@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/GaudiOnline/src/RawBufferWriter.cpp,v 1.4 2005-05-04 17:14:09 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/GaudiOnline/src/RawBufferWriter.cpp,v 1.5 2005-05-11 07:33:00 frankb Exp $
 //	====================================================================
 //  RawBufferWriter.cpp
 //	--------------------------------------------------------------------
@@ -12,8 +12,8 @@
 #include "GaudiKernel/DataObject.h"
 #include "GaudiKernel/SmartDataPtr.h"
 #include "GaudiOnline/StreamDescriptor.h"
-#include "Event/RawBuffer.h"
-#include "Event/L1Buffer.h"
+#include "Event/RawEvent.h"
+#include "Event/L1Event.h"
 
 using GaudiOnline::StreamDescriptor;
 
@@ -75,11 +75,13 @@ public:
   }
   /// Execute procedure
   virtual StatusCode execute()    {
+    SmartDataPtr<DataObject> evt(eventSvc(),"/Event");
+    if ( evt ) {}    
     switch(m_intType) {
     case StreamDescriptor::DAQ_BUFFER: {
-      SmartDataPtr<RawBuffer> raw(eventSvc(),RawBufferLocation::Default);
+      SmartDataPtr<RawEvent> raw(eventSvc(),RawEventLocation::Default);
       if ( raw )  {
-        int len = raw->currentSize()*sizeof(raw_int);
+        int len = raw->bufLen()*sizeof(raw_int);
         if ( StreamDescriptor::write(m_client, &len, sizeof(len)) )  {
           return StreamDescriptor::write(m_client, raw->buffer(), len) 
                  ? StatusCode::SUCCESS : StatusCode::FAILURE;
@@ -88,9 +90,9 @@ public:
     }
     break;
     case StreamDescriptor::L1_BUFFER:  {
-      SmartDataPtr<L1Buffer> l1(eventSvc(),L1BufferLocation::Default);
+      SmartDataPtr<L1Event> l1(eventSvc(),L1EventLocation::Default);
       if ( l1 )  {
-        int len = l1->currentSize()*sizeof(l1_int);
+        int len = l1->bufLen()*sizeof(l1_int);
         if ( StreamDescriptor::write(m_client, &len, sizeof(len)) )  {
           return StreamDescriptor::write(m_client, l1->buffer(), len) 
                   ? StatusCode::SUCCESS : StatusCode::FAILURE;
@@ -101,6 +103,8 @@ public:
     default:
     break;
     }
+    MsgStream log(msgSvc(), name());
+    log << MSG::ERROR << "Failed to retrieve event buffer object!" << endmsg;
     return StatusCode::FAILURE;
   }
 };

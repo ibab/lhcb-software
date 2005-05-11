@@ -7,6 +7,7 @@ EventDataSvc.RootCLID                = 1;
 EventDataSvc.EnableFaultHandler      = true ;
 ApplicationMgr.TopAlg                = { "StoreExplorerAlg" };
 StoreExplorerAlg.Load                = 1;
-StoreExplorerAlg.PrintFreq           = 1.0;
-ApplicationMgr.EvtMax                = 1000;
+StoreExplorerAlg.PrintFreq           = 0.001;
+EventSelector.PrintFreq              = 1000;
+ApplicationMgr.EvtMax                = 100000;
 #include "$GAUDIONLINEROOT/options/Setup.opts"

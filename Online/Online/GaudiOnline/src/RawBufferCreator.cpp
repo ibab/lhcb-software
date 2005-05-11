@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/GaudiOnline/src/RawBufferCreator.cpp,v 1.3 2005-05-04 17:10:23 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/GaudiOnline/src/RawBufferCreator.cpp,v 1.4 2005-05-11 07:33:00 frankb Exp $
 //	====================================================================
 //  RawBufferCreator.cpp
 //	--------------------------------------------------------------------
@@ -18,9 +18,10 @@
 #include "GaudiKernel/SmartDataPtr.h"
 #include "GaudiOnline/OnlineAddress.h"
 #include "GaudiOnline/StreamDescriptor.h"
-#include "Event/RawBuffer.h"
-#include "Event/L1Buffer.h"
+#include "Event/RawEvent.h"
+#include "Event/L1Event.h"
 #include <memory>
+#include <stdexcept>
 
 /** @class OnlineCnvSvc OnlineCnvSvc.cpp  GaudiOnline/OnlineCnvSvc.cpp
   *
@@ -55,6 +56,14 @@ const IFactory& OnlineCnvSvcFactory = svcFactory;
   * @date    01/01/2005
   */ 
 class OnlineConverter : public Converter  {
+
+  // Helper to print errors and return bad status
+  StatusCode error(const std::string& msg) {
+    MsgStream err(msgSvc(), "OnlineConverter");
+    err << MSG::ERROR << msg << endmsg;
+    return StatusCode::FAILURE;
+  }
+
 public:
   /// Initializing constructor
   /**  @param   loc         [IN]  Pointer to the service locator object
@@ -96,45 +105,51 @@ public:
     */
   virtual StatusCode fillObjRefs(IOpaqueAddress* pAddr, DataObject* /* pObj */ )  {
     if ( pAddr )  {
-      GaudiOnline::Address* addr = dynamic_cast<GaudiOnline::Address*>(pAddr);
-      const GaudiOnline::StreamDescriptor* dsc = addr->descriptor();
-      std::auto_ptr<DataObject> obj(new DataObject());
-      switch( dsc->type() ) {
-      case GaudiOnline::StreamDescriptor::DAQ_BUFFER:
-        if ( dataProvider()->registerObject("DAQ", obj.get()).isSuccess() )  {
+      try {
+        GaudiOnline::Address* addr = dynamic_cast<GaudiOnline::Address*>(pAddr);
+        const GaudiOnline::StreamDescriptor* dsc = addr->descriptor();
+        std::auto_ptr<DataObject> obj(new DataObject());
+	std::auto_ptr<DataObject> raw;
+	std::string loc;
+        if ( dataProvider()->registerObject("/Event/DAQ", obj.get()).isSuccess() )  {
           obj.release();
-          int len = dsc->length()/sizeof(raw_int);
-          std::auto_ptr<raw_int> raw_buff(new raw_int[len]);
-          ::memcpy(raw_buff.get(), dsc->data(), len);
-          std::auto_ptr<RawBuffer>  raw(new RawBuffer(len, raw_buff.release()));
-          if ( dataProvider()->registerObject(RawBufferLocation::Default,raw.get()).isSuccess() )  {
+          switch( dsc->type() ) {
+          case GaudiOnline::StreamDescriptor::DAQ_BUFFER: {
+              int len = dsc->length()/sizeof(raw_int);
+              if ( (dsc->length()%sizeof(raw_int)) != 0 ) len++;
+              raw = std::auto_ptr<DataObject>(new RawEvent((raw_int*)dsc->data(),len));
+              loc = RawEventLocation::Default;
+            }
+            break;
+	    case GaudiOnline::StreamDescriptor::L1_BUFFER: {
+              int len = dsc->length()/sizeof(l1_int);
+              if ( (dsc->length()%sizeof(l1_int)) != 0 ) len++;
+              raw = std::auto_ptr<DataObject>(new L1Event((l1_int*)dsc->data(),len));
+              loc = L1EventLocation::Default;
+	    }
+            break;
+            default: {
+              MsgStream err(msgSvc(), "OnlineConverter");
+              err << MSG::ERROR << "Unknown data type:" << dsc->type() << endmsg;
+            }
+            return StatusCode::FAILURE;
+          }
+          if ( dataProvider()->registerObject(loc,raw.get()).isSuccess() )  {
             raw.release();
             return StatusCode::SUCCESS;
           }
+          return error("Failed to register object "+loc);
         }
-        break;
-      case GaudiOnline::StreamDescriptor::L1_BUFFER:
-        if ( dataProvider()->registerObject("L1", obj.get()).isSuccess() )  {
-          obj.release();
-          /* not yet implememnted in the event model 
-          int len = dsc->length()/sizeof(l1_int);
-          std::auto_ptr<L1Buffer>  raw(new L1Buffer());
-          raw->reallocate(len);
-          ::memcpy(raw->buffer(), dsc->data(), dsc->length());
-          if ( dataProvider()->registerObject(RawBufferLocation::Default,raw.get()).isSuccess() )  {
-            raw.release();
-            return StatusCode::SUCCESS;
-          }
-          */
-        }
-        break;
-      default:
-        break;
+        return error("Failed to register object DAQ");
+      }
+      catch (std::exception& e) {
+        return error(std::string("Exception:") + e.what());
+      }
+      catch(...) {
+        return error("Exception: (Unknown)");
       }
     }
-    MsgStream err1(msgSvc(), "OnlineConverter");
-    err1 << MSG::ERROR << "No valid top level event object present." << endmsg;
-    return StatusCode::FAILURE;
+    return error("No valid top level event object present.");
   }
 };
 

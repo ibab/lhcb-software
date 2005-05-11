@@ -6,7 +6,7 @@
 //
 //	Author     : M.Frank
 //====================================================================
-// $Id: StreamDescriptor.cpp,v 1.8 2005-05-04 17:10:23 frankb Exp $
+// $Id: StreamDescriptor.cpp,v 1.9 2005-05-11 07:33:00 frankb Exp $
 
 // Include files
 #include "GaudiOnline/StreamDescriptor.h"
@@ -316,7 +316,9 @@ GaudiOnline::StreamDescriptor::bind(const std::string& specs)  {
     case 'I':          //  DATA='ip://137.138.142.82:8000'
       result.ioDesc = Networking::socket(AF_INET,Networking::_SOCK_STREAM,Networking::_IPPROTO_IP);
       if ( result.ioDesc > 0 )   {
+        int opt = 1;
         StreamDescriptor::getInetConnection(specs, file, &sin.sin_addr, sin.sin_port);
+        Networking::setsockopt(result.ioDesc,SOL_SOCKET,SO_REUSEADDR,&opt,sizeof(opt));
         sin.sin_family = AF_INET;
         if ( Networking::bind(result.ioDesc, (Networking::sockaddr*)&sin, sizeof(sin)) == 0) {
           if ( Networking::listen(result.ioDesc, SOMAXCONN) == 0 )  {
@@ -382,6 +384,10 @@ GaudiOnline::StreamDescriptor::accept(const Access& specs)  {
         Networking::sockaddr sin;
         ::memset(&sin,0,sizeof(sin));
         result.ioDesc = Networking::accept(specs.ioDesc, &sin, &len);
+        if ( result.ioDesc > 0 ) {
+          int opt = 1;
+	  Networking::setsockopt(result.ioDesc,SOL_SOCKET,SO_REUSEADDR,&opt,sizeof(opt));
+	}
       }
       break;
     case 'S':

@@ -1,4 +1,4 @@
-// $Id: OnlineEvtSelector.cpp,v 1.4 2005-04-28 11:53:19 bgaidioz Exp $
+// $Id: OnlineEvtSelector.cpp,v 1.5 2005-05-11 07:33:00 frankb Exp $
 //====================================================================
 //	OnlineEvtSelector.cpp
 //--------------------------------------------------------------------
@@ -191,7 +191,7 @@ GaudiOnline::EvtSelector::EvtSelector(const std::string& nam, ISvcLocator* svclo
   declareProperty("CnvService",  m_cnvSvcName);
   declareProperty("NumBuffers",  m_numBuffers   = 2);
   declareProperty("LENGTH",      m_buffLen      = "8192");
-  declareProperty("TYPE",        m_dataTypeName = "L1");
+  declareProperty("INPUT",       m_dataTypeName = "L1");
 }
 
 GaudiOnline::EvtSelector::~EvtSelector() {
@@ -231,14 +231,13 @@ StatusCode GaudiOnline::EvtSelector::initialize()    {
     log << MSG::ERROR 
       << "Unable to localize interface IID_IDataManagerSvc "
       << "from service EventDataSvc"
-	    << endreq;
+	    << endmsg;
     return status;
   }
   m_rootCLID = eds->rootCLID();
   eds->release();
   m_dataType = StreamDescriptor::dataType(m_dataTypeName);
-  log << MSG::DEBUG << "Selection CLID:" << m_rootCLID 
-    << "  Data type:" << m_dataTypeName << "(" << m_dataType << ")" << endreq;
+  log << MSG::DEBUG << "Selection CLID:" << m_rootCLID << endmsg;
   return status;
 }
 
@@ -248,7 +247,7 @@ StatusCode GaudiOnline::EvtSelector::finalize()    {
   MsgStream log(messageService(), name());
   StatusCode status = Service::finalize();
   if ( !status.isSuccess() )    {
-    log << MSG::ERROR << "Error initializing base class Service!" << endreq;
+    log << MSG::ERROR << "Error initializing base class Service!" << endmsg;
   }
   return status;
 }
@@ -302,7 +301,7 @@ GaudiOnline::EvtSelector::previous(Context& /* ctxt */) const
 {
   MsgStream log(msgSvc(), name());
   log << MSG::FATAL 
-      << " EventSelector Iterator, operator -- not supported " << endreq;
+      << " EventSelector Iterator, operator -- not supported " << endmsg;
   return StatusCode::FAILURE;
 }
 
@@ -362,7 +361,7 @@ GaudiOnline::EvtSelector::releaseContext(Context*& ctxt) const
 
 StatusCode 
 GaudiOnline::EvtSelector::resetCriteria(const std::string& criteria,
-                                 Context& context)  const
+                                        Context& context)  const
 {
   MsgStream log(messageService(), name());
   std::string crit = criteria;
@@ -370,15 +369,16 @@ GaudiOnline::EvtSelector::resetCriteria(const std::string& criteria,
   if ( ctxt )  {
     ctxt->close();
     crit.replace(0,5,"DATA='");
-    crit += "' LENGTH='"+m_buffLen+"'";
+    crit += "' LENGTH='" + m_buffLen;
+    crit += "' TYPE='"   + m_dataTypeName+"'";
     ctxt->setCriteria(crit);
     StatusCode sc = ctxt->connect();
     if ( !sc.isSuccess() )  {
-      log << MSG::ERROR << "Failed to connect to:" << crit << endreq;
+      log << MSG::ERROR << "Failed to connect to:" << crit << endmsg;
     }
     return sc;
   }
-  log << MSG::ERROR << "Invalid iteration context." << endreq;
+  log << MSG::ERROR << "Invalid iteration context." << endmsg;
   return StatusCode::FAILURE;
 }
 

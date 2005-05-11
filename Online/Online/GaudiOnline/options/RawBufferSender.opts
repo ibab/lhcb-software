@@ -1,17 +1,32 @@
-ApplicationMgr.ExtSvc = { "EventSelector" };
+ApplicationMgr.ExtSvc = { "EventSelector", "DataOnDemandSvc" };
+//DataOnDemandSvc.Algorithms   = { "DATA='/Event/DAQ/RawEvent' TYPE='CreateRawEvent'",
+//                                 "DATA='/Event/DAQ/L1Event'  TYPE='CreateL1Event'"
+//#include "$GAUDIPOOLDBROOT/options/GaudiPoolDbRoot.opts"
+//#include "$EVENTSYSROOT/options/PoolDicts.opts"
 //--------------------------------------------------------------
 // Event related parameters
 //--------------------------------------------------------------
 ApplicationMgr.HistogramPersistency = "NONE";
 PoolDbCacheSvc.OutputLevel = 3;
 EventDataSvc.RootCLID = 1;
-ApplicationMgr.EvtMax = 1000;
+ApplicationMgr.EvtMax = 100000;
 ApplicationMgr.DLLs += { "CaloEvent", "DAQEvent" };
-//#include "$GAUDIPOOLDBROOT/options/GaudiPoolDbRoot.opts"
-//#include "$EVENTSYSROOT/options/PoolDicts.opts"
 EventPersistencySvc.CnvServices += { "OnlineCnvSvc" };
 PoolDbCacheSvc.Dlls             += {"SealSTLDict" };
 //EventSelector.Input = {"DATAFILE='rfio:/castor/cern.ch/user/c/cattanem/Brunel/v26r0/Brunel-0412.dst' TYP='POOL_ROOT' OPT='READ'"};
-EventSelector.Input              = {"DATA='${SFCCONNECTION}' SVC='GaudiOnline::EvtSelector' TYPE='DAQ'"};
+EventSelector.Input              = {"DATA='${SFCCONNECTION}' SVC='GaudiOnline::EvtSelector' INPUT='DAQ'"};
+EventSelector.Input             += {"DATA='file://rawBuffer1.dat' SVC='GaudiOnline::EvtSelector' INPUT='DAQ'"};
+EventSelector.Input             += {"DATA='file://rawBuffer2.dat' SVC='GaudiOnline::EvtSelector' INPUT='DAQ'"};
+EventSelector.Input             += {"DATA='file://rawBuffer3.dat' SVC='GaudiOnline::EvtSelector' INPUT='DAQ'"};
+EventSelector.Input             += {"DATA='file://rawBuffer4.dat' SVC='GaudiOnline::EvtSelector' INPUT='DAQ'"};
+EventSelector.Input             += {"DATA='file://rawBuffer5.dat' SVC='GaudiOnline::EvtSelector' INPUT='DAQ'"};
+EventSelector.Input             += {"DATA='file://rawBuffer6.dat' SVC='GaudiOnline::EvtSelector' INPUT='DAQ'"};
+EventSelector.Input             += {"DATA='file://rawBuffer7.dat' SVC='GaudiOnline::EvtSelector' INPUT='DAQ'"};
+EventSelector.Input             += {"DATA='file://rawBuffer8.dat' SVC='GaudiOnline::EvtSelector' INPUT='DAQ'"};
+EventSelector.Input             += {"DATA='file://rawBuffer9.dat' SVC='GaudiOnline::EvtSelector' INPUT='DAQ'"};
+EventSelector.Input             += {"DATA='file://rawBuffer10.dat' SVC='GaudiOnline::EvtSelector' INPUT='DAQ'"};
+EventSelector.Input             += {"DATA='file://rawBuffer11.dat' SVC='GaudiOnline::EvtSelector' INPUT='DAQ'"};
+EventSelector.Input             += {"DATA='file://rawBuffer12.dat' SVC='GaudiOnline::EvtSelector' INPUT='DAQ'"};
 #include "$GAUDIONLINEROOT/options/SendBuffer.opts"
 RawBufferWriter.OutputLevel      = 1;
+EventSelector.PrintFreq          = 1000;

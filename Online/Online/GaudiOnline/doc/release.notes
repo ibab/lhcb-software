@@ -1,6 +1,10 @@
 Package: GaudiOnline
 Author:  Markus Frank
 
+! 10-05-2005 Markus Frank
+  Adapt to LHCb v18r4 and the use of RawEvent/L1Event instead of
+  RawBuffer and L1Buffer
+
 !=============== GaudiOnline v1r0 22-02-2005 =============================
  There are a few examples coming along with this package.
  1) options/RawBufferWriter: Write binary raw buffer file from POOL dst
