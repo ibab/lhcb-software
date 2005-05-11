@@ -6,7 +6,7 @@
 //
 //	Author     : M.Frank
 //====================================================================
-// $Id: StreamDescriptor.cpp,v 1.11 2005-05-11 17:48:33 frankb Exp $
+// $Id: StreamDescriptor.cpp,v 1.12 2005-05-11 17:56:01 frankb Exp $
 
 // Include files
 #include "GaudiOnline/StreamDescriptor.h"
@@ -33,9 +33,9 @@ namespace Networking {
   #include "Winsock2.h"
 
   typedef char SockOpt_t;
-  typedef int AddrLen_t;
-  //static const int SOCK_STREAM = _SOCK_STREAM;
-  //static const int IPPROTO_IP  = _IPPROTO_IP;
+  typedef int  AddrLen_t;
+  static const int _SOCK_STREAM = SOCK_STREAM;
+  static const int _IPPROTO_IP  = IPPROTO_IP;
 
   struct __init__ {
     __init__()  {
@@ -58,6 +58,8 @@ namespace Networking {
   #include <arpa/inet.h>
   #include <netdb.h>
   int (*closesocket)(int) = ::close;
+  static const int _SOCK_STREAM = SOCK_STREAM;
+  static const int _IPPROTO_IP  = IPPROTO_IP;
 #endif
 }
 namespace FileIO {
@@ -262,7 +264,7 @@ GaudiOnline::StreamDescriptor::connect(const std::string& specs)  {
         };
       */
       getInetConnection(specs, file, &sin.sin_addr, sin.sin_port);
-      result.ioDesc = Networking::socket(AF_INET, SOCK_STREAM, IPPROTO_IP);
+      result.ioDesc = Networking::socket(AF_INET, Networking::_SOCK_STREAM, Networking::_IPPROTO_IP);
       if ( result.ioDesc > 0 )   {        
         sin.sin_family      = AF_INET;
         ::memset(sin.sin_zero,0,sizeof(sin.sin_zero));
@@ -315,7 +317,7 @@ GaudiOnline::StreamDescriptor::bind(const std::string& specs)  {
       result.m_send_decision = file_send_decision;
       break;
     case 'I':          //  DATA='ip://137.138.142.82:8000'
-      result.ioDesc = Networking::socket(AF_INET,SOCK_STREAM,IPPROTO_IP);
+      result.ioDesc = Networking::socket(AF_INET,Networking::_SOCK_STREAM,Networking::_IPPROTO_IP);
       if ( result.ioDesc > 0 )   {
         int opt = 1;
         StreamDescriptor::getInetConnection(specs, file, &sin.sin_addr, sin.sin_port);
