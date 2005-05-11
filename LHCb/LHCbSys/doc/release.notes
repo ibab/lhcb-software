@@ -5,12 +5,12 @@
 ! Purpose     : LHCb OO kernel packages
 !-----------------------------------------------------------------------------
 
-!======================= LHCbSys v18r4 2005-05-08 =======================
-! 2005-05-08 - Marco Cattaneo
- - Packages added:    STTools v1r1, TrgTools v7r3
+!======================= LHCbSys v18r4 2005-05-11 =======================
+! 2005-05-11 - Marco Cattaneo
+ - Packages added:    STTools v1r1, TrgTools v7r3, Rdst v1r0
  - Packages modified: DetSys v6r5, DetDescCnv v2r4, XmlTools v3r5, LHCbAlgs v1r6,
-     EventSys v20r4, LinkerEvent v1r8, DAQEvent v5r1, EventAssoc v1r5,
-     AssociatorsSys v3r0, CaloAssociators v5r0, CaloUtils v4r9,
+     EventSys v20r4, LinkerEvent v1r8, DAQEvent v5r1, TrgEvent v5r5,
+     EventAssoc v1r5, AssociatorsSys v3r0, CaloAssociators v5r0, CaloUtils v4r9,
      DetDescChecks v2r3, DAQSys v1r3, CaloDAQ v1r1
 
  - In STTools v1r1:
@@ -45,6 +45,12 @@
 
  - In LinkerEvent v1r8:
    . Allow for keys that cannot be implicitly converted to int
+
+ - In TrgEvent v5r5:
+   . Add HltScore and HltAlgorithmScore classes
+
+ - In Rdst v1r0:
+   . First version of event classes for Rdst, with coding and decoding algorithms
 
  - In DetDescCnv v2r4, XmlTools v3r5:
    . Pointer returned by XmlParserSvc::parseString() must now be released by
