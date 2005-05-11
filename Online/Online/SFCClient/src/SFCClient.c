@@ -1,7 +1,7 @@
 #include  <stdio.h>
 #include  <stdlib.h>
 #include  <SFCClient/SFCClient.h>
-#define fatal(s) do{fprintf(stderr,s "fatal error %s:%d\n",__FILE__,__LINE__);abort();}while(0)
+#define fatal(s) do{perror(s);fprintf(stderr,s "fatal error %s:%d\n",__FILE__,__LINE__);abort();}while(0)
 #define SFCC_DEBUG 
 #define HEADER_TO_SKIP  0
 #define p_conn_req  0x01
@@ -21,8 +21,9 @@
 #include  <netinet/in.h> 
 #include  <sys/socket.h>
 #include  <netpacket/packet.h>
-#define bug  printf
+#define bug  if(1) printf
 #define info  if(1) printf
+#define debug  if(1) printf
 
 
 struct msg_data {
@@ -38,7 +39,8 @@ struct msg_decision {
 };
 
 struct msg_header {
-	u_int32_t port;
+	u_int32_t dport;
+	u_int32_t sport;
 	u_int32_t type;
 	u_int32_t key;
 	u_int32_t id;
@@ -46,7 +48,7 @@ struct msg_header {
 		struct msg_data data;
 		struct msg_decision decision;
 	} content;
-	char *data[0];
+	char data[0];
 };
 
 char *sfc_string;
@@ -58,6 +60,8 @@ u_int32_t level;
 
 int sock;
 int r;
+
+static int his_port = 0;
 
 static char packets[100][MTU+HEADER_TO_SKIP];
 static char control_packet[MTU+HEADER_TO_SKIP];
@@ -101,17 +105,16 @@ int sfcc_perror(char *prefix)
 	return fprintf(stderr,"%s: %s\n",prefix,sfcc_strerror(sfcc_errno));
 }
 
-int sfcc_register(const char *hostname, int level)
+int protocol[] = {0x00f3,0x00f4};
+
+int sfcc_register(const char *eth_string, int myport, int level)
 {
         if(level!=SFCC_L1 && level!=SFCC_HLT) return -SFCC_ERR_PARAM;
-#ifdef SFCC_DEBUG
-        printf("sfcc_lib:connecting to host %s for %s...\n",hostname,level_name[level]);
-#endif
-	sfc_string = hostname;
-	sfc_string = "00:07:E9:10:93:D1";
-	type = 0x00f3;
-	port = 0;
-	dev_string = "eth1";
+        debug("sfcc_lib:connecting to host %s for %s...\n",eth_string,level_name[level]);
+	sfc_string = eth_string;
+	type = protocol[level];
+	port = myport;
+	dev_string = "eth3";
 	cpu = 0;
 	
 	sock = socket(PF_PACKET,SOCK_DGRAM,type);
@@ -146,55 +149,59 @@ int sfcc_register(const char *hostname, int level)
 	recv_packet = control_packet;
 	recv_msg = (struct msg_header*)&recv_packet[HEADER_TO_SKIP];
 	send_msg->type = p_conn_req;
-	send_msg->port = port;
+	send_msg->sport = port;
+	send_msg->dport = his_port;
 	send_len = sendto(sock,send_packet,sizeof(struct msg_header),0,(struct sockaddr*)&sfc,sizeof(sfc));
 	if(send_len==-1) fatal("sendto");
 	if(send_len!=sizeof(struct msg_header)) {bug("send");abort();}
+	for(;;) {
 	recv_len = recvfrom(sock,recv_packet,MTU+HEADER_TO_SKIP,0,(struct sockaddr*)&who,&add_len);
 	if(recv_len==-1) fatal("recvfrom");
-	info("received %d bytes\n",recv_len);
+	if(recv_msg->dport == port) break; else {bug("port\n");continue;}
+	}
+	debug("received %d bytes\n",recv_len);
 	if(recv_msg->type != p_conn_ack) bug("type\n");
-	if(recv_msg->port != port) bug("port\n");
+	if(recv_msg->sport != his_port) bug("port\n");
 	id = recv_msg->id;
 	send_msg->id = id;
 	send_msg->key = recv_msg->key;
 	
-	info("send a conack\n");
+	debug("send a conack\n");
 	send_msg->type = p_conn_ack_ack;
+	send_msg->sport = port;
+	send_msg->dport = his_port;
 	send_len = sendto(sock,send_packet,sizeof(struct msg_header),0,(struct sockaddr*)&who,sizeof(who));
 	if(send_len==-1) fatal("sendto");
 	if(send_len!=sizeof(struct msg_header)) {bug("send");abort();}
 	
-	info("prepare decision\n");
+	debug("prepare decision\n");
 	send_msg->content.decision.decision = 0xab;
 	send_msg->content.decision.number = number;
 	send_msg->type = p_decision;
 	
         if(0) return -SFCC_ERR_CONNECT_FAILED;
-#ifdef SFCC_DEBUG
-        printf("sfcc_lib:connected!\n");
-#endif
+        debug("sfcc_lib:connected!\n");
         return 0;
 }
 
 int sfcc_read_event(struct sfcc_event_buffer *rbuf)
 {
-#ifdef SFCC_DEBUG
-        printf("sfcc_lib:sending token\n");
-#endif
-#ifdef SFCC_DEBUG
-        printf("sfcc_lib:waiting for an event\n");
-#endif
-	if(next_packet!=1) fatal("next_packet!=1");
-	do {
+        debug("sfcc_lib:sfcc_read_event\n");
+	if(next_packet!=1) fatal("sfcc_read_event was not called in proper time");
+	while(total_recved!=next_event_len) {
+		debug("total_recved=%d,next_event_len=%d\n",
+			total_recved,next_event_len);
 		recv_packet = packets[next_packet];
 		recv_msg = (struct msg_header*)&recv_packet[HEADER_TO_SKIP]; /* skip headers */
 		
+		for(;;) {
 		recv_len = recvfrom(sock,recv_packet,MTU+HEADER_TO_SKIP,0,(struct sockaddr*)&who,&add_len);
 		if(recv_len==-1) fatal("recvfrom");
-		info("received %d bytes\n",recv_len);
+		if(recv_msg->dport == port) break; else {bug("port\n");continue;}
+		}
+		debug("received %d bytes\n",recv_len);
 		if(recv_msg->type != p_data) {bug("type %d\n",recv_msg->type);abort();}
-		if(recv_msg->port != port) {bug("port\n");abort();}
+		his_port = recv_msg->sport;
 		if(recv_msg->content.data.rank != next_rank) {
 				bug("packet loss (%d instead of %d)\n",
 					recv_msg->content.data.rank,
@@ -207,39 +214,37 @@ int sfcc_read_event(struct sfcc_event_buffer *rbuf)
 		vectors[next_packet].iov_len = recv_msg->content.data.len;
 		next_packet++;
 
-	} while(total_recved!=next_event_len);
+	};
 	
 	{
 		int p;
 		char *next_byte = rbuf->buffer;
 		for(p=0;p<next_packet;p++) {
-			info("copying data of packet %d\n",p);
+			debug("copying data of packet %d\n",p);
 			memcpy(next_byte,vectors[p].iov_base,vectors[p].iov_len);
 			next_byte+=vectors[p].iov_len;
 		}
 	}
 	
-	info("send a ack\n");
+	debug("send a ack\n");
 	send_msg->type = p_ack;
+	send_msg->sport = port;
+	send_msg->dport = his_port;
 	send_len = sendto(sock,send_packet,sizeof(struct msg_header),0,(struct sockaddr*)&who,sizeof(who));
 	if(send_len==-1) fatal("sendto");
 	if(send_len!=sizeof(struct msg_header)) {bug("send");abort();}
 	decision_has_been_sent = 0;
 	next_packet = 0;
 	rbuf->buffer_len = next_event_len;
-#ifdef SFCC_DEBUG
-        printf("sfcc_lib:next event is %d bytes long\n",next_event_len);
-#endif
+        debug("sfcc_lib:next event is %d bytes long\n",next_event_len);
         return 0;
 }
 
 int sfcc_set_decision(struct sfcc_decision *dec)
 {
-#ifdef SFCC_DEBUG
-        printf("sfcc_lib:setting decision (length %d)\n",dec->buffer_len);
-#endif
+        debug("sfcc_lib:setting decision (length %d)\n",dec->buffer_len);
 	
-	info("prepare decision");
+	debug("prepare decision\n");
 	send_msg->content.decision.decision = 0xab;
 	send_msg->content.decision.number = number;
 	send_msg->type = p_decision;
@@ -249,7 +254,10 @@ int sfcc_set_decision(struct sfcc_decision *dec)
 int sfcc_push_decision(void)
 {
 	
-	info("send decision");
+	debug("send decision");
+	send_msg->type = p_decision;
+	send_msg->sport = port;
+	send_msg->dport = his_port;
 	send_len = sendto(sock,send_packet,sizeof(struct msg_header),0,(struct sockaddr*)&who,sizeof(who));
 	if(send_len==-1) fatal("sendto");
 	if(send_len!=sizeof(struct msg_header)) {bug("send");abort();}
@@ -261,10 +269,12 @@ int sfcc_unregister() { return 0;}
 
 int sfcc_read_length(int *data_length)
 {
-	info("read length\n");
 	if(decision_has_been_sent==0) {
 		
-		info("send decision\n");
+		debug("send decision");
+		send_msg->type = p_decision;
+		send_msg->sport = port;
+		send_msg->dport = his_port;
 		send_len = sendto(sock,send_packet,sizeof(struct msg_header),0,(struct sockaddr*)&who,sizeof(who));
 		if(send_len==-1) fatal("sendto");
 		if(send_len!=sizeof(struct msg_header)) {bug("send");abort();}
@@ -282,11 +292,14 @@ int sfcc_read_length(int *data_length)
 	recv_packet = packets[next_packet];
 	recv_msg = (struct msg_header*)&recv_packet[HEADER_TO_SKIP]; /* skip headers */
 	
+	for(;;) {
 	recv_len = recvfrom(sock,recv_packet,MTU+HEADER_TO_SKIP,0,(struct sockaddr*)&who,&add_len);
 	if(recv_len==-1) fatal("recvfrom");
-	info("received %d bytes\n",recv_len);
+	if(recv_msg->dport == port) break; else {bug("port\n");continue;}
+	}
+	debug("received %d bytes\n",recv_len);
 	if(recv_msg->type != p_data) {bug("type %d\n",recv_msg->type);abort();}
-	if(recv_msg->port != port) {bug("port\n");abort();}
+	his_port = recv_msg->sport;
 	if(recv_msg->content.data.rank != next_rank) {
 			bug("packet loss (%d instead of %d)\n",
 				recv_msg->content.data.rank,
@@ -304,7 +317,7 @@ int sfcc_read_length(int *data_length)
 	if(next_packet==1) {
 		number = recv_msg->content.data.number;
 		next_event_len = recv_msg->content.data.total_len;
-		info("new event: %08x, %d\n",number,next_event_len);
+		debug("new event: %08x, %d\n",number,next_event_len);
 	}
 	*data_length=next_event_len;
 	return 0;
