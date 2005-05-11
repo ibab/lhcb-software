@@ -6,7 +6,7 @@
 //
 //	Author     : M.Frank
 //====================================================================
-// $Id: StreamDescriptor.cpp,v 1.12 2005-05-11 17:56:01 frankb Exp $
+// $Id: StreamDescriptor.cpp,v 1.13 2005-05-11 18:07:00 frankb Exp $
 
 // Include files
 #include "GaudiOnline/StreamDescriptor.h"
@@ -31,12 +31,6 @@ namespace SFC {
 namespace Networking {
 #ifdef _WIN32
   #include "Winsock2.h"
-
-  typedef char SockOpt_t;
-  typedef int  AddrLen_t;
-  static const int _SOCK_STREAM = SOCK_STREAM;
-  static const int _IPPROTO_IP  = IPPROTO_IP;
-
   struct __init__ {
     __init__()  {
       static bool g_first = true;
@@ -51,16 +45,18 @@ namespace Networking {
     }
   };
   static __init__ g_init;
+  typedef char SockOpt_t;
+  typedef int  AddrLen_t;
 #else
-  typedef int SockOpt_t;
-  typedef size_t AddrLen_t;
   #include <netinet/in.h>
   #include <arpa/inet.h>
   #include <netdb.h>
   int (*closesocket)(int) = ::close;
+  typedef int SockOpt_t;
+  typedef size_t AddrLen_t;
+#endif
   static const int _SOCK_STREAM = SOCK_STREAM;
   static const int _IPPROTO_IP  = IPPROTO_IP;
-#endif
 }
 namespace FileIO {
   using ::close;
