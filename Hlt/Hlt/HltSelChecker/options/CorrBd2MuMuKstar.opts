@@ -6,10 +6,10 @@ Bd2MuMuKstarAndTDR.AvoidSelResult = false ;
 
 // correlation of HLT and TDR
 HLTCorrelations.Members += { "SelResultCorrelations/CorrBd2MuMuKstar" };
-CorrBd2MuMuKstar.Algorithms = { "CheckHLTGeneric"	
-                        ,"AllBd2MuMuKstarTracks", 
+CorrBd2MuMuKstar.Algorithms = { "CheckHLTGeneric",	
+                        "CheckHLTDimuon",
+                        "AllBd2MuMuKstarTracks", 
                         "HLTSharedKstar",
-//                        "HLTDimuons",
                         "HLTFilterBd2MuMuKstar", 
                         "TDRselBd2MuMuKstar",
                         "Bd2MuMuKstarAndTDR" } ;

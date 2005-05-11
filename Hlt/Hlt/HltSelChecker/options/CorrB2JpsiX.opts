@@ -6,9 +6,9 @@ B2JpsiXAndTDR.AvoidSelResult = false ;
 
 // correlation of HLT and TDR
 HLTCorrelations.Members += { "SelResultCorrelations/CorrB2JpsiX" };
-CorrB2JpsiX.Algorithms = { "CheckHLTGeneric"	
-                        ,"AllJpsiTracks", 
-//                        "HLTDimuons", 
+CorrB2JpsiX.Algorithms = { "CheckHLTGeneric" ,	
+                        "CheckHLTDimuon", 
+                        "AllJpsiTracks", 
                         "HLTFilterB2JpsiX", 
                         "TDRselBd2Jpsi2MuMu_Ks2PiPi",
                          "TDRselBs2Jpsi2MuMu_Phi2KK",

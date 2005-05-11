@@ -7,6 +7,16 @@
 ! 2005-05-11 - P. Koppenburg
   - src/CheckHltGeneric.cpp
     . Removed. Replaced by HltFilter in HltSelections.
+  - options/CorrB2HH.opts
+  - options/CorrB2JpsiX.opts
+  - options/CorrB2MuMu.opts
+  - options/CorrBd2JpsiKs.opts
+  - options/CorrBd2MuMuKstar.opts
+  - options/CorrBs2JpsiPhi.opts
+  - options/CorrDiMuons.opts
+  - options/CorrHLTsels.opts
+  - options/Correlations.opts
+    . Use HltFilter to check Correlations.
 
 ! 2005-05-10 - P. Koppenburg
   - src/TestHltScore.{cpp,h}

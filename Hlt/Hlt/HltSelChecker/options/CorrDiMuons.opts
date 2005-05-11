@@ -6,5 +6,7 @@ CorrDimuons.Algorithms = {"CheckHLTGeneric"
                           , "HLTFilterB2JpsiX"
                           , "HLTFilterBd2MuMuKstar"
                           , "HLTFilterB2MuMu"
+			  , "CheckHLTInclusiveB"
+			  , "CheckHLTDimuon"
 			   } ;
 
