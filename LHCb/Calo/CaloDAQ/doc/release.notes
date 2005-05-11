@@ -4,6 +4,18 @@
 ! Purpose     : Convert Calo Digit and Trigger information to RawBuffer banks.
 !-----------------------------------------------------------------------------
 
+! 2005-05-11 - Vanya BELYAEV
+  
+ - src/CaloReCreateMCLinks.cpp
+     1) add new property "IgnoreMode" 
+        (the defualt value is "false" )
+        to ignore the absence of MC-containers 
+        (an error message is generated, but processing is continued) 
+     2) some consmetics changes 
+     3) improve Doxygen comments 
+ - src/CaloReCreateMcLinks.h
+     remove the file 
+ 
 !========================== CaloDAQ v1r1 2005-05-10 ==========================
 ! 2005-05-10 - Olivier Callot
  - Initialize the base class of CaloEnergyFromRaw, was forgotten.

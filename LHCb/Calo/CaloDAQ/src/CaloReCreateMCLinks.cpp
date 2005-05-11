@@ -1,61 +1,154 @@
-// $Id: CaloReCreateMCLinks.cpp,v 1.1 2005-01-12 09:59:14 ocallot Exp $
-
-// Include files 
-// Gaudi
+// $Id: CaloReCreateMCLinks.cpp,v 1.2 2005-05-11 18:04:09 ibelyaev Exp $
+// ============================================================================
+// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.2 $
+// ============================================================================
+// $Log: not supported by cvs2svn $ 
+// ============================================================================
+// Include 
+// ============================================================================
+// GaudiKernel
+// ============================================================================
 #include "GaudiKernel/AlgFactory.h"
-
+// ============================================================================
+// GaudiAlg 
+// ============================================================================
+#include "GaudiAlg/GaudiAlgorithm.h"
+// ============================================================================
 // Event
+// ============================================================================
 #include "Event/MCTruth.h"
-
+// ============================================================================
 // CaloEvent
+// ============================================================================
 #include "Event/CaloDigit.h"
 #include "Event/MCCaloDigit.h"
-
-// local
-#include "CaloReCreateMCLinks.h"
-
-/** @file 
- *  Implementation file for class CaloReCreateMCLinks
- * 
- *  @date   2004-02-23 
- *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
- */
-
-static const  AlgFactory<CaloReCreateMCLinks>         s_factory ;
-const        IAlgFactory&CaloReCreateMCLinksFactory = s_factory ; 
+// ============================================================================
 
 // ============================================================================
-/** Standard constructor
- *  @see GaudiAlgorithm
- *  @see      Algorithm 
- *  @see      AlgFactory
- *  @see     IAlgFactory 
- *  @param name algorithm instance name 
- *  @param pSvc service locator
+/** @class CaloReCreateMCLinks CaloReCreateMCLinks.cpp
+ *
+ *  Simple algorithm to be invoked after 
+ *   CaloDigitFromBuffer to re-create the MC links 
+ *
+ *  @code 
+ *
+ *  // (re)create digits from Raw buffer 
+ *  ApplicationMgr.TopAlg += { "CaloDigitFromRaw"} ;
+ *  // (re)create Digits -> McDigits links 
+ *  ApplicationMgr.TopAlg += { "CaloReCreateMCLinks" };
+ *
+ *  @endcode 
+ *
+ *   The major properties of the algorithm:
+ *
+ *    - "Digits"
+ *       The default value is      CaloDigitLocation::Spd  +
+ *                                 CaloDigitLocation::Prs  + 
+ *                                 CaloDigitLocation::Ecal +
+ *                                 CaloDigitLocation::Hcal 
+ *       The list of addresses in TES for containters of CaloDigit
+ *   
+ *    - "MCDigits"
+ *       The default value is      MCCaloDigitLocation::Spd  +
+ *                                 MCCaloDigitLocation::Prs  + 
+ *                                 MCCaloDigitLocation::Ecal +
+ *                                 MCCaloDigitLocation::Hcal 
+ *       The list of addresses in TES for containters of MCCaloDigit
+ *  
+ *    - "IgnoreMode" 
+ *       The default value is                false 
+ *       The flag to indicate "ignore" mode. In this mode 
+ *       for missing MC-container an error message is generated.
+ *       This mode is needed to simplify the 
+ *       processing of Brunel for "old"/"new" data
+ *
+ *  @author Vanya BELYAEV Ivan.Belyaev@lapp.in2p3.fr
+ *  @date   2004-02-23
  */
 // ============================================================================
-CaloReCreateMCLinks::CaloReCreateMCLinks( const std::string& name , 
-                                          ISvcLocator*       pSvc ) 
-  : GaudiAlgorithm ( name , pSvc ) 
-  , m_raw ()
-  , m_mc  () 
-{
-  m_raw   .push_back (    CaloDigitLocation::Spd   ) ;
-  m_mc    .push_back (  MCCaloDigitLocation::Spd   ) ;
-  m_raw   .push_back (    CaloDigitLocation::Prs   ) ;
-  m_mc    .push_back (  MCCaloDigitLocation::Prs   ) ;
-  m_raw   .push_back (    CaloDigitLocation::Ecal  ) ;
-  m_mc    .push_back (  MCCaloDigitLocation::Ecal  ) ;
-  m_raw   .push_back (    CaloDigitLocation::Hcal  ) ;
-  m_mc    .push_back (  MCCaloDigitLocation::Hcal  ) ;
-  
-  declareProperty ( "Digits"   , m_raw ) ;
-  declareProperty ( "MCDigits" , m_mc  ) ;
+class CaloReCreateMCLinks : public GaudiAlgorithm 
+{ 
+  /// friend factory for algorithm instantiation
+  friend class AlgFactory<CaloReCreateMCLinks> ;
+public:
+  /** execution of the algorithm
+   *  @see IAlgorithm
+   *  @return status code
+   */
+  virtual StatusCode execute() ;
+protected:  
+  /** Standard constructor
+   *  @param name algorithm instance name 
+   *  @param pSvc pointer to service locator
+   */
+  CaloReCreateMCLinks 
+  ( const std::string& name , 
+    ISvcLocator*       pSvc ) 
+    : GaudiAlgorithm ( name , pSvc ) 
+    , m_raw    ()
+    , m_mc     () 
+    , m_ignore ( false  )
+  {
+    m_raw   .push_back (    CaloDigitLocation::Spd   ) ;
+    m_mc    .push_back (  MCCaloDigitLocation::Spd   ) ;
+    m_raw   .push_back (    CaloDigitLocation::Prs   ) ;
+    m_mc    .push_back (  MCCaloDigitLocation::Prs   ) ;
+    m_raw   .push_back (    CaloDigitLocation::Ecal  ) ;
+    m_mc    .push_back (  MCCaloDigitLocation::Ecal  ) ;
+    m_raw   .push_back (    CaloDigitLocation::Hcal  ) ;
+    m_mc    .push_back (  MCCaloDigitLocation::Hcal  ) ;
+    //
+    declareProperty ( "Digits"     , m_raw     ) ;
+    declareProperty ( "MCDigits"   , m_mc      ) ;
+    declareProperty ( "IgnoreMode" , m_ignore  ) ;
+  };
+  // destructor 
+  virtual ~CaloReCreateMCLinks( ){};
+private:
+  // default constructor  is disabled 
+  CaloReCreateMCLinks() ;
+  // copy constructor     is disabled 
+  CaloReCreateMCLinks
+  ( const CaloReCreateMCLinks& right ) ;
+  // assignement operator is disabled 
+  CaloReCreateMCLinks& operator=
+  ( const CaloReCreateMCLinks& right ) ;  
+private:
+  typedef std::vector<std::string> Addresses ;
+  Addresses m_raw    ;
+  Addresses m_mc     ;
+  bool      m_ignore ;
 };
 // ============================================================================
-/// Destructor
+
 // ============================================================================
-CaloReCreateMCLinks::~CaloReCreateMCLinks() {}; 
+/// anonymouse namesapce to hide local algorithm factory
+// ============================================================================
+namespace 
+{
+  // ==========================================================================
+  /** @var s_Factory
+   *  local concrete algorithm factory for instantiation of 
+   *  algorithm CaloReCreateMCLinks 
+   *  @see CaloReCreateMCLinks
+   *  @author Vanya BELYAEV Ivan.BElyaev@lapp.in2p3.fr
+   *  @date 2005-05-10
+   */
+  // ==========================================================================
+  const  AlgFactory<CaloReCreateMCLinks>         s_Factory ;
+  // ==========================================================================
+};
+// ============================================================================
+/** @var CaloReCreateMCLinksFactory
+ *  exported abstract algorithm factory for instantiation of 
+ *  algorithm CaloReCreateMCLinks 
+ *  @see CaloReCreateMCLinks
+ *  @author Vanya BELYAEV Ivan.BElyaev@lapp.in2p3.fr
+ *  @date 2005-05-10
+ */
+// ============================================================================
+const   IAlgFactory&CaloReCreateMCLinksFactory = s_Factory ; 
+// ============================================================================
 
 // ============================================================================
 /** execution of the algorithm
@@ -63,31 +156,54 @@ CaloReCreateMCLinks::~CaloReCreateMCLinks() {};
  *  @return status code
  */
 // ============================================================================
-StatusCode CaloReCreateMCLinks::execute() {
-  
-  if ( m_raw.size() != m_mc.size () ) { 
-    return Error(" 'Raw' and 'MC' containers in a contradiction " ) ; 
-  }
-  
-  for ( size_t index = 0 ; index < m_raw.size() ; ++index ) {
-    const std::string& addr1 = m_raw [index] ;
+StatusCode CaloReCreateMCLinks::execute() 
+{
+  //
+  const StatusCode OK = StatusCode::SUCCESS  ;
+  //
+  if ( m_raw.size() != m_mc.size () ) 
+  { return Error ( " 'Raw' and 'MC' containers in a contradiction " ) ; }
+  //
+  for ( size_t index = 0 ; index < m_raw.size() ; ++index ) 
+  {
+    // address for MC digits 
     const std::string& addr2 = m_mc  [index] ;
-    
-    if ( msgLevel( MSG::DEBUG ) ) { 
+    // "ignore" mode ?
+    if ( m_ignore && !exist<MCCaloDigits> ( addr2 ) ) 
+    { 
+      Error ( "(MC)container is not found '" + addr2 + "', skip" , OK ) ; 
+      continue ;                                        // CONTINUE 
+    }
+    //
+    // get MC digits from TES 
+    MCCaloDigits*  mc  = get<MCCaloDigits>  ( addr2 ) ;
+    //
+    // address of digits 
+    const std::string& addr1 = m_raw [index] ;
+    //
+    // get digits from TES 
+    CaloDigits*    raw = get<CaloDigits>    ( addr1 ) ;
+    //
+    if ( msgLevel ( MSG::DEBUG ) ) 
+    { 
       debug () << " Set MClinks between containers '" 
                << addr1 << "' and '"
                << addr2 << "'" << endreq ;
     }
-    
-    CaloDigits*    raw = get<CaloDigits>    ( m_raw [ index ] ) ;
-    MCCaloDigits*  mc  = get<MCCaloDigits>  ( m_mc  [ index ] ) ;
-    
+    //
+    // set MC link
     StatusCode sc = setMCTruth ( raw , mc ) ;
-    if( sc.isFailure() ) { 
+    if ( sc.isFailure() ) 
+    { 
       return Error ( " setMCTruth: unable to set MC-link between '" + 
                      addr1 + "' and '" + addr2 + "'" , sc ) ; 
     }
   }
-  return StatusCode::SUCCESS;
+  //
+  return StatusCode::SUCCESS ;
 };
+// ============================================================================
+
+// ============================================================================
+// The END 
 // ============================================================================
