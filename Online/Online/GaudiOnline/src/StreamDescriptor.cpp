@@ -6,7 +6,7 @@
 //
 //	Author     : M.Frank
 //====================================================================
-// $Id: StreamDescriptor.cpp,v 1.10 2005-05-11 16:15:53 frankb Exp $
+// $Id: StreamDescriptor.cpp,v 1.11 2005-05-11 17:48:33 frankb Exp $
 
 // Include files
 #include "GaudiOnline/StreamDescriptor.h"
@@ -20,18 +20,23 @@ namespace SFC {
 }
 #ifdef _WIN32
   #include <io.h>
+  #include <sys/stat.h>
+  static const int S_IRWXU = (S_IREAD|S_IWRITE);
 #else
   #include <ctype.h>
   #include <unistd.h>
-static const int _O_BINARY = 0;
-static const int _O_RDONLY = O_RDONLY;
-static const int _O_WRONLY = O_WRONLY;
-static const int _O_CREAT  = O_CREAT;
+  static const int O_BINARY = 0;
 #endif
 
 namespace Networking {
 #ifdef _WIN32
   #include "Winsock2.h"
+
+  typedef char SockOpt_t;
+  typedef int AddrLen_t;
+  //static const int SOCK_STREAM = _SOCK_STREAM;
+  //static const int IPPROTO_IP  = _IPPROTO_IP;
+
   struct __init__ {
     __init__()  {
       static bool g_first = true;
@@ -47,13 +52,13 @@ namespace Networking {
   };
   static __init__ g_init;
 #else
+  typedef int SockOpt_t;
+  typedef size_t AddrLen_t;
   #include <netinet/in.h>
   #include <arpa/inet.h>
   #include <netdb.h>
   int (*closesocket)(int) = ::close;
 #endif
-  static const int _SOCK_STREAM = SOCK_STREAM;
-  static const int _IPPROTO_IP  = _IPPROTO_IP;
 }
 namespace FileIO {
   using ::close;
@@ -240,7 +245,7 @@ GaudiOnline::StreamDescriptor::connect(const std::string& specs)  {
   switch(result.type) {
     case 'F':          //  DATA='file://C:/Data/myfile.dat'
       StreamDescriptor::getFileConnection(specs, file);
-      result.ioDesc     = FileIO::open(file.c_str(), _O_RDONLY|_O_BINARY );
+      result.ioDesc     = FileIO::open(file.c_str(), O_RDONLY|O_BINARY );
       result.m_write    = file_write;
       result.m_read     = file_read;
       result.m_read_len = file_read_len;
@@ -257,7 +262,7 @@ GaudiOnline::StreamDescriptor::connect(const std::string& specs)  {
         };
       */
       getInetConnection(specs, file, &sin.sin_addr, sin.sin_port);
-      result.ioDesc = Networking::socket(AF_INET, Networking::_SOCK_STREAM, Networking::_IPPROTO_IP);
+      result.ioDesc = Networking::socket(AF_INET, SOCK_STREAM, IPPROTO_IP);
       if ( result.ioDesc > 0 )   {        
         sin.sin_family      = AF_INET;
         ::memset(sin.sin_zero,0,sizeof(sin.sin_zero));
@@ -302,11 +307,7 @@ GaudiOnline::StreamDescriptor::bind(const std::string& specs)  {
   switch(result.type) {
     case 'F':          //  DATA='file://C:/Data/myfile.dat'
       StreamDescriptor::getFileConnection(specs, file);
-#ifdef _WIN32
-      result.ioDesc     = FileIO::open(file.c_str(), _O_WRONLY|_O_BINARY|_O_CREAT );
-#else
-      result.ioDesc     = FileIO::open(file.c_str(), _O_WRONLY|_O_BINARY|_O_CREAT, S_IRWXU );
-#endif
+      result.ioDesc     = FileIO::open(file.c_str(), O_WRONLY|O_BINARY|O_CREAT, S_IRWXU );
       result.m_write    = file_write;
       result.m_read     = file_read;
       result.m_read_len = file_read_len;
@@ -314,11 +315,11 @@ GaudiOnline::StreamDescriptor::bind(const std::string& specs)  {
       result.m_send_decision = file_send_decision;
       break;
     case 'I':          //  DATA='ip://137.138.142.82:8000'
-      result.ioDesc = Networking::socket(AF_INET,Networking::_SOCK_STREAM,Networking::_IPPROTO_IP);
+      result.ioDesc = Networking::socket(AF_INET,SOCK_STREAM,IPPROTO_IP);
       if ( result.ioDesc > 0 )   {
         int opt = 1;
         StreamDescriptor::getInetConnection(specs, file, &sin.sin_addr, sin.sin_port);
-        Networking::setsockopt(result.ioDesc,SOL_SOCKET,SO_REUSEADDR,&opt,sizeof(opt));
+        Networking::setsockopt(result.ioDesc,SOL_SOCKET,SO_REUSEADDR,(Networking::SockOpt_t*)&opt,sizeof(opt));
         sin.sin_family = AF_INET;
         if ( Networking::bind(result.ioDesc, (Networking::sockaddr*)&sin, sizeof(sin)) == 0) {
           if ( Networking::listen(result.ioDesc, SOMAXCONN) == 0 )  {
@@ -376,18 +377,14 @@ GaudiOnline::StreamDescriptor::accept(const Access& specs)  {
       break;
     case 'I':
       if ( specs.ioDesc > 0 )  {
-#ifdef _WIN32
-        int len;
-#else
-        size_t len;
-#endif
         Networking::sockaddr sin;
-        ::memset(&sin,0,sizeof(sin));
+        Networking::AddrLen_t len = sizeof(sin);
+        ::memset(&sin,0,len);
         result.ioDesc = Networking::accept(specs.ioDesc, &sin, &len);
         if ( result.ioDesc > 0 ) {
           int opt = 1;
-	  Networking::setsockopt(result.ioDesc,SOL_SOCKET,SO_REUSEADDR,&opt,sizeof(opt));
-	}
+          Networking::setsockopt(result.ioDesc,SOL_SOCKET,SO_REUSEADDR,(Networking::SockOpt_t*)&opt,sizeof(opt));
+	      }
       }
       break;
     case 'S':

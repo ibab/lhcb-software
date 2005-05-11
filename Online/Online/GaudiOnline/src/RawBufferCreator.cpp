@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/GaudiOnline/src/RawBufferCreator.cpp,v 1.4 2005-05-11 07:33:00 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/GaudiOnline/src/RawBufferCreator.cpp,v 1.5 2005-05-11 17:48:33 frankb Exp $
 //	====================================================================
 //  RawBufferCreator.cpp
 //	--------------------------------------------------------------------
@@ -15,7 +15,6 @@
 
 #include "GaudiKernel/MsgStream.h"
 #include "GaudiKernel/DataObject.h"
-#include "GaudiKernel/SmartDataPtr.h"
 #include "GaudiOnline/OnlineAddress.h"
 #include "GaudiOnline/StreamDescriptor.h"
 #include "Event/RawEvent.h"
@@ -109,8 +108,8 @@ public:
         GaudiOnline::Address* addr = dynamic_cast<GaudiOnline::Address*>(pAddr);
         const GaudiOnline::StreamDescriptor* dsc = addr->descriptor();
         std::auto_ptr<DataObject> obj(new DataObject());
-	std::auto_ptr<DataObject> raw;
-	std::string loc;
+        std::auto_ptr<DataObject> raw;
+        std::string loc;
         if ( dataProvider()->registerObject("/Event/DAQ", obj.get()).isSuccess() )  {
           obj.release();
           switch( dsc->type() ) {
@@ -121,14 +120,14 @@ public:
               loc = RawEventLocation::Default;
             }
             break;
-	    case GaudiOnline::StreamDescriptor::L1_BUFFER: {
+          case GaudiOnline::StreamDescriptor::L1_BUFFER: {
               int len = dsc->length()/sizeof(l1_int);
               if ( (dsc->length()%sizeof(l1_int)) != 0 ) len++;
               raw = std::auto_ptr<DataObject>(new L1Event((l1_int*)dsc->data(),len));
               loc = L1EventLocation::Default;
-	    }
+            }
             break;
-            default: {
+          default: {
               MsgStream err(msgSvc(), "OnlineConverter");
               err << MSG::ERROR << "Unknown data type:" << dsc->type() << endmsg;
             }
