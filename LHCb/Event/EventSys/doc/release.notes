@@ -1,8 +1,9 @@
 package EventSys
 package manager: Marco Cattaneo
 
-!======================== EventSys v20r4 2005-05-08 ========================
-! 2005-05-08 - Marco Cattaneo
+!======================== EventSys v20r4 2005-05-10 ========================
+! 2005-05-10 - Marco Cattaneo
+ - Add Rdst v1r0
  - Use LinkerEvent v1r8, DAQEvent v5r1, EventAssoc v1r5
 
 !======================== EventSys v20r3 2005-04-21 ========================
