@@ -1,4 +1,4 @@
-// $Id: PhysDesktop.cpp,v 1.16 2005-05-02 15:08:31 pkoppenb Exp $
+// $Id: PhysDesktop.cpp,v 1.17 2005-05-11 16:08:04 pkoppenb Exp $
 // Include files 
 
 // from Gaudi
@@ -32,6 +32,49 @@
 static const  ToolFactory<PhysDesktop>           s_factory ;
 const        IToolFactory& PhysDesktopFactory = s_factory ; 
 
+/// anonymous namespace to make functions local
+namespace 
+{
+  typedef std::pair<bool,std::string>  _StringPair ;
+  
+  template <class TYPE>
+  inline _StringPair _getNameFromI ( IInterface* aif ) 
+  {
+    if ( 0 == aif ) { return _StringPair( false ,"NULL" ) ; }
+    // try to use dynamic_cast first 
+    TYPE* cmp = dynamic_cast<TYPE*> ( aif ) ;
+    if ( 0 != cmp ) { return _StringPair( true , cmp->name() ) ; }
+    // else try to extract the interface using "queryInterface"
+    void *tmp  = 0 ;
+    StatusCode sc = aif->queryInterface( TYPE::interfaceID() , &tmp ) ;
+    if (  sc.isSuccess() && 0 != tmp ) 
+    { 
+      cmp = static_cast<TYPE*>( tmp ) ;
+      _StringPair res = _StringPair( true , cmp->name() ) ; 
+      cmp->release() ; // NB: queryInterface increment the references
+      return res ;
+    }
+    return _StringPair( false , "" ) ; 
+  } ;
+  
+  std::string nameFromInterface 
+  ( IInterface* aif ) 
+  {
+    if ( 0 == aif ) { return "NULL" ; }
+    // try IAlgorithm
+    _StringPair alg = _getNameFromI<IAlgorithm> ( aif ) ;
+    if ( alg.first ) { return alg.second ; }
+    // try IService
+    _StringPair svc = _getNameFromI<IService>   ( aif ) ;
+    if ( svc.first ) { return svc.second ; }
+    // try IAlgTool 
+    _StringPair iat = _getNameFromI<IAlgTool>   ( aif ) ;
+    if ( iat.first ) { return iat.second ; }
+    // use type as name 
+    return System::typeinfoName( typeid( *aif ) ) ;
+  };
+};
+
 //=============================================================================
 // Standard constructor, initializes variables
 //=============================================================================
@@ -39,9 +82,11 @@ PhysDesktop::PhysDesktop( const std::string& type,
                           const std::string& name,
                           const IInterface* parent )
   : GaudiTool ( type, name , parent )
-  , m_pMaker(0)
-  , m_locationWarned(false)
-  , m_PVLocator(0){
+  , m_pMaker         (0)
+  , m_outputLocn     () 
+  , m_locationWarned (false)
+  , m_PVLocator      (0)
+{
   
   // Declaring implemented interfaces
   declareInterface<IPhysDesktop>(this);
@@ -61,17 +106,28 @@ PhysDesktop::PhysDesktop( const std::string& type,
   //  REMOVED TO KILL COMPATIBILITY WITH OLD INPUT FILES
   //  declareProperty( "OutputLocation", m_outputLocn = "/Event/Phys/User");
   
-  const IInterface* itemp = this->parent();
-  const IAlgorithm* ialg = dynamic_cast<const IAlgorithm*>(itemp);
-  if( !ialg ) {
-    StatusCode scExc;
-    throw GaudiException("Parent of PhysDesktop is not an algorithm",
-                         this->name(),scExc);
-  }
+  IInterface* p = const_cast<IInterface*>( parent ) ;
+  if ( 0 != p ) 
+  {
+    // set the default value using parent's name  
+    m_outputLocn = "/Event/Phys/" + nameFromInterface ( p ) ;
+    // try to overwrite the name from  parents's "OutputLocation" property:
+    void* tmp = 0 ;
+    StatusCode sc = p->queryInterface ( IProperty::interfaceID() , &tmp ) ;
+    if ( sc.isSuccess() && 0 != tmp ) 
+    {
+      IProperty* pp = static_cast<IProperty*>( tmp ) ;
+      StringProperty output = StringProperty ( "OutputLocation" , "NOTDEDINED" ) ;
+      sc = pp->getProperty( &output ) ;
+      if ( sc.isSuccess() ) { m_outputLocn = output.value() ; }   // NB !!
+      // release the used interface 
+      pp->release() ;
+    }
+  };
+  // check that output location is set to *SOME* value 
+  Assert ( !m_outputLocn.empty() , "OutputLocation is not set" );
   
-  m_outputLocn = "/Event/Phys/"+ialg->name();
-  
-}
+} ;
 
 //=============================================================================
 // Initialize method, retrieve necessary services 
