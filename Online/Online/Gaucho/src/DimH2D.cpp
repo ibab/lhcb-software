@@ -1,4 +1,4 @@
-//$Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/Gaucho/src/DimH2D.cpp,v 1.1 2005-04-07 14:44:30 evh Exp $
+//$Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/Gaucho/src/DimH2D.cpp,v 1.2 2005-05-11 14:26:55 evh Exp $
 
 #include "AIDA/IAxis.h"
 #include "AIDA/IHistogram2D.h"
@@ -27,8 +27,8 @@ DimH2D::DimH2D(std::string h2dname, const IHistogram2D* InfoVar)
   int i,j;
   for (i=0; i<m_nbinsX; ++i) {
     for (j=0; j<m_nbinsY; ++j) {
-      m_entries[m_nbinsX*i+j]=0.0; 
-      m_errors [m_nbinsX*i+j]=0.0;
+      m_entries[m_nbinsY*i+j]=0.0; 
+      m_errors [m_nbinsY*i+j]=0.0;
     }
   }
 }
@@ -57,8 +57,9 @@ void DimH2D::rpcHandler() {
 //                std::cout <<  "DIMH2D received command 2: request for histo bin contents transfer" << std::endl;
                 for (i=0; i<m_nbinsX; ++i) {
                   for (j=0; j<m_nbinsY; ++j) {
-                    m_entries[m_nbinsX*i+j]= m_h2d->binEntries(i,j);
-//                    std::cout << "DimH2D " << i << " " << j << " " << m_nbinsX*i+j << " " << m_entries[m_nbinsX*i+j] << std::endl;
+                    m_entries[m_nbinsY*i+j]= m_h2d->binEntries(i,j);
+//                    std::cout << "DimH2D:" << i << " " << j << " " << m_h2d->binEntries(i,j) << " " 
+//                    << m_nbinsY*i+j << " " << m_entries[m_nbinsY*i+j] << std::endl;
                   }
                 }
                 total=m_nbinsX*m_nbinsY;
@@ -69,7 +70,7 @@ void DimH2D::rpcHandler() {
 //                std::cout <<  "DIMH2D received command 3: request for histo bin errors transfer" << std::endl;
                 for (i=0; i<m_nbinsX; ++i) {
                   for (j=0; j<m_nbinsY; ++j) {
-                    m_errors[m_nbinsX*i+j]= m_h2d->binError(i,j);
+                    m_errors[m_nbinsY*i+j]= m_h2d->binError(i,j);
                   }
                 }
                 total=m_nbinsX*m_nbinsY;
