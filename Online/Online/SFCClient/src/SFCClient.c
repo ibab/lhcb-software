@@ -13,6 +13,39 @@
 #define p_go  0x07
 #define MTU  4080
 #define MAX_EVENT  180000
+
+#ifdef _WIN32
+#include <Winsock2.h>
+#include <string.h>
+
+#define PF_PACKET AF_INET
+#define PACKET_HOST 0
+#define ioctl ioctlsocket
+#define SIOCGIFINDEX 0
+#define SIOCGIFHWADDR 0
+#define IFNAMSIZ 64
+#define bzero(a,b) memset(a,0,b)
+
+typedef unsigned __int32 u_int32_t;
+struct iovec  {
+  __int32 iov_len;
+  void*   iov_base;
+};
+struct ifreq  {
+	char ifr_name[IFNAMSIZ];
+  __int32 ifr_ifindex;
+};
+struct sockaddr_ll  {
+  int sll_ifindex;
+  int sll_halen;
+  int sll_family;
+  int sll_protocol;
+  int sll_pkttype;
+  unsigned char sll_addr[8];
+};
+int ether_aton(char* c)  {  return 0; }
+
+#else
 #include  <net/if.h>
 #include  <sys/uio.h>
 #include  <string.h>
@@ -21,6 +54,7 @@
 #include  <netinet/in.h> 
 #include  <sys/socket.h>
 #include  <netpacket/packet.h>
+#endif
 #define bug  if(1) printf
 #define info  if(1) printf
 #define debug  if(1) printf
@@ -111,7 +145,7 @@ int sfcc_register(const char *eth_string, int myport, int level)
 {
         if(level!=SFCC_L1 && level!=SFCC_HLT) return -SFCC_ERR_PARAM;
         debug("sfcc_lib:connecting to host %s for %s...\n",eth_string,level_name[level]);
-	sfc_string = eth_string;
+	sfc_string = (char*)eth_string;
 	type = protocol[level];
 	port = myport;
 	dev_string = "eth3";
