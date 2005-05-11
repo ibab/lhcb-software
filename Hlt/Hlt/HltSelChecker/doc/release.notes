@@ -4,6 +4,10 @@
 ! Purpose     : High-Level Trigger Exclusive Selections - Checking 
 !-----------------------------------------------------------------------------
 
+! 2005-05-11 - P. Koppenburg
+  - src/CheckHltGeneric.cpp
+    . Removed. Replaced by HltFilter in HltSelections.
+
 ! 2005-05-10 - P. Koppenburg
   - src/TestHltScore.{cpp,h}
     . New algorithm that checks the HltScore class

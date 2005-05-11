@@ -48,7 +48,7 @@ ApplicationMgr.DLLs += {"HltSelChecker"};
 // EventSelector.Input   = {};
 // #include "$HLTSELECTIONSROOT/options/L0L1TDR-Bs2JpsiPhi.opts"
 
-ApplicationMgr.EvtMax    = 500 ;
+ApplicationMgr.EvtMax    = -1 ;
 EventSelector.FirstEvent = 1 ;
 
 MessageSvc.Format = "% F%50W%S%7W%R%T %0W%M";
@@ -86,10 +86,5 @@ DaVinci.OutputLevel = 2 ;
 // uncomment to get HLT generic
 #include "$HLTGENERICROOT/options/HltGeneric.opts"
 HltGenericDecision.Filter = true ; // false is default
-
-HLTExclusiveSelectionsFlag.OutputLevel = 4 ;
-HLTDstarFlag.OutputLevel = 4 ;
-HLTJpsi2MuMuFlag.OutputLevel = 4 ;
-HLTHotMuonFlag.OutputLevel = 4 ;
 
 HltDecision.OutputLevel = 3 ;

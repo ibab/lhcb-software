@@ -2,9 +2,6 @@
 
 HLTCorrelations.Members += { "SelResultCorrelations/HLTCorr" };
 HLTCorr.Algorithms = { "CheckHLTGeneric"	
-			, "HLT2kHzFlag"
-                        , "HLTExclusiveSelectionsFlag"
-			, "HLTFilterDstar"	
                         , "HLTFilterB2HH"
                         , "HLTFilterBd2D0Kstar"
                         , "HLTFilterBd2DstarPi"
