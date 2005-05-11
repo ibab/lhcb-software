@@ -1,4 +1,4 @@
-//$Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/Gaucho/src/DimPropServer.cpp,v 1.5 2005-04-14 14:31:42 evh Exp $
+//$Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/Gaucho/src/DimPropServer.cpp,v 1.6 2005-05-11 10:30:50 evh Exp $
 
 #include "GaudiKernel/StatusCode.h"
 #include "GaudiKernel/MsgStream.h"
@@ -26,6 +26,7 @@
 //#include "AIDA/IHistogram1D.h"
 #include "GaudiKernel/IMonitorSvc.h"
 #include "AIDA/IAxis.h"
+#include <ctype.h>
 
 #ifdef WIN32
 namespace wins {
@@ -217,24 +218,33 @@ void DimPropServer::rpcHandler() {
 	     log << MSG::INFO << "Found leaves. "  << endreq;
              for ( Leaves::const_iterator i=leaves.begin(); i != leaves.end(); i++ )   {
                const std::string& id = (*i)->identifier();
-               log << MSG::INFO << "Histogram found with id " << id << endreq;
-	       	     	       		   
-	       strcpy(ptr,id.c_str());
-	       char tmp[100];
-	       strcpy(tmp,id.c_str());
-	       ptr+=strlen(tmp)+1;
-	       size+=strlen(tmp)+1; 
+               log << MSG::INFO << "Histogram found with id " << id << " char 6 "<< id.substr(6,1)	       <<endreq;
+	       char ch=id[6];
+	       if (isdigit(ch))
+	       {	     	       		   
+	          strcpy(ptr,id.c_str());
+	          char tmp[100];
+	          strcpy(tmp,id.c_str());
+	          ptr+=strlen(tmp)+1;
+	          size+=strlen(tmp)+1; 
 	       
-	       //add histogram title	
-	       myhisto=0;
-	       sc=EDS->retrieveObject(id,mydataobject);
-	       myhisto=dynamic_cast<AIDA::IHistogram*>(mydataobject);
-	       log << MSG::INFO << " Histogram found with title: "<< myhisto->title()<<endreq;  
-	       strcpy(ptr,myhisto->title().c_str());
-	       char tmp1[100];
-	       strcpy(tmp1,myhisto->title().c_str());
-	       ptr+=strlen(tmp1)+1;
-	       size+=strlen(tmp1)+1;		   		   
+	          //add histogram title	
+	          myhisto=0;       
+	          sc=EDS->retrieveObject(id,mydataobject);
+	          if (sc.isSuccess()) {
+	             myhisto=dynamic_cast<AIDA::IHistogram*>(mydataobject);
+	             log << MSG::INFO << " Histogram found with title: "<< myhisto->title()<<endreq;  
+	             strcpy(ptr,myhisto->title().c_str());
+	             char tmp1[100];
+	             strcpy(tmp1,myhisto->title().c_str());
+	             ptr+=strlen(tmp1)+1;
+	             size+=strlen(tmp1)+1;	
+	          }
+	          else 
+	             {
+	             log << MSG::INFO << "Could not retrieve object from TES " << endreq;
+	          }
+	       }	   		   
              }
 	     setData(nextdata,size);
            }
