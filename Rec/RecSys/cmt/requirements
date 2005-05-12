@@ -36,7 +36,7 @@ use TrgMonitor		v4r0	Trg
 use TrgMuon		v1r2p1	Trg
 use TrgPrimVertex	v4r0p1	Trg
 use TrgVelo             v7r3    Trg
-use TrgVeloTT		v6r1	Trg
+use TrgVeloTT		v7r0	Trg
 
 # L1 reconstruction and decision
 use L1Reco		v7r0	Trg
