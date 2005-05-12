@@ -1,4 +1,4 @@
-// $Id: CheckPV.cpp,v 1.4 2005-01-06 10:37:47 pkoppenb Exp $
+// $Id: CheckPV.cpp,v 1.5 2005-05-12 07:14:53 pkoppenb Exp $
 // Include files 
 
 // from Gaudi
@@ -84,7 +84,7 @@ StatusCode CheckPV::execute() {
     return StatusCode::FAILURE ;
   }
   int n =  PV->size() ;
-  debug() << "There are " << n << " primary vertices." << endreq ;
+  verbose() << "There are " << n << " primary vertices." << endreq ;
   m_nPV = m_nPV+n ;
   ++m_nEvent ;
 
@@ -94,8 +94,8 @@ StatusCode CheckPV::execute() {
   }
 
   setFilterPassed(ok);
-  if (ok) info() << "Event accepted because there are " << n << " primary vertices." << endreq ;
-  else    info() << "Event rejected because there are " << n << " primary vertices." << endreq ; 
+  if (ok) debug() << "Event accepted because there are " << n << " primary vertices." << endreq ;
+  else    debug() << "Event rejected because there are " << n << " primary vertices." << endreq ; 
 
   return StatusCode::SUCCESS;
 };

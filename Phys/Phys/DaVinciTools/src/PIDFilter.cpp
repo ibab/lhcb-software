@@ -1,4 +1,4 @@
-// $Id: PIDFilter.cpp,v 1.1 2005-02-15 07:31:50 pkoppenb Exp $
+// $Id: PIDFilter.cpp,v 1.2 2005-05-12 07:17:08 pkoppenb Exp $
 // Include files 
 
 // from Gaudi
@@ -103,7 +103,7 @@ StatusCode PIDFilter::execute() {
   }
   // write output
   bool m_found = (!pc.empty()) ;  
-  if ( m_found ) info() << "Saved " << pc.size() << " from " << pv.size() 
+  if ( m_found ) debug() << "Saved " << pc.size() << " from " << pv.size() 
            << " candidates" << endmsg;
   else debug() << "Writing nothing to output" << endmsg;
 
