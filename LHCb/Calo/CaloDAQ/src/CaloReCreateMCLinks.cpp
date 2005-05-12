@@ -1,8 +1,11 @@
-// $Id: CaloReCreateMCLinks.cpp,v 1.2 2005-05-11 18:04:09 ibelyaev Exp $
+// $Id: CaloReCreateMCLinks.cpp,v 1.3 2005-05-12 06:44:32 cattanem Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.2 $
+// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.3 $
 // ============================================================================
-// $Log: not supported by cvs2svn $ 
+// $Log: not supported by cvs2svn $
+// Revision 1.2  2005/05/11 18:04:09  ibelyaev
+//  add new property 'IgnoreMode' for CaloReCreateMCLinks
+// 
 // ============================================================================
 // Include 
 // ============================================================================
@@ -171,7 +174,7 @@ StatusCode CaloReCreateMCLinks::execute()
     // "ignore" mode ?
     if ( m_ignore && !exist<MCCaloDigits> ( addr2 ) ) 
     { 
-      Error ( "(MC)container is not found '" + addr2 + "', skip" , OK ) ; 
+      Warning ( "(MC)container is not found '" + addr2 + "', skip" , OK, 0 ) ; 
       continue ;                                        // CONTINUE 
     }
     //
