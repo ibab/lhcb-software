@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.250 2005-04-15 08:21:13 pkoppenb Exp $
+# $Id: requirements,v 1.251 2005-05-12 08:22:49 pkoppenb Exp $
 # Created    : 07/02/2002
 # Maintainer : P. Koppenburg
 #
@@ -32,12 +32,14 @@ use HbookCnv            v*
 use RootHistCnv         v*
 
 #-- Database
-use XmlDDDB             v22r3   Det
-use FieldMap            v4r5
-use ParamFiles          v3r8    -no_auto_imports
+use XmlDDDB             v*     Det
+use FieldMap            v*
+use ParamFiles          v*    -no_auto_imports
 
 # TMP:
 use RichTools           v1r2p2 Rich
+
+use LHCb                        v*  
 
 #=======================================================
 # DaVinciSys v12r10
@@ -52,16 +54,16 @@ use  L0MuonTrigger 		v2r3p1   L0
 use  L0mConf            	v2r2p3   L0
 
 #-- L1 Trigger libraries 
-use TrgSys                      v1r5     Trg
+use TrgSys                      v1r6     Trg
 
 #-- RICH Trigger libraries 
 use RichHLTSys                  v1r0p1   Rich
 use RichRecQC                   v1r10    Rich
 
 #-- HLT trigger
-use HltGeneric                  v2r3     Hlt
-use HltSelections               v3r0     Hlt
-use HltSelChecker               v3r0     Hlt
+use HltGeneric                  v2r4     Hlt
+use HltSelections               v3r1     Hlt
+use HltSelChecker               v3r1     Hlt
 
 # Enable neutral ProtoParticles production and CaloPIDs
 use  CaloPIDs           	v2r4     Calo 
@@ -82,11 +84,11 @@ use  LoKiHlt             	v2r1     Tools
 use  LoKiGen             	v1r0     Tools  
 
 # Reconstruction tools 
-use  Utilities          	v1r14    Tools
+use  Utilities          	v2r0     Tools
 
 # Physics packages
 use  CommonParticles    	v1r5p3   Phys
-use  DaVinciFilter      	v1r7     Phys
+use  DaVinciFilter      	v1r8     Phys
 use  DaVinciKernel      	v3r3     Phys
 use  DaVinciTools       	v11r8    Phys
 use  FlavourTagging     	v5r5     Phys
@@ -94,8 +96,8 @@ use  Ks2PiPiSel         	v1r4p1   Phys
 use  ParticleMaker      	v1r4p1   Phys
 use  PhysSelections		v6r12    Phys
 use  DaVinciTransporter 	v2r0p1   Phys
-use  VertexFit			v1r5p1   Phys
-use  Tampering                  v1r0     Phys
+use  VertexFit			v1r6     Phys
+use  Tampering                  v1r1     Phys
 
 # Physics MC packages
 use  DaVinciAssociators 	v5r3p1   Phys

@@ -2,6 +2,7 @@
  * 
  *  This file executes reconstruction of particles
  *  and writes them to a mini DST. 
+ *  Make sure to uncomment the DstWriter.
  *  Use options/DVReadMiniDst.opts to read them back
  *
  *  @author P. Koppenburg
@@ -16,30 +17,47 @@
 #pragma print on
 
 //--------------------------------------------------------------
-// Re-run L0 and L1 Trigger with DC04 tuning 
+// Re-run L0 Trigger with DC04 tuning 
 #include "$DAVINCIROOT/options/L0.opts"  
-//#include "$DAVINCIROOT/options/L0Checking.opts"  
+//--------------------------------------------------------------
+// Run L1 Trigger
 #include "$TRGSYSROOT/options/L1.opts"
-ApplicationMgr.TopAlg += { "GaudiSequencer/L0L1Seq" };
-L0L1Seq.Members = { "TrgL1Filter", "PrintHeader/PassedL1" };
+//--------------------------------------------------------------
+// Run HLT
+#include "$HLTGENERICROOT/options/HltGeneric.opts"
+#include "$HLTSELECTIONSROOT/options/HLTSelections.opts"
+//--------------------------------------------------------------
+ApplicationMgr.TopAlg += { "GaudiSequencer/TriggerSeq" };
+TriggerSeq.Members = { "TrgL1Filter", "PrintHeader/PassedL1" };
+TriggerSeq.Members += { "HltFilter", "PrintHeader/PassedHlt" }; // comment to ignore HLT
 PassedL1.OutputLevel = 2 ;
+PassedHlt.OutputLevel = 2 ;
 
+//==============================================================
+// CHECKING
 //--------------------------------------------------------------
-// HLT generic filtering. Uncomment three lines:
-//#include "$HLTGENERICROOT/options/HltGeneric.opts"
-//HltGenericSeq.Members += { "PrintHeader/PassedHlt" };
-//PassedHlt.OutputLevel = 2 ;
+// Checking of L0
+//#include "$DAVINCIROOT/options/L0Checking.opts" 
+//--------------------------------------------------------------
+// Checking of L1 and/or HLT reconstruction:
+//#include "$HLTSELCHECKERROOT/options/TrgChecking.opts"  
+//--------------------------------------------------------------
+// Checking of HLT selections (correlations, plots, timing, test):
+// #include "$HLTSELCHECKERROOT/options/Correlations.opts"
+// #include "$HLTSELCHECKERROOT/options/Plots.opts"
+// #include "$HLTSELCHECKERROOT/options/MeasureTimes.opts"
+// #include "$HLTSELCHECKERROOT/options/TestHltScore.opts"
+//--------------------------------------------------------------
 
-//--------------------------------------------------------------
-// Checking of L1 and/or HLT:
-//#include "$TRGSYSROOT/options/TrgChecking.opts"  
-//--------------------------------------------------------------
+//==============================================================
+// OUTPUT: Uncomment following line to write out DST
+//==============================================================
+//ApplicationMgr.OutStream += { "DstWriter" } ;
 #include "$DAVINCIROOT/options/DstContent.opts"
-DstWriter.RequireAlgs  = { "L0L1Seq" } ;
+DstWriter.RequireAlgs  = { "TriggerSeq" } ;
 DstWriter.Preload  = false ;
 DstWriter.Output = "DATAFILE='L0L1Accepted.dst' TYP='POOL_ROOTTREE' OPT='RECREATE'" ;
 //DstWriter.OutputLevel = 1 ;
-ApplicationMgr.OutStream += { "DstWriter" } ;
 //--------------------------------------------------------------
 // Set output level thresholds (2=DEBUG, 3=INFO, 4=WARNING, 5=ERROR, 6=FATAL )
 MessageSvc.OutputLevel                  = 3;
@@ -53,5 +71,5 @@ MessageSvc.Format = "% F%40W%S%7W%R%T %0W%M";
 EventSelector.FirstEvent = 1;
 
 #include "$DAVINCIROOT/options/DaVinciTestData.opts"
-ApplicationMgr.EvtMax    = 1000 ;
+ApplicationMgr.EvtMax    = 10000 ;
 EventSelector.PrintFreq  = 1;
