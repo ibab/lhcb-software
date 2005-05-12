@@ -3,11 +3,6 @@
 /// Standard constructor
 DVAlgorithm::DVAlgorithm( const std::string& name, ISvcLocator* pSvcLocator ) 
   : GaudiTupleAlg ( name , pSvcLocator )
-  , m_typeVertexFit("UnconstVertexFitter")
-  , m_typeLagFit("LagrangeMassVertexFitter")
-  , m_decayDescriptor("not specified")
-  , m_avoidSelResult(false)
-  , m_printSelResult(true)
   , m_pDesktop(0)
   , m_pLagFit(0)
   , m_pVertexFit(0)
@@ -24,11 +19,11 @@ DVAlgorithm::DVAlgorithm( const std::string& name, ISvcLocator* pSvcLocator )
   , m_algorithmID(-1)
 {  
     
-  declareProperty("VertexFitter", m_typeVertexFit);
-  declareProperty("MassVertexFitter",m_typeLagFit);
-  declareProperty("DecayDescriptor", m_decayDescriptor);
-  declareProperty("AvoidSelResult", m_avoidSelResult);
-  declareProperty("PrintSelResult", m_printSelResult);
+  declareProperty("VertexFitter", m_typeVertexFit = "UnconstVertexFitter");
+  declareProperty("MassVertexFitter",m_typeLagFit = "LagrangeMassVertexFitter");
+  declareProperty("DecayDescriptor", m_decayDescriptor = "not specified");
+  declareProperty("AvoidSelResult", m_avoidSelResult = false );
+  declareProperty("PrintSelResult", m_printSelResult = false );
 
 };
 //=============================================================================
@@ -60,16 +55,16 @@ StatusCode DVAlgorithm::sysInitialize () {
   sc = this->Algorithm::sysInitialize();
   if (!sc ) return sc;
 
+  if (m_decayDescriptor == "not specified"){
+    warning() << "Decay Descriptor string not specified" << endreq;
+  } else{
+    info() << "Decay Descriptor: " << m_decayDescriptor << endreq;
+  }
+
   // initialize GaudiTupleAlg base class then
   sc = this->GaudiTupleAlg::initialize();  
   if (!sc ) return sc;
 
-  if (m_decayDescriptor == "not specified"){
-    warning() << "Decay Descriptor string not specified" << endreq;
-  }
-  else{
-    info() << "Decay Descriptor: " << m_decayDescriptor << endreq;
-  }
   debug() << "End of DVAlgorithm::sysInitialize with " << sc << endreq;
 
   return sc;
