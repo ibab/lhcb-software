@@ -36,7 +36,7 @@ ApplicationMgr.DLLs += {"HltSelChecker"};
 #include "$HLTSELCHECKERROOT/options/TestHltScore.opts"
 //==============================================================================
 // PK's stripping of MB passing L0 and L1:
-#include "$HLTSELECTIONSROOT/options/L0L1-MB.opts"
+//#include "$HLTSELECTIONSROOT/options/L0L1-MB.opts"
 //==============================================================================
 // PK's stripping of signal passing L0, L1 and TDR:
 // #include "$HLTSELECTIONSROOT/options/L0L1TDR-AllSignals.opts"
@@ -45,10 +45,10 @@ ApplicationMgr.DLLs += {"HltSelChecker"};
 // Warning: Files are added up to EventSelector
 // in these options
 // Hence: re-initalize event selector
-// EventSelector.Input   = {};
-// #include "$HLTSELECTIONSROOT/options/L0L1TDR-Bs2JpsiPhi.opts"
+EventSelector.Input   = {};
+#include "$HLTSELECTIONSROOT/options/L0L1TDR-Bs2JpsiPhi.opts"
 
-ApplicationMgr.EvtMax    = -1 ;
+ApplicationMgr.EvtMax    = 100 ;
 EventSelector.FirstEvent = 1 ;
 
 MessageSvc.Format = "% F%50W%S%7W%R%T %0W%M";
@@ -81,10 +81,5 @@ DaVinci.OutputLevel = 2 ;
 // K-ID
 //#include "$HLTSELECTIONSROOT/options/UseRich.opts"
 //TrgParticleMaker.KaonDLLCut = 15 ; // default
-
-//----------------------------------------------------------
-// uncomment to get HLT generic
-#include "$HLTGENERICROOT/options/HltGeneric.opts"
-HltGenericDecision.Filter = true ; // false is default
 
 HltDecision.OutputLevel = 3 ;
