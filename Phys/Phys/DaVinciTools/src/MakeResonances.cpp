@@ -1,4 +1,4 @@
-// $Id: MakeResonances.cpp,v 1.4 2005-05-02 11:57:26 pkoppenb Exp $
+// $Id: MakeResonances.cpp,v 1.5 2005-05-12 11:54:04 pkoppenb Exp $
 // Include files 
 
 #include <algorithm>
@@ -37,6 +37,8 @@ MakeResonances::MakeResonances( const std::string& name,
   ,  m_daughterPlots()
   ,  m_motherPlots()
   ,  m_checkOverlap()
+  ,  m_decayDescriptors()
+  ,  m_decays()
 {
   declareProperty( "DaughterFilterName" , m_daughterFilterName = "DaughterFilter" );
   declareProperty( "MotherFilterName" , m_motherFilterName = "MotherFilter");
@@ -129,11 +131,13 @@ StatusCode MakeResonances::initialize() {
 StatusCode MakeResonances::createDecays(){
   // get string decoder
   IDecodeSimpleDecayString* dsds = tool<IDecodeSimpleDecayString>("DecodeSimpleDecayString",this);
-  if ( !dsds ) return StatusCode::FAILURE ;  
+  if ( !dsds ) return StatusCode::FAILURE ;
   
   if ( m_decayDescriptors.empty() ){
+    debug() << "No decay descriptors array defined. Pushing back " << getDecayDescriptor() << endmsg ;
     m_decayDescriptors.push_back(getDecayDescriptor());
   }
+  debug() << "Decay descriptors are " << m_decayDescriptors << endmsg ;
 
   for ( std::vector<std::string>::const_iterator dd = m_decayDescriptors.begin() ;
         dd != m_decayDescriptors.end() ; ++dd ){
