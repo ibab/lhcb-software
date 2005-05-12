@@ -1,4 +1,4 @@
-//$Id: PopulateDB.cpp,v 1.14 2005-04-25 11:54:09 marcocle Exp $
+//$Id: PopulateDB.cpp,v 1.15 2005-05-12 16:27:33 marcocle Exp $
 #include <iostream>
 #include <fstream>
 #include <string>
@@ -435,7 +435,7 @@ StatusCode PopulateDB::i_condDBDumpSampleData ( ) {
 std::string PopulateDB::i_conditionToXml( const std::string &name, Condition &cond ) const {
   std::ostringstream xml;
   // XML header
-  xml << "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<!DOCTYPE DDDB SYSTEM \"structure.dtd\">\n";
+  xml << "<?xml version=\"1.0\" encoding=\"UTF-8\"?><!DOCTYPE DDDB SYSTEM \"structure.dtd\">";
   // DDDB open
   xml << "<DDDB>";
   // condition open
