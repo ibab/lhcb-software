@@ -1,9 +1,12 @@
-# $Id: release.notes,v 1.32 2005-05-12 10:44:04 marcocle Exp $
+# $Id: release.notes,v 1.33 2005-05-12 16:17:32 marcocle Exp $
 Package Det/DetCond
 Package manager : Marco Clemencic
 
+================= Det/DetCond v7r1 ===========================================
 ! 2005-05-12 - Marco Clemencic
  - Fixed the compilation on WIN32
+ - Added support to multiple databases through option
+   ConditionsDBCnvSvc.CondDBAccessServices
 
 ================= Det/DetCond v7r0 ===========================================
 ! 2005-04-25 - Marco CLEMENCIC

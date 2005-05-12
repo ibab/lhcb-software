@@ -1,7 +1,7 @@
-# $Id: requirements,v 1.29 2005-04-25 10:38:35 marcocle Exp $
+# $Id: requirements,v 1.30 2005-05-12 16:17:32 marcocle Exp $
 # Modified by Marco Clemencic and Nicolas Gilardi (Gen. 2005)
 package DetCond
-version v7r0
+version v7r1
 
 branches DetCond cmt src doc
 
@@ -16,8 +16,6 @@ use COOL v* LCG_Interfaces
 use DetDesc v* Det
 
 include_dirs $(DETCONDROOT)
-
-
 
 # Build a component library
 macro DetCond_sources "component/*.cpp" 

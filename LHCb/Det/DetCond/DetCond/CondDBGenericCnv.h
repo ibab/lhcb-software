@@ -1,4 +1,4 @@
-// $Id: CondDBGenericCnv.h,v 1.2 2005-04-22 14:09:31 marcocle Exp $
+// $Id: CondDBGenericCnv.h,v 1.3 2005-05-12 16:17:32 marcocle Exp $
 #ifndef DETCOND_CONDDBGENERICCNV_H 
 #define DETCOND_CONDDBGENERICCNV_H 1
 
@@ -12,10 +12,13 @@
 
 #include "DetCond/ICondDBAccessSvc.h"
 
+#include "CoolKernel/types.h"
+
 // Forward and external declarations
 class ISvcLocator;
 class IDetDataSvc;
 class DataObject;
+class ConditionsDBCnvSvc;
 
 template <class TYPE> class CnvFactory;
 
@@ -76,9 +79,6 @@ protected:
    * @return StatusCode::SUCCECC if the event time was defined.
    */
   StatusCode eventTime(TimePoint &time) const;
-  
-  /// Shortcut to the current tag used.
-  inline const std::string &tag() const {return m_dbAccSvc->tag();}
 
   /**
    * Set the validity of the DataObject if it inherits from IValidity.
@@ -87,9 +87,25 @@ protected:
 
   /// Pointer to the DetectorDataService.
   IDetDataSvc         *m_detDataSvc;
-  /// Pointer to the CondDBAccessSvc;
-  ICondDBAccessSvc    *m_dbAccSvc;
+  /// Pointer to the ConditionDBCnvSvc;
+  ConditionsDBCnvSvc  *m_condDBCnvSvc;
   
+  /**
+   * Get an object from the Conditions DB. It tries all the CondDBAccessSvcs
+   * known by ConditionsDBCnvSvc before returing a failure code.
+   * @input 
+   * @param path the path inside the CondDB
+   * @output
+   * @param obj shared pointer to the COOL object
+   * @param descr folder description string (used to know the storage type by RelyConverter)
+   * @param since start of the IOV
+   * @param until end of the IOV
+   * The IOV is inside the object itself as two cool::ValidityKey, the since and until are 
+   * used to avoid the conversion outside this method.
+   */
+  StatusCode getObject(const std::string &path, cool::IObjectPtr &obj,
+                       std::string &descr, TimePoint &since, TimePoint &until);
+
 private:
 
 };

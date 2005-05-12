@@ -1,4 +1,4 @@
-//$Id: ConditionsDBCnvSvc.cpp,v 1.17 2005-05-12 10:44:04 marcocle Exp $
+//$Id: ConditionsDBCnvSvc.cpp,v 1.18 2005-05-12 16:17:32 marcocle Exp $
 #include <string>
 
 #include "ConditionsDBCnvSvc.h"
@@ -23,7 +23,9 @@ const ISvcFactory& ConditionsDBCnvSvcFactory = ConditionsDBCnvSvc_factory;
 ConditionsDBCnvSvc::ConditionsDBCnvSvc( const std::string& name, 
 				        ISvcLocator* svc)
   : ConversionSvc ( name, svc, CONDDB_StorageType )
-{}
+{
+  declareProperty("CondDBAccessServices",m_dbAccSvcNames);
+}
 
 //----------------------------------------------------------------------------
 
@@ -46,16 +48,23 @@ StatusCode ConditionsDBCnvSvc::initialize()
   log << MSG::INFO << "Specific initialization starting" << endreq;
 
   // Locate the Database Access Service
-  sc = serviceLocator()->getService("CondDBAccessSvc",
-                                    ICondDBAccessSvc::interfaceID(),(IInterface*&)m_dbAccSvc);
-  if (  !sc.isSuccess() ) {
-    log << MSG::ERROR << "Could not locate CondDBAccessSvc" << endreq;
-    return sc;
+  if (m_dbAccSvcNames.empty()) m_dbAccSvcNames.push_back("CondDBAccessSvc");
+  std::vector<std::string>::const_iterator svcName;
+  for ( svcName = m_dbAccSvcNames.begin(); svcName != m_dbAccSvcNames.end(); ++svcName ){
+    ICondDBAccessSvc *svcInt;
+    sc = serviceLocator()->getService(*svcName,
+                                      ICondDBAccessSvc::interfaceID(),(IInterface*&)svcInt);
+    if (  !sc.isSuccess() ) {
+      log << MSG::ERROR << "Could not locate CondDBAccessSvc/" << *svcName << endreq;
+      return sc;
+    }
+    m_dbAccSvcs.push_back(svcInt);
+    log << MSG::DEBUG << "Retrieved CondDBAccessSvc/" << *svcName << endreq;
   }
+  
   // Locate the Detector Data Service
   IDataProviderSvc* pDDS = 0;
-  sc = serviceLocator()->getService 
-    ("DetectorDataSvc",  IID_IDataProviderSvc, (IInterface*&)pDDS);
+  sc = serviceLocator()->getService("DetectorDataSvc",  IID_IDataProviderSvc, (IInterface*&)pDDS);
   if ( !sc.isSuccess() ) {
     log << MSG::ERROR << "Could not locate DetectorDataSvc" << endreq;
     return sc;
@@ -114,7 +123,8 @@ StatusCode ConditionsDBCnvSvc::finalize()
 {
   MsgStream log(msgSvc(), "ConditionsDBCnvSvc" );
   log << MSG::DEBUG << "Finalizing" << endreq;
-  m_dbAccSvc->release();
+  std::vector<ICondDBAccessSvc*>::iterator accSvc;
+  for ( accSvc = m_dbAccSvcs.begin(); accSvc != m_dbAccSvcs.end(); ++accSvc ) (*accSvc)->release();
   m_detPersSvc->release();
   m_detDataSvc->release();
   return ConversionSvc::finalize();

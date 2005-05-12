@@ -1,4 +1,4 @@
-// $Id: RelyConverter.cpp,v 1.4 2005-05-12 10:44:04 marcocle Exp $
+// $Id: RelyConverter.cpp,v 1.5 2005-05-12 16:17:32 marcocle Exp $
 // Include files 
 #include "DetCond/RelyConverter.h"
 
@@ -13,12 +13,7 @@
 
 #include "DetDesc/ValidDataObject.h"
 
-#include "DetCond/ICondDBAccessSvc.h"
-
-#include "CoolKernel/IFolder.h"
 #include "CoolKernel/IObject.h"
-#include "CoolKernel/IDatabase.h"
-#include "RelationalCool/RelationalException.h"
 
 #include <string>
 #include <sstream>
@@ -164,85 +159,58 @@ StatusCode RelyConverter::i_delegatedCreation(IOpaqueAddress* pAddress, DataObje
 
   MsgStream log(msgSvc(),"RelyConverter");
 
-  TimePoint now;
-  sc = eventTime(now);
-  if (sc.isFailure()) {
-    log << MSG::ERROR << "Cannot create DataObject: event time undefined" << endmsg;
+  cool::IObjectPtr object;
+  std::string description;
+  TimePoint since,until;
+  
+  sc = getObject(pAddress->par()[0], object, description, since, until);
+  if ( !sc.isSuccess() ) return sc;
+
+  long storage_type = getStorageType(description);
+  if (storage_type <= 0) {
+    log << MSG::ERROR <<
+      "Folder description does not contain a valid storage type: " << endmsg;
+    log << MSG::ERROR << "desc = \"" << description << "\"" << endmsg;
+    return StatusCode::FAILURE;
+  }
+
+  log << MSG::DEBUG << "delegate to DetectorPersistencySvc" << endmsg;
+
+  // Create temporary address for the relevant type and classID 
+  IOpaqueAddress *tmpAddress;
+  const std::string par[2] = { object->payloadValue<std::string>("data"), 
+                               pAddress->par()[1] };
+  sc = conversionSvc()->addressCreator()
+    ->createAddress( storage_type,pAddress->clID() , par, 0, tmpAddress );
+  if (sc.isFailure()){
+    log << MSG::ERROR 
+        << "Persistency service could not create a new address" << endreq;
     return sc;
   }
-
-  TimePoint since,until;
-  try {
-
-    cool::IFolderPtr folder = m_dbAccSvc->database()->getFolder(pAddress->par()[0]);    
-    //    cool::IObjectPtr object = folder->findObject(m_condDBCnvSvc->timeToValKey(now),0,m_dbAccSvc->tag());
-    cool::IObjectPtr object;
-    if (m_dbAccSvc->tag() == "HEAD" || m_dbAccSvc->tag() == ""){
-      object = folder->findObject(m_dbAccSvc->timeToValKey(now));
-    } else {
-      object = folder->findObject(m_dbAccSvc->timeToValKey(now),
-                                  0,folder->fullPath()+"-"+m_dbAccSvc->tag());
-    }
-
-    long storage_type = getStorageType(folder->description());
-    if (storage_type <= 0) {
-      log << MSG::ERROR <<
-        "Folder description does not contain a valid storage type: " << endmsg;
-      log << MSG::ERROR << "desc = \"" << folder->description() << "\"" << endmsg;
-      return StatusCode::FAILURE;
-    }
-
-    since = m_dbAccSvc->valKeyToTime(object->since());
-    until  = m_dbAccSvc->valKeyToTime(object->until());
-
-    log << MSG::DEBUG << "delegate to DetectorPersistencySvc" << endmsg;
-
-    // Create temporary address for the relevant type and classID 
-    IOpaqueAddress *tmpAddress;
-    const std::string par[2] = { object->payloadValue<std::string>("data"), 
-                                 pAddress->par()[1] };
-    sc = conversionSvc()->addressCreator()
-      ->createAddress( storage_type,pAddress->clID() , par, 0, tmpAddress );
-    if (sc.isFailure()){
-      log << MSG::ERROR 
-          << "Persistency service could not create a new address" << endreq;
-      return sc;
-    }
-
-    if (sc.isFailure()) return sc;
-    tmpAddress->addRef();
-    if ( pAddress->registry() ){
-      log << MSG::DEBUG << "register tmpAddress to registry " << pAddress->registry()->identifier()
-          << endmsg;
-    } else {
-      log << MSG::WARNING << "the address does not have a registry" << endmsg;
-    }
-    tmpAddress->setRegistry(pAddress->registry());
-    if (tmpAddress->registry()) {
-      log << MSG::DEBUG << "tmpAddress registered to registry " << tmpAddress->registry()->identifier()
-          << endmsg;
-    } else {
-      log << MSG::WARNING << "tmpAddress not registered!" << endmsg;
-    }
-    
-    sc = m_detPersSvc->createObj ( tmpAddress, pObject );
-    tmpAddress->release();
-    if ( sc.isFailure() ) {
-      log << MSG::ERROR 
-          << "Persistency service could not create a new object" << endreq;
-      return sc;
-    }
-    
-  } catch ( cool::RelationalFolderNotFound &e) {
-    log << MSG::ERROR << e << endmsg;
-    return StatusCode::FAILURE;
-  } catch (cool::RelationalObjectNotFound &e) {
-    log << MSG::ERROR << "Object not found in \"" << pAddress->par()[0] <<
-      "\" for tag \"" << m_dbAccSvc->tag() << "\" ("<< now << ')' << endmsg;
-    log << MSG::DEBUG << e << endmsg;
-    return StatusCode::FAILURE;
+  
+  if (sc.isFailure()) return sc;
+  tmpAddress->addRef();
+  if ( pAddress->registry() ){
+    log << MSG::DEBUG << "register tmpAddress to registry " << pAddress->registry()->identifier()
+        << endmsg;
+  } else {
+    log << MSG::WARNING << "the address does not have a registry" << endmsg;
   }
-
+  tmpAddress->setRegistry(pAddress->registry());
+  if (tmpAddress->registry()) {
+    log << MSG::DEBUG << "tmpAddress registered to registry " << tmpAddress->registry()->identifier()
+        << endmsg;
+  } else {
+    log << MSG::WARNING << "tmpAddress not registered!" << endmsg;
+  }
+  
+  sc = m_detPersSvc->createObj ( tmpAddress, pObject );
+  tmpAddress->release();
+  if ( sc.isFailure() ) {
+    log << MSG::ERROR 
+        << "Persistency service could not create a new object" << endreq;
+    return sc;
+  }
   
   log << MSG::DEBUG << "Setting object validity" << endreq;
   setObjValidity(since,until,pObject);

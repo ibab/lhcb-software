@@ -1,4 +1,4 @@
-//$Id: ConditionsDBCnvSvc.h,v 1.12 2005-04-22 14:09:31 marcocle Exp $
+//$Id: ConditionsDBCnvSvc.h,v 1.13 2005-05-12 16:17:32 marcocle Exp $
 #ifndef DETCOND_CONDITIONSDBCNVSVC_H
 #define DETCOND_CONDITIONSDBCNVSVC_H 1
 
@@ -73,10 +73,17 @@ class ConditionsDBCnvSvc : public ConversionSvc {
   /// Retrieve converter from list
   virtual IConverter* converter(const CLID& clid);
 
+  inline std::vector<ICondDBAccessSvc*> &accessServices() { return m_dbAccSvcs; }
+  inline const std::vector<ICondDBAccessSvc*> &accessServices() const { return m_dbAccSvcs; }
+
  private:
 
-  /// Handle to the databas Access service
-  ICondDBAccessSvc*    m_dbAccSvc;
+  /// List of all the names of the known databases. It is filled via the option
+  /// ConditionsDBCnvSvc.CondDBAccessServices. If none is given, "CondDBAccessSvc" is used.
+  std::vector<std::string>       m_dbAccSvcNames;
+
+  /// Handles to the database Access services
+  std::vector<ICondDBAccessSvc*> m_dbAccSvcs;
 
   /// Handle to the IConversionSvc interface of the DetectorPersistencySvc
   IConversionSvc*      m_detPersSvc;

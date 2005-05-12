@@ -1,4 +1,4 @@
-// $Id: CondDBGenericCnv.cpp,v 1.5 2005-04-25 10:38:35 marcocle Exp $
+// $Id: CondDBGenericCnv.cpp,v 1.6 2005-05-12 16:17:32 marcocle Exp $
 // Include files 
 #include "GaudiKernel/IDetDataSvc.h"
 #include "GaudiKernel/TimePoint.h"
@@ -14,9 +14,12 @@
 #include "CoolKernel/ValidityKey.h"
 #include "CoolKernel/IFolder.h"
 #include "CoolKernel/IObject.h"
+#include "CoolKernel/IDatabase.h"
+#include "RelationalCool/RelationalException.h"
 
 // local
 #include "DetCond/CondDBGenericCnv.h"
+#include "ConditionsDBCnvSvc.h"
 
 //-----------------------------------------------------------------------------
 // Implementation file for class : CondDBGenericCnv
@@ -52,16 +55,14 @@ StatusCode CondDBGenericCnv::initialize() {
     MsgStream log(msgSvc(),"CondDBGenericCnv");
     log << MSG::DEBUG << "Succesfully located DetectorDataSvc" << endreq;
   }
-  // Query the ICondDBAccessSvc interface of the detector data service
-  sc = serviceLocator()->service("CondDBAccessSvc",m_dbAccSvc);
-  if( !sc.isSuccess() ) {
+  // Get a pointer to the ConditionsDBCnvSvc
+  m_condDBCnvSvc = dynamic_cast<ConditionsDBCnvSvc*>(conversionSvc());
+  if ( m_condDBCnvSvc == NULL ) {
     MsgStream log(msgSvc(),"CondDBGenericCnv");
-    log << MSG::ERROR << "Can't locate CondDBAccessSvc" << endreq;
-    return sc;
-  } else {
-    MsgStream log(msgSvc(),"CondDBGenericCnv");
-    log << MSG::DEBUG << "Succesfully located CondDBAccessSvc" << endreq;
+    log << MSG::ERROR << "The conversion service is not a ConditionsDBCnvSvc!" << endreq;
+    return StatusCode::FAILURE;
   }
+
   return sc;
 }
 
@@ -70,7 +71,6 @@ StatusCode CondDBGenericCnv::initialize() {
 //=========================================================================
 StatusCode CondDBGenericCnv::finalize() {
   m_detDataSvc->release();
-  m_dbAccSvc->release();
   return Converter::finalize();
 }
 
@@ -108,4 +108,52 @@ void CondDBGenericCnv::setObjValidity(TimePoint &since, TimePoint &till, DataObj
   }
 }
 
+//=========================================================================
+//  get an object from the conditions database
+//=========================================================================
+StatusCode CondDBGenericCnv::getObject (const std::string &path, cool::IObjectPtr &obj,
+                                        std::string &descr, TimePoint &since, TimePoint &until) {
+
+  MsgStream log(msgSvc(),"CondDBGenericCnv");
+
+  TimePoint now;
+  StatusCode sc = eventTime(now);
+  if (sc.isFailure()) {
+    log << MSG::ERROR << "Cannot create DataObject: event time undefined" << endmsg;
+    return sc;
+  }
+
+  bool found_object = false;
+  
+  for ( std::vector<ICondDBAccessSvc*>::iterator accSvc = m_condDBCnvSvc->accessServices().begin();
+        accSvc !=  m_condDBCnvSvc->accessServices().end() && ! found_object ; ++accSvc ) {
+    try {
+      cool::IFolderPtr folder = (*accSvc)->database()->getFolder(path);
+      descr = folder->description();
+
+      if ((*accSvc)->tag() == "HEAD" || (*accSvc)->tag() == ""){
+        obj = folder->findObject((*accSvc)->timeToValKey(now));
+      } else {
+        obj = folder->findObject((*accSvc)->timeToValKey(now),0,folder->fullPath()+"-"+(*accSvc)->tag());
+      }
+    
+      since = (*accSvc)->valKeyToTime(obj->since());
+      until  = (*accSvc)->valKeyToTime(obj->until());
+
+      found_object = true;
+    
+    } catch ( cool::RelationalFolderNotFound /*&e*/) {
+      //log << MSG::ERROR << e << endmsg;
+      //return StatusCode::FAILURE;
+    } catch (cool::RelationalObjectNotFound /*&e*/) {
+      //log << MSG::ERROR << "Object not found in \"" << path <<
+      //  "\" for tag \"" << (*accSvc)->tag() << "\" ("<< now << ')' << endmsg;
+      //log << MSG::DEBUG << e << endmsg;
+      //return StatusCode::FAILURE;
+    }
+  }
+  return (found_object) ? StatusCode::SUCCESS : StatusCode::FAILURE;
+}
+
 //=============================================================================
+
