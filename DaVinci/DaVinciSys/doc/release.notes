@@ -3,9 +3,297 @@ Package     : Phys/DaVinci
 Package Coordinator : Patrick Koppenburg
 Purpose     : LHCb analysis program 
 
+</PRE><H1><A NAME=v12r10>2005-05-12 DaVinci v12r10 - HLT release version</A></H1><PRE>
+First usable version of HLT available. Use HltFilter algorithm (in HltSelections)
+and HltScore class (in TrgEvent).
+
+#######################################MM#######################################
+#                               DAVINCI v12r10                                 #
+################################################################################
+###################################### L0 #######################################
+###################################### HLT #####################################
+!========================== HltGeneric v2r4 2005-05-12 ===================
+! 2005-05-10 - P. Koppenburg
+  - Use TrgVertexFitter
+!========================== HltSelChecker v3r1 2005-05-12 ===================
+! 2005-05-11 - P. Koppenburg
+  - src/CheckHltGeneric.cpp
+    . Removed. Replaced by HltFilter in HltSelections.
+  - options/CorrB2HH.opts
+  - options/CorrB2JpsiX.opts
+  - options/CorrB2MuMu.opts
+  - options/CorrBd2JpsiKs.opts
+  - options/CorrBd2MuMuKstar.opts
+  - options/CorrBs2JpsiPhi.opts
+  - options/CorrDiMuons.opts
+  - options/CorrHLTsels.opts
+  - options/Correlations.opts
+    . Use HltFilter to check Correlations.
+
+! 2005-05-10 - P. Koppenburg
+  - src/TestHltScore.{cpp,h}
+    . New algorithm that checks the HltScore class
+  - src/HltSelChecker_load.cpp
+    . Add algorithm
+  - options/TestHltScore.opts
+    . Use this algorithm
+  - options/CorrB2JpsiX.opts
+  - options/CorrB2MuMu.opts
+  - options/CorrBd2JpsiKs.opts
+  - options/CorrBd2MuMuKstar.opts
+  - options/CorrBs2JpsiPhi.opts
+  - options/CorrDiMuons.opts
+  - options/CorrHLTsels.opts
+  - options/Correlations.opts
+  - options/DVHLTCorr.opts
+  - options/TruthInput.opts
+    . More changes reflecting the fact that the muons are now done in HltGeneric
+
+! 2005-04-04 - Luis Fernandez
+ - options/NT*.opts
+   . Adapt to DecayChainNTuple modifications
+
+!========================== HltSelections v3r1 2005-05-12 ===================
+! 2005-05-11 - P. Koppenburg
+  - src/HltFilter.{cpp,h}
+    . Algorithm that allows to select events according to HLT decision
+      Options:
+          RequireHLT = true
+          RequireGeneric = false
+          RequireInclusiveB = false
+          RequireExclusiveB = false
+          RequireDstar = false
+          RequireDimuon = false
+    
+  - src/HltSelections_load.cpp
+    . Add algorithm
+
+! 2005-05-10 - P. Koppenburg
+  - src/HltDecision.{cpp,h}
+    . New algorithm that fills the HltScore class
+  - src/HltSelections_load.cpp
+    . Add algorithm
+  - options/HLTDecision.opts
+    . Use this algorithm
+  - options/HLTselB2MuMu.opts
+  - options/TrgDispCalculator.opts
+  - options/TrgTracks.opts
+  - options/TrgVertexFitter.opts
+    . More changes reflecting the fact that the muons are now done in HltGeneric
+    
+! 2005-05-09 - P. Koppenburg
+   . Restore Neutrals.
+
+! 2005-04-27 - P. Koppenburg
+   . Do not use TrgSys...
+
+##################################### PHYS #####################################
+!========================== DaVinciFilter v1r8 2005-05-12 ===================
+! 2005-05-12 - P. Koppenburg
+  - src/FilterDesktop.cpp
+    . No info() in execute()
+
+! 2005-05-02 - P. Koppenburg
+  - src/FilterDesktop.cpp
+    . Remove MakePlots option. Now use HistoProduce option inherited from
+      GaudiHistoAlg
+
+!========================== DaVinciKernel v3r3 2005-05-12 ===================
+! 2005-05-11 - P. Koppenburg for Vanya Belyaev
+  - src/component/PhysDesktop.cpp
+    . Allow to have tools as parent of physdektop
+
+! 2005-05-09 - P. Koppenburg
+  - Kernel/ICheckOverlap.h
+    . Method was not declared purely virtual. Bug kindly reported by Vanya.
+
+! 2005-05-02 - P. Koppenburg
+  - Kernel/IAlgorithm2ID.h
+    . New interface for a tool that returns an ID from a name and a 
+      name from an ID.
+  - Kernel/DVAlgorithm.h
+  - src/DVAlgorithm.cpp
+    . Use this tool.    
+  
+! 2005-04-21 - Y. Xie
+  - Kernel/INewDirectionFitter.h
+    . add this new interface 
+    . similar to ILifetimeFitter.h, used to fit for both lifetime and mass 
+ 
+! 2005-04-14 - P. Koppenburg
+  - DaVinciTools/IParticleTransporter.h
+    . removed
+
+!========================== DaVinciTools v11r8 2005-05-12 ===================
+! 2005-05-12 - P. Koppenburg
+  - src/CheckPV.cpp
+  - src/PIDFilter.cpp
+    . No info() printout in execute()
+    
+! 2005-05-02 - P. Koppenburg
+  - src/MakeResonances.cpp
+    . Remove MakePlots option. Now use HistoProduce option inherited from
+      GaudiHistoAlg
+
+! 2005-04-20 - P. Koppenburg
+  - src/DecodeSimpleDecayString.{cpp,h}
+    . Remove finalize() method to get rid of warnings at end of job
+  - src/Algorithm2ID.{cpp,h}
+    . Small tool that alows to assign an ID to an algorithm by options.
+      ToolSvc.AlgorithmNames = { "DVAlg1", "DVAlg2" };
+      Since this tool is declared to DVAlgorithm, DVAlg1 will know
+      it is number 1, and DVAlg2 is 2. Essentially designed for HLT.
+
+! 2005-04-12 - P. Koppenburg for Luis Fernandez
+  - src/MakeResonances.cpp
+    . Small bug fix to avoid duiplication of mothers if the user does:
+      PhiForSimpleBs2PhiGamma.DecayDescriptor = "[phi(1020) -> K+ K-]cc";
+
+!========================== DaVinci v12r10 2005-05-12 ===================
+! 2005-05-10 - P. Koppenburg
+  - options/DVTRiggerFilter.opts
+    . Include HLT
+    . Switch off DstWriter by default
+!========================== Tampering v1r1 2005-05-12 ===================
+! 2005-05-09 - P. Koppenburg
+  - xml/TamperingResults_Event.xml
+    . Remove obsolete LHCbStreams
+
+! 2005-05-05 - Mariusz Witek
+  First version of L0 Tampering added.
+  New files: 
+  - TamperingL0Alg.cpp and .h
+  Modified files:
+  - xml/TamperingResults_Event.xml
+  - src/TamperingL1Alg.cpp
+  - src/TamperResRead.cpp
+  - options/TamperingCommon.opts
+  - options/SignalSelection.opts
+  - options/SignalParticles.opts
+
+!========================== VertexFit v1r6 2005-05-12 ===================
+! 2005-04-25 - P. Koppenburg for L. Fernandez
+  - src/UnconstVertexFitter.cpp 
+  - src/UnconstVertexFitter.h
+    . Another modification for neutrals. New options      
+      UseDaughters = true 
+    . looks recursively for all final states (with origin) or long-lived daughters
+      in the resonances' decay trees
+    . all gammas(s) found in the descendants are re-evaluated at the vertex
+    . does not refit vertex if only one composite and gamma(s)
+    . for composites in the original list only decaying to gammas:
+      Point on track, decay vertex, momentum are *not* changed
+    . TEMPORARY fix: allow to fit only gammas, e.g. pi0 -> gamma gamma. This should not be allowed
+
+! 2005-04-21 - Yuehong Xie
+  - introduce new tool src/NewDirectionFitter.cpp(.h)
+    .a upgraded version of LifetimeFitter. The difference is this tool fits
+     for both time and mass at the same time. Correlation between time and
+     mass is obtained. Based on this a mass constraint can then be applied 
+  - src/KFFitTool.cpp
+    . update vertex chi2 and NDoF when reFitting a Particle
+
+#################################### PHYSSEL ###################################
+!========================== B2RhoRho v1r8p1 2005-05-12 ===================
+! 2005-04-25- P. Koppenburg
+  - cmt/requirements
+    . Remove dependency on CommonPartticles. Only needed at runtime.
+!========================== Bd2PiPiPi0 v2r2p2 2005-05-12 ===================
+! 2005-04-25- P. Koppenburg
+  - cmt/requirements
+    . Remove dependency on CommonPartticles. Only needed at runtime.
+!========================== Bu2D0K v1r1 2005-05-12 ===================
+! 2005-03-24 - P. Koppenburg for Cristina Lazzeroni
+  - src/Bu2D0K_KsPiPi.cpp
+    . Fixed CLHEP problems.
+
+! 2005-03-24 - P. Koppenburg for Cristina Lazzeroni
+  - options/DVPreselBu2D0K_KsPiPi.opts
+  - options/PreselBu2D0K_KsPiPi.opts
+    . Typo fixes
+
+! 2005-03-22 - P. Koppenburg for Thomas Barber
+  - options/DVPreselBu2D0K_KsPiPi.opts
+  - options/PreselBu2D0K_KsPiPi.opts
+  - src/Bu2D0K_KsPiPi.{cpp,h}
+  - src/D02KsPiPi.{cpp,h}
+    . New code for D0->KsPiPi
+  - src/Bu2D0K_load.cpp
+    . Modified accordingly 
+!========================== PhysSelSys v8r1 2005-05-12 ===================
+use  B2RhoRho                 v1r8p1   PhysSel
+use  Bd2PiPiPi0               v2r2p2   PhysSel
+use  Bu2D0K                   v1r1     PhysSel
+#####################################  REC  ####################################
+##################################### RICH #####################################
+##################################### TOOLS ####################################
+!========================== LoKiJets v1r0 2005-03-21 ===================
+! 2005-03-21 - Vanya BELYAEV
+ - New packge:
+
+  * One more piece of complex and unmaintainable software which "physicists" 
+  *     a) do not like 
+  *     b) do not need 
+  *     c) do not use
+!========================== Stripping v2r1 2005-05-12 ===================
+! 2005-05-09 - P. Koppenburg
+  - python/strip.py
+    . Restore Bu2D0K package
+! 2005-04-21 - P. Koppenburg
+  - python/strip.py
+    . Remove non-compliant Bu2D0K package
+!========================== Utilities v2r0 2005-05-12 ===================
+! 2005-05-12 - P. Koppenburg
+  - src/AlgorithmCorrelations.cpp
+    . Remove all std::cout
+    
+! 2005-04-20 - P. Koppenburg
+    New tool that implements the functionality of SelResultCorrelations.cpp:
+  - Utilities/IAlgorithmCorrelations.h
+    . Interface for a Tool to print a table of correlations of 
+      Bernoullian variables.
+      The list of algorithms (or any string) is set at initialization with
+        StatusCode algorithms(const std::vector<std::string>&)
+      At each event, for each algorithm the result is given by:
+        StatusCode fillResult(const std::string& algo,const bool& result) 
+      Then at the end of each event on needs to trigger the correlations:
+         StatusCode endEvent() 
+      The statistics are printed at finalization (or anywhere) with
+         StatusCode printTable(void)
+	 StatusCode printList(void) (for debugging)      
+  - src/AlgorithmCorrelations.cpp
+  - src/AlgorithmCorrelations.h
+    . Actual implementation. Options:
+      If one wants to declare the algorithm directly to the tool (ignoring
+      the corresponding methods):
+        Algorithms = { "alg1", "alg2"... }
+        AlgorithmsRow, optional, for non-squere matrices.
+       Other options:
+        OnlyNonZero = true ; ///< skips algorithms with eff=0 in table
+	Decimals = -1 ; ///< defines precision. -1 means automatic precision.
+  - src/SelResultCorrelations.cpp
+  - src/SelResultCorrelations.h
+    . Rewritten to use the tool.
+  - cmt/requirements
+    . Now exports headers. -> v2r0
+###################################### TRG #####################################
+!========================= TrgEvent v5r3p1 2005-05-10 ==================
+! 2005-05-10 - P. Koppenburg
+ - xml/HltAlgorithmScore.xml
+ - xml/HltScore.xml
+   . New HLT score classes
+
 </PRE><H1><A NAME=v12r9>2005-03-22 DaVinci v12r9 - Stripping version for DC04v2</A></H1><PRE>
 DaVinci for DC04v2 stripping with updated preselections and new
 L0 and L1 tunings.
+
+##################################### KTJET ####################################
+! # Package KtJet written by: 
+! #   Jon Butterworth                           
+! #   Jon Couchman                              
+! #   Brian Cox                                 
+! #   Ben Waugh                                 
+! # See documentation at <http://www.ktjet.org> 
 
 ################################################################################
 #                               DAVINCI v12r9                                  #
