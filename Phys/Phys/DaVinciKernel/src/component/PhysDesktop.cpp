@@ -1,5 +1,5 @@
-// $Id: PhysDesktop.cpp,v 1.17 2005-05-11 16:08:04 pkoppenb Exp $
-// Include files 
+// $Id: PhysDesktop.cpp,v 1.18 2005-05-12 08:34:27 pkoppenb Exp $
+// Include files  
 
 // from Gaudi
 #include "GaudiKernel/ToolFactory.h"
@@ -82,8 +82,8 @@ PhysDesktop::PhysDesktop( const std::string& type,
                           const std::string& name,
                           const IInterface* parent )
   : GaudiTool ( type, name , parent )
-  , m_pMaker         (0)
   , m_outputLocn     () 
+  , m_pMaker         (0)
   , m_locationWarned (false)
   , m_PVLocator      (0)
 {
