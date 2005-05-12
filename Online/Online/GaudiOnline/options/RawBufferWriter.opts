@@ -7,10 +7,10 @@ PoolDbCacheSvc.OutputLevel = 3;
 DataOnDemandSvc.Algorithms   = { "DATA='/Event/DAQ/RawEvent' TYPE='CreateRawEvent'",
                                  "DATA='/Event/DAQ/L1Event'  TYPE='CreateL1Event'"
                                };
-RawBufferWriter.Type         = "DAQ";
-RawBufferWriter.AcceptParams = "file://rawBuffer.dat";
 RawBufferWriter.Type         = "L1";
 RawBufferWriter.AcceptParams = "file://l1Buffer.dat";
+RawBufferWriter.Type         = "DAQ";
+RawBufferWriter.AcceptParams = "file://rawBuffer.dat";
 
 EventDataSvc.RootCLID = 1;
 EventDataSvc.EnableFaultHandler  = true ;
