@@ -1,6 +1,9 @@
-#$Id: release.notes,v 1.34 2005-05-03 15:50:30 marcocle Exp $
+#$Id: release.notes,v 1.35 2005-05-12 10:45:02 marcocle Exp $
 Package Ex/DetCondExample
 Package manager : Marco Clemencic
+
+! 2005-05-12 - Marco Clemencic
+ - Made the test running on WIN32 (Oracle only)
 
 !=========== Ex/DetCondExample v7r2 ==========================================
 ! 2005-05-03 - Marco Clemencic
