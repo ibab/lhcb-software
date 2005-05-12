@@ -1,4 +1,4 @@
-// $Id: RelyConverter.cpp,v 1.3 2005-04-25 10:38:35 marcocle Exp $
+// $Id: RelyConverter.cpp,v 1.4 2005-05-12 10:44:04 marcocle Exp $
 // Include files 
 #include "DetCond/RelyConverter.h"
 
@@ -9,6 +9,7 @@
 #include "GaudiKernel/ISvcLocator.h"
 #include "GaudiKernel/DataObject.h"
 #include "GaudiKernel/TimePoint.h"
+#include "GaudiKernel/CnvFactory.h"
 
 #include "DetDesc/ValidDataObject.h"
 

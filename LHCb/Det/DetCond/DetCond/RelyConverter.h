@@ -1,10 +1,9 @@
-// $Id: RelyConverter.h,v 1.2 2005-04-22 14:09:31 marcocle Exp $
+// $Id: RelyConverter.h,v 1.3 2005-05-12 10:44:04 marcocle Exp $
 #ifndef COMPONENT_RELYCONVERTER_H 
 #define COMPONENT_RELYCONVERTER_H 1
 
 // Include files
 #include "DetCond/CondDBGenericCnv.h"
-#include "GaudiKernel/CnvFactory.h"
 
 // Forward and external declarations
 class ISvcLocator;

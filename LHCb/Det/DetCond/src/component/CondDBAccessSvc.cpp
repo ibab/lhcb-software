@@ -1,7 +1,9 @@
-// $Id: CondDBAccessSvc.cpp,v 1.5 2005-04-25 13:56:14 marcocle Exp $
+// $Id: CondDBAccessSvc.cpp,v 1.6 2005-05-12 10:44:04 marcocle Exp $
 // Include files 
 #include <sstream>
-#include <unistd.h>
+
+// needed to sleep (ORA-01466 work-around)
+#include "SealBase/TimeInfo.h"
 
 #include "GaudiKernel/SvcFactory.h"
 #include "GaudiKernel/MsgStream.h"
@@ -291,7 +293,7 @@ StatusCode CondDBAccessSvc::i_openConnention(){
         if (m_dbBackEnd == "oracle"){
           // ORA-01466: work-around
           log << MSG::INFO << "ORA-01466: work-around" << endmsg;
-          sleep(1);
+          seal::TimeInfo::sleep(1);
         }
       } else { // if !recreate => just open
         log << MSG::DEBUG << "Opening connection" << endmsg;

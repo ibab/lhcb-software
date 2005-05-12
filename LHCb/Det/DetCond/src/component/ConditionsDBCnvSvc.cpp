@@ -1,4 +1,4 @@
-//$Id: ConditionsDBCnvSvc.cpp,v 1.16 2005-04-22 14:09:31 marcocle Exp $
+//$Id: ConditionsDBCnvSvc.cpp,v 1.17 2005-05-12 10:44:04 marcocle Exp $
 #include <string>
 
 #include "ConditionsDBCnvSvc.h"
@@ -160,7 +160,7 @@ StatusCode ConditionsDBCnvSvc::createAddress( long svc_type,
 }
 
 //----------------------------------------------------------------------------
-extern ICnvFactory &RelyConverterFactory;
+extern const ICnvFactory &RelyConverterFactory;
 
 StatusCode ConditionsDBCnvSvc::addConverter(const CLID& clid){
   MsgStream log(msgSvc(), "ConditionsDBCnvSvc" );
