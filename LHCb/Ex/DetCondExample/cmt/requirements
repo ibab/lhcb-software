@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.26 2005-05-03 15:50:30 marcocle Exp $
+# $Id: requirements,v 1.27 2005-05-12 10:41:10 marcocle Exp $
 package DetCondExample
 version v7r2
 
@@ -34,12 +34,16 @@ set ODBCINST $(unixodbc_home)
 
 # library path needed for oracle backend
 macro Oracle_version "10.1.0.3-1"
-macro Oracle_base "/afs/cern.ch/project/oracle/instantclient"
-path_remove LD_LIBRARY_PATH "/oracle/"
+macro Oracle_base "$(LCG_external)/oracle"
+path_remove LD_LIBRARY_PATH "/oracle/" WIN32 ""
 path_append LD_LIBRARY_PATH "$(Oracle_base)/$(Oracle_version)/$(CMTCONFIG)/lib" WIN32 "" \
 	    rh73_gcc323_dbg "$(Oracle_base)/$(Oracle_version)/rh73_gcc323/lib" \
             slc3_ia32_gcc323_dbg "$(Oracle_base)/$(Oracle_version)/slc3_ia32_gcc323/lib"
-set TNS_ADMIN "/afs/cern.ch/project/oracle/admin"
+# remove entries due to Windows Oracle installation
+path_remove PATH "" WIN32 "\Oracle\"
+path_remove PATH "" WIN32 "\oracle\"
+path_append PATH "" WIN32 "$(Oracle_base)\$(Oracle_version)\win32_vc71\bin"
+set TNS_ADMIN "/afs/cern.ch/project/oracle/admin" WIN32 "Z:\cern.ch\project\oracle\admin"
 
 
 # Xml Parsing services (XmlCnvSvc)
