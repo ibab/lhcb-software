@@ -1,7 +1,8 @@
-! $Id: release.notes,v 1.161 2005-05-12 07:17:08 pkoppenb Exp $
+! $Id: release.notes,v 1.162 2005-05-12 08:22:09 pkoppenb Exp $
 ! Package     : DaVinciTools
 ! Responsible : P. Koppenburg
 
+!========================== DaVinciTools v11r8 2005-05-12 ===================
 ! 2005-05-12 - P. Koppenburg
   - src/CheckPV.cpp
   - src/PIDFilter.cpp
