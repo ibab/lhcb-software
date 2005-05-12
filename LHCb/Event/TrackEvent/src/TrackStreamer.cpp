@@ -1,5 +1,6 @@
 #include "Event/TrackStreamer.h"
 #include "Event/TrackKeys.h"
+#include "Event/StateKeys.h"
 
 std::ostream& str::track(const Track& track, std::ostream& os) {
 
@@ -14,7 +15,6 @@ std::ostream& str::trackHeader(const Track& track, std::ostream& os) {
 
   os << " chi2  \t" << track.chi2() << std::endl;
   os << " ndof  \t" << track.nDoF() << std::endl;
-  os << " physics state \t"; str::state(track.physicsState(),os);
   os << std::endl;
   os << " flags \t " << track.flags() << std::endl;
   os << " nstates \t " << track.states().size() << std::endl;
@@ -72,23 +72,23 @@ std::ostream& str::trackFields(const Track& track, std::ostream& os) {
 
 std::ostream& str::stateFields(const State& state, std::ostream& os) {
   
-  if (state.checkType(State::HasMomentum)) os <<"T:HasMomentum, ";
-  if (state.checkType(State::StraightLine)) os <<"T:StraightLine, ";
+  if (state.checkType(StateKeys::HasMomentum)) os <<"T:HasMomentum, ";
+  if (state.checkType(StateKeys::StraightLine)) os <<"T:StraightLine, ";
   
-  if (state.checkLocation(State::Unknown)) os <<"L:Unknown, ";
-  if (state.checkLocation(State::ClosestToBeam)) 
+  if (state.checkLocation(StateKeys::LocationUnknown)) os <<"L:Unknown, ";
+  if (state.checkLocation(StateKeys::ClosestToBeam)) 
     os <<"L:ClosestToBeam, ";
-  if (state.checkLocation(State::FirstMeasurement)) 
+  if (state.checkLocation(StateKeys::FirstMeasurement)) 
     os <<"L:FirstMeasurement, ";
-  if (state.checkLocation(State::EndVelo)) os <<"L:EndVelo, ";
-  if (state.checkLocation(State::AtTT)) os <<"L:AtTT, ";
-  if (state.checkLocation(State::AtT)) os <<"L:AtT, ";
-  if (state.checkLocation(State::BegRich1)) os <<"L:BegRich1, ";
-  if (state.checkLocation(State::EndRich1)) os <<"L:EndRich1, ";
-  if (state.checkLocation(State::BegRich2)) os <<"L:BegRich2, ";
-  if (state.checkLocation(State::EndRich2)) os <<"L:EndRich2, ";
-  if (state.checkLocation(State::Calo)) os <<"L:Calo, ";
-  if (state.checkLocation(State::Muon)) os <<"L:Muon, ";
+  if (state.checkLocation(StateKeys::EndVelo)) os <<"L:EndVelo, ";
+  if (state.checkLocation(StateKeys::AtTT)) os <<"L:AtTT, ";
+  if (state.checkLocation(StateKeys::AtT)) os <<"L:AtT, ";
+  if (state.checkLocation(StateKeys::BegRich1)) os <<"L:BegRich1, ";
+  if (state.checkLocation(StateKeys::EndRich1)) os <<"L:EndRich1, ";
+  if (state.checkLocation(StateKeys::BegRich2)) os <<"L:BegRich2, ";
+  if (state.checkLocation(StateKeys::EndRich2)) os <<"L:EndRich2, ";
+  if (state.checkLocation(StateKeys::Calo)) os <<"L:Calo, ";
+  if (state.checkLocation(StateKeys::Muon)) os <<"L:Muon, ";
 
   return os;  
 }

@@ -1,7 +1,10 @@
-// $Id: State.cpp,v 1.3 2005-04-19 06:42:29 cattanem Exp $
+// $Id: State.cpp,v 1.4 2005-05-12 14:00:59 erodrigu Exp $
+
+#include <math.h>
 
 // local
 #include "Event/State.h"
+#include "Event/StateKeys.h"
 
 #include "CLHEP/Matrix/Matrix.h"
 
@@ -15,8 +18,8 @@
 // Default constructor. State defined to be of type State::HasMomentum
 //=============================================================================
 State::State() {
-  setType( State::HasMomentum );
-  setLocation( State::Unknown );
+  setType( StateKeys::HasMomentum );
+  setLocation( StateKeys::LocationUnknown );
   m_z          = 0.;
   m_state      = HepVector(5,0);
   m_covariance = HepSymMatrix(5,0);
@@ -36,7 +39,7 @@ double State::qOverP() const
 double State::p() const
 {
   if ( m_state[4] != 0. ) return fabs( 1./m_state[4] );
-  return 0.;
+  return HUGE_VAL;
 };
 
 //=============================================================================
@@ -48,7 +51,7 @@ double State::pt() const
     double txy2 = m_state[2]*m_state[2] + m_state[3]*m_state[3];
     return sqrt( txy2/(1.+txy2) ) / fabs( m_state[4] );
   }
-  return 0.;
+  return HUGE_VAL;
 };
 
 //=============================================================================
@@ -100,17 +103,17 @@ HepSymMatrix State::posMomCovariance() const
   HepSymMatrix C_A = cov6Dtmp.sub(1,3);
   HepSymMatrix C_D = cov6Dtmp.sub(4,6);
   HepMatrix    C_B = HepMatrix(3,3,0);
-  HepMatrix    j   = HepMatrix(3,3,0);
+  HepMatrix    jmat   = HepMatrix(3,3,0);
 
-  j[0][0] = ( 1 + Ty2 ) * N2;
-  j[0][1] = - Tx * Ty * N2;
-  j[0][2] = - Qp * Tx;
-  j[1][0] = - Tx * Ty * N2;
-  j[1][1] = ( 1 + Tx2 ) * N2;
-  j[1][2] = - Qp * Ty;
-  j[2][0] = - Tx * N2;
-  j[2][1] = - Ty * N2;
-  j[2][2] = - Qp;
+  jmat[0][0] = ( 1 + Ty2 ) * N2;
+  jmat[0][1] = - Tx * Ty * N2;
+  jmat[0][2] = - Qp * Tx;
+  jmat[1][0] = - Tx * Ty * N2;
+  jmat[1][1] = ( 1 + Tx2 ) * N2;
+  jmat[1][2] = - Qp * Ty;
+  jmat[2][0] = - Tx * N2;
+  jmat[2][1] = - Ty * N2;
+  jmat[2][2] = - Qp;
 
   C_B(1,1) = cov6Dtmp.fast(4,1);
   C_B(2,1) = cov6Dtmp.fast(5,1);
@@ -119,10 +122,10 @@ HepSymMatrix State::posMomCovariance() const
   C_B(3,2) = cov6Dtmp.fast(6,2);
   C_B(3,3) = cov6Dtmp.fast(6,3);
 
-  C_B = j * C_B;
+  C_B = jmat * C_B;
 
   cov6D.sub(1,C_A);
-  cov6D.sub(4,C_D.similarity(j));
+  cov6D.sub(4,C_D.similarity(jmat));
   cov6D.fast(4,1) = C_B(1,1);
   cov6D.fast(5,1) = C_B(2,1);
   cov6D.fast(6,1) = C_B(3,1);
@@ -158,7 +161,7 @@ double State::errP2() const
 //=============================================================================
 HepSymMatrix State::errMomentum() const
 {
-  if ( checkType( State::HasMomentum ) ) {
+  if ( checkType( StateKeys::HasMomentum ) ) {
     const HepSymMatrix temp = posMomCovariance(); // CLHEP 1.9, must be const
     return temp.sub(4,6);
   }
@@ -226,7 +229,7 @@ void State::setState( double x, double y, double z,
   m_state[2] = tx;
   m_state[3] = ty;
   m_z        = z;
-  if ( checkType( State::StraightLine ) ) {
+  if ( checkType( StateKeys::StraightLine ) ) {
     std::cerr
       << "ERROR   You're trying to set the Q/P value for a state of type State::StraightLine!"
       << "ERROR   This value will be discarded." << std::endl;
@@ -242,16 +245,6 @@ void State::setState( double x, double y, double z,
 void State::setQOverP( double value )
 {
   m_state[4] = value;
-};
-
-//=============================================================================
-// Update State type
-//=============================================================================
-void State::setType( const Type& value)
-{
-  unsigned int val = (unsigned int)value;
-  m_flags &= ~typeMask;
-  m_flags |= ((((unsigned int)val) << typeBits) & typeMask);
 };
 
 //=============================================================================

@@ -1,7 +1,9 @@
-// $Id: Track.cpp,v 1.7 2005-04-18 16:25:22 hernando Exp $ // Include files
+// $Id: Track.cpp,v 1.8 2005-05-12 14:00:59 erodrigu Exp $ // Include files
 
 // local
 #include "Event/Track.h"
+#include "Event/TrackKeys.h"
+#include "Event/TrackFunctor.h"
 
 //-----------------------------------------------------------------------------
 // Implementation file for class : Track
@@ -18,7 +20,7 @@ StatusCode Track::positionAndMomentum( HepPoint3D &pos,
                                        HepVector3D &mom,
                                        HepSymMatrix &cov6D ) const
 {
-  m_physicsState.positionAndMomentum( pos, mom, cov6D );
+  physicsState().positionAndMomentum( pos, mom, cov6D );
 
   return StatusCode::SUCCESS;
 };
@@ -29,7 +31,7 @@ StatusCode Track::positionAndMomentum( HepPoint3D &pos,
 StatusCode Track::positionAndMomentum( HepPoint3D &pos,
                                        HepVector3D &mom ) const
 {
-  m_physicsState.positionAndMomentum( pos, mom );
+  physicsState().positionAndMomentum( pos, mom );
 
   return StatusCode::SUCCESS;
 };
@@ -40,8 +42,8 @@ StatusCode Track::positionAndMomentum( HepPoint3D &pos,
 StatusCode Track::position( HepPoint3D &pos,
                             HepSymMatrix &errPos ) const
 {
-  pos    = m_physicsState.position();
-  errPos = m_physicsState.errPosition();
+  pos    = physicsState().position();
+  errPos = physicsState().errPosition();
 
   return StatusCode::SUCCESS;
 };
@@ -52,8 +54,8 @@ StatusCode Track::position( HepPoint3D &pos,
 StatusCode Track::slopes( HepVector3D &slopes,
                           HepSymMatrix &errSlopes ) const
 {
-  slopes    = m_physicsState.slopes();
-  errSlopes = m_physicsState.errSlopes();
+  slopes    = physicsState().slopes();
+  errSlopes = physicsState().errSlopes();
 
   return StatusCode::SUCCESS;
 };
@@ -63,7 +65,7 @@ StatusCode Track::slopes( HepVector3D &slopes,
 //=============================================================================
 double Track::p() const
 {
-  return m_physicsState.p();
+  return physicsState().p();
 };
 
 //=============================================================================
@@ -71,7 +73,7 @@ double Track::p() const
 //=============================================================================
 double Track::pt() const
 {
-  return m_physicsState.pt();
+  return physicsState().pt();
 };
 
 //=============================================================================
@@ -80,8 +82,8 @@ double Track::pt() const
 StatusCode Track::momentum( HepVector3D &mom,
                             HepSymMatrix &errMom ) const
 {
-  mom    = m_physicsState.momentum();
-  errMom = m_physicsState.errMomentum();
+  mom    = physicsState().momentum();
+  errMom = physicsState().errMomentum();
 
   return StatusCode::SUCCESS;
 };
@@ -91,7 +93,7 @@ StatusCode Track::momentum( HepVector3D &mom,
 //=============================================================================
 StatusCode Track::posMomCovariance( HepSymMatrix &cov6D ) const
 {
-  cov6D = m_physicsState.posMomCovariance();
+  cov6D = physicsState().posMomCovariance();
 
   return StatusCode::SUCCESS;
 };
@@ -110,7 +112,6 @@ State & Track::closestState( double z )
       best    = *it;
     }
   }
-  if ( fabs(z - m_physicsState.z()) < minDist ) return m_physicsState;
   return *best;
 };
 
@@ -128,7 +129,6 @@ const State & Track::closestState( double z ) const
       best    = *it;
     }
   }
-  if ( fabs(z - m_physicsState.z()) < minDist ) return m_physicsState;
   return *best;
 };
 
@@ -148,7 +148,6 @@ State & Track::closestState( const HepPlane3D &plane )
       best    = *it;
     }
   }
-  if ( fabs( plane.distance(m_physicsState.position())) < minDist ) return m_physicsState;
   return *best;
 };
 
@@ -168,45 +167,50 @@ const State & Track::closestState( const HepPlane3D &plane ) const
       best    = *it;
     }
   }
-  if ( fabs( plane.distance(m_physicsState.position()) ) < minDist )
-    return m_physicsState;
-
   return *best;
 };
 
 //=============================================================================
 // check the existence of a state at a certain predefined location
 //=============================================================================
-bool Track::hasStateAt( const State::Location& value ) const
+bool Track::hasStateAt( unsigned int location ) const
 {
-  if ( NULL != stateAt(value) ) return true;
-  return false;
+  bool ok = false;
+  for (unsigned int i = 0 ; i < m_states.size(); i++)
+    if (m_states[i]-> checkLocation(location) ) return true;
+  return ok;
 };
 
 //=============================================================================
 // Retrieve the pointer to the state closest to the given plane
 //=============================================================================
-State* Track::stateAt( const State::Location& value )
+State& Track::stateAt( unsigned int location )
 {
-  for ( std::vector<State*>::iterator it = m_states.begin() ;
-        m_states.end() != it; it++ ) {
-    if ( (*it) -> checkLocation( value ) ) return (*it);
-  }
-  if  (m_physicsState.checkLocation(value)) return &m_physicsState;
-  return NULL;
+  if (!hasStateAt(location))
+    throw GaudiException( "There is no state at requested location",
+                          "Track.cpp",
+                          StatusCode::FAILURE );
+  unsigned int index = 0;
+  for (unsigned int i = 0 ; i < m_states.size(); i++)
+    if (m_states[i]-> checkLocation(location) ) index = i;
+
+  return *m_states[index];
 };
 
 //=============================================================================
 // Retrieve the (const) pointer to the state at a given location
 //=============================================================================
-const State* Track::stateAt( const State::Location& value ) const
+const State& Track::stateAt( unsigned int location ) const
 {
-  for ( std::vector<State*>::const_iterator it = m_states.begin() ;
-        m_states.end() != it; it++ ) {
-    if ( (*it) -> checkLocation( value ) ) return (*it);
-  }
-  if  (m_physicsState.checkLocation(value)) return &m_physicsState;
-  return NULL;
+  if (!hasStateAt(location))
+    throw GaudiException( "There is no state at requested location",
+                          "Track.cpp",
+                          StatusCode::FAILURE );
+  unsigned int index = 0;
+  for (unsigned int i = 0 ; i < m_states.size(); i++)
+    if (m_states[i]-> checkLocation(location) ) index = i;
+  
+  return *m_states[index];
 };
 
 //=============================================================================
@@ -218,7 +222,6 @@ void Track::reset()
   m_chi2PerDoF = 0;
   m_nDoF       = 0;
   m_flags      = 0;
-  m_physicsState.reset();
   m_lhcbIDs.clear();
   for (std::vector<State*>::iterator it = m_states.begin();
        it != m_states.end(); it++) delete *it;
@@ -238,84 +241,51 @@ void Track::reset()
 Track* Track::clone() const
 {
   Track* tr = new Track();
-  tr->setChi2PerDoF(chi2PerDoF());
-  tr->setNDoF(nDoF());
-  tr->setFlags(flags());
-  tr->setPhysicsState(physicsState());
-  tr->setLhcbIDs(lhcbIDs());
+  tr->setChi2PerDoF( chi2PerDoF() );
+  tr->setNDoF( nDoF() );
+  tr->setFlags( flags() );
+  tr->setLhcbIDs( lhcbIDs() );
   for (std::vector<State*>::const_iterator it = m_states.begin();
-       it != m_states.end(); it++) tr->addToStates(*(*it));
+       it != m_states.end(); it++) tr->addToStates( *(*it), false );
   for (std::vector<Measurement*>::const_iterator it2 = m_measurements.begin();
-       it2 != m_measurements.end(); it2++) tr->addToMeasurements(*(*it2));
+       it2 != m_measurements.end(); it2++) 
+    tr->addToMeasurements( *(*it2), false );
   for (std::vector<Node*>::const_iterator it3 = m_nodes.begin();
-       it3 != m_nodes.end(); it3++) tr->addToNodes( (*it3)->clone());
+       it3 != m_nodes.end(); it3++) tr->addToNodes( (*it3)->clone() );
   for (std::vector<Track*>::const_iterator it4 = m_ancestors.begin();
        it4 != m_ancestors.end();  it4++) tr->addToAncestors( *(*it4) );
   return tr;
 };
 
-
+//=============================================================================
+// Clone the track
 //=============================================================================
 
-void Track::setHistory(unsigned int key )
+void Track::addToStates(const State& state, bool inOrder) 
 {
-  m_flags &= ~historyMask;
-  m_flags |= ((((unsigned int) key ) << historyBits) & historyMask);
-};
-
-unsigned int Track::history() const
-{
-  unsigned int val = ( m_flags & historyMask) >> historyBits;
-  return val;
-};
-
-void Track::setHistoryFit(unsigned int key )
-{
-  m_flags &= ~historyFitMask;
-  m_flags |= ((((unsigned int) key) << historyFitBits) & historyFitMask);
-};
-
-unsigned int Track::historyFit() const
-{
-  unsigned int val = ( m_flags & historyFitMask) >> historyFitBits;
-  return val;
-};
-
-void Track::setType(unsigned int key)
-{
-  m_flags &= ~typeMask;
-  m_flags |= ((((unsigned int) key) << typeBits) & typeMask);
-};
-
-unsigned int Track::type() const
-{
-  unsigned int val = ( m_flags & typeMask) >> typeBits;
-  return val;
+  State* local = state.clone();
+  m_states.push_back(local);
+  if (!inOrder) return;
+  int order = checkFlag(TrackKeys::Backward) ? -1 : 1;
+  std::vector<State*>::iterator i = 
+    std::upper_bound(m_states.begin(),
+                     m_states.end(),
+                     local,  
+                     TrackFunctor::orderByZ<State>(order));
+  m_states.insert(i,local);    
 }
-
-void Track::setStatus(unsigned int key)
+void Track::addToMeasurements(const Measurement& meas, bool inOrder) 
 {
-  m_flags &= ~statusMask;
-  m_flags |= ((((unsigned int) key) << statusBits) & statusMask);
-};
-
-unsigned int Track::status() const
-{
-  unsigned int val = ( m_flags & statusMask) >> statusBits;
-  return val;
+  Measurement* local = meas.clone();
+  m_measurements.push_back(local);
+  if (!inOrder) return;
+  int order = checkFlag(TrackKeys::Backward) ? -1 : 1;
+  std::vector<Measurement*>::iterator i = 
+    std::upper_bound(m_measurements.begin(),
+                     m_measurements.end(),
+                     local,  
+                     TrackFunctor::orderByZ<Measurement>(order));
+  m_measurements.insert(i,local);
 }
-
-void Track::setFlag(unsigned int flag, bool ok)
-{
-  unsigned int val = (((unsigned int) flag) << flagBits) & flagMask;
-  if (ok) m_flags |= val;
-  else m_flags &= ~val;
-}
-
-bool Track::checkFlag(unsigned int flag) const
-{
-  unsigned int val = ((unsigned int) flag << flagBits);  
-  bool ok = (0 != ( m_flags & flagMask & val ));
-  return ok;
-}
+//=============================================================================
 

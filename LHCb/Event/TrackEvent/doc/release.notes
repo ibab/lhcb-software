@@ -4,6 +4,16 @@
 ! Purpose     : Package for the tracking event model classes
 !-----------------------------------------------------------------------------
 
+! 2005-05-12 - Jose Hernando, Eduardo Rodrigues
+ - States/Measurements ordered when added to the Track
+ - TrackFunctor added
+ - State momentum-related methods return a HUGE_VAL (from math.h)
+   for linear states
+ - minor changes to usage of GaudiObjectDesc syntax
+ - "physics state" data member removed
+ - constructor with key completed
+ - minor add-ons to Node
+
 !========================= TrackEvent v0r1 2005-04-19 ========================
 ! 2005-04-19 - Marco Cattaneo
  - Fix a Windows compilation warning

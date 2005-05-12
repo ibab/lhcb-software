@@ -18,18 +18,6 @@
       <import name='CLHEP/Geometry/Vector3D' />
       &StlPtrVector;
 
-      <enum
-        name    = 'Type'
-        value   = 'HasMomentum=1,StraightLine=2'
-        desc    = 'enumeration for the state type'
-        access  = 'PUBLIC' />
-
-      <enum
-        name    = 'Location'
-        value   = 'Unknown,ClosestToBeam,FirstMeasurement,EndVelo,AtTT,AtT,BegRich1,EndRich1,BegRich2,EndRich2,Calo,Muon'
-        desc    = 'enumeration for the location of the state'
-        access  = 'PUBLIC' />
-
       <constructor
         desc    = 'Default constructor. State defined to be of type State::HasMomentum.' />
 
@@ -38,24 +26,21 @@
        name    = 'flags'
        desc    = 'the variety of state flags'
        init    = '0'
-       setMeth = 'FALSE'
        access  = 'PROTECTED'>
        <bitfield
          name      = 'type'
-         length    = '2'
-         type      = 'Type'
+         length    = '3'
          desc      = 'state type'
-         setMeth   = 'FALSE'
-         getMeth   = 'FALSE'
-         checkMeth = 'TRUE' />
+         setMeth   = 'TRUE'
+         getMeth   = 'TRUE'
+         checkMeth = 'FALSE' />
        <bitfield
          name      = 'location'
          length    = '10'
-         type      = 'Location'
          desc      = 'state location'
          setMeth   = 'TRUE'
-         getMeth   = 'FALSE'
-         checkMeth = 'TRUE' />
+         getMeth   = 'TRUE'
+         checkMeth = 'FALSE' />
       </attribute>
 
       <attribute
@@ -335,7 +320,7 @@
       <method
         type    = 'State*'
         name    = 'clone'
-        desc    = 'Clone the state'
+        desc    = 'Clone the state (you own the pointer)'
         virtual = 'TRUE'
         const   = 'TRUE' />
 
@@ -441,10 +426,26 @@
         virtual = 'TRUE' />
 
       <method
-        name    = 'setType'
-        argList = 'State::Type value'
-        desc    = 'Update the type of the state'
-        access  = 'PROTECTED' />
+        type    = 'bool'
+        name    = 'checkType'
+        argList = 'unsigned int value'
+        desc    = 'check if the state is of this type'
+        const   = 'TRUE'>
+        <code>
+  return type() == value;
+        </code>
+      </method>
+
+      <method
+        type    = 'bool'
+        name    = 'checkLocation'
+        argList = 'unsigned int value'
+        desc    = 'check if the state is of this location'
+        const   = 'TRUE'>
+        <code>
+  return location() == value;
+        </code>
+      </method>
 
     </class>
 

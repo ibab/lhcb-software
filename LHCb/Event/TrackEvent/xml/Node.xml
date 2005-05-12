@@ -14,8 +14,9 @@
       <import name='Event/State' />
       <import name='Event/Measurement' />
 
+      <base name='KeyedObject&lt;int&gt;' />
+      &KeyedObject;
       &StlPtrVector;
-
 
       <destructor
         desc = 'Track destructor'>

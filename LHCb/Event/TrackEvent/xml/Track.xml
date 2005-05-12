@@ -13,6 +13,7 @@
       location    = 'Rec/Track/Best'
       serializers = 'FALSE'>
 
+      <location name="Ideal"   place="Rec/Track/Ideal"/>
       <location name="Velo"    place="Rec/Track/Velo"/>
       <location name="Seed"    place="Rec/Track/Seed"/>
       <location name="Match"   place="Rec/Track/Match"/>
@@ -24,6 +25,7 @@
       <base name='KeyedObject&lt;int&gt;' />
       &KeyedObject;
 
+      <import name='GaudiKernel/GaudiException' />
       <import name='Event/State' />
       <import name='Event/Measurement' />
       <import name='Event/Node' />
@@ -33,7 +35,7 @@
       <constructor 
 	desc     = "Constructor with assigned key" 
 	argList  = "int key " 
-	initList = "KeyedObject&lt;int&gt;( key ), m_chi2PerDoF(0.0), m_nDoF(0), m_flags(0), m_lhcbIDs(), m_physicsState(), m_states()">
+	initList = "KeyedObject&lt;int&gt;( key ), m_chi2PerDoF(0.0), m_nDoF(0), m_flags(0), m_lhcbIDs(), m_states(), m_measurements(), m_nodes(), m_ancestors()">
       </constructor>
 
       <destructor
@@ -60,42 +62,41 @@
        name    = 'flags'
        desc    = 'the variety of track flags'
        init    = '0'
-       setMeth = 'TRUE'
        access  = 'PROTECTED'>
        <bitfield
          name      = 'type'
          length    = '5'
          desc      = 'track type'
-         setMeth   = 'FALSE'
-         getMeth   = 'FALSE'
+         setMeth   = 'TRUE'
+         getMeth   = 'TRUE'
          checkMeth = 'FALSE' />
        <bitfield
          name      = 'history'
          length    = '5'
          desc      = 'specifies the pattern recogn algorithm that created the track'
-         setMeth   = 'FALSE'
-         getMeth   = 'FALSE'
+         setMeth   = 'TRUE'
+         getMeth   = 'TRUE'
          checkMeth = 'FALSE' />
        <bitfield
          name      = 'historyFit'
          length    = '5'
          desc      = 'specifies the fitting algorithm the fitted the track)'
-         setMeth   = 'FALSE'
-         getMeth   = 'FALSE'
+         setMeth   = 'TRUE'
+         getMeth   = 'TRUE'
          checkMeth = 'FALSE' />
        <bitfield
          name      = 'status'
          length    = '3'
          desc      = 'status of the track'
-	 setMeth   = 'FALSE'
-         getMeth   = 'FALSE'
+	 setMeth   = 'TRUE'
+         getMeth   = 'TRUE'
          checkMeth = 'FALSE' />
        <bitfield
          name      = 'flag'
          length    = '10'
          desc      = 'track flags'
          setMeth   = 'FALSE'
-         getMeth   = 'FALSE'
+         getMeth   = 'TRUE'
          checkMeth = 'FALSE' />
        <bitfield
          name      = 'specific'
@@ -112,12 +113,6 @@
         desc      = 'container of LHCbIDs'
         access    = 'PROTECTED'
         serialize = 'FALSE' />
-
-      <attribute
-        type   = 'State'
-        name   = 'physicsState'
-        desc   = 'State closest to the beam-line'
-        access = 'PROTECTED' />
 
       <attribute
         type      = 'std::vector&lt;State*&gt;'
@@ -218,12 +213,27 @@
       </method>
 
       <method
+        type    = 'State &amp;'
+        name    = 'physicsState'
+        desc    = 'Retrieve the the physics state'
+        const   = 'TRUE'>
+        <code>
+  // check at least the &quot;physics state&quot; exists
+  if ( NULL == m_states[0] )
+    throw GaudiException( &quot;Physics state not defined!&quot;,
+                          &quot;Track.h&quot;,
+                          StatusCode::FAILURE );
+  return *m_states[0];
+        </code>
+      </method>
+
+      <method
         type    = 'int'
         name    = 'charge'
         const   = 'TRUE'
         desc    = 'Retrieve the charge assigned to the track'>
         <code>
-  double qP = m_physicsState.qOverP();
+  double qP = physicsState().qOverP();
   return ( qP != 0. ? int(fabs(qP)/qP) : 0 );
         </code>
       </method>
@@ -247,14 +257,12 @@
   return m_states.size();
         </code>
       </method>
-
-     <method
-       name    = 'addToStates'
+      
+    <method
+        name    = 'addToStates'
        desc    = 'Add a State to the list of states associated to the track'>
-        <arg type = 'State ' name=' state' />
-        <code>
-  m_states.push_back( state.clone() );
-        </code>
+        <arg type = 'const State' name=' state' />
+        <arg type = 'bool' name='inOrder' />
       </method>
 
      <method
@@ -300,21 +308,21 @@
       <method
         type    = 'bool'
         name    = 'hasStateAt'
-        argList = 'const State::Location value'
+        argList = 'unsigned int location'
         desc    = 'check the existence of a state at a certain predefined location. See State class.'
         const   = 'TRUE' />
 
       <method
-        type    = 'State*'
+        type    = 'State &amp;'
         name    = 'stateAt'
-        argList = 'const State::Location value'
-        desc    = 'Retrieve the pointer to the state at a certain predefined location. See State class.' />
+        argList = 'unsigned int location'
+        desc    = 'Retrieve the state at a certain predefined location. See State class.' />
 
       <method
-        type    = 'const State*'
+        type    = 'const State &amp;'
         name    = 'stateAt'
-        argList = 'const State::Location value'
-        desc    = 'Retrieve the pointer to the state at a certain predefined location. See State class.'
+        argList = 'unsigned int location'
+        desc    = 'Retrieve the const state at a certain predefined location. See State class.'
         const   = 'TRUE' />
 
       <method
@@ -332,9 +340,19 @@
       <method
         name    = 'addToMeasurements'
         desc    = 'add a measurement to the list associated to the track'>
-        <arg type = 'Measurement ' name='meas' />
+        <arg type = 'const Measurement' name='meas' />
+        <arg type = 'bool' name='inOrder' />
+      </method>
+
+     <method
+        name    = 'removeFromMeasurements'
+        desc    = 'Remove a measurement from the list of measurements associated to the track'
+        argList = 'Measurement* value'>
         <code>
-  m_measurements.push_back( meas.clone() );
+  std::vector&lt;Measurement*&gt;::iterator iter =
+    std::remove( m_measurements.begin(), m_measurements.end(), value );
+  delete *iter;
+  m_measurements.erase( iter, m_measurements.end() );
         </code>
       </method>
 
@@ -344,6 +362,18 @@
         <arg type = 'Node*' name='node' />
         <code>
   m_nodes.push_back( node );
+        </code>
+      </method>
+
+     <method
+        name    = 'removeFromNodes'
+        desc    = 'Remove a Node from the list of nodes associated to the track'
+        argList = 'Node* value'>
+        <code>
+  std::vector&lt;Node*&gt;::iterator iter =
+    std::remove( m_nodes.begin(), m_nodes.end(), value );
+  delete *iter;
+  m_nodes.erase( iter, m_nodes.end() );
         </code>
       </method>
 
@@ -376,6 +406,17 @@
         </code>
       </method>
 
+     <method
+        name    = 'removeFromAncestors'
+        desc    = 'Remove an ancestor track from the list of ancestors associated to the track'
+        argList = 'Track&amp; value'>
+        <code>
+  std::vector&lt;Track*&gt;::iterator iter =
+    std::remove( m_ancestors.begin(), m_ancestors.end(), &amp;value );
+  m_ancestors.erase( iter, m_ancestors.end() );
+        </code>
+      </method>
+
       <method
         type    = 'void'
         name    = 'reset'
@@ -391,66 +432,61 @@
         const   = 'TRUE' />
 
       <method
-        name    = 'setType'
+        type    = 'bool'
+        name    = 'checkType'
         argList = 'unsigned int value'
-        desc    = 'set type of the track (values in TrackKeys::Types)'
-        />
+        desc    = 'check the type of the track'
+        const   = 'TRUE'>
+        <code>
+  return type() == value;
+        </code>
+      </method>
 
       <method
-        type    = 'unsigned int'
-        name    = 'type'
-        desc    = 'return the type of the track'
-        const   = 'TRUE'/> 
-
-      <method
-        name    = 'setHistory'
+        type    = 'bool'
+        name    = 'checkHistory'
         argList = 'unsigned int value'
-        desc    = 'set the name of the algorithm (ParRec) thar made the track (see in TrackKeys::History)'
-        />
+        desc    = 'check the history of the track'
+        const   = 'TRUE'>
+        <code>
+  return history() == value;
+        </code>
+      </method>
 
       <method
-        type    = 'unsigned int'
-        name    = 'history'
-        desc    = 'return the algorithm that created the track '
-        const   = 'TRUE'/> 
-
-      <method
-        name    = 'setHistoryFit'
-        argList = 'unsigned int'
-        desc    = 'set the algorithm that fitted the track (TrackKeys::HistoryFit)'
-        />
-
-      <method
-        type    = 'unsigned int'
-        name    = 'historyFit'
-        desc    = 'return the fitting algorithm '
-        const   = 'TRUE'/> 
-      
-      <method
-        name    = 'setStatus'
-        argList = 'unsigned int'
-        desc    = 'set the status of the track (see TrackKeys::Status)'
-        />
-
-      <method
-        type    = 'unsigned int'
-        name    = 'status'
-        desc    = 'return the status of the track '
-        const   = 'TRUE'/> 
+        type    = 'bool'
+        name    = 'checkHistoryFit'
+        argList = 'unsigned int value'
+        desc    = 'check the fit history of the track'
+        const   = 'TRUE'>
+        <code>
+  return historyFit() == value;
+        </code>
+      </method>
 
       <method
         name    = 'setFlag'
-        argList = 'unsigned int, bool value'
-        desc    = 'Update the flag (see TrackKeys::Flags)'
-        />
+        argList = 'unsigned int flag, bool ok'
+        desc    = 'Update the flag (see TrackKeys::Flags)'>
+        <code>
+  unsigned int val = (((unsigned int) flag) &lt;&lt; flagBits) &amp; flagMask;
+  if (ok) m_flags |= val;
+  else m_flags &amp;= ~val;
+        </code>
+      </method>
 
       <method
         type    = 'bool'
         name    = 'checkFlag'
-        argList = 'unsigned int flag '
-        desc    = 'return the status of the flag '
-        const   = 'TRUE'/> 
-
+        argList = 'unsigned int flag'
+        desc    = 'check the status of the flag'
+        const   = 'TRUE'>
+        <code>
+  unsigned int val = ((unsigned int) flag &lt;&lt; flagBits);  
+  bool ok = (0 != ( m_flags &amp; flagMask &amp; val ));
+  return ok;
+        </code>
+      </method> 
 
     </class>
 
