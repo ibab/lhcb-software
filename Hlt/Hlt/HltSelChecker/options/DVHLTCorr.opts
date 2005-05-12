@@ -1,6 +1,6 @@
 ApplicationMgr.DLLs += {"HltSelChecker"};
 #include "$HLTSELECTIONSROOT/options/DVHLTExSelections.opts"
-
+HltDecision.MakeCorrelations = true ;
 //==============================================================================
 // The offline selections
 //==============================================================================

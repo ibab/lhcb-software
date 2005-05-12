@@ -39,3 +39,6 @@ CheckHLTDstar.RequireDstar = true ;
 #include "$HLTSELCHECKERROOT/options/CorrDstar.opts"
 #include "$HLTSELCHECKERROOT/options/CorrDiMuons.opts"
 #include "$HLTSELCHECKERROOT/options/CorrHLTsels.opts"
+
+
+HltDecision.MakeCorrelations = true ;
