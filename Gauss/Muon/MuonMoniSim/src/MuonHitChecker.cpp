@@ -110,11 +110,7 @@ StatusCode MuonHitChecker::crNtuples() {
   nt1->farray("dx", m_dix ,"Nhits",1000);
   nt1->farray("xz", m_dxz ,"Nhits",1000);
   nt1->farray("yz", m_dyz ,"Nhits",1000);
-
-  // Fill N-tuple
-  if (m_nhits!=0){ 
-    nt1->write();  
-  }
+  nt1->write();  
 
   return StatusCode::SUCCESS;
 
@@ -145,8 +141,6 @@ StatusCode MuonHitChecker::execute() {
   m_tv.clear();   m_mom.clear();  m_ple.clear();  m_hen.clear();  m_dix.clear();
   m_dxz.clear();   m_dyz.clear();  
   
-  m_nhits = 0;
-
   for(int iterRegion=0; iterRegion<m_partition; iterRegion++){
     int station=iterRegion/m_regionNumber;
     int region=iterRegion%m_regionNumber;    
@@ -251,8 +245,6 @@ StatusCode MuonHitChecker::execute() {
     }  
   }  
 
-  debug()<<" Hits retrieved correctly. " <<m_nhits<<" hits found."<<endmsg;
-  
   // book vectors of histos
   StatusCode sc;
   if(m_detailedMonitor && (fullDetail() == true) ) sc = crNtuples();

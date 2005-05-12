@@ -1,4 +1,4 @@
-// $Id: MuonHitChecker.h,v 1.1.1.1 2005-05-05 09:42:12 asarti Exp $
+// $Id: MuonHitChecker.h,v 1.2 2005-05-12 14:09:03 asarti Exp $
 #ifndef MuonHitChecker_H 
 #define MuonHitChecker_H 1
 
@@ -54,7 +54,6 @@ private:
   /// N-tuple items to be written away (hit)
   long  m_run;
   long  m_evt;
-  long  m_nhits;
   std::vector<float> m_sta;
   std::vector<float> m_reg;
   std::vector<float> m_con;
