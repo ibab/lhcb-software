@@ -1,7 +1,11 @@
-! $Id: release.notes,v 1.159 2005-05-02 11:57:26 pkoppenb Exp $
+! $Id: release.notes,v 1.160 2005-05-12 07:14:53 pkoppenb Exp $
 ! Package     : DaVinciTools
 ! Responsible : P. Koppenburg
 
+! 2005-05-12 - P. Koppenburg
+  - src/CheckPV.cpp
+    . No info() printout in execute()
+    
 ! 2005-05-02 - P. Koppenburg
   - src/MakeResonances.cpp
     . Remove MakePlots option. Now use HistoProduce option inherited from
