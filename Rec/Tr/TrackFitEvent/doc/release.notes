@@ -4,6 +4,10 @@
 ! Purpose     : Package for the tracking fitting-related classes
 !-----------------------------------------------------------------------------
 
+! 2005-05-12 - Eduardo Rodrigues
+ - MeasurementFunctor removed. A templated Functor for Measurements and
+   States was added to Event/TrackEvent
+
 ! 2005-04-15 - Eduardo Rodrigues
  - FitNode class added (adaptation of TrNode in TrFitter)
  - MeasurementFunctor adapted to use Track and not FitTrack

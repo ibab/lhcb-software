@@ -19,7 +19,7 @@ include_dirs      $(TRACKFITEVENTROOT)
 # Used packages. Specify the version, * at the end specifies 'any revision'
 #    Put as many lines as needed, with all packages, without the '#'
 #============================================================================
-use   TrackEvent      v1r*    Event
+use   TrackEvent      v*      Event
 use   OTEvent         v*      Event
 use   ITEvent         v*      Event
 use   VeloEvent       v*      Event

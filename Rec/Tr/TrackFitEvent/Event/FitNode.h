@@ -89,7 +89,7 @@ public:
   void updateFilteredState( State* filteredState );
 
   /// get best = smoothed state from node
-  State* bestState() const                 {  return m_state;  }
+State* bestState() const                 {  return m_state;  }
 
   /// set best = smoothed state from node
   void setBestState( State* bestState )      {  m_state = bestState; }
