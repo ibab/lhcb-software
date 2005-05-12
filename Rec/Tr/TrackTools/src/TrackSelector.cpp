@@ -185,8 +185,6 @@ unsigned int TrackSelector::trackType( MCParticle* mcPart )
   m_previousTrackType  = tracktype;
   m_previousMCParticle = mcPart;
 
-  debug() << "- MCParticle of type " << tracktype << endreq;
-
   return tracktype;
 }
 

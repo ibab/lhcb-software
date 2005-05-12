@@ -4,6 +4,9 @@
 ! Purpose     : Package for tracking tools
 !-----------------------------------------------------------------------------
 
+! 2005-05-12 - Eduardo Rodrigues
+ - IBIntegrator.h interface and BIntegrator tool added
+
 ! 2005-05-09 - Eduardo Rodrigues
  - ITrackSelector interface and TrackSelector tool added
 
