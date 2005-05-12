@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE DDDB SYSTEM "DTD/structure.dtd">
+<DDDB> 
+  <catalog name="dd">
+    <catalog name="multiDBTest">
+      <conditionref href="conddb:/multiDBTest/Folder1#Cond1"/>
+      <conditionref href="conddb:/multiDBTest/Folder2#Cond2"/>
+    </catalog>
+  </catalog>
+</DDDB>
