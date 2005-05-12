@@ -4,6 +4,7 @@
 ! Purpose     : High-Level Trigger Exclusive Selections - Checking 
 !-----------------------------------------------------------------------------
 
+!========================== HltSelChecker v3r1 2005-05-12 ===================
 ! 2005-05-11 - P. Koppenburg
   - src/CheckHltGeneric.cpp
     . Removed. Replaced by HltFilter in HltSelections.
