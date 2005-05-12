@@ -4,6 +4,19 @@
 ! Purpose     : Holds final reconstruction code
 !-----------------------------------------------------------------------------
 
+! 2005-05-12 - Vanya BELYAEV
+ - src/ChargedProtoPAlg.h,.cpp
+    1) remove all calo-related associators, 
+    2) make direct usage of relation tables 
+    3) *****  use GaudiAlgorithm as a base class. 
+ - src/NeutralPPsFromCPsAlg.cpp 
+    1) remove all calo-related associators, 
+    2) make direct usage of relation tables 
+    3) cosmetics 
+ - src/NeutralPPsFromCPsAlg.h
+    remove the obsolete file 
+
+
 !========================== GlobalReco v4r8p1 2004-09-16 ===================
 ! 2004-09-13 -P. Koppenburg
   - cmt/requirements

@@ -1,4 +1,4 @@
-// $
+// $Id: ChargedProtoPAlg.cpp,v 1.23 2005-05-12 09:55:56 ibelyaev Exp $
 // Include files 
 #include <memory>
 
@@ -36,17 +36,19 @@ const        IAlgFactory& ChargedProtoPAlgFactory = s_factory ;
 //=============================================================================
 ChargedProtoPAlg::ChargedProtoPAlg( const std::string& name,
                                     ISvcLocator* pSvcLocator)
-  : Algorithm ( name , pSvcLocator )
-  , m_electronPath( "Rec/Calo/Electrons" )
-  , m_photonMatchName( "PhotonMatch" )
-  , m_electronMatchName( "ElectronMatch" )
-  , m_bremMatchName( "BremMatch" )
-  , m_dLLeEcalName ( "EcalPIDe" )
-  , m_dLLePrsName  ( "PrsPIDe" )
-  , m_dLLeBremName ( "BremPIDe" )
-  , m_dLLeHcalName ( "HcalPIDe" )
-  , m_dLLmuEcalName( "EcalPIDmu" )
-  , m_dLLmuHcalName( "HcalPIDmu" )
+  : GaudiAlgorithm ( name , pSvcLocator )
+  //
+  , m_electronPath      ( "Rec/Calo/Electrons"     )
+  , m_photonMatchName   ( "Rec/Calo/PhotonMatch"   )
+  , m_electronMatchName ( "Rec/Calo/ElectronMatch" )
+  , m_bremMatchName     ( "Rec/Calo/BremMatch"     )
+  , m_dLLeEcalName      ( "Rec/Calo/EcalPIDe"      )
+  , m_dLLePrsName       ( "Rec/Calo/PrsPIDe"       )
+  , m_dLLeBremName      ( "Rec/Calo/BremPIDe"      )
+  , m_dLLeHcalName      ( "Rec/Calo/HcalPIDe"      ) 
+  , m_dLLmuEcalName     ( "Rec/Calo/EcalPIDmu"     )
+  , m_dLLmuHcalName     ( "Rec/Calo/HcalPIDmu"     )
+  //
   , m_downstream( true )
   , m_velott( true )
   , m_trackClassCut( 0.4 )
@@ -55,15 +57,6 @@ ChargedProtoPAlg::ChargedProtoPAlg( const std::string& name,
   , m_chiSqVTT( 5.0 )
   , m_chiSqDowns( 3.0 )
   , m_ptVTT( 50.0 )
-  , m_photonMatch(0)
-  , m_electronMatch(0)
-  , m_bremMatch(0)
-  , m_ecalPIDe(0)  
-  , m_prsPIDe(0)  
-  , m_bremPIDe(0)  
-  , m_hcalPIDe(0)  
-  , m_ecalPIDmu(0)  
-  , m_hcalPIDmu(0)  
   , m_errorCount( )
   , m_monitor( false )
 {
@@ -115,10 +108,12 @@ ChargedProtoPAlg::~ChargedProtoPAlg() {};
 //=============================================================================
 StatusCode ChargedProtoPAlg::initialize() {
 
+  StatusCode sc = GaudiAlgorithm::initialize() ;
+  if ( sc.isFailure() ) { return sc ; }
+
   MsgStream msg(msgSvc(), name());
   msg << MSG::DEBUG << "==> Initialise" << endreq;
 
-  StatusCode sc;
   IParticlePropertySvc* ppSvc;
   sc = service("ParticlePropertySvc", ppSvc);
   if( sc.isFailure() ) {
@@ -142,13 +137,6 @@ StatusCode ChargedProtoPAlg::initialize() {
 
   partProp = ppSvc->find( "p+" );
   m_idProton = partProp->jetsetID();
-
-  // Associators for CaloTables
-  sc = caloPIDTools();
-  if( !sc.isSuccess() ) {
-    msg << MSG::ERROR << "Unable to retrieve Calo PIDs Tools" << endreq;
-    return sc;
-  }
 
   // MuonID Delta Log Likelihood tool
   sc = toolSvc()->retrieveTool( "MuonIDDLLTool",  m_muonIDdll );
@@ -260,52 +248,89 @@ StatusCode ChargedProtoPAlg::execute() {
           << " CaloHypo at " << m_electronPath << endreq;
     } 
   }
-
+  
   /// Check the tables for electronID exist
-  const PhotonTable* phtable = m_photonMatch->inverse();
-  if( 0 == phtable ) { 
-    msg << MSG::DEBUG << "Table from PhotonMatch points to NULL" << endreq;
-    caloData = false;
-    m_errorCount["5. No photon table      "] += 1;
+  // Track->Cluster position matching relation table  
+  const PhotonTable* phtable = 0 ;
+  {
+    const _PMT2D* pmt2d = get<_PMT2D>( m_photonMatchName ) ;
+    if ( 0 != pmt2d   ) { phtable = pmt2d->inverse() ; }
+    if ( 0 == phtable )
+    { 
+      msg << MSG::DEBUG << "Table from PhotonMatch points to NULL" << endreq;
+      caloData = false;
+      m_errorCount["5. No photon table      "] += 1;
+    } 
   }
-  const ElectronTable* etable = m_electronMatch->inverse();
-  if( 0 == etable ) { 
-    msg << MSG::DEBUG << "Table from ElectronMatch points to NULL" << endreq;
-    caloData = false;
-    m_errorCount["6. No electron table    "] += 1;
+  // Track->Hypo energy/position matching relation table 
+  const ElectronTable* etable = 0 ; 
+  {
+    const _EMT2D* emt2d = get<_EMT2D> ( m_electronMatchName  ) ;
+    if ( 0 != emt2d  ) { etable = emt2d -> inverse() ; }
+    if ( 0 == etable ) 
+    { 
+      msg << MSG::DEBUG << "Table from ElectronMatch points to NULL" << endreq;
+      caloData = false;
+      m_errorCount["6. No electron table    "] += 1;
+    }
   }
-  const BremTable* brtable = m_bremMatch->inverse();
-  if( 0 == brtable ) { 
-    msg << MSG::DEBUG << "Table from BremMatch points to NULL" << endreq;
-    m_errorCount["7. No brems table       "] += 1;
+  
+  // Track->Hypo   bremstrahlung position matching relation table 
+  const BremTable* brtable = 0 ; 
+  {
+    const _BMT2D* bmt2d = get<_BMT2D> ( m_bremMatchName ) ;
+    if ( 0 != bmt2d   ) { brtable = bmt2d->inverse() ; }
+    if ( 0 == brtable ) 
+    { 
+      msg << MSG::DEBUG << "Table from BremMatch points to NULL" << endreq;
+      m_errorCount["7. No brems table       "] += 1;
+    }    
   }
-  const TrkCaloPIDTable* eEcalTable = m_ecalPIDe->direct();
-  if( 0 == eEcalTable ) {
+  
+  const TrkCaloPIDTable* eEcalTable = 
+    get<TrkCaloPIDTable>( m_dLLeEcalName ) ;
+  if ( 0 == eEcalTable ) 
+  {
     msg << MSG::DEBUG << "Table EcalPIDe points to NULL";
     m_errorCount["7a.No EcalPIDe table    "] += 1;
   }
-  const TrkCaloPIDTable* ePrsTable = m_prsPIDe->direct();
-  if( 0 == ePrsTable ) {
+  
+  const TrkCaloPIDTable* ePrsTable = 
+    get<TrkCaloPIDTable> ( m_dLLePrsName ) ;
+  if ( 0 == ePrsTable ) 
+  {
     msg << MSG::DEBUG << "Table PrsPIDe points to NULL";
     m_errorCount["7b.No PrsPIDe  table    "] += 1;
   }
-  const TrkCaloPIDTable* eBremTable = m_bremPIDe->direct();
-  if( 0 == eBremTable ) {
+  
+  const TrkCaloPIDTable* eBremTable = 
+    get<TrkCaloPIDTable> ( m_dLLeBremName ) ;
+  if ( 0 == eBremTable ) 
+  {
     msg << MSG::DEBUG << "Table BremPIDe points to NULL";
     m_errorCount["7c.No BremPIDe table    "] += 1;
   }
-  const TrkCaloPIDTable* eHcalTable = m_hcalPIDe->direct();
-  if( 0 == eHcalTable ) {
+  
+  const TrkCaloPIDTable* eHcalTable = 
+    get<TrkCaloPIDTable> ( m_dLLeHcalName ) ;
+  if ( 0 == eHcalTable ) 
+  {
     msg << MSG::DEBUG << "Table HcalPIDe points to NULL";
     m_errorCount["7d.No HcalPIDe table    "] += 1;
   }
-  const TrkCaloPIDTable* muEcalTable = m_ecalPIDmu->direct();
-  if( 0 == muEcalTable ) {
+  
+  const TrkCaloPIDTable* muEcalTable = 
+    get<TrkCaloPIDTable> ( m_dLLmuEcalName ) ;
+  if ( 0 == muEcalTable ) 
+  {
     msg << MSG::DEBUG << "Table EcalPIDmu points to NULL";
     m_errorCount["7e.No EcalPIDmu table   "] += 1;
   }
-  const TrkCaloPIDTable* muHcalTable = m_hcalPIDmu->direct();
-  if( 0 == muHcalTable ) {
+  
+  const TrkCaloPIDTable* muHcalTable = 
+    get<TrkCaloPIDTable> ( m_dLLmuHcalName ) ;
+  if ( 0 == muHcalTable ) 
+  {
     msg << MSG::DEBUG << "Table HcalPIDmu points to NULL";
     m_errorCount["7f.No HcalPIDmu table   "] += 1;
   }
@@ -388,83 +413,125 @@ StatusCode ChargedProtoPAlg::execute() {
     }
     
     // Add CaloElectrons to this ProtoParticle   
-    if( caloData ) {  
-      // Add the Electron hypothesis when available (no cuts at the moment)
-      const ElectronRange erange = etable->relations( *iTrack );
-      if( !erange.empty() ) {
-        countProto[ElectronProto]++;
-        CaloHypo* hypo = erange.begin()->to();
-        proto->addToCalo( hypo );
-        
-        double chi2 = erange.begin()->weight();
+    
+    // Add the Electron hypothesis when available (no cuts at the moment)
+    if ( 0 != etable )
+    {
+      const ElectronTable::Range range = etable->relations ( *iTrack ) ;
+      if ( !range.empty() )
+      {
+        ++countProto[ElectronProto];
+        //
+        const CaloHypo* hypo = range.front().to    () ;
+        const double    chi2 = range.front().weight() ;
+        if ( 0 != hypo ) { proto->addToCalo ( hypo ) ; }
         proto->pIDDetectors().
           push_back( std::make_pair(ProtoParticle::CaloEMatch, chi2) );
-        
-        // Add the CaloCluster chi2 (only lowest)
-        const PhotonRange phrange = phtable->relations( *iTrack );
-        if( !phrange.empty() ) {
-          chi2 = phrange.begin()->weight();
-          proto->pIDDetectors().
-            push_back( std::make_pair(ProtoParticle::CaloTrMatch, chi2) );
-        }
-        
-        // Add Brem hypothesis and chi2 (only lowest)
-        const BremRange brrange = brtable->relations( *iTrack );
-        if( !brrange.empty() ) {
-          hypo = brrange.begin()->to();
-          proto -> addToCalo( hypo );
-          chi2 = brrange.begin()->weight();
-          proto->pIDDetectors().
-            push_back( std::make_pair(ProtoParticle::BremMatch, chi2) );
-        }
-
-        // Add Delta Log Likelihood for e+/- based on Ecal
-        double caloDLL = 0.0;
-        const TrkCaloPIDRange eecalrange = eEcalTable->relations( *iTrack );
-        if( !eecalrange.empty() ) {
-          proto->setCaloeBit(1);
-          caloDLL = eecalrange.front().to();
-          proto->pIDDetectors().
-            push_back( std::make_pair(ProtoParticle::ECalPIDe, caloDLL) );
-          (combDLL->m_eDLL) += caloDLL;
-        }
-        const TrkCaloPIDRange eprsrange = ePrsTable->relations( *iTrack );
-        if( !eprsrange.empty() ) {
-          caloDLL = eprsrange.front().to();
-          proto->pIDDetectors().
-            push_back( std::make_pair(ProtoParticle::PrsPIDe, caloDLL) );
-          (combDLL->m_eDLL) += caloDLL;
-        }
-        const TrkCaloPIDRange ebremrange = eBremTable->relations( *iTrack );
-        if( !ebremrange.empty() ) {
-          caloDLL = ebremrange.front().to();
-          proto->pIDDetectors().
-            push_back( std::make_pair(ProtoParticle::BremPIDe, caloDLL) );
-          (combDLL->m_eDLL) += caloDLL;
-        }
-        const TrkCaloPIDRange ehcalrange = eHcalTable->relations( *iTrack );
-        if( !ehcalrange.empty() ) {
-          caloDLL = ehcalrange.front().to();
-          proto->pIDDetectors().
-            push_back( std::make_pair(ProtoParticle::HcalPIDe, caloDLL) );
-          (combDLL->m_eDLL) += caloDLL;
-        }
-        const TrkCaloPIDRange muecalrange = muEcalTable->relations( *iTrack );
-        if( !muecalrange.empty() ) {
-          caloDLL = muecalrange.front().to();
-          proto->pIDDetectors().
-            push_back( std::make_pair(ProtoParticle::EcalPIDmu, caloDLL) );
-          (combDLL->m_muDLL) += caloDLL;
-        }
-        const TrkCaloPIDRange muhcalrange = muHcalTable->relations( *iTrack );
-        if( !muhcalrange.empty() ) {
-          caloDLL = muhcalrange.front().to();
-          proto->pIDDetectors().
-            push_back( std::make_pair(ProtoParticle::HcalPIDmu, caloDLL) );
-          (combDLL->m_muDLL) += caloDLL;
-        }         
+      } 
+    }
+    if ( 0 != phtable ) 
+    {
+      const PhotonTable::Range range = phtable->relations ( *iTrack ) ;
+      if ( !range.empty() )
+      {
+        //
+        const double    chi2 = range.front().weight() ;
+        proto->pIDDetectors().
+          push_back( std::make_pair(ProtoParticle::CaloTrMatch, chi2) );
+      }  
+    }
+    if ( 0 != brtable ) 
+    {
+      const BremTable::Range range = brtable->relations ( *iTrack ) ;
+      const CaloHypo* hypo = range.front() .to() ;
+      const double    chi2 = range.front().weight() ;
+      if ( 0 != hypo ) { proto->addToCalo ( hypo ) ; }
+      proto->pIDDetectors().
+        push_back( std::make_pair(ProtoParticle::BremMatch, chi2) );
+    }
+    
+    double caloDLLe  = 0 ;
+    double caloDLLmu = 0 ;
+    
+    if ( 0 != eEcalTable ) 
+    {
+      const TrkCaloPIDTable::Range range = eEcalTable->relations ( *iTrack ) ;
+      if ( !range.empty() ) 
+      {
+        //
+        proto->setCaloeBit(1) ;
+        //
+        const double value = range.front().to() ;
+        proto->pIDDetectors().
+          push_back( std::make_pair(ProtoParticle::ECalPIDe, value ) );
+        //
+        caloDLLe += value ; (combDLL->m_eDLL) += caloDLLe ;
       }
     }
+    if ( 0 != ePrsTable ) 
+    {
+      const TrkCaloPIDTable::Range range = ePrsTable->relations ( *iTrack ) ;
+      if ( !range.empty() ) 
+      {
+        //
+        proto->setCaloeBit(1) ;
+        //
+        const double value = range.front().to() ;
+        proto->pIDDetectors().
+          push_back( std::make_pair(ProtoParticle::PrsPIDe, value ) );
+        //
+        caloDLLe += value ; (combDLL->m_eDLL) += caloDLLe ;
+      }
+    }    
+    if ( 0 != eBremTable ) 
+    {
+      const TrkCaloPIDTable::Range range = eBremTable->relations ( *iTrack ) ;
+      if ( !range.empty() ) 
+      {
+        const double value = range.front().to() ;
+        proto->pIDDetectors().
+          push_back( std::make_pair(ProtoParticle::BremPIDe, value ) );
+        //
+        caloDLLe += value ; (combDLL->m_eDLL) += caloDLLe ;
+      }
+    }
+    if ( 0 != eHcalTable ) 
+    {
+      const TrkCaloPIDTable::Range range = eHcalTable->relations ( *iTrack ) ;
+      if ( !range.empty() ) 
+      {
+        const double value = range.front().to() ;
+        proto->pIDDetectors().
+          push_back( std::make_pair(ProtoParticle::HcalPIDe, value ) );
+        //
+        caloDLLe += value ; (combDLL->m_eDLL) += caloDLLe ;
+      }
+    }
+    if ( 0 != muEcalTable ) 
+    {
+      const TrkCaloPIDTable::Range range = muEcalTable->relations ( *iTrack ) ;
+      if ( !range.empty() ) 
+      {
+        const double value = range.front().to() ;
+        proto->pIDDetectors().
+          push_back( std::make_pair(ProtoParticle::EcalPIDmu, value ) );
+        //
+        caloDLLmu += value ; (combDLL->m_muDLL) += caloDLLmu ;
+      }
+    }
+    if ( 0 != muHcalTable ) 
+    {
+      const TrkCaloPIDTable::Range range = muHcalTable->relations ( *iTrack ) ;
+      if ( !range.empty() ) 
+      {
+        const double value = range.front().to() ;
+        proto->pIDDetectors().
+          push_back( std::make_pair(ProtoParticle::HcalPIDmu, value ) );
+        //
+        caloDLLmu += value ; (combDLL->m_muDLL) += caloDLLmu ;
+      }
+    }
+    
     
     // Particle IDs from various detectors, if none are available
     // set NoneBit and assume is a pion
@@ -550,17 +617,6 @@ StatusCode ChargedProtoPAlg::finalize() {
   MsgStream msg(msgSvc(), name());
 
   msg << MSG::DEBUG << "Release Tools" << endreq;
-  if( m_photonMatch )   toolSvc()->releaseTool( m_photonMatch );
-  if( m_electronMatch ) toolSvc()->releaseTool( m_electronMatch );
-  if( m_bremMatch )     toolSvc()->releaseTool( m_bremMatch );
-  if( m_ecalPIDe )      toolSvc()->releaseTool( m_ecalPIDe );
-  if( m_prsPIDe )       toolSvc()->releaseTool( m_prsPIDe );
-  if( m_bremPIDe )      toolSvc()->releaseTool( m_bremPIDe );
-  if( m_hcalPIDe )      toolSvc()->releaseTool( m_hcalPIDe );
-  if( m_ecalPIDmu )     toolSvc()->releaseTool( m_ecalPIDmu );
-  if( m_hcalPIDmu )     toolSvc()->releaseTool( m_hcalPIDmu );
-  if( m_muonIDdll )     toolSvc()->releaseTool( m_muonIDdll );
-
 
   msg << MSG::INFO << "********* ProtoParticles error Summary ***********"
       << endreq;
@@ -577,7 +633,7 @@ StatusCode ChargedProtoPAlg::finalize() {
   msg << MSG::INFO << "**************************************************"
       << endreq;
   
-  return StatusCode::SUCCESS;
+  return GaudiAlgorithm::finalize() ;
 }; 
 
 //=============================================================================
@@ -810,85 +866,6 @@ StatusCode ChargedProtoPAlg::addRich( SmartDataPtr<RichPIDs>& richpids,
   return sc;
 }
 
-//=============================================================================
-// Retrieve tools for Calorimeters PIDs
-//=============================================================================
-StatusCode ChargedProtoPAlg::caloPIDTools() {
-  
-  MsgStream msg(msgSvc(), name());
-  StatusCode sc = StatusCode::SUCCESS;
-
-  // Associators for CaloTables
-  std::string matchType="AssociatorWeighted<CaloCluster,TrStoredTrack,float>";
-  sc = toolSvc()->retrieveTool( matchType, m_photonMatchName, m_photonMatch );
-  if( !sc.isSuccess() ) {
-    msg << MSG::ERROR << "Unable to retrieve " << matchType << "/"
-        << m_photonMatchName << endreq;
-    return sc;
-  }
-
-  matchType = "AssociatorWeighted<CaloHypo,TrStoredTrack,float>";
-  sc = toolSvc()->retrieveTool( matchType, m_electronMatchName,
-                                m_electronMatch );
-  if( !sc.isSuccess() ) {
-    msg << MSG::ERROR << "Unable to retrieve " << matchType << "/"
-        << m_electronMatchName << endreq;
-    return sc;
-  }
-
-  matchType = "AssociatorWeighted<CaloHypo,TrStoredTrack,float>";
-  sc = toolSvc()->retrieveTool( matchType, m_bremMatchName, m_bremMatch );
-  if( !sc.isSuccess() ) {
-    msg << MSG::ERROR << "Unable to retrieve " << matchType << "/"
-        << m_bremMatchName << endreq;
-    return sc;
-  }
-
-  matchType = "Associator<TrStoredTrack,float>";
-  sc = toolSvc()->retrieveTool( matchType, m_dLLeEcalName, m_ecalPIDe );
-  if( !sc.isSuccess() ) {
-    msg << MSG::ERROR << "Unable to retrieve " << matchType << "/" 
-        << m_dLLeEcalName << endreq;
-    return sc;
-  }
-
-  sc = toolSvc()->retrieveTool( matchType, m_dLLePrsName, m_prsPIDe );
-  if( !sc.isSuccess() ) {
-    msg << MSG::ERROR << "Unable to retrieve " << matchType << "/" 
-        << m_dLLePrsName << endreq;
-    return sc;
-  }
-  
-  sc = toolSvc()->retrieveTool( matchType, m_dLLeBremName, m_bremPIDe );
-  if( !sc.isSuccess() ) {
-    msg << MSG::ERROR << "Unable to retrieve " << matchType << "/" 
-        << m_dLLeBremName << endreq;
-    return sc;
-  }
-
-  sc = toolSvc()->retrieveTool( matchType, m_dLLeHcalName, m_hcalPIDe );
-  if( !sc.isSuccess() ) {
-    msg << MSG::ERROR << "Unable to retrieve " << matchType << "/" 
-        << m_dLLeHcalName << endreq;
-    return sc;
-  }
-
-  sc = toolSvc()->retrieveTool( matchType, m_dLLmuEcalName, m_ecalPIDmu );
-  if( !sc.isSuccess() ) {
-    msg << MSG::ERROR << "Unable to retrieve " << matchType << "/" 
-        << m_dLLmuEcalName << endreq;
-    return sc;
-  }
-
-  sc = toolSvc()->retrieveTool( matchType, m_dLLmuHcalName, m_hcalPIDmu );
-  if( !sc.isSuccess() ) {
-    msg << MSG::ERROR << "Unable to retrieve " << matchType << "/" 
-        << m_dLLmuHcalName << endreq;
-    return sc;
-  }
-
-  return StatusCode::SUCCESS;
-}
 
 //=============================================================================
 // Muon DLL based on MuonProb

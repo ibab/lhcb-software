@@ -7,11 +7,12 @@
 #include <string>
 #include <map>
 
-// from Gaudi
-#include "GaudiKernel/Algorithm.h"
+// from GaudiAlg 
+#include "GaudiAlg/GaudiAlgorithm.h"
 // LHCbKernel
-#include "Relations/IAssociator.h"
-#include "Relations/IAssociatorWeighted.h"
+#include "Relations/IRelation.h"
+#include "Relations/IRelationWeighted.h"
+#include "Relations/IRelationWeighted2D.h"
 // from Event
 #include "Event/CaloHypo.h"
 #include "Event/TrStoredTrack.h"
@@ -26,7 +27,8 @@
  *  @author Gloria Corti
  *  @date   2002-07-08
  */
-class ChargedProtoPAlg : public Algorithm {
+class ChargedProtoPAlg : public GaudiAlgorithm 
+{
 public:
 
   enum TrkRejectType { KeepTrack=0, NoTrack, NoTrackType, Chi2Cut, Other,
@@ -69,7 +71,6 @@ protected:
   int rejectTrack( const TrStoredTrack* track );
   StatusCode addRich( SmartDataPtr<RichPIDs>& richpids, ProtoParticle* proto,
                       CombinedDLL* combDLL );
-  StatusCode caloPIDTools();
   StatusCode muonProbDLL( ProtoParticle* proto, CombinedDLL* combDLL );
   
 private:
@@ -111,36 +112,15 @@ private:
   int m_idPion;               ///< PDG id of pi+/pi-
   int m_idKaon;               ///< PDG id of K+/K-
   int m_idProton;             ///< PDG id of p/p~ 
-
-  typedef IAssociatorWeighted<CaloCluster,TrStoredTrack,float> PhotonMatch;
-  typedef IAssociatorWeighted<CaloHypo,TrStoredTrack,float>    ElectronMatch;
-  typedef IAssociatorWeighted<CaloHypo,TrStoredTrack,float>    BremMatch;
-  typedef IAssociator<TrStoredTrack,float>                     ITrkCaloPID;
-  typedef PhotonMatch::InverseType    PhotonTable;
-  typedef ElectronMatch::InverseType  ElectronTable;
-  typedef BremMatch::InverseType      BremTable;
-  typedef ITrkCaloPID::DirectType     TrkCaloPIDTable;
-  typedef PhotonTable::Range          PhotonRange;
-  typedef ElectronTable::Range        ElectronRange;
-  typedef BremTable::Range            BremRange;
-  typedef TrkCaloPIDTable::Range      TrkCaloPIDRange;
-
-  PhotonMatch*   m_photonMatch;     ///< Associator for photon Match
-  ElectronMatch* m_electronMatch;   ///< Associator for electron Match
-  BremMatch*     m_bremMatch;       ///< Associator for brem Match
-  /// Associator for e+/- delta log likelyhood based on Ecal energy
-  ITrkCaloPID*   m_ecalPIDe;
-  /// Associator for e+/- delta log likelyhood based on Preshower 
-  ITrkCaloPID*   m_prsPIDe;
-  /// Associator for e+/- delta log likelyhood based on Brem
-  ITrkCaloPID*   m_bremPIDe;
-  /// Associator for e+/- delta log likelyhood based on Hcal
-  ITrkCaloPID*   m_hcalPIDe;
-  /// Associator for mu+/- delta log likelyhood based on Ecal
-  ITrkCaloPID*   m_ecalPIDmu; 
-  /// Associator for mu+/- delta log likelyhood based on Hcal
-  ITrkCaloPID*   m_hcalPIDmu;
-
+  
+  typedef const IRelationWeighted2D<CaloCluster,TrStoredTrack,float>   _PMT2D ;
+  typedef const _PMT2D::InverseType                               PhotonTable ;
+  typedef const IRelationWeighted2D<CaloHypo,TrStoredTrack,float>      _EMT2D ;
+  typedef const _EMT2D::InverseType                             ElectronTable ;
+  typedef const IRelationWeighted2D<CaloHypo,TrStoredTrack,float>      _BMT2D ;
+  typedef const _BMT2D::InverseType                                 BremTable ;
+  typedef const IRelation<TrStoredTrack,float>                TrkCaloPIDTable ;
+  
   /// Tool for mu+/- delta log likelyhood based on Muon System
   IMuonIDDLLTool*  m_muonIDdll;
 
