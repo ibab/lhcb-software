@@ -63,4 +63,4 @@ use RichTrgTools	v1r0    Rich
 
 # Global reco
 use PrimVtx             v2r1p1  Rec
-use GlobalReco		v4r8p1  Rec
+use GlobalReco		v4r9    Rec
