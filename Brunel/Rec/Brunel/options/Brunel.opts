@@ -163,9 +163,9 @@ ApplicationMgr.DLLs += { "Associators" };
 #include "$TRASSOCIATORSROOT/options/Brunel.opts"
 #include "$CALOASSOCIATORSOPTS/CaloAssociators.opts"
 #include "$MUONASSOCIATORSROOT/options/MuonAssociators.opts"
-RelationsCaloSeq.Members += { "CaloReCreateMCLinks" };
-RelationsCaloSeq.Members += { "CaloClustersMCTruth5Alg/CCs2MCPs" };
 ApplicationMgr.DLLs += { "AsctToLinker" };
+RelationsCaloSeq.Members += { "CaloReCreateMCLinks" }; // For Boole data  < v9r0
+CaloReCreateMCLinks.IgnoreMode = true;                 // For Boole data >= v9r0
 RelationsTrSeq.Members   += { "TrStoredTrackMCTruthAlg/Tr2MCP" };
 Tr2MCP.MakeLinker = true;
 // New style links. Also creates Relations to MCP for Velo, IT, OT, Muon

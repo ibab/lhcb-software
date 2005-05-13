@@ -3,8 +3,9 @@ Package: Rec/Brunel
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb reconstruction program
 
-</PRE><H1><A NAME=v27r0>2005-05-04 Brunel v27r0</A></H1><PRE>
+</PRE><H1><A NAME=v27r0>2005-05-13 Brunel v27r0</A></H1><PRE>
 - Adapt requirements to use RecSys v1r0, Lbcom v2r0, LHCb v18r4
+- Adapt options to new version of Calorimeter associations
 - Add STTools to loaded DLLs
 - Fixes to Copy.opts
 

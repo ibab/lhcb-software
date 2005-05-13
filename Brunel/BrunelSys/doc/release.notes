@@ -3,11 +3,23 @@ Package: Rec/Brunel
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb reconstruction program
 
-</PRE><H1><A NAME=v27r0>2005-04-25 Brunel v27r0</A></H1><PRE>
+</PRE><H1><A NAME=v27r0>2005-05-10 Brunel v27r0</A></H1><PRE>
 This version uses Gaudi v16r3, LHCb v18r4 (also CLHEP 1.9, ROOT 4.0)
-Requires input data from Boole v8r2 or greater. Incompatible with DC04 versions
+Requires input data from Boole v8r3 or greater. Incompatible with DC04 versions
 
-Identical to v26r3, but now based on RecSys project.
+Based on v26r3, and new RecSys project.
+
+- Modified packaging
+  . Complete restructuring of CaloAssociators (CaloAssociators v5r0)
+  . Update for CaloTrackAlg and CaloTrackHistoAlg base classes and remove 
+    associator tools 
+    (CaloUtils v4r9, CaloReco v2r8, CaloPIDs v2r5, CaloMoniDst v1r1)
+  . Remove dependency on ITAlgorithms, get ISTSignalToNoiseTool from STTools
+    (STTools v1r1, LongTrack v1r15, TrKShort v1r6, VeloTT v1r13)
+
+- Persistency changes
+  . Save Link/Raw/Calo/Digits instead of Rec/Relations/EcalClusters2MCParticles
+  . Remove Rec/Relations/Tr2MCP
 
 </PRE><H1><A NAME=v26r3>2005-04-19 Brunel v26r3</A></H1><PRE>
 Requires input data from Boole v8r2 or greater. Incompatible with DC04 versions

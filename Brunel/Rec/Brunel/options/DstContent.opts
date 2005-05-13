@@ -72,10 +72,8 @@ DstWriter.ItemList =
 , "/Event/Rec/Muon/M4/Coords#1"
 , "/Event/Rec/Muon/M5/Coords#1"
 , "/Event/Rec/Muon/MuonID#1"
-  // "Relations" MC truth
+  // Keep "Relations" directory to allow recreation in DaVinci
 , "/Event/Rec/Relations#1"
-, "/Event/Rec/Relations/EcalClusters2MCParticles#1"
-, "/Event/Rec/Relations/Tr2MCP#1"
   // "Links" MC truth
 , "/Event/Link#1"
 , "/Event/Link/Trig#1"
@@ -89,6 +87,8 @@ DstWriter.ItemList =
 , "/Event/Link/Raw/IT/Digits#1"
 , "/Event/Link/Raw/OT#1"
 , "/Event/Link/Raw/OT/Times#1"
+, "/Event/Link/Raw/Ecal#1"
+, "/Event/Link/Raw/Ecal/Digits#1"
 , "/Event/Link/Rec#1"
 , "/Event/Link/Rec/IT#1"
 , "/Event/Link/Rec/IT/Clusters#1"
