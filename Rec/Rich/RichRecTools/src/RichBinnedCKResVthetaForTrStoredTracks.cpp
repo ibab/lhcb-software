@@ -1,15 +1,16 @@
 
+//-----------------------------------------------------------------------------
 /** @file RichBinnedCKResVthetaForTrStoredTracks.cpp
  *
  *  Implementation file for tool : RichBinnedCKResVthetaForTrStoredTracks
  *
  *  CVS Log :-
- *  $Id: RichBinnedCKResVthetaForTrStoredTracks.cpp,v 1.4 2004-07-27 20:15:29 jonrob Exp $
- *  $Log: not supported by cvs2svn $
+ *  $Id: RichBinnedCKResVthetaForTrStoredTracks.cpp,v 1.5 2005-05-13 15:20:37 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
  */
+//-----------------------------------------------------------------------------
 
 // from Gaudi
 #include "GaudiKernel/ToolFactory.h"

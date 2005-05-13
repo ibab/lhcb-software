@@ -5,7 +5,7 @@
  *  Header file for tool : RichRecGeomTool
  *
  *  CVS Log :-
- *  $Id: RichRecGeomTool.h,v 1.3 2005-02-02 10:09:29 jonrob Exp $
+ *  $Id: RichRecGeomTool.h,v 1.4 2005-05-13 15:20:38 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -86,7 +86,7 @@ private: // private data
   IRichDetParameters  * m_detParams; ///< Detector parameters tool
   IRichCherenkovAngle * m_ckAngle;   ///< Pointer to the Cherenkov angle tool
 
-  /// The radiator outer limits
+  /// The radiator outer limits in local coordinates
   boost::array< IRichDetParameters::RadLimits, Rich::NRadiatorTypes > m_radOutLimLoc;
 
 };

@@ -5,7 +5,7 @@
  *  Header file for tool : RichGeomEffPhotonTracing
  *
  *  CVS Log :-
- *  $Id: RichGeomEffPhotonTracing.h,v 1.9 2005-04-15 16:36:08 jonrob Exp $
+ *  $Id: RichGeomEffPhotonTracing.h,v 1.10 2005-05-13 15:20:37 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -15,6 +15,7 @@
 #ifndef RICHRECTOOLS_RICHGEOMEFFPHOTONTRACING_H
 #define RICHRECTOOLS_RICHGEOMEFFPHOTONTRACING_H 1
 
+// STL
 #include <algorithm>
 
 // from Gaudi
@@ -35,6 +36,7 @@
 #include "RichRecBase/IRichCherenkovAngle.h"
 #include "RichRecBase/IRichGeomEff.h"
 #include "RichKernel/IRichRayTracing.h"
+#include "RichKernel/IRichHPDInfoTool.h"
 
 // GSL
 #include "gsl/gsl_math.h"
@@ -86,6 +88,7 @@ private: // Private data
   // Pointers to tool instances
   IRichRayTracing * m_rayTrace;    ///< Ray tracking tool
   IRichCherenkovAngle * m_ckAngle; ///< Cherenkov angle tool
+  IRichHPDInfoTool * m_hpdTool;    ///< HPD information tool
 
   /// Number of photons to use in geometrical efficiency calculation
   int m_nGeomEff;
@@ -97,7 +100,7 @@ private: // Private data
   /// Increment parameter for PD efficiencies
   double m_pdInc;
 
-  /// Flat Randomn distribution between 0 and 1
+  /// Flat random distribution between 0 and 1
   mutable Rndm::Numbers m_uniDist;
 
   /// Ray-tracing configuration object
@@ -105,6 +108,9 @@ private: // Private data
 
   /// Vector of sampling phi values around the Cherekov ring
   std::vector<double> m_phiValues;
+
+  /// Flag to turn on or off the explicit checking of the HPD status
+  bool m_hpdCheck;
 
 };
 

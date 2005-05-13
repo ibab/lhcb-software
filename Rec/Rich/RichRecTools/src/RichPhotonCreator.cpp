@@ -5,7 +5,7 @@
  *  Implementation file for tool : RichPhotonCreator
  *
  *  CVS Log :-
- *  $Id: RichPhotonCreator.cpp,v 1.24 2005-04-08 13:07:49 jonrob Exp $
+ *  $Id: RichPhotonCreator.cpp,v 1.25 2005-05-13 15:20:38 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -89,10 +89,10 @@ StatusCode RichPhotonCreator::finalize()
 
   // Print out final stats
   info() << "------------------------------------------------------" << endreq
-         << " Photon Candidate Summary : " << m_Nevts << " events :-" << endreq
-         << "   Aerogel   " << occ(m_photCount[Rich::Aerogel],m_Nevts) << "  photons/event" << endreq
-         << "   C4F10     " << occ(m_photCount[Rich::C4F10],m_Nevts)   << "  photons/event" << endreq
-         << "   CF4       " << occ(m_photCount[Rich::CF4],m_Nevts)     << "  photons/event" << endreq
+         << "  Photon Candidate Summary : " << m_Nevts << " events :-" << endreq
+         << "    Aerogel   " << occ(m_photCount[Rich::Aerogel],m_Nevts) << "  photons/event" << endreq
+         << "    C4F10     " << occ(m_photCount[Rich::C4F10],m_Nevts)   << "  photons/event" << endreq
+         << "    CF4       " << occ(m_photCount[Rich::CF4],m_Nevts)     << "  photons/event" << endreq
          << "------------------------------------------------------" << endreq;
 
   // Execute base class method
@@ -242,35 +242,46 @@ void RichPhotonCreator::reconstructPhotons() const
   for ( RichRecTracks::const_iterator iTrack =
           trackCreator()->richTracks()->begin();
         iTrack != trackCreator()->richTracks()->end();
-        ++iTrack ) {
+        ++iTrack ) 
+  {
     RichRecTrack * track = *iTrack;
+  
     if ( !track->inUse() ) continue; // skip tracks not "on"
-
-    if ( !track->allPhotonsDone() ) {
+    if ( !track->allPhotonsDone() ) 
+    {
 
       // Iterate over segments
       for ( RichRecTrack::Segments::const_iterator iSegment =
               track->richRecSegments().begin();
             iSegment != track->richRecSegments().end();
-            ++iSegment) {
+            ++iSegment) 
+      {
         RichRecSegment * segment = *iSegment;
 
-        if ( !segment->allPhotonsDone() ) {
+        if ( !segment->allPhotonsDone() ) 
+        {
 
-          // Iterate over pixels
-          for ( RichRecPixels::const_iterator iPixel =
-                  pixelCreator()->richPixels()->begin();
-                iPixel != pixelCreator()->richPixels()->end();
-                ++iPixel ) {
+          // Iterate over pixels in same RICH as this segment
+          //for ( RichRecPixels::const_iterator iPixel = pixelCreator()->richPixels()->begin();
+          //      iPixel != pixelCreator()->richPixels()->end();
+          //      ++iPixel ) 
+          const Rich::DetectorType rich = segment->trackSegment().rich();
+          for ( RichRecPixels::const_iterator iPixel = pixelCreator()->begin(rich);
+                iPixel != pixelCreator()->end(rich); ++iPixel ) 
+          {
             RichRecPixel * pixel = *iPixel;
 
             // If container was empty, skip checks for whether photon already exists
-            if ( noPhots ) {
-              if ( m_photonPredictor->photonPossible( segment, pixel ) ) {
+            if ( noPhots ) 
+            {
+              if ( m_photonPredictor->photonPossible( segment, pixel ) ) 
+              {
                 buildPhoton( segment, pixel,
                              RichRecPhotonKey(pixel->key(),segment->key()) );
               }
-            } else {
+            } 
+            else 
+            {
               reconstructPhoton( segment, pixel );
             }
 
@@ -363,9 +374,9 @@ RichRecPhotons * RichPhotonCreator::richPhotons() const
 {
   if ( !m_photons ) 
   {
-    SmartDataPtr<RichRecPhotons> tdsPhotons( evtSvc(),
-                                             m_richRecPhotonLocation );
-    if ( !tdsPhotons ) {
+    
+    if ( !exist<RichRecPhotons>(m_richRecPhotonLocation) )
+    {
 
       // Reinitialise the Photon Container
       m_photons = new RichRecPhotons();
@@ -373,20 +384,25 @@ RichRecPhotons * RichPhotonCreator::richPhotons() const
       // Register new RichRecPhoton container to Gaudi data store
       put( m_photons, m_richRecPhotonLocation );
 
-    } else {
+    } 
+    else 
+    {
 
-      debug() << "Found " << tdsPhotons->size() << " pre-existing RichRecPhotons in TES at "
-              << m_richRecPhotonLocation << endreq;
-
-      // Set smartref to TES photon container
-      m_photons = tdsPhotons;
+      // get photons from TES
+      m_photons = get<RichRecPhotons>(m_richRecPhotonLocation);
+      if ( msgLevel(MSG::DEBUG) )
+      {
+        debug() << "Found " << m_photons->size() << " pre-existing RichRecPhotons in TES at "
+                << m_richRecPhotonLocation << endreq;
+      }
 
       // Remake local photon reference map
       if ( m_bookKeep ) 
       {
-        for ( RichRecPhotons::const_iterator iPhoton = tdsPhotons->begin();
-              iPhoton != tdsPhotons->end();
-              ++iPhoton ) {
+        for ( RichRecPhotons::const_iterator iPhoton = m_photons->begin();
+              iPhoton != m_photons->end();
+              ++iPhoton ) 
+        {
           m_photonDone[ (*iPhoton)->key() ] = true;
         }
       }

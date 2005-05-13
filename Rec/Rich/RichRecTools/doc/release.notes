@@ -4,6 +4,14 @@
 ! Purpose     : Utility tools for RICH reconstruction algorithms
 !------------------------------------------------------------------------------
 
+! 2005-05-13 - Chris Jones
+ - update pixel creates to new base class
+ - Update fixed geom. eff. tool
+ - Add check on HPD status to various ray-tracing tools
+ - Update summary printouts to the various creator tools
+ - Update acceptance tool to make a simple approximation to the HPD panel
+   acceptance
+
 ! 2005-04-06 - Chris Jones
  - Fix stats for cases when some events are not processed (such as in HLT)
 

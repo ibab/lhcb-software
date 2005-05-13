@@ -5,7 +5,7 @@
  *  Implementation file for tool : RichRecGeomTool
  *
  *  CVS Log :-
- *  $Id: RichRecGeomTool.cpp,v 1.4 2005-04-15 16:39:40 jonrob Exp $
+ *  $Id: RichRecGeomTool.cpp,v 1.5 2005-05-13 15:20:38 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -91,31 +91,31 @@ double RichRecGeomTool::trackPixelHitSep2Local( const RichRecSegment * segment,
                                                 const RichRecPixel * pixel ) const
 {
 
-  if ( Rich::Rich1 == segment->trackSegment().rich() ) 
+  if ( Rich::Rich1 == segment->trackSegment().rich() )
   {
 
-    if ( pixel->localPosition().y() * segment->pdPanelHitPointLocal().y() > 0 ) 
+    if ( pixel->localPosition().y() * segment->pdPanelHitPointLocal().y() > 0 )
     {
       return pixel->localPosition().distance2( segment->pdPanelHitPointLocal() );
-    } 
+    }
     else if ( ( pixel->localPosition().y() > 0 && segment->photonsInYPlus() ) ||
-              ( pixel->localPosition().y() < 0 && segment->photonsInYMinus() ) ) 
+              ( pixel->localPosition().y() < 0 && segment->photonsInYMinus() ) )
     {
       return segment->pdPanelHitPointLocal().distance2( HepPoint3D( pixel->localPosition().x(),
                                                                     -pixel->localPosition().y(),
                                                                     pixel->localPosition().z() ) );
     }
 
-  } 
+  }
   else // RICH 2
   {
 
-    if ( pixel->localPosition().x() * segment->pdPanelHitPointLocal().x() > 0 ) 
+    if ( pixel->localPosition().x() * segment->pdPanelHitPointLocal().x() > 0 )
     {
       return pixel->localPosition().distance2( segment->pdPanelHitPointLocal() );
-    } 
+    }
     else if ( ( pixel->localPosition().x() > 0 && segment->photonsInXPlus()  ) ||
-              ( pixel->localPosition().x() < 0 && segment->photonsInXMinus() ) ) 
+              ( pixel->localPosition().x() < 0 && segment->photonsInXMinus() ) )
     {
       return segment->pdPanelHitPointLocal().distance2( HepPoint3D( -pixel->localPosition().x(),
                                                                     pixel->localPosition().y(),
@@ -130,10 +130,6 @@ double RichRecGeomTool::hpdPanelAcceptance( RichRecSegment * segment,
                                             const Rich::ParticleIDType id ) const
 {
 
-  const double yMin1 = 180.;  // approximate edge of optical image from RICH1 gas
-  const double xMin2 = 690.;  // approximate edge along x of RICH2 HPD plane
-  const double yMin2 = 696.;  // approximate edge along y of RICH2 HPD plane
-
   // The acceptance
   double acc = 0;
 
@@ -145,50 +141,80 @@ double RichRecGeomTool::hpdPanelAcceptance( RichRecSegment * segment,
     acc = 1;
 
     // radius of ring for given hypothesis
-    const double rSig = m_ckAngle->avCKRingRadiusLocal(segment,id);
+    const double ckRadius = m_ckAngle->avCKRingRadiusLocal(segment,id);
 
     // Track impact point on HPD panel
     const HepPoint3D & tkPoint = segment->pdPanelHitPointLocal();
 
-    // Simple acceptance calculation
-    if ( Rich::C4F10 == segment->trackSegment().radiator() )
-    {
-      // Account for rings that are close to the edges of the detector plane
-      if ( fabs(tkPoint.y()) < yMin1-rSig ) 
-      {
-        acc = 0.;
-      } 
-      else 
-      {
-        if ( fabs(tkPoint.y()-yMin1) < rSig ) acc *= acos( -(tkPoint.y()-yMin1)/rSig )/M_PI;
-        if ( fabs(tkPoint.y()+yMin1) < rSig ) acc *= acos( (tkPoint.y()+yMin1)/rSig  )/M_PI;
-      }
-    } 
-    else if ( Rich::CF4 == segment->trackSegment().radiator() )
-    {
-      if ( fabs(tkPoint.x()) > xMin2+rSig ||
-           fabs(tkPoint.y()) > yMin2+rSig ) 
-      {
-        acc = 0.;
-      } 
-      else 
-      {
-        if ( fabs(tkPoint.x())       < rSig ) acc *= acos(  -fabs(tkPoint.x())/rSig  )/M_PI;
-        if ( fabs(tkPoint.x()-xMin2) < rSig ) acc *= acos(  (tkPoint.x()-xMin2)/rSig )/M_PI;
-        if ( fabs(tkPoint.x()+xMin2) < rSig ) acc *= acos( -(tkPoint.x()+xMin2)/rSig )/M_PI;
-        if ( fabs(tkPoint.y()-yMin2) < rSig ) acc *= acos(  (tkPoint.y()-yMin2)/rSig )/M_PI;
-        if ( fabs(tkPoint.y()+yMin2) < rSig ) acc *= acos( -(tkPoint.y()+yMin2)/rSig )/M_PI;
-      }
-    }
-    else if ( Rich::Aerogel == segment->trackSegment().radiator() )
-    {
+    // radiator
+    const Rich::RadiatorType rad = segment->trackSegment().radiator();
 
+    // limits
+    const IRichDetParameters::RadLimits & lims = m_radOutLimLoc[rad];
+
+    // Calculate acceptance
+    if ( fabs(tkPoint.x()) > (lims.maxX()+ckRadius) ||
+         fabs(tkPoint.y()) > (lims.maxY()+ckRadius) ||
+         fabs(tkPoint.x()) < (lims.minX()-ckRadius) ||
+         fabs(tkPoint.y()) < (lims.minY()-ckRadius) )
+    {
+      acc = 0.;
+    }
+    else
+    {
+      // Near max X positive
+      if ( fabs(tkPoint.x()-lims.maxX()) < ckRadius )
+      {
+        acc *= acos( (tkPoint.x()-lims.maxX())/ckRadius ) / M_PI;
+      }
+      // Near max X negative
+      else if ( fabs(tkPoint.x()+lims.maxX()) < ckRadius )
+      {
+        acc *= acos( (-tkPoint.x()-lims.maxX())/ckRadius ) / M_PI;
+      }
+      if ( lims.minX() > 0 )
+      {
+        // Near min X positive
+        if ( fabs(tkPoint.x()-lims.minX()) < ckRadius )
+        {
+          acc *= acos( (-tkPoint.x()+lims.minX())/ckRadius ) / M_PI;
+        }
+        // Near min X negative
+        else if ( fabs(tkPoint.x()+lims.minX()) < ckRadius )
+        {
+          acc *= acos( (tkPoint.x()+lims.minX())/ckRadius ) / M_PI;
+        }
+      }
+
+      // Near max Y positive
+      if ( fabs(tkPoint.y()-lims.maxY()) < ckRadius )
+      {
+        acc *= acos( (tkPoint.y()-lims.maxY())/ckRadius ) / M_PI;
+      }
+      // Near max Y negative
+      else if ( fabs(tkPoint.y()+lims.maxY()) < ckRadius )
+      {
+        acc *= acos( (-tkPoint.y()-lims.maxY())/ckRadius ) / M_PI;
+      }
+      if ( lims.minY() > 0 )
+      {
+        // Near min Y positive
+        if ( fabs(tkPoint.y()-lims.minY()) < ckRadius )
+        {
+          acc *= acos( (-tkPoint.y()+lims.minY())/ckRadius ) / M_PI;
+        }
+        // Near min Y negative
+        else if ( fabs(tkPoint.y()+lims.minY()) < ckRadius )
+        {
+          acc *= acos( (tkPoint.y()+lims.minY())/ckRadius ) / M_PI;
+        }
+      }
 
     }
 
     if ( msgLevel(MSG::DEBUG) )
     {
-      debug() << "Segment " << segment->key() << " " << segment->trackSegment().radiator() 
+      debug() << "Segment " << segment->key() << " " << segment->trackSegment().radiator()
               << " " << id << " " << acc << endreq;
     }
 

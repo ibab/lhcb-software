@@ -5,7 +5,7 @@
  *  Header file for tool : RichTrackCreatorFromTrStoredTracks
  *
  *  CVS Log :-
- *  $Id: RichTrackCreatorFromTrStoredTracks.h,v 1.22 2005-04-06 20:23:17 jonrob Exp $
+ *  $Id: RichTrackCreatorFromTrStoredTracks.h,v 1.23 2005-05-13 15:20:38 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -18,7 +18,6 @@
 // from Gaudi
 #include "GaudiKernel/IIncidentListener.h"
 #include "GaudiKernel/IIncidentSvc.h"
-#include "GaudiKernel/SmartDataPtr.h"
 #include "GaudiKernel/ToolFactory.h"
 
 // base package

@@ -5,7 +5,7 @@
  *  Implementation file for tool : RichTrackCreatorFromTrStoredTracks
  *
  *  CVS Log :-
- *  $Id: RichTrackCreatorFromTrStoredTracks.cpp,v 1.26 2005-04-08 13:08:15 jonrob Exp $
+ *  $Id: RichTrackCreatorFromTrStoredTracks.cpp,v 1.27 2005-05-13 15:20:38 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -77,7 +77,7 @@ StatusCode RichTrackCreatorFromTrStoredTracks::initialize()
 
   // Configure track selector
   if ( !m_trSelector.configureTrackTypes() ) return StatusCode::FAILURE;
-  info() << "Selecting '" << m_trSelector.selectedTracksAsString() << "' tracks" << endreq;
+  m_trSelector.printTrackSelection( info() );
 
   // Configure the ray-tracing mode
   m_traceMode.setDetPrecision      ( RichTraceMode::circle );
@@ -101,9 +101,9 @@ StatusCode RichTrackCreatorFromTrStoredTracks::finalize()
   RichStatDivFunctor occ("%8.2f +-%5.2f");
 
   // Print out final track stats
-  info() << "===============================================================================" << endreq
+  info() << "================================================================================" << endreq
          << "                    Track Selection Summary : " << m_Nevts << " events" << endreq
-         << "-------------------------------------------------------------------------------" << endreq;
+         << "--------------------------------------------------------------------------------" << endreq;
   for ( TrackTypeCount::iterator i = m_nTracksAll.begin();
         i != m_nTracksAll.end(); ++i )
   {
@@ -123,7 +123,7 @@ StatusCode RichTrackCreatorFromTrStoredTracks::finalize()
       info() << "                    :"
              << occ((*i).second.cf4Segs,m_Nevts)   << " CF4      segments/event" << endreq;
   }
-  info() << "===============================================================================" << endreq;
+  info() << "================================================================================" << endreq;
 
   // Execute base class method
   return RichRecToolBase::finalize();
@@ -378,8 +378,8 @@ RichRecTracks * RichTrackCreatorFromTrStoredTracks::richTracks() const
 {
   if ( !m_tracks ) {
 
-    SmartDataPtr<RichRecTracks> tdsTracks( evtSvc(), m_richRecTrackLocation );
-    if ( !tdsTracks ) {
+    if ( !exist<RichRecTracks>(m_richRecTrackLocation) )
+    {
 
       // Reinitialise the track Container
       m_tracks = new RichRecTracks();
@@ -387,22 +387,25 @@ RichRecTracks * RichTrackCreatorFromTrStoredTracks::richTracks() const
       // Register new RichRecTrack container to Gaudi data store
       put( m_tracks, m_richRecTrackLocation );
 
-    } else {
+    }
+    else
+    {
 
+      // get tracks from TES
+      m_tracks = get<RichRecTracks>(m_richRecTrackLocation);
       if ( msgLevel(MSG::DEBUG) )
       {
-        debug() << "Found " << tdsTracks->size() << " pre-existing RichRecTracks in TES at "
+        debug() << "Found " << m_tracks->size() << " pre-existing RichRecTracks in TES at "
                 << m_richRecTrackLocation << endreq;
       }
 
-      // Set smartref to TES track container
-      m_tracks = tdsTracks;
-
-      if ( m_bookKeep ) {
+      if ( m_bookKeep )
+      {
         // Remake local track reference map
-        for ( RichRecTracks::const_iterator iTrack = tdsTracks->begin();
-              iTrack != tdsTracks->end();
-              ++iTrack ) {
+        for ( RichRecTracks::const_iterator iTrack = m_tracks->begin();
+              iTrack != m_tracks->end();
+              ++iTrack )
+        {
           m_trackDone[(*iTrack)->key()] = true;
         }
       }

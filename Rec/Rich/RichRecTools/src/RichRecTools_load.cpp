@@ -1,18 +1,16 @@
 
+//=========================================================================
 /** @file RichRecTools_load.cpp
  *
  *  Declaration of objects in the component library RichRecTools
  *
  *  CVS Log :-
- *  $Id: RichRecTools_load.cpp,v 1.19 2004-10-30 19:38:44 jonrob Exp $
- *  $Log: not supported by cvs2svn $
- *  Revision 1.18  2004/07/27 20:15:32  jonrob
- *  Add doxygen file documentation and CVS information
- *
+ *  $Id: RichRecTools_load.cpp,v 1.20 2005-05-13 15:20:38 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
  */
+//=========================================================================
 
 #include "GaudiKernel/DeclareFactoryEntries.h"
 

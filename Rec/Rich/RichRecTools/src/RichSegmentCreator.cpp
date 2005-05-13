@@ -5,7 +5,7 @@
  *  Implementation file for tool : RichSegmentCreator
  *
  *  CVS Log :-
- *  $Id: RichSegmentCreator.cpp,v 1.16 2005-04-06 20:23:17 jonrob Exp $
+ *  $Id: RichSegmentCreator.cpp,v 1.17 2005-05-13 15:20:38 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -92,9 +92,9 @@ StatusCode RichSegmentCreator::finalize()
 void RichSegmentCreator::handle ( const Incident& incident )
 {
   // Update prior to start of event. Used to re-initialise data containers
-  if ( IncidentType::BeginEvent == incident.type() ) 
-  { 
-    InitEvent(); 
+  if ( IncidentType::BeginEvent == incident.type() )
+  {
+    InitEvent();
   }
   // end of event
   else if ( IncidentType::EndEvent == incident.type() )
@@ -127,7 +127,7 @@ void RichSegmentCreator::saveSegment ( RichRecSegment * segment ) const
 {
 
   // debug counting
-  if ( msgLevel(MSG::DEBUG) ) 
+  if ( msgLevel(MSG::DEBUG) )
   {
     // Count segments
     ++m_segCount[segment->trackSegment().radiator()];
@@ -141,10 +141,11 @@ void RichSegmentCreator::saveSegment ( RichRecSegment * segment ) const
 
 RichRecSegments * RichSegmentCreator::richSegments() const
 {
-  if ( !m_segments ) {
-    SmartDataPtr<RichRecSegments> tdsSegments( evtSvc(),
-                                               m_richRecSegmentLocation );
-    if ( !tdsSegments ) {
+  if ( !m_segments )
+  {
+
+    if ( !exist<RichRecSegments>(m_richRecSegmentLocation) )
+    {
 
       // Reinitialise the Photon Container
       m_segments = new RichRecSegments();
@@ -152,13 +153,17 @@ RichRecSegments * RichSegmentCreator::richSegments() const
       // Register new RichRecPhoton container to Gaudi data store
       put( m_segments, m_richRecSegmentLocation );
 
-    } else {
+    }
+    else
+    {
 
-      debug() << "Found " << tdsSegments->size() << " pre-existing RichRecSegments in TES at "
-              << m_richRecSegmentLocation << endreq;
-
-      // Set smartref to TES segment container
-      m_segments = tdsSegments;
+      // get segments from TES
+      m_segments = get<RichRecSegments>(m_richRecSegmentLocation);
+      if ( msgLevel(MSG::DEBUG) )
+      {
+        debug() << "Found " << m_segments->size() << " pre-existing RichRecSegments in TES at "
+                << m_richRecSegmentLocation << endreq;
+      }
 
     }
   }

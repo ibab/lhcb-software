@@ -5,7 +5,7 @@
  *  Header file for tool : RichPhotonCreator
  *
  *  CVS Log :-
- *  $Id: RichPhotonCreator.h,v 1.20 2005-04-08 13:07:49 jonrob Exp $
+ *  $Id: RichPhotonCreator.h,v 1.21 2005-05-13 15:20:38 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -19,7 +19,6 @@
 #include "GaudiKernel/IIncidentListener.h"
 #include "GaudiKernel/IIncidentSvc.h"
 #include "GaudiKernel/ToolFactory.h"
-#include "GaudiKernel/SmartDataPtr.h"
 
 // base class
 #include "RichRecBase/RichRecToolBase.h"

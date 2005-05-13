@@ -2,7 +2,7 @@
 # Created    : 11/03/2002
 # Maintainer : Christopher Rob Jones   Christopher.Rob.Jones@cern.ch
 #============================================================================
-# $Id: requirements,v 1.32 2005-03-03 15:52:24 jonrob Exp $
+# $Id: requirements,v 1.33 2005-05-13 15:20:37 jonrob Exp $
 #============================================================================
 
 package RichRecTools
@@ -15,6 +15,9 @@ include_path none
 # ================ dependencies =============================================
 use RichRecBase    v1r*   Rich
 use RichDet        v8r*   Det
+# Following is needed only by RichPixelCreatorFromRawBufferWithDeadHPDs
+# Should look to spliting up this package, its getting rather large.
+use DAQEvent       v*      Event
 
 # ================ component library=========================================
 library          RichRecTools  ../src/*.cpp

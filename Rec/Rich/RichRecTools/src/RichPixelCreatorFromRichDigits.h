@@ -1,26 +1,16 @@
 
+//-----------------------------------------------------------------------------
 /** @file RichPixelCreatorFromRichDigits.h
  *
  *  Header file for tool : RichPixelCreatorFromRichDigits
  *
  *  CVS Log :-
- *  $Id: RichPixelCreatorFromRichDigits.h,v 1.12 2005-01-13 14:34:27 jonrob Exp $
- *  $Log: not supported by cvs2svn $
- *  Revision 1.11  2004/10/30 19:38:44  jonrob
- *  Add RichRecPixel creator that uses the RawBuffer directly
- *
- *  Revision 1.10  2004/10/27 14:39:41  jonrob
- *  Various updates
- *
- *  Revision 1.9  2004/10/13 09:52:41  jonrob
- *  Speed improvements + various minor changes
- *
- *  Revision 1.8  2004/07/27 20:15:32  jonrob
- *  Add doxygen file documentation and CVS information
+ *  $Id: RichPixelCreatorFromRichDigits.h,v 1.13 2005-05-13 15:20:38 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
  */
+//-----------------------------------------------------------------------------
 
 #ifndef RICHRECTOOLS_RICHPIXELCREATORFROMRICHDIGITS_H
 #define RICHRECTOOLS_RICHPIXELCREATORFROMRICHDIGITS_H 1
@@ -28,22 +18,18 @@
 // from Gaudi
 #include "GaudiKernel/IIncidentListener.h"
 #include "GaudiKernel/IIncidentSvc.h"
-#include "GaudiKernel/SmartDataPtr.h"
 #include "GaudiKernel/ToolFactory.h"
 
 // base class
-#include "RichRecBase/RichRecToolBase.h"
+#include "RichRecBase/RichPixelCreatorBase.h"
 
 // interfaces
-#include "RichRecBase/IRichPixelCreator.h"
 #include "RichKernel/IRichSmartIDTool.h"
-
-// RichKernel
-#include "RichKernel/RichHashMap.h"
 
 // Event
 #include "Event/RichDigit.h"
 
+//-----------------------------------------------------------------------------
 /** @class RichPixelCreatorFromRichDigits RichPixelCreatorFromRichDigits.h
  *
  *  Tool for the creation and book-keeping of RichRecPixel objects.
@@ -52,10 +38,11 @@
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
  */
+//-----------------------------------------------------------------------------
 
-class RichPixelCreatorFromRichDigits : public RichRecToolBase,
-                                       virtual public IRichPixelCreator,
-                                       virtual public IIncidentListener {
+class RichPixelCreatorFromRichDigits : public RichPixelCreatorBase,
+                                       virtual public IIncidentListener 
+{
 
 public: // Methods for Gaudi Framework
 
@@ -87,21 +74,12 @@ public: // methods (and doxygen comments) inherited from public interface
   // The most efficient way to make all RichRecPixel objects in the event.
   StatusCode newPixels() const;
 
-  // Returns a pointer to the RichRecPixels
-  RichRecPixels * richPixels() const;
-
 private: // methods
-
-  /// Initialise for a new event
-  void InitNewEvent();
 
   /// Build a new RichRecPixel
   RichRecPixel * buildPixel ( const RichDigit * digit ) const;
 
 private: // data
-
-  /// Pointer to RichRecPixels
-  mutable RichRecPixels * m_pixels;
 
   /// Pointer to RichSmartID tool
   IRichSmartIDTool * m_idTool;
@@ -109,33 +87,6 @@ private: // data
   /// String containing input RichDigits location in TES
   std::string m_recoDigitsLocation;
 
-  /// Location of RichRecPixels in TES
-  std::string m_richRecPixelLocation;
-
-  /// Flag to signify all pixels have been formed
-  mutable bool m_allDone;
-
-  /// Pointer to pixel map
-  mutable RichHashMap< RichSmartID::KeyType, RichRecPixel* > m_pixelExists;
-  mutable RichHashMap< RichSmartID::KeyType, bool > m_pixelDone;
-
-  /// Flag to turn on or off the book keeping features to save cpu time.
-  bool m_bookKeep;
-
-  /// Flags for which RICH detectors to create pixels for
-  std::vector<bool> m_usedDets;
-
 };
-
-inline void RichPixelCreatorFromRichDigits::InitNewEvent()
-{
-  // Initialise navigation data
-  m_allDone = false;
-  m_pixels  = 0;
-  if ( m_bookKeep ) {
-    m_pixelExists.clear();
-    m_pixelDone.clear();
-  }
-}
 
 #endif // RICHRECTOOLS_RICHPIXELCREATORFROMRICHDIGITS_H

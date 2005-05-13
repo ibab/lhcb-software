@@ -1,15 +1,16 @@
 
+//-----------------------------------------------------------------------------
 /** @file RichStatusCreator.cpp
  *
  *  Implementation file for tool : RichStatusCreator
  *
  *  CVS Log :-
- *  $Id: RichStatusCreator.cpp,v 1.7 2004-07-27 20:15:32 jonrob Exp $
- *  $Log: not supported by cvs2svn $
+ *  $Id: RichStatusCreator.cpp,v 1.8 2005-05-13 15:20:38 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
  */
+//-----------------------------------------------------------------------------
 
 // local
 #include "RichStatusCreator.h"
@@ -44,10 +45,7 @@ StatusCode RichStatusCreator::initialize()
   // Setup incident services
   incSvc()->addListener( this, IncidentType::BeginEvent );
 
-  // Make sure we are ready for a new event
-  InitNewEvent();
-
-  return StatusCode::SUCCESS;
+  return sc;
 }
 
 StatusCode RichStatusCreator::finalize() 
@@ -64,13 +62,16 @@ void RichStatusCreator::handle ( const Incident& incident )
 
 RichRecStatus * RichStatusCreator::richStatus() const
 {
-  if ( !m_status ) {
-    SmartDataPtr<RichRecStatus> status( evtSvc(), m_richStatusLocation );
-    if ( !status ) {
+  if ( !m_status ) 
+  {
+    if ( !exist<RichRecStatus>(m_richStatusLocation) )
+    {
       m_status = new RichRecStatus();
       put( m_status, m_richStatusLocation );
-    } else {
-      m_status = status;
+    } 
+    else 
+    {
+      m_status = get<RichRecStatus>(m_richStatusLocation);
     }
   }
   return m_status;

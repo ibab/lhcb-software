@@ -5,7 +5,7 @@
  *  Implementation file for tool : RichGeomEffFixedValue
  *
  *  CVS Log :-
- *  $Id: RichGeomEffFixedValue.cpp,v 1.9 2005-04-15 16:36:33 jonrob Exp $
+ *  $Id: RichGeomEffFixedValue.cpp,v 1.10 2005-05-13 15:20:37 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -75,10 +75,10 @@ double RichGeomEffFixedValue::geomEfficiency ( RichRecSegment * segment,
 
     if ( ckTh > 0 ) 
     {
-      // Geometrical acceptance
-      eff = m_fixedValue[segment->trackSegment().radiator()];
-      // Average HPD acceptance
-      eff *= m_geomTool->hpdPanelAcceptance(segment,id);
+      // First get the HPD panel acceptance (edges)
+      eff = m_geomTool->hpdPanelAcceptance(segment,id);
+      // .. next, scale by the average panel acceptance (circular HPDs)
+      eff *= m_fixedValue[segment->trackSegment().radiator()];
     }
 
     // Set the geom eff

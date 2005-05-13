@@ -5,7 +5,7 @@
  *  Implementation file for tool : RichGeomEffPhotonTracing
  *
  *  CVS Log :-
- *  $Id: RichGeomEffPhotonTracing.cpp,v 1.10 2005-04-15 16:36:08 jonrob Exp $
+ *  $Id: RichGeomEffPhotonTracing.cpp,v 1.11 2005-05-13 15:20:37 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -30,7 +30,8 @@ RichGeomEffPhotonTracing::RichGeomEffPhotonTracing ( const std::string& type,
     m_ckAngle         ( 0 ),
     m_nGeomEff        ( 0 ),
     m_nGeomEffBailout ( 0 ),
-    m_pdInc           ( 0 )
+    m_pdInc           ( 0 ),
+    m_hpdCheck        ( false )
 {
 
   // define interface
@@ -39,8 +40,9 @@ RichGeomEffPhotonTracing::RichGeomEffPhotonTracing ( const std::string& type,
   // Define job option parameters
   declareProperty( "NPhotonsGeomEffCalc",    m_nGeomEff        = 100 );
   declareProperty( "NPhotonsGeomEffBailout", m_nGeomEffBailout = 20  );
+  declareProperty( "CheckHPDsAreActive",     m_hpdCheck );
 
-  // randomn number distribution
+  // random number distribution
   Rndm::Numbers m_uniDist;
 
 }
@@ -55,6 +57,12 @@ StatusCode RichGeomEffPhotonTracing::initialize()
   // Acquire instances of tools
   acquireTool( "RichRayTracing",     m_rayTrace );
   acquireTool( "RichCherenkovAngle", m_ckAngle  );
+  if ( m_hpdCheck )
+  {
+    acquireTool( "RichHPDInfoTool", m_hpdTool );
+    Warning( "Will check each pixel for HPD status. Takes additional CPU.",
+             StatusCode::SUCCESS );
+  }
 
   // randomn number service
   IRndmGenSvc * randSvc = svc<IRndmGenSvc>( "RndmGenSvc", true );
@@ -130,6 +138,9 @@ RichGeomEffPhotonTracing::geomEfficiency ( RichRecSegment * segment,
                                                photon,
                                                m_traceMode ) )
         {
+
+          // Check HPD status
+          if ( m_hpdCheck && !m_hpdTool->hpdIsActive(photon.smartID()) ) continue;
 
           // count detected photons
           ++nDetect;
@@ -221,7 +232,13 @@ RichGeomEffPhotonTracing::geomEfficiencyScat ( RichRecSegment * segment,
                                                emissionPt,
                                                photDir,
                                                photon,
-                                               m_traceMode ) ) { ++nDetect; }
+                                               m_traceMode ) ) 
+        { 
+          // Check HPD status
+          if ( m_hpdCheck && !m_hpdTool->hpdIsActive(photon.smartID()) ) continue;
+          // count detected
+          ++nDetect; 
+        }
 
         // Bail out if tried m_geomEffBailout times and all have failed
         if ( 0 == nDetect && iPhot >= m_nGeomEffBailout ) break;

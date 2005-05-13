@@ -1,15 +1,16 @@
 
+//-----------------------------------------------------------------------------
 /** @file RichStatusCreator.h
  *
  *  Header file for tool : RichStatusCreator
  *
  *  CVS Log :-
- *  $Id: RichStatusCreator.h,v 1.5 2004-07-27 20:15:32 jonrob Exp $
- *  $Log: not supported by cvs2svn $
+ *  $Id: RichStatusCreator.h,v 1.6 2005-05-13 15:20:38 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
  */
+//-----------------------------------------------------------------------------
 
 #ifndef RICHRECTOOLS_RICHSTATUSCREATOR_H
 #define RICHRECTOOLS_RICHSTATUSCREATOR_H 1
@@ -17,7 +18,6 @@
 // from Gaudi
 #include "GaudiKernel/IIncidentListener.h"
 #include "GaudiKernel/IIncidentSvc.h"
-#include "GaudiKernel/SmartDataPtr.h"
 #include "GaudiKernel/ToolFactory.h"
 
 // base class
@@ -26,6 +26,7 @@
 // interface
 #include "RichRecBase/IRichStatusCreator.h"
 
+//-----------------------------------------------------------------------------
 /** @class RichStatusCreator RichStatusCreator.h
  *
  *  Tool for the creation and book-keeping of the RichRecStatus object.
@@ -33,6 +34,7 @@
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
  */
+//-----------------------------------------------------------------------------
 
 class RichStatusCreator : public RichRecToolBase,
                           virtual public IRichStatusCreator,
