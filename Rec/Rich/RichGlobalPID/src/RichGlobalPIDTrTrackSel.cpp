@@ -5,7 +5,7 @@
  *  Implementation file for RICH Global PID algorithm class : RichGlobalPIDTrTrackSel
  *
  *  CVS Log :-
- *  $Id: RichGlobalPIDTrTrackSel.cpp,v 1.20 2005-04-08 13:16:45 jonrob Exp $
+ *  $Id: RichGlobalPIDTrTrackSel.cpp,v 1.21 2005-05-13 14:24:29 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   17/04/2002
@@ -65,7 +65,7 @@ StatusCode RichGlobalPIDTrTrackSel::initialize()
 
   // Configure track selector
   if ( !m_trSelector.configureTrackTypes() ) return StatusCode::FAILURE;
-  info() << "Selecting '" << m_trSelector.selectedTracksAsString() << "' tracks" << endreq;
+  m_trSelector.printTrackSelection( info() );
 
   return sc;
 }
