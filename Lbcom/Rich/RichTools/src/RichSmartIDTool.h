@@ -1,26 +1,16 @@
 
+//-----------------------------------------------------------------------------
 /** @file RichSmartIDTool.h
  *
  *  Header file for tool : RichSmartIDTool
  *
  *  CVS Log :-
- *  $Id: RichSmartIDTool.h,v 1.8 2005-01-13 13:19:22 jonrob Exp $
- *  $Log: not supported by cvs2svn $
- *  Revision 1.7  2005/01/07 13:24:31  jonrob
- *  Changes to interface methods
- *
- *  Revision 1.6  2004/10/27 14:41:03  jonrob
- *  Various updates
- *
- *  Revision 1.5  2004/10/12 09:58:26  papanest
- *  speed up globaltoPDpanel
- *
- *  Revision 1.4  2004/07/26 18:03:05  jonrob
- *  Various improvements to the doxygen comments
+ *  $Id: RichSmartIDTool.h,v 1.9 2005-05-13 15:21:58 jonrob Exp $
  *
  *  @author Antonis Papanestis
  *  @date   2003-10-28
  */
+//-----------------------------------------------------------------------------
 
 #ifndef RICHTOOLS_RICHSMARTIDTOOL_H
 #define RICHTOOLS_RICHSMARTIDTOOL_H 1
@@ -40,6 +30,7 @@
 // RichDet
 #include "RichDet/DeRichHPDPanel.h"
 
+//-----------------------------------------------------------------------------
 /** @class RichSmartIDTool RichSmartIDTool.h
  *
  *  A tool to preform the manipulation of RichSmartID channel identifiers
@@ -47,6 +38,7 @@
  *  @author Antonis Papanestis
  *  @date   2003-10-28
  */
+//-----------------------------------------------------------------------------
 
 class RichSmartIDTool : public RichToolBase,
                         virtual public IRichSmartIDTool {
