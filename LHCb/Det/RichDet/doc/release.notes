@@ -4,6 +4,9 @@
 ! Purpose     : interface to the xml description
 !-----------------------------------------------------------------------------
 
+! 2005-05-13 - Marco Clemencic
+ - Use new ParamValidDataObject interface (DetDesc >= v15)
+
 !========================= RichDet v8r3 2005-03-04 =========================
 ! 2005-02-22 - Chris Jones
  - Add fix to DeRichHPDPanel to protect against invalid pixel information 

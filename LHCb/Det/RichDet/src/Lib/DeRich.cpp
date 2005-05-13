@@ -3,7 +3,7 @@
  *
  *  Implementation file for detector description class : DeRich
  *
- *  $Id: DeRich.cpp,v 1.9 2005-02-25 23:28:54 jonrob Exp $
+ *  $Id: DeRich.cpp,v 1.10 2005-05-13 16:11:37 marcocle Exp $
  *
  *  @author Antonis Papanestis a.papanestis@rl.ac.uk
  *  @date   2004-06-18
@@ -45,15 +45,15 @@ DeRich::~DeRich() {}
 StatusCode DeRich::initialize ( ) 
 {
 
-  m_vectorNames = paramVectors();
-  m_paramNames  = params();
+  //  m_vectorNames = paramVectors();
+  m_paramNames  = paramNames();
 
-  if ( hasParam( "SphMirrorSegRows" ) )
+  if ( exists( "SphMirrorSegRows" ) )
   {
-    m_sphMirrorSegRows  = paramAsInt( "SphMirrorSegRows" );
-    m_sphMirrorSegCols  = paramAsInt( "SphMirrorSegColumns" );
-    m_flatMirrorSegRows = paramAsInt( "FlatMirrorSegRows" );
-    m_flatMirrorSegCols = paramAsInt( "FlatMirrorSegColumns" );
+    m_sphMirrorSegRows  = param<int>( "SphMirrorSegRows" );
+    m_sphMirrorSegCols  = param<int>( "SphMirrorSegColumns" );
+    m_flatMirrorSegRows = param<int>( "FlatMirrorSegRows" );
+    m_flatMirrorSegCols = param<int>( "FlatMirrorSegColumns" );
     m_positionInfo      = true;
   }
 

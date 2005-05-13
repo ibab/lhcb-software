@@ -4,7 +4,7 @@
  *
  *  Implementation file for detector description class : DeRichHPDPanel
  *
- *  $Id: DeRichHPDPanel.cpp,v 1.27 2005-02-25 23:28:54 jonrob Exp $
+ *  $Id: DeRichHPDPanel.cpp,v 1.28 2005-05-13 16:11:37 marcocle Exp $
  *
  *  @author Antonis Papanestis a.papanestis@rl.ac.uk
  *  @date   2004-06-18
@@ -87,18 +87,18 @@ StatusCode DeRichHPDPanel::initialize()
       << " Panel" << (int)side() << endreq;
 
   SmartDataPtr<DetectorElement> deRich1(dataSvc(), DeRichLocation::Rich1);
-  m_pixelSize = deRich1->userParameterAsDouble("RichHpdPixelXsize");
+  m_pixelSize = deRich1->param<double>("RichHpdPixelXsize");
   m_subPixelSize = m_pixelSize/8;
-  m_activeRadius = deRich1->userParameterAsDouble("RichHpdActiveInpRad");
+  m_activeRadius = deRich1->param<double>("RichHpdActiveInpRad");
   m_activeRadiusSq = m_activeRadius*m_activeRadius;
 
-  m_pixelColumns = deRich1->userParameterAsInt("RichHpdNumPixelCol");
-  m_pixelRows = deRich1->userParameterAsInt("RichHpdNumPixelRow");
+  m_pixelColumns = deRich1->param<int>("RichHpdNumPixelCol");
+  m_pixelRows = deRich1->param<int>("RichHpdNumPixelRow");
   msg << MSG::DEBUG << "pixelRows:" << m_pixelRows << " pixelColumns:"
       << m_pixelColumns << endreq;
 
-  m_HPDRows = userParameterAsInt("PDRows");
-  m_HPDColumns = userParameterAsInt("PDColumns");
+  m_HPDRows = param<int>("PDRows");
+  m_HPDColumns = param<int>("PDColumns");
   msg << MSG::DEBUG << "RichHpdPixelsize:" << m_pixelSize << " ActiveRadius:"
       << m_activeRadius << " PDRows:" << m_HPDRows << " PDColumns:"
       << m_HPDColumns << endreq;

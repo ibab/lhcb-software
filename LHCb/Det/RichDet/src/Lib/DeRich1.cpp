@@ -3,7 +3,7 @@
  *
  *  Implementation file for detector description class : DeRich1
  *
- *  $Id: DeRich1.cpp,v 1.14 2005-02-25 23:28:54 jonrob Exp $
+ *  $Id: DeRich1.cpp,v 1.15 2005-05-13 16:11:37 marcocle Exp $
  *
  *  @author Antonis Papanestis a.papanestis@rl.ac.uk
  *  @date   2004-06-18
@@ -48,9 +48,9 @@ StatusCode DeRich1::initialize()
 
   if ( !DeRich::initialize() ) return StatusCode::FAILURE;
 
-  const double nominalCoCX = userParameterAsDouble("Rich1Mirror1NominalCoCX");
-  const double nominalCoCY = userParameterAsDouble("Rich1Mirror1NominalCoCY");
-  const double nominalCoCZ = userParameterAsDouble("Rich1Mirror1NominalCoCZ");
+  const double nominalCoCX = param<double>("Rich1Mirror1NominalCoCX");
+  const double nominalCoCY = param<double>("Rich1Mirror1NominalCoCY");
+  const double nominalCoCZ = param<double>("Rich1Mirror1NominalCoCZ");
 
   m_nominalCentreOfCurvature =
     HepPoint3D(nominalCoCX, nominalCoCY, nominalCoCZ);
@@ -61,11 +61,11 @@ StatusCode DeRich1::initialize()
       << m_nominalCentreOfCurvature << " ," << m_nominalCentreOfCurvatureBottom
       << endmsg;
 
-  m_sphMirrorRadius = paramAsDouble("Rich1SphMirror1Radius");
+  m_sphMirrorRadius = param<double>("Rich1SphMirror1Radius");
 
   // get the parameters of the nominal flat mirror plane in the form
   // Ax+By+Cz+D=0
-  const std::vector<double> & nominalFMirrorPlane = paramVector("Rich1NominalFlatMirrorPlane");
+  const std::vector<double> & nominalFMirrorPlane = param<std::vector<double> >("Rich1NominalFlatMirrorPlane");
   m_nominalPlaneTop = HepPlane3D(nominalFMirrorPlane[0],nominalFMirrorPlane[1],
                                  nominalFMirrorPlane[2],nominalFMirrorPlane[3]);
   m_nominalPlaneBottom = HepPlane3D(nominalFMirrorPlane[0],-nominalFMirrorPlane[1],
@@ -104,8 +104,8 @@ StatusCode DeRich1::initialize()
 
   // find the HPD quantum efficiency
   std::string HPD_QETabPropLoc;
-  if ( hasParam( "RichHpdQETableName" ) )
-    HPD_QETabPropLoc = paramAsString( "RichHpdQETableName" );
+  if ( exists( "RichHpdQETableName" ) )
+    HPD_QETabPropLoc = param<std::string>( "RichHpdQETableName" );
   else
     HPD_QETabPropLoc = "/dd/Materials/RichMaterialTabProperties/HpdQuantumEff";
 

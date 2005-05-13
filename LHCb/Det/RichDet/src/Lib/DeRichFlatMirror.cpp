@@ -3,7 +3,7 @@
  *
  *  Implementation file for detector description class : DeRichFlatMirror
  *
- *  $Id: DeRichFlatMirror.cpp,v 1.9 2005-02-25 23:28:54 jonrob Exp $
+ *  $Id: DeRichFlatMirror.cpp,v 1.10 2005-05-13 16:11:37 marcocle Exp $
  *
  *  @author Antonis Papanestis a.papanestis@rl.ac.uk
  *  @date   2004-06-18
@@ -59,8 +59,8 @@ StatusCode DeRichFlatMirror::initialize()
 
   m_solid = geometry()->lvolume()->solid();
 
-  m_alignmentConstantX = userParameterAsDouble( "AlignmentConstantX" );
-  m_alignmentConstantY = userParameterAsDouble( "AlignmentConstantY" );
+  m_alignmentConstantX = param<double>( "AlignmentConstantX" );
+  m_alignmentConstantY = param<double>( "AlignmentConstantY" );
 
   const HepRotateX3D alignX(-m_alignmentConstantY);
   const HepRotateY3D alignY(m_alignmentConstantX);

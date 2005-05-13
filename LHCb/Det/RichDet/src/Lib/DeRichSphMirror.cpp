@@ -3,7 +3,7 @@
  *
  *  Implementation file for detector description class : DeRichSphMirror
  *
- *  $Id: DeRichSphMirror.cpp,v 1.13 2005-02-25 23:28:54 jonrob Exp $
+ *  $Id: DeRichSphMirror.cpp,v 1.14 2005-05-13 16:11:37 marcocle Exp $
  *
  *  @author Antonis Papanestis a.papanestis@rl.ac.uk
  *  @date   2004-06-18
@@ -63,8 +63,8 @@ StatusCode DeRichSphMirror::initialize()
   const std::string type = m_solid->typeName();
 
   double hexRadius = 510.0*mm;
-  if ( deRich2->hasParam("Rich2SphMirrorHexDiameter") )
-    hexRadius = deRich2->userParameterAsDouble("Rich2SphMirrorHexDiameter")/2.0;
+  if ( deRich2->exists("Rich2SphMirrorHexDiameter") )
+    hexRadius = deRich2->param<double>("Rich2SphMirrorHexDiameter")/2.0;
 
   const double flatToCentre = hexRadius*sin(60*degree);
 

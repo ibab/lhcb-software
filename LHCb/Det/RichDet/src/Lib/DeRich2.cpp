@@ -3,7 +3,7 @@
  *
  *  Implementation file for detector description class : DeRich2
  *
- *  $Id: DeRich2.cpp,v 1.15 2005-02-25 23:28:54 jonrob Exp $
+ *  $Id: DeRich2.cpp,v 1.16 2005-05-13 16:11:37 marcocle Exp $
  *
  *  @author Antonis Papanestis a.papanestis@rl.ac.uk
  *  @date   2004-06-18
@@ -48,7 +48,7 @@ StatusCode DeRich2::initialize()
 
   if ( !DeRich::initialize() ) return StatusCode::FAILURE;
 
-  const std::vector<double> nominalCoC = paramVector("Rich2NominalCoC");
+  const std::vector<double> nominalCoC = param<std::vector<double> >("Rich2NominalCoC");
   m_nominalCentreOfCurvature =
     HepPoint3D( nominalCoC[0], nominalCoC[1], nominalCoC[2]);
   m_nominalCentreOfCurvatureRight =
@@ -58,11 +58,11 @@ StatusCode DeRich2::initialize()
       << m_nominalCentreOfCurvature << " ," << m_nominalCentreOfCurvatureRight
       << endmsg;
 
-  m_sphMirrorRadius = paramAsDouble("Rich2SphMirrorRadius");
+  m_sphMirrorRadius = param<double>("Rich2SphMirrorRadius");
 
   // get the parameters of the nominal flat mirror plane in the form
   // Ax+By+Cz+D=0
-  const std::vector<double> & nominalFMirrorPlane = paramVector("Rich2NominalFlatMirrorPlane");
+  const std::vector<double> & nominalFMirrorPlane = param<std::vector<double> >("Rich2NominalFlatMirrorPlane");
   m_nominalPlaneLeft = HepPlane3D(nominalFMirrorPlane[0],nominalFMirrorPlane[1],
                                   nominalFMirrorPlane[2],nominalFMirrorPlane[3]);
   m_nominalPlaneRight = HepPlane3D(-nominalFMirrorPlane[0],nominalFMirrorPlane[1],
