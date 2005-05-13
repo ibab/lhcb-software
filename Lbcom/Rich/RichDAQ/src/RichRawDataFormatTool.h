@@ -5,7 +5,7 @@
  *  Header file for tool : RichRawDataFormatTool
  *
  *  CVS Log :-
- *  $Id: RichRawDataFormatTool.h,v 1.6 2005-04-06 20:23:32 jonrob Exp $
+ *  $Id: RichRawDataFormatTool.h,v 1.7 2005-05-13 14:22:12 jonrob Exp $
  *
  *  @author Chris Jones    Christopher.Rob.Jones@cern.ch
  *  @date   2004-12-18
@@ -32,7 +32,7 @@
 
 // Interfaces
 #include "RichKernel/IRichRawDataFormatTool.h"
-#include "RichKernel/IRichHPDIDTool.h"
+#include "RichKernel/IRichHPDInfoTool.h"
 #include "RichKernel/IRichHPDToLevel1Tool.h"
 
 // local
@@ -143,7 +143,7 @@ private: // methods
 private: // data
 
   /// Pointer to Rich HPD ID tool
-  IRichHPDIDTool * m_hpdID;
+  IRichHPDInfoTool * m_hpdID;
 
   /// Pointer to L1 tool
   IRichHPDToLevel1Tool * m_l1Tool;

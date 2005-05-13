@@ -4,7 +4,7 @@
  *
  *  Implementation file for RICH DAQ helper class : RichZeroSuppData
  *
- *  $Id: RichZeroSuppData.cpp,v 1.3 2005-02-09 09:16:26 cattanem Exp $
+ *  $Id: RichZeroSuppData.cpp,v 1.4 2005-05-13 14:22:12 jonrob Exp $
  *
  *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
  *  @date   2004-12-17
@@ -44,7 +44,7 @@ namespace RichZeroSuppDataV0 {
   }
 
   void RichZeroSuppData::fillRichSmartIDs ( RichSmartID::Collection & ids,
-                                            const IRichHPDIDTool * /* hpdTool */ ) const
+                                            const IRichHPDInfoTool * /* hpdTool */ ) const
   {
 
     // How many digits do we expect to make
@@ -134,7 +134,7 @@ namespace RichZeroSuppDataV1 {
   }
 
   void RichZeroSuppData::fillRichSmartIDs ( RichSmartID::Collection & ids,
-                                            const IRichHPDIDTool * hpdTool ) const
+                                            const IRichHPDInfoTool * hpdTool ) const
   {
 
     // How many digits do we expect to make
@@ -248,7 +248,7 @@ namespace RichZeroSuppDataV2 {
   }
 
   void RichZeroSuppData::fillRichSmartIDs ( RichSmartID::Collection & ids,
-                                            const IRichHPDIDTool * hpdTool ) const
+                                            const IRichHPDInfoTool * hpdTool ) const
   {
 
     // How many digits do we expect to make

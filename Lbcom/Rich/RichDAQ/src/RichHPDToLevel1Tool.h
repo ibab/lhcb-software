@@ -5,16 +5,7 @@
  *  Header file for tool : RichHPDToLevel1Tool
  *
  *  CVS Log :-
- *  $Id: RichHPDToLevel1Tool.h,v 1.4 2005-01-18 09:06:55 jonrob Exp $
- *  $Log: not supported by cvs2svn $
- *  Revision 1.3  2005/01/14 16:57:12  jonrob
- *  Add functionality to use job options for mapping data
- *
- *  Revision 1.2  2005/01/13 13:10:14  jonrob
- *  Update mapping type
- *
- *  Revision 1.1  2005/01/07 12:35:59  jonrob
- *  Complete rewrite
+ *  $Id: RichHPDToLevel1Tool.h,v 1.5 2005-05-13 14:22:12 jonrob Exp $
  *
  *  @author Chris Jones    Christopher.Rob.Jones@cern.ch
  *  @date   2004-12-18
@@ -45,8 +36,9 @@
 // Interfaces
 #include "RichKernel/IRichSmartIDTool.h"
 #include "RichKernel/IRichHPDToLevel1Tool.h"
-#include "RichKernel/IRichHPDIDTool.h"
+#include "RichKernel/IRichHPDInfoTool.h"
 
+//-----------------------------------------------------------------------------
 /** @class RichHPDToLevel1Tool RichHPDToLevel1Tool.h
  *
  *  Tool to associate HPDs to Level1 boards
@@ -56,6 +48,7 @@
  *
  *  @todo Finish implementation with true L1 numbering scheme from database
  */
+//-----------------------------------------------------------------------------
 
 class RichHPDToLevel1Tool : public RichToolBase,
                             virtual public IRichHPDToLevel1Tool {
@@ -105,6 +98,9 @@ private: //methods
   void buildTempMapping();
 
 private: // data
+
+  // HPD information tool
+  IRichHPDInfoTool * m_hpdTool;
 
   /// L1 data from job options
   typedef std::vector< int > JOData;

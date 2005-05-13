@@ -5,12 +5,10 @@
  * Implementation file for class : RichRawBufferToSmartIDsTool
  *
  * CVS Log :-
- * $Id: RichRawBufferToSmartIDsTool.cpp,v 1.9 2005-01-26 09:59:18 jonrob Exp $
+ * $Id: RichRawBufferToSmartIDsTool.cpp,v 1.10 2005-05-13 14:22:12 jonrob Exp $
  *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @date 14/01/2002
- *
- * @todo Review RichSmartID bit packing to facilitate more efficient and finer grained sorting
  */
 //-----------------------------------------------------------------------------
 
@@ -31,8 +29,10 @@ RichRawBufferToSmartIDsTool::RichRawBufferToSmartIDsTool( const std::string& typ
     m_newEvent         ( true  )
 {
 
+  // Defined interface
   declareInterface<IRichRawBufferToSmartIDsTool>(this);
 
+  // job options
   declareProperty( "SortRichSmartIDs", m_sortIDs = false );
 
 }
@@ -49,10 +49,10 @@ StatusCode RichRawBufferToSmartIDsTool::initialize()
   // Setup incident services
   incSvc()->addListener( this, IncidentType::BeginEvent );
 
-  // Make sure we are ready for a new event
-  InitNewEvent();
+  if (m_sortIDs) 
+    info() << "Data will be sorted according to RICH and HPD panel" << endreq;
 
-  return StatusCode::SUCCESS;
+  return sc;
 }
 
 StatusCode RichRawBufferToSmartIDsTool::finalize()
@@ -69,7 +69,8 @@ void RichRawBufferToSmartIDsTool::handle ( const Incident& incident )
 
 const RichSmartID::Collection & RichRawBufferToSmartIDsTool::allRichSmartIDs() const
 {
-  if ( m_newEvent ) {
+  if ( m_newEvent )
+  {
     fillRichSmartIDs(); // Fill for this event
     m_newEvent = false; // Set this event processed
   }
@@ -85,9 +86,7 @@ void RichRawBufferToSmartIDsTool::fillRichSmartIDs() const
   // Sort into order of Rich/Panel/HPD/Pixel if required
   if ( m_sortIDs )
   {
-    debug() << "Sorting the RichSmartIDs..." << endreq;
-    const RichSmartIDSorter sorter;
-    sorter.sortByRegion( m_smartIDs );
+    m_sorter.sortByRegion( m_smartIDs );
   }
 
   // Printout the RichSmartIDs...

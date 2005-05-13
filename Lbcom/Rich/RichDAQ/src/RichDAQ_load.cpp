@@ -5,14 +5,7 @@
  *  Declaration file for objects in component library RichDAQ
  *
  *  CVS Log :-
- *  $Id: RichDAQ_load.cpp,v 1.7 2005-01-07 12:35:59 jonrob Exp $
- *  $Log: not supported by cvs2svn $
- *  Revision 1.6  2004/10/30 19:13:05  jonrob
- *  Reworking RawBuffer decoding as a tool, to allow reconstruction 
- *  to skip RichDigit creation
- *
- *  Revision 1.5  2004/07/27 13:46:07  jonrob
- *  Add doxygen file documentation and CVS information
+ *  $Id: RichDAQ_load.cpp,v 1.8 2005-05-13 14:22:12 jonrob Exp $
  *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   2003-11-09
@@ -36,7 +29,7 @@ DECLARE_FACTORY_ENTRIES ( RichDAQ )
   // Tool to convert between HPD and L1 identifiers
   DECLARE_TOOL( RichHPDToLevel1Tool );
 
-  // Tool to convert between HPD hardware and software identifiers
-  DECLARE_TOOL( RichHPDIDTool );
+  // Tool giving information on the status of the HPDs
+  DECLARE_TOOL( RichHPDInfoTool );
 
 }

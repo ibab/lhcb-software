@@ -1,14 +1,16 @@
 
+//-----------------------------------------------------------------------------
 /** @file RichRawBufferToSmartIDsTool.h
  *
  *  Header file for tool : RichRawBufferToSmartIDsTool
  *
  *  CVS Log :-
- *  $Id: RichRawBufferToSmartIDsTool.h,v 1.5 2005-01-26 09:59:18 jonrob Exp $
+ *  $Id: RichRawBufferToSmartIDsTool.h,v 1.6 2005-05-13 14:22:12 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
  */
+//-----------------------------------------------------------------------------
 
 #ifndef RICHDAQ_RICHRAWBUFFERTOSMARTIDSTOOL_H
 #define RICHDAQ_RICHRAWBUFFERTOSMARTIDSTOOL_H 1
@@ -32,6 +34,7 @@
 #include "RichKernel/IRichRawBufferToSmartIDsTool.h"
 #include "RichKernel/IRichRawDataFormatTool.h"
 
+//-----------------------------------------------------------------------------
 /** @class RichRawBufferToSmartIDsTool RichRawBufferToSmartIDsTool.h
  *
  *  Tool to create RichSmartIDs from the raw buffer.
@@ -43,6 +46,7 @@
  *
  *  @todo Add missing sorting and partitioning functionality for reconstruction
  */
+//-----------------------------------------------------------------------------
 
 class RichRawBufferToSmartIDsTool : public RichToolBase,
                                     virtual public IRichRawBufferToSmartIDsTool,
@@ -94,6 +98,9 @@ private: // private data
 
   /// New event flag
   mutable bool m_newEvent;
+
+  /// RichSmartID sorting utility object
+  RichSmartIDSorter m_sorter;
 
 };
 

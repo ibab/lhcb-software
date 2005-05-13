@@ -5,19 +5,7 @@
  * Implementation file for class : RichHPDToLevel1Tool
  *
  * CVS Log :-
- * $Id: RichHPDToLevel1Tool.cpp,v 1.5 2005-01-22 13:33:42 jonrob Exp $
- * $Log: not supported by cvs2svn $
- * Revision 1.4  2005/01/18 09:06:55  jonrob
- * Add method to get RICH detector from Level1 ID
- *
- * Revision 1.3  2005/01/14 16:57:12  jonrob
- * Add functionality to use job options for mapping data
- *
- * Revision 1.2  2005/01/13 13:10:14  jonrob
- * Update mapping type
- *
- * Revision 1.1  2005/01/07 12:35:59  jonrob
- * Complete rewrite
+ * $Id: RichHPDToLevel1Tool.cpp,v 1.6 2005-05-13 14:22:12 jonrob Exp $
  *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @date 2004-12-18
@@ -56,13 +44,12 @@ StatusCode RichHPDToLevel1Tool::initialize()
   const StatusCode sc = RichToolBase::initialize();
   if ( sc.isFailure() ) return sc;
 
+  // acquire tools
+  acquireTool( "RichHPDInfoTool", m_hpdTool );
+
   // If map from job options is empty, build a temporary one
   // Used for old data base versions...
   if ( m_joData.empty() ) { buildTempMapping(); return sc; }
-
-  // acquire tools
-  IRichHPDIDTool * hpdIDTool;
-  acquireTool( "RichHPDIDTool",   hpdIDTool  );
 
   // Use data from job options...
   JOData::const_iterator iD = m_joData.begin();
@@ -79,7 +66,7 @@ StatusCode RichHPDToLevel1Tool::initialize()
       if ( *iD > 0 ) {
         const RichDAQ::HPDHardwareID hardID = *iD;
         // Get RichSmartID
-        const RichSmartID smartID = hpdIDTool->richSmartID( hardID );
+        const RichSmartID smartID = m_hpdTool->richSmartID( hardID );
         // Fill maps
         m_smartid2L1 [ smartID ] = L1ID;
         m_hardid2L1  [ hardID  ] = L1ID;
@@ -95,9 +82,6 @@ StatusCode RichHPDToLevel1Tool::initialize()
     ++iD;
   }
   m_joData.clear();
-
-  // release tool
-  releaseTool( hpdIDTool );
 
   info() << "Created L1 ID <-> HPD map : # L1 Boards RICH(1/2) = " << nL1s[Rich::Rich1]
          << " / " << nL1s[Rich::Rich2] << endreq;
@@ -200,8 +184,6 @@ RichHPDToLevel1Tool::richDetector( const RichDAQ::Level1ID l1ID ) const
 void RichHPDToLevel1Tool::buildTempMapping()
 {
   // acquire tools
-  IRichHPDIDTool * hpdIDTool;
-  acquireTool( "RichHPDIDTool",   hpdIDTool  );
   IRichSmartIDTool * smartIDs;
   acquireTool( "RichSmartIDTool", smartIDs );
 
@@ -223,8 +205,10 @@ void RichHPDToLevel1Tool::buildTempMapping()
     const RichSmartID hpdID = (*iID).pdID();
     if ( m_smartid2L1.find(hpdID) == m_smartid2L1.end() )
     {
+
       // Get hardware ID for this RichSmartID
-      const RichDAQ::HPDHardwareID hardID = hpdIDTool->hardwareID( hpdID );
+      const RichDAQ::HPDHardwareID hardID = m_hpdTool->hardwareID( hpdID );
+
       // Create L1 ID
       if ( iHPD >= nHPDsPerL1 ||
            ( rich != Rich::InvalidDetector && rich != hpdID.rich() ) ) { ++L1ID; iHPD = 0; }
@@ -238,15 +222,14 @@ void RichHPDToLevel1Tool::buildTempMapping()
       m_l12hardids[L1ID].push_back( hardID );
       m_l1ToRich[L1ID] = rich;
       ++iHPD;
-
       verbose() << "RichSmartID " << hpdID << " HardID " << hardID
                 << " -> L1ID " << L1ID << endreq;
+
     }
   }
 
   // release tools
   releaseTool( smartIDs  );
-  releaseTool( hpdIDTool );
 
   info() << "Created L1 ID <-> HPD map : # L1 Boards RICH(1/2) = " << nL1s[Rich::Rich1]
          << " / " << nL1s[Rich::Rich2] << endreq;

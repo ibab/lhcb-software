@@ -5,10 +5,7 @@
  *  Header file for RICH DAQ utility class : RichZeroSuppData
  *
  *  CVS Log :-
- *  $Id: RichZeroSuppData.h,v 1.2 2005-01-13 13:12:05 jonrob Exp $
- *  $Log: not supported by cvs2svn $
- *  Revision 1.1  2005/01/07 12:35:59  jonrob
- *  Complete rewrite
+ *  $Id: RichZeroSuppData.h,v 1.3 2005-05-13 14:22:12 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   2004-12-17
@@ -84,7 +81,7 @@ namespace RichZeroSuppDataV0 {
 
     // Fill a vector with RichSmartIDs for hit pixels
     virtual void fillRichSmartIDs( RichSmartID::Collection & ids,
-                                   const IRichHPDIDTool * hpdTool ) const;
+                                   const IRichHPDInfoTool * hpdTool ) const;
 
     // Print data bank to message stream
     virtual void fillMsgStream( MsgStream & os ) const;
@@ -156,7 +153,7 @@ namespace RichZeroSuppDataV1 {
 
     // Fill a vector with RichSmartIDs for hit pixels
     virtual void fillRichSmartIDs( RichSmartID::Collection & ids,
-                                   const IRichHPDIDTool * hpdTool ) const;
+                                   const IRichHPDInfoTool * hpdTool ) const;
 
     // Print data bank to message stream
     virtual void fillMsgStream( MsgStream & os ) const;
@@ -234,7 +231,7 @@ namespace RichZeroSuppDataV2 {
 
     // Fill a vector with RichSmartIDs for hit pixels
     virtual void fillRichSmartIDs( RichSmartID::Collection & ids,
-                                   const IRichHPDIDTool * hpdTool ) const;
+                                   const IRichHPDInfoTool * hpdTool ) const;
 
     // Print data bank to message stream
     virtual void fillMsgStream( MsgStream & os ) const;

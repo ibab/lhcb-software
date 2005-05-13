@@ -5,7 +5,7 @@
  *  Header file for RICH DAQ utility class : RichHPDDataBank
  *
  *  CVS Log :-
- *  $Id: RichHPDDataBank.h,v 1.4 2005-03-21 14:11:42 jonrob Exp $
+ *  $Id: RichHPDDataBank.h,v 1.5 2005-05-13 14:22:12 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   2004-12-17
@@ -23,7 +23,7 @@
 #include "RichKernel/RichDAQDefinitions.h"
 
 // HPD Tool
-#include "RichKernel/IRichHPDIDTool.h"
+#include "RichKernel/IRichHPDInfoTool.h"
 
 //-----------------------------------------------------------------------------
 /** @class RichHPDDataBank RichHPDDataBank.h
@@ -87,7 +87,7 @@ public:
    *  @param hpdTool Pointer to the tool to convert hardware to software HPD IDs
    */
   virtual void fillRichSmartIDs( RichSmartID::Collection & ids,
-                                 const IRichHPDIDTool * hpdTool ) const = 0;
+                                 const IRichHPDInfoTool * hpdTool ) const = 0;
 
   /** Fill a RAWBank with the data for this bank
    *

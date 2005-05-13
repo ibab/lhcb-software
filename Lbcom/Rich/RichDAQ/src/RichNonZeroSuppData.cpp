@@ -4,7 +4,7 @@
  *
  *  Implementation file for RICH DAQ helper class : RichNonZeroSuppData
  *
- *  $Id: RichNonZeroSuppData.cpp,v 1.3 2005-02-09 09:16:26 cattanem Exp $
+ *  $Id: RichNonZeroSuppData.cpp,v 1.4 2005-05-13 14:22:12 jonrob Exp $
  *
  *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
  *  @date   2004-12-17
@@ -17,7 +17,7 @@
 namespace RichNonZeroSuppDataV0 {
 
   void RichNonZeroSuppData::fillRichSmartIDs( RichSmartID::Collection & ids,
-                                              const IRichHPDIDTool * /* hpdTool */ ) const
+                                              const IRichHPDInfoTool * /* hpdTool */ ) const
   {
     // header word object
     const Header head ( header() );
@@ -63,7 +63,7 @@ namespace RichNonZeroSuppDataV0 {
 namespace RichNonZeroSuppDataV1 {
 
   void RichNonZeroSuppData::fillRichSmartIDs( RichSmartID::Collection & ids,
-                                              const IRichHPDIDTool * hpdTool ) const
+                                              const IRichHPDInfoTool * hpdTool ) const
   {
     // header word object
     const Header head ( header() );

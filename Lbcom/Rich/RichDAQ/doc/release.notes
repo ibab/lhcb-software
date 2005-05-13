@@ -4,6 +4,13 @@
 ! Purpose     : Package simulating the RICH DAQ system and data format
 !-----------------------------------------------------------------------------
 
+! 2005-05-13 - Chris Jones
+ - Clean up some doxygen comments
+ - Rename RichHPDIDTool RichHPDInfoTool ( better matches its use )
+ - Add functionality to RichHPDInfoTool to disable given HPDs
+ - Add a few new methods to RichHPDInfoTool to access information on whether
+   a given HPD is active
+
 ! 2005-04-06 - Chris Jones
  - Fix stats for cases when some events are not processed (such as in HLT)
 

@@ -5,13 +5,7 @@
  *  Header file for RICH DAQ utility class : RichNonZeroSuppData
  *
  *  CVS Log :-
- *  $Id: RichNonZeroSuppData.h,v 1.13 2005-01-13 13:10:41 jonrob Exp $
- *  $Log: not supported by cvs2svn $
- *  Revision 1.12  2005/01/07 12:35:59  jonrob
- *  Complete rewrite
- *
- *  Revision 1.11  2004/07/27 13:46:07  jonrob
- *  Add doxygen file documentation and CVS information
+ *  $Id: RichNonZeroSuppData.h,v 1.14 2005-05-13 14:22:12 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   2003-11-07
@@ -93,7 +87,7 @@ namespace RichNonZeroSuppDataV0 {
 
     // Fill a vector with RichSmartIDs for hit pixels
     virtual void fillRichSmartIDs( RichSmartID::Collection & ids,
-                                   const IRichHPDIDTool * hpdTool ) const;
+                                   const IRichHPDInfoTool * hpdTool ) const;
 
     // Print data bank to Gaudi MsgStream
     virtual void fillMsgStream( MsgStream & os ) const;
@@ -178,7 +172,7 @@ namespace RichNonZeroSuppDataV1 {
 
     // Fill a vector with RichSmartIDs for hit pixels
     virtual void fillRichSmartIDs( RichSmartID::Collection & ids,
-                                   const IRichHPDIDTool * hpdTool ) const;
+                                   const IRichHPDInfoTool * hpdTool ) const;
 
     // Print data bank to messager stream
     virtual void fillMsgStream( MsgStream & os ) const;
