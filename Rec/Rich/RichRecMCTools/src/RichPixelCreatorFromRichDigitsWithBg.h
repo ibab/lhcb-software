@@ -5,7 +5,7 @@
  *  Header file for RICH reconstruction tool : RichPixelCreatorFromRichDigitsWithBg
  *
  *  CVS Log :-
- *  $Id: RichPixelCreatorFromRichDigitsWithBg.h,v 1.7 2005-04-15 16:32:30 jonrob Exp $
+ *  $Id: RichPixelCreatorFromRichDigitsWithBg.h,v 1.8 2005-05-13 15:00:05 jonrob Exp $
  *
  *  @author Andy Buckley   buckley@hep.phy.cam.ac.uk
  *  @author Chris Jones    Christopher.Rob.Jones@cern.ch
@@ -19,20 +19,17 @@
 // from Gaudi
 #include "GaudiKernel/IIncidentListener.h"
 #include "GaudiKernel/IIncidentSvc.h"
-#include "GaudiKernel/SmartDataPtr.h"
 #include "GaudiKernel/ToolFactory.h"
 
 // base class
-#include "RichRecBase/RichRecToolBase.h"
+#include "RichRecBase/RichPixelCreatorBase.h"
 
 // interfaces
-#include "RichRecBase/IRichPixelCreator.h"
 #include "RichKernel/IRichSmartIDTool.h"
 #include "RichKernel/IRichMCTruthTool.h"
 
 // RichKernel
 #include "RichKernel/RichMap.h"
-#include "RichKernel/RichHashMap.h"
 
 // Event
 #include "Event/RichDigit.h"
@@ -55,9 +52,9 @@
  */
 //------------------------------------------------------------------------------------
 
-class RichPixelCreatorFromRichDigitsWithBg : public RichRecToolBase,
-                                             virtual public IRichPixelCreator,
-                                             virtual public IIncidentListener {
+class RichPixelCreatorFromRichDigitsWithBg : public RichPixelCreatorBase,
+                                             virtual public IIncidentListener 
+{
 
 public: // methods for Gaudi
 
@@ -89,13 +86,7 @@ public: // methods (and doxygen comments) inherited from public interface
   // The most efficient way to make all RichRecPixel objects in the event.
   StatusCode newPixels() const;
 
-  // Returns a pointer to the RichRecPixels
-  RichRecPixels * richPixels() const;
-
 private: // methods
-
-  /// Initialise for a new event
-  void InitNewEvent();
 
   /// Returns a RichRecPixel object for given smart ID
   RichRecPixel * newPixel( const RichSmartID id ) const;
@@ -104,9 +95,6 @@ private: // methods
   StatusCode fillBgTrackStack() const;
 
 private: // data
-
-  /// Pointer to RichRecPixels
-  mutable RichRecPixels * m_pixels;
 
   /// Pointer to RichSmartID tool
   IRichSmartIDTool * m_smartIDTool;
@@ -117,36 +105,15 @@ private: // data
   /// String containing input RichDigits location in TES
   std::string m_recoDigitsLocation;
 
-  /// Location of RichRecPixels in TES
-  std::string m_richRecPixelLocation;
+  /// Typedef for mapping between MCParticles and RIchSmartIDs
+  typedef RichMap<const MCParticle*, RichSmartID::Collection > BgTrackStack;
 
-  /// Flag to signify all pixels have been formed
-  mutable bool m_allDone;
-
-  /// Map of existing pixels
-  mutable RichMap< RichSmartID::KeyType, RichRecPixel* > m_pixelExists;
-
-  /// map to indicate pixels that have been considered
-  mutable RichMap< RichSmartID::KeyType, bool > m_pixelDone;
-
-  /// Stack of RichSmartIDS for a single MCParticle for use as track background
-  typedef RichMap<const MCParticle*, std::vector<RichSmartID> > BgTrackStack;
+  /// Stack of RichSmartIDs for a single MCParticle for use as track background
   mutable RichMap<Rich::DetectorType, BgTrackStack> m_digitsForTrackBg;
 
   /// Number of background tracks to add to each event
   std::vector<size_t> m_numBgTracksToAdd;
 
-  /// Flags for which RICH detectors to create pixels for
-  std::vector<bool> m_usedDets;
-
 };
-
-inline void RichPixelCreatorFromRichDigitsWithBg::InitNewEvent()
-{
-  m_allDone = false;
-  m_pixelExists.clear();
-  m_pixelDone.clear();
-  m_pixels = 0;
-}
 
 #endif // RICHRECMCTOOLS_RICHPIXELCREATORFROMRICHDIGITSWITHBG_H

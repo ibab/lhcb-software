@@ -1,48 +1,38 @@
 
+//--------------------------------------------------------------------------------------
 /** @file RichPixelCreatorFromCheatedRichDigits.h
  *
  *  Header file for RICH reconstruction tool : RichPixelCreatorFromCheatedRichDigits
  *
  *  CVS Log :-
- *  $Id: RichPixelCreatorFromCheatedRichDigits.h,v 1.9 2005-01-13 14:39:00 jonrob Exp $
- *  $Log: not supported by cvs2svn $
- *  Revision 1.8  2004/10/13 09:37:27  jonrob
- *  Add new pixel creator tool.
- *  Add ability to make pixels for particular radiators.
- *
- *  Revision 1.7  2004/07/27 16:14:11  jonrob
- *  Add doxygen file documentation and CVS information
- *
+ *  $Id: RichPixelCreatorFromCheatedRichDigits.h,v 1.10 2005-05-13 15:00:05 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   08/07/2004
  */
+//--------------------------------------------------------------------------------------
 
-#ifndef RICHRECTOOLS_RICHPIXELCREATORFROMCHEATEDRICHDIGITS_H
-#define RICHRECTOOLS_RICHPIXELCREATORFROMCHEATEDRICHDIGITS_H 1
+#ifndef RICHRECMCTOOLS_RICHPIXELCREATORFROMCHEATEDRICHDIGITS_H
+#define RICHRECMCTOOLS_RICHPIXELCREATORFROMCHEATEDRICHDIGITS_H 1
 
 // from Gaudi
 #include "GaudiKernel/IIncidentListener.h"
 #include "GaudiKernel/IIncidentSvc.h"
-#include "GaudiKernel/SmartDataPtr.h"
 #include "GaudiKernel/ToolFactory.h"
 
 // base class
-#include "RichRecBase/RichRecToolBase.h"
+#include "RichRecBase/RichPixelCreatorBase.h"
 
 // interfaces
-#include "RichRecBase/IRichPixelCreator.h"
 #include "RichKernel/IRichSmartIDTool.h"
 #include "RichKernel/IRichMCTruthTool.h"
-
-// RichKernel
-#include "RichKernel/RichHashMap.h"
 
 // Event
 #include "Event/RichDigit.h"
 #include "Event/MCRichDigit.h"
 #include "Event/MCRichOpticalPhoton.h"
 
+//--------------------------------------------------------------------------------------
 /** @class RichPixelCreatorFromCheatedRichDigits RichPixelCreatorFromCheatedRichDigits.h
  *
  *  Tool for the creation and book-keeping of RichRecPixel objects.
@@ -52,10 +42,11 @@
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/09/2003
  */
+//--------------------------------------------------------------------------------------
 
-class RichPixelCreatorFromCheatedRichDigits : public RichRecToolBase,
-                                              virtual public IRichPixelCreator,
-                                              virtual public IIncidentListener {
+class RichPixelCreatorFromCheatedRichDigits : public RichPixelCreatorBase,
+                                              virtual public IIncidentListener  
+{
 
 public: // methods for Gaudi framework
 
@@ -87,9 +78,6 @@ public: // Public interface methods
   // The most efficient way to make all RichRecPixel objects in the event.
   StatusCode newPixels() const;
 
-  // Returns a pointer to the RichRecPixels
-  RichRecPixels * richPixels() const;
-
 private: // methods
 
   /** Create a new RichRecPixel for a given RichDigit and MCRichHit
@@ -99,13 +87,7 @@ private: // methods
                                   const MCRichHit * hit    ///< Pointer to an MCRichHit
                                   ) const;
 
-  /// Initialise for a new event
-  void InitNewEvent();
-
 private: // data
-
-  /// Pointer to RichRecPixels
-  mutable RichRecPixels * m_pixels;
 
   /// Pointer to RichSmartID tool
   IRichSmartIDTool * m_smartIDTool;
@@ -116,28 +98,9 @@ private: // data
   /// String containing input RichDigits location in TES
   std::string m_recoDigitsLocation;
 
-  /// Location of RichRecPixels in TES
-  std::string m_richRecPixelLocation;
-
-  /// Flag to signify all pixels have been formed
-  mutable bool m_allDone;
-
-  // Internal book keeping
-  mutable RichHashMap< unsigned int, RichRecPixel* > m_pixelExists;
-  mutable RichHashMap< unsigned int, bool > m_pixelDone;
-
   /// Flags for which radiators to create pixels for
   std::vector<bool> m_usedRads;
 
 };
 
-inline void RichPixelCreatorFromCheatedRichDigits::InitNewEvent()
-{
-  // Initialise data for new event
-  m_allDone = false;
-  m_pixelExists.clear();
-  m_pixelDone.clear();
-  m_pixels = 0;
-}
-
-#endif // RICHRECTOOLS_RICHPIXELCREATORFROMCHEATEDRICHDIGITS_H
+#endif // RICHRECMCTOOLS_RICHPIXELCREATORFROMCHEATEDRICHDIGITS_H
