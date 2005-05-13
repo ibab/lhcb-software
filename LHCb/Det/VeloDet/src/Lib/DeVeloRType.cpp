@@ -1,4 +1,4 @@
-// $Id: DeVeloRType.cpp,v 1.10 2005-03-03 14:46:10 mtobin Exp $
+// $Id: DeVeloRType.cpp,v 1.11 2005-05-13 16:13:23 marcocle Exp $
 //==============================================================================
 #define VELODET_DEVELORTYPE_CPP 1
 //==============================================================================
@@ -71,14 +71,14 @@ StatusCode DeVeloRType::initialize()
   m_numberOfZones = 4;
   m_stripsInZone = m_numberOfStrips / m_numberOfZones;
 
-  m_innerPitch = this->userParameterAsDouble("InnerPitch");
-  m_outerPitch = this->userParameterAsDouble("OuterPitch");
+  m_innerPitch = param<double>("InnerPitch");
+  m_outerPitch = param<double>("OuterPitch");
 
-  m_overlapInX = this->userParameterAsDouble("ROverlapInX");
+  m_overlapInX = param<double>("ROverlapInX");
   
   // the resolution of the sensor
-  m_resolution.first = this->userParameterAsDouble("RResGrad");
-  m_resolution.second = this->userParameterAsDouble("RResConst");
+  m_resolution.first = param<double>("RResGrad");
+  m_resolution.second = param<double>("RResConst");
   
   /// Calculate the strip radii/phi limits 
   calcStripLimits();
@@ -288,7 +288,7 @@ void DeVeloRType::calcStripLimits()
     (m_outerR - m_innerR);
 
   /// Dead region from bias line
-  m_phiGap = this->userParameterAsDouble("RPhiGap") / 2;
+  m_phiGap = param<double>("RPhiGap") / 2;
 
   /// Corner cut offs
   cornerLimits();
@@ -363,10 +363,10 @@ void DeVeloRType::calcStripLimits()
 //==============================================================================
 void DeVeloRType::cornerLimits()
 {
-  m_cornerX1 = this->userParameterAsDouble("RCornerX1");
-  m_cornerY1 = this->userParameterAsDouble("RCornerY1");
-  m_cornerX2 = this->userParameterAsDouble("RCornerX2");
-  m_cornerY2 = this->userParameterAsDouble("RCornerY2");
+  m_cornerX1 = param<double>("RCornerX1");
+  m_cornerY1 = param<double>("RCornerY1");
+  m_cornerX2 = param<double>("RCornerX2");
+  m_cornerY2 = param<double>("RCornerY2");
   
   m_corners.clear();
   double gradient;

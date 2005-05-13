@@ -1,6 +1,10 @@
-! $Id: release.notes,v 1.68 2005-03-23 16:47:36 cattanem Exp $
+! $Id: release.notes,v 1.69 2005-05-13 16:13:23 marcocle Exp $
 package VeloDet
 package manager : Velo Group
+
+! 2005-05-13 - Marco CLEMENCIC
+ - Use new ParamValidDataObject interface (DetDesc >= v15)
+
 !========================= VeloDet v9r4 2005-03-22 =========================
 ! 2005-03-22 - Juan Palacios
  - Enable DeVelo to cope with an arbitrary number of detector element 

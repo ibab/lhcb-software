@@ -1,4 +1,4 @@
-// $Id: DeVelo.cpp,v 1.45 2005-03-23 16:47:37 cattanem Exp $
+// $Id: DeVelo.cpp,v 1.46 2005-05-13 16:13:23 marcocle Exp $
 //
 // ============================================================================
 #define  VELODET_DEVELO_CPP 1
@@ -72,9 +72,9 @@ StatusCode DeVelo::initialize() {
     msg << MSG::ERROR << "Failure to initialize DetectorElement" << endreq;
     return sc ; 
   }
-  unsigned int nextR=this->userParameterAsInt("FirstR");
-  unsigned int nextPhi=this->userParameterAsInt("FirstPhi");
-  unsigned int nextPileUp=this->userParameterAsInt("FirstPileUp");
+  unsigned int nextR=param<int>("FirstR");
+  unsigned int nextPhi=param<int>("FirstPhi");
+  unsigned int nextPileUp=param<int>("FirstPileUp");
 
   // get all of the pointers to the child detector elements
   std::vector<DeVeloSensor*> veloSensors = this->getVeloSensors();

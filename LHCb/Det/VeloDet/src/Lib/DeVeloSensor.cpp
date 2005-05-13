@@ -1,4 +1,4 @@
-// $Id: DeVeloSensor.cpp,v 1.5 2004-02-28 21:43:43 mtobin Exp $
+// $Id: DeVeloSensor.cpp,v 1.6 2005-05-13 16:13:23 marcocle Exp $
 //==============================================================================
 #define VELODET_DEVELOSENSOR_CPP 1
 //==============================================================================
@@ -60,10 +60,10 @@ StatusCode DeVeloSensor::initialize()
     return sc;
   }
   m_numberOfStrips = 2048;
-  m_innerRadius = this->userParameterAsDouble("InnerRadius");
-  m_outerRadius = this->userParameterAsDouble("OuterRadius");
-  m_siliconThickness = this->userParameterAsDouble("SiThick");
-  m_type = this->userParameterAsString("Type");
+  m_innerRadius = param<double>("InnerRadius");
+  m_outerRadius = param<double>("OuterRadius");
+  m_siliconThickness = param<double>("SiThick");
+  m_type = param<std::string>("Type");
   initSensor();
   IGeometryInfo* geom = this->geometry();
   m_geometry = geom;
