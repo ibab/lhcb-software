@@ -1,11 +1,14 @@
 ! =============================================================================
-! $Id: release.notes,v 1.173 2005-05-03 15:44:49 marcocle Exp $ 
+! $Id: release.notes,v 1.174 2005-05-13 08:26:01 marcocle Exp $ 
 ! =============================================================================
 ! package DetDesc
 ! package manager : N.N 
 ! =============================================================================
 
 !======================== DetDesc v15r0 2005-04-22 ========================
+! 2005-05-13 - Marco Clemencic
+ - Added method Condition::toXml() to convert a condition to an XML string.
+
 ! 2005-05-03 - Marco Clemencic
  - Added the UpdateManagerSvc and the method DetectorElement::updMgrSvc()
    for an easy access to it

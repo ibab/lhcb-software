@@ -1,4 +1,4 @@
-//$Id: Condition.h,v 1.4 2003-04-23 10:06:41 sponce Exp $
+//$Id: Condition.h,v 1.5 2005-05-13 08:26:00 marcocle Exp $
 #ifndef DETDESC_CONDITION_H
 #define DETDESC_CONDITION_H 1
 
@@ -39,6 +39,9 @@ class Condition : public ParamValidDataObject,
   /// Update using another Condition: deep copy all contents, 
   /// except for the properties of a generic DataObject
   virtual void update (Condition& obj);
+
+  /// Prepare an XML string representing the condition.
+  virtual std::string toXml(const std::string &name = std::string());
 
   /// Destructor 
   virtual ~Condition();
