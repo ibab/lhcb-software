@@ -1,8 +1,11 @@
-// $Id: CaloClusterMCTruthMonitor.cpp,v 1.3 2005-05-08 09:58:24 ibelyaev Exp $
+// $Id: CaloClusterMCTruthMonitor.cpp,v 1.4 2005-05-13 12:58:35 cattanem Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.3 $
+// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.4 $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.3  2005/05/08 09:58:24  ibelyaev
+//  remove associators, update options
+//
 // ============================================================================
 // Include files
 // ============================================================================
@@ -162,7 +165,7 @@ StatusCode CaloClusterMCTruthMonitor::execute()
   AIDA::IHistogram1D* h5 = histo ( 5 ) ;
   
   // total number of links 
-  hFill ( h1 , log10( table->relations().size() + 1 ) ) ;
+  hFill ( h1 , log10( table->relations().size() + 1. ) ) ;
   if ( inputs().empty() ) 
   { return Error ( "Containers of Clusters are not specified " ) ; }
   // make a loop over containers of clusters 

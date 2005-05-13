@@ -1,13 +1,16 @@
-! $Id: release.notes,v 1.4 2005-05-09 15:48:49 cattanem Exp $ 
+! $Id: release.notes,v 1.5 2005-05-13 12:58:35 cattanem Exp $ 
 ! -----------------------------------------------------------------------------
-! CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.4 $
+! CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.5 $
 ! -----------------------------------------------------------------------------
 ! Package     : Calo/CaloMoniDst
 ! Responsible : Vanya BELYAEV belyaev@lapp.in2p3.fr
 ! Purpose     : Calo monitoring of Dst tape 
 ! -----------------------------------------------------------------------------
 
-========================= CaloMoniDst v1r1 2005-05-09 =========================
+========================= CaloMoniDst v1r1 2005-05-13 =========================
+! 2005-05-13 - Marco Cattaneo
+ - Fix ambiguous call to overloaded log10 function, for Windows
+
 ! 2005-05-08 - Vanya BELYAEV
    - eliminate all associators 
    - a lot of minor cosmetic changes 

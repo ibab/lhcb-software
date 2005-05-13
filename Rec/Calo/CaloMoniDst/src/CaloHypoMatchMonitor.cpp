@@ -1,8 +1,11 @@
-// $Id: CaloHypoMatchMonitor.cpp,v 1.2 2005-05-08 09:58:25 ibelyaev Exp $
+// $Id: CaloHypoMatchMonitor.cpp,v 1.3 2005-05-13 12:58:35 cattanem Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.2 $
+// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.3 $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.2  2005/05/08 09:58:25  ibelyaev
+//  remove associators, update options
+//
 // ============================================================================
 // Include files
 // ============================================================================
@@ -151,7 +154,7 @@ StatusCode CaloHypoMatchMonitor::execute()
   AIDA::IHistogram1D* h5 = histo ( 5 ) ;
   
   // logarithm of ( total number of links + 1 ) 
-  hFill ( h1 , log10( table->relations().size() + 1 ) ) ;
+  hFill ( h1 , log10( table->relations().size() + 1. ) ) ;
   
   if ( inputs().empty() ) 
   { return Error ( "No input data are specified" ) ; }

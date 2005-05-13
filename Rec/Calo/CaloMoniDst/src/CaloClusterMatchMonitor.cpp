@@ -1,8 +1,11 @@
-// $Id: CaloClusterMatchMonitor.cpp,v 1.3 2005-05-08 09:58:25 ibelyaev Exp $
+// $Id: CaloClusterMatchMonitor.cpp,v 1.4 2005-05-13 12:58:35 cattanem Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.3  2005/05/08 09:58:25  ibelyaev
+//  remove associators, update options
+//
 // ============================================================================
 // Include files
 // ============================================================================
@@ -147,7 +150,7 @@ StatusCode CaloClusterMatchMonitor::execute()
   AIDA::IHistogram1D* h5 = histo ( 5 ) ;
   
   // total number of links 
-  hFill ( h1 , log10( table->relations().size() + 1 ) ) ;
+  hFill ( h1 , log10( table->relations().size() + 1. ) ) ;
   
   if ( inputs().empty() ) 
   { return Error ( "No input data are specified" ) ; }
