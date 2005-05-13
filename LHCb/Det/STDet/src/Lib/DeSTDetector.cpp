@@ -63,18 +63,18 @@ StatusCode DeSTDetector::initialize() {
     log << MSG::DEBUG << "*****get parameters from"<<(*iterStation)->name()
         << endreq;
 
-    double itZ= (*iterStation)->userParameterAsDouble("zCenter");    
-    double itThickness=(*iterStation)->userParameterAsDouble("Thickness");
-    unsigned int numLayers=(*iterStation)->userParameterAsInt("numLayers");   
-    unsigned int iStation =(*iterStation)->userParameterAsInt("StationID");
-    double SensorWidth=(*iterStation)->userParameterAsDouble("SensorWidth");
-    double SensorHeight=(*iterStation)->userParameterAsDouble("SensorHeight");
+    double itZ= (*iterStation)->params()->param<double>("zCenter");    
+    double itThickness=(*iterStation)->params()->param<double>("Thickness");
+    unsigned int numLayers=(*iterStation)->params()->param<int>("numLayers");   
+    unsigned int iStation =(*iterStation)->params()->param<int>("StationID");
+    double SensorWidth=(*iterStation)->params()->param<double>("SensorWidth");
+    double SensorHeight=(*iterStation)->params()->param<double>("SensorHeight");
   
-    double holeX =(*iterStation)->userParameterAsDouble("holeX");
-    double holeY =(*iterStation)->userParameterAsDouble("holeY");
-    double ladderDist=(*iterStation)->userParameterAsDouble("DzLadder");
-    unsigned int numStrips =(*iterStation)->userParameterAsInt("numStrips");
-    double pitch =(*iterStation)->userParameterAsDouble("pitch");
+    double holeX =(*iterStation)->params()->param<double>("holeX");
+    double holeY =(*iterStation)->params()->param<double>("holeY");
+    double ladderDist=(*iterStation)->params()->param<double>("DzLadder");
+    unsigned int numStrips =(*iterStation)->params()->param<int>("numStrips");
+    double pitch =(*iterStation)->params()->param<double>("pitch");
     double SensorThickness;
 
     STDetectionStation* station = new STDetectionStation(itZ, itThickness, numLayers, iStation);  
@@ -93,9 +93,9 @@ StatusCode DeSTDetector::initialize() {
       std::string boxName = (*iterBox)->name();       
       log << MSG::DEBUG << "*****get parameters from"<<boxName <<endreq;
 
-      unsigned int NSensorX = (*iterBox)->userParameterAsInt("NSensorX");
-      unsigned int NSensorY = (*iterBox)->userParameterAsInt("NSensorY");
-      double SensorOverlap=(*iterStation)->userParameterAsDouble("SensorOverlap");
+      unsigned int NSensorX = (*iterBox)->params()->param<int>("NSensorX");
+      unsigned int NSensorY = (*iterBox)->params()->param<int>("NSensorY");
+      double SensorOverlap=(*iterStation)->params()->param<double>("SensorOverlap");
 
       log << MSG::DEBUG << "*****now loop over layers"<<endreq;
 
@@ -124,25 +124,25 @@ StatusCode DeSTDetector::initialize() {
         }
 
         // make sure this layer was not created
-        unsigned int iLayer =(*iterLayer)->userParameterAsInt("LayerID"); 
+        unsigned int iLayer =(*iterLayer)->params()->param<int>("LayerID"); 
         if (0 != station->layer(iLayer)) continue;  
 
         // make sure the Layer ID is in scope 
-        //unsigned int iLayer =(*iterLayer)->userParameterAsInt("LayerID");        
+        //unsigned int iLayer =(*iterLayer)->params()->param<int>("LayerID");        
         if(iLayer<=0||iLayer>numLayers) {
           log << MSG::ERROR << "Layer ID out of scope!" <<endreq;
           return StatusCode::FAILURE;
         }
 
         if (iLayer<=4){
-          SensorThickness=(*iterStation)->userParameterAsDouble("SensorThicknessTB");
+          SensorThickness=(*iterStation)->params()->param<double>("SensorThicknessTB");
 	}
         else {
-          SensorThickness=(*iterStation)->userParameterAsDouble("SensorThicknessLR");
+          SensorThickness=(*iterStation)->params()->param<double>("SensorThicknessLR");
 	}
 
-        double stereoAngle=(*iterLayer)->userParameterAsDouble("stereoAngle");
-        unsigned int position=(*iterLayer)->userParameterAsInt("position");
+        double stereoAngle=(*iterLayer)->params()->param<double>("stereoAngle");
+        unsigned int position=(*iterLayer)->params()->param<int>("position");
 
         ITLayer* layer = new ITLayer(iStation, iLayer, LayerZ,
                    stereoAngle, pitch, SensorWidth, SensorHeight, SensorThickness,
@@ -159,19 +159,19 @@ StatusCode DeSTDetector::initialize() {
     ++m_nTT;
 
     std::vector<int> ladderSize1, ladderSize2;
-    unsigned int NSensorX1   =(*iterStation)->userParameterAsInt("NSensorX1");
-    unsigned int NSensorX2   =(*iterStation)->userParameterAsInt("NSensorX2");
+    unsigned int NSensorX1   =(*iterStation)->params()->param<int>("NSensorX1");
+    unsigned int NSensorX2   =(*iterStation)->params()->param<int>("NSensorX2");
 
-    double SensorOverlap1=(*iterStation)->userParameterAsDouble("SensorOverlap1");
-    double SensorOverlap2=(*iterStation)->userParameterAsDouble("SensorOverlap2");
-    unsigned int nOverlap1 = (*iterStation)->userParameterAsInt("nOverlap1");
-    unsigned int nFine =  (*iterStation)->userParameterAsInt("nFine");
-    double  vertGuardRing = (*iterStation)->userParameterAsDouble("verticalGuardRing");
+    double SensorOverlap1=(*iterStation)->params()->param<double>("SensorOverlap1");
+    double SensorOverlap2=(*iterStation)->params()->param<double>("SensorOverlap2");
+    unsigned int nOverlap1 = (*iterStation)->params()->param<int>("nOverlap1");
+    unsigned int nFine =  (*iterStation)->params()->param<int>("nFine");
+    double  vertGuardRing = (*iterStation)->params()->param<double>("verticalGuardRing");
  
 
-    SensorThickness=(*iterStation)->userParameterAsDouble("SensorThickness");
-    ladderSize1 =(*iterStation)->userParameterVectorAsInt("VSensor1");
-    ladderSize2 =(*iterStation)->userParameterVectorAsInt("VSensor2");
+    SensorThickness=(*iterStation)->params()->param<double>("SensorThickness");
+    ladderSize1 =(*iterStation)->params()->param<std::vector<int> >("VSensor1");
+    ladderSize2 =(*iterStation)->params()->param<std::vector<int> >("VSensor2");
 
     IDetectorElement::IDEContainer::const_iterator iterLayer;
 
@@ -192,13 +192,13 @@ StatusCode DeSTDetector::initialize() {
        }
   
        // make sure the Layer ID is in scope
-       unsigned int iLayer =(*iterLayer)->userParameterAsInt("LayerID");
+       unsigned int iLayer =(*iterLayer)->params()->param<int>("LayerID");
        if(iLayer<=0||iLayer>numLayers) {
          log << MSG::ERROR << "Layer ID out of scope!" <<endreq;
          return StatusCode::FAILURE;
        }
 
-       double  stereoAngle=(*iterLayer)->userParameterAsDouble("stereoAngle");
+       double  stereoAngle=(*iterLayer)->params()->param<double>("stereoAngle");
       
        TTLayer* layer = new TTLayer(iStation, iLayer, LayerZ,
                                     stereoAngle, pitch, SensorWidth, SensorHeight,

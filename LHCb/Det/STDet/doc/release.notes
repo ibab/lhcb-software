@@ -1,6 +1,9 @@
 !Package         : STDet
 !Package manager : M. Needham
 
+! 2005-05-13 - Marco Clemencic
+ - Use new ParamValidDataObject interface (DetDesc >= v15)
+
 !========================= STDet v1r3 2005-04-06 =======================
 ! 2005-04-06  M. Needham
   - bug fix in TTLayer.cpp (not backwards compatible)
