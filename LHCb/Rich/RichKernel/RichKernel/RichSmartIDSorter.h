@@ -4,7 +4,7 @@
  *
  *  Header file for RichSmartID utility class : RichSmartIDSorter
  *
- *  $Id: RichSmartIDSorter.h,v 1.5 2005-02-09 09:13:04 cattanem Exp $
+ *  $Id: RichSmartIDSorter.h,v 1.6 2005-05-13 14:29:54 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   2005-01-10
@@ -20,6 +20,7 @@
 // Kernel
 #include "Kernel/RichSmartID.h"
 
+//-----------------------------------------------------------------------------
 /** @class RichSmartIDSorter RichSmartIDSorter.h RichKernel/RichSmartIDSorter.h
  *
  *  Utility class to sort RichSmartIDs according to various criteria
@@ -27,6 +28,8 @@
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   2005-01-10
  */
+//-----------------------------------------------------------------------------
+
 class RichSmartIDSorter {
 
 private: // utility classes
@@ -46,19 +49,18 @@ private: // utility classes
      *  @param p2 Second RichSmartID
      *
      *  @return bool indicating if p1 should be listed before p2
-     *
-     *  @todo Rewrite more efficiently when RichSmartID bit packing is better arranged
      */
-    bool operator() ( const RichSmartID p1, const RichSmartID p2 ) const
+    inline bool operator() ( const RichSmartID p1, const RichSmartID p2 ) const
     {
-      // Until RichSmartID is updated, use explicit slow sorting...
-      //return ( p1.dataBitsOnly().key() < p2.dataBitsOnly().key() );
-      return ( 100000000*p1.rich() + 10000000*p1.panel() +
-               1000000*p1.pdRow() + 10000*p1.pdCol() +
-               100*p1.pixelRow() + p1.pixelCol()  <
-               100000000*p2.rich() + 10000000*p2.panel() +
-               1000000*p2.pdRow() + 10000*p2.pdCol() +
-               100*p2.pixelRow() + p2.pixelCol() );
+      // Use internal bit packing to sort
+      return ( p1.dataBitsOnly().key() < p2.dataBitsOnly().key() );
+      // Use explicit field comparision. Slower but assumes nothing about bit packing
+      //return ( 100000000*p1.rich() + 10000000*p1.panel() +
+      //         1000000*p1.pdCol() + 10000*p1.pdRow() +
+      //         100*p1.pixelCol() + p1.pixelRow()  <
+      //         100000000*p2.rich() + 10000000*p2.panel() +
+      //         1000000*p2.pdCol() + 10000*p2.pdRow() +
+      //         100*p2.pixelCol() + p2.pixelRow() );
     }
 
   };
