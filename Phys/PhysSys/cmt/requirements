@@ -7,30 +7,32 @@ branches doc cmt
 # packages included in the DAVINCI tree
 #=======================================================
 #-- HLT trigger
-use HltGeneric                  v2r3     Hlt
+use HltGeneric                  v2r4     Hlt
 use HltSelections               v3r1     Hlt
 use HltSelChecker               v3r1     Hlt
 
 # LoKi
 use  LoKi               	v3r11p1  Tools  
-use  LoKiHlt             	v2r1     Tools 
-use  LoKiGen             	v1r0     Tools 
+use  LoKiHlt             	v2r1     Tools  
+use  LoKiGen             	v1r0     Tools  
+use  LoKiJets             	v1r0     Tools  
+use  KtJet	             	v1r0      
 
 # Generic Tools
-use  Utilities          	v1r14    Tools 
+use  Utilities          	v2r0     Tools
 use  RecoTools                  v1r1     Rec
 
 # Physics packages
 use  CommonParticles    	v1r5p3   Phys
 use  DaVinciFilter      	v1r7     Phys 	
-use  DaVinciKernel      	v3r2p1   Phys 	
-use  DaVinciTools       	v11r7p1  Phys 	
+use  DaVinciKernel      	v3r3p1   Phys 	
+use  DaVinciTools       	v11r8    Phys 	
 use  FlavourTagging     	v5r5p1   Phys
-use  Ks2PiPiSel         	v1r4p1   Phys 	
+use  Ks2PiPiSel         	v1r5     Phys 	
 use  ParticleMaker      	v1r4p1   Phys 	
 use  PhysSelections		v6r12    Phys 	  
 use  DaVinciTransporter 	v2r0p1   Phys 	
-use  VertexFit			v1r5p1   Phys 	
+use  VertexFit			v1r6     Phys 	
 use  Tampering			v1r1p1   Phys 	
 
 # Physics MC packages
