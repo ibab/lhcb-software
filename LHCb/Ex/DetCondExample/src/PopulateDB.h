@@ -1,4 +1,4 @@
-//$Id: PopulateDB.h,v 1.6 2005-04-22 15:17:54 marcocle Exp $
+//$Id: PopulateDB.h,v 1.7 2005-05-13 09:14:38 marcocle Exp $
 #ifndef DETCONDEXAMPLE_POPULATEDB_H
 #define DETCONDEXAMPLE_POPULATEDB_H 1
 
@@ -41,9 +41,6 @@ class PopulateDB : public GaudiAlgorithm {
 
   /// Dump sample data
   StatusCode i_condDBDumpSampleData();
-
-  /// Encode generic condition to XML
-  std::string i_conditionToXml( const std::string &name, Condition &cond ) const;
 
   /// Encode XML temperature data
   void i_encodeXmlTemperature( const double temperature,

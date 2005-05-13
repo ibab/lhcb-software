@@ -1,4 +1,4 @@
-//$Id: PopulateDB.cpp,v 1.15 2005-05-12 16:27:33 marcocle Exp $
+//$Id: PopulateDB.cpp,v 1.16 2005-05-13 09:14:38 marcocle Exp $
 #include <iostream>
 #include <fstream>
 #include <string>
@@ -328,7 +328,7 @@ StatusCode PopulateDB::i_condDBStoreSampleData ( ) {
         chnls_str.push_back(t.str());
       }
       temp.addParamVector("Channels","int","",chnls_str,chnls_dbl,chnls);
-      std::string s = i_conditionToXml("DummyDE",temp);
+      std::string s = temp.toXml("DummyDE");
       verbose() << "/ReadOut/DummyDE: " << s << endmsg;
       m_dbAccSvc->storeXMLString("/ReadOut/DummyDE",s,TimePoint(i*24), TimePoint((i+1)*24));
     }
@@ -432,53 +432,6 @@ StatusCode PopulateDB::i_condDBDumpSampleData ( ) {
 
 //----------------------------------------------------------------------------
 
-std::string PopulateDB::i_conditionToXml( const std::string &name, Condition &cond ) const {
-  std::ostringstream xml;
-  // XML header
-  xml << "<?xml version=\"1.0\" encoding=\"UTF-8\"?><!DOCTYPE DDDB SYSTEM \"structure.dtd\">";
-  // DDDB open
-  xml << "<DDDB>";
-  // condition open
-  xml << "<condition name=\"" << name << "\">";
-
-  std::vector<std::string> pars;
-  std::vector<std::string>::const_iterator i;
-  // loop over parameters
-  pars = cond.params();
-  for ( i = pars.begin(); i != pars.end(); ++i ){
-  	xml << "<param name=\"" << *i << "\" type=\"";
-    switch (cond.paramKind(*i)){
-    case IParamSet::DOUBLE : xml << "double"; break;
-    case IParamSet::INT    : xml << "int"; break;
-    default                : xml << "other";
-    }
-    xml << "\">" << cond.paramAsString(*i) << "</param>";
-  }
-  // loop over vector parameters
-  pars = cond.paramVectors();
-  for ( i = pars.begin(); i != pars.end(); ++i ){
-  	xml << "<paramVector name=\"" << *i << "\" type=\"";
-    switch (cond.paramVectorKind(*i)){
-    case IParamSet::DOUBLE : xml << "double"; break;
-    case IParamSet::INT    : xml << "int"; break;
-    default                : xml << "other";
-    }
-    xml << "\">";
-    std::vector<std::string> p_val = cond.paramVectorAsString(*i);
-    for ( std::vector<std::string>::const_iterator s = p_val.begin(); s != p_val.end() ; ++s ){
-      xml << " " << *s;
-    }
-    xml << "</paramVector>";
-  }
-
-  // condition close
-  xml << "</condition>";
-  // DDDB close
-  xml << "</DDDB>\n";
-  
-  return xml.str();
-}
-
 void PopulateDB::i_encodeXmlTemperature( const double temperature,
 					 const std::string& objName,
 					 std::string& xmlString   ) {
@@ -489,7 +442,7 @@ void PopulateDB::i_encodeXmlTemperature( const double temperature,
   std::ostringstream tmp;
   tmp << temperature;
   temp.addParam("Temperature", "double", "", tmp.str(), temperature);
-  xmlString = i_conditionToXml(objName,temp);
+  xmlString = temp.toXml(objName);
 
   verbose() << "Encoded XML string is:" << xmlString << endmsg;
 }
@@ -570,7 +523,7 @@ void PopulateDB::i_encodeXmlParamVector( const double pos[3],
   p.push_back(pos[1]); t1 << pos[1]; ps.push_back(t1.str());
   p.push_back(pos[2]); t2 << pos[2]; ps.push_back(t2.str());
   posCond.addParamVector(parName,"double","",ps,p);
-  xmlString = i_conditionToXml(objName,posCond);
+  xmlString = posCond.toXml(objName);
   
   verbose() << "Encoded XML string is:" << std::endl
       << xmlString << endreq;
