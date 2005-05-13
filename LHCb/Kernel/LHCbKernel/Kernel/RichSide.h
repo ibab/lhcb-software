@@ -1,21 +1,16 @@
 
+//-----------------------------------------------------------------------------
 /** @file RichSide.h
  *
  *  Header file for RICH particle ID enumeration : RichSide
  *
  *  CVS Log :-
- *  $Id: RichSide.h,v 1.6 2005-01-17 13:00:10 cattanem Exp $
- *  $Log: not supported by cvs2svn $
- *  Revision 1.5  2004/08/17 11:27:48  jonrob
- *  Update printout messages for enumerations
- *
- *  Revision 1.4  2004/08/17 11:10:41  jonrob
- *  Update doxygen comments for RICH enumerations
- *
+ *  $Id: RichSide.h,v 1.7 2005-05-13 14:16:53 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   08/07/2004
  */
+//-----------------------------------------------------------------------------
 
 #ifndef LHCBKERNEL_RICHSIDE_H
 #define LHCBKERNEL_RICHSIDE_H 1
@@ -36,6 +31,12 @@
  *  @date   08/07/2004
  */
 namespace Rich {
+
+  /// Total number of HPD panels
+  static const unsigned int NTotalHPDPanels = 4;
+
+  /// Number of HPD panels per RICH detector
+  static const unsigned int NHPDPanelsPerRICH = 2;
 
   /** @enum Rich::Side
    *
