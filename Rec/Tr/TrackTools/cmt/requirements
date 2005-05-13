@@ -24,7 +24,7 @@ include_path      none
 #============================================================================
 use   GaudiAlg        v8r*
 use   Relations       v2r*     Kernel
-use   TrackEvent      v*       Event
+use   TrackEvent      v0r*     Event
 use   OTEvent         v14r*    Event
 use   ITEvent         v13r*    Event
 use   VeloEvent       v13r*    Event

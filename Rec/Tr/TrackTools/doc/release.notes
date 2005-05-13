@@ -4,6 +4,9 @@
 ! Purpose     : Package for tracking tools
 !-----------------------------------------------------------------------------
 
+! 2005-05-13 - Jacopo Nardulli
+ - ITrackPtKick.h interface and TrackPtKick tool added
+
 ! 2005-05-12 - Eduardo Rodrigues
  - IBIntegrator.h interface and BIntegrator tool added
 
