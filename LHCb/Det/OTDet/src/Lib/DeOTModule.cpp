@@ -1,4 +1,4 @@
-// $Id: DeOTModule.cpp,v 1.3 2003-12-04 10:22:09 jnardull Exp $
+// $Id: DeOTModule.cpp,v 1.4 2005-05-13 16:09:41 marcocle Exp $
 
 // CLHEP
 #include "CLHEP/Units/SystemOfUnits.h"
@@ -51,14 +51,14 @@ StatusCode DeOTModule::initialize()
   IDetectorElement* ot = station->parentIDetectorElement();
 
   // Get specific parameters from the module
-  m_moduleID = (unsigned int) this->userParameterAsInt("moduleID");
-  m_quarterID = (unsigned int) quarter->userParameterAsInt("quarterID");
-  m_layerID = (unsigned int) layer->userParameterAsInt("layerID");
-  m_stationID = (unsigned int) station->userParameterAsInt("stationID");
-  m_nStraws = (unsigned int) this->userParameterAsInt("nStraws");
+  m_moduleID = (unsigned int) param<int>("moduleID");
+  m_quarterID = (unsigned int) quarter->params()->param<int>("quarterID");
+  m_layerID = (unsigned int) layer->params()->param<int>("layerID");
+  m_stationID = (unsigned int) station->params()->param<int>("stationID");
+  m_nStraws = (unsigned int) param<int>("nStraws");
   m_longModule = 
     ((this->geometry())->lvolumeName() == "/dd/Geometry/OT/Modules/lvLModule");
-  m_stereoAngle = layer->userParameterAsDouble("stereoAngle");
+  m_stereoAngle = layer->params()->param<double>("stereoAngle");
   m_sinAngle = sin(m_stereoAngle);
   m_cosAngle = cos(m_stereoAngle);  
   OTChannelID aChannel = OTChannelID( m_stationID, m_layerID, 
@@ -66,10 +66,10 @@ StatusCode DeOTModule::initialize()
   m_uniqueModuleID = aChannel.uniqueModule();
 
   // Get some general parameters for the OT
-  m_pitch = ot->userParameterAsDouble("strawPitch");
-  m_cellRadius = ot->userParameterAsDouble("cellRadius");
-  m_inefficientRegion = ot->userParameterAsDouble("inefficientRegion");
-  m_nModules = (unsigned int) ot->userParameterAsInt("nModules");
+  m_pitch = ot->params()->param<double>("strawPitch");
+  m_cellRadius = ot->params()->param<double>("cellRadius");
+  m_inefficientRegion = ot->params()->param<double>("inefficientRegion");
+  m_nModules = (unsigned int) ot->params()->param<int>("nModules");
 
   // Get the lenght of the module
   const ILVolume* lv = (this->geometry())->lvolume();

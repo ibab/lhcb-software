@@ -2,6 +2,9 @@
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.10  2001/12/09 14:16:18  ibelyaev
+//  update for newer version of Gaudi
+//
 // Revision 1.9  2001/08/21 13:05:09  ibelyaev
 // fix problems of user parameters on Win2K
 //
@@ -66,14 +69,14 @@ StatusCode DeSubCalorimeter::initialize()
   typedef std::vector<std::string> Parameters;
   typedef Parameters::iterator     Iterator;
   ///
-  Parameters pars( userParameters() );
+  Parameters pars( paramNames() );
   ///
   { /// cell size
     Iterator it =
       std::find( pars.begin() , pars.end () , std::string("CellSize") );
     if( pars.end() != it )
       {
-		const double value = userParameterAsDouble( *it );
+		const double value = param<double>( *it );
         setSize( value ) ;
         pars.erase( it );
       }

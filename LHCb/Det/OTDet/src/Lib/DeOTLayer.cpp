@@ -1,4 +1,4 @@
-// $Id: DeOTLayer.cpp,v 1.3 2004-06-24 09:48:34 jnardull Exp $
+// $Id: DeOTLayer.cpp,v 1.4 2005-05-13 16:09:41 marcocle Exp $
 
 // DetDesc
 #include "DetDesc/IGeometryInfo.h"
@@ -32,8 +32,8 @@ const CLID& DeOTLayer::clID () const
 
 StatusCode DeOTLayer::initialize() 
 {
-  m_layerID = (unsigned int) this->userParameterAsInt("layerID");
-  m_stereoAngle = this->userParameterAsDouble("stereoAngle");
+  m_layerID = (unsigned int) param<int>("layerID");
+  m_stereoAngle = param<double>("stereoAngle");
 
   //loop over quarters
   IDetectorElement::IDEContainer::const_iterator iQuarter;

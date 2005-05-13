@@ -1,4 +1,4 @@
-// $Id: DeOTDetector.cpp,v 1.13 2004-11-02 07:12:43 cattanem Exp $
+// $Id: DeOTDetector.cpp,v 1.14 2005-05-13 16:09:41 marcocle Exp $
 
 // CLHEP
 #include "CLHEP/Geometry/Point3D.h"
@@ -52,18 +52,18 @@ StatusCode DeOTDetector::initialize()
   }
 
   // get resolution parameters
-  m_resolution = this->userParameterAsDouble("resolution");
-  m_resolutionCor = this->userParameterAsDouble("resolutionCor");
+  m_resolution = param<double>("resolution");
+  m_resolutionCor = param<double>("resolutionCor");
 
   // get the rt relation parameters
-  m_propagationDelay = this->userParameterAsDouble("propagationDelay");
-  m_maxDriftTime = this->userParameterAsDouble("maxDriftTime");
-  m_maxDriftTimeCor = this->userParameterAsDouble("maxDriftTimeCor");
-  m_cellRadius = this->userParameterAsDouble("cellRadius");
+  m_propagationDelay = param<double>("propagationDelay");
+  m_maxDriftTime = param<double>("maxDriftTime");
+  m_maxDriftTimeCor = param<double>("maxDriftTimeCor");
+  m_cellRadius = param<double>("cellRadius");
 
   // get station number parameters
-  m_numStations = this->userParameterAsInt("numStations");
-  m_firstOTStation = this->userParameterAsInt("firstOTStation");
+  m_numStations = param<int>("numStations");
+  m_firstOTStation = param<int>("firstOTStation");
 
   m_nMaxChanInModule = 0;
   m_nChannels = 0;

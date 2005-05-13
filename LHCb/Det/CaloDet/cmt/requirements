@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.35 2004-02-17 11:59:13 ibelyaev Exp $ 
+# $Id: requirements,v 1.36 2005-05-13 16:08:55 marcocle Exp $ 
 # =============================================================================
 package  CaloDet 
 version  v6r8
@@ -11,7 +11,7 @@ include_dirs      $(CALODETROOT)
 
 # =============== used packages ===============================================
 use CaloKernel   v3r*   Calo 
-use DetDesc      v14r*  Det 
+use DetDesc      v*     Det 
 
 # =============== own options =================================================
 set CALODETOPTS  ${CALODETROOT}/options

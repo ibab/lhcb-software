@@ -1,4 +1,4 @@
-// $Id: DeOTQuarter.cpp,v 1.1 2003-12-04 10:22:09 jnardull Exp $
+// $Id: DeOTQuarter.cpp,v 1.2 2005-05-13 16:09:41 marcocle Exp $
 
 // DetDesc
 #include "DetDesc/IGeometryInfo.h"
@@ -40,8 +40,8 @@ StatusCode DeOTQuarter::initialize()
 {
   IDetectorElement* layer = this->parentIDetectorElement();
 
-  m_quarterID = (unsigned int) this->userParameterAsInt("quarterID");
-  m_stereoAngle = layer->userParameterAsDouble("stereoAngle");
+  m_quarterID = (unsigned int) param<int>("quarterID");
+  m_stereoAngle = layer->params()->param<double>("stereoAngle");
 
   //loop over modules
   IDetectorElement::IDEContainer::const_iterator iModule;

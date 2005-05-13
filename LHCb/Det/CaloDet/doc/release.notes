@@ -1,7 +1,11 @@
-! $Id: release.notes,v 1.41 2004-02-26 10:02:23 cattanem Exp $ 
+! $Id: release.notes,v 1.42 2005-05-13 16:08:55 marcocle Exp $ 
 ! =============================================================================
 Package         : CaloDet   
 Package manager : Vanya Belyaev Ivan.Belyaev@itep.ru
+
+! 2005-05-13 - Marco Clemencic
+ - Use new ParamValidDataObject interface (DetDesc >= v15)
+ - Removed dependency on DetDesc v14r* in requirements
 
 !========================= CaloDet v6r8 2004-02-26 =========================
 ! 2004-02-15 - Vanya BELYAEV

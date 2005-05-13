@@ -1,8 +1,11 @@
-// $Id: DeCalorimeter.cpp,v 1.21 2003-06-16 13:39:05 sponce Exp $ 
+// $Id: DeCalorimeter.cpp,v 1.22 2005-05-13 16:08:55 marcocle Exp $ 
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.21  2003/06/16 13:39:05  sponce
+// use new version of DetDesc. Thus drop dependency on XML
+//
 // Revision 1.20  2002/12/17 15:39:53  ocallot
 // Add the Ecal Validation cards
 //
@@ -103,13 +106,13 @@ StatusCode DeCalorimeter::initialize()
   typedef std::vector<std::string> Parameters;
   typedef Parameters::iterator     Iterator;
   ///
-  Parameters pars( userParameters() );
+  Parameters pars( paramNames() );
   ///
   { /// coding bits
     Iterator it =
       std::find( pars.begin() , pars.end () , std::string("CodingBit") );
     if( pars.end() != it ) {
-      setCoding( userParameterAsInt(*it) ) ;
+      setCoding( param<int>(*it) ) ;
       pars.erase( it );
     }
   }
@@ -117,7 +120,7 @@ StatusCode DeCalorimeter::initialize()
     Iterator it =
       std::find( pars.begin() , pars.end () , std::string("EtInCenter") );
     if( pars.end() != it ) {
-      const double value = userParameterAsDouble( *it ) ;
+      const double value = param<double>( *it ) ;
       setEtInCenter( value ) ;
       pars.erase( it );
     }
@@ -126,7 +129,7 @@ StatusCode DeCalorimeter::initialize()
     Iterator it =
       std::find( pars.begin() , pars.end () , std::string("EtSlope") );
     if( pars.end() != it ) {
-      const double value = userParameterAsDouble( *it ) ;
+      const double value = param<double>( *it ) ;
       setEtSlope( value ) ;
       pars.erase( it );
     }
@@ -135,7 +138,7 @@ StatusCode DeCalorimeter::initialize()
     Iterator it =
       std::find( pars.begin() , pars.end () , std::string("AdcMax") );
     if( pars.end() != it ) {
-      setAdcMax( userParameterAsInt(*it) ) ;
+      setAdcMax( param<int>(*it) ) ;
       pars.erase( it );
     }
   }
@@ -143,7 +146,7 @@ StatusCode DeCalorimeter::initialize()
     Iterator it =
       std::find( pars.begin() , pars.end () , std::string("ActiveToTotal") );
     if( pars.end() != it ) {
-      const double value = userParameterAsDouble( *it ) ;
+      const double value = param<double>( *it ) ;
       setActiveToTotal( value ) ;
       pars.erase( it );
     }
@@ -152,7 +155,7 @@ StatusCode DeCalorimeter::initialize()
     Iterator it =
       std::find( pars.begin() , pars.end () , std::string("ZShowerMax") );
     if( pars.end() != it ) {
-      const double value = userParameterAsDouble( *it ) ; 
+      const double value = param<double>( *it ) ; 
       setZShowerMax( value ) ;
       pars.erase( it );
     }
@@ -161,7 +164,7 @@ StatusCode DeCalorimeter::initialize()
     Iterator it =
       std::find( pars.begin() , pars.end () , std::string("YToXSizeRatio") );
     if( pars.end() != it ) {
-      m_YToXSizeRatio = userParameterAsDouble( *it ) ; 
+      m_YToXSizeRatio = param<double>( *it ) ; 
       pars.erase( it );
     }
   }
@@ -169,7 +172,7 @@ StatusCode DeCalorimeter::initialize()
     Iterator it =
       std::find( pars.begin() , pars.end () , std::string("centralHoleX") );
     if( pars.end() != it ) {
-      m_centralHoleX = userParameterAsInt( *it ) ; 
+      m_centralHoleX = param<int>( *it ) ; 
       pars.erase( it );
     }
   }
@@ -177,7 +180,7 @@ StatusCode DeCalorimeter::initialize()
     Iterator it =
       std::find( pars.begin() , pars.end () , std::string("centralHoleY") );
     if( pars.end() != it ) {
-      m_centralHoleY = userParameterAsInt( *it ) ; 
+      m_centralHoleY = param<int>( *it ) ; 
       pars.erase( it );
     }
   }

@@ -1,4 +1,4 @@
-// $Id: DeOTStation.cpp,v 1.2 2004-06-24 09:48:34 jnardull Exp $
+// $Id: DeOTStation.cpp,v 1.3 2005-05-13 16:09:41 marcocle Exp $
 
 // DetDesc
 #include "DetDesc/IGeometryInfo.h"
@@ -31,7 +31,7 @@ const CLID& DeOTStation::clID () const
 
 StatusCode DeOTStation::initialize() 
 {
-  m_stationID = (unsigned int) this->userParameterAsInt("stationID");
+  m_stationID = (unsigned int) param<int>("stationID");
 
   //loop over layers
   IDetectorElement::IDEContainer::const_iterator iLayer;
