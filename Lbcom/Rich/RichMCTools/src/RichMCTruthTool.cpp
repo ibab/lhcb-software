@@ -5,7 +5,7 @@
  * Implementation file for class : RichMCTruthTool
  *
  * CVS Log :-
- * $Id: RichMCTruthTool.cpp,v 1.18 2005-04-08 13:18:15 jonrob Exp $
+ * $Id: RichMCTruthTool.cpp,v 1.19 2005-05-13 14:46:53 jonrob Exp $
  *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @date 14/01/2002
@@ -93,16 +93,30 @@ void RichMCTruthTool::handle ( const Incident& incident )
 
 const MCRichDigits * RichMCTruthTool::mcRichDigits() const
 {
-  if ( !m_mcRichDigitsDone ) {
+  if ( !m_mcRichDigitsDone ) 
+  {
     m_mcRichDigitsDone = true;
 
-    SmartDataPtr<MCRichDigits> tdsMCDigits( evtSvc(),
-                                            m_mcRichDigitsLocation );
-    if ( tdsMCDigits ) {
-      m_mcRichDigits = tdsMCDigits;
-      debug() << "Successfully located " << m_mcRichDigits->size()
-              << " MCRichDigits at " << m_mcRichDigitsLocation << endreq;
-    } else {
+    // try and load MCRichDigits
+    if ( exist<MCRichDigits>(m_mcRichDigitsLocation) )
+    {
+      m_mcRichDigits = get<MCRichDigits>(m_mcRichDigitsLocation);
+      if ( msgLevel(MSG::DEBUG) )
+      {
+        debug() << "Successfully located " << m_mcRichDigits->size()
+                << " MCRichDigits at " << m_mcRichDigitsLocation << endreq;
+        if ( msgLevel(MSG::VERBOSE) )
+        {
+          for ( MCRichDigits::const_iterator iDig = m_mcRichDigits->begin();
+                iDig != m_mcRichDigits->end(); ++iDig )
+          {
+            verbose() << "  -> MCRichDigit " << (*iDig)->key().key() << " " << (*iDig)->key() << endreq;
+          }
+        }
+      }
+    } 
+    else 
+    {
       m_mcRichDigits = NULL;
       Warning( "Failed to locate MCRichDigits at "+m_mcRichDigitsLocation );
     }
@@ -114,22 +128,25 @@ const MCRichDigits * RichMCTruthTool::mcRichDigits() const
 
 const MCRichHits * RichMCTruthTool::mcRichHits() const
 {
-  if ( !m_mcRichHitsDone ) {
+  if ( !m_mcRichHitsDone ) 
+  {
     m_mcRichHitsDone = true;
 
-    SmartDataPtr<MCRichHits> tdsMCHits( evtSvc(),
-                                            m_mcRichHitsLocation );
-    if ( tdsMCHits ) {
-      m_mcRichHits = tdsMCHits;
+    // Try and load MC Rich Hits
+    if ( exist<MCRichHits>(m_mcRichHitsLocation) )
+    {
+      m_mcRichHits = get<MCRichHits>(m_mcRichHitsLocation);
       debug() << "Successfully located " << m_mcRichHits->size()
               << " MCRichHits at " << m_mcRichHitsLocation << endreq;
-    } else {
+    } 
+    else 
+    {
       m_mcRichHits = NULL;
       Warning( "Failed to locate MCRichHits at "+m_mcRichHitsLocation );
     }
-
+    
   }
-
+  
   return m_mcRichHits;
 }
 
@@ -159,11 +176,16 @@ const MCRichDigit * RichMCTruthTool::mcRichDigit( const RichDigit * digit ) cons
 {
   if ( !digit ) return NULL;
 
+  if ( msgLevel(MSG::DEBUG) )
+  {
+    debug() << "Locating MCRichDigit for RichDigit " << (int)digit->key() << endreq;
+  }
+
   // Try fast method
-  MCRichDigit * mcDigit = MCTruth<MCRichDigit>(digit);
+  const MCRichDigit * mcDigit = MCTruth<MCRichDigit>(digit);
 
   // If failed, try accessing MCRichDigit container directly via key
-  if ( !mcDigit && mcRichDigits() ) mcDigit = mcRichDigits()->object(digit->key());
+  if ( !mcDigit && mcRichDigits() ) mcDigit = mcRichDigit( digit->key() );
 
   // if still failed, issue a warning
   if ( !mcDigit ) Warning( "Failed to find MCRichDigit for RichDigit" );
@@ -173,6 +195,10 @@ const MCRichDigit * RichMCTruthTool::mcRichDigit( const RichDigit * digit ) cons
 
 const MCRichDigit * RichMCTruthTool::mcRichDigit( const RichSmartID id ) const
 {
+  if ( msgLevel(MSG::DEBUG) )
+  {
+    debug() << "Locating MCRichDigit for RichSmartID " << id << endreq;
+  }
   const MCRichDigit * mcDigit = ( mcRichDigits() ? mcRichDigits()->object(id) : 0 );
   if ( !mcDigit ) Warning( "Failed to locate MCRichDigit from RichSmartID" );
   return mcDigit;
