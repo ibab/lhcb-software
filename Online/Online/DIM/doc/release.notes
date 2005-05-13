@@ -4,6 +4,10 @@
 ! Purpose     : CMT Interface to DIM 
 !-----------------------------------------------------------------------------
 
+!============================ DIM v1r0 2005-05-13 ============================
+! 2005-05-13 - Marco Cattaneo
+ - First release in OnlineSys
+
 ! 2005-04-20 - Markus Frank
   Use latest version released by Clara with common file structure (v15r11)
 
