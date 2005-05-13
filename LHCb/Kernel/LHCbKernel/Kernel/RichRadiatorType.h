@@ -1,18 +1,16 @@
 
+//=================================================================================
 /** @file RichRadiatorType.h
  *
  *  Header file for RICH particle ID enumeration : RichRadiatorType
  *
  *  CVS Log :-
- *  $Id: RichRadiatorType.h,v 1.5 2005-01-17 13:00:10 cattanem Exp $
- *  $Log: not supported by cvs2svn $
- *  Revision 1.4  2004/08/17 11:10:41  jonrob
- *  Update doxygen comments for RICH enumerations
- *
+ *  $Id: RichRadiatorType.h,v 1.6 2005-05-13 14:16:15 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   08/07/2004
  */
+//=================================================================================
 
 #ifndef LHCBKERNEL_RICHRADIATORTYPE_H
 #define LHCBKERNEL_RICHRADIATORTYPE_H 1
