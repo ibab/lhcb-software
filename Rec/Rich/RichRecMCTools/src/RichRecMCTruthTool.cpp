@@ -5,7 +5,7 @@
  *  Implementation file for RICH reconstruction tool : RichRecMCTruthTool
  *
  *  CVS Log :-
- *  $Id: RichRecMCTruthTool.cpp,v 1.14 2005-04-15 16:32:30 jonrob Exp $
+ *  $Id: RichRecMCTruthTool.cpp,v 1.15 2005-05-13 14:59:51 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   08/07/2004
@@ -104,7 +104,8 @@ const MCRichDigit *
 RichRecMCTruthTool::mcRichDigit( const RichRecPixel * richPixel ) const
 {
   // protect against bad pixels
-  if ( !richPixel ) {
+  if ( !richPixel ) 
+  {
     Warning ( "::mcRichDigit : NULL RichRecPixel pointer" );
     return NULL;
   }
@@ -121,7 +122,7 @@ RichRecMCTruthTool::mcRichDigit( const RichRecPixel * richPixel ) const
     const RichDigit * digit = dynamic_cast<const RichDigit*>( richPixel->parentPixel() );
     if ( !digit ) { Warning ( "RichRecPixel has no associated RichDigit" ); }
 
-    // All OK, so find and return MCParticle for this RichDigit
+    // All OK, so find and return MCRichDigit for this RichDigit
     mcDigit = m_truth->mcRichDigit( digit );
 
   } else if ( Rich::PixelParent::NoParent == richPixel->parentType() ) {
