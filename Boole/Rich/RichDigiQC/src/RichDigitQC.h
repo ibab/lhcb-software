@@ -5,7 +5,7 @@
  *  Header file for RICH Digitisation Quality Control algorithm : RichDigitQC
  *
  *  CVS Log :-
- *  $Id: RichDigitQC.h,v 1.10 2005-03-05 16:49:04 jonrob Exp $
+ *  $Id: RichDigitQC.h,v 1.11 2005-05-13 14:23:46 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   2003-09-08
@@ -47,7 +47,7 @@
 
 // RICH Interfaces
 #include "RichKernel/IRichHPDToLevel1Tool.h"
-#include "RichKernel/IRichHPDIDTool.h"
+#include "RichKernel/IRichHPDInfoTool.h"
 #include "RichKernel/IRichSmartIDTool.h"
 #include "RichKernel/IRichMCTruthTool.h"
 
@@ -82,7 +82,7 @@ private: // data
   IRichHPDToLevel1Tool * m_level1;
 
   /// Pointer to Rich HPD ID tool
-  IRichHPDIDTool * m_hpdID;
+  IRichHPDInfoTool * m_hpdID;
 
   /// Pointer to RichSmartID tool
   IRichSmartIDTool * m_smartIDs;
