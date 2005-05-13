@@ -3,7 +3,11 @@
 ToolSvc.RichToolRegistry.Tools += { "RichPixelCreatorFromRawBuffer/RichPixelCreator" };
 
 // Which RICH detectors to use             RICH1   RICH2
-ToolSvc.RichPixelCreator.UseDetectors = {  true,   true   };
+ToolSvc.RichPixelCreator.UseDetectors  = {  true,   true   };
 
 // Do not perform book keeping in order to speed things up
 ToolSvc.RichPixelCreator.DoBookKeeping = false;
+
+// Random HPD killing options
+ToolSvc.RichHPDInfoTool.KillRandomHPDs         = false;
+ToolSvc.RichHPDInfoTool.FractionToRandomlyKill = 0.0;
