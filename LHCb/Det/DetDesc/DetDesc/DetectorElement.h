@@ -1,4 +1,4 @@
-// $Id: DetectorElement.h,v 1.24 2005-05-03 15:44:49 marcocle Exp $ 
+// $Id: DetectorElement.h,v 1.25 2005-05-13 16:01:10 marcocle Exp $ 
 #ifndef  DETDESC_DETECTORELEMENT_H
 #define  DETDESC_DETECTORELEMENT_H 1
 
@@ -232,6 +232,12 @@ public:
     childEnd  () { return childIDetectorElements().end  () ; }
   inline virtual IDetectorElement::IDEContainer::const_iterator
     childEnd  () const { return childIDetectorElements().end  () ; }
+
+  /**
+   * Method used to access the ParamValidDataObject methods from IDetectorElement
+   * interface.
+   */
+  virtual const ParamValidDataObject *params() const;
 
   /// IInspectable interface:
 //   virtual bool acceptInspector( IInspector* )       ; 

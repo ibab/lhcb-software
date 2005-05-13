@@ -1,4 +1,4 @@
-// $Id: DetectorElement.cpp,v 1.24 2005-05-03 15:44:49 marcocle Exp $ 
+// $Id: DetectorElement.cpp,v 1.25 2005-05-13 16:01:10 marcocle Exp $ 
 #include "GaudiKernel/Kernel.h"
 #include "GaudiKernel/ISvcLocator.h"
 #include "GaudiKernel/IDataManagerSvc.h"
@@ -360,6 +360,10 @@ DetectorElement::childIDetectorElements() const {
   return m_de_childrens;
 };
 
+const ParamValidDataObject *DetectorElement::params() const {
+  return this;
+}
+  
 // ============================================================================
 // End 
 // ============================================================================

@@ -1,4 +1,4 @@
-//$Id: Condition.cpp,v 1.6 2005-05-13 08:26:01 marcocle Exp $
+//$Id: Condition.cpp,v 1.7 2005-05-13 16:01:10 marcocle Exp $
 #include <string> 
 
 #include "DetDesc/Condition.h"
@@ -22,7 +22,7 @@ Condition::Condition (const ITime& since, const ITime& till)
 
 /// Copy constructor
 Condition::Condition (Condition& obj)
-  : ICondition(), ParamValidDataObject ((ParamValidDataObject&)obj) {}; 
+  : ParamValidDataObject ((ParamValidDataObject&)obj) {}; 
 
 //---------------------------------------------------------------------------
 
@@ -58,31 +58,23 @@ std::string Condition::toXml(const std::string &name) {
   std::vector<std::string> pars;
   std::vector<std::string>::const_iterator i;
   // loop over parameters
-  pars = params();
+  pars = paramNames();
   for ( i = pars.begin(); i != pars.end(); ++i ){
-  	xml << "<param name=\"" << *i << "\" type=\"";
-    switch (paramKind(*i)){
-    case IParamSet::DOUBLE : xml << "double"; break;
-    case IParamSet::INT    : xml << "int"; break;
-    default                : xml << "other";
+  	xml << "<param";
+  	bool is_vect_param = isVector(*i);
+  	if ( is_vect_param ) xml << "Vector";
+    xml << " name=\"" << *i << "\" type=\"";
+    const std::type_info &curr_type = type(*i);
+    if ( curr_type == typeid(double) || curr_type == typeid(std::vector<double>) ) {
+      xml << "double";
+    } else if ( curr_type == typeid(int) || curr_type == typeid(std::vector<int>) ) {
+      xml << "int";
+    } else { // OTHER
+      xml << "other";
     }
-    xml << "\">" << paramAsString(*i) << "</param>";
-  }
-  // loop over vector parameters
-  pars = paramVectors();
-  for ( i = pars.begin(); i != pars.end(); ++i ){
-  	xml << "<paramVector name=\"" << *i << "\" type=\"";
-    switch (paramVectorKind(*i)){
-    case IParamSet::DOUBLE : xml << "double"; break;
-    case IParamSet::INT    : xml << "int"; break;
-    default                : xml << "other";
-    }
-    xml << "\">";
-    std::vector<std::string> p_val = paramVectorAsString(*i);
-    for ( std::vector<std::string>::const_iterator s = p_val.begin(); s != p_val.end() ; ++s ){
-      xml << " " << *s;
-    }
-    xml << "</paramVector>";
+    xml << "\">" << paramToString(*i) << "</param";
+  	if ( is_vect_param ) xml << "Vector";
+    xml << ">";
   }
   
   // condition close
@@ -96,33 +88,6 @@ std::string Condition::toXml(const std::string &name) {
 
 /// Destructor
 Condition::~Condition() {};
-
-//----------------------------------------------------------------------------
-
-unsigned long Condition::addRef  () {
-  return ParamValidDataObject::addRef();
-}
-
-unsigned long Condition::release () {
-  return ParamValidDataObject::release();
-}
-
-/// queryInterface
-StatusCode Condition::queryInterface( const InterfaceID& ID , void** ppI )
-{
-  if ( 0 == ppI ) { return StatusCode::FAILURE; }
-  *ppI = 0 ;
-  if ( ICondition::interfaceID() == ID ) 
-    { *ppI = static_cast<ICondition*> ( this ) ; } 
-  else if ( IInterface::interfaceID() == ID ) 
-    { *ppI = static_cast<IInterface*> ( this ) ; } 
-  else                                                  
-    { return StatusCode::FAILURE ; }
-  /// add the reference 
-  addRef();
-  ///
-  return StatusCode::SUCCESS;
-};
 
 //----------------------------------------------------------------------------
 

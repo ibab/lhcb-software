@@ -1,476 +1,198 @@
-//$Id: ParamValidDataObject.cpp,v 1.2 2003-06-16 13:42:36 sponce Exp $
+//$Id: ParamValidDataObject.cpp,v 1.3 2005-05-13 16:01:10 marcocle Exp $
 #include <string> 
 
 #include "DetDesc/ParamValidDataObject.h"
-#include "DetDesc/ParamSet.h"
 
 //---------------------------------------------------------------------------
 
 /// Default constructor
-ParamValidDataObject::ParamValidDataObject()
-  : IParamSetEditor(), ValidDataObject()
-{
-  m_paramSet = new ParamSet();
-}; 
+ParamValidDataObject::ParamValidDataObject(): ValidDataObject() {}
 
 //---------------------------------------------------------------------------
 
 /// Constructor
 ParamValidDataObject::ParamValidDataObject (const ITime& since, 
                                             const ITime& till)
-  : IParamSetEditor(), ValidDataObject( since, till )
-{
-  m_paramSet = new ParamSet();
-}; 
+  :ValidDataObject( since, till ){}
 
 //---------------------------------------------------------------------------
 
 /// Copy constructor
 ParamValidDataObject::ParamValidDataObject (ParamValidDataObject& obj)
-  : IParamSetEditor ((IParamSetEditor&)obj),
-    ValidDataObject ((ValidDataObject&)obj)
-{
-  m_paramSet = new ParamSet ((IParamSet&)obj);
-}; 
+  :ValidDataObject ((ValidDataObject&)obj),
+    m_paramList (obj.m_paramList),
+    m_comments (obj.m_comments){}
 
 //---------------------------------------------------------------------------
 
 /// Destructor
-ParamValidDataObject::~ParamValidDataObject() 
-{
-  delete m_paramSet;
-};
+ParamValidDataObject::~ParamValidDataObject() {};
 
 //----------------------------------------------------------------------------
 
 void ParamValidDataObject::reset() 
 {
-  /// reset geometry
-  if (0 != m_paramSet) { m_paramSet->reset() ;} 
+  m_paramList.clear();
+  m_comments.clear();
 }
 
-
 //----------------------------------------------------------------------------
 
-/// Get the type of a parameter.
-std::string ParamValidDataObject::userParameterType (std::string name) 
-{
-  // redirection to the new method
-  return paramType (name);
-};
+void ParamValidDataObject::update( ValidDataObject& obj ){
+  // first check the class
+  ParamValidDataObject *pvdo = dynamic_cast<ParamValidDataObject *>(&obj);
+  if (0 == pvdo){
+    throw ParamException("Trying to do a deep copy between different classes");
+  }
+  // call the 
+  ValidDataObject::update(obj);
   
+  // default merge
+  m_paramList += pvdo->m_paramList;
+  CommentMap::const_iterator i;
+  for ( i = pvdo->m_comments.begin(); i != pvdo->m_comments.end(); ++i ){
+  	// TODO: optimize!
+    m_comments[i->first] = i->second;
+  }
+}
+
 //----------------------------------------------------------------------------
 
+bool ParamValidDataObject::exists(const std::string &name) const {
+  return ( m_paramList.count(name) );
+}
+
+//----------------------------------------------------------------------------
+/// TypeId of the parameter
+const std::type_info &ParamValidDataObject::type(const std::string &name) const {
+  ParamList::const_iterator i = m_paramList.find(name);
+  if ( i == m_paramList.end() ) throw ParamException(name);
+  return i->second->type();
+}
+
+//----------------------------------------------------------------------------
+/// Check if the parameter is a vector.
+bool ParamValidDataObject::isVector(const std::string &name) const {
+  const std::type_info &t = type(name);
+  return t == typeid(std::vector<int>) ||
+         t == typeid(std::vector<double>) ||
+         t == typeid(std::vector<std::string>);
+}
+//----------------------------------------------------------------------------
 /// Get the comment of a parameter.
-std::string ParamValidDataObject::userParameterComment (std::string name) 
-{
-  // redirection to the new method
-  return paramComment (name);
-};
-  
-//----------------------------------------------------------------------------
+std::string ParamValidDataObject::comment (const std::string &name) const {
+  if ( m_paramList.count(name) == 0) throw ParamException(name);
 
+  CommentMap::const_iterator i = m_comments.find(name);
+  if (i != m_comments.end()) return i->second;
+  
+  return std::string();
+}
+
+//----------------------------------------------------------------------------
+/// Set the comment of a parameter.
+void ParamValidDataObject::setComment (const std::string &name, const char *comm){
+  if ( m_paramList.count(name) == 0) throw ParamException(name);
+
+  CommentMap::iterator i = m_comments.find(name);
+  if (i != m_comments.end()) {
+    i->second = comm;
+  } else {
+    m_comments.insert(make_pair(name,std::string(comm)));
+  }
+}
+
+//----------------------------------------------------------------------------
 /// Get the value of a parameter, as a string.
-std::string ParamValidDataObject::userParameterAsString (std::string name) 
-{
-  // redirection to the new method
-  return paramAsString (name);
-};
+const std::string &ParamValidDataObject::paramAsString (const std::string &name) const {
+  return param<std::string>(name);
+}
   
 //----------------------------------------------------------------------------
-
-/// Get the value of a parameter, as a int.
-int ParamValidDataObject::userParameterAsInt (std::string name) 
-{
-  // redirection to the new method
-  return paramAsInt (name);
-};
-
+/// Get the value of a parameter, as a string (non const version).
+std::string &ParamValidDataObject::paramAsString (const std::string &name){
+  return param<std::string>(name);
+}
+  
 //----------------------------------------------------------------------------
-
+/// Get the value of a parameter, as an int.
+int ParamValidDataObject::paramAsInt (const std::string &name) const {
+  return param<int>(name);
+}
+  
+//----------------------------------------------------------------------------
 /// Get the value of a parameter, as a double.
-double ParamValidDataObject::userParameterAsDouble (std::string name) 
-{
-  // redirection to the new method
-  return paramAsDouble (name);
-};
+double ParamValidDataObject::paramAsDouble (const std::string &name) const {
+  try {
+    return param<double>(name);
+  } catch (std::bad_cast) {
+    if (type(name) == typeid(int)){
+      return param<int>(name);
+  	} else throw;
+  }
+}
   
 //----------------------------------------------------------------------------
-
-/// Get the value of a parameter, as a double.
-double ParamValidDataObject::userParameter (std::string name) 
-{
-  // redirection to the new method
-  return param (name);
-};  
-  
-//----------------------------------------------------------------------------
-
-/// Get the type of a parameter vector.
-std::string ParamValidDataObject::userParameterVectorType (std::string name) 
-{
-  // redirection to the new method
-  return paramVectorType (name);
-};
-  
-//----------------------------------------------------------------------------
-
-/// Get the comment of a parameter vector.
-std::string ParamValidDataObject::userParameterVectorComment (std::string name) 
-{
-  // redirection to the new method
-  return paramVectorComment (name);
-};
-  
-//----------------------------------------------------------------------------
-
-/// Get the value of a parameter vector, as a string vector.
-std::vector<std::string> 
-ParamValidDataObject::userParameterVectorAsString (std::string name) 
-{
-  // redirection to the new method
-  return paramVectorAsString (name);
-};
-  
-//----------------------------------------------------------------------------
-
-/// Get the value of a parameter vector, as a int vector.
-std::vector<int>
-ParamValidDataObject::userParameterVectorAsInt (std::string name) 
-{
-  // redirection to the new method
-  return paramVectorAsInt (name);
-};
-  
-//----------------------------------------------------------------------------
-
-/// Get the value of a parameter vector, as a double vector.
-std::vector<double>
-ParamValidDataObject::userParameterVectorAsDouble (std::string name) 
-{
-  // redirection to the new method
-  return paramVectorAsDouble (name);
-};
-  
-//----------------------------------------------------------------------------
-
-/// Get the value of a parameter vector, as a double vector.
-std::vector<double>
-ParamValidDataObject::userParameterVector (std::string name) 
-{
-  // redirection to the new method
-  return paramVector (name);
-};
-
-//----------------------------------------------------------------------------
-
-/// Get the list of existing parameters.
-std::vector<std::string> ParamValidDataObject::userParameters() 
-{
-  // redirection to the new method
-  return params();
-};
-   
-//----------------------------------------------------------------------------
-
-/// Get the list of existing parameter vectors.
-std::vector<std::string> ParamValidDataObject::userParameterVectors() 
-{
-  // redirection to the new method
-  return paramVectors();
-};
-
-//----------------------------------------------------------------------------
-
-/// Get the type of a parameter.
-IParamSet::Kind ParamValidDataObject::paramKind (std::string name) 
-{
-  return m_paramSet->paramKind (name);
-};
-
-//----------------------------------------------------------------------------
-
-/// Get the type of a parameter.
-std::string ParamValidDataObject::paramType (std::string name) 
-{
-  return m_paramSet->paramType (name);
-};
-  
-//----------------------------------------------------------------------------
-
-/// Get the comment of a parameter.
-std::string ParamValidDataObject::paramComment (std::string name) 
-{
-  return m_paramSet->paramComment (name);
-};
-  
-//----------------------------------------------------------------------------
-
 /// Get the value of a parameter, as a string.
-std::string ParamValidDataObject::paramAsString (std::string name) 
-{
-  return m_paramSet->paramAsString (name);
-};
+const std::vector<std::string> &ParamValidDataObject::paramAsStringVect (const std::string &name) const {
+  return param<std::vector<std::string> >(name);
+}
   
 //----------------------------------------------------------------------------
-
-/// Get the value of a parameter, as a int.
-int ParamValidDataObject::paramAsInt (std::string name) 
-{
-  return m_paramSet->paramAsInt (name);
-};
-
+/// Get the value of a parameter, as a string.
+std::vector<std::string> &ParamValidDataObject::paramAsStringVect (const std::string &name){
+  return param<std::vector<std::string> >(name);
+}
+  
 //----------------------------------------------------------------------------
-
+/// Get the value of a parameter, as an int.
+const std::vector<int> &ParamValidDataObject::paramAsIntVect (const std::string &name) const {
+  return param<std::vector<int> >(name);
+}
+  
+//----------------------------------------------------------------------------
 /// Get the value of a parameter, as a double.
-double ParamValidDataObject::paramAsDouble (std::string name) 
-{
-  return m_paramSet->paramAsDouble (name);
-};
+const std::vector<double> &ParamValidDataObject::paramAsDoubleVect (const std::string &name) const {
+  return param<std::vector<double> >(name);
+}
+
+//----------------------------------------------------------------------------
+/// Get the value of a parameter, as an int.
+std::vector<int> &ParamValidDataObject::paramAsIntVect (const std::string &name) {
+  return param<std::vector<int> >(name);
+}
   
 //----------------------------------------------------------------------------
-
 /// Get the value of a parameter, as a double.
-double ParamValidDataObject::param (std::string name) 
-{
-  return m_paramSet->param (name);
-};  
-  
-//----------------------------------------------------------------------------
-
-/// Get the kind of a parameter vector.
-IParamSet::Kind
-ParamValidDataObject::paramVectorKind (std::string name) 
-{
-  return m_paramSet->paramVectorKind (name);
-};
-  
-//----------------------------------------------------------------------------
-
-/// Get the type of a parameter vector.
-std::string ParamValidDataObject::paramVectorType (std::string name) 
-{
-  return m_paramSet->paramVectorType (name);
-};
-  
-//----------------------------------------------------------------------------
-
-/// Get the comment of a parameter vector.
-std::string ParamValidDataObject::paramVectorComment (std::string name) 
-{
-  return m_paramSet->paramVectorComment (name);
-};
-  
-//----------------------------------------------------------------------------
-
-/// Get the value of a parameter vector, as a string vector.
-std::vector<std::string> 
-ParamValidDataObject::paramVectorAsString (std::string name) 
-{
-  return m_paramSet->paramVectorAsString (name);
-};
-  
-//----------------------------------------------------------------------------
-
-/// Get the value of a parameter vector, as a int vector.
-std::vector<int>
-ParamValidDataObject::paramVectorAsInt (std::string name) 
-{
-  return m_paramSet->paramVectorAsInt (name);
-};
-  
-//----------------------------------------------------------------------------
-
-/// Get the value of a parameter vector, as a double vector.
-std::vector<double>
-ParamValidDataObject::paramVectorAsDouble (std::string name) 
-{
-  return m_paramSet->paramVectorAsDouble (name);
-};
-  
-//----------------------------------------------------------------------------
-
-/// Get the value of a parameter vector, as a double vector.
-std::vector<double> ParamValidDataObject::paramVector (std::string name) 
-{
-  return m_paramSet->paramVector (name);
-};
+std::vector<double> &ParamValidDataObject::paramAsDoubleVect (const std::string &name) {
+  return param<std::vector<double> >(name);
+}
 
 //----------------------------------------------------------------------------
-
 /// Get the list of existing parameters.
-std::vector<std::string> ParamValidDataObject::params() 
-{
-  return m_paramSet->params();
-};
-   
-//----------------------------------------------------------------------------
-
-/// Get the list of existing parameter vectors.
-std::vector<std::string> ParamValidDataObject::paramVectors() 
-{
-  return m_paramSet->paramVectors();
-};
-
-//----------------------------------------------------------------------------
-
-/// addUserParameter
-void ParamValidDataObject::addUserParameter (std::string name,
-                                             std::string type,
-                                             std::string comment,
-                                             std::string value,
-                                             double d_value) {
-  // redirection to the new method
-  addParam (name, type, comment, value, d_value);
+std::vector<std::string> ParamValidDataObject::paramNames() const {
+  return m_paramList.getKeys();
 }
  
 //----------------------------------------------------------------------------
-  
-/// addUserParameter
-void ParamValidDataObject::addUserParameter (std::string name,
-                                             std::string type,
-                                             std::string comment,
-                                             std::string value,
-                                             double d_value,
-                                             int i_value) {
-  // redirection to the new method
-  addParam (name, type, comment, value, d_value, i_value);
-}
- 
-//----------------------------------------------------------------------------
-  
-/// addUserParameter
-void ParamValidDataObject::addUserParameter (std::string name,
-                                             std::string type,
-                                             std::string comment,
-                                             std::string value) {
-  // redirection to the new method
-  addParam (name, type, comment, value);
-}
- 
-//----------------------------------------------------------------------------
-  
-/// addUserParameterVector
-void
-ParamValidDataObject::addUserParameterVector (std::string name,
-                                              std::string type,
-                                              std::string comment,
-                                              std::vector<std::string> value,
-                                              std::vector<double> d_value) {
-  // redirection to the new method
-  addParamVector (name, type, comment, value, d_value);
-}
- 
-//----------------------------------------------------------------------------
-
-/// addUserParameterVector
-void
-ParamValidDataObject::addUserParameterVector (std::string name,
-                                              std::string type,
-                                              std::string comment,
-                                              std::vector<std::string> value,
-                                              std::vector<double> d_value,
-                                              std::vector<int> i_value) {
-  // redirection to the new method
-  addParamVector (name, type, comment, value, d_value, i_value);
-}
- 
-//----------------------------------------------------------------------------
-
-/// addUserParameterVector
-void
-ParamValidDataObject::addUserParameterVector (std::string name,
-                                              std::string type,
-                                              std::string comment,
-                                              std::vector<std::string> value) {
-  // redirection to the new method
-  addParamVector (name, type, comment, value);
-}
- 
-//----------------------------------------------------------------------------
-
-/// Add a new double parameter.
-void ParamValidDataObject::addParam (std::string name,
-                                     std::string type,
-                                     std::string comment,
-                                     std::string value,
-                                     double d_value) {
-  m_paramSet->addParam (name, type, comment, value, d_value);
-  return;
-};
- 
-//----------------------------------------------------------------------------
- 
-/// Add a new integer parameter.
-void ParamValidDataObject::addParam (std::string name,
-                                     std::string type,
-                                     std::string comment,
-                                     std::string value,
-                                     double d_value,
-                                     int i_value) {
-  m_paramSet->addParam (name, type, comment, value, d_value, i_value);
-  return;
-};
-
-//----------------------------------------------------------------------------
-
-/// Add a new non-numerical parameter.
-void ParamValidDataObject::addParam (std::string name,
-                                     std::string type,
-                                     std::string comment,
-                                     std::string value) {
-  m_paramSet->addParam (name, type, comment, value);
-  return;
-};
-  
-//----------------------------------------------------------------------------
-
-/// Add a new double parameter vector.
-void ParamValidDataObject::addParamVector (std::string name,
-                                           std::string type,
-                                           std::string comment,
-                                           std::vector<std::string> value,
-                                           std::vector<double> d_value) {
-  m_paramSet->addParamVector (name, type, comment, value, d_value);
-  return;
-};
-
-//----------------------------------------------------------------------------
-
-/// Add a new integer parameter vector.
-void ParamValidDataObject::addParamVector (std::string name,
-                                           std::string type,
-                                           std::string comment,
-                                           std::vector<std::string> value,
-                                           std::vector<double> d_value,
-                                           std::vector<int> i_value) {
-  m_paramSet->addParamVector (name, type, comment, value, d_value, i_value);
-  return;
-};
-
-//----------------------------------------------------------------------------
-
-/// Add a new non-numerical parameter vector.
-void ParamValidDataObject::addParamVector (std::string name,
-                                           std::string type,
-                                           std::string comment,
-                                           std::vector<std::string> value) {
-  m_paramSet->addParamVector (name, type, comment, value);
-  return;
-};
-
-//----------------------------------------------------------------------------
-
 /// Print the user parameters on a string
-std::string ParamValidDataObject::printParams() {
-  return m_paramSet->printParams();
-};
+std::string ParamValidDataObject::printParams() const {
+  std::ostringstream os;
+  ParamList::const_iterator i;
+  for ( i = m_paramList.begin(); i != m_paramList.end() ; ++i ){    
+    os << "(" << i->second->type().name() << ") " << i->first << " = "
+       << i->second->toStr() << "\n";
+  }
+  return os.str();
+}
 
 //----------------------------------------------------------------------------
+/// Convert a parameter to a string (for xml representation).
+std::string ParamValidDataObject::paramToString(const std::string &name) const {
+  ParamList::const_iterator i = m_paramList.find(name);
+  if ( i == m_paramList.end() ) throw ParamException(name);
+  std::ostringstream os;
+  os << i->second->toStr();
+  return os.str();
+}
 
-/// Print the user parameter vectors on a string
-std::string ParamValidDataObject::printParamVectors() {
-  return m_paramSet->printParamVectors();
-};
-
-//----------------------------------------------------------------------------

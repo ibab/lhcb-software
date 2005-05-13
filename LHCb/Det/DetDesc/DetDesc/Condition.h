@@ -1,11 +1,10 @@
-//$Id: Condition.h,v 1.5 2005-05-13 08:26:00 marcocle Exp $
+//$Id: Condition.h,v 1.6 2005-05-13 16:01:09 marcocle Exp $
 #ifndef DETDESC_CONDITION_H
 #define DETDESC_CONDITION_H 1
 
 #include <string>
 
 // Base classes
-#include "DetDesc/ICondition.h"
 #include "DetDesc/ParamValidDataObject.h"
 
 // Unique ID of the class
@@ -21,9 +20,7 @@
  *  @author Sebastien Ponce 
  *  @author Andrea Valassi 
  */
-class Condition : public ParamValidDataObject, 
-                  virtual public ICondition
-{
+class Condition : public ParamValidDataObject {
 
  public: 
   
@@ -64,14 +61,7 @@ class Condition : public ParamValidDataObject,
 
   /// Class ID of this class
   inline static  const CLID& classID() { return CLID_Condition; };
-  
-public:
 
-  // Implementation of IInterface
-  virtual unsigned long addRef();
-  virtual unsigned long release();
-  virtual StatusCode queryInterface( const InterfaceID& , void** );
-  
 };
 
 #endif // DETDESC_CONDITION_H

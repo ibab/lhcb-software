@@ -1,4 +1,4 @@
-// $Id: IDetectorElement.h,v 1.15 2005-05-03 15:44:49 marcocle Exp $
+// $Id: IDetectorElement.h,v 1.16 2005-05-13 16:01:10 marcocle Exp $
 // $ID:  $
 #ifndef  DETDESC_IDETECTORELEMENT_H 
 #define  DETDESC_IDETECTORELEMENT_H 1
@@ -11,7 +11,6 @@
 #include "GaudiKernel/IInterface.h"
 #include "GaudiKernel/ISerialize.h"
 #include "GaudiKernel/SmartRef.h"
-#include "DetDesc/IParamSet.h"
 
 // Forward declarations
 class IGeometryInfo;
@@ -22,6 +21,7 @@ class ISlowControl;
 class IFastControl; 
 
 class Condition;
+class ParamValidDataObject;
 
 /** the unique interface identifier 
  * ( unique interface identifier , major & minor versions)
@@ -36,11 +36,11 @@ static const InterfaceID IID_IDetectorElement( 156 , 2 , 1 );
  *
  *  @author Sebastien Ponce
  *  @author Vanya Belyaev
+ *  @author Marco Clemencic <marco.clemencic@cern.ch>
  */
 
 class IDetectorElement : virtual public IInterface,
-                         virtual public ISerialize,
-                         virtual public IParamSet
+                         virtual public ISerialize
 {
   ///
  public: 
@@ -158,7 +158,13 @@ class IDetectorElement : virtual public IInterface,
   virtual std::ostream&  printOut      ( std::ostream& ) const = 0;  
   /// reset to the initial state 
   virtual       IDetectorElement* reset()       = 0 ; 
-  
+
+  /**
+   * Method used to access the ParamValidDataObject methods from IDetectorElement
+   * interface.
+   */
+  virtual const ParamValidDataObject *params() const = 0;
+
   /**
    * This method initializes the detector element. It should be overridden
    * and used for computation purposes. This is a kind of hook for adding

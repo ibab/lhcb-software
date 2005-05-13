@@ -1,5 +1,5 @@
 ! =============================================================================
-! $Id: release.notes,v 1.174 2005-05-13 08:26:01 marcocle Exp $ 
+! $Id: release.notes,v 1.175 2005-05-13 16:01:10 marcocle Exp $ 
 ! =============================================================================
 ! package DetDesc
 ! package manager : N.N 
@@ -8,6 +8,9 @@
 !======================== DetDesc v15r0 2005-04-22 ========================
 ! 2005-05-13 - Marco Clemencic
  - Added method Condition::toXml() to convert a condition to an XML string.
+ - Removed ICondition, ParamSet, IParamSet, IParamSetEditor, UserParam*
+ - Added ParamList and cleaned ParamValidDataObject interface
+ - Made ParamValidDataObject::update() work (essential for updating)
 
 ! 2005-05-03 - Marco Clemencic
  - Added the UpdateManagerSvc and the method DetectorElement::updMgrSvc()
