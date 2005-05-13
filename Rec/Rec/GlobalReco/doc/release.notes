@@ -4,6 +4,7 @@
 ! Purpose     : Holds final reconstruction code
 !-----------------------------------------------------------------------------
 
+!========================== GlobalReco v4r9 2005-05-12 ===================
 ! 2005-05-12 - Vanya BELYAEV
  - src/ChargedProtoPAlg.h,.cpp
     1) remove all calo-related associators, 
@@ -15,7 +16,6 @@
     3) cosmetics 
  - src/NeutralPPsFromCPsAlg.h
     remove the obsolete file 
-
 
 !========================== GlobalReco v4r8p1 2004-09-16 ===================
 ! 2004-09-13 -P. Koppenburg
