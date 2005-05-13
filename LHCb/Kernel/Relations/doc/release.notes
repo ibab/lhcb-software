@@ -1,11 +1,24 @@
-! $Id: release.notes,v 1.15 2005-03-14 09:47:14 cattanem Exp $ 
+! $Id: release.notes,v 1.16 2005-05-13 11:22:30 ibelyaev Exp $ 
 ! -----------------------------------------------------------------------------
 ! CVS tag $Name: not supported by cvs2svn $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Kernel/Relations
-! Responsible : Vanya BELYAEV ibelyaev@lapp.in2p3.fr 
+! Responsible : Vanya BELYAEV   Ivan.Belyaev@lapp.in2p3.fr 
 ! Purpose     : General purposes templated relations between classes
 !-----------------------------------------------------------------------------
+
+! 2005-05-13 - Vanya BELYAEV   
+ - Relations/Pointer.h
+   pointer-wrapper class to make a realions to RAW poiter objects
+ - Relations/ObjectTypeTraitsStripped.h
+   make usage of Relations::Pointer
+   
+   THIS MODIFICATION IS BACKWARD COMPATIBLE.
+   Indeed allexisting relations are not affected at all.
+   I need it to make a relations with HepMC::GenParticle* 
+
+ - cmt/requirements
+   version increment to v2r5 
 
 ! ====================== Relations v2r4 2005-03-14 ============================
 ! 2005-03-14 - Marco Cattaneo
