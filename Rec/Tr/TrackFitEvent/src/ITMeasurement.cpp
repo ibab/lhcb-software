@@ -1,4 +1,4 @@
-// $Id: ITMeasurement.cpp,v 1.1.1.1 2005-04-07 20:24:28 erodrigu Exp $
+// $Id: ITMeasurement.cpp,v 1.2 2005-05-13 13:09:08 erodrigu Exp $
 // Include files 
 
 #include "STDet/STDetectionLayer.h"
@@ -23,6 +23,10 @@ ITMeasurement::ITMeasurement( ITCluster& itCluster,
   m_cluster = &itCluster; //pointer to ITCluster
 
   ITChannelID ITChan = m_cluster->channelID();
+
+  // set the LHCbID
+  setLhcbID ( LHCbID( ITChan ) );
+
   const STDetectionLayer* ITLay = geom.layer( ITChan );
   m_measure      = ITLay->U( ITChan ) + m_cluster->distToStripCenter() ;
   m_errMeasure    = m_cluster->distToStripError();

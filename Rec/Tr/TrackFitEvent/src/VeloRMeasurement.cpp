@@ -1,4 +1,4 @@
-// $Id: VeloRMeasurement.cpp,v 1.1.1.1 2005-04-07 20:24:28 erodrigu Exp $
+// $Id: VeloRMeasurement.cpp,v 1.2 2005-05-13 13:09:08 erodrigu Exp $
 // Include files
 
 // local
@@ -51,5 +51,7 @@ VeloRMeasurement::VeloRMeasurement( VeloCluster& cluster,
 
   m_z = det.zSensor( m_cluster->sensor() );
 
+  // set the LHCbID
+  setLhcbID ( LHCbID( channelOne ) );
 }
 //=============================================================================
