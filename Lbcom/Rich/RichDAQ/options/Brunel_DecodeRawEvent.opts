@@ -1,13 +1,15 @@
 
-// Explicitly run algorithm
-//BrunelRecoRICHSeq.Members += { "RawBufferToRichDigitsAlg/RichDecodeRawEvent" };
-// ... or Use data-on-demand service
-DataOnDemandSvc.Algorithms += { "DATA='/Event/Raw/Rich/Digits' TYPE='RawBufferToRichDigitsAlg/RichRawEventToDigits'" };
+
+// Use data-on-demand service
+DataOnDemandSvc.Algorithms += 
+{ 
+  "DATA='/Event/Raw/Rich/Digits' TYPE='RawBufferToRichDigitsAlg/RichRawEventToDigits'" 
+};
 
 // utility tools
 ToolSvc.RichToolRegistry.Tools += { "RichRawBufferToSmartIDsTool/RichSmartIDDecoder" };
-ToolSvc.RichToolRegistry.Tools += { "RichHPDIDTool/RichHPDIDTool" };
+ToolSvc.RichToolRegistry.Tools += { "RichHPDInfoTool/RichHPDInfoTool" };
 ToolSvc.RichToolRegistry.Tools += { "RichHPDToLevel1Tool/RichHPDToLevel1Tool" };
 
 // Sort the decoded RichSmartIDs ?
-ToolSvc.RichSmartIDDecoder.SortRichSmartIDs = false;
+ToolSvc.RichSmartIDDecoder.SortRichSmartIDs = true;

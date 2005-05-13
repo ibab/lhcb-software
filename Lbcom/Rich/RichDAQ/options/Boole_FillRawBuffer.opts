@@ -6,5 +6,5 @@ DigiRICHSeq.Members += { "MCRichDigitsToRawBufferAlg/RichFillRawBuffer" };
 RichFillRawBuffer.DataVersion = 2;
 
 // utility tools
-ToolSvc.RichToolRegistry.Tools += { "RichHPDIDTool/RichHPDIDTool" };
+ToolSvc.RichToolRegistry.Tools += { "RichHPDInfoTool/RichHPDInfoTool" };
 ToolSvc.RichToolRegistry.Tools += { "RichHPDToLevel1Tool/RichHPDToLevel1Tool" };
