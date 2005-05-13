@@ -1,4 +1,4 @@
-// $Id: XmlBaseConditionCnv.cpp,v 1.4 2003-06-16 13:44:11 sponce Exp $
+// $Id: XmlBaseConditionCnv.cpp,v 1.5 2005-05-13 16:06:32 marcocle Exp $
 
 // include files
 #include "GaudiKernel/CnvFactory.h"
@@ -189,24 +189,11 @@ StatusCode XmlBaseConditionCnv::i_fillObj (xercesc::DOMElement* childElement,
           << value << ", type " << type << " and comment \"" << comment
           << "\"" << endreq;
       if (type == "int") {
-        double dd = xmlSvc()->eval(value, false);
-        dataObj->addUserParameter (name,
-                                   type,
-                                   comment,
-                                   value,
-                                   dd,
-                                   int (dd));
+        dataObj->addParam<int>(name,(int)xmlSvc()->eval(value, false),comment);
       } else if(type == "double") {
-        dataObj->addUserParameter (name,
-                                   type,
-                                   comment,
-                                   value,
-                                   xmlSvc()->eval(value, false));
+        dataObj->addParam<double>(name,xmlSvc()->eval(value, false),comment);
       } else {
-        dataObj->addUserParameter (name,
-                                   type,
-                                   comment,
-                                   value);
+        dataObj->addParam<std::string>(name,value,comment);
       }
     } else if (0 == xercesc::XMLString::compareString
                (paramVectorString, tagName)) {
@@ -233,7 +220,6 @@ StatusCode XmlBaseConditionCnv::i_fillObj (xercesc::DOMElement* childElement,
         double dd = xmlSvc()->eval(*it, false);
         if ("int" == type) {
           i_vect.push_back ((int)dd);
-          d_vect.push_back (dd);
         } else if ("double" == type) {
           d_vect.push_back (dd);
         }
@@ -250,12 +236,11 @@ StatusCode XmlBaseConditionCnv::i_fillObj (xercesc::DOMElement* childElement,
       log << ", type " << type << " and comment \""
           << comment << "\"." << endreq;
       if ("int" == type) {
-        dataObj->addUserParameterVector
-          (name, type, comment, vect, d_vect, i_vect);
+        dataObj->addParam(name,i_vect,comment);
       } else if ("double" == type) {
-        dataObj->addUserParameterVector (name, type, comment, vect, d_vect);
+        dataObj->addParam(name,d_vect,comment);
       } else {
-        dataObj->addUserParameterVector (name, type, comment, vect);
+        dataObj->addParam(name,vect,comment);
       }
     }
     

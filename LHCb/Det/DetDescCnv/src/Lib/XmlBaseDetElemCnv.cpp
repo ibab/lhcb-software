@@ -1,4 +1,4 @@
-// $Id: XmlBaseDetElemCnv.cpp,v 1.5 2005-05-04 11:37:31 marcocle Exp $
+// $Id: XmlBaseDetElemCnv.cpp,v 1.6 2005-05-13 16:06:32 marcocle Exp $
 
 // include files
 
@@ -394,29 +394,16 @@ StatusCode XmlBaseDetElemCnv::i_fillObj (xercesc::DOMElement* childElement,
     if (isSingleParam) {
       // adds the new parameter to the detectorElement
       if (type == "int") {
-        double dd = xmlSvc()->eval(value, false);
-        dataObj->addUserParameter (name,
-                                   type,
-                                   comment,
-                                   value,
-                                   dd,
-                                   int (dd));
+        dataObj->addParam<int>(name,(int)xmlSvc()->eval(value, false),comment);
       } else if(type == "double") {
-        dataObj->addUserParameter (name,
-                                   type,
-                                   comment,
-                                   value,
-                                   xmlSvc()->eval(value, false));
+        dataObj->addParam<double>(name,xmlSvc()->eval(value, false),comment);
       } else {
         // check whether there are "" around the string. If yes, remove them
         if ((value.length() > 1) &&
             (value[0] == '"' && value[value.length()-1] == '"')) {
           value = value.substr(1, value.length()-2);
         }
-        dataObj->addUserParameter (name,
-                                   type,
-                                   comment,
-                                   value);
+        dataObj->addParam<std::string>(name,value,comment);
       }
       log << MSG::DEBUG << "Added user parameter " << name << " with value "
           << value << ", type " << type << " and comment \"" << comment
@@ -446,7 +433,6 @@ StatusCode XmlBaseDetElemCnv::i_fillObj (xercesc::DOMElement* childElement,
         double dd = xmlSvc()->eval(*it, false);
         if ("int" == type) {
           i_vect.push_back ((int)dd);
-          d_vect.push_back (dd);
         } else if ("double" == type) {
           d_vect.push_back (dd);
         }
@@ -463,12 +449,11 @@ StatusCode XmlBaseDetElemCnv::i_fillObj (xercesc::DOMElement* childElement,
       log << ", type " << type << " and comment \""
           << comment << "\"." << endreq;
       if ("int" == type) {
-        dataObj->addUserParameterVector
-          (name, type, comment, vect, d_vect, i_vect);
+        dataObj->addParam(name,i_vect,comment);
       } else if ("double" == type) {
-        dataObj->addUserParameterVector (name, type, comment, vect, d_vect);
+        dataObj->addParam(name,d_vect,comment);
       } else {
-        dataObj->addUserParameterVector (name, type, comment, vect);
+        dataObj->addParam(name,vect,comment);
       }
     }
 

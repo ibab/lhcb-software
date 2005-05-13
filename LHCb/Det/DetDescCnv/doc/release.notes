@@ -4,10 +4,12 @@
 ! Purpose     : standard converters for the LHCb Detector Description
 !-----------------------------------------------------------------------------
 
-!================ DetDescCnv v3r0 2005-05-04 ===========================
+! 2005-05-13 - Marco Clemencic
+ - Modified to use the new ParamValidDataObject interface (Det/DetDesc >= v15)
+
 ! 2005-05-04 - Marco Clemencic
  - Added support for XML tag "conditioninfo".
-   Depend on Det/DetDesc >= v15 and Det/XmlDDDB > v24r1
+   Depend on Det/DetDesc >= v15 and Det/XmlDDDB >= v24r2
  - Removed explicit dependency on DetDesc v14r*
 
 !================ DetDescCnv v2r4 2005-04-22 ===========================
