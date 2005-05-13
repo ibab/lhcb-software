@@ -4,7 +4,7 @@
  *
  * Header file for utility class : RichTrackID
  *
- * $Id: RichTrackID.h,v 1.14 2005-04-06 20:29:17 jonrob Exp $
+ * $Id: RichTrackID.h,v 1.15 2005-05-13 14:54:57 jonrob Exp $
  *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @date   08/07/2004
@@ -36,7 +36,7 @@ namespace Rich {
     /** @enum Rich::Track::Type
      *
      *  Enumeration for the various different track algorithm types
-     *  that are avaialble.
+     *  that are available.
      *
      *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
      *  @date   08/07/2004

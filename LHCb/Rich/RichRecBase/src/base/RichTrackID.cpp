@@ -5,7 +5,7 @@
  *  Implementation file for class : RichTrackID
  *
  *  CVS Log :-
- *  $Id: RichTrackID.cpp,v 1.9 2005-02-02 10:01:20 jonrob Exp $
+ *  $Id: RichTrackID.cpp,v 1.10 2005-05-13 14:54:57 jonrob Exp $
  *
  *  @author Chris Jones    Christopher.Rob.Jones@cern.ch
  *  @date   2003-09-23
@@ -64,9 +64,10 @@ Rich::Track::Type Rich::Track::type( const std::string & name )
   else if ( "velo"     == name )   { return Rich::Track::Velo;     }
   else if ( "unknown"  == name )   { return Rich::Track::Unknown;  }
   else if ( "unusable" == name )   { return Rich::Track::Unusable; }
-  else {   // Should not get here ...
+  else 
+  { // Should not get here ...
     throw GaudiException( "Unknown track string name '"+name+"'",
-                          "*RichTrackID*", StatusCode::FAILURE );
+                          "*Rich::Track::type*", StatusCode::FAILURE );
     return Rich::Track::Unknown; 
   }
 }
@@ -84,26 +85,28 @@ Rich::Track::Type Rich::Track::type( const TrStoredTrack * track )
     else if ( track->velo()     )     { return Rich::Track::Velo;     }
     else if ( track->follow()   )     { return Rich::Track::Follow;   }
     else if ( track->veloBack() )     { return Rich::Track::Unusable; }
-    else { // Should not get here ...
+    else 
+    { // Should not get here ...
       std::ostringstream mess;
       mess << "Unknown TrStoredTrack type : history code = " << track->history();
-      throw GaudiException( mess.str(), "*RichTrackID*", StatusCode::FAILURE );
+      throw GaudiException( mess.str(), "*Rich::Track::type*", StatusCode::FAILURE );
     }
   }
 
   // Should not get here either ...
   throw GaudiException( "Null TrStoredTrack pointer",
-                        "*RichTrackID*", StatusCode::FAILURE );
+                        "*Rich::Track::type*", StatusCode::FAILURE );
 }
 
 // Returns the enumerated type for a given TrStoredTrack
 Rich::Track::Type Rich::Track::type( const TrgTrack * track )
 {
-  if ( track ) {
+  if ( track ) 
+  {
     // Only one type at the moment
     return Rich::Track::Trigger;
   }
 
   // Should not get here 
-  throw GaudiException( "Null TrgTrack pointer","*RichTrackID*", StatusCode::FAILURE );
+  throw GaudiException( "Null TrgTrack pointer","*Rich::Track::type*", StatusCode::FAILURE );
 }

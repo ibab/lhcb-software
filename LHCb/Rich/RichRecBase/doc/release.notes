@@ -4,6 +4,16 @@
 ! Purpose     : Base package for RICH Reconstruction Packages
 !-----------------------------------------------------------------------------
 
+! 2005-05-13 - Chris Jones
+ - Add explicit dependency on DAQEvent
+ - Add new methods to access a range of RichRecPIxels 
+   (e.g. only those in RICH1 or RICH1 upper panel )
+ - Add base class for all pixel creator tools (shared common code)
+   each creator only need implement those bits that are unique to each
+ - Update RichTrackSelector
+   + Fix a few bugs in the "trackSelected" methods
+   + Add new method to print out selection to a given stream
+
 ! 2005-04-07 - Marco Cattaneo
  - Remove from xml import of obsolete includes
  - Add private use GaudiObjDesc v*, no longer inherited from Event model

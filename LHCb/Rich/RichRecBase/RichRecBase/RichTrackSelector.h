@@ -5,7 +5,7 @@
  * Header file for utility class : RichTrackSelector
  *
  * CVS Log :-
- * $Id: RichTrackSelector.h,v 1.9 2005-02-02 10:01:20 jonrob Exp $
+ * $Id: RichTrackSelector.h,v 1.10 2005-05-13 14:54:57 jonrob Exp $
  *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @date   2003-06-20
@@ -17,6 +17,7 @@
 
 // from Gaudi
 #include "GaudiKernel/GaudiException.h"
+#include "GaudiKernel/MsgStream.h"
 
 // Event model
 #include "Event/TrStoredTrack.h"
@@ -26,6 +27,7 @@
 // Kernel
 #include "RichKernel/BoostArray.h"
 
+//--------------------------------------------------------------------------------
 /** @class RichTrackSelector RichTrackSelector.h RichRecBase/RichTrackSelector.h
  *
  *  A utility class for the RICH reconstruction providing generic track selection
@@ -33,11 +35,13 @@
  *  @author Chris Jones    Christopher.Rob.Jones@cern.ch
  *  @date   2003-06-20
  */
+//--------------------------------------------------------------------------------
 
 class RichTrackSelector {
 
 public: // definitions
 
+  /// Container type for momentum data for each track type
   typedef std::vector<std::string> MomentumCutData;
 
 public:
@@ -121,9 +125,6 @@ public:
    */
   bool typeSelected( const Rich::Track::Type track ) const;
 
-  /// Returns selected track types as a single string
-  const std::string selectedTracksAsString() const;
-
   /** Configure the track selection
    *
    *  @return Boolean indicating status of the selection configuration
@@ -132,11 +133,17 @@ public:
    */
   bool configureTrackTypes();
 
+  /// Print to the requested MsgStream the track selection criteria
+  void printTrackSelection( MsgStream & stream ) const;
+
+  /// Returns selected track types as a single string
+  const std::string selectedTracksAsString() const;
+
 private: // methods
 
   /// Finds the TrStateP for a given track and z position
   const TrStateP * trStateP( const TrStoredTrack * track,
-                             const double zPos = -999999 ) const;
+                             const double zPos = 0 ) const;
 
   /// Configure the momentum cuts
   bool configureMomentumCuts();
@@ -150,6 +157,7 @@ private: // private data
   /// Unique tracks only ?
   bool m_uniqueTrOnly;
 
+  /// Track type selection array
   typedef boost::array<bool,Rich::Track::NTrTypes> TrackTypesSel;
   /// Track types to select
   TrackTypesSel m_tkTypeSel;
@@ -209,22 +217,20 @@ inline bool RichTrackSelector::trackSelected( const TrgTrack * track ) const
   return ( track &&                                           // Track pointer OK
            m_tkTypeSel[type] &&                               // tracking algorithm type
            ( m_chargeSel*track->firstState().momentum() >= 0 )  &&       // track charge
-           ( track->firstState().momentum() > minMomentum(type) ) &&     // Momentum cut
-           ( track->firstState().momentum() < maxMomentum(type) )        // Momentum cut
+           ( fabs(track->firstState().momentum())/GeV > minMomentum(type) ) && // Momentum cut
+           ( fabs(track->firstState().momentum())/GeV < maxMomentum(type) )    // Momentum cut
            );
 }
 
 inline bool RichTrackSelector::trackSelected( const RichRecTrack * track ) const
 {
-  const Rich::Track::Type type = track->trackID().trackType();
   return ( track &&                                           // Track pointer OK
            (!m_uniqueTrOnly || track->trackID().unique()) &&  // Unique tracks
-           m_tkTypeSel[type] &&                               // tracking algorithm type
+           m_tkTypeSel[track->trackID().trackType()] &&       // tracking algorithm type
            ( m_chargeSel*track->charge() >= 0 )  &&           // track charge
-           ( track->vertexMomentum() > minMomentum(type) ) &&     // Momentum cut
-           ( track->vertexMomentum() < maxMomentum(type) )        // Momentum cut
+           ( track->vertexMomentum()/GeV > minMomentum(track->trackID().trackType()) ) &&  // Momentum cut
+           ( track->vertexMomentum()/GeV < maxMomentum(track->trackID().trackType()) )     // Momentum cut
            );
-
 }
 
 inline std::vector<std::string> & RichTrackSelector::selectedTrackTypes()
@@ -242,14 +248,6 @@ inline bool RichTrackSelector::typeSelected( const Rich::Track::Type track ) con
   return ( m_trNames.end() != std::find( m_trNames.begin(),
                                          m_trNames.end(),
                                          Rich::text(track) ) );
-}
-
-inline const std::string RichTrackSelector::selectedTracksAsString() const
-{
-  std::vector<std::string>::const_iterator iT = selectedTrackTypes().begin();
-  std::string names = *iT; ++iT;
-  for ( ; iT != selectedTrackTypes().end(); ++iT ) { names += " " + *iT; }
-  return names;
 }
 
 #endif // RICHRECBASE_RICHTRACKSELECTOR_H

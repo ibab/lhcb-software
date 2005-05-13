@@ -5,8 +5,7 @@
  *  Header file for RICH reconstruction tool interface : IRichPixelCreator
  *
  *  CVS Log :-
- *  $Id: IRichPixelCreator.h,v 1.5 2004-07-26 18:00:57 jonrob Exp $
- *  $Log: not supported by cvs2svn $
+ *  $Id: IRichPixelCreator.h,v 1.6 2005-05-13 14:54:56 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -68,6 +67,50 @@ public:
    *  @return Pointer to the container of RichRecPixels
    */
   virtual RichRecPixels * richPixels() const = 0;
+
+  /** Access the begin iterator for the pixels in the given RICH detector
+   *
+   *  @param rich The Rich detector
+   *
+   *  @return The begin iterator for the given RICH detector
+   *
+   *  @attention Only valid if newPixels() has been called for the current event
+   */
+  virtual RichRecPixels::iterator begin( const Rich::DetectorType rich ) const = 0;
+
+  /** Access the end iterator for the pixels in the given RICH detector
+   *
+   *  @param rich The Rich detector
+   *
+   *  @return The end iterator for the given RICH detector
+   *
+   *  @attention Only valid if newPixels() has been called for the current event
+   */
+  virtual RichRecPixels::iterator end( const Rich::DetectorType rich ) const = 0;
+
+  /** Access the begin iterator for the pixels in the given RICH detector
+   *
+   *  @param rich  The Rich detector
+   *  @param panel The HPD panel
+   *
+   *  @return The begin iterator for the given RICH detector
+   *
+   *  @attention Only valid if newPixels() has been called for the current event
+   */
+  virtual RichRecPixels::iterator begin( const Rich::DetectorType rich,
+                                         const Rich::Side         panel ) const = 0;
+
+  /** Access the end iterator for the pixels in the given RICH detector
+   *
+   *  @param rich  The Rich detector
+   *  @param panel The HPD panel
+   *
+   *  @return The end iterator for the given RICH detector
+   *
+   *  @attention Only valid if newPixels() has been called for the current event
+   */
+  virtual RichRecPixels::iterator end( const Rich::DetectorType rich,
+                                       const Rich::Side         panel ) const = 0;
 
 };
 
