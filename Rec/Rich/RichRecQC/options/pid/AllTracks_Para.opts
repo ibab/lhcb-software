@@ -11,7 +11,7 @@ RiPIDMonAll0To2.MinPCut = 0;
 RiPIDMonAll0To2.MaxPCut = 2;
 RiPIDMonAll0To2.MCHistoPath = "RICH/PIDQC/ALL/0TO2/MC/";
 RiPIDMonAll0To2.HistoPath = "RICH/PIDQC/ALL/0TO2/";
-RiPIDMonAll0To2.FinalPrintout = false;
+RiPIDMonAll0To2.FinalPrintout = true;
 
 // Low Momentum PID monitor : 2-10 GeV/c
 RiPIDMonAll2To10.MinPCut = 2;

@@ -5,7 +5,7 @@
  *  Implementation file for RICH reconstruction monitoring algorithm : RichPIDQC
  *
  *  CVS Log :-
- *  $Id: RichPIDQC.cpp,v 1.40 2005-04-15 16:33:32 jonrob Exp $
+ *  $Id: RichPIDQC.cpp,v 1.41 2005-05-13 15:07:43 jonrob Exp $
  *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   2002-06-13
@@ -57,7 +57,8 @@ StatusCode RichPIDQC::initialize()
   if ( sc.isFailure() ) { return sc; }
 
   // Check momentum cuts make sense
-  if ( m_pMinCut >= m_pMaxCut ) {
+  if ( m_pMinCut >= m_pMaxCut ) 
+  {
     err() << "Invalid Min/Max momentum cuts "
           << m_pMinCut << "/" << m_pMaxCut << endreq;
     return StatusCode::FAILURE;
@@ -79,6 +80,7 @@ StatusCode RichPIDQC::initialize()
 
   // Configure track selector
   if ( !m_trSelector.configureTrackTypes() ) return StatusCode::FAILURE;
+  m_trSelector.printTrackSelection( debug() );
 
   // Warn if extra histos are enabled
   if ( m_extraHistos ) Warning( "Extra histograms are enabled", StatusCode::SUCCESS );
