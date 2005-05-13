@@ -5,13 +5,7 @@
  *  Header file for tool interface : IRichHPDToLevel1Tool
  *
  *  CVS Log :-
- *  $Id: IRichHPDToLevel1Tool.h,v 1.3 2005-01-18 08:59:20 jonrob Exp $
- *  $Log: not supported by cvs2svn $
- *  Revision 1.2  2005/01/13 12:15:18  jonrob
- *  Add methods to access the various maps
- *
- *  Revision 1.1  2005/01/07 12:41:57  jonrob
- *  Add new interfaces
+ *  $Id: IRichHPDToLevel1Tool.h,v 1.4 2005-05-13 14:30:09 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   2004-12-18
@@ -30,6 +24,7 @@
 /// Static Interface Identification
 static const InterfaceID IID_IRichHPDToLevel1Tool ( "IRichHPDToLevel1Tool", 1, 0 );
 
+//-----------------------------------------------------------------------------
 /** @class IRichHPDToLevel1Tool IRichHPDToLevel1Tool.h RichKernel/IRichHPDToLevel1Tool.h
  *
  *  Interface to tool to associate HPDs to L1 boards
@@ -37,6 +32,7 @@ static const InterfaceID IID_IRichHPDToLevel1Tool ( "IRichHPDToLevel1Tool", 1, 0
  *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
  *  @date   2004-12-18
  */
+//-----------------------------------------------------------------------------
 
 class IRichHPDToLevel1Tool : virtual public IAlgTool {
 
