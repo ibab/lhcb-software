@@ -1,9 +1,7 @@
-// $Id: DummyDetectorElement.cpp,v 1.3 2005-05-03 15:50:30 marcocle Exp $
+// $Id: DummyDetectorElement.cpp,v 1.4 2005-05-13 16:17:50 marcocle Exp $
 // Include files 
 
 #include <string>
-#include "DetDesc/IReadOut.h"
-#include "DetDesc/ISlowControl.h"
 #include "DetDesc/Condition.h"
 
 #include "DetDesc/IUpdateManagerSvc.h"
@@ -72,8 +70,8 @@ StatusCode DummyDetectorElement::i_updateTemperatures(){
   MsgStream log(msgSvc(),name());
   log << MSG::DEBUG << "Entering i_updateTemperatures()" << endmsg;
   try {
-    m_slowTemp   = condition("SlowControl")->paramAsDouble("Temperature");
-    m_cratesTemp = condition("ReadOut")->paramVectorAsDouble("CrateTemps");
+    m_slowTemp   = condition("SlowControl")->param<double>("Temperature");
+    m_cratesTemp = condition("ReadOut")->param<std::vector<double> >("CrateTemps");
   } catch (...) {
     log << MSG::ERROR << "i_updateTemperatures: couldn't access condition" << endmsg;
     return StatusCode::FAILURE;
@@ -87,8 +85,8 @@ StatusCode DummyDetectorElement::i_updateChannels(){
   MsgStream log(msgSvc(),name());
   log << MSG::DEBUG << "Entering i_updateChannels()" << endmsg;
   try {
-    m_maxChannels = condition("ReadOut")->paramAsInt("NChannels");
-    m_activeChannels = condition("ReadOut")->paramVectorAsInt("Channels");
+    m_maxChannels = condition("ReadOut")->param<int>("NChannels");
+    m_activeChannels = condition("ReadOut")->param<std::vector<int> >("Channels");
   } catch (...) {
     log << MSG::ERROR << "i_updateChannels: couldn't access condition" << endmsg;
     return StatusCode::FAILURE;

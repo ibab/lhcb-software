@@ -1,4 +1,4 @@
-//$Id: XmlTestAlgorithm.cpp,v 1.1 2001-12-17 20:13:25 andreav Exp $
+//$Id: XmlTestAlgorithm.cpp,v 1.2 2005-05-13 16:17:50 marcocle Exp $
 
 #include "XmlTestAlgorithm.h"
 #include "DetDesc/Condition.h"
@@ -18,8 +18,7 @@ const IAlgFactory& XmlTestAlgorithmFactory = Factory;
 //----------------------------------------------------------------------------
 
 /// Constructor
-XmlTestAlgorithm::XmlTestAlgorithm ( const std::string& name, 
-				     ISvcLocator* pSvcLocator )
+XmlTestAlgorithm::XmlTestAlgorithm ( const std::string& name, ISvcLocator* pSvcLocator )
   : Algorithm( name, pSvcLocator )
 {
 }
@@ -83,9 +82,8 @@ StatusCode XmlTestAlgorithm::execute() {
   Condition* alEcal = ecal->alignment()->condition();
   if( 0 != alEcal ) {
     log << MSG::INFO << "Before update, Ecal alignment data has " 
-	<< alEcal->params().size() << " parameters and "
-	<< alEcal->paramVectors().size() << " parameter vectors" << std::endl
-	<< alEcal->printParams() << alEcal->printParamVectors() << endreq;
+        << alEcal->paramNames().size() << " parameters" << std::endl
+        << alEcal->printParams() << endreq;
   } else {
     log << MSG::ERROR << "Could not retrieve Ecal alignment" << endreq;
     return StatusCode::FAILURE;
@@ -99,18 +97,16 @@ StatusCode XmlTestAlgorithm::execute() {
     log << MSG::INFO << "DataObject successfully updated" << endreq;
   }
   log << MSG::INFO << "After update, Ecal alignment data has " 
-      << alEcal->params().size() << " parameters and "
-      << alEcal->paramVectors().size() << " parameter vectors" << std::endl
-      << alEcal->printParams() << alEcal->printParamVectors() << endreq;
+      << alEcal->paramNames().size() << " parameters" << std::endl
+      << alEcal->printParams() << endreq;
 
   // Retrieve calibration for the Ecal detector
   log << MSG::INFO << "Retrieve calibration for the Ecal detector" << endreq;
   Condition* caEcal = ecal->calibration()->condition();
   if( 0 != caEcal ) {
     log << MSG::INFO << "Before update, Ecal calibration data has " 
-	<< caEcal->params().size() << " parameters and "
-	<< caEcal->paramVectors().size() << " parameter vectors" << std::endl
-	<< caEcal->printParams() << caEcal->printParamVectors() << endreq;
+        << caEcal->paramNames().size() << " parameters" << std::endl
+        << caEcal->printParams() << endreq;
   } else {
     log << MSG::ERROR << "Could not retrieve Ecal calibration" << endreq;
     return StatusCode::FAILURE;
@@ -124,18 +120,16 @@ StatusCode XmlTestAlgorithm::execute() {
     log << MSG::INFO << "DataObject successfully updated" << endreq;
   }
   log << MSG::INFO << "After update, Ecal calibration data has " 
-      << caEcal->params().size() << " parameters and "
-      << caEcal->paramVectors().size() << " parameter vectors" << std::endl
-      << caEcal->printParams() << caEcal->printParamVectors() << endreq;
+      << caEcal->paramNames().size() << " parameters" << std::endl
+      << caEcal->printParams() << endreq;
 
   // Retrieve readout for the Ecal detector
   log << MSG::INFO << "Retrieve readout for the Ecal detector" << endreq;
   Condition* roEcal = ecal->readOut()->condition();
   if( 0 != roEcal ) {
     log << MSG::INFO << "Before update, Ecal readout data has " 
-	<< roEcal->params().size() << " parameters and "
-	<< roEcal->paramVectors().size() << " parameter vectors" << std::endl
-	<< roEcal->printParams() << roEcal->printParamVectors() << endreq;
+        << roEcal->paramNames().size() << " parameters" << std::endl
+        << roEcal->printParams() << endreq;
   } else {
     log << MSG::ERROR << "Could not retrieve Ecal readout" << endreq;
     return StatusCode::FAILURE;
@@ -149,18 +143,16 @@ StatusCode XmlTestAlgorithm::execute() {
     log << MSG::INFO << "DataObject successfully updated" << endreq;
   }
   log << MSG::INFO << "After update, Ecal readout data has " 
-      << roEcal->params().size() << " parameters and "
-      << roEcal->paramVectors().size() << " parameter vectors" << std::endl
-      << roEcal->printParams() << roEcal->printParamVectors() << endreq;
+      << roEcal->paramNames().size() << " parameters" << std::endl
+      << roEcal->printParams() << endreq;
 
   // Retrieve slow control for the Ecal detector
   log << MSG::INFO << "Retrieve slow control for the Ecal detector" << endreq;
   Condition* scEcal = ecal->slowControl()->condition();
   if( 0 != scEcal ) {
     log << MSG::INFO << "Before update, Ecal slow control data has " 
-	<< scEcal->params().size() << " parameters and "
-	<< scEcal->paramVectors().size() << " parameter vectors" << std::endl
-	<< scEcal->printParams() << scEcal->printParamVectors() << endreq;
+        << scEcal->paramNames().size() << " parameters" << std::endl
+        << scEcal->printParams() << endreq;
   } else {
     log << MSG::ERROR << "Could not retrieve Ecal slow control" << endreq;
     return StatusCode::FAILURE;
@@ -174,18 +166,16 @@ StatusCode XmlTestAlgorithm::execute() {
     log << MSG::INFO << "DataObject successfully updated" << endreq;
   }
   log << MSG::INFO << "After update, Ecal slow control data has " 
-      << scEcal->params().size() << " parameters and "
-      << scEcal->paramVectors().size() << " parameter vectors" << std::endl
-      << scEcal->printParams() << scEcal->printParamVectors() << endreq;
+      << scEcal->paramNames().size() << " parameters" << std::endl
+      << scEcal->printParams() << endreq;
   
   // Retrieve fast control for the Ecal detector
   log << MSG::INFO << "Retrieve fast control for the Ecal detector" << endreq;
   Condition* fcEcal = ecal->fastControl()->condition();
   if( 0 != fcEcal ) {
     log << MSG::INFO << "Before update, Ecal fast control data has " 
-	<< fcEcal->params().size() << " parameters and "
-	<< fcEcal->paramVectors().size() << " parameter vectors" << std::endl
-	<< fcEcal->printParams() << fcEcal->printParamVectors() << endreq;
+        << fcEcal->paramNames().size() << " parameters" << std::endl
+        << fcEcal->printParams() << endreq;
   } else {
     log << MSG::ERROR << "Could not retrieve Ecal fast control" << endreq;
     return StatusCode::FAILURE;
@@ -199,9 +189,8 @@ StatusCode XmlTestAlgorithm::execute() {
     log << MSG::INFO << "DataObject successfully updated" << endreq;
   }
   log << MSG::INFO << "After update, Ecal fast control data has " 
-      << fcEcal->params().size() << " parameters and "
-      << fcEcal->paramVectors().size() << " parameter vectors" << std::endl
-      << fcEcal->printParams() << fcEcal->printParamVectors() << endreq;
+      << fcEcal->paramNames().size() << " parameters" << std::endl
+      << fcEcal->printParams() << endreq;
   
   // Event processing completed
   return StatusCode::SUCCESS;

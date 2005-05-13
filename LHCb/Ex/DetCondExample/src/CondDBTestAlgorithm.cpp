@@ -1,4 +1,4 @@
-//$Id: CondDBTestAlgorithm.cpp,v 1.6 2005-05-03 12:46:19 marcocle Exp $
+//$Id: CondDBTestAlgorithm.cpp,v 1.7 2005-05-13 16:17:50 marcocle Exp $
 
 #include "CondDBTestAlgorithm.h"
 #include "DetDesc/Condition.h"
@@ -159,13 +159,11 @@ StatusCode CondDBTestAlgorithm::i_analyse( DataObject* pObj ) {
     ParamValidDataObject *pPVDO= dynamic_cast<ParamValidDataObject*>( pObj );
     if ( 0 != pPVDO ){
       log << MSG::INFO << "  -> it has "
-          << pPVDO->params().size() << " params and "
-          << pPVDO->paramVectors().size() << " paramVectors" << endmsg;
+          << pPVDO->paramNames().size() << " params" << endmsg;
       log << MSG::INFO << pPVDO->printParams() << endmsg;
-      log << MSG::INFO << pPVDO->printParamVectors() << endmsg;
     }
     log << MSG::INFO << "Now update it" << endmsg;
-    sc = detSvc()->updateObject( pObj );
+    sc = pVDO->update();
   } else { // it is not a ValidDataObject, so it does not implement update()
     log << MSG::INFO << "Now update it (via DataSvc)" << endmsg;
     sc = detSvc()->updateObject( pObj );
@@ -190,10 +188,8 @@ StatusCode CondDBTestAlgorithm::i_analyse( DataObject* pObj ) {
     ParamValidDataObject *pPVDO= dynamic_cast<ParamValidDataObject*>( pObj );
     if ( 0 != pPVDO ){
       log << MSG::INFO << "  -> it has "
-          << pPVDO->params().size() << " params and "
-          << pPVDO->paramVectors().size() << " paramVectors" << endmsg;
+          << pPVDO->paramNames().size() << " params" << endmsg;
       log << MSG::INFO << pPVDO->printParams() << endmsg;
-      log << MSG::INFO << pPVDO->printParamVectors() << endmsg;
     }
   }
   return StatusCode::SUCCESS;  
@@ -212,7 +208,7 @@ StatusCode CondDBTestAlgorithm::updateCacheLHCb(){
       return StatusCode::FAILURE;
     }
   }
-  m_LHCb_temp = m_LHCb_cond->paramAsDouble("Temperature");
+  m_LHCb_temp = m_LHCb_cond->param<double>("Temperature");
   return StatusCode::SUCCESS;
 }
 StatusCode CondDBTestAlgorithm::updateCacheHcal(){
@@ -227,7 +223,7 @@ StatusCode CondDBTestAlgorithm::updateCacheHcal(){
       return StatusCode::FAILURE;
     }
   }
-  m_Hcal_temp = m_Hcal_cond->paramAsDouble("Temperature");
+  m_Hcal_temp = m_Hcal_cond->param<double>("Temperature");
   return StatusCode::SUCCESS;
 }
 StatusCode CondDBTestAlgorithm::updateCache(){
@@ -251,7 +247,7 @@ StatusCode CondDBTestAlgorithm::updateCache(){
       return StatusCode::FAILURE;
     }
   }
-  m_avg_temp = (m_LHCb_cond->paramAsDouble("Temperature")+m_Hcal_cond->paramAsDouble("Temperature"))/2.;
+  m_avg_temp = (m_LHCb_cond->param<double>("Temperature")+m_Hcal_cond->param<double>("Temperature"))/2.;
   return StatusCode::SUCCESS;
 }
 

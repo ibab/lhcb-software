@@ -30,11 +30,11 @@ const CLID& DeCalorimeter::classID() {
 
 
 StatusCode DeCalorimeter::initialize() {
-  setCodingBit (userParameterAsInt("CodingBit"));
-  setEtInCenter (userParameterAsDouble("EtInCenter"));
-  setEtSlope (userParameterAsDouble("EtSlope"));
-  setAdcMax (userParameterAsInt("AdcMax"));
-  setActiveToTotal (userParameterAsDouble("ActiveToTotal"));
-  setZShowerMax (userParameterAsDouble("ZShowerMax"));
+  setCodingBit (param<int>("CodingBit"));
+  setEtInCenter (param<double>("EtInCenter"));
+  setEtSlope (param<double>("EtSlope"));
+  setAdcMax (param<int>("AdcMax"));
+  setActiveToTotal (param<double>("ActiveToTotal"));
+  setZShowerMax (param<double>("ZShowerMax"));
   return StatusCode::SUCCESS;
 }

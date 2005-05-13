@@ -1,4 +1,4 @@
-// $Id: SimpleAlgorithm.cpp,v 1.15 2003-01-17 14:16:22 sponce Exp $
+// $Id: SimpleAlgorithm.cpp,v 1.16 2005-05-13 16:14:22 marcocle Exp $
 
 /// Include files
 
@@ -94,23 +94,23 @@ StatusCode SimpleAlgorithm::initialize() {
     dumpPVs (msgSvc(), stvol, cave->name());
     
 
-  log << MSG::INFO << "/////////////////////////////" << endmsg;
-  log << MSG::INFO << "// Usage of userParameters //" << endmsg;
-  log << MSG::INFO << "/////////////////////////////" << endmsg;
-  log << MSG::INFO << "This is the list of userParameters " 
+  log << MSG::INFO << "/////////////////////////" << endmsg;
+  log << MSG::INFO << "// Usage of parameters //" << endmsg;
+  log << MSG::INFO << "/////////////////////////" << endmsg;
+  log << MSG::INFO << "This is the list of parameters " 
       << "defined on the Ecal detector element : " << endmsg;
   SmartDataPtr<IDetectorElement> ecal (detSvc(), "/dd/Structure/LHCb/Ecal");
   if (!ecal) {
     log << MSG::ERROR << "Can't retrieve /dd/Structure/LHCb/Ecal" << endmsg;
     return StatusCode::FAILURE;
   }
-  std::vector<std::string> parameterList = ecal->userParameters();
+  std::vector<std::string> parameterList = ecal->params()->paramNames();
   std::vector<std::string>::iterator it2;
   for (it2 = parameterList.begin();
        it2 != parameterList.end();
        it2++) {
     log << MSG::INFO << *it2 << " = "
-        << ecal->userParameterAsString(*it2)
+        << ecal->params()->paramToString(*it2)
         << endmsg;
   }
 

@@ -1,4 +1,4 @@
-//$Id: PopulateDB.cpp,v 1.16 2005-05-13 09:14:38 marcocle Exp $
+//$Id: PopulateDB.cpp,v 1.17 2005-05-13 16:17:50 marcocle Exp $
 #include <iostream>
 #include <fstream>
 #include <string>
@@ -311,23 +311,14 @@ StatusCode PopulateDB::i_condDBStoreSampleData ( ) {
       std::vector<std::string> temps_str;
       for ( int j=0; j<10; ++j ) {
         temps.push_back((double)i*4.17+20.16-(double)j*0.92);
-        std::ostringstream t ;
-        t << (double)i*4.17+20.16-(double)j*0.92;
-        temps_str.push_back(t.str());
       }
-      temp.addParamVector("CrateTemps","double","",temps_str,temps);
-      temp.addParam("NChannels","int","","10",10,10);
+      temp.addParam("CrateTemps",temps);
+      temp.addParam("NChannels",(int)10);
       std::vector<int> chnls;
-      std::vector<double> chnls_dbl;
-      std::vector<std::string> chnls_str;
       for ( int j=0; j<10; j += 1+i ) {
         chnls.push_back(j);
-        chnls_dbl.push_back(j);
-        std::ostringstream t ;
-        t << j;
-        chnls_str.push_back(t.str());
       }
-      temp.addParamVector("Channels","int","",chnls_str,chnls_dbl,chnls);
+      temp.addParam("Channels",chnls);
       std::string s = temp.toXml("DummyDE");
       verbose() << "/ReadOut/DummyDE: " << s << endmsg;
       m_dbAccSvc->storeXMLString("/ReadOut/DummyDE",s,TimePoint(i*24), TimePoint((i+1)*24));
@@ -420,8 +411,8 @@ StatusCode PopulateDB::i_condDBDumpSampleData ( ) {
       for (std::vector<std::string>::const_iterator tag = tags.begin(); tag != tags.end(); ++tag ){
         status = i_dumpFolder( *fldr_name, *tag );
         if ( !status.isSuccess() ) return status;
-  }
-  }
+      }
+    }
   }
 
   info() << "============= condDBDumpSampleData() ending ========================" << endreq;
@@ -433,15 +424,13 @@ StatusCode PopulateDB::i_condDBDumpSampleData ( ) {
 //----------------------------------------------------------------------------
 
 void PopulateDB::i_encodeXmlTemperature( const double temperature,
-					 const std::string& objName,
-					 std::string& xmlString   ) {
+                                         const std::string& objName,
+                                         std::string& xmlString   ) {
   MsgStream log(msgSvc(), name());
   verbose() << "Encoding XML string for name=" << objName << " and temperature=" << temperature << endmsg;  
 
   Condition temp;
-  std::ostringstream tmp;
-  tmp << temperature;
-  temp.addParam("Temperature", "double", "", tmp.str(), temperature);
+  temp.addParam("Temperature",temperature);
   xmlString = temp.toXml(objName);
 
   verbose() << "Encoded XML string is:" << xmlString << endmsg;
@@ -517,12 +506,10 @@ void PopulateDB::i_encodeXmlParamVector( const double pos[3],
       << " and position=" << pos[0] << " " << pos[1] << " " << pos[2] << endreq;
   Condition posCond;
   std::vector<double> p;
-  std::vector<std::string> ps;
-  std::ostringstream t0,t1,t2;
-  p.push_back(pos[0]); t0 << pos[0]; ps.push_back(t0.str());
-  p.push_back(pos[1]); t1 << pos[1]; ps.push_back(t1.str());
-  p.push_back(pos[2]); t2 << pos[2]; ps.push_back(t2.str());
-  posCond.addParamVector(parName,"double","",ps,p);
+  p.push_back(pos[0]);
+  p.push_back(pos[1]);
+  p.push_back(pos[2]);
+  posCond.addParam(parName,p);
   xmlString = posCond.toXml(objName);
   
   verbose() << "Encoded XML string is:" << std::endl
