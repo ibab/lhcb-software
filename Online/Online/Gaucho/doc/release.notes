@@ -1,7 +1,8 @@
-! $Id: release.notes,v 1.3 2005-03-22 16:39:17 evh Exp $
+! $Id: release.notes,v 1.4 2005-05-13 07:41:09 cattanem Exp $
 ! Package     : Online/Gaucho	
 ! Responsible : Eric.van.Herwijnen@cern.ch
 
+!======================== Gaucho v3r0 2005-05-13 ==========================
 ! 20050322 - Gaucho v3r0 - Eric van Herwijnen
   - MonitorSvc tested with PVSS (fwGaucho v2r0)
   - DimPropServer.cpp allows listing and setting of algorithm properties
