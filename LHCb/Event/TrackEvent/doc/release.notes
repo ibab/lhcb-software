@@ -5,6 +5,7 @@
 !-----------------------------------------------------------------------------
 
 ! 2005-05-16 - Eduardo Rodrigues
+ - keyedContTypeDef = 'TRUE' added to Measurement class definition
  - Measurement class: inheritance from KeyedObject<int> removed
  - changes to State class:
    - no more "type" attribute
