@@ -13,8 +13,6 @@
 
       <import name='Kernel/LHCbID' />
 
-      <base name='KeyedObject&lt;int&gt;' />
-      &KeyedObject;
       &StlPtrVector;
 
       <enum

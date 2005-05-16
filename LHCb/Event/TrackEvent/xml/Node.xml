@@ -14,24 +14,22 @@
       <import name='Event/State' />
       <import name='Event/Measurement' />
 
-      <base name='KeyedObject&lt;int&gt;' />
-      &KeyedObject;
       &StlPtrVector;
 
+      <constructor 
+	desc     = "Constructor from a State and a Measurement" 
+	argList  = "State* state, Measurement* meas"
+	initList = "m_state(state), m_measurement(meas), m_residual(0.0), m_errResidual(0.0), m_projectionMatrix()">
+      </constructor>
+
+<!--
       <destructor
-        desc = 'Track destructor'>
+        desc = 'Node destructor'>
         <code>
   reset();
         </code>
       </destructor>
-
-      <attribute
-        type    = 'Measurement*'
-        name    = 'measurement'
-        setMeth = 'FALSE'
-        getMeth = 'FALSE'
-        desc    = 'pointer to the measurement'
-        access  = 'PROTECTED' />
+-->
 
       <attribute
         type    = 'State*'
@@ -39,6 +37,14 @@
         setMeth = 'FALSE'
         getMeth = 'FALSE'
         desc    = 'pointer to the state'
+        access  = 'PROTECTED' />
+
+      <attribute
+        type    = 'Measurement*'
+        name    = 'measurement'
+        setMeth = 'FALSE'
+        getMeth = 'FALSE'
+        desc    = 'pointer to the measurement'
         access  = 'PROTECTED' />
 
       <attribute
@@ -63,10 +69,10 @@
         type    = 'void'
         name    = 'reset'
 	virtual = 'TRUE'
-        desc    = 'Clear the track before re-use'>
+        desc    = 'Clear the node before re-use'>
         <code>
   if (m_state != NULL) delete m_state;
-  m_measurement = NULL;
+//  m_measurement = NULL;
   m_state = NULL;
   m_residual = 0.;
   m_errResidual = 0.;
@@ -128,21 +134,10 @@
         const   = 'TRUE'
         virtual = 'TRUE'>
         <code>
-  Node* me = new Node(); 
-  me->setMeasurement(measurement());
-  me->setState(state());
+  Node* me = new Node(state().clone(), (Measurement*) &amp;measurement()); 
   me->setResidual(residual());
   me->setErrResidual(errResidual());
   return me;
-        </code>
-      </method>
-
-      <method
-        name    = 'setMeasurement'
-        argList = 'Measurement meas'
-        desc    = 'Update the measurement'>
-        <code>
-  m_measurement = (Measurement*) &amp;meas;
         </code>
       </method>
 

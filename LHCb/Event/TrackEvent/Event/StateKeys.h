@@ -8,10 +8,6 @@
 namespace StateKeys 
 {
   
-  enum Types {HasMomentum,
-              StraightLine
-  };
-
   enum Location {LocationUnknown,
                  ClosestToBeam,
                  FirstMeasurement,

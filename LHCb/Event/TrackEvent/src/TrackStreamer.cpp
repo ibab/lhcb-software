@@ -38,7 +38,7 @@ std::ostream& str::state(const State& state, std::ostream& os) {
   os << " flags \t" << state.flags() << std::endl;
   str::stateFields(state,os); os << std::endl;
   os << " z \t" << state.z() << std::endl;
-  os << " state \t" << state.state();
+  os << " state \t" << state.stateVector();
   //  os << " cov " << state.covariance() << std::endl;
   return os;
 }
@@ -71,9 +71,6 @@ std::ostream& str::trackFields(const Track& track, std::ostream& os) {
 }
 
 std::ostream& str::stateFields(const State& state, std::ostream& os) {
-  
-  if (state.checkType(StateKeys::HasMomentum)) os <<"T:HasMomentum, ";
-  if (state.checkType(StateKeys::StraightLine)) os <<"T:StraightLine, ";
   
   if (state.checkLocation(StateKeys::LocationUnknown)) os <<"L:Unknown, ";
   if (state.checkLocation(StateKeys::ClosestToBeam)) 

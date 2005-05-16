@@ -14,12 +14,13 @@
       serializers      = 'FALSE'
       keyedContTypeDef = 'TRUE'>
 
+      <import name='GaudiKernel/GaudiException' />
       <import name='CLHEP/Geometry/Point3D' />
       <import name='CLHEP/Geometry/Vector3D' />
       &StlPtrVector;
 
       <constructor
-        desc    = 'Default constructor. State defined to be of type State::HasMomentum.' />
+        desc    = 'Default constructor' />
 
      <attribute
        type    = 'bitfield'
@@ -28,15 +29,8 @@
        init    = '0'
        access  = 'PROTECTED'>
        <bitfield
-         name      = 'type'
-         length    = '3'
-         desc      = 'state type'
-         setMeth   = 'TRUE'
-         getMeth   = 'TRUE'
-         checkMeth = 'FALSE' />
-       <bitfield
          name      = 'location'
-         length    = '10'
+         length    = '16'
          desc      = 'state location'
          setMeth   = 'TRUE'
          getMeth   = 'TRUE'
@@ -45,7 +39,7 @@
 
       <attribute
         type    = 'HepVector'
-        name    = 'state'
+        name    = 'stateVector'
         desc    = 'the state vector'
         setMeth = 'FALSE'
         access  = 'PROTECTED' />
@@ -71,7 +65,7 @@
         const   = 'TRUE'
         desc    = 'Retrieve the number of state parameters'>
         <code>
-  return (unsigned int) m_state.num_row();
+  return (unsigned int) m_stateVector.num_row();
         </code>
       </method>
 
@@ -107,7 +101,7 @@
         desc    = 'Retrieve the 3D-position vector of the state'
         const   = 'TRUE'>
         <code>
-  return HepPoint3D( m_state[0], m_state[1], m_z );
+  return HepPoint3D( m_stateVector[0], m_stateVector[1], m_z );
         </code>
       </method>
 
@@ -117,7 +111,7 @@
         const   = 'TRUE'
         desc    = 'Retrieve the x-position of the state'>
         <code>
-  return m_state[0];
+  return m_stateVector[0];
         </code>
       </method>
 
@@ -127,7 +121,7 @@
         const   = 'TRUE'
         desc    = 'Retrieve the y-position of the state'>
         <code>
-  return m_state[1];
+  return m_stateVector[1];
         </code>
       </method>
 
@@ -147,7 +141,7 @@
         const   = 'TRUE'
         desc    = 'Retrieve the slopes (Tx=dx/dz,Ty=dy/dz,1.) of the state'>
         <code>
-  return HepVector3D( m_state[2], m_state[3], 1.);
+  return HepVector3D( m_stateVector[2], m_stateVector[3], 1.);
         </code>
       </method>
 
@@ -157,7 +151,7 @@
         const   = 'TRUE'
         desc    = 'Retrieve the Tx=dx/dz slope of the state'>
         <code>
-  return m_state[2];
+  return m_stateVector[2];
         </code>
       </method>
 
@@ -167,7 +161,7 @@
         const   = 'TRUE'
         desc    = 'Retrieve the Ty=dy/dz slope of the state'>
         <code>
-  return m_state[3];
+  return m_stateVector[3];
         </code>
       </method>
 
@@ -320,21 +314,16 @@
       <method
         type    = 'State*'
         name    = 'clone'
-        desc    = 'Clone the state (you own the pointer)'
+        desc    = 'Clone the state (remember you then owe the pointer)'
         virtual = 'TRUE'
         const   = 'TRUE' />
-
-      <method
-        name    = 'reset'
-        desc    = 'Clear the state before re-using it'
-        virtual = 'TRUE' />
 
       <method
         name    = 'setState'
         argList = 'const HepVector state'
         desc    = 'Update the state vector'>
         <code>
-  m_state = state;
+  m_stateVector = state;
         </code>
       </method>
 
@@ -345,32 +334,15 @@
         virtual = 'TRUE' />
 
       <method
-        name    = 'setState'
-        argList = 'double x, double y, double z, double tx, double ty'
-        desc    = 'Update the state vector (presumably of type State::StraightLine)'>
-        <code>
-  m_state[0] = x;
-  m_state[1] = y;
-  m_state[2] = tx;
-  m_state[3] = ty;
-  m_z        = z;
-        </code>
-      </method>
-
-      <method
         name    = 'setCovariance'
         argList = 'HepSymMatrix value'
         desc    = 'Update the state covariance'>
         <code>
-  if ( value.num_row() == (int) nParameters() ) {
-    m_covariance = value;
-  }
-  else {
-    std::cerr &lt;&lt; "ERROR   The dimension of the covariance matrix does not match that of the state!"
-              &lt;&lt; "ERROR   Using the default covariance matrix." &lt;&lt; std::endl;
-    int dim = nParameters();
-    m_covariance = HepSymMatrix(dim,0);
-  }
+  if ( value.num_row() != (int) nParameters() )
+    throw GaudiException( &quot;The dimension of the covariance matrix does not match that of the State!&quot;,
+                          &quot;State.h&quot;,
+                          StatusCode::FAILURE );
+  m_covariance = value;
         </code>
       </method>
 
@@ -379,7 +351,7 @@
         argList = 'double value'
         desc    = 'Update the x-position of the state'>
         <code>
-  m_state[0] = value;
+  m_stateVector[0] = value;
         </code>
       </method>
 
@@ -388,7 +360,7 @@
         argList = 'double value'
         desc    = 'Update the y-position of the state'>
         <code>
-  m_state[1] = value;
+  m_stateVector[1] = value;
         </code>
       </method>
 
@@ -406,7 +378,7 @@
         argList = 'double value'
         desc    = 'Update the Tx slope of the state'>
         <code>
-  m_state[2] = value;
+  m_stateVector[2] = value;
         </code>
       </method>
 
@@ -415,7 +387,7 @@
         argList = 'double value'
         desc    = 'Update the Ty slope of the state'>
         <code>
-  m_state[3] = value;
+  m_stateVector[3] = value;
         </code>
       </method>
 
@@ -424,17 +396,6 @@
         argList = 'double value'
         desc    = 'Update the Q/P value of the state'
         virtual = 'TRUE' />
-
-      <method
-        type    = 'bool'
-        name    = 'checkType'
-        argList = 'unsigned int value'
-        desc    = 'check if the state is of this type'
-        const   = 'TRUE'>
-        <code>
-  return type() == value;
-        </code>
-      </method>
 
       <method
         type    = 'bool'

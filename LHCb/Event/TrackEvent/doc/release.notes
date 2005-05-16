@@ -4,6 +4,20 @@
 ! Purpose     : Package for the tracking event model classes
 !-----------------------------------------------------------------------------
 
+! 2005-05-16 - Eduardo Rodrigues
+ - Measurement class: inheritance from KeyedObject<int> removed
+ - changes to State class:
+   - no more "type" attribute
+     (StateKeys.h and related methods modified/removed)
+   - m_state attribute renamed to m_stateVector
+   - reset method removed
+ - changes to Node class:
+   - introduced explicit constructor from a State and a Measurement
+     (GOD still produces a default constructor - not yet possible
+      to avoid it!!!)
+   - inheritance from KeyedObject<int> removed
+   - setMeasurement method removed
+
 ! 2005-05-12 - Jose Hernando, Eduardo Rodrigues
  - States/Measurements ordered when added to the Track
  - TrackFunctor added
