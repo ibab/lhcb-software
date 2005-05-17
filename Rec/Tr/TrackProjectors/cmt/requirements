@@ -23,11 +23,10 @@ include_path      none
 #    Put as many lines as needed, with all packages, without the '#'
 #============================================================================
 use   GaudiAlg       v*
-use   LHCbInterfaces v1r*   Kernel
-use   TrackEvent     v1r*   Event
-use   TrackFitEvent  v1r*   Tr
+use   TrackEvent     v*   Event
+use   TrackFitEvent  v*   Tr
 
-use   OTDet          v5*    Det
+use   OTDet          v5r*    Det
 use   STDet          v1r*   Det
 #============================================================================
 # Component library building rule
