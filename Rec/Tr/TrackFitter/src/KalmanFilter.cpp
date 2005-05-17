@@ -1,4 +1,4 @@
-// $Id: KalmanFilter.cpp,v 1.1.1.1 2005-04-18 11:55:37 hernando Exp $
+// $Id: KalmanFilter.cpp,v 1.2 2005-05-17 12:38:58 hernando Exp $
 //
 //  Implementation of the KalmanFilter tool
 //

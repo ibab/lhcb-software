@@ -1,16 +1,16 @@
-// $Id: KalmanFilter.h,v 1.1.1.1 2005-04-18 11:55:37 hernando Exp $
+// $Id: KalmanFilter.h,v 1.2 2005-05-17 12:38:58 hernando Exp $
 #ifndef KALMANFILTER_H 
 #define KALMANFILTER_H 1
 
 // Include files
 // from Gaudi
 #include "GaudiAlg/GaudiTool.h"
-#include "TrackTools/IKalmanFilter.h"  
 #include "Event/Track.h"
 #include "Event/FitNode.h"
 
 #include "Tools/ITrackExtrapolator.h"            
 #include "Tools/ITrackProjector.h"
+#include "ITrackKalmanFilter.h"  
 
 /** @class KalmanFilter KalmanFilter.h
  *  
@@ -22,7 +22,7 @@
  *  @author Mattiew Needham 
  */
 
-class KalmanFilter : public GaudiTool, public IKalmanFilter {
+class KalmanFilter : public GaudiTool, public ITrackKalmanFilter {
 public: 
   /// Standard constructor
   KalmanFilter( const std::string& type, 
