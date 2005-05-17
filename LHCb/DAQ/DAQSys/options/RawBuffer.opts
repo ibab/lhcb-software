@@ -13,6 +13,7 @@ ApplicationMgr.DLLs += { "RichDAQ" };
 ApplicationMgr.DLLs += { "MuonDAQ" };
 
 // Set up the algorithms
+DataOnDemandSvc.Nodes += { "DATA='/Event/Raw' TYPE='DataObject'" };
 DataOnDemandSvc.Algorithms +=
   {
      "DATA='/Event/DAQ/RawEvent'       TYPE='CreateRawEvent'"
