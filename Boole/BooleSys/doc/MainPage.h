@@ -1,18 +1,21 @@
 /** \mainpage notitle
  *  \anchor booledoxygenmain
  *
- * This is the code reference manual for the Boole digization classes.
- *
- * These pages have been generated directly from the code and reflect the exact 
- * state of the software for this version of the BooleSys packages.
- *
- * \sa
- * \li <a href="../release.notes"><b>Boole release notes</b></a>
- * \li <a href="requirements-source.html"><b>List of BooleSys packages</b></a>
- * \li <a href="http://cern.ch/lhcb-comp/Digitization/"><b>Boole project Web pages</b></a><p>
- * \li \ref lbcomdoxygenmain "LbcomSys documentation (LHCb shared components)"
- * \li \ref lhcbdoxygenmain  "LHCbSys documentation (LHCb core classes)"
- * \li \ref gaudidoxygenmain "Gaudi documentation"
+ * <b>This reference manual contains classes specific to the Boole digization program.<p> 
+ * Other classes used by Boole are documented in the following reference manuals:</b>
+ * \li \ref lbcomdoxygenmain "LbcomSys documentation (LHCb packages shared with Reconstruction and Analysis)"
+ * \li \ref lhcbdoxygenmain  "LHCbSys documentation (LHCb core packages)"
+ * \li \ref gaudidoxygenmain "Gaudi documentation (Framework packages)"
  * \li \ref externaldocs     "Related external libraries"
+ *
+ * <hr>
+ * \htmlinclude new_release.notes
+ * <b>See also: </b><a href="_digi_content_8opts-source.html"><b>Digi content</b></a>, <a href="requirements-source.html"><b>Constituent packages</b></a><p>
+ * <hr>
+
+ * <b>Additional information:</b>
+ * \li <b>Boole User Guide</b> (<a href="../WebWorks/Boole.htm">html</a>,  <a href="../Boole.pdf">pdf</a>, <a href="../Boole-2up.ps">printable version</a>)
+ * \li <a href="http://cern.ch/lhcb-comp/Digitization/"><b>Boole project Web pages</b></a>
+ * \li <a href="../release.notes"><b>Release notes history</b></a>
 
  */
