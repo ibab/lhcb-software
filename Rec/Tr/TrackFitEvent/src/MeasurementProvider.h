@@ -1,4 +1,4 @@
-// $Id: MeasurementProvider.h,v 1.2 2005-04-14 17:50:24 hernando Exp $
+// $Id: MeasurementProvider.h,v 1.3 2005-05-17 10:00:24 erodrigu Exp $
 #ifndef MEASUREMENTPROVIDER_H 
 #define MEASUREMENTPROVIDER_H 1
 
@@ -38,12 +38,13 @@ public:
 
   StatusCode initialize();
 
-  StatusCode load();
+  void load();
 
-  Measurement& measurement(const LHCbID&, 
-                           double par = 999., double par = 999.);
+  StatusCode load( Track& track );  
 
-  StatusCode load(Track& track);  
+  Measurement& measurement( const LHCbID&, 
+                            double par0 = 999.,
+                            double par1 = 999.);
 
 protected:
 
@@ -56,11 +57,9 @@ protected:
   std::string   m_itDetPath;   ///< Name of the IT XML geom path
   std::string   m_veloDetPath;        ///< Name of the Velo XML geom path
 
-  OTTimes*   m_otTimes;
+  OTTimes*      m_otTimes;
   ITClusters*   m_itClusters;
   VeloClusters* m_veloClusters;
-
-  Measurements* m_meas;
 
   std::string m_measLocation;
   

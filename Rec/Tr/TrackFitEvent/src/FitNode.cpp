@@ -72,11 +72,11 @@ void FitNode::updatePredictedState( State* predictedState )
   }
   else{
     // get reference to the state vector and cov
-    HepVector& tX    = m_predictedState -> state();
+    HepVector& tX    = m_predictedState -> stateVector();
     HepSymMatrix& tC = m_predictedState -> covariance();
    
     //update 
-    tX = predictedState -> state();
+    tX = predictedState -> stateVector();
     tC = predictedState -> covariance();
 
   }
@@ -93,11 +93,11 @@ void FitNode::updateFilteredState( State* filteredState )
   }
   else{
     // get reference to the state vector and cov
-    HepVector& tX    = m_filteredState -> state();
+    HepVector& tX    = m_filteredState -> stateVector();
     HepSymMatrix& tC = m_filteredState -> covariance();
    
     //update 
-    tX = filteredState -> state();
+    tX = filteredState -> stateVector();
     tC = filteredState -> covariance();
 
   }
@@ -115,11 +115,11 @@ void FitNode::updateBestState( State* state )
   }
   else{
     // get reference to the state vector and cov
-    HepVector& tX    = m_state -> state();
+    HepVector& tX    = m_state -> stateVector();
     HepSymMatrix& tC = m_state -> covariance();
 
     //update 
-    tX = state -> state();
+    tX = state -> stateVector();
     tC = state -> covariance();
   }
 }

@@ -1,4 +1,4 @@
-// $Id: MeasurementProvider.cpp,v 1.3 2005-05-13 13:09:08 erodrigu Exp $
+// $Id: MeasurementProvider.cpp,v 1.4 2005-05-17 10:00:24 erodrigu Exp $
 // Include files 
 
 // from Gaudi
@@ -33,20 +33,24 @@ MeasurementProvider::MeasurementProvider( const std::string& type,
   declareInterface<MeasurementProvider>(this);
 
   declareProperty( "OTGeometryPath",
-                   m_otDetPath = "/dd/Structure/LHCb/Tracker/OT" );
+                   m_otDetPath = DeOTDetectorLocation::Default );
   declareProperty( "ITGeometryPath",
-                   m_itDetPath = "/dd/Structure/LHCb/Tracker/IT" );
+                   m_itDetPath = DeSTDetectorLocation::Default );
   declareProperty( "VeloGeometryPath",
                    m_otDetPath = "/dd/Structure/LHCb/Velo" );
 
   declareProperty( "MeasLocation" ,
                    m_measLocation = "/Event/Rec/Tr/Measurements" );
 }
+
 //=============================================================================
 // Destructor
 //=============================================================================
 MeasurementProvider::~MeasurementProvider() {};
 
+//=============================================================================
+// 
+//=============================================================================
 StatusCode MeasurementProvider::initialize() {
 
   m_otDet = getDet<DeOTDetector>( m_otDetPath );
@@ -58,21 +62,39 @@ StatusCode MeasurementProvider::initialize() {
   return StatusCode::SUCCESS;
 }
 
-StatusCode MeasurementProvider::load() {
-  
+//=============================================================================
+// 
+//=============================================================================
+void MeasurementProvider::load() {
+
   m_otTimes = get<OTTimes>( OTTimeLocation::Default );
 
   m_itClusters = get<ITClusters>( ITClusterLocation::Default );
 
   m_veloClusters = get<VeloClusters>( VeloClusterLocation::Default);
-
-  m_meas = new Measurements();
-  StatusCode sc = put(m_meas, m_measLocation );
-  return sc;
 } 
 
-Measurement& MeasurementProvider::measurement
-(const LHCbID& id, double par0, double par1) {
+//=============================================================================
+// 
+//=============================================================================
+StatusCode MeasurementProvider::load(Track& track) 
+{
+  const std::vector<LHCbID>& ids = track.lhcbIDs();
+  for (std::vector<LHCbID>::const_iterator it = ids.begin();
+       it != ids.end(); it++) {
+    const LHCbID& id = *it;
+    Measurement& meas = measurement(id);
+    track.addToMeasurements(meas, true);
+  }
+  return StatusCode::SUCCESS;
+}
+
+//=============================================================================
+// 
+//=============================================================================
+Measurement& MeasurementProvider::measurement ( const LHCbID& id,
+                                                double par0,
+                                                double par1 ) {
 
   // TODO first look if it is in the list already :)
   Measurement* meas = NULL;
@@ -102,8 +124,7 @@ Measurement& MeasurementProvider::measurement
   }
 
   if (meas != NULL) {
-    meas->setLhcbID(id);
-    m_meas->insert(meas);
+    //meas->setLhcbID(id);
   } else {
     error() << " not able to create measurement " << endreq;
   }
@@ -115,15 +136,4 @@ Measurement& MeasurementProvider::measurement
   return *meas;  
 }
 
-StatusCode MeasurementProvider::load(Track& track) 
-{
-  const std::vector<LHCbID>& ids = track.lhcbIDs();
-  for (std::vector<LHCbID>::const_iterator it = ids.begin();
-       it != ids.end(); it++) {
-    const LHCbID& id = *it;
-    Measurement& meas = measurement(id);
-    track.addToMeasurements(meas, true);
-  }
-  return StatusCode::SUCCESS;
-}
-
+//=============================================================================
