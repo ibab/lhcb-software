@@ -1,7 +1,11 @@
-! $Id: release.notes,v 1.54 2005-04-21 16:54:56 xieyu Exp $
+! $Id: release.notes,v 1.55 2005-05-17 19:11:12 xieyu Exp $
 ! Package     : DaVinciMCTools
 ! Responsible : P. Koppenburg
 !=============================================================================
+! 2005-05-17 - Yuehong Xie
+ - src/CheatedLifetimeFitter.cpp(.h)
+   . Algtool -> Gauditool
+   . adapt to new CLHEP to make it compile with DaVinci v13r1
 
 ! 2005-04-21 - Yuehong Xie
  - DaVinciMCTools/ICheatedLifetimeFitter.h

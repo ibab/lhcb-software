@@ -5,6 +5,9 @@
 #include "GaudiKernel/IAlgTool.h"
 
 // Forward declarations
+class MCVertex;
+class MCParticle;
+
 class Vertex;
 class Particle;
 class StatusCode;

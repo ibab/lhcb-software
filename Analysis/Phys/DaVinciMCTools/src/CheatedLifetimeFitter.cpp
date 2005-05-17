@@ -1,4 +1,4 @@
-// $Id: CheatedLifetimeFitter.cpp,v 1.1 2005-04-21 16:57:07 xieyu Exp $
+// $Id: CheatedLifetimeFitter.cpp,v 1.2 2005-05-17 19:11:12 xieyu Exp $
 
 // Include files from Gaudi
 #include "GaudiKernel/ToolFactory.h"
@@ -48,7 +48,7 @@ const IToolFactory& CheatedLifetimeFitterFactory = s_factory;
 CheatedLifetimeFitter::CheatedLifetimeFitter(const std::string& type, 
                                const std::string& name, 
                                const IInterface* parent) 
-  : AlgTool( type, name, parent )
+  : GaudiTool( type, name, parent )
 {
   declareInterface<ICheatedLifetimeFitter>(this);
   declareProperty( "MaxIter", m_maxIter = 10);
@@ -74,8 +74,7 @@ StatusCode CheatedLifetimeFitter::fit(const Vertex& productionVtx,
                                double& chisq) const
 {
 
-  MsgStream log(msgSvc(), name());
-  log << MSG::DEBUG << " lifetime fitter starting " << endmsg;
+  debug() << " lifetime fitter starting " << endmsg;
 
   // problem is parameterized by 7 parameters: v,p,tau
   HepVector p(7);
@@ -91,7 +90,7 @@ StatusCode CheatedLifetimeFitter::fit(const Vertex& productionVtx,
   double prev_chi_sq = 1.E20;
   for (unsigned i=0;i<m_maxIter&&!converged;++i) {
      double chi_sq = iterate( p, Cp, mass, O, W );
-     log<< MSG::DEBUG << " iteration " << i << " chisq: " << chi_sq << endmsg;
+     debug()  << " iteration " << i << " chisq: " << chi_sq << endmsg;
      if(chi_sq<-9999.) {
        converged=false;
        break;
@@ -103,7 +102,7 @@ StatusCode CheatedLifetimeFitter::fit(const Vertex& productionVtx,
      chisq = prev_chi_sq;
      lifetime = p[6];
      lifetimeError = sqrt(Cp[6][6]);
-     log << MSG::DEBUG << " found lifetime " << lifetime 
+     debug()  << " found lifetime " << lifetime 
          << " +- " << lifetimeError <<  "   ( " << prev_chi_sq << " ) " << endmsg;
 
      return StatusCode::SUCCESS;
@@ -117,11 +116,12 @@ CheatedLifetimeFitter::setup(const Particle& part, const Vertex& vert,
                       double &mass,
                       HepVector& p,HepVector& O, HepSymMatrix& W) const
 {
-  MsgStream log(msgSvc(), name());
 
   mass = part.mass();
   // initial guestimate of the 7 parameters:
-  const Hep3Vector& mom = part.momentum().vect();
+  const Hep3Vector& momV = part.momentum().vect();
+  const HepPoint3D mom(momV.x(),momV.y(),momV.z());
+
   const Vertex* decayVtx = part.endVertex();
   const HepPoint3D& decay = decayVtx->position();
   const HepPoint3D& production = vert.position();
@@ -154,8 +154,8 @@ CheatedLifetimeFitter::setup(const Particle& part, const Vertex& vert,
   int ier=0;
   W.invert(ier);
   if (ier!=0) {
-     log << MSG::ERROR << "could not invert matrix in CheatedLifetimeFitter::setup" << endmsg;
-     log << MSG::ERROR << "matrix W has determinant " << W.determinant() <<endmsg;
+     err() << "could not invert matrix in CheatedLifetimeFitter::setup" << endmsg;
+     err() << "matrix W has determinant " << W.determinant() <<endmsg;
   }
   return (ier==0);
 }
@@ -168,7 +168,6 @@ double
 CheatedLifetimeFitter::iterate(HepVector& p, HepSymMatrix& Cp, 
                         const double& mass,const HepVector& O, const HepSymMatrix& W)  const
 {
-  MsgStream log(msgSvc(), name());
   // [] start from [0], () start from (1)...
 
   HepVector R(9);
@@ -191,8 +190,8 @@ CheatedLifetimeFitter::iterate(HepVector& p, HepSymMatrix& Cp,
   int ier=0;
   Cp = DWD.inverse(ier);
   if (ier!=0) {
-     log << MSG::ERROR << "could not invert matrix in CheatedLifetimeFitter::iterate" << endmsg;
-     log << MSG::ERROR << "matrix DWD has determinant " << DWD.determinant() <<endmsg;
+     err() << "could not invert matrix in CheatedLifetimeFitter::iterate" << endmsg;
+     err() << "matrix DWD has determinant " << DWD.determinant() <<endmsg;
      return -999999.;
   }
 
@@ -216,8 +215,7 @@ StatusCode CheatedLifetimeFitter::fitWithMCPV(const MCVertex& productionVtx,
                                double& chisq) const
 {
 
-  MsgStream log(msgSvc(), name());
-  log << MSG::DEBUG << " lifetime fitter with MCPV starting " << endmsg;
+  debug() << " lifetime fitter with MCPV starting " << endmsg;
 
   // problem is parameterized by 4 parameters: p,tau
   HepVector p(4);
@@ -232,7 +230,7 @@ StatusCode CheatedLifetimeFitter::fitWithMCPV(const MCVertex& productionVtx,
   double prev_chi_sq = 1.E20;
   for (unsigned i=0;i<m_maxIter&&!converged;++i) {
      double chi_sq = iterateWithMCPV( p, Cp, mass, O, W );
-     log<< MSG::DEBUG << " iteration " << i << " chisq: " << chi_sq << endmsg;
+     debug() << " iteration " << i << " chisq: " << chi_sq << endmsg;
      if(chi_sq<-9999.) {
        converged=false;
        break;
@@ -244,7 +242,7 @@ StatusCode CheatedLifetimeFitter::fitWithMCPV(const MCVertex& productionVtx,
      chisq = prev_chi_sq;
      lifetime = p[3];
      lifetimeError = sqrt(Cp[3][3]);
-     log << MSG::DEBUG << " found lifetime with MC PV " << lifetime 
+     debug() << " found lifetime with MC PV " << lifetime 
          << " +- " << lifetimeError <<  "   ( " << prev_chi_sq << " ) " << endmsg;
 
      return StatusCode::SUCCESS;
@@ -262,11 +260,11 @@ CheatedLifetimeFitter::setupWithMCPV(const Particle& part, const MCVertex& vert,
                       double &mass,
                       HepVector& p,HepVector& O, HepSymMatrix& W) const
 {
-  MsgStream log(msgSvc(), name());
-
   mass = part.mass();
   // initial guestimate of the 4 parameters:
-  const Hep3Vector& mom = part.momentum().vect();
+  const Hep3Vector& momV = part.momentum().vect();
+  const HepPoint3D mom(momV.x(),momV.y(),momV.z());
+
   const Vertex* decayVtx = part.endVertex();
   const HepPoint3D& decay = decayVtx->position();
   const HepPoint3D& production = vert.position();
@@ -290,7 +288,7 @@ CheatedLifetimeFitter::setupWithMCPV(const Particle& part, const MCVertex& vert,
   int ier=0;
   W.invert(ier);
   if (ier!=0) {
-     log << MSG::ERROR << "could not invert matrix in LifetimeFitter::setupWithMCPV" << endmsg;
+     err() << "could not invert matrix in LifetimeFitter::setupWithMCPV" << endmsg;
   }
   return (ier==0);
 }
@@ -303,7 +301,6 @@ double
 CheatedLifetimeFitter::iterateWithMCPV(HepVector& p, HepSymMatrix& Cp, 
                         const double& mass,const HepVector& O, const HepSymMatrix& W)  const
 {
-  MsgStream log(msgSvc(), name());
   // [] start from [0], () start from (1)...
 
   HepVector R(6);
@@ -324,8 +321,8 @@ CheatedLifetimeFitter::iterateWithMCPV(HepVector& p, HepSymMatrix& Cp,
   int ier=0;
   Cp = DWD.inverse(ier);
   if (ier!=0) {
-     log << MSG::ERROR << "could not invert matrix in LifetimeFitter::iterateWithMCPV" << endmsg;
-     log << MSG::ERROR << "matrix DWD has determinant " << DWD.determinant() <<endmsg;
+     err() << "could not invert matrix in LifetimeFitter::iterateWithMCPV" << endmsg;
+     err() << "matrix DWD has determinant " << DWD.determinant() <<endmsg;
      return -999999.;
   }
 
@@ -349,8 +346,7 @@ StatusCode CheatedLifetimeFitter::fitWithMCVB(const Vertex& productionVtx,
                                double& chisq) const
 {
 
-  MsgStream log(msgSvc(), name());
-  log << MSG::DEBUG << " lifetime fitter with MCVB starting " << endmsg;
+  debug() << " lifetime fitter with MCVB starting " << endmsg;
 
   // problem is parameterized by 4 parameters: p,tau
   HepVector p(4);
@@ -365,7 +361,7 @@ StatusCode CheatedLifetimeFitter::fitWithMCVB(const Vertex& productionVtx,
   double prev_chi_sq = 1.E20;
   for (unsigned i=0;i<m_maxIter&&!converged;++i) {
      double chi_sq = iterateWithMCVB( p, Cp, mass, O, W );
-     log<< MSG::DEBUG << " iteration " << i << " chisq: " << chi_sq << endmsg;
+     debug() << " iteration " << i << " chisq: " << chi_sq << endmsg;
      if(chi_sq<-9999.) {
        converged=false;
        break;
@@ -377,7 +373,7 @@ StatusCode CheatedLifetimeFitter::fitWithMCVB(const Vertex& productionVtx,
      chisq = prev_chi_sq;
      lifetime = p[3];
      lifetimeError = sqrt(Cp[3][3]);
-     log << MSG::DEBUG << " found lifetime with MCB Vertex " << lifetime 
+     debug() << " found lifetime with MCB Vertex " << lifetime 
          << " +- " << lifetimeError <<  "   ( " << prev_chi_sq << " ) " << endmsg;
 
      return StatusCode::SUCCESS;
@@ -397,11 +393,10 @@ CheatedLifetimeFitter::setupWithMCVB(const Particle& part,
                       double &mass,
                       HepVector& p,HepVector& O, HepSymMatrix& W) const
 {
-  MsgStream log(msgSvc(), name());
-
   mass = part.mass();
   // initial guestimate of the 4 parameters:
-  const Hep3Vector& mom = part.momentum().vect();
+  const Hep3Vector& momV = part.momentum().vect();
+  const HepPoint3D mom(momV.x(),momV.y(),momV.z());
   const HepPoint3D& decay = mcpart.endVertices().front()->position();
   const HepPoint3D& production = vert.position();
   // [] start from [0], () start from (1)...
@@ -421,7 +416,7 @@ CheatedLifetimeFitter::setupWithMCVB(const Particle& part,
   int ier=0;
   W.invert(ier);
   if (ier!=0) {
-     log << MSG::ERROR << "could not invert matrix in LifetimeFitter::setupWithMCVB" << endmsg;
+     err() << "could not invert matrix in LifetimeFitter::setupWithMCVB" << endmsg;
   }
   return (ier==0);
 }
@@ -434,7 +429,6 @@ double
 CheatedLifetimeFitter::iterateWithMCVB(HepVector& p, HepSymMatrix& Cp, 
                         const double& mass,const HepVector& O, const HepSymMatrix& W)  const
 {
-  MsgStream log(msgSvc(), name());
   // [] start from [0], () start from (1)...
 
   HepVector R(6);
@@ -456,8 +450,8 @@ CheatedLifetimeFitter::iterateWithMCVB(HepVector& p, HepSymMatrix& Cp,
   int ier=0;
   Cp = DWD.inverse(ier);
   if (ier!=0) {
-     log << MSG::ERROR << "could not invert matrix in LifetimeFitter::iterateWithMCVB" << endmsg;
-     log << MSG::ERROR << "matrix DWD has determinant " << DWD.determinant() <<endmsg;
+     err() << "could not invert matrix in LifetimeFitter::iterateWithMCVB" << endmsg;
+     err() << "matrix DWD has determinant " << DWD.determinant() <<endmsg;
      return -999999.;
   }
 
@@ -481,8 +475,7 @@ StatusCode CheatedLifetimeFitter::fitWithMCPB(const Vertex& productionVtx,
                                double& chisq) const
 {
 
-  MsgStream log(msgSvc(), name());
-  log << MSG::DEBUG << " lifetime fitter with MCPB starting " << endmsg;
+  debug() << " lifetime fitter with MCPB starting " << endmsg;
 
   // problem is parameterized by 4 parameters: pv,tau
   HepVector p(4);
@@ -498,7 +491,7 @@ StatusCode CheatedLifetimeFitter::fitWithMCPB(const Vertex& productionVtx,
   double prev_chi_sq = 1.E20;
   for (unsigned i=0;i<m_maxIter&&!converged;++i) {
      double chi_sq = iterateWithMCPB( p, Cp, vmom, mass, O, W );
-     log<< MSG::DEBUG << " iteration " << i << " chisq: " << chi_sq << endmsg;
+     debug() << " iteration " << i << " chisq: " << chi_sq << endmsg;
      if(chi_sq<-9999.) {
        converged=false;
        break;
@@ -510,7 +503,7 @@ StatusCode CheatedLifetimeFitter::fitWithMCPB(const Vertex& productionVtx,
      chisq = prev_chi_sq;
      lifetime = p[3];
      lifetimeError = sqrt(Cp[3][3]);
-     log << MSG::DEBUG << " found lifetime with MCB momentum " << lifetime 
+     debug() << " found lifetime with MCB momentum " << lifetime 
          << " +- " << lifetimeError <<  "   ( " << prev_chi_sq << " ) " << endmsg;
 
      return StatusCode::SUCCESS;
@@ -531,12 +524,12 @@ CheatedLifetimeFitter::setupWithMCPB(const Particle& part,
                       double &mass,
                       HepVector& p,HepVector& O, HepSymMatrix& W) const
 {
-  MsgStream log(msgSvc(), name());
 
   mass = mcpart.virtualMass();
   vmom = mcpart.momentum().vect();
   // initial guestimate of the 4 parameters:
-  const Hep3Vector& mom = mcpart.momentum().vect();
+  const Hep3Vector& momV = part.momentum().vect();
+  const HepPoint3D mom(momV.x(),momV.y(),momV.z());
   const Vertex* decayVtx = part.endVertex();
   const HepPoint3D& decay = decayVtx->position();
   const HepPoint3D& production = vert.position();
@@ -557,7 +550,7 @@ CheatedLifetimeFitter::setupWithMCPB(const Particle& part,
   int ier=0;
   W.invert(ier);
   if (ier!=0) {
-     log << MSG::ERROR << "could not invert matrix in LifetimeFitter::setupWithMCPB" << endmsg;
+     err() << "could not invert matrix in LifetimeFitter::setupWithMCPB" << endmsg;
   }
   return (ier==0);
 }
@@ -571,7 +564,6 @@ CheatedLifetimeFitter::iterateWithMCPB(HepVector& p, HepSymMatrix& Cp,
                         const HepVector3D & vmom,
                         const double& mass,const HepVector& O, const HepSymMatrix& W)  const
 {
-  MsgStream log(msgSvc(), name());
   // [] start from [0], () start from (1)...
 
   HepVector R(6);
@@ -592,8 +584,8 @@ CheatedLifetimeFitter::iterateWithMCPB(HepVector& p, HepSymMatrix& Cp,
   int ier=0;
   Cp = DWD.inverse(ier);
   if (ier!=0) {
-     log << MSG::ERROR << "could not invert matrix in LifetimeFitter::iterateWithMCPB" << endmsg;
-     log << MSG::ERROR << "matrix DWD has determinant " << DWD.determinant() <<endmsg;
+     err() << "could not invert matrix in LifetimeFitter::iterateWithMCPB" << endmsg;
+     err() << "matrix DWD has determinant " << DWD.determinant() <<endmsg;
      return -999999.;
   }
 

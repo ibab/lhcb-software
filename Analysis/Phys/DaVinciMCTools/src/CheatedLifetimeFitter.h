@@ -1,4 +1,4 @@
-// $Id: CheatedLifetimeFitter.h,v 1.1 2005-04-21 16:57:07 xieyu Exp $
+// $Id: CheatedLifetimeFitter.h,v 1.2 2005-05-17 19:11:12 xieyu Exp $
 #ifndef CHEATEDLIFETIMEFITTER_H
 #define CHEATEDLIFETIMEFITTER_H 1
 
@@ -7,15 +7,16 @@
 #include <string>
 
 // Include files from Gaudi
-#include "GaudiKernel/AlgTool.h"
+#include "GaudiAlg/GaudiTool.h"
 
 #include "DaVinciMCTools/ICheatedLifetimeFitter.h"
 
-// Forward declarations
+#include "CLHEP/Matrix/Vector.h"
+#include "CLHEP/Matrix/Matrix.h"
+#include "CLHEP/Matrix/SymMatrix.h"
+#include "CLHEP/Matrix/DiagMatrix.h"
 
-class HepVector;
-class HepSymMatrix;
-
+#include "Event/MCParticle.h"
 
 /** @class CheatedLifetimeFitter CheatedLifetimeFitter.h 
  *  
@@ -28,7 +29,7 @@ class HepSymMatrix;
  *
 */
 
-class CheatedLifetimeFitter : public AlgTool,
+class CheatedLifetimeFitter : public GaudiTool,
                        virtual public ICheatedLifetimeFitter {
 
 public:
@@ -66,8 +67,8 @@ private:
   /// Private methods used in CheatedLifetimeFitter.
 
   bool setup(const Particle& part, const Vertex& vert, 
-             double &mass,
-             HepVector& p,HepVector& O, HepSymMatrix& W) const;
+             double& mass,
+             HepVector& p, HepVector& O, HepSymMatrix& W) const;
   /// Performs one iteration of fit;
   /// input is the previous estimate of the parameters
   /// output are the updated parameters, their covariance
@@ -76,7 +77,7 @@ private:
                  const double& mass, const HepVector& O, const HepSymMatrix& W) const;
 
   bool setupWithMCPV(const Particle& part, const MCVertex& vert,
-             double &mass,
+             double& mass,
              HepVector& p,HepVector& O, HepSymMatrix& W) const;
                                                                                 
   double iterateWithMCPV(HepVector &p, HepSymMatrix& Cp,
@@ -86,7 +87,7 @@ private:
   bool setupWithMCPB(const Particle& part, const MCParticle& mcpart,
              const Vertex& vert,
              HepVector3D & vmom,
-             double &mass,
+             double& mass,
              HepVector& p,HepVector& O, HepSymMatrix& W) const;
                                                                                 
   double iterateWithMCPB(HepVector &p, HepSymMatrix& Cp,
@@ -96,7 +97,7 @@ private:
 
   bool setupWithMCVB(const Particle& part, const MCParticle& mcpart,
              const Vertex& vert,
-             double &mass,
+             double& mass,
              HepVector& p,HepVector& O, HepSymMatrix& W) const;
                                                                                 
   double iterateWithMCVB(HepVector &p, HepSymMatrix& Cp,
