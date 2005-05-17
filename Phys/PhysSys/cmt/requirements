@@ -3,55 +3,65 @@ version v1r0
 
 branches doc cmt
 
+# nedit */*Sys/v*/cmt/requirements 
+
 #=======================================================
-# packages included in the DAVINCI tree
+use  PhysCoreSys                v1r0     Phys
 #=======================================================
-#-- HLT trigger
-use HltGeneric                  v2r4     Hlt
-use HltSelections               v3r1     Hlt
-use HltSelChecker               v3r1     Hlt
-
-# LoKi
-use  LoKi               	v3r11p1  Tools  
-use  LoKiHlt             	v2r1     Tools  
-use  LoKiGen             	v1r0     Tools  
-use  LoKiJets             	v1r0     Tools  
-use  KtJet	             	v1r0      
-
-# Generic Tools
-use  Utilities          	v2r0     Tools
-use  RecoTools                  v1r1     Rec
-
-# Physics packages
+# packages included in PhysCoreSys
+#=======================================================                                                                                                                                                                            
 use  CommonParticles    	v1r5p3   Phys
-use  DaVinciFilter      	v1r7     Phys 	
+use  DaVinciFilter      	v1r8     Phys 	
 use  DaVinciKernel      	v3r3p1   Phys 	
 use  DaVinciTools       	v11r8    Phys 	
 use  FlavourTagging     	v5r5p1   Phys
 use  Ks2PiPiSel         	v1r5     Phys 	
 use  ParticleMaker      	v1r4p1   Phys 	
 use  PhysSelections		v6r12    Phys 	  
-use  DaVinciTransporter 	v2r0p1   Phys 	
+use  DaVinciTransporter 	v2r0p2   Phys 	
 use  VertexFit			v1r6     Phys 	
 use  Tampering			v1r1p1   Phys 	
 
-# Physics MC packages
+# Generic Tools
+use  Utilities          	v2r0     Tools
+use  RecoTools                  v1r1     Rec
+
+#=======================================================
+use PhysMCSys                 v1r0     Phys
+#=======================================================
+# packages included in PhysMCSys
+#=======================================================
 use  DaVinciAssociators 	v5r4     Phys 	
 use  DaVinciEff         	v3r3     Phys 	
 use  DaVinciMCTools     	v5r10    Phys 	
 use  DaVinciTest        	v5r6     Phys 	
 use  DaVinciUser        	v5r2     Phys 	
 
-# Stripping
-use  Stripping        		v2r1     Tools 	
+#=======================================================
+use LoKiSys                     v1r0     Tools
+#=======================================================
+# packages included in LoKiSys
+#=======================================================
+use  LoKi               	v3r11p1  Tools  
+use  LoKiHlt             	v2r1     Tools  
+use  LoKiGen             	v1r0     Tools  
+use  LoKiJets             	v1r0     Tools  
+use  KtJet	             	v1r0      
 
-# Physics selections
-use  PhysSelSys			v8r1     PhysSel
+#=======================================================
+use HltSys                      v1r0     Hlt
+#=======================================================
+# packages included in HltSys
+#=======================================================
+use HltGeneric                  v2r4     Hlt
+use HltSelections               v3r1     Hlt
+use HltSelChecker               v3r1     Hlt
 
-#============================================================================
-# PhysSel
-#============================================================================
-
+#=======================================================
+use  PhysSelSys			v8r2     PhysSel
+#=======================================================
+# packages included in PhysSelSys	
+#=======================================================
 use  B2DstarX2D02hh     	v2r1p1   PhysSel
 use  B2HH              	        v2r5     PhysSel
 use  B2RhoRho           	v1r8p1   PhysSel
@@ -84,3 +94,6 @@ use  Gamma2ee           	v1r4p2   PhysSel
 use  Jpsi               	v1r1p1   PhysSel
 use  Muon               	v1r2     PhysSel
 use  TriggerSel               	v1r0     PhysSel
+
+# Stripping
+use  Stripping        		v2r2     Tools 	

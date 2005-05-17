@@ -3,21 +3,68 @@ Package     : PhysSys
 Package Coordinator : Patrick Koppenburg
 Purpose     : LHCb physics packages
 
-</PRE><H1><A NAME=v1r0>2005-04-20 Phys v1r0 - First version</A></H1><PRE>
+</PRE><H1><A NAME=v1r0>2005-05-17 Phys v1r0 - First version</A></H1><PRE>
 Result of new splitting into projects. Only Hlt/ Phys/ PhysSel/ and Tools/
-stay in this package. L0/ goes to Lbcom, Trg/, Rec/, Rich and Muon/ to Rec/.
+stay in this package. L0/ goes to Lbcom, Trg/, Rec/, Rich and Muon/ to Rec.
 
 ################################################################################
 #                                 PHYS v1r0                                    #
 ################################################################################
 ##################################### HLT ######################################
+!========================== HltSys v1r0 2005-05-17 ===================
+! 2005-05-17 - P. Koppenburg
+ - First import
 ##################################### PHYS #####################################
+!========================== PhysCoreSys v1r0 2005-05-17 ===================
+! 2005-05-17 - P. Koppenburg
+ - First import
+!========================== PhysMCSys v1r0 2005-05-17 ===================
+! 2005-05-17 - P. Koppenburg
+ - First import
+!========================== DaVinciAssociators v5r4 2005-05-17 ===================
+! 2005-05-09 - P. Koppenburg
+ - src/NeutralPP2MC.cpp
+   . Fix compilation warning
+! 2005-05-09 - Vanya BELYAEV
+ - src/NeutralPP2MC.cpp
+   1) remove associator-related properties and 
+      introduce the direct manupulations with relation table.
+   2) New property "MCCaloTable" is introduced,
+      the default value is "Rec/Relations/EcalClusters2MCParticles"
+      It is compatible with "old" (including RTTC) data 
+      For "new" data (DaVinci v14r*?)
+      (with new treatment of Calo->MC relations, 
+      the value of properties need to be set to 
+      "Rec/Relations/CaloClusters2MCParticles"
+   3) remove the bulk of debug/verbose printout 
+   4) few "cosmetic" changes 
+   5) Modify the treatment of invalid input: 
+       for missing container of protoparticles, the defualt policy of 
+       method GaudiAlgorithm::get is used (exception)
+   6) improve comments for Doxygen 
+  
+ - src/NeutralPP2MC.h - remove the file 
+ - cmt/requirements
+    version increment to v5r4 
+!========================= DaVinciTransporter v2r0p2 2005-05-17 ===================
+! 2005-04-21 - Yuehong Xie
+  -src/TrTransporter.cpp
+   . change the message level from err() to debug() when extrapolation of 
+     a state fails
+!=========================== Ks2PiPiSel v1r5 2005-05-13 ====================
+! 2005-05-13 - P. Koppenburg
+ - options/PreLoadPions.opts
+   . Remove all XXX.UseDownstream = true options that don't do anything
+     useful and are not understood by the latest Calo software anymore.
+
+ 
 #################################### PHYSSEL ###################################
+!========================== PhysSelSys v8r2 2005-05-17 ===================
+use  Stripping                v2r2     Tools
 ##################################### TOOLS ####################################
-
-
-
-
+!========================== LoKiSys v1r0 2005-05-17 ===================
+! 2005-05-17 - P. Koppenburg
+ - First import
 
 
 </PRE><H1><A NAME=v13r1>2005-04-20 DaVinci v13r1 - Version able to read RTTC data</A></H1><PRE>

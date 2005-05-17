@@ -1,5 +1,5 @@
 /** \mainpage notitle
- *  \anchor bruneldoxygenmain
+ *  \anchor physsysdoxygenmain
  *
  * This is the code reference manual for the Physics Analysis classes.
 
@@ -10,6 +10,7 @@
  * of the DaVinci project
  *
  * \sa
+ * \li <a href="../release.notes"><b>release notes</b></a>
  * \li \ref lhcbdoxygenmain  "LHCbSys documentation"
  * \li \ref gaudidoxygenmain "Gaudi documentation"
  * \li \ref externaldocs     "Related external libraries"
