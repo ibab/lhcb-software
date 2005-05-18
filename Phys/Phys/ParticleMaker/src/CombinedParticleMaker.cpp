@@ -1,4 +1,4 @@
-// $Id: CombinedParticleMaker.cpp,v 1.5 2005-05-18 12:45:02 jonrob Exp $
+// $Id: CombinedParticleMaker.cpp,v 1.6 2005-05-18 12:47:56 jonrob Exp $
 // Include files
 #include <algorithm>
 
@@ -88,7 +88,7 @@ StatusCode CombinedParticleMaker::initialize() {
 
   // intialize base class
   const StatusCode sc = GaudiTool::initialize();
-  if ( sc.isFailure() ) return Error( "Failed to intialize GaudiTool base class" );
+  if ( sc.isFailure() ) return Error( "Failed to initialize GaudiTool base class" );
 
   if( m_particleList.empty() ) {
     info() << "A list of particles types must be specified"
