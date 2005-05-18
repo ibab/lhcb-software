@@ -1,4 +1,4 @@
-// $Id: CombinedParticleMaker.cpp,v 1.6 2005-05-18 12:47:56 jonrob Exp $
+// $Id: CombinedParticleMaker.cpp,v 1.7 2005-05-18 13:24:05 jonrob Exp $
 // Include files
 #include <algorithm>
 
@@ -84,22 +84,22 @@ CombinedParticleMaker::~CombinedParticleMaker( ) { } ;
 //=============================================================================
 // Standard initialize method
 //=============================================================================
-StatusCode CombinedParticleMaker::initialize() {
+StatusCode CombinedParticleMaker::initialize()
+{
 
   // intialize base class
   const StatusCode sc = GaudiTool::initialize();
   if ( sc.isFailure() ) return Error( "Failed to initialize GaudiTool base class" );
 
-  if( m_particleList.empty() ) {
-    info() << "A list of particles types must be specified"
-           << endreq;
-    return StatusCode::FAILURE;
+  if( m_particleList.empty() ) 
+  {
+    return Error( "A list of particles types must be specified" );
   }
 
   IParticlePropertySvc* ppSvc = svc<IParticlePropertySvc>("ParticlePropertySvc", true);
-  if( !ppSvc ) {
-    fatal() << "Cannot retrieve ParticlePropertySvc" << endreq;
-    return StatusCode::FAILURE;
+  if( !ppSvc ) 
+  {
+    return Error( "Cannot retrieve ParticlePropertySvc" );
   }
 
   if( m_pionSelection.empty() ) {
@@ -113,9 +113,9 @@ StatusCode CombinedParticleMaker::initialize() {
       ++iPType;
     }
     const std::string lastPID = m_particleList.back();
-    if( makePion && ("PION" != to_upper(lastPID)) ) {
-      fatal() << "When PionSelections not specified pion must be last in list" << endreq;
-      return StatusCode::FAILURE;
+    if( makePion && ("PION" != to_upper(lastPID)) ) 
+    {
+      return Error( "When PionSelections not specified pion must be last in list");
     }
   }
 
@@ -154,15 +154,12 @@ StatusCode CombinedParticleMaker::initialize() {
       setSelections(selDescs, selSpecs);
     }
     else {
-      fatal() << "Unknown particle type" << endreq;
-      return StatusCode::FAILURE;
+      return Error( "Unknown particle type " + testPID );
     }
 
     partProp = ppSvc->find( temp );
     if( 0 == partProp ) {
-      fatal() << "Unknown property for particle type "
-              << temp << endreq;
-      return StatusCode::FAILURE;
+      return Error( "Unknown property for particle type " + temp );
     }
 
     //     SelectionType typeSel;
@@ -177,18 +174,18 @@ StatusCode CombinedParticleMaker::initialize() {
   // Retrieve the data service
   m_EDS = svc<IDataProviderSvc>("EventDataSvc", true);
   if( !m_EDS ) {
-    fatal() << "Unable to locate Event Data Service" << endreq;
-    return StatusCode::FAILURE;
+    return Error( "Unable to locate Event Data Service" );
   }
 
   // Log selection criteria
-  info() << "Selection of particle types have been set" << endreq;
-  info() << "Particle Type" << "     Criteria" << endreq;
+  info() << "Particle selection criteria :-" << endreq
+         << "Particle Type   Detector(s)           Criteria " << endreq;
   for( TypeSelections::const_iterator itype=m_typeSelections.begin();
        m_typeSelections.end()!=itype; ++itype ) {
     std::string ptype = ((*itype).first)->particle();
     partProp = ppSvc->findByStdHepID( -(((*itype).first)->jetsetID()) );
     if( partProp ) { ptype += "/"+partProp->particle(); }
+    ptype.resize(13,' ');
     info() << ptype << "   ";
     for( SelectionSpecs::const_iterator isel=((*itype).second).begin();
          ((*itype).second).end()!=isel; ++isel) {
@@ -196,7 +193,8 @@ StatusCode CombinedParticleMaker::initialize() {
       if( (*isel)->HasRich() ) det += "RICH ";
       if( (*isel)->HasCalo() ) det += "CALO ";
       if( (*isel)->HasMuon() ) det += "MUON ";
-      info() << det << "   ";
+      det.resize(20,' ');
+      info() << det << "  ";
       const std::vector<double>& cuts = (*isel)->dllCuts();
       for( unsigned int ipos = 0; ipos < cuts.size(); ++ipos ) {
         if( cuts[ipos] > -999.0 ) {
@@ -205,12 +203,11 @@ StatusCode CombinedParticleMaker::initialize() {
           info() << explanation << " > " << cuts[ipos] << "  ";
         }
       }
-      info() << std::endl;
     }
     info() << endreq;
   }
 
-  info() << "The type of tracks to be used are :";
+  info() << "The track types to be used are :";
   bool atLeastOneType = false;
   if( m_longTracks ) {
     info() << " Long";
@@ -225,9 +222,9 @@ StatusCode CombinedParticleMaker::initialize() {
     atLeastOneType = true;
   }
   info() << endreq;
-  if( !atLeastOneType ) {
-    err() << "At least one track type needs to be selected" << endreq;
-    return StatusCode::FAILURE;
+  if( !atLeastOneType ) 
+  {
+    return Error( "At least one track type needs to be selected" );
   }
 
   return sc;
