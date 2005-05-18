@@ -1,4 +1,4 @@
-// $Id: CombinedParticleMaker.h,v 1.3 2005-01-06 10:46:54 pkoppenb Exp $
+// $Id: CombinedParticleMaker.h,v 1.4 2005-05-18 14:00:19 pkoppenb Exp $
 #ifndef COMBINEDPARTICLEMAKER_H 
 #define COMBINEDPARTICLEMAKER_H 1
 
@@ -88,8 +88,6 @@ protected:
   double dllValue( const ProtoParticle* proto,
                    const ProtoParticle::detectorPID& det );
 
-  /// The standard event data service. Method not in IParticleMaker.h.
-  IDataProviderSvc* eventSvc() const;
 
 private:
 
@@ -132,8 +130,6 @@ private:
   
   /// List of particles to make with list of selections with related cuts
   TypeSelections m_typeSelections;
-
-  IDataProviderSvc* m_EDS;        ///<  Reference to Event Data Service
   
 };
 #endif // COMBINEDPARTICLEMAKER_H

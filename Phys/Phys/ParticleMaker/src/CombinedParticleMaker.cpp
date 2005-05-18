@@ -1,4 +1,4 @@
-// $Id: CombinedParticleMaker.cpp,v 1.8 2005-05-18 13:47:43 jonrob Exp $
+// $Id: CombinedParticleMaker.cpp,v 1.9 2005-05-18 14:00:19 pkoppenb Exp $
 // Include files
 #include <algorithm>
 
@@ -40,7 +40,6 @@ CombinedParticleMaker::CombinedParticleMaker( const std::string& type,
                                               const IInterface* parent )
   : GaudiTool ( type, name , parent )
   , m_typeSelections()
-  , m_EDS()
 {
 
   // Declaring implemented interfaces
@@ -169,12 +168,6 @@ StatusCode CombinedParticleMaker::initialize()
 
     ++aPID;
 
-  }
-
-  // Retrieve the data service
-  m_EDS = svc<IDataProviderSvc>("EventDataSvc", true);
-  if( !m_EDS ) {
-    return Error( "Unable to locate Event Data Service" );
   }
 
   // Log selection criteria
@@ -374,7 +367,7 @@ StatusCode CombinedParticleMaker::makeParticles( ParticleVector& parts ) {
   debug() << "CombinedParticleMaker::makeParticles()" << endreq;
 
   int nParticles = 0;   // Counter of particles created
-  ProtoParticles* protos = get<ProtoParticles>( eventSvc(), m_input );
+  ProtoParticles* protos = get<ProtoParticles>( m_input );
   if( !protos ) {
     return Error( "Charged ProtoParticles do not exist" );
   }
@@ -705,13 +698,4 @@ double CombinedParticleMaker::dllValue(const ProtoParticle* proto,
   }
   return value;
 }
-
-//=============================================================================
-// Pointer to the Event Data service
-//=============================================================================
-IDataProviderSvc* CombinedParticleMaker::eventSvc() const
-{
-  return m_EDS;
-}
-
 
