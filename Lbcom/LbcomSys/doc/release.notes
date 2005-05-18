@@ -7,9 +7,7 @@
 !-----------------------------------------------------------------------------
 
 </PRE><H1><A NAME=v2r0>2005-05-10 LbcomSys v2r0</A></H1><PRE>
-!===============================================================================
-! 2005-05-10 - Marco Cattaneo
- - Repackaging to create RecSys project
+ Repackaging to create RecSys project
  - Packages moved to RecSys: RichRecTools, RichRecMCTools, RichRecCommon,
                              RichRecQC, TrExtrapolator, CaloReco, CaloPIDs
  - Packages added:    ITAlgorithms, ITCheckers, L0Checker
