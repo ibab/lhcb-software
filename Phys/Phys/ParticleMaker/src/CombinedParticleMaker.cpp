@@ -1,4 +1,4 @@
-// $Id: CombinedParticleMaker.cpp,v 1.7 2005-05-18 13:24:05 jonrob Exp $
+// $Id: CombinedParticleMaker.cpp,v 1.8 2005-05-18 13:47:43 jonrob Exp $
 // Include files
 #include <algorithm>
 
@@ -376,12 +376,11 @@ StatusCode CombinedParticleMaker::makeParticles( ParticleVector& parts ) {
   int nParticles = 0;   // Counter of particles created
   ProtoParticles* protos = get<ProtoParticles>( eventSvc(), m_input );
   if( !protos ) {
-    err() << "Charged ProtoParticles do not exist" << endreq;
-    return StatusCode::FAILURE;
+    return Error( "Charged ProtoParticles do not exist" );
   }
   if( protos->empty() ) {
-    info() << "Charged ProtoParticles container is empty at " << m_input << endreq;
-    return StatusCode::SUCCESS;
+    return Warning( "Charged ProtoParticles container is empty at " + m_input,
+                    StatusCode::SUCCESS );
   }
 
   // Debug number of ProtoPartCandidates retrieved
