@@ -1,17 +1,19 @@
 /** \mainpage notitle
  *  \anchor recsysdoxygenmain
  *
- * This is the code reference manual for the LHCb reconstruction classes.
- *
- * These pages have been generated directly from the code and reflect the exact
- * state of the software for this version of the RecSys packages.
- *
- * \sa
- * \li <a href="../release.notes"><b>release notes</b></a>
- * \li <a href="requirements-source.html"><b>List of RecSys packages</b></a>
- * \li <a href="http://cern.ch/lhcb-comp/Reconstruction/"><b>Reconstruction applications Web pages</b></a><p>
+ * This is the code reference manual for the LHCb reconstruction classes. See:
+ * <a href="requirements-source.html"><b>RecSys constituent packages</b></a>
+ * <p><b>See also:</b>
  * \li \ref lhcbdoxygenmain  "LHCbSys documentation (LHCb core classes)"
- * \li \ref gaudidoxygenmain "Gaudi documentation"
+ * \li \ref gaudidoxygenmain "Gaudi documentation (Framework packages)"
  * \li \ref externaldocs     "Related external libraries"
+
+ * <hr>
+ * \htmlinclude new_release.notes
+ * <hr>
+ *
+ * <b>Additional information:</b>
+ * \li <a href="../release.notes"><b>Release notes history</b></a>
+ * \li <a href="http://cern.ch/lhcb-comp/Reconstruction/"><b>Reconstruction application Web pages</b></a><p>
 
  */
