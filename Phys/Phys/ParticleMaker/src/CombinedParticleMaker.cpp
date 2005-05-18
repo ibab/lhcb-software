@@ -1,5 +1,5 @@
-// $Id: CombinedParticleMaker.cpp,v 1.4 2005-03-11 13:49:35 pkoppenb Exp $
-// Include files 
+// $Id: CombinedParticleMaker.cpp,v 1.5 2005-05-18 12:45:02 jonrob Exp $
+// Include files
 #include <algorithm>
 
 // from Gaudi
@@ -19,7 +19,7 @@
 
 // Declaration of the Tool Factory
 static const  ToolFactory<CombinedParticleMaker>          s_factory ;
-const        IToolFactory& CombinedParticleMakerFactory = s_factory ; 
+const        IToolFactory& CombinedParticleMakerFactory = s_factory ;
 
 
 namespace
@@ -39,14 +39,14 @@ CombinedParticleMaker::CombinedParticleMaker( const std::string& type,
                                               const std::string& name,
                                               const IInterface* parent )
   : GaudiTool ( type, name , parent )
-    , m_typeSelections()
-   , m_EDS()
+  , m_typeSelections()
+  , m_EDS()
 {
 
   // Declaring implemented interfaces
   declareInterface<IParticleMaker>(this);
   declareProperty("InputProtoP", m_input =  ProtoParticleLocation::Charged);
-  
+
   m_particleList.push_back("muon");
   m_particleList.push_back("electron");
   m_particleList.push_back("kaon");
@@ -55,13 +55,13 @@ CombinedParticleMaker::CombinedParticleMaker( const std::string& type,
   declareProperty("Particles", m_particleList );
 
   declareProperty("ExclusiveSelection", m_exclusive = false );
-  
+
   m_muonSelection.push_back("det='MUON' mu-pi='-8.0'");
   declareProperty("MuonSelection", m_muonSelection );
 
   m_electronSelection.push_back("det='CALO' e-pi='0.0'");
   declareProperty("ElectronSelection", m_electronSelection );
-  
+
   m_kaonSelection.push_back("det='RICH' k-pi='2.0' k-p='-2.0'");
   declareProperty("KaonSelection", m_kaonSelection );
 
@@ -69,8 +69,8 @@ CombinedParticleMaker::CombinedParticleMaker( const std::string& type,
   declareProperty("ProtonSelection", m_protonSelection );
 
   m_pionSelection.clear();
-  declareProperty("PionSelection", m_pionSelection );  
- 
+  declareProperty("PionSelection", m_pionSelection );
+
   declareProperty("AddBremPhoton", m_addBremPhoton = true );
 
   declareProperty("UseLongTracks",     m_longTracks = true );
@@ -85,10 +85,14 @@ CombinedParticleMaker::~CombinedParticleMaker( ) { } ;
 // Standard initialize method
 //=============================================================================
 StatusCode CombinedParticleMaker::initialize() {
-  
+
+  // intialize base class
+  const StatusCode sc = GaudiTool::initialize();
+  if ( sc.isFailure() ) return Error( "Failed to intialize GaudiTool base class" );
+
   if( m_particleList.empty() ) {
-    info() << "A list of particles types must be specified" 
-        << endreq;
+    info() << "A list of particles types must be specified"
+           << endreq;
     return StatusCode::FAILURE;
   }
 
@@ -97,12 +101,12 @@ StatusCode CombinedParticleMaker::initialize() {
     fatal() << "Cannot retrieve ParticlePropertySvc" << endreq;
     return StatusCode::FAILURE;
   }
-  
+
   if( m_pionSelection.empty() ) {
     std::vector<std::string>::const_iterator iPType = m_particleList.begin();
     bool makePion = false;
     while( m_particleList.end() != iPType ) {
-      if( "PION" == to_upper( *iPType ) ) { 
+      if( "PION" == to_upper( *iPType ) ) {
         makePion = true;
         break;
       }
@@ -153,11 +157,11 @@ StatusCode CombinedParticleMaker::initialize() {
       fatal() << "Unknown particle type" << endreq;
       return StatusCode::FAILURE;
     }
-    
+
     partProp = ppSvc->find( temp );
     if( 0 == partProp ) {
-      fatal() << "Unknown property for particle type " 
-          << temp << endreq;
+      fatal() << "Unknown property for particle type "
+              << temp << endreq;
       return StatusCode::FAILURE;
     }
 
@@ -167,7 +171,7 @@ StatusCode CombinedParticleMaker::initialize() {
     m_typeSelections.push_back( std::make_pair( partProp, selSpecs ) );
 
     ++aPID;
-    
+
   }
 
   // Retrieve the data service
@@ -203,7 +207,7 @@ StatusCode CombinedParticleMaker::initialize() {
       }
       info() << std::endl;
     }
-    info() << endreq;  
+    info() << endreq;
   }
 
   info() << "The type of tracks to be used are :";
@@ -226,16 +230,15 @@ StatusCode CombinedParticleMaker::initialize() {
     return StatusCode::FAILURE;
   }
 
-  return StatusCode::SUCCESS;
-  
+  return sc;
 }
 
 //===========================================================================
 // Finalize
 //===========================================================================
 StatusCode CombinedParticleMaker::finalize() {
-  
-  debug() << "Delete selection criteria" << endreq;  
+
+  debug() << "Delete selection criteria" << endreq;
   // loop over m_typeSelections, pop back vector of selectionDesc
   // where new was done
   for( TypeSelections::iterator itype=m_typeSelections.begin();
@@ -247,7 +250,8 @@ StatusCode CombinedParticleMaker::finalize() {
     }
   }
 
-  return StatusCode::SUCCESS;
+  // finalize base class
+  return GaudiTool::finalize();
 }
 
 //===========================================================================
@@ -255,25 +259,25 @@ StatusCode CombinedParticleMaker::finalize() {
 //===========================================================================
 void CombinedParticleMaker::setSelections(const SelectionDescs& selDescriptions,
                                           SelectionSpecs& selections) {
-  
+
   for( SelectionDescs::const_iterator iDesc = selDescriptions.begin();
        iDesc != selDescriptions.end(); ++iDesc ) {
     PMakerSelection* selection = new PMakerSelection();
     defineSelection( *iDesc, selection );
     selections.push_back( selection );
   }
-  
+
 }
 
 //===========================================================================
 // Decode criteria for selection for a particle type
 //===========================================================================
-void CombinedParticleMaker::defineSelection(const std::string description, 
+void CombinedParticleMaker::defineSelection(const std::string description,
                                             PMakerSelection* selection ) {
-  
+
   Tokenizer tok;
   tok.analyse( description, " ", "", "", "=", "'", "'" );
-  for ( Tokenizer::Items::iterator i = tok.items().begin(); 
+  for ( Tokenizer::Items::iterator i = tok.items().begin();
         i != tok.items().end(); ++i )   {
     const std::string& tag   = to_upper((*i).tag());
     const std::string& value = (*i).value();
@@ -286,7 +290,7 @@ void CombinedParticleMaker::defineSelection(const std::string description,
     else if( "E-MU" == tag ) {
       (selection->dllCuts())[PMakerSelection::DLLE_MU] = atof(value.c_str());
     }
-    else if( "E-K" == tag ) { 
+    else if( "E-K" == tag ) {
       (selection->dllCuts())[PMakerSelection::DLLE_K] = atof(value.c_str());
     }
     else if( "E-P" == tag ) {
@@ -336,15 +340,15 @@ void CombinedParticleMaker::defineSelection(const std::string description,
     }
     else if( "PI-P" == tag ) {
       (selection->dllCuts())[PMakerSelection::DLLPI_P] = atof(value.c_str());
-    } 
+    }
   }
-} 
+}
 
 //===========================================================================
 // setDetectorFlags for one property
 //===========================================================================
 void CombinedParticleMaker::setDetectorFlag( const std::string detector,
-                                             PMakerSelection* selection ) {  
+                                             PMakerSelection* selection ) {
   switch( ::toupper(detector[0]) ) {
   case 'R':
     selection->setHasRich(true);
@@ -364,33 +368,33 @@ void CombinedParticleMaker::setDetectorFlag( const std::string detector,
   }
 }
 
- 
+
 //=============================================================================
 // Main execution
 //=============================================================================
 StatusCode CombinedParticleMaker::makeParticles( ParticleVector& parts ) {
-  
+
   debug() << "CombinedParticleMaker::makeParticles()" << endreq;
 
-  int nParticles = 0;   // Counter of particles created  
+  int nParticles = 0;   // Counter of particles created
   ProtoParticles* protos = get<ProtoParticles>( eventSvc(), m_input );
   if( !protos ) {
     err() << "Charged ProtoParticles do not exist" << endreq;
     return StatusCode::FAILURE;
   }
-  if( protos->empty() ) { 
+  if( protos->empty() ) {
     info() << "Charged ProtoParticles container is empty at " << m_input << endreq;
     return StatusCode::SUCCESS;
   }
-  
+
   // Debug number of ProtoPartCandidates retrieved
-  debug() << "Number of Charged ProtoParticles retrieved from " 
-      << m_input << " = " << protos->size() << endreq;
-  
+  debug() << "Number of Charged ProtoParticles retrieved from "
+          << m_input << " = " << protos->size() << endreq;
+
   // Now make Particles based on criterias
   // First loop on all ProtoParticles
   StatusCode sc = StatusCode::SUCCESS;
-  for( ProtoParticles::const_iterator iProto=protos->begin(); 
+  for( ProtoParticles::const_iterator iProto=protos->begin();
        protos->end()!=iProto; ++iProto ) {
 
     // check if the track type is to be used
@@ -421,7 +425,7 @@ StatusCode CombinedParticleMaker::makeParticles( ParticleVector& parts ) {
           Particle* aParticle = new Particle();
           sc = fillParticle( *iProto, (*iSel).first, aParticle );
           if( sc.isSuccess() ) {
-            debug() << "Making a " << ((*iSel).first)->particle() 
+            debug() << "Making a " << ((*iSel).first)->particle()
                     << " " << aParticle->particleID().pid() << endmsg ;
             parts.push_back(aParticle);
             ++nParticles;
@@ -453,19 +457,19 @@ StatusCode CombinedParticleMaker::makeParticles( ParticleVector& parts ) {
 
   return StatusCode::SUCCESS;
 }
- 
+
 //=========================================================================
 // Fill particles parameters
 //=========================================================================
 StatusCode CombinedParticleMaker::fillParticle( const ProtoParticle* proto,
-                                                const ParticleProperty* pprop, 
+                                                const ParticleProperty* pprop,
                                                 Particle* particle ) {
-// Check it is a Charged ProtoP hence TrStateP is accessible
+  // Check it is a Charged ProtoP hence TrStateP is accessible
 
   const TrStateP* trackState = proto->trStateP();
   if( !trackState ) return StatusCode::FAILURE;
   if ( proto->track()->isDownstream()) {
-//  New (PK): Use first measured point
+    //  New (PK): Use first measured point
     trackState = proto->firstMeasured();
   }
   // Start filling particle with orgininating ProtoParticle
@@ -475,8 +479,8 @@ StatusCode CombinedParticleMaker::fillParticle( const ProtoParticle* proto,
   int pID =  pprop->jetsetID() * (int)(proto->charge());
   particle->setParticleID( ParticleID( pID ) );
   double ve  = exp(dllValue( proto, ProtoParticle::LkhPIDe ));
-  double vmu = exp(dllValue( proto, ProtoParticle::LkhPIDmu )); 
-  double vk  = exp(dllValue( proto, ProtoParticle::LkhPIDK )); 
+  double vmu = exp(dllValue( proto, ProtoParticle::LkhPIDmu ));
+  double vk  = exp(dllValue( proto, ProtoParticle::LkhPIDK ));
   double vp  = exp(dllValue( proto, ProtoParticle::LkhPIDp ));
   double confLevel = 0.0;
   confLevel = 1./(1.+ve+vmu+vk+vp); // conf level for pion
@@ -502,20 +506,20 @@ StatusCode CombinedParticleMaker::fillParticle( const ProtoParticle* proto,
   // Set position of first measured point on track:
   HepPoint3D position( trackState->x(), trackState->y(), trackState->z() ) ;
   particle->setPointOnTrack( position );
-    
+
   // Calculate and set four momentum
   double momentum = trackState->p();
   //  int p10keV = (int)(momentumf*(MeV/(10*keV))+0.5); // HACK
   //  double momentum = (10*keV/MeV)*p10keV; // HACK
   //  debug() << "P = " << momentumf << " MeV becomes " << p10keV << " (10keV), becomes " << momentum << " MeV" << endmsg ;
   double slopeX   = trackState->tx();
-  double slopeY   = trackState->ty();	  
+  double slopeY   = trackState->ty();
 
   // If electron and Brem then add calohypothesis momentum
   if( ("e+" == pprop->particle()) && m_addBremPhoton ) {
     momentum += bremMomentum( proto );
   }
-  
+
   double pZ = momentum/sqrt( 1.0 + slopeX*slopeX + slopeY*slopeY );
   HepLorentzVector quadriMomentum;
   quadriMomentum.setPx( pZ*slopeX );
@@ -537,7 +541,7 @@ StatusCode CombinedParticleMaker::fillParticle( const ProtoParticle* proto,
   HepSymMatrix slpMomErr(3, 0);
   slpMomErr = trkCov.sub(3,5);
   particle->setSlopesMomErr(slpMomErr);
-  // Set position-slopes correlation matrix. 
+  // Set position-slopes correlation matrix.
   // Position X Momentum correlation matrix also automatically set.
   // No correlation with Z
   HepMatrix posSlopesCorr(3, 3, 0);
@@ -553,7 +557,7 @@ StatusCode CombinedParticleMaker::fillParticle( const ProtoParticle* proto,
   return StatusCode::SUCCESS;
 
 }
- 
+
 //============================================================================
 // get momentum of Brem photon
 //=============================================================================
@@ -567,7 +571,7 @@ double CombinedParticleMaker::bremMomentum( const ProtoParticle* proto ) {
   if( hypos.size() == 2 ){ /// the second hypo is the brem phot one
     SmartRefVector<CaloHypo>::const_reverse_iterator bremHypo = hypos.rbegin();
     SmartRefVector<CaloCluster> clusters = (*bremHypo)->clusters();
-        
+
     SmartRefVector<CaloCluster>::iterator icluster;
     for( icluster = clusters.begin() ;
          icluster != clusters.end()  ;
@@ -579,46 +583,46 @@ double CombinedParticleMaker::bremMomentum( const ProtoParticle* proto ) {
     if( 0 != caloMomentum ) {
       bremMom = caloMomentum->momentum().e();
     }
-  }  
+  }
 
   //double chi2Brem  = chi2BremMatch(*icand);
-  
+
   // inner part of ECAL
-//   if( (Xcluster<970.0) && (Ycluster<727.0) ){
-//     //    if ( chi2Brem <= m_CutOnChi2BremMatchIP ){
-//     bremMomentum = momentum;
-//   }
+  //   if( (Xcluster<970.0) && (Ycluster<727.0) ){
+  //     //    if ( chi2Brem <= m_CutOnChi2BremMatchIP ){
+  //     bremMomentum = momentum;
+  //   }
   // middle part of ECAL
-//   if( (Xcluster<1939.0) && (Ycluster<1212.0) ) {
-//     if ( (Xcluster<970.0) && (Ycluster<727.0) ) { /* do nothing */ }
-//     else {
-//       //if ( chi2Brem <= m_CutOnChi2BremMatchMP ) {
-//       //  m_4momOfBremPhot =  MomOfBremPhBremMatch(*icand);
-//         //}
-//       bremMomentum = momentum; 
-//     }
-//   }
-//   // outer part  
-//   if( (Xcluster<1939.0) && (Ycluster<1212.0) )
-//   else {
-// //     if ( chi2Brem <= m_CutOnChi2BremMatchOP ) {
-// //       m_4momOfBremPhot = MomOfBremPhBremMatch(*icand);
-// //     }
-//     bremMomentum = momentum; 
-//   }
+  //   if( (Xcluster<1939.0) && (Ycluster<1212.0) ) {
+  //     if ( (Xcluster<970.0) && (Ycluster<727.0) ) { /* do nothing */ }
+  //     else {
+  //       //if ( chi2Brem <= m_CutOnChi2BremMatchMP ) {
+  //       //  m_4momOfBremPhot =  MomOfBremPhBremMatch(*icand);
+  //         //}
+  //       bremMomentum = momentum;
+  //     }
+  //   }
+  //   // outer part
+  //   if( (Xcluster<1939.0) && (Ycluster<1212.0) )
+  //   else {
+  // //     if ( chi2Brem <= m_CutOnChi2BremMatchOP ) {
+  // //       m_4momOfBremPhot = MomOfBremPhBremMatch(*icand);
+  // //     }
+  //     bremMomentum = momentum;
+  //   }
   return bremMom;
 }
 
- 
+
 //===========================================================================
 // Check criteria are satified for a particular particle type
 //===========================================================================
 bool CombinedParticleMaker::selectionIsSatisfied(const ProtoParticle* proto,
                                                  const PMakerSelection* spec ) {
-  
+
   // Check that required detectors are present
   if( (spec->HasRich()) && !(proto->richBit()) ) {
-      return false;
+    return false;
   }
   if( (spec->HasCalo()) && !(proto->caloeBit()) ) {
     return false;
@@ -628,8 +632,8 @@ bool CombinedParticleMaker::selectionIsSatisfied(const ProtoParticle* proto,
   }
   // For required detectors check that cuts are satisfied
   double de_pi  = dllValue( proto, ProtoParticle::LkhPIDe );
-  double dmu_pi = dllValue( proto, ProtoParticle::LkhPIDmu ); 
-  double dk_pi  = dllValue( proto, ProtoParticle::LkhPIDK ); 
+  double dmu_pi = dllValue( proto, ProtoParticle::LkhPIDmu );
+  double dk_pi  = dllValue( proto, ProtoParticle::LkhPIDK );
   double dp_pi  = dllValue( proto, ProtoParticle::LkhPIDp );
 
   bool keep = true;
@@ -642,7 +646,7 @@ bool CombinedParticleMaker::selectionIsSatisfied(const ProtoParticle* proto,
   if( (dllCut > -999.0) && ((de_pi - dk_pi) < dllCut) )  { keep = false; }
   dllCut = (spec->dllCuts())[PMakerSelection::DLLE_P];
   if( (dllCut > -999.0) && ((de_pi - dp_pi) < dllCut) )  { keep = false; }
-  
+
   // muon vs other particles hypothesis
   dllCut = (spec->dllCuts())[PMakerSelection::DLLMU_PI];
   if( (dllCut > -999.0) && (dmu_pi < dllCut) )           { keep = false; }
@@ -662,7 +666,7 @@ bool CombinedParticleMaker::selectionIsSatisfied(const ProtoParticle* proto,
   if( (dllCut > -999.0) && ((dk_pi - dmu_pi) < dllCut) ) { keep = false; }
   dllCut = (spec->dllCuts())[PMakerSelection::DLLK_P];
   if( (dllCut > -999.0) && ((dk_pi - dp_pi) < dllCut) )  { keep = false; }
-  
+
   // proton vs other hypothesis
   dllCut = (spec->dllCuts())[PMakerSelection::DLLP_PI];
   if( (dllCut > -999.0) && (dp_pi < dllCut) )             { keep = false; }
@@ -672,7 +676,7 @@ bool CombinedParticleMaker::selectionIsSatisfied(const ProtoParticle* proto,
   if( (dllCut > -999.0) && ((dp_pi - dmu_pi) < dllCut) ) { keep = false; }
   dllCut = (spec->dllCuts())[PMakerSelection::DLLP_K];
   if( (dllCut > -999.0) && ((dp_pi - dk_pi) < dllCut) )  { keep = false; }
- 
+
   // pions vs other hypothesis
   dllCut = (spec->dllCuts())[PMakerSelection::DLLPI_E];
   if( (dllCut > -999.0) && ((-de_pi) < dllCut) )         { keep = false; }
@@ -685,17 +689,17 @@ bool CombinedParticleMaker::selectionIsSatisfied(const ProtoParticle* proto,
 
   return keep;
 }
- 
+
 
 //============================================================================
 // dllValue (similar to method in ProtoParticle but with reverse iterator
 //============================================================================
 double CombinedParticleMaker::dllValue(const ProtoParticle* proto,
                                        const ProtoParticle::detectorPID& det) {
-  
+
   verbose() << "dllValue" << endmsg ;
   double value = -999.0;
-  for( ProtoParticle::PIDDetVector::const_reverse_iterator 
+  for( ProtoParticle::PIDDetVector::const_reverse_iterator
          id = proto->pIDDetectors().rbegin();
        proto->pIDDetectors().rend() != id; ++id ) {
     if( det == (*id).first ) {
@@ -712,6 +716,6 @@ double CombinedParticleMaker::dllValue(const ProtoParticle* proto,
 IDataProviderSvc* CombinedParticleMaker::eventSvc() const
 {
   return m_EDS;
-} 
+}
 
-  
+

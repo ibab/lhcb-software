@@ -1,6 +1,10 @@
-! $Id: release.notes,v 1.14 2005-04-20 14:35:33 pkoppenb Exp $ 
+! $Id: release.notes,v 1.15 2005-05-18 12:44:54 jonrob Exp $ 
 ! Package     : ParticleMaker
 ! Responsible : P. Koppenburg
+
+! 2005-05-18 - Chris Jones
+ - Fix bug in CombinedParticleMaker by adding calls to GaudiTool::initialize()
+   and GaudiTool::finalize() which where missing.
 
 !========================== ParticleMaker v1r4p1 2005-04-20 ===================
 ! 2005-04-14 - P. Koppenburg
