@@ -1,7 +1,9 @@
-! $Id: release.notes,v 1.55 2005-05-17 19:11:12 xieyu Exp $
+! $Id: release.notes,v 1.56 2005-05-19 09:24:33 pkoppenb Exp $
 ! Package     : DaVinciMCTools
 ! Responsible : P. Koppenburg
 !=============================================================================
+
+!========================== DaVinciMCTools v5r11 2005-05-19 ===================
 ! 2005-05-17 - Yuehong Xie
  - src/CheatedLifetimeFitter.cpp(.h)
    . Algtool -> Gauditool
