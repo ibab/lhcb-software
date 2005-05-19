@@ -1,9 +1,14 @@
-! $Id: release.notes,v 1.67 2005-05-09 11:37:26 pkoppenb Exp $
+! $Id: release.notes,v 1.68 2005-05-19 08:34:55 phicharp Exp $
 !===================================================================================
 ! Package     : DaVinciAssociators
 ! Responsible : Philippe Charpentier
 !===================================================================================
 
+! 2005-05-19 - Ph.Charpentier
+ - src/Lib/Particle2MCLink.cpp
+   . Prevent adding /Particles to ProtoP containers
+ - cmt/requirements
+   . Go to v5r4p1
 ! 2005-05-09 - P. KOppenburg
  - src/NeutralPP2MC.cpp
    . Fix compilation warning
