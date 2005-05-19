@@ -40,6 +40,16 @@ Fixes a bug in DaVinciAssociators and takes some updates in selections
 ! 2005-05-18 - P. Koppenburg for Olivier Deschamps
   - src/*.cpp
     . Harder cuts
+!========================== Bd2PhisKs v4r3 2005-05-19 ===================
+! 2005-05-19 - Y. Xie
+ - options/PreselBd2PhiKs.opts
+   . comment "/Event/Phys/LVPhi2KK" as input and increase rejection rate
+     by %20 for DC04 v2 stripping. Long-VTT type phi will not be considered
+     becasue they produce poor B mass resolution and therefore make it difficult
+     to estimate S/B.
+   . VTT kaons and LV phi themselves are not disabled, so it will be possible to
+     enable using LV phi by uncomment "/Event/Phys/LVPhi2KK" in PreselBd2PhiKs.opts
+                                                                                                                                                              
 !========================== Bs2JpsiEta v4r0 2005-05-19 ===================
 ! 2005-05-18 - P. Koppenburg for Ben Carron
  - Total rewriting of the analysis.
@@ -79,6 +89,7 @@ Fixes a bug in DaVinciAssociators and takes some updates in selections
 
 !========================== PhysSelSys v8r3 2005-05-19 ===================
 use  B2RhoRho                 v1r9     PhysSel
+use  Bd2PhisKs                v4r3     PhysSel
 use  Bs2JpsiEta               v4r0     PhysSel
 use  Bs2PhiEtac               v3r1     PhysSel
 
