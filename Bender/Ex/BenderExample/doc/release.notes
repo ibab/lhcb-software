@@ -1,12 +1,27 @@
-! $Id: release.notes,v 1.6 2005-02-16 10:14:45 ibelyaev Exp $
+! $Id: release.notes,v 1.7 2005-05-19 17:36:54 ibelyaev Exp $
 ! -----------------------------------------------------------------------------
-! CVS tag $Name: not supported by cvs2svn $; version $Revision: 1.6 $
+! CVS tag $Name: not supported by cvs2svn $; version $Revision: 1.7 $
 ! -----------------------------------------------------------------------------
 ! Package     : Ex/BenderExample
 ! Responsible : Vanya  BELYAEV Ivan.Belyaev@itep.ru
 ! Purpose     : collection of examples to run Bender - 
 !             :                    -Python based physic sanalysis 
 ! -----------------------------------------------------------------------------
+
+! 2005-05-19 - Vanya BELYAEV
+
+- ATTENTION! 
+  for this particular version one *MUST* use the semantics:
+   
+      Bender.exe MyPythonScript.py 
+
+  The "normal" usage of python resutl in segmentation fault. 
+  ... due to timing I am not able to fix a problem ... 
+
+- *ONLY* Pi0.py and CaloMatch.py examples are tested.
+
+  
+  
 
 ! 2005-02-16 - Vanya  BELYAEV
  - add new algorihtms 

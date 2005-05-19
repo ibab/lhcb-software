@@ -1,9 +1,12 @@
 # =============================================================================
-# $Id: bendermodule.py,v 1.23 2005-03-04 19:30:43 ibelyaev Exp $ 
+# $Id: bendermodule.py,v 1.24 2005-05-19 17:33:48 ibelyaev Exp $ 
 # =============================================================================
 # CVS tag $NAme:$ 
 # =============================================================================
 # $Log: not supported by cvs2svn $
+# Revision 1.23  2005/03/04 19:30:43  ibelyaev
+#  v4r7: add possibility to deal with AlgTools
+#
 # Revision 1.22  2005/02/10 18:37:01  ibelyaev
 #  add new moduel bendermatrix
 #
@@ -81,6 +84,7 @@ import bendersmartrefs
 import bendermath
 import bendermatrix
 import benderconfig
+
 import benderrels 
 
 # =============================================================================

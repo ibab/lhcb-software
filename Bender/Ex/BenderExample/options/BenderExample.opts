@@ -1,6 +1,6 @@
-// $Id: BenderExample.opts,v 1.6 2005-01-24 17:33:00 ibelyaev Exp $ 
+// $Id: BenderExample.opts,v 1.7 2005-05-19 17:36:54 ibelyaev Exp $ 
 // ============================================================================
-// CVS version $Revision: 1.6 $ 
+// CVS version $Revision: 1.7 $ 
 // ============================================================================
 // CVS tag     $Name: not supported by cvs2svn $ 
 // ============================================================================
@@ -43,6 +43,20 @@ ApplicationMgr.EvtMax    = 500;
 EventSelector.FirstEvent = 1;
 EventSelector.PrintFreq  = 1;
 
+// #include "$DAVINCIASSOCIATORSROOT/options/DaVinciAssociators.opts"
+
+DataOnDemandSvc.Algorithms +=
+        { "DATA='/Event/Rec/Relations/ChargedPP2MC' 
+           TYPE='ChargedPP2MC/ChargedPP2MC'"}; 
+DataOnDemandSvc.Algorithms +=
+        { "DATA='/Event/Rec/Relations/NeutralPP2MC' 
+           TYPE='NeutralPP2MC/NeutralPP2MC'"}; 
+
+ToolSvc.NPPs2MCPs.Location             = "/Event/Rec/Relations/NeutralPP2MC" ;
+ToolSvc.NPPs2MCPs.AlgorithmType        = "" ;
+ToolSvc.NPPs2MCPs.AlgorithmName        = "" ;
+ToolSvc.ChargedPP2MCAsct.AlgorithmType = "" ;
+ToolSvc.ChargedPP2MCAsct.AlgorithmName = "" ;
 
 // ============================================================================
 // The END 

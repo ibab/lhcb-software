@@ -1,14 +1,19 @@
 <PRE>
 ! -----------------------------------------------------------------------------
-! $Id: release.notes,v 1.13 2005-02-10 18:37:01 ibelyaev Exp $
+! $Id: release.notes,v 1.14 2005-05-19 17:33:48 ibelyaev Exp $
 ! -----------------------------------------------------------------------------
-! CVS tag $Name: not supported by cvs2svn $ ; version $Revision: 1.13 $
+! CVS tag $Name: not supported by cvs2svn $ ; version $Revision: 1.14 $
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/Bender
 ! Responsible : Vanya BELYAEV Ivan.Belyaev@itep.ru
 ! Purpose     : The package is a result of "pythonization procedure"
 !                of the LoKi package
 ! -----------------------------------------------------------------------------
+
+! 2005-05-19 - Vanya BELYAEV
+ - "stripped" version of Bender
+    due to technical limitations a lot of stuff could nto be tested 
+
 
 ! 2005-02-10 - Vanya BELYAEV
  -  add new module bendrmatrix.py
