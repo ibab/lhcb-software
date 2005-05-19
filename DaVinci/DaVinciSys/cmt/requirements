@@ -148,7 +148,7 @@ use  Bd2DstarPi         	v2r7p2   PhysSel
 use  Bd2JpsiKs          	v2r6p1   PhysSel
 use  Bd2JpsiKstar       	v2r1p2   PhysSel
 use  Bd2MuMuKstar       	v2r3p1   PhysSel
-use  Bd2PhiKs           	v4r2p1   PhysSel
+use  Bd2PhiKs           	v4r3     PhysSel
 use  Bd2PiPiPi0         	v2r2p2   PhysSel
 use  Bd2a1Dstar         	v2r4     PhysSel
 use  Bc2RhoPi                   v1r0     PhysSel  
