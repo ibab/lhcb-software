@@ -3,6 +3,90 @@ Package     : Phys/DaVinci
 Package Coordinator : Patrick Koppenburg
 Purpose     : LHCb analysis program 
 
+</PRE><H1><A NAME=v12r11>2005-05-19 DaVinci v12r11 - Bug fix version</A></H1><PRE>
+Fixes a bug in DaVinciAssociators and takes some updates in selections
+
+#######################################MM#######################################
+#                               DAVINCI v12r11                                 #
+################################################################################
+###################################### L0 ######################################
+###################################### HLT #####################################
+##################################### PHYS #####################################
+!========================== DaVinciAssociators v5r4p1 2005-05-19 ===================
+! 2005-05-19 - Ph.Charpentier
+ - src/Lib/Particle2MCLink.cpp
+   . Prevent adding /Particles to ProtoP containers
+ - cmt/requirements
+   . Go to v5r4p1
+
+!========================== DaVinciMCTools v5r11 2005-05-19 ===================
+! 2005-05-17 - Yuehong Xie
+ - src/CheatedLifetimeFitter.cpp(.h)
+   . Algtool -> Gauditool
+   . adapt to new CLHEP to make it compile with DaVinci v13r1
+
+! 2005-04-21 - Yuehong Xie
+ - DaVinciMCTools/ICheatedLifetimeFitter.h
+ - src/CheatedLifetimeFitter.cpp(.h)
+   . new tool for direction fit with cheated primary vertex, B momentum or B vertex
+
+!========================== ParticleMaker v1r5 2005-05-19 ===================
+! 2005-05-18 - Chris Jones
+ - Fix bug in CombinedParticleMaker by adding calls to GaudiTool::initialize()
+   and GaudiTool::finalize() which where missing.
+
+#################################### PHYSSEL ###################################
+!========================== B2RhoRho v1r9 2005-05-19 ===================
+! 2005-05-18 - P. Koppenburg for Olivier Deschamps
+  - src/*.cpp
+    . Harder cuts
+!========================== Bs2JpsiEta v4r0 2005-05-19 ===================
+! 2005-05-18 - P. Koppenburg for Ben Carron
+ - Total rewriting of the analysis.
+ 
+!========================== Bs2PhiEtac v3r1 2005-05-19 ===================
+! 2005-05-13 - Luis Fernandez
+ - src
+   . Remove all obsolete TDR codes
+ - options
+   . Remove all obsolete TDR options
+ - options/TightCutsForPreselBs2PhiEtac.opts
+   . Tuning of tight cuts
+
+! 2005-04-28 - Luis Fernandez
+ - src/AnalyzeBs2PhiEtac.{h, cpp}
+   . Use CheatedLifetimeFitter
+
+! 2005-04-20 - Luis Fernandez
+ - cmt/requirements
+   . Use LoKi
+ - src/AnalyzeBs2PhiEtac.{h, cpp}
+   . New LoKi algorithm
+ - src/Bs2PhiEtac_load.cpp
+   . Load AnalyzeBs2PhiEtac
+
+! 2005-04-06 - Luis Fernandez
+ - options/TightCutsForPreselBs2PhiEtac.opts
+   . DLL cuts
+
+! 2005-04-04 - Luis Fernandez
+ - options
+   . Changes for DecayChainNTuple
+
+! 2005-03-29 - Luis Fernandez
+ - options
+   . Preliminary tuning, wild guess
+
+!========================== PhysSelSys v8r3 2005-05-19 ===================
+use  B2RhoRho                 v1r9     PhysSel
+use  Bs2JpsiEta               v4r0     PhysSel
+use  Bs2PhiEtac               v3r1     PhysSel
+
+#####################################  REC  ####################################
+##################################### RICH #####################################
+##################################### TOOLS ####################################
+###################################### TRG #####################################
+##################################### KTJET ####################################
 </PRE><H1><A NAME=v12r10>2005-05-12 DaVinci v12r10 - HLT release version</A></H1><PRE>
 First usable version of HLT available. Use HltFilter algorithm (in HltSelections)
 and HltScore class (in TrgEvent).
@@ -10,7 +94,7 @@ and HltScore class (in TrgEvent).
 #######################################MM#######################################
 #                               DAVINCI v12r10                                 #
 ################################################################################
-###################################### L0 #######################################
+###################################### L0 ######################################
 ###################################### HLT #####################################
 !========================== HltGeneric v2r4 2005-05-12 ===================
 ! 2005-05-10 - P. Koppenburg
