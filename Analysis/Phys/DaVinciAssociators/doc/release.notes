@@ -1,9 +1,10 @@
-! $Id: release.notes,v 1.69 2005-05-19 09:12:09 pkoppenb Exp $
+! $Id: release.notes,v 1.70 2005-05-19 09:23:45 pkoppenb Exp $
 !===================================================================================
 ! Package     : DaVinciAssociators
 ! Responsible : Philippe Charpentier
 !===================================================================================
 
+!========================== DaVinciAssociators v5r4p1 2005-05-19 ===================
 ! 2005-05-19 - Ph.Charpentier
  - src/Lib/Particle2MCLink.cpp
    . Prevent adding /Particles to ProtoP containers
