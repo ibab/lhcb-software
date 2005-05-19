@@ -64,6 +64,7 @@ use  MuonID             	v3r7p1   Muon
 #-- RICH Trigger libraries 
 use RichHLTSys                  v1r0p1   Rich
 use RichRecQC                   v1r10    Rich
+use RichTools                   v1r2p2 Rich
 
 # Final Reconstruction
 use  GlobalReco         	v4r8p1   Rec

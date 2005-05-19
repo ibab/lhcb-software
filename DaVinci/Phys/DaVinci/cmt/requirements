@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.253 2005-05-19 09:39:30 pkoppenb Exp $
+# $Id: requirements,v 1.254 2005-05-19 10:25:03 pkoppenb Exp $
 # Created    : 07/02/2002
 # Maintainer : P. Koppenburg
 #
@@ -37,7 +37,6 @@ use FieldMap            v*
 use ParamFiles          v*    -no_auto_imports
 
 # TMP:
-use RichTools           v1r2p2 Rich
 
 use LHCb                        v*  
 
@@ -105,6 +104,7 @@ use  MuonID             	v3r7p1   Muon
 #-- RICH Trigger libraries 
 use RichHLTSys                  v1r0p1   Rich
 use RichRecQC                   v1r10    Rich
+use RichTools                   v1r2p2 Rich
 
 # Final Reconstruction
 use  GlobalReco         	v4r8p1   Rec
