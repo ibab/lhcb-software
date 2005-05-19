@@ -44,8 +44,9 @@ PassedHlt.OutputLevel = 2 ;
 //--------------------------------------------------------------
 // Checking of HLT selections (correlations, plots, timing, test):
 // #include "$HLTSELCHECKERROOT/options/Correlations.opts"
+HltDecision.MakeCorrelations = true ;
 // #include "$HLTSELCHECKERROOT/options/Plots.opts"
-// #include "$HLTSELCHECKERROOT/options/MeasureTimes.opts"
+#include "$HLTSELCHECKERROOT/options/MeasureTimes.opts"
 // #include "$HLTSELCHECKERROOT/options/TestHltScore.opts"
 //--------------------------------------------------------------
 
@@ -71,5 +72,6 @@ MessageSvc.Format = "% F%40W%S%7W%R%T %0W%M";
 EventSelector.FirstEvent = 1;
 
 #include "$DAVINCIROOT/options/DaVinciTestData.opts"
-ApplicationMgr.EvtMax    = 10000 ;
+ApplicationMgr.EvtMax    = 100 ;
 EventSelector.PrintFreq  = 1;
+
