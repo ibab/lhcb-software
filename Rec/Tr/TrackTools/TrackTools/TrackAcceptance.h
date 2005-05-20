@@ -15,7 +15,7 @@
 #include "Event/MCVeloHit.h"
 
 // Associators
-#include "TrackTools/ITrackReconstructible.h"
+#include "TrackInterfaces/ITrackReconstructible.h"
 
 // Det
 #include "VeloDet/DeVelo.h"

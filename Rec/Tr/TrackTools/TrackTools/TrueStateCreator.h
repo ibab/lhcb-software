@@ -17,11 +17,9 @@
 // from LHCbKernel
 #include "Relations/IAssociator.h" 
 
-// from LHChInterfacces
-#include "Tools/ITrackExtrapolator.h"
-
-// from TrackTools
-#include "TrackTools/IStateCreator.h"
+// from TrackInterfacces
+#include "TrackInterfaces/ITrackExtrapolator.h"
+#include "TrackInterfaces/IStateCreator.h"
 
 class State;
 

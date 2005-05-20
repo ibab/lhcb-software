@@ -1,4 +1,4 @@
-// $Id: BIntegrator.h,v 1.1 2005-05-12 15:02:14 erodrigu Exp $
+// $Id: BIntegrator.h,v 1.2 2005-05-20 16:51:30 erodrigu Exp $
 #ifndef TRACKTOOLS_BINTEGRATOR_H 
 #define TRACKTOOLS_BINTEGRATOR_H 1
 
@@ -8,8 +8,8 @@
 #include "GaudiAlg/GaudiTool.h"
 #include "GaudiKernel/IMagneticFieldSvc.h"
 
-// local
-#include "TrackTools/IBIntegrator.h"            // Interface
+// from TrackInterfaces
+#include "TrackInterfaces/IBIntegrator.h"            // Interface
 
 /** @class BIntegrator BIntegrator.h TrackTools/BIntegrator.h
  *  
@@ -17,7 +17,8 @@
  *  @author Rutger Hierck
  *  @date   2002-05-28
  */
-class BIntegrator : public GaudiTool, virtual public IBIntegrator {
+class BIntegrator : public GaudiTool,
+                    virtual public IBIntegrator {
 public: 
   /// Standard constructor
   BIntegrator( const std::string& type, 

@@ -1,4 +1,4 @@
-// $Id: TrackPtKick.h,v 1.1 2005-05-13 12:57:52 erodrigu Exp $
+// $Id: TrackPtKick.h,v 1.2 2005-05-20 16:51:31 erodrigu Exp $
 #ifndef TRACKTOOLS_TRACKPTKICK_H 
 #define TRACKTOOLS_TRACKPTKICK_H 1
 
@@ -6,10 +6,10 @@
 // -------------
 // from Gaudi
 #include "GaudiAlg/GaudiTool.h"
-#include "ITrackPtKick.h"            // Interface
 
-// from TrackTools
-#include "TrackTools/IBIntegrator.h"
+// from TrackInterfaces
+#include "TrackInterfaces/ITrackPtKick.h"            // Interface
+#include "TrackInterfaces/IBIntegrator.h"
 
 /** @class TrackPtKick TrackPtKick.h TrackTools/TrackPtKick.h
  *  

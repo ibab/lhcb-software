@@ -2,7 +2,13 @@
 ! Package     : Tr/TrackTools
 ! Responsible : Jose Hernando, Eduardo Rodrigues
 ! Purpose     : Package for tracking tools
+
 !-----------------------------------------------------------------------------
+
+! 2005-05-20 - Eduardo Rodrigues
+ - all tool interfaces removed and put into the new package 
+   Tr/TrackInterfaces. Corresponding changes made to derived tools
+ - ClusterLHCbIDCnv tool removed as no longer needed
 
 ! 2005-05-13 - Jacopo Nardulli
  - ITrackPtKick.h interface and TrackPtKick tool added

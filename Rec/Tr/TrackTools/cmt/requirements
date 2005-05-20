@@ -29,11 +29,11 @@ use   OTEvent         v14r*    Event
 use   ITEvent         v13r*    Event
 use   VeloEvent       v13r*    Event
 
-use   LHCbInterfaces  v*    Kernel
+use   TrackInterfaces v*       Tr
 
-use   STDet           v1r*    Det
-use   OTDet           v5r*    Det
-use   VeloDet         v9r*    Det
+use   STDet           v1r*     Det
+use   OTDet           v5r*     Det
+use   VeloDet         v9r*     Det
 #============================================================================
 # Component library building rule
 #============================================================================

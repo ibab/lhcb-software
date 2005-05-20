@@ -8,9 +8,11 @@
 #include "Event/MCParticle.h"
 #include "Event/Track.h"
 
+// from TrackInterfaces
+#include "TrackInterfaces/ITrackSelector.h"
+
 // local
 #include "TrackTools/TrackAcceptance.h"
-#include "TrackTools/ITrackSelector.h"
 
 /** @class TrackSelector TrackSelector.h "TrackTools/TrackSelector.h"
  *
