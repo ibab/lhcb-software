@@ -4,7 +4,6 @@
 // Include files
 // -------------
 #include <functional>
-#include "Event/State.h"
 #include "Event/Track.h"
 
 /** @namespace TrackFunctor
@@ -55,6 +54,40 @@ namespace TrackFunctor
   };
   
 //=============================================================================
+// select T object close to z position
+//=============================================================================
+  template <class T>
+  class closestToZ {
+  private:
+    double m_z0;
+  public:
+    explicit closestToZ( double z0 = 0.):m_z0(z0) {}
+    const T* operator()( const T* t1,
+                         const T* t2 ) const
+    {
+      return (fabs(t1->z()-m_z0) < fabs(t2->z()-m_z0))? t1:t2;
+    }
+  };
+
+//=============================================================================
+// select T object close to plane position
+//=============================================================================
+  template <class T>
+  class closestToPlane {
+  private:
+    HepPlane3D m_plane;
+  public:
+    explicit closestToPlane(const HepPlane3D& plane):m_plane(plane) {}
+    const T* operator()( const T* t1,
+                         const T* t2 ) const
+    {
+      double d1 = fabs(m_plane.distance(t1->position()));
+      double d2 = fabs(m_plane.distance(t2->position()));
+      return (d1 < d2)? t1:t2;
+    }
+  };
+
+//=============================================================================
 // Class for sorting class T by z in order (+1/-1)
 //=============================================================================
   template <class T>
@@ -69,6 +102,7 @@ namespace TrackFunctor
       return (m_order)*t1->z() > (m_order)*t2->z();
     }
   };
+
 
 //=============================================================================
 // Class for sorting class T by increasing z
@@ -95,6 +129,36 @@ namespace TrackFunctor
       return t1->z() > t2->z();
     }
   };
+
+  template <class T>
+  class HasKey: public std::unary_function<T*, bool> {
+  public:
+    // A predicate (unary bool function):
+    // example:
+    // HasKey<Track> isBackward = 
+    // HasKey<Track>(&Track::checkFlag,TrackKeys::Backwards)
+    // if (isBackward(track)) ...
+    typedef bool (T::* ptr_memfun) (unsigned int) const;
+  private:
+    ptr_memfun m_pmf;
+    unsigned int m_key;
+  public:
+    explicit HasKey(ptr_memfun check, unsigned int key ):
+      m_pmf(check),m_key(key) {}
+    bool operator()( const T* t ) const 
+    {
+      return (t ->* m_pmf) (m_key);
+    }
+  };  
+
+  template <class T>
+  void deleteFromList(std::vector<T*>& List, T* value) 
+  {
+    typename std::vector<T*>::iterator it;
+    it = std::remove(List.begin(), List.end(), value );
+    delete *it;
+    List.erase( it, List.end() );
+  }
   
 }
 

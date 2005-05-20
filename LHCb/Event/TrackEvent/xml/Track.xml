@@ -147,9 +147,9 @@
         serialize = 'FALSE' />
 
       <method
-        type    = 'StatusCode'
+        type    = 'void'
         name    = 'positionAndMomentum'
-        desc    = 'Retrieve the position and momentum vectors and the corresponding 6D covariance matrix (pos:1->3,mom:4-6) at the physics state'
+        desc    = 'Retrieve the position and momentum vectors and the corresponding 6D covariance matrix (pos:1->3,mom:4-6) at the first state'
         const   = 'TRUE'>
         <arg type = 'HepPoint3D' name='pos' />
         <arg type = 'HepVector3D' name='mom' />
@@ -157,70 +157,100 @@
       </method>
 
       <method
-        type    = 'StatusCode'
+        type    = 'void'
         name    = 'positionAndMomentum'
-        desc    = 'Retrieve the position and momentum vectors at the physics state'
+        desc    = 'Retrieve the position and momentum vectors at the first state'
         const   = 'TRUE'>
         <arg type = 'HepPoint3D' name='pos' />
         <arg type = 'HepVector3D' name='mom' />
       </method>
 
       <method
-        type    = 'StatusCode'
+        type    = 'HepPoint3D'
         name    = 'position'
-        desc    = 'Retrieve the 3D-position (+ errors) at the physics state'
+        desc    = 'Retrieve the 3D-position vector of the state'
+        const   = 'TRUE'>
+        <code>
+   return firstState().position();
+        </code>
+      </method>
+
+      <method
+        type    = 'void'
+        name    = 'position'
+        desc    = 'Retrieve the 3D-position (+ errors) at the first state'
         const   = 'TRUE'>
         <arg type = 'HepPoint3D' name='pos' />
         <arg type = 'HepSymMatrix' name='errPos' />
       </method>
 
-      <method
-        type    = 'StatusCode'
+    <method
+        type    = 'HepVector3D'
         name    = 'slopes'
-        desc    = 'Retrieve the slopes (dx/dz,dy/dz,1) at the physics state'
+        const   = 'TRUE'
+        desc    = 'Retrieve the slopes (Tx=dx/dz,Ty=dy/dz,1.) of the state'>
+        <code>
+   return firstState().slopes();
+        </code>
+      </method>
+
+      <method
+        type    = 'void'
+        name    = 'slopes'
+        desc    = 'Retrieve the slopes (dx/dz,dy/dz,1) at the first state'
         const   = 'TRUE'>
         <arg type = 'HepVector3D' name='slopes' />
         <arg type = 'HepSymMatrix' name='errSlopes' />
       </method>
 
       <method
+        type    = 'HepVector3D'
+        name    = 'momentum'
+        const   = 'TRUE'
+        desc    = 'Retrieve the momentum vector of the state'>
+        <code>
+   return firstState().momentum();
+        </code>
+      </method>
+
+      <method
         type    = 'double'
         name    = 'p'
-        desc    = 'Retrieve the momentum at the physics state'
+        desc    = 'Retrieve the momentum at the first state'
         const   = 'TRUE' />
 
       <method
         type    = 'double'
         name    = 'pt'
-        desc    = 'Retrieve the transverse momentum at the physics state'
+        desc    = 'Retrieve the transverse momentum at the first state'
         const   = 'TRUE' />
 
       <method
-        type    = 'StatusCode'
+        type    = 'void'
         name    = 'momentum'
-        desc    = 'Retrieve the momentum vector (+ errors) at the physics state'
+        desc    = 'Retrieve the momentum vector (+ errors) at the first state'
         const   = 'TRUE'>
         <arg type = 'HepVector3D' name='mom' />
         <arg type = 'HepSymMatrix' name='errMom' />
       </method>
 
       <method
-        type    = 'StatusCode'
+        type    = 'void'
         name    = 'posMomCovariance'
-        desc    = 'Retrieve the 6D covariance matrix (x,y,z,px,py,pz) at the physics state'
+        desc    = 'Retrieve the 6D covariance matrix (x,y,z,px,py,pz) at the first state'
         const   = 'TRUE'>
         <arg type='HepSymMatrix' name='cov6D' />
       </method>
 
       <method
         type    = 'State &amp;'
-        name    = 'physicsState'
-        desc    = 'Retrieve the the physics state'
+        name    = 'firstState'
+        desc    = 'Retrieve the the first state'
         const   = 'TRUE'>
         <code>
-  // check at least the &quot;physics state&quot; exists
-  if ( NULL == m_states[0] )
-    throw GaudiException( &quot;Physics state not defined!&quot;,
+  // check at least the &quot;first state&quot; exists
+  if ( m_states.empty() )
+    throw GaudiException( &quot;first (first) state not defined!&quot;,
                           &quot;Track.h&quot;,
                           StatusCode::FAILURE );
   return *m_states[0];
@@ -233,7 +263,7 @@
         const   = 'TRUE'
         desc    = 'Retrieve the charge assigned to the track'>
         <code>
-  double qP = physicsState().qOverP();
+  double qP = firstState().qOverP();
   return ( qP != 0. ? int(fabs(qP)/qP) : 0 );
         </code>
       </method>
@@ -262,19 +292,12 @@
         name    = 'addToStates'
        desc    = 'Add a State to the list of states associated to the track'>
         <arg type = 'const State' name=' state' />
-        <arg type = 'bool' name='inOrder' />
       </method>
 
      <method
         name    = 'removeFromStates'
         desc    = 'Remove a State from the list of states associated to the track'
         argList = 'State* value'>
-        <code>
-  std::vector&lt;State*&gt;::iterator iter =
-    std::remove( m_states.begin(), m_states.end(), value );
-  delete *iter;
-  m_states.erase( iter, m_states.end() );
-        </code>
       </method>
 
       <method
@@ -337,28 +360,34 @@
         </code>
       </method>
 
+<!--
+      <method
+        type    = 'template &lt; class Pred &gt; unsigned int'
+        name    = 'nMeasurements'
+        desc    = 'number of measurements fulfiling a condition or predicate' 
+        const   = 'TRUE'>
+        <arg type = 'Pred' name='fun' />
+       <code>
+   return std::count_if(m_lhcbIDs.begin(),m_lhcbIDs.end(),fun);
+       </code>
+      </method>
+-->
+
       <method
         name    = 'addToMeasurements'
         desc    = 'add a measurement to the list associated to the track'>
         <arg type = 'const Measurement' name='meas' />
-        <arg type = 'bool' name='inOrder' />
       </method>
 
      <method
         name    = 'removeFromMeasurements'
         desc    = 'Remove a measurement from the list of measurements associated to the track'
         argList = 'Measurement* value'>
-        <code>
-  std::vector&lt;Measurement*&gt;::iterator iter =
-    std::remove( m_measurements.begin(), m_measurements.end(), value );
-  delete *iter;
-  m_measurements.erase( iter, m_measurements.end() );
-        </code>
       </method>
 
       <method
         name    = 'addToNodes'
-        desc    = 'add a Node to the list of nodes (nodes are own by Track)'>
+        desc    = 'add a Node to the list of nodes (note: Track will take the ownership of this pointer!!)'>
         <arg type = 'Node*' name='node' />
         <code>
   m_nodes.push_back( node );
@@ -369,12 +398,6 @@
         name    = 'removeFromNodes'
         desc    = 'Remove a Node from the list of nodes associated to the track'
         argList = 'Node* value'>
-        <code>
-  std::vector&lt;Node*&gt;::iterator iter =
-    std::remove( m_nodes.begin(), m_nodes.end(), value );
-  delete *iter;
-  m_nodes.erase( iter, m_nodes.end() );
-        </code>
       </method>
 
      <method
@@ -427,7 +450,7 @@
       <method
         type    = 'Track*'
         name    = 'clone'
-        desc    = 'Clone the track'
+        desc    = 'Clone the track (you take ownership of the pointer)'
 	virtual = 'TRUE'
         const   = 'TRUE' />
 

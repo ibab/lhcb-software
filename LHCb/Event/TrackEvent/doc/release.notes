@@ -4,8 +4,13 @@
 ! Purpose     : Package for the tracking event model classes
 !-----------------------------------------------------------------------------
 
+! 2005-05-20 - Jose A. Hernando
+	- in Track.xml, Track.cpp and TrackFunctor.h
+ 	methods returning unused StatusCode return now void
+  using internally algorithms and functions objects to loop and operate vectors
+	function objects added to TrackFunctor.h
+
 ! 2005-05-16 - Eduardo Rodrigues
- - keyedContTypeDef = 'TRUE' added to Measurement class definition
  - Measurement class: inheritance from KeyedObject<int> removed
  - changes to State class:
    - no more "type" attribute

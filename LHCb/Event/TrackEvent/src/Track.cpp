@@ -1,9 +1,10 @@
-// $Id: Track.cpp,v 1.8 2005-05-12 14:00:59 erodrigu Exp $ // Include files
+// $Id: Track.cpp,v 1.9 2005-05-20 15:57:46 hernando Exp $ // Include files
 
 // local
 #include "Event/Track.h"
 #include "Event/TrackKeys.h"
 #include "Event/TrackFunctor.h"
+#include <functional>
 
 //-----------------------------------------------------------------------------
 // Implementation file for class : Track
@@ -16,48 +17,40 @@
 // Retrieve the position and momentum vectors and the corresponding
 // 6D covariance matrix (pos:1->3,mom:4-6) at the physics state
 //=============================================================================
-StatusCode Track::positionAndMomentum( HepPoint3D &pos,
-                                       HepVector3D &mom,
-                                       HepSymMatrix &cov6D ) const
+void Track::positionAndMomentum( HepPoint3D &pos,
+                                 HepVector3D &mom,
+                                 HepSymMatrix &cov6D ) const
 {
-  physicsState().positionAndMomentum( pos, mom, cov6D );
-
-  return StatusCode::SUCCESS;
+  firstState().positionAndMomentum( pos, mom, cov6D );
 };
 
 //=============================================================================
 // Retrieve the position and momentum vectors at the physics state
 //=============================================================================
-StatusCode Track::positionAndMomentum( HepPoint3D &pos,
+void Track::positionAndMomentum( HepPoint3D &pos,
                                        HepVector3D &mom ) const
 {
-  physicsState().positionAndMomentum( pos, mom );
-
-  return StatusCode::SUCCESS;
+  firstState().positionAndMomentum( pos, mom );
 };
 
 //=============================================================================
 // Retrieve the 3D-position (+ errors) at the physics state
 //=============================================================================
-StatusCode Track::position( HepPoint3D &pos,
+void Track::position( HepPoint3D &pos,
                             HepSymMatrix &errPos ) const
 {
-  pos    = physicsState().position();
-  errPos = physicsState().errPosition();
-
-  return StatusCode::SUCCESS;
+  pos    = firstState().position();
+  errPos = firstState().errPosition();
 };
 
 //=============================================================================
 // Retrieve the slopes (dx/dz,dy/dz,1) at the physics state
 //=============================================================================
-StatusCode Track::slopes( HepVector3D &slopes,
+void Track::slopes( HepVector3D &slopes,
                           HepSymMatrix &errSlopes ) const
 {
-  slopes    = physicsState().slopes();
-  errSlopes = physicsState().errSlopes();
-
-  return StatusCode::SUCCESS;
+  slopes    = firstState().slopes();
+  errSlopes = firstState().errSlopes();
 };
 
 //=============================================================================
@@ -65,7 +58,7 @@ StatusCode Track::slopes( HepVector3D &slopes,
 //=============================================================================
 double Track::p() const
 {
-  return physicsState().p();
+  return firstState().p();
 };
 
 //=============================================================================
@@ -73,29 +66,25 @@ double Track::p() const
 //=============================================================================
 double Track::pt() const
 {
-  return physicsState().pt();
+  return firstState().pt();
 };
 
 //=============================================================================
 // Retrieve the momentum vector (+ errors) at the physics state
 //=============================================================================
-StatusCode Track::momentum( HepVector3D &mom,
+void Track::momentum( HepVector3D &mom,
                             HepSymMatrix &errMom ) const
 {
-  mom    = physicsState().momentum();
-  errMom = physicsState().errMomentum();
-
-  return StatusCode::SUCCESS;
+  mom    = firstState().momentum();
+  errMom = firstState().errMomentum();
 };
 
 //=============================================================================
 // Retrieve the 6D covariance matrix (x,y,z,px,py,pz) at the physics state
 //=============================================================================
-StatusCode Track::posMomCovariance( HepSymMatrix &cov6D ) const
+void Track::posMomCovariance( HepSymMatrix &cov6D ) const
 {
-  cov6D = physicsState().posMomCovariance();
-
-  return StatusCode::SUCCESS;
+  cov6D = firstState().posMomCovariance();
 };
 
 //=============================================================================
@@ -103,16 +92,13 @@ StatusCode Track::posMomCovariance( HepSymMatrix &cov6D ) const
 //=============================================================================
 State & Track::closestState( double z )
 {
-  double minDist = 999999999.;
-  State* best = 0;
-  for ( std::vector<State*>::iterator it = m_states.begin() ;
-        m_states.end() != it; it++ ) {
-    if ( minDist > fabs( z - (*it)->z() ) ) {
-      minDist = fabs( z-(*it)->z() );
-      best    = *it;
-    }
-  }
-  return *best;
+  std::vector<State*>::iterator iter = 
+    std::max_element(m_states.begin(),m_states.end(),
+                     TrackFunctor::closestToZ<State>(z));
+  if (iter == m_states.end())
+    throw GaudiException( "No state closest to z","Track.cpp",
+                          StatusCode::FAILURE );
+  return *(*iter);
 };
 
 //=============================================================================
@@ -120,16 +106,13 @@ State & Track::closestState( double z )
 //=============================================================================
 const State & Track::closestState( double z ) const
 {
-  double minDist = 999999999.;
-  State* best = 0;
-  for ( std::vector<State*>::const_iterator it = m_states.begin() ;
-        m_states.end() != it; it++ ) {
-    if ( minDist > fabs( z - (*it)->z() ) ) {
-      minDist = fabs( z-(*it)->z() );
-      best    = *it;
-    }
-  }
-  return *best;
+  std::vector<State*>::const_iterator iter = 
+    std::max_element(m_states.begin(),m_states.end(),
+                     TrackFunctor::closestToZ<State>(z));
+  if (iter == m_states.end())
+    throw GaudiException( "No state closest to z","Track.cpp",
+                          StatusCode::FAILURE );
+  return *(*iter);
 };
 
 //=============================================================================
@@ -137,18 +120,13 @@ const State & Track::closestState( double z ) const
 //=============================================================================
 State & Track::closestState( const HepPlane3D &plane )
 {
-  double minDist = 999999999.;
-  double dist;
-  State* best = 0;
-  for ( std::vector<State*>::iterator it = m_states.begin() ;
-        m_states.end() != it; it++ ) {
-    dist = plane.distance( ((*it) -> position()) );
-    if ( minDist > dist ) {
-      minDist = dist;
-      best    = *it;
-    }
-  }
-  return *best;
+  std::vector<State*>::iterator iter = 
+    std::max_element(m_states.begin(),m_states.end(),
+                     TrackFunctor::closestToPlane<State>(plane));
+  if (iter == m_states.end())
+    throw GaudiException( "No state closest to plane","Track.cpp",
+                          StatusCode::FAILURE );
+  return *(*iter);
 };
 
 //=============================================================================
@@ -156,18 +134,13 @@ State & Track::closestState( const HepPlane3D &plane )
 //=============================================================================
 const State & Track::closestState( const HepPlane3D &plane ) const
 {
-  double minDist = 999999999.;
-  double dist;
-  State* best = 0;
-  for ( std::vector<State*>::const_iterator it = m_states.begin() ;
-        m_states.end() != it; it++ ) {
-    dist = plane.distance( ((*it) -> position()) );
-    if ( minDist > dist ) {
-      minDist = dist;
-      best    = *it;
-    }
-  }
-  return *best;
+  std::vector<State*>::const_iterator iter = 
+    std::max_element(m_states.begin(),m_states.end(),
+                     TrackFunctor::closestToPlane<State>(plane));
+  if (iter == m_states.end())
+    throw GaudiException( "No state closest to plane","Track.cpp",
+                          StatusCode::FAILURE );
+  return *(*iter);
 };
 
 //=============================================================================
@@ -175,10 +148,12 @@ const State & Track::closestState( const HepPlane3D &plane ) const
 //=============================================================================
 bool Track::hasStateAt( unsigned int location ) const
 {
-  bool ok = false;
-  for (unsigned int i = 0 ; i < m_states.size(); i++)
-    if (m_states[i]-> checkLocation(location) ) return true;
-  return ok;
+  std::vector<State*>::const_iterator iter =
+    std::find_if(m_states.begin(),m_states.end(),
+                 std::bind2nd(std::mem_fun(&State::checkLocation),location));
+  // the last line should be equivalent to:
+  //             TrackFunctor::HasKey<State>(&State::checkLocation,location));
+  return (iter != m_states.end());
 };
 
 //=============================================================================
@@ -186,15 +161,14 @@ bool Track::hasStateAt( unsigned int location ) const
 //=============================================================================
 State& Track::stateAt( unsigned int location )
 {
-  if (!hasStateAt(location))
+  std::vector<State*>::iterator iter = 
+    std::find_if(m_states.begin(),m_states.end(),
+                 TrackFunctor::HasKey<State>(&State::checkLocation,location));
+  if (iter == m_states.end())
     throw GaudiException( "There is no state at requested location",
                           "Track.cpp",
                           StatusCode::FAILURE );
-  unsigned int index = 0;
-  for (unsigned int i = 0 ; i < m_states.size(); i++)
-    if (m_states[i]-> checkLocation(location) ) index = i;
-
-  return *m_states[index];
+  return *(*iter);
 };
 
 //=============================================================================
@@ -202,15 +176,14 @@ State& Track::stateAt( unsigned int location )
 //=============================================================================
 const State& Track::stateAt( unsigned int location ) const
 {
-  if (!hasStateAt(location))
+  std::vector<State*>::const_iterator iter = 
+    std::find_if(m_states.begin(),m_states.end(),
+                 TrackFunctor::HasKey<State>(&State::checkLocation,location));
+  if (iter == m_states.end())
     throw GaudiException( "There is no state at requested location",
                           "Track.cpp",
                           StatusCode::FAILURE );
-  unsigned int index = 0;
-  for (unsigned int i = 0 ; i < m_states.size(); i++)
-    if (m_states[i]-> checkLocation(location) ) index = i;
-  
-  return *m_states[index];
+  return *(*iter);
 };
 
 //=============================================================================
@@ -246,10 +219,10 @@ Track* Track::clone() const
   tr->setFlags( flags() );
   tr->setLhcbIDs( lhcbIDs() );
   for (std::vector<State*>::const_iterator it = m_states.begin();
-       it != m_states.end(); it++) tr->addToStates( *(*it), false );
+       it != m_states.end(); it++) tr->addToStates( *(*it));
   for (std::vector<Measurement*>::const_iterator it2 = m_measurements.begin();
        it2 != m_measurements.end(); it2++) 
-    tr->addToMeasurements( *(*it2), false );
+    tr->addToMeasurements( *(*it2) );
   for (std::vector<Node*>::const_iterator it3 = m_nodes.begin();
        it3 != m_nodes.end(); it3++) tr->addToNodes( (*it3)->clone() );
   for (std::vector<Track*>::const_iterator it4 = m_ancestors.begin();
@@ -261,11 +234,10 @@ Track* Track::clone() const
 // Clone the track
 //=============================================================================
 
-void Track::addToStates(const State& state, bool inOrder) 
+void Track::addToStates(const State& state) 
 {
   State* local = state.clone();
   m_states.push_back(local);
-  if (!inOrder) return;
   int order = checkFlag(TrackKeys::Backward) ? -1 : 1;
   std::vector<State*>::iterator i = 
     std::upper_bound(m_states.begin(),
@@ -274,11 +246,15 @@ void Track::addToStates(const State& state, bool inOrder)
                      TrackFunctor::orderByZ<State>(order));
   m_states.insert(i,local);    
 }
-void Track::addToMeasurements(const Measurement& meas, bool inOrder) 
+
+//=============================================================================
+void Track::addToMeasurements(const Measurement& meas) 
 {
+  const LHCbID& id = meas.lhcbID();
+  if (std::find(m_lhcbIDs.begin(),m_lhcbIDs.end(),id) == m_lhcbIDs.end())
+    addToLhcbIDs(id);
   Measurement* local = meas.clone();
   m_measurements.push_back(local);
-  if (!inOrder) return;
   int order = checkFlag(TrackKeys::Backward) ? -1 : 1;
   std::vector<Measurement*>::iterator i = 
     std::upper_bound(m_measurements.begin(),
@@ -289,3 +265,19 @@ void Track::addToMeasurements(const Measurement& meas, bool inOrder)
 }
 //=============================================================================
 
+void Track::removeFromMeasurements(Measurement* meas) 
+{
+  const LHCbID& id = meas->lhcbID();
+  removeFromLhcbIDs(id);
+  TrackFunctor::deleteFromList<Measurement>(m_measurements,meas);
+}
+
+void Track::removeFromNodes(Node* node) 
+{
+  TrackFunctor::deleteFromList<Node>(m_nodes,node);
+}
+
+void Track::removeFromStates(State* state) 
+{
+  TrackFunctor::deleteFromList<State>(m_states,state);
+}
