@@ -1,12 +1,15 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: benderstr.py,v 1.6 2005-03-04 19:30:43 ibelyaev Exp $ 
+# $Id: benderstr.py,v 1.7 2005-05-20 10:55:19 ibelyaev Exp $ 
 # =============================================================================
-# CVS version $Revision: 1.6 $ 
+# CVS version $Revision: 1.7 $ 
 # =============================================================================
 # CVS tag     $Name: not supported by cvs2svn $ 
 # =============================================================================
 # $Log: not supported by cvs2svn $
+# Revision 1.6  2005/03/04 19:30:43  ibelyaev
+#  v4r7: add possibility to deal with AlgTools
+#
 # Revision 1.5  2005/01/24 17:44:39  ibelyaev
 #  v4r5
 #

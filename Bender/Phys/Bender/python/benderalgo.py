@@ -1,12 +1,15 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: benderalgo.py,v 1.13 2005-03-04 19:30:43 ibelyaev Exp $ 
+# $Id: benderalgo.py,v 1.14 2005-05-20 10:55:19 ibelyaev Exp $ 
 # =============================================================================
-# CVS version $Revision: 1.13 $ 
+# CVS version $Revision: 1.14 $ 
 # =============================================================================
 # CVS tag     $Name: not supported by cvs2svn $ 
 # =============================================================================
 # $Log: not supported by cvs2svn $
+# Revision 1.13  2005/03/04 19:30:43  ibelyaev
+#  v4r7: add possibility to deal with AlgTools
+#
 # =============================================================================
 """
 The definition and implemenation of basic Bender' algorithm:

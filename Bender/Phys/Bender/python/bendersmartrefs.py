@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: bendersmartrefs.py,v 1.9 2005-03-04 19:30:43 ibelyaev Exp $ 
+# $Id: bendersmartrefs.py,v 1.10 2005-05-20 10:55:19 ibelyaev Exp $ 
 # =============================================================================
 # CVS tag $Name: not supported by cvs2svn $ version $Revison:$
 # =============================================================================
@@ -13,7 +13,7 @@ Helper module  to (re)define few sipmple methods for few useful event classes
 """
 # =============================================================================
 __author__  = "Vanya BELYAEV Ivan.Belyaev@itep.ru"
-__version__ = "CVS tag $Name: not supported by cvs2svn $ version: $Revision: 1.9 $ "
+__version__ = "CVS tag $Name: not supported by cvs2svn $ version: $Revision: 1.10 $ "
 # =============================================================================
 
 import gaudimodule

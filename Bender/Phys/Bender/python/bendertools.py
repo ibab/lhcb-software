@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: bendertools.py,v 1.2 2005-03-05 11:43:40 ibelyaev Exp $ 
+# $Id: bendertools.py,v 1.3 2005-05-20 10:55:19 ibelyaev Exp $ 
 # =============================================================================
 # CVS tag $Name: not supported by cvs2svn $ version $Revison:$
 # =============================================================================
@@ -13,7 +13,7 @@ Helper module  to locate/cast to different tools
 """
 # =============================================================================
 __author__  = "Vanya BELYAEV Ivan.Belyaev@itep.ru"
-__version__ = "CVS tag $Name: not supported by cvs2svn $ version: $Revision: 1.2 $ "
+__version__ = "CVS tag $Name: not supported by cvs2svn $ version: $Revision: 1.3 $ "
 # =============================================================================
 
 import gaudimodule

@@ -1,10 +1,13 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: bendermcparticlecuts.py,v 1.5 2005-02-02 19:15:10 ibelyaev Exp $ 
+# $Id: bendermcparticlecuts.py,v 1.6 2005-05-20 10:55:19 ibelyaev Exp $ 
 # =============================================================================
-# CVS tag $Name: not supported by cvs2svn $ ; version $Revision: 1.5 $
+# CVS tag $Name: not supported by cvs2svn $ ; version $Revision: 1.6 $
 # =============================================================================
 # $Log: not supported by cvs2svn $
+# Revision 1.5  2005/02/02 19:15:10  ibelyaev
+#  add new functions
+#
 # Revision 1.4  2004/08/26 19:34:36  ibelyaev
 #  remove explict PyLCGDict
 #

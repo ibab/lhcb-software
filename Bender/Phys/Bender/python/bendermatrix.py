@@ -1,8 +1,8 @@
 #!/usr/bin/env
 # =============================================================================
-# $Id: bendermatrix.py,v 1.1 2005-02-10 18:37:01 ibelyaev Exp $
+# $Id: bendermatrix.py,v 1.2 2005-05-20 10:55:19 ibelyaev Exp $
 # =============================================================================
-# CVS tag $Name: not supported by cvs2svn $ ; version $Revision: 1.1 $
+# CVS tag $Name: not supported by cvs2svn $ ; version $Revision: 1.2 $
 # =============================================================================
 """
 Trivial module to make a some adaptation for CLHEP 'Matrix'-like classes
