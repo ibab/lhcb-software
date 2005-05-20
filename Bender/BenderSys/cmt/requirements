@@ -1,6 +1,6 @@
-# $Id: requirements,v 1.60 2005-05-20 10:56:33 ibelyaev Exp $ 
+# $Id: requirements,v 1.61 2005-05-20 11:40:33 ibelyaev Exp $ 
 # =============================================================================
-# CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.60 $
+# CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.61 $
 # =============================================================================
 # The management of the content of BENDER project:
 #                 LHCb Physics Analysis with Python  
@@ -32,7 +32,7 @@ use           BenderTest     v4r6   Tests
 use           LoKiTest       v3r9   Tests 
 # =========== examples of usage of Bender "in practice" =======================
 use           BenderExample  v4r7   Ex  
-use           LoKiExample    v3r10  Ex 
+use           LoKiExample    v3r12  Ex 
 # =========== Test suit for Bender ============================================
 use           BenderVis      v4r5   Vis 
 # =========== empty 'user' package ============================================
