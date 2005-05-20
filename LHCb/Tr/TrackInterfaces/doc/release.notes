@@ -1,0 +1,14 @@
+!-----------------------------------------------------------------------------
+! Package     : Tr/TrackInterfaces
+! Responsible : Jose Hernando, Eduardo Rodrigues
+! Purpose     : package for tracking tools interfaces
+!-----------------------------------------------------------------------------
+
+! 2005-05-20 - Jose Hernando, Eduardo Rodrigues
+ - creation of the package:
+    - moved from Kernel/LHCbInterfaces:
+      interfaces for the track extrapolators (ITrackExtrapolator.h)
+      and track projectors (ITrackProjector.h) added
+    - moved from Tr/TrackTools:
+      IBIntegrator.h, IStateCreator.h, ITrackPtKick.h,
+      ITrackReconstructible.h, ITrackSelector.h
