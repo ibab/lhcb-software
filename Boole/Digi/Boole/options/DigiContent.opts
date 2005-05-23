@@ -19,12 +19,9 @@ DigiWriter.ItemList =
 , "/Event/DAQ/RawBuffer#1"
 , "/Event/Gen#1"
 , "/Event/Gen/Header#1"
-, "/Event/Gen/Collisions#1"
 , "/Event/Gen/HepMCEvents#1"
 , "/Event/Gen/HardProcesses#1"
 , "/Event/MC#1"
-, "/Event/MC/Particles#1"
-, "/Event/MC/Vertices#1"
 , "/Event/MC/MCTrackInfo#1"
 , "/Event/MC/Velo#1"
 , "/Event/MC/Velo/Hits#1"
@@ -54,10 +51,6 @@ DigiWriter.ItemList =
 , "/Event/Trig/L0/Muon#1"
 , "/Event/Trig/L0/PuVeto#1"
 , "/Event/Trig/L0/Decision#1" 
-  // Keep directory nodes, to avoid loading them when recreating digits 
-, "/Event/Raw#2"
-, "/Event/Rec#1"
-, "/Event/Rec/Relations#1"
 , "/Event/MC/Rich/Digits#1" // Single hop to MCHit, instead of relations
 , "/Event/MC/Muon/Digits#1" // Single hop to MCHit, instead of relations
 , "/Event/Link#1"
@@ -77,4 +70,12 @@ DigiWriter.ItemList =
 , "/Event/Link/ITDigits2MCHits#1"
 , "/Event/Link/OTTimes2MCHits#1"
 , "/Event/Link/VeloClusters2MCHits#1"
+};
+
+// Write some classes in compressed format
+ApplicationMgr.DLLs += { "Rdst" };
+Output.DetectorList += { "Pack" };
+OutputPackSeq.Members += { "PackCollision", "PackMCParticle", "PackMCVertex" };
+DigiWriter.ItemList += { 
+, "/Event/Rdst#2"
 };

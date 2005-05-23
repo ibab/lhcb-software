@@ -16,6 +16,10 @@ ApplicationMgr.DLLs += { "GaudiAlg", "LHCbAlgs" };
 EventDataSvc.ForceLeaves = true;
 EventDataSvc.RootCLID    =    1;
 
+// Configure the DataOnDemand Service
+ApplicationMgr.ExtSvc += { "DataOnDemandSvc" };
+EventDataSvc.EnableFaultHandler = true ;
+
 // Objects to be written to output file
 #include "$BOOLEOPTS/DigiContent.opts"
 
@@ -26,7 +30,8 @@ ApplicationMgr.TopAlg += { "ProcessPhase/Init",
                            "ProcessPhase/Digi",
                            "ProcessPhase/Trigger",
                            "ProcessPhase/Relations", 
-                           "ProcessPhase/Moni" }; 
+                           "ProcessPhase/Moni",
+                           "ProcessPhase/Output" };
 #include "$BOOLEOPTS/BooleMoni.opts"
 
 //--------------------------------------------------------------
@@ -141,9 +146,6 @@ DigiVELOSeq.Members += { "PrepareVeloRawBuffer" };
 //--------------------------------------------------------------
 // Relations to MC truth. Built unconditionally regardless of monitoring
 //--------------------------------------------------------------
-// Configure the DataOnDemand Service
-ApplicationMgr.ExtSvc += { "DataOnDemandSvc" };
-EventDataSvc.EnableFaultHandler = true ;
 DataOnDemandSvc.Nodes += { "DATA='/Event/Rec'           TYPE='DataObject'",
                            "DATA='/Event/Rec/Relations' TYPE='DataObject'" };
 
