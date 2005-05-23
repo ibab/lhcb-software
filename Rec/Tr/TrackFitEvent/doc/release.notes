@@ -4,6 +4,9 @@
 ! Purpose     : Package for the tracking fitting-related classes
 !-----------------------------------------------------------------------------
 
+! 2005-05-23 - Eduardo Rodrigues
+ - propagating changes from TrackEvent to TrackFitEvent
+
 ! 2005-05-17 - Eduardo Rodrigues
  - propagating changes from TrackEvent to TrackFitEvent
  - MeasurementProvider no more stores the Measurements in the TES

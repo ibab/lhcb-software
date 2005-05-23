@@ -1,4 +1,4 @@
-// $Id: MeasurementProvider.cpp,v 1.4 2005-05-17 10:00:24 erodrigu Exp $
+// $Id: MeasurementProvider.cpp,v 1.5 2005-05-23 09:15:29 erodrigu Exp $
 // Include files 
 
 // from Gaudi
@@ -84,7 +84,7 @@ StatusCode MeasurementProvider::load(Track& track)
        it != ids.end(); it++) {
     const LHCbID& id = *it;
     Measurement& meas = measurement(id);
-    track.addToMeasurements(meas, true);
+    track.addToMeasurements(meas);
   }
   return StatusCode::SUCCESS;
 }
