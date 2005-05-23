@@ -16,12 +16,9 @@ DstWriter.ItemList =
   "/Event#1"
 , "/Event/Gen#1"
 , "/Event/Gen/Header#1"
-, "/Event/Gen/Collisions#1"
 , "/Event/Gen/HepMCEvents#1"
 , "/Event/Gen/HardProcesses#1"
 , "/Event/MC#1"
-, "/Event/MC/Particles#1"
-, "/Event/MC/Vertices#1"
 , "/Event/MC/MCTrackInfo#1"
 , "/Event/Trig#1"
 , "/Event/Trig/L0#1"
@@ -31,18 +28,14 @@ DstWriter.ItemList =
 , "/Event/DAQ#1"
 , "/Event/DAQ/L1Buffer#1"
 , "/Event/DAQ/RawBuffer#1"
-, "/Event/Raw#2"
 , "/Event/Rec#1"
 , "/Event/Rec/Status#1"
 , "/Event/Rec/IT#1"
 , "/Event/Rec/IT/Summary#1"
 , "/Event/Rec/Tr#1"
-, "/Event/Rec/Tr/Best#1"
 , "/Event/Rec/Tr/ITClusters#1"
 , "/Event/Rec/Tr/OTClusters#1"
 , "/Event/Rec/Tr/VeloClusters#1"
-, "/Event/Rec/Tr/StatesP#1"
-, "/Event/Rec/Tr/StatesL#1"
 , "/Event/Rec/Rich#1"
 , "/Event/Rec/Rich/PIDs#1"
 , "/Event/Rec/Calo#1"
@@ -72,8 +65,6 @@ DstWriter.ItemList =
 , "/Event/Rec/Muon/M4/Coords#1"
 , "/Event/Rec/Muon/M5/Coords#1"
 , "/Event/Rec/Muon/MuonID#1"
-  // Keep "Relations" directory to allow recreation in DaVinci
-, "/Event/Rec/Relations#1"
   // "Links" MC truth
 , "/Event/Link#1"
 , "/Event/Link/Trig#1"
@@ -96,4 +87,26 @@ DstWriter.ItemList =
 , "/Event/Link/Rec/Muon/Coords#1"
 , "/Event/Link/Rec/Tr#1"
 , "/Event/Link/Rec/Tr/Best#1"
+};
+
+// Pack track and state containers
+Output.DetectorList += { "Pack" };
+OutputPackSeq.Members += { "PackTrStateL", "PackTrStateP", "PackTrStoredTrack" };
+
+// Pack also MC truth containers if not already done on input tape
+DataOnDemandSvc.Algorithms += {
+  "DATA='/Event/Rdst/Collisions'    TYPE='PackCollision'"
+, "DATA='/Event/Rdst/MCParticles'   TYPE='PackMCParticle'"
+, "DATA='/Event/Rdst/MCVertices'    TYPE='PackMCVertex'"
+};
+
+// Add the packed containers to the DST
+DstWriter.ItemList += { 
+  "/Event/Rdst#1"
+, "/Event/Rdst/MCParticles#1"
+, "/Event/Rdst/MCVertices#1"
+, "/Event/Rdst/Collisions#1"
+, "/Event/Rdst/TrStatesL#1"
+, "/Event/Rdst/TrStatesP#1"
+, "/Event/Rdst/Tracks#1"
 };

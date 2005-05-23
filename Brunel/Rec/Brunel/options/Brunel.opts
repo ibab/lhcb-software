@@ -24,18 +24,20 @@ ApplicationMgr.DLLs += { "GaudiAlg", "LHCbAlgs" };
 EventDataSvc.ForceLeaves = true;
 EventDataSvc.RootCLID    =    1;
 
-//--------------------------------------------------------------
-// Data on demand service for decoding RawBuffer
-//--------------------------------------------------------------
+//----------------------------------------------------------------------------
+// Data on demand service for decoding RawBuffer and unpacking Digi containers
+//----------------------------------------------------------------------------
 #include "$DAQSYSROOT/options/RawBuffer.opts"
+#include "$RDSTROOT/options/UnpackDigi.opts"
 
 //--------------------------------------------------------------
 // Brunel Phases to be executed
 //--------------------------------------------------------------
 ApplicationMgr.TopAlg += { "ProcessPhase/Init",
                            "ProcessPhase/BrunelReco",
-                           "ProcessPhase/Relations" };
-ApplicationMgr.TopAlg += { "ProcessPhase/BrunelMoni" }; 
+                           "ProcessPhase/Relations",
+                           "ProcessPhase/BrunelMoni",
+                           "ProcessPhase/Output" };
 #include "$BRUNELOPTS/BrunelMoni.opts"
 //--------------------------------------------------------------
 // Detectors to be processed in each phase
@@ -155,6 +157,10 @@ BrunelRecoMUONSeq.Members += { "MuonRec", "MuonIDFOI" };
 //----------------------------------------------------------------------
 // Relations to MC truth, built unconditionally regardless of monitoring
 //----------------------------------------------------------------------
+
+// Needed because otherwise created by calling a Relations algorithm
+DataOnDemandSvc.Nodes += { "DATA='/Event/Rec' TYPE='DataObject'" };
+
 ApplicationMgr.DLLs += { "Associators" };
 #include "$ASSOCIATORSROOT/options/Brunel.opts"
 #include "$VELOASSOCIATORSROOT/options/VeloAssociators.opts"
