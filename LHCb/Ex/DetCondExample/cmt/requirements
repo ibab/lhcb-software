@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.28 2005-05-23 16:48:17 marcocle Exp $
+# $Id: requirements,v 1.29 2005-05-23 16:51:07 marcocle Exp $
 package DetCondExample
 version v7r2
 
@@ -14,12 +14,12 @@ use GaudiSvc v*
 use GaudiAlg v*
 
 # Detector Description
-use DetDesc v15r* Det
+use DetDesc v* Det
 use DetDescCnv v* Det
 use XmlDDDB v* Det
 
 # Detector Conditions
-use DetCond v7* Det
+use DetCond v* Det
 apply_tag NEEDS_COOL_FACTORY
 
 # library path needed for mysql backend
