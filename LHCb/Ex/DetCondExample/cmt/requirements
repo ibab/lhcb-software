@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.27 2005-05-12 10:41:10 marcocle Exp $
+# $Id: requirements,v 1.28 2005-05-23 16:48:17 marcocle Exp $
 package DetCondExample
 version v7r2
 
@@ -20,6 +20,7 @@ use XmlDDDB v* Det
 
 # Detector Conditions
 use DetCond v7* Det
+apply_tag NEEDS_COOL_FACTORY
 
 # library path needed for mysql backend
 use myodbc   v* LCG_Interfaces

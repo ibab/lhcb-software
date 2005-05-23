@@ -1,8 +1,11 @@
-#$Id: release.notes,v 1.38 2005-05-13 16:17:50 marcocle Exp $
+#$Id: release.notes,v 1.39 2005-05-23 16:48:17 marcocle Exp $
 Package Ex/DetCondExample
 Package manager : Marco Clemencic
 
 !=========== Ex/DetCondExample v7r2 ==========================================
+! 2005-05-23 - Marco CLEMENCIC
+ - Uses NEEDS_COOL_FACTORY cmt tag
+
 ! 2005-05-13 - Marco Clemencic
  - use Condition::toXml()
  - Use new ParamValidDataObject interface (DetDesc >= v15)
