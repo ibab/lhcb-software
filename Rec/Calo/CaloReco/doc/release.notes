@@ -1,12 +1,13 @@
-! $Id: release.notes,v 1.69 2005-05-24 11:39:51 pkoppenb Exp $
+! $Id: release.notes,v 1.70 2005-05-24 12:59:47 cattanem Exp $
 ! -----------------------------------------------------------------------------
-! CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.69 $
+! CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.70 $
 ! -----------------------------------------------------------------------------
 ! Package     : Calo/CaloReco
 ! Responsible : Vanya BELYAEV  belyaev@lapp.in2p3.fr 
 ! Purpose     : Main Package for Calorimeter Reconstruction Software 
 ! -----------------------------------------------------------------------------
 
+!=========================== CaloReco v2r8p1 2005-05-24 =======================
 ! 2005-05-24 - P. Koppenburg
  - options/CaloRecoOnDemand.opts
    . Fix typo in /Event/Rec/Calo/ElectronMatch (no "n")
