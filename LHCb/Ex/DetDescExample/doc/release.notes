@@ -1,9 +1,10 @@
-$Id: release.notes,v 1.27 2005-05-13 16:14:21 marcocle Exp $
+$Id: release.notes,v 1.28 2005-05-24 09:35:35 cattanem Exp $
 Package: DetDescExample
 Package Manager: I.Belyaev
 Purpose: Demonstrate how to access detector elements, their geometry 
          parameters and materials from detector description XML database.
 
+!==================DetDescExample v6r3 2005-05-24 ====================
 ! 2005-05-13 - Marco CLEMENCIC
  - Use new ParamValidDataObject interface (DetDesc >= v15)
 
