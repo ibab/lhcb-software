@@ -1,4 +1,4 @@
-// $Id: TrgVertexFitter.cpp,v 1.7 2005-03-09 16:29:27 pkoppenb Exp $
+// $Id: TrgVertexFitter.cpp,v 1.8 2005-05-24 13:28:40 hruiz Exp $
 // Include files 
 
 // from Gaudi
@@ -238,7 +238,7 @@ StatusCode TrgVertexFitter::fitVertex( const  ParticleVector& parts,  Vertex& V)
     // 1) Photons are not used for vertexing, just added to the vertex at the end
     if ( par.origin() && m_photonID == par.particleID().pid() ) { 
       inputPhotons.push_back(parPointer);
-      debug() << "Input particle is a photon. Not added to list for fit" << endreq;
+      verbose() << "Input particle is a photon. Not added to list for fit" << endreq;
     }
  
     // 2) For resonances, use daughter particles for fit if m_useDaughters is set to true
@@ -251,7 +251,7 @@ StatusCode TrgVertexFitter::fitVertex( const  ParticleVector& parts,  Vertex& V)
           fatal() << "Pointer to daughter particle failed: " << daughtPointer->particleID() << endreq;
           return StatusCode::FAILURE;
         }
-        debug() << "Daughter particle added to list for fit: " << daughtPointer->particleID() << endreq;
+        verbose() << "Daughter particle added to list for fit: " << daughtPointer->particleID() << endreq;
         partsToFit.push_back(daughtPointer);
       }
       
@@ -260,7 +260,7 @@ StatusCode TrgVertexFitter::fitVertex( const  ParticleVector& parts,  Vertex& V)
     // 3) In any other case, particle will be used directly in the fit
     else {
       partsToFit.push_back(parPointer);
-      debug() << "Input particle added to list for fit: " << parPointer->particleID() << endreq;
+      verbose() << "Input particle added to list for fit: " << parPointer->particleID() << endreq;
       verbose() << "Point on particle: " << parPointer->pointOnTrack() << endreq;
       verbose() << "Error on point on particle: " << parPointer->pointOnTrackErr() << endreq;
     }
@@ -269,10 +269,10 @@ StatusCode TrgVertexFitter::fitVertex( const  ParticleVector& parts,  Vertex& V)
   // Number of particles to be used for the fit
   // Can be different than # of input particles!
   int nPartsToFit = partsToFit.size();
-  debug() << "Number of particles that will be used for the fit: " << nPartsToFit << endreq;
+  verbose() << "Number of particles that will be used for the fit: " << nPartsToFit << endreq;
   
   // Number of photons to be added at the end
-  debug() << "Number of photons that will be added to the vertex: " << inputPhotons.size() << endreq;
+  verbose() << "Number of photons that will be added to the vertex: " << inputPhotons.size() << endreq;
   
   // Check wether enough particles
   if ( (nPartsToFit == 0) || (nPartsToFit == 1)){
@@ -293,13 +293,13 @@ StatusCode TrgVertexFitter::fitVertex( const  ParticleVector& parts,  Vertex& V)
     Particle& phot = *(photPointer);
     phot.setPointOnTrack(V.position());
     phot.setPointOnTrackErr(V.positionErr());
-    debug() << "Photon origin updated" << endreq;
+    verbose() << "Photon origin updated" << endreq;
   }
 
   // Add daugthers
   for(ParticleVector::const_iterator iterP = parts.begin(); iterP != parts.end(); iterP++) {
     V.addToProducts(*iterP);
-    debug() << "Particle added to vertex products: " << (*iterP)->particleID() << endreq;
+    verbose() << "Particle added to vertex products: " << (*iterP)->particleID() << endreq;
   }
 
   debug() << "Returning vertex " << V.position() << " with error " 
