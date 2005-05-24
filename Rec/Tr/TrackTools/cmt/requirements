@@ -29,6 +29,7 @@ use   OTEvent         v14r*    Event
 use   ITEvent         v13r*    Event
 use   VeloEvent       v13r*    Event
 
+use   TrackFitEvent   v*       Tr
 use   TrackInterfaces v*       Tr
 
 use   STDet           v1r*     Det
