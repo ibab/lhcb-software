@@ -14,20 +14,8 @@ version           v1r0
 # Structure, i.e. directories to process. 
 #============================================================================
 branches          cmt doc TrackInterfaces
-include_path      none
 
-#============================================================================
-# Used packages. Specify the version, * at the end specifies 'any revision'
-#    Put as many lines as needed, with all packages, without the '#'
-#============================================================================
-# use   Package      v1r*    Hat
+# =============== include directories =======================================
+include_dirs      $(TRACKINTERFACESROOT)
 
-#============================================================================
-# Component library building rule
-#============================================================================
-library          TrackInterfaces    ../src/*.cpp 
-
-#============================================================================
-# define component library link options
-#============================================================================
-apply_pattern    component_library library=TrackInterfaces
+# =============== dependencies ==============================================

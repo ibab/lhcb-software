@@ -4,6 +4,9 @@
 ! Purpose     : package for tracking tools interfaces
 !-----------------------------------------------------------------------------
 
+! 2005-05-24 - Eduardo Rodrigues
+ - correction to requirements file
+
 ! 2005-05-20 - Jose Hernando, Eduardo Rodrigues
  - creation of the package:
     - moved from Kernel/LHCbInterfaces:
