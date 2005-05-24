@@ -1,7 +1,7 @@
-# $Id: requirements,v 1.36 2005-05-13 16:08:55 marcocle Exp $ 
+# $Id: requirements,v 1.37 2005-05-24 08:25:21 cattanem Exp $ 
 # =============================================================================
 package  CaloDet 
-version  v6r8
+version  v6r9
 
 # =============== structure ===================================================
 branches         src cmt doc options CaloDet 
@@ -10,7 +10,7 @@ branches         src cmt doc options CaloDet
 include_dirs      $(CALODETROOT)
 
 # =============== used packages ===============================================
-use CaloKernel   v3r*   Calo 
+use CaloKernel   v*     Calo 
 use DetDesc      v*     Det 
 
 # =============== own options =================================================

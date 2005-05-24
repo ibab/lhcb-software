@@ -1,8 +1,5 @@
 /// ===========================================================================
-/// $Log: not supported by cvs2svn $
-/// Revision 1.1  2001/07/02 17:17:58  ibelyaev
-/// improvements in readability of DeCalorimeter.h
-///
+/// $Id: CardParam.h,v 1.3 2005-05-24 08:25:21 cattanem Exp $
 /// ===========================================================================
 #ifndef CALODET_CARDPARAM_H 
 #define CALODET_CARDPARAM_H 1
@@ -26,7 +23,7 @@ public:
   /** constructor 
       @param iArea  calorimeter area 
       @param iRow   row 
-      @param icol   column
+      @param iCol   column
   */
   CardParam( int iArea, int iRow, int iCol );
   

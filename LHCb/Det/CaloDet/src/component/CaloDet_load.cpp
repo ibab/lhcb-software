@@ -1,4 +1,4 @@
-// $Id: CaloDet_load.cpp,v 1.5 2003-11-24 14:01:12 cattanem Exp $ 
+// $Id: CaloDet_load.cpp,v 1.6 2005-05-24 08:25:21 cattanem Exp $ 
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
@@ -14,7 +14,7 @@
 // ============================================================================
 /** @file  CaloDet_load.cpp
  *
- * Implementation of <Package>_load routine. This routine 
+ * Implementation of \<Package\>_load routine. This routine 
  * is needed for forcing the linker to load all the components of the library
  */
 // ============================================================================
