@@ -6,6 +6,10 @@
 !             : Contains packages shared by Boole and other applications   
 !-----------------------------------------------------------------------------
 
+</PRE><H1><A NAME=v2r1>2005-05-24 LbcomSys v2r1</A></H1><PRE>
+This version is built against LHCb v18r5 and Gaudi v16r4.
+Its contents are unchanged relative to LbcomSys v2r0
+
 </PRE><H1><A NAME=v2r0>2005-05-10 LbcomSys v2r0</A></H1><PRE>
  Repackaging to create RecSys project
  - Packages moved to RecSys: RichRecTools, RichRecMCTools, RichRecCommon,
