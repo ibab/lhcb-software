@@ -4,6 +4,7 @@
 ! Purpose     : Package for the tracking event model classes
 !-----------------------------------------------------------------------------
 
+!========================= TrackEvent v1r0 2005-05-24 ========================
 ! 2005-05-24 - Olivier Callot
  - Add the new class TrackVertex.xml to hold the trigger vertices, made of 
    Tracks. This is a copy of TrgVertex from Event/TrgEvent package.
