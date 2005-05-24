@@ -1,11 +1,11 @@
 ! =============================================================================
-! $Id: release.notes,v 1.175 2005-05-13 16:01:10 marcocle Exp $ 
+! $Id: release.notes,v 1.176 2005-05-24 07:44:00 cattanem Exp $ 
 ! =============================================================================
 ! package DetDesc
-! package manager : N.N 
+! package manager : Marco Clemencic, Juan Palacios
 ! =============================================================================
 
-!======================== DetDesc v15r0 2005-04-22 ========================
+!======================== DetDesc v15r0 2005-05-24 ========================
 ! 2005-05-13 - Marco Clemencic
  - Added method Condition::toXml() to convert a condition to an XML string.
  - Removed ICondition, ParamSet, IParamSet, IParamSetEditor, UserParam*
@@ -20,7 +20,7 @@
 
 ! 2005-03-18 - Marco Clemencic
  - Change in ValidDataObject and SimpleValidity following the change in
-   GaudiKernel/IValidity (needs GaudiKernel >= v20)
+   GaudiKernel/IValidity (needs GaudiKernel >= v19r2)
  - Add methods to ValidDataObject to disable/force an update
  - ValidDataObject uses TimePoint instead of ITime*
  - Change in LogVolBase inheritance tree
@@ -32,7 +32,7 @@
 
 !======================== DetDesc v14r3 2005-01-25 ========================
 ! 2005-01-25 - Marco Cattaneo
- - Backwards comatible changes to CLHEP declarations, for CLHEP 1.9
+ - Backwards compatible changes to CLHEP declarations, for CLHEP 1.9
  - Fixes to doxygen comments
  - remove some unneccessary #include
 
