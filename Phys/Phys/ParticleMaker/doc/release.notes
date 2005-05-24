@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.17 2005-05-24 15:41:07 pkoppenb Exp $ 
+! $Id: release.notes,v 1.18 2005-05-24 16:35:00 pkoppenb Exp $ 
 ! Package     : ParticleMaker
 ! Responsible : P. Koppenburg
 
@@ -6,6 +6,8 @@
  - options/PreLoadCombinedParticles.opts
  - options/PreLoadNoPIDParticles.opts
    . Moved from DaVinci (v14r1)
+ - options/PreLoadParticles.opts
+   . Removed
 !========================== ParticleMaker v1r5 2005-05-19 ===================
 ! 2005-05-18 - Chris Jones
  - Fix bug in CombinedParticleMaker by adding calls to GaudiTool::initialize()

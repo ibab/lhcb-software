@@ -1,5 +1,0 @@
-//########################################################################
-// Default options for pre loading particles in TES 
-// No cuts are performed
-//========================================================================
-PreLoadParticles.PhysDesktop.ParticleMakerType = "CombinedParticleMaker";
