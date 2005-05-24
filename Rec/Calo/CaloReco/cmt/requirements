@@ -1,9 +1,9 @@
-# $Id: requirements,v 1.35 2005-05-08 09:45:56 ibelyaev Exp $
+# $Id: requirements,v 1.36 2005-05-24 11:39:51 pkoppenb Exp $
 # =============================================================================
-# CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.35 $
+# CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.36 $
 # =============================================================================
 package            CaloReco
-version            v2r8
+version            v2r8p1
 
 # ================ structure ==================================================
 branches           cmt doc src options 
@@ -25,6 +25,9 @@ apply_pattern      component_library library=CaloReco
 
 # =============================================================================
 # $Log: not supported by cvs2svn $
+# Revision 1.35  2005/05/08 09:45:56  ibelyaev
+#  remove all *associators*
+#
 # =============================================================================
 # The END
 # =============================================================================
