@@ -5,17 +5,16 @@
 // -------------
 // from Gaudi
 #include "GaudiKernel/IAlgTool.h"
-#include <string>
 
-#include "Event/MCParticle.h"
+class MCParticle;
 
 static const InterfaceID IID_ITrackReconstructible( "ITrackReconstructible", 0, 0 );
 
 /** @class ITrackReconstructible TrackInterfaces/ITrackReconstructible.h
  *  
  *
- *  @author Olivier Callot
- *  @date   2002-09-12
+ *  @author Eduardo Rodrigues, Jose Hernando
+ *  @date   2005-05-20
  */
 
 class ITrackReconstructible : virtual public IAlgTool {

@@ -3,9 +3,6 @@
 
 // Include files
 // -------------
-// from STL
-#include <string>
-
 // from Gaudi
 #include "GaudiKernel/IAlgTool.h"
 
@@ -17,8 +14,8 @@ static const InterfaceID IID_ITrackPtKick ( "ITrackPtKick", 1, 0 );
 /** @class ITrackPtKick ITrackPtKick.h TrackInterfaces/ITrackPtKick.h
  *  
  *
- *  @author Marco Cattaneo
- *  @date   2002-01-19
+ *  @author Eduardo Rodrigues, Jose Hernando
+ *  @date   2005-05-20
  */
 class ITrackPtKick : virtual public IAlgTool {
 public: 

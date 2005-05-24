@@ -19,3 +19,6 @@ branches          cmt doc TrackInterfaces
 include_dirs      $(TRACKINTERFACESROOT)
 
 # =============== dependencies ==============================================
+use LHCbKernel  v* Kernel
+use GaudiKernel v*
+use CLHEP       v* LCG_Interfaces

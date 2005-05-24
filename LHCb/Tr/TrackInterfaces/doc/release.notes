@@ -5,6 +5,10 @@
 !-----------------------------------------------------------------------------
 
 !====================== TrackInterfaces v1r0 2005-05-24 ======================
+! 2005-05-24 - Marco Cattaneo
+ - Add use statements to requirements file
+ - Remove some unneccessary includes in header files
+
 ! 2005-05-24 - Eduardo Rodrigues
  - correction to requirements file
 
