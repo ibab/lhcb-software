@@ -4,9 +4,9 @@
 ! Purpose     : collect Kernel packages
 !-----------------------------------------------------------------------------
 
-!======================== KernelSys v4r11 2005-05-17 =======================
-! 2005-05-17 - Marco Cattaneo
- - Use Relations v2r5
+!======================== KernelSys v4r11 2005-05-24 =======================
+! 2005-05-24 - Marco Cattaneo
+ - Use Relations v2r5, RichKernel v5r4p1
 
 !======================== KernelSys v4r10 2005-04-15 =======================
 ! 2005-04-15 - Marco Cattaneo
