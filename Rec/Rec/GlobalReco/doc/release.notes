@@ -4,6 +4,19 @@
 ! Purpose     : Holds final reconstruction code
 !-----------------------------------------------------------------------------
 
+! 2005-05-24 -P. Koppenburg
+  Big reshuffling of options for Panoramix
+  - options/CaloAlgorithms.opts
+    . New calo relation options from $DAVINCIROOT/options/CaloOnDemand.opts
+  - options/Electrons.opts
+    . New: From DaVinciElectrons.opts
+  - options/Neutrals.opts
+    . New: From DaVinciNeutrals.opts
+  - options/GlobalReco.opts
+    . Remove obsolete stuff
+  - options/NeutralProtoPAlg.opts
+    . Removed
+    
 !========================== GlobalReco v4r9 2005-05-12 ===================
 ! 2005-05-12 - Vanya BELYAEV
  - src/ChargedProtoPAlg.h,.cpp

@@ -1,0 +1,12 @@
+// The major algorith sequence for "neutrals"
+// DaVinciMainSeq.Members += { "GaudiSequencer/Neutrals" };
+
+// correct 3x3 matrix 
+Neutrals.Members += {"CaloClusterCorrect3x3Position"};
+// Corrections for SplitPhotons
+Neutrals.Members += { "CaloHypoAlg/PhotonFromMergedCalibration" };
+// Corrections for Single Photons
+Neutrals.Members += { "CaloHypoAlg/PhotonCalibration"   };
+
+// Make neutral ProtoParticles
+Neutrals.Members += { "NeutralPPsFromCPsAlg" };

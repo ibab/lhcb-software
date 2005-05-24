@@ -1,11 +1,15 @@
-// =================================================================
-// Global Reco options
-//
+//--------------------------------------------------------------
+// ProtoParticles creation: charged and neutrals
+ApplicationMgr.DLLs += { "GlobalReco", "CaloReco" };
+#include "$CALORECOOPTS/Reco.opts"
+ApplicationMgr.DLLs += { "CaloPIDs" };
+#include "$CALOPIDSOPTS/CaloPIDs.opts"
+#include "$CALOEVENTOPTS/CaloEvent.opts"
+ToolSvc.PhotonMatch.Location      = "Rec/Calo/PhotonMatch" ;
+ApplicationMgr.DLLs += { "MuonID", "MuonTools" };
+#include "$MUONIDROOT/options/MuonIDDLLTool.opts"
 
-#include "$GLOBALRECOROOT/options/ChargedProtoPAlg.opts"
-#include "$GLOBALRECOROOT/options/NeutralProtoPAlg.opts"
-
-// Tools for neutral and charge options require the following
-// options that are set in DaVinciCommon
-// #include "$CALORECO/options/Reco.opts"
-
+// Calo
+#include "$GLOBALRECOROOT/options/CaloAlgorithms.opts"
+#include "$CALORECOROOT/options/CaloRecoOnDemand.opts"
+#include "$CALOPIDSROOT/options/CaloPIDsOnDemand.opts"
