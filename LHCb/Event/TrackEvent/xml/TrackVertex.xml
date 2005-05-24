@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!--- $Id: -->
+<!--- Author  : Olivier Callot -->
+<!--- Created : 2005-05-24 -->
+
+<!DOCTYPE gdd SYSTEM "gdd.dtd" >
+<gdd>
+  <package name="TackEvent">
+
+    <import name="Event/Track"/>
+
+<!--- Vertex, just a variant of the offline one -->
+
+    <class 
+      author           = "Olivier Callot" 
+      desc             = "Track Vertex" 
+      id               = "10020" 
+      name             = "TrackVertex" 
+      templateList     = "FALSE" 
+      templateVector   = "TRUE" 
+      keyedContTypeDef = "TRUE" >
+
+      <base name="KeyedObject&lt;int&gt;"/>
+      &KeyedObject;
+      <import name="CLHEP/Units/SystemOfUnits"/>
+
+      <location name="Velo2D"    place="Rec/Trig/Vertex2D"     />
+      <location name="Velo3D"    place="Rec/Trig/Vertex3D"     />
+
+      <constructor
+        argList="int key"
+        desc="create a vertex with a selected key"
+        initList = "KeyedObject&lt;int&gt;( key ),m_position(0.0, 0.0, -1*km),
+m_positionErr(3, 0)"
+       />
+ 
+       <attribute
+        name="position"
+        desc="Position in LHCb reference system"
+        type="HepPoint3D"
+        init="0.0, 0.0, -1*km"
+       />
+       <attribute
+        name="positionErr"
+        desc="Covariance matrix containing errors on vertex position"
+        type="HepSymMatrix"
+        init="3, 0"
+       />
+      
+       <attribute
+        name="chi2"
+        desc="chi2 of the vertex fit"
+        type="double"
+       />
+      
+       <attribute
+        name="nDoF"
+        desc="Degree of freedom of the vertex fit"
+        type="int"
+       />
+      
+      <relation
+        type      = "Track"
+        name      = "tracks"
+        desc      = "Tracks this vertex was made from" 
+        multiplicity = "N" />
+
+    </class>
+  </package>
+</gdd>

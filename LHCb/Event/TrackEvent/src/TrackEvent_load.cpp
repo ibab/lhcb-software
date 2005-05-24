@@ -8,9 +8,15 @@
 //-----------------------------------------------------------------------------
 
 /// ====================================================================
+#include "Event/TrackVertex.h"
+_ImplementContainedObjectFactory( TrackVertex )
+_ImplementDataObjectFactory( TrackVertices )
+
 
 void TrackEvent_load() {
   // Declaration of contained object factories
+  DLL_DECL_OBJECTFACTORY( TrackVertex );
+  DLL_DECL_OBJECTFACTORY( TrackVertices );
 }
 
 extern "C" void TrackEvent_loadRef()  {
