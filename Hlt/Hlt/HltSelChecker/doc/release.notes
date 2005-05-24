@@ -4,6 +4,9 @@
 ! Purpose     : High-Level Trigger Exclusive Selections - Checking 
 !-----------------------------------------------------------------------------
 
+! 2005-05-25 - P. Koppenburg
+  - options/HLTExSelectionsNTuples.opts
+    . Removed
 !========================== HltSelChecker v3r1 2005-05-12 ===================
 ! 2005-05-11 - P. Koppenburg
   - src/CheckHltGeneric.cpp
