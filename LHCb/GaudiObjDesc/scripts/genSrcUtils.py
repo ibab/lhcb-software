@@ -133,6 +133,7 @@ class genSrcUtils(importUtils.importUtils):
     metAtt = met['attrs']
     if ( not scopeName ) :
       s += '  /// %s\n  ' % metAtt['desc']
+      if metAtt.has_key('template') : s += 'template <%s>\n  ' % metAtt['template']
       indent += 2
       if metAtt['virtual'] in ['TRUE','PURE']:
         s += 'virtual '
@@ -141,6 +142,7 @@ class genSrcUtils(importUtils.importUtils):
         s += 'friend '
         indent += 7
     else :
+      if metAtt.has_key('template') : s += 'template <%s>\n' % metAtt['template']      
       s += 'inline '
       scopeName += '::'
       indent += len(scopeName) + 7

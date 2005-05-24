@@ -98,6 +98,7 @@ class genClassDicts(importUtils.importUtils):
         indent = 0
         if method['attrs']['access'] in ('PRIVATE', 'PROTECTED') : break
         if method['attrs']['friend'] == 'TRUE' : break
+        if method['attrs'].has_key('template') : break
         constF = ''
         if method['attrs']['const'] == 'TRUE' : constF = 'const'
         retType = ''
@@ -399,6 +400,7 @@ class genClassDicts(importUtils.importUtils):
         metAtt = met['attrs']
         if metAtt['access'] in ('PRIVATE', 'PROTECTED') : break
         if metAtt['friend'] == 'TRUE' : break
+        if metAtt.has_key('template') : break
         if metAtt['virtual'] == 'PURE' : self.classIsAbstract = 1
         constF = ''
         if metAtt['const'] == 'TRUE' : constF = 'const'
