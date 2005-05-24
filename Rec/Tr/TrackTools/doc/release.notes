@@ -4,6 +4,9 @@
 ! Purpose     : Package for tracking tools not accessing MC information
 !-----------------------------------------------------------------------------
 
+! 2005-05-24 - Eduardo Rodrigues
+ - MeasurementProvider tool moved here from Tr/TrackFitEvent
+
 ! 2005-05-23 - Eduardo Rodrigues
  - TrackAcceptance, TrueStateCreator and TrackSelector tools moved to
    the new package Tr/TrackMCTools (for tools that access MC information)
