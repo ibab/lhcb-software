@@ -1,0 +1,9 @@
+!-----------------------------------------------------------------------------
+! Package     : Tr/TrackMCTools
+! Responsible : Jose Hernando, Eduardo Rodrigues
+! Purpose     : package for tracking tools accessing MC information
+!-----------------------------------------------------------------------------
+
+! 2005-05-23 - Eduardo Rodrigues
+ - creation of the package. Moved from Tr/TrackTools the tools:
+   TrackAcceptance, TrueStateCreator and TrackSelector
