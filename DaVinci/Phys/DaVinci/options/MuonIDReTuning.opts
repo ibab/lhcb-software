@@ -5,7 +5,7 @@
  *  @date 2003-05-16
  */
 
-ApplicationMgr.TopAlg += { "MuonIDFOI" };
+DaVinciMainSeq.Members += { "MuonIDFOI" };
 #include "$MUONIDROOT/options/MuonIDFOI.opts"
 
 MuonIDFOI.IDLocation = "/Event/Rec/Muon/NewMuonID";
