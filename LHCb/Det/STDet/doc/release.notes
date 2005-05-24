@@ -1,6 +1,7 @@
 !Package         : STDet
 !Package manager : M. Needham
 
+!========================= STDet v1r4 2005-05-24 =======================
 ! 2005-05-13 - Marco Clemencic
  - Use new ParamValidDataObject interface (DetDesc >= v15)
 
