@@ -1,7 +1,10 @@
-! $Id: release.notes,v 1.70 2005-05-13 14:30:49 jonrob Exp $
+! $Id: release.notes,v 1.71 2005-05-24 09:20:48 cattanem Exp $
 ! Package     : Rich/RichKernel
 ! Responsible : Chris Jones
 ! Purpose     : General purpose RICH classes
+
+! 2005-05-24 - Marco Cattaneo
+ - Remove explicit DetDesc version from requirements
 
 ! 2005-05-13 - Chris Jones
  - Adapt to new RichDAQ
