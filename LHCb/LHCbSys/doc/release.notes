@@ -6,6 +6,7 @@
 !-----------------------------------------------------------------------------
 
 </PRE><H1><A NAME=v18r5>2005-05-24 LHCbSys v18r5</A></H1><PRE>
+ - Packages added:    TrackInterfaces v1r0
  - Packages modified: KernelSys v4r11, Relations v2r5, RichKernel v5r4p1,
      EventSys v20r5, Rdst v1r1, TrackEvent v1r0, LHCbInterfaces v1r2,
      DetSys v7r0, DetDesc v15r0, DetDescCnv v2r5, CaloDet, OTDet v5r5,
@@ -29,8 +30,11 @@
    . First release of new Track Event model
    . Add TrackVertex class (copy of TrgVertex using Track)
 
+ - In TrackInterfaces v1r0
+   . First release of interfaces for new Track model
+
  - In LHCbInterfaces v1r2
-   . Remove ITrackProjector,ITrackExtrapolator interfaces, moved to TrInterfaces
+   . Remove ITrackProjector, ITrackExtrapolator. Moved to TrackInterfaces
 
  - In DetDesc v7r0
    . Various changes to prepare deployment of CondDb. In particular:

@@ -92,6 +92,7 @@ use CaloInterfaces	v4r3	Calo
 use CaloUtils		v4r9	Calo
 use RichRecBase		v1r15p1 Rich
 use STTools		v1r1	IT
+use TrackInterfaces 	v1r0	Tr
 
 # Temporary, should be split
 use TrgTools		v7r3	Trg
