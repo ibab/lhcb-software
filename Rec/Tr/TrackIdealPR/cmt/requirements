@@ -32,6 +32,7 @@ use   OTAssociators   v3r*  OT
 use   ITAssociators   v2r*  IT
 use   VeloAssociators v1r*  Velo
 
+use   TrackInterfaces v*    Tr
 use   TrackTools      v*    Tr
 
 use CLHEP v1 LCG_Interfaces

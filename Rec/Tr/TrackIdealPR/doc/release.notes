@@ -4,6 +4,14 @@
 ! Purpose     : Perfect pattern recognition
 !-----------------------------------------------------------------------------
 
+! 2005-05-24 - Eduardo Rodrigues
+ - propagating changes from TrackEvent to TrackIdealPR
+ - using now the interfaces from Tr/TrackInterfaces and no longer
+   from Kernel/LHCbInterfaces
+
+! 2005-05-13 - Eduardo Rodrigues
+ - correct memory leak
+
 ! 2005-05-09 - Eduardo Rodrigues
  - major re-writing of the algorithm, adaptations from TrueTracksCreator
    in Tr/TrCheck

@@ -10,23 +10,22 @@
 #include "Event/Track.h"
 
 // from TrackFitEvent
-#include "Event/MeasurementFunctor.h"
+#include "Event/TrackFunctor.h"
 
 // from XxxAssociators
 #include "OTAssociators/OTTime2MCHitAsct.h"
 #include "ITAssociators/ITCluster2MCParticleAsct.h"
 #include "VeloAssociators/VeloCluster2MCParticleAsct.h"
 
-// Interfaces
-#include "TrackTools/IStateCreator.h"
-#include "TrackTools/ITrackSelector.h"
+// from TrackInterfaces
+#include "TrackInterfaces/IStateCreator.h"
+#include "TrackInterfaces/ITrackSelector.h"
 //#include "Event/ITrackFitter.h"
 
 // Forward declarations
 class DeOTDetector;
 class DeSTDetector;
 class DeVelo;
-//class ITrackFitter;
 
 /** @class TrueTracksCreator TrueTracksCreator.h
  *
@@ -77,7 +76,7 @@ public:
   void sortMeasurements( Track* track ) {
     std::sort( track->measurements().begin(),
                track->measurements().end(),
-               MeasurementFunctor::increasingByZ() );
+               TrackFunctor::increasingByZ<Measurement>() );
   };
 
 private:

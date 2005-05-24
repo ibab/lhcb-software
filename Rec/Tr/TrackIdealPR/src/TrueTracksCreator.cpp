@@ -1,17 +1,19 @@
 // Include files
 // -------------
-// LHCbEvent
+// LHCbKernel
+#include "Relations/RelationWeighted1D.h"
+
+// from LHCbEvent
 #include "Event/EventHeader.h"
+
+// from TrackEvent
+#include "Event/TrackKeys.h"
+
+// from TrackFitEvent
 #include "Event/OTMeasurement.h"
 #include "Event/ITMeasurement.h"
 #include "Event/VeloRMeasurement.h"
 #include "Event/VeloPhiMeasurement.h"
-
-// LHCbKernel
-#include "Relations/RelationWeighted1D.h"
-
-// from TrackEvent
-#include "Event/TrackKeys.h"
 
 // Local
 #include "TrueTracksCreator.h"
@@ -149,6 +151,8 @@ StatusCode TrueTracksCreator::execute()
 
   /// Retrieve the Containers for Clusters and Times
   OTTimes* otTimes           = get<OTTimes>( OTTimeLocation::Default );
+  debug() << "- retrieved " <<  otTimes -> size() << " OTTimes." << endreq;
+
 //  ITClusters* itClusters     = get<ITClusters>( ITClusterLocation::Default );
 //  VeloClusters* veloClusters = get<VeloClusters>( VeloClusterLocation::Default );
 
@@ -172,7 +176,7 @@ StatusCode TrueTracksCreator::execute()
   }
   else {
     verbose() << "Relations container " << m_relationTable
-              << "registered." << endreq;
+              << " registered" << endreq;
   }
 
   debug() << "Starting loop over the "
@@ -407,16 +411,17 @@ StatusCode TrueTracksCreator::addOTTimes( OTTimes* times,
         if (0.0 == deltaZ) continue; // curling track inside layer
         const double tx = (exitP.x() - entryP.x()) / deltaZ;
         const double ty = (exitP.y() - entryP.y()) / deltaZ;
-        double mcDist = module -> distanceToWire( channel.straw(), entryP, tx, ty );
+        double mcDist = module -> distanceToWire( channel.straw(),
+                                                  entryP, tx, ty );
         int ambiguity = 1;
         if ( mcDist < 0.0 ) ambiguity = -1;
         // Get the tu from the MCHit
         double angle = module -> stereoAngle();
         double tu = tx * cos(angle) + ty * sin(angle);
         // Make the TrMeasurement
-        OTMeasurement* otTim = new OTMeasurement( *aTime, *m_otTracker,
-                                                  ambiguity, tu );
-        track -> addToMeasurements( *otTim );
+        OTMeasurement otTim = OTMeasurement( *aTime, *m_otTracker,
+                                             ambiguity, tu );
+        track -> addToMeasurements( otTim );
         nOTMeas++;
       }
     }
@@ -442,8 +447,8 @@ StatusCode TrueTracksCreator::addITClusters( MCParticle* mcPart,
   ITCluster2MCParticleAsct::FromIterator iClus;
   for ( iClus = range.begin(); iClus != range.end(); ++iClus) {
     ITCluster* aCluster = iClus->to();
-    ITMeasurement* meas = new ITMeasurement( *aCluster, *m_itTracker );
-    track -> addToMeasurements( *meas );
+    ITMeasurement meas = ITMeasurement( *aCluster, *m_itTracker );
+    track -> addToMeasurements( meas );
     nITMeas++;
   }
 
@@ -474,18 +479,18 @@ StatusCode TrueTracksCreator::addVeloClusters( MCParticle* mcPart,
       State* tempState;
       StatusCode sc = m_stateCreator -> createState( mcPart, z, tempState );
       if ( sc.isSuccess() ) {
-        HepVector vec = tempState -> state();
+        HepVector vec = tempState -> stateVector();
         phi = atan2( vec[1], vec[0] );
       }
       delete tempState;
 
-      VeloRMeasurement* meas = new VeloRMeasurement( *aCluster, *m_velo, phi );
-      track -> addToMeasurements( *meas );
+      VeloRMeasurement meas = VeloRMeasurement( *aCluster, *m_velo, phi );
+      track -> addToMeasurements( meas );
       nVeloRMeas++;
     }
     else {
-      VeloPhiMeasurement* meas = new VeloPhiMeasurement( *aCluster, *m_velo );
-      track -> addToMeasurements( *meas );
+      VeloPhiMeasurement meas = VeloPhiMeasurement( *aCluster, *m_velo );
+      track -> addToMeasurements( meas );
       nVeloPhiMeas++;
     }
   }
@@ -505,7 +510,7 @@ StatusCode TrueTracksCreator::registerTracks( Tracks* tracksCont )
   if ( sc.isFailure() )
     error() << "Unable to register the output container at "
             << m_tracksTESPath << ". Status is " << sc << endreq;
-  verbose() << "Track container stored in EvDS." << endreq;
+  verbose() << "Tracks container stored in the TES" << endreq;
 
   return StatusCode::SUCCESS;
 }
@@ -528,8 +533,7 @@ StatusCode TrueTracksCreator::initializeState( double z,
     cov.fast(4,4) = m_errorTy2;
     cov.fast(5,5) = pow( m_errorP * state->qOverP(), 2. );
 
-    //track -> addToStates( *state );
-    track -> setPhysicsState( *state );
+    track -> addToStates( *state );
 
     double qP = state -> qOverP();
 
