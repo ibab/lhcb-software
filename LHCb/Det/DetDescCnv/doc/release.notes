@@ -1,9 +1,10 @@
 !-----------------------------------------------------------------------------
 ! Package     : Det/DetDescCnv
-! Responsible : Sebastien Ponce
+! Responsible : Marco Clemencic, Juan Palacios
 ! Purpose     : standard converters for the LHCb Detector Description
 !-----------------------------------------------------------------------------
 
+!================ DetDescCnv v2r5 2005-05-24 ===========================
 ! 2005-05-13 - Marco Clemencic
  - Modified to use the new ParamValidDataObject interface (Det/DetDesc >= v15)
 
