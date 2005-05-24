@@ -1,5 +1,5 @@
 package LHCbSys
-version v18r4
+version v18r5
 
 branches doc cmt
 
@@ -7,7 +7,7 @@ branches doc cmt
 # LHCb packages used by all applications
 #===============================================================
 
-use LHCb		v18r4
+use LHCb		v18r5
 
 use GaudiConf		v9r1
 
@@ -15,35 +15,35 @@ use GaudiConf		v9r1
 use HepMC	v4r121p0	Sim
 
 # Kernel packages
-use KernelSys   	v4r10   Kernel
+use KernelSys   	v4r11   Kernel
 use LHCbKernel  	v5r10   Kernel
-use Relations		v2r4	Kernel
+use Relations		v2r5	Kernel
 use CaloKernel  	v3r2	Calo
 use MuonKernel  	v2r7	Muon
 use TrKernel    	v11r4	Tr
-use RichKernel  	v5r4	Rich
+use RichKernel  	v5r4p1	Rich
 use VeloKernel  	v1r5p1  Velo
 use L0mConf		v2r2p4	L0
 use L0MuonKernel	v3r0p1	L0
 use ProcessorKernel	v1r0p1  L0
 
 # Detector description
-use DetSys		v6r5	Det
-use VeloDet        	v9r4	Det
-use DetDesc        	v14r4	Det
-use DetDescCnv        	v2r4	Det
+use DetSys		v7r0	Det
+use VeloDet        	v9r5	Det
+use DetDesc        	v15r0	Det
+use DetDescCnv        	v2r5	Det
 use XmlTools        	v3r5	Tools
-use OTDet          	v5r4p1	Det
-use CaloDet        	v6r8	Det
+use OTDet          	v5r5	Det
+use CaloDet        	v6r9	Det
 use CaloDetXmlCnv	v2r3p1	Det
 use MuonDet        	v4r6	Det
 use Magnet         	v2r8	Det
 use MuonTools      	v3r8	Muon
-use RichDet		v8r3	Det
-use STDet          	v1r3	Det
+use RichDet		v8r4	Det
+use STDet          	v1r4	Det
 
 # Event data model
-use EventSys		v20r4	Event
+use EventSys		v20r5	Event
 use Event        	v4r7	Event
 use VeloEvent    	v13r2p1 Event
 use ITEvent      	v13r2p1	Event
@@ -59,8 +59,8 @@ use GenEvent    	v3r3p1	Event
 use EventAssoc          v1r5    Event
 use LinkerEvent         v1r8    Event
 use TrgEvent            v5r5    Event
-use Rdst                v1r0    Event
-use TrackEvent          v0r1    Event
+use Rdst                v1r1    Event
+use TrackEvent          v1r0    Event
 use EventUtils		v1r0	Event
 
 # Associators
@@ -75,7 +75,7 @@ use MuonAssociators    	v1r5p1	Muon
 use AsctToLinker	v1r4	Rec
 
 # L1/Raw buffer encoding and decoding
-use DAQSys		v1r3	DAQ
+use DAQSys		v1r4	DAQ
 use MuonDAQ		v1r2p2	Muon
 use STDAQ		v1r5    IT
 use OTDAQ		v3r2p1	OT
@@ -85,7 +85,7 @@ use CaloDAQ		v1r1	Calo
 use L0MuonDAQ		v1r0	L0
 
 # Other stuff
-use LHCbInterfaces	v1r1	Kernel
+use LHCbInterfaces	v1r2	Kernel
 use LHCbAlgs		v1r6	Kernel
 use MCTools		v1r13	Phys
 use CaloInterfaces	v4r3	Calo
@@ -98,5 +98,5 @@ use TrgTools		v7r3	Trg
 
 # LHCb  Examples
 use DetDescChecks	v2r3	Det
-use DetDescExample      v6r2p1	Ex
+use DetDescExample      v6r3	Ex
 use IOExample    	v1r4p2	Ex

@@ -5,8 +5,45 @@
 ! Purpose     : LHCb OO kernel packages
 !-----------------------------------------------------------------------------
 
-!======================= LHCbSys v18r4 2005-05-11 =======================
-! 2005-05-11 - Marco Cattaneo
+</PRE><H1><A NAME=v18r5>2005-05-24 LHCbSys v18r5</A></H1><PRE>
+ - Packages modified: KernelSys v4r11, Relations v2r5, RichKernel v5r4p1,
+     EventSys v20r5, Rdst v1r1, TrackEvent v1r0, LHCbInterfaces v1r2,
+     DetSys v7r0, DetDesc v15r0, DetDescCnv v2r5, CaloDet, OTDet v5r5,
+     RichDet v8r4, STDet v1r4, VeloDet v9r5, DetDescExample v6r3, DAQSys v1r4
+
+ - In Relations v2r5:
+   . Add a pointer wrapper class, to make relations to raw pointer objects
+
+ - In DAQSys v1r5:
+   . Add to RawBuffer.opts creation of /Event/Raw on demand if not existing 
+
+ - In Rdst v1r1:
+   . Use key() instead of linkID() when storing SmartRef, to avoid problems
+     when linkID is not defined (e.g. in job that creates the SmartRef)
+   . Replace Rdst.opts with UnpackDigi.opts and UnpackDst.opts.
+   . Clear the registry address of containers that have been packed. Ensures that
+     programs reading a packed file do not try to load the unpacked containers if
+     they exist on an ancestor file.
+
+ - In TrackEvent v1r0
+   . First release of new Track Event model
+   . Add TrackVertex class (copy of TrgVertex using Track)
+
+ - In LHCbInterfaces v1r2
+   . Remove ITrackProjector,ITrackExtrapolator interfaces, moved to TrInterfaces
+
+ - In DetDesc v7r0
+   . Various changes to prepare deployment of CondDb. In particular:
+     . Change in ValidDataObject and SimpleValidity following the change in
+       GaudiKernel/IValidity (needs GaudiKernel >= v19r2, XmlDDDB >= v24r2)
+     . Change in LogVolBase inheritance tree
+       (ValidDataObject instead of DataObject+IValidity)
+
+ - In DetDescCnv v2r5, CaloDet, OTDet v5r5, RichDet v8r4, STDet v1r4, 
+      VeloDet v9r5, DetDescExample v6r3
+   . Adapt to changes in DetDesc
+
+</PRE><H1><A NAME=v18r4>2005-05-11 LHCbSys v18r4</A></H1><PRE>
  - Packages added:    STTools v1r1, TrgTools v7r3, Rdst v1r0
  - Packages modified: DetSys v6r5, DetDescCnv v2r4, XmlTools v3r5, LHCbAlgs v1r6,
      EventSys v20r4, LinkerEvent v1r8, DAQEvent v5r1, TrgEvent v5r5,
@@ -58,7 +95,7 @@
 
  - In DetDescChecks v2r3:
    . Cleanup code, add progress bar to output
-
+</PRE><PRE>
 !======================= LHCbSys v18r3 2005-04-21 =======================
 ! 2005-04-21 - Marco Cattaneo
  - Move to Gaudi v16r3
