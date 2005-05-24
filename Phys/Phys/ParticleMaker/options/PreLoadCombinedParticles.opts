@@ -1,0 +1,62 @@
+/** @file 
+ * 
+ *  Configuration file to run PreLoadParticles algorithm to load
+ *  particles with the Combined Particle Maker in default configuration  
+ * 
+ *  @author G.Corti
+ *  @date 2003-06-03
+ */
+
+ApplicationMgr.TopAlg += { "PreLoadParticles" };
+
+// Set to use the CombinedParticleMaker
+PreLoadParticles.PhysDesktop.ParticleMakerType = "CombinedParticleMaker";
+
+// Default values for particle types to be made
+// Note that when exclusive mode is selected the selection is done in
+// the order set below
+//  PreLoadParticles.PhysDesktop.CombinedParticleMaker.Particles = {
+//   "muon", "electron", "kaon", "proton", "pion" };
+
+// Default value for particles to be selected exclusively or not
+//  PreLoadParticles.PhysDesktop.CombinedParticleMaker.ExclusiveSelection = true;
+
+// Default value for selection of muon
+//  PreLoadParticles.PhysDesktop.CombinedParticleMaker.MuonSelection = {
+//    "det='MUON' mu-pi='-8.0'" };
+
+// Default value for selection of electron
+//  PreLoadParticles.PhysDesktop.CombinedParticleMaker.ElectronSelection = {
+//    "det='CALO' e-pi='0.0'" };
+
+// Default value for selection of kaon
+//  PreLoadParticles.PhysDesktop.CombinedParticleMaker.KaonSelection = {
+//    "det='RICH' k-pi='2.0' k-p='-2.0'" };
+
+// Default value for selection of proton
+//  PreLoadParticles.PhysDesktop.CombinedParticleMaker.ProtonSelection = {
+//    "det='RICH' p-pi='3.0'" };
+
+// Default value for selection of pion
+// Empty vector means any criteria:
+//  - if ExclusiveSelection = true, pions will be made from any ProtoParticles
+//    that has not been used to make an other particle type
+//  - if ExclusiveSelection = false, all particle will be made as pions
+//  PreLoadParticles.PhysDesktop.CombinedParticleMaker.PionSelection = {};
+
+// Default value for adding energy of BremPhoton to electrons
+//  PreLoadParticles.PhysDesktop.CombinedParticleMaker.AddBremPhoton = false;
+
+// Default value for input where to get ProtoParticles
+// String corresponding to ProtoParticleLocation::Charged
+//  PreLoadParticles.PhysDesktop.CombinedParticleMaker.InputProtoP = 
+//    "/Event/Rec/ProtoP/Charged" 
+
+// Default value for output of PhysDesktop
+//  PreLoadParticles.PhysDesktop.OutputLocation = "/Event/Phys/User";
+
+// Default value for which type of tracks to use
+//  PreLoadParticles.PhysDesktop.CombinedParticleMaker.UseLongTracks     = true;
+// This replaces UseUpstreamTracks:
+//  PreLoadParticles.PhysDesktop.CombinedParticleMaker.UseDownstreamTracks = false;
+//  PreLoadParticles.PhysDesktop.CombinedParticleMaker.UseVTTTracks      = false;
