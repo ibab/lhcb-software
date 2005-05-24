@@ -1,4 +1,4 @@
-// $Id: TrackProjector.cpp,v 1.3 2005-04-13 16:54:13 erodrigu Exp $
+// $Id: TrackProjector.cpp,v 1.4 2005-05-24 12:37:52 erodrigu Exp $
 // Include files 
 
 // from Gaudi
@@ -81,7 +81,7 @@ TrackProjector::~TrackProjector() {};
 void TrackProjector::computeResidual(const State& state,
                                      const Measurement& meas) 
 {
-  m_residual = meas.measure() - dot( m_H, state.state() );
+  m_residual = meas.measure() - dot( m_H, state.stateVector() );
 }
 
 //=============================================================================

@@ -2,11 +2,14 @@
 #define TRACKPROJECTORS_TRACKMASTERPROJECTOR_H 1
 
 // Include files
+// -------------
 // from Gaudi
 #include "GaudiAlg/GaudiTool.h"
 
-#include "Tools/ITrackProjector.h"            // Interface
+// from TrackInterfaces
+#include "TrackInterfaces/ITrackProjector.h"            // Interface
 
+// from TrackEvent
 #include "Event/State.h"
 #include "Event/Measurement.h"
 

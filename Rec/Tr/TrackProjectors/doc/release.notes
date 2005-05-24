@@ -4,8 +4,13 @@
 ! Purpose     : Package for tracking projectors
 !-----------------------------------------------------------------------------
 
+! 2005-05-24 - Eduardo Rodrigues
+ - propagating changes from TrackEvent
+ - tools adapted to use interfaces from Tr/TrackInterfaces and no
+   longer from Kernel/LHCbInterfaces
+
 ! 2005-04-18 - Jose Hernando, Eduardo Rodrigues
-	- the main method of the projectors return a StatusCode
+ - the main method of the projectors return a StatusCode
 
 ! 2005-04-13 - Jose Hernando, Eduardo Rodrigues
  - concrete classes TrackVeloRProjector and TrackVeloPhiProjector

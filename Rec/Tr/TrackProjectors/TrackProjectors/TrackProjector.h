@@ -1,4 +1,4 @@
-// $Id: TrackProjector.h,v 1.3 2005-04-18 09:12:05 hernando Exp $
+// $Id: TrackProjector.h,v 1.4 2005-05-24 12:37:51 erodrigu Exp $
 #ifndef TRACKPROJECTORS_TRACKPROJECTOR_H 
 #define TRACKPROJECTORS_TRACKPROJECTOR_H 1
 
@@ -6,8 +6,10 @@
 // from Gaudi
 #include "GaudiAlg/GaudiTool.h"
 
-#include "Tools/ITrackProjector.h"            // Interface
+// from TrackInterfaces
+#include "TrackInterfaces/ITrackProjector.h"            // Interface
 
+// from TrackEvent
 #include "Event/State.h"
 #include "Event/Measurement.h"
 
