@@ -4,7 +4,7 @@
  *
  *  Header file for detector description class : DeRichHPDPanel
  *
- *  $Id: DeRichHPDPanel.h,v 1.24 2005-02-22 18:11:37 jonrob Exp $
+ *  $Id: DeRichHPDPanel.h,v 1.25 2005-05-24 09:25:32 cattanem Exp $
  *
  *  @author Antonis Papanestis a.papanestis@rl.ac.uk
  *  @date   2004-06-18
@@ -193,8 +193,6 @@ public:
    * Adds to the given vector all the available readout channels in this HPD panel
    *
    * @param readoutChannels Vector of valid pixel IDs
-   * @param rich The RICH detector for these channels
-   * @param panel The RICH panel for these channels 
    *
    * @return Status code
    */

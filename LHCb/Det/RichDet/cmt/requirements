@@ -1,12 +1,12 @@
 package RichDet
-version v8r3
+version v8r4
 
 branches src RichDet doc cmt
 
 include_dirs $(RICHDETROOT)
 
-use RichKernel  v5r*   Rich
-use DetDescCnv  v2r*   Det
+use RichKernel  v*   Rich
+use DetDescCnv  v*   Det
 
 library  RichDetLib  Lib/*.cpp 
 library  RichDet     component/*.cpp
