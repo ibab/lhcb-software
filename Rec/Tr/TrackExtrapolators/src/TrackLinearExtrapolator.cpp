@@ -1,4 +1,4 @@
-// $Id: TrackLinearExtrapolator.cpp,v 1.3 2005-04-08 11:53:09 hernando Exp $
+// $Id: TrackLinearExtrapolator.cpp,v 1.4 2005-05-24 12:01:48 erodrigu Exp $
 // Include files
 
 // from Gaudi
@@ -30,7 +30,7 @@ const        IToolFactory& TrackLinearExtrapolatorFactory = s_factory ;
 void TrackLinearExtrapolator::extrapolate( State* state ) const
 {
   // get reference to the State vector and covariance
-  HepVector& tX = state -> state();
+  HepVector& tX = state -> stateVector();
   HepSymMatrix& tC = state -> covariance();
 
   // calculate new state
@@ -64,7 +64,7 @@ StatusCode TrackLinearExtrapolator::propagate( State& state,
   updateState( state, zNew );
 
   debug() << " z propagation " << zNew
-          << " propagated state " << state.state()
+          << " propagated state " << state.stateVector()
           << " propagated cov   " << state.covariance()
           << " of particle pid " << pid.pid() << endreq;
 

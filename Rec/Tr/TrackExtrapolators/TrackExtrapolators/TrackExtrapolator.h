@@ -1,13 +1,17 @@
-// $Id: TrackExtrapolator.h,v 1.3 2005-03-16 14:10:04 hernando Exp $
+// $Id: TrackExtrapolator.h,v 1.4 2005-05-24 12:01:47 erodrigu Exp $
 #ifndef TRACKEXTRAPOLATORS_TRACKEXTRAPOLATOR_H 
 #define TRACKEXTRAPOLATORS_TRACKEXTRAPOLATOR_H 1
 
 // Include files
+// -------------
 // from Gaudi
 #include "GaudiAlg/GaudiTool.h"
-#include "Tools/ITrackExtrapolator.h"
-#include "Event/Track.h"
 
+// from TrackInterfaces
+#include "TrackInterfaces/ITrackExtrapolator.h"
+
+// from TrackEvent
+#include "Event/Track.h"
 
 /** @class TrackExtrapolator TrackExtrapolator/TrackExtrapolator.h
  *  

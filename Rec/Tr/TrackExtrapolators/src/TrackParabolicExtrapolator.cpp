@@ -1,4 +1,4 @@
-// $Id: TrackParabolicExtrapolator.cpp,v 1.1 2005-03-16 14:10:05 hernando Exp $
+// $Id: TrackParabolicExtrapolator.cpp,v 1.2 2005-05-24 12:01:48 erodrigu Exp $
 
 // Gaudi
 #include "GaudiKernel/IMagneticFieldSvc.h"
@@ -99,7 +99,7 @@ StatusCode TrackParabolicExtrapolator::propagate(State& state,
   updateTransportMatrix(dz,state); 
 
   // get reference to the TrState vector and cov
-  HepVector& tState = state.state();
+  HepVector& tState = state.stateVector();
   HepSymMatrix& tStateCov = state.covariance();
 
   // Extrapolate state EXACT  

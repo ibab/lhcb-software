@@ -1,8 +1,13 @@
 !-----------------------------------------------------------------------------
-! Package     : Tr/TrExtrapolators
+! Package     : Tr/TrackExtrapolators
 ! Responsible : Eduardo Rodrigues, Jose A. Hernando
 ! Purpose     : Package for tracking extrapolators
 !-----------------------------------------------------------------------------
+
+! 2005-05-24 - Eduardo Rodrigues
+ - propagating changes from TrackEvent to TrackExtrapolators
+ - tools adapted to use interfaces from Tr/TrackInterfaces and no
+   longer from Kernel/LHCbInterfaces
 
 ! 2005-05-10 - Eduardo Rodrigues
  - minor change to requirements file

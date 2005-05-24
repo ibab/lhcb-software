@@ -1,4 +1,4 @@
-// $Id: TrackExtrapolator.cpp,v 1.2 2005-04-08 11:53:09 hernando Exp $
+// $Id: TrackExtrapolator.cpp,v 1.3 2005-05-24 12:01:48 erodrigu Exp $
 // Include files
 
 // from Gaudi
@@ -499,7 +499,7 @@ TrackExtrapolator::~TrackExtrapolator() {};
 void TrackExtrapolator::updateState( State& state, double z ) const
 {
   // get reference to the State vector and covariance
-  HepVector& tX = state.state();
+  HepVector& tX = state.stateVector();
   HepSymMatrix& tC = state.covariance();
 
   // calculate new state

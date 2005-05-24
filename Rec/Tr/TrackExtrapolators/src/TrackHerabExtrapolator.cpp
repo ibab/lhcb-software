@@ -1,4 +1,4 @@
-// $Id: TrackHerabExtrapolator.cpp,v 1.1 2005-03-16 14:10:05 hernando Exp $
+// $Id: TrackHerabExtrapolator.cpp,v 1.2 2005-05-24 12:01:48 erodrigu Exp $
 
 // Gaudi
 #include "GaudiKernel/IMagneticFieldSvc.h"
@@ -90,7 +90,7 @@ StatusCode TrackHerabExtrapolator::propagate( State& state,
   }
 
   // prepare Q/p transport - note RK expects zStart as 1st argument
-  HepVector& tX = state.state();
+  HepVector& tX = state.stateVector();
   double pIn[5];
   int i;
   for (i = 0; i < 5; ++i) {

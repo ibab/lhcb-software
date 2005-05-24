@@ -1,9 +1,9 @@
-// $Id: TrackTransportStep.h,v 1.1 2005-03-16 14:10:05 hernando Exp $
+// $Id: TrackTransportStep.h,v 1.2 2005-05-24 12:01:48 erodrigu Exp $
 #ifndef TRACKTRANSPORTSTEP_H 
 #define TRACKTRANSPORTSTEP_H 1
 
-// Forward declaration
-#include "Tools/ITrackExtrapolator.h"
+// from TrackInterfaces
+#include "TrackInterfaces/ITrackExtrapolator.h"
 
 /** @class TrackTransportStep TrackTransportStep.h "TrackTransportStep.h"
  *

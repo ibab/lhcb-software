@@ -1,4 +1,4 @@
-// $Id: TrackFirstCleverExtrapolator.cpp,v 1.2 2005-04-08 11:53:09 hernando Exp $
+// $Id: TrackFirstCleverExtrapolator.cpp,v 1.3 2005-05-24 12:01:48 erodrigu Exp $
 
 // GSL : for macros
 #include "gsl/gsl_math.h"
@@ -146,7 +146,7 @@ StatusCode TrackFirstCleverExtrapolator::propagate( State& state,
   for ( int step=0 ; nbStep > step ; ++step ) {
 
     ILVolume::Intersections intersept;
-    HepVector& tX = state.state();
+    HepVector& tX = state.stateVector();
     HepPoint3D start( tX[0], tX[1], state.z() );  // Initial position
     HepVector3D vect( tX[2]*zStep, tX[3]*zStep, zStep );
 
@@ -607,7 +607,7 @@ StatusCode TrackFirstCleverExtrapolator::energyLoss( State& state,
   }
 
   // apply correction - note for now only correct the state vector
-  HepVector& tX = state.state();
+  HepVector& tX = state.stateVector();
 
   if (tX[4]>0.){
     tX[4] = 1./(1./tX[4]+(bbLoss));
@@ -639,7 +639,7 @@ StatusCode TrackFirstCleverExtrapolator::electronEnergyLoss(State& state,
   if (fabs(t)>m_tMax) t = GSL_SIGN(t)*m_tMax;
 
   // apply correction
-  HepVector& tX = state.state();
+  HepVector& tX = state.stateVector();
   HepSymMatrix& tC = state.covariance();
 
   tC.fast(5,5) += gsl_pow_2(tX[4]) * (exp(-t*log(3.0)/log(2.0))-exp(-2.0*t));
