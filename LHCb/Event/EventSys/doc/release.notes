@@ -1,6 +1,10 @@
 package EventSys
 package manager: Marco Cattaneo
 
+!======================== EventSys v20r5 2005-05-24 ========================
+! 2005-05-24 - Marco Cattaneo
+ - Use Rdst v1r1, TrackEvent v1r0
+
 !======================== EventSys v20r4 2005-05-10 ========================
 ! 2005-05-10 - Marco Cattaneo
  - Add Rdst v1r0
