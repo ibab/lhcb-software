@@ -36,8 +36,7 @@ L0Muon::L0BufferUnit::L0BufferUnit(int & type){
 
   m_l0bufferFile = NULL;
   m_l0EventNumber=0;
-  m_writeL0Buffer = false;
-  m_buildL0Buffer = true;
+  m_buildL0Buffer = false;
 
 };
 
@@ -397,8 +396,7 @@ void L0Muon::L0BufferUnit::setOLPLL(){
 
 void L0Muon::L0BufferUnit::initialize(){
   Unit* crate = parentByType("CrateUnit");
-  if ( crate->getProperty("WriteL0Buffer") == "True")  m_writeL0Buffer = true;
-  if ( crate->getProperty("BuildL0Buffer") == "False") m_buildL0Buffer = false;
+  if ( crate->getProperty("BuildL0Buffer") == "True") m_buildL0Buffer = true;
 }
 
 /**
@@ -411,7 +409,7 @@ void L0Muon::L0BufferUnit::execute(){
   setL0buf();
 
   // Write out the L0Buffer
-  if ( m_writeL0Buffer ) writeEvent();
+  writeEvent();
 
   // Increment event counter
   m_l0EventNumber++;

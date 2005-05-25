@@ -1,4 +1,4 @@
-// $Id: CoreUnit.h,v 1.1 2005-05-25 13:18:13 jucogan Exp $
+// $Id: CoreUnit.h,v 1.2 2005-05-25 14:36:07 jucogan Exp $
 #ifndef L0MUONKERNEL_COREUNIT_H
 #define L0MUONKERNEL_COREUNIT_H     1
 
@@ -72,6 +72,7 @@ private:
   int m_status;
   std::vector<std::pair<PCandidate, std::vector<int> > > m_offForCand;
 
+  bool m_buildL0Buffer;
   
 };
 

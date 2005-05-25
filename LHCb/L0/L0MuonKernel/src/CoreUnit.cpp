@@ -8,6 +8,7 @@
 
 L0Muon::CoreUnit::CoreUnit() {  
   m_status = 0;
+  m_buildL0Buffer = false;
 }
     
 L0Muon::CoreUnit::~CoreUnit() {};  
@@ -92,10 +93,10 @@ void L0Muon::CoreUnit::makeTower() {
       
       m_tower.setBit(nsta, nYindex, nXindex );
       
-      if (m_debug) std::cout << "Core:makeTower   XY" 
- 			     << " " << nXindex  
- 			     << " " << nYindex 
- 			     << " " << (*itmp).toString() << std::endl;
+      //      if (m_debug) std::cout << "Core:makeTower   XY" 
+      //		     << " " << nXindex  
+      //		     << " " << nYindex 
+      //		     << " " << (*itmp).toString() << std::endl;
       m_tower.setPadIdMap(nsta, yx, *ip);
       
     }     
@@ -105,6 +106,8 @@ void L0Muon::CoreUnit::makeTower() {
 void L0Muon::CoreUnit::initialize() {
   // Get a pointer to the parent Crate Unit
   CrateUnit * pcrate = dynamic_cast<CrateUnit *>( parentByType("CrateUnit"));
+
+  if ( pcrate->getProperty("BuildL0Buffer") == "True") m_buildL0Buffer = true;
 
   // Set the foi
   for (int ista=0; ista<5; ista++){ 
@@ -118,12 +121,10 @@ void L0Muon::CoreUnit::initialize() {
   // Set the NO M1 flag
   m_tower.setIgnoreM1(pcrate->ignoreM1());
   
-  //L0Muon::Unit::initialize();
 }
 
 void L0Muon::CoreUnit::preexecute() {
 
-  //L0Muon::Unit::preexecute();
   m_cand.clear();
   m_offForCand.clear();
   if (m_debug) m_tower.setDebugMode();
@@ -214,7 +215,7 @@ void L0Muon::CoreUnit::execute() {
     pReg->set(m_tower.addr(icand));
          
     //load address in l0buffer
-    if (l0buffer != NULL){
+    if (m_buildL0Buffer){
       char * name = "cand%d";      
       char buf[4096];      
       sprintf(buf,name,icand);      
@@ -239,7 +240,7 @@ void L0Muon::CoreUnit::execute() {
   pReg->set(bits);
 
   // load register in l0buf  
-  if (l0buffer != NULL){
+  if (m_buildL0Buffer){
     char * name = "status";      
     char buf[4096];      
     sprintf(buf,name);      
@@ -257,8 +258,10 @@ void L0Muon::CoreUnit::execute() {
       bcsu->loadCandidates(*icand);           
     }
     if (m_cand.size()==1){   
-      PCandidate pcand(new Candidate(L0MuonStatus::PU_EMPTY)) ;        
-      bcsu->loadCandidates(pcand);	      
+      if (m_buildL0Buffer){
+	PCandidate pcand(new Candidate(L0MuonStatus::PU_EMPTY)) ;        
+	bcsu->loadCandidates(pcand);	      
+      }
     }
     bcsu->loadStatus(L0MuonStatus::OK);
   }
@@ -274,10 +277,12 @@ void L0Muon::CoreUnit::execute() {
         
   if (m_cand.size()==0){
     m_status =0;
-    PCandidate pcand(new Candidate(L0MuonStatus::PU_EMPTY));
-    bcsu->loadCandidates(pcand);
-    PCandidate pcand1(new Candidate(L0MuonStatus::PU_EMPTY));
-    bcsu->loadCandidates(pcand1);
+    if (m_buildL0Buffer){
+      PCandidate pcand(new Candidate(L0MuonStatus::PU_EMPTY));
+      bcsu->loadCandidates(pcand);
+      PCandidate pcand1(new Candidate(L0MuonStatus::PU_EMPTY));
+      bcsu->loadCandidates(pcand1);
+    }
     bcsu->loadStatus(1);	  
   }        
 }
@@ -286,7 +291,6 @@ void L0Muon::CoreUnit::execute() {
 void L0Muon::CoreUnit::postexecute() {
   m_pads.clear();
   releaseRegisters();
-  //L0Muon::Unit::postexecute(); 
 }
 
 

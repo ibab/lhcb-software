@@ -101,7 +101,6 @@ namespace L0Muon {
 
     std::vector<std::pair<PCandidate, std::vector<int> > > m_offsets;  
     
-    bool m_writeL0Buffer;
     bool m_buildL0Buffer;  
 
   };

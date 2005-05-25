@@ -87,7 +87,6 @@ namespace L0Muon {
     /// Event counter
     unsigned long int m_l0EventNumber;
 
-    bool m_writeL0Buffer;
     bool m_buildL0Buffer;
 
   };

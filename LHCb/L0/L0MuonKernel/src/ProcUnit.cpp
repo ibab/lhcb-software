@@ -23,8 +23,7 @@ L0Muon::ProcUnit::ProcUnit(L0MPuNodeBase & puNode) {
   //=                                           =
   //=============================================
 
-  m_writeL0Buffer = false;
-  m_buildL0Buffer = true;
+  m_buildL0Buffer = false;
 
 
   //=============================================
@@ -422,15 +421,13 @@ std::map<std::string, std::string>  L0Muon::ProcUnit::setPLLRegisters(MuonTileID
 void L0Muon::ProcUnit::initialize() {
   CrateUnit * pcrate = dynamic_cast<CrateUnit *>( parentByType("CrateUnit"));
 
-  if ( pcrate->getProperty("WriteL0Buffer") == "True")  m_writeL0Buffer = true;
-  if ( pcrate->getProperty("BuildL0Buffer") == "False") m_buildL0Buffer = false;
+  if ( pcrate->getProperty("BuildL0Buffer") == "True") m_buildL0Buffer = true;
 
 
   // Construct the PLL L0Buffer (V2-TestBench)
   bool l0bufferPLLFlag    = true;
 
   if (m_debug) std::cout << "ProcUnit::initialize " 
-			 << "m_writeL0Buffer " << m_writeL0Buffer << " " 
 			 << "m_buildL0Buffer " << m_buildL0Buffer << " " 
 			 << "l0bufferPLLFlag " << l0bufferPLLFlag <<  std::endl;
   
@@ -457,7 +454,7 @@ void L0Muon::ProcUnit::initialize() {
     }
 
     // Set the output registers
-    std::string l0bufferMapPath    = pcrate->getProperty("L0BufferMapPath");
+    std::string l0bufferMapPath    = pcrate->getProperty("L0BufferPLLMapPath");
     if (m_debug) std::cout << "ProcUnit::initialize " 
 			   << "l0bufferMapPath " << l0bufferMapPath <<  std::endl;
     std::map<std::string, std::string> registerNames = setPLLRegisters(m_pu, l0bufferMapPath);
@@ -510,19 +507,16 @@ void L0Muon::ProcUnit::initialize() {
 
 void L0Muon::ProcUnit::execute() {
 
-  if ( ! m_buildL0Buffer ) {
-
-    //    // Skip this PU processing if no seeds are noticed
-    //  
-    //      bool skip = true;
-    //      if ( m_ol3[0] ) {
-    //        if ( ! m_ol3[0]->empty() ) skip = false;
-    //      }  
-    //      if ( m_ol3[1] ) {
-    //        if ( ! m_ol3[1]->empty() ) skip = false;  
-    //      }  
-    //      if ( skip ) return;  
-
-  }
+  //    // Skip this PU processing if no seeds are noticed
+  //  
+  //      bool skip = true;
+  //      if ( m_ol3[0] ) {
+  //        if ( ! m_ol3[0]->empty() ) skip = false;
+  //      }  
+  //      if ( m_ol3[1] ) {
+  //        if ( ! m_ol3[1]->empty() ) skip = false;  
+  //      }  
+  //      if ( skip ) return;  
+  
   L0Muon::Unit::execute();
 }

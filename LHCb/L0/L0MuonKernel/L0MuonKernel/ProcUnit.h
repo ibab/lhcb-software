@@ -1,4 +1,4 @@
-// $Id: ProcUnit.h,v 1.1 2005-05-25 13:18:13 jucogan Exp $
+// $Id: ProcUnit.h,v 1.2 2005-05-25 14:36:07 jucogan Exp $
 
 #ifndef L0MUONKERNEL_PROCUNIT_H
 #define L0MUONKERNEL_PROCUNIT_H     1
@@ -66,7 +66,6 @@ namespace L0Muon {
     MuonTileID  m_pu;
     MuonTileID  m_boardID;
     L0MFoi      m_maxFoi;
-    bool m_writeL0Buffer;
     bool m_buildL0Buffer;
     TileRegister* m_ol3[2];     // OL's in station 3 
   };

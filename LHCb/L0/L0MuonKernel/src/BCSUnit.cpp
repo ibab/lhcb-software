@@ -42,8 +42,7 @@ L0Muon::BCSUnit::BCSUnit(MuonTileID boardid){
   m_id = boardid;
   m_bcsueventnumber = 0;
   m_bcsul0bufferFile =NULL;
-  m_writeL0Buffer = false;
-  m_buildL0Buffer = true;
+  m_buildL0Buffer = false;
   
 }
 
@@ -54,8 +53,7 @@ L0Muon::BCSUnit::~BCSUnit(){
 void L0Muon::BCSUnit::initialize()
 {
   Unit* crate = parentByType("CrateUnit");
-  if ( crate->getProperty("WriteL0Buffer") == "True")  m_writeL0Buffer = true;
-  if ( crate->getProperty("BuildL0Buffer") == "False") m_buildL0Buffer = false;
+  if ( crate->getProperty("BuildL0Buffer") == "True") m_buildL0Buffer = true;
 }
 
 void L0Muon::BCSUnit::preexecute()
@@ -103,7 +101,7 @@ void L0Muon::BCSUnit::execute() {
     setOutBCSU();
   
     // Write Buffer
-    if ( m_writeL0Buffer ) writeL0Buffer();
+    writeL0Buffer();
   } 
   m_bcsueventnumber++;
   L0Muon::Unit::execute();
