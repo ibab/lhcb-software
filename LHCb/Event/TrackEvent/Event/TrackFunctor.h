@@ -159,6 +159,13 @@ namespace TrackFunctor
     delete *it;
     List.erase( it, List.end() );
   }
+
+  template <class Pred>
+  unsigned int nMeasurements(const Track& track, Pred& pred) 
+  {
+    const std::vector<LHCbId>& ids = track.lhcbIDs();
+    return std::count_if(ids.begin(),ids.end(),Pred);
+  }
   
 }
 

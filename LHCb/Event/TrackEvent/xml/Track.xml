@@ -138,13 +138,24 @@
         setMeth   = 'FALSE'
         serialize = 'FALSE' />
 
+      <relation
+        type      = "Track"
+        name      = "ancestors"
+        access    = 'PROTECTED'
+        setMeth   = 'FALSE'
+        desc      = "ancestor tracks that created this one" 
+        multiplicity = "N" 
+        serialize = 'FALSE' />
+
+<!--
       <attribute
-        type      = 'std::vector&lt;Track*&gt;'
+        type      = 'Track;'
         name      = 'ancestors'
         desc      = 'container of ancestors of the track'
         access    = 'PROTECTED'
         setMeth   = 'FALSE'
         serialize = 'FALSE' />
+-->
 
       <method
         type    = 'void'
@@ -361,16 +372,18 @@
       </method>
 
 <!--
-      <method
-        type    = 'template &lt; class Pred &gt; unsigned int'
-        name    = 'nMeasurements'
-        desc    = 'number of measurements fulfiling a condition or predicate' 
-        const   = 'TRUE'>
-        <arg type = 'Pred' name='fun' />
-       <code>
-   return std::count_if(m_lhcbIDs.begin(),m_lhcbIDs.end(),fun);
-       </code>
-      </method>
+
+   <method template="class Pred" 
+      type="unsigned int"  
+      name="nMeasurements" 
+      const="TRUE" 
+      desc="return the number of measurements fulfiling a condition/predicate on LHCbIDs">
+      <arg type="Pred" name="pred"/>
+      <code>  
+   return std::count_if(m_meas.begin(),m_meas.end(),pred); 
+      </code>
+    </method>
+
 -->
 
       <method
@@ -423,22 +436,24 @@
       <method
         name    = 'addToAncestors'
         desc    = 'add a track to the list of ancestors of this track'>
-        <arg type = 'Track ' name='ancestor' />
+        <arg type = 'const Track ' name='ancestor' />
         <code>
   m_ancestors.push_back( (Track*) &amp;ancestor );
         </code>
       </method>
 
-     <method
+<!--
+    <method
         name    = 'removeFromAncestors'
         desc    = 'Remove an ancestor track from the list of ancestors associated to the track'
         argList = 'Track&amp; value'>
         <code>
-  std::vector&lt;Track*&gt;::iterator iter =
+  SmartRefVector&lt;Track&gt;::iterator iter =
     std::remove( m_ancestors.begin(), m_ancestors.end(), &amp;value );
   m_ancestors.erase( iter, m_ancestors.end() );
         </code>
       </method>
+-->
 
       <method
         type    = 'void'

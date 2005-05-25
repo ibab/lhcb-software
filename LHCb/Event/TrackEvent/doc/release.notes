@@ -4,6 +4,10 @@
 ! Purpose     : Package for the tracking event model classes
 !-----------------------------------------------------------------------------
 
+! 2005-05-25 - Jose A. Hernando
+ - Track: ancestors are contained in SmartRefVec
+   nMeasurements(Pred) method is in TrackFunctor waiting for new GOD/Gaudi version and proper work done with templates for python-dictionaries
+
 !========================= TrackEvent v1r0 2005-05-24 ========================
 ! 2005-05-24 - Olivier Callot
  - Add the new class TrackVertex.xml to hold the trigger vertices, made of 

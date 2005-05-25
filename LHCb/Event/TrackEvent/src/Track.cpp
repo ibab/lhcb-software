@@ -1,4 +1,4 @@
-// $Id: Track.cpp,v 1.9 2005-05-20 15:57:46 hernando Exp $ // Include files
+// $Id: Track.cpp,v 1.10 2005-05-25 08:38:00 hernando Exp $ // Include files
 
 // local
 #include "Event/Track.h"
@@ -225,8 +225,9 @@ Track* Track::clone() const
     tr->addToMeasurements( *(*it2) );
   for (std::vector<Node*>::const_iterator it3 = m_nodes.begin();
        it3 != m_nodes.end(); it3++) tr->addToNodes( (*it3)->clone() );
-  for (std::vector<Track*>::const_iterator it4 = m_ancestors.begin();
-       it4 != m_ancestors.end();  it4++) tr->addToAncestors( *(*it4) );
+  for (SmartRefVector<Track>::const_iterator it4 = m_ancestors.begin();
+       it4 != m_ancestors.end();  it4++) tr->addToAncestors(*(*it4));
+  
   return tr;
 };
 
