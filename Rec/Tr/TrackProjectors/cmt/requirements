@@ -13,7 +13,7 @@ version           v1r0
 #
 # Structure, i.e. directories to process. 
 #============================================================================
-branches          cmt doc src TrackProjectors
+branches          cmt doc src
 include_path      none
 
 #============================================================================
