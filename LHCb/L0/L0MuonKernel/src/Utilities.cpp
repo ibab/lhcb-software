@@ -56,28 +56,101 @@ std::vector<L0MTile>  L0Muon::readTileListFromMap(FILE *mapfile,int max){
   std::vector<L0MTile> ltiles(max);
   
   while (1)
-  {
+    {
 
-    // Read line
-    int ibit;
-    char type[8];
-    char smid[20];
+      // Read line
+      int ibit;
+      char type[8];
+      char smid[20];
 
-    if (fscanf(mapfile,"%d %s %s",&ibit,smid,type)==EOF) break;
+      if (fscanf(mapfile,"%d %s %s",&ibit,smid,type)==EOF) break;
 
-    L0MBase::L0MTileType tag; 
-    if      (type == "Pad")     { tag = L0MBase::Pad; }
-    else if (type == "HS")      { tag = L0MBase::StripH; }
-    else if (type == "VS")      { tag = L0MBase::StripV; }
-    else { tag = L0MBase::Unknown; }
+      L0MBase::L0MTileType tag; 
+      if      (type == "Pad")     { tag = L0MBase::Pad; }
+      else if (type == "HS")      { tag = L0MBase::StripH; }
+      else if (type == "VS")      { tag = L0MBase::StripV; }
+      else { tag = L0MBase::Unknown; }
  
-    // Build the L0MTile
+      // Build the L0MTile
   
-    MuonTileID mid(smid);
+      MuonTileID mid(smid);
     
-    L0MTile tile(mid,tag);
-    ltiles[ibit]=tile;
-  }
+      L0MTile tile(mid,tag);
+      ltiles[ibit]=tile;
+    }
 
   return ltiles;
+}
+
+
+/*
+
+*/
+void L0Muon::splitTileListInfo(const std::vector<L0MTile> & l0mtilelist,
+			       TileRegister * reg){
+
+
+  std::vector<MuonTileID> muontilelist;
+  boost::dynamic_bitset<> tilestag;
+  boost::dynamic_bitset<> stripstag;
+ 
+  splitTileListInfo(l0mtilelist,muontilelist,tilestag,stripstag);
+
+  reg->setTileVector(muontilelist);
+  reg->setTilesTagVector(tilestag);
+  reg->setStripsTagVector(stripstag);
+  
+}
+
+/*
+
+*/
+void L0Muon::splitTileListInfo(const std::vector<L0MTile> & l0mtilelist,
+			       std::vector<MuonTileID> & muontilelist,
+			       boost::dynamic_bitset<> & tilestag,
+			       boost::dynamic_bitset<> & stripstag){
+  
+  muontilelist.clear();
+  tilestag.clear();
+  stripstag.clear();
+
+  for (std::vector<L0MTile>::const_iterator it = l0mtilelist.begin(); it != l0mtilelist.end(); it++){
+    muontilelist.push_back(*it);
+    if ((*it).isValid()){
+    
+      if ( (*it).tag()==L0MBase::StripH ||
+	   (*it).tag()==L0MBase::StripV){
+	tilestag.push_back(0);
+	if ((*it).tag()==L0MBase::StripH) stripstag.push_back(0);
+	if ((*it).tag()==L0MBase::StripV) stripstag.push_back(1);
+
+      } else if ((*it).tag()==L0MBase::Pad || (*it).tag()==L0MBase::YCorner ||
+		 (*it).tag()==L0MBase::YBand) {
+	tilestag.push_back(1);
+	stripstag.push_back(0);
+
+      } else if ( (*it).tag()==L0MBase::XBand ){
+	std::vector<L0MTile> tmp = (*it).tiles();
+	std::vector<L0MTile>::iterator itmp;
+	itmp = tmp.begin();
+	if ( (*itmp).tag()==L0MBase::Pad) {
+	  tilestag.push_back(1);
+	  stripstag.push_back(0);
+	} else if ( (*itmp).tag()==L0MBase::StripH){
+	  tilestag.push_back(0);
+	  stripstag.push_back(0);
+	} else if ( (*itmp).tag()==L0MBase::StripV){
+	  tilestag.push_back(0);
+	  stripstag.push_back(1);
+	}     
+      } else {
+	tilestag.push_back(0);
+	stripstag.push_back(0);
+      }    
+    } else {
+      tilestag.push_back(0);
+      stripstag.push_back(0);
+    } 
+  }
+  
 }

@@ -62,8 +62,8 @@ namespace L0Muon {
     void writeEvent();
     void writeHeader();
     
+    void initialize();
     void execute();
-    void bootstrap();
 
     /// Give a static type name to the unit
     std::string type() {

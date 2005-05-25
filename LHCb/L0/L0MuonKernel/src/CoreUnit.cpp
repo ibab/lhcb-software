@@ -1,18 +1,18 @@
 #include <iostream>
 
-#include "L0MuonKernel/CablingUnit.h"
+#include "L0MuonKernel/CoreUnit.h"
 #include "L0MuonKernel/CrateUnit.h"
 #include "L0MuonKernel/L0BufferUnit.h"
-#include "L0MuonKernel/BestCandidateSelectionUnit.h"
+#include "L0MuonKernel/BCSUnit.h"
 
 
-L0Muon::CablingUnit::CablingUnit() {  
+L0Muon::CoreUnit::CoreUnit() {  
   m_status = 0;
 }
     
-L0Muon::CablingUnit::~CablingUnit() {};  
+L0Muon::CoreUnit::~CoreUnit() {};  
 
-void L0Muon::CablingUnit::makePads() {
+void L0Muon::CoreUnit::makePads() {
   m_pads.clear();
  
   std::map<std::string,Register*>::iterator ir;
@@ -22,31 +22,34 @@ void L0Muon::CablingUnit::makePads() {
     TileRegister* itr = dynamic_cast<TileRegister*>(ir->second);
    
     if ( ! itr->empty() ) {
-      if (m_debug) std::cout << "Cabling::makePads: register key  " << ir->first   << std::endl;
-      if (m_debug) std::cout << "Cabling::makePads: register name " << itr->name() << std::endl;
+      if (m_debug) std::cout << "Core:makePads: register key  " << ir->first   << std::endl;
+      if (m_debug) std::cout << "Core:makePads: register name " << itr->name() << std::endl;
       boost::dynamic_bitset<> r = itr->getBitset();
-      if (m_debug) std::cout << "Cabling::makePads: reg size" << " " <<r.size() << std::endl;
+      if (m_debug) std::cout << "Core:makePads: reg size" << " " <<r.size() << std::endl;
       std::vector<MuonTileID> tmp = itr->firedTiles();
       std::vector<MuonTileID>::iterator itmp;
-      if (m_debug) std::cout << "Cabling::makePads: fired tiles: " << std::endl;
+      if (m_debug) std::cout << "Core:makePads: fired tiles (" << tmp.size() <<"):"<< std::endl;
       for (itmp = tmp.begin(); itmp!= tmp.end(); itmp++){
-	//if (m_debug) std::cout << "Cabling::makePads:   " << (*itmp).toString()<< std::endl;
+	if (m_debug) std::cout << "Core:makePads:   " << (*itmp).toString()<< std::endl;
       }
 
       itr->makePads();
+      if (m_debug) std::cout << "Core:makePads: itr->makePads() done" << std::endl;
 
       std::vector<MuonTileID> pads = itr->Pads();
+      if (m_debug) std::cout << "Core:makePads: pads.size= "<<pads.size() << std::endl;
       std::vector<MuonTileID>::iterator  ipads ;    
       for (ipads = pads.begin(); ipads != pads.end(); ipads++){
 	m_pads.push_back(*ipads);
-
+	if (m_debug) std::cout << "Core:makePads:   " << (*ipads).toString() << std::endl;
       }
+      if (m_debug) std::cout << "Core:makePads: m_pads.size()= " << m_pads.size() << std::endl;
     }           
   }      
 }
 
 
-void L0Muon::CablingUnit::makeTower() {
+void L0Muon::CoreUnit::makeTower() {
 
   unsigned int nreg = m_pu.region();
   MuonLayout layout(48,8);
@@ -62,17 +65,17 @@ void L0Muon::CablingUnit::makeTower() {
   
   for (ip=m_pads.begin(); ip != m_pads.end(); ip++) {
 
-    //if (m_debug) std::cout << "Cabling: " << "pad " << (*ip).toString() << std::endl;
+    if (m_debug) std::cout << "Core:makeTower " << "pad " << (*ip).toString() << std::endl;
     int nsta = ip->station();
     std::vector<MuonTileID> tmp;
     
     
     if ( ip->region() == nreg ) {
-      // if (m_debug) std::cout << "Cabling: " << "ip->region==nreg" << std::endl;
+      if (m_debug) std::cout << "Core:makeTower " << "ip->region==nreg" << std::endl;
       tmp = layout.tiles(*ip);
     } else if ( ip->region() != nreg){
-      if (m_debug) std::cout << "Cabling: ip->region != nreg" << std::endl;
-      if (m_debug) std::cout << "Cabling: quarter " << (*ip).quarter() << " region " << (*ip).region() << " nreg " << nreg << std::endl;
+      if (m_debug) std::cout << "Core:makeTower ip->region != nreg" << std::endl;
+      if (m_debug) std::cout << "Core:makeTower quarter " << (*ip).quarter() << " region " << (*ip).region() << " nreg " << nreg << std::endl;
       tmp = layout.tilesInRegion((*ip), nreg); 
     }
     
@@ -89,24 +92,24 @@ void L0Muon::CablingUnit::makeTower() {
       
       m_tower.setBit(nsta, nYindex, nXindex );
       
-//       if (m_debug) std::cout << "Cabling:   XY" 
-// 			     << " " << nXindex  
-// 			     << " " << nYindex 
-// 			     << " " << (*itmp).toString() << std::endl;
+      if (m_debug) std::cout << "Core:makeTower   XY" 
+ 			     << " " << nXindex  
+ 			     << " " << nYindex 
+ 			     << " " << (*itmp).toString() << std::endl;
       m_tower.setPadIdMap(nsta, yx, *ip);
       
     }     
   } 
 }
 
-void L0Muon::CablingUnit::bootstrap() {
+void L0Muon::CoreUnit::initialize() {
   // Get a pointer to the parent Crate Unit
   CrateUnit * pcrate = dynamic_cast<CrateUnit *>( parentByType("CrateUnit"));
 
   // Set the foi
   for (int ista=0; ista<5; ista++){ 
     m_tower.setFoi(ista,pcrate->xFoi(ista),pcrate->yFoi(ista));
-    if (m_debug) std::cout << "Cabling: FOI sta M" <<ista+1<< "X: "<< pcrate->xFoi(ista)<< "Y: "<< pcrate->yFoi(ista) << std::endl; 
+    if (m_debug) std::cout << "Core: FOI sta M" <<ista+1<< "X: "<< pcrate->xFoi(ista)<< "Y: "<< pcrate->yFoi(ista) << std::endl; 
   }
       
   // Set the pt parameters
@@ -115,12 +118,12 @@ void L0Muon::CablingUnit::bootstrap() {
   // Set the NO M1 flag
   m_tower.setIgnoreM1(pcrate->ignoreM1());
   
-  L0Muon::Unit::bootstrap();
+  //L0Muon::Unit::initialize();
 }
 
-void L0Muon::CablingUnit::initialize() {
+void L0Muon::CoreUnit::preexecute() {
 
-  L0Muon::Unit::initialize();
+  //L0Muon::Unit::preexecute();
   m_cand.clear();
   m_offForCand.clear();
   if (m_debug) m_tower.setDebugMode();
@@ -128,17 +131,16 @@ void L0Muon::CablingUnit::initialize() {
   
 }
 
-void L0Muon::CablingUnit::execute() {
+void L0Muon::CoreUnit::execute() {
 
-  if (m_debug) std::cout << "Cabling: executing PU " << m_parent->name() << std::endl; 
+  if (m_debug) std::cout << "Core:execute executing PU " << m_parent->name() << std::endl; 
 
   // Get a pointer to the Board Unit
   Unit * myBoard = m_parent->parent();
   BoardUnit * bu = dynamic_cast<BoardUnit*>(myBoard);
   
   // Get a pointer to the BCSU
-  BestCandidateSelectionUnit* bcsu= 
-    dynamic_cast<BestCandidateSelectionUnit*> (bu->subUnit("bcsu"));
+  BCSUnit* bcsu= dynamic_cast<BCSUnit*> (bu->subUnit("bcsu"));
   
   // Get a pointer to the Crate Unit
   //  CrateUnit * cr = dynamic_cast<CrateUnit*>(myBoard->parent());
@@ -148,9 +150,9 @@ void L0Muon::CablingUnit::execute() {
   m_tower.reset();
 
   makePads();
-  if (m_debug) std::cout << "Cabling: after makePads " << std::endl; 
+  if (m_debug) std::cout << "Core:execute after makePads " << std::endl; 
   makeTower();
-  if (m_debug) std::cout << "Cabling: after makeTower "<< std::endl; 
+  if (m_debug) std::cout << "Core:execute after makeTower "<< std::endl; 
 
   
   //IMuonTileXYZTool *iTileXYZTool = cr->getMuonTool();  
@@ -192,7 +194,7 @@ void L0Muon::CablingUnit::execute() {
   } else if (m_cand.size()>2){
     m_status = L0MuonStatus::PU_OVERFLOW;
   }
-  if (m_debug) std::cout << "Cabling: " << "Number of Candidates" <<" " 
+  if (m_debug) std::cout << "Core: " << "Number of Candidates" <<" " 
 			 << m_cand.size() << std::endl;
 
   // Addresses for candidates (L0Buffers)
@@ -255,8 +257,8 @@ void L0Muon::CablingUnit::execute() {
       bcsu->loadCandidates(*icand);           
     }
     if (m_cand.size()==1){   
-      //PCandidate pcand(new Candidate(L0MuonStatus::PU_EMPTY)) ;        
-      //bcsu->loadCandidates(pcand);	      
+      PCandidate pcand(new Candidate(L0MuonStatus::PU_EMPTY)) ;        
+      bcsu->loadCandidates(pcand);	      
     }
     bcsu->loadStatus(L0MuonStatus::OK);
   }
@@ -272,18 +274,19 @@ void L0Muon::CablingUnit::execute() {
         
   if (m_cand.size()==0){
     m_status =0;
-    //PCandidate pcand(new Candidate(L0MuonStatus::PU_EMPTY));
-    //bcsu->loadCandidates(pcand);
-    //PCandidate pcand1(new Candidate(L0MuonStatus::PU_EMPTY));
-    //bcsu->loadCandidates(pcand1);
+    PCandidate pcand(new Candidate(L0MuonStatus::PU_EMPTY));
+    bcsu->loadCandidates(pcand);
+    PCandidate pcand1(new Candidate(L0MuonStatus::PU_EMPTY));
+    bcsu->loadCandidates(pcand1);
     bcsu->loadStatus(1);	  
   }        
 }
 
 
-void L0Muon::CablingUnit::finalize() {
+void L0Muon::CoreUnit::postexecute() {
   m_pads.clear();
   releaseRegisters();
+  //L0Muon::Unit::postexecute(); 
 }
 
 

@@ -1,9 +1,9 @@
-// $Id: L0mProcUnit.h,v 1.9 2005-04-15 16:14:31 cattanem Exp $
+// $Id: ProcUnit.h,v 1.1 2005-05-25 13:18:13 jucogan Exp $
 
-#ifndef L0MUONKERNEL_L0MPROCUNIT_H
-#define L0MUONKERNEL_L0MPROCUNIT_H     1
+#ifndef L0MUONKERNEL_PROCUNIT_H
+#define L0MUONKERNEL_PROCUNIT_H     1
 
-/* @class L0mProcUnit L0mProcUnit.h L0MuonKernel/L0mProcUnit.h
+/* @class ProcUnit ProcUnit.h L0MuonKernel/ProcUnit.h
 
 Class representing a processing unit 
 of the level-0 muon trigger 
@@ -17,24 +17,24 @@ of the level-0 muon trigger
 #include "L0mConf/L0MFoi.h"
 #include "ProcessorKernel/RegisterFactory.h"
 #include "L0MuonKernel/Tower.h"
-#include "L0MuonKernel/CablingUnit.h"
+#include "L0MuonKernel/CoreUnit.h"
 #include "L0MuonKernel/L0BufferUnit.h"
 #include "L0MuonKernel/FormattingUnit.h"
 
 namespace L0Muon {
 
-  class L0mProcUnit : public Unit {
+  class ProcUnit : public Unit {
 
   public:
 
     /// Default constructor
-    L0mProcUnit();
+    ProcUnit();
 
     /** Constructor
 
     @param puNode   :  data flow from L0mConf
     */
-    L0mProcUnit(L0MPuNodeBase& puNode);
+    ProcUnit(L0MPuNodeBase& puNode);
 
     /// Return the MuonTileID of the PU
     MuonTileID puId(){return m_pu;} 
@@ -45,8 +45,8 @@ namespace L0Muon {
     /// Return the field of interest from L0mConf
     L0MFoi foi() {return m_maxFoi; }
   
-    /// Bootstrap 
-    void bootstrap();
+    /// Initialize 
+    void initialize();
     
     void execute();
  
@@ -58,7 +58,7 @@ namespace L0Muon {
   
     /// Give a static type name to the unit
     std::string type() {
-      return "L0mProcUnit";
+      return "ProcUnit";
     }  
 
   private:
@@ -73,4 +73,4 @@ namespace L0Muon {
 
 };  // namespace L0Muon
 
-#endif      // L0MUONKERNEL_L0MPROCUNIT_H  
+#endif      // L0MUONKERNEL_PROCUNIT_H  

@@ -1,7 +1,7 @@
-#ifndef L0MUONKERNEL_BESTCANDIDATESELECTIONUNIT_H
-#define L0MUONKERNEL_BESTCANDIDATESELECTIONUNIT_H     1
+#ifndef L0MUONKERNEL_BCSUNIT_H
+#define L0MUONKERNEL_BCSUNIT_H     1
 
-/** @class BestCandidateSelectionUnit BestCandidateSelectionUnit.h L0MuonKernel/BestCandidateSelectionUnit.h
+/** @class BCSUnit BCSUnit.h L0MuonKernel/BCSUnit.h
  
    Class representing a BCSU of the hardware processor.
    It receive two candidates from each PU in the board 
@@ -20,15 +20,15 @@
 
 namespace L0Muon {
 
-  class BestCandidateSelectionUnit : public Unit {
+  class BCSUnit : public Unit {
 
   public:
 
     /// Constructor 
-    BestCandidateSelectionUnit(MuonTileID puid);
+    BCSUnit(MuonTileID puid);
 
     /// Destructor
-    ~BestCandidateSelectionUnit();
+    ~BCSUnit();
 
     /// Get candidates from PUs
     void loadCandidates(PCandidate cand);
@@ -56,13 +56,13 @@ namespace L0Muon {
    
 
     void initialize();
+    void preexecute();
     void execute();
-    void finalize();
-    void bootstrap();
+    void postexecute();
     
     /// Give a static type name to the unit
     std::string type() {
-      return "BestCandidateSelectionUnit";
+      return "BCSUnit";
     }
 
   private:
@@ -109,4 +109,4 @@ namespace L0Muon {
 
 };  // namespace L0Muon
 
-#endif      // L0MUONKERNEL_BOARD_H  
+#endif      // L0MUONKERNEL_BCSUNIT_H 

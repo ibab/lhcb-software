@@ -34,20 +34,18 @@ namespace L0Muon {
 
 
      
-     void initialize();
+     void preexecute();
   
      void execute();
    
-     void finalize();
+     void postexecute();
 
      /// Give a static type name to the unit
      std::string type() {
        return "FormattingUnit";
      }
 
-     /**
-        Intersect tiles of input and output data 
-      */
+     // Intersect tiles of input and output data 
      void makePads();
 
    private:

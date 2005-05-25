@@ -37,23 +37,19 @@ void L0Muon::FormattingUnit::makePads() {
   }  
 }
 
-void L0Muon::FormattingUnit::initialize(){
+void L0Muon::FormattingUnit::preexecute(){
    
   makePads();
 
   std::map<std::string,Register*>::iterator out;
 
-
-
   // Iterate on all the output registers and their tiles to see if
   // they have non-zero interception with one (or many) fired pads
   // in the m_pads vector filled in by the makePads() method
-
-     
     
   if ( ! m_outputs.empty()){
    
-    if (m_debug) std::cout << "Formatting::initialize: registers in ouput"  << std::endl;
+    if (m_debug) std::cout << "Formatting::preexecute: registers in ouput"  << std::endl;
     for ( out = m_outputs.begin(); out != m_outputs.end(); out++ ) {
       TileRegister* outtr = dynamic_cast<TileRegister*>(out->second);
       std::vector<MuonTileID> outPads = outtr->getTileVector();
@@ -74,13 +70,13 @@ void L0Muon::FormattingUnit::initialize(){
           }
         }
       }
-      if (m_debug) std::cout <<"Formatting::initialize:   "<<out->first
+      if (m_debug) std::cout <<"Formatting::preexecute:   "<<out->first
 			     <<" "<<outPads.size()<<" pads"
 			     <<" "<<outtr->firedTiles().size()<<" fired tiles"
-			     <<std::endl;
-      
+			     <<std::endl;      
     }    
   }  
+  //L0Muon::Unit::preexecute();
 }
 
 
@@ -91,10 +87,11 @@ void L0Muon::FormattingUnit::execute(){
   
 }
 
-void L0Muon::FormattingUnit::finalize(){
+void L0Muon::FormattingUnit::postexecute(){
 
   m_pads.clear();
   releaseRegisters();
+  //L0Muon::Unit::postexecute(); 
   
 }
 

@@ -1,5 +1,5 @@
 #include "L0MuonKernel/L0BufferUnit.h"
-#include "L0MuonKernel/L0mProcUnit.h"
+#include "L0MuonKernel/ProcUnit.h"
 #include "L0MuonKernel/CrateUnit.h"
 #include "L0mConf/L0MBase.h" 
 #include <cmath>
@@ -51,6 +51,7 @@ void L0Muon::L0BufferUnit::setOutputFile(MuonTileID puid, std::string suffixe){
   char buf[4096];
   sprintf(buf,name,puid.region()+1,puid.nX(),puid.nY(),suffixe.c_str());
   m_l0bufferFile = fopen(buf,"w");
+  // // std::cout << "L0BufferUnit:: setOutputFile file is "<< buf << std::endl;
 
   // Write file header
   writeHeader();
@@ -71,8 +72,8 @@ void L0Muon::L0BufferUnit::setL0buf(){
   if (m_bufferType == 0) {
     setL0bufStd();
   } else {
-    //setOLPLL();
-    //setL0bufPLL();
+    setOLPLL();
+    setL0bufPLL();
   }
 }
 
@@ -174,6 +175,7 @@ void L0Muon::L0BufferUnit::setL0bufStd(){
 */
 void L0Muon::L0BufferUnit::setL0bufPLL(){
 
+  if (m_l0bufferFile==NULL) return;
   
   // 
   // Build the list of fired tiles
@@ -321,6 +323,8 @@ void L0Muon::L0BufferUnit::setL0bufPLL(){
 */
 void L0Muon::L0BufferUnit::setOLPLL(){
 
+  if (m_l0bufferFile==NULL) return;
+
   // 
   // Build the list of fired tiles
   //
@@ -333,6 +337,7 @@ void L0Muon::L0BufferUnit::setOLPLL(){
     TileRegister * itr = dynamic_cast<TileRegister*>(ir->second);
 
     if (itr->Type()=="OpticalLink" ) {
+      // // // std::cout << "L0BufferUnit::setOLPLL OpticalLink input register found: "<<  ir->first  << std::endl;
       std::vector<MuonTileID> inputFiredTiles = itr->firedTiles();
       for (std::vector<MuonTileID>::iterator itfired=inputFiredTiles.begin(); 
 	   itfired!= inputFiredTiles.end(); 
@@ -341,6 +346,9 @@ void L0Muon::L0BufferUnit::setOLPLL(){
       }
     }
   }
+
+  
+  // // //   std::cout << "L0BufferUnit:setOLPLL firedPadList.size()= "<<  firedPadList.size()  << std::endl;
 
   //
   // Update the OL output register with the fired tiles
@@ -357,6 +365,14 @@ void L0Muon::L0BufferUnit::setOLPLL(){
        itfired++){
     pOutRegister->setTile(*itfired);
   }
+
+  std::vector<MuonTileID> tmpFiredTiles  = pOutRegister->firedTiles();
+  std::vector<MuonTileID> tmpTilesVector = pOutRegister->getTileVector();
+  // // //   std::cout << "L0BufferUnit:setOLPLL " 
+  // // // 	    << "  tmpFiredTiles.size()= "<<  tmpFiredTiles.size()  
+  // // // 	    << "  tmpFiredTiles.size()= "<<  tmpTilesVector.size()
+  // // // 	    << std::endl;
+
 
   //
   // Write the BCID on the 3rd word of the last link
@@ -379,9 +395,9 @@ void L0Muon::L0BufferUnit::setOLPLL(){
 
 }
 
-void L0Muon::L0BufferUnit::bootstrap(){
+void L0Muon::L0BufferUnit::initialize(){
   Unit* crate = parentByType("CrateUnit");
-  if ( crate->getProperty("WriteL0Buffer") == "True") m_writeL0Buffer = true;
+  if ( crate->getProperty("WriteL0Buffer") == "True")  m_writeL0Buffer = true;
   if ( crate->getProperty("BuildL0Buffer") == "False") m_buildL0Buffer = false;
 }
 
@@ -389,19 +405,10 @@ void L0Muon::L0BufferUnit::bootstrap(){
    Execute event
 */
 void L0Muon::L0BufferUnit::execute(){
-  
+
   if ( ! m_buildL0Buffer ) return;
   
-  if (m_debug) std::cout << "L0BufferUnit::execute type is "<<m_bufferType << std::endl;
-
   setL0buf();
-
-  if ( ! m_units.empty() ) {
-    std::map<std::string,L0Muon::Unit*>::iterator iu;
-    for ( iu = m_units.begin(); iu != m_units.end(); iu++ ) {
-      (*iu).second->execute();
-    }
-  }
 
   // Write out the L0Buffer
   if ( m_writeL0Buffer ) writeEvent();
@@ -459,28 +466,19 @@ void L0Muon::L0BufferUnit::writeEvent(){
 
   if (m_l0bufferFile==NULL) return;
 
-
   // Write Event Header
   fprintf(m_l0bufferFile,"#- Header\n");
   fprintf(m_l0bufferFile,"%04x %04x\n",m_l0EventNumber%16,0);
-  
-  //std::map<std::string,Register*>::iterator ir ;
 
   // Write Optical link in INPUT
   fprintf(m_l0bufferFile,"#- Optical links\n");
-  //   for (ir = m_outputs.begin(); ir!= m_outputs.end(); ir++){
-  //     TileRegister * itr = dynamic_cast<TileRegister*>(ir->second);
-  //     if (itr->Type()=="OLBuffer" ) {
-  //       itr->print_words(m_l0bufferFile,3);
-  //     }
-  //   }
   TileRegister * pOLOut = dynamic_cast<TileRegister*>(m_outputs["OLOut"]);
-  pOLOut->print_words(m_l0bufferFile,3);
+  if (pOLOut!=0) pOLOut->print_words(m_l0bufferFile,3);
 
   // Write L0Buffer
   fprintf(m_l0bufferFile,"#- L0Buffer\n");
   TileRegister * pL0bOut = dynamic_cast<TileRegister*>(m_outputs["L0bOut"]);
-  pL0bOut->print_words(m_l0bufferFile);
+  if (pL0bOut!=0) pL0bOut->print_words(m_l0bufferFile);
   
   // Write Event Trailer
   fprintf(m_l0bufferFile,"#----\n");

@@ -1,8 +1,8 @@
-// $Id: CablingUnit.h,v 1.8 2005-04-04 07:58:43 atsareg Exp $
-#ifndef L0MUONKERNEL_CABLINGUNIT_H
-#define L0MUONKERNEL_CABLINGUNIT_H     1
+// $Id: CoreUnit.h,v 1.1 2005-05-25 13:18:13 jucogan Exp $
+#ifndef L0MUONKERNEL_COREUNIT_H
+#define L0MUONKERNEL_COREUNIT_H     1
 
-/* @class CablingUnit CablingUnit.h  L0MuonKernel/CablingUnit.h
+/* @class CoreUnit CoreUnit.h  L0MuonKernel/CoreUnit.h
 
    Class representing the kernel of the processing.
    It transforms strips into logical pads.
@@ -25,15 +25,15 @@
 
 namespace L0Muon {
 
-class CablingUnit : public L0Muon::Unit {
+class CoreUnit : public L0Muon::Unit {
 
 public:
 
   /// Constructor
-  CablingUnit();
+  CoreUnit();
 
   /// Destructor
-  ~CablingUnit();
+  ~CoreUnit();
 
   /// Set the MuonTileID of the PU 
   void setPU( MuonTileID pu ) { m_pu = pu; }
@@ -53,14 +53,14 @@ public:
   void drawTower() {m_tower.draw();}
 
   // Overloads from Unit
-  void bootstrap(); 
-  void initialize();
+  void initialize(); 
+  void preexecute();
   void execute();
-  void finalize();
+  void postexecute();
   
   /// Give a static type name to the unit
   std::string type() {
-    return "CablingUnit";
+    return "CoreUnit";
   }
      
 private:
@@ -77,4 +77,4 @@ private:
 
 };  // namespace L0Muon
 
-#endif      // L0MUONKERNEL_CABLINGUNIT_H  
+#endif      // L0MUONKERNEL_COREUNIT_H  

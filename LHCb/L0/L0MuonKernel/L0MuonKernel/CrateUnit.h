@@ -17,7 +17,7 @@ date  24 September 2003
 #include <vector>
 #include <cmath> // for fabs
 
-#include "L0MuonKernel/L0mProcUnit.h"
+#include "L0MuonKernel/ProcUnit.h"
 #include "L0mConf/L0MPuNodeBase.h"
 #include "L0mConf/L0MProNetBase.h"
 #include "L0mConf/L0MXmlReader.h"
@@ -44,20 +44,18 @@ namespace L0Muon {
 
     /// Destructor
     ~CrateUnit();
-
+ 
     /// Initialize subunits
     void initialize();
-
-    /// Bootstrap subunits
-    void bootstrap();
  
+    /// Preexecute subunits
+    void preexecute();
 
     /// Execute subunits
     void execute();
 
-
-    /// Finalize subunits
-    void finalize();
+    /// Postexecute subunits
+    void postexecute();
     
     /// Get candidates from processing units.
     void fillCandidates(PCandidate cand); 

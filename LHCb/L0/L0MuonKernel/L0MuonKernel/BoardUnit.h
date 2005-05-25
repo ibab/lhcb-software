@@ -14,7 +14,7 @@
 #include <boost/dynamic_bitset.hpp>
 #include <vector>
 #include "L0mConf/L0MPuNodeBase.h"
-#include "L0MuonKernel/L0mProcUnit.h"
+#include "L0MuonKernel/ProcUnit.h"
 #include "ProcessorKernel/Unit.h"
 
 
@@ -29,11 +29,6 @@ namespace L0Muon {
 
     /// Destructor
     ~BoardUnit();
-
-
-    //void initialize();
-    //void execute();
-    //void finalize();
 
     /// Give a static type name to the unit
     std::string type() {

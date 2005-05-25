@@ -1,7 +1,7 @@
 #include <utility>  // For std::pair
 #include <algorithm> 
 #include "L0MuonKernel/CrateUnit.h"
-#include "L0MuonKernel/BestCandidateSelectionUnit.h"
+#include "L0MuonKernel/BCSUnit.h"
 
 L0Muon::CrateUnit::CrateUnit(PL0MProNet & pProNet,std::vector<MuonTileID> config_pus )
 {
@@ -51,14 +51,9 @@ L0Muon::CrateUnit::CrateUnit(PL0MProNet & pProNet,std::vector<MuonTileID> config
      board->setParent(this);
      addUnit(board);
 
-     BestCandidateSelectionUnit * bcsu = new BestCandidateSelectionUnit(*ib);
+     BCSUnit * bcsu = new BCSUnit(*ib);
      bcsu->setParent(board);     
      board->addUnit(bcsu, "bcsu");
-//      if ( ! writeL0buffer.empty() ) {
-//        // Open output file for the L0Buffer
-//        // bcsu->setOutputFile(writeL0buffer);
-//      }
-     
      
      for ( ipusb = pusb.begin(); ipusb != pusb.end(); ipusb++ ){
             
@@ -78,7 +73,7 @@ L0Muon::CrateUnit::CrateUnit(PL0MProNet & pProNet,std::vector<MuonTileID> config
 	        
        if ( ok ) {
 	 L0MPuNodeBase m_pPuNode = pProNet->puNode(*ipusb);
-	 Unit * pProcUnit = new L0mProcUnit(m_pPuNode);
+	 Unit * pProcUnit = new ProcUnit(m_pPuNode);
 
 	 pProcUnit->setParent(board);
 	 board->addUnit(pProcUnit);
@@ -87,63 +82,41 @@ L0Muon::CrateUnit::CrateUnit(PL0MProNet & pProNet,std::vector<MuonTileID> config
    }  
 }
 
-
-
-
-
-L0Muon::CrateUnit::~CrateUnit()
-{
+L0Muon::CrateUnit::~CrateUnit(){
 }
 
 void L0Muon::CrateUnit::initialize() {
   L0Muon::Unit::initialize();
 }
 
-void L0Muon::CrateUnit::bootstrap() {
-  L0Muon::Unit::bootstrap();
+void L0Muon::CrateUnit::preexecute() {
+  L0Muon::Unit::preexecute();
 }
-
 
 void L0Muon::CrateUnit::execute()
 {
   m_status = L0MuonStatus::OK ;
   L0Muon::Unit::execute();
   sortCandidates();  
-  //std::cout << "Finished crate execute" << std::endl;
 }
 
-void L0Muon::CrateUnit::finalize()
-{ 
-  if ( ! m_units.empty() ) {
-    std::map<std::string,L0Muon::Unit*>::iterator iu;
-    for ( iu = m_units.begin(); iu != m_units.end(); iu++ ) {    
-	(*iu).second->finalize();
-    }
-    
-//     std::vector<Candidate*>::iterator ilmc ;
-//     for(ilmc = m_candidates.begin();ilmc != m_candidates.end();ilmc++) {
-//       delete *ilmc;
-//     }
-    m_candidates.clear();
-    m_offsets.clear();
-  
-  }   
+void L0Muon::CrateUnit::postexecute(){ 
+  L0Muon::Unit::postexecute();
+  m_candidates.clear();
+  m_offsets.clear(); 
 }
 
 
-void L0Muon::CrateUnit::fillCandidates(PCandidate cand)
-{
+void L0Muon::CrateUnit::fillCandidates(PCandidate cand){
   m_candidates.push_back(cand);
 }
 
 void L0Muon::CrateUnit::fillOffset(std::pair<PCandidate, 
-                                   std::vector<int> > off)
-{
+                                   std::vector<int> > off){
   m_offsets.push_back(off);
 }
 
-void L0Muon::CrateUnit::sortCandidates()
-{
+void L0Muon::CrateUnit::sortCandidates(){
 
    //m_debug = true;
 

@@ -1,5 +1,5 @@
 #include "L0MuonKernel/L0MuonStatus.h"
-#include "L0MuonKernel/BestCandidateSelectionUnit.h"
+#include "L0MuonKernel/BCSUnit.h"
 #include "L0MuonKernel/CrateUnit.h"
 //#include "Event/L0Muon.h"
 #include <stdio.h>
@@ -37,7 +37,7 @@
 */
 
 
-L0Muon::BestCandidateSelectionUnit::BestCandidateSelectionUnit(MuonTileID boardid){
+L0Muon::BCSUnit::BCSUnit(MuonTileID boardid){
   
   m_id = boardid;
   m_bcsueventnumber = 0;
@@ -47,28 +47,29 @@ L0Muon::BestCandidateSelectionUnit::BestCandidateSelectionUnit(MuonTileID boardi
   
 }
 
-L0Muon::BestCandidateSelectionUnit::~BestCandidateSelectionUnit(){
+L0Muon::BCSUnit::~BCSUnit(){
   if (m_bcsul0bufferFile!=NULL) fclose(m_bcsul0bufferFile);  
 }
 
-void L0Muon::BestCandidateSelectionUnit::bootstrap()
+void L0Muon::BCSUnit::initialize()
 {
   Unit* crate = parentByType("CrateUnit");
-  if ( crate->getProperty("WriteL0Buffer") == "True") m_writeL0Buffer = true;
+  if ( crate->getProperty("WriteL0Buffer") == "True")  m_writeL0Buffer = true;
   if ( crate->getProperty("BuildL0Buffer") == "False") m_buildL0Buffer = false;
 }
 
-void L0Muon::BestCandidateSelectionUnit::initialize()
+void L0Muon::BCSUnit::preexecute()
 {
-  //if (m_debug) std::cout << "Initialize BCSU" << std::endl;
+  //if (m_debug) std::cout << "Preexecute BCSU" << std::endl;
   m_offsets.clear();
   m_candidates.clear();
+  L0Muon::Unit::preexecute();
 }
 
-void L0Muon::BestCandidateSelectionUnit::execute() {
+void L0Muon::BCSUnit::execute() {
 
   //m_debug = true;
-  if (m_debug) std::cout << "Execute BestCandidateSelectionUnit" << std::endl;
+  if (m_debug) std::cout << "Execute BCSUnit" << std::endl;
 
   dumpCandidates();
   //dumpAddresses(log);
@@ -105,21 +106,22 @@ void L0Muon::BestCandidateSelectionUnit::execute() {
     if ( m_writeL0Buffer ) writeL0Buffer();
   } 
   m_bcsueventnumber++;
+  L0Muon::Unit::execute();
   
 }
 
 
-void L0Muon::BestCandidateSelectionUnit::finalize()
+void L0Muon::BCSUnit::postexecute()
 {
   //m_offsets.clear();
   //m_candidates.clear();
   releaseRegisters();
-  
+  L0Muon::Unit::postexecute(); 
 }
 
 
 
-void L0Muon::BestCandidateSelectionUnit::setOutputFile(std::string suffixe)
+void L0Muon::BCSUnit::setOutputFile(std::string suffixe)
 
 {
   
@@ -134,14 +136,14 @@ void L0Muon::BestCandidateSelectionUnit::setOutputFile(std::string suffixe)
 }
 
 
-void L0Muon::BestCandidateSelectionUnit::loadCandidates(PCandidate cand)
+void L0Muon::BCSUnit::loadCandidates(PCandidate cand)
 {
   PCandidate tmpcand(cand);
   m_candidates.push_back(tmpcand);
 }
 
 // function for debug
-void L0Muon::BestCandidateSelectionUnit::dumpCandidates() {
+void L0Muon::BCSUnit::dumpCandidates() {
 
   //std::cout << "Dumping candidates " << m_candidates.size() << std::endl;
   
@@ -158,7 +160,7 @@ void L0Muon::BestCandidateSelectionUnit::dumpCandidates() {
 }
 
 
-void L0Muon::BestCandidateSelectionUnit::dumpAddresses()
+void L0Muon::BCSUnit::dumpAddresses()
 {
  std::map<std::string,L0Muon::Register*>::iterator ir;
  for ( ir = m_inputs.begin(); ir != m_inputs.end(); ir++) {
@@ -183,7 +185,7 @@ void L0Muon::BestCandidateSelectionUnit::dumpAddresses()
 	o The condition to select the registers with 
           addresses should be changed
 */
-void L0Muon::BestCandidateSelectionUnit::fillAddresses() {
+void L0Muon::BCSUnit::fillAddresses() {
 
   //std::cout << "BCSU: fillAddresses " << std::endl;
 
@@ -207,7 +209,7 @@ void L0Muon::BestCandidateSelectionUnit::fillAddresses() {
 }
 
 
-void L0Muon::BestCandidateSelectionUnit::sortCandidatesbcsu()
+void L0Muon::BCSUnit::sortCandidatesbcsu()
 {
   //std::sort(m_candidates.begin(),m_candidates.end(), 
   //        CalculateBestPt());
@@ -224,7 +226,7 @@ void L0Muon::BestCandidateSelectionUnit::sortCandidatesbcsu()
   Fill m_inp (pair a candidate with its addresse).
   Note: m_inp is sorted with to decreasing pt
 */
-void L0Muon::BestCandidateSelectionUnit::fillInp() {
+void L0Muon::BCSUnit::fillInp() {
 
   //std::cout << "BCSU: fillInp " << m_candidates.size() << std::endl;
   m_inp.clear();
@@ -248,7 +250,7 @@ void L0Muon::BestCandidateSelectionUnit::fillInp() {
 /*
   Fill m_BcsuId
 */
-void L0Muon::BestCandidateSelectionUnit::setIdBCSU() {
+void L0Muon::BCSUnit::setIdBCSU() {
 
   //std::cout << "BCSU: setIdBCSU " << std::endl;
 
@@ -277,7 +279,7 @@ void L0Muon::BestCandidateSelectionUnit::setIdBCSU() {
 /*
   Fill m_BcsuOut
 */
-void L0Muon::BestCandidateSelectionUnit::setOutBCSU()
+void L0Muon::BCSUnit::setOutBCSU()
  {
  
   //std::cout << "BCSU: setOutBCSU " << std::endl;
@@ -338,7 +340,7 @@ void L0Muon::BestCandidateSelectionUnit::setOutBCSU()
 /*
   Fill m_BcsuInput
  */
-void L0Muon::BestCandidateSelectionUnit::setInpBCSU() {
+void L0Muon::BCSUnit::setInpBCSU() {
 
   //std::cout << "BCSU: setInpBCSU " << std::endl;
 
@@ -422,7 +424,7 @@ void L0Muon::BestCandidateSelectionUnit::setInpBCSU() {
 }
 
 
-void L0Muon::BestCandidateSelectionUnit::writeL0Buffer()
+void L0Muon::BCSUnit::writeL0Buffer()
 {
   
   if (m_bcsul0bufferFile==NULL) return;
@@ -456,7 +458,7 @@ void L0Muon::BestCandidateSelectionUnit::writeL0Buffer()
   Encode the p value given as a double on 8 bits (including one bit for the sign)
 */
 
-boost::dynamic_bitset<> L0Muon::BestCandidateSelectionUnit::codedPt(double pt){
+boost::dynamic_bitset<> L0Muon::BCSUnit::codedPt(double pt){
 
   unsigned long p= int((fabs(pt)+20.)/40.);
 
@@ -471,7 +473,7 @@ boost::dynamic_bitset<> L0Muon::BestCandidateSelectionUnit::codedPt(double pt){
 }
 
 
-void L0Muon::BestCandidateSelectionUnit::loadOffsets(std::pair<PCandidate ,std::vector<int> > off)
+void L0Muon::BCSUnit::loadOffsets(std::pair<PCandidate ,std::vector<int> > off)
 {   
   m_offsets.push_back(off);
 }
