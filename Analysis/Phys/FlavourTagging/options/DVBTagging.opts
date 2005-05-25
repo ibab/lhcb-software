@@ -61,10 +61,11 @@ ChargedProtoPAlg.VeloTTTracks     = true ;
 // Number of events to process, skip and printing frequency
 //---------------------------------------------------------------
 MessageSvc.Format = "% F%15W%S%7W%R%T %0W%M";
-ApplicationMgr.EvtMax    = 100000;
+ApplicationMgr.EvtMax    = 100;
 EventSelector.FirstEvent = 1;
 EventSelector.PrintFreq  = 1;
 
+BTagging.OutputLevel = 2 ;
 //---------------------------------------------------------------
 // Input data 
 //---------------------------------------------------------------

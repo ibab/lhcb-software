@@ -1,10 +1,18 @@
-! $Id: release.notes,v 1.59 2005-03-03 14:58:51 pkoppenb Exp $
+! $Id: release.notes,v 1.60 2005-05-25 11:37:56 pkoppenb Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Phys/FlavourTagging
 ! Responsible : Marco Musy
 ! Purpose     : Provide tools and algorithm for tagging B
 !-----------------------------------------------------------------------------
 
+! 2005-05-25 - P. Koppenburg
+  - src/BTagging.{h,cpp}
+    . Protect get<> methods with exist<>
+    . Do not use TrgDecision::HLT as it is called hlt() in DaVinci v14
+    . Use HltScore instead
+    . Indent properly
+ - src/BTaggingMonitor.cpp
+    . Protect get<> methods with exist<>
 !========================== FlavourTagging v5r5 2005-03-03 ===================
 ! 2005-03-01 - M. Musy
   - src/BTagging.{h,cpp}
