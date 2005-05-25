@@ -1,5 +1,5 @@
 package RecSys
-version v1r0
+version v1r1
 
 branches cmt doc
  
@@ -9,8 +9,8 @@ branches cmt doc
 
 # Calorimeter
 use CaloMoniDst         v1r1	Calo
-use CaloPIDs		v2r5	Calo
-use CaloReco            v2r8    Calo
+use CaloPIDs		v2r5p1	Calo
+use CaloReco            v2r8p2  Calo
 
 # Tracking
 use TrExtrapolator      v2r14   Tr
@@ -25,6 +25,15 @@ use TrMatching          v2r10p2	Tr
 use TrCleanEx           v2r11	Tr
 use VeloTT              v1r13	Tr
 use TrKShort		v1r6	Tr
+
+# New tracking
+use TrackExtrapolators  v1r0    Tr
+use TrackTools          v1r0    Tr
+use TrackMCTools        v1r0    Tr
+use TrackProjectors     v1r0    Tr
+use TrackFitEvent       v1r0    Tr
+use TrackIdealPR        v1r0    Tr
+use TrConverters        v1r0    Tr
 
 # Trg reconstruction
 use TrgSys		v2r5	Trg
@@ -63,4 +72,4 @@ use RichTrgTools	v1r0    Rich
 
 # Global reco
 use PrimVtx             v2r1p1  Rec
-use GlobalReco		v4r9    Rec
+use GlobalReco		v5r0    Rec
