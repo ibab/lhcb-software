@@ -1,4 +1,4 @@
-// $Id: TrackExtrapolator.cpp,v 1.3 2005-05-24 12:01:48 erodrigu Exp $
+// $Id: TrackExtrapolator.cpp,v 1.4 2005-05-25 14:24:35 cattanem Exp $
 // Include files
 
 // from Gaudi
@@ -9,7 +9,7 @@
 #include "Event/State.h"
 
 // local
-#include "TrackExtrapolators/TrackExtrapolator.h"
+#include "TrackExtrapolator.h"
 
 //-----------------------------------------------------------------------------
 // Implementation file for class : TrackExtrapolator

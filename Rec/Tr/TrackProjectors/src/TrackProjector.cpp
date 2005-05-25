@@ -1,4 +1,4 @@
-// $Id: TrackProjector.cpp,v 1.4 2005-05-24 12:37:52 erodrigu Exp $
+// $Id: TrackProjector.cpp,v 1.5 2005-05-25 14:30:21 cattanem Exp $
 // Include files 
 
 // from Gaudi
@@ -9,7 +9,7 @@
 #include "Event/Measurement.h"
 
 // local
-#include "TrackProjectors/TrackProjector.h"
+#include "TrackProjector.h"
 
 //-----------------------------------------------------------------------------
 // Implementation file for class : TrackProjector

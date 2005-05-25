@@ -12,7 +12,7 @@
 #include "Event/MCVeloHit.h"
 
 // local
-#include "TrackMCTools/TrackAcceptance.h"
+#include "TrackAcceptance.h"
 
 //-----------------------------------------------------------------------------
 // Implementation file for class : TrackAcceptance
@@ -72,7 +72,8 @@ TrackAcceptance::~TrackAcceptance() {};
 //=============================================================================
 StatusCode TrackAcceptance::initialize()
 {
-  StatusCode sc;
+  StatusCode sc = GaudiTool::initialize(); // must be executed first
+  if ( sc.isFailure() ) return sc;
 
   ///Geometry information
   debug() << " start reading geometry ..." << endreq;

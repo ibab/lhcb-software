@@ -1,4 +1,4 @@
-// $Id: TrackPtKick.cpp,v 1.1 2005-05-13 12:57:53 erodrigu Exp $
+// $Id: TrackPtKick.cpp,v 1.2 2005-05-25 14:31:35 cattanem Exp $
 // Include files
 // -------------
 
@@ -13,7 +13,7 @@
 #include "CLHEP/Units/PhysicalConstants.h"
 
 // local
-#include "TrackTools/TrackPtKick.h"
+#include "TrackPtKick.h"
 
 //-----------------------------------------------------------------------------
 // Implementation file for class : TrackPtKick
@@ -59,8 +59,10 @@ TrackPtKick::~TrackPtKick() {};
 //=============================================================================
 StatusCode TrackPtKick::initialize()
 {
+  StatusCode sc = GaudiTool::initialize();
+  if (sc.isFailure()) return sc;  // error already reported by base class
+
   m_bIntegrator = tool<IBIntegrator>( "IBIntegrator" );
-  //StatusCode sc = toolSvc()->retrieveTool("BIntegrator",m_bIntegrator);
   
   info() << " Pt kick parameters(" << m_ParabolicCorrection.size()
          << ") ==" <<m_ParabolicCorrection[0] << " + " 
@@ -68,17 +70,6 @@ StatusCode TrackPtKick::initialize()
          << m_ParabolicCorrection[2] <<" tx^2 " <<endreq;
 
   determineFieldPolarity();
-
-  return StatusCode::SUCCESS;
-}
-
-//=============================================================================
-// Finalization
-//=============================================================================
-StatusCode TrackPtKick::finalize() 
-{
-  // Release all tools
-  //if( m_bIntegrator ) toolSvc()->releaseTool( m_bIntegrator );
 
   return StatusCode::SUCCESS;
 }

@@ -10,7 +10,7 @@
 #include "Event/TrackParameters.h"
 
 // local
-#include "TrackMCTools/TrueStateCreator.h"
+#include "TrueStateCreator.h"
 
 //-----------------------------------------------------------------------------
 // Implementation file for class : TrueStateCreator
@@ -74,9 +74,10 @@ TrueStateCreator::~TrueStateCreator() {};
 //=============================================================================
 StatusCode TrueStateCreator::initialize()
 {
-  StatusCode sc;
-
   debug() << "==> Initialize" << endreq;
+
+  StatusCode sc = GaudiTool::initialize(); // must be executed first
+  if ( sc.isFailure() ) return sc;
 
   std::string ascType     = "Associator<MCParticle,MCHit>";
   std::string ascVeloType = "Associator<MCParticle,MCVeloHit>";

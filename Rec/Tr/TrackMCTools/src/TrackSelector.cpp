@@ -10,7 +10,7 @@
 #include "Event/TrackKeys.h"
 
 // local
-#include "TrackMCTools/TrackSelector.h"
+#include "TrackSelector.h"
 
 //-----------------------------------------------------------------------------
 // Implementation file for class : TrackSelector
@@ -57,8 +57,7 @@ TrackSelector::~TrackSelector() {};
 StatusCode TrackSelector::initialize()
 {
   StatusCode sc = GaudiTool::initialize(); // must be executed first
-  if ( sc.isFailure() )
-    return Error( "Base class \"GaudiTool\" was not initialized properly!" );
+  if ( sc.isFailure() ) return sc;  
 
   debug() << "==> Initialize" << endreq;
 
@@ -66,16 +65,6 @@ StatusCode TrackSelector::initialize()
   m_mcParticleJudge = tool<ITrackReconstructible>( m_mcParticleJudgeName );
 
   return StatusCode::SUCCESS;
-}
-
-//=============================================================================
-// Finalization
-//=============================================================================
-StatusCode TrackSelector::finalize()
-{
-  debug() << "==> Finalize" << endreq;
-
-  return GaudiTool::finalize();  // must be called after all other actions
 }
 
 //=============================================================================
@@ -131,7 +120,7 @@ bool TrackSelector::selectByTrackType( Track* track ) const
     selected = false;
 
   // Check if the track is of the requested type
-  unsigned int tracktype = track -> type();
+  int tracktype = track -> type();
   if ( tracktype == TrackKeys::TypeUnknown ||
        ( !m_tracktypes.empty() &&  
          std::find( m_tracktypes.begin(), m_tracktypes.end(), 

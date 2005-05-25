@@ -1,4 +1,4 @@
-// $Id: MeasurementProvider.cpp,v 1.1 2005-05-24 09:52:44 erodrigu Exp $
+// $Id: MeasurementProvider.cpp,v 1.2 2005-05-25 14:31:35 cattanem Exp $
 // Include files 
 // -------------
 // from Gaudi
@@ -54,6 +54,9 @@ MeasurementProvider::~MeasurementProvider() {};
 // 
 //=============================================================================
 StatusCode MeasurementProvider::initialize() {
+
+  StatusCode sc = GaudiTool::initialize();
+  if (sc.isFailure()) return sc;  // error already reported by base class
 
   m_otDet = getDet<DeOTDetector>( m_otDetPath );
   

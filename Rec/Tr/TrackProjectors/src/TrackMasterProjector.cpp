@@ -8,7 +8,7 @@
 #include "Event/Measurement.h"
 
 // local
-#include "TrackProjectors/TrackMasterProjector.h"
+#include "TrackMasterProjector.h"
 
 //-----------------------------------------------------------------------------
 // Implementation file for class : TrackMasterProjector

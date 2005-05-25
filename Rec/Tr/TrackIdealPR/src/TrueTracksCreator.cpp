@@ -556,8 +556,8 @@ StatusCode TrueTracksCreator::initializeState( double z,
 //=============================================================================
 StatusCode TrueTracksCreator::deleteStates( Track* track )
 {
-  std::vector<State*>::iterator it = track -> states().begin();
-  for ( it; it != track->states().end(); it++) {
+  for ( std::vector<State*>::iterator it  = track->states().begin();
+                                      it != track->states().end(); it++) {
     track -> removeFromStates( (*it) );
   }
   

@@ -21,21 +21,16 @@ include_path      none
 #============================================================================
 use   GaudiAlg        v*
 
-use   OTEvent         v14r* Event
-use   ITEvent         v13r* Event
-use   VeloEvent       v13r* Event
+use   Event           v* Event
+use   TrackEvent      v* Event
+use   TrackFitEvent   v* Tr
 
-use   TrackEvent      v*    Event
-use   TrackFitEvent   v*    Tr
+use   OTAssociators   v* OT
+use   ITAssociators   v* IT
+use   VeloAssociators v* Velo
 
-use   OTAssociators   v3r*  OT
-use   ITAssociators   v2r*  IT
-use   VeloAssociators v1r*  Velo
+use   TrackInterfaces v* Tr
 
-use   TrackInterfaces v*    Tr
-use   TrackTools      v*    Tr
-
-use CLHEP v1 LCG_Interfaces
 #============================================================================
 # Component library building rule
 #============================================================================

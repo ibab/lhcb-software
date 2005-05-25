@@ -1,11 +1,11 @@
-// $Id: TrackLinearExtrapolator.h,v 1.2 2005-04-08 11:53:09 hernando Exp $
+// $Id: TrackLinearExtrapolator.h,v 1.3 2005-05-25 14:24:35 cattanem Exp $
 #ifndef TRACKEXTRAPOLATORS_TRLINEAREXTRAPOLATOR_H 
 #define TRACKEXTRAPOLATORS_TRLINEAREXTRAPOLATOR_H 1
 
 // Include files
 
 // from TrackExtrapolators
-#include "TrackExtrapolators/TrackExtrapolator.h"
+#include "TrackExtrapolator.h"
 
 // Forward declaration
 class Track;

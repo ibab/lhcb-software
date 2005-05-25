@@ -4,6 +4,11 @@
 ! Purpose     : Package for tracking tools not accessing MC information
 !-----------------------------------------------------------------------------
 
+!======================== TrackTools v1r0 2005-05-25 =========================
+! 2005-05-25 - Marco Cattaneo
+ - Remove TrackTools directory, header files moved to src
+ - Initialize base class of GaudiTools
+
 ! 2005-05-24 - Eduardo Rodrigues
  - MeasurementProvider tool moved here from Tr/TrackFitEvent
  - requirements file updated

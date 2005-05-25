@@ -1,9 +1,9 @@
-// $Id: TrackHerabExtrapolator.h,v 1.1 2005-03-16 14:10:05 hernando Exp $
+// $Id: TrackHerabExtrapolator.h,v 1.2 2005-05-25 14:24:35 cattanem Exp $
 #ifndef TRACKHERABEXTRAPOLATOR_H
 #define TRACKHERABEXTRAPOLATOR_H 1
 
 // Include files
-#include "TrackExtrapolators/TrackExtrapolator.h"
+#include "TrackExtrapolator.h"
 
 /** @class TrackHerabExtrapolator TrackHerabExtrapolator.h "TrackHerabExtrapolator.h"
  *

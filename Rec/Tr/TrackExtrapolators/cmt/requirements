@@ -15,15 +15,13 @@ version           v1r0
 #============================================================================
 branches          cmt doc src TrackExtrapolators
 
-include_dirs    $(TRACKEXTRAPOLATORSROOT)
-
 include_path      none
 
 #============================================================================
 # Used packages. Specify the version, * at the end specifies 'any revision'
 #    Put as many lines as needed, with all packages, without the '#'
 #============================================================================
-use     GaudiAlg        v8r*
+use     GaudiAlg        v*
 use     GSL             v*     LCG_Interfaces
 
 use 	TrackEvent	v*     Event

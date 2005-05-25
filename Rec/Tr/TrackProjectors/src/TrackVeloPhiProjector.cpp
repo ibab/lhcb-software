@@ -4,7 +4,7 @@
 #include "GaudiKernel/ToolFactory.h" 
 
 // local
-#include "TrackProjectors/TrackVeloPhiProjector.h"
+#include "TrackVeloPhiProjector.h"
 #include "Event/VeloPhiMeasurement.h"
 
 //-----------------------------------------------------------------------------

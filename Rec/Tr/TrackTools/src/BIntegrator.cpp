@@ -1,4 +1,4 @@
-// $Id: BIntegrator.cpp,v 1.1 2005-05-12 15:02:14 erodrigu Exp $
+// $Id: BIntegrator.cpp,v 1.2 2005-05-25 14:31:35 cattanem Exp $
 // Include files 
 // -------------
 
@@ -9,14 +9,11 @@
 #include "Event/State.h"
 #include "Event/TrackParameters.h"
 
-// from Gaudi
-#include "GaudiKernel/ISvcLocator.h"
-
 // from CLHEP
 #include "CLHEP/Units/PhysicalConstants.h"
 
 // local
-#include "TrackTools/BIntegrator.h"
+#include "BIntegrator.h"
 
 //-----------------------------------------------------------------------------
 // Implementation file for class : BIntegrator
@@ -54,28 +51,17 @@ BIntegrator::~BIntegrator() {};
 //=============================================================================
 StatusCode BIntegrator::initialize()
 {
+  StatusCode sc = GaudiTool::initialize();
+  if (sc.isFailure()) return sc;  // error already reported by base class
+
   // Retrieve a pointer to the magnetic field service
-  StatusCode sc = serviceLocator() -> service( "MagneticFieldSvc",
-                                               m_pIMF, true );
-  if( sc.isFailure() )
-    Error( "Failed to retrieve magnetic field service", sc );
+  m_pIMF = svc<IMagneticFieldSvc>( "MagneticFieldSvc", true );
  
   calculateBdlCenter();
   info() << "Center of the field is at the z positions "
          << m_centerZ << endreq;
   
   return sc;
-}
-
-//=============================================================================
-// Finalization
-//=============================================================================
-StatusCode BIntegrator::finalize() 
-{
-  // Release services and tools retrieved at initialize
-  if( 0 != m_pIMF ) { m_pIMF->release(); m_pIMF = 0; }
-  
-  return StatusCode::SUCCESS;
 }
 
 //=============================================================================

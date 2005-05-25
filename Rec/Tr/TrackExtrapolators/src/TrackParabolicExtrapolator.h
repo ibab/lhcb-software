@@ -1,9 +1,9 @@
-// $Id: TrackParabolicExtrapolator.h,v 1.1 2005-03-16 14:10:05 hernando Exp $
+// $Id: TrackParabolicExtrapolator.h,v 1.2 2005-05-25 14:24:35 cattanem Exp $
 #ifndef TRACKPARABOLICEXTRAPOLATOR_H
 #define TRACKPARABOLICEXTRAPOLATOR_H 1
 
 // Include files
-#include "TrackExtrapolators/TrackExtrapolator.h"
+#include "TrackExtrapolator.h"
 
 // Forward declaration
 class IMagneticFieldSvc;

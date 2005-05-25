@@ -4,6 +4,7 @@
 ! Purpose     : Perfect pattern recognition
 !-----------------------------------------------------------------------------
 
+!======================= TrackIdealPR v1r0 2005-05-24 ========================
 ! 2005-05-24 - Eduardo Rodrigues
  - propagating changes from TrackEvent to TrackIdealPR
  - using now the interfaces from Tr/TrackInterfaces and no longer

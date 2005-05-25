@@ -4,6 +4,11 @@
 ! Purpose     : package for tracking tools accessing MC information
 !-----------------------------------------------------------------------------
 
+!======================= TrackMCTools v1r0 2005-05-25 ========================
+! 2005-05-25 - Marco Cattaneo
+ - Remove TrackMCTools directory, header files moved to src
+ - Initialize base class of GaudiTools
+
 ! 2005-05-23 - Eduardo Rodrigues
  - creation of the package. Moved from Tr/TrackTools the tools:
    TrackAcceptance, TrueStateCreator and TrackSelector

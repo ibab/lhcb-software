@@ -14,27 +14,25 @@ version           v1r0
 # Structure, i.e. directories to process. 
 #============================================================================
 branches          cmt doc src TrackMCTools
-
-include_dirs    $(TRACKMCTOOLSROOT)
-
 include_path      none
+
 #============================================================================
 # Used packages. Specify the version, * at the end specifies 'any revision'
 #    Put as many lines as needed, with all packages, without the '#'
 #============================================================================
 use   GaudiAlg        v*
-use   Relations       v2r*     Kernel
+use   Relations       v*     Kernel
 
-use   TrackEvent      v0r*     Event
-use   OTEvent         v14r*    Event
-use   ITEvent         v13r*    Event
-use   VeloEvent       v13r*    Event
+use   TrackEvent      v*     Event
+use   OTEvent         v*     Event
+use   ITEvent         v*     Event
+use   VeloEvent       v*     Event
 
-use   TrackInterfaces v*       Tr
+use   TrackInterfaces v*     Tr
 
-use   STDet           v1r*     Det
-use   OTDet           v5r*     Det
-use   VeloDet         v9r*     Det
+use   STDet           v*     Det
+use   OTDet           v*     Det
+use   VeloDet         v*     Det
 #============================================================================
 # Component library building rule
 #============================================================================

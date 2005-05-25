@@ -4,7 +4,7 @@
 #include "GaudiKernel/ToolFactory.h" 
 
 // local
-#include "TrackProjectors/TrackITProjector.h"
+#include "TrackITProjector.h"
 
 //-----------------------------------------------------------------------------
 // Implementation file for class : TrackITProjector

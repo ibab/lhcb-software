@@ -4,7 +4,7 @@
 #include "GaudiKernel/ToolFactory.h" 
 
 // local
-#include "TrackProjectors/TrackOTProjector.h"
+#include "TrackOTProjector.h"
 #include "Event/OTMeasurement.h"
 
 //-----------------------------------------------------------------------------
