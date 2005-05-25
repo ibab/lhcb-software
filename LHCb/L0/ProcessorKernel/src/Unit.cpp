@@ -16,12 +16,6 @@ void L0Muon::Unit::setParent(L0Muon::Unit * unit)
   m_parent = unit;
 }
 
-//Unit * L0Muon::Unit::subUnit(std::string name)
-//{  
-//std::map<std::string,L0Muon::Unit*>::iterator iunit; 
-//iunit = m_units.find(name);
-//return (*iunit).second;  
-//}
 
 std::string L0Muon::Unit::getProperty(std::string name) {
   std::map<std::string,std::string>::iterator im;
@@ -116,6 +110,42 @@ void L0Muon::Unit::dumpRegisters() {
   }
 }
 
+void L0Muon::Unit::setDebugMode() {
+
+  m_debug = true;
+  if (m_debug) std::cout <<"*** "<< type() <<"::setDebugMode" << std::endl;
+  // set debug level for all the subunits
+  if ( ! m_units.empty() ) {
+    std::map<std::string,L0Muon::Unit*>::iterator iu;
+    for ( iu = m_units.begin(); iu != m_units.end(); iu++ ) {
+      (*iu).second->setDebugMode();
+    }
+  } 
+}
+
+void L0Muon::Unit::initialize() {
+
+  if (m_debug) std::cout <<"*** "<< type() <<"::initialize" << std::endl;
+  // initialize the subunits
+  if ( ! m_units.empty() ) {
+    std::map<std::string,L0Muon::Unit*>::iterator iu;
+    for ( iu = m_units.begin(); iu != m_units.end(); iu++ ) {
+      (*iu).second->initialize();
+    }
+  } 
+}
+
+void L0Muon::Unit::preexecute() {
+
+  if (m_debug) std::cout <<"*** "<< type() <<"::preexecute" << std::endl;
+  // preexecute the subunits
+  if ( ! m_units.empty() ) {
+    std::map<std::string,L0Muon::Unit*>::iterator iu;
+    for ( iu = m_units.begin(); iu != m_units.end(); iu++ ) {
+      (*iu).second->preexecute();
+    }
+  } 
+}
 
 void L0Muon::Unit::execute() {
   if (m_debug) std::cout <<"*** "<< type() <<"::execute" << std::endl;
@@ -129,43 +159,20 @@ void L0Muon::Unit::execute() {
   }  
 }
 
-void L0Muon::Unit::initialize() {
-
-  // initialize the subunits
+  
+void L0Muon::Unit::postexecute() {
+  if (m_debug) std::cout <<"*** "<< type() <<"::postexecute" << std::endl;
+  // postexecute the subunits
   if ( ! m_units.empty() ) {
     std::map<std::string,L0Muon::Unit*>::iterator iu;
     for ( iu = m_units.begin(); iu != m_units.end(); iu++ ) {
-      (*iu).second->initialize();
-    }
-  } 
-}
-
-void L0Muon::Unit::bootstrap() {
-
-  if (m_debug) std::cout <<"*** "<< type() <<"::bootstrap" << std::endl;
-  // initialize the subunits
-  if ( ! m_units.empty() ) {
-    std::map<std::string,L0Muon::Unit*>::iterator iu;
-    for ( iu = m_units.begin(); iu != m_units.end(); iu++ ) {
-      (*iu).second->bootstrap();
-    }
-  } 
-}
-
-void L0Muon::Unit::setDebugMode() {
-
-  m_debug = true;
-  // set debug level for all the subunits
-  if ( ! m_units.empty() ) {
-    std::map<std::string,L0Muon::Unit*>::iterator iu;
-    for ( iu = m_units.begin(); iu != m_units.end(); iu++ ) {
-      (*iu).second->setDebugMode();
+      (*iu).second->postexecute();
     }
   } 
 }
 
 void L0Muon::Unit::finalize() {
-  
+  if (m_debug) std::cout <<"*** "<< type() <<"::finalize" << std::endl;
   // finalize the subunits
   if ( ! m_units.empty() ) {
     std::map<std::string,L0Muon::Unit*>::iterator iu;

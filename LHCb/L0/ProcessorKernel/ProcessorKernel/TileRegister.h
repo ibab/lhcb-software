@@ -1,4 +1,4 @@
-// $Id: TileRegister.h,v 1.4 2005-04-05 11:24:40 cattanem Exp $
+// $Id: TileRegister.h,v 1.5 2005-05-25 13:15:44 jucogan Exp $
 
 #ifndef PROCESSORKERNEL_TILEREGISTER_H
 #define PROCESSORKERNEL_TILEREGISTER_H     1
@@ -14,9 +14,6 @@
 
 
 #include <vector>
-#include "L0mConf/L0MPuNodeBase.h"
-#include "L0mConf/L0MTile.h"
-#include "L0mConf/L0MBase.h"
 #include "ProcessorKernel/Register.h"
 #include "MuonKernel/MuonTileID.h"
 #include <stdio.h>
@@ -81,6 +78,9 @@ public:
   /// Set the tile id
   void setTile(MuonTileID & id);
   
+  /// set the type of tiles (strips/pad)
+  void setTilesTagVector(boost::dynamic_bitset<> & tilestag);
+
   /// Return the type of tiles
   boost::dynamic_bitset<> TilesTag() { return m_tilestag ;}
 
@@ -90,9 +90,9 @@ public:
   /// Return the strips
   boost::dynamic_bitset<> StripsTag() { return m_stripstag ;}
   
-  /// set the type of tiles (strips/pad)
-  void setTag(std::vector<L0MTile> & tiles);
-  
+  /// set the type of strips (H/V)
+  void setStripsTagVector(boost::dynamic_bitset<> & stripstag);
+
   /// Cross the strips, fill m_pads
   void makePads(int flag=0);
   

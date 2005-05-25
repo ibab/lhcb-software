@@ -1,4 +1,4 @@
-// $Id: Unit.h,v 1.3 2005-04-15 16:15:07 cattanem Exp $
+// $Id: Unit.h,v 1.4 2005-05-25 13:15:44 jucogan Exp $
 
 #ifndef PROCESSORKERNEL_UNIT_H
 #define PROCESSORKERNEL_UNIT_H     1
@@ -79,20 +79,24 @@ public:
   */
   void addUnit(L0Muon::Unit* unit, std::string uname);
  
-  virtual void bootstrap();
-
+  /// Set the DEBUG level flag
+  void setDebugMode() ;
+  
   /// Virtual method to initialize the hierarchy of units
   virtual void initialize();
+
+  /// Virtual method to preexecute the hierarchy of units
+  virtual void preexecute();
 
   /// Virtual method to execute the hierarchy of units
   virtual void execute();
 
+  /// Virtual method to postexecute the hierarchy of units
+  virtual void postexecute();
+
   /// Virtual method to finalize the hierarchy of units
   virtual void finalize();
 
-  /// Set the DEBUG level flag
-  void setDebugMode() ;
-  
   /// Get the unit type
   virtual std::string type() =0;
   
