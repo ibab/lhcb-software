@@ -1,4 +1,4 @@
-// $Id: TileRegister.h,v 1.5 2005-05-25 13:15:44 jucogan Exp $
+// $Id: TileRegister.h,v 1.6 2005-05-25 13:30:09 jucogan Exp $
 
 #ifndef PROCESSORKERNEL_TILEREGISTER_H
 #define PROCESSORKERNEL_TILEREGISTER_H     1
@@ -94,7 +94,7 @@ public:
   void setStripsTagVector(boost::dynamic_bitset<> & stripstag);
 
   /// Cross the strips, fill m_pads
-  void makePads(int flag=0);
+  void makePads();
   
   /// Print the tile register for debug
   void print_bits(long unsigned int event, FILE *file);
