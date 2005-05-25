@@ -1,4 +1,4 @@
-// $Id: ITrackFitter.h,v 1.1 2005-05-25 09:08:39 hernando Exp $
+// $Id: ITrackFitter.h,v 1.2 2005-05-25 09:28:19 hernando Exp $
 #ifndef TRACKINTERFACES_ITRACKFITTER_H 
 #define TRACKINTERFACES_ITRACKFITTER_H 1
 
@@ -30,16 +30,16 @@ public:
   static const InterfaceID& interfaceID() { return IID_ITrackFitter; }
 
   //! fit a track without a seed state
-  StatusCode fit(Track& track) = 0;
+  virtual StatusCode fit(Track& track) = 0;
 
   //! fit the track with a seed state
-  StatusCode fit(Track& track, const State& seed) = 0;
+  virtual StatusCode fit(Track& track, const State& seed) = 0;
   
   //! filter the track (only filter)
-  StatusCode filter(Track& track, const State& seed) = 0;
+  virtual StatusCode filter(Track& track, const State& seed) = 0;
   
   //! filter/update state with this measurement
-  StatusCode filter(State& state, Measurement& meas) = 0;
+  virtual StatusCode filter(State& state, Measurement& meas) = 0;
 
 };
 #endif // TRACKINTERFACES_ITRACKFITTER_H
