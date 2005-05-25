@@ -1,4 +1,4 @@
-// $Id: CondDBGenericCnv.cpp,v 1.6 2005-05-12 16:17:32 marcocle Exp $
+// $Id: CondDBGenericCnv.cpp,v 1.7 2005-05-25 17:22:14 marcocle Exp $
 // Include files 
 #include "GaudiKernel/IDetDataSvc.h"
 #include "GaudiKernel/TimePoint.h"
@@ -15,7 +15,7 @@
 #include "CoolKernel/IFolder.h"
 #include "CoolKernel/IObject.h"
 #include "CoolKernel/IDatabase.h"
-#include "RelationalCool/RelationalException.h"
+#include "CoolKernel/Exception.h"
 
 // local
 #include "DetCond/CondDBGenericCnv.h"
@@ -142,10 +142,10 @@ StatusCode CondDBGenericCnv::getObject (const std::string &path, cool::IObjectPt
 
       found_object = true;
     
-    } catch ( cool::RelationalFolderNotFound /*&e*/) {
+    } catch ( cool::FolderNotFound /*&e*/) {
       //log << MSG::ERROR << e << endmsg;
       //return StatusCode::FAILURE;
-    } catch (cool::RelationalObjectNotFound /*&e*/) {
+    } catch (cool::ObjectNotFound /*&e*/) {
       //log << MSG::ERROR << "Object not found in \"" << path <<
       //  "\" for tag \"" << (*accSvc)->tag() << "\" ("<< now << ')' << endmsg;
       //log << MSG::DEBUG << e << endmsg;

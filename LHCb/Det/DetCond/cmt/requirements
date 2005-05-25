@@ -1,7 +1,7 @@
-# $Id: requirements,v 1.30 2005-05-12 16:17:32 marcocle Exp $
+# $Id: requirements,v 1.31 2005-05-25 17:22:14 marcocle Exp $
 # Modified by Marco Clemencic and Nicolas Gilardi (Gen. 2005)
 package DetCond
-version v7r1
+version v7r2
 
 branches DetCond cmt src doc
 

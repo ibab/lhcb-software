@@ -1,4 +1,4 @@
-// $Id: CondDBAccessSvc.cpp,v 1.6 2005-05-12 10:44:04 marcocle Exp $
+// $Id: CondDBAccessSvc.cpp,v 1.7 2005-05-25 17:22:14 marcocle Exp $
 // Include files 
 #include <sstream>
 
@@ -14,9 +14,9 @@
 #include "CoolKernel/IDatabaseSvc.h"
 #include "CoolKernel/IFolder.h"
 #include "CoolKernel/IObject.h"
+#include "CoolKernel/Exception.h"
 
-#include "RelationalCool/RalDatabaseSvcFactory.h"
-#include "RelationalCool/RelationalException.h"
+#include "CoolApplication/DatabaseSvcFactory.h"
 
 #include "AttributeList/AttributeList.h"
 
@@ -223,11 +223,11 @@ StatusCode CondDBAccessSvc::initialize(){
       cool::IFolderPtr folder = m_db->getFolder(m_test_path);
       cool::IObjectPtr object = folder->findObject(2000);
       object->payload().print(std::cout);
-    } catch (cool::RelationalFolderNotFound &e) {
+    } catch (cool::FolderNotFound &e) {
       log << MSG::ERROR << "Folder \"" << m_test_path << "\" not found!" << endmsg;
       log << MSG::ERROR << e << endmsg;
       return StatusCode::FAILURE;
-    } catch (cool::RelationalObjectNotFound &e) {
+    } catch (cool::ObjectNotFound &e) {
       log << MSG::ERROR << "Object \"" << m_test_path << "\" not found!" << endmsg;
       log << MSG::ERROR << e << endmsg;
       return StatusCode::FAILURE;
@@ -272,7 +272,7 @@ StatusCode CondDBAccessSvc::i_openConnention(){
   try {
     if (! m_db) { // The database is not yet opened
       log << MSG::DEBUG << "Get DatabaseSvc" << endmsg;
-      cool::IDatabaseSvc &dbSvc = cool::RalDatabaseSvcFactory::databaseService();
+      cool::IDatabaseSvc &dbSvc = cool::DatabaseSvcFactory::databaseService();
       if ( ! &dbSvc ) {
         log << MSG::ERROR << "unable to get the Database Service" << endmsg;
         return StatusCode::FAILURE;
@@ -303,8 +303,8 @@ StatusCode CondDBAccessSvc::i_openConnention(){
       log << MSG::VERBOSE << "Database connection already established!" << endmsg;
     }
   }
-  //  catch ( cool::RelationalDatabaseDoesNotExist &e ) {
-  catch ( cool::RelationalException &e ) {
+  //  catch ( cool::DatabaseDoesNotExist &e ) {
+  catch ( cool::Exception &e ) {
     log << MSG::ERROR << "Problems opening database" << endmsg;
     log << MSG::ERROR << e << endmsg;
     m_db.reset();
@@ -376,7 +376,7 @@ StatusCode CondDBAccessSvc::createFolder(const std::string &path,
           << "\": unknown StorageType" << endmsg;
       return StatusCode::FAILURE;
     }
-  } catch(cool::RelationalNodeExists){
+  } catch(cool::NodeExists){
     MsgStream log(msgSvc(), name() );
     log << MSG::ERROR << "Unable to create the folder \"" << path
         << "\": the node already exists" << endmsg;
@@ -459,7 +459,7 @@ StatusCode CondDBAccessSvc::tagFolder(const std::string &path, const std::string
         folder->tag(folder->fullPath() + "-" + tagName,description);
       }
     }
-  } catch (cool::RelationalFolderNotFound &e) {
+  } catch (cool::FolderNotFound &e) {
     MsgStream log(msgSvc(),name());
     log << MSG::ERROR << "Folder \"" << path << "\" not found!" << endmsg;
     log << e << endmsg;
