@@ -5,6 +5,7 @@
 !-----------------------------------------------------------------------------
 
 ! 2005-05-25 - Jose A. Hernando
+ - State: when clone location it set to unknown
  - Track: ancestors are contained in SmartRefVec
    nMeasurements(Pred) method is in TrackFunctor waiting for new GOD/Gaudi version and proper work done with templates for python-dictionaries
 
