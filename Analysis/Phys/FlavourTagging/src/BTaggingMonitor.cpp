@@ -1,4 +1,4 @@
-// $Id: BTaggingMonitor.cpp,v 1.5 2005-03-01 09:57:05 musy Exp $
+// $Id: BTaggingMonitor.cpp,v 1.6 2005-05-25 11:37:57 pkoppenb Exp $
 // local
 #include "BTaggingMonitor.h"
 
@@ -52,24 +52,26 @@ StatusCode BTaggingMonitor::execute() {
  
   setFilterPassed( false );
 
-  // Retrieve informations about event
-  EventHeader* evt = get<EventHeader> (EventHeaderLocation::Default);
-  if ( !evt ) {
+  /*  
+  // Retrieve informations about event 
+  if ( !exist<EventHeader>(EventHeaderLocation::Default) ){
     err() << "Unable to Retrieve Event" << endreq;
     return StatusCode::FAILURE;
   }
+  EventHeader* evt = get<EventHeader> (EventHeaderLocation::Default);
+  */
 
   //choose the forced B
   MCParticle* B0 = 0;
-  GenMCLinks* sigL = get<GenMCLinks> (GenMCLinkLocation::Default);
-  if( !sigL ) {
-    err() << "Unable to Retrieve GenMCLinks" << endreq;
-    return StatusCode::FAILURE; 
+  if( !exist<GenMCLinks> (GenMCLinkLocation::Default) ) {
+    warning() << "Unable to Retrieve GenMCLinks" << endreq;
+    return StatusCode::SUCCESS; 
   }
+  GenMCLinks* sigL = get<GenMCLinks> (GenMCLinkLocation::Default);
   B0 = (*(sigL->begin()))->signal();
   if(!B0) {
-    err() << "No signal B in GenMCLinks" << endreq;
-    return StatusCode::FAILURE; 
+    warning() << "No signal B in GenMCLinks" << endreq;
+    return StatusCode::SUCCESS; 
   }
 
   int tagdecision=0, ix=0;

@@ -15,7 +15,7 @@ const        IAlgFactory& BTaggingFactory = s_factory ;
 // Standard constructor, initializes variables
 //=============================================================================
 BTagging::BTagging(const std::string& name,
-		   ISvcLocator* pSvcLocator) : DVAlgorithm(name, pSvcLocator){
+                   ISvcLocator* pSvcLocator) : DVAlgorithm(name, pSvcLocator){
 
   declareProperty( "Muon_Pt_cut", m_Pt_cut_muon = 1.2 );
   declareProperty( "Muon_P_cut",  m_P_cut_muon  = 5.0 );
@@ -92,38 +92,50 @@ StatusCode BTagging::execute() {
   setFilterPassed( false );
    
   // Retrieve informations about event
-  EventHeader* evt = get<EventHeader> (EventHeaderLocation::Default);
-  if ( !evt ) {   
-    err() << "Unable to Retrieve Event" << endreq;
+  if ( !exist<EventHeader>(EventHeaderLocation::Default) ) {   
+    err() << "Unable to Retrieve Event header" << endreq;
     return StatusCode::SUCCESS;
   }
+  EventHeader* evt = get<EventHeader> (EventHeaderLocation::Default);
 
   // Retrieve trigger/tampering info
   int trigger=-1;
   double tamper=100;
-  debug()<<"Retrieve TrgDecision from "<<TrgDecisionLocation::Default<<endreq;
+  debug()<< "Retrieve TrgDecision from " << TrgDecisionLocation::Default <<endreq;
   TrgDecision* trg = 0;
-  if(m_RequireTrigger || m_RequireTamp) {
-    trg = get<TrgDecision> (TrgDecisionLocation::Default);
-  }
-  if( 0 == trg && m_RequireTamp){
-    fatal()<<"You required the Tampering: please run the Trigger!"<<endreq;
-    return StatusCode::FAILURE;
+  HltScore* hlt = 0 ;
+  if (m_RequireTrigger || m_RequireTamp) {
+    if ( !exist<TrgDecision>(TrgDecisionLocation::Default) ){
+      warning() << "No TrgDecision" << endmsg ;
+      if( m_RequireTamp){
+        fatal()<<"You required the Tampering: please run the Trigger!"<<endreq;
+        return StatusCode::FAILURE;
+      }
+    } else {
+      trg = get<TrgDecision> (TrgDecisionLocation::Default);
+      if ( !exist<HltScore>(HltScoreLocation::Default) ){
+        debug() << "No HLT score" << endmsg ;
+      } else hlt = get<HltScore>(HltScoreLocation::Default) ;
+    }
   } 
   if(trg) {
     // Select events on trigger
-    if(m_RequireL0)  if( trg->L0() == 0 ) return StatusCode::SUCCESS;
-    if(m_RequireL1)  if( trg->L1() == 0 ) return StatusCode::SUCCESS;
-    if(m_RequireHLT) if( trg->HLT()== 0 ) return StatusCode::SUCCESS;
-    trigger = trg->L0() + trg->L1() *10 + trg->HLT() *100;
+    if(m_RequireL0)  {if( !trg->L0() ) return StatusCode::SUCCESS;}
+    if(m_RequireL1)  {if( !trg->L1() ) return StatusCode::SUCCESS;}
+    if(m_RequireHLT) {
+      if ( 0==hlt ) return StatusCode::SUCCESS;
+      if ( !hlt->decision() ) return StatusCode::SUCCESS; 
+    }
+    if ( 0!=hlt) trigger = trg->L0() + trg->L1() *10 + 100*hlt->decision();
+    else trigger = trg->L0() + trg->L1() *10 ;
 
     // Retrieve Tampering info
     if( m_RequireTamp ) {
       TamperingResults* tampres = 
-	get<TamperingResults>(TamperingResultsLocation::Default);
+        get<TamperingResults>(TamperingResultsLocation::Default);
       if( tampres ) {
-	tamper= tampres->L1TIS() + tampres->L1TOS()*10 + tampres->L1TOB()*100;
-	debug() << "Results read ( TOB, TOS, TIS ): " << tamper <<endreq;
+        tamper= tampres->L1TIS() + tampres->L1TOS()*10 + tampres->L1TOB()*100;
+        debug() << "Results read ( TOB, TOS, TIS ): " << tamper <<endreq;
       } else warning() << "TamperingResults not found" << endreq;
     }
   }
@@ -131,13 +143,13 @@ StatusCode BTagging::execute() {
   //----------------------------------------------------------------------
   // Counter of events processed
   debug() << ">>>>>  Tagging Run Nr " << evt->runNum()
-	  << " Event " << evt->evtNum() << "  <<<<<" << endreq;
+          << " Event " << evt->evtNum() << "  <<<<<" << endreq;
 
   //PhysDeskTop
   const ParticleVector& parts = desktop()->particles();
   const VertexVector&   verts = desktop()->primaryVertices();    
   debug() << "  Nr Vertices: "  << verts.size() 
-	  << "  Nr Particles: " << parts.size() <<endreq;
+          << "  Nr Particles: " << parts.size() <<endreq;
 
   //----------------------------------------------------------------------
   //look for B in selection:
@@ -161,7 +173,7 @@ StatusCode BTagging::execute() {
       if( AXB0->particleID().hasStrange() ) isBs = true;
       if( AXB0->particleID().hasUp() )      isBu = true;
       debug() << "Found Selected B0/Bs!  daugh=" 
-	  << axdaugh.size()-1 <<endreq;
+              << axdaugh.size()-1 <<endreq;
       ptotB = AXB0->momentum();
       B0mass = ptotB.m()/GeV;
       B0the  = ptotB.theta();
@@ -191,8 +203,8 @@ StatusCode BTagging::execute() {
       calcIP(AXB0, *iv, ip, iperr);
       debug() <<"Vertex IP="<<ip/iperr<<endreq;
       if(iperr) if( fabs(ip/iperr) < kdmin ) {
-	kdmin = fabs(ip/iperr);
-	RecVert = (*iv);
+        kdmin = fabs(ip/iperr);
+        RecVert = (*iv);
       }     
     }
   }
@@ -279,7 +291,7 @@ StatusCode BTagging::execute() {
 
       TrStoredTrack* track = proto->track();
       if((track->measurements()).size() > 5)
-	lcs = track->lastChiSq()/((track->measurements()).size()-5);
+        lcs = track->lastChiSq()/((track->measurements()).size()-5);
     }
 
     long trtyp = trackType(axp);
@@ -311,7 +323,7 @@ StatusCode BTagging::execute() {
 
     //-------------------------------------------------------
     debug() << " trtyp="<<trtyp << " ID="<<ID 
-	    << " P="<<P <<" Pt="<<Pt <<endreq;
+            << " P="<<P <<" Pt="<<Pt <<endreq;
     debug() << " deta="<<deta << " dphi="<<dphi << " dQ="<<dQ <<endreq;
     debug() << " IPsig="<<IPsig << " IPPU="<<IPPU << " IPT="<<IPT<<endreq;
 
@@ -320,65 +332,65 @@ StatusCode BTagging::execute() {
     switch ( abs(ID) ) {
     case 13:                           // selects OS muon tag
       if(Pt > m_Pt_cut_muon)
-	if(P  > m_P_cut_muon)
-	  if( Pt > ptmaxm ) { //Pt ordering
-	    imuon = axp;
-	    ptmaxm = Pt;
-	  }   
+        if(P  > m_P_cut_muon)
+          if( Pt > ptmaxm ) { //Pt ordering
+            imuon = axp;
+            ptmaxm = Pt;
+          }   
       break;
     case 11:                           // selects OS electron tag      
       if(Pt > m_Pt_cut_ele)
-	if(P > m_P_cut_ele)
-	  if(Emeas/P > m_EoverP || Emeas<0) {
-	    double veloch = m_veloCharge->calculate(axp);
-	    if(veloch > m_VeloChMin && veloch < m_VeloChMax)
-	      if(trtyp == 1) 
-		if( Pt > ptmaxe ) { //Pt ordering
-		  iele = axp;
-		  ptmaxe = Pt;
-		}
-	  }
+        if(P > m_P_cut_ele)
+          if(Emeas/P > m_EoverP || Emeas<0) {
+            double veloch = m_veloCharge->calculate(axp);
+            if(veloch > m_VeloChMin && veloch < m_VeloChMax)
+              if(trtyp == 1) 
+                if( Pt > ptmaxe ) { //Pt ordering
+                  iele = axp;
+                  ptmaxe = Pt;
+                }
+          }
       break;
     case 321:                         // selects OS kaon tag
       if(Pt > m_Pt_cut_kaon)
-	if(P  > m_P_cut_kaon)
-	  if(IPPU > m_IPPU_cut_kaon)
-	    if(Pfit.size()==0 || fabs(IPT)<8.0 )
-	      if((trtyp==1 && lcs<2.5 && fabs(IP)<2.0) ||
-		 (trtyp==2 && lcs<1.4 && fabs(IP)<1.0) ||
-		 (trtyp==3 && lcs<2.5 && fabs(IP)<1.0) )
-		if(IPsig > m_IP_cut_kaon ) {
-		  qk += axp->charge();
-		  if( Pt > ptmaxk ) { //Pt ordering
-		    ikaon = axp;
-		    ptmaxk = Pt;
-		  }
-		}
+        if(P  > m_P_cut_kaon)
+          if(IPPU > m_IPPU_cut_kaon)
+            if(Pfit.size()==0 || fabs(IPT)<8.0 )
+              if((trtyp==1 && lcs<2.5 && fabs(IP)<2.0) ||
+                 (trtyp==2 && lcs<1.4 && fabs(IP)<1.0) ||
+                 (trtyp==3 && lcs<2.5 && fabs(IP)<1.0) )
+                if(IPsig > m_IP_cut_kaon ) {
+                  qk += axp->charge();
+                  if( Pt > ptmaxk ) { //Pt ordering
+                    ikaon = axp;
+                    ptmaxk = Pt;
+                  }
+                }
       if( isBs ) {                // selects SS kaon tag
-	if(Pt > m_Pt_cut_kaonS) 
-	  if(P > m_P_cut_kaonS) 
-	    if(IPsig < m_IP_cut_kaonS)
-	      if(dphi < m_phicut_kaonS)
-		if(deta < m_etacut_kaonS)
-		  if(dQ < m_dQcut_kaonS)
-		    if(trtyp==1 || (trtyp==3 && lcs<2.5))
-		      if( Pt > ptmaxkS ) { //Pt ordering
-			ikaonS = axp;
-			ptmaxkS = Pt;
-		      }
+        if(Pt > m_Pt_cut_kaonS) 
+          if(P > m_P_cut_kaonS) 
+            if(IPsig < m_IP_cut_kaonS)
+              if(dphi < m_phicut_kaonS)
+                if(deta < m_etacut_kaonS)
+                  if(dQ < m_dQcut_kaonS)
+                    if(trtyp==1 || (trtyp==3 && lcs<2.5))
+                      if( Pt > ptmaxkS ) { //Pt ordering
+                        ikaonS = axp;
+                        ptmaxkS = Pt;
+                      }
       }	
       break;
     case 211:                      // selects SS pion tag
       if( isBd || isBu ) {
-	if(Pt > m_Pt_cut_pionS)
-	  if(P > m_P_cut_pionS)
-	    if(IPsig < m_IP_cut_pionS)
-	      if(dQ < m_dQcut_pionS ) 
-		if(trtyp==1 || (trtyp==3 && lcs<2.5))
-		  if( Pt > ptmaxpS ) { //Pt ordering
-		    ipionS = axp;
-		    ptmaxpS = Pt;
-		  }
+        if(Pt > m_Pt_cut_pionS)
+          if(P > m_P_cut_pionS)
+            if(IPsig < m_IP_cut_pionS)
+              if(dQ < m_dQcut_pionS ) 
+                if(trtyp==1 || (trtyp==3 && lcs<2.5))
+                  if( Pt > ptmaxpS ) { //Pt ordering
+                    ipionS = axp;
+                    ptmaxpS = Pt;
+                  }
       }	
       break;
     }
@@ -472,12 +484,12 @@ StatusCode BTagging::execute() {
       debug()<< "tagger muon: " << imuon->p()/GeV <<endreq;
       calcIP(imuon, RecVert, IP, IPerr);
       if(Pfit.size()) {
-	calcIP(imuon, &Vfit, ip, iperr);
-	if(!iperr) IPT = ip/iperr;
+        calcIP(imuon, &Vfit, ip, iperr);
+        if(!iperr) IPT = ip/iperr;
       } else IPT = -1000.; 
       
       rnet = m_nnet->MLPm(B0p, B0the, vtags.size(), tamper, 
-			  imuon->p()/GeV, imuon->pt()/GeV, IP/IPerr,IPT);
+                          imuon->p()/GeV, imuon->pt()/GeV, IP/IPerr,IPT);
 			  
       pn[1] = 1.0-pol3(rnet, 1.2939, -2.0406, 0.90781); //1-omega
     }
@@ -485,12 +497,12 @@ StatusCode BTagging::execute() {
       debug()<< "tagger ele : " << iele->p()/GeV <<endreq;
       calcIP(iele, RecVert, IP, IPerr);
       if(Pfit.size()) {
-	calcIP(iele, &Vfit, ip, iperr);
-	if(!iperr) IPT = ip/iperr;
+        calcIP(iele, &Vfit, ip, iperr);
+        if(!iperr) IPT = ip/iperr;
       } else IPT = -1000.; 
 
       rnet = m_nnet->MLPe(B0p, B0the, vtags.size(), tamper, 
-			  iele->p()/GeV, iele->pt()/GeV,IP/IPerr, IPT);
+                          iele->p()/GeV, iele->pt()/GeV,IP/IPerr, IPT);
 			  
       pn[2] = 1.0-pol4(rnet, 0.4933, -0.6766, 1.761, -1.587); //1-omega
     }
@@ -498,12 +510,12 @@ StatusCode BTagging::execute() {
       debug()<< "tagger kaon: " << ikaon->p()/GeV <<endreq;
       calcIP(ikaon, RecVert, IP, IPerr);
       if(Pfit.size()) {
-	calcIP(ikaon, &Vfit, ip, iperr);
-	if(!iperr) IPT = ip/iperr;
+        calcIP(ikaon, &Vfit, ip, iperr);
+        if(!iperr) IPT = ip/iperr;
       } else IPT = -1000.; 
 
       rnet = m_nnet->MLPk(B0p, B0the, vtags.size(), tamper, 
-			  ikaon->p()/GeV, ikaon->pt()/GeV,IP/IPerr, IPT);
+                          ikaon->p()/GeV, ikaon->pt()/GeV,IP/IPerr, IPT);
 			  
       pn[3] = 1.0-pol2(rnet, 0.52144, -0.27136); //1-omega
     }
@@ -512,17 +524,17 @@ StatusCode BTagging::execute() {
       double ang = asin((ikaonS->pt()/GeV)/(ikaonS->p()/GeV));
       double deta= log(tan(B0the/2.))-log(tan(ang/2.));
       double dphi= std::min(fabs(ikaonS->momentum().phi()-B0phi), 
-			    6.283-fabs(ikaonS->momentum().phi()-B0phi));
+                            6.283-fabs(ikaonS->momentum().phi()-B0phi));
       double dQ  = (ptotB+ikaonS->momentum()).m()/GeV - B0mass;
       calcIP(ikaonS, RecVert, IP, IPerr);
       if(Pfit.size()) {
-	calcIP(ikaonS, &Vfit, ip, iperr);
-	if(!iperr) IPT = ip/iperr;
+        calcIP(ikaonS, &Vfit, ip, iperr);
+        if(!iperr) IPT = ip/iperr;
       } else IPT = -1000.; 
 
       rnet = m_nnet->MLPkS(B0p, B0the, vtags.size(), tamper, 
-			   ikaonS->p()/GeV, ikaonS->pt()/GeV,IP/IPerr, IPT,
-			   deta, dphi, dQ);
+                           ikaonS->p()/GeV, ikaonS->pt()/GeV,IP/IPerr, IPT,
+                           deta, dphi, dQ);
 
       pn[4] = 1.0-pol2(rnet, 1.0007, -1.0049); //1-omega
     }
@@ -531,17 +543,17 @@ StatusCode BTagging::execute() {
       double ang = asin((ipionS->pt()/GeV)/(ipionS->p()/GeV));
       double deta= log(tan(B0the/2.))-log(tan(ang/2.));
       double dphi= std::min(fabs(ipionS->momentum().phi()-B0phi), 
-			    6.283-fabs(ipionS->momentum().phi()-B0phi));
+                            6.283-fabs(ipionS->momentum().phi()-B0phi));
       double dQ  = (ptotB+ipionS->momentum()).m()/GeV - B0mass;
       calcIP(ipionS, RecVert, IP, IPerr);
       if(Pfit.size()) {
-	calcIP(ipionS, &Vfit, ip, iperr);
-	if(!iperr) IPT = ip/iperr;
+        calcIP(ipionS, &Vfit, ip, iperr);
+        if(!iperr) IPT = ip/iperr;
       } else IPT = -1000.; 
 
       rnet = m_nnet->MLPpS(B0p, B0the, vtags.size(), tamper, 
-			  ipionS->p()/GeV, ipionS->pt()/GeV,IP/IPerr, IPT,
-			  deta, dphi, dQ);
+                           ipionS->p()/GeV, ipionS->pt()/GeV,IP/IPerr, IPT,
+                           deta, dphi, dQ);
 
       if(rnet > m_ProbMin) pn[4] = 1.0-pol2(rnet, 1.0772, -1.1632); //1-omega
       else { ipionS=0; itag[4] = 0; }
@@ -582,16 +594,16 @@ StatusCode BTagging::execute() {
 
   ///OUTPUT to Logfile -----------------------------------------------------
   info() << "BTAGGING TAG   " << evt->runNum()
-	 << std::setw(4) << evt->evtNum()
-	 << std::setw(4) << trigger
-	 << std::setw(5) << tagdecision
-	 << std::setw(3) << catt  
-	 << std::setw(5) << itag[1]
-	 << std::setw(3) << itag[2]
-	 << std::setw(3) << itag[3]
-	 << std::setw(3) << itag[4]
-	 << std::setw(3) << itag[5]
-	 << endreq;
+         << std::setw(4) << evt->evtNum()
+         << std::setw(4) << trigger
+         << std::setw(5) << tagdecision
+         << std::setw(3) << catt  
+         << std::setw(5) << itag[1]
+         << std::setw(3) << itag[2]
+         << std::setw(3) << itag[3]
+         << std::setw(3) << itag[4]
+         << std::setw(3) << itag[5]
+         << endreq;
 
   ///OUTPUT to TES ---------------------------------------------------------
   FlavourTag* theTag = new FlavourTag;
@@ -628,7 +640,7 @@ bool BTagging::isinTree( Particle* axp, ParticleVector& sons ) {
   for( ParticleVector::iterator ip = sons.begin(); ip != sons.end(); ip++ ){
     if( (*ip)->origin() == axp->origin() ) {
       debug() << "excluding signal part: " 
-	      << axp->particleID().pid() <<" with p="<<axp->p()/GeV<<endreq;
+              << axp->particleID().pid() <<" with p="<<axp->p()/GeV<<endreq;
       return true;
     }
   }
@@ -636,14 +648,14 @@ bool BTagging::isinTree( Particle* axp, ParticleVector& sons ) {
 }
 //=============================================================================
 StatusCode BTagging::calcIP( Particle* axp, Vertex* RecVert, 
-			     double& ip, double& iperr) {
+                             double& ip, double& iperr) {
   ip   =-100.0;
   iperr= 0.0;
   Hep3Vector ipVec;
   HepSymMatrix errMatrix;
   StatusCode sc = 
     geomDispCalculator()->calcImpactPar(*axp, *RecVert, ip,
-					iperr, ipVec, errMatrix);
+                                        iperr, ipVec, errMatrix);
   if( sc ) {
     ip   = ipVec.z()>0 ? ip : -ip ; 
     iperr= iperr; 
@@ -652,7 +664,7 @@ StatusCode BTagging::calcIP( Particle* axp, Vertex* RecVert,
 }
 //=============================================================================
 StatusCode BTagging::calcIP( Particle* axp, const VertexVector PileUpVtx,
-			     double& ip, double& ipe) {
+                             double& ip, double& ipe) {
   double ipmin = 100000.0;
   double ipminerr = 0.0;
   Vertices::const_iterator iv;
@@ -663,7 +675,7 @@ StatusCode BTagging::calcIP( Particle* axp, const VertexVector PileUpVtx,
   for(iv = PileUpVtx.begin(); iv != PileUpVtx.end(); iv++){
     double ipx, ipex;
     sc = geomDispCalculator()->calcImpactPar(*axp, **iv, ipx,
-					     ipex, ipVec, errMatrix);
+                                             ipex, ipVec, errMatrix);
     if( sc ) if( ipx < ipmin ) {
       ipmin = ipx;
       ipminerr = ipex;
@@ -712,23 +724,23 @@ double BTagging::pol4(double x, double a0, double a1, double a2, double a3) {
 //return a vector containing all daughters of signal 
 ParticleVector BTagging::FindDaughters( Particle* axp ) {
 
-   ParticleVector apv(0), apv2, aplist(0);
-   apv.push_back(axp);
+  ParticleVector apv(0), apv2, aplist(0);
+  apv.push_back(axp);
 
-   do {
-     apv2.clear();
-     for( Particles::iterator ip=apv.begin(); ip!=apv.end(); ip++ ) {
-       if( (*ip)->endVertex() ) {
-	 ParticleVector tmp = toStdVector((*ip)->endVertex()->products());
-	 for( Particles::iterator itmp=tmp.begin(); itmp!=tmp.end(); itmp++) {
-	   apv2.push_back(*itmp);
-	   aplist.push_back(*itmp);
-	 }
-       }
-     }
-     apv = apv2;
-   } while ( apv2.size() );
+  do {
+    apv2.clear();
+    for( Particles::iterator ip=apv.begin(); ip!=apv.end(); ip++ ) {
+      if( (*ip)->endVertex() ) {
+        ParticleVector tmp = toStdVector((*ip)->endVertex()->products());
+        for( Particles::iterator itmp=tmp.begin(); itmp!=tmp.end(); itmp++) {
+          apv2.push_back(*itmp);
+          aplist.push_back(*itmp);
+        }
+      }
+    }
+    apv = apv2;
+  } while ( apv2.size() );
    	    
-   return aplist;
+  return aplist;
 }
 //=============================================================================

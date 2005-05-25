@@ -29,6 +29,11 @@
 //BTagging.PhysDesktop.InputLocations = { "/Event/Phys/TDRselBs2DsK" };
 //TamperingL1Alg.SelectionName = "TDRselBs2DsK";
 
+//ApplicationMgr.TopAlg += { "PreLoadParticles/Combined" };
+//#include "$BD2JPSIKSROOT/options/DoTDRselBd2Jpsi2MuMu_Ks2PiPi.opts"
+//BTagging.PhysDesktop.InputLocations = { "/Event/Phys/TDRselBd2Jpsi2MuMu_Ks2PiPi" };
+//TamperingL1Alg.SelectionName = "TDRselBd2Jpsi2MuMu_Ks2PiPi";
+
 ///or Cheated Selection ------------------------------------------
 #include "$FLAVOURTAGGINGOPTS/CheatedSelection.opts"
 
@@ -70,6 +75,4 @@ BTagging.OutputLevel = 2 ;
 // Input data 
 //---------------------------------------------------------------
 EventSelector.Input = {"DATAFILE='PFN:rfio:/castor/cern.ch/user/p/pkoppenb/L0L1TDR-Bs2DsK01.dst' TYP='POOL_ROOTTREE' OPT='READ'"};
-//---------------------------------------------------------------
-
 

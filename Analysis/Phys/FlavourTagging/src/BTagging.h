@@ -1,4 +1,4 @@
-// $Id: BTagging.h,v 1.10 2005-03-01 09:57:05 musy Exp $
+// $Id: BTagging.h,v 1.11 2005-05-25 11:37:57 pkoppenb Exp $
 #ifndef USER_BTAGGING_H 
 #define USER_BTAGGING_H 1
 
@@ -14,6 +14,7 @@
 #include "Event/FlavourTag.h"
 #include "Event/SelResult.h"
 #include "Event/TrgDecision.h"
+#include "Event/HltScore.h"
 #include "Event/TamperingResults.h"
 // from RecoTools
 #include "RecoTools/ITrVeloCharge.h"
