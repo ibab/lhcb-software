@@ -1,4 +1,4 @@
-// $Id: KalmanFilter.cpp,v 1.2 2005-05-17 12:38:58 hernando Exp $
+// $Id: KalmanFilter.cpp,v 1.3 2005-05-25 09:29:22 hernando Exp $
 //
 //  Implementation of the KalmanFilter tool
 //
@@ -26,7 +26,7 @@ KalmanFilter::KalmanFilter( const std::string& type,
                             const IInterface* parent) :
   GaudiTool( type, name, parent)
 {
-  declareInterface<IKalmanFilter>( this );
+  declareInterface<ITrackFitter>( this );
 
   declareProperty("Extrapolator",m_extrapolatorName = "MasterExtrapolator");
 
@@ -92,7 +92,7 @@ StatusCode KalmanFilter::iniKalman(Track & track)
   }
 
   if (msgLevel(MSG::DEBUG)) {
-    debug() << " seed state vector \t" << m_state->state() << endreq;
+    debug() << " seed state vector \t" << m_state->stateVector() << endreq;
     debug() << " seed state cov \t" << m_state->covariance() << endreq;
     debug() << " track nodes size \t" << m_nodes.size() << endreq;
   }
@@ -177,7 +177,7 @@ StatusCode KalmanFilter::predict(FitNode& aNode, State& aState) {
   Measurement& thisMeasure = aNode.measurement();
 
   // only use extrapolator in first iteration; else use stored parameters
-  HepVector prevStateVec = aState.state();
+  HepVector prevStateVec = aState.stateVector();
   HepSymMatrix prevStateCov = aState.covariance();
   double z = thisMeasure.z();
   // StatusCode sc = m_extrapolator->propagate(state,z,m_particleID);
@@ -187,7 +187,7 @@ StatusCode KalmanFilter::predict(FitNode& aNode, State& aState) {
 
   const HepMatrix& F = m_extrapolator->transportMatrix();
   aNode.setTransportMatrix( F );
-  aNode.setTransportVector( aState.state() - F * prevStateVec );
+  aNode.setTransportVector( aState.stateVector() - F * prevStateVec );
   aNode.setNoiseMatrix( aState.covariance() - prevStateCov.similarity(F) );
 
   // save predicted state
@@ -195,7 +195,7 @@ StatusCode KalmanFilter::predict(FitNode& aNode, State& aState) {
 
   if (msgLevel(MSG::DEBUG)) {
     debug() << " predicted  state at z \t" << z << endreq;
-    debug() << " predicted  state vector  \t" << aState.state() << endreq;
+    debug() << " predicted  state vector  \t" << aState.stateVector() << endreq;
     debug() << " predicted  state cov \t" << aState.covariance() << endreq;
     debug() << " transport matrix \t" << aNode.transportMatrix() << endreq;
     debug() << " transport vector \t" << aNode.transportVector() << endreq;
@@ -251,7 +251,7 @@ StatusCode KalmanFilter::filter(State& state, Measurement& meas)  {
   }
 
   // get reference to the state vector and cov
-  HepVector&    tX = state.state();
+  HepVector&    tX = state.stateVector();
   HepSymMatrix& tC = state.covariance();
 
   // project the state into the measurement 
@@ -299,7 +299,7 @@ StatusCode KalmanFilter::smooth(FitNode& thisNode, FitNode& prevNode){
 
   // preliminaries, first we need to invert the _predicted_ covariance
   // matrix at k+1
-  HepVector&    prevNodeX = prevNode.predictedState().state();
+  HepVector&    prevNodeX = prevNode.predictedState().stateVector();
   HepSymMatrix& prevNodeC = prevNode.predictedState().covariance();
 
   // check that the elements are not too large else dsinv will crash
@@ -312,7 +312,7 @@ StatusCode KalmanFilter::smooth(FitNode& thisNode, FitNode& prevNode){
   if ( sc.isFailure() ) return failure(" inverting matrix in smoother");
 
   //references to _predicted_ state + cov of this node from the first step
-  HepVector&    thisNodeX = thisNode.state().state();
+  HepVector&    thisNodeX = thisNode.state().stateVector();
   HepSymMatrix& thisNodeC = thisNode.state().covariance();
 
   //transport
@@ -322,7 +322,7 @@ StatusCode KalmanFilter::smooth(FitNode& thisNode, FitNode& prevNode){
   HepMatrix A = thisNodeC * F.T() * invPrevNodeC;
 
   // best = smoothed state at prev Node
-  HepVector&    prevNodeSmoothedX = prevNode.state().state();
+  HepVector&    prevNodeSmoothedX = prevNode.state().stateVector();
   HepSymMatrix& prevNodeSmoothedC = prevNode.state().covariance();
 
   //smooth state

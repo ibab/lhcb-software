@@ -1,4 +1,4 @@
-// $Id: KalmanFilter.h,v 1.2 2005-05-17 12:38:58 hernando Exp $
+// $Id: KalmanFilter.h,v 1.3 2005-05-25 09:29:22 hernando Exp $
 #ifndef KALMANFILTER_H 
 #define KALMANFILTER_H 1
 
@@ -8,9 +8,9 @@
 #include "Event/Track.h"
 #include "Event/FitNode.h"
 
-#include "Tools/ITrackExtrapolator.h"            
-#include "Tools/ITrackProjector.h"
-#include "ITrackKalmanFilter.h"  
+#include "TrackInterfaces/ITrackExtrapolator.h"            
+#include "TrackInterfaces/ITrackProjector.h"
+#include "TrackInterfaces/ITrackFitter.h"
 
 /** @class KalmanFilter KalmanFilter.h
  *  
@@ -22,7 +22,7 @@
  *  @author Mattiew Needham 
  */
 
-class KalmanFilter : public GaudiTool, public ITrackKalmanFilter {
+class KalmanFilter : public GaudiTool, public ITrackFitter {
 public: 
   /// Standard constructor
   KalmanFilter( const std::string& type, 
@@ -30,10 +30,16 @@ public:
                 const IInterface* parent);
 
   /// Destructor
-  virtual ~KalmanFilter( ); 
+  virtual ~KalmanFilter( );
 
   StatusCode initialize();
   
+  //! fit the track (filter and smoother)
+  StatusCode fit(Track& track){
+    info() << " not implemented yet!" << track.nMeasurements() << endreq;
+    return StatusCode::SUCCESS;
+  }
+
   //! fit the track (filter and smoother)
   StatusCode fit(Track& track, const State& seed);
   

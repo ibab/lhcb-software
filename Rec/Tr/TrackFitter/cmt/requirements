@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.1.1.1 2005-04-18 11:55:37 hernando Exp $
+# $Id: requirements,v 1.2 2005-05-25 09:29:22 hernando Exp $
 # Created    : 21/03/2002
 # Maintainer : Eduardo Rodrigues
 
@@ -12,7 +12,7 @@ branches          cmt doc src
 # Used packages. Specify the version, * at the end specifies 'any revision'
 #============================================================================
 use     TrackFitEvent	v*	Tr
-use     TrackTools	v*	Tr
+use     TrackInterfaces	v*	Tr
 use     GaudiAlg        v*
 
 # Component library building rule
