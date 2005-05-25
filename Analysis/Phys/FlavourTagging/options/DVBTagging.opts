@@ -7,10 +7,19 @@
 #pragma print on
 
 //--------------------------------------------------------------
-// If needed, Re-run L0 and L1 Trigger with DC04 tuning
+// Uncomment these lines to run L0 L1 and HLT Triggers
 //--------------------------------------------------------------
 //#include "$DAVINCIROOT/options/L0.opts"
 //#include "$TRGSYSROOT/options/L1.opts"
+//L1.Members = { "TrgInitEvent", "GaudiSequencer/L1Processing" };
+//--------
+//#include "$HLTGENERICROOT/options/HltGeneric.opts"
+//#include "$HLTSELECTIONSROOT/options/HLTSelections.opts"
+//ApplicationMgr.TopAlg += { "GaudiSequencer/TriggerSeq" };
+//TriggerSeq.Members = { "PrintHeader/PassedL1" };
+//TriggerSeq.Members += { "PrintHeader/PassedHlt" };
+//HltDecision.MakeCorrelations = true ;
+//#include "$HLTSELCHECKERROOT/options/MeasureTimes.opts"
 
 //--------------------------------------------------------------
 #include "$DAVINCIROOT/options/DaVinciReco.opts"
@@ -29,50 +38,52 @@
 //BTagging.PhysDesktop.InputLocations = { "/Event/Phys/TDRselBs2DsK" };
 //TamperingL1Alg.SelectionName = "TDRselBs2DsK";
 
-//ApplicationMgr.TopAlg += { "PreLoadParticles/Combined" };
-//#include "$BD2JPSIKSROOT/options/DoTDRselBd2Jpsi2MuMu_Ks2PiPi.opts"
-//BTagging.PhysDesktop.InputLocations = { "/Event/Phys/TDRselBd2Jpsi2MuMu_Ks2PiPi" };
-//TamperingL1Alg.SelectionName = "TDRselBd2Jpsi2MuMu_Ks2PiPi";
-
 ///or Cheated Selection ------------------------------------------
 #include "$FLAVOURTAGGINGOPTS/CheatedSelection.opts"
 
 //----------------------------------------------------------------
 // includes upstream/downstream tracks (not mandatory) 
-ChargedProtoPAlg.VeloTTTracks     = true ;
+ChargedProtoPAlg.VeloTTTracks = true ;
 
 ///---------------------------------------------------------------
-//   L1 buffer tampering: must rerun L0&L1 trigger first
+//   L1 buffer TAMPERING: must rerun trigger first
 ///---------------------------------------------------------------
+//if you uncomment this part,
+//you will have slightly better performance
+//but you need to run the Trigger first (uncomment above^)
 //#include "$TAMPERINGROOT/options/TamperingCommon.opts"
+//BTagging.RequireL1Tampering = true; 
 //TamperingL1Alg.InputType = "Selection";
+//TamperingL0Alg.InputType = @TamperingL1Alg.InputType ;
+//TamperingL0Alg.SelectionName = @TamperingL1Alg.SelectionName ;
 
 ///---------------------------------------------------------------
 ///               BTagging
 ///---------------------------------------------------------------
 #include "$FLAVOURTAGGINGOPTS/BTagging.opts"
 
-//if you set this to true, you will have slightly better performance
-//but you need to run Trigger&Tampering (uncomment above)
-//BTagging.RequireTampering = true; 
-
 ///---------------------------------------------------------------
 /// 		BTaggingMonitor
+/// example of an optional algorithm that reads in what is in TES
 ///---------------------------------------------------------------
-///example of optional algorithm that reads in what is in TES
 #include "$FLAVOURTAGGINGOPTS/BTaggingMonitor.opts"
 
 //---------------------------------------------------------------
 // Number of events to process, skip and printing frequency
-//---------------------------------------------------------------
 MessageSvc.Format = "% F%15W%S%7W%R%T %0W%M";
-ApplicationMgr.EvtMax    = 100;
+ApplicationMgr.EvtMax    = 100000;
 EventSelector.FirstEvent = 1;
 EventSelector.PrintFreq  = 1;
 
-BTagging.OutputLevel = 2 ;
 //---------------------------------------------------------------
-// Input data 
+// Example input data 
 //---------------------------------------------------------------
-EventSelector.Input = {"DATAFILE='PFN:rfio:/castor/cern.ch/user/p/pkoppenb/L0L1TDR-Bs2DsK01.dst' TYP='POOL_ROOTTREE' OPT='READ'"};
+EventSelector.Input = {
+"DATAFILE='PFN:rfio:/castor/cern.ch/user/p/pkoppenb/L0L1TDR-Bs2DsK01.dst' 
+TYP='POOL_ROOTTREE' OPT='READ'"};
+//EventSelector.Input = {
+//"DATAFILE='PFN:rfio:/castor/cern.ch/lhcb/DC04/00000641_00000005_5.dst' 
+//TYP='POOL_ROOTTREE' OPT='READ'"}; //again BsDsK events
+//---------------------------------------------------------------
+
 

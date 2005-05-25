@@ -1,4 +1,4 @@
-// $Id: SecondaryVertexTool.cpp,v 1.3 2005-03-01 11:21:26 musy Exp $
+// $Id: SecondaryVertexTool.cpp,v 1.4 2005-05-25 18:33:31 musy Exp $
 // Include files 
 // from Gaudi
 #include "GaudiKernel/ToolFactory.h"
@@ -27,14 +27,11 @@ SecondaryVertexTool::SecondaryVertexTool( const std::string& type,
 
 StatusCode SecondaryVertexTool::initialize() {
 
-  debug()<< "==> SecondaryVertexTool initialize" << endreq;  
-
   geom = tool<IGeomDispCalculator>("GeomDispCalculator");
   if ( !geom ) {   
     err() << "Unable to Retrieve GeomDispCalculator" << endreq;
     return StatusCode::FAILURE;
   }
-
   fitter = tool<IVertexFitter>("UnconstVertexFitter");
   if ( !fitter ) {   
     err() << "Unable to Retrieve UnconstVertexFitter" << endreq;
@@ -68,14 +65,8 @@ Vertex SecondaryVertexTool::SVertex( const Vertex RecVert,
 
   for ( jp = vtags.begin(); jp != vtags.end(); jp++ ) {
 
+    //FIRST seed particle -----------------------------------
     if( (*jp)->particleID().abspid()==13 ) continue;           //exclude muons
-
-    //at least one must be long forward 
-    ContainedObject* contObj1 = (*jp)->origin();
-    if (!contObj1) continue;
-    ProtoParticle* proto1 = dynamic_cast<ProtoParticle*>(contObj1);
-    if( ! (proto1->track()->forward()) ) continue;              //preselection
-
     sc = geom->calcImpactPar(**jp, RecVert, ipl, iperrl, ipVec, errMatrix);
     if( sc.isFailure() ) continue;
     if( iperrl > 1.0 ) continue;                                //preselection
@@ -89,9 +80,10 @@ Vertex SecondaryVertexTool::SVertex( const Vertex RecVert,
     if((track->measurements()).size() > 5)
       lcs = track->lastChiSq()/((track->measurements()).size()-5);
     if( lcs > 2.0 ) continue;                                   //preselection
+    //must be long forward 
     if( track->forward() == false ) continue;                   //preselection
 
-    //SECOND particle ---------------------------------------
+    //SECOND seed particle -----------------------------------
     for ( kp = (jp+1) ; kp != vtags.end(); kp++ ) {
 
       if( (*kp)->particleID().abspid()==13 ) continue;
@@ -109,29 +101,24 @@ Vertex SecondaryVertexTool::SVertex( const Vertex RecVert,
       if((track->measurements()).size() > 5)
         lcs = track->lastChiSq()/((track->measurements()).size()-5);
       if( lcs > 2.0 ) continue;                                //preselection
+      //second particle must also be forward
       if( track->forward() == false ) continue;                //preselection
 
-      //second particle must also be forward
-      ContainedObject* contObj2 = (*kp)->origin();
-      if ( !contObj2 ) continue ;
-      ProtoParticle* proto2 = dynamic_cast<ProtoParticle*>(contObj2);
-      if( ! (proto2->track()->forward()) ) continue;           //preselection 
-
+      //cut on the z position of the seed
       sc = fitter->fitVertex( **jp, **kp, vtx );
       if( sc.isFailure() ) continue;
       if( vtx.chi2() / vtx.nDoF() > 10.0 ) continue;           //preselection
       if((vtx.position().z()/mm - RVz) < 1.0 ) continue;       //preselection
 
-      HepLorentzVector sum = (*jp)->momentum() + (*kp)->momentum();
-
       //if the couple is compatible with a Ks, drop it         //preselection
+      HepLorentzVector sum = (*jp)->momentum() + (*kp)->momentum();
       if( sum.m()/GeV > 0.490 && sum.m()/GeV < 0.505 
 	 &&  (*jp)->particleID().abspid() == 211
 	 &&  (*kp)->particleID().abspid() == 211
 	 && ((*jp)->particleID().threeCharge())
 	  * ((*kp)->particleID().threeCharge()) < 0 ) {
 	debug() << "This is a Ks candidate! skip."<<endreq;
-	//set their energy to 0
+	//set their energy to 0 so that they're not used afterwards
 	HepLorentzVector zero(0.0001,0.0001,0.0001,0.0001);
 	(*jp)->setMomentum(zero);
 	(*kp)->setMomentum(zero);
@@ -139,28 +126,15 @@ Vertex SecondaryVertexTool::SVertex( const Vertex RecVert,
       }
 
       //build a likelihood that the combination comes from B ---------
-      double x, probi1, probi2, probp1, probp2, proba, probs, probb;
+      double probi1, probi2, probp1, probp2, proba, probs, probb;
       // impact parameter
-      x= ipl/iperrl;
-      probi1=-0.535+0.3351*x-0.03102*x*x+0.001316*x*x*x
-	-0.00002598*pow(x,4)+0.0000001919*pow(x,5);
-      if(x > 40.0) probi1=0.6;
-      x= ips/iperrs;
-      probi2=-0.535+0.3351*x-0.03102*x*x+0.001316*x*x*x
-	-0.00002598*pow(x,4)+0.0000001919*pow(x,5);
-      if(x > 40.0) probi2=0.6;
+      probi1=ipprob(ipl/iperrl);
+      probi2=ipprob(ips/iperrs);
       // pt
-      x= (*jp)->pt()/GeV;
-      probp1=0.04332+0.9493*x-0.5283*x*x+0.1296*x*x*x-0.01094*pow(x,4);
-      if(x > 5.0) probp1=0.65;
-      x= (*kp)->pt()/GeV;
-      probp2=0.04332+0.9493*x-0.5283*x*x+0.1296*x*x*x-0.01094*pow(x,4);
-      if(x > 5.0) probp2=0.65;
+      probp1=ptprob((*jp)->pt()/GeV); 
+      probp2=ptprob((*kp)->pt()/GeV); 
       // angle
-      x= ((*jp)->momentum().vect()).angle((*kp)->momentum().vect());
-      proba=0.4516-1.033*x;
-      if(x < 0.02) proba=0.32;
-
+      proba=aprob(((*jp)->momentum().vect()).angle((*kp)->momentum().vect()));
       // total
       probs=probi1*probi2*probp1*probp2*proba;
       probb=(1-probi1)*(1-probi2)*(1-probp1)*(1-probp2)*(1-proba);
@@ -173,8 +147,6 @@ Vertex SecondaryVertexTool::SVertex( const Vertex RecVert,
       }
     }
   }
-  //printout
-  debug()<< "MAX probf= " << probf <<endreq;
 
   Vertex VfitTMP;
   ParticleVector Pfit(0);
@@ -193,28 +165,19 @@ Vertex SecondaryVertexTool::SVertex( const Vertex RecVert,
       if( (*jpp)->particleID().abspid()==13 ) continue;  //exclude muons
 
       double ip, ipe;
-      double x, probi1, probp1, probs, probb, likeb;
       sc = geom->calcImpactPar(**jpp, RecVert, ip, ipe, ipVec, errMatrix);
       if( !sc ) continue;
       if( ip/ipe < 1.8 ) continue;                                        //cut
       if( ip/ipe > 100 ) continue;                                        //cut
       if( ipe > 1.5    ) continue;                                        //cut
 
-      //likelihood for the particle comes from B ------
-      x= ip/ipe;
-      probi1=-0.535+0.3351*x-0.03102*x*x+0.001316*x*x*x
-	-0.00002598*pow(x,4)+0.0000001919*pow(x,5);
-      if(x > 40.0) probi1=0.6;
-      // pt
-      x= (*jpp)->pt()/GeV;
-      probp1=0.04332+0.9493*x-0.5283*x*x+0.1296*x*x*x-0.01094*pow(x,4);
-      if(x > 5.0) probp1=0.65;
+      //likelihood for the particle to come from B ------
+      double probi1=ipprob(ip/ipe);
+      double probp1=ptprob((*jpp)->pt()/GeV); // pt
       // total
-      if(probi1<0) probi1=0;
-      if(probp1<0) probp1=0;
-      probs=probi1*probp1;
-      probb=(1-probi1)*(1-probp1);
-      likeb=probs/(probs+probb);
+      double probs=probi1*probp1;
+      double probb=(1-probi1)*(1-probp1);
+      double likeb=probs/(probs+probb);
       if( likeb < 0.2 ) continue;                                         //cut
 
       Pfit.push_back(*jpp);
@@ -371,7 +334,6 @@ Vertex SecondaryVertexTool::SVertexNN( const Vertex RecVert,
       }
     }
   }
-  debug()<< "MAX probf= " << probf <<endreq;
 
   Vertex VfitTMP;
   ParticleVector Pfit(0);  
@@ -393,21 +355,11 @@ Vertex SecondaryVertexTool::SVertexNN( const Vertex RecVert,
       if( ip/ipe > 100 ) continue;                                       //cut
       if( ipe > 1.5    ) continue;                                       //cut
 
-      //likelihood for the particle comes from B ------
-      double x, probi1, probp1, probs, probb;
-      x= ip/ipe;
-      probi1=-0.535+0.3351*x-0.03102*x*x+0.001316*x*x*x
-        -0.00002598*pow(x,4)+0.0000001919*pow(x,5);
-      if(x > 40.0) probi1=0.6;
-      // pt
-      x= (*jpp)->pt()/GeV;
-      probp1=0.04332+0.9493*x-0.5283*x*x+0.1296*x*x*x-0.01094*pow(x,4);
-      if(x > 5.0) probp1=0.65;
-      // total
-      if(probi1<0) probi1=0;
-      if(probp1<0) probp1=0;
-      probs=probi1*probp1;
-      probb=(1-probi1)*(1-probp1);
+      //likelihood for the particle to come from B ------
+      double probi1=ipprob(ip/ipe); //IP
+      double probp1=ptprob((*jpp)->pt()/GeV); // pt
+      double probs=probi1*probp1; // total
+      double probb=(1-probi1)*(1-probp1);
       if( probs/(probs+probb) < 0.2 ) continue;                          //cut
 
       sc = fitter->fitVertex( Pfit, VfitTMP ); /////////FIT before
@@ -481,15 +433,15 @@ double SecondaryVertexTool::NNseeding(double P1,
 				      double JVZ,
 				      double JCHI ) {
   //normalise inputs
-  double OUT1 = min(P1/ 80., 1.);
-  double OUT2 = min(P2/ 80., 1.);
-  double OUT3 = min(PT1/ 8., 1.);
-  double OUT4 = min(PT2/ 8., 1.);
-  double OUT5 = min(B0PT/25., 1.);
-  double OUT6 = min(fabs(IP1/40.)-.05, 1.);
-  double OUT7 = min(fabs(IP2/40.)-.05, 1.);
-  double OUT8 = min(JVZ/30., 1.);
-  double OUT9 = log(JCHI)/10.;
+  double OUT1 = std::min(P1/ 80., 1.);
+  double OUT2 = std::min(P2/ 80., 1.);
+  double OUT3 = std::min(PT1/ 8., 1.);
+  double OUT4 = std::min(PT2/ 8., 1.);
+  double OUT5 = std::min(B0PT/25., 1.);
+  double OUT6 = std::min(fabs(IP1/40.)-.05, 1.);
+  double OUT7 = std::min(fabs(IP2/40.)-.05, 1.);
+  double OUT8 = std::min(JVZ/30., 1.);
+  double OUT9 = std::log(JCHI)/10.;
 
   double RIN1 = 9.391623e-01
     +(-5.951788e+00) * OUT1
@@ -564,6 +516,22 @@ double SecondaryVertexTool::SIGMOID(double x){
 }
 
 //=============================================================================
-inline double SecondaryVertexTool::min(double x, double y) 
-{ return x<=y ? x : y; }
-
+double SecondaryVertexTool::ipprob(double x) {
+  if( x > 40. ) return 0.6;
+  double r = - 0.535 + 0.3351*x - 0.03102*pow(x,2) + 0.001316*pow(x,3)
+    - 0.00002598*pow(x,4) + 0.0000001919*pow(x,5);
+  if(r<0) r=0;
+  return r;
+}
+double SecondaryVertexTool::ptprob(double x) {
+  if( x > 5.0 ) return 0.65;
+  double r = 0.04332 + 0.9493*x - 0.5283*pow(x,2) + 0.1296*pow(x,3)
+    - 0.01094*pow(x,4);
+  if(r<0) r=0;
+  return r;
+}
+double SecondaryVertexTool::aprob(double x) {
+  if( x < 0.02 ) return 0.32;
+  return 0.4516 - 1.033*x;
+}
+//=============================================================================

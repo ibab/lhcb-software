@@ -1,4 +1,4 @@
-// $Id: BTagging.h,v 1.11 2005-05-25 11:37:57 pkoppenb Exp $
+// $Id: BTagging.h,v 1.12 2005-05-25 18:33:31 musy Exp $
 #ifndef USER_BTAGGING_H 
 #define USER_BTAGGING_H 1
 
@@ -12,7 +12,6 @@
 // from Event 
 #include "Event/EventHeader.h"
 #include "Event/FlavourTag.h"
-#include "Event/SelResult.h"
 #include "Event/TrgDecision.h"
 #include "Event/HltScore.h"
 #include "Event/TamperingResults.h"
@@ -85,9 +84,13 @@ private:
   double m_ProbMin;
   double m_VchOmega;
 
-  bool m_RequireL0, m_RequireL1, m_RequireHLT;
-  bool  m_RequireTrigger, m_RequireTamp;
+  double m_lcs_eu, m_IPT_k, m_lcs_kf, m_lcs_km, m_lcs_ku, m_IP_kf;
+  double m_IP_km, m_IP_ku, m_lcs_pSu;
 
+  bool m_RequireL0, m_RequireL1, m_RequireHLT;
+  bool m_RequireTrigger, m_RequireL1Tamp;
+  bool m_EnableMuonTagger,m_EnableElectronTagger,m_EnableKaonOSTagger;
+  bool m_EnableKaonSSTagger,m_EnablePionTagger,m_EnableVertexChargeTagger;
 };
 
 //===========================================================================//

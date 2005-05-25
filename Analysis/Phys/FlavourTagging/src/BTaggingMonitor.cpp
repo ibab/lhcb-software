@@ -1,4 +1,4 @@
-// $Id: BTaggingMonitor.cpp,v 1.6 2005-05-25 11:37:57 pkoppenb Exp $
+// $Id: BTaggingMonitor.cpp,v 1.7 2005-05-25 18:33:31 musy Exp $
 // local
 #include "BTaggingMonitor.h"
 
@@ -52,26 +52,28 @@ StatusCode BTaggingMonitor::execute() {
  
   setFilterPassed( false );
 
-  /*  
-  // Retrieve informations about event 
-  if ( !exist<EventHeader>(EventHeaderLocation::Default) ){
+  // Retrieve informations about event
+  EventHeader* evt=0;
+  if( exist<EventHeader> (EventHeaderLocation::Default)) {
+    evt = get<EventHeader> (EventHeaderLocation::Default);
+  } else {
     err() << "Unable to Retrieve Event" << endreq;
-    return StatusCode::FAILURE;
+    return StatusCode::SUCCESS;
   }
-  EventHeader* evt = get<EventHeader> (EventHeaderLocation::Default);
-  */
 
   //choose the forced B
   MCParticle* B0 = 0;
-  if( !exist<GenMCLinks> (GenMCLinkLocation::Default) ) {
-    warning() << "Unable to Retrieve GenMCLinks" << endreq;
-    return StatusCode::SUCCESS; 
+  GenMCLinks* sigL = 0;
+  if( exist<GenMCLinks> (GenMCLinkLocation::Default) ) {
+    sigL = get<GenMCLinks> (GenMCLinkLocation::Default);
+  } else {
+    err() << "Unable to Retrieve GenMCLinks" << endreq;
+    return StatusCode::FAILURE; 
   }
-  GenMCLinks* sigL = get<GenMCLinks> (GenMCLinkLocation::Default);
   B0 = (*(sigL->begin()))->signal();
   if(!B0) {
-    warning() << "No signal B in GenMCLinks" << endreq;
-    return StatusCode::SUCCESS; 
+    err() << "No signal B in GenMCLinks" << endreq;
+    return StatusCode::FAILURE; 
   }
 
   int tagdecision=0, ix=0;
@@ -81,8 +83,11 @@ StatusCode BTaggingMonitor::execute() {
   std::vector<std::string>::const_iterator loc_i;
   for(loc_i=m_tags_locations.begin(); loc_i!=m_tags_locations.end(); loc_i++){
     debug() << "Monitoring location: "<< (*loc_i)+"/Tags" << endreq;
-    SmartDataPtr<FlavourTags> tags(eventSvc(), (*loc_i)+"/Tags");
-    if( !tags ) {
+
+    FlavourTags* tags = 0;
+    if( exist<FlavourTags>((*loc_i)+"/Tags") ) {
+    tags = get<FlavourTags>((*loc_i)+"/Tags");
+    } else {
       debug() << "No tags found. " << endreq;
       continue;
     }
@@ -103,9 +108,10 @@ StatusCode BTaggingMonitor::execute() {
      m_debug->printTree( (*ti)->taggedB() );
     }
 
-    debug() << "Monitoring location: "<<(*loc_i)+"/Taggers" <<endreq;
-    SmartDataPtr<Particles> tagCands( eventSvc(), (*loc_i)+"/Taggers" );
-    if( !tagCands ) {
+    Particles* tagCands;
+    if(exist<Particles> ((*loc_i)+"/Taggers") ) {
+      tagCands = get<Particles>((*loc_i)+"/Taggers");
+    } else {
       debug() << "No taggers found. " << endreq;
       continue;
     }

@@ -1,4 +1,3 @@
-
 //----------------------------------------------------------------------
 //BTagging algorithm 
 //----------------------------------------------------------------------
@@ -8,8 +7,9 @@ ApplicationMgr.TopAlg += { "DecodeVeloRawBuffer" };
 ApplicationMgr.TopAlg += { "BTagging" };
 BTagging.OutputLevel   = 3;
 
-BTagging.SecondaryVertexType  = "TDR";
-BTagging.CombinationTechnique = "NNet";
+BTagging.SecondaryVertexType  = "TDR";  //can be "TDR" or "NNet"
+BTagging.CombinationTechnique = "NNet"; //can be "TDR" or "NNet"
+
 BTagging.TagOutputLocation = "/Event/Phys/BTagging";
 
 //PID definition

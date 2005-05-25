@@ -49,25 +49,19 @@ StatusCode CheatedSelection::execute() {
   
   setFilterPassed( false );
 
-  // Retrieve informations about event
-  EventHeader* evt = get<EventHeader> (EventHeaderLocation::Default);
-  if ( !evt ) {
-    err() << "Unable to Retrieve Event" << endreq;
-    return StatusCode::FAILURE;
-  }
-  debug() << ">>>>>  Processing Event Nr " << evt->evtNum()
-	  << " Run " << evt->runNum() << "  <<<<<" << endreq;
+  debug() << "-> Processing CheatedSelection " <<endreq;
   
   ////////////////////////////////////////////////////
   //check what is the B forced to decay
-  MCParticle* mcSignal = NULL;
-  GenMCLinks* sigLinks = get<GenMCLinks> (GenMCLinkLocation::Default);
-  if( !sigLinks ) {
+  GenMCLinks* sigLinks;
+  if(exist<GenMCLinks> (GenMCLinkLocation::Default)) {
+    sigLinks = get<GenMCLinks> (GenMCLinkLocation::Default);
+  } else {
     err() << "Unable to Retrieve GenMCLinks" << endreq;
     return StatusCode::FAILURE;
   }
-  mcSignal = (*(sigLinks->begin()))->signal();    
-  if ( mcSignal == NULL ) {
+  MCParticle* mcSignal = (*(sigLinks->begin()))->signal();    
+  if ( !mcSignal ) {
     err() << "No B was forced to decay in MC. "<< endreq;
     return StatusCode::FAILURE;
   }

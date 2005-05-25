@@ -1,4 +1,4 @@
-// $Id: NNetTool.h,v 1.3 2005-03-01 11:21:26 musy Exp $
+// $Id: NNetTool.h,v 1.4 2005-05-25 18:33:31 musy Exp $
 #ifndef NNETTOOL_NNETTOOL_H 
 #define NNETTOOL_NNETTOOL_H 1
 // Include files
@@ -9,8 +9,13 @@
 
 /** @class NNetTool NNetTool.h NNetTool.h
  *  
+ * Neural Net returns wrong tag fraction for a given tagger.
+ * Inputs are: B-signal momentum/GeV, B-theta, event-multiplicity,
+ * tampering flag, tagger p/GeV, pt/GeV, IP-significance,
+ * IP significance wrt secondary Vtx, Delta-eta between B and tagger,
+ * Delta-phi, Delta-Q (= mass of B+tagger system - mass of B).
  *  v1.3
- *  @author 
+ *  @author Marco Musy
  *  @date   2004-12-14
  */
 class NNetTool : public GaudiTool, 

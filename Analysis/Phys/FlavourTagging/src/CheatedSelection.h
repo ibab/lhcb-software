@@ -1,4 +1,4 @@
-// $Id: CheatedSelection.h,v 1.8 2005-03-01 09:57:05 musy Exp $
+// $Id: CheatedSelection.h,v 1.9 2005-05-25 18:33:31 musy Exp $
 #ifndef USER_CheatedSelection_H 
 #define USER_CheatedSelection_H 1
 
@@ -20,6 +20,8 @@
 
 /** @class CheatedSelection CheatedSelection.h 
  *  
+ *  Select events looking at the MC truth
+ *
  *  @author Marco Musy
  *  @date   16/11/2004
  */

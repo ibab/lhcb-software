@@ -1,4 +1,4 @@
-// $Id: SecondaryVertexTool.h,v 1.3 2005-03-01 11:21:26 musy Exp $
+// $Id: SecondaryVertexTool.h,v 1.4 2005-05-25 18:33:31 musy Exp $
 #ifndef SECONDARYVERTEXTOOL_SECONDARYVERTEXTOOL_H 
 #define SECONDARYVERTEXTOOL_SECONDARYVERTEXTOOL_H 1
 // Include files
@@ -13,8 +13,9 @@
 
 /** @class SecondaryVertexTool SecondaryVertexTool.h SecondaryVertexTool.h
  *  
- *  v1.3
- *  @author 
+ *  v1.3 This tool takes as input a primary vertex and a particle vector
+ *       and returns a secondary vertex
+ *  @author Marco Musy
  *  @date   2004-12-14
  */
 class SecondaryVertexTool : public GaudiTool, 
@@ -52,8 +53,9 @@ private:
 		   double JCHI );
  
   double SIGMOID(double x);
-
-  double min(double x, double y);
+  double ipprob(double x) ;
+  double ptprob(double x);
+  double aprob(double x);
 
 };
 #endif // SECONDARYVERTEXTOOL_SECONDARYVERTEXTOOL_H

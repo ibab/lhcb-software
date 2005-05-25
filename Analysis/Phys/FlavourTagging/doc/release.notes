@@ -1,9 +1,14 @@
-! $Id: release.notes,v 1.60 2005-05-25 11:37:56 pkoppenb Exp $
+! $Id: release.notes,v 1.61 2005-05-25 18:33:31 musy Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Phys/FlavourTagging
 ! Responsible : Marco Musy
 ! Purpose     : Provide tools and algorithm for tagging B
 !-----------------------------------------------------------------------------
+
+! 2005-05-25 - M. Musy
+ - code has been cleaned up a bit.
+ - added new properties for most hard-coded numbers
+ - many comments added along the way
 
 ! 2005-05-25 - P. Koppenburg
   - src/BTagging.{h,cpp}
@@ -13,7 +18,7 @@
     . Indent properly
  - src/BTaggingMonitor.cpp
     . Protect get<> methods with exist<>
-!========================== FlavourTagging v5r5 2005-03-03 ===================
+!========================== FlavourTagging v5r4 2005-02-15 ===================
 ! 2005-03-01 - M. Musy
   - src/BTagging.{h,cpp}
     . Default is now without L0 L1 and Tampering; without Tampering, results
@@ -21,7 +26,6 @@
     . Code structure has been revised.
     . Bug on same-side pion tagger fixed.
 
-!========================== FlavourTagging v5r4 2005-02-15 ===================
 ! 2005-02-02 - P. Koppenburg for Marco Musy
   - src/BTagging.{h,cpp}
     . Allow the use without L0 L1 and Tampering.
