@@ -1,15 +1,17 @@
-! $Id: release.notes,v 1.71 2005-05-25 12:23:11 pkoppenb Exp $
+! $Id: release.notes,v 1.72 2005-05-25 14:48:31 cattanem Exp $
 ! -----------------------------------------------------------------------------
-! CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.71 $
+! CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.72 $
 ! -----------------------------------------------------------------------------
 ! Package     : Calo/CaloReco
 ! Responsible : Vanya BELYAEV  belyaev@lapp.in2p3.fr 
 ! Purpose     : Main Package for Calorimeter Reconstruction Software 
 ! -----------------------------------------------------------------------------
 
+!=========================== CaloReco v2r8p2 2005-05-24 =======================
 ! 2005-05-24 - P. Koppenburg
  - options/CaloReCorrections.opts
    . New options: Moved from DaVinci
+
 !=========================== CaloReco v2r8p1 2005-05-24 =======================
 ! 2005-05-24 - P. Koppenburg
  - options/CaloRecoOnDemand.opts
