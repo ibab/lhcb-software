@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.61 2005-05-25 18:33:31 musy Exp $
+! $Id: release.notes,v 1.62 2005-05-25 18:42:16 musy Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Phys/FlavourTagging
 ! Responsible : Marco Musy
@@ -9,6 +9,7 @@
  - code has been cleaned up a bit.
  - added new properties for most hard-coded numbers
  - many comments added along the way
+ - each tagger can be disabled separately via property
 
 ! 2005-05-25 - P. Koppenburg
   - src/BTagging.{h,cpp}
