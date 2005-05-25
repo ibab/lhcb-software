@@ -12,7 +12,8 @@
  * - contains functors (previously contained in associated classes)
  * - other small classes and things that do not fit (yet)
  *
- *  @author Eduardo Rodrigues (adaptations to new track event model)
+ *  @author Jose A. Hernando
+ *  @author Eduardo Rodrigues (adaptations)
  *  @date   2005-04-05
  *
  * @author Rutger van der Eijk
@@ -160,11 +161,11 @@ namespace TrackFunctor
     List.erase( it, List.end() );
   }
 
-  template <class Pred>
-  unsigned int nMeasurements(const Track& track, Pred& pred) 
+  template <class T>
+  unsigned int nMeasurements(const Track& track, T& pred) 
   {
-    const std::vector<LHCbId>& ids = track.lhcbIDs();
-    return std::count_if(ids.begin(),ids.end(),Pred);
+    const std::vector<LHCbID>& ids = track.lhcbIDs();
+    return std::count_if(ids.begin(),ids.end(),pred);
   }
   
 }
