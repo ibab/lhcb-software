@@ -4,6 +4,9 @@
 ! Purpose     : package for tracking tools interfaces
 !-----------------------------------------------------------------------------
 
+! 2005-05-25 - Jose A. Hernando
+ - adding (draft) interface to ITrackFitter 
+
 !====================== TrackInterfaces v1r0 2005-05-24 ======================
 ! 2005-05-24 - Marco Cattaneo
  - Add use statements to requirements file
