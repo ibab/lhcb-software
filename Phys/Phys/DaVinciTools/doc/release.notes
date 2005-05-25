@@ -1,7 +1,10 @@
-! $Id: release.notes,v 1.162 2005-05-12 08:22:09 pkoppenb Exp $
+! $Id: release.notes,v 1.163 2005-05-25 07:01:33 pkoppenb Exp $
 ! Package     : DaVinciTools
 ! Responsible : P. Koppenburg
 
+! 2005-05-24 - P. Koppenburg
+  - options/PreLoadParticles.opts
+    . Moved to ParticleMaker
 !========================== DaVinciTools v11r8 2005-05-12 ===================
 ! 2005-05-12 - P. Koppenburg
   - src/CheckPV.cpp
