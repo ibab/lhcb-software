@@ -28,7 +28,7 @@ use   OTDet           v*      Det
 use   STDet           v*      Det
 use   VeloDet         v*      Det
 
-use	GaudiAlg	v*
+use   CLHEP           v*      LCG_Interfaces
 
 #============================================================================
 #---- Produce Header-Files from XML description

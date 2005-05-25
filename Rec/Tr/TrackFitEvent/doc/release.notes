@@ -4,6 +4,7 @@
 ! Purpose     : Package for the tracking fitting-related classes
 !-----------------------------------------------------------------------------
 
+!========================== TrackFitEvent v1r0 2005-05-25 ====================
 ! 2005-05-24 - Eduardo Rodrigues
  - MeasurementProvider tool moved to Tr/TrackTools
 
