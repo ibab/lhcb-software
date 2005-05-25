@@ -1,0 +1,51 @@
+//==============================================================
+// Common job options to use a COOL in DetCondExample
+//==============================================================
+
+//--------------------------------------------------------------
+// Extra services needed in the application
+//--------------------------------------------------------------
+
+// Dynamically load component library for DetCond services and converters
+ApplicationMgr.DLLs += { "DetCond" };
+
+// Add other external services to the list of known services
+ApplicationMgr.ExtSvc += { "CondDBAccessSvc" };
+
+//--------------------------------------------------------------
+// Access to the ConditionsDB
+//--------------------------------------------------------------
+
+// name of the database server
+CondDBAccessSvc.HostName = "";
+
+// name of the user needed to connect
+CondDBAccessSvc.User     = "";
+
+// password needed to connect to the DB server
+CondDBAccessSvc.Password = "";
+
+// hide password in log output (default = true)
+CondDBAccessSvc.HidePassword = true;
+
+// name of the database to use
+CondDBAccessSvc.Database = "";
+
+// schema to use
+CondDBAccessSvc.Schema   = "";
+
+// which tag to use if none is specified
+// CondDBAccessSvc.TAG = "";
+
+// which db technology to use (oracle|mysql|sqlite)
+CondDBAccessSvc.BackEnd    = "";
+
+// Drop and recreate the database during initialization.
+//CondDBAccessSvc.RecreateDB = true;
+
+//CondDBAccessSvc.RunTest = true;
+
+//************************************************** 
+
+// which tag to use if none is specified
+//CondDBAccessSvc.TAG = "COLD";

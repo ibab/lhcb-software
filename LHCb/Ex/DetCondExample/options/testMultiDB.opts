@@ -1,0 +1,67 @@
+//$Id: testMultiDB.opts,v 1.1 2005-05-25 12:37:56 marcocle Exp $
+//==============================================================
+// Job options to test double CondDB usage in DetCondExample
+//==============================================================
+
+#include "../options/common.opts"
+DetectorDataSvc.DetDbLocation  = "$DETCONDEXAMPLE_XMLDDDB/multi.xml";
+
+//--------------------------------------------------------------
+// Sequence of algorithms to be applied
+//--------------------------------------------------------------
+ApplicationMgr.TopAlg  = { "Sequencer" };
+Sequencer.Members   = { };
+Sequencer.Members  += { "EvtClock" };
+Sequencer.Members  += { "FireUpdateManager" };
+Sequencer.Members  += { "MultiDBTest" };
+Sequencer.Members  += { "DumpDetectorStore" };
+//--------------------------------------------------------------
+// Input events
+//--------------------------------------------------------------
+
+// Input file
+ApplicationMgr.EvtSel = "NONE";
+
+// Number of events to be processed (default is 10)
+ApplicationMgr.EvtMax = 2;
+
+// Event clock attributes
+EvtClock.startTime = 5;
+EvtClock.delayTime = 10;
+
+//--------------------------------------------------------------
+// Message service options
+//--------------------------------------------------------------
+
+// Set output level threshold 
+// Levels: 1=VERBOSE, 2=DEBUG, 3=INFO, 4=WARNING, 5=ERROR, 6=FATAL
+MessageSvc.OutputLevel = 1;
+
+//--------------------------------------------------------------
+// DetCond extra options
+//--------------------------------------------------------------
+ApplicationMgr.DLLs += { "DetCond" };
+ApplicationMgr.ExtSvc += { "CondDBAccessSvc/DB1" };
+ApplicationMgr.ExtSvc += { "CondDBAccessSvc/DB2" };
+
+ConditionsDBCnvSvc.CondDBAccessServices = { "DB1", "DB2" };
+ApplicationMgr.ExtSvc += { "ConditionsDBCnvSvc" };
+DetectorPersistencySvc.CnvServices += { "ConditionsDBCnvSvc" };
+
+DB1.HostName     = "";
+DB1.User         = "";
+DB1.Password     = "";
+DB1.HidePassword = true;
+DB1.Database     = "";
+DB1.Schema       = "";
+DB1.BackEnd      = "";
+DB1.RecreateDB   = true;
+
+DB2.HostName     = "";
+DB2.User         = "";
+DB2.Password     = "";
+DB2.HidePassword = true;
+DB2.Database     = "";
+DB2.Schema       = "";
+DB2.BackEnd      = "";
+DB2.RecreateDB   = true;
