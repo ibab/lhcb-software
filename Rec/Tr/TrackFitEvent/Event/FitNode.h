@@ -33,13 +33,10 @@ public:
   FitNode();
 
   /// Constructor from a Measurement
-  FitNode( Measurement* aHit );
+  FitNode(Measurement& meas );
 
   /// Destructor
   virtual ~FitNode();
-
-//  /// retrieve pointer to Node Measurement
-//  Measurement* measurementOnTrack() const { return m_meas; }
 
   /// retrieve transport matrix
   const HepMatrix& transportMatrix() const  { return m_transportMatrix; }
@@ -51,7 +48,7 @@ public:
   const HepSymMatrix& noiseMatrix() const { return m_noiseMatrix; }
 
   /// set transport matrix
-  void setTransportMatrix( HepMatrix transportMatrix ) {
+  void setTransportMatrix( const HepMatrix& transportMatrix ) {
     m_transportMatrix = transportMatrix;
   }
   
@@ -66,53 +63,32 @@ public:
   }  
 
   /// retrieved state predicted by the kalman filter step
-  State* predictedState() const             { return m_predictedState; }
+  State& predictedState() const             
+  { return *m_predictedState; }
 
   /// set state predicted by the kalman filter
-  void setPredictedState( State* predictedState ) {
-    m_predictedState = predictedState; 
-  }
-
-  /// Update the State predicted by the Kalman filter
-  void updatePredictedState( State* predictedState );
+  void setPredictedState( const State& predictedState );
 
   /// get filtered state from the kalman filter step
-  State* filteredState() const              { return m_filteredState; }
-  
+  const State& filteredState() const 
+  {return *m_filteredState; }
 
   /// set filtered state from the kalman filter step
-  void setFilteredState( State* filteredState ) {
-    m_filteredState = filteredState;
-  }
-
-  /// Update the filtered state from the Kalman filter step
-  void updateFilteredState( State* filteredState );
-
-  /// get best = smoothed state from node
-State* bestState() const                 {  return m_state;  }
-
-  /// set best = smoothed state from node
-  void setBestState( State* bestState )      {  m_state = bestState; }
-  
-  /// update best = smoothed state from node
-  void updateBestState( State* state );
+  void setFilteredState( const State& filteredState );
 
   /// add the transport transformation of prevNode to this node
-  void addNode( FitNode* node );
+  void addNode( const FitNode& node );
 
   /// z position of Node
-  double z() const   { return m_measurement -> z(); };
+  double z() const   { return m_measurement->z(); };
 
 private:
 
   HepMatrix      m_transportMatrix;  ///< transport matrix
   HepVector      m_transportVector;  ///< transport vector
   HepSymMatrix   m_noiseMatrix;      ///< noise matrix
-//  Measurement*   m_meas;             ///< measurement
   State*         m_predictedState;   ///< predicted state from filter step
   State*         m_filteredState;    ///< filtered State at this Node
-//  State*         m_bestState;        ///< best state at this node
-
 };
 
 

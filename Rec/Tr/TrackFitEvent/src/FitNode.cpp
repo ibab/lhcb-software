@@ -33,13 +33,12 @@ FitNode::FitNode():
   m_transportMatrix = HepMatrix(5, 5, 1);
   m_transportVector = HepVector(5, 0);
   m_noiseMatrix     = HepSymMatrix(5, 0);
-  m_state           = 0;
 }
 
 //=============================================================================
 // Constructor from a Measurement
 //=============================================================================
-FitNode::FitNode(Measurement* aMeas):
+FitNode::FitNode(Measurement& aMeas):
   m_predictedState(0),
   m_filteredState(0)
 {
@@ -47,8 +46,7 @@ FitNode::FitNode(Measurement* aMeas):
   m_transportMatrix = HepMatrix(5, 5, 1);
   m_transportVector = HepVector(5, 0);
   m_noiseMatrix     = HepSymMatrix(5, 0);
-  m_state           = 0;
-  m_measurement     = aMeas;
+  m_measurement     = &aMeas;
 }
 
 //=============================================================================
@@ -56,83 +54,41 @@ FitNode::FitNode(Measurement* aMeas):
 //=============================================================================
 FitNode::~FitNode()
 {
-  delete m_predictedState;
-  delete m_filteredState;
-  delete m_state;
+  if (m_predictedState) delete m_predictedState;
+  if (m_filteredState) delete m_filteredState;
 }
 
 //=============================================================================
 // Update the State predicted by the Kalman filter
 //=============================================================================
-void FitNode::updatePredictedState( State* predictedState )
+void FitNode::setPredictedState( const State& predictedState )
 {  
   //if pointer not set clone state - else copy (not great)
-  if ( !m_predictedState ) {
-    m_predictedState = predictedState -> clone();    
-  }
-  else{
-    // get reference to the state vector and cov
-    HepVector& tX    = m_predictedState -> stateVector();
-    HepSymMatrix& tC = m_predictedState -> covariance();
-   
-    //update 
-    tX = predictedState -> stateVector();
-    tC = predictedState -> covariance();
-
-  }
+  if (m_predictedState) delete m_predictedState;
+  m_predictedState = predictedState.clone();
+  setState(predictedState);
 }
 
 //=============================================================================
 // Update the filtered state from the Kalman filter step
 //=============================================================================
-void FitNode::updateFilteredState( State* filteredState )
+void FitNode::setFilteredState( const State& filteredState )
 {  
   //if pointer not set clone state - else copy (not great)
-  if ( !m_filteredState ) {
-    m_filteredState = filteredState -> clone();
-  }
-  else{
-    // get reference to the state vector and cov
-    HepVector& tX    = m_filteredState -> stateVector();
-    HepSymMatrix& tC = m_filteredState -> covariance();
-   
-    //update 
-    tX = filteredState -> stateVector();
-    tC = filteredState -> covariance();
-
-  }
-}
-
-//=============================================================================
-// 
-//=============================================================================
-void FitNode::updateBestState( State* state )
-{
-  /// update the best state 
-  //if pointer not set clone state - else copy (not great)
-  if ( !m_state ) {
-    m_state = state -> clone();
-  }
-  else{
-    // get reference to the state vector and cov
-    HepVector& tX    = m_state -> stateVector();
-    HepSymMatrix& tC = m_state -> covariance();
-
-    //update 
-    tX = state -> stateVector();
-    tC = state -> covariance();
-  }
+  if ( m_filteredState ) delete m_filteredState;
+  m_filteredState = filteredState.clone();
+  setState(filteredState);
 }
 
 //=============================================================================
 // Add the transport transformation of prevNode to this node
 //=============================================================================
-void FitNode::addNode( FitNode* prevNode )
+void FitNode::addNode( const FitNode& prevNode )
 {
   // add the transport transformation of prevNode to this node
-  m_transportVector += m_transportMatrix * prevNode->transportVector() ;
-  m_noiseMatrix += (prevNode->noiseMatrix()).similarity( m_transportMatrix );
-  m_transportMatrix = m_transportMatrix * prevNode->transportMatrix();  
+  m_transportVector += m_transportMatrix * prevNode.transportVector() ;
+  m_noiseMatrix += (prevNode.noiseMatrix()).similarity( m_transportMatrix );
+  m_transportMatrix = m_transportMatrix * prevNode.transportMatrix();  
 }
 
 //=============================================================================
