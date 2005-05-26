@@ -4,7 +4,10 @@
 ! Purpose     : Package for the tracking fitting-related classes
 !-----------------------------------------------------------------------------
 
-!========================== TrackFitEvent v1r0 2005-05-25 ====================
+!========================== TrackFitEvent v1r0 2005-05-26 ====================
+! 2005-05-26 - Marco Cattaneo
+ - Add TrFitEvent_load.cpp
+
 ! 2005-05-24 - Eduardo Rodrigues
  - MeasurementProvider tool moved to Tr/TrackTools
 
