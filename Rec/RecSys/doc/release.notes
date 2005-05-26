@@ -12,7 +12,8 @@ This version uses Gaudi v16r4, LHCb v18r5 (also CLHEP 1.9, ROOT 4.0)
 - Packages added:    TrackExtrapolators v1r0, TrackTools v1r0, TrackMCTools v1r0,
                      TrackProjectors v1r0, TrackFitEvent v1r0, TrackIdealPR v1r0,
                      TrConverters v1r0
-- Packages modified: CaloPIDs v2r5p1, CaloReco v2r8p2, GlobalReco v5r0
+- Packages modified: CaloPIDs v2r5p1, CaloReco v2r8p2, GlobalReco v5r0,
+                     RichRecSys v1r16p2, RichRecTools v2r14p1
 
 - In GlobalReco v5r0:
   . Major repackaging of job options to remove Panoramix dependency on DaVinci
@@ -27,6 +28,9 @@ This version uses Gaudi v16r4, LHCb v18r5 (also CLHEP 1.9, ROOT 4.0)
 - In TrackExtrapolators v1r0, TrackProjectors v1r0, TrackMCTools v1r0,
      TrackTools v1r0, TrackFitEvent v1r0, TrackIdealPR v1r0, TrConverters v1r0
   . First release of Track Fit tools for new Track model
+
+- In RichRecTools v2r14p1
+  . Adapt to interface change in DetDesc v15r0
  
 </PRE><H1><A NAME=v1r0>2005-05-13 RecSys v1r0</A></H1><PRE>
 This version uses Gaudi v16r3, LHCb v18r4 (also CLHEP 1.9, ROOT 4.0). 

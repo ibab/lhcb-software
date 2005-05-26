@@ -57,12 +57,12 @@ use MuonRec             v2r4p1	Muon
 use MuonID              v3r7p2	Muon
 
 # Rich
-use RichRecSys		v1r16p1	Rich
+use RichRecSys		v1r16p2	Rich
 use RichRingRefit	v1r9p1	Rich
 use RichLocalPID	v1r10p1	Rich
 use RichGlobalPID	v1r9p1	Rich
 use RichPIDMerge	v1r5	Rich
-use RichRecTools        v2r14   Rich
+use RichRecTools        v2r14p1 Rich
 use RichRecMCTools      v1r8    Rich
 use RichRecCommon       v1r12   Rich
 use RichRecQC           v1r10   Rich
