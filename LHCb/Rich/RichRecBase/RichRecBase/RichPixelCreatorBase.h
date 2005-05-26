@@ -5,7 +5,7 @@
  *  Header file for tool base class : RichPixelCreatorBase
  *
  *  CVS Log :-
- *  $Id: RichPixelCreatorBase.h,v 1.1 2005-05-13 14:54:57 jonrob Exp $
+ *  $Id: RichPixelCreatorBase.h,v 1.2 2005-05-26 16:45:51 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   20/04/2005
@@ -17,6 +17,10 @@
 
 // STL
 #include <functional>
+
+// Gaudi
+#include "GaudiKernel/IIncidentListener.h"
+#include "GaudiKernel/IIncidentSvc.h"
 
 // base class
 #include "RichRecBase/RichRecToolBase.h"
@@ -36,8 +40,11 @@
 //---------------------------------------------------------------------------------------
 /** @class RichPixelCreatorBase RichPixelCreatorBase.h RichRecBase/RichPixelCreatorBase.h
  *
- *  Base class for all RichRecPixel creator tools. Implements common functionaility need
- *  by all concrete implementations.
+ *  Base class for all RichRecPixel creator tools.
+ *
+ *  Implements common functionaility needed by all concrete implementations.
+ *  Derived classes must implement the methods newPixels and buildPixel using
+ *  whatever means appropriate for that implementation.
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   20/04/2005
@@ -48,7 +55,8 @@
 //---------------------------------------------------------------------------------------
 
 class RichPixelCreatorBase : public RichRecToolBase,
-                             virtual public IRichPixelCreator
+                             virtual public IRichPixelCreator,
+                             virtual public IIncidentListener
 {
 
 public:
@@ -66,6 +74,10 @@ public:
 
   // Finalize method
   virtual StatusCode finalize();
+
+  // Implement the handle method for the Incident service.
+  // This is used to inform the tool of software incidents.
+  virtual void handle( const Incident& incident );
 
 public: // methods from interface
 
@@ -89,18 +101,18 @@ public: // methods from interface
 protected: // methods
 
   /// Initialise for a new event
-  void InitNewEvent();
+  virtual void InitNewEvent();
 
   /// Finalise current event
-  void FinishEvent();
+  virtual void FinishEvent();
 
-  /// Read the pixels and fill the RICH and panel iterators
+  /// Read the pixels and fill the RICH and panel begin and end iterators
   void fillIterators() const;
 
-  /// Reset iterators to default values
+  /// Reset all iterators to default values
   void resetIterators() const;
 
-  /// Sort the RichRecPixel container
+  /// Sort the RichRecPixel container into detector regions
   void sortPixels() const;
 
   /// Access the final RichRecPixel location in the TES
@@ -109,13 +121,30 @@ protected: // methods
   /// Is book keeping to be performed
   bool bookKeep() const;
 
-  /// Check if a given detector is to be used
+  /** Check if a given RICH detector is to be used
+   *
+   *  @param rich The RICH detector type
+   *
+   *  @return boolean indicating if the given RICH detector is active
+   *  @retval true  RICH detector is active
+   *  @retval false RICH detector is not in use
+   */
   bool useDetector( const Rich::DetectorType rich ) const;
 
-  /// Check the status of the given pixel
+  /** Check the status of the given RICH channel (RichSmartID)
+   *
+   *  @param id The RichSmartID to check
+   *
+   *  @return boolean indicating if the given channel is active
+   *  @retval true  channel is active
+   *  @retval false channel is not in use
+   */
   bool pixelIsOK( const RichSmartID id ) const;
 
-  /// Save a given pixel
+  /** Save a given pixel to the TES container
+   *
+   *  @param pix Pointer to the RichRecPixel to save
+   */
   void savePixel( RichRecPixel * pix ) const;
 
 protected: // data
@@ -170,6 +199,11 @@ private: // data
   /// Flag to indicate if the tool has been used in a given event
   mutable bool m_hasBeenCalled;
 
+private: // methods
+
+  /// Printout the pixel creation statistics
+  void printStats() const;
+
 private: // helper classes
 
   /// Class to sort the RichRecPixels according to detector regions
@@ -186,29 +220,6 @@ private: // helper classes
   };
 
 };
-
-inline void RichPixelCreatorBase::InitNewEvent()
-{
-  // Initialise navigation data
-  m_hasBeenCalled = false;
-  m_allDone = false;
-  m_pixels  = 0;
-  if ( m_bookKeep )
-  {
-    m_pixelExists.clear();
-    m_pixelDone.clear();
-  }
-}
-
-inline void RichPixelCreatorBase::FinishEvent()
-{
-  if ( m_hasBeenCalled ) ++m_Nevts;
-  if ( msgLevel(MSG::DEBUG) )
-  {
-    debug() << "Created " << richPixels()->size() << " RichRecPixels at "
-            << pixelLocation() << endreq;
-  }
-}
 
 inline void RichPixelCreatorBase::sortPixels() const
 {

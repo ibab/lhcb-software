@@ -5,7 +5,7 @@
  *  Implementation file for tool base class : RichPixelCreatorBase
  *
  *  CVS Log :-
- *  $Id: RichPixelCreatorBase.cpp,v 1.1 2005-05-13 14:54:57 jonrob Exp $
+ *  $Id: RichPixelCreatorBase.cpp,v 1.2 2005-05-26 16:45:51 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   20/04/2005
@@ -40,9 +40,9 @@ RichPixelCreatorBase::RichPixelCreatorBase( const std::string& type,
   // Define job option parameters
   declareProperty( "RichRecPixelLocation",
                    m_richRecPixelLocation = RichRecPixelLocation::Default );
-  declareProperty( "DoBookKeeping", m_bookKeep );
-  declareProperty( "UseDetectors", m_usedDets  );
-  declareProperty( "CheckHPDsAreActive", m_hpdCheck );
+  declareProperty( "DoBookKeeping",      m_bookKeep  );
+  declareProperty( "UseDetectors",       m_usedDets  );
+  declareProperty( "CheckHPDsAreActive", m_hpdCheck  );
 
 }
 
@@ -66,6 +66,10 @@ StatusCode RichPixelCreatorBase::initialize()
   if ( !m_usedDets[Rich::Rich2] )
     Warning( "Pixels for RICH2 are disabled", StatusCode::SUCCESS );
 
+  // Setup incident services
+  incSvc()->addListener( this, IncidentType::BeginEvent );
+  incSvc()->addListener( this, IncidentType::EndEvent   );
+
   // Intialise counts
   m_hitCount[Rich::Rich1] = 0;
   m_hitCount[Rich::Rich2] = 0;
@@ -75,19 +79,33 @@ StatusCode RichPixelCreatorBase::initialize()
 
 StatusCode RichPixelCreatorBase::finalize()
 {
-  // Stats printout
-  //if ( m_Nevts > 0 )
-  // {
-  RichStatDivFunctor occ("%8.2f +-%5.2f");
-  info() << "------------------------------------------------" << endreq
-         << "  Pixel summary for " << m_Nevts << " events :-" << endreq
-         << "     Rich1  " << occ(m_hitCount[Rich::Rich1],m_Nevts) << "  pixels/event" << endreq
-         << "     Rich2  " << occ(m_hitCount[Rich::Rich2],m_Nevts) << "  pixels/event" << endreq
-         << "------------------------------------------------" << endreq;
-  //  }
+  // print stats
+  printStats();
 
   // base class finalize
   return RichRecToolBase::finalize();
+}
+
+void RichPixelCreatorBase::printStats() const
+{
+  if ( m_Nevts > 0
+       && !( m_hitCount[Rich::Rich1] == 0 &&
+             m_hitCount[Rich::Rich2] == 0 ) )
+  {
+    RichStatDivFunctor occ("%8.2f +-%7.2f");
+    info() << "================================================" << endreq
+           << "  Pixel summary for " << m_Nevts << " events :-" << endreq
+           << "     Rich1  "
+           << occ(m_hitCount[Rich::Rich1],m_Nevts) << "  pixels/event" << endreq
+           << "     Rich2  "
+           << occ(m_hitCount[Rich::Rich2],m_Nevts) << "  pixels/event" << endreq
+         << "================================================" << endreq;
+  }
+  else
+  {
+    Warning( "No pixels produced", StatusCode::SUCCESS );
+  }
+
 }
 
 void RichPixelCreatorBase::fillIterators() const
@@ -119,10 +137,10 @@ void RichPixelCreatorBase::fillIterators() const
       }
       if ( rich != (*iPix)->smartID().rich() )
       {
-        rich = (*iPix)->smartID().rich();
+        rich                = (*iPix)->smartID().rich();
         m_richBegin[rich]   = iPix;
         m_richEnd[lastrich] = iPix;
-        lastrich  = rich;
+        lastrich            = rich;
       }
     }
 
@@ -206,4 +224,40 @@ RichPixelCreatorBase::end( const Rich::DetectorType rich,
                            const Rich::Side         panel ) const
 {
   return m_ends[rich][panel];
+}
+
+void RichPixelCreatorBase::handle ( const Incident& incident )
+{
+  // Update prior to start of event. Used to re-initialise data containers
+  if ( IncidentType::BeginEvent == incident.type() )
+  {
+    this->InitNewEvent();
+  }
+  // Debug printout at the end of each event
+  else if ( IncidentType::EndEvent == incident.type() )
+  {
+    this->FinishEvent();
+  }
+}
+
+void RichPixelCreatorBase::InitNewEvent()
+{
+  m_hasBeenCalled = false;
+  m_allDone = false;
+  m_pixels  = 0;
+  if ( m_bookKeep )
+  {
+    m_pixelExists.clear();
+    m_pixelDone.clear();
+  }
+}
+
+void RichPixelCreatorBase::FinishEvent()
+{
+  if ( m_hasBeenCalled ) ++m_Nevts;
+  if ( msgLevel(MSG::DEBUG) )
+  {
+    debug() << "Created " << richPixels()->size() << " RichRecPixels at "
+            << pixelLocation() << endreq;
+  }
 }

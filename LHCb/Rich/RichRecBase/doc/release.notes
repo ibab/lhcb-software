@@ -4,9 +4,14 @@
 ! Purpose     : Base package for RICH Reconstruction Packages
 !-----------------------------------------------------------------------------
 
+! 2005-05-26 - Chris Jones
+ - Add new base classes for photon and track creator tools. Due to the
+   increase in the number of such tools, its is now convenient to have 
+   common functionality in shared base classes.
+
 ! 2005-05-13 - Chris Jones
  - Add explicit dependency on DAQEvent
- - Add new methods to access a range of RichRecPIxels 
+ - Add new methods to access a range of RichRecPixels 
    (e.g. only those in RICH1 or RICH1 upper panel )
  - Add base class for all pixel creator tools (shared common code)
    each creator only need implement those bits that are unique to each
