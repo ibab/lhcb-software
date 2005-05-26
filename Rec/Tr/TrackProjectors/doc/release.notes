@@ -7,6 +7,7 @@
 !====================== TrackProjectors v1r0 2005-05-25 ======================
 ! 2005-05-25 - Marco Cattaneo
  - Remove TrackProjectors directory, move files to src
+ - Add dummy implementation of TrackProjector::project() to please Windows linker
 
 ! 2005-05-24 - Eduardo Rodrigues
  - propagating changes from TrackEvent

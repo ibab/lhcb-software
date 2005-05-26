@@ -1,4 +1,4 @@
-// $Id: TrackProjector.cpp,v 1.5 2005-05-25 14:30:21 cattanem Exp $
+// $Id: TrackProjector.cpp,v 1.6 2005-05-26 09:34:41 cattanem Exp $
 // Include files 
 
 // from Gaudi
@@ -20,6 +20,14 @@
 // Declaration of the Tool Factory
 static const  ToolFactory<TrackProjector>          s_factory ;
 const        IToolFactory& TrackProjectorFactory = s_factory ;
+
+//=============================================================================
+// Dummy implementation of method, to please Windows linker
+//=============================================================================
+StatusCode TrackProjector::project( const State&, Measurement& )
+{
+  return StatusCode::FAILURE;
+}
 
 //=============================================================================
 // Retrieve the projection matrix H of the (last) projection
