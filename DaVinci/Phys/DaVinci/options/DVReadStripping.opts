@@ -1,0 +1,37 @@
+// Check the tag on DST
+#include "$DAVINCIROOT/options/DaVinciCommon.opts"
+
+ApplicationMgr.TopAlg += { "GaudiSequencer/AnaBd2PiPiSeq" };
+AnaBd2PiPiSeq.Members += { "CheckSelResult/CheckTDRselBd2PiPi" };
+CheckTDRselBd2PiPi.Algorithms = { "TDRselBd2PiPi" };
+
+// Re-run TDR selection
+//#include "$DAVINCIROOT/options/DaVinciReco.opts"
+
+ApplicationMgr.DLLs  += { "B2HH" };
+
+//ApplicationMgr.TopAlg += { "Sequencer/SeqTDRselBd2PiPi" }; // re-run always
+AnaBd2PiPiSeq.Members += { "Sequencer/SeqTDRselBd2PiPi" };// only for good
+
+SeqTDRselBd2PiPi.Members += { "ChargedProtoPAlg" };                                                                                                                                                                         
+// Primary vertex
+ApplicationMgr.DLLs += { "PrimVtx" };
+#include "$PRIMVTXROOT/options/PrimVtx.opts"
+SeqTDRselBd2PiPi.Members += { "PrimVtxFinder" };
+
+SeqTDRselBd2PiPi.Members += {
+  "PreLoadParticles/Combined",
+   "B2hh/TDRselBd2PiPi"
+};
+   
+#include "$B2HHROOT/options/TDRselBd2PiPi.opts"
+
+SeqTDRselBd2PiPi.Members += { "PrintHeader/PrintTDRselBd2PiPi" };
+PrintTDRselBd2PiPi.OutputLevel = 2 ;
+
+// Data
+
+ApplicationMgr.EvtMax = 10000 ;
+
+#include "$DAVINCIROOT/options/Good-Stripped-DST-DC04v1.opts"
+EventSelector.PrintFreq = 100 ;

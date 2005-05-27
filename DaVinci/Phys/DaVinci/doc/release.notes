@@ -4,11 +4,14 @@
 ! Purpose     : Analysis program for LHCb
 !-----------------------------------------------------------------------------
 
-! 2005-05-24 - P. Koppenburg
+!========================== DaVinci v12r11 2005-05-27 ===================
+! 2005-05-27 - P. Koppenburg
+  - options/DVReadStripping.opt
+    . New example options that allow to read stripped DST data
+  - options/Good-Stripped-DST-DC04v1.opts
+    . Stripped DSTs that should be used
   - options/MuonIDReTuning.opts
-    . Put algo in DaVinciSeq
-                                                                                                                                                          
-!========================== DaVinci v12r11 2005-05-19 ===================
+    . Put algo in DaVinciSeq 
 !========================== DaVinci v12r10 2005-05-12 ===================
 ! 2005-05-10 - P. Koppenburg
   - options/DVTRiggerFilter.opts
@@ -230,7 +233,7 @@ Olivier writes:
     - In L1Checking : remove the TrgTrackToConatiner.prefix option
     - in HltChecking, add the options
      HltTrgTrack2MCParticle.prefix = "Hlt/";
-     HltTrgChecker.prefix          = "Hlt/";
+     HltTrgChecker.prefix = "Hlt/";
     If not the monitoring of L1 and HLT can not be set together.
 
 ! 2004-09-07 - P. Koppenburg
