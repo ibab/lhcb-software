@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.31 2005-05-25 17:22:14 marcocle Exp $
+# $Id: requirements,v 1.32 2005-05-27 12:12:52 marcocle Exp $
 # Modified by Marco Clemencic and Nicolas Gilardi (Gen. 2005)
 package DetCond
 version v7r2
@@ -10,6 +10,8 @@ use GaudiKernel v*
 use GaudiSvc    v*
 
 use COOL v* LCG_Interfaces
+# Windows needs the COOL factory also here
+tag WIN32 NEEDS_COOL_FACTORY
 
 # Detector Description
 # This is only needed because updateObj assumes a ValidDataObject (TEMPORARY?)

@@ -1,9 +1,12 @@
-# $Id: release.notes,v 1.34 2005-05-25 17:22:14 marcocle Exp $
+# $Id: release.notes,v 1.35 2005-05-27 12:12:52 marcocle Exp $
 Package Det/DetCond
 Package manager : Marco Clemencic
 
 ================= Det/DetCond v7r2 ===========================================
-! 2005-05-25 - Marco CLEMENCIC
+! 2005-05-27 - Marco Clemencic
+ - fixed compilation issue for Windows
+
+! 2005-05-25 - Marco Clemencic
  - Adapted to COOL 1.1.0 (LCG_35)
 
 ================= Det/DetCond v7r1 ===========================================
