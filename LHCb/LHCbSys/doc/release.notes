@@ -6,7 +6,7 @@
 !-----------------------------------------------------------------------------
 
 </PRE><H1><A NAME=v18r5>2005-05-24 LHCbSys v18r5</A></H1><PRE>
- - Packages added:    TrackInterfaces v1r0
+ - Packages added:    TrackInterfaces v1r0, DetCond v7r2, DetCondExample v7r2
  - Packages modified: KernelSys v4r11, Relations v2r5, RichKernel v5r4p1,
      EventSys v20r5, Rdst v1r1, TrackEvent v1r0, LHCbInterfaces v1r2,
      DetSys v7r0, DetDesc v15r0, DetDescCnv v2r5, CaloDet, OTDet v5r5,
@@ -46,6 +46,9 @@
  - In DetDescCnv v2r5, CaloDet, OTDet v5r5, RichDet v8r4, STDet v1r4, 
       VeloDet v9r5, DetDescExample v6r3
    . Adapt to changes in DetDesc
+
+ - In DetCond v7r2, DetCondExample v7r2
+   . First public release of conditions database for LHCb
 
 </PRE><H1><A NAME=v18r4>2005-05-11 LHCbSys v18r4</A></H1><PRE>
  - Packages added:    STTools v1r1, TrgTools v7r3, Rdst v1r0
