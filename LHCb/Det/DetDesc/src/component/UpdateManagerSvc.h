@@ -1,4 +1,4 @@
-// $Id: UpdateManagerSvc.h,v 1.1 2005-05-03 12:40:09 marcocle Exp $
+// $Id: UpdateManagerSvc.h,v 1.2 2005-05-27 11:57:42 marcocle Exp $
 #ifndef UPDATEMANAGERSVC_H 
 #define UPDATEMANAGERSVC_H 1
 
@@ -10,6 +10,7 @@
 #include <string>
 #include <map>
 #include <exception>
+#include <algorithm>
 
 // Forward declarations
 template <class TYPE> class SvcFactory;

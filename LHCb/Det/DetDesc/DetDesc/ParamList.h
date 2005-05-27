@@ -1,4 +1,4 @@
-// $Id: ParamList.h,v 1.1 2005-05-13 16:01:10 marcocle Exp $
+// $Id: ParamList.h,v 1.2 2005-05-27 11:57:42 marcocle Exp $
 #ifndef DETDESC_PARAMLIST_H 
 #define DETDESC_PARAMLIST_H 1
 
@@ -39,7 +39,7 @@ public:
       i->second->set(val);
     } else {
       //(*this)[key] = new Param<T>(val);
-      insert(make_pair(key,new Param<T>(val)));
+      insert(std::pair<std::string,Param<T>*>(key,new Param<T>(val)));
     }
   }
 
