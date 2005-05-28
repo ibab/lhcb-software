@@ -6,6 +6,10 @@
 
 ! 2005-05-28 - Chris Jones
  - Update photon creators to use new base classes
+ - Add new creator tool, RichPhotonCreatorWithGaussianCKSmear, which first
+   delegates the actual RichRecPhoton creator to another tool, and then applies
+   a random Gaussian smearing to the Cherenkov theta angle. Can be used to 
+   artifically degrad the resolution for robustness studies.
 
 ! 2005-05-13 - Chris Jones
  - Update pixel creators to use new base class

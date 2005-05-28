@@ -5,7 +5,7 @@
  *  Implementation file for RICH reconstruction tool : RichPixelCreatorFromRichDigitsWithBg
  *
  *  CVS Log :-
- *  $Id: RichPixelCreatorFromRichDigitsWithBg.cpp,v 1.10 2005-05-13 15:00:05 jonrob Exp $
+ *  $Id: RichPixelCreatorFromRichDigitsWithBg.cpp,v 1.11 2005-05-28 16:45:48 jonrob Exp $
  *
  *  @author Andy Buckley  buckley@hep.phy.cam.ac.uk
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
@@ -47,10 +47,6 @@ StatusCode RichPixelCreatorFromRichDigitsWithBg::initialize()
   acquireTool( "RichSmartIDTool", m_smartIDTool );
   acquireTool( "RichMCTruthTool", m_mcTool      );
 
-  // Setup incident services
-  incSvc()->addListener( this, IncidentType::BeginEvent );
-  incSvc()->addListener( this, IncidentType::EndEvent );
-
   // warn that this background adding creator is being used
   info() << "Using background adding pixel creator : Will add " << m_numBgTracksToAdd[Rich::Rich1]
          << "/" << m_numBgTracksToAdd[Rich::Rich2] << " traversing particles to RICH(1/2)" << endreq;
@@ -63,22 +59,6 @@ StatusCode RichPixelCreatorFromRichDigitsWithBg::finalize()
   // Execute base class method
   return RichPixelCreatorBase::finalize();
 }
-
-// Method that handles various Gaudi "software events"
-void RichPixelCreatorFromRichDigitsWithBg::handle ( const Incident& incident )
-{
-  // Update prior to start of event. Used to re-initialise data containers
-  if ( IncidentType::BeginEvent == incident.type() )
-  {
-    InitNewEvent();
-  }
-  // Debug printout at the end of each event
-  else if ( IncidentType::EndEvent == incident.type() )
-  {
-    FinishEvent();
-  }
-}
-
 
 // Fill the stack of background tracks from the current event
 // (effectively emptying this event)

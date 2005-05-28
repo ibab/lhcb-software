@@ -5,7 +5,7 @@
  *  Header file for RICH reconstruction tool : RichPixelCreatorFromSignalRichDigits
  *
  *  CVS Log :-
- *  $Id: RichPixelCreatorFromSignalRichDigits.h,v 1.6 2005-05-13 15:00:05 jonrob Exp $
+ *  $Id: RichPixelCreatorFromSignalRichDigits.h,v 1.7 2005-05-28 16:45:48 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   08/07/2004
@@ -16,8 +16,6 @@
 #define RICHRECMCTOOLS_RICHPIXELCREATORFROMSIGNALRICHDIGITS_H 1
 
 // from Gaudi
-#include "GaudiKernel/IIncidentListener.h"
-#include "GaudiKernel/IIncidentSvc.h"
 #include "GaudiKernel/ToolFactory.h"
 
 // base class
@@ -49,8 +47,7 @@
  */
 //--------------------------------------------------------------------------------------
 
-class RichPixelCreatorFromSignalRichDigits : public RichPixelCreatorBase,
-                                             virtual public IIncidentListener 
+class RichPixelCreatorFromSignalRichDigits : public RichPixelCreatorBase
 {
 
 public: // methods for Gaudi framework
@@ -69,10 +66,6 @@ public: // methods for Gaudi framework
   // Finalize method
   StatusCode finalize();
 
-  /// Implement the handle method for the Incident service.
-  /// This is used to inform the tool of software incidents.
-  void handle( const Incident& incident );
-
 public: // Public interface methods
 
   // Returns a RichRecPixel object pointer for given ContainedObject.
@@ -86,7 +79,7 @@ public: // Public interface methods
 private: // methods
 
   /// Initialise for a new event. Re-implmented from base class version.
-  void InitNewEvent();
+  virtual void InitNewEvent();
 
   /// List of tracked MCParticles
   typedef RichMap < const MCParticle*, bool > TrackedMCPList;
@@ -121,13 +114,5 @@ private: // data
   mutable bool m_trackMCPsDone;
 
 };
-
-inline void RichPixelCreatorFromSignalRichDigits::InitNewEvent()
-{
-  // Initialise data for new event
-  RichPixelCreatorBase::InitNewEvent();
-  m_trackedMCPs.clear();
-  m_trackMCPsDone = false;
-}
 
 #endif // RICHRECMCTOOLS_RICHPIXELCREATORFROMSIGNALRICHDIGITS_H

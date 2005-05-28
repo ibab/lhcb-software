@@ -5,7 +5,7 @@
  *  Implementation file for RICH reconstruction tool : RichPixelCreatorFromCheatedRichDigits
  *
  *  CVS Log :-
- *  $Id: RichPixelCreatorFromCheatedRichDigits.cpp,v 1.14 2005-05-13 15:00:05 jonrob Exp $
+ *  $Id: RichPixelCreatorFromCheatedRichDigits.cpp,v 1.15 2005-05-28 16:45:48 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/09/2003
@@ -54,10 +54,6 @@ StatusCode RichPixelCreatorFromCheatedRichDigits::initialize()
   if ( !m_usedRads[Rich::C4F10]   ) Warning("Pixel data for C4F10 is disabled",StatusCode::SUCCESS);
   if ( !m_usedRads[Rich::CF4]     ) Warning("Pixel data for CF4 is disabled",StatusCode::SUCCESS);
 
-  // Setup incident services
-  incSvc()->addListener( this, IncidentType::BeginEvent );
-  incSvc()->addListener( this, IncidentType::EndEvent );
-
   return sc;
 }
 
@@ -65,21 +61,6 @@ StatusCode RichPixelCreatorFromCheatedRichDigits::finalize()
 {
   // Execute base class method
   return RichPixelCreatorBase::finalize();
-}
-
-// Method that handles various Gaudi "software events"
-void RichPixelCreatorFromCheatedRichDigits::handle ( const Incident& incident )
-{
-  // Update prior to start of event. Used to re-initialise data containers
-  if ( IncidentType::BeginEvent == incident.type() )
-  {
-    InitNewEvent();
-  }
-  // Debug printout at the end of each event
-  else if ( IncidentType::EndEvent == incident.type() )
-  {
-    FinishEvent();
-  }
 }
 
 // Forms a new RichRecPixel object from a RichDigit

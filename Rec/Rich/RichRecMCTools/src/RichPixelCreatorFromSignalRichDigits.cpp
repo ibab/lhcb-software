@@ -5,7 +5,7 @@
  *  Implementation file for RICH reconstruction tool : RichPixelCreatorFromSignalRichDigits
  *
  *  CVS Log :-
- *  $Id: RichPixelCreatorFromSignalRichDigits.cpp,v 1.8 2005-05-13 15:00:05 jonrob Exp $
+ *  $Id: RichPixelCreatorFromSignalRichDigits.cpp,v 1.9 2005-05-28 16:45:48 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/09/2003
@@ -53,10 +53,6 @@ StatusCode RichPixelCreatorFromSignalRichDigits::initialize()
   acquireTool( "RichRecMCTruthTool",  m_mcRecTool );
   acquireTool( m_subPixelCreatorName, m_pixMaker  );
 
-  // Setup incident services
-  incSvc()->addListener( this, IncidentType::BeginEvent );
-  incSvc()->addListener( this, IncidentType::EndEvent );
-
   return sc;
 }
 
@@ -64,21 +60,6 @@ StatusCode RichPixelCreatorFromSignalRichDigits::finalize()
 {
   // Execute base class method
   return RichPixelCreatorBase::finalize();
-}
-
-// Method that handles various Gaudi "software events"
-void RichPixelCreatorFromSignalRichDigits::handle ( const Incident& incident )
-{
-  // Update prior to start of event. Used to re-initialise data containers
-  if ( IncidentType::BeginEvent == incident.type() )
-  {
-    InitNewEvent();
-  }
-  // Debug printout at the end of each event
-  else if ( IncidentType::EndEvent == incident.type() )
-  {
-    FinishEvent();
-  }
 }
 
 // Forms a new RichRecPixel object from a RichDigit
@@ -191,3 +172,10 @@ StatusCode RichPixelCreatorFromSignalRichDigits::newPixels() const
   return StatusCode::SUCCESS;
 }
 
+void RichPixelCreatorFromSignalRichDigits::InitNewEvent()
+{
+  // Initialise data for new event
+  RichPixelCreatorBase::InitNewEvent();
+  m_trackedMCPs.clear();
+  m_trackMCPsDone = false;
+}
