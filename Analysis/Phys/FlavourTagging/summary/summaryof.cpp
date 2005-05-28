@@ -49,31 +49,29 @@ int main(int argc, char **argv) {
   while(!in.eof()) {
 
     in >> flagstring;
+    if(flagstring != "TAG" && flagstring != "MON") continue;
+
     if(flagstring == "TAG") { //reads in tagging info from BTagging
-      in >> Run; in >> Event;
+      in >> Run >> Event;
       in >> Trig;
       in >> tag;
+      //in >> truetag;
       in >> categ;
-      in >> fm; in >> fe; in >> fk; in >> fS; in >> fV;
-      continue; //read next
+      in >> fm >> fe >> fk >> fS >> fV; //taggers
+      continue;
     } 
-    else if(flagstring == "MON") { //reads in from BTaggingMonitor
-      in >> tag;
-      in >> categ;
-      in >> truetag;
-    } else continue;
+    if(flagstring == "MON") { //reads in from BTaggingMonitor
+      in >> tag >> categ >> truetag;
+    }
 
- 
-    //---------------------------------- optional cuts
-    //if( mass < 5.0 ) continue; 
-    //----------------------------------
-
+    //trigger 
     HLT= (int)  Trig/100;
     L1 = (int) (Trig-100*HLT)/10;
     L0 = (int) (Trig-100*HLT-10*L1)/1;
-    if((*argv[2]=='2' || *argv[2]=='3') && L0 == 0 ) continue;
-    if( *argv[2]=='3' && L1 == 0 ) continue;
+    if(Trig>-1) if((*argv[2]=='2' || *argv[2]=='3') && L0 == 0 ) continue;
+    if(Trig>-1) if( *argv[2]=='3' && L1 == 0 ) continue;
 
+    //----------------------
     nsele++;
 
     if(tag== truetag)  nrt[categ]++; 

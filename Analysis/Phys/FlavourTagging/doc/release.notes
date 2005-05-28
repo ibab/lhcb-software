@@ -1,9 +1,20 @@
-! $Id: release.notes,v 1.62 2005-05-25 18:42:16 musy Exp $
+! $Id: release.notes,v 1.63 2005-05-28 10:46:16 musy Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Phys/FlavourTagging
-! Responsible : Marco Musy
+! Responsible : Marco Musy (musy@cern.ch)
 ! Purpose     : Provide tools and algorithm for tagging B
 !-----------------------------------------------------------------------------
+
+! 2005-05-28 - M. Musy
+ - summary.cpp has been updated
+ - removed hlt part from options (no use case for the moment)
+ - a WEB page is now available for tagging :
+
+       ********************************************************
+       https://uimon.cern.ch/twiki/bin/view/LHCb/FlavourTagging
+       ********************************************************
+
+   where you can find technical infos and summary of performances
 
 ! 2005-05-25 - M. Musy
  - code has been cleaned up a bit.
