@@ -5,7 +5,7 @@
  *  Implementation file for tool : RichGeomEffPhotonTracing
  *
  *  CVS Log :-
- *  $Id: RichGeomEffPhotonTracing.cpp,v 1.11 2005-05-13 15:20:37 jonrob Exp $
+ *  $Id: RichGeomEffPhotonTracing.cpp,v 1.12 2005-05-28 13:10:53 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -40,10 +40,7 @@ RichGeomEffPhotonTracing::RichGeomEffPhotonTracing ( const std::string& type,
   // Define job option parameters
   declareProperty( "NPhotonsGeomEffCalc",    m_nGeomEff        = 100 );
   declareProperty( "NPhotonsGeomEffBailout", m_nGeomEffBailout = 20  );
-  declareProperty( "CheckHPDsAreActive",     m_hpdCheck );
-
-  // random number distribution
-  Rndm::Numbers m_uniDist;
+  declareProperty( "CheckHPDsAreActive",     m_hpdCheck              );
 
 }
 
@@ -64,7 +61,7 @@ StatusCode RichGeomEffPhotonTracing::initialize()
              StatusCode::SUCCESS );
   }
 
-  // randomn number service
+  // random number service
   IRndmGenSvc * randSvc = svc<IRndmGenSvc>( "RndmGenSvc", true );
   if ( !m_uniDist.initialize( randSvc, Rndm::Flat(0,1) ) )
   {

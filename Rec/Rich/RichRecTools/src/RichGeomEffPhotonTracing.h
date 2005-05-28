@@ -5,7 +5,7 @@
  *  Header file for tool : RichGeomEffPhotonTracing
  *
  *  CVS Log :-
- *  $Id: RichGeomEffPhotonTracing.h,v 1.10 2005-05-13 15:20:37 jonrob Exp $
+ *  $Id: RichGeomEffPhotonTracing.h,v 1.11 2005-05-28 13:10:53 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -55,7 +55,8 @@
 //-----------------------------------------------------------------------------
 
 class RichGeomEffPhotonTracing : public RichRecToolBase,
-                                 virtual public IRichGeomEff {
+                                 virtual public IRichGeomEff 
+{
 
 public: // Methods for Gaudi Framework
 

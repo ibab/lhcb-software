@@ -5,7 +5,7 @@
  *  Implementation file for tool : RichPixelCreatorFromRichDigits
  *
  *  CVS Log :-
- *  $Id: RichPixelCreatorFromRichDigits.cpp,v 1.18 2005-05-13 15:20:38 jonrob Exp $
+ *  $Id: RichPixelCreatorFromRichDigits.cpp,v 1.19 2005-05-28 13:10:53 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -44,10 +44,6 @@ StatusCode RichPixelCreatorFromRichDigits::initialize()
   // Acquire instances of tools
   acquireTool( "RichSmartIDTool", m_idTool  );
 
-  // Setup incident services
-  incSvc()->addListener( this, IncidentType::BeginEvent );
-  incSvc()->addListener( this, IncidentType::EndEvent );
-
   return sc;
 }
 
@@ -55,21 +51,6 @@ StatusCode RichPixelCreatorFromRichDigits::finalize()
 {
   // Execute base class method
   return RichPixelCreatorBase::finalize();
-}
-
-// Method that handles various Gaudi "software events"
-void RichPixelCreatorFromRichDigits::handle ( const Incident& incident )
-{
-  // Update prior to start of event. Used to re-initialise data containers
-  if ( IncidentType::BeginEvent == incident.type() )
-  {
-    InitNewEvent();
-  }
-  // Debug printout at the end of each event
-  else if (IncidentType::EndEvent == incident.type() )
-  {
-    FinishEvent();
-  }
 }
 
 // Forms a new RichRecPixel object from a RichDigit

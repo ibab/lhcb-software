@@ -4,6 +4,9 @@
 ! Purpose     : Utility tools for RICH reconstruction algorithms
 !------------------------------------------------------------------------------
 
+! 2005-05-28 - Chris Jones
+ - Adapt creator tools to use new base classes
+
 ! 2005-05-13 - Chris Jones
  - update pixel creates to new base class
  - Update fixed geom. eff. tool

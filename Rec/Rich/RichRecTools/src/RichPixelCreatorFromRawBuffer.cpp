@@ -5,7 +5,7 @@
  *  Implementation file for tool : RichPixelCreatorFromRawBuffer
  *
  *  CVS Log :-
- *  $Id: RichPixelCreatorFromRawBuffer.cpp,v 1.7 2005-05-13 15:20:38 jonrob Exp $
+ *  $Id: RichPixelCreatorFromRawBuffer.cpp,v 1.8 2005-05-28 13:10:53 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   30/10/2004
@@ -28,9 +28,7 @@ RichPixelCreatorFromRawBuffer( const std::string& type,
                                const IInterface* parent )
   : RichPixelCreatorBase ( type, name, parent ),
     m_idTool             ( 0 ),
-    m_decoder            ( 0 )
-{
-}
+    m_decoder            ( 0 ) { }
 
 StatusCode RichPixelCreatorFromRawBuffer::initialize()
 {
@@ -42,10 +40,6 @@ StatusCode RichPixelCreatorFromRawBuffer::initialize()
   acquireTool( "RichSmartIDTool",    m_idTool  );
   acquireTool( "RichSmartIDDecoder", m_decoder );
 
-  // Setup incident services
-  incSvc()->addListener( this, IncidentType::BeginEvent );
-  incSvc()->addListener( this, IncidentType::EndEvent );
-
   return sc;
 }
 
@@ -53,21 +47,6 @@ StatusCode RichPixelCreatorFromRawBuffer::finalize()
 {
   // Execute base class method
   return RichPixelCreatorBase::finalize();
-}
-
-// Method that handles various Gaudi "software events"
-void RichPixelCreatorFromRawBuffer::handle ( const Incident& incident )
-{
-  // Update prior to start of event. Used to re-initialise data containers
-  if      ( IncidentType::BeginEvent == incident.type() )
-  {
-    InitNewEvent();
-  }
-  // Debug printout at the end of each event
-  else if ( IncidentType::EndEvent == incident.type() )
-  {
-    FinishEvent();
-  }
 }
 
 // Forms a new RichRecPixel object

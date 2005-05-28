@@ -5,7 +5,7 @@
  *  Header file for tool : RichPixelCreatorFromRawBuffer
  *
  *  CVS Log :-
- *  $Id: RichPixelCreatorFromRawBuffer.h,v 1.5 2005-05-13 15:20:38 jonrob Exp $
+ *  $Id: RichPixelCreatorFromRawBuffer.h,v 1.6 2005-05-28 13:10:53 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   30/10/2004
@@ -16,8 +16,6 @@
 #define RICHRECTOOLS_RICHPIXELCREATORFROMRAWBUFFER_H 1
 
 // from Gaudi
-#include "GaudiKernel/IIncidentListener.h"
-#include "GaudiKernel/IIncidentSvc.h"
 #include "GaudiKernel/ToolFactory.h"
 
 // base class
@@ -38,8 +36,7 @@
  */
 //---------------------------------------------------------------------------------
 
-class RichPixelCreatorFromRawBuffer : public RichPixelCreatorBase,
-                                      virtual public IIncidentListener 
+class RichPixelCreatorFromRawBuffer : public RichPixelCreatorBase
 {
 
 public: // Methods for Gaudi Framework
@@ -57,10 +54,6 @@ public: // Methods for Gaudi Framework
 
   // Finalize method
   StatusCode finalize();
-
-  // Implement the handle method for the Incident service.
-  // This is used to inform the tool of software incidents.
-  void handle( const Incident& incident );
 
 public: // methods (and doxygen comments) inherited from public interface
 

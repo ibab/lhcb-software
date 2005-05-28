@@ -5,7 +5,7 @@
  *  Header file for tool : RichPixelCreatorFromRichDigits
  *
  *  CVS Log :-
- *  $Id: RichPixelCreatorFromRichDigits.h,v 1.13 2005-05-13 15:20:38 jonrob Exp $
+ *  $Id: RichPixelCreatorFromRichDigits.h,v 1.14 2005-05-28 13:10:53 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -16,8 +16,6 @@
 #define RICHRECTOOLS_RICHPIXELCREATORFROMRICHDIGITS_H 1
 
 // from Gaudi
-#include "GaudiKernel/IIncidentListener.h"
-#include "GaudiKernel/IIncidentSvc.h"
 #include "GaudiKernel/ToolFactory.h"
 
 // base class
@@ -40,8 +38,7 @@
  */
 //-----------------------------------------------------------------------------
 
-class RichPixelCreatorFromRichDigits : public RichPixelCreatorBase,
-                                       virtual public IIncidentListener 
+class RichPixelCreatorFromRichDigits : public RichPixelCreatorBase
 {
 
 public: // Methods for Gaudi Framework
@@ -59,10 +56,6 @@ public: // Methods for Gaudi Framework
 
   // Finalize method
   StatusCode finalize();
-
-  // Implement the handle method for the Incident service.
-  // This is used to inform the tool of software incidents.
-  void handle( const Incident& incident );
 
 public: // methods (and doxygen comments) inherited from public interface
 
