@@ -4,6 +4,9 @@
 ! Purpose     : Monte Carlo Utility tools for RICH reconstruction algorithms
 !------------------------------------------------------------------------------
 
+! 2005-05-28 - Chris Jones
+ - Update photon creators to use new base classes
+
 ! 2005-05-13 - Chris Jones
  - Update pixel creators to use new base class
 
