@@ -5,7 +5,7 @@
  *  Header file for RICH reconstruction tool : RichPhotonCreatorWithGaussianCKSmear
  *
  *  CVS Log :-
- *  $Id: RichPhotonCreatorWithGaussianCKSmear.h,v 1.1 2005-05-28 16:45:48 jonrob Exp $
+ *  $Id: RichPhotonCreatorWithGaussianCKSmear.h,v 1.2 2005-05-28 17:31:51 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   20/05/2005
@@ -35,9 +35,9 @@
 //-----------------------------------------------------------------------------------------------
 /** @class RichPhotonCreatorWithGaussianCKSmear RichPhotonCreatorWithGaussianCKSmear.h
  *
- *  With which first delegates the photon creator to another tool, but then applies
- *  a Gaussian smear to the true Cherenkov photons for each Radiator. The about of smearing is
- *  seperately configurable for each radiator.
+ *  Tool which first delegates the photon creator to another tool, but then applies
+ *  a Gaussian smear to the true Cherenkov photons for each Radiator. 
+ *  The about of smearing is seperately configurable for each radiator.
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   20/05/2005
