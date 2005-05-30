@@ -10,29 +10,90 @@ use  PhysCoreSys                v1r1     Phys
 #=======================================================
 # packages included in PhysCoreSys
 #=======================================================                                                                                                                                                                            
+use  CommonParticles    	v1r5p3   Phys
+use  DaVinciFilter      	v1r8     Phys
+use  DaVinciKernel      	v3r3p1   Phys
+use  DaVinciTools       	v11r8p1  Phys
+use  FlavourTagging     	v5r6     Phys
+use  Ks2PiPiSel         	v1r6     Phys
+use  ParticleMaker      	v1r6     Phys
+use  PhysSelections		v6r12    Phys
+use  DaVinciTransporter 	v2r0p2   Phys
+use  VertexFit			v1r6p1   Phys
+use  Tampering                  v1r1p1   Phys
+# Generic tools 
+use  Utilities          	v2r0     Tools
+use  RecoTools          	v1r1     Rec
 
 #=======================================================
 use PhysMCSys                   v1r1     Phys
 #=======================================================
 # packages included in PhysMCSys
 #=======================================================
+use  DaVinciAssociators 	v5r4p1   Phys 	
+use  DaVinciEff         	v3r3     Phys 	
+use  DaVinciMCTools     	v5r11    Phys 	
+use  DaVinciTest        	v5r6     Phys 	
+use  DaVinciUser        	v5r2     Phys 	
 
 #=======================================================
 use LoKiSys                     v1r1     Tools
 #=======================================================
 # packages included in LoKiSys
 #=======================================================
+use  LoKi               	v3r12    Tools  
+use  LoKiHlt             	v2r2     Tools  
+use  LoKiGen             	v2r0     Tools  
+use  LoKiJets             	v1r0     Tools  
+use  KtJet	             	v1r0      
+
 
 #=======================================================
 use HltSys                      v1r1     Hlt
 #=======================================================
 # packages included in HltSys
 #=======================================================
+use HltGeneric                  v2r4     Hlt
+use HltSelections               v3r2     Hlt
+use HltSelChecker               v3r2     Hlt
+
 
 #=======================================================
 use  PhysSelSys			v8r4     PhysSel
 #=======================================================
 # packages included in PhysSelSys	
 #=======================================================
+use  B2DstarX2D02hh             v2r1p1   PhysSel
+use  B2HH                       v2r5     PhysSel
+use  B2RhoRho                   v1r9     PhysSel
+use  B2XGamma                   v3r1     PhysSel
+use  Bd2DPi                     v1r0     PhysSel
+use  Bd2D0Kstar                 v4r3p2   PhysSel
+use  Bd2DstarPi                 v2r7p2   PhysSel
+use  Bd2JpsiKs                  v2r6p1   PhysSel
+use  Bd2JpsiKstar               v2r1p2   PhysSel
+use  Bd2MuMuKstar               v2r3p1   PhysSel
+use  Bd2PhiKs                   v4r3     PhysSel
+use  Bd2PiPiPi0                 v2r2p2   PhysSel
+use  Bd2a1Dstar                 v2r4     PhysSel
+use  Bc2RhoPi                   v1r0     PhysSel  
+use  Bs2DsDs                    v2r1     PhysSel  
+use  Bs2DsH                     v3r4     PhysSel 
+use  Bs2JpsiEta                 v4r0     PhysSel
+use  Bs2JpsiPhi                 v2r3p2   PhysSel
+use  Bs2KsKs                    v2r3     PhysSel
+use  Bs2KstarKstar              v1r4     PhysSel
+use  Bs2MuMu                    v2r4p3   PhysSel
+use  Bs2PhiEtac                 v3r1     PhysSel
+use  Bs2PhiPhi                  v2r3p2   PhysSel
+use  Bu2KsPi                    v2r4     PhysSel
+use  Bu2LLK                     v2r0     PhysSel
+use  Bu2D0K                     v1r1p1   PhysSel
+use  D02MuMu                    v2r0p1   PhysSel 
+use  DsSelector                 v1r1p1   PhysSel
+use  Gamma2ee                   v1r4p2   PhysSel
+use  Jpsi                       v1r1p1   PhysSel
+use  Muon                       v1r2     PhysSel
+use  TriggerSel                 v1r0     PhysSel
 
-use Relations v2r5 Kernel
+use  Stripping                  v2r2     Tools

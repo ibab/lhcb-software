@@ -3,6 +3,106 @@ Package     : PhysSys
 Package Coordinator : Patrick Koppenburg
 Purpose     : LHCb physics packages
 
+</PRE><H1><A NAME=v1r1>2005-05-30 Phys v1r1 - Towards RTTC</A></H1><PRE>
+ - Some small changes here and there
+ - Reshuffling of options to allow Panoramix not to depend on DaVinci
+################################################################################
+#                                 PHYS v1r1                                    #
+################################################################################
+##################################### HLT ######################################
+!========================== HltSelChecker v3r2 2005-05-30 ===================
+! 2005-05-25 - P. Koppenburg
+  - options/HLTExSelectionsNTuples.opts
+    . Removed
+!========================== HltSelections v3r2 2005-05-30 ===================
+! 2005-05-24 - P. Koppenburg
+  - options/
+    . Removed a few obsolete files
+!========================== HltSys v1r1 2005-05-30 ===================
+HltSelections v3r2
+##################################### PHYS #####################################
+!========================== DaVinciTools v11r8p1 2005-05-30 ===================
+! 2005-05-24 - P. Koppenburg
+  - options/PreLoadParticles.opts
+    . Moved to ParticleMaker
+!========================== FlavourTagging v5r6 2005-05-30 ===================
+! 2005-05-28 - M. Musy
+ - summary.cpp has been updated
+ - removed hlt part from options (no use case for the moment)
+ - a WEB page is now available for tagging :
+
+       ********************************************************
+       https://uimon.cern.ch/twiki/bin/view/LHCb/FlavourTagging
+       ********************************************************
+
+   where you can find technical infos and summary of performances
+
+! 2005-05-25 - M. Musy
+ - code has been cleaned up a bit.
+ - added new properties for most hard-coded numbers
+ - many comments added along the way
+ - each tagger can be disabled separately via property
+
+! 2005-05-25 - P. Koppenburg
+  - src/BTagging.{h,cpp}
+    . Protect get<> methods with exist<>
+    . Do not use TrgDecision::HLT as it is called hlt() in DaVinci v14
+    . Use HltScore instead
+    . Indent properly
+ - src/BTaggingMonitor.cpp
+    . Protect get<> methods with exist<>
+!========================== Ks2PiPiSel v1r6 2005-05-30 ===================
+! 2005-05-24 - P. Koppenburg
+ - options/DaVinciKshortLoose.opts
+ - options/DaVinciKshortTight.opts
+   . Moved from DaVinci (from v14r1)
+!========================== ParticleMaker v1r6 2005-05-30 ===================
+! 2005-05-24 - P. Koppenburg
+ - options/PreLoadCombinedParticles.opts
+ - options/PreLoadNoPIDParticles.opts
+   . Moved from DaVinci (v14r1)
+ - options/PreLoadParticles.opts
+   . Removed
+!========================== PhysCoreSys v1r1 2005-05-30 ===================
+! 2005-05-30 - P. Koppenburg
+ - options/DaVinciInit.opts
+   . New file that contains all "low level" initializations for DaVinci and 
+     Panoramix.
+! 2005-05-24 - P. Koppenburg
+ - options/PhysCoreSys.opts
+   . File that contains all DLLs. Extracted from DaVinciCommon.opts
+!========================== PhysMCSys v1r1 2005-05-30 ===================
+! 2005-05-25 - P. Koppenburg
+ - options/PhysMCSys.opts
+   . File that contains all DLLs. Extracted from DaVinciCommon.opts
+!========================== VertexFit v1r6p1 2005-05-30 ===================
+! 2005-05-24 - H.Ruiz
+  - src/TrgVertexFitter.cpp
+    . Reduced level of verbosity for debug mode. Most messages moved to 
+      verbose mode
+
+#################################### PHYSSEL ###################################
+!========================== Bu2D0K v1r1p1 2005-05-30 ===================
+! 2005-05-24 - P. Koppenburg
+  - options/D02HHForBu2D0K.opts
+    . Set histogram flags to false.
+##################################### TOOLS ####################################
+!========================== LoKiGen v2r0 2005-05-30 ===================
+! 2005-05-18 - Vanya Belyaev
+
+ - 2 new predicates  which simplify the navigation from/to HepMC graph and 
+   MCParticle/MCVertex tree 
+
+  1) GMCMOTH, which evaluates to "true" for HEpMC::GenPArticle, which 
+     "produces" a certain MC particle
+  2) FROMGTREE, which evaluates to "true" for MC particles, which comes 
+     from certain HEpMC::GenParticle
+!========================== LoKiHlt v2r2 2005-05-30 ===================
+! 2005-03-29 - Vanya BELYAEV
+
+ - no new code, just add code metric report from SLOCCount 
+
+
 </PRE><H1><A NAME=v1r0>2005-05-17 Phys v1r0 - First version</A></H1><PRE>
 Result of new splitting into projects. Only Hlt/ Phys/ PhysSel/ and Tools/
 stay in this package. L0/ goes to Lbcom, Trg/, Rec/, Rich and Muon/ to Rec.
