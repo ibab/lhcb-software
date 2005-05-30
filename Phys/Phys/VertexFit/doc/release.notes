@@ -1,7 +1,8 @@
-! $Id: release.notes,v 1.32 2005-05-30 08:51:31 pkoppenb Exp $
+! $Id: release.notes,v 1.33 2005-05-30 09:45:41 pkoppenb Exp $
 ! Package     : VertexFit
 ! Responsible : P. Koppenburg
 
+!========================== VertexFit v1r6p1 2005-05-30 ===================
 ! 2005-05-24 - H.Ruiz
   - src/TrgVertexFitter.cpp
     . Reduced level of verbosity for debug mode. Most messages moved to 
