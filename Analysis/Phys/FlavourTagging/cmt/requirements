@@ -37,5 +37,5 @@ apply_pattern component_library library=FlavourTagging
 
 # =================== summary application  ==================================
 private 
- application       summaryof      ../summary/summaryof.cpp
+# application       summaryof      ../summary/summaryof.cpp
  apply_pattern     application_path
