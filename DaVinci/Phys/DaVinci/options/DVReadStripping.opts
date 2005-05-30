@@ -31,7 +31,7 @@ PrintTDRselBd2PiPi.OutputLevel = 2 ;
 
 // Data
 
-ApplicationMgr.EvtMax = 10000 ;
+ApplicationMgr.EvtMax = -1 ;
 
 #include "$DAVINCIROOT/options/Good-Stripped-DST-DC04v1.opts"
 EventSelector.PrintFreq = 100 ;
