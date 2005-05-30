@@ -1,7 +1,12 @@
-! $Id: release.notes,v 1.56 2005-05-19 09:24:33 pkoppenb Exp $
+! $Id: release.notes,v 1.57 2005-05-30 14:09:32 pkoppenb Exp $
 ! Package     : DaVinciMCTools
 ! Responsible : P. Koppenburg
 !=============================================================================
+
+!========================= DaVinciMCTools v5r11p1 2005-05-30 ==================
+! 2005-05-30 - P. Koppenburg
+ - src/CheatedLifetimeFitter.cpp(.h)
+   . Very stupid bug fix for windows
 
 !========================== DaVinciMCTools v5r11 2005-05-19 ===================
 ! 2005-05-17 - Yuehong Xie

@@ -1,4 +1,4 @@
-// $Id: CheatedLifetimeFitter.cpp,v 1.2 2005-05-17 19:11:12 xieyu Exp $
+// $Id: CheatedLifetimeFitter.cpp,v 1.3 2005-05-30 14:09:32 pkoppenb Exp $
 
 // Include files from Gaudi
 #include "GaudiKernel/ToolFactory.h"
@@ -567,14 +567,22 @@ CheatedLifetimeFitter::iterateWithMCPB(HepVector& p, HepSymMatrix& Cp,
   // [] start from [0], () start from (1)...
 
   HepVector R(6);
+  HepVector TMP(3); // stupid thing needed for windows
+  TMP[0] = vmom.x(); TMP[1] = vmom.y(); TMP[2] = vmom.z();
   { for (unsigned i=0;i<3;++i) R[i] = O[i]-p[i]; }
-  { for (unsigned i=3;i<6;++i) R[i] = O[i]-(p[i-3]+vmom[i-3]/mass*p[3]); }
+  { for (unsigned i=3;i<6;++i){ 
+    R[i] = O[i]
+      -(p[i-3]
+        +TMP[i-3]
+        /mass*p[3]); }
+  }
+  
   
   static const HepMatrix I3(  -1. * HepMatrix(3,3,1) );
   HepMatrix D(6,4,0);
   D.sub(1,1, I3); 
   D.sub(4,1, I3);
-  for (unsigned i=4;i<7;++i) D(i,4) = -vmom[i-4]/mass;
+  for (unsigned i=4;i<7;++i) D(i,4) = -TMP[i-4]/mass;
 
   HepSymMatrix DWD = W.similarityT(D);
   // as long as we don't need the covariance 
