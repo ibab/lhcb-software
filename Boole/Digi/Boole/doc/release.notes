@@ -3,9 +3,9 @@ Package: Digi/Boole
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb Digitization program
 
-</PRE><H1><A NAME=v9r1>2005-05-23 Boole v9r1</A></H1><PRE>
-! 2005-05-23 - Marco Cattaneo
- - Adapt requirements to Lbcom v2r1, LHCb v18r5
+</PRE><H1><A NAME=v9r1>2005-05-30 Boole v9r1</A></H1><PRE>
+! 2005-05-30 - Marco Cattaneo
+ - Adapt requirements to Lbcom v2r1, LHCb v18r5, Gaudi v16r4, XmlDDDB v24r2
  - Remove saving of empty directory nodes from DigiContent.opts
  - Add Output phase, with Pack sequence. Produces packed MCParticles, MCVertices,
    Collisions, saved on .digi instead of unpacked versions
