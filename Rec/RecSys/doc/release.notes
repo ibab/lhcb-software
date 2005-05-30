@@ -6,14 +6,14 @@ Purpose: LHCb reconstruction packages.
          by one or more LHCb applications. 
          It supersedes BrunelSys and large parts of LbcomSys and DaVinciSys. 
 
-</PRE><H1><A NAME=v1r1>2005-05-25 RecSys v1r1</A></H1><PRE>
+</PRE><H1><A NAME=v1r1>2005-05-30 RecSys v1r1</A></H1><PRE>
 This version uses Gaudi v16r4, LHCb v18r5 (also CLHEP 1.9, ROOT 4.0)
 
 - Packages added:    TrackExtrapolators v1r0, TrackTools v1r0, TrackMCTools v1r0,
                      TrackProjectors v1r0, TrackFitEvent v1r0, TrackIdealPR v1r0,
                      TrConverters v1r0
 - Packages modified: CaloPIDs v2r5p1, CaloReco v2r8p2, GlobalReco v5r0,
-                     RichRecSys v1r16p2, RichRecTools v2r14p1
+    RichRecSys v1r16p2, RichRecTools v2r14p1, TrgSys v2r6, L1Decision v5r0
 
 - In GlobalReco v5r0:
   . Major repackaging of job options to remove Panoramix dependency on DaVinci
@@ -31,6 +31,9 @@ This version uses Gaudi v16r4, LHCb v18r5 (also CLHEP 1.9, ROOT 4.0)
 
 - In RichRecTools v2r14p1
   . Adapt to interface change in DetDesc v15r0
+
+- In L1Decision v5r0
+  . Adapt to DAQEvent v5r* L1Bank definitions, for RTTC compatibility
  
 </PRE><H1><A NAME=v1r0>2005-05-13 RecSys v1r0</A></H1><PRE>
 This version uses Gaudi v16r3, LHCb v18r4 (also CLHEP 1.9, ROOT 4.0). 
