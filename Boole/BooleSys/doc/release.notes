@@ -3,9 +3,24 @@ Package: Digi/Boole
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb Digitization program
 
+</PRE><H1><A NAME=v9r1>2005-05-30 Boole v9r1</A></H1><PRE>
+This version uses Gaudi v16r4, LHCb v18r5, Lbcom v2r1 (also CLHEP 1.9, ROOT 4.0) 
+Requires input from Gauss v19r3 or greater. Output needs Brunel v27r1 or greater
+
+- Functionality changes
+  . Added Output phase, with Pack sequence, to pack Collisions, MCParticles,
+    MCVertices before writing to .digi (Boole.opts, DigiContent.opts)
+
+- Persistency changes:
+  . Remove saving of empty directories /Raw, /Rec, /Rec/Relations, as they can be
+    recreated explicitly by DataOnDemandSvc
+  . Replace MC/Collisions, MC/Particles, MC/Vertices by packed equivalent in
+    /Event/Rdst. Unpacked versions (from .sim file) are no longer reachable from
+    .digi file. Use $RDSTROOT/options/UnpackDigi.opts to decode (Rdst v1r1)
+
 </PRE><H1><A NAME=v9r0>2005-05-10 Boole v9r0</A></H1><PRE>
 This version uses Gaudi v16r3, LHCb v18r4, Lbcom v2r0 (also CLHEP 1.9, ROOT 4.0) 
-Requires input from Gauss v19r3 or greater. Output needs Brunel v26r2 or greater
+Requires input from Gauss v19r3 or greater. Output needs Brunel v27r0 or greater
 Based on v8r4, adapted to new project structure
 
 - Packages removed: ITAlgorithms, ITCheckers (moved to Lbcom)

@@ -1,5 +1,5 @@
 package BooleSys
-version v9r0
+version v9r1
 
 branches cmt doc
  
@@ -7,24 +7,24 @@ branches cmt doc
 # packages included in the BOOLE tree
 #=======================================================
 
-# Boole application
-use Boole		v9r0	Digi
-use DigiAlg		v3r0	Digi
+# Boole application                   # Maintainer  
+use Boole		v9r1	Digi  # Marco Cattaneo
+use DigiAlg		v3r0	Digi  # Marco Cattaneo
 
 # Calorimeter
-use CaloMoniDigi        v1r0 	Calo
-use CaloDigit           v1r8	Calo
+use CaloMoniDigi        v1r0 	Calo  # Ivan Belyaev
+use CaloDigit           v1r8	Calo  # Olivier Callot
 
 # Velo
-use VeloAlgorithms      v3r3	Velo
+use VeloAlgorithms      v3r3	Velo  # Chris Parkes
 
 # Outer Tracker
-use OTSimulation	v1r4	OT
+use OTSimulation	v1r4	OT    # Jacopo Nardulli
 
 # Muon
-use MuonAlgs            v5r7	Muon
-use MuonBackground	v1r10p1	Muon
+use MuonAlgs            v5r7	Muon  # Alessia Satta
+use MuonBackground	v1r10p1	Muon  # Alessia Satta
 
 # Rich
-use RichDigiQC		v2r1	Rich
-use RichReadout		v1r12	Rich
+use RichDigiQC		v2r1	Rich  # Chris Jones
+use RichReadout		v1r12	Rich  # Chris Jones
