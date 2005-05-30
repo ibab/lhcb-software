@@ -1,7 +1,8 @@
-! $Id: release.notes,v 1.163 2005-05-25 07:01:33 pkoppenb Exp $
+! $Id: release.notes,v 1.164 2005-05-30 09:37:20 pkoppenb Exp $
 ! Package     : DaVinciTools
 ! Responsible : P. Koppenburg
 
+!========================== DaVinciTools v11r8p1 2005-05-30 ===================
 ! 2005-05-24 - P. Koppenburg
   - options/PreLoadParticles.opts
     . Moved to ParticleMaker
