@@ -1,7 +1,8 @@
-! $Id: release.notes,v 1.18 2005-05-24 16:35:00 pkoppenb Exp $ 
+! $Id: release.notes,v 1.19 2005-05-30 09:38:19 pkoppenb Exp $ 
 ! Package     : ParticleMaker
 ! Responsible : P. Koppenburg
 
+!========================== ParticleMaker v1r6 2005-05-30 ===================
 ! 2005-05-24 - P. Koppenburg
  - options/PreLoadCombinedParticles.opts
  - options/PreLoadNoPIDParticles.opts
