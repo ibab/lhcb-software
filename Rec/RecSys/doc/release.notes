@@ -32,6 +32,9 @@ This version uses Gaudi v16r4, LHCb v18r5 (also CLHEP 1.9, ROOT 4.0)
 - In RichRecTools v2r14p1
   . Adapt to interface change in DetDesc v15r0
 
+- In TrgSys v2r6
+  . Add L1-RTTC.opts, to run L1 without using any L0 information, needed for RTTC
+
 - In L1Decision v5r0
   . Adapt to DAQEvent v5r* L1Bank definitions, for RTTC compatibility
  
