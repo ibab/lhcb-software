@@ -4,6 +4,9 @@
 ! Purpose     : Package for the tracking event model classes
 !-----------------------------------------------------------------------------
 
+! 2005-05-31 - Jose A. Hernando
+ - Track: removing bug in addToStates and addToMeasurements: we were adding them twice!
+
 ! 2005-05-25 - Jose A. Hernando
  - State: when clone location it set to unknown
  - Track: ancestors are contained in SmartRefVec

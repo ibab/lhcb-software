@@ -1,4 +1,4 @@
-// $Id: Track.cpp,v 1.10 2005-05-25 08:38:00 hernando Exp $ // Include files
+// $Id: Track.cpp,v 1.11 2005-05-31 13:27:34 hernando Exp $ // Include files
 
 // local
 #include "Event/Track.h"
@@ -238,7 +238,6 @@ Track* Track::clone() const
 void Track::addToStates(const State& state) 
 {
   State* local = state.clone();
-  m_states.push_back(local);
   int order = checkFlag(TrackKeys::Backward) ? -1 : 1;
   std::vector<State*>::iterator i = 
     std::upper_bound(m_states.begin(),
@@ -255,7 +254,6 @@ void Track::addToMeasurements(const Measurement& meas)
   if (std::find(m_lhcbIDs.begin(),m_lhcbIDs.end(),id) == m_lhcbIDs.end())
     addToLhcbIDs(id);
   Measurement* local = meas.clone();
-  m_measurements.push_back(local);
   int order = checkFlag(TrackKeys::Backward) ? -1 : 1;
   std::vector<Measurement*>::iterator i = 
     std::upper_bound(m_measurements.begin(),
