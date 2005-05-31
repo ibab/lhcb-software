@@ -3,9 +3,10 @@ Package: Rec/Brunel
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb reconstruction program
 
-</PRE><H1><A NAME=v27r1>2005-05-23 Brunel v27r1</A></H1><PRE>
+</PRE><H1><A NAME=v27r1>2005-05-31 Brunel v27r1</A></H1><PRE>
 ! 2005-05-23 - Marco Cattaneo
- - Adapt requirements to use RecSys v1r1, Lbcom v2r1, LHCb v18r5
+ - Adapt requirements to use RecSys v1r1, Lbcom v2r1, LHCb v18r5, Gaudi v16r4
+ - Use XmlDDDB v24r2
  - Remove saving of empty directories from DstContent.opts
  - Fixes for DataOnDemandSvc in Brunel.opts
  - Add Output phase, with Pack sequence. Produces packed Tr/StatesL, Tr/StatesP,
