@@ -4,6 +4,10 @@
 ! Purpose     : LHCb Simulation Application with Geant4
 !-----------------------------------------------------------------------------
 
+! 2005-05-31 - Gloria CORTI
+ - Example option to generate events at fixed luminosity
+   . FixedLumi-5.opts
+
 !========================== Gauss v19r4 ==================================
 ! 2005-04-22 - Gloria Corti
  - Use new versions of GeneratorModules (v15r1) and GENSER (v2r100p0)
