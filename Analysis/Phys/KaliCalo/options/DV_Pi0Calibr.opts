@@ -1,0 +1,135 @@
+// $Id: DV_Pi0Calibr.opts,v 1.1.1.1 2005-05-31 13:03:31 ibelyaev Exp $ 
+// ============================================================================
+// CVS tag $Name: not supported by cvs2svn $; version $Revision: 1.1.1.1 $
+// ============================================================================
+// $Log: not supported by cvs2svn $
+// ============================================================================
+
+/** @file 
+ *  Job-options file to drive Pi0 calibration
+ *  @see LoKi_Pi0
+ *  @author Vanya BELYAEV belyaev@lapp.in2p3.fr 
+ *  @date 2005-02-05
+ */
+
+#pragma print off
+#include "$DAVINCIROOT/options/DaVinciCommon.opts"
+DaVinciMainSeq.Members  = { "LbAppInit/DaVinci" };
+DaVinciMainSeq.Members += {"GaudiSequencer/CaloReRe"} ;
+/// we do not need it 
+/// #include "$DAVINCIROOT/options/DaVinciReco.opts"
+/// #include "$DAVINCIROOT/options/DaVinciNeutrals.opts"
+
+// The major algorith sequence for "neutrals"
+DaVinciMainSeq.Members += { "GaudiSequencer/Neutrals" };
+
+// Re-create CaloDigits from raw buffer 
+// Neutrals.Members  = { "CaloDigitsFromRaw" };
+// -> Now on demand  
+
+// correct 3x3 matrix 
+Neutrals.Members += {"CaloClusterCorrect3x3Position"};
+// Corrections for SplitPhotons
+//// Neutrals.Members += { "CaloHypoAlg/PhotonFromMergedCalibration" };
+// Corrections for Single Photons
+Neutrals.Members += { "CaloHypoAlg/PhotonCalibration"   };
+
+// Make neutral ProtoParticles
+Neutrals.Members += { "NeutralPPsFromCPsAlg1" };
+
+
+#pragma print on
+
+// additional libraries 
+ApplicationMgr.DLLs   += { "LoKi" , "KaliMisCalo" , "KaliCalo" } ;
+
+// the main 
+ApplicationMgr.TopAlg += { "GaudiSequencer/LoKiPi0"  } ;
+LoKiPi0.Members        = {  "LoKiPreLoad/Photons"    ,
+                            "LoKi_Pi0Calibr/Pi0"      } ;
+LoKiPi0.MeasureTime    = true ;
+
+Photons.PhysDesktop.ParticleMakerType                 = "PhotonParticleMaker" ;
+Photons.PhysDesktop.PhotonParticleMaker.UseAllPhotons = false ; 
+
+Pi0.PhysDesktop.InputLocations =  { "/Event/Phys/Photons" }; 
+Pi0.NTupleLUN = "PI0" ;
+
+// Histogram persistency 
+ApplicationMgr.HistogramPersistency = "HBOOK";
+HistogramPersistencySvc.OutputFile  = "pi0histos.hbook";
+HbookHistSvc.PrintHistos            = true  ;
+DaVinci.doHistos                    = false ;
+
+// NTuples 
+ApplicationMgr.ExtSvc += { "NTupleSvc" } ;
+NTupleSvc.Output      += 
+  {"PI0 DATAFILE='pi0calibr.hbook' TYP='HBOOK' OPT='NEW'" } ;
+
+// Set output level thresholds (2=DEBUG, 3=INFO, 4=WARNING, 5=ERROR, 6=FATAL )
+MessageSvc.OutputLevel                  = 3;
+ToolSvc.OutputLevel                     = 3;
+XmlParserSvc.OutputLevel                = 4;
+ChargedProtoPAlg.OutputLevel            = 3;
+
+Neutrals  .MeasureTime = true ; 
+
+// ============================================================================
+/// Ecal miscalibration parameters 
+// ============================================================================
+EcalMis.Number = 15   ; 
+EcalMis.Mean   = 1.0  ;
+EcalMis.Sigma  = 0.10 ;
+EcalMis.Constants = { 
+ 1.07453
+,0.914807
+,1.01022
+,1.0299
+,0.828255
+,1.18416
+,1.02775
+,1.02065
+,0.857905
+,1.16655
+,0.972923
+,0.978521
+,1.05952
+,0.961271
+,0.919189
+}; 
+// ============================================================================
+
+// ============================================================================
+/// Miscalibration of Ecal and (re)-recontruction of Calorimeter
+// ============================================================================
+CaloReRe  .Members     = {"CaloMisCalibrateDigits/EcalMis"} ;
+CaloReRe  .Members    += 
+  {   
+    "CellularAutomaton/EcalClust"        , /// Cellular Automaton clusterisation 
+    "CaloSharedCellAlg/EcalShare"        , /// Shared energy redistribution 
+    "CaloClusterCovarianceAlg/EcalCovar"   /// Evaluation of covariances 
+    
+  };    
+CaloReRe  .Members    +=
+  {
+    "CaloSinglePhotonAlg/PhotonRec"      , /// Reconstruction of single photons  
+    "CaloHypoAlg/PhotonCalibration"      , /// E/S/L-corrections 
+    "CaloHyposMerge/CaloMerge"             /// Merge CaloHypos to CaloParticle    
+  };
+CaloReRe  .MeasureTime = true ;
+PhotonRec.SelectionTools  = { "CaloSelectorNOT/NOT" } ;
+ToolSvc.NOT.SelectorTools = {"CaloSelectorAND/AND"  } ;
+// ============================================================================
+
+
+// Number of events to process, skip and printing frequency
+ApplicationMgr.EvtMax    = 10000 ;
+EventSelector.FirstEvent = 1     ;
+EventSelector.PrintFreq  = 50    ;
+
+#include "$DAVINCIROOT/options/DaVinciTestData.opts"
+
+
+// ============================================================================
+// The END 
+// ============================================================================
