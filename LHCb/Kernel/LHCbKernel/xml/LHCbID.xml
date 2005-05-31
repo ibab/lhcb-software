@@ -63,6 +63,18 @@
           </code>
        </constructor>
 
+       <constructor
+         desc     = "Constructor from VeloChannelID and size"
+        >
+          <arg const="TRUE" name="chanID" type="VeloChannelID" />
+          <arg const="TRUE" name="size" type="unsigned int" />
+          <code>
+m_lhcbID = (veloType &lt;&lt; detectorTypeBits) +
+           (size     &lt;&lt; veloBits ) +
+           chanID;
+          </code>
+       </constructor>
+
        <method
          type  = "bool"
          name  = "isVelo"

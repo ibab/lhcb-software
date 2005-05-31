@@ -11,12 +11,9 @@
       <constructor 
         argList='unsigned int sensor, unsigned int strip,
         VeloChannelID::sensorType type' 
-        initList = 'm_channelID(0)'
         desc='constructor with sensor, strip, and sensor type'>
         <code>
-          setSensor(sensor);
-          setStrip(strip);
-          setType(type);
+m_channelID = ( sensor &lt;&lt; sensorBits ) | ( type &lt;&lt; typeBits ) | strip;
        </code>
       </constructor>
       <constructor 

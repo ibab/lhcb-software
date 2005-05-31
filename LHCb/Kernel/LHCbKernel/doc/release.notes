@@ -2,6 +2,12 @@ Package LHCbKernel
 Package manager: M.Cattaneo
 Purpose: LHCb specific Kernel classes
 
+! 2005-05-31 - Olivier Callot
+ - VeloChannelID.xml: Modify the creator with 3 arguments: Single line of code
+   instead of calling 3 methods with masking. This gains speed for L1.
+ - LHCbID.xml: Add a constructor with VeloChannelID and size, without masking,
+   for improved speed in L1.
+
 !===================== LHCbKernel v5r10 2005-04-15 ========================
 ! 2005-04-15 - Chris Jones
  - Add preprocessor directives so that valdity checks in RichSmartID
