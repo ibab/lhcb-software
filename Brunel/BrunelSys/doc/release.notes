@@ -3,8 +3,28 @@ Package: Rec/Brunel
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb reconstruction program
 
+</PRE><H1><A NAME=v27r1>2005-05-31 Brunel v27r1</A></H1><PRE>
+This version uses Gaudi v16r4, LHCb v18r5, Rec v1r1, Lbcom v2r1
+Requires input data from Boole v8r3 or greater. Incompatible with DC04 versions
+
+- Functionality changes:
+  . Added Output phase, with Pack sequence, to pack Tr/StatesP, Tr/StatesL,
+    Tr/Best before writing to .dst (Brunel.opts, DstContent.opts)
+
+- Persistency changes:
+  . Remove saving of empty directories /Raw, /Rec/Relations, as they can be
+    recreated explicitly by DataOnDemandSvc (DstContent.opts)
+  . Replace Rec/Tr/Best, Rec/Tr/StatesP, Rec/Tr/StatesL by packed equivalent in
+    in /Event/Rdst. Also done for MC/Collisions, MC/Particles, MC/Vertices, by 
+    copying packed version from .digi or creating on demand when writing the Dst.
+    Use $RDSTROOT/options/UnpackDst.opts to decode (Rdst v1r1, DstContent.opts)
+
+- Bug fixes:
+  . Changes to job options to recreate empty directory nodes on demand
+    (DAQSys v1r4, Brunel.opts)
+
 </PRE><H1><A NAME=v27r0>2005-05-10 Brunel v27r0</A></H1><PRE>
-This version uses Gaudi v16r3, LHCb v18r4 (also CLHEP 1.9, ROOT 4.0)
+This version uses Gaudi v16r3, LHCb v18r4, Rec v1r0, Lbcom v2r0
 Requires input data from Boole v8r3 or greater. Incompatible with DC04 versions
 
 Based on v26r3, and new RecSys project.
