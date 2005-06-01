@@ -4,6 +4,9 @@
 ! Purpose     : package for tracking tools interfaces
 !-----------------------------------------------------------------------------
 
+! 2005-05-25 - Eduardo Rodrigues
+ - added forward declaration for `Measurement' in ITrackFitter.h
+
 ! 2005-05-25 - Jose A. Hernando
  - adding (draft) interface to ITrackFitter 
 

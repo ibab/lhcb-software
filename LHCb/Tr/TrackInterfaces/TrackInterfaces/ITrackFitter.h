@@ -1,4 +1,4 @@
-// $Id: ITrackFitter.h,v 1.2 2005-05-25 09:28:19 hernando Exp $
+// $Id: ITrackFitter.h,v 1.3 2005-06-01 12:35:16 erodrigu Exp $
 #ifndef TRACKINTERFACES_ITRACKFITTER_H 
 #define TRACKINTERFACES_ITRACKFITTER_H 1
 
@@ -11,6 +11,7 @@
 
 class Track;
 class State;
+class Measurement;
 
 static const InterfaceID IID_ITrackFitter ( "ITrackFitter", 1, 0 );
 
