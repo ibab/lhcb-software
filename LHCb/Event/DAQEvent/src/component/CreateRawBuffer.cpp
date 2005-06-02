@@ -1,8 +1,9 @@
-// $Id: CreateRawBuffer.cpp,v 1.5 2005-06-02 13:55:39 cattanem Exp $
+// $Id: CreateRawBuffer.cpp,v 1.6 2005-06-02 14:10:51 cattanem Exp $
 // Include files 
 
 // from Gaudi
 #include "GaudiKernel/AlgFactory.h"
+#include "GaudiKernel/IRegistry.h"
 
 // From LHCb event model
 #include "Event/RawBuffer.h"
