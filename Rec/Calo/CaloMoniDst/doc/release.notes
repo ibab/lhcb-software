@@ -1,11 +1,16 @@
-! $Id: release.notes,v 1.5 2005-05-13 12:58:35 cattanem Exp $ 
+! $Id: release.notes,v 1.6 2005-06-02 12:36:18 cattanem Exp $ 
 ! -----------------------------------------------------------------------------
-! CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.5 $
+! CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.6 $
 ! -----------------------------------------------------------------------------
 ! Package     : Calo/CaloMoniDst
 ! Responsible : Vanya BELYAEV belyaev@lapp.in2p3.fr
 ! Purpose     : Calo monitoring of Dst tape 
 ! -----------------------------------------------------------------------------
+
+========================= CaloMoniDst v1r2 2005-06-02 =========================
+! 2005-06-02 - Marco Cattaneo
+ - Adapt job options to change in phase name from BrunelMoni to Moni (for 
+   monitoring without MC truth) and Check (for checking with MC truth)
 
 ========================= CaloMoniDst v1r1 2005-05-13 =========================
 ! 2005-05-13 - Marco Cattaneo

@@ -1,8 +1,6 @@
-// $Id: Brunel.opts,v 1.8 2005-05-08 09:45:56 ibelyaev Exp $ 
+// $Id: Brunel.opts,v 1.9 2005-06-02 12:37:03 cattanem Exp $ 
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.8 $ 
-// ============================================================================
-// $Log: not supported by cvs2svn $
+// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.9 $ 
 // ============================================================================
 
 /** @file
@@ -12,7 +10,7 @@
  */
 
 /// The first pass of CALOrimeter reconstruction - track independent 
-BrunelRecoCALOSeq.Members += 
+RecoCALOSeq.Members += 
   { 
     // Cellular Automaton clusterisation 
     "CellularAutomaton/EcalClust"        , /// Cellular Automaton clusterisation 
@@ -25,7 +23,7 @@ BrunelRecoCALOSeq.Members +=
   };
 
 /// The second pass of CALOrimeter reconstruction: track dependent 
-BrunelRecoCALOSeq.Members += 
+RecoCALOSeq.Members += 
   {
     "CaloCluster2TrackAlg/PhotonMatch"   , /// Cluster/Track matching 
     //

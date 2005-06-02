@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.22 2005-05-23 15:47:36 cattanem Exp $ 
+! $Id: release.notes,v 1.23 2005-06-02 12:36:39 cattanem Exp $ 
 ! -----------------------------------------------------------------------------
 ! CVS tag   $Name: not supported by cvs2svn $
 ! -----------------------------------------------------------------------------
@@ -6,6 +6,10 @@
 ! Responsible : Vanya BELYAEV Ivan.Belyaev@itep.ru
 ! Purpose     : Calorimeter PIDs 
 ! -----------------------------------------------------------------------------
+
+!========================= CaloPIDs v2r6 2005-06-02 ===========================
+! 2005-06-02 - Marco Cattaneo
+ - Adapt Brunel.opts to new phase name Reco instead of BrunelReco
 
 !========================= CaloPIDs v2r5p1 2005-05-23 =========================
 ! 2005-05-10 - Vanya BELYAEV

@@ -1,11 +1,6 @@
-// $Id: Brunel.opts,v 1.2 2003-04-17 11:40:38 cattanem Exp $ 
+// $Id: Brunel.opts,v 1.3 2005-06-02 12:36:39 cattanem Exp $ 
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
-// ============================================================================
-// $Log: not supported by cvs2svn $
-// Revision 1.1.1.1  2003/03/13 18:52:04  ibelyaev
-// The first import of new package 
-// 
 // ============================================================================
 
 /** @file 
@@ -27,7 +22,7 @@
  */
 
 /// Variouse identification techniques 
-BrunelRecoCALOSeq.Members += 
+RecoCALOSeq.Members += 
   {
     /// must be done in Brunel!
     "CaloTrack2EstimatorAlg/HcalE"         /// estimator for Hcal energy
