@@ -1,4 +1,4 @@
-// $Id: DeVeloSensor.cpp,v 1.6 2005-05-13 16:13:23 marcocle Exp $
+// $Id: DeVeloSensor.cpp,v 1.7 2005-06-02 09:05:19 jpalac Exp $
 //==============================================================================
 #define VELODET_DEVELOSENSOR_CPP 1
 //==============================================================================
@@ -59,19 +59,19 @@ StatusCode DeVeloSensor::initialize()
     msg << MSG::ERROR << "Failed to initialise DetectorElement" << endreq;
     return sc;
   }
-  m_numberOfStrips = 2048;
-  m_innerRadius = param<double>("InnerRadius");
-  m_outerRadius = param<double>("OuterRadius");
-  m_siliconThickness = param<double>("SiThick");
-  m_type = param<std::string>("Type");
+
   initSensor();
   IGeometryInfo* geom = this->geometry();
   m_geometry = geom;
   m_z = m_geometry->toGlobal(HepPoint3D(0,0,0)).z();
-  msg << MSG::DEBUG << "Sensor type " << m_type << " z= " << m_z
-      << " R " << m_isR << " Phi " << m_isPhi  << " PU " << m_isPileUp
+  msg << MSG::DEBUG << "Sensor full type " << m_fullType << " z= " << m_z
+      << " R " << this->isR() 
+      << " Phi " 
+      << this->isPhi()  
+      << " PU " << this->isPileUp()
       << " Left " << m_isLeft
-      << " Right " << m_isRight << " Downstream " << m_isDownstream << endreq;
+      << " Right " << this->isRight() 
+      << " Downstream " << this->isDownstream() << endreq;
   return StatusCode::SUCCESS;
 }
 //==============================================================================
@@ -109,28 +109,24 @@ StatusCode DeVeloSensor::globalToLocal(const HepPoint3D& globalPos,
 void DeVeloSensor::initSensor()
 {
   // Set the sensor type from name in XML
-  m_isR=m_isPileUp=m_isPhi=false;
-  if(m_type == "VetoL" || m_type == "VetoR"){
-    m_isPileUp = true;
-  } else if(m_type == "RRigh" || m_type == "RLeft") {
-    m_isR = true;
-  } else if(m_type == "PhiUR" || m_type == "PhiUL"
-            || m_type == "PhiDR" || m_type == "PhiDL") {
-    m_isPhi = true;
+  m_numberOfStrips = 2048;
+  m_innerRadius = this->param<double>("InnerRadius");
+  m_outerRadius = this->param<double>("OuterRadius");
+  m_siliconThickness = this->param<double>("SiThick");
+  m_type = this->param<std::string>("Type");
+
+  if ( m_type == "R" || m_type == "Phi" || m_type == "Veto" ) {
+    m_isLeft = this->param<int>("Left");
+    m_isDownstream=this->param<int>("Downstream");
+    m_fullType = m_type + ( (m_isDownstream) ? "DnStrm" : "UpStrm" )
+      + ( (m_isLeft) ? "Left" : "Right");
+  } else {
+    m_isLeft = (m_type == "PhiDL" || m_type == "PhiUL"
+                || m_type == "RLeft" || m_type == "VetoL");
+    m_isDownstream = (m_type == "PhiDL" || m_type == "PhiDR");
+    m_fullType = m_type;
   }
-  // Set the side of the sensor
-  m_xSide = 0;
-  m_isRight=m_isLeft=false;
-  if (m_type == "PhiDR" || m_type == "PhiUR"
-      || m_type == "RRigh" || m_type == "VetoR") {
-    m_xSide = -1;
-    m_isRight = true;
-  } else   if (m_type == "PhiDL" || m_type == "PhiUL"
-      || m_type == "RLeft" || m_type == "VetoL") {
-    m_xSide = 1;
-    m_isLeft = true;
-  }
-  // Set the stereo angle for phi sensors
-  m_isDownstream=false;
-  if(m_type == "PhiDL" || m_type == "PhiDR") m_isDownstream=true;
+
+  m_xSide = (m_isLeft) ? 1 : -1;
+
 }

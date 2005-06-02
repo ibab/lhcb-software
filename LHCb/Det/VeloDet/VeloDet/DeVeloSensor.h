@@ -1,4 +1,4 @@
-// $Id: DeVeloSensor.h,v 1.5 2004-02-28 21:43:16 mtobin Exp $
+// $Id: DeVeloSensor.h,v 1.6 2005-06-02 09:05:18 jpalac Exp $
 #ifndef VELODET_DEVELOSENSOR_H 
 #define VELODET_DEVELOSENSOR_H 1
 
@@ -110,8 +110,8 @@ public:
 
   /// Convert local phi to rough global phi
   inline double localPhiToGlobal(double phiLocal){
-    if(m_isDownstream) phiLocal = -phiLocal;
-    if(m_isRight) phiLocal += pi;
+    if(this->isDownstream()) phiLocal = -phiLocal;
+    if(this->isRight()) phiLocal += pi;
     return phiLocal;
   }
 
@@ -122,19 +122,19 @@ public:
   inline int xSide() {return m_xSide;}
   
   /// Return true for X<0 side of the detector (-ve x is Right)
-  inline bool isRight() {return m_isRight;}
+  inline bool isRight() {return !m_isLeft;}
   
   /// Returns true if sensor is downstream
   inline bool isDownstream() {return m_isDownstream;}
 
   /// Returns true if R Sensor
-  inline bool isPileUp() {return m_isPileUp;}  
+  inline bool isPileUp() {return m_type=="Veto";}  
 
   /// Returns true if R Sensor
-  inline bool isR() {return m_isR;}
+  inline bool isR() {return m_type=="R";}
 
   /// Returns true if R Sensor
-  inline bool isPhi() {return m_isPhi;}
+  inline bool isPhi() {return m_type=="Phi";}
 
   /// Return the number of strips
   inline unsigned int numberOfStrips() {return m_numberOfStrips;}
@@ -152,8 +152,8 @@ public:
   inline double siliconThickness() {return m_siliconThickness;}
   
   /// Returns the sensor type
-  inline std::string type() {return m_type;}
-
+  //  inline std::string type() {return m_type;}
+  inline std::string type() {return m_fullType;}
   /// Set the sensor number
   //void sensorNumber(unsigned int sensor);
   inline void sensorNumber(unsigned int sensor){m_sensorNumber=sensor;}
@@ -170,8 +170,9 @@ public:
   inline std::vector<unsigned int> associatedSensors() {return m_associated;}
   
 protected:
-  bool m_isRight,m_isLeft,m_isDownstream;
-  bool m_isR,m_isPhi,m_isPileUp;
+  std::string m_type;
+  std::string m_fullType;
+  bool m_isLeft,m_isDownstream;
   unsigned int m_numberOfStrips,m_numberOfZones;
   double m_innerRadius,m_outerRadius;
 
@@ -181,7 +182,6 @@ private:
   unsigned int m_sensorNumber;
   std::vector<unsigned int> m_associated;
   double m_siliconThickness;
-  std::string m_type;
   double m_z;
   IGeometryInfo* m_geometry;
 };

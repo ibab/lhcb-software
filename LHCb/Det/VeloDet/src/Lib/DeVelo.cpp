@@ -1,4 +1,4 @@
-// $Id: DeVelo.cpp,v 1.46 2005-05-13 16:13:23 marcocle Exp $
+// $Id: DeVelo.cpp,v 1.47 2005-06-02 09:05:18 jpalac Exp $
 //
 // ============================================================================
 #define  VELODET_DEVELO_CPP 1
@@ -72,9 +72,9 @@ StatusCode DeVelo::initialize() {
     msg << MSG::ERROR << "Failure to initialize DetectorElement" << endreq;
     return sc ; 
   }
-  unsigned int nextR=param<int>("FirstR");
-  unsigned int nextPhi=param<int>("FirstPhi");
-  unsigned int nextPileUp=param<int>("FirstPileUp");
+  unsigned int nextR=this->param<int>("FirstR");
+  unsigned int nextPhi=this->param<int>("FirstPhi");
+  unsigned int nextPileUp=this->param<int>("FirstPileUp");
 
   // get all of the pointers to the child detector elements
   std::vector<DeVeloSensor*> veloSensors = this->getVeloSensors();
@@ -150,9 +150,12 @@ StatusCode DeVelo::initialize() {
   for(unsigned int iSensor=0; iSensor < m_vpSensor.size() ; ++iSensor){
     m_sensorZ.push_back(m_vpSensor[iSensor]->z());
     unsigned int sensor = m_vpSensor[iSensor]->sensorNumber();
+
     msg << MSG::DEBUG << "Index " << iSensor << " Sensor number " << sensor
         << " is type " << m_vpSensor[iSensor]->type() 
-        << " at z = " << m_vpSensor[iSensor]->z()
+        << " at global z = " << m_vpSensor[iSensor]->z()
+        << " and in VELO frame " 
+        << this->geometry()->toLocal(HepPoint3D(0,0,m_vpSensor[iSensor]->z())).z()
         << endreq;
     // Find phi sensors associated to R in each station (group of 4 sensors)
     int station=(iSensor-4)/4;

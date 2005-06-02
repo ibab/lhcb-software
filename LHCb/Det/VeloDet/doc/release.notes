@@ -1,6 +1,12 @@
-! $Id: release.notes,v 1.70 2005-05-24 09:29:34 cattanem Exp $
+! $Id: release.notes,v 1.71 2005-06-02 09:05:18 jpalac Exp $
 package VeloDet
 package manager : Velo Group
+
+!========================= VeloDet v9r6 2005-06-02 =========================
+! 2005-06-02 - Juan PALACIOS
+- Modify .cpp files to accept new XML parameters controlling sensor types,
+  to allow for flipped R sensors. Old sensor typing scheme understood so
+  backwards compatible.
 
 !========================= VeloDet v9r5 2005-05-24 =========================
 ! 2005-05-13 - Marco CLEMENCIC
