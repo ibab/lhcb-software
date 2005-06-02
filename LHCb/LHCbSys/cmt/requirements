@@ -1,5 +1,5 @@
 package LHCbSys
-version v18r5
+version v18r6
 
 branches doc cmt
 
@@ -7,99 +7,99 @@ branches doc cmt
 # LHCb packages used by all applications
 #===============================================================
 
-use LHCb		v18r5
-
+use LHCb		v18r6
 use GaudiConf		v9r1
 
+#                                         Maintainer
 # External package used by GenEvent
-use HepMC	v4r121p0	Sim
+use HepMC	v4r121p0	Sim     # Gloria Corti, Matt Dobbs
 
 # Kernel packages
-use KernelSys   	v4r11   Kernel
-use LHCbKernel  	v5r10   Kernel
-use Relations		v2r5	Kernel
-use CaloKernel  	v3r2	Calo
-use MuonKernel  	v2r7	Muon
-use TrKernel    	v11r4	Tr
-use RichKernel  	v5r4p1	Rich
-use VeloKernel  	v1r5p1  Velo
-use L0mConf		v2r2p4	L0
-use L0MuonKernel	v3r0p1	L0
-use ProcessorKernel	v1r0p1  L0
+use KernelSys   	v4r12   Kernel  # Marco Cattaneo
+use LHCbKernel  	v5r11   Kernel  # Marco Cattaneo
+use Relations		v2r5	Kernel  # Ivan Belyaev
+use CaloKernel  	v3r2	Calo    # Ivan Belyaev
+use MuonKernel  	v2r7	Muon    # Andrei Tsaregorodtsev
+use TrKernel    	v11r4	Tr      # ?
+use RichKernel  	v5r4p1	Rich    # Chris Jones
+use VeloKernel  	v1r5p1  Velo    # Chris Parkes
+use L0mConf		v2r2p4	L0      # Andrei Tsaregorodtsev
+use L0MuonKernel	v3r0p1	L0      # Andrei Tsaregorodtsev
+use ProcessorKernel	v1r0p1  L0      # Andrei Tsaregorodtsev
 
 # Detector description
-use DetSys		v7r0	Det
-use VeloDet        	v9r5	Det
-use DetDesc        	v15r0	Det
-use DetDescCnv        	v2r5	Det
-use XmlTools        	v3r5	Tools
-use OTDet          	v5r5	Det
-use CaloDet        	v6r9	Det
-use CaloDetXmlCnv	v2r3p1	Det
-use MuonDet        	v4r6	Det
-use Magnet         	v2r8	Det
-use MuonTools      	v3r8	Muon
-use RichDet		v8r4	Det
-use STDet          	v1r4	Det
+use DetSys		v7r0	Det     # Marco Cattaneo
+use VeloDet        	v9r5	Det     # Mark Tobin
+use DetDesc        	v15r0	Det     # Marco Clemencic, Juan Palacios
+use DetDescCnv        	v2r5	Det     # Marco Clemencic, Juan Palacios
+use XmlTools        	v3r5	Tools   # Marco Clemencic, Juan Palacios
+use OTDet          	v5r5	Det     # Jacopo Nardulli
+use CaloDet        	v6r9	Det     # Ivan Belyaev
+use CaloDetXmlCnv	v2r3p1	Det     # Ivan Belyaev
+use MuonDet        	v4r6	Det     # Alessia Satta
+use Magnet         	v2r8	Det     # ?
+use MuonTools      	v3r8	Muon    # Alessia Satta
+use RichDet		v8r4	Det     # Chris Jones
+use STDet          	v1r4	Det     # Matt Needham
 
 # Event data model
-use EventSys		v20r5	Event
-use Event        	v4r7	Event
-use VeloEvent    	v13r2p1 Event
-use ITEvent      	v13r2p1	Event
-use OTEvent      	v14r0p1 Event
-use TrEvent      	v14r2	Event
-use RichEvent    	v8r3	Event
-use CaloEvent    	v13r9	Event
-use MuonEvent    	v4r0	Event
-use L0Event      	v14r3	Event
-use PhysEvent    	v8r9	Event
-use DAQEvent		v5r1	Event
-use GenEvent    	v3r3p1	Event
-use EventAssoc          v1r5    Event
-use LinkerEvent         v1r8    Event
-use TrgEvent            v5r5    Event
-use Rdst                v1r1    Event
-use TrackEvent          v1r0    Event
-use EventUtils		v1r0	Event
+use EventSys		v20r6	Event   # Marco Cattaneo
+use Event        	v4r7	Event   # Marco Cattaneo
+use VeloEvent    	v13r2p1 Event   # Chris Parkes
+use ITEvent      	v13r2p1	Event   # Matt Needham
+use OTEvent      	v14r0p1 Event   # Jacopo Nardulli
+use TrEvent      	v14r3	Event   # ?
+use RichEvent    	v8r3	Event   # Chris Jones
+use CaloEvent    	v13r9	Event   # Ivan Belyaev
+use MuonEvent    	v4r0	Event   # Alessia Satta
+use L0Event      	v14r3	Event   # O.Callot, O.Deschamps, A.Tsaregorodtsev
+use PhysEvent    	v8r9	Event   # Patrick Koppenburg
+use DAQEvent		v5r1p1  Event   # Marco Cattaneo
+use GenEvent    	v3r3p1	Event   # Gloria Corti
+use EventAssoc          v1r5    Event   # Ivan Belyaev
+use LinkerEvent         v1r8    Event   # Olivier Callot
+use TrgEvent            v5r5    Event   # Olivier Callot
+use PackedEvent         v1r0    Event   # Marco Cattaneo, Olivier Callot
+use TrackEvent          v1r1    Event   # Eduardo Rodrigues, Jose Hernando
+use EventUtils		v1r0	Event   # Marco Cattaneo
 
 # Associators
-use AssociatorsSys	v3r0	Associators
-use Associators		v2r4p1	Associators
-use ITAssociators      	v2r11p1	IT
-use OTAssociators      	v3r2p1	OT
-use VeloAssociators    	v1r14p1	Velo
-use TrAssociators      	v5r1p1	Tr
-use CaloAssociators    	v5r0	Calo
-use MuonAssociators    	v1r5p1	Muon
-use AsctToLinker	v1r4	Rec
+use AssociatorsSys	v3r0	Associators # Marco Cattaneo
+use Associators		v2r4p1	Associators # ?
+use ITAssociators      	v2r11p1	IT          # ?
+use OTAssociators      	v3r2p1	OT          # ?
+use VeloAssociators    	v1r14p1	Velo        # ?
+use TrAssociators      	v5r1p1	Tr          # ?
+use CaloAssociators    	v5r0	Calo        # Ivan Belyaev
+use MuonAssociators    	v1r5p1	Muon        # ?
+use AsctToLinker	v1r4	Rec         # ?
 
 # L1/Raw buffer encoding and decoding
-use DAQSys		v1r4	DAQ
-use MuonDAQ		v1r2p2	Muon
-use STDAQ		v1r5    IT
-use OTDAQ		v3r2p1	OT
-use VeloDAQ		v2r3p1	Velo
-use RichDAQ		v2r1p1	Rich
-use CaloDAQ		v1r1	Calo
-use L0MuonDAQ		v1r0	L0
+use DAQSys		v1r4	DAQ     # Marco Cattaneo
+use MuonDAQ		v1r2p2	Muon    # Alessia Satta
+use STDAQ		v1r5    IT      # Matt Needham
+use OTDAQ		v3r2p1	OT      # Jacopo Nardulli
+use VeloDAQ		v2r3p1	Velo    # Chris Parkes
+use RichDAQ		v2r1p1	Rich    # Chris Jones
+use CaloDAQ		v1r1	Calo    # Ivan Belyaev
+use L0MuonDAQ		v1r0	L0      # Andrei Tsaregorodtsev
 
 # Other stuff
-use LHCbInterfaces	v1r2	Kernel
-use LHCbAlgs		v1r6	Kernel
-use MCTools		v1r13	Phys
-use CaloInterfaces	v4r3	Calo
-use CaloUtils		v4r9	Calo
-use RichRecBase		v1r15p1 Rich
-use STTools		v1r1	IT
-use TrackInterfaces 	v1r0	Tr
-use DetCond		v7r2	Det
+use LHCbInterfaces	v1r2	Kernel  # Marco Cattaneo
+use LHCbAlgs		v1r6	Kernel  # Marco Cattaneo
+use MCTools		v1r13	Phys    # Many
+use CaloInterfaces	v4r3	Calo    # Ivan Belyaev
+use CaloUtils		v4r9	Calo    # Ivan Belyaev
+use RichRecBase		v1r15p1 Rich    # Chris Jones
+use STTools		v1r1	IT      # Matt Needham
+use TrackInterfaces 	v1r0	Tr      # Eduardo Rodrigues, Jose Hernando
+use DetCond		v7r2	Det     # Marco Clemencic
 
 # Temporary, should be split
-use TrgTools		v7r3	Trg
+use TrgTools		v7r3	Trg     # Olivier Callot
 
 # LHCb  Examples
-use DetDescChecks	v2r3	Det
-use DetDescExample      v6r3	Ex
-use IOExample    	v1r4p2	Ex
-use DetCondExample	v7r2	Ex
+use DetDescChecks	v2r3	Det     # Ivan Belyaev
+use DetDescExample      v6r3	Ex      # ?
+use IOExample    	v1r4p2	Ex      # Marco Cattaneo
+use DetCondExample	v7r2	Ex      # Marco Clemencic

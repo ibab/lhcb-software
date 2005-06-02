@@ -5,6 +5,29 @@
 ! Purpose     : LHCb OO kernel packages
 !-----------------------------------------------------------------------------
 
+</PRE><H1><A NAME=v18r6>2005-06-02 LHCbSys v18r6</A></H1><PRE>
+ - Packages added:    Event/PackedEvent v1r0 (replaces Event/Rdst)
+ - Packages removed:  Event/Rdst
+ - Packages modified: KernelSys v4r12, LHCbKernel v5r11,
+      EventSys v20r6, TrEvent v14r3, DAQEvent v5r1p1, TrackEvent v1r1
+
+ - In LHCbKernel v5r11:
+   . Speed improvements in VeloChannelID and LHCbID constructors, for L1
+   . Add Kernel/StandardPacker.h, moved from Event/Rdst
+
+ - In PackedEvent v1r0:
+   . Changed default locations of packed containers to Event/pSim, Event/pDst
+
+ - In TrEvent v14r3:
+   . Remove Track and State, now in TrackEvent
+
+ - In DAQEvent v5r1p1:
+   . Add HLT to RawBuffer BankType enum. For RTTC
+
+ - In TrackEvent v1r1:
+   . Fix bug in Track::addToStates and addToMeasurements, was adding twice
+   . Minor changes to Track and State
+
 </PRE><H1><A NAME=v18r5>2005-05-24 LHCbSys v18r5</A></H1><PRE>
  - Packages added:    TrackInterfaces v1r0, DetCond v7r2, DetCondExample v7r2
  - Packages modified: KernelSys v4r11, Relations v2r5, RichKernel v5r4p1,
