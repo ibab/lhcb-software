@@ -2,6 +2,10 @@ Package LHCbKernel
 Package manager: M.Cattaneo
 Purpose: LHCb specific Kernel classes
 
+!===================== LHCbKernel v5r11 2005-06-01 ========================
+! 2005-06-01 - Marco Cattaneo
+ - Add Kernel/StandardPacker.h (moved from Event/Rdst)
+
 ! 2005-05-31 - Olivier Callot
  - VeloChannelID.xml: Modify the creator with 3 arguments: Single line of code
    instead of calling 3 methods with masking. This gains speed for L1.
