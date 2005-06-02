@@ -1,4 +1,4 @@
-// $Id: DeVeloRType.h,v 1.6 2004-03-01 14:33:40 mtobin Exp $
+// $Id: DeVeloRType.h,v 1.7 2005-06-02 14:11:41 jpalac Exp $
 #ifndef VELODET_DEVELORTYPE_H 
 #define VELODET_DEVELORTYPE_H 1
 
@@ -45,23 +45,18 @@ public:
   StatusCode pointToChannel(const HepPoint3D& point,
                                     VeloChannelID& channel,
                                     double& fraction,
-                                    double& pitch);
+                                    double& pitch) const;
   
   /// Get the nth nearest neighbour for a given channel
   StatusCode neighbour(const VeloChannelID& start, 
                                const int& nOffset, 
-                               VeloChannelID& channel);
-
-  /// Returns the number of channels between two channels
-  StatusCode channelDistance(const VeloChannelID& start,
-                             const VeloChannelID& end,
-                             int& nOffset);
+                               VeloChannelID& channel) const;
 
   /// Residual of 3-d point to a VeloChannelID
   StatusCode residual(const HepPoint3D& point, 
                               const VeloChannelID& channel,
                               double &residual,
-                              double &chi2);
+                              double &chi2) const;
   
   /// Residual [see DeVelo for explanation]
    StatusCode residual(const HepPoint3D& point,
@@ -69,37 +64,39 @@ public:
                       const double localOffset,
                       const double width,
                       double &residual,
-                      double &chi2);
+                      double &chi2) const;
   /// The capacitance of the strip 
-  double stripCapacitance(unsigned int strip);
+  double stripCapacitance(unsigned int strip) const;
   
   /// The number of zones in the detector
   //  inline unsigned int numberOfZones(){return m_numberOfZones;}
  
   /// The zones number for a given strip
-  inline unsigned int zoneOfStrip(const unsigned int strip){
+  inline unsigned int zoneOfStrip(const unsigned int strip) const {
     return static_cast<unsigned int>(strip/512);
   }
 
   /// The number of strips in a zone
-  inline unsigned int stripsInZone(const unsigned int /*zone*/){
+  inline unsigned int stripsInZone(const unsigned int /*zone*/) const{
     return m_stripsInZone;
   }
 
   /// The minimum radius for a given zone of the sensor
-  double rMin(const unsigned int /*zone*/) {return m_innerRadius;}
+  double rMin(const unsigned int /*zone*/) const {
+    return this->innerRadius();
+  }
   
   /// The maximum radius for a given zone of the sensor
-  double rMax(const unsigned int /*zone*/) {return m_outerRadius;}
+  double rMax(const unsigned int /*zone*/) const {return this->outerRadius();}
 
   /// Determines if local 3-d point is inside sensor
-  StatusCode isInside(const HepPoint3D& point);
+  StatusCode isInside(const HepPoint3D& point) const;
 
   /// Determine if local point is in corner cut-offs
-  bool isCutOff(double x, double y);
+  bool isCutOff(double x, double y) const;
 
   /// Zone for a given local phi
-  inline unsigned int zoneOfPhi(double phi){
+  inline unsigned int zoneOfPhi(double phi) const {
     unsigned int zone=0;
     if(m_phiMax[0] > phi){
       zone = 0;
@@ -114,34 +111,36 @@ public:
   }
   
   /// Minimum strip number for each zone
-  inline unsigned int firstStrip(unsigned int zone){return zone*512;}
+  inline unsigned int firstStrip(unsigned int zone) const {return zone*512;}
 
   /// Return the radius of the strip
-  inline double rOfStrip(const unsigned int strip){return m_rStrips[strip];}
+  inline double rOfStrip(const unsigned int strip) const {
+    return m_rStrips[strip];
+  }
 
   /// Return the radius of the strip+fraction
-  inline double rOfStrip(unsigned int strip, double fraction){
+  inline double rOfStrip(unsigned int strip, double fraction) const {
     return m_rStrips[strip]+fraction*rPitch(strip);
   }
 
   /// Return the local pitch of the sensor for a given strip
-  inline double rPitch(unsigned int strip){return m_rPitch[strip];}
+  inline double rPitch(unsigned int strip) const {return m_rPitch[strip];}
 
   /// Return the local pitch of the sensor for a given strip +/- fraction
-  inline double rPitch(unsigned int strip, double fraction){
+  inline double rPitch(unsigned int strip, double fraction) const {
     return exp(fraction)*m_rPitch[strip];
   }
 
   /// Return the local pitch at a given radius 
-  inline double rPitch(double radius) {  
-    return m_innerPitch + m_pitchSlope*(radius - m_innerRadius);
+  inline double rPitch(double radius) const {  
+    return m_innerPitch + m_pitchSlope*(radius - this->innerRadius());
   }
 
   /// The minimum phi for a zone
-  inline double phiMinZone(unsigned int zone){return m_phiMin[zone];}
+  inline double phiMinZone(unsigned int zone) const {return m_phiMin[zone];}
 
   /// Returns the minimum phi in a zone at given radius
-  inline double phiMinZone(unsigned int zone, double radius){
+  inline double phiMinZone(unsigned int zone, double radius) const {
     double phiMin;
     if(0 == zone){
       phiMin = -acos(m_overlapInX/radius);
@@ -154,10 +153,10 @@ public:
   }
   
   /// The maximum phi for a zone
-  inline double phiMaxZone(unsigned int zone){return m_phiMax[zone];}
+  inline double phiMaxZone(unsigned int zone) const {return m_phiMax[zone];}
      
   /// Returns the maximum phi in a zone at given radius
-  inline double phiMaxZone(unsigned int zone, double radius){
+  inline double phiMaxZone(unsigned int zone, double radius) const {
     double phiMax;
     if(1 == zone){
       phiMax = asin(-m_phiGap/radius);
@@ -170,22 +169,23 @@ public:
   }
    
   /// The minimum phi of a strip
-  double phiMinStrip(unsigned int strip){return m_stripLimits[strip].first;}
+  double phiMinStrip(unsigned int strip) const {
+    return m_stripLimits[strip].first;
+  }
   
   /// The maximum phi of a strip
-  double phiMaxStrip(unsigned int strip){return m_stripLimits[strip].second;}
+  double phiMaxStrip(unsigned int strip) const {
+    return m_stripLimits[strip].second; 
+  }
 
   /// Return the strip limits for panoramix
   inline StatusCode stripLimits(unsigned int strip, double &radius,
-                         double &phiMin, double &phiMax){
+                         double &phiMin, double &phiMax) const {
     radius = rOfStrip(strip);
     phiMin = phiMinStrip(strip);
     phiMax = phiMaxStrip(strip);
     return StatusCode::SUCCESS;
   }
-  
-  
-protected:
 
 private:
   /// Store the local radius for each strip in the sensor
@@ -197,7 +197,6 @@ private:
   /// Store the co-ordinates of the cut-offs
   void cornerLimits();
 
-  //  unsigned int m_numberOfStrips;
   //  unsigned int m_numberOfZones;
   unsigned int m_stripsInZone;
   std::vector<double> m_rStrips;
@@ -213,8 +212,6 @@ private:
   std::pair<double,double> m_resolution;//Resolution from LHCB??????
   double m_innerPitch;
   double m_outerPitch;
-  //  double m_innerRadius;
-  //  double m_outerRadius;
   double m_innerR;//< Radius of first strip
   double m_outerR;//< Radius of outer strip
   double m_overlapInX;

@@ -1,4 +1,4 @@
-// $Id: DeVelo.h,v 1.25 2005-03-23 16:47:36 cattanem Exp $
+// $Id: DeVelo.h,v 1.26 2005-06-02 14:11:41 jpalac Exp $
 #ifndef       VELODET_DEVELO_H
 #define       VELODET_DEVELO_H 1
 // ============================================================================
@@ -64,33 +64,33 @@ public:
   }
 
   /// return the sensor type
-  inline std::string type(unsigned int sensor) 
+  inline std::string type(unsigned int sensor) const
   {
     return m_vpSensor[sensorIndex(sensor)]->type();
   }
   
   /// return true if this is an PileUp type sensor
-  inline bool isPileUpSensor(unsigned int sensor) {
+  inline bool isPileUpSensor(unsigned int sensor) const {
     return m_vpSensor[sensorIndex(sensor)]->isPileUp();
   }
 
   /// return true if this is an R type sensor
-  inline bool isRSensor(unsigned int sensor) {    
+  inline bool isRSensor(unsigned int sensor) const {    
     return m_vpSensor[sensorIndex(sensor)]->isR();
   }
 
   /// return true if this is an Phi type sensor
-  inline bool isPhiSensor(unsigned int sensor) {
+  inline bool isPhiSensor(unsigned int sensor) const {
     return m_vpSensor[sensorIndex(sensor)]->isPhi();
   }
 
   /// return true if phi sensor is second stereo (Downstream)
-  inline bool isDownstreamSensor(unsigned int sensor) {
+  inline bool isDownstreamSensor(unsigned int sensor) const {
     return m_vpSensor[sensorIndex(sensor)]->isDownstream();
   }
 
   /// return the sensor number for a point (global frame)
-  unsigned int sensorNumber( const HepPoint3D& point );
+  unsigned int sensorNumber( const HepPoint3D& point ) const;
   
   /// return the sensor number for a given index
   unsigned int sensorNumber( const unsigned int index ) const{
@@ -98,25 +98,26 @@ public:
   };
   
   /// return the index of the sensor (assumes sensors are stored 
-  unsigned int sensorIndex(unsigned int sensor);
+  unsigned int sensorIndex(unsigned int sensor) const;
 
-  /// Return vector of pointers to all sensors sorted by increasing z
-  inline std::vector<DeVeloSensor*> vpSensors() {
+  /// Return copy of vector of pointers to all sensors sorted by increasing z
+  inline std::vector<DeVeloSensor*> vpSensors() const {
     return m_vpSensor;
   }
 
-  /// Return vector of pointers to the R sensors sorted by increasing z
-  inline std::vector<DeVeloRType*> vpRSensors() {
+  /// Return copy vector of pointers to the R sensors sorted by increasing z
+  inline std::vector<DeVeloRType*> vpRSensors() const {
     return m_vpRSensor;
   }
   
-  /// Return vector of pointers to the Phi sensors sorted by increasing z
-  inline std::vector<DeVeloPhiType*> vpPhiSensors() {
+  /// Return copy of vector of pointers to the Phi sensors 
+  /// sorted by increasing z
+  inline std::vector<DeVeloPhiType*> vpPhiSensors() const {
     return m_vpPhiSensor;
   }
   
   /// Return vector of pointers to the Pile Up sensors sorted by increasing z
-  inline std::vector<DeVeloRType*> vpPileUpSensors() {
+  inline std::vector<DeVeloRType*> vpPileUpSensors() const {
     return m_vpPUSensor;
   }
   
@@ -127,14 +128,14 @@ public:
   StatusCode pointToChannel(const HepPoint3D &point, 
                             VeloChannelID &channel,
                             double &localOffset,
-                            double &pitch) ;
+                            double &pitch) const;
 
   /// pointToChannel if sensor known (global frame)
   StatusCode pointToChannel(const HepPoint3D &point, 
                             const unsigned int &sensor,
                             VeloChannelID &channel,
                             double &localOffset,
-                            double &pitch) ;
+                            double &pitch) const;
 
 
   /** Residual of 3D point to a VeloChannelID
@@ -142,7 +143,7 @@ public:
   StatusCode residual(const HepPoint3D &point, 
                       const VeloChannelID &channel,
                       double &residual,
-                      double &chi2) ;
+                      double &chi2) const;
 
   /** Residual of 3D point to a VeloChannelID + offset in fraction of a channel
       and width of the cluster in channel widths (for the chi2)
@@ -152,7 +153,7 @@ public:
                       const double &localOffset,
                       const double &width,
                       double &residual,
-                      double &chi2) ;
+                      double &chi2) const;
 
   /// Convert global 3D Point to local 3D point in frame of the sensor 
   StatusCode globalToLocal(const unsigned int &sensorNumber,
@@ -162,158 +163,159 @@ public:
   /// Convert local 3D Point in the sensor fram to a global 3D point 
   StatusCode localToGlobal(const unsigned int &sensorNumber,
                            const HepPoint3D &local,
-                           HepPoint3D &global) ;
+                           HepPoint3D &global) const;
 
   /// Get the nth (signed) neighbour strip to a given VeloChannelID
   StatusCode neighbour(const VeloChannelID &startChannel,
                        const int &Offset,
-                       VeloChannelID &channel) ;
+                       VeloChannelID &channel) const;
 
   /// Check the distance in strips between two channelIDs
   StatusCode channelDistance(const VeloChannelID &startChannel,
                              const VeloChannelID &endChannel,
-                             int &Offset) ;
+                             int &Offset) const;
 
   /** Returns the vector of sensor numbers one can match with the 
       specified sensor number, r and pileup sensors match to phi, phi to R 
       Returns a list (0,1,2) of sensor numbers (same +/- x side) 
       with the closest in Z listed first */
   StatusCode sensorAssociated( unsigned int sensor, 
-                               std::vector<unsigned int> &assocSensor ) ;
+                               std::vector<unsigned int> &assocSensor ) const;
   
   /** Returns the offical (not alignment corrected) z position of this 
       Velo sensor */
-  inline double zSensor( unsigned int sensor )  { 
+  inline double zSensor( unsigned int sensor )  const { 
     return m_sensorZ[sensorIndex(sensor)]; 
   }
   
   /// returns the number of zones in this sensor
-  unsigned int numberOfZones( unsigned int sensor) ;
+  unsigned int numberOfZones( unsigned int sensor) const;
 
   /// returns the phi "zone" of the r strip or r zone of phi strip
-  unsigned int zoneOfStrip( VeloChannelID strip ) ;
+  unsigned int zoneOfStrip( VeloChannelID strip ) const;
 
   /// returns the phi "zone" of the r strip or r zone of phi strip
-  unsigned int zoneOfStrip( unsigned int strip, unsigned int sensor ) ;
+  unsigned int zoneOfStrip( unsigned int strip, unsigned int sensor ) const;
   
   /// Number of strips in each zone
-  unsigned int stripsInZone( unsigned int sensor, unsigned int zone ) ;
+  unsigned int stripsInZone( unsigned int sensor, unsigned int zone ) const;
 
   /// returns the local radius of the strip
-  double rOfStrip( VeloChannelID channel );
+  double rOfStrip( VeloChannelID channel ) const;
 
   /// returns the local radius of the strip+fractional distance to strip
-  double rOfStrip(VeloChannelID channel, double fraction);
+  double rOfStrip(VeloChannelID channel, double fraction) const;
 
   /// returns the R pitch at the given channelID
-  double rPitch( VeloChannelID channel);
+  double rPitch( VeloChannelID channel) const;
 
   /// returns the R pitch at the given channelID +/- fraction of channel
-  double rPitch( VeloChannelID channel, double fraction);
+  double rPitch( VeloChannelID channel, double fraction) const;
 
   /// returns the R pitch at a given radius
-  double rPitchAtLocalR( VeloChannelID channel, double radius);
+  double rPitchAtLocalR( VeloChannelID channel, double radius) const;
 
   /// returns the phi of the strip at the specified radius 
   /// in the local frame of the sensor.
-  double phiOfStrip( VeloChannelID channel, double radius);
+  double phiOfStrip( VeloChannelID channel, double radius) const;
 
   /// returns the phi of the strip+fractional distance to strip
   /// at the specified radius in the local frame of sensor.
-  double phiOfStrip( VeloChannelID channel, double fraction, double radius);
-
-  /// returns the angle of the strip wrt the x axis in the local frame
-  /// for the strip
-  double angleOfStrip( VeloChannelID channel);
-                               
+  double phiOfStrip( VeloChannelID channel, double fraction, double radius) const;
+                      
   /// returns the angle of the strip wrt the x axis in the local frame for
   /// the strip+fractional distance to strip
-  double angleOfStrip( VeloChannelID channel, double fraction);
+  double angleOfStrip( VeloChannelID channel, double fraction=0.) const;
 
   /** The stereo angle of the phi strips in radians,
       signed so that positive indicates phi increases with radius */
-  double phiStereo( VeloChannelID channel, double radius);
+  double phiStereo( VeloChannelID channel, double radius) const;
 
   /// returns the Phi pitch (in mm) at the given radius (sensor local)
-  double phiPitch( VeloChannelID channel, double radius );
+  double phiPitch( VeloChannelID channel, double radius ) const;
 
   /// returns the Phi pitch (in mm) at the given radius (sensor local)
-  double phiPitch( VeloChannelID channel );
+  double phiPitch( VeloChannelID channel ) const;
 
   /// Return the distance to the origin for a phi strip
-  double distToOrigin(VeloChannelID channel);
+  double distToOrigin(VeloChannelID channel) const;
 
   /// return the minimum sensitive radius of an R wafer, local frame
-  double rMin(unsigned int sensor) ;
+  double rMin(unsigned int sensor) const;
 
   /// return the maximum sensitive radius of an R wafer, local frame
-  double rMax(unsigned int sensor) ;
+  double rMax(unsigned int sensor) const;
 
   /** return the minimum sensitive radius of an R wafer in a zone, local frame
       4 zones (different phi) for R sensors and 2 zones 
       (different R and stereo) for the phi sensors */
-  double rMin(unsigned int sensor, unsigned int zone) ; 
+  double rMin(unsigned int sensor, unsigned int zone) const; 
 
   /** return the maximum sensitive radius of an R wafer in a zone, local frame
       4 zones (different phi) for R sensors and 2 zones 
       (different R and stereo) for the phi sensors */
-  double rMax(unsigned int sensor, unsigned int zone) ;
+  double rMax(unsigned int sensor, unsigned int zone) const;
 
   /// Smallest Phi at R (local frame) of the R strips in a zone
-  double phiMin(unsigned int sensor, unsigned int zone);
+  double phiMin(unsigned int sensor, unsigned int zone) const;
   
   /// Largest Phi (local frame) of the R strips in a zone
-  double phiMax(unsigned int sensor, unsigned int zone);
+  double phiMax(unsigned int sensor, unsigned int zone) const;
 
   // minimum phi at R (overlap in x) for a given zone
-  double phiMin(unsigned int sensor, unsigned int zone, double radius);
+  double phiMin(unsigned int sensor, unsigned int zone, double radius) const;
   
   // maximum phi at R (overlap in x) for a given zone
-  double phiMax(unsigned int sensor, unsigned int zone, double radius);
+  double phiMax(unsigned int sensor, unsigned int zone, double radius) const;
   
   /// returns the silicon thickness
-  double siliconThickness ( unsigned int sensor ) ;
+  double siliconThickness ( unsigned int sensor ) const;
 
   /// returns the number of strips per sensor.
-  unsigned int numberStrips(unsigned int sensor) ;
+  unsigned int numberStrips(unsigned int sensor) const;
     
   /// returns the capacitance of the strip.
-  double stripCapacitance(VeloChannelID channel) ;
+  double stripCapacitance(VeloChannelID channel) const;
 
   /** Access to a strip's geometry, for Panoramix
       from strip number and R sensor number, returns Z, R and a phi range.
       in local frame */
-  StatusCode stripLimitsR( unsigned int sensor, unsigned int strip,
-                     double& z, double& radius, 
-                     double& phiMin, double& phiMax ) ;
+  StatusCode stripLimitsR( unsigned int sensor, 
+                           unsigned int strip,
+                           double& z, 
+                           double& radius, 
+                           double& phiMin, 
+                           double& phiMax ) const ;
   
   /** from strip number and phi sensor number, returns the two end points
       in local frame */
-  StatusCode stripLimitsPhi( unsigned int sensor, unsigned int strip,
-                       HepPoint3D& begin, HepPoint3D& end ) ;
+  StatusCode stripLimitsPhi( unsigned int sensor, 
+                             unsigned int strip,
+                             HepPoint3D& begin, 
+                             HepPoint3D& end ) const;
 
   /// Return the side of the detector. (+1 for +ve x, -1 for -ve x.)
-  inline int xSide(unsigned int sensor)  
+  inline int xSide(unsigned int sensor)  const
   {
     return m_vpSensor[sensorIndex(sensor)]->xSide();
   }
   
   /// Returns true if sensor is in right side (-ve x) of detector
-  inline bool isRightSensor(unsigned int sensor) 
+  inline bool isRightSensor(unsigned int sensor) const
   {
     return m_vpSensor[sensorIndex(sensor)]->isRight();
   }
 
   /// Set accessor to member m_zVertex, used to compute phi by extrapolating
   /// between R and Phi sensors.
-  inline void setZVertex(double zVertex) 
+  inline void setZVertex(double zVertex)
   {
     m_zVertex = zVertex;
   }
 
   ///  Returns m_zVertex, used to compute phi by extrapolating
   /// between R and Phi sensors.
-  inline double zVertex() 
+  inline double zVertex() const
   {
     return m_zVertex;
   }
@@ -326,11 +328,11 @@ public:
                              double phiFrac,
                              HepPoint3D& point, 
                              double&  rPitch,
-                             double&  phiPitch ) ;
+                             double&  phiPitch ) const;
 
   ///  Return true if the two zones are matching for R sensors. 
   ///  Also returns true for neighbouring phi zones
-  bool matchingZones(unsigned int zone1, unsigned int zone2);
+  bool matchingZones(unsigned int zone1, unsigned int zone2) const;
 
   ///=========================================================================
   /// REPLICATE OLD DeVelo Code with added rotations asumning perfect geometry
@@ -344,15 +346,17 @@ public:
                              double& stripMin, 
                              double& stripMax, 
                              double& pitch, 
-                             double& offset );
+                             double& offset ) const;
   /// returns the phi of the strip at the specified radius 
-  double trgPhiOfStrip( VeloChannelID channel,double radius ) ;
+  double trgPhiOfStrip( VeloChannelID channel,
+                        double radius ) const;
   /// returns the phi of the strip+fractional distance to strip
-  double trgPhiOfStrip( VeloChannelID channel, double fraction, double radius );
-  /// returns the angle of the strip wrt the x axis 
-  double trgPhiDirectionOfStrip( VeloChannelID channel ) ;
+  double trgPhiOfStrip( VeloChannelID channel, 
+                        double fraction, 
+                        double radius ) const;
   /// returns the angle of the strip+frac. distance to strip wrt the x axis 
-  double trgPhiDirectionOfStrip( VeloChannelID channel, double fraction ) ;
+  double trgPhiDirectionOfStrip( VeloChannelID channel, 
+                                 double fraction=0. ) const;
   ///========================================================================
 protected: 
 

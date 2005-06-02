@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.71 2005-06-02 09:05:18 jpalac Exp $
+! $Id: release.notes,v 1.72 2005-06-02 14:11:41 jpalac Exp $
 package VeloDet
 package manager : Velo Group
 
@@ -7,6 +7,8 @@ package manager : Velo Group
 - Modify .cpp files to accept new XML parameters controlling sensor types,
   to allow for flipped R sensors. Old sensor typing scheme understood so
   backwards compatible.
+- Make most methods in DeVelo, DeVeloSensors and derived classes const.
+- Get rid of most protected data members in DeVeloSensor class
 
 !========================= VeloDet v9r5 2005-05-24 =========================
 ! 2005-05-13 - Marco CLEMENCIC

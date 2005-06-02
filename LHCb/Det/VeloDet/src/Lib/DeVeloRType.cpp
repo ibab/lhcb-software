@@ -1,4 +1,4 @@
-// $Id: DeVeloRType.cpp,v 1.12 2005-06-02 09:05:19 jpalac Exp $
+// $Id: DeVeloRType.cpp,v 1.13 2005-06-02 14:11:41 jpalac Exp $
 //==============================================================================
 #define VELODET_DEVELORTYPE_CPP 1
 //==============================================================================
@@ -69,7 +69,7 @@ StatusCode DeVeloRType::initialize()
   }
 
   m_numberOfZones = 4;
-  m_stripsInZone = m_numberOfStrips / m_numberOfZones;
+  m_stripsInZone = this->numberOfStrips() / m_numberOfZones;
 
   m_innerPitch = this->param<double>("InnerPitch");
   m_outerPitch = this->param<double>("OuterPitch");
@@ -91,7 +91,7 @@ StatusCode DeVeloRType::initialize()
 StatusCode DeVeloRType::pointToChannel(const HepPoint3D& point,
                                        VeloChannelID& channel,
                                        double& fraction,
-                                       double& pitch)
+                                       double& pitch) const
 {
   MsgStream msg(msgSvc(), "DeVeloRType");
   HepPoint3D localPoint(0,0,0);
@@ -136,12 +136,12 @@ StatusCode DeVeloRType::pointToChannel(const HepPoint3D& point,
 //==============================================================================
 /// Checks if local point is inside sensor
 //==============================================================================
-StatusCode DeVeloRType::isInside(const HepPoint3D& point)
+StatusCode DeVeloRType::isInside(const HepPoint3D& point) const
 {
   MsgStream msg(msgSvc(), "DeVeloRType");
   // check boundaries....  
   double radius=point.perp();
-  if(m_innerRadius >= radius || m_outerRadius <= radius) {
+  if(this->innerRadius() >= radius || this->outerRadius() <= radius) {
     msg << MSG::VERBOSE << "Outside active radii " << radius << endreq;
     return StatusCode::FAILURE;
   }
@@ -163,7 +163,7 @@ StatusCode DeVeloRType::isInside(const HepPoint3D& point)
 //==============================================================================
 /// Is the point in the corner cut-off?
 //==============================================================================
-bool DeVeloRType::isCutOff(double x, double y)
+bool DeVeloRType::isCutOff(double x, double y) const
 {
   if(m_cornerX1 > x) return true;
   y = fabs(y);
@@ -180,7 +180,7 @@ bool DeVeloRType::isCutOff(double x, double y)
 //==============================================================================
 StatusCode DeVeloRType::neighbour(const VeloChannelID& start, 
                                   const int& nOffset, 
-                                  VeloChannelID& channel)
+                                  VeloChannelID& channel) const
 {
   unsigned int strip=0;
   strip = start.strip();
@@ -190,7 +190,7 @@ StatusCode DeVeloRType::neighbour(const VeloChannelID& start,
   unsigned int endZone;
   endZone = zoneOfStrip(strip);
   // Check boundaries
-  if(m_numberOfStrips < strip) return StatusCode::FAILURE;
+  if(this->numberOfStrips() < strip) return StatusCode::FAILURE;
   if(startZone != endZone) {
     return StatusCode::FAILURE;
   }
@@ -198,41 +198,14 @@ StatusCode DeVeloRType::neighbour(const VeloChannelID& start,
   channel.setStrip(strip);
   return StatusCode::SUCCESS;
 }
-//==============================================================================
-/// Returns the number of channels between two channels
-//==============================================================================
-StatusCode DeVeloRType::channelDistance(const VeloChannelID& start,
-                                        const VeloChannelID& end,
-                                        int& nOffset)
-{
-  nOffset = 0;
-  unsigned int startStrip=0;
-  unsigned int endStrip=0;
-  startStrip = start.strip();
-  endStrip = end.strip();
-  if(m_numberOfStrips<startStrip || m_numberOfStrips<endStrip) {
-    return StatusCode::FAILURE;
-  }
 
-  unsigned int startZone;
-  startZone = zoneOfStrip(startStrip);
-
-  unsigned int endZone;
-  endZone = zoneOfStrip(endStrip);
-  // Check validity of zones
-  if(startZone != endZone) {
-    return StatusCode::FAILURE;
-  }
-  nOffset = endStrip-startStrip;
-  return StatusCode::SUCCESS;
-}
-//==============================================================================
+//=============================================================================
 /// Residual of 3-d point to a VeloChannelID
-//==============================================================================
+//=============================================================================
 StatusCode DeVeloRType::residual(const HepPoint3D& point, 
                                  const VeloChannelID& channel,
                                  double &residual,
-                                 double &chi2)
+                                 double &chi2) const
 {
   MsgStream msg(msgSvc(), "DeVeloRType");
   HepPoint3D localPoint(0,0,0);
@@ -267,7 +240,7 @@ StatusCode DeVeloRType::residual(const HepPoint3D& /*point*/,
                                    const double /*localOffset*/,
                                    const double /*width*/,
                                    double &/*residual*/,
-                                   double &/*chi2*/)
+                                   double &/*chi2*/) const
 {
 
   // Perpendicular distance to strip.....
@@ -281,8 +254,8 @@ void DeVeloRType::calcStripLimits()
 {
   MsgStream msg( msgSvc(), "DeVeloRType" );
   msg << MSG::VERBOSE << "calcStripLimits" << endreq;
-  m_innerR = m_innerRadius + m_innerPitch / 2;
-  m_outerR = m_outerRadius - m_outerPitch / 2;
+  m_innerR = this->innerRadius() + m_innerPitch / 2;
+  m_outerR = this->outerRadius() - m_outerPitch / 2;
 
   m_pitchSlope = (m_outerPitch - m_innerPitch) / 
     (m_outerR - m_innerR);
@@ -348,8 +321,9 @@ void DeVeloRType::calcStripLimits()
   }
   for(unsigned int i=0; i < m_phiMin.size(); i++){
     msg << MSG::DEBUG << "Zone limits; zone " << i << " min " << m_phiMin[i]
-        << " max " << m_phiMax[i] << " phiMin " << phiMinZone(i,m_innerRadius) 
-        << " max " << phiMaxZone(i,m_innerRadius) << endmsg;
+        << " max " << m_phiMax[i] << " phiMin " 
+        << phiMinZone(i,this->innerRadius()) 
+        << " max " << phiMaxZone(i,this->innerRadius()) << endmsg;
   }
   msg << MSG::DEBUG << "Radius of first strip is " << m_rStrips[0] 
       << " last strip " << m_rStrips[m_rStrips.size()-1] << endmsg;
@@ -385,7 +359,7 @@ void DeVeloRType::phiZoneLimits()
   m_quarterAngle  = .5 * m_halfAngle;
 
   double phi;
-  phi = acos(m_overlapInX/m_outerRadius);
+  phi = acos(m_overlapInX/this->outerRadius());
 
   m_phiMin.clear();
   m_phiMin.push_back(-phi);
@@ -403,7 +377,7 @@ void DeVeloRType::phiZoneLimits()
 //==============================================================================
 /// Return the capacitance of the strip
 //==============================================================================
-double DeVeloRType::stripCapacitance(unsigned int /*strip*/)
+double DeVeloRType::stripCapacitance(unsigned int /*strip*/) const
 {
   double C=0.0;
   return C;

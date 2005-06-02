@@ -1,4 +1,4 @@
-// $Id: DeVeloPhiType.cpp,v 1.13 2005-06-02 09:05:19 jpalac Exp $
+// $Id: DeVeloPhiType.cpp,v 1.14 2005-06-02 14:11:41 jpalac Exp $
 //==============================================================================
 #define VELODET_DEVELOPHITYPE_CPP 1
 //==============================================================================
@@ -67,13 +67,10 @@ StatusCode DeVeloPhiType::initialize()
     return sc;
   }
   m_numberOfZones=2;
-  m_numberOfStrips=this->numberOfStrips();
   m_nbInner = this->param<int>("NbPhiInner");
   m_stripsInZone.clear();
   m_stripsInZone.push_back(m_nbInner);
-  m_stripsInZone.push_back(m_numberOfStrips-m_nbInner);
-  m_innerRadius = this->innerRadius();
-  m_outerRadius = this->outerRadius();
+  m_stripsInZone.push_back(this->numberOfStrips()-m_nbInner);
   m_middleRadius = this->param<double>("PhiBoundRadius"); // PhiBound
   // Point where strips of inner/outer regions cross
   m_phiOrigin = this->param<double>("PhiOrigin");
@@ -81,7 +78,7 @@ StatusCode DeVeloPhiType::initialize()
   /* Inner strips (dist. to origin defined by angle between 
      extrapolated strip and phi)*/
   m_innerDistToOrigin = this->param<double>("InnerDistToOrigin");
-  m_innerTilt = asin(m_innerDistToOrigin/m_innerRadius);
+  m_innerTilt = asin(m_innerDistToOrigin/this->innerRadius());
   m_innerTilt += m_phiOrigin;
   // Outer strips
   m_outerDistToOrigin = this->param<double>("OuterDistToOrigin");
@@ -89,7 +86,7 @@ StatusCode DeVeloPhiType::initialize()
   double phiAtBoundary   = m_innerTilt - 
     asin( m_innerDistToOrigin / m_middleRadius );
   m_outerTilt += phiAtBoundary;
-  double phi = m_outerTilt - asin( m_outerDistToOrigin/m_outerRadius );
+  double phi = m_outerTilt - asin( m_outerDistToOrigin/this->outerRadius() );
   msg << MSG::DEBUG << "Phi (degree) inner "    << m_phiOrigin/degree
       << " at boundary " << phiAtBoundary/degree
       << " and outside " << phi/degree
@@ -123,17 +120,17 @@ void DeVeloPhiType::calcStripLines()
 {
   m_stripLines.clear();
   double x1,y1,x2,y2;
-  for(unsigned int strip=0; strip<m_numberOfStrips; strip++){
+  for(unsigned int strip=0; strip<this->numberOfStrips(); strip++){
     if(m_nbInner > strip) {
-      x1 = m_innerRadius * cos(phiOfStrip(strip,0.,m_innerRadius));
-      y1 = m_innerRadius * sin(phiOfStrip(strip,0.,m_innerRadius));
+      x1 = this->innerRadius() * cos(phiOfStrip(strip,0.,this->innerRadius()));
+      y1 = this->innerRadius() * sin(phiOfStrip(strip,0.,this->innerRadius()));
       x2 = m_middleRadius * cos(phiOfStrip(strip,0.,m_middleRadius-m_rGap/2));
       y2 = m_middleRadius * sin(phiOfStrip(strip,0.,m_middleRadius-m_rGap/2));
     } else {
       x1 = m_middleRadius * cos(phiOfStrip(strip,0.,m_middleRadius+m_rGap/2));
       y1 = m_middleRadius * sin(phiOfStrip(strip,0.,m_middleRadius+m_rGap/2));
-      x2 = m_outerRadius * cos(phiOfStrip(strip,0.,m_outerRadius));
-      y2 = m_outerRadius * sin(phiOfStrip(strip,0.,m_outerRadius));
+      x2 = this->outerRadius() * cos(phiOfStrip(strip,0.,this->outerRadius()));
+      y2 = this->outerRadius() * sin(phiOfStrip(strip,0.,this->outerRadius()));
     }
     double gradient;
     gradient = (y2 - y1) /  (x2 - x1);
@@ -191,7 +188,7 @@ void DeVeloPhiType::cornerLimits()
 StatusCode DeVeloPhiType::pointToChannel(const HepPoint3D& point,
                           VeloChannelID& channel,
                           double& fraction,
-                          double& pitch)
+                          double& pitch) const
 {
   MsgStream msg(msgSvc(), "DeVeloPhiType");
   HepPoint3D localPoint(0,0,0);
@@ -205,7 +202,7 @@ StatusCode DeVeloPhiType::pointToChannel(const HepPoint3D& point,
 
   // Use symmetry to handle second stereo...
   double phi=localPoint.phi();
-  if(m_isDownstream) {
+  if(this->isDownstream()) {
     //    phi = -phi;
   }
   
@@ -243,7 +240,7 @@ StatusCode DeVeloPhiType::pointToChannel(const HepPoint3D& point,
 //==============================================================================
 StatusCode DeVeloPhiType::neighbour(const VeloChannelID& start, 
                                     const int& nOffset, 
-                                    VeloChannelID& channel)
+                                    VeloChannelID& channel) const
 {
   unsigned int strip=0;
   strip = start.strip();
@@ -253,7 +250,7 @@ StatusCode DeVeloPhiType::neighbour(const VeloChannelID& start,
   unsigned int endZone=0;
   endZone = zoneOfStrip(strip);
   // put in some checks for boundaries etc...
-  if(m_numberOfStrips < strip) return StatusCode::FAILURE;
+  if(this->numberOfStrips() < strip) return StatusCode::FAILURE;
   if(startZone != endZone) {
     return StatusCode::FAILURE;
   }
@@ -264,12 +261,12 @@ StatusCode DeVeloPhiType::neighbour(const VeloChannelID& start,
 //==============================================================================
 /// Checks if local point is inside sensor
 //==============================================================================
-StatusCode DeVeloPhiType::isInside(const HepPoint3D& point)
+StatusCode DeVeloPhiType::isInside(const HepPoint3D& point) const
 {
   MsgStream msg(msgSvc(), "DeVeloPhiType");
   // check boundaries....  
   double radius=point.perp();
-  if(m_innerRadius >= radius || m_outerRadius <= radius) {
+  if(this->innerRadius() >= radius || this->outerRadius() <= radius) {
     msg << MSG::VERBOSE << "Outside active radii " << radius << endreq;
     return StatusCode::FAILURE;
   }
@@ -361,10 +358,10 @@ StatusCode DeVeloPhiType::isInside(const HepPoint3D& point)
 //==============================================================================
 /// Is the local point in the corner cut-off?
 //==============================================================================
-bool DeVeloPhiType::isCutOff(double x, double y)
+bool DeVeloPhiType::isCutOff(double x, double y) const
 {
   // Use symmetry to handle second stereo...
-  if(m_isDownstream) {
+  if(this->isDownstream()) {
     //    y = -y;
   }
   // if(m_corner1X1 > x) return true;
@@ -389,39 +386,14 @@ bool DeVeloPhiType::isCutOff(double x, double y)
   }
   return false;
 }
-//==============================================================================
-/// Returns the number of channels between two channels
-//==============================================================================
-StatusCode DeVeloPhiType::channelDistance(const VeloChannelID& start,
-                                          const VeloChannelID& end,
-                                          int& nOffset)
-{
-  nOffset = 0;
-  unsigned int startStrip=0;
-  unsigned int endStrip=0;
-  startStrip = start.strip();
-  endStrip = end.strip();
-  if(m_numberOfStrips<startStrip || m_numberOfStrips<endStrip) {
-    return StatusCode::FAILURE;
-  }
-  // put in some checks for boundaries etc...
-  unsigned int startZone;
-  startZone = zoneOfStrip(startStrip);
-  unsigned int endZone;
-  endZone = zoneOfStrip(endStrip);
-  if(startZone != endZone) {
-    return StatusCode::FAILURE;
-  }
-  nOffset = endStrip-startStrip;
-  return StatusCode::SUCCESS;
-}
+
 //==============================================================================
 /// Residual of 3-d point to a VeloChannelID
 //==============================================================================
 StatusCode DeVeloPhiType::residual(const HepPoint3D& point, 
                                    const VeloChannelID& channel,
                                    double &residual,
-                                   double &chi2)
+                                   double &chi2) const
 {
   MsgStream msg(msgSvc(), "DeVeloPhiType");
   HepPoint3D localPoint(0,0,0);
@@ -432,7 +404,7 @@ StatusCode DeVeloPhiType::residual(const HepPoint3D& point,
 
   double x=localPoint.x();
   double y=localPoint.y();
-  //  if(m_isDownstream) y = -y;
+  //  if(this->isDownstream()) y = -y;
   // Work out closest point on line
   unsigned int strip;
   strip=channel.strip();
@@ -464,18 +436,18 @@ StatusCode DeVeloPhiType::residual(const HepPoint3D& /*point*/,
                                    const double /*localOffset*/,
                                    const double /*width*/,
                                    double &/*residual*/,
-                                   double &/*chi2*/)
+                                   double &/*chi2*/) const
 {
   return StatusCode::SUCCESS;
 }
 //==============================================================================
 /// The minimum radius for a given zone of the sensor
 //==============================================================================
-double DeVeloPhiType::rMin(const unsigned int zone)
+double DeVeloPhiType::rMin(const unsigned int zone) const
 {
   double rMin=0;
   if(zone == 0) {
-    rMin = m_innerRadius;
+    rMin = this->innerRadius();
   } else if (zone == 1) {
     rMin = m_middleRadius;
   }
@@ -484,20 +456,20 @@ double DeVeloPhiType::rMin(const unsigned int zone)
 //==============================================================================
 /// The maximum radius for a given zone of the sensor
 //==============================================================================
-double DeVeloPhiType::rMax(const unsigned int zone)
+double DeVeloPhiType::rMax(const unsigned int zone) const
 {
   double rMax=0;
   if(zone == 0) {
     rMax = m_middleRadius;
   } else if (zone == 1) {
-    rMax = m_outerRadius;
+    rMax = this->outerRadius();
   }
   return rMax;
 }
 //==============================================================================
 /// Return the capacitance of the strip
 //==============================================================================
-double DeVeloPhiType::stripCapacitance(unsigned int /*strip*/)
+double DeVeloPhiType::stripCapacitance(unsigned int /*strip*/) const
 {
   double C=0.0;
   return C;

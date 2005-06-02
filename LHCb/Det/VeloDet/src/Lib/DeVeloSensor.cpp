@@ -1,4 +1,4 @@
-// $Id: DeVeloSensor.cpp,v 1.7 2005-06-02 09:05:19 jpalac Exp $
+// $Id: DeVeloSensor.cpp,v 1.8 2005-06-02 14:11:41 jpalac Exp $
 //==============================================================================
 #define VELODET_DEVELOSENSOR_CPP 1
 //==============================================================================
@@ -78,7 +78,7 @@ StatusCode DeVeloSensor::initialize()
 /// Convert local position to global position
 //==============================================================================
 StatusCode DeVeloSensor::localToGlobal(const HepPoint3D& localPos, 
-                                       HepPoint3D& globalPos)
+                                       HepPoint3D& globalPos) const
 {
   MsgStream msg(msgSvc(), "DeVeloSensor");
   globalPos = m_geometry->toGlobal(localPos);
@@ -94,7 +94,7 @@ StatusCode DeVeloSensor::localToGlobal(const HepPoint3D& localPos,
 /// Convert global position to local position 
 //==============================================================================
 StatusCode DeVeloSensor::globalToLocal(const HepPoint3D& globalPos, 
-                         HepPoint3D& localPos)
+                         HepPoint3D& localPos) const
 {
   MsgStream msg(msgSvc(), "DeVeloSensor");
   localPos = m_geometry->toLocal(globalPos);
@@ -106,6 +106,31 @@ StatusCode DeVeloSensor::globalToLocal(const HepPoint3D& globalPos,
       << endreq;
   return StatusCode::SUCCESS;
 }
+
+//=============================================================================
+/// Returns the number of channels between two channels
+//=============================================================================
+StatusCode DeVeloSensor::channelDistance(const VeloChannelID& start,
+                                         const VeloChannelID& end,
+                                         int& nOffset) const
+{
+  nOffset = 0;
+  unsigned int startStrip = start.strip();
+  unsigned int endStrip = end.strip();
+
+  if(this->numberOfStrips()<startStrip || this->numberOfStrips()<endStrip) {
+    return StatusCode::FAILURE;
+  }
+  // put in some checks for boundaries etc...
+  unsigned int startZone = zoneOfStrip(startStrip);
+  unsigned int endZone = zoneOfStrip(endStrip);
+  if(startZone != endZone) {
+    return StatusCode::FAILURE;
+  }
+  nOffset = endStrip-startStrip;
+  return StatusCode::SUCCESS;
+}
+//=============================================================================
 void DeVeloSensor::initSensor()
 {
   // Set the sensor type from name in XML
@@ -113,7 +138,11 @@ void DeVeloSensor::initSensor()
   m_innerRadius = this->param<double>("InnerRadius");
   m_outerRadius = this->param<double>("OuterRadius");
   m_siliconThickness = this->param<double>("SiThick");
-  m_type = this->param<std::string>("Type");
+
+  m_type     = this->param<std::string>("Type");
+  m_isPileUp = m_type.find("Veto")==0;
+  m_isR      = m_type.find("R")==0;
+  m_isPhi    = m_type.find("Phi")==0;
 
   if ( m_type == "R" || m_type == "Phi" || m_type == "Veto" ) {
     m_isLeft = this->param<int>("Left");

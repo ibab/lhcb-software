@@ -1,4 +1,4 @@
-// $Id: DeVeloPhiType.h,v 1.7 2004-10-26 14:58:31 dhcroft Exp $
+// $Id: DeVeloPhiType.h,v 1.8 2005-06-02 14:11:41 jpalac Exp $
 #ifndef VELODET_DEVELOPHITYPE_H 
 #define VELODET_DEVELOPHITYPE_H 1
 
@@ -43,23 +43,18 @@ public:
   StatusCode pointToChannel(const HepPoint3D& point,
                             VeloChannelID& channel,
                             double& localOffset,
-                            double& pitch);
+                            double& pitch) const;
   
   /// Get the nth nearest neighbour for a given channel
   StatusCode neighbour(const VeloChannelID& start, 
                        const int& nOffset, 
-                       VeloChannelID& channel);
+                       VeloChannelID& channel) const;
 
-  /// Returns the number of channels between two channels
-  StatusCode channelDistance(const VeloChannelID& start,
-                             const VeloChannelID& end,
-                             int& nOffset);
-  
   /// Residual of 3-d point to a VeloChannelID
   StatusCode residual(const HepPoint3D& point, 
                       const VeloChannelID& channel,
                       double &residual,
-                      double &chi2);
+                      double &chi2) const;
 
 
 
@@ -69,40 +64,35 @@ public:
                       const double localOffset,
                       const double width,
                       double &residual,
-                      double &chi2);
+                      double &chi2) const;
 
   /// The capacitance of the strip 
-  double stripCapacitance(unsigned int strip);
+  double stripCapacitance(unsigned int strip) const;
   
   /// The number of zones in the detector
-  inline unsigned int numberOfZones(){return m_numberOfZones;}
+  inline unsigned int numberOfZones() const {return m_numberOfZones;}
   
   /// The zones number for a given strip
-  inline unsigned int zoneOfStrip(const unsigned int strip){
-    unsigned int zone=0;
-    if(m_nbInner > strip) {
-      zone = 0;
-    } else {
-      zone = 1;
-    }
-    return zone;
+  inline unsigned int zoneOfStrip(const unsigned int strip) const {
+    return (m_nbInner > strip) ? 0 : 1;
   }
   
   /// The number of strips in a zone
-  inline unsigned int stripsInZone(const unsigned int zone){
+  inline unsigned int stripsInZone(const unsigned int zone) const {
+
     if(0 == zone) {
       return m_nbInner;
     } else if(1 == zone){
-      return m_numberOfStrips-m_nbInner;
+      return this->numberOfStrips()-m_nbInner;
     }
     return 0;
   }
   
   /// The minimum radius for a given zone of the sensor
-  double rMin(const unsigned int zone);
+  double rMin(const unsigned int zone) const;
   
   /// The maximum radius for a given zone of the sensor
-  double rMax(const unsigned int zone);
+  double rMax(const unsigned int zone) const;
 
   /// The minimum phi for a given zone of the sensor
   //  double phiMin(const unsigned int /*zone*/) {return 0.;}
@@ -111,14 +101,14 @@ public:
   //  double phiMax(const unsigned int /*zone*/) {return 0.;}
 
   /// Determines if 3-d point is inside sensor
-  StatusCode isInside(const HepPoint3D& point);
+  StatusCode isInside(const HepPoint3D& point) const;
 
   /// Determine if local point is in corner cut-offs
-  bool isCutOff(double x, double y);
+  bool isCutOff(double x, double y) const;
 
   /// The phi position of a strip at a given radius in the local frame
   inline double phiOfStrip(unsigned int strip, double fraction, 
-                           const double radius){
+                           const double radius) const {
     double effectiveStrip=fraction+static_cast<double>(strip);
     if (m_nbInner > strip) {
       return (effectiveStrip*m_innerPitch) + phiOffset(radius);
@@ -132,7 +122,7 @@ public:
   inline double trgPhiOfStrip(unsigned int strip, double fraction, 
                            const double radius){
     double phi=phiOfStrip(strip,fraction,radius);
-    if(m_isDownstream) phi = -phi;
+    if(this->isDownstream()) phi = -phi;
     return phi;
   }
   
@@ -163,7 +153,7 @@ public:
     
 
   /// Returns the offset in phi for a given radius
-  inline double phiOffset(double radius){
+  inline double phiOffset(double radius) const {
     if(m_middleRadius > radius){
       return m_innerTilt - asin(m_innerDistToOrigin / radius);
     } else {
@@ -172,33 +162,19 @@ public:
   }
 
   /// The phi pitch in mm at a given radius
-  inline double phiPitch(const double radius){
-    if (m_middleRadius > radius) {
-      return m_innerPitch * radius;
-    } else {
-      return m_outerPitch * radius;
-    }
+  inline double phiPitch(const double radius) const {
+    return (m_middleRadius > radius) ? m_innerPitch * radius :
+      m_outerPitch * radius;
   }
 
   /// The phi pitch in radians for a given strip
-  inline double phiPitch(unsigned int strip){
-    if (m_nbInner > strip) {
-      return m_innerPitch;
-    } else {
-      return m_outerPitch;
-    }
+  inline double phiPitch(unsigned int strip) const {
+    return  (m_nbInner > strip) ? m_innerPitch : m_outerPitch;
   }
 
   /// Return the distance to the origin for sensor
-  inline double distToOrigin(unsigned int strip){
-    double distance=0;
-    if(m_nbInner > strip){
-      distance = m_innerDistToOrigin;
-    } else {
-      distance = m_outerDistToOrigin;
-    }
-    //    if(!m_isDownstream) return -distance;
-    return distance;
+  inline double distToOrigin(unsigned int strip) const {
+    return (m_nbInner > strip) ? m_innerDistToOrigin : m_outerDistToOrigin;
   }
 
   /// Return the strip geometry for panoramix
