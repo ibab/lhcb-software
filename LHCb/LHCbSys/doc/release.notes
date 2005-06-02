@@ -21,8 +21,9 @@
  - In TrEvent v14r3:
    . Remove Track and State, now in TrackEvent
 
- - In DAQEvent v5r1p1:
+ - In DAQEvent v5r2:
    . Add HLT to RawBuffer BankType enum. For RTTC
+   . Clear registry entry of /Event/Header after adding it to RawBuffer
 
  - In TrackEvent v1r1:
    . Fix bug in Track::addToStates and addToMeasurements, was adding twice
