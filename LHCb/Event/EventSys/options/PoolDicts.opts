@@ -1,4 +1,4 @@
-// $Id: PoolDicts.opts,v 1.8 2005-05-11 07:58:24 cattanem Exp $
+// $Id: PoolDicts.opts,v 1.9 2005-06-02 13:30:19 cattanem Exp $
 // Job option to tell POOL to load all Event Model dictionaries
 
 PoolDbCacheSvc.Dlls += {"LHCbKernelDict", "MuonKernelDict" };
@@ -17,5 +17,5 @@ PoolDbCacheSvc.Dlls += {"PhysEventDict" };
 PoolDbCacheSvc.Dlls += {"EventAssocDict" };
 PoolDbCacheSvc.Dlls += {"LinkerEventDict" };
 PoolDbCacheSvc.Dlls += {"TrgEventDict" };
-PoolDbCacheSvc.Dlls += {"RdstDict" };
+PoolDbCacheSvc.Dlls += {"PackedEventDict" };
 PoolDbCacheSvc.Dlls += {"SealSTLDict", "SealCLHEPDict" };
