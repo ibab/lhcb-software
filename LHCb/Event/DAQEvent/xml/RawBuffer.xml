@@ -16,7 +16,7 @@
        <enum
         desc="Define the bank types for Raw buffer"
         name="BankType"
-        value="L0Calo=0, L0DU, PrsE, EcalE, HcalE, PrsTrig, EcalTrig, HcalTrig, Velo, Rich, TT, IT, OT, Muon, L0PU, DAQ, ODIN"
+        value="L0Calo=0, L0DU, PrsE, EcalE, HcalE, PrsTrig, EcalTrig, HcalTrig, Velo, Rich, TT, IT, OT, Muon, L0PU, DAQ, ODIN, HLT"
         access="PUBLIC"
        />
        <enum
