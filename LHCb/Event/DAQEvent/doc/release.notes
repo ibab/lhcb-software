@@ -3,6 +3,7 @@ Author: Jose' Helder Lopes
 Purpose: Define the L1Buffer,  L1Event, L1Bank, RawBuffer, RawEvent and 
          RawBank classes.
 
+!================ DAQEvent v5r1p1 2005-06-02 ==========================
 ! 2005-06-02 - P. Koppenburg
  - Added HLT to RawBuffer BankType enum. For RTTC.
 

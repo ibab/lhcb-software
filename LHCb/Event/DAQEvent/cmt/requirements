@@ -3,7 +3,7 @@
 # Maintainer : Helder Lopes
 #============================================================================
 package           DAQEvent
-version           v5r2
+version           v5r1p1
 
 # Structure, i.e. directories to process. 
 #============================================================================
