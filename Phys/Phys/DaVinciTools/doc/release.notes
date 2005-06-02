@@ -1,7 +1,13 @@
-! $Id: release.notes,v 1.164 2005-05-30 09:37:20 pkoppenb Exp $
+! $Id: release.notes,v 1.165 2005-06-02 16:39:46 pkoppenb Exp $
 ! Package     : DaVinciTools
 ! Responsible : P. Koppenburg
 
+! 2005-06-02 - P. Koppenburg based on an idea by Miriam Calvi
+  - src/CheckVeloOverlap.{cpp,h}
+    . New ICheckOverlap tool that checks for common velo clusters.
+      By default it returns true when theer are shared clusters. This can be
+      tuned using the MaxCommonClusters and MaxCommonFraction properties.
+         
 !========================== DaVinciTools v11r8p1 2005-05-30 ===================
 ! 2005-05-24 - P. Koppenburg
   - options/PreLoadParticles.opts

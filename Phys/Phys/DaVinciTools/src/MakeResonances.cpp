@@ -1,4 +1,4 @@
-// $Id: MakeResonances.cpp,v 1.5 2005-05-12 11:54:04 pkoppenb Exp $
+// $Id: MakeResonances.cpp,v 1.6 2005-06-02 16:39:47 pkoppenb Exp $
 // Include files 
 
 #include <algorithm>
@@ -84,11 +84,12 @@ StatusCode MakeResonances::initialize() {
     return StatusCode::FAILURE ;    
   }
   if ( m_killOverlap ){
-    m_checkOverlap = tool<ICheckOverlap>("CheckOverlap") ;
+    m_checkOverlap = checkOverlap() ;
     if ( !m_checkOverlap ){
-      err() << "Cannot retrieve " << m_motherFilterName << endmsg ;
+      err() << "Cannot retrieve CheckOverlap Tool" << endmsg ;
       return StatusCode::FAILURE ;    
     }
+    verbose() << "Got overlap tool" << endmsg ;
   }
   // histogramming 
   //  GaudiHistoAlg::setProduceHistos( m_makePlots );
