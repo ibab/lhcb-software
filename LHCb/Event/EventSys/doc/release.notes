@@ -5,7 +5,7 @@ package manager: Marco Cattaneo
 ! 2005-06-02 - Marco Cattaneo
  - Add PackedEvent v1r0
  - Remove Rdst
- - Use TrEvent v14r3, DAQEvent v5r1p1, TrackEvent v1r1
+ - Use TrEvent v14r3, DAQEvent v5r2, TrackEvent v1r1
 
 !======================== EventSys v20r5 2005-05-24 ========================
 ! 2005-05-24 - Marco Cattaneo
