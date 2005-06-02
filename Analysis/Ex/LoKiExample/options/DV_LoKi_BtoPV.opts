@@ -1,0 +1,90 @@
+// $Id: DV_LoKi_BtoPV.opts,v 1.1 2005-06-02 10:02:55 ibelyaev Exp $
+// ============================================================================
+// CVS tag $Name: not supported by cvs2svn $
+// ============================================================================
+// $Log: not supported by cvs2svn $
+// ============================================================================
+// include files 
+// ============================================================================
+#pragma   print off 
+// ============================================================================
+#include "$DAVINCIROOT/options/DaVinciCommon.opts"
+#include "$DAVINCIROOT/options/DaVinciReco.opts"
+#include "$STDOPTS/RootHist.opts"
+#include "$STDOPTS/Hbook.opts"
+// ============================================================================
+#pragma   print on 
+// ============================================================================
+
+// ============================================================================
+/** @file 
+ *  Options file to drive the simple LoKi example LoKi_Bs2PhiPhi algorithm
+ *  @see LoKi_Bs2PhiPhi
+ *  @author Vanya BELYAEV  Ivan.Belyaev@itep.ru
+ *  @date 2003-05-12
+ */
+// ============================================================================
+
+// load nesessary libraries 
+ApplicationMgr.DLLs   += { "LoKiExample" , "LoKi" } ;
+
+// top level algorithms 
+ApplicationMgr.TopAlg +=  { "GaudiSequencer/B2PV" } ;
+B2PV.Members = 
+  {
+    "LoKiPreLoad/Charged"   ,  // create and put into TES charged particles
+    "LoKi_BtoPV/BtoPV"      , // execute the algorithm itsels  
+    "StoreExplorerAlg/Explorer" 
+  };
+B2PV.measureTime = true ;
+Explorer.PrintEvt = 5 ;
+
+// configuration of algorithm 'Charged' 
+Charged.PhysDesktop.ParticleMakerType =  "CombinedParticleMaker";
+Charged.PhysDesktop.CombinedParticleMaker.ExclusiveSelection = false ;
+Charged.PhysDesktop.CombinedParticleMaker.Particles = 
+  { "kaon" };
+Charged.PhysDesktop.CombinedParticleMaker.KaonSelection = 
+  { "det='RICH' k-pi='-10.0' k-p='-10.0'" } ;
+
+// configuration of algorithm 'PhiPhi' 
+BtoPV.PhysDesktop.InputLocations       = { "/Event/Phys/Charged" };
+BtoPV.NTupleLUN                        = "BTOPV"  ; // logical file unit 
+BtoPV.DecayDescriptor                  =  " Bs -> phi(1020) phi(1020) " ;
+BtoPV.OutputLocation                   = "/Event/Phys/BtoPV"        ;
+BtoPV.MCppAssociators                  = 
+  { "AssociatorWeighted<ProtoParticle,MCParticle,double>/ChargedPP2MCAsct" } ;
+
+// N-Tuples
+ApplicationMgr.ExtSvc += { "NTupleSvc" } ;
+NTupleSvc.Output      += 
+  {"BTOPV DATAFILE='BtoPV.hbook' TYP='HBOOK' OPT='NEW'" } ;
+
+
+// control for printout 
+MessageSvc.OutputLevel   =    3 ;  // "WARNING" printout level
+EventSelector.PrintFreq  =   50 ;  // make a print only each 10th event 
+// suppress some messages 
+ChargedProtoPAlg.OutputLevel     = 4 ; 
+PrimVtxFinder.OutputLevel        = 4 ; 
+RootEvtCnvSvc.OutputLevel        = 4 ;
+
+ChronoStatSvc.NumberOfSkippedEventsForMemStat = -1 ;
+
+#pragma   print off 
+// input data set: DC04 Bs -> phi phi 
+#include "$LOKIEXAMPLEOPTS/Bs_phiphi_DC04.opts"
+#pragma   print on 
+
+PoolDbCacheSvc.Catalog = 
+  { 
+    "xmlcatalog_file:$LOKIEXAMPLEOPTS/LoKiExampleMutableCatalog.xml"  ,
+    "xmlcatalog_file:$LOKIEXAMPLEOPTS/Bs_phiphi_DC04.xml"          
+  };
+
+// The number of events to process 
+ApplicationMgr.EvtMax  = 100 ;
+
+// ============================================================================
+// The END 
+// ============================================================================
