@@ -1,0 +1,44 @@
+#============================================================================
+# Created    : 2005-02-07
+# Maintainer : Olivier Callot
+#
+# Documentation on the requirement file can be found at
+# http://cern.ch/lhcb-comp/Support/html/new_structure.pdf
+#============================================================================
+package           PackedEvent
+version           v1r0
+
+#============================================================================
+# This template is an example for a standard Algorithm package
+#
+# Structure, i.e. directories to process. 
+#============================================================================
+branches          cmt doc src Event xml
+include_dirs      $(PACKEDEVENTROOT)
+#============================================================================
+# Used packages. Specify the version, * at the end specifies 'any revision'
+#    Put as many lines as needed, with all packages, without the '#'
+#============================================================================
+use	GaudiAlg	v*
+use	TrEvent		v*	Event
+use     Event           v*      Event
+use     LHCbKernel      v*      Kernel
+#============================================================================
+# Component library building rule
+#============================================================================
+library          PackedEvent    ../src/*.cpp 
+#============================================================================
+# define component library link options
+#============================================================================
+apply_pattern    component_library library=PackedEvent
+
+#============================================================================
+# Produce lcg dictionary for stl containers used in PackedEvent
+#============================================================================
+document lcg_dictionary_generator PackedEventGen $(PACKEDEVENTROOT)/Event/*.h dictionary=PackedEvent
+macro_append PackedEvent_lcgdict_options '--select=$(PACKEDEVENTROOT)/xml/lcg_selection.xml --split $(includes)'
+library PackedEventDict    ../$(tag)/dict/PackedEvent/*.cpp
+apply_pattern component_library library=PackedEventDict
+
+#private
+#use GaudiObjDesc v*

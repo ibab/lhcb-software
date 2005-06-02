@@ -1,0 +1,30 @@
+<lcgdict>
+<!-- Produce dictionary for the packed classes
+  The magic number is just the class ID in Hex, followed by the given pattern of zeroes
+  -->
+
+  <class name="PackedTrStateL"/>
+  <class name="std::vector<PackedTrStateL>"/>
+  <class name="PackedTrStateLs"  id="000005DC-0000-0000-0000-000000000000"/>
+
+  <class name="PackedTrStateP"/>
+  <class name="std::vector<PackedTrStateP>"/>
+  <class name="PackedTrStatePs"  id="000005DD-0000-0000-0000-000000000000"/>
+
+  <class name="PackedTrack"/>
+  <class name="std::vector<PackedTrack>"/>
+  <class name="PackedTracks" id="000005DE-0000-0000-0000-000000000000"/>
+
+  <class name="PackedMCParticle"/>
+  <class name="std::vector<PackedMCParticle>"/>
+  <class name="PackedMCParticles" id="000005E6-0000-0000-0000-000000000000"/>
+
+  <class name="PackedMCVertex"/>
+  <class name="std::vector<PackedMCVertex>"/>
+  <class name="PackedMCVertices" id="000005E7-0000-0000-0000-000000000000"/>
+
+  <class name="PackedCollision"/>
+  <class name="std::vector<PackedCollision>"/>
+  <class name="PackedCollisions" id="000005E8-0000-0000-0000-000000000000"/>
+
+</lcgdict>

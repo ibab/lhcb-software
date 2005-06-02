@@ -1,0 +1,47 @@
+!-----------------------------------------------------------------------------
+! Package     : Event/PackedEvent
+! Responsible : Olivier Callot
+! Purpose     : Pack, Unpack and Compare containers for optimized persistency
+!-----------------------------------------------------------------------------
+
+!======================== PackedEvent v1r0 2005-06-02 ========================
+! 2005-06-02 - Marco Cattaneo
+ - Package renamed PackedEvent
+ - StandardPacker.h moved to LHCbKernel
+ - Changed default locations of packed containers to Event/pSim, Event/pDst
+
+!=========================== Rdst v1r1 2005-05-23 ==========================
+! 2005-05-23 - Marco Cattaneo
+ - Replace Rdst.opts with UnpackDigi.opts and UnpackDst.opts. Use these options
+   to unpack containers packed by Boole and Brunel via DataOnDemandSvc
+ - Clear the registry address of containers that have been packed. Ensures that
+   programs reading a packed file do not try to load the unpacked containers if
+   they exist on an ancestor file.
+
+! 2005-05-20 - Olivier Callot
+ - Replace the (*it).linkID() by (*it)->key() when storing references, to 
+   avoid problems when the SmartRef is created in the job, i.e. linkID() is 
+   not yet defined.
+
+!=========================== Rdst v1r0 2005-05-10 ==========================
+! 2005-05-10 - Marco Cattaneo
+ - Add default TES locations for Rdst classes
+ - Add options/Rdst.opts for Rdst encoding and decoding via DataOnDemandSvc 
+
+! 2005-03-18 - Olivier Callot
+ - First attempt. The package has a class ( in Event ) for each container
+   one want to compress, a struc describing the data and a DataObject which
+   contains a vector of these struct.
+  
+   The xml directory contains the lcg_dict generation
+
+   The Rdst directory contains a small tool to pack various double to int and
+   the reverse, and also to pack-unpack references. This part could probably
+   be improved
+
+   The src directory has 3 algorithms per class, to Pack, Unpack and Compare
+   each of the containers. The default for unpacking is in a different container
+   to allow comparison. That should not be the final version !
+
+   Re-grouping the 3 track classes, and the 3 MC information classes in a single
+   algorithm would make less (automatically generated) lines of code.
