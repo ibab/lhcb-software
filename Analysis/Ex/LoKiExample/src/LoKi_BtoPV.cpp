@@ -1,6 +1,6 @@
-// $Id: LoKi_BtoPV.cpp,v 1.2 2005-06-02 10:06:06 ibelyaev Exp $
+// $Id: LoKi_BtoPV.cpp,v 1.3 2005-06-02 10:12:54 ibelyaev Exp $
 // =============================================================================
-// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.2 $
+// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.3 $
 // =============================================================================
 // $Log: not supported by cvs2svn $ 
 // =============================================================================
@@ -104,8 +104,10 @@ LOKI_ALGORITHM( LoKi_BtoPV )
       const Vertex* pv     = iPV->to() ;
       const double  weight = iPV->weight() ;
       if ( 0 == pv ) { continue ; }
-      always() 
-        << " \t\t Primary vertex at " << pv->position()/mm << "[mm]"
+      size_t index = 0 ;
+      always()
+        << "# " << (++index)
+        << " \t Primary vertex at " << pv->position()/mm << "[mm]"
         << " with weight(chi2IP)   " << weight 
         << endreq ;
     }     
