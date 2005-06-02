@@ -3,7 +3,11 @@ Author: Jose' Helder Lopes
 Purpose: Define the L1Buffer,  L1Event, L1Bank, RawBuffer, RawEvent and 
          RawBank classes.
 
-!================ DAQEvent v5r1p1 2005-06-02 ==========================
+!================ DAQEvent v5r2 2005-06-02 ============================
+! 2005-06-02 - Marco Cattaneo
+ - In CreateRawBuffer.cpp, clear the registry entry of Event/Header after it
+   has been added to RawBuffer, to prevent reloading it when decoding RawBuffer
+
 ! 2005-06-02 - P. Koppenburg
  - Added HLT to RawBuffer BankType enum. For RTTC.
 

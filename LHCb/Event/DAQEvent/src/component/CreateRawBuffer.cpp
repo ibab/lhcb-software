@@ -1,4 +1,4 @@
-// $Id: CreateRawBuffer.cpp,v 1.4 2005-03-08 13:16:48 cattanem Exp $
+// $Id: CreateRawBuffer.cpp,v 1.5 2005-06-02 13:55:39 cattanem Exp $
 // Include files 
 
 // from Gaudi
@@ -56,6 +56,10 @@ StatusCode CreateRawBuffer::execute() {
 
   // Add this block to RawBuffer:
   rawBuffer->addBank( 1, RawBuffer::DAQ, head, 4, 0 );
+
+  // Clear the registry address of the event header, to prevent reloading if not
+  // written to output file
+  evt->registry()->setAddress( 0 );
 
   return StatusCode::SUCCESS;
 };
