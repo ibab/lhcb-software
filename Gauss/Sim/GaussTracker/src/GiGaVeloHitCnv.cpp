@@ -106,6 +106,7 @@ StatusCode GiGaVeloHitCnv::createObj
   DataObject*&     object  )
 {
   ///
+  //  std::cout << name() << "in createObj" << std::endl;
   object = 0 ;
   if( 0 ==  address  ) 
     { return Error("IOpaqueAddress* points to NULL!" ) ; }
@@ -146,6 +147,8 @@ StatusCode GiGaVeloHitCnv::updateObj
   DataObject*      object  ) 
 {
 
+  // TEMPORARY TO SEE WHAT IS CALLED WHEN
+  //std::cout << "GiGaVeloHitCnv in updateObj" << std::endl;
   ///
   if( 0 ==   address   ) { return Error(" IOpaqueAddress* points to NULL");}
   if( 0 ==   object    ) { return Error(" DataObject* points to NULL"    );}

@@ -102,6 +102,7 @@ bool GiGaSensDetMuon::ProcessHits( G4Step* step ,
           std::string pvName = PV->GetName();
           int depth = TT->GetHistoryDepth();
           // Check if the depth is allowed or not
+
           if( depth <= 3 ) {
             Error( "Non correct depth in sensitive volume ");
             warning() << pvName 
@@ -116,11 +117,8 @@ bool GiGaSensDetMuon::ProcessHits( G4Step* step ,
                       << " ParentID = " << track->GetParentID()
                       << endmsg;
           } else {
-            TT -> MoveUpHistory(1);
-            G4int CurrentGapNumber = TT -> GetVolume() -> GetCopyNo() ;
-
-            TT -> MoveUpHistory(1);
-            G4int CurrentChamNumber= TT -> GetVolume() -> GetCopyNo() ;
+            G4int CurrentGapNumber = TT->GetVolume(1)->GetCopyNo();
+            G4int CurrentChamNumber = TT->GetVolume(2)->GetCopyNo();
 
             G4int GapNumber=CurrentGapNumber - 999;
 
@@ -156,46 +154,8 @@ bool GiGaSensDetMuon::ProcessHits( G4Step* step ,
                   << endmsg;
             }
             else {
-            
-          
-              //MsgStream log( msgSvc() , name() );
-            
-              //log << MSG::INFO << "************************" << endreq;
-              //log << MSG::INFO << "Cham =" << CurrentChamNumber << " , " <<
-              //  ChamNumber << "   Gap =" << CurrentGapNumber << " , " <<
-              //  GapNumber << endreq;
-          
-            
-              //           G4TouchableHistory* postTT =  
-              //   (G4TouchableHistory*)(step->GetPostStepPoint()
-              //          ->GetTouchable());
-              //           G4VPhysicalVolume*  postPV =   postTT->GetVolume();
-              //      G4LogicalVolume*    postLV =   postPV->GetLogicalVolume();
-          
-              // std::string pvname=PV->GetName();
-              // G4TouchableHistory* MotherTT = TT;
-              // MotherTT ->MoveUpHistory(1);
-
-              //           std::string stname=MotherTT -> GetVolume()->GetName();
-          
-              // log << MSG::INFO << "Mother: " << stname <<  endreq;      
-          
-              // log << MSG::INFO 
-              //     << " PrePos=("  << prepos.x() << "," 
-              //     << prepos.y() << "," << prepos.z() 
-              //     << ")" 
-              //     << " PrePV="    << pvname  
-              //     << " PreLV="    << LV->GetName() << endreq;
-          
-              // log << MSG::INFO 
-              //     << " PostPos=("
-              //     << postpos.x() << "," << postpos.y() << "," 
-              // << postpos.z() << ")" 
-              //     << " PostPV="    << postPV->GetName()  
-              //    << " PostLV="    << postLV->GetName() << endreq;
-              // end of temp
   
-              ///
+              // New hit in G4 collection
               MuonHit* newHit = new MuonHit();
               newHit->SetEdep( edep );
               newHit->SetEntryPos( prepos );
