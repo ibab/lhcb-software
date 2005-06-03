@@ -3,9 +3,20 @@ Package: Digi/Boole
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb Digitization program
 
+</PRE><H1><A NAME=v9r2>2005-06-02 Boole v9r2</A></H1><PRE>
+This version uses Gaudi v16r4, LHCb v18r6, Lbcom v2r2 (also CLHEP 1.9, ROOT 4.0) 
+Requires input from Gauss v19r3 or greater. Output needs Brunel v27r2 or greater
+
+- Repackaging
+  . Links sequence in Relations phase split into Velo, IT, OT, Links
+
+- Persistency changes:
+  . Packed containers now saved to /Event/pSim (PackedEvent v1r0)
+  . Remove registry entry of Event/Header as it's not saved (DAQEvent v5r2)
+
 </PRE><H1><A NAME=v9r1>2005-05-30 Boole v9r1</A></H1><PRE>
 This version uses Gaudi v16r4, LHCb v18r5, Lbcom v2r1 (also CLHEP 1.9, ROOT 4.0) 
-Requires input from Gauss v19r3 or greater. Output needs Brunel v27r1 or greater
+Requires input from Gauss v19r3 or greater. Output needs Brunel v27r1
 
 - Functionality changes
   . Added Output phase, with Pack sequence, to pack Collisions, MCParticles,

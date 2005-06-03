@@ -40,7 +40,7 @@ ApplicationMgr.TopAlg += { "ProcessPhase/Init",
 Init.DetectorList += { "Boole", "Data" };
 Digi.DetectorList += { "VELO" , "IT", "OT" , "RICH" , "CALO", "MUON" };
 Trigger.DetectorList = { "L0" };
-Relations.DetectorList = { "OT", "L0", "Links" };
+Relations.DetectorList = { "Velo", "IT", "OT", "L0", "Links" };
 
 //--------------------------------------------------------------
 // Geometry and magnetic field
@@ -154,15 +154,14 @@ DataOnDemandSvc.Nodes += { "DATA='/Event/Rec'           TYPE='DataObject'",
 #include "$VELOASSOCIATORSROOT/options/VeloAssociators.opts"
 #include "$CALOASSOCIATORSROOT/options/CaloAssociators.opts"
 
-RelationsOTSeq.Members += { "OTTimeCreator" };
+RelationsVeloSeq.Members += { "VeloTruthFromCluster" };
+ApplicationMgr.DLLs += { "MCTools" };
+RelationsITSeq.Members += { "ITTruthFromDigit" };
+RelationsOTSeq.Members += { "OTTimeCreator", "OTTruthFromOTTime" };
 
 RelationsL0Seq.Members += { "L0CaloToMCParticleAsct" };
 RelationsL0Seq.Members += { "L0CaloToMCParticleAsct/L0CaloFullTruth"};
 L0CaloFullTruth.InputContainer = "Trig/L0/FullCalo";
 
 ApplicationMgr.DLLs += { "AsctToLinker" };
-ApplicationMgr.DLLs += { "MCTools" };
-RelationsLinksSeq.Members += { "VeloTruthFromCluster",
-                               "ITTruthFromDigit",
-                               "OTTruthFromOTTime",
-                               "BuildMCTrackInfo" };
+RelationsLinksSeq.Members += { "BuildMCTrackInfo" };

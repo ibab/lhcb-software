@@ -3,28 +3,29 @@ Package: Digi/Boole
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb Digitization program
 
+</PRE><H1><A NAME=v9r2>2005-06-02 Boole v9r2</A></H1><PRE>
+ - Adapt requirements to Lbcom v2r2, LHCb v18r6, Gaudi v16r4
+ - Save Event/pSim#2 instead of Event/Rdst#2 in DigiContent.opts
+ - Split RelationsLinks sequence into constituents Velo,IT,OT,Links
+
 </PRE><H1><A NAME=v9r1>2005-05-30 Boole v9r1</A></H1><PRE>
-! 2005-05-30 - Marco Cattaneo
  - Adapt requirements to Lbcom v2r1, LHCb v18r5, Gaudi v16r4, XmlDDDB v24r2
  - Remove saving of empty directory nodes from DigiContent.opts
  - Add Output phase, with Pack sequence. Produces packed MCParticles, MCVertices,
    Collisions, saved on .digi instead of unpacked versions
 
 </PRE><H1><A NAME=v9r0>2005-05-10 Boole v9r0</A></H1><PRE>
-! 2005-05-10 - Marco Cattaneo
 - Adapt requirements to Lbcom v2r0, LHCb v18r4, Gaudi v16r3
 - Remove MCCaloDigits from DigiContent, add Link/Raw/Ecal/Digits instead
 - Modify RawEvent handling in Boole.opts
 
 </PRE><H1><A NAME=v8r4>2005-05-03 Boole v8r4</A></H1><PRE>
 Merged from branch v8r3b
-! 2005-05-03 - Marco Cattaneo
  - Fix RawWriter.opts to write also directory nodes needed for reconstruction
  - Fix Copy.opts to copy also required directory nodes
  - Add CopyRaw.opts to merge files produced by RawWriter
 
 </PRE><H1><A NAME=v8r3>2005-04-19 Boole v8r3</A></H1><PRE>
-! 2005-04-19 - Marco Cattaneo
 - Adapt requirements to Lbcom v1r3, LHCb v18r3, Gaudi v16r3
 - Adapt Boole.supp to Boole v8r3 and valgrind 2.2.0
 - Update XmlDDDB version to v24r1
