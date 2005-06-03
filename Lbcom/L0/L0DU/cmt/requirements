@@ -1,5 +1,5 @@
 package		L0DU
-version 	v6r9
+version 	v6r9p1
 
 # ================ structure =============================================
 branches	src cmt doc options
@@ -9,7 +9,7 @@ include_path none
 set L0DUOPTS	$(L0DUROOT)/options
 
 # ================ used packages =========================================
-use L0Event     v14r*	Event
+use L0Event     v*	Event
 use DAQEvent    v*      Event
 # ================ component library =====================================
 library		L0DU	../src/*.cpp

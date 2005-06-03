@@ -1,0 +1,20 @@
+//*************************************************************************
+//   Options to re-run the Level 0 trigger decision in DaVinci or Panoramix
+//=========================================================================
+// Reimplemented by O.Callot for DC04
+//=========================================================================
+
+//=========================================================================
+// re-run L0Muon
+ApplicationMgr.DLLs  += { "L0MuonTrigger", "MuonTools","MuonDet" };
+ApplicationMgr.TopAlg  += { "L0mTriggerAlgorithm/L0MuonTrigger"};
+#include "$L0MUONTRIGGERROOT/options/Boole.opts"
+L0MuonTrigger.InputFromMuonCoords = true;
+//=========================================================================
+// Make L0 calo candidates
+ApplicationMgr.DLLs    += { "L0Calo" };
+ApplicationMgr.TopAlg  += { "L0CaloCandidatesFromRaw"};
+//=========================================================================
+// run L0 decision unit
+ApplicationMgr.DLLs    += { "L0DU" };
+ApplicationMgr.TopAlg  += { "DecisionUnit"};
