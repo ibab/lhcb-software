@@ -5,11 +5,12 @@
 ! Purpose     : LHCb OO kernel packages
 !-----------------------------------------------------------------------------
 
-</PRE><H1><A NAME=v18r6>2005-06-02 LHCbSys v18r6</A></H1><PRE>
+</PRE><H1><A NAME=v18r6>2005-06-03 LHCbSys v18r6</A></H1><PRE>
  - Packages added:    Event/PackedEvent v1r0 (replaces Event/Rdst)
  - Packages removed:  Event/Rdst
  - Packages modified: KernelSys v4r12, LHCbKernel v5r11,
-      EventSys v20r6, TrEvent v14r3, DAQEvent v5r1p1, TrackEvent v1r1
+      EventSys v20r6, TrEvent v14r3, DAQEvent v5r1p1, TrackEvent v1r1,
+      DetSys v7r1, DetDesc v15r1, VeloDet v9r6, DetDescCnv v2r6
 
  - In LHCbKernel v5r11:
    . Speed improvements in VeloChannelID and LHCbID constructors, for L1
@@ -28,6 +29,14 @@
  - In TrackEvent v1r1:
    . Fix bug in Track::addToStates and addToMeasurements, was adding twice
    . Minor changes to Track and State
+
+ - In DetDesc v15r1, DetDescCnv v2r6
+   . Add support for Alignment Conditions
+
+ - In VeloDet v9r6
+   . Add support for flipped R sensors
+   . Make const most methods of DeVelo and DeVeloSensor
+   . Remove most protected data members in DeVeloSensor 
 
 </PRE><H1><A NAME=v18r5>2005-05-24 LHCbSys v18r5</A></H1><PRE>
  - Packages added:    TrackInterfaces v1r0, DetCond v7r2, DetCondExample v7r2
