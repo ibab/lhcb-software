@@ -152,10 +152,6 @@ StatusCode GiGaMuonHitCnv::updateObj
   DataObject*      object  ) 
 {
 
-//   MsgStream msg ( msgSvc(), name() );
-
-//   // TEMPORARY TO SEE WHAT IS CALLED WHEN
-//   std::cout << "GiGaMuonHitCnv in updateObj" << std::endl;
   ///
   if( 0 ==   address   ) { return Error(" IOpaqueAddress* points to NULL");}
   if( 0 ==   object    ) { return Error(" DataObject* points to NULL"    );}
@@ -171,7 +167,7 @@ StatusCode GiGaMuonHitCnv::updateObj
   G4HCofThisEvent* hitscollections = 0 ; 
 
   std::string colname = *(address->par());
-
+  
   try
     {
         // get hitscollections from GiGa 
@@ -204,7 +200,7 @@ StatusCode GiGaMuonHitCnv::updateObj
              double edep=(*myCollection)[itr]->GetEdep();
              double toffl=(*myCollection)[itr]->GetTimeOfFlight();
              int chamber=(*myCollection)[itr]->ChamberID();
-             int gap=(*myCollection)[itr]->GapID();             
+             int gap=(*myCollection)[itr]->GapID();
 
              MCMuonHit* mchit =new MCMuonHit();
              mchit->setEntry(pentry);

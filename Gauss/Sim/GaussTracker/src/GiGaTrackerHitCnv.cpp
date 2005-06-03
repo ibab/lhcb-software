@@ -146,8 +146,6 @@ StatusCode GiGaTrackerHitCnv::updateObj
   DataObject*      object  ) 
 {
 
-  // TEMPORARY TO SEE WHAT IS CALLED WHEN
-  //std::cout << "GiGaTrackerHitCnv in updateObj" << std::endl;
   ///
   if( 0 ==   address   ) { return Error(" IOpaqueAddress* points to NULL");}
   if( 0 ==   object    ) { return Error(" DataObject* points to NULL"    );}
