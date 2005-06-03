@@ -1,0 +1,10 @@
+package MooreSys
+version v1r0
+
+branches doc cmt
+
+#=======================================================
+# Don't forget Moore itself
+#=======================================================
+use  Moore                 	v1r0    Hlt
+

@@ -1,0 +1,62 @@
+# $Id: requirements,v 1.1.1.1 2005-06-03 11:26:08 pkoppenb Exp $
+# Created    : 03/06/2005 by P. Koppenburg
+# Maintainer : P. Koppenburg & M. Cattaneo
+#
+
+#============================================================================
+package Moore
+version v1r0
+
+# Structure, i.e. directories to process. 
+#============================================================================
+branches doc cmt options
+
+# Used packages. 
+#============================================================================
+
+#-- External libraries now taken from LCG, version defined by GaudiEnv
+
+#-- Gaudi libraries
+use GaudiSys            v*
+# Event persistency
+use GaudiPoolDb         v*
+
+# Histogram persistency 
+use HbookCnv            v*
+use RootHistCnv         v*
+
+#-- Database
+use XmlDDDB             v*   Det
+use FieldMap            v*
+use ParamFiles          v*   -no_auto_imports
+
+#=======================================================
+# Used projects
+#=======================================================
+#-- LHCb packages
+use LHCb                v*
+
+#-- Phys packages
+use PhysCoreSys         v*   Phys
+use HltSys              v*   Hlt
+
+#-- Rec packages
+use RecSys              v*
+
+#-- Lbcom packages
+#use LbcomSys            v*
+
+#
+#===== build Moore =========================
+application Moore $(GAUDICONFROOT)/src/GaudiMain.cpp
+# ========================= set macros ============================
+
+macro Moore_linkopts    "$(application_linkopts)"
+
+apply_pattern application_path
+
+# Set the default path for Moore options.
+set MOOREOPTS ${MOOREROOT}/options
+
+# define aliases
+alias Moore "${MOOREROOT}/${BINDIR}/Moore.exe"

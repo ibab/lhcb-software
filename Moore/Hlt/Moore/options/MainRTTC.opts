@@ -1,0 +1,55 @@
+/** @file
+ *
+ *  This file is the minimal set of options to run the 
+ *  HLT in the RTTC
+ *
+ *  @author P. Koppenburg
+ *  @date 2005-06-02
+ */
+//--------------------------------------------------------------
+// Standard Gaudi configuration and additional DLLs are in
+// DaVinciCommon.
+#pragma print off
+#include "$MOOREROOT/options/MooreCommon.opts"
+#pragma print on
+//--------------------------------------------------------------
+// Run HLT
+#include "$HLTGENERICROOT/options/HltGeneric.opts"
+#include "$HLTSELECTIONSROOT/options/HLTSelections.opts"
+// Remove TrgL1Filter from Hlt
+Hlt.Members = { //"TrgL1Filter",
+                "GaudiSequencer/HLTProcessing"};
+//--------------------------------------------------------------
+// Execute Reconstruction when HLT is OK
+ApplicationMgr.TopAlg += { "GaudiSequencer/RecoSeq" };
+RecoSeq.Members += { "HltFilter/FilterHlt", "PrintHeader/PassedHlt" }; // comment to ignore HLT 
+// Reco stuff goes here
+//--------------------------------------------------------------
+
+//==============================================================
+// CHECKING
+//--------------------------------------------------------------
+// Checking of HLT selections (correlations, plots, timing, test):
+ApplicationMgr.DLLs   += { "HltSelChecker" };
+//#include "$HLTSELCHECKERROOT/options/Correlations.opts" // needs MC
+HltDecision.MakeCorrelations = false ;
+//MCCorrelations.Members = {};
+// #include "$HLTSELCHECKERROOT/options/Plots.opts"
+// #include "$HLTSELCHECKERROOT/options/MeasureTimes.opts"
+#include "$HLTSELCHECKERROOT/options/TestHltScore.opts" // Gaucho stuff
+TestHltScore.OutputLevel = 4 ;
+HltGenericDecision.OutputLevel = 4 ;
+//--------------------------------------------------------------
+//--------------------------------------------------------------
+// Set output level thresholds (2=DEBUG, 3=INFO, 4=WARNING, 5=ERROR, 6=FATAL )
+MessageSvc.OutputLevel                  = 3;
+ToolSvc.OutputLevel                     = 3;
+XmlParserSvc.OutputLevel                = 4;
+                                                                                                               
+MessageSvc.Format = "% F%40W%S%7W%R%T %0W%M";     
+EventSelector.FirstEvent = 1;   
+ApplicationMgr.EvtMax    = -1 ;
+#pragma print off
+#include "$HLTSYSROOT/options/RTTCTestData.opts"
+#pragma print on
+EventSelector.PrintFreq  = 100 ;

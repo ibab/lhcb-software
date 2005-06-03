@@ -1,0 +1,66 @@
+/** @file 
+ *  Configuration options for the execution of any DaVinci application.
+ *  Standard services and DLLs.
+ *  Algorithms for reprocessing, primary vertex and production of 
+ *  ProtoParticles.
+ *  Default properties for common use algorithms and tools.
+ * 
+ *  @author G.Corti
+ *  @date 2003-03-14
+ */
+
+//--------------------------------------------------------------
+// Main initialisation
+#include "$PHYSCORESYSROOT/options/DaVinciInit.opts"
+//--------------------------------------------------------------
+// ProtoParticles creation: charged and neutrals
+#include "$GLOBALRECOROOT/options/GlobalReco.opts"
+//--------------------------------------------------------------
+// Physics packages and dependent packages
+#include "$PHYSCORESYSROOT/options/PhysCoreSys.opts"
+//    ... for physics check on MC data
+// #include "$PHYSMCSYSROOT/options/PhysMCSys.opts"
+//--------------------------------------------------------------
+// Profiling
+AuditorSvc.Auditors  = { "NameAuditor", "ChronoAuditor", "MemoryAuditor" };
+NameAuditor.Enable   = false;
+ChronoAuditor.Enable = true ;
+MemoryAuditor.Enable = false;
+
+// General output levels (2=DEBUG, 3=INFO, 4=WARNING, 5=ERROR, 6=FATAL)
+MessageSvc.OutputLevel                  = 3;
+ToolSvc.OutputLevel                     = 3;
+XmlParserSvc.OutputLevel                = 4;
+
+// Print algorithm name with 40 characters
+MessageSvc.Format = "% F%40W%S%7W%R%T %0W%M";
+
+// Print Frequency
+EventSelector.PrintFreq  = 1;
+
+//--------------------------------------------------------------
+// Histogram persistency 
+// Root DLL for histogram persistency is needed for CALOPID. Hbook 
+// might be needed for users. 
+ApplicationMgr.DLLs += { "RootHistCnv" };
+ApplicationMgr.DLLs += { "HbookCnv" };
+// Need a histogram persistency or Calo crashes :-(
+ApplicationMgr.HistogramPersistency = "ROOT";
+
+// Default Database dependent configurations. The latest
+// compatible database is included from here.
+DetectorDataSvc.DetDbLocation = "$XMLDDDBROOT/DDDB/lhcb-200412.xml" ;
+
+//=================================================================
+// Start Hlt sequence
+//
+ApplicationMgr.TopAlg += { "GaudiSequencer/HltMainSeq" } ;
+HltMainSeq.IgnoreFilterPassed = true ; // because of HltElectrons
+HltMainSeq.MeasureTime = true ;
+// To avoid loading Sim file to get /Event/Header, explicitly make it
+// from the raw buffer. Needs to be done *before* LbAppInit
+HltMainSeq.Members += { "CreateRawEvent"
+                       ,  "EventHeaderFromRaw" 
+			};
+//HltMainSeq.Members += { "LbAppInit/Hlt" };
+//Hlt.OutputLevel = 4 ;

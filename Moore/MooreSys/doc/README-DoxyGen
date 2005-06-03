@@ -1,0 +1,8 @@
+To make the documentation:
+
+(replace the versions by the appropriate)
+source ../cmt/setup.csh
+setenv GAUDIROOT /afs/cern.ch/sw/Gaudi/releases/GAUDI/GAUDI_v16r3/
+setenv LHCBSYSROOT /afs/cern.ch/lhcb/software/releases/LHCB/LHCB_v18r4/LHCbSys/v18r4
+                                                            
+python /afs/cern.ch/lhcb/scripts/makedoc.py
