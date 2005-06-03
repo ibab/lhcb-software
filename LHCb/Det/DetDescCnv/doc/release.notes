@@ -4,6 +4,20 @@
 ! Purpose     : standard converters for the LHCb Detector Description
 !-----------------------------------------------------------------------------
 
+!================ DetDescCnv v2r6 2005-06-03 ===========================
+
+! 2005-06-03 - Juan Palacios
+ - Modified src/Lib/XmlBaseDetElemCnv.cpp to pass condition path to 
+   DetectorElement::createGeometryInfo calls.
+
+ - Added src/component/XmlAlignmentConditionCnv.cpp to 
+   generate AlignmentConditions
+
+ - Modified src/component/DetDescCnv_load.cpp to add XmlAlignmentConditionCnv
+   to components
+ 
+ - cmt/requirements version to v2r6
+
 !================ DetDescCnv v2r5 2005-05-24 ===========================
 ! 2005-05-13 - Marco Clemencic
  - Modified to use the new ParamValidDataObject interface (Det/DetDesc >= v15)

@@ -1,4 +1,4 @@
-// $Id: XmlBaseDetElemCnv.cpp,v 1.6 2005-05-13 16:06:32 marcocle Exp $
+// $Id: XmlBaseDetElemCnv.cpp,v 1.7 2005-06-03 10:02:11 jpalac Exp $
 
 // include files
 
@@ -223,16 +223,19 @@ StatusCode XmlBaseDetElemCnv::i_fillObj (xercesc::DOMElement* childElement,
     // Everything is in the attributes
     std::string logVolName =
       dom2Std (childElement->getAttribute (lvnameString));
+    std::string conditionPath = 
+      dom2Std (childElement->getAttribute (conditionString));
     std::string support =
       dom2Std (childElement->getAttribute (supportString));
     std::string replicaPath =
       dom2Std (childElement->getAttribute (rpathString));
     std::string namePath =
       dom2Std (childElement->getAttribute (npathString));
-    log << MSG::DEBUG << "GI volume : " << logVolName  << endreq;
-    log << MSG::DEBUG << "GI support: " << support     << endreq;
-    log << MSG::DEBUG << "GI rpath  : " << replicaPath << endreq;
-    log << MSG::DEBUG << "GI npath  : " << namePath    << endreq;
+    log << MSG::DEBUG << "GI volume        : " << logVolName    << endreq;
+    log << MSG::DEBUG << "GI support       : " << support       << endreq;
+    log << MSG::DEBUG << "GI rpath         : " << replicaPath   << endreq;
+    log << MSG::DEBUG << "GI npath         : " << namePath      << endreq;
+    log << MSG::DEBUG << "GI conditionPath : " << conditionPath << endreq;
 
     // creates a geometryInfo child
     if (logVolName.empty()) {
@@ -240,7 +243,8 @@ StatusCode XmlBaseDetElemCnv::i_fillObj (xercesc::DOMElement* childElement,
     } else if (support.empty()) {
       dataObj->createGeometryInfo (logVolName);
     } else if (!namePath.empty()) {
-      dataObj->createGeometryInfo (logVolName, support, namePath);
+      dataObj->createGeometryInfo (logVolName, support, 
+                                   namePath, conditionPath);
     } else if (!replicaPath.empty()) {
       ILVolume::ReplicaPath repPath;            
       // Replica path has the format "1/3/7/2"
@@ -271,7 +275,7 @@ StatusCode XmlBaseDetElemCnv::i_fillObj (xercesc::DOMElement* childElement,
         }
         rp++;
       } while (*rp != 0);
-      dataObj->createGeometryInfo (logVolName,support,repPath);
+      dataObj->createGeometryInfo (logVolName,support,repPath, conditionPath);
     } else {
       char* tagNameString = xercesc::XMLString::transcode(tagName);
       log << MSG::ERROR << "File " << address->par()[0] << ": "

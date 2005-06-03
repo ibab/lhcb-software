@@ -1,4 +1,4 @@
-// $Id: DetDescCnv_load.cpp,v 1.1.1.1 2003-04-23 13:59:46 sponce Exp $
+// $Id: DetDescCnv_load.cpp,v 1.2 2005-06-03 10:02:11 jpalac Exp $
 // Include files
 #include "GaudiKernel/ObjectFactory.h"
 #include "GaudiKernel/DeclareFactoryEntries.h"
@@ -12,6 +12,7 @@ DECLARE_FACTORY_ENTRIES(DetDescCnv) {
   // converters  
   DECLARE_CONVERTER( XmlCatalogCnv           ) ;
   DECLARE_CONVERTER( XmlConditionCnv         ) ;
+  DECLARE_CONVERTER( XmlAlignmentConditionCnv) ;
   DECLARE_CONVERTER( XmlDetectorElementCnv   ) ;
   DECLARE_CONVERTER( XmlLVolumeCnv           ) ;
   DECLARE_CONVERTER( XmlIsotopeCnv           ) ;
