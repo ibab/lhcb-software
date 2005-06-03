@@ -1,4 +1,4 @@
-// $Id: DetectorElement.h,v 1.25 2005-05-13 16:01:10 marcocle Exp $ 
+// $Id: DetectorElement.h,v 1.26 2005-06-03 10:19:44 jpalac Exp $ 
 #ifndef  DETDESC_DETECTORELEMENT_H
 #define  DETDESC_DETECTORELEMENT_H 1
 
@@ -44,7 +44,9 @@ class IUpdateManagerSvc;
  *  @author Rado Chytracek
  *  @author Ivan Belyaev
  *  @author Marco Clemencic
+ *  @author Juan Palacios
 */
+
 class DetectorElement: public ParamValidDataObject,
                        virtual public IDetectorElement {
 
@@ -265,10 +267,23 @@ public:
          (const std::string& logVol, 
           const std::string& support,
           const ILVolume::ReplicaPath & replicaPath );
+
+  const IGeometryInfo* createGeometryInfo
+         (const std::string& logVol, 
+          const std::string& support,
+          const ILVolume::ReplicaPath & replicaPath,
+          const std::string& alignmentPath);
+
   const IGeometryInfo* createGeometryInfo
          (const std::string& logVol, 
           const std::string& support,
           const std::string& namePath);
+
+  const IGeometryInfo* createGeometryInfo
+         (const std::string& logVol, 
+          const std::string& support,
+          const std::string& namePath,
+          const std::string& alignmentPath);
 
   const IAlignment* createAlignment (const std::string& condition);
 

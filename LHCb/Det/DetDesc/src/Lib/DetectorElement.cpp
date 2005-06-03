@@ -1,4 +1,4 @@
-// $Id: DetectorElement.cpp,v 1.25 2005-05-13 16:01:10 marcocle Exp $ 
+// $Id: DetectorElement.cpp,v 1.26 2005-06-03 10:19:44 jpalac Exp $ 
 #include "GaudiKernel/Kernel.h"
 #include "GaudiKernel/ISvcLocator.h"
 #include "GaudiKernel/IDataManagerSvc.h"
@@ -263,6 +263,22 @@ DetectorElement::createGeometryInfo( const std::string& LogVol   ,
                                                 NamePath );
   return geometry();
 };
+/////
+const IGeometryInfo*
+DetectorElement::createGeometryInfo( const std::string& LogVol   , 
+                                     const std::string& Support  ,
+                                     const std::string& NamePath,
+                                     const std::string& alignmentPath)
+{
+  Assert( 0 == geometry() , 
+          "Could not create REGULAR(1): Geometry already exist!" );
+  m_de_iGeometry = GeoInfo::createGeometryInfo( this     , 
+                                                LogVol   , 
+                                                Support  , 
+                                                NamePath ,
+                                                alignmentPath);
+  return geometry();
+};
 //
 const IGeometryInfo* 
 DetectorElement::createGeometryInfo( const std::string           & LogVol   , 
@@ -277,7 +293,23 @@ DetectorElement::createGeometryInfo( const std::string           & LogVol   ,
                                                 rPath   );
   return geometry();
 };
-
+//=============================================================================
+const IGeometryInfo* 
+DetectorElement::createGeometryInfo( const std::string           & LogVol   , 
+                                     const std::string           & Support  ,
+                                     const ILVolume::ReplicaPath & rPath,
+                                     const std::string& alignmentPath) 
+{
+  Assert( 0 == geometry() , 
+          "Could not create REGULAR(2): Geometry already exist!" );
+  m_de_iGeometry = GeoInfo::createGeometryInfo( this    , 
+                                                LogVol  , 
+                                                Support , 
+                                                rPath   ,
+                                                alignmentPath);
+  return geometry();
+};
+//=============================================================================
 const IAlignment*
 DetectorElement::createAlignment (const std::string& condition) {
   Assert( 0 == alignment() ,

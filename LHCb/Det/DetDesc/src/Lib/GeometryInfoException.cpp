@@ -1,15 +1,15 @@
-// $Id: GeometryInfoException.cpp,v 1.4 2003-04-25 08:52:24 sponce Exp $
+// $Id: GeometryInfoException.cpp,v 1.5 2005-06-03 10:19:44 jpalac Exp $
 /// GaudiKernel
 #include "GaudiKernel/MsgStream.h"
 /// local 
-#include "GeometryInfo.h" 
+#include "DetDesc/IGeometryInfo.h" 
 #include "GeometryInfoException.h" 
 ///
 
 
 /////////////////////////////////////////////////////////////////////////////////////////////////
 GeometryInfoException::GeometryInfoException( const std::string  & name , 
-                                              const GeometryInfo * gi   ,
+                                              const IGeometryInfo * gi   ,
                                               const StatusCode   & sc   )
   : GaudiException( name , "*GeometryInfoException*" , sc )
   , m_gie_geometryInfo  ( gi   )         
@@ -17,7 +17,7 @@ GeometryInfoException::GeometryInfoException( const std::string  & name ,
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 GeometryInfoException::GeometryInfoException( const std::string    & name , 
                                               const GaudiException & ge   , 
-                                              const GeometryInfo   * gi   ,
+                                              const IGeometryInfo   * gi   ,
                                               const StatusCode     & sc   )
   : GaudiException( name , "*GeometryInfoException*" , sc , ge )
   , m_gie_geometryInfo  ( gi   )         
@@ -63,13 +63,3 @@ MsgStream&    GeometryInfoException::printOut( MsgStream&  os     ) const
   ///
 };
 /////////////////////////////////////////////////////////////////////////////////////////////////////
-
-
-
-
-
-
-
-
-
-

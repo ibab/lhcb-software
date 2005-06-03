@@ -1,8 +1,11 @@
-// $Id: GeoInfo.cpp,v 1.2 2003-04-25 08:52:24 sponce Exp $
+// $Id: GeoInfo.cpp,v 1.3 2005-06-03 10:19:44 jpalac Exp $
 /// ===========================================================================
 /// CVS tag $Name: not supported by cvs2svn $ 
 /// ===========================================================================
 /// $Log: not supported by cvs2svn $
+/// Revision 1.2  2003/04/25 08:52:24  sponce
+/// fixes after valgrind tests, application of code conventions
+///
 /// Revision 1.1  2001/08/10 14:59:02  ibelyaev
 /// modifications in IGeometryInfo and related classes
 /// 
@@ -12,6 +15,7 @@
 /// Local 
 #include "GeoInfo.h"
 #include "GeometryInfo.h"
+#include "GeometryInfoPlus.h"
 
 // ============================================================================
 /** @file GeoInfo.cpp
@@ -32,7 +36,7 @@
 // ============================================================================
 IGeometryInfo* 
 GeoInfo::createGeometryInfo( IDetectorElement* de )
-{ return new GeometryInfo( de ); }
+{ return new GeometryInfoPlus( de ); }
 
 // ============================================================================
 /** create "orphan" geometry info object
@@ -45,7 +49,7 @@ GeoInfo::createGeometryInfo( IDetectorElement* de )
 IGeometryInfo* 
 GeoInfo::createGeometryInfo( IDetectorElement* de  ,
                              const std::string& LV )
-{ return new GeometryInfo( de , LV ); }
+{ return new GeometryInfoPlus( de , LV ); }
 
 // ============================================================================
 /** create regular geometry infor element 
@@ -54,14 +58,23 @@ GeoInfo::createGeometryInfo( IDetectorElement* de  ,
  *  @param LogVol          name of logical volume
  *  @param Support         name of support element 
  *  @param ReplicaNamePath replica path/address 
+ *  @param alignmentPath   address of alignment condition
  */
 // ============================================================================
 IGeometryInfo* 
 GeoInfo::createGeometryInfo( IDetectorElement*  de              ,
                              const std::string& LogVol          , 
                              const std::string& Support         ,
-                             const std::string& ReplicaNamePath )
-{ return new GeometryInfo( de , LogVol , Support , ReplicaNamePath ); }
+                             const std::string& ReplicaNamePath ,
+                             const std::string& alignmentPath)
+{ 
+  return new GeometryInfoPlus( de,
+                               LogVol,
+                               Support,
+                               ReplicaNamePath,
+                               alignmentPath); 
+
+}
 
 // ============================================================================
 /** create regular geometry infor element 
@@ -70,13 +83,22 @@ GeoInfo::createGeometryInfo( IDetectorElement*  de              ,
  *  @param LogVol          name of logical volume
  *  @param Support         name of support element 
  *  @param ReplicaPath     replica path 
+ *  @param alignmentPath   address of alignment condition
  */
 // ============================================================================
 IGeometryInfo* 
 GeoInfo::createGeometryInfo( IDetectorElement*  de              ,
                              const std::string& LogVol          , 
                              const std::string& Support         ,
-                             const ILVolume::ReplicaPath& ReplicaPath )
-{ return new GeometryInfo( de , LogVol , Support , ReplicaPath ); }
+                             const ILVolume::ReplicaPath& ReplicaPath,
+                             const std::string& alignmentPath)
+{ 
+  return new GeometryInfoPlus( de,
+                               LogVol,
+                               Support,
+                               ReplicaPath,
+                               alignmentPath);
+  
+}
 
 // ============================================================================

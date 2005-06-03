@@ -1,4 +1,4 @@
-// $Id: IGeometryInfo.h,v 1.10 2005-01-25 14:40:21 cattanem Exp $ 
+// $Id: IGeometryInfo.h,v 1.11 2005-06-03 10:19:44 jpalac Exp $ 
 // ===========================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ===========================================================================
@@ -93,7 +93,13 @@ public:
    *  @see matrixInv()
    *  @return the transformation matrix  from "Global" system
    */
-  virtual const HepTransform3D&  matrix   () const = 0;
+  virtual const HepTransform3D&  matrix() const = 0;
+
+  virtual const HepTransform3D&  idealMatrix() const = 0;  
+
+  virtual const HepTransform3D&  localIdealMatrix() const = 0;  
+
+  virtual const HepTransform3D&  localDeltaMatrix() const = 0;
 
   /**  transformation matrix  from Local Reference System
    *   to the Global Reference System of
@@ -438,6 +444,10 @@ public:
    *  @return pointer to the parent IGeometryInfo
    */
   virtual const IGeometryInfo* parentIGeometryInfo() const = 0 ;
+
+  //  virtual IGeometryInfo* supportIGeometryInfo() = 0 ;
+
+  virtual IGeometryInfo* const supportIGeometryInfo() const = 0 ;
 
   /** (reference to) container of children IGeometryInfo
    *  return  reference to container of children IGeometryInfo

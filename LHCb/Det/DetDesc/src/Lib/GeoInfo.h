@@ -1,8 +1,11 @@
-// $Id: GeoInfo.h,v 1.2 2003-04-25 08:52:24 sponce Exp $
+// $Id: GeoInfo.h,v 1.3 2005-06-03 10:19:44 jpalac Exp $
 /// ===========================================================================
 /// CVS tag $Name: not supported by cvs2svn $
 /// ===========================================================================
 /// $Log: not supported by cvs2svn $
+/// Revision 1.2  2003/04/25 08:52:24  sponce
+/// fixes after valgrind tests, application of code conventions
+///
 /// Revision 1.1  2001/08/10 14:59:02  ibelyaev
 /// modifications in IGeometryInfo and related classes
 /// 
@@ -46,19 +49,21 @@ namespace GeoInfo
   IGeometryInfo* 
   createGeometryInfo( IDetectorElement* de  ,
                       const std::string& LV );
-  
+
   /** create regular geometry infor element 
    *  @exception GeometryInfoException null IDetectorElement pointer   
    *  @param de              pointer to detector element 
    *  @param LogVol          name of logical volume
    *  @param Support         name of support element 
    *  @param ReplicaNamePath replica path/address 
+   *  @param alignmentPath   address of alignment condition
    */
   IGeometryInfo* 
   createGeometryInfo( IDetectorElement*  de              ,
                       const std::string& LogVol          , 
                       const std::string& Support         ,
-                      const std::string& ReplicaNamePath );
+                      const std::string& ReplicaNamePath ,
+                      const std::string& alignmentPath="");
   
   /** create regular geometry infor element 
    *  @exception GeometryInfoException null IDetectorElement pointer   
@@ -66,12 +71,16 @@ namespace GeoInfo
    *  @param LogVol          name of logical volume
    *  @param Support         name of support element 
    *  @param ReplicaPath     replica path 
+   *  @param alignmentPath   address of alignment condition
    */
   IGeometryInfo* 
   createGeometryInfo( IDetectorElement*  de              ,
                       const std::string& LogVol          , 
                       const std::string& Support         ,
-                      const ILVolume::ReplicaPath& ReplicaPath );
+                      const ILVolume::ReplicaPath& ReplicaPath,
+                      const std::string& alignmentPath="");
+
+
 
 };
 

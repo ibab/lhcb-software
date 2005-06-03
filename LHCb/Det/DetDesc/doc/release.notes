@@ -1,11 +1,39 @@
 ! =============================================================================
-! $Id: release.notes,v 1.177 2005-05-27 11:57:42 marcocle Exp $ 
+! $Id: release.notes,v 1.178 2005-06-03 10:19:44 jpalac Exp $ 
 ! =============================================================================
 ! package DetDesc
 ! package manager : Marco Clemencic, Juan Palacios
 ! =============================================================================
 
+!======================== DetDesc v15r1 2005-05-24 ========================
+
+! 2005-06-03 Juan Palacios
+
+ - Added ALignmentCondition class files:
+          DetDesc/AlignmentCondition.h
+          DetDesc/CLIDAlignmentCondition.h
+          src/Lib/AlignmentCondition.cpp
+          
+ - Added new implementation of IGeometryInfo:
+          src/Lib/GeometryInfoPlus.cp
+          src/Lib/GeometryInfoPlus.h
+
+ - Modify DetectorElement to read in condition path in createGeometryInfo
+
+ - Added misalignment matrix access methods to IGeometryInfo and propagated to
+   the GeometryInfo implementations.
+
+ - Modified GeoInfo namespace functions to point to new GeometryInfoPlus
+   implementation of IGeometryInfo
+
+ - Modified GeometryInfoException to take as arguments IGeometryInfo* and not
+   specific derived class.
+
+ - requirements file change version to v15r1
+
 !======================== DetDesc v15r0 2005-05-24 ========================
+
+
 ! 2005-05-27 - Marco Clemencic
  - Fixed compilation issue on Windows
 

@@ -1,11 +1,11 @@
-// $Id: GeometryInfoException.h,v 1.5 2003-04-25 08:52:24 sponce Exp $
+// $Id: GeometryInfoException.h,v 1.6 2005-06-03 10:19:44 jpalac Exp $
 #ifndef     DETDESC_GEOMETRYINFOEXCEPTION_H
 #define     DETDESC_GEOMETRYINFOEXCEPTION_H 1 
 /// GaudiKernel
 #include "GaudiKernel/GaudiException.h" 
 ///
 class MsgStream;
-class GeometryInfo;
+class IGeometryInfo;
 ///
 
 /** @class GeometryInfoException GeometryInfoException.h DetDesc/GeometryInfoException.h
@@ -13,6 +13,12 @@ class GeometryInfo;
     Exception class used in GeometryInfo objects 
     
     @author Vanya Belyaev 
+
+
+    Change to deal with IGeometryInfo
+
+    @author Juan Palacios
+
 */
 
 class GeometryInfoException : public GaudiException 
@@ -20,12 +26,12 @@ class GeometryInfoException : public GaudiException
 public:
   /// constructor 
   GeometryInfoException( const std::string  & name     , 
-                         const GeometryInfo * gi   = 0 ,
+                         const IGeometryInfo * gi   = 0 ,
                          const StatusCode   & sc = StatusCode::FAILURE );
   ///
   GeometryInfoException( const std::string    & name      , 
                          const GaudiException & ge        , 
-                         const GeometryInfo   * gi   =  0 ,
+                         const IGeometryInfo   * gi   =  0 ,
                          const StatusCode     & sc = StatusCode::FAILURE ) ;
   /// destructor 
   virtual ~GeometryInfoException() throw();
@@ -37,7 +43,7 @@ public:
   ///
 private:
   ///
-  const GeometryInfo*   m_gie_geometryInfo  ; 
+  const IGeometryInfo*   m_gie_geometryInfo  ; 
   ///
 };
 ///
