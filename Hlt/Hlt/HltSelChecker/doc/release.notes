@@ -4,6 +4,9 @@
 ! Purpose     : High-Level Trigger Exclusive Selections - Checking 
 !-----------------------------------------------------------------------------
 
+! 2005-06-03 - P. Koppenburg
+  - src/TestHltScore.cpp
+    . Moved to HltSelections
 !========================== HltSelChecker v3r2 2005-05-30 ===================
 ! 2005-05-25 - P. Koppenburg
   - options/HLTExSelectionsNTuples.opts
