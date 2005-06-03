@@ -5,6 +5,13 @@
 !                    tracker like detectors (Velo, OT, IT, Muon)
 !-----------------------------------------------------------------------------
 
+! 2005-06-03 - Gloria CORTI
+ - src/GiGaSensDetMuon.cpp
+   . do not use method MoveUpHistory(1) to navigate geometry history tree
+     because it causes corruption of state of navigation in case next step
+     is in same volume. Use instead GetVolume(s) with s = number of step up
+     in geometry tree. Leave protections just in case. (Bug# 6850)
+
 !=========================== GaussTracker v4r0 ================================
 ! 2005-04-11 - Gloria Corti
  - src/GiGaSensDetMuon.{h,cpp}
