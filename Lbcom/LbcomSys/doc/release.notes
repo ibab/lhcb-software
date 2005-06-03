@@ -6,6 +6,18 @@
 !             : Contains packages shared by Boole and other applications   
 !-----------------------------------------------------------------------------
 
+</PRE><H1><A NAME=v2r2>2005-06-03 LbcomSys v2r2</A></H1><PRE>
+This version is built against LHCb v18r6 and Gaudi v16r4.
+- Packages added:    KaliMisCalo
+- Packages modified: L0DU v6r9p1
+
+- In KaliMisCalo v1r0:
+  . Algorithms to miscalibrate CaloDigits, MCCaloDigits, MCCaloHits 
+
+- In L0DU v6r9p1:
+  . Add $(L0DUOPTS)/L0.opts, for re-running L0 from DST in DaVinci or Panoramix
+  . Remove obosolete Brunel.opts, NotBrunel.opts
+
 </PRE><H1><A NAME=v2r1>2005-05-24 LbcomSys v2r1</A></H1><PRE>
 This version is built against LHCb v18r5 and Gaudi v16r4.
 Its contents are unchanged relative to LbcomSys v2r0

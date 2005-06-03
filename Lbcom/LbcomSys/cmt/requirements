@@ -1,5 +1,5 @@
 package LbcomSys
-version v2r1
+version v2r2
 
 branches doc cmt
 
@@ -7,21 +7,23 @@ branches doc cmt
 # LHCb packages shared by Boole and other applications
 #===============================================================
 
-# L0 trigger simulation
-use L0Calo          v8r2    L0
-use L0DU            v6r9    L0
-use L0MuonTrigger   v3r0    L0
-use PuVeto          v6r0p1  L0
-use L0Checker       v3r0p1  L0
+# L0 trigger simulation          # Maintainer
+use L0Calo          v8r2    L0   # Olivier Callot
+use L0DU            v6r9p1  L0   # Eduardo Rodrigues   
+use L0MuonTrigger   v3r0    L0   # Andrei Tsaregorodtsev
+use PuVeto          v6r0p1  L0   # ?
+use L0Checker       v3r0p1  L0   # Eduardo Rodrigues
 
 # Outer tracker
-use OTMonitor       v1r1    OT
+use OTMonitor       v1r1    OT   # Jacopo Nardulli
 
 # Rich
-use RichTools	    v1r6    Rich
-use RichMCTools	    v2r5    Rich
+use RichTools       v1r6    Rich # Chris Jones
+use RichMCTools     v2r5    Rich # Chris Jones
 
 # Inner Tracker
-use ITAlgorithms    v15r0   IT
-use ITCheckers      v2r5    IT
+use ITAlgorithms    v15r0   IT   # Matt Needham
+use ITCheckers      v2r5    IT   # Matt Needham
 
+# Calorimeter calibration
+use KaliMisCalo     v1r0    Calo # Ivan Belyaev
