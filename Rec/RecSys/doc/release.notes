@@ -6,6 +6,21 @@ Purpose: LHCb reconstruction packages.
          by one or more LHCb applications. 
          It supersedes BrunelSys and large parts of LbcomSys and DaVinciSys. 
 
+</PRE><H1><A NAME=v1r2>2005-06-03 RecSys v1r2</A></H1><PRE>
+This version uses Gaudi v16r4, LHCb v18r6 (also CLHEP 1.9, ROOT 4.0)
+
+- Packages modified: RichRecSys v1r16p3, RichRecoQC v1r10p1, TrgSys v2r7,
+                     CaloReco v2r9, CaloPIDs v2r6, CaloMoniDst v1r2
+
+- In RichRecSys v1r16p3, CaloReco v2r9, CaloPIDs v2r6:
+  . Adapt job options to change in phase name from BrunelReco to Reco
+
+- In RichRecoQC v1r10p1, CaloMoniDst v1r2
+  . Adapt job options to change in phase name from BrunelMoni to Check
+
+- In TrgSys v2r7
+  . Modify Hlt.opts to allow running Hlt without running L1
+
 </PRE><H1><A NAME=v1r1>2005-05-30 RecSys v1r1</A></H1><PRE>
 This version uses Gaudi v16r4, LHCb v18r5 (also CLHEP 1.9, ROOT 4.0)
 

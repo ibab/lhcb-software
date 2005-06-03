@@ -1,5 +1,5 @@
 package RecSys
-version v1r1
+version v1r2
 
 branches cmt doc
  
@@ -8,9 +8,9 @@ branches cmt doc
 #=======================================================
 
 # Calorimeter                         # Maintainer
-use CaloMoniDst         v1r1	Calo  # Ivan Belyaev
-use CaloPIDs		v2r5p1	Calo  # Ivan Belyaev
-use CaloReco            v2r8p2  Calo  # Ivan Belyaev
+use CaloMoniDst         v1r2	Calo  # Ivan Belyaev
+use CaloPIDs		v2r6	Calo  # Ivan Belyaev
+use CaloReco            v2r9    Calo  # Ivan Belyaev
 
 # Tracking
 use TrExtrapolator      v2r14   Tr    # ?
@@ -36,7 +36,7 @@ use TrackIdealPR        v1r0    Tr    # Eduardo Rodrigues, Jose Hernando
 use TrConverters        v1r0    Tr    # Eduardo Rodrigues, Jose Hernando
 
 # Trg reconstruction
-use TrgSys		v2r6	Trg   # Olivier Callot
+use TrgSys		v2r7	Trg   # Olivier Callot
 use TrgBrunel           v1r1    Trg   # Olivier Callot
 use TrgCalo		v2r0	Trg   # Olivier Deschamps
 use TrgChecker		v7r1	Trg   # Olivier Callot
@@ -57,7 +57,7 @@ use MuonRec             v2r4p1	Muon  # ?
 use MuonID              v3r7p2	Muon  # ?
 
 # Rich
-use RichRecSys		v1r16p2	Rich  # Chris Jones
+use RichRecSys		v1r16p3	Rich  # Chris Jones
 use RichRingRefit	v1r9p1	Rich  # Chris Jones
 use RichLocalPID	v1r10p1	Rich  # Chris Jones
 use RichGlobalPID	v1r9p1	Rich  # Chris Jones
@@ -65,7 +65,7 @@ use RichPIDMerge	v1r5	Rich  # Chris Jones
 use RichRecTools        v2r14p1 Rich  # Chris Jones
 use RichRecMCTools      v1r8    Rich  # Chris Jones
 use RichRecCommon       v1r12   Rich  # Chris Jones
-use RichRecQC           v1r10   Rich  # Chris Jones
+use RichRecQC           v1r10p1 Rich  # Chris Jones
 use RichHLTSys		v1r0p2  Rich  # Chris Jones
 use RichTrgGlobalPID	v1r0p1  Rich  # Chris Jones
 use RichTrgTools	v1r0    Rich  # Chris Jones
