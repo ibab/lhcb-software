@@ -1,4 +1,4 @@
-// $Id: UpdateManagerSvc.h,v 1.2 2005-05-27 11:57:42 marcocle Exp $
+// $Id: UpdateManagerSvc.h,v 1.3 2005-06-03 12:33:07 cattanem Exp $
 #ifndef UPDATEMANAGERSVC_H 
 #define UPDATEMANAGERSVC_H 1
 
@@ -34,15 +34,15 @@ public:
   */
   virtual StatusCode queryInterface(const InterfaceID& riid, void** ppvUnknown);
 
-  /// Initilize Service
+  /// Initialize Service
   virtual StatusCode initialize();
   
   /// Finalize Service
   virtual StatusCode finalize();
 
-  /// \return the pointer to the data provider service, used to retrieve objects.
+  /// Return the pointer to the data provider service, used to retrieve objects.
   virtual IDataProviderSvc *dataProvider() const;
-  /// \return the pointer to the detector data service, used to obtain the event time..
+  /// Return the pointer to the detector data service, used to obtain the event time..
   virtual IDetDataSvc *detDataSvc() const;
   
   /// Start a the update loop getting the time to use from the detector data service.
@@ -68,7 +68,8 @@ protected:
   /// Used to force an update of the given instance (ex. when the object is created during an event).
   virtual StatusCode update(void *instance);
 
-  /// Used to remove an object from the dependency network. \warning{Removing an object is \e dangerous.}
+  /// Used to remove an object from the dependency network. 
+  /// \warning{Removing an object is dangerous}
   virtual StatusCode unregister(void *instance);
 
   /// Force an update of all the object depending on the given one for the next event.

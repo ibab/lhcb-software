@@ -1,4 +1,4 @@
-// $Id: IUpdateManagerSvc.h,v 1.2 2005-05-03 15:22:33 marcocle Exp $
+// $Id: IUpdateManagerSvc.h,v 1.3 2005-06-03 12:33:07 cattanem Exp $
 #ifndef DETCOND_IUPDATEMANAGERSVC_H 
 #define DETCOND_IUPDATEMANAGERSVC_H 1
 
@@ -22,7 +22,7 @@ static const InterfaceID IID_IUpdateManagerSvc ( "IUpdateManagerSvc", 1, 0 );
 
 /** @class BaseObjectMemberFunction
  *
- * Base class of @class ObjectMemberFunction. It is used to allow to use containers of
+ * Base class of ObjectMemberFunction. It is used to allow to use containers of
  * different types of object member functions. \see ObjectMemberFunction for details.
  *
  * @author Marco Clemencic
@@ -52,7 +52,7 @@ public:
 template <class CallerClass>
 class ObjectMemberFunction: public BaseObjectMemberFunction {
 public:
-  /// MemberFunctionType is the type for a pointer to a member function of \class CallerClass.
+  /// MemberFunctionType is the type for a pointer to a member function of class CallerClass.
   typedef	StatusCode (CallerClass::*MemberFunctionType)();
 
   /// Calls the member function of the object and returns the StatusCode.
@@ -123,7 +123,7 @@ protected:
 class IUpdateManagerSvc : virtual public IInterface {
 public: 
 
-  /// \return the interface ID
+  /// Return the interface ID
   static const InterfaceID& interfaceID() { return IID_IUpdateManagerSvc; }
 
   /// Give access to the data provider.

@@ -1,11 +1,13 @@
 ! =============================================================================
-! $Id: release.notes,v 1.178 2005-06-03 10:19:44 jpalac Exp $ 
+! $Id: release.notes,v 1.179 2005-06-03 12:33:07 cattanem Exp $ 
 ! =============================================================================
 ! package DetDesc
 ! package manager : Marco Clemencic, Juan Palacios
 ! =============================================================================
 
-!======================== DetDesc v15r1 2005-05-24 ========================
+!======================== DetDesc v15r1 2005-06-03 ========================
+! 2005-06-03 - Marco Cattaneo
+ - Fix some doxygen warnings
 
 ! 2005-06-03 Juan Palacios
 
@@ -32,8 +34,6 @@
  - requirements file change version to v15r1
 
 !======================== DetDesc v15r0 2005-05-24 ========================
-
-
 ! 2005-05-27 - Marco Clemencic
  - Fixed compilation issue on Windows
 
