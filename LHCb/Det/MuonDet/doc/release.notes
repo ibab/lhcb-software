@@ -1,7 +1,17 @@
-! $Id: release.notes,v 1.36 2004-04-23 12:09:05 cattanem Exp $
+! $Id: release.notes,v 1.37 2005-06-06 08:22:51 cattanem Exp $
 !
 ! Package     : MuonDet
 ! Responsible : Alessia Satta
+
+!========================= MuonDet v4r7 2005-06-06 =========================
+! 2005-06-06 - Marco Cattaneo
+ - Remove unnecessary options directory
+
+! 2005-06-06 - Juan Palacios
+ - Add geometry to chambers *after* adding them to TES, to fix a problem that
+   appears with new GeometryInfo implementation
+ - Currently this fix complains about chamber 1 being added twice - to be
+   understood
 
 !========================= MuonDet v4r6 2004-04-23 =========================
 ! 2004-04-23 - Marco Cattaneo

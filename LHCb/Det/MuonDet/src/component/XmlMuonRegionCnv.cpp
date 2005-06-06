@@ -1,4 +1,4 @@
-// $Id: XmlMuonRegionCnv.cpp,v 1.12 2004-04-23 12:08:00 cattanem Exp $
+// $Id: XmlMuonRegionCnv.cpp,v 1.13 2005-06-06 08:22:51 cattanem Exp $
 
 // Include files
 #include <cstdio>
@@ -456,11 +456,16 @@ XmlMuonRegionCnv::makeChamberObjects(xercesc::DOMElement* &childElement,
         << endreq;
     return StatusCode::FAILURE;
   }
-
+  
   // Now create chamberNum identical chambers, differing only in position
+  
   int chamNum;
-  for(chamNum=1;chamNum<=dataObj->chamberNum();chamNum++){
+  for(chamNum=1; chamNum <= dataObj->chamberNum(); chamNum++){
     // NOTE: this is a "safe" new as this is passed to the transisent store
+    log << MSG::DEBUG << "Making Chamber no.   " << chamNum << endmsg;
+    log << MSG::DEBUG << "               reg.  " << regNum << endmsg;
+    log << MSG::DEBUG << "               stat. " << statNum << endmsg;
+    log << MSG::DEBUG << "               gas.  " << gasGapNumber << endmsg;
     DeMuonChamber *cChamber = 
       new DeMuonChamber(statNum,regNum,chamNum,gasGapNumber);
     
@@ -481,7 +486,7 @@ XmlMuonRegionCnv::makeChamberObjects(xercesc::DOMElement* &childElement,
     log << MSG::DEBUG << "GI Support        : " << support     << endreq;
     log << MSG::DEBUG << "GI rpath  : " << (chamNum-1) << endreq;
     // add the geometry information
-    cChamber->createGeometryInfo (logVolName,support,repPath);
+    //    cChamber->createGeometryInfo (logVolName,support,repPath);
 	  	
     // Name this chamber
     char Cham000[8];
@@ -500,7 +505,7 @@ XmlMuonRegionCnv::makeChamberObjects(xercesc::DOMElement* &childElement,
           << chamberName << endreq;
       return StatusCode::FAILURE;
     }
-
+    cChamber->createGeometryInfo (logVolName,support,repPath);
     //get path of chamber
     DataSvcHelpers::RegistryEntry* chamPath = 
       dynamic_cast<DataSvcHelpers::RegistryEntry*> (cChamber->registry()); 
@@ -512,7 +517,8 @@ XmlMuonRegionCnv::makeChamberObjects(xercesc::DOMElement* &childElement,
     if(!sc.isSuccess()){
       log << MSG::WARNING << "Failed to make gasgap objects" << endreq;
       return sc;
-    }    
+    }
+
   }
   return StatusCode::SUCCESS;
 }
