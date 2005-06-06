@@ -3,12 +3,13 @@ Package: Digi/Boole
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb Digitization program
 
-</PRE><H1><A NAME=v9r2>2005-06-02 Boole v9r2</A></H1><PRE>
+</PRE><H1><A NAME=v9r2>2005-06-06 Boole v9r2</A></H1><PRE>
 This version uses Gaudi v16r4, LHCb v18r6, Lbcom v2r2 (also CLHEP 1.9, ROOT 4.0) 
 Requires input from Gauss v19r3 or greater. Output needs Brunel v27r2 or greater
 
 - Repackaging
   . Links sequence in Relations phase split into Velo, IT, OT, Links
+  . Use $LHCBROOT/options/LHCbApplication.opts in Boole.opts
 
 - Persistency changes:
   . Packed containers now saved to /Event/pSim (PackedEvent v1r0)

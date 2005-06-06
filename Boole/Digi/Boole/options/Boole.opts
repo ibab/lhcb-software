@@ -4,21 +4,7 @@
 //
 // This file defines, sequences and configures the algorithms to be executed
 //==============================================================
-#units "$STDOPTS/units.opts"
-
-ApplicationMgr.DLLs += { "GaudiAlg", "LHCbAlgs" };
-
-// POOL persistency - can be removed if only using GaudiRootDb
-#include "$GAUDIPOOLDBROOT/options/GaudiPoolDbRoot.opts"
-#include "$EVENTSYSROOT/options/PoolDicts.opts"
-
-// Transient store setup
-EventDataSvc.ForceLeaves = true;
-EventDataSvc.RootCLID    =    1;
-
-// Configure the DataOnDemand Service
-ApplicationMgr.ExtSvc += { "DataOnDemandSvc" };
-EventDataSvc.EnableFaultHandler = true ;
+#include "$LHCBROOT/options/LHCbApplication.opts"
 
 // Objects to be written to output file
 #include "$BOOLEOPTS/DigiContent.opts"
@@ -41,18 +27,6 @@ Init.DetectorList += { "Boole", "Data" };
 Digi.DetectorList += { "VELO" , "IT", "OT" , "RICH" , "CALO", "MUON" };
 Trigger.DetectorList = { "L0" };
 Relations.DetectorList = { "Velo", "IT", "OT", "L0", "Links" };
-
-//--------------------------------------------------------------
-// Geometry and magnetic field
-//--------------------------------------------------------------
-#include "$STDOPTS/DetDesc.opts"
-ApplicationMgr.DLLs += { "CaloDetXmlCnv" };
-ApplicationMgr.DLLs += { "RichDet" };
-ApplicationMgr.DLLs += { "MuonDet" };
-ApplicationMgr.DLLs += { "STDet" };
-ApplicationMgr.DLLs += { "OTDet" };
-ApplicationMgr.DLLs += { "VeloDet" };
-ApplicationMgr.DLLs += { "Magnet" };
 
 //--------------------------------------------------------------
 // Spillover, LHC background, Initialization
