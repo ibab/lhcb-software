@@ -36,7 +36,7 @@ use XmlTools        	v3r5	Tools   # Marco Clemencic, Juan Palacios
 use OTDet          	v5r5	Det     # Jacopo Nardulli
 use CaloDet        	v6r9	Det     # Ivan Belyaev
 use CaloDetXmlCnv	v2r3p1	Det     # Ivan Belyaev
-use MuonDet        	v4r7	Det     # David Hutchcroft, Alessia Satta
+use MuonDet        	v4r7	Det     # Alessia Satta, Alessio Sarti
 use Magnet         	v2r8	Det     # ?
 use MuonTools      	v3r8	Muon    # Alessia Satta
 use RichDet		v8r4	Det     # Chris Jones
@@ -75,7 +75,7 @@ use MuonAssociators    	v1r5p1	Muon        # ?
 use AsctToLinker	v1r4	Rec         # ?
 
 # L1/Raw buffer encoding and decoding
-use DAQSys		v1r4	DAQ     # Marco Cattaneo
+use DAQSys		v1r4p1  DAQ     # Marco Cattaneo
 use MuonDAQ		v1r2p2	Muon    # Alessia Satta
 use STDAQ		v1r5    IT      # Matt Needham
 use OTDAQ		v3r2p1	OT      # Jacopo Nardulli
