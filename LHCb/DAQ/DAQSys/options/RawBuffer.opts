@@ -1,9 +1,5 @@
 // Job options to configure the data on demand service for decoding the RawBuffer
 
-// Configure the DataOnDemand Service 
-ApplicationMgr.ExtSvc += { "DataOnDemandSvc" };
-EventDataSvc.EnableFaultHandler  = true ;
-
 // Load the DLLs
 ApplicationMgr.DLLs += { "DAQEvent" };
 ApplicationMgr.DLLs += { "VeloDAQ" };

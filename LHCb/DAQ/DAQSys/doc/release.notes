@@ -4,6 +4,11 @@
 ! Purpose     : Hat package for packages encoding and decoding DAQ buffers
 !-----------------------------------------------------------------------------
 
+!========================== DAQSys v1r4p1 2005-06-06 =========================
+! 2005-06-06 - Marco Cattaneo
+ - Remove creation of DataOnDemandSvc from RawBuffer.opts, to avoid clashes with
+   other job options includes
+
 !========================== DAQSys v1r4 2005-05-17 ===========================
 ! 2005-05-17 - Marco Cattaneo
  - Fix RawBuffer.opts to create /Event/Raw on demand if it does not exist
