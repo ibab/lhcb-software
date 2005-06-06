@@ -1,17 +1,17 @@
-! $Id: release.notes,v 1.37 2005-06-06 08:22:51 cattanem Exp $
+! $Id: release.notes,v 1.38 2005-06-06 15:03:29 cattanem Exp $
 !
 ! Package     : MuonDet
 ! Responsible : Alessia Satta
 
 !========================= MuonDet v4r7 2005-06-06 =========================
 ! 2005-06-06 - Marco Cattaneo
+ - Added hack to suppress warnings when chambers added twice. This happens due
+   to circular dependency of MuonRegion, which will break misalignment code
  - Remove unnecessary options directory
 
 ! 2005-06-06 - Juan Palacios
  - Add geometry to chambers *after* adding them to TES, to fix a problem that
    appears with new GeometryInfo implementation
- - Currently this fix complains about chamber 1 being added twice - to be
-   understood
 
 !========================= MuonDet v4r6 2004-04-23 =========================
 ! 2004-04-23 - Marco Cattaneo

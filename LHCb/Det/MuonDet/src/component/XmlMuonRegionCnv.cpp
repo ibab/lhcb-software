@@ -1,4 +1,4 @@
-// $Id: XmlMuonRegionCnv.cpp,v 1.13 2005-06-06 08:22:51 cattanem Exp $
+// $Id: XmlMuonRegionCnv.cpp,v 1.14 2005-06-06 15:03:29 cattanem Exp $
 
 // Include files
 #include <cstdio>
@@ -228,8 +228,7 @@ XmlMuonRegionCnv::i_fillSpecificObj (xercesc::DOMElement* childElement,
   if ("Chambers" == tagName) {
     sc = chamberRead(childElement,dataObj,address);
     if(!sc.isSuccess()){
-      log << MSG::WARNING << "Failed to read chamber" << endreq;
-      return sc;
+      return sc; // Error message already printed by chamberRead()
     }    
   } else if("ReadoutMap" == tagName){
 
@@ -337,8 +336,7 @@ StatusCode XmlMuonRegionCnv::chamberRead (xercesc::DOMElement* &childElement,
                         gasGapNumber,gasGapOffset,
                         gasGapLogvol,gasGapSupport);
   if(!sc.isSuccess()){
-    log << MSG::WARNING << "Failed to make chamber objects" << endreq;
-    return sc;
+    return sc; // Error already reported by makeChamberObjects
   }
 
   return StatusCode::SUCCESS;
@@ -498,12 +496,15 @@ XmlMuonRegionCnv::makeChamberObjects(xercesc::DOMElement* &childElement,
     log << MSG::DEBUG << "Registering chamber " << chamberName 
         <<	  endreq;
 
-    // pass to tranisent store
+    // pass to transient store
     sc = regionEntry->add(chamberName,cChamber);    
     if(StatusCode::SUCCESS != sc) {
-      log << MSG::WARNING << "The store rejected chamber "
-          << chamberName << endreq;
-      return StatusCode::FAILURE;
+      // Should return failure in this case. However, this is a hack to suppress
+      // warnings as workaround the problem of circular dependency of MuonRegion
+      log << MSG::DEBUG << "The store rejected chamber " << chamberName 
+          << ": Known problem with the Muon geometry implementation..." 
+          << endmsg;
+      return StatusCode::SUCCESS;
     }
     cChamber->createGeometryInfo (logVolName,support,repPath);
     //get path of chamber
@@ -557,9 +558,6 @@ XmlMuonRegionCnv::makeGasGapObjects(DataSvcHelpers::RegistryEntry* chamPath,
         << " repPath " <<  gapNum-1 << "/" << gasGapOffset-1
         << endreq;
 
-    // add the geometry information
-    cGap->createGeometryInfo (gasGapLogvol,gapSupport,
-                              ggRepPath);
     char Gap0[5];
     sprintf(Gap0,"Gap%1i",gapNum);
     std::string gapName = Gap0;
@@ -576,6 +574,9 @@ XmlMuonRegionCnv::makeGasGapObjects(DataSvcHelpers::RegistryEntry* chamPath,
           << gapName << endreq;
       return StatusCode::FAILURE;
     }
+
+    // add the geometry information
+    cGap->createGeometryInfo (gasGapLogvol,gapSupport, ggRepPath);
   }
   return StatusCode::SUCCESS;
 }
