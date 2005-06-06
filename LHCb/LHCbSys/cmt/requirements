@@ -36,7 +36,7 @@ use XmlTools        	v3r5	Tools   # Marco Clemencic, Juan Palacios
 use OTDet          	v5r5	Det     # Jacopo Nardulli
 use CaloDet        	v6r9	Det     # Ivan Belyaev
 use CaloDetXmlCnv	v2r3p1	Det     # Ivan Belyaev
-use MuonDet        	v4r6	Det     # Alessia Satta
+use MuonDet        	v4r7	Det     # David Hutchcroft, Alessia Satta
 use Magnet         	v2r8	Det     # ?
 use MuonTools      	v3r8	Muon    # Alessia Satta
 use RichDet		v8r4	Det     # Chris Jones
