@@ -1,4 +1,4 @@
-// $Id: UpdateManagerSvc.h,v 1.3 2005-06-03 12:33:07 cattanem Exp $
+// $Id: UpdateManagerSvc.h,v 1.4 2005-06-07 18:20:34 marcocle Exp $
 #ifndef UPDATEMANAGERSVC_H 
 #define UPDATEMANAGERSVC_H 1
 
@@ -113,6 +113,10 @@ private:
   Item::ItemList    m_all_items;
   /// List used to record all teh objects without parents. (for fast access)
   Item::ItemList    m_head_items;
+  /// Lower bound of intersection of head IOVs.
+  TimePoint         m_head_since;
+  /// Higher bound of intersection of head IOVs.
+  TimePoint         m_head_until;
 };
 
 #include "UpdateManagerSvc.icpp"

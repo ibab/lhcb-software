@@ -1,9 +1,13 @@
 ! =============================================================================
-! $Id: release.notes,v 1.179 2005-06-03 12:33:07 cattanem Exp $ 
+! $Id: release.notes,v 1.180 2005-06-07 18:20:34 marcocle Exp $ 
 ! =============================================================================
 ! package DetDesc
 ! package manager : Marco Clemencic, Juan Palacios
 ! =============================================================================
+
+! 2005-06-07 - Marco Clemencic
+ - Added requested optimization to UpdateManagerSvc: check the intersection
+	 of validities of the head items before starting the update loop.
 
 !======================== DetDesc v15r1 2005-06-03 ========================
 ! 2005-06-03 - Marco Cattaneo

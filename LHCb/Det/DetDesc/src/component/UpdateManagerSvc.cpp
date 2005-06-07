@@ -1,4 +1,4 @@
-// $Id: UpdateManagerSvc.cpp,v 1.1 2005-05-03 12:40:08 marcocle Exp $
+// $Id: UpdateManagerSvc.cpp,v 1.2 2005-06-07 18:20:34 marcocle Exp $
 // Include files 
 #include "GaudiKernel/SvcFactory.h"
 #include "GaudiKernel/MsgStream.h"
@@ -25,7 +25,7 @@ const ISvcFactory &UpdateManagerSvcFactory = s_factory;
 // Standard constructor, initializes variables
 //=============================================================================
 UpdateManagerSvc::UpdateManagerSvc(const std::string& name, ISvcLocator* svcloc):
-  Service(name,svcloc),m_dataProvider(NULL),m_detDataSvc(NULL)
+  Service(name,svcloc),m_dataProvider(NULL),m_detDataSvc(NULL),m_head_since(1),m_head_until(-1)
 {
   declareProperty("DataProviderSvc", m_dataProviderName = "DetectorDataSvc");
   declareProperty("DetDataSvc",      m_detDataSvcName);
@@ -131,6 +131,9 @@ StatusCode UpdateManagerSvc::registerCondition(const std::string &condition, Bas
     if (cond_item->isHead()) removeFromHead(cond_item);
   }
   link(mf_item,mf,cond_item);
+  // a new item means that we need an update
+  m_head_since = 1;
+  m_head_until = -1;
 	return StatusCode::SUCCESS;
 }
 StatusCode UpdateManagerSvc::registerCondition(void *obj, BaseObjectMemberFunction *mf){
@@ -152,6 +155,9 @@ StatusCode UpdateManagerSvc::registerCondition(void *obj, BaseObjectMemberFuncti
     m_head_items.push_back(mf_item); // since it is new, it has no parents
   }
   link(mf_item,mf,cond_item);
+  // a new item means that we need an update
+  m_head_since = 1;
+  m_head_until = -1;
 	return StatusCode::SUCCESS;
 }
 StatusCode UpdateManagerSvc::newEvent(){
@@ -167,10 +173,19 @@ StatusCode UpdateManagerSvc::newEvent(){
 }
 StatusCode UpdateManagerSvc::newEvent(const ITime &evtTime){
   StatusCode sc = StatusCode::SUCCESS;
+  // Check head validity
+  if ( evtTime >= m_head_since && evtTime < m_head_until ) return sc; // no need to update
+  // Reset head IOV
+  m_head_since = time_absolutepast;
+  m_head_until = time_absolutefuture;
   // loop over the registered items of the head (unless a problem occurs)
   Item::ItemList::iterator it;
   for (it = m_head_items.begin(); it != m_head_items.end() && sc.isSuccess(); ++it){
     sc = (*it)->update(dataProvider(),evtTime);
+    if (sc.isSuccess()) {
+      if ( m_head_since < (*it)->since )  m_head_since = (*it)->since;
+      if ( m_head_until > (*it)->until )  m_head_until = (*it)->until;
+    }
   }
   return sc;
 }
@@ -178,7 +193,14 @@ StatusCode UpdateManagerSvc::update(void *instance){
   if (detDataSvc() != NULL){
 		if (detDataSvc()->validEventTime()) {
       Item *item = findItem(instance);
-      if (item) return item->update(dataProvider(),detDataSvc()->eventTime());
+      if (item) {
+        StatusCode sc = item->update(dataProvider(),detDataSvc()->eventTime());
+        if (sc.isSuccess()) {
+          if ( m_head_since < item->since )  m_head_since = item->since;
+          if ( m_head_until > item->until )  m_head_until = item->until;
+        }
+        return sc;
+      }
     } else {
       return StatusCode::SUCCESS;
     }
@@ -187,7 +209,11 @@ StatusCode UpdateManagerSvc::update(void *instance){
 }
 void UpdateManagerSvc::invalidate(void *instance){
   Item *item = findItem(instance);
-  if (item) item->invalidate();
+  if (item) {
+    item->invalidate();
+    m_head_since = 1;
+    m_head_until = -1;
+  }
 }
 
 StatusCode UpdateManagerSvc::unregister(void *instance){
@@ -229,6 +255,7 @@ void UpdateManagerSvc::dump(){
   log << MSG::DEBUG << "--- Dump" << endmsg;
   log << MSG::DEBUG << "    " << m_all_items.size() << " items registered" << endmsg;
   log << MSG::DEBUG << "     of which " << m_head_items.size() << " in the head" << endmsg;
+  log << MSG::DEBUG << "         head IOV = " << m_head_since.absoluteTime() << " - " << m_head_until.absoluteTime() << endmsg;
   
   size_t cnt = 0, head_cnt = 0;
   for (Item::ItemList::iterator i = m_all_items.begin(); i != m_all_items.end(); ++i){
