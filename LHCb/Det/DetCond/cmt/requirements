@@ -1,37 +1,29 @@
-# $Id: requirements,v 1.32 2005-05-27 12:12:52 marcocle Exp $
-# Modified by Marco Clemencic and Nicolas Gilardi (Gen. 2005)
-package DetCond
-version v7r2
+# $Id: requirements,v 1.33 2005-06-08 17:20:49 marcocle Exp $
+# =============================================================================
+package       DetCond
+version       v7r2
 
-branches DetCond cmt src doc
+# =========== structure =======================================================
+branches      DetCond doc cmt src
 
-# GAUDI framework dependencies
-use GaudiKernel v*
-use GaudiSvc    v*
+# =========== own includes ====================================================
+include_dirs  $(DETCONDROOT)
 
-use COOL v* LCG_Interfaces
+# =========== dependencies ====================================================
+use           GaudiKernel       v*
+use           GaudiSvc          v*
+use           COOL              v*      LCG_Interfaces
+use           DetDesc           v*      Det
 # Windows needs the COOL factory also here
-tag WIN32 NEEDS_COOL_FACTORY
+tag   WIN32   NEEDS_COOL_FACTORY
 
-# Detector Description
-# This is only needed because updateObj assumes a ValidDataObject (TEMPORARY?)
-use DetDesc v* Det
+# =========== constituents =====================================================
+library       DetCondLib        Lib/*.cpp
+library       DetCond           component/*.cpp
 
-include_dirs $(DETCONDROOT)
+# =========== standard patterns (the order is essential!) ====================== 
 
-# Build a component library
-macro DetCond_sources "component/*.cpp" 
-library DetCond $(DetCond_sources)
-
-# Export the component library to dependent packages
-apply_pattern package_Clinkopts
-apply_pattern packageShr
+apply_pattern component_library library=DetCond 
+apply_pattern linker_library    library=DetCondLib 
 
 apply_pattern ld_library_path
-
-#==================================================================
-private
-
-apply_pattern package_Cshlibflags
-macro_append DetCond_shlibflags " $(GaudiKernel_linkopts)"
-macro_append DetCond_shlibflags " $(COOL_linkopts)" 

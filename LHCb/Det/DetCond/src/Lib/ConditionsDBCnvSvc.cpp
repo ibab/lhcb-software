@@ -1,4 +1,4 @@
-//$Id: ConditionsDBCnvSvc.cpp,v 1.18 2005-05-12 16:17:32 marcocle Exp $
+//$Id: ConditionsDBCnvSvc.cpp,v 1.1 2005-06-08 17:20:49 marcocle Exp $
 #include <string>
 
 #include "ConditionsDBCnvSvc.h"

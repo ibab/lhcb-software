@@ -1,6 +1,9 @@
-# $Id: release.notes,v 1.35 2005-05-27 12:12:52 marcocle Exp $
+# $Id: release.notes,v 1.36 2005-06-08 17:20:49 marcocle Exp $
 Package Det/DetCond
 Package manager : Marco Clemencic
+
+! 2005-06-08 - Marco Clemencic
+ - Changed from "component library" to "component + link library"
 
 ================= Det/DetCond v7r2 ===========================================
 ! 2005-05-27 - Marco Clemencic
