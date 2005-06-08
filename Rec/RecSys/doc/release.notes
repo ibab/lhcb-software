@@ -8,10 +8,9 @@ Purpose: LHCb reconstruction packages.
 
 </PRE><H1><A NAME=v1r2>2005-06-08 RecSys v1r2</A></H1><PRE>
 This version uses Gaudi v16r4, LHCb v18r6 (also CLHEP 1.9, ROOT 4.0)
-Reorganisation of job options for running Reco phase of Brunel in online mode
 
 - Packages modified: RichRecSys v1r16p3, RichRecoQC v1r10p1, TrgSys v2r7,
-    TrgVelo v7r3p1, CaloReco v2r9, CaloPIDs v2r6, CaloMoniDst v1r2
+    TrgVelo v7r3p1,L1Decision v5r1, CaloReco v2r9,CaloPIDs v2r6,CaloMoniDst v1r2
 
 - In RecSys v1r2
   . Add options/Reco.opts, for setting up Reco phase of Brunel
@@ -28,7 +27,10 @@ Reorganisation of job options for running Reco phase of Brunel in online mode
 - In TrgVelo v3r7p1
   . In Brunel.opts, change name of offline instances of Velo tracking algorithms,
     to avoid configuring online algorithms with offline tuning when both are
-    run in the same job    
+    run in the same job
+
+- In L1Decision v5r1
+  . Fix bug in accessing L0Calo L1 bank, reduces L1 accept rate from ~11% to 7.5%
 
 </PRE><H1><A NAME=v1r1>2005-05-30 RecSys v1r1</A></H1><PRE>
 This version uses Gaudi v16r4, LHCb v18r5 (also CLHEP 1.9, ROOT 4.0)

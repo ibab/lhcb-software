@@ -49,7 +49,7 @@ use TrgVeloTT		v7r0	Trg   # Olivier Callot
 
 # L1 reconstruction and decision
 use L1Reco		v7r0	Trg   # Mariusz Witek
-use L1Decision		v5r0	Trg   # Thomas Schietinger
+use L1Decision		v5r1    Trg   # Thomas Schietinger
 
 # Muon
 use MuonUtils		v1r0	Muon  # ?
