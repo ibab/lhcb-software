@@ -6,11 +6,15 @@ Purpose: LHCb reconstruction packages.
          by one or more LHCb applications. 
          It supersedes BrunelSys and large parts of LbcomSys and DaVinciSys. 
 
-</PRE><H1><A NAME=v1r2>2005-06-03 RecSys v1r2</A></H1><PRE>
+</PRE><H1><A NAME=v1r2>2005-06-08 RecSys v1r2</A></H1><PRE>
 This version uses Gaudi v16r4, LHCb v18r6 (also CLHEP 1.9, ROOT 4.0)
+Reorganisation of job options for running Reco phase of Brunel in online mode
 
 - Packages modified: RichRecSys v1r16p3, RichRecoQC v1r10p1, TrgSys v2r7,
-                     CaloReco v2r9, CaloPIDs v2r6, CaloMoniDst v1r2
+    TrgVelo v7r3p1, CaloReco v2r9, CaloPIDs v2r6, CaloMoniDst v1r2
+
+- In RecSys v1r2
+  . Add options/Reco.opts, for setting up Reco phase of Brunel
 
 - In RichRecSys v1r16p3, CaloReco v2r9, CaloPIDs v2r6:
   . Adapt job options to change in phase name from BrunelReco to Reco
@@ -20,6 +24,11 @@ This version uses Gaudi v16r4, LHCb v18r6 (also CLHEP 1.9, ROOT 4.0)
 
 - In TrgSys v2r7
   . Modify Hlt.opts to allow running Hlt without running L1
+
+- In TrgVelo v3r7p1
+  . In Brunel.opts, change name of offline instances of Velo tracking algorithms,
+    to avoid configuring online algorithms with offline tuning when both are
+    run in the same job    
 
 </PRE><H1><A NAME=v1r1>2005-05-30 RecSys v1r1</A></H1><PRE>
 This version uses Gaudi v16r4, LHCb v18r5 (also CLHEP 1.9, ROOT 4.0)

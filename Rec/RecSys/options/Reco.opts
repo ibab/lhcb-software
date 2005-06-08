@@ -1,0 +1,85 @@
+//--------------------------------------------------------------
+// Job options for Brunel Reco Phase
+//--------------------------------------------------------------
+Reco.DetectorList = { "VELO", "IT", "Tr", "RICH", "CALO", "MUON" };
+
+// Velo tracking
+ApplicationMgr.DLLs += { "TrgTools", "TrgVelo", "TrgBrunel" };
+RecoVELOSeq.Members += { "DecodeRawVelo"
+                        ,"VeloRTracking/BrunelVeloRTracking"
+                        ,"VeloSpaceTracking/BrunelVeloSpaceTracking"
+                        ,"ConvertToTrFitTrack"
+};
+#include "$TRGVELOROOT/options/Brunel.opts"
+
+// Silicon tracker reconstruction (clustering)
+ApplicationMgr.DLLs += { "ITAlgorithms" };
+RecoITSeq.Members   += { "ITClusterCreator", "ITSummaryCreator" };
+#include "$ITALGORITHMSROOT/options/itRec.opts"
+
+// Tracking tools
+ApplicationMgr.DLLs += { "TrFitter", "TrExtrapolator", "STTools" };
+ApplicationMgr.ExtSvc += { "TransportSvc" };
+
+// Forward tracking
+ApplicationMgr.DLLs += { "LongTrack" };
+RecoTrSeq.Members   += { "FindLongTrack",
+                         "TrEventTracksFitter/FitFw" };
+FitFw.TrackContainer = "Rec/FitTrack/Forward";
+#include "$LONGTRACKROOT/options/Brunel.opts"
+
+// Seeding
+ApplicationMgr.DLLs += { "Seeding" }; 
+RecoTrSeq.Members   += { "TrSeedEvent/seedEvent",
+                         "TrEventTracksFitter/fitSeed" };
+#include "$SEEDINGROOT/options/Brunel.opts"
+seedEvent.FilterCluster = true; // Enable filtering of T clusters
+ToolSvc.ClusterFilter.Containers = { "Rec/FitTrack/Forward" };
+
+// Velo Matching
+ApplicationMgr.DLLs += { "TrMatching" }; 
+RecoTrSeq.Members   += { "TrMatchVeloSeed/matchVeloSeed",
+                         "TrEventTracksFitter/reFit" };
+reFit.TrackContainer = "Rec/FitTrack/Match";
+
+// K Short tracking
+ApplicationMgr.DLLs += { "TrKShort" };
+#include "$TRKSHORTROOT/options/Brunel.opts"
+RecoTrSeq.Members   += { "FindTrKShort"
+                       , "TrEventTracksFitter/KShortFit" };
+KShortFit.TrackContainer = "Rec/FitTrack/KsTrack";
+KShortFit.Fitter.stateAtBeamLine = false;
+
+// Clone killer
+ApplicationMgr.DLLs += { "TrCleanEx" };
+RecoTrSeq.Members   += { "TrTrackCloneKiller" };
+
+// VeloTT tracking
+ApplicationMgr.DLLs += { "VeloTT" };
+RecoTrSeq.Members   += { "VeloTTFind" };
+#include "$VELOTTROOT/options/BrunelField045.opts"
+RecoTrSeq.Members   += { "TrPrepareVelo" };
+
+// Conversion to TrStoredTrack
+RecoTrSeq.Members += { "TrFit2StoredTrackCnv/StoreBest" };
+#include "$TRCLEANEXROOT/options/Brunel.opts"
+TrTrackCloneKiller.flagMode = true;
+
+// Rich
+ApplicationMgr.DLLs += { "RichTools", "RichRecTools", "RichRecCommon",
+                         "RichGlobalPID", "RichLocalPID", 
+                         "RichRingRefit", "RichPIDMerge" };
+#include "$RICHRECSYSOPTS/RecoToolPara.opts"
+#include "$RICHRECSYSOPTS/RecoOfflineAlgs.opts"
+
+// Calorimeter reconstruction
+ApplicationMgr.DLLs += { "CaloReco", "CaloPIDs" };
+#include "$CALORECOOPTS/Brunel.opts"
+#include "$CALORECOOPTS/Reco.opts"
+#include "$CALORECOOPTS/Filters.opts"
+#include "$CALOPIDSOPTS/Brunel.opts"
+
+// Muon coordinate reconstruction, MuonID, cleaning
+ApplicationMgr.DLLs += { "MuonTools", "MuonRec", "MuonID" };
+RecoMUONSeq.Members += { "MuonRec", "MuonIDFOI" };
+#include "$MUONIDROOT/options/MuonIDFOI.opts"
