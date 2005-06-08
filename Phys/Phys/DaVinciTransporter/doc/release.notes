@@ -1,12 +1,18 @@
-! $Id: release.notes,v 1.15 2005-05-17 12:38:12 pkoppenb Exp $
+! $Id: release.notes,v 1.16 2005-06-08 12:30:37 pkoppenb Exp $
 ! Package     : DaVinciTransporter
-! Responsible : P. Koppenburg, Yuehong Xie
+! Responsible : Yuehong Xie
+
+! 2005-06-08 - P. Koppenburg
+  - src/CombinedTransporter.cpp
+  - src/LinearTransporter.cpp
+  - src/ParabolicTransporter.cpp
+   . change the message level to debug() for "initialization starting"
 
 !========================= DaVinciTransporter v2r0p2 2005-05-17 ===================
 ! 2005-04-21 - Yuehong Xie
-  -src/TrTransporter.cpp
-   . change the message level from err() to debug() when extrapolation of 
-     a state fails
+  - src/TrTransporter.cpp
+    . change the message level from err() to debug() when extrapolation of 
+      a state fails
 
 !========================== DaVinciTransporter v2r0p1 2005-03-03 ===================
 ! 2005-02-25 - P. Koppenburg

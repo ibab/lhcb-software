@@ -1,4 +1,4 @@
-// $Id: CombinedTransporter.cpp,v 1.3 2005-02-25 13:28:57 pkoppenb Exp $
+// $Id: CombinedTransporter.cpp,v 1.4 2005-06-08 12:30:37 pkoppenb Exp $
 // Include files 
 #include "CLHEP/Matrix/SymMatrix.h"  // here because of CLHEP bug
 
@@ -54,7 +54,7 @@ StatusCode CombinedTransporter::initialize(){
   StatusCode sc = GaudiTool::initialize();
   if (!sc) return sc;
 
-  info() << "CombinedTransporter Initialization starting..." << endreq;
+  debug() << "CombinedTransporter Initialization starting..." << endreq;
   
   // This tool needs to use internally the ToolSvc to retrieve the
   // transporter tool   

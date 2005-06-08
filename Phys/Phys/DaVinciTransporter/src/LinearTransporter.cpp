@@ -1,4 +1,4 @@
-// $Id: LinearTransporter.cpp,v 1.3 2005-02-25 13:28:57 pkoppenb Exp $
+// $Id: LinearTransporter.cpp,v 1.4 2005-06-08 12:30:37 pkoppenb Exp $
 // Include files 
 #include "CLHEP/Matrix/SymMatrix.h"  // here because of CLHEP bug
 
@@ -49,8 +49,6 @@ StatusCode LinearTransporter::initialize(){
   StatusCode sc = GaudiTool::initialize();
   if (!sc) return sc ;
 
-  info() << "LinearTransporter Initialization starting..." << endreq;
-  
   return StatusCode::SUCCESS;
   
 }
