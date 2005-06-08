@@ -1,4 +1,4 @@
-// $Id: Algorithm2ID.h,v 1.1 2005-04-20 14:08:39 pkoppenb Exp $
+// $Id: Algorithm2ID.h,v 1.2 2005-06-08 06:57:00 pkoppenb Exp $
 #ifndef ALGORITHM2ID_H 
 #define ALGORITHM2ID_H 1
 
@@ -35,6 +35,9 @@ public:
   std::string nameFromId( const int& );
 
   StatusCode initialize();
+
+  int size(void){return m_pairs.size(); };
+  
  
 protected:
 

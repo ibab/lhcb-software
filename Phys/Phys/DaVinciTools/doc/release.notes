@@ -1,7 +1,11 @@
-! $Id: release.notes,v 1.165 2005-06-02 16:39:46 pkoppenb Exp $
+! $Id: release.notes,v 1.166 2005-06-08 06:57:00 pkoppenb Exp $
 ! Package     : DaVinciTools
 ! Responsible : P. Koppenburg
 
+! 2005-06-08 - P. Koppenburg
+  - src/Algorithm2ID.h
+    . Return size of algorithm array
+                                                                                                                                                                                  
 ! 2005-06-02 - P. Koppenburg based on an idea by Miriam Calvi
   - src/CheckVeloOverlap.{cpp,h}
     . New ICheckOverlap tool that checks for common velo clusters.
