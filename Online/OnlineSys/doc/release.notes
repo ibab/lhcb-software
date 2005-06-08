@@ -4,6 +4,10 @@
 ! Purpose     : 
 !-----------------------------------------------------------------------------
 
+! 2005-06-08 - Markus Frank
+ - Incorporate Beat's changes to GaudoJob and GaudiOnline
+
+
 !======================== OnlineSys v1r0 2005-05-13 ==========================
 ! 2005-05-13 - Marco Cattaneo
  - First release of OnlineSys project

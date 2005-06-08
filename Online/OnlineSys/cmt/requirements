@@ -9,7 +9,7 @@ branches cmt doc
 
 use DIM		  v1r0   Online
 use Gaucho        v3r0   Online
-use GauchoJob     v2r0   Online
-use GaudiOnline   v1r0   Online
+use GauchoJob     v2r1   Online
+use GaudiOnline   v1r1   Online
 use SFCClient     v1r0   Online
 use PyDIM         v1r0   Online
