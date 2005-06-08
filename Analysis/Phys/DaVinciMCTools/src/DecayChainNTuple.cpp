@@ -10,7 +10,7 @@
 #include "Event/EventHeader.h"
 #include "Event/ProtoParticle.h"
 // #include "Kernel/ILifetimeFitter.h"
-#include "Kernel/IPVLocator.h"
+#include "Kernel/IOnOffline.h"
 #include "Event/TrgDecision.h"
 #include "Event/FlavourTag.h"
 
@@ -48,7 +48,7 @@ DecayChainNTuple::DecayChainNTuple( const std::string& name,
   : DVAlgorithm ( name , pSvcLocator )
     , m_bookedNTuple(false)
     , m_PVContainer(VertexLocation::Primary)
-    , m_PVLocator()
+    , m_OnOfflineTool()
     , m_ppSvc(0)
     , m_pDKFinder(0)
     , m_IPTool(0)
@@ -122,13 +122,13 @@ StatusCode DecayChainNTuple::initialize() {
   }
 
   // Do not use interface here
-  sc = toolSvc()->retrieveTool("PVLocator", m_PVLocator, this);
+  sc = toolSvc()->retrieveTool("OnOfflineTool", m_OnOfflineTool, this);
   if(sc.isFailure()){
     err() << " Unable to retrieve PV Locator tool" << endreq;
     return sc;
   } 
 
-  m_PVContainer = m_PVLocator->getPVLocation() ;
+  m_PVContainer = m_OnOfflineTool->getPVLocation() ;
   info() << "Getting PV from " << m_PVContainer << endreq ;
 
 #ifdef MCCheck

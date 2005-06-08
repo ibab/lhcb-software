@@ -17,7 +17,7 @@ class INTuple;
 class IParticlePropertySvc;
 class IGeomDispCalculator;
 // class ILifetimeFitter;
-class IPVLocator;
+class IOnOffline;
 
 #ifdef MCCheck
 class IMCDecayFinder;
@@ -64,8 +64,8 @@ class IMCDecayFinder;
  *           other selections always save the B
  *          -> the decay string should be written with care
  *
- *  The primaries are retrieved with the PVLocator tool, default is offline
- *  -> must set PVLocation property of PVLocator tool to change it
+ *  The primaries are retrieved with the OnOfflineTool tool, default is offline
+ *  -> must set PVLocation property of OnOfflineTool tool to change it
  *  
  *  Possibility to use the TrgDispCalculator tool for online particles
  *  -> uses the approximated HLT covariance matrix for computation of IP, vertex separation, etc ...
@@ -114,7 +114,7 @@ private:
   bool m_bookedNTuple;
 
   std::string m_PVContainer;
-  IPVLocator* m_PVLocator;
+  IOnOffline* m_OnOfflineTool;
 
   long m_event, m_run;
 
