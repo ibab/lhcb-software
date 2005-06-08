@@ -5,6 +5,9 @@
 !-----------------------------------------------------------------------------
 
 !========================== DaVinci v12r11 2005-05-27 ===================
+! 2005-06-08 - P. Koppenburg
+  - cmt/requirements
+    . Explicit use of XmlDDDB v24r2 Det
 ! 2005-05-27 - P. Koppenburg
   - options/DVReadStripping.opt
     . New example options that allow to read stripped DST data
