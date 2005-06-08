@@ -1,9 +1,9 @@
 //------------------------------------------------------------------------------
 // The offline selections
 //------------------------------------------------------------------------------
-// Re-Define PV
-ApplicationMgr.TopAlg += { "ResetPVLocation/SetOfflinePV" };
-SetOfflinePV.ResetToOffline = true ;
+// Define PV for the offline selections check
+HLTSelections.Members += { "ResetOnOffline/SetOffline" };
+SetOffline.ResetToOffline = true ;
 //------------------------------------------------------------------------------
 #include "$DAVINCIROOT/options/DaVinciReco.opts"
 #include "$DAVINCIROOT/options/DaVinciNeutrals.opts"

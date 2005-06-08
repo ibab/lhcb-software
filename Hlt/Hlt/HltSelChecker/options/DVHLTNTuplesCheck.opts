@@ -24,8 +24,8 @@ TrueSignals.Members += {"TrgL1Filter/TrueTrgL1Filter","TrgTrackToContainer","Trg
 #include "$DAVINCIROOT/options/DaVinciNeutrals.opts"
 
 // Define PV for the offline selections check
-HLTSelections.Members += { "ResetPVLocation/SetOfflineTreePV" };
-SetOfflineTreePV.ResetToOffline = true;
+HLTSelections.Members += { "ResetOnOffline/SetOffline" };
+SetOffline.ResetToOffline = true ;
 
 // Several selection have the same instance of PreLoadParticles ... comment in some DoTDRsel*
 // and add it here ... 
