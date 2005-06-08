@@ -1,4 +1,4 @@
-// $Id: OnOfflineTool.h,v 1.1 2005-06-08 16:15:32 pkoppenb Exp $
+// $Id: OnOfflineTool.h,v 1.2 2005-06-08 16:41:44 pkoppenb Exp $
 #ifndef ONOFFLINETOOL_H 
 #define ONOFFLINETOOL_H 1
 
@@ -23,7 +23,7 @@ public:
   virtual ~OnOfflineTool( ); ///< Destructor
 
   /// On or Offline ?
-  bool online(void) const  ;
+  bool online(void) const {return m_online;} ;
 
   /// On or Offline ?
   StatusCode setOnline(const bool&)  ;

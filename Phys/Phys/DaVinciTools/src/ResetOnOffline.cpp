@@ -1,4 +1,4 @@
-// $Id: ResetOnOffline.cpp,v 1.1 2005-06-08 16:15:32 pkoppenb Exp $
+// $Id: ResetOnOffline.cpp,v 1.2 2005-06-08 16:41:44 pkoppenb Exp $
 // Include files 
 
 // from Gaudi
@@ -55,7 +55,7 @@ StatusCode ResetOnOffline::initialize() {
     info() << "Will Set to OFFLINE" << endmsg ;
   } else warning() << "Will be doing nothing" << endmsg ;
 
-  return StatusCode::SUCCESS;
+  return this->execute(); // also in initialisation
 };
 
 //=============================================================================

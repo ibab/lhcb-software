@@ -1,4 +1,4 @@
-// $Id: OnOfflineTool.cpp,v 1.1 2005-06-08 16:15:32 pkoppenb Exp $
+// $Id: OnOfflineTool.cpp,v 1.2 2005-06-08 16:41:44 pkoppenb Exp $
 // Include files 
 
 // from Gaudi
@@ -55,6 +55,8 @@ std::string OnOfflineTool::getPVLocation(void) const {
 //=============================================================================
 StatusCode OnOfflineTool::setOnline(const bool& online){
   m_online = online ;
+  if ( m_online ) debug() << "Reset to online" << endmsg ;
+  else debug() << "Reset to offline" << endmsg ;
   return StatusCode::SUCCESS ;
 };
 //=============================================================================
