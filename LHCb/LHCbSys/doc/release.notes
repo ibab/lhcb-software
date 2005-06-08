@@ -5,7 +5,7 @@
 ! Purpose     : LHCb OO kernel packages
 !-----------------------------------------------------------------------------
 
-</PRE><H1><A NAME=v18r6>2005-06-06 LHCbSys v18r6</A></H1><PRE>
+</PRE><H1><A NAME=v18r6>2005-06-08 LHCbSys v18r6</A></H1><PRE>
  - Packages added:    Event/PackedEvent v1r0 (replaces Event/Rdst)
  - Packages removed:  Event/Rdst
  - Packages modified: KernelSys v4r12, LHCbKernel v5r11, DAQSys v1r4p1,
@@ -32,6 +32,7 @@
 
  - In DetDesc v15r1, DetDescCnv v2r6
    . Add support for Alignment Conditions
+   . Optimization of UpdateManagerSvc
 
  - In VeloDet v9r6
    . Add support for flipped R sensors
