@@ -2,10 +2,11 @@
 # Maintainer : Markus Frank
 #============================================================================
 package           GaudiOnline 
-version           v1r0
+version           v1r1
 #============================================================================
 branches          cmt doc src GaudiOnline 
 include_dirs      $(GAUDIONLINEROOT)
+use DIM           v* Online
 use SFCClient     v* Online
 use EventSys      v* Event
 use GaudiSvc      v*
@@ -17,7 +18,7 @@ private
 
 # needed to write raw data file....
 use GaudiConf     v*
-use GaudiPoolDb   v*
+#use GaudiPoolDb   v*
 use PyDIM         v* Online
 
 application Gaudi "$(GAUDICONFROOT)/src/GaudiMain.cpp"

@@ -1,6 +1,10 @@
 Package: GaudiOnline
 Author:  Markus Frank
 
+!================== GaudiOnline v2r1 2005-05-13 =============================
+! 10-06-2005 Markus Frank
+  Add OnlineMessageSvc component from Beat
+
 !================== GaudiOnline v1r0 2005-05-13 =============================
 ! 10-05-2005 Markus Frank
   Adapt to LHCb v18r4 and the use of RawEvent/L1Event instead of
