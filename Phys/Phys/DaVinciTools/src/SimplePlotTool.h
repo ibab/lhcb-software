@@ -1,4 +1,4 @@
-// $Id: SimplePlotTool.h,v 1.3 2005-01-13 12:28:01 pkoppenb Exp $
+// $Id: SimplePlotTool.h,v 1.4 2005-06-08 16:15:32 pkoppenb Exp $
 #ifndef SIMPLEPLOTTOOL_H 
 #define SIMPLEPLOTTOOL_H 1
 
@@ -16,7 +16,7 @@
  *  @date   2005-01-05
  */
 class IParticlePropertySvc;
-class IPVLocator;
+class IOnOffline;
 class IGeomDispCalculator;
 class SimplePlotTool : public GaudiHistoTool, virtual public IPlotTool {
 public: 
@@ -81,7 +81,7 @@ private:
   /// IP tool
   IGeomDispCalculator* m_geomTool;
   /// PV tool
-  IPVLocator* m_pvLocator;
+  IOnOffline* m_onOfflineTool;
 
   /// Initialisation flag
   bool m_isInitialised;

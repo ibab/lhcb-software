@@ -1,10 +1,10 @@
-// $Id: CheckPV.cpp,v 1.5 2005-05-12 07:14:53 pkoppenb Exp $
+// $Id: CheckPV.cpp,v 1.6 2005-06-08 16:15:32 pkoppenb Exp $
 // Include files 
 
 // from Gaudi
 #include "GaudiKernel/AlgFactory.h" 
 
-#include "Kernel/IPVLocator.h"
+#include "Kernel/IOnOffline.h"
 #include "Event/Vertex.h"
 // local
 
@@ -27,7 +27,7 @@ const        IAlgFactory& CheckPVFactory = s_factory ;
 CheckPV::CheckPV( const std::string& name,
                   ISvcLocator* pSvcLocator)
   : GaudiAlgorithm ( name , pSvcLocator )
-  , m_PVLocator()
+  , m_OnOfflineTool()
   , m_nEvent(0)
   , m_nPV(0)
 {
@@ -49,8 +49,8 @@ StatusCode CheckPV::initialize() {
 
   debug() << "==> Initialize" << endmsg;
 
-  m_PVLocator = tool<IPVLocator>("PVLocator");
-  if( !m_PVLocator ){
+  m_OnOfflineTool = tool<IOnOffline>("OnOfflineTool");
+  if( !m_OnOfflineTool ){
     err() << " Unable to retrieve PV Locator tool" << endreq;
     return StatusCode::FAILURE;
   }
@@ -74,7 +74,7 @@ StatusCode CheckPV::execute() {
 
   debug() << "==> Execute" << endmsg;
 
-  std::string m_PVContainer = m_PVLocator->getPVLocation() ;
+  std::string m_PVContainer = m_OnOfflineTool->getPVLocation() ;
   
   verbose() << "Getting PV from " << m_PVContainer << endreq ;  
   Vertices* PV = get<Vertices>(m_PVContainer);

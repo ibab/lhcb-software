@@ -1,4 +1,4 @@
-// $Id: DaVinciTools_load.cpp,v 1.50 2005-05-02 11:57:26 pkoppenb Exp $
+// $Id: DaVinciTools_load.cpp,v 1.51 2005-06-08 16:15:32 pkoppenb Exp $
 // Include files 
 
 #include "GaudiKernel/DeclareFactoryEntries.h"
@@ -15,18 +15,19 @@
 DECLARE_FACTORY_ENTRIES( DaVinciTools ) {
 
   // Miscellaneous
+  DECLARE_TOOL( Algorithm2ID ) ;
   DECLARE_TOOL( CheckOverlap );
   DECLARE_TOOL( DecayFinder );
   DECLARE_TOOL( DecodeSimpleDecayString );
+  DECLARE_TOOL( OnOfflineTool ) ;
   DECLARE_TOOL( PVLocator ) ;
   DECLARE_TOOL( RecursivePlotTool ) ;
   DECLARE_TOOL( SimplePlotTool ) ;
 
-  DECLARE_TOOL( Algorithm2ID ) ;
-
   // Algorithms
   DECLARE_ALGORITHM( CheckPV );  
   DECLARE_ALGORITHM( ResetPVLocation ) ;
+  DECLARE_ALGORITHM( ResetOnOffline ) ;
   DECLARE_ALGORITHM( SimplePlots );  
   DECLARE_ALGORITHM( PIDFilter );  
   

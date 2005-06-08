@@ -1,4 +1,4 @@
-// $Id: SimplePlotTool.cpp,v 1.9 2005-02-09 13:40:13 pkoppenb Exp $
+// $Id: SimplePlotTool.cpp,v 1.10 2005-06-08 16:15:32 pkoppenb Exp $
 // Include files 
 #include "gsl/gsl_math.h"
 // from Gaudi
@@ -6,7 +6,7 @@
 #include "GaudiKernel/ParticleProperty.h"
 #include "GaudiKernel/IParticlePropertySvc.h"
 
-#include "Kernel/IPVLocator.h"
+#include "Kernel/IOnOffline.h"
 #include "Kernel/IGeomDispCalculator.h"
 // local
 #include "SimplePlotTool.h"
@@ -33,7 +33,7 @@ SimplePlotTool::SimplePlotTool( const std::string& type,
   , m_allDefault(true)
   , m_ppSvc(0)
   , m_geomTool(0)
-  , m_pvLocator(0)
+  , m_onOfflineTool(0)
   , m_isInitialised(false)
 {
   declareInterface<IPlotTool>(this);
@@ -77,9 +77,9 @@ StatusCode SimplePlotTool::firstInitialize () {
     return StatusCode::FAILURE;
   }          
 
-  m_pvLocator = tool<IPVLocator>("PVLocator");
-  if( !m_pvLocator ) {
-    err() << "Unable to get PVLocator" << endreq;
+  m_onOfflineTool = tool<IOnOffline>("OnOfflineTool");
+  if( !m_onOfflineTool ) {
+    err() << "Unable to get OnOfflineTool" << endreq;
     return StatusCode::FAILURE;
   }          
   m_isInitialised = true ; // don't re-do this
@@ -233,7 +233,7 @@ StatusCode SimplePlotTool::doPlot(const Particle* P, MyHisto& H,
   // IP or flight significances
   // -----------------------------------------
   } else if ( var == "IP" || var == "IPs" || var == "DPV" || var == "FS"){
-    std::string PVContainer = m_pvLocator->getPVLocation() ;
+    std::string PVContainer = m_onOfflineTool->getPVLocation() ;
     verbose() << "Getting PV from " << PVContainer << endreq ;
     Vertices* PV = get<Vertices>(PVContainer);
     if ( !PV ) {

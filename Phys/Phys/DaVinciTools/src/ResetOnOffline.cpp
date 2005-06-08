@@ -1,61 +1,59 @@
-// $Id: ResetPVLocation.cpp,v 1.1 2004-10-27 13:49:59 pkoppenb Exp $
+// $Id: ResetOnOffline.cpp,v 1.1 2005-06-08 16:15:32 pkoppenb Exp $
 // Include files 
 
 // from Gaudi
 #include "GaudiKernel/AlgFactory.h" 
-// from Event
-#include "Event/Vertex.h" 
 
 // local
-#include "ResetPVLocation.h"
+#include "ResetOnOffline.h"
+#include "Kernel/IOnOffline.h" 
 
 //-----------------------------------------------------------------------------
-// Implementation file for class : ResetPVLocation
+// Implementation file for class : ResetOnOffline
 //
-// 2004-10-27 : Patrick KOPPENBURG
+// 2005-06-08 : Patrick KOPPENBURG
 //-----------------------------------------------------------------------------
 
 // Declaration of the Algorithm Factory
-static const  AlgFactory<ResetPVLocation>          s_factory ;
-const        IAlgFactory& ResetPVLocationFactory = s_factory ; 
+static const  AlgFactory<ResetOnOffline>          s_factory ;
+const        IAlgFactory& ResetOnOfflineFactory = s_factory ; 
 
 
 //=============================================================================
 // Standard constructor, initializes variables
 //=============================================================================
-ResetPVLocation::ResetPVLocation( const std::string& name,
-                                  ISvcLocator* pSvcLocator)
+ResetOnOffline::ResetOnOffline( const std::string& name,
+                                ISvcLocator* pSvcLocator)
   : GaudiAlgorithm ( name , pSvcLocator )
-    , m_PVLocator()
 {
-    declareProperty( "PVLocation", m_PVLocation = VertexLocation::Primary);
-    declareProperty( "ResetToOffline", m_reset = false );
+    declareProperty( "ResetToOffline", m_offline = false );
+    declareProperty( "ResetToOnline", m_online = false );
 }
 //=============================================================================
 // Destructor
 //=============================================================================
-ResetPVLocation::~ResetPVLocation() {}; 
+ResetOnOffline::~ResetOnOffline() {}; 
 
 //=============================================================================
 // Initialization
 //=============================================================================
-StatusCode ResetPVLocation::initialize() {
+StatusCode ResetOnOffline::initialize() {
   StatusCode sc = GaudiAlgorithm::initialize(); // must be executed first
   if ( sc.isFailure() ) return sc;  // error printed already by GaudiAlgorithm
 
-  debug() << "==> Initialize" << endmsg;
-  sc = toolSvc()->retrieveTool( "PVLocator", m_PVLocator);
-  if(sc.isFailure()){
-    err() << " Unable to retrieve PV Locator tool" << endreq;
-    return sc;
+  m_onOffline = tool<IOnOffline>("OnOfflineTool");
+  if (!m_onOffline){
+    err() << "No OnOffline Tool" << endmsg ;
+    return StatusCode::FAILURE;
   }
-  if ( m_reset && ( m_PVLocation != VertexLocation::Primary)){
-    err() << "You cannot reset PV to offline PV and to " << 
-      VertexLocation::Primary << " at the same time" << endreq;
+  if ( m_online && m_offline ){
+    err() << "Cannot set to ONLINE and OFFLINE at the same time" << endmsg ;
     return  StatusCode::FAILURE;
-  }
-  if ( m_reset ) m_PVLocation = VertexLocation::Primary ; // already the case but anyway
-  info() << "This algorithm will reset PV to " << m_PVLocation << endreq ;
+  } else if ( m_online ) {
+    info() << "Will Set to ONLINE" << endmsg ;
+  } else if ( m_offline ) {
+    info() << "Will Set to OFFLINE" << endmsg ;
+  } else warning() << "Will be doing nothing" << endmsg ;
 
   return StatusCode::SUCCESS;
 };
@@ -63,20 +61,24 @@ StatusCode ResetPVLocation::initialize() {
 //=============================================================================
 // Main execution
 //=============================================================================
-StatusCode ResetPVLocation::execute() {
+StatusCode ResetOnOffline::execute() {
 
   debug() << "==> Execute" << endmsg;
-  StatusCode sc = m_PVLocator->setPVLocation( m_PVLocation );
-  if ( sc.isFailure() ){
-    warning() << "PVLocator is unhappy" << endmsg ;
-  } ;
+  if ( m_online) {
+    StatusCode sc = m_onOffline->setOnline( m_online );
+    return sc ;
+  } else if ( m_offline ) {
+    StatusCode sc = m_onOffline->setOnline( !m_offline );
+    return sc ;
+  }
+
   return StatusCode::SUCCESS;
 };
 
 //=============================================================================
 //  Finalize
 //=============================================================================
-StatusCode ResetPVLocation::finalize() {
+StatusCode ResetOnOffline::finalize() {
 
   debug() << "==> Finalize" << endmsg;
 

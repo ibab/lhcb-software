@@ -1,7 +1,28 @@
-! $Id: release.notes,v 1.166 2005-06-08 06:57:00 pkoppenb Exp $
+! $Id: release.notes,v 1.167 2005-06-08 16:15:32 pkoppenb Exp $
 ! Package     : DaVinciTools
 ! Responsible : P. Koppenburg
 
+! 2005-06-08 - P. Koppenburg
+  - src/PVLocator.cpp
+  - src/PVLocator.h
+  - src/ResetPVLocation.cpp
+  - src/ResetPVLocation.h
+    . Removed
+  - src/OnOfflineTool.cpp
+  - src/OnOfflineTool.h
+    . New global tool that defines Online or Offline environment
+      It knows about the PV location, the geom and vertex tools to use
+      and replaces the PVLocator
+  - src/ResetOnOffline.cpp
+  - src/ResetOnOffline.h
+    . New algorith that sets Online or Offline environment
+  - src/CheckPV.cpp
+  - src/CheckPV.h
+  - src/DaVinciTools_load.cpp
+  - src/SimplePlotTool.cpp
+  - src/SimplePlotTool.h
+    . Modified accordingly
+                                                                                                                                                                                  
 ! 2005-06-08 - P. Koppenburg
   - src/Algorithm2ID.h
     . Return size of algorithm array
