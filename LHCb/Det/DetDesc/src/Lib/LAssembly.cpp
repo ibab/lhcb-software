@@ -1,4 +1,4 @@
-// $Id: LAssembly.cpp,v 1.5 2003-06-04 08:14:35 ibelyaev Exp $
+// $Id: LAssembly.cpp,v 1.6 2005-06-09 11:04:37 cattanem Exp $
 
 // Include files
 // from Gaudi
@@ -416,7 +416,7 @@ void LAssembly::computeCover() {
       }  
     }
   }
-  log << MSG::DEBUG << "Assembly " << name() 
+  log << MSG::VERBOSE << "Assembly " << name() 
       << " x [" << m_xMin << "," << m_xMax
       << "], y [" << m_yMin << "," << m_yMax
       << "], z [" << m_zMin << "," << m_zMax

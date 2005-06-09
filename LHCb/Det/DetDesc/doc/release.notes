@@ -1,15 +1,15 @@
 ! =============================================================================
-! $Id: release.notes,v 1.182 2005-06-09 06:58:17 pkoppenb Exp $ 
+! $Id: release.notes,v 1.183 2005-06-09 11:04:36 cattanem Exp $ 
 ! =============================================================================
 ! package DetDesc
 ! package manager : Marco Clemencic, Juan Palacios
 ! =============================================================================
 
+!======================== DetDesc v15r1 2005-06-08 ========================
 ! 2005-06-08 - P. Koppenburg
-  - src/Lib/GeometryInfoPlus.cpp
+  - src/Lib/GeometryInfoPlus.cpp, LAssembly.cpp
     . Changed all DEBUG to VERBOSE
     
-!======================== DetDesc v15r1 2005-06-08 ========================
 ! 2005-06-07 - Marco Clemencic
  - Added requested optimization to UpdateManagerSvc: check the intersection
 	 of validities of the head items before starting the update loop.
