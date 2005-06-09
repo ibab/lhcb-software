@@ -1,9 +1,39 @@
-! $Id: release.notes,v 1.49 2005-05-12 08:20:39 pkoppenb Exp $
+! $Id: release.notes,v 1.50 2005-06-09 13:10:41 pkoppenb Exp $
 ! Package     : DaVinciKernel
 ! Responsible : P. Koppenburg
 
+! 2005-06-09 - P. Koppenburg
+  - Kernel/IDirectionFit.h
+  - Kernel/IMassVertexFit.h
+  - Kernel/IParticleCombiner.h
+  - Kernel/IParticleReFitter.h
+  - Kernel/IVertexFit.h
+    . New interfaces for vertex fitters
+
+! 2005-06-08 - P. Koppenburg
+  - Kernel/IOnOffline.h
+    . New tool that resturns online or offline environment
+      Knows about PV (replaces PVLocator) and what geom and vertex 
+      tools to use.
+  - Kernel/DVAlgorithm.h
+  - src/DVAlgorithm.cpp
+  - src/component/PhysDesktop.cpp
+  - src/component/PhysDesktop.h
+    . Use new tool
+  - Kernel/IPVLocator.h
+    . Removed
+  - src/IAlgorithm2ID.h
+    . Return size of algorithm array
+
+! 2005-06-02 - P. Koppenburg
+  - src/DVAlgorithm.{h,cpp}
+    . Allow change of CheckOverlap Tool implementation
 
 !========================== DaVinciKernel v3r3 2005-05-12 ===================
+! 2005-05-11 - P. Koppenburg
+  - Kernel/IParticleTransporter.h
+    . Removed
+
 ! 2005-05-11 - P. Koppenburg for Vanya Belyaev
   - src/component/PhysDesktop.cpp
     . Allow to have tools as parent of physdektop

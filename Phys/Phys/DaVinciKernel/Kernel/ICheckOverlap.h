@@ -1,4 +1,4 @@
-// $Id: ICheckOverlap.h,v 1.6 2005-05-09 07:35:31 pkoppenb Exp $
+// $Id: ICheckOverlap.h,v 1.7 2005-06-09 13:10:40 pkoppenb Exp $
 #ifndef DAVINCIKERNEL_ICHECKOVERLAP_H 
 #define DAVINCIKERNEL_ICHECKOVERLAP_H 1
 
@@ -20,9 +20,9 @@ static const InterfaceID IID_ICheckOverlap("ICheckOverlap", 2, 1);
 /** @class ICheckOverlap ICheckOverlap.h
  *  
  *  Tool to check if more than one particle originate 
- *  from the same protoparticle.
+ *  from the same source 
  *
- *  @author Jose Helder Lopes
+ *  @author Jose Helder Lopes, redesigned by P. Koppenburg
  *  @date   28/06/2002
  */
 

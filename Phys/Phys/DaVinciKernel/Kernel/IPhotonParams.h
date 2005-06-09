@@ -1,8 +1,14 @@
-// $Id: IPhotonParams.h,v 1.2 2005-02-09 17:20:43 pkoppenb Exp $
+// $Id: IPhotonParams.h,v 1.3 2005-06-09 13:10:40 pkoppenb Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.2.6.1  2005/06/02 16:45:41  pkoppenb
+// CheckOverlap - another implementation
+//
+// Revision 1.2  2005/02/09 17:20:43  pkoppenb
+// CLHEP
+//
 // Revision 1.1  2005/01/06 10:30:43  pkoppenb
 // *.h moved from DaVinciTools to Kernel
 //

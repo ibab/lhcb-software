@@ -1,4 +1,4 @@
-// $Id: IAlgorithm2ID.h,v 1.1 2005-05-02 15:08:30 pkoppenb Exp $
+// $Id: IAlgorithm2ID.h,v 1.2 2005-06-09 13:10:40 pkoppenb Exp $
 #ifndef KERNEL_IALGORITHM2ID_H 
 #define KERNEL_IALGORITHM2ID_H 1
 
@@ -9,7 +9,7 @@
 // from Gaudi
 #include "GaudiKernel/IAlgTool.h"
 
-static const InterfaceID IID_IAlgorithm2ID ( "IAlgorithm2ID", 1, 0 );
+static const InterfaceID IID_IAlgorithm2ID ( "IAlgorithm2ID", 1, 1 );
 
 /** @class IAlgorithm2ID IAlgorithm2ID.h Kernel/IAlgorithm2ID.h
  *  
@@ -29,6 +29,9 @@ public:
  
   /// Return name from ID
   virtual std::string nameFromId( const int& ) = 0;
+ 
+  /// Return size
+  virtual int size(void) = 0;
  
 protected:
 

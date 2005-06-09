@@ -1,4 +1,4 @@
-// $Id: PhysDesktop.h,v 1.9 2005-02-09 07:32:54 pkoppenb Exp $
+// $Id: PhysDesktop.h,v 1.10 2005-06-09 13:10:41 pkoppenb Exp $
 #ifndef PHYSDESKTOP_H 
 #define PHYSDESKTOP_H 1
 
@@ -15,7 +15,7 @@
 // Forward declarations
 class IDataProviderSvc;
 class IParticleMaker;
-class IPVLocator;
+class IOnOffline;
 
 /** @class PhysDesktop PhysDesktop.h Kernel/PhysDesktop.h
  *  A Desktop upon which the user keeps his particles and vertices
@@ -140,6 +140,6 @@ private:
 
   bool m_locationWarned ;
   
-  IPVLocator* m_PVLocator ;   ///< locate PV
+  IOnOffline* m_OnOffline ;   ///< locate PV
 };
 #endif // PHYSDESKTOP_H

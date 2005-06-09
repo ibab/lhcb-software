@@ -1,4 +1,5 @@
 #include "Kernel/DVAlgorithm.h"
+#include "Kernel/IOnOffline.h"
 
 /// Standard constructor
 DVAlgorithm::DVAlgorithm( const std::string& name, ISvcLocator* pSvcLocator ) 
@@ -19,8 +20,10 @@ DVAlgorithm::DVAlgorithm( const std::string& name, ISvcLocator* pSvcLocator )
   , m_algorithmID(-1)
 {  
     
-  declareProperty("VertexFitter", m_typeVertexFit = "UnconstVertexFitter");
+  declareProperty("VertexFitter", m_typeVertexFit = "Default");
+  declareProperty("GeomTool", m_typeGeomTool = "Default");
   declareProperty("MassVertexFitter",m_typeLagFit = "LagrangeMassVertexFitter");
+  declareProperty("CheckOverlapTool",m_typeCheckOverlap = "CheckOverlap");
   declareProperty("DecayDescriptor", m_decayDescriptor = "not specified");
   declareProperty("AvoidSelResult", m_avoidSelResult = false );
   declareProperty("PrintSelResult", m_printSelResult = false );
@@ -92,20 +95,41 @@ StatusCode DVAlgorithm::loadTools() {
         << "] not found" << endreq;
     return StatusCode::FAILURE;
   }
-     
-  msg << MSG::DEBUG << ">>> Retrieving " << m_typeVertexFit 
-      << " as IVertexFitter" << endreq;
-  m_pVertexFit = tool<IVertexFitter>(m_typeVertexFit, this);
+
+  // vertex fitter
+  IOnOffline* onof = NULL;
+  std::string tvf = m_typeVertexFit ;
+  if ( tvf == "Default" ){
+    onof = tool<IOnOffline>("OnOfflineTool");
+    if (onof==0) {
+       msg << MSG::ERROR << ">>> DVAlgorithm[OnOfflineTool] not found" << endreq;
+       return StatusCode::FAILURE;
+    }
+    tvf = onof->vertexFitter();
+  }
+  msg << MSG::DEBUG << ">>> Retrieving " << tvf
+        << " as IVertexFitter" << endreq;
+  m_pVertexFit = tool<IVertexFitter>(tvf, this);
   if ( !m_pVertexFit ) {
     msg << MSG::ERROR << ">>> DVAlgorithm[" << m_typeVertexFit 
         << "] not found" << endreq;
     return StatusCode::FAILURE;
   }
   
-  msg << MSG::DEBUG << ">>> Retrieving GeomDispCalculator" << endreq;
-  m_pGeomDispCalc = tool<IGeomDispCalculator>("GeomDispCalculator", this);
+  // geom
+  std::string gdc = m_typeGeomTool ;
+  if ( gdc == "Default" ){
+    if (onof==0) onof = tool<IOnOffline>("OnOfflineTool");
+    if (onof==0) {
+       msg << MSG::ERROR << ">>> DVAlgorithm[OnOfflineTool] not found" << endreq;
+       return StatusCode::FAILURE;
+    }
+    gdc = onof->dispCalculator();
+  }
+  msg << MSG::DEBUG << ">>> Retrieving" << gdc << " as IGeomDispCalculator" << endreq;
+  m_pGeomDispCalc = tool<IGeomDispCalculator>(gdc, this);
   if ( !m_pGeomDispCalc ) {
-    msg << MSG::ERROR << ">>> DVAlgorithm[GeomDispCalculator] not found" 
+    msg << MSG::ERROR << ">>> DVAlgorithm[" << gdc << "] not found" 
         << endreq;
     return StatusCode::FAILURE;
   }
@@ -135,9 +159,9 @@ StatusCode DVAlgorithm::loadTools() {
   }  
   
   msg << MSG::DEBUG << ">>> Retrieving CheckOverlap Tool" << endreq;
-  m_checkOverlap = tool<ICheckOverlap>("CheckOverlap");
+  m_checkOverlap = tool<ICheckOverlap>(m_typeCheckOverlap);
   if ( !m_checkOverlap ) {
-    msg << MSG::ERROR << ">>> DVAlgorithm[CheckOverlap] not found" 
+    msg << MSG::ERROR << ">>> DVAlgorithm["<< m_typeCheckOverlap << "] not found" 
         << endreq;
     return StatusCode::FAILURE;
   }

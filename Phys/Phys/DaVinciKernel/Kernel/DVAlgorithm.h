@@ -100,12 +100,16 @@ private:
   /// Method to create SelResult container
   StatusCode fillSelResult() ;
 
-  /// Concrete type Name of MassConstrained vertex to use (Property)
+  /// Concrete type Name of Unconstrained vertex to use (Property)
   std::string m_typeVertexFit;
+  /// Concrete type Name of geom tool
+  std::string m_typeGeomTool;
   /// Concrete type of VertexFitter to use (Property)
   std::string m_typeLagFit;
   /// Decay description (Property)
   std::string m_decayDescriptor;
+  /// Concrete type of CheckOverlap tool
+  std::string m_typeCheckOverlap;
   /// Avoid writing SelResult object in TES (Property)
   bool m_avoidSelResult;
   /// Avoid printing SelResult statistics 

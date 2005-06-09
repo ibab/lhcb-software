@@ -1,4 +1,4 @@
-// $Id: PhysDesktop.cpp,v 1.18 2005-05-12 08:34:27 pkoppenb Exp $
+// $Id: PhysDesktop.cpp,v 1.19 2005-06-09 13:10:41 pkoppenb Exp $
 // Include files  
 
 // from Gaudi
@@ -15,7 +15,7 @@
 // local
 #include "PhysDesktop.h"
 #include "Kernel/IParticleMaker.h"
-#include "Kernel/IPVLocator.h"
+#include "Kernel/IOnOffline.h"
 
 /*-----------------------------------------------------------------------------
  * Implementation file for class : PhysDesktop base class 
@@ -23,7 +23,7 @@
  * 18/02/2002 : Sandra Amato
  * 04/03/2004 : Hugo Ruiz : automatized outputLocation = algorithm name
  * 11/08/2004 : Patrick Koppenburg : Make it a GaudiTool
- * 17/12/2004 : Patrick Koppenburg : Add PVLocator tool
+ * 17/12/2004 : Patrick Koppenburg : Add OnOffline tool
  * 08/02/2005 : Patrick Koppenburg : Split vertices into primaries and secondaries
  *-----------------------------------------------------------------------------
  */
@@ -85,7 +85,7 @@ PhysDesktop::PhysDesktop( const std::string& type,
   , m_outputLocn     () 
   , m_pMaker         (0)
   , m_locationWarned (false)
-  , m_PVLocator      (0)
+  , m_OnOffline      (0)
 {
   
   // Declaring implemented interfaces
@@ -184,9 +184,9 @@ StatusCode PhysDesktop::initialize() {
     info() << endmsg;
   }
   
-  // PVLocator tool
-  m_PVLocator = tool<IPVLocator>("PVLocator");
-  if( !m_PVLocator ){
+  // OnOffline tool
+  m_OnOffline = tool<IOnOffline>("OnOfflineTool");
+  if( !m_OnOffline ){
     err() << " Unable to retrieve PV Locator tool" << endmsg;
     return StatusCode::FAILURE;
   }
@@ -769,14 +769,14 @@ StatusCode PhysDesktop::getParticles(){
 StatusCode PhysDesktop::getPrimaryVertices(){
   
   std::string primVtxLocn ;
-  if ( m_primVtxLocn == "" ) primVtxLocn = m_PVLocator->getPVLocation() ;
+  if ( m_primVtxLocn == "" ) primVtxLocn = m_OnOffline->getPVLocation() ;
   else primVtxLocn = m_primVtxLocn ;
 
   verbose() << "Getting PV from " << primVtxLocn << endmsg;
 
   if ( !exist<Vertices>( primVtxLocn )){
     Warning("Primary vertex location `"+primVtxLocn+"' does not exist") ;
-    if ( m_primVtxLocn == "" ) Warning("This location is obtained from PVLocator tool");
+    if ( m_primVtxLocn == "" ) Warning("This location is obtained from OnOffline tool");
     return StatusCode::SUCCESS; // no PV
   }
        
