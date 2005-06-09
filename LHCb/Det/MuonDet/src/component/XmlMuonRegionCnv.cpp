@@ -1,4 +1,4 @@
-// $Id: XmlMuonRegionCnv.cpp,v 1.14 2005-06-06 15:03:29 cattanem Exp $
+// $Id: XmlMuonRegionCnv.cpp,v 1.15 2005-06-09 06:59:02 pkoppenb Exp $
 
 // Include files
 #include <cstdio>
@@ -188,7 +188,7 @@ XmlMuonRegionCnv::i_fillSpecificObj (xercesc::DOMElement* childElement,
   // gets the element's name
   std::string tagName = dom2Std (childElement->getNodeName());
 
-  log << MSG::DEBUG << "Processing element "
+  log << MSG::VERBOSE << "Processing element "
       << tagName << endreq;
   
 
@@ -295,7 +295,7 @@ StatusCode XmlMuonRegionCnv::chamberRead (xercesc::DOMElement* &childElement,
   // both GasGap and Readout should be here
 
   if(!childElement->hasChildNodes()){
-    log << MSG::DEBUG << "No readout/gasgap associated to this region" 
+    log << MSG::VERBOSE << "No readout/gasgap associated to this region" 
         << endreq;
     return StatusCode::FAILURE;
   }
@@ -327,7 +327,7 @@ StatusCode XmlMuonRegionCnv::chamberRead (xercesc::DOMElement* &childElement,
     return StatusCode::FAILURE;
   }
   
-  log << MSG::DEBUG << "Number has converted value : " <<
+  log << MSG::VERBOSE << "Number has converted value : " <<
     atol(Number.c_str()) << endreq;
   
   dataObj->setchamberNum (atol(Number.c_str()));
@@ -371,7 +371,7 @@ XmlMuonRegionCnv::chamberChildrenRead(xercesc::DOMElement* &childElement,
       xercesc::DOMNode* readoutNode = attributes->getNamedItem(conditionString);
 
       readout = dom2Std(readoutNode->getNodeValue());
-      log << MSG::DEBUG << "Readout is "
+      log << MSG::VERBOSE << "Readout is "
           << readout << endreq;
 
     } else if(dom2Std(nodeChildren->item(i)->getNodeName()) == "GasGap"){
@@ -393,7 +393,7 @@ XmlMuonRegionCnv::chamberChildrenRead(xercesc::DOMElement* &childElement,
       xercesc::DOMNode* ggSupport = attributes->getNamedItem(supportString);
       gasGapSupport = dom2Std(ggSupport->getNodeValue());
 
-      log << MSG::DEBUG << "GasGap parameters: "
+      log << MSG::VERBOSE << "GasGap parameters: "
           << "Number " << gasGapNumber 
           << " offset " << gasGapOffset
           << " logvol " << gasGapLogvol
@@ -460,10 +460,10 @@ XmlMuonRegionCnv::makeChamberObjects(xercesc::DOMElement* &childElement,
   int chamNum;
   for(chamNum=1; chamNum <= dataObj->chamberNum(); chamNum++){
     // NOTE: this is a "safe" new as this is passed to the transisent store
-    log << MSG::DEBUG << "Making Chamber no.   " << chamNum << endmsg;
-    log << MSG::DEBUG << "               reg.  " << regNum << endmsg;
-    log << MSG::DEBUG << "               stat. " << statNum << endmsg;
-    log << MSG::DEBUG << "               gas.  " << gasGapNumber << endmsg;
+    log << MSG::VERBOSE << "Making Chamber no.   " << chamNum << endmsg;
+    log << MSG::VERBOSE << "               reg.  " << regNum << endmsg;
+    log << MSG::VERBOSE << "               stat. " << statNum << endmsg;
+    log << MSG::VERBOSE << "               gas.  " << gasGapNumber << endmsg;
     DeMuonChamber *cChamber = 
       new DeMuonChamber(statNum,regNum,chamNum,gasGapNumber);
     
@@ -480,9 +480,9 @@ XmlMuonRegionCnv::makeChamberObjects(xercesc::DOMElement* &childElement,
     ILVolume::ReplicaPath repPath;
     repPath.push_back(static_cast<unsigned int>(chamNum-1));
 	
-    log << MSG::DEBUG << "GI Logical volume : " << logVolName  << endreq;
-    log << MSG::DEBUG << "GI Support        : " << support     << endreq;
-    log << MSG::DEBUG << "GI rpath  : " << (chamNum-1) << endreq;
+    log << MSG::VERBOSE << "GI Logical volume : " << logVolName  << endreq;
+    log << MSG::VERBOSE << "GI Support        : " << support     << endreq;
+    log << MSG::VERBOSE << "GI rpath  : " << (chamNum-1) << endreq;
     // add the geometry information
     //    cChamber->createGeometryInfo (logVolName,support,repPath);
 	  	
@@ -493,7 +493,7 @@ XmlMuonRegionCnv::makeChamberObjects(xercesc::DOMElement* &childElement,
     std::string chamberName = Cham000;
 
     // And register it to current data object directory
-    log << MSG::DEBUG << "Registering chamber " << chamberName 
+    log << MSG::VERBOSE << "Registering chamber " << chamberName 
         <<	  endreq;
 
     // pass to transient store
@@ -501,7 +501,7 @@ XmlMuonRegionCnv::makeChamberObjects(xercesc::DOMElement* &childElement,
     if(StatusCode::SUCCESS != sc) {
       // Should return failure in this case. However, this is a hack to suppress
       // warnings as workaround the problem of circular dependency of MuonRegion
-      log << MSG::DEBUG << "The store rejected chamber " << chamberName 
+      log << MSG::VERBOSE << "The store rejected chamber " << chamberName 
           << ": Known problem with the Muon geometry implementation..." 
           << endmsg;
       return StatusCode::SUCCESS;
@@ -552,7 +552,7 @@ XmlMuonRegionCnv::makeGasGapObjects(DataSvcHelpers::RegistryEntry* chamPath,
     ggRepPath.push_back(static_cast<unsigned int>(gapNum-1));
     ggRepPath.push_back(static_cast<unsigned int>(gasGapOffset-1));
 
-    log << MSG::DEBUG 
+    log << MSG::VERBOSE 
         << "GasGap Logvol " <<  gasGapLogvol
         << " support " <<  gapSupport
         << " repPath " <<  gapNum-1 << "/" << gasGapOffset-1
@@ -563,7 +563,7 @@ XmlMuonRegionCnv::makeGasGapObjects(DataSvcHelpers::RegistryEntry* chamPath,
     std::string gapName = Gap0;
 
     // And register it to current data object directory
-    log << MSG::DEBUG << "Registering gap " 
+    log << MSG::VERBOSE << "Registering gap " 
         << gapName 
         <<	  endreq;
     

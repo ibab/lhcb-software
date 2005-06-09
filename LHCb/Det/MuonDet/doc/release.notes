@@ -1,8 +1,12 @@
-! $Id: release.notes,v 1.38 2005-06-06 15:03:29 cattanem Exp $
+! $Id: release.notes,v 1.39 2005-06-09 06:59:02 pkoppenb Exp $
 !
 ! Package     : MuonDet
 ! Responsible : Alessia Satta
 
+! 2005-06-08 - P. Koppenburg
+  - src/component/XmlMuonRegionCnv.cpp
+    . Changed all DEBUG to VERBOSE
+                                                                                                                                                                                 
 !========================= MuonDet v4r7 2005-06-06 =========================
 ! 2005-06-06 - Marco Cattaneo
  - Added hack to suppress warnings when chambers added twice. This happens due
