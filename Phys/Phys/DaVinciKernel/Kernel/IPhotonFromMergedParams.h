@@ -1,8 +1,11 @@
-// $Id: IPhotonFromMergedParams.h,v 1.3 2005-06-09 13:10:40 pkoppenb Exp $
+// $Id: IPhotonFromMergedParams.h,v 1.4 2005-06-09 13:11:30 pkoppenb Exp $
 // ====================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ====================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.3  2005/06/09 13:10:40  pkoppenb
+// Joined with v3r3b1 branch
+//
 // Revision 1.2.6.1  2005/06/02 16:45:41  pkoppenb
 // CheckOverlap - another implementation
 //
