@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/GaudiOnline/src/OnlineMessageSvc.h,v 1.1 2005-06-08 11:38:13 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/GaudiOnline/src/OnlineMessageSvc.h,v 1.2 2005-06-09 12:55:56 frankb Exp $
 #ifndef GAUDI_ONLINEMESSAGESVC_H
 #define GAUDI_ONLINEMESSAGESVC_H
 
@@ -7,7 +7,7 @@
 #include <vector>
 #include <map>
 #include <dis.hxx>
-#include <strstream>
+#include <sstream>
 
 #include "GaudiKernel/StatusCode.h"
 #include "GaudiKernel/Service.h"
@@ -145,11 +145,11 @@ private:
 
   std::string colTrans(std::string, int);
   typedef std::map<std::string, MSG::Color> ColorMap;
-  ColorMap m_colMap;
-  bool m_useDIM;
-  DimService *m_LogSrvc;
-  OnlineDimMessage m_mess;
-  bool m_inited;
+  ColorMap                                  m_colMap;
+  bool                                      m_useDIM;
+  DimService                               *m_LogSrvc;
+  OnlineDimMessage                          m_mess;
+  bool                                      m_inited;
 };
 
 #endif

@@ -1,4 +1,4 @@
-// $Id: OnlineMessageSvc.cpp,v 1.1 2005-06-08 11:38:13 frankb Exp $
+// $Id: OnlineMessageSvc.cpp,v 1.2 2005-06-09 12:55:56 frankb Exp $
 
 #include "GaudiKernel/Kernel.h"
 #include "GaudiKernel/StatusCode.h"
@@ -21,7 +21,6 @@
 // instances of this service
 static const SvcFactory<OnlineMessageSvc> s_factory;
 const IFactory& OnlineMessageSvcFactory = s_factory;
-static char DIMMsg[] = "DIM Message Service Starting";
 
 OnlineDimMessage::OnlineDimMessage()
 {
