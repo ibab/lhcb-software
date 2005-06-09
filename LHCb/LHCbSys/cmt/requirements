@@ -96,7 +96,7 @@ use TrackInterfaces 	v1r0	Tr      # Eduardo Rodrigues, Jose Hernando
 use DetCond		v7r2	Det     # Marco Clemencic
 
 # Temporary, should be split
-use TrgTools		v7r3	Trg     # Olivier Callot
+use TrgTools		v7r4	Trg     # Olivier Callot
 
 # LHCb  Examples
 use DetDescChecks	v2r3	Det     # Ivan Belyaev

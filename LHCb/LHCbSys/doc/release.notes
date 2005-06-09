@@ -5,12 +5,13 @@
 ! Purpose     : LHCb OO kernel packages
 !-----------------------------------------------------------------------------
 
-</PRE><H1><A NAME=v18r6>2005-06-08 LHCbSys v18r6</A></H1><PRE>
+</PRE><H1><A NAME=v18r6>2005-06-09 LHCbSys v18r6</A></H1><PRE>
  - Packages added:    Event/PackedEvent v1r0 (replaces Event/Rdst)
  - Packages removed:  Event/Rdst
  - Packages modified: KernelSys v4r12, LHCbKernel v5r11, DAQSys v1r4p1,
       EventSys v20r6, TrEvent v14r3, DAQEvent v5r1p1, TrackEvent v1r1,
-      DetSys v7r1, DetDesc v15r1, VeloDet v9r6, DetDescCnv v2r6, MuonDet v4r7
+      DetSys v7r1, DetDesc v15r1, VeloDet v9r6, DetDescCnv v2r6, MuonDet v4r7,
+      TrgTools v4r7
 
  - In LHCbKernel v5r11:
    . Speed improvements in VeloChannelID and LHCbID constructors, for L1
@@ -32,6 +33,7 @@
 
  - In DetDesc v15r1, DetDescCnv v2r6
    . Add support for Alignment Conditions
+   . Change OutputLevel of very frequent DEBUG messages to VERBOSE
    . Optimization of UpdateManagerSvc
 
  - In VeloDet v9r6
@@ -41,12 +43,16 @@
 
  - In MuonDet v4r7
    . Add hack to bypass a problem discovered with new GeometryInfo implementation
+   . Change OutputLevel of very frequent DEBUG messages to VERBOSE
 
  - In LHCb v18r6
    . Add options/LHCbApplication.opts, options shared by most applications
 
  - In DAQSys v1r4p1
    . Remove explicit creation of DataOnDemandSvc from RawBuffer.opts
+
+ - In TrgTools v4r7
+   . Move TrgInsertTrackErrParam algorithm to HltGeneric
 
 </PRE><H1><A NAME=v18r5>2005-05-24 LHCbSys v18r5</A></H1><PRE>
  - Packages added:    TrackInterfaces v1r0, DetCond v7r2, DetCondExample v7r2
