@@ -1,4 +1,4 @@
-// $Id: GeometryInfoPlus.cpp,v 1.1 2005-06-03 10:19:44 jpalac Exp $
+// $Id: GeometryInfoPlus.cpp,v 1.2 2005-06-09 06:58:17 pkoppenb Exp $
 // Include files 
 
 // GaudiKernel
@@ -185,34 +185,34 @@ StatusCode GeometryInfoPlus::initialize()
   m_services = DetDesc::services();
   m_hasAlignment=!m_alignmentPath.empty();
   m_log = new MsgStream(msgSvc(), "GeometryInfoPlus");
-  log() << MSG::DEBUG << "initialize" << endmsg;
-  log() << MSG::DEBUG << "alignment path " << m_alignmentPath << endmsg;
+  log() << MSG::VERBOSE << "initialize" << endmsg;
+  log() << MSG::VERBOSE << "alignment path " << m_alignmentPath << endmsg;
   return cache();  
 }
 //=============================================================================
 StatusCode GeometryInfoPlus::cache() 
 {
  
-  log() << MSG::DEBUG << "cache() getting alignmentCondition" << endmsg;
+  log() << MSG::VERBOSE << "cache() getting alignmentCondition" << endmsg;
   StatusCode scAlignment=getAlignmentCondition();
-  log() << MSG::DEBUG << "cache() got alignmentCondition" << endmsg;
+  log() << MSG::VERBOSE << "cache() got alignmentCondition" << endmsg;
   if (!scAlignment) {
-    log() << MSG::DEBUG 
+    log() << MSG::VERBOSE 
           << "Volume: " << lvolumeName() << endmsg;
     
-    log() << MSG::DEBUG
+    log() << MSG::VERBOSE
           << "No alignment condition loaded for this IGeometryInfo" 
           << endmsg;
-    log() << MSG::DEBUG 
+    log() << MSG::VERBOSE 
           << "\t Unity transformation will be assigned as delta" 
           << endmsg;
   }
-  log() << MSG::DEBUG << "cache() clearing matrices" << endmsg;
+  log() << MSG::VERBOSE << "cache() clearing matrices" << endmsg;
   clearMatrices(); 
-  log() << MSG::DEBUG << "cache() calculating matrices" << endmsg;
+  log() << MSG::VERBOSE << "cache() calculating matrices" << endmsg;
   calculateMatrices();
  
-  log() << MSG::DEBUG << "CACHED EVERYTHING" << endmsg;
+  log() << MSG::VERBOSE << "CACHED EVERYTHING" << endmsg;
 
   return StatusCode::SUCCESS;
   
@@ -221,13 +221,13 @@ StatusCode GeometryInfoPlus::cache()
 StatusCode GeometryInfoPlus::calculateMatrices() 
 {
 
-  log() << MSG::DEBUG << "calculateMatrices: clearing matrices" << endmsg;
+  log() << MSG::VERBOSE << "calculateMatrices: clearing matrices" << endmsg;
   clearMatrices(); 
 
   IGeometryInfo* gi = this;
   std::vector<IGeometryInfo*> parentGeomInfos;
   
-  log() << MSG::DEBUG << "Welcome to calculateMatrices for volume "
+  log() << MSG::VERBOSE << "Welcome to calculateMatrices for volume "
         << gi->lvolumeName() << " support " << m_gi_supportName
         << endmsg;
   do {
@@ -236,31 +236,31 @@ StatusCode GeometryInfoPlus::calculateMatrices()
     Assert( 0 != gi->lvolume(), 
             " GeometryInfoPlus::calculateMatrices() - support has no LVolume!");
 
-    log() << MSG::DEBUG << "storing matrix for volume " 
+    log() << MSG::VERBOSE << "storing matrix for volume " 
           << gi->lvolumeName()
           << endmsg;
 
     if (!idealMatrixLoaded()) {
-      log() << MSG::DEBUG << "store ideal..." << endmsg;
+      log() << MSG::VERBOSE << "store ideal..." << endmsg;
       m_pvMatrices.push_back( gi->localIdealMatrix() );
     } else {
-      log() << MSG::DEBUG << "ideal already stored..." << endmsg;
+      log() << MSG::VERBOSE << "ideal already stored..." << endmsg;
     }
     
     
-    log() << MSG::DEBUG << "store delta for " << endmsg;
+    log() << MSG::VERBOSE << "store delta for " << endmsg;
     m_deltaMatrices.push_back( gi->localDeltaMatrix() );
 
     parentGeomInfos.push_back(gi);
 
-    log() << MSG::DEBUG << "get support IGeometryInfo* for "
+    log() << MSG::VERBOSE << "get support IGeometryInfo* for "
           << gi->lvolumeName() << endmsg;
     
     gi = gi->supportIGeometryInfo();
 
   } while (0!=gi);
   
-  log() << MSG::DEBUG << "calculateMatrices: stored " 
+  log() << MSG::VERBOSE << "calculateMatrices: stored " 
         << m_pvMatrices.size() << " ideal and "
         << m_deltaMatrices.size() << " delta matrices for volumes "
         << endmsg;
@@ -270,7 +270,7 @@ StatusCode GeometryInfoPlus::calculateMatrices()
 
   std::vector<IGeometryInfo*>::iterator it=parentGeomInfos.begin();
   for (; it!=parentGeomInfos.end(); ++it) {
-    log() << MSG::DEBUG << "\t" << (*it)->lvolumeName()
+    log() << MSG::VERBOSE << "\t" << (*it)->lvolumeName()
           << endmsg;  
   }
 
@@ -388,35 +388,35 @@ StatusCode GeometryInfoPlus::getAlignmentCondition()
   StatusCode sc = StatusCode::FAILURE;
   if (this->hasAlignmentCondition()) {
 
-    log() << MSG::DEBUG << "gettingAlignmentCondition with path "
+    log() << MSG::VERBOSE << "gettingAlignmentCondition with path "
           << m_alignmentPath << endmsg;
     SmartDataPtr<AlignmentCondition> condition( dataSvc(), m_alignmentPath ); 
-    log() << MSG::DEBUG << "Got it!" << endmsg;
+    log() << MSG::VERBOSE << "Got it!" << endmsg;
     
     if (condition) {
-      log() << MSG::DEBUG <<"Found condition" << endmsg;
+      log() << MSG::VERBOSE <<"Found condition" << endmsg;
       
       sc = StatusCode::SUCCESS;
       m_alignmentCondition=condition;
       m_hasAlignment=true;
     } else {
-      log() << MSG::DEBUG <<"Did not find condition" << endmsg;
+      log() << MSG::VERBOSE <<"Did not find condition" << endmsg;
       m_hasAlignment=false;
       m_alignmentCondition=0;
     }
 
-    log() << MSG::DEBUG << "getAlignmentCondition classID "
+    log() << MSG::VERBOSE << "getAlignmentCondition classID "
           << condition->clID() << endmsg;
     std::vector<double> translations =  
       m_alignmentCondition->paramAsDoubleVect("dPosXYZ");
     if (translations.size()==3) {
-      log() <<  MSG::DEBUG << "Translations " 
+      log() <<  MSG::VERBOSE << "Translations " 
             << " X " << translations[0]
             << " Y " << translations[1]
             << " z " << translations[2]
             << endmsg;
     } else {
-      log() << MSG::DEBUG << "Translations vector has funny size: "
+      log() << MSG::VERBOSE << "Translations vector has funny size: "
             << translations.size() << endmsg;
     }
 
@@ -432,7 +432,7 @@ const HepTransform3D& GeometryInfoPlus::localIdealMatrix() const
 {
 
   if (0!=m_localIdealMatrix) {
-    log() << MSG::DEBUG << "Ideal matrix for " << m_gi_supportNamePath
+    log() << MSG::VERBOSE << "Ideal matrix for " << m_gi_supportNamePath
           << " already present" << endmsg;
     return *m_localIdealMatrix;
   }
@@ -441,7 +441,7 @@ const HepTransform3D& GeometryInfoPlus::localIdealMatrix() const
   
   if( ( 0==gi || !hasLVolume()) || !hasSupport() || 
       ( this == ( const IGeometryInfo*) gi ) ) {
-    log() << MSG::DEBUG << "localIdealMatrix: assigning identity matrix "
+    log() << MSG::VERBOSE << "localIdealMatrix: assigning identity matrix "
           << endmsg;
     m_localIdealMatrix = new HepTransform3D();
   } else {
@@ -479,7 +479,7 @@ IGeometryInfo* const GeometryInfoPlus::supportIGeometryInfo() const
 {
 
   if ( !hasSupport() ) return 0;
-  log() << MSG::DEBUG << "supportIGeometryInfo with support "
+  log() << MSG::VERBOSE << "supportIGeometryInfo with support "
         << m_gi_supportName << endmsg;
 
   if ( 0 == m_gi_support ) {
@@ -491,11 +491,11 @@ IGeometryInfo* const GeometryInfoPlus::supportIGeometryInfo() const
   }
 
   if (0!=m_gi_support) {
-    log() << MSG::DEBUG 
+    log() << MSG::VERBOSE 
           << "supportIGeometryInfo return IGeometryInfo* with volume "
           << m_gi_support->lvolumeName();
   } else {
-       log() << MSG::DEBUG 
+       log() << MSG::VERBOSE 
              << "supportIGeometryInfo found no IGeometryInfo* with support "
              << m_gi_supportName << endmsg;
        
@@ -520,7 +520,7 @@ HepTransform3D* GeometryInfoPlus::accumulateMatrices(const ILVolume::PVolumePath
 ILVolume::ReplicaPath& GeometryInfoPlus::supportPath() const 
 {
 
-  log() << MSG::DEBUG << "supportPath is " << m_gi_supportName << endmsg;  
+  log() << MSG::VERBOSE << "supportPath is " << m_gi_supportName << endmsg;  
   if(!m_gi_has_support||!m_gi_supportPath.empty()) {
     return m_gi_supportPath;
   }
@@ -562,13 +562,13 @@ ILVolume::ReplicaPath& GeometryInfoPlus::supportPath() const
 //=============================================================================
 IGeometryInfo* GeometryInfoPlus::geoByName( const std::string& name ) const 
 {
-  log() << MSG::DEBUG << "geoByName name is " << name << endmsg;
+  log() << MSG::VERBOSE << "geoByName name is " << name << endmsg;
   
   IGeometryInfo* gi = 0;
   SmartDataPtr<IDetectorElement> ptr( dataSvc() , name );
   if ( 0 != ptr ) {
     gi = ptr->geometry();
-    log() << MSG::DEBUG << "geoByName: Found detector element for " 
+    log() << MSG::VERBOSE << "geoByName: Found detector element for " 
           << name << endmsg;  
   }
   
@@ -785,7 +785,7 @@ IGeometryInfo*  GeometryInfoPlus::reset()
 IGeometryInfo* GeometryInfoPlus::parentIGeometryInfo()       
 {
   if( !hasSupport() )  { return 0; }
-  log() << MSG::DEBUG << "parentIGeometryInfo with support "
+  log() << MSG::VERBOSE << "parentIGeometryInfo with support "
         << m_gi_supportName << endmsg;
   
   if( 0 == m_gi_support )
