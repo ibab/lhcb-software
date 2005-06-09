@@ -2,6 +2,10 @@ Package         : MuonMoniSim
 Package manager : A Sarti
 
 ======================= MuonMoniSim v1r0 2005-05-05 ========================
+! 2005-06-09 A. Sarti
+  Added more printout
+ 
+======================= MuonMoniSim v1r0 2005-05-05 ========================
 ! 2005-05-55 A. Sarti
   New package to hold Muon Sim checking/monitoring algorithms
  

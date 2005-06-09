@@ -67,6 +67,7 @@ StatusCode MuonHitChecker::initialize() {
   m_regionNumber = basegeometry.getRegions();  int i=0;
 
   for(int i=0; i<5; i++) {
+    nhit_ri[i] = cnt_ri[i] = 0;
     for(int j=0; j<4; j++) {
       nhit[i][j] = cnt[i][j] = 0;
     }
@@ -123,8 +124,9 @@ StatusCode MuonHitChecker::execute() {
   info() << "==> Execute MuonHitChecker" << endmsg;
  // Header
   const EventHeader* evt = get<EventHeader>(EventHeaderLocation::Default);
-  int tnhit[5][4];  
+  int tnhit[5][4];    int tnhit_ri[5];  int tmhit_ri[5];  
   for(int i=0; i<5; i++) {
+    tnhit_ri[i] = 0; tmhit_ri[i] = 0;
     for(int j=0; j<4; j++) {
       tnhit[i][j] = 0;
     }
@@ -190,7 +192,7 @@ StatusCode MuonHitChecker::execute() {
 	m_con.push_back(0);
 	
 	m_x.push_back(xpos); m_y.push_back(ypos); m_z.push_back(zpos);
-	m_time.push_back(time/1000);
+	m_time.push_back(time);
 	
 	//Fill some histos	  
 	int hh =station*4+region;
@@ -232,11 +234,19 @@ StatusCode MuonHitChecker::execute() {
 	}          
 	
 	tnhit[station][region]++;
+	tnhit_ri[station]++;
+	if(abs(particle->particleID().pid()) == 13) tmhit_ri[station]++;
       }
     }
   }
-  for(int r=0; r<4; r++) {
-    for(int s=0; s<5; s++) {
+
+  for(int s=0; s<5; s++) {
+    if(tnhit_ri[s]) {
+      //Looking at mean number of hits (intregrated over regions)
+      cnt_ri[s]++;
+      nhit_ri[s]+= tnhit_ri[s];
+    }
+    for(int r=0; r<4; r++) {
       if(tnhit[s][r]) {
 	//Looking at mean number of hits
 	cnt[s][r]++;
@@ -262,18 +272,33 @@ StatusCode MuonHitChecker::finalize() {
   info() << "       Muon Monitoring Table " << endmsg;
   info() << "-----------------------------------------------------------------"
 	 << endmsg;
-  info()<<" S1        S2        S3        S4        S5 "<<endmsg;
+  info()<<" M1        M2        M3        M4        M5 "<<endmsg;
   for(int r=0; r<4; r++) {
     for(int s=0; s<5; s++) {
       if(cnt[s][r])  {
 	info()<<format("%5.3lf  ",(double)nhit[s][r]/cnt[s][r]);
 	//	info()<<(double)nhit[s][r]/cnt[s][r]<<"     ";
       } else {
-	info()<<0;
+	info()<<"0.000  ";
       }
     }
     info()<<" R"<<r+1<<endmsg;
   }
+  info() << "-----------------------------------------------------------------"
+	 << endmsg;
+  info() << "-------    Integrated over regions    ---------------------------"
+	 << endmsg;
+  info() << "-----------------------------------------------------------------"
+	 << endmsg;
+  for(int s=0; s<5; s++) {
+    if(cnt_ri[s])  {
+      info()<<format("%5.3lf  ",(double)nhit_ri[s]/cnt_ri[s]);
+      //	info()<<(double)nhit[s][r]/cnt[s][r]<<"     ";
+    } else {
+      info()<<"0.000  ";
+    }
+  }
+  info()<<" allR"<<endmsg;
   
   return StatusCode::SUCCESS;
 }

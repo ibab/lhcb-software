@@ -1,4 +1,4 @@
-// $Id: MuonHitChecker.h,v 1.2 2005-05-12 14:09:03 asarti Exp $
+// $Id: MuonHitChecker.h,v 1.3 2005-06-09 13:27:01 asarti Exp $
 #ifndef MuonHitChecker_H 
 #define MuonHitChecker_H 1
 
@@ -49,6 +49,7 @@ private:
 
   virtual StatusCode crNtuples();
   int nhit[5][4],cnt[5][4];
+  int nhit_ri[5],cnt_ri[5];
 
   bool m_detailedMonitor;
   /// N-tuple items to be written away (hit)
