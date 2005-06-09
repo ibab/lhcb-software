@@ -4,13 +4,12 @@ Package Coordinator: Marco Cattaneo
 Purpose: LHCb reconstruction packages.
          This project groups together all the reconstruction packages needed
          by one or more LHCb applications. 
-         It supersedes BrunelSys and large parts of LbcomSys and DaVinciSys. 
 
-</PRE><H1><A NAME=v1r2>2005-06-08 RecSys v1r2</A></H1><PRE>
+</PRE><H1><A NAME=v1r2>2005-06-10 RecSys v1r2</A></H1><PRE>
 This version uses Gaudi v16r4, LHCb v18r6 (also CLHEP 1.9, ROOT 4.0)
 
 - Packages modified: RichRecSys v1r16p3, RichRecoQC v1r10p1, TrgSys v2r7,
-    TrgVelo v7r3p1,L1Decision v5r1, CaloReco v2r9,CaloPIDs v2r6,CaloMoniDst v1r2
+    TrgVelo v7r3p2,L1Decision v5r1, CaloReco v2r9,CaloPIDs v2r6,CaloMoniDst v1r2
 
 - In RecSys v1r2
   . Add options/Reco.opts, for setting up Reco phase of Brunel
@@ -28,6 +27,8 @@ This version uses Gaudi v16r4, LHCb v18r6 (also CLHEP 1.9, ROOT 4.0)
   . In Brunel.opts, change name of offline instances of Velo tracking algorithms,
     to avoid configuring online algorithms with offline tuning when both are
     run in the same job
+  . Add property "nTracksMax". This is a dirty hack to allow throttling of L1
+    trigger in RTTC. Default is 10000
 
 - In L1Decision v5r1
   . Fix bug in accessing L0Calo L1 bank, reduces L1 accept rate from ~11% to 7.5%

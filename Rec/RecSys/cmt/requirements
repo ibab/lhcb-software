@@ -44,7 +44,7 @@ use TrgForward		v5r1p1	Trg   # Olivier Callot
 use TrgMonitor		v4r0	Trg   # Olivier Callot
 use TrgMuon		v1r2p1	Trg   # Alessia Satta
 use TrgPrimVertex	v4r0p1	Trg   # Olivier Callot
-use TrgVelo             v7r3p1  Trg   # David Hutchcroft
+use TrgVelo             v7r3p2  Trg   # David Hutchcroft
 use TrgVeloTT		v7r0	Trg   # Olivier Callot
 
 # L1 reconstruction and decision
