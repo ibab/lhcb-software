@@ -1,4 +1,4 @@
-// $Id: XmlBaseDetElemCnv.cpp,v 1.7 2005-06-03 10:02:11 jpalac Exp $
+// $Id: XmlBaseDetElemCnv.cpp,v 1.8 2005-06-09 11:14:31 cattanem Exp $
 
 // include files
 
@@ -125,7 +125,7 @@ StatusCode XmlBaseDetElemCnv::initialize() {
     log << MSG::VERBOSE << "Initializing" << endreq;
     if (0 != m_xmlSvc) {
       m_doGenericCnv = m_xmlSvc->allowGenericCnv();
-      log << MSG::DEBUG << "Generic conversion status: "
+      log << MSG::VERBOSE << "Generic conversion status: "
           << (unsigned int)m_doGenericCnv << endreq;
     }
   }
@@ -164,7 +164,7 @@ StatusCode XmlBaseDetElemCnv::i_createObj (xercesc::DOMElement* element,
   MsgStream log(msgSvc(), "XmlDetElemCnv" );
   
   // creates an object for the node found
-  log << MSG::DEBUG << "Normal generic detector element conversion" << endreq;
+  log << MSG::VERBOSE << "Normal generic detector element conversion" << endreq;
   std::string elementName = dom2Std (element->getAttribute(nameString));
   refpObject = new DetectorElement (elementName);
   
@@ -231,11 +231,12 @@ StatusCode XmlBaseDetElemCnv::i_fillObj (xercesc::DOMElement* childElement,
       dom2Std (childElement->getAttribute (rpathString));
     std::string namePath =
       dom2Std (childElement->getAttribute (npathString));
-    log << MSG::DEBUG << "GI volume        : " << logVolName    << endreq;
-    log << MSG::DEBUG << "GI support       : " << support       << endreq;
-    log << MSG::DEBUG << "GI rpath         : " << replicaPath   << endreq;
-    log << MSG::DEBUG << "GI npath         : " << namePath      << endreq;
-    log << MSG::DEBUG << "GI conditionPath : " << conditionPath << endreq;
+    log << MSG::VERBOSE << std::endl
+        << "GI volume        : " << logVolName    << std::endl
+        << "GI support       : " << support       << std::endl
+        << "GI rpath         : " << replicaPath   << std::endl
+        << "GI npath         : " << namePath      << std::endl
+        << "GI conditionPath : " << conditionPath << endmsg;
 
     // creates a geometryInfo child
     if (logVolName.empty()) {
@@ -267,7 +268,7 @@ StatusCode XmlBaseDetElemCnv::i_fillObj (xercesc::DOMElement* childElement,
             *replica = '\0';
             i = (unsigned int)atol (buf);
             repPath.push_back (i);
-            log << MSG::DEBUG << "Found replica number "
+            log << MSG::VERBOSE << "Found replica number "
                 << repPath.back() << endreq;
             replica = buf;
             i = 0;
@@ -409,7 +410,7 @@ StatusCode XmlBaseDetElemCnv::i_fillObj (xercesc::DOMElement* childElement,
         }
         dataObj->addParam<std::string>(name,value,comment);
       }
-      log << MSG::DEBUG << "Added user parameter " << name << " with value "
+      log << MSG::VERBOSE << "Added user parameter " << name << " with value "
           << value << ", type " << type << " and comment \"" << comment
           << "\"" << endreq;
     } else {

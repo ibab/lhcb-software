@@ -1,4 +1,4 @@
-// $Id: XmlGenericCnv.cpp,v 1.5 2005-04-22 13:33:31 marcocle Exp $
+// $Id: XmlGenericCnv.cpp,v 1.6 2005-06-09 11:14:31 cattanem Exp $
 
 // Include files
 #include "DetDescCnv/XmlGenericCnv.h"
@@ -98,7 +98,7 @@ StatusCode XmlGenericCnv::createObj (IOpaqueAddress* addr,
    }
 
    // displays the address for debug purposes  
-   log << MSG::DEBUG << "Address : dbname = " << addr->par()[0]
+   log << MSG::VERBOSE << "Address : dbname = " << addr->par()[0]
        << ", ObjectName = " << addr->par()[1]
        << ", isString = " << addr->ipar()[0] << endreq;
 

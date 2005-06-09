@@ -4,7 +4,9 @@
 ! Purpose     : standard converters for the LHCb Detector Description
 !-----------------------------------------------------------------------------
 
-!================ DetDescCnv v2r6 2005-06-03 ===========================
+!================ DetDescCnv v2r6 2005-06-09 ===========================
+! 2005-06-09 - Marco Cattaneo
+ - Change OutputLevel of many DEBUG messages to VERBOSE
 
 ! 2005-06-03 - Juan Palacios
  - Modified src/Lib/XmlBaseDetElemCnv.cpp to pass condition path to 
