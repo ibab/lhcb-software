@@ -38,7 +38,7 @@ use TrConverters        v1r0    Tr    # Eduardo Rodrigues, Jose Hernando
 # Trg reconstruction
 use TrgSys		v2r7	Trg   # Olivier Callot
 use TrgBrunel           v1r1    Trg   # Olivier Callot
-use TrgCalo		v2r0	Trg   # Olivier Deschamps
+use TrgCalo		v2r0p1  Trg   # Olivier Deschamps
 use TrgChecker		v7r1	Trg   # Olivier Callot
 use TrgForward		v5r1p1	Trg   # Olivier Callot
 use TrgMonitor		v4r0	Trg   # Olivier Callot
