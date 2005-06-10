@@ -1,7 +1,11 @@
 Package         : MuonMoniSim
 Package manager : A Sarti
 
-======================= MuonMoniSim v1r0 2005-05-05 ========================
+======================= MuonMoniSim v1r0 2005-06-10 ========================
+! 2005-06-10 A. Sarti
+  Fixed a bug in the normalization of the various mean hits evaluation
+
+======================= MuonMoniSim v1r0 2005-06-09 ========================
 ! 2005-06-09 A. Sarti
   Added more printout
  

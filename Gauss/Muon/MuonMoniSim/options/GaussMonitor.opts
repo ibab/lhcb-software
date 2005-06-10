@@ -1,4 +1,4 @@
-// $Id: GaussMonitor.opts,v 1.1.1.1 2005-05-05 09:42:12 asarti Exp $ 
+// $Id: GaussMonitor.opts,v 1.2 2005-06-10 10:53:19 asarti Exp $ 
 
 /** @file 
  * 
@@ -9,8 +9,8 @@
  */
 
 // Load the DLLs for histogram persistency
-ApplicationMgr.DLLs += { "HbookCnv" };
-ApplicationMgr.HistogramPersistency = "HBOOK";
+ApplicationMgr.DLLs += { "RootHistCnv" };
+ApplicationMgr.HistogramPersistency = "ROOT";
 
 //---------------------------------------------------------------------
 // Generator Monitor Histograms: set of histograms from HepMC

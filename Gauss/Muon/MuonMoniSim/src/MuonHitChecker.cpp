@@ -233,25 +233,21 @@ StatusCode MuonHitChecker::execute() {
 	  m_mom.push_back(0);
 	}          
 	
+	if(abs(particle->particleID().pid()) == 13) tmhit_ri[station]++;
 	tnhit[station][region]++;
 	tnhit_ri[station]++;
-	if(abs(particle->particleID().pid()) == 13) tmhit_ri[station]++;
       }
     }
   }
 
   for(int s=0; s<5; s++) {
-    if(tnhit_ri[s]) {
-      //Looking at mean number of hits (intregrated over regions)
-      cnt_ri[s]++;
-      nhit_ri[s]+= tnhit_ri[s];
-    }
+    //Looking at mean number of hits (intregrated over regions)
+    cnt_ri[s]++;
+    nhit_ri[s]+= tnhit_ri[s];
     for(int r=0; r<4; r++) {
-      if(tnhit[s][r]) {
-	//Looking at mean number of hits
-	cnt[s][r]++;
-	nhit[s][r]+= tnhit[s][r];
-      }  
+      //Looking at mean number of hits
+      cnt[s][r]++;
+      nhit[s][r]+= tnhit[s][r];
     }  
   }  
 

@@ -1,5 +1,5 @@
 #printOptions 
-// $Id: GaussJob.opts,v 1.1.1.1 2005-05-05 09:42:12 asarti Exp $ 
+// $Id: GaussJob.opts,v 1.2 2005-06-10 10:53:19 asarti Exp $ 
 
 /** @file 
  * 
@@ -60,12 +60,12 @@ ApplicationMgr.OutStream +=  { "GaussTape" };
 //---------------------------------------------------------------------------
 // Number of events to process
 //---------------------------------------------------------------------------
-ApplicationMgr.EvtMax     = 50;
+ApplicationMgr.EvtMax     = 15;
 
 //---------------------------------------------------------------------------
 // Set run and first event number, hence setting random numbers to start with
 //---------------------------------------------------------------------------
-Gauss.FirstEventNumber    = 51;
+Gauss.FirstEventNumber    = 1;
 Gauss.RunNumber           = 1;
 
 //---------------------------------------------------------------------------
@@ -74,7 +74,8 @@ Gauss.RunNumber           = 1;
 GaussTape.Output = "DATAFILE='PFN:rfio:/castor/cern.ch/user/a/asarti/Gauss.sim' TYP='POOL_ROOTTREE' OPT='RECREATE'";
 PoolDbCacheSvc.Catalog = { "xmlcatalog_file:NewCatalog.xml" };
 
-//ApplicationMgr.HistogramPersistency = "ROOT";
+//
+ApplicationMgr.HistogramPersistency = "ROOT";
 HistogramPersistencySvc.OutputFile = "/afs/cern.ch/user/a/asarti/scratch0/GaussProdHistos.root";  // Monitoring histos
 
 ApplicationMgr.ExtSvc += { "NTupleSvc" };

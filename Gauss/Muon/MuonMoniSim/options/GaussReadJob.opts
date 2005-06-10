@@ -1,5 +1,5 @@
 #printOptions 
-// $Id: GaussReadJob.opts,v 1.1.1.1 2005-05-05 09:42:13 asarti Exp $ 
+// $Id: GaussReadJob.opts,v 1.2 2005-06-10 10:53:19 asarti Exp $ 
 
 /** @file 
  * 
@@ -14,8 +14,8 @@
 // Phases to be executed: initialization + monitor
 //---------------------------------------------------------------------------
 ApplicationMgr.TopAlg  = { "LbAppInit/Gauss",
-                           "GaudiSequencer/Monitor"        
-                         }; 
+                           "GaudiSequencer/Monitor" 
+	}; 
 
 //---------------------------------------------------------------------------
 // Monitor phase: as in production + user monitor
@@ -25,7 +25,7 @@ ApplicationMgr.TopAlg  = { "LbAppInit/Gauss",
 Monitor.Members       += { "GaudiSequencer/GenMonitor" };
 Monitor.Members       += { "GaudiSequencer/SimMonitor" };     
 Monitor.Members       += { "GaudiSequencer/UserMonitor" };
-#include "$MUONCHECKERSROOT/options/GaussReadMonitor.opts"
+#include "$MUONMONISIMROOT/options/GaussReadMonitor.opts"
 Monitor.MeasureTime = true;
 
 // Algorithm in User monitor
@@ -53,20 +53,19 @@ GeneratorFullMonitor.OutputLevel = 2;
 
 //---------------------------------------------------------------------------
 // Number of events to read
-ApplicationMgr.EvtMax      = 20;
-
+ApplicationMgr.EvtMax      = 1000;
 
 //---------------------------------------------------------------------------
 // Input file 
 //---------------------------------------------------------------------------
 EventSelector.Input   = {
-  "DATAFILE='PFN:castor:/castor/cern.ch/user/a/asarti/Gauss.sim' TYP='POOL_ROOTTREE' OPT='READ'"
+  "DATAFILE='PFN:castor:/castor/cern.ch/user/g/gcorti/Gauss/v19r4/30000000.1000ev.mu-shift.sim' TYP='POOL_ROOTTREE' OPT='READ'"
 };
 
 //---------------------------------------------------------------------------
 // Output file. 
 //---------------------------------------------------------------------------
-HistogramPersistencySvc.OutputFile = "/afs/cern.ch/user/a/asarti/scratch0/GaussReadHistos.hbook";
+HistogramPersistencySvc.OutputFile = "/afs/cern.ch/user/a/asarti/scratch0/GaussReadHistos2.root";
 ApplicationMgr.ExtSvc += { "NTupleSvc" };
 NTupleSvc.Output      += { "FILE1 DATAFILE='/afs/cern.ch/user/a/asarti/scratch0/GaussHitReadMoni.root' TYP='ROOT' OPT='NEW'" } ;
 
