@@ -3,3 +3,8 @@ Package     : MooreSys
 Package Coordinator : Patrick Koppenburg and Marco Cattaneo
 Purpose     : LHCb HLT application
 
+</PRE><H1><A NAME=v1r0>2005-06-10 Moore v1r0</A></H1><PRE>
+This version uses LHCb v18r6, Lbcom v2r2, Rec v1r2, Phys v1r2, Online v1r1
+
+First release, for RTTC tests
+</PRE>
