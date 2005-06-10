@@ -1,4 +1,4 @@
-// $Id: DaVinciTools_load.cpp,v 1.52 2005-06-10 07:05:24 pkoppenb Exp $
+// $Id: DaVinciTools_load.cpp,v 1.53 2005-06-10 07:06:36 pkoppenb Exp $
 // Include files 
 
 #include "GaudiKernel/DeclareFactoryEntries.h"
@@ -20,7 +20,6 @@ DECLARE_FACTORY_ENTRIES( DaVinciTools ) {
   DECLARE_TOOL( DecayFinder );
   DECLARE_TOOL( DecodeSimpleDecayString );
   DECLARE_TOOL( OnOfflineTool ) ;
-  DECLARE_TOOL( PVLocator ) ;
   DECLARE_TOOL( RecursivePlotTool ) ;
   DECLARE_TOOL( SimplePlotTool ) ;
 
