@@ -65,14 +65,14 @@ HltYesExclusive.Members += { "ProcessPhase/Reco" };
 // CHECKING
 //--------------------------------------------------------------
 // Checking of HLT selections (correlations, plots, timing, test):
-ApplicationMgr.DLLs   += { "HltSelChecker" };
+//ApplicationMgr.DLLs   += { "HltSelChecker" };
 //#include "$HLTSELCHECKERROOT/options/Correlations.opts" // needs MC
 HltDecision.MakeCorrelations = false ;
 
 //MCCorrelations.Members = {};
 // #include "$HLTSELCHECKERROOT/options/Plots.opts"
 // #include "$HLTSELCHECKERROOT/options/MeasureTimes.opts"
-#include "$HLTSELCHECKERROOT/options/TestHltScore.opts" // Gaucho stuff
+#include "$HLTSELECTIONSROOT/options/TestHltScore.opts" // Gaucho stuff
 
 // Input data, number of events, OutputLevels etc.
 TestHltScore.OutputLevel = 4 ;
