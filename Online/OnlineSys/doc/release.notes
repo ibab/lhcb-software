@@ -1,13 +1,24 @@
+<PRE>
 !-----------------------------------------------------------------------------
 ! Package     : ONLINE_v1r0/OnlineSys
 ! Responsible : Marco Cattaneo
 ! Purpose     : 
 !-----------------------------------------------------------------------------
 
-!======================== OnlineSys v1r1 2005-06-10 ==========================
-! 2005-06-08 - Markus Frank
- - Incorporate Beat's changes to GauchoJob (v2r1) and GaudiOnline (v1r1)
+</PRE><H1><A NAME=v1r1>2005-06-10 OnlineSys v1r1</A></H1><PRE>
+This version uses Gaudi v16r4, LHCb v18r6
 
-!======================== OnlineSys v1r0 2005-05-13 ==========================
-! 2005-05-13 - Marco Cattaneo
+ - Packages modified: GaudiOnline v1r1, GauchoJob v2r1
+
+ - In GaudiOnline v1r1:
+   . Add OnlineMessageSvc component
+
+ - In GauchoJob v2r1:
+   . Adapt main program to use OnlineMessageSvc
+   . Rename GaudiMain.cpp to GaudiOnlineMain.cpp, to avoid clash with standard
+     GaudiMain in applications that build both online and offline executables
+   . Cleanup requirements and options directory
+
+</PRE><H1><A NAME=v1r0>2005-05-13 OnlineSys v1r0</A></H1><PRE>
  - First release of OnlineSys project
+</PRE>
