@@ -1,4 +1,4 @@
-// $Id: MuonDigitChecker.h,v 1.1.1.1 2005-05-12 09:39:10 asarti Exp $
+// $Id: MuonDigitChecker.h,v 1.2 2005-06-10 11:05:23 asarti Exp $
 #ifndef MuonDigitChecker_H 
 #define MuonDigitChecker_H 1
 
@@ -84,7 +84,7 @@ private:
   std::vector<float> m_tv;
   std::vector<float>  m_mom;
 
-  /// N-tuple items to be written away (hit)
+  /// N-tuple items to be written away (Digit)
   long  m_digit_run;
   long  m_digit_evt;
   long  n_digits;
@@ -98,6 +98,8 @@ private:
   std::vector<float> m_digit_dz;
   std::vector<float> m_digit_time;
   std::vector<float> m_digit_origin;
+  std::vector<float> m_digit_bx;
+  std::vector<float> m_digit_firing;
   std::vector<float> m_digit_multi;
 
 };

@@ -140,6 +140,8 @@ StatusCode MuonDigitChecker::crNtuples() {
   nt2->farray("dz",    m_digit_dz,     "Ndigits",1000);
   nt2->farray("t" ,    m_digit_time,   "Ndigits",1000);
   nt2->farray("origin",m_digit_origin, "Ndigits",1000);
+  nt2->farray("bx"    ,m_digit_bx,     "Ndigits",1000);
+  nt2->farray("firing",m_digit_firing, "Ndigits",1000);
   nt2->farray("multip",m_digit_multi,  "Ndigits",1000);
   nt2->write();  
 
@@ -187,9 +189,11 @@ StatusCode MuonDigitChecker::execute() {
     m_tv.clear();   m_mom.clear();  
   }
   m_digit_s.clear();  m_digit_r.clear();
-  m_digit_x.clear();  m_digit_y.clear();  m_digit_z.clear();  m_digit_dx.clear();
-  m_digit_dy.clear();  m_digit_dz.clear();  m_digit_time.clear();  m_digit_origin.clear();
-  m_digit_multi.clear();
+  m_digit_x.clear();  m_digit_y.clear();  m_digit_z.clear();  
+  m_digit_dx.clear();
+  m_digit_dy.clear();  m_digit_dz.clear();  m_digit_time.clear();  
+  m_digit_origin.clear();  m_digit_bx.clear();
+  m_digit_multi.clear(); m_digit_firing.clear();
 
   // loop over Muon Hits only if required
   if(m_hitMonitor) {
@@ -243,7 +247,7 @@ StatusCode MuonDigitChecker::execute() {
 	    m_con.push_back(container);
 
 	    m_x.push_back(xpos); m_y.push_back(ypos); m_z.push_back(zpos);
-	    m_time.push_back(time/1000);
+	    m_time.push_back(time);
 
 	    //Fill some histos	  
 	    int hh =station*4+region;
@@ -291,11 +295,9 @@ StatusCode MuonDigitChecker::execute() {
     }
     for(int r=0; r<4; r++) {
       for(int s=0; s<5; s++) {
-	if(tnhit[s][r]) {
-	  //Looking at mean number of hits
-	  cnt[s][r]++;
-	  nhit[s][r]+= tnhit[s][r];
-	}  
+	//Looking at mean number of hits
+	cnt[s][r]++;
+	nhit[s][r]+= tnhit[s][r];
       }  
     }    
   }    
@@ -308,6 +310,8 @@ StatusCode MuonDigitChecker::execute() {
   
   MuonDigits::const_iterator jdigit;
   int Dsta, Dreg, Dcon;
+  double Dfir;
+  bool Deve, Dali;
   double x,y,z;  double dx,dy,dz;  
 
   for(jdigit=digit->begin();jdigit<digit->end();jdigit++){
@@ -317,7 +321,7 @@ StatusCode MuonDigitChecker::execute() {
     m_digit_s.push_back(Dsta);
     m_digit_r.push_back(Dreg);
     m_digit_time.push_back((*jdigit)->TimeStamp());
-    
+
     // attenzione !
     // TimeStamp e' uno degli 8 intervalli (8 digits) in cui
     // e' divisa la finestra di accettanza di 20 ns dopo il beam crossing
@@ -332,34 +336,39 @@ StatusCode MuonDigitChecker::execute() {
     m_digit_dz.push_back(dz);
     
     debug()<<" Digits" << x<<y<<z <<endmsg;
-    
+
+    //Match with "true" MC digit    
     ContainedObject* MCd=mcdigit->containedObject((*jdigit)->key());  
     MCMuonDigit* MCmd=dynamic_cast<MCMuonDigit *> (MCd);       
 
-    // Hi orginin (codes in MuonEvent/v2r1/Event/MuonOriginFlag.h)
+    MCMuonDigitInfo digInfo = MCmd->DigitInfo();
+    
+    // Hit orginin (codes in MuonEvent/v2r1/Event/MuonOriginFlag.h)
     // Geant                 = 0
     // FlastSpillOver        = 1
     // Low Energy Background = 2
     // Chamber Noise         = 3
     // Crosstalk             = 4
     // Electronic Noise      = 5
-    Dcon = MCmd->DigitInfo().natureOfHit();
-    //    info()<<MCmd->firingTime()<<endmsg;
+    Dcon = digInfo.natureOfHit();
+    Deve = digInfo.doesFiringHitBelongToCurrentEvent();
+    Dali = digInfo.isAlive();
+    Dfir = MCmd->firingTime();
+    m_digit_firing.push_back(Dfir);
     m_digit_origin.push_back(Dcon);
+    m_digit_bx.push_back(Deve);
 
     // Hits mupltiplicity
     m_digit_multi.push_back( MCmd->mcMuonHits().size());
-    tnDhit[Dsta][Dreg][Dcon]++;
+    if(Deve) tnDhit[Dsta][Dreg][Dcon]++;
   }
 
   //Looking at mean number of hits
   for(int c=0; c<6; c++) {
     for(int r=0; r<4; r++) {
       for(int s=0; s<5; s++) {
-	if(tnDhit[s][r][c]) {
-	  Dcnt[s][r][c]++;
-	  nDhit[s][r][c]+= tnDhit[s][r][c];
-	}  
+	Dcnt[s][r][c]++;
+	nDhit[s][r][c]+= tnDhit[s][r][c];
       }  
     }    
   }    
@@ -383,14 +392,14 @@ StatusCode MuonDigitChecker::finalize() {
 	 << endmsg;
   if(m_detailedMonitor && (fullDetail() == true) && m_hitMonitor) {
     info() << "       Hit Information     " << endmsg;
-    info()<<" S1      S2      S3      S4      S5 "<<endmsg;
+    info()<<" M1      M2      M3      M4      M5 "<<endmsg;
     for(int r=0; r<4; r++) {
       for(int s=0; s<5; s++) {
 	if(cnt[s][r])  {
 	  info()<<format("%5.3lf  ",(double)nhit[s][r]/cnt[s][r]);
 	  //	info()<<(double)nhit[s][r]/cnt[s][r]<<"     ";
 	} else {
-	  info()<<0;
+	  info()<<"0.000  ";
 	}
       }
       info()<<" R"<<r+1<<endmsg;
@@ -412,7 +421,7 @@ StatusCode MuonDigitChecker::finalize() {
 	if(Dcnt[s][r][c])  {
 	  info()<<format("%5.3lf  ",(double)nDhit[s][r][c]/Dcnt[s][r][c]);
 	} else {
-	  info()<<0;
+	  info()<<"0.000  ";
 	}
       }
       info()<<" R"<<r+1<<endmsg;
