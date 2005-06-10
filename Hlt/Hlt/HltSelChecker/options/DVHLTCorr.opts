@@ -33,7 +33,7 @@ HltDecision.MakeCorrelations = true ;
 //==============================================================================
 // test
 //==============================================================================
-#include "$HLTSELCHECKERROOT/options/TestHltScore.opts"
+#include "$HLTSELECTIONSROOT/options/TestHltScore.opts"
 //==============================================================================
 // PK's stripping of MB passing L0 and L1:
 //#include "$HLTSELECTIONSROOT/options/L0L1-MB.opts"
