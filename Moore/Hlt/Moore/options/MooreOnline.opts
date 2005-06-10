@@ -1,0 +1,10 @@
+// Job options for running Moore in online mode
+
+// Common Online+Offline configuration
+#include "$MOOREROOT/options/MooreCommon.opts"
+
+// Start the monitoring service
+ApplicationMgr.ExtSvc += { "MonitorSvc" };
+
+// Set the trigger decision (always set, at end of Hlt processing)
+HltMainSeq.Members += { "DecisionSetterAlg" };

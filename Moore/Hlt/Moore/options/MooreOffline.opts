@@ -1,0 +1,10 @@
+// Job options for running Moore in offline mode
+
+// Common Online+Offline configuration
+#include "$MOOREROOT/options/MooreCommon.opts"
+
+// Input data
+#pragma print off
+#include "$HLTSYSROOT/options/RTTCTestData.opts"
+EventSelector.PrintFreq  = 100 ;
+#pragma print on
