@@ -1,8 +1,9 @@
-! $Id: release.notes,v 1.58 2005-06-08 16:10:50 pkoppenb Exp $
+! $Id: release.notes,v 1.59 2005-06-13 07:34:31 pkoppenb Exp $
 ! Package     : DaVinciMCTools
 ! Responsible : P. Koppenburg
 !=============================================================================
 
+!========================== DaVinciMCTools v5r12 2005-06-13 ===================
 ! 2005-06-08 - P. Koppenburg
  - src/ src/DecayChainNTuple.{cpp,h}
    . Use IOnOfflineTool 
