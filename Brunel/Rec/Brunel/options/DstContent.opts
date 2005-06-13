@@ -1,30 +1,9 @@
-// Define DST content for Brunel
+// Define DST content for Brunel real data
 
 DstWriter.Preload = false;
-DstWriter.OptItemList =
-{
-  "/Event/Prev#1"
-, "/Event/Prev/Header#1"
-, "/Event/PrevPrev#1"
-, "/Event/PrevPrev/Header#1"
-, "/Event/Next#1"
-, "/Event/Next/Header#1"
-, "/Event/MC/Signal#1"
-}; 
 DstWriter.ItemList = 
 {
   "/Event#1"
-, "/Event/Gen#1"
-, "/Event/Gen/Header#1"
-, "/Event/Gen/HepMCEvents#1"
-, "/Event/Gen/HardProcesses#1"
-, "/Event/MC#1"
-, "/Event/MC/MCTrackInfo#1"
-, "/Event/Trig#1"
-, "/Event/Trig/L0#1"
-, "/Event/Trig/L0/Muon#1"
-, "/Event/Trig/L0/PuVeto#1"
-, "/Event/Trig/L0/Decision#1" 
 , "/Event/DAQ#1"
 , "/Event/DAQ/L1Buffer#1"
 , "/Event/DAQ/RawBuffer#1"
@@ -65,48 +44,15 @@ DstWriter.ItemList =
 , "/Event/Rec/Muon/M4/Coords#1"
 , "/Event/Rec/Muon/M5/Coords#1"
 , "/Event/Rec/Muon/MuonID#1"
-  // "Links" MC truth
-, "/Event/Link#1"
-, "/Event/Link/Trig#1"
-, "/Event/Link/Trig/L0#1"
-, "/Event/Link/Trig/L0/Calo#1"
-, "/Event/Link/Trig/L0/FullCalo#1"
-, "/Event/Link/Raw#1"
-, "/Event/Link/Raw/Velo#1"
-, "/Event/Link/Raw/Velo/Clusters#1"
-, "/Event/Link/Raw/IT#1"
-, "/Event/Link/Raw/IT/Digits#1"
-, "/Event/Link/Raw/OT#1"
-, "/Event/Link/Raw/OT/Times#1"
-, "/Event/Link/Raw/Ecal#1"
-, "/Event/Link/Raw/Ecal/Digits#1"
-, "/Event/Link/Rec#1"
-, "/Event/Link/Rec/IT#1"
-, "/Event/Link/Rec/IT/Clusters#1"
-, "/Event/Link/Rec/Muon#1"
-, "/Event/Link/Rec/Muon/Coords#1"
-, "/Event/Link/Rec/Tr#1"
-, "/Event/Link/Rec/Tr/Best#1"
 };
 
 // Pack track and state containers
+ApplicationMgr.DLLs += { "PackedEvent" };
 Output.DetectorList += { "Pack" };
 OutputPackSeq.Members += { "PackTrStateL", "PackTrStateP", "PackTrStoredTrack" };
-
-// Pack also MC truth containers if not already done on input tape
-DataOnDemandSvc.Algorithms += {
-  "DATA='/Event/Rdst/Collisions'    TYPE='PackCollision'"
-, "DATA='/Event/Rdst/MCParticles'   TYPE='PackMCParticle'"
-, "DATA='/Event/Rdst/MCVertices'    TYPE='PackMCVertex'"
-};
+PackTrStoredTrack.StoreMeasurements = true;
 
 // Add the packed containers to the DST
 DstWriter.ItemList += { 
-  "/Event/Rdst#1"
-, "/Event/Rdst/MCParticles#1"
-, "/Event/Rdst/MCVertices#1"
-, "/Event/Rdst/Collisions#1"
-, "/Event/Rdst/TrStatesL#1"
-, "/Event/Rdst/TrStatesP#1"
-, "/Event/Rdst/Tracks#1"
+  "/Event/pDst#2"
 };

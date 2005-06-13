@@ -3,8 +3,14 @@ Package: Rec/Brunel
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb reconstruction program
 
+</PRE><H1><A NAME=v27r2>2005-06-12 Brunel v27r2</A></H1><PRE>
+ - Adapt requirements to use RecSys v1r2, Lbcom v2r2, LHCb v18r6, Gaudi v16r4
+ - Use XmlDDDB v25r0, add v200506.opts
+ - Change locaton of compressed DST classes in TES
+ - Reorganize options to simplify usage with real data
+ - Move options for Reco phase to RecSys, to allow sharing with Moore in RTTC
+
 </PRE><H1><A NAME=v27r1>2005-05-31 Brunel v27r1</A></H1><PRE>
-! 2005-05-23 - Marco Cattaneo
  - Adapt requirements to use RecSys v1r1, Lbcom v2r1, LHCb v18r5, Gaudi v16r4
  - Use XmlDDDB v24r2
  - Remove saving of empty directories from DstContent.opts

@@ -1,78 +1,23 @@
-// Modify this file to change the default Brunel monitoring. 
-//--------------------------------------------------------------
+// This file sets up the default Brunel monitoring, independent of MC Truth
+//-------------------------------------------------------------------------
 
-//--------------------------------------------------------------
-// Choice of persistency technology. Default is ROOT, move comments for Hbook
-// Hbook persistency (use HBookCnv v* in requirements).
-//#include "$STDOPTS/Hbook.opts"
-// ROOT persistency (use RootHistCnv v* in requirements).
+// ROOT persistency for histograms
 #include "$STDOPTS/RootHist.opts"
 RootHistCnv.ForceAlphaIds = true;
 
 //--------------------------------------------------------------
 // Detectors to monitor
 //--------------------------------------------------------------
-BrunelMoni.DetectorList = { "IT","OT","Tr","RICH","CALO" };
+Moni.DetectorList = { "IT","OT" };
 
 //--------------------------------------------------------------
 // Monitoring algorithms
 //--------------------------------------------------------------
 
 // IT clustering and efficiency
-ApplicationMgr.DLLs     += { "ITCheckers", "MCTools" };
-BrunelMoniITSeq.Members += { "ITClusterChecker" };
-BrunelMoniITSeq.Members += { "ITEffMonitor" };
-ITEffMonitor.MCParticleSelector.betaGammaMin = 0.0;
-//#include "$ITCHECKERSROOT/options/Brunel.opts"
-//ITEffMonitor.fullDetail = true;
+ApplicationMgr.DLLs += { "ITCheckers" };
+MoniITSeq.Members   += { "ITClusterChecker" };
 
 // OT reconstruction
-ApplicationMgr.DLLs     += { "OTMonitor" };
-BrunelMoniOTSeq.Members += { "OTTimeMonitor" };
-BrunelMoniOTSeq.Members += { "OTTimeChecker" };
-//OTTimeChecker.fullDetail = true;
-
-// Tracking
-ApplicationMgr.DLLs += { "TrCheck" };
-#include "$TRFITASSOCIATORSROOT/options/Brunel.opts"
-BrunelMoniTrSeq.Members += { "TrAnalyse" };
-BrunelMoniTrSeq.Members += { "KShortMonitor" };
-BrunelMoniTrSeq.Members += { "TrChecker" };
-// MC-free track monitoring (contains 2D histos)
-// BrunelMoniTrSeq.Members += { "TrMonitor" };
-
-// Rich reconstruction
-ApplicationMgr.DLLs += { "RichRecQC", "RichMCTools", "RichRecMCTools" };
-#include "$RICHRECQCOPTS/RecQC_Brunel.opts"
-
-// detailed RICH reconstruction monitors
-//#include "$RICHRECQCOPTS/RecQC_Brunel_Detailed.opts"
-//#include "$RICHRECCOMMONOPTS/RecoMoni_Brunel.opts"
-//#include "$RICHGLOBALPIDOPTS/RecoMoni_Brunel.opts"
-//#include "$RICHLOCALPIDOPTS/RecoMoni_Brunel.opts"
-//#include "$RICHRINGREFITOPTS/RecoMoni_Brunel.opts"
-
-// Calorimeters
-//#include "$CALOMONITOROPTS/Brunel.opts" - remove digitization monitoring
-ApplicationMgr.DLLs += {"CaloMoniDst"};
-BrunelMoniCALOSeq.Members +=
-{
-   // monitoring of clusters
-  "CaloClusterMonitor/ClusterMoni"              ,
-  "CaloClusterMonitor/SplitClusterMoni"         ,
-  // monitoring of hypos
-  "CaloHypoMonitor/ElectronMoni"                ,
-  "CaloHypoMonitor/PhotonMoni"                  ,
-  "CaloHypoMonitor/SplitPhotonMoni"             ,
-  "CaloHypoMonitor/MergedPi0Moni"               ,
-  // monitoring of matching
-  "CaloClusterMatchMonitor/PhotonMatchMoni"     ,
-  "CaloHypoMatchMonitor/ElectronMatchMoni"      ,
-  "CaloHypoMatchMonitor/BremMatchMoni"          ,
-  // monitoring of 2-gamma distributions
-  "CaloPi0Monitor/Pi0Moni"                      ,
-  "CaloMCPi0Monitor/MCPi0Moni"                  ,
-  // MC truth monitoring
-  "CaloClusterMCTruthMonitor/CaloMCTruthMoni"
-};
-#include "$CALOMONIDSTOPTS/MoniDst.opts"
+ApplicationMgr.DLLs += { "OTMonitor" };
+MoniOTSeq.Members   += { "OTTimeMonitor" };

@@ -1,178 +1,43 @@
-// Default Brunel job Options.
+// Main job options for running Brunel.
 //
-// This file is included by the geometry dependent options files.
+// This file is included by the geometry dependent options files, and is valid
+// for both real and simulated data
 //
 // This file defines, sequences and configures the algorithms to be executed
 // You only need to modify it if you want to add or remove algorithms
 // !! Do not modify position or order of included files !!
 //==============================================================
 
-// Allow units to be used in jobOptions
-#units "$STDOPTS/units.opts"
-
-// Framework
-ApplicationMgr.DLLs += { "GaudiAlg", "LHCbAlgs" };
-
-// POOL Persistency
-#include "$GAUDIPOOLDBROOT/options/GaudiPoolDbRoot.opts"
-#include "$EVENTSYSROOT/options/PoolDicts.opts"
+// Standard LHCb application setup
+#include "$LHCBROOT/options/LHCbApplication.opts"
 
 // Define DST content
 #include "$BRUNELOPTS/DstContent.opts"
 
-// Set up the transient data store
-EventDataSvc.ForceLeaves = true;
-EventDataSvc.RootCLID    =    1;
-
-//----------------------------------------------------------------------------
-// Data on demand service for decoding RawBuffer and unpacking Digi containers
-//----------------------------------------------------------------------------
+// Data on demand service for decoding RawBuffer
 #include "$DAQSYSROOT/options/RawBuffer.opts"
-#include "$RDSTROOT/options/UnpackDigi.opts"
 
-//--------------------------------------------------------------
-// Brunel Phases to be executed
-//--------------------------------------------------------------
+//----------------------------------------------------------------------------
+// Instantiate all Brunel phases. MC specific phases not populated in this file
+//----------------------------------------------------------------------------
 ApplicationMgr.TopAlg += { "ProcessPhase/Init",
-                           "ProcessPhase/BrunelReco",
+                           "ProcessPhase/Reco",
                            "ProcessPhase/Relations",
-                           "ProcessPhase/BrunelMoni",
+                           "ProcessPhase/Moni",
+                           "ProcessPhase/Check",
                            "ProcessPhase/Output" };
-#include "$BRUNELOPTS/BrunelMoni.opts"
-//--------------------------------------------------------------
-// Detectors to be processed in each phase
-//--------------------------------------------------------------
-Init.DetectorList        = { "Brunel" };
-BrunelReco.DetectorList  = { "VELO","OT","IT","Tr","RICH","CALO","MUON" };
-Relations.DetectorList   = { "Tr", "Calo", "Links" };
 
-//--------------------------------------------------------------
-// Geometry, magnetic field, particle properties
-//--------------------------------------------------------------
-#include "$STDOPTS/DetDesc.opts"
-ApplicationMgr.DLLs += { "CaloDetXmlCnv" };
-ApplicationMgr.DLLs += { "RichDet" };
-ApplicationMgr.DLLs += { "MuonDet" };
-ApplicationMgr.DLLs += { "STDet" };
-ApplicationMgr.DLLs += { "OTDet" };
-ApplicationMgr.DLLs += { "VeloDet" };
-ApplicationMgr.DLLs += { "Magnet" };
-
-//--------------------------------------------------------------
 // Initialisation phase
-//--------------------------------------------------------------
-InitBrunelSeq.Members += { "EventHeaderFromRaw" };
+Init.DetectorList = { "Brunel" };
 InitBrunelSeq.Members += { "LbAppInit/Brunel" };
 
+// Reconstruction phase
+#include "$RECSYSROOT/options/Reco.opts"
+
+// Monitoring phase (monitoring independent of MC truth)
+#include "$BRUNELOPTS/BrunelMoni.opts"
+
 //--------------------------------------------------------------
-// Subdetector algorithms
-//--------------------------------------------------------------
-
-// Calorimeter reconstruction
-ApplicationMgr.DLLs += { "CaloReco", "CaloPIDs" };
-#include "$CALORECOOPTS/Brunel.opts"
-#include "$CALORECOOPTS/Reco.opts"
-#include "$CALORECOOPTS/Filters.opts"
-#include "$CALOPIDSOPTS/Brunel.opts"
-
-// Silicon tracker reconstruction (clustering)
-ApplicationMgr.DLLs   += { "ITAlgorithms" };
-BrunelRecoITSeq.Members +={"ITClusterCreator","ITSummaryCreator"};
-#include "$ITALGORITHMSROOT/options/itRec.opts"
-
-// Outer tracker reconstruction (clustering) done by RawBuffer decoding algorithm
-
-// Velo Tracking
-ApplicationMgr.DLLs += { "TrgTools", "TrgVelo", "TrgBrunel" };
-BrunelRecoVELOSeq.Members = { "DecodeRawVelo"
-                             ,"VeloRTracking"
-                             ,"VeloSpaceTracking"
-                             ,"ConvertToTrFitTrack"
-};
-#include "$TRGVELOROOT/options/Brunel.opts"
-
-// Tracking tools
-ApplicationMgr.DLLs += { "TrFitter", "TrExtrapolator", "STTools" };
-ApplicationMgr.ExtSvc += { "TransportSvc" };
-
-// Forward tracking
-ApplicationMgr.DLLs += { "LongTrack" };
-BrunelRecoTrSeq.Members += { "FindLongTrack" };
-BrunelRecoTrSeq.Members += { "TrEventTracksFitter/FitFw" };
-FitFw.TrackContainer = "Rec/FitTrack/Forward";
-#include "$LONGTRACKROOT/options/Brunel.opts"
-
-// Seeding
-ApplicationMgr.DLLs += { "Seeding" }; 
-BrunelRecoTrSeq.Members += { "TrSeedEvent/seedEvent",
-                             "TrEventTracksFitter/fitSeed" };
-#include "$SEEDINGROOT/options/Brunel.opts"
-
-seedEvent.FilterCluster = true; // Enable filtering of T clusters
-ToolSvc.ClusterFilter.Containers = { "Rec/FitTrack/Forward" };
-
-// Velo Matching
-ApplicationMgr.DLLs += { "TrMatching" }; 
-BrunelRecoTrSeq.Members += { "TrMatchVeloSeed/matchVeloSeed",
-                             "TrEventTracksFitter/reFit" };
-reFit.TrackContainer = "Rec/FitTrack/Match";
-
-// K Short tracking
-ApplicationMgr.DLLs += { "TrKShort" };
-#include "$TRKSHORTROOT/options/Brunel.opts"
-BrunelRecoTrSeq.Members += { "FindTrKShort"
-                           , "TrEventTracksFitter/KShortFit" };
-KShortFit.TrackContainer = "Rec/FitTrack/KsTrack";
-KShortFit.Fitter.stateAtBeamLine = false;
-
-// Clone killer and converter to TrStoredTrack
-ApplicationMgr.DLLs += { "TrCleanEx" };
-BrunelRecoTrSeq.Members += { "TrTrackCloneKiller" };
-
-// VeloTT tracking
-ApplicationMgr.DLLs += { "VeloTT" };
-BrunelRecoTrSeq.Members += { "VeloTTFind" };
-#include "$VELOTTROOT/options/BrunelField045.opts"
-BrunelRecoTrSeq.Members += { "TrPrepareVelo" };
-
-BrunelRecoTrSeq.Members += { "TrFit2StoredTrackCnv/StoreBest" };
-#include "$TRCLEANEXROOT/options/Brunel.opts"
-TrTrackCloneKiller.flagMode = true;
-
-// Rich
-ApplicationMgr.DLLs += { "RichTools", "RichRecTools", "RichRecCommon",
-                         "RichGlobalPID", "RichLocalPID", 
-                         "RichRingRefit", "RichPIDMerge" };
-#include "$RICHRECSYSOPTS/RecoToolPara.opts"
-#include "$RICHRECSYSOPTS/RecoOfflineAlgs.opts"
-
-// Muon coordinate reconstruction, MuonID, cleaning
-ApplicationMgr.DLLs += { "MuonTools", "MuonRec", "MuonID" };
-BrunelRecoMUONSeq.Members += { "MuonRec", "MuonIDFOI" };
-#include "$MUONIDROOT/options/MuonIDFOI.opts"
-
 // Modify printout defaults
+//--------------------------------------------------------------
 #include "$BRUNELOPTS/BrunelMessage.opts"
-
-//----------------------------------------------------------------------
-// Relations to MC truth, built unconditionally regardless of monitoring
-//----------------------------------------------------------------------
-
-// Needed because otherwise created by calling a Relations algorithm
-DataOnDemandSvc.Nodes += { "DATA='/Event/Rec' TYPE='DataObject'" };
-
-ApplicationMgr.DLLs += { "Associators" };
-#include "$ASSOCIATORSROOT/options/Brunel.opts"
-#include "$VELOASSOCIATORSROOT/options/VeloAssociators.opts"
-#include "$ITASSOCIATORSROOT/options/ITAssociators.opts"
-#include "$OTASSOCIATORSROOT/options/OTAssociators.opts"
-#include "$TRASSOCIATORSROOT/options/Brunel.opts"
-#include "$CALOASSOCIATORSOPTS/CaloAssociators.opts"
-#include "$MUONASSOCIATORSROOT/options/MuonAssociators.opts"
-ApplicationMgr.DLLs += { "AsctToLinker" };
-RelationsCaloSeq.Members += { "CaloReCreateMCLinks" }; // For Boole data  < v9r0
-CaloReCreateMCLinks.IgnoreMode = true;                 // For Boole data >= v9r0
-RelationsTrSeq.Members   += { "TrStoredTrackMCTruthAlg/Tr2MCP" };
-Tr2MCP.MakeLinker = true;
-// New style links. Also creates Relations to MCP for Velo, IT, OT, Muon
-RelationsLinksSeq.Members += { "ConvertToLinker" };

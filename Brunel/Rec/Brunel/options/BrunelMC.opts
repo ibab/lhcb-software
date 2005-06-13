@@ -1,0 +1,42 @@
+// Additional job options for running Brunel with simulated data
+//
+// This file is included by the geometry dependent options files
+//
+// This file defines, sequences and configures the algorithms to be executed
+// You only need to modify it if you want to add or remove algorithms
+// !! Do not modify position or order of included files !!
+//==============================================================
+
+// Define additional DST content for MC data
+#include "$BRUNELOPTS/MCDstContent.opts"
+
+// Add Checker algorithms (monitoring requiring MC truth)
+#include "$BRUNELOPTS/BrunelCheck.opts"
+
+//----------------------------------------------------------------------
+// DataOnDemandSvc options
+//----------------------------------------------------------------------
+
+// Unpack MCParticles etc
+#include "$PACKEDEVENTROOT/options/UnpackSim.opts"
+
+// Create Relations needed for MC truth DST
+#include "$VELOASSOCIATORSROOT/options/VeloAssociators.opts"
+#include "$ITASSOCIATORSROOT/options/ITAssociators.opts"
+#include "$OTASSOCIATORSROOT/options/OTAssociators.opts"
+#include "$TRASSOCIATORSROOT/options/Brunel.opts"
+#include "$CALOASSOCIATORSOPTS/CaloAssociators.opts"
+#include "$MUONASSOCIATORSROOT/options/MuonAssociators.opts"
+
+// Needed because otherwise created by calling a Relations algorithm
+DataOnDemandSvc.Nodes += { "DATA='/Event/Rec' TYPE='DataObject'" };
+
+//----------------------------------------------------------------------
+// Additional massaging of relations for MC truth DST
+//----------------------------------------------------------------------
+Relations.DetectorList   = { "Tr", "Links" };
+ApplicationMgr.DLLs += { "AsctToLinker" };
+RelationsTrSeq.Members   += { "TrStoredTrackMCTruthAlg/Tr2MCP" };
+Tr2MCP.MakeLinker = true;
+// Convert Velo, IT, OT, Tr, Muon relations to Links
+RelationsLinksSeq.Members += { "ConvertToLinker" };

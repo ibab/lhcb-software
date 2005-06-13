@@ -1,0 +1,23 @@
+// Additional monitoring available to experts in Brunel, not included by default
+// Assumes BrunelMoni.opts and BrunelCheck.opts have also been included
+//------------------------------------------------------------------------------
+
+// IT efficiency
+ITEffMonitor.fullDetail = true;
+
+// OT reconstruction
+OTTimeChecker.fullDetail = true;
+
+// Tracking
+MoniTrSeq.Members += { "TrMonitor" };
+
+// Detailed RICH reconstruction monitors
+#include "$RICHRECQCOPTS/RecQC_Brunel_Detailed.opts"
+#include "$RICHRECCOMMONOPTS/RecoMoni_Brunel.opts"
+#include "$RICHGLOBALPIDOPTS/RecoMoni_Brunel.opts"
+#include "$RICHLOCALPIDOPTS/RecoMoni_Brunel.opts"
+#include "$RICHRINGREFITOPTS/RecoMoni_Brunel.opts"
+
+// Calorimeters
+Check.DetectorList += { "CALO" };
+#include "$CALOMONIDSTOPTS/Brunel.opts"
