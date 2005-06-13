@@ -4,10 +4,11 @@ Package Coordinator: Marco Cattaneo
 Purpose: LHCb Digitization program
 
 </PRE><H1><A NAME=v9r2>2005-06-06 Boole v9r2</A></H1><PRE>
- - Adapt requirements to Lbcom v2r2, LHCb v18r6, Gaudi v16r4
+ - Adapt requirements to Lbcom v2r2, LHCb v18r6, Gaudi v16r4, XmlDDDB v25r0
  - Save Event/pSim#2 instead of Event/Rdst#2 in DigiContent.opts
  - Split RelationsLinks sequence into constituents Velo,IT,OT,Links
  - Simplify Boole.opts to use LHCbApplication.opts
+ - Add v200605.opts
 
 </PRE><H1><A NAME=v9r1>2005-05-30 Boole v9r1</A></H1><PRE>
  - Adapt requirements to Lbcom v2r1, LHCb v18r5, Gaudi v16r4, XmlDDDB v24r2

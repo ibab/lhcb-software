@@ -3,17 +3,29 @@ Package: Digi/Boole
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb Digitization program
 
-</PRE><H1><A NAME=v9r2>2005-06-06 Boole v9r2</A></H1><PRE>
-This version uses Gaudi v16r4, LHCb v18r6, Lbcom v2r2 (also CLHEP 1.9, ROOT 4.0) 
+</PRE><H1><A NAME=v9r2>2005-06-12 Boole v9r2</A></H1><PRE>
+This version uses Gaudi v16r4, LHCb v18r6, Lbcom v2r2
 Requires input from Gauss v19r3 or greater. Output needs Brunel v27r2 or greater
+
+- Geometry changes
+  . Add support for v200506 geometry (tilted Calo+Muon) (XmlDDDB v25r0)
+  . Add support for alignment conditions (DetDesc v15r1, DetDescCnv v2r6)
 
 - Repackaging
   . Links sequence in Relations phase split into Velo, IT, OT, Links
-  . Use $LHCBROOT/options/LHCbApplication.opts in Boole.opts
+  . All generic options now taken from $LHCBROOT/options/LHCbApplication.opts
+    (LHCb v18r6)
 
 - Persistency changes:
   . Packed containers now saved to /Event/pSim (PackedEvent v1r0)
   . Remove registry entry of Event/Header as it's not saved (DAQEvent v5r2)
+
+- New tuning
+  . Speed improvement in VeloChannelID constructor (LHCbKernel v5r11)
+
+- Bug fixes
+  . Add hack to bypass circular detector element dependency discovered with new
+    GeometryInfo implementation (MuonDet v4r7)
 
 </PRE><H1><A NAME=v9r1>2005-05-30 Boole v9r1</A></H1><PRE>
 This version uses Gaudi v16r4, LHCb v18r5, Lbcom v2r1 (also CLHEP 1.9, ROOT 4.0) 
