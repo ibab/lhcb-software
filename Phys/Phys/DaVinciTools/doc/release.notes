@@ -1,7 +1,8 @@
-! $Id: release.notes,v 1.168 2005-06-10 13:48:00 pkoppenb Exp $
+! $Id: release.notes,v 1.169 2005-06-13 07:34:52 pkoppenb Exp $
 ! Package     : DaVinciTools
 ! Responsible : P. Koppenburg
 
+!========================== DaVinciTools v12r0 2005-06-13 ===================
 ! 2005-06-10 - P. Koppenburg
   - cmt/requirements
     . Removed boost linkopts
