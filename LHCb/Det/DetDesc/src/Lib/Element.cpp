@@ -1,4 +1,4 @@
-// $Id: Element.cpp,v 1.6 2003-04-25 08:52:24 sponce Exp $
+// $Id: Element.cpp,v 1.7 2005-06-13 11:34:29 cattanem Exp $
 /// STL and STD 
 #include <math.h>
 /// GaudiKernel
@@ -15,7 +15,6 @@ Element::Element( const std::string& name    ,
                   const std::string& symb    ,
                   const double       a       , 
                   const double       z       , 
-                  const double       n       , 
                   const double       density ,                    
                   const double       rl      , 
                   const double       al      ,
@@ -25,7 +24,6 @@ Element::Element( const std::string& name    ,
   : Material( name , density , rl , al , temp, press , s )
   , m_Aeff ( a )
   , m_Zeff ( z )
-  , m_Neff ( n )
   , m_isotopes()
   , m_coulomb ()
   , m_tsai    ()
@@ -34,46 +32,46 @@ Element::Element( const std::string& name    ,
   if( 0 < Z() ) { ComputeCoulombFactor  (); } 
   if( 0 < Z() ) { ComputeLradTsaiFactor (); }
 };
-/////////////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////////
 Element::~Element() { m_isotopes.clear();  }
-////////////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////////
 void  Element::addIsotope ( const SmartRef<Isotope>& iPtr , const double Fract, const bool comp )
 { addIsotope( Entry( Fract, iPtr ) , comp ); }
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////////
 void  Element::addIsotope ( const Entry&             iPtr                     , const bool comp )
 { 
   m_isotopes.push_back( iPtr ) ; 
   if( comp ) { compute(); } 
 }; 
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////////
 void  Element::removeIsotope ( const SmartRef<Isotope>& iPtr , const bool comp )
 {
   for( Isotopes::iterator it = m_isotopes.begin() ; m_isotopes.end() != it ; ++it )
     { if( it->second == iPtr ) { m_isotopes.erase(it); break; }  } 
   if( comp ) { compute(); } 
 };
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////////
 const SmartRef<Isotope>&  Element::isotope( const unsigned int i ) const 
 {
   if( i >= isotopes().size() )
     { throw MaterialException("Element::isotope(indx), wrong index!", this );}
   return isotopes()[i].second;  
 };
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////////
       SmartRef<Isotope>&  Element::isotope( const unsigned int i )       
 {
   if( i >= isotopes().size() )
     { throw MaterialException("Element::isotope(indx), wrong index! ", this );}
   return isotopes()[i].second;  
 };
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////////
 const double               Element::isotopeFraction( const unsigned int i ) const 
 {
   if( i >= isotopes().size() )
     { throw MaterialException("Element::isotope(indx), wrong index! " , this );}
   return isotopes()[i].first;  
 };
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////////
 void Element::compute()
 {
   // Effective Z is taken from the first isotope, anyway they should be the
@@ -81,25 +79,23 @@ void Element::compute()
   
   setZ( isotope(0)->Z() );
 
-  double sum = 0.0; double nEff = 0.0; double aEff = 0.0;
+  double sum = 0.0;
+  double aEff = 0.0;
   
   for( Isotopes::const_iterator it = m_isotopes.begin() ; m_isotopes.end() != it ; ++it )
     {
       aEff += (it->first) * ( it->second->A() ) ;
-      nEff += (it->first) * ( it->second->N() ) ;
       sum  += (it->first) ;
     } 
   
   aEff /= sum;
-  nEff /= sum;
   
   setA( aEff );
-  setN( nEff );
   
   ComputeCoulombFactor();
   ComputeLradTsaiFactor();
 }
-////////////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////////
 void Element::ComputeCoulombFactor()
 {
   // Compute Coulomb correction factor (Phys Rev. D50 3-1 (1994) page 1254)
@@ -110,7 +106,7 @@ void Element::ComputeCoulombFactor()
   
   m_coulomb = (k1*az4 + k2 + 1./(1.+az2))*az2 - (k3*az4 + k4)*az4;
 }
-////////////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////////
 void Element::ComputeLradTsaiFactor()
 {
   // Compute Tsai's Expression for the Radiation Length
@@ -141,7 +137,6 @@ StreamBuffer&     Element::serialize ( StreamBuffer& s ) const
   s << symbol() 
     << A() 
     << Z() 
-    << N() 
     << coulombFactor () 
     << tsaiFactor    () 
     << isotopes().size();
@@ -149,14 +144,13 @@ StreamBuffer&     Element::serialize ( StreamBuffer& s ) const
     { s << it->first << it->second(this) ; }
   return s ;
 };
-/////////////////////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////////
 StreamBuffer&     Element::serialize ( StreamBuffer& s )       
 {
   Material::serialize( s );
   s >> m_symb 
     >> m_Aeff 
     >> m_Zeff
-    >> m_Neff 
     >> m_coulomb 
     >> m_tsai  ;
   Isotopes::size_type size;
@@ -168,7 +162,7 @@ StreamBuffer&     Element::serialize ( StreamBuffer& s )
   compute();
   return s ;
 };
-/////////////////////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////////
 MsgStream&        Element::fillStream ( MsgStream&   s ) const 
 {
   Material::fillStream( s ) ;
@@ -186,7 +180,7 @@ MsgStream&        Element::fillStream ( MsgStream&   s ) const
     }
   return s;
 };    
-/////////////////////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////////
 std::ostream&     Element::fillStream ( std::ostream& s ) const 
 {
   Material::fillStream( s ) ;
@@ -204,9 +198,3 @@ std::ostream&     Element::fillStream ( std::ostream& s ) const
     }
   return s;
 };    
-/////////////////////////////////////////////////////////////////////////////////////////////////
-
-
-
-
-

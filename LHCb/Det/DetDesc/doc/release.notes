@@ -1,11 +1,14 @@
 ! =============================================================================
-! $Id: release.notes,v 1.183 2005-06-09 11:04:36 cattanem Exp $ 
+! $Id: release.notes,v 1.184 2005-06-13 11:34:29 cattanem Exp $ 
 ! =============================================================================
 ! package DetDesc
 ! package manager : Marco Clemencic, Juan Palacios
 ! =============================================================================
 
-!======================== DetDesc v15r1 2005-06-08 ========================
+!======================== DetDesc v15r1 2005-06-13 ========================
+! 2005-06-13 - Marco Cattaneo
+ - Calculate effective number of nucleons N() from A() of materials
+
 ! 2005-06-08 - P. Koppenburg
   - src/Lib/GeometryInfoPlus.cpp, LAssembly.cpp
     . Changed all DEBUG to VERBOSE

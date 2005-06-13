@@ -1,29 +1,25 @@
-// $Id: Mixture.icpp,v 1.2 2003-04-25 08:52:23 sponce Exp $
+// $Id: Mixture.icpp,v 1.3 2005-06-13 11:34:29 cattanem Exp $
 #ifndef    DETDESC_MIXTURE_ICPP 
 #define    DETDESC_MIXTURE_ICPP 1 
-/// GaudiKernel
-#include "GaudiKernel/GaudiException.h"
-/// DetDesc
+
 #include "DetDesc/Mixture.h"
+#include "CLHEP/Units/PhysicalConstants.h"
 
-
-//////////////////////////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////////
 inline const int    Mixture::nOfItems() const { return m_elements.size(); }
-/// Effective A is returned //////////////////////////////////////////////////////////////////////////
+/// Effective A is returned /////////////////////////////////////////////////////
 inline const double Mixture::A()        const { return m_A    ; }
-/// Effective A is computed, can't be set explicitly /////////////////////////////////////////////////
+/// Effective A is computed, can't be set explicitly ////////////////////////////
 inline void         Mixture::setA( const double /*value*/ ){} ;
-/// Effective Z is returned //////////////////////////////////////////////////////////////////////////
+/// Effective Z is returned /////////////////////////////////////////////////////
 inline const double Mixture::Z()        const { return m_Z    ; }
-/// Effective Z is computed, can't be set explicitly /////////////////////////////////////////////////
+/// Effective Z is computed, can't be set explicitly ////////////////////////////
 inline void         Mixture::setZ( const double /*value*/ ){} ; 
-/// Effective N is returned /// Does it make sense ? /////////////////////////////////////////////////
-inline const double Mixture::N()        const { return m_N    ; }  
-/// Does it make sense to set the number of nucleons for a mixture ? /////////////////////////////////
-inline void         Mixture::setN( const double /*value*/ ){}
-//////////////////////////////////////////////////////////////////////////////////////////////////////
-inline const Mixture::Elements& Mixture::elements() const { return m_elements ; } 
-inline       Mixture::Elements& Mixture::elements()       { return m_elements ; } 
-//////////////////////////////////////////////////////////////////////////////////////////////////////
+/// Effective N is returned
+inline const double Mixture::N()        const { return m_A*mole/g; }  
+/////////////////////////////////////////////////////////////////////////////////
+inline const Mixture::Elements& Mixture::elements() const { return m_elements ; }
+inline       Mixture::Elements& Mixture::elements()       { return m_elements ; }
+/////////////////////////////////////////////////////////////////////////////////
 
 #endif  // DETDESC_MIXTURE_ICPP 

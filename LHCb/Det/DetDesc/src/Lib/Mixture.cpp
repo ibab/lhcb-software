@@ -1,16 +1,10 @@
-// $Id: Mixture.cpp,v 1.8 2002-05-31 17:24:36 mato Exp $ 
+// $Id: Mixture.cpp,v 1.9 2005-06-13 11:34:29 cattanem Exp $ 
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
-// $Log: not supported by cvs2svn $
-// Revision 1.7  2002/01/18 18:23:09  ibelyaev
-//  bug fixes(materials), warning reduced, printout improved
-// 
-// ============================================================================
-/// DetDesc 
+// DetDesc 
 #include "DetDesc/MaterialException.h"
 #include "DetDesc/Mixture.h"
-///
 
 //
 Mixture::Mixture( const std::string&  name    , 
@@ -28,7 +22,6 @@ Mixture::Mixture( const std::string&  name    ,
   , m_own     ( 0 )
   , m_A       ( a )
   , m_Z       ( z )
-  , m_N       ( 0 )
 {};
 //
 Mixture::~Mixture() {}
@@ -170,7 +163,6 @@ StatusCode Mixture::computeByFraction()
   ///
   m_A = 0 ;
   m_Z = 0 ;
-  m_N = 0 ;
   ///
   double radleninv = 0 ; 
   double lambdainv = 0 ;
@@ -182,7 +174,6 @@ StatusCode Mixture::computeByFraction()
     /// 
     m_A += frac * elem->A() ;
     m_Z += frac * elem->Z() ;
-    m_N += frac * elem->N() ;
     // 
     // Use the aproximate formula for radiation lengh of mixtures 1/x0 = sum(wi/Xi)
     if( elem->radiationLength() > 0.0 && elem->density() > 0.0) {
@@ -209,7 +200,6 @@ StatusCode Mixture::computeByFraction()
   return 
     A()       <= 0 ? StatusCode::FAILURE :
     Z()       <= 0 ? StatusCode::FAILURE :
-    N()       <= 0 ? StatusCode::FAILURE :
     radleninv <= 0 ? StatusCode::FAILURE :
     density() <= 0 ? StatusCode::FAILURE : 
     lambdainv <= 0 ? StatusCode::FAILURE : StatusCode::SUCCESS ;
@@ -219,7 +209,7 @@ StatusCode Mixture::computeByFraction()
 StreamBuffer&    Mixture::serialize ( StreamBuffer& s ) const 
 {
   Material::serialize( s );
-  s << A() << Z() << N() ;
+  s << A() << Z();
   s << ( ( 0 == m_own ) ? m_elements.size() : m_elements.size() - 1 ) ; 
   for( Elements::const_iterator i1 = m_elements.begin() ; 
        m_elements.end() != i1 ; ++i1 )
@@ -233,7 +223,7 @@ StreamBuffer&    Mixture::serialize ( StreamBuffer& s ) const
 StreamBuffer&     Mixture::serialize ( StreamBuffer& s )       
 {
   Material::serialize( s );
-  s >> m_A >> m_Z >> m_N ; 
+  s >> m_A >> m_Z; 
   Elements::size_type size1;
   s >> size1 ; 
   m_elements.clear();
@@ -351,21 +341,6 @@ StatusCode Mixture::addMyself()
   ///
   return StatusCode::SUCCESS;
 };
-///
-
-// ============================================================================
-// End 
-// ============================================================================
-
-
-
-
-
-
-
-
-
-
 
 
 

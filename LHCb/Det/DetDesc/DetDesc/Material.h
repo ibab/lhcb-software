@@ -1,5 +1,5 @@
-// $Id: Material.h,v 1.7 2004-12-08 15:17:46 ibelyaev Exp $
-/// $Id: Material.h,v 1.7 2004-12-08 15:17:46 ibelyaev Exp $
+// $Id: Material.h,v 1.8 2005-06-13 11:34:29 cattanem Exp $
+/// $Id: Material.h,v 1.8 2005-06-13 11:34:29 cattanem Exp $
 #ifndef DETDESC_MATERIAL_H
 #define DETDESC_MATERIAL_H
 /// STL
@@ -93,7 +93,6 @@ public:
   
   /// Number of nucleons
   virtual const double N() const = 0;
-  virtual void      setN( const double value ) = 0;
   
   /// some tabulated properties
   inline       Tables&  tabulatedProperties()       ;
@@ -146,10 +145,3 @@ private:
 ///
 
 #endif // DETDESC_MATERIAL_MATERIAL_H
-
-
-
-
-
-
-

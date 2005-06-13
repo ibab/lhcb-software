@@ -1,4 +1,4 @@
-// $Id: Mixture.h,v 1.9 2004-07-09 14:19:41 cattanem Exp $ 
+// $Id: Mixture.h,v 1.10 2005-06-13 11:34:29 cattanem Exp $ 
 // ============================================================================ 
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================ 
@@ -90,7 +90,6 @@ public:
   virtual inline void         setZ( const double value );  
   ///        Number of nucleons
   virtual inline const double    N() const;
-  virtual inline void         setN( const double value );
   ///
   virtual inline const CLID& clID    () const { return Mixture::classID(); }
   static         const CLID& classID ()       { return CLID_Mixture      ; } 
@@ -125,7 +124,6 @@ private:
   ///
   double         m_A ;
   double         m_Z ;
-  double         m_N ;
   ///
 };
 
@@ -133,19 +131,4 @@ private:
 #include "DetDesc/Mixture.icpp"
 ///
    
-// ============================================================================ 
-// End 
-// ============================================================================ 
 #endif // DETDESC_MIXTURE_H
-  
-
-
-
-
-
-
-
-
-
-
-

@@ -1,5 +1,5 @@
-// $Id: Element.h,v 1.10 2004-12-07 17:49:08 ibelyaev Exp $
-/// $Id: Element.h,v 1.10 2004-12-07 17:49:08 ibelyaev Exp $
+// $Id: Element.h,v 1.11 2005-06-13 11:34:29 cattanem Exp $
+/// $Id: Element.h,v 1.11 2005-06-13 11:34:29 cattanem Exp $
 #ifndef DETDESC_ELEMENT_H
 #define DETDESC_ELEMENT_H 1 
 /// STL
@@ -33,7 +33,6 @@ public:
            const std::string&  symb     = "??" ,
            const double        a        =  0   , 
            const double        z        =  0   , 
-           const double        n        =  0   , 
            const double        density  =  0   ,
            const double        rl       =  0   , 
            const double        al       =  0   ,  
@@ -83,7 +82,6 @@ public:
   virtual inline void         setZ( const double value );
   ///        Number of nucleons
   virtual inline const double    N() const;
-  virtual inline void         setN( const double value );
   ///  Coulomb factor 
   inline const double  coulombFactor() const ;
   ///  Tsai    factor 
@@ -111,8 +109,6 @@ private:
   double                  m_Aeff;
   /// Effective atomic number
   double                  m_Zeff;
-  /// Effective number of nucleons
-  double                  m_Neff;
   /// Vector of isotopes this material is composed of
   Isotopes                m_isotopes;  
   /// Coulomb factor
