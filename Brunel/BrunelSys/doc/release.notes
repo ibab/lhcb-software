@@ -3,9 +3,43 @@ Package: Rec/Brunel
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb reconstruction program
 
+</PRE><H1><A NAME=v27r2>2005-06-12 Brunel v27r2</A></H1><PRE>
+This version uses Gaudi v16r6, LHCb v18r6, Rec v1r2, Lbcom v2r2
+Requires input data from Boole v9r2 or greater. Incompatible with DC04 versions
+
+- Functionality changes
+  . Add support for v200506 geometry (tilted Calo+Muon) (XmlDDDB v25r0)
+  . Add property "nTracksMax" to Velo R tracking, needed when used online (RTTC).
+    Default seen by Brunel is 10000 (TrgVelo v3r7p1)
+  . Add support for alignment conditions (DetDesc v15r1, DetDescCnv v2r6)
+
+- Persistency changes
+  . Packed containers now read from /Event/pSim and written to /Event/pDst
+    (DstContent.opts, PackedEvent v1r0)
+
+- Packaging changes
+  . Reorganize options to simplify usage with real data
+  . All generic options now taken from $LHCBROOT/options/LHCbApplication.opts
+    (LHCb v18r6)
+  . Rename BrunelReco phase, now called Reco. Reco phase options moved to 
+    $RECSYSROOT/options/Reco.opts to allow sharing with Moore in RTTC
+    (Brunel.opts, RecSys v1r2, RichRecSys v1r16p3, CaloReco v2r9, CaloPIDs v2r6)
+  . Remove MC truth checking from Moni phase, add Check (with MC truth) phase
+    (BrunelMoni.opts, BrunelCheck.opts, RichRecoQC v1r10p1, CaloMoniDst v1r2) 
+  . Move all expert checking to ExpertCheck.opts, not enabled by default
+  . Change instance name of Velo tracking algorithms, to avoid configuring online
+    algorithms with offline tuning (TrgVelo v3r7p1)
+
+- New tuning
+  . Speed improvement in VeloChannelID and LHCbID constructor (LHCbKernel v5r11)
+
+- Bug fixes
+  . Add hack to bypass circular detector element dependency discovered with new 
+    GeometryInfo implementation (MuonDet v4r7)
+
 </PRE><H1><A NAME=v27r1>2005-05-31 Brunel v27r1</A></H1><PRE>
 This version uses Gaudi v16r4, LHCb v18r5, Rec v1r1, Lbcom v2r1
-Requires input data from Boole v8r3 or greater. Incompatible with DC04 versions
+Requires input data from Boole v8r3 to v9r1. Incompatible with DC04 versions
 
 - Functionality changes:
   . Added Output phase, with Pack sequence, to pack Tr/StatesP, Tr/StatesL,
@@ -25,7 +59,7 @@ Requires input data from Boole v8r3 or greater. Incompatible with DC04 versions
 
 </PRE><H1><A NAME=v27r0>2005-05-10 Brunel v27r0</A></H1><PRE>
 This version uses Gaudi v16r3, LHCb v18r4, Rec v1r0, Lbcom v2r0
-Requires input data from Boole v8r3 or greater. Incompatible with DC04 versions
+Requires input data from Boole v8r3 to v9r1. Incompatible with DC04 versions
 
 Based on v26r3, and new RecSys project.
 
@@ -42,7 +76,7 @@ Based on v26r3, and new RecSys project.
   . Remove Rec/Relations/Tr2MCP
 
 </PRE><H1><A NAME=v26r3>2005-04-19 Brunel v26r3</A></H1><PRE>
-Requires input data from Boole v8r2 or greater. Incompatible with DC04 versions
+Requires input data from Boole v8r2 to v9r1. Incompatible with DC04 versions
 
 - Packages modified: ITAlgorithms v14r4p1, TrgTools v7r3
 
@@ -60,7 +94,7 @@ Requires input data from Boole v8r2 or greater. Incompatible with DC04 versions
 
 </PRE><H1><A NAME=v26r2>2005-04-11 Brunel v26r2</A></H1><PRE>
 This version uses Gaudi v16r2, LHCb v18r2 (also CLHEP 1.9, ROOT 4.0)
-Requires input data from Boole v8r2 or greater. Incompatible with DC04 versions
+Requires input data from Boole v8r2 to v9r1. Incompatible with DC04 versions
 
 - Packages modified: TrgTools v7r2, VeloTT v1r12, TrgVelo v7r3, MuonID v3r7p2,
                      MuonRec v2r4p1, RichRecSys v1r16p1, RichLocalPID v1r10p1,
