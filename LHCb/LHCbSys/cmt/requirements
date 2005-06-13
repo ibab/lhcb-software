@@ -100,6 +100,6 @@ use TrgTools		v7r4	Trg     # Olivier Callot
 
 # LHCb  Examples
 use DetDescChecks	v2r3	Det     # Ivan Belyaev
-use DetDescExample      v6r3	Ex      # ?
+use DetDescExample      v6r4	Ex      # Marco Clemencic
 use IOExample    	v1r4p2	Ex      # Marco Cattaneo
 use DetCondExample	v7r2	Ex      # Marco Clemencic
