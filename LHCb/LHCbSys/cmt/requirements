@@ -93,7 +93,7 @@ use CaloUtils		v4r9	Calo    # Ivan Belyaev
 use RichRecBase		v1r15p1 Rich    # Chris Jones
 use STTools		v1r1	IT      # Matt Needham
 use TrackInterfaces 	v1r0	Tr      # Eduardo Rodrigues, Jose Hernando
-use DetCond		v7r2	Det     # Marco Clemencic
+use DetCond		v7r3	Det     # Marco Clemencic
 
 # Temporary, should be split
 use TrgTools		v7r4	Trg     # Olivier Callot
