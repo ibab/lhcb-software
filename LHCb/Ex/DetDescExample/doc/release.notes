@@ -1,8 +1,14 @@
-$Id: release.notes,v 1.28 2005-05-24 09:35:35 cattanem Exp $
+$Id: release.notes,v 1.29 2005-06-13 11:26:10 cattanem Exp $
 Package: DetDescExample
-Package Manager: I.Belyaev
+Package Manager: Marco Clemencic
 Purpose: Demonstrate how to access detector elements, their geometry 
          parameters and materials from detector description XML database.
+
+!==================DetDescExample v6r4 2005-06-24 ====================
+! 2005-06-13 - Marco Cattaneo
+ - Update job options to use a recent XmlDDDB geometry
+ - Remove obsolete Gaudi.job
+ - For materials, print out also N (effective number of nucleons)
 
 !==================DetDescExample v6r3 2005-05-24 ====================
 ! 2005-05-13 - Marco CLEMENCIC

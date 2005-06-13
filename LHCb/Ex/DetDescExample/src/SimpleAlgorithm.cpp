@@ -1,4 +1,4 @@
-// $Id: SimpleAlgorithm.cpp,v 1.16 2005-05-13 16:14:22 marcocle Exp $
+// $Id: SimpleAlgorithm.cpp,v 1.17 2005-06-13 11:26:10 cattanem Exp $
 
 /// Include files
 
@@ -191,6 +191,7 @@ StatusCode SimpleAlgorithm::initialize() {
   log << MSG::INFO << "A       : " << elO->A()/(g/mole)
       << " g/mole" << endmsg;
   log << MSG::INFO << "Z       : " << elO->Z() << endmsg;
+  log << MSG::INFO << "N       : " << elO->N() << endmsg;
   log << MSG::INFO << "Density : " << elO->density()/(g/cm3)
       << " g/cm3" << endmsg;
   log << MSG::INFO << "X0      : " << elO->radiationLength()/(cm)
@@ -209,6 +210,7 @@ StatusCode SimpleAlgorithm::initialize() {
   log << MSG::INFO << "A       : " << elB->A()/(g/mole) << " g/mole"
       << endmsg;
   log << MSG::INFO << "Z       : " << elB->Z() << endmsg;
+  log << MSG::INFO << "N       : " << elB->N() << endmsg;
   log << MSG::INFO << "Density : " << elB->density()/(g/cm3) << " g/cm3"
       << endmsg;
   log << MSG::INFO << "X0      : " << elB->radiationLength()/(cm) << " cm"
@@ -227,6 +229,7 @@ StatusCode SimpleAlgorithm::initialize() {
   log << MSG::INFO << "A       : " << mWater->A()/(g/mole) << " g/mole"
       << endmsg;
   log << MSG::INFO << "Z       : " << mWater->Z() << endmsg;
+  log << MSG::INFO << "N       : " << mWater->N() << endmsg;
   log << MSG::INFO << "Density : " << mWater->density()/(g/cm3) << " g/cm3"
       << endmsg;
   log << MSG::INFO << "X0      : " << mWater->radiationLength()/(cm)
@@ -246,6 +249,7 @@ StatusCode SimpleAlgorithm::initialize() {
   log << MSG::INFO << "A       : " << mArCF4CO2->A()/(g/mole)
       << " g/mole"  << endmsg;
   log << MSG::INFO << "Z       : " << mArCF4CO2->Z() << endmsg;
+  log << MSG::INFO << "N       : " << mArCF4CO2->N() << endmsg;
   log << MSG::INFO << "Density : " << mArCF4CO2->density()/(g/cm3)
       << " g/cm3"  << endmsg;
   log << MSG::INFO << "X0      : " << mArCF4CO2->radiationLength()/(cm)

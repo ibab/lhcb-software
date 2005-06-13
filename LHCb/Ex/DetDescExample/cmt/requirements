@@ -1,6 +1,6 @@
-# $Id: requirements,v 1.25 2005-05-24 09:35:35 cattanem Exp $
+# $Id: requirements,v 1.26 2005-06-13 11:26:09 cattanem Exp $
 package DetDescExample
-version v6r3
+version v6r4
 
 branches doc src options cmt
 
@@ -17,9 +17,4 @@ use XmlDDDB       v* Det
 #==> DetDesc example
 application DetDescExample *.cpp \
             "$(GAUDICONFROOT)/src/GaudiMain.cpp"
-
-# ========================= set macros ============================
-
-ignore_pattern package_stamps 
 apply_pattern  application_path
-macro DetDescExample_linkopts  "$(application_linkopts)"
