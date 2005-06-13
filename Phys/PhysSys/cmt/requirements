@@ -5,8 +5,6 @@ branches doc cmt
 
 # nedit ../../*/*Sys/v*/cmt/requirements 
 
-use DAQEvent v5r2 Event
-
 #=======================================================
 use  PhysCoreSys                v1r2     Phys
 #=======================================================
