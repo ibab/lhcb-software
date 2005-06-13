@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.16 2005-06-09 13:10:40 pkoppenb Exp $
+# $Id: requirements,v 1.17 2005-06-13 07:34:05 pkoppenb Exp $
 # Created    : 05/02/2002
 # Maintainer : P. Koppenburg
 #
@@ -6,7 +6,7 @@
 # http://cern.ch/lhcb-comp/Support/html/new_structure.pdf
 
 package           DaVinciKernel
-version           v3r4p1
+version           v3r4
 
 # Structure, i.e. directories to process. 
 #============================================================================

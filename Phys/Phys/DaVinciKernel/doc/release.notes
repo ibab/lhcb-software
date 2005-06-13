@@ -1,12 +1,12 @@
-! $Id: release.notes,v 1.51 2005-06-09 13:12:33 pkoppenb Exp $
+! $Id: release.notes,v 1.52 2005-06-13 07:34:05 pkoppenb Exp $
 ! Package     : DaVinciKernel
 ! Responsible : P. Koppenburg
 
+!========================== DaVinciKernel v3r4 2005-06-13 ===================
 ! 2005-06-09 - P. Koppenburg
   Merged with head revision. From now on use head revision in v14 series and
   make branches without Kernel/IParticleTransporter.h for v12 series.
-  
-  
+   
 ! 2005-06-09 - P. Koppenburg
   - Kernel/IDirectionFit.h
   - Kernel/IMassVertexFit.h
