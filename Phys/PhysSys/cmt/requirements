@@ -1,24 +1,27 @@
 package PhysSys
-version v1r1
+version v1r2
 
 branches doc cmt
 
-# nedit */*Sys/v*/cmt/requirements 
+# nedit ../../*/*Sys/v*/cmt/requirements 
+
+use DAQEvent v5r2 Event
 
 #=======================================================
-use  PhysCoreSys                v1r1     Phys
+use  PhysCoreSys                v1r2     Phys
 #=======================================================
 # packages included in PhysCoreSys
 #=======================================================                                                                                                                                                                            
 use  CommonParticles    	v1r5p3   Phys
-use  DaVinciFilter      	v1r8     Phys
-use  DaVinciKernel      	v3r3p1   Phys
-use  DaVinciTools       	v11r8p1  Phys
+use  DaVinciFilter      	v2r0     Phys
+use  DaVinciKernel      	v3r4     Phys
+use  DaVinciTools       	v12r0    Phys
 use  FlavourTagging     	v5r6     Phys
+use  KaliCalo            	v1r0     Phys
 use  Ks2PiPiSel         	v1r6     Phys
 use  ParticleMaker      	v1r6     Phys
 use  PhysSelections		v6r12    Phys
-use  DaVinciTransporter 	v2r0p2   Phys
+use  DaVinciTransporter 	v2r0p3   Phys
 use  VertexFit			v1r6p1   Phys
 use  Tampering                  v1r1p1   Phys
 # Generic tools 
@@ -26,37 +29,35 @@ use  Utilities          	v2r0     Tools
 use  RecoTools          	v1r1     Rec
 
 #=======================================================
-use PhysMCSys                   v1r1     Phys
+use PhysMCSys                   v1r2     Phys
 #=======================================================
 # packages included in PhysMCSys
 #=======================================================
 use  DaVinciAssociators 	v5r4p1   Phys 	
 use  DaVinciEff         	v3r3     Phys 	
-use  DaVinciMCTools     	v5r11p1  Phys 	
+use  DaVinciMCTools     	v5r12    Phys 	
 use  DaVinciTest        	v5r6     Phys 	
 use  DaVinciUser        	v5r2     Phys 	
 
 #=======================================================
-use LoKiSys                     v1r1     Tools
+use LoKiSys                     v1r2     Tools
 #=======================================================
 # packages included in LoKiSys
 #=======================================================
-use  LoKi               	v3r12    Tools  
+use  LoKi               	v3r13    Tools  
 use  LoKiHlt             	v2r2     Tools  
 use  LoKiGen             	v2r0     Tools  
-use  LoKiJets             	v1r0     Tools  
-use  KtJet	             	v1r0      
-
+use  LoKiJets             	v1r1     Tools  
+use  KtJet	             	v1r0     External
 
 #=======================================================
-use HltSys                      v1r1     Hlt
+use HltSys                      v1r2     Hlt
 #=======================================================
 # packages included in HltSys
 #=======================================================
-use HltGeneric                  v2r4     Hlt
-use HltSelections               v3r2     Hlt
-use HltSelChecker               v3r2     Hlt
-
+use HltGeneric                  v2r5     Hlt
+use HltSelections               v3r3     Hlt
+use HltSelChecker               v3r3     Hlt
 
 #=======================================================
 use  PhysSelSys			v8r4     PhysSel

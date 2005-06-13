@@ -14,5 +14,11 @@
  * \li \ref lhcbdoxygenmain  "LHCbSys documentation"
  * \li \ref gaudidoxygenmain "Gaudi documentation"
  * \li \ref externaldocs     "Related external libraries"
-
+ * 
+ * <b>Additional information:</b>
+ * \li <a href="../release.notes"><b>Release notes history</b></a>
+ * 
+ * <hr>
+ * \htmlinclude new_release.notes
+ * <hr>
  */

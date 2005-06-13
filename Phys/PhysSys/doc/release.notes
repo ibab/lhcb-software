@@ -3,6 +3,271 @@ Package     : PhysSys
 Package Coordinator : Patrick Koppenburg
 Purpose     : LHCb physics packages
 
+</PRE><H1><A NAME=v1r2>2005-06-13 Phys v1r2 - Frozen trigger for RTTC</A></H1><PRE>
+  - RTTC: . HLT is frozen to ensure identical results between RTTC and the 
+            production of the multi-events packets (MEP).
+          . Several monitoring algorithms have been added to the HLT packages
+	  . There is an algorithm that allows to write out HltScore into 
+	    the raw buffer. For RTTC.
+          . The HLT will be run in a new application called Moore
+  - Phys: . The IPVLocator tool has been replace by an IOnOffline tool. It
+            provides the PV, but also the IGemDispCalculator and the 
+	    IVertexFiiter to use. This allows an easy switching between tools
+	    in on- and offline environments. The HLT options telling
+	    which tool to use have been removed.
+	  
+#######################################MM#######################################
+#                                  PHYS v1r2                                   #
+################################################################################
+###################################### HLT #####################################
+!========================== HltGeneric v2r5 2005-06-13 ===================
+! 2005-06-13 - P. Koppenburg for Hugo Ruiz and Joe Helder Lopes
+  - src/PlotTrackDeviation.{cpp,h}
+    . New algorithm that monitors IP.  
+  - cmt/requirements
+    . import AIDA
+  - src/HltGeneric_load.cpp
+    . Add algorithm 
+! 2005-06-09 - P. Koppenburg
+  - src/TrgInsertTrackErrParam.*
+   . Moved from TrgTools
+   . New tuning by Hugo
+   - src/HltGeneric_load.cpp
+    . Add algorithm
+! 2005-06-09 - P. Koppenburg
+  - options/HltGeneric.opts
+    . Use TrgDispCalculator (just in case)
+! 2005-06-03 - P. Koppenburg
+  Allow to run HltGeneric when L1 is not executed in the same job 
+  (as in the RTTC)
+  - src/HltGenericDecision.{cpp,h}
+  - src/HltGenericMonitor.cpp
+    . Protect agains absence of L1score
+    . Initialize all member variables in constructor (except those having a 
+      default constructor).
+!========================== HltSelChecker v3r3 2005-06-13 ===================
+! 2005-06-10 - P. Koppenburg
+  - options/TestHltScore.opts
+    . Moved to HltSelections
+! 2005-06-03 - P. Koppenburg
+  - src/TestHltScore.cpp
+    . Moved to HltSelections
+!========================== HltSelections v3r3 2005-06-13 ===================
+! 2005-06-10 - P. Koppenburg
+ - src/HltCompare2RawBuffer: same as below.
+
+! 2005-06-10 - Marco Cattaneo
+ - src/TestHltScore: remove online specific tests and job options, instead 
+   call directly declareInfo method of Algorithm base class, which makes the 
+   test internally
+
+! 2005-06-10 - P. Koppenburg
+  - src/TestHltScore.cpp
+    . Check message level outside of printStatistics method, as boost 
+      clashes info() when OutputLevel = 4.
+  - options/TestHltScore.cpp
+    . Moved from HltSelChecker  
+    
+! 2005-06-09 - P. Koppenburg
+  - src/HltCompare2RawBuffer.cpp
+    . Added Gaucho Monitoring
+    
+! 2005-06-08 - P. Koppenburg
+  - options/TrgTracks.opts
+    . Use OnOffline tool to set all vertex and geom tools
+    
+! 2005-06-08 - P. Koppenburg for Jose Helder Lopes
+  - src/TestHltScore.cpp
+    . Added Gaucho Monitoring
+! 2005-06-03 - P. Koppenburg
+  - src/testHltScore.cpp
+    . Moved from HltSelChecker
+! 2005-06-02 - P. Koppenburg
+  - src/HltDecision.cpp
+    . New FillTrgDecision (=true) option for writing out to TrgDecision
+  Convert HltScore class to rawbuffer. Many new files:
+  - src/Hlt2RawBuffer.{cpp,h}
+    . Store HltScore in raw buffer
+  - src/HltCompare2RawBuffer.{cpp,h}
+    . Compare HltScore in rawbuffer and as output by HLT
+  - src/HltDAQ.h
+    . Common enums
+ - src/HltSelections_load.cpp
+    . Modified accordingly
+!========================== HltSys v1r2 2005-06-13 ===================
+! 2005-06-10 - P. Koppenburg
+ - New data for RTTC
+ - New versions of the packages for Moore v1r0
+!========================== DaVinciFilter v2r0 2005-06-13 ===================
+! 2005-06-08 - P. Koppenburg
+  - src/FlightDistanceFilterCriterion.{cpp,h}
+  - src/LifetimeSignificanceCriterion.{cpp,h}
+  - src/Momentum2FlightAngleFilterCriterion.{cpp,h}
+  - src/PVIPFilterCriterion.{cpp,h}
+  - src/VtxIsolationFilterCriterion.{cpp,h}
+    . Get GeomTool and Vertex fitter from IOnOffline tool.
+  - src/DaVinciFilter_load.cpp
+    . Reflect change
+! 2005-06-02 - P. Koppenburg
+  - src/OverlapFilterCriterion.{cpp,h}
+    . Allow to choose implementation of ICheckOverlap tool
+    . Bug fix in initialisation
+
+##################################### PHYS #####################################
+!========================== DaVinciKernel v3r4 2005-06-13 ===================
+! 2005-06-09 - P. Koppenburg
+  Merged with head revision. From now on use head revision in v14 series and
+  make branches without Kernel/IParticleTransporter.h for v12 series.
+   
+! 2005-06-09 - P. Koppenburg
+  - Kernel/IDirectionFit.h
+  - Kernel/IMassVertexFit.h
+  - Kernel/IParticleCombiner.h
+  - Kernel/IParticleReFitter.h
+  - Kernel/IVertexFit.h
+    . New interfaces for vertex fitters
+
+! 2005-06-08 - P. Koppenburg
+  - Kernel/IOnOffline.h
+    . New tool that resturns online or offline environment
+      Knows about PV (replaces PVLocator) and what geom and vertex 
+      tools to use.
+  - Kernel/DVAlgorithm.h
+  - src/DVAlgorithm.cpp
+  - src/component/PhysDesktop.cpp
+  - src/component/PhysDesktop.h
+    . Use new tool
+  - Kernel/IPVLocator.h
+    . Removed
+  - src/IAlgorithm2ID.h
+    . Return size of algorithm array
+
+! 2005-06-02 - P. Koppenburg
+  - src/DVAlgorithm.{h,cpp}
+    . Allow change of CheckOverlap Tool implementation
+
+!========================== DaVinciMCTools v5r12 2005-06-13 ===================
+! 2005-06-08 - P. Koppenburg
+ - src/ src/DecayChainNTuple.{cpp,h}
+   . Use IOnOfflineTool 
+!========================== DaVinciTools v12r0 2005-06-13 ===================
+! 2005-06-10 - P. Koppenburg
+  - cmt/requirements
+    . Removed boost linkopts
+! 2005-06-08 - P. Koppenburg
+  - src/PVLocator.cpp
+  - src/PVLocator.h
+  - src/ResetPVLocation.cpp
+  - src/ResetPVLocation.h
+    . Removed
+  - src/OnOfflineTool.cpp
+  - src/OnOfflineTool.h
+    . New global tool that defines Online or Offline environment
+      It knows about the PV location, the geom and vertex tools to use
+      and replaces the PVLocator
+  - src/ResetOnOffline.cpp
+  - src/ResetOnOffline.h
+    . New algorith that sets Online or Offline environment
+  - src/CheckPV.cpp
+  - src/CheckPV.h
+  - src/DaVinciTools_load.cpp
+  - src/SimplePlotTool.cpp
+  - src/SimplePlotTool.h
+    . Modified accordingly
+                                                                                                                                                                                  
+! 2005-06-08 - P. Koppenburg
+  - src/Algorithm2ID.h
+    . Return size of algorithm array
+                                                                                                                                                                                  
+! 2005-06-02 - P. Koppenburg based on an idea by Miriam Calvi
+  - src/CheckVeloOverlap.{cpp,h}
+    . New ICheckOverlap tool that checks for common velo clusters.
+      By default it returns true when theer are shared clusters. This can be
+      tuned using the MaxCommonClusters and MaxCommonFraction properties.
+         
+!========================== DaVinciTransporter v2r0p3 2005-06-13 ===================
+! 2005-06-08 - P. Koppenburg
+  - src/CombinedTransporter.cpp
+  - src/LinearTransporter.cpp
+  - src/ParabolicTransporter.cpp
+   . change the message level to debug() for "initialization starting"
+
+!========================== KaliCalo v1r0 2005-06-13 ===================
+! 2005-05-31 - Vanya BELYAEV
+ -  new package
+    now constains "iterative pi0" algorihtm and modified NeutralPPs... 
+    energy flow is expected *soon* 
+
+!========================== PhysCoreSys v1r2 2005-06-13 ===================
+! 2005-06-07 - P. Koppenburg
+ - options/DaVinciInit.opts
+   . Restore ParticlePropertySvc ExtSvc
+
+! 2005-06-06 - Marco Cattaneo
+ - options/DaVinciInit.opts
+   . Get most options from $LHCBROOT/options/LHCbApplication.opts
+   . Update location of UnpackDst.opts
+
+#################################### PHYSSEL ###################################
+##################################### TOOLS ####################################
+!========================== LoKiJets v1r1 2005-06-13 ===================
+! 2005-06-02 - P. Koppenburg
+  KtJets moved to External/
+
+!========================== LoKi v3r13 2005-06-13 ===================
+! 2005-06-02 - Vanya BELYAEV
+ - LoKi/LoopObj.h
+   src/LoopObj.cpp
+
+  New method for changing the particle ID for "loop"-object is introduced
+   
+  for ( Loop Bc = loop ( "psi pi" , "B_c+" ) ; Bc ; ++Bc ) 
+   {
+     // set particle ID according to the charge of the pion
+      Bc->setPID ( Q( Bc(2) ) > 0 ? "B_c+" : "B_c-" ) ; 
+      //
+      Bc->save("Bc") ;
+   }
+
+  IMPORTANT:
+  ==========
+  The treatment of setPID method is modified now.
+  The particle ID of existing effective particle will 
+  be modified (if proper ownership is establshed).
+  For some configurations (rare) it could result in 
+  deletion and recreation of existing particle object. 
+  In this case, the results of various fit procedures 
+  could be modified. Therefore *IT IS RECOMMENDED* to 
+  use this method *ONLY BEFORE* the  actual explicit 
+  constrains procedures, e.g.
+  
+  correct order: 
+
+      Bc->setPID( ... ) ; 
+      Bc->fit( FitMassVertex && FitLifeTime) ;  
+
+  "wrong" order: 
+
+     Bc->fit( FitMassVertex && FitLifeTime ) ;  
+     Bc->setPID( ... ) ;       
+
+   It could be wrong e.g. in the context:
+
+      for ( Bc = loop ("psi pi", "B+") ;  .... ) 
+        {
+            Bc->fit( FitMassVertex && FitLifeTime ) ;  // WRONG
+            Bc->setPID( "B_c+") ;                      // WRONG  
+            Bc->save("Bc") ;       
+        } 
+   Here for the saved object only Vertex-constrained fit is performed.
+   (Note the mismatch between "B+" and "B_c+") 
+
+
+   Many thanks to Andreas Wenger for use-cases.... 
+
+  - cmt/requirements
+    version increment to v3r13 
+
 </PRE><H1><A NAME=v1r1>2005-05-30 Phys v1r1 - Towards RTTC</A></H1><PRE>
  - Some small changes here and there
  - Reshuffling of options to allow Panoramix not to depend on DaVinci
