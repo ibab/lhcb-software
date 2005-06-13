@@ -3,12 +3,12 @@ Package: Rec/Brunel
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb reconstruction program
 
-</PRE><H1><A NAME=v27r2>2005-06-12 Brunel v27r2</A></H1><PRE>
+</PRE><H1><A NAME=v27r2>2005-06-13 Brunel v27r2</A></H1><PRE>
 This version uses Gaudi v16r6, LHCb v18r6, Rec v1r2, Lbcom v2r2
 Requires input data from Boole v9r2 or greater. Incompatible with DC04 versions
 
 - Functionality changes
-  . Add support for v200506 geometry (tilted Calo+Muon) (XmlDDDB v25r0)
+  . Add support for v200506 geometry (tilted Calo+Muon) (XmlDDDB v25r1)
   . Add property "nTracksMax" to Velo R tracking, needed when used online (RTTC).
     Default seen by Brunel is 10000 (TrgVelo v3r7p1)
   . Add support for alignment conditions (DetDesc v15r1, DetDescCnv v2r6)
@@ -31,11 +31,13 @@ Requires input data from Boole v9r2 or greater. Incompatible with DC04 versions
     algorithms with offline tuning (TrgVelo v3r7p1)
 
 - New tuning
-  . Speed improvement in VeloChannelID and LHCbID constructor (LHCbKernel v5r11)
+  . Speed improvement in VeloChannelID constructor (LHCbKernel v5r11)
 
 - Bug fixes
   . Add hack to bypass circular detector element dependency discovered with new 
     GeometryInfo implementation (MuonDet v4r7)
+  . Always calculate effective number of nucleons N() from A() of materials
+    (DetDesc v15r1, DetDescCnv v2r6, XmlDDDB v15r1)
 
 </PRE><H1><A NAME=v27r1>2005-05-31 Brunel v27r1</A></H1><PRE>
 This version uses Gaudi v16r4, LHCb v18r5, Rec v1r1, Lbcom v2r1
