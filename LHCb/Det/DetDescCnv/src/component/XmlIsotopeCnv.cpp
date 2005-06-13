@@ -1,4 +1,4 @@
-// $Id: XmlIsotopeCnv.cpp,v 1.4 2003-06-16 13:44:17 sponce Exp $
+// $Id: XmlIsotopeCnv.cpp,v 1.5 2005-06-13 11:36:10 cattanem Exp $
 // include files
 #include "GaudiKernel/CnvFactory.h"
 #include "GaudiKernel/GenericAddress.h"
@@ -67,7 +67,6 @@ XmlIsotopeCnv::XmlIsotopeCnv (ISvcLocator* svc) :
   stateString = xercesc::XMLString::transcode("state");
   AString = xercesc::XMLString::transcode("A");
   ZString = xercesc::XMLString::transcode("Z");
-  NString = xercesc::XMLString::transcode("N");
   densityString = xercesc::XMLString::transcode("density");
   radlenString = xercesc::XMLString::transcode("radlen");
   lambdaString = xercesc::XMLString::transcode("lambda");
@@ -86,7 +85,6 @@ XmlIsotopeCnv::~XmlIsotopeCnv () {
   xercesc::XMLString::release((XMLCh**)&stateString);
   xercesc::XMLString::release((XMLCh**)&AString);
   xercesc::XMLString::release((XMLCh**)&ZString);
-  xercesc::XMLString::release((XMLCh**)&NString);
   xercesc::XMLString::release((XMLCh**)&densityString);
   xercesc::XMLString::release((XMLCh**)&radlenString);
   xercesc::XMLString::release((XMLCh**)&lambdaString);
@@ -127,10 +125,6 @@ StatusCode XmlIsotopeCnv::i_createObj (xercesc::DOMElement* element,
   std::string zAttribute = dom2Std (element->getAttribute ( ZString ));
   if (!zAttribute.empty()) {
     dataObj->setZ (xmlSvc()->eval(zAttribute, false));
-  }
-  std::string nAttribute = dom2Std (element->getAttribute ( NString ));
-  if (!nAttribute.empty()) {
-    dataObj->setN (xmlSvc()->eval(nAttribute, false));
   }
   std::string densityAttribute =
     dom2Std (element->getAttribute (densityString));
