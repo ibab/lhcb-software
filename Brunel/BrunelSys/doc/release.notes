@@ -37,7 +37,8 @@ Requires input data from Boole v9r2 or greater. Incompatible with DC04 versions
   . Add hack to bypass circular detector element dependency discovered with new 
     GeometryInfo implementation (MuonDet v4r7)
   . Always calculate effective number of nucleons N() from A() of materials
-    (DetDesc v15r1, DetDescCnv v2r6, XmlDDDB v15r1)
+    (DetDesc v15r1, DetDescCnv v2r6)
+  . Fix the densities of Na, K, Sb, Cs (XmlDDDB v25r1)
 
 </PRE><H1><A NAME=v27r1>2005-05-31 Brunel v27r1</A></H1><PRE>
 This version uses Gaudi v16r4, LHCb v18r5, Rec v1r1, Lbcom v2r1
