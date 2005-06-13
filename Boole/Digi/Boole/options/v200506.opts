@@ -43,7 +43,7 @@ PoolDbCacheSvc.Catalog = {
 // Spillover
 //---------------------------------------------------------------------------
 SpilloverSelector.Input = { 
-   "DATAFILE='PFN:castor:/castor/cern.ch/user/g/gcorti/Gauss/v20r0/300000000.1000ev.tilt.sim' TYP='POOL_ROOT' OPT='READ'" 
+   "DATAFILE='PFN:castor:/castor/cern.ch/user/g/gcorti/Gauss/v20r0/30000000.1000ev.tilt.sim' TYP='POOL_ROOT' OPT='READ'" 
 };  // Minimum bias events, with Gauss v20r0
 
 
