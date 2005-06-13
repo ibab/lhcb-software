@@ -1,7 +1,8 @@
-! $Id: release.notes,v 1.16 2005-06-08 12:30:37 pkoppenb Exp $
+! $Id: release.notes,v 1.17 2005-06-13 07:35:11 pkoppenb Exp $
 ! Package     : DaVinciTransporter
 ! Responsible : Yuehong Xie
 
+!========================== DaVinciTransporter v2r0p3 2005-06-13 ===================
 ! 2005-06-08 - P. Koppenburg
   - src/CombinedTransporter.cpp
   - src/LinearTransporter.cpp
