@@ -11,7 +11,7 @@
  - Packages modified: KernelSys v4r12, LHCbKernel v5r11, DAQSys v1r4p1,
       EventSys v20r6, TrEvent v14r3, DAQEvent v5r1p1, TrackEvent v1r1,
       DetSys v7r1, DetDesc v15r1, VeloDet v9r6, DetDescCnv v2r6, MuonDet v4r7,
-      TrgTools v4r7
+      TrgTools v7r4
 
  - In LHCbKernel v5r11:
    . Speed improvements in VeloChannelID and LHCbID constructors, for L1
@@ -51,7 +51,7 @@
  - In DAQSys v1r4p1
    . Remove explicit creation of DataOnDemandSvc from RawBuffer.opts
 
- - In TrgTools v4r7
+ - In TrgTools v7r4
    . Move TrgInsertTrackErrParam algorithm to HltGeneric
 
 </PRE><H1><A NAME=v18r5>2005-05-24 LHCbSys v18r5</A></H1><PRE>
