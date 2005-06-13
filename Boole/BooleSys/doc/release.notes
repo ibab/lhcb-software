@@ -3,12 +3,12 @@ Package: Digi/Boole
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb Digitization program
 
-</PRE><H1><A NAME=v9r2>2005-06-12 Boole v9r2</A></H1><PRE>
+</PRE><H1><A NAME=v9r2>2005-06-13 Boole v9r2</A></H1><PRE>
 This version uses Gaudi v16r4, LHCb v18r6, Lbcom v2r2
 Requires input from Gauss v19r3 or greater. Output needs Brunel v27r2 or greater
 
 - Geometry changes
-  . Add support for v200506 geometry (tilted Calo+Muon) (XmlDDDB v25r0)
+  . Add support for v200506 geometry (tilted Calo+Muon) (XmlDDDB v25r1)
   . Add support for alignment conditions (DetDesc v15r1, DetDescCnv v2r6)
 
 - Repackaging
@@ -26,6 +26,9 @@ Requires input from Gauss v19r3 or greater. Output needs Brunel v27r2 or greater
 - Bug fixes
   . Add hack to bypass circular detector element dependency discovered with new
     GeometryInfo implementation (MuonDet v4r7)
+  . Always calculate effective number of nucleons N() from A() of materials
+    (DetDesc v15r1, DetDescCnv v2r6)
+  . Fix the densities of Na, K, Sb, Cs (XmlDDDB v25r1)
 
 </PRE><H1><A NAME=v9r1>2005-05-30 Boole v9r1</A></H1><PRE>
 This version uses Gaudi v16r4, LHCb v18r5, Lbcom v2r1 (also CLHEP 1.9, ROOT 4.0) 
