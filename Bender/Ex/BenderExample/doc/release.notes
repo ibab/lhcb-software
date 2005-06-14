@@ -1,12 +1,29 @@
-! $Id: release.notes,v 1.7 2005-05-19 17:36:54 ibelyaev Exp $
+! $Id: release.notes,v 1.8 2005-06-14 16:17:19 ibelyaev Exp $
 ! -----------------------------------------------------------------------------
-! CVS tag $Name: not supported by cvs2svn $; version $Revision: 1.7 $
+! CVS tag $Name: not supported by cvs2svn $; version $Revision: 1.8 $
 ! -----------------------------------------------------------------------------
 ! Package     : Ex/BenderExample
 ! Responsible : Vanya  BELYAEV Ivan.Belyaev@itep.ru
 ! Purpose     : collection of examples to run Bender - 
 !             :                    -Python based physic sanalysis 
 ! -----------------------------------------------------------------------------
+
+! 2005-06-14 - Vanya BELYAEV
+ - VeloSpaceTracks.py
+   new primitive example on looping over TrgTracsk and their MC-Truth 
+
+ - SpillOverRTTC.py
+ - BtoPV.py 
+
+   
+! 2005-06-09 - Vanya BELYAEV
+ - python/benderROOT.py 
+   (obsolete code fragment?)... I need some advice from (Py)ROOT experts...
+ 
+ - cmt/requirements
+   version increment to v5r1 
+
+
 
 ! 2005-05-19 - Vanya BELYAEV
 
