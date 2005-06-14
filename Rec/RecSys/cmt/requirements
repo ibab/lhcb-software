@@ -13,16 +13,16 @@ use CaloPIDs		v2r6	Calo  # Ivan Belyaev
 use CaloReco            v2r9    Calo  # Ivan Belyaev
 
 # Tracking
-use TrExtrapolator      v2r14   Tr    # ?
-use TrFitEvent		v4r9	Tr    # ?
-use TrFitAssociators	v1r3	Tr    # ?
-use TrCheck             v2r8	Tr    # ?
+use TrExtrapolator      v2r14   Tr    # N.N.
+use TrFitEvent		v4r9	Tr    # N.N.
+use TrFitAssociators	v1r3	Tr    # N.N.
+use TrCheck             v2r8	Tr    # N.N.
 use LongTrack           v1r15	Tr    # Olivier Callot
-use TrFitter            v4r0	Tr    # ?
-use TrTools             v2r6	Tr    # ?
-use Seeding             v2r10	Tr    # ?
-use TrMatching          v2r10p2	Tr    # ?
-use TrCleanEx           v2r11	Tr    # ?
+use TrFitter            v4r0	Tr    # N.N.
+use TrTools             v2r6	Tr    # N.N.
+use Seeding             v2r10	Tr    # N.N.
+use TrMatching          v2r10p2	Tr    # N.N.
+use TrCleanEx           v2r11	Tr    # N.N.
 use VeloTT              v1r13	Tr    # Yuehong Xie
 use TrKShort		v1r6	Tr    # Olivier Callot
 
@@ -52,9 +52,9 @@ use L1Reco		v7r0	Trg   # Mariusz Witek
 use L1Decision		v5r1    Trg   # Thomas Schietinger
 
 # Muon
-use MuonUtils		v1r0	Muon  # ?
-use MuonRec             v2r4p1	Muon  # ?
-use MuonID              v3r7p2	Muon  # ?
+use MuonUtils		v1r0	Muon  # N.N.
+use MuonRec             v2r4p1	Muon  # N.N.
+use MuonID              v3r7p2	Muon  # N.N.
 
 # Rich
 use RichRecSys		v1r16p3	Rich  # Chris Jones
@@ -71,5 +71,5 @@ use RichTrgGlobalPID	v1r0p1  Rich  # Chris Jones
 use RichTrgTools	v1r0    Rich  # Chris Jones
 
 # Global reco
-use PrimVtx             v2r1p1  Rec   # ?
+use PrimVtx             v2r1p1  Rec   # N.N.
 use GlobalReco		v5r0    Rec   # Patrick Koppenburg
