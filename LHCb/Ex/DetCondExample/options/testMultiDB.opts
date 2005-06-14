@@ -1,4 +1,4 @@
-//$Id: testMultiDB.opts,v 1.1 2005-05-25 12:37:56 marcocle Exp $
+//$Id: testMultiDB.opts,v 1.2 2005-06-14 13:19:55 marcocle Exp $
 //==============================================================
 // Job options to test double CondDB usage in DetCondExample
 //==============================================================
@@ -44,24 +44,24 @@ ApplicationMgr.DLLs += { "DetCond" };
 ApplicationMgr.ExtSvc += { "CondDBAccessSvc/DB1" };
 ApplicationMgr.ExtSvc += { "CondDBAccessSvc/DB2" };
 
-ConditionsDBCnvSvc.CondDBAccessServices = { "DB1", "DB2" };
-ApplicationMgr.ExtSvc += { "ConditionsDBCnvSvc" };
-DetectorPersistencySvc.CnvServices += { "ConditionsDBCnvSvc" };
+CondDBCnvSvc.CondDBAccessServices = { "DB1", "DB2" };
+ApplicationMgr.ExtSvc += { "CondDBCnvSvc" };
+DetectorPersistencySvc.CnvServices += { "CondDBCnvSvc" };
 
-DB1.HostName     = "";
-DB1.User         = "";
-DB1.Password     = "";
+DB1.HostName     = "$CONDDBHOST";
+//DB1.User         = "$CONDDBUSER";
+//DB1.Password     = "$CONDDBPWD";
 DB1.HidePassword = true;
-DB1.Database     = "";
-DB1.Schema       = "";
-DB1.BackEnd      = "";
+DB1.Database     = "$CONDDBNAME1";
+DB1.Schema       = "$CONDDBSCHEMA";
+DB1.BackEnd      = "$CONDDBENGINE";
 DB1.RecreateDB   = true;
 
-DB2.HostName     = "";
-DB2.User         = "";
-DB2.Password     = "";
+DB2.HostName     = "$CONDDBHOST";
+//DB2.User         = "$CONDDBUSER";
+//DB2.Password     = "$CONDDBPWD";
 DB2.HidePassword = true;
-DB2.Database     = "";
-DB2.Schema       = "";
-DB2.BackEnd      = "";
+DB2.Database     = "$CONDDBNAME2";
+DB2.Schema       = "$CONDDBSCHEMA";
+DB2.BackEnd      = "$CONDDBENGINE";
 DB2.RecreateDB   = true;

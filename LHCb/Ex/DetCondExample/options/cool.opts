@@ -17,28 +17,28 @@ ApplicationMgr.ExtSvc += { "CondDBAccessSvc" };
 //--------------------------------------------------------------
 
 // name of the database server
-CondDBAccessSvc.HostName = "";
+CondDBAccessSvc.HostName = "$CONDDBHOST";
 
 // name of the user needed to connect
-CondDBAccessSvc.User     = "";
+//CondDBAccessSvc.User     = "$CONDDBUSER";
 
 // password needed to connect to the DB server
-CondDBAccessSvc.Password = "";
+//CondDBAccessSvc.Password = "$CONDDBPWD";
 
 // hide password in log output (default = true)
 CondDBAccessSvc.HidePassword = true;
 
 // name of the database to use
-CondDBAccessSvc.Database = "";
+CondDBAccessSvc.Database = "$CONDDBNAME";
 
 // schema to use
-CondDBAccessSvc.Schema   = "";
+CondDBAccessSvc.Schema   = "$CONDDBSCHEMA";
 
 // which tag to use if none is specified
 // CondDBAccessSvc.TAG = "";
 
 // which db technology to use (oracle|mysql|sqlite)
-CondDBAccessSvc.BackEnd    = "";
+CondDBAccessSvc.BackEnd    = "$CONDDBENGINE";
 
 // Drop and recreate the database during initialization.
 //CondDBAccessSvc.RecreateDB = true;

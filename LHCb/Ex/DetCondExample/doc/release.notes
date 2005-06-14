@@ -1,6 +1,10 @@
-#$Id: release.notes,v 1.39 2005-05-23 16:48:17 marcocle Exp $
+#$Id: release.notes,v 1.40 2005-06-14 13:19:55 marcocle Exp $
 Package Ex/DetCondExample
 Package manager : Marco Clemencic
+
+! 2005-06-14 - Marco Clemencic
+ - Environment variables added as place holders for DB connections data.
+ - "ConditionsDBCnvSvc" replaced with "CondDBCnvSvc" (DetCond > v7r3)
 
 !=========== Ex/DetCondExample v7r2 ==========================================
 ! 2005-05-23 - Marco CLEMENCIC

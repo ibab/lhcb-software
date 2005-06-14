@@ -1,4 +1,4 @@
-//$Id: testCondDB.opts,v 1.7 2005-05-03 12:46:19 marcocle Exp $
+//$Id: testCondDB.opts,v 1.8 2005-06-14 13:19:55 marcocle Exp $
 //==============================================================
 // Job options for DetCondExample test of CondDB
 //==============================================================
@@ -7,10 +7,10 @@
 #include "../options/cool.opts"
 
 // Add other external services to the list of known services
-ApplicationMgr.ExtSvc += { "ConditionsDBCnvSvc" };
+ApplicationMgr.ExtSvc += { "CondDBCnvSvc" };
 
 // Detector Persistency service setup: 
-DetectorPersistencySvc.CnvServices += { "ConditionsDBCnvSvc" };
+DetectorPersistencySvc.CnvServices += { "CondDBCnvSvc" };
 
 //--------------------------------------------------------------
 // Sequence of algorithms to be applied
