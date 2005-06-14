@@ -72,7 +72,10 @@ HltDecision.MakeCorrelations = false ;
 //MCCorrelations.Members = {};
 // #include "$HLTSELCHECKERROOT/options/Plots.opts"
 // #include "$HLTSELCHECKERROOT/options/MeasureTimes.opts"
-#include "$HLTSELECTIONSROOT/options/TestHltScore.opts" // Gaucho stuff
+ApplicationMgr.TopAlg += { "GaudiSequencer/HltMonitoring" };
+HltMonitoring.Members  += { "TestHltScore" };
+HltMonitoring.Members  += {"PlotTrackDeviation"}; // Monitor
+ApplicationMgr.ExtSvc += { "ParticlePropertySvc" }; // needed for PlotTrackDeviation
 
 // Input data, number of events, OutputLevels etc.
 TestHltScore.OutputLevel = 4 ;

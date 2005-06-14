@@ -1,4 +1,27 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
 <!-- Edited By POOL -->
 <!DOCTYPE POOLFILECATALOG SYSTEM "InMemory">
 <POOLFILECATALOG>
+
+  <File ID="70EF2A70-96D9-D911-8FD4-000CF1A37A86">
+    <physical>
+      <pfn filetype="ROOT_All" name="L0L1Accepted.raw"/>
+    </physical>
+    <logical/>
+  </File>
+
+  <File ID="886012FB-A4D9-D911-9185-000CF1A37A86">
+    <physical>
+      <pfn filetype="ROOT_All" name="L0L1Accepted500.raw"/>
+    </physical>
+    <logical/>
+  </File>
+
+  <File ID="E49C930C-CFD9-D911-98F1-000CF1A37A86">
+    <physical>
+      <pfn filetype="ROOT_All" name="L0L1Accepted100k.raw"/>
+    </physical>
+    <logical/>
+  </File>
+
 </POOLFILECATALOG>

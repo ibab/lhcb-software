@@ -3,6 +3,8 @@
 // Common Online+Offline configuration
 #include "$MOOREROOT/options/MooreCommon.opts"
 
+HltMonitoring.Members  += {"HltCompare2RawBuffer"};
+
 // Start the monitoring service
 ApplicationMgr.DLLs   += { "Gaucho" };
 ApplicationMgr.ExtSvc += { "MonitorSvc" };
