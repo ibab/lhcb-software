@@ -1,4 +1,4 @@
-//$Id: ConditionsDBCnvSvc.h,v 1.1 2005-06-08 17:20:49 marcocle Exp $
+//$Id: ConditionsDBCnvSvc.h,v 1.1 2005-06-14 11:55:35 cattanem Exp $
 #ifndef DETCOND_CONDITIONSDBCNVSVC_H
 #define DETCOND_CONDITIONSDBCNVSVC_H 1
 

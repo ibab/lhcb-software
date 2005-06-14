@@ -1,6 +1,6 @@
-// $Id: RelyConverter.cpp,v 1.1 2005-06-08 17:20:49 marcocle Exp $
+// $Id: RelyConverter.cpp,v 1.7 2005-06-14 11:55:36 cattanem Exp $
 // Include files 
-#include "DetCond/RelyConverter.h"
+#include "RelyConverter.h"
 
 #include "GaudiKernel/IConversionSvc.h"
 #include "GaudiKernel/MsgStream.h"

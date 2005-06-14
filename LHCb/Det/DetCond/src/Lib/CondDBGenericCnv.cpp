@@ -1,4 +1,4 @@
-// $Id: CondDBGenericCnv.cpp,v 1.1 2005-06-08 17:20:49 marcocle Exp $
+// $Id: CondDBGenericCnv.cpp,v 1.2 2005-06-14 11:55:35 cattanem Exp $
 // Include files 
 #include "GaudiKernel/IDetDataSvc.h"
 #include "GaudiKernel/TimePoint.h"
@@ -19,7 +19,7 @@
 
 // local
 #include "DetCond/CondDBGenericCnv.h"
-#include "ConditionsDBCnvSvc.h"
+#include "DetCond/ConditionsDBCnvSvc.h"
 
 //-----------------------------------------------------------------------------
 // Implementation file for class : CondDBGenericCnv

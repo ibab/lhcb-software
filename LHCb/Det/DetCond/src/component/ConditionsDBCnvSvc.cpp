@@ -1,7 +1,7 @@
-//$Id: ConditionsDBCnvSvc.cpp,v 1.1 2005-06-08 17:20:49 marcocle Exp $
+//$Id: ConditionsDBCnvSvc.cpp,v 1.20 2005-06-14 11:55:36 cattanem Exp $
 #include <string>
 
-#include "ConditionsDBCnvSvc.h"
+#include "DetCond/ConditionsDBCnvSvc.h"
 #include "DetCond/ICondDBAccessSvc.h"
 
 #include "GaudiKernel/GenericAddress.h"

@@ -1,12 +1,15 @@
-# $Id: release.notes,v 1.38 2005-06-14 10:32:57 marcocle Exp $
+# $Id: release.notes,v 1.39 2005-06-14 11:55:35 cattanem Exp $
 Package Det/DetCond
 Package manager : Marco Clemencic
+
+================= Det/DetCond v7r3 2005-06-14 ================================
+! 2005-06-14 - Marco Cattaneo
+ - Move ConditionsDbCnvSvc and RelyConverter to component library.
 
 ! 2005-06-14 - Marco Clemencic
  - CondDBAccessSvc does not complain anymore if the user is not specified
 	 (adapted to POOL XML authentication service, COOL > 1.1.0)
 
-================= Det/DetCond v7r3 2005-06-13 ================================
 ! 2005-06-08 - Marco Clemencic
  - Changed from "component library" to "component + link library"
 

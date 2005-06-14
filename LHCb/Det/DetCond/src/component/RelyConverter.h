@@ -1,4 +1,4 @@
-// $Id: RelyConverter.h,v 1.3 2005-05-12 10:44:04 marcocle Exp $
+// $Id: RelyConverter.h,v 1.1 2005-06-14 11:55:36 cattanem Exp $
 #ifndef COMPONENT_RELYCONVERTER_H 
 #define COMPONENT_RELYCONVERTER_H 1
 
