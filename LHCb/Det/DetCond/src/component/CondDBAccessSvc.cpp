@@ -1,4 +1,4 @@
-// $Id: CondDBAccessSvc.cpp,v 1.7 2005-05-25 17:22:14 marcocle Exp $
+// $Id: CondDBAccessSvc.cpp,v 1.8 2005-06-14 10:32:57 marcocle Exp $
 // Include files 
 #include <sstream>
 
@@ -105,13 +105,14 @@ StatusCode CondDBAccessSvc::initialize(){
 
   log << MSG::DEBUG << "Initialize" << endmsg;
   
+  // user, name and password can be specified via authentication.xml
   if ( m_dbHostName == "" ||
-       m_dbUser == "" ||
+       // m_dbUser == "" ||
        m_dbName == "" ||
        m_dbSchema == "" ||
        m_dbBackEnd == "" ){
     log << MSG::ERROR << "An information needed to connect to the CondDB is missing." << endmsg;
-    log << MSG::ERROR << "Check that options 'HostName', 'User', 'Database', 'Schema' and 'BackEnd' are set." << endmsg;
+    log << MSG::ERROR << "Check that options 'HostName', 'Schema', 'Database' and 'BackEnd' are set." << endmsg;
     return StatusCode::FAILURE;
   }
 
@@ -256,9 +257,9 @@ std::string CondDBAccessSvc::i_connection_uri() const {
   
   result << m_dbBackEnd << "://" << m_dbHostName
          << ";schema="   << m_dbSchema
-         << ";user="     << m_dbUser
-         << ";password=" << m_dbPassword
          << ";dbname="   << m_dbName;
+  if ( ! m_dbUser.empty() )     result << ";user="     << m_dbUser;
+  if ( ! m_dbPassword.empty() ) result << ";password=" << m_dbPassword;
 
   return result.str();
 }
@@ -283,7 +284,17 @@ StatusCode CondDBAccessSvc::i_openConnention(){
         log << MSG::INFO << "Recreating Database" << endmsg;
         
         std::string uri = i_connection_uri();
-        log << MSG::DEBUG << "drop the database " << uri << endmsg;
+        log << MSG::DEBUG << "drop the database \"";
+        if (! m_hidePasswd){
+          log << uri;
+        } else {
+          log << m_dbBackEnd << "://" << m_dbHostName
+              << ";schema="   << m_dbSchema
+              << ";user="     << m_dbUser
+              << ";password=" << "**hidden**"
+              << ";dbname="   << m_dbName;
+        }
+        log << "\"" << endmsg;
         dbSvc.dropDatabase(uri,false);
         log << MSG::DEBUG << "done" << endmsg;
         

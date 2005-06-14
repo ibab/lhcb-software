@@ -1,6 +1,10 @@
-# $Id: release.notes,v 1.37 2005-06-13 11:47:36 marcocle Exp $
+# $Id: release.notes,v 1.38 2005-06-14 10:32:57 marcocle Exp $
 Package Det/DetCond
 Package manager : Marco Clemencic
+
+! 2005-06-14 - Marco Clemencic
+ - CondDBAccessSvc does not complain anymore if the user is not specified
+	 (adapted to POOL XML authentication service, COOL > 1.1.0)
 
 ================= Det/DetCond v7r3 2005-06-13 ================================
 ! 2005-06-08 - Marco Clemencic
