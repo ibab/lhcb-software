@@ -1,6 +1,10 @@
-# $Id: release.notes,v 1.39 2005-06-14 11:55:35 cattanem Exp $
+# $Id: release.notes,v 1.40 2005-06-14 13:14:30 marcocle Exp $
 Package Det/DetCond
 Package manager : Marco Clemencic
+
+! 2005-06-14 - Marco Clemencic
+ - Renamed ConditionsDBCnvSvc to CondDBCnvSvc and added the interface
+   ICondDBCnvSvc
 
 ================= Det/DetCond v7r3 2005-06-14 ================================
 ! 2005-06-14 - Marco Cattaneo

@@ -1,7 +1,7 @@
-//$Id: ConditionsDBCnvSvc.cpp,v 1.20 2005-06-14 11:55:36 cattanem Exp $
+//$Id: CondDBCnvSvc.cpp,v 1.1 2005-06-14 13:14:30 marcocle Exp $
 #include <string>
 
-#include "DetCond/ConditionsDBCnvSvc.h"
+#include "CondDBCnvSvc.h"
 #include "DetCond/ICondDBAccessSvc.h"
 
 #include "GaudiKernel/GenericAddress.h"
@@ -14,13 +14,13 @@
 #include "GaudiKernel/TimePoint.h"
 
 /// Instantiation of a static factory to create instances of this service
-static SvcFactory<ConditionsDBCnvSvc>          ConditionsDBCnvSvc_factory;
-const ISvcFactory& ConditionsDBCnvSvcFactory = ConditionsDBCnvSvc_factory;
+static SvcFactory<CondDBCnvSvc>          CondDBCnvSvc_factory;
+const ISvcFactory& CondDBCnvSvcFactory = CondDBCnvSvc_factory;
 
 //----------------------------------------------------------------------------
 
 /// Constructor
-ConditionsDBCnvSvc::ConditionsDBCnvSvc( const std::string& name, 
+CondDBCnvSvc::CondDBCnvSvc( const std::string& name, 
 				        ISvcLocator* svc)
   : ConversionSvc ( name, svc, CONDDB_StorageType )
 {
@@ -30,13 +30,13 @@ ConditionsDBCnvSvc::ConditionsDBCnvSvc( const std::string& name,
 //----------------------------------------------------------------------------
 
 /// Destructor
-ConditionsDBCnvSvc::~ConditionsDBCnvSvc()
+CondDBCnvSvc::~CondDBCnvSvc()
 {}
 
 //----------------------------------------------------------------------------
 
 /// Initialize the service.
-StatusCode ConditionsDBCnvSvc::initialize()
+StatusCode CondDBCnvSvc::initialize()
 {
 
   // Before anything else, we need to initialise the base class
@@ -44,7 +44,7 @@ StatusCode ConditionsDBCnvSvc::initialize()
   if ( !sc.isSuccess() ) return sc;
 
   // Now we can get a handle to the MessageSvc
-  MsgStream log(msgSvc(), "ConditionsDBCnvSvc" );
+  MsgStream log(msgSvc(), "CondDBCnvSvc" );
   log << MSG::INFO << "Specific initialization starting" << endreq;
 
   // Locate the Database Access Service
@@ -105,7 +105,7 @@ StatusCode ConditionsDBCnvSvc::initialize()
   } else {
     log << MSG::DEBUG << "Retrieved IAddressCreator interface of DetectorPersistencySvc" << endreq;
   }
-  log << MSG::DEBUG << "Set it as the address creator of the ConditionsDBCnvSvc" << endreq;
+  log << MSG::DEBUG << "Set it as the address creator of the CondDBCnvSvc" << endreq;
   sc = setAddressCreator( iAddrCreator );
   if ( !sc.isSuccess() ) {
     log << MSG::ERROR << "Cannot set the address creator" << endreq;
@@ -119,9 +119,9 @@ StatusCode ConditionsDBCnvSvc::initialize()
 //----------------------------------------------------------------------------
 
 /// Finalize the service.
-StatusCode ConditionsDBCnvSvc::finalize()
+StatusCode CondDBCnvSvc::finalize()
 {
-  MsgStream log(msgSvc(), "ConditionsDBCnvSvc" );
+  MsgStream log(msgSvc(), "CondDBCnvSvc" );
   log << MSG::DEBUG << "Finalizing" << endreq;
   std::vector<ICondDBAccessSvc*>::iterator accSvc;
   for ( accSvc = m_dbAccSvcs.begin(); accSvc != m_dbAccSvcs.end(); ++accSvc ) (*accSvc)->release();
@@ -133,17 +133,17 @@ StatusCode ConditionsDBCnvSvc::finalize()
 //----------------------------------------------------------------------------
 
 /// Create an address using explicit arguments to identify a single object.
-/// Par[0] is folder name in the ConditionsDB.
+/// Par[0] is folder name in the CondDB.
 /// Par[1] is entry name in the string (which may contain many conditions,
 /// for instance in the case of XML files with more than one element).
-StatusCode ConditionsDBCnvSvc::createAddress( long svc_type,
+StatusCode CondDBCnvSvc::createAddress( long svc_type,
 					      const CLID& clid,
 					      const std::string* par, 
 					      const unsigned long* /*ipar*/,
 					      IOpaqueAddress*& refpAddress ) {
   
   // First check that requested address is of type CONDDB_StorageType
-  MsgStream log(msgSvc(), "ConditionsDBCnvSvc" );
+  MsgStream log(msgSvc(), "CondDBCnvSvc" );
   log << MSG::INFO << "entering createAddress" << endmsg;
   if ( svc_type!= CONDDB_StorageType ) {
     log << MSG::ERROR 
@@ -153,7 +153,7 @@ StatusCode ConditionsDBCnvSvc::createAddress( long svc_type,
     return StatusCode::FAILURE;
   }
   
-  // Par[0] is folder name in the ConditionsDB.
+  // Par[0] is folder name in the CondDB.
   std::string folderName = par[0];
 
   // Par[1] is entry name in the string (which may contain many conditions, 
@@ -172,8 +172,8 @@ StatusCode ConditionsDBCnvSvc::createAddress( long svc_type,
 //----------------------------------------------------------------------------
 extern const ICnvFactory &RelyConverterFactory;
 
-StatusCode ConditionsDBCnvSvc::addConverter(const CLID& clid){
-  MsgStream log(msgSvc(), "ConditionsDBCnvSvc" );
+StatusCode CondDBCnvSvc::addConverter(const CLID& clid){
+  MsgStream log(msgSvc(), "CondDBCnvSvc" );
   StatusCode status = ConversionSvc::addConverter(clid);
   if (status.isSuccess()){
     return status;
@@ -199,7 +199,7 @@ StatusCode ConditionsDBCnvSvc::addConverter(const CLID& clid){
 }
 
 /// Retrieve converter from list
-IConverter* ConditionsDBCnvSvc::converter(const CLID& clid) {
+IConverter* CondDBCnvSvc::converter(const CLID& clid) {
   IConverter* cnv = 0;
   Workers::iterator i = std::find_if(m_workers->begin(),m_workers->end(),CnvTest(clid));
   if ( i != m_workers->end() )      {
@@ -217,3 +217,19 @@ IConverter* ConditionsDBCnvSvc::converter(const CLID& clid) {
   return cnv;
 }
 
+//----------------------------------------------------------------------------
+// Implementation of ICondDBCnvSvc interface
+std::vector<ICondDBAccessSvc*> &CondDBCnvSvc::accessServices() { return m_dbAccSvcs; }
+const std::vector<ICondDBAccessSvc*> &CondDBCnvSvc::accessServices() const { return m_dbAccSvcs; }
+
+//----------------------------------------------------------------------------
+// Implementation of IInterface
+StatusCode CondDBCnvSvc::queryInterface(const InterfaceID& riid,
+                                        void** ppvUnknown){
+  if ( IID_ICondDBCnvSvc.versionMatch(riid) )   {
+    *ppvUnknown = (ICondDBCnvSvc*)this;
+    addRef();
+    return SUCCESS;
+  }
+  return ConversionSvc::queryInterface(riid,ppvUnknown);
+}

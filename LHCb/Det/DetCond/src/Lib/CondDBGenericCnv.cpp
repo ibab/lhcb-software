@@ -1,4 +1,4 @@
-// $Id: CondDBGenericCnv.cpp,v 1.2 2005-06-14 11:55:35 cattanem Exp $
+// $Id: CondDBGenericCnv.cpp,v 1.3 2005-06-14 13:14:30 marcocle Exp $
 // Include files 
 #include "GaudiKernel/IDetDataSvc.h"
 #include "GaudiKernel/TimePoint.h"
@@ -10,6 +10,7 @@
 #include "DetDesc/ValidDataObject.h"
 
 #include "DetCond/ICondDBAccessSvc.h"
+#include "DetCond/ICondDBCnvSvc.h"
 
 #include "CoolKernel/ValidityKey.h"
 #include "CoolKernel/IFolder.h"
@@ -19,7 +20,6 @@
 
 // local
 #include "DetCond/CondDBGenericCnv.h"
-#include "DetCond/ConditionsDBCnvSvc.h"
 
 //-----------------------------------------------------------------------------
 // Implementation file for class : CondDBGenericCnv
@@ -55,11 +55,11 @@ StatusCode CondDBGenericCnv::initialize() {
     MsgStream log(msgSvc(),"CondDBGenericCnv");
     log << MSG::DEBUG << "Succesfully located DetectorDataSvc" << endreq;
   }
-  // Get a pointer to the ConditionsDBCnvSvc
-  m_condDBCnvSvc = dynamic_cast<ConditionsDBCnvSvc*>(conversionSvc());
-  if ( m_condDBCnvSvc == NULL ) {
+  // Get a pointer to the CondDBCnvSvc
+  sc = conversionSvc()->queryInterface(ICondDBCnvSvc::interfaceID(),(void**)&m_condDBCnvSvc);
+  if ( !sc.isSuccess() ) {
     MsgStream log(msgSvc(),"CondDBGenericCnv");
-    log << MSG::ERROR << "The conversion service is not a ConditionsDBCnvSvc!" << endreq;
+    log << MSG::ERROR << "The conversion service does not implement ICondDBCnvSvc!" << endreq;
     return StatusCode::FAILURE;
   }
 
@@ -71,6 +71,7 @@ StatusCode CondDBGenericCnv::initialize() {
 //=========================================================================
 StatusCode CondDBGenericCnv::finalize() {
   m_detDataSvc->release();
+  m_condDBCnvSvc->release();
   return Converter::finalize();
 }
 

@@ -1,4 +1,4 @@
-// $Id: CondDBGenericCnv.h,v 1.3 2005-05-12 16:17:32 marcocle Exp $
+// $Id: CondDBGenericCnv.h,v 1.4 2005-06-14 13:14:30 marcocle Exp $
 #ifndef DETCOND_CONDDBGENERICCNV_H 
 #define DETCOND_CONDDBGENERICCNV_H 1
 
@@ -18,13 +18,13 @@
 class ISvcLocator;
 class IDetDataSvc;
 class DataObject;
-class ConditionsDBCnvSvc;
+class ICondDBCnvSvc;
 
 template <class TYPE> class CnvFactory;
 
 /** @class CondDBGenericCnv CondDBGenericCnv.h DetCond/CondDBGenericCnv.h
  *  
- *  Generic converter for the ConditionsDBCnvSvc.  This generic converter
+ *  Generic converter for the CondDBCnvSvc.  This generic converter
  *  provides common functions to access the CondDB in order to make it 
  *  easier to write specific converters.
  *
@@ -37,7 +37,7 @@ public:
    * Initializes the converter.
    * Here the pointers to common services are taken:
    *  <ul>
-   *  <li> ConditionsDBCnvSvc
+   *  <li> CondDBCnvSvc
    *  <li> DetectorDataSvc
    *  </ul>
    *  @return status depending on the completion of the call
@@ -87,12 +87,12 @@ protected:
 
   /// Pointer to the DetectorDataService.
   IDetDataSvc         *m_detDataSvc;
-  /// Pointer to the ConditionDBCnvSvc;
-  ConditionsDBCnvSvc  *m_condDBCnvSvc;
+  /// Pointer to the ICondDBCnvSvc interface;
+  ICondDBCnvSvc       *m_condDBCnvSvc;
   
   /**
    * Get an object from the Conditions DB. It tries all the CondDBAccessSvcs
-   * known by ConditionsDBCnvSvc before returing a failure code.
+   * known by CondDBCnvSvc before returing a failure code.
    * @input 
    * @param path the path inside the CondDB
    * @output

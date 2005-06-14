@@ -1,9 +1,11 @@
-//$Id: ConditionsDBCnvSvc.h,v 1.1 2005-06-14 11:55:35 cattanem Exp $
-#ifndef DETCOND_CONDITIONSDBCNVSVC_H
-#define DETCOND_CONDITIONSDBCNVSVC_H 1
+//$Id: CondDBCnvSvc.h,v 1.1 2005-06-14 13:14:30 marcocle Exp $
+#ifndef DETCOND_CONDDBCNVSVC_H
+#define DETCOND_CONDDBCNVSVC_H 1
 
 /// Include files
 #include "GaudiKernel/ConversionSvc.h"
+
+#include "DetCond/ICondDBCnvSvc.h"
 
 /// Forward and external declarations
 template <class TYPE> class SvcFactory;
@@ -12,7 +14,7 @@ class IOpaqueAddress;
 class ICondDBAccessSvc;
 
 ///---------------------------------------------------------------------------
-/** @class ConditionsDBCnvSvc ConditionsDBCnvSvc.h Det/DetCond/ConditionsDBCnvSvc.h
+/** @class CondDBCnvSvc CondDBCnvSvc.h
 
     A conversion service for CERN-IT COOL (ex. CondDB) persistency.
     Allows to create and update condition data objects (i.e. DataObjects
@@ -22,18 +24,19 @@ class ICondDBAccessSvc;
     @date November 2004
 *///--------------------------------------------------------------------------
 
-class ConditionsDBCnvSvc : public ConversionSvc {
+class CondDBCnvSvc : public ConversionSvc,
+                     virtual public ICondDBCnvSvc {
   
   /// Only factories can access protected constructors
-  friend class SvcFactory<ConditionsDBCnvSvc>;
+  friend class SvcFactory<CondDBCnvSvc>;
 
  protected:
   
   /// Constructor
-  ConditionsDBCnvSvc( const std::string& name, ISvcLocator* svc );
+  CondDBCnvSvc( const std::string& name, ISvcLocator* svc );
   
   /// Destructor
-  virtual ~ConditionsDBCnvSvc();
+  virtual ~CondDBCnvSvc();
 
  public:
 
@@ -73,13 +76,25 @@ class ConditionsDBCnvSvc : public ConversionSvc {
   /// Retrieve converter from list
   virtual IConverter* converter(const CLID& clid);
 
-  inline std::vector<ICondDBAccessSvc*> &accessServices() { return m_dbAccSvcs; }
-  inline const std::vector<ICondDBAccessSvc*> &accessServices() const { return m_dbAccSvcs; }
+  // Overloaded from ICondDBCnvSvc
+
+  /// Return a reference to the known list of access services.
+  virtual std::vector<ICondDBAccessSvc*> &accessServices();
+  /// Return a reference to the known list of access services. (const version)
+  virtual const std::vector<ICondDBAccessSvc*> &accessServices() const;
+
+  // Overloaded from IInterface
+  
+  /** Query interfaces of Interface
+      @param riid       ID of Interface to be retrieved
+      @param ppvUnknown Pointer to Location for interface pointer
+  */
+  virtual StatusCode queryInterface(const InterfaceID& riid, void** ppvUnknown);
 
  private:
 
   /// List of all the names of the known databases. It is filled via the option
-  /// ConditionsDBCnvSvc.CondDBAccessServices. If none is given, "CondDBAccessSvc" is used.
+  /// CondDBCnvSvc.CondDBAccessServices. If none is given, "CondDBAccessSvc" is used.
   std::vector<std::string>       m_dbAccSvcNames;
 
   /// Handles to the database Access services
