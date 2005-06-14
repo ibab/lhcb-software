@@ -1,14 +1,19 @@
 <PRE>
 ! -----------------------------------------------------------------------------
-! $Id: release.notes,v 1.15 2005-05-20 10:55:18 ibelyaev Exp $
+! $Id: release.notes,v 1.16 2005-06-14 15:24:32 ibelyaev Exp $
 ! -----------------------------------------------------------------------------
-! CVS tag $Name: not supported by cvs2svn $ ; version $Revision: 1.15 $
+! CVS tag $Name: not supported by cvs2svn $ ; version $Revision: 1.16 $
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/Bender
 ! Responsible : Vanya BELYAEV Ivan.Belyaev@itep.ru
 ! Purpose     : The package is a result of "pythonization procedure"
 !                of the LoKi package
 ! -----------------------------------------------------------------------------
+
+! 2005-06-14 - Vanya BELYAEV
+ - add new features for Trg* stuff 
+ - cmt/requirements 
+   version increment 
 
 ! 2005-02-10 - Vanya BELYAEV
  -  add new module bendrmatrix.py
