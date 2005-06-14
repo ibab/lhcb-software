@@ -20,7 +20,7 @@ use LHCbKernel  	v5r11   Kernel  # Marco Cattaneo
 use Relations		v2r5	Kernel  # Ivan Belyaev
 use CaloKernel  	v3r2	Calo    # Ivan Belyaev
 use MuonKernel  	v2r7	Muon    # Andrei Tsaregorodtsev
-use TrKernel    	v11r4	Tr      # ?
+use TrKernel    	v11r4	Tr      # N.N.
 use RichKernel  	v5r4p1	Rich    # Chris Jones
 use VeloKernel  	v1r5p1  Velo    # Chris Parkes
 use L0mConf		v2r2p4	L0      # Andrei Tsaregorodtsev
@@ -37,7 +37,7 @@ use OTDet          	v5r5	Det     # Jacopo Nardulli
 use CaloDet        	v6r9	Det     # Ivan Belyaev
 use CaloDetXmlCnv	v2r3p1	Det     # Ivan Belyaev
 use MuonDet        	v4r7	Det     # Alessia Satta, Alessio Sarti
-use Magnet         	v2r8	Det     # ?
+use Magnet         	v2r8	Det     # N.N.
 use MuonTools      	v3r8	Muon    # Alessia Satta
 use RichDet		v8r4	Det     # Chris Jones
 use STDet          	v1r4	Det     # Matt Needham
@@ -48,7 +48,7 @@ use Event        	v4r7	Event   # Marco Cattaneo
 use VeloEvent    	v13r2p1 Event   # Chris Parkes
 use ITEvent      	v13r2p1	Event   # Matt Needham
 use OTEvent      	v14r0p1 Event   # Jacopo Nardulli
-use TrEvent      	v14r3	Event   # ?
+use TrEvent      	v14r3	Event   # N.N.
 use RichEvent    	v8r3	Event   # Chris Jones
 use CaloEvent    	v13r9	Event   # Ivan Belyaev
 use MuonEvent    	v4r0	Event   # Alessia Satta
@@ -65,14 +65,14 @@ use EventUtils		v1r0	Event   # Marco Cattaneo
 
 # Associators
 use AssociatorsSys	v3r0	Associators # Marco Cattaneo
-use Associators		v2r4p1	Associators # ?
-use ITAssociators      	v2r11p1	IT          # ?
-use OTAssociators      	v3r2p1	OT          # ?
-use VeloAssociators    	v1r14p1	Velo        # ?
-use TrAssociators      	v5r1p1	Tr          # ?
+use Associators		v2r4p1	Associators # N.N.
+use ITAssociators      	v2r11p1	IT          # N.N.
+use OTAssociators      	v3r2p1	OT          # N.N.
+use VeloAssociators    	v1r14p1	Velo        # N.N.
+use TrAssociators      	v5r1p1	Tr          # N.N.
 use CaloAssociators    	v5r0	Calo        # Ivan Belyaev
-use MuonAssociators    	v1r5p1	Muon        # ?
-use AsctToLinker	v1r4	Rec         # ?
+use MuonAssociators    	v1r5p1	Muon        # N.N.
+use AsctToLinker	v1r4	Rec         # N.N.
 
 # L1/Raw buffer encoding and decoding
 use DAQSys		v1r4p1  DAQ     # Marco Cattaneo
