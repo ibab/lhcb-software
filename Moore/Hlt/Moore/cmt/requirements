@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.5 2005-06-15 13:36:03 cattanem Exp $
+# $Id: requirements,v 1.6 2005-06-15 17:01:12 cattanem Exp $
 # Created    : 03/06/2005 by P. Koppenburg
 # Maintainer : P. Koppenburg & M. Cattaneo
 #
@@ -39,8 +39,8 @@ use RecSys      v1r2
 use PhysCoreSys v1r2   Phys
 use HltSys      v1r2   Hlt
 
-#-- Online packages (from Online v1r1) - not on Windows
-macro useOnline "OnlineSys v1r1" WIN32 ""
+#-- Online packages (from Online v1r2) - not on Windows
+macro useOnline "OnlineSys v1r2" WIN32 ""
 use $(useOnline)
 #
 #===== build Moore. On Win32 online app is same as offline... =====
