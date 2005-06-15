@@ -1,0 +1,6 @@
+package ExampleGaucho
+! Example code to run and test Gaucho  online publishing services
+
+! 20050611 - ExampleGaucho v1r0 - Jose Helder Lopes
+  - New package to separate testing code from the main deirectory of 
+    GauchoJob application.

@@ -1,0 +1,28 @@
+#============================================================================
+package           ExampleGaucho
+version           v1r0
+
+#============================================================================
+# Structure, i.e. directories to process. 
+#============================================================================
+branches          cmt doc src
+include_path      none
+#============================================================================
+# Used packages. Specify the version, * at the end specifies 'any revision'
+#    Put as many lines as needed, with all packages, without the '#'
+#============================================================================
+
+use GaudiKernel v*
+
+#============================================================================
+# Component library building rule
+#============================================================================
+library          ExampleGaucho  ../src/*.cpp
+
+#============================================================================
+# define component library link options
+#============================================================================
+apply_pattern    component_library library=ExampleGaucho
+
+private
+use AIDA        v* LCG_Interfaces
