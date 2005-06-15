@@ -1,9 +1,28 @@
 <PRE>
 !-----------------------------------------------------------------------------
-! Package     : ONLINE_v1r0/OnlineSys
+! Package     : Online/OnlineSys
 ! Responsible : Marco Cattaneo
 ! Purpose     : 
 !-----------------------------------------------------------------------------
+
+</PRE><H1><A NAME=v1r2>2005-06-15 OnlineSys v1r2</A></H1><PRE>
+This version uses Gaudi v16r4, LHCb v18r6
+
+ - Packages added:    ExampleGaucho v1r0
+ - Packages modified: Gaucho v3r1, GauchoJob v2r2
+
+ - In Gaucho v3r1:
+   . MonitorSvc: Changed use of nodename/PID to UTGID defined in an environment
+     variable
+   . Various small fixes
+ 
+ - In GauchoJob v2r2:
+   . GaudiOnlineMain and GaudiDimController: Change nodename/PID to UTGID, taken
+     from an environment variable, as the controller name
+   . Package restructuring, example code moved to ExampleGaucho
+
+ - In ExampleGaucho v1r0:
+   . Package containing component library for Gaucho tests 
 
 </PRE><H1><A NAME=v1r1>2005-06-10 OnlineSys v1r1</A></H1><PRE>
 This version uses Gaudi v16r4, LHCb v18r6
