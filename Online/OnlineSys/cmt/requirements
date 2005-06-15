@@ -7,7 +7,7 @@ branches cmt doc
 # LHCb Online packages
 #=======================================================
 
-use DIM		  v1r0   Online
+use DIM		  v1r1   Online
 use Gaucho        v3r1   Online
 use GauchoJob     v2r2   Online
 use GaudiOnline   v1r1   Online
