@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.66 2005-06-14 16:20:30 ibelyaev Exp $ 
+# $Id: requirements,v 1.67 2005-06-15 15:37:04 ibelyaev Exp $ 
 # =============================================================================
 # CVS tag $Name: not supported by cvs2svn $
 # =============================================================================
@@ -25,7 +25,7 @@ use           BenderDict     v5r1   Tools
 use           BenderRels     v5r1   Tools 
   
 # =========== Visualization ===================================================
-use           BenderVis      v5r0   Vis 
+use           BenderVis      v5r1   Vis 
 
 # =========== Hybrid(Python/C++) solution for efficient analysis ==============
 use           LoKiHybrid     v5r0   Tools
