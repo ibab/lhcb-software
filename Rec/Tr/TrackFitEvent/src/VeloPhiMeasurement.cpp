@@ -1,4 +1,4 @@
-// $Id: VeloPhiMeasurement.cpp,v 1.2 2005-05-13 13:09:08 erodrigu Exp $
+// $Id: VeloPhiMeasurement.cpp,v 1.3 2005-06-15 15:24:10 erodrigu Exp $
 // Include files 
 
 
@@ -18,7 +18,9 @@
 // Standard constructor, initializes variables
 //=============================================================================
 VeloPhiMeasurement::VeloPhiMeasurement( VeloCluster& cluster,
-                                        DeVelo& det ) {
+                                        DeVelo& det )
+{
+  m_mtype = Measurement::VeloPhi;
 
   m_cluster = &cluster;
   

@@ -4,6 +4,10 @@
 ! Purpose     : Package for the tracking fitting-related classes
 !-----------------------------------------------------------------------------
 
+! 2005-06-15 - Eduardo Rodrigues
+ - type of measurement set in the constructor
+ - ambiguity of OTMeasurement set also in the corresponding LHCbID
+
 !========================== TrackFitEvent v1r0 2005-05-26 ====================
 ! 2005-05-26 - Marco Cattaneo
  - Add TrFitEvent_load.cpp

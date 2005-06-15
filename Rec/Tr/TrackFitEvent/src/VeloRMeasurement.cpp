@@ -1,4 +1,4 @@
-// $Id: VeloRMeasurement.cpp,v 1.2 2005-05-13 13:09:08 erodrigu Exp $
+// $Id: VeloRMeasurement.cpp,v 1.3 2005-06-15 15:24:10 erodrigu Exp $
 // Include files
 
 // local
@@ -17,8 +17,10 @@
 //=============================================================================
 VeloRMeasurement::VeloRMeasurement( VeloCluster& cluster,
                                     DeVelo& det,
-                                    double phi ) {
-
+                                    double phi )
+{
+  m_mtype = Measurement::VeloR;
+  
   m_phi = phi;
   m_cluster = &cluster;
   
