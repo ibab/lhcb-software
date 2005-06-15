@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.4 2005-06-13 13:33:28 cattanem Exp $
+# $Id: requirements,v 1.5 2005-06-15 13:36:03 cattanem Exp $
 # Created    : 03/06/2005 by P. Koppenburg
 # Maintainer : P. Koppenburg & M. Cattaneo
 #
@@ -25,7 +25,6 @@ use RootHistCnv         v9r4
 use XmlDDDB     v25r1   Det
 use ParamFiles  v3r11   -no_auto_imports
 use FieldMap    v4r5
-use BooleDQ     v1r0    DQ
 
 #-- LHCb libraries (from LHCB_v18r6)
 use LHCb        v18r6
@@ -40,12 +39,16 @@ use RecSys      v1r2
 use PhysCoreSys v1r2   Phys
 use HltSys      v1r2   Hlt
 
-#-- Online packages (from Online v1r1)
-use OnlineSys   v1r1
+#-- Online packages (from Online v1r1) - not on Windows
+macro useOnline "OnlineSys v1r1" WIN32 ""
+use $(useOnline)
 #
-#===== build Moore =========================
-application Moore        $(GAUCHOJOBROOT)/src/GaudiOnlineMain.cpp \
-                         $(GAUCHOJOBROOT)/src/GaudiDimController.cpp 
+#===== build Moore. On Win32 online app is same as offline... =====
+macro buildOnline "$(GAUCHOJOBROOT)/src/GaudiOnlineMain.cpp \
+                   $(GAUCHOJOBROOT)/src/GaudiDimController.cpp" \
+            WIN32 "$(GAUDICONFROOT)/src/GaudiMain.cpp"
+application Moore $(buildOnline)
+
 application MooreOffline $(GAUDICONFROOT)/src/GaudiMain.cpp
 apply_pattern application_path
 # ========================= set macros ============================
