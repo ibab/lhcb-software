@@ -1,4 +1,4 @@
-// $Id: SimGeometry.opts,v 1.3 2005-02-07 09:12:17 ranjard Exp $
+// $Id: SimGeometry.opts,v 1.4 2005-06-15 15:41:03 gcorti Exp $
 
 /** @file
  *
@@ -39,7 +39,6 @@ Geo.StreamItems         += {"/dd/Structure/LHCb/IT"};
 Geo.StreamItems         += {"/dd/Structure/LHCb/Rich2"};
 Geo.StreamItems         += {"/dd/Geometry/Rich2/Rich2Surfaces"};
 Geo.StreamItems         += {"/dd/Structure/LHCb/Spd"};
-Geo.StreamItems         += {"/dd/Structure/LHCb/Converter"};
 Geo.StreamItems         += {"/dd/Structure/LHCb/Prs"};
 Geo.StreamItems         += {"/dd/Structure/LHCb/Ecal"};
 Geo.StreamItems         += {"/dd/Structure/LHCb/Hcal"};

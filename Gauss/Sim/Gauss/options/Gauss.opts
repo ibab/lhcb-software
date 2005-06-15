@@ -1,5 +1,5 @@
 #printOptions 
-// $Id: Gauss.opts,v 1.62 2005-04-22 15:00:03 gcorti Exp $ 
+// $Id: Gauss.opts,v 1.63 2005-06-15 15:41:03 gcorti Exp $ 
 
 /** @file 
  * 
@@ -15,11 +15,10 @@
 //                        i.e. Simulation if running generator in stand-alone
 //                        in which case comment also Simulation.opts below
 //---------------------------------------------------------------------------
-ApplicationMgr.TopAlg  = { "LbAppInit/Gauss",
-                           "GaudiSequencer/Generator",
-                           "GaudiSequencer/Simulation",   
-                           "GaudiSequencer/Monitor"        
-                         }; 
+ApplicationMgr.TopAlg  = { "LbAppInit/Gauss" };
+ApplicationMgr.TopAlg += { "GaudiSequencer/Generator" };
+ApplicationMgr.TopAlg += { "GaudiSequencer/Simulation" }; 
+ApplicationMgr.TopAlg += { "GaudiSequencer/Monitor" }; 
 
 //---------------------------------------------------------------------------
 // Generator phase: see there how to modify to run generator 
@@ -85,3 +84,4 @@ HistogramPersistencySvc.OutputFile = "GaussHistos.hbook";  // Monitoring histos
 //#include "$DECFILESROOT/options/30000000.opts"  // Min Bias
 
 //#include "$GAUSSOPTS/ParticleGun.opts"          
+ 

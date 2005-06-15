@@ -4,6 +4,32 @@
 ! Purpose     : LHCb Simulation Application with Geant4
 !-----------------------------------------------------------------------------
 
+! 2005-06-15 - Gloria CORTI
+ - Use version of GaussRICH (v5r0) with naming as in latest XmlDDDB
+
+! 2005-06-13 - Gloria CORTI
+ - Introduce two files to steer dependency of geometry (tilted calorimeters
+   require removing Converter from detector elements in Geo.StreamItems)
+   For simulating with "old" geometry give v200412.opts as argument of
+   executable, for simulating with tilted Calorimeters & Muons give
+   v200506.opts. 
+   Note that by default Gauss.opts would use latest geometry but the new
+   options should be used instead in production.
+   . v200412.opts
+     NEW options to stear simulation with RTTC geometry
+   . v200506.opts
+     NEW options to stear simulation with Tilted Calo and Muon  
+   . SimGeometry.opts
+     remove Converter from Geo.StreamItems to make it usable for both
+     supported geometries
+ - Use version of XmlDDDB (v25r0) supporting RTTC and Calo+Muon tilted 
+   geometry 
+ - Use version of DecFiles (v7r2) and ParamFiles (v3r12) supporting 
+   production of Higgs with 120 and 140 GeV mass
+ - Use version of GaussTracker (v4r1) with Muon hits bug fixed
+ - Use version of GeneratorModules (v15r12) with changes for AcerMC and various
+   bug fixes
+
 ! 2005-05-31 - Gloria CORTI
  - Example option to generate events at fixed luminosity
    . FixedLumi-5.opts
