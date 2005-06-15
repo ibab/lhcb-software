@@ -5,6 +5,7 @@
 !                    tracker like detectors (Velo, OT, IT, Muon)
 !-----------------------------------------------------------------------------
 
+!=========================== GaussTracker v4r1 ================================
 ! 2005-06-03 - Gloria CORTI
  - src/GiGaSensDetMuon.cpp
    . do not use method MoveUpHistory(1) to navigate geometry history tree
