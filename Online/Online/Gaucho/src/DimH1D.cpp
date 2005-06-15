@@ -1,8 +1,8 @@
-//$Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/Gaucho/src/DimH1D.cpp,v 1.5 2005-04-07 14:42:00 evh Exp $
+// $Id: DimH1D.cpp,v 1.6 2005-06-15 15:02:30 cattanem Exp $
 
 #include "AIDA/IAxis.h"
 #include "AIDA/IHistogram1D.h"
-#include "Gaucho/DimH1D.h"
+#include "DimH1D.h"
 #include <iostream>
 using namespace AIDA;
 
@@ -35,13 +35,13 @@ void DimH1D::rpcHandler() {
   switch (command) {
 	case 1: 
     // request for histo parameters transfer
-//    std::cout << "DIMH1D received command 1" << std::endl;
+    //    std::cout << "DIMH1D received command 1" << std::endl;
 		setData(m_pars,3*sizeof(float));
     break;
 	case 2:
     //request for histo bin contents transfer
 		int binnr,total;
-//		 std::cout << "DIMH1D received command 2" << std::endl;
+    //		 std::cout << "DIMH1D received command 2" << std::endl;
 		for (binnr=0;binnr<m_nbins;binnr++) {
 			m_data[binnr] = m_h1d->binHeight(binnr);
 		}

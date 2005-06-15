@@ -18,13 +18,12 @@ namespace AIDA { class IHistogram; }
 
 /** @class MonitorSvc MonitorSvc.h GaudiKernel/MonitorSvc.h
     
-
 This class implements the IMonitorSvc interface, and publishes Gaudi variables
 to outside monitoring processes with Dim.
 
-An internal DimEngine is used for this purpose. A DimPropServer is started which
-takes string commands in the format Algorithm.Property and returns the value of
-the property.
+An internal DimEngine is used for this purpose. A DimPropServer is started 
+which takes string commands in the format Algorithm.Property and returns 
+the value of the property.
 
 @author Philippe Vannerem
 @author Jose Helder Lopes Jan. 2005
@@ -44,16 +43,23 @@ public:
       @param name Monitoring information name knwon to the external system
       @param var Monitoring Listener address
       @param desc Textual description
-      @param owner Owner identifier of the monitoring information (needed to peform 
-      clean up 
+      @param owner Owner identifier of the monitoring information 
+      (needed to peform clean up 
   */
-  void declareInfo(const std::string& name, const bool&  var, const std::string& desc, const IInterface* owner) ;
-  void declareInfo(const std::string& name, const int&  var, const std::string& desc, const IInterface* owner) ;
-  void declareInfo(const std::string& name, const long&  var, const std::string& desc, const IInterface* owner) ;
-  void declareInfo(const std::string& name, const double& var, const std::string& desc, const IInterface* owner) ;
-  void declareInfo(const std::string& name, const std::string& var, const std::string& desc, const IInterface* owner) ;
-  void declareInfo(const std::string& name, const std::pair<double,double>& var, const std::string& desc, const IInterface* owner) ;
-  void declareInfo(const std::string& name, const AIDA::IHistogram* var, const std::string& desc, const IInterface* owner) ;
+  void declareInfo(const std::string& name, const bool&  var, 
+                   const std::string& desc, const IInterface* owner) ;
+  void declareInfo(const std::string& name, const int&  var, 
+                   const std::string& desc, const IInterface* owner) ;
+  void declareInfo(const std::string& name, const long&  var, 
+                   const std::string& desc, const IInterface* owner) ;
+  void declareInfo(const std::string& name, const double& var, 
+                   const std::string& desc, const IInterface* owner) ;
+  void declareInfo(const std::string& name, const std::string& var, 
+                   const std::string& desc, const IInterface* owner) ;
+  void declareInfo(const std::string& name, const std::pair<double,double>&var,
+                   const std::string& desc, const IInterface* owner) ;
+  void declareInfo(const std::string& name, const AIDA::IHistogram* var, 
+                   const std::string& desc, const IInterface* owner) ;
   
   /** Undeclare monitoring information
       @param name Monitoring information name knwon to the external system
@@ -72,14 +78,18 @@ public:
   std::set<std::string> * getInfos(const IInterface* owner = 0);
 
 private:
-  char* m_nodename;
-  char* tmp;
-  char * m_pid;   // OS process id
-  // Map associating to each algorithm name a set with the info names from this algorithm 
+  // Map associating to each algorithm name a set with the info 
+  // names from this algorithm 
   typedef std::map<const IInterface*, std::set<std::string> > InfoNamesMap;
   InfoNamesMap m_InfoNamesMap;
   InfoNamesMap::iterator m_InfoNamesMapIt;
+
+  // The container below is necessary because usually the descriptions of 
+  // the services are constant strings, not variables. DimService expects 
+  // a variable address to monitor as its second argument and we are using 
+  // a DimService for strings to publish the descriptions.
   std::map<std::string,std::string> m_infoDescriptions;
+
   DimPropServer* m_dimpropsvr;
   DimEngine* m_dimeng;
   DimCmdServer* m_dimcmdsvr;

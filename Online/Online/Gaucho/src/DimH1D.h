@@ -9,8 +9,8 @@
 /** @class DimH1D Gaucho/DimH1D.h
     
 This class publishes an 1d histogram as defined in the AIDA interface
-as a Dim Rpc server. The server transmits parameters and bin contents + bin errors
-on request to a Dim Rcp client.
+as a Dim Rpc server. The server transmits parameters and bin contents + 
+bin errors on request to a Dim Rcp client.
 
 @author Philippe Vannerem
 */

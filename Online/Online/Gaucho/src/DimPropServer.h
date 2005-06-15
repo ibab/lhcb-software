@@ -1,4 +1,4 @@
-//$Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/Gaucho/Gaucho/DimPropServer.h,v 1.5 2005-04-07 14:42:00 evh Exp $
+//$Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/Gaucho/src/DimPropServer.h,v 1.1 2005-06-15 15:02:30 cattanem Exp $
 #ifndef GAUCHO_DIMPROPSERVER_H
 #define GAUCHO_DIMPROPSERVER_H 1
 
@@ -8,11 +8,11 @@
 
 /** @class DimPropServer DimPropServer.h Gaucho/DimPropServer.h
 
-    This class get/sets properties of Gaudi Algorithms/ApplicationMgr on request
-	as a Dim Rpc service. A Dim Rpc client can connect and give string commands
-	for this purpose.
+This class get/sets properties of Gaudi Algorithms/ApplicationMgr on request
+as a Dim Rpc service. A Dim Rpc client can connect and give string commands
+for this purpose.
 
-    @author Philippe Vannerem
+@author Philippe Vannerem
 */
 
 // forward declarations
@@ -25,12 +25,10 @@ class IHistogram;
 
 class DimPropServer : public DimRpc {
 public:
-  DimPropServer(char* thisnodename,ISvcLocator* svclocator );
+  DimPropServer(std::string name,ISvcLocator* svclocator );
   virtual ~DimPropServer();
   void rpcHandler();
 private:
-  char* m_name;
-  char* m_nodename;
   IAlgManager* m_algman;
   ISvcLocator* m_svcloc;
   IProperty* m_appmgr;

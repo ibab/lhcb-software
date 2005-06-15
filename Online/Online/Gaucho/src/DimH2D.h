@@ -9,10 +9,10 @@
 /** @class DimH2D Gaucho/DimH2D.h
     
 This class publishes an 2d histogram as defined in the AIDA interface
-as a Dim Rpc server. The server transmits parameters and bin contents + bin errors
-on request to a Dim Rcp client.
+as a Dim Rpc server. The server transmits parameters and bin contents 
++ bin errors on request to a Dim Rcp client.
 
-@author Philippe Vannerem
+Adapted from DimH1D
 */
 
 //forward declaration
@@ -30,8 +30,7 @@ private:
   std::string m_name;
   int m_nbinsX;
   int m_nbinsY;
-  float* m_entries;
-  float* m_errors;
+  float* m_data;
   float* m_pars;
   const AIDA::IHistogram2D* m_h2d;
 };

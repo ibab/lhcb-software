@@ -1,6 +1,22 @@
-! $Id: release.notes,v 1.4 2005-05-13 07:41:09 cattanem Exp $
+! $Id: release.notes,v 1.5 2005-06-15 15:02:30 cattanem Exp $
 ! Package     : Online/Gaucho	
 ! Responsible : Eric.van.Herwijnen@cern.ch
+
+!======================== Gaucho v3r1 2005-06-15 ==========================
+! 2005-06-15 - Marco Cattaneo
+ - Cleanup up requirements
+ - Move all .h to src directory ans remove Gaucho directory
+
+! 2005-06-11 - Jose Helder Lopes
+  - MonitorSvc and DimEngine: Implemented declare methods for pairs of doubles.
+    They are published as two independent double services as DIM doesn't work 
+    with std::pair's.
+    These services have "DimPair" in their names to help identify them.
+  - MonitorSvc: Changed use of nodename/PID to UTGID defined in an environment
+    variable.
+  - MonitorSvc and DimEngine: Fixed some inconsistencies in the bookkeeping of
+    published services and in the undeclare methods.
+  - Other small technical changes.
 
 !======================== Gaucho v3r0 2005-05-13 ==========================
 ! 20050322 - Gaucho v3r0 - Eric van Herwijnen

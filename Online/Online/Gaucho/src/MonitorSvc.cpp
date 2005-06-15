@@ -4,10 +4,10 @@
 #include "GaudiKernel/Service.h"
 #include "GaudiKernel/SvcFactory.h"
 #include "GaudiKernel/MsgStream.h"
-#include "Gaucho/MonitorSvc.h"
-#include "Gaucho/DimEngine.h"
-#include "Gaucho/DimPropServer.h"
-#include "Gaucho/DimCmdServer.h"
+#include "MonitorSvc.h"
+#include "DimEngine.h"
+#include "DimPropServer.h"
+#include "DimCmdServer.h"
 #ifdef WIN32
 namespace wins {
 #include <windows.h>
@@ -55,48 +55,29 @@ StatusCode MonitorSvc::queryInterface(const InterfaceID& riid, void** ppvIF) {
 StatusCode MonitorSvc::initialize() {
   MsgStream msg(msgSvc(),"MonitorSvc");
   if( IService::INITIALIZED == this->state() ) {
-  msg << MSG::INFO << "MonitorSvc already initialized" << endreq;
-  return StatusCode::SUCCESS; 
+    msg << MSG::INFO << "MonitorSvc already initialized" << endreq;
+    return StatusCode::SUCCESS; 
   }
   Service::initialize(); 
-  m_nodename=new char[60];
 #ifdef WIN32
-  int errcode;
-  errcode=wins::gethostname(m_nodename,60);
+  std::string utgid(getenv("UTGID"));//Change to the correct sintax for windows
 #else
-  gethostname(m_nodename,60);
-#endif
-  //get hostname only (slc)
-  tmp=new char[50];
-  char * pch;
-  pch = strtok(m_nodename,".");
-  m_pid=new char[10];
-#ifdef WIN32
-  sprintf(m_pid,"%d",wins::_getpid());
-#else
-  sprintf(m_pid,"%d",getpid() );
+  std::string utgid(getenv("UTGID"));
 #endif
   
-  msg << MSG::INFO << "initialize: Setting up DIM for Nodename: " << m_nodename << " Process ID: " << m_pid << endreq;
+  msg << MSG::INFO << "initialize: Setting up DIM for UTGID " 
+      << utgid << endreq;
   
-  char * name = new char[60];
-  strcpy(name,m_nodename);
-  strcat(name,"/");
-  strcat(name,m_pid);
+  m_dimeng=new DimEngine(utgid , serviceLocator());
+  msg << MSG::DEBUG << "DimEngine created with name " 
+      << utgid  << endreq;
+  m_dimpropsvr= new DimPropServer(utgid ,serviceLocator());
+  msg << MSG::DEBUG << "DimPropServer created with name " << utgid << endreq;
   
-  msg << MSG::DEBUG << "DimEngine name: " << name <<  endreq;
-
-  m_dimeng=new DimEngine(name,serviceLocator());
-  msg << MSG::DEBUG << "DimEngine created with name " << name << endreq;
-  m_dimpropsvr= new DimPropServer(name,serviceLocator());
-  msg << MSG::DEBUG << "DimPropServer created with name " << name << endreq;
+  m_dimcmdsvr = new DimCmdServer( (utgid+"/"), serviceLocator());
+  msg << MSG::DEBUG << "DimCmdServer created with name " 
+      << (utgid+"/") << endreq;
   
-  strcpy(tmp,name);
-  strcat(tmp,"/");
-  m_dimcmdsvr = new DimCmdServer(tmp,serviceLocator());
-
-  delete [] name;
-  delete [] tmp;
   msg << MSG::DEBUG << "Initialized successfully " << endreq;
   return StatusCode::SUCCESS;
 }
@@ -104,9 +85,7 @@ StatusCode MonitorSvc::initialize() {
 
 StatusCode MonitorSvc::finalize() {
   MsgStream msg(msgSvc(),"MonitorSvc");
-  delete [] m_nodename;
-  delete [] m_pid;
-
+  
   m_InfoNamesMap.clear();
   m_infoDescriptions.clear();
   delete m_dimeng;
@@ -116,183 +95,305 @@ StatusCode MonitorSvc::finalize() {
   return StatusCode::SUCCESS;
 }
 
-void MonitorSvc::declareInfo(const std::string& name, const bool&  var, const std::string& desc, const IInterface* owner) {
+void MonitorSvc::declareInfo(const std::string& name, const bool&  var, 
+                             const std::string& desc, const IInterface* owner) 
+{
   MsgStream msg(msgSvc(),"MonitorSvc");
-  std::string dimName =infoOwnerName( owner )+"/"+name;
-  msg << MSG::INFO << "Declaring info: Owner: " << infoOwnerName( owner ) << " Name: " << name << endreq;
-  msg << MSG::DEBUG << "dimName: " << dimName << endreq;
   m_InfoNamesMapIt = m_InfoNamesMap.find( owner );
-  if( m_InfoNamesMapIt != m_InfoNamesMap.end() ) (*m_InfoNamesMapIt).second.insert(dimName);
-  else { // Create a new set for this algo
-    m_InfoNamesMap[owner]=std::set<std::string>();
-    m_InfoNamesMap[owner].insert(dimName);
+  std::string ownerName = infoOwnerName( owner );
+  if( m_InfoNamesMapIt != m_InfoNamesMap.end() ) {
+  	std::pair<std::set<std::string>::iterator,bool> p = 
+      (*m_InfoNamesMapIt).second.insert(name);
+	  if( p.second) {
+      msg << MSG::INFO << endreq;
+      msg << MSG::INFO << "Declaring info: Owner: " 
+          << infoOwnerName( owner ) << " Name: " << name << endreq;
+	  }
+	  else { // Insertion failed: Name already exists
+      msg << MSG::INFO << endreq;
+	  	msg << MSG::ERROR << "Already existing info " << name << " from owner " 
+          << infoOwnerName( owner ) << " not published" << endreq;
+      return;
+    }
   }
-  m_dimeng->declSvc(dimName, var);
-  m_infoDescriptions[dimName] = desc;
-  m_dimeng->declSvc(dimName+"/gauchocomment", m_infoDescriptions[dimName] );
-
-}
-void MonitorSvc::declareInfo(const std::string& name, const int&  var, const std::string& desc, const IInterface* owner) {
-  MsgStream msg(msgSvc(),"MonitorSvc");
-  std::string dimName =infoOwnerName( owner )+"/"+name;
-  msg << MSG::INFO << "Declaring info: Owner: " << infoOwnerName( owner ) << " Name: " << name << endreq;
+  else { // Create a new set for this algo and insert name
+    m_InfoNamesMap[owner]=std::set<std::string>();
+    m_InfoNamesMap[owner].insert(name);
+  }
+  std::string dimName =ownerName+"/"+name;
   msg << MSG::DEBUG << "dimName: " << dimName << endreq;
-  m_InfoNamesMapIt = m_InfoNamesMap.find( owner );
-  if( m_InfoNamesMapIt != m_InfoNamesMap.end() ) (*m_InfoNamesMapIt).second.insert(dimName);
-  else { // Create a new set for this algo
-    m_InfoNamesMap[owner]=std::set<std::string>();
-    m_InfoNamesMap[owner].insert(dimName);
-  }
-  m_dimeng->declSvc(dimName, var);
-  m_infoDescriptions[dimName] = desc;
-  m_dimeng->declSvc(dimName+"/gauchocomment", m_infoDescriptions[dimName] );
-
-}
-void MonitorSvc::declareInfo(const std::string& name, const long&  var, const std::string& desc, const IInterface* owner) {
-  MsgStream msg(msgSvc(),"MonitorSvc");
-  std::string dimName =infoOwnerName( owner )+"/"+name;
-  msg << MSG::INFO << "Declaring info: Owner: " << infoOwnerName( owner ) << " Name: " << name << endreq;
-  msg << MSG::DEBUG << "dimName: " << dimName << endreq;
-  m_InfoNamesMapIt = m_InfoNamesMap.find( owner );
-  if( m_InfoNamesMapIt != m_InfoNamesMap.end() ) (*m_InfoNamesMapIt).second.insert(dimName);
-  else { // Create a new set for this algo
-    m_InfoNamesMap[owner]=std::set<std::string>();
-    m_InfoNamesMap[owner].insert(dimName);
-  }
-  m_dimeng->declSvc(dimName, var);
-  m_infoDescriptions[dimName] = desc;
-  m_dimeng->declSvc(dimName+"/gauchocomment", m_infoDescriptions[dimName] );
-
-}
-void MonitorSvc::declareInfo(const std::string& name, const double& var, const std::string& desc, const IInterface* owner) {
-  MsgStream msg(msgSvc(),"MonitorSvc");
-  std::string dimName =infoOwnerName( owner )+"/"+name;
-  msg << MSG::INFO << "Declaring info: Owner: " << infoOwnerName( owner ) << " Name: " << name << endreq;
-  msg << MSG::DEBUG << "dimName: " << dimName << endreq;
-  m_InfoNamesMapIt = m_InfoNamesMap.find( owner );
-  if( m_InfoNamesMapIt != m_InfoNamesMap.end() ) (*m_InfoNamesMapIt).second.insert(dimName);
-  else { // Create a new set for this algo
-    m_InfoNamesMap[owner]=std::set<std::string>();
-    m_InfoNamesMap[owner].insert(dimName);
-  }
-  m_dimeng->declSvc(dimName, var);
-  m_infoDescriptions[dimName] = desc;
-  m_dimeng->declSvc(dimName+"/gauchocomment", m_infoDescriptions[dimName] );
-
-}
-void MonitorSvc::declareInfo(const std::string& name, const std::string& var, const std::string& desc, const IInterface* owner) {
-  MsgStream msg(msgSvc(),"MonitorSvc");
-  std::string dimName =infoOwnerName( owner )+"/"+name;
-  msg << MSG::INFO << "Declaring info: Owner: " << infoOwnerName( owner ) << " Name: " << name << endreq;
-  msg << MSG::DEBUG << "dimName: " << dimName << endreq;
-  m_InfoNamesMapIt = m_InfoNamesMap.find( owner );
-  if( m_InfoNamesMapIt != m_InfoNamesMap.end() ) (*m_InfoNamesMapIt).second.insert(dimName);
-  else { // Create a new set for this algo
-    m_InfoNamesMap[owner]=std::set<std::string>();
-    m_InfoNamesMap[owner].insert(dimName);
-  }
   m_dimeng->declSvc(dimName, var );
   m_infoDescriptions[dimName] = desc;
-  m_dimeng->declSvc(dimName+"/gauchocomment", m_infoDescriptions[dimName] );
+  m_dimeng->declSvc( dimName+"/gauchocomment", 
+                     m_infoDescriptions[dimName].c_str() );
+  
 }
-void MonitorSvc::declareInfo(const std::string& name, const std::pair<double,double>& var, const std::string& desc, const IInterface* owner) {
+void MonitorSvc::declareInfo(const std::string& name, const int&  var, 
+                             const std::string& desc, const IInterface* owner) 
+{
   MsgStream msg(msgSvc(),"MonitorSvc");
-   msg << MSG::INFO << "declareInfo: No pair service in DIM for now." << endreq;
-   return;
-/*
-  std::string dimName =infoOwnerName( owner )+"/"+name;
-  msg << MSG::INFO << "Declaring info: Owner: " << infoOwnerName( owner ) << " Name: " << name << endreq;
-  msg << MSG::DEBUG << "dimName: " << dimName << endreq;
   m_InfoNamesMapIt = m_InfoNamesMap.find( owner );
-  if( m_InfoNamesMapIt != m_InfoNamesMap.end() ) (*m_InfoNamesMapIt).second.insert(dimName);
-  else { // Create a new set for this algo
-    m_InfoNamesMap[owner]=std::set<std::string>();
-    m_InfoNamesMap[owner].insert(dimName);
+  std::string ownerName = infoOwnerName( owner );
+  if( m_InfoNamesMapIt != m_InfoNamesMap.end() ) {
+  	std::pair<std::set<std::string>::iterator,bool> p = 
+      (*m_InfoNamesMapIt).second.insert(name);
+	  if( p.second) {
+      msg << MSG::INFO << endreq;
+      msg << MSG::INFO << "Declaring info: Owner: " 
+          << infoOwnerName( owner ) << " Name: " << name << endreq;
+	  }
+	  else { // Insertion failed: Name already exists
+      msg << MSG::INFO << endreq;
+	  	msg << MSG::ERROR << "Already existing info " << name << " from owner " 
+          << infoOwnerName( owner ) << " not published" << endreq;
+      return;
+    }
   }
-  m_dimeng->declSvc(dimName, var);
+  else { // Create a new set for this algo and insert name
+    m_InfoNamesMap[owner]=std::set<std::string>();
+    m_InfoNamesMap[owner].insert(name);
+  }
+  std::string dimName =ownerName+"/"+name;
+  msg << MSG::DEBUG << "dimName: " << dimName << endreq;
+  m_dimeng->declSvc(dimName, var );
   m_infoDescriptions[dimName] = desc;
-  m_dimeng->declSvc(dimName+"/gauchocomment", m_infoDescriptions[dimName] );
-
-*/
+  m_dimeng->declSvc( dimName+"/gauchocomment", 
+                     m_infoDescriptions[dimName].c_str() );
 }
-void MonitorSvc::declareInfo(const std::string& name, const AIDA::IHistogram* var, const std::string& desc, const IInterface* owner) {
+void MonitorSvc::declareInfo(const std::string& name, const long&  var, 
+                             const std::string& desc, const IInterface* owner) 
+{
   MsgStream msg(msgSvc(),"MonitorSvc");
-  std::string dimName =infoOwnerName( owner )+"/"+name;
-  msg << MSG::INFO << "Declaring info: Owner: " << infoOwnerName( owner ) << " Name: " << name << endreq;
-  msg << MSG::DEBUG << "dimName: " << dimName << endreq;
   m_InfoNamesMapIt = m_InfoNamesMap.find( owner );
-  if( m_InfoNamesMapIt != m_InfoNamesMap.end() ) (*m_InfoNamesMapIt).second.insert(dimName);
-  else { // Create a new set for this algo
-    m_InfoNamesMap[owner]=std::set<std::string>();
-    m_InfoNamesMap[owner].insert(dimName);
+  std::string ownerName = infoOwnerName( owner );
+  if( m_InfoNamesMapIt != m_InfoNamesMap.end() ) {
+  	std::pair<std::set<std::string>::iterator,bool> p = 
+      (*m_InfoNamesMapIt).second.insert(name);
+	  if( p.second) {
+      msg << MSG::INFO << endreq;
+      msg << MSG::INFO << "Declaring info: Owner: " 
+          << infoOwnerName( owner ) << " Name: " << name << endreq;
+	  }
+	  else { // Insertion failed: Name already exists
+      msg << MSG::INFO << endreq;
+	  	msg << MSG::ERROR << "Already existing info " << name << " from owner " 
+          << infoOwnerName( owner ) << " not published" << endreq;
+      return;
+    }
   }
-  m_dimeng->declSvc(dimName, var);
+  else { // Create a new set for this algo and insert name
+    m_InfoNamesMap[owner]=std::set<std::string>();
+    m_InfoNamesMap[owner].insert(name);
+  }
+  std::string dimName =ownerName+"/"+name;
+  msg << MSG::DEBUG << "dimName: " << dimName << endreq;
+  m_dimeng->declSvc(dimName, var );
   m_infoDescriptions[dimName] = desc;
-  m_dimeng->declSvc(dimName+"/gauchocomment", m_infoDescriptions[dimName] );
-
+  m_dimeng->declSvc( dimName+"/gauchocomment", 
+                     m_infoDescriptions[dimName].c_str() );
+}
+void MonitorSvc::declareInfo(const std::string& name, const double& var, 
+                             const std::string& desc, const IInterface* owner) 
+{
+  MsgStream msg(msgSvc(),"MonitorSvc");
+  m_InfoNamesMapIt = m_InfoNamesMap.find( owner );
+  std::string ownerName = infoOwnerName( owner );
+  if( m_InfoNamesMapIt != m_InfoNamesMap.end() ) {
+  	std::pair<std::set<std::string>::iterator,bool> p = 
+      (*m_InfoNamesMapIt).second.insert(name);
+	  if( p.second) {
+      msg << MSG::INFO << endreq;
+      msg << MSG::INFO << "Declaring info: Owner: " 
+          << infoOwnerName( owner ) << " Name: " << name << endreq;
+	  }
+	  else { // Insertion failed: Name already exists
+      msg << MSG::INFO << endreq;
+	  	msg << MSG::ERROR << "Already existing info " << name << " from owner " 
+          << infoOwnerName( owner ) << " not published" << endreq;
+      return;
+    }
+  }
+  else { // Create a new set for this algo and insert name
+    m_InfoNamesMap[owner]=std::set<std::string>();
+    m_InfoNamesMap[owner].insert(name);
+  }
+  std::string dimName =ownerName+"/"+name;
+  msg << MSG::DEBUG << "dimName: " << dimName << endreq;
+  m_dimeng->declSvc(dimName, var );
+  m_infoDescriptions[dimName] = desc;
+  m_dimeng->declSvc( dimName+"/gauchocomment", 
+                     m_infoDescriptions[dimName].c_str() );
+}
+void MonitorSvc::declareInfo(const std::string& name, const std::string& var, 
+                             const std::string& desc, const IInterface* owner) 
+{
+  MsgStream msg(msgSvc(),"MonitorSvc");
+  m_InfoNamesMapIt = m_InfoNamesMap.find( owner );
+  std::string ownerName = infoOwnerName( owner );
+  if( m_InfoNamesMapIt != m_InfoNamesMap.end() ) {
+  	std::pair<std::set<std::string>::iterator,bool> p = 
+      (*m_InfoNamesMapIt).second.insert(name);
+	  if( p.second) {
+      msg << MSG::INFO << endreq;
+      msg << MSG::INFO << "Declaring info: Owner: " 
+          << infoOwnerName( owner ) << " Name: " << name << endreq;
+	  }
+	  else { // Insertion failed: Name already exists
+      msg << MSG::INFO << endreq;
+	  	msg << MSG::ERROR << "Already existing info " << name << " from owner " 
+          << infoOwnerName( owner ) << " not published" << endreq;
+      return;
+    }
+  }
+  else { // Create a new set for this algo and insert name
+    m_InfoNamesMap[owner]=std::set<std::string>();
+    m_InfoNamesMap[owner].insert(name);
+  }
+  std::string dimName =ownerName+"/"+name;
+  msg << MSG::DEBUG << "dimName: " << dimName << endreq;
+  m_dimeng->declSvc(dimName, var );
+  m_infoDescriptions[dimName] = desc;
+  m_dimeng->declSvc( dimName+"/gauchocomment", 
+                     m_infoDescriptions[dimName].c_str() );
+}
+void MonitorSvc::declareInfo(const std::string& name, 
+                             const std::pair<double,double>& var, 
+                             const std::string& desc, const IInterface* owner) 
+{
+  MsgStream msg(msgSvc(),"MonitorSvc");
+  m_InfoNamesMapIt = m_InfoNamesMap.find( owner );
+  std::string ownerName = infoOwnerName( owner );
+  if( m_InfoNamesMapIt != m_InfoNamesMap.end() ) {
+    std::pair<std::set<std::string>::iterator,bool> p = 
+      (*m_InfoNamesMapIt).second.insert(name);
+    if( p.second) {
+      msg << MSG::INFO << endreq;
+      msg << MSG::INFO << "Declaring info: Owner: " 
+          << infoOwnerName( owner ) << " Name: " << name << endreq;
+    }
+    else { // Insertion failed: Name already exists
+      msg << MSG::INFO << endreq;
+      msg << MSG::ERROR << "Already existing info " << name << " from owner "
+          << infoOwnerName( owner ) << " not published" << endreq;
+      return;
+    }
+  }
+  else { // Create a new set for this algo and insert name
+    m_InfoNamesMap[owner]=std::set<std::string>();
+    m_InfoNamesMap[owner].insert(name);
+  }
+  std::string dimName =ownerName+"/"+name;
+  msg << MSG::DEBUG << "dimName: " << dimName << endreq;
+  m_dimeng->declSvc(dimName, var );
+  m_infoDescriptions[dimName] = desc;
+  m_dimeng->declSvc( dimName+"/gauchocomment", 
+                     m_infoDescriptions[dimName].c_str() );
+}
+void MonitorSvc::declareInfo(const std::string& name, 
+                             const AIDA::IHistogram* var, 
+                             const std::string& desc, const IInterface* owner) 
+{
+  MsgStream msg(msgSvc(),"MonitorSvc");
+  m_InfoNamesMapIt = m_InfoNamesMap.find( owner );
+  std::string ownerName = infoOwnerName( owner );
+  if( m_InfoNamesMapIt != m_InfoNamesMap.end() ) {
+  	std::pair<std::set<std::string>::iterator,bool> p = 
+      (*m_InfoNamesMapIt).second.insert(name);
+	  if( p.second) {
+      msg << MSG::INFO << endreq;
+      msg << MSG::INFO << "Declaring info: Owner: " 
+          << infoOwnerName( owner ) << " Name: " << name << endreq;
+	  }
+	  else { // Insertion failed: Name already exists
+      msg << MSG::INFO << endreq;
+	  	msg << MSG::ERROR << "Already existing info " << name << " from owner " 
+          << infoOwnerName( owner ) << " not published" << endreq;
+      return;
+    }
+  }
+  else { // Create a new set for this algo and insert name
+    m_InfoNamesMap[owner]=std::set<std::string>();
+    m_InfoNamesMap[owner].insert(name);
+  }
+  std::string dimName =ownerName+"/"+name;
+  msg << MSG::DEBUG << "dimName: " << dimName << endreq;
+  m_dimeng->declSvc(dimName, var );
+  m_infoDescriptions[dimName] = desc;
+  m_dimeng->declSvc( dimName+"/gauchocomment", 
+                     m_infoDescriptions[dimName].c_str() );
 }
 
-void MonitorSvc::undeclareInfo( const std::string& name, const IInterface* owner ){
+void MonitorSvc::undeclareInfo( const std::string& name, 
+                                const IInterface* owner )
+{
   MsgStream msg(msgSvc(),"MonitorSvc");
   std::set<std::string> * infoNamesSet = getInfos( owner );
   if( 0 == infoNamesSet ) {
-    msg << MSG::WARNING << "undeclareInfo: Info  " << name << " not declared by " << infoOwnerName(owner) << ". Empty set" << endreq;
+    msg << MSG::WARNING << "undeclareInfo: Info  " << name 
+        << ": No info to undeclare for " << infoOwnerName(owner) 
+        << ". Empty set" << endreq;
     return;
   }
-  bool undeclared = false;
-  std::set<std::string>::iterator infoNamesIt = (*infoNamesSet).begin();
-  while( infoNamesIt!=(*infoNamesSet).end() ){
-  // Look for the info name in string dimName sent to Dim
-    std::string::size_type pos = (*infoNamesIt).find( "/"+name);
-    if( pos != std::string::npos ) {
-      m_dimeng->undeclSvc( (*infoNamesIt) ) ;
-      m_dimeng->undeclSvc( (*infoNamesIt)+"/gauchocomment" ) ;
-      // Iterate before erasing in order to keep the iterator valid
-      std::set<std::string>::iterator infoNameItToErase = infoNamesIt; 
-      infoNamesIt++;
-      (*infoNamesSet).erase(infoNameItToErase);
-      msg << MSG::INFO << "undeclareInfo: " << name << " undeclared" << endreq;
-      undeclared = true;
-      continue;
-    }
-  infoNamesIt++;
-  }
-  if( !undeclared ) {
-    msg << MSG::WARNING << "undeclareInfo: Info  " << name << " not declared by " << infoOwnerName(owner) << endreq;
+  std::string ownerName = infoOwnerName( owner );
+  if( (*infoNamesSet).find( name) !=  (*infoNamesSet).end() ){
+    m_dimeng->undeclSvc( ownerName+"/"+name ) ;
+    m_dimeng->undeclSvc( ownerName+"/"+name+"/gauchocomment" );
+    (*infoNamesSet).erase(name);
+    msg << MSG::INFO << "undeclareInfo: " << name << " from owner " 
+        << ownerName  << " undeclared" << endreq;
+  }  
+  else{
+    msg << MSG::WARNING << "undeclareInfo: Info  " << name << " declared by " 
+        << infoOwnerName(owner) << " not found" << endreq;
     msg << MSG::DEBUG << infoOwnerName(owner) << " infoNames: " << endreq;
-    for( infoNamesIt = (*infoNamesSet).begin();infoNamesIt!=(*infoNamesSet).end();++infoNamesIt)
+    for( std::set<std::string>::iterator infoNamesIt = (*infoNamesSet).begin();
+         infoNamesIt!=(*infoNamesSet).end();++infoNamesIt)
       msg << MSG::DEBUG << "\t" <<  (*infoNamesIt) << endreq;
   }
 }
-void MonitorSvc::undeclareAll( const IInterface* owner ){
+void MonitorSvc::undeclareAll( const IInterface* owner )
+{
   MsgStream msg(msgSvc(),"MonitorSvc");
   if( 0!=owner ){
-  std::string ownerName = infoOwnerName( owner );
-  std::set<std::string> * infoNamesSet = getInfos( owner );
-  if( 0 == infoNamesSet ) {
-    msg << MSG::WARNING << "undeclareAll: No infos to  undeclare for " << ownerName << endreq;
-    return;
-  }
-  std::set<std::string>::iterator infoNamesIt;
-  for( infoNamesIt = (*infoNamesSet).begin();infoNamesIt!=(*infoNamesSet).end();++infoNamesIt){
-    m_dimeng->undeclSvc( (*infoNamesIt) ) ;
-    m_dimeng->undeclSvc( (*infoNamesIt)+"/gauchocomment" ) ;
-    msg << MSG::INFO << "undeclareAll: Undeclared info " << (*infoNamesIt) << " from owner " << ownerName << endreq;
-  }
-  m_InfoNamesMap.erase(owner );
-} else { // Null pointer. Undeclare for all owners
-  for(m_InfoNamesMapIt = m_InfoNamesMap.begin();m_InfoNamesMapIt != m_InfoNamesMap.end();++m_InfoNamesMapIt)
-    undeclareAll( m_InfoNamesMapIt->first );
+    std::string ownerName = infoOwnerName( owner );
+    std::set<std::string> * infoNamesSet = getInfos( owner );
+    if( 0 == infoNamesSet ) {
+      msg << MSG::WARNING << "undeclareAll: No infos to  undeclare for " 
+          << ownerName << endreq;
+      return;
+    }
+    std::set<std::string>::iterator infoNamesIt;
+    msg << MSG::DEBUG << "undeclareAll: List of services published by " 
+        << ownerName << endreq;
+    for( infoNamesIt = (*infoNamesSet).begin();
+         infoNamesIt!=(*infoNamesSet).end();++infoNamesIt)
+      msg << MSG::DEBUG << (*infoNamesIt) << " ";
+    msg << MSG::DEBUG << endreq;
+    for( infoNamesIt = (*infoNamesSet).begin();
+         infoNamesIt!=(*infoNamesSet).end();++infoNamesIt){
+      m_dimeng->undeclSvc( ownerName+"/"+(*infoNamesIt) ) ;
+      m_dimeng->undeclSvc( ownerName+"/"+(*infoNamesIt)+"/gauchocomment" ) ;
+      msg << MSG::INFO << "undeclareAll: Undeclared info " << (*infoNamesIt) 
+          << " from owner " << ownerName << endreq;
+    }
+    m_InfoNamesMap.erase(owner );
+  } else { // Null pointer. Undeclare for all owners
+    for(m_InfoNamesMapIt = m_InfoNamesMap.begin();
+        m_InfoNamesMapIt != m_InfoNamesMap.end();++m_InfoNamesMapIt)
+      undeclareAll( m_InfoNamesMapIt->first );
   }
 }
-std::set<std::string> * MonitorSvc::getInfos(const IInterface* owner ){
+std::set<std::string> * MonitorSvc::getInfos(const IInterface* owner )
+{
   m_InfoNamesMapIt = m_InfoNamesMap.find( owner );
-  if( m_InfoNamesMapIt != m_InfoNamesMap.end() ) return &(m_InfoNamesMapIt->second);
+  if( m_InfoNamesMapIt != m_InfoNamesMap.end() ) 
+    return &(m_InfoNamesMapIt->second);
   else {
     return 0;
   }
 }
-std::string MonitorSvc::infoOwnerName( const IInterface* owner ){
+std::string MonitorSvc::infoOwnerName( const IInterface* owner )
+{
   const IAlgorithm* ownerAlg = dynamic_cast<const IAlgorithm*>(owner);
   if( 0 != ownerAlg ) // It's an algorithm
     return ownerAlg->name();
@@ -305,4 +406,3 @@ std::string MonitorSvc::infoOwnerName( const IInterface* owner ){
   // NULL pointer or Unknown interface:
   return "";
 }
-
