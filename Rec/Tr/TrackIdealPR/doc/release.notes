@@ -4,6 +4,11 @@
 ! Purpose     : Perfect pattern recognition
 !-----------------------------------------------------------------------------
 
+! 2005-06-15 - Eduardo Rodrigues
+ - propagating changes from TrackEvent to TrackIdealPR
+ - version of algorithm with extra debugging information
+ - add use TrackMCTools to requirements file
+
 !======================= TrackIdealPR v1r0 2005-05-24 ========================
 ! 2005-05-24 - Eduardo Rodrigues
  - propagating changes from TrackEvent to TrackIdealPR

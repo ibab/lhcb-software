@@ -30,6 +30,7 @@ use   ITAssociators   v* IT
 use   VeloAssociators v* Velo
 
 use   TrackInterfaces v* Tr
+use   TrackMCTools    v* Tr
 
 #============================================================================
 # Component library building rule

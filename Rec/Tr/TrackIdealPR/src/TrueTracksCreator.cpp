@@ -107,14 +107,14 @@ StatusCode TrueTracksCreator::initialize()
    m_velo      = getDet<DeVelo>( m_veloPath );
    debug() << "Geometry read in." << endreq;
 
-  // Retrieve track selection tool
-  sc = toolSvc() -> retrieveTool("TrackSelector", "select", m_trackSelector,this);
-  if ( !sc ) { return sc; }
+  // Retrieve the TrackSelector tool
+  m_trackSelector = tool<ITrackSelector>( "TrackSelector" );
 
-  // Retrieve TrueStateCreator tool
+  // Retrieve the TrueStateCreator tool
   m_stateCreator = tool<IStateCreator>( "TrueStateCreator" );
 
   if ( m_fitTracks ) {
+    always() << "Fitting part of algorithm not yet done!" << endreq;
 //    sc = toolSvc()->retrieveTool( "TrFitAtAllPoints", "Fitter", 
 //                                  m_tracksFitter, this );
 //    if ( !sc ) { return sc; }
@@ -153,17 +153,8 @@ StatusCode TrueTracksCreator::execute()
   OTTimes* otTimes           = get<OTTimes>( OTTimeLocation::Default );
   debug() << "- retrieved " <<  otTimes -> size() << " OTTimes." << endreq;
 
-//  ITClusters* itClusters     = get<ITClusters>( ITClusterLocation::Default );
-//  VeloClusters* veloClusters = get<VeloClusters>( VeloClusterLocation::Default );
-
   // Make container for tracks
   Tracks* tracksCont = new Tracks();
-  //StatusCode sc = eventSvc() -> registerObject( m_tracksTESPath, tracksCont )
-  //if ( sc.isFailure() ) {
-    //error() << "Unable to store track container in TES: "
-            //<< m_tracksTESPath << " (sc = " << sc.getCode() << " )." << endreq;
-    //return sc;
-  //}
 
   // create relation table and register it in the event transient store
   typedef RelationWeighted1D<Track,MCParticle,double>  Table;
@@ -188,14 +179,15 @@ StatusCode TrueTracksCreator::execute()
   for ( iPart = particles->begin(); particles->end() != iPart; ++iPart ) {
     MCParticle* mcParticle = *iPart;
     if ( m_trackSelector -> select( mcParticle ) ) {
-      debug() << "- MCParticle of type "
-              << m_trackSelector -> trackType( mcParticle ) << endreq
+      debug() << endreq
+              << "Selected MCParticle of type "
+              << m_trackSelector -> trackType( mcParticle )
+              << " , (key # " << mcParticle -> key() << ")" << endreq
               << "    - momentum = " << mcParticle -> momentum() << " MeV" <<endreq
               << "    - P        = " << mcParticle -> momentum().vect().mag()
               << " MeV" <<endreq
               << "    - charge   = "
               << ( mcParticle -> particleID().threeCharge() / 3 ) << endreq;
-
 
       // Make a new track
       // ----------------
@@ -212,6 +204,7 @@ StatusCode TrueTracksCreator::execute()
       // Add Velo clusters
       // -----------------
       if ( m_addVeloClusters == true ) {
+        debug() << "... adding VeloXxxClusters" << endreq;
         sc = addVeloClusters( mcParticle, track );
         if ( sc.isFailure() ) {
           error() << "Unable to add velo R clusters" << endreq;
@@ -219,13 +212,10 @@ StatusCode TrueTracksCreator::execute()
         }
       }
 
-      // Sort the measurements in z
-      // --------------------------
-      sortMeasurements( track );
-
       // Add IT clusters
       // ---------------
       if ( m_addITClusters == true ) {
+        debug() << "... adding ITClusters" << endreq;
         sc = addITClusters( mcParticle, track );
         if ( sc.isFailure() ) {
           error() << "Unable to add inner tracker clusters" << endreq;
@@ -236,6 +226,7 @@ StatusCode TrueTracksCreator::execute()
       // Add OTTimes
       // -----------
       if ( m_addOTTimes == true && otTimes != 0 ) {
+        debug() << "... adding OTTimes" << endreq;
         sc = addOTTimes( otTimes, mcParticle, track );
         if ( sc.isFailure() ) {
           error() << "Unable to add outer tracker OTTimes" << endreq;
@@ -246,18 +237,18 @@ StatusCode TrueTracksCreator::execute()
       // Check if the track contains enough hits
       // ---------------------------------------
       if ( (int) track -> nMeasurements() < m_minNHits) {
+        debug() << " -> track deleted. Had only " << track -> nMeasurements()
+                << " hits" << endreq;
         delete track;
         continue; // go to next track
-        debug() << " -> track deleted. Had only " <<track -> nMeasurements()
-                << " hits" << endreq;
       }
 
       // Sort the measurements in z
       // --------------------------
-      sortMeasurements( track );
+      //sortMeasurements( track );  // no more needed!
 
-      // Initialize a state
-      // ------------------
+      // Initialize a seed state
+      // -----------------------
       if ( m_initState ) {
         if ( m_upstream ) {
           std::vector<Measurement*>::const_reverse_iterator rbeginM =
@@ -279,10 +270,9 @@ StatusCode TrueTracksCreator::execute()
 
       // Set some of the track properties
       // --------------------------------
-      track -> setStatus( TrackKeys::PatRec );
-      track -> setFlag( TrackKeys::Valid, true );
+      track -> setStatus( TrackKeys::PatRecMeas );
       track -> setFlag( TrackKeys::Unique, true );
-
+      track -> setHistory( TrackKeys::TrackIdealPR );
       // Fit the track
       //if ( m_initState && m_fitTracks ) {
         // select appropriate track fitter
@@ -336,16 +326,35 @@ StatusCode TrueTracksCreator::execute()
       tracksCont -> add( track );
       table -> relate( track, mcParticle, 1.0 );
 
-    // debugging Track ...
-    // -------------------
-    debug()
-      << "-> Track with key # " << track -> key() << endreq
-      << "  * charge         = " << track -> charge() << endreq
-      << "  * is Valid       = " << track -> checkFlag( TrackKeys::Valid ) << endreq
-      << "  * is Unique      = " << track -> checkFlag( TrackKeys::Unique ) << endreq
-      << "  * is of type     = " << track -> type() << endreq
-      << "  * is Backward    = " << track -> checkFlag( TrackKeys::Backward ) << endreq
-      << "  * # measurements = " << track -> nMeasurements() << endreq;
+      // debugging Track ...
+      // -------------------
+      debug()
+        << "-> Track with key # " << track -> key() << endreq
+        << "  * charge         = " << track -> charge() << endreq
+        << "  * is Invalid     = " << track -> checkFlag( TrackKeys::Invalid ) << endreq
+        << "  * is Unique      = " << track -> checkFlag( TrackKeys::Unique ) << endreq
+        << "  * is of type     = " << track -> type() << endreq
+        << "  * is Backward    = " << track -> checkFlag( TrackKeys::Backward ) << endreq
+        << "  * # measurements = " << track -> nMeasurements() << endreq;
+      
+      // print the measurements
+      const std::vector<Measurement*>& meas = track -> measurements();
+      for ( std::vector<Measurement*>::const_iterator itMeas = meas.begin();
+            itMeas != meas.end(); itMeas++ ) {
+        debug() << "  - measurement of type " << (*itMeas) -> type() << endreq
+                << "  - z        = " << (*itMeas) -> z() << " mm" << endreq
+                << "  - LHCbID   = " << (*itMeas) -> lhcbID()  << endreq;
+        // continue according to type ...  
+        if ( (*itMeas) -> lhcbID().isOT() ) {
+          debug() << "  - XxxChannelID = " << (*itMeas) -> lhcbID().otID() << endreq;
+        }
+        else if ( (*itMeas) -> lhcbID().isST() ) {
+          debug() << "  - XxxChannelID = " << (*itMeas) -> lhcbID().stID() << endreq;
+        }
+        else if ( (*itMeas) -> lhcbID().isVelo() ) {    
+          debug() << "  - XxxChannelID = " << (*itMeas) -> lhcbID().veloID() << endreq;
+        }
+      }
 
     } // is selected
   } // looping over MCParticles
@@ -423,6 +432,8 @@ StatusCode TrueTracksCreator::addOTTimes( OTTimes* times,
                                              ambiguity, tu );
         track -> addToMeasurements( otTim );
         nOTMeas++;
+        debug() << " - added OTMeasurement, ambiguity = "
+                << ambiguity << endreq;
       }
     }
     // next cluster
@@ -525,7 +536,7 @@ StatusCode TrueTracksCreator::initializeState( double z,
   State* state;
   StatusCode sc = m_stateCreator -> createState( mcPart, z, state );
   if ( sc.isSuccess() ) {
-    // set covariance matrix to a somewhat larger value for the fit.
+    // set covariance matrix to a somewhat larger value for the fit
     HepSymMatrix& cov = state -> covariance();
     cov.fast(1,1) = m_errorX2;
     cov.fast(2,2) = m_errorY2;
@@ -556,8 +567,9 @@ StatusCode TrueTracksCreator::initializeState( double z,
 //=============================================================================
 StatusCode TrueTracksCreator::deleteStates( Track* track )
 {
-  for ( std::vector<State*>::iterator it  = track->states().begin();
-                                      it != track->states().end(); it++) {
+  std::vector<State*> tmpStates = track -> states();
+  for ( std::vector<State*>::const_iterator it  = tmpStates.begin();
+        it != tmpStates.end(); it++) {
     track -> removeFromStates( (*it) );
   }
   
