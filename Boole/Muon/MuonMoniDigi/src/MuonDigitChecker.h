@@ -1,4 +1,4 @@
-// $Id: MuonDigitChecker.h,v 1.2 2005-06-10 11:05:23 asarti Exp $
+// $Id: MuonDigitChecker.h,v 1.3 2005-06-15 13:05:44 asarti Exp $
 #ifndef MuonDigitChecker_H 
 #define MuonDigitChecker_H 1
 
@@ -44,6 +44,7 @@ protected:
   static std::string numreg[4];   
   static std::string numsta[5];
   static std::string TESPathOfHitsContainer[4];
+  static std::string HitOr[6];
   int m_stationNumber;
   std::vector<int> m_numberOfGaps;
   int m_regionNumber;

@@ -30,9 +30,11 @@ std::string MuonDigitChecker::numreg[4] =
 {"1","2","3","4"};
 std::string MuonDigitChecker::numsta[5]= 
 {"1","2","3","4","5"};
- std::string MuonDigitChecker::TESPathOfHitsContainer[4]=
+std::string MuonDigitChecker::TESPathOfHitsContainer[4]=
 {"Hits","ChamberNoiseHits","FlatSpilloverHits","BackgroundHits"};
-
+std::string MuonDigitChecker::HitOr[6]=
+  {"Geant","FlastSpillOver","Low Energy Background","Chamber Noise",
+   "Crosstalk","Electronic Noise"};      
 
 //=============================================================================
 // Standard constructor, initializes variables
@@ -410,10 +412,10 @@ StatusCode MuonDigitChecker::finalize() {
   info() << "    Digi Information     " << endmsg;
   info() << "-----------------------------------------------------------------" << endmsg;
 
-
   for(int c=0; c<6; c++) {
+    std::string myCon = HitOr[c];
     info() << "-----------------------------------------------------------------" << endmsg;
-    info() << "-----   Container: "<< c << "------------------------------------" << endmsg;
+    info() << "-----   Container: "<< myCon << "------------------------" << endmsg;
     info() << "-----------------------------------------------------------------" << endmsg;
     info()<<" S1      S2      S3      S4      S5 "<<endmsg;
     for(int r=0; r<4; r++) {
