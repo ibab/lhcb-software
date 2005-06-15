@@ -4,6 +4,10 @@
 ! Purpose     : CMT Interface to DIM 
 !-----------------------------------------------------------------------------
 
+!============================ DIM v1r1 2005-06-15 ============================
+! 2005-06-15 - Marco Cattaneo
+ - Change requirements to point to DIM_release_area
+
 !============================ DIM v1r0 2005-05-13 ============================
 ! 2005-05-13 - Marco Cattaneo
  - First release in OnlineSys
