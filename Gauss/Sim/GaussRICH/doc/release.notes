@@ -5,12 +5,13 @@
 ! Purpose          : collection of sensitive detectors, G4 actions, etc for RICH
 !-----------------------------------------------------------------------------
 
-!======================== GaussRICH v4r14 ==================================
 !2005-05-10 - Sajan Easo
   - In RichAnalysis/RichG4ReconFlatMirr.cpp the xml userparameter names refering to the
     direction of the flat mirrors changed in accordance with names in recent xml versions.
     Also the quartic equation solution now uses GSL based algorithm.
     This is not used in standard running, but only activated in verification software for special studies.
+
+!======================== GaussRICH v4r14 ==================================
 !2005-04-19  - Sajan Easo
   - Added three montoring histograms for set2 to plot the 
     number of  nonraditor hits.
