@@ -25,15 +25,15 @@ const        IToolFactory& TrackMasterProjectorFactory = s_factory ;
 // It returns the chi squared of the projection
 //=============================================================================
 StatusCode TrackMasterProjector::project( const State& state, 
-                                          Measurement& meas ) {
-  // TODO: change the measurement to get the type, 
-  // selectProjector(meas.type());
-  StatusCode sc = StatusCode::SUCCESS;
-  if ( Measurement::OT != m_selectedMeasType) 
-    sc = selectProjector( Measurement::OT );
-  if (sc.isFailure()) return Warning(" Not able to select projector");
+                                          Measurement& meas )
+{
+  if ( meas.type() != m_selectedMeasType) {
+    StatusCode sc = selectProjector( meas.type() );
+    if ( sc.isFailure() )
+      return Error( "Unable to project this measurement!" );
+  }
 
-  return m_selectedProjector->project( state, meas );  
+  return m_selectedProjector -> project( state, meas );  
 }
 
 //=============================================================================
@@ -42,10 +42,14 @@ StatusCode TrackMasterProjector::project( const State& state,
 StatusCode TrackMasterProjector::selectProjector
 ( const Measurement::Type& type ) 
 {
-  if ( m_projectors.find(type) == m_projectors.end() )
-    return Warning(" No ITrackProjector in TrackMasterProjector for measurement type ");
+  if ( m_projectors.find(type) == m_projectors.end() ) {
+    fatal() << "No TrackXxxProjector in TrackMasterProjector for this measurement of type = " << type << "!";
+    return StatusCode::FAILURE;
+  }
+
   m_selectedProjector = m_projectors[type];
-  m_selectedMeasType  = type;    
+  m_selectedMeasType  = type;
+
   return StatusCode::SUCCESS;
 }
 
@@ -54,7 +58,7 @@ StatusCode TrackMasterProjector::selectProjector
 //=============================================================================
 const HepVector& TrackMasterProjector::projectionMatrix() const
 {
-  return m_selectedProjector->projectionMatrix();
+  return m_selectedProjector -> projectionMatrix();
 }
 
 //=============================================================================
@@ -115,8 +119,7 @@ TrackMasterProjector::TrackMasterProjector( const std::string& type,
 
   m_projectors.clear();
   m_selectedProjector = NULL;
-  // TODO: set a unknown measurement type in Measurement
-  m_selectedMeasType = Measurement::OT;
+  m_selectedMeasType = Measurement::Unknown;
 }
 
 //=============================================================================

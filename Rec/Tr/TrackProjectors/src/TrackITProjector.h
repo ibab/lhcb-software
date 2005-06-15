@@ -8,7 +8,6 @@
 
 // from STDet
 #include"STDet/DeSTDetector.h"
-#include"STDet/STDetectionLayer.h"
 
 /** @class TrackITProjector TrackITProjector.h TrackProjectors/TrackITProjector.h
  *  

@@ -4,6 +4,10 @@
 ! Purpose     : Package for tracking projectors
 !-----------------------------------------------------------------------------
 
+! 2005-06-15 - Eduardo Rodrigues
+ - TrackMasterProjector can now handle all types of measurements
+ - added extra debugging information (temporarily)
+
 !====================== TrackProjectors v1r0 2005-05-25 ======================
 ! 2005-05-25 - Marco Cattaneo
  - Remove TrackProjectors directory, move files to src
