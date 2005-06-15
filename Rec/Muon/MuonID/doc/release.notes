@@ -1,7 +1,24 @@
-! $Id: release.notes,v 1.27 2005-04-07 07:19:40 cattanem Exp $
+! $Id: release.notes,v 1.28 2005-06-15 06:26:39 pkoppenb Exp $
 ! Package     : MuonID
-! Responsible : David Hutchcroft
+! Responsible : Andre Massafferri
 
+! 2005-06-17 - P. Koppenburg
+  - src/MuonIDFOI.{cpp,h}
+    . Translate to GaudiAlgorithm
+    . Initialize all global variables
+  - src/MuonIDDLLTool.{cpp,h}
+    . Translate to GaudiAlgorithm
+    . Initialize all global variables
+
+! 2005-06-17 - P. Koppenburg for Andre Massafferri
+  - src/MuonIDFOI.{cpp,h}
+    . ADD SOME COMMENT HERE
+  - src/MuonIDDLLTool.{cpp,h}
+    . ADD SOME COMMENT HERE
+  - options/MuonIDDLLTool.opts
+    . ADD SOME COMMENT HERE
+  - options/MuonIDFOI.opts
+    . ADD SOME COMMENT HERE
 !======================== MuonID v3r7p2 2005-04-07 ========================
 ! 2005-04-07 - Marco Cattaneo
  - Use v* in requirements, instead of explicit versions
