@@ -1,17 +1,8 @@
-// $Id: Bender.cpp,v 1.4 2004-03-15 18:13:57 ibelyaev Exp $
+// $Id: Bender.cpp,v 1.5 2005-06-15 11:57:36 ibelyaev Exp $
 // ============================================================================ 
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================ 
 // $Log: not supported by cvs2svn $
-// Revision 1.3  2004/02/11 17:46:43  ibelyaev
-//  small polishing
-//
-// Revision 1.2  2004/02/10 12:35:03  ibelyaev
-//  last update
-//
-// Revision 1.1.1.1  2004/01/22 22:29:45  ibelyaev
-// New location of 'old' package
-// 
 // ============================================================================ 
 // Include files 
 // ============================================================================ 
@@ -177,7 +168,7 @@ StatusCode processTheFile( const std::string& name )
 #else
   // This trick is needed to avoid 
   // problem with different versions of C -libraries  
-  std::ifstream file( name ) ;
+  std::ifstream file( name.c_str() ) ;
   std::stringstream str;
   if( file ) 
   {
