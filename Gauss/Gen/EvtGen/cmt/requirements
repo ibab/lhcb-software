@@ -1,5 +1,5 @@
 package     EvtGen
-version     v8r4
+version     v8r4p1
  
 branches    cmt src doc EvtGen EvtGenModels EvtGenBase photos
 

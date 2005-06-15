@@ -205,8 +205,8 @@ void EvtGen::generateDecay(EvtParticle *p){
 
 
 
-void EvtGen::generateEvent(int stdhepid, CLHEP::HepLorentzVector P,
-                           CLHEP::HepLorentzVector D){
+void EvtGen::generateEvent(int stdhepid, HepLorentzVector P,
+                           HepLorentzVector D){
 
   EvtParticle *root_part;
   EvtVectorParticle *vector_part;
@@ -228,7 +228,7 @@ void EvtGen::generateEvent(int stdhepid, CLHEP::HepLorentzVector P,
 
 }
 
-void EvtGen::generateEvent(EvtParticle *root_part,CLHEP::HepLorentzVector D){
+void EvtGen::generateEvent(EvtParticle *root_part,HepLorentzVector D){
 
   int i;  
   

@@ -29,12 +29,10 @@
 #define EVTGEN_HH
 
 #include "EvtGenBase/EvtPDL.hh"
+#include "CLHEP/Vector/LorentzVector.h"
 
 class EvtParticle;
 class EvtRandomEngine;
-namespace CLHEP {
-  class HepLorentzVector; 
-};
 class EvtVector4R;
 class EvtStdHep;
 class EvtSpinDensity;
@@ -56,9 +54,9 @@ public:
   void generateDecay(EvtParticle *p);
 
   //These two methods are obsolete
-  void generateEvent(int stdhepid, CLHEP::HepLorentzVector P, 
-                     CLHEP::HepLorentzVector D);
-  void generateEvent(EvtParticle *p,CLHEP::HepLorentzVector D);
+  void generateEvent(int stdhepid, HepLorentzVector P, 
+                     HepLorentzVector D);
+  void generateEvent(EvtParticle *p,HepLorentzVector D);
 
   
 private:

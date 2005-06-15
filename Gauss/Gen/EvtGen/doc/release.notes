@@ -1,6 +1,12 @@
 Package :EvtGen 
 Package manager : Patrick Robbe
 
+!============================== EvtGen v8r4p1 =============================
+! 2005-06-10 - Gloria CORTI
+ - Changes to make code compatible with both CLHEP 1.8 and 1.9 (to
+   allow to be used in DC04)
+   . src/EvtGen.cpp, EvtVub.cpp, EvtGen/EvtGen.h, EvtGenModels/EvtVub.h
+
 !============================== EvtGen v8r4 ===============================
 ! 2005-04-05 - Patrick Robbe for Federica Legger
  - src/EvtDiracParticle : fix bug in Dirac spinor
