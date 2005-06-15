@@ -116,7 +116,7 @@ bool TrackSelector::selectByTrackType( Track* track ) const
     selected = false;
 
   // Check the validity flag
-  if ( m_validFlag && !( track->checkFlag( TrackKeys::Valid ) ) )
+  if ( m_validFlag && track->checkFlag( TrackKeys::Invalid ) )
     selected = false;
 
   // Check if the track is of the requested type

@@ -126,7 +126,7 @@ StatusCode TrueStateCreator::createState( const MCParticle* mcPart,
   pState -> setZ( zRec );
   pState -> setCovariance( stateCov );
   state = pState;
-   
+
   // Check if MCParticle exists
   if ( mcPart == 0 ) return StatusCode::FAILURE;
 
@@ -260,7 +260,7 @@ StatusCode TrueStateCreator::createState( const MCParticle* mcPart,
 
   // set the state parameters
   pState->setState( x, y, z, slopeX, slopeY, this->qOverP(mcPart) );
-  
+
   // set covariance matrix
   HepSymMatrix cov = HepSymMatrix(5,0);
   cov.fast(1,1) = m_eX2;
