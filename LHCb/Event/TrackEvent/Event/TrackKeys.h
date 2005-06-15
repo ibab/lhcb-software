@@ -8,15 +8,15 @@
 namespace TrackKeys 
 {
   enum History {HistoryUnknown=0,
-                TrLong,
+                TrackIdealPR,
                 TrSeeding,
-                TrKshort,
-                TrMatching,
                 TrVelo,
+                TrLong,
                 TrVeloTT,
-                TrgVelo,
-                TrgVeloTT,
-                TrgForward};
+                TrMatching,
+                TrKshort,
+                TrgForward,
+                TrgVeloTT};
     
 
   enum HistoryFit {FitUnknown=0,
@@ -33,13 +33,13 @@ namespace TrackKeys
               Ttrack};
 
   enum Status {StatusUnknown=0,
-               PatRec,
-               Ready,
+               PatRecIDs,
+               PatRecMeas,
                Fitted,
-               Failed};
+               FitFailed};
 
   enum Flags {Backward=1,
-              Valid=2,
+              Invalid=2,
               Unique=4,
               IPSelected=8,
               PIDSelected=16};

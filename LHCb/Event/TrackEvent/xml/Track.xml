@@ -14,12 +14,12 @@
       serializers = 'FALSE'>
 
       <location name="Ideal"   place="Rec/Track/Ideal"/>
-      <location name="Velo"    place="Rec/Track/Velo"/>
       <location name="Seed"    place="Rec/Track/Seed"/>
-      <location name="Match"   place="Rec/Track/Match"/>
+      <location name="Velo"    place="Rec/Track/Velo"/>
       <location name="Forward" place="Rec/Track/Forward"/>
       <location name="Follow"  place="Rec/Track/Follow"/>
       <location name="VeloTT"  place="Rec/Track/VeloTT"/>
+      <location name="Match"   place="Rec/Track/Match"/>
       <location name="KsTrack" place="Rec/Track/KsTrack"/>
 
       <base name='KeyedObject&lt;int&gt;' />
@@ -146,16 +146,6 @@
         desc      = "ancestor tracks that created this one" 
         multiplicity = "N" 
         serialize = 'FALSE' />
-
-<!--
-      <attribute
-        type      = 'Track;'
-        name      = 'ancestors'
-        desc      = 'container of ancestors of the track'
-        access    = 'PROTECTED'
-        setMeth   = 'FALSE'
-        serialize = 'FALSE' />
--->
 
       <method
         type    = 'void'

@@ -4,14 +4,20 @@
 ! Purpose     : Package for the tracking event model classes
 !-----------------------------------------------------------------------------
 
+! 2005-06-15 - Eduardo Rodrigues
+ - changes to enums in TrackKeys.h, for clarity
+ - TrackVertex.xml made to comply with conventions
+
 !========================= TrackEvent v1r1 2005-06-02 ========================
 ! 2005-05-31 - Jose A. Hernando
- - Track: removing bug in addToStates and addToMeasurements: we were adding them twice!
+ - Track: removing bug in addToStates and addToMeasurements:
+   we were adding them twice!
 
 ! 2005-05-25 - Jose A. Hernando
  - State: when clone location it set to unknown
  - Track: ancestors are contained in SmartRefVec
-   nMeasurements(Pred) method is in TrackFunctor waiting for new GOD/Gaudi version and proper work done with templates for python-dictionaries
+   nMeasurements(Pred) method is in TrackFunctor waiting for new GOD/Gaudi
+   version and proper work done with templates for python-dictionaries
 
 !========================= TrackEvent v1r0 2005-05-24 ========================
 ! 2005-05-24 - Olivier Callot

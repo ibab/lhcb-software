@@ -5,7 +5,7 @@
 
 <!DOCTYPE gdd SYSTEM "gdd.dtd" >
 <gdd>
-  <package name="TackEvent">
+  <package name="TrackEvent">
 
     <import name="Event/Track"/>
 
