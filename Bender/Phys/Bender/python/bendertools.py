@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: bendertools.py,v 1.3 2005-05-20 10:55:19 ibelyaev Exp $ 
+# $Id: bendertools.py,v 1.4 2005-06-16 20:30:28 ibelyaev Exp $ 
 # =============================================================================
 # CVS tag $Name: not supported by cvs2svn $ version $Revison:$
 # =============================================================================
@@ -13,7 +13,7 @@ Helper module  to locate/cast to different tools
 """
 # =============================================================================
 __author__  = "Vanya BELYAEV Ivan.Belyaev@itep.ru"
-__version__ = "CVS tag $Name: not supported by cvs2svn $ version: $Revision: 1.3 $ "
+__version__ = "CVS tag $Name: not supported by cvs2svn $ version: $Revision: 1.4 $ "
 # =============================================================================
 
 import gaudimodule
@@ -33,7 +33,7 @@ ICheckOverlap            = _gbl.ICheckOverlap
 IGeomDispCalculator      = _gbl.IGeomDispCalculator
 ILifetimeFitter          = _gbl.ILifetimeFitter 
 IParticleTransporter     = _gbl.IParticleTransporter
-IPVLocator               = _gbl.IPVLocator          
+IOnOffline               = _gbl.IOnOffline          
 IDecayFinder             = _gbl.IDecayFinder       
 IGeomVertexFitter        = _gbl.IGeomVertexFitter  
 IMassVertexFitter        = _gbl.IMassVertexFitter  
@@ -63,7 +63,7 @@ Tools = ( IBestParticles           ,
           IGeomDispCalculator      ,
           ILifetimeFitter          ,
           IParticleTransporter     ,
-          IPVLocator               ,
+          IOnOffline               ,
           IDecayFinder             ,
           IGeomVertexFitter        ,
           IMassVertexFitter        ,
