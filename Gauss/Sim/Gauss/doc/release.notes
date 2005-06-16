@@ -4,6 +4,10 @@
 ! Purpose     : LHCb Simulation Application with Geant4
 !-----------------------------------------------------------------------------
 
+! 2005-06-16 - Gloria CORTI
+ - Remove unnecessary loading of DAQEventDict (no longer necessary because
+   of removed use in CaloEvent) in GaussPoolIO.opts
+
 ! 2005-06-15 - Gloria CORTI
  - Use version of GaussRICH (v5r0) with naming as in latest XmlDDDB
 
