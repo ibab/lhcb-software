@@ -1,9 +1,12 @@
 # =============================================================================
-# $Id: bendermodule.py,v 1.25 2005-05-20 10:55:19 ibelyaev Exp $ 
+# $Id: bendermodule.py,v 1.26 2005-06-16 17:45:31 ibelyaev Exp $ 
 # =============================================================================
 # CVS tag $NAme:$ 
 # =============================================================================
 # $Log: not supported by cvs2svn $
+# Revision 1.25  2005/05/20 10:55:19  ibelyaev
+#  prepare for v4r8
+#
 # Revision 1.23  2005/03/04 19:30:43  ibelyaev
 #  v4r7: add possibility to deal with AlgTools
 #
@@ -85,6 +88,13 @@ import bendermath
 import bendermatrix
 import benderconfig
 import benderrels 
+
+import atexit
+def _atexit_() :
+    state = gaudi.state()
+    if 1 == state or 3 == state : gaudi.exit()
+
+atexit.register( _atexit_ )
 
 # =============================================================================
 # The END 
