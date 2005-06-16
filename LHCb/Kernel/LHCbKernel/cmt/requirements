@@ -1,10 +1,10 @@
-# $Id: requirements,v 1.74 2005-06-02 13:46:36 cattanem Exp $
+# $Id: requirements,v 1.75 2005-06-16 11:11:20 cattanem Exp $
 # =============================================================================
 package LHCbKernel
 author  M.Frank    CERN/LHCb
 manager M.Cattaneo CERN/LHCb
 
-version v5r11
+version v5r11p1
 
 include_dirs $(LHCBKERNELROOT)
 
@@ -22,7 +22,7 @@ document obj2dict LHCbKernelObj2Dict ../xml/*.xml
 document lcg_dictionary_generator LHCbKernelGen \
       $(LHCBKERNELROOT)/Kernel/lcgStl.h dictionary=LHCbKernel
 macro_append LHCbKernel_lcgdict_options \
-      '--select=$(LHCBKERNELROOT)/xml/lcgdict/lcg_selection.xml --split --pool \
+      '--select=$(LHCBKERNELROOT)/xml/lcgdict/lcg_selection.xml --split \
        -I"$(POOL_home)/../include" $(includes)'
 
 # Build libraries (including dictionary)
