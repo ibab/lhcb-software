@@ -1,4 +1,4 @@
-// $Id: RichG4ReconHpd.h,v 1.2 2004-02-10 14:24:14 jonesc Exp $
+// $Id: RichG4ReconHpd.h,v 1.3 2005-06-16 11:39:59 seaso Exp $
 #ifndef RICHANALYSIS_RICHG4RECONHPD_H 
 #define RICHANALYSIS_RICHG4RECONHPD_H 1
 
@@ -45,8 +45,11 @@ private:
   double m_HpdPhCathodeRad;
   double m_HpdPixelXSize;
   double m_HpdPixelYSize;
-  double m_HpdPixelXNumCol;
-  double m_HpdPixelXNumRow;
+  int m_HpdPixelXNumCol;
+  int m_HpdPixelXNumRow;
+
+  //  double m_HpdPixelXNumCol;
+  // double m_HpdPixelXNumRow;
 
 };
 

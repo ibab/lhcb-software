@@ -1,4 +1,4 @@
-// $Id: RichG4ReconFlatMirr.cpp,v 1.3 2005-05-09 12:25:36 seaso Exp $
+// $Id: RichG4ReconFlatMirr.cpp,v 1.4 2005-06-16 11:39:59 seaso Exp $
 // Include files
 
 
@@ -60,8 +60,8 @@ RichG4ReconFlatMirr::RichG4ReconFlatMirr(  )
 
 
 
-  SmartDataPtr<IDetectorElement> Rich1DE(detSvc, "/dd/Structure/LHCb/Rich1");
-  SmartDataPtr<IDetectorElement> Rich2DE(detSvc, "/dd/Structure/LHCb/Rich2");
+  SmartDataPtr<DetectorElement> Rich1DE(detSvc, "/dd/Structure/LHCb/Rich1");
+  SmartDataPtr<DetectorElement> Rich2DE(detSvc, "/dd/Structure/LHCb/Rich2");
 
   if(Rich1DE) {
     setRich1FlatMirrorParam();
@@ -87,26 +87,45 @@ void RichG4ReconFlatMirr::setRich1FlatMirrorParam( )
   IMessageSvc*  msgSvc = RichG4SvcLocator::RichG4MsgSvc ();
   MsgStream RichG4ReconFlatMirrlog( msgSvc,"RichG4ReconFlatMirr");
 
+  // modif in the following to be compatible with recent Detdesc. 
+  // SE 16-6-2005.
 
-  SmartDataPtr<IDetectorElement> Rich1DE(detSvc, "/dd/Structure/LHCb/Rich1");
+  SmartDataPtr<DetectorElement> Rich1DE(detSvc, "/dd/Structure/LHCb/Rich1");
   // modif in the following to be compatible with the xml userparameter name.
   // SE 10-5-2005.
   if( Rich1DE) {
 
     double r1m2A =
-      Rich1DE->userParameterAsDouble("Rich1NominalNorX");
+      Rich1DE->param<double>("Rich1NominalNorX");
     //      Rich1DE->userParameterAsDouble("Rich1Mirror2NominalNorXCosX");
 
     double r1m2B =
-      Rich1DE->userParameterAsDouble("Rich1NominalNorY");
+      Rich1DE->param<double>("Rich1NominalNorY");
     //      Rich1DE->userParameterAsDouble("Rich1Mirror2NominalNorYCosY");
 
     double r1m2C =
-      Rich1DE->userParameterAsDouble("Rich1NominalNorZ");
+      Rich1DE->param<double>("Rich1NominalNorZ");
     //      Rich1DE->userParameterAsDouble("Rich1Mirror2NominalNorZCosZ");
 
     double r1m2D =
-      Rich1DE->userParameterAsDouble("Rich1DParam");
+      Rich1DE->param<double>("Rich1DParam");
+    //      Rich1DE->userParameterAsDouble("Rich1Mirror2DParamDistance");
+
+
+    //    double r1m2A =
+    //  Rich1DE->userParameterAsDouble("Rich1NominalNorX");
+    //      Rich1DE->userParameterAsDouble("Rich1Mirror2NominalNorXCosX");
+
+    //    double r1m2B =
+    //  Rich1DE->userParameterAsDouble("Rich1NominalNorY");
+    //      Rich1DE->userParameterAsDouble("Rich1Mirror2NominalNorYCosY");
+
+    //  double r1m2C =
+    //  Rich1DE->userParameterAsDouble("Rich1NominalNorZ");
+    //      Rich1DE->userParameterAsDouble("Rich1Mirror2NominalNorZCosZ");
+
+    //  double r1m2D =
+    //  Rich1DE->userParameterAsDouble("Rich1DParam");
     //      Rich1DE->userParameterAsDouble("Rich1Mirror2DParamDistance");
 
 
@@ -141,24 +160,41 @@ void RichG4ReconFlatMirr::setRich2FlatMirrorParam( )
   MsgStream RichG4ReconFlatMirrlog( msgSvc,"RichG4ReconFlatMirr");
 
 
-  SmartDataPtr<IDetectorElement> Rich2DE(detSvc, "/dd/Structure/LHCb/Rich2");
+  SmartDataPtr<DetectorElement> Rich2DE(detSvc, "/dd/Structure/LHCb/Rich2");
 
   if(Rich2DE) {
 
     double r2m2A =
-      Rich2DE->userParameterAsDouble("Rich2NominalNorX");
+      Rich2DE->param<double>("Rich2NominalNorX");
     //        Rich2DE->userParameterAsDouble("Rich2NominalNormalCosX");
 
     double r2m2B =
-      Rich2DE->userParameterAsDouble("Rich2NominalNorY");
+      Rich2DE->param<double>("Rich2NominalNorY");
     //      Rich2DE->userParameterAsDouble("Rich2NominalNormalCosY");
 
     double r2m2C =
-      Rich2DE->userParameterAsDouble("Rich2NominalNorZ");
+      Rich2DE->param<double>("Rich2NominalNorZ");
     //      Rich2DE->userParameterAsDouble("Rich2NominalNormalCosZ");
 
     double r2m2D =
-      Rich2DE->userParameterAsDouble("Rich2DParam");
+      Rich2DE->param<double>("Rich2DParam");
+    //      Rich2DE->userParameterAsDouble("Rich2DParameter");
+
+
+    // double r2m2A =
+    //  Rich2DE->userParameterAsDouble("Rich2NominalNorX");
+    //        Rich2DE->userParameterAsDouble("Rich2NominalNormalCosX");
+
+    // double r2m2B =
+    //  Rich2DE->userParameterAsDouble("Rich2NominalNorY");
+    //      Rich2DE->userParameterAsDouble("Rich2NominalNormalCosY");
+
+    // double r2m2C =
+    //  Rich2DE->userParameterAsDouble("Rich2NominalNorZ");
+    //      Rich2DE->userParameterAsDouble("Rich2NominalNormalCosZ");
+
+    // double r2m2D =
+    //  Rich2DE->userParameterAsDouble("Rich2DParam");
     //      Rich2DE->userParameterAsDouble("Rich2DParameter");
 
     m_RichFlatMirrorNominalOrientation[2][0]= r2m2A;

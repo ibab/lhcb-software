@@ -1,4 +1,4 @@
-// $Id: RichG4ReconHpd.cpp,v 1.2 2004-02-10 14:24:14 jonesc Exp $
+// $Id: RichG4ReconHpd.cpp,v 1.3 2005-06-16 11:39:59 seaso Exp $
 // Include files 
 
 #include "GaudiKernel/Kernel.h"
@@ -41,7 +41,7 @@ RichG4ReconHpd::RichG4ReconHpd():
   
   MsgStream RichG4HpdReconlog( msgSvc,"RichG4HpdRecon");
 
-    SmartDataPtr<IDetectorElement> Rich1DE(detSvc, "/dd/Structure/LHCb/Rich1");
+    SmartDataPtr<DetectorElement> Rich1DE(detSvc, "/dd/Structure/LHCb/Rich1");
 
   if( !Rich1DE ){
     RichG4HpdReconlog << MSG::ERROR 
@@ -50,39 +50,73 @@ RichG4ReconHpd::RichG4ReconHpd():
   }else {
 
     m_HpdSiDetXSize=
-      Rich1DE->userParameterAsDouble("RichHpdSiliconDetectorXSize");
+      Rich1DE->param<double>("RichHpdSiliconDetectorXSize");
+
+    //  m_HpdSiDetXSize=
+    //  Rich1DE->userParameterAsDouble("RichHpdSiliconDetectorXSize");
     
     m_HpdSiDetYSize=
-      Rich1DE->userParameterAsDouble("RichHpdSiliconDetectorYSize");
+      Rich1DE->param<double>("RichHpdSiliconDetectorYSize");
+ 
+    // m_HpdSiDetYSize=
+    //  Rich1DE->userParameterAsDouble("RichHpdSiliconDetectorYSize");
     
     m_HpdSiDetZSize=
-      Rich1DE->userParameterAsDouble("RichHpdSiliconDetectorZSize");
+      Rich1DE->param<double>("RichHpdSiliconDetectorZSize");
+
+    //    m_HpdSiDetZSize=
+    //  Rich1DE->userParameterAsDouble("RichHpdSiliconDetectorZSize");
     
     m_HpdSiDetZLocation= 
-      Rich1DE->userParameterAsDouble("RichHpdSiliconDetectorLocalZlocation");
+      Rich1DE->param<double>("RichHpdSiliconDetectorLocalZlocation");
+
+    //    m_HpdSiDetZLocation= 
+    //  Rich1DE->userParameterAsDouble("RichHpdSiliconDetectorLocalZlocation");
     
     m_HpdPhCathodeToSiDetMaxDist=
-      Rich1DE->userParameterAsDouble("RichHpdQWToSiMaxDist");
+      Rich1DE->param<double>("RichHpdQWToSiMaxDist");
+ 
+    //  m_HpdPhCathodeToSiDetMaxDist=
+    //  Rich1DE->userParameterAsDouble("RichHpdQWToSiMaxDist");
     
     //    m_HpdPhCathodeRad=
     //  Rich1DE->userParameterAsDouble("RichHpdQWInnerSphericalRadius");
     m_HpdPhCathodeRad=
-      Rich1DE->userParameterAsDouble("RichHpdPhCathInnerSphericalRadius");
+      Rich1DE->param<double>("RichHpdPhCathInnerSphericalRadius");
+
+    //   m_HpdPhCathodeRad=
+    //  Rich1DE->userParameterAsDouble("RichHpdPhCathInnerSphericalRadius");
+
 
     m_HpdPixelXSize=
-      Rich1DE->userParameterAsDouble( "RichHpdPixelXsize");
+      Rich1DE->param<double>( "RichHpdPixelXsize");
+
+    //   m_HpdPixelXSize=
+    //  Rich1DE->userParameterAsDouble( "RichHpdPixelXsize");
     
     m_HpdPixelYSize=  
-      Rich1DE->userParameterAsDouble("RichHpdPixelYsize");
+      Rich1DE->param<double>("RichHpdPixelYsize");
+
+    //    m_HpdPixelYSize=  
+    //  Rich1DE->userParameterAsDouble("RichHpdPixelYsize");
 
     m_HpdPixelXNumCol=
-      Rich1DE->userParameterAsDouble( "RichHpdNumPixelCol");
+      Rich1DE->param<int>( "RichHpdNumPixelCol");
+
+    //    m_HpdPixelXNumCol=
+    //  Rich1DE->userParameterAsInt( "RichHpdNumPixelCol");
 
     m_HpdPixelXNumRow=
-      Rich1DE->userParameterAsDouble("RichHpdNumPixelRow" );
+      Rich1DE->param<int>("RichHpdNumPixelRow" );
+
+    //   m_HpdPixelXNumRow=
+    //  Rich1DE->userParameterAsInt("RichHpdNumPixelRow" );
 
     double PhCathiodeCoCZ= 
-      Rich1DE->userParameterAsDouble("RichHpdPhCathodeCoCZ");
+      Rich1DE->param<double>("RichHpdPhCathodeCoCZ");
+
+    //    double PhCathiodeCoCZ= 
+    //  Rich1DE->userParameterAsDouble("RichHpdPhCathodeCoCZ");
     
     //        RichG4HpdReconlog<<MSG::INFO
     //  << "PhCathodetoSiDist SiDetZ Phcathoderad phcathZ "

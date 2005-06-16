@@ -39,8 +39,10 @@ RichHpdProperties::RichHpdProperties(IDataProviderSvc* detSvc,
   // RichHpdlog << MSG::INFO
   //           << " Test of Printout from RichHpdProperties" << endreq;
   // First get the number of hpds in rich1 and rich2.
+  // following modif to be compatible with recent Detdesc. SE 16-6-2005.
 
-  SmartDataPtr<IDetectorElement> Rich1DE(detSvc, "/dd/Structure/LHCb/Rich1");
+  //  SmartDataPtr<IDetectorElement> Rich1DE(detSvc, "/dd/Structure/LHCb/Rich1");
+  SmartDataPtr<DetectorElement> Rich1DE(detSvc, "/dd/Structure/LHCb/Rich1");
   if( !Rich1DE ){
     RichHpdlog << MSG::ERROR
                << "Can't retrieve /dd/Structure/LHCb/Rich1" << endreq;
@@ -48,15 +50,21 @@ RichHpdProperties::RichHpdProperties(IDataProviderSvc* detSvc,
   else
   {
 
-    m_numHpdTotRich[0]= Rich1DE->userParameterAsInt("Rich1TotNumHpd");
+    //following line modified to be compatible with recent DetDesc. SE 16-6-2005. 
+    m_numHpdTotRich[0]= Rich1DE->param<int>("Rich1TotNumHpd");
+
+    //    m_numHpdTotRich[0]= Rich1DE->userParameterAsInt("Rich1TotNumHpd");
 
     RichHpdlog << MSG::INFO << "Total Number of hpds in Rich1 = "
                << m_numHpdTotRich[0] << endreq;
-    m_HpdMaxQuantumEff=  Rich1DE->userParameterAsDouble("RichHpdMaxQE");
+
+    //following line modified to be compatible with recent DetDesc. SE 16-6-2005. 
+    m_HpdMaxQuantumEff=  Rich1DE->param<double>("RichHpdMaxQE");
+    //    m_HpdMaxQuantumEff=  Rich1DE->userParameterAsDouble("RichHpdMaxQE");
 
   }
 
-  SmartDataPtr<IDetectorElement> Rich2DE(detSvc, "/dd/Structure/LHCb/Rich2");
+  SmartDataPtr<DetectorElement> Rich2DE(detSvc, "/dd/Structure/LHCb/Rich2");
   if( !Rich2DE )
   {
 
@@ -73,7 +81,8 @@ RichHpdProperties::RichHpdProperties(IDataProviderSvc* detSvc,
     // the rich2 structure.xml file has this info.
 
     // m_numHpdTotRich[1]= Rich2DE->userParameterAsInt("Rich2TotNumHpd");
-    m_numHpdTotRich[1]= Rich1DE->userParameterAsInt("Rich2TotNumHpd");
+    //    m_numHpdTotRich[1]= Rich1DE->userParameterAsInt("Rich2TotNumHpd");
+    m_numHpdTotRich[1]= Rich1DE->param<int>("Rich2TotNumHpd");
     RichHpdlog << MSG::INFO
                << "Total Number of hpds in Rich2 = "
                << m_numHpdTotRich[1]<<endreq;
@@ -236,7 +245,9 @@ RichHpdProperties::RichHpdProperties(IDataProviderSvc* detSvc,
                << endreq;
   }else {
 
-    hpdQwtoSiDist = Rich1DE->userParameterAsDouble("RichHpdQWToSiMaxDist");
+    // modif to be compatible with recent Detdesc, SE 16-6-2005.
+    hpdQwtoSiDist = Rich1DE->param<double>("RichHpdQWToSiMaxDist");
+    //    hpdQwtoSiDist = Rich1DE->userParameterAsDouble("RichHpdQWToSiMaxDist");
   }
   if(HpdVerboseLevel >0 ){
     RichHpdlog << MSG::INFO
@@ -258,7 +269,9 @@ RichHpdProperties::RichHpdProperties(IDataProviderSvc* detSvc,
                << endreq;
   }else {
 
-    MaxZHitInRich1 = Rich1DE->userParameterAsDouble("Rich1MaxDownstreamZHitCoord");
+    // modif to to be comaptible with recent Detdesc SE 16-6-2005.
+    MaxZHitInRich1 = Rich1DE->param<double>("Rich1MaxDownstreamZHitCoord");
+    //    MaxZHitInRich1 = Rich1DE->userParameterAsDouble("Rich1MaxDownstreamZHitCoord");
   }
   if ( HpdVerboseLevel >0 ) {
     RichHpdlog << MSG::INFO
@@ -276,7 +289,7 @@ RichHpdProperties::RichHpdProperties(IDataProviderSvc* detSvc,
   std::string hpdQWlvname;
   std::string hpdPhCathlvname;
   double phcathRinn = 0.0;
-  SmartDataPtr<IDetectorElement> RichHpdQWDE(detSvc, "/dd/Structure/LHCb/Rich1/Rich1FirstHpdQW");
+  SmartDataPtr<DetectorElement> RichHpdQWDE(detSvc, "/dd/Structure/LHCb/Rich1/Rich1FirstHpdQW");
   if(!RichHpdQWDE) {
     RichHpdlog << MSG::ERROR
                <<"Can't retrieve /dd/Structure/LHCb/Rich1/Rich1FirstHpdQW "<<endreq;
@@ -296,7 +309,7 @@ RichHpdProperties::RichHpdProperties(IDataProviderSvc* detSvc,
                <<"Hpd Qw Log Volname =  "<<hpdQWlvname<<endreq;
   }
   m_HpdQWLogVolName = hpdQWlvname;
-  SmartDataPtr<IDetectorElement> RichHpdPCDE(detSvc, "/dd/Structure/LHCb/Rich1/Rich1FirstHpdPhCathode");
+  SmartDataPtr<DetectorElement> RichHpdPCDE(detSvc, "/dd/Structure/LHCb/Rich1/Rich1FirstHpdPhCathode");
   if(!RichHpdPCDE) {
     RichHpdlog << MSG::ERROR
                <<"Can't retrieve /dd/Structure/LHCb/Rich1/Rich1FirstHpdPhCathode "
@@ -312,7 +325,10 @@ RichHpdProperties::RichHpdProperties(IDataProviderSvc* detSvc,
                  <<"Erroneous Log Vol for Hpd PhCathode log vol " <<endreq;
     }
 
-    phcathRinn= RichHpdPCDE->userParameterAsDouble( "HpdPhCathodeRadInner");
+    // modif to be compatible with recent Detdesc. SE 16-6-2005.
+    phcathRinn= RichHpdPCDE->param<double>( "HpdPhCathodeRadInner");
+
+    //    phcathRinn= RichHpdPCDE->userParameterAsDouble( "HpdPhCathodeRadInner");
 
   }
   if(HpdVerboseLevel >0 ){

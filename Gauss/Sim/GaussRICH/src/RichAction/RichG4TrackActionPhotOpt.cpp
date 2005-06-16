@@ -1,4 +1,4 @@
-// $Id: RichG4TrackActionPhotOpt.cpp,v 1.1 2003-06-02 14:43:20 seaso Exp $
+// $Id: RichG4TrackActionPhotOpt.cpp,v 1.2 2005-06-16 11:40:18 seaso Exp $
 // Include files 
 
 /// CLHEP
@@ -67,7 +67,7 @@ StatusCode RichG4TrackActionPhotOpt::initialize()
   IDataProviderSvc* detSvc = RichG4SvcLocator:: RichG4detSvc ();
  
 
-  SmartDataPtr<IDetectorElement> Rich1DE(detSvc, 
+  SmartDataPtr<DetectorElement> Rich1DE(detSvc, 
                                  "/dd/Structure/LHCb/Rich1");
      if( !Rich1DE ){
        return Error( 
@@ -75,18 +75,32 @@ StatusCode RichG4TrackActionPhotOpt::initialize()
      } 
      else {
 
-       m_MaxHpdQuantumEff=Rich1DE->userParameterAsDouble("RichHpdMaxQE");
+       m_MaxHpdQuantumEff=Rich1DE->param<double>("RichHpdMaxQE");
        m_MaxRich1Mirror1Reflect=
-                 Rich1DE->userParameterAsDouble("Rich1Mirror1MaxReflect");
+                 Rich1DE->param<double>("Rich1Mirror1MaxReflect");
        m_MaxRich1Mirror2Reflect=
-                 Rich1DE->userParameterAsDouble("Rich1Mirror2MaxReflect");
+                 Rich1DE->param<double>("Rich1Mirror2MaxReflect");
        m_MaxRich2Mirror1Reflect=
-                 Rich1DE->userParameterAsDouble("Rich2Mirror1MaxReflect");
+                 Rich1DE->param<double>("Rich2Mirror1MaxReflect");
        m_MaxRich2Mirror2Reflect=
-                 Rich1DE->userParameterAsDouble("Rich2Mirror2MaxReflect");
+                 Rich1DE->param<double>("Rich2Mirror2MaxReflect");
 
        m_ZDownstreamOfRich1 = 
-         Rich1DE->userParameterAsDouble("RichZDownstreamOfRich1");
+         Rich1DE->param<double>("RichZDownstreamOfRich1");
+
+
+       //       m_MaxHpdQuantumEff=Rich1DE->userParameterAsDouble("RichHpdMaxQE");
+       //  m_MaxRich1Mirror1Reflect=
+       //          Rich1DE->userParameterAsDouble("Rich1Mirror1MaxReflect");
+       //  m_MaxRich1Mirror2Reflect=
+       //          Rich1DE->userParameterAsDouble("Rich1Mirror2MaxReflect");
+       //  m_MaxRich2Mirror1Reflect=
+       //          Rich1DE->userParameterAsDouble("Rich2Mirror1MaxReflect");
+       // m_MaxRich2Mirror2Reflect=
+       //          Rich1DE->userParameterAsDouble("Rich2Mirror2MaxReflect");
+
+       //     m_ZDownstreamOfRich1 = 
+       //  Rich1DE->userParameterAsDouble("RichZDownstreamOfRich1");
        
        m_Rich1TotPhotonSuppressFactor=  m_MaxHpdQuantumEff;
        

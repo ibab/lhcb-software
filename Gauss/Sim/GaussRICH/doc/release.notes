@@ -4,7 +4,10 @@
 ! Responsible	     : Witold Pokorski
 ! Purpose          : collection of sensitive detectors, G4 actions, etc for RICH
 !-----------------------------------------------------------------------------
-
+!2005-06-16 - Sajan Easo
+  - The DetectorElement member functions userParameterAsInt and userParameterAsDouble replaced by
+    param<int> and param<double> to be compatible with recent changes in DetDesc. 
+  - All usage of IDetectorElement to DetectorElement to be compatible with recent DetDesc.
 !2005-05-10 - Sajan Easo
   - In RichAnalysis/RichG4ReconFlatMirr.cpp the xml userparameter names refering to the
     direction of the flat mirrors changed in accordance with names in recent xml versions.

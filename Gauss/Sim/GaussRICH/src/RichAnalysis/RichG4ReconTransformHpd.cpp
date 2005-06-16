@@ -1,4 +1,4 @@
-// $Id: RichG4ReconTransformHpd.cpp,v 1.2 2004-02-10 14:24:15 jonesc Exp $
+// $Id: RichG4ReconTransformHpd.cpp,v 1.3 2005-06-16 11:39:59 seaso Exp $
 // Include files
 #include "GaudiKernel/Kernel.h"
 #include "GaudiKernel/ISvcLocator.h"
@@ -81,7 +81,7 @@ RichG4ReconTransformHpd::RichG4ReconTransformHpd( int aRichDetNum,
 
   if(aRichDetNum == 0 ) {
 
-    SmartDataPtr<IDetectorElement> Rich1DE(detSvc,
+    SmartDataPtr<DetectorElement> Rich1DE(detSvc,
                                            "/dd/Structure/LHCb/Rich1");
 
     if( !Rich1DE ){
@@ -226,7 +226,7 @@ RichG4ReconTransformHpd::RichG4ReconTransformHpd( int aRichDetNum,
     }
   }else if( aRichDetNum == 1){
 
-    SmartDataPtr<IDetectorElement> Rich2DE(detSvc,
+    SmartDataPtr<DetectorElement> Rich2DE(detSvc,
                                            "/dd/Structure/LHCb/Rich2");
 
     if( !Rich2DE ){

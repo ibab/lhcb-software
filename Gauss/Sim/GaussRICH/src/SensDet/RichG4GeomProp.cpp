@@ -33,17 +33,32 @@ RichG4GeomProp::RichG4GeomProp(IDataProviderSvc* detSvc, IMessageSvc* msgSvc)
   }
   else
   {
-    m_NumberOfRichDet= Rich1DESD->userParameterAsInt("RichNumberOfDetectors");
-    m_NumberOfDetSectionsInRich1= Rich1DESD->userParameterAsInt("Rich1NumberOfDetSections");
-    m_NumberOfDetSectionsInRich2= Rich1DESD->userParameterAsInt("Rich2NumberOfDetSections");
-    m_NumberOfPixelsInHPD=Rich1DESD->userParameterAsInt("RichHpdTotNumPixel");
+    // the following lines modified to be compatible with the recent changes in DeDesc.
+    // SE 16-6-2005 
+    m_NumberOfRichDet= Rich1DESD->param<int>("RichNumberOfDetectors");
+    m_NumberOfDetSectionsInRich1= Rich1DESD->param<int>("Rich1NumberOfDetSections");
+    m_NumberOfDetSectionsInRich2= Rich1DESD->param<int>("Rich2NumberOfDetSections");
+    m_NumberOfPixelsInHPD=Rich1DESD->param<int>("RichHpdTotNumPixel");
 
-    m_NumberOfHPDsInRich1 = Rich1DESD->userParameterAsInt("Rich1TotNumHpd");
-    m_NumberOfHPDsInRich2 = Rich1DESD->userParameterAsInt("Rich2TotNumHpd");
-    m_NumberOfPixelColInHPD=Rich1DESD->userParameterAsInt("RichHpdNumPixelCol" );
-    m_NumberOfPixelRowInHPD=Rich1DESD->userParameterAsInt("RichHpdNumPixelRow" );
-    m_PixelXsize=Rich1DESD->userParameterAsDouble("RichHpdPixelXsize");
-    m_PixelYsize=Rich1DESD->userParameterAsDouble("RichHpdPixelYsize");
+    m_NumberOfHPDsInRich1 = Rich1DESD->param<int>("Rich1TotNumHpd");
+    m_NumberOfHPDsInRich2 = Rich1DESD->param<int>("Rich2TotNumHpd");
+    m_NumberOfPixelColInHPD=Rich1DESD->param<int>("RichHpdNumPixelCol" );
+    m_NumberOfPixelRowInHPD=Rich1DESD->param<int>("RichHpdNumPixelRow" );
+    m_PixelXsize=Rich1DESD->param<double>("RichHpdPixelXsize");
+    m_PixelYsize=Rich1DESD->param<double>("RichHpdPixelYsize");
+
+    //    m_NumberOfRichDet= Rich1DESD->userParameterAsInt("RichNumberOfDetectors");
+    // m_NumberOfDetSectionsInRich1= Rich1DESD->userParameterAsInt("Rich1NumberOfDetSections");
+    // m_NumberOfDetSectionsInRich2= Rich1DESD->userParameterAsInt("Rich2NumberOfDetSections");
+    //  m_NumberOfPixelsInHPD=Rich1DESD->userParameterAsInt("RichHpdTotNumPixel");
+
+    // m_NumberOfHPDsInRich1 = Rich1DESD->userParameterAsInt("Rich1TotNumHpd");
+    // m_NumberOfHPDsInRich2 = Rich1DESD->userParameterAsInt("Rich2TotNumHpd");
+    // m_NumberOfPixelColInHPD=Rich1DESD->userParameterAsInt("RichHpdNumPixelCol" );
+    // m_NumberOfPixelRowInHPD=Rich1DESD->userParameterAsInt("RichHpdNumPixelRow" );
+    // m_PixelXsize=Rich1DESD->userParameterAsDouble("RichHpdPixelXsize");
+    // m_PixelYsize=Rich1DESD->userParameterAsDouble("RichHpdPixelYsize");
+
     m_PixelXBoundarySize=m_NumberOfPixelColInHPD+1;
     m_PixelYBoundarySize=m_NumberOfPixelRowInHPD+1;
     m_PixelXBoundary.reserve( m_PixelXBoundarySize);
@@ -59,7 +74,10 @@ RichG4GeomProp::RichG4GeomProp(IDataProviderSvc* detSvc, IMessageSvc* msgSvc)
       m_PixelYBoundary.push_back(CurPixelBoundaryY+ipc*m_PixelYsize);
     }
 
-    m_MaxZHitInRich1Det = Rich1DESD->userParameterAsDouble("Rich1MaxDownstreamZHitCoord");
+    // the following line modified to be compatible with recent changes in DetDesc
+    // Se 16-6-2005.
+    m_MaxZHitInRich1Det = Rich1DESD->param<double>("Rich1MaxDownstreamZHitCoord");
+    //    m_MaxZHitInRich1Det = Rich1DESD->userParameterAsDouble("Rich1MaxDownstreamZHitCoord");
 
     log << MSG::DEBUG << "Total Number of hpds in Rich1 from RichGeomProp=  "
         << m_NumberOfHPDsInRich1
@@ -85,6 +103,11 @@ RichG4GeomProp::RichG4GeomProp(IDataProviderSvc* detSvc, IMessageSvc* msgSvc)
   else
   {
     //the following line already made earlier and hence is unnecessary.
+    // eventually this line should be activated so that the parameter is
+    // read from the rich2 sub directory in xml.    
+
+    //m_NumberofHPDsInRich2 = Rich2DESD->param<int>("Rich2TotNumHpd");
+
 
     //m_NumberofHPDsInRich2 = Rich2DESD->userParameterAsInt("Rich2TotNumHpd");
   }

@@ -1,4 +1,4 @@
-// $Id: RichG4CkvRecon.cpp,v 1.4 2005-05-09 12:25:36 seaso Exp $
+// $Id: RichG4CkvRecon.cpp,v 1.5 2005-06-16 11:39:59 seaso Exp $
 // Include files
 #include "GaudiKernel/Kernel.h"
 #include "GaudiKernel/ISvcLocator.h"
@@ -23,7 +23,7 @@
 #include "RichG4ReconFlatMirr.h"
 #include "RichG4AnalysisConstGauss.h"
 #include "RichSolveQuarticEqn.h"
-
+#include <math.h>
 // modification made on 30-8-2004 to make windows compatible.
 
 //extern "C" {
@@ -77,8 +77,8 @@ RichG4CkvRecon::RichG4CkvRecon()
   //             << endreq;
 
 
-  SmartDataPtr<IDetectorElement> Rich1DE(detSvc, "/dd/Structure/LHCb/Rich1");
-  SmartDataPtr<IDetectorElement> Rich2DE(detSvc, "/dd/Structure/LHCb/Rich2");
+  SmartDataPtr<DetectorElement> Rich1DE(detSvc, "/dd/Structure/LHCb/Rich1");
+  SmartDataPtr<DetectorElement> Rich2DE(detSvc, "/dd/Structure/LHCb/Rich2");
 
   m_agelnominalrefractiveindex = 1.0339124;
   m_c4f10nominalrefrativeindex = 1.0014069;
@@ -93,44 +93,79 @@ RichG4CkvRecon::RichG4CkvRecon()
 
 
     m_NumRichDet =
-      Rich1DE->userParameterAsInt("RichNumberOfDetectors");
+      Rich1DE->param<int>("RichNumberOfDetectors");
 
 
     m_NumHpdRich[0] =
-      Rich1DE->userParameterAsInt("Rich1TotNumHpd");
+      Rich1DE->param<int>("Rich1TotNumHpd");
 
     m_NumHpdRich[1] =
-      Rich1DE->userParameterAsInt("Rich2TotNumHpd");
+      Rich1DE->param<int>("Rich2TotNumHpd");
+
+    //    m_NumRichDet =
+    //  Rich1DE->userParameterAsInt("RichNumberOfDetectors");
+
+
+    //   m_NumHpdRich[0] =
+    //  Rich1DE->userParameterAsInt("Rich1TotNumHpd");
+
+    //   m_NumHpdRich[1] =
+    //  Rich1DE->userParameterAsInt("Rich2TotNumHpd");
 
     m_HpdTransforms [0].resize( m_NumHpdRich[0]);
     m_HpdTransforms [1].resize( m_NumHpdRich[1]);
 
     m_SphMirrCC [0] [0]=
-      Rich1DE->userParameterAsDouble( "Rich1Mirror1NominalCCX");
+      Rich1DE->param<double>( "Rich1Mirror1NominalCCX");
     m_SphMirrCC [0] [1]=
-      Rich1DE->userParameterAsDouble( "Rich1Mirror1NominalCCY");
+      Rich1DE->param<double>( "Rich1Mirror1NominalCCY");
     m_SphMirrCC [0] [2]=
-      Rich1DE->userParameterAsDouble( "Rich1Mirror1NominalCCZ");
+      Rich1DE->param<double>( "Rich1Mirror1NominalCCZ");
 
     m_SphMirrRad [0] =
-      Rich1DE->userParameterAsDouble( "Rich1Mirror1NominalRadiusC");
+      Rich1DE->param<double>( "Rich1Mirror1NominalRadiusC");
+
+
+    //    m_SphMirrCC [0] [0]=
+    //   Rich1DE->userParameterAsDouble( "Rich1Mirror1NominalCCX");
+    // m_SphMirrCC [0] [1]=
+    //  Rich1DE->userParameterAsDouble( "Rich1Mirror1NominalCCY");
+    // m_SphMirrCC [0] [2]=
+    //  Rich1DE->userParameterAsDouble( "Rich1Mirror1NominalCCZ");
+
+    //    m_SphMirrRad [0] =
+    //  Rich1DE->userParameterAsDouble( "Rich1Mirror1NominalRadiusC");
 
     m_SphMirrCC [1] [0]= m_SphMirrCC [0] [0];
     m_SphMirrCC [1] [1]= -1.0* m_SphMirrCC [0] [1];
     m_SphMirrCC [1] [2]=   m_SphMirrCC [0] [2];
 
     m_HpdSiDetThickness =   Rich1DE->
-      userParameterAsDouble("RichHpdSiliconDetectorZSize");
+      param<double>("RichHpdSiliconDetectorZSize");
 
     m_HpdSiPixelXSize =  Rich1DE->
-      userParameterAsDouble( "RichHpdPixelXsize");
+      param<double>( "RichHpdPixelXsize");
     m_HpdSiPixelYSize = Rich1DE->
-      userParameterAsDouble("RichHpdPixelYsize");
+      param<double>("RichHpdPixelYsize");
 
     m_HpdSiNumPixelX =  Rich1DE->
-      userParameterAsInt("RichHpdNumPixelCol");
+      param<int>("RichHpdNumPixelCol");
     m_HpdSiNumPixelY =  Rich1DE->
-      userParameterAsInt("RichHpdNumPixelRow");
+      param<int>("RichHpdNumPixelRow");
+
+
+    //    m_HpdSiDetThickness =   Rich1DE->
+    //  userParameterAsDouble("RichHpdSiliconDetectorZSize");
+
+    //    m_HpdSiPixelXSize =  Rich1DE->
+    //   userParameterAsDouble( "RichHpdPixelXsize");
+    //  m_HpdSiPixelYSize = Rich1DE->
+    //  userParameterAsDouble("RichHpdPixelYsize");
+
+    // m_HpdSiNumPixelX =  Rich1DE->
+    //  userParameterAsInt("RichHpdNumPixelCol");
+    //  m_HpdSiNumPixelY =  Rich1DE->
+    //  userParameterAsInt("RichHpdNumPixelRow");
 
   }
 
@@ -142,13 +177,23 @@ RichG4CkvRecon::RichG4CkvRecon()
   } else {
 
     m_SphMirrCC [2] [0]=
-      Rich2DE->userParameterAsDouble( "Rich2NominalCoCX" );
+      Rich2DE->param<double>( "Rich2NominalCoCX" );
     m_SphMirrCC [2] [1]=
-      Rich2DE->userParameterAsDouble( "Rich2NominalCoCY");
+      Rich2DE->param<double>( "Rich2NominalCoCY");
     m_SphMirrCC [2] [2]=
-      Rich2DE->userParameterAsDouble( "Rich2NominalCoCZ");
+      Rich2DE->param<double>( "Rich2NominalCoCZ");
     m_SphMirrRad [1]=
-      Rich2DE->userParameterAsDouble( "Rich2SphMirrorRadius");
+      Rich2DE->param<double>( "Rich2SphMirrorRadius");
+
+
+    //    m_SphMirrCC [2] [0]=
+    //  Rich2DE->userParameterAsDouble( "Rich2NominalCoCX" );
+    //  m_SphMirrCC [2] [1]=
+    //  Rich2DE->userParameterAsDouble( "Rich2NominalCoCY");
+    //  m_SphMirrCC [2] [2]=
+    //  Rich2DE->userParameterAsDouble( "Rich2NominalCoCZ");
+    //  m_SphMirrRad [1]=
+    //  Rich2DE->userParameterAsDouble( "Rich2SphMirrorRadius");
 
     m_SphMirrCC [3] [0]= -1.0* m_SphMirrCC [2] [0];
     m_SphMirrCC [3] [1]= m_SphMirrCC [2] [1];
@@ -331,7 +376,8 @@ HepPoint3D RichG4CkvRecon::getPhotAgelExitZ( double ex, double ey, double ez,
   // aerogel exit plane equation z-1160 =0
 
   HepPlane3D AgelExitPlane(0,0,1,-AgelZEndAnalysis);
-  double distEmisToAgelExit= abs( AgelExitPlane.distance(aPhotTrueEmitPt)) ;
+  //  double distEmisToAgelExit= abs( AgelExitPlane.distance(aPhotTrueEmitPt)) ;
+  double distEmisToAgelExit= fabs( AgelExitPlane.distance(aPhotTrueEmitPt)) ;
 
   pDir *= distEmisToAgelExit;
 

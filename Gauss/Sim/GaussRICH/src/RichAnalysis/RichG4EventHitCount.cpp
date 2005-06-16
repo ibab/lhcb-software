@@ -1,4 +1,4 @@
-// $Id: RichG4EventHitCount.cpp,v 1.6 2005-04-19 16:12:51 seaso Exp $
+// $Id: RichG4EventHitCount.cpp,v 1.7 2005-06-16 11:39:59 seaso Exp $
 // Include files
 
 
@@ -25,6 +25,7 @@
 #include "G4TrajectoryPoint.hh"
 #include <vector>
 #include <iterator>
+#include <math.h>
 /// GaudiKernel
 #include "GaudiKernel/IHistogramSvc.h"
 #include "GaudiKernel/DataObject.h"
@@ -147,14 +148,14 @@ bool RichG4EventHitCount::Rich1FiducialRegion
       (zt - Rich1FiducialUpstrZ)* Rich1FiducialXslope ;
 
 
-    if(abs(xt) <= xat )  InsideRich1X= true;
+    if(fabs(xt) <= xat )  InsideRich1X= true;
 
     // now check for Y
 
     G4double yat = Rich1FiducialUpstrEndY +
       (zt - Rich1FiducialUpstrZ)* Rich1FiducialYslope ;
 
-    if( abs(yt) <=   yat ) InsideRich1Y= true;
+    if( fabs(yt) <=   yat ) InsideRich1Y= true;
 
 
     if( OutsidebeamHole &&  InsideRich1X &&
@@ -189,13 +190,13 @@ bool  RichG4EventHitCount::Rich1AgelFiducialRegion(const G4ThreeVector & aTjPos)
     G4double xat = Rich1FiducialUpstrEndX;
 
 
-    if(abs(xt) <= xat )  InsideRich1AgelX= true;
+    if(fabs(xt) <= xat )  InsideRich1AgelX= true;
 
     // now check for Y
 
     G4double yat = Rich1FiducialUpstrEndY ;
 
-    if( abs(yt) <=   yat ) InsideRich1AgelY= true;
+    if( fabs(yt) <=   yat ) InsideRich1AgelY= true;
 
     if( OutsideAgelbeamHole &&  InsideRich1AgelX &&
         InsideRich1AgelY ) InsideRich1AgelFiducial = true;
@@ -216,8 +217,8 @@ bool  RichG4EventHitCount::Rich1ProdDirSelection
     G4double SlopeR=pow(( SlopeX*SlopeX+SlopeY*SlopeY),0.5);
 
     if( ( SlopeR  >= m_Rich1InitSlopeRMin) &&
-        ( abs(SlopeX) <= m_Rich1InitSlopeXMax ) &&
-        ( abs(SlopeY) <= m_Rich1InitSlopeYMax ) ) {
+        ( fabs(SlopeX) <= m_Rich1InitSlopeXMax ) &&
+        ( fabs(SlopeY) <= m_Rich1InitSlopeYMax ) ) {
 
       InitDirOK = true;
 
@@ -295,14 +296,14 @@ bool RichG4EventHitCount::Rich2FiducialRegion
       (zt - Rich2FiducialUpstrZ)* Rich2FiducialXslope ;
 
 
-    if(abs(xt) <= xat )  InsideRich2X= true;
+    if(fabs(xt) <= xat )  InsideRich2X= true;
 
     // now check for Y
 
     G4double yat = Rich2FiducialUpstrEndY +
       (zt - Rich2FiducialUpstrZ)* Rich2FiducialYslope ;
 
-    if( abs(yt) <=   yat ) InsideRich2Y= true;
+    if( fabs(yt) <=   yat ) InsideRich2Y= true;
 
 
     if( OutsideBeamHoleR2 &&  InsideRich2X &&
@@ -345,8 +346,8 @@ bool  RichG4EventHitCount::Rich2ProdDirSelection
     G4double SlopeR =pow((SlopeX*SlopeX+SlopeY*SlopeY),0.5);
 
     if( ( SlopeR >= m_Rich2InitSlopeRMin) &&
-        ( abs(SlopeX) <= m_Rich2InitSlopeXMax ) &&
-        ( abs(SlopeY) <= m_Rich2InitSlopeYMax ) ) {
+        ( fabs(SlopeX) <= m_Rich2InitSlopeXMax ) &&
+        ( fabs(SlopeY) <= m_Rich2InitSlopeYMax ) ) {
 
       InitDirOK = true;
 
