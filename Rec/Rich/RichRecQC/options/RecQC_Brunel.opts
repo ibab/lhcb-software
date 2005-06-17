@@ -9,4 +9,3 @@
 // Suppress errors from Linker
 MessageSvc.setFatal += { "LinkedTo::MC/Rich/MCPartsToMCRichTracks",
                          "LinkedTo::MC/Rich/MCRichHitsToOpPhotons" };
-

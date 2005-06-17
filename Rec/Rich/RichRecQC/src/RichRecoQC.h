@@ -1,15 +1,16 @@
 
+//---------------------------------------------------------------------------------
 /** @file RichRecoQC.h
  *
  *  Header file for RICH reconstruction monitoring algorithm : RichRecoQC
  *
  *  CVS Log :-
- *  $Id: RichRecoQC.h,v 1.5 2004-07-27 13:56:30 jonrob Exp $
- *  $Log: not supported by cvs2svn $
+ *  $Id: RichRecoQC.h,v 1.6 2005-06-17 15:25:55 jonrob Exp $
  *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   2002-07-02
  */
+//---------------------------------------------------------------------------------
 
 #ifndef RICHRECQC_RICHRECOQC_H
 #define RICHRECQC_RICHRECOQC_H 1
@@ -41,6 +42,10 @@
 #include "RichRecBase/IRichParticleProperties.h"
 #include "RichRecBase/IRichCherenkovAngle.h"
 
+// RichKernel
+#include "RichKernel/RichStatDivFunctor.h"
+
+//---------------------------------------------------------------------------------
 /** @class RichRecoQC RichRecoQC.h
  *
  *  Quality control monitor for Rich Reconstruction
@@ -48,6 +53,7 @@
  *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
  *  @date   2002-07-02
  */
+//---------------------------------------------------------------------------------
 
 class RichRecoQC : public RichRecAlgBase {
 
@@ -88,5 +94,9 @@ private: // data
   IHistogram1D* m_ckTrueDTheta[Rich::NRadiatorTypes];       ///< Cherenkov angle resolution for beta=1 tracks
   IHistogram1D* m_trueSignalPhots[Rich::NRadiatorTypes];    ///< Number of observed p.e.s for beta=1 tracks 
 
+  std::vector<unsigned int> m_truePhotCount;
+  std::vector<unsigned int> m_nSegs;
+
 };
+
 #endif // RICHRECQC_RICHRECOQC_H

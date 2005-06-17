@@ -1,20 +1,21 @@
 
+//---------------------------------------------------------------------------------
 /** @file RichRecoQC.cpp
  *
  *  Implementation file for RICH reconstruction monitoring algorithm : RichRecoQC
  *
  *  CVS Log :-
- *  $Id: RichRecoQC.cpp,v 1.11 2004-07-27 13:56:30 jonrob Exp $
- *  $Log: not supported by cvs2svn $
+ *  $Id: RichRecoQC.cpp,v 1.12 2005-06-17 15:25:55 jonrob Exp $
  *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   2002-07-02
  */
+//---------------------------------------------------------------------------------
 
 // local
 #include "RichRecoQC.h"
 
-//-----------------------------------------------------------------------------
+//---------------------------------------------------------------------------------
 
 // Declaration of the Algorithm Factory
 static const  AlgFactory<RichRecoQC>          s_factory ;
@@ -24,12 +25,18 @@ const        IAlgFactory& RichRecoQCFactory = s_factory ;
 // Standard constructor, initializes variables
 RichRecoQC::RichRecoQC( const std::string& name,
                         ISvcLocator* pSvcLocator )
-  : RichRecAlgBase ( name, pSvcLocator ) {
+  : RichRecAlgBase   ( name, pSvcLocator ),
+    m_richPartProp   ( 0 ),
+    m_ckAngle        ( 0 ),
+    m_richRecMCTruth ( 0 ),    
+    m_truePhotCount  ( Rich::NRadiatorTypes, 0 ),
+    m_nSegs          ( Rich::NRadiatorTypes, 0 )
+{
 
   // Declare job options
   declareProperty( "MCHistoPath", m_mcHistPth = "RICH/RECOQC/MC/" );
-  declareProperty( "HistoPath", m_histPth = "RICH/RECOQC/" );
-  declareProperty( "MinBeta", m_minBeta = 0.99 );
+  declareProperty( "HistoPath",   m_histPth = "RICH/RECOQC/" );
+  declareProperty( "MinBeta",     m_minBeta = 0.999 );
 
 }
 
@@ -51,23 +58,25 @@ StatusCode RichRecoQC::initialize()
   // Book histograms
   if ( !bookHistograms() || !bookMCHistograms() ) return StatusCode::FAILURE;
 
+  return sc;
+};
+
+StatusCode RichRecoQC::bookHistograms() 
+{
   return StatusCode::SUCCESS;
 };
 
-StatusCode RichRecoQC::bookHistograms() {
-  return StatusCode::SUCCESS;
-};
-
-StatusCode RichRecoQC::bookMCHistograms() {
+StatusCode RichRecoQC::bookMCHistograms() 
+{
 
   std::string title;
   int id;
 
+  const double ckRange[] = { 0.015, 0.01, 0.005 };
+
   // Defines for various parameters
   RAD_HISTO_OFFSET;
   RADIATOR_NAMES;
-
-  const double ckRange[] = { 0.015, 0.01, 0.005 };
 
   for ( int iRad = 0; iRad < Rich::NRadiatorTypes; ++iRad ) {
 
@@ -83,10 +92,11 @@ StatusCode RichRecoQC::bookMCHistograms() {
   } // end rad loop
 
   return StatusCode::SUCCESS;
-};
+}
 
 // Main execution
-StatusCode RichRecoQC::execute() {
+StatusCode RichRecoQC::execute() 
+{
 
   debug() << "Execute" << endreq;
 
@@ -95,7 +105,8 @@ StatusCode RichRecoQC::execute() {
 
   // Iterate over segments
   for ( RichRecSegments::const_iterator iSeg = richSegments()->begin();
-        iSeg != richSegments()->end(); ++iSeg ) {
+        iSeg != richSegments()->end(); ++iSeg ) 
+  {
     RichRecSegment * segment = *iSeg;
 
     // Radiator info
@@ -116,14 +127,17 @@ StatusCode RichRecoQC::execute() {
     // loop over photons for this segment
     int truePhotons = 0;
     for ( RichRecSegment::Photons::iterator iPhot = segment->richRecPhotons().begin();
-          iPhot != segment->richRecPhotons().end(); ++iPhot ) {
+          iPhot != segment->richRecPhotons().end(); ++iPhot ) 
+    {
       RichRecPhoton * photon = *iPhot;
 
+      // reconstructed theta
       const double thetaRec = photon->geomPhoton().CherenkovTheta();
 
       // Is this a true photon ?
       const MCParticle * photonParent = m_richRecMCTruth->trueCherenkovPhoton( photon );
-      if ( photonParent ) {
+      if ( photonParent ) 
+      {
         ++truePhotons;
         m_ckTrueDTheta[rad]->fill( thetaRec-thetaExpTrue );
       }
@@ -131,19 +145,33 @@ StatusCode RichRecoQC::execute() {
     } // photon loop
 
     // number of true photons
-    if ( truePhotons > 0 ) m_trueSignalPhots[rad]->fill( truePhotons );
+    if ( truePhotons > 0 ) 
+    {
+      m_trueSignalPhots[rad]->fill( truePhotons );
+      m_truePhotCount[rad] += truePhotons;
+      ++m_nSegs[rad];
+    }
 
   } // end loop over segments
 
   return StatusCode::SUCCESS;
-};
+}
 
 //  Finalize
 StatusCode RichRecoQC::finalize()
 {
+
+  // statistical tool
+  RichStatDivFunctor occ("%10.2f +-%7.2f");
+
+  // print out of photon counts
+  info() << "Aerogel  Av. # CK photons = " 
+         << occ(m_truePhotCount[Rich::Aerogel],m_nSegs[Rich::Aerogel]) << " photons/segment" << endreq
+         << "C4F10    Av. # CK photons = " 
+         << occ(m_truePhotCount[Rich::C4F10],m_nSegs[Rich::C4F10]) << " photons/segment" << endreq
+         << "CF4      Av. # CK photons = " 
+         << occ(m_truePhotCount[Rich::CF4],m_nSegs[Rich::CF4]) << " photons/segment" << endreq;
+
   // Execute base class method
   return RichRecAlgBase::finalize();
 }
-
-
-

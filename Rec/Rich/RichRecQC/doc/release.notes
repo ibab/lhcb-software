@@ -4,6 +4,9 @@
 ! Purpose     : Quality Control monitoring algorithms for RICH reconstruction
 !-----------------------------------------------------------------------------
 
+! 2005-06-17 - Chris Jones
+ - Update to new Check sequencer, plus minor other changes
+
 !======================= RichRecQC v1r10 2004-11-18 ========================
 ! 2004-10-27 - Chris Jones
  - Improvements to the RichPIDQC finalisation printout, to hopefully clarify
