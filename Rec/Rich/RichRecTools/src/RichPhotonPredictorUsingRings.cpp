@@ -1,15 +1,16 @@
 
+//-----------------------------------------------------------------------------
 /** @file RichPhotonPredictorUsingRings.cpp
  *
  *  Implementation file for tool : RichPhotonPredictorUsingRings
  *
  *  CVS Log :-
- *  $Id: RichPhotonPredictorUsingRings.cpp,v 1.4 2004-07-27 20:15:31 jonrob Exp $
- *  $Log: not supported by cvs2svn $
+ *  $Id: RichPhotonPredictorUsingRings.cpp,v 1.5 2005-06-17 15:08:36 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
  */
+//-----------------------------------------------------------------------------
 
 // local
 #include "RichPhotonPredictorUsingRings.h"
@@ -70,7 +71,7 @@ StatusCode RichPhotonPredictorUsingRings::initialize()
   // Make sure we are ready for a new event
   InitNewEvent();
 
-  return StatusCode::SUCCESS;
+  return sc;
 }
 
 StatusCode RichPhotonPredictorUsingRings::finalize()
@@ -87,10 +88,9 @@ bool RichPhotonPredictorUsingRings::photonPossible( RichRecSegment * segment,
   if ( segment->trackSegment().rich() != pixel->detector() ) return false;
 
   // Hit separation criteria : based on global coordinates
-  const double sepG = m_geomTool->trackPixelHitSep2Global(segment, pixel);
+  const double sepG = m_geomTool->trackPixelHitSep2(segment, pixel);
   if ( sepG > m_maxROI2[segment->trackSegment().radiator()] ||
        sepG < m_minROI2[segment->trackSegment().radiator()] ) return false;
-
 
   // Temporary whilst no rings in RICH1
   if ( Rich::Rich1 == segment->trackSegment().rich() ) return true;

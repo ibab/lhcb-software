@@ -5,7 +5,7 @@
  *  Implementation file for tool : RichRecGeomTool
  *
  *  CVS Log :-
- *  $Id: RichRecGeomTool.cpp,v 1.5 2005-05-13 15:20:38 jonrob Exp $
+ *  $Id: RichRecGeomTool.cpp,v 1.6 2005-06-17 15:08:36 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -27,9 +27,19 @@ RichRecGeomTool::RichRecGeomTool( const std::string& type,
                                   const IInterface* parent )
   : RichRecToolBase ( type, name, parent ),
     m_detParams     ( 0 ),
-    m_ckAngle       ( 0 )
+    m_ckAngle       ( 0 ),
+    m_radScale      ( Rich::NRadiatorTypes, 0 )
 {
+
+  // interface
   declareInterface<IRichRecGeomTool>(this);
+
+  // job options
+  m_radScale[Rich::Aerogel] =  0.037;
+  m_radScale[Rich::C4F10]   =  0.012;
+  m_radScale[Rich::CF4]     = -0.015;
+  declareProperty( "RadOpticalCorrections", m_radScale );
+
 }
 
 StatusCode RichRecGeomTool::initialize()
@@ -47,6 +57,9 @@ StatusCode RichRecGeomTool::initialize()
   m_radOutLimLoc[Rich::C4F10]   = m_detParams->AvAcceptOuterLimitsLocal(Rich::C4F10);
   m_radOutLimLoc[Rich::CF4]     = m_detParams->AvAcceptOuterLimitsLocal(Rich::CF4);
 
+  // info printout
+  info() << "Av. optical distortion correction parameters : " << m_radScale << endreq;
+
   return sc;
 }
 
@@ -56,79 +69,58 @@ StatusCode RichRecGeomTool::finalize()
   return RichRecToolBase::finalize();
 }
 
-double RichRecGeomTool::trackPixelHitSep2Global( const RichRecSegment * segment,
-                                                 const RichRecPixel * pixel ) const
+double RichRecGeomTool::trackPixelHitSep2( const RichRecSegment * segment,
+                                           const RichRecPixel * pixel ) const
 {
 
-  if ( Rich::Rich1 == segment->trackSegment().rich() ) {
-
-    if ( pixel->globalPosition().y() * segment->pdPanelHitPoint().y() > 0 ) {
-      return pixel->globalPosition().distance2( segment->pdPanelHitPoint() );
-    } else if ( ( pixel->globalPosition().y() > 0 && segment->photonsInYPlus() ) ||
-                ( pixel->globalPosition().y() < 0 && segment->photonsInYMinus() ) ) {
-      return segment->pdPanelHitPoint().distance2( HepPoint3D( pixel->globalPosition().x(),
-                                                               -pixel->globalPosition().y(),
-                                                               pixel->globalPosition().z() ) );
-    }
-
-  } else if ( Rich::Rich2 == segment->trackSegment().rich() ) {
-
-    if ( pixel->globalPosition().x() * segment->pdPanelHitPoint().x() > 0 ) {
-      return pixel->globalPosition().distance2( segment->pdPanelHitPoint() );
-    } else if ( ( pixel->globalPosition().x() > 0 && segment->photonsInXPlus()  ) ||
-                ( pixel->globalPosition().x() < 0 && segment->photonsInXMinus() ) ) {
-      return segment->pdPanelHitPoint().distance2( HepPoint3D( -pixel->globalPosition().x(),
-                                                               pixel->globalPosition().y(),
-                                                               pixel->globalPosition().z() ) );
-    }
-
-  }
-
-  return 99999999.9;
-}
-
-double RichRecGeomTool::trackPixelHitSep2Local( const RichRecSegment * segment,
-                                                const RichRecPixel * pixel ) const
-{
-
-  if ( Rich::Rich1 == segment->trackSegment().rich() )
+  // in same RICH ?
+  if ( segment->trackSegment().rich() == pixel->detector() )
   {
 
-    if ( pixel->localPosition().y() * segment->pdPanelHitPointLocal().y() > 0 )
+    // Which radiator
+    const Rich::RadiatorType rad = segment->trackSegment().radiator();
+    // Pixel position, in local HPD coords corrected for average radiator distortion
+    const HepPoint3D & pixP = pixel->localPosition(rad);
+    // segment position ray traced to HPD panel, in local HPD coords
+    const HepPoint3D & segP = segment->pdPanelHitPointLocal();
+
+    if ( Rich::Rich1 == pixel->detector() )
     {
-      return pixel->localPosition().distance2( segment->pdPanelHitPointLocal() );
+      if ( pixP.y()*segP.y() > 0 )
+      {
+        return pixP.distance2(segP);
+      }
+      else if ( ( pixP.y() > 0 && segment->photonsInYPlus()  ) ||
+                ( pixP.y() < 0 && segment->photonsInYMinus() ) )
+      {
+        return pixP.distance2( HepPoint3D(segP.x(),-segP.y(),segP.z()) );
+      }
     }
-    else if ( ( pixel->localPosition().y() > 0 && segment->photonsInYPlus() ) ||
-              ( pixel->localPosition().y() < 0 && segment->photonsInYMinus() ) )
+    else // RICH2
     {
-      return segment->pdPanelHitPointLocal().distance2( HepPoint3D( pixel->localPosition().x(),
-                                                                    -pixel->localPosition().y(),
-                                                                    pixel->localPosition().z() ) );
+      if ( pixP.x()*segP.x() > 0 )
+      {
+        return pixP.distance2(segP);
+      }
+      else if ( ( pixP.x() > 0 && segment->photonsInXPlus()  ) ||
+                ( pixP.x() < 0 && segment->photonsInXMinus() ) )
+      {
+        return pixP.distance2( HepPoint3D(-segP.x(),segP.y(),segP.z()) );
+      }
     }
 
   }
-  else // RICH 2
-  {
 
-    if ( pixel->localPosition().x() * segment->pdPanelHitPointLocal().x() > 0 )
-    {
-      return pixel->localPosition().distance2( segment->pdPanelHitPointLocal() );
-    }
-    else if ( ( pixel->localPosition().x() > 0 && segment->photonsInXPlus()  ) ||
-              ( pixel->localPosition().x() < 0 && segment->photonsInXMinus() ) )
-    {
-      return segment->pdPanelHitPointLocal().distance2( HepPoint3D( -pixel->localPosition().x(),
-                                                                    pixel->localPosition().y(),
-                                                                    pixel->localPosition().z() ) );
-    }
-  }
-
-  return 99999999.9;
+  return 99999999;
 }
 
 double RichRecGeomTool::hpdPanelAcceptance( RichRecSegment * segment,
                                             const Rich::ParticleIDType id ) const
 {
+
+  // ==============================================
+  // CRJ : NB : Method still under construction !!
+  // ==============================================
 
   // The acceptance
   double acc = 0;
@@ -221,4 +213,12 @@ double RichRecGeomTool::hpdPanelAcceptance( RichRecSegment * segment,
   }
 
   return acc;
+}
+
+HepPoint3D RichRecGeomTool::correctAvRadiatorDistortion( const HepPoint3D & point,
+                                                         const Rich::RadiatorType rad ) const
+{
+  return HepPoint3D( (1-m_radScale[rad]) * point.x(),
+                     (1+m_radScale[rad]) * point.y(),
+                     point.z() );
 }

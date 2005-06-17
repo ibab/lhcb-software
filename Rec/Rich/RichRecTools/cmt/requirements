@@ -2,11 +2,11 @@
 # Created    : 11/03/2002
 # Maintainer : Christopher Rob Jones   Christopher.Rob.Jones@cern.ch
 #============================================================================
-# $Id: requirements,v 1.33 2005-05-13 15:20:37 jonrob Exp $
+# $Id: requirements,v 1.34 2005-06-17 15:08:36 jonrob Exp $
 #============================================================================
 
 package RichRecTools
-version v2r14
+version v2r15
 
 # ================ structure ================================================
 branches src cmt doc

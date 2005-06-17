@@ -5,7 +5,7 @@
  *  Implementation file for tool : RichBinnedCKResVthetaForTrStoredTracks
  *
  *  CVS Log :-
- *  $Id: RichBinnedCKResVthetaForTrStoredTracks.cpp,v 1.5 2005-05-13 15:20:37 jonrob Exp $
+ *  $Id: RichBinnedCKResVthetaForTrStoredTracks.cpp,v 1.6 2005-06-17 15:08:36 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -148,15 +148,17 @@ StatusCode RichBinnedCKResVthetaForTrStoredTracks::initialize()
 
   // Informational Printout
   debug() << " Using binned track resolutions for TrStoredTracks" << endreq;
-  for ( int iR = 0; iR < Rich::NRadiatorTypes; ++iR ) {
+  for ( int iR = 0; iR < Rich::NRadiatorTypes; ++iR )
+  {
     debug() << " " << (Rich::RadiatorType)iR << " Resolution bins = " << m_binEdges[iR] << endreq;
-    for ( unsigned iT = 0; iT < Rich::Track::NTrTypes; ++iT ) {
+    for ( unsigned iT = 0; iT < Rich::Track::NTrTypes; ++iT )
+    {
       debug() << " " << (Rich::RadiatorType)iR << " " << (Rich::Track::Type)iT
               << " Cherenkov Resolution = " << m_theerr[iR][iT] << endreq;
     }
   }
 
-  return StatusCode::SUCCESS;
+  return sc;
 }
 
 StatusCode RichBinnedCKResVthetaForTrStoredTracks::finalize()
@@ -170,29 +172,42 @@ RichBinnedCKResVthetaForTrStoredTracks::ckThetaResolution( RichRecSegment * segm
                                                            const Rich::ParticleIDType id ) const
 {
 
-  // Reference to track ID object
-  const RichTrackID & tkID = segment->richRecTrack()->trackID();
+  if ( !segment->ckThetaResolution().dataIsValid(id) )
+  {
 
-  // Check track parent type is TrStoredTrack
-  if ( Rich::TrackParent::TrStoredTrack != tkID.parentType() ) {
-    Exception( "Track parent type is not TrStoredTrack" );
+    // Reference to track ID object
+    const RichTrackID & tkID = segment->richRecTrack()->trackID();
+
+    // Check track parent type is TrStoredTrack
+    if ( Rich::TrackParent::TrStoredTrack != tkID.parentType() )
+    {
+      Exception( "Track parent type is not TrStoredTrack" );
+    }
+
+    // Expected Cherenkov theta angle
+    const double thetaExp = m_ckAngle->avgCherenkovTheta( segment, id );
+    if ( thetaExp < 0.000001 ) return 0;
+
+    const Rich::RadiatorType rad = segment->trackSegment().radiator();
+    const Rich::Track::Type type = tkID.trackType();
+    double res = 0;
+    if ( thetaExp > 0. &&  thetaExp < (m_binEdges[rad])[0] )
+    {
+      res = (m_theerr[rad][type])[0];
+    }
+    else if ( thetaExp > (m_binEdges[rad])[0] &&
+              thetaExp < (m_binEdges[rad])[1] )
+    {
+      res = (m_theerr[rad][type])[1];
+    }
+    else if ( thetaExp > (m_binEdges[rad])[1] )
+    {
+      res = (m_theerr[rad][type])[2];
+    }
+
+    segment->setCKThetaResolution( id, res );
+
   }
 
-  // Expected Cherenkov theta angle
-  const double thetaExp = m_ckAngle->avgCherenkovTheta( segment, id );
-  if ( thetaExp < 0.000001 ) return 0;
-
-  const Rich::RadiatorType rad = segment->trackSegment().radiator();
-  const Rich::Track::Type type = tkID.trackType();
-  double res = 0;
-  if ( thetaExp > 0. &&  thetaExp < (m_binEdges[rad])[0] ) {
-    res = (m_theerr[rad][type])[0];
-  } else if ( thetaExp > (m_binEdges[rad])[0] &&
-              thetaExp < (m_binEdges[rad])[1] ) {
-    res = (m_theerr[rad][type])[1];
-  } else if ( thetaExp > (m_binEdges[rad])[1] ) {
-    res = (m_theerr[rad][type])[2];
-  }
-
-  return res;
+  return segment->ckThetaResolution( id );
 }

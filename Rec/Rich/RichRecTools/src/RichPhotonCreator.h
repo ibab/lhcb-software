@@ -5,7 +5,7 @@
  *  Header file for tool : RichPhotonCreator
  *
  *  CVS Log :-
- *  $Id: RichPhotonCreator.h,v 1.22 2005-05-28 13:10:53 jonrob Exp $
+ *  $Id: RichPhotonCreator.h,v 1.23 2005-06-17 15:08:36 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -63,8 +63,11 @@ protected: // methods
 
 private: // private data
 
-  // Pointers to tool instances
-  IRichPhotonReconstruction * m_photonReco; ///< Pointer to photon reconstruction tool
+  /// Pointer to photon reconstruction tool
+  IRichPhotonReconstruction * m_photonReco; 
+
+  /// Photon reconstruction tool runtime name
+  std::string m_photonRecoName;
 
 };
 

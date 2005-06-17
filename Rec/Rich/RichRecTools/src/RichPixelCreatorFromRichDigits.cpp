@@ -5,7 +5,7 @@
  *  Implementation file for tool : RichPixelCreatorFromRichDigits
  *
  *  CVS Log :-
- *  $Id: RichPixelCreatorFromRichDigits.cpp,v 1.19 2005-05-28 13:10:53 jonrob Exp $
+ *  $Id: RichPixelCreatorFromRichDigits.cpp,v 1.20 2005-06-17 15:08:36 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -83,7 +83,7 @@ RichRecPixel *
 RichPixelCreatorFromRichDigits::buildPixel( const RichDigit * digit ) const
 {
 
-  RichRecPixel * newPixel = NULL;
+  RichRecPixel * pixel = NULL;
 
   // RichDigit key
   const RichSmartID id = digit->key();
@@ -94,17 +94,22 @@ RichPixelCreatorFromRichDigits::buildPixel( const RichDigit * digit ) const
 
     // Make a new RichRecPixel
     const HepPoint3D gPos = m_idTool->globalPosition( id );
-    newPixel = new RichRecPixel( id,                              // SmartID for pixel
-                                 gPos,                            // position in global coords
-                                 m_idTool->globalToPDPanel(gPos), // position in local coords
-                                 Rich::PixelParent::Digit,        // parent type
-                                 digit                            // pointer to parent
-                                 );
-    savePixel( newPixel );
+    pixel = new RichRecPixel( id,                              // SmartID for pixel
+                              gPos,                            // position in global coords
+                              m_idTool->globalToPDPanel(gPos), // position in local coords
+                              Rich::PixelParent::Digit,        // parent type
+                              digit                            // pointer to parent
+                              );
+
+    // compute corrected local coordinates
+    computeRadCorrLocalPositions( pixel );
+
+    // save to TES container in tool
+    savePixel( pixel );
 
   }
 
-  return newPixel;
+  return pixel;
 }
 
 StatusCode RichPixelCreatorFromRichDigits::newPixels() const

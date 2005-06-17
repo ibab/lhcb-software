@@ -5,7 +5,7 @@
  *  Implementation file for tool : RichPixelCreatorFromRawBuffer
  *
  *  CVS Log :-
- *  $Id: RichPixelCreatorFromRawBuffer.cpp,v 1.8 2005-05-28 13:10:53 jonrob Exp $
+ *  $Id: RichPixelCreatorFromRawBuffer.cpp,v 1.9 2005-06-17 15:08:36 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   30/10/2004
@@ -78,6 +78,11 @@ RichPixelCreatorFromRawBuffer::buildPixel( const RichSmartID id ) const
                               Rich::PixelParent::RawBuffer,    // parent type
                               0                                // pointer to parent (not available)
                               );
+
+    // compute corrected local coordinates
+    computeRadCorrLocalPositions( pixel );
+
+    // save to TES container in tool
     savePixel( pixel );
 
   }

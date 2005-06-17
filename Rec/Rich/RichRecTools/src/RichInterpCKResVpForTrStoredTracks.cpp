@@ -4,8 +4,11 @@
  *  Implementation file for tool : RichInterpCKResVpForTrStoredTracks
  *
  *  CVS Log :-
- *  $Id: RichInterpCKResVpForTrStoredTracks.cpp,v 1.4 2004-07-27 20:15:30 jonrob Exp $
+ *  $Id: RichInterpCKResVpForTrStoredTracks.cpp,v 1.5 2005-06-17 15:08:36 jonrob Exp $
  *  $Log: not supported by cvs2svn $
+ *  Revision 1.4  2004/07/27 20:15:30  jonrob
+ *  Add doxygen file documentation and CVS information
+ *
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -105,26 +108,33 @@ StatusCode RichInterpCKResVpForTrStoredTracks::finalize()
 
 double
 RichInterpCKResVpForTrStoredTracks::ckThetaResolution( RichRecSegment * segment,
-                                                       const Rich::ParticleIDType /* id */ ) const
+                                                       const Rich::ParticleIDType id ) const
 {
 
-  // Reference to track ID object
-  const RichTrackID & tkID = segment->richRecTrack()->trackID();
+  if ( !segment->ckThetaResolution().dataIsValid(id) )
+  {
 
-  // Check track parent type is TrStoredTrack
-  if ( Rich::TrackParent::TrStoredTrack != tkID.parentType() ) {
-    Exception( "Track parent type is not TrStoredTrack" );
+    // Reference to track ID object
+    const RichTrackID & tkID = segment->richRecTrack()->trackID();
+
+    // Check track parent type is TrStoredTrack
+    if ( Rich::TrackParent::TrStoredTrack != tkID.parentType() ) {
+      Exception( "Track parent type is not TrStoredTrack" );
+    }
+
+    // momentum for this segment
+    const double ptot = segment->trackSegment().bestMomentum().mag();
+
+    // track type
+    const Rich::Track::Type type = segment->richRecTrack()->trackID().trackType();
+
+    // which radiator
+    const Rich::RadiatorType rad = segment->trackSegment().radiator();
+
+    // fill the resolution
+    segment->setCKThetaResolution( id, (m_ckRes[rad][type])->value(ptot) );
+
   }
 
-  // momentum for this segment
-  const double ptot = segment->trackSegment().bestMomentum().mag();
-
-  // track type
-  const Rich::Track::Type type = segment->richRecTrack()->trackID().trackType();
-
-  // which radiator
-  const Rich::RadiatorType rad = segment->trackSegment().radiator();
-
-  // compute the interpolated resolution
-  return (m_ckRes[rad][type])->value(ptot);
+  return segment->ckThetaResolution( id );
 }

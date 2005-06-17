@@ -1,15 +1,16 @@
 
-/** @file RichPhotonPredictor.h
+//-----------------------------------------------------------------------------
+/** @file RichSimplePhotonPredictor.h
  *
- *  Header file for tool : RichPhotonPredictor
+ *  Header file for tool : RichSimplePhotonPredictor
  *
  *  CVS Log :-
- *  $Id: RichPhotonPredictor.h,v 1.8 2004-07-27 20:15:31 jonrob Exp $
- *  $Log: not supported by cvs2svn $
+ *  $Id: RichSimplePhotonPredictor.h,v 1.1 2005-06-17 15:08:37 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
  */
+//-----------------------------------------------------------------------------
 
 #ifndef RICHRECTOOLS_RICHPHOTONPREDICTOR_H
 #define RICHRECTOOLS_RICHPHOTONPREDICTOR_H 1
@@ -28,29 +29,35 @@
 #include "RichRecBase/IRichPhotonPredictor.h"
 #include "RichRecBase/IRichRecGeomTool.h"
 
-/** @class RichPhotonPredictor RichPhotonPredictor.h
+// RichKernel
+#include "RichKernel/RichPoissonEffFunctor.h"
+
+//-----------------------------------------------------------------------------
+/** @class RichSimplePhotonPredictor RichSimplePhotonPredictor.h
  *
  *  Tool which performs the association between RichRecTracks and
- *  RichRecPixels to form RichRecPhotons. This particular class using simple
- *  geometrical considerations based on the segment/pixel seperation
- *  to make the decision.
+ *  RichRecPixels to form RichRecPhotons. 
+ * 
+ *  This particular implementation uses a simple fixed cut range per radiator, 
+ *  on the seperation between the pixel and ray-traced track impact point.
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
  */
+//-----------------------------------------------------------------------------
 
-class RichPhotonPredictor : public RichRecToolBase,
-                            virtual public IRichPhotonPredictor {
+class RichSimplePhotonPredictor : public RichRecToolBase,
+                                  virtual public IRichPhotonPredictor {
 
 public: // Methods for Gaudi Framework
 
   /// Standard constructor
-  RichPhotonPredictor( const std::string& type,
-                       const std::string& name,
-                       const IInterface* parent );
+  RichSimplePhotonPredictor( const std::string& type,
+                             const std::string& name,
+                             const IInterface* parent );
 
   /// Destructor
-  virtual ~RichPhotonPredictor(){}
+  virtual ~RichSimplePhotonPredictor(){}
 
   // Initialize method
   StatusCode initialize();
@@ -73,6 +80,9 @@ private: // private data
   std::vector<double> m_maxROI;  ///< Max hit radius of interest around track centres
   std::vector<double> m_maxROI2; ///< Square of m_maxROI
   std::vector<double> m_minROI2; ///< Square of m_minROI
+
+  mutable std::vector<unsigned int> m_Nselected; ///< Number of selected combinations for each radiator
+  mutable std::vector<unsigned int> m_Nreject;   ///< Number of rejected combinations for each radiator
 
 };
 

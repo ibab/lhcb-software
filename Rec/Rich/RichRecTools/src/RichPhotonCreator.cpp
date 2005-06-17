@@ -5,7 +5,7 @@
  *  Implementation file for tool : RichPhotonCreator
  *
  *  CVS Log :-
- *  $Id: RichPhotonCreator.cpp,v 1.26 2005-05-28 13:10:53 jonrob Exp $
+ *  $Id: RichPhotonCreator.cpp,v 1.27 2005-06-17 15:08:36 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -26,7 +26,11 @@ RichPhotonCreator::RichPhotonCreator( const std::string& type,
                                       const std::string& name,
                                       const IInterface* parent )
   : RichPhotonCreatorBase ( type, name, parent ),
-    m_photonReco          ( 0 ) { }
+    m_photonReco          ( 0 ),
+    m_photonRecoName      ( "RichDetPhotonReco" )
+{
+  declareProperty( "PhotonRecoTool", m_photonRecoName );
+}
 
 StatusCode RichPhotonCreator::initialize()
 {
@@ -35,7 +39,7 @@ StatusCode RichPhotonCreator::initialize()
   if ( sc.isFailure() ) { return sc; }
 
   // Acquire instances of tools
-  acquireTool( "RichDetPhotonReco", m_photonReco );
+  acquireTool( m_photonRecoName, m_photonReco, this );
 
   return sc;
 }
@@ -60,15 +64,11 @@ RichPhotonCreator::buildPhoton( RichRecSegment * segment,
                                         pixel->globalPosition(),
                                         geomPhoton ) != 0 )
   {
-
-    // Which radiator
-    const Rich::RadiatorType rad = segment->trackSegment().radiator();
     
     // Check angles are reasonable
     if ( ( geomPhoton.CherenkovTheta() > 0. ||
            geomPhoton.CherenkovPhi() > 0. ) &&
-         geomPhoton.CherenkovTheta() < maxCKTheta(rad) &&
-         geomPhoton.CherenkovTheta() > minCKTheta(rad) ) 
+         checkAngleInRange( segment, geomPhoton.CherenkovTheta() ) ) 
     {
 
       // give photon same smart ID as pixel
@@ -78,8 +78,8 @@ RichPhotonCreator::buildPhoton( RichRecSegment * segment,
       newPhoton = new RichRecPhoton( geomPhoton, segment,
                                      segment->richRecTrack(), pixel );
 
-      // shall we keep this photon ?
-      if ( keepPhoton( newPhoton ) )
+      // check photon signal probability
+      if ( checkPhotonProb( newPhoton ) )
       {
 
         // save this photons to TES

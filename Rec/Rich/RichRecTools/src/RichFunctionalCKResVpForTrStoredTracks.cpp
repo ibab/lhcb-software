@@ -1,19 +1,15 @@
 
+//----------------------------------------------------------------------------------------
 /** @file RichFunctionalCKResVpForTrStoredTracks.cpp
  *
  *  Implementation file for tool : RichFunctionalCKResVpForTrStoredTracks
  *
- *  $Id: RichFunctionalCKResVpForTrStoredTracks.cpp,v 1.4 2004-10-30 19:38:44 jonrob Exp $
- *  $Log: not supported by cvs2svn $
- *  Revision 1.3  2004/10/27 14:39:41  jonrob
- *  Various updates
- *
- *  Revision 1.2  2004/07/27 20:15:30  jonrob
- *  Add doxygen file documentation and CVS information
+ *  $Id: RichFunctionalCKResVpForTrStoredTracks.cpp,v 1.5 2005-06-17 15:08:36 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   17/10/2004
  */
+//----------------------------------------------------------------------------------------
 
 // from Gaudi
 #include "GaudiKernel/ToolFactory.h"
@@ -21,7 +17,7 @@
 // local
 #include "RichFunctionalCKResVpForTrStoredTracks.h"
 
-//-----------------------------------------------------------------------------
+//----------------------------------------------------------------------------------------
 
 // Declaration of the Tool Factory
 static const  ToolFactory<RichFunctionalCKResVpForTrStoredTracks>          s_factory ;
@@ -60,22 +56,31 @@ StatusCode RichFunctionalCKResVpForTrStoredTracks::finalize()
 
 double
 RichFunctionalCKResVpForTrStoredTracks::ckThetaResolution( RichRecSegment * segment,
-                                                           const Rich::ParticleIDType /* id */ ) const
+                                                           const Rich::ParticleIDType id ) const
 {
 
   // This method is un-finished - so throw an exception if called
   Exception("Unfinished implementation - use another for the moment !");
 
-  // Reference to track ID object
-  const RichTrackID & tkID = segment->richRecTrack()->trackID();
+  if ( !segment->ckThetaResolution().dataIsValid(id) )
+  {
 
-  // Check track parent type is TrStoredTrack
-  if ( Rich::TrackParent::TrStoredTrack != tkID.parentType() ) {
-    Exception( "Track parent type is not TrStoredTrack" );
+    // Reference to track ID object
+    const RichTrackID & tkID = segment->richRecTrack()->trackID();
+
+    // Check track parent type is TrStoredTrack
+    if ( Rich::TrackParent::TrStoredTrack != tkID.parentType() ) {
+      Exception( "Track parent type is not TrStoredTrack" );
+    }
+
+    // momentum for this segment
+    //const double ptot = segment->trackSegment().bestMomentum().mag();
+
+    double res = 0;
+
+    segment->setCKThetaResolution( id, res );
+
   }
 
-  // momentum for this segment
-  //const double ptot = segment->trackSegment().bestMomentum().mag();
-
-  return 0;
+  return segment->ckThetaResolution( id );
 }

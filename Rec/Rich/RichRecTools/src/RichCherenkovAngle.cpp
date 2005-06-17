@@ -5,7 +5,7 @@
  *  Implementation file for tool : RichCherenkovAngle
  *
  *  CVS Log :-
- *  $Id: RichCherenkovAngle.cpp,v 1.12 2005-02-02 10:04:53 jonrob Exp $
+ *  $Id: RichCherenkovAngle.cpp,v 1.13 2005-06-17 15:08:36 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -51,8 +51,6 @@ StatusCode RichCherenkovAngle::initialize()
   acquireTool( "RichRefractiveIndex",     m_refIndex     );
   acquireTool( "RichParticleProperties",  m_richPartProp );
 
-  // Cache data
-
   // Get the nominal refractive index for the given radiator
 
   const double refAero   = m_refIndex->refractiveIndex( Rich::Aerogel );
@@ -81,18 +79,14 @@ RichCherenkovAngle::avgCherenkovTheta( RichRecSegment * segment,
                                        const Rich::ParticleIDType id ) const
 {
 
-  // Protect against invalid particle type
-  //if ( Rich::Unknown == id ) {
-  //  Error("Particle ID type is unknown !");
-  //  return 0;
-  //}
-
-  if ( !segment->averageCKTheta().dataIsValid(id) ) {
+  if ( !segment->averageCKTheta().dataIsValid(id) ) 
+  {
     double angle = 0;
 
     // total unscattered signal
     double unscat = m_signal->nSignalPhotons( segment, id );
-    if ( unscat > 0 ) {
+    if ( unscat > 0 ) 
+    {
 
       // which radiator
       const Rich::RadiatorType rad = segment->trackSegment().radiator();
@@ -102,7 +96,8 @@ RichCherenkovAngle::avgCherenkovTheta( RichRecSegment * segment,
 
       // loop over energy bins
       RichPhotonSpectra<RichRecSegment::FloatType> & sigSpectra = segment->signalPhotonSpectra();
-      for ( unsigned int iEnBin = 0; iEnBin < sigSpectra.energyBins(); ++iEnBin ) {
+      for ( unsigned int iEnBin = 0; iEnBin < sigSpectra.energyBins(); ++iEnBin ) 
+      {
         const double temp = beta *
           m_refIndex->refractiveIndex( rad, sigSpectra.binEnergy(iEnBin) );
         angle += (sigSpectra.energyDist(id))[iEnBin] * ( temp>1 ? acos(1/temp) : 0 );
@@ -148,14 +143,16 @@ void RichCherenkovAngle::computeRadii( RichRecSegment * segment,
   const double rMax = satCKRingRadiusLocal( segment, nSamples );
 
   // Loop over all particle codes
-  for ( int iHypo = 0; iHypo < Rich::NParticleTypes; ++iHypo ) {
+  for ( int iHypo = 0; iHypo < Rich::NParticleTypes; ++iHypo ) 
+  {
     const Rich::ParticleIDType id = static_cast<Rich::ParticleIDType>(iHypo);
 
     // Get CK theta
     const double ckTheta = avgCherenkovTheta(segment,id);
 
     // Set the value
-    segment->setAverageCKRadiusLocal( id, rMax * (ckTheta/m_nomCK[segment->trackSegment().radiator()]) );
+    segment->setAverageCKRadiusLocal( id, 
+                                      rMax * (ckTheta/m_nomCK[segment->trackSegment().radiator()]) );
 
   }
 
@@ -177,9 +174,10 @@ double RichCherenkovAngle::avCKRingRadiusLocal( RichRecSegment * segment,
 
   // send off virtual photons
   double ckPhi = 0.0;
-  double rSum  = 0.;
+  double rSum  = 0.0;
   unsigned int nUsed = 0;
-  for ( unsigned int iPhot = 0 ; iPhot < nSamples; ++iPhot, ckPhi+=incPhi ) {
+  for ( unsigned int iPhot = 0 ; iPhot < nSamples; ++iPhot, ckPhi+=incPhi ) 
+  {
 
     // Photon emission point is half-way between segment start and end points
     const HepPoint3D & emissionPt = segment->trackSegment().bestPoint();

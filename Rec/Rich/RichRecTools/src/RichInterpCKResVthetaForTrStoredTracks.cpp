@@ -1,15 +1,16 @@
 
+//-----------------------------------------------------------------------------
 /** @file RichInterpCKResVthetaForTrStoredTracks.cpp
  *
  *  Implementation file for tool : RichInterpCKResVthetaForTrStoredTracks
  *
  *  CVS Log :-
- *  $Id: RichInterpCKResVthetaForTrStoredTracks.cpp,v 1.4 2004-07-27 20:15:30 jonrob Exp $
- *  $Log: not supported by cvs2svn $
+ *  $Id: RichInterpCKResVthetaForTrStoredTracks.cpp,v 1.5 2005-06-17 15:08:36 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
  */
+//-----------------------------------------------------------------------------
 
 // from Gaudi
 #include "GaudiKernel/ToolFactory.h"
@@ -64,7 +65,8 @@ RichInterpCKResVthetaForTrStoredTracks ( const std::string& type,
   declareProperty( "CF4VeloRes",     m_theerr[Rich::CF4][Rich::Track::Velo] );
 
   // set interpolator pointers to NULL
-  for ( int iR = 0; iR < Rich::NRadiatorTypes; ++iR ) {
+  for ( int iR = 0; iR < Rich::NRadiatorTypes; ++iR )
+  {
     for ( unsigned iT = 0; iT < Rich::Track::NTrTypes; ++iT ) { m_ckRes[iR][iT] = 0; }
   }
 
@@ -80,10 +82,13 @@ StatusCode RichInterpCKResVthetaForTrStoredTracks::initialize()
   acquireTool( "RichCherenkovAngle", m_ckAngle );
 
   // initialise interpolators
-  for ( int iR = 0; iR < Rich::NRadiatorTypes; ++iR ) {
-    for ( unsigned iT = 0; iT < Rich::Track::NTrTypes; ++iT ) {
+  for ( int iR = 0; iR < Rich::NRadiatorTypes; ++iR )
+  {
+    for ( unsigned iT = 0; iT < Rich::Track::NTrTypes; ++iT )
+    {
       m_ckRes[iR][iT] = new Rich1DTabFunc( m_thebin[iR], m_theerr[iR][iT] );
-      if ( !(m_ckRes[iR][iT])->valid() ) {
+      if ( !(m_ckRes[iR][iT])->valid() )
+      {
         err() << "Failed to initialise interpolator for "
               << (Rich::RadiatorType)iR << " " << (Rich::Track::Type)iT << endreq;
         return StatusCode::FAILURE;
@@ -91,14 +96,16 @@ StatusCode RichInterpCKResVthetaForTrStoredTracks::initialize()
     }
   }
 
-  return StatusCode::SUCCESS;
+  return sc;
 }
 
 StatusCode RichInterpCKResVthetaForTrStoredTracks::finalize()
 {
   // clean up interpolators
-  for ( int iR = 0; iR < Rich::NRadiatorTypes; ++iR ) {
-    for ( unsigned iT = 0; iT < Rich::Track::NTrTypes; ++iT ) {
+  for ( int iR = 0; iR < Rich::NRadiatorTypes; ++iR )
+  {
+    for ( unsigned iT = 0; iT < Rich::Track::NTrTypes; ++iT )
+    {
       if ( m_ckRes[iR][iT] ) { delete m_ckRes[iR][iT]; m_ckRes[iR][iT] = 0; }
     }
   }
@@ -112,24 +119,33 @@ RichInterpCKResVthetaForTrStoredTracks::ckThetaResolution( RichRecSegment * segm
                                                            const Rich::ParticleIDType id ) const
 {
 
-  // Reference to track ID object
-  const RichTrackID & tkID = segment->richRecTrack()->trackID();
+  if ( !segment->ckThetaResolution().dataIsValid(id) )
+  {
 
-  // Check track parent type is TrStoredTrack
-  if ( Rich::TrackParent::TrStoredTrack != tkID.parentType() ) {
-    Exception( "Track parent type is not TrStoredTrack" );
+    // Reference to track ID object
+    const RichTrackID & tkID = segment->richRecTrack()->trackID();
+
+    // Check track parent type is TrStoredTrack
+    if ( Rich::TrackParent::TrStoredTrack != tkID.parentType() )
+    {
+      Exception( "Track parent type is not TrStoredTrack" );
+    }
+
+    // Expected Cherenkov theta angle
+    const double thetaExp = m_ckAngle->avgCherenkovTheta( segment, id );
+    if ( thetaExp < 0.000001 ) return 0;
+
+    // track type
+    const Rich::Track::Type type = tkID.trackType();
+
+    // which radiator
+    const Rich::RadiatorType rad = segment->trackSegment().radiator();
+
+    // compute the interpolated resolution
+    segment->setCKThetaResolution( id, (m_ckRes[rad][type])->value(thetaExp) );
+
   }
 
-  // Expected Cherenkov theta angle
-  const double thetaExp = m_ckAngle->avgCherenkovTheta( segment, id );
-  if ( thetaExp < 0.000001 ) return 0;
+  return segment->ckThetaResolution( id );
 
-  // track type
-  const Rich::Track::Type type = tkID.trackType();
-
-  // which radiator
-  const Rich::RadiatorType rad = segment->trackSegment().radiator();
-
-  // compute the interpolated resolution
-  return (m_ckRes[rad][type])->value(thetaExp);
 }

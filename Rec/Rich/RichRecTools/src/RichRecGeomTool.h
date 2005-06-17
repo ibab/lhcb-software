@@ -5,7 +5,7 @@
  *  Header file for tool : RichRecGeomTool
  *
  *  CVS Log :-
- *  $Id: RichRecGeomTool.h,v 1.4 2005-05-13 15:20:38 jonrob Exp $
+ *  $Id: RichRecGeomTool.h,v 1.5 2005-06-17 15:08:36 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -45,7 +45,8 @@
 //-----------------------------------------------------------------------------
 
 class RichRecGeomTool : public RichRecToolBase,
-                        virtual public IRichRecGeomTool {
+                        virtual public IRichRecGeomTool 
+{
 
 public: // Methods for Gaudi Framework
 
@@ -66,25 +67,28 @@ public: // Methods for Gaudi Framework
 public: // methods (and doxygen comments) inherited from public interface
 
   // Returns square of distance seperating the pixel hit and hit position extrapolated
-  // using the RichRecSegment direction in global corrdinates
-  double trackPixelHitSep2Global( const RichRecSegment * segment,
-                                  const RichRecPixel * pixel ) const;
-
-  // Returns square of distance seperating the pixel hit and hit position extrapolated
   // using the RichRecSegment direction in local corrdinates
-  double trackPixelHitSep2Local( const RichRecSegment * segment,
-                                 const RichRecPixel * pixel ) const;
+  double trackPixelHitSep2( const RichRecSegment * segment,
+                            const RichRecPixel * pixel ) const;
 
   // Computes the fraction of the Cherenkov cone for a given segment that
   //  is within the average HPD panel acceptance
   double hpdPanelAcceptance( RichRecSegment * segment,
                              const Rich::ParticleIDType id ) const; 
 
+  // Correct the given position (in local HPD coordinates) for the average
+  // optical distortion for given radiator
+  HepPoint3D correctAvRadiatorDistortion( const HepPoint3D & point,
+                                          const Rich::RadiatorType rad ) const;
+
 private: // private data
 
   // Pointers to tool instances
   IRichDetParameters  * m_detParams; ///< Detector parameters tool
   IRichCherenkovAngle * m_ckAngle;   ///< Pointer to the Cherenkov angle tool
+
+  /// Radiator correction scale parameter
+  std::vector<double> m_radScale;
 
   /// The radiator outer limits in local coordinates
   boost::array< IRichDetParameters::RadLimits, Rich::NRadiatorTypes > m_radOutLimLoc;

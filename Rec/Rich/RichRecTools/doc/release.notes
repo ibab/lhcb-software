@@ -4,11 +4,17 @@
 ! Purpose     : Utility tools for RICH reconstruction algorithms
 !------------------------------------------------------------------------------
 
+! 2005-06-17 - Chris Jones
+ - Add new tool to predict which pixel/segment pairs to attempt to
+   create photon candidates from, based on the local separation of
+   their local HPD panel hits, compared to that expected for the
+   Cherenkov angles expected for that track
+
 ! 2005-05-28 - Chris Jones
  - Adapt creator tools to use new base classes
 
 ! 2005-05-13 - Chris Jones
- - update pixel creates to new base class
+ - Update pixel creates to new base class
  - Update fixed geom. eff. tool
  - Add check on HPD status to various ray-tracing tools
  - Update summary printouts to the various creator tools

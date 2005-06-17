@@ -5,7 +5,7 @@
  *  Implementation file for tool : RichPhotonSignal
  *
  *  CVS Log :-
- *  $Id: RichPhotonSignal.cpp,v 1.15 2005-02-02 10:07:18 jonrob Exp $
+ *  $Id: RichPhotonSignal.cpp,v 1.16 2005-06-17 15:08:36 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -31,10 +31,11 @@ RichPhotonSignal::RichPhotonSignal( const std::string& type,
 
 }
 
-StatusCode RichPhotonSignal::initialize() {
+StatusCode RichPhotonSignal::initialize() 
+{
 
   // Sets up various tools and services
-  StatusCode sc = RichRecToolBase::initialize();
+  const StatusCode sc = RichRecToolBase::initialize();
   if ( sc.isFailure() ) { return sc; }
 
   // Acquire instances of tools
@@ -62,7 +63,7 @@ StatusCode RichPhotonSignal::initialize() {
           << m_radiusCurv[Rich::Rich1] << " " << m_radiusCurv[Rich::Rich2] << endreq
           << " Pixel area                   = " << m_pixelArea << endreq;
 
-  return StatusCode::SUCCESS;
+  return sc;
 }
 
 StatusCode RichPhotonSignal::finalize()
@@ -75,7 +76,8 @@ double
 RichPhotonSignal::predictedPixelSignal( RichRecPhoton * photon,
                                         const Rich::ParticleIDType id ) const
 {
-  if ( !photon->expPixelSignalPhots().dataIsValid(id) ) {
+  if ( !photon->expPixelSignalPhots().dataIsValid(id) ) 
+  {
 
     // Which detector
     const Rich::DetectorType det = photon->richRecSegment()->trackSegment().rich();
@@ -124,7 +126,8 @@ double
 RichPhotonSignal::scatterProb( RichRecPhoton * photon,
                                const Rich::ParticleIDType id ) const
 {
-  if ( Rich::Aerogel == photon->richRecSegment()->trackSegment().radiator() ) {
+  if ( Rich::Aerogel == photon->richRecSegment()->trackSegment().radiator() ) 
+  {
 
     // Expected Cherenkov theta angle
     const double thetaExp = m_ckAngle->avgCherenkovTheta( photon->richRecSegment(), id );
@@ -135,12 +138,17 @@ RichPhotonSignal::scatterProb( RichRecPhoton * photon,
 
     // Compute the scattering
     double fbkg = 0.0;
-    if ( thetaRec < thetaExp ) {
+    if ( thetaRec < thetaExp ) 
+    {
       fbkg = ( exp(17.0*thetaRec) - 1.0 ) / ( exp(17.0*thetaExp) - 1.0 );
-    } else if ( thetaRec < 0.5*M_PI + thetaExp - 0.04 ) {
+    } 
+    else if ( thetaRec < 0.5*M_PI + thetaExp - 0.04 ) 
+    {
       fbkg = cos( thetaRec - thetaExp + 0.04 );
       fbkg = fbkg*fbkg/0.9984;
-    } else {
+    } 
+    else 
+    {
       return 0.0;
     }
 

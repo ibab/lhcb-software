@@ -5,7 +5,7 @@
  *  Declaration of objects in the component library RichRecTools
  *
  *  CVS Log :-
- *  $Id: RichRecTools_load.cpp,v 1.20 2005-05-13 15:20:38 jonrob Exp $
+ *  $Id: RichRecTools_load.cpp,v 1.21 2005-06-17 15:08:36 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -24,7 +24,8 @@ DECLARE_FACTORY_ENTRIES( RichRecTools )
   DECLARE_TOOL( RichPixelCreatorFromRichDigits );
   DECLARE_TOOL( RichPixelCreatorFromRawBuffer );
   DECLARE_TOOL( RichPhotonCreator );
-  DECLARE_TOOL( RichPhotonPredictor );
+  DECLARE_TOOL( RichSimplePhotonPredictor );
+  DECLARE_TOOL( RichSepVCKthetaPhotonPredictor );
   DECLARE_TOOL( RichPhotonPredictorUsingRings );
   DECLARE_TOOL( RichStatusCreator ); 
   DECLARE_TOOL( RichMassHypothesisRingCreator );

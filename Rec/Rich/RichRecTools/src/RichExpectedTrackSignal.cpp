@@ -5,7 +5,7 @@
  *  Implementation file for tool : RichExpectedTrackSignal
  *
  *  CVS Log :-
- *  $Id: RichExpectedTrackSignal.cpp,v 1.11 2005-02-02 10:06:00 jonrob Exp $
+ *  $Id: RichExpectedTrackSignal.cpp,v 1.12 2005-06-17 15:08:36 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -50,7 +50,7 @@ StatusCode RichExpectedTrackSignal::initialize()
   acquireTool( "RichRayleighScatter",    m_rayScat      );
   acquireTool( "RichGasQuartzWindow",    m_gasQuartzWin );
 
-  return StatusCode::SUCCESS;
+  return sc;
 }
 
 StatusCode RichExpectedTrackSignal::finalize()
@@ -60,14 +60,17 @@ StatusCode RichExpectedTrackSignal::finalize()
 }
 
 double RichExpectedTrackSignal::nEmittedPhotons ( RichRecSegment * segment,
-                                                  const Rich::ParticleIDType id ) const {
+                                                  const Rich::ParticleIDType id ) const 
+{
 
-  if ( !segment->nEmittedPhotons().dataIsValid(id) ) {
+  if ( !segment->nEmittedPhotons().dataIsValid(id) ) 
+  {
 
     // loop over energy bins
     double signal = 0;
     RichPhotonSpectra<RichRecSegment::FloatType> & spectra = segment->emittedPhotonSpectra();
-    for ( unsigned int iEnBin = 0; iEnBin < spectra.energyBins(); ++iEnBin ) {
+    for ( unsigned int iEnBin = 0; iEnBin < spectra.energyBins(); ++iEnBin ) 
+    {
 
       double phots =
         m_sellmeir->photonsInEnergyRange( segment,
@@ -77,6 +80,7 @@ double RichExpectedTrackSignal::nEmittedPhotons ( RichRecSegment * segment,
       if ( phots<0 ) phots = 0;
       (spectra.energyDist(id))[iEnBin] = phots;
       signal += phots;
+
     }
 
     segment->setNEmittedPhotons( id, signal );
@@ -86,9 +90,11 @@ double RichExpectedTrackSignal::nEmittedPhotons ( RichRecSegment * segment,
 }
 
 double RichExpectedTrackSignal::nDetectablePhotons ( RichRecSegment * segment,
-                                                     const Rich::ParticleIDType id ) const {
+                                                     const Rich::ParticleIDType id ) const 
+{
 
-  if ( !segment->nDetectablePhotons().dataIsValid(id) ) {
+  if ( !segment->nDetectablePhotons().dataIsValid(id) ) 
+  {
 
     // Make sure emitted Photons are calculated
     nEmittedPhotons( segment, id );
@@ -97,7 +103,8 @@ double RichExpectedTrackSignal::nDetectablePhotons ( RichRecSegment * segment,
     double signal = 0;
     RichPhotonSpectra<RichRecSegment::FloatType> & emitSpectra = segment->emittedPhotonSpectra();
     RichPhotonSpectra<RichRecSegment::FloatType> & detSpectra  = segment->detectablePhotonSpectra();
-    for ( unsigned int iEnBin = 0; iEnBin < emitSpectra.energyBins(); ++iEnBin ) {
+    for ( unsigned int iEnBin = 0; iEnBin < emitSpectra.energyBins(); ++iEnBin ) 
+    {
       const double sig = (emitSpectra.energyDist(id))[iEnBin] *
         m_sigDetEff->photonDetEfficiency( segment, emitSpectra.binEnergy(iEnBin) );
       const double gasQuartzWinTrans =
@@ -115,13 +122,15 @@ double
 RichExpectedTrackSignal::nSignalPhotons ( RichRecSegment * segment,
                                           const Rich::ParticleIDType id ) const {
 
-  if ( !segment->nSignalPhotons().dataIsValid( id ) ) {
+  if ( !segment->nSignalPhotons().dataIsValid( id ) ) 
+  {
     double signal  = 0;
     double scatter = 0;
 
     // compute detectable emitted photons
     double detectablePhots = nDetectablePhotons( segment, id );
-    if ( detectablePhots > 0 ) {
+    if ( detectablePhots > 0 ) 
+    {
 
       // which radiator
       const Rich::RadiatorType rad = segment->trackSegment().radiator();
@@ -129,7 +138,8 @@ RichExpectedTrackSignal::nSignalPhotons ( RichRecSegment * segment,
       // loop over energy bins
       RichPhotonSpectra<RichRecSegment::FloatType> & sigSpectra = segment->signalPhotonSpectra();
       const RichPhotonSpectra<RichRecSegment::FloatType> & detSpectra = segment->detectablePhotonSpectra();
-      for ( unsigned int iEnBin = 0; iEnBin < detSpectra.energyBins(); ++iEnBin ) {
+      for ( unsigned int iEnBin = 0; iEnBin < detSpectra.energyBins(); ++iEnBin ) 
+      {
 
         const double scattProb =
           ( rad != Rich::Aerogel ? 0 :
@@ -164,7 +174,8 @@ RichExpectedTrackSignal::avgSignalPhotEnergy( RichRecSegment * segment,
   double nSig = nSignalPhotons ( segment, id );
 
   double avgEnergy = 0;
-  if ( nSig> 0 ) {
+  if ( nSig> 0 ) 
+  {
 
     // loop over energy bins
     const RichPhotonSpectra<RichRecSegment::FloatType> & spectra = segment->signalPhotonSpectra();
@@ -190,7 +201,8 @@ RichExpectedTrackSignal::avgEmitPhotEnergy( RichRecSegment * segment,
   const double nSig = nEmittedPhotons ( segment, id );
 
   double avgEnergy = 0;
-  if ( nSig> 0 ) {
+  if ( nSig> 0 ) 
+  {
 
     // loop over energy bins
     RichPhotonSpectra<RichRecSegment::FloatType> & spectra = segment->emittedPhotonSpectra();
