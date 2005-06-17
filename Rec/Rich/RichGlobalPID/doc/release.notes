@@ -4,6 +4,9 @@
 ! Purpose     : The Rich Global PID algorithm
 !-----------------------------------------------------------------------------
 
+! 2005-06-17 - Chris Jones
+ - minor speed update
+
 !====================== RichGlobalPID v1r9p1 2005-04-07 ======================
 ! 2005-04-07 - Marco Cattaneo
  - Add use GaudiObjDesc, no longer inherited via Event model

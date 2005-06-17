@@ -5,7 +5,7 @@
  *  Implementation file for RICH Global PID algorithm class : RichGlobalPIDAlg
  *
  *  CVS Log :-
- *  $Id: RichGlobalPIDAlg.cpp,v 1.22 2005-04-08 13:16:45 jonrob Exp $
+ *  $Id: RichGlobalPIDAlg.cpp,v 1.23 2005-06-17 14:59:55 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   17/04/2002
@@ -113,7 +113,7 @@ StatusCode RichGlobalPIDAlg::execute()
   if ( richPhotons()->empty() ) {
     photonCreator()->reconstructPhotons();
     debug() << "Reconstructed " << richPhotons()->size() << " photon candidates" << endreq;
-    if ( richPhotons()->empty() ) 
+    if ( richPhotons()->empty() )
       return Warning("No reconstructed photons -> Abort",StatusCode::SUCCESS);
   }
 
@@ -407,24 +407,30 @@ RichGlobalPIDAlg::deltaLogLikelihood( RichRecTrack * track,
 
   // Photon part
   RichRecTrack::Pixels & pixels = track->richRecPixels();
+  const RichRecTrack::Pixels::iterator ePixel = pixels.end();
   for ( RichRecTrack::Pixels::iterator iPixel = pixels.begin();
-        iPixel != pixels.end(); ++iPixel ) {
+        iPixel != ePixel; ++iPixel )
+  {
 
     // photons for this pixel
     RichRecPixel::Photons & photons = (*iPixel)->richRecPhotons();
-    if ( !photons.empty() ) {
+    if ( !photons.empty() ) 
+    {
 
       double oldSig = (*iPixel)->currentBackground();
       double newSig = oldSig;
 
-      // cache end point since container size will not change in proceeding loop
+      // Loop over photons for this pixel
       const RichRecPixel::Photons::iterator iPhotonEnd = photons.end();
       for ( RichRecPixel::Photons::const_iterator iPhoton = photons.begin();
-            iPhoton != iPhotonEnd; ++iPhoton ) {
+            iPhoton != iPhotonEnd; ++iPhoton ) 
+      {
         RichRecPhoton * photon = *iPhoton;
 
+        // Skip tracks not in use
         if ( !photon->richRecTrack()->inUse() ) continue;
 
+        // update signal numbers
         const double tmpOldSig =
           photon->expPixelSignalPhots( photon->richRecTrack()->currentHypothesis() );
         oldSig += tmpOldSig;
@@ -433,6 +439,7 @@ RichGlobalPIDAlg::deltaLogLikelihood( RichRecTrack * track,
 
       } // end photon loop
 
+      // increment change to likelihood for this photon
       deltaLL -= sigFunc(newSig) - sigFunc(oldSig);
 
     } // end photons not empty
@@ -449,7 +456,8 @@ double RichGlobalPIDAlg::logLikelihood()
   double trackLL = 0.0;
   for ( RichGlobalPIDTracks::iterator track = m_GPIDtracks->begin();
         track != m_GPIDtracks->end();
-        ++track ) {
+        ++track ) 
+  {
     // Sum expected photons from each track with current assumed hypotheses
     RichRecTrack * rRTrack = (*track)->richRecTrack();
     trackLL +=
@@ -466,14 +474,17 @@ double RichGlobalPIDAlg::logLikelihood()
   double pixelLL = 0.0;
   for ( RichRecPixels::iterator iPixel = richPixels()->begin();
         iPixel != richPixels()->end();
-        ++iPixel ) {
+        ++iPixel ) 
+  {
     RichRecPixel * pixel = *iPixel;
 
     double photonSig = 0.0;
     RichRecPixel::Photons & photons = pixel->richRecPhotons();
+    const RichRecPixel::Photons::iterator iPhotonEnd = photons.end();
     for ( RichRecPixel::Photons::iterator iPhoton = photons.begin();
-          iPhoton != photons.end();
-          ++iPhoton ) {
+          iPhoton != iPhotonEnd;
+          ++iPhoton ) 
+    {
       RichRecPhoton * photon = *iPhoton;
 
       RichRecTrack * rRTrack = photon->richRecTrack();
