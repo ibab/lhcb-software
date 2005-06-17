@@ -5,7 +5,7 @@
  *  Implementation file for RICH reconstruction tool : RichPhotonCreatorFromMCRichOpticalPhotons
  *
  *  CVS Log :-
- *  $Id: RichPhotonCreatorFromMCRichOpticalPhotons.cpp,v 1.7 2005-05-28 16:45:48 jonrob Exp $
+ *  $Id: RichPhotonCreatorFromMCRichOpticalPhotons.cpp,v 1.8 2005-06-17 15:28:34 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   08/07/2004
@@ -60,14 +60,10 @@ RichPhotonCreatorFromMCRichOpticalPhotons::buildPhoton( RichRecSegment * segment
   if ( mcPhoton )
   {
 
-    // Which radiator ?
-    const Rich::RadiatorType rad = segment->trackSegment().radiator();
-
     // Check angles are reasonable
     if ( ( mcPhoton->cherenkovTheta() > 0. ||
            mcPhoton->cherenkovPhi() > 0. ) &&
-         mcPhoton->cherenkovTheta() < maxCKTheta(rad) &&
-         mcPhoton->cherenkovTheta() > minCKTheta(rad) )
+         checkAngleInRange( segment, mcPhoton->cherenkovTheta() ) )
     {
 
       // make a photon object from MC info
@@ -86,8 +82,8 @@ RichPhotonCreatorFromMCRichOpticalPhotons::buildPhoton( RichRecSegment * segment
                                      segment->richRecTrack(),
                                      pixel );
 
-      // shall we keep this photon ?
-      if ( keepPhoton( newPhoton ) )
+      // check photon signal probability
+      if ( checkPhotonProb( newPhoton ) )
       {
 
         // save this photons to TES

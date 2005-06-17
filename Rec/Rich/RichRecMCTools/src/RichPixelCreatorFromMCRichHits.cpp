@@ -5,7 +5,7 @@
  *  Implementation file for RICH reconstruction tool : RichPixelCreatorFromMCRichHits
  *
  *  CVS Log :-
- *  $Id: RichPixelCreatorFromMCRichHits.cpp,v 1.13 2005-05-28 16:45:48 jonrob Exp $
+ *  $Id: RichPixelCreatorFromMCRichHits.cpp,v 1.14 2005-06-17 15:28:34 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -105,6 +105,8 @@ RichPixelCreatorFromMCRichHits::newPixel( const ContainedObject * obj ) const {
           newPixel->setGlobalPosition( mcPhot->pdIncidencePoint() );
           newPixel->localPosition() =
             m_smartIDTool->globalToPDPanel(newPixel->globalPosition());
+          // compute corrected local coordinates
+          computeRadCorrLocalPositions( newPixel );
 
           // Set smartID
           newPixel->setSmartID( id );

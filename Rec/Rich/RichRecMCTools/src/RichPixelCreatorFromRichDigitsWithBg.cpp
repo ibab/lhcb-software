@@ -5,7 +5,7 @@
  *  Implementation file for RICH reconstruction tool : RichPixelCreatorFromRichDigitsWithBg
  *
  *  CVS Log :-
- *  $Id: RichPixelCreatorFromRichDigitsWithBg.cpp,v 1.11 2005-05-28 16:45:48 jonrob Exp $
+ *  $Id: RichPixelCreatorFromRichDigitsWithBg.cpp,v 1.12 2005-06-17 15:28:34 jonrob Exp $
  *
  *  @author Andy Buckley  buckley@hep.phy.cam.ac.uk
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
@@ -178,6 +178,8 @@ RichPixelCreatorFromRichDigitsWithBg::newPixel( const RichSmartID id ) const
       // Positions
       newPixel->globalPosition() = m_smartIDTool->globalPosition( id );
       newPixel->localPosition()  = m_smartIDTool->globalToPDPanel(newPixel->globalPosition());
+      // compute corrected local coordinates
+      computeRadCorrLocalPositions( newPixel );
 
       // Set smartID
       newPixel->setSmartID( id );

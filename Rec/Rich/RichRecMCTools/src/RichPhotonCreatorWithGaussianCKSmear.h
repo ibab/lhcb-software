@@ -5,7 +5,7 @@
  *  Header file for RICH reconstruction tool : RichPhotonCreatorWithGaussianCKSmear
  *
  *  CVS Log :-
- *  $Id: RichPhotonCreatorWithGaussianCKSmear.h,v 1.2 2005-05-28 17:31:51 jonrob Exp $
+ *  $Id: RichPhotonCreatorWithGaussianCKSmear.h,v 1.3 2005-06-17 15:28:34 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   20/05/2005
@@ -70,10 +70,14 @@ private: // private methods
                                        RichRecPixel * pixel,
                                        const RichRecPhotonKey key ) const;
 
+  /// Access RICH MC reconstruction tool on demand
+  /// Means if not needed, this tool runs MC free and can be used on real data (if wanted)
+  IRichRecMCTruthTool * richMCRecTool() const;
+
 private: // private data
 
   // Pointers to tool instances
-  IRichRecMCTruthTool * m_mcRecTool;  ///< Rich Reconstruction MC Truth tool
+  mutable IRichRecMCTruthTool * m_mcRecTool;  ///< Rich Reconstruction MC Truth tool
   IRichPhotonCreator * m_delPhotCr;   ///< Delegated photon creator
 
   /// Apply smearing to all photons, or only to true photons
@@ -89,5 +93,12 @@ private: // private data
   mutable boost::array< Rndm::Numbers, Rich::NRadiatorTypes > m_rand;
 
 };
+
+inline IRichRecMCTruthTool * 
+RichPhotonCreatorWithGaussianCKSmear::richMCRecTool() const
+{
+  if ( !m_mcRecTool ) acquireTool( "RichRecMCTruthTool", m_mcRecTool );
+  return m_mcRecTool;
+}
 
 #endif // RICHRECMCTOOLS_RICHPHOTONCREATORWITHGAUSSIANCKSMEAR_H

@@ -5,7 +5,7 @@
  *  Implementation file for RICH reconstruction tool : RichPhotonCreatorWithMCSignal
  *
  *  CVS Log :-
- *  $Id: RichPhotonCreatorWithMCSignal.cpp,v 1.2 2005-05-28 16:45:48 jonrob Exp $
+ *  $Id: RichPhotonCreatorWithMCSignal.cpp,v 1.3 2005-06-17 15:28:34 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   08/07/2004
@@ -63,17 +63,21 @@ RichPhotonCreatorWithMCSignal::buildPhoton( RichRecSegment * segment,
   const MCRichOpticalPhoton * mcPhoton = m_mcRecTool->trueOpticalPhoton(segment,pixel);
 
   if ( mcPhoton )
-  { 
+  {
     // Use MC creator
     if ( msgLevel(MSG::DEBUG) )
+    {
       debug() << "Delegating photon creation to MC tool" << endreq;
+    }
     newPhoton = m_mcPhotCr->reconstructPhoton(segment,pixel);
-  } 
-  else 
-  { 
+  }
+  else
+  {
     // Use Reco creator
     if ( msgLevel(MSG::DEBUG) )
+    {
       debug() << "Delegating photon creation to Reco tool" << endreq;
+    }
     newPhoton = m_recoPhotCr->reconstructPhoton(segment,pixel);
   }
 

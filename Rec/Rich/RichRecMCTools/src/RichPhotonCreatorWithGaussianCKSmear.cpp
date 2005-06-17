@@ -5,7 +5,7 @@
  *  Implementation file for RICH reconstruction tool : RichPhotonCreatorWithGaussianCKSmear
  *
  *  CVS Log :-
- *  $Id: RichPhotonCreatorWithGaussianCKSmear.cpp,v 1.1 2005-05-28 16:45:48 jonrob Exp $
+ *  $Id: RichPhotonCreatorWithGaussianCKSmear.cpp,v 1.2 2005-06-17 15:28:34 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   08/07/2004
@@ -48,7 +48,6 @@ StatusCode RichPhotonCreatorWithGaussianCKSmear::initialize()
   if ( sc.isFailure() ) { return sc; }
 
   // Acquire instances of tools
-  acquireTool( "RichRecMCTruthTool",         m_mcRecTool );
   acquireTool( "RichDelegatedPhotonCreator", m_delPhotCr );
 
   // Initialize gaussian smearing
@@ -78,7 +77,7 @@ StatusCode RichPhotonCreatorWithGaussianCKSmear::initialize()
     {
       info() << "Applying smearing only to true Cherenkov photons" << endreq;
     }
-  } 
+  }
   else
   {
     Warning( "Using CK theta smearing tool, but no radiators selected", StatusCode::SUCCESS );
@@ -109,28 +108,35 @@ RichPhotonCreatorWithGaussianCKSmear::buildPhoton( RichRecSegment * segment,
   RichRecPhoton * newPhoton = m_delPhotCr->reconstructPhoton(segment,pixel);
   if ( !newPhoton ) return newPhoton; // if null, return
 
-  // Add to reference map
-  if ( bookKeep() ) m_photonDone[key] = true;
-
-  // which radiator
-  const Rich::RadiatorType rad = segment->trackSegment().radiator();
-  if ( m_smearRad[rad] )
+  // has this photon already been smeared ?
+  if ( !m_photonDone[key] )
   {
 
-    // See if there is a true cherenkov photon for this segment/pixel pair
-    if ( !m_applySmearingToAll &&
-         !m_mcRecTool->trueOpticalPhoton(segment,pixel) ) return newPhoton;
-    
-    // Smear the Cherenkov theta
-    const double smear = (m_rand[rad])();
-    const double newCKtheta = smear + newPhoton->geomPhoton().CherenkovTheta();
-    if ( msgLevel(MSG::VERBOSE) )
+    // This is a new photon , so add to reference map
+    m_photonDone[key] = true;
+
+    // Now, smear this photon
+
+    const Rich::RadiatorType rad = segment->trackSegment().radiator();
+    if ( m_smearRad[rad] )
     {
-      verbose() << rad << " photon. Applying theta smearing " << smear
-                << ": theta = " << newPhoton->geomPhoton().CherenkovTheta()
-                << " -> " << newCKtheta << endreq;
+
+      // See if there is a true cherenkov photon for this segment/pixel pair
+      if ( !m_applySmearingToAll &&
+           !richMCRecTool()->trueOpticalPhoton(segment,pixel) ) return newPhoton;
+
+      // Smear the Cherenkov theta
+      const double smear = (m_rand[rad])();
+      const double newCKtheta = smear + newPhoton->geomPhoton().CherenkovTheta();
+      if ( msgLevel(MSG::VERBOSE) )
+      {
+        verbose() << rad << " photon. Applying theta smearing " << smear
+                  << ": theta = " << newPhoton->geomPhoton().CherenkovTheta()
+                  << " -> " << newCKtheta << endreq;
+      }
+      newPhoton->geomPhoton().setCherenkovTheta( newCKtheta );
+
     }
-    newPhoton->geomPhoton().setCherenkovTheta( newCKtheta );
 
   }
 

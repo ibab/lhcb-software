@@ -5,7 +5,7 @@
  *  Implementation file for RICH reconstruction tool : RichPixelCreatorFromCheatedRichDigits
  *
  *  CVS Log :-
- *  $Id: RichPixelCreatorFromCheatedRichDigits.cpp,v 1.15 2005-05-28 16:45:48 jonrob Exp $
+ *  $Id: RichPixelCreatorFromCheatedRichDigits.cpp,v 1.16 2005-06-17 15:28:34 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/09/2003
@@ -125,6 +125,8 @@ RichPixelCreatorFromCheatedRichDigits::newPixelFromHit( const RichDigit * digit,
           newPixel->setGlobalPosition( mcPhot->pdIncidencePoint() );
           newPixel->localPosition() =
             m_smartIDTool->globalToPDPanel(newPixel->globalPosition());
+          // compute corrected local coordinates
+          computeRadCorrLocalPositions( newPixel );
 
           // Set smartID
           newPixel->setSmartID( digit->key() );
