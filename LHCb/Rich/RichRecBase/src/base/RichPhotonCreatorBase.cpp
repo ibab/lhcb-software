@@ -5,7 +5,7 @@
  *  Implementation file for tool base class : RichPhotonCreatorBase
  *
  *  CVS Log :-
- *  $Id: RichPhotonCreatorBase.cpp,v 1.1 2005-05-26 16:45:51 jonrob Exp $
+ *  $Id: RichPhotonCreatorBase.cpp,v 1.2 2005-06-17 14:48:57 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   20/05/2005
@@ -21,15 +21,19 @@
 RichPhotonCreatorBase::RichPhotonCreatorBase( const std::string& type,
                                               const std::string& name,
                                               const IInterface* parent )
-  : RichRecToolBase   ( type, name, parent ),
-    m_hasBeenCalled   ( false ),
-    m_photonPredictor ( 0 ),
-    m_photonSignal    ( 0 ),
-    m_Nevts           ( 0 ),
-    m_bookKeep        ( false ),
-    m_photons         ( 0 ),
-    m_photCount       ( Rich::NRadiatorTypes, 0 ),
-    m_photCountLast   ( Rich::NRadiatorTypes, 0 )
+  : RichRecToolBase         ( type, name, parent ),
+    m_hasBeenCalled         ( false ),
+    m_photonPredictor       ( 0 ),
+    m_photonSignal          ( 0 ),
+    m_ckAngle               ( 0 ),
+    m_ckRes                 ( 0 ),
+    m_Nevts                 ( 0 ),
+    m_bookKeep              ( false ),
+    m_photons               ( 0 ),
+    m_richRecPhotonLocation ( RichRecPhotonLocation::Default ),
+    m_photPredName          ( "RichPhotonPredictor" ),
+    m_photCount             ( Rich::NRadiatorTypes, 0 ),
+    m_photCountLast         ( Rich::NRadiatorTypes, 0 )
 {
 
   // Define the interface
@@ -37,20 +41,26 @@ RichPhotonCreatorBase::RichPhotonCreatorBase( const std::string& type,
 
   // job options
 
-  declareProperty( "RichRecPhotonLocation",
-                   m_richRecPhotonLocation = RichRecPhotonLocation::Default );
+  declareProperty( "RichRecPhotonLocation", m_richRecPhotonLocation );
 
   declareProperty( "DoBookKeeping", m_bookKeep );
 
-  m_minCKtheta.push_back( 0.09 );   // aerogel
+  declareProperty( "PhotonPredictor", m_photPredName );
+
+  m_CKTol.push_back( 0.005 );   // aerogel
+  m_CKTol.push_back( 0.004 );      // c4f10
+  m_CKTol.push_back( 0.003 );      // cf4
+  declareProperty( "CherenkovThetaTolerence", m_CKTol );
+
+  m_minCKtheta.push_back( 0 );   // aerogel
   m_minCKtheta.push_back( 0 );      // c4f10
   m_minCKtheta.push_back( 0 );      // cf4
-  declareProperty( "MinCherenkovTheta", m_minCKtheta );
+  declareProperty( "MinAllowedCherenkovTheta", m_minCKtheta );
 
-  m_maxCKtheta.push_back( 0.300 ); // aerogel
-  m_maxCKtheta.push_back( 0.080 ); // c4f10
-  m_maxCKtheta.push_back( 0.050 ); // cf4
-  declareProperty( "MaxCherenkovTheta", m_maxCKtheta );
+  m_maxCKtheta.push_back( 999 ); // aerogel
+  m_maxCKtheta.push_back( 999 ); // c4f10
+  m_maxCKtheta.push_back( 999 ); // cf4
+  declareProperty( "MaxAllowedCherenkovTheta", m_maxCKtheta );
 
   m_minPhotonProb.push_back( 1e-15 ); // aerogel
   m_minPhotonProb.push_back( 1e-15 ); // c4f10
@@ -66,12 +76,24 @@ StatusCode RichPhotonCreatorBase::initialize()
   if ( sc.isFailure() ) { return sc; }
 
   // get tools
-  acquireTool( "RichPhotonPredictor",   m_photonPredictor );
-  acquireTool( "RichPhotonSignal",      m_photonSignal    );
+  acquireTool( m_photPredName,        m_photonPredictor );
+  acquireTool( "RichPhotonSignal",    m_photonSignal    );
+  acquireTool( "RichCherenkovAngle",  m_ckAngle         );
+  acquireTool( "RichCherenkovResolution", m_ckRes       );
 
   // Setup incident services
   incSvc()->addListener( this, IncidentType::BeginEvent );
   incSvc()->addListener( this, IncidentType::EndEvent   );
+
+  // info printout
+  for ( int rad = 0; rad < Rich::NRadiatorTypes; ++rad )
+  {
+    std::string trad = Rich::text((Rich::RadiatorType)rad);
+    trad.resize(8,' ');
+    info() << trad << " : CK theta range " << format("%5.3f",m_minCKtheta[rad])
+           << " -> " << format("%5.3f",m_maxCKtheta[rad])
+           << " rad : Tol. " << format("%5.3f",m_CKTol[rad]) << " mrad" << endreq;
+  }
 
   return sc;
 }
@@ -113,15 +135,15 @@ void RichPhotonCreatorBase::printStats() const
     RichStatDivFunctor occ("%10.2f +-%7.2f");
 
     // Print out final stats
-    info() << "=======================================================" << endreq
-           << "  Photon Candidate Summary : " << m_Nevts << " events :-" << endreq
-           << "    Aerogel   "
+    info() << "=================================================================" << endreq
+           << "  Photon candidate summary : " << m_Nevts << " events :-" << endreq
+           << "    Aerogel   : "
            << occ(m_photCount[Rich::Aerogel],m_Nevts) << "  photons/event" << endreq
-           << "    C4F10     "
+           << "    C4F10     : "
            << occ(m_photCount[Rich::C4F10],m_Nevts)   << "  photons/event" << endreq
-           << "    CF4       "
+           << "    CF4       : "
            << occ(m_photCount[Rich::CF4],m_Nevts)     << "  photons/event" << endreq
-           << "=======================================================" << endreq;
+           << "=================================================================" << endreq;
 
   }
   else
@@ -163,11 +185,11 @@ void RichPhotonCreatorBase::reconstructPhotons() const
 
           // Iterate over pixels in same RICH as this segment
           const Rich::DetectorType rich = segment->trackSegment().rich();
-          for ( RichRecPixels::const_iterator iPixel = pixelCreator()->begin(rich);
-                iPixel != pixelCreator()->end(rich); ++iPixel )
+          RichRecPixels::const_iterator iPixel( pixelCreator()->begin(rich) );
+          RichRecPixels::const_iterator endPix( pixelCreator()->end(rich)   );
+          for ( ; iPixel != endPix; ++iPixel )
           {
             reconstructPhoton( segment, *iPixel );
-
           } // pixel loop
 
           segment->setAllPhotonsDone(true);
@@ -180,6 +202,17 @@ void RichPhotonCreatorBase::reconstructPhotons() const
 
   } // track loop
 
+}
+
+RichRecPhoton *
+RichPhotonCreatorBase::checkForExistingPhoton( RichRecSegment * segment,
+                                               RichRecPixel * pixel ) const
+{
+  // Form the key for this photon
+  const RichRecPhotonKey photonKey( pixel->key(), segment->key() );
+
+  // Try and find the photon
+  return richPhotons()->object( photonKey );
 }
 
 RichRecPhoton*
@@ -206,7 +239,6 @@ RichPhotonCreatorBase::reconstructPhoton( RichRecSegment * segment,
     // return brand new photon
     return buildPhoton( segment, pixel, photonKey );
   }
-
 }
 
 RichRecPhotons * RichPhotonCreatorBase::richPhotons() const
@@ -331,4 +363,40 @@ RichPhotonCreatorBase::reconstructPhotons( RichRecTrack * track,
   }
 
   return photons;
+}
+
+void RichPhotonCreatorBase::buildCrossReferences( RichRecPhoton * photon ) const
+{
+
+  // Pointers to the segment and pixel
+  RichRecSegment * segment = photon->richRecSegment();
+  RichRecPixel * pixel     = photon->richRecPixel();
+
+  // Add this pixel to the segment list of pixels that have a reconstructed photon
+  segment->addToRichRecPixels( pixel );
+
+  // Add this photon to the segment list of reconstructed photons
+  segment->addToRichRecPhotons( photon );
+
+  // Add this photon to the track list of reconstructed photons
+  segment->richRecTrack()->addToRichRecPhotons( photon );
+
+  // Add this photon to the pixel list of reconstructed photons
+  pixel->addToRichRecPhotons( photon );
+
+  // Add the track to the pixel list of associated tracks (those with valid photons)
+  pixel->addToRichRecTracks( segment->richRecTrack() );
+
+  // Add pixel to track list. Need to check if not already there for RICH1
+  if ( Rich::Rich1 == segment->trackSegment().rich() )
+  {
+    RichRecTrack::Pixels & tkPixs = segment->richRecTrack()->richRecPixels();
+    RichRecTrack::Pixels::iterator iPix = std::find( tkPixs.begin(), tkPixs.end(), pixel );
+    if ( tkPixs.end() == iPix ) segment->richRecTrack()->addToRichRecPixels( pixel );
+  } 
+  else // RICH2 - only one radiator type so no need to test
+  {
+    segment->richRecTrack()->addToRichRecPixels( pixel );
+  }
+
 }

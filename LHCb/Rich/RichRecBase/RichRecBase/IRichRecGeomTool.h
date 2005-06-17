@@ -5,7 +5,7 @@
  *  Header file for RICH reconstruction tool interface : IRichRecGeomTool
  *
  *  CVS Log :-
- *  $Id: IRichRecGeomTool.h,v 1.3 2005-02-02 10:01:20 jonrob Exp $
+ *  $Id: IRichRecGeomTool.h,v 1.4 2005-06-17 14:48:57 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -43,18 +43,6 @@ public:
   static const InterfaceID& interfaceID() { return IID_IRichRecGeomTool; }
 
   /** Computes the square of the distance separating the pixel hit and track hit
-   *  position extrapolated using the RichRecSegment direction in the LHCb global
-   *  coordinate system
-   *
-   *  @param segment Pointer to the RichRecSegment
-   *  @param pixel   Pointer to the RichRecPixel
-   *
-   *  @return The separation squared in global coordinates
-   */
-  virtual double trackPixelHitSep2Global( const RichRecSegment * segment,
-                                          const RichRecPixel * pixel ) const = 0;
-
-  /** Computes the square of the distance separating the pixel hit and track hit
    *  position extrapolated using the RichRecSegment direction in local
    *  HPD panel coordinates
    *
@@ -63,10 +51,10 @@ public:
    *
    *  @return The separation squared in local HPD panel coordinates
    */
-  virtual double trackPixelHitSep2Local( const RichRecSegment * segment,
-                                         const RichRecPixel * pixel ) const = 0;
+  virtual double trackPixelHitSep2( const RichRecSegment * segment,
+                                    const RichRecPixel * pixel ) const = 0;
 
-  /** Computes the fraction of the Cherenkov cone for a given segment and mass hypothesis 
+  /** Computes the fraction of the Cherenkov cone for a given segment and mass hypothesis
    *  that lies within the average HPD panel acceptance
    *
    *  @param segment Pointer the a RichRecSegment
@@ -76,6 +64,19 @@ public:
    */
   virtual double hpdPanelAcceptance( RichRecSegment * segment,
                                      const Rich::ParticleIDType id ) const = 0;
+
+
+  /** Correct the given position (in local HPD coordinates) for the average
+   *  optical distortion for given radiator
+   *
+   *  @param point The local position coordinate to correct
+   *  @param rad   The radiator type to correct for
+   *
+   *  @return The corrected local coordinate
+   */
+  virtual HepPoint3D correctAvRadiatorDistortion( const HepPoint3D & point,
+                                                  const Rich::RadiatorType rad ) const = 0;
+
 
 };
 

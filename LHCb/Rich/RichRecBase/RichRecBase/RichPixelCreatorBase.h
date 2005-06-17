@@ -5,7 +5,7 @@
  *  Header file for tool base class : RichPixelCreatorBase
  *
  *  CVS Log :-
- *  $Id: RichPixelCreatorBase.h,v 1.2 2005-05-26 16:45:51 jonrob Exp $
+ *  $Id: RichPixelCreatorBase.h,v 1.3 2005-06-17 14:48:57 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   20/04/2005
@@ -27,6 +27,7 @@
 
 // interfaces
 #include "RichRecBase/IRichPixelCreator.h"
+#include "RichRecBase/IRichRecGeomTool.h"
 #include "RichKernel/IRichHPDInfoTool.h"
 
 // RichKernel
@@ -147,6 +148,12 @@ protected: // methods
    */
   void savePixel( RichRecPixel * pix ) const;
 
+  /** Compute the average radiator distortion corrected positions
+   *  in local HPD panel coordinate system, 
+   *  for each valid radiator for the given pixel
+   */
+  void computeRadCorrLocalPositions( RichRecPixel * pixel ) const;
+
 protected: // data
 
   /// Flag to signify all pixels have been formed
@@ -162,6 +169,9 @@ private: // data
 
   /// HPD information tool
   IRichHPDInfoTool * m_hpdTool;
+
+  /// Reconstruction geometry tool
+  IRichRecGeomTool * m_recGeom;
 
   /// Pointer to RichRecPixels
   mutable RichRecPixels * m_pixels;
@@ -278,6 +288,20 @@ inline void RichPixelCreatorBase::resetIterators() const
   m_richEnd[Rich::Rich1]   = richPixels()->begin();
   m_richEnd[Rich::Rich2]   = richPixels()->begin();
 
+}
+
+inline void 
+RichPixelCreatorBase::computeRadCorrLocalPositions( RichRecPixel * pixel ) const
+{
+  if ( Rich::Rich1 == pixel->detector() )
+  {
+    pixel->setRadCorrLocalPosition(m_recGeom->correctAvRadiatorDistortion(pixel->localPosition(),Rich::Aerogel),Rich::Aerogel);
+    pixel->setRadCorrLocalPosition(m_recGeom->correctAvRadiatorDistortion(pixel->localPosition(),Rich::C4F10),Rich::C4F10);  
+  } 
+  else
+  {
+    pixel->setRadCorrLocalPosition(m_recGeom->correctAvRadiatorDistortion(pixel->localPosition(),Rich::CF4),Rich::CF4);
+  } 
 }
 
 #endif // RICHRECBASE_RICHPIXELCREATORBASE_H

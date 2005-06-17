@@ -5,11 +5,7 @@
  * A collection of general parameters for histogramming limits etc.
  *
  * CVS Log :-
- * $Id: RichDetParams.h,v 1.7 2005-05-13 14:54:56 jonrob Exp $
- * $Log: not supported by cvs2svn $
- * Revision 1.6  2004/07/26 18:00:58  jonrob
- * Various improvements to the doxygen comments
- *
+ * $Id: RichDetParams.h,v 1.8 2005-06-17 14:48:57 jonrob Exp $
  *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @date   2003-06-20
@@ -27,8 +23,8 @@
 #define RICH_HISTO_OFFSET   const int richOffset = 100000
 #define RAD_HISTO_OFFSET    const int radOffset  = 10000
 #define HYPO_HISTO_OFFSET   const int hypoOffset = 1000
-#define MAX_CKTHETA_RAD     const double maxCkTheta[] = { 0.255, 0.055, 0.0375 }
-#define MIN_CKTHETA_RAD     const double minCkTheta[] = { 0.05,  0.0,   0.0 }
+#define MAX_CKTHETA_RAD     const double maxCkTheta[] = { 0.31, 0.07, 0.04 }
+#define MIN_CKTHETA_RAD     const double minCkTheta[] = { 0.0,  0.0,   0.0 }
 
 #define RADIATOR_MAX_CKTHETA \
 const double ckThetaMax[] = { 0.3, 0.06, 0.06 }

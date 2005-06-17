@@ -5,8 +5,7 @@
  *  Header file for RICH reconstruction tool interface : IRichCherenkovResolution
  *
  *  CVS Log :-
- *  $Id: IRichCherenkovResolution.h,v 1.4 2004-07-26 18:00:57 jonrob Exp $
- *  $Log: not supported by cvs2svn $
+ *  $Id: IRichCherenkovResolution.h,v 1.5 2005-06-17 14:48:57 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -22,6 +21,7 @@ class RichRecSegment;
 /// Static Interface Identification
 static const InterfaceID IID_IRichCherenkovResolution( "IRichCherenkovResolution", 1, 0 );
 
+//-----------------------------------------------------------------------------
 /** @class IRichCherenkovResolution IRichCherenkovResolution.h
  *
  *  Interface for tool providing the expected Cherenkov angle resolution for
@@ -30,6 +30,7 @@ static const InterfaceID IID_IRichCherenkovResolution( "IRichCherenkovResolution
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
  */
+//-----------------------------------------------------------------------------
 
 class IRichCherenkovResolution : public virtual IAlgTool {
 

@@ -5,7 +5,7 @@
  *  Header file for tool base class : RichPhotonCreatorBase
  *
  *  CVS Log :-
- *  $Id: RichPhotonCreatorBase.h,v 1.1 2005-05-26 16:45:51 jonrob Exp $
+ *  $Id: RichPhotonCreatorBase.h,v 1.2 2005-06-17 14:48:57 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   20/05/2005
@@ -26,6 +26,8 @@
 #include "RichRecBase/IRichPhotonCreator.h"
 #include "RichRecBase/IRichPhotonPredictor.h"
 #include "RichRecBase/IRichPhotonSignal.h"
+#include "RichRecBase/IRichCherenkovAngle.h"
+#include "RichRecBase/IRichCherenkovResolution.h"
 
 // RichKernel
 #include "RichKernel/RichStatDivFunctor.h"
@@ -47,7 +49,7 @@
 
 class RichPhotonCreatorBase : public RichRecToolBase,
                               virtual public IRichPhotonCreator,
-                              virtual public IIncidentListener 
+                              virtual public IIncidentListener
 {
 
 public: // methods for Gaudi
@@ -76,6 +78,10 @@ public: // methods from interface
 
   // Return Pointer to RichRecPhotons
   RichRecPhotons * richPhotons() const;
+
+  // Checks whether a photon candidate exists for the given segment and pixel pair
+  RichRecPhoton * checkForExistingPhoton( RichRecSegment * segment,
+                                          RichRecPixel * pixel ) const;
 
   // Form a Photon candidate from a Segment and a pixel.
   RichRecPhoton * reconstructPhoton( RichRecSegment * segment,
@@ -110,21 +116,66 @@ protected: // methods
    */
   bool bookKeep() const;
 
-  /** Max Cherenkov theta value to reconstuct for given radiator
+  /*  Computes the cherenkov range to look in for a given track segment
    *
-   *  @param rad The radiator type
+   *  @param segment The track segment
+   *  @param id      The mass hypothesis
    *
-   *  @return The maximum Cherenkov angle to reconstruct for the given radiator
+   *  @return The Cherenkov angle range to search for photons in
    */
-  double maxCKTheta( const Rich::RadiatorType rad ) const;
+  double ckSearchRange( RichRecSegment * segment,
+                        const Rich::ParticleIDType id ) const;
 
-  /** Min Cherenkov theta value to reconstuct for given radiator
+  /** Absolute maximum Cherenkov theta value to reconstuct for given track segment
    *
-   *  @param rad The radiator type
+   *  @param segment The track segment
    *
-   *  @return The minimum Cherenkov angle to reconstruct for the given radiator
+   *  @return The maximum Cherenkov angle to reconstruct
    */
-  double minCKTheta( const Rich::RadiatorType rad ) const;
+  double absMaxCKTheta( RichRecSegment * segment ) const;
+
+  /** Absolute minimum Cherenkov theta value to reconstuct for given track segment
+   *
+   *  @param segment The track segment
+   *
+   *  @return The minimum Cherenkov angle to reconstruct
+   */
+  double absMinCKTheta( RichRecSegment * segment ) const;
+
+  /** Maximum Cherenkov theta value to reconstuct for
+   *  given track segment and mass hypothesis
+   *
+   *  @param segment The track segment
+   *  @param id      The mass hypothesis
+   *
+   *  @return The maximum Cherenkov angle to reconstruct
+   */
+  double maxCKTheta( RichRecSegment * segment,
+                     const Rich::ParticleIDType id = Rich::Electron ) const;
+
+  /** Minimum Cherenkov theta value to reconstuct for
+   *  given track segment and mass hypothesis
+   *
+   *  @param segment The track segment
+   *  @param id      The mass hypothesis
+   *
+   *  @return The minimum Cherenkov angle to reconstruct
+   */
+  double minCKTheta( RichRecSegment * segment,
+                     const Rich::ParticleIDType id = Rich::Proton ) const;
+
+  /** Check if the given Cherenkov theta is within tolerences for any mass
+   *  hypothesis for given track segment
+   *
+   *  @param segment The track segment
+   *  @param ckTheta The cherenkov angle to test
+   *
+   *  @return boolean indicating if angle is within tolerence
+   *  @retval true  Angle is within tolerence for at least one mass hypothesis
+   *  @retval false Angle is outside tolerence for all mass hypotheses
+   */
+  bool checkAngleInRange( RichRecSegment * segment,
+                          const double ckTheta ) const;
 
   /** Form a Photon candidate from a Segment and a pixel.
    *
@@ -154,7 +205,8 @@ protected: // methods
   void savePhoton( RichRecPhoton * photon,
                    const RichRecPhotonKey key ) const;
 
-  /** Performs simple tests to see if the given photon is worth keeping
+  /** Checks the photon signal probability is above a threshold value for
+   *  any mass hypothesis
    *
    *  @param photon The photon candidate to test
    *
@@ -162,7 +214,7 @@ protected: // methods
    *  @retval true  The photon candidate is a good one and is to be saved
    *  @retval false The photon candidate is to be rejected
    */
-  bool keepPhoton( RichRecPhoton * photon ) const;
+  bool checkPhotonProb( RichRecPhoton * photon ) const;
 
   /** Build cross references between the various reconstruction data
    *  objects for this photon
@@ -187,13 +239,22 @@ private: // data
   /// Pointer to the RichPhotonSignal tool
   IRichPhotonSignal * m_photonSignal;
 
+  /// Pointer to Cherenkov angle tool
+  IRichCherenkovAngle * m_ckAngle;
+
+  /// Pointer to Cherenkov angle resolution tool
+  IRichCherenkovResolution * m_ckRes;
+
   /// Number of events processed tally
   unsigned int m_Nevts;
 
-  /// Max Cherenkov theta angle
+  /// Tolerence on Cherenkov Angle
+  std::vector<double> m_CKTol;
+
+  /// Absolute maximum allowed Cherenkov Angle
   std::vector<double> m_maxCKtheta;
 
-  /// Min Cherenkov theta angle
+  /// Absolute minimum allowed Cherenkov Angle
   std::vector<double> m_minCKtheta;
 
   /// minimum cut value for photon probability
@@ -207,6 +268,9 @@ private: // data
 
   /// Location of RichRecPhotons in TES
   std::string m_richRecPhotonLocation;
+
+  /// Runtime name for photon predictor tool
+  std::string m_photPredName;
 
   // debug photon counting
   mutable std::vector<unsigned long int> m_photCount;
@@ -240,15 +304,59 @@ inline void RichPhotonCreatorBase::FinishEvent()
 }
 
 inline double
-RichPhotonCreatorBase::maxCKTheta( const Rich::RadiatorType rad ) const
+RichPhotonCreatorBase::ckSearchRange( RichRecSegment * segment,
+                                      const Rich::ParticleIDType id ) const
 {
-  return m_maxCKtheta[rad];
+  // Range depends on track resolution
+  //return m_CKTol[segment->trackSegment().radiator()] * m_ckRes->ckThetaResolution(segment,id);
+  // Fixed range per radiator
+  return m_CKTol[segment->trackSegment().radiator()];
 }
 
 inline double
-RichPhotonCreatorBase::minCKTheta( const Rich::RadiatorType rad ) const
+RichPhotonCreatorBase::absMaxCKTheta( RichRecSegment * segment ) const
 {
-  return m_minCKtheta[rad];
+  return m_maxCKtheta[segment->trackSegment().radiator()];
+}
+
+inline double
+RichPhotonCreatorBase::maxCKTheta( RichRecSegment * segment,
+                                   const Rich::ParticleIDType id ) const
+{
+  return ( m_ckAngle->avgCherenkovTheta(segment,id) + ckSearchRange(segment,id) );
+}
+
+inline double
+RichPhotonCreatorBase::absMinCKTheta( RichRecSegment * segment ) const
+{
+  return m_minCKtheta[segment->trackSegment().radiator()];
+}
+
+inline double
+RichPhotonCreatorBase::minCKTheta( RichRecSegment * segment,
+                                   const Rich::ParticleIDType id ) const
+{
+  return ( m_ckAngle->avgCherenkovTheta(segment,id) - ckSearchRange(segment,id) );
+}
+
+inline bool
+RichPhotonCreatorBase::checkAngleInRange( RichRecSegment * segment,
+                                          const double ckTheta ) const
+{
+  // Just check overall absolute min - max range
+  if ( ckTheta < absMinCKTheta(segment) || ckTheta > absMaxCKTheta(segment) ) return false;
+  // Check between eletron max and proton min around each track
+  //if ( ckTheta < minCKTheta(segment) || ckTheta > maxCKTheta(segment) ) return false;
+  //return true;
+  // Finer grained check, to be within tolerence of any mass hypothesis
+  bool ok = false;
+  for ( int ihypo = 0; ihypo < Rich::NParticleTypes; ++ihypo )
+  {
+    const Rich::ParticleIDType id = static_cast<Rich::ParticleIDType>(ihypo);
+    const double tmpT = m_ckAngle->avgCherenkovTheta( segment, id );
+    if ( fabs(tmpT-ckTheta) < ckSearchRange(segment,id) ) { ok = true; break; }
+  }
+  return ok;
 }
 
 inline bool RichPhotonCreatorBase::bookKeep() const
@@ -265,43 +373,19 @@ inline void RichPhotonCreatorBase::savePhoton( RichRecPhoton * photon,
   ++m_photCount[ photon->richRecSegment()->trackSegment().radiator() ];
 }
 
-inline bool RichPhotonCreatorBase::keepPhoton( RichRecPhoton * photon ) const
+inline bool RichPhotonCreatorBase::checkPhotonProb( RichRecPhoton * photon ) const
 {
   // check photon has significant probability to be signal for any
   // hypothesis. If not then reject
   bool keepPhoton = false;
-  for ( int iHypo = 0; iHypo < Rich::NParticleTypes; ++iHypo ) {
+  for ( int iHypo = 0; iHypo < Rich::NParticleTypes; ++iHypo )
+  {
     if ( m_photonSignal->predictedPixelSignal( photon,
                                                static_cast<Rich::ParticleIDType>(iHypo) )
          > m_minPhotonProb[ photon->richRecSegment()->trackSegment().radiator() ] )
-    {
-      keepPhoton = true;
-      break;
-    }
+    { keepPhoton = true; break; }
   }
   return keepPhoton;
-}
-
-inline void RichPhotonCreatorBase::buildCrossReferences( RichRecPhoton * photon ) const
-{
-  RichRecSegment * segment = photon->richRecSegment();
-  RichRecPixel * pixel     = photon->richRecPixel();
-  segment->addToRichRecPixels( pixel );
-  segment->addToRichRecPhotons( photon );
-  segment->richRecTrack()->addToRichRecPhotons( photon );
-  pixel->addToRichRecPhotons( photon );
-  pixel->addToRichRecTracks( segment->richRecTrack() );
-  RichRecTrack::Pixels & tkPixs = segment->richRecTrack()->richRecPixels();
-  bool notThere = true;
-  for ( RichRecTrack::Pixels::iterator pix = tkPixs.begin();
-        pix != tkPixs.end(); ++pix )
-  {
-    if ( (RichRecPixel*)(*pix) == pixel ) { notThere = false; break; }
-  }
-  if ( notThere )
-  {
-    segment->richRecTrack()->addToRichRecPixels( pixel );
-  }
 }
 
 #endif // RICHRECBASE_RICHPHOTONCREATORBASE_H

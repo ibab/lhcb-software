@@ -4,7 +4,7 @@
 <package name="RichRecBase">
 
 <!-- **************************************************************************
-  * $Id: RichRecTrack.xml,v 1.5 2005-04-07 16:43:47 cattanem Exp $
+  * $Id: RichRecTrack.xml,v 1.6 2005-06-17 14:48:58 jonrob Exp $
   *****************************************************************************
   * XML-description of RichrecTrack class                                     *
   * author: Chris Jones   Christopher.Rob.Jones@cern.ch                       *
@@ -302,8 +302,7 @@
 		def    = "Segments" 
 		type   = "std::vector&lt;RichRecSegment*&gt;"
 	/>
-
-            
+           
 	<typedef 
 		desc      = "Container type for RichRecPixels" 
 		access    = "PUBLIC" 
@@ -353,7 +352,7 @@
 			m_richRecPixels.push_back(pixel);
 		</code>
         </method>
-            
+        
 	<attribute 
 		name      = "richRecPhotons"
 		access    = "PRIVATE" 

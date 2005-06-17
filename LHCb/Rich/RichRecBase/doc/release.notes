@@ -4,6 +4,9 @@
 ! Purpose     : Base package for RICH Reconstruction Packages
 !-----------------------------------------------------------------------------
 
+! 2005-06-17 - Chris Jones
+ - Remove unused SmartRefs from definition of RichRecPixel
+
 ! 2005-05-26 - Chris Jones
  - Add new base classes for photon and track creator tools. Due to the
    increase in the number of such tools, its is now convenient to have 

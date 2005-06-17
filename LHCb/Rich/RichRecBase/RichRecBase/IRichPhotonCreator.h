@@ -5,8 +5,7 @@
  *  Header file for RICH reconstruction tool interface : IRichPhotonCreator
  *
  *  CVS Log :-
- *  $Id: IRichPhotonCreator.h,v 1.4 2004-07-26 18:00:57 jonrob Exp $
- *  $Log: not supported by cvs2svn $
+ *  $Id: IRichPhotonCreator.h,v 1.5 2005-06-17 14:48:57 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -25,6 +24,7 @@
 /// Static Interface Identification
 static const InterfaceID IID_IRichPhotonCreator( "IRichPhotonCreator" , 1 , 0 );
 
+//-----------------------------------------------------------------------------
 /** @class IRichPhotonCreator IRichPhotonCreator.h
  *
  *  Interface for tool which performs the association between RichRecSegments
@@ -33,6 +33,7 @@ static const InterfaceID IID_IRichPhotonCreator( "IRichPhotonCreator" , 1 , 0 );
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
  */
+//-----------------------------------------------------------------------------
 
 class IRichPhotonCreator : public virtual IAlgTool {
 
@@ -49,6 +50,20 @@ public:
    *  @return Pointer to the container of RichRecPhotons
    */
   virtual RichRecPhotons * richPhotons() const = 0;
+
+  /** Checks whether a photon candidate exists for the given segment and pixel pair
+   *
+   *  @param segment Pointer to the RichRecSegment
+   *  @param pixel   Pointer to the RichRecPixel
+   *
+   *  @return Pointer to the reconstructed photon candidate
+   *  @retval !NULL A valid reconstructed photon exists for this pixel/segment pair
+   *  @retval NULL  No photon exists for this pixel/segment pair.
+   *                Note this DOES NOT mean it isn't possible to reconstruct a candidate 
+   *                ( see reconstructPhoton methods ).
+   */
+  virtual RichRecPhoton * checkForExistingPhoton( RichRecSegment * segment,
+                                                  RichRecPixel * pixel ) const = 0;
 
   /** Form a RichRecPhoton candidate from a given segment and a pixel. 
    *  Whether or not this method succeeds in creating a photon object

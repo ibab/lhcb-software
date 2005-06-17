@@ -5,7 +5,7 @@
  *  Implementation file for tool base class : RichPixelCreatorBase
  *
  *  CVS Log :-
- *  $Id: RichPixelCreatorBase.cpp,v 1.2 2005-05-26 16:45:51 jonrob Exp $
+ *  $Id: RichPixelCreatorBase.cpp,v 1.3 2005-06-17 14:48:57 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   20/04/2005
@@ -24,6 +24,7 @@ RichPixelCreatorBase::RichPixelCreatorBase( const std::string& type,
   : RichRecToolBase ( type, name, parent ),
     m_allDone       ( false ),
     m_hpdTool       ( 0 ),
+    m_recGeom       ( 0 ),
     m_pixels        ( 0 ),
     m_bookKeep      ( false ),
     m_hpdCheck      ( false ),
@@ -53,6 +54,7 @@ StatusCode RichPixelCreatorBase::initialize()
   if ( sc.isFailure() ) { return sc; }
 
   // get tools
+  acquireTool( "RichRecGeomTool", m_recGeom );
   if ( m_hpdCheck )
   {
     acquireTool( "RichHPDInfoTool", m_hpdTool );

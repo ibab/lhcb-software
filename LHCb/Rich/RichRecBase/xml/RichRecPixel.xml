@@ -4,7 +4,7 @@
 <package name="RichRecBase">
 
 <!-- **************************************************************************
-  * $Id: RichRecPixel.xml,v 1.7 2005-03-04 16:52:56 cattanem Exp $
+  * $Id: RichRecPixel.xml,v 1.8 2005-06-17 14:48:57 jonrob Exp $
   *****************************************************************************
   * XML-description of RichRecPixel class                                     *
   * author: Chris Jones   Christopher.Rob.Jones@cern.ch                       *
@@ -42,7 +42,7 @@
 
         <constructor 
                 desc     = "Constructor with arguments" 
-                initList = "m_smartID(smartID), m_globalPosition(gPos), m_localPosition(lPos), m_currentBackground(0), m_parentType(parentType), m_richRecTracks(), m_richRecPhotons(), m_parentPixel(parent)">
+                initList = "m_smartID(smartID), m_globalPosition(gPos), m_localPosition(lPos), m_radCorrLocalPositions(Rich::NRadiatorTypes,lPos), m_currentBackground(0), m_parentType(parentType), m_richRecTracks(), m_richRecPhotons(), m_parentPixel(parent)">
                 <arg inout="BYVALUE"  const="TRUE" name="smartID"    type="RichSmartID"               />
                 <arg                  const="TRUE" name="gPos"       type="HepPoint3D"                />
                 <arg                  const="TRUE" name="lPos"       type="HepPoint3D"                />
@@ -53,12 +53,12 @@
 
         <constructor 
                 desc     = "Copy Constructor. Creates a new RichRecPixel with the same physics content" 
-                initList = "KeyedObject&lt;int&gt;(), m_smartID(pixel.smartID()), m_globalPosition(pixel.globalPosition()), m_localPosition(pixel.localPosition()), m_currentBackground(pixel.currentBackground()), m_parentType(pixel.parentType()), m_richRecTracks(pixel.richRecTracks()), m_richRecPhotons(pixel.richRecPhotons()), m_parentPixel(pixel.parentPixel())">
+                initList = "KeyedObject&lt;int&gt;(), m_smartID(pixel.smartID()), m_globalPosition(pixel.globalPosition()), m_localPosition(pixel.localPosition()), m_radCorrLocalPositions(pixel.radCorrLocalPositions()), m_currentBackground(pixel.currentBackground()), m_parentType(pixel.parentType()), m_richRecTracks(pixel.richRecTracks()), m_richRecPhotons(pixel.richRecPhotons()), m_parentPixel(pixel.parentPixel())">
                 <arg  const="TRUE" name="pixel" type="RichRecPixel" />
                 <code/>
         </constructor>
             
-        <method 
+        <method
                 const = "TRUE" 
                 desc  = "Returns the RICH Detector for this pixel" 
                 name  = "detector" 
@@ -87,40 +87,92 @@
                         return m_smartID.panelID();
                 </code>
         </method>
-            
+
+        <method 
+                desc   = "Add to associated RichRecTracks" 
+                inline = "TRUE" 
+                name   = "addToRichRecTracks" >
+                <arg const="FALSE" name="track" type="RichRecTrack*"/>
+                <code>
+                        m_richRecTracks.push_back(track);
+                </code>
+        </method>
+
+        <method 
+                desc      = "Add to associated RichRecPhotons" 
+                inline    = "TRUE" 
+                name      = "addToRichRecPhotons" >
+                <arg const="FALSE" name="photon" type="RichRecPhoton*"/>
+                <code>
+                        m_richRecPhotons.push_back(photon);
+                </code>
+        </method>
+
+        <method 
+                desc   = "Set the radiator corrected local HPD panel coordinate position for given radiator"
+                inline = "TRUE"
+                name   = "setRadCorrLocalPosition" >
+                <arg const="TRUE" name="localPos" type="HepPoint3D" />
+                <arg const="TRUE" name="rad"      type="Rich::RadiatorType" inout="BYVALUE" />
+                <code>
+                        m_radCorrLocalPositions[rad] = localPos;
+                </code>
+        </method>
+
+        <method 
+                const  = "TRUE" 
+                desc   = "Get the radiator corrected local HPD panel coordinate position for given radiator"
+                inline = "TRUE"
+                name   = "localPosition" 
+                type   = "const HepPoint3D&amp;" >
+                <arg const="TRUE" name="rad" type="Rich::RadiatorType" inout="BYVALUE" />
+                <code>
+                        return m_radCorrLocalPositions[rad];
+                </code>
+        </method>
+
         <attribute 
                 desc = "RichSmartID" 
-                init = "0" 
                 name = "smartID" 
                 type = "RichSmartID"
+                init = "0" 
         />
             
         <attribute 
-                desc = "Position in global coordinates" 
+                desc = "Position in global LHCb coordinate system" 
                 name = "globalPosition" 
-                init = "0,0,0" 
                 type = "HepPoint3D"
+                init = "0,0,0" 
         />
             
         <attribute 
-                desc = "Position in local coordinates" 
-                init = "0,0,0" 
+                desc = "Uncorrected position in local HPD panel coordinate system" 
                 name = "localPosition" 
                 type = "HepPoint3D"
+                init = "0,0,0" 
         />
-            
+
+        <attribute 
+                desc    = "Position in local HPD panel coordinate system, corrected for the average optical distortion for each radiator" 
+                name    = "radCorrLocalPositions"
+                type    = "std::vector&lt;HepPoint3D&gt;"
+                init    = "Rich::NRadiatorTypes,HepPoint3D(0,0,0)"
+                setMeth = "FALSE" 
+                getMeth = "TRUE" 
+        />
+
         <attribute 
                 desc = "Current value for a working estimate of the background in this pixel" 
-                init = "0" 
                 name = "currentBackground" 
                 type = "RichRecPixel::FloatType"
+                init = "0" 
         />
             
         <attribute 
                 desc = "Enumeration to Parent type" 
-                init = "Rich::PixelParent::Unknown" 
                 name = "parentType" 
                 type = "Rich::PixelParent::Type"
+                init = "Rich::PixelParent::Unknown" 
         />
             
         <relation 
@@ -142,16 +194,6 @@
                 name   = "richRecTracks" serialize="FALSE" 
                 type   = "Tracks"
         />
-                
-        <method 
-                desc   = "Add to associated RichRecTracks" 
-                inline = "TRUE" 
-                name   = "addToRichRecTracks" >
-                <arg const="FALSE" name="track" type="RichRecTrack*"/>
-                <code>
-                        m_richRecTracks.push_back(track);
-                </code>
-        </method>
             
         <typedef 
                 access = "PUBLIC" 
@@ -167,30 +209,21 @@
                 serialize = "FALSE" 
                 type      = "Photons"
         />
-            
-        <method 
-                desc      = "Add to associated RichRecPhotons" 
-                inline    = "TRUE" 
-                name      = "addToRichRecPhotons" >
-                <arg const="FALSE" name="photon" type="RichRecPhoton*"/>
-                <code>
-                        m_richRecPhotons.push_back(photon);
-                </code>
-        </method>
 
+<!--
         <relation 
                 desc         = "SmartRefVector of RichRecTracks for which this pixel has valid photon associations" 
                 multiplicity = "N" 
                 name         = "richRecTracksSmartRefs" 
                 type         = "RichRecTrack"
-        />
-            
+        />  
         <relation 
                 desc         = "SmartRefVector to associated RichRecPhotons"
                 multiplicity = "N" 
                 name         = "richRecPhotonsSmartRefs" 
                 type         = "RichRecPhoton"
         />
+-->
 
 </class>
 
