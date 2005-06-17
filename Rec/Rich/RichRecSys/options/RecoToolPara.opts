@@ -62,6 +62,9 @@
 // I.e cheat the emission, detection and mirror reflection points, and the cherenkov angles
 //#include "$RICHRECSYSOPTS/tools/RichPhotonsFromMCRichOpticalPhotons.opts"
 
+// Photon reconstruction using full reconstructed information, but applying an additional
+// gaussian smear to the reconstructed theta values
+//#include "$RICHRECSYSOPTS/tools/RichPhotonsFromRecoWithSmearing.opts"
 
 // =================================== Miscellaneous ===========================================
 
@@ -82,13 +85,16 @@ ToolSvc.RichToolRegistry.Tools += { "RichStatusCreator/RichStatusCreator" };
 
 // Geometrical efficiency from full ray tracing
 ToolSvc.RichToolRegistry.Tools += { "RichGeomEffPhotonTracing/RichGeomEff" };
-ToolSvc.RichGeomEff.NPhotonsGeomEffCalc          = 100;
-ToolSvc.RichGeomEff.NPhotonsGeomEffBailout       = 25;
+//ToolSvc.RichGeomEff.NPhotonsGeomEffCalc          = 100;
+//ToolSvc.RichGeomEff.NPhotonsGeomEffBailout       = 25;
+ToolSvc.RichGeomEff.NPhotonsGeomEffCalc          = 50;
+ToolSvc.RichGeomEff.NPhotonsGeomEffBailout       = 15;
 
 // Fixed value
 //ToolSvc.RichToolRegistry.Tools += { "RichGeomEffFixedValue/RichGeomEff" };
-//ToolSvc.RichGeomEff.FixedSignalEfficiency   =  { 0.70, 0.70, 0.70 };
-//ToolSvc.RichGeomEff.FixedScatterEfficiency  =  0.70;
+//                                               Aerogel  C4F10   CF4
+//ToolSvc.RichGeomEff.FixedSignalEfficiency   =  { 0.55,    0.62,   0.55  };
+//ToolSvc.RichGeomEff.FixedScatterEfficiency  =  0.55;
 
 // Track signals
 ToolSvc.RichToolRegistry.Tools += { "RichExpectedTrackSignal/RichExpectedTrackSignal" };
@@ -145,3 +151,7 @@ ToolSvc.RichToolRegistry.Tools += { "RichSmartIDTool/RichSmartIDTool" };
 
 // Detector ray-tracing
 ToolSvc.RichToolRegistry.Tools += { "RichRayTracing/RichRayTracing" };
+
+// Reco geometry tool
+ToolSvc.RichToolRegistry.Tools += { "RichRecGeomTool/RichRecGeomTool" };
+ToolSvc.RichRecGeomTool.RadOpticalCorrections = { 0.037, 0.0105, -0.014 };

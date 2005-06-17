@@ -1,0 +1,22 @@
+
+// RichRecPhoton predictor (quick test if a given pixel/segment combination
+// is likely to yield a good photon)
+ToolSvc.RichToolRegistry.Tools += { "RichPhotonPredictor/RichPhotonPredictor" };
+ToolSvc.RichPhotonPredictor.MinTrackROI          = { 130.0,   0.0,    0.0  };
+ToolSvc.RichPhotonPredictor.MaxTrackROI          = { 350.0,  90.0,  250.0  };
+
+// RichRecPhoton Creator
+ToolSvc.RichToolRegistry.Tools += { "RichPhotonCreatorWithGaussianCKSmear/RichPhotonCreator" };
+
+//                                             Aero   C4F10   CF4
+ToolSvc.RichPhotonCreator.RadiatorsToSmear = { true,  false,  false };
+ToolSvc.RichPhotonCreator.SmearingWidths   = { 0.1,   0.01,   0.01  };
+ToolSvc.RichPhotonCreator.ApplySmearingToAllPhotons = false;
+
+ToolSvc.RichToolRegistry.Tools += { "RichPhotonCreator/RichDelegatedPhotonCreator" };
+//ToolSvc.RichDelegatedPhotonCreator.MinCherenkovThetaTolerence = { 0.005,  0.004,  0.003  };
+//ToolSvc.RichDelegatedPhotonCreator.MaxCherenkovThetaTolerence = { 0.005,  0.004,  0.003  };
+//ToolSvc.RichDelegatedPhotonCreator.MinPhotonProbability       = { 1e-15,  1e-15,  1e-15  };
+
+// geometrical photon reconstruction
+ToolSvc.RichToolRegistry.Tools += { "RichPhotonReco/RichDetPhotonReco" };

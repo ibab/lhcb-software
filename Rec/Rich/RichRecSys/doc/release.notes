@@ -4,6 +4,10 @@
 ! Purpose     : Co-ordinates the RICH reconstruction packages
 !-----------------------------------------------------------------------------
 
+! 2005-06-17 - Chris Jones
+ - Update to photon reconstruction scheme
+ - Update geometrical efficiency calculation parameters
+
 ! 2005-05-13 - Chris Jones
  - Add options to run pixel create with forced-dead HPDs
 
