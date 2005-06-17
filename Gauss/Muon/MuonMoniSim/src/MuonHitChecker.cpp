@@ -121,7 +121,7 @@ StatusCode MuonHitChecker::crNtuples() {
 //=============================================================================
 StatusCode MuonHitChecker::execute() {
 
-  info() << "==> Execute MuonHitChecker" << endmsg;
+  debug() << "==> Execute MuonHitChecker" << endmsg;
  // Header
   const EventHeader* evt = get<EventHeader>(EventHeaderLocation::Default);
   int tnhit[5][4];    int tnhit_ri[5];  int tmhit_ri[5];  

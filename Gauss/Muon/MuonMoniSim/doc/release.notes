@@ -1,15 +1,17 @@
 Package         : MuonMoniSim
 Package manager : A Sarti
 
-======================= MuonMoniSim v1r0 2005-06-10 ========================
-! 2005-06-10 A. Sarti
-  Fixed a bug in the normalization of the various mean hits evaluation
+!============================== MuonMoniSim v1r1 ============================
+! 2005-06-17 - Gloria CORTI
+ - Make print out at execute in debug() instead of info()
 
-======================= MuonMoniSim v1r0 2005-06-09 ========================
+! 2005-06-10 A. Sarti
+ - Fixed a bug in the normalization of the various mean hits evaluation
+
 ! 2005-06-09 A. Sarti
-  Added more printout
+ - Added more printout
  
-======================= MuonMoniSim v1r0 2005-05-05 ========================
+!======================= MuonMoniSim v1r0 2005-05-05 ========================
 ! 2005-05-55 A. Sarti
-  New package to hold Muon Sim checking/monitoring algorithms
+ - New package to hold Muon Sim checking/monitoring algorithms
  
