@@ -1,7 +1,7 @@
 
 // Job options to produce PID results with varying nsigma cuts
 
-BrunelMoniRICHSeq.Members += { "RichPIDQC/RiPIDMonAllTightKaon0" };
+CheckRICHSeq.Members += { "RichPIDQC/RiPIDMonAllTightKaon0" };
 RiPIDMonAllTightKaon0.MinPCut = 2;
 RiPIDMonAllTightKaon0.MaxPCut = 150;
 RiPIDMonAllTightKaon0.MCHistoPath = "RICH/PIDQC/ALL/2TO150/TIGHTK0/MC/";
@@ -9,7 +9,7 @@ RiPIDMonAllTightKaon0.HistoPath = "RICH/PIDQC/ALL/2TO150/TIGHTK0/";
 RiPIDMonAllTightKaon0.FinalPrintout = true;
 RiPIDMonAllTightKaon0.TightNSigmaCutKaon = 0;
 
-BrunelMoniRICHSeq.Members += { "RichPIDQC/RiPIDMonAllTightKaon1" };
+CheckRICHSeq.Members += { "RichPIDQC/RiPIDMonAllTightKaon1" };
 RiPIDMonAllTightKaon1.MinPCut = 2;
 RiPIDMonAllTightKaon1.MaxPCut = 150;
 RiPIDMonAllTightKaon1.MCHistoPath = "RICH/PIDQC/ALL/2TO150/TIGHTK1/MC/";
@@ -17,7 +17,7 @@ RiPIDMonAllTightKaon1.HistoPath = "RICH/PIDQC/ALL/2TO150/TIGHTK1/";
 RiPIDMonAllTightKaon1.FinalPrintout = true;
 RiPIDMonAllTightKaon1.TightNSigmaCutKaon = 1;
 
-BrunelMoniRICHSeq.Members += { "RichPIDQC/RiPIDMonAllTightKaon2" };
+CheckRICHSeq.Members += { "RichPIDQC/RiPIDMonAllTightKaon2" };
 RiPIDMonAllTightKaon2.MinPCut = 2;
 RiPIDMonAllTightKaon2.MaxPCut = 150;
 RiPIDMonAllTightKaon2.MCHistoPath = "RICH/PIDQC/ALL/2TO150/TIGHTK2/MC/";
@@ -25,7 +25,7 @@ RiPIDMonAllTightKaon2.HistoPath = "RICH/PIDQC/ALL/2TO150/TIGHTK2/";
 RiPIDMonAllTightKaon2.FinalPrintout = true;
 RiPIDMonAllTightKaon2.TightNSigmaCutKaon = 2;
 
-BrunelMoniRICHSeq.Members += { "RichPIDQC/RiPIDMonAllTightKaon3" };
+CheckRICHSeq.Members += { "RichPIDQC/RiPIDMonAllTightKaon3" };
 RiPIDMonAllTightKaon3.MinPCut = 2;
 RiPIDMonAllTightKaon3.MaxPCut = 150;
 RiPIDMonAllTightKaon3.MCHistoPath = "RICH/PIDQC/ALL/2TO150/TIGHTK3/MC/";
@@ -33,7 +33,7 @@ RiPIDMonAllTightKaon3.HistoPath = "RICH/PIDQC/ALL/2TO150/TIGHTK3/";
 RiPIDMonAllTightKaon3.FinalPrintout = true;
 RiPIDMonAllTightKaon3.TightNSigmaCutKaon = 3;
 
-BrunelMoniRICHSeq.Members += { "RichPIDQC/RiPIDMonAllTightKaon4" };
+CheckRICHSeq.Members += { "RichPIDQC/RiPIDMonAllTightKaon4" };
 RiPIDMonAllTightKaon4.MinPCut = 2;
 RiPIDMonAllTightKaon4.MaxPCut = 150;
 RiPIDMonAllTightKaon4.MCHistoPath = "RICH/PIDQC/ALL/2TO150/TIGHTK4/MC/";
@@ -41,7 +41,7 @@ RiPIDMonAllTightKaon4.HistoPath = "RICH/PIDQC/ALL/2TO150/TIGHTK4/";
 RiPIDMonAllTightKaon4.FinalPrintout = true;
 RiPIDMonAllTightKaon4.TightNSigmaCutKaon = 4;
 
-BrunelMoniRICHSeq.Members += { "RichPIDQC/RiPIDMonAllTightKaon5" };
+CheckRICHSeq.Members += { "RichPIDQC/RiPIDMonAllTightKaon5" };
 RiPIDMonAllTightKaon5.MinPCut = 2;
 RiPIDMonAllTightKaon5.MaxPCut = 150;
 RiPIDMonAllTightKaon5.MCHistoPath = "RICH/PIDQC/ALL/2TO150/TIGHTK5/MC/";
@@ -49,7 +49,7 @@ RiPIDMonAllTightKaon5.HistoPath = "RICH/PIDQC/ALL/2TO150/TIGHTK5/";
 RiPIDMonAllTightKaon5.FinalPrintout = true;
 RiPIDMonAllTightKaon5.TightNSigmaCutKaon = 5;
 
-BrunelMoniRICHSeq.Members += { "RichPIDQC/RiPIDMonAllTightKaon6" };
+CheckRICHSeq.Members += { "RichPIDQC/RiPIDMonAllTightKaon6" };
 RiPIDMonAllTightKaon6.MinPCut = 2;
 RiPIDMonAllTightKaon6.MaxPCut = 150;
 RiPIDMonAllTightKaon6.MCHistoPath = "RICH/PIDQC/ALL/2TO150/TIGHTK6/MC/";
@@ -57,7 +57,7 @@ RiPIDMonAllTightKaon6.HistoPath = "RICH/PIDQC/ALL/2TO150/TIGHTK6/";
 RiPIDMonAllTightKaon6.FinalPrintout = true;
 RiPIDMonAllTightKaon6.TightNSigmaCutKaon = 6;
 
-BrunelMoniRICHSeq.Members += { "RichPIDQC/RiPIDMonAllTightKaon7" };
+CheckRICHSeq.Members += { "RichPIDQC/RiPIDMonAllTightKaon7" };
 RiPIDMonAllTightKaon7.MinPCut = 2;
 RiPIDMonAllTightKaon7.MaxPCut = 150;
 RiPIDMonAllTightKaon7.MCHistoPath = "RICH/PIDQC/ALL/2TO150/TIGHTK7/MC/";
@@ -65,7 +65,7 @@ RiPIDMonAllTightKaon7.HistoPath = "RICH/PIDQC/ALL/2TO150/TIGHTK7/";
 RiPIDMonAllTightKaon7.FinalPrintout = true;
 RiPIDMonAllTightKaon7.TightNSigmaCutKaon = 7;
 
-BrunelMoniRICHSeq.Members += { "RichPIDQC/RiPIDMonAllTightKaon8" };
+CheckRICHSeq.Members += { "RichPIDQC/RiPIDMonAllTightKaon8" };
 RiPIDMonAllTightKaon8.MinPCut = 2;
 RiPIDMonAllTightKaon8.MaxPCut = 150;
 RiPIDMonAllTightKaon8.MCHistoPath = "RICH/PIDQC/ALL/2TO150/TIGHTK8/MC/";
@@ -73,7 +73,7 @@ RiPIDMonAllTightKaon8.HistoPath = "RICH/PIDQC/ALL/2TO150/TIGHTK8/";
 RiPIDMonAllTightKaon8.FinalPrintout = true;
 RiPIDMonAllTightKaon8.TightNSigmaCutKaon = 8;
 
-BrunelMoniRICHSeq.Members += { "RichPIDQC/RiPIDMonAllTightKaon9" };
+CheckRICHSeq.Members += { "RichPIDQC/RiPIDMonAllTightKaon9" };
 RiPIDMonAllTightKaon9.MinPCut = 2;
 RiPIDMonAllTightKaon9.MaxPCut = 150;
 RiPIDMonAllTightKaon9.MCHistoPath = "RICH/PIDQC/ALL/2TO150/TIGHTK9/MC/";
@@ -81,7 +81,7 @@ RiPIDMonAllTightKaon9.HistoPath = "RICH/PIDQC/ALL/2TO150/TIGHTK9/";
 RiPIDMonAllTightKaon9.FinalPrintout = true;
 RiPIDMonAllTightKaon9.TightNSigmaCutKaon = 9;
 
-BrunelMoniRICHSeq.Members += { "RichPIDQC/RiPIDMonAllTightKaon10" };
+CheckRICHSeq.Members += { "RichPIDQC/RiPIDMonAllTightKaon10" };
 RiPIDMonAllTightKaon10.MinPCut = 2;
 RiPIDMonAllTightKaon10.MaxPCut = 150;
 RiPIDMonAllTightKaon10.MCHistoPath = "RICH/PIDQC/ALL/2TO150/TIGHTK10/MC/";
@@ -91,7 +91,7 @@ RiPIDMonAllTightKaon10.TightNSigmaCutKaon = 10;
 
 // ========================================================================
 
-BrunelMoniRICHSeq.Members += { "RichPIDQC/RiPIDMonAllLooseKaon0" };
+CheckRICHSeq.Members += { "RichPIDQC/RiPIDMonAllLooseKaon0" };
 RiPIDMonAllLooseKaon0.MinPCut = 2;
 RiPIDMonAllLooseKaon0.MaxPCut = 150;
 RiPIDMonAllLooseKaon0.MCHistoPath = "RICH/PIDQC/ALL/2TO150/LOOSEK0/MC/";
@@ -99,7 +99,7 @@ RiPIDMonAllLooseKaon0.HistoPath = "RICH/PIDQC/ALL/2TO150/LOOSEK0/";
 RiPIDMonAllLooseKaon0.FinalPrintout = true;
 RiPIDMonAllLooseKaon0.LooseNSigmaCutKaon = 0;
 
-BrunelMoniRICHSeq.Members += { "RichPIDQC/RiPIDMonAllLooseKaon1" };
+CheckRICHSeq.Members += { "RichPIDQC/RiPIDMonAllLooseKaon1" };
 RiPIDMonAllLooseKaon1.MinPCut = 2;
 RiPIDMonAllLooseKaon1.MaxPCut = 150;
 RiPIDMonAllLooseKaon1.MCHistoPath = "RICH/PIDQC/ALL/2TO150/LOOSEK1/MC/";
@@ -107,7 +107,7 @@ RiPIDMonAllLooseKaon1.HistoPath = "RICH/PIDQC/ALL/2TO150/LOOSEK1/";
 RiPIDMonAllLooseKaon1.FinalPrintout = true;
 RiPIDMonAllLooseKaon1.LooseNSigmaCutKaon = 1;
 
-BrunelMoniRICHSeq.Members += { "RichPIDQC/RiPIDMonAllLooseKaon2" };
+CheckRICHSeq.Members += { "RichPIDQC/RiPIDMonAllLooseKaon2" };
 RiPIDMonAllLooseKaon2.MinPCut = 2;
 RiPIDMonAllLooseKaon2.MaxPCut = 150;
 RiPIDMonAllLooseKaon2.MCHistoPath = "RICH/PIDQC/ALL/2TO150/LOOSEK2/MC/";
@@ -115,7 +115,7 @@ RiPIDMonAllLooseKaon2.HistoPath = "RICH/PIDQC/ALL/2TO150/LOOSEK2/";
 RiPIDMonAllLooseKaon2.FinalPrintout = true;
 RiPIDMonAllLooseKaon2.LooseNSigmaCutKaon = 2;
 
-BrunelMoniRICHSeq.Members += { "RichPIDQC/RiPIDMonAllLooseKaon3" };
+CheckRICHSeq.Members += { "RichPIDQC/RiPIDMonAllLooseKaon3" };
 RiPIDMonAllLooseKaon3.MinPCut = 2;
 RiPIDMonAllLooseKaon3.MaxPCut = 150;
 RiPIDMonAllLooseKaon3.MCHistoPath = "RICH/PIDQC/ALL/2TO150/LOOSEK3/MC/";
@@ -123,7 +123,7 @@ RiPIDMonAllLooseKaon3.HistoPath = "RICH/PIDQC/ALL/2TO150/LOOSEK3/";
 RiPIDMonAllLooseKaon3.FinalPrintout = true;
 RiPIDMonAllLooseKaon3.LooseNSigmaCutKaon = 3;
 
-BrunelMoniRICHSeq.Members += { "RichPIDQC/RiPIDMonAllLooseKaon4" };
+CheckRICHSeq.Members += { "RichPIDQC/RiPIDMonAllLooseKaon4" };
 RiPIDMonAllLooseKaon4.MinPCut = 2;
 RiPIDMonAllLooseKaon4.MaxPCut = 150;
 RiPIDMonAllLooseKaon4.MCHistoPath = "RICH/PIDQC/ALL/2TO150/LOOSEK4/MC/";
@@ -131,7 +131,7 @@ RiPIDMonAllLooseKaon4.HistoPath = "RICH/PIDQC/ALL/2TO150/LOOSEK4/";
 RiPIDMonAllLooseKaon4.FinalPrintout = true;
 RiPIDMonAllLooseKaon4.LooseNSigmaCutKaon = 4;
 
-BrunelMoniRICHSeq.Members += { "RichPIDQC/RiPIDMonAllLooseKaon5" };
+CheckRICHSeq.Members += { "RichPIDQC/RiPIDMonAllLooseKaon5" };
 RiPIDMonAllLooseKaon5.MinPCut = 2;
 RiPIDMonAllLooseKaon5.MaxPCut = 150;
 RiPIDMonAllLooseKaon5.MCHistoPath = "RICH/PIDQC/ALL/2TO150/LOOSEK5/MC/";
@@ -139,7 +139,7 @@ RiPIDMonAllLooseKaon5.HistoPath = "RICH/PIDQC/ALL/2TO150/LOOSEK5/";
 RiPIDMonAllLooseKaon5.FinalPrintout = true;
 RiPIDMonAllLooseKaon5.LooseNSigmaCutKaon = 5;
 
-BrunelMoniRICHSeq.Members += { "RichPIDQC/RiPIDMonAllLooseKaon6" };
+CheckRICHSeq.Members += { "RichPIDQC/RiPIDMonAllLooseKaon6" };
 RiPIDMonAllLooseKaon6.MinPCut = 2;
 RiPIDMonAllLooseKaon6.MaxPCut = 150;
 RiPIDMonAllLooseKaon6.MCHistoPath = "RICH/PIDQC/ALL/2TO150/LOOSEK6/MC/";
@@ -147,7 +147,7 @@ RiPIDMonAllLooseKaon6.HistoPath = "RICH/PIDQC/ALL/2TO150/LOOSEK6/";
 RiPIDMonAllLooseKaon6.FinalPrintout = true;
 RiPIDMonAllLooseKaon6.LooseNSigmaCutKaon = 6;
 
-BrunelMoniRICHSeq.Members += { "RichPIDQC/RiPIDMonAllLooseKaon7" };
+CheckRICHSeq.Members += { "RichPIDQC/RiPIDMonAllLooseKaon7" };
 RiPIDMonAllLooseKaon7.MinPCut = 2;
 RiPIDMonAllLooseKaon7.MaxPCut = 150;
 RiPIDMonAllLooseKaon7.MCHistoPath = "RICH/PIDQC/ALL/2TO150/LOOSEK7/MC/";
@@ -155,7 +155,7 @@ RiPIDMonAllLooseKaon7.HistoPath = "RICH/PIDQC/ALL/2TO150/LOOSEK7/";
 RiPIDMonAllLooseKaon7.FinalPrintout = true;
 RiPIDMonAllLooseKaon7.LooseNSigmaCutKaon = 7;
 
-BrunelMoniRICHSeq.Members += { "RichPIDQC/RiPIDMonAllLooseKaon8" };
+CheckRICHSeq.Members += { "RichPIDQC/RiPIDMonAllLooseKaon8" };
 RiPIDMonAllLooseKaon8.MinPCut = 2;
 RiPIDMonAllLooseKaon8.MaxPCut = 150;
 RiPIDMonAllLooseKaon8.MCHistoPath = "RICH/PIDQC/ALL/2TO150/LOOSEK8/MC/";
@@ -163,7 +163,7 @@ RiPIDMonAllLooseKaon8.HistoPath = "RICH/PIDQC/ALL/2TO150/LOOSEK8/";
 RiPIDMonAllLooseKaon8.FinalPrintout = true;
 RiPIDMonAllLooseKaon8.LooseNSigmaCutKaon = 8;
 
-BrunelMoniRICHSeq.Members += { "RichPIDQC/RiPIDMonAllLooseKaon9" };
+CheckRICHSeq.Members += { "RichPIDQC/RiPIDMonAllLooseKaon9" };
 RiPIDMonAllLooseKaon9.MinPCut = 2;
 RiPIDMonAllLooseKaon9.MaxPCut = 150;
 RiPIDMonAllLooseKaon9.MCHistoPath = "RICH/PIDQC/ALL/2TO150/LOOSEK9/MC/";
@@ -171,7 +171,7 @@ RiPIDMonAllLooseKaon9.HistoPath = "RICH/PIDQC/ALL/2TO150/LOOSEK9/";
 RiPIDMonAllLooseKaon9.FinalPrintout = true;
 RiPIDMonAllLooseKaon9.LooseNSigmaCutKaon = 9;
 
-BrunelMoniRICHSeq.Members += { "RichPIDQC/RiPIDMonAllLooseKaon10" };
+CheckRICHSeq.Members += { "RichPIDQC/RiPIDMonAllLooseKaon10" };
 RiPIDMonAllLooseKaon10.MinPCut = 2;
 RiPIDMonAllLooseKaon10.MaxPCut = 150;
 RiPIDMonAllLooseKaon10.MCHistoPath = "RICH/PIDQC/ALL/2TO150/LOOSEK10/MC/";

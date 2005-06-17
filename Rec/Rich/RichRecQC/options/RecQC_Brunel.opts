@@ -1,6 +1,6 @@
 
 // Reco QC - disabled due to POOL MC problems
-//BrunelMoniRICHSeq.Members += { "RichRecoQC" };
+//CheckRICHSeq.Members += { "RichRecoQC" };
 
 // PID Monitors for all tracks combined
 #include "$RICHRECQCOPTS/pid/BrunelMoni_AllTracks.opts"

@@ -1,13 +1,13 @@
 
 // Default PID monitor : 2-100 GeV/c
-BrunelMoniRICHSeq.Members += { "RichPIDQC/RiPIDMonMatch2To100" };
+CheckRICHSeq.Members += { "RichPIDQC/RiPIDMonMatch2To100" };
 // Low Momentum PID monitor : 0-2 GeV/c
-BrunelMoniRICHSeq.Members += { "RichPIDQC/RiPIDMonMatch0To2" };
+CheckRICHSeq.Members += { "RichPIDQC/RiPIDMonMatch0To2" };
 // Low Momentum PID monitor : 2-10 GeV/c
-BrunelMoniRICHSeq.Members += { "RichPIDQC/RiPIDMonMatch2To10" };
+CheckRICHSeq.Members += { "RichPIDQC/RiPIDMonMatch2To10" };
 // Mid Momentum PID monitor : 10-70 GeV/c
-BrunelMoniRICHSeq.Members += { "RichPIDQC/RiPIDMonMatch10To70" };
+CheckRICHSeq.Members += { "RichPIDQC/RiPIDMonMatch10To70" };
 // High Momentum PID monitor : 70-100 GeV/c
-BrunelMoniRICHSeq.Members += { "RichPIDQC/RiPIDMonMatch70To100" };
+CheckRICHSeq.Members += { "RichPIDQC/RiPIDMonMatch70To100" };
 // High Momentum PID monitor : 100+ GeV/c
-BrunelMoniRICHSeq.Members += { "RichPIDQC/RiPIDMonMatch100Plus" };
+CheckRICHSeq.Members += { "RichPIDQC/RiPIDMonMatch100Plus" };
