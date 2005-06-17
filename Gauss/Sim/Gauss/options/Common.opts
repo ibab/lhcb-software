@@ -1,4 +1,4 @@
-// $Id: Common.opts,v 1.8 2005-04-12 17:58:53 gcorti Exp $ 
+// $Id: Common.opts,v 1.9 2005-06-17 15:52:24 gcorti Exp $ 
 #pragma print off
 
 /** @file 
@@ -50,6 +50,7 @@ MessageSvc.Format = "% F%24W%S%7W%R%T %0W%M";  // Longer "algorithm" identifier 
 
 // Geometry setup always necessary
 #include "$STDOPTS/DetDesc.opts"
+ApplicationMgr.DLLS += { "CaloDetXmlCnv" };
 
 //DetectorDataSvc.DetDbLocation = "$XMLDDDBROOT/DDDB/lhcb-200402.xml";
 DetectorDataSvc.DetDbLocation = "$XMLDDDBROOT/DDDB/lhcb-200412.xml";

@@ -4,6 +4,16 @@
 ! Purpose     : LHCb Simulation Application with Geant4
 !-----------------------------------------------------------------------------
 
+! 2005-06-17 - Gloria CORTI
+ - Use new version of GaussMonitor (v2r1) and adapt to change in property
+   in Monitor.opts
+ - Introduce example for setting geometry in GaussRead.opts
+ - Move loading of CaloDetXmlCnv from SimGeometry.opts to Common.opts so 
+   that it is also available in GaussRead.opts
+ - Introduce monitors for Muons
+   . use new package Muon/MuonMoniSim v1r1
+   . add dll and algorithm to list in Monitor.opts
+
 ! 2005-06-16 - Gloria CORTI
  - Remove unnecessary loading of DAQEventDict (no longer necessary because
    of removed use in CaloEvent) in GaussPoolIO.opts

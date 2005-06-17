@@ -30,9 +30,10 @@ use GaussAlgs		v1r6    Sim
 #use GiGaVisUI           v3r0    Sim
 
 #-- Monitoring
-use GaussMonitor        v2r0    Sim
+use GaussMonitor        v2r1    Sim
 use CaloMoniSim         v1r0    Calo
 use VeloAlgorithms      v3r3    Velo
+use MuonMoniSim         v1r1    Muon
 
 #=========================================================================
 #-- GAUDI framework

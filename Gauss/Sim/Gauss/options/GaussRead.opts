@@ -1,5 +1,5 @@
 #printOptions 
-// $Id: GaussRead.opts,v 1.3 2005-04-22 15:00:03 gcorti Exp $ 
+// $Id: GaussRead.opts,v 1.4 2005-06-17 15:52:24 gcorti Exp $ 
 
 /** @file 
  * 
@@ -13,9 +13,8 @@
 //---------------------------------------------------------------------------
 // Phases to be executed: initialization + monitor
 //---------------------------------------------------------------------------
-ApplicationMgr.TopAlg  = { "LbAppInit/Gauss",
-                           "GaudiSequencer/Monitor"        
-                         }; 
+ApplicationMgr.TopAlg  = { "LbAppInit/Gauss" };
+ApplicationMgr.TopAlg += { "GaudiSequencer/Monitor" }; 
 
 //---------------------------------------------------------------------------
 // Monitor phase: as in production + user monitor
@@ -29,9 +28,9 @@ Monitor.Members       += { "GaudiSequencer/UserMonitor" };
 Monitor.MeasureTime = true;
 
 // Algorithm in User monitor
-UserMonitor.Members       += { "GiGaGetEventAlg",
-                               "GiGaGetHitsAlg"
-                             };
+UserMonitor.Members   += { "GiGaGetEventAlg" };
+UserMonitor.Members   += { "GiGaGetHitsAlg" };
+
 // The following are set explicitely since not in standard sim file
 GiGaGetHitsAlg.RichOpticalPhotons = "";
 GiGaGetHitsAlg.RichSegments = "";
@@ -53,7 +52,14 @@ GeneratorFullMonitor.OutputLevel = 2;
 
 //---------------------------------------------------------------------------
 // Number of events to read
+//---------------------------------------------------------------------------
 ApplicationMgr.EvtMax      = 10;
+
+//---------------------------------------------------------------------------
+// Detector used to produce the file read in: uncomment the chosen one
+//---------------------------------------------------------------------------
+DetectorDataSvc.DetDbLocation = "$XMLDDDBROOT/DDDB/lhcb-200506.xml";
+//DetectorDataSvc.DetDbLocation = "$XMLDDDBROOT/DDDB/lhcb-200412.xml";
 
 
 //---------------------------------------------------------------------------
