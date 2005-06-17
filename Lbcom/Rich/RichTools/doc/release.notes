@@ -4,6 +4,16 @@
 ! Purpose     : General purpose Rich Tools
 !-----------------------------------------------------------------------------
 
+! 2005-06-17 - Chris Jones
+ - Update mirror segment finder to be more efficient at locating the correct
+   mirror, by using tricks such as trying the last founbd mirror first and
+   aborting the search if the mirror is found unambiguously
+ - Update Photon reconstrction tool (renamed RichPhotonRecoUsingQuarticSoln)
+   to allow various bits to be turned off via job options.
+   Also, to use a trimmed down version of the quartic solver which skips
+   solution not needed by the RICH
+ - Minor updates to RicRayTracing (const etc.)
+
 !=========================== RichTools v1r6 2005-04-18 =======================
 ! 2005-04-18 - Chris Jones
  - Fix memory leaks in RichTrSegMakerFromTrStoredTracks when track segments

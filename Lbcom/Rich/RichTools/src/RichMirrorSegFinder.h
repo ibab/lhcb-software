@@ -1,15 +1,16 @@
 
+//-----------------------------------------------------------------------------
 /** @file RichMirrorSegFinder.h
  *
  *  Header file for tool : RichMirrorSegFinder
  *
  *  CVS Log :-
- *  $Id: RichMirrorSegFinder.h,v 1.4 2004-07-26 18:03:04 jonrob Exp $
- *  $Log: not supported by cvs2svn $
+ *  $Id: RichMirrorSegFinder.h,v 1.5 2005-06-17 15:15:55 jonrob Exp $
  *
  *  @author Antonis Papanestis
  *  @date   2003-11-04
  */
+//-----------------------------------------------------------------------------
 
 #ifndef RICHTOOLS_RICHMIRRORSEGFINDER_H
 #define RICHTOOLS_RICHMIRRORSEGFINDER_H 1
@@ -38,6 +39,7 @@
 // CLHEP
 #include "CLHEP/Units/PhysicalConstants.h"
 
+//-----------------------------------------------------------------------------
 /** @class RichMirrorSegFinder RichMirrorSegFinder.h
  *
  *  Tool to find the appropriate mirror segment for a given reflection point
@@ -45,6 +47,8 @@
  *  @author Antonis Papanestis
  *  @date   2003-11-04
  */
+//-----------------------------------------------------------------------------
+
 class RichMirrorSegFinder : public RichToolBase,
                             virtual public IRichMirrorSegFinder {
 
@@ -67,25 +71,36 @@ public: // methods (and doxygen comments) inherited from public interface
 
   // Locates the spherical mirror Segment given a reflection point,
   // RICH identifier and panel
-  DeRichSphMirror* findSphMirror( const Rich::DetectorType rich,
-                                  const Rich::Side side,
-                                  const HepPoint3D& reflPoint ) const;
+  const DeRichSphMirror* findSphMirror( const Rich::DetectorType rich,
+                                        const Rich::Side side,
+                                        const HepPoint3D& reflPoint ) const;
 
   // Locates the flat mirror Segment given a reflection point,
   // RICH identifier and panel
-  DeRichFlatMirror* findFlatMirror( const Rich::DetectorType rich,
-                                    const Rich::Side side,
-                                    const HepPoint3D& reflPoint ) const;
+  const DeRichFlatMirror* findFlatMirror( const Rich::DetectorType rich,
+                                          const Rich::Side side,
+                                          const HepPoint3D& reflPoint ) const;
 
 private:
 
-  enum mirrorType {sph = 0, flat };
+  /// Enumeration for falt and spherical mirror types
+  enum mirrorType { sph = 0, flat = 1 };
 
-  // mirror collections
-  DeRichSphMirror* m_sphMirrors[2][2][30];
-  DeRichFlatMirror* m_flatMirrors[2][2][30];
+  /// Pointers to the spherical mirror detector elements
+  const DeRichSphMirror* m_sphMirrors[Rich::NRiches][Rich::NHPDPanelsPerRICH][30];
 
-  unsigned int m_lastMirror[2][2][2];
+  /// Pointers to the flat mirror detector elements
+  const DeRichFlatMirror* m_flatMirrors[Rich::NRiches][Rich::NHPDPanelsPerRICH][30];
+
+  /// The max mirror number for each RICH and HPD panel
+  unsigned int m_maxMirror[Rich::NRiches][Rich::NHPDPanelsPerRICH][2];
+
+  /// The last found mirror number for each RICH and HPD panel
+  mutable unsigned int m_lastFoundMirror[Rich::NRiches][Rich::NHPDPanelsPerRICH][2];
+
+  /// Max distance to accept mirror
+  double m_maxDist[Rich::NRiches][2];
 
 };
+
 #endif // RICHTOOLS_RICHMIRRORSEGFINDER_H

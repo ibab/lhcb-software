@@ -5,7 +5,7 @@
  * Implementation file for class : RichRayTracing
  *
  * CVS Log :-
- * $Id: RichRayTracing.cpp,v 1.13 2005-02-02 10:11:51 jonrob Exp $
+ * $Id: RichRayTracing.cpp,v 1.14 2005-06-17 15:15:55 jonrob Exp $
  *
  * @author Antonis Papanestis
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
@@ -58,7 +58,9 @@ RichRayTracing::~RichRayTracing() { }
 StatusCode RichRayTracing::initialize()
 {
 
-  if ( !RichToolBase::initialize() ) return StatusCode::FAILURE;
+  // intialise base class
+  const StatusCode sc = RichToolBase::initialize();
+  if ( sc.isFailure() ) return sc;
 
   const std::string pdPanelName[2][2]  = { { DeRichHPDPanelLocation::Rich1Panel0,
                                              DeRichHPDPanelLocation::Rich1Panel1 },
@@ -125,8 +127,8 @@ StatusCode RichRayTracing::initialize()
 
   if ( m_moni ) bookHistos();
 
-  return StatusCode::SUCCESS;
-};
+  return sc;
+}
 
 //=============================================================================
 //  Finalize
@@ -262,8 +264,8 @@ StatusCode RichRayTracing::reflectBothMirrors( const Rich::DetectorType rich,
   } else if (  mode.outMirrorBoundary() ) {
     // check the outside boundaries of the (whole) mirror
     if ( !sphSegment->intersects( position, direction ) ) {
-      RichMirrorSegPosition pos = m_rich[rich]->sphMirrorSegPos( sphSegment->mirrorNumber() );
-      HepPoint3D mirCentre( sphSegment->mirrorCentre() );
+      const RichMirrorSegPosition pos = m_rich[rich]->sphMirrorSegPos( sphSegment->mirrorNumber() );
+      const HepPoint3D & mirCentre = sphSegment->mirrorCentre();
       bool fail( false );
       if ( pos.row() == 0 ) {                 // bottom segment
         if ( tmpPosition.y() < mirCentre.y() )
@@ -311,8 +313,7 @@ StatusCode RichRayTracing::reflectBothMirrors( const Rich::DetectorType rich,
     return StatusCode::FAILURE;
 
   // find segment
-  DeRichFlatMirror* flatSegment = m_mirrorSegFinder->
-    findFlatMirror(rich,side,tmpPosition);
+  const DeRichFlatMirror* flatSegment = m_mirrorSegFinder->findFlatMirror(rich,side,tmpPosition);
 
   // depending on the tracing flag:
   if ( mode.mirrorSegBoundary() ) {
@@ -326,8 +327,8 @@ StatusCode RichRayTracing::reflectBothMirrors( const Rich::DetectorType rich,
 
     // check the outside boundaries of the (whole) mirror
     if ( !flatSegment->intersects( storePosition, storeDirection ) ) {
-      RichMirrorSegPosition pos = m_rich[rich]->flatMirrorSegPos( flatSegment->mirrorNumber() );
-      HepPoint3D mirCentre( flatSegment->mirrorCentre() );
+      const RichMirrorSegPosition pos = m_rich[rich]->flatMirrorSegPos( flatSegment->mirrorNumber() );
+      const HepPoint3D & mirCentre = flatSegment->mirrorCentre();
       bool fail( false );
       if ( pos.row() == 0 ) {                 // bottom segment
         if ( tmpPosition.y() < mirCentre.y() )

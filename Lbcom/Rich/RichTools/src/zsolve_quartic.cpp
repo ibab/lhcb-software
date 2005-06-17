@@ -1,22 +1,31 @@
 
+//----------------------------------------------------------------------
 /**  @file zsolve_quartic.cpp
  *
  *  Implementation file for zsolve_quartic.h
  *
  *  CVS Log :-
- *  $Id: zsolve_quartic.cpp,v 1.2 2004-07-26 18:03:05 jonrob Exp $
- *  $Log: not supported by cvs2svn $
+ *  $Id: zsolve_quartic.cpp,v 1.3 2005-06-17 15:15:55 jonrob Exp $
  *
- *  @todo switch to GSL version when available
+ *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
+ *  @date   2003-11-14
+ *
+ *  @todo switch to GSL version if and when available
  */
+//----------------------------------------------------------------------
 
 #include "zsolve_quartic.h"
 
 #define SWAP(a,b) do { gsl_complex tmp = b ; b = a ; a = tmp ; } while(0)
 
-int gsl_poly_complex_solve_quartic(const double a, const double b, const double c, const double d,
-                                   gsl_complex * z0, gsl_complex * z1,
-                                   gsl_complex * z2, gsl_complex * z3)
+int gsl_poly_complex_solve_quartic ( const double a, 
+                                     const double b, 
+                                     const double c, 
+                                     const double d,
+                                     gsl_complex * z0, 
+                                     gsl_complex * z1,
+                                     gsl_complex * z2, 
+                                     gsl_complex * z3 )
 {
   const double r4 = 1.0 / 4.0;
   const double q2 = 1.0 / 2.0;
@@ -25,7 +34,7 @@ int gsl_poly_complex_solve_quartic(const double a, const double b, const double 
   const double q1 = 3.0 / 8.0;
   const double q3 = 3.0 / 16.0;
   double u[3], v[3], disc;
-  int k1 = 0, k2 = 0, mt;
+  int k1(0), k2(0), mt;
 
   gsl_complex i, zarr[4], w1, w2, w3;
   GSL_SET_COMPLEX(&i,     0.0, 1.0);
