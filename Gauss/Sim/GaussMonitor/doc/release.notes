@@ -4,6 +4,12 @@
 ! Purpose     : Hold monitoring algorithms for Gauss
 !-----------------------------------------------------------------------------
 
+!======================= GaussMonitor v2r1 ===================================
+! 2005-06-17 - Gloria CORTI
+ - src/GenMonitorAlg.{h,cpp}
+   . adapt to GaudiHistoAlg and add some histograms for Primary vertices 
+     and pileup counters.
+
 !======================= GaussMonitor v2r0 ===================================
 ! 2005-04-10 - Gloria Corti
  - src/GenMonitorAlg.{h,cpp}

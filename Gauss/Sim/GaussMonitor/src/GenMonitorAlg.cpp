@@ -1,4 +1,4 @@
-// $Id: GenMonitorAlg.cpp,v 1.1 2005-04-12 13:00:21 gcorti Exp $
+// $Id: GenMonitorAlg.cpp,v 1.2 2005-06-17 14:12:13 gcorti Exp $
 // Include files 
 
 // from Gaudi
@@ -37,7 +37,7 @@ const        IAlgFactory& GenMonitorAlgFactory = s_factory ;
 //=============================================================================
 GenMonitorAlg::GenMonitorAlg( const std::string& name,
                               ISvcLocator* pSvcLocator)
-  : GaudiAlgorithm  ( name , pSvcLocator ) ,
+  : GaudiHistoAlg( name , pSvcLocator ) ,
     m_counter       ( 0 ) ,
     m_counterstable ( 0 ) ,
     m_counterCharged( 0 ),
@@ -46,8 +46,10 @@ GenMonitorAlg::GenMonitorAlg( const std::string& name,
 
   declareProperty( "MinEta", m_minEta = 2.0);
   declareProperty( "MaxEta", m_maxEta = 4.9);
-  declareProperty( "FillHistos" , m_doHistos = false );
   declareProperty( "Input",       m_dataPath = "/Event/Gen/HepMCEvents" );
+  
+  // Set by default not to fill histograms for this algorithm
+  setProduceHistos( false );
   
 }
 
@@ -61,41 +63,10 @@ GenMonitorAlg::~GenMonitorAlg() {};
 //=============================================================================
 StatusCode GenMonitorAlg::initialize() {
 
-  StatusCode sc = GaudiAlgorithm::initialize(); // must be executed first
+  StatusCode sc = GaudiHistoAlg::initialize(); // must be executed first
   if ( sc.isFailure() ) return sc;  // error printed already by GaudiHistoAlg
 
   debug() << "==> Initialize" << endmsg;
-
-  if( !m_doHistos ) return StatusCode::SUCCESS;
-
-  m_multiplicity        = histoSvc()->book( name(), 100, "Multiplicity", 
-                                            300, 0., 2999. );
-  m_multiplicitystable  = histoSvc()->book( name(), 110, 
-                                            "Multiplicity ProtoStable",
-                                            300, 0., 2999. );
-  m_momentum            = histoSvc()->book( name(), 200, "Momentum",
-                                            100, 0., 100. );
-  m_momentumstable      = histoSvc()->book( name(), 210, 
-                                            "Momentum ProtoStable" ,
-                                            100, 0., 100. );
-  m_pdgId               = histoSvc()->book( name(), 300, "PDGId" ,
-                                            10000, -4999., 5000. );
-  m_pdgIdstable         = histoSvc()->book( name(), 310, "PDGId ProtoStable" ,
-                                            10000, -4999., 5000. );
-  m_lifetimestable      = histoSvc()->book( name(), 410,
-                                            "Lifetime Stable",
-                                            100, -1.5e-10, 1.5e-10 ) ;
-  m_multiplicityCharged = histoSvc()->book( name(), 120 ,
-                                            "Multiplicity Charged Stable" ,
-                                            300, -0.5, 299.5 );
-  m_pseudoRapCharged    = histoSvc()->book( name(), 520,
-                                            "Pseudorapidity Charged Stable",
-                                            150, -15., 15. );
-  m_ptCharged           = histoSvc()->book( name(), 620 , "Pt charged stable" ,
-                                            100, 0., 20. );
-  m_multChEtaAcc        = histoSvc()->book( name(), 130,
-                                            "Multiplicity Charged Stable in LHCb eta " ,
-                                            300, -0.5, 299.5 );
   
   return StatusCode::SUCCESS;
 };
@@ -110,41 +81,61 @@ StatusCode GenMonitorAlg::execute() {
   // Initialize counters
   int nParticles(0), nParticlesStable(0);
   int nParticlesStableCharged(0), nParChStabEtaAcc(0);
+  int nPileUp(0);
   
   // Retrieve data from selected path
-  SmartDataPtr< HepMCEvents > hepMCptr ( eventSvc() , m_dataPath );
+  SmartDataPtr< HepMCEvents > hepMCptr( eventSvc() , m_dataPath );
 
-  if ( 0 == hepMCptr ) {
+  if( 0 == hepMCptr ) {
     info() << "No HepMCEvents at location " << m_dataPath << endreq;
   } else {
     HepMCEvents::iterator it ;
-    for ( it = hepMCptr->begin() ; it != hepMCptr->end(); ++it ) {
-      for ( HepMC::GenEvent::particle_const_iterator 
-              itp = ( *it ) -> pGenEvt() -> particles_begin() ;
-            itp != ( *it ) -> pGenEvt() -> particles_end   () ;
-            itp++ ) {
+    for( it = hepMCptr->begin() ; it != hepMCptr->end(); ++it ) {
+      bool primFound = false;
+      nPileUp++;
+      for( HepMC::GenEvent::particle_const_iterator 
+             itp = (*it)->pGenEvt()->particles_begin();
+           itp != (*it)->pGenEvt()->particles_end(); itp++ ) {
         HepMC::GenParticle* hepMCpart = *itp;
         nParticles++ ;
-        if ( m_doHistos ) {  
-          m_momentum -> fill( hepMCpart->momentum().vect().mag(), 1. ) ;
-          m_pdgId    -> fill( hepMCpart->pdg_id(), 1. ) ;
+        if( produceHistos() ) { 
+          // Identify primary vertex and fill histograms
+          if( !primFound ) {
+            if( (hepMCpart->status() == 1) || (hepMCpart->status() == 888 ) ) {
+              primFound = true;
+              plot( hepMCpart->production_vertex()->position().x(),
+                    "PrimaryVertex x (mm)", -0.5, 0.5 );
+              plot( hepMCpart->production_vertex()->position().y(),
+                    "PrimaryVertex y (mm)", -0.5, 0.5 );
+              plot( hepMCpart->production_vertex()->position().z(),
+                    "PrimaryVertex z (mm)", -200., 200. );
+              plot( hepMCpart->production_vertex()->position().z(),
+                    "PrimaryVertex z, all Velo (mm)", -1000., 1000. );
+            }
+          }
+          plot( hepMCpart->momentum().vect().mag(), 
+                "Momentum of all particles (GeV)", 0., 100. );
+          plot( hepMCpart->pdg_id(), 
+                "PDGid of all particles", -4999., 5000., 10000 );
         }
-        // Note that the following is really multiplicity of particle defined as
-        // stable by Pythia just after hadronization: all particles known by
-        // EvtGen are defined stable for Pythia (it will count rho and pi0 and gamma all 
-        // togheter as stable ...
-        if ( ( hepMCpart -> status() != 2 ) && 
-             ( hepMCpart -> status() != 3 ) ) {
-          nParticlesStable++ ;
-          if ( m_doHistos ) {
-            m_momentumstable -> fill( hepMCpart->momentum().vect().mag(), 1.);
-            m_pdgIdstable    -> fill( hepMCpart->pdg_id(), 1. );
-            m_lifetimestable -> fill( lifetime( hepMCpart ), 1. );
+        // Note that the following is really multiplicity of particle defined
+        // as stable by Pythia just after hadronization: all particles known by
+        // EvtGen are defined stable for Pythia (it will count rho and pi0  
+        // and gamma all togheter as stable ...
+        if( ( hepMCpart->status() != 2 ) && ( hepMCpart->status() != 3 ) ) {
+          nParticlesStable++;
+          if( produceHistos() ) {
+            plot( hepMCpart->momentum().vect().mag(),
+                  "Momentum of protostable particles (GeV)", 0., 100. );
+            plot( hepMCpart->pdg_id(), 
+                  "PDGid of protostable particles", -4999., 5000., 10000 );
+            plot( lifetime( hepMCpart ), 
+                  "Lifetime protostable particles", -1.5e-10, 1.5e-10 );
           }
           // Charged stable particles meaning really stable after EvtGen
           ParticleID pID( hepMCpart->pdg_id() );
           if( 0.0 != pID.threeCharge() ) {
-            // a particle does not have an outgoing vertex
+            // A stable particle does not have an outgoing vertex
             if( !hepMCpart->end_vertex() ) {
 //             // should be the same as the following  
 //             if ( ( hepMCpart -> status() == 999 )  
@@ -154,9 +145,12 @@ StatusCode GenMonitorAlg::execute() {
               if( (pseudoRap > m_minEta) && (pseudoRap < m_maxEta) ) {
                 ++nParChStabEtaAcc;
               }
-              if( m_doHistos ) {
-                m_pseudoRapCharged->fill( pseudoRap , 1. );
-                m_ptCharged->fill( hepMCpart->momentum().perp(), 1. );
+              if( produceHistos() ) {
+                plot( pseudoRap, 
+                      "Pseudorapidity stable charged particles", 
+                      -15., 15., 150 );
+                plot( hepMCpart->momentum().perp(), 
+                      "Pt stable charged particles", 0., 20. );
               }
             }
           }    
@@ -164,11 +158,16 @@ StatusCode GenMonitorAlg::execute() {
       }
     }
   }
-  if( m_doHistos ) {
-    m_multiplicity -> fill( nParticles , 1. ) ;  
-    m_multiplicitystable -> fill( nParticlesStable, 1. ) ;
-    m_multiplicityCharged -> fill( nParticlesStableCharged, 1. );
-    m_multChEtaAcc->fill( nParChStabEtaAcc, 1.);   
+  if( produceHistos() ) {
+    plot( nParticles, "Multiplicity all particles", 0., 2999., 300 );
+    plot( nParticlesStable, 
+          "Multiplicity protostable particles", 0., 2999., 300 );
+    plot( nParticlesStableCharged,
+          "Multiplicity stable charged particles", -0.5, 299.5, 300 );
+    plot( nParChStabEtaAcc,
+          "Multiplicity stable charged particles in LHCb eta",
+          -0.5, 299.5, 300 );
+    plot( nPileUp, "Num. of primary interaction per bunch", -0.5, 10.5, 11 );
   }
   m_counter += nParticles ;
   m_counterstable += nParticlesStable ;
@@ -232,7 +231,7 @@ StatusCode GenMonitorAlg::finalize() {
          << "==================================================================="
          << endreq;
 
-  return GaudiAlgorithm::finalize();
+  return GaudiHistoAlg::finalize();
   
 }
 
