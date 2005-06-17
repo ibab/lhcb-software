@@ -8,7 +8,8 @@
 ! 2005-06-17 - Gloria CORTI
  - src/GenMonitorAlg.{h,cpp}
    . adapt to GaudiHistoAlg and add some histograms for Primary vertices 
-     and pileup counters.
+     and pileup counters. This implies that property "FillHistos" is replaced
+     by "HistoProduce" (from GaudiHistoAlg), set to false in this algorithm. 
 
 !======================= GaussMonitor v2r0 ===================================
 ! 2005-04-10 - Gloria Corti
