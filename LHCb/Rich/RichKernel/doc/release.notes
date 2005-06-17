@@ -1,7 +1,10 @@
-! $Id: release.notes,v 1.71 2005-05-24 09:20:48 cattanem Exp $
+! $Id: release.notes,v 1.72 2005-06-17 14:27:36 jonrob Exp $
 ! Package     : Rich/RichKernel
 ! Responsible : Chris Jones
 ! Purpose     : General purpose RICH classes
+
+! 2005-06-17 - Chris Jones
+ - Changes to RichMirrorSegFinder interface
 
 ! 2005-05-24 - Marco Cattaneo
  - Remove explicit DetDesc version from requirements
