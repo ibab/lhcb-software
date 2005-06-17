@@ -1,12 +1,11 @@
-//
+
 //-----------------------------------------------------------------------------
 /** @file RichMCTrackInfoTool.cpp
  *
  * Implementation file for class : RichMCTrackInfoTool
  *
  * CVS Log :-
- * $Id: RichMCTrackInfoTool.cpp,v 1.6 2004-07-26 17:56:09 jonrob Exp $
- * $Log: not supported by cvs2svn $
+ * $Id: RichMCTrackInfoTool.cpp,v 1.7 2005-06-17 15:50:06 jonrob Exp $
  *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @date 15/03/2002
@@ -48,7 +47,7 @@ StatusCode RichMCTrackInfoTool::initialize()
   m_traceMode.setOutMirrorBoundary ( false                 );
   m_traceMode.setMirrorSegBoundary ( false                 );
 
-  return StatusCode::SUCCESS;
+  return sc;
 }
 
 StatusCode RichMCTrackInfoTool::finalize() 
@@ -60,12 +59,12 @@ StatusCode RichMCTrackInfoTool::finalize()
 const bool RichMCTrackInfoTool::panelIntersectGlobal( const MCRichSegment * segment,
                                                       HepPoint3D & hitPoint ) const
 {
-  if ( !m_rayTrace->traceToDetectorWithoutEff( segment->rich(),
-                                               segment->bestPoint(0.5),
-                                               segment->bestMomentum(0.5),
-                                               hitPoint,
-                                               m_traceMode ) ) return false;
-  return true; // all OK
+  return ( 0 != segment &&
+           m_rayTrace->traceToDetectorWithoutEff( segment->rich(),
+                                                  segment->bestPoint(0.5),
+                                                  segment->bestMomentum(0.5),
+                                                  hitPoint,
+                                                  m_traceMode ) );
 }
 
 const bool RichMCTrackInfoTool::panelIntersectLocal( const MCRichSegment * segment,
