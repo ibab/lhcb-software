@@ -1,14 +1,16 @@
 
+//================================================================
 /** @file BoostArray.h
  *
  *  Header file for boost::array + Additional Gaudi methods
  *
  *  CVS Log :-
- *  $Id: BoostArray.h,v 1.5 2005-02-02 09:59:24 jonrob Exp $
+ *  $Id: BoostArray.h,v 1.6 2005-06-17 14:26:30 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   2003-07-31
  */
+//================================================================
 
 #ifndef RICHKERNEL_BOOSTARRAY_H 
 #define RICHKERNEL_BOOSTARRAY_H 1
@@ -17,7 +19,7 @@
 #include "boost/array.hpp"
 #include "GaudiKernel/MsgStream.h"
 
-/// Implement textual MsgStream << method
+/// Implement textual MsgStream << method for boost::array's
 template <class TYPE, std::size_t N>
 inline MsgStream& operator << ( MsgStream& s, 
                                 boost::array<TYPE, N>& data )
