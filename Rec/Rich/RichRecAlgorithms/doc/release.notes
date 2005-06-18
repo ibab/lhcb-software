@@ -1,0 +1,9 @@
+!-----------------------------------------------------------------------------
+! Package     : Rich/RichRecAlgorithms
+! Responsible : Chris Jones
+! Purpose     : Common reconstruction algorithms for the RICH
+!-----------------------------------------------------------------------------
+
+! 2005-06-18 - Chris Jones
+ - First version
+ - Algorithms imported from old RichRecCommon
