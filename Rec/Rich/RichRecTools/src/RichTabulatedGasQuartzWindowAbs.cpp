@@ -1,20 +1,16 @@
 
+//-----------------------------------------------------------------------------
 /** @file RichTabulatedGasQuartzWindowAbs.cpp
  *
  *  Implementation file for tool : RichTabulatedGasQuartzWindowAbs
  *
  *  CVS Log :-
- *  $Id: RichTabulatedGasQuartzWindowAbs.cpp,v 1.5 2004-11-25 15:49:25 jonrob Exp $
- *  $Log: not supported by cvs2svn $
- *  Revision 1.4  2004/10/27 14:39:41  jonrob
- *  Various updates
- *
- *  Revision 1.3  2004/07/27 20:15:32  jonrob
- *  Add doxygen file documentation and CVS information
+ *  $Id: RichTabulatedGasQuartzWindowAbs.cpp,v 1.6 2005-06-18 11:40:11 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
  */
+//-----------------------------------------------------------------------------
 
 // local
 #include "RichTabulatedGasQuartzWindowAbs.h"
@@ -36,35 +32,26 @@ RichTabulatedGasQuartzWindowAbs::RichTabulatedGasQuartzWindowAbs ( const std::st
 
 }
 
-StatusCode RichTabulatedGasQuartzWindowAbs::initialize() {
+StatusCode RichTabulatedGasQuartzWindowAbs::initialize() 
+{
 
   // Sets up various tools and services
   const StatusCode sc = RichRecToolBase::initialize();
   if ( sc.isFailure() ) { return sc; }
 
   // Get Rich Detector elements
-  DeRich1 * Rich1DE = getDet<DeRich1>( DeRichLocation::Rich1 );
-  DeRich2 * Rich2DE = getDet<DeRich2>( DeRichLocation::Rich2 );
+  const DeRich1 * Rich1DE = getDet<DeRich1>( DeRichLocation::Rich1 );
+  const DeRich2 * Rich2DE = getDet<DeRich2>( DeRichLocation::Rich2 );
 
   // Absorption length
   m_gasQWin[Rich::Rich1] = new Rich1DTabProperty( Rich1DE->gasWinAbsLength() );
   m_gasQWin[Rich::Rich2] = new Rich1DTabProperty( Rich2DE->gasWinAbsLength() );
 
-  // Quartz window thicknesses. Until these parameters exist in the XML add backup default values
-  try { m_qWinZSize[Rich::Rich1] = Rich1DE->userParameterAsDouble("Rich1GasQuartzWindowThickness"); }
-  catch ( const GaudiException & excp ) {
-    Warning("Parameter Rh1QuartzWindowZSize unavailable -> Reverting to default",
-            StatusCode::SUCCESS);
-    m_qWinZSize[Rich::Rich1] = 6 * mm;
-  }
-  try { m_qWinZSize[Rich::Rich2] = Rich2DE->userParameterAsDouble("Rich2GasQuartzWindowThickness"); }
-  catch ( const GaudiException & excp ) {
-    Warning("Parameter Rh2QuartzWindowZSize unavailable -> Reverting to default",
-            StatusCode::SUCCESS);
-    m_qWinZSize[Rich::Rich2] = 5 * mm;
-  }
+  // Quartz window thicknesses. 
+  m_qWinZSize[Rich::Rich1] = Rich1DE->param<double>("Rich1GasQuartzWindowThickness");
+  m_qWinZSize[Rich::Rich2] = Rich2DE->param<double>("Rich2GasQuartzWindowThickness");
 
-  return StatusCode::SUCCESS;
+  return sc;
 }
 
 StatusCode RichTabulatedGasQuartzWindowAbs::finalize()

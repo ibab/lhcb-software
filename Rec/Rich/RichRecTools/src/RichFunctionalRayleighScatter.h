@@ -1,15 +1,16 @@
 
+//-----------------------------------------------------------------------------
 /** @file RichFunctionalRayleighScatter.h
  *
  *  Header file for tool : RichFunctionalRayleighScatter
  *
  *  CVS Log :-
- *  $Id: RichFunctionalRayleighScatter.h,v 1.5 2004-07-27 20:15:30 jonrob Exp $
- *  $Log: not supported by cvs2svn $
+ *  $Id: RichFunctionalRayleighScatter.h,v 1.6 2005-06-18 11:40:10 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
  */
+//-----------------------------------------------------------------------------
 
 #ifndef RICHRECTOOLS_RICHFUNCTIONALRAYLEIGHSCATTER_H
 #define RICHRECTOOLS_RICHFUNCTIONALRAYLEIGHSCATTER_H 1
@@ -33,6 +34,7 @@
 // interfaces
 #include "RichRecBase/IRichRayleighScatter.h"
 
+//-----------------------------------------------------------------------------
 /** @class RichFunctionalRayleighScatter RichFunctionalRayleighScatter.h
  *
  *  Tool to calculate quantities related to Rayleigh scattering using an
@@ -41,6 +43,7 @@
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
  */
+//-----------------------------------------------------------------------------
 
 class RichFunctionalRayleighScatter : public RichRecToolBase,
                                       virtual public IRichRayleighScatter {

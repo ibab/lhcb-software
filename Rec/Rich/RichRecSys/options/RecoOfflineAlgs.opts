@@ -3,7 +3,7 @@
 // ============================================================================
 
 // Markov chain ring finder
-//BrunelRecoRICHSeq.Members += {
+//RecoRICHSeq.Members += {
   //"Rich1MarkovRingFinderAlg/Rich1P0RingFinder",   // Rich1 Upper panel
   //"Rich1MarkovRingFinderAlg/Rich1P1RingFinder",   // Rich1 Lower panel
   //"Rich2LMarkovRingFinderAlg/Rich2P0RingFinder",  // Rich2 left panel 
@@ -11,36 +11,36 @@
 //};
 
 // Run the Local PID first
-BrunelRecoRICHSeq.Members += { "RichLocalPIDAlg/RichLocPID" };
+RecoRICHSeq.Members += { "RichLocalPIDAlg/RichLocPID" };
 
 // Initialise GlobalPID each event
-BrunelRecoRICHSeq.Members += { "RichGlobalPIDInitialize/RichGloPIDInit" };
-BrunelRecoRICHSeq.Members += { "RichGlobalPIDDigitSel/RichGloPIDDigSel" };
-BrunelRecoRICHSeq.Members += { "RichGlobalPIDTrTrackSel/RichGloPIDTrSel" };
+RecoRICHSeq.Members += { "RichGlobalPIDInitialize/RichGloPIDInit" };
+RecoRICHSeq.Members += { "RichGlobalPIDDigitSel/RichGloPIDDigSel" };
+RecoRICHSeq.Members += { "RichGlobalPIDTrTrackSel/RichGloPIDTrSel" };
 
 // Backgroud alg - Uses local PID results as working particle hypotheses
-BrunelRecoRICHSeq.Members += { "RichRecBackgroundEsti/RichBckEst1" };
+RecoRICHSeq.Members += { "RichRecBackgroundEsti/RichBckEst1" };
 
 // First iteration of Global PID
-BrunelRecoRICHSeq.Members += { "RichGlobalPIDAlg/RichGloPIDIt1" };
+RecoRICHSeq.Members += { "RichGlobalPIDAlg/RichGloPIDIt1" };
 
 // Backgroud alg - Uses global 1st iter results as working particle hypotheses
-BrunelRecoRICHSeq.Members += { "RichRecBackgroundEsti/RichBckEst2" };
+RecoRICHSeq.Members += { "RichRecBackgroundEsti/RichBckEst2" };
 
 // Second iteration of Global PID
-BrunelRecoRICHSeq.Members += { "RichGlobalPIDAlg/RichGloPIDIt2" };
+RecoRICHSeq.Members += { "RichGlobalPIDAlg/RichGloPIDIt2" };
 
 // Ring refit - uses working PIDs to identify good photons and refit angles
 // Results as yet not used in formation of final PID
-//BrunelRecoRICHSeq.Members += { "RichRingRefitAlg/RichRingRefit" };
+//RecoRICHSeq.Members += { "RichRingRefitAlg/RichRingRefit" };
 
 // Finalise Global PID algorithm each event
-BrunelRecoRICHSeq.Members += { "RichGlobalPIDFinalize/RichGloPIDFin" };
+RecoRICHSeq.Members += { "RichGlobalPIDFinalize/RichGloPIDFin" };
 
 // Make final output PID results
 // Current uses for each track Global PID if it exists, 
 // otherwise local if that exists
-BrunelRecoRICHSeq.Members += { "RichHierarchicalPIDMerge/MergeRichPIDs" };
+RecoRICHSeq.Members += { "RichHierarchicalPIDMerge/MergeRichPIDs" };
 
 // Reconstruction algorithm parameters
 // ========================================================================================

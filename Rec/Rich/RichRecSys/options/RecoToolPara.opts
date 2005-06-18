@@ -78,7 +78,7 @@ ToolSvc.RichRayTraceCKCone.NPhotonsRayTrace = 100;
 // Segment creator
 ToolSvc.RichToolRegistry.Tools += { "RichSegmentCreator/RichSegmentCreator" };
 //                                             Aerogel  C4F10   CF4
-ToolSvc.RichSegmentCreator.EnergyBins      = { 10,      10,     10   };
+ToolSvc.RichSegmentCreator.EnergyBins      = { 5,       5,      5   };
 
 // Status Creator
 ToolSvc.RichToolRegistry.Tools += { "RichStatusCreator/RichStatusCreator" };

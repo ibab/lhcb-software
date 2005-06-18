@@ -1,18 +1,16 @@
 
+//-----------------------------------------------------------------------------
 /** @file RichFunctionalRayleighScatter.cpp
  *
  *  Implementation file for tool : RichFunctionalRayleighScatter
  *
  *  CVS Log :-
- *  $Id: RichFunctionalRayleighScatter.cpp,v 1.10 2004-10-13 09:52:41 jonrob Exp $
- *  $Log: not supported by cvs2svn $
- *  Revision 1.9  2004/07/27 20:15:30  jonrob
- *  Add doxygen file documentation and CVS information
- *
+ *  $Id: RichFunctionalRayleighScatter.cpp,v 1.11 2005-06-18 11:40:10 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
  */
+//-----------------------------------------------------------------------------
 
 // local
 #include "RichFunctionalRayleighScatter.h"
@@ -44,18 +42,18 @@ StatusCode RichFunctionalRayleighScatter::initialize()
   if ( sc.isFailure() ) { return sc; }
 
   // Get Rich1 Detector element
-  DeRich1 * Rich1DE = getDet<DeRich1>( DeRichLocation::Rich1 );
+  const DeRich1 * Rich1DE = getDet<DeRich1>( DeRichLocation::Rich1 );
 
   // Rayleigh scattering parameters
   m_eVToMicron  = ( h_Planck/(joule*s) * c_light/(m/s) / e_SI ) / nanometer ;
-  m_AeroClarity = Rich1DE->userParameterAsDouble( "AerogelClarity" )/cm;
+  m_AeroClarity = Rich1DE->param<double>( "AerogelClarity" )/cm;
 
   // Informational Printout
   debug() << " Using analytic implementation"   << endreq
           << " eV to mm conversion factor   = " << m_eVToMicron << endreq
           << " Aerogel clarity              = " << m_AeroClarity << endreq;
   
-  return StatusCode::SUCCESS;
+  return sc;
 }
 
 StatusCode RichFunctionalRayleighScatter::finalize() 

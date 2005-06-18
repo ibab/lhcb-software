@@ -2,7 +2,7 @@
 # Created    : 2003-07-01
 # Maintainer : Chris Jones   Christopher.Rob.Jones@cern.ch
 #============================================================================
-# $Id: requirements,v 1.41 2005-06-17 15:46:52 jonrob Exp $
+# $Id: requirements,v 1.42 2005-06-18 11:39:20 jonrob Exp $
 #============================================================================
 
 package           RichRecSys
@@ -17,23 +17,26 @@ set RICHRECSYSOPTS $(RICHRECSYSROOT)/options
 # ================ dependencies =============================================
 
 # DAQ Decoding
-use RichDAQ         v2r1p1	Rich
+use RichDAQ             v2r1p1  Rich
 
 # Common RICH reconstruction packages
-use RichRecBase     v1r16	Rich
-use RichRecTools    v2r15	Rich
-use RichRecCommon   v1r13	Rich
+use RichRecBase         v1r16   Rich
+use RichRecTools        v2r15   Rich
+use RichRecAlgorithms   v1r0    Rich
 
 # "Offline" PID packages
-use RichGlobalPID   v1r10	Rich
-use RichLocalPID    v1r11	Rich
-use RichRingRefit   v1r9p1	Rich
+use RichGlobalPID       v1r10   Rich
+use RichLocalPID        v1r11   Rich
+use RichRingRefit       v1r9p1  Rich
 
 # Result merging algorithms
-use RichPIDMerge    v1r5	Rich
+use RichPIDMerge        v1r5    Rich
+
+# Expert common monitor algorithms
+use RichRecMonitors     v1r0    Rich
 
 # MC packages
-use RichRecMCTools  v1r9	Rich
+use RichRecMCTools      v1r9    Rich
 
 # =================================
 # Developmental algorithms ...

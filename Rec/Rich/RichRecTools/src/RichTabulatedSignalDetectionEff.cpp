@@ -1,17 +1,16 @@
 
+//-----------------------------------------------------------------------------
 /** @file RichTabulatedSignalDetectionEff.cpp
  *
  *  Implementation file for tool : RichTabulatedSignalDetectionEff
  *
  *  CVS Log :-
- *  $Id: RichTabulatedSignalDetectionEff.cpp,v 1.7 2004-10-27 14:39:41 jonrob Exp $
- *  $Log: not supported by cvs2svn $
- *  Revision 1.6  2004/07/27 20:15:33  jonrob
- *  Add doxygen file documentation and CVS information
+ *  $Id: RichTabulatedSignalDetectionEff.cpp,v 1.8 2005-06-18 11:40:11 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
  */
+//-----------------------------------------------------------------------------
 
 // local
 #include "RichTabulatedSignalDetectionEff.h"
@@ -44,9 +43,9 @@ StatusCode RichTabulatedSignalDetectionEff::initialize()
   const StatusCode sc = RichRecToolBase::initialize();
   if ( sc.isFailure() ) { return sc; }
 
-  // Rich1 and Rich2 (should be const but "userParameterAsDouble" isn't const ...)
-  DeRich * rich1 = getDet<DeRich>( DeRichLocation::Rich1 );
-  DeRich * rich2 = getDet<DeRich>( DeRichLocation::Rich2 );
+  // Rich1 and Rich2 
+  const DeRich * rich1 = getDet<DeRich>( DeRichLocation::Rich1 );
+  const DeRich * rich2 = getDet<DeRich>( DeRichLocation::Rich2 );
 
   // QE Curve
   m_QE = new Rich1DTabProperty( rich1->nominalHPDQuantumEff() );
@@ -58,16 +57,16 @@ StatusCode RichTabulatedSignalDetectionEff::initialize()
   m_sphMirRefl[Rich::Rich2]  = new Rich1DTabProperty( rich2->nominalSphMirrorRefl()  );
 
   // Quartz window eff
-  m_quartzWinEff = rich1->userParameterAsDouble( "HPDQuartzWindowEff" );
+  m_quartzWinEff = rich1->param<double>( "HPDQuartzWindowEff" );
 
   // Digitisation pedestal loss
-  m_pedLoss = rich1->userParameterAsDouble( "HPDPedestalDigiEff" );
+  m_pedLoss =      rich1->param<double>( "HPDPedestalDigiEff" );
 
   // Informational Printout
   debug() << " HPD quartz window efficiency = " << m_quartzWinEff << endreq
           << " Digitisation pedestal eff.   = " << m_pedLoss << endreq;
 
-  return StatusCode::SUCCESS;
+  return sc;
 }
 
 StatusCode RichTabulatedSignalDetectionEff::finalize()

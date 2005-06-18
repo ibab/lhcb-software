@@ -5,7 +5,7 @@
  *  Implementation file for tool : RichPhotonSignal
  *
  *  CVS Log :-
- *  $Id: RichPhotonSignal.cpp,v 1.16 2005-06-17 15:08:36 jonrob Exp $
+ *  $Id: RichPhotonSignal.cpp,v 1.17 2005-06-18 11:40:11 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -44,17 +44,17 @@ StatusCode RichPhotonSignal::initialize()
   acquireTool( "RichCherenkovResolution", m_ckRes   );
 
   // Get Rich Detector elements
-  DeRich1 * Rich1DE = getDet<DeRich1>( DeRichLocation::Rich1 );
-  DeRich2 * Rich2DE = getDet<DeRich2>( DeRichLocation::Rich2 );
+  const DeRich1 * Rich1DE = getDet<DeRich1>( DeRichLocation::Rich1 );
+  const DeRich2 * Rich2DE = getDet<DeRich2>( DeRichLocation::Rich2 );
 
   // Mirror radii of curvature in mm
   m_radiusCurv[Rich::Rich1] = Rich1DE->sphMirrorRadius();
   m_radiusCurv[Rich::Rich2] = Rich2DE->sphMirrorRadius();
 
   // area of pixel in mm^2
-  const double xSize      = Rich1DE->userParameterAsDouble("RichHpdPixelXsize"); // 0.5*mm
-  const double ySize      = Rich1DE->userParameterAsDouble("RichHpdPixelYsize"); // 0.5*mm
-  //const double demagScale       = Rich1DE->userParameterAsDouble("HPDDemagScaleFactor"); // 4.8
+  const double xSize      = Rich1DE->param<double>("RichHpdPixelXsize"); // 0.5*mm
+  const double ySize      = Rich1DE->param<double>("RichHpdPixelYsize"); // 0.5*mm
+  //const double demagScale       = Rich1DE->param<double>("HPDDemagScaleFactor"); // 4.8
   const double demagScale       = 4.8;
   m_pixelArea = demagScale*xSize * demagScale*ySize;
 

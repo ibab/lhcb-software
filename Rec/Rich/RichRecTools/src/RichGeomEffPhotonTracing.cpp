@@ -5,7 +5,7 @@
  *  Implementation file for tool : RichGeomEffPhotonTracing
  *
  *  CVS Log :-
- *  $Id: RichGeomEffPhotonTracing.cpp,v 1.12 2005-05-28 13:10:53 jonrob Exp $
+ *  $Id: RichGeomEffPhotonTracing.cpp,v 1.13 2005-06-18 11:40:11 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -249,10 +249,10 @@ RichGeomEffPhotonTracing::geomEfficiencyScat ( RichRecSegment * segment,
 
     // Assign this efficiency to all hypotheses
     segment->setGeomEfficiencyScat( Rich::Electron, eff );
-    segment->setGeomEfficiencyScat( Rich::Muon, eff );
-    segment->setGeomEfficiencyScat( Rich::Pion, eff );
-    segment->setGeomEfficiencyScat( Rich::Kaon, eff );
-    segment->setGeomEfficiencyScat( Rich::Proton, eff );
+    segment->setGeomEfficiencyScat( Rich::Muon,     eff );
+    segment->setGeomEfficiencyScat( Rich::Pion,     eff );
+    segment->setGeomEfficiencyScat( Rich::Kaon,     eff );
+    segment->setGeomEfficiencyScat( Rich::Proton,   eff );
 
   }
 

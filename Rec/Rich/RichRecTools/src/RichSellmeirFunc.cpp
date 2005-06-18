@@ -5,7 +5,7 @@
  *  Implementation file for tool : RichSellmeirFunc
  *
  *  CVS Log :-
- *  $Id: RichSellmeirFunc.cpp,v 1.11 2005-02-17 09:56:20 jonrob Exp $
+ *  $Id: RichSellmeirFunc.cpp,v 1.12 2005-06-18 11:40:11 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -66,34 +66,38 @@ StatusCode RichSellmeirFunc::initialize() {
   DeRich1 * Rich1DE = getDet<DeRich1>( DeRichLocation::Rich1 );
 
   // Load radiator parameters from XML
-  m_selF1[Rich::Aerogel] = Rich1DE->userParameterAsDouble("SellAgelF1Param");
-  m_selF1[Rich::C4F10]   = Rich1DE->userParameterAsDouble("SellC4F10F1Param");
-  m_selF1[Rich::CF4]     = Rich1DE->userParameterAsDouble("SellCF4F1Param");
-  m_selF2[Rich::Aerogel] = Rich1DE->userParameterAsDouble("SellAgelF2Param");
-  m_selF2[Rich::C4F10]   = Rich1DE->userParameterAsDouble("SellC4F10F2Param");
-  m_selF2[Rich::CF4]     = Rich1DE->userParameterAsDouble("SellCF4F2Param");
-  m_selE1[Rich::Aerogel] = Rich1DE->userParameterAsDouble("SellAgelE1Param");
-  m_selE1[Rich::C4F10]   = Rich1DE->userParameterAsDouble("SellC4F10E1Param");
-  m_selE1[Rich::CF4]     = Rich1DE->userParameterAsDouble("SellCF4E1Param");
-  m_selE2[Rich::Aerogel] = Rich1DE->userParameterAsDouble("SellAgelE2Param");
-  m_selE2[Rich::C4F10]   = Rich1DE->userParameterAsDouble("SellC4F10E2Param");
-  m_selE2[Rich::CF4]     = Rich1DE->userParameterAsDouble("SellCF4E2Param");
+  m_selF1[Rich::Aerogel] = Rich1DE->param<double>("SellAgelF1Param");
+  m_selF1[Rich::C4F10]   = Rich1DE->param<double>("SellC4F10F1Param");
+  m_selF1[Rich::CF4]     = Rich1DE->param<double>("SellCF4F1Param");
+  m_selF2[Rich::Aerogel] = Rich1DE->param<double>("SellAgelF2Param");
+  m_selF2[Rich::C4F10]   = Rich1DE->param<double>("SellC4F10F2Param");
+  m_selF2[Rich::CF4]     = Rich1DE->param<double>("SellCF4F2Param");
+  m_selE1[Rich::Aerogel] = Rich1DE->param<double>("SellAgelE1Param");
+  m_selE1[Rich::C4F10]   = Rich1DE->param<double>("SellC4F10E1Param");
+  m_selE1[Rich::CF4]     = Rich1DE->param<double>("SellCF4E1Param");
+  m_selE2[Rich::Aerogel] = Rich1DE->param<double>("SellAgelE2Param");
+  m_selE2[Rich::C4F10]   = Rich1DE->param<double>("SellC4F10E2Param");
+  m_selE2[Rich::CF4]     = Rich1DE->param<double>("SellCF4E2Param");
   m_molW[Rich::Aerogel]  = 0;
-  m_molW[Rich::C4F10]    = Rich1DE->userParameterAsDouble("GasMolWeightC4F10Param");
-  m_molW[Rich::CF4]      = Rich1DE->userParameterAsDouble("GasMolWeightCF4Param");
+  m_molW[Rich::C4F10]    = Rich1DE->param<double>("GasMolWeightC4F10Param");
+  m_molW[Rich::CF4]      = Rich1DE->param<double>("GasMolWeightCF4Param");
   m_rho[Rich::Aerogel]   = 0;
-  m_rho[Rich::C4F10]     = Rich1DE->userParameterAsDouble("RhoEffectiveSellC4F10Param");
-  m_rho[Rich::CF4]       = Rich1DE->userParameterAsDouble("RhoEffectiveSellCF4Param");
-  double selLorGasFac    = Rich1DE->userParameterAsDouble("SellLorGasFacParam");
+  m_rho[Rich::C4F10]     = Rich1DE->param<double>("RhoEffectiveSellC4F10Param");
+  m_rho[Rich::CF4]       = Rich1DE->param<double>("RhoEffectiveSellCF4Param");
+  const double selLorGasFac = Rich1DE->param<double>("SellLorGasFacParam");
 
   // Initialise the calculations and cache as much as possible for efficiency
-  for ( int iRad = 0; iRad < Rich::NRadiatorTypes; ++iRad ) {
+  for ( int iRad = 0; iRad < Rich::NRadiatorTypes; ++iRad ) 
+  {
     const Rich::RadiatorType rad = static_cast<Rich::RadiatorType>(iRad);
     double RC3,RC2;
-    if ( Rich::Aerogel == rad ) {
+    if ( Rich::Aerogel == rad ) 
+    {
       RC3 = 1.;
       RC2 = 1.;
-    } else {
+    } 
+    else 
+    {
       RC3 = 3. * selLorGasFac * m_rho[rad] / m_molW[rad];
       RC2 = 2. * selLorGasFac * m_rho[rad] / m_molW[rad];
     }

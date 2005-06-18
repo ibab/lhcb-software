@@ -1,17 +1,16 @@
 
+//-----------------------------------------------------------------------------
 /** @file RichTabulatedGasQuartzWindowAbs.h
  *
  *  Header file for tool : RichTabulatedGasQuartzWindowAbs
  *
  *  CVS Log :-
- *  $Id: RichTabulatedGasQuartzWindowAbs.h,v 1.4 2004-10-27 14:39:41 jonrob Exp $
- *  $Log: not supported by cvs2svn $
- *  Revision 1.3  2004/07/27 20:15:32  jonrob
- *  Add doxygen file documentation and CVS information
+ *  $Id: RichTabulatedGasQuartzWindowAbs.h,v 1.5 2005-06-18 11:40:11 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
  */
+//-----------------------------------------------------------------------------
 
 #ifndef RICHRECTOOLS_RICHGASQUARTZWINDOWABS_H
 #define RICHRECTOOLS_RICHGASQUARTZWINDOWABS_H 1
@@ -42,6 +41,7 @@
 // interfaces
 #include "RichRecBase/IRichGasQuartzWindowAbs.h"
 
+//-----------------------------------------------------------------------------
 /** @class RichTabulatedGasQuartzWindowAbs RichTabulatedGasQuartzWindowAbs.h
  *
  *  Tool to calculate transmission properties for the gas quartz window. Uses
@@ -50,6 +50,7 @@
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
  */
+//-----------------------------------------------------------------------------
 
 class RichTabulatedGasQuartzWindowAbs : public RichRecToolBase,
                                         virtual public IRichGasQuartzWindowAbs {

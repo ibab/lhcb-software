@@ -1,17 +1,16 @@
 
+//-----------------------------------------------------------------------------
 /** @file RichTabulatedSignalDetectionEff.h
  *
  *  Header file for tool : RichTabulatedSignalDetectionEff
  *
  *  CVS Log :-
- *  $Id: RichTabulatedSignalDetectionEff.h,v 1.7 2004-10-27 14:39:41 jonrob Exp $
- *  $Log: not supported by cvs2svn $
- *  Revision 1.6  2004/07/27 20:15:33  jonrob
- *  Add doxygen file documentation and CVS information
+ *  $Id: RichTabulatedSignalDetectionEff.h,v 1.8 2005-06-18 11:40:11 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
  */
+//-----------------------------------------------------------------------------
 
 #ifndef RICHRECTOOLS_RICHTABULATEDSIGNALDETECTIONEFF_H
 #define RICHRECTOOLS_RICHTABULATEDSIGNALDETECTIONEFF_H 1
@@ -39,6 +38,7 @@
 // RichDet
 #include "RichDet/DeRich1.h"
 
+//-----------------------------------------------------------------------------
 /** @class RichTabulatedSignalDetectionEff RichTabulatedSignalDetectionEff.h
  *
  *  Tool providing calculations for the photon detection efficiencies
@@ -48,6 +48,7 @@
  *
  *  @todo Add support for different QE curves for each HPD
  */
+//-----------------------------------------------------------------------------
 
 class RichTabulatedSignalDetectionEff : public RichRecToolBase,
                                         virtual public IRichSignalDetectionEff {
