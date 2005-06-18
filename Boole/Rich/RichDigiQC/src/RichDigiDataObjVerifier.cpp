@@ -1,4 +1,4 @@
-// $Id: RichDigiDataObjVerifier.cpp,v 1.7 2005-01-14 17:29:58 jonrob Exp $
+// $Id: RichDigiDataObjVerifier.cpp,v 1.8 2005-06-18 11:27:15 jonrob Exp $
 
 // local
 #include "RichDigiDataObjVerifier.h"
@@ -78,6 +78,7 @@ StatusCode RichDigiDataObjVerifier::execute() {
     printHitsAt ( "NexNext/"  + MCRichHitLocation::Default );
   }
 
+  /*
   // MCRichDeposits
   if ( m_bdMCDeposits ) {
     SmartDataPtr<MCRichDeposits> mcDeps( eventSvc(), MCRichDepositLocation::Default );
@@ -119,6 +120,7 @@ StatusCode RichDigiDataObjVerifier::execute() {
       }
     }
   } // end MCRichSummedDeposits print
+  */
 
     // MCRichDigits
   MCRichDigits * richMcDigits( 0 );

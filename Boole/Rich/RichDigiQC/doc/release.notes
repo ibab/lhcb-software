@@ -4,6 +4,9 @@
 ! Purpose     : Quality Control monitoring algorithms for RICH digitisation
 !-----------------------------------------------------------------------------
 
+! 2005-06-18 - Chris Jones
+ - Adapt to changes in RichEvent
+
 ! 2005-05-13 - Chris Jones
  - Adapt to changes in RichDAQ
 

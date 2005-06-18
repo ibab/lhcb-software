@@ -5,12 +5,12 @@ RiDigitQC.NTupleProduce  = false; // turn off ntuples
 RiDigitQC.EvtColsProduce = false; // turn off event collections
 //RiDigitQC.HistoProduce   = false; // turn off histograms
 RiDigitQC.HistoDir = "RICH/DIGI/DIGITQC"; // set histo directory
+RiDigitQC.HistoOffSet = 10000;
+
+// DAQ decoding
+//#include "$RICHDAQROOT/options/Brunel_DecodeRawEvent.opts"
 
 /*
-// DAQ decoding
-#include "$RICHDAQROOT/options/Brunel_DecodeRawEvent.opts"
-//MoniRICHSeq.Members += { "RawBufferToRichDigitsAlg/RichDecodeRawEvent" };
-
 // Low level data object debugger
 MoniRICHSeq.Members += { "RichDigiDataObjVerifier/RichDigiEventCheck" };
 RichDigiEventCheck.CheckRichDigits           = true;

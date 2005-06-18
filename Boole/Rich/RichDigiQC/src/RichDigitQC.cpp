@@ -5,7 +5,7 @@
  *  Implementation file for RICH Digitisation Quality Control algorithm : RichDigitQC
  *
  *  CVS Log :-
- *  $Id: RichDigitQC.cpp,v 1.18 2005-05-13 14:23:46 jonrob Exp $
+ *  $Id: RichDigitQC.cpp,v 1.19 2005-06-18 11:27:15 jonrob Exp $
  *
  *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
  *  @date   2003-09-08
@@ -29,6 +29,7 @@ RichDigitQC::RichDigitQC( const std::string& name,
     m_hpdID         ( 0                 ),
     m_smartIDs      ( 0                 ),
     m_mcTool        ( 0                 ),
+    m_evtC          ( 0                 ),
     m_spillDigits   ( Rich::NRiches     ),
     m_totalSpills   ( Rich::NRiches     ),
     m_bkgHits       ( Rich::NRiches, 0  )
@@ -68,19 +69,20 @@ StatusCode RichDigitQC::initialize()
 // Main execution
 StatusCode RichDigitQC::execute()
 {
-  debug() << "Execute" << endreq;
+  if ( msgLevel(MSG::DEBUG) ) debug() << "Execute" << endreq;
 
   // Locate MCRichDigits
   MCRichDigits * richDigits = get<MCRichDigits>( m_digitTDS );
 
-  // temporary talliy
+  // temporary tally
   HPDCounter nHPD[Rich::NRiches];
 
   // Loop over all digits
   std::vector<unsigned int> backs(Rich::NRiches);
   SpillDetCount spills(Rich::NRiches);
   for ( MCRichDigits::const_iterator iDigit = richDigits->begin();
-        iDigit != richDigits->end(); ++iDigit ) {
+        iDigit != richDigits->end(); ++iDigit )
+  {
 
     // Get Rich ID
     const Rich::DetectorType rich = (*iDigit)->key().rich();
@@ -103,7 +105,7 @@ StatusCode RichDigitQC::execute()
 
   // Get total number of hits in each event
   //------------------------------------------------------------------------------
-  for ( EventLocations::const_iterator iC = m_evtLocs.begin(); 
+  for ( EventLocations::const_iterator iC = m_evtLocs.begin();
         iC != m_evtLocs.end(); ++iC )
   {
     if ( exist<MCRichHits>(iC->first) )
@@ -113,7 +115,10 @@ StatusCode RichDigitQC::execute()
       {
         ++(m_totalSpills[(*iH)->rich()])[iC->first];
       }
-      debug() << "Found " << hits->size() << " MCRichHits at " << iC->first << endreq;
+      if ( msgLevel(MSG::DEBUG) )
+      {
+        debug() << "Found " << hits->size() << " MCRichHits at " << iC->first << endreq;
+      }
     }
   }
 
@@ -122,79 +127,61 @@ StatusCode RichDigitQC::execute()
 
   // Various tallies and plots
   //------------------------------------------------------------------------------
-  std::vector< unsigned int > totDet(Rich::NRiches,0);
-  L1Counter totL1R1, totL1R2;
-  {for ( HPDCounter::const_iterator iHPD = nHPD[Rich::Rich1].begin();
-         iHPD != nHPD[Rich::Rich1].end(); ++iHPD )
+  for ( int iRich = 0; iRich<Rich::NRiches; ++iRich )
   {
-    plot1D( (*iHPD).second, "RICH1 : HPD occupancy", 0, 150, 75 );
-    (m_nHPD[Rich::Rich1])[(*iHPD).first] += (*iHPD).second;
-    const RichDAQ::Level1ID l1ID = m_level1->levelL1ID( (*iHPD).first );
-    totL1R1[l1ID]       += (*iHPD).second;
-    totDet[Rich::Rich1] += (*iHPD).second;
-  }}
-  {for ( HPDCounter::const_iterator iHPD = nHPD[Rich::Rich2].begin();
-         iHPD != nHPD[Rich::Rich2].end(); ++iHPD )
-  {
-    plot1D( (*iHPD).second, "RICH2 : HPD occupancy", 0, 150, 75 );
-    (m_nHPD[Rich::Rich2])[(*iHPD).first] += (*iHPD).second;
-    const RichDAQ::Level1ID l1ID = m_level1->levelL1ID( (*iHPD).first );
-    totL1R2[l1ID]       += (*iHPD).second;
-    totDet[Rich::Rich2] += (*iHPD).second;
-  }}
+    const Rich::DetectorType rich = (Rich::DetectorType)iRich;
+    const std::string RICH = Rich::text(rich);
 
-  plot1D( totDet[Rich::Rich1], "RICH1 : Detector occupancy", 0, 5000, 50 );
-  plot1D( totDet[Rich::Rich2], "RICH2 : Detector occupancy", 0, 2000, 50 );
-  if ( m_extraHists )
-  {
-    plot1D( backs[Rich::Rich1], "RICH1 : # Background hits", 0, 5000, 50 );
-    plot1D( backs[Rich::Rich2], "RICH2 : # Background hits", 0, 2000, 50 );
-    for ( SpillCount::iterator iC = spills[Rich::Rich1].begin(); iC != spills[Rich::Rich1].end(); ++iC )
+    unsigned int totDet(0);
+    L1Counter totL1;
+    for ( HPDCounter::const_iterator iHPD = nHPD[rich].begin();
+          iHPD != nHPD[rich].end(); ++iHPD )
     {
-      plot1D( iC->second,  "RICH1 : # Spillover hits "+iC->first,  0, 5000, 50 );
+      plot1D( (*iHPD).second, RICH+" : Average HPD occupancy (nHits>0)", 0, 150, 75 );
+      if ( m_extraHists )
+      {
+        const RichDAQ::HPDHardwareID hID = m_hpdID->hardwareID( (*iHPD).first );
+        std::ostringstream title;
+        title << RICH << " : HPD " << (*iHPD).first << " " << hID << " occupancy (nHits>0)";
+        plot1D( (*iHPD).second, hID, title.str(), 0, 150, 75 );
+      }
+      (m_nHPD[rich])[(*iHPD).first] += (*iHPD).second;
+      const RichDAQ::Level1ID l1ID = m_level1->levelL1ID( (*iHPD).first );
+      totL1[l1ID] += (*iHPD).second;
+      totDet      += (*iHPD).second;
     }
-
-    for ( SpillCount::iterator iC = spills[Rich::Rich2].begin(); iC != spills[Rich::Rich2].end(); ++iC )
-    {
-      plot1D( iC->second,  "RICH2 : # Spillover hits "+iC->first,  0, 2000, 50 );
-    }
-  }
-
-  {for ( L1Counter::const_iterator iL1 = totL1R1.begin(); iL1 != totL1R1.end(); ++iL1 ) {
-    std::string l1String =  boost::lexical_cast<std::string>((*iL1).first);
-    plot1D( (*iL1).second, "RICH1 : Average L1 board occupancy", 0, 1000 );
+    plot1D( totDet, RICH+" : Detector occupancy", 0, 5000, 50 );
     if ( m_extraHists )
     {
-      plot1D( (*iL1).second, "RICH1 : L1 board "+l1String+" occupancy", 0, 1000 );
+      plot1D( backs[rich], RICH+" : # Background hits", 0, 5000, 50 );
+      for ( SpillCount::iterator iC = spills[rich].begin(); iC != spills[rich].end(); ++iC )
+      {
+        plot1D( iC->second, RICH+" : # Spillover hits "+iC->first,  0, 5000, 50 );
+      }
     }
-  }}
-  {for ( L1Counter::const_iterator iL1 = totL1R2.begin(); iL1 != totL1R2.end(); ++iL1 ) {
-    std::string l1String =  boost::lexical_cast<std::string>((*iL1).first);
-    plot1D( (*iL1).second, "RICH2 : Average L1 board occupancy", 0, 1000 );
-    if ( m_extraHists )
+    for ( L1Counter::const_iterator iL1 = totL1.begin(); iL1 != totL1.end(); ++iL1 )
     {
-      plot1D( (*iL1).second, "RICH2 : L1 board "+l1String+" occupancy", 0, 1000 );
+      std::string l1String = boost::lexical_cast<std::string>((*iL1).first);
+      plot1D( (*iL1).second, RICH+" : Average L1 board occupancy (nHits>0)", 0, 1000 );
+      if ( m_extraHists )
+      {
+        plot1D( (*iL1).second, RICH+" : L1 board "+l1String+" occupancy (nHits>0)", 0, 1000 );
+      }
     }
-  }}
 
-  // Event printout
-  //------------------------------------------------------------------------------
-  if ( msgLevel(MSG::DEBUG) )
-  {
-    debug() << "RICH1 : Total # digits = " << totDet[Rich::Rich1] << endreq;
-    for ( SpillCount::const_iterator iC = spills[Rich::Rich1].begin();
-          iC != spills[Rich::Rich1].end(); ++iC )
+    // Event printout
+    //------------------------------------------------------------------------------
+    if ( msgLevel(MSG::DEBUG) )
     {
-      debug() <<  "      : " << iC->first << " " << iC->second << endreq;
+      debug() << RICH+" : Total # digits = " << totDet << endreq;
+      for ( SpillCount::const_iterator iC = spills[rich].begin();
+            iC != spills[rich].end(); ++iC )
+      {
+        debug() <<  "      : " << iC->first << " " << iC->second << endreq;
+      }
+      debug() << "      : # background " << backs[rich] << endreq;
     }
-    debug() << "      : # background " << backs[Rich::Rich1] << endreq;
-    debug() << "RICH2 : Total # digits = " << totDet[Rich::Rich2] << endreq;
-    for ( SpillCount::const_iterator iC = spills[Rich::Rich2].begin();
-          iC != spills[Rich::Rich2].end(); ++iC )
-    {
-      debug() <<  "      : " << iC->first << " " << iC->second << endreq;
-    }
-    debug() << "      : # background " << backs[Rich::Rich2] << endreq;
+
   }
 
   return StatusCode::SUCCESS;
@@ -209,108 +196,70 @@ StatusCode RichDigitQC::finalize()
   RichPoissonEffFunctor eff("%6.2f +-%5.2f");
 
   info() << "===============================================================================================" << endreq
-         << "                            RICH Digitisation Simuation Summary" << endreq
-         << "-----------------------------------------------------------------------------------------------" << endreq;
+         << "                            RICH Digitisation Simuation Summary" << endreq;
 
-  // Form final numbers
-  L1Counter totL1R1, totL1R2;
-  std::vector< unsigned int > totDet(Rich::NRiches,0);
-
-  // RICH1 ----------------------------------------------------------------------------------
+  for ( int iRich = 0; iRich<Rich::NRiches; ++iRich )
   {
-    verbose() << " RICH1 : Individual HPD info :-" << endreq;
-    for ( HPDCounter::const_iterator iHPD = m_nHPD[Rich::Rich1].begin();
-          iHPD != m_nHPD[Rich::Rich1].end(); ++iHPD )
+    const Rich::DetectorType rich = (Rich::DetectorType)iRich;
+    const std::string RICH = Rich::text(rich);
+    info() << "-----------------------------------------------------------------------------------------------" << endreq;
+
+    // Form final numbers
+    L1Counter totL1;
+    unsigned int totDet(0);
+
+    debug() << " " << RICH << " : Individual HPD info :-" << endreq;
+    unsigned int maxOcc(0), minOcc(999999);
+    RichDAQ::HPDHardwareID maxHPD(0), minHPD(0);
+    for ( HPDCounter::const_iterator iHPD = m_nHPD[rich].begin();
+          iHPD != m_nHPD[rich].end(); ++iHPD )
     {
       const RichDAQ::HPDHardwareID hID = m_hpdID->hardwareID( (*iHPD).first );
       const RichDAQ::Level1ID l1ID     = m_level1->levelL1ID( (*iHPD).first );
       const HepPoint3D hpdGlo = m_smartIDs->hpdPosition( (*iHPD).first );
       const HepPoint3D hpdLoc = m_smartIDs->globalToPDPanel( hpdGlo );
-      totL1R1[l1ID]       += (*iHPD).second;
-      totDet[Rich::Rich1] += (*iHPD).second;
+      totL1[l1ID] += (*iHPD).second;
+      totDet      += (*iHPD).second;
+      if ( (*iHPD).second > maxOcc ) { maxOcc = (*iHPD).second; maxHPD = hID; }
+      if ( (*iHPD).second < minOcc ) { minOcc = (*iHPD).second; minHPD = hID; }
       if ( m_extraHists )
       {
-        plot2D( hpdLoc.x(), hpdLoc.y(), "RICH1 : HPD hardware ID layout", -800, 800, -600, 600, 100, 100, hID );
-        plot2D( hpdLoc.x(), hpdLoc.y(), "RICH1 : Level1 ID layout", -800, 800, -600, 600, 100, 100, l1ID );
-        plot2D( hpdLoc.x(), hpdLoc.y(), "RICH1 : SmartID Row layout", -800, 800, -600, 600, 100, 100, (*iHPD).first.pdRow() );
-        plot2D( hpdLoc.x(), hpdLoc.y(), "RICH1 : SmartID Col layout", -800, 800, -600, 600, 100, 100, (*iHPD).first.pdCol() );
+        plot2D( hpdLoc.x(), hpdLoc.y(), RICH+" : HPD hardware ID layout", -800, 800, -600, 600, 100, 100, hID );
+        plot2D( hpdLoc.x(), hpdLoc.y(), RICH+" : Level1 ID layout", -800, 800, -600, 600, 100, 100, l1ID );
+        plot2D( hpdLoc.x(), hpdLoc.y(), RICH+" : SmartID Row layout", -800, 800, -600, 600, 100, 100, (*iHPD).first.pdRow() );
+        plot2D( hpdLoc.x(), hpdLoc.y(), RICH+" : SmartID Col layout", -800, 800, -600, 600, 100, 100, (*iHPD).first.pdCol() );
       }
-      verbose() << "    HPD " << (*iHPD).first << " hardID "
-                << format("%3i",hID) << " : L1 board" << format("%3i",l1ID) << endreq
-                << "      Global position : " << hpdGlo << endreq
-                << "      Local position  : " << hpdLoc << endreq
-                << "      Hit occupancy   : " << occ((*iHPD).second,m_evtC) << " hits/event" << endreq;
+      debug() << "    HPD " << (*iHPD).first << " hardID "
+              << format("%3i",hID) << " : L1 board" << format("%3i",l1ID) << endreq
+              << "      Global position : " << hpdGlo << endreq
+              << "      Local position  : " << hpdLoc << endreq
+              << "      Hit occupancy   : " << occ((*iHPD).second,m_evtC) << " hits/event" << endreq;
     }
 
-    info() << " RICH1 : Av. overall hit occupancy    " << occ(totDet[Rich::Rich1],m_evtC) << " hits/event" << endreq
+    info() << " " << RICH << " : Av. overall hit occupancy    " << occ(totDet,m_evtC) << " hits/event" << endreq
            << "       : Av. HPD hit occupancy        "
-           << occ(totDet[Rich::Rich1],m_evtC*m_nHPD[Rich::Rich1].size()) << " hits/event" << endreq;
-    {for ( SpillCount::iterator iC = m_spillDigits[Rich::Rich1].begin(); iC != m_spillDigits[Rich::Rich1].end(); ++iC )
+           << occ(totDet,m_evtC*m_nHPD[rich].size()) << " hits/event" << endreq;
+    {for ( SpillCount::iterator iC = m_spillDigits[rich].begin(); iC != m_spillDigits[rich].end(); ++iC )
     {
       std::string loc = iC->first;
       loc.resize(28,' ');
-      info() << "       :   " << loc << " " << eff(iC->second,totDet[Rich::Rich1]) << " % of total, "
-             << eff(iC->second,(m_totalSpills[Rich::Rich1])[iC->first]) << " % event eff." << endreq;
+      info() << "       :   " << loc << " " << eff(iC->second,totDet) << " % of total, "
+             << eff(iC->second,(m_totalSpills[rich])[iC->first]) << " % event eff." << endreq;
     }}
     info() << "       : % background hits              "
-           << eff(m_bkgHits[Rich::Rich1],totDet[Rich::Rich1]) << " % " << endreq;
+           << eff(m_bkgHits[rich],totDet) << " % " << endreq;
 
     int iC = 0;
-    for ( L1Counter::const_iterator iL1 = totL1R1.begin(); iL1 != totL1R1.end(); ++iL1, ++iC )
+    for ( L1Counter::const_iterator iL1 = totL1.begin(); iL1 != totL1.end(); ++iL1, ++iC )
     {
       debug() << "       : Av. L1 board" << format("%3i",(*iL1).first)
               << " hit occupancy   = " << occ((*iL1).second,m_evtC) << endreq;
     }
 
-  }
-
-  info() << "-----------------------------------------------------------------------------------------------" << endreq;
-
-  // RICH2 ----------------------------------------------------------------------------------
-  {
-    verbose() << " RICH2 : Individual HPD info :-" << endreq;
-    for ( HPDCounter::const_iterator iHPD = m_nHPD[Rich::Rich2].begin();
-          iHPD != m_nHPD[Rich::Rich2].end(); ++iHPD )
-    {
-      const RichDAQ::HPDHardwareID hID = m_hpdID->hardwareID( (*iHPD).first );
-      const RichDAQ::Level1ID l1ID     = m_level1->levelL1ID( (*iHPD).first );
-      const HepPoint3D hpdGlo = m_smartIDs->hpdPosition( (*iHPD).first );
-      const HepPoint3D hpdLoc = m_smartIDs->globalToPDPanel( hpdGlo );
-      totL1R2[l1ID]       += (*iHPD).second;
-      totDet[Rich::Rich2] += (*iHPD).second;
-      if ( m_extraHists )
-      {
-        plot2D( hpdLoc.x(), hpdLoc.y(), "RICH2 : HPD hardware ID layout", -800, 800, -800, 800, 100, 100, hID );
-        plot2D( hpdLoc.x(), hpdLoc.y(), "RICH2 : Level1 ID layout", -800, 800, -800, 800, 100, 100, l1ID );
-        plot2D( hpdLoc.x(), hpdLoc.y(), "RICH2 : SmartID Row layout", -800, 800, -800, 800, 100, 100, (*iHPD).first.pdRow() );
-        plot2D( hpdLoc.x(), hpdLoc.y(), "RICH2 : SmartID Col layout", -800, 800, -800, 800, 100, 100, (*iHPD).first.pdCol() );
-      }
-      verbose() << "    HPD " << (*iHPD).first << " hardID "
-                << format("%3i",hID) << " : L1 board" << format("%3i",l1ID) << endreq
-                << "      Global position : " << hpdGlo << endreq
-                << "      Local position  : " << hpdLoc << endreq
-                << "      Hit occupancy   : " << occ((*iHPD).second,m_evtC) << " hits/event" << endreq;
-    }
-
-    info() << " RICH2 : Av. overall hit occupancy    " << occ(totDet[Rich::Rich2],m_evtC) << " hits/event" << endreq
-           << "       : Av. HPD hit occupancy        "
-           << occ(totDet[Rich::Rich2],m_evtC*m_nHPD[Rich::Rich2].size()) << " hits/event" << endreq;
-    {for ( SpillCount::iterator iC = m_spillDigits[Rich::Rich2].begin(); iC != m_spillDigits[Rich::Rich2].end(); ++iC )
-    {
-      std::string loc = iC->first;
-      loc.resize(28,' ');
-      info() << "       :   " << loc << " " << eff(iC->second,totDet[Rich::Rich2]) << " % of total, "
-             << eff(iC->second,(m_totalSpills[Rich::Rich2])[iC->first]) << " % event eff." << endreq;
-    }}
-    info() << "       : % background hits              "
-           << eff(m_bkgHits[Rich::Rich2],totDet[Rich::Rich2]) << " % " << endreq;
-
-    int iC = 0;
-    for ( L1Counter::const_iterator iL1 = totL1R2.begin(); iL1 != totL1R2.end(); ++iL1, ++iC )
-    {
-      debug() << "       : Av. L1 board" << format("%3i",(*iL1).first)
-              << " hit occupancy   = " << occ((*iL1).second,m_evtC) << endreq;
-    }
+    info() << "       : Min Av. HPD occupancy hID=" << format("%3i",minHPD) 
+           << occ(minOcc,m_evtC) << " hits/event" << endreq
+           << "       : Max Av. HPD occupancy hID=" << format("%3i",maxHPD) 
+           << occ(maxOcc,m_evtC) << " hits/event" << endreq;
 
   }
 
