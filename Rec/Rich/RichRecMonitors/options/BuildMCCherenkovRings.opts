@@ -1,0 +1,18 @@
+
+// Options need to build the Cherenkov Rings from MCRichSegments
+
+ApplicationMgr.TopAlg += { "RichMCMassHypoRingsAlg/BuildMCRichRings" };
+ToolSvc.RichToolRegistry.Tools += { "RichMassHypothesisRingCreator/MCCherenkovRings" };
+ToolSvc.RichToolRegistry.Tools += { "RichMassHypothesisRingCreator/MCCherenkovRingsPrev" };
+ToolSvc.RichToolRegistry.Tools += { "RichMassHypothesisRingCreator/MCCherenkovRingsPrevPrev" };
+ToolSvc.RichToolRegistry.Tools += { "RichMassHypothesisRingCreator/MCCherenkovRingsNext" };
+ToolSvc.RichToolRegistry.Tools += { "RichMassHypothesisRingCreator/MCCherenkovRingsNextNext" };
+ToolSvc.RichToolRegistry.Tools += { "RichMassHypothesisRingCreator/MCCherenkovRingsLHCBackground" };
+ToolSvc.MCCherenkovRings.RingsLocation              = "MC/Rich/CherenkovRings";
+ToolSvc.MCCherenkovRingsPrev.RingsLocation          = "Prev/MC/Rich/CherenkovRings";
+ToolSvc.MCCherenkovRingsPrevPrev.RingsLocation      = "PrevPrev/MC/Rich/CherenkovRings";
+ToolSvc.MCCherenkovRingsNext.RingsLocation          = "Next/MC/Rich/CherenkovRings";
+ToolSvc.MCCherenkovRingsNextNext.RingsLocation      = "NextNext/MC/Rich/CherenkovRings";
+ToolSvc.MCCherenkovRingsLHCBackground.RingsLocation = "LHCBackground/MC/Rich/CherenkovRings";
+
+BuildMCRichRings.OutputLevel = 2;

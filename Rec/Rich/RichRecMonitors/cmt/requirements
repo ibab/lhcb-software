@@ -1,0 +1,28 @@
+#============================================================================
+# Created    : 17/06/2005
+# Maintainer : Christopher Rob Jones
+#            : Expert monitor algorithms for RICH reconstruction
+#============================================================================
+# $Id: requirements,v 1.1.1.1 2005-06-18 11:44:45 jonrob Exp $
+#============================================================================
+
+package RichRecMonitors
+version v1r0
+
+# ================ structure ================================================
+branches src cmt doc options
+include_path none
+
+# ================ environment ==============================================
+set RICHRECMONITORSOPTS $(RICHRECMONITORSROOT)/options
+
+# ================ dependencies =============================================
+use RichRecBase       v1r*  Rich
+use Relations         v*    Kernel
+
+# ================ component library=========================================
+library           RichRecMonitors   ../src/*.cpp   -import=AIDA
+
+# define component library link options
+#============================================================================
+apply_pattern component_library library=RichRecMonitors

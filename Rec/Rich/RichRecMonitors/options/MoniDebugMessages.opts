@@ -1,0 +1,16 @@
+// Turn on debug printout
+
+// reconstruction tool monitors
+RiRecPhotonMoni.OutputLevel = 2;
+RiRecTkMoni.OutputLevel = 2;
+RiRecPixelMoni.OutputLevel = 2;
+
+// Processing time monitor
+RichRecTime.OutputLevel = 2;
+TrTime.OutputLevel = 2;
+
+// Test alg for XML
+//RichXMLTest.OutputLevel = 2;
+
+// low level object verifier
+//RichObjPrint.OutputLevel = 2;

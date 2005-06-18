@@ -1,0 +1,9 @@
+!-----------------------------------------------------------------------------
+! Package     : Rich/RichRecMonitor
+! Responsible : Chris Jones
+! Purpose     : 
+!-----------------------------------------------------------------------------
+
+! 2005-06-17 - Chris Jones
+ - First version
+   Import of monitor algorithms from retired RichRecCommon package

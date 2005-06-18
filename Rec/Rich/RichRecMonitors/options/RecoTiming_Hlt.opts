@@ -1,0 +1,9 @@
+// Rich Reconstruction timing monitors
+
+// overall rich reconstruction
+CheckRICHSeq.Members += { "RichRecTimeMonitor/RichRecTime" };
+RichRecTime.MCHistoPath = "RICH/TIME/MC/";
+RichRecTime.HistoPath   = "RICH/TIME/";
+RichRecTime.TimingName = "BrunelRecoRICHSeq";
+RichRecTime.Algorithms = { "BrunelRecoRICHSeq" };
+

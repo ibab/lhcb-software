@@ -1,0 +1,42 @@
+// Rich Reconstruction monitors for common components
+
+// Pixel monitor
+CheckRICHSeq.Members += { "RichPixelMonitor/RiRecPixelMoni" };
+
+// Track geometry monitor
+CheckRICHSeq.Members += { "RichTrackGeomMoni/RiRecTkGeomMoni" };
+RiRecTkGeomMoni.TrackSelection = { "trigger" };
+RiRecTkGeomMoni.MCHistoPath = "RICH/RecTr/Geom/MC/";
+RiRecTkGeomMoni.HistoPath   = "RICH/RecTr/Geom/";
+
+// Track resolution monitors
+// forward tracks - positive
+CheckRICHSeq.Members += { "RichTrackResolutionMoni/RiRecTrigTkPosResMoni" };
+RiRecTrigTkPosResMoni.TrackSelection = { "unique","trigger" };
+RiRecTrigTkPosResMoni.TrackChargeSel = 1;
+RiRecTrigTkPosResMoni.MCHistoPath = "RICH/RecTr/Res/Trig/Pos/MC/";
+RiRecTrigTkPosResMoni.HistoPath   = "RICH/RecTr/Res/Trig/Pos/";
+// forward tracks - negative
+CheckRICHSeq.Members += { "RichTrackResolutionMoni/RiRecTrigTkNegResMoni" };
+RiRecTrigTkNegResMoni.TrackSelection = { "unique","trigger" };
+RiRecTrigTkNegResMoni.TrackChargeSel = -1;
+RiRecTrigTkNegResMoni.MCHistoPath = "RICH/RecTr/Res/Trig/Neg/MC/";
+RiRecTrigTkNegResMoni.HistoPath   = "RICH/RecTr/Res/Trig/Neg/";
+
+// Reconstruction monitor
+CheckRICHSeq.Members += { "RichPhotonMonitor/RiRecPhotonMoni" };
+RiRecPhotonMoni.MaxRichRecTracks = 230;
+
+// Timing monitors
+#include "$RICHRECMONITORSOPTS/RecoTiming_Hlt.opts"
+
+// Low level object verifier
+//CheckRICHSeq.Members += { "RichRecDataObjVerifier/RichRecObjPrint" };
+//RichRecObjPrint.PrintPixels   = true;
+//RichRecObjPrint.PrintTracks   = true;
+//RichRecObjPrint.PrintSegments = true;
+//RichRecObjPrint.PrintPhotons  = true;
+
+// Test algorithm to histogram XML geometry
+//CheckRICHSeq.Members += { "RichXMLTest" };
+//RichXMLTest.HistoPath = "RICH/XMLTEST/";
