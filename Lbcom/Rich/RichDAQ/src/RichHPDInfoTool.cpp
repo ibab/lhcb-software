@@ -5,7 +5,7 @@
  *  Implementation file for class : RichHPDInfoTool
  *
  *  CVS Log :-
- *  $Id: RichHPDInfoTool.cpp,v 1.1 2005-05-13 14:22:12 jonrob Exp $
+ *  $Id: RichHPDInfoTool.cpp,v 1.2 2005-06-18 11:24:17 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date 2004-12-18
@@ -102,10 +102,10 @@ StatusCode RichHPDInfoTool::buildHPDMappings()
       // fill vectors of valid HPD IDs
       m_smartIDs.push_back(hpdID);
       m_hardIDs.push_back(hID);
+      // debug printout
+      verbose() << "RichSmartID " << hpdID << " -> hardID " << hID << endreq;
       // increment hardward ID
       ++hID;
-      // finally, debug printout
-      verbose() << "RichSmartID " << hpdID << " -> hardID " << hID << endreq;
     }
   }
 
