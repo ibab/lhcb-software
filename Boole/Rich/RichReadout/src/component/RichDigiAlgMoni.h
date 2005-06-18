@@ -1,4 +1,4 @@
-// $Id: RichDigiAlgMoni.h,v 1.12 2005-02-20 19:12:47 jonrob Exp $
+// $Id: RichDigiAlgMoni.h,v 1.1 2005-06-18 11:36:05 jonrob Exp $
 #ifndef RICHMONITOR_RICHDIGIALGMONI_H
 #define RICHMONITOR_RICHDIGIALGMONI_H 1
 

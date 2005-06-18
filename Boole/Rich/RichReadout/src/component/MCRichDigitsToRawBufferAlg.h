@@ -4,8 +4,11 @@
  *  Header file for RICH DAQ algorithm : MCRichDigitsToRawBufferAlg
  *
  *  CVS Log :-
- *  $Id: MCRichDigitsToRawBufferAlg.h,v 1.1 2005-01-07 13:21:22 jonrob Exp $
+ *  $Id: MCRichDigitsToRawBufferAlg.h,v 1.1 2005-06-18 11:36:05 jonrob Exp $
  *  $Log: not supported by cvs2svn $
+ *  Revision 1.1  2005/01/07 13:21:22  jonrob
+ *  Add new algorithm
+ *
  *
  *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
  *  @date   2003-11-06

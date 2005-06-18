@@ -1,4 +1,4 @@
-// $Id: RichDetParams.h,v 1.2 2003-10-31 16:46:29 jonrob Exp $
+// $Id: RichDetParams.h,v 1.1 2005-06-18 11:36:05 jonrob Exp $
 #ifndef RICHKERNEL_RICHDETPARAMS_H
 #define RICHKERNEL_RICHDETPARAMS_H 1
 

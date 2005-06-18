@@ -4,6 +4,9 @@
 ! Purpose     : Rich Digitisation
 !-----------------------------------------------------------------------------
 
+! 2005-06-18 - Chris Jones
+ - Import data objects MCRichDeposit and MCRichSummedDeposit from RichEvent
+
 !======================== RichReadout v1r12 2005-03-08 =======================
 ! 2005-03-03 - Chris Jones
  - Add history information to MCRichDigits.

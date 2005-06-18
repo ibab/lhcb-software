@@ -4,8 +4,11 @@
  *  Declaration file for objects in component library RichReadout
  *
  *  CVS Log :-
- *  $Id: RichReadout_load.cpp,v 1.5 2005-01-07 13:20:39 jonrob Exp $
+ *  $Id: RichReadout_load.cpp,v 1.1 2005-06-18 11:36:05 jonrob Exp $
  *  $Log: not supported by cvs2svn $
+ *  Revision 1.5  2005/01/07 13:20:39  jonrob
+ *  Updates for new RichDAQ package
+ *
  *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   2003-11-09

@@ -4,8 +4,11 @@
  *  Implementation file for RICH DAQ algorithm : MCRichDigitsToRawBufferAlg
  *
  *  CVS Log :-
- *  $Id: MCRichDigitsToRawBufferAlg.cpp,v 1.2 2005-01-13 12:59:36 jonrob Exp $
+ *  $Id: MCRichDigitsToRawBufferAlg.cpp,v 1.1 2005-06-18 11:36:05 jonrob Exp $
  *  $Log: not supported by cvs2svn $
+ *  Revision 1.2  2005/01/13 12:59:36  jonrob
+ *  Update printout
+ *
  *  Revision 1.1  2005/01/07 13:21:22  jonrob
  *  Add new algorithm
  *

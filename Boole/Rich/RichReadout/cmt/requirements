@@ -2,24 +2,33 @@
 # Created    : 11/05/2003
 # Maintainer : Christopher Rob Jones
 #============================================================================
-# $Id: requirements,v 1.24 2005-03-08 10:49:29 cattanem Exp $
+# $Id: requirements,v 1.25 2005-06-18 11:36:03 jonrob Exp $
 #============================================================================
 
 package RichReadout
 version v1r12
 
 # ================ structure =================================================
-branches cmt doc src
-include_path none
+branches cmt doc src Event xml
+#include_path none
 
 # ================ environment ===============================================
 set RICHREADOUTOPTS $(RICHREADOUTROOT)/options
 
 # ================ dependencies ==============================================
-use RichEvent   v8r*    Event
-use DAQEvent    v*      Event
+use GaudiObjDesc v* 
+use RichEvent    v8r*    Event
+use DAQEvent     v*      Event
+
+#============================================================================
+# Build GOD objects
+#============================================================================
+document  obj2doth  RichReadout_EventObj2Doth      ../xml/*.xml
 
 # ================ component library =========================================
-library RichReadout ../src/*.cpp  -import=AIDA
+library RichReadout ../src/event/*.cpp ../src/component/*.cpp  -import=AIDA
 
 apply_pattern component_library library=RichReadout
+
+private
+include_dirs $(RICHREADOUTROOT)

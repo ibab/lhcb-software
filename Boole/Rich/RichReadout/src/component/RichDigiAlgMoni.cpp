@@ -1,4 +1,4 @@
-// $Id: RichDigiAlgMoni.cpp,v 1.12 2005-02-20 19:12:46 jonrob Exp $
+// $Id: RichDigiAlgMoni.cpp,v 1.1 2005-06-18 11:36:05 jonrob Exp $
 
 // local
 #include "RichDigiAlgMoni.h"
