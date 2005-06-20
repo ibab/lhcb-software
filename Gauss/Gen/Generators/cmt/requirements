@@ -1,0 +1,26 @@
+# $Id: requirements,v 1.1.1.1 2005-06-20 21:42:17 robbep Exp $ 
+# =============================================================================
+package       Generators
+version       v1r0
+
+# =========== structure =======================================================
+branches      Generators doc cmt src
+
+# =========== own includes ====================================================
+include_dirs  $(GENERATORSROOT)
+
+# =========== dependencies ====================================================
+use           GaudiAlg          v*
+use           CLHEP             v*                LCG_Interfaces
+use           GenEvent          v*                Event
+use           HepEvt            v*                Gen
+use           EvtGen            v*                Gen
+
+# =========== constituents ====================================================
+library       GeneratorsLib     Lib/*.cpp Lib/*.F
+library       Generators        component/*.cpp
+
+# =========== standard patterns (the order is essential!) =====================
+apply_pattern component_library library=Generators 
+apply_pattern linker_library    library=GeneratorsLib 
+apply_pattern library_stamps    library=GeneratorsLib 

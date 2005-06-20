@@ -1,0 +1,13 @@
+! $Id: release.notes,v 1.1.1.1 2005-06-20 21:42:17 robbep Exp $
+! Package     : Gen/Generators
+! Responsible : 
+
+! 2005-06-20 - Patrick Robbe
+ - new package. This package contains the base classes used by the
+   generator algorithms and tools. It also contains generic algorithms
+   and tools for debugging (DumpMC, DumpMCDecay), for EvtGen access
+   (EvtGenTool, SetDecayAlg, EvtDecayAlg), for vertex smearing (SmearVertexAlg)
+   and also utility functions (random number interfaces, HepMC help functions,
+   String utilities to read generator Fortran-like options)
+
+! ====================================================================
