@@ -5,7 +5,7 @@
  *  Header file for tool : RichPhotonRecoUsingQuarticSoln
  *
  *  CVS Log :-
- *  $Id: RichPhotonRecoUsingQuarticSoln.h,v 1.1 2005-06-17 15:15:55 jonrob Exp $
+ *  $Id: RichPhotonRecoUsingQuarticSoln.h,v 1.2 2005-06-20 16:34:00 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @author Antonis Papanestis
@@ -59,7 +59,7 @@
 
 // Include the private quartic solving code
 // Eventually this might be in GSL ...
-#include "zsolve_quartic.h"
+//#include "zsolve_quartic.h"
 #include "zsolve_quartic_RICH.h"
 
 //-----------------------------------------------------------------------------
