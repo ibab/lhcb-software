@@ -2,7 +2,7 @@
 # Created    : 2003-07-01
 # Maintainer : Chris Jones   Christopher.Rob.Jones@cern.ch
 #============================================================================
-# $Id: requirements,v 1.42 2005-06-18 11:39:20 jonrob Exp $
+# $Id: requirements,v 1.43 2005-06-20 13:24:15 jonrob Exp $
 #============================================================================
 
 package           RichRecSys
@@ -17,7 +17,8 @@ set RICHRECSYSOPTS $(RICHRECSYSROOT)/options
 # ================ dependencies =============================================
 
 # DAQ Decoding
-use RichDAQ             v2r1p1  Rich
+# Now acquired from DAQSys requirements
+#use RichDAQ             v2r2    Rich
 
 # Common RICH reconstruction packages
 use RichRecBase         v1r16   Rich

@@ -2,33 +2,25 @@
 // Define the algorithms to run and in which order
 // ============================================================================
 
-// Markov chain ring finder
-//RecoRICHSeq.Members += {
-  //"Rich1MarkovRingFinderAlg/Rich1P0RingFinder",   // Rich1 Upper panel
-  //"Rich1MarkovRingFinderAlg/Rich1P1RingFinder",   // Rich1 Lower panel
-  //"Rich2LMarkovRingFinderAlg/Rich2P0RingFinder",  // Rich2 left panel 
-  //"Rich2RMarkovRingFinderAlg/Rich2P1RingFinder"   // Rich2 right panel
-//};
-
-// Run the Local PID first
+// Run the Local PID algorithm first
 RecoRICHSeq.Members += { "RichLocalPIDAlg/RichLocPID" };
 
-// Initialise GlobalPID each event
-RecoRICHSeq.Members += { "RichGlobalPIDInitialize/RichGloPIDInit" };
-RecoRICHSeq.Members += { "RichGlobalPIDDigitSel/RichGloPIDDigSel" };
-RecoRICHSeq.Members += { "RichGlobalPIDTrTrackSel/RichGloPIDTrSel" };
+// Initialise Global PID algorithm for each event
+RecoRICHSeq.Members += { "RichGlobalPIDInitialize/RichGloPIDInit",
+                         "RichGlobalPIDDigitSel/RichGloPIDDigSel",
+                         "RichGlobalPIDTrTrackSel/RichGloPIDTrSel" };
 
-// Backgroud alg - Uses local PID results as working particle hypotheses
-RecoRICHSeq.Members += { "RichRecBackgroundEsti/RichBckEst1" };
+// First iteration of background estimation then Global PID iteration
+RecoRICHSeq.Members += { "RichRecBackgroundEsti/RichBckEst1",
+                         "RichGlobalPIDAlg/RichGloPIDIt1" };
 
-// First iteration of Global PID
-RecoRICHSeq.Members += { "RichGlobalPIDAlg/RichGloPIDIt1" };
+// Second iteration of background estimation then Global PID iteration
+RecoRICHSeq.Members += { "RichRecBackgroundEsti/RichBckEst2",
+                         "RichGlobalPIDAlg/RichGloPIDIt2" };
 
-// Backgroud alg - Uses global 1st iter results as working particle hypotheses
-RecoRICHSeq.Members += { "RichRecBackgroundEsti/RichBckEst2" };
-
-// Second iteration of Global PID
-RecoRICHSeq.Members += { "RichGlobalPIDAlg/RichGloPIDIt2" };
+// Third iteration of background estimation then Global PID iteration
+//RecoRICHSeq.Members += { "RichRecBackgroundEsti/RichBckEst3",
+//                         "RichGlobalPIDAlg/RichGloPIDIt3" };
 
 // Ring refit - uses working PIDs to identify good photons and refit angles
 // Results as yet not used in formation of final PID
@@ -82,10 +74,17 @@ RichGloPIDIt1.MinSignalForAproxLLCalc     = 1e-5;
 //                                            Its      tracks     lowT    highT
 RichGloPIDIt2.TrackMinDeltaLLPara         = { 0,10,    30,150,   -4,-3,  -2, -0.5 };
 RichGloPIDIt2.FreezeOutPara               = { 0,10,    30,150,    4, 3,   2,  1   };
-
 RichGloPIDIt2.LikelihoodThreshold         = -1e-3;
 RichGloPIDIt2.MinSignalForNoLLCalc        = 1e-25;
 RichGloPIDIt2.MinSignalForAproxLLCalc     = 1e-5;
+
+// Global Algorithm parameters - phase 3
+//                                            Its      tracks     lowT    highT
+RichGloPIDIt3.TrackMinDeltaLLPara         = { 0,10,    30,150,   -4,-3,  -2, -0.5 };
+RichGloPIDIt3.FreezeOutPara               = { 0,10,    30,150,    4, 3,   2,  1   };
+RichGloPIDIt3.LikelihoodThreshold         = -1e-3;
+RichGloPIDIt3.MinSignalForNoLLCalc        = 1e-25;
+RichGloPIDIt3.MinSignalForAproxLLCalc     = 1e-5;
 
 // Ring Refit
 RichRingRefit.TrackSelection = { "unique","seed","match","forward","KsTrack" };
