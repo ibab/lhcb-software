@@ -1,4 +1,4 @@
-// $Id: GeometryInfoPlus.h,v 1.2 2005-06-20 12:23:43 jpalac Exp $
+// $Id: GeometryInfoPlus.h,v 1.3 2005-06-20 16:20:33 cattanem Exp $
 #ifndef LIB_GEOMETRYINFOPLUS_H 
 #define LIB_GEOMETRYINFOPLUS_H 1
 
@@ -68,6 +68,7 @@ public:
    *  @param LogVol name of logical volume
    *  @param Support name of support element 
    *  @param ReplicaPath replica path/address 
+   *  @param alignmentPath alignment path/address 
    */
   GeometryInfoPlus( IDetectorElement*            de,
                     const std::string&           LogVol, 
@@ -80,6 +81,7 @@ public:
    *  @param LogVol          name of logical volume
    *  @param Support         name of support element 
    *  @param ReplicaNamePath replica path/address 
+   *  @param alignmentPath   alignment path/address 
    */
   GeometryInfoPlus( IDetectorElement*  de,
                     const std::string& LogVol, 
@@ -333,7 +335,7 @@ public:
   MsgStream&    printOut   ( MsgStream&    ) const;
   /// reset to the initial state 
   IGeometryInfo*  reset();
-  ///@}
+
   /** query the interface
    *  @param ID interface identifier
    *  @param ppI placeholder for returned interface

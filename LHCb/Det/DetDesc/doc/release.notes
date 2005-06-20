@@ -1,36 +1,37 @@
 ! =============================================================================
-! $Id: release.notes,v 1.185 2005-06-20 12:23:43 jpalac Exp $ 
+! $Id: release.notes,v 1.186 2005-06-20 16:20:33 cattanem Exp $ 
 ! =============================================================================
 ! package DetDesc
 ! package manager : Marco Clemencic, Juan Palacios
 ! =============================================================================
 
+!======================== DetDesc v15r2 2005-06-20 ========================
 ! 2005-06-20 - Juan Palacios
   - DetDesc/Condition.h 
-				change toXml(const std::string) method to const method.
+     change toXml(const std::string) method to const method.
 
   - DetDesc/IGeometryInfo.h 
-				Add virtual const AlignmentCondition* alignmentCondition() const method
-        to return pointer to GeometryInfo's AlignmentCondition
+     Add virtual const AlignmentCondition* alignmentCondition() const method
+     to return pointer to GeometryInfo's AlignmentCondition
 
   - src/Lib/AlignmentCondition.cpp
-				Change most MSG::DEBUG to MSG::VERBOSE
+     Change most MSG::DEBUG to MSG::VERBOSE
 
   - src/Lib/Condition.cpp
-				Add ClassID attribute to string returned by toXml method. Allows 
-				convertor to generate AlignmentCondition if needed.
+     Add ClassID attribute to string returned by toXml method. Allows 
+     convertor to generate AlignmentCondition if needed.
 
   - src/Lib/GeometryInfo.h and GeometryInfoPlus.h
-				Add virtual const AlignmentCondition* alignmentCondition() const method
-        to return pointer to GeometryInfo's AlignmentCondition
+     Add virtual const AlignmentCondition* alignmentCondition() const method
+     to return pointer to GeometryInfo's AlignmentCondition
 
   - src/Lib/GeometryInfo.icpp and GeometryInfoPlus.cpp
-				Implement virtual const AlignmentCondition* alignmentCondition() const
-				methods.
+     Implement virtual const AlignmentCondition* alignmentCondition() const
+     methods.
 
   - src/Lib/GeometryInfoPlus.cpp
-				Throw exception when required condition not found in DataSvc.
-				Re-structure initialization of transformation matrices.
+     Throw exception when required condition not found in DataSvc.
+     Re-structure initialization of transformation matrices.
 
 !======================== DetDesc v15r1 2005-06-13 ========================
 ! 2005-06-13 - Marco Cattaneo
