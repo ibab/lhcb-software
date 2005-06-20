@@ -4,6 +4,17 @@
 ! Purpose     : standard converters for the LHCb Detector Description
 !-----------------------------------------------------------------------------
 
+! 2005-06-20 - Juan Palacios
+
+ - src/Lib/AddressTools.h, AddressTools.cpp
+		Added files for parsing strings containing environment variables. Used to
+		expand addresses with environment variables.
+
+ - src/Lib/XmlGenericCnv.cpp
+		Method createXmlAddress(std::string, std::string, CLID) modified to use
+		environment variable expansion from AddressTools. If failure to resolve
+		environment variable exception is thrown.
+
 !================ DetDescCnv v2r6 2005-06-13 ===========================
 ! 2005-06-13 - Marco Cattaneo
  - Remove parsing of "N" attribute for isotopes, removed from XmlDDDB

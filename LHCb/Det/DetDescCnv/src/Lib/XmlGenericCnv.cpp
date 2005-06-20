@@ -1,4 +1,4 @@
-// $Id: XmlGenericCnv.cpp,v 1.6 2005-06-09 11:14:31 cattanem Exp $
+// $Id: XmlGenericCnv.cpp,v 1.7 2005-06-20 12:40:28 jpalac Exp $
 
 // Include files
 #include "DetDescCnv/XmlGenericCnv.h"
@@ -17,6 +17,8 @@
 #include "GaudiKernel/MsgStream.h"
 
 #include "XmlTools/IXmlSvc.h"
+
+#include "AddressTools.h"
 
 // -----------------------------------------------------------------------
 // Standard Constructor
@@ -98,7 +100,7 @@ StatusCode XmlGenericCnv::createObj (IOpaqueAddress* addr,
    }
 
    // displays the address for debug purposes  
-   log << MSG::VERBOSE << "Address : dbname = " << addr->par()[0]
+   log << MSG::DEBUG << "Address : dbname = " << addr->par()[0]
        << ", ObjectName = " << addr->par()[1]
        << ", isString = " << addr->ipar()[0] << endreq;
 
@@ -486,10 +488,26 @@ XmlGenericCnv::createAddressForHref (std::string href,
 IOpaqueAddress* XmlGenericCnv::createXmlAddress (std::string location,
                                                  std::string entryName,
                                                  CLID clid) const {
+
+  MsgStream log( msgSvc(), "XmlGenericCnv" );
+  std::string oldPath=location;
+  if (AddressTools::hasEnvironmentVariable(location) ) {
+    log << MSG::VERBOSE << "Found environment variable in path "
+        << location << endmsg;
+    if (!AddressTools::expandAddress(location)) {
+      throw XmlCnvException("XmlGenericCnv : unable to resolve path "+oldPath,
+                            StatusCode::FAILURE);
+    }
+    log << MSG::VERBOSE << "path expanded to " << location << std::endl;    
+  }
+  
   const std::string par[2] = {location, entryName};
   const unsigned long isString = 0; // address: filename (0) or string (1)?
   const unsigned long ipar[1] = { isString };
   IOpaqueAddress* result;
+
+
+
   StatusCode sc = addressCreator()->createAddress (XML_StorageType,
                                                    clid,
                                                    par,
@@ -499,7 +517,7 @@ IOpaqueAddress* XmlGenericCnv::createXmlAddress (std::string location,
     throw XmlCnvException ("XmlGenericCnv : Unable to create Address from href",
                            sc);
   }
-  MsgStream log( msgSvc(), "XmlGenericCnv" );
+
   log << MSG::DEBUG << "New address created : location = "
       << location << ", entry name = " 
       << entryName << " isString : " << isString << endreq;
