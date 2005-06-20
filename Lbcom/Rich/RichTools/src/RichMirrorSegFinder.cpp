@@ -5,7 +5,7 @@
  * Implementation file for class : RichMirrorSegFinder
  *
  * CVS Log :-
- * $Id: RichMirrorSegFinder.cpp,v 1.8 2005-06-17 15:15:55 jonrob Exp $
+ * $Id: RichMirrorSegFinder.cpp,v 1.9 2005-06-20 16:23:53 jonrob Exp $
  *
  * @date   2003-11-05
  * @author Antonis Papanestis
@@ -208,7 +208,7 @@ RichMirrorSegFinder::findSphMirror( const Rich::DetectorType rich,
                                     const HepPoint3D& reflPoint ) const
 {
 
-  // Most likely mirror is the last one tried... So test this one first
+  // Most likely mirror is the last one found... So test this one first
   unsigned int mirrorNum = m_lastFoundMirror[rich][side][sph];
   if ( m_sphMirrors[rich][side][mirrorNum]->mirrorCentre().distance2(reflPoint)
        > m_maxDist[rich][sph] )
@@ -249,7 +249,7 @@ RichMirrorSegFinder::findFlatMirror( const Rich::DetectorType rich,
                                      const HepPoint3D& reflPoint ) const
 {
 
-  // Most likely mirror is the last one tried... So test this one first
+  // Most likely mirror is the last one found... So test this one first
   unsigned int mirrorNum = m_lastFoundMirror[rich][side][flat];
   if ( m_flatMirrors[rich][side][mirrorNum]->mirrorCentre().distance2(reflPoint)
        > m_maxDist[rich][flat] )

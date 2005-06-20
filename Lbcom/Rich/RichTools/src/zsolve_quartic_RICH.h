@@ -13,7 +13,7 @@
  *  @see gsl_poly_complex_solve_quartic
  *
  *  CVS Log :-
- *  $Id: zsolve_quartic_RICH.h,v 1.1 2005-06-17 15:15:55 jonrob Exp $
+ *  $Id: zsolve_quartic_RICH.h,v 1.2 2005-06-20 16:27:12 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   2003-11-14
@@ -33,7 +33,7 @@
  *
  *  Optimised to give only solutions needed by RICH optical system
  *
- *  @return THe solution needed by the RICH
+ *  @return The solution needed by the RICH
  */
 double solve_quartic_RICH ( const double a,
                             const double b,
