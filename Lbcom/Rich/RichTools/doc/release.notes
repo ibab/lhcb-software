@@ -10,6 +10,7 @@
    aborting the search if the mirror is found unambiguously
  - Update Photon reconstrction tool (renamed RichPhotonRecoUsingQuarticSoln)
    to allow various bits to be turned off via job options.
+   By default, the ambiguous photon test is not performed.
    Also, to use a trimmed down version of the quartic solver which skips
    solution not needed by the RICH
  - Minor updates to RicRayTracing (const etc.)
