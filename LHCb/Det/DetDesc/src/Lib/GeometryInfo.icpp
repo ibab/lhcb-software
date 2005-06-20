@@ -1,4 +1,4 @@
-// $Id: GeometryInfo.icpp,v 1.7 2003-04-23 14:07:45 sponce Exp $ 
+// $Id: GeometryInfo.icpp,v 1.8 2005-06-20 12:23:43 jpalac Exp $ 
 #ifndef         DETDESC_GEOMETRYINFO_ICCP
 #define         DETDESC_GEOMETRYINFO_ICCP 1 
 /// GaudiKernel
@@ -41,6 +41,12 @@ inline bool GeometryInfo::isInsideDaughter
 inline bool GeometryInfo::hasLVolume () const { return m_gi_has_logical; };
 ///
 inline bool GeometryInfo::hasSupport () const { return m_gi_has_support; } 
+
+inline const AlignmentCondition* GeometryInfo::alignmentCondition() const 
+{
+  return new AlignmentCondition();
+}
+
 ///
 inline const HepTransform3D& GeometryInfo::matrix()  const 
 {

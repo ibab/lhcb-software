@@ -1,4 +1,4 @@
-// $Id: GeometryInfo.h,v 1.11 2005-01-25 14:09:19 cattanem Exp $ 
+// $Id: GeometryInfo.h,v 1.12 2005-06-20 12:23:43 jpalac Exp $ 
 #ifndef     DETDESC_GEOMETRYINFO_H
 #define     DETDESC_GEOMETRYINFO_H 1 
 /** STD and STL includes */ 
@@ -16,7 +16,7 @@
 #include "DetDesc/IPVolume.h"
 #include "DetDesc/IGeometryInfo.h" 
 #include "DetDesc/IDetectorElement.h" 
-
+#include "DetDesc/AlignmentCondition.h"
 /** forward declarations */
 class GaudiException   ;
 class IDataProviderSvc ;
@@ -105,6 +105,9 @@ public:
                         
   /// Is this "geometry object" supported?
   inline bool hasSupport   () const ;   //                             
+
+  inline const AlignmentCondition* alignmentCondition() const;
+
   /** transformation matrix from global reference 
    *  system to the local one 
    */

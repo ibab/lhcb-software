@@ -1,4 +1,4 @@
-// $Id: GeometryInfoPlus.h,v 1.1 2005-06-03 10:19:44 jpalac Exp $
+// $Id: GeometryInfoPlus.h,v 1.2 2005-06-20 12:23:43 jpalac Exp $
 #ifndef LIB_GEOMETRYINFOPLUS_H 
 #define LIB_GEOMETRYINFOPLUS_H 1
 
@@ -98,7 +98,15 @@ public:
   inline bool hasLVolume() const { return m_gi_has_logical; }   //     
                         
   /// Is this "geometry object" supported?
-  inline bool hasSupport() const { return m_gi_has_support; }   //                             
+  inline bool hasSupport() const { return m_gi_has_support; }   //
+
+  inline const AlignmentCondition* alignmentCondition() const 
+  {
+    return m_alignmentCondition;
+  }
+
+
+
   /// transformation matrix from global reference
   /// system to the local one
   inline const HepTransform3D&  matrix() const 
@@ -393,12 +401,31 @@ private:
   StatusCode getAlignmentCondition();
 
   void clearMatrices();
-  
+
+  inline bool needsAlignmentCondition() const
+  {
+    return m_hasAlignmentPath;
+  }
+
+  inline void needsAlignmentCondition(const bool& needsAlignment)
+  {
+    m_hasAlignmentPath = needsAlignment;
+  }
+
   inline bool hasAlignmentCondition() const
   {
     return m_hasAlignment;
   }
-  
+
+  inline void hasAlignmentCondition(const bool& hasAlignment) 
+  {
+    m_hasAlignment = hasAlignment;
+  }
+
+  inline AlignmentCondition* myAlignmentCondition() const 
+  {
+    return m_alignmentCondition;
+  }  
 
   IDetectorElement* parentIDetectorElement(IDetectorElement* iDetElem) 
   {
@@ -429,10 +456,7 @@ private:
 
   HepTransform3D* accumulateMatrices(const ILVolume::PVolumePath& volumePath) const;
   
-  inline AlignmentCondition* alignmentCondition() const 
-  {
-    return m_alignmentCondition;
-  }
+
 
   bool idealMatrixLoaded() { return (0!= m_idealMatrix); }
   
@@ -450,8 +474,10 @@ private:
   mutable ILVolume*                    m_gi_lvolume; 
 
   bool m_hasAlignment;
-  
+
   std::string m_alignmentPath;
+
+  bool m_hasAlignmentPath;
 
   AlignmentCondition* m_alignmentCondition;
 

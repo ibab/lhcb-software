@@ -1,4 +1,4 @@
-// $Id: GeometryInfoPlus.cpp,v 1.2 2005-06-09 06:58:17 pkoppenb Exp $
+// $Id: GeometryInfoPlus.cpp,v 1.3 2005-06-20 12:23:43 jpalac Exp $
 // Include files 
 
 // GaudiKernel
@@ -42,6 +42,7 @@ GeometryInfoPlus::GeometryInfoPlus(IDetectorElement* de)
   m_gi_lvolume          (       0     ),
   m_hasAlignment        (     false   ),
   m_alignmentPath       (      ""     ),
+  m_hasAlignmentPath    (     false   ),
   m_alignmentCondition  (       0     ),
   m_matrix              (       0     ),
   m_idealMatrix         (       0     ),
@@ -63,7 +64,9 @@ GeometryInfoPlus::GeometryInfoPlus(IDetectorElement* de)
   if( 0 == de  ) 
     { throw GeometryInfoException("IDetectorElement* points to NULL!") ; }
 
-  initialize();
+  if ( initialize().isFailure() )
+  { throw GeometryInfoException("Failed to initialize!") ; }
+    
 
 };
 //=============================================================================
@@ -76,6 +79,7 @@ GeometryInfoPlus::GeometryInfoPlus(IDetectorElement*  de,
   m_gi_lvolume          (       0     ),
   m_hasAlignment        (     false   ),
   m_alignmentPath       (      ""     ),
+  m_hasAlignmentPath    (     false   ),
   m_alignmentCondition  (       0     ),
   m_matrix              (       0     ),
   m_idealMatrix         (       0     ),
@@ -99,7 +103,8 @@ GeometryInfoPlus::GeometryInfoPlus(IDetectorElement*  de,
   if( 0 == de  ) 
     { throw GeometryInfoException("IDetectorElement* points to NULL!"    ) ; }
 
-  initialize();
+  if ( initialize().isFailure() )
+  { throw GeometryInfoException("Failed to initialize!") ; }
 
 };
 //=============================================================================
@@ -115,6 +120,7 @@ GeometryInfoPlus::GeometryInfoPlus(IDetectorElement*            de,
   m_gi_lvolume          (       0     ),
   m_hasAlignment        (     false   ),
   m_alignmentPath       (alignmentPath),
+  m_hasAlignmentPath    (     false   ),
   m_alignmentCondition  (       0     ),
   m_matrix              (       0     ),
   m_idealMatrix         (       0     ),
@@ -137,8 +143,10 @@ GeometryInfoPlus::GeometryInfoPlus(IDetectorElement*            de,
 {
   if( 0 == de  ) 
     { throw GeometryInfoException("IDetectorElement* points to NULL!"    ) ; }
-  
-  initialize();
+
+  if ( initialize().isFailure() )
+  { throw GeometryInfoException("Failed to initialize!") ; }
+
 };
 //=============================================================================
 /// create regular  with name path 
@@ -175,7 +183,8 @@ GeometryInfoPlus::GeometryInfoPlus( IDetectorElement*  de,
   if( 0 == de  ) 
     { throw GeometryInfoException("IDetectorElement* points to NULL!"    ) ; }
 
-  initialize();
+  if ( initialize().isFailure() )
+  { throw GeometryInfoException("Failed to initialize!") ; }
   
 };
 //=============================================================================
@@ -183,7 +192,7 @@ StatusCode GeometryInfoPlus::initialize()
 {
 
   m_services = DetDesc::services();
-  m_hasAlignment=!m_alignmentPath.empty();
+  m_hasAlignmentPath=!m_alignmentPath.empty();
   m_log = new MsgStream(msgSvc(), "GeometryInfoPlus");
   log() << MSG::VERBOSE << "initialize" << endmsg;
   log() << MSG::VERBOSE << "alignment path " << m_alignmentPath << endmsg;
@@ -194,21 +203,19 @@ StatusCode GeometryInfoPlus::cache()
 {
  
   log() << MSG::VERBOSE << "cache() getting alignmentCondition" << endmsg;
-  StatusCode scAlignment=getAlignmentCondition();
-  log() << MSG::VERBOSE << "cache() got alignmentCondition" << endmsg;
-  if (!scAlignment) {
+  StatusCode scAlignment = StatusCode::FAILURE;
+  
+  if ( this->needsAlignmentCondition() ) {
+    scAlignment=getAlignmentCondition();
+    if (!scAlignment) return scAlignment;
+  } else {
     log() << MSG::VERBOSE 
-          << "Volume: " << lvolumeName() << endmsg;
+          << "cache() no alignmentCondition requested. Assigning identity transformation" 
+          << endmsg;;
     
-    log() << MSG::VERBOSE
-          << "No alignment condition loaded for this IGeometryInfo" 
-          << endmsg;
-    log() << MSG::VERBOSE 
-          << "\t Unity transformation will be assigned as delta" 
-          << endmsg;
   }
-  log() << MSG::VERBOSE << "cache() clearing matrices" << endmsg;
-  clearMatrices(); 
+  
+  
   log() << MSG::VERBOSE << "cache() calculating matrices" << endmsg;
   calculateMatrices();
  
@@ -329,7 +336,7 @@ StatusCode GeometryInfoPlus::localDeltaMatrix(const HepTransform3D& newDelta)
   // Need to do this depending on whether there is an 
   // AlignmentCondition present. So check for that, and if there is,
   // also change the matrix in the AlignmentCondition data member.
-  if (this->hasAlignmentCondition()) alignmentCondition()->matrix(newDelta);
+  if (this->hasAlignmentCondition()) myAlignmentCondition()->matrix(newDelta);
 
   if (m_deltaMatrices.empty()) {
     log() << MSG::WARNING << "localDeltaMatrix set failed!" << endmsg;
@@ -385,46 +392,27 @@ void GeometryInfoPlus::clearMatrices()
 //=============================================================================
 StatusCode GeometryInfoPlus::getAlignmentCondition() 
 {
-  StatusCode sc = StatusCode::FAILURE;
-  if (this->hasAlignmentCondition()) {
 
-    log() << MSG::VERBOSE << "gettingAlignmentCondition with path "
-          << m_alignmentPath << endmsg;
-    SmartDataPtr<AlignmentCondition> condition( dataSvc(), m_alignmentPath ); 
-    log() << MSG::VERBOSE << "Got it!" << endmsg;
-    
-    if (condition) {
-      log() << MSG::VERBOSE <<"Found condition" << endmsg;
-      
-      sc = StatusCode::SUCCESS;
-      m_alignmentCondition=condition;
-      m_hasAlignment=true;
-    } else {
-      log() << MSG::VERBOSE <<"Did not find condition" << endmsg;
-      m_hasAlignment=false;
-      m_alignmentCondition=0;
-    }
+  log() << MSG::VERBOSE << "getting AlignmentCondition with path "
+        << m_alignmentPath << endmsg;
 
+  SmartDataPtr<AlignmentCondition> condition( dataSvc(), m_alignmentPath ); 
+
+  if (condition) {
+    log() << MSG::VERBOSE <<"Found condition" << endmsg;
+    m_alignmentCondition=condition;
+    this->hasAlignmentCondition(true);
     log() << MSG::VERBOSE << "getAlignmentCondition classID "
-          << condition->clID() << endmsg;
-    std::vector<double> translations =  
-      m_alignmentCondition->paramAsDoubleVect("dPosXYZ");
-    if (translations.size()==3) {
-      log() <<  MSG::VERBOSE << "Translations " 
-            << " X " << translations[0]
-            << " Y " << translations[1]
-            << " z " << translations[2]
-            << endmsg;
-    } else {
-      log() << MSG::VERBOSE << "Translations vector has funny size: "
-            << translations.size() << endmsg;
-    }
-
+          << condition->toXml() << endmsg;
+    return StatusCode::SUCCESS;
   } else {
+    log() << MSG::ERROR <<"Did not find condition " 
+          << m_alignmentPath 
+          << " volume " << lvolumeName() << endmsg;
+    this->hasAlignmentCondition(false);
     m_alignmentCondition=0;
+    return StatusCode::FAILURE;
   }
-
-  return sc;
   
 }
 //=============================================================================
@@ -468,7 +456,7 @@ const HepTransform3D& GeometryInfoPlus::localDeltaMatrix() const
   if (0!=m_localDeltaMatrix) return *m_localDeltaMatrix;
 
   m_localDeltaMatrix = (this->hasAlignmentCondition())      ?
-    new HepTransform3D(alignmentCondition()->matrix()) :
+    new HepTransform3D(myAlignmentCondition()->matrix()) :
     m_localDeltaMatrix = new HepTransform3D();        
 
   return *m_localDeltaMatrix;

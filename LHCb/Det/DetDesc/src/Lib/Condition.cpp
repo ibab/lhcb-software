@@ -1,4 +1,4 @@
-//$Id: Condition.cpp,v 1.7 2005-05-13 16:01:10 marcocle Exp $
+//$Id: Condition.cpp,v 1.8 2005-06-20 12:23:43 jpalac Exp $
 #include <string> 
 
 #include "DetDesc/Condition.h"
@@ -36,14 +36,14 @@ void Condition::update (Condition& obj)
 //=========================================================================
 //  Prepare an XML string representing the condition
 //=========================================================================
-std::string Condition::toXml(const std::string &name) {
+std::string Condition::toXml(const std::string &name) const{
   std::ostringstream xml;
   // XML header
   xml << "<?xml version=\"1.0\" encoding=\"UTF-8\"?><!DOCTYPE DDDB SYSTEM \"structure.dtd\">";
   // DDDB open
   xml << "<DDDB>";
   // condition open
-  xml << "<condition name=\"";
+  xml << "<condition classID=\"" << this->clID() << "\" name=\"";
   if (name.empty()) {
     if (registry()){
       xml << registry()->name();

@@ -1,4 +1,4 @@
-// $Id: IGeometryInfo.h,v 1.11 2005-06-03 10:19:44 jpalac Exp $ 
+// $Id: IGeometryInfo.h,v 1.12 2005-06-20 12:23:43 jpalac Exp $ 
 // ===========================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ===========================================================================
@@ -15,6 +15,7 @@
 #include "CLHEP/Geometry/Transform3D.h"
 /// DetDesc include 
 #include "DetDesc/ILVolume.h"
+#include "DetDesc/AlignmentCondition.h"
 /** forward declarations */
 class StatusCode;
 
@@ -79,6 +80,10 @@ public:
    *  distinguish "regular" from others
    */
   virtual bool hasSupport () const = 0;
+
+  /// Access to this IGeometryInfo condition
+
+  virtual const AlignmentCondition* alignmentCondition() const = 0;
 
   /** @defgroup PureGeometricalInfo pure geometrical information
    *

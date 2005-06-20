@@ -1,4 +1,4 @@
-// $Id: AlignmentCondition.cpp,v 1.1 2005-06-03 10:19:44 jpalac Exp $
+// $Id: AlignmentCondition.cpp,v 1.2 2005-06-20 12:23:43 jpalac Exp $
 // Include files
 
 #include "DetDesc/AlignmentCondition.h"
@@ -22,7 +22,7 @@ AlignmentCondition::AlignmentCondition(  ) :
 {
   //  m_services = DetDesc::services();
   MsgStream log(msgSvc(), "AlignmentCondition");
-  log << MSG::DEBUG << "Constructing default AlignmentCondition, classID " 
+  log << MSG::VERBOSE << "Constructing default AlignmentCondition, classID " 
       << classID()
       << endmsg;
 }
@@ -36,7 +36,7 @@ AlignmentCondition::AlignmentCondition(const ITime& since, const ITime& till )
 {
   //  m_services=DetDesc::services();
   MsgStream log(msgSvc(), "AlignmentCondition");
-  log << MSG::DEBUG << "Constructing AlignmentCondition classID " << classID()
+  log << MSG::VERBOSE << "Constructing AlignmentCondition classID " << classID()
       << endmsg;
   
 }
@@ -79,20 +79,20 @@ const HepTransform3D* AlignmentCondition::XYZRotation(const std::vector<double>&
 void AlignmentCondition::makeMatrices() 
 {
   MsgStream log(msgSvc(), "AlignmentCondition");
-  log << MSG::DEBUG << "Making transformation matrix" << endmsg;
+  log << MSG::VERBOSE << "Making transformation matrix" << endmsg;
   
 //   std::vector<double> translations =  userParameterVectorAsDouble("dPosXYZ");
 //   std::vector<double> rotations =  userParameterVectorAsDouble("dRotXYZ");
   std::vector<double> translations = paramAsDoubleVect ("dPosXYZ");
   std::vector<double> rotations    = paramAsDoubleVect ("dRotXYZ");
   if (translations.size()==3) {
-    log <<  MSG::DEBUG << "Translations " 
+    log <<  MSG::VERBOSE << "Translations " 
         << " X " << translations[0]
         << " Y " << translations[1]
         << " z " << translations[2]
         << endmsg;
   } else {
-    log << MSG::DEBUG << "Translations vector has funny size: "
+    log << MSG::VERBOSE << "Translations vector has funny size: "
         << translations.size() << endmsg;
     
   }
