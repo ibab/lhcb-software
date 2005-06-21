@@ -1,19 +1,21 @@
-! $Id: release.notes,v 1.72 2005-06-17 14:27:36 jonrob Exp $
+! $Id: release.notes,v 1.73 2005-06-21 14:02:16 cattanem Exp $
 ! Package     : Rich/RichKernel
 ! Responsible : Chris Jones
 ! Purpose     : General purpose RICH classes
 
+!======================= RichKernel v5r5 2005-06-21 =======================
 ! 2005-06-17 - Chris Jones
  - Changes to RichMirrorSegFinder interface
-
-! 2005-05-24 - Marco Cattaneo
- - Remove explicit DetDesc version from requirements
 
 ! 2005-05-13 - Chris Jones
  - Adapt to new RichDAQ
 
 ! 2005-04-16 - Chris Jones
  - Add debug proprocessor flag.
+
+!======================= RichKernel v5r4p1 2005-05-24 =======================
+! 2005-05-24 - Marco Cattaneo
+ - Remove explicit DetDesc version from requirements
 
 !======================= RichKernel v5r4 2005-03-08 =======================
 ! 2005-02-20 - Chris Jones

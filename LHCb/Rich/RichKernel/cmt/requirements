@@ -2,7 +2,7 @@
 # Created    : 2003-11-06
 # Maintainer : Christopher Rob Jones
 #============================================================================
-# $Id: requirements,v 1.36 2005-06-17 14:27:36 jonrob Exp $
+# $Id: requirements,v 1.37 2005-06-21 14:02:16 cattanem Exp $
 #============================================================================
 
 package RichKernel
@@ -19,6 +19,7 @@ use DetDesc     v*   Det
 use LHCbKernel  v*   Kernel
 use GaudiAlg    v*
 use GSL         v*   LCG_Interfaces
+use CLHEP       v*   LCG_Interfaces
 
 # ================ linker library ============================================
 library RichKernel ../src/*.cpp
