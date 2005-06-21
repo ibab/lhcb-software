@@ -5,6 +5,56 @@
 ! Purpose     : LHCb OO kernel packages
 !-----------------------------------------------------------------------------
 
+</PRE><H1><A NAME=v18r7>2005-06-21 LHCbSys v18r7</A></H1><PRE>
+ - Packages modified: KernelSys v4r13, LHCbKernel v5r11p1, RichKernel v5r5,
+                      DetSys v7r2, DetDesc v15r2, DetDescCnv v2r7,
+                      EventSys v20r7, TrackEvent v1r2, RichEvent v8r4,
+                      DAQSys v1r5, RichDAQ v2r2,
+                      TrackInterfaces v1r1, TrgTools v7r4p1, RichRecBase v1r16
+
+ - In LHCbKernel v5r11p1
+   . Remove --pool option from build command for LCG dictionary, to provide
+     complete dictionaries for use from GaudiPython
+
+ - In DetDesc v15r2
+   . Changes for handling conditions attached to IGeometryInfo
+   . Bug fix in UpdateManagerSvc navigation from children to parents
+
+ - In DetDescCnv v2r7
+   . Allow parsing of address strings that include environment variables
+
+ - In TrgTools v7r4p1
+   . L1InitEvent.cpp: dummy initialization of event and run number in
+                      L1Score to prevent access to raw buffer
+
+ - In TrackInterfaces v1r1
+   . Add ITrackFitter interface
+
+ - In TrackEvent v1r2
+   . Changes to enums in TrackKeys.h, for clarity
+
+ - In RichKernel v5r5
+   . Changes to RichMirrorSegFinder interface
+
+ - In RichEvent v8r4
+   . Move non-persistent digitization classes MCRichDeposit, MCRichSummedDeposit
+     to Rich/RichReadout package
+   . Add non-const accessors to allow direct manipulation of data members
+    (avoids an additional copy during reconstruction)
+
+ - In RichRecBase v1r16
+   . Add new base classes for pixel, photon and track creator tools.
+   . Add new methods to access a range of RichRecPixels
+   . Fix a few bugs in the "trackSelected" methods of RichTrackSelector
+   . Only load the creator tools "on-demand" for the algorithm base classes
+     Has the side that some tools are only created during the first event...
+
+ - In RichDAQ v2r2
+   . Rename RichHPDIDTool RichHPDInfoTool
+   . Add functionality to RichHPDInfoTool to disable given HPDs and methods to
+     access information on whether a given HPD is active
+   . Fix stats for cases when some events are not processed (such as in HLT)
+
 </PRE><H1><A NAME=v18r6>2005-06-13 LHCbSys v18r6</A></H1><PRE>
  - Packages added:    Event/PackedEvent v1r0 (replaces Event/Rdst)
  - Packages removed:  Event/Rdst
