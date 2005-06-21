@@ -4,6 +4,10 @@
 ! Purpose     : Hat package for packages encoding and decoding DAQ buffers
 !-----------------------------------------------------------------------------
 
+!========================== DAQSys v1r5 2005-06-21 ===========================
+! 2005-06-21 - Marco Cattaneo
+ - Use RichDAQ v2r2
+
 !========================== DAQSys v1r4p1 2005-06-06 =========================
 ! 2005-06-06 - Marco Cattaneo
  - Remove creation of DataOnDemandSvc from RawBuffer.opts, to avoid clashes with
