@@ -1,0 +1,37 @@
+C $Id: upevnt.F,v 1.1.1.1 2005-06-21 12:40:51 robbep Exp $  
+C*********************************************************************
+ 
+C...UPEVNT
+C... Select external user process
+ 
+      SUBROUTINE UPEVNT
+ 
+C...Double precision and integer declarations.
+      IMPLICIT DOUBLE PRECISION(A-H, O-Z)
+      IMPLICIT INTEGER(I-N)
+ 
+C...User process event common block.
+      INTEGER MAXNUP
+      PARAMETER (MAXNUP=500)
+      INTEGER NUP,IDPRUP,IDUP,ISTUP,MOTHUP,ICOLUP
+      DOUBLE PRECISION XWGTUP,SCALUP,AQEDUP,AQCDUP,PUP,VTIMUP,SPINUP
+      COMMON/HEPEUP/NUP,IDPRUP,XWGTUP,SCALUP,AQEDUP,AQCDUP,IDUP(MAXNUP),
+     &ISTUP(MAXNUP),MOTHUP(2,MAXNUP),ICOLUP(2,MAXNUP),PUP(5,MAXNUP),
+     &VTIMUP(MAXNUP),SPINUP(MAXNUP)
+      SAVE /HEPEUP/
+ 
+      INTEGER PYTHIAGAUSSPROCESS
+      COMMON /GAUSSUSERPROCESS/ PYTHIAGAUSSPROCESS
+
+      IF ( PYTHIAGAUSSPROCESS .EQ. 0 ) THEN
+        GOTO 999
+      ELSEIF ( PYTHIAGAUSSPROCESS .EQ. 1 ) THEN
+        CALL ACERMC_UPEVNT
+      ENDIF
+      
+ 999  RETURN
+      END 
+
+      SUBROUTINE ACERMC_UPEVNT
+      PRINT*, 'WARNING ..... Dummy Routine to redefine !'
+      END
