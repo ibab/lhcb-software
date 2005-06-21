@@ -4,6 +4,10 @@
 ! Purpose     : Provides basic tools for RICH MC information
 !-----------------------------------------------------------------------------
 
+!========================== RichMCTools v2r6 2005-06-21 ======================
+! 2005-06-21 - Marco Cattaneo
+ - Remove explicit versions of used packages from LHCbSys
+
 ! 2005-06-17 - Chris Jones
  - minor updates to MC navigation
 
