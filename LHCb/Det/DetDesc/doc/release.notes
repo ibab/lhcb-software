@@ -1,15 +1,15 @@
 ! =============================================================================
-! $Id: release.notes,v 1.187 2005-06-21 12:47:11 marcocle Exp $ 
+! $Id: release.notes,v 1.188 2005-06-21 12:56:34 cattanem Exp $ 
 ! =============================================================================
 ! package DetDesc
 ! package manager : Marco Clemencic, Juan Palacios
 ! =============================================================================
 
+!======================== DetDesc v15r2 2005-06-21 ========================
 ! 2005-06-21 - Marco Clemencic
  - Fixed a bug in the UpdateManagerSvc (possible seg. faults when navigating
    from children to parents)
 
-!======================== DetDesc v15r2 2005-06-20 ========================
 ! 2005-06-20 - Juan Palacios
   - DetDesc/Condition.h 
      change toXml(const std::string) method to const method.
