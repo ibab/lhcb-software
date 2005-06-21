@@ -1,5 +1,5 @@
 package EventSys
-version v20r6
+version v20r7
 
 branches doc cmt
 
@@ -10,7 +10,7 @@ use VeloEvent   v13r2p1 Event
 use ITEvent     v13r2p1 Event
 use OTEvent     v14r0p1 Event
 use TrEvent     v14r3   Event
-use RichEvent   v8r3    Event
+use RichEvent   v8r4    Event
 use CaloEvent   v13r9   Event
 use MuonEvent   v4r0    Event
 use L0Event     v14r3   Event
@@ -20,7 +20,7 @@ use GenEvent    v3r3p1  Event
 use EventAssoc  v1r5    Event
 use LinkerEvent v1r8    Event
 use TrgEvent    v5r5    Event
-use TrackEvent  v1r1    Event
+use TrackEvent  v1r2    Event
 use PackedEvent v1r0	Event
 use EventUtils  v1r0    Event
 

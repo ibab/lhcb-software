@@ -1,6 +1,10 @@
 package EventSys
 package manager: Marco Cattaneo
 
+!======================== EventSys v20r7 2005-06-21 ========================
+! 2005-06-21 - Marco Cattaneo
+ - Use TrackEvent v1r2, RichEvent v8r4
+
 !======================== EventSys v20r6 2005-06-02 ========================
 ! 2005-06-02 - Marco Cattaneo
  - Add PackedEvent v1r0
