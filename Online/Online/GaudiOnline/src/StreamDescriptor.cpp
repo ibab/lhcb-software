@@ -6,7 +6,7 @@
 //
 //	Author     : M.Frank
 //====================================================================
-// $Id: StreamDescriptor.cpp,v 1.14 2005-05-11 18:11:19 frankb Exp $
+// $Id: StreamDescriptor.cpp,v 1.15 2005-06-21 14:02:06 bgaidioz Exp $
 
 // Include files
 #include "GaudiOnline/StreamDescriptor.h"
@@ -279,7 +279,7 @@ GaudiOnline::StreamDescriptor::connect(const std::string& specs)  {
       }
       break;
     case 'S':          //  DATA='sfc://137.138.142.82:8000'
-      if ( 0 == SFC::sfcc_register(file.c_str(), 0, SFCC_L1) )  {
+      if ( 0 == SFC::sfcc_register() )  {
         result.ioDesc   = 1;
         result.m_write    = sfc_send;
         result.m_read     = sfc_recv;
@@ -334,7 +334,7 @@ GaudiOnline::StreamDescriptor::bind(const std::string& specs)  {
       break;
     case 'S':          //  DATA='sfc://137.138.142.82:8000'
       getInetConnection(specs, file, &sin.sin_addr, sin.sin_port);
-      if ( 0 == SFC::sfcc_register(file.c_str(), 0, sin.sin_port) )  {
+      if ( 0 == SFC::sfcc_register() )  {
         result.ioDesc     = 1;
         result.m_write    = sfc_send;
         result.m_read     = sfc_recv;

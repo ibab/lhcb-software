@@ -1,51 +1,18 @@
 #include  <stdio.h>
 #include  <stdlib.h>
-#include  <SFCClient/SFCClient.h>
+#include  <assert.h>
 #define fatal(s) do{perror(s);fprintf(stderr,s "fatal error %s:%d\n",__FILE__,__LINE__);abort();}while(0)
 #define SFCC_DEBUG 
 #define HEADER_TO_SKIP  0
-#define p_conn_req  0x01
-#define p_conn_ack  0x02
-#define p_conn_ack_ack  0x03
-#define p_data  0x04
-#define p_ack  0x05
-#define p_decision  0x06
-#define p_go  0x07
+#define ENVSTRING(v,s) do{v=getenv(#s);if(v==NULL) {fprintf(stderr,"please define "#s"\n");fatal("getenv");}}while(0)
+#define ENVINT(i,s) do{char *v=getenv(#s);if(v==NULL) {fprintf(stderr,"please define "#s"\n");fatal("getenv");}else i=atoi(v);}while(0)
+#define p_data  0x01
+#define p_ack  0x02
+#define p_decision  0x04
+#define p_token  0x08
+#define p_both  (p_token|p_decision)
 #define MTU  4080
 #define MAX_EVENT  180000
-
-#ifdef _WIN32
-#include <Winsock2.h>
-#include <string.h>
-
-#define PF_PACKET AF_INET
-#define PACKET_HOST 0
-#define ioctl ioctlsocket
-#define SIOCGIFINDEX 0
-#define SIOCGIFHWADDR 0
-#define IFNAMSIZ 64
-#define bzero(a,b) memset(a,0,b)
-
-typedef unsigned __int32 u_int32_t;
-struct iovec  {
-  __int32 iov_len;
-  void*   iov_base;
-};
-struct ifreq  {
-	char ifr_name[IFNAMSIZ];
-  __int32 ifr_ifindex;
-};
-struct sockaddr_ll  {
-  int sll_ifindex;
-  int sll_halen;
-  int sll_family;
-  int sll_protocol;
-  int sll_pkttype;
-  unsigned char sll_addr[8];
-};
-int ether_aton(char* c)  {  return 0; }
-
-#else
 #include  <net/if.h>
 #include  <sys/uio.h>
 #include  <string.h>
@@ -54,11 +21,15 @@ int ether_aton(char* c)  {  return 0; }
 #include  <netinet/in.h> 
 #include  <sys/socket.h>
 #include  <netpacket/packet.h>
-#endif
-#define bug  if(1) printf
+#define bug  if(0) printf
 #define info  if(1) printf
 #define debug  if(1) printf
 
+#ifdef __LOCAL_DIR__
+#include "SFCClient.h"
+#else
+#include <SFCClient/SFCClient.h>
+#endif
 
 struct msg_data {
 	u_int32_t len;
@@ -76,8 +47,7 @@ struct msg_header {
 	u_int32_t dport;
 	u_int32_t sport;
 	u_int32_t type;
-	u_int32_t key;
-	u_int32_t id;
+	u_int32_t index;
 	union {
 		struct msg_data data;
 		struct msg_decision decision;
@@ -85,12 +55,12 @@ struct msg_header {
 	char data[0];
 };
 
-char *sfc_string;
-u_int32_t type;
-u_int32_t port;
-char *dev_string;
-u_int32_t cpu;
-u_int32_t level;
+static char *sfc_string;
+static u_int32_t type;
+static u_int32_t port;
+static u_int32_t index;
+static char *dev_string;
+static u_int32_t cpu;
 
 int sock;
 int r;
@@ -98,7 +68,6 @@ int r;
 static int his_port = 0;
 
 static char packets[100][MTU+HEADER_TO_SKIP];
-static char control_packet[MTU+HEADER_TO_SKIP];
 static struct iovec vectors[100];
 static int next_packet;
 static char *recv_packet = packets[0];
@@ -116,13 +85,10 @@ static struct ether_header *eth = (struct ether_header*)send_packet;
 #endif
 static struct ether_addr *eth_addr;
 static struct ifreq ifr;
-static int decision_has_been_sent = 0;
 static int next_event_len = 0;
 
-struct sockaddr_ll sfc, who;
+struct sockaddr_ll who;
 int add_len = sizeof(who);
-
-int id;
 static char *level_name[] = {"L1","HLT"};
 static char *sfcc_error_messages[__SFCC_MAX_ERR];
 static char unknown_error[] = "Unknown error code";
@@ -141,80 +107,47 @@ int sfcc_perror(char *prefix)
 
 int protocol[] = {0x00f3,0x00f4};
 
-int sfcc_register(const char *eth_string, int myport, int level)
+int sfcc_register()
 {
-        if(level!=SFCC_L1 && level!=SFCC_HLT) return -SFCC_ERR_PARAM;
-        debug("sfcc_lib:connecting to host %s for %s...\n",eth_string,level_name[level]);
-	sfc_string = (char*)eth_string;
-	type = protocol[level];
-	port = myport;
-	dev_string = "eth3";
-	cpu = 0;
+	char *eth_string;
+	char *my_dev;
+	int my_index, myport,my_level;
+	ENVSTRING(eth_string,SFCC_SFC_MAC_ADDR);
+	ENVSTRING(my_dev,SFCC_DAQ_DEV);
+	ENVINT(my_index,SFCC_INDEX);
+	ENVINT(myport,SFCC_PORT);
+	ENVINT(my_level,SFCC_LEVEL);
+        if(my_level!=SFCC_L1 && my_level!=SFCC_HLT) return -SFCC_ERR_PARAM;
+        debug("sfcc_lib: SFC is host %s, level is %s, index is %d, device is %s...\n",
+		eth_string,level_name[my_level],my_index, my_dev);
+	assert(my_level==SFCC_L1||my_level==SFCC_HLT);
+	index = my_index;
+	type = protocol[my_level];
 	
 	sock = socket(PF_PACKET,SOCK_DGRAM,type);
 	if(sock==-1) fatal("socket");
+	bzero(&who,sizeof(who));
+	sfc_string = eth_string;
 	
-	bzero(&sfc,sizeof(sfc));
+	who.sll_family = PF_PACKET;
+	who.sll_protocol = type;
+	who.sll_pkttype = PACKET_HOST;
+	who.sll_halen = 6;
 	eth_addr = ether_aton(sfc_string); /* dest address */
 	if(eth_addr==NULL) fatal("ether_aton");
-	#if 0
-	memcpy(eth->ether_dhost,eth_addr,6);
-	#endif
+	memcpy(who.sll_addr,eth_addr,6);
+	dev_string = my_dev;
+	
 	strncpy(ifr.ifr_name,dev_string,IFNAMSIZ);
-	r = ioctl(sock,SIOCGIFINDEX,&ifr);
-	if(r<0) fatal("ioctl");
-	sfc.sll_ifindex = ifr.ifr_ifindex;
-	r = ioctl(sock,SIOCGIFHWADDR,&ifr);
-	if(r<0) fatal("ioctl");
-	sfc.sll_family = PF_PACKET;
-	sfc.sll_protocol = type;
-	sfc.sll_pkttype = PACKET_HOST;
-	memcpy(sfc.sll_addr,eth_addr,6);
-	sfc.sll_halen = 6;
-	#if 0
-	memcpy(eth->ether_shost,sfc.sll_addr,6);
-	#endif
-	r = bind(sock,(struct sockaddr*)&sfc,sizeof(sfc));
+	r = ioctl(sock,SIOCGIFINDEX,&ifr); if(r<0) fatal("ioctl");
+	who.sll_ifindex = ifr.ifr_ifindex;
+	r = ioctl(sock,SIOCGIFHWADDR,&ifr); if(r<0) fatal("ioctl");
+	r = bind(sock,(struct sockaddr*)&who,sizeof(who));
 	if(r<0) fatal("bind");
-	#if 0
-	eth->ether_type = type;
-	#endif
-	
-	recv_packet = control_packet;
-	recv_msg = (struct msg_header*)&recv_packet[HEADER_TO_SKIP];
-	send_msg->type = p_conn_req;
-	send_msg->sport = port;
-	send_msg->dport = his_port;
-	send_len = sendto(sock,send_packet,sizeof(struct msg_header),0,(struct sockaddr*)&sfc,sizeof(sfc));
-	if(send_len==-1) fatal("sendto");
-	if(send_len!=sizeof(struct msg_header)) {bug("send");abort();}
-	for(;;) {
-	recv_len = recvfrom(sock,recv_packet,MTU+HEADER_TO_SKIP,0,(struct sockaddr*)&who,&add_len);
-	if(recv_len==-1) fatal("recvfrom");
-	if(recv_msg->dport == port) break; else {bug("port\n");continue;}
-	}
-	debug("received %d bytes\n",recv_len);
-	if(recv_msg->type != p_conn_ack) bug("type\n");
-	if(recv_msg->sport != his_port) bug("port\n");
-	id = recv_msg->id;
-	send_msg->id = id;
-	send_msg->key = recv_msg->key;
-	
-	debug("send a conack\n");
-	send_msg->type = p_conn_ack_ack;
-	send_msg->sport = port;
-	send_msg->dport = his_port;
-	send_len = sendto(sock,send_packet,sizeof(struct msg_header),0,(struct sockaddr*)&who,sizeof(who));
-	if(send_len==-1) fatal("sendto");
-	if(send_len!=sizeof(struct msg_header)) {bug("send");abort();}
-	
-	debug("prepare decision\n");
-	send_msg->content.decision.decision = 0xab;
-	send_msg->content.decision.number = number;
-	send_msg->type = p_decision;
-	
-        if(0) return -SFCC_ERR_CONNECT_FAILED;
-        debug("sfcc_lib:connected!\n");
+	port = myport;
+	cpu = 0;
+	send_msg->index = index;
+	send_msg->type = p_token; /* only a token the first time */
         return 0;
 }
 
@@ -248,7 +181,7 @@ int sfcc_read_event(struct sfcc_event_buffer *rbuf)
 		vectors[next_packet].iov_len = recv_msg->content.data.len;
 		next_packet++;
 
-	};
+	}
 	
 	{
 		int p;
@@ -267,7 +200,7 @@ int sfcc_read_event(struct sfcc_event_buffer *rbuf)
 	send_len = sendto(sock,send_packet,sizeof(struct msg_header),0,(struct sockaddr*)&who,sizeof(who));
 	if(send_len==-1) fatal("sendto");
 	if(send_len!=sizeof(struct msg_header)) {bug("send");abort();}
-	decision_has_been_sent = 0;
+	send_msg->type = p_token; /* the next message type by default */
 	next_packet = 0;
 	rbuf->buffer_len = next_event_len;
         debug("sfcc_lib:next event is %d bytes long\n",next_event_len);
@@ -277,25 +210,25 @@ int sfcc_read_event(struct sfcc_event_buffer *rbuf)
 int sfcc_set_decision(struct sfcc_decision *dec)
 {
         debug("sfcc_lib:setting decision (length %d)\n",dec->buffer_len);
+	send_msg->type = p_both;
 	
 	debug("prepare decision\n");
 	send_msg->content.decision.decision = 0xab;
 	send_msg->content.decision.number = number;
-	send_msg->type = p_decision;
         return 0;
 }
 
 int sfcc_push_decision(void)
 {
+	send_msg->type = p_decision;
 	
 	debug("send decision");
-	send_msg->type = p_decision;
 	send_msg->sport = port;
 	send_msg->dport = his_port;
 	send_len = sendto(sock,send_packet,sizeof(struct msg_header),0,(struct sockaddr*)&who,sizeof(who));
 	if(send_len==-1) fatal("sendto");
 	if(send_len!=sizeof(struct msg_header)) {bug("send");abort();}
-	decision_has_been_sent=1;
+	send_msg->type = p_token; /* the next message type */
 	return 0;
 }
 
@@ -303,17 +236,14 @@ int sfcc_unregister() { return 0;}
 
 int sfcc_read_length(int *data_length)
 {
-	if(decision_has_been_sent==0) {
-		
-		debug("send decision");
-		send_msg->type = p_decision;
-		send_msg->sport = port;
-		send_msg->dport = his_port;
-		send_len = sendto(sock,send_packet,sizeof(struct msg_header),0,(struct sockaddr*)&who,sizeof(who));
-		if(send_len==-1) fatal("sendto");
-		if(send_len!=sizeof(struct msg_header)) {bug("send");abort();}
-		decision_has_been_sent=1;
-	}
+	
+	debug("send decision");
+	send_msg->sport = port;
+	send_msg->dport = his_port;
+	send_len = sendto(sock,send_packet,sizeof(struct msg_header),0,(struct sockaddr*)&who,sizeof(who));
+	if(send_len==-1) fatal("sendto");
+	if(send_len!=sizeof(struct msg_header)) {bug("send");abort();}
+	send_msg->type = p_token;
 	if(next_packet==0) {
 		next_event_len = 0;
 		next_packet=0;
