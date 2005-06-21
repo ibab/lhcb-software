@@ -5,6 +5,10 @@
 !-----------------------------------------------------------------------------
 
 !======================= GaussMonitor v2r1 ===================================
+! 2005-06-21 - Gloria CORTI
+ - src/GenMonitorAlg.cpp
+   . force ID of histograms
+
 ! 2005-06-17 - Gloria CORTI
  - src/GenMonitorAlg.{h,cpp}
    . adapt to GaudiHistoAlg and add some histograms for Primary vertices 

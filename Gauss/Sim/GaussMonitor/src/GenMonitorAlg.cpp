@@ -1,4 +1,4 @@
-// $Id: GenMonitorAlg.cpp,v 1.2 2005-06-17 14:12:13 gcorti Exp $
+// $Id: GenMonitorAlg.cpp,v 1.3 2005-06-21 15:44:04 gcorti Exp $
 // Include files 
 
 // from Gaudi
@@ -103,19 +103,19 @@ StatusCode GenMonitorAlg::execute() {
           if( !primFound ) {
             if( (hepMCpart->status() == 1) || (hepMCpart->status() == 888 ) ) {
               primFound = true;
-              plot( hepMCpart->production_vertex()->position().x(),
+              plot( hepMCpart->production_vertex()->position().x(), 11,
                     "PrimaryVertex x (mm)", -0.5, 0.5 );
-              plot( hepMCpart->production_vertex()->position().y(),
+              plot( hepMCpart->production_vertex()->position().y(), 12,
                     "PrimaryVertex y (mm)", -0.5, 0.5 );
-              plot( hepMCpart->production_vertex()->position().z(),
+              plot( hepMCpart->production_vertex()->position().z(), 13,
                     "PrimaryVertex z (mm)", -200., 200. );
-              plot( hepMCpart->production_vertex()->position().z(),
+              plot( hepMCpart->production_vertex()->position().z(), 14,
                     "PrimaryVertex z, all Velo (mm)", -1000., 1000. );
             }
           }
-          plot( hepMCpart->momentum().vect().mag(), 
+          plot( hepMCpart->momentum().vect().mag(), 21, 
                 "Momentum of all particles (GeV)", 0., 100. );
-          plot( hepMCpart->pdg_id(), 
+          plot( hepMCpart->pdg_id(), 22,
                 "PDGid of all particles", -4999., 5000., 10000 );
         }
         // Note that the following is really multiplicity of particle defined
@@ -125,11 +125,11 @@ StatusCode GenMonitorAlg::execute() {
         if( ( hepMCpart->status() != 2 ) && ( hepMCpart->status() != 3 ) ) {
           nParticlesStable++;
           if( produceHistos() ) {
-            plot( hepMCpart->momentum().vect().mag(),
+            plot( hepMCpart->momentum().vect().mag(), 31,
                   "Momentum of protostable particles (GeV)", 0., 100. );
-            plot( hepMCpart->pdg_id(), 
+            plot( hepMCpart->pdg_id(), 32,
                   "PDGid of protostable particles", -4999., 5000., 10000 );
-            plot( lifetime( hepMCpart ), 
+            plot( lifetime( hepMCpart ), 33,
                   "Lifetime protostable particles", -1.5e-10, 1.5e-10 );
           }
           // Charged stable particles meaning really stable after EvtGen
@@ -146,10 +146,10 @@ StatusCode GenMonitorAlg::execute() {
                 ++nParChStabEtaAcc;
               }
               if( produceHistos() ) {
-                plot( pseudoRap, 
-                      "Pseudorapidity stable charged particles", 
+                plot( pseudoRap, 44,
+                      "Pseudorapidity stable charged particles",
                       -15., 15., 150 );
-                plot( hepMCpart->momentum().perp(), 
+                plot( hepMCpart->momentum().perp(), 45, 
                       "Pt stable charged particles", 0., 20. );
               }
             }
@@ -159,15 +159,15 @@ StatusCode GenMonitorAlg::execute() {
     }
   }
   if( produceHistos() ) {
-    plot( nParticles, "Multiplicity all particles", 0., 2999., 300 );
-    plot( nParticlesStable, 
+    plot( nParticles, 1, "Multiplicity all particles", 0., 2999., 300 );
+    plot( nParticlesStable, 2,
           "Multiplicity protostable particles", 0., 2999., 300 );
-    plot( nParticlesStableCharged,
+    plot( nParticlesStableCharged, 3,
           "Multiplicity stable charged particles", -0.5, 299.5, 300 );
-    plot( nParChStabEtaAcc,
+    plot( nParChStabEtaAcc, 4,
           "Multiplicity stable charged particles in LHCb eta",
           -0.5, 299.5, 300 );
-    plot( nPileUp, "Num. of primary interaction per bunch", -0.5, 10.5, 11 );
+    plot( nPileUp, 10, "Num. of primary interaction per bunch", -0.5, 10.5, 11 );
   }
   m_counter += nParticles ;
   m_counterstable += nParticlesStable ;
