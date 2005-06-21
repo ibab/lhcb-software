@@ -1,0 +1,15 @@
+C $Id: gpyssmt.F,v 1.1.1.1 2005-06-21 12:40:51 robbep Exp $
+      INTEGER*4 FUNCTION PYSSMT_ADDRESS() 
+      IMPLICIT NONE
+
+
+      DOUBLE PRECISION ZMIX, UMIX, VMIX, SMZ, SMW, SFMIX, ZMIXI, UMIXI, 
+     &  VMIXI
+      COMMON /PYSSMT/ ZMIX(4,4),UMIX(2,2),VMIX(2,2),SMZ(4),SMW(2),
+     &     SFMIX(16,4), ZMIXI(4,4), UMIXI(2,2), VMIXI(2,2)
+      EXTERNAL PYDATA ! All that is required to force loading of BLOCK DATA
+      INTEGER*4 GETADDR
+
+      PYSSMT_ADDRESS = GETADDR(ZMIX)
+      RETURN
+      END

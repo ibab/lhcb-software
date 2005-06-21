@@ -1,0 +1,13 @@
+C $Id: gpymssm.F,v 1.1.1.1 2005-06-21 12:40:51 robbep Exp $
+      INTEGER*4 FUNCTION PYMSSM_ADDRESS() 
+      IMPLICIT NONE
+
+
+      INTEGER ISSM
+      DOUBLE PRECISION RSSM
+      COMMON /PYMSSM/ ISSM(0:99),RSSM(0:99)
+      EXTERNAL PYDATA ! All that is required to force loading of BLOCK DATA
+      INTEGER*4 GETADDR
+      PYMSSM_ADDRESS = GETADDR(ISSM)
+      RETURN
+      END

@@ -1,0 +1,12 @@
+! $Id: release.notes,v 1.1.1.1 2005-06-21 12:40:51 robbep Exp $
+! Package     : Gen/LbPythia
+! Responsible : 
+
+! 2005-06-21 - Patrick Robbe
+ - New package: this package contains all functions related to the 
+   use of Pythia in LHCb (PythiaAlg, HiggsPythiaAlg, TTbarPythiaAlg), 
+   functions to access Pythia Fortran common block and reimplementation
+   of some Pythia functions for specific action in LHCb (forced fragmentation
+   mechanism).
+
+! ====================================================================
