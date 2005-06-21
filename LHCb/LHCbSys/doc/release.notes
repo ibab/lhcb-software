@@ -9,8 +9,12 @@
  - Packages modified: KernelSys v4r13, LHCbKernel v5r11p1, RichKernel v5r5,
                       DetSys v7r2, DetDesc v15r2, DetDescCnv v2r7,
                       EventSys v20r7, TrackEvent v1r2, RichEvent v8r4,
-                      DAQSys v1r5, RichDAQ v2r2,
+                      DAQSys v1r5, RichDAQ v2r2, LHCb v18r7,
                       TrackInterfaces v1r1, TrgTools v7r4p1, RichRecBase v1r16
+
+ - In LHCb v18r7
+   . Remove Pool persistency and dictionary setup from LHCbApplication.opts,
+     as it breaks online applicatons. Should be done explicitly in offline apps.
 
  - In LHCbKernel v5r11p1
    . Remove --pool option from build command for LCG dictionary, to provide
