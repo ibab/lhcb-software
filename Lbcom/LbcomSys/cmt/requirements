@@ -1,5 +1,5 @@
 package LbcomSys
-version v2r2
+version v2r3
 
 branches doc cmt
 
@@ -18,8 +18,8 @@ use L0Checker       v3r0p1  L0   # Eduardo Rodrigues
 use OTMonitor       v1r1    OT   # Jacopo Nardulli
 
 # Rich
-use RichTools       v1r6    Rich # Chris Jones
-use RichMCTools     v2r5    Rich # Chris Jones
+use RichTools       v1r7    Rich # Chris Jones
+use RichMCTools     v2r6    Rich # Chris Jones
 
 # Inner Tracker
 use ITAlgorithms    v15r0   IT   # Matt Needham

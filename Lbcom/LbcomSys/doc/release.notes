@@ -6,6 +6,21 @@
 !             : Contains packages shared by Boole and other applications   
 !-----------------------------------------------------------------------------
 
+</PRE><H1><A NAME=v2r3>2005-06-21 LbcomSys v2r3</A></H1><PRE>
+This version is built against LHCb v18r7 and Gaudi v16r4.
+- Packages modified: RichTools v1r7, RichMCTools v2r6
+
+- In RichTools v1r7
+  . Update mirror segment finder to be more efficient at locating correct mirror
+  . Update Photon reconstruction tool (renamed RichPhotonRecoUsingQuarticSoln)
+    to allow various bits to be turned off via job options.
+    By default, the ambiguous photon test is not performed.
+    Also, to use a trimmed down version of the quartic solver which skips
+    solution not needed by the RICH
+
+- In RichMCTools v2r6
+  . Minor updates to MC navigation
+
 </PRE><H1><A NAME=v2r2>2005-06-03 LbcomSys v2r2</A></H1><PRE>
 This version is built against LHCb v18r6 and Gaudi v16r4.
 - Packages added:    KaliMisCalo
