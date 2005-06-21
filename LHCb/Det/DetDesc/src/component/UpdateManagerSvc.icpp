@@ -4,7 +4,7 @@
 // inline methods for UpdateManagerSvc
 
 inline void UpdateManagerSvc::link(Item* parent, BaseObjectMemberFunction *mf, Item *child) {
-  parent->addChild(mf,child);
+  mf = parent->addChild(mf,child);
   child->addParent(parent,mf);
 }
 inline UpdateManagerSvc::Item *UpdateManagerSvc::findItem(const std::string &path) const {

@@ -1,4 +1,4 @@
-// $Id: UpdateManagerSvc_Item.icpp,v 1.1 2005-05-03 12:40:09 marcocle Exp $
+// $Id: UpdateManagerSvc_Item.icpp,v 1.2 2005-06-21 12:47:11 marcocle Exp $
 #ifndef UPDATEMANAGERSVC_ITEM_ICPP
 #define UPDATEMANAGERSVC_ITEM_ICPP 1
 
@@ -185,7 +185,8 @@ struct Item {
   }
     
   /// Adds a child item to the given member function.
-  void addChild(BaseObjectMemberFunction *thisMF, Item *child) {
+  /// Return a pointer to the actual member function if an equivalent one was already registered.
+  BaseObjectMemberFunction * addChild(BaseObjectMemberFunction *thisMF, Item *child) {
     MembFuncList::iterator mfIt = find(thisMF);
     if (mfIt == memFuncs.end()) {
       mfIt = memFuncs.insert(mfIt,MembFunc(thisMF));
@@ -194,6 +195,7 @@ struct Item {
         delete thisMF;
     }
     if (std::find(mfIt->items->begin(),mfIt->items->end(),child) == mfIt->items->end()){
+      // it is a new child (not in current m.f. list)
       mfIt->items->push_back(child);
       if (mfIt->since < child->since) mfIt->since = child->since;
       if (mfIt->until > child->until) mfIt->until = child->until;
@@ -204,6 +206,8 @@ struct Item {
         if (until > child->until) until = child->until;
       }
     }
+    // return the real pointer since thisMF can be deleted
+    return mfIt->mf;
   }
 };
 #endif // UPDATEMANAGERSVC_ITEM_ICPP
