@@ -1,7 +1,8 @@
-! $Id: release.notes,v 1.1.1.1 2005-06-20 21:42:17 robbep Exp $
+! $Id: release.notes,v 1.2 2005-06-22 10:36:25 ranjard Exp $
 ! Package     : Gen/Generators
 ! Responsible : 
 
+!========================== Generators v1r0 ===========================
 ! 2005-06-20 - Patrick Robbe
  - new package. This package contains the base classes used by the
    generator algorithms and tools. It also contains generic algorithms
