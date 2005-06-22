@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!DOCTYPE gdd SYSTEM "gdd.dtd">
+<gdd>
+<package name="RichEvent">
+
+<!-- **************************************************************************
+  * $Id: MCRichSummedDeposit.xml,v 1.1 2005-06-22 12:39:26 jonrob Exp $
+  *****************************************************************************
+  * XML-description of MCRichSummedDeposit class                              *
+  * author: Chris Jones   Christopher.Rob.Jones@cern.ch                       *
+  * date:   2004-06-23                                                        *
+  ************************************************************************* -->
+
+<class 
+        name             = "MCRichSummedDeposit"
+        author           = "Chris Jones   Christopher.Rob.Jones@cern.ch" 
+        desc             = "Combined energy of multiple deposits within one pixel" 
+        id               = "12409" 
+        location         = "MC/Rich/SummedDeposits"  
+        keyedContTypeDef = "TRUE" 
+        stdVectorTypeDef = "TRUE">
+
+        <base name="KeyedObject&lt;RichSmartID&gt;"/>
+        &KeyedContainer;
+          
+        <import name="Kernel/RichSmartID"/>
+        <import name="Event/MCRichDeposit"/>
+            
+        <attribute 
+                name = "summedEnergy"
+                desc = "Combined energy of multiple deposits within a single pixel" 
+                type = "double"
+                init = "0"
+        />
+
+        <attribute 
+                name = "historyCode"
+                desc = "Bit-packed history information" 
+                init = "0" 
+                type = "bitfield">
+                <bitfield desc="SummedDeposit is associated to a signal event MCRichHit"    length="1" name="signalEvent" />
+                <bitfield desc="SummedDeposit is associated to a Prev event MCRichHit"      length="1" name="prevEvent" />
+                <bitfield desc="SummedDeposit is associated to a PrevPrev event MCRichHit"  length="1" name="prevPrevEvent" />
+                <bitfield desc="SummedDeposit is associated to a Next event MCRichHit"      length="1" name="nextEvent" />
+                <bitfield desc="SummedDeposit is associated to a sNextNext event MCRichHit" length="1" name="nextNextEvent" />
+        </attribute>
+
+        <relation 
+                name         = "deposits"
+                desc         = "MCRichDesposits contributing to this summed energy deposit" 
+                multiplicity = "N"  
+                type         = "MCRichDeposit"
+        />
+         
+        <method 
+                name = "addEnergy"
+                desc = "Add to the summed energy" >
+                <arg const = "TRUE" name="energy" type="double"/>
+                <code>
+                   m_summedEnergy += energy;
+                </code>
+        </method>
+        
+</class>
+
+</package>
+</gdd>

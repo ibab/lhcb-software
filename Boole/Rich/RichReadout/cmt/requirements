@@ -2,11 +2,11 @@
 # Created    : 11/05/2003
 # Maintainer : Christopher Rob Jones
 #============================================================================
-# $Id: requirements,v 1.25 2005-06-18 11:36:03 jonrob Exp $
+# $Id: requirements,v 1.26 2005-06-22 12:39:26 jonrob Exp $
 #============================================================================
 
 package RichReadout
-version v1r12
+version v1r13
 
 # ================ structure =================================================
 branches cmt doc src Event xml
