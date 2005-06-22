@@ -3,6 +3,15 @@ Package: Digi/Boole
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb Digitization program
 
+</PRE><H1><A NAME=v9r3>2005-06-22 Boole v9r3</A></H1><PRE>
+This version uses Gaudi v16r4, LHCb v18r7, Lbcom v2r3
+Requires input from Gauss v19r3 or greater. Output needs Brunel v27r2 or greater
+
+- Repackaging
+  . Move non-persistent classes MCRichDeposit and MCRichSummedDeposit from
+    RichEvent to RichReadout (RichReadout v1r13, RichEvent v8r4)
+  . Rename RichHPDIDTool RichHPDInfoTool (RichDigiQC v2r2, RichDAQ v2r2)
+
 </PRE><H1><A NAME=v9r2>2005-06-13 Boole v9r2</A></H1><PRE>
 This version uses Gaudi v16r4, LHCb v18r6, Lbcom v2r2
 Requires input from Gauss v19r3 or greater. Output needs Brunel v27r2 or greater

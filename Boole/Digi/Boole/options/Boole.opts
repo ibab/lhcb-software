@@ -6,12 +6,14 @@
 //==============================================================
 #include "$LHCBROOT/options/LHCbApplication.opts"
 
+// POOL Persistency
+#include "$GAUDIPOOLDBROOT/options/GaudiPoolDbRoot.opts"
+#include "$EVENTSYSROOT/options/PoolDicts.opts"
+
 // Objects to be written to output file
 #include "$BOOLEOPTS/DigiContent.opts"
 
-//--------------------------------------------------------------
 // Phases to be executed
-//--------------------------------------------------------------
 ApplicationMgr.TopAlg += { "ProcessPhase/Init",
                            "ProcessPhase/Digi",
                            "ProcessPhase/Trigger",
@@ -20,24 +22,19 @@ ApplicationMgr.TopAlg += { "ProcessPhase/Init",
                            "ProcessPhase/Output" };
 #include "$BOOLEOPTS/BooleMoni.opts"
 
-//--------------------------------------------------------------
 // Detectors to be processed in each phase
-//--------------------------------------------------------------
 Init.DetectorList += { "Boole", "Data" };
 Digi.DetectorList += { "VELO" , "IT", "OT" , "RICH" , "CALO", "MUON" };
 Trigger.DetectorList = { "L0" };
 Relations.DetectorList = { "Velo", "IT", "OT", "L0", "Links" };
 
-//--------------------------------------------------------------
 // Spillover, LHC background, Initialization
-//--------------------------------------------------------------
 ApplicationMgr.DLLs += { "DigiAlg", "DAQEvent" };
 #include "$DIGIALGROOT/options/Spillover.opts"
 InitBooleSeq.Members += { "LbAppInit/Boole" };
 InitBooleSeq.Members += { "CreateL1Buffer" };
 InitBooleSeq.Members += { "CreateRawBuffer" };
 
-//--------------------------------------------------------------
 // Subdetector algorithms
 //--------------------------------------------------------------
 // L0 trigger
