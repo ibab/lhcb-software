@@ -5,8 +5,8 @@
 ! Purpose     : LHCb OO kernel packages
 !-----------------------------------------------------------------------------
 
-</PRE><H1><A NAME=v18r7>2005-06-21 LHCbSys v18r7</A></H1><PRE>
- - Packages modified: KernelSys v4r13, LHCbKernel v5r11p1, RichKernel v5r5,
+</PRE><H1><A NAME=v18r7>2005-06-22 LHCbSys v18r7</A></H1><PRE>
+ - Packages modified: KernelSys v4r13, LHCbKernel v5r12, RichKernel v5r5,
                       DetSys v7r2, DetDesc v15r2, DetDescCnv v2r7,
                       EventSys v20r7, TrackEvent v1r2, RichEvent v8r4,
                       DAQSys v1r5, RichDAQ v2r2, LHCb v18r7,
@@ -16,9 +16,10 @@
    . Remove Pool persistency and dictionary setup from LHCbApplication.opts,
      as it breaks online applicatons. Should be done explicitly in offline apps.
 
- - In LHCbKernel v5r11p1
-   . Remove --pool option from build command for LCG dictionary, to provide
-     complete dictionaries for use from GaudiPython
+ - In LHCbKernel v5r12
+   . Fixes to POOL dictionaries for use from GaudiPython:
+     + Generate all dictionaries (including channelIDs) with lcgdict
+     + Remove --pool option from lcgdict build command
 
  - In DetDesc v15r2
    . Changes for handling conditions attached to IGeometryInfo

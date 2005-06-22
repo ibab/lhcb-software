@@ -16,7 +16,7 @@ use HepMC	v4r121p0	Sim     # Gloria Corti, Matt Dobbs
 
 # Kernel packages
 use KernelSys   	v4r13   Kernel  # Marco Cattaneo
-use LHCbKernel  	v5r11p1 Kernel  # Marco Cattaneo
+use LHCbKernel  	v5r12   Kernel  # Marco Cattaneo
 use Relations		v2r5	Kernel  # Ivan Belyaev
 use CaloKernel  	v3r2	Calo    # Ivan Belyaev
 use MuonKernel  	v2r7	Muon    # Andrei Tsaregorodtsev
