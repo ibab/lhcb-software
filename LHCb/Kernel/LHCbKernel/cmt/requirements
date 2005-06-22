@@ -1,10 +1,10 @@
-# $Id: requirements,v 1.75 2005-06-16 11:11:20 cattanem Exp $
+# $Id: requirements,v 1.76 2005-06-22 11:43:26 cattanem Exp $
 # =============================================================================
 package LHCbKernel
 author  M.Frank    CERN/LHCb
 manager M.Cattaneo CERN/LHCb
 
-version v5r11p1
+version v5r12
 
 include_dirs $(LHCBKERNELROOT)
 
@@ -16,7 +16,6 @@ use CLHEP        v*    LCG_Interfaces
 macro LHCbKernelObj2Doth_GODflags " -s ../Kernel/ " \
       WIN32                       " -s ..\Kernel\ "
 document obj2doth LHCbKernelObj2Doth ../xml/*.xml
-document obj2dict LHCbKernelObj2Dict ../xml/*.xml
 
 # Produce lcg dictionary for stl containers used in LHCb
 document lcg_dictionary_generator LHCbKernelGen \
@@ -26,16 +25,14 @@ macro_append LHCbKernel_lcgdict_options \
        -I"$(POOL_home)/../include" $(includes)'
 
 # Build libraries (including dictionary)
-#============================================================================
 library LHCbKernel     *.cpp
-library LHCbKernelDict ../dict/*.cpp ../$(tag)/dict/LHCbKernel/*.cpp
+library LHCbKernelDict ../$(tag)/dict/LHCbKernel/*.cpp
 
 # Debug flag for RichSmartID
 macro_append LHCbKernel_cppflags "" \
                    Linux&debug " -DRICHDEBUG "
         
 # Standard patterns (order is essential)
-#============================================================================
 apply_pattern component_library library=LHCbKernelDict
 apply_pattern linker_library    library=LHCbKernel
 
