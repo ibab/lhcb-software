@@ -2,7 +2,7 @@
 # Created    : 11/05/2003
 # Maintainer : Christopher Rob Jones
 #============================================================================
-# $Id: requirements,v 1.26 2005-06-22 12:39:26 jonrob Exp $
+# $Id: requirements,v 1.27 2005-06-22 13:20:47 cattanem Exp $
 #============================================================================
 
 package RichReadout
@@ -16,8 +16,7 @@ branches cmt doc src Event xml
 set RICHREADOUTOPTS $(RICHREADOUTROOT)/options
 
 # ================ dependencies ==============================================
-use GaudiObjDesc v* 
-use RichEvent    v8r*    Event
+use RichEvent    v*      Event
 use DAQEvent     v*      Event
 
 #============================================================================
@@ -31,4 +30,5 @@ library RichReadout ../src/event/*.cpp ../src/component/*.cpp  -import=AIDA
 apply_pattern component_library library=RichReadout
 
 private
+use GaudiObjDesc v* 
 include_dirs $(RICHREADOUTROOT)
