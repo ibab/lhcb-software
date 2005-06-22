@@ -1,4 +1,4 @@
-// $Id: EvtGenTool.cpp,v 1.1.1.1 2005-06-20 21:42:17 robbep Exp $
+// $Id: EvtGenTool.cpp,v 1.2 2005-06-22 09:29:03 robbep Exp $
 // Header file
 #include "EvtGenTool.h"
 
@@ -368,6 +368,7 @@ StatusCode EvtGenTool::initialize( ) {
     pythiaoutput_init_( &arg ) ;
 #endif
   } else {
+    arg = 1 ;
 #ifdef WIN32
     PYTHIAOUTPUT_INIT( &arg ) ;
     PHOTOS_INIT() ;
