@@ -1,7 +1,8 @@
-! $Id: release.notes,v 1.1.1.1 2005-06-21 12:40:51 robbep Exp $
+! $Id: release.notes,v 1.2 2005-06-22 10:17:53 ranjard Exp $
 ! Package     : Gen/LbPythia
 ! Responsible : 
 
+! ========================== LbPythia v1r0 ============================
 ! 2005-06-21 - Patrick Robbe
  - New package: this package contains all functions related to the 
    use of Pythia in LHCb (PythiaAlg, HiggsPythiaAlg, TTbarPythiaAlg), 
