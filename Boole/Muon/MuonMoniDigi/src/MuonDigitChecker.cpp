@@ -417,7 +417,7 @@ StatusCode MuonDigitChecker::finalize() {
     info() << "-----------------------------------------------------------------" << endmsg;
     info() << "-----   Container: "<< myCon << "------------------------" << endmsg;
     info() << "-----------------------------------------------------------------" << endmsg;
-    info()<<" S1      S2      S3      S4      S5 "<<endmsg;
+    info()<<"   M1     M2     M3     M4     M5 "<<endmsg;
     for(int r=0; r<4; r++) {
       for(int s=0; s<5; s++) {
 	if(Dcnt[s][r][c])  {
