@@ -1,253 +1,272 @@
-//$Id: CondDBTestAlgorithm.cpp,v 1.7 2005-05-13 16:17:50 marcocle Exp $
+// $Id: CondDBTestAlgorithm.cpp,v 1.8 2005-06-23 13:34:22 marcocle Exp $
+// Include files 
 
-#include "CondDBTestAlgorithm.h"
+// from Gaudi
+#include "GaudiKernel/AlgFactory.h" 
+#include "GaudiKernel/SmartDataPtr.h"
+#include "GaudiKernel/IDetDataSvc.h"
+
 #include "DetDesc/Condition.h"
 #include "DetDesc/DetectorElement.h"
 #include "DetDesc/IAlignment.h"
 #include "DetDesc/IGeometryInfo.h"
 #include "DetDesc/ISlowControl.h"
 #include "DetDesc/LVolume.h"
-#include "GaudiKernel/AlgFactory.h"
-#include "GaudiKernel/SmartDataPtr.h"
 
 #include "DetDesc/IUpdateManagerSvc.h"
 
-/// Instantiation of a static factory to create instances of this algorithm
-static const AlgFactory<CondDBTestAlgorithm> Factory;
-const IAlgFactory& CondDBTestAlgorithmFactory = Factory;
+// local
+#include "CondDBTestAlgorithm.h"
 
-//----------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
+// Implementation file for class : CondDBTestAlgorithm
+//
+// 2005-06-23 : Marco Clemencic
+//-----------------------------------------------------------------------------
 
-/// Constructor
-CondDBTestAlgorithm::CondDBTestAlgorithm ( const std::string& name, ISvcLocator* pSvcLocator )
-  : Algorithm( name, pSvcLocator ),
-  m_LHCb_cond(NULL),
-  m_Hcal_cond(NULL),
-  m_LHCb_temp(-1e20),
-  m_Hcal_temp(-1e20),
-  m_avg_temp(-1e20)
+// Declaration of the Algorithm Factory
+static const  AlgFactory<CondDBTestAlgorithm>          s_factory ;
+const        IAlgFactory& CondDBTestAlgorithmFactory = s_factory ; 
+
+
+//=============================================================================
+// Standard constructor, initializes variables
+//=============================================================================
+CondDBTestAlgorithm::CondDBTestAlgorithm( const std::string& name,
+                                          ISvcLocator* pSvcLocator)
+  : GaudiAlgorithm ( name , pSvcLocator ),
+    m_LHCb_cond(NULL),
+    m_Hcal_cond(NULL),
+    m_LHCb_temp(-1e20),
+    m_Hcal_temp(-1e20),
+    m_avg_temp(-1e20),
+    m_evtCount(0)
 {
+
 }
+//=============================================================================
+// Destructor
+//=============================================================================
+CondDBTestAlgorithm::~CondDBTestAlgorithm() {}; 
 
-//----------------------------------------------------------------------------
-
-/// Initialize the algorithm. 
+//=============================================================================
+// Initialization
+//=============================================================================
 StatusCode CondDBTestAlgorithm::initialize() {
-  StatusCode sc;
-  MsgStream log(msgSvc(), name());
+  StatusCode sc = GaudiAlgorithm::initialize(); // must be executed first
+  if ( sc.isFailure() ) return sc;  // error printed already by GaudiAlgorithm
 
-  log << MSG::INFO << "*************** initialize() ***************" << endreq;
-  log << MSG::INFO << "Retrieve the LHCb detector /dd/Structure/LHCb" << endreq;
+  debug() << "==> Initialize" << endmsg;
+  
+  info() << "Retrieve the LHCb detector /dd/Structure/LHCb" << endmsg;
   SmartDataPtr<DetectorElement> lhcb( detSvc(), "/dd/Structure/LHCb" );
 
-  log << MSG::INFO << "*** register conditions ***" << endreq;
-  IUpdateManagerSvc *ums;
-  sc = serviceLocator()->service("UpdateManagerSvc",ums,true);
-  if (!sc.isSuccess()) {
-    log << MSG::ERROR << "Unable to find UpdateManagerSvc" <<endmsg;
-    return sc;
+  
+  info() << "*** register conditions ***" << endmsg;
+  try {
+    m_ums = svc<IUpdateManagerSvc>("UpdateManagerSvc",true);
+    
+    m_ums->registerCondition(this,"/dd/SlowControl/LHCb/scLHCb",&CondDBTestAlgorithm::i_updateCacheLHCb);
+    m_ums->registerCondition(this,"/dd/SlowControl/LHCb/scLHCb",&CondDBTestAlgorithm::i_updateCache);
+    m_ums->registerCondition(this,"/dd/SlowControl/Hcal/scHcal",&CondDBTestAlgorithm::i_updateCacheHcal);
+    m_ums->registerCondition(this,"/dd/SlowControl/Hcal/scHcal",&CondDBTestAlgorithm::i_updateCache);
+    m_ums->registerCondition(this,"/dd/SlowControl/LHCb/scLHCb",NULL);
+    m_ums->update(this);
   }
-  ums->registerCondition(this,"/dd/SlowControl/LHCb/scLHCb",&CondDBTestAlgorithm::updateCacheLHCb);
-  ums->registerCondition(this,"/dd/SlowControl/LHCb/scLHCb",&CondDBTestAlgorithm::updateCache);
-  ums->registerCondition(this,"/dd/SlowControl/Hcal/scHcal",&CondDBTestAlgorithm::updateCacheHcal);
-  ums->registerCondition(this,"/dd/SlowControl/Hcal/scHcal",&CondDBTestAlgorithm::updateCache);
-  ums->registerCondition(this,"/dd/SlowControl/LHCb/scLHCb",NULL);
-  ums->update(this);
-  ums->release();
- 
+  catch (GaudiException){
+    return StatusCode::FAILURE;
+  }
+  
   return StatusCode::SUCCESS;
-}
+};
 
-//----------------------------------------------------------------------------
-
-/// Process one event.
+//=============================================================================
+// Main execution
+//=============================================================================
 StatusCode CondDBTestAlgorithm::execute() {
 
+  debug() << "==> Execute" << endmsg;
+
+  info() << "-------------------------------------" << endmsg;
+  info() << "Temperature check: LHCb = " << m_LHCb_temp << endmsg;
+  info() << "                   Hcal = " << m_Hcal_temp << endmsg;
+  info() << "                   avg  = " << m_avg_temp << endmsg;
+  info() << "-------------------------------------" << endmsg;
+  
+  ++m_evtCount;
+
   StatusCode sc;
-  MsgStream log(msgSvc(), name());
-  log << MSG::INFO << "*************** execute(): process new event ***************" << endreq;
-
-  log << MSG::INFO << "-------------------------------------" << endmsg;
-  log << MSG::INFO << "Temperature check: LHCb = " << m_LHCb_temp << endmsg;
-  log << MSG::INFO << "                   Hcal = " << m_Hcal_temp << endmsg;
-  log << MSG::INFO << "                   avg  = " << m_avg_temp << endmsg;
-  log << MSG::INFO << "-------------------------------------" << endmsg;
   
-  static int count = 0;
-  
-  ++count;
-
   // Retrieve the LHCb detector element
-  log << MSG::INFO << "Retrieve the LHCb detector /dd/Structure/LHCb" << endreq;
+  info() << "Retrieve the LHCb detector /dd/Structure/LHCb" << endmsg;
   SmartDataPtr<DetectorElement> lhcb( detSvc(), "/dd/Structure/LHCb" );
   sc = i_analyse( lhcb );
-  if( !sc.isSuccess() ) return StatusCode::FAILURE;
+  if( !sc.isSuccess() ) return sc;
 
   // Retrieve alignment for the LHCb detector
-  log << MSG::INFO << "Retrieve the alignment Condition for the LHCb detector" << endreq;
+  info() << "Retrieve the alignment Condition for the LHCb detector" << endmsg;
   Condition* alLHCb = lhcb->alignment()->condition();
   sc = i_analyse( alLHCb );
-  if( !sc.isSuccess() ) return StatusCode::FAILURE;
+  if( !sc.isSuccess() ) return sc;
 
   // Retrieve slowControl for the LHCb detector
-  log << MSG::INFO << "Retrieve the slowControl Condition for the LHCb detector" << endreq;
+  info() << "Retrieve the slowControl Condition for the LHCb detector" << endmsg;
   Condition* scLHCb = lhcb->slowControl()->condition();
-  if (count == 4){
-    log << MSG::INFO << "(Force update!)" << endreq;
-    scLHCb->forceUpdateMode();
-  }
   sc = i_analyse( scLHCb );
   if( !sc.isSuccess() ) return StatusCode::FAILURE;
+  if (m_evtCount == 4){
+    // change the value and trigger a re-cache
+    info() << "Forcing a re-cache..." << endmsg;
+    scLHCb->param<double>("Temperature") = scLHCb->param<double>("Temperature")/2.0;
+    info() << "Temperature set to " << scLHCb->param<double>("Temperature") << endmsg;
+    info() << "UpdateManagerSvc::invalidate() ==> Condition data are considered no more valid" << endmsg;
+    m_ums->invalidate(scLHCb);
+  } else if (m_evtCount == 5){
+    // trigger a re-load from CondDB
+    info() << "Forcing a re-load from CondDB..." << endmsg;
+    info() << "ValidDataObject::forceUpdateMode() + UpdateManagerSvc::invalidate()" << endmsg;
+    scLHCb->forceUpdateMode();
+    m_ums->invalidate(scLHCb);
+  }
 
   // Retrieve logical volume for the LHCb detector
-  log << MSG::INFO << "Retrieve the logical volume for the LHCb detector" << endreq;
+  info() << "Retrieve the logical volume for the LHCb detector" << endmsg;
   LVolume* lvLHCb = dynamic_cast<LVolume*>( (ILVolume*)(lhcb->geometry()->lvolume()) );
   sc = i_analyse( lvLHCb );
   if( !sc.isSuccess() ) return StatusCode::FAILURE;
 
   // Retrieve the Hcal detector element
-  log << MSG::INFO << "Retrieve the Hcal detector /dd/Structure/LHCb/Hcal" << endreq;
+  info() << "Retrieve the Hcal detector /dd/Structure/LHCb/Hcal" << endmsg;
   SmartDataPtr<DetectorElement> hcal( detSvc(), "/dd/Structure/LHCb/Hcal" );
   sc = i_analyse( hcal );
   if( !sc.isSuccess() ) return StatusCode::FAILURE;
 
   // Retrieve slowControl for the Hcal detector
-  log << MSG::INFO << "Retrieve the slowControl Condition for the Hcal detector" << endreq;
+  info() << "Retrieve the slowControl Condition for the Hcal detector" << endmsg;
   Condition* scHcal = hcal->slowControl()->condition();
   sc = i_analyse( scHcal );
   if( !sc.isSuccess() ) return StatusCode::FAILURE;
 
   // Retrieve the Hcal detector element
-  log << MSG::INFO << "Test DummyDE detector /dd/Structure/LHCb/Dummy" << endreq;
+  info() << "Test DummyDE detector /dd/Structure/LHCb/Dummy" << endmsg;
   SmartDataPtr<DetectorElement> dummy( detSvc(), "/dd/Structure/LHCb/Dummy" );
   sc = i_analyse( dummy );
   if( !sc.isSuccess() ) return StatusCode::FAILURE;
 
   // Event processing completed
   return StatusCode::SUCCESS;
+};
 
+//=============================================================================
+//  Finalize
+//=============================================================================
+StatusCode CondDBTestAlgorithm::finalize() {
+
+  debug() << "==> Finalize" << endmsg;
+
+  return GaudiAlgorithm::finalize();  // must be called after all other actions
 }
 
-//----------------------------------------------------------------------------
-
-/// Finalize the algorithm. 
-StatusCode CondDBTestAlgorithm::finalize( ) {
-  return StatusCode::SUCCESS;
-}
-
-//----------------------------------------------------------------------------
-
+//=========================================================================
+//  Anlyze the contnt of a DataObject
+//=========================================================================
 StatusCode CondDBTestAlgorithm::i_analyse( DataObject* pObj ) {
-  MsgStream log(msgSvc(), name());
   if( 0 != pObj ) {
-    log << MSG::INFO << "Successfully retrieved" << endreq;
+    info() << "Successfully retrieved" << endmsg;
   } else {
-    log << MSG::ERROR << "Could not retrieve this DataObject" << endreq;
+    error() << "Could not retrieve this DataObject" << endmsg;
     return StatusCode::FAILURE;
   }
 
-  StatusCode sc;  
   ValidDataObject *pVDO= dynamic_cast<ValidDataObject*>( pObj );
+
   if( 0 != pVDO ) {
-    log << MSG::INFO << "Before update:" << endmsg;
-    log << MSG::INFO << "  -> this Object is valid in [" 
-        << std::dec << pVDO->validSince().absoluteTime()
-        << "(0x" << std::hex << pVDO->validSince().absoluteTime() << ")," 
-        << std::dec  << pVDO->validTill().absoluteTime()
-        << "(0x" << std::hex << pVDO->validTill().absoluteTime()  << ")]"
-        << endmsg;
+    info() << "Object is valid in ["
+           << std::dec << pVDO->validSince().absoluteTime()
+      //<< "(0x" << std::hex << pVDO->validSince().absoluteTime() << "),"
+           << "," 
+           << std::dec << pVDO->validTill().absoluteTime()
+      //<< "(0x" << std::hex << pVDO->validTill().absoluteTime() << ")"
+           << "[" << endmsg;
+    
+    if ( pVDO->isValid( svc<IDetDataSvc>("DetectorDataSvc")->eventTime() ) ) {
+      info() << "(currently valid)" << endmsg;
+    }
+    else {
+      error() << "Object is not valid at the current event time! (" << svc<IDetDataSvc>("DetectorDataSvc")->eventTime()
+              << ")" << endmsg;
+      return StatusCode::FAILURE;
+    }
     ParamValidDataObject *pPVDO= dynamic_cast<ParamValidDataObject*>( pObj );
     if ( 0 != pPVDO ){
-      log << MSG::INFO << "  -> it has "
-          << pPVDO->paramNames().size() << " params" << endmsg;
-      log << MSG::INFO << pPVDO->printParams() << endmsg;
+      info() << "It is a ParamValidDataObject with " << pPVDO->paramNames().size() << " params" << endmsg;
+      info() << "Parameters:\n" << pPVDO->printParams() << endmsg;
     }
-    log << MSG::INFO << "Now update it" << endmsg;
-    sc = pVDO->update();
-  } else { // it is not a ValidDataObject, so it does not implement update()
-    log << MSG::INFO << "Now update it (via DataSvc)" << endmsg;
-    sc = detSvc()->updateObject( pObj );
+  } else {
+    info() << "(not a ValidDataObject)" << endmsg;
   }
   
-  if( !sc.isSuccess() ) {
-    log << MSG::ERROR << "Can't update DataObject" << endreq;
-    return StatusCode::FAILURE;
-  } else {
-    log << MSG::INFO << "Successfully updated" << endreq;
-  }
-
-  pVDO = dynamic_cast<ValidDataObject*>( pObj );
-  if( 0 != pVDO ) {
-    log << MSG::INFO << "After update:" << endmsg;
-    log << MSG::INFO << "  -> this Object is valid in [" 
-        << std::dec << pVDO->validSince().absoluteTime()
-        << "(0x" << std::hex << pVDO->validSince().absoluteTime() << ")," 
-        << std::dec  << pVDO->validTill().absoluteTime()
-        << "(0x" << std::hex << pVDO->validTill().absoluteTime()  << ")]"
-        << endmsg;
-    ParamValidDataObject *pPVDO= dynamic_cast<ParamValidDataObject*>( pObj );
-    if ( 0 != pPVDO ){
-      log << MSG::INFO << "  -> it has "
-          << pPVDO->paramNames().size() << " params" << endmsg;
-      log << MSG::INFO << pPVDO->printParams() << endmsg;
-    }
-  }
   return StatusCode::SUCCESS;  
 }
 
-//----------------------------------------------------------------------------
-StatusCode CondDBTestAlgorithm::updateCacheLHCb(){
-  MsgStream log(msgSvc(), name());
-  log << MSG::INFO << "updateCacheLHCb() called!" << endmsg;
+//=========================================================================
+//  
+//=========================================================================
+StatusCode CondDBTestAlgorithm::i_updateCacheLHCb ( ) {
+  info() << "i_updateCacheLHCb() called!" << endmsg;
   if (m_LHCb_cond == NULL){
-    DataObject *pObj;
-    detSvc()->retrieveObject("/dd/SlowControl/LHCb/scLHCb",pObj);
-    m_LHCb_cond = dynamic_cast<Condition *>(pObj);
-    if (m_LHCb_cond == NULL) {
-      log << MSG::ERROR << "Failed to retrieve /dd/SlowControl/LHCb/scLHCb" << endmsg;
+    try {
+      m_LHCb_cond = getDet<Condition>("/dd/SlowControl/LHCb/scLHCb");
+    }
+    catch (GaudiException){
       return StatusCode::FAILURE;
     }
   }
   m_LHCb_temp = m_LHCb_cond->param<double>("Temperature");
   return StatusCode::SUCCESS;
 }
-StatusCode CondDBTestAlgorithm::updateCacheHcal(){
-  MsgStream log(msgSvc(), name());
-  log << MSG::INFO << "updateCacheHcal() called!" << endmsg;
+
+//=========================================================================
+//  
+//=========================================================================
+StatusCode CondDBTestAlgorithm::i_updateCacheHcal ( ) {
+  info() << "i_updateCacheHcal() called!" << endmsg;
   if (m_Hcal_cond == NULL){
-    DataObject *pObj;
-    detSvc()->retrieveObject("/dd/SlowControl/Hcal/scHcal",pObj);
-    m_Hcal_cond = dynamic_cast<Condition *>(pObj);
-    if (m_Hcal_cond == NULL) {
-      log << MSG::ERROR << "Failed to retrieve /dd/SlowControl/Hcal/scHcal" << endmsg;
+    try {
+      m_Hcal_cond = getDet<Condition>("/dd/SlowControl/Hcal/scHcal");
+    }
+    catch (GaudiException){
       return StatusCode::FAILURE;
     }
   }
   m_Hcal_temp = m_Hcal_cond->param<double>("Temperature");
   return StatusCode::SUCCESS;
 }
-StatusCode CondDBTestAlgorithm::updateCache(){
-  MsgStream log(msgSvc(), name());
-  log << MSG::INFO << "updateCache() called!" << endmsg;
+
+//=========================================================================
+//  
+//=========================================================================
+StatusCode CondDBTestAlgorithm::i_updateCache ( ) {
+  info() << "i_updateCache() called!" << endmsg;
+
   if (m_LHCb_cond == NULL){
-    DataObject *pObj;
-    detSvc()->retrieveObject("/dd/SlowControl/LHCb/scLHCb",pObj);
-    m_LHCb_cond = dynamic_cast<Condition *>(pObj);
-    if (m_LHCb_cond == NULL) {
-      log << MSG::ERROR << "Failed to retrieve /dd/SlowControl/LHCb/scLHCb" << endmsg;
+    try {
+      m_LHCb_cond = getDet<Condition>("/dd/SlowControl/LHCb/scLHCb");
+    }
+    catch (GaudiException){
       return StatusCode::FAILURE;
     }
   }
+
   if (m_Hcal_cond == NULL){
-    DataObject *pObj;
-    detSvc()->retrieveObject("/dd/SlowControl/Hcal/scHcal",pObj);
-    m_Hcal_cond = dynamic_cast<Condition *>(pObj);
-    if (m_Hcal_cond == NULL) {
-      log << MSG::ERROR << "Failed to retrieve /dd/SlowControl/Hcal/scHcal" << endmsg;
+    try {
+      m_Hcal_cond = getDet<Condition>("/dd/SlowControl/Hcal/scHcal");
+    }
+    catch (GaudiException){
       return StatusCode::FAILURE;
     }
   }
   m_avg_temp = (m_LHCb_cond->param<double>("Temperature")+m_Hcal_cond->param<double>("Temperature"))/2.;
   return StatusCode::SUCCESS;
 }
-
+//=============================================================================

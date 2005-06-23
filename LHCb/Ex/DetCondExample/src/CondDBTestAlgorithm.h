@@ -1,54 +1,64 @@
- // $Id: CondDBTestAlgorithm.h,v 1.3 2005-05-03 12:46:19 marcocle Exp $
-#ifndef DETCONDEXAMPLE_CONDDBTESTALGORITHM_H
-#define DETCONDEXAMPLE_CONDDBTESTALGORITHM_H 1
+// $Id: CondDBTestAlgorithm.h,v 1.4 2005-06-23 13:34:23 marcocle Exp $
+#ifndef CONDDBTESTALGORITHM_H 
+#define CONDDBTESTALGORITHM_H 1
 
-// Base class
-#include "GaudiKernel/Algorithm.h"
+// Include files
+// from Gaudi
+#include "GaudiAlg/GaudiAlgorithm.h"
 
 // Forward declarations
 class DataObject;
 class Condition;
+class IUpdateManagerSvc;
 
-///---------------------------------------------------------------------------
-/** @class CondDBTestAlgorithm CondDBTestAlgorithm.h Ex/DetCondExample/CondDBTestAlgorithm.h
+/** @class CondDBTestAlgorithm CondDBTestAlgorithm.h
+ *  
+ *  Example of an algorithm retrieving condition data stored in the CondDB.
+ *
+ *  Pointers to relevant DataObjects are retrieved at every new event.
+ *  The retrieved objects are explicitly updated to ensure they are valid.
+ *
+ *  @author Andrea Valassi 
+ *  @date December 2001
+ *
+ *  @author Marco Clemencic
+ *  @date   2005-06-23
+ */
+class CondDBTestAlgorithm : public GaudiAlgorithm {
+public: 
+  /// Standard constructor
+  CondDBTestAlgorithm( const std::string& name, ISvcLocator* pSvcLocator );
 
-    Example of an algorithm retrieving condition data stored in the CondDB.
+  virtual ~CondDBTestAlgorithm( ); ///< Destructor
 
-    Pointers to relevant DataObjects are retrieved at every new event.
-    The retrieved objects are explicitly updated to ensure they are valid.
+  virtual StatusCode initialize();    ///< Algorithm initialization
+  virtual StatusCode execute   ();    ///< Algorithm execution
+  virtual StatusCode finalize  ();    ///< Algorithm finalization
 
-    @author Andrea Valassi 
-    @date December 2001
-*///--------------------------------------------------------------------------
-
-class CondDBTestAlgorithm : public Algorithm {
-
- public:
-
-  /// Constructor.
-  CondDBTestAlgorithm( const std::string& name, 
-		       ISvcLocator* pSvcLocator ); 
-
-  // Algorithm standard methods.
-  StatusCode initialize();
-  StatusCode execute();
-  StatusCode finalize();
-
- private:
+private:
   /// Dump interesting information about a DataObject
   StatusCode i_analyse( DataObject* pObj );
 
-  StatusCode updateCacheLHCb();
-  StatusCode updateCacheHcal();
-  StatusCode updateCache();
+  /// Internal member function used with the UpdateManagerSvc
+  StatusCode i_updateCacheLHCb();
+  /// Internal member function used with the UpdateManagerSvc
+  StatusCode i_updateCacheHcal();
+  /// Internal member function used with the UpdateManagerSvc
+  StatusCode i_updateCache();
   
+  /// Cached pointer to Condition
   Condition *m_LHCb_cond;
+  /// Cached pointer to Condition
   Condition *m_Hcal_cond;
   
+  /// Pointer tu the Update Manager Service
+  IUpdateManagerSvc *m_ums;
+
   double m_LHCb_temp;
   double m_Hcal_temp;
   double m_avg_temp;
-  
-};
 
-#endif    // DETCONDEXAMPLE_CONDDBTESTALGORITHM_H
+  size_t m_evtCount;
+
+};
+#endif // CONDDBTESTALGORITHM_H
