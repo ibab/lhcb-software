@@ -1,4 +1,4 @@
-// $Id: MultiDBTest.cpp,v 1.1 2005-05-12 16:34:22 marcocle Exp $
+// $Id: MultiDBTest.cpp,v 1.2 2005-06-23 13:44:01 marcocle Exp $
 // Include files 
 
 // from Gaudi
@@ -45,52 +45,44 @@ StatusCode MultiDBTest::initialize() {
 
   debug() << "==> Initialize" << endmsg;
   
-  // Locate the Database Access Service 1
-  sc = serviceLocator()->service("DB1",m_dbAccSvc1);
-  if (  !sc.isSuccess() ) {
-    error() << "Could not locate DB1" << endreq;
-    return sc;
+  try {
+
+    // Locate the Database Access Service 1
+    m_dbAccSvc1 = svc<ICondDBAccessSvc>("DB1");
+
+    // Locate the Database Access Service 2
+    m_dbAccSvc2 = svc<ICondDBAccessSvc>("DB2");
+
+    info() << "*** prepare databases ***" << endmsg;
+
+    m_dbAccSvc1->createFolder("/multiDBTest/Folder1","",ICondDBAccessSvc::XML);
+
+    m_dbAccSvc2->createFolder("/multiDBTest/Folder1","",ICondDBAccessSvc::XML);
+    m_dbAccSvc2->createFolder("/multiDBTest/Folder2","",ICondDBAccessSvc::XML);
+
+    m_dbAccSvc1->storeXMLString("/multiDBTest/Folder1","<?xml version=\"1.0\" encoding=\"UTF-8\"?>"
+                                "<!DOCTYPE DDDB SYSTEM \"structure.dtd\">"
+                                "<DDDB><condition name=\"Cond1\"><param name=\"Database\" type=\"other\">DB1</param>"
+                                "</condition></DDDB>",TimePoint(0), TimePoint(10));
+    m_dbAccSvc2->storeXMLString("/multiDBTest/Folder1","<?xml version=\"1.0\" encoding=\"UTF-8\"?>"
+                                "<!DOCTYPE DDDB SYSTEM \"structure.dtd\">"
+                                "<DDDB><condition name=\"Cond1\"><param name=\"Database\" type=\"other\">DB2</param>"
+                                "</condition></DDDB>",TimePoint(0), TimePoint(20));
+    m_dbAccSvc2->storeXMLString("/multiDBTest/Folder2","<?xml version=\"1.0\" encoding=\"UTF-8\"?>"
+                                "<!DOCTYPE DDDB SYSTEM \"structure.dtd\">"
+                                "<DDDB><condition name=\"Cond2\"><param name=\"Database\" type=\"other\">DB2</param>"
+                                "</condition></DDDB>",TimePoint(0), TimePoint(20));
+
+    info() << "*** register conditions ***" << endreq;
+    IUpdateManagerSvc *ums = svc<IUpdateManagerSvc>("UpdateManagerSvc",true);
+    ums->registerCondition(this,"/dd/multiDBTest/Cond1",NULL);
+    ums->registerCondition(this,"/dd/multiDBTest/Cond2",NULL);
+    ums->update(this);
+
   }
-  // Locate the Database Access Service 2
-  sc = serviceLocator()->service("DB2",m_dbAccSvc2);
-  if (  !sc.isSuccess() ) {
-    error() << "Could not locate DB2" << endreq;
-    return sc;
+  catch (GaudiException){
+    return StatusCode::FAILURE;
   }
-
-  // Get a pointer to the DBs to speed up a bit
-  info() << "*** prepare databases ***" << endmsg;
-
-  m_dbAccSvc1->createFolder("/multiDBTest/Folder1","",ICondDBAccessSvc::XML);
-
-  m_dbAccSvc2->createFolder("/multiDBTest/Folder1","",ICondDBAccessSvc::XML);
-  m_dbAccSvc2->createFolder("/multiDBTest/Folder2","",ICondDBAccessSvc::XML);
-
-  m_dbAccSvc1->storeXMLString("/multiDBTest/Folder1","<?xml version=\"1.0\" encoding=\"UTF-8\"?>"
-                              "<!DOCTYPE DDDB SYSTEM \"structure.dtd\">"
-                              "<DDDB><condition name=\"Cond1\"><param name=\"Database\" type=\"other\">DB1</param>"
-                              "</condition></DDDB>",TimePoint(0), TimePoint(10));
-  m_dbAccSvc2->storeXMLString("/multiDBTest/Folder1","<?xml version=\"1.0\" encoding=\"UTF-8\"?>"
-                              "<!DOCTYPE DDDB SYSTEM \"structure.dtd\">"
-                              "<DDDB><condition name=\"Cond1\"><param name=\"Database\" type=\"other\">DB2</param>"
-                              "</condition></DDDB>",TimePoint(0), TimePoint(20));
-  m_dbAccSvc2->storeXMLString("/multiDBTest/Folder2","<?xml version=\"1.0\" encoding=\"UTF-8\"?>"
-                              "<!DOCTYPE DDDB SYSTEM \"structure.dtd\">"
-                              "<DDDB><condition name=\"Cond2\"><param name=\"Database\" type=\"other\">DB2</param>"
-                              "</condition></DDDB>",TimePoint(0), TimePoint(20));
-
-  info() << "*** register conditions ***" << endreq;
-  IUpdateManagerSvc *ums;
-  sc = serviceLocator()->service("UpdateManagerSvc",ums,true);
-  if (!sc.isSuccess()) {
-    error() << "Unable to find UpdateManagerSvc" <<endmsg;
-    return sc;
-  }
-  ums->registerCondition(this,"/dd/multiDBTest/Cond1",NULL);
-  ums->registerCondition(this,"/dd/multiDBTest/Cond2",NULL);
-  ums->update(this);
-  ums->release();
-
   return StatusCode::SUCCESS;
 };
 
@@ -119,9 +111,6 @@ StatusCode MultiDBTest::execute() {
 StatusCode MultiDBTest::finalize() {
 
   debug() << "==> Finalize" << endmsg;
-
-  m_dbAccSvc1->release();
-  m_dbAccSvc2->release();
 
   return GaudiAlgorithm::finalize();  // must be called after all other actions
 }
