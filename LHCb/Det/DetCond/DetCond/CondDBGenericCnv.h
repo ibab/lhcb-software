@@ -1,4 +1,4 @@
-// $Id: CondDBGenericCnv.h,v 1.4 2005-06-14 13:14:30 marcocle Exp $
+// $Id: CondDBGenericCnv.h,v 1.5 2005-06-23 14:11:54 marcocle Exp $
 #ifndef DETCOND_CONDDBGENERICCNV_H 
 #define DETCOND_CONDDBGENERICCNV_H 1
 
@@ -19,6 +19,10 @@ class ISvcLocator;
 class IDetDataSvc;
 class DataObject;
 class ICondDBCnvSvc;
+namespace pool {
+  class AttributeList;
+}
+
 
 template <class TYPE> class CnvFactory;
 
@@ -103,7 +107,7 @@ protected:
    * The IOV is inside the object itself as two cool::ValidityKey, the since and until are 
    * used to avoid the conversion outside this method.
    */
-  StatusCode getObject(const std::string &path, cool::IObjectPtr &obj,
+  StatusCode getObject(const std::string &path, boost::shared_ptr<pool::AttributeList> &obj,
                        std::string &descr, TimePoint &since, TimePoint &until);
 
 private:

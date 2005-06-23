@@ -1,4 +1,4 @@
-// $Id: ICondDBAccessSvc.h,v 1.4 2005-04-25 10:38:35 marcocle Exp $
+// $Id: ICondDBAccessSvc.h,v 1.5 2005-06-23 14:11:54 marcocle Exp $
 #ifndef DETCOND_ICONDDBACCESSSVC_H 
 #define DETCOND_ICONDDBACCESSSVC_H 1
 
@@ -14,8 +14,12 @@
 #include "CoolKernel/ValidityKey.h"
 
 // Forward declarations
-class ITime;
 class TimePoint;
+namespace pool {
+  class AttributeList;
+  class AttributeListSpecification;
+}
+
 
 static const InterfaceID IID_ICondDBAccessSvc ( "ICondDBAccessSvc", 1, 0 );
 
@@ -23,6 +27,10 @@ static const InterfaceID IID_ICondDBAccessSvc ( "ICondDBAccessSvc", 1, 0 );
  *  
  *  Class used as interface to LCG COOL library API. It should expose as less as
  *  possible COOL internal details.
+ *
+ *  CondDBAccessSvc can be operated with only an in-memory CondDB, setting both the options NoBD and useCache to true.  The memory
+ *  database can be populated using cacheAddFolder and cacheAddObject (or their XML counter parts). The CondDB folders of the
+ *  memory db are equivalent to COOL single-version folders (see COOL documentation for details).
  *
  *  @author Marco CLEMENCIC
  *  @date   2005-01-11
@@ -51,8 +59,13 @@ public:
  
   /// Utility function that simplifies the storage of an XML string.
   virtual StatusCode storeXMLString(const std::string &path, const std::string &data,
-                                    const ITime &since, const ITime &till) const = 0;
+                                    const TimePoint &since, const TimePoint &until) const = 0;
 
+  /// Utility function that simplifies the storage of an XML string.
+  /// (Useful for Python, the times are in seconds)
+  virtual StatusCode storeXMLString(const std::string &path, const std::string &data,
+                                    const double since_s, const double until_s) const = 0;
+  
   /// Convert from TimePoint class to cool::ValidityKey.
   virtual cool::ValidityKey timeToValKey(const TimePoint &time) const = 0;
    
@@ -70,6 +83,27 @@ public:
   virtual StatusCode tagFolder(const std::string &path, const std::string &tagName,
                                const std::string &description = "") = 0;
 
+  /// Retrieve data from the condition database.
+  /// Returns a shared pointer to an attribute list, the folder description and the IOV limits.
+  virtual StatusCode getObject (const std::string &path, const TimePoint &when,
+                                boost::shared_ptr<pool::AttributeList> &data,
+                                std::string &descr, TimePoint &since, TimePoint &until) = 0;
+
+  /// Add a folder to the cache (bypass the DB)
+  virtual StatusCode cacheAddFolder(const std::string &path, const std::string &descr,
+                                    const pool::AttributeListSpecification& spec) = 0;
+  
+  /// Add an XML folder to the cache (bypass the DB)
+  virtual StatusCode cacheAddXMLFolder(const std::string &path) = 0;
+
+  /// Add an object to the cache (bypass the DB)
+  virtual StatusCode cacheAddObject(const std::string &path, const TimePoint &since, const TimePoint &until,
+                                    const pool::AttributeList& payload) = 0;
+  
+  /// Add an XML object to the cache (bypass the DB)
+  virtual StatusCode cacheAddXMLObject(const std::string &path, const TimePoint &since, const TimePoint &until,
+                                       const std::string& data) = 0;
+  
 protected:
 
 private:
