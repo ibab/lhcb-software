@@ -1,9 +1,13 @@
 ! =============================================================================
-! $Id: release.notes,v 1.188 2005-06-21 12:56:34 cattanem Exp $ 
+! $Id: release.notes,v 1.189 2005-06-23 14:21:30 marcocle Exp $ 
 ! =============================================================================
 ! package DetDesc
 ! package manager : Marco Clemencic, Juan Palacios
 ! =============================================================================
+
+! 2005-06-23 - Marco Clemencic
+ - Modified the UpdateManagerSvc in order to allow changes in item's IOV and 
+   to find objects using the CondDB path.
 
 !======================== DetDesc v15r2 2005-06-21 ========================
 ! 2005-06-21 - Marco Clemencic

@@ -1,4 +1,4 @@
-// $Id: IUpdateManagerSvc.h,v 1.3 2005-06-03 12:33:07 cattanem Exp $
+// $Id: IUpdateManagerSvc.h,v 1.4 2005-06-23 14:21:30 marcocle Exp $
 #ifndef DETCOND_IUPDATEMANAGERSVC_H 
 #define DETCOND_IUPDATEMANAGERSVC_H 1
 
@@ -17,6 +17,7 @@ class IUpdateManagerSvc;
 class IDataProviderSvc;
 class IDetDataSvc;
 class ITime;
+class TimePoint;
 
 static const InterfaceID IID_IUpdateManagerSvc ( "IUpdateManagerSvc", 1, 0 );
 
@@ -172,6 +173,15 @@ public:
   /// be updated before the next event.
   template <class CallerClass>
   inline void invalidate(CallerClass *instance) {invalidate(dynamic_cast<void*>(instance));}
+
+  /// Retrieve the interval of validity (in the UpdateManagerSvc) of the given item.
+  /// @return false if the item was not found.
+  virtual bool getValidity(const std::string path, TimePoint& since, TimePoint &until, bool path_to_db = false) = 0;
+
+  /// Change the interval of validity of the given item to the specified values, updating parents if needed.
+  /// The change can only restrict the current IOV, If you want to expand the validity you should act on the transient data store
+  /// and the change will be reflected at the next update.
+  virtual void setValidity(const std::string path, const TimePoint& since, const TimePoint &until, bool path_to_db = false) = 0;
 
   /// Start an update loop using the event time given by the detector data service.
   virtual StatusCode newEvent() = 0;

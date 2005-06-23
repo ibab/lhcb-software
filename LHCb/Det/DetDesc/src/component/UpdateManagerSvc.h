@@ -1,10 +1,13 @@
-// $Id: UpdateManagerSvc.h,v 1.4 2005-06-07 18:20:34 marcocle Exp $
+// $Id: UpdateManagerSvc.h,v 1.5 2005-06-23 14:21:30 marcocle Exp $
 #ifndef UPDATEMANAGERSVC_H 
 #define UPDATEMANAGERSVC_H 1
 
 // Include files
 #include "GaudiKernel/Service.h"
 #include "GaudiKernel/TimePoint.h"
+#include "GaudiKernel/ClassID.h"
+#include "GaudiKernel/IOpaqueAddress.h"
+
 #include "DetDesc/IUpdateManagerSvc.h"
 
 #include <string>
@@ -54,6 +57,9 @@ public:
 
   //virtual StatusCode runAll() const;
 
+  virtual bool getValidity(const std::string path, TimePoint& since, TimePoint &until, bool path_to_db = false);
+  virtual void setValidity(const std::string path, const TimePoint& since, const TimePoint &until, bool path_to_db = false);
+
   /// Debug method: it dumps the dependency network through the message service (not very readable, for experts only).
   virtual void dump();
 
@@ -83,7 +89,7 @@ private:
   inline void link(Item* parent, BaseObjectMemberFunction *mf, Item *child);
 
   /// Finds the item matching the given path.
-  inline Item *findItem(const std::string &path) const;
+  inline Item *findItem(const std::string &path, bool is_path_to_db = false) const;
    
   /// Finds the item matching the given pointer.
   inline Item *findItem(void *p) const;

@@ -7,9 +7,9 @@ inline void UpdateManagerSvc::link(Item* parent, BaseObjectMemberFunction *mf, I
   mf = parent->addChild(mf,child);
   child->addParent(parent,mf);
 }
-inline UpdateManagerSvc::Item *UpdateManagerSvc::findItem(const std::string &path) const {
+inline UpdateManagerSvc::Item *UpdateManagerSvc::findItem(const std::string &path, bool is_path_to_db) const {
   for (Item::ItemList::const_iterator i = m_all_items.begin(); i != m_all_items.end(); ++i){
-    if ((*i)->match(path)) return *i;
+    if ((*i)->match(path,is_path_to_db)) return *i;
   }
   return NULL;
 }

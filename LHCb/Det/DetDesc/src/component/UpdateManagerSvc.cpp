@@ -1,4 +1,4 @@
-// $Id: UpdateManagerSvc.cpp,v 1.2 2005-06-07 18:20:34 marcocle Exp $
+// $Id: UpdateManagerSvc.cpp,v 1.3 2005-06-23 14:21:30 marcocle Exp $
 // Include files 
 #include "GaudiKernel/SvcFactory.h"
 #include "GaudiKernel/MsgStream.h"
@@ -287,5 +287,50 @@ void UpdateManagerSvc::dump(){
     log << "MISMATCH!!!!!";
   }
   log << endmsg;
+}
+
+//=========================================================================
+//  search the item with the given path and change its validity
+//=========================================================================
+bool UpdateManagerSvc::getValidity(const std::string path, TimePoint& since, TimePoint &until,
+                                   bool path_to_db) {
+  // search
+  Item *item = findItem(path,path_to_db);
+  if (item) {
+    // copy IOV limits
+    since = item->since;
+    until = item->until;
+    return true;
+  }
+  return false;
+}
+//=========================================================================
+//  search the item with the given path and change its validity
+//=========================================================================
+void UpdateManagerSvc::setValidity(const std::string path, const TimePoint& since, const TimePoint &until,
+                                   bool path_to_db) {
+  if (!path_to_db) { // the DDS path is unique
+    // search
+    Item *item = findItem(path,path_to_db);
+    if (item) {
+      // set the validity and propagate up
+      item->changeValidity(since,until);
+      // if the object has already been loaded we should also change its validity
+      if (item->vdo) item->vdo->setValidity(since,until);
+    }
+  } else { // a CondDB path can contain many objects
+    Item::ItemList::iterator i = m_all_items.begin();
+    while ( i !=  m_all_items.end() &&
+            (*i)->match(path,path_to_db) ) {
+      // set the validity and propagate up
+      (*i)->changeValidity(since,until);
+      // if the object has already been loaded we should also change its validity
+      if ((*i)->vdo) (*i)->vdo->setValidity(since,until);
+      ++i;
+    }
+  }
+  // adjust head validity
+  if ( m_head_since < since ) m_head_since = since;
+  if ( m_head_until > until ) m_head_until = until;
 }
 //=============================================================================
