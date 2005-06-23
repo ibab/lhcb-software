@@ -1,4 +1,4 @@
-//$Id: testXml.opts,v 1.5 2005-04-22 15:17:53 marcocle Exp $
+//$Id: testXml.opts,v 1.6 2005-06-23 08:46:39 marcocle Exp $
 //==============================================================
 // Job options for DetCondExample test of XML files
 //==============================================================
@@ -9,11 +9,11 @@
 // Sequence of algorithms to be applied
 //--------------------------------------------------------------
 
-ApplicationMgr.TopAlg  = { "Sequencer" };
-Sequencer.Members   = { };
-Sequencer.Members  += { "EvtClock" };
-Sequencer.Members  += { "XmlTestAlgorithm" };
-Sequencer.Members  += { "DumpDetectorStore" };
+ApplicationMgr.TopAlg  = { "GaudiSequencer" };
+GaudiSequencer.Members   = { };
+GaudiSequencer.Members  += { "EvtClock" };
+GaudiSequencer.Members  += { "XmlTestAlgorithm" };
+GaudiSequencer.Members  += { "DumpDetectorStore" };
 
 //--------------------------------------------------------------
 // Input events

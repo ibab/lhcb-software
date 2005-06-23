@@ -1,4 +1,4 @@
-//$Id: daqCondDB.opts,v 1.3 2005-06-14 13:19:55 marcocle Exp $
+//$Id: daqCondDB.opts,v 1.4 2005-06-23 08:46:40 marcocle Exp $
 //==============================================================
 // Job options for DetCondExample DAQ test of CondDB
 //==============================================================
@@ -15,9 +15,10 @@ DetectorPersistencySvc.CnvServices += { "CondDBCnvSvc" };
 //--------------------------------------------------------------
 // Sequence of algorithms to be applied
 //--------------------------------------------------------------
-ApplicationMgr.TopAlg  = { "Sequencer" };
-Sequencer.Members   = { };
-Sequencer.Members  += { "DAQCondDBAlgorithm" };
+ApplicationMgr.TopAlg  = { "GaudiSequencer" };
+GaudiSequencer.Members   = { };
+GaudiSequencer.Members  += { "DAQCondDBAlgorithm" };
+GaudiSequencer.MeasureTim = true;
 
 //--------------------------------------------------------------
 // Input events

@@ -1,4 +1,4 @@
-//$Id: testCondDB.opts,v 1.8 2005-06-14 13:19:55 marcocle Exp $
+//$Id: testCondDB.opts,v 1.9 2005-06-23 08:46:40 marcocle Exp $
 //==============================================================
 // Job options for DetCondExample test of CondDB
 //==============================================================
@@ -15,12 +15,12 @@ DetectorPersistencySvc.CnvServices += { "CondDBCnvSvc" };
 //--------------------------------------------------------------
 // Sequence of algorithms to be applied
 //--------------------------------------------------------------
-ApplicationMgr.TopAlg  = { "Sequencer" };
-Sequencer.Members   = { };
-Sequencer.Members  += { "EvtClock" };
-Sequencer.Members  += { "FireUpdateManager" };
-Sequencer.Members  += { "CondDBTestAlgorithm" };
-Sequencer.Members  += { "DumpDetectorStore" };
+ApplicationMgr.TopAlg  = { "GaudiSequencer" };
+GaudiSequencer.Members   = { };
+GaudiSequencer.Members  += { "EvtClock" };
+GaudiSequencer.Members  += { "FireUpdateManager" };
+GaudiSequencer.Members  += { "CondDBTestAlgorithm" };
+GaudiSequencer.Members  += { "DumpDetectorStore" };
 
 //--------------------------------------------------------------
 // Input events

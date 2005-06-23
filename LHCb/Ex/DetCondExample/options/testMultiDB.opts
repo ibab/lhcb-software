@@ -1,4 +1,4 @@
-//$Id: testMultiDB.opts,v 1.2 2005-06-14 13:19:55 marcocle Exp $
+//$Id: testMultiDB.opts,v 1.3 2005-06-23 08:46:39 marcocle Exp $
 //==============================================================
 // Job options to test double CondDB usage in DetCondExample
 //==============================================================
@@ -9,12 +9,12 @@ DetectorDataSvc.DetDbLocation  = "$DETCONDEXAMPLE_XMLDDDB/multi.xml";
 //--------------------------------------------------------------
 // Sequence of algorithms to be applied
 //--------------------------------------------------------------
-ApplicationMgr.TopAlg  = { "Sequencer" };
-Sequencer.Members   = { };
-Sequencer.Members  += { "EvtClock" };
-Sequencer.Members  += { "FireUpdateManager" };
-Sequencer.Members  += { "MultiDBTest" };
-Sequencer.Members  += { "DumpDetectorStore" };
+ApplicationMgr.TopAlg  = { "GaudiSequencer" };
+GaudiSequencer.Members   = { };
+GaudiSequencer.Members  += { "EvtClock" };
+GaudiSequencer.Members  += { "FireUpdateManager" };
+GaudiSequencer.Members  += { "MultiDBTest" };
+GaudiSequencer.Members  += { "DumpDetectorStore" };
 //--------------------------------------------------------------
 // Input events
 //--------------------------------------------------------------
