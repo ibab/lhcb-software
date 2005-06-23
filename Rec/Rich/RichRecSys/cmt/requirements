@@ -2,7 +2,7 @@
 # Created    : 2003-07-01
 # Maintainer : Chris Jones   Christopher.Rob.Jones@cern.ch
 #============================================================================
-# $Id: requirements,v 1.43 2005-06-20 13:24:15 jonrob Exp $
+# $Id: requirements,v 1.44 2005-06-23 15:30:23 jonrob Exp $
 #============================================================================
 
 package           RichRecSys
@@ -28,7 +28,7 @@ use RichRecAlgorithms   v1r0    Rich
 # "Offline" PID packages
 use RichGlobalPID       v1r10   Rich
 use RichLocalPID        v1r11   Rich
-use RichRingRefit       v1r9p1  Rich
+use RichRingRefit       v1r10   Rich
 
 # Result merging algorithms
 use RichPIDMerge        v1r5    Rich
