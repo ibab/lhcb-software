@@ -5,7 +5,7 @@
  *  Header file for tool : RichTrSegMakerFromMCRichTracks
  *
  *  CVS Log :-
- *  $Id: RichTrSegMakerFromMCRichTracks.h,v 1.7 2005-04-08 13:18:33 jonrob Exp $
+ *  $Id: RichTrSegMakerFromMCRichTracks.h,v 1.8 2005-06-23 15:08:50 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   14/01/2002
@@ -101,7 +101,7 @@ private: // methods
 private: // data
 
   /// Rich1 and Rich2 detector objects
-  DeRich* m_rich[Rich::NRiches];
+  const DeRich* m_rich[Rich::NRiches];
 
   /// typedef of array of DeRichRadiators
   typedef boost::array<DeRichRadiator*, Rich::NRadiatorTypes> Radiators;
@@ -109,7 +109,7 @@ private: // data
   Radiators m_radiators;
 
   /// Pointer to the RICH MC truth tool
-  IRichMCTruthTool * m_truth;
+  const IRichMCTruthTool * m_truth;
 
   /// Flags to turn on/off individual radiators
   std::vector<bool> m_usedRads;

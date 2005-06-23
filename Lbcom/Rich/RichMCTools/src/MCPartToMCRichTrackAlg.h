@@ -4,8 +4,7 @@
  *  Header file for algorithm : MCPartToMCRichTrackAlg
  *
  *  CVS Log :-
- *  $Id: MCPartToMCRichTrackAlg.h,v 1.3 2004-07-26 17:56:09 jonrob Exp $
- *  $Log: not supported by cvs2svn $
+ *  $Id: MCPartToMCRichTrackAlg.h,v 1.4 2005-06-23 15:08:50 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   2004-02-11

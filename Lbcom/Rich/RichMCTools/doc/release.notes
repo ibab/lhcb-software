@@ -5,6 +5,9 @@
 !-----------------------------------------------------------------------------
 
 !========================== RichMCTools v2r6 2005-06-21 ======================
+! 2005-06-21 - Chris Jones
+ - Adapt to changes in RichKernel base classes and RichToolRegistry
+
 ! 2005-06-21 - Marco Cattaneo
  - Remove explicit versions of used packages from LHCbSys
 

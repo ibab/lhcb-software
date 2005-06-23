@@ -4,8 +4,7 @@
  *  Header file for tool : RichMCTrackInfoTool
  *
  *  CVS Log :-
- *  $Id: RichMCTrackInfoTool.h,v 1.6 2004-07-26 17:56:09 jonrob Exp $
- *  $Log: not supported by cvs2svn $
+ *  $Id: RichMCTrackInfoTool.h,v 1.7 2005-06-23 15:08:50 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -80,8 +79,8 @@ public: // methods (and doxygen comments) inherited from interface
 
 private: // private data
 
-  IRichRayTracing * m_rayTrace;     ///< Pointer to ray tracing tool
-  IRichSmartIDTool * m_smartIDTool; ///< Pointer to RichSmartID tool
+  const IRichRayTracing * m_rayTrace;     ///< Pointer to ray tracing tool
+  const IRichSmartIDTool * m_smartIDTool; ///< Pointer to RichSmartID tool
 
   /// Ray-tracing configuration object
   RichTraceMode m_traceMode;
