@@ -5,7 +5,7 @@
  *  Implementation file for tool base class : RichPhotonCreatorBase
  *
  *  CVS Log :-
- *  $Id: RichPhotonCreatorBase.cpp,v 1.3 2005-06-18 11:38:33 jonrob Exp $
+ *  $Id: RichPhotonCreatorBase.cpp,v 1.4 2005-06-23 15:13:05 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   20/05/2005
@@ -41,8 +41,6 @@ RichPhotonCreatorBase::RichPhotonCreatorBase( const std::string& type,
 
   // job options
 
-  declareProperty( "RichRecPhotonLocation", m_richRecPhotonLocation );
-
   declareProperty( "DoBookKeeping", m_bookKeep );
 
   declareProperty( "PhotonPredictor", m_photPredName );
@@ -75,11 +73,26 @@ StatusCode RichPhotonCreatorBase::initialize()
   const StatusCode sc = RichRecToolBase::initialize();
   if ( sc.isFailure() ) { return sc; }
 
+  // Configure output location depending on processing stage
+  // to be replace by common "context" when available
+  if      ( processingStage() == "Offline" )
+  {
+    m_richRecPhotonLocation = RichRecPhotonLocation::Offline;
+  }
+  else if ( processingStage() == "HLT" )
+  {
+    m_richRecPhotonLocation = RichRecPhotonLocation::HLT;
+  }
+  if ( msgLevel(MSG::DEBUG) )
+  {
+    debug() << "RichRecPhoton location : " << m_richRecPhotonLocation << endreq;
+  }
+
   // get tools
-  acquireTool( m_photPredName,        m_photonPredictor );
-  acquireTool( "RichPhotonSignal",    m_photonSignal    );
-  acquireTool( "RichCherenkovAngle",  m_ckAngle         );
-  acquireTool( "RichCherenkovResolution", m_ckRes       );
+  acquireTool( m_photPredName, m_photonPredictor );
+  m_photonSignal = expPhotonSignalTool();
+  m_ckAngle      = cherenkovAngleTool();
+  m_ckRes        = cherenkovAngleResolutionTool();
 
   // Setup incident services
   incSvc()->addListener( this, IncidentType::BeginEvent );
@@ -187,7 +200,7 @@ void RichPhotonCreatorBase::reconstructPhotons() const
           //for ( RichRecPixels::const_iterator iPixel =
           //      pixelCreator()->richPixels()->begin();
           //    iPixel != pixelCreator()->richPixels()->end();
-          //    ++iPixel ) 
+          //    ++iPixel )
           // Iterate over pixels in same RICH as this segment
           const Rich::DetectorType rich = segment->trackSegment().rich();
           RichRecPixels::const_iterator iPixel( pixelCreator()->begin(rich) );
@@ -398,7 +411,7 @@ void RichPhotonCreatorBase::buildCrossReferences( RichRecPhoton * photon ) const
     RichRecTrack::Pixels & tkPixs = segment->richRecTrack()->richRecPixels();
     RichRecTrack::Pixels::iterator iPix = std::find( tkPixs.begin(), tkPixs.end(), pixel );
     if ( tkPixs.end() == iPix ) segment->richRecTrack()->addToRichRecPixels( pixel );
-  } 
+  }
   else // RICH2 - only one radiator type so no need to test
   {
     segment->richRecTrack()->addToRichRecPixels( pixel );

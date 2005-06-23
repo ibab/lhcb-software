@@ -1,0 +1,55 @@
+
+//-----------------------------------------------------------------------------
+/** @file RichRecInitOptions.icpp
+ *
+ *  Common initialisation for RICH reconstruction tools and algorithms
+ *
+ *  CVS Log :-
+ *  $Id: RichRecInitOptions.icpp,v 1.1 2005-06-23 15:13:05 jonrob Exp $
+ *
+ *  @author Chris Jones    Christopher.Rob.Jones@cern.ch
+ *  @date   22/06/2005
+ */
+//-----------------------------------------------------------------------------
+
+// Set up options depending on processing stage
+// to be replace by a more global "context" solution or
+// multiple default job option values
+if ( "Undefined" == processingStage() )
+{
+
+  // Try and deduce from runtime name
+  if      ( name().find("Offline") != std::string::npos )
+  {
+    m_procStage = "Offline";
+  }
+  else if ( name().find("HLT") != std::string::npos )
+  {
+    m_procStage = "HLT";
+  }
+  else
+  {
+    m_procStage = "Common";
+  }
+
+}
+if ( msgLevel(MSG::DEBUG) )
+{
+  debug() << "Processing Mode : " << processingStage() << endreq;
+}
+
+// working object creator tools
+m_pixelCrName   = "RichPixelCreator"   + processingStage();
+m_trackCrName   = "RichTrackCreator"   + processingStage();
+m_segmentCrName = "RichSegmentCreator" + processingStage();
+m_photonCrName  = "RichPhotonCreator"  + processingStage();
+m_statusCrName  = "RichStatusCreator"  + processingStage();
+
+// common tools
+m_geomEffName         = "RichGeomEff"             + processingStage();
+m_expectedTkSigName   = "RichExpectedTrackSignal" + processingStage();
+m_expectedPhotSigName = "RichPhotonSignal"        + processingStage();
+m_ckAngleNickName     = "RichCherenkovAngle"      + processingStage();
+m_ckAngleResNickName  = "RichCherenkovResolution" + processingStage();
+m_geometryNickName    = "RichRecGeometry"         + processingStage();
+

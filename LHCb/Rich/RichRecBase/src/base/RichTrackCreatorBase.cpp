@@ -5,7 +5,7 @@
  *  Implementation file for tool base class : RichTrackCreatorBase
  *
  *  CVS Log :-
- *  $Id: RichTrackCreatorBase.cpp,v 1.1 2005-05-26 16:45:51 jonrob Exp $
+ *  $Id: RichTrackCreatorBase.cpp,v 1.2 2005-06-23 15:13:05 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   20/05/2005
@@ -34,7 +34,6 @@ RichTrackCreatorBase::RichTrackCreatorBase( const std::string& type,
 
   // job options
   declareProperty( "DoBookKeeping",        m_bookKeep                        );
-  declareProperty( "RichRecTrackLocation", m_richRecTrackLocation            );
   declareProperty( "DoBookKeeping",        m_bookKeep                        );
   declareProperty( "TrackMomentumCuts",    m_trSelector.setMomentumCuts()    );
   declareProperty( "TrackSelection",       m_trSelector.selectedTrackTypes() );
@@ -46,6 +45,21 @@ StatusCode RichTrackCreatorBase::initialize()
   // base class initilize
   const StatusCode sc = RichRecToolBase::initialize();
   if ( sc.isFailure() ) { return sc; }
+
+  // Configure output location depending on processing stage
+  // to be replace by common "context" when available
+  if      ( processingStage() == "Offline" )
+  {
+    m_richRecTrackLocation = RichRecTrackLocation::Offline;
+  }
+  else if ( processingStage() == "HLT" )
+  {
+    m_richRecTrackLocation = RichRecTrackLocation::HLT;
+  }
+  if ( msgLevel(MSG::DEBUG) )
+  {
+    debug() << "RichRecTrack location : " << m_richRecTrackLocation << endreq;
+  }
 
   // Configure track selector
   if ( !m_trSelector.configureTrackTypes() ) return StatusCode::FAILURE;

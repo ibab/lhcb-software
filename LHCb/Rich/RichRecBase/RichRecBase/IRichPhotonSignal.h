@@ -1,12 +1,11 @@
 
 //-----------------------------------------------------------------------------
-/** @file IRichPhotonSignal.h
+/** @file IRichPhotonSignal.h RichRecBase/IRichPhotonSignal.h
  *
  *  Header file for RICH reconstruction tool interface : IRichPhotonSignal
  *
  *  CVS Log :-
- *  $Id: IRichPhotonSignal.h,v 1.6 2004-07-26 18:00:57 jonrob Exp $
- *  $Log: not supported by cvs2svn $
+ *  $Id: IRichPhotonSignal.h,v 1.7 2005-06-23 15:13:05 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002

@@ -4,7 +4,7 @@
 <package name="RichRecBase">
 
 <!-- **************************************************************************
-  * $Id: RichRecStatus.xml,v 1.4 2005-03-04 16:52:56 cattanem Exp $
+  * $Id: RichRecStatus.xml,v 1.5 2005-06-23 15:13:05 jonrob Exp $
   *****************************************************************************
   * XML-description of RichRecTrack class                                     *
   * author: Chris Jones   Christopher.Rob.Jones@cern.ch                       *
@@ -25,6 +25,9 @@
             
         <import name="Kernel/RichDetectorType"/>
         <import ignore="TRUE" name="Rich"/>
+
+        <location name="Offline" place="Rec/Rich/RecoEvent/OfflineStatus"/>
+        <location name="HLT"     place="Rec/Rich/RecoEvent/HltStatus"/>
 
 	<typedef 
 		desc   = "type for internal storage for floating point data" 

@@ -5,7 +5,7 @@
  *  Header file for tool base class : RichPhotonCreatorBase
  *
  *  CVS Log :-
- *  $Id: RichPhotonCreatorBase.h,v 1.2 2005-06-17 14:48:57 jonrob Exp $
+ *  $Id: RichPhotonCreatorBase.h,v 1.3 2005-06-23 15:13:05 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   20/05/2005
@@ -234,16 +234,16 @@ protected: // data
 private: // data
 
   /// Pointer to the RichPhotonPredictor tool
-  IRichPhotonPredictor * m_photonPredictor;
+  const IRichPhotonPredictor * m_photonPredictor;
 
   /// Pointer to the RichPhotonSignal tool
-  IRichPhotonSignal * m_photonSignal;
+  const IRichPhotonSignal * m_photonSignal;
 
   /// Pointer to Cherenkov angle tool
-  IRichCherenkovAngle * m_ckAngle;
+  const IRichCherenkovAngle * m_ckAngle;
 
   /// Pointer to Cherenkov angle resolution tool
-  IRichCherenkovResolution * m_ckRes;
+  const IRichCherenkovResolution * m_ckRes;
 
   /// Number of events processed tally
   unsigned int m_Nevts;

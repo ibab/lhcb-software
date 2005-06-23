@@ -5,7 +5,7 @@
  *  Implementation file for tool base class : RichPixelCreatorBase
  *
  *  CVS Log :-
- *  $Id: RichPixelCreatorBase.cpp,v 1.3 2005-06-17 14:48:57 jonrob Exp $
+ *  $Id: RichPixelCreatorBase.cpp,v 1.4 2005-06-23 15:13:05 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   20/04/2005
@@ -29,6 +29,7 @@ RichPixelCreatorBase::RichPixelCreatorBase( const std::string& type,
     m_bookKeep      ( false ),
     m_hpdCheck      ( false ),
     m_usedDets      ( Rich::NRiches, true ),
+    m_richRecPixelLocation ( RichRecPixelLocation::Default ),
     m_begins        ( boost::extents[Rich::NRiches][Rich::NHPDPanelsPerRICH] ),
     m_ends          ( boost::extents[Rich::NRiches][Rich::NHPDPanelsPerRICH] ),
     m_Nevts         ( 0 ),
@@ -39,8 +40,6 @@ RichPixelCreatorBase::RichPixelCreatorBase( const std::string& type,
   declareInterface<IRichPixelCreator>(this);
 
   // Define job option parameters
-  declareProperty( "RichRecPixelLocation",
-                   m_richRecPixelLocation = RichRecPixelLocation::Default );
   declareProperty( "DoBookKeeping",      m_bookKeep  );
   declareProperty( "UseDetectors",       m_usedDets  );
   declareProperty( "CheckHPDsAreActive", m_hpdCheck  );
@@ -53,8 +52,23 @@ StatusCode RichPixelCreatorBase::initialize()
   const StatusCode sc = RichRecToolBase::initialize();
   if ( sc.isFailure() ) { return sc; }
 
+  // Configure output location depending on processing stage
+  // to be replace by common "context" when available
+  if      ( processingStage() == "Offline" )
+  {
+    m_richRecPixelLocation = RichRecPixelLocation::Offline;
+  }
+  else if ( processingStage() == "HLT" )
+  {
+    m_richRecPixelLocation = RichRecPixelLocation::HLT;
+  }
+  if ( msgLevel(MSG::DEBUG) )
+  {
+    debug() << "RichRecPixel location : " << m_richRecPixelLocation << endreq;
+  }
+
   // get tools
-  acquireTool( "RichRecGeomTool", m_recGeom );
+  m_recGeom = geometryTool();
   if ( m_hpdCheck )
   {
     acquireTool( "RichHPDInfoTool", m_hpdTool );
@@ -101,7 +115,7 @@ void RichPixelCreatorBase::printStats() const
            << occ(m_hitCount[Rich::Rich1],m_Nevts) << "  pixels/event" << endreq
            << "     Rich2  "
            << occ(m_hitCount[Rich::Rich2],m_Nevts) << "  pixels/event" << endreq
-         << "================================================" << endreq;
+           << "================================================" << endreq;
   }
   else
   {

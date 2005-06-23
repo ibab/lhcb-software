@@ -4,7 +4,7 @@
 <package name="RichRecBase">
 
 <!-- **************************************************************************
-  * $Id: RichRecPhoton.xml,v 1.4 2005-03-04 16:52:56 cattanem Exp $
+  * $Id: RichRecPhoton.xml,v 1.5 2005-06-23 15:13:05 jonrob Exp $
   *****************************************************************************
   * XML-description of RichRecTrack class                                     *
   * author: Chris Jones   Christopher.Rob.Jones@cern.ch                       *
@@ -27,6 +27,9 @@
         <import name="RichKernel/RichHypoData"/>
         <import name="RichKernel/RichParticleIDType"/>
         <import name="RichEvent/RichGeomPhoton"/>
+
+        <location name="Offline" place="Rec/Rich/RecoEvent/OfflinePhotons"/>
+        <location name="HLT"     place="Rec/Rich/RecoEvent/HltPhotons"/>
 
         &KeyedObject;
 

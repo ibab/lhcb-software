@@ -6,7 +6,7 @@
  *  algorithm base class : RichRecMoniAlgBase
  *
  *  CVS Log :-
- *  $Id: RichRecMoniAlgBase.cpp,v 1.3 2005-04-06 20:33:49 jonrob Exp $
+ *  $Id: RichRecMoniAlgBase.cpp,v 1.4 2005-06-23 15:13:05 jonrob Exp $
  *
  *  @author Chris Jones    Christopher.Rob.Jones@cern.ch
  *  @date   2005/01/13
@@ -22,12 +22,24 @@
 // Standard constructor
 RichRecMoniAlgBase::RichRecMoniAlgBase( const std::string& name,
                                         ISvcLocator* pSvcLocator )
-  : RichMoniAlgBase ( name, pSvcLocator ),
-    m_pixTool      ( 0 ),
-    m_tkTool       ( 0 ),
-    m_segTool      ( 0 ),
-    m_photTool     ( 0 ),
-    m_statTool     ( 0 ) { }
+  : RichMoniAlgBase  ( name, pSvcLocator ),
+    m_pixTool        ( 0 ),
+    m_tkTool         ( 0 ),
+    m_segTool        ( 0 ),
+    m_photTool       ( 0 ),
+    m_statTool       ( 0 ),
+    m_ckAngleTool    ( 0 ),
+    m_expTkSigTool   ( 0 ),
+    m_exPhotSigTool  ( 0 ),
+    m_ckAngleResTool ( 0 ),
+    m_geomEffTool    ( 0 ),
+    m_geometryTool   ( 0 )
+{
+
+  // job options
+  declareProperty( "ProcessingStage", m_procStage = "Undefined" );
+
+}
 
 // Destructor
 RichRecMoniAlgBase::~RichRecMoniAlgBase() {};
@@ -39,12 +51,8 @@ StatusCode RichRecMoniAlgBase::initialize()
   const StatusCode sc = RichMoniAlgBase::initialize();
   if ( sc.isFailure() ) return sc;
 
-  // Cache creator tools
-  //acquireTool( "RichPixelCreator",   m_pixTool  );
-  //acquireTool( "RichTrackCreator",   m_tkTool   );
-  //acquireTool( "RichSegmentCreator", m_segTool  );
-  //acquireTool( "RichPhotonCreator",  m_photTool );
-  //acquireTool( "RichStatusCreator",  m_statTool );
+  // Common initialisation
+  #include "RichRecInitOptions.icpp"
 
   return sc;
 }

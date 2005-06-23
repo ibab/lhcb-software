@@ -4,7 +4,7 @@
 <package name="RichRecBase">
 
 <!-- **************************************************************************
-  * $Id: RichRecPixel.xml,v 1.8 2005-06-17 14:48:57 jonrob Exp $
+  * $Id: RichRecPixel.xml,v 1.9 2005-06-23 15:13:05 jonrob Exp $
   *****************************************************************************
   * XML-description of RichRecPixel class                                     *
   * author: Chris Jones   Christopher.Rob.Jones@cern.ch                       *
@@ -32,6 +32,9 @@
         <import ignore="TRUE" name="Type"/>
         <import ignore="TRUE" name="DetectorType"/>
         <import name="Kernel/RichSmartID"/>
+
+        <location name="Offline" place="Rec/Rich/RecoEvent/OfflinePixels"/>
+        <location name="HLT"     place="Rec/Rich/RecoEvent/HltPixels"/>
             
 	<typedef 
 		desc   = "type for internal storage for floating point data" 

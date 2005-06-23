@@ -5,6 +5,10 @@
 !-----------------------------------------------------------------------------
 
 !====================== RichRecBase v1r16 2005-06-21 =======================
+! 2005-06-21 - Chris Jones
+ - Changes needed to allow offline and HLT reconstructions to run in
+   the same application
+
 ! 2005-06-17 - Chris Jones
  - Remove unused SmartRefs from definition of RichRecPixel
 

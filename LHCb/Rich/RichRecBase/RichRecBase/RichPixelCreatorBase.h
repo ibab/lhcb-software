@@ -5,7 +5,7 @@
  *  Header file for tool base class : RichPixelCreatorBase
  *
  *  CVS Log :-
- *  $Id: RichPixelCreatorBase.h,v 1.3 2005-06-17 14:48:57 jonrob Exp $
+ *  $Id: RichPixelCreatorBase.h,v 1.4 2005-06-23 15:13:05 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   20/04/2005
@@ -168,10 +168,10 @@ protected: // data
 private: // data
 
   /// HPD information tool
-  IRichHPDInfoTool * m_hpdTool;
+  const IRichHPDInfoTool * m_hpdTool;
 
   /// Reconstruction geometry tool
-  IRichRecGeomTool * m_recGeom;
+  const IRichRecGeomTool * m_recGeom;
 
   /// Pointer to RichRecPixels
   mutable RichRecPixels * m_pixels;

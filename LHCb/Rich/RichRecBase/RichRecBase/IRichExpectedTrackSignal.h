@@ -1,14 +1,11 @@
 
 //-----------------------------------------------------------------------------
-/** @file IRichExpectedTrackSignal.h
+/** @file IRichExpectedTrackSignal.h RichRecBase/IRichExpectedTrackSignal.h
  *
  *  Header file for RICH reconstruction tool interface : IRichExpectedTrackSignal
  *
  *  CVS Log :-
- *  $Id: IRichExpectedTrackSignal.h,v 1.6 2004-10-30 19:21:56 jonrob Exp $
- *  $Log: not supported by cvs2svn $
- *  Revision 1.5  2004/07/26 18:00:57  jonrob
- *  Various improvements to the doxygen comments
+ *  $Id: IRichExpectedTrackSignal.h,v 1.7 2005-06-23 15:13:05 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
