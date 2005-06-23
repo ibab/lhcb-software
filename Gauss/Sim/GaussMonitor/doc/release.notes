@@ -5,6 +5,14 @@
 !-----------------------------------------------------------------------------
 
 !======================= GaussMonitor v2r1 ===================================
+! 2005-06-23 - Gloria CORTI
+ - src/GenMonitorAlg.{h,cpp}
+   . Add possibility to monitor only particles in events produced
+     with a certain generator (identified by name in
+     HepMCEvent container). Controlled by setting name of generator in
+     property "ApplyTo". The default is set to an empty string, in which
+     case the smearing is applied to all events in container
+ 
 ! 2005-06-21 - Gloria CORTI
  - src/GenMonitorAlg.cpp
    . force ID of histograms

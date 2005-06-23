@@ -1,4 +1,4 @@
-// $Id: GenMonitorAlg.h,v 1.2 2005-06-17 14:12:13 gcorti Exp $
+// $Id: GenMonitorAlg.h,v 1.3 2005-06-23 17:57:16 gcorti Exp $
 #ifndef GAUSSMONITOR_GENMONITORALG_H 
 #define GAUSSMONITOR_GENMONITORALG_H 1
 
@@ -37,6 +37,8 @@ private:
   int            m_counter       , m_counterstable;
   int            m_counterCharged, m_counterChInEta;
   int            m_nEvents;
+  
+  std::string    m_generatorName;
 
   double lifetime ( HepMC::GenParticle * ) ;
 };

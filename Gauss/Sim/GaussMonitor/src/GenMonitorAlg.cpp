@@ -1,4 +1,4 @@
-// $Id: GenMonitorAlg.cpp,v 1.3 2005-06-21 15:44:04 gcorti Exp $
+// $Id: GenMonitorAlg.cpp,v 1.4 2005-06-23 17:57:26 gcorti Exp $
 // Include files 
 
 // from Gaudi
@@ -46,7 +46,8 @@ GenMonitorAlg::GenMonitorAlg( const std::string& name,
 
   declareProperty( "MinEta", m_minEta = 2.0);
   declareProperty( "MaxEta", m_maxEta = 4.9);
-  declareProperty( "Input",       m_dataPath = "/Event/Gen/HepMCEvents" );
+  declareProperty( "Input",  m_dataPath = "/Event/Gen/HepMCEvents" );
+  declareProperty( "ApplyTo", m_generatorName = "" );
   
   // Set by default not to fill histograms for this algorithm
   setProduceHistos( false );
@@ -68,6 +69,15 @@ StatusCode GenMonitorAlg::initialize() {
 
   debug() << "==> Initialize" << endmsg;
   
+  if ( m_generatorName.empty() ) {
+    info() << "Monitor will be applied to all events in container " 
+           << m_dataPath << endmsg;
+  } else {
+    info() << "Monitor will be applied to events produced with generator "
+           << m_generatorName << " in container "
+           << m_dataPath << endmsg; 
+  }
+
   return StatusCode::SUCCESS;
 };
 
@@ -91,6 +101,16 @@ StatusCode GenMonitorAlg::execute() {
   } else {
     HepMCEvents::iterator it ;
     for( it = hepMCptr->begin() ; it != hepMCptr->end(); ++it ) {
+
+      // Check if monitor has to be applied to this event
+      if( !m_generatorName.empty() ) {
+        if( m_generatorName != (*it)->generatorName() ) {
+          continue;
+        }
+      }
+      debug() << "Monitor for " << (*it)->generatorName()
+              << endmsg;
+      
       bool primFound = false;
       nPileUp++;
       for( HepMC::GenEvent::particle_const_iterator 
