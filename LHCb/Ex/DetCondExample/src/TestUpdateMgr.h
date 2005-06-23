@@ -1,4 +1,4 @@
-// $Id: TestUpdateMgr.h,v 1.1 2005-05-03 12:46:19 marcocle Exp $
+// $Id: TestUpdateMgr.h,v 1.2 2005-06-23 13:57:14 marcocle Exp $
 #ifndef TESTUPDATEMGR_H 
 #define TESTUPDATEMGR_H 1
 
@@ -49,6 +49,8 @@ private:
   IUpdateManagerSvc *m_ums;
 
   InternalClass m_intermediate;
+
+  size_t m_evtCount;
 
 };
 #endif // TESTUPDATEMGR_H

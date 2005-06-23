@@ -1,4 +1,4 @@
-// $Id: TestUpdateMgr.cpp,v 1.1 2005-05-03 12:46:19 marcocle Exp $
+// $Id: TestUpdateMgr.cpp,v 1.2 2005-06-23 13:57:14 marcocle Exp $
 // Include files 
 
 // from Gaudi
@@ -26,9 +26,9 @@ const        IAlgFactory& TestUpdateMgrFactory = s_factory ;
 //=============================================================================
 TestUpdateMgr::TestUpdateMgr( const std::string& name,
                               ISvcLocator* pSvcLocator)
-  : GaudiAlgorithm ( name , pSvcLocator )
+  : GaudiAlgorithm ( name , pSvcLocator ),
+    m_evtCount(0)
 {
-
 }
 //=============================================================================
 // Destructor
@@ -44,23 +44,23 @@ StatusCode TestUpdateMgr::initialize() {
 
   debug() << "==> Initialize" << endmsg;
 
-  sc = serviceLocator()->service("UpdateManagerSvc",m_ums,true);
-  if (!sc.isSuccess()) {
-    error() << "Unable to find UpdateManagerSvc" <<endmsg;
-    return sc;
+  try {
+    m_ums = svc<IUpdateManagerSvc>("UpdateManagerSvc",true);
+    
+    m_ums->registerCondition(this,"/dd/SlowControl/LHCb/scLHCb",&TestUpdateMgr::i_updateMethod1);
+    m_ums->registerCondition(this,"/dd/SlowControl/LHCb/scLHCb",&TestUpdateMgr::i_updateMethod2);
+    m_ums->registerCondition(this,"/dd/SlowControl/Hcal/scHcal",&TestUpdateMgr::i_updateMethod3);
+    m_ums->registerCondition(this,"/dd/SlowControl/Hcal/scHcal",&TestUpdateMgr::i_updateMethod3);
+    m_ums->registerCondition(this,"/dd/SlowControl/Hcal/scHcal",&TestUpdateMgr::i_updateMethod2);
+    
+    m_ums->registerCondition(this,"/dd/Structure/LHCb/Dummy",&TestUpdateMgr::i_updateMethod3);
+    
+    m_ums->registerCondition(&m_intermediate,"/dd/SlowControl/Hcal/scHcal",&InternalClass::myTinyMethod);
+    
+    m_ums->registerCondition(this,&m_intermediate,&TestUpdateMgr::i_updateMethod4);
+  } catch (GaudiException) {
+    return StatusCode::FAILURE;
   }
-  m_ums->registerCondition(this,"/dd/SlowControl/LHCb/scLHCb",&TestUpdateMgr::i_updateMethod1);
-  m_ums->registerCondition(this,"/dd/SlowControl/LHCb/scLHCb",&TestUpdateMgr::i_updateMethod2);
-  m_ums->registerCondition(this,"/dd/SlowControl/Hcal/scHcal",&TestUpdateMgr::i_updateMethod3);
-  m_ums->registerCondition(this,"/dd/SlowControl/Hcal/scHcal",&TestUpdateMgr::i_updateMethod3);
-  m_ums->registerCondition(this,"/dd/SlowControl/Hcal/scHcal",&TestUpdateMgr::i_updateMethod2);
-
-  m_ums->registerCondition(this,"/dd/Structure/LHCb/Dummy",&TestUpdateMgr::i_updateMethod3);
-
-  m_ums->registerCondition(&m_intermediate,"/dd/SlowControl/Hcal/scHcal",&InternalClass::myTinyMethod);
-
-  m_ums->registerCondition(this,&m_intermediate,&TestUpdateMgr::i_updateMethod4);
-
   return StatusCode::SUCCESS;
 };
 
@@ -70,8 +70,7 @@ StatusCode TestUpdateMgr::initialize() {
 StatusCode TestUpdateMgr::execute() {
 
   debug() << "==> Execute" << endmsg;
-  static int count = 0;
-  if ( ++count == 3 ) {
+  if ( ++m_evtCount == 3 ) {
     debug() << " invalidating m_intermediate" << endmsg;
     m_ums->invalidate(&m_intermediate);
   }
