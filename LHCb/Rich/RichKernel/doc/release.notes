@@ -1,9 +1,13 @@
-! $Id: release.notes,v 1.73 2005-06-21 14:02:16 cattanem Exp $
+! $Id: release.notes,v 1.74 2005-06-23 15:07:02 jonrob Exp $
 ! Package     : Rich/RichKernel
 ! Responsible : Chris Jones
 ! Purpose     : General purpose RICH classes
 
 !======================= RichKernel v5r5 2005-06-21 =======================
+! 2005-06-21 - Chris Jones
+ - Technical changes to help reconstruction run simultaneously offline
+   and HLT reconstructions
+
 ! 2005-06-17 - Chris Jones
  - Changes to RichMirrorSegFinder interface
 

@@ -5,10 +5,7 @@
  *  Header file for tool interface : IRichRefractiveIndex
  *
  *  CVS Log :-
- *  $Id: IRichRefractiveIndex.h,v 1.6 2005-01-07 12:42:16 jonrob Exp $
- *  $Log: not supported by cvs2svn $
- *  Revision 1.5  2004/07/26 17:53:17  jonrob
- *  Various improvements to the doxygen comments
+ *  $Id: IRichRefractiveIndex.h,v 1.7 2005-06-23 15:07:02 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -54,7 +51,7 @@ public:
    *  @return The refractive index at the requested energy
    */
   virtual double refractiveIndex ( const Rich::RadiatorType rad,
-                                   const double energy ) = 0;
+                                   const double energy ) const = 0;
 
   /** Calculates the average refractive index for a given radiator type
    *  for a given range of photon energies.
@@ -67,7 +64,7 @@ public:
    */
   virtual double refractiveIndex ( const Rich::RadiatorType rad, 
                                    const double energyBot,     
-                                   const double energyTop ) = 0;
+                                   const double energyTop ) const = 0;
 
   /** Calculates the average refractive index for a given radiator type
    *  for all visable photon energies.
@@ -76,7 +73,7 @@ public:
    *
    *  @return The overall average refractive index
    */
-  virtual double refractiveIndex ( const Rich::RadiatorType rad ) = 0;
+  virtual double refractiveIndex ( const Rich::RadiatorType rad ) const = 0;
 
 };
 

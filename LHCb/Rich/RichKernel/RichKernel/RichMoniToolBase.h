@@ -5,7 +5,7 @@
  *  Header file for Tool base class : RichMoniToolBase
  *
  *  CVS Log :-
- *  $Id: RichMoniToolBase.h,v 1.4 2005-02-20 18:40:44 jonrob Exp $
+ *  $Id: RichMoniToolBase.h,v 1.5 2005-06-23 15:07:02 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   2002-07-26
@@ -103,11 +103,12 @@ protected:   // Protected methods
    *  @return Pointer to the tool associated to the given nickname
    */
   template <typename TOOL> inline
-  TOOL* acquireTool( const std::string & tName,
-                     TOOL*& pTool,
-                     const IInterface * parent = 0 ) const
+  const TOOL* acquireTool( const std::string & tName,
+                           const TOOL*& pTool,
+                           const IInterface * parent = 0 ) const
   {
-    if ( msgLevel(MSG::DEBUG) ) {
+    if ( msgLevel(MSG::DEBUG) )
+    {
       debug() << " Acquiring tool '" << tName
               << "' of type '" << toolRegistry()->toolType(tName) << "'" << endreq;
     }

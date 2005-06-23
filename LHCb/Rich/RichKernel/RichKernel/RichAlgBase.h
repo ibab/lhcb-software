@@ -5,7 +5,7 @@
  *  Header file for algorithm base class : RichAlgBase
  *
  *  CVS Log :-
- *  $Id: RichAlgBase.h,v 1.8 2005-02-20 18:40:34 jonrob Exp $
+ *  $Id: RichAlgBase.h,v 1.9 2005-06-23 15:07:02 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   05/04/2002
@@ -114,11 +114,12 @@ protected:  // protected methods
    *  @return Pointer to the tool associated to the given nickname
    */
   template <typename TOOL> inline
-  TOOL* acquireTool( const std::string & tName,
-                     TOOL*& pTool,
-                     const IInterface * parent = 0 ) const
+  const TOOL* acquireTool( const std::string & tName,
+                           const TOOL*& pTool,
+                           const IInterface * parent = 0 ) const
   {
-    if ( msgLevel(MSG::DEBUG) ) {
+    if ( msgLevel(MSG::DEBUG) ) 
+    {
       debug() << " Acquiring tool '" << tName
               << "' of type '" << toolRegistry()->toolType(tName) << "'" << endreq;
     }
