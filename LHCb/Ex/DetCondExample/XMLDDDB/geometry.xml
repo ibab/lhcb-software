@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE DDDB SYSTEM "DTD/geometry.dtd">
-<!-- $Id: geometry.xml,v 1.4 2005-04-22 15:17:48 marcocle Exp $ -->
+<!-- $Id: geometry.xml,v 1.5 2005-06-23 16:20:29 marcocle Exp $ -->
 <DDDB>
   <catalog name="Geometry">
     <!-- ******************************************************* -->
     <!-- * definition of main catalog for geometry gescription * -->
     <!-- ******************************************************* -->
     <!-- <catalogref href="conddb:/CONDDB/Geometry2/LHCb#LHCb"/> -->
-    <catalogref href="conddb:/Geometry2/LHCb#LHCb"/>
+    <catalogref href="LHCb/geometry.xml#LHCb"/>
     <catalogref href="Ecal/geometry.xml#Ecal"/>
     <catalogref href="Hcal/geometry.xml#Hcal"/>
   </catalog>
