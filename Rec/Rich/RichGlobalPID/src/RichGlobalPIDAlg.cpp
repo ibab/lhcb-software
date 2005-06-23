@@ -5,7 +5,7 @@
  *  Implementation file for RICH Global PID algorithm class : RichGlobalPIDAlg
  *
  *  CVS Log :-
- *  $Id: RichGlobalPIDAlg.cpp,v 1.23 2005-06-17 14:59:55 jonrob Exp $
+ *  $Id: RichGlobalPIDAlg.cpp,v 1.24 2005-06-23 14:54:25 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   17/04/2002
@@ -74,8 +74,8 @@ StatusCode RichGlobalPIDAlg::initialize()
   if ( sc.isFailure() ) { return sc; }
 
   // Acquire tools
-  acquireTool( "RichPhotonSignal",        m_photonSig );
-  acquireTool( "RichExpectedTrackSignal", m_tkSignal  );
+  m_photonSig = expPhotonSignalTool();
+  m_tkSignal = expTrackSignalTool();
 
   // trick to force pre-loading of various tools. Avoids loading
   // during first processed event and thus biased any timing numbers
@@ -97,7 +97,6 @@ StatusCode RichGlobalPIDAlg::finalize()
 // Main execution
 StatusCode RichGlobalPIDAlg::execute()
 {
-  debug() << "Execute" << endreq;
 
   // Update RichRecEvent pointers
   if ( !richStatus()->eventOK() ) return StatusCode::SUCCESS;

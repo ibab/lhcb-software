@@ -4,8 +4,7 @@
  *  Header file for RICH Global PID algorithm class : RichGlobalPIDFinalize
  *
  *  CVS Log :-
- *  $Id: RichGlobalPIDFinalize.h,v 1.4 2004-07-27 10:56:36 jonrob Exp $
- *  $Log: not supported by cvs2svn $
+ *  $Id: RichGlobalPIDFinalize.h,v 1.5 2005-06-23 14:54:25 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   12/12/2002

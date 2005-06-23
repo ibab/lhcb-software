@@ -4,6 +4,10 @@
 ! Purpose     : The Rich Global PID algorithm
 !-----------------------------------------------------------------------------
 
+! 2005-06-23 - Chris Jones
+ - Adapt to changes needed to allow HLT and offline reconstructions to run
+  in the same application
+
 ! 2005-06-17 - Chris Jones
  - minor speed update
 

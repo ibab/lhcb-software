@@ -5,7 +5,7 @@
  *  Implementation file for RICH Global PID algorithm class : RichGlobalPIDDigitSel
  *
  *  CVS Log :-
- *  $Id: RichGlobalPIDDigitSel.cpp,v 1.15 2005-04-08 13:16:45 jonrob Exp $
+ *  $Id: RichGlobalPIDDigitSel.cpp,v 1.16 2005-06-23 14:54:25 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   17/04/2002
@@ -43,7 +43,11 @@ StatusCode RichGlobalPIDDigitSel::initialize()
   const StatusCode sc = RichRecAlgBase::initialize();
   if ( sc.isFailure() ) { return sc; }
 
-  return StatusCode::SUCCESS;
+  // trick to force pre-loading of various tools. Avoids loading
+  // during first processed event and thus biased any timing numbers
+  pixelCreator();  // pre-load the pixel creator
+
+  return sc;
 }
 
 // Initialise pixels

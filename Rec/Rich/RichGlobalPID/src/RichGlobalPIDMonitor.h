@@ -4,8 +4,7 @@
  *  Header file for RICH Global PID algorithm class : RichGlobalPIDMonitor
  *
  *  CVS Log :-
- *  $Id: RichGlobalPIDMonitor.h,v 1.2 2004-07-27 10:56:37 jonrob Exp $
- *  $Log: not supported by cvs2svn $
+ *  $Id: RichGlobalPIDMonitor.h,v 1.3 2005-06-23 14:54:25 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   12/12/2002

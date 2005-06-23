@@ -5,7 +5,7 @@
  *  Header file for RICH Global PID algorithm class : RichGlobalPIDAlg
  *
  *  CVS Log :-
- *  $Id: RichGlobalPIDAlg.h,v 1.9 2005-04-08 13:16:45 jonrob Exp $
+ *  $Id: RichGlobalPIDAlg.h,v 1.10 2005-06-23 14:54:25 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   12/12/2002
@@ -103,8 +103,8 @@ private: // Private methods
 private:  // Private data members
 
   // tool pointers
-  IRichExpectedTrackSignal * m_tkSignal;
-  IRichPhotonSignal * m_photonSig;
+  const IRichExpectedTrackSignal * m_tkSignal;
+  const IRichPhotonSignal * m_photonSig;
 
   /// Threshold for likelihood maximisation
   double m_epsilon;

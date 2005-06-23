@@ -4,7 +4,7 @@
  *  Implementation file for RICH Global PID algorithm class : RichGlobalPIDInitialize
  *
  *  CVS Log :-
- *  $Id: RichGlobalPIDInitialize.cpp,v 1.7 2005-04-06 21:34:35 jonrob Exp $
+ *  $Id: RichGlobalPIDInitialize.cpp,v 1.8 2005-06-23 14:54:25 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   17/04/2002
@@ -35,10 +35,9 @@ StatusCode RichGlobalPIDInitialize::initialize()
   const StatusCode sc = RichRecAlgBase::initialize();
   if ( sc.isFailure() ) { return sc; }
 
-  // trick to force pre-loading of various tools. avoids loading
-  // during first processed event and thus biased timing numbers
-  trackCreator();
-  pixelCreator();
+  // trick to force pre-loading of various tools. Avoids loading
+  // during first processed event and thus biased any timing numbers
+  statusCreator();   // pre-load the status creator
 
   return sc;
 }
@@ -46,7 +45,6 @@ StatusCode RichGlobalPIDInitialize::initialize()
 // Main execution
 StatusCode RichGlobalPIDInitialize::execute()
 {
-  debug() << "Execute" << endreq;
 
   // Set event status to OK for start of GlobalPID processing
   richStatus()->setEventOK( true );

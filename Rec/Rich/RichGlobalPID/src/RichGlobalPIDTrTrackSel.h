@@ -5,7 +5,7 @@
  *  Header file for RICH Global PID algorithm class : RichGlobalPIDTrTrackSel
  *
  *  CVS Log :-
- *  $Id: RichGlobalPIDTrTrackSel.h,v 1.11 2005-04-08 13:16:45 jonrob Exp $
+ *  $Id: RichGlobalPIDTrTrackSel.h,v 1.12 2005-06-23 14:54:25 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   12/12/2002
@@ -75,7 +75,7 @@ private:
   /// Location of processing status object in TES
   std::string m_procStatLocation;
 
-  IRichExpectedTrackSignal * m_tkSignal; ///< Pointer to RichExpectedTrackSignal
+  const IRichExpectedTrackSignal * m_tkSignal; ///< Pointer to RichExpectedTrackSignal
 
   // Selection cuts
   double m_minPhysPtot; ///< Minimum momentum for physics quality tracks
