@@ -5,6 +5,9 @@
 !-----------------------------------------------------------------------------
 
 !========================== RichDAQ v2r2 2005-06-21 =========================
+! 2005-06-23 - Chris Jones
+ - Adapt to changes in RichKernel base classes and RichToolRegistry
+
 ! 2005-05-13 - Chris Jones
  - Clean up some doxygen comments
  - Rename RichHPDIDTool RichHPDInfoTool ( better matches its use )
