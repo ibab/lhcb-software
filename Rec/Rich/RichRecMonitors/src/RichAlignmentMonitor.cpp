@@ -4,17 +4,7 @@
  *  Implementation file for algorithm class : RichAlignmentMonitor
  *
  *  CVS Log :-
- *  $Id: RichAlignmentMonitor.cpp,v 1.1.1.1 2005-06-18 11:44:45 jonrob Exp $
- *  $Log: not supported by cvs2svn $
- *  Revision 1.7  2005/04/20 15:34:43  papanest
- *  Improvements in RichAlignmentMonitor
- *
- *  Revision 1.6  2004/09/24 11:29:56  papanest
- *  Bug fix
- *
- *  Revision 1.5  2004/07/27 09:48:04  jonrob
- *  Add doxygen file documentation and CVS information
- *
+ *  $Id: RichAlignmentMonitor.cpp,v 1.2 2005-06-23 15:14:55 jonrob Exp $
  *
  *  @author Antonis Papanestis
  *  @date   2004-02-19
@@ -81,7 +71,7 @@ StatusCode RichAlignmentMonitor::initialize()
   if ( sc.isFailure() ) { return sc; }
 
   acquireTool( "RichRefractiveIndex",    m_richRefIndexTool );
-  acquireTool( "RichCherenkovAngle",     m_ckAngle      );
+  m_ckAngle = cherenkovAngleTool();
 
   if ( m_useMCTruth ) {
     acquireTool( "RichRecMCTruthTool",    m_richRecMCTruth );
@@ -107,8 +97,8 @@ StatusCode RichAlignmentMonitor::initialize()
 
   if ( !bookHistos() ) return StatusCode::FAILURE;
 
-  debug() << "Finsihed Initialization" << endmsg;
-  return StatusCode::SUCCESS;
+  debug() << "Finished Initialization" << endmsg;
+  return sc;
 };
 
 //=============================================================================

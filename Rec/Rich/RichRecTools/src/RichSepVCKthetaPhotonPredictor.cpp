@@ -5,7 +5,7 @@
  *  Implementation file for tool : RichSepVCKthetaPhotonPredictor
  *
  *  CVS Log :-
- *  $Id: RichSepVCKthetaPhotonPredictor.cpp,v 1.1 2005-06-17 15:08:36 jonrob Exp $
+ *  $Id: RichSepVCKthetaPhotonPredictor.cpp,v 1.2 2005-06-23 15:17:41 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   01/06/2005
@@ -79,9 +79,9 @@ StatusCode RichSepVCKthetaPhotonPredictor::initialize()
   if ( sc.isFailure() ) { return sc; }
 
   // get tools
-  acquireTool( "RichRecGeomTool",         m_geomTool );
-  acquireTool( "RichCherenkovAngle",      m_ckAngle  );
-  acquireTool( "RichCherenkovResolution", m_ckRes    );
+  m_geomTool = geometryTool();
+  m_ckAngle  = cherenkovAngleTool();
+  m_ckRes    = cherenkovAngleResolutionTool();
 
   // loop over radiators
   for ( int rad = 0; rad < Rich::NRadiatorTypes; ++rad )

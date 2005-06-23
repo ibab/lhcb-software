@@ -1,21 +1,16 @@
 
+//-----------------------------------------------------------------------------
 /** @file RichParticleProperties.cpp
  *
  *  Implementation file for tool : RichParticleProperties
  *
  *  CVS Log :-
- *  $Id: RichParticleProperties.cpp,v 1.10 2004-11-18 08:03:46 cattanem Exp $
- *  $Log: not supported by cvs2svn $
- *  Revision 1.9  2004/10/13 09:52:41  jonrob
- *  Speed improvements + various minor changes
- *
- *  Revision 1.8  2004/07/27 20:15:30  jonrob
- *  Add doxygen file documentation and CVS information
- *
+ *  $Id: RichParticleProperties.cpp,v 1.11 2005-06-23 15:17:41 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
  */
+//-----------------------------------------------------------------------------
 
 // local
 #include "RichParticleProperties.h"
@@ -36,14 +31,15 @@ RichParticleProperties::RichParticleProperties ( const std::string& type,
 
 }
 
-StatusCode RichParticleProperties::initialize() {
+StatusCode RichParticleProperties::initialize() 
+{
 
   // Sets up various tools and services
-  StatusCode sc = RichRecToolBase::initialize();
+  const StatusCode sc = RichRecToolBase::initialize();
   if ( sc.isFailure() ) { return sc; }
 
   // Acquire instances of tools
-  IRichRefractiveIndex * refIndex;
+  const IRichRefractiveIndex * refIndex;
   acquireTool( "RichRefractiveIndex", refIndex );
 
   // Retrieve particle property service
@@ -70,21 +66,23 @@ StatusCode RichParticleProperties::initialize() {
   debug() << " Particle masses (MeV/c^2)     = " << m_particleMass << endreq;
 
   // Setup momentum thresholds
-  for ( int iRad = 0; iRad < Rich::NRadiatorTypes; ++iRad ) {
+  for ( int iRad = 0; iRad < Rich::NRadiatorTypes; ++iRad ) 
+  {
     const Rich::RadiatorType rad = static_cast<Rich::RadiatorType>(iRad);
     debug() << " Particle thresholds (MeV/c^2) : " << rad << " : ";
-    for ( int iHypo = 0; iHypo < Rich::NParticleTypes; ++iHypo ) {
+    for ( int iHypo = 0; iHypo < Rich::NParticleTypes; ++iHypo ) 
+    {
       const double index = refIndex->refractiveIndex(rad);
       m_momThres[iRad][iHypo] = m_particleMass[iHypo]/sqrt(index*index - 1.0);
       debug() << m_momThres[iRad][iHypo] << " ";
     }
     debug() << endreq;
   }
-
+  
   // release tool
   releaseTool(refIndex);
 
-  return StatusCode::SUCCESS;
+  return sc;
 }
 
 StatusCode RichParticleProperties::finalize()
@@ -97,7 +95,7 @@ double RichParticleProperties::beta( RichRecSegment * segment,
                                      const Rich::ParticleIDType id ) const
 {
   const double momentum = segment->trackSegment().bestMomentum().mag();
-  const double Esquare = momentum*momentum + m_particleMassSq[id];
+  const double Esquare  = momentum*momentum + m_particleMassSq[id];
   return ( Esquare > 0 ? momentum/sqrt(Esquare) : 0 );
 }
 

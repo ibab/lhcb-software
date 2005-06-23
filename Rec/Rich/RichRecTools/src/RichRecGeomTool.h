@@ -5,7 +5,7 @@
  *  Header file for tool : RichRecGeomTool
  *
  *  CVS Log :-
- *  $Id: RichRecGeomTool.h,v 1.5 2005-06-17 15:08:36 jonrob Exp $
+ *  $Id: RichRecGeomTool.h,v 1.6 2005-06-23 15:17:41 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -84,8 +84,8 @@ public: // methods (and doxygen comments) inherited from public interface
 private: // private data
 
   // Pointers to tool instances
-  IRichDetParameters  * m_detParams; ///< Detector parameters tool
-  IRichCherenkovAngle * m_ckAngle;   ///< Pointer to the Cherenkov angle tool
+  const IRichDetParameters  * m_detParams; ///< Detector parameters tool
+  const IRichCherenkovAngle * m_ckAngle;   ///< Pointer to the Cherenkov angle tool
 
   /// Radiator correction scale parameter
   std::vector<double> m_radScale;

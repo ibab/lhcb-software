@@ -1,15 +1,16 @@
 
+//---------------------------------------------------------------------------------------
 /** @file RichInterpCKResVthetaForTrStoredTracks.h
  *
  *  Header file for tool : RichInterpCKResVthetaForTrStoredTracks
  *
  *  CVS Log :-
- *  $Id: RichInterpCKResVthetaForTrStoredTracks.h,v 1.3 2004-07-27 20:15:30 jonrob Exp $
- *  $Log: not supported by cvs2svn $
+ *  $Id: RichInterpCKResVthetaForTrStoredTracks.h,v 1.4 2005-06-23 15:17:41 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
  */
+//---------------------------------------------------------------------------------------
 
 #ifndef RICHRECTOOLS_RICHINTERPCKRESVTHETAFORTRSTOREDTRACKS_H
 #define RICHRECTOOLS_RICHINTERPCKRESVTHETAFORTRSTOREDTRACKS_H 1
@@ -30,6 +31,7 @@
 #include "RichRecBase/IRichCherenkovResolution.h"
 #include "RichRecBase/IRichCherenkovAngle.h"
 
+//---------------------------------------------------------------------------------------
 /** @class RichInterpCKResVthetaForTrStoredTracks RichInterpCKResVthetaForTrStoredTracks.h
  *
  *  Tool to calculate the Cherenkov angle resolution. This implementation is
@@ -39,9 +41,11 @@
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
  */
+//---------------------------------------------------------------------------------------
 
 class RichInterpCKResVthetaForTrStoredTracks : public RichRecToolBase,
-                                               virtual public IRichCherenkovResolution {
+                                               virtual public IRichCherenkovResolution 
+{
 
 public: // Methods for Gaudi Framework
 
@@ -68,7 +72,7 @@ public: // methods (and doxygen comments) inherited from public interface
 private:  // Private data
 
   /// Pointer to RichCherenkovAngle interface
-  IRichCherenkovAngle * m_ckAngle;
+  const IRichCherenkovAngle * m_ckAngle;
 
   // data containers from job options
   std::vector<double> m_theerr[Rich::NRadiatorTypes][Rich::Track::NTrTypes];

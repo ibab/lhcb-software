@@ -5,7 +5,7 @@
  *  Header file for algorithm class : RichPixelMonitor
  *
  *  CVS Log :-
- *  $Id: RichPixelMonitor.h,v 1.1.1.1 2005-06-18 11:44:46 jonrob Exp $
+ *  $Id: RichPixelMonitor.h,v 1.2 2005-06-23 15:14:55 jonrob Exp $
  *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   05/04/2002
@@ -74,7 +74,7 @@ private:
 
 private:
 
-  IRichRecMCTruthTool* m_richRecMCTruth; ///< Pointer to RichRecMCTruthTool interface
+  const IRichRecMCTruthTool* m_richRecMCTruth; ///< Pointer to RichRecMCTruthTool interface
 
   bool m_truth;            ///< Flag to turn on MC truth histograms
 

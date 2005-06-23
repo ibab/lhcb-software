@@ -4,6 +4,10 @@
 ! Purpose     : Monte Carlo Utility tools for RICH reconstruction algorithms
 !------------------------------------------------------------------------------
 
+! 2005-06-21 - Chris Jones
+ - Adapt to changes in RichKernel base classes and RichToolRegistry, and 
+   changes to allow HLT and offline to run at the same time
+
 ! 2005-05-28 - Chris Jones
  - Update photon creators to use new base classes
  - Add new creator tool, RichPhotonCreatorWithGaussianCKSmear, which first

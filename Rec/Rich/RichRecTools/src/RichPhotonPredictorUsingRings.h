@@ -1,15 +1,16 @@
 
+//----------------------------------------------------------------------------------
 /** @file RichPhotonPredictorUsingRings.h
  *
  *  Header file for tool : RichPhotonPredictorUsingRings
  *
  *  CVS Log :-
- *  $Id: RichPhotonPredictorUsingRings.h,v 1.4 2004-07-27 20:15:31 jonrob Exp $
- *  $Log: not supported by cvs2svn $
+ *  $Id: RichPhotonPredictorUsingRings.h,v 1.5 2005-06-23 15:17:41 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
  */
+//----------------------------------------------------------------------------------
 
 #ifndef RICHRECTOOLS_RICHPHOTONPREDICTORUSINGRINGS_H
 #define RICHRECTOOLS_RICHPHOTONPREDICTORUSINGRINGS_H 1
@@ -32,6 +33,7 @@
 #include "RichRecBase/IRichPhotonPredictor.h"
 #include "RichRecBase/IRichRecGeomTool.h"
 
+//----------------------------------------------------------------------------------
 /** @class RichPhotonPredictorUsingRings RichPhotonPredictorUsingRings.h
  *
  *  Tool which performs the association between RichRecSegments and
@@ -42,10 +44,12 @@
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
  */
+//----------------------------------------------------------------------------------
 
 class RichPhotonPredictorUsingRings : public RichRecToolBase,
                                       virtual public IRichPhotonPredictor,
-                                      virtual public IIncidentListener {
+                                      virtual public IIncidentListener 
+{
 
 public: // Methods for Gaudi Framework
 
@@ -83,7 +87,7 @@ private: // methods
 private: // private data
 
   /// Geometry tool
-  IRichRecGeomTool * m_geomTool;
+  const IRichRecGeomTool * m_geomTool;
 
   std::vector<double> m_minROI;  ///< Min hit radius of interest around track centres
   std::vector<double> m_maxROI;  ///< Max hit radius of interest around track centres

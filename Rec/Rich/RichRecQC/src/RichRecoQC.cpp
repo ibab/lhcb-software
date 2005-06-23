@@ -5,7 +5,7 @@
  *  Implementation file for RICH reconstruction monitoring algorithm : RichRecoQC
  *
  *  CVS Log :-
- *  $Id: RichRecoQC.cpp,v 1.12 2005-06-17 15:25:55 jonrob Exp $
+ *  $Id: RichRecoQC.cpp,v 1.13 2005-06-23 15:15:54 jonrob Exp $
  *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   2002-07-02
@@ -52,7 +52,7 @@ StatusCode RichRecoQC::initialize()
 
   // acquire tools
   acquireTool( "RichParticleProperties", m_richPartProp );
-  acquireTool( "RichCherenkovAngle",     m_ckAngle      );
+  m_ckAngle = cherenkovAngleTool();
   acquireTool( "RichRecMCTruthTool",   m_richRecMCTruth );
 
   // Book histograms

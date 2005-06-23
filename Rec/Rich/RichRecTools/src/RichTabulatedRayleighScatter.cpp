@@ -1,18 +1,16 @@
 
+//-----------------------------------------------------------------------------
 /** @file RichTabulatedRayleighScatter.cpp
  *
  *  Implementation file for tool : RichTabulatedRayleighScatter
  *
  *  CVS Log :-
- *  $Id: RichTabulatedRayleighScatter.cpp,v 1.6 2004-10-27 14:39:41 jonrob Exp $
- *  $Log: not supported by cvs2svn $
- *  Revision 1.5  2004/07/27 20:15:32  jonrob
- *  Add doxygen file documentation and CVS information
- *
+ *  $Id: RichTabulatedRayleighScatter.cpp,v 1.7 2005-06-23 15:17:42 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
  */
+//-----------------------------------------------------------------------------
 
 // local
 #include "RichTabulatedRayleighScatter.h"
@@ -48,7 +46,7 @@ StatusCode RichTabulatedRayleighScatter::initialize()
   // Get the rayleigh scattering length
   m_rayScatL = new Rich1DTabProperty( aero->rayleigh() );
 
-  return StatusCode::SUCCESS;
+  return sc;
 }
 
 StatusCode RichTabulatedRayleighScatter::finalize() 

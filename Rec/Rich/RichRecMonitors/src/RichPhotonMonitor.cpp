@@ -5,7 +5,7 @@
  *  Implementation file for algorithm class : RichPhotonMonitor
  *
  *  CVS Log :-
- *  $Id: RichPhotonMonitor.cpp,v 1.1.1.1 2005-06-18 11:44:46 jonrob Exp $
+ *  $Id: RichPhotonMonitor.cpp,v 1.2 2005-06-23 15:14:55 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   2002-07-02
@@ -64,13 +64,13 @@ StatusCode RichPhotonMonitor::initialize()
 
   // Acquire instances of tools
   acquireTool( "ForcedRichPhotonCreator", m_forcedPhotCreator, this );
-  acquireTool( "RichPhotonSignal",        m_photonSig     );
-  acquireTool( "RichExpectedTrackSignal", m_tkSignal      );
-  //acquireTool( "RichGeomEff",             m_geomEffic     );
+  m_photonSig = expPhotonSignalTool();
+  m_tkSignal = expTrackSignalTool();
+  //m_geomEffic = geomEffTool();
   acquireTool( "RichGeomEffFix",          m_geomEfficFix, this   );
   acquireTool( "RichGeomEffRay",          m_geomEfficRay, this   );
-  acquireTool( "RichRecGeomTool",         m_geomTool      );
-  acquireTool( "RichCherenkovAngle",      m_ckAngle       );
+  m_geomTool = geometryTool();
+  m_ckAngle = cherenkovAngleTool();
   acquireTool( "RichParticleProperties",  m_richPartProp  );
   acquireTool( "RichRefractiveIndex",     m_refIndex      );
   if ( m_truth )

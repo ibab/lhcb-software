@@ -1,3 +1,4 @@
+
 // Mirror Alignment monitor
 CheckRICHSeq.Members += { "RichAlignmentMonitor/RichAlignMoni" };
 //RichAlignMoni.HistoPath = "RICH/ALIGN/";

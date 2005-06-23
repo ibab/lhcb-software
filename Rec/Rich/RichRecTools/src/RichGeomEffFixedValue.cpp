@@ -5,7 +5,7 @@
  *  Implementation file for tool : RichGeomEffFixedValue
  *
  *  CVS Log :-
- *  $Id: RichGeomEffFixedValue.cpp,v 1.10 2005-05-13 15:20:37 jonrob Exp $
+ *  $Id: RichGeomEffFixedValue.cpp,v 1.11 2005-06-23 15:17:41 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -51,8 +51,8 @@ StatusCode RichGeomEffFixedValue::initialize()
   if ( sc.isFailure() ) { return sc; }
 
   // Acquire instances of tools
-  acquireTool( "RichCherenkovAngle", m_ckAngle    );
-  acquireTool( "RichRecGeomTool",    m_geomTool   );
+  m_ckAngle  = cherenkovAngleTool();
+  m_geomTool = geometryTool();
 
   return sc;
 }

@@ -1,15 +1,16 @@
 
+//---------------------------------------------------------------------------------------
 /** @file RichInterpCKResVpForTrStoredTracks.h
  *
  *  Header file for tool : RichInterpCKResVpForTrStoredTracks
  *
  *  CVS Log :-
- *  $Id: RichInterpCKResVpForTrStoredTracks.h,v 1.3 2004-07-27 20:15:30 jonrob Exp $
- *  $Log: not supported by cvs2svn $
+ *  $Id: RichInterpCKResVpForTrStoredTracks.h,v 1.4 2005-06-23 15:17:41 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
  */
+//---------------------------------------------------------------------------------------
 
 #ifndef RICHRECTOOLS_RICHINTERPCKRESVPFORTRSTOREDTRACKS_H
 #define RICHRECTOOLS_RICHINTERPCKRESVPFORTRSTOREDTRACKS_H 1
@@ -29,6 +30,7 @@
 // interfaces
 #include "RichRecBase/IRichCherenkovResolution.h"
 
+//---------------------------------------------------------------------------------------
 /** @class RichInterpCKResVpForTrStoredTracks RichInterpCKResVpForTrStoredTracks.h
  *
  *  Tool to calculate the Cherenkov angle resolution. This implementation is
@@ -38,6 +40,7 @@
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
  */
+//---------------------------------------------------------------------------------------
 
 class RichInterpCKResVpForTrStoredTracks : public RichRecToolBase,
                                            virtual public IRichCherenkovResolution {

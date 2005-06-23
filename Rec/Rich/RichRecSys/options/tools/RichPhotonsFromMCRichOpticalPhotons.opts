@@ -1,7 +1,4 @@
 
 // RichRecPhoton Creator - Uses the MC information from MCRichOptical photons
 // to only reconstruct true photons with the MC geometry
-ToolSvc.RichToolRegistry.Tools += { "RichPhotonCreatorFromMCRichOpticalPhotons/RichPhotonCreator" };
-//ToolSvc.RichPhotonCreator.MinCherenkovThetaTolerence = { 0.005,   0.004,  0.003  };
-//ToolSvc.RichPhotonCreator.MaxCherenkovThetaTolerence = { 0.005,   0.004,  0.003  };
-//ToolSvc.RichPhotonCreator.MinPhotonProbability       = { 1e-15,   1e-15,  1e-15  };
+ToolSvc.RichToolRegistry.Tools += { "RichPhotonCreatorFromMCRichOpticalPhotons/RichPhotonCreatorOffline" };

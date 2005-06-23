@@ -5,18 +5,18 @@
 // Define the primary track creator tool
 //----------------------------------------------------------------------------------------------
 
-ToolSvc.RichToolRegistry.Tools += { "RichDelegatedTrackCreatorFromTrStoredTracks/RichTrackCreator" };
+ToolSvc.RichToolRegistry.Tools += { "RichDelegatedTrackCreatorFromTrStoredTracks/RichTrackCreatorOffline" };
 
 // Setup delegated tools for each track type
-ToolSvc.RichTrackCreator.ToolsByTrackType = { "forward/RichTrackCrLongVTT",
-                                              "match/RichTrackCrLongVTT",
-                                              "veloTT/RichTrackCrLongVTT",
-                                              "seed/RichTrackCrSeedKs",
-                                              "velo/RichTrackCrLongVTT", // needed but always rejected !
-                                              "KsTrack/RichTrackCrSeedKs" };
+ToolSvc.RichTrackCreatorOffline.ToolsByTrackType = { "forward/RichTrackCrLongVTT",
+                                                     "match/RichTrackCrLongVTT",
+                                                     "veloTT/RichTrackCrLongVTT",
+                                                     "seed/RichTrackCrSeedKs",
+                                                     "velo/RichTrackCrLongVTT", // needed but always rejected !
+                                                     "KsTrack/RichTrackCrSeedKs" };
 
 // turn off or on book keeping
-ToolSvc.RichTrackCreator.DoBookKeeping = false;
+ToolSvc.RichTrackCreatorOffline.DoBookKeeping = false;
 
 //----------------------------------------------------------------------------------------------
 
@@ -27,7 +27,7 @@ ToolSvc.RichTrackCreator.DoBookKeeping = false;
 ToolSvc.RichToolRegistry.Tools += { "RichTrackCreatorFromTrStoredTracks/RichTrackCrLongVTT" };
 
 // Selected track types
-ToolSvc.RichTrackCrLongVTT.TrackSelection = 
+ToolSvc.RichTrackCrLongVTT.TrackSelection =
   { "unique", "positive", "negative", "forward", "match", "veloTT" };
 
 // Momentum cuts ( in the format tracktype/minP/maxP )
@@ -77,7 +77,7 @@ ToolSvc.RichDetTrSegLongVTT.ExtrapolateFromReference = true;
 ToolSvc.RichToolRegistry.Tools += { "RichTrackCreatorFromTrStoredTracks/RichTrackCrSeedKs" };
 
 // Selected track types
-ToolSvc.RichTrackCrSeedKs.TrackSelection = 
+ToolSvc.RichTrackCrSeedKs.TrackSelection =
   { "unique", "positive", "negative", "seed", "KsTrack" };
 
 // Momentum cuts ( in the format tracktype/minP/maxP )

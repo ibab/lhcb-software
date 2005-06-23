@@ -4,6 +4,10 @@
 ! Purpose     : Co-ordinates the RICH reconstruction packages
 !-----------------------------------------------------------------------------
 
+! 2005-06-21 - Chris Jones
+ - Changes needed to allow offline and HLT reconstructions to run in
+   the same application
+
 ! 2005-06-17 - Chris Jones
  - Update to photon reconstruction scheme
  - Update geometrical efficiency calculation parameters

@@ -1,5 +1,9 @@
 // Extensions to standard monitoring for experts
 
+// MC tools
+ToolSvc.RichToolRegistry.Tools += { "RichMCTruthTool/RichMCTruthTool" };
+ToolSvc.RichToolRegistry.Tools += { "RichRecMCTruthTool/RichRecMCTruthTool" };
+
 // Monitors for different track types
 #include "$RICHRECQCOPTS/pid/BrunelMoni_ForwardTracks.opts"
 #include "$RICHRECQCOPTS/pid/ForwardTracks_Para.opts"

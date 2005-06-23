@@ -5,7 +5,7 @@
  *  Implementation file for tool : RichSellmeirFunc
  *
  *  CVS Log :-
- *  $Id: RichSellmeirFunc.cpp,v 1.12 2005-06-18 11:40:11 jonrob Exp $
+ *  $Id: RichSellmeirFunc.cpp,v 1.13 2005-06-23 15:17:41 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -49,7 +49,7 @@ StatusCode RichSellmeirFunc::initialize() {
   if ( sc.isFailure() ) { return sc; }
 
   // Acquire instances of tools
-  IRichParticleProperties * partProp;
+  const IRichParticleProperties * partProp;
   acquireTool( "RichParticleProperties", partProp );
 
   // Retrieve square of particle masses

@@ -4,14 +4,7 @@
  *  Implementation file for algorithm class : RichMCMassHypoRingsAlg
  *
  *  CVS Log :-
- *  $Id: RichMCMassHypoRingsAlg.cpp,v 1.1.1.1 2005-06-18 11:44:46 jonrob Exp $
- *  $Log: not supported by cvs2svn $
- *  Revision 1.5  2004/10/13 09:31:32  jonrob
- *  Add the ability to create MC Cherenkov rings for particular radiators
- *
- *  Revision 1.4  2004/07/27 09:48:04  jonrob
- *  Add doxygen file documentation and CVS information
- *
+ *  $Id: RichMCMassHypoRingsAlg.cpp,v 1.2 2005-06-23 15:14:55 jonrob Exp $
  *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   05/04/2002
@@ -76,7 +69,7 @@ StatusCode RichMCMassHypoRingsAlg::initialize()
   acquireTool( "RichMCTrackInfoTool", m_mcTkInfo );
   acquireTool( "RichRayTraceCKCone",  m_rayTrace );
 
-  return StatusCode::SUCCESS;
+  return sc;
 }
 
 
@@ -105,7 +98,7 @@ RichMCMassHypoRingsAlg::buildRings( const std::string & evtLoc ) const
           << " MCRichSegments at " << evtLoc << MCRichSegmentLocation::Default << endreq;
 
   // Cache pointer to Ring tool for this event location
-  IRichMassHypothesisRingCreator * ringCr = ringCreator(evtLoc);
+  const IRichMassHypothesisRingCreator * ringCr = ringCreator(evtLoc);
 
   // Ray tracing mode
   RichTraceMode mode;

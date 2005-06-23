@@ -1,17 +1,16 @@
 
+//----------------------------------------------------------------------------------------
 /** @file RichFunctionalCKResVpForTrStoredTracks.h
  *
  *  Header file for tool : RichFunctionalCKResVpForTrStoredTracks
  *
  *  CVS Log :-
- *  $Id: RichFunctionalCKResVpForTrStoredTracks.h,v 1.3 2004-10-27 14:39:41 jonrob Exp $
- *  $Log: not supported by cvs2svn $
- *  Revision 1.2  2004/07/27 20:15:30  jonrob
- *  Add doxygen file documentation and CVS information
+ *  $Id: RichFunctionalCKResVpForTrStoredTracks.h,v 1.4 2005-06-23 15:17:41 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   17/10/2004
  */
+//----------------------------------------------------------------------------------------
 
 #ifndef RICHRECTOOLS_RICHFUNCTIONALCKRESVPFORTRSTOREDTRACKS_H
 #define RICHRECTOOLS_RICHFUNCTIONALCKRESVPFORTRSTOREDTRACKS_H 1
@@ -22,6 +21,7 @@
 // interfaces
 #include "RichRecBase/IRichCherenkovResolution.h"
 
+//----------------------------------------------------------------------------------------
 /** @class RichFunctionalCKResVpForTrStoredTracks RichFunctionalCKResVpForTrStoredTracks.h
  *
  *  Provides an analytical calculation of the expected Cherenkoc angle resolution.
@@ -31,6 +31,7 @@
  *
  *  @todo Finish this implementation using Results from Ring Refitting work.
  */
+//----------------------------------------------------------------------------------------
 
 class RichFunctionalCKResVpForTrStoredTracks : public RichRecToolBase,
                                                virtual public IRichCherenkovResolution {

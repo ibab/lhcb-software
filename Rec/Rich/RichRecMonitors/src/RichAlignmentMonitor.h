@@ -4,17 +4,7 @@
  *  Header file for algorithm class : RichAlignmentMonitor
  *
  *  CVS Log :-
- *  $Id: RichAlignmentMonitor.h,v 1.1.1.1 2005-06-18 11:44:45 jonrob Exp $
- *  $Log: not supported by cvs2svn $
- *  Revision 1.7  2005/04/20 15:34:43  papanest
- *  Improvements in RichAlignmentMonitor
- *
- *  Revision 1.6  2004/09/24 11:29:56  papanest
- *  Bug fix
- *
- *  Revision 1.5  2004/07/27 09:48:04  jonrob
- *  Add doxygen file documentation and CVS information
- *
+ *  $Id: RichAlignmentMonitor.h,v 1.2 2005-06-23 15:14:55 jonrob Exp $
  *
  *  @author Antonis Papanestis   a.papanestis@rl.ac.uk
  *  @date   2004-02-19
@@ -123,12 +113,11 @@ private: // data
   double m_deltaThetaHistoRange;
 
   
-
   // Pointer to RichRecMCTruthTool interface
-  IRichRecMCTruthTool* m_richRecMCTruth;
-  IRichRefractiveIndex* m_richRefIndexTool;
-  IRichParticleProperties* m_richPartProp; ///< Rich Particle properties
-  IRichCherenkovAngle* m_ckAngle;  ///< Pointer to RichCherenkovAngle tool
+  const IRichRecMCTruthTool* m_richRecMCTruth;
+  const IRichRefractiveIndex* m_richRefIndexTool;
+  const IRichParticleProperties* m_richPartProp; ///< Rich Particle properties
+  const IRichCherenkovAngle* m_ckAngle;  ///< Pointer to RichCherenkovAngle tool
 
   // Histograms
   IHistogram1D* m_ambigMirrorsHist[2];

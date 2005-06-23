@@ -5,7 +5,7 @@
  *  Header file for tool : RichGeomEffFixedValue
  *
  *  CVS Log :-
- *  $Id: RichGeomEffFixedValue.h,v 1.6 2005-04-15 16:36:33 jonrob Exp $
+ *  $Id: RichGeomEffFixedValue.h,v 1.7 2005-06-23 15:17:41 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -72,8 +72,8 @@ public: // methods (and doxygen comments) inherited from public interface
 private: // Private data
 
   // Pointers to tool instances
-  IRichCherenkovAngle * m_ckAngle;   ///< Cherenkov angle tool
-  IRichRecGeomTool * m_geomTool;     ///< Pointer to the Geometry tool
+  const IRichCherenkovAngle * m_ckAngle;   ///< Cherenkov angle tool
+  const IRichRecGeomTool * m_geomTool;     ///< Pointer to the Geometry tool
 
   std::vector<double> m_fixedValue;  ///< vector of fixed radiator geometrical efficiencies
   double m_fixedScatValue;           ///< vector of fixed radiator geometrical scatter efficiency

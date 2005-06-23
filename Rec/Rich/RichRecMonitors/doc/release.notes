@@ -4,6 +4,10 @@
 ! Purpose     : 
 !-----------------------------------------------------------------------------
 
+! 2005-06-21 - Chris Jones
+ - Adapt to changes in RichKernel base classes and RichToolRegistry, and 
+   changes to allow HLT and offline to run at the same time
+
 ! 2005-06-17 - Chris Jones
  - First version
    Import of monitor algorithms from retired RichRecCommon package

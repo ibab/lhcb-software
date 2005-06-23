@@ -5,7 +5,7 @@
  *  Header file for tool : RichSepVCKthetaPhotonPredictor
  *
  *  CVS Log :-
- *  $Id: RichSepVCKthetaPhotonPredictor.h,v 1.1 2005-06-17 15:08:36 jonrob Exp $
+ *  $Id: RichSepVCKthetaPhotonPredictor.h,v 1.2 2005-06-23 15:17:42 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   01/06/2005
@@ -82,13 +82,13 @@ public: // methods (and doxygen comments) inherited from public interface
 private: // private data
 
   /// Geometry tool
-  IRichRecGeomTool * m_geomTool;
+  const IRichRecGeomTool * m_geomTool;
 
   /// Pointer to Cherenkov angle tool
-  IRichCherenkovAngle * m_ckAngle;
+  const IRichCherenkovAngle * m_ckAngle;
 
   /// Pointer to Cherenkov angle resolution tool
-  IRichCherenkovResolution * m_ckRes;
+  const IRichCherenkovResolution * m_ckRes;
 
   std::vector<double> m_minROI;  ///< Min hit radius of interest around track centres
   std::vector<double> m_maxROI;  ///< Max hit radius of interest around track centres

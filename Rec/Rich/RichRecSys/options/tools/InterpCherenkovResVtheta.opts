@@ -2,80 +2,80 @@
 // Interpolated cherenkov resolution function
 
 ToolSvc.RichToolRegistry.Tools += { 
-  "RichInterpCKResVthetaForTrStoredTracks/RichCherenkovResolution" 
+  "RichInterpCKResVthetaForTrStoredTracks/RichCherenkovResolutionOffline" 
 };
 
-ToolSvc.RichCherenkovResolution.NAerogelResBins = {
+ToolSvc.RichCherenkovResolutionOffline.NAerogelResBins = {
  0.1000000    , 0.2250000    , 0.2525000    
  };
-ToolSvc.RichCherenkovResolution.AerogelForwardRes = {
+ToolSvc.RichCherenkovResolutionOffline.AerogelForwardRes = {
  0.3592480E-02, 0.2666490E-02, 0.2567600E-02
  };
-ToolSvc.RichCherenkovResolution.AerogelMatchRes = {
+ToolSvc.RichCherenkovResolutionOffline.AerogelMatchRes = {
  0.4114100E-02, 0.2806370E-02, 0.2614030E-02
  };
-ToolSvc.RichCherenkovResolution.AerogelFollowRes = {
+ToolSvc.RichCherenkovResolutionOffline.AerogelFollowRes = {
   0.000000    ,  0.000000    ,  0.000000    
  };
-ToolSvc.RichCherenkovResolution.AerogelSeedRes = {
+ToolSvc.RichCherenkovResolutionOffline.AerogelSeedRes = {
   0.000000    ,  0.000000    ,  0.000000    
  };
-ToolSvc.RichCherenkovResolution.AerogelVeloRes = {
+ToolSvc.RichCherenkovResolutionOffline.AerogelVeloRes = {
   0.000000    ,  0.000000    ,  0.000000    
  };
-ToolSvc.RichCherenkovResolution.AerogelVTTRes = {
+ToolSvc.RichCherenkovResolutionOffline.AerogelVTTRes = {
  0.9849130E-02, 0.4436500E-02, 0.2829640E-02
  };
-ToolSvc.RichCherenkovResolution.AerogelKsTrackRes = {
+ToolSvc.RichCherenkovResolutionOffline.AerogelKsTrackRes = {
  0.3671810E-02, 0.3093490E-02, 0.2704340E-02
  };
 
-ToolSvc.RichCherenkovResolution.NC4F10ResBins = {
+ToolSvc.RichCherenkovResolutionOffline.NC4F10ResBins = {
  0.1500000E-01, 0.4000000E-01, 0.5200000E-01
  };
-ToolSvc.RichCherenkovResolution.C4F10ForwardRes = {
+ToolSvc.RichCherenkovResolutionOffline.C4F10ForwardRes = {
  0.2403500E-02, 0.1678130E-02, 0.1505340E-02
  };
-ToolSvc.RichCherenkovResolution.C4F10MatchRes = {
+ToolSvc.RichCherenkovResolutionOffline.C4F10MatchRes = {
  0.2378580E-02, 0.1817600E-02, 0.1658890E-02
  };
-ToolSvc.RichCherenkovResolution.C4F10FollowRes = {
+ToolSvc.RichCherenkovResolutionOffline.C4F10FollowRes = {
   0.000000    ,  0.000000    ,  0.000000    
  };
-ToolSvc.RichCherenkovResolution.C4F10SeedRes = {
+ToolSvc.RichCherenkovResolutionOffline.C4F10SeedRes = {
   0.000000    ,  0.000000    ,  0.000000    
  };
-ToolSvc.RichCherenkovResolution.C4F10VeloRes = {
+ToolSvc.RichCherenkovResolutionOffline.C4F10VeloRes = {
   0.000000    ,  0.000000    ,  0.000000    
  };
-ToolSvc.RichCherenkovResolution.C4F10VTTRes = {
+ToolSvc.RichCherenkovResolutionOffline.C4F10VTTRes = {
  0.9568550E-02, 0.3310700E-02, 0.2006480E-02
  };
-ToolSvc.RichCherenkovResolution.C4F10KsTrackRes = {
+ToolSvc.RichCherenkovResolutionOffline.C4F10KsTrackRes = {
  0.2784290E-02, 0.1935350E-02, 0.1866330E-02
  };
 
-ToolSvc.RichCherenkovResolution.NCF4ResBins = {
+ToolSvc.RichCherenkovResolutionOffline.NCF4ResBins = {
  0.1400000E-01, 0.2300000E-01, 0.2950000E-01
  };
-ToolSvc.RichCherenkovResolution.CF4ForwardRes = {
+ToolSvc.RichCherenkovResolutionOffline.CF4ForwardRes = {
  0.1088600E-02, 0.7021060E-03, 0.5847840E-03
  };
-ToolSvc.RichCherenkovResolution.CF4MatchRes = {
+ToolSvc.RichCherenkovResolutionOffline.CF4MatchRes = {
  0.1571850E-02, 0.7682770E-03, 0.6281490E-03
  };
-ToolSvc.RichCherenkovResolution.CF4FollowRes = {
+ToolSvc.RichCherenkovResolutionOffline.CF4FollowRes = {
   0.000000    ,  0.000000    ,  0.000000    
  };
-ToolSvc.RichCherenkovResolution.CF4SeedRes = {
+ToolSvc.RichCherenkovResolutionOffline.CF4SeedRes = {
  0.1216400E-02, 0.9588680E-03, 0.7451190E-03
  };
-ToolSvc.RichCherenkovResolution.CF4VTTRes = {
+ToolSvc.RichCherenkovResolutionOffline.CF4VTTRes = {
   0.000000    ,  0.000000    ,  0.000000    
  };
-ToolSvc.RichCherenkovResolution.CF4VeloRes = {
+ToolSvc.RichCherenkovResolutionOffline.CF4VeloRes = {
   0.000000    ,  0.000000    ,  0.000000    
  };
-ToolSvc.RichCherenkovResolution.CF4KsTrackRes = {
+ToolSvc.RichCherenkovResolutionOffline.CF4KsTrackRes = {
  0.1089470E-02, 0.9107090E-03, 0.7235070E-03
  };

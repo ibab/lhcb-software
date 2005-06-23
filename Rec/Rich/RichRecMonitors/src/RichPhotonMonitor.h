@@ -5,7 +5,7 @@
  *  Header file for algorithm class : RichPhotonMonitor
  *
  *  CVS Log :-
- *  $Id: RichPhotonMonitor.h,v 1.1.1.1 2005-06-18 11:44:46 jonrob Exp $
+ *  $Id: RichPhotonMonitor.h,v 1.2 2005-06-23 15:14:55 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   05/04/2002
@@ -105,18 +105,17 @@ private: // methods
 
 private: // data
 
-  IRichPhotonSignal * m_photonSig; ///< Pointer to RichPhotonSignal tool
-  IRichExpectedTrackSignal * m_tkSignal; ///< Pointer to RichExpectedTrackSignal tool
-  IRichGeomEff * m_geomEfficRay; ///< Pointer to ray-tracing RichGeomEff tool
-  IRichGeomEff * m_geomEfficFix; ///< Pointer to fixed RichGeomEff tool
-  IRichRecMCTruthTool* m_richRecMCTruth; ///< Pointer to RichRecMCTruthTool interface
-  IRichCherenkovAngle * m_ckAngle; ///< Pointer to RichCherenkovAngle tool
-  IRichParticleProperties * m_richPartProp; ///< Rich Particle properties
-  IRichMCTrackInfoTool * m_mcTkInfo; ///< MC track information
-  IRichRefractiveIndex * m_refIndex; ///< Refractive index tool
-  IRichRecGeomTool * m_geomTool; ///< Simple geometrical questions
-
-  IRichPhotonCreator * m_forcedPhotCreator;
+  const IRichPhotonSignal * m_photonSig; ///< Pointer to RichPhotonSignal tool
+  const IRichExpectedTrackSignal * m_tkSignal; ///< Pointer to RichExpectedTrackSignal tool
+  const IRichGeomEff * m_geomEfficRay; ///< Pointer to ray-tracing RichGeomEff tool
+  const IRichGeomEff * m_geomEfficFix; ///< Pointer to fixed RichGeomEff tool
+  const IRichRecMCTruthTool* m_richRecMCTruth; ///< Pointer to RichRecMCTruthTool interface
+  const IRichCherenkovAngle * m_ckAngle; ///< Pointer to RichCherenkovAngle tool
+  const IRichParticleProperties * m_richPartProp; ///< Rich Particle properties
+  const IRichMCTrackInfoTool * m_mcTkInfo; ///< MC track information
+  const IRichRefractiveIndex * m_refIndex; ///< Refractive index tool
+  const IRichRecGeomTool * m_geomTool; ///< Simple geometrical questions
+  const IRichPhotonCreator * m_forcedPhotCreator;
 
   /// Track selector
   RichTrackSelector m_trSelector;

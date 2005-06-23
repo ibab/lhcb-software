@@ -5,7 +5,7 @@
  *  Header file for tool : RichPhotonSignal
  *
  *  CVS Log :-
- *  $Id: RichPhotonSignal.h,v 1.10 2005-02-02 10:07:18 jonrob Exp $
+ *  $Id: RichPhotonSignal.h,v 1.11 2005-06-23 15:17:41 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -86,13 +86,13 @@ public: // methods (and doxygen comments) inherited from public interface
 private: // private data
 
   /// Pointer to RichExpectedTrackSignal interface
-  IRichExpectedTrackSignal * m_signal;
+  const IRichExpectedTrackSignal * m_signal;
 
   /// Pointer to RichCherenkovAngle interface
-  IRichCherenkovAngle * m_ckAngle;
+  const IRichCherenkovAngle * m_ckAngle;
 
   /// Pointer to RichCherenkovResolution interface
-  IRichCherenkovResolution * m_ckRes;
+  const IRichCherenkovResolution * m_ckRes;
 
   /// Temporary local value for Radii of curvature
   double m_radiusCurv[Rich::NRiches];

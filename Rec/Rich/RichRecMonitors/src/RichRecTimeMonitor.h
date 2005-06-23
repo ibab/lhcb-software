@@ -4,11 +4,7 @@
  *  Header file for algorithm class : RichRecTimeMonitor
  *
  *  CVS Log :-
- *  $Id: RichRecTimeMonitor.h,v 1.1.1.1 2005-06-18 11:44:46 jonrob Exp $
- *  $Log: not supported by cvs2svn $
- *  Revision 1.8  2004/07/27 09:48:05  jonrob
- *  Add doxygen file documentation and CVS information
- *
+ *  $Id: RichRecTimeMonitor.h,v 1.2 2005-06-23 15:14:56 jonrob Exp $
  *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   05/04/2002

@@ -1,5 +1,6 @@
 //=============================================================================================
 // Rich Reconstruction Tools
+// Configuration to run the offline quality reconstruction on offline tracks
 //=============================================================================================
 
 // ================================== Track Creators ==========================================
@@ -76,36 +77,31 @@ ToolSvc.RichToolRegistry.Tools += { "RichRayTraceCherenkovCone/RichRayTraceCKCon
 ToolSvc.RichRayTraceCKCone.NPhotonsRayTrace = 100;
 
 // Segment creator
-ToolSvc.RichToolRegistry.Tools += { "RichSegmentCreator/RichSegmentCreator" };
-//                                             Aerogel  C4F10   CF4
-ToolSvc.RichSegmentCreator.EnergyBins      = { 5,       5,      5   };
+ToolSvc.RichToolRegistry.Tools += { "RichSegmentCreator/RichSegmentCreatorOffline" };
+ToolSvc.RichSegmentCreatorOffline.RichRecSegmentLocation = "Rec/Rich/RecoEvent/OfflineSegments";
+//                                               Aerogel  C4F10   CF4
+ToolSvc.RichSegmentCreatorOffline.EnergyBins = { 5,       5,      5   };
 
 // Status Creator
-ToolSvc.RichToolRegistry.Tools += { "RichStatusCreator/RichStatusCreator" };
+ToolSvc.RichToolRegistry.Tools += { "RichStatusCreator/RichStatusCreatorOffline" };
+ToolSvc.RichStatusCreatorOffline.RichRecStatusLocation = "Rec/Rich/RecoEvent/OfflineStatus";
 
 // Geometrical efficiency from full ray tracing
-ToolSvc.RichToolRegistry.Tools += { "RichGeomEffPhotonTracing/RichGeomEff" };
-//ToolSvc.RichGeomEff.NPhotonsGeomEffCalc          = 100;
-//ToolSvc.RichGeomEff.NPhotonsGeomEffBailout       = 25;
-ToolSvc.RichGeomEff.NPhotonsGeomEffCalc          = 50;
-ToolSvc.RichGeomEff.NPhotonsGeomEffBailout       = 15;
+ToolSvc.RichToolRegistry.Tools += { "RichGeomEffPhotonTracing/RichGeomEffOffline" };
+ToolSvc.RichGeomEffOffline.NPhotonsGeomEffCalc          = 50;
+ToolSvc.RichGeomEffOffline.NPhotonsGeomEffBailout       = 15;
 
 // Fixed value
-//ToolSvc.RichToolRegistry.Tools += { "RichGeomEffFixedValue/RichGeomEff" };
-//                                               Aerogel  C4F10   CF4
-//ToolSvc.RichGeomEff.FixedSignalEfficiency   =  { 0.55,    0.62,   0.55  };
-//ToolSvc.RichGeomEff.FixedScatterEfficiency  =  0.55;
+//ToolSvc.RichToolRegistry.Tools += { "RichGeomEffFixedValue/RichGeomEffOffline" };
+//                                                        Aerogel  C4F10   CF4
+//ToolSvc.RichGeomEffOffline.FixedSignalEfficiency   =  { 0.55,    0.62,   0.55  };
+//ToolSvc.RichGeomEffOffline.FixedScatterEfficiency  =  0.55;
 
 // Track signals
-ToolSvc.RichToolRegistry.Tools += { "RichExpectedTrackSignal/RichExpectedTrackSignal" };
+ToolSvc.RichToolRegistry.Tools += { "RichExpectedTrackSignal/RichExpectedTrackSignalOffline" };
 
 // Photon signals
-ToolSvc.RichToolRegistry.Tools += { "RichPhotonSignal/RichPhotonSignal" };
-
-// Sellmeir function
-ToolSvc.RichToolRegistry.Tools += { "RichSellmeirFunc/RichSellmeirFunc" };
-ToolSvc.RichSellmeirFunc.WaveIndpTrans = 1.0;
-//ToolSvc.RichSellmeirFunc.WaveIndpTrans = 0.9368;
+ToolSvc.RichToolRegistry.Tools += { "RichPhotonSignal/RichPhotonSignalOffline" };
 
 // Cherenkov resolution - fixed binned implementation as a function of cherenkov angle
 #include "$RICHRECSYSOPTS/tools/BinnedCherenkovResVtheta.opts"
@@ -119,20 +115,31 @@ ToolSvc.RichSellmeirFunc.WaveIndpTrans = 1.0;
 // analytical cherenkov resolution as a function of momentum
 //#include "$RICHRECSYSOPTS/tools/FunctionalCherenkovResVmomentum.opts"
 
-// Photon detection efficiency using XML tabulation
-ToolSvc.RichToolRegistry.Tools += { "RichTabulatedSignalDetectionEff/RichSignalDetectionEff" };
+// Expected Cherenkov angles
+ToolSvc.RichToolRegistry.Tools += { "RichCherenkovAngle/RichCherenkovAngleOffline" };
+
+// Reco geometry tool
+ToolSvc.RichToolRegistry.Tools += { "RichRecGeomTool/RichRecGeometryOffline" };
+//ToolSvc.RichRecGeometryOffline.RadOpticalCorrections = { 0.037, 0.0105, -0.014 };
+
+// The following options are shared between online and offline
+// ======================================================================================
 
 // Refractive index using XML tabulation
 ToolSvc.RichToolRegistry.Tools += { "RichTabulatedRefractiveIndex/RichRefractiveIndex" };
 
 // Rayleigh scattering using XML tabulation
 ToolSvc.RichToolRegistry.Tools += { "RichTabulatedRayleighScatter/RichRayleighScatter" };
-
 // Rayleigh scattering using analytic function
 //ToolSvc.RichToolRegistry.Tools += { "RichFunctionalRayleighScatter/RichRayleighScatter" };
 
-// Expected Cherenkov angles
-ToolSvc.RichToolRegistry.Tools += { "RichCherenkovAngle/RichCherenkovAngle" };
+// Sellmeir function
+ToolSvc.RichToolRegistry.Tools += { "RichSellmeirFunc/RichSellmeirFunc" };
+ToolSvc.RichSellmeirFunc.WaveIndpTrans = 1.0;
+//ToolSvc.RichSellmeirFunc.WaveIndpTrans = 0.9368;
+
+// Photon detection efficiency using XML tabulation
+ToolSvc.RichToolRegistry.Tools += { "RichTabulatedSignalDetectionEff/RichSignalDetectionEff" };
 
 // Rich particle properties
 ToolSvc.RichToolRegistry.Tools += { "RichParticleProperties/RichParticleProperties" };
@@ -152,6 +159,7 @@ ToolSvc.RichToolRegistry.Tools += { "RichSmartIDTool/RichSmartIDTool" };
 // Detector ray-tracing
 ToolSvc.RichToolRegistry.Tools += { "RichRayTracing/RichRayTracing" };
 
-// Reco geometry tool
-ToolSvc.RichToolRegistry.Tools += { "RichRecGeomTool/RichRecGeomTool" };
-ToolSvc.RichRecGeomTool.RadOpticalCorrections = { 0.037, 0.0105, -0.014 };
+// mirror segment finder
+ToolSvc.RichToolRegistry.Tools += { "RichMirrorSegFinder/RichMirrorSegFinder" };
+
+

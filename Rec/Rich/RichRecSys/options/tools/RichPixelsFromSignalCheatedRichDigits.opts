@@ -4,14 +4,14 @@
 // HPD entrance window, obtained from the associated MCRichOpticalPhoton object
 
 // use the tool that uses RichDigits
-ToolSvc.RichToolRegistry.Tools += { "RichPixelCreatorFromSignalRichDigits/RichPixelCreator" };
+ToolSvc.RichToolRegistry.Tools += { "RichPixelCreatorFromSignalRichDigits/RichPixelCreatorOffline" };
 
 // Tool to pass the the work to once signal hits are selected
-ToolSvc.RichPixelCreator.DelegatedPixelCreator = "RichPixelCreatorMC";
+ToolSvc.RichPixelCreatorOffline.DelegatedPixelCreator = "RichPixelCreatorMCOffline";
 
 // Configure which tool to use to actually make the digits. 
 // Here, use the normal reconstruction tool
-ToolSvc.RichToolRegistry.Tools += { "RichPixelCreatorFromCheatedRichDigits/RichPixelCreatorMC" };
+ToolSvc.RichToolRegistry.Tools += { "RichPixelCreatorFromCheatedRichDigits/RichPixelCreatorMCOffline" };
 
-// Choose which radiators to use            Aero   C4F10   CF4
-ToolSvc.RichPixelCreatorMC.UseRadiators = { true,  true,   true };
+// Choose which radiators to use                   Aero   C4F10   CF4
+ToolSvc.RichPixelCreatorMCOffline.UseRadiators = { true,  true,   true };

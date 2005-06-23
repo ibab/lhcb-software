@@ -1,78 +1,78 @@
 // Interpolated cherenkov resolution function
 
 ToolSvc.RichToolRegistry.Tools += { 
-  "RichInterpCKResVpForTrStoredTracks/RichCherenkovResolution" 
+  "RichInterpCKResVpForTrStoredTracks/RichCherenkovResolutionOffline" 
 };
 
-ToolSvc.RichCherenkovResolution.NAerogelResBins = {
+ToolSvc.RichCherenkovResolutionOffline.NAerogelResBins = {
   1584.893    ,  2818.383    ,  3548.134    ,  4466.837    ,  5623.413    ,  7943.284    ,  17782.79    ,  56234.13    
  };
-ToolSvc.RichCherenkovResolution.AerogelForwardRes = {
+ToolSvc.RichCherenkovResolutionOffline.AerogelForwardRes = {
  0.3146680E-02, 0.2762490E-02, 0.2693450E-02, 0.2571860E-02, 0.2557550E-02, 0.2516170E-02, 0.2488800E-02, 0.2428330E-02
  };
-ToolSvc.RichCherenkovResolution.AerogelMatchRes = {
+ToolSvc.RichCherenkovResolutionOffline.AerogelMatchRes = {
  0.3321370E-02, 0.2758530E-02, 0.2709750E-02, 0.2520020E-02, 0.2556290E-02, 0.2564950E-02, 0.2421860E-02, 0.2438740E-02
  };
-ToolSvc.RichCherenkovResolution.AerogelFollowRes = {
+ToolSvc.RichCherenkovResolutionOffline.AerogelFollowRes = {
   0.000000    ,  0.000000    ,  0.000000    ,  0.000000    ,  0.000000    ,  0.000000    ,  0.000000    ,  0.000000    
  };
-ToolSvc.RichCherenkovResolution.AerogelSeedRes = {
+ToolSvc.RichCherenkovResolutionOffline.AerogelSeedRes = {
   0.000000    ,  0.000000    ,  0.000000    ,  0.000000    ,  0.000000    ,  0.000000    ,  0.000000    ,  0.000000    
  };
-ToolSvc.RichCherenkovResolution.AerogelVeloRes = {
+ToolSvc.RichCherenkovResolutionOffline.AerogelVeloRes = {
   0.000000    ,  0.000000    ,  0.000000    ,  0.000000    ,  0.000000    ,  0.000000    ,  0.000000    ,  0.000000    
  };
-ToolSvc.RichCherenkovResolution.AerogelVTTRes = {
+ToolSvc.RichCherenkovResolutionOffline.AerogelVTTRes = {
  0.5387650E-02, 0.3411470E-02, 0.3217420E-02, 0.3133730E-02, 0.2972540E-02, 0.2830990E-02, 0.2733960E-02, 0.2738070E-02
  };
-ToolSvc.RichCherenkovResolution.AerogelKsTrackRes = {
+ToolSvc.RichCherenkovResolutionOffline.AerogelKsTrackRes = {
  0.3925700E-02, 0.3343710E-02, 0.2974510E-02, 0.2894230E-02, 0.2729920E-02, 0.2595910E-02, 0.2443770E-02, 0.2145110E-02
  };
-ToolSvc.RichCherenkovResolution.NC4F10ResBins = {
+ToolSvc.RichCherenkovResolutionOffline.NC4F10ResBins = {
   1778.279    ,  3548.134    ,  4466.837    ,  5623.413    ,  7079.456    ,  8912.511    ,  17782.79    ,  56234.13    
  };
-ToolSvc.RichCherenkovResolution.C4F10ForwardRes = {
+ToolSvc.RichCherenkovResolutionOffline.C4F10ForwardRes = {
  0.2371560E-02, 0.1988400E-02, 0.1765260E-02, 0.1645240E-02, 0.1575930E-02, 0.1539130E-02, 0.1484440E-02, 0.1452360E-02
  };
-ToolSvc.RichCherenkovResolution.C4F10MatchRes = {
+ToolSvc.RichCherenkovResolutionOffline.C4F10MatchRes = {
  0.2466540E-02, 0.2155020E-02, 0.1865990E-02, 0.1645970E-02, 0.1623900E-02, 0.1580660E-02, 0.1551300E-02, 0.1477550E-02
  };
-ToolSvc.RichCherenkovResolution.C4F10FollowRes = {
+ToolSvc.RichCherenkovResolutionOffline.C4F10FollowRes = {
   0.000000    ,  0.000000    ,  0.000000    ,  0.000000    ,  0.000000    ,  0.000000    ,  0.000000    ,  0.000000    
  };
-ToolSvc.RichCherenkovResolution.C4F10SeedRes = {
+ToolSvc.RichCherenkovResolutionOffline.C4F10SeedRes = {
   0.000000    ,  0.000000    ,  0.000000    ,  0.000000    ,  0.000000    ,  0.000000    ,  0.000000    ,  0.000000    
  };
-ToolSvc.RichCherenkovResolution.C4F10VeloRes = {
+ToolSvc.RichCherenkovResolutionOffline.C4F10VeloRes = {
   0.000000    ,  0.000000    ,  0.000000    ,  0.000000    ,  0.000000    ,  0.000000    ,  0.000000    ,  0.000000    
  };
-ToolSvc.RichCherenkovResolution.C4F10VTTRes = {
+ToolSvc.RichCherenkovResolutionOffline.C4F10VTTRes = {
  0.3397320E-02, 0.4786610E-02, 0.3783330E-02, 0.2698020E-02, 0.2176200E-02, 0.1871970E-02, 0.1786110E-02, 0.1868950E-02
  };
-ToolSvc.RichCherenkovResolution.C4F10KsTrackRes = {
+ToolSvc.RichCherenkovResolutionOffline.C4F10KsTrackRes = {
  0.2692700E-02, 0.2221180E-02, 0.2006670E-02, 0.1837880E-02, 0.1746110E-02, 0.1670480E-02, 0.1608740E-02, 0.1500510E-02
  };
-ToolSvc.RichCherenkovResolution.NCF4ResBins = {
+ToolSvc.RichCherenkovResolutionOffline.NCF4ResBins = {
   6309.573    ,  11220.19    ,  14125.38    ,  17782.79    ,  22387.21    ,  31622.78    ,  50118.70    ,  79432.84    
  };
-ToolSvc.RichCherenkovResolution.CF4ForwardRes = {
+ToolSvc.RichCherenkovResolutionOffline.CF4ForwardRes = {
  0.8378520E-03, 0.6536390E-03, 0.6103410E-03, 0.6038640E-03, 0.5973220E-03, 0.5974280E-03, 0.5886850E-03, 0.5678690E-03
  };
-ToolSvc.RichCherenkovResolution.CF4MatchRes = {
+ToolSvc.RichCherenkovResolutionOffline.CF4MatchRes = {
  0.9223200E-03, 0.6753540E-03, 0.6294050E-03, 0.6736130E-03, 0.6219980E-03, 0.6167700E-03, 0.6448280E-03, 0.5927770E-03
  };
-ToolSvc.RichCherenkovResolution.CF4FollowRes = {
+ToolSvc.RichCherenkovResolutionOffline.CF4FollowRes = {
   0.000000    ,  0.000000    ,  0.000000    ,  0.000000    ,  0.000000    ,  0.000000    ,  0.000000    ,  0.000000    
  };
-ToolSvc.RichCherenkovResolution.CF4SeedRes = {
+ToolSvc.RichCherenkovResolutionOffline.CF4SeedRes = {
  0.1205590E-02, 0.1074900E-02, 0.9144700E-03, 0.8216010E-03, 0.7530500E-03, 0.7139960E-03, 0.7165010E-03, 0.7537170E-03
  };
-ToolSvc.RichCherenkovResolution.CF4VTTRes = {
+ToolSvc.RichCherenkovResolutionOffline.CF4VTTRes = {
   0.000000    ,  0.000000    ,  0.000000    ,  0.000000    ,  0.000000    ,  0.000000    ,  0.000000    ,  0.000000    
  };
-ToolSvc.RichCherenkovResolution.CF4VeloRes = {
+ToolSvc.RichCherenkovResolutionOffline.CF4VeloRes = {
   0.000000    ,  0.000000    ,  0.000000    ,  0.000000    ,  0.000000    ,  0.000000    ,  0.000000    ,  0.000000    
  };
-ToolSvc.RichCherenkovResolution.CF4KsTrackRes = {
+ToolSvc.RichCherenkovResolutionOffline.CF4KsTrackRes = {
  0.1165180E-02, 0.1012510E-02, 0.8645500E-03, 0.7942060E-03, 0.7170490E-03, 0.6576750E-03, 0.5993790E-03, 0.5808240E-03
  };

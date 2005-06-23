@@ -5,7 +5,7 @@
  *  Header file for tool : RichPixelCreatorFromRawBuffer
  *
  *  CVS Log :-
- *  $Id: RichPixelCreatorFromRawBuffer.h,v 1.6 2005-05-28 13:10:53 jonrob Exp $
+ *  $Id: RichPixelCreatorFromRawBuffer.h,v 1.7 2005-06-23 15:17:41 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   30/10/2004
@@ -73,10 +73,10 @@ private: // methods
 private: // data
 
   /// Pointer to RichSmartID tool
-  IRichSmartIDTool * m_idTool;
+  const IRichSmartIDTool * m_idTool;
 
   /// Raw Buffer Decoding tool
-  IRichRawBufferToSmartIDsTool * m_decoder;
+  const IRichRawBufferToSmartIDsTool * m_decoder;
 
 };
 

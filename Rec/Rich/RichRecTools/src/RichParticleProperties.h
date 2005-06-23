@@ -1,15 +1,16 @@
 
+//-----------------------------------------------------------------------------
 /** @file RichParticleProperties.h
  *
  *  Header file for tool : RichParticleProperties
  *
  *  CVS Log :-
- *  $Id: RichParticleProperties.h,v 1.8 2004-07-27 20:15:31 jonrob Exp $
- *  $Log: not supported by cvs2svn $
+ *  $Id: RichParticleProperties.h,v 1.9 2005-06-23 15:17:41 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
  */
+//-----------------------------------------------------------------------------
 
 #ifndef RICHRECTOOLS_RICHPARTICLEPROPERTIES_H
 #define RICHRECTOOLS_RICHPARTICLEPROPERTIES_H 1
@@ -38,6 +39,7 @@
 #include "RichRecBase/IRichParticleProperties.h"
 #include "RichKernel/IRichRefractiveIndex.h"
 
+//-----------------------------------------------------------------------------
 /** @class RichParticleProperties RichParticleProperties.h
  *
  *  Tool to calculate various physical properties 
@@ -46,6 +48,7 @@
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
  */
+//-----------------------------------------------------------------------------
 
 class RichParticleProperties : public RichRecToolBase,
                                virtual public IRichParticleProperties {

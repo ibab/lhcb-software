@@ -5,7 +5,7 @@
  *  Implementation file for tool : RichDelegatedTrackCreatorFromTrStoredTracks
  *
  *  CVS Log :-
- *  $Id: RichDelegatedTrackCreatorFromTrStoredTracks.cpp,v 1.7 2005-05-28 13:10:53 jonrob Exp $
+ *  $Id: RichDelegatedTrackCreatorFromTrStoredTracks.cpp,v 1.8 2005-06-23 15:17:41 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -50,7 +50,7 @@ StatusCode RichDelegatedTrackCreatorFromTrStoredTracks::initialize()
   if ( sc.isFailure() ) { return sc; }
 
   // setup mapping between track type and tool pointer
-  RichMap< std::string, IRichTrackCreator * > tmpMap;
+  RichMap< std::string, const IRichTrackCreator * > tmpMap;
   for ( ToolList::iterator it = m_names.begin();
         it != m_names.end(); ++it ) 
   {

@@ -5,7 +5,7 @@
  *  Header file for RICH reconstruction tool : RichPixelCreatorFromRichDigitsWithBg
  *
  *  CVS Log :-
- *  $Id: RichPixelCreatorFromRichDigitsWithBg.h,v 1.9 2005-05-28 16:45:48 jonrob Exp $
+ *  $Id: RichPixelCreatorFromRichDigitsWithBg.h,v 1.10 2005-06-23 15:14:12 jonrob Exp $
  *
  *  @author Andy Buckley   buckley@hep.phy.cam.ac.uk
  *  @author Chris Jones    Christopher.Rob.Jones@cern.ch
@@ -90,10 +90,10 @@ private: // methods
 private: // data
 
   /// Pointer to RichSmartID tool
-  IRichSmartIDTool * m_smartIDTool;
+  const IRichSmartIDTool * m_smartIDTool;
 
   /// Pointer to RichMCTruth tool
-  IRichMCTruthTool * m_mcTool;
+  const IRichMCTruthTool * m_mcTool;
 
   /// String containing input RichDigits location in TES
   std::string m_recoDigitsLocation;

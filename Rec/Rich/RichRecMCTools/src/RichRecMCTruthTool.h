@@ -5,7 +5,7 @@
  *  Header file for RICH reconstruction tool : RichRecMCTruthTool
  *
  *  CVS Log :-
- *  $Id: RichRecMCTruthTool.h,v 1.9 2005-04-15 16:32:30 jonrob Exp $
+ *  $Id: RichRecMCTruthTool.h,v 1.10 2005-06-23 15:14:12 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   08/07/2004
@@ -162,7 +162,7 @@ public: // Public interface methods
 private: // private data
 
   /// pointer to RichMCTruth tool
-  IRichMCTruthTool * m_truth;
+  const IRichMCTruthTool * m_truth;
 
   /// Empty container for missing links
   SmartRefVector<MCRichHit> m_emptyContainer;

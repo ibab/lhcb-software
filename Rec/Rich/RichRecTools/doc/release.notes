@@ -4,6 +4,10 @@
 ! Purpose     : Utility tools for RICH reconstruction algorithms
 !------------------------------------------------------------------------------
 
+! 2005-06-21 - Chris Jones
+ - Changes needed to allow offline and HLT reconstructions to run in
+   the same application
+
 ! 2005-06-17 - Chris Jones
  - Add new tool to predict which pixel/segment pairs to attempt to
    create photon candidates from, based on the local separation of

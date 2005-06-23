@@ -5,7 +5,7 @@
  *  Header file for tool : RichStatusCreator
  *
  *  CVS Log :-
- *  $Id: RichStatusCreator.h,v 1.6 2005-05-13 15:20:38 jonrob Exp $
+ *  $Id: RichStatusCreator.h,v 1.7 2005-06-23 15:17:42 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -38,7 +38,8 @@
 
 class RichStatusCreator : public RichRecToolBase,
                           virtual public IRichStatusCreator,
-                          virtual public IIncidentListener {
+                          virtual public IIncidentListener 
+{
 
 public: // Methods for Gaudi Framework
 

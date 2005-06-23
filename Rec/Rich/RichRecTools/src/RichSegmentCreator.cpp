@@ -5,7 +5,7 @@
  *  Implementation file for tool : RichSegmentCreator
  *
  *  CVS Log :-
- *  $Id: RichSegmentCreator.cpp,v 1.17 2005-05-13 15:20:38 jonrob Exp $
+ *  $Id: RichSegmentCreator.cpp,v 1.18 2005-06-23 15:17:41 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -27,6 +27,7 @@ RichSegmentCreator::RichSegmentCreator ( const std::string& type,
                                          const IInterface* parent )
   : RichRecToolBase ( type, name, parent      ),
     m_segments      ( 0                       ),
+    m_richRecSegmentLocation ( RichRecSegmentLocation::Default ),
     m_binsEn        ( Rich::NRadiatorTypes, 5 ),
     m_segCount      ( Rich::NRadiatorTypes, 0 ),
     m_segCountLast  ( Rich::NRadiatorTypes, 0 ),
@@ -34,12 +35,10 @@ RichSegmentCreator::RichSegmentCreator ( const std::string& type,
     m_hasBeenCalled ( false                   )
 {
 
+  // tool interface
   declareInterface<IRichSegmentCreator>(this);
 
   // Define job option parameters
-
-  declareProperty( "RichRecSegmentLocation",
-                   m_richRecSegmentLocation = RichRecSegmentLocation::Default );
   declareProperty( "EnergyBins", m_binsEn );
 
 }
@@ -50,12 +49,27 @@ StatusCode RichSegmentCreator::initialize()
   const StatusCode sc = RichRecToolBase::initialize();
   if ( sc.isFailure() ) { return sc; }
 
+  // Configure output location depending on processing stage
+  // to be replace by common "context" when available
+  if      ( processingStage() == "Offline" )
+  {
+    m_richRecSegmentLocation = RichRecSegmentLocation::Offline;
+  }
+  else if ( processingStage() == "HLT" )
+  {
+    m_richRecSegmentLocation = RichRecSegmentLocation::HLT;
+  }
+  if ( msgLevel(MSG::DEBUG) )
+  {
+    debug() << "RichRecSegment location : " << m_richRecSegmentLocation << endreq;
+  }
+
   // Setup incident services
   incSvc()->addListener( this, IncidentType::BeginEvent );
   if (msgLevel(MSG::DEBUG)) incSvc()->addListener( this, IncidentType::EndEvent );
 
   // Get the max/min photon energies
-  IRichDetParameters * detParams;
+  const IRichDetParameters * detParams;
   acquireTool( "RichDetParameters", detParams );
   m_maxPhotEn[Rich::Aerogel] = detParams->maxPhotonEnergy( Rich::Aerogel );
   m_maxPhotEn[Rich::C4F10]   = detParams->maxPhotonEnergy( Rich::C4F10   );

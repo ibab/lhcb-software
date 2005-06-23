@@ -5,7 +5,7 @@
  *  Header file for tool : RichExpectedTrackSignal
  *
  *  CVS Log :-
- *  $Id: RichExpectedTrackSignal.h,v 1.9 2005-02-02 10:06:00 jonrob Exp $
+ *  $Id: RichExpectedTrackSignal.h,v 1.10 2005-06-23 15:17:41 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -170,12 +170,12 @@ public: // methods (and doxygen comments) inherited from public interface
 private:  // Private data
 
   // Pointers to tool instances
-  IRichGeomEff * m_geomEff;                  ///< Geometrical efficiency tool
-  IRichSellmeirFunc * m_sellmeir;            ///< Sellmeir function
-  IRichSignalDetectionEff * m_sigDetEff;     ///< signal detection efficiency
-  IRichParticleProperties * m_richPartProp;  ///< General particle properties
-  IRichRayleighScatter * m_rayScat;          ///< Rayleigh scattering function
-  IRichGasQuartzWindowAbs * m_gasQuartzWin;  ///< Absorption at the quartz window
+  const IRichGeomEff * m_geomEff;                  ///< Geometrical efficiency tool
+  const IRichSellmeirFunc * m_sellmeir;            ///< Sellmeir function
+  const IRichSignalDetectionEff * m_sigDetEff;     ///< signal detection efficiency
+  const IRichParticleProperties * m_richPartProp;  ///< General particle properties
+  const IRichRayleighScatter * m_rayScat;          ///< Rayleigh scattering function
+  const IRichGasQuartzWindowAbs * m_gasQuartzWin;  ///< Absorption at the quartz window
 
 };
 

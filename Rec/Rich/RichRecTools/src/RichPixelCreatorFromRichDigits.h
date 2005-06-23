@@ -5,7 +5,7 @@
  *  Header file for tool : RichPixelCreatorFromRichDigits
  *
  *  CVS Log :-
- *  $Id: RichPixelCreatorFromRichDigits.h,v 1.14 2005-05-28 13:10:53 jonrob Exp $
+ *  $Id: RichPixelCreatorFromRichDigits.h,v 1.15 2005-06-23 15:17:41 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -75,7 +75,7 @@ private: // methods
 private: // data
 
   /// Pointer to RichSmartID tool
-  IRichSmartIDTool * m_idTool;
+  const IRichSmartIDTool * m_idTool;
 
   /// String containing input RichDigits location in TES
   std::string m_recoDigitsLocation;

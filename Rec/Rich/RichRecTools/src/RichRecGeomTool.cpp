@@ -5,7 +5,7 @@
  *  Implementation file for tool : RichRecGeomTool
  *
  *  CVS Log :-
- *  $Id: RichRecGeomTool.cpp,v 1.6 2005-06-17 15:08:36 jonrob Exp $
+ *  $Id: RichRecGeomTool.cpp,v 1.7 2005-06-23 15:17:41 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -36,8 +36,8 @@ RichRecGeomTool::RichRecGeomTool( const std::string& type,
 
   // job options
   m_radScale[Rich::Aerogel] =  0.037;
-  m_radScale[Rich::C4F10]   =  0.012;
-  m_radScale[Rich::CF4]     = -0.015;
+  m_radScale[Rich::C4F10]   =  0.0105;
+  m_radScale[Rich::CF4]     = -0.014;
   declareProperty( "RadOpticalCorrections", m_radScale );
 
 }
@@ -50,7 +50,7 @@ StatusCode RichRecGeomTool::initialize()
 
   // Acquire instances of tools
   acquireTool( "RichDetParameters",  m_detParams );
-  acquireTool( "RichCherenkovAngle", m_ckAngle   );
+  m_ckAngle = cherenkovAngleTool();
 
   // Cache the acceptance data
   m_radOutLimLoc[Rich::Aerogel] = m_detParams->AvAcceptOuterLimitsLocal(Rich::Aerogel);

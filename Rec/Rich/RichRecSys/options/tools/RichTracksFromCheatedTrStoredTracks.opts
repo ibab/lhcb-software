@@ -5,49 +5,52 @@
 
 // Define the primary RichTrackCreator to be the delegator tool
 // This tool sends the real work to other tools depending on the configuration
-ToolSvc.RichToolRegistry.Tools += { "RichDelegatedTrackCreatorFromTrStoredTracks/RichTrackCreator" };
+ToolSvc.RichToolRegistry.Tools += { "RichDelegatedTrackCreatorFromTrStoredTracks/RichTrackCreatorOffline" };
 
 // Example configuration, use MC for all but forward tracks...
-ToolSvc.RichTrackCreator.ToolsByTrackType = { "forward/RichTrackCreatorMC",
-                                              "match/RichTrackCreatorMC",
-                                              "veloTT/RichTrackCreatorMC",
-                                              "seed/RichTrackCreatorMC",
-                                              "KsTrack/RichTrackCreatorMC",
-                                              "velo/RichTrackCreatorMC" };
+ToolSvc.RichTrackCreatorOffline.ToolsByTrackType = { "forward/RichTrackCreatorMC",
+                                                     "match/RichTrackCreatorMC",
+                                                     "veloTT/RichTrackCreatorMC",
+                                                     "seed/RichTrackCreatorMC",
+                                                     "KsTrack/RichTrackCreatorMC",
+                                                     "velo/RichTrackCreatorMC" };
 
 // The delegated RichTrackCreator that uses full reco information
-ToolSvc.RichToolRegistry.Tools += { "RichTrackCreatorFromTrStoredTracks/RichTrackCreatorReco" };
-ToolSvc.RichTrackCreatorReco.TrackSelection = { "unique","positive","negative","seed","match","forward","KsTrack","veloTT" };
-ToolSvc.RichTrackCreatorReco.TrackSegmentTool = "RichDetTrSegMakerReco";
+ToolSvc.RichToolRegistry.Tools += { "RichTrackCreatorFromTrStoredTracks/RichTrackCreatorOfflineReco" };
+ToolSvc.RichTrackCreatorOfflineReco.TrackSelection =
+  {
+    "unique","positive","negative","seed","match","forward","KsTrack","veloTT"
+  };
+ToolSvc.RichTrackCreatorOfflineReco.TrackSegmentTool = "RichDetTrSegMakerRecoOffline";
 // Momentum cuts ( in the format tracktype/minP/maxP )
-ToolSvc.RichTrackCreatorReco.TrackMomentumCuts = { "forward/0/9999999",
-                                                   "match/0/9999999",
-                                                   "seed/0/9999999",
-                                                   "veloTT/1/9999999",
-                                                   "KsTrack/0/9999999",
-                                                   "velo/999999/9999999" };
+ToolSvc.RichTrackCreatorOfflineReco.TrackMomentumCuts = { "forward/0/9999999",
+                                                          "match/0/9999999",
+                                                          "seed/0/9999999",
+                                                          "veloTT/1/9999999",
+                                                          "KsTrack/0/9999999",
+                                                          "velo/999999/9999999" };
 
 // Configure the RichTrackSegment maker for reconstructed tracks
-ToolSvc.RichToolRegistry.Tools += { "RichTrSegMakerFromTrStoredTracks/RichDetTrSegMakerReco" };
-ToolSvc.RichDetTrSegMakerReco.PrimaryTrackExtrapolator = "TrHerabExtrapolator";
-ToolSvc.RichDetTrSegMakerReco.BackupTrackExtrapolator  = "TrParabolicExtrapolator";
-// which radiators to use                      Aerogel   C4F10    CF4
-ToolSvc.RichDetTrSegMakerReco.UseRadiators = { true,     true,    true };
+ToolSvc.RichToolRegistry.Tools += { "RichTrSegMakerFromTrStoredTracks/RichDetTrSegMakerRecoOffline" };
+ToolSvc.RichDetTrSegMakerRecoOffline.PrimaryTrackExtrapolator = "TrHerabExtrapolator";
+ToolSvc.RichDetTrSegMakerRecoOffline.BackupTrackExtrapolator  = "TrParabolicExtrapolator";
+// which radiators to use                             Aerogel   C4F10    CF4
+ToolSvc.RichDetTrSegMakerRecoOffline.UseRadiators = { true,     true,    true };
 
 // The delegated RichTrackCreator that uses MC information
-ToolSvc.RichToolRegistry.Tools += { "RichTrackCreatorFromTrStoredTracks/RichTrackCreatorMC" };
-ToolSvc.RichTrackCreatorMC.TrackSelection = { "unique","positive","negative","seed","match","forward","KsTrack","veloTT" };
-ToolSvc.RichTrackCreatorMC.TrackSegmentTool = "RichDetTrSegMakerMC";
+ToolSvc.RichToolRegistry.Tools += { "RichTrackCreatorFromTrStoredTracks/RichTrackCreatorMCOffline" };
+ToolSvc.RichTrackCreatorMCOffline.TrackSelection = { "unique","positive","negative","seed","match","forward","KsTrack","veloTT" };
+ToolSvc.RichTrackCreatorMCOffline.TrackSegmentTool = "RichDetTrSegMakerMCOffline";
 // Momentum cuts ( in the format tracktype/minP/maxP )
-ToolSvc.RichTrackCreatorMC.TrackMomentumCuts = { "forward/0/9999999",
-                                                 "match/0/9999999",
-                                                 "follow/0/9999999",
-                                                 "seed/0/9999999",
-                                                 "veloTT/1/9999999",
-                                                 "KsTrack/0/9999999",
-                                                 "velo/999999/9999999" };
+ToolSvc.RichTrackCreatorMCOffline.TrackMomentumCuts = { "forward/0/9999999",
+                                                        "match/0/9999999",
+                                                        "follow/0/9999999",
+                                                        "seed/0/9999999",
+                                                        "veloTT/1/9999999",
+                                                        "KsTrack/0/9999999",
+                                                        "velo/999999/9999999" };
 
 // Configure the RichTrackSegment maker for MC tracks
-ToolSvc.RichToolRegistry.Tools += { "RichTrSegMakerFromMCRichTracks/RichDetTrSegMakerMC" };
-// which radiators to use                      Aerogel   C4F10    CF4
-ToolSvc.RichDetTrSegMakerMC.UseRadiators   = { true,     true,    true };
+ToolSvc.RichToolRegistry.Tools += { "RichTrSegMakerFromMCRichTracks/RichDetTrSegMakerMOfflineC" };
+// which radiators to use                             Aerogel   C4F10    CF4
+ToolSvc.RichDetTrSegMakerMCOffline.UseRadiators   = { true,     true,    true };

@@ -5,7 +5,7 @@
  *  Header file for tool : RichCherenkovAngle
  *
  *  CVS Log :-
- *  $Id: RichCherenkovAngle.h,v 1.6 2005-02-02 10:04:53 jonrob Exp $
+ *  $Id: RichCherenkovAngle.h,v 1.7 2005-06-23 15:17:41 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -110,19 +110,19 @@ private: // methods
 private: // Private data
 
   /// Pointer to RichExpectedTrackSignal interface
-  IRichExpectedTrackSignal * m_signal;
+  const IRichExpectedTrackSignal * m_signal;
 
   /// Pointer to RichParticleProperties interface
-  IRichParticleProperties * m_richPartProp;
+  const IRichParticleProperties * m_richPartProp;
 
   /// Pointer to refractive index tool
-  IRichRefractiveIndex * m_refIndex;
+  const IRichRefractiveIndex * m_refIndex;
 
   /// Pointer to the RichSmartID tool
-  IRichSmartIDTool * m_smartIDTool;
+  const IRichSmartIDTool * m_smartIDTool;
 
   /// Pointer to the ray tracking tool
-  IRichRayTracing * m_rayTrace;
+  const IRichRayTracing * m_rayTrace;
 
   /// Storage for nominal saturated Cherenkov angles
   boost::array< double, Rich::NRadiatorTypes > m_nomCK;

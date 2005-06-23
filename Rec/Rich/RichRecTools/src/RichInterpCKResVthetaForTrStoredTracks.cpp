@@ -5,7 +5,7 @@
  *  Implementation file for tool : RichInterpCKResVthetaForTrStoredTracks
  *
  *  CVS Log :-
- *  $Id: RichInterpCKResVthetaForTrStoredTracks.cpp,v 1.5 2005-06-17 15:08:36 jonrob Exp $
+ *  $Id: RichInterpCKResVthetaForTrStoredTracks.cpp,v 1.6 2005-06-23 15:17:41 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -79,7 +79,7 @@ StatusCode RichInterpCKResVthetaForTrStoredTracks::initialize()
   if ( sc.isFailure() ) { return sc; }
 
   // Acquire instances of tools
-  acquireTool( "RichCherenkovAngle", m_ckAngle );
+  m_ckAngle = cherenkovAngleTool();
 
   // initialise interpolators
   for ( int iR = 0; iR < Rich::NRadiatorTypes; ++iR )

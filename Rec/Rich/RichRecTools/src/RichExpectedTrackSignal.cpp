@@ -5,7 +5,7 @@
  *  Implementation file for tool : RichExpectedTrackSignal
  *
  *  CVS Log :-
- *  $Id: RichExpectedTrackSignal.cpp,v 1.12 2005-06-17 15:08:36 jonrob Exp $
+ *  $Id: RichExpectedTrackSignal.cpp,v 1.13 2005-06-23 15:17:41 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -43,7 +43,7 @@ StatusCode RichExpectedTrackSignal::initialize()
   if ( sc.isFailure() ) { return sc; }
 
   // Acquire instances of tools
-  acquireTool( "RichGeomEff",            m_geomEff      );
+  m_geomEff = geomEffTool();
   acquireTool( "RichSellmeirFunc",       m_sellmeir     );
   acquireTool( "RichSignalDetectionEff", m_sigDetEff    );
   acquireTool( "RichParticleProperties", m_richPartProp );

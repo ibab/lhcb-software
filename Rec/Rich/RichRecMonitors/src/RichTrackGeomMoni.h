@@ -5,7 +5,7 @@
  *  Header file for algorithm class : RichTrackGeomMoni
  *
  *  CVS Log :-
- *  $Id: RichTrackGeomMoni.h,v 1.1.1.1 2005-06-18 11:44:46 jonrob Exp $
+ *  $Id: RichTrackGeomMoni.h,v 1.2 2005-06-23 15:14:56 jonrob Exp $
  *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   05/04/2002
@@ -84,11 +84,11 @@ private: // methods
 
 private: // data
 
-  IRichRayTracing * m_rayTrace;        ///< Pointer RichDetector ray tracing tool
-  IRichRecMCTruthTool* m_richRecMCTruth; ///< Pointer to RichRecMCTruthTool interface
-  IRichRecGeomTool * m_geomTool;     ///< Pointer to the Geometry tool
-  IRichGeomEff * m_geomEffic; ///< Pointer to RichGeomEff tool
-  IRichMCTrackInfoTool * m_mcTkInfo; ///< MC track information
+  const IRichRayTracing * m_rayTrace;        ///< Pointer RichDetector ray tracing tool
+  const IRichRecMCTruthTool* m_richRecMCTruth; ///< Pointer to RichRecMCTruthTool interface
+  const IRichRecGeomTool * m_geomTool;     ///< Pointer to the Geometry tool
+  const IRichGeomEff * m_geomEffic; ///< Pointer to RichGeomEff tool
+  const IRichMCTrackInfoTool * m_mcTkInfo; ///< MC track information
 
   // job options
   std::string m_histPth;   ///< Output histogram path

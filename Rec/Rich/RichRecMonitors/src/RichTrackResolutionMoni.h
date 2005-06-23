@@ -5,7 +5,7 @@
  *  Header file for algorithm class : RichTrackResolutionMoni
  *
  *  CVS Log :-
- *  $Id: RichTrackResolutionMoni.h,v 1.1.1.1 2005-06-18 11:44:46 jonrob Exp $
+ *  $Id: RichTrackResolutionMoni.h,v 1.2 2005-06-23 15:14:56 jonrob Exp $
  *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   05/04/2002
@@ -73,8 +73,8 @@ private: // methods
 
 private: // data
 
-  IRichRecMCTruthTool* m_richRecMCTruth; ///< Pointer to RichRecMCTruthTool interface
-  IRichMCTrackInfoTool * m_mcTkInfo; ///< MC track information
+  const IRichRecMCTruthTool* m_richRecMCTruth; ///< Pointer to RichRecMCTruthTool interface
+  const IRichMCTrackInfoTool * m_mcTkInfo; ///< MC track information
 
   // job options
   std::string m_histPth;   ///< Output histogram path

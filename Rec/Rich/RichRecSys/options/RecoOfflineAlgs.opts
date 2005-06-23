@@ -1,5 +1,7 @@
 
+// ============================================================================
 // Define the algorithms to run and in which order
+// Run the offline quality algorithms on offline tracks
 // ============================================================================
 
 // Run the Local PID algorithm first
@@ -56,7 +58,7 @@ RichGloPIDDigSel.MaxUsedPixels            = 8000;
 
 // Global PID track selection
 RichGloPIDTrSel.TrackSelection = { "unique","positive","negative","seed","match","forward","KsTrack","veloTT" };
-RichGloPIDTrSel.MaxUsedTracks             = 200;
+RichGloPIDTrSel.MaxUsedTracks             = 300;
 RichGloPIDTrSel.MaxInputTracks            = 700;
 RichGloPIDTrSel.MinimumPhysicsMomentum    = 0.0*GeV;
 RichGloPIDTrSel.MinimumLikelihoodMomentum = 0.0*GeV;
@@ -106,3 +108,18 @@ MergeRichPIDs.UseRingRefitPIDs = false;
 MergeRichPIDs.UseLocalPIDs     = true;
 MergeRichPIDs.UseGlobalPIDs    = true;
 //MergeRichPIDs.OutputPIDLocation = "Rec/Rich/NewPIDs";
+
+//===============================================================================================
+// options related to getting things into "Offline" mode
+// hopefully eventually handled by context
+
+RichLocPID.ProcessingStage             = "Offline";
+ToolSvc.RichLocPIDTool.ProcessingStage = "Offline";
+RichGloPIDInit.ProcessingStage         = "Offline";
+RichGloPIDDigSel.ProcessingStage       = "Offline";
+RichGloPIDTrSel.ProcessingStage        = "Offline";
+RichBckEst1.ProcessingStage            = "Offline";
+RichGloPIDIt1.ProcessingStage          = "Offline";
+RichBckEst2.ProcessingStage            = "Offline";
+RichGloPIDIt2.ProcessingStage          = "Offline";
+RichGloPIDFin.ProcessingStage          = "Offline";

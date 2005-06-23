@@ -5,7 +5,7 @@
  *  Header file for tool : RichTrackCreatorFromTrStoredTracks
  *
  *  CVS Log :-
- *  $Id: RichTrackCreatorFromTrStoredTracks.h,v 1.24 2005-05-28 13:10:53 jonrob Exp $
+ *  $Id: RichTrackCreatorFromTrStoredTracks.h,v 1.25 2005-06-23 15:17:42 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -89,19 +89,19 @@ private: // data
   mutable TrStoredTracks * m_trTracks;
 
   /// Pointer to the detector ray tracing tool
-  IRichRayTracing * m_rayTrace;
+  const IRichRayTracing * m_rayTrace;
 
   /// Pointer to RichSmartID tool
-  IRichSmartIDTool * m_smartIDTool;
+  const IRichSmartIDTool * m_smartIDTool;
 
   /// Pointer to ring creator
-  IRichMassHypothesisRingCreator * m_massHypoRings;
+  const IRichMassHypothesisRingCreator * m_massHypoRings;
 
   /// Pointer to track segment maker
-  IRichTrSegMaker * m_segMaker;
+  const IRichTrSegMaker * m_segMaker;
 
   /// Pointer to RichExpectedTrackSignal interface
-  IRichExpectedTrackSignal * m_signal;
+  const IRichExpectedTrackSignal * m_signal;
 
   /// Input location of TrStoredTracks in TES
   std::string m_trTracksLocation;

@@ -1,20 +1,17 @@
-//
-// =================== Rich online Reconstruction =====================
-//
 
-// Fast Local PID
-//===========================================================================
-//ToolSvc.RichToolRegistry.Tools += { "RichTrgLocalPIDTool/RichTrgLocalPIDTool" };
-//RecoRICHSeq.Members += { "RichTrgLocalPIDMakerAlg/MakeRichTrgLocalPIDs" };
-//ToolSvc.RichTrgLocalPIDTool.kpcuts = 0;
-//MakeRichTrgLocalPIDs.OutputPIDLocation = "Rec/Rich/PIDs";
+// ============================================================================
+// Define the algorithms to run and in which order
+// Run the online quality algorithms on offline tracks
+// ============================================================================
 
 // Fast Global PID
 //===========================================================================
-//RecoRICHSeq.Members        += { "RichTrgGlobalPIDAlgOLD/RichTrgGlobalPID" };
-RecoRICHSeq.Members         += { "RichTrgGlobalPIDAlg/RichTrgGlobalPID" };
-RichTrgGlobalPID.TrackSelection    = { "unique","seed","match","forward","follow","KsTrack","veloTT" };
-RichTrgGlobalPID.OutputPIDLocation = "Rec/Rich/PIDs";
+RecoRICHSeq.Members += { "RichTrgGlobalPIDAlg/RichHltGlobalPID" };
+RichHltGlobalPID.TrackSelection    = 
+  { "unique","seed","match","forward","follow","KsTrack","veloTT" };
+RichHltGlobalPID.OutputPIDLocation = "Rec/Rich/PIDs";
 // Monitoring options
-RichTrgGlobalPID.NTupleProduce = false;
-RichTrgGlobalPID.HistoProduce  = false;
+RichHltGlobalPID.NTupleProduce = false;
+RichHltGlobalPID.HistoProduce  = false;
+// tell algorithm it is offline
+RichHltGlobalPID.ProcessingStage = "Offline";

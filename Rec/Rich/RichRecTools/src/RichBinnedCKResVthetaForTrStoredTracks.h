@@ -4,8 +4,11 @@
  *  Header file for tool : RichBinnedCKResVthetaForTrStoredTracks
  *
  *  CVS Log :-
- *  $Id: RichBinnedCKResVthetaForTrStoredTracks.h,v 1.2 2004-07-27 20:15:29 jonrob Exp $
+ *  $Id: RichBinnedCKResVthetaForTrStoredTracks.h,v 1.3 2005-06-23 15:17:41 jonrob Exp $
  *  $Log: not supported by cvs2svn $
+ *  Revision 1.2  2004/07/27 20:15:29  jonrob
+ *  Add doxygen file documentation and CVS information
+ *
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -62,7 +65,7 @@ public: // methods (and doxygen comments) inherited from public interface
 private:  // Private data
 
   /// Pointer to RichCherenkovAngle interface
-  IRichCherenkovAngle * m_ckAngle;
+  const IRichCherenkovAngle * m_ckAngle;
 
   /// The averged resolutions in each bin, for each track type
   std::vector<double> m_theerr[Rich::NRadiatorTypes][Rich::Track::NTrTypes];

@@ -5,7 +5,7 @@
  *  Header file for RICH reconstruction monitoring algorithm : RichPIDQC
  *
  *  CVS Log :-
- *  $Id: RichPIDQC.h,v 1.20 2005-04-15 16:33:32 jonrob Exp $
+ *  $Id: RichPIDQC.h,v 1.21 2005-06-23 15:15:54 jonrob Exp $
  *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   2002-06-13
@@ -147,7 +147,7 @@ private: // data
 
   RichTrackSelector m_trSelector;  ///< Track selector
 
-  IRichMCTruthTool * m_mcTruth;    ///< MC Truth tool
+  const IRichMCTruthTool * m_mcTruth;    ///< MC Truth tool
 
   // Summary information
   double m_sumTab[6][6];

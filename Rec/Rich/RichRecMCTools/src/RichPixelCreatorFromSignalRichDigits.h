@@ -5,7 +5,7 @@
  *  Header file for RICH reconstruction tool : RichPixelCreatorFromSignalRichDigits
  *
  *  CVS Log :-
- *  $Id: RichPixelCreatorFromSignalRichDigits.h,v 1.7 2005-05-28 16:45:48 jonrob Exp $
+ *  $Id: RichPixelCreatorFromSignalRichDigits.h,v 1.8 2005-06-23 15:14:12 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   08/07/2004
@@ -89,13 +89,13 @@ private: // methods
 private: // data
 
   /// General MC truth tool
-  IRichMCTruthTool * m_mcTool;
+  const IRichMCTruthTool * m_mcTool;
 
   /// Reconstruction MC truth tool
-  IRichRecMCTruthTool * m_mcRecTool;
+  const IRichRecMCTruthTool * m_mcRecTool;
 
   /// Pointer to delegated pixel maker
-  IRichPixelCreator * m_pixMaker;
+  const IRichPixelCreator * m_pixMaker;
 
   /// Nickname of RichPixel Creator to use
   std::string m_subPixelCreatorName;

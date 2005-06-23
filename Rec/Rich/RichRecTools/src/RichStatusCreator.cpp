@@ -5,7 +5,7 @@
  *  Implementation file for tool : RichStatusCreator
  *
  *  CVS Log :-
- *  $Id: RichStatusCreator.cpp,v 1.8 2005-05-13 15:20:38 jonrob Exp $
+ *  $Id: RichStatusCreator.cpp,v 1.9 2005-06-23 15:17:42 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -36,7 +36,7 @@ RichStatusCreator::RichStatusCreator( const std::string& type,
 
 }
 
-StatusCode RichStatusCreator::initialize() 
+StatusCode RichStatusCreator::initialize()
 {
   // Sets up various tools and services
   const StatusCode sc = RichRecToolBase::initialize();
@@ -45,10 +45,15 @@ StatusCode RichStatusCreator::initialize()
   // Setup incident services
   incSvc()->addListener( this, IncidentType::BeginEvent );
 
+  if ( msgLevel(MSG::DEBUG) )
+  {
+    debug() << "RichRecStatus location : " << m_richStatusLocation << endreq;
+  }
+
   return sc;
 }
 
-StatusCode RichStatusCreator::finalize() 
+StatusCode RichStatusCreator::finalize()
 {
   // Execute base class method
   return RichRecToolBase::finalize();
@@ -62,14 +67,14 @@ void RichStatusCreator::handle ( const Incident& incident )
 
 RichRecStatus * RichStatusCreator::richStatus() const
 {
-  if ( !m_status ) 
+  if ( !m_status )
   {
     if ( !exist<RichRecStatus>(m_richStatusLocation) )
     {
       m_status = new RichRecStatus();
       put( m_status, m_richStatusLocation );
-    } 
-    else 
+    }
+    else
     {
       m_status = get<RichRecStatus>(m_richStatusLocation);
     }

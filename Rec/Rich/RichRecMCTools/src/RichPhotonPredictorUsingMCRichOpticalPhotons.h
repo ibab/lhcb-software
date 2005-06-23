@@ -1,15 +1,16 @@
 
+//---------------------------------------------------------------------------------------------------
 /** @file RichPhotonPredictorUsingMCRichOpticalPhotons.h
  *
  *  Header file for RICH reconstruction tool : RichPhotonPredictorUsingMCRichOpticalPhotons
  *
  *  CVS Log :-
- *  $Id: RichPhotonPredictorUsingMCRichOpticalPhotons.h,v 1.3 2004-07-27 16:14:11 jonrob Exp $
- *  $Log: not supported by cvs2svn $
+ *  $Id: RichPhotonPredictorUsingMCRichOpticalPhotons.h,v 1.4 2005-06-23 15:14:12 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   08/07/2004
  */
+//---------------------------------------------------------------------------------------------------
 
 #ifndef RICHRECMCTOOLS_RICHPHOTONPREDICTORUSINGMCRICHOPTICALPHOTOS_H
 #define RICHRECMCTOOLS_RICHPHOTONPREDICTORUSINGMCRICHOPTICALPHOTOS_H 1
@@ -29,6 +30,7 @@
 #include "RichRecBase/IRichPhotonPredictor.h"
 #include "RichRecBase/IRichRecMCTruthTool.h"
 
+//---------------------------------------------------------------------------------------------------
 /** @class RichPhotonPredictorUsingMCRichOpticalPhotons RichPhotonPredictorUsingMCRichOpticalPhotons.h
  *
  *  Tool which performs the association between RichRecSegments and
@@ -38,6 +40,7 @@
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   08/07/2004
  */
+//---------------------------------------------------------------------------------------------------
 
 class RichPhotonPredictorUsingMCRichOpticalPhotons : public RichRecToolBase,
                                                      virtual public IRichPhotonPredictor {
@@ -67,7 +70,7 @@ public: // Public interface methods
 private: // private data
 
   // Pointers to tool instances
-  IRichRecMCTruthTool * m_mcRecTool;  ///< MC Truth tool
+  const IRichRecMCTruthTool * m_mcRecTool;  ///< MC Truth tool
 
 };
 

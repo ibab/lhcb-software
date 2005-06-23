@@ -5,7 +5,7 @@
  *  Implementation file for tool : RichBinnedCKResVthetaForTrStoredTracks
  *
  *  CVS Log :-
- *  $Id: RichBinnedCKResVthetaForTrStoredTracks.cpp,v 1.6 2005-06-17 15:08:36 jonrob Exp $
+ *  $Id: RichBinnedCKResVthetaForTrStoredTracks.cpp,v 1.7 2005-06-23 15:17:41 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -144,7 +144,7 @@ StatusCode RichBinnedCKResVthetaForTrStoredTracks::initialize()
   if ( sc.isFailure() ) { return sc; }
 
   // Acquire instances of tools
-  acquireTool( "RichCherenkovAngle", m_ckAngle );
+  m_ckAngle = cherenkovAngleTool();
 
   // Informational Printout
   debug() << " Using binned track resolutions for TrStoredTracks" << endreq;

@@ -4,6 +4,9 @@
 ! Purpose     : Quality Control monitoring algorithms for RICH reconstruction
 !-----------------------------------------------------------------------------
 
+! 2005-06-21 - Chris Jones
+ - Adapt to changes in RichKernel base classes and RichToolRegistry
+
 ! 2005-06-17 - Chris Jones
  - Update to new Check sequencer, plus minor other changes
 

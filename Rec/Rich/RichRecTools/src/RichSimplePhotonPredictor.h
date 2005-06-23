@@ -5,7 +5,7 @@
  *  Header file for tool : RichSimplePhotonPredictor
  *
  *  CVS Log :-
- *  $Id: RichSimplePhotonPredictor.h,v 1.1 2005-06-17 15:08:37 jonrob Exp $
+ *  $Id: RichSimplePhotonPredictor.h,v 1.2 2005-06-23 15:17:42 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -47,7 +47,8 @@
 //-----------------------------------------------------------------------------
 
 class RichSimplePhotonPredictor : public RichRecToolBase,
-                                  virtual public IRichPhotonPredictor {
+                                  virtual public IRichPhotonPredictor 
+{
 
 public: // Methods for Gaudi Framework
 
@@ -74,7 +75,7 @@ public: // methods (and doxygen comments) inherited from public interface
 private: // private data
 
   /// Geometry tool
-  IRichRecGeomTool * m_geomTool;
+  const IRichRecGeomTool * m_geomTool;
 
   std::vector<double> m_minROI;  ///< Min hit radius of interest around track centres
   std::vector<double> m_maxROI;  ///< Max hit radius of interest around track centres

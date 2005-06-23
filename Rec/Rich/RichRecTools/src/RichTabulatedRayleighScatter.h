@@ -1,18 +1,16 @@
 
+//-----------------------------------------------------------------------------
 /** @file RichTabulatedRayleighScatter.h
  *
  *  Header file for tool : RichTabulatedRayleighScatter
  *
  *  CVS Log :-
- *  $Id: RichTabulatedRayleighScatter.h,v 1.6 2004-10-27 14:39:41 jonrob Exp $
- *  $Log: not supported by cvs2svn $
- *  Revision 1.5  2004/07/27 20:15:33  jonrob
- *  Add doxygen file documentation and CVS information
- *
+ *  $Id: RichTabulatedRayleighScatter.h,v 1.7 2005-06-23 15:17:42 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
  */
+//-----------------------------------------------------------------------------
 
 #ifndef RICHRECTOOLS_RICHTABULATEDRAYLEIGHSCATTER_H
 #define RICHRECTOOLS_RICHTABULATEDRAYLEIGHSCATTER_H 1
@@ -42,6 +40,7 @@
 // interfaces
 #include "RichRecBase/IRichRayleighScatter.h"
 
+//-----------------------------------------------------------------------------
 /** @class RichTabulatedRayleighScatter RichTabulatedRayleighScatter.h
  *
  *  Tool to calculate quantities related to Rayleigh scattering using
@@ -50,6 +49,7 @@
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
  */
+//-----------------------------------------------------------------------------
 
 class RichTabulatedRayleighScatter : public RichRecToolBase,
                                      virtual public IRichRayleighScatter {

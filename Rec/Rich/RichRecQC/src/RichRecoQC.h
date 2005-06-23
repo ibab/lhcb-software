@@ -5,7 +5,7 @@
  *  Header file for RICH reconstruction monitoring algorithm : RichRecoQC
  *
  *  CVS Log :-
- *  $Id: RichRecoQC.h,v 1.6 2005-06-17 15:25:55 jonrob Exp $
+ *  $Id: RichRecoQC.h,v 1.7 2005-06-23 15:15:54 jonrob Exp $
  *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   2002-07-02
@@ -79,11 +79,11 @@ private: // methods
 private: // data
 
   // Pointers to tool instances
-  IRichParticleProperties * m_richPartProp; ///< Rich Particle properties
-  IRichCherenkovAngle * m_ckAngle;  ///< Pointer to RichCherenkovAngle tool
+  const IRichParticleProperties * m_richPartProp; ///< Rich Particle properties
+  const IRichCherenkovAngle * m_ckAngle;  ///< Pointer to RichCherenkovAngle tool
 
   /// Pointer to RichRecMCTruthTool interface
-  IRichRecMCTruthTool* m_richRecMCTruth;
+  const IRichRecMCTruthTool* m_richRecMCTruth;
 
   // job options
   std::string m_mcHistPth; ///< Output MC truth histogram path

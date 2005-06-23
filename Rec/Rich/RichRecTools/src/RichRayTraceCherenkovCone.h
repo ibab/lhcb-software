@@ -5,7 +5,7 @@
  *  Header file for tool : RichRayTraceCherenkovCone
  *
  *  CVS Log :-
- *  $Id: RichRayTraceCherenkovCone.h,v 1.6 2005-02-02 10:08:59 jonrob Exp $
+ *  $Id: RichRayTraceCherenkovCone.h,v 1.7 2005-06-23 15:17:41 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -97,14 +97,14 @@ public: // methods (and doxygen comments) inherited from public interface
 private: // data
 
   // Pointers to tool instances
-  IRichRayTracing * m_rayTrace;
-  IRichCherenkovAngle * m_ckAngle;
-  IRichSmartIDTool * m_smartIDTool;
+  const IRichRayTracing * m_rayTrace;     ///< Optical ray tracing tool
+  const IRichCherenkovAngle * m_ckAngle;  ///< Cherenkov angle calculator tool
+  const IRichSmartIDTool * m_smartIDTool; ///< RichSmartID manipulation tool
 
-  // Number of photons to use in ray tracing
+  /// Number of photons to use in ray tracing
   int m_nRayTrace;
 
-  // Cherenkov phi incrementation
+  /// Cherenkov phi increment size
   double m_incPhi;
 
 };

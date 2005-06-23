@@ -5,7 +5,7 @@
  *  Header file for RICH reconstruction tool : RichPixelCreatorFromMCRichHits
  *
  *  CVS Log :-
- *  $Id: RichPixelCreatorFromMCRichHits.h,v 1.10 2005-05-28 16:45:48 jonrob Exp $
+ *  $Id: RichPixelCreatorFromMCRichHits.h,v 1.11 2005-06-23 15:14:12 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   08/07/2004
@@ -72,10 +72,10 @@ public: // Public interface methods
 private: // data
 
   /// Pointer to RichSmartID tool
-  IRichSmartIDTool * m_smartIDTool;
+  const IRichSmartIDTool * m_smartIDTool;
 
   /// MC Truth tool
-  IRichMCTruthTool * m_mcTool;
+  const IRichMCTruthTool * m_mcTool;
 
   /// String containing input MCRichHits location in TES
   std::string m_mcHitsLocation;

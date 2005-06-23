@@ -4,17 +4,7 @@
  *  Header file for algorithm class : RichMCMassHypoRingsAlg
  *
  *  CVS Log :-
- *  $Id: RichMCMassHypoRingsAlg.h,v 1.1.1.1 2005-06-18 11:44:46 jonrob Exp $
- *  $Log: not supported by cvs2svn $
- *  Revision 1.7  2005/01/13 14:42:54  jonrob
- *  Use RichMap
- *
- *  Revision 1.6  2004/10/13 09:31:32  jonrob
- *  Add the ability to create MC Cherenkov rings for particular radiators
- *
- *  Revision 1.5  2004/07/27 09:48:04  jonrob
- *  Add doxygen file documentation and CVS information
- *
+ *  $Id: RichMCMassHypoRingsAlg.h,v 1.2 2005-06-23 15:14:55 jonrob Exp $
  *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   10/01/2003
@@ -71,7 +61,7 @@ private: // methods
   StatusCode buildRings( const std::string & evtLoc ) const;
 
   /// Returns the Ring creator for a given location
-  IRichMassHypothesisRingCreator * ringCreator( const std::string & loc ) const;
+  const IRichMassHypothesisRingCreator * ringCreator( const std::string & loc ) const;
 
   /// Returns the cherenkov angle for a given MCRichSegment
   double ckTheta( const MCRichSegment * segment ) const;
@@ -86,14 +76,14 @@ private: // Private data members
 
   /** typedef to a map translating an event location into a particular
    *  Mass Hypothesis ring creator */
-  typedef RichHashMap<std::string,IRichMassHypothesisRingCreator*> RingCreators;
+  typedef RichHashMap<std::string,const IRichMassHypothesisRingCreator*> RingCreators;
 
   /// The Mass hypothesis ring creators
   mutable RingCreators m_ringCrs;
 
-  IRichMCTruthTool * m_truth;              ///< MC truth tool
-  IRichMCTrackInfoTool * m_mcTkInfo;       ///< MC Track information
-  IRichRayTraceCherenkovCone * m_rayTrace; ///< Ray tracing
+  const IRichMCTruthTool * m_truth;              ///< MC truth tool
+  const IRichMCTrackInfoTool * m_mcTkInfo;       ///< MC Track information
+  const IRichRayTraceCherenkovCone * m_rayTrace; ///< Ray tracing
 
   /// Max Cherenkov theta angle
   std::vector<double> m_maxCKtheta;
@@ -106,11 +96,12 @@ private: // Private data members
 
 };
 
-inline IRichMassHypothesisRingCreator *
+inline const IRichMassHypothesisRingCreator *
 RichMCMassHypoRingsAlg::ringCreator( const std::string & loc ) const
 {
-  IRichMassHypothesisRingCreator *& tool = m_ringCrs[loc];
-  if (!tool) {
+  const IRichMassHypothesisRingCreator *& tool = m_ringCrs[loc];
+  if (!tool) 
+  {
     const int slash = loc.find_first_of( "/" );
     const std::string toolName =
       "MCCherenkovRings" + ( slash > 0 ? loc.substr(0,slash) : loc );

@@ -1,5 +1,9 @@
 // Rich Reconstruction monitors for common components
 
+// MC tools
+ToolSvc.RichToolRegistry.Tools += { "RichMCTruthTool/RichMCTruthTool" };
+ToolSvc.RichToolRegistry.Tools += { "RichRecMCTruthTool/RichRecMCTruthTool" };
+
 // Pixel monitor
 CheckRICHSeq.Members += { "RichPixelMonitor/RiRecPixelMoni" };
 

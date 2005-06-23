@@ -5,7 +5,7 @@
  *  Implementation file for tool : RichSimplePhotonPredictor
  *
  *  CVS Log :-
- *  $Id: RichSimplePhotonPredictor.cpp,v 1.1 2005-06-17 15:08:36 jonrob Exp $
+ *  $Id: RichSimplePhotonPredictor.cpp,v 1.2 2005-06-23 15:17:42 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -54,7 +54,7 @@ StatusCode RichSimplePhotonPredictor::initialize()
   if ( sc.isFailure() ) { return sc; }
 
   // get tools
-  acquireTool( "RichRecGeomTool", m_geomTool );
+  m_geomTool = geometryTool();
 
   // Initialise some variables
   for ( int rad = 0; rad < Rich::NRadiatorTypes; ++rad )

@@ -5,7 +5,7 @@
  *  Header file for tool : RichDelegatedTrackCreatorFromTrStoredTracks
  *
  *  CVS Log :-
- *  $Id: RichDelegatedTrackCreatorFromTrStoredTracks.h,v 1.6 2005-05-28 13:10:53 jonrob Exp $
+ *  $Id: RichDelegatedTrackCreatorFromTrStoredTracks.h,v 1.7 2005-06-23 15:17:41 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -80,7 +80,7 @@ private: // methods
   const TrStoredTracks * trStoredTracks() const;
 
   /// Returns the RichTrackCreator tool appropriate for a given track type
-  IRichTrackCreator * tkTool( const Rich::Track::Type tkType ) const;
+  const IRichTrackCreator * tkTool( const Rich::Track::Type tkType ) const;
 
 private: // data
 
@@ -98,12 +98,12 @@ private: // data
   ToolList m_names;
 
   /// mapping type between track type and  RichTrackCreator tool pointer
-  typedef std::vector< IRichTrackCreator* > TrackToPnt;
+  typedef std::vector< const IRichTrackCreator* > TrackToPnt;
   TrackToPnt m_tkToPtn;
 
 };
 
-inline IRichTrackCreator *
+inline const IRichTrackCreator *
 RichDelegatedTrackCreatorFromTrStoredTracks::tkTool( const Rich::Track::Type tkType ) const
 {
   if ( !m_tkToPtn[tkType] )
