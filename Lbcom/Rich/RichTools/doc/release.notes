@@ -5,6 +5,9 @@
 !-----------------------------------------------------------------------------
 
 !=========================== RichTools v1r7 2005-06-21 =======================
+! 2005-06-21 - Chris Jones
+ - Adapt to changes in RichKernel base classes and RichToolRegistry
+
 ! 2005-06-17 - Chris Jones
  - Update mirror segment finder to be more efficient at locating the correct
    mirror, by using tricks such as trying the last founbd mirror first and

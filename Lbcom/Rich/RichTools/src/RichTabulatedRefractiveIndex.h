@@ -5,13 +5,7 @@
  *  Header file for tool : RichTabulatedRefractiveIndex
  *
  *  CVS Log :-
- *  $Id: RichTabulatedRefractiveIndex.h,v 1.5 2005-01-07 13:26:17 jonrob Exp $
- *  $Log: not supported by cvs2svn $
- *  Revision 1.4  2004/10/27 14:41:03  jonrob
- *  Various updates
- *
- *  Revision 1.3  2004/07/26 18:03:05  jonrob
- *  Various improvements to the doxygen comments
+ *  $Id: RichTabulatedRefractiveIndex.h,v 1.6 2005-06-23 15:20:05 jonrob Exp $
  *
  *  @author Chris Jones    Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -43,6 +37,7 @@
 #include "RichDet/DeRich.h"
 #include "RichDet/DeRichRadiator.h"
 
+//-----------------------------------------------------------------------------
 /** @class RichTabulatedRefractiveIndex RichTabulatedRefractiveIndex.h
  *
  *  Tool to calculate the effective refractive index for
@@ -52,9 +47,11 @@
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
  */
+//-----------------------------------------------------------------------------
 
 class RichTabulatedRefractiveIndex : public RichToolBase,
-                                     virtual public IRichRefractiveIndex {
+                                     virtual public IRichRefractiveIndex
+{
 
 public: // Methods for Gaudi Framework
 
@@ -77,17 +74,17 @@ public: // methods (and doxygen comments) inherited from interface
   // Calculates the refractive index for a given radiator type at a
   // given energy
   double refractiveIndex ( const Rich::RadiatorType rad,
-                           const double energy );
+                           const double energy ) const;
 
   // Calculates the average refractive index for a given radiator type
   // for a given range of photon energies.
   double refractiveIndex ( const Rich::RadiatorType rad,
-                           const double energyBot,     
-                           const double energyTop );
+                           const double energyBot,
+                           const double energyTop ) const;
 
   // Calculates the average refractive index for a given radiator type
   // for a all visable photon energies.
-  double refractiveIndex ( const Rich::RadiatorType rad );
+  double refractiveIndex ( const Rich::RadiatorType rad ) const;
 
 private:  // Private data
 
@@ -95,7 +92,7 @@ private:  // Private data
   Rich1DTabProperty * m_QE;
 
   /// Detector paramters tool
-  IRichDetParameters * m_detParams;
+  const IRichDetParameters * m_detParams;
 
   /// Pointers to refractive indices for each radiator type
   typedef boost::array<Rich1DTabProperty*,Rich::NRadiatorTypes> RefractiveIndices;

@@ -5,7 +5,7 @@
  * Implementation file for class : RichToolRegistry
  *
  * CVS Log :-
- * $Id: RichToolRegistry.cpp,v 1.8 2005-02-02 10:12:10 jonrob Exp $
+ * $Id: RichToolRegistry.cpp,v 1.9 2005-06-23 15:20:05 jonrob Exp $
  *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @date 14/01/2002
@@ -26,7 +26,7 @@ const        IToolFactory& RichToolRegistryFactory = s_factory ;
 RichToolRegistry::RichToolRegistry( const std::string& type,
                                     const std::string& name,
                                     const IInterface* parent )
-  : GaudiTool( type, name, parent ) 
+  : GaudiTool( type, name, parent )
 {
   // declare interface
   declareInterface<IRichToolRegistry>(this);
@@ -35,28 +35,58 @@ RichToolRegistry::RichToolRegistry( const std::string& type,
   declareProperty( "Tools", m_names );
 }
 
-StatusCode RichToolRegistry::initialize() 
+StatusCode RichToolRegistry::initialize()
 {
   // Execute the base class initialize
   const StatusCode sc = GaudiTool::initialize();
   if ( sc.isFailure() ) return sc;
 
-  debug() << "Initialize" << endreq;
-
   // setup tool registry
   for ( ToolList::const_iterator it = m_names.begin();
-        it != m_names.end(); ++it ) {
+        it != m_names.end(); ++it )
+  {
     const int slash = (*it).find_first_of( "/" );
-    addEntry( ( slash>0 ? (*it).substr(slash+1) : *it ), 
+    addEntry( ( slash>0 ? (*it).substr(slash+1) : *it ),
               ( slash>0 ? (*it).substr(0,slash) : *it ) );
   }
 
-  return StatusCode::SUCCESS;
+  return sc;
 }
 
-const std::string & RichToolRegistry::toolType( const std::string & nickname ) const
+const std::string &
+RichToolRegistry::toolType( const std::string & nickname ) const
 {
-  if ( "" == nickname ) Exception("Received request to retrieve a tool with no name !");
-  if ( "" == m_myTools[nickname] ) addEntry( nickname, nickname );
+  // Test nickname is valid
+  if ( nickname.empty() )
+  {
+    // Empty nick name !
+    Exception( "Received empty tool nickname" );
+  }
+
+  // test instance name is defined
+  if ( m_myTools[nickname].empty() )
+  {
+    Exception( "Unknown RICH tool nickname '" + nickname + "'" );
+    // Add entry to map with same nickname and instance name
+    // addEntry( nickname, nickname );
+  }
+
+  // All OK, so return instance name for this nickname
   return m_myTools[nickname];
+}
+
+void RichToolRegistry::addEntry( const std::string & nickname,
+                                 const std::string & type ) const
+{
+  if ( !m_myTools[nickname].empty() && type != m_myTools[nickname] )
+  {
+    Warning( "Changing tool nickname implementation from " + m_myTools[nickname]
+             + " to " + type, StatusCode::SUCCESS );
+  }
+  if ( msgLevel(MSG::DEBUG) )
+  {
+    debug() << " Tool nickname '" << nickname
+            << "' maps to type '" << type << "'" << endreq;
+  }
+  m_myTools[nickname] = type;
 }

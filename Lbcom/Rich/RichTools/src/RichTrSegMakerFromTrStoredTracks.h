@@ -5,7 +5,7 @@
  *  Header file for tool : RichTrSegMakerFromTrStoredTracks
  *
  *  CVS Log :-
- *  $Id: RichTrSegMakerFromTrStoredTracks.h,v 1.9 2005-02-17 09:57:59 jonrob Exp $
+ *  $Id: RichTrSegMakerFromTrStoredTracks.h,v 1.10 2005-06-23 15:20:05 jonrob Exp $
  *
  *  @author Chris Jones         Christopher.Rob.Jones@cern.ch
  *  @author Antonis Papanestis  a.papanestis@rl.ac.uk
@@ -135,7 +135,7 @@ private: // methods
 private: // data
 
   /// Ray tracing tool
-  IRichRayTracing* m_rayTracing;
+  const IRichRayTracing* m_rayTracing;
 
   /// Rich1 and Rich2 detector elements
   DeRich* m_rich[Rich::NRiches];

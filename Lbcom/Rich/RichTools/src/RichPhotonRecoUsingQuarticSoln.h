@@ -5,7 +5,7 @@
  *  Header file for tool : RichPhotonRecoUsingQuarticSoln
  *
  *  CVS Log :-
- *  $Id: RichPhotonRecoUsingQuarticSoln.h,v 1.2 2005-06-20 16:34:00 jonrob Exp $
+ *  $Id: RichPhotonRecoUsingQuarticSoln.h,v 1.3 2005-06-23 15:20:05 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @author Antonis Papanestis
@@ -178,16 +178,16 @@ private: // data
   double m_nomSphMirrorRadius[Rich::NRiches];
 
   /// Tool to locate the appropriate mirror segments for a given reflection point
-  IRichMirrorSegFinder* m_mirrorSegFinder;
+  const IRichMirrorSegFinder* m_mirrorSegFinder;
 
   /// Raytracing tool
-  IRichRayTracing* m_rayTracing;
+  const IRichRayTracing* m_rayTracing;
 
   /// RichSmartID tool
-  IRichSmartIDTool* m_idTool;
+  const IRichSmartIDTool* m_idTool;
 
   /// Refractive index tool
-  IRichRefractiveIndex * m_refIndex;
+  const IRichRefractiveIndex * m_refIndex;
 
   /** Flag to indicate if the unambiguous photon test should be performed
    *

@@ -1,23 +1,16 @@
 
+//-----------------------------------------------------------------------------
 /** @file RichRayTracing.h
  *
  *  Header file for tool : RichDetParameters
  *
  *  CVS History :
- *  $Id: RichRayTracing.h,v 1.13 2004-10-27 14:41:03 jonrob Exp $
- *  $Log: not supported by cvs2svn $
- *  Revision 1.12  2004/10/21 12:59:35  papanest
- *  new method traceBackFromDetector
- *
- *  Revision 1.11  2004/07/26 18:03:05  jonrob
- *  Various improvements to the doxygen comments
- *
- *  Revision 1.10  2004/07/22 14:39:57  jonrob
- *  test CVS log in file
+ *  $Id: RichRayTracing.h,v 1.14 2005-06-23 15:20:05 jonrob Exp $
  *
  *  @author Chris Jones    Christopher.Rob.Jones@cern.ch
  *  @date   2004-03-29
  */
+//-----------------------------------------------------------------------------
 
 #ifndef RICHTOOLS_RICHRAYTRACING_H
 #define RICHTOOLS_RICHRAYTRACING_H 1
@@ -54,7 +47,7 @@
 #include "RichDet/DeRichFlatMirror.h"
 #include "RichDet/DeRichHPDPanel.h"
 
-
+//-----------------------------------------------------------------------------
 /** @class RichRayTracing RichRayTracing.h
  *
  *  Rich detector tool which traces photons to the photodetectors. Mirror
@@ -63,8 +56,11 @@
  *  @author Antonis Papanestis
  *  @date   2003-11-04
  */
+//-----------------------------------------------------------------------------
+
 class RichRayTracing : public RichToolBase,
-                       virtual public IRichRayTracing {
+                       virtual public IRichRayTracing 
+{
 
 public: // Methods for Gaudi Framework
 
@@ -170,7 +166,7 @@ private: // data
   int m_flatMirrorSegCols[Rich::NRiches];
 
   /// Mirror segment finder tool
-  IRichMirrorSegFinder* m_mirrorSegFinder;
+  const IRichMirrorSegFinder* m_mirrorSegFinder;
 
   /// Histogram service
   mutable IHistogramSvc* m_HDS;

@@ -5,11 +5,7 @@
  * Implementation file for class : RichTabulatedRefractiveIndex
  *
  * CVS Log :-
- * $Id: RichTabulatedRefractiveIndex.cpp,v 1.4 2004-10-27 14:41:03 jonrob Exp $
- * $Log: not supported by cvs2svn $
- * Revision 1.3  2004/07/26 18:03:05  jonrob
- * Various improvements to the doxygen comments
- *
+ * $Id: RichTabulatedRefractiveIndex.cpp,v 1.5 2005-06-23 15:20:05 jonrob Exp $
  *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @date 15/03/2002
@@ -34,12 +30,12 @@ RichTabulatedRefractiveIndex::RichTabulatedRefractiveIndex ( const std::string& 
 
 }
 
-StatusCode RichTabulatedRefractiveIndex::initialize() 
+StatusCode RichTabulatedRefractiveIndex::initialize()
 {
   // Initialise base class
   const StatusCode sc = RichToolBase::initialize();
   if ( sc.isFailure() ) return sc;
- 
+
   // Get tools
   acquireTool( "RichDetParameters", m_detParams );
 
@@ -56,39 +52,40 @@ StatusCode RichTabulatedRefractiveIndex::initialize()
   // Get Rich1
   const DeRich * rich1 = getDet<DeRich>( DeRichLocation::Rich1 );
 
-  // Nominal HPD QE 
+  // Nominal HPD QE
   m_QE = new Rich1DTabProperty( rich1->nominalHPDQuantumEff() );
 
-  return StatusCode::SUCCESS;
+  return sc;
 }
 
 StatusCode RichTabulatedRefractiveIndex::finalize()
 {
   // Tidy up
   for ( RefractiveIndices::iterator iRef = m_refIndex.begin();
-        iRef != m_refIndex.end(); ++iRef ) {
+        iRef != m_refIndex.end(); ++iRef ) 
+  {
     if ( *iRef ) { delete *iRef; *iRef = 0; }
   }
   if ( m_QE ) { delete m_QE; m_QE = 0; }
-
+  
   // base class finalize
   return RichToolBase::finalize();
 }
 
 double RichTabulatedRefractiveIndex::refractiveIndex( const Rich::RadiatorType rad,
-                                                      const double energy )
+                                                      const double energy ) const
 {
   return (*m_refIndex[rad])[energy*eV];
 }
 
 double RichTabulatedRefractiveIndex::refractiveIndex( const Rich::RadiatorType rad,
                                                       const double energyBot,
-                                                      const double energyTop )
+                                                      const double energyTop ) const
 {
   return refractiveIndex( rad, m_QE->meanX(energyBot,energyTop)/eV );
 }
 
-double RichTabulatedRefractiveIndex::refractiveIndex( const Rich::RadiatorType rad )
+double RichTabulatedRefractiveIndex::refractiveIndex( const Rich::RadiatorType rad ) const
 {
   return refractiveIndex( rad, m_detParams->meanPhotonEnergy(rad) );
 }

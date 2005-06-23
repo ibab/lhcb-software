@@ -5,7 +5,7 @@
  *  Header file for tool : RichToolRegistry
  *
  *  CVS Log :-
- *  $Id: RichToolRegistry.h,v 1.7 2005-02-02 10:12:10 jonrob Exp $
+ *  $Id: RichToolRegistry.h,v 1.8 2005-06-23 15:20:05 jonrob Exp $
  *
  *  @author Chris Jones    Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -41,7 +41,8 @@
 //-----------------------------------------------------------------------------
 
 class RichToolRegistry : public GaudiTool,
-                         virtual public IRichToolRegistry {
+                         virtual public IRichToolRegistry
+{
 
 public: // for Gaudi framework
 
@@ -66,10 +67,9 @@ public: // methods (and doxygen comments) inherited from interface
 
 private: // methods
 
-  /** Adds a entry to the map between nicknames and class names
-   */
-  void addEntry( const std::string & nickname, ///< nickname
-                 const std::string & type      ///< class name
+  /// Adds a entry to the map between nicknames and class names
+  void addEntry( const std::string & nickname, ///< tool nickname
+                 const std::string & type      ///< tool class name
                  ) const;
 
 private: // data
@@ -85,13 +85,5 @@ private: // data
   mutable RichToolMap m_myTools;
 
 };
-
-inline void RichToolRegistry::addEntry( const std::string & nickname,
-                                        const std::string & type ) const
-{
-  debug() << " Tool nickname '" << nickname 
-          << "' maps to type '" << type << "'" << endreq;
-  m_myTools[nickname] = type;
-}
 
 #endif // RICHTOOLS_RICHTOOLREGISTRY_H
