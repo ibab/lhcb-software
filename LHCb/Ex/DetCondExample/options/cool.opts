@@ -20,10 +20,10 @@ ApplicationMgr.ExtSvc += { "CondDBAccessSvc" };
 CondDBAccessSvc.HostName = "$CONDDBHOST";
 
 // name of the user needed to connect
-//CondDBAccessSvc.User     = "$CONDDBUSER";
+CondDBAccessSvc.User     = "$CONDDBUSER";
 
 // password needed to connect to the DB server
-//CondDBAccessSvc.Password = "$CONDDBPWD";
+CondDBAccessSvc.Password = "$CONDDBPWD";
 
 // hide password in log output (default = true)
 CondDBAccessSvc.HidePassword = true;
