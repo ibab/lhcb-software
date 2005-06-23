@@ -1,4 +1,4 @@
-// $Id: FireUpdateManager.cpp,v 1.1 2005-05-03 12:46:19 marcocle Exp $
+// $Id: FireUpdateManager.cpp,v 1.2 2005-06-23 09:33:37 marcocle Exp $
 // Include files 
 
 // from Gaudi
@@ -44,11 +44,13 @@ StatusCode FireUpdateManager::initialize() {
 
   debug() << "==> Initialize" << endmsg;
 
-  sc = service("UpdateManagerSvc",m_updateMgr,true);
-  if ( !sc.isSuccess() ){
-    error() << "Unable to get a pointer to IUpdateManagerSvc" << endmsg;
-    return sc;
-  }  
+  try {
+
+    m_updateMgr = svc<IUpdateManagerSvc>("UpdateManagerSvc",true);
+
+  } catch (GaudiException) {
+    return StatusCode::FAILURE;
+  }
 
   return StatusCode::SUCCESS;
 };
@@ -69,8 +71,6 @@ StatusCode FireUpdateManager::execute() {
 StatusCode FireUpdateManager::finalize() {
 
   debug() << "==> Finalize" << endmsg;
-
-  m_updateMgr->release();
 
   return GaudiAlgorithm::finalize();  // must be called after all other actions
 }

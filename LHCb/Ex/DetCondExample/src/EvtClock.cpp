@@ -1,125 +1,102 @@
-//$Id: EvtClock.cpp,v 1.5 2002-04-17 16:11:59 andreav Exp $
-#include <stdio.h>
+// $Id: EvtClock.cpp,v 1.6 2005-06-23 09:33:37 marcocle Exp $
+// Include files 
 
-#include "EvtClock.h"
-
-#include "GaudiKernel/AlgFactory.h"
-#include "GaudiKernel/IDataProviderSvc.h"
+// from Gaudi
+#include "GaudiKernel/AlgFactory.h" 
 #include "GaudiKernel/IDetDataSvc.h"
 #include "GaudiKernel/MsgStream.h"
 #include "GaudiKernel/TimePoint.h"
 
-/// Instantiation of a static factory to create instances of this algorithm
-static const AlgFactory<EvtClock> Factory;
-const IAlgFactory& EvtClockFactory = Factory;
+// local
+#include "EvtClock.h"
 
-//----------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
+// Implementation file for class : EvtClock
+//
+// 2005-06-23 : Marco Clemencic
+//-----------------------------------------------------------------------------
 
-/// Constructor
-EvtClock::EvtClock( const std::string&  name, 
-		    ISvcLocator*        pSvcLocator )
-  : Algorithm     ( name, pSvcLocator )
+// Declaration of the Algorithm Factory
+static const  AlgFactory<EvtClock>          s_factory ;
+const        IAlgFactory& EvtClockFactory = s_factory ; 
+
+
+//=============================================================================
+// Standard constructor, initializes variables
+//=============================================================================
+EvtClock::EvtClock( const std::string& name,
+                    ISvcLocator* pSvcLocator)
+  : GaudiAlgorithm ( name , pSvcLocator )
   , m_eventNumber ( 0 )
   , m_detDataSvc  ( 0 )
 {
   declareProperty( "startTime",  m_startTime = 2 );
   declareProperty( "delayTime",  m_delayTime = 5 );
+  declareProperty( "DetDataSvc", m_detDataSvcName = "DetectorDataSvc" );
 }
+//=============================================================================
+// Destructor
+//=============================================================================
+EvtClock::~EvtClock() {}; 
 
-//----------------------------------------------------------------------------
-
-/// Initialization of the algorithm. 
-
+//=============================================================================
+// Initialization
+//=============================================================================
 StatusCode EvtClock::initialize() {
+  StatusCode sc = GaudiAlgorithm::initialize(); // must be executed first
+  if ( sc.isFailure() ) return sc;  // error printed already by GaudiAlgorithm
 
-  StatusCode sc;
-  MsgStream log(msgSvc(), name());
-  log << MSG::INFO << "Initialize()" << endreq;
+  debug() << "==> Initialize" << endmsg;
 
-  // Query the IDetDataSvc interface of the detector data service
-  sc = detSvc()->queryInterface(IID_IDetDataSvc, 
-				(void**) &m_detDataSvc);
-  if ( !sc.isSuccess() ) {
-    log << MSG::ERROR 
-	<< "Could not query IDetDataSvc interface of DetectorDataSvc" 
-	<< endreq;
-    return sc;
-  } else {
-    log << MSG::DEBUG 
-	<< "Retrieved IDetDataSvc interface of DetectorDataSvc" 
-	<< endreq;
+  try {
+    
+    m_detDataSvc = svc<IDetDataSvc>(m_detDataSvcName);
+    
+  } catch (GaudiException) {
+    return StatusCode::FAILURE;
   }
 
-  // Get properties from the JobOptionsSvc
-  sc = setProperties();
-  if ( !sc.isSuccess() ) {
-    log << MSG::ERROR << "Could not set jobOptions properties" << endreq;
-    return sc;
-  }
-  log << MSG::DEBUG << "Properties were read from jobOptions" << endreq;
-  log << MSG::INFO << "Time of first event: "
-      << (ITime::AbsoluteTime)m_startTime 
-      << "(0x" << std::hex 
-      << (ITime::AbsoluteTime)m_startTime 
-      << std::dec << ")" 
-      << endreq; 
-  log << MSG::INFO << "Time between events: "
-      << (ITime::AbsoluteTime)m_delayTime 
-      << "(0x" << std::hex 
-      << (ITime::AbsoluteTime)m_delayTime 
-      << std::dec << ")" 
-      << endreq;
   return StatusCode::SUCCESS;
+};
 
-}
+//=============================================================================
+// Main execution
+//=============================================================================
+StatusCode EvtClock::execute() {
 
-//----------------------------------------------------------------------------
+  debug() << "==> Execute" << endmsg;
 
-StatusCode EvtClock::execute( ) {
-
-  MsgStream log(msgSvc(), name());
-  log << MSG::INFO 
-      << "------------- NEW EVENT! -------------------------------------------"
-      << endreq;
-  log << MSG::INFO << "Execute()" << endreq;
+  info() << "------------- NEW EVENT! -------------------------------------------" << endmsg;
 
   // Increment the event counter
-  m_eventNumber++;
-  log << MSG::INFO << "Event number: " << m_eventNumber << endreq;
+  ++m_eventNumber;
+  info() << "Event number: " << m_eventNumber << endmsg;
 
   // Set the event time
-  long time = i_evtTime();
-  log << MSG::INFO << "Event time: "
-      << (ITime::AbsoluteTime)time 
-      << "(0x" << std::hex 
-      << (ITime::AbsoluteTime)time 
-      << std::dec << ")" 
-      << endreq; 
-  m_detDataSvc->setEventTime( TimePoint(time) );
+  TimePoint time = i_evtTime();
+  info() << "Event" << time
+         << " (0x" << std::hex << time.absoluteTime() << std::dec << ")"
+         << endmsg;
+  m_detDataSvc->setEventTime(time);
 
   return StatusCode::SUCCESS;
+};
+
+//=============================================================================
+//  Finalize
+//=============================================================================
+StatusCode EvtClock::finalize() {
+
+  debug() << "==> Finalize" << endmsg;
+  info() << "Total #events: " << m_eventNumber << endmsg;
+
+  return GaudiAlgorithm::finalize();  // must be called after all other actions
 }
 
-//----------------------------------------------------------------------------
-
-StatusCode EvtClock::finalize( ) {
-
-  MsgStream log(msgSvc(), name());
-  log << MSG::INFO 
-      << "------------- FINALIZE!! -------------------------------------------"
-      << endreq;
-  log << MSG::INFO << "Total #events: " << m_eventNumber << endreq;
-  
-  return StatusCode::SUCCESS;
+//=========================================================================
+//  
+//=========================================================================
+TimePoint EvtClock::i_evtTime() {
+  return TimePoint(m_startTime + ( m_eventNumber - 1 ) * m_delayTime);
 }
-
-//----------------------------------------------------------------------------
-
-longlong EvtClock::i_evtTime( ) {
-
-  return m_startTime + ( m_eventNumber - 1 ) * m_delayTime;
-
-}
-
-//----------------------------------------------------------------------------
-
+//=============================================================================

@@ -1,55 +1,58 @@
-//$Id: EvtClock.h,v 1.3 2001-12-16 21:58:25 andreav Exp $
-#ifndef DETCONDEXAMPLE_EVTCLOCK_H
-#define DETCONDEXAMPLE_EVTCLOCK_H 1
+// $Id: EvtClock.h,v 1.4 2005-06-23 09:33:37 marcocle Exp $
+#ifndef EVTCLOCK_H 
+#define EVTCLOCK_H 1
 
-// Base class
-#include "GaudiKernel/Algorithm.h"
+// Include files
+// from Gaudi
+#include "GaudiAlg/GaudiAlgorithm.h"
+#include "GaudiKernel/TimePoint.h"
 
 // Forward declarations
 class IDetDataSvc;
 
-///---------------------------------------------------------------------------
-/** @class EvtClock EvtClock.h DetCondExample/EvtClock.h
+/** @class EvtClock EvtClock.h
+ *  
+ *  Simple algorithm to set fake event times on the detector data service.
+ *
+ *  @author Andrea Valassi
+ *  @date   August 2001
+ *  @author Marco Clemencic
+ *  @date   2005-06-23
+ */
+class EvtClock : public GaudiAlgorithm {
+public: 
+  /// Standard constructor
+  EvtClock( const std::string& name, ISvcLocator* pSvcLocator );
 
-    Simple algorithm to set fake event times on the detector data service.
+  virtual ~EvtClock( ); ///< Destructor
 
-    @author Andrea Valassi 
-    @date August 2001
-*///--------------------------------------------------------------------------
+  virtual StatusCode initialize();    ///< Algorithm initialization
+  virtual StatusCode execute   ();    ///< Algorithm execution
+  virtual StatusCode finalize  ();    ///< Algorithm finalization
 
-class EvtClock : public Algorithm {
-
- public:
-
-  /// Constructor
-  EvtClock ( const std::string& name, ISvcLocator* pSvcLocator ); 
-  
-  // Algorithm standard methods
-  StatusCode initialize();
-  StatusCode execute();
-  StatusCode finalize();
-  
- private:
+protected:
 
   /// Absolute time of current event
-  longlong i_evtTime();
+  TimePoint i_evtTime();
 
- private:
+private:
 
   /// Current event number
   long m_eventNumber;
 
   /// Absolute time of first event
   long m_startTime;
+  //  ITime::AbsoluteTime m_startTime;
 
   /// Absolute time spacing between events
   long m_delayTime;
+  //  ITime::AbsoluteTime m_delayTime;
+
+  /// Name of the detector data service (option EvtClock.DetDataSvc)
+  std::string  m_detDataSvcName;
 
   /// Handle to the IDetDataSvc interface of the DetectorDataSvc
   IDetDataSvc* m_detDataSvc;
   
 };
-
-#endif    // DETCONDEXAMPLE_EVTCLOCK_H
-
-
+#endif // EVTCLOCK_H

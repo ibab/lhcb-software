@@ -1,8 +1,9 @@
-//$Id: PopulateDB.h,v 1.7 2005-05-13 09:14:38 marcocle Exp $
-#ifndef DETCONDEXAMPLE_POPULATEDB_H
-#define DETCONDEXAMPLE_POPULATEDB_H 1
+// $Id: PopulateDB.h,v 1.8 2005-06-23 09:33:37 marcocle Exp $
+#ifndef POPULATEDB_H 
+#define POPULATEDB_H 1
 
-// Base class
+// Include files
+// from Gaudi
 #include "GaudiAlg/GaudiAlgorithm.h"
 
 // Forward declarations
@@ -10,32 +11,27 @@ class ICondDBAccessSvc;
 class ICondDBObject;
 class Condition;
 
-//#include "ConditionsDB/CondDBException.h"
-//#include "ConditionsDB/CondDBKey.h"
-
-///---------------------------------------------------------------------------
-/** @class PopulateDB PopulateDB.h DetCondExample/PopulateDB.h
-
-    Simple algorithm to populate the ConditionsDB.
-
-    @author Marco Clemencic
-    @date January 2005
-*///--------------------------------------------------------------------------
-
+/** @class PopulateDB PopulateDB.h
+ *  
+ *  Simple algorithm to populate the ConditionsDB.
+ *
+ *  @author Marco Clemencic
+ *  @date   2005-06-22
+ */
 class PopulateDB : public GaudiAlgorithm {
+public: 
+  /// Standard constructor
+  PopulateDB( const std::string& name, ISvcLocator* pSvcLocator );
 
- public:
+  virtual ~PopulateDB( ); ///< Destructor
 
-  /// Constructor
-  PopulateDB ( const std::string& name, ISvcLocator* pSvcLocator ); 
-  
-  // Algorithm standard methods
-  StatusCode initialize();
-  StatusCode execute();
-  StatusCode finalize();
-  
- private:
+  virtual StatusCode initialize();    ///< Algorithm initialization
+  virtual StatusCode execute   ();    ///< Algorithm execution
+  virtual StatusCode finalize  ();    ///< Algorithm finalization
 
+protected:
+
+private:
   /// Store sample data
   StatusCode i_condDBStoreSampleData();
 
@@ -43,30 +39,20 @@ class PopulateDB : public GaudiAlgorithm {
   StatusCode i_condDBDumpSampleData();
 
   /// Encode XML temperature data
-  void i_encodeXmlTemperature( const double temperature,
-			       const std::string& objName,
-			       std::string& xmlString );
+  std::string i_encodeXmlTemperature( const double temperature,
+                                      const std::string& objName );
   
   /// Encode XML paramVector
-  void i_encodeXmlParamVector( const double par[3],
-			       const std::string& objName,
-			       const std::string& parName,
-			       std::string& xmlString );
+  std::string i_encodeXmlParamVector( const double par[3],
+                               const std::string& objName,
+                               const std::string& parName );
   
   /// Dump the contents of a CondDBFolder
   StatusCode i_dumpFolder( const std::string& folderName,
-			   const std::string& tagName );
-
-  /// Tag the full tree.
-  StatusCode i_tagDB(const std::string& tagName);
-
- private:
-
-  /// Handle to the ConditionsDBGate (write the data in the CondDB)
+                           const std::string& tagName );
+  
+  /// Handle to the CondDBAccessSvc (to write the data in the CondDB)
   ICondDBAccessSvc* m_dbAccSvc;
 
 };
-
-#endif    // DETCONDEXAMPLE_POPULATEDB_H
-
-
+#endif // POPULATEDB_H

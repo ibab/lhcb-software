@@ -1,20 +1,21 @@
-//$Id: PopulateDB.cpp,v 1.17 2005-05-13 16:17:50 marcocle Exp $
+// $Id: PopulateDB.cpp,v 1.18 2005-06-23 09:33:37 marcocle Exp $
+// Include files
 #include <iostream>
 #include <fstream>
 #include <string>
 #include <vector>
 #include <sstream>
 
-#include "PopulateDB.h"
+// from Gaudi
+#include "GaudiKernel/AlgFactory.h" 
+#include "GaudiKernel/MsgStream.h"
+#include "GaudiKernel/TimePoint.h"
 
 #include "DetDesc/Condition.h"
 
 #include "DetCond/ICondDBAccessSvc.h"
 
-#include "GaudiKernel/AlgFactory.h"
-#include "GaudiKernel/MsgStream.h"
-#include "GaudiKernel/TimePoint.h"
-
+// from COOL
 #include "CoolKernel/Exception.h"
 #include "CoolKernel/IDatabase.h"
 #include "CoolKernel/IFolder.h"
@@ -26,100 +27,122 @@
 #include "AttributeList/AttributeListSpecification.h"
 #include "AttributeList/AttributeList.h"
 
-/// Instantiation of a static factory to create instances of this algorithm
-static const AlgFactory<PopulateDB> Factory;
-const IAlgFactory& PopulateDBFactory = Factory;
+// local
+#include "PopulateDB.h"
 
-//----------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
+// Implementation file for class : PopulateDB
+//
+// 2005-06-22 : Marco Clemencic
+//-----------------------------------------------------------------------------
 
-/// Constructor
-PopulateDB::PopulateDB( const std::string&  name, 
-			ISvcLocator*        pSvcLocator )
-  : GaudiAlgorithm(name, pSvcLocator)
+// Declaration of the Algorithm Factory
+static const  AlgFactory<PopulateDB>          s_factory ;
+const        IAlgFactory& PopulateDBFactory = s_factory ; 
+
+
+//=============================================================================
+// Standard constructor, initializes variables
+//=============================================================================
+PopulateDB::PopulateDB( const std::string& name,
+                        ISvcLocator* pSvcLocator)
+  : GaudiAlgorithm ( name , pSvcLocator )
 {
+
 }
+//=============================================================================
+// Destructor
+//=============================================================================
+PopulateDB::~PopulateDB() {}; 
 
-//----------------------------------------------------------------------------
-
-/// Initialization of the algorithm. 
-/// It creates the environment needed for processing the events. 
-/// For this class this is the main method, where we store data in the CondDB.
-
+//=============================================================================
+// Initialization
+//=============================================================================
 StatusCode PopulateDB::initialize() {
+  StatusCode sc = GaudiAlgorithm::initialize(); // must be executed first
+  if ( sc.isFailure() ) return sc;  // error printed already by GaudiAlgorithm
 
-  info() << "Initialize()" << endreq;
+  debug() << "==> Initialize" << endmsg;
 
-  StatusCode sc;
-  
-  // Locate the Database Access Service
-  sc = serviceLocator()->service("CondDBAccessSvc",m_dbAccSvc);
-  if (  !sc.isSuccess() ) {
-    error() << "Could not locate CondDBAccessSvc" << endreq;
-    return sc;
+  try {
+
+    // Locate the Database Access Service
+    m_dbAccSvc = svc<ICondDBAccessSvc>("CondDBAccessSvc",true);
+
+    // Store sample data if the database is empty
+    info() << "Store sample data in the database if empty" << endmsg;
+    sc = i_condDBStoreSampleData();
+    if ( !sc.isSuccess() ) return sc;
+    
+    // Dump the database to make sure it is not empty
+    info() << "Dump sample data from the database" << endmsg;
+    sc = i_condDBDumpSampleData();
+    if ( !sc.isSuccess() ) return sc;
+    
+    info() << "Initialization completed" << endmsg;
+    
+  } catch (GaudiException &e) {
+    return StatusCode::FAILURE;
   }
 
-  // Store sample data if the database is empty
-  info() << "Store sample data in the database if empty" << endreq;
-  sc = i_condDBStoreSampleData( );
-  if ( !sc.isSuccess() ) return sc;
-
-  // Dump the database to make sure it is not empty
-  info() << "Dump sample data from the database" << endreq;
-  sc = i_condDBDumpSampleData( );
-  if ( !sc.isSuccess() ) return sc;
-
-  info() << "Initialization completed" << endreq;
   return StatusCode::SUCCESS;
+};
 
+//=============================================================================
+// Main execution
+//=============================================================================
+StatusCode PopulateDB::execute() {
+
+  //  debug() << "==> Execute" << endmsg;
+
+  return StatusCode::SUCCESS;
+};
+
+//=============================================================================
+//  Finalize
+//=============================================================================
+StatusCode PopulateDB::finalize() {
+
+  debug() << "==> Finalize" << endmsg;
+
+  return GaudiAlgorithm::finalize();  // must be called after all other actions
 }
 
-//----------------------------------------------------------------------------
-
-StatusCode PopulateDB::execute( ) {
-  return StatusCode::SUCCESS;
-}
-
-//----------------------------------------------------------------------------
-
-StatusCode PopulateDB::finalize( ) {
-  return StatusCode::SUCCESS;
-}
-
-//----------------------------------------------------------------------------
-
-StatusCode PopulateDB::i_condDBStoreSampleData ( ) {
-
-  info() << "============= condDBStoreSampleData() starting =====================" << endreq;
+//=========================================================================
+//  Populate the database 
+//=========================================================================
+StatusCode PopulateDB::i_condDBStoreSampleData() {
+  info() << "============= condDBStoreSampleData() starting =====================" << endmsg;
 
   // Get a pointer to the DB to speed up a bit
   cool::IDatabasePtr &db = m_dbAccSvc->database();
-  
+
   // Check for signature (a folderset called "/_"+name())
   std::string signature_folderset = "/_";
   signature_folderset += name();
   info() << "Checking if CondDB tree has been already filled" << endmsg;
   bool signatureFolderSetExists = db->existsFolderSet(signature_folderset);
-  
+
   // If root folderSet exists already then return
   // If root folderSet does not exist then create it and store sample data
   if (signatureFolderSetExists) {
-    info() << "Signature folderSet already exists: no need to store sample data" << endreq; 
-    info() << "============= condDBStoreSampleData() ending =======================" << endreq;
+    info() << "Signature folderSet already exists: no need to store sample data" << endmsg; 
+    info() << "============= condDBStoreSampleData() ending =======================" << endmsg;
     return StatusCode::SUCCESS;
   } else {      
-    info() << "Signature folderSet does not exist: create it" << endreq;
+    info() << "Signature folderSet does not exist: create it" << endmsg;
     try {
       m_dbAccSvc->createFolder(signature_folderset,
-                               "Dummy folderset used to sign the prepared database",ICondDBAccessSvc::FOLDERSET);
+                               "Dummy folderset used to sign the prepared database",
+                               ICondDBAccessSvc::FOLDERSET);
     } catch (cool::Exception &e) {
-      error() << e << endreq;
+      error() << e << endmsg;
       return StatusCode::FAILURE;
     }
-    info() << "Signature folderSet did not exist and was succesfully created" << endreq;
+    info() << "Signature folderSet did not exist and was succesfully created" << endmsg;
   }
-  
   // Store sample data
-  info() << "Now store sample data into the CondDB" << endreq;
+  info() << "Now store sample data into the CondDB" << endmsg;
 
   try {
     
@@ -186,17 +209,18 @@ StatusCode PopulateDB::i_condDBStoreSampleData ( ) {
     }
     
     // Create new COLD temperature CondDBObjects
-    debug() << "Create COLD objects in /SlowControl/LHCb/scLHCb and /SlowControl/Hcal/scHcal" << endreq;
+    debug() << "Create COLD objects in /SlowControl/LHCb/scLHCb and /SlowControl/Hcal/scHcal" << endmsg;
     int i;
     for ( i=0; i<3; i++ ) {
-      std::string s;
 
       // LHCb
-      i_encodeXmlTemperature( (double)i*10+5, "scLHCb", s);
-      m_dbAccSvc->storeXMLString("/SlowControl/LHCb/scLHCb",s,TimePoint(i*16), TimePoint((i+1)*16));
+      m_dbAccSvc->storeXMLString("/SlowControl/LHCb/scLHCb",
+                                 i_encodeXmlTemperature( (double)i*10+5, "scLHCb" ),
+                                 TimePoint(i*16), TimePoint((i+1)*16));
       // Hcal
-      i_encodeXmlTemperature( (double)i*10.4+4.2, "scHcal", s);
-      m_dbAccSvc->storeXMLString("/SlowControl/Hcal/scHcal",s,TimePoint(i*16), TimePoint((i+1)*16));
+      m_dbAccSvc->storeXMLString("/SlowControl/Hcal/scHcal",
+                                 i_encodeXmlTemperature( (double)i*10.4+4.2, "scHcal"),
+                                 TimePoint(i*16), TimePoint((i+1)*16));
     }
 
     debug() << "Apply tag COLD" << endmsg;
@@ -206,16 +230,17 @@ StatusCode PopulateDB::i_condDBStoreSampleData ( ) {
 
     // Create new HOT temperature CondDBObjects
     debug() << "Create HOT objects in /SlowControl/LHCb/scLHCb"
-            << " and /SlowControl/Hcal/scHcal" << endreq;
+            << " and /SlowControl/Hcal/scHcal" << endmsg;
     for ( i=0; i<3; i++ ) {
-      std::string s;
 
       // LHCb
-      i_encodeXmlTemperature( (double)i*10+105, "scLHCb", s);
-      m_dbAccSvc->storeXMLString("/SlowControl/LHCb/scLHCb",s,TimePoint(i*16), TimePoint((i+1)*16));
+      m_dbAccSvc->storeXMLString("/SlowControl/LHCb/scLHCb",
+                                 i_encodeXmlTemperature( (double)i*10+105, "scLHCb" ),
+                                 TimePoint(i*16), TimePoint((i+1)*16));
       // Hcal
-      i_encodeXmlTemperature( (double)i*10+105, "scHcal", s);
-      m_dbAccSvc->storeXMLString("/SlowControl/Hcal/scHcal",s,TimePoint(i*16), TimePoint((i+1)*16));
+      m_dbAccSvc->storeXMLString("/SlowControl/Hcal/scHcal",
+                                 i_encodeXmlTemperature( (double)i*10+105, "scHcal"),
+                                 TimePoint(i*16), TimePoint((i+1)*16));
     }
 
     debug() << "Apply tag HOT" << endmsg;
@@ -224,13 +249,13 @@ StatusCode PopulateDB::i_condDBStoreSampleData ( ) {
     m_dbAccSvc->tagFolder("/SlowControl/Hcal","PRODUCTION");
 
     // Create new geometry CondDBObjects
-    debug() << "Create objects in folder /Geometry/LHCb" << endreq;
+    debug() << "Create objects in folder /Geometry/LHCb" << endmsg;
     {
       // Copy XML data from a file to a string
       char* fileName;      
       fileName = "../XMLDDDB/LHCb/geometry.xml";
-      debug() << "Reading XML data from file: " << endreq;
-      debug() << fileName << endreq;
+      debug() << "Reading XML data from file: " << endmsg;
+      debug() << fileName << endmsg;
       std::ifstream inputFile ( fileName );
       std::string xmlString = ""; 
       char ch;
@@ -238,46 +263,46 @@ StatusCode PopulateDB::i_condDBStoreSampleData ( ) {
         xmlString = xmlString + ch;
       }     
       if( xmlString == "" ) {
-        error() << "File is empty" << endreq;
+        error() << "File is empty" << endmsg;
         return StatusCode::FAILURE;
       }
       // Change the DTD relative path location to "file.dtd"
       // This can be correctly interpreted by the XmlCnvSvc
       unsigned int dtdPos = xmlString.find( ".dtd" );
       if( dtdPos < xmlString.length() ) {
-        verbose() << "Remove DTD relative path in the XML" << endreq;
+        verbose() << "Remove DTD relative path in the XML" << endmsg;
         unsigned int slashPos = xmlString.substr(0,dtdPos).rfind("/");
         if( slashPos < dtdPos ) {
           unsigned int quotePos;
           if( xmlString[dtdPos+4] == '\'' ) {
             quotePos = xmlString.substr(0,dtdPos).rfind("\'");
             verbose() << "DTD literal was: " 
-                << xmlString.substr(quotePos,dtdPos+5-quotePos) << endreq;
+                      << xmlString.substr(quotePos,dtdPos+5-quotePos) << endmsg;
             if( quotePos < slashPos ) 
               xmlString.replace( quotePos+1, slashPos-quotePos, "" );
             verbose() << "DTD literal is now: " 
-                << xmlString.substr(quotePos,dtdPos+5-slashPos) << endreq;
+                      << xmlString.substr(quotePos,dtdPos+5-slashPos) << endmsg;
           } else if( xmlString[dtdPos+4] == '\"' ) {
             quotePos = xmlString.substr(0,dtdPos).rfind("\"");
             verbose() << "DTD literal was: " 
-                << xmlString.substr(quotePos,dtdPos+5-quotePos) << endreq;
+                      << xmlString.substr(quotePos,dtdPos+5-quotePos) << endmsg;
             if( quotePos < slashPos ) 
               xmlString.replace( quotePos+1, slashPos-quotePos, "" );
             verbose() << "DTD literal is now: " 
-                << xmlString.substr(quotePos,dtdPos+5-slashPos) << endreq;
+                      << xmlString.substr(quotePos,dtdPos+5-slashPos) << endmsg;
           } else {
-            error() << "Bad DTD literal in the string to be parsed" << endreq;
+            error() << "Bad DTD literal in the string to be parsed" << endmsg;
             return StatusCode::FAILURE;
           }
         }
       }
       // Now store the XML string in the CondDB
-      verbose() << "XML data is:" << std::endl << xmlString << endreq;
-      verbose() << "Store it in the database with [-inf,+inf] validity range" << endreq;
-      verbose() << "Folder name: /Geometry/LHCb" << endreq;
+      verbose() << "XML data is:" << std::endl << xmlString << endmsg;
+      verbose() << "Store it in the database with [-inf,+inf] validity range" << endmsg;
+      verbose() << "Folder name: /Geometry/LHCb" << endmsg;
       verbose() << "Create object with validity range: [" << cool::ValidityKeyMin
                 << "(0x" << std::hex << cool::ValidityKeyMin << std::dec << ")" 
-                << "," << cool::ValidityKeyMax << "(0x" << std::hex << cool::ValidityKeyMax << std::dec << ")]" << endreq;
+                << "," << cool::ValidityKeyMax << "(0x" << std::hex << cool::ValidityKeyMax << std::dec << ")]" << endmsg;
 
       m_dbAccSvc->storeXMLString("/Geometry/LHCb",xmlString,time_absolutepast,time_absolutefuture);
     }
@@ -287,23 +312,23 @@ StatusCode PopulateDB::i_condDBStoreSampleData ( ) {
 
     debug() << "Put in a new HEAD" << endmsg;
     for ( i=0; i<2; i++ ) {
-      std::string s;
       // LHCb
-      i_encodeXmlTemperature( (double)i*5+9.2, "scLHCb", s);
-      m_dbAccSvc->storeXMLString("/SlowControl/LHCb/scLHCb",s,TimePoint(i*24), TimePoint((i+1)*24));
+      m_dbAccSvc->storeXMLString("/SlowControl/LHCb/scLHCb",
+                                 i_encodeXmlTemperature( (double)i*5+9.2, "scLHCb" ),
+                                 TimePoint(i*24), TimePoint((i+1)*24));
     }
     for ( i=0; i<10; i++ ) {
-      std::string s;
       // Hcal
-      i_encodeXmlTemperature( (double)i*5.4+9, "scHcal", s);
-      m_dbAccSvc->storeXMLString("/SlowControl/Hcal/scHcal",s,TimePoint(i*10), TimePoint((i+1)*10));
+      m_dbAccSvc->storeXMLString("/SlowControl/Hcal/scHcal",
+                                 i_encodeXmlTemperature( (double)i*5.4+9, "scHcal" ),
+                                 TimePoint(i*10), TimePoint((i+1)*10));
     }
 
     /// ------------ DummyDE conditions
     for ( i=0; i<3; ++i ) {
-      std::string s;
-      i_encodeXmlTemperature((double)i*4.17+25.16, "DummyDE", s);
-      m_dbAccSvc->storeXMLString("/SlowControl/DummyDE",s,TimePoint(i*24), TimePoint((i+1)*24));
+      m_dbAccSvc->storeXMLString("/SlowControl/DummyDE",
+                                 i_encodeXmlTemperature((double)i*4.17+25.16, "DummyDE" ),
+                                 TimePoint(i*24), TimePoint((i+1)*24));
     }
     for ( i=0; i<3; ++i ) {
       Condition temp;
@@ -330,14 +355,15 @@ StatusCode PopulateDB::i_condDBStoreSampleData ( ) {
     
     //    for ( i=-1; i<3; i++ ) {
     for ( i=-1; i<3; i++ ) {
-      std::string s;
       // alEcal
       if (i>=0){
-        i_encodeXmlParamVector( ecalpos[i%3], "alEcal","Ecal position", s);
-        m_dbAccSvc->storeXMLString("/Alignment/Ecal/alEcal",s,time_absolutepast,time_absolutefuture);
+        m_dbAccSvc->storeXMLString("/Alignment/Ecal/alEcal",
+                                   i_encodeXmlParamVector( ecalpos[i%3], "alEcal","Ecal position" ),
+                                   time_absolutepast,time_absolutefuture);
       } else {
-        i_encodeXmlParamVector( fallbackpos, "alEcal","Ecal position", s);
-        m_dbAccSvc->storeXMLString("/Alignment/Ecal/alEcal",s,time_absolutepast,time_absolutefuture);
+        m_dbAccSvc->storeXMLString("/Alignment/Ecal/alEcal",
+                                   i_encodeXmlParamVector( fallbackpos, "alEcal","Ecal position" ),
+                                   time_absolutepast,time_absolutefuture);
       }
     }
 
@@ -368,22 +394,23 @@ StatusCode PopulateDB::i_condDBStoreSampleData ( ) {
     
   } catch (cool::Exception &e) {
 
-    error() << "Error in storing sample data into the CondDB" << endreq;
-    error() << "*** COOL exception caught: " << endreq;
-    error() << "***   error message: " << e << endreq;
+    error() << "Error in storing sample data into the CondDB" << endmsg;
+    error() << "*** COOL exception caught: " << endmsg;
+    error() << "***   error message: " << e << endmsg;
     return StatusCode::FAILURE;
 
   }
-  info() << "============= condDBStoreSampleData() ending =======================" << endreq;
-  return StatusCode::SUCCESS; 
+  info() << "============= condDBStoreSampleData() ending =======================" << endmsg;
 
+  return StatusCode::SUCCESS;
 }
 
-//----------------------------------------------------------------------------
+//=========================================================================
+//  Dumpt the content of the database
+//=========================================================================
+StatusCode PopulateDB::i_condDBDumpSampleData() {
 
-StatusCode PopulateDB::i_condDBDumpSampleData ( ) {
-  MsgStream log(msgSvc(), name());
-  info() << "============= condDBDumpSampleData() starting ======================" << endreq;
+  info() << "============= condDBDumpSampleData() starting ======================" << endmsg;
 
   cool::IDatabasePtr &db = m_dbAccSvc->database();
 
@@ -415,35 +442,32 @@ StatusCode PopulateDB::i_condDBDumpSampleData ( ) {
     }
   }
 
-  info() << "============= condDBDumpSampleData() ending ========================" << endreq;
+  info() << "============= condDBDumpSampleData() ending ========================" << endmsg;
 
-  return StatusCode::SUCCESS;  
-
+  return StatusCode::SUCCESS;
 }
 
-//----------------------------------------------------------------------------
-
-void PopulateDB::i_encodeXmlTemperature( const double temperature,
-                                         const std::string& objName,
-                                         std::string& xmlString   ) {
-  MsgStream log(msgSvc(), name());
+//=========================================================================
+//  Prepare the xml representation of a Condition containing only a temperature
+//=========================================================================
+std::string PopulateDB::i_encodeXmlTemperature( const double temperature,
+                                                const std::string& objName ) {
   verbose() << "Encoding XML string for name=" << objName << " and temperature=" << temperature << endmsg;  
 
   Condition temp;
   temp.addParam("Temperature",temperature);
-  xmlString = temp.toXml(objName);
+  std::string xmlString = temp.toXml(objName);
 
   verbose() << "Encoded XML string is:" << xmlString << endmsg;
+  return xmlString;
 }
 
-//----------------------------------------------------------------------------
-
-/// Dump the contents of a CondDBFolder
+//=========================================================================
+//  Dump the contents of a CondDBFolder
+//=========================================================================
 StatusCode PopulateDB::i_dumpFolder( const std::string& folderName,
-				     const std::string& tagName ) 
-{
-  MsgStream log(msgSvc(), name());
-
+                                     const std::string& tagName ) {
+  
   cool::IFolderPtr folder = m_dbAccSvc->database()->getFolder(folderName);
 
   if ( tagName != "" && tagName != "HEAD" ) {
@@ -493,41 +517,28 @@ StatusCode PopulateDB::i_dumpFolder( const std::string& folderName,
 
   return StatusCode::SUCCESS;
 }
-  
-//----------------------------------------------------------------------------
 
-void PopulateDB::i_encodeXmlParamVector( const double pos[3],
-                                           const std::string& objName,
-                                           const std::string& parName,
-                                           std::string& xmlString   ) {
-  MsgStream log(msgSvc(), name());
+//=========================================================================
+//  Prepare the xml representation of a Contdition containing only a ParamVector
+//=========================================================================
+std::string PopulateDB::i_encodeXmlParamVector( const double pos[3],
+                                                const std::string& objName,
+                                                const std::string& parName ) {
+  
   verbose()
-      << "Encoding XML string for name=" << objName 
-      << " and position=" << pos[0] << " " << pos[1] << " " << pos[2] << endreq;
+    << "Encoding XML string for name=" << objName 
+    << " and position=" << pos[0] << " " << pos[1] << " " << pos[2] << endmsg;
   Condition posCond;
   std::vector<double> p;
   p.push_back(pos[0]);
   p.push_back(pos[1]);
   p.push_back(pos[2]);
   posCond.addParam(parName,p);
-  xmlString = posCond.toXml(objName);
+  std::string xmlString = posCond.toXml(objName);
   
   verbose() << "Encoded XML string is:" << std::endl
-      << xmlString << endreq;
-  return;
-};
-
-
-StatusCode PopulateDB::i_tagDB(const std::string& tagName){
-  cool::IDatabasePtr &db = m_dbAccSvc->database();
-  
-  std::vector<std::string> fldr_names = db->listFolders();
-  std::vector<std::string>::const_iterator fn;
-  for ( fn = fldr_names.begin() ; fn != fldr_names.end() ; ++fn ){
-  	if (db->existsFolder(*fn)){
-  	  cool::IFolderPtr folder = db->getFolder(*fn);
-  	  folder->tag(folder->fullPath()+"-"+tagName,"");
-  	}
-  }
-  return StatusCode::SUCCESS;
+            << xmlString << endmsg;
+  return xmlString;
 }
+
+//=============================================================================
