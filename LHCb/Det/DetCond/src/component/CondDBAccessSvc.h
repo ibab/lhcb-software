@@ -1,4 +1,4 @@
-// $Id: CondDBAccessSvc.h,v 1.4 2005-04-25 10:38:35 marcocle Exp $
+// $Id: CondDBAccessSvc.h,v 1.5 2005-06-23 14:14:46 marcocle Exp $
 #ifndef COMPONENT_CONDDBACCESSSVC_H 
 #define COMPONENT_CONDDBACCESSSVC_H 1
 
@@ -9,6 +9,8 @@
 // Forward declarations
 template <class TYPE> class SvcFactory;
 namespace pool { class AttributeListSpecification; }
+
+class CondDBCache;
 
 /** @class CondDBAccessSvc CondDBAccessSvc.h
  *  
@@ -46,7 +48,12 @@ public:
   
   /// Utility function that simplifies the storage of an XML string.
   virtual StatusCode storeXMLString(const std::string &path, const std::string &data,
-                                    const ITime &since, const ITime &till) const;
+                                    const TimePoint &since, const TimePoint &until) const;
+  
+  /// Utility function that simplifies the storage of an XML string.
+  /// (Useful for Python, the times are in seconds)
+  virtual StatusCode storeXMLString(const std::string &path, const std::string &data,
+                                    const double since_s, const double until_s) const;
   
   /// Convert from TimePoint class to cool::ValidityKey.
   virtual cool::ValidityKey timeToValKey(const TimePoint &time) const;
@@ -65,6 +72,24 @@ public:
   virtual StatusCode tagFolder(const std::string &path, const std::string &tagName,
                                const std::string &description);
 
+  virtual StatusCode getObject (const std::string &path, const TimePoint &when,
+                                boost::shared_ptr<pool::AttributeList> &data,
+                                std::string &descr, TimePoint &since, TimePoint &until);
+
+  /// Add a folder to the cache (bypass the DB)
+  virtual StatusCode cacheAddFolder(const std::string &path, const std::string &descr,
+                                    const pool::AttributeListSpecification& spec);
+  
+  /// Add a folder to the cache (bypass the DB)
+  virtual StatusCode cacheAddXMLFolder(const std::string &path);
+  
+  ///Add an object to the cache (bypass the DB)
+  virtual StatusCode cacheAddObject(const std::string &path, const TimePoint &since, const TimePoint &until,
+                                    const pool::AttributeList& payload);
+  
+  ///Add an XML object to the cache (bypass the DB)
+  virtual StatusCode cacheAddXMLObject(const std::string &path, const TimePoint &since, const TimePoint &until,
+                                       const std::string& data);
 protected:
   /// Standard constructor
   CondDBAccessSvc(const std::string& name, ISvcLocator* svcloc); 
@@ -106,8 +131,24 @@ private:
   /** Property CondDBAccessSvc.RunTest: */
   bool m_test;
 
+  /** Property CondDBAccessSvc.UseCache: store the retrieved informations into a cache for faster
+      later access. */
+  bool m_useCache;
+  
+  /// Property CondDBAccessSvc.CacheLowLevel: minimum fill of the cache.
+  size_t m_cacheLL;
+
+  /// Property CondDBAccessSvc.CacheHighLevel: maximum fill of the cache.
+  size_t m_cacheHL;
+  
+  /** Property CondDBAccessSvc.NoDB: do not use the database (cache must be on). */
+  bool m_noDB;
+
   /// Shared pointer to the COOL database instance
   cool::IDatabasePtr m_db;
+
+  /// Pointer to the cache manager
+  CondDBCache *m_cache;
 
   /// Generate the string used to connect to COOL.
   std::string i_connection_uri() const;

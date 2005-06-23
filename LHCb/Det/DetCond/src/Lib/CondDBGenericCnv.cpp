@@ -1,4 +1,4 @@
-// $Id: CondDBGenericCnv.cpp,v 1.3 2005-06-14 13:14:30 marcocle Exp $
+// $Id: CondDBGenericCnv.cpp,v 1.4 2005-06-23 14:13:39 marcocle Exp $
 // Include files 
 #include "GaudiKernel/IDetDataSvc.h"
 #include "GaudiKernel/TimePoint.h"
@@ -112,7 +112,7 @@ void CondDBGenericCnv::setObjValidity(TimePoint &since, TimePoint &till, DataObj
 //=========================================================================
 //  get an object from the conditions database
 //=========================================================================
-StatusCode CondDBGenericCnv::getObject (const std::string &path, cool::IObjectPtr &obj,
+StatusCode CondDBGenericCnv::getObject (const std::string &path, boost::shared_ptr<pool::AttributeList> &data,
                                         std::string &descr, TimePoint &since, TimePoint &until) {
 
   MsgStream log(msgSvc(),"CondDBGenericCnv");
@@ -128,30 +128,7 @@ StatusCode CondDBGenericCnv::getObject (const std::string &path, cool::IObjectPt
   
   for ( std::vector<ICondDBAccessSvc*>::iterator accSvc = m_condDBCnvSvc->accessServices().begin();
         accSvc !=  m_condDBCnvSvc->accessServices().end() && ! found_object ; ++accSvc ) {
-    try {
-      cool::IFolderPtr folder = (*accSvc)->database()->getFolder(path);
-      descr = folder->description();
-
-      if ((*accSvc)->tag() == "HEAD" || (*accSvc)->tag() == ""){
-        obj = folder->findObject((*accSvc)->timeToValKey(now));
-      } else {
-        obj = folder->findObject((*accSvc)->timeToValKey(now),0,folder->fullPath()+"-"+(*accSvc)->tag());
-      }
-    
-      since = (*accSvc)->valKeyToTime(obj->since());
-      until  = (*accSvc)->valKeyToTime(obj->until());
-
-      found_object = true;
-    
-    } catch ( cool::FolderNotFound /*&e*/) {
-      //log << MSG::ERROR << e << endmsg;
-      //return StatusCode::FAILURE;
-    } catch (cool::ObjectNotFound /*&e*/) {
-      //log << MSG::ERROR << "Object not found in \"" << path <<
-      //  "\" for tag \"" << (*accSvc)->tag() << "\" ("<< now << ')' << endmsg;
-      //log << MSG::DEBUG << e << endmsg;
-      //return StatusCode::FAILURE;
-    }
+    found_object = (*accSvc)->getObject(path,now,data,descr,since,until).isSuccess();
   }
   return (found_object) ? StatusCode::SUCCESS : StatusCode::FAILURE;
 }

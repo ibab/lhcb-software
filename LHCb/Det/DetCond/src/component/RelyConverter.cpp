@@ -1,4 +1,4 @@
-// $Id: RelyConverter.cpp,v 1.7 2005-06-14 11:55:36 cattanem Exp $
+// $Id: RelyConverter.cpp,v 1.8 2005-06-23 14:14:46 marcocle Exp $
 // Include files 
 #include "RelyConverter.h"
 
@@ -14,6 +14,9 @@
 #include "DetDesc/ValidDataObject.h"
 
 #include "CoolKernel/IObject.h"
+
+#include "AttributeList/AttributeList.h"
+#include "AttributeList/AttributeExceptions.h"
 
 #include <string>
 #include <sstream>
@@ -159,11 +162,11 @@ StatusCode RelyConverter::i_delegatedCreation(IOpaqueAddress* pAddress, DataObje
 
   MsgStream log(msgSvc(),"RelyConverter");
 
-  cool::IObjectPtr object;
+  boost::shared_ptr<pool::AttributeList> data;
   std::string description;
   TimePoint since,until;
   
-  sc = getObject(pAddress->par()[0], object, description, since, until);
+  sc = getObject(pAddress->par()[0], data, description, since, until);
   if ( !sc.isSuccess() ) return sc;
 
   long storage_type = getStorageType(description);
@@ -178,7 +181,15 @@ StatusCode RelyConverter::i_delegatedCreation(IOpaqueAddress* pAddress, DataObje
 
   // Create temporary address for the relevant type and classID 
   IOpaqueAddress *tmpAddress;
-  const std::string par[2] = { object->payloadValue<std::string>("data"), 
+  std::string xml_data;
+  try {
+    (*data)["data"].getValue(xml_data);
+  } catch (pool::attribute_not_found &e) {
+    log << MSG::ERROR << "I cannot find the data inside COOL object: " << e.what() << endmsg;
+    return StatusCode::FAILURE;
+  }
+  
+  const std::string par[2] = { xml_data, 
                                pAddress->par()[1] };
   sc = conversionSvc()->addressCreator()
     ->createAddress( storage_type,pAddress->clID() , par, 0, tmpAddress );

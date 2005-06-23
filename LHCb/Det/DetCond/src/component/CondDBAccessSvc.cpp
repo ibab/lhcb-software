@@ -1,4 +1,4 @@
-// $Id: CondDBAccessSvc.cpp,v 1.8 2005-06-14 10:32:57 marcocle Exp $
+// $Id: CondDBAccessSvc.cpp,v 1.9 2005-06-23 14:14:46 marcocle Exp $
 // Include files 
 #include <sstream>
 
@@ -19,9 +19,11 @@
 #include "CoolApplication/DatabaseSvcFactory.h"
 
 #include "AttributeList/AttributeList.h"
+#include "AttributeList/AttributeValueAccessor.h"
 
 // local
 #include "CondDBAccessSvc.h"
+#include "CondDBCache.h"
 
 // Factory implementation
 static SvcFactory<CondDBAccessSvc> s_factory;
@@ -44,23 +46,30 @@ CondDBAccessSvc::CondDBAccessSvc(const std::string& name, ISvcLocator* svcloc):
   Service(name,svcloc)
 {
 
-  declareProperty("HostName",     m_dbHostName);
-  declareProperty("User",         m_dbUser);
-  declareProperty("Password",     m_dbPassword);
-  declareProperty("HidePassword", m_hidePasswd);
-  declareProperty("Database",     m_dbName);
-  declareProperty("Schema",       m_dbSchema);
-  declareProperty("TAG",          m_dbTAG);
-  declareProperty("BackEnd",      m_dbBackEnd);
-  declareProperty("RecreateDB",   m_recreateDB);
-  declareProperty("RunTest",      m_test);
+  declareProperty("HostName",       m_dbHostName);
+  declareProperty("User",           m_dbUser);
+  declareProperty("Password",       m_dbPassword);
+  declareProperty("HidePassword",   m_hidePasswd);
+  declareProperty("Database",       m_dbName);
+  declareProperty("Schema",         m_dbSchema);
+  declareProperty("TAG",            m_dbTAG);
+  declareProperty("BackEnd",        m_dbBackEnd);
+  declareProperty("RecreateDB",     m_recreateDB);
+  declareProperty("RunTest",        m_test);
+  declareProperty("UseCache",       m_useCache);
+  declareProperty("CacheLowLevel",  m_cacheLL=10);
+  declareProperty("CacheHighLevel", m_cacheHL=100);
+  //declareProperty("CachePreload",   m_cachePreload=3600*1E9); // ns
+  declareProperty("NoDB",           m_noDB);
 
   // default for properties:
   m_hidePasswd = true;
   m_dbBackEnd  = "mysql";
   m_recreateDB = false;
   m_test       = false;
+  m_useCache   = false;
   m_dbTAG      = "";
+  m_noDB       = false;
   
   if (s_XMLstorageAttListSpec == NULL){
     // attribute list spec template
@@ -105,33 +114,55 @@ StatusCode CondDBAccessSvc::initialize(){
 
   log << MSG::DEBUG << "Initialize" << endmsg;
   
-  // user, name and password can be specified via authentication.xml
-  if ( m_dbHostName == "" ||
-       // m_dbUser == "" ||
-       m_dbName == "" ||
-       m_dbSchema == "" ||
-       m_dbBackEnd == "" ){
-    log << MSG::ERROR << "An information needed to connect to the CondDB is missing." << endmsg;
-    log << MSG::ERROR << "Check that options 'HostName', 'Schema', 'Database' and 'BackEnd' are set." << endmsg;
+  if ( m_noDB && !m_useCache ) {
+    log << MSG::ERROR << "Database access disabled and cache off: I cannot work like that. Ciao!" << endmsg;
     return StatusCode::FAILURE;
   }
-
-  cool::DatabaseId uri = i_connection_uri();
   
-  log << MSG::DEBUG << "Connection string = \"" ;
-  if (! m_hidePasswd){
-    log << uri;
-  } else {
-    log << m_dbBackEnd << "://" << m_dbHostName
-        << ";schema="   << m_dbSchema
-        << ";user="     << m_dbUser
-        << ";password=" << "**hidden**"
-        << ";dbname="   << m_dbName;
-  }
-  log << "\"" << endmsg;
+  if ( !m_noDB ) {
+    // user, name and password can be specified via authentication.xml
+    if ( m_dbHostName == "" ||
+         // m_dbUser == "" ||
+         m_dbName == "" ||
+         m_dbSchema == "" ||
+         m_dbBackEnd == "" ){
+      log << MSG::ERROR << "An information needed to connect to the CondDB is missing." << endmsg;
+      log << MSG::ERROR << "Check that options 'HostName', 'Schema', 'Database' and 'BackEnd' are set." << endmsg;
+      return StatusCode::FAILURE;
+    }
+    
+    cool::DatabaseId uri = i_connection_uri();
+    
+    log << MSG::DEBUG << "Connection string = \"" ;
+    if (! m_hidePasswd){
+      log << uri;
+    } else {
+      log << m_dbBackEnd << "://" << m_dbHostName
+          << ";schema="   << m_dbSchema
+          << ";user="     << m_dbUser
+          << ";password=" << "**hidden**"
+          << ";dbname="   << m_dbName;
+    }
+    log << "\"" << endmsg;
 
-  sc = i_openConnention();
-  if (sc.isFailure()) return sc;
+    sc = i_openConnention();
+    if (!sc.isSuccess()) return sc;
+  } else {
+    log << MSG::INFO << "Database not requested: I'm not trying to connect" << endmsg;
+  }
+  
+  // set up cache if needed
+  if (m_useCache) {
+    log << MSG::DEBUG << "Initialize CondDB cache." << endmsg;
+    m_cache = new CondDBCache(MsgStream(msgSvc(), name() + ".Cache"),m_cacheHL,m_cacheLL);
+    if (m_cache == NULL) {
+      log << MSG::ERROR << "Unable to initialize CondDB cache." << endmsg;
+      return StatusCode::FAILURE;
+    }
+  } else {
+    log << MSG::DEBUG << "CondDB cache not needed" << endmsg;
+    m_cache = NULL;
+  }
 
   /* TODO: this piece of code must be reintroduced when HVS is functional
      sc = i_checkTag();
@@ -142,7 +173,7 @@ StatusCode CondDBAccessSvc::initialize(){
   */
   if ( !m_test ) {
     return sc;
-  } else { // do the test
+  } else  if ( !m_noDB ) { // do the test
     log << MSG::DEBUG << "Entering Test" << endmsg;
 
     pool::AttributeListSpecification BasicStringALSpec;
@@ -234,7 +265,7 @@ StatusCode CondDBAccessSvc::initialize(){
       return StatusCode::FAILURE;
     }
   }
-
+  
   return StatusCode::SUCCESS;
 }
 
@@ -246,6 +277,13 @@ StatusCode CondDBAccessSvc::finalize(){
   log << MSG::DEBUG << "Finalize" << endmsg;
   // release the database
   m_db.reset();
+  if (m_useCache) {
+    // dump the content of the cache
+    m_cache->dump();
+    // dispose of the cache manager
+    delete m_cache;
+  }
+  
   return Service::finalize();
 }
 
@@ -329,9 +367,16 @@ StatusCode CondDBAccessSvc::i_openConnention(){
 //=============================================================================
 const std::string &CondDBAccessSvc::tag() const{ return m_dbTAG; }
 StatusCode CondDBAccessSvc::setTag(const std::string &_tag){
+
+  if (m_dbTAG == _tag) return StatusCode::SUCCESS; // no need to change
+
   StatusCode sc = i_checkTag(_tag);
   if ( sc.isSuccess() ) {
     m_dbTAG = _tag;
+    if (m_useCache) {
+      // the cache must be cleared if the tag is changed
+      m_cache->clear();
+    }
   } else {
     MsgStream log(msgSvc(), name() );
     log << MSG::WARNING << "Unable to set TAG \"" << _tag
@@ -402,7 +447,14 @@ StatusCode CondDBAccessSvc::createFolder(const std::string &path,
 }
 
 StatusCode CondDBAccessSvc::storeXMLString(const std::string &path, const std::string &data,
-                                           const ITime &since, const ITime &till) const {
+                                           const TimePoint &since, const TimePoint &until) const {
+  if ( !m_db ) {
+    MsgStream log(msgSvc(), name() );
+    log << MSG::ERROR << "Unable to store the object \"" << path
+        << "\": the database is not opened!" << endmsg;
+    return StatusCode::FAILURE;
+  }
+  
   try {
     // retrieve folder pointer
     cool::IFolderPtr folder = m_db->getFolder(path);
@@ -414,7 +466,7 @@ StatusCode CondDBAccessSvc::storeXMLString(const std::string &path, const std::s
     }
     pool::AttributeList payload(*s_XMLstorageAttListSpec);
     payload["data"].setValue<std::string>(data);
-    folder->storeObject(timeToValKey(since),timeToValKey(till),payload);
+    folder->storeObject(timeToValKey(since),timeToValKey(until),payload);
   } catch (cool::Exception &e){
     MsgStream log(msgSvc(), name() );
     log << MSG::ERROR << "Unable to store the XML string into \"" << path
@@ -422,6 +474,10 @@ StatusCode CondDBAccessSvc::storeXMLString(const std::string &path, const std::s
     return StatusCode::FAILURE;
   }
   return StatusCode::SUCCESS;
+}
+StatusCode CondDBAccessSvc::storeXMLString(const std::string &path, const std::string &data,
+                                           const double since_s, const double until_s) const {
+  return storeXMLString(path,data,TimePoint((long long int)(since_s * 1e9)),TimePoint((long long int)(until_s * 1e9)));
 }
 
 cool::ValidityKey CondDBAccessSvc::timeToValKey(const TimePoint &time) const {
@@ -441,6 +497,12 @@ TimePoint CondDBAccessSvc::valKeyToTime(const cool::ValidityKey &key) const {
 
 StatusCode CondDBAccessSvc::tagFolder(const std::string &path, const std::string &tagName,
                                       const std::string &description){
+  if ( !m_db ) {
+    MsgStream log(msgSvc(), name() );
+    log << MSG::ERROR << "Unable to tag the folder \"" << path
+        << "\": the database is not opened!" << endmsg;
+    return StatusCode::FAILURE;
+  }
   try {
     MsgStream log(msgSvc(),name());
     log << MSG::DEBUG << "entering tagFolder: \"" << path << '"' << endmsg;
@@ -477,4 +539,120 @@ StatusCode CondDBAccessSvc::tagFolder(const std::string &path, const std::string
     return StatusCode::FAILURE;
   }
   return StatusCode::SUCCESS;
+}
+
+StatusCode CondDBAccessSvc::getObject(const std::string &path, const TimePoint &when,
+                                      boost::shared_ptr<pool::AttributeList> &data,
+                                      std::string &descr, TimePoint &since, TimePoint &until){
+
+  try {
+    if (m_useCache) {
+      cool::ValidityKey vk_when = timeToValKey(when);
+      cool::ValidityKey vk_since, vk_until;
+      if (!m_cache->get(path,vk_when,vk_since,vk_until,descr,data)) {
+        // go to the database
+        cool::IFolderPtr folder = database()->getFolder(path);
+        cool::IObjectPtr obj;
+        if (tag() == "HEAD" || tag() == ""){
+          obj = folder->findObject(vk_when);
+        } else {
+          obj = folder->findObject(vk_when,0,folder->fullPath()+"-"+tag());
+        }
+        m_cache->insert(folder,obj);
+        // now the object is in the cache
+        m_cache->get(path,vk_when,vk_since,vk_until,descr,data);
+      }
+      since = valKeyToTime(vk_since);
+      until = valKeyToTime(vk_until);
+    } else if (!m_noDB){
+      
+      cool::IFolderPtr folder = database()->getFolder(path);
+      descr = folder->description();
+
+      cool::IObjectPtr obj;
+      if (tag() == "HEAD" || tag() == ""){
+        obj = folder->findObject(timeToValKey(when));
+      } else {
+        obj = folder->findObject(timeToValKey(when),0,folder->fullPath()+"-"+tag());
+      }
+    
+      // deep copy of the attr. list
+      boost::shared_ptr<pool::AttributeListSpecification> spec(new pool::AttributeListSpecification);
+      for (pool::AttributeListSpecification::const_iterator a = folder->payloadSpecification().begin();
+           a != folder->payloadSpecification().end(); ++a) {
+        spec->push_back(a->name(),a->type());
+      }
+      // spec->append_and_merge(folder->payloadSpecification());
+    
+      data = boost::shared_ptr<pool::AttributeList>(new pool::AttributeList(spec));
+      for(pool::AttributeListSpecification::const_iterator a = spec->begin();
+          a != spec->end(); ++a) {
+        pool::AttributeValueAccessor(obj->payload()[a->name()])
+          .copyData(pool::AttributeValueAccessor((*data)[a->name()]).getMemoryAddress());
+      }
+      //data = obj->payload();
+    
+      since = valKeyToTime(obj->since());
+      until = valKeyToTime(obj->until());
+      
+    } else {
+      //log << MSG::ERROR << "Object not found in cache and database is off" << endmsg;
+      return StatusCode::FAILURE;
+    }
+    
+  } catch ( cool::FolderNotFound /*&e*/) {
+    //log << MSG::ERROR << e << endmsg;
+    return StatusCode::FAILURE;
+  } catch (cool::ObjectNotFound /*&e*/) {
+    //log << MSG::ERROR << "Object not found in \"" << path <<
+    //  "\" for tag \"" << (*accSvc)->tag() << "\" ("<< now << ')' << endmsg;
+    //log << MSG::DEBUG << e << endmsg;
+    return StatusCode::FAILURE;
+  }
+  return StatusCode::SUCCESS;
+}
+
+//=========================================================================
+//  
+//=========================================================================
+StatusCode CondDBAccessSvc::cacheAddFolder(const std::string &path, const std::string &descr,
+                                           const pool::AttributeListSpecification& spec) {
+  if (!m_useCache) {
+    MsgStream log(msgSvc(),name());
+    log << MSG::ERROR << "Cache not in use: I cannot add a folder to it." << endmsg;
+    return StatusCode::FAILURE;
+  }
+  return m_cache->addFolder(path,descr,spec) ? StatusCode::SUCCESS : StatusCode::FAILURE;
+}
+
+//=========================================================================
+//  
+//=========================================================================
+StatusCode CondDBAccessSvc::cacheAddXMLFolder(const std::string &path) {
+  std::ostringstream _descr;
+  _descr << " <storage_type=" << std::dec << XML_StorageType << ">";
+  return cacheAddFolder(path,_descr.str(),*s_XMLstorageAttListSpec);
+}
+
+//=========================================================================
+//  
+//=========================================================================
+StatusCode CondDBAccessSvc::cacheAddObject(const std::string &path, const TimePoint &since, const TimePoint &until,
+                                           const pool::AttributeList& payload) {
+  if (!m_useCache) {
+    MsgStream log(msgSvc(),name());
+    log << MSG::ERROR << "Cache not in use: I cannot add an object to it." << endmsg;
+    return StatusCode::FAILURE;
+  }
+  return m_cache->addObject(path,timeToValKey(since),timeToValKey(until),payload) ? StatusCode::SUCCESS : StatusCode::FAILURE;
+}
+
+//=========================================================================
+//  
+//=========================================================================
+StatusCode CondDBAccessSvc::cacheAddXMLObject(const std::string &path, const TimePoint &since, const TimePoint &until,
+                                           const std::string &data) {
+  pool::AttributeList payload(*s_XMLstorageAttListSpec);
+  payload["data"].setValue<std::string>(data);
+  return cacheAddObject(path,since,until,payload);
 }
