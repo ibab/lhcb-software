@@ -1,4 +1,4 @@
-// $Id: UpdateManagerSvc.cpp,v 1.3 2005-06-23 14:21:30 marcocle Exp $
+// $Id: UpdateManagerSvc.cpp,v 1.4 2005-06-23 15:14:14 marcocle Exp $
 // Include files 
 #include "GaudiKernel/SvcFactory.h"
 #include "GaudiKernel/MsgStream.h"
@@ -320,12 +320,13 @@ void UpdateManagerSvc::setValidity(const std::string path, const TimePoint& sinc
     }
   } else { // a CondDB path can contain many objects
     Item::ItemList::iterator i = m_all_items.begin();
-    while ( i !=  m_all_items.end() &&
-            (*i)->match(path,path_to_db) ) {
-      // set the validity and propagate up
-      (*i)->changeValidity(since,until);
-      // if the object has already been loaded we should also change its validity
-      if ((*i)->vdo) (*i)->vdo->setValidity(since,until);
+    while ( i !=  m_all_items.end() ) {
+      if ( (*i)->match(path,path_to_db) ) {
+        // set the validity and propagate up
+        (*i)->changeValidity(since,until);
+        // if the object has already been loaded we should also change its validity
+        if ((*i)->vdo) (*i)->vdo->setValidity(since,until);
+      }
       ++i;
     }
   }
