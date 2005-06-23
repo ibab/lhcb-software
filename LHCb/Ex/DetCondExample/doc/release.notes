@@ -1,6 +1,11 @@
-#$Id: release.notes,v 1.40 2005-06-14 13:19:55 marcocle Exp $
+#$Id: release.notes,v 1.41 2005-06-23 09:34:10 marcocle Exp $
 Package Ex/DetCondExample
 Package manager : Marco Clemencic
+
+! 2005-06-23 - Marco Clemencic
+ - Code clean up, now closer to more recent standards
+   (PopulateDB, EvtClock, FireUpdateManager)
+ - Use GaudiSequencer instead of Sequencer
 
 ! 2005-06-14 - Marco Clemencic
  - Environment variables added as place holders for DB connections data.
