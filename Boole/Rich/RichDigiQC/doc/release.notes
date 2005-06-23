@@ -5,6 +5,9 @@
 !-----------------------------------------------------------------------------
 
 !======================== RichDigiQC v2r2 2005-06-22 ========================
+! 2005-06-22 - Chris Jones
+ - Adapt to changes in RichKernel base classes and RichToolRegistry
+
 ! 2005-06-18 - Chris Jones
  - Adapt to changes in RichEvent
 

@@ -7,8 +7,8 @@ RiDigitQC.EvtColsProduce = false; // turn off event collections
 RiDigitQC.HistoDir = "RICH/DIGI/DIGITQC"; // set histo directory
 RiDigitQC.HistoOffSet = 10000;
 
-// DAQ decoding
-//#include "$RICHDAQROOT/options/Brunel_DecodeRawEvent.opts"
+// MC tools
+ToolSvc.RichToolRegistry.Tools += { "RichMCTruthTool/RichMCTruthTool" };
 
 /*
 // Low level data object debugger

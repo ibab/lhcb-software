@@ -5,7 +5,7 @@
  *  Header file for RICH Digitisation Quality Control algorithm : RichDigitQC
  *
  *  CVS Log :-
- *  $Id: RichDigitQC.h,v 1.12 2005-06-18 11:27:15 jonrob Exp $
+ *  $Id: RichDigitQC.h,v 1.13 2005-06-23 14:52:32 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   2003-09-08
@@ -82,16 +82,16 @@ private: // methods
 private: // data
 
   /// Pointer to RICH Level1 tool
-  IRichHPDToLevel1Tool * m_level1;
+  const IRichHPDToLevel1Tool * m_level1;
 
   /// Pointer to Rich HPD ID tool
-  IRichHPDInfoTool * m_hpdID;
+  const IRichHPDInfoTool * m_hpdID;
 
   /// Pointer to RichSmartID tool
-  IRichSmartIDTool * m_smartIDs;
+  const IRichSmartIDTool * m_smartIDs;
 
   /// Pointer to MC truth tool
-  IRichMCTruthTool * m_mcTool;
+  const IRichMCTruthTool * m_mcTool;
 
   // job options
   std::string m_digitTDS;  ///< Location of MCRichDigits in TES
