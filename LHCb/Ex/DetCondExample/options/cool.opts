@@ -45,7 +45,14 @@ CondDBAccessSvc.BackEnd    = "$CONDDBENGINE";
 
 //CondDBAccessSvc.RunTest = true;
 
+// +++++++++++++ Cache related options (default values)
+//CondDBAccessSvc.UseCache = false;
+//CondDBAccessSvc.CacheHighLevel = 100;
+//CondDBAccessSvc.CacheLowLevel = 10;
+//CondDBAccessSvc.NoDB = false;
+
 //************************************************** 
 
 // which tag to use if none is specified
 //CondDBAccessSvc.TAG = "COLD";
+

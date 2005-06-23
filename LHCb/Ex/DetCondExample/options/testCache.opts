@@ -1,0 +1,54 @@
+//$Id: testCache.opts,v 1.1 2005-06-23 15:30:54 marcocle Exp $
+//==============================================================
+// Job options to test double CondDB usage in DetCondExample
+//==============================================================
+
+#include "../options/common.opts"
+#include "../options/cool.opts"
+
+DetectorDataSvc.DetDbLocation  = "$DETCONDEXAMPLE_XMLDDDB/cache.xml";
+
+// disable database access
+CondDBAccessSvc.UseCache = true;
+CondDBAccessSvc.NoDB = true;
+
+//--------------------------------------------------------------
+// Sequence of algorithms to be applied
+//--------------------------------------------------------------
+ApplicationMgr.TopAlg  = { "Sequencer" };
+Sequencer.Members   = { };
+Sequencer.Members  += { "EvtClock" };
+Sequencer.Members  += { "FireUpdateManager" };
+Sequencer.Members  += { "TestCacheInjection" };
+Sequencer.Members  += { "DumpDetectorStore" };
+//--------------------------------------------------------------
+// Input events
+//--------------------------------------------------------------
+
+// Input file
+ApplicationMgr.EvtSel = "NONE";
+
+// Number of events to be processed (default is 10)
+ApplicationMgr.EvtMax = 3;
+
+// Event clock attributes
+EvtClock.startTime = 5;
+EvtClock.delayTime = 10;
+
+//--------------------------------------------------------------
+// Message service options
+//--------------------------------------------------------------
+
+// Set output level threshold 
+// Levels: 1=VERBOSE, 2=DEBUG, 3=INFO, 4=WARNING, 5=ERROR, 6=FATAL
+MessageSvc.OutputLevel = 1;
+
+//--------------------------------------------------------------
+// DetCond extra options
+//--------------------------------------------------------------
+ApplicationMgr.DLLs += { "DetCond" };
+ApplicationMgr.ExtSvc += { "CondDBAccessSvc" };
+ApplicationMgr.ExtSvc += { "CondDBCnvSvc" };
+
+DetectorPersistencySvc.CnvServices += { "CondDBCnvSvc" };
+
