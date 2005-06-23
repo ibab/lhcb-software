@@ -1,7 +1,8 @@
-# $Id: release.notes,v 1.41 2005-06-23 14:12:29 marcocle Exp $
+# $Id: release.notes,v 1.42 2005-06-23 15:27:36 marcocle Exp $
 Package Det/DetCond
 Package manager : Marco Clemencic
 
+================= Det/DetCond v7r4 2005-06-23 ================================
 ! 2005-06-23 - Marco Clemencic
  - Added the possibility of having an in-memory copy of the CondDB.
 
