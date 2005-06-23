@@ -1,18 +1,16 @@
 
+//===============================================================================
 /** @file MCRichDigitsToRawBufferAlg.h
  *
  *  Header file for RICH DAQ algorithm : MCRichDigitsToRawBufferAlg
  *
  *  CVS Log :-
- *  $Id: MCRichDigitsToRawBufferAlg.h,v 1.1 2005-06-18 11:36:05 jonrob Exp $
- *  $Log: not supported by cvs2svn $
- *  Revision 1.1  2005/01/07 13:21:22  jonrob
- *  Add new algorithm
- *
+ *  $Id: MCRichDigitsToRawBufferAlg.h,v 1.2 2005-06-23 15:10:12 jonrob Exp $
  *
  *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
  *  @date   2003-11-06
  */
+//===============================================================================
 
 #ifndef RICHDAQ_MCRICHDIGITSTORAWBUFFERALG_H
 #define RICHDAQ_MCRICHDIGITSTORAWBUFFERALG_H 1
@@ -31,6 +29,7 @@
 #include "RichKernel/IRichRawDataFormatTool.h"
 #include "RichKernel/IRichHPDToLevel1Tool.h"
 
+//===============================================================================
 /** @class MCRichDigitsToRawBufferAlg MCRichDigitsToRawBufferAlg.h
  *
  *  Algorithm to fill the Raw buffer with RICH information from MCRichDigits.
@@ -40,6 +39,7 @@
  *
  *  @todo Remove DC04 hacks when no longer needed
  */
+//===============================================================================
 
 class MCRichDigitsToRawBufferAlg : public RichAlgBase {
 
@@ -57,10 +57,10 @@ public:
 private: // data
 
   /// Pointer to RICH raw data format tool
-  IRichRawDataFormatTool * m_rawFormatT;
+  const IRichRawDataFormatTool * m_rawFormatT;
 
   /// Pointer to RICH Level1 tool
-  IRichHPDToLevel1Tool * m_level1;
+  const IRichHPDToLevel1Tool * m_level1;
 
   /// Location of input MCRichDigits in TES
   std::string m_digitsLoc;

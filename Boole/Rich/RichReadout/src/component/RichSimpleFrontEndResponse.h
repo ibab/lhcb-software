@@ -1,4 +1,18 @@
 
+//===============================================================================
+/** @file RichSimpleFrontEndResponse.h
+ *
+ *  Header file for RICH digitisation algorithm : RichSimpleFrontEndResponse
+ *
+ *  CVS Log :-
+ *  $Id: RichSimpleFrontEndResponse.h,v 1.2 2005-06-23 15:10:12 jonrob Exp $
+ *
+ *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
+ *  @author Alex Howard   a.s.howard@ic.ac.uk
+ *  @date   2003-11-06
+ */
+//===============================================================================
+
 #ifndef RICHREADOUT_RICHSIMPLEFRONTENDRESPONSE_H
 #define RICHREADOUT_RICHSIMPLEFRONTENDRESPONSE_H 1
 

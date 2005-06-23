@@ -1,4 +1,18 @@
 
+//===============================================================================
+/** @file RichDetailedFrontEndResponse.cpp
+ *
+ *  Implementation file for RICH digitisation algorithm : RichDetailedFrontEndResponse
+ *
+ *  CVS Log :-
+ *  $Id: RichDetailedFrontEndResponse.cpp,v 1.2 2005-06-23 15:10:12 jonrob Exp $
+ *
+ *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
+ *  @author Alex Howard   a.s.howard@ic.ac.uk
+ *  @date   2003-11-06
+ */
+//===============================================================================
+
 #include "RichDetailedFrontEndResponse.h"
 
 // Declaration of the Algorithm Factory
@@ -39,7 +53,7 @@ StatusCode RichDetailedFrontEndResponse::initialize()
   if ( sc.isFailure() ) { return sc; }
 
   // create a collection of all pixels
-  IRichSmartIDTool * smartIDs;
+  const IRichSmartIDTool * smartIDs;
   acquireTool( "RichSmartIDTool" , smartIDs );
   const RichSmartID::Collection & pixels = smartIDs->readoutChannelList();
   actual_base = theRegistry.GetNewBase( pixels );

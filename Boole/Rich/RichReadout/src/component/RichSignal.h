@@ -1,3 +1,18 @@
+
+//===============================================================================
+/** @file RichSignal.h
+ *
+ *  Header file for RICH digitisation algorithm : RichSignal
+ *
+ *  CVS Log :-
+ *  $Id: RichSignal.h,v 1.2 2005-06-23 15:10:12 jonrob Exp $
+ *
+ *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
+ *  @author Alex Howard   a.s.howard@ic.ac.uk
+ *  @date   2003-11-06
+ */
+//===============================================================================
+
 #ifndef RICHREADOUT_RICHSIGNAL_H
 #define RICHREADOUT_RICHSIGNAL_H 1
 
@@ -75,7 +90,7 @@ private: // data
   bool m_doLHCBkg;
 
   /// Pointer to RichSmartID tool
-  IRichSmartIDTool * m_smartIDTool;
+  const IRichSmartIDTool * m_smartIDTool;
 
   mutable Rndm::Numbers m_rndm;
 

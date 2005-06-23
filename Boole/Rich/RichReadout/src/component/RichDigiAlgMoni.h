@@ -1,4 +1,4 @@
-// $Id: RichDigiAlgMoni.h,v 1.1 2005-06-18 11:36:05 jonrob Exp $
+// $Id: RichDigiAlgMoni.h,v 1.2 2005-06-23 15:10:12 jonrob Exp $
 #ifndef RICHMONITOR_RICHDIGIALGMONI_H
 #define RICHMONITOR_RICHDIGIALGMONI_H 1
 
@@ -92,10 +92,10 @@ private: // methods
 private: // data
 
   /// Pointer to RichSmartID tool
-  IRichSmartIDTool * m_smartIDTool;
+  const IRichSmartIDTool * m_smartIDTool;
 
   /// Pointer to MC truth tool
-  IRichMCTruthTool * m_mcTool;
+  const IRichMCTruthTool * m_mcTool;
 
   // job options
   std::string m_histPth;        ///< Output histogram path

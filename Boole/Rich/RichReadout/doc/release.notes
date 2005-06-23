@@ -5,6 +5,9 @@
 !-----------------------------------------------------------------------------
 
 !======================== RichReadout v1r13 2005-06-21 =======================
+! 2005-06-21 - Chris Jones
+ - Adapt to changes in RichKernel base classes and RichToolRegistry
+
 ! 2005-06-18 - Chris Jones
  - Import data objects MCRichDeposit and MCRichSummedDeposit from RichEvent
 
