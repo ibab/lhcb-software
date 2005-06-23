@@ -1,8 +1,12 @@
 !-----------------------------------------------------------------------------
 ! Package     : Tools/XmlTools
-! Responsible : Sebastien Ponce
+! Responsible : Sebastien Ponce / Marco Clemencic
 ! Purpose     : Interface to XML Xerces Parser plus some extra services
 !-----------------------------------------------------------------------------
+
+! 2005-06-23 - Marco Clemencic
+ - Fixed a small memory leak in XmlParserSvc
+   (the cache was not freed in the destructor)
 
 !================= XmlTools v3r5 2005-04-22 ==========================
 ! 2005-04-22 - Marco Clemencic
