@@ -5,7 +5,7 @@
  * Implementation file for class : RichHPDToLevel1Tool
  *
  * CVS Log :-
- * $Id: RichHPDToLevel1Tool.cpp,v 1.6 2005-05-13 14:22:12 jonrob Exp $
+ * $Id: RichHPDToLevel1Tool.cpp,v 1.7 2005-06-23 14:50:28 jonrob Exp $
  *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @date 2004-12-18
@@ -184,7 +184,7 @@ RichHPDToLevel1Tool::richDetector( const RichDAQ::Level1ID l1ID ) const
 void RichHPDToLevel1Tool::buildTempMapping()
 {
   // acquire tools
-  IRichSmartIDTool * smartIDs;
+  const IRichSmartIDTool * smartIDs;
   acquireTool( "RichSmartIDTool", smartIDs );
 
   // Get list of all valid readout channels

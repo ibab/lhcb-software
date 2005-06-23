@@ -4,8 +4,7 @@
  *  Header file for RICH DAQ utility class : RichZSPacked
  *
  *  CVS Log :-
- *  $Id: RichZSPacked.h,v 1.1 2005-01-13 13:12:26 jonrob Exp $
- *  $Log: not supported by cvs2svn $
+ *  $Id: RichZSPacked.h,v 1.2 2005-06-23 14:50:28 jonrob Exp $
  *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   2003-11-06

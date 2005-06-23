@@ -5,7 +5,7 @@
  *  Header file for tool : RichRawDataFormatTool
  *
  *  CVS Log :-
- *  $Id: RichRawDataFormatTool.h,v 1.7 2005-05-13 14:22:12 jonrob Exp $
+ *  $Id: RichRawDataFormatTool.h,v 1.8 2005-06-23 14:50:28 jonrob Exp $
  *
  *  @author Chris Jones    Christopher.Rob.Jones@cern.ch
  *  @date   2004-12-18
@@ -143,10 +143,10 @@ private: // methods
 private: // data
 
   /// Pointer to Rich HPD ID tool
-  IRichHPDInfoTool * m_hpdID;
+  const IRichHPDInfoTool * m_hpdID;
 
   /// Pointer to L1 tool
-  IRichHPDToLevel1Tool * m_l1Tool;
+  const IRichHPDToLevel1Tool * m_l1Tool;
 
   /// Pointer to Raw Event
   mutable RawEvent * m_rawEvent;

@@ -4,10 +4,7 @@
  *  Header file for RICH DAQ algorithm : RawBufferToRichDigitsAlg
  *
  *  CVS Log :-
- *  $Id: RawBufferToRichDigitsAlg.h,v 1.6 2004-10-30 19:13:05 jonrob Exp $
- *  $Log: not supported by cvs2svn $
- *  Revision 1.5  2004/07/27 13:46:06  jonrob
- *  Add doxygen file documentation and CVS information
+ *  $Id: RawBufferToRichDigitsAlg.h,v 1.7 2005-06-23 14:50:28 jonrob Exp $
  *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   2003-11-06
@@ -55,7 +52,7 @@ private: // data
   std::string m_richDigitsLoc;
 
   /// Raw Buffer Decoding tool 
-  IRichRawBufferToSmartIDsTool * m_decoder;
+  const IRichRawBufferToSmartIDsTool * m_decoder;
 
 };
 

@@ -4,16 +4,7 @@
  *  Header file for RICH DAQ utility class : RichZSHitTriplet
  *
  *  CVS Log :-
- *  $Id: RichZSHitTriplet.h,v 1.9 2005-01-13 17:31:47 jonrob Exp $
- *  $Log: not supported by cvs2svn $
- *  Revision 1.8  2005/01/13 13:12:41  jonrob
- *  Various updates
- *
- *  Revision 1.7  2005/01/07 12:35:59  jonrob
- *  Complete rewrite
- *
- *  Revision 1.6  2004/07/27 13:46:07  jonrob
- *  Add doxygen file documentation and CVS information
+ *  $Id: RichZSHitTriplet.h,v 1.10 2005-06-23 14:50:28 jonrob Exp $
  *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   2003-11-06

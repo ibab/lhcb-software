@@ -5,7 +5,7 @@
  *  Header file for tool : RichRawBufferToSmartIDsTool
  *
  *  CVS Log :-
- *  $Id: RichRawBufferToSmartIDsTool.h,v 1.6 2005-05-13 14:22:12 jonrob Exp $
+ *  $Id: RichRawBufferToSmartIDsTool.h,v 1.7 2005-06-23 14:50:28 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -88,7 +88,7 @@ private: // private methods
 private: // private data
 
   /// Pointer to RICH raw data format tool
-  IRichRawDataFormatTool * m_rawFormatT;
+  const IRichRawDataFormatTool * m_rawFormatT;
 
   /// Flag to turn on the sorting of the RichSmartIDs
   bool m_sortIDs;

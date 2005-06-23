@@ -5,7 +5,7 @@
  *  Header file for tool : RichHPDToLevel1Tool
  *
  *  CVS Log :-
- *  $Id: RichHPDToLevel1Tool.h,v 1.5 2005-05-13 14:22:12 jonrob Exp $
+ *  $Id: RichHPDToLevel1Tool.h,v 1.6 2005-06-23 14:50:28 jonrob Exp $
  *
  *  @author Chris Jones    Christopher.Rob.Jones@cern.ch
  *  @date   2004-12-18
@@ -100,7 +100,7 @@ private: //methods
 private: // data
 
   // HPD information tool
-  IRichHPDInfoTool * m_hpdTool;
+  const IRichHPDInfoTool * m_hpdTool;
 
   /// L1 data from job options
   typedef std::vector< int > JOData;
