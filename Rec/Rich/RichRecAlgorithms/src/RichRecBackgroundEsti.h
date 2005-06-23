@@ -59,7 +59,7 @@ private:   // Private data members
   typedef RichMap<RichSmartID::KeyType,double> PDsignals;
 
   /// Pointers to expected track signal tool
-  IRichExpectedTrackSignal * m_tkSignal;
+  const IRichExpectedTrackSignal * m_tkSignal;
 
   /// Maximum number of iterations in background normalisation
   int m_maxBkgIterations;

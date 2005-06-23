@@ -5,7 +5,7 @@
  *  Implementation file for algorithm class : RichRecBackgroundEsti
  *
  *  CVS Log :-
- *  $Id: RichRecBackgroundEsti.cpp,v 1.1.1.1 2005-06-18 08:42:43 jonrob Exp $
+ *  $Id: RichRecBackgroundEsti.cpp,v 1.2 2005-06-23 15:10:56 jonrob Exp $
  *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   17/04/2002
@@ -47,7 +47,7 @@ StatusCode RichRecBackgroundEsti::initialize()
   if ( sc.isFailure() ) { return sc; }
 
   // Acquire instances of tools
-  acquireTool( "RichExpectedTrackSignal", m_tkSignal );
+  m_tkSignal = expTrackSignalTool();
 
   return sc;
 }
