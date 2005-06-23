@@ -40,6 +40,7 @@
 
  - In RichKernel v5r5
    . Changes to RichMirrorSegFinder interface
+   . Changes to allow running HLT and offline reconstruction in same job
 
  - In RichEvent v8r4
    . Move non-persistent digitization classes MCRichDeposit, MCRichSummedDeposit
@@ -53,12 +54,14 @@
    . Fix a few bugs in the "trackSelected" methods of RichTrackSelector
    . Only load the creator tools "on-demand" for the algorithm base classes
      Has the side that some tools are only created during the first event...
+   . Changes to allow running HLT and offline reconstruction in same job
 
  - In RichDAQ v2r2
    . Rename RichHPDIDTool RichHPDInfoTool
    . Add functionality to RichHPDInfoTool to disable given HPDs and methods to
      access information on whether a given HPD is active
    . Fix stats for cases when some events are not processed (such as in HLT)
+   . Changes to allow running HLT and offline reconstruction in same job
 
 </PRE><H1><A NAME=v18r6>2005-06-13 LHCbSys v18r6</A></H1><PRE>
  - Packages added:    Event/PackedEvent v1r0 (replaces Event/Rdst)
