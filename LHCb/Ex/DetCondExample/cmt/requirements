@@ -1,6 +1,6 @@
-# $Id: requirements,v 1.29 2005-05-23 16:51:07 marcocle Exp $
+# $Id: requirements,v 1.30 2005-06-23 15:20:18 marcocle Exp $
 package DetCondExample
-version v7r2
+version v7r3
 
 branches doc src job options cmt XMLDDDB sql
 ignore_pattern package_stamps 
@@ -29,9 +29,8 @@ use unixodbc v* LCG_Interfaces
 set ODBCINST $(unixodbc_home)
 
 # library path needed for sqlite backend
-#path_remove LD_LIBRARY_PATH "/sqlite/"
-#path_append LD_LIBRARY_PATH "$(LCG_external)/sqlite/3.0.8/$(CMTCONFIG)/lib" WIN32 ""
-#### sqlite is not working
+#use sqlite   v* LCG_Interfaces
+#### sqlite is not yet working
 
 # library path needed for oracle backend
 macro Oracle_version "10.1.0.3-1"
@@ -61,17 +60,14 @@ set DETCONDEXAMPLE_DAQFOLDERNAME DAQ
 set DETCONDEXAMPLE_DAQRECORDSIZE 3999
 
 # Path to some useful scripts using sql
-path_append PATH ${DETCONDEXAMPLEROOT}/sql
+#path_append PATH ${DETCONDEXAMPLEROOT}/sql
 
-# Path to the shared libraries in the bin directory
-path_remove LD_LIBRARY_PATH ${DETCONDEXAMPLEROOT}
-path_append LD_LIBRARY_PATH ${DETCONDEXAMPLEROOT}/${BINDIR}
+apply_pattern ld_library_path
 
 #==================================================================
 private
 
 #==> Detector Conditions example
 application DetCondExample *.cpp $(GAUDICONFROOT)/src/GaudiMain.cpp
-macro DetCondExample_linkopts "$(application_linkopts) -L$(DETCONDROOT)/$(CMTCONFIG) -lDetCond "
 
 path JOBOPTSEARCHPATH ../options
