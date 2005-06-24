@@ -1,4 +1,4 @@
-// $Id: GeometryInfoPlus.cpp,v 1.4 2005-06-24 11:54:55 jpalac Exp $
+// $Id: GeometryInfoPlus.cpp,v 1.5 2005-06-24 12:41:59 cattanem Exp $
 // Include files 
 
 // GaudiKernel
@@ -37,6 +37,7 @@
 // create "ghost" 
 GeometryInfoPlus::GeometryInfoPlus(IDetectorElement* de) 
   : 
+  m_log                 (       0     ),
   m_gi_has_logical      (     false   ),
   m_gi_lvolumeName      (      ""     ),
   m_gi_lvolume          (       0     ),
@@ -74,6 +75,7 @@ GeometryInfoPlus::GeometryInfoPlus(IDetectorElement* de)
 GeometryInfoPlus::GeometryInfoPlus(IDetectorElement*  de,
                                    const std::string& LogVol) 
   : 
+  m_log                 (       0     ),
   m_gi_has_logical      (    true     ),
   m_gi_lvolumeName      (   LogVol    ),
   m_gi_lvolume          (       0     ),
@@ -115,6 +117,7 @@ GeometryInfoPlus::GeometryInfoPlus(IDetectorElement*            de,
                                    const ILVolume::ReplicaPath& replicaPath,
                                    const std::string& alignmentPath          )
   : 
+  m_log                 (       0     ),
   m_gi_has_logical      (    true     ),
   m_gi_lvolumeName      (   LogVol    ),
   m_gi_lvolume          (       0     ),
@@ -156,6 +159,7 @@ GeometryInfoPlus::GeometryInfoPlus( IDetectorElement*  de,
                                     const std::string& ReplicaNamePath,
                                     const std::string& alignmentPath   ) 
   : 
+  m_log                 (       0     ),
   m_gi_has_logical      (    true         ),
   m_gi_lvolumeName      (   LogVol        ),
   m_gi_lvolume          (       0         ),
@@ -193,7 +197,7 @@ StatusCode GeometryInfoPlus::initialize()
 
   m_services = DetDesc::services();
   m_hasAlignmentPath=!m_alignmentPath.empty();
-  m_log = new MsgStream(msgSvc(), "GeometryInfoPlus");
+  if( 0 == m_log ) m_log = new MsgStream(msgSvc(), "GeometryInfoPlus");
   log() << MSG::VERBOSE << "initialize" << endmsg;
   log() << MSG::VERBOSE << "alignment path " << m_alignmentPath << endmsg;
   return cache();  

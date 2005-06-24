@@ -1,15 +1,15 @@
 ! =============================================================================
-! $Id: release.notes,v 1.191 2005-06-24 11:54:55 jpalac Exp $ 
+! $Id: release.notes,v 1.192 2005-06-24 12:41:59 cattanem Exp $ 
 ! =============================================================================
 ! package DetDesc
 ! package manager : Marco Clemencic, Juan Palacios
 ! =============================================================================
 
+!======================== DetDesc v15r2 2005-06-24 ========================
 ! 2005-06-24 - Juan Palacios
  - delete all dynamically allocated matrices and pointer to MsgStream in 
    GeometryInfoPlus destructor.
 
-!======================== DetDesc v15r2 2005-06-24 ========================
 ! 2005-06-23 - Marco Clemencic
  - Modified the UpdateManagerSvc in order to allow changes in item's IOV and 
    to find objects using the CondDB path.
