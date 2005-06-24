@@ -5,7 +5,7 @@ branches cmt doc
 
 use DetDesc	   	v15r2	Det
 use DetDescCnv		v2r7	Det
-use XmlTools		v3r5	Tools
+use XmlTools		v3r5p1  Tools
 use VeloDet        	v9r6 	Det
 use OTDet          	v5r5	Det
 use CaloDet	   	v6r9	Det
