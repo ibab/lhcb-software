@@ -4,6 +4,7 @@
 ! Purpose     : Utility tools for RICH reconstruction algorithms
 !------------------------------------------------------------------------------
 
+!===================== RichRecTools v2r15 2005-06-24 ======================
 ! 2005-06-21 - Chris Jones
  - Changes needed to allow offline and HLT reconstructions to run in
    the same application
