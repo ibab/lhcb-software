@@ -1,4 +1,4 @@
-// $Id: lcgStl.h,v 1.8 2005-06-22 11:43:26 cattanem Exp $
+// $Id: lcgStl.h,v 1.9 2005-06-24 06:40:31 cattanem Exp $
 #ifndef KERNEL_LCGSTL_H 
 #define KERNEL_LCGSTL_H 1
 
@@ -33,13 +33,6 @@ namespace {
   std::vector<std::pair<double,CaloCellID> > k;
   std::vector<HepGeom::Vector3D<double> >    l;
   std::vector<HepGeom::Point3D<double> >     m;
-  std::vector<CaloCellID>    v0;
-  std::vector<ITChannelID>   v1;
-  std::vector<LHCbID>        v2;
-  std::vector<OTChannelID>   v3;
-  std::vector<ParticleID>    v4;
-  std::vector<RichSmartID>   v5;
-  std::vector<VeloChannelID> v6;
 }
 
 #endif // KERNEL_LCGSTL_H
