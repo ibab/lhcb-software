@@ -2,11 +2,11 @@ Package LHCbKernel
 Package manager: M.Cattaneo
 Purpose: LHCb specific Kernel classes
 
-!===================== LHCbKernel v5r12 2005-06-22 ========================
-! 2005-06-22 - Stefan Roiser
+!===================== LHCbKernel v5r12 2005-06-24 ========================
+! 2005-06-24 - Stefan Roiser
  - Fixes to POOL dictionaries for use from GaudiPython:
-   . Generate all dictionaries (including channelIDs) with lcgdict
    . Remove --pool option from lcgdict build command
+   . Add copy constructor to CaloCellID, VeloChannelID, ITChannelID
 
 !===================== LHCbKernel v5r11 2005-06-01 ========================
 ! 2005-06-01 - Marco Cattaneo

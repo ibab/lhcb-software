@@ -18,6 +18,9 @@
       <constructor argList='int id' initList = 'm_channelID(id)' desc='constructor with channelID'>
         <code></code>
       </constructor>
+      <constructor argList="ITChannelID o" desc="Copy constructor" initList="m_channelID(o.m_channelID)">
+        <code/>
+      </constructor>
       <method type='unsigned int' name='station' const='TRUE' desc='get station number'>
         <code>return ((m_channelID &amp; stationMask) &gt;&gt; stationBits)+1;</code>
       </method>

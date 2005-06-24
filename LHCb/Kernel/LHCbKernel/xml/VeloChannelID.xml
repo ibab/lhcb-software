@@ -32,6 +32,10 @@ m_channelID = ( sensor &lt;&lt; sensorBits ) | ( type &lt;&lt; typeBits ) | stri
         desc='constructor with channelID'>
         <code></code>
       </constructor>
+      <constructor argList="VeloChannelID o" initList="m_channelID(o.m_channelID)" 
+        desc="Copy constructor">
+        <code/>
+      </constructor>
       
       <method type='unsigned int' name='sensor' const='TRUE' 
         desc='get sensor number'>

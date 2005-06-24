@@ -3,7 +3,7 @@
 <gdd>
 
 <!-- **************************************************************************
-  * $Id: CaloCellID.xml,v 1.5 2004-12-07 18:21:07 ibelyaev Exp $
+  * $Id: CaloCellID.xml,v 1.6 2005-06-24 06:40:31 cattanem Exp $
   *****************************************************************************
   * XML-description of CaloCellIDclass                                        *
   * author: Vanya BELYAEV Ivan.Belyaev@itep.ru                                *
@@ -82,6 +82,13 @@
     </code> 
   </constructor>
   
+  <constructor 
+    desc = "Copy constructor"
+    argList = "CaloCellID o"
+    initList = "m_ccid(o.m_ccid)">
+    <code/>
+  </constructor>
+
   <method
     desc   = "Decoding function to extract index"
     name   = "index"

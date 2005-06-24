@@ -1,4 +1,4 @@
-// $Id: lcgStl.h,v 1.9 2005-06-24 06:40:31 cattanem Exp $
+// $Id: lcgStl.h,v 1.10 2005-06-24 06:43:39 cattanem Exp $
 #ifndef KERNEL_LCGSTL_H 
 #define KERNEL_LCGSTL_H 1
 
@@ -15,8 +15,6 @@
 #include "Kernel/ITChannelID.h"
 #include "Kernel/OTChannelID.h"
 #include "Kernel/CaloCellID.h"
-#include "Kernel/LHCbID.h"
-#include "Kernel/ParticleID.h"
 #include "CLHEP/Geometry/Point3D.h"
 #include "CLHEP/Geometry/Vector3D.h"
 
