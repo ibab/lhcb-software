@@ -4,6 +4,7 @@
 ! Purpose     : Co-ordinates the RICH reconstruction packages
 !-----------------------------------------------------------------------------
 
+!====================== RichRecSys v1r17 2005-06-24 ======================
 ! 2005-06-21 - Chris Jones
  - Changes needed to allow offline and HLT reconstructions to run in
    the same application
@@ -15,6 +16,7 @@
 ! 2005-05-13 - Chris Jones
  - Add options to run pixel create with forced-dead HPDs
 
+!===================== RichRecSys v1r16p1 2005-04-07 =====================
 ! 2005-04-07 - Marco Cattaneo
  - Use RichLocalPID v1r10p1, RichGlobalPID v1r9p1, RichRingRefit v1r9p1,
        RichRecBase v1r15p1
