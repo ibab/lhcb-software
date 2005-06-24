@@ -4,6 +4,7 @@
 ! Purpose     : Package for the tracking fitting-related classes
 !-----------------------------------------------------------------------------
 
+!========================== TrackFitEvent v1r1 2005-06-24 ====================
 ! 2005-06-15 - Eduardo Rodrigues
  - type of measurement set in the constructor
  - ambiguity of OTMeasurement set also in the corresponding LHCbID
