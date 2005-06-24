@@ -4,6 +4,11 @@
 ! Purpose       : G4 actions and some miscellaneous algs for Gauss
 !-----------------------------------------------------------------------------
 
+!=========================== GaussTools v10r10p1 ===========================
+! 2005-06-15 - Gloria CORTI
+ - src/Components/SpecialCuts.cpp
+   . adapt to use with geant4.6.1 by using obsolete methods names
+
 !=========================== GaussTools v10r10 =============================
 ! 2005-04-11 - Gloria Corti
  - src/Components/CommandTrackAction.cpp
