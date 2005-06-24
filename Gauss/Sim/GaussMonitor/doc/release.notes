@@ -5,6 +5,12 @@
 !-----------------------------------------------------------------------------
 
 !======================= GaussMonitor v2r1 ===================================
+! 2005-06-24 - Gloria CORTI
+ - src/GeneratorFullMonitor.{h,cpp}
+   . Add possibility to look for HardInfo in a different path in TES.
+     Controlled by setting property "HardInfo", by default set to
+     HardInfoLocation::Default.
+
 ! 2005-06-23 - Gloria CORTI
  - src/GenMonitorAlg.{h,cpp}
    . Add possibility to monitor only particles in events produced

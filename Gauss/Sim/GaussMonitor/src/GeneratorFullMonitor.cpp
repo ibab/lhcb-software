@@ -1,4 +1,4 @@
-// $Id: GeneratorFullMonitor.cpp,v 1.3 2004-05-14 07:06:04 robbep Exp $
+// $Id: GeneratorFullMonitor.cpp,v 1.4 2005-06-24 08:36:21 gcorti Exp $
 // Include files 
 
 // from Gaudi
@@ -68,8 +68,10 @@ GeneratorFullMonitor::GeneratorFullMonitor( const std::string& name,
     , m_nPartMax( 2000 ) 
     , m_nInterMax( 20 ) 
     , m_inputData( HepMCEventLocation::Default )
+    , m_hardInfo( HardInfoLocation::Default )
 {
   declareProperty( "Input", m_inputData );
+  declareProperty( "HardInfo", m_hardInfo );
 }
 
 //=============================================================================
@@ -210,7 +212,7 @@ StatusCode GeneratorFullMonitor::execute() {
 
   MsgStream  msg( msgSvc(), name() );
   msg << MSG::DEBUG << "==> Execute" << endreq;
-  SmartDataPtr<HardInfos> hardVect ( eventSvc(), HardInfoLocation::Default );
+  SmartDataPtr<HardInfos> hardVect ( eventSvc(), m_hardInfo );
   if( !hardVect ) {
     msg << MSG::DEBUG << "This event has no Hard Process Info" 
         << endreq ;
@@ -219,6 +221,8 @@ StatusCode GeneratorFullMonitor::execute() {
     for( HardInfos::iterator itHard = hardVect->begin(); 
          hardVect->end() != itHard; ++itHard ) {
       msg << MSG::DEBUG << "Hard Info is ::: "
+          << endmsg;
+      msg << MSG::DEBUG
           << (*itHard)->event()->pGenEvt()->signal_process_id() << " " 
           << (*itHard)->sHat() << " " 
           << (*itHard)->tHat() << " " 

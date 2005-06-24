@@ -1,4 +1,4 @@
-// $Id: GeneratorFullMonitor.h,v 1.2 2004-04-29 17:19:13 gcorti Exp $
+// $Id: GeneratorFullMonitor.h,v 1.3 2005-06-24 08:36:21 gcorti Exp $
 #ifndef GAUSSMONITOR_GENERATORFULLMONITOR_H 
 #define GAUSSMONITOR_GENERATORFULLMONITOR_H 1
 
@@ -62,5 +62,8 @@ private:
   int m_nInterMax ;
   /// Location where to find HepMC event
   std::string m_inputData ;
+  /// Location where to find HardInfo
+  std::string m_hardInfo;
+
 };
 #endif // GAUSSMONITOR_GENERATORFULLMONITOR_H
