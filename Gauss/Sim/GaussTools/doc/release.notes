@@ -4,6 +4,10 @@
 ! Purpose       : G4 actions and some miscellaneous algs for Gauss
 !-----------------------------------------------------------------------------
 
+! 2005-06-24 - Gloria CORTI
+ - src/Components/SpecialCuts.cpp
+   . put back compatibility to geant4.7.0   
+
 !=========================== GaussTools v10r10p1 ===========================
 ! 2005-06-15 - Gloria CORTI
  - src/Components/SpecialCuts.cpp
