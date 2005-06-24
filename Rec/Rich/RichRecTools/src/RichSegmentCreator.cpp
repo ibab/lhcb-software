@@ -5,7 +5,7 @@
  *  Implementation file for tool : RichSegmentCreator
  *
  *  CVS Log :-
- *  $Id: RichSegmentCreator.cpp,v 1.18 2005-06-23 15:17:41 jonrob Exp $
+ *  $Id: RichSegmentCreator.cpp,v 1.19 2005-06-24 13:49:02 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -40,6 +40,8 @@ RichSegmentCreator::RichSegmentCreator ( const std::string& type,
 
   // Define job option parameters
   declareProperty( "EnergyBins", m_binsEn );
+  declareProperty( "RichRecSegmentLocation",
+                   m_richRecSegmentLocation = RichRecSegmentLocation::Default );
 
 }
 
