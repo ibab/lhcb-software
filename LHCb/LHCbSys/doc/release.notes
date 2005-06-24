@@ -5,12 +5,13 @@
 ! Purpose     : LHCb OO kernel packages
 !-----------------------------------------------------------------------------
 
-</PRE><H1><A NAME=v18r7>2005-06-22 LHCbSys v18r7</A></H1><PRE>
+</PRE><H1><A NAME=v18r7>2005-06-24 LHCbSys v18r7</A></H1><PRE>
  - Packages modified: KernelSys v4r13, LHCbKernel v5r12, RichKernel v5r5,
-                      DetSys v7r2, DetDesc v15r2, DetDescCnv v2r7,
-                      EventSys v20r7, TrackEvent v1r2, RichEvent v8r4,
-                      DAQSys v1r5, RichDAQ v2r2, LHCb v18r7,
-                      TrackInterfaces v1r1, TrgTools v7r4p1, RichRecBase v1r16
+                    DetSys v7r2, DetDesc v15r2, DetDescCnv v2r7, XmlTools v3r5p1,
+                    EventSys v20r7, TrackEvent v1r2, RichEvent v8r4,
+                    DAQSys v1r5, RichDAQ v2r2, LHCb v18r7, LHCbAlgs v1r7
+                    TrackInterfaces v1r1, TrgTools v7r4p1, RichRecBase v1r16,
+                    DetCond v7r4, DetCondExample v7r3
 
  - In LHCb v18r7
    . Remove Pool persistency and dictionary setup from LHCbApplication.opts,
@@ -18,15 +19,24 @@
 
  - In LHCbKernel v5r12
    . Fixes to POOL dictionaries for use from GaudiPython:
-     + Generate all dictionaries (including channelIDs) with lcgdict
      + Remove --pool option from lcgdict build command
+     + Add copy constructor to CaloCellID, VeloChannelID, ITChannelID
+
+ - In LHCbAlgs v1r7 
+   . LbAppInit is a GaudiHistoAlg, property "HistoProduce" replaces "doHistos"
+   . Split memory histogram into two, both with "HistoSize" bins
+     + hID=2: one entry per event for first HistoSize events
+     + hID=3: one entry every HistoSize events, starting at event 1
 
  - In DetDesc v15r2
    . Changes for handling conditions attached to IGeometryInfo
-   . Bug fix in UpdateManagerSvc navigation from children to parents
+   . Updates to UpdateManagerSvc
 
  - In DetDescCnv v2r7
    . Allow parsing of address strings that include environment variables
+
+ - In XmlTools v3r5p1
+   . Fix small memory leak in XmlParserSvc (cache was not freed in destructor)
 
  - In TrgTools v7r4p1
    . L1InitEvent.cpp: dummy initialization of event and run number in
@@ -62,6 +72,13 @@
      access information on whether a given HPD is active
    . Fix stats for cases when some events are not processed (such as in HLT)
    . Changes to allow running HLT and offline reconstruction in same job
+
+ - In DetCond v7r4
+   . Added the possibility of having an in-memory copy of the CondDB.
+   . Renamed ConditionsDBCnvSvc to CondDBCnvSvc, added ICondDBCnvSvc interface
+  
+ - In DetCondExample v7r3
+   . Code cleanups and updates for DetCond v7r4
 
 </PRE><H1><A NAME=v18r6>2005-06-13 LHCbSys v18r6</A></H1><PRE>
  - Packages added:    Event/PackedEvent v1r0 (replaces Event/Rdst)

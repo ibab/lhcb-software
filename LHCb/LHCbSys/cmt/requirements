@@ -32,7 +32,7 @@ use DetSys		v7r2	Det     # Marco Cattaneo
 use VeloDet        	v9r6	Det     # Mark Tobin
 use DetDesc        	v15r2	Det     # Marco Clemencic, Juan Palacios
 use DetDescCnv        	v2r7	Det     # Marco Clemencic, Juan Palacios
-use XmlTools        	v3r5	Tools   # Marco Clemencic, Juan Palacios
+use XmlTools        	v3r5p1  Tools   # Marco Clemencic
 use OTDet          	v5r5	Det     # Jacopo Nardulli
 use CaloDet        	v6r9	Det     # Ivan Belyaev
 use CaloDetXmlCnv	v2r3p1	Det     # Ivan Belyaev
@@ -86,14 +86,14 @@ use L0MuonDAQ		v1r0	L0      # Andrei Tsaregorodtsev
 
 # Other stuff
 use LHCbInterfaces	v1r2	Kernel  # Marco Cattaneo
-use LHCbAlgs		v1r6	Kernel  # Marco Cattaneo
+use LHCbAlgs		v1r7	Kernel  # Marco Cattaneo
 use MCTools		v1r13	Phys    # Many
 use CaloInterfaces	v4r3	Calo    # Ivan Belyaev
 use CaloUtils		v4r9	Calo    # Ivan Belyaev
 use RichRecBase		v1r16   Rich    # Chris Jones
 use STTools		v1r1	IT      # Matt Needham
 use TrackInterfaces 	v1r1	Tr      # Eduardo Rodrigues, Jose Hernando
-use DetCond		v7r3	Det     # Marco Clemencic
+use DetCond		v7r4	Det     # Marco Clemencic
 
 # Temporary, should be split
 use TrgTools		v7r4p1	Trg     # Olivier Callot
@@ -102,4 +102,4 @@ use TrgTools		v7r4p1	Trg     # Olivier Callot
 use DetDescChecks	v2r3	Det     # Ivan Belyaev
 use DetDescExample      v6r4	Ex      # Marco Clemencic
 use IOExample    	v1r4p2	Ex      # Marco Cattaneo
-use DetCondExample	v7r2	Ex      # Marco Clemencic
+use DetCondExample	v7r3	Ex      # Marco Clemencic
