@@ -3,6 +3,9 @@ Package     : PhysSys
 Package Coordinator : Patrick Koppenburg
 Purpose     : LHCb physics packages
 
+</PRE><H1><A NAME=v1r3>2005-06-24 Phys v1r3 - Frozen trigger for RTTC</A></H1><PRE>
+- All packages identical to v1r2, but built against LHCb v16r7
+
 </PRE><H1><A NAME=v1r2>2005-06-13 Phys v1r2 - Frozen trigger for RTTC</A></H1><PRE>
   - RTTC: . HLT is frozen to ensure identical results between RTTC and the 
             production of the multi-events packets (MEP).
