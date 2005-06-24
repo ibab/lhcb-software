@@ -1,4 +1,4 @@
-// $Id: GeometryInfoPlus.cpp,v 1.3 2005-06-20 12:23:43 jpalac Exp $
+// $Id: GeometryInfoPlus.cpp,v 1.4 2005-06-24 11:54:55 jpalac Exp $
 // Include files 
 
 // GaudiKernel
@@ -1079,8 +1079,7 @@ GeometryInfoPlus::~GeometryInfoPlus()
   //
   m_gi_lvolume = 0 ; 
   //
-  if( 0 != m_matrix    ){ delete m_matrix   ; m_matrix    = 0; }  
-  if( 0 != m_matrixInv ){ delete m_matrixInv; m_matrixInv = 0; }  
+  clearMatrices();
   //
   m_gi_support = 0;
   //
@@ -1088,6 +1087,11 @@ GeometryInfoPlus::~GeometryInfoPlus()
   m_gi_childrensNames.clear();
   m_gi_childrens.clear();
   //
+  if( 0 != m_log ) { 
+    delete m_log; 
+    m_log = 0; 
+  }
+
   m_services->release();
 };
 //=============================================================================

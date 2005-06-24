@@ -1,9 +1,13 @@
 ! =============================================================================
-! $Id: release.notes,v 1.190 2005-06-24 06:53:55 cattanem Exp $ 
+! $Id: release.notes,v 1.191 2005-06-24 11:54:55 jpalac Exp $ 
 ! =============================================================================
 ! package DetDesc
 ! package manager : Marco Clemencic, Juan Palacios
 ! =============================================================================
+
+! 2005-06-24 - Juan Palacios
+ - delete all dynamically allocated matrices and pointer to MsgStream in 
+   GeometryInfoPlus destructor.
 
 !======================== DetDesc v15r2 2005-06-24 ========================
 ! 2005-06-23 - Marco Clemencic
