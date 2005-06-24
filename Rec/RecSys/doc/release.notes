@@ -5,6 +5,57 @@ Purpose: LHCb reconstruction packages.
          This project groups together all the reconstruction packages needed
          by one or more LHCb applications. 
 
+</PRE><H1><A NAME=v1r3>2005-06-24 RecSys v1r3</A></H1><PRE>
+This version uses Gaudi v16r4, LHCb v18r7 (also CLHEP 1.9, ROOT 4.0)
+
+- Packages added   : RichRecAlgorithms - MC free algs, replaces RichRecCommon
+                     RichRecMonitors   - Expert Rich monitoring
+                     PatSys            - New pattern recognition with new Track
+                              (contains PatTools, PatUtils, PatVelo, PatChecker)
+- Packages removed : RichRecCommon
+- Packages modified: TrgSys v2r8, TrgPrimVertex v4r2, TrgMuon v1r2p2,
+   RichRecSys v1r17, RichLocalPID v1r11, RichRecMCTools v1r9, RichRecTools v2r15,
+   RichRingRefit v1r10, RichRecQC v1r11, RichHLTSys v1r1, RichTrgGlobalPID v2r0,
+   RichTrgTools v1r1, TrackFitEvent v1r1, TrackIdealPR v1r1, TrackMCTools v1r1,
+   TrackProjectors v1r1, TrConverters v1r1
+
+- In TrgPrimVertex v4r2, TrgMuon v1r2p2
+  . Fix several memory leaks, first seen in Moore v1r0
+
+- In RichRecSys  v1r17
+  . Update to photon reconstruction scheme
+  . Update geometrical efficiency calculation parameters
+  . Add options to run pixel create with forced-dead HPDs
+
+- In RichGlobalPID v1r11
+  . Minor speed update
+
+- In RichTools v2r15
+  . Various minor updates to existing tools
+  . Add RichSepVCKthetaPhotonPredictor and RichSimplePhotonPredictor tools
+
+- In RichRecMCTools v1r9
+  . Add RichPhotonCreatorWithGaussianCKSmear tool
+
+- In RichLocalPID v1r11, RichRecMCTools v1r9, RichRecQC v1r11, 
+     RichRecTools v2r15, RichTrgTools v1r1
+  . Adapt to changes in RichKernel and RichRecBase base classes
+
+- In RichHLTSys v1r1, RichRecSys v1r17, RichLocalPID v1r11, RichGlobalPID v1r11, 
+     RichRecMCTools v1r9, RichRecTools v2r15, RichRingRefit v1r10,
+     RichTrgGlobalPID v2r0, RichTrgTools v1r1
+  . Changes to allow HLT and offline reconstruction to run in same application
+
+- In TrackFitEvent v1r1
+  . type of measurement set in the constructor
+  . ambiguity of OTMeasurement set also in the corresponding LHCbID
+
+- In TrackProjectors v1r1
+  . TrackMasterProjector can now handle all types of measurements
+
+- In TrackIdealPR v1r1, TrackMCTools v1r1, TrConverters v1r1
+  . Adapt to changes in TrackEvent classes
+
 </PRE><H1><A NAME=v1r2>2005-06-10 RecSys v1r2</A></H1><PRE>
 This version uses Gaudi v16r4, LHCb v18r6 (also CLHEP 1.9, ROOT 4.0)
 
