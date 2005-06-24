@@ -1,4 +1,4 @@
-// $Id: SmearVertexAlg.h,v 1.1.1.1 2005-06-20 21:42:17 robbep Exp $
+// $Id: SmearVertexAlg.h,v 1.2 2005-06-24 16:32:47 gcorti Exp $
 #ifndef GENERATORS_SMEARVERTEXALG_H 
 #define GENERATORS_SMEARVERTEXALG_H 1
 
@@ -18,8 +18,10 @@
  *  It is also possible to smear the z of the vertex with a flat
  *  distribution within certain allowed values. 
  *
- *  @author Witold POKORSKI (modified by A.CARBONE)
- *  @date   2003-02-02 (modified 2005-05-10)
+ *  @author Witek Pokorski
+ *  @author Angelo Carbone
+ *  @author Gloria Corti
+ *  @date   2003-02-02 (last modified 2005-06-23)
  */
 class SmearVertexAlg : public GaudiAlgorithm {
 public:
@@ -49,5 +51,8 @@ private:
   double m_zmax;     ///< max z value in case of flat distribution in z 
   double m_zmin;     ///< min z value in case of flat distribution in z
 
+  std::string m_eventLoc;      ///< Location of HepMCEvent in TES
+  std::string m_generatorName; ///< Name of generator
+ 
 };
 #endif // GENERATORS_SMEARVERTEXALG_H

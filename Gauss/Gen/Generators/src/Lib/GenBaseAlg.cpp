@@ -1,4 +1,4 @@
-// $Id: GenBaseAlg.cpp,v 1.1.1.1 2005-06-20 21:42:17 robbep Exp $
+// $Id: GenBaseAlg.cpp,v 1.2 2005-06-24 16:32:47 gcorti Exp $
 // -------------------------------------------------------------
 //
 // initial version by M. Shapiro
@@ -66,6 +66,10 @@ GenBaseAlg::GenBaseAlg(const std::string& name,
   declareProperty("BeamDecayTime" , m_dectime = 10.0 ) ;
   declareProperty("CrossRate"     , m_crossrate = 30.0 ) ;
   declareProperty("TotalXSect"    , m_totxsect = 102.4 ) ;
+  declareProperty("HepMCEventLocation" , m_eventLoc = HepMCEventLocation::Default );
+  declareProperty("GenHeaderLocation", m_headerLoc = GenHeaderLocation::Default );
+  declareProperty("HardInfoLocation", m_hardInfoLoc = HardInfoLocation::Default );
+   
 }
 
 //===========================================================================
@@ -443,7 +447,7 @@ StatusCode GenBaseAlg::execute() {
   genHead->setLuminosity(rlumnow*1000*1.e29/(cm2*s));
   genHead->setEvType(m_evnType);
 
-  StatusCode sc = put( genHead , GenHeaderLocation::Default ) ;
+  StatusCode sc = put( genHead , m_headerLoc );
   
   if ( ! sc.isSuccess() )
     return Error( "GenHeader could not be registered!" , sc ) ;
@@ -453,7 +457,7 @@ StatusCode GenBaseAlg::execute() {
   EventVector::iterator ithep;
   for( ithep = tempHepMC.begin() ; tempHepMC.end() != ithep ; ++ithep ) {
     HepMCEvents * anhepMCVector = 
-      getOrCreate< HepMCEvents , HepMCEvents >( HepMCEventLocation::Default );
+      getOrCreate< HepMCEvents , HepMCEvents >( m_eventLoc );
     anhepMCVector -> insert( *ithep ) ;
   }
   
@@ -461,7 +465,7 @@ StatusCode GenBaseAlg::execute() {
   HardVector::iterator itHard ;
   for( itHard = tempHard.begin(); tempHard.end() != itHard; ++itHard ) {
     HardInfos * hardVector = 
-      getOrCreate< HardInfos , HardInfos >( HardInfoLocation::Default ) ;
+      getOrCreate< HardInfos , HardInfos >( m_hardInfoLoc ) ;
     hardVector -> insert( *itHard ) ;
   }    
   

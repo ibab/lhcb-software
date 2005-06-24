@@ -1,4 +1,4 @@
-// $Id: SetDecayAlg.cpp,v 1.1.1.1 2005-06-20 21:42:17 robbep Exp $
+// $Id: SetDecayAlg.cpp,v 1.2 2005-06-24 16:32:47 gcorti Exp $
 #include "SetDecayAlg.h"
 
 #include "GaudiKernel/AlgFactory.h"
@@ -18,7 +18,9 @@ const IAlgFactory& SetDecayAlgFactory = Factory;
 // Constructor
 //=============================================================================
 SetDecayAlg::SetDecayAlg(const std::string& name, ISvcLocator* pSvcLocator) :
-  GaudiAlgorithm(name, pSvcLocator) , m_evtTool( 0 ) { }
+  GaudiAlgorithm(name, pSvcLocator) , m_evtTool( 0 ) { 
+  declareProperty("HepMCEventLocation", m_eventLoc = HepMCEventLocation::Default );
+}
 
 //=============================================================================
 // Destructor
@@ -48,7 +50,7 @@ StatusCode SetDecayAlg::initialize() {
 // Execute method
 //=============================================================================
 StatusCode SetDecayAlg::execute() {  
-  HepMCEvents * hepMCptr = get< HepMCEvents >( HepMCEventLocation::Default ) ;
+  HepMCEvents * hepMCptr = get< HepMCEvents >( m_eventLoc ) ;
   
   if( 0 == hepMCptr ) info() << "No HepMCptr" << endreq;
   else {

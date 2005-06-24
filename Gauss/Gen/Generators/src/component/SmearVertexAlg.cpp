@@ -1,4 +1,4 @@
-// $Id: SmearVertexAlg.cpp,v 1.1.1.1 2005-06-20 21:42:17 robbep Exp $
+// $Id: SmearVertexAlg.cpp,v 1.2 2005-06-24 16:32:47 gcorti Exp $
 // Include files 
 
 // This class
@@ -42,6 +42,10 @@ SmearVertexAlg::SmearVertexAlg( const std::string& name,
   declareProperty("Zmax",   m_zmax= 900); // mm
   declareProperty("Zmin",   m_zmin=-800); // mm
 
+  declareProperty("ApplyTo", m_generatorName = "");
+ 
+  declareProperty("HepMCEventLocation" , m_eventLoc = HepMCEventLocation::Default );
+ 
 }
 
 //=============================================================================
@@ -71,6 +75,15 @@ StatusCode SmearVertexAlg::initialize() {
       return  Error("Could not initialize flat random generator");
   }
 
+  if ( m_generatorName.empty() ) {
+    info() << "Smearing will be applied to all events in container "
+           << m_eventLoc << endmsg;
+  } else {
+    info() << "Smearing will be applied to events produced with generator "
+           << m_generatorName << " in container "
+           << m_eventLoc << endmsg;
+  }
+ 
   return StatusCode::SUCCESS;
 }
 
@@ -80,7 +93,7 @@ StatusCode SmearVertexAlg::initialize() {
 StatusCode SmearVertexAlg::execute() {
   debug() << "==> Execute" << endreq;
   
-  HepMCEvents * hepMCptr = get< HepMCEvents >( HepMCEventLocation::Default ) ;
+  HepMCEvents * hepMCptr = get< HepMCEvents >( m_eventLoc ) ;
   
   if( 0 == hepMCptr ) info () << "No HepMCptr" << endreq ; 
   else {
@@ -89,6 +102,16 @@ StatusCode SmearVertexAlg::execute() {
     double dx, dy, dz;
     
     for( it=hepMCptr->begin() ; it!=hepMCptr->end() ; ++it ) {
+
+      // Check if smearing has to be applied to this event
+      if( !m_generatorName.empty() ) {
+        if( m_generatorName != (*it)->generatorName() ) {
+          continue;
+        }
+      }
+      debug() << "Smear vertex for " << (*it)->generatorName()
+              << endmsg;
+
       // generate random values for spread in x,y,z
       do { 
         dx=m_gaudigen();

@@ -1,4 +1,4 @@
-// $Id: SetDecayAlg.h,v 1.1.1.1 2005-06-20 21:42:17 robbep Exp $
+// $Id: SetDecayAlg.h,v 1.2 2005-06-24 16:32:47 gcorti Exp $
 #ifndef GENERATORS_SETDECAYALG_H
 #define GENERATORS_SETDECAYALG_H 1
 
@@ -17,6 +17,7 @@ public:
 private:
   // Interface to EvtGen
   IEvtGenTool * m_evtTool ;
+  std::string m_eventLoc;
 };
 
 #endif // GENERATORS_SETDECAYALG_H

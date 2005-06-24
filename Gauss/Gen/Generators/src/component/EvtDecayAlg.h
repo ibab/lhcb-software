@@ -1,4 +1,4 @@
-// $Id: EvtDecayAlg.h,v 1.1.1.1 2005-06-20 21:42:17 robbep Exp $
+// $Id: EvtDecayAlg.h,v 1.2 2005-06-24 16:32:47 gcorti Exp $
 #ifndef GENERATORS_EVTDECAYALG_H
 #define GENERATORS_EVTDECAYALG_H 1
 
@@ -44,6 +44,7 @@ public:
 private:
   bool m_isolateSignal ; ///< Flag to store signal decay in specific location
   IEvtGenTool * m_evtTool ;   ///< Interface to EvtGen
+  std::string m_eventLoc;     ///< Location in TES for event   
 
   // Utility functions
   /** boost a decay tree to a given frame

@@ -1,6 +1,26 @@
-! $Id: release.notes,v 1.2 2005-06-22 10:36:25 ranjard Exp $
+! $Id: release.notes,v 1.3 2005-06-24 16:32:47 gcorti Exp $
 ! Package     : Gen/Generators
 ! Responsible : 
+
+! 2005-06-24 - Gloria CORTI
+ - Import changes as done in GeneratorModules v15r3 for merging of
+   beam gas with min bias events
+  + Changes to add possibility to set with properties the Generator data
+   paths in the TES. By defaut they are set to XxxLocation::Default
+   . src/component/EvtDecayAlg.{h,cpp} - property "HepMCEventLocation"
+   . src/component/SetDecayAlg.{h,cpp} - property "HepMCEventLocation"
+   . src/component/SmearVertexAlg.{h,cpp} - property "HepMCEventLocation"
+   . Generators/GenBaseAlg.h
+     src/Lib/GenBaseAlg.cpp - property "HepMCEventLocation"
+                              property "HardInfoLocation"
+                              property "GenHeaderLocation"
+  + Changes to add possibility to apply smearing of primary vertex only
+   to events produced with a certain generator (identified by name in
+   HepMCEvent container). Controlled by setting name of generator in
+   property "ApplyTo". The default is set to an empty string, in which
+   case the smearing is applied to all events in container
+   . src/component/SmearVertexAlg.{h,cpp}
+   
 
 !========================== Generators v1r0 ===========================
 ! 2005-06-20 - Patrick Robbe

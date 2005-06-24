@@ -1,4 +1,4 @@
-// $Id: GenBaseAlg.h,v 1.1.1.1 2005-06-20 21:42:17 robbep Exp $
+// $Id: GenBaseAlg.h,v 1.2 2005-06-24 16:32:47 gcorti Exp $
 // --------------------------------------------------
 //
 // Initial code by M. Shapiro
@@ -266,6 +266,11 @@ private:
 
   /// Maximum number of try for repeated hadronization
   int m_maxNumberOfRep ;  
+
+  std::string m_eventLoc;     ///< Location of HepMCEvent in TES
+  std::string m_headerLoc;    ///< Location of GenHeader in TES
+  std::string m_hardInfoLoc;  ///< Location of HardInfo in TES
+   
 };   
 
 #endif  // GENERATORS_GENBASEALG_H
