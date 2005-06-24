@@ -3,6 +3,203 @@ Package : GaussSys
 Package manager : Gloria Corti
 </PRE>
 
+<H1><A NAME="v19r5">2005-06-24 - GaussSys v19r5</A></H1><PRE>
+<H3><A NAME="Use">
+ use Pythia 6_226.2, photos 209.2 (via GENSER 1_0_0), pdflib 804 
+     DecFiles v7r3, ParamFiles v3r12 
+     Geant4 v70r0p1,
+     LHCb v18r6 
+     XmlDDDB v25r0, FieldMap v4r5 </A></H3>
+    
+!========================== Gauss v19r5 ==================================
+! 2005-06-24 - Gloria CORTI
+ - Allow production of Beam gas events and production of minbias events with
+   combined beam gas at generator level
+   . use GeneratorModules v15r13
+   . use DecFiles v7r3
+   . BeamGas-Velo.opts
+ 
+! 2005-06-17 - Gloria CORTI
+ - Use new version of GaussMonitor (v2r1) and adapt to change in property
+   in Monitor.opts
+ - Introduce example for setting geometry in GaussRead.opts
+ - Move loading of CaloDetXmlCnv from SimGeometry.opts to Common.opts so
+   that it is also available in GaussRead.opts
+ - Introduce monitors for Muons
+   . use new package Muon/MuonMoniSim v1r1
+   . add dll and algorithm to list in Monitor.opts
+
+! 2005-06-16 - Gloria CORTI
+ - Remove unnecessary loading of DAQEventDict (no longer necessary because
+   of removed use in CaloEvent) in GaussPoolIO.opts
+ 
+! 2005-06-15 - Gloria CORTI
+ - Use version of GaussRICH (v5r0) with naming as in latest XmlDDDB
+ 
+! 2005-06-13 - Gloria CORTI
+ - Introduce two files to steer dependency of geometry (tilted calorimeters
+   require removing Converter from detector elements in Geo.StreamItems)
+   For simulating with "old" geometry give v200412.opts as argument of
+   executable, for simulating with tilted Calorimeters & Muons give
+   v200506.opts.
+   Note that by default Gauss.opts would use latest geometry but the new
+   options should be used instead in production.
+   . v200412.opts
+     NEW options to stear simulation with RTTC geometry
+   . v200506.opts
+     NEW options to stear simulation with Tilted Calo and Muon
+   . SimGeometry.opts
+     remove Converter from Geo.StreamItems to make it usable for both
+     supported geometries
+   . Common.opts
+     set as default lhcb-v200506.opts
+ - Use version of XmlDDDB (v25r0) supporting RTTC and Calo+Muon tilted
+   geometry
+ - Use version of DecFiles (v7r2) and ParamFiles (v3r12) supporting
+   production of Higgs with 120 and 140 GeV mass
+ - Use version of GaussTracker (v4r1) with Muon hits bug fixed
+ - Use version of GeneratorModules (v15r12) with changes for AcerMC and various
+   bug fixes
+ 
+! 2005-05-31 - Gloria CORTI
+ - Example option to generate events at fixed luminosity
+   . FixedLumi-5.opts
+
+!=========================== GaussTracker v4r1 ================================
+! 2005-06-03 - Gloria CORTI
+ - src/GiGaSensDetMuon.cpp
+   . do not use method MoveUpHistory(1) to navigate geometry history tree
+     because it causes corruption of state of navigation in case next step
+     is in same volume. Use instead GetVolume(s) with s = number of step up
+     in geometry tree. Leave protections just in case. (Bug# 6850)
+ 
+!======================== GaussRICH v4r15 ==================================
+!2005-06-16 - Sajan Easo
+  - The DetectorElement member functions userParameterAsInt and
+    userParameterAsDouble replaced by param<int> and param<double> to be
+    compatible with recent changes in DetDesc.
+  - All usage of IDetectorElement to DetectorElement to be compatible with
+    recent DetDesc.
+ 
+!2005-05-10 - Sajan Easo
+  - In RichAnalysis/RichG4ReconFlatMirr.cpp the xml userparameter names
+    refering to the direction of the flat mirrors changed in accordance
+    with names in recent xml versions.
+    Also the quartic equation solution now uses GSL based algorithm.
+    This is not used in standard running, but only activated in verification
+    software for special studies.
+
+!======================= GaussMonitor v2r1 ===================================
+! 2005-06-24 - Gloria CORTI
+ - src/GeneratorFullMonitor.{h,cpp}
+   . Add possibility to look for HardInfo in a different path in TES.
+     Controlled by setting property "HardInfo", by default set to
+     HardInfoLocation::Default.
+ 
+! 2005-06-23 - Gloria CORTI
+ - src/GenMonitorAlg.{h,cpp}
+   . Add possibility to monitor only particles in events produced
+     with a certain generator (identified by name in
+     HepMCEvent container). Controlled by setting name of generator in
+     property "ApplyTo". The default is set to an empty string, in which
+     case the smearing is applied to all events in container
+  
+! 2005-06-21 - Gloria CORTI
+ - src/GenMonitorAlg.cpp
+   . force ID of histograms
+ 
+! 2005-06-17 - Gloria CORTI
+ - src/GenMonitorAlg.{h,cpp}
+   . adapt to GaudiHistoAlg and add some histograms for Primary vertices
+     and pileup counters. This implies that property "FillHistos" is replaced
+     by "HistoProduce" (from GaudiHistoAlg), set to false in this algorithm.
+ 
+!============================== MuonMoniSim v1r1 ============================
+! 2005-06-17 - Gloria CORTI
+ - Make print out at execute in debug() instead of info()
+ - Remove options regarding Gauss jobs.
+ 
+! 2005-06-10 A. Sarti
+ - Fixed a bug in the normalization of the various mean hits evaluation
+ 
+! 2005-06-09 A. Sarti
+ - Added more printout
+  
+!======================= MuonMoniSim v1r0 2005-05-05 ========================
+! 2005-05-55 A. Sarti
+ - New package to hold Muon Sim checking/monitoring algorithms
+
+!========================= GeneratorModules v15r3 =======================
+! 2005-06-23 - Gloria CORTI
+ - Changes to add possibility to set with properties the Generator data
+   paths in the TES. By defaut they are set to XxxLocation::Default
+   . src/Algorithms/EvtDecayAlg.{h,cpp} - property "HepMCEventLocation"
+   . src/Algorithms/SetDecayAlg.{h,cpp} - property "HepMCEventLocation"
+   . src/Algorithms/SmearVertexAlg.{h,cpp} - property "HepMCEventLocation"
+   . src/Algorithms/GenBaseAlg.{h,cpp} - property "HepMCEventLocation"
+                                         property "HardInfoLocation"
+                                         property "GenHeaderLocation"
+ - Changes to add possibility to apply smearing of primary vertex only
+   to events produced with a certain generator (identified by name in
+   HepMCEvent container). Controlled by setting name of generator in
+   property "ApplyTo". The default is set to an empty string, in which
+   case the smearing is applied to all events in container
+   . src/Algorithms/SmearVertexAlg.{h,cpp}
+ 
+! 2005-06-15 - Gloria CORTI and Angelo CARBONE
+ - Changes to handle in an easy way the generation of "beam gas in Velo":
+   essential fixed target with flat smearing of primary vertex in z.
+   . src/Algortihms/PythiaAlg.{h,cpp}
+     add possibility to generate proton beam on proton at rest, controlled
+     by property "FixedTarget" (def= false)
+   . src/Algorithms/SmearVertex.{h,cpp}
+     add possibility to smear z coordinate of primary vertex with flat
+     distribution within min and max z values, controlled by properties
+     "FlatInZ" (def= false), "Zmax" (def= 900*mm), "Zmin" (def= -800*mm)
+ 
+!========================= GeneratorModules v15r2 =======================
+! 2005-06-13 - Gloria CORTI
+ - Temporarly remove SingleParticleGun from library since it has problems
+   compiling at the same time with CLHEP 1.8 and 1.9 because of random
+   numbers.
+   . src/Algorithms/GeneratorModules_entries.cpp (remove declaration)
+   . cmt/requirements (exclude from library)
+ 
+! 2005-06-12 - Patrick Robbe
+ - src/Algorithms/HiggsPythiaAlg.cpp: add the possibility (job option) not
+   to cut on the b/bbar angle.
+ - src/Algorithms/AcerMCPythiaAlg.cpp: initiliaze PDF library options before
+   initiliazing Pythia and remove temporary file at the end of job
+   (acermc_init).
+ - src/Algorithms/EvtGenTool.cpp: remove temporary file at the end of
+   job (photos_init)
+ - src/Algorithms/PythiaAlg.h: make parsePythiaCommands protected for AcerMC.
+ - src/Algorithms/PythiaAlg.cpp: remove temporary file at the end of job
+   (pdflib_init)
+ 
+! 2005-06-10 - Patrick Robbe
+ - src/Algorithms/AcerMCPythiaAlg.cpp: continue AcerMC implementation
+   in Gauss
+ - src/Pythia_i/pdflib_utils.F and photos_utils.F: fix name inversion
+ - src/AcerMC_i: add Fortran interfaces for AcerMC to Acer Common block
+   and to switch off the output.
+ 
+! 2005-05-31 - Patrick Robbe
+ - src/Algorithms/EvtGenTool.cpp: correct polarization of Lambda_b
+ - src/Algorithms/TTbarPythiaAlg: add algorithm for t tbar generation
+   with Pythia
+ 
+! 2005-05-03 - Patrick Robbe
+ - Pythia_i/lunhep.F: count number of quarks in B hadrons instead of
+   number of "free" quarks.
+
+!============================== EvtGen v8r4p1 =============================
+! 2005-06-10 - Gloria CORTI
+ - Changes to make code compatible with both CLHEP 1.8 and 1.9 (to
+   allow to be used in DC04)
+   . src/EvtGen.cpp, EvtVub.cpp, EvtGen/EvtGen.h, EvtGenModels/EvtVub.h
+ 
+!=============================================================================
 <H1><A NAME="v19r4">2005-04-22 - GaussSys v19r4</A></H1><PRE>
     use Geant4 v70r0p1, Pythia 6_226.2, photos 209.2, LHCb v18r3, XmlDDDB v24r0
 

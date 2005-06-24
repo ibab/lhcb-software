@@ -14,7 +14,7 @@ use Gauss		v19r5	  Sim
 use GENSER              v2r100p0  Gen
 use HepEvt              v3r121p0  Gen
 use EvtGen              v8r4p1    Gen
-use GeneratorModules    v15r2     Gen
+use GeneratorModules    v15r3     Gen
 
 # GiGa stuff...
 use GiGa        	v17r2	Sim        
