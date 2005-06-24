@@ -27,3 +27,10 @@ PythiaBeamGas.GenHeaderLocation       = "/Event/BeamGas/Gen/Header";
 SmearVertexAlg.ApplyTo = "PythiaAlg";
 SmearBeamGas.ApplyTo   = "PythiaBeamGas";
 
+GenMonitor.Members += {"GenMonitorAlg/MonitorPythia"};
+GenMonitor.Members += {"GenMonitorAlg/MonitorBeamGas"};
+MonitorPythia.HistoProduce       = true;
+MonitorBeamGas.HistoProduce      = true;
+MonitorPythia.ApplyTo            = "PythiaAlg";
+MonitorBeamGas.ApplyTo           = "PythiaBeamGas";
+ 
