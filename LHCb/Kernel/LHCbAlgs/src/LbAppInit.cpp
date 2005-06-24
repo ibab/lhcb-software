@@ -1,4 +1,4 @@
-// $Id: LbAppInit.cpp,v 1.10 2005-04-19 15:26:33 cattanem Exp $
+// $Id: LbAppInit.cpp,v 1.11 2005-06-24 06:45:54 cattanem Exp $
 
 // Include files
 #include "LbAppInit.h"
@@ -7,7 +7,6 @@
 #include "GaudiKernel/IRndmEngine.h"
 #include "GaudiKernel/RndmGenerators.h"
 #include "GaudiKernel/IDataManagerSvc.h"
-#include "AIDA/IHistogram1D.h"
 #include "Event/EventHeader.h"
 #include "Event/ProcStatus.h"
 #include "Tools/INormalizeTool.h"
@@ -24,17 +23,16 @@ const IAlgFactory& LbAppInitFactory = s_factory;
 
 //-----------------------------------------------------------------------------
 LbAppInit::LbAppInit( const std::string& name, ISvcLocator* pSvcLocator )
-                                    : GaudiAlgorithm( name, pSvcLocator ) { 
+                                     : GaudiHistoAlg( name, pSvcLocator ) { 
   m_eventCounter = 0;
   m_engine       = 0;
-  m_hMemVirtual  = 0;
   
   declareProperty( "FirstEventNumber", m_firstEvent = 1     );
   declareProperty( "RunNumber",        m_runNumber  = 1     );
-  declareProperty( "doHistos",         m_doHistos   = true  );
   declareProperty( "SkipFactor",       m_skipFactor = 0     );
   declareProperty( "SingleSeed",       m_singleSeed = false );
   declareProperty( "PreloadGeometry",  m_preloadGeom= false );
+  declareProperty( "HistoSize",        m_bins       = 500   );
 }
 //-----------------------------------------------------------------------------
 
@@ -46,8 +44,8 @@ LbAppInit::~LbAppInit() { }
 StatusCode LbAppInit::initialize() { 
 //-----------------------------------------------------------------------------
 
-  StatusCode sc = GaudiAlgorithm::initialize();
-  if( sc.isFailure() ) return Error( "Failed to initialize base class", sc );
+  StatusCode sc = GaudiHistoAlg::initialize();
+  if( sc.isFailure() ) return sc;  // Error already printed by base class
   
   // Get the random number engine
   m_engine = randSvc()->engine();
@@ -70,18 +68,6 @@ StatusCode LbAppInit::initialize() {
            << " random numbers before each event" << endmsg;
   }
   
-  // Book the monitoring histograms
-  if( m_doHistos ) {
-    IProperty* appMgrP = svc<IProperty>( "ApplicationMgr" );
-    IntegerProperty numBins;
-    numBins.assign( appMgrP->getProperty( "EvtMax" ) );
-    release( appMgrP );
-
-    if( -1 == numBins ) numBins = 500;
-    m_hMemVirtual = histoSvc()->book( name(), 2, "Virtual memory (kB)",
-                                      numBins, 0.5, numBins+0.5 );
-  }
-
   if( m_preloadGeom ) {
     DataStoreLoadAgent *loadAgent = new DataStoreLoadAgent();
     IDataManagerSvc *dataMgr = svc<IDataManagerSvc>("DetectorDataSvc", true);
@@ -98,13 +84,22 @@ StatusCode LbAppInit::execute() {
 //-----------------------------------------------------------------------------
 
   // Debug mode: print memory at each event
+  double mem = (double)System::virtualMemory();
+
   debug() << "At event " << m_eventCounter+1 << ", memory usage is " 
-          << System::virtualMemory() << endreq;  
+          << mem << endreq;  
 
   // Fill the memory usage histograms before the next event is loaded
-  if( m_doHistos ) {
-    long mem = System::virtualMemory();
-    m_hMemVirtual->fill( m_eventCounter+1, (double)mem );
+  if( produceHistos() ) {
+    if( m_bins > m_eventCounter ) {
+      plot( m_eventCounter+1, 2, "Virtual memory (kB), all events",
+            0.5, m_bins+0.5, m_bins, mem );
+    }
+    if( 0 == m_eventCounter%m_bins ) {
+      unsigned int bin = 1 + ( m_eventCounter/m_bins );
+      plot( bin, 3, "Virtual memory (kB), downscaled events",
+            0.5, m_bins+0.5, m_bins, mem );
+    }
   }
 
   // Retrieve the event header if it exists, otherwise create it
@@ -122,8 +117,8 @@ StatusCode LbAppInit::execute() {
     newEvt->setRunNum( m_runNumber );
     put( newEvt, EventHeaderLocation::Default );
   }
-  ++m_eventCounter;
 
+  ++m_eventCounter;
   info() << "Evt " << eventNumber << ",  Run " << m_runNumber 
          << ",  Nr. in job = " << m_eventCounter << endmsg;
 
@@ -151,7 +146,7 @@ StatusCode LbAppInit::finalize() {
     << "=================================================================="
     << endmsg;
 
-  return GaudiAlgorithm::finalize();
+  return GaudiHistoAlg::finalize();
 }
 
 //-----------------------------------------------------------------------------

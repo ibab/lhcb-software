@@ -1,13 +1,12 @@
-// $Id: LbAppInit.h,v 1.3 2005-03-18 16:23:45 cattanem Exp $
+// $Id: LbAppInit.h,v 1.4 2005-06-24 06:45:54 cattanem Exp $
 #ifndef LHCBALGS_LBAPPINIT_H
 #define LHCBALGS_LPAPPINIT_H 1
 
 // Include files
-#include "GaudiAlg/GaudiAlgorithm.h"
+#include "GaudiAlg/GaudiHistoAlg.h"
 
 // Forward declarations
 class IRndmEngine;
-class IHistogram1D;
 
 /** @class LbAppInit LbAppInit.h
  * Generic initialisation for LHCb data processing applications
@@ -18,7 +17,7 @@ class IHistogram1D;
  * Based on similar BrunelInitialisation, BooleInit, GaussInitialisation classes
  */
 
-class LbAppInit : public GaudiAlgorithm {
+class LbAppInit : public GaudiHistoAlg {
 public:
 	LbAppInit( const std::string& name, ISvcLocator *svcloc ); ///< Constructor
 	virtual ~LbAppInit();                                      ///< Destructor
@@ -43,9 +42,6 @@ private:
   /// Property to set the run number, if event header is missing
   unsigned int m_runNumber;
 
-  /// Property to enable creation and filling of memory monitoring histogram
-  bool m_doHistos;
-
   /// Property to skip some random numbers (default is zero)
   int  m_skipFactor;
 
@@ -55,10 +51,12 @@ private:
   /// Property to preload the detector geometry (default is false)
   bool m_preloadGeom;
 
+  /// Property to define number of bins in memory histo
+  unsigned int m_bins;
+ 
   // Member data
   IRndmEngine*  m_engine;       ///< Pointer to random number engine
   unsigned int  m_eventCounter; ///< Number of events processed
-  IHistogram1D* m_hMemVirtual;  ///< Pointer to virtual memory usage histogram
 };
 
 #endif    // LHCBALGS_LBAPPINIT_H

@@ -4,6 +4,13 @@
 ! Purpose     : General purpose algorithms and tools for LHCb
 !-----------------------------------------------------------------------------
 
+!======================== LHCbAlgs v1r7 2005-06-23 =======================
+! 2005-06-23 - Marco Cattaneo
+ - LbAppInit is now a GaudiHistoAlg, property "HistoProduce" replaces "doHistos"
+ - Split memory histogram into two, both with "HistoSize" bins
+   . hID=2: one entry per event for first HistoSize events
+   . hID=3: one entry every HistoSize events, starting at event 1
+
 !======================== LHCbAlgs v1r6 2005-05-03 =======================
 ! 2005-05-03 - Marco Cattaneo
  - Remove TESFilter algorithm, moved to EventUtils
