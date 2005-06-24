@@ -1,4 +1,4 @@
-// $Id: Common.opts,v 1.9 2005-06-17 15:52:24 gcorti Exp $ 
+// $Id: Common.opts,v 1.10 2005-06-24 08:02:29 gcorti Exp $ 
 #pragma print off
 
 /** @file 
@@ -52,8 +52,7 @@ MessageSvc.Format = "% F%24W%S%7W%R%T %0W%M";  // Longer "algorithm" identifier 
 #include "$STDOPTS/DetDesc.opts"
 ApplicationMgr.DLLS += { "CaloDetXmlCnv" };
 
-//DetectorDataSvc.DetDbLocation = "$XMLDDDBROOT/DDDB/lhcb-200402.xml";
-DetectorDataSvc.DetDbLocation = "$XMLDDDBROOT/DDDB/lhcb-200412.xml";
+DetectorDataSvc.DetDbLocation = "$XMLDDDBROOT/DDDB/lhcb-200506.xml";
 
 // Transient store setup
 EventDataSvc.ForceLeaves         = true ;
