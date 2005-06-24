@@ -1,0 +1,29 @@
+/** @file
+ *
+ *  Options to generate events with 1 beam gas in Velo always mixed
+ *  At the moment it works only for mixing with min bias 
+ *  This file need to be included in Gauss.opts at the end.
+ *
+ *  @author G.Corti
+ *  @date   2005-06-24
+ *
+ */
+
+#include "$DECFILESROOT/options/60000000.opts"  // Beam gas in Velo
+ToolSvc.EvtGenTool.EventType = 30000000;
+
+Generator.Members = {
+  "SignalDecayAlg" , 
+  "PythiaAlg/PythiaBeamGas" ,   // This MUST be executed BEFORE standard
+  "PythiaAlg" ,                 // PythiaAlg: ORDER CHANGES RESULTS!
+  "SetDecayAlg"    ,
+  "EvtDecayAlg"    ,
+  "SmearVertexAlg/SmearBeamGas" ,
+  "SmearVertexAlg",
+  "GenMonitorAlg"
+};
+
+PythiaBeamGas.GenHeaderLocation       = "/Event/BeamGas/Gen/Header";
+SmearVertexAlg.ApplyTo = "PythiaAlg";
+SmearBeamGas.ApplyTo   = "PythiaBeamGas";
+

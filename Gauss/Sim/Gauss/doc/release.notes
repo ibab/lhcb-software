@@ -4,6 +4,13 @@
 ! Purpose     : LHCb Simulation Application with Geant4
 !-----------------------------------------------------------------------------
 
+! 2005-06-24 - Gloria CORTI
+ - Allow production of Beam gas events and production of minbias events with
+   combined beam gas at generator level
+   . use GeneratorModules v15r13
+   . use DecFiles v7r3
+   . BeamGas-Velo.opts
+
 ! 2005-06-17 - Gloria CORTI
  - Use new version of GaussMonitor (v2r1) and adapt to change in property
    in Monitor.opts
@@ -36,6 +43,8 @@
    . SimGeometry.opts
      remove Converter from Geo.StreamItems to make it usable for both
      supported geometries
+   . Common.opts
+     set as default lhcb-v200506.opts
  - Use version of XmlDDDB (v25r0) supporting RTTC and Calo+Muon tilted 
    geometry 
  - Use version of DecFiles (v7r2) and ParamFiles (v3r12) supporting 

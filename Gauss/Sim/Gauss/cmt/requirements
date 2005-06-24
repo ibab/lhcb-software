@@ -9,13 +9,13 @@ branches src doc options cmt job
 #-- Databases
 use XmlDDDB             v25r0   Det   -no_auto_imports
 use FieldMap            v4r5          -no_auto_imports
-use DecFiles            v7r2    Gen   -no_auto_imports
+use DecFiles            v7r3    Gen   -no_auto_imports
 use ParamFiles          v3r12         -no_auto_imports
 use Geant4Files		v52r0	      -no_auto_imports
 
 #========================================================================
 #-- Generator
-use GeneratorModules    v15r2   Gen
+use GeneratorModules    v15r3   Gen
 
 #-- Simulation
 use GiGaCnv             v15r11  Sim
