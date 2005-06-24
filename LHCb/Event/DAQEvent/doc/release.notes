@@ -3,6 +3,10 @@ Author: Jose' Helder Lopes
 Purpose: Define the L1Buffer,  L1Event, L1Bank, RawBuffer, RawEvent and 
          RawBank classes.
 
+!================ DAQEvent v5r2p1 2005-06-24 ==========================
+! 2005-06-24 - Marco Cattaneo
+ - In CreateL1Event,CreateRawEvent, do not attempt to create if already existing 
+
 !================ DAQEvent v5r2 2005-06-02 ============================
 ! 2005-06-02 - Marco Cattaneo
  - In CreateRawBuffer.cpp, clear the registry entry of Event/Header after it

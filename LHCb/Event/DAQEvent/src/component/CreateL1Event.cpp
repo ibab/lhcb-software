@@ -1,4 +1,4 @@
-// $Id: CreateL1Event.cpp,v 1.1 2004-06-28 11:41:03 cattanem Exp $
+// $Id: CreateL1Event.cpp,v 1.2 2005-06-24 14:44:08 cattanem Exp $
 // Include files 
 
 // from Gaudi
@@ -35,13 +35,13 @@ CreateL1Event::CreateL1Event( const std::string& name,
 //=============================================================================
 StatusCode CreateL1Event::execute() {
 
-  // Retrieve the L1Buffer
-  L1Buffer* l1Buffer = get<L1Buffer>( L1BufferLocation::Default );
+  debug() << "==> Execute" << endmsg;
 
-  L1Event* l1Event = new L1Event( *l1Buffer );
-  if( NULL == l1Event ) {
-    return Error( "Unable to allocate memory to L1Event" );
+  if ( !exist<L1Event>( L1EventLocation::Default ) ) {
+    L1Buffer* buf = get<L1Buffer>( L1BufferLocation::Default );
+    L1Event* evt = new L1Event( *buf );
+    put( evt, L1EventLocation::Default );
   }
-  
-  return put( l1Event, L1EventLocation::Default );
+
+  return StatusCode::SUCCESS;
 };

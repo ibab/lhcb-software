@@ -1,4 +1,4 @@
-// $Id: CreateRawEvent.cpp,v 1.1 2004-06-28 11:41:03 cattanem Exp $
+// $Id: CreateRawEvent.cpp,v 1.2 2005-06-24 14:44:08 cattanem Exp $
 // Include files 
 
 // from Gaudi
@@ -35,13 +35,13 @@ CreateRawEvent::CreateRawEvent( const std::string& name,
 //=============================================================================
 StatusCode CreateRawEvent::execute() {
 
-  // Retrieve the RawBuffer
-  RawBuffer* rawBuffer = get<RawBuffer>( RawBufferLocation::Default );
+  debug() << "==> Execute" << endmsg;
 
-  RawEvent* rawEvent = new RawEvent( *rawBuffer );
-  if( NULL == rawEvent ) {
-    return Error( "Unable to allocate memory to RawEvent" );
+  if ( !exist<RawEvent>( RawEventLocation::Default ) ) {
+    RawBuffer* buf = get<RawBuffer>( RawBufferLocation::Default );
+    RawEvent* evt = new RawEvent( *buf );
+    put( evt, RawEventLocation::Default );
   }
-  
-  return put( rawEvent, RawEventLocation::Default );
+
+  return StatusCode::SUCCESS;
 };
