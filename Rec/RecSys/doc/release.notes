@@ -5,7 +5,7 @@ Purpose: LHCb reconstruction packages.
          This project groups together all the reconstruction packages needed
          by one or more LHCb applications. 
 
-</PRE><H1><A NAME=v1r3>2005-06-24 RecSys v1r3</A></H1><PRE>
+</PRE><H1><A NAME=v1r3>2005-06-27 RecSys v1r3</A></H1><PRE>
 This version uses Gaudi v16r4, LHCb v18r7 (also CLHEP 1.9, ROOT 4.0)
 
 - Packages added   : RichRecAlgorithms - MC free algs, replaces RichRecCommon
@@ -20,7 +20,7 @@ This version uses Gaudi v16r4, LHCb v18r7 (also CLHEP 1.9, ROOT 4.0)
    TrackProjectors v1r1, TrConverters v1r1
 
 - In Reco.opts
-  . Remove RichRecCommon DLL
+  . Remove RichRecCommon DLL, add RichRecAlgorithms DLL
 
 - In TrgPrimVertex v4r2, TrgMuon v1r2p2
   . Fix several memory leaks, first seen in Moore v1r0
