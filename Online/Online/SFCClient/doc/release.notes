@@ -1,5 +1,13 @@
 Package: SFCClient
 Author:  Benjamin Gaidioz
 
+!=================== SFCClient v1r1 2005-06-27 =============================
+! 2005-06-22 - Benjamin Gaidioz
+ - RTTC updates of the SFCClient library. Main change is that all parameters
+   of the SFCClient library are read by the library from environment variables
+   rather than parameters from the job option file or parameters in GaudiOnline.
+   Later, we will move back the parameters to the SFCClient library registration
+   call and environment variables will be read from GaudiOnline.
+
 !=================== SFCClient v1r0 2005-05-13 =============================
   New Package.

@@ -2,7 +2,7 @@
 # Maintainer : Markus Frank
 #============================================================================
 package           SFCClient 
-version           v1r0
+version           v1r1
 use GaudiPolicy   v*
 build_strategy    no_prototypes
 #============================================================================
