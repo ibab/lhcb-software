@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.6 2005-06-15 17:01:12 cattanem Exp $
+# $Id: requirements,v 1.7 2005-06-27 11:50:48 pkoppenb Exp $
 # Created    : 03/06/2005 by P. Koppenburg
 # Maintainer : P. Koppenburg & M. Cattaneo
 #
@@ -26,21 +26,21 @@ use XmlDDDB     v25r1   Det
 use ParamFiles  v3r11   -no_auto_imports
 use FieldMap    v4r5
 
-#-- LHCb libraries (from LHCB_v18r6)
-use LHCb        v18r6
+#-- LHCb libraries (from LHCB_v18r7)
+use LHCb        v18r7
 
-#-- Lbcom packages (from LBCOM_v2r2)
-use LbcomSys    v2r2
+#-- Lbcom packages (from LBCOM_v2r3)
+use LbcomSys    v2r3
 
-#-- Rec packages (from REC_v1r2)
-use RecSys      v1r2
+#-- Rec packages (from REC_v1r3)
+use RecSys      v1r3
 
-#-- Phys packages (from PHYS_v1r2)
+#-- Phys packages (from PHYS_v1r3)
 use PhysCoreSys v1r2   Phys
-use HltSys      v1r2   Hlt
+use HltSys      v1r3   Hlt
 
-#-- Online packages (from Online v1r2) - not on Windows
-macro useOnline "OnlineSys v1r2" WIN32 ""
+#-- Online packages (from Online v1r3) - not on Windows
+macro useOnline "OnlineSys v1r3" WIN32 ""
 use $(useOnline)
 #
 #===== build Moore. On Win32 online app is same as offline... =====
