@@ -1,9 +1,12 @@
 Package: GaudiOnline
 Author:  Markus Frank
 
-!================== GaudiOnline v2r1 2005-06-10 =============================
+!================== GaudiOnline v1r2 2005-06-27 =============================
 ! 12-06-2005 Markus Frank
-  Fill first guess into L1 decision block according to information from T.Schietinger
+  Fill first guess into L1 decision block according to information from
+  T.Schietinger
+
+!================== GaudiOnline v1r1 2005-06-10 =============================
 ! 11-06-2005 Markus Frank
   Fix compiler warnings (unused vars & deprecated) in OnlineMessageSvc.
 ! 10-06-2005 Markus Frank
