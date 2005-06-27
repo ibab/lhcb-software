@@ -2,7 +2,10 @@ Package: GaudiOnline
 Author:  Markus Frank
 
 !================== GaudiOnline v1r2 2005-06-27 =============================
-! 12-06-2005 Markus Frank
+! 2005-06-22 - Benjamin Gaidioz
+  Adapt to change in SFC client library
+
+! 2005-06-12 - Markus Frank
   Fill first guess into L1 decision block according to information from
   T.Schietinger
 
