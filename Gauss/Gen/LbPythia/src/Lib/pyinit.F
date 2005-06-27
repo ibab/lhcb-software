@@ -1,4 +1,4 @@
-C $Id: pyinit.F,v 1.1.1.1 2005-06-21 12:40:51 robbep Exp $ 
+C $Id: pyinit.F,v 1.2 2005-06-27 15:22:32 robbep Exp $ 
 C*********************************************************************
  
 C...PYINIT
@@ -189,8 +189,14 @@ C...Precalculate flavour selection weights.
       CALL PYKFIN
 
 CC MODIFICATION FOR ACERMC
-      CALL UPINIT(2)
-CC END OF MODIF FOR ACERMC  
+CC        CALL UPINIT
+C...   ReCall user process initialization routine.
+      IF(FRAME(1:1).EQ.'u'.OR.FRAME(1:1).EQ.'U') THEN
+        MSEL=0
+        CALL UPINIT(2)
+        MSEL=0
+      ENDIF
+CC END OF MODIF FOR ACERMC
  
 C...Loop over gamma-p or gamma-gamma alternatives.
       CKIN3=CKIN(3)
