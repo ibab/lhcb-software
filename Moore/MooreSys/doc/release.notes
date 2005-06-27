@@ -6,8 +6,25 @@ Purpose     : LHCb HLT application
 </PRE><H1><A NAME=v1r1>2005-06-27 Moore v1r1</A></H1><PRE>
 This version uses LHCb v18r7, Lbcom v2r3, Rec v1r3, Phys v1r3, Online v1r3
 
-Updated RTTC release.
-</PRE>
+ - New features:
+   . Property "Moore.HistoProduce" replaces "Moore.doHistos" (LHCbAlgs v1r7)
+   . Split memory histogram into two, both with "Moore.HistoSize" bins
+     + hID=2: one entry per event for first HistoSize events
+     + hID=3: one entry every HistoSize events, starting at event 1
+     (LHCbAlgs v1r7)
+   . Repackaging of Rich to allow running both Hlt and Reco in same job 
+     (Not yet enabled. See LHCbSys, LbcomSys, RecSys, PhysSys release notes)
+
+ - New tuning:
+   . Speed improvements to Rich reconstruction
+     (See LHCbSys, LbcomSys, RecSys release notes)
+
+ - Bug fixes:
+   . Load Pool persistency only in offline application
+     (MooreOffline.opts, LHCbApplication.opts)
+   . Set up online EventSelector in online application (MooreOnline.opts) 
+   . Fix memory leaks at finalisation (XmlTools v5r3p1, DetDesc v15r2)
+   . Fix memory leaks in event loop (TrgPrimVertex v4r2, TrgMuon v1r2p2)
 
 </PRE><H1><A NAME=v1r0>2005-06-15 Moore v1r0</A></H1><PRE>
 This version uses LHCb v18r6, Lbcom v2r2, Rec v1r2, Phys v1r2, Online v1r2

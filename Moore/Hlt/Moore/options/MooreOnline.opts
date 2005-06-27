@@ -3,7 +3,12 @@
 // Common Online+Offline configuration
 #include "$MOOREROOT/options/MooreCommon.opts"
 
-HltMonitoring.Members  += {"HltCompare2RawBuffer"};
+// Set up the event input
+ApplicationMgr.DLLs   += { "GaudiOnline" };
+EventPersistencySvc.CnvServices += { "OnlineCnvSvc" };
+EventSelector.Input += {
+  "DATA='sfc://${SFCC_SFC_MAC_ADDR}' SVC='GaudiOnline::EvtSelector' INPUT='HLT'"
+};
 
 // Start the monitoring service
 ApplicationMgr.DLLs   += { "Gaucho" };
@@ -11,3 +16,6 @@ ApplicationMgr.ExtSvc += { "MonitorSvc" };
 
 // Set the trigger decision (always set, at end of Hlt processing)
 ApplicationMgr.TopAlg += { "DecisionSetterAlg" };
+
+// Comparison with offline result (RTTC data only)
+HltMonitoring.Members  += {"HltCompare2RawBuffer"};

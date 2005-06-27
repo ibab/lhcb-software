@@ -73,6 +73,7 @@ HltDecision.MakeCorrelations = false ;
 // #include "$HLTSELCHECKERROOT/options/Plots.opts"
 // #include "$HLTSELCHECKERROOT/options/MeasureTimes.opts"
 ApplicationMgr.TopAlg += { "GaudiSequencer/HltMonitoring" };
+ApplicationMgr.DLLs   += { "HltMonitor" };
 HltMonitoring.Members  += { "TestHltScore" };
 HltMonitoring.Members  += {"PlotTrackDeviation"}; // Monitor
 ApplicationMgr.ExtSvc += { "ParticlePropertySvc" }; // needed for PlotTrackDeviation

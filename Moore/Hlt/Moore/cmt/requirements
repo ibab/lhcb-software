@@ -1,11 +1,11 @@
-# $Id: requirements,v 1.7 2005-06-27 11:50:48 pkoppenb Exp $
+# $Id: requirements,v 1.8 2005-06-27 12:45:58 cattanem Exp $
 # Created    : 03/06/2005 by P. Koppenburg
 # Maintainer : P. Koppenburg & M. Cattaneo
 #
 
 #============================================================================
 package Moore
-version v1r0
+version v1r1
 
 # Structure, i.e. directories to process. 
 #============================================================================
@@ -22,7 +22,7 @@ use GaudiPoolDb         v1r13
 use RootHistCnv         v9r4
 
 #-- Databases
-use XmlDDDB     v25r1   Det
+use XmlDDDB     v26r0   Det
 use ParamFiles  v3r11   -no_auto_imports
 use FieldMap    v4r5
 

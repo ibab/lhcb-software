@@ -3,8 +3,12 @@
 // Common Online+Offline configuration
 #include "$MOOREROOT/options/MooreCommon.opts"
 
-// Input data
+// POOL Persistency
 #pragma print off
+#include "$GAUDIPOOLDBROOT/options/GaudiPoolDbRoot.opts"
+#include "$EVENTSYSROOT/options/PoolDicts.opts"
+
+// Input data
 #include "$HLTSYSROOT/options/RTTCTestData.opts"
 EventSelector.PrintFreq  = 100 ;
 #pragma print on
