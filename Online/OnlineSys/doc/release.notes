@@ -5,6 +5,22 @@
 ! Purpose     : 
 !-----------------------------------------------------------------------------
 
+</PRE><H1><A NAME=v1r3>2005-06-27 OnlineSys v1r3</A></H1><PRE>
+This version uses Gaudi v16r4, LHCb v18r7
+
+ - Packages modified: GauchoJob v2r3, GaudiOnline v1r2, SFCClient v1r1
+
+ - In GauchoJob v2r3:
+   . GaudiOnlineMain: if UTGID is not set, don't give a null pointer
+
+ - In GaudiOnline v1r2:
+   . Fill L1 decision block with information from L1Score
+
+ - In SFCClient v1r1:
+   . Updates for RTTC. Main change is that all parameters of the library are read
+     by from environment variables rather than from the job option file or as 
+     parameters passed by GaudiOnline
+
 </PRE><H1><A NAME=v1r2>2005-06-15 OnlineSys v1r2</A></H1><PRE>
 This version uses Gaudi v16r4, LHCb v18r6
 

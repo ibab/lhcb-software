@@ -1,5 +1,5 @@
 package OnlineSys
-version v1r2
+version v1r3
 
 branches cmt doc
  
@@ -9,9 +9,9 @@ branches cmt doc
 
 use DIM		  v1r1   Online
 use Gaucho        v3r1   Online
-use GauchoJob     v2r2   Online
-use GaudiOnline   v1r1   Online
-use SFCClient     v1r0   Online
+use GauchoJob     v2r3   Online
+use GaudiOnline   v1r2   Online
+use SFCClient     v1r1   Online
 use PyDIM         v1r0   Online
 
 private
