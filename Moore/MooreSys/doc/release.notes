@@ -14,6 +14,7 @@ This version uses LHCb v18r7, Lbcom v2r3, Rec v1r3, Phys v1r3, Online v1r3
      (LHCbAlgs v1r7)
    . Repackaging of Rich to allow running both Hlt and Reco in same job 
      (Not yet enabled. See LHCbSys, LbcomSys, RecSys, PhysSys release notes)
+   . Read SFC client parameters from environment variables (SFCClient v1r1)
 
  - New tuning:
    . Speed improvements to Rich reconstruction
@@ -25,6 +26,7 @@ This version uses LHCb v18r7, Lbcom v2r3, Rec v1r3, Phys v1r3, Online v1r3
    . Set up online EventSelector in online application (MooreOnline.opts) 
    . Fix memory leaks at finalisation (XmlTools v5r3p1, DetDesc v15r2)
    . Fix memory leaks in event loop (TrgPrimVertex v4r2, TrgMuon v1r2p2)
+   . If UTGID is not set, don't give a null pointer (GauchoJob v2r3)
 
 </PRE><H1><A NAME=v1r0>2005-06-15 Moore v1r0</A></H1><PRE>
 This version uses LHCb v18r6, Lbcom v2r2, Rec v1r2, Phys v1r2, Online v1r2
