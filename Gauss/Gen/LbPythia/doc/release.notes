@@ -1,6 +1,9 @@
-! $Id: release.notes,v 1.2 2005-06-22 10:17:53 ranjard Exp $
+! $Id: release.notes,v 1.3 2005-06-27 15:23:32 robbep Exp $
 ! Package     : Gen/LbPythia
 ! Responsible : 
+
+! 2005-06-27 - Patrick Robbe
+ - Lib/pyinit.F: apply upinit only when there is a user process, for safety.
 
 ! ========================== LbPythia v1r0 ============================
 ! 2005-06-21 - Patrick Robbe
