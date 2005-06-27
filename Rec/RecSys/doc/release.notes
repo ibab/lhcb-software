@@ -19,6 +19,9 @@ This version uses Gaudi v16r4, LHCb v18r7 (also CLHEP 1.9, ROOT 4.0)
    RichTrgTools v1r1, TrackFitEvent v1r1, TrackIdealPR v1r1, TrackMCTools v1r1,
    TrackProjectors v1r1, TrConverters v1r1
 
+- In Reco.opts
+  . Remove RichRecCommon DLL
+
 - In TrgPrimVertex v4r2, TrgMuon v1r2p2
   . Fix several memory leaks, first seen in Moore v1r0
 
