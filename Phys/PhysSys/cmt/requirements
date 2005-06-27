@@ -49,13 +49,14 @@ use  LoKiJets             	v1r1     Tools
 use  KtJet	             	v1r0     External
 
 #=======================================================
-use HltSys                      v1r2     Hlt
+use HltSys                      v1r3     Hlt
 #=======================================================
 # packages included in HltSys
 #=======================================================
-use HltGeneric                  v2r5     Hlt
-use HltSelections               v3r3     Hlt
+use HltGeneric                  v2r6     Hlt
+use HltSelections               v3r4     Hlt
 use HltSelChecker               v3r3     Hlt
+use HltMonitor                  v1r0     Hlt
 
 #=======================================================
 use  PhysSelSys			v8r4     PhysSel
