@@ -4,6 +4,9 @@
 ! Purpose     : package for tracking tools interfaces
 !-----------------------------------------------------------------------------
 
+! 2005-06-28 - Eduardo Rodrigues
+ - added interface to MeasurementProvider tool (concrete tool in Tr/TrackTools)
+
 !====================== TrackInterfaces v1r1 2005-06-21 ======================
 ! 2005-05-25 - Eduardo Rodrigues
  - added forward declaration for `Measurement' in ITrackFitter.h
