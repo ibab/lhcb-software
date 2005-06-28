@@ -17,7 +17,7 @@ Requires input from Gauss v19r3 or greater. Output needs Brunel v27r2 or greater
     (LHCbAlgs v1r7)
   . Add support for v200507 geometry (same as v200506 plus Velo with alternate
     R-sensors rotated, and with possibility to add external misalignment files)
-    (v200507.opts, XmlDDDB v26r0, DetDesc v15r2, DetDescCnv v2r7)
+    (v200507.opts, XmlDDDB v26r0, DetDesc v15r2, DetDescCnv v2r7, VeloDet v9r7)
   . Minor improvements to Rich monitoring printout (RichDigiQC v2r2)
 
 - Repackaging
