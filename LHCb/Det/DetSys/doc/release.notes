@@ -4,9 +4,9 @@
 ! Purpose     : collect Det packages
 !-----------------------------------------------------------------------------
 
-!========================= DetSys v7r2 2005-06-24 =========================
-! 2005-06-24 - Marco Cattaneo
- - Use DetDesc v15r2, DetDescCnv v2r7, XmlTools v3r5p1
+!========================= DetSys v7r2 2005-06-28 =========================
+! 2005-06-28 - Marco Cattaneo
+ - Use DetDesc v15r2, DetDescCnv v2r7, XmlTools v3r5p1, VeloDet v9r7
 
 !========================= DetSys v7r1 2005-06-06 =========================
 ! 2005-06-06 - Marco Cattaneo
