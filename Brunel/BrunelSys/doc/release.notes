@@ -3,8 +3,35 @@ Package: Rec/Brunel
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb reconstruction program
 
+</PRE><H1><A NAME=v27r3>2005-06-28 Brunel v27r3</A></H1><PRE>
+This version uses Gaudi v16r4, LHCb v18r7, Rec v1r3, Lbcom v2r3
+Requires input data from Boole v9r2 or greater. Incompatible with DC04 versions
+
+ - New features:
+   . Property "Brunel.HistoProduce" replaces "Brunel.doHistos" (LHCbAlgs v1r7)
+   . Split memory histogram into two, both with "Brunel.HistoSize" bins
+     + hID=2: one entry per event for first HistoSize events
+     + hID=3: one entry every HistoSize events, starting at event 1
+     (LHCbAlgs v1r7)
+   . Repackaging of Rich to allow running both Hlt and Reco in same job
+     (See LHCbSys, LbcomSys, RecSys, PhysSys release notes)
+   . Add possibility to access v200507 geometry (v200506 plus Velo with alternate
+     R-sensors rotated, and with possibility to add external misalignment files)
+     (v200507.opts, XmlDDDB v26r0, DetDesc v15r2, DetDescCnv v2r7, VeloDet v9r7)
+     N.B. reconstruction not yet working correctly with new Velo geometry!!!
+
+ - New tuning:
+   . Speed improvements to Rich reconstruction
+     (See LHCbSys, LbcomSys, RecSys release notes)
+   . Update to photon reconstruction scheme                (RichRecSys v1r17)
+   . Update geometrical efficiency calculation parameters  (RichRecSys v1r17)
+   . Add options to run pixel create with forced-dead HPDs (RichRecSys v1r17)
+
+ - Bug fixes:
+   . Fix memory leaks at finalisation (XmlTools v5r3p1, DetDesc v15r2)
+
 </PRE><H1><A NAME=v27r2>2005-06-13 Brunel v27r2</A></H1><PRE>
-This version uses Gaudi v16r6, LHCb v18r6, Rec v1r2, Lbcom v2r2
+This version uses Gaudi v16r4, LHCb v18r6, Rec v1r2, Lbcom v2r2
 Requires input data from Boole v9r2 or greater. Incompatible with DC04 versions
 
 - Functionality changes

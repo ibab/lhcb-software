@@ -1,5 +1,5 @@
 package BrunelSys
-version v27r2
+version v27r3
 
 branches cmt doc
  
@@ -8,4 +8,4 @@ branches cmt doc
 #=======================================================
 
 # Brunel application
-use Brunel              v27r2	Rec
+use Brunel              v27r3	Rec
