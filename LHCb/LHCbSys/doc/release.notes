@@ -30,6 +30,8 @@
 
  - In DetDesc v15r2
    . Changes for handling conditions attached to IGeometryInfo
+   . Delete all dynamically allocated matrices and pointer to MsgStream in
+     GeometryInfoPlus destructor
    . Updates to UpdateManagerSvc
 
  - In DetDescCnv v2r7
