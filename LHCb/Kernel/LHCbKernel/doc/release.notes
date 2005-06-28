@@ -2,6 +2,7 @@ Package LHCbKernel
 Package manager: M.Cattaneo
 Purpose: LHCb specific Kernel classes
 
+!===================== LHCbKernel v5r12 2005-06-28 ========================
 ! 2005-06-28 - Olivier Callot
  - Fix the packing of ITChannelID in LHCbID, remove two unused bits for strip
    and add the needed bits for station.
@@ -9,7 +10,6 @@ Purpose: LHCb specific Kernel classes
  - Inline most LHCbID constructors to make them faster.
  - faster accessors to the Velo/IT/OT ids from LHCbID.
 
-!===================== LHCbKernel v5r12 2005-06-24 ========================
 ! 2005-06-24 - Stefan Roiser
  - Fixes to POOL dictionaries for use from GaudiPython:
    . Remove --pool option from lcgdict build command
