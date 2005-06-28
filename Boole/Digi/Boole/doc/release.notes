@@ -3,9 +3,10 @@ Package: Digi/Boole
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb Digitization program
 
-</PRE><H1><A NAME=v9r3>2005-06-22 Boole v9r3</A></H1><PRE>
- - Adapt requirements to Lbcom v2r3, LHCb v18r7, Gaudi v16r4, XmlDDDB v25r1
+</PRE><H1><A NAME=v9r3>2005-06-27 Boole v9r3</A></H1><PRE>
+ - Adapt requirements to Lbcom v2r3, LHCb v18r7, Gaudi v16r4, XmlDDDB v26r0
  - Add pool persistency and dicts to Boole.opts
+ - Add v200507.opts
 
 </PRE><H1><A NAME=v9r2>2005-06-13 Boole v9r2</A></H1><PRE>
  - Adapt requirements to Lbcom v2r2, LHCb v18r6, Gaudi v16r4, XmlDDDB v25r1
