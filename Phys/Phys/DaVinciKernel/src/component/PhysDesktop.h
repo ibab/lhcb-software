@@ -1,4 +1,4 @@
-// $Id: PhysDesktop.h,v 1.10 2005-06-09 13:10:41 pkoppenb Exp $
+// $Id: PhysDesktop.h,v 1.11 2005-06-28 15:32:27 lazzecri Exp $
 #ifndef PHYSDESKTOP_H 
 #define PHYSDESKTOP_H 1
 
@@ -110,17 +110,15 @@ public:
   void imposeOutputLocation(std::string outputLocationString);
 
   std::string getOutputLocation(){ return m_outputLocn ;};
-
-protected:
   
-  
-private:
+private: // methods
 
   StatusCode makeParticles();      ///< Make particles
   StatusCode getPrimaryVertices(); ///< get PV
   StatusCode getParticles();       ///< get Particles
   
-  
+private: // data
+
   /// TES pathname for Primary Vertices 
   std::string m_primVtxLocn;
   /// TES pathname for Input Particles & Vertices from previous processing
@@ -138,8 +136,11 @@ private:
   /// Identify specific type of particle maker requested (Property)
   std::string m_pMakerType;  
 
+  /// turn on location warnings
   bool m_locationWarned ;
   
   IOnOffline* m_OnOffline ;   ///< locate PV
+
 };
+
 #endif // PHYSDESKTOP_H
