@@ -53,21 +53,10 @@
          </code>
        </method>
 
-       <constructor
-         desc     = "Constructor from VeloChannelID"
-         initList = "m_lhcbID(0)">
+       <constructor 
+         desc  = "Constructor from VeloChannelID and optional size" >
           <arg const="TRUE" name="chanID" type="VeloChannelID" />
-          <code>
-  setDetectorType( veloType );
-  setID( chanID );
-          </code>
-       </constructor>
-
-       <constructor
-         desc     = "Constructor from VeloChannelID and size"
-        >
-          <arg const="TRUE" name="chanID" type="VeloChannelID" />
-          <arg const="TRUE" name="size" type="unsigned int" />
+          <arg const="TRUE" name="size=0" type="unsigned int" />
           <code>
 m_lhcbID = (veloType &lt;&lt; detectorTypeBits) +
            (size     &lt;&lt; veloBits ) +
@@ -81,7 +70,7 @@ m_lhcbID = (veloType &lt;&lt; detectorTypeBits) +
          const = 'TRUE'
          desc  = "return true if this is a Velo identifier">
          <code>
-  return (veloType == detectorType()) ? true : false;
+  return (veloType == detectorType());
          </code>
        </method>
 
@@ -91,19 +80,22 @@ m_lhcbID = (veloType &lt;&lt; detectorTypeBits) +
          const = 'TRUE'
          desc  = "return the VeloChannelID">
 	 <code>
-  return isVelo() ? channelID() : 0x0;
+if ( !isVelo() ) return 0xF0000000;
+return ( m_lhcbID &amp; veloMask );
          </code>
        </method>
 
        <constructor
-         desc     = "Constructor from ITChannelID"
-         initList = "m_lhcbID(0)" >
+         desc     = "Constructor from ITChannelID and optional size" >
           <arg const="TRUE" name="chanID" type="ITChannelID" />
+          <arg const="TRUE" name="size=0" type="unsigned int" />
           <code>
-  setDetectorType( stType );
-  setID( ((chanID.uniqueWafer()-1)&gt;&gt;4) + (chanID.strip()-1) );
-          </code>
-       </constructor>
+m_lhcbID = (stType &lt;&lt; detectorTypeBits) +
+          (size   &lt;&lt; stBits ) +
+          ((chanID.uniqueWafer()-1) &gt;&gt;6) +
+          (chanID.strip()-1) ;
+        </code>
+      </constructor>
 
        <method
          type  = "bool"
@@ -111,7 +103,7 @@ m_lhcbID = (veloType &lt;&lt; detectorTypeBits) +
          const = 'TRUE'
          desc  = "return true if this is a Silicon Tracker identifier">
          <code>
-  return (stType == detectorType()) ? true : false;
+  return (stType == detectorType());
          </code>
        </method>
 
@@ -121,17 +113,16 @@ m_lhcbID = (veloType &lt;&lt; detectorTypeBits) +
          const = 'TRUE'
          desc  = "return the ITChannelID">
 	 <code>
-  return isST() ? channelID(): 0xF0000000;
+if ( !isST() ) return 0xF0000000;
+return ( ( (m_lhcbID &amp; 0x3FFFC00 ) &lt;&lt; 6) + ( m_lhcbID &amp; 0x3FF));
          </code>
        </method>
 
        <constructor
-         desc     = "Constructor from OTChannelID"
-         initList = "m_lhcbID(0)" >
+         desc     = "Constructor from OTChannelID" >
         <arg const="TRUE" name="chanID" type="OTChannelID" />
         <code>
-  setDetectorType( otType );
-  setID( chanID );
+m_lhcbID = (otType &lt;&lt; detectorTypeBits) + chanID;
         </code>
        </constructor>
 
@@ -141,7 +132,7 @@ m_lhcbID = (veloType &lt;&lt; detectorTypeBits) +
          const = 'TRUE'
          desc  = "return true if this is a Outer Tracker identifier">
          <code>
-  return (otType == detectorType()) ? true : false;
+return (otType == detectorType());
          </code>
        </method>
 
@@ -151,7 +142,8 @@ m_lhcbID = (veloType &lt;&lt; detectorTypeBits) +
          const = 'TRUE'
          desc="return the OTChannelID">
 	 <code>
-  return isOT() ? channelID() : 0xF0000000;
+if ( !isOT() ) return  0xF0000000;
+return m_lhcbID &amp; otMask;
          </code>
        </method>
 
@@ -173,7 +165,7 @@ m_lhcbID = (veloType &lt;&lt; detectorTypeBits) +
          const = 'TRUE'
          desc  = 'return true if this is a Rich identifier'>
          <code>
-  return (richType == detectorType()) ? true : false;
+  return (richType == detectorType());
          </code>
        </method>
 
@@ -183,7 +175,10 @@ m_lhcbID = (veloType &lt;&lt; detectorTypeBits) +
          const = 'TRUE'
          desc  = "return the richSmartID">
 	 <code>
- return isRich()? channelID():0x0;
+if ( !isRich() ) return 0x0;
+int id = m_lhcbID &amp; IDMask;
+if( id &amp;&amp; 0x8000000 ) id = id | 0x7E000000;
+return id;
          </code>
        </method>
 
@@ -203,7 +198,7 @@ m_lhcbID = (veloType &lt;&lt; detectorTypeBits) +
          const = 'TRUE'
          desc  = "return true if this is a Calo identifier">
          <code>
-  return (caloType == detectorType()) ? true : false;
+  return (caloType == detectorType());
          </code>
        </method>
 
@@ -213,28 +208,17 @@ m_lhcbID = (veloType &lt;&lt; detectorTypeBits) +
          const = 'TRUE'
          desc  = "return the CaloCellID">
          <code>
-  return isCalo() ? channelID() : 0xF0000000;
+  return isCalo() ? (m_lhcbID &amp; IDMask) : 0xF0000000;
          </code>
        </method>
 
       <method
-        type  = "unsigned int"
-        name  = "channelID"
-        const = 'TRUE'
-        desc  = "return the specific detector channelID (the key value)">
+        type    = "unsigned int"
+        name    = "channelID"
+        const   = "TRUE"
+        desc    = "Returns the ChannelID part, for printing...">
         <code>
-  unsigned mask = IDMask;
-  unsigned bits  = IDBits;
-  if (isVelo()) mask = veloMask;
-  if (isOT()) mask = otMask;
-  if (isST()) mask = stMask;
-  unsigned int id = (m_lhcbID &amp; mask) &gt;&gt; bits;
-  if (isST()) id = (((id &amp; 0xFFFF000) &lt;&lt; 4)+(id &amp; 0xFFF));
-  if (isRich())  {  
-    id = id &amp; 0x7000000;
-    if( id &amp;&amp; 0x8000000 ) id = id + 0x7E000000;
-  }
-  return id;
+return m_lhcbID &amp; IDMask;
         </code>
       </method>
 
@@ -257,7 +241,7 @@ m_lhcbID = (veloType &lt;&lt; detectorTypeBits) +
     bits = otBits;
   }
   m_lhcbID &amp;= ~mask;
-  m_lhcbID |= ((((unsigned int)value) &lt;&lt; bits) &amp; mask);
+  m_lhcbID |= ((value &lt;&lt; bits) &amp; mask);
         </code>
       </method>
 
@@ -284,8 +268,6 @@ m_lhcbID = (veloType &lt;&lt; detectorTypeBits) +
   return val;
          </code>
        </method>
-
-
     
     </class>
   </package>
