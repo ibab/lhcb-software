@@ -1,4 +1,4 @@
-// $Id: DeVelo.cpp,v 1.48 2005-06-02 14:11:41 jpalac Exp $
+// $Id: DeVelo.cpp,v 1.49 2005-06-28 13:06:32 cattanem Exp $
 //
 // ============================================================================
 #define  VELODET_DEVELO_CPP 1
@@ -90,6 +90,10 @@ StatusCode DeVelo::initialize() {
   m_vpPhiSensor.clear();
   m_vpPUSensor.clear();
   m_nRSensors=m_nPhiSensors=m_nPileUpSensors=0;
+
+  // JPP sensors no longer pre-sorted by Z in XML so sort them before
+  // storing.
+  std::sort(veloSensors.begin(), veloSensors.end(), less_Z());
   
   for(iDESensor = veloSensors.begin() ; iDESensor != veloSensors.end() ; 
       ++iDESensor){
@@ -97,6 +101,7 @@ StatusCode DeVelo::initialize() {
     m_vpSensor.push_back(*iDESensor);
     unsigned int index=m_vpSensor.size()-1;
     msg << MSG::DEBUG << "type " << (*iDESensor)->fullType() 
+        << " index " << index
         << " R " << (*iDESensor)->isR() 
         << " PHI " << (*iDESensor)->isPhi()
         << " PU " << (*iDESensor)->isPileUp() << endmsg;
@@ -122,10 +127,9 @@ StatusCode DeVelo::initialize() {
       msg << MSG::ERROR << "Sensor type is unknown\n";
     }
     msg << MSG::DEBUG << "Sensor number " << m_vpSensor[index]->sensorNumber()
-        << " pSensor " << (*iDESensor)->sensorNumber() << endreq;
-    msg << MSG::DEBUG << " Sensor number " << m_vpSensor[index]->sensorNumber()
-        << " is type " << m_vpSensor[index]->fullType() 
-        << " at z = " << m_vpSensor[index]->z()
+        << " pSensor " << (*iDESensor)->sensorNumber()
+        << " type " << m_vpSensor[index]->fullType() 
+        << " z = " << m_vpSensor[index]->z()
         << endreq;
     detElemCount++;
   }
@@ -145,7 +149,7 @@ StatusCode DeVelo::initialize() {
   // Dog leg shape requires both phi of the station
   // need to sort sensors into accending order in z
   // get cute and use the STL sort routine with a custom comparator
-  std::sort(m_vpSensor.begin(), m_vpSensor.end(), less_Z());
+  //  std::sort(m_vpSensor.begin(), m_vpSensor.end(), less_Z());
 
   for(unsigned int iSensor=0; iSensor < m_vpSensor.size() ; ++iSensor){
     m_sensorZ.push_back(m_vpSensor[iSensor]->z());
@@ -155,7 +159,9 @@ StatusCode DeVelo::initialize() {
         << " is type " << m_vpSensor[iSensor]->fullType() 
         << " at global z = " << m_vpSensor[iSensor]->z()
         << " and in VELO frame " 
-        << this->geometry()->toLocal(HepPoint3D(0,0,m_vpSensor[iSensor]->z())).z()
+        << this->geometry()->toLocal(HepPoint3D(0,
+                                                0,
+                                                m_vpSensor[iSensor]->z())).z()
         << endreq;
     // Find phi sensors associated to R in each station (group of 4 sensors)
     int station=(iSensor-4)/4;

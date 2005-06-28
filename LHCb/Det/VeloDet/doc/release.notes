@@ -1,6 +1,11 @@
-! $Id: release.notes,v 1.72 2005-06-02 14:11:41 jpalac Exp $
+! $Id: release.notes,v 1.73 2005-06-28 13:06:32 cattanem Exp $
 package VeloDet
 package manager : Velo Group
+
+!========================= VeloDet v9r7 2005-06-28 =========================
+! 2005-06-28 - Juan PALACIOS
+ - In DeVelo, sort sensors in Z before storing, as they are no longer sorted 
+   in the latest XML geometry
 
 !========================= VeloDet v9r6 2005-06-02 =========================
 ! 2005-06-02 - Juan PALACIOS
