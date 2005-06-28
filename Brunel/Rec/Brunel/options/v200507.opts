@@ -1,6 +1,6 @@
 ///////////////////////////////////////////////////////////////////////////////
-///   Job options for Brunel for data produced with Boole v9r2 or greater   ///
-//  geometry lhcb-200412 (Rich1 EDR, Rotated Rich2, TT KLM layout, new Velo) //
+///   Job options for Brunel for data produced with Boole v9r3 or greater   ///
+///   geometry lhcb-200507 (tilted Calo and Muon, latest Velo               ///
 ///////////////////////////////////////////////////////////////////////////////
 #pragma print off
 #include "$BRUNELOPTS/Brunel.opts"           // Generic options for all jobs
@@ -11,7 +11,7 @@ ApplicationMgr.OutStream += { "DstWriter" }; // Comment to switch off DST output
 //---------------------------------------------------------------------------
 // Geometry specific options
 //---------------------------------------------------------------------------
-DetectorDataSvc.DetDbLocation = "$XMLDDDBROOT/DDDB/lhcb-200412.xml";
+DetectorDataSvc.DetDbLocation = "$XMLDDDBROOT/DDDB/lhcb-200507.xml";
 #include "$STDAQROOT/options/stDAQ-v2.opts"
 #pragma print on
 
@@ -28,7 +28,7 @@ ApplicationMgr.EvtMax = -1;
 //---------------------------------------------------------------------------
 // Histogram output
 //---------------------------------------------------------------------------
-HistogramPersistencySvc.OutputFile = "0412-11144100.root";  // Monitoring histos
+HistogramPersistencySvc.OutputFile = "0507-11144100.root";  // Monitoring histos
 
 //---------------------------------------------------------------------------
 // POOL file catalogs. First one is read-write, others are read only
@@ -42,11 +42,11 @@ PoolDbCacheSvc.Catalog = {
 // Event input
 //---------------------------------------------------------------------------
 EventSelector.Input = {
-  "DATAFILE='PFN:castor:/castor/cern.ch/user/c/cattanem/Boole/v9r3/0412-11144100.500ev.digi' TYP='POOL_ROOT' OPT='READ'"
-};  // 500 events B->J/Psi(mumu)Ks with Gauss v19r3, Boole v9r3
+  "DATAFILE='PFN:castor:/castor/cern.ch/user/c/cattanem/Boole/v9r3/0507-11144100.500ev.digi' TYP='POOL_ROOT' OPT='READ'"
+};  // 500 events B->J/Psi(mumu)Ks with Gauss v20r0, Boole v9r3
 
 //---------------------------------------------------------------------------
 // Event output
 //---------------------------------------------------------------------------
-DstWriter.Output = "DATAFILE='PFN:0412-11144100.500ev.dst' TYP='POOL_ROOTTREE' OPT='REC'";
+DstWriter.Output = "DATAFILE='PFN:0507-11144100.500ev.dst' TYP='POOL_ROOTTREE' OPT='REC'";
 //////////////////////////////////////////////////////////////////////////////

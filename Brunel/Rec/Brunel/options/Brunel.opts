@@ -11,6 +11,10 @@
 // Standard LHCb application setup
 #include "$LHCBROOT/options/LHCbApplication.opts"
 
+// POOL Persistency
+#include "$GAUDIPOOLDBROOT/options/GaudiPoolDbRoot.opts"
+#include "$EVENTSYSROOT/options/PoolDicts.opts"
+
 // Define DST content
 #include "$BRUNELOPTS/DstContent.opts"
 

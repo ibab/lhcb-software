@@ -12,11 +12,13 @@ OTTimeChecker.fullDetail = true;
 MoniTrSeq.Members += { "TrMonitor" };
 
 // Detailed RICH reconstruction monitors
-#include "$RICHRECQCOPTS/RecQC_Brunel_Detailed.opts"
-#include "$RICHRECCOMMONOPTS/RecoMoni_Brunel.opts"
-#include "$RICHGLOBALPIDOPTS/RecoMoni_Brunel.opts"
-#include "$RICHLOCALPIDOPTS/RecoMoni_Brunel.opts"
-#include "$RICHRINGREFITOPTS/RecoMoni_Brunel.opts"
+// Detailed RICH reconstruction monitors
+ApplicationMgr.DLLs += { "RichRecMonitors", "RichMCTools", "RichRecMCTools" };
+#include "$RICHRECQCOPTS/RecQC_Brunel_Detailed.opts" // PID tables for all track types
+#include "$RICHRECMONITORSOPTS/RecoMoni_Brunel.opts" // Expert common reconstruction monitors
+#include "$RICHGLOBALPIDOPTS/RecoMoni_Brunel.opts"   // Global PID monitor
+#include "$RICHLOCALPIDOPTS/RecoMoni_Brunel.opts"    // Local PID monitor
+#include "$RICHRINGREFITOPTS/RecoMoni_Brunel.opts"   // Ring refitting monitor
 
 // Calorimeters
 Check.DetectorList += { "CALO" };
