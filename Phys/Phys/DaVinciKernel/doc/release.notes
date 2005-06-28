@@ -1,10 +1,11 @@
-! $Id: release.notes,v 1.54 2005-06-28 15:32:56 lazzecri Exp $
+! $Id: release.notes,v 1.55 2005-06-28 15:42:40 lazzecri Exp $
 ! Package     : DaVinciKernel
 ! Responsible : P. Koppenburg
 
 ! 2005-06-28 - Cristina Lazzeroni
  - Add new base class for Filter tools
  - Add interface for Filter result tool
+ - Create src/Lib directory for linker library files
 
 !========================== DaVinciKernel v3r4 2005-06-13 ===================
 ! 2005-06-09 - P. Koppenburg
