@@ -1,11 +1,15 @@
-! $Id: release.notes,v 1.55 2005-06-28 15:42:40 lazzecri Exp $
+! $Id: release.notes,v 1.56 2005-06-28 15:48:32 pkoppenb Exp $
 ! Package     : DaVinciKernel
 ! Responsible : P. Koppenburg
 
 ! 2005-06-28 - Cristina Lazzeroni
- - Add new base class for Filter tools
- - Add interface for Filter result tool
- - Create src/Lib directory for linker library files
+ - Kernel/FilterCriterionBase.h, 
+   src/Lib/FilterCriterionBase.cpp
+   . New base class for Filter tools 
+ - Kernel/IFilterCriteriaTESTool.h
+   . New interface for Filter result tool
+ - src/Lib/DVAlgorithm.cpp
+   . Moved from src/
 
 !========================== DaVinciKernel v3r4 2005-06-13 ===================
 ! 2005-06-09 - P. Koppenburg
