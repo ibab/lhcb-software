@@ -1,11 +1,11 @@
-// $Id: TrueMCFilterCriterion.h,v 1.4 2005-03-20 23:20:35 lfernan Exp $
+// $Id: TrueMCFilterCriterion.h,v 1.5 2005-06-28 15:37:27 lazzecri Exp $
 #ifndef TRUEMCFILTERCRITERION_H 
 #define TRUEMCFILTERCRITERION_H 1
 
-// Include files
-// from Gaudi
-#include "GaudiAlg/GaudiTool.h"
-#include "Kernel/IFilterCriterion.h"            // Interface
+
+// base class
+#include "Kernel/FilterCriterionBase.h"
+
 class IMCDecayFinder;
 #include "Event/CaloCluster.h"
 
@@ -21,8 +21,10 @@ class IMCDecayFinder;
  *  FIXME : 
  *  - association of online gammas requires offline CaloClusters for now
  */
-class TrueMCFilterCriterion : public GaudiTool, virtual public IFilterCriterion {
+class TrueMCFilterCriterion : public FilterCriterionBase {
+
 public: 
+
   /// Standard constructor
   TrueMCFilterCriterion( const std::string& type, 
                          const std::string& name,
@@ -31,17 +33,15 @@ public:
   virtual ~TrueMCFilterCriterion( ); ///< Destructor
   /// Initialize
   StatusCode initialize( );
-
-  /// Test if particle is assocaited with MC truth
-  inline bool isSatisfied( const Particle* const & part );
-
-  /// Test if particle is assocaited with MC truth
-  inline bool operator()( const Particle* const & part );
+  
 
   /// Finalize
   StatusCode finalize( );
 
-protected:
+protected: // methods
+
+  /// Test if filter is satisfied.
+  virtual bool testParticle( const Particle* const & part );
 
 private:
   bool findMCParticle(const MCParticle* MC);

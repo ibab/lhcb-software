@@ -1,7 +1,10 @@
-! $Id: release.notes,v 1.59 2005-06-13 07:34:31 pkoppenb Exp $
+! $Id: release.notes,v 1.60 2005-06-28 15:37:18 lazzecri Exp $
 ! Package     : DaVinciMCTools
 ! Responsible : P. Koppenburg
 !=============================================================================
+
+! 2005-06-28 - Cristina Lazzeroni
+ - Update filter tool to use new base class
 
 !========================== DaVinciMCTools v5r12 2005-06-13 ===================
 ! 2005-06-08 - P. Koppenburg

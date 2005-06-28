@@ -1,4 +1,4 @@
-// $Id: TrueMCFilterCriterion.cpp,v 1.6 2005-03-20 23:20:35 lfernan Exp $
+// $Id: TrueMCFilterCriterion.cpp,v 1.7 2005-06-28 15:37:27 lazzecri Exp $
 // Include files 
 
 // from Gaudi
@@ -31,7 +31,7 @@ const        IToolFactory& TrueMCFilterCriterionFactory = s_factory ;
 TrueMCFilterCriterion::TrueMCFilterCriterion( const std::string& type,
                                               const std::string& name,
                                               const IInterface* parent )
-  : GaudiTool ( type, name , parent )
+  : FilterCriterionBase ( type, name , parent )
     , m_pMCDecFinder(0)
     , m_pAsct(0)
     , m_filterOut(false)
@@ -51,7 +51,7 @@ TrueMCFilterCriterion::~TrueMCFilterCriterion() {};
 //=============================================================================
 StatusCode TrueMCFilterCriterion::initialize( ){
 
-  StatusCode sc = GaudiTool::initialize() ;
+  const StatusCode sc = FilterCriterionBase::initialize() ;
   if ( !sc) return sc ;
 
   m_pMCDecFinder = tool<IMCDecayFinder>("MCDecayFinder", this); 
@@ -83,7 +83,7 @@ StatusCode TrueMCFilterCriterion::initialize( ){
 //=============================================================================
 // Test if filter is satisfied
 //=============================================================================
-bool TrueMCFilterCriterion::isSatisfied( const Particle* const & part ) {
+bool TrueMCFilterCriterion::testParticle( const Particle* const & part ) {
  
   verbose() << "TrueMCFilterCriterion" << endreq ;
 
@@ -256,14 +256,7 @@ bool TrueMCFilterCriterion::findMCParticle( const MCParticle* MC ) {
   return false ;
   
 }
-//=============================================================================
-// Test if filter is satisfied
-//=============================================================================
-bool TrueMCFilterCriterion::operator()( const Particle* const & part ) {
 
-  return this->isSatisfied( part );
-
-}
 
 //=============================================================================
 StatusCode TrueMCFilterCriterion::finalize(){
