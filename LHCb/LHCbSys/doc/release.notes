@@ -20,6 +20,7 @@
    . Fixes to POOL dictionaries for use from GaudiPython:
      + Remove --pool option from lcgdict build command
      + Add copy constructor to CaloCellID, VeloChannelID, ITChannelID
+   . Fix LHCbID for ITChannelID and other LHCbID improvements
 
  - In LHCbAlgs v1r7 
    . LbAppInit is a GaudiHistoAlg, property "HistoProduce" replaces "doHistos"
