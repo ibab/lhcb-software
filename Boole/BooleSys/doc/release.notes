@@ -3,14 +3,30 @@ Package: Digi/Boole
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb Digitization program
 
-</PRE><H1><A NAME=v9r3>2005-06-22 Boole v9r3</A></H1><PRE>
+</PRE><H1><A NAME=v9r3>2005-06-27 Boole v9r3</A></H1><PRE>
 This version uses Gaudi v16r4, LHCb v18r7, Lbcom v2r3
 Requires input from Gauss v19r3 or greater. Output needs Brunel v27r2 or greater
+
+- Packages modified: RichDigiQC v2r2, RichReadout v1r13
+
+- New features
+  . Property "Boole.HistoProduce" replaces Boole.doHistos" (LHCbAlgs v1r7)
+  . Split memory histogram into two, both with "Boole.HistoSize" bins
+    + hID=2: one entry per event for first HistoSize events
+    + hID=3: one entry every HistoSize events, starting at event 1
+    (LHCbAlgs v1r7)
+  . Add support for v200507 geometry (same as v200506 plus Velo with alternate
+    R-sensors rotated, and with possibility to add external misalignment files)
+    (v200507.opts, XmlDDDB v26r0, DetDesc v15r2, DetDescCnv v2r7)
+  . Minor improvements to Rich monitoring printout (RichDigiQC v2r2)
 
 - Repackaging
   . Move non-persistent classes MCRichDeposit and MCRichSummedDeposit from
     RichEvent to RichReadout (RichReadout v1r13, RichEvent v8r4)
   . Rename RichHPDIDTool RichHPDInfoTool (RichDigiQC v2r2, RichDAQ v2r2)
+
+ - Bug fixes:
+  . Fix memory leaks at finalisation (XmlTools v5r3p1, DetDesc v15r2)
 
 </PRE><H1><A NAME=v9r2>2005-06-13 Boole v9r2</A></H1><PRE>
 This version uses Gaudi v16r4, LHCb v18r6, Lbcom v2r2
