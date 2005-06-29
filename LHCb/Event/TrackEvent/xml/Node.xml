@@ -22,15 +22,6 @@
 	initList = "m_state(state), m_measurement(meas), m_residual(0.0), m_errResidual(0.0), m_projectionMatrix()">
       </constructor>
 
-<!--
-      <destructor
-        desc = 'Node destructor'>
-        <code>
-  reset();
-        </code>
-      </destructor>
--->
-
       <attribute
         type    = 'State*'
         name    = 'state'

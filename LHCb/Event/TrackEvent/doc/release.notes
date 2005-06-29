@@ -4,6 +4,9 @@
 ! Purpose     : Package for the tracking event model classes
 !-----------------------------------------------------------------------------
 
+! 2005-06-28 - Eduardo Rodrigues
+ - added Track clone method with key
+
 !========================= TrackEvent v1r2 2005-06-21 ========================
 ! 2005-06-15 - Eduardo Rodrigues
  - changes to enums in TrackKeys.h, for clarity

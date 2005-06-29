@@ -1,4 +1,4 @@
-// $Id: Track.cpp,v 1.11 2005-05-31 13:27:34 hernando Exp $ // Include files
+// $Id: Track.cpp,v 1.12 2005-06-29 13:11:48 erodrigu Exp $ // Include files
 
 // local
 #include "Event/Track.h"
@@ -209,6 +209,30 @@ void Track::reset()
 };
 
 //=============================================================================
+// Clone the track keeping the key
+//=============================================================================
+Track* Track::cloneWithKey( ) const
+{
+  int theKey = this -> key();
+  Track* tr = new Track( theKey );
+  tr->setChi2PerDoF( chi2PerDoF() );
+  tr->setNDoF( nDoF() );
+  tr->setFlags( flags() );
+  tr->setLhcbIDs( lhcbIDs() );
+  for (std::vector<State*>::const_iterator it = m_states.begin();
+       it != m_states.end(); it++) tr->addToStates( *(*it));
+  for (std::vector<Measurement*>::const_iterator it2 = m_measurements.begin();
+       it2 != m_measurements.end(); it2++) 
+    tr->addToMeasurements( *(*it2) );
+  for (std::vector<Node*>::const_iterator it3 = m_nodes.begin();
+       it3 != m_nodes.end(); it3++) tr->addToNodes( (*it3)->clone() );
+  for (SmartRefVector<Track>::const_iterator it4 = m_ancestors.begin();
+       it4 != m_ancestors.end();  it4++) tr->addToAncestors(*(*it4));
+  
+  return tr;
+};
+
+//=============================================================================
 // Clone the track
 //=============================================================================
 Track* Track::clone() const
@@ -232,9 +256,8 @@ Track* Track::clone() const
 };
 
 //=============================================================================
-// Clone the track
+// 
 //=============================================================================
-
 void Track::addToStates(const State& state) 
 {
   State* local = state.clone();
