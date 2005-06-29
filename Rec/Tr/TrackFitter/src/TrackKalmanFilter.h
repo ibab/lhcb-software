@@ -1,18 +1,22 @@
-// $Id: KalmanFilter.h,v 1.3 2005-05-25 09:29:22 hernando Exp $
-#ifndef KALMANFILTER_H 
-#define KALMANFILTER_H 1
+// $Id: TrackKalmanFilter.h,v 1.1 2005-06-29 15:35:02 erodrigu Exp $
+#ifndef TRACKFITTER_TRACKKALMANFILTER_H 
+#define TRACKFITTER_TRACKKALMANFILTER_H 1
 
 // Include files
+// -------------
 // from Gaudi
 #include "GaudiAlg/GaudiTool.h"
-#include "Event/Track.h"
-#include "Event/FitNode.h"
 
+// from TrackInterfaces
 #include "TrackInterfaces/ITrackExtrapolator.h"            
 #include "TrackInterfaces/ITrackProjector.h"
 #include "TrackInterfaces/ITrackFitter.h"
 
-/** @class KalmanFilter KalmanFilter.h
+// from TrackEvent
+#include "Event/Track.h"
+#include "Event/FitNode.h"
+
+/** @class TrackKalmanFilter TrackKalmanFilter.h
  *  
  *
  *  @author Jose Angel Hernando Morata 
@@ -22,20 +26,21 @@
  *  @author Mattiew Needham 
  */
 
-class KalmanFilter : public GaudiTool, public ITrackFitter {
+class TrackKalmanFilter : public GaudiTool, public ITrackFitter {
 public: 
   /// Standard constructor
-  KalmanFilter( const std::string& type, 
-                const std::string& name,
-                const IInterface* parent);
+  TrackKalmanFilter( const std::string& type, 
+                     const std::string& name,
+                     const IInterface* parent);
 
   /// Destructor
-  virtual ~KalmanFilter( );
+  virtual ~TrackKalmanFilter( );
 
   StatusCode initialize();
   
   //! fit the track (filter and smoother)
-  StatusCode fit(Track& track){
+  StatusCode fit(Track& track) {
+    //track.setHistoryFit( TrackKeys::Kalman );
     info() << " not implemented yet!" << track.nMeasurements() << endreq;
     return StatusCode::SUCCESS;
   }
@@ -51,10 +56,10 @@ public:
   
 protected:
 
-  //! initialize the filter to fit7/filter his track
+  //! initialize the filter to fit/filter his track
   StatusCode iniKalman(Track& track);
   
-  //! predict the state to this node
+  //! Predict the state to this node
   StatusCode predict(FitNode& node, State& state);
   
   //! filter this node
@@ -64,18 +69,15 @@ protected:
   StatusCode smoother(Track& track);
   
   //! smooth 2 nodes
-  StatusCode smooth(FitNode& node0, FitNode& node1);
+  StatusCode smooth(FitNode& node0, const FitNode& node1);
   
   //! compute the chi2
   void computeChiSq(Track& track);
   
 protected:
   
-  //! print comment of failure 
-  StatusCode failure(const std::string& comment);
-  
   // ! check that the contents of the cov matrix are fine
-  StatusCode checkInvertMatrix(HepSymMatrix& mat);
+  StatusCode checkInvertMatrix(const HepSymMatrix& mat);
 
   // ! check that the contents of the cov matrix are fine
   StatusCode checkPositiveMatrix(HepSymMatrix& mat);
@@ -108,11 +110,22 @@ protected:
   //! projector
   ITrackProjector* m_projector;
 
-  //! name of the extrapolator in Gaudi
-  std::string m_extrapolatorName;
+private:
 
-  //! name of the projector in Gaudi
-  std::string m_projectorName;
+  // job options
+  std::string m_extrapolatorName;   ///<  name of the extrapolator in Gaudi
+  std::string m_projectorName;      ///< name of the projector in Gaudi
+  std::vector<double> m_zPositions; ///< z-positions at which to determine the states
+  bool m_statesAtMeasZPos;          ///< store states at measurement-positions?
+  bool m_stateAtBeamLine;           ///< add state closest to the beam-line?
+  int m_numFitIter;                 ///< number of fit iterations to perform
+  double m_chi2Outliers;            ///< chi2 of outliers to be removed
+  double m_storeTransport;          ///< store the transport of the extrapolator
 
+  //! print comment of failure 
+  StatusCode failure(const std::string& comment);
+
+  bool m_debugLevel;
+  
   };
-#endif // KALMANFILTER_H
+#endif // TRACKFITTER_TRACKKALMANFILTER_H

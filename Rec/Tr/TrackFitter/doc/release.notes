@@ -3,9 +3,19 @@
 ! Responsible : Eduardo Rodrigues, Jose A. Hernando
 !----------------------------------------------------------------------------
 
+! 2005-06-29 - Eduardo Rodrigues
+ - KalmanFilter tool renamed to TrackKalmanFilter. And functionality added
+ - Windows necessary files TrackFitter_load.cpp and TrackFitter_dll.cpp added
+ - debug version of both fitting algorithm and tool
+
+! 2005-05-27 - Eduardo Rodrigues
+ - first version of main algorithm for fitting all tracks added:
+   adaptation from Tr/TrFitter/TrEventTracksFitter to new event model
 
 ! 2005-04-18 - Jose A. Hernando, Eduardo Rodrigues
  - Translating the Tr/TrFitter packages for the new track event model
- - original code from: -credits here-
-
-   
+ - original code from:
+   Olivier Callot
+   Matthew Needham
+   Rutger van der Eijk
+ - Kalman fitter and smoother tool added
