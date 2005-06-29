@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.257 2005-06-29 14:49:37 pkoppenb Exp $
+# $Id: requirements,v 1.258 2005-06-29 14:55:58 pkoppenb Exp $
 # Created    : 07/02/2002
 # Maintainer : P. Koppenburg
 #
@@ -39,9 +39,6 @@ use ParamFiles          v*    -no_auto_imports
 # TMP:
 
 use LHCb                        v*  
-
-#TMP
-use PhysEvent                   v8r5p2   Event
 
 #=======================================================
 # packages included in PhysCoreSys
