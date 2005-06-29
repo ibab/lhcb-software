@@ -4,6 +4,10 @@
 ! Purpose     : standard converters for the LHCb Detector Description
 !-----------------------------------------------------------------------------
 
+! 2005-06-29 - Juan Palacios
+ - src/Lib/XmlBaseConditionCnv.cpp: fillObjRefs now returns StatusCode of
+   call to DataObject.initialize(), not always StatusCode::SUCCESS.
+
 !================ DetDescCnv v2r7 2005-06-20 ===========================
 ! 2005-06-20 - Juan Palacios
  - src/Lib/AddressTools.h, AddressTools.cpp
