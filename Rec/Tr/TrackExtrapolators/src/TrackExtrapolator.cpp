@@ -1,4 +1,4 @@
-// $Id: TrackExtrapolator.cpp,v 1.4 2005-05-25 14:24:35 cattanem Exp $
+// $Id: TrackExtrapolator.cpp,v 1.5 2005-06-29 13:46:18 erodrigu Exp $
 // Include files
 
 // from Gaudi
@@ -502,17 +502,18 @@ void TrackExtrapolator::updateState( State& state, double z ) const
   HepVector& tX = state.stateVector();
   HepSymMatrix& tC = state.covariance();
 
+  debug() << "Initial state vector at z = " << z << " ," << tX << endreq
+          << "and covariance matrix = " << tC << endreq
+          << "and transport matrix F = " << m_F << endreq;
+
   // calculate new state
   state.setZ( z );
-  info() << " initial state vector " << tX << endreq;
   tX = m_F * tX; // X*F  (can this be done more efficiently?)
 
   tC = tC.similarity(m_F); // F*C*F.T()
 
-  info() << " F " << m_F << endreq;
-  info() << " updated state vector " << tX << endreq;
-  info() << " updated cov matrix " << tC << endreq;
-
+  debug() << "updated to state vector = " << tX << endreq
+          << "and covariance matrix = " << tC << endreq;
 
 }
 

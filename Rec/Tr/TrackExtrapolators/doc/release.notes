@@ -4,6 +4,9 @@
 ! Purpose     : Package for tracking extrapolators
 !-----------------------------------------------------------------------------
 
+! 2005-06-02 - Eduardo Rodrigues
+ - debug statements added
+
 !======================= TrackExtrapolators v1r0 2005-05-24 ==================
 ! 2005-05-24 - Marco Cattaneo
  - Remove TrackExtrapolators directory. Header files moved to src

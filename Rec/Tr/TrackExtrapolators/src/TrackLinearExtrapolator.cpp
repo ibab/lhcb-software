@@ -1,4 +1,4 @@
-// $Id: TrackLinearExtrapolator.cpp,v 1.4 2005-05-24 12:01:48 erodrigu Exp $
+// $Id: TrackLinearExtrapolator.cpp,v 1.5 2005-06-29 13:46:18 erodrigu Exp $
 // Include files
 
 // from Gaudi
@@ -56,7 +56,8 @@ StatusCode TrackLinearExtrapolator::propagate( State& state,
   // if ( fabs(dz) < TrackParameters::hiTolerance ) dz = 0.;
   m_F[0][2] = dz; // tx*dz
   m_F[1][3] = dz; // ty*dz
-  info() << " F " << m_F << endreq;
+
+  debug() << "Transport matrix F =" << m_F << endreq;
   
   // extrapolate
   //extrapolate(state);
