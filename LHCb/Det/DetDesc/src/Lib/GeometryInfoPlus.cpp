@@ -1,4 +1,4 @@
-// $Id: GeometryInfoPlus.cpp,v 1.5 2005-06-24 12:41:59 cattanem Exp $
+// $Id: GeometryInfoPlus.cpp,v 1.6 2005-06-29 13:46:40 jpalac Exp $
 // Include files 
 
 // GaudiKernel
@@ -341,13 +341,37 @@ StatusCode GeometryInfoPlus::localDeltaMatrix(const HepTransform3D& newDelta)
   // AlignmentCondition present. So check for that, and if there is,
   // also change the matrix in the AlignmentCondition data member.
   if (this->hasAlignmentCondition()) myAlignmentCondition()->matrix(newDelta);
-
-  if (m_deltaMatrices.empty()) {
-    log() << MSG::WARNING << "localDeltaMatrix set failed!" << endmsg;
-    return StatusCode::FAILURE;
+  return setLocalDeltaMatrix(newDelta);
+}
+//=============================================================================
+StatusCode GeometryInfoPlus::localDeltaParams(const std::vector<double>& trans,
+                                              const std::vector<double>& rot)
+{
+  if (this->hasAlignmentCondition()) {
+    
+    return (myAlignmentCondition()->setTransformation(trans, rot) ) ? 
+      setLocalDeltaMatrix(myAlignmentCondition()->matrix()) :
+      StatusCode::FAILURE;
   }
   
-  if( 0 != m_localDeltaMatrix ) delete m_localDeltaMatrix; 
+  return StatusCode::FAILURE;
+  
+}
+
+//=============================================================================
+StatusCode GeometryInfoPlus::setLocalDeltaMatrix(const HepTransform3D& 
+                                                 newDelta)
+{
+
+  if (m_deltaMatrices.empty()) {
+    log() << MSG::WARNING << "setLocalDeltaMatrix set failed!" << endmsg;
+    return StatusCode::FAILURE;
+  }
+
+  if( 0 != m_localDeltaMatrix ) {
+    delete m_localDeltaMatrix; 
+    m_localDeltaMatrix=0;
+  }
 
   m_localDeltaMatrix = new HepTransform3D(newDelta);
   m_deltaMatrices[0] = *m_localDeltaMatrix;

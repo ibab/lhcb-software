@@ -1,4 +1,4 @@
-// $Id: AlignmentCondition.h,v 1.1 2005-06-03 10:19:43 jpalac Exp $
+// $Id: AlignmentCondition.h,v 1.2 2005-06-29 13:46:40 jpalac Exp $
 #ifndef DETDESC_ALIGNMENTCONDITION_H 
 #define DETDESC_ALIGNMENTCONDITION_H 1
 
@@ -22,8 +22,12 @@ class AlignmentCondition : public Condition {
 
 public: 
   /// Standard constructor
-  AlignmentCondition( ); 
-  /// Constructor 
+  AlignmentCondition( );
+  ///
+  AlignmentCondition(const std::vector<double>& translation,
+                     const std::vector<double>& rotation );
+  
+  /// Constructor
   AlignmentCondition (const ITime& since, const ITime& till);
   /// Copy constructor 
   AlignmentCondition (Condition& obj);
@@ -52,6 +56,13 @@ public:
     m_matrix=newMatrix;
     m_matrixInv=m_matrix.inverse();
   }
+
+  inline StatusCode setTransformation( const std::vector<double>& translation,
+                                       const std::vector<double>& rotation) 
+  {
+    loadParams(translation, rotation);
+    return makeMatrices();
+  }
   
 
 protected:
@@ -60,9 +71,15 @@ protected:
 
 private:
 
+  inline void loadParams(const std::vector<double>& translation,
+                         const std::vector<double>& rotation     ) 
+  {
+    this->addParam(m_translationString, translation);
+    this->addParam(m_rotationString, rotation);
+  }
+  
 
-
-  void makeMatrices();
+  StatusCode makeMatrices();
   
   const HepTransform3D* XYZRotation(const std::vector<double>& coefficients) const;
   const HepTranslate3D* XYZTranslation(const std::vector<double>& coefficients) const;
@@ -73,7 +90,9 @@ private:
   HepTransform3D m_rotMatrix;
   HepTransform3D m_matrix;
   HepTransform3D m_matrixInv;
-  
+
+  const std::string m_translationString;
+  const std::string m_rotationString;
 
 };
 #endif // DETDESC_ALIGNMENTCONDITION_H

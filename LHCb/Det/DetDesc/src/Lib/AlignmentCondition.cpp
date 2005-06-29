@@ -1,4 +1,4 @@
-// $Id: AlignmentCondition.cpp,v 1.2 2005-06-20 12:23:43 jpalac Exp $
+// $Id: AlignmentCondition.cpp,v 1.3 2005-06-29 13:46:40 jpalac Exp $
 // Include files
 
 #include "DetDesc/AlignmentCondition.h"
@@ -18,27 +18,50 @@
 //=============================================================================
 AlignmentCondition::AlignmentCondition(  ) : 
   Condition(),
-  m_services(DetDesc::services())
+  m_services(DetDesc::services()),
+  m_translationString("dPosXYZ"),
+  m_rotationString("dRotXYZ")
 {
-  //  m_services = DetDesc::services();
   MsgStream log(msgSvc(), "AlignmentCondition");
   log << MSG::VERBOSE << "Constructing default AlignmentCondition, classID " 
       << classID()
       << endmsg;
+
 }
+//=============================================================================
+AlignmentCondition::AlignmentCondition(const std::vector<double>& 
+                                       translation,
+                                       const std::vector<double>& 
+                                       rotation ) : 
+  Condition(),
+  m_services(DetDesc::services()),
+  m_translationString("dPosXYZ"),
+  m_rotationString("dRotXYZ")
+{
+  MsgStream log(msgSvc(), "AlignmentCondition");
+  log << MSG::VERBOSE << "Constructing AlignmentCondition from transformation parameters. classID " 
+      << classID()
+      << endmsg;
+
+  setTransformation(translation, rotation);
+
+}
+
 //=============================================================================
 // Constructor
 //=============================================================================
 AlignmentCondition::AlignmentCondition(const ITime& since, const ITime& till )
   :
   Condition (since, till),
-  m_services(DetDesc::services())
+  m_services(DetDesc::services()),
+  m_translationString("dPosXYZ"),
+  m_rotationString("dRotXYZ")
 {
-  //  m_services=DetDesc::services();
   MsgStream log(msgSvc(), "AlignmentCondition");
-  log << MSG::VERBOSE << "Constructing AlignmentCondition classID " << classID()
+  log << MSG::VERBOSE << "Constructing AlignmentCondition classID "
+      << classID()
       << endmsg;
-  
+
 }
 
 //=============================================================================
@@ -51,9 +74,7 @@ AlignmentCondition::~AlignmentCondition() {};
 StatusCode AlignmentCondition::initialize() {
   // this is a default implementation that does nothing.
   // it is up to the user to override this in a child of Condition
-  makeMatrices();
-  
-  return StatusCode::SUCCESS;
+  return makeMatrices();
 }
 
 //=============================================================================
@@ -76,32 +97,31 @@ const HepTransform3D* AlignmentCondition::XYZRotation(const std::vector<double>&
   
 }
 //=============================================================================
-void AlignmentCondition::makeMatrices() 
+StatusCode AlignmentCondition::makeMatrices() 
 {
   MsgStream log(msgSvc(), "AlignmentCondition");
   log << MSG::VERBOSE << "Making transformation matrix" << endmsg;
   
-//   std::vector<double> translations =  userParameterVectorAsDouble("dPosXYZ");
-//   std::vector<double> rotations =  userParameterVectorAsDouble("dRotXYZ");
-  std::vector<double> translations = paramAsDoubleVect ("dPosXYZ");
-  std::vector<double> rotations    = paramAsDoubleVect ("dRotXYZ");
+  std::vector<double> translations = paramAsDoubleVect (m_translationString);
+  std::vector<double> rotations    = paramAsDoubleVect (m_rotationString);
+
   if (translations.size()==3) {
     log <<  MSG::VERBOSE << "Translations " 
         << " X " << translations[0]
         << " Y " << translations[1]
-        << " z " << translations[2]
-        << endmsg;
+        << " z " << translations[2] << endmsg;
+    m_matrixInv =  (*XYZTranslation(translations)) * (*XYZRotation(rotations));
+    m_matrix = m_matrixInv.inverse();
+    return StatusCode::SUCCESS;
   } else {
-    log << MSG::VERBOSE << "Translations vector has funny size: "
-        << translations.size() << endmsg;
-    
+    log << MSG::ERROR << "Translations vector has funny size: "
+        << translations.size() << ". Assigning identity matrices" << endmsg;
+    m_matrixInv=HepTranslate3D();
+    m_matrix=m_matrixInv;
+    return StatusCode::FAILURE;
   }
-  
-   
-  m_matrixInv =  (*XYZTranslation(translations)) * (*XYZRotation(rotations));
-  m_matrix = m_matrixInv.inverse();
-}
 
+}
 //=============================================================================
 IMessageSvc* AlignmentCondition::msgSvc() const {
   return m_services->msgSvc();

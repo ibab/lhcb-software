@@ -1,4 +1,4 @@
-// $Id: GeometryInfoPlus.h,v 1.3 2005-06-20 16:20:33 cattanem Exp $
+// $Id: GeometryInfoPlus.h,v 1.4 2005-06-29 13:46:40 jpalac Exp $
 #ifndef LIB_GEOMETRYINFOPLUS_H 
 #define LIB_GEOMETRYINFOPLUS_H 1
 
@@ -151,8 +151,13 @@ public:
   
   /// Upate the DELTA transformation matrix of this IGeometryInfo.
   /// Will re-do calculation of all matrices.
+  /// Works even if this GeometryInfo has no AlignmentCondition.
   StatusCode localDeltaMatrix(const HepTransform3D&);
 
+  /// Update the transformation parametrs in this GeometryInfo's
+  /// AlignmentCondifion and re-do calculation of all matrices.
+  StatusCode localDeltaParams(const std::vector<double>& trans,
+                              const std::vector<double>& rot);
 
   /// tranform the point from the global reference systemn 
   /// to the local reference system  
@@ -399,6 +404,12 @@ private:
   /// Set the corresponding inverse matrix.
   void calculateIdealMatrix(matrix_iterator pvFirst,
                             matrix_iterator pvEnd);
+
+  /// Force the local delta matrix to be newDelta and re-do all
+  /// necessary matrix calculations
+  StatusCode setLocalDeltaMatrix(const HepTransform3D& 
+                                 newDelta);
+  
 
   StatusCode getAlignmentCondition();
 
