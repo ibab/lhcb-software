@@ -25,6 +25,7 @@
 #include "CaloKernel/CaloVector.h"
 #include "Event/TrgCaloParticle.h"
 #include "Event/L1Score.h"
+#include "Event/HltScore.h"
 
 // local
 #include "DecayChainNTuple.h"
@@ -56,10 +57,13 @@ DecayChainNTuple::DecayChainNTuple( const std::string& name,
 #ifdef MCCheck
     , m_pMCDKFinder(0)
     , m_pAsctLinks(0)
+    , m_pCompositeAsct(0)
     , m_gammaID(22)
     , m_pAsctCl2MCP(0)
 #endif
     , m_pathTrg(TrgDecisionLocation::Default)
+    , m_L1ScoreLocation(L1ScoreLocation::Default)
+    , m_HltScoreLocation(HltScoreLocation::Default)
     , m_CaloClustersPath(CaloClusterLocation::Ecal)
     , m_TrgCaloClustersPath(TrgCaloClusterLocation::Ecal)
 {
@@ -67,6 +71,7 @@ DecayChainNTuple::DecayChainNTuple( const std::string& name,
 #ifdef MCCheck
   declareProperty("MCDecay", m_MCDecay = "B0 -> ^pi+ ^pi-");
   declareProperty("FillMCDecay", m_FillMCDecay = false);
+  declareProperty("InputComposite", m_inputComposite = std::vector<std::string>()); // E.g. "Phys/MyBs"
 #endif
   declareProperty("NtupleName", m_ntupleName = "FILE1/MySelection" );
   declareProperty("RequireTrigger", m_requireTrigger = false);
@@ -74,7 +79,7 @@ DecayChainNTuple::DecayChainNTuple( const std::string& name,
   declareProperty("UseRichOnlinePID", m_useRichOnlinePID = false); // For online tracks with Rich
   declareProperty("UseOnlineCalo", m_useOnlineCalo = false); // Protection for MC -> Part online association 
   declareProperty("RichOnlinePIDLocation", m_richOnlinePIDLocation = "Rec/Rich/TrgPIDs" );
-  declareProperty("GeomTool", m_geomToolName = "GeomDispCalculator"); // For online use TrgDispCalculator
+  declareProperty("GeomTool", m_geomToolName = "Default"); // For online use TrgDispCalculator
 }
 //=============================================================================
 // Destructor
@@ -115,21 +120,20 @@ StatusCode DecayChainNTuple::initialize() {
   m_pDKFinder->setDecay(m_Decay);
   info() << "Will look for the decay: "<< m_pDKFinder->decay() << endreq;
 
-  m_IPTool = tool<IGeomDispCalculator>(m_geomToolName, m_IPTool, this);
-  if(!m_IPTool){
-    err() << " Unable to retrieve GeomDispCalculator tool" << endreq;
-    return sc;
-  }
 
-  // Do not use interface here
-  sc = toolSvc()->retrieveTool("OnOfflineTool", m_OnOfflineTool, this);
-  if(sc.isFailure()){
-    err() << " Unable to retrieve PV Locator tool" << endreq;
-    return sc;
-  } 
+  // OnOfflineTool 
+  m_OnOfflineTool = tool<IOnOffline>("OnOfflineTool");
 
   m_PVContainer = m_OnOfflineTool->getPVLocation() ;
   info() << "Getting PV from " << m_PVContainer << endreq ;
+
+  if(m_geomToolName == "Default"){
+    m_IPTool = tool<IGeomDispCalculator>(m_OnOfflineTool->dispCalculator(),this);
+    debug() << "Using " << m_OnOfflineTool->dispCalculator() << endreq;
+  } 
+  else{
+    m_IPTool = tool<IGeomDispCalculator>(m_geomToolName,this);
+  }
 
 #ifdef MCCheck
   // Retrieve the MCDecayFinder
@@ -149,6 +153,9 @@ StatusCode DecayChainNTuple::initialize() {
     err() << "Unable to retrieve the Particle2MCLinksAsct" << endreq;
     return sc;
   }
+
+  // Composite
+  m_pCompositeAsct = new Particle2MCLink(this, Particle2MCMethod::Composite, m_inputComposite);
 
   // for calo clusters association
   m_pAsctCl2MCP = tool<IAsctCl2MCP>("AssociatorWeighted<CaloCluster,MCParticle,float>", "CCs2MCPs");
@@ -452,7 +459,7 @@ DecayChainNTuple::HandleNTuple::HandleNTuple(NTuplePtr& nt, unsigned int& number
   // sc = nt->addIndexedItem("_lab"+label,m_n,m_);
 
 #ifdef MCCheck
-  // Look if a final state is reconstructed and is signal (only meaningful for final tracks)
+  // Look if a the particle is associated to signal
   sc = nt->addIndexedItem("Sig_lab"+label,m_n,m_Sig);
 
   // Extrapolated state vector of the associated MCParticle track (x,y,tx,ty,Q/P), tx = dx/dz, ty = dy/dz
@@ -866,7 +873,7 @@ void DecayChainNTuple::HandleNTuple::FillNTuple(Particle& part, VertexVector& pv
   */
 
 #ifdef MCCheck
-  // Look if a final state is reconstructed (only meaningful for final tracks)
+  // Look if a the particle is associated to signal
   m_Sig[m_n] = isSig;
 #endif
 
@@ -929,6 +936,12 @@ StatusCode DecayChainNTuple::BookNTuple(std::vector<Particle*>& mothervec) {
         sc = nt->addItem("L1Elec", m_L1Elec);
         sc = nt->addItem("L1Phot", m_L1Phot);
         sc = nt->addItem("HLTDecision", m_HLTDecision);
+        sc = nt->addItem("HLTGen", m_HLTGen);
+        sc = nt->addItem("HLTIncB", m_HLTIncB);
+        sc = nt->addItem("HLTDiMu", m_HLTDiMu);
+        sc = nt->addItem("HLTDstar", m_HLTDstar);
+        sc = nt->addItem("HLTExB", m_HLTExB);
+
         // The tags
         sc = nt->addItem("nTags", m_nTags, 0, 10000);
         sc = nt->addIndexedItem("TagDecision", m_nTags, m_TagDecision);
@@ -1110,19 +1123,27 @@ StatusCode DecayChainNTuple::WriteNTuple(std::vector<Particle*>& mothervec) {
   RichPIDs* globalPIDs = NULL;
   if (m_useRichOnlinePID){
 
-    debug() << "You requested the online Rich, make sure you run it" << endreq;
-    globalPIDs = get<RichPIDs>( m_richOnlinePIDLocation );
+    if(!exist<RichPIDs>(m_richOnlinePIDLocation)){
+      Warning("You requested the online Rich, make sure you run it. No RichPIDs at "+m_richOnlinePIDLocation);
+    } 
+    else{
+      globalPIDs = get<RichPIDs>(m_richOnlinePIDLocation);
+      if(NULL == globalPIDs){
+        err() << "Null RichPIDs at " << m_richOnlinePIDLocation << endreq;
+        return StatusCode::FAILURE;
+      }
+      else{
+        debug() << "Found " << globalPIDs->size() << " RichPIDs at " << m_richOnlinePIDLocation << endreq;
+      } // if globalPIDs != NULL
+    } // if  RichPIDs exists
 
-    if(globalPIDs){
-      debug() << "Found " << globalPIDs->size() << " RichPIDs at " << m_richOnlinePIDLocation << endreq;
-    }
   }
   //---------------------------------------------  
 
   //---------------------------------------------  
-  // Trigger information
+  // L0
   bool L0Decision = false;
-  // L1 Trigger informations
+  // L1 
   bool L1Decision = false;
   bool L1Gen      = false;
   bool L1SiMu     = false;
@@ -1130,47 +1151,98 @@ StatusCode DecayChainNTuple::WriteNTuple(std::vector<Particle*>& mothervec) {
   bool L1JPsi     = false;
   bool L1Elec     = false;
   bool L1Phot     = false;
-
+  // Hlt 
   bool HLTDecision = false;
+  bool HLTGen      = false;
+  bool HLTIncB     = false;
+  bool HLTDiMu     = false;
+  bool HLTDstar    = false;
+  bool HLTExB      = false;
 
   if(m_requireTrigger){
 
-    debug() << "You requested the trigger, make sure you run it" << endreq;
-    TrgDecision* trg = get<TrgDecision>(m_pathTrg);
-    
-    if (trg){
-      L0Decision = trg->L0();
-      debug() << "L0 decision: " << L0Decision << endreq;
-      L1Decision = trg->L1();
-      debug() << "L1 decision: " << L1Decision << endreq;
-      //      HLTDecision = trg->HLT();
-      HLTDecision = 1 ;
-      debug() << "HLT decision: " << HLTDecision << endreq;
-    }
+    TrgDecision* trg = NULL;
+    if(!exist<TrgDecision>(m_pathTrg)){
+      Warning("You requested the trigger, make sure you run it. No TrgDecision at "+m_pathTrg);
+    } 
+    else{
+      trg = get<TrgDecision>(m_pathTrg);
+      if(NULL == trg){
+        err() << "Null TrgDecision at " << m_pathTrg << endreq;
+        return StatusCode::FAILURE;
+      }
+      else{
+        L0Decision = trg->L0();
+        debug() << "L0 decision: " << L0Decision << endreq;
+      } // if trg != NULL
+    } // if TrgDecision exists
     
     // L1 full detail
-    L1Score* score = get<L1Score>( L1ScoreLocation::Default );
-    if(score != NULL){
-      
-      L1Decision = score->decision();
-      L1Gen      = score->decisionGen();
-      L1SiMu     = score->decisionMu();
-      L1DiMu     = score->decisionDiMu();
-      L1JPsi     = score->decisionDiMuJPsi();
-      L1Elec     = score->decisionElec();
-      L1Phot     = score->decisionPhot();
-      
-      debug() << "L1 trigger summary: "        << endreq;
-      debug() << " Generic:     " << L1Gen      << endreq;
-      debug() << " Single Muon: " << L1SiMu     << endreq;
-      debug() << " Dimuon:      " << L1DiMu     << endreq;
-      debug() << " JPsi:        " << L1JPsi     << endreq;
-      debug() << " Electron:    " << L1Elec     << endreq;
-      debug() << " Photon:      " << L1Phot     << endreq;
-      debug() << "----------------------------" << endreq;
-      debug() << "Total:       " << L1Decision << endreq;
-    }
-  }
+    L1Score* scoreL1 = NULL;
+    if(!exist<L1Score>(m_L1ScoreLocation)){
+      Warning("You requested the trigger, make sure you run it. No L1Score at "+m_L1ScoreLocation);
+    } 
+    else{
+      scoreL1 = get<L1Score>(m_L1ScoreLocation);
+      if(NULL == scoreL1){
+        err() << "Null L1Score at " << m_L1ScoreLocation << endreq;
+        return StatusCode::FAILURE;
+      }
+      else{
+        L1Decision = scoreL1->decision();
+        L1Gen      = scoreL1->decisionGen();
+        L1SiMu     = scoreL1->decisionMu();
+        L1DiMu     = scoreL1->decisionDiMu();
+        L1JPsi     = scoreL1->decisionDiMuJPsi();
+        L1Elec     = scoreL1->decisionElec();
+        L1Phot     = scoreL1->decisionPhot();
+        
+        debug() << "L1 trigger summary "          << endreq;
+        debug() << " Generic:     " << L1Gen      << endreq;
+        debug() << " Single Muon: " << L1SiMu     << endreq;
+        debug() << " Dimuon:      " << L1DiMu     << endreq;
+        debug() << " JPsi:        " << L1JPsi     << endreq;
+        debug() << " Electron:    " << L1Elec     << endreq;
+        debug() << " Photon:      " << L1Phot     << endreq;
+        debug() << "----------------------------" << endreq;
+        debug() << "Total L1 decision is: " << L1Decision << endreq;
+        
+      } // if scoreL1 != NULL
+    } // if L1Score exists
+
+    // Hlt full detail
+    HltScore* scoreHlt = NULL;
+    if (!exist<HltScore>(m_HltScoreLocation)){
+      Warning("You requested the trigger, make sure you run it. No HltScore at "+m_HltScoreLocation);
+    } 
+    else {
+      scoreHlt = get<HltScore>(m_HltScoreLocation);
+      if(NULL == scoreHlt){
+        err() << "Null HltScore at " << m_HltScoreLocation << endreq;
+        return StatusCode::FAILURE;
+      }
+      else{
+
+        HLTDecision = scoreHlt->decision();
+        HLTGen      = scoreHlt->decisionGen();
+        HLTIncB     = scoreHlt->decisionInclusiveB();
+        HLTDiMu     = scoreHlt->decisionDimuon();
+        HLTDstar    = scoreHlt->decisionDstar();
+        HLTExB      = scoreHlt->decisionExclusive();
+
+        debug() << "Hlt trigger summary "            << endreq;
+        debug() << " Generic:          " << HLTGen   << endreq;
+        debug() << " Inclusive b->mu:  " << HLTIncB  << endreq;
+        debug() << " Inclusive Dimuon: " << HLTDiMu  << endreq;
+        debug() << " Inclusive D*:     " << HLTDstar << endreq;
+        debug() << " Exclusive B:      " << HLTExB   << endreq;
+        debug() << "----------------------------" << endreq;
+        debug() << "Total Hlt decision is: " << HLTDecision << endreq;
+
+      } // if scoreHlt != NULL
+    } // if HltScore exists
+
+  } // m_requireTrigger
   
   //---------------------------------------------  
 
@@ -1180,73 +1252,84 @@ StatusCode DecayChainNTuple::WriteNTuple(std::vector<Particle*>& mothervec) {
     // Reset index
     m_nTags = 0;
 
-    debug() << "You requested the tagging, make sure you run it" << endreq;  
-
     // The tagging only looks at the first selected b-candidate ?
-    FlavourTags* tags = get<FlavourTags>("/Event/Phys/BTagging/Tags");
 
-    FlavourTags::const_iterator itags;
-    for(itags = tags->begin(); itags != tags->end(); ++itags){
+    FlavourTags* tags = NULL;
+    if (!exist<FlavourTags>("/Event/Phys/BTagging/Tags")){
+      Warning("You requested the tagging, make sure you run it. No FlavourTags at /Event/Phys/BTagging/Tags");
+    } 
+    else {
+      tags = get<FlavourTags>("/Event/Phys/BTagging/Tags");
+      if(NULL == tags){
+        err() << "Null FlavourTags at " << "/Event/Phys/BTagging/Tags" << endreq;
+        return StatusCode::FAILURE;
+      }
+      else{
 
-      // not to be out of range ...
-      if(m_nTags > 9999) break;
+        FlavourTags::const_iterator itags;
+        for(itags = tags->begin(); itags != tags->end(); ++itags){
+
+          // not to be out of range ...
+          if(m_nTags > 9999) break;
     
-      // b = -1, bbar = 1, none = 0
-      debug() << "Tag decision = " << (*itags)->decision()
-              << " and category = " << (*itags)->category()
-              << endreq;
+          // b = -1, bbar = 1, none = 0
+          debug() << "Tag decision = " << (*itags)->decision()
+                  << " and category = " << (*itags)->category()
+                  << endreq;
 
-      // Fill variables for tags
-      m_TagDecision[m_nTags] = (*itags)->decision();
-      m_TagCat[m_nTags] = (*itags)->category();
+          // Fill variables for tags
+          m_TagDecision[m_nTags] = (*itags)->decision();
+          m_TagCat[m_nTags] = (*itags)->category();
 
-      // Particle for which this tag has been made
-      if((*itags)->taggedB()) debug() << "taggedPart pt = "<< (*itags)->taggedB()->pt() << endreq;
+          // Particle for which this tag has been made
+          if((*itags)->taggedB()) debug() << "taggedPart pt = "<< (*itags)->taggedB()->pt() << endreq;
 
-      //  The particles used to make the decision : how can I know what taggers belong to which tag ?
-      Particles* theTaggers = get<Particles>( "/Event/Phys/BTagging/Taggers");
+          //  The particles used to make the decision : how can I know what taggers belong to which tag ?
+          Particles* theTaggers = get<Particles>( "/Event/Phys/BTagging/Taggers");
     
-      debug() << " Number of taggers found = " << theTaggers->size() << endreq;
+          debug() << " Number of taggers found = " << theTaggers->size() << endreq;
     
-      // Reset index
-      m_nTaggers = 0;
-      Particles::const_iterator iTaggers;
-      for(iTaggers = theTaggers->begin(); iTaggers != theTaggers->end(); iTaggers++){
+          // Reset index
+          m_nTaggers = 0;
+          Particles::const_iterator iTaggers;
+          for(iTaggers = theTaggers->begin(); iTaggers != theTaggers->end(); iTaggers++){
 
-        // not to be out of range ...
-        if(m_nTaggers > 9) break;
+            // not to be out of range ...
+            if(m_nTaggers > 9) break;
       
-        // Smallest IPS to all primaries, not necessarily the best mother vertex
-        double normIPSMin = -1.;
+            // Smallest IPS to all primaries, not necessarily the best mother vertex
+            double normIPSMin = -1.;
 
-        Vertices::iterator iPV;
-        for(iPV = PVs.begin(); iPV != PVs.end(); iPV++){
-          double ip, ipe;
-          double normIPS;
-          m_IPTool->calcImpactPar(*(*iTaggers),**iPV,ip,ipe);
-          normIPS = ip/ipe;
-          verbose() << "normIPSMin = " << normIPSMin << " normIPS = " << normIPS << endreq;
-          if(normIPSMin<0||normIPS<normIPSMin) normIPSMin=normIPS;
-        }
+            Vertices::iterator iPV;
+            for(iPV = PVs.begin(); iPV != PVs.end(); iPV++){
+              double ip, ipe;
+              double normIPS;
+              m_IPTool->calcImpactPar(*(*iTaggers),**iPV,ip,ipe);
+              normIPS = ip/ipe;
+              verbose() << "normIPSMin = " << normIPSMin << " normIPS = " << normIPS << endreq;
+              if(normIPSMin<0||normIPS<normIPSMin) normIPSMin=normIPS;
+            }
 
-        debug() << "  -> tagger ID: " << (*iTaggers)->particleID().pid() 
-                << " , p = " << (*iTaggers)->p() 
-                << " pt = " << (*iTaggers)->pt()
-                << " sIPS = " << normIPSMin
-                << endreq;
+            debug() << "  -> tagger ID: " << (*iTaggers)->particleID().pid() 
+                    << " , p = " << (*iTaggers)->p() 
+                    << " pt = " << (*iTaggers)->pt()
+                    << " sIPS = " << normIPSMin
+                    << endreq;
 
-        // Fill variables for taggers
-        m_IDTagger[m_nTags][m_nTaggers] = (*iTaggers)->particleID().pid();
-        m_pTagger[m_nTags][m_nTaggers] = (*iTaggers)->p();
-        m_ptTagger[m_nTags][m_nTaggers] = (*iTaggers)->pt();
-        m_sIPSTagger[m_nTags][m_nTaggers] = normIPSMin;
+            // Fill variables for taggers
+            m_IDTagger[m_nTags][m_nTaggers] = (*iTaggers)->particleID().pid();
+            m_pTagger[m_nTags][m_nTaggers] = (*iTaggers)->p();
+            m_ptTagger[m_nTags][m_nTaggers] = (*iTaggers)->pt();
+            m_sIPSTagger[m_nTags][m_nTaggers] = normIPSMin;
 
-        // Increment index
-        m_nTaggers++;
-      } // iTaggers
-      // Increment index
-      m_nTags++;
-    } // itags
+            // Increment index
+            m_nTaggers++;
+          } // iTaggers
+          // Increment index
+          m_nTags++;
+        } // itags
+      } // if tags != NULL
+    } // if FlavourTags exists
   } // m_requireTagging
   //---------------------------------------------  
 
@@ -1265,6 +1348,12 @@ StatusCode DecayChainNTuple::WriteNTuple(std::vector<Particle*>& mothervec) {
   m_L1Elec = long(L1Elec);
   m_L1Phot = long(L1Phot);
   m_HLTDecision = long(HLTDecision);
+  m_HLTGen = long(HLTGen);
+  m_HLTIncB = long(HLTIncB);
+  m_HLTDiMu = long(HLTDiMu);
+  m_HLTDstar = long(HLTDstar);
+  m_HLTExB = long(HLTExB);
+
   //---------------------------------------------  
 
   //---------------------------------------------
@@ -1315,10 +1404,30 @@ StatusCode DecayChainNTuple::WriteNTuple(std::vector<Particle*>& mothervec) {
 #endif
 
 #ifdef MCCheck
-    // Look if a final state is reconstructed and is signal (only meaningful for final tracks)
+    // Look if a the particle is associated to signal
     bool isSig = false;
     MCParticle* mclink = 0;
-    
+
+    if((*imother)->endVertex()){ // composite
+      mclink = m_pCompositeAsct->firstMCP(*imother);
+      if(mclink){
+        std::vector<MCParticle*>::const_iterator imchead;
+        // For each true decay
+        for(imchead = MCHead.begin(); imchead != MCHead.end(); ++imchead){
+          isSig = (mclink == *imchead);
+          if(isSig) break;
+        } // for imchead
+      } // if mclink 
+    } // if endVertex
+
+      // Just for the case with association but not from signal
+    if(!isSig) mclink = 0;    
+
+    // Warning: the head can be associated for 'wrong' combinations like
+    // B -> A(K1 K2) C(K3 K4) or B -> A(K1 K3) C(K2 K4)
+    // --> check subdecays in ntuple
+    debug() << "Is the particle signal (1: yes, 0: false)? ==> " << isSig << endreq;
+
     if (jkeymother != m_HandleNTupleMap.end()){
       jkeymother->second->FillNTuple(**imother, PVs, isSig, mclink, globalPIDs);
     }
@@ -1338,105 +1447,115 @@ StatusCode DecayChainNTuple::WriteNTuple(std::vector<Particle*>& mothervec) {
 
       //---------------------------------------------
 #ifdef MCCheck
-      // Look if a final state is reconstructed and is signal (only meaningful for final tracks)
+      // Look if a the particle is associated to signal
       isSig = false;
       mclink = 0;
 
       verbose() << "Looking for link association for particle with ID: "
-             << (*ichild)->particleID().pid() << " " << (*ichild)->momentum() << endreq;
+                << (*ichild)->particleID().pid() << " " << (*ichild)->momentum() << endreq;
 
-
-      // beg FIXME : for now the association of online gammas requires offline clusters
-      // Special case of online gammas (neutrals with origin)
-
-      if((*ichild)->origin() && m_gammaID == (*ichild)->particleID().pid()){ // neutrals with origin
-
-        // Check that the gamma is made from a TrgCaloParticle
-        const TrgCaloParticle* myTrgCaloPart = dynamic_cast<const TrgCaloParticle*>((*ichild)->origin());
-
-        if(myTrgCaloPart){
-
-          debug() << "Special case of online gammas" << endreq;
-
-          std::vector<CaloCellID> ClusterSeed = myTrgCaloPart->cellIdVector();
-          CaloCellID myTrgCaloPartCellID = ClusterSeed[0];
+      if((*ichild)->origin()){ // if final state with origin
         
-          verbose() << "There is a TrgCaloParticle with ID " << myTrgCaloPart->particleID().pid() 
-                    << " and CellID[0] " << ClusterSeed[0] << endreq;
+        // beg FIXME : for now the association of online gammas requires offline clusters
+        // Special case of online gammas (neutrals with origin)
 
-          // The Calo clusters
-          CaloClusters* myCaloClusters = get<CaloClusters>(m_CaloClustersPath);
-          // TrgCaloClusters* myTrgCaloClusters  = get<TrgCaloClusters>(m_TrgCaloClustersPath);
+        if((*ichild)->origin() && m_gammaID == (*ichild)->particleID().pid()){ // neutrals with origin
 
-          // Create a CaloVector of CaloClusters for easy access and get rid of split clusters (from pi0)  
-          CaloVector<const CaloCluster*>  CaloClustersVec;
+          // Check that the gamma is made from a TrgCaloParticle
+          const TrgCaloParticle* myTrgCaloPart = dynamic_cast<const TrgCaloParticle*>((*ichild)->origin());
 
-          for(CaloClusters::const_iterator icl = myCaloClusters->begin(); icl != myCaloClusters->end(); ++icl){
-            // forget it if split cluster
-            const CaloCluster* cl = *icl;
-            if (!(myCaloClusters == cl->parent())) continue;
-            CaloClustersVec.addEntry(cl,  cl->seed());
-          }
+          if(myTrgCaloPart){
 
-          verbose() << "CaloClustersVec size: " << CaloClustersVec.size() << endreq;
-          // debug() << "TrgCaloClusters size: " << myTrgCaloClusters->size() << endreq;
+            debug() << "Special case of online gammas" << endreq;
 
-          // get the corresponding CaloCluster
-          const CaloCluster* ccluster = CaloClustersVec[myTrgCaloPartCellID];
-          if(!ccluster) return Error("Cluster corresponding to the TrgCaloParticle not found");
-
-          // Now the relation table and association
-          if(false == m_pAsctCl2MCP->tableExists()){
-            return Error("No table retrieved for CaloCluster2MCParticle associator");
-          }
-          const DirectType* table = m_pAsctCl2MCP->direct();
-          if(!table) return Error("No valid direct table for CaloCluster2MCParticle associator");
+            std::vector<CaloCellID> ClusterSeed = myTrgCaloPart->cellIdVector();
+            CaloCellID myTrgCaloPartCellID = ClusterSeed[0];
         
-          // Check the association
-          const DirectType::Range r = table->relations(ccluster);
-          for(unsigned ii = 0 ; ii<r.size(); ++ii){
-            mclink = r[ii].to();
-            if( !mclink || (*ichild)->particleID().pid() != mclink->particleID().pid()) continue;
+            verbose() << "There is a TrgCaloParticle with ID " << myTrgCaloPart->particleID().pid() 
+                      << " and CellID[0] " << ClusterSeed[0] << endreq;
+
+            // The Calo clusters
+            CaloClusters* myCaloClusters = get<CaloClusters>(m_CaloClustersPath);
+            // TrgCaloClusters* myTrgCaloClusters  = get<TrgCaloClusters>(m_TrgCaloClustersPath);
+
+            // Create a CaloVector of CaloClusters for easy access and get rid of split clusters (from pi0)  
+            CaloVector<const CaloCluster*>  CaloClustersVec;
+
+            for(CaloClusters::const_iterator icl = myCaloClusters->begin(); icl != myCaloClusters->end(); ++icl){
+              // forget it if split cluster
+              const CaloCluster* cl = *icl;
+              if (!(myCaloClusters == cl->parent())) continue;
+              CaloClustersVec.addEntry(cl,  cl->seed());
+            }
+
+            verbose() << "CaloClustersVec size: " << CaloClustersVec.size() << endreq;
+            // debug() << "TrgCaloClusters size: " << myTrgCaloClusters->size() << endreq;
+
+            // get the corresponding CaloCluster
+            const CaloCluster* ccluster = CaloClustersVec[myTrgCaloPartCellID];
+            if(!ccluster) return Error("Cluster corresponding to the TrgCaloParticle not found");
+
+            // Now the relation table and association
+            if(false == m_pAsctCl2MCP->tableExists()){
+              return Error("No table retrieved for CaloCluster2MCParticle associator");
+            }
+            const DirectType* table = m_pAsctCl2MCP->direct();
+            if(!table) return Error("No valid direct table for CaloCluster2MCParticle associator");
+        
+            // Check the association
+            const DirectType::Range r = table->relations(ccluster);
+            for(unsigned ii = 0 ; ii<r.size(); ++ii){
+              mclink = r[ii].to();
+              if( !mclink || (*ichild)->particleID().pid() != mclink->particleID().pid()) continue;
           
-            isSig = isSignal(mclink, MCHead);
-            if(isSig) verbose() << "Found association for online gamma" << endreq;
-            if(isSig) break; // just take one associated MCParticle
+              isSig = isSignal(mclink, MCHead);
+              if(isSig) verbose() << "Found association for online gamma" << endreq;
+              if(isSig) break; // just take one associated MCParticle
 
-          } // ii
-        } // if myTrgCaloPart
-      } // online gammas
-      // end FIXME
+            } // ii
+          } // if myTrgCaloPart
+        } // online gammas
+        // end FIXME
 
-      // Old way, no gammas
-      // Particle2MCLinksAsct::IAsct* m_pAsctLinks;
-      // mclink = m_pAsctLinks->associatedFrom(*ichild);
-      // isSig = isSignal(mclink, MCHead);
+        // Old way, no gammas
+        // Particle2MCLinksAsct::IAsct* m_pAsctLinks;
+        // mclink = m_pAsctLinks->associatedFrom(*ichild);
+        // isSig = isSignal(mclink, MCHead);
 
-      // Note : need to go AssociatorWeighted class to treat gammas and charged in the same way
-      AssociatorWeighted<Particle,MCParticle,double>::IAsct *pAsso = m_pAsctLinks;
+        // Note : need to go AssociatorWeighted class to treat gammas and charged in the same way
+        AssociatorWeighted<Particle,MCParticle,double>::IAsct *pAsso = m_pAsctLinks;
 
-      // Range
-      // MCsFromParticleLinks mcPartLinksRange = m_pAsctLinks->rangeFrom(*ichild);
-      AssociatorWeighted<Particle,MCParticle,double>::ToRange mcPartAssoRange = pAsso->rangeFrom(*ichild);
-      verbose() << " ... rangeFrom size = " << mcPartAssoRange.size() << endreq; 
+        // Range
+        // MCsFromParticleLinks mcPartLinksRange = m_pAsctLinks->rangeFrom(*ichild);
+        AssociatorWeighted<Particle,MCParticle,double>::ToRange mcPartAssoRange = pAsso->rangeFrom(*ichild);
+        verbose() << " ... rangeFrom size = " << mcPartAssoRange.size() << endreq; 
 
-      // Iterator
-      // MCsFromParticleLinksIterator mcPartLinksIt;
-      AssociatorWeighted<Particle,MCParticle,double>::ToIterator mcPartAssoIt;
+        // Iterator
+        // MCsFromParticleLinksIterator mcPartLinksIt;
+        AssociatorWeighted<Particle,MCParticle,double>::ToIterator mcPartAssoIt;
       
-      for(mcPartAssoIt = mcPartAssoRange.begin(); mcPartAssoIt != mcPartAssoRange.end(); mcPartAssoIt++){
-        mclink = mcPartAssoIt->to();
-        // Check if ID part == ID MC associated part : don't do this because of no PID possibility
-        // if(mclink->particleID().pid() != (*ichild)->particleID().pid()) continue;
-        // Check if the associated MCParticle belongs to the DOI
-        isSig = isSignal(mclink, MCHead);
-        if(isSig) break; // just take one associated MCParticle
+        for(mcPartAssoIt = mcPartAssoRange.begin(); mcPartAssoIt != mcPartAssoRange.end(); mcPartAssoIt++){
+          mclink = mcPartAssoIt->to();
+          // Check if ID part == ID MC associated part : don't do this because of no PID possibility
+          // if(mclink->particleID().pid() != (*ichild)->particleID().pid()) continue;
+          // Check if the associated MCParticle belongs to the DOI
+          isSig = isSignal(mclink, MCHead);
+          if(isSig) break; // just take one associated MCParticle
+        }
+      
+      } // if final state with origin
+      else{ // no origin
+        
+        if((*ichild)->endVertex()){ // composite
+          mclink = m_pCompositeAsct->firstMCP(*ichild);
+          isSig = isSignal(mclink, MCHead);
+        } // if endVertex
       }
       
       // Just for the case with association but not from signal
       if(!isSig) mclink = 0;
       
-      debug() << "Is the particle reconstructed and signal (1: yes, 0: false)? ==> " << isSig << endreq;
+      debug() << "Is the particle signal (1: yes, 0: false)? ==> " << isSig << endreq;
 
 #endif
       //---------------------------------------------
@@ -1735,52 +1854,59 @@ StatusCode DecayChainNTuple::WriteMCNTuple(std::vector<MCParticle*>& MCHead) {
       // If not reco and gamma check clusters for online
       if(m_useOnlineCalo == true && !reco && (*imcchild)->particleID().pid() == m_gammaID){
 
-        debug() << "You requested the online Calo, make sure you run it" << endreq;
         // Get the clusters
-        TrgCaloClusters* myTrgCaloClusters  = get<TrgCaloClusters>(m_TrgCaloClustersPath);
-
-        // If not running with online : ignore
-        if(!myTrgCaloClusters->empty()){
+        TrgCaloClusters* myTrgCaloClusters = NULL;
+        if (!exist<TrgCaloClusters>(m_TrgCaloClustersPath)){
+          Warning("You requested the online Calo, make sure you run it. No TrgCaloClusters at "+m_TrgCaloClustersPath);
+        } 
+        else{
           
-          // Now the relation table and association
-          if(false == m_pAsctCl2MCP->tableExists()){
-            return Error("No table retrieved for CaloCluster2MCParticle associator");
+          myTrgCaloClusters = get<TrgCaloClusters>(m_TrgCaloClustersPath);
+          if(NULL == myTrgCaloClusters){
+            err() << "Null TrgCaloClusters at " << m_TrgCaloClustersPath << endreq;
+            return StatusCode::FAILURE;
           }
+          else{
+            // Now the relation table and association
+            if(false == m_pAsctCl2MCP->tableExists()){
+              return Error("No table retrieved for CaloCluster2MCParticle associator");
+            }
 
-          const InverseType* table = m_pAsctCl2MCP->inverse();
-          if(!table) return Error("No valid inverse table for CaloCluster2MCParticle associator");
+            const InverseType* table = m_pAsctCl2MCP->inverse();
+            if(!table) return Error("No valid inverse table for CaloCluster2MCParticle associator");
         
-          // Check the inverse association
-          const InverseType::Range r = table->relations(*imcchild);
-          verbose() << "inverse range size = " << r.size() << endreq;
+            // Check the inverse association
+            const InverseType::Range r = table->relations(*imcchild);
+            verbose() << "inverse range size = " << r.size() << endreq;
 
-          for(unsigned ii = 0 ; ii<r.size(); ++ii){
-            CaloCluster* cluster = r[ii].to();
-            if(!cluster) continue;
+            for(unsigned ii = 0 ; ii<r.size(); ++ii){
+              CaloCluster* cluster = r[ii].to();
+              if(!cluster) continue;
           
-            CaloCellID myCaloPartCellID = cluster->seed();
-            for(TrgCaloClusters::const_iterator icl = myTrgCaloClusters->begin(); icl != myTrgCaloClusters->end(); ++icl){
-              const TrgCaloCluster* cl = *icl;
+              CaloCellID myCaloPartCellID = cluster->seed();
+              for(TrgCaloClusters::const_iterator icl = myTrgCaloClusters->begin(); icl != myTrgCaloClusters->end(); ++icl){
+                const TrgCaloCluster* cl = *icl;
             
-              CaloCellID myTrgCaloPartCellID = cl->seed();
-              if(myCaloPartCellID == myTrgCaloPartCellID) isReco = true;
+                CaloCellID myTrgCaloPartCellID = cl->seed();
+                if(myCaloPartCellID == myTrgCaloPartCellID) isReco = true;
+                if(isReco) break;
+              } // icl
               if(isReco) break;
-            } // icl
-            if(isReco) break;
-          } // ii
-        } // if !myTrgCaloClusters->empty()
+            } // ii
+          } // if myTrgCaloClusters != NULL
+        } // if TrgCaloClusters exists
       }
       // end FIXME
 
-      debug() << "Is the MC particle reconstructed (1: yes, 0: false)? ==> " << isReco << endreq;
+      debug() << "Is the MC particle reconstructed (not for composites, 1: yes, 0: false)? ==> " << isReco << endreq;
 
       // Check if the track is reconstructible
       MCTrackInfo trInfo(eventSvc(), msgSvc());
       verbose() << "MCTrackInfo = " << trInfo.fullInfo(*imcchild) << endreq;
 
-      debug() << "MCTrackInfo: hasVelo = " << trInfo.hasVelo(*imcchild) << endreq;
-      debug() << "MCTrackInfo: hasTT = " << trInfo.hasTT(*imcchild) << endreq;
-      debug() << "MCTrackInfo: hasT = " << trInfo.hasT(*imcchild) << endreq;
+      verbose() << "MCTrackInfo: hasVelo = " << trInfo.hasVelo(*imcchild) << endreq;
+      verbose() << "MCTrackInfo: hasTT = " << trInfo.hasTT(*imcchild) << endreq;
+      verbose() << "MCTrackInfo: hasT = " << trInfo.hasT(*imcchild) << endreq;
 
       //---------------------------------------------
       // Case of identical parts: take arbitrary offset and add (500000*forthekeydau)

@@ -67,7 +67,7 @@ class IMCDecayFinder;
  *  The primaries are retrieved with the OnOfflineTool tool, default is offline
  *  -> must set PVLocation property of OnOfflineTool tool to change it
  *  
- *  Possibility to use the TrgDispCalculator tool for online particles
+ *  Possibility to use the TrgDispCalculator tool for online particles, automatically set through the OnOfflineTool tool
  *  -> uses the approximated HLT covariance matrix for computation of IP, vertex separation, etc ...
  * 
  *  Gammas are not re-evaluated at the vertex : 
@@ -79,6 +79,12 @@ class IMCDecayFinder;
  * 
  *  Warning : if you require trigger information, tagging, online calo, etc ..., make sure you run the necessary code
  * 
+ *  Warning : for the composite association can be associated for 'wrong' combinations like
+ *            B -> A(K1 K2) C(K3 K4) or B -> A(K1 K3) C(K2 K4)
+ *            --> check subdecays in ntuple
+ *
+ *  Warning : when using no PID, use option 'IgnorePID' of CompositeParticle2MCLinks for the association
+ *  
  *  FIXME: 
  *  - association of online gammas requires offline CaloClusters for now
  *
@@ -140,6 +146,11 @@ private:
   IMCDecayFinder* m_pMCDKFinder;
   // Ref. to link associator
   Particle2MCLinksAsct::IAsct* m_pAsctLinks;
+  // Composite associator
+  Particle2MCLink* m_pCompositeAsct;
+  // std::string m_inputComposite;
+  std::vector<std::string>  m_inputComposite;
+  
   int m_gammaID; // gamma particle ID
   typedef IAssociatorWeighted<CaloCluster, MCParticle, float> IAsctCl2MCP;
   typedef IAsctCl2MCP::DirectType DirectType;
@@ -168,9 +179,11 @@ private:
 #endif
 
   // Trigger
-  const std::string m_pathTrg;
-  const std::string m_CaloClustersPath;
-  const std::string m_TrgCaloClustersPath;
+  std::string m_pathTrg;
+  std::string m_L1ScoreLocation;
+  std::string m_HltScoreLocation;
+  std::string m_CaloClustersPath;
+  std::string m_TrgCaloClustersPath;
 
   // NTuple global variables
   NTuple::Item<long> m_eventNumber,m_runNumber;
@@ -188,6 +201,12 @@ private:
   NTuple::Item<long> m_L1Elec;
   NTuple::Item<long> m_L1Phot;
   NTuple::Item<long> m_HLTDecision;
+  NTuple::Item<long> m_HLTGen;
+  NTuple::Item<long> m_HLTIncB;
+  NTuple::Item<long> m_HLTDiMu;
+  NTuple::Item<long> m_HLTDstar;
+  NTuple::Item<long> m_HLTExB;
+
   // The tags
   NTuple::Item<long> m_nTags;
   NTuple::Array<long> m_TagDecision;
@@ -343,7 +362,7 @@ private:
     // NTuple::Array<float> m_ctfitChi2;
 
 #ifdef MCCheck
-    // Look if a final state is reconstructed and is signal (only meaningful for final tracks)
+    // Look if a the particle is associated to signal
     NTuple::Array<float> m_Sig;
 
     // Extrapolated state vector of the associated MCParticle track (x,y,tx,ty,Q/P), tx = dx/dz, ty = dy/dz

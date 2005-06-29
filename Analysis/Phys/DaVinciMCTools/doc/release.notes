@@ -1,7 +1,11 @@
-! $Id: release.notes,v 1.61 2005-06-28 16:04:51 pkoppenb Exp $
+! $Id: release.notes,v 1.62 2005-06-29 08:34:55 pkoppenb Exp $
 ! Package     : DaVinciMCTools
 ! Responsible : P. Koppenburg
 !=============================================================================
+
+! 2005-06-29 - Luis Fernandez
+ - src/DecayChainNTuple.{cpp,h}
+   . Use composite associator, protections, Hlt score, ...
 
 ! 2005-06-28 - Cristina Lazzeroni
   - src/TrueMCFilterCriterion.cpp
