@@ -1,4 +1,4 @@
-// $Id: CompositeParticle2MCLinks.h,v 1.10 2004-08-03 15:32:59 phicharp Exp $
+// $Id: CompositeParticle2MCLinks.h,v 1.11 2005-06-29 07:57:02 lfernan Exp $
 #ifndef CompositeParticle2MCLinks_H 
 #define CompositeParticle2MCLinks_H 1
 
@@ -40,6 +40,7 @@ private:
   bool                      m_skipResonances;
   double                    m_maxResonanceLifeTime;
   std::string               m_asctMethod;
+  bool                      m_ignorePID;
   // Local variables
   IParticlePropertySvc*     m_ppSvc;
   Object2MCLink*            m_p2MCLink;

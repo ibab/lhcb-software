@@ -1,4 +1,4 @@
-// $Id: CompositeParticle2MCLinks.cpp,v 1.11 2004-08-03 15:32:59 phicharp Exp $
+// $Id: CompositeParticle2MCLinks.cpp,v 1.12 2005-06-29 07:57:02 lfernan Exp $
 // Include files 
 
 // from Gaudi
@@ -50,7 +50,7 @@ CompositeParticle2MCLinks::CompositeParticle2MCLinks( const std::string& name,
   declareProperty( "skipResonances",       m_skipResonances = false );
   declareProperty( "maxResonanceLifeTime", m_maxResonanceLifeTime = 1.e-18*s );
   declareProperty( "AssociationMethod",    m_asctMethod = "Links");
-
+  declareProperty( "IgnorePID",            m_ignorePID = false );
 }
 
 //=============================================================================
@@ -160,7 +160,7 @@ StatusCode CompositeParticle2MCLinks::execute() {
                             << " -> MCParts";
         while( NULL != mcp ) {          
           const ParticleID& idM = mcp->particleID();
-          if ( idP.pid() == idM.pid() || 
+          if ( m_ignorePID || idP.pid() == idM.pid() || 
                ( (*pIt)->charge()==0 && idP.abspid() == idM.abspid()) ) {
             if( !counted ) {
               ++m_nass;
@@ -216,7 +216,7 @@ CompositeParticle2MCLinks::associateTree(const Particle *p,
   std::string asctType;
   const ParticleID& idP = p->particleID();
   const ParticleID& idM = m->particleID();
-  if ( idP.pid() == idM.pid() || 
+  if ( m_ignorePID || idP.pid() == idM.pid() || 
        ( p->charge()==0 && idP.abspid() == idM.abspid()) ) {
 #ifdef DEEPDEBUG
     ifMsg(MSG::VERBOSE) << " Checking particle " <<  objectName(p) 
