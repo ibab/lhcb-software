@@ -1,4 +1,4 @@
-// $Id: MeasurementProvider.h,v 1.1 2005-05-24 09:52:44 erodrigu Exp $
+// $Id: MeasurementProvider.h,v 1.2 2005-06-29 14:41:19 erodrigu Exp $
 #ifndef TRACKTOOLS_MEASUREMENTPROVIDER_H 
 #define TRACKTOOLS_MEASUREMENTPROVIDER_H 1
 
@@ -6,6 +6,12 @@
 // -------------
 // from Gaudi
 #include "GaudiAlg/GaudiTool.h"
+
+// from LHCbKernel
+#include "Kernel/LHCbID.h"
+
+// from TrackInterfaces
+#include "TrackInterfaces/IMeasurementProvider.h"            // Interface
 
 // from TrackEvent
 #include "Event/Track.h"
@@ -29,12 +35,9 @@ static const InterfaceID IID_MeasurementProvider ( "MeasurementProvider", 1, 0 )
  *  @author Jose Angel Hernando Morata
  *  @date   2005-04-14
  */
-class MeasurementProvider : public GaudiTool {
-public: 
-
-  // Return the interface ID
-  static const InterfaceID& interfaceID() { return IID_MeasurementProvider; }
-
+class MeasurementProvider : public GaudiTool,
+                            virtual public IMeasurementProvider {
+public:
   /// Standard constructor
   MeasurementProvider( const std::string& type, 
                        const std::string& name,

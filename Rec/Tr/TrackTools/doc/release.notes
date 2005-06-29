@@ -4,6 +4,11 @@
 ! Purpose     : Package for tracking tools not accessing MC information
 !-----------------------------------------------------------------------------
 
+! 2005-06-29 - Eduardo Rodrigues
+ - MeasurementProvider inherits from new IMeasurementProvider interface
+   in Tr/TrackInterfaces
+ - minor typos corrected
+
 !======================== TrackTools v1r0 2005-05-25 =========================
 ! 2005-05-25 - Marco Cattaneo
  - Remove TrackTools directory, header files moved to src
