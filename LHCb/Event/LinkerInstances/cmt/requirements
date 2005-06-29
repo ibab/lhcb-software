@@ -1,0 +1,34 @@
+# $Id: requirements,v 1.1.1.1 2005-06-29 15:58:38 truf Exp $
+# =============================================================================
+package LinkerInstances
+author  Stefan Roiser
+manager Thomas Ruf
+
+version v1r0
+
+include_dirs $(LINKERINSTANCESROOT)
+
+use LinkerEvent  v*    Event
+use Event        v*    Event
+use VeloEvent    v*    Event
+use TrgEvent     v*    Event
+use OTEvent      v*    Event
+use ITEvent      v*    Event
+use MuonEvent    v*    Event
+use TrEvent      v*    Event
+
+
+# Produce lcg dictionary for instances of Linker classes
+#============================================================================
+document lcg_dictionary_generator LinkerInstancesGen \
+      $(LINKERINSTANCESROOT)/dict/linker_instances.h dictionary=LinkerInstances
+macro_append LinkerInstances_lcgdict_options \
+      '--select=$(LINKERINSTANCESROOT)/xml/lcg_selection.xml --split $(includes)'
+
+# Build libraries (including dictionary)
+#============================================================================
+library LinkerInstancesDict ../dict/*.cpp ../$(tag)/dict/LinkerInstances/*.cpp
+        
+# Standard patterns
+#============================================================================
+apply_pattern component_library library=LinkerInstancesDict
