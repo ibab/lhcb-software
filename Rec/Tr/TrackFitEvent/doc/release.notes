@@ -4,6 +4,10 @@
 ! Purpose     : Package for the tracking fitting-related classes
 !-----------------------------------------------------------------------------
 
+! 2005-06-29 - Eduardo Rodrigues
+ - minor additions to FitNode
+ - corrected assignment of ambiguity in constructor of OTMeasurement
+
 !========================== TrackFitEvent v1r1 2005-06-24 ====================
 ! 2005-06-15 - Eduardo Rodrigues
  - type of measurement set in the constructor

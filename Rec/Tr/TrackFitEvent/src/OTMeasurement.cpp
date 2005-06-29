@@ -1,4 +1,4 @@
-// $Id: OTMeasurement.cpp,v 1.3 2005-06-15 15:24:10 erodrigu Exp $
+// $Id: OTMeasurement.cpp,v 1.4 2005-06-29 13:36:20 erodrigu Exp $
 // Include files
 
 // local
@@ -28,7 +28,14 @@ OTMeasurement::OTMeasurement( OTTime& otTime,
 
   // set the LHCbID and ambiguity
   setLhcbID( LHCbID( m_time -> channel() ) );
-  lhcbID().setSpareBits( ambiguity );
+
+  // spareBits: 11 / 10 for ambiguity = +1 / -1
+  if ( ambiguity != 0 ) {
+    ( ambiguity < 0 ) ? lhcbID().setSpareBits( 2 ) : lhcbID().setSpareBits( 3 );
+  }
+  else {
+    lhcbID().setSpareBits( 0 );
+  }
 
   // some constants...
   double driftVelocity = geom.driftDelay(); // ns/mm

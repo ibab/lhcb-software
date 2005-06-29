@@ -62,14 +62,22 @@ public:
     m_noiseMatrix = noiseMatrix;
   }  
 
-  /// retrieved state predicted by the kalman filter step
-  State& predictedState() const             
+  /// retrieve state predicted by the kalman filter step
+  State& predictedState()
+  { return *m_predictedState; }
+
+  /// retrieve state predicted by the kalman filter step
+  const State& predictedState() const             
   { return *m_predictedState; }
 
   /// set state predicted by the kalman filter
   void setPredictedState( const State& predictedState );
 
-  /// get filtered state from the kalman filter step
+  /// retrieve filtered state from the kalman filter step
+  State& filteredState()
+  {return *m_filteredState; }
+
+  /// retrieve filtered state from the kalman filter step
   const State& filteredState() const 
   {return *m_filteredState; }
 

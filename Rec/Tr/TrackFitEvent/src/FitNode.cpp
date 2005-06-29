@@ -77,7 +77,9 @@ void FitNode::setFilteredState( const State& filteredState )
   //if pointer not set clone state - else copy (not great)
   if ( m_filteredState ) delete m_filteredState;
   m_filteredState = filteredState.clone();
-  setState(filteredState);
+  
+  //setState(filteredState);
+  m_state = filteredState.clone();
 }
 
 //=============================================================================
