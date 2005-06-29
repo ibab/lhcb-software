@@ -1,0 +1,91 @@
+//==============================================================================
+//  Bs -> mu+ mu-
+//==============================================================================
+// Author: Luis Fernandez, 27/06/2005
+
+// The  offline selections
+#include "$BS2MUMUROOT/options/DoTDRselBs2MuMu.opts"
+TDRselBs2MuMu.MassWindow = 60*MeV ; // 600.0 MeV
+
+ApplicationMgr.TopAlg += {"GaudiSequencer/CheckHLTB2MuMu"};
+
+CheckHLTB2MuMu.IgnoreFilterPassed = false ; // Act as Sequencer
+CheckHLTB2MuMu.MeasureTime = false;
+
+CheckHLTB2MuMu.Members ={ "TrgL0Filter", "PrintHeader/PassedL0",
+                          "TrgL1Filter", "PrintHeader/PassedL1",
+                          //"HltFilter/HltGenericFilter", "PrintHeader/PassedHltGeneric",
+                          "CheckSelResult/MergeOffB2MuMu", 
+                          "DecayChainNTuple/OffB2MuMuTree",
+                          "CheckSelResult/MergeHLTB2MuMu",
+                          "ResetOnOffline/HLTB2MuMuTreeSetOnline",
+                          "DecayChainNTuple/HLTB2MuMuTree"};
+
+PassedL0.OutputLevel = 3;
+PassedL1.OutputLevel = 3;
+// PassedHltGeneric.OutputLevel = 3;
+// HltGenericFilter.RequireHLT = false;
+// HltGenericFilter.RequireGeneric = true;  
+
+MergeOffB2MuMu.Algorithms = { "TDRselBs2MuMu"};
+MergeOffB2MuMu.ANDmode = false;
+MergeOffB2MuMu.AvoidSelResult = false;
+MergeHLTB2MuMu.Algorithms = {"HLTFilterB2MuMu"};
+
+MergeOffB2MuMu.OutputLevel = 4;
+MergeHLTB2MuMu.OutputLevel = 4;
+
+// Important !!!
+HLTB2MuMuTreeSetOnline.ResetToOnline = true;
+
+//------------------------------------------------------------------------------
+// Write Tree for Off selection
+OffB2MuMuTree.PhysDesktop.InputLocations = {"Phys/TDRselBs2MuMu"};
+
+OffB2MuMuTree.CompositeParticle2MCLinks.skipResonances = true;
+// OffB2MuMuTree.InputComposite = {"Phys/TDRselBs2MuMu/Particles"};
+
+OffB2MuMuTree.LinkAsct.Location      = "Phys/Relations/Particle2MCLinksOffB2MuMu";
+OffB2MuMuTree.LinkAsct.AlgorithmType = "Particle2MCLinks";
+OffB2MuMuTree.LinkAsct.AlgorithmName = "Particle2MCLinksOffB2MuMu";
+OffB2MuMuTree.LinkAsct.OutputLevel = 3;
+
+Particle2MCLinksOffB2MuMu.InputData  = {"Phys/Combined/Particles"};
+Particle2MCLinksOffB2MuMu.OutputLevel = 3;
+
+// WARNING: The offline does not create B_s~0 but always B_s0
+OffB2MuMuTree.Decay = "B_s0 -> ^mu- ^mu+";
+OffB2MuMuTree.MCDecay = "{B_s0 -> ^mu- ^mu+, B_s~0 -> ^mu- ^mu+}";
+
+OffB2MuMuTree.NtupleName = "FILE1/OffB2MuMu";
+OffB2MuMuTree.FillMCDecay = true;
+OffB2MuMuTree.RequireTrigger = true;
+OffB2MuMuTree.OutputLevel = 3;
+//------------------------------------------------------------------------------
+
+// Warning : check that you run the Trg Rich options when setting UseRichOnlinePID = true;
+
+//------------------------------------------------------------------------------
+// Write Tree for HLT selection
+HLTB2MuMuTree.PhysDesktop.InputLocations = {"Phys/HLTFilterB2MuMu"};
+
+HLTB2MuMuTree.CompositeParticle2MCLinks.skipResonances = true;
+// HLTB2MuMuTree.InputComposite = {"Phys/HLTFilterB2MuMu/Particles"};
+
+HLTB2MuMuTree.LinkAsct.Location      = "Phys/Relations/Particle2MCLinksHLTB2MuMu";
+HLTB2MuMuTree.LinkAsct.AlgorithmType = "Particle2MCLinks";
+HLTB2MuMuTree.LinkAsct.AlgorithmName = "Particle2MCLinksHLTB2MuMu";
+HLTB2MuMuTree.LinkAsct.OutputLevel = 3;
+
+Particle2MCLinksHLTB2MuMu.InputData  = {"Phys/HltGeneric/Particles"};
+Particle2MCLinksHLTB2MuMu.OutputLevel = 3;
+
+HLTB2MuMuTree.Decay = "B_s0 -> ^mu- ^mu+";
+HLTB2MuMuTree.MCDecay = "{B_s0 -> ^mu- ^mu+, B_s~0 -> ^mu- ^mu+}";
+
+HLTB2MuMuTree.NtupleName = "FILE1/HLTB2MuMu";
+HLTB2MuMuTree.FillMCDecay = true;
+HLTB2MuMuTree.RequireTrigger = true;
+HLTB2MuMuTree.UseRichOnlinePID = false;
+HLTB2MuMuTree.OutputLevel = 3;
+//------------------------------------------------------------------------------

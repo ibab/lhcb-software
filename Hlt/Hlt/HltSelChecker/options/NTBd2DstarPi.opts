@@ -5,6 +5,7 @@
 
 // The offline selection
 #include "$BD2DSTARPIROOT/options/DoTDRselBd2DstarPi.opts"
+TDRselBd2DstarPi.BdMassWindowTight = 50.*MeV;// 200 MeV
 
 ApplicationMgr.TopAlg += {"GaudiSequencer/CheckHLTBd2DstarPi"};
 
@@ -13,23 +14,34 @@ CheckHLTBd2DstarPi.MeasureTime = false;
 
 CheckHLTBd2DstarPi.Members ={ "TrgL0Filter", "PrintHeader/PassedL0",
                               "TrgL1Filter", "PrintHeader/PassedL1",
+                              //"HltFilter/HltGenericFilter", "PrintHeader/PassedHltGeneric",
                               "CheckSelResult/MergeOffBd2DstarPi",
                               "DecayChainNTuple/OffBd2DstarPiTree",
                               "CheckSelResult/MergeHLTBd2DstarPi",
+                              "ResetOnOffline/HLTBd2DstarPiTreeSetOnline",
                               "DecayChainNTuple/HLTBd2DstarPiTree"};
  
 PassedL0.OutputLevel = 3;
 PassedL1.OutputLevel = 3;
- 
+// PassedHltGeneric.OutputLevel = 3;
+// HltGenericFilter.RequireHLT = false;
+// HltGenericFilter.RequireGeneric = true; 
+
 MergeOffBd2DstarPi.Algorithms = {"TDRselBd2DstarPi"};
 MergeHLTBd2DstarPi.Algorithms = {"HLTFilterBd2DstarPi"};
 
 MergeOffBd2DstarPi.OutputLevel = 4;
 MergeHLTBd2DstarPi.OutputLevel = 4;
 
+// Important !!!
+HLTBd2DstarPiTreeSetOnline.ResetToOnline = true;
+
 //------------------------------------------------------------------------------
 // Write Tree for Off selection
 OffBd2DstarPiTree.PhysDesktop.InputLocations = {"Phys/TDRselBd2DstarPi"};
+
+OffBd2DstarPiTree.CompositeParticle2MCLinks.skipResonances = true;
+// OffBd2DstarPiTree.InputComposite = {"Phys/TDRselBd2DstarPi/Particles"};
 
 OffBd2DstarPiTree.LinkAsct.Location      = "Phys/Relations/Particle2MCLinksOffBd2DstarPi";
 OffBd2DstarPiTree.LinkAsct.AlgorithmType = "Particle2MCLinks";
@@ -45,7 +57,6 @@ OffBd2DstarPiTree.MCDecay = "{B0 -> (^D*(2010)- -> (^D~0 -> ^K+ ^pi-)  ^pi-) ^pi
 OffBd2DstarPiTree.NtupleName = "FILE1/OffBd2DstarPi";
 OffBd2DstarPiTree.FillMCDecay = true;
 OffBd2DstarPiTree.RequireTrigger = true;
-OffBd2DstarPiTree.PVLocator.PVLocation = "/Event/Phys/PrimaryVertices";
 OffBd2DstarPiTree.OutputLevel = 3;
 //------------------------------------------------------------------------------
 
@@ -55,14 +66,17 @@ OffBd2DstarPiTree.OutputLevel = 3;
 // Write Tree for HLT selection
 HLTBd2DstarPiTree.PhysDesktop.InputLocations = {"Phys/HLTFilterBd2DstarPi"};
 
+HLTBd2DstarPiTree.CompositeParticle2MCLinks.skipResonances = true;
+// HLTBd2DstarPiTree.InputComposite = {"Phys/HLTFilterBd2DstarPi/Particles"};
+
 HLTBd2DstarPiTree.LinkAsct.Location      = "Phys/Relations/Particle2MCLinksHLTBd2DstarPi";
 HLTBd2DstarPiTree.LinkAsct.AlgorithmType = "Particle2MCLinks";
 HLTBd2DstarPiTree.LinkAsct.AlgorithmName = "Particle2MCLinksHLTBd2DstarPi";
 HLTBd2DstarPiTree.LinkAsct.OutputLevel = 3;
 
-Particle2MCLinksHLTBd2DstarPi.InputData  = {"Phys/HLTPions/Particles", "Phys/HLTKaons/Particles", "Phys/HLTPreselPions/Particles", "Phys/HLTPreselKaons/Particles"};
-// Particle2MCLinksHLTBd2DstarPi.InputData  = {"Phys/HLTPions/Particles", "Phys/HLTKaons/Particles", "Phys/HLTSeedingKPiDaughters/Particles"
-//                                             , "Phys/SoftPionForHLTDstar2D0/Particles", "Phys/HardPionForHLTDstar2D0/Particles"};
+Particle2MCLinksHLTBd2DstarPi.InputData  = {"Phys/HLTPions/Particles", "Phys/HLTKaons/Particles", 
+                                            "Phys/HLTPreselPions/Particles", "Phys/HLTPreselKaons/Particles", 
+                                            "Phys/HLTDetachedPions/Particles"}; // HLTDetachedPions : soft pion
 Particle2MCLinksHLTBd2DstarPi.OutputLevel = 3;
 
 // No D~0 in the HLT, but we form: D0 -> pi+ pi-, K+ pi-, pi+ K- and K+ K-
@@ -81,8 +95,6 @@ HLTBd2DstarPiTree.MCDecay = "{B0 -> (^D*(2010)- -> (^D~0 -> ^K+ ^pi-)  ^pi-) ^pi
 HLTBd2DstarPiTree.NtupleName = "FILE1/HLTBd2DstarPi";
 HLTBd2DstarPiTree.FillMCDecay = true;
 HLTBd2DstarPiTree.RequireTrigger = true;
-HLTBd2DstarPiTree.PVLocator.PVLocation = "/Event/Phys/Trg/Vertices";
 HLTBd2DstarPiTree.UseRichOnlinePID = false;
-HLTBd2DstarPiTree.GeomTool = "TrgDispCalculator";
 HLTBd2DstarPiTree.OutputLevel = 3;
 //------------------------------------------------------------------------------

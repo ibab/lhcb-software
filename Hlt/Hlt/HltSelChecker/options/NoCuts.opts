@@ -1,19 +1,17 @@
 //
 // This file overwrites all selection cuts
 //
+HLTDetachedPions.Filter.Selections = {} ;
 // kill non-VTT tracks for preselPions and Kaons
 HLTPreselPions.Filter.Selections = {"pi+ : TrackTypeFilterCriterion" }; 
 HLTPreselKaons.Filter.Selections = {"K+ : TrackTypeFilterCriterion" };  
 // kill all other cuts
 HLTFilterDs2KKPi.DaughterFilter.Selections = {};
 HLTFilterDs2KKPi.MotherFilter.Selections = {};
-HLTSeedingKPiMother.MotherFilter.Selections = {};
-HLTSeedingKKMother.MotherFilter.Selections = {};
-HLTFilterB2JpsiX.Filter.Selections = {};
 HLTPreselPhotons.Filter.Selections = {} ;
-HLTSeedingVertices.MotherFilter.Selections = {};
 HLTFilterB2HH.DaughterFilter.Selections = {};
 HLTFilterB2HH.MotherFilter.Selections = {};
+HLTFilterB2JpsiX.Filter.Selections = {};
 HLTFilterB2MuMu.Filter.Selections = {};
 FilterD0ForHLTBd2D0Kstar.Filter.Selections = {};
 FilterKstarForHLTBd2D0Kstar.Filter.Selections = {};
@@ -27,30 +25,48 @@ HLTFilterBd2MuMuKstar.DaughterFilter.Selections = {};
 HLTFilterBd2MuMuKstar.MotherFilter.Selections = {};
 HLTFilterBs2DsH.DaughterFilter.Selections = {};
 HLTFilterBs2DsH.MotherFilter.Selections = {};
-HLTFilterBs2JpsiPhi.DaughterFilter.Selections = {};
-HLTFilterBs2JpsiPhi.MotherFilter.Selections = {};
 HLTFilterBs2PhiGamma.DaughterFilter.Selections = {};
 HLTFilterBs2PhiGamma.MotherFilter.Selections = {};
 HLTFilterBs2PhiPhi.DaughterFilter.Selections = {};
 HLTFilterBs2PhiPhi.MotherFilter.Selections = {};
-HLTFilterDstar.DaughterFilter.Selections = {}; 
+HLTFilterDstar.DaughterFilter.Selections = {};
 HLTFilterDstar.MotherFilter.Selections = {};
 HLTSharedD02KH.DaughterFilter.Selections = {};
-HLTSharedD02KH.MotherFilter.Selections = {}; 
+HLTSharedD02KH.MotherFilter.Selections = {};
 HLTLooseD02PiPi.DaughterFilter.Selections = {};
-HLTLooseD02PiPi.MotherFilter.Selections = {}; 
-HLTSharedKstar.MotherFilter.Selections = {} ;
+HLTLooseD02PiPi.MotherFilter.Selections = {};
+HLTSharedKstar.MotherFilter.Selections = {};
 HLTSharedPhi.MotherFilter.Selections = {};
 
 // MinPt
-HLTFilterDs2KKPi.MinPt = 0.; // hlt tuned: 2500 MeV, hlt presel: 0 MeV, no offline cut
-HLTFilterB2HH.MinPt = 0.; // hlt tuned: 1000 MeV, hlt presel: 0 MeV, offline is 1000-1600 MeV
-HLTDstarForBd2DstarPi.MinPt = 0.*MeV; // hlt tuned: 500 MeV, hlt presel: 0 MeV, offline is 1400 MeV
-HLTFilterBs2DsH.MinPt = 0.*MeV; // hlt tuned: 3000 MeV, hlt presel: 0 MeV, no offline cut
-HLTFilterBs2PhiGamma.MinPt = 0.*MeV;  // hlt tuned: xxx MeV, hlt presel: 0 MeV, no offline cut
-HLTFilterDstar.MinPt = 0*MeV ;  // From Thomas
-HLTSharedD02KH.MinPt = 0.*MeV; // MeV
+HLTFilterDs2KKPi.MinPt = 0.*MeV;
+HLTFilterB2HH.MinPt = 0.*MeV;
+HLTFilterBd2D0Kstar.MinPt = 0.*MeV;
+HLTDstarForBd2DstarPi.MinPt = 0.*MeV;
+HLTFilterBs2DsH.MinPt = 0.*MeV;
+HLTFilterBs2PhiGamma.MinPt = 0.*MeV;
+HLTFilterDstar.MinPt = 0*MeV ;
+HLTSharedD02KH.MinPt = 0.*MeV;
 HLTLooseD02PiPi.MinPt = 0.*MeV;
 
 // MinMomentum
 // nothing
+
+// Window
+
+HLTFilterDs2KKPi.Window= 10000.*MeV;
+HLTFilterB2HH.Window= 10000.*MeV;
+HLTFilterBd2D0Kstar.Window= 10000.*MeV;
+HLTDstarForBd2DstarPi.Window= 10000.*MeV;
+HLTFilterBd2DstarPi.Window = 10000.*MeV;
+HLTFilterBd2MuMuKstar.Window = 10000.*MeV;
+HLTFilterBs2DsH.Window = 10000.*MeV;
+HLTFilterBs2PhiGamma.Window = 10000.*MeV;
+HLTFilterBs2PhiPhi.Window = 10000.*MeV;
+HLTFilterDstar.UpperWindow = 10000.*MeV;
+HLTFilterDstar.LowerWindow = 10000.*MeV;
+HLTSharedD02KH.Window = 10000.*MeV;
+HLTLooseD02PiPi.UpperWindow = 10000.*MeV;
+HLTLooseD02PiPi.LowerWindow = 10000.*MeV;
+HLTSharedKstar.Window = 10000.*MeV;
+HLTSharedPhi.Window = 10000.*MeV;

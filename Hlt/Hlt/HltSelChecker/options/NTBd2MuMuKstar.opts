@@ -1,0 +1,96 @@
+//==============================================================================
+//  Bd -> mu+ mu- K*
+//==============================================================================
+// Author: Luis Fernandez, 27/06/2005
+
+// The  offline selections
+#include "$BD2MUMUKSTARROOT/options/DoTDRselBd2MuMuKstar.opts"
+TDRselBd2MuMuKstar.B0MassWindow = 50*MeV ;// 1000.0;
+
+ApplicationMgr.TopAlg += {"GaudiSequencer/CheckHLTBd2MuMuKstar"};
+
+CheckHLTBd2MuMuKstar.IgnoreFilterPassed = false ; // Act as Sequencer
+CheckHLTBd2MuMuKstar.MeasureTime = false;
+
+CheckHLTBd2MuMuKstar.Members ={  "TrgL0Filter", "PrintHeader/PassedL0",
+                                 "TrgL1Filter", "PrintHeader/PassedL1",
+                                //"HltFilter/HltGenericFilter", "PrintHeader/PassedHltGeneric",
+                                "CheckSelResult/MergeOffBd2MuMuKstar", 
+                                "DecayChainNTuple/OffBd2MuMuKstarTree",
+                                "CheckSelResult/MergeHLTBd2MuMuKstar",
+                                "ResetOnOffline/HLTBd2MuMuKstarTreeSetOnline",
+                                "DecayChainNTuple/HLTBd2MuMuKstarTree"};
+
+PassedL0.OutputLevel = 3;
+PassedL1.OutputLevel = 3;
+// PassedHltGeneric.OutputLevel = 3;
+// HltGenericFilter.RequireHLT = false;
+// HltGenericFilter.RequireGeneric = true;  
+
+MergeOffBd2MuMuKstar.Algorithms = { "TDRselBd2MuMuKstar"};
+MergeOffBd2MuMuKstar.ANDmode = false;
+MergeOffBd2MuMuKstar.AvoidSelResult = false;
+MergeHLTBd2MuMuKstar.Algorithms = {"HLTFilterBd2MuMuKstar"};
+
+MergeOffBd2MuMuKstar.OutputLevel = 4;
+MergeHLTBd2MuMuKstar.OutputLevel = 3;
+
+// Important !!!
+HLTBd2MuMuKstarTreeSetOnline.ResetToOnline = true;
+
+//------------------------------------------------------------------------------
+// Write Tree for Off selection
+OffBd2MuMuKstarTree.PhysDesktop.InputLocations = {"Phys/TDRselBd2MuMuKstar"};
+
+OffBd2MuMuKstarTree.CompositeParticle2MCLinks.skipResonances = true;
+// OffBd2MuMuKstarTree.InputComposite = {"Phys/TDRselBd2MuMuKstar/Particles"};
+
+OffBd2MuMuKstarTree.LinkAsct.Location      = "Phys/Relations/Particle2MCLinksOffBd2MuMuKstar";
+OffBd2MuMuKstarTree.LinkAsct.AlgorithmType = "Particle2MCLinks";
+OffBd2MuMuKstarTree.LinkAsct.AlgorithmName = "Particle2MCLinksOffBd2MuMuKstar";
+OffBd2MuMuKstarTree.LinkAsct.OutputLevel = 3;
+
+Particle2MCLinksOffBd2MuMuKstar.InputData  = {"Phys/Combined/Particles"};
+Particle2MCLinksOffBd2MuMuKstar.OutputLevel = 3;
+
+// WARNING: The offline  creates B0 -> mu- mu+ K+ pi- or B~0 -> mu- mu+ K- pi+, no K*!
+OffBd2MuMuKstarTree.Decay = "{B0 -> ^mu- ^mu+ ^K+ ^pi-, B~0 -> ^mu- ^mu+ ^K- ^pi+}";
+OffBd2MuMuKstarTree.MCDecay = "{B0 -> ^mu- ^mu+ (K*(892)0 -> ^K+ ^pi-) {,gamma} {,gamma}, B~0 -> ^mu- ^mu+ (K*(892)~0 -> ^K- ^pi+) {,gamma} {,gamma}
+, B0 -> ^mu- ^mu+ (K*(892)~0 -> ^K- ^pi+) {,gamma} {,gamma}, B~0 -> ^mu- ^mu+ (K*(892)0 -> ^K+ ^pi-) {,gamma} {,gamma}}";
+
+OffBd2MuMuKstarTree.NtupleName = "FILE1/OffBd2MuMuKstar";
+OffBd2MuMuKstarTree.FillMCDecay = true;
+OffBd2MuMuKstarTree.RequireTrigger = true;
+OffBd2MuMuKstarTree.OutputLevel = 3;
+//------------------------------------------------------------------------------
+
+// Warning : check that you run the Trg Rich options when setting UseRichOnlinePID = true;
+
+//------------------------------------------------------------------------------
+// Write Tree for HLT selection
+HLTBd2MuMuKstarTree.PhysDesktop.InputLocations = {"Phys/HLTFilterBd2MuMuKstar"};
+
+HLTBd2MuMuKstarTree.CompositeParticle2MCLinks.skipResonances = false;
+// HLTBd2MuMuKstarTree.InputComposite = {"Phys/HLTFilterBd2MuMuKstar/Particles"};
+
+HLTBd2MuMuKstarTree.LinkAsct.Location      = "Phys/Relations/Particle2MCLinksHLTBd2MuMuKstar";
+HLTBd2MuMuKstarTree.LinkAsct.AlgorithmType = "Particle2MCLinks";
+HLTBd2MuMuKstarTree.LinkAsct.AlgorithmName = "Particle2MCLinksHLTBd2MuMuKstar";
+HLTBd2MuMuKstarTree.LinkAsct.OutputLevel = 3;
+
+Particle2MCLinksHLTBd2MuMuKstar.InputData  = {"Phys/HltGeneric/Particles",
+                                              "Phys/HLTPions/Particles", "Phys/HLTKaons/Particles", 
+                                              "Phys/HLTPreselPions/Particles", "Phys/HLTPreselKaons/Particles"};
+
+Particle2MCLinksHLTBd2MuMuKstar.OutputLevel = 3;
+
+HLTBd2MuMuKstarTree.Decay = "{B0 -> (J/psi(1S) -> ^mu- ^mu+) (^K*(892)0 -> ^K+ ^pi-), B~0 -> (J/psi(1S) -> ^mu- ^mu+) (^K*(892)~0 -> ^K- ^pi+)}";
+HLTBd2MuMuKstarTree.MCDecay = "{B0 -> ^mu- ^mu+ (^K*(892)0 -> ^K+ ^pi-) {,gamma} {,gamma}, B~0 -> ^mu- ^mu+ (^K*(892)~0 -> ^K- ^pi+) {,gamma} {,gamma}
+, B0 -> ^mu- ^mu+ (^K*(892)~0 -> ^K- ^pi+) {,gamma} {,gamma}, B~0 -> ^mu- ^mu+ (^K*(892)0 -> ^K+ ^pi-) {,gamma} {,gamma}}";
+
+HLTBd2MuMuKstarTree.NtupleName = "FILE1/HLTBd2MuMuKstar";
+HLTBd2MuMuKstarTree.FillMCDecay = true;
+HLTBd2MuMuKstarTree.RequireTrigger = true;
+HLTBd2MuMuKstarTree.UseRichOnlinePID = false;
+HLTBd2MuMuKstarTree.OutputLevel = 3;
+//------------------------------------------------------------------------------

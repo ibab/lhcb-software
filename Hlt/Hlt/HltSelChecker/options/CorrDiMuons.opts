@@ -2,11 +2,10 @@
 HLTCorrelations.Members += { "SelResultCorrelations/CorrDimuons" };
 CorrDimuons.Algorithms = {"CheckHLTGeneric"	
                         , "AllJpsi2MuMuTracks"
-                          , "HLTMuons" 
+                          //, "HLTMuons" 
                           , "HLTFilterB2JpsiX"
                           , "HLTFilterBd2MuMuKstar"
                           , "HLTFilterB2MuMu"
-			  , "CheckHLTInclusiveB"
-			  , "CheckHLTDimuon"
-			   } ;
+                          , "CheckHLTInclusiveB"
+                          , "CheckHLTDimuon"} ;
 

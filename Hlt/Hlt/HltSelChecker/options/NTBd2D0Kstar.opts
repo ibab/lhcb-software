@@ -5,6 +5,7 @@
 
 // The offline selection
 #include "$BD2D0KSTARROOT/options/DoTDRselBd2D02KpiKstar.opts"
+TDRselBd2D02KpiKstar.B0MassWindowTight  = 50*MeV; // 500 MeV
 
 ApplicationMgr.TopAlg += {"GaudiSequencer/CheckHLTBd2D0Kstar"};
 
@@ -13,38 +14,49 @@ CheckHLTBd2D0Kstar.MeasureTime = false;
 
 CheckHLTBd2D0Kstar.Members ={ "TrgL0Filter", "PrintHeader/PassedL0",
                               "TrgL1Filter", "PrintHeader/PassedL1",
+                              //"HltFilter/HltGenericFilter", "PrintHeader/PassedHltGeneric",
                               "CheckSelResult/MergeOffBd2D02KpiKstar",
                               "DecayChainNTuple/OffBd2D02KpiKstarTree",
                               "CheckSelResult/MergeHLTBd2D0Kstar",
+                              "ResetOnOffline/HLTBd2D0KstarTreeSetOnline",
                               "DecayChainNTuple/HLTBd2D0KstarTree"};
  
 PassedL0.OutputLevel = 3;
 PassedL1.OutputLevel = 3;
- 
+// PassedHltGeneric.OutputLevel = 3;
+// HltGenericFilter.RequireHLT = false;
+// HltGenericFilter.RequireGeneric = true; 
+
 MergeOffBd2D02KpiKstar.Algorithms = {"TDRselBd2D02KpiKstar"};
 MergeHLTBd2D0Kstar.Algorithms = {"HLTFilterBd2D0Kstar"};
 
 MergeOffBd2D02KpiKstar.OutputLevel = 4;
 MergeHLTBd2D0Kstar.OutputLevel = 4;
 
+// Important !!!
+HLTBd2D0KstarTreeSetOnline.ResetToOnline = true;
+
 //------------------------------------------------------------------------------
 // Write Tree for Off selection
 OffBd2D02KpiKstarTree.PhysDesktop.InputLocations = {"Phys/TDRselBd2D02KpiKstar"};
+
+OffBd2D02KpiKstarTree.CompositeParticle2MCLinks.skipResonances = true;
+// OffBd2D02KpiKstarTree.InputComposite = {"Phys/TDRselBd2D02KpiKstar/Particles"};
 
 OffBd2D02KpiKstarTree.LinkAsct.Location      = "Phys/Relations/Particle2MCLinksOffBd2D02KpiKstar";
 OffBd2D02KpiKstarTree.LinkAsct.AlgorithmType = "Particle2MCLinks";
 OffBd2D02KpiKstarTree.LinkAsct.AlgorithmName = "Particle2MCLinksOffBd2D02KpiKstar";
 OffBd2D02KpiKstarTree.LinkAsct.OutputLevel = 3;
 
-Particle2MCLinksOffBd2D02KpiKstar.InputData  = { "Phys/TDRselD0/Particles", "Phys/TDRselKstar2KpiForBd2D0/Particles"};
+Particle2MCLinksOffBd2D02KpiKstar.InputData  = { "Phys/TDRselD02Kpi/Particles", "Phys/TDRselKstar2KpiForBd2D02Kpi/Particles"};
 Particle2MCLinksOffBd2D02KpiKstar.OutputLevel = 3;
 
 OffBd2D02KpiKstarTree.Decay = "{B0 -> (^D~0 -> ^K+ ^pi-) (^K*(892)0 -> ^K+ ^pi-), B~0 -> (^D0 -> ^K- ^pi+) (^K*(892)~0 -> ^K- ^pi+)}";
-OffBd2D02KpiKstarTree.MCDecay = "{B0 -> (^D~0 -> ^K+ ^pi-) (^K*(892)0 -> ^K+ ^pi-), B0 -> (^D0 -> ^K- ^pi+) (^K*(892)~0 -> ^K- ^pi+), B~0 -> (^D0 -> ^K- ^pi+) (^K*(892)~0 -> ^K- ^pi+), B~0 -> (^D~0 -> ^K+ ^pi-) (^K*(892)0 -> ^K+ ^pi-)}";
+OffBd2D02KpiKstarTree.MCDecay = "{B0 -> (^D~0 -> ^K+ ^pi-) (^K*(892)0 -> ^K+ ^pi-), B0 -> (^D0 -> ^K- ^pi+) (^K*(892)~0 -> ^K- ^pi+)
+, B~0 -> (^D0 -> ^K- ^pi+) (^K*(892)~0 -> ^K- ^pi+), B~0 -> (^D~0 -> ^K+ ^pi-) (^K*(892)0 -> ^K+ ^pi-)}";
 OffBd2D02KpiKstarTree.NtupleName = "FILE1/OffBd2D02KpiKstar";
 OffBd2D02KpiKstarTree.FillMCDecay = true;
 OffBd2D02KpiKstarTree.RequireTrigger = true;
-OffBd2D02KpiKstarTree.PVLocator.PVLocation = "/Event/Phys/PrimaryVertices";
 OffBd2D02KpiKstarTree.OutputLevel = 3;
 //------------------------------------------------------------------------------
 
@@ -53,6 +65,9 @@ OffBd2D02KpiKstarTree.OutputLevel = 3;
 //------------------------------------------------------------------------------
 // Write Tree for HLT selection
 HLTBd2D0KstarTree.PhysDesktop.InputLocations = {"Phys/HLTFilterBd2D0Kstar"};
+
+HLTBd2D0KstarTree.CompositeParticle2MCLinks.skipResonances = true;
+// HLTBd2D0KstarTree.InputComposite = {"Phys/HLTFilterBd2D0Kstar/Particles"};
 
 HLTBd2D0KstarTree.LinkAsct.Location      = "Phys/Relations/Particle2MCLinksHLTBd2D0Kstar";
 HLTBd2D0KstarTree.LinkAsct.AlgorithmType = "Particle2MCLinks";
@@ -75,12 +90,11 @@ B~0 -> (^D0 -> ^pi+ ^K-) (^K*(892)~0 -> ^K- ^pi+),
 B~0 -> (^D0 -> ^K+ ^K-) (^K*(892)~0 -> ^K- ^pi+)
 }";
 
-HLTBd2D0KstarTree.MCDecay = "{B0 -> (^D~0 -> ^K+ ^pi-) (^K*(892)0 -> ^K+ ^pi-), B0 -> (^D0 -> ^K- ^pi+) (^K*(892)~0 -> ^K- ^pi+), B~0 -> (^D0 -> ^K- ^pi+) (^K*(892)~0 -> ^K- ^pi+), B~0 -> (^D~0 -> ^K+ ^pi-) (^K*(892)0 -> ^K+ ^pi-)}";
+HLTBd2D0KstarTree.MCDecay = "{B0 -> (^D~0 -> ^K+ ^pi-) (^K*(892)0 -> ^K+ ^pi-), B0 -> (^D0 -> ^K- ^pi+) (^K*(892)~0 -> ^K- ^pi+)
+, B~0 -> (^D0 -> ^K- ^pi+) (^K*(892)~0 -> ^K- ^pi+), B~0 -> (^D~0 -> ^K+ ^pi-) (^K*(892)0 -> ^K+ ^pi-)}";
 HLTBd2D0KstarTree.NtupleName = "FILE1/HLTBd2D0Kstar";
 HLTBd2D0KstarTree.FillMCDecay = true;
 HLTBd2D0KstarTree.RequireTrigger = true;
-HLTBd2D0KstarTree.PVLocator.PVLocation = "/Event/Phys/Trg/Vertices";
 HLTBd2D0KstarTree.UseRichOnlinePID = false;
-HLTBd2D0KstarTree.GeomTool = "TrgDispCalculator";
 HLTBd2D0KstarTree.OutputLevel = 3;
 //------------------------------------------------------------------------------

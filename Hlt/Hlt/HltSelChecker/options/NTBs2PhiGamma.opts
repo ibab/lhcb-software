@@ -5,6 +5,7 @@
 
 // The offline selection
 #include "$B2XGAMMAROOT/options/DoTDRselBs2PhiGamma.opts"
+TDRselBs2PhiGamma.Cuts = 4 ; // "Final" cuts (TDR) with 200 MeV window
 
 ApplicationMgr.TopAlg += {"GaudiSequencer/CheckHLTBs2PhiGamma"};
 
@@ -13,13 +14,18 @@ CheckHLTBs2PhiGamma.MeasureTime = false;
 
 CheckHLTBs2PhiGamma.Members ={ "TrgL0Filter", "PrintHeader/PassedL0",
                                "TrgL1Filter", "PrintHeader/PassedL1",
+                               //"HltFilter/HltGenericFilter", "PrintHeader/PassedHltGeneric",
                                "CheckSelResult/MergeOffBs2PhiGamma",
                                "DecayChainNTuple/OffBs2PhiGammaTree",
                                "CheckSelResult/MergeHLTBs2PhiGamma",
+                               "ResetOnOffline/HLTBs2PhiGammaTreeSetOnline",
                                "DecayChainNTuple/HLTBs2PhiGammaTree"};
  
 PassedL0.OutputLevel = 3;
 PassedL1.OutputLevel = 3;
+// PassedHltGeneric.OutputLevel = 3;
+// HltGenericFilter.RequireHLT = false;
+// HltGenericFilter.RequireGeneric = true; 
  
 MergeOffBs2PhiGamma.Algorithms = {"TDRselBs2PhiGamma"};
 MergeHLTBs2PhiGamma.Algorithms = {"HLTFilterBs2PhiGamma"};
@@ -27,9 +33,15 @@ MergeHLTBs2PhiGamma.Algorithms = {"HLTFilterBs2PhiGamma"};
 MergeOffBs2PhiGamma.OutputLevel = 4;
 MergeHLTBs2PhiGamma.OutputLevel = 4;
 
+// Important !!!
+HLTBs2PhiGammaTreeSetOnline.ResetToOnline = true;
+
 //------------------------------------------------------------------------------
 // Write Tree for Off selection
 OffBs2PhiGammaTree.PhysDesktop.InputLocations = {"Phys/TDRselBs2PhiGamma"};
+
+OffBs2PhiGammaTree.CompositeParticle2MCLinks.skipResonances = true;
+// OffBs2PhiGammaTree.InputComposite = {"Phys/TDRselBs2PhiGamma/Particles"};
 
 OffBs2PhiGammaTree.LinkAsct.Location      = "Phys/Relations/Particle2MCLinksOffBs2PhiGamma";
 OffBs2PhiGammaTree.LinkAsct.AlgorithmType = "Particle2MCLinks";
@@ -44,7 +56,6 @@ OffBs2PhiGammaTree.MCDecay = "{B_s0 -> (^phi(1020) -> ^K- ^K+) ^gamma, B_s~0 -> 
 OffBs2PhiGammaTree.NtupleName = "FILE1/OffBs2PhiGamma";
 OffBs2PhiGammaTree.FillMCDecay = true;
 OffBs2PhiGammaTree.RequireTrigger = true;
-OffBs2PhiGammaTree.PVLocator.PVLocation = "/Event/Phys/PrimaryVertices";
 OffBs2PhiGammaTree.OutputLevel = 3;
 //------------------------------------------------------------------------------
 
@@ -53,6 +64,9 @@ OffBs2PhiGammaTree.OutputLevel = 3;
 //------------------------------------------------------------------------------
 // Write Tree for HLT selection
 HLTBs2PhiGammaTree.PhysDesktop.InputLocations = {"Phys/HLTFilterBs2PhiGamma"};
+
+HLTBs2PhiGammaTree.CompositeParticle2MCLinks.skipResonances = true;
+// HLTBs2PhiGammaTree.InputComposite = {"Phys/HLTFilterBs2PhiGamma/Particles"}; // The composite does not work for online gammas
 
 HLTBs2PhiGammaTree.LinkAsct.Location      = "Phys/Relations/Particle2MCLinksHLTBs2PhiGamma";
 HLTBs2PhiGammaTree.LinkAsct.AlgorithmType = "Particle2MCLinks";
@@ -69,9 +83,7 @@ HLTBs2PhiGammaTree.MCDecay = "{B_s0 -> (^phi(1020) -> ^K- ^K+) ^gamma, B_s~0 -> 
 HLTBs2PhiGammaTree.NtupleName = "FILE1/HLTBs2PhiGamma";
 HLTBs2PhiGammaTree.FillMCDecay = true;
 HLTBs2PhiGammaTree.RequireTrigger = true;
-HLTBs2PhiGammaTree.PVLocator.PVLocation = "/Event/Phys/Trg/Vertices";
 HLTBs2PhiGammaTree.UseRichOnlinePID = false;
 HLTBs2PhiGammaTree.UseOnlineCalo = true;
-HLTBs2PhiGammaTree.GeomTool = "TrgDispCalculator";
 HLTBs2PhiGammaTree.OutputLevel = 3;
 //------------------------------------------------------------------------------

@@ -1,4 +1,4 @@
-// from TrgChecking
+// from TrgChecker
 TrueSignals.Members += {"TrgL1Filter/TrueTrgL1Filter","TrgTrackToContainer","TrgTrack2MCParticle"};
 
 ApplicationMgr.DLLs += {"DaVinciMCTools"}; 
@@ -35,18 +35,9 @@ PrintTracks.OutputLevel = 4; // don't do this
 TrueSignals.Members += {"PrintTree/PrintBTracks"};
 PrintBTracks.DebugTool.Informations = "Name E M P Px Py Pz Pt phi Vz" ;
 PrintBTracks.PhysDesktop.InputLocations = { "Phys/AllBd2D0KstarTracks"
-                                           , "Phys/AllBd2DstarPiTracks"
-                                            ,"Phys/AllBs2DsHTracks"
-                                            ,"Phys/AllBs2PhiPhiTracks"
-                                           , "Phys/AllB2HHTracks"
-					    ,"Phys/AllB2MuMuTracks"
-					    ,"Phys/AllJpsiTracks"
-					   , "Phys/AllBd2MuMuKstarTracks"
-//					   , "Phys/AllBs2JpsiPhiTracks"
-					     } ;
-
-// links
-Particle2MCLinks.InputData = { "Phys/HLTPions/Particles",  
-                               "Phys/HLTKaons/Particles",  
-			       "Phys/HLTMuons/Particles"};
-
+                                            , "Phys/AllBd2DstarPiTracks"
+                                            , "Phys/AllBs2DsHTracks"
+                                            , "Phys/AllBs2PhiPhiTracks"
+                                            , "Phys/AllB2HHTracks"
+                                            , "Phys/AllBd2MuMuKstarTracks" // only K and pi
+};

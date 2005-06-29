@@ -1,16 +1,20 @@
 TrueSignals.Members += {"FilterDesktop/SelectJpsi2MuMu"};
-SelectJpsi2MuMu.PhysDesktop.InputLocations = { "Phys/HLTMuons" } ;
-SelectJpsi2MuMu.Filter.Selections =  { "mu+ : TrueMCFilterCriterion" } ;                           // select pi-, pi+
+SelectJpsi2MuMu.PhysDesktop.InputLocations = { "Phys/HltGeneric" } ;// muons from generic
+SelectJpsi2MuMu.Filter.Selections =  { "mu+ : TrueMCFilterCriterion" } ;
 SelectJpsi2MuMu.Filter.TrueMCFilterCriterion.MCDecayFinder.Decay =  "J/psi(1S) -> ^mu+ ^mu-" ;
 SelectJpsi2MuMu.Filter.TrueMCFilterCriterion.Particle2MCLinksAsct.Location = "Phys/Relations/Particle2MCLinks" ;
+SelectJpsi2MuMu.Filter.TrueMCFilterCriterion.Particle2MCLinksAsct.AlgorithmType = "Particle2MCLinks";
+SelectJpsi2MuMu.Filter.TrueMCFilterCriterion.Particle2MCLinksAsct.AlgorithmName = "Particle2MCLinksSelectJpsi2MuMu";
+ 
+// LF: rename each associator
+Particle2MCLinksSelectJpsi2MuMu.InputData = { "Phys/HltGeneric/Particles"}; // no muon association ...
 
-// check that all 3 tracks are there
+// check that all 2 tracks are there
 TrueSignals.Members += {"MakeResonances/AllJpsi2MuMuTracks"};
 AllJpsi2MuMuTracks.PhysDesktop.InputLocations = {"Phys/SelectJpsi2MuMu"};
-AllJpsi2MuMuTracks.DecayDescriptor = "J/psi(1S) -> mu+ mu-" ; 
+AllJpsi2MuMuTracks.DecayDescriptor = "J/psi(1S) -> mu+ mu-" ;  
 
 // only here
 TrueSignals.Members += {"PrintTree/PrintJpsiTracks"};
 PrintJpsiTracks.DebugTool.Informations = "Name E M P Px Py Pz Pt phi Vz" ;
 PrintJpsiTracks.PhysDesktop.InputLocations = { "Phys/AllJpsi2MuMuTracks" } ;
-

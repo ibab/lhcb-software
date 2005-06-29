@@ -4,6 +4,12 @@
 ! Purpose     : High-Level Trigger Exclusive Selections - Checking 
 !-----------------------------------------------------------------------------
 
+! 2005-06-29 - Luis Fernandez
+ - options/
+   . New option files for ntuples
+   . Clean-up of truth options, rename associators for each decay
+   . Note that association to muons does not work due to problem in TrgMuon
+
 !========================== HltSelChecker v3r3 2005-06-13 ===================
 ! 2005-06-10 - P. Koppenburg
   - options/TestHltScore.opts

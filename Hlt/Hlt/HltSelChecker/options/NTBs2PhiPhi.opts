@@ -4,7 +4,12 @@
 // Author: Luis Fernandez, 10/12/2004
 
 // The offline selection
-#include "$BS2PHIPHIROOT/options/DoTightTDRselBs2PhiPhi.opts"
+#include "$BS2PHIPHIROOT/options/DoTDRselBs2PhiPhi.opts"
+ApplicationMgr.TopAlg += { "FilterDesktop/TightTDRselBs2PhiPhi" };
+TightTDRselBs2PhiPhi.PhysDesktop.InputLocations = {"Phys/TDRselBs2PhiPhi"} ;
+TightTDRselBs2PhiPhi.Filter.Selections = {"B_s0 : MassFilterCriterion"} ;
+TightTDRselBs2PhiPhi.Filter.MassFilterCriterion.Window = 24*MeV ; // 1.5 GeV
+TightTDRselBs2PhiPhi.Filter.ExclusiveSelection = true ; // only Bs, not phi!
 
 ApplicationMgr.TopAlg += {"GaudiSequencer/CheckHLTBs2PhiPhi"};
 
@@ -13,23 +18,39 @@ CheckHLTBs2PhiPhi.MeasureTime = false;
 
 CheckHLTBs2PhiPhi.Members ={ "TrgL0Filter", "PrintHeader/PassedL0",
                              "TrgL1Filter", "PrintHeader/PassedL1",
-                             "CheckSelResult/MergeOffBs2PhiPhi",
-                             "DecayChainNTuple/OffBs2PhiPhiTree",
-                             "CheckSelResult/MergeHLTBs2PhiPhi",
-                             "DecayChainNTuple/HLTBs2PhiPhiTree"};
+                             //"HltFilter/HltGenericFilter", "PrintHeader/PassedHltGeneric",
+                             "CheckSelResult/MergeOffBs2PhiPhi", "PrintHeader/PassedOffBs2PhiPhi",
+                             "DecayChainNTuple/OffBs2PhiPhiTree", "PrintHeader/PassedOffBs2PhiPhiTree",
+                             "CheckSelResult/MergeHLTBs2PhiPhi", "PrintHeader/PassedHLTBs2PhiPhi",
+                             "ResetOnOffline/HLTBs2PhiPhiTreeSetOnline",
+                             "DecayChainNTuple/HLTBs2PhiPhiTree", "PrintHeader/PassedHLTBs2PhiPhiTree"};
  
 PassedL0.OutputLevel = 3;
 PassedL1.OutputLevel = 3;
- 
+// PassedHltGeneric.OutputLevel = 3;
+// HltGenericFilter.RequireHLT = false;
+// HltGenericFilter.RequireGeneric = true; 
+
+PassedOffBs2PhiPhi.OutputLevel = 3;
+PassedOffBs2PhiPhiTree.OutputLevel = 3;
+PassedHLTBs2PhiPhi.OutputLevel = 3;
+PassedHLTBs2PhiPhiTree.OutputLevel = 3;
+
 MergeOffBs2PhiPhi.Algorithms = {"TightTDRselBs2PhiPhi"};
 MergeHLTBs2PhiPhi.Algorithms = {"HLTFilterBs2PhiPhi"};
 
 MergeOffBs2PhiPhi.OutputLevel = 4;
 MergeHLTBs2PhiPhi.OutputLevel = 4;
 
+// Important !!!
+HLTBs2PhiPhiTreeSetOnline.ResetToOnline = true;
+
 //------------------------------------------------------------------------------
 // Write Tree for Off selection
 OffBs2PhiPhiTree.PhysDesktop.InputLocations = {"Phys/TightTDRselBs2PhiPhi"};
+
+OffBs2PhiPhiTree.CompositeParticle2MCLinks.skipResonances = true;
+// OffBs2PhiPhiTree.InputComposite = {"Phys/TightTDRselBs2PhiPhi/Particles"};
 
 OffBs2PhiPhiTree.LinkAsct.Location      = "Phys/Relations/Particle2MCLinksOffBs2PhiPhi";
 OffBs2PhiPhiTree.LinkAsct.AlgorithmType = "Particle2MCLinks";
@@ -44,7 +65,6 @@ OffBs2PhiPhiTree.MCDecay = "{B_s0 -> (^phi(1020) -> ^K- ^K+) (^phi(1020) -> ^K- 
 OffBs2PhiPhiTree.NtupleName = "FILE1/OffBs2PhiPhi";
 OffBs2PhiPhiTree.FillMCDecay = true;
 OffBs2PhiPhiTree.RequireTrigger = true;
-OffBs2PhiPhiTree.PVLocator.PVLocation = "/Event/Phys/PrimaryVertices";
 OffBs2PhiPhiTree.OutputLevel = 3;
 //------------------------------------------------------------------------------
 
@@ -53,6 +73,9 @@ OffBs2PhiPhiTree.OutputLevel = 3;
 //------------------------------------------------------------------------------
 // Write Tree for HLT selection
 HLTBs2PhiPhiTree.PhysDesktop.InputLocations = {"Phys/HLTFilterBs2PhiPhi"};
+
+HLTBs2PhiPhiTree.CompositeParticle2MCLinks.skipResonances = true;
+// HLTBs2PhiPhiTree.InputComposite = {"Phys/HLTFilterBs2PhiPhi/Particles"};
 
 HLTBs2PhiPhiTree.LinkAsct.Location      = "Phys/Relations/Particle2MCLinksHLTBs2PhiPhi";
 HLTBs2PhiPhiTree.LinkAsct.AlgorithmType = "Particle2MCLinks";
@@ -68,8 +91,6 @@ HLTBs2PhiPhiTree.MCDecay = "{B_s0 -> (^phi(1020) -> ^K- ^K+) (^phi(1020) -> ^K- 
 HLTBs2PhiPhiTree.NtupleName = "FILE1/HLTBs2PhiPhi";
 HLTBs2PhiPhiTree.FillMCDecay = true;
 HLTBs2PhiPhiTree.RequireTrigger = true;
-HLTBs2PhiPhiTree.PVLocator.PVLocation = "/Event/Phys/Trg/Vertices";
 HLTBs2PhiPhiTree.UseRichOnlinePID = false;
-HLTBs2PhiPhiTree.GeomTool = "TrgDispCalculator";
 HLTBs2PhiPhiTree.OutputLevel = 3;
 //------------------------------------------------------------------------------

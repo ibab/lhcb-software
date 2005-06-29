@@ -2,21 +2,21 @@
 
 ApplicationMgr.DLLs += {"HltSelChecker"};
 
+//==============================================================================
+// Uncomment A or B
+//
+// ---------------------------------- A ----------------------------------------
 // For the association on 'Trg' particles
 // Do not include this line if running DVHLTCorr.opts at the same time
 // Do not include this line if Truth.opts is included after
-TrueSignals.Members += {"TrgL1Filter/TrueTrgL1Filter","TrgTrackToContainer","TrgTrack2MCParticle"};
-
-//==============================================================================
-// MC truth
-//==============================================================================
+// TrueSignals.Members += {"TrgL1Filter/TrueTrgL1Filter","TrgTrackToContainer","TrgTrack2MCParticle"};
+//
+// ---------------------------------- B ----------------------------------------
 // Include this to overwrite input to take *only* MC truth particles into account
-// #include "$HLTSELCHECKERROOT/options/Truth.opts"
+#include "$HLTSELCHECKERROOT/options/Truth.opts"
 // Include this to overwrite input to take *only* MC truth particles into account
-// #include "$HLTSELCHECKERROOT/options/TruthInput.opts" // !!! ONLY MCTRUTH
-
-// WARNING: comment the NTuples in DVHLTExSelections.opts when running DVHLTNTuplesCheck.opts
-// and comment the all the other exclusive channels, excepted the one to check
+#include "$HLTSELCHECKERROOT/options/TruthInput.opts" // !!! ONLY MCTRUTH
+//==============================================================================
 
 // Include this if you also need to run on offline particles and if 
 // OfflineTracks.opts not included
@@ -24,8 +24,9 @@ TrueSignals.Members += {"TrgL1Filter/TrueTrgL1Filter","TrgTrackToContainer","Trg
 #include "$DAVINCIROOT/options/DaVinciNeutrals.opts"
 
 // Define PV for the offline selections check
-HLTSelections.Members += { "ResetOnOffline/SetOffline" };
-SetOffline.ResetToOffline = true ;
+// Important !!!
+ApplicationMgr.TopAlg += {"ResetOnOffline/SetOffline"};
+SetOffline.ResetToOffline = true;
 
 // Several selection have the same instance of PreLoadParticles ... comment in some DoTDRsel*
 // and add it here ... 
@@ -34,54 +35,20 @@ ApplicationMgr.TopAlg += { "PreLoadParticles/Combined" } ;
 MessageSvc.OutputLevel = 4;
 ToolSvc.OutputLevel    = 4;
 
-//==============================================================================
-// Checking B -> H H
-//==============================================================================
-// #include "$HLTSELCHECKERROOT/options/NTB2HH.opts"
-
-//==============================================================================
-// Checking B_s0 -> phi(1020) phi(1020)
-//==============================================================================
-// #include "$HLTSELCHECKERROOT/options/NTBs2PhiPhi.opts"
-
-//==============================================================================
-// Checking B0 -> (D~0 -> K+ pi-) (K*(892)0 -> K+ pi-) and cc
-//==============================================================================
-// #include "$HLTSELCHECKERROOT/options/NTBd2D0Kstar.opts"
-
-//==============================================================================
-// Checking B0 -> (D*(2010)- -> (D~0 -> K+ pi-)  pi-) pi+ and cc
-//==============================================================================
-// #include "$HLTSELCHECKERROOT/options/NTBd2DstarPi.opts"
-
-//==============================================================================
-// Checking B_s0 -> (D_s- -> K+ K- pi-) h+ and cc
-//==============================================================================
-// #include "$HLTSELCHECKERROOT/options/NTBs2DsH.opts"
-
-//==============================================================================
-// Checking B_s0 -> phi(1020) gamma
-//==============================================================================
-#include "$HLTSELCHECKERROOT/options/NTBs2PhiGamma.opts"
-
-//------------------------------------------------------------------------------
-ApplicationMgr.ExtSvc += { "NTupleSvc" };
-NTupleSvc.Output={"FILE1 DATAFILE='DVNtuples.root' TYP='ROOT' OPT='NEW'"};
-NTupleSvc.OutputLevel = 3;
 //------------------------------------------------------------------------------ 
-
+//  re-initalize event selector
+EventSelector.Input   = {};
 //------------------------------------------------------------------------------
 // PK's stripping of MB passing L0 and L1:
 // #include "$HLTSELECTIONSROOT/options/L0L1-MB.opts"
 //------------------------------------------------------------------------------
 // PK's stripping of signal passing L0, L1 and TDR:
 //#include "$HLTSELECTIONSROOT/options/L0L1TDR-AllSignals.opts"
-
 //------------------------------------------------------------------------------ 
-//  re-initalize event selector
-EventSelector.Input   = {};
 
-//===================================================
+//==============================================================================
+// Checking B -> H H
+//==============================================================================
 // B-> H H
 // Bd -> Pi Pi
 // #include "$HLTSELECTIONSROOT/options/L0L1TDR-Bd2PiPi.opts"
@@ -91,41 +58,95 @@ EventSelector.Input   = {};
 // #include "$HLTSELECTIONSROOT/options/L0L1TDR-Bs2KK.opts"
 // Bs -> Pi K
 // #include "$HLTSELECTIONSROOT/options/L0L1TDR-Bs2PiK.opts"
-//===================================================
+
+// #include "$HLTSELCHECKERROOT/options/NTB2HH.opts"
+
+//==============================================================================
+// Checking B_s0 -> phi(1020) phi(1020)
+//==============================================================================
 // Bs -> Phi Phi
-// #include "$HLTSELECTIONSROOT/options/L0L1TDR-Bs2PhiPhi.opts"
-//===================================================
+#include "$HLTSELECTIONSROOT/options/L0L1TDR-Bs2PhiPhi.opts"
+
+#include "$HLTSELCHECKERROOT/options/NTBs2PhiPhi.opts"
+
+//==============================================================================
+// Checking B0 -> (D~0 -> K+ pi-) (K*(892)0 -> K+ pi-) and cc
+//==============================================================================
 // Bd -> D0 K*
 // #include "$HLTSELECTIONSROOT/options/L0L1TDR-Bd2D0Kstar.opts"
-//===================================================
+
+// #include "$HLTSELCHECKERROOT/options/NTBd2D0Kstar.opts"
+
+//==============================================================================
+// Checking B0 -> (D*(2010)- -> (D~0 -> K+ pi-)  pi-) pi+ and cc
+//==============================================================================
 // Bd -> D* Pi
 // #include "$HLTSELECTIONSROOT/options/L0L1TDR-Bd2DstarPi.opts"
-//===================================================
-// Bd -> J/Psi(MuMu)Ks
-// #include "$HLTSELECTIONSROOT/options/L0L1TDR-Bd2JpsiKs.opts"
-//===================================================
+
+// #include "$HLTSELCHECKERROOT/options/NTBd2DstarPi.opts"
+
+//==============================================================================
+// Checking B_s0 -> (D_s- -> K+ K- pi-) h+ and cc
+//==============================================================================
 // Bs -> Ds(KKPi) K
 // #include "$HLTSELECTIONSROOT/options/L0L1TDR-Bs2DsK.opts"
-//===================================================
 // Bs -> Ds(KKPi) Pi
 // #include "$HLTSELECTIONSROOT/options/L0L1TDR-Bs2DsPi.opts"
-//===================================================
+
+// #include "$HLTSELCHECKERROOT/options/NTBs2DsH.opts"
+
+//==============================================================================
+// Checking B_s0 -> phi(1020) gamma
+//==============================================================================
+// Bs -> Phi Gamma
+// #include "$HLTSELECTIONSROOT/options/L0L1TDR-Bs2PhiGamma.opts"
+
+// #include "$HLTSELCHECKERROOT/options/NTBs2PhiGamma.opts"
+
+//==============================================================================
+// Checking Hot J/Psi
+//==============================================================================
+// Bd -> J/Psi(MuMu)Ks
+// #include "$HLTSELECTIONSROOT/options/L0L1TDR-Bd2JpsiKs.opts"
+// Bs -> J/Psi(MuMu) Phi
+// #include "$HLTSELECTIONSROOT/options/L0L1TDR-Bs2JpsiPhi.opts"
+
+// #include "$HLTSELCHECKERROOT/options/NTB2JpsiX.opts"
+
+//==============================================================================
+// Checking 
+//==============================================================================
 // Bs -> Mu Mu
 // #include "$HLTSELECTIONSROOT/options/L0L1TDR-Bs2MuMu.opts"
-//===================================================
-// Bs -> J/Psi(MuMu) Phi
-// #include "$HLTSELECTIONSROOT/options/L0L1TDR-Bs2JPsiPhi.opts"
-//===================================================
-// Bs -> Phi Gamma
-#include "$HLTSELECTIONSROOT/options/L0L1TDR-Bs2PhiGamma.opts"
-//===================================================
+
+// #include "$HLTSELCHECKERROOT/options/NTB2MuMu.opts"
+
+//==============================================================================
+// Checking 
+//==============================================================================
+// Bs -> Mu Mu K*
+// #include "$HLTSELECTIONSROOT/options/L0L1TDR-Bd2MuMuKstar.opts"
+
+// #include "$HLTSELCHECKERROOT/options/NTBd2MuMuKstar.opts"
+
+//==============================================================================
+// Checking 
+//==============================================================================
+// D* -> D0 pi
+// #include "$HLTSELECTIONSROOT/options/L0L1TDR-Bd2DstarPi.opts"
+
+// #include "$HLTSELCHECKERROOT/options/NTDstar.opts"
+
+//------------------------------------------------------------------------------
+ApplicationMgr.ExtSvc += { "NTupleSvc" };
+NTupleSvc.Output={"FILE1 DATAFILE='DVNtuples.root' TYP='ROOT' OPT='NEW'"};
+NTupleSvc.OutputLevel = 3;
 //------------------------------------------------------------------------------ 
 
 MessageSvc.Format = "% F%60W%S%7W%R%T %0W%M";
-ApplicationMgr.EvtMax    = 10; 
+ApplicationMgr.EvtMax    = 1;
 // ApplicationMgr.EvtMax    = -1;
-EventSelector.FirstEvent = 1;
+EventSelector.FirstEvent = 1; 
 EventSelector.PrintFreq  = 1;
 
-// #include "$HLTGENERICROOT/options/HltGeneric.opts"
-// HltGenericDecision.Filter = false; // false is default
+// #include "$HLTSELCHECKERROOT/options/NoCuts.opts"

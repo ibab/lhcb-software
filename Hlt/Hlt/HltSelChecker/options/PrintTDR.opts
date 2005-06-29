@@ -13,4 +13,4 @@ PrintTDR.PhysDesktop.InputLocations = { "Phys/TightTDRselBs2PhiPhi"
                                         , "Phys/TDRselBs2DsK"
                                         , "Phys/TDRselBs2Jpsi2MuMu_Phi2KK"
                                         , "Phys/TDRselBs2PhiGamma"
- 					 } ;
+} ;
