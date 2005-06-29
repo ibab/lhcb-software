@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.256 2005-06-27 09:47:10 pkoppenb Exp $
+# $Id: requirements,v 1.257 2005-06-29 14:49:37 pkoppenb Exp $
 # Created    : 07/02/2002
 # Maintainer : P. Koppenburg
 #
@@ -41,15 +41,15 @@ use ParamFiles          v*    -no_auto_imports
 use LHCb                        v*  
 
 #TMP
-use PhysEvent                   v8r5p1   Event
+use PhysEvent                   v8r5p2   Event
 
 #=======================================================
 # packages included in PhysCoreSys
 #=======================================================                                                                                                                                                                            
 use  CommonParticles    	v1r5p3   Phys
-use  DaVinciFilter      	v2r0     Phys
-use  DaVinciKernel      	v3r4     Phys
-use  DaVinciTools       	v12r0    Phys
+use  DaVinciFilter      	v3r0     Phys
+use  DaVinciKernel      	v3r5     Phys
+use  DaVinciTools       	v12r0p1  Phys
 use  FlavourTagging     	v5r6     Phys
 use  Ks2PiPiSel         	v1r6     Phys
 use  ParticleMaker      	v1r6     Phys
@@ -64,9 +64,9 @@ use  RecoTools          	v1r1     Rec
 #=======================================================
 # packages included in PhysMCSys
 #=======================================================
-use  DaVinciAssociators 	v5r4p1   Phys
+use  DaVinciAssociators 	v5r5     Phys
 use  DaVinciEff         	v3r3     Phys
-use  DaVinciMCTools     	v5r12    Phys
+use  DaVinciMCTools     	v5r13    Phys
 use  DaVinciTest        	v5r6     Phys
 use  DaVinciUser        	v5r2     Phys
 
@@ -84,10 +84,10 @@ use  KtJet	             	v1r0     External
 #=======================================================
 use HltGeneric                  v2r6     Hlt
 use HltSelections               v3r4     Hlt
-use HltSelChecker               v3r3     Hlt
+use HltSelChecker               v3r4     Hlt
 
 #=======================================================
-use  PhysSelSys			v8r4     PhysSel
+use  PhysSelSys			v8r5     PhysSel
 #=======================================================
 
 ########################################################
@@ -121,7 +121,7 @@ use  L0MuonTrigger 		v2r3p1   L0
 use  L0mConf            	v2r2p3   L0
 
 #-- L1 Trigger libraries 
-use TrgSys                      v1r6     Trg
+use TrgSys                      v1r7     Trg
 
 use GaudiPython v*
 
