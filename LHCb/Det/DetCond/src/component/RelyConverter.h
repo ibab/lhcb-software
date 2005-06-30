@@ -1,4 +1,4 @@
-// $Id: RelyConverter.h,v 1.1 2005-06-14 11:55:36 cattanem Exp $
+// $Id: RelyConverter.h,v 1.2 2005-06-30 16:16:58 marcocle Exp $
 #ifndef COMPONENT_RELYCONVERTER_H 
 #define COMPONENT_RELYCONVERTER_H 1
 
@@ -25,6 +25,12 @@ class RelyConverter: public CondDBGenericCnv {
 
 public: 
 
+  /// Operations that can be performed by delegation
+  enum Operation {
+    CreateObject,
+    FillObjectRefs
+  };
+
   /**
    * Initializes the converter
    *  @return status depending on the completion of the call
@@ -45,6 +51,14 @@ public:
    */
   virtual StatusCode createObj (IOpaqueAddress *pAddress,
                                 DataObject *&pObject);
+  /**
+   * Resolve the references of the created transient object.
+   * @param  pAddress the address of the object representation
+   * @param  pObject the object created
+   * @return status depending on the completion of the call
+   */
+  virtual StatusCode fillObjRefs (IOpaqueAddress *pAddress,
+                                  DataObject *pObject);
   /**
    * Updates the transient object from the other representation (not implemented).
    * @param pAddress the address of the object representation
@@ -92,7 +106,8 @@ private:
    * Do the needed steps to perform a creation by delegation.
    */
   StatusCode i_delegatedCreation(IOpaqueAddress* pAddress,
-                                 DataObject *&pObject);
+                                 DataObject *&pObject,
+                                 Operation op = CreateObject);
 
 public:
   /**

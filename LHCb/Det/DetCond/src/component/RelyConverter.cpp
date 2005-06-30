@@ -1,4 +1,4 @@
-// $Id: RelyConverter.cpp,v 1.8 2005-06-23 14:14:46 marcocle Exp $
+// $Id: RelyConverter.cpp,v 1.9 2005-06-30 16:16:58 marcocle Exp $
 // Include files 
 #include "RelyConverter.h"
 
@@ -84,9 +84,26 @@ StatusCode RelyConverter::createObj (IOpaqueAddress* pAddress, DataObject *&pObj
   MsgStream log(msgSvc(),"RelyConverter");
   log << MSG::DEBUG << "entering createObj" << endmsg;
 
-  StatusCode sc = i_delegatedCreation(pAddress,pObject);
+  StatusCode sc = i_delegatedCreation(pAddress,pObject,CreateObject);
   if (sc.isFailure()){
     log << MSG::ERROR << "Cannot create the object" << endmsg;
+    return sc;
+  }
+
+  return StatusCode::SUCCESS;
+}
+
+//=========================================================================
+// Fill references of the transient representation
+//=========================================================================
+StatusCode RelyConverter::fillObjRefs (IOpaqueAddress* pAddress, DataObject *pObject)
+{
+  MsgStream log(msgSvc(),"RelyConverter");
+  log << MSG::DEBUG << "entering fillObjRefs" << endmsg;
+
+  StatusCode sc = i_delegatedCreation(pAddress,pObject,FillObjectRefs);
+  if (sc.isFailure()){
+    log << MSG::ERROR << "Cannot fill object's refs" << endmsg;
     return sc;
   }
 
@@ -102,7 +119,7 @@ StatusCode RelyConverter::updateObj (IOpaqueAddress* pAddress, DataObject* pObje
   log << MSG::DEBUG << "Method updateObj starting" << endreq;
       
   DataObject* pNewObject; // create a new object and copy it to the old version
-  StatusCode sc = i_delegatedCreation(pAddress,pNewObject);
+  StatusCode sc = i_delegatedCreation(pAddress,pNewObject,CreateObject);
   if (sc.isFailure()){
     log << MSG::ERROR << "Cannot create the new object" << endmsg;
     return sc;
@@ -157,7 +174,7 @@ StatusCode RelyConverter::updateRep (IOpaqueAddress* /*pAddress*/, DataObject* /
 //=========================================================================
 // Create an object by delegation
 //=========================================================================
-StatusCode RelyConverter::i_delegatedCreation(IOpaqueAddress* pAddress, DataObject *&pObject){
+StatusCode RelyConverter::i_delegatedCreation(IOpaqueAddress* pAddress, DataObject *&pObject, Operation op){
   StatusCode sc;
 
   MsgStream log(msgSvc(),"RelyConverter");
@@ -215,7 +232,14 @@ StatusCode RelyConverter::i_delegatedCreation(IOpaqueAddress* pAddress, DataObje
     log << MSG::WARNING << "tmpAddress not registered!" << endmsg;
   }
   
-  sc = m_detPersSvc->createObj ( tmpAddress, pObject );
+  switch (op) {
+  case CreateObject:
+    sc = m_detPersSvc->createObj ( tmpAddress, pObject );
+    break;
+  case FillObjectRefs:
+    sc = m_detPersSvc->fillObjRefs ( tmpAddress, pObject );
+  }
+  
   tmpAddress->release();
   if ( sc.isFailure() ) {
     log << MSG::ERROR 
@@ -223,11 +247,13 @@ StatusCode RelyConverter::i_delegatedCreation(IOpaqueAddress* pAddress, DataObje
     return sc;
   }
   
-  log << MSG::DEBUG << "Setting object validity" << endreq;
-  setObjValidity(since,until,pObject);
+  if (op == CreateObject){
+    log << MSG::DEBUG << "Setting object validity" << endreq;
+    setObjValidity(since,until,pObject);
 
+  } 
   log << MSG::DEBUG << "New object successfully created" << endreq;
-
+  
   return StatusCode::SUCCESS;
 }
 
