@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.1.1.1 2005-06-29 15:58:38 truf Exp $
+# $Id: requirements,v 1.2 2005-06-30 06:54:20 truf Exp $
 # =============================================================================
 package LinkerInstances
 author  Stefan Roiser
@@ -32,3 +32,8 @@ library LinkerInstancesDict ../dict/*.cpp ../$(tag)/dict/LinkerInstances/*.cpp
 # Standard patterns
 #============================================================================
 apply_pattern component_library library=LinkerInstancesDict
+path_remove PATH "/LinkerInstances/" WIN32 "\LinkerInstances\"
+path_append PATH "${LINKERINSTANCESROOT}/$(BINDIR)" \
+                 WIN32 "${LINKERINSTANCESROOT}\$(BINDIR)" 
+path_append PYTHONPATH "${LINKERINSTANCESROOT}/Python" \
+                 WIN32 "${LINKERINSTANCESROOT}\Python"
