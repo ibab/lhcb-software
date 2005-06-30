@@ -1,4 +1,4 @@
-// $Id: DeVeloRType.cpp,v 1.13 2005-06-02 14:11:41 jpalac Exp $
+// $Id: DeVeloRType.cpp,v 1.14 2005-06-30 14:47:45 dhcroft Exp $
 //==============================================================================
 #define VELODET_DEVELORTYPE_CPP 1
 //==============================================================================
@@ -362,16 +362,32 @@ void DeVeloRType::phiZoneLimits()
   phi = acos(m_overlapInX/this->outerRadius());
 
   m_phiMin.clear();
-  m_phiMin.push_back(-phi);
-  m_phiMin.push_back(-m_quarterAngle);
-  m_phiMin.push_back(0);
-  m_phiMin.push_back(m_quarterAngle);
-  
   m_phiMax.clear();
-  m_phiMax.push_back(-m_quarterAngle);
-  m_phiMax.push_back(0);
-  m_phiMax.push_back(m_quarterAngle);
-  m_phiMax.push_back(phi);
+
+  if(!this->isDownstream()){
+    // upstream sensor
+    m_phiMin.push_back(-phi);
+    m_phiMin.push_back(-m_quarterAngle);
+    m_phiMin.push_back(0);
+    m_phiMin.push_back(m_quarterAngle);
+    
+    m_phiMax.push_back(-m_quarterAngle);
+    m_phiMax.push_back(0);
+    m_phiMax.push_back(m_quarterAngle);
+    m_phiMax.push_back(phi);
+
+  }else{
+    //downstream sensor (i.e. 180deg flip and sectors order in phi reversed)
+    m_phiMin.push_back(m_quarterAngle);
+    m_phiMin.push_back(0);
+    m_phiMin.push_back(-m_quarterAngle);
+    m_phiMin.push_back(-phi);
+    
+    m_phiMax.push_back(phi);
+    m_phiMax.push_back(m_quarterAngle);
+    m_phiMax.push_back(0);
+    m_phiMax.push_back(-m_quarterAngle);
+  }    
 
 }
 //==============================================================================

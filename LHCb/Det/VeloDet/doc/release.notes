@@ -1,6 +1,9 @@
-! $Id: release.notes,v 1.73 2005-06-28 13:06:32 cattanem Exp $
+! $Id: release.notes,v 1.74 2005-06-30 14:47:45 dhcroft Exp $
 package VeloDet
 package manager : Velo Group
+
+! 2005-06-30 - David Hutchcroft
+ - Reversed phi range of R sectors in "downstream" R sensors 0<->3, 1<->2 etc. 
 
 !========================= VeloDet v9r7 2005-06-28 =========================
 ! 2005-06-28 - Juan PALACIOS
