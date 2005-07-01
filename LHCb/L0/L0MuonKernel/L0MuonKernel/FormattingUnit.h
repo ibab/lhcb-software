@@ -16,27 +16,29 @@
 #include <boost/dynamic_bitset.hpp>
 #include <vector>
 #include "L0mConf/L0MPuNodeBase.h"
-#include "ProcessorKernel/Unit.h"
+#include "L0MuonKernel/L0MUnit.h"
 #include "ProcessorKernel/TileRegister.h"
 //#include "GaudiKernel/MsgStream.h"
 
 namespace L0Muon {
   
-   class FormattingUnit : public Unit {
+   class FormattingUnit : public L0MUnit {
      
    public:
      
      /// Constructor
      FormattingUnit();
+     
+     FormattingUnit(MuonTileID id);
 
      /// Destructor
      ~FormattingUnit();
 
+     /// Constructor
+     FormattingUnit(DOMNode* pNode);
 
      
      void preexecute();
-  
-     void execute();
    
      void postexecute();
 

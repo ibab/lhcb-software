@@ -1,6 +1,7 @@
 #include "L0MuonKernel/L0BufferUnit.h"
 #include "L0MuonKernel/ProcUnit.h"
 #include "L0MuonKernel/CrateUnit.h"
+#include "L0MuonKernel/MuonTriggerUnit.h"
 #include "L0mConf/L0MBase.h" 
 #include <cmath>
 #include <iostream>
@@ -30,25 +31,33 @@
 /**
    Constructor.
 */
-L0Muon::L0BufferUnit::L0BufferUnit(int & type){
-   
-  m_bufferType = type; // 0 for standard; 1 for PLL
-
+L0Muon::L0BufferUnit::L0BufferUnit(){
   m_l0bufferFile = NULL;
-  m_l0EventNumber=0;
-  m_buildL0Buffer = false;
+};
+/**
+   Constructor.
+*/
+L0Muon::L0BufferUnit::L0BufferUnit(MuonTileID id):L0MUnit(id){
+  m_l0bufferFile = NULL;
+};
 
+/**
+   Constructor.
+*/
+L0Muon::L0BufferUnit::L0BufferUnit(DOMNode* pNode):L0MUnit(pNode){
+  m_l0bufferFile = NULL;  
 };
 
 /**
    Open the Output file where to write the L0Buffers, and write the header.
 */
-void L0Muon::L0BufferUnit::setOutputFile(MuonTileID puid, std::string suffixe){
+void L0Muon::L0BufferUnit::setOutputFile(MuonTileID puid, std::string filepath){
 
   // Open the output file 
-  char * name = "/marmuon3/NewInputFiles/l0buf_sim_R%d%d%d_%s.txt";
+  char * name = "%s/l0buf_sim_R%d%d%d.txt";
   char buf[4096];
-  sprintf(buf,name,puid.region()+1,puid.nX(),puid.nY(),suffixe.c_str());
+  sprintf(buf,name,filepath.c_str(),puid.region()+1,puid.nX(),puid.nY());
+  std::cout << "L0BufferUnit:: setOutputFile file name is "<< buf << std::endl;
   m_l0bufferFile = fopen(buf,"w");
   // // std::cout << "L0BufferUnit:: setOutputFile file is "<< buf << std::endl;
 
@@ -67,50 +76,53 @@ L0Muon::L0BufferUnit::~L0BufferUnit(){
    Fill the L0Buffer output register.
 */
 void L0Muon::L0BufferUnit::setL0buf(){
-
-  if (m_bufferType == 0) {
-    setL0bufStd();
-  } else {
-    setOLPLL();
-    setL0bufPLL();
-  }
-}
-
-
-/**
-   Fill the L0Buffer output register with the "standard" format.
-*/
-void L0Muon::L0BufferUnit::setL0bufStd(){
+  if (m_debug) std::cout << "*!* L0BufferUnit::setL0buf" <<std::endl;
   
   // Get a pointer to the L0buffer output register
   TileRegister * pOutRegister = dynamic_cast<TileRegister*>(m_outputs["L0bOut"]);
+  if (m_debug) std::cout << "*!* L0BufferUnit::setL0buf pOutRegister " <<pOutRegister<<std::endl;
   // Clear the ouptut register bit set
   pOutRegister->reset();
 
+  std::vector<MuonTileID> lmids = pOutRegister->getTileVector();
+  for (std::vector<MuonTileID>::iterator i_lmids = lmids.begin();i_lmids != lmids.end(); i_lmids ++){
+    //if (m_debug) std::cout << "*!* L0BufferUnit::setL0buf  i_lmids: " <<i_lmids->toString()<<std::endl;
+  }
 
   //
   // Update the input field of the bitset of the output register (OL + Neighbours) 
   //
 
   // Loop over input registers
+  if (m_debug) std::cout << "*!* L0BufferUnit::setL0buf m_inputs.size()= " <<m_inputs.size()<<std::endl;
   std::map<std::string,L0Muon::Register*>::iterator ir;
   for (ir = m_inputs.begin(); ir!= m_inputs.end(); ir++){
     
     TileRegister * itr = dynamic_cast<TileRegister*>(ir->second);
     
+    if (m_debug) std::cout << "*!* L0BufferUnit::setL0buf"
+			   <<" itr->type()= " <<itr->type()
+			   <<std::endl;
     // Filter the input register according to their type
-    if (itr->Type()=="OpticalLink" || itr->Type()=="Neighbours") {
+    if (itr->type()=="OpticalLink" || itr->type()=="Neighbours") {
 
       // Get the list of fired tiles
       std::vector<MuonTileID> firedTilesList = itr->firedTiles();
       std::vector<MuonTileID>::iterator itfired;
+      
+      if (m_debug) std::cout << "*!* L0BufferUnit::setL0buf"
+			     <<" itr->type()= " <<itr->type()
+			     <<" firedTilesList.size()= "<< firedTilesList.size()<<std::endl;
      
       // For each fired tile, set to 1 the corresponding tiles in the output register bit set
       for (itfired=firedTilesList.begin(); itfired!= firedTilesList.end(); itfired++){
+	if (m_debug) std::cout << "*!* L0BufferUnit::setL0buf  itfired: " <<itfired->toString()<<std::endl;
 	pOutRegister->setTile(*itfired);
       }
     }
   }
+  if (m_debug) std::cout << "*!* L0BufferUnit::setL0buf pOutRegister->firedTiles().size()= " 
+			 <<pOutRegister->firedTiles().size()<<std::endl;
 
   //
   // Update the output field of the bitset of the output register (candidates + status + BCPT) 
@@ -153,7 +165,7 @@ void L0Muon::L0BufferUnit::setL0bufStd(){
     }
   }
 
-  // Write the BCID (use by PLL to check internal consistency)
+  // Write the BCID
   boost::dynamic_bitset<> bcidSet(BCID_SIZE,(unsigned long) (m_l0EventNumber%16) );
   for (boost::dynamic_bitset<>::size_type i =0; i < bcidSet.size();i++){
     int val=bcidSet[i] ;
@@ -162,241 +174,19 @@ void L0Muon::L0BufferUnit::setL0bufStd(){
     }
   }
 
-
-  // Update the bit set.
-  pOutRegister->set(outBitSet);
-
-
-}
-
-/**
-   Fill the L0Buffer output register with the PLL format.
-*/
-void L0Muon::L0BufferUnit::setL0bufPLL(){
-
-  if (m_l0bufferFile==NULL) return;
-  
-  // 
-  // Build the list of fired tiles
-  //
-
-  // Get the L0Buffer register in input
-  TileRegister * pInRegister = dynamic_cast<TileRegister*>(m_inputs["L0bIn"]);
-  // Make the pads (cross horizontal and vertical strips)
-  pInRegister->makePads();
-  // Get the list of fired pads 
-  std::vector<MuonTileID> firedPadsList = pInRegister->Pads();
-  // Get the list of fired tiles 
-  std::vector<MuonTileID> firedTilesList = pInRegister->firedTiles();
-
-    
-  // Get a pointer to the L0buffer output register
-  TileRegister * pOutRegister = dynamic_cast<TileRegister*>(m_outputs["L0bOut"]);
-  // Clear bit set
-  pOutRegister->reset();
-
-  //
-  // Update the input field of the bitset of the output register (OL + Neighbours) 
-  //
-
-  // Loop over the Tiles of the output l0buffer register
-  std::vector<MuonTileID> l0bufferTiles =  pOutRegister->getTileVector();
-  for (std::vector<MuonTileID>::iterator itl0buffer=l0bufferTiles.begin();
-       itl0buffer!=l0bufferTiles.end();
-       itl0buffer++){
-    
-    if (! itl0buffer->isValid()) continue;
-    if (itl0buffer->station()>2) {
-      // Loop over the fired pads for stations M4 & M5
-      for (std::vector<MuonTileID> ::iterator itfired=firedPadsList.begin(); 
-	   itfired!= firedPadsList.end(); 
-	   itfired++){
-	MuonTileID  intercept= itfired->intercept(*itl0buffer);
-	if (intercept.isValid()){
-	  pOutRegister->setTile(*itl0buffer);
-	}
-      }
-    } else {
-      // Loop over the fired tiles for stations M1, M2 & M3
-      for (std::vector<MuonTileID> ::iterator itfired=firedTilesList.begin(); 
-	   itfired!= firedTilesList.end(); 
-	   itfired++){
-	MuonTileID  intercept= itfired->intercept(*itl0buffer);
-
-	MuonTileID  container= itl0buffer->containerID(itfired->layout());
-	if ( intercept== (*itl0buffer) ){
-	  pOutRegister->setTile(*itl0buffer);
-	}
-      }
-    }
-    
-  }
-
-
-  //
-  // Update the output field of the bitset of the output register (candidates + status + BCID + FOI) 
-  //
-
-  // Get the bitset of the output register 
-  boost::dynamic_bitset<> outBitSet = pOutRegister->getBitset();
-
-  // Write the output field of the l0buffer (as it was written on the input l0buffer register)
-  boost::dynamic_bitset<> inBitSet = pInRegister->getBitset();
-  for (boost::dynamic_bitset<>::size_type i =0; i < OUTPUTFIELD_SIZE;i++){
-    int val=inBitSet[i] ;
-    if (val) {
-      outBitSet.set(i);
-    }
-  }
-  
-  // Write the FOI in X for M1
-  boost::dynamic_bitset<> xM1bitset(4,(unsigned long) xHardFoi(0));
-  for (boost::dynamic_bitset<>::size_type i =0; i < xM1bitset.size();i++){
-    int val=xM1bitset[i] ;
-    if (val) {
-      outBitSet.set(i+XM1FOI_OFFSET);
-    }
-  }
-
-  // Write the FOI in X for M2
-  boost::dynamic_bitset<> xM2bitset(4,(unsigned long) xHardFoi(1));
-  for (boost::dynamic_bitset<>::size_type i =0; i < xM2bitset.size();i++){
-    int val=xM2bitset[i] ;
-    if (val) {
-      outBitSet.set(i+XM2FOI_OFFSET);
-    }
-  }
-
-  // Write the FOI in X for M4
-  boost::dynamic_bitset<> xM4bitset(4,(unsigned long) xHardFoi(3));
-  for (boost::dynamic_bitset<>::size_type i =0; i < xM4bitset.size();i++){
-    int val=xM4bitset[i] ;
-    if (val) {
-      outBitSet.set(i+XM4FOI_OFFSET);
-    }
-  }
-
-  // Write the FOI in X for M5
-  boost::dynamic_bitset<> xM5bitset(4,(unsigned long) xHardFoi(4));
-  for (boost::dynamic_bitset<>::size_type i =0; i < xM5bitset.size();i++){
-    int val=xM5bitset[i] ;
-    if (val) {
-      outBitSet.set(i+XM5FOI_OFFSET);
-    }
-  }
-
-  // Write the FOI in Y for M4
-  boost::dynamic_bitset<> yM4bitset(4,(unsigned long) yHardFoi(3));
-  for (boost::dynamic_bitset<>::size_type i =0; i < yM4bitset.size();i++){
-    int val=yM4bitset[i] ;
-    if (val) {
-      outBitSet.set(i+YM4FOI_OFFSET);
-    }
-  }
-
-  // Write the FOI in Y for M5
-  boost::dynamic_bitset<> yM5bitset(4,(unsigned long) yHardFoi(4));
-  for (boost::dynamic_bitset<>::size_type i =0; i < yM5bitset.size();i++){
-    int val=yM5bitset[i] ;
-    if (val) {
-      outBitSet.set(i+YM5FOI_OFFSET);
-    }
-  }
-
-  // Write the BCID an other time (use by PLL to check internal consistency)
-  boost::dynamic_bitset<> bcidSet(BCID_SIZE,(unsigned long) (m_l0EventNumber%16) );
-  for (boost::dynamic_bitset<>::size_type i =0; i < bcidSet.size();i++){
-    int val=bcidSet[i] ;
-    if (val) {
-      outBitSet.set(i+BCIDin_OFFSET);
-    }
-  }
-
   // Update the bit set.
   pOutRegister->set(outBitSet);
 
 }
 
-/**
-   Fill the OL output register with the PLL format.
-*/
-void L0Muon::L0BufferUnit::setOLPLL(){
-
-  if (m_l0bufferFile==NULL) return;
-
-  // 
-  // Build the list of fired tiles
-  //
-  std::vector<MuonTileID> firedPadList;
-
-  // Get the OLs in input 
-  std::map<std::string,Register*>::iterator ir ;
-  for (ir = m_inputs.begin(); ir!= m_inputs.end(); ir++){
-
-    TileRegister * itr = dynamic_cast<TileRegister*>(ir->second);
-
-    if (itr->Type()=="OpticalLink" ) {
-      // // // std::cout << "L0BufferUnit::setOLPLL OpticalLink input register found: "<<  ir->first  << std::endl;
-      std::vector<MuonTileID> inputFiredTiles = itr->firedTiles();
-      for (std::vector<MuonTileID>::iterator itfired=inputFiredTiles.begin(); 
-	   itfired!= inputFiredTiles.end(); 
-	   itfired++){
-	firedPadList.push_back(*itfired);
-      }
-    }
-  }
-
-  
-  // // //   std::cout << "L0BufferUnit:setOLPLL firedPadList.size()= "<<  firedPadList.size()  << std::endl;
-
-  //
-  // Update the OL output register with the fired tiles
-  //
-    
-  // Get a pointer to the OL output register
-  TileRegister * pOutRegister = dynamic_cast<TileRegister*>(m_outputs["OLOut"]);
-  // Clear the ouptut register bit set
-  pOutRegister->reset();
-
-  // Loop over the fired tiles
-  for (std::vector<MuonTileID> ::iterator itfired=firedPadList.begin(); 
-       itfired!= firedPadList.end(); 
-       itfired++){
-    pOutRegister->setTile(*itfired);
-  }
-
-  std::vector<MuonTileID> tmpFiredTiles  = pOutRegister->firedTiles();
-  std::vector<MuonTileID> tmpTilesVector = pOutRegister->getTileVector();
-  // // //   std::cout << "L0BufferUnit:setOLPLL " 
-  // // // 	    << "  tmpFiredTiles.size()= "<<  tmpFiredTiles.size()  
-  // // // 	    << "  tmpFiredTiles.size()= "<<  tmpTilesVector.size()
-  // // // 	    << std::endl;
-
-
-  //
-  // Write the BCID on the 3rd word of the last link
-  // 
-
-  // Get the bitset of the output register 
-  boost::dynamic_bitset<> outBitSet = pOutRegister->getBitset();
-
-  // Write the BCID (use by PLL to check internal consistency)
-  boost::dynamic_bitset<> bcidSet(BCID_SIZE,(unsigned long) (m_l0EventNumber%16));
-  for (boost::dynamic_bitset<>::size_type i =0; i < bcidSet.size();i++){
-    int val=bcidSet[i] ;
-    if (val) {
-      outBitSet.set(i+OL_BCID_OFFSET);
-    }
-  }
-  
-  // Update the bit set.
-  pOutRegister->set(outBitSet);
-
-}
 
 void L0Muon::L0BufferUnit::initialize(){
-  Unit* crate = parentByType("CrateUnit");
-  if ( crate->getProperty("BuildL0Buffer") == "True") m_buildL0Buffer = true;
+  if (m_debug) std::cout << "*!* L0BufferUnit::initialize" <<std::endl;
+  Unit* parent = parentByType("MuonTriggerUnit");
+  std::string buildL0Buffer = parent->getProperty("BuildL0Buffer");
+  m_buildL0Buffer = false;
+  if (buildL0Buffer == "True") m_buildL0Buffer = true;
+  m_l0EventNumber=0;
 }
 
 /**
@@ -404,15 +194,19 @@ void L0Muon::L0BufferUnit::initialize(){
 */
 void L0Muon::L0BufferUnit::execute(){
 
+  if (m_debug) std::cout << "*!* L0BufferUnit::execute m_buildL0Buffer= "<<m_buildL0Buffer <<std::endl;
   if ( ! m_buildL0Buffer ) return;
   
   setL0buf();
+  if (m_debug) std::cout << "*!* L0BufferUnit::execute setL0buf done"<<std::endl;
 
   // Write out the L0Buffer
   writeEvent();
+  if (m_debug) std::cout << "*!* L0BufferUnit::execute writeEvent done"<<std::endl;
 
   // Increment event counter
   m_l0EventNumber++;
+  if (m_debug) std::cout << "*!* L0BufferUnit::execute l0EventNumber++ done"<<std::endl;
 }
 
 
@@ -448,7 +242,7 @@ void L0Muon::L0BufferUnit::writeHeader(){
   
 
   fprintf(m_l0bufferFile,"#- PU\n");
-  fprintf(m_l0bufferFile,"Q%d R%d%d%d\n",m_pu.quarter()+1,m_pu.region()+1,m_pu.nX(),m_pu.nY());
+  fprintf(m_l0bufferFile,"Q%d R%d%d%d\n",m_mid.quarter()+1,m_mid.region()+1,m_mid.nX(),m_mid.nY());
   fprintf(m_l0bufferFile,"#- FOI \n");
   fprintf(m_l0bufferFile,"%04x %04x\n",xFOI,yFOI);
   fprintf(m_l0bufferFile,"#- Mask \n");
@@ -462,20 +256,17 @@ void L0Muon::L0BufferUnit::writeHeader(){
 */
 void L0Muon::L0BufferUnit::writeEvent(){
 
+  if (m_debug) std::cout << "*!* L0BufferUnit::writeEvent m_l0bufferFile="<<m_l0bufferFile<<std::endl;
   if (m_l0bufferFile==NULL) return;
 
   // Write Event Header
   fprintf(m_l0bufferFile,"#- Header\n");
   fprintf(m_l0bufferFile,"%04x %04x\n",m_l0EventNumber%16,0);
 
-  // Write Optical link in INPUT
-  fprintf(m_l0bufferFile,"#- Optical links\n");
-  TileRegister * pOLOut = dynamic_cast<TileRegister*>(m_outputs["OLOut"]);
-  if (pOLOut!=0) pOLOut->print_words(m_l0bufferFile,3);
-
   // Write L0Buffer
   fprintf(m_l0bufferFile,"#- L0Buffer\n");
   TileRegister * pL0bOut = dynamic_cast<TileRegister*>(m_outputs["L0bOut"]);
+  if (m_debug) std::cout << "*!* L0BufferUnit::writeEvent pL0bOut="<<pL0bOut<<std::endl;
   if (pL0bOut!=0) pL0bOut->print_words(m_l0bufferFile);
   
   // Write Event Trailer

@@ -37,12 +37,13 @@
 */
 
 
-L0Muon::BCSUnit::BCSUnit(MuonTileID boardid){
+L0Muon::BCSUnit::BCSUnit(MuonTileID id):L0MUnit(id){
   
-  m_id = boardid;
-  m_bcsueventnumber = 0;
-  m_bcsul0bufferFile =NULL;
-  m_buildL0Buffer = false;
+  m_mid = id;
+  
+}
+
+L0Muon::BCSUnit::BCSUnit(DOMNode* pNode):L0MUnit(pNode){
   
 }
 
@@ -52,8 +53,12 @@ L0Muon::BCSUnit::~BCSUnit(){
 
 void L0Muon::BCSUnit::initialize()
 {
-  Unit* crate = parentByType("CrateUnit");
-  if ( crate->getProperty("BuildL0Buffer") == "True") m_buildL0Buffer = true;
+  m_bcsueventnumber = 0;
+  m_bcsul0bufferFile =NULL;
+  Unit* parent = parentByType("MuonTriggerUnit");
+  std::string buildL0Buffer = parent->getProperty("BuildL0Buffer");
+  m_buildL0Buffer = false;
+  if (buildL0Buffer == "True") m_buildL0Buffer = true;
 }
 
 void L0Muon::BCSUnit::preexecute()
@@ -67,41 +72,52 @@ void L0Muon::BCSUnit::preexecute()
 void L0Muon::BCSUnit::execute() {
 
   //m_debug = true;
-  if (m_debug) std::cout << "Execute BCSUnit" << std::endl;
+  if (m_debug) std::cout << "*!* BCSUnit::execute" << std::endl;
 
   dumpCandidates();
   //dumpAddresses(log);
 
+  if (m_debug) std::cout << "*!* BCSUnit::execute m_candidates.size()= " << m_candidates.size()<< std::endl;
+
   if ( m_candidates.size()>0 ) { 
+
+  if (m_debug) std::cout << "*!* BCSUnit::execute  m_offsets.size()  = " << m_offsets.size()   << std::endl;    
 
     // Sort ordered candidates and offsets
     std::sort(m_candidates.begin(),m_candidates.end(),ComparePt());
 
+    if (m_debug) std::cout << "*!* BCSUnit::execute  sorting done "<< std::endl;    
+
     Unit * myCrate = m_parent->parent();
     CrateUnit * cr = dynamic_cast<CrateUnit*>(myCrate);
-
-    //std::cout << "BCSU: candidates " << m_candidates.size() 
-    //          << " offsets " << m_offsets.size() << std::endl;    
 
     for (std::vector<PCandidate  >::iterator icand = m_candidates.begin();
 	 icand != m_candidates.end(); icand++){
 
+      if (m_debug) std::cout << "*!* BCSUnit::execute     filling candidate ... "<< std::endl;    
       cr->fillCandidates(*icand);
     }
   }  
   
+  if (m_debug) std::cout << "*!* BCSUnit::execute  m_buildL0Buffer = "<<m_buildL0Buffer << std::endl;    
   if ( m_buildL0Buffer ) {
     // Build L0Buffer
 
     fillAddresses();
+    if (m_debug) std::cout << "*!* BCSUnit::execute fillAddresses done "<<std::endl;    
     fillInp();
+    if (m_debug) std::cout << "*!* BCSUnit::execute fillInp done "<<std::endl;    
     
     setInpBCSU();
+    if (m_debug) std::cout << "*!* BCSUnit::execute setInpBCSU done "<<std::endl;    
     setIdBCSU();
+    if (m_debug) std::cout << "*!* BCSUnit::execute setIdBCSU done "<<std::endl;    
     setOutBCSU();
+    if (m_debug) std::cout << "*!* BCSUnit::execute setOutBCSU done "<<std::endl;    
   
     // Write Buffer
     writeL0Buffer();
+    if (m_debug) std::cout << "*!* BCSUnit::execute writeL0Buffer done "<<std::endl;    
   } 
   m_bcsueventnumber++;
   L0Muon::Unit::execute();
@@ -127,7 +143,7 @@ void L0Muon::BCSUnit::setOutputFile(std::string suffixe)
   
   char buf[4096];
   
-  sprintf(buf,name,m_id.quarter()+1,m_id.region()+1,m_id.nX(),m_id.nY(),suffixe.c_str());
+  sprintf(buf,name,m_mid.quarter()+1,m_mid.region()+1,m_mid.nX(),m_mid.nY(),suffixe.c_str());
   
   m_bcsul0bufferFile = fopen(buf,"w");
   
@@ -226,7 +242,7 @@ void L0Muon::BCSUnit::sortCandidatesbcsu()
 */
 void L0Muon::BCSUnit::fillInp() {
 
-  //std::cout << "BCSU: fillInp " << m_candidates.size() << std::endl;
+  //std::cout << "!!! BCSUnit::fillInp " << m_candidates.size() << std::endl;
   m_inp.clear();
 
   int imax = m_candidates.size();
@@ -280,21 +296,26 @@ void L0Muon::BCSUnit::setIdBCSU() {
 void L0Muon::BCSUnit::setOutBCSU()
  {
  
-  //std::cout << "BCSU: setOutBCSU " << std::endl;
+  // // //std::cout << "!!! BCSU::setOutBCSU IN" << std::endl;
   //
   // Output field = 3 words-> 48 bits (16 x 3)
   //
-   m_BcsuOut.clear();
+  m_BcsuOut.clear();
+  // // //std::cout << "!!! BCSU::setOutBCSU m_BcsuOut.clear() done" << std::endl;
 
+  // // //std::cout << "!!! BCSU::setOutBCSU    m_inp.size()" << m_inp.size() <<std::endl;
   // Bits 0-15 for pt of candidate 1 & 2.
   for (int i=0; i<2; i++) {
+    // // //std::cout << "!!! BCSU::setOutBCSU   candidate loop i=" << i <<std::endl;
     double p = m_inp[i].first->pt();
+    // // //std::cout << "!!! BCSU::setOutBCSU   candidate loop p=" << p <<std::endl;
     boost::dynamic_bitset<> pt = codedPt(p);
     for ( boost::dynamic_bitset<>::size_type ib =0; ib < 8; ib++){  
       bool val = pt[ib];
       m_BcsuOut.push_back(val);
     } 
   }
+  // // //std::cout << "!!! BCSU::setOutBCSU 0-15 done" << std::endl;
 
   // Bits 16-31 for addresses of candidate 1 & 2 in M3 
   for (int i=0; i<2; i++) {
@@ -306,6 +327,7 @@ void L0Muon::BCSUnit::setOutBCSU()
     }
     m_BcsuOut.push_back(0);
   }
+  // // //std::cout << "!!! BCSU::setOutBCSU 16-31 done" << std::endl;
 
   // Bits 32-33 and 40-41 for pu identifier for candidates 1 and 2
   for (int i=0; i<2; i++) {
@@ -318,6 +340,7 @@ void L0Muon::BCSUnit::setOutBCSU()
     if (i==0) m_BcsuOut.resize(40,0);
   } 
   m_BcsuOut.resize(44,0);
+  // // //std::cout << "!!! BCSU::setOutBCSU 32-33 and 40-41 done" << std::endl;
 
   // Bits 44-47 for status (0<= number of candidates <=8) 
   unsigned long icounter =0;
@@ -332,6 +355,9 @@ void L0Muon::BCSUnit::setOutBCSU()
     bool val = st[ib];
     m_BcsuOut.push_back(val);
   }
+  // // //std::cout << "!!! BCSU::setOutBCSU 44-47 done" << std::endl;
+
+  // // //std::cout << "!!! BCSU::setOutBCSU OUT" << std::endl;
  
 }
 

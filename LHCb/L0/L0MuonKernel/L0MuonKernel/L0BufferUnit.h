@@ -16,13 +16,13 @@
 #include <stdio.h>
 #include <boost/dynamic_bitset.hpp>
 #include <vector>
-#include "ProcessorKernel/Unit.h"
+#include "L0MuonKernel/L0MUnit.h"
 #include "L0mConf/L0MPuNodeBase.h"
 #include "L0mConf/L0MTile.h"
 
 namespace L0Muon {
   
-  class L0BufferUnit : public Unit {
+  class L0BufferUnit : public L0MUnit {
 
   public:
 
@@ -30,12 +30,13 @@ namespace L0Muon {
     L0BufferUnit();
 
     /// Constructor
-    L0BufferUnit(int & type);
+    L0BufferUnit(MuonTileID id);
+
+    /// Constructor
+    L0BufferUnit(DOMNode* pNode);
+
     /// Destructor
     ~L0BufferUnit();
-    
-    /// Set the MuonTileID of the PU 
-    void setPU( MuonTileID pu ) { m_pu = pu; }
 
     /// Return x foi in station sta
     int xFoi(int sta);
@@ -51,12 +52,9 @@ namespace L0Muon {
     
     /// Fill the bits of the output register
     void setL0buf();
-    void setL0bufStd();
-    void setL0bufPLL();
-    void setOLPLL();
 
     /// Open the output file 
-    void setOutputFile(MuonTileID puid, std::string suffixe);
+    void setOutputFile(MuonTileID puid, std::string filepath);
  
     /// Write the l0buffer on the output file
     void writeEvent();
@@ -74,12 +72,6 @@ namespace L0Muon {
 
 
   private:
-
-    /// PU ID
-    MuonTileID m_pu;
-    
-    /// Type of the Unit : "standard" or PLL type.
-    int m_bufferType;
 
     /// Pointer to the file where to write the L0Buffer
     FILE *m_l0bufferFile;

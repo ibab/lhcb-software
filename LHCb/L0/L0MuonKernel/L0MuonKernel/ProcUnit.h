@@ -1,8 +1,9 @@
-// $Id: ProcUnit.h,v 1.2 2005-05-25 14:36:07 jucogan Exp $
+// $Id: ProcUnit.h,v 1.3 2005-07-01 12:42:42 jucogan Exp $
 
 #ifndef L0MUONKERNEL_PROCUNIT_H
 #define L0MUONKERNEL_PROCUNIT_H     1
 
+#define  __TEST_BENCH_V2__ 0
 /* @class ProcUnit ProcUnit.h L0MuonKernel/ProcUnit.h
 
 Class representing a processing unit 
@@ -11,7 +12,7 @@ of the level-0 muon trigger
 */
 
 #include <vector>
-#include "ProcessorKernel/Unit.h"
+#include "L0MuonKernel/L0MUnit.h"
 #include "L0mConf/L0MPuNodeBase.h"
 #include "L0mConf/L0MTile.h"
 #include "L0mConf/L0MFoi.h"
@@ -23,7 +24,7 @@ of the level-0 muon trigger
 
 namespace L0Muon {
 
-  class ProcUnit : public Unit {
+  class ProcUnit : public L0MUnit {
 
   public:
 
@@ -36,14 +37,11 @@ namespace L0Muon {
     */
     ProcUnit(L0MPuNodeBase& puNode);
 
+    /// Constructor
+    ProcUnit(DOMNode* pNode);
+
     /// Return the MuonTileID of the PU
-    MuonTileID puId(){return m_pu;} 
-
-    /// Return the MuonTileID of the board
-    MuonTileID boardId(){return m_boardID;}
-
-    /// Return the field of interest from L0mConf
-    L0MFoi foi() {return m_maxFoi; }
+    MuonTileID puId(){return m_mid;} 
   
     /// Initialize 
     void initialize();
@@ -53,9 +51,6 @@ namespace L0Muon {
     /// Return the list of tiles in the l0buffer
     std::vector<L0MTile> l0bufferTileList(L0MPuNodeBase & puNode);
 
-    /// Set the registers for the l0buffer used in the testbench (temporarly)
-    std::map<std::string, std::string> setPLLRegisters(MuonTileID puid, std::string L0BufferMapPath);
-  
     /// Give a static type name to the unit
     std::string type() {
       return "ProcUnit";
@@ -63,9 +58,6 @@ namespace L0Muon {
 
   private:
 
-    MuonTileID  m_pu;
-    MuonTileID  m_boardID;
-    L0MFoi      m_maxFoi;
     bool m_buildL0Buffer;
     TileRegister* m_ol3[2];     // OL's in station 3 
   };

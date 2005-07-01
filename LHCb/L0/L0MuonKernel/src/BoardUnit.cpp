@@ -3,8 +3,16 @@
 
 L0Muon::BoardUnit::BoardUnit(){
 
+}
+
+L0Muon::BoardUnit::BoardUnit(MuonTileID id):L0MUnit(id){
   
 }
+
+L0Muon::BoardUnit::BoardUnit(DOMNode* pNode):L0MUnit(pNode){
+  
+}
+
 
 
 L0Muon::BoardUnit::~BoardUnit() {}

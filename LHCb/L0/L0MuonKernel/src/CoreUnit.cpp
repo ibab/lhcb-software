@@ -6,9 +6,13 @@
 #include "L0MuonKernel/BCSUnit.h"
 
 
-L0Muon::CoreUnit::CoreUnit() {  
-  m_status = 0;
-  m_buildL0Buffer = false;
+L0Muon::CoreUnit::CoreUnit() {
+}
+    
+L0Muon::CoreUnit::CoreUnit(MuonTileID id):L0MUnit(id) {
+}
+    
+L0Muon::CoreUnit::CoreUnit(DOMNode* pNode):L0MUnit(pNode) {  
 }
     
 L0Muon::CoreUnit::~CoreUnit() {};  
@@ -52,11 +56,11 @@ void L0Muon::CoreUnit::makePads() {
 
 void L0Muon::CoreUnit::makeTower() {
 
-  unsigned int nreg = m_pu.region();
+  unsigned int nreg = m_mid.region();
   MuonLayout layout(48,8);
   MuonLayout pulayout(2,2);
 
-  MuonTileID refpad = MuonTileID(m_pu,layout,0,0);
+  MuonTileID refpad = MuonTileID(m_mid,layout,0,0);
   int refX = refpad.nX();
   int refY = refpad.nY();
 
@@ -104,16 +108,27 @@ void L0Muon::CoreUnit::makeTower() {
 }
 
 void L0Muon::CoreUnit::initialize() {
+  if (m_debug) std::cout << "*!* CoreUnit::initialize" <<std::endl;
   // Get a pointer to the parent Crate Unit
+  Unit * parent = parentByType("MuonTriggerUnit");
   CrateUnit * pcrate = dynamic_cast<CrateUnit *>( parentByType("CrateUnit"));
+  if (m_debug) std::cout << "*!* CoreUnit::initialize pcrate="<<pcrate <<std::endl;
+  if (m_debug) std::cout << "*!* CoreUnit::initialize pcrate->xFoi(0)="<<pcrate->xFoi(0) <<std::endl;
 
-  if ( pcrate->getProperty("BuildL0Buffer") == "True") m_buildL0Buffer = true;
+  std::string buildL0Buffer = parent->getProperty("BuildL0Buffer");
+  if (m_debug) std::cout << "*!* CoreUnit::initialize buildL0Buffer="<<buildL0Buffer <<std::endl;
+  m_buildL0Buffer = false;
+  if (buildL0Buffer== "True") m_buildL0Buffer = true;
+  if (m_debug) std::cout << "*!* CoreUnit::initialize m_buildL0Buffer="<<m_buildL0Buffer <<std::endl;
 
   // Set the foi
   for (int ista=0; ista<5; ista++){ 
+    if (m_debug) std::cout << "*!* CoreUnit::initialize sta M" <<ista+1<< std::endl; 
     m_tower.setFoi(ista,pcrate->xFoi(ista),pcrate->yFoi(ista));
-    if (m_debug) std::cout << "Core: FOI sta M" <<ista+1<< "X: "<< pcrate->xFoi(ista)<< "Y: "<< pcrate->yFoi(ista) << std::endl; 
+    if (m_debug) std::cout << "*!* CoreUnit::initialize FOI sta M" <<ista+1<< "X: "<< pcrate->xFoi(ista)<< "Y: "<< pcrate->yFoi(ista) << std::endl; 
   }
+  // Initialize the status
+  m_status = 0;
       
   // Set the pt parameters
   m_tower.setPtparam(pcrate->ptParameters());
@@ -134,14 +149,24 @@ void L0Muon::CoreUnit::preexecute() {
 
 void L0Muon::CoreUnit::execute() {
 
-  if (m_debug) std::cout << "Core:execute executing PU " << m_parent->name() << std::endl; 
+  if (m_debug) std::cout << "*!* CoreUnit::execute " << std::endl; 
 
   // Get a pointer to the Board Unit
   Unit * myBoard = m_parent->parent();
   BoardUnit * bu = dynamic_cast<BoardUnit*>(myBoard);
+  if (bu == NULL) {
+    std::cout << "*** FATAL ERROR ***\n";
+    std::cout << "    L0Muon::CoreUnit::execute\n";
+    std::cout << "    board unit not found bu="<<bu<<"\n";
+  }
   
   // Get a pointer to the BCSU
-  BCSUnit* bcsu= dynamic_cast<BCSUnit*> (bu->subUnit("bcsu"));
+  BCSUnit* bcsu= dynamic_cast<BCSUnit*> (bu->subUnit("BCSUnit"));
+  if (bcsu == NULL) {
+    std::cout << "*** FATAL ERROR ***\n";
+    std::cout << "    L0Muon::CoreUnit::execute\n";
+    std::cout << "    bcsu unit not found bcsu="<<bcsu<<"\n";
+  }
   
   // Get a pointer to the Crate Unit
   //  CrateUnit * cr = dynamic_cast<CrateUnit*>(myBoard->parent());
@@ -151,15 +176,15 @@ void L0Muon::CoreUnit::execute() {
   m_tower.reset();
 
   makePads();
-  if (m_debug) std::cout << "Core:execute after makePads " << std::endl; 
+  if (m_debug) std::cout << "*!* CoreUnit::execute after makePads " << std::endl; 
   makeTower();
-  if (m_debug) std::cout << "Core:execute after makeTower "<< std::endl; 
+  if (m_debug) std::cout << "*!* CoreUnit::execute after makeTower "<< std::endl; 
 
   
   //IMuonTileXYZTool *iTileXYZTool = cr->getMuonTool();  
   //m_tower.setMuonToolInTower(iTileXYZTool);
   
-  m_tower.processTower(m_pu);
+  m_tower.processTower(m_mid);
   m_cand = m_tower.puCandidates();
 
   // Debug
@@ -195,43 +220,53 @@ void L0Muon::CoreUnit::execute() {
   } else if (m_cand.size()>2){
     m_status = L0MuonStatus::PU_OVERFLOW;
   }
-  if (m_debug) std::cout << "Core: " << "Number of Candidates" <<" " 
+  if (m_debug) std::cout << "*!* CoreUnit::execute number of Candidates" <<" " 
 			 << m_cand.size() << std::endl;
 
   // Addresses for candidates (L0Buffers)
 
   L0Muon::RegisterFactory* rfactory = L0Muon::RegisterFactory::instance();
-  L0BufferUnit* l0buffer= dynamic_cast<L0BufferUnit*>(m_parent->subUnit("l0buf"));
+  L0BufferUnit* l0buffer= dynamic_cast<L0BufferUnit*>(m_parent->subUnit("L0BufferUnit"));
+  if ( l0buffer== NULL) {
+    std::cout << "*** FATAL ERROR ***\n";
+    std::cout << "    L0Muon::CoreUnit::execute\n";
+    std::cout << "    l0buffer unit not found l0buffer="<<l0buffer<<"\n";
+  }
      
   for (int icand= 0; icand<2; icand++){
+    if (m_debug) std::cout << "*!* CoreUnit::execute loop over candidates   icand=" << icand << std::endl;
     int nbits = m_tower.addr(icand).size();
+    if (m_debug) std::cout << "*!* CoreUnit::execute loop over candidates   nbits=" << nbits << std::endl;
     
     // Prepare registers with addresser for candidates
     char * name = "(R%d,%d,%d)_addr_candidate%d";
     char buf[4096];     
-    sprintf(buf,name,m_pu.region(), m_pu.nX(), m_pu.nY(),icand+1);
+    sprintf(buf,name,m_mid.region(), m_mid.nX(), m_mid.nY(),icand+1);
     TileRegister* pReg= rfactory->createTileRegister(buf,nbits);
     pReg->setType("Outputfield");     
     pReg->set(m_tower.addr(icand));
          
+    if (m_debug) std::cout << "*!* CoreUnit::execute regiser for candidates prepared and set" << std::endl;
     //load address in l0buffer
     if (m_buildL0Buffer){
       char * name = "cand%d";      
       char buf[4096];      
       sprintf(buf,name,icand);      
       l0buffer->addInputRegister(pReg,buf);
+      if (m_debug) std::cout << "*!* CoreUnit::execute regiser for candidates added to l0buffer" << std::endl;
     }
  
     if (bcsu != NULL){
       bcsu->addInputRegister(pReg);
+      if (m_debug) std::cout << "*!* CoreUnit::execute regiser for candidates added to bcsu" << std::endl;
     }
           
   }
 
-  // Status world for candidates: Prepare register with status word
+  // Status words for candidates: Prepare register with status word
   char * name = "(R%d,%d,%d)_status";      
   char buf[4096];      
-  sprintf(buf,name,m_pu.region(), m_pu.nX(), m_pu.nY());      
+  sprintf(buf,name,m_mid.region(), m_mid.nX(), m_mid.nY());      
   unsigned long int status= m_cand.size()<3 ? m_cand.size() : 3ul;
   boost::dynamic_bitset<> bits(4,status);
   int nbits = bits.size();
@@ -250,6 +285,8 @@ void L0Muon::CoreUnit::execute() {
   if (bcsu != NULL){
     bcsu->addInputRegister(pReg);
   }
+
+  if (m_debug) std::cout << "*!* CoreUnit::execute Registers done" <<std::endl;
         
   // load Candidates and Offsets in BCSU (the first two candidates are transmitted to BCSU
   if (m_cand.size()>0 && m_cand.size()<3){

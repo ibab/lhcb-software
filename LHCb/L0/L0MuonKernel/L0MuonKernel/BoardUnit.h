@@ -15,17 +15,23 @@
 #include <vector>
 #include "L0mConf/L0MPuNodeBase.h"
 #include "L0MuonKernel/ProcUnit.h"
-#include "ProcessorKernel/Unit.h"
+#include "L0MuonKernel/L0MUnit.h"
 
 
 namespace L0Muon {
 
-   class BoardUnit : public Unit {
+   class BoardUnit : public L0MUnit {
      
   public:
 
     /// Constructor 
     BoardUnit();
+
+    /// Constructor 
+    BoardUnit(MuonTileID id);
+
+    /// Constructor 
+    BoardUnit(DOMNode* pNode);
 
     /// Destructor
     ~BoardUnit();

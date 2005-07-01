@@ -15,17 +15,23 @@
 #include <vector>
 #include <cmath>
 #include <utility>
-#include "ProcessorKernel/Unit.h"
+#include "L0MuonKernel/L0MUnit.h"
 #include "L0MuonKernel/Candidate.h"
 
 namespace L0Muon {
 
-  class BCSUnit : public Unit {
+  class BCSUnit : public L0MUnit {
 
   public:
 
     /// Constructor 
-    BCSUnit(MuonTileID puid);
+    BCSUnit();
+
+    /// Constructor 
+    BCSUnit(MuonTileID id);
+
+    /// Constructor 
+    BCSUnit(DOMNode* pNode);
 
     /// Destructor
     ~BCSUnit();
@@ -75,8 +81,6 @@ namespace L0Muon {
     void setIdBCSU();  // set the Identification field
     
     boost::dynamic_bitset<> codedPt(double pt); // code the value of pt on 8 bits
-
-    MuonTileID m_id;
 
     boost::dynamic_bitset<> m_BcsuInput; // bitset for input field
     boost::dynamic_bitset<> m_BcsuOut ;  // bitset for output field

@@ -1,6 +1,5 @@
 //#include <time.h>
 #include "L0MuonKernel/ProcUnit.h"
-#include "L0MuonKernel/CrateUnit.h"
 #include "L0mConf/L0MFoi.h"
 #include "L0MuonKernel/Utilities.h"
 
@@ -17,14 +16,6 @@ L0Muon::ProcUnit::ProcUnit() {
 */
 L0Muon::ProcUnit::ProcUnit(L0MPuNodeBase & puNode) {
 
-  //=============================================
-  //=                                           =
-  //=   Default values for variables            =
-  //=                                           =
-  //=============================================
-
-  m_buildL0Buffer = false;
-
 
   //=============================================
   //=                                           =
@@ -32,10 +23,7 @@ L0Muon::ProcUnit::ProcUnit(L0MPuNodeBase & puNode) {
   //=                                           =
   //=============================================
 
-  m_maxFoi = puNode.fieldOfInterest();
-  m_pu = puNode.id();
-  m_boardID =puNode.board();
-  setName(puNode.name());
+  m_mid = puNode.id();
   
   //=============================================
   //=                                           =
@@ -48,22 +36,16 @@ L0Muon::ProcUnit::ProcUnit(L0MPuNodeBase & puNode) {
   }
 
   // Core Unit
-  CoreUnit    * m_cu = new CoreUnit();
+  CoreUnit    * m_cu = new CoreUnit(m_mid);
   addUnit(m_cu);
-  m_cu->setParent(this);
-  m_cu->setPU(puNode.id());
 
   // Formatting Unit
-  FormattingUnit * m_formatting = new FormattingUnit();
+  FormattingUnit * m_formatting = new FormattingUnit(m_mid);
   addUnit(m_formatting);
-  m_formatting->setParent(this);
 
   // L0Buffer Unit
-  int type=0;
-  L0BufferUnit   * m_l0b = new L0BufferUnit(type); 
-  addUnit(m_l0b,"l0buf");
-  m_l0b->setParent(this); 
-  m_l0b->setPU(puNode.id());
+  L0BufferUnit   * m_l0b = new L0BufferUnit(m_mid); 
+  addUnit(m_l0b);
 
   //=============================================
   //=                                           =
@@ -114,11 +96,10 @@ L0Muon::ProcUnit::ProcUnit(L0MPuNodeBase & puNode) {
 	if ( sta == 2 ) m_ol3[olcounter] = reg;
 
 	// Register the tileregister
-	addInputRegister(reg);
+	// 	addInputRegister(reg);
 	m_cu->addInputRegister(reg); 
 	m_formatting->addInputRegister(reg);
 	m_l0b->addInputRegister(reg);
-
       }// End if tiles transfered
       olcounter++;
     }  // End of loop over optical links
@@ -166,7 +147,7 @@ L0Muon::ProcUnit::ProcUnit(L0MPuNodeBase & puNode) {
 	  sprintf(buf,formatIn,
 		  namefunc, 
 		  sta,
-		  m_pu.quarter(),
+		  m_mid.quarter(),
 		  (*ip).region(),(*ip).nX(),(*ip).nY(), 
 		  puNode.name().c_str());
           if (m_debug) std::cout << "name for Register" <<" " << buf <<  std::endl;
@@ -209,7 +190,7 @@ L0Muon::ProcUnit::ProcUnit(L0MPuNodeBase & puNode) {
           sprintf(buf,format, 
                   namefunc, 
                   sta, 
-                  m_pu.quarter(),
+                  m_mid.quarter(),
                   puNode.name().c_str(),
                   (*ip).region(),(*ip).nX(),(*ip).nY());             
           if (m_debug) std::cout << "name for Register" <<" " << buf <<  std::endl;
@@ -260,6 +241,7 @@ L0Muon::ProcUnit::ProcUnit(L0MPuNodeBase & puNode) {
     m_l0b->addOutputRegister(reg,"L0bOut");
   }
 
+
   // // //   // --- Output fields  ---------------
 
   // // //   for (int icand= 0; icand<2; icand++){
@@ -267,7 +249,7 @@ L0Muon::ProcUnit::ProcUnit(L0MPuNodeBase & puNode) {
   // // //     // Prepare registers with addresser for candidates
   // // //     char * name = "(R%d,%d,%d)_addr_candidate%d";
   // // //     char buf[4096];     
-  // // //     sprintf(buf,name,m_pu.region(), m_pu.nX(), m_pu.nY(),icand+1);
+  // // //     sprintf(buf,name,m_mid.region(), m_mid.nX(), m_mid.nY(),icand+1);
   // // //     TileRegister* pReg= rfactory->createTileRegister(buf,nbits);
   // // //     pReg->setType("Outputfield");     
   // // //     char * format = "cand%d";      
@@ -275,10 +257,18 @@ L0Muon::ProcUnit::ProcUnit(L0MPuNodeBase & puNode) {
   // // //     m_l0b->addInputRegister(reg,buf);
   // // //   }
 
-  
-
 }
-
+/**
+   Constructor
+*/
+L0Muon::ProcUnit::ProcUnit(DOMNode* pNode):L0MUnit(pNode) {
+  
+  //   for (std::vector<L0Muon::Unit*>::iterator iu=m_units.begin();iu!=m_units.end();iu++){
+  //     if ((*iu)->type()=="CoreUnit") m_cu = (*iu);
+  //     if ((*iu)->type()=="FomattingUnit") m_formatting = (*iu);
+  //     if ((*iu)->type()=="L0BufferUnit") m_l0b = (*iu);
+  //   }
+}
 /**
    Return the list of tiles in the l0buffer
    SHOULD BE CHANGED TO BE SET ACCORDING TO THE DATABASE
@@ -341,165 +331,32 @@ std::vector<L0MTile> L0Muon::ProcUnit::l0bufferTileList(L0MPuNodeBase & puNode){
   return l0mtilelist;
 }
 
-/**
-   Set the registers for the l0buffer used in the testbench (temporarly)
-*/
-std::map<std::string, std::string>  L0Muon::ProcUnit::setPLLRegisters(MuonTileID puid, std::string l0bufferMapPath){
-  //
-  // Set the tile register used for the output of the L0buffer specific to V2-TestBench.
-  //
-
-  std::map<std::string, std::string> registerNames;
-  registerNames["l0buffer"] = UNKNOWN;
-  registerNames["OL"]       = UNKNOWN;
-  if (l0bufferMapPath==UNKNOWN) return registerNames;
-
-  L0Muon::RegisterFactory* rfactory = L0Muon::RegisterFactory::instance();
-  // 
-  // --- PLL stuff: l0buffer specific to V2-TestBench
-  //
-  // The tile content of these registers are described in external files.
-  //
-  // // //   std::cout << "ProcUnit::setPLLRegisters name():" << name() << std::endl;
-  std::vector<L0MTile> l0mtilelist;
-      
-  // PLL L0Buffer:
-  // Read the map describing the content of the PLL L0Buffer
-  // If no map is found, the L0Buffer for this PU will not be activated.
-  l0mtilelist=tileListFromMap(puid,0,l0bufferMapPath);
-  // // //   std::cout << "ProcUnit::setPLLRegisters [buf] l0mtilelist=" << l0mtilelist.size() << std::endl;
-  if (l0mtilelist.size()>0) {
-
-    // Create the Tile register for the PLL L0Buffer
-    char buf[4096];
-    char* format ;
-    format = "PLLBUF_Q%d_%s";
-    sprintf(buf,format,puid.quarter(),name().c_str());
-    TileRegister* reg = rfactory->createTileRegister(buf,l0mtilelist.size());
-    registerNames["l0buffer"] = buf;
-
-    // Set the type
-    reg->setType("L0Buffer");
-    L0Muon::splitTileListInfo(l0mtilelist,reg);
-      
-    std::vector<MuonTileID> mids = reg->getTileVector();
-    // // //     std::cout << "ProcUnit::setPLLRegisters [buf] mids.size()=" << mids.size() << std::endl;
-
-  } // End PLL L0Buffer
-
-  // PLL OL:
-  // Read the map describing the content of the PLL OL
-  // If no map is found, the L0Buffer for this PU will not be activated.
-  l0mtilelist=tileListFromMap(puid,1,l0bufferMapPath);
-  // // //   std::cout << "ProcUnit::setPLLRegisters [OL] l0mtilelist=" << l0mtilelist.size() << std::endl;
-  if (l0mtilelist.size()>0) {
-
-    // Create the Tile register for the PLL OL
-    char buf[4096];
-    char* format ;
-    format = "PLLOL_Q%d_%s";
-    sprintf(buf,format,puid.quarter(),name().c_str());
-    TileRegister* reg = rfactory->createTileRegister(buf,l0mtilelist.size());
-    registerNames["OL"] = buf;
-      
-    // Set the type
-    reg->setType("OLBuffer");
-    L0Muon::splitTileListInfo(l0mtilelist,reg);
-
-    std::vector<MuonTileID> mids = reg->getTileVector();
-    // // //     std::cout << "ProcUnit::setPLLRegisters [OL] mids.size()=" << mids.size() << std::endl;
-            
-  } // End PLL OL
-
-  return registerNames;
-
-}
 
 /**
    Initialize
 */
 void L0Muon::ProcUnit::initialize() {
-  CrateUnit * pcrate = dynamic_cast<CrateUnit *>( parentByType("CrateUnit"));
+  if (m_debug) std::cout << "*!* ProcUnit::initialize " <<  std::endl;
+  Unit * parent = parentByType("MuonTriggerUnit");
 
-  if ( pcrate->getProperty("BuildL0Buffer") == "True") m_buildL0Buffer = true;
+  std::string buildL0Buffer = parent->getProperty("BuildL0Buffer");
+  m_buildL0Buffer = false;
+  if (buildL0Buffer== "True") m_buildL0Buffer = true;
 
-
-  // Construct the PLL L0Buffer (V2-TestBench)
-  bool l0bufferPLLFlag    = true;
-
-  if (m_debug) std::cout << "ProcUnit::initialize " 
-			 << "m_buildL0Buffer " << m_buildL0Buffer << " " 
-			 << "l0bufferPLLFlag " << l0bufferPLLFlag <<  std::endl;
+  if (m_debug) std::cout << "*!* ProcUnit::initialize " 
+			 << "m_buildL0Buffer " << m_buildL0Buffer <<  std::endl;
   
   if ( m_buildL0Buffer ) {
-
-    // Create a L0BufferUnit for the PLL buffer
-    int type=1;
-    L0BufferUnit   * m_l0bpll = new L0BufferUnit(type); 
-    addUnit(m_l0bpll, "l0bufpll");
-    m_l0bpll->setParent(this);
-    m_l0bpll->setName("PLLBuf");
-    m_l0bpll->setPU(m_pu);
-
-    // Register the input registers
-    std::map<std::string,Register*>::iterator ir ;
-    for (ir = m_inputs.begin(); ir!= m_inputs.end(); ir++){   
-      TileRegister * itr = dynamic_cast<TileRegister*>(ir->second);
-      if (itr->Type()=="OpticalLink") {
-	m_l0bpll->addInputRegister(itr);
-      }
-      if (itr->Type()=="L0Buffer") {
-	m_l0bpll->addInputRegister(itr,"L0bIn");	  
-      }
-    }
-
-    // Set the output registers
-    std::string l0bufferMapPath    = pcrate->getProperty("L0BufferPLLMapPath");
-    if (m_debug) std::cout << "ProcUnit::initialize " 
-			   << "l0bufferMapPath " << l0bufferMapPath <<  std::endl;
-    std::map<std::string, std::string> registerNames = setPLLRegisters(m_pu, l0bufferMapPath);
-
-    // Register the output register
-    L0Muon::RegisterFactory* rfactory = L0Muon::RegisterFactory::instance();
-
-    // L0Buffer part
-    std::string l0bufferRegisterName=registerNames["l0buffer"];
-    if (m_debug) std::cout << "ProcUnit::initialize " 
-			   << "l0bufferRegisterName " << l0bufferRegisterName <<  std::endl;
-    if (l0bufferRegisterName!=UNKNOWN){
-      TileRegister* reg = rfactory->searchTileRegister(l0bufferRegisterName.c_str());
-      // Add the the register to the PLL L0buffer unit output registers
-      m_l0bpll->addOutputRegister(reg,"L0bOut");	  
-    } else {
-      l0bufferPLLFlag = false;
-    }
-
-    // OL part
-    std::string olRegisterName=registerNames["OL"];
-    if (m_debug) std::cout << "ProcUnit::initialize " 
-			   << "olRegisterName " << olRegisterName <<  std::endl;
-    if (olRegisterName!=UNKNOWN){
-      TileRegister* reg = rfactory->searchTileRegister(olRegisterName.c_str());
-      // Add the the register to the PLL L0buffer unit output registers
-      m_l0bpll->addOutputRegister(reg,"OLOut");	  
-    } else {
-      l0bufferPLLFlag = false;
-    }
-
     //---- Output Settings for the L0Buffers
-    std::string l0bufferStdOutSuffixe= pcrate->getProperty("L0BufferStdSuffixe");
-    if (l0bufferStdOutSuffixe!=UNKNOWN) {
-      L0BufferUnit* m_l0b = dynamic_cast<L0BufferUnit*>(subUnit("l0buf"));
-      m_l0b->setOutputFile(m_pu, l0bufferStdOutSuffixe);
+    std::string suffixe= parent->getProperty("L0BufferPath");
+    if (suffixe!=UNKNOWN) {
+      for (std::vector<L0Muon::Unit*>::iterator iu=m_units.begin();iu!=m_units.end();iu++){
+	if ((*iu)->type()=="L0BufferUnit"){
+	  L0BufferUnit* l0buffer= dynamic_cast<L0BufferUnit*>(*iu);
+	  l0buffer->setOutputFile(m_mid, suffixe);
+	}
+      }
     }
-    std::string l0bufferPLLOutSuffixe= pcrate->getProperty("L0BufferPLLSuffixe");
-    if ( l0bufferPLLFlag  && l0bufferPLLOutSuffixe!=UNKNOWN) {
-      L0BufferUnit* m_l0bpll = dynamic_cast<L0BufferUnit*>(subUnit("l0bufpll"));
-      m_l0bpll->setOutputFile(m_pu, l0bufferPLLOutSuffixe);
-    }
-    if (m_debug) std::cout << "ProcUnit::initialize " 
-			   << "l0bufferPLLOutSuffixe " << l0bufferPLLOutSuffixe << " " 
-			   << "l0bufferPLLFlag " << l0bufferPLLFlag <<  std::endl;
   
   } // End if m_buildL0Buffer
   L0Muon::Unit::initialize();
