@@ -1,4 +1,4 @@
-// $Id: XmlMuonRegionCnv.cpp,v 1.15 2005-06-09 06:59:02 pkoppenb Exp $
+// $Id: XmlMuonRegionCnv.cpp,v 1.16 2005-07-01 09:48:19 cattanem Exp $
 
 // Include files
 #include <cstdio>
@@ -504,6 +504,7 @@ XmlMuonRegionCnv::makeChamberObjects(xercesc::DOMElement* &childElement,
       log << MSG::VERBOSE << "The store rejected chamber " << chamberName 
           << ": Known problem with the Muon geometry implementation..." 
           << endmsg;
+      delete cChamber;
       return StatusCode::SUCCESS;
     }
     cChamber->createGeometryInfo (logVolName,support,repPath);
