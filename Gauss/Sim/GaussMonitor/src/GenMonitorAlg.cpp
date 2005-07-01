@@ -1,4 +1,4 @@
-// $Id: GenMonitorAlg.cpp,v 1.4 2005-06-23 17:57:26 gcorti Exp $
+// $Id: GenMonitorAlg.cpp,v 1.5 2005-07-01 11:51:19 gcorti Exp $
 // Include files 
 
 // from Gaudi
@@ -110,7 +110,11 @@ StatusCode GenMonitorAlg::execute() {
       }
       debug() << "Monitor for " << (*it)->generatorName()
               << endmsg;
-      
+
+      // Plot process type
+      plot( (*it)->pGenEvt()->signal_process_id(), 5, "Process type", 
+            -0.5, 110.5, 111);
+
       bool primFound = false;
       nPileUp++;
       for( HepMC::GenEvent::particle_const_iterator 
@@ -124,17 +128,17 @@ StatusCode GenMonitorAlg::execute() {
             if( (hepMCpart->status() == 1) || (hepMCpart->status() == 888 ) ) {
               primFound = true;
               plot( hepMCpart->production_vertex()->position().x(), 11,
-                    "PrimaryVertex x (mm)", -0.5, 0.5 );
+                    "PrimaryVertex x (mm)", -0.5, 0.5, 100 );
               plot( hepMCpart->production_vertex()->position().y(), 12,
-                    "PrimaryVertex y (mm)", -0.5, 0.5 );
+                    "PrimaryVertex y (mm)", -0.5, 0.5, 100 );
               plot( hepMCpart->production_vertex()->position().z(), 13,
-                    "PrimaryVertex z (mm)", -200., 200. );
+                    "PrimaryVertex z (mm)", -200., 200., 100 );
               plot( hepMCpart->production_vertex()->position().z(), 14,
-                    "PrimaryVertex z, all Velo (mm)", -1000., 1000. );
+                    "PrimaryVertex z, all Velo (mm)", -1000., 1000., 100 );
             }
           }
           plot( hepMCpart->momentum().vect().mag(), 21, 
-                "Momentum of all particles (GeV)", 0., 100. );
+                "Momentum of all particles (GeV)", 0., 100., 100 );
           plot( hepMCpart->pdg_id(), 22,
                 "PDGid of all particles", -4999., 5000., 10000 );
         }
@@ -146,11 +150,11 @@ StatusCode GenMonitorAlg::execute() {
           nParticlesStable++;
           if( produceHistos() ) {
             plot( hepMCpart->momentum().vect().mag(), 31,
-                  "Momentum of protostable particles (GeV)", 0., 100. );
+                  "Momentum of protostable particles (GeV)", 0., 100., 100 );
             plot( hepMCpart->pdg_id(), 32,
                   "PDGid of protostable particles", -4999., 5000., 10000 );
             plot( lifetime( hepMCpart ), 33,
-                  "Lifetime protostable particles", -1.5e-10, 1.5e-10 );
+                  "Lifetime protostable particles", -1.5e-10, 1.5e-10, 100 );
           }
           // Charged stable particles meaning really stable after EvtGen
           ParticleID pID( hepMCpart->pdg_id() );
@@ -170,7 +174,7 @@ StatusCode GenMonitorAlg::execute() {
                       "Pseudorapidity stable charged particles",
                       -15., 15., 150 );
                 plot( hepMCpart->momentum().perp(), 45, 
-                      "Pt stable charged particles", 0., 20. );
+                      "Pt stable charged particles", 0., 20., 100 );
               }
             }
           }    
@@ -196,7 +200,7 @@ StatusCode GenMonitorAlg::execute() {
   m_nEvents++ ;
   
   info() << "Event number " << m_nEvents << " contains "
-         << nParticles << " particles" << endreq ;
+         << nParticles << " particles" << endreq ;  
 
   return StatusCode::SUCCESS;
 };

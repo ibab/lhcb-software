@@ -4,6 +4,10 @@
 ! Purpose     : Hold monitoring algorithms for Gauss
 !-----------------------------------------------------------------------------
 
+! 2005-07-01 - Gloria CORTI
+ - src/GenMonitorAlg.cpp
+   . Add new histogram on event process type
+
 !======================= GaussMonitor v2r1 ===================================
 ! 2005-06-24 - Gloria CORTI
  - src/GeneratorFullMonitor.{h,cpp}
