@@ -1,4 +1,4 @@
-// $Id: TileRegister.h,v 1.6 2005-05-25 13:30:09 jucogan Exp $
+// $Id: TileRegister.h,v 1.7 2005-07-01 12:39:12 jucogan Exp $
 
 #ifndef PROCESSORKERNEL_TILEREGISTER_H
 #define PROCESSORKERNEL_TILEREGISTER_H     1
@@ -69,12 +69,6 @@ public:
   /// Return the vector of MuonTileIDs for bits set to 1      
   std::vector<MuonTileID> firedTiles();
 
-  /// Set the type of the register (optical link, neigh input/output)
-  void setType( std::string str){ m_fieldtype = str ;}
-
-  /// Return the type of the register  
-  std::string Type() { return m_fieldtype;}
-
   /// Set the tile id
   void setTile(MuonTileID & id);
   
@@ -103,12 +97,13 @@ public:
 
   void print_tiles(FILE *file, int ntiles_per_line=4);
   
+  std::string toXML(std::string tab="");
+
 private:
 
   std::vector<MuonTileID> m_ids ;  // MuonTileIDs mapping
   std::vector<MuonTileID> m_pads;
 
-  std::string m_fieldtype ;
   boost::dynamic_bitset<> m_tilestag ;
   boost::dynamic_bitset<> m_stripstag ;
 

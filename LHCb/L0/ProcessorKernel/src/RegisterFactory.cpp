@@ -19,7 +19,7 @@ L0Muon::RegisterFactory* L0Muon::RegisterFactory::instance() {
 }
 
 L0Muon::Register* L0Muon::RegisterFactory::createRegister
-                 (std::string name, int size) {
+(std::string name, int size) {
   
   std::map<std::string,L0Muon::Register*>::iterator ind;
   ind = m_registers.find(name);
@@ -36,7 +36,7 @@ L0Muon::Register* L0Muon::RegisterFactory::createRegister
 }
 
 L0Muon::TileRegister* L0Muon::RegisterFactory::createTileRegister
-                 (std::string name, int size) {
+(std::string name, int size) {
   
   std::map<std::string,L0Muon::Register*>::iterator ind;
   ind = m_registers.find(name);
@@ -52,7 +52,7 @@ L0Muon::TileRegister* L0Muon::RegisterFactory::createTileRegister
 }
 
 L0Muon::TileRegister* L0Muon::RegisterFactory::searchTileRegister
-                 (std::string name) {
+(std::string name) {
   
   std::map<std::string,L0Muon::Register*>::iterator ind;
   ind = m_registers.find(name);
@@ -60,7 +60,7 @@ L0Muon::TileRegister* L0Muon::RegisterFactory::searchTileRegister
    
     m_found = true;
     
-   return dynamic_cast<L0Muon::TileRegister*>((*ind).second);
+    return dynamic_cast<L0Muon::TileRegister*>((*ind).second);
   } else {
     return 0;
     
@@ -91,3 +91,176 @@ createAlias(std::string name, std::string alias) {
 void L0Muon::RegisterFactory::dump() {
   std::cout << "RegisterFactory: " << m_registers.size() << " registers" << std::endl;
 }
+
+
+std::string L0Muon::RegisterFactory::toXML(std::string tab){
+
+  std::string xmlString=tab;
+
+  char buf[8];
+  std::string str;
+
+
+  xmlString += "<"+XMLRegisterFactory+" ";
+  sprintf(buf,"%d",m_registers.size());
+  str = buf;
+  xmlString += " size = \""+str+"\" ";
+  xmlString += " >\n";
+
+  
+
+  // Write registers (skip aliases)
+  std::map<std::string,Register*>::iterator i_registers;  
+  for (i_registers=m_registers.begin();i_registers!=m_registers.end();i_registers++){
+    if ((*i_registers).second->name()==(*i_registers).first)
+      xmlString += (*i_registers).second->toXML(tab+"    ");
+  }
+  
+  // Write aliases
+  for (i_registers=m_registers.begin();i_registers!=m_registers.end();i_registers++){
+    if ((*i_registers).second->name()!=(*i_registers).first) {
+      xmlString += tab+"    ";
+      xmlString += "<"+XMLRegisterAlias+" ";
+      xmlString += " alias = \""+(*i_registers).first+"\" ";
+      xmlString += " name = \""+(*i_registers).second->name()+"\" ";
+      xmlString += " />\n";
+    } 
+  }
+  
+  xmlString += tab;
+  xmlString +="</"+XMLRegisterFactory+">\n";
+
+  return xmlString;
+  
+}
+
+void L0Muon::RegisterFactory::fromXML(DOMNode* pNode){
+  
+  //Get the attributes
+  DOMNamedNodeMap* di = pNode->getAttributes();
+  int size         = getAttributeInt(di, "size");
+
+  //Fill the internal dictionary with puNode
+  XMLCh* REGISTER      = XMLString::transcode(XMLRegister.c_str());
+  XMLCh* TILEREGISTER  = XMLString::transcode(XMLTileRegister.c_str());
+  XMLCh* REGISTERALIAS = XMLString::transcode(XMLRegisterAlias.c_str());
+  DOMNode *child = pNode->getFirstChild();
+  while(child) {
+    
+    if(XMLString::equals(child->getNodeName(),REGISTER)) {
+      registerFromNode(child);
+    } else if (XMLString::equals(child->getNodeName(),TILEREGISTER)) {
+      tileRegisterFromNode(child);
+    }else if (XMLString::equals(child->getNodeName(),REGISTERALIAS)) {
+      registerAliasFromNode(child);
+    }
+    child = child->getNextSibling();
+  }
+  
+  if (m_registers.size()!=size) {
+    std::cout <<"L0Muon::RegisterFactory::fillFactory "<<m_registers.size()<<" != "<<size <<std::endl;
+    std::cout << "Please raise a proper exception"<<std::endl;
+    exit(-1);
+  }
+} 
+
+void L0Muon::RegisterFactory::registerFromNode(DOMNode* pNode){
+  DOMNamedNodeMap* di = pNode->getAttributes();
+  std::string name = getAttributeStr(di, "name");
+  std::string type = getAttributeStr(di, "type");
+  int size         = getAttributeInt(di, "size");
+  Register* preg = createRegister(name,size);
+  preg->setType(type);
+}
+
+void L0Muon::RegisterFactory::tileRegisterFromNode(DOMNode* pNode){
+
+  XMLCh* TILE = XMLString::transcode(XMLTile.c_str());
+
+  DOMNamedNodeMap* di = pNode->getAttributes();
+  std::string name = getAttributeStr(di, "name");
+  std::string type = getAttributeStr(di, "type");
+  int size         = getAttributeInt(di, "size");
+
+  TileRegister* preg = createTileRegister(name,size);
+  preg->setType(type);
+
+  std::vector<MuonTileID> ids;  
+  boost::dynamic_bitset<> tilestag ;
+  boost::dynamic_bitset<> stripstag;
+
+  DOMNode *child = pNode->getFirstChild();
+  while(child) {
+    if(XMLString::equals(child->getNodeName(),TILE)) {
+      tileFromNode(child,&ids,&tilestag,&stripstag);
+    }
+    child = child->getNextSibling();
+  }
+  preg->setTileVector(ids);
+  preg->setTilesTagVector(tilestag);
+  preg->setStripsTagVector(stripstag);
+}
+
+void L0Muon::RegisterFactory::registerAliasFromNode(DOMNode* pNode){
+  DOMNamedNodeMap* di = pNode->getAttributes();
+  std::string alias = getAttributeStr(di, "alias");
+  std::string name  = getAttributeStr(di, "name");
+  createAlias(name,alias);
+}
+
+void L0Muon::RegisterFactory::tileFromNode(DOMNode* pNode, 
+					   std::vector<MuonTileID> * mids, 
+					   boost::dynamic_bitset<> * tilestag, 
+					   boost::dynamic_bitset<> * stripstag){
+
+  DOMNamedNodeMap* di = pNode->getAttributes();
+  
+  std::string id  = getAttributeStr(di, "id");
+  int itilestag   = getAttributeInt(di, "tilestag");
+  int istripstag  = getAttributeInt(di, "stripstag");
+
+
+  mids->push_back(MuonTileID(id));
+  tilestag->push_back(itilestag);
+  stripstag->push_back(istripstag);
+}
+
+////////////////////////////////////////////////////////////////////////////////
+//
+//  getAttribute
+//
+////////////////////////////////////////////////////////////////////////////////
+
+int L0Muon::RegisterFactory::getAttributeInt(DOMNamedNodeMap* di, const char* key){
+  
+  const XMLCh* valX;
+  int          valI;
+  
+  XMLCh* xmlKey = XMLString::transcode(key);
+  
+  valX = di->getNamedItem(xmlKey)->getNodeValue();
+  valI = XMLString::parseInt(valX);
+  
+  XMLString::release(&xmlKey); //Release memory used by the transcode method
+  return valI;
+
+}
+
+std::string L0Muon::RegisterFactory::getAttributeStr(DOMNamedNodeMap* di, const char* key){
+
+  const XMLCh* valX;
+  char*  valC;
+  std::string  valS;
+  
+  XMLCh* xmlKey = XMLString::transcode(key);
+  
+  valX = di->getNamedItem(xmlKey)->getNodeValue();
+  valC = XMLString::transcode(valX);
+  valS = valC;
+  
+  XMLString::release(&xmlKey); //Release memory used by the transcode method
+  XMLString::release(&valC);   //Release memory used by the transcode method
+  return valS;
+  
+}
+

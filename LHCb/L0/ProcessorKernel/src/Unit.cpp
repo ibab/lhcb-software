@@ -6,8 +6,9 @@ L0Muon::Unit::Unit() {
 
   m_parent =0;
   m_debug = false;
-  m_name = "Unknown";  
+//   m_name = "Unknown";  
 }
+
     
 L0Muon::Unit::~Unit() {} 
 
@@ -16,14 +17,24 @@ void L0Muon::Unit::setParent(L0Muon::Unit * unit)
   m_parent = unit;
 }
 
+L0Muon::Unit * L0Muon::Unit::subUnit(std::string type)
+{
+  std::vector<L0Muon::Unit*>::iterator iu;
+  for (iu=m_units.begin();iu!=m_units.end();iu++){
+    if( (*iu)->type()==type) return (*iu);
+  }
+  return 0;
+  
+}
 
-std::string L0Muon::Unit::getProperty(std::string name) {
-  std::map<std::string,std::string>::iterator im;
+
+L0Muon::Property L0Muon::Unit::getProperty(std::string name) {
+  std::map<std::string,L0Muon::Property>::iterator im;
   im = m_properties.find(name);
   if (im!=m_properties.end()) {
     return (*im).second;
   } else {
-    return "Unknown";
+    return L0Muon::Property("Unknown");
   }
 }
 
@@ -48,17 +59,16 @@ void L0Muon::Unit::addOutputRegister(L0Muon::Register* out) {
   m_outputs[nm] = out ;
 }
 
-void L0Muon::Unit::addUnit(L0Muon::Unit* punit, std::string uname) {
-
-  m_units[uname] = punit ;
-}
 
 void L0Muon::Unit::addUnit(L0Muon::Unit* punit) {
-  int nreg = m_units.size();
-  char  strbuf[256];
-  sprintf(strbuf,"%d",nreg);
-  std::string iss = strbuf;
-  m_units[iss] = punit ;
+  if (punit->parent()!=0) {
+    std::cout <<"** ERROR: Unit :"<<type()<<std::endl;
+    std::cout <<"** child unit"<<punit->type()<<"already has a parent"<<std::endl;
+    std::cout <<"** parent points to= "<<punit->parent()<<" ("<<punit->parent()->type() <<")"<< std::endl;
+    exit(-1);
+  }
+  punit->setParent(this);
+  m_units.push_back(punit);
 }
 
 void L0Muon::Unit::releaseRegisters() {
@@ -110,17 +120,31 @@ void L0Muon::Unit::dumpRegisters() {
   }
 }
 
-void L0Muon::Unit::setDebugMode() {
+void L0Muon::Unit::setDebugMode(bool debug) {
 
-  m_debug = true;
-  if (m_debug) std::cout <<"*** "<< type() <<"::setDebugMode" << std::endl;
+  m_debug = debug;
+  if (m_debug) std::cout <<"*** "<< type() <<"::setDebugMode " << debug<<std::endl;
   // set debug level for all the subunits
   if ( ! m_units.empty() ) {
-    std::map<std::string,L0Muon::Unit*>::iterator iu;
+    std::vector<L0Muon::Unit*>::iterator  iu;
     for ( iu = m_units.begin(); iu != m_units.end(); iu++ ) {
-      (*iu).second->setDebugMode();
+      (*iu)->setDebugMode(debug);
     }
   } 
+}
+
+void L0Muon::Unit::setProperties(std::map<std::string,L0Muon::Property> properties) {
+  //   std::cout <<"Unit::setProperties IN"<<std::endl;
+  m_properties.clear();
+  //   std::cout <<"Unit::setProperties  m_properties cleared "<<std::endl;
+  //   std::cout <<"Unit::setProperties  m_properties.size()= "<< m_properties.size() <<std::endl;
+  std::map<std::string,L0Muon::Property>::iterator iproperties;
+  for (iproperties=properties.begin(); iproperties!=properties.end(); iproperties++){
+    //     std::cout <<"Unit::setProperties (loop)  "<<iproperties->first<<" "<<iproperties->second<<std::endl;
+    m_properties[iproperties->first]=iproperties->second;
+  }
+  // m_properties = properties;
+  //   std::cout <<"Unit::setProperties OUT"<<std::endl;
 }
 
 void L0Muon::Unit::initialize() {
@@ -128,9 +152,9 @@ void L0Muon::Unit::initialize() {
   if (m_debug) std::cout <<"*** "<< type() <<"::initialize" << std::endl;
   // initialize the subunits
   if ( ! m_units.empty() ) {
-    std::map<std::string,L0Muon::Unit*>::iterator iu;
+    std::vector<L0Muon::Unit*>::iterator  iu;
     for ( iu = m_units.begin(); iu != m_units.end(); iu++ ) {
-      (*iu).second->initialize();
+      (*iu)->initialize();
     }
   } 
 }
@@ -140,9 +164,9 @@ void L0Muon::Unit::preexecute() {
   if (m_debug) std::cout <<"*** "<< type() <<"::preexecute" << std::endl;
   // preexecute the subunits
   if ( ! m_units.empty() ) {
-    std::map<std::string,L0Muon::Unit*>::iterator iu;
+    std::vector<L0Muon::Unit*>::iterator  iu;
     for ( iu = m_units.begin(); iu != m_units.end(); iu++ ) {
-      (*iu).second->preexecute();
+      (*iu)->preexecute();
     }
   } 
 }
@@ -151,9 +175,9 @@ void L0Muon::Unit::execute() {
   if (m_debug) std::cout <<"*** "<< type() <<"::execute" << std::endl;
   // execute the subunits
   if ( ! m_units.empty() ) {
-    std::map<std::string,L0Muon::Unit*>::iterator iu;
+    std::vector<L0Muon::Unit*>::iterator  iu;
     for ( iu = m_units.begin(); iu != m_units.end(); iu++ ) {
-      (*iu).second->execute();
+      (*iu)->execute();
 
     }
   }  
@@ -164,9 +188,9 @@ void L0Muon::Unit::postexecute() {
   if (m_debug) std::cout <<"*** "<< type() <<"::postexecute" << std::endl;
   // postexecute the subunits
   if ( ! m_units.empty() ) {
-    std::map<std::string,L0Muon::Unit*>::iterator iu;
+    std::vector<L0Muon::Unit*>::iterator  iu;
     for ( iu = m_units.begin(); iu != m_units.end(); iu++ ) {
-      (*iu).second->postexecute();
+      (*iu)->postexecute();
     }
   } 
 }
@@ -175,9 +199,9 @@ void L0Muon::Unit::finalize() {
   if (m_debug) std::cout <<"*** "<< type() <<"::finalize" << std::endl;
   // finalize the subunits
   if ( ! m_units.empty() ) {
-    std::map<std::string,L0Muon::Unit*>::iterator iu;
+    std::vector<L0Muon::Unit*>::iterator  iu;
     for ( iu = m_units.begin(); iu != m_units.end(); iu++ ) {
-      (*iu).second->finalize();
+      (*iu)->finalize();
     }
   } 
 }
@@ -194,24 +218,27 @@ L0Muon::Unit* L0Muon::Unit::parentByType(std::string utype) {
   return uparent;
 }
 
+
 void L0Muon::Unit::dump(int offset) {
 
   std::string blanc(offset,' ');
 
   std::cout << blanc << "+--------- Unit -----------" << std::endl;
-  std::cout << blanc << "| Unit name '" << m_name << "' of type " << type() << std::endl;
+//   std::cout << blanc << "| Unit name '" << m_name << "' of type " << type() << std::endl;
+  std::cout << blanc << "| Unit type " << type() << std::endl;
   if (m_parent) {
-    std::cout << blanc << "| Parent name '" << m_parent->name() << "' of type " 
-              << m_parent->type() << std::endl;
+     std::cout << blanc << "| Parent type " << m_parent->type() << std::endl;
+//     std::cout << blanc << "| Parent name '" << m_parent->name() << "' of type " 
+//               << m_parent->type() << std::endl;
   } else {
     std::cout << blanc << "| No Parent" << std::endl;
   }
   
   if (m_units.size() > 0) {
     std::cout << blanc << "| Subunits:" << std::endl;  
-    std::map<std::string,L0Muon::Unit*>::iterator isu;
+    std::vector<L0Muon::Unit*>::iterator  isu;
     for ( isu = m_units.begin(); isu != m_units.end(); isu++) {
-      std::cout << blanc << "| '" << (*isu).first << "' of type " << (*isu).second->type() << std::endl;
+      std::cout << blanc << "| type " << (*isu)->type() << std::endl;
     }  
   }
   std::cout << blanc << "+--------------------------" << std::endl;    
@@ -222,9 +249,9 @@ void L0Muon::Unit::dumpUnitTree(int offset) {
   dump(offset);
 
   if ( ! m_units.empty() ) {
-    std::map<std::string,L0Muon::Unit*>::iterator iu;
+    std::vector<L0Muon::Unit*>::iterator  iu;
     for ( iu = m_units.begin(); iu != m_units.end(); iu++ ) {
-      (*iu).second->dumpUnitTree(offset+4);
+      (*iu)->dumpUnitTree(offset+4);
     }
   } 
 }

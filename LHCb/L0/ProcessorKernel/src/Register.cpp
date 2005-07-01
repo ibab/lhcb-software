@@ -1,4 +1,5 @@
 #include "ProcessorKernel/Register.h"
+#include <iostream>
 
 L0Muon::Register::Register() {}
 
@@ -24,6 +25,26 @@ void L0Muon::Register::set(const L0Muon::Register& r) {
    }  
 }
 
+
+std::string L0Muon::Register::toXML(std::string tab){
+
+  std::string xmlString=tab;
+
+  char buf[8];
+  std::string str;
+
+  xmlString +="<"+XMLRegister+" ";
+  xmlString +=" name = \""+m_name+"\" ";
+  xmlString +=" type = \""+m_type+"\" ";
+  sprintf(buf,"%d",size());
+  str = buf;
+  xmlString +=" size = \""+str+"\" ";
+  xmlString +=" />";
+  
+  
+
+  return xmlString;
+}
   
 std::ostream& L0Muon::operator<<(std::ostream ost,L0Muon::Register& r) {
   return (ost << r.getBitset());

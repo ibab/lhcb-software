@@ -62,8 +62,7 @@ void L0Muon::TileRegister::setTilesTagVector(boost::dynamic_bitset<> & tilestag)
 }
 
 void L0Muon::TileRegister::setStripsTagVector(boost::dynamic_bitset<> & stripstag){
-  m_stripstag = stripstag;
-  
+  m_stripstag = stripstag; 
 }
 
 
@@ -179,5 +178,40 @@ void L0Muon::TileRegister::print_tiles(FILE *file,int ntiles_per_line){
   fprintf(file,"\n");
 }
 
+std::string L0Muon::TileRegister::toXML(std::string tab){
 
-      
+  std::string xmlString=tab;
+  
+  char buf[8];
+  std::string str;
+
+  xmlString +="<"+XMLTileRegister+" ";
+  xmlString +=" name = \""+name()+"\" ";
+  xmlString +=" type = \""+type()+"\" ";
+  sprintf(buf,"%d",size());
+  str = buf;
+  xmlString +=" size = \""+str+"\" ";
+  xmlString +=" >\n";
+
+  std::vector<MuonTileID>::iterator  i_ids = m_ids.begin();
+  for (int i = 0; i<size();i++) {
+    xmlString +=tab+"    ";
+    xmlString +="<"+XMLTile+" ";
+    xmlString +=" id = \""+(*i_ids).toString()+"\" ";
+    int tilestag = m_tilestag[i];
+    sprintf(buf,"%d",tilestag);
+    str = buf;
+    xmlString +=" tilestag  = \""+str+"\" ";
+    int stripstag = m_stripstag[i];
+    sprintf(buf,"%d",stripstag);
+    str = buf;
+    xmlString +=" stripstag = \""+str+"\" ";
+    xmlString +=" />\n";
+    i_ids++;
+  }
+
+  xmlString += tab;
+  xmlString +="</"+XMLTileRegister+">\n";
+
+  return xmlString;  
+}
