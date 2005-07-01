@@ -13,3 +13,8 @@
 EventSelector.PrintFreq  = 100 ;
 #pragma print on
 
+HistogramPersistencySvc.OutputFile = "Hlt.root";
+
+//Moore.HistoSize = 10000;
+//ApplicationMgr.EvtMax = 10000;
+
