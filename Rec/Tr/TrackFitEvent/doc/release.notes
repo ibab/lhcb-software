@@ -4,6 +4,9 @@
 ! Purpose     : Package for the tracking fitting-related classes
 !-----------------------------------------------------------------------------
 
+! 2005-07-01 - Eduardo Rodrigues
+ - clean-up of debugging statements
+
 ! 2005-06-29 - Eduardo Rodrigues
  - minor additions to FitNode
  - corrected assignment of ambiguity in constructor of OTMeasurement
