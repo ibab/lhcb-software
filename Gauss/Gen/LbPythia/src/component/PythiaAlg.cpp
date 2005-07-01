@@ -1,4 +1,4 @@
-// $Id: PythiaAlg.cpp,v 1.1.1.1 2005-06-21 12:40:51 robbep Exp $
+// $Id: PythiaAlg.cpp,v 1.2 2005-07-01 16:19:26 robbep Exp $
 // ------------------------------------------------------------- 
 // GeneratorModules/PythiaAlg.cxx Description: Allows the user
 // to generate Pythia events and store the result in the
@@ -701,7 +701,7 @@ StatusCode PythiaAlg::fillEvt( HepMC::GenEvent* evt) {
               // and it is a stable particle
               // status = 1 : particle undecayed in Pythia
               if ( ( 1 ==  (*iter) -> status() ) && 
-                   ( 0 != (*iter) -> end_vertex( ) ) ) {
+                   ( 0 == (*iter) -> end_vertex( ) ) ) {
                 // Decay the particle up to the minBMass
                 
                 // The particle which has to be decayed by EvtGen
