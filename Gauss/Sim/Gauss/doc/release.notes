@@ -4,6 +4,10 @@
 ! Purpose     : LHCb Simulation Application with Geant4
 !-----------------------------------------------------------------------------
 
+! 2005-07-01 - Gloria CORTI
+ - Remove obsolete options to read files - jobread.opts - Should instead
+   use GaussRead.opts
+
 !========================== Gauss v19r5 ==================================
 ! 2005-06-24 - Gloria CORTI
  - Allow production of Beam gas events and production of minbias events with
