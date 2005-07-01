@@ -8,7 +8,7 @@ Bs2DsHAndTDR.AvoidSelResult = false ;
 HLTCorrelations.Members += { "SelResultCorrelations/CorrBs2DsH" };
 CorrBs2DsH.Algorithms = { "CheckHLTGeneric"	
                           ,"AllBs2DsHTracks", 
-                           "HLTFilterDs2KKPi", 
+                           "HLTSharedD", 
 			   "HLTFilterBs2DsH",
 			   "TDRselBs2DsPi",
 			   "TDRselBs2DsK",

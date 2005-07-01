@@ -6,8 +6,8 @@ HLTDetachedPions.Filter.Selections = {} ;
 HLTPreselPions.Filter.Selections = {"pi+ : TrackTypeFilterCriterion" }; 
 HLTPreselKaons.Filter.Selections = {"K+ : TrackTypeFilterCriterion" };  
 // kill all other cuts
-HLTFilterDs2KKPi.DaughterFilter.Selections = {};
-HLTFilterDs2KKPi.MotherFilter.Selections = {};
+HLTSharedD.DaughterFilter.Selections = {};
+HLTSharedD.MotherFilter.Selections = {};
 HLTPreselPhotons.Filter.Selections = {} ;
 HLTFilterB2HH.DaughterFilter.Selections = {};
 HLTFilterB2HH.MotherFilter.Selections = {};
@@ -39,7 +39,7 @@ HLTSharedKstar.MotherFilter.Selections = {};
 HLTSharedPhi.MotherFilter.Selections = {};
 
 // MinPt
-HLTFilterDs2KKPi.MinPt = 0.*MeV;
+HLTSharedD.MinPt = 0.*MeV;
 HLTFilterB2HH.MinPt = 0.*MeV;
 HLTFilterBd2D0Kstar.MinPt = 0.*MeV;
 HLTDstarForBd2DstarPi.MinPt = 0.*MeV;
@@ -54,7 +54,7 @@ HLTLooseD02PiPi.MinPt = 0.*MeV;
 
 // Window
 
-HLTFilterDs2KKPi.Window= 10000.*MeV;
+HLTSharedD.Window= 10000.*MeV;
 HLTFilterB2HH.Window= 10000.*MeV;
 HLTFilterBd2D0Kstar.Window= 10000.*MeV;
 HLTDstarForBd2DstarPi.Window= 10000.*MeV;

@@ -75,11 +75,11 @@ FilterD0ForHLTBd2DstarPi.InputPlotsPath  = "D04DstarPiIn" ;
 FilterD0ForHLTBd2DstarPi.OutputPlotsPath = "D04DstarPiOut";
 
 // Ds
-HLTFilterDs2KKPi.HistoProduce = true ;
-HLTFilterDs2KKPi.DaughterPlots.Variables = { "M", "Chi2", "Vz", "P", "Pt", "IPs" } ;
-HLTFilterDs2KKPi.MotherPlots.Variables =   { "M", "Chi2", "Vz", "P", "Pt", "IPs", "FS" } ;
-HLTFilterDs2KKPi.DaughterPlotsPath = "Ds2KKPiIn" ;
-HLTFilterDs2KKPi.MotherPlotsPath   = "Ds2KKPiOut";
+HLTSharedD.HistoProduce = true ;
+HLTSharedD.DaughterPlots.Variables = { "M", "Chi2", "Vz", "P", "Pt", "IPs" } ;
+HLTSharedD.MotherPlots.Variables =   { "M", "Chi2", "Vz", "P", "Pt", "IPs", "FS" } ;
+HLTSharedD.DaughterPlotsPath = "Ds2KKPiIn" ;
+HLTSharedD.MotherPlotsPath   = "Ds2KKPiOut";
 
 // D* stream
 HLTFilterDstar.HistoProduce = true ;

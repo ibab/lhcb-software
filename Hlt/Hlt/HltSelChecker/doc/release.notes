@@ -4,6 +4,9 @@
 ! Purpose     : High-Level Trigger Exclusive Selections - Checking 
 !-----------------------------------------------------------------------------
 
+! 2005-07-01 - P. Koppenburg
+  Rename HLTFilterDs2KKPi into HLTSharedDs
+
 ! 2005-06-29 - Luis Fernandez
  - options/
    . New option files for ntuples
