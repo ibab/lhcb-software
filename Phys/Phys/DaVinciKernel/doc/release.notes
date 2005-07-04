@@ -1,6 +1,12 @@
-! $Id: release.notes,v 1.56 2005-06-28 15:48:32 pkoppenb Exp $
+! $Id: release.notes,v 1.57 2005-07-04 15:45:32 pkoppenb Exp $
 ! Package     : DaVinciKernel
 ! Responsible : P. Koppenburg
+
+! 2005-07-04 - P. Koppenburg
+  - Kernel/IBTaggingTool.h
+  - Kernel/ISecondaryVertexTool.h
+  - Kernel/ITagger.h
+    . Tagging tools added here.
 
 ! 2005-06-28 - Cristina Lazzeroni
  - Kernel/FilterCriterionBase.h, 
