@@ -1,11 +1,11 @@
-# $Id: requirements,v 1.38 2005-06-28 13:06:32 cattanem Exp $
+# $Id: requirements,v 1.39 2005-07-04 09:38:55 jpalac Exp $
 # =========================================================================
 
 package  VeloDet 
 version  v9r7
 
 # =============== structure ===============================================	
-branches         src cmt doc VeloDet 
+branches         src cmt doc VeloDet dict
 
 # =============== own includes ============================================
 include_dirs      $(VELODETROOT)
@@ -22,7 +22,15 @@ library          VeloDetLib        Lib/*.cpp
 # =============== component library =======================================
 library          VeloDet           component/*.cpp
 
+# =============== LCG Dictionaries ========================================
+apply_pattern lcg_dictionary dictionary=VeloDet \
+                             headerfiles=$(VELODETROOT)/dict/detdesc.h \
+                             selectionfile=../dict/selection.xml \
+                             options=--split
+apply_pattern lcgdict_library dictionary=VeloDet
+
 #================ patterns ================================================
+apply_pattern component_library library=VeloDetDict
 apply_pattern component_library library=VeloDet
 apply_pattern linker_library    library=VeloDetLib
 
