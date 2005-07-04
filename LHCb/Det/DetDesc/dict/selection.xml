@@ -1,0 +1,12 @@
+<lcgdict>
+  <class name="DetectorElement"/>
+  <class name="Material"/>
+  <class name="Element"/>
+  <class pattern="I*Info"/>
+  <class name="IAlignment"/>
+  <class name="ICalibration"/>
+  <class name="IReadOut"/>
+  <class name="ISlowControl"/>
+  <class name="FalseControl"/>
+  <class pattern="*Condition"/>
+</lcgdict>

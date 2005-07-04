@@ -1,9 +1,14 @@
 ! =============================================================================
-! $Id: release.notes,v 1.193 2005-06-29 13:46:40 jpalac Exp $ 
+! $Id: release.notes,v 1.194 2005-07-04 09:33:41 jpalac Exp $ 
 ! =============================================================================
 ! package DetDesc
 ! package manager : Marco Clemencic, Juan Palacios
 ! =============================================================================
+
+! 2005-07-29 - Juan Palacios
+
+ - Add dict directory with dictionary generation. Add necessary patterns to 
+   requirements file (from P. Mato).
 
 ! 2005-06-29 - Juan Palacios
  - Add constructor to AlignmentCondition. Allows construction from 

@@ -1,10 +1,10 @@
-# $Id: requirements,v 1.66 2005-06-20 16:20:33 cattanem Exp $ 
+# $Id: requirements,v 1.67 2005-07-04 09:33:40 jpalac Exp $ 
 # =============================================================================
 package       DetDesc
 version       v15r2
 
 # =========== structure =======================================================
-branches      DetDesc doc cmt src
+branches      DetDesc doc cmt src dict
 
 # =========== own includes ====================================================
 include_dirs  $(DETDESCROOT)
@@ -13,10 +13,18 @@ include_dirs  $(DETDESCROOT)
 use           GaudiKernel       v*
 use           CLHEP             v*	LCG_Interfaces
 
-# =========== constituents =====================================================
+# =========== constituents ====================================================
 library       DetDescLib        Lib/*.cpp
 library       DetDesc           component/*.cpp
 
-# =========== standard patterns (the order is essential!) ====================== 
+# =========== LCG Dictionaries ================================================
+apply_pattern lcg_dictionary dictionary=DetDesc \
+                             headerfiles=$(DETDESCROOT)/dict/detdesc.h \
+                             selectionfile=../dict/selection.xml \
+                             options=--split
+apply_pattern lcgdict_library dictionary=DetDesc
+
+# =========== standard patterns (the order is essential!) =====================
+apply_pattern component_library library=DetDescDict
 apply_pattern component_library library=DetDesc 
 apply_pattern linker_library    library=DetDescLib 
