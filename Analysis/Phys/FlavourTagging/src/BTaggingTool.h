@@ -1,4 +1,5 @@
-// $Id: BTaggingTool.h,v 1.2 2005-07-04 15:40:09 pkoppenb Exp $
+// $Id: BTaggingTool.h,v 1.3 2005-07-04 16:38:42 pkoppenb Exp $
+
 #ifndef USER_BTAGGINGTOOL_H 
 #define USER_BTAGGINGTOOL_H 1
 
@@ -76,7 +77,7 @@ private:
 
   IPhysDesktop *m_physd;
   ITagger *m_taggerMu,*m_taggerEle,*m_taggerKaon;
-  ITagger *m_taggerKaonS,*m_taggerPionS, *m_taggerVtx ;
+  ITagger *m_taggerKaonS,*m_taggerPionS, *m_taggerVtx, *m_taggerJetS ;
 
   //properties ----------------
   double m_thetaMin;
@@ -89,6 +90,7 @@ private:
   bool m_RequireTrigger, m_RequireL1Tamp;
   bool m_EnableMuonTagger,m_EnableElectronTagger,m_EnableKaonOSTagger;
   bool m_EnableKaonSSTagger,m_EnablePionTagger,m_EnableVertexChargeTagger;
+  bool m_EnableJetSameTagger;
 };
 
 //=======================================================================//

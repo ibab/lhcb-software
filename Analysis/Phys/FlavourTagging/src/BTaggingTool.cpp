@@ -37,8 +37,8 @@ BTaggingTool::BTaggingTool( const std::string& type,
   declareProperty( "EnableKaonOSTagger",m_EnableKaonOSTagger    = true );
   declareProperty( "EnableKaonSSTagger",m_EnableKaonSSTagger    = true );
   declareProperty( "EnablePionTagger",m_EnablePionTagger        = true );
-  declareProperty( "EnableVertexChargeTagger",
-                   m_EnableVertexChargeTagger= true );
+  declareProperty( "EnableVertexChargeTagger",m_EnableVertexChargeTagger= true);
+  declareProperty( "EnableJetSameTagger",m_EnableJetSameTagger  = true );
   m_nnet = 0;
   m_svtool = 0;
   m_taggerMu=m_taggerEle=m_taggerKaon=0;
@@ -97,6 +97,11 @@ StatusCode BTaggingTool::initialize() {
   m_taggerPionS = tool<ITagger> ("TaggerPionSameTool", this);
   if(! m_taggerPionS) {
     fatal() << "Unable to retrieve TaggerPionSameTool"<< endreq;
+    return StatusCode::FAILURE;
+  }
+  m_taggerJetS = tool<ITagger> ("TaggerJetSameTool", this);
+  if(! m_taggerJetS) {
+    fatal() << "Unable to retrieve TaggerJetSameTool"<< endreq;
     return StatusCode::FAILURE;
   }
 
@@ -305,6 +310,23 @@ FlavourTag* BTaggingTool::tag( const Particle* AXB0,
   if(m_EnablePionTagger) if( isBd || isBu ) {
     ParticleVector vpionS = m_taggerPionS->taggers(AXB0, RecVert, vtags);
     if(vpionS.size()) ipionS = vpionS.at(0);
+  }
+  double JetS = 0;  //contains the Jet same side
+  if(m_EnableJetSameTagger) {
+    ParticleVector vjetS = m_taggerJetS->taggers(AXB0, RecVert, vtags);
+    // Construction of a Jet charge same side with no kaonS(pionS)
+    double aux  = 0;
+    double norm = 0;
+    double k    = 1.1;
+    double Jetcut= 0.2;
+    for(ip=vjetS.begin(); ip!=vjetS.end(); ip++) {
+      if ((*ip) != ikaonS || (*ip) != ipionS){
+	aux  += pow((*ip)->pt()/GeV,k)*(*ip)->charge();
+	norm += pow((*ip)->pt()/GeV,k);
+      }
+    }
+    //build jet charge same side
+    if (norm) if ( aux/norm<(-Jetcut) || aux/norm>Jetcut ) JetS = aux/norm;
   }
   //-----------------------------
   //end of tagger cands selection
