@@ -1,4 +1,4 @@
-// $Id: SVertexABTool.h,v 1.1 2005-07-04 08:20:05 pkoppenb Exp $
+// $Id: SVertexABTool.h,v 1.2 2005-07-04 15:40:09 pkoppenb Exp $
 #ifndef SVERTEXABTOOL_H 
 #define SVERTEXABTOOL_H 1
 // Include files
@@ -9,7 +9,7 @@
 #include "Event/ProtoParticle.h"
 #include "Kernel/IGeomDispCalculator.h"
 #include "Kernel/IVertexFitter.h"
-#include "FlavourTagging/ISecondaryVertexTool.h"   // Interface
+#include "Kernel/ISecondaryVertexTool.h"   // Interface
 
 /** @class SVertexABTool SVertexABTool.h SVertexABTool.h
  *  
@@ -26,8 +26,8 @@ public:
 
   /// Standard constructor
   SVertexABTool( const std::string& type, 
-		 const std::string& name,
-		 const IInterface* parent );
+                 const std::string& name,
+                 const IInterface* parent );
   virtual ~SVertexABTool( ); ///< Destructor
   /// Initialize
   StatusCode initialize();
@@ -35,8 +35,8 @@ public:
   StatusCode finalize();
   
   //-------------------------------------------------------------
-  virtual std::vector<Vertex>
-    buildVertex( const Vertex, const ParticleVector ); 
+  std::vector<Vertex>
+  buildVertex( const Vertex&, const ParticleVector& ); 
   //-------------------------------------------------------------
 
 private:

@@ -1,4 +1,4 @@
-// $Id: SVertexNNTool.h,v 1.1 2005-07-04 08:20:06 pkoppenb Exp $
+// $Id: SVertexNNTool.h,v 1.2 2005-07-04 15:40:09 pkoppenb Exp $
 #ifndef SVERTEXNNTOOL_H 
 #define SVERTEXNNTOOL_H 1
 // Include files
@@ -9,7 +9,7 @@
 #include "Event/ProtoParticle.h"
 #include "Kernel/IGeomDispCalculator.h"
 #include "Kernel/IVertexFitter.h"
-#include "FlavourTagging/ISecondaryVertexTool.h"   // Interface
+#include "Kernel/ISecondaryVertexTool.h"   // Interface
 
 /** @class SVertexNNTool SVertexNNTool.h SVertexNNTool.h
  *  
@@ -25,8 +25,8 @@ public:
 
   /// Standard constructor
   SVertexNNTool( const std::string& type, 
-		 const std::string& name,
-		 const IInterface* parent );
+                 const std::string& name,
+                 const IInterface* parent );
   virtual ~SVertexNNTool( ); ///< Destructor
   /// Initialize
   StatusCode initialize();
@@ -34,8 +34,8 @@ public:
   StatusCode finalize();
   
   //-------------------------------------------------------------
-  virtual std::vector<Vertex>
-    buildVertex( const Vertex, const ParticleVector ); 
+  std::vector<Vertex>
+  buildVertex( const Vertex&, const ParticleVector& ); 
   //-------------------------------------------------------------
 
 private:
@@ -43,14 +43,14 @@ private:
   IVertexFitter *fitter;
 
   double NNseeding(double P1,
-		   double P2,
-		   double PT1,
-		   double PT2,
-		   double B0PT,
-		   double IP1,
-		   double IP2,
-		   double JVZ,
-		   double JCHI );
+                   double P2,
+                   double PT1,
+                   double PT2,
+                   double B0PT,
+                   double IP1,
+                   double IP2,
+                   double JVZ,
+                   double JCHI );
  
   double SIGMOID(double x);
   double ipprob(double x) ;

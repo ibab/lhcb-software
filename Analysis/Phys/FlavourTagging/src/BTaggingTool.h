@@ -1,4 +1,4 @@
-// $Id: BTaggingTool.h,v 1.1 2005-07-04 08:20:05 pkoppenb Exp $
+// $Id: BTaggingTool.h,v 1.2 2005-07-04 15:40:09 pkoppenb Exp $
 #ifndef USER_BTAGGINGTOOL_H 
 #define USER_BTAGGINGTOOL_H 1
 
@@ -19,12 +19,12 @@
 #include "Event/HltScore.h"
 #include "Event/TamperingResults.h"
 // from RecoTools
-#include "DaVinciTools/IGeomDispCalculator.h"
+#include "Kernel/IGeomDispCalculator.h"
 #include "Kernel/IPhysDesktop.h"
-#include "FlavourTagging/ISecondaryVertexTool.h"
-#include "FlavourTagging/INNetTool.h"
-#include "FlavourTagging/IBTaggingTool.h" 
-#include "FlavourTagging/ITagger.h" 
+#include "Kernel/ISecondaryVertexTool.h"
+#include "INNetTool.h"
+#include "Kernel/IBTaggingTool.h" 
+#include "Kernel/ITagger.h" 
 
 /** @class BTaggingTool BTaggingTool.h 
  *
@@ -50,20 +50,19 @@ public:
   StatusCode finalize  ();    ///<  finalization
 
   //-------------------------------------------------------------
-  virtual FlavourTag* tag( Particle* );
-  virtual FlavourTag* tag( Particle*, Vertex* );
-  virtual FlavourTag* tag( Particle*, Vertex*, 
-			   std::vector<Particle*> );
+  FlavourTag* tag( const Particle* );
+  FlavourTag* tag( const Particle*, const Vertex* );
+  FlavourTag* tag( const Particle*, const Vertex*, ParticleVector& );
   //-------------------------------------------------------------
 
 private:
-  bool isinTree( Particle*, ParticleVector& );
-  StatusCode calcIP( Particle*, Vertex*, double&, double& );
-  StatusCode calcIP( Particle*, 
-		     VertexVector, double&, double& ) ;
-  ParticleVector toStdVector( SmartRefVector<Particle>& );
-  ParticleVector FindDaughters( Particle* );
-  long trackType( Particle* );
+  bool isinTree( const Particle*, std::vector<const Particle*>& );
+  StatusCode calcIP( const Particle*, const Vertex*, double&, double& );
+  StatusCode calcIP( const Particle*, 
+		     const VertexVector, double&, double& ) ;
+  std::vector<const Particle*> toStdVector( const SmartRefVector<Particle>& );
+  std::vector<const Particle*> FindDaughters( const Particle* );
+  long trackType( const Particle* );
   double pol2(double, double, double );
   double pol3(double, double, double, double );
   double pol4(double, double, double, double, double );

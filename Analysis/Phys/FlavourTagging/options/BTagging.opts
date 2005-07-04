@@ -10,5 +10,5 @@ BTagging.DecayDescriptor= { "not specified" };
 BTagging.PhysDesktop.OutputLevel = 5;
 
 #include "$FLAVOURTAGGINGOPTS/BTaggingTool.opts"
- 
+
 //-----------------------------------------------------------------------

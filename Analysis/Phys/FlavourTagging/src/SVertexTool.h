@@ -1,4 +1,4 @@
-// $Id: SVertexTool.h,v 1.1 2005-07-04 08:20:06 pkoppenb Exp $
+// $Id: SVertexTool.h,v 1.2 2005-07-04 15:40:09 pkoppenb Exp $
 #ifndef SVERTEXTOOL_H 
 #define SVERTEXTOOL_H 1
 // Include files
@@ -9,7 +9,7 @@
 #include "Event/ProtoParticle.h"
 #include "Kernel/IGeomDispCalculator.h"
 #include "Kernel/IVertexFitter.h"
-#include "FlavourTagging/ISecondaryVertexTool.h" // Interface
+#include "Kernel/ISecondaryVertexTool.h" // Interface
 
 /** @class SVertexTool SVertexTool.h SVertexTool.h
  *  
@@ -24,8 +24,8 @@ class SVertexTool : public GaudiTool, virtual public ISecondaryVertexTool {
 public:
   /// Standard constructor
   SVertexTool( const std::string& type, 
-	       const std::string& name,
-	       const IInterface* parent );
+               const std::string& name,
+               const IInterface* parent );
 
   virtual ~SVertexTool( ); ///< Destructor
 
@@ -35,8 +35,7 @@ public:
   StatusCode finalize();
   
   //----------------------------------------------------------------
-  virtual std::vector<Vertex>
-    buildVertex ( const Vertex, const ParticleVector ); 
+  std::vector<Vertex> buildVertex ( const Vertex&, const ParticleVector& );
   //----------------------------------------------------------------
 
 private:

@@ -13,8 +13,8 @@ const        IToolFactory& TaggerElectronToolFactory = s_factory ;
 
 //====================================================================
 TaggerElectronTool::TaggerElectronTool( const std::string& type,
-				const std::string& name,
-				const IInterface* parent ) :
+                                        const std::string& name,
+                                        const IInterface* parent ) :
   GaudiTool ( type, name, parent ) {
 
   declareInterface<ITagger>(this);
@@ -37,15 +37,15 @@ StatusCode TaggerElectronTool::initialize() {
     return StatusCode::FAILURE;
   }
 
-return StatusCode::SUCCESS; 
+  return StatusCode::SUCCESS; 
 }
 
 //=====================================================================
-ParticleVector TaggerElectronTool::taggers( Particle* AXB0, 
-					    Vertex* RecVert, 
-					    std::vector<Particle*> vtags ){
+ParticleVector TaggerElectronTool::taggers( const Particle* AXB0, 
+                                            const Vertex* RecVert, 
+                                            const ParticleVector& vtags ){
   verbose() << "B pt=" << AXB0->pt()/GeV 
-	    << " VTXz="<< RecVert->position().z() <<endreq;
+            << " VTXz="<< RecVert->position().z() <<endreq;
 
   //select electron tagger(s)
   //if more than one satisfies cuts, take the highest Pt one
@@ -67,26 +67,29 @@ ParticleVector TaggerElectronTool::taggers( Particle* AXB0,
     ContainedObject* contObj = (*ipart)->origin();
     if (contObj) {
       ProtoParticle* proto = dynamic_cast<ProtoParticle*>(contObj);
-      SmartRefVector<CaloHypo>& vcalo = proto->calo();
-      if(vcalo.size()==1) Emeas = (*(vcalo.begin()))->e()/GeV;
-      TrStoredTrack* track = proto->track();
-      if((track->measurements()).size() > 5)
-	lcs = track->lastChiSq()/((track->measurements()).size()-5);
-      if(track->forward()) trtyp = 1;
+      if ( proto ) {
+        SmartRefVector<CaloHypo>& vcalo = proto->calo();
+        if(vcalo.size()==1) Emeas = (*(vcalo.begin()))->e()/GeV;
+        TrStoredTrack* track = proto->track();
+        if((track->measurements()).size() > 5)
+          lcs = track->lastChiSq()/((track->measurements()).size()-5);
+        if(track->forward()) trtyp = 1;
+      }
     }
+    
     debug() << " Elec P="<<P <<" Pt="<<Pt 
-	    << " trtyp=" << trtyp << " Emeas/P=" << Emeas/P <<endreq;
+            << " trtyp=" << trtyp << " Emeas/P=" << Emeas/P <<endreq;
 
     if(Emeas/P > m_EoverP || Emeas<0) {
       if(trtyp == 1) {
-	double veloch = m_veloCharge->calculate(*ipart);
-	debug() << "      veloch=" <<veloch << endreq;
-	if(veloch > m_VeloChMin && veloch < m_VeloChMax ) {
-	  if( Pt > ptmaxe ) { 
-	    ele = (*ipart);
-	    ptmaxe = Pt;
-	  }
-	}
+        double veloch = m_veloCharge->calculate(*ipart);
+        debug() << "      veloch=" <<veloch << endreq;
+        if(veloch > m_VeloChMin && veloch < m_VeloChMax ) {
+          if( Pt > ptmaxe ) { 
+            ele = (*ipart);
+            ptmaxe = Pt;
+          }
+        }
       } 
     }
   } 

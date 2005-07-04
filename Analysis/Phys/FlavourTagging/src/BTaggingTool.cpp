@@ -13,8 +13,8 @@ const        IToolFactory& BTaggingToolFactory = s_factory ;
 
 //==========================================================================
 BTaggingTool::BTaggingTool( const std::string& type,
-			    const std::string& name,
-			    const IInterface* parent ) :
+                            const std::string& name,
+                            const IInterface* parent ) :
   GaudiTool ( type, name, parent ), m_eventSvc(0), m_Geom(0) {
 
   declareInterface<IBTaggingTool>(this);
@@ -38,7 +38,7 @@ BTaggingTool::BTaggingTool( const std::string& type,
   declareProperty( "EnableKaonSSTagger",m_EnableKaonSSTagger    = true );
   declareProperty( "EnablePionTagger",m_EnablePionTagger        = true );
   declareProperty( "EnableVertexChargeTagger",
-		   m_EnableVertexChargeTagger= true );
+                   m_EnableVertexChargeTagger= true );
   m_nnet = 0;
   m_svtool = 0;
   m_taggerMu=m_taggerEle=m_taggerKaon=0;
@@ -67,7 +67,7 @@ StatusCode BTaggingTool::initialize() {
   m_svtool = tool<ISecondaryVertexTool> (m_SecondaryVertexToolName, this);
   if(! m_svtool) {
     warning()<< "No Vertex Charge tag will be used! " 
-	     << m_SecondaryVertexToolName <<endreq;
+             << m_SecondaryVertexToolName <<endreq;
   }
   m_nnet = tool<INNetTool> ("NNetTool", this);
   if(! m_nnet) {
@@ -104,17 +104,19 @@ StatusCode BTaggingTool::initialize() {
 }
 
 //==========================================================================
-FlavourTag* BTaggingTool::tag( Particle* AXB0 ) {
+FlavourTag* BTaggingTool::tag( const Particle* AXB0 ) {
   ParticleVector p(0);
   return tag( AXB0, 0, p );
 }
-FlavourTag* BTaggingTool::tag( Particle* AXB0, Vertex* RecVert ) {
+//==========================================================================
+FlavourTag* BTaggingTool::tag( const Particle* AXB0, const Vertex* RecVert ) {
   ParticleVector p(0);
   return tag( AXB0, RecVert, p );
 }
-FlavourTag* BTaggingTool::tag( Particle* AXB0, 
-			       Vertex* RecVert, 
-			       std::vector<Particle*> vtags ) {
+//==========================================================================
+FlavourTag* BTaggingTool::tag( const Particle* AXB0, 
+                               const Vertex* RecVert,
+                               ParticleVector& vtags ) {
    
   FlavourTag* theTag = new FlavourTag;
   theTag->setDecision( FlavourTag::none );
@@ -132,7 +134,7 @@ FlavourTag* BTaggingTool::tag( Particle* AXB0,
   double L0tamp=0;
   double L1tamp=100;
   debug()<<"Retrieve TrgDecision from "
-	 <<TrgDecisionLocation::Default<<endreq;
+         <<TrgDecisionLocation::Default<<endreq;
   TrgDecision* trg = 0;
   HltScore* hlt = 0 ;
   if (m_RequireTrigger || m_RequireL1Tamp) {
@@ -159,12 +161,12 @@ FlavourTag* BTaggingTool::tag( Particle* AXB0,
     // Retrieve Tampering info
     if( m_RequireL1Tamp ) {
       if(exist<TamperingResults>(TamperingResultsLocation::Default)) {
-	TamperingResults* tampres = 
-	  get<TamperingResults>(TamperingResultsLocation::Default);
+        TamperingResults* tampres = 
+          get<TamperingResults>(TamperingResultsLocation::Default);
         L0tamp= tampres->L0TOB()*100 + tampres->L0TOS()*10 + tampres->L0TIS();
-	L1tamp= tampres->L1TOB()*100 + tampres->L1TOS()*10 + tampres->L1TIS();
-	debug() << "Tampering (TOB,TOS,TIS)  L0: "  << L0tamp 
-		<< "   L1: " << L1tamp << "  Trig: "<< trigger <<endreq;
+        L1tamp= tampres->L1TOB()*100 + tampres->L1TOS()*10 + tampres->L1TIS();
+        debug() << "Tampering (TOB,TOS,TIS)  L0: "  << L0tamp 
+                << "   L1: " << L1tamp << "  Trig: "<< trigger <<endreq;
       } else warning() << "TamperingResults not found" << endreq;
     }
   }
@@ -172,7 +174,7 @@ FlavourTag* BTaggingTool::tag( Particle* AXB0,
   //----------------------------
   // Counter of events processed
   debug() << ">>>>>  Tagging Run Nr " << evt->runNum()
-	  << " Event " << evt->evtNum() << "  <<<<<" << endreq;
+          << " Event " << evt->evtNum() << "  <<<<<" << endreq;
 
   //build desktop
   if( !(m_physd->getEventInput()) ) return theTag;
@@ -180,7 +182,7 @@ FlavourTag* BTaggingTool::tag( Particle* AXB0,
   VertexVector   verts = m_physd->primaryVertices();
   if( !(m_physd->saveDesktop()) )   return theTag;
   debug() << "  Nr Vertices: "  << verts.size() 
-	  << "  Nr Particles: " << parts.size() <<endreq;
+          << "  Nr Particles: " << parts.size() <<endreq;
 
   //AXB0 is the signal B from selection
   bool isBd = false;
@@ -201,13 +203,13 @@ FlavourTag* BTaggingTool::tag( Particle* AXB0,
     Vertices::const_iterator iv;
     for(iv=verts.begin(); iv!=verts.end(); iv++){
       if( (*iv)->type() == Vertex::Primary ){
-	double ip, iperr;
-	calcIP(AXB0, *iv, ip, iperr);
-	debug() <<"Vertex IP="<<ip/iperr<<endreq;
-	if(iperr) if( fabs(ip/iperr) < kdmin ) {
-	  kdmin = fabs(ip/iperr);
-	  RecVert = (*iv);
-	}     
+        double ip, iperr;
+        calcIP(AXB0, *iv, ip, iperr);
+        debug() <<"Vertex IP="<<ip/iperr<<endreq;
+        if(iperr) if( fabs(ip/iperr) < kdmin ) {
+          kdmin = fabs(ip/iperr);
+          RecVert = (*iv);
+        }     
       }
     }
     if( !RecVert ) {
@@ -227,7 +229,7 @@ FlavourTag* BTaggingTool::tag( Particle* AXB0,
 
   //loop over Particles, preselect taggers /////////////////////
   ParticleVector::iterator ip;
-  ParticleVector axdaugh = FindDaughters(AXB0); //vector of B daughters
+  std::vector<const Particle*> axdaugh = FindDaughters(AXB0); //vector of B daughters
   axdaugh.push_back(AXB0);
   if(vtags.size()==0) {
     for ( ip = parts.begin(); ip != parts.end(); ip++ ){
@@ -265,13 +267,13 @@ FlavourTag* BTaggingTool::tag( Particle* AXB0,
   std::vector<Vertex> vvec(0);
   double Vch = 0;  //contains the vertex charge
   Vertex Vfit(0);  //secondary vertex found
-  ParticleVector Pfit(0); //particles in it
+  std::vector<const Particle*>  Pfit(0); //particles in it
   if(m_EnableVertexChargeTagger) if(m_svtool) {
     vvec = m_svtool->buildVertex(*RecVert, vtags);
     if(vvec.size()) {
       Vfit = vvec.at(0); //take first
       Pfit = toStdVector(Vfit.products());
-      for(ip=Pfit.begin(); ip!=Pfit.end(); ip++) Vch += (*ip)->charge();
+      for(std::vector<const Particle*>::const_iterator ip=Pfit.begin(); ip!=Pfit.end(); ip++) Vch += (*ip)->charge();
       debug() << " Vertex charge: " << Vch << endreq;
     }
   }
@@ -291,18 +293,18 @@ FlavourTag* BTaggingTool::tag( Particle* AXB0,
     for(ip=vkaon.begin(); ip!=vkaon.end(); ip++) {
       qk += (*ip)->charge(); //sum of taggers charge
       if( (*ip)->pt()/GeV > ptmaxk ) { 
-	ikaon = (*ip);
-	ptmaxk = (*ip)->pt()/GeV;
+        ikaon = (*ip);
+        ptmaxk = (*ip)->pt()/GeV;
       }
     }
   }
   if(m_EnableKaonSSTagger) if( isBs ) { 
-     ParticleVector vkaonS = m_taggerKaonS->taggers(AXB0, RecVert, vtags);
-     if(vkaonS.size()) ikaonS = vkaonS.at(0);
+    ParticleVector vkaonS = m_taggerKaonS->taggers(AXB0, RecVert, vtags);
+    if(vkaonS.size()) ikaonS = vkaonS.at(0);
   }
   if(m_EnablePionTagger) if( isBd || isBu ) {
-     ParticleVector vpionS = m_taggerPionS->taggers(AXB0, RecVert, vtags);
-     if(vpionS.size()) ipionS = vpionS.at(0);
+    ParticleVector vpionS = m_taggerPionS->taggers(AXB0, RecVert, vtags);
+    if(vpionS.size()) ipionS = vpionS.at(0);
   }
   //-----------------------------
   //end of tagger cands selection
@@ -400,14 +402,14 @@ FlavourTag* BTaggingTool::tag( Particle* AXB0,
       debug()<< "Tagger Muon: " << imuon->p()/GeV <<endreq;
       calcIP(imuon, RecVert, IP, IPerr); //re-calculate IP
       if(Pfit.size()) {
-	calcIP(imuon, &Vfit, ip, iperr); //re-calculate IPT
-	if(!iperr) IPT = ip/iperr;
+        calcIP(imuon, &Vfit, ip, iperr); //re-calculate IPT
+        if(!iperr) IPT = ip/iperr;
       } else IPT = -1000.; 
 
       //calculate the result of neural net, the higher rnet is,
       //the more reliable is the tagger:
       rnet = m_nnet->MLPm(B0p, B0the, vtags.size(), L1tamp, 
-			  imuon->p()/GeV, imuon->pt()/GeV, IP/IPerr, IPT);
+                          imuon->p()/GeV, imuon->pt()/GeV, IP/IPerr, IPT);
 
       //pn is the probability that the tagger is giving the
       //correct answer for the B flavour. the hard-coded numbers
@@ -419,22 +421,22 @@ FlavourTag* BTaggingTool::tag( Particle* AXB0,
       debug()<< "Tagger Ele : " << iele->p()/GeV <<endreq;
       calcIP(iele, RecVert, IP, IPerr);
       if(Pfit.size()) {
-	calcIP(iele, &Vfit, ip, iperr);
-	if(!iperr) IPT = ip/iperr;
+        calcIP(iele, &Vfit, ip, iperr);
+        if(!iperr) IPT = ip/iperr;
       } else IPT = -1000.; 
       rnet = m_nnet->MLPe(B0p, B0the, vtags.size(), L1tamp, 
-			  iele->p()/GeV, iele->pt()/GeV, IP/IPerr, IPT);
+                          iele->p()/GeV, iele->pt()/GeV, IP/IPerr, IPT);
       pn.at(2) = 1.0-pol4(rnet, 0.4933, -0.6766, 1.761, -1.587); 
     }
     if(ikaon) {
       debug()<< "Tagger Kaon: " << ikaon->p()/GeV <<endreq;
       calcIP(ikaon, RecVert, IP, IPerr);
       if(Pfit.size()) {
-	calcIP(ikaon, &Vfit, ip, iperr);
-	if(!iperr) IPT = ip/iperr;
+        calcIP(ikaon, &Vfit, ip, iperr);
+        if(!iperr) IPT = ip/iperr;
       } else IPT = -1000.; 
       rnet = m_nnet->MLPk(B0p, B0the, vtags.size(), L1tamp, 
-			  ikaon->p()/GeV, ikaon->pt()/GeV,IP/IPerr, IPT);
+                          ikaon->p()/GeV, ikaon->pt()/GeV,IP/IPerr, IPT);
       pn.at(3) = 1.0-pol2(rnet, 0.52144, -0.27136);
     }
     if(ikaonS) {
@@ -442,16 +444,16 @@ FlavourTag* BTaggingTool::tag( Particle* AXB0,
       double ang = asin((ikaonS->pt()/GeV)/(ikaonS->p()/GeV));
       double deta= log(tan(B0the/2.))-log(tan(ang/2.));
       double dphi= std::min(fabs(ikaonS->momentum().phi()-B0phi), 
-			    6.283-fabs(ikaonS->momentum().phi()-B0phi));
+                            6.283-fabs(ikaonS->momentum().phi()-B0phi));
       double dQ  = (ptotB+ikaonS->momentum()).m()/GeV - B0mass;
       calcIP(ikaonS, RecVert, IP, IPerr);
       if(Pfit.size()) {
-	calcIP(ikaonS, &Vfit, ip, iperr);
-	if(!iperr) IPT = ip/iperr;
+        calcIP(ikaonS, &Vfit, ip, iperr);
+        if(!iperr) IPT = ip/iperr;
       } else IPT = -1000.; 
       rnet = m_nnet->MLPkS(B0p, B0the, vtags.size(), L1tamp, 
-			   ikaonS->p()/GeV, ikaonS->pt()/GeV,IP/IPerr, IPT,
-			   deta, dphi, dQ);
+                           ikaonS->p()/GeV, ikaonS->pt()/GeV,IP/IPerr, IPT,
+                           deta, dphi, dQ);
       pn.at(4) = 1.0-pol2(rnet, 1.0007, -1.0049);
     }
     if(ipionS) {
@@ -459,16 +461,16 @@ FlavourTag* BTaggingTool::tag( Particle* AXB0,
       double ang = asin((ipionS->pt()/GeV)/(ipionS->p()/GeV));
       double deta= log(tan(B0the/2.))-log(tan(ang/2.));
       double dphi= std::min(fabs(ipionS->momentum().phi()-B0phi), 
-			    6.283-fabs(ipionS->momentum().phi()-B0phi));
+                            6.283-fabs(ipionS->momentum().phi()-B0phi));
       double dQ  = (ptotB+ipionS->momentum()).m()/GeV - B0mass;
       calcIP(ipionS, RecVert, IP, IPerr);
       if(Pfit.size()) {
-	calcIP(ipionS, &Vfit, ip, iperr);
-	if(!iperr) IPT = ip/iperr;
+        calcIP(ipionS, &Vfit, ip, iperr);
+        if(!iperr) IPT = ip/iperr;
       } else IPT = -1000.; 
       rnet = m_nnet->MLPpS(B0p, B0the, vtags.size(), L1tamp, 
-			   ipionS->p()/GeV, ipionS->pt()/GeV,IP/IPerr, IPT,
-			   deta, dphi, dQ);
+                           ipionS->p()/GeV, ipionS->pt()/GeV,IP/IPerr, IPT,
+                           deta, dphi, dQ);
       if(rnet > m_ProbMin) pn.at(4) = 1.0-pol2(rnet, 1.0772, -1.1632); 
       else { ipionS=0; itag.at(4) = 0; }
     }
@@ -485,7 +487,7 @@ FlavourTag* BTaggingTool::tag( Particle* AXB0,
       pnsum_a *= ((1-mtag)/2+mtag* pn.at(i) ); // p
       pnsum_b *= ((1+mtag)/2-mtag* pn.at(i) ); //(1-p)
       debug()<<"i="<<i<<" itag="<<mtag<<" pn="<<pn.at(i)<<endreq;
-    }      
+    }
     if(pnsum_a > pnsum_b) tagdecision = +1;
     if(pnsum_a < pnsum_b) tagdecision = -1;
     //normalise probability to the only two possible flavours:
@@ -508,23 +510,23 @@ FlavourTag* BTaggingTool::tag( Particle* AXB0,
   }
   else {
     err() << "Unknown tagger combination: " 
-	  << m_CombinationTechnique<<endreq;
+          << m_CombinationTechnique<<endreq;
     return theTag;
   } 
   if(tagdecision == 0) catt=0; 
 
   ///OUTPUT to Logfile ---------------------------------------------------
   info() << "BTAGGING TAG   " << evt->runNum()
-	 << std::setw(4) << evt->evtNum()
-	 << std::setw(4) << trigger
-	 << std::setw(5) << tagdecision
-	 << std::setw(3) << catt       //category
-	 << std::setw(5) << itag.at(1) //mu decision
-	 << std::setw(3) << itag.at(2) //ele
-	 << std::setw(3) << itag.at(3) //Kopp
-	 << std::setw(3) << itag.at(4) //Ksame/Pi_same
-	 << std::setw(3) << itag.at(5) //VtxCharge
-	 << endreq;
+         << std::setw(4) << evt->evtNum()
+         << std::setw(4) << trigger
+         << std::setw(5) << tagdecision
+         << std::setw(3) << catt       //category
+         << std::setw(5) << itag.at(1) //mu decision
+         << std::setw(3) << itag.at(2) //ele
+         << std::setw(3) << itag.at(3) //Kopp
+         << std::setw(3) << itag.at(4) //Ksame/Pi_same
+         << std::setw(3) << itag.at(5) //VtxCharge
+         << endreq;
 
   ///fill FlavourTag object ---------------------------------------------
   if(      tagdecision ==  1 ) theTag->setDecision( FlavourTag::bbar );
@@ -561,7 +563,7 @@ FlavourTag* BTaggingTool::tag( Particle* AXB0,
     tagr->addTaggerPart(*ikaon);
     theTag->addTagger(*tagr);
     delete tagr;
- }
+  }
   if(ikaonS)  { 
     Tagger* tagr = new Tagger;
     tagr->setType( Tagger::SS_Kaon ); 
@@ -585,7 +587,7 @@ FlavourTag* BTaggingTool::tag( Particle* AXB0,
     tagr->setType( Tagger::VtxCharge ); 
     tagr->setDecision( itag.at(5) );
     tagr->setOmega( 1-pn.at(5) );
-    for(ip=Pfit.begin(); ip!=Pfit.end(); ip++) tagr->addTaggerPart(**ip);
+    for(std::vector<const Particle*>::const_iterator ip=Pfit.begin(); ip!=Pfit.end(); ip++) tagr->addTaggerPart(**ip);
     theTag->addTagger(*tagr);
     delete tagr;
   }
@@ -596,23 +598,23 @@ FlavourTag* BTaggingTool::tag( Particle* AXB0,
 StatusCode BTaggingTool::finalize() { return StatusCode::SUCCESS; }
 
 //==========================================================================
-bool BTaggingTool::isinTree( Particle* axp, 
-			     ParticleVector& sons ) {
+bool BTaggingTool::isinTree( const Particle* axp, 
+                             std::vector<const Particle*>& sons ) {
 
-  ParticleVector::iterator ip;
+  std::vector<const Particle*>::const_iterator ip;
   for( ip = sons.begin(); ip != sons.end(); ip++ ){
     if( (*ip)->origin() == axp->origin() ) {
       debug() << "excluding signal part: " 
-	      << axp->particleID().pid() <<" with p="<<axp->p()/GeV<<endreq;
+              << axp->particleID().pid() <<" with p="<<axp->p()/GeV<<endreq;
       return true;
     }
   }
   return false;
 }
 //==========================================================================
-StatusCode BTaggingTool::calcIP( Particle* axp, 
-				 Vertex* RecVert, 
-				 double& ip, double& iperr) {
+StatusCode BTaggingTool::calcIP( const Particle* axp, 
+                                 const Vertex* RecVert, 
+                                 double& ip, double& iperr) {
   ip   =-100.0;
   iperr= 0.0;
   Hep3Vector ipVec;
@@ -626,9 +628,9 @@ StatusCode BTaggingTool::calcIP( Particle* axp,
   return sc;
 }
 //=========================================================================
-StatusCode BTaggingTool::calcIP( Particle* axp, 
-				 VertexVector PileUpVtx,
-				 double& ip, double& ipe) {
+StatusCode BTaggingTool::calcIP( const Particle* axp, 
+                                 const VertexVector PileUpVtx,
+                                 double& ip, double& ipe) {
   double ipmin = 100000.0;
   double ipminerr = 0.0;
   Vertices::const_iterator iv;
@@ -649,29 +651,32 @@ StatusCode BTaggingTool::calcIP( Particle* axp,
   return lastsc;
 }
 //==========================================================================
-long BTaggingTool::trackType( Particle* axp ) {
+long BTaggingTool::trackType( const Particle* axp ) {
 
   long trtyp=0;
-  ContainedObject* contObj = axp->origin();
+  const ContainedObject* contObj = axp->origin();
   if (contObj) {
-    ProtoParticle* proto = dynamic_cast<ProtoParticle*>(contObj);
-    TrStoredTrack* track = proto->track();
-    if     (track->forward()     ) trtyp = 1;
-    else if(track->match()       ) trtyp = 2;
-    else if(track->isUpstream()  ) trtyp = 3;
-    else if(track->isDownstream()) trtyp = 4;
-    else if(track->isVelotrack() ) trtyp = 5;
-    else if(track->isTtrack()    ) trtyp = 6;
-    else if(track->isBackward()  ) trtyp = 7;
-    else if(track->follow()      ) trtyp = 8;
-    else if(track->ksTrack()     ) trtyp = 9;
+    const ProtoParticle* proto = dynamic_cast<const ProtoParticle*>(contObj);
+    if ( proto) {
+      const TrStoredTrack* track = proto->track();
+      if     (track->forward()     ) trtyp = 1;
+      else if(track->match()       ) trtyp = 2;
+      else if(track->isUpstream()  ) trtyp = 3;
+      else if(track->isDownstream()) trtyp = 4;
+      else if(track->isVelotrack() ) trtyp = 5;
+      else if(track->isTtrack()    ) trtyp = 6;
+      else if(track->isBackward()  ) trtyp = 7;
+      else if(track->follow()      ) trtyp = 8;
+      else if(track->ksTrack()     ) trtyp = 9;
+    }
   }
+  
   return trtyp;
 }
 //==========================================================================
-ParticleVector BTaggingTool::toStdVector( SmartRefVector<Particle>& refvector ){
-  ParticleVector tvector(0);
-  for( SmartRefVector<Particle>::iterator ip = refvector.begin();
+std::vector<const Particle*> BTaggingTool::toStdVector( const SmartRefVector<Particle>& refvector ){
+  std::vector<const Particle*>  tvector;
+  for( SmartRefVector<Particle>::const_iterator ip = refvector.begin();
        ip != refvector.end(); ++ip ) tvector.push_back( *ip );
   return tvector;
 }
@@ -685,23 +690,25 @@ double BTaggingTool::pol4(double x, double a0, double a1, double a2, double a3){
 }
 //==========================================================================
 //return a vector containing all daughters of signal 
-ParticleVector BTaggingTool::FindDaughters( Particle* axp ) {
+std::vector<const Particle*> BTaggingTool::FindDaughters( const Particle* axp ) {
 
-  ParticleVector apv(0), apv2, aplist(0);
+  std::vector<const Particle*> apv, apv2, aplist;
   apv.push_back(axp);  
   do {
     apv2.clear();
-    for( ParticleVector::iterator ip=apv.begin(); ip!=apv.end(); ip++ ) {
+    for( std::vector<const Particle*>::const_iterator 
+           ip=apv.begin(); ip!=apv.end(); ip++ ) {
       if( (*ip)->endVertex() ) {
-	ParticleVector tmp = toStdVector((*ip)->endVertex()->products());
-	for( Particles::iterator itmp=tmp.begin(); itmp!=tmp.end(); itmp++){
-	  apv2.push_back(*itmp);
-	  aplist.push_back(*itmp);
-	}
+        std::vector<const Particle*> tmp = toStdVector((*ip)->endVertex()->products());
+        for( std::vector<const Particle*> ::const_iterator 
+               itmp=tmp.begin(); itmp!=tmp.end(); itmp++){
+          apv2.push_back(*itmp);
+          aplist.push_back(*itmp);
+        }
       }
     }
     apv = apv2;
-  } while ( apv2.size() );
+  } while ( !apv2.empty() );
    	    
   return aplist;
 }

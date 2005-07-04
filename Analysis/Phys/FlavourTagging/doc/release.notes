@@ -1,11 +1,23 @@
-! $Id: release.notes,v 1.65 2005-07-04 08:20:05 pkoppenb Exp $
+! $Id: release.notes,v 1.66 2005-07-04 15:40:09 pkoppenb Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Phys/FlavourTagging
 ! Responsible : Marco Musy (musy@cern.ch)
 ! Purpose     : Provide tools and algorithm for tagging B
 !-----------------------------------------------------------------------------
 
-!========================== FlavourTagging v6r0 2005-07-04 ===================
+! 2005-07-04 - P. Koppenburg
+ - Add "const" where it seems reasonable
+ - Indent properly
+ - IMPORTANT: BTagging now uses the PhysDesktop to get it's input. 
+   ParticlesLocation is obsolete.
+ - Some reorganisation:
+  R FlavourTagging/IBTaggingTool.h
+  R FlavourTagging/INNetTool.h
+  R FlavourTagging/ISecondaryVertexTool.h
+    . Moved to DaVinciKernel
+  R FlavourTagging/ITagger.h
+    . Moved to src/
+
 ! 2005-07-04 - M. Musy
  - New version which exploits the new FlavourTag class definition 
    in PhysEvent 
@@ -19,7 +31,6 @@
    modified to return a vector of vertices instead of a single vertex
    A new SVertexABTool is created. It returns two vertices instead of 
    just one, for the moment only for development purposes.
-
 
 !========================== FlavourTagging v5r6 2005-05-30 ===================
 ! 2005-05-28 - M. Musy

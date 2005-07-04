@@ -13,20 +13,20 @@ ChargedProtoPAlg.VeloTTTracks = true ;
 ////--------------------------------------------------------------
 ///example Bd Channel Selection -------------------
 //#include "$B2HHROOT/options/DoTDRselBd2PiPi.opts"
-//BTagging.ParticlesLocation = "Phys/TDRselBd2PiPi/Particles";
+//BTagging.PhysDesktop.InputLocations = { "Phys/TDRselBd2PiPi" };
 //TamperingL1Alg.SelectionName = "TDRselBd2PiPi";
 
 ///example Bs Channel Selection -----------------
 //#include "$B2HHROOT/options/DoTDRselBs2KK.opts"
-//BTagging.ParticlesLocation = "Phys/TDRselBs2KK/Particles";
+//BTagging.PhysDesktop.InputLocations = { "Phys/TDRselBs2KK" };
 //TamperingL1Alg.SelectionName = "TDRselBs2KK";
 
 //#include "$BS2DSHROOT/options/DoTDRselBs2DsK.opts"
-//BTagging.ParticlesLocation = "Phys/TDRselBs2DsK/Particles";
+//BTagging.PhysDesktop.InputLocations = { "Phys/TDRselBs2DsK" };
 //TamperingL1Alg.SelectionName = "TDRselBs2DsK";
 
 ///or Cheated Selection ----------------------------
-#include "$FLAVOURTAGGINGOPTS/CheatedSelection.opts"
+#include "$FLAVOURTAGGINGCHECKEROPTS/CheatedSelection.opts"
 
 ///---------------------------------------------------------------
 //   L1 buffer TAMPERING
@@ -54,18 +54,18 @@ ApplicationMgr.DLLs   += { "VeloDAQ" };
 ApplicationMgr.TopAlg += { "DecodeVeloRawBuffer" };
 
 #include "$FLAVOURTAGGINGOPTS/BTagging.opts"
-BTagging.OutputLevel = 2;
+BTagging.OutputLevel = 3;
 
 ///---------------------------------------------------------------
-/// 		BTaggingMonitor
+/// 		BTaggingChecker
 /// example of an optional algorithm that reads in what is in TES
 ///---------------------------------------------------------------
-#include "$FLAVOURTAGGINGOPTS/BTaggingMonitor.opts"
+#include "$FLAVOURTAGGINGCHECKEROPTS/BTaggingChecker.opts"
 
 //---------------------------------------------------------------
 // Number of events to process, skip and printing frequency
-MessageSvc.Format = "% F%15W%S%7W%R%T %0W%M";
-ApplicationMgr.EvtMax    = 1000000;
+MessageSvc.Format = "% F%40W%S%7W%R%T %0W%M";
+ApplicationMgr.EvtMax    = 100;
 EventSelector.FirstEvent = 1;
 EventSelector.PrintFreq  = 1;
 

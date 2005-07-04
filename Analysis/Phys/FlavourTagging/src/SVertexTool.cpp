@@ -1,4 +1,4 @@
-// $Id: SVertexTool.cpp,v 1.1 2005-07-04 08:20:06 pkoppenb Exp $
+// $Id: SVertexTool.cpp,v 1.2 2005-07-04 15:40:09 pkoppenb Exp $
 #include "SVertexTool.h"
 
 //-----------------------------------------------------------------------------
@@ -15,8 +15,8 @@ const        IToolFactory& SVertexToolFactory = s_factory ;
 // Standard constructor, initializes variables
 //=============================================================================
 SVertexTool::SVertexTool( const std::string& type,
-			  const std::string& name,
-			  const IInterface* parent ) :
+                          const std::string& name,
+                          const IInterface* parent ) :
   GaudiTool ( type, name, parent ) { 
   declareInterface<ISecondaryVertexTool>(this);
 }
@@ -43,8 +43,8 @@ StatusCode SVertexTool::finalize() { return StatusCode::SUCCESS; }
 SVertexTool::~SVertexTool(){}
 
 //=============================================================================
-std::vector<Vertex> SVertexTool::buildVertex( const Vertex RecVert, 
-					      const ParticleVector vtags ){
+std::vector<Vertex> SVertexTool::buildVertex( const Vertex& RecVert, 
+                                              const ParticleVector& vtags ){
 
   double RVz = RecVert.position().z()/mm;
 
@@ -72,6 +72,7 @@ std::vector<Vertex> SVertexTool::buildVertex( const Vertex RecVert,
     double lcs=1000.;
     ContainedObject* contObj = (*jp)->origin();
     ProtoParticle* proto = dynamic_cast<ProtoParticle*>(contObj);
+    if (!proto) continue ;
     TrStoredTrack* track = proto->track();
     if((track->measurements()).size() > 5)
       lcs = track->lastChiSq()/((track->measurements()).size()-5);
@@ -109,16 +110,16 @@ std::vector<Vertex> SVertexTool::buildVertex( const Vertex RecVert,
       //if the couple is compatible with a Ks, drop it         //preselection
       HepLorentzVector sum = (*jp)->momentum() + (*kp)->momentum();
       if( sum.m()/GeV > 0.490 && sum.m()/GeV < 0.505 
-	 &&  (*jp)->particleID().abspid() == 211
-	 &&  (*kp)->particleID().abspid() == 211
-	 && ((*jp)->particleID().threeCharge())
-	  * ((*kp)->particleID().threeCharge()) < 0 ) {
-	debug() << "This is a Ks candidate! skip."<<endreq;
-	//set their energy to 0 so that they're not used afterwards
-	HepLorentzVector zero(0.0001,0.0001,0.0001,0.0001);
-	(*jp)->setMomentum(zero);
-	(*kp)->setMomentum(zero);
-	continue;
+          &&  (*jp)->particleID().abspid() == 211
+          &&  (*kp)->particleID().abspid() == 211
+          && ((*jp)->particleID().threeCharge())
+          * ((*kp)->particleID().threeCharge()) < 0 ) {
+        debug() << "This is a Ks candidate! skip."<<endreq;
+        //set their energy to 0 so that they're not used afterwards
+        HepLorentzVector zero(0.0001,0.0001,0.0001,0.0001);
+        (*jp)->setMomentum(zero);
+        (*kp)->setMomentum(zero);
+        continue;
       }
 
       //build a likelihood that the combination comes from B ---------
@@ -136,10 +137,10 @@ std::vector<Vertex> SVertexTool::buildVertex( const Vertex RecVert,
       probb=(1-probi1)*(1-probi2)*(1-probp1)*(1-probp2)*(1-proba);
       if( probs/(probs+probb) < 0.2 ) continue;                   //preselection
       if( probs/(probs+probb) > probf ) {
-	probf = probs/(probs+probb);
-	Vfit = vtx;
-	p1 = (*jp);
-	p2 = (*kp);
+        probf = probs/(probs+probb);
+        Vfit = vtx;
+        p1 = (*jp);
+        p2 = (*kp);
       }
     }
   }
@@ -182,9 +183,9 @@ std::vector<Vertex> SVertexTool::buildVertex( const Vertex RecVert,
       if( !sc ) { Pfit.pop_back(); continue; }
     
       if( VfitTMP.chi2() / VfitTMP.nDoF()  > 5.0 ) 
-	{ Pfit.pop_back(); continue; }                                   //cut
+      { Pfit.pop_back(); continue; }                                   //cut
       if((VfitTMP.position().z()/mm - RVz) < 1.0 ) 
-	{ Pfit.pop_back(); continue; }                                   //cut
+      { Pfit.pop_back(); continue; }                                   //cut
 
       //look what is the part which behaves the worst
       double ipmax = -1.0;
@@ -193,33 +194,33 @@ std::vector<Vertex> SVertexTool::buildVertex( const Vertex RecVert,
       ParticleVector::iterator kpp, kpp_worse;
 
       for( kpp=Pfit.begin(); kpp!=Pfit.end(); kpp++, ikpp++ ){
-	if( Pfit.size() < 3 ) break;
+        if( Pfit.size() < 3 ) break;
 
-	ParticleVector tmplist = Pfit;
-	tmplist.erase( tmplist.begin() + ikpp );
+        ParticleVector tmplist = Pfit;
+        tmplist.erase( tmplist.begin() + ikpp );
 
-	sc = fitter->fitVertex( tmplist, vtx ); 
-	if( !sc ) continue;
+        sc = fitter->fitVertex( tmplist, vtx ); 
+        if( !sc ) continue;
 
-	sc = geom->calcImpactPar(**kpp, vtx, ip, ipe, ipVec, errMatrix);
-	if( !sc ) continue;
-	if( ip/ipe > ipmax ) {
-	  ipmax = ip/ipe;
-	  kpp_worse = kpp;
-	  worse_exist = true;
-	}
+        sc = geom->calcImpactPar(**kpp, vtx, ip, ipe, ipVec, errMatrix);
+        if( !sc ) continue;
+        if( ip/ipe > ipmax ) {
+          ipmax = ip/ipe;
+          kpp_worse = kpp;
+          worse_exist = true;
+        }
       }
       //decide if keep it or kill it
       if( worse_exist ) {
-	debug()<< "Worse=" << (*kpp_worse)->particleID().pid()
-	    << " P=" << (*kpp_worse)->p()/GeV
-	    << " ipmax=" << ipmax ;
-	if ( ipmax > 3.0 && Pfit.size() > 2 ) {
-	  Pfit.erase( kpp_worse );
-	  debug() << " killed." << endreq;	
-	} else {
-	  debug() << " included." << endreq;	
-	}
+        debug()<< "Worse=" << (*kpp_worse)->particleID().pid()
+               << " P=" << (*kpp_worse)->p()/GeV
+               << " ipmax=" << ipmax ;
+        if ( ipmax > 3.0 && Pfit.size() > 2 ) {
+          Pfit.erase( kpp_worse );
+          debug() << " killed." << endreq;	
+        } else {
+          debug() << " included." << endreq;	
+        }
       }
     }
     sc = fitter->fitVertex( Pfit, Vfit ); //RE-FIT////////////////////

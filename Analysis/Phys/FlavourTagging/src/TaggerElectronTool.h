@@ -1,4 +1,4 @@
-// $Id: TaggerElectronTool.h,v 1.1 2005-07-04 08:20:06 pkoppenb Exp $
+// $Id: TaggerElectronTool.h,v 1.2 2005-07-04 15:40:09 pkoppenb Exp $
 #ifndef USER_TAGGERELECTRONTOOL_H 
 #define USER_TAGGERELECTRONTOOL_H 1
 
@@ -8,7 +8,7 @@
 #include "GaudiKernel/ToolFactory.h"
 // from Event
 #include "RecoTools/ITrVeloCharge.h"
-#include "FlavourTagging/ITagger.h"
+#include "Kernel/ITagger.h"
 
 /** @class TaggerElectronTool TaggerElectronTool.h 
  *
@@ -31,8 +31,8 @@ public:
   StatusCode finalize  ();    ///<  finalization
 
   //-------------------------------------------------------------
-  virtual ParticleVector taggers( Particle*, Vertex*, 
-				  std::vector<Particle*> );
+  ParticleVector taggers( const Particle*, const Vertex*, 
+				  const ParticleVector& );
   //-------------------------------------------------------------
 
 private:

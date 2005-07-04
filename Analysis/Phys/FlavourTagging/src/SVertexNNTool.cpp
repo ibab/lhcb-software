@@ -1,4 +1,4 @@
-// $Id: SVertexNNTool.cpp,v 1.1 2005-07-04 08:20:05 pkoppenb Exp $
+// $Id: SVertexNNTool.cpp,v 1.2 2005-07-04 15:40:09 pkoppenb Exp $
 #include "SVertexNNTool.h"
 
 //-----------------------------------------------------------------------------
@@ -15,8 +15,8 @@ const        IToolFactory& SVertexNNToolFactory = s_factory ;
 // Standard constructor, initializes variables
 //=============================================================================
 SVertexNNTool::SVertexNNTool( const std::string& type,
-			      const std::string& name,
-			      const IInterface* parent ) :
+                              const std::string& name,
+                              const IInterface* parent ) :
   GaudiTool ( type, name, parent ) { 
   declareInterface<ISecondaryVertexTool>(this);
 }
@@ -44,8 +44,8 @@ StatusCode SVertexNNTool::finalize() { return StatusCode::SUCCESS; }
 SVertexNNTool::~SVertexNNTool(){}
 
 //=============================================================================
-std::vector<Vertex> SVertexNNTool::buildVertex( const Vertex RecVert, 
-						const ParticleVector vtags ){
+std::vector<Vertex> SVertexNNTool::buildVertex( const Vertex& RecVert, 
+                                                const ParticleVector& vtags ){
 
   double RVz = RecVert.position().z()/mm;
 
@@ -75,6 +75,7 @@ std::vector<Vertex> SVertexNNTool::buildVertex( const Vertex RecVert,
     double lcs=1000.;
     ContainedObject* contObj = (*jp)->origin();
     ProtoParticle* proto = dynamic_cast<ProtoParticle*>(contObj);
+    if (!proto) continue;
     TrStoredTrack* track = proto->track();
     if((track->measurements()).size() > 5)
       lcs = track->lastChiSq()/((track->measurements()).size()-5);
@@ -100,7 +101,7 @@ std::vector<Vertex> SVertexNNTool::buildVertex( const Vertex RecVert,
       ProtoParticle* proto = dynamic_cast<ProtoParticle*>(contObj);
       TrStoredTrack* track = proto->track();
       if((track->measurements()).size() > 5)
-	lcs = track->lastChiSq()/((track->measurements()).size()-5);
+        lcs = track->lastChiSq()/((track->measurements()).size()-5);
       if( lcs > 2.0 ) continue;                                //preselection
       if( track->forward() == false ) continue;                //preselection
 
@@ -111,34 +112,34 @@ std::vector<Vertex> SVertexNNTool::buildVertex( const Vertex RecVert,
       //if the couple is compatible with a Ks, drop it          //preselection
       HepLorentzVector sum = (*jp)->momentum() + (*kp)->momentum();
       if( sum.m()/GeV > 0.490 && sum.m()/GeV < 0.505 
-	 &&  jpid == 211 &&  kpid == 211
-	 && ((*jp)->particleID().threeCharge())
-	  * ((*kp)->particleID().threeCharge()) < 0 ) {
-	debug() << "This is a Ks candidate! skip."<<endreq;
-	//set their energy to 0
-	HepLorentzVector zero(0.0001,0.0001,0.0001,0.0001);
-	(*jp)->setMomentum(zero);
-	(*kp)->setMomentum(zero);
-	continue;
+          &&  jpid == 211 &&  kpid == 211
+          && ((*jp)->particleID().threeCharge())
+          * ((*kp)->particleID().threeCharge()) < 0 ) {
+        debug() << "This is a Ks candidate! skip."<<endreq;
+        //set their energy to 0
+        HepLorentzVector zero(0.0001,0.0001,0.0001,0.0001);
+        (*jp)->setMomentum(zero);
+        (*kp)->setMomentum(zero);
+        continue;
       }
 
       //build a probability that the combination comes from B ---------
       //P1,P2,PT1,PT2,B0PT,IP1,IP2,JVZ,JCHI
       double NNoutput = NNseeding( (*jp)->p()/GeV,
-				   (*kp)->p()/GeV,
-				   (*jp)->pt()/GeV,
-				   (*kp)->pt()/GeV,
-				   7.0,
-				   ipl/iperrl,
-				   ips/iperrs,
-				   vtx.position().z()/mm - RVz,
-				   vtx.chi2()/vtx.nDoF() )/2.0+0.5;
+                                   (*kp)->p()/GeV,
+                                   (*jp)->pt()/GeV,
+                                   (*kp)->pt()/GeV,
+                                   7.0,
+                                   ipl/iperrl,
+                                   ips/iperrs,
+                                   vtx.position().z()/mm - RVz,
+                                   vtx.chi2()/vtx.nDoF() )/2.0+0.5;
       if( NNoutput < 0.2 ) continue;                           //preselection
       if( NNoutput > probf ) {
-	probf = NNoutput;
-	Vfit = vtx;
-	p1 = (*jp);
-	p2 = (*kp);
+        probf = NNoutput;
+        Vfit = vtx;
+        p1 = (*jp);
+        p2 = (*kp);
       }
     }
   }
@@ -183,15 +184,15 @@ std::vector<Vertex> SVertexNNTool::buildVertex( const Vertex RecVert,
       if( !sc ) { Pfit.pop_back(); continue; }
     
       if( VfitTMP.chi2() / VfitTMP.nDoF() > 5.0 ) 
-	{ Pfit.pop_back(); continue; }                                   //cut
+      { Pfit.pop_back(); continue; }                                   //cut
       if( VfitTMP.position().z()/mm - RVz < 1.0 ) 
-	{ Pfit.pop_back(); continue; }                                   //cut
+      { Pfit.pop_back(); continue; }                                   //cut
 
       debug()<<"---> chi="<< VfitTMP.chi2() / VfitTMP.nDoF()
-	     <<" Vz-RVz="<< VfitTMP.position().z()/mm - RVz
-	     <<" prob="<< probs/(probs+probb)
-	     <<" IPbef="<< ip/ipe
-	     <<endreq;
+             <<" Vz-RVz="<< VfitTMP.position().z()/mm - RVz
+             <<" prob="<< probs/(probs+probb)
+             <<" IPbef="<< ip/ipe
+             <<endreq;
 
       //look what is the part which behaves worse
       double ipmax = -1.0;
@@ -200,21 +201,21 @@ std::vector<Vertex> SVertexNNTool::buildVertex( const Vertex RecVert,
       ParticleVector::iterator kpp, kpp_worse;
 
       for( kpp=Pfit.begin(); kpp!=Pfit.end(); kpp++, ikpp++ ){
-	if( Pfit.size() < 3 ) break;
+        if( Pfit.size() < 3 ) break;
 
-	ParticleVector tmplist = Pfit;
-	tmplist.erase( tmplist.begin() + ikpp );
+        ParticleVector tmplist = Pfit;
+        tmplist.erase( tmplist.begin() + ikpp );
 
-	sc = fitter->fitVertex( tmplist, vtx ); 
-	if( !sc ) continue;
+        sc = fitter->fitVertex( tmplist, vtx ); 
+        if( !sc ) continue;
 
-	sc = geom->calcImpactPar(**kpp, vtx, ip, ipe, ipVec, errMatrix);
-	if( !sc ) continue;
-	if( ip/ipe > ipmax ) {
-	  ipmax = ip/ipe;
-	  kpp_worse = kpp;
-	  worse_exist = true;
-	}
+        sc = geom->calcImpactPar(**kpp, vtx, ip, ipe, ipVec, errMatrix);
+        if( !sc ) continue;
+        if( ip/ipe > ipmax ) {
+          ipmax = ip/ipe;
+          kpp_worse = kpp;
+          worse_exist = true;
+        }
       }
       //decide if keep it or kill it
       if( worse_exist && ipmax > 3.0) Pfit.erase( kpp_worse );
@@ -233,14 +234,14 @@ std::vector<Vertex> SVertexNNTool::buildVertex( const Vertex RecVert,
 
 //=============================================================================
 double SVertexNNTool::NNseeding(double P1,
-				      double P2,
-				      double PT1,
-				      double PT2,
-				      double B0PT,
-				      double IP1,
-				      double IP2,
-				      double JVZ,
-				      double JCHI ) {
+                                double P2,
+                                double PT1,
+                                double PT2,
+                                double B0PT,
+                                double IP1,
+                                double IP2,
+                                double JVZ,
+                                double JCHI ) {
   //normalise inputs
   double OUT1 = std::min(P1/ 80., 1.);
   double OUT2 = std::min(P2/ 80., 1.);

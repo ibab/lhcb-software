@@ -23,7 +23,7 @@ BTagging.BTaggingTool.PhysDesktop.CombinedParticleMaker.ElectronSelection = {
     "det='CALO' e-pi='3.0'" };
 BTagging.BTaggingTool.PhysDesktop.CombinedParticleMaker.KaonSelection = {
     "det='RICH' k-pi='3.0' k-p='-4.0'" };
-BTagging.BTaggingTool.PhysDesktop.CombinedParticleMaker.OutputLevel = 2;
+BTagging.BTaggingTool.PhysDesktop.CombinedParticleMaker.OutputLevel = 4;
 
 //----------------------------
 //Charge in velo for electrons

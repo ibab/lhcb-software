@@ -1,11 +1,11 @@
-// $Id: NNetTool.h,v 1.4 2005-05-25 18:33:31 musy Exp $
+// $Id: NNetTool.h,v 1.5 2005-07-04 15:40:09 pkoppenb Exp $
 #ifndef NNETTOOL_NNETTOOL_H 
 #define NNETTOOL_NNETTOOL_H 1
 // Include files
 // from Gaudi
 #include "GaudiAlg/GaudiTool.h"
 #include "GaudiKernel/AlgTool.h"
-#include "FlavourTagging/INNetTool.h"            // Interface
+#include "INNetTool.h"            // Interface
 
 /** @class NNetTool NNetTool.h NNetTool.h
  *  

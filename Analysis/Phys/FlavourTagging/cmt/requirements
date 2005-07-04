@@ -5,7 +5,7 @@
 # http://cern.ch/lhcb-comp/Support/html/new_structure.pdf
 #============================================================================
 package           FlavourTagging
-version           v5r6
+version           v6r0
 
 # Structure, i.e. directories to process. 
 #============================================================================
@@ -14,13 +14,11 @@ branches          cmt doc src options summary
 # Set the default paths for the Tagging options
 #============================================================================
 set FLAVOURTAGGINGOPTS ${FLAVOURTAGGINGROOT}/options
-include_dirs           $(FLAVOURTAGGINGROOT)
+# include_dirs           $(FLAVOURTAGGINGROOT)
 
 # Used packages. 
 #============================================================================
-use DaVinciTools    v*  Phys
-use DaVinciMCTools  v*  Phys
-use MCTools         v*  Phys
+use DaVinciKernel   v*  Phys
 use L0Event	    v*  Event
 use TrgEvent        v*  Event
 use GenEvent        v*  Event
@@ -29,7 +27,7 @@ use Tampering       v*  Phys
 
 # Component library building rule
 #============================================================================
-library          FlavourTagging    ../src/*.cpp -import=AIDA
+library          FlavourTagging    ../src/*.cpp
 
 # define component library link options
 #============================================================================

@@ -13,8 +13,8 @@ const        IToolFactory& TaggerPionSameToolFactory = s_factory ;
 
 //====================================================================
 TaggerPionSameTool::TaggerPionSameTool( const std::string& type,
-					const std::string& name,
-					const IInterface* parent ) :
+                                        const std::string& name,
+                                        const IInterface* parent ) :
   GaudiTool ( type, name, parent ) {
   declareInterface<ITagger>(this);
 
@@ -35,13 +35,13 @@ StatusCode TaggerPionSameTool::initialize() {
     fatal() << "GeomDispCalculator could not be found" << endreq;
     return StatusCode::FAILURE;
   }
-return StatusCode::SUCCESS; 
+  return StatusCode::SUCCESS; 
 }
 
 //=====================================================================
-ParticleVector TaggerPionSameTool::taggers( Particle* AXB0, 
-					    Vertex* RecVert, 
-					    std::vector<Particle*> vtags ){
+ParticleVector TaggerPionSameTool::taggers( const Particle* AXB0, 
+                                            const Vertex* RecVert, 
+                                            const ParticleVector& vtags ){
 
   //select pionS sameside tagger(s)
   //if more than one satisfies cuts, take the highest Pt one
@@ -63,7 +63,7 @@ ParticleVector TaggerPionSameTool::taggers( Particle* AXB0,
     if(!IPerr) continue;
     double IPsig = fabs(IP/IPerr);
     debug() << " PioS P="<< P <<" Pt="<< Pt << " IPsig=" << IPsig 
-	    << " IP=" << IP <<endreq;
+            << " IP=" << IP <<endreq;
 
     if(IPsig < m_IP_cut_pionS) {
 
@@ -77,19 +77,21 @@ ParticleVector TaggerPionSameTool::taggers( Particle* AXB0,
       double lcs  = 1000.;
       ContainedObject* contObj = (*ipart)->origin();
       if (contObj) {
-	ProtoParticle* proto = dynamic_cast<ProtoParticle*>(contObj);
-	TrStoredTrack* track = proto->track();
-	if((track->measurements()).size() > 5)
-	  lcs = track->lastChiSq()/((track->measurements()).size()-5);
-	if(     track->forward()   ) trtyp = 1;
-	else if(track->isUpstream()) trtyp = 3;
+        ProtoParticle* proto = dynamic_cast<ProtoParticle*>(contObj);
+        if ( proto ) {
+          TrStoredTrack* track = proto->track();
+          if((track->measurements()).size() > 5)
+            lcs = track->lastChiSq()/((track->measurements()).size()-5);
+          if(     track->forward()   ) trtyp = 1;
+          else if(track->isUpstream()) trtyp = 3;
+        }
       }
       debug()<< "      trtyp=" << trtyp << " lcs=" << lcs << endreq; 
       if(trtyp==1 || (trtyp==3 && lcs<m_lcs_pSu)) {
-	if( Pt > ptmaxpS ) { 
-	  pionS = (*ipart);
-	  ptmaxpS = Pt;
-	}
+        if( Pt > ptmaxpS ) { 
+          pionS = (*ipart);
+          ptmaxpS = Pt;
+        }
       }
     }
   } 
@@ -98,15 +100,15 @@ ParticleVector TaggerPionSameTool::taggers( Particle* AXB0,
   return vpionS;
 }
 //====================================================================
-void TaggerPionSameTool::calcIP( Particle* axp, 
-				 Vertex* RecVert, 
-				 double& ip, double& iperr) {
+void TaggerPionSameTool::calcIP( const Particle* axp, 
+                                 const Vertex* RecVert, 
+                                 double& ip, double& iperr) {
   ip   =-100.0;
   iperr= 0.0;
   Hep3Vector ipVec;
   HepSymMatrix errMatrix;
   StatusCode sc =  m_Geom->calcImpactPar(*axp, *RecVert, ip,
-					 iperr, ipVec, errMatrix);
+                                         iperr, ipVec, errMatrix);
   if( sc ) {
     ip   = ipVec.z()>0 ? ip : -ip ; 
     iperr= iperr; 

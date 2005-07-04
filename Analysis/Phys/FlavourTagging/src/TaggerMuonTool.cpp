@@ -28,9 +28,9 @@ TaggerMuonTool::~TaggerMuonTool() {};
 StatusCode TaggerMuonTool::initialize() { return StatusCode::SUCCESS; }
 
 //=====================================================================
-ParticleVector TaggerMuonTool::taggers( Particle* AXB0, 
-					Vertex* RecVert, 
-					std::vector<Particle*> vtags ){
+ParticleVector TaggerMuonTool::taggers( const Particle* AXB0, 
+					const Vertex* RecVert, 
+					const ParticleVector& vtags ){
   verbose() << "B pt=" << AXB0->pt()/GeV 
 	    << " VTXz="<< RecVert->position().z() <<endreq;
 

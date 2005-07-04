@@ -13,8 +13,8 @@ const        IToolFactory& TaggerKaonOppositeToolFactory = s_factory ;
 
 //====================================================================
 TaggerKaonOppositeTool::TaggerKaonOppositeTool( const std::string& type,
-						const std::string& name,
-						const IInterface* parent ) :
+                                                const std::string& name,
+                                                const IInterface* parent ) :
   GaudiTool ( type, name, parent ) {
   declareInterface<ITagger>(this);
 
@@ -39,13 +39,13 @@ StatusCode TaggerKaonOppositeTool::initialize() {
     return StatusCode::FAILURE;
   }
 
-return StatusCode::SUCCESS; 
+  return StatusCode::SUCCESS; 
 }
 
 //=====================================================================
-ParticleVector TaggerKaonOppositeTool::taggers( Particle* AXB0, 
-				       Vertex* RecVert, 
-				       std::vector<Particle*> vtags ){
+ParticleVector TaggerKaonOppositeTool::taggers( const Particle* AXB0, 
+                                                const Vertex* RecVert, 
+                                                const ParticleVector& vtags ){
   verbose()<< "B pt=" << AXB0->pt()/GeV <<endreq;
 
   //select kaon opposite tagger(s)
@@ -68,29 +68,32 @@ ParticleVector TaggerKaonOppositeTool::taggers( Particle* AXB0,
     if(!IPerr) continue;
     double IPsig = fabs(IP/IPerr);
     debug() << " Kaon P="<< P <<" Pt="<< Pt << " IPsig=" << IPsig 
-	    << " IP=" << IP <<endreq;
+            << " IP=" << IP <<endreq;
 
     if(IPsig > m_IP_cut_kaon ) {
       long   trtyp= 0;
       double lcs  = 1000.;
       ContainedObject* contObj = (*ipart)->origin();
       if (contObj) {
-	ProtoParticle* proto = dynamic_cast<ProtoParticle*>(contObj);
-	TrStoredTrack* track = proto->track();
-	if((track->measurements()).size() > 5)
-	  lcs = track->lastChiSq()/((track->measurements()).size()-5);
-	if(     track->forward()   ) trtyp = 1;
-	else if(track->match()     ) trtyp = 2;
-	else if(track->isUpstream()) trtyp = 3;
+        ProtoParticle* proto = dynamic_cast<ProtoParticle*>(contObj);
+        if ( proto) {
+          TrStoredTrack* track = proto->track();
+          if((track->measurements()).size() > 5)
+            lcs = track->lastChiSq()/((track->measurements()).size()-5);
+          if(     track->forward()   ) trtyp = 1;
+          else if(track->match()     ) trtyp = 2;
+          else if(track->isUpstream()) trtyp = 3;
+        }
       }
+      
       debug()<< "      trtyp=" << trtyp << " lcs=" << lcs << endreq; 
       if((trtyp==1 && lcs<m_lcs_kf && fabs(IP)<m_IP_kf) ||
-	 (trtyp==2 && lcs<m_lcs_km && fabs(IP)<m_IP_km) ||
-	 (trtyp==3 && lcs<m_lcs_ku && fabs(IP)<m_IP_ku) ) {
-	if( Pt > ptmaxk ) { 
-	  kaon = (*ipart);
-	  ptmaxk = Pt;
-	}
+         (trtyp==2 && lcs<m_lcs_km && fabs(IP)<m_IP_km) ||
+         (trtyp==3 && lcs<m_lcs_ku && fabs(IP)<m_IP_ku) ) {
+        if( Pt > ptmaxk ) { 
+          kaon = (*ipart);
+          ptmaxk = Pt;
+        }
       }
     }
   } 
@@ -99,15 +102,15 @@ ParticleVector TaggerKaonOppositeTool::taggers( Particle* AXB0,
   return vkaon;
 }
 //====================================================================
-void TaggerKaonOppositeTool::calcIP( Particle* axp, 
-				     Vertex* RecVert, 
-				     double& ip, double& iperr) {
+void TaggerKaonOppositeTool::calcIP( const Particle* axp, 
+                                     const Vertex* RecVert, 
+                                     double& ip, double& iperr) {
   ip   =-100.0;
   iperr= 0.0;
   Hep3Vector ipVec;
   HepSymMatrix errMatrix;
   StatusCode sc =  m_Geom->calcImpactPar(*axp, *RecVert, ip,
-					 iperr, ipVec, errMatrix);
+                                         iperr, ipVec, errMatrix);
   if( sc ) {
     ip   = ipVec.z()>0 ? ip : -ip ; 
     iperr= iperr; 

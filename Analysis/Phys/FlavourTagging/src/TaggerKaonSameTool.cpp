@@ -13,8 +13,8 @@ const        IToolFactory& TaggerKaonSameToolFactory = s_factory ;
 
 //====================================================================
 TaggerKaonSameTool::TaggerKaonSameTool( const std::string& type,
-					const std::string& name,
-					const IInterface* parent ) :
+                                        const std::string& name,
+                                        const IInterface* parent ) :
   GaudiTool ( type, name, parent ) {
   declareInterface<ITagger>(this);
 
@@ -38,13 +38,13 @@ StatusCode TaggerKaonSameTool::initialize() {
     return StatusCode::FAILURE;
   }
 
-return StatusCode::SUCCESS; 
+  return StatusCode::SUCCESS; 
 }
 
 //=====================================================================
-ParticleVector TaggerKaonSameTool::taggers( Particle* AXB0, 
-					    Vertex* RecVert, 
-					    std::vector<Particle*> vtags ){
+ParticleVector TaggerKaonSameTool::taggers( const Particle* AXB0, 
+                                            const Vertex* RecVert, 
+                                            const ParticleVector& vtags ){
 
   //select kaonS sameside tagger(s)
   //if more than one satisfies cuts, take the highest Pt one
@@ -66,7 +66,7 @@ ParticleVector TaggerKaonSameTool::taggers( Particle* AXB0,
     if(!IPerr) continue;
     double IPsig = fabs(IP/IPerr);
     debug() << " KaoS P="<< P <<" Pt="<< Pt << " IPsig=" << IPsig 
-	    << " IP=" << IP <<endreq;
+            << " IP=" << IP <<endreq;
 
     if(IPsig < m_IP_cut_kaonS) {
 
@@ -79,7 +79,7 @@ ParticleVector TaggerKaonSameTool::taggers( Particle* AXB0,
       if(dphi>3.1416) dphi=6.2832-dphi;
       double dQ    = (ptotB+(*ipart)->momentum()).m()/GeV - B0mass;
       debug()<< "      deta=" << deta << " dphi=" << dphi 
-	     << " dQ=" << dQ << endreq; 
+             << " dQ=" << dQ << endreq; 
       if(dphi > m_phicut_kaonS) continue;
       if(deta > m_etacut_kaonS) continue;
       if(dQ   > m_dQcut_kaonS ) continue;
@@ -88,19 +88,21 @@ ParticleVector TaggerKaonSameTool::taggers( Particle* AXB0,
       double lcs  = 1000.;
       ContainedObject* contObj = (*ipart)->origin();
       if (contObj) {
-	ProtoParticle* proto = dynamic_cast<ProtoParticle*>(contObj);
-	TrStoredTrack* track = proto->track();
-	if((track->measurements()).size() > 5)
-	  lcs = track->lastChiSq()/((track->measurements()).size()-5);
-	if(     track->forward()   ) trtyp = 1;
-	else if(track->isUpstream()) trtyp = 3;
+        ProtoParticle* proto = dynamic_cast<ProtoParticle*>(contObj);
+        if ( proto ) {
+          TrStoredTrack* track = proto->track();
+          if((track->measurements()).size() > 5)
+            lcs = track->lastChiSq()/((track->measurements()).size()-5);
+          if(     track->forward()   ) trtyp = 1;
+          else if(track->isUpstream()) trtyp = 3;
+        }
       }
       debug()<< "      trtyp=" << trtyp << " lcs=" << lcs << endreq; 
       if( trtyp==1 || (trtyp==3 && lcs< m_lcs_kSu ) ) {
-	if( Pt > ptmaxkS ) { 
-	  kaonS = (*ipart);
-	  ptmaxkS = Pt;
-	}
+        if( Pt > ptmaxkS ) { 
+          kaonS = (*ipart);
+          ptmaxkS = Pt;
+        }
       }
     }
   } 
@@ -109,15 +111,15 @@ ParticleVector TaggerKaonSameTool::taggers( Particle* AXB0,
   return vkaonS;
 }
 //====================================================================
-void TaggerKaonSameTool::calcIP( Particle* axp, 
-				 Vertex* RecVert, 
-				 double& ip, double& iperr) {
+void TaggerKaonSameTool::calcIP( const Particle* axp, 
+                                 const Vertex* RecVert, 
+                                 double& ip, double& iperr) {
   ip   =-100.0;
   iperr= 0.0;
   Hep3Vector ipVec;
   HepSymMatrix errMatrix;
   StatusCode sc =  m_Geom->calcImpactPar(*axp, *RecVert, ip,
-					 iperr, ipVec, errMatrix);
+                                         iperr, ipVec, errMatrix);
   if( sc ) {
     ip   = ipVec.z()>0 ? ip : -ip ; 
     iperr= iperr; 
