@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.66 2005-07-04 15:40:09 pkoppenb Exp $
+! $Id: release.notes,v 1.67 2005-07-04 16:07:20 pkoppenb Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Phys/FlavourTagging
 ! Responsible : Marco Musy (musy@cern.ch)
@@ -10,12 +10,14 @@
  - Indent properly
  - IMPORTANT: BTagging now uses the PhysDesktop to get it's input. 
    ParticlesLocation is obsolete.
+ - BTagging.cpp now uses flavourTagging() method of DVAlgorithm 
+   (needs DaVinciKernel v3r5)
  - Some reorganisation:
-  R FlavourTagging/IBTaggingTool.h
-  R FlavourTagging/INNetTool.h
-  R FlavourTagging/ISecondaryVertexTool.h
+  - FlavourTagging/IBTaggingTool.h
+  - FlavourTagging/INNetTool.h
+  - FlavourTagging/ISecondaryVertexTool.h
     . Moved to DaVinciKernel
-  R FlavourTagging/ITagger.h
+  - FlavourTagging/ITagger.h
     . Moved to src/
 
 ! 2005-07-04 - M. Musy

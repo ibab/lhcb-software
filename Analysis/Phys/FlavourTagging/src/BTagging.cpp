@@ -24,11 +24,6 @@ BTagging::~BTagging() {};
 //=======================================================================
 StatusCode BTagging::initialize() {
   
-  m_tag = tool<IBTaggingTool> ("BTaggingTool",this);
-  if(! m_tag) {
-    fatal() << "Unable to retrieve BTaggingTool"<< endreq;
-    return StatusCode::FAILURE;
-  }
   return StatusCode::SUCCESS; 
 }
 
@@ -54,13 +49,13 @@ StatusCode BTagging::execute() {
 
       //--------------------- TAG THEM -------------------
       //use tool for tagging by just specifing the signal B
-      theTag = m_tag -> tag( *icandB );
+      theTag = flavourTagging() -> tag( *icandB );
 
       //use tool for tagging if you want to specify the Primary Vtx
-      //theTag = m_tag -> tag( *icandB, PVertex );
+      //theTag = flavourTagging() -> tag( *icandB, PVertex );
 
       //use tool for tagging if you want to specify a list of particles
-      //theTag = m_tag -> tag( *icandB, PVertex, vtags );
+      //theTag = flavourTagging() -> tag( *icandB, PVertex, vtags );
       //--------------------------------------------------
 
       //--- PRINTOUTS ---
