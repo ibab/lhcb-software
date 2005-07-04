@@ -1,14 +1,12 @@
 /*------------------------------------------------------------------
  This program reads the output logfiles of 
- YourSelection + BTagging + BTaggingMonitor
+ YourSelection + BTaggingTool + BTaggingMonitor
  and gives tagging performances with correct statistical errors
 
  To run it:
 > c++ summaryof.cpp -o summaryof
-> ./summaryof taginfo 3 N
+> ./summaryof mylogfile.txt 3 N
 
- To create the taginfo file, this command could be useful: 
- grep -h BTAGGING *.txt | colrm 1 32 >! taginfo
 *///----------------------------------------------------------------
 
 #include <iostream>
@@ -18,60 +16,63 @@
 #include <iomanip>
 
 using namespace std;
- 
-int nrt[20], nwt[20];
-int nrt_m=0, nwt_m=0;
-int nrt_e=0, nwt_e=0;
-int nrt_k=0, nwt_k=0;
-int nrt_s=0, nwt_s=0;
-int nrt_v=0, nwt_v=0;
-int Run,Event,tag,truetag,categ,Trig,L0,L1,HLT,nsele=0;
-string flagstring;
-int fe,fm,fk,fS,fV;
-double mass;
 
 int main(int argc, char **argv) {
 
+  int nrt[20], nwt[20];
+  int nrt_m=0, nwt_m=0;
+  int nrt_e=0, nwt_e=0;
+  int nrt_k=0, nwt_k=0;
+  int nrt_s=0, nwt_s=0;
+  int nrt_v=0, nwt_v=0;
+  int Run,Event,tag,truetag,categ,Trig,L0,L1,HLT,nsele=0;
+  int fe,fm,fk,fS,fV;
+  string flagstring;
+  for(int it=1; it!=20; ++it) nrt[it]=nwt[it]=0;
+ 
   ifstream in(argv[1]);
   if(!in) { cout<<"File does not exist! \n\n"; return 0; }
   if(argc<4){
-    cout << "Usage: summaryof tagfile.txt NR TYPE" << endl;
+    cout << "Usage: summaryof  mylogfile.txt  NR  TYPE" << endl;
     cout << "       NR=1   -> Before triggers  " << endl;
     cout << "       NR=2   -> After L0 trigger " << endl;
-    cout << "       NR=3   -> After L0*L1 " << endl;
+    cout << "       NR=3   -> After L0*L1 "    << endl;
+    cout << "       NR=4   -> After L0*L1*HLT" << endl;
     cout << "       TYPE=T -> TDR categories " << endl;
-    cout << "       TYPE=N -> NNet categories " << endl;
+    cout << "       TYPE=N -> NNet categories" << endl;
     return 0;
   }
-  for(int it=1; it!=20; it++) nrt[it]=nwt[it]=0;
 
   //LOOP ---
   while(!in.eof()) {
 
+    //read in from file:
     in >> flagstring;
-    if(flagstring != "TAG" && flagstring != "MON") continue;
-
+    truetag = 0;
     if(flagstring == "TAG") { //reads in tagging info from BTagging
-      in >> Run >> Event;
-      in >> Trig;
-      in >> tag;
+      in >> Run  >> Event;
+      in >> Trig >> tag;
       //in >> truetag;
       in >> categ;
       in >> fm >> fe >> fk >> fS >> fV; //taggers
-      continue;
     } 
     if(flagstring == "MON") { //reads in from BTaggingMonitor
       in >> tag >> categ >> truetag;
     }
+    if( truetag == 0 ) continue;
+    //cout<< Run <<" "<< Event <<" "<< tag <<" "<< truetag <<endl;
 
-    //trigger 
-    HLT= (int)  Trig/100;
-    L1 = (int) (Trig-100*HLT)/10;
-    L0 = (int) (Trig-100*HLT-10*L1)/1;
-    if(Trig>-1) if((*argv[2]=='2' || *argv[2]=='3') && L0 == 0 ) continue;
-    if(Trig>-1) if( *argv[2]=='3' && L1 == 0 ) continue;
+    //discard untriggered 
+    if(Trig>-1) {
+      HLT= (int)  Trig/100;
+      L1 = (int) (Trig-100*HLT)/10;
+      L0 = (int) (Trig-100*HLT-10*L1)/1;
+      if(*argv[2]=='2') if( !L0 ) continue;
+      if(*argv[2]=='3') if( !L0 || !L1 ) continue;
+      if(*argv[2]=='4') if( !L0 || !L1 || !HLT ) continue;
+    }
 
-    //----------------------
+    //------------- event passes: count right and wrongs
     nsele++;
 
     if(tag== truetag)  nrt[categ]++; 
@@ -88,7 +89,7 @@ int main(int argc, char **argv) {
     if(fS ==-truetag)  nwt_s++;
     if(fV ==-truetag)  nwt_v++;
 
-  }
+  } //end of loop
 
   // calculate effective efficiency in various categories
   double rtt=0, wtt=0;
@@ -98,18 +99,18 @@ int main(int argc, char **argv) {
 
   cout << "\n======================================================="<<endl;
   cout << "Summary for: " << argv[1] <<endl;
-  if     (*argv[2] == '1') cout << "Before triggers, " << endl;
+  if(Trig == -1) cout << "Trigger info not available in file." << endl;
+  else if(*argv[2] == '1') cout << "Before triggers, " << endl;
   else if(*argv[2] == '2') cout << "After L0 trigger only, "<< endl;
-  else if(*argv[2] == '3') cout << "After L0 and L1 triggers, " <<endl;
-  else { cout << "Wrong argument: " <<*argv[2]<<endl; return 0; }
-  cout << "Total nr of events =  "<<setw(5) << nsele << endl;
+  else if(*argv[2] == '3') cout << "After L0*L1 triggers, " <<endl;
+  else if(*argv[2] == '4') cout << "After L0*L1*HLT triggers, " <<endl;
+  else { cout << "Wrong argument NR: " <<*argv[2]<<endl<<endl; return 0; }
+  cout << "Total nr of events =  " << setw(5) << nsele <<endl;
   cout << "---------------------------------------------------------"<<endl;
-
   cout<< " Category            EFF.          Etag         Wrong TF"
       << "      r       w\n";
 
   for( int it=1; it != 20; it++ ) {
-
     rtag = wtag = 0; 
     string cats;
     if(it== 1) cats =  "   mu only";

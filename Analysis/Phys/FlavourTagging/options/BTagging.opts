@@ -1,35 +1,14 @@
 //----------------------------------------------------------------------
 //BTagging algorithm 
 //----------------------------------------------------------------------
-ApplicationMgr.DLLs   += { "VeloDAQ" };
-ApplicationMgr.TopAlg += { "DecodeVeloRawBuffer" };
 
 ApplicationMgr.TopAlg += { "BTagging" };
-BTagging.OutputLevel   = 3;
 
-BTagging.SecondaryVertexType  = "TDR";  //can be "TDR" or "NNet"
-BTagging.CombinationTechnique = "NNet"; //can be "TDR" or "NNet"
-
-BTagging.TagOutputLocation = "/Event/Phys/BTagging";
-
-//PID definition
-BTagging.PhysDesktop.CombinedParticleMaker.UseVTTTracks  = true;
-BTagging.PhysDesktop.CombinedParticleMaker.AddBremPhoton = false;
-BTagging.PhysDesktop.CombinedParticleMaker.ExclusiveSelection = true;
-BTagging.PhysDesktop.ParticleMakerType = "CombinedParticleMaker";
-BTagging.PhysDesktop.CombinedParticleMaker.MuonSelection = {
-    "det='MUON' mu-pi='-3.0'" };
-BTagging.PhysDesktop.CombinedParticleMaker.ElectronSelection = {
-    "det='CALO' e-pi='3.0'" };
-BTagging.PhysDesktop.CombinedParticleMaker.KaonSelection = {
-    "det='RICH' k-pi='3.0' k-p='-4.0'" };
-
-BTagging.TrVeloChargeName = "TrVeloCharge";
-BTagging.TrVeloCharge.Normalisation = 1.;
-BTagging.TrVeloCharge.Ratio = 0.7;
-BTagging.TrVeloCharge.OutputLevel = 3;
+BTagging.OutputLevel    = 3;
 BTagging.AvoidSelResult = false;
-BTagging.DecayDescriptor = { "not specified" };
+BTagging.DecayDescriptor= { "not specified" };
 BTagging.PhysDesktop.OutputLevel = 5;
-BTagging.UnconstVertexFitter.OutputLevel = 4;
+
+#include "$FLAVOURTAGGINGOPTS/BTaggingTool.opts"
+ 
 //-----------------------------------------------------------------------

@@ -21,8 +21,9 @@ Combined.PhysDesktop.CombinedParticleMaker.KaonSelection =
   { "det='RICH' k-pi='3.0' k-p='-4.0'" };
 
 //---------------------------------------------------
-BTagging.PhysDesktop.InputLocations = { "/Event/Phys/CheatedSelection" };
 TamperingL1Alg.SelectionName = "CheatedSelection";
+
+BTagging.ParticlesLocation = "Phys/CheatedSelection/Particles";
 
 //---------------------------------------------------
 CheatedSelection.PhysDesktop.InputLocations = { "/Event/Phys/Combined" };
@@ -38,3 +39,4 @@ CheatedSelection.Cheating.Location = "Phys/Relations/Cheating";
 CheatedSelection.Cheating.AlgorithmName = "myAsctAlgCheat";
 myAsctAlgCheat.InputData = {"/Event/Phys/Combined/Particles"};
 myAsctAlgCheat.OutputLevel = 4;
+//---------------------------------------------------

@@ -1,20 +1,15 @@
-// $Id: BTaggingMonitor.h,v 1.6 2005-03-01 09:57:05 musy Exp $
+// $Id: BTaggingMonitor.h,v 1.7 2005-07-04 08:20:05 pkoppenb Exp $
 #ifndef BTAGGINGMONITOR_H 
 #define BTAGGINGMONITOR_H 1
 
 // Include files
-// from STL
 #include <string>
 #include <vector>
 #include <algorithm>
-// from Gaudi
 #include "GaudiKernel/AlgFactory.h"
-
-#include "Event/EventHeader.h"
 #include "Event/FlavourTag.h"
 #include "DaVinciMCTools/IDebugTool.h"
 #include "Event/GenMCLink.h"
-#include "Event/TrgDecision.h"
 
 // from DaVinci
 #include "Kernel/DVAlgorithm.h"
@@ -22,7 +17,7 @@
 
 /** @class BTaggingMonitor BTaggingMonitor.h
  *  
- *
+ *  Algorithm to read a location in TES and evaluate tag performances
  *  @author Marco Musy
  *  @date   2004-02-15
  */
@@ -39,7 +34,7 @@ public:
 
 private:
   /// Vector of locations of the tags to monitor
-  std::vector<std::string> m_tags_locations; 
+  std::string m_tags_location; 
   Particle2MCLinksAsct::IAsct* m_pAsctLinks; 
   IDebugTool* m_debug;
 

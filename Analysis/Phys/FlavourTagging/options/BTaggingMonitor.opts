@@ -3,7 +3,6 @@
 ApplicationMgr.TopAlg += { "BTaggingMonitor" };
 BTaggingMonitor.OutputLevel = 3;
 BTaggingMonitor.DebugTool.OutputLevel   = 4;
-BTaggingMonitor.TagsLocations = { "/Event/Phys/BTagging" };
 
 //associators
 BTaggingMonitor.TagMonitor.Location = "Phys/Relations/Cheating";

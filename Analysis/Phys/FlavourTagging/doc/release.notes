@@ -1,9 +1,25 @@
-! $Id: release.notes,v 1.64 2005-05-30 09:37:45 pkoppenb Exp $
+! $Id: release.notes,v 1.65 2005-07-04 08:20:05 pkoppenb Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Phys/FlavourTagging
 ! Responsible : Marco Musy (musy@cern.ch)
 ! Purpose     : Provide tools and algorithm for tagging B
 !-----------------------------------------------------------------------------
+
+!========================== FlavourTagging v6r0 2005-07-04 ===================
+! 2005-07-04 - M. Musy
+ - New version which exploits the new FlavourTag class definition 
+   in PhysEvent 
+ - BTagging has became BTaggingTool, while it remains for backward
+   compatibility and as an example of how to use the tagging tool
+ - BTaggingTool itself has been splitted in TaggerXXXTools which return
+   the tagger candidates to BTaggingTool which eventually combines them
+   into a final decision
+ - SecondaryVertexTool has been splitted into 3 separate tools all
+   inheriting from the same interface ISecondaryVertexTool which has been
+   modified to return a vector of vertices instead of a single vertex
+   A new SVertexABTool is created. It returns two vertices instead of 
+   just one, for the moment only for development purposes.
+
 
 !========================== FlavourTagging v5r6 2005-05-30 ===================
 ! 2005-05-28 - M. Musy

@@ -1,0 +1,38 @@
+//----------------------------------------------------------------------
+//BTaggingTool
+//----------------------------------------------------------------------
+
+//inclusive secondary vtx type
+BTagging.BTaggingTool.SecondaryVertexName= "SVertexTool";//"TDR" type
+//BTagging.BTaggingTool.SecondaryVertexName= "SVertexNNTool";//higher effic.
+//BTagging.BTaggingTool.SecondaryVertexName= "SVertexABTool";//two output vtxs
+
+//combination method of taggers
+BTagging.BTaggingTool.CombinationTechnique = "NNet";
+//BTagging.BTaggingTool.CombinationTechnique = "TDR"; //old TDR categories
+
+//--------------
+//PID definition
+BTagging.BTaggingTool.PhysDesktop.CombinedParticleMaker.UseVTTTracks  = true;
+BTagging.BTaggingTool.PhysDesktop.CombinedParticleMaker.AddBremPhoton = false;
+BTagging.BTaggingTool.PhysDesktop.CombinedParticleMaker.ExclusiveSelection= true;
+BTagging.BTaggingTool.PhysDesktop.ParticleMakerType = "CombinedParticleMaker";
+BTagging.BTaggingTool.PhysDesktop.CombinedParticleMaker.MuonSelection = {
+    "det='MUON' mu-pi='-3.0'" };
+BTagging.BTaggingTool.PhysDesktop.CombinedParticleMaker.ElectronSelection = {
+    "det='CALO' e-pi='3.0'" };
+BTagging.BTaggingTool.PhysDesktop.CombinedParticleMaker.KaonSelection = {
+    "det='RICH' k-pi='3.0' k-p='-4.0'" };
+BTagging.BTaggingTool.PhysDesktop.CombinedParticleMaker.OutputLevel = 2;
+
+//----------------------------
+//Charge in velo for electrons
+BTagging.BTaggingTool.TaggerElectronTool.TrVeloChargeName = "TrVeloCharge";
+BTagging.BTaggingTool.TaggerElectronTool.TrVeloCharge.Normalisation = 1.;
+BTagging.BTaggingTool.TaggerElectronTool.TrVeloCharge.Ratio = 0.7;
+BTagging.BTaggingTool.TaggerElectronTool.TrVeloCharge.OutputLevel = 3;
+
+BTagging.BTaggingTool.PhysDesktop.OutputLevel = 5;
+BTagging.BTaggingTool.UnconstVertexFitter.OutputLevel = 4;
+
+//-----------------------------------------------------------------------

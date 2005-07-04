@@ -1,29 +1,29 @@
-// $Id: BTaggingMonitor.cpp,v 1.7 2005-05-25 18:33:31 musy Exp $
+// $Id: BTaggingMonitor.cpp,v 1.8 2005-07-04 08:20:05 pkoppenb Exp $
 // local
 #include "BTaggingMonitor.h"
 
-//-----------------------------------------------------------------------------
+//--------------------------------------------------------------------------
 // Implementation file for class : BTaggingMonitor
 //
 // 2004-02-15 : Marco Musy
-//-----------------------------------------------------------------------------
+//--------------------------------------------------------------------------
 
 // Declaration of the Algorithm Factory
 static const  AlgFactory<BTaggingMonitor>          s_factory ;
 const        IAlgFactory& BTaggingMonitorFactory = s_factory ; 
 
-//=============================================================================
+//==========================================================================
 BTaggingMonitor::BTaggingMonitor( const std::string& name,
-				  ISvcLocator* pSvcLocator)
-  : DVAlgorithm ( name , pSvcLocator ), m_tags_locations(0)
-{
-  declareProperty("TagsLocations", m_tags_locations);
+				  ISvcLocator* pSvcLocator )
+  : DVAlgorithm ( name , pSvcLocator ) {
+  declareProperty("TagsLocation", 
+		  m_tags_location = FlavourTagLocation::Default );
 }
 
-//=============================================================================
+//==========================================================================
 BTaggingMonitor::~BTaggingMonitor() {}; 
 
-//=============================================================================
+//==========================================================================
 StatusCode BTaggingMonitor::initialize() {
 
   m_pAsctLinks = tool<Particle2MCLinksAsct::IAsct>
@@ -45,21 +45,12 @@ StatusCode BTaggingMonitor::initialize() {
   return StatusCode::SUCCESS;
 };
 
-//=============================================================================
+//==========================================================================
 // Main execution
-//=============================================================================
+//==========================================================================
 StatusCode BTaggingMonitor::execute() {
  
   setFilterPassed( false );
-
-  // Retrieve informations about event
-  EventHeader* evt=0;
-  if( exist<EventHeader> (EventHeaderLocation::Default)) {
-    evt = get<EventHeader> (EventHeaderLocation::Default);
-  } else {
-    err() << "Unable to Retrieve Event" << endreq;
-    return StatusCode::SUCCESS;
-  }
 
   //choose the forced B
   MCParticle* B0 = 0;
@@ -70,71 +61,53 @@ StatusCode BTaggingMonitor::execute() {
     err() << "Unable to Retrieve GenMCLinks" << endreq;
     return StatusCode::FAILURE; 
   }
+  if(sigL->size() > 1) err()<< "sigL->size() > 1 !?!" <<endreq;
   B0 = (*(sigL->begin()))->signal();
   if(!B0) {
     err() << "No signal B in GenMCLinks" << endreq;
-    return StatusCode::FAILURE; 
+    return StatusCode::SUCCESS; 
   }
+  //-------------------
 
   int tagdecision=0, ix=0;
   int truetag = B0->particleID().pid()>0 ? 1 : -1;
-  Particle* tagB = 0;
 
-  std::vector<std::string>::const_iterator loc_i;
-  for(loc_i=m_tags_locations.begin(); loc_i!=m_tags_locations.end(); loc_i++){
-    debug() << "Monitoring location: "<< (*loc_i)+"/Tags" << endreq;
-
-    FlavourTags* tags = 0;
-    if( exist<FlavourTags>((*loc_i)+"/Tags") ) {
-    tags = get<FlavourTags>((*loc_i)+"/Tags");
-    } else {
-      debug() << "No tags found. " << endreq;
-      continue;
-    }
-
-    FlavourTags::const_iterator ti;
-    for( ti=tags->begin(); ti!=tags->end(); ti++ ) {
-
-      tagB = (*ti)->taggedB();
-      tagdecision = (*ti)->decision();
-      ix = (*ti)->category();
-      info() << "BTAGGING MON "
-	     << std::setw(3) << tagdecision
-	     << std::setw(3) << ix 
-	     << std::setw(3) << truetag
-	     << endreq;
-
-     if( tagB ) debug() << "taggedB P="<< tagB->p()/GeV <<endreq;
-     m_debug->printTree( (*ti)->taggedB() );
-    }
-
-    Particles* tagCands;
-    if(exist<Particles> ((*loc_i)+"/Taggers") ) {
-      tagCands = get<Particles>((*loc_i)+"/Taggers");
-    } else {
-      debug() << "No taggers found. " << endreq;
-      continue;
-    }
-    debug() << "NR Taggers found= " << tagCands->size() << endreq;
-
-    Particles::const_iterator ip;
-    for( ip = tagCands->begin(); ip != tagCands->end(); ip++ ){
-      debug() << "tagger ID: " << (*ip)->particleID().pid()
-	      << "  P=" << (*ip)->p()/GeV << endreq;
-    }
+  //look in TagLocation
+  FlavourTags* tags(0);
+  if( exist<FlavourTags>( m_tags_location ) ) {
+    tags = get<FlavourTags>( m_tags_location );
+  } else {
+    debug() << "No tags found in " << m_tags_location << endreq;
+    return StatusCode::SUCCESS;
   }
-  
-  if( tagB ) {
-    nsele++;
-    if     (tagdecision ==  truetag) nrt[ix]++;
-    else if(tagdecision == -truetag) nwt[ix]++;
+
+  FlavourTags::const_iterator ti;
+  for( ti=tags->begin(); ti!=tags->end(); ti++ ) {
+
+    tagdecision = (*ti)->decision();
+    ix = (*ti)->category();
+
+    info() << "BTAGGING MON "
+	   << std::setw(3) << tagdecision
+	   << std::setw(3) << ix
+	   << std::setw(3) << truetag
+	   << endreq;
+
+    if( ! tagdecision ) continue;
+
+    m_debug->printTree( (*ti)->taggedB() );
   }
+
+  //count rights and wrongs
+  nsele++;
+  if     (tagdecision ==  truetag) nrt[ix]++;
+  else if(tagdecision == -truetag) nwt[ix]++;
 
   setFilterPassed( true );
   return StatusCode::SUCCESS;
 };
 
-//=============================================================================
+//==========================================================================
 StatusCode BTaggingMonitor::finalize(){ 
 
   MsgStream req( msgSvc(), name() );
@@ -146,10 +119,10 @@ StatusCode BTaggingMonitor::finalize(){
   double effe_tot=0;
   double epsilerr, epsilerrtot=0;
 
-  info() << "======================================================="<<endreq;
-  info() << "Summary : " <<endreq;
-  info() << " Category            EFF.          Etag         Wrong TF"
-	 << "      r       w       "<<endreq;
+  info()<<"======================================================="<<endreq;
+  info()<< "Summary : " <<endreq;
+  info()<< " Category            EFF.          Etag         Wrong TF"
+	<< "      r       w       "<<endreq;
 
   for( int it=1; it < 13; it++ ) {
 
@@ -201,7 +174,7 @@ StatusCode BTaggingMonitor::finalize(){
   double avw_invert_err= sqrt((rtt*wtt*(rtt*rtt + rtt*utt + wtt*(utt + wtt)))/
 			      ( pow(rtt + wtt,4) *(rtt + utt + wtt)));
 
-  info()<< "---------------------------------------------------------"<<endreq;
+  info()<<"---------------------------------------------------------"<<endreq;
   info()<< "Total nr of events =  "<<std::setw(5) << nsele << endreq;
   info()<< "Tagging efficiency =  "
 	<<std::setprecision(2)<<std::setw(5)
@@ -212,9 +185,9 @@ StatusCode BTaggingMonitor::finalize(){
   info()<< "EFFECTIVE COMB. TE =  "
 	<<std::setprecision(2)<<std::setw(5)
 	<< effe_tot*100 << " +/- "<<epsilerrtot*100<< " %"<< endreq;
-  info()<< "========================================================="<<endreq;
+  info()<<"========================================================="<<endreq;
 
   return StatusCode::SUCCESS; 
 }
-//=============================================================================
+//==========================================================================
 

@@ -1,4 +1,4 @@
-// $Id: NNetTool.cpp,v 1.3 2005-03-01 11:21:26 musy Exp $
+// $Id: NNetTool.cpp,v 1.4 2005-07-04 08:20:05 pkoppenb Exp $
 // Include files 
 // from Gaudi
 #include "GaudiKernel/ToolFactory.h"
@@ -81,7 +81,6 @@ void NNetTool::normaliseSS(double& OUT1, double& OUT2, double& OUT3,
 double NNetTool::MLPm(double OUT1, double OUT2, double OUT3,
 		      double OUT4, double OUT5, double OUT6,
 		      double OUT7, double OUT8) { 
-  debug()<<"NNetTool MLPm"<<endreq;
 
   normaliseOS( OUT1,  OUT2,  OUT3,
 	       OUT4,  OUT5,  OUT6, OUT7,  OUT8 );
@@ -108,7 +107,6 @@ double NNetTool::MLPm(double OUT1, double OUT2, double OUT3,
 double NNetTool::MLPe(double OUT1, double OUT2, double OUT3,
 		      double OUT4, double OUT5, double OUT6,
 		      double OUT7, double OUT8) { 
-  debug()<<"NNetTool MLPe"<<endreq;
 
   normaliseOS( OUT1,  OUT2,  OUT3,
 	       OUT4,  OUT5,  OUT6, OUT7,  OUT8 );
@@ -159,7 +157,6 @@ double NNetTool::MLPe(double OUT1, double OUT2, double OUT3,
 double NNetTool::MLPk(double OUT1, double OUT2, double OUT3,
 		      double OUT4, double OUT5, double OUT6,
 		      double OUT7, double OUT8) { 
-  debug()<<"NNetTool MLPk"<<endreq;
 
   normaliseOS( OUT1,  OUT2,  OUT3,
 	       OUT4,  OUT5,  OUT6, OUT7,  OUT8 );
@@ -189,7 +186,6 @@ double NNetTool::MLPkS(double OUT1, double OUT2, double OUT3,
 		       double OUT4, double OUT5, double OUT6,
 		       double OUT7, double OUT8,
 		       double OUT10, double OUT11, double OUT12) { 
-  debug()<<"NNetTool MLPkS"<<endreq;
 
   normaliseSS( OUT1,  OUT2,  OUT3, OUT4,  OUT5,  OUT6,
 	       OUT7,  OUT8,  OUT10, OUT11,  OUT12 );
@@ -235,7 +231,6 @@ double NNetTool::MLPpS(double OUT1, double OUT2, double OUT3,
 		       double OUT4, double OUT5, double OUT6,
 		       double OUT7, double OUT8,
 		       double OUT10, double OUT11, double OUT12) { 
-  debug()<<"NNetTool MLPpS"<<endreq;
 
   normaliseSS( OUT1,  OUT2,  OUT3, OUT4,  OUT5,  OUT6,
 	       OUT7,  OUT8,  OUT10, OUT11,  OUT12 );
@@ -275,5 +270,4 @@ double NNetTool::MLPpS(double OUT1, double OUT2, double OUT3,
     +(1.538327e+00) * OUT1
     +(3.393626e+00) * OUT2;
 };
-
 //=============================================================================

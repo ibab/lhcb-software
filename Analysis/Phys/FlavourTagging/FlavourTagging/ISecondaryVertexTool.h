@@ -1,4 +1,4 @@
-// $Id: ISecondaryVertexTool.h,v 1.2 2005-03-01 11:21:25 musy Exp $
+// $Id: ISecondaryVertexTool.h,v 1.3 2005-07-04 08:20:05 pkoppenb Exp $
 #ifndef SECONDARYVERTEXTOOL_ISECONDARYVERTEXTOOL_H 
 #define SECONDARYVERTEXTOOL_ISECONDARYVERTEXTOOL_H 1
 
@@ -23,8 +23,7 @@ public:
   /// Retrieve interface ID
   static const InterfaceID& interfaceID() { return IID_ISecondaryVertexTool; };
  
-  virtual Vertex SVertex( const Vertex, const ParticleVector ) = 0; 
-  virtual Vertex SVertexNN( const Vertex, const ParticleVector ) = 0; 
-
+  virtual std::vector<Vertex> 
+    buildVertex( const Vertex, const ParticleVector ) = 0; 
 };
 #endif // SECONDARYVERTEXTOOL_ISECONDARYVERTEXTOOL_H
