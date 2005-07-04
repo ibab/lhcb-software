@@ -1,12 +1,12 @@
 ! =============================================================================
-! $Id: release.notes,v 1.194 2005-07-04 09:33:41 jpalac Exp $ 
+! $Id: release.notes,v 1.195 2005-07-04 11:05:19 cattanem Exp $ 
 ! =============================================================================
 ! package DetDesc
 ! package manager : Marco Clemencic, Juan Palacios
 ! =============================================================================
 
-! 2005-07-29 - Juan Palacios
-
+!======================== DetDesc v15r3 2005-07-03 ========================
+! 2005-07-03 - Juan Palacios
  - Add dict directory with dictionary generation. Add necessary patterns to 
    requirements file (from P. Mato).
 
