@@ -20,6 +20,7 @@
 #include "Kernel/IParticleFilter.h"
 #include "Kernel/ICheckOverlap.h"
 #include "Kernel/IAlgorithm2ID.h"
+#include "Kernel/IBTaggingTool.h"
 
 /** @class DVAlgorithm DVAlgorithm.h Kernel/DVAlgorithm.h
  *  Base Class for DaVinci Selection Algorithms:
@@ -89,6 +90,9 @@ public:
   /// Accessor for Algorithm2ID Tool
   IAlgorithm2ID* algorithmID() const;
 
+  /// Tagging Tool
+  IBTaggingTool* flavourTagging() const;
+
 protected:
 
 private:
@@ -134,6 +138,8 @@ private:
   mutable ICheckOverlap* m_checkOverlap;
   /// Reference to Algorithm2ID
   mutable IAlgorithm2ID* m_algorithm2IDTool;
+  /// Reference to FlavourTagging
+  mutable IBTaggingTool* m_taggingTool;
 
   /// Has setFilterPassed() already been called in current event?
   bool m_setFilterCalled;

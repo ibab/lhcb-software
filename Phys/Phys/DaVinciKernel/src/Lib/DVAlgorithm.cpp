@@ -13,6 +13,7 @@ DVAlgorithm::DVAlgorithm( const std::string& name, ISvcLocator* pSvcLocator )
   , m_ppSvc(0)
   , m_checkOverlap(0)
   , m_algorithm2IDTool()
+  , m_taggingTool()
   , m_setFilterCalled(false)
   , m_countFilterWrite(0)
   , m_countFilterPassed(0)
@@ -174,6 +175,14 @@ StatusCode DVAlgorithm::loadTools() {
     return StatusCode::FAILURE;
   }
 
+  msg << MSG::DEBUG << ">>> Retrieving BTagging Tool" << endreq;
+  m_taggingTool = tool<IBTaggingTool>("BTaggingTool");
+  if ( !m_taggingTool ) {
+    msg << MSG::ERROR << ">>> DVAlgorithm[BTaggingTool] not found" 
+        << endreq;
+    return StatusCode::FAILURE;
+  }
+
   return StatusCode::SUCCESS;
 }
 
@@ -230,6 +239,9 @@ ICheckOverlap* DVAlgorithm::checkOverlap() const {return m_checkOverlap;}
 
 //=============================================================================
 IAlgorithm2ID* DVAlgorithm::algorithmID() const {return m_algorithm2IDTool;}
+
+//=============================================================================
+IBTaggingTool* DVAlgorithm::flavourTagging() const {return m_taggingTool;}
 
 //=============================================================================
 StatusCode DVAlgorithm::setFilterPassed  (  bool    state  ) {
