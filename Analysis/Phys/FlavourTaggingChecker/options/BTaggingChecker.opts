@@ -1,0 +1,15 @@
+//----------------------------------------------------------------------
+//BTaggingChecker algorithm option file
+ApplicationMgr.TopAlg += { "BTaggingChecker" };
+ApplicationMgr.DLLs += { "FlavourTaggingChecker" };
+BTaggingChecker.OutputLevel = 3;
+BTaggingChecker.DebugTool.OutputLevel   = 4;
+
+//associators
+BTaggingChecker.TagMonitor.Location = "Phys/Relations/Cheating";
+BTaggingChecker.TagMonitor.AlgorithmName = "myAsctAlgMonitor";
+myAsctAlgMonitor.InputData = {"/Event/Phys/BTagging/Particles"};
+myAsctAlgMonitor.OutputLevel = 4;
+
+//----------------------------------------------------------------------
+

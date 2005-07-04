@@ -1,0 +1,438 @@
+! $Id: release.notes,v 1.1.1.1 2005-07-04 15:24:22 pkoppenb Exp $
+!-----------------------------------------------------------------------------
+! Package     : Phys/FlavourTaggingChecker
+! Responsible : Marco Musy (musy@cern.ch)
+! Purpose     : Checker package for Phys/FlavourTagging
+!-----------------------------------------------------------------------------
+
+! 2005-07-04 - P. Koppenburg
+  New package containing all MC-related stuff 
+
+! 2005-07-04 - M. Musy
+ - New version which exploits the new FlavourTag class definition 
+   in PhysEvent 
+ - BTagging has became BTaggingTool, while it remains for backward
+   compatibility and as an example of how to use the tagging tool
+ - BTaggingTool itself has been splitted in TaggerXXXTools which return
+   the tagger candidates to BTaggingTool which eventually combines them
+   into a final decision
+ - SecondaryVertexTool has been splitted into 3 separate tools all
+   inheriting from the same interface ISecondaryVertexTool which has been
+   modified to return a vector of vertices instead of a single vertex
+   A new SVertexABTool is created. It returns two vertices instead of 
+   just one, for the moment only for development purposes.
+
+!========================== FlavourTagging v5r6 2005-05-30 ===================
+! 2005-05-28 - M. Musy
+ - summary.cpp has been updated
+ - removed hlt part from options (no use case for the moment)
+ - a WEB page is now available for tagging :
+
+       ********************************************************
+       https://uimon.cern.ch/twiki/bin/view/LHCb/FlavourTagging
+       ********************************************************
+
+   where you can find technical infos and summary of performances
+
+! 2005-05-25 - M. Musy
+ - code has been cleaned up a bit.
+ - added new properties for most hard-coded numbers
+ - many comments added along the way
+ - each tagger can be disabled separately via property
+
+! 2005-05-25 - P. Koppenburg
+  - src/BTagging.{h,cpp}
+    . Protect get<> methods with exist<>
+    . Do not use TrgDecision::HLT as it is called hlt() in DaVinci v14
+    . Use HltScore instead
+    . Indent properly
+ - src/BTaggingMonitor.cpp
+    . Protect get<> methods with exist<>
+!========================== FlavourTagging v5r4 2005-02-15 ===================
+! 2005-03-01 - M. Musy
+  - src/BTagging.{h,cpp}
+    . Default is now without L0 L1 and Tampering; without Tampering, results
+      may change (worsen) slightly depending upon the decay channel.
+    . Code structure has been revised.
+    . Bug on same-side pion tagger fixed.
+
+! 2005-02-02 - P. Koppenburg for Marco Musy
+  - src/BTagging.{h,cpp}
+    . Allow the use without L0 L1 and Tampering.
+    !! WARNING: results will be slightly different !!      
+  - src/ISecondaryVertexTool.h and src/INNetTool.h
+    moved to FlavourTagging/
+  
+! 2005-02-01 - P. Koppenburg
+  - FlavourTagging/IFlavourTaggingTool.h
+    . Removed
+  - options/CheatedSelection.opts
+    . Removed DaVinciCommon and DaVinciReco already included in 
+      DVBTagging.opts
+
+! 2005-01-31 - P. Koppenburg for Marco Musy
+Main changes/upgrades are the following:
+
+- tagging efficiencies and performance calculation are now moved
+to BTaggingMonitor so that no truth information is accessed at any stage.
+
+- BTagging.cpp still needs to rerun the trigger because it 
+makes use of the tampering info
+
+- SecondaryVertex is now a tool, and the user can choose whether
+to use the TDR definition or the revised version of it using
+NeuralNets (default is old tdr)
+
+- I implemented the new definition of tagging categories, obtained
+by using a NNet tuned for each taggers separately. 
+these NNets are accessed via a tool (this was asked for in a meeting).
+the user can still choose to stick to the old TDR categories via 
+BTagging.CombinationTechnique = "TDR";
+
+- summaryof.cpp is an additional standalone program to quickly get 
+useful numbers out of the logfiles. it contains the instructions on
+how to run it.
+
+- DVBTagging.opts is meant as an example option file. 
+
+!========================== FlavourTagging v5r3p1 2005-01-18 ===================
+! 2005-01-04 - P. Koppenburg
+  - src/*.h
+    . Change location of interfaces
+! 2004-12-06 - P. Koppenburg
+  - options/DVBTagging_example.opts
+    . Correct location of L1.opts. 
+    . Do not run Hlt.opts it does nothing useful (yet).
+    . Define BTagging TopAlg here
+  - options/BTagging.opts
+    . Define BTagging TopAlg in DVBTagging_example.opts
+!========================== FlavourTagging v5r3 2004-10-04 ===================
+! 2004-09-13 - P. Koppenburg for Thomas Ruf
+  - src/BTagging.cpp
+    . Do not wrap string over several lines. 
+      Causes compilation problems on widows.
+  - Re-tag as v5r3 as it is already corrected on the release are in DaVinci 
+    v12r1
+! 2004-09-13 - P. Koppenburg for Julien Babel
+  Include trigger again
+!========================== FlavourTagging v5r2 2004-08-03 ===================
+! 2004-07-29 - P. Koppenburg
+  - options/BTagging.opts
+    . Set write to TES to true by default for backward compatibility.
+! 2004-07-23 - P. Koppenburg
+  - cmt/requirements
+    . L1Event -> TrgEvent
+    . Import AIDA
+  - src/*.cpp
+    . Comment out all obsolete L1 stuff
+!========================== FlavourTagging v5r1 2004-07-22 ===================
+! 2004-07-08 - P. Koppenburg for Marco Musy
+  - options/BTagging.opts
+  - options/CheatedSelection.opts
+  - src/BTagging.cpp
+  - src/BTagging.h
+  - src/BTaggingMonitor.cpp
+  - src/BTaggingMonitor.h
+  - src/CheatedSelection.h
+    . It includes SS pion tag and a revised treatment for electrons.
+
+!==================== FlavourTagging v5r0 2004-05-05 ===================
+! 2004-05-04 - P. Koppenburg for Marco Musy
+  - src/BTagging.cpp
+  - src/BTagging.h
+  - src/CheatedSelection.cpp
+  - src/CheatedSelection.h
+  - src/FlavourTagging_load.cpp
+  - src/BTaggingMonitor.cpp
+  - src/BTaggingMonitor.h
+  - options/DVBTagging_example.opts
+  - options/BTagging.opts
+  - options/CheatedSelection.opts
+  . Modified or added new flavour tagging. Now official.
+    Writes output to TES.
+
+  - summary/summaryof.cpp
+  . Little tool that allows to decode output
+
+  - src/CategoryTaggingTool.cpp
+  - src/CategoryTaggingTool.h
+  - src/CheatedReco.cpp
+  - src/CheatedReco.h
+  - src/FTCombinedParticleMaker.cpp
+  - src/FTCombinedParticleMaker.h
+  - src/FlavourMonitorAlgorithm.cpp
+  - src/FlavourMonitorAlgorithm.h
+  - src/FlavourTaggingAlgorithm.cpp
+  - src/FlavourTaggingAlgorithm.h
+  - src/FlavourTaggingDebug.cpp
+  - src/FlavourTaggingDebug.h
+  - src/FlavourTaggingSummary.cpp
+  - src/FlavourTaggingSummary.h
+  - src/KaonSameSideTaggingTool.cpp
+  - src/KaonSameSideTaggingTool.h
+  - src/OrderedTaggingTool.cpp
+  - src/OrderedTaggingTool.h
+  - src/ParticleTaggerCriterion.cpp
+  - src/ParticleTaggerCriterion.h
+  - src/SingleParticleTaggingMonitor.cpp
+  - src/SingleParticleTaggingMonitor.h
+  - src/SingleParticleTaggingTool.cpp
+  - src/SingleParticleTaggingTool.h
+  - src/VertexChargeTaggingTool.cpp
+  - src/VertexChargeTaggingTool.h
+  - options/CombinedFlavourTagging.opts
+  - options/DVCheatedSelection.opts
+  - FlavourTagging/IFlavourTaggingTool.h
+  . Obsolete and moved to src/attic and options/attic
+    
+!==================== FlavourTagging v4r9 2004-03-31 ===================
+! 2004-03-25 - P. Koppenburg 
+ - CheatedReco.cpp
+   . Correct location of IMCDecayFinder.h
+     
+!==================== FlavourTagging v4r8 2004-03-11 ===================
+! 2004-03-11 - P. Koppenburg for Odie and Marco
+ - CategoryTaggingTool.cpp (PK/Odie)
+   . Don't try to access L1 or L0 when they're not there.
+   . Avoid not assigning a B meson as the tagged particle 
+     in the case of opposing tag decisions. 
+ - BTagging class (Marco)
+   . pion same side tagging
+   . summary of tag performance at the end of run
+   . writing output to TES in FlavourTag class
+ - CheatedSelection (Marco)
+   . Don't stop when signal B is not found in event
+	(waiting for Gauss to provide flag of forced B).
+ - VertexChargeTaggingTool.cpp and BTagging.cpp
+   . upstream() -> isDownstream()
+
+!==================== FlavourTagging v4r7 2004-01-28 ===================
+! 2004-01-28 - Gloria CORTI for Marco MUSY
+ - New version of tagging code to substitute what used for TDR.
+   NOTE: Be CAREFULL to use the new (or old) tagging code after loose-cuts
+         selections as this may imply that particles belonging
+         to the signal are left as possible taggers, which spoils the tag!
+ - src/BTagging.{h,cpp}
+   . new tagging code, the output is provided as a line in the log file
+     in the following sequence:
+     RunNr EventNr Tag TagCategory L0 L1 NrReconPrimVTX NrVisiblePrimVTX
+     ex: BTagging     INFO TAGGINGINFO  429208403 473 1 3 1 0 1 1
+     Tag and TagCategory have the same meaning as in FlavourTagging.
+ - options/DVBTagging_example.opts
+   . example of how to use the new flavour tagging with either a real
+     selection or a cheated selection
+ - src/CheatedSelection.{h,cpp}
+   . to perform tagging studies using a cheated selection
+ - options/DVCheatedSelection.opts
+   . options to execute a cheated selection as a real one
+
+! 2004-01-14 - Gloria CORTI
+ - cmt/requirements
+   . use v* to allow compilation against different versions of LHCb
+
+!==================== FlavourTagging v4r6p1 2003-08-06 =================
+! 2003-07-24 - Gloria CORTI
+ - src/FTCombinedParticleMaker.cpp
+   . remove initialization of iterator = 0 to please gcc32
+   . declare local variable to be passed as argument of method as int
+     instead of double as in method (gcc32 warning)
+
+!==================== FlavourTagging v4r6 2003-07-07 ===================
+! 2003-07-04 - Olivier Dormond
+ - src/FlavourTaggingAlgorithm.h, FlavourTaggingAlgorithm.cpp
+   . Added a preselection cut to remove all particles compatible with a pileup
+     vtx.
+ - src/SingleParticleTaggingTool.h, SingleParticleTaggingTool.cpp
+   . Added an option to sum the charge of the particles passing the cuts
+     instead of just using the one with the highest pt.
+ - option/CombinedFlavourTagging.opts
+   . Activate the previous addition for the kaon same-side tag.
+ - doc/release.note
+   . This changelog.
+
+! 2003-07-03 - Olivier Dormond
+ - Tabification cleanup.
+ - src/CategoryTaggingTool.cpp
+   . Print out the number of reconstructed vertex instead of collisions.
+   . Print out the category the event fall in.
+   . Fixed the category key computation.
+   . Fixed tag computation for e + Kss category.
+ - src/CategoryTaggingTool.h
+   . Fixed the computation of the error on epsillon effective.
+ - src/CheatedReco.cpp
+   . Correct the pid and mass of the Particle used to create the B in
+     order to have the right B mass.
+ - src/FlavourTaggingAlgorithm.cpp
+   . Fixed the computation of the error on epsillon effective.
+ - src/KaonSameSideTaggingTool.cpp
+   . Updated the default cuts.
+   . Fixed the vertex used for the IP cut.
+ - src/VertexChargeTaggingTool.cpp
+   . Fixed the cuts values.
+   . Fixed the handling of the Kshort decay products.
+ - doc/release.notes
+   . This update.
+
+!==================== FlavourTagging v4r5 2003-06-18 ===================
+! 2003-06-16 - Olivier Dormond
+ - src/CategoryTaggingTool.h, src/CategoryTaggingTool.cpp
+   . Activated the vertex charge code path.
+ - src/VertexChargeTaggingTool.h, src/VertexChargeTaggingTool.cpp
+   . Added this new IFlavourTaggingTool subclass.
+ - src/FlavourTaggingAlgorithm.cpp
+   . Fixed a bug when dumping info for a vertexCharge tag.
+ - src/FlavourTagging_load.cpp
+   . Added the VertexChargeTaggingTool tool.
+ - src/SingleParticleTaggingTool.cpp, src/KaonSameSideTaggingTool.cpp
+   . Added a debug print out on entry of the active block.
+ - options/CombinedFlavourTagging.opts
+   . Updated the cuts including the CombinedParticleMaker tuning.
+ - doc/release.notes
+   . These lines.
+
+! 2003-06-13 - Olivier Dormond
+ - cmt/requirement
+   . Added deps for L1 trigger and the visible collision tool.
+   . Bumped version to v4r5
+ - src/CategoryTaggingTool.h, src/CategoryTaggingTool.cpp
+   . New tool which uses the previous one to get a set of tags it uses to
+     categorize the event and make a decision about the final tag.
+ - src/CheatedReco.h, src/CheatedReco.cpp
+   . New algo to create particle from a cheated reconstruction.
+     See doc/CheatedReco.txt for explanation about it's config.
+ - src/FlavourTaggingAlgorithm.h, src/FlavourTaggingAlgorithm.cpp
+   . Moved from Algorithm to DVAlgorithm and cleaned up the code a bit.
+   . The Vertex passed to the tagging tool is now the primary vertex the B
+     is pointing to.
+ - src/FlavourTaggingSummary.h, src/FlavourTaggingSummary.cpp
+   . Added L0 and L1 trigger to the output.
+   . Added # of collision and # of visible collision to the output.
+ - src/FlavourTagging_load.cpp
+   . Added the CheatedReco algorithm and the CategoryTaggingTool tool.
+ - src/KaonSameSideTaggingTool.cpp
+   . Added some debugging output.
+ - options/CombinedFlavourTagging.opts
+   . The option file for the use of the CategoryTaggingTool which combines tags.
+ - doc/CheatedReco.txt
+   . Some documentation for the configuration of the CheatedReco algorithm.
+ - doc/release.notes
+   . This update.
+
+!==================== FlavourTagging v4r4p1 2003-06-03 ===================
+! 2003-05-30 - Gloria Corti
+ - src/SingleParticleTaggingMonitor.h, SingleParticleTaggingMonitor.cpp
+   . adapt to change in name of Particle2MCLinksAsct and removal of
+     obsolete header file
+ - src/FlavourMonitorAlgorithm.h, FlavourMonitorAlgorithm.cpp
+   . adapt to change in name of Particle2MCLinksAsct and removal of
+     obsolete header file
+
+!==================== FlavourTagging v4r4 2003-04-28 =====================
+! 2003-04-28 - Gloria Corti
+ - cmt/requiremets 
+   . use DaVinciTools v8r* and DaVinciMCTools v5r* 
+   . remove explicit use of DaVinciAssociators and TrAssociators (via
+     DaVinciMCTools)
+   . increase version numver to v4r4
+
+!==================== FlavourTagging v4r3 2003-04-25 =====================
+! 2003-04-10 - Olivier Dormond
+ - Added a combined particle maker until one is available globally.
+ - The FlavourTaggingAlgorithm now reports the statistical errors at the end
+   of the job.
+ - Added a tool to implement the same-side kaon tagging.
+ - Added a simple algorithm to summarise all the generated tags for a B in
+   one line.
+ - Cleanup the options files.
+
+!==================== FlavourTagging v4r2 2003-01-06 =====================
+! 2003-01-06 - Florence Ranjard
+ - requirements - use LHCb v11r5
+
+! =================== FlavourTagging v4r1 2003-01-06 ======================
+! 2002-12-20 - Gloria Corti
+ - Remove explicit dependecy of EventKernel in requirements
+
+! 2002-11-20 - Olivier Dormond
+ - Restructured the option files (have a look in 
+   /afs/cern.ch/user/o/odie/public/DaVinciOptionsForTheTagging for a set of
+   option files for DaVinci).
+ - Added support for multiple-collision in the FlavourMonitorAlgorithm. Stats
+   are now splitted by number of collisions.
+ - Added check for the L0 trigger in FlavourTaggingAlgorithm.
+ - Droped the ntuple from the SingleParticleTaggingTool.
+ - Added a SingleParticleTaggingMonitor to study the job of the so-named tool.
+
+! =================== FlavourTagging v4r0 2002-11-13 ======================
+! 2002-11-13 - Gloria Corti
+ - Use explicitely EventKernel v2r0 because of compilation error
+ - Use new major versions of DaVinciTools (v7r*) and DaVinciMCTools (v4r*)
+
+! =================== FlavourTagging v3r0 2002-10-30 ======================
+! 2002-10-21 - Gloria Corti
+ - Introduce some missing std:: to compile on windows
+
+! 2002-10-19 - Olivier Dormond
+ - Fixed a typo which caused the error on the effective efficiency to be wrong.
+ - Added three options files to do tagging with only one kind a particle (Kaon,
+   muon, electron).
+
+! 2002-09-20 - Olivier Dormond
+ - requirement: added DaVinciMCTools v3r* for the monitoring.
+ - FlavourTagging.opts: Changed particle maker to Charged and "All".
+ -                      Changed measured Z cut to more closely match the VELO.
+ -                      Added setting for the FlavourTaggingDebug algorithm.
+ - FlavourTaggingAlgorithm: Added a property 'FirstOnly' (default to false)
+     which will let the tagging only use the first B in each hypo location.
+     The idea is to have a workaround for the strange behaviour of the
+     SelectBs2mumu algo which produces n^2 identical Bs where n is the number
+     of primary vertices.
+ - SingleParticleTaggingTool: Fixed the removing of the B decay products from
+     the event by comparing the ProtoParticles. It could be replaced by the
+     CheckOverlap tool when commonly available.
+ - Added a FlavourTaggingDebug algorithm which dumps the B and the event.
+
+! 2002-09-13 - Gloria Corti
+ - Remove use of PhysEvent, update version of use used packages to be
+   consistent with DaVinci v6r0 and set version to v3r0
+
+! =================== FlavourTagging v2r0 2002-09-10 ======================
+! 2002-09-10 - Olivier Dormond
+ - Monitor: Divided the statistics based on how well the B has been 
+            reconstructed.
+ - Tagging: Added a consistency check.
+ - SPTT:    Added the event and run number to the ntuple.
+ - All:     Small code layout changes.
+
+! 2002-09-06 - Olivier Dormond
+ - Made a cleanup of the abort messages.
+ - Fixed the handling of the vertices so the impact param cut realy works.
+
+! 2002-09-05 - Olivier Dormond
+ - Fixed computation and report of the statistics for tagging and monitoring
+ - Added the missing writeRecord so the ntuples are realy filled in!
+ - Stripped down the generated name for the ntuple by only using the last
+   part of the tool name (the one after the rightmost dot).
+
+! 2002-09-03 - Olivier Dormond
+ - The "/Particles" part of the hypothesis locations is now added
+   automatically if not present.
+ - Added a check to avoid trying to tag particles without a bottom quark.
+
+! 2002-09-03 - Olivier Dormond
+ - Swapped the way particles and B hypothesis are setup. Now the PhysDesktop
+   takes care of the particles and the B are handled seperatly.
+ - Support multiple locations for the B.
+ - The tools support both Particles and ParticleVector.
+ - The tools can produce an ntuple for optimization.
+ - The tools can save a FlavourTag for the monitoring only.
+ - Added a FlavourMonitorAlgorithm to check the FlavourTag against the truth.
+
+! 2002-07-18 - Gloria Corti
+ - Increase version number to v2r0 and use DaVinciTools v5r*
+
+! >>>>>>>>>>>>>>>>>>>>>>>>>>> FlavourTagging v1r0 <<<<<<<<<<<<<<<<<<<<<<<<<<<
+
+! 2002-05-22 - Gloria Corti
+ - New package provided by Olivier Dormond
+

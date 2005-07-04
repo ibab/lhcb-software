@@ -1,0 +1,43 @@
+//##############################################################
+// DaVinci job Options for CheatedSelection
+ApplicationMgr.DLLs += { "FlavourTaggingChecker" };
+
+//---------------------------------------------------
+// MC mass window in GeV to decide if all final state 
+// particles where present and reconstructed 
+CheatedSelection.BMassWindow = 0.3; //GeV
+
+//---------------------------------------------------
+ApplicationMgr.TopAlg += { "Sequencer/SeqCheatedSelection" };
+SeqCheatedSelection.Members = { "PreLoadParticles/Combined", 
+                                "CheatedSelection" };
+
+Combined.PhysDesktop.ParticleMakerType = "CombinedParticleMaker";
+Combined.PhysDesktop.CombinedParticleMaker.ExclusiveSelection = true;
+Combined.PhysDesktop.CombinedParticleMaker.MuonSelection = 
+  { "det='MUON' mu-pi='-3.0'" };
+Combined.PhysDesktop.CombinedParticleMaker.ElectronSelection = 
+  { "det='CALO' e-pi='3.0'" };
+Combined.PhysDesktop.CombinedParticleMaker.KaonSelection = 
+  { "det='RICH' k-pi='3.0' k-p='-4.0'" };
+
+//---------------------------------------------------
+TamperingL1Alg.SelectionName = "CheatedSelection";
+
+BTagging.PhysDesktop.InputLocations = { "Phys/CheatedSelection" };
+
+//---------------------------------------------------
+CheatedSelection.PhysDesktop.InputLocations = { "/Event/Phys/Combined" };
+CheatedSelection.DecayDescriptor = { "not specified" };
+
+CheatedSelection.OutputLevel            = 3;
+CheatedSelection.DebugTool.OutputLevel  = 4;
+CheatedSelection.DebugTool.Informations = "Name P Pt theta Vz";
+CheatedSelection.PhysDesktop.OutputLevel= 4;
+
+//associators
+CheatedSelection.Cheating.Location = "Phys/Relations/Cheating";
+CheatedSelection.Cheating.AlgorithmName = "myAsctAlgCheat";
+myAsctAlgCheat.InputData = {"/Event/Phys/Combined/Particles"};
+myAsctAlgCheat.OutputLevel = 4;
+//---------------------------------------------------
