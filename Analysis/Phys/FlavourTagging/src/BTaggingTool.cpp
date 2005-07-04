@@ -64,7 +64,7 @@ StatusCode BTaggingTool::initialize() {
     fatal() << "GeomDispCalculator could not be found" << endreq;
     return StatusCode::FAILURE;
   }
-  m_svtool = tool<ISecondaryVertexTool> (m_SecondaryVertexToolName, this);
+  m_svtool = tool<ISecondaryVertexTool> ("SVertexTool", m_SecondaryVertexToolName, this);
   if(! m_svtool) {
     warning()<< "No Vertex Charge tag will be used! " 
              << m_SecondaryVertexToolName <<endreq;
