@@ -4,6 +4,19 @@
 ! Purpose     : LHCb Simulation Application with Geant4
 !-----------------------------------------------------------------------------
 
+! 2005-07-04 - Gloria CORTI
+ - Add use of RootHistCnv. Histograms and Ntuple are set to be saved in
+   ROOT as default. 
+	 . use RootHistCnv
+   . Monitor.opts, add Dll of RootHistCnv and set output type
+ - Segment monitor in a default one with histograms for all detectors
+   (normally execute in Gauss but switched off in production: see options
+    v200412.opts or v200506.opts) and an additional one providing ntuples.
+   . MonitorInDetail.opts, new options
+   . Monitor.opts, remove part put in new file
+   . Gauss.opts, put commented use of MonitorInDetail.opts
+   . GaussRead.opts, put use of MonitorInDetail.opts
+
 ! 2005-07-01 - Gloria CORTI
  - Remove obsolete options to read files - jobread.opts - Should instead
    use GaussRead.opts

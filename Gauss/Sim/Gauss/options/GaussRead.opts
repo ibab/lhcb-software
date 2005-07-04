@@ -1,5 +1,5 @@
 #printOptions 
-// $Id: GaussRead.opts,v 1.4 2005-06-17 15:52:24 gcorti Exp $ 
+// $Id: GaussRead.opts,v 1.5 2005-07-04 17:23:16 gcorti Exp $ 
 
 /** @file 
  * 
@@ -25,6 +25,7 @@ Monitor.Members       += { "GaudiSequencer/GenMonitor" };
 Monitor.Members       += { "GaudiSequencer/SimMonitor" };     
 Monitor.Members       += { "GaudiSequencer/UserMonitor" };
 #include "$GAUSSOPTS/Monitor.opts"
+#include "$GAUSSOPTS/MonitorInDetail.opts"
 Monitor.MeasureTime = true;
 
 // Algorithm in User monitor
@@ -72,6 +73,4 @@ EventSelector.Input   = {
 //---------------------------------------------------------------------------
 // Output file. 
 //---------------------------------------------------------------------------
-HistogramPersistencySvc.OutputFile = "GaussReadHistos.hbook";
-
-
+HistogramPersistencySvc.OutputFile = "GaussReadHistos.root";

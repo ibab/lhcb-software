@@ -1,0 +1,42 @@
+// $Id: MonitorInDetail.opts,v 1.1 2005-07-04 17:21:03 gcorti Exp $ 
+
+/** @file 
+ * 
+ *  File containing options to study in detail a production.
+ *
+ *  @author G.Corti
+ *  @date 2005-07-04
+ */
+
+
+//------------------------------------------------------------------------
+// Check events
+//------------------------------------------------------------------------
+// Check MCSignal info (only for complete production)
+// SimMonitor.Members    += { "MCDecayCounter" };
+MCDecayCounter.DetailedPrintOut          = true;
+MCDecayCounter.OutputLevel               = 2;
+MCDecayCounter.MCDecayFinder.OutputLevel = 3;
+//MCDecayCounter.EvtCodeFromData = true;
+//MCDecayCounter.EvtCode = 0;
+
+//------------------------------------------------------------------------
+// Dump of event at various phases in text form
+//------------------------------------------------------------------------
+// Dump on screen content of generator full info
+//GenMonitor.Members += {"DumpMC"};
+
+//------------------------------------------------------------------------
+// Detailed Monitor
+//------------------------------------------------------------------------
+ApplicationMgr.ExtSvc += { "NTupleSvc" }; 
+NTupleSvc.Output={"FILE1 DATAFILE='GaussMonitor.root' TYP='ROOT' OPT='NEW'"};
+MuonHitChecker.DetailedMonitor = true;
+
+// Algorithm filling detailed info in an ntuple from HepMC
+GenMonitor.Members       += { "GeneratorFullMonitor" };
+
+// Algorithm filling detailed info in an ntuple from MCParticle
+SimMonitor.Members       += { "MCTruthFullMonitor" };
+
+
