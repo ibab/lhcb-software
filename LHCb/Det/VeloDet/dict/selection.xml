@@ -1,3 +1,7 @@
 <lcgdict>
   <class name="DeVelo"/>
+  <class name="DeVeloSensor"/>
+  <class name="DeVeloRType"/>
+  <class name="DeVeloPhiType"/>
+  <class name="VeloChannelID"/>
 </lcgdict>
