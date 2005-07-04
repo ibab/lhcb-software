@@ -7,7 +7,7 @@ branches src doc options cmt job
 
 #=========================================================================
 #-- Databases
-use XmlDDDB             v25r0   Det   -no_auto_imports
+use XmlDDDB             v25r1   Det   -no_auto_imports
 use FieldMap            v4r5          -no_auto_imports
 use DecFiles            v7r3    Gen   -no_auto_imports
 use ParamFiles          v3r12         -no_auto_imports
@@ -29,6 +29,9 @@ use GaussAlgs		v1r6    Sim
 #-- Optional visualisation and UI
 #use GiGaVisUI           v3r0    Sim
 
+#-- Optional GDML
+#use GDMLG4Writer        v2r0    Sim
+
 #-- Monitoring
 use GaussMonitor        v2r1    Sim
 use CaloMoniSim         v1r0    Calo
@@ -46,6 +49,7 @@ use GaudiPoolDb         v*
 
 #-- Histogram persistency 
 use HbookCnv            v*
+use RootHistCnv         v*
 
 #-- LHCb
 use GaudiConf           v*     

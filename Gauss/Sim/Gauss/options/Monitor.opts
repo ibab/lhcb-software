@@ -1,4 +1,4 @@
-// $Id: Monitor.opts,v 1.9 2005-06-17 15:52:24 gcorti Exp $ 
+// $Id: Monitor.opts,v 1.10 2005-07-04 17:20:39 gcorti Exp $ 
 
 /** @file 
  * 
@@ -8,9 +8,9 @@
  *  @date 2005-02-21
  */
 
-// Load the DLLs for histogram persistency
-ApplicationMgr.DLLs += { "HbookCnv" };
-ApplicationMgr.HistogramPersistency = "HBOOK";
+// Load the DLLs for histogram persistency - choose ROOT or HBook
+// #include "STDOPTS/HBookCnv.opts"
+#include "$STDOPTS/RootHist.opts"
 
 //---------------------------------------------------------------------
 // Generator Monitor Histograms: set of histograms from HepMC
@@ -63,35 +63,4 @@ HcalMonitor.OutputLevel = 4;
 ApplicationMgr.DLLs += { "MuonMoniSim" };
 SimMonitor.Members  += { "MuonHitChecker" };
 MuonHitChecker.FullDetail = true;
-
-//------------------------------------------------------------------------
-// Check events
-//------------------------------------------------------------------------
-// Check MCSignal info (only for complete production)
-// SimMonitor.Members    += { "MCDecayCounter" };
-MCDecayCounter.DetailedPrintOut          = true;
-MCDecayCounter.OutputLevel               = 2;
-MCDecayCounter.MCDecayFinder.OutputLevel = 3;
-//MCDecayCounter.EvtCodeFromData = true;
-//MCDecayCounter.EvtCode = 0;
-
-//------------------------------------------------------------------------
-// Dump of event at various phases in text form
-//------------------------------------------------------------------------
-// Dump on screen content of generator full info
-//GenMonitor.Members += {"DumpMC"};
-
-//------------------------------------------------------------------------
-// Detailed Monitor
-//------------------------------------------------------------------------
-//ApplicationMgr.ExtSvc += { "NTupleSvc" }; 
-//NTupleSvc.Output={"FILE1 DATAFILE='GaussMonitor.hbook' TYP='HBOOK' OPT='NEW'"};
-//MuonHitChecker.DetailedMonitor = true;
-
-// Algorithm filling detailed info in an ntuple from HepMC
-//GenMonitor.Members       += { "GeneratorFullMonitor" };
-
-// Algorithm filling detailed info in an ntuple from MCParticle
-//SimMonitor.Members       += { "MCTruthFullMonitor" };
-
 
