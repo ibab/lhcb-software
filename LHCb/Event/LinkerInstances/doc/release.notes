@@ -2,11 +2,12 @@ Package LinkerInstances
 Package manager: T.Ruf
 Purpose: Creates dictionaries for the use of Linker relations in Python
 
+!===================== LinkerInstances v2r0 2005-06-30 ========================
+! 2005-06-30 - Thomas Ruf
+- modified linker_instances.h to match with the change of the OT event model change after DC04
+
 !===================== LinkerInstances v1r0 2005-06-30 ========================
 ! 2005-06-30 - Thomas Ruf
  - dll automatically added to PATH and PYTHON directory automatically added to PYTHONPATH
 To be used needs a "use LinkerInstances v* Event" in the requirement file of the user application 
 and a "from eventassoc import *" in the user PYthon script.
-!===================== LinkerInstances v2r0 2005-06-30 ========================
-! 2005-06-30 - Thomas Ruf
-- modified linker_instances.h to match with the change of the OT event model change after DC04
