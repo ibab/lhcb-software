@@ -1,15 +1,15 @@
 ! =============================================================================
-! $Id: release.notes,v 1.196 2005-07-05 13:28:34 jpalac Exp $ 
+! $Id: release.notes,v 1.197 2005-07-05 13:38:34 cattanem Exp $ 
 ! =============================================================================
 ! package DetDesc
 ! package manager : Marco Clemencic, Juan Palacios
 ! =============================================================================
 
+!======================== DetDesc v15r3 2005-07-05 ========================
 ! 2005-07-05 - Juan Palacios
  - Remove GeometryInfo class.
  - Add methods to re-set AlignmentConditions to IGeometryInfo.
 
-!======================== DetDesc v15r3 2005-07-03 ========================
 ! 2005-07-03 - Juan Palacios
  - Add dict directory with dictionary generation. Add necessary patterns to 
    requirements file (from P. Mato).
