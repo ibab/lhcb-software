@@ -1,4 +1,4 @@
-// $Id: PhysDesktop.cpp,v 1.20 2005-06-28 15:32:27 lazzecri Exp $
+// $Id: PhysDesktop.cpp,v 1.21 2005-07-05 12:45:40 pkoppenb Exp $
 // Include files
 
 // from Gaudi
@@ -222,6 +222,8 @@ const VertexVector& PhysDesktop::vertices()
 //=============================================================================
 const VertexVector& PhysDesktop::primaryVertices()
 {
+  // @todo Find a smarter way of checking this is done only once...
+  if ( m_primVerts.empty()) getPrimaryVertices();
   return m_primVerts;
 }
 

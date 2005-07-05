@@ -1,11 +1,16 @@
-! $Id: release.notes,v 1.58 2005-07-04 16:03:48 pkoppenb Exp $
+! $Id: release.notes,v 1.59 2005-07-05 12:45:40 pkoppenb Exp $
 ! Package     : DaVinciKernel
 ! Responsible : P. Koppenburg
 
+! 2005-07-05 - P. Koppenburg
+  - src/component/PhysDesktop.cpp
+    . Call getPrimaryVertices() in primaryVertices() method
+      in order to be able to avoid having to call getInput().
+    
 ! 2005-07-04 - P. Koppenburg
   - Kernel/DVAlgorithm.h
   - src/Lib/DVAlgorithm.cpp
-    - Added flavourTagging() method
+    . Added flavourTagging() method
     
 ! 2005-07-04 - P. Koppenburg
   - Kernel/IBTaggingTool.h
