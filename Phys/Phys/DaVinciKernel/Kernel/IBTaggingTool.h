@@ -1,4 +1,4 @@
-// $Id: IBTaggingTool.h,v 1.1 2005-07-04 15:45:32 pkoppenb Exp $
+// $Id: IBTaggingTool.h,v 1.2 2005-07-05 15:40:48 pkoppenb Exp $
 #ifndef BTAGGINGTOOL_IBTAGGINGTOOL_H
 #define BTAGGINGTOOL_IBTAGGINGTOOL_H 1
 
@@ -26,9 +26,9 @@ public:
   /// Retrieve interface ID
   static const InterfaceID& interfaceID() { return IID_IBTaggingTool; };
 
-  virtual FlavourTag* tag( const Particle* ) = 0;
-  virtual FlavourTag* tag( const  Particle*, const  Vertex* ) = 0;
-  virtual FlavourTag* tag( const  Particle*, const  Vertex*,
+  virtual StatusCode tag( FlavourTag&, const Particle* ) = 0;
+  virtual StatusCode tag( FlavourTag&, const  Particle*, const  Vertex* ) = 0;
+  virtual StatusCode tag( FlavourTag&, const  Particle*, const  Vertex*,
 			   ParticleVector& ) = 0;
 };
 #endif // BTAGGINGTOOL_IBTAGGINGTOOL_H
