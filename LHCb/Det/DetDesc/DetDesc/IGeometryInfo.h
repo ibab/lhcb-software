@@ -1,4 +1,4 @@
-// $Id: IGeometryInfo.h,v 1.12 2005-06-20 12:23:43 jpalac Exp $ 
+// $Id: IGeometryInfo.h,v 1.13 2005-07-05 13:28:34 jpalac Exp $ 
 // ===========================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ===========================================================================
@@ -105,6 +105,14 @@ public:
   virtual const HepTransform3D&  localIdealMatrix() const = 0;  
 
   virtual const HepTransform3D&  localDeltaMatrix() const = 0;
+
+  /// Upate the DELTA transformation matrix of this IGeometryInfo.
+  virtual StatusCode  localDeltaMatrix(const HepTransform3D&) = 0;
+
+  /// Update the transformation parametrs in this GeometryInfo's
+  /// AlignmentCondifion.
+  virtual StatusCode localDeltaParams(const std::vector<double>& trans,
+                                      const std::vector<double>& rot) =0;
 
   /**  transformation matrix  from Local Reference System
    *   to the Global Reference System of
