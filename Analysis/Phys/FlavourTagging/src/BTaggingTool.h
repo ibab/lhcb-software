@@ -1,4 +1,4 @@
-// $Id: BTaggingTool.h,v 1.5 2005-07-05 14:33:05 musy Exp $
+// $Id: BTaggingTool.h,v 1.6 2005-07-05 15:40:36 pkoppenb Exp $
 
 #ifndef USER_BTAGGINGTOOL_H 
 #define USER_BTAGGINGTOOL_H 1
@@ -51,9 +51,9 @@ public:
   StatusCode finalize  ();    ///<  finalization
 
   //-------------------------------------------------------------
-  FlavourTag tag( const Particle* );
-  FlavourTag tag( const Particle*, const Vertex* );
-  FlavourTag tag( const Particle*, const Vertex*, ParticleVector& );
+  StatusCode tag( FlavourTag& theTag, const Particle* );
+  StatusCode tag( FlavourTag& theTag, const Particle*, const Vertex* );
+  StatusCode tag( FlavourTag& theTag, const Particle*, const Vertex*, ParticleVector& );
   //-------------------------------------------------------------
 
 private:

@@ -49,14 +49,15 @@ StatusCode BTagging::execute() {
 
       //--------------------- TAG THEM -------------------
       //use tool for tagging by just specifing the signal B
-      theTag = flavourTagging() -> tag( *icandB );
+      StatusCode sc = flavourTagging() -> tag( theTag, *icandB );
 
       //use tool for tagging if you want to specify the Primary Vtx
-      //theTag = flavourTagging() -> tag( *icandB, PVertex );
+      //StatusCode sc = flavourTagging() -> tag( theTag, *icandB, PVertex );
 
       //use tool for tagging if you want to specify a list of particles
-      //theTag = flavourTagging() -> tag( *icandB, PVertex, vtags );
+      //StatusCode sc = flavourTagging() -> tag( theTag, *icandB, PVertex, vtags );
       //--------------------------------------------------
+      if (!sc) return sc;
 
       //--- PRINTOUTS ---
       //print the information in theTag

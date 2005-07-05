@@ -113,20 +113,20 @@ StatusCode BTaggingTool::initialize() {
 }
 
 //==========================================================================
-FlavourTag BTaggingTool::tag( const Particle* AXB0 ) {
+StatusCode BTaggingTool::tag( FlavourTag& theTag, const Particle* AXB0 ) {
   ParticleVector p(0);
-  return tag( AXB0, 0, p );
+  return tag( theTag, AXB0, 0, p ) ;
 }
 //==========================================================================
-FlavourTag BTaggingTool::tag( const Particle* AXB0, const Vertex* RecVert ) {
+StatusCode BTaggingTool::tag( FlavourTag& theTag, const Particle* AXB0, 
+                              const Vertex* RecVert ) {
   ParticleVector p(0);
-  return tag( AXB0, RecVert, p );
+  return tag( theTag, AXB0, RecVert, p );
 }
 //==========================================================================
-FlavourTag BTaggingTool::tag( const Particle* AXB0, 
-			      const Vertex* RecVert,
-			      ParticleVector& vtags ) {
-  FlavourTag theTag;
+StatusCode BTaggingTool::tag( FlavourTag& theTag, const Particle* AXB0, 
+                              const Vertex* RecVert,
+                              ParticleVector& vtags ) {
   theTag.setDecision( FlavourTag::none );
 
   // Retrieve informations about event
@@ -135,7 +135,7 @@ FlavourTag BTaggingTool::tag( const Particle* AXB0,
     evt = get<EventHeader> (EventHeaderLocation::Default);
   } else {
     err() << "Unable to Retrieve Event" << endreq;
-    return theTag;
+    return StatusCode::SUCCESS;
   }
   // Retrieve trigger/tampering info
   int trigger=-1;
@@ -157,11 +157,11 @@ FlavourTag BTaggingTool::tag( const Particle* AXB0,
   } 
   if(trg) {
     // Select events on trigger
-    if( m_RequireL0 ) if( !trg->L0() ) return theTag; 
-    if( m_RequireL1 ) if( !trg->L1() ) return theTag; 
+    if( m_RequireL0 ) if( !trg->L0() ) return StatusCode::SUCCESS; 
+    if( m_RequireL1 ) if( !trg->L1() ) return StatusCode::SUCCESS; 
     if( m_RequireHLT) {
-      if ( ! hlt ) return theTag;
-      if ( !(hlt->decision()) ) return theTag; 
+      if ( ! hlt ) return StatusCode::SUCCESS;
+      if ( !(hlt->decision()) ) return StatusCode::SUCCESS; 
     }
     if ( 0!=hlt ) trigger = 100* hlt->decision() + 10* trg->L1() + trg->L0();
     else trigger = 10* trg->L1() + trg->L0();
@@ -189,9 +189,9 @@ FlavourTag BTaggingTool::tag( const Particle* AXB0,
   if ( !exist<Particles>(m_outputLocation+"/Particles")) {
     // make particles and save them
     debug() << "Making tagging particles to be saved in " << m_outputLocation << endmsg ;
-    if( !(m_physd->getEventInput()) ) return theTag;
+    if( !(m_physd->getEventInput()) ) return StatusCode::SUCCESS;
     parts = m_physd->particles();
-    if( !(m_physd->saveDesktop()) ) return theTag;
+    if( !(m_physd->saveDesktop()) ) return StatusCode::SUCCESS;
   } else {
     debug() << "Getting tagging particles saved in " << m_outputLocation << endmsg ;
     const Particles* ptmp = get<Particles>(m_outputLocation+"/Particles");
@@ -233,7 +233,7 @@ FlavourTag BTaggingTool::tag( const Particle* AXB0,
     }
     if( !RecVert ) {
       err() <<"No Reconstructed Vertex!! Skip." <<endreq;
-      return theTag;
+      return StatusCode::SUCCESS;
     }    
   }
 
@@ -547,7 +547,7 @@ FlavourTag BTaggingTool::tag( const Particle* AXB0,
   else {
     err() << "Unknown tagger combination: " 
           << m_CombinationTechnique<<endreq;
-    return theTag;
+    return StatusCode::SUCCESS;
   } 
   if(tagdecision == 0) catt=0; 
 
@@ -628,7 +628,7 @@ FlavourTag BTaggingTool::tag( const Particle* AXB0,
     delete tagr;
   }
 
-  return theTag;
+  return StatusCode::SUCCESS;
 }
 //=========================================================================
 StatusCode BTaggingTool::finalize() { return StatusCode::SUCCESS; }
