@@ -40,7 +40,7 @@ StatusCode BTagging::execute() {
   if( parts.empty()  ) return StatusCode::SUCCESS;
 
   //-------------- loop on signal B candidates from selection
-  FlavourTag* theTag=0;
+  FlavourTag theTag;
   ParticleVector::const_iterator icandB;
   for ( icandB = parts.begin(); icandB != parts.end(); icandB++){
     if((*icandB)->particleID().hasBottom()) {
@@ -60,14 +60,14 @@ StatusCode BTagging::execute() {
 
       //--- PRINTOUTS ---
       //print the information in theTag
-      int tagdecision = theTag->decision();
+      int tagdecision = theTag.decision();
       debug() << "Flavour guessed: " << (tagdecision>0 ? "b":"bbar")<<endreq;
-      debug() << "estimated omega= " << theTag->omega() <<endreq;
-      Particle* tagB = theTag->taggedB();
+      debug() << "estimated omega= " << theTag.omega() <<endreq;
+      Particle* tagB = theTag.taggedB();
       if( tagB ) debug() << "taggedB p="<< tagB->p()/GeV <<endreq;
 
       ///print Taggers information
-      std::vector<Tagger> mytaggers = theTag->taggers();
+      std::vector<Tagger> mytaggers = theTag.taggers();
       std::vector<Tagger>::iterator itag;
       for(itag=mytaggers.begin(); itag!=mytaggers.end(); ++itag) {
         std::string tts;
@@ -101,9 +101,9 @@ StatusCode BTagging::execute() {
 
   //-------------------------------------------
   ///Output to TES (for backward compatibility) 
-  if( m_WriteToTES ) if( theTag ) {
+  if( m_WriteToTES ) if( theTag.decision() ) {
     FlavourTags* tags = new FlavourTags;
-    tags->insert(theTag);
+    tags->insert(&theTag);
     StatusCode sc = put(tags,m_TagLocation);
     if( !sc ) err() <<"Unable to register tags"<< endreq;
   }

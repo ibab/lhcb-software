@@ -113,22 +113,21 @@ StatusCode BTaggingTool::initialize() {
 }
 
 //==========================================================================
-FlavourTag* BTaggingTool::tag( const Particle* AXB0 ) {
+FlavourTag BTaggingTool::tag( const Particle* AXB0 ) {
   ParticleVector p(0);
   return tag( AXB0, 0, p );
 }
 //==========================================================================
-FlavourTag* BTaggingTool::tag( const Particle* AXB0, const Vertex* RecVert ) {
+FlavourTag BTaggingTool::tag( const Particle* AXB0, const Vertex* RecVert ) {
   ParticleVector p(0);
   return tag( AXB0, RecVert, p );
 }
 //==========================================================================
-FlavourTag* BTaggingTool::tag( const Particle* AXB0, 
-                               const Vertex* RecVert,
-                               ParticleVector& vtags ) {
-   
-  FlavourTag* theTag = new FlavourTag;
-  theTag->setDecision( FlavourTag::none );
+FlavourTag BTaggingTool::tag( const Particle* AXB0, 
+			      const Vertex* RecVert,
+			      ParticleVector& vtags ) {
+  FlavourTag theTag;
+  theTag.setDecision( FlavourTag::none );
 
   // Retrieve informations about event
   EventHeader* evt=0;
@@ -566,12 +565,12 @@ FlavourTag* BTaggingTool::tag( const Particle* AXB0,
          << endreq;
 
   ///fill FlavourTag object ---------------------------------------------
-  if(      tagdecision ==  1 ) theTag->setDecision( FlavourTag::bbar );
-  else if( tagdecision == -1 ) theTag->setDecision( FlavourTag::b );
-  else theTag->setDecision( FlavourTag::none );
-  theTag->setCategory( catt );
-  theTag->setOmega( 1-pnsum );
-  theTag->setTaggedB( AXB0 );
+  if(      tagdecision ==  1 ) theTag.setDecision( FlavourTag::bbar );
+  else if( tagdecision == -1 ) theTag.setDecision( FlavourTag::b );
+  else theTag.setDecision( FlavourTag::none );
+  theTag.setCategory( catt );
+  theTag.setOmega( 1-pnsum );
+  theTag.setTaggedB( AXB0 );
 
   //fill in taggers info into FlavourTag object
   if(imuon)  { 
@@ -580,7 +579,7 @@ FlavourTag* BTaggingTool::tag( const Particle* AXB0,
     tagr->setDecision( itag.at(1) );
     tagr->setOmega( 1-pn.at(1) );
     tagr->addTaggerPart(*imuon);
-    theTag->addTagger(*tagr); //save it <--
+    theTag.addTagger(*tagr); //save it <--
     delete tagr;
   }
   if(iele)  { 
@@ -589,7 +588,7 @@ FlavourTag* BTaggingTool::tag( const Particle* AXB0,
     tagr->setDecision( itag.at(2) );
     tagr->setOmega( 1-pn.at(2) );
     tagr->addTaggerPart(*iele);
-    theTag->addTagger(*tagr); 
+    theTag.addTagger(*tagr); 
     delete tagr;
   }
   if(ikaon)  { 
@@ -598,7 +597,7 @@ FlavourTag* BTaggingTool::tag( const Particle* AXB0,
     tagr->setDecision( itag.at(3) );
     tagr->setOmega( 1-pn.at(3) );
     tagr->addTaggerPart(*ikaon);
-    theTag->addTagger(*tagr);
+    theTag.addTagger(*tagr);
     delete tagr;
   }
   if(ikaonS)  { 
@@ -607,7 +606,7 @@ FlavourTag* BTaggingTool::tag( const Particle* AXB0,
     tagr->setDecision( itag.at(4) );
     tagr->setOmega( 1-pn.at(4) );
     tagr->addTaggerPart(*ikaonS);
-    theTag->addTagger(*tagr);
+    theTag.addTagger(*tagr);
     delete tagr;
   }
   if(ipionS)  { 
@@ -616,7 +615,7 @@ FlavourTag* BTaggingTool::tag( const Particle* AXB0,
     tagr->setDecision( itag.at(4) );
     tagr->setOmega( 1-pn.at(4) );
     tagr->addTaggerPart(*ipionS);
-    theTag->addTagger(*tagr);
+    theTag.addTagger(*tagr);
     delete tagr;
   }
   if(Vch)  { 
@@ -625,7 +624,7 @@ FlavourTag* BTaggingTool::tag( const Particle* AXB0,
     tagr->setDecision( itag.at(5) );
     tagr->setOmega( 1-pn.at(5) );
     for(std::vector<const Particle*>::const_iterator ip=Pfit.begin(); ip!=Pfit.end(); ip++) tagr->addTaggerPart(**ip);
-    theTag->addTagger(*tagr);
+    theTag.addTagger(*tagr);
     delete tagr;
   }
 
