@@ -1,16 +1,15 @@
-! $Id: release.notes,v 1.78 2005-07-05 09:45:49 jpalac Exp $
+! $Id: release.notes,v 1.79 2005-07-05 13:17:12 cattanem Exp $
 package VeloDet
 package manager : Velo Group
 
+!========================= VeloDet v9r8 2005-07-05 =========================
 ! 2005-07-05 - Juan PALACIOS
  - Add std::vector<*> to dictionary. At the moment that only covers vectors of
    DeVeloSensor , DeVeloRType and DeVeloPhiType pointers.
 
 ! 2005-07-04 - Juan PALACIOS
-
  - Add DeVeloSensor, DeVeloRType, DeVeloPhiType, VeloChannelID to dictionary.
 
-!========================= VeloDet v9r8 2005-07-03 =========================
 ! 2005-07-03 - Juan PALACIOS
  - Add dict directory with dictionary generation. Add necessary patterns to 
    requirements file (from P. Mato).
