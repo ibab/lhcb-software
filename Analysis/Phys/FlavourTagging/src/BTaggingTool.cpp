@@ -22,8 +22,9 @@ BTaggingTool::BTaggingTool( const std::string& type,
   declareProperty( "IPPU_cut",     m_IPPU_cut = 3.0 );
   declareProperty( "thetaMin_cut", m_thetaMin = 0.012 );
 
-  declareProperty( "SecondaryVertexName",m_SecondaryVertexToolName="TDR" );
-  declareProperty( "CombinationTechnique", m_CombinationTechnique ="NNet");
+  declareProperty( "SecondaryVertexName",
+		   m_SecondaryVertexToolName = "SVertexTool" );
+  declareProperty( "CombinationTechnique", m_CombinationTechnique = "NNet");
   declareProperty( "ProbMin", m_ProbMin   = 0.52);
   declareProperty( "VchOmega", m_VchOmega = 0.40);
 

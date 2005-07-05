@@ -12,9 +12,9 @@ ChargedProtoPAlg.VeloTTTracks = true ;
 
 ////--------------------------------------------------------------
 ///example Bd Channel Selection -------------------
-//#include "$B2HHROOT/options/DoTDRselBd2PiPi.opts"
-//BTagging.PhysDesktop.InputLocations = { "Phys/TDRselBd2PiPi" };
-//TamperingL1Alg.SelectionName = "TDRselBd2PiPi";
+#include "$B2HHROOT/options/DoTDRselBd2PiPi.opts"
+BTagging.PhysDesktop.InputLocations = { "Phys/TDRselBd2PiPi" };
+TamperingL1Alg.SelectionName = "TDRselBd2PiPi";
 
 ///example Bs Channel Selection -----------------
 //#include "$B2HHROOT/options/DoTDRselBs2KK.opts"
@@ -26,7 +26,7 @@ ChargedProtoPAlg.VeloTTTracks = true ;
 //TamperingL1Alg.SelectionName = "TDRselBs2DsK";
 
 ///or Cheated Selection ----------------------------
-#include "$FLAVOURTAGGINGCHECKEROPTS/CheatedSelection.opts"
+//#include "$FLAVOURTAGGINGCHECKEROPTS/CheatedSelection.opts"
 
 ///---------------------------------------------------------------
 //   L1 buffer TAMPERING
@@ -41,10 +41,10 @@ ChargedProtoPAlg.VeloTTTracks = true ;
 // TamperingL1Alg.InputType = "Selection";
 // TamperingL0Alg.InputType = @TamperingL1Alg.InputType ;
 // TamperingL0Alg.SelectionName = @TamperingL1Alg.SelectionName ;
-// BTagging.BTaggingTool.RequireTrigger     = true;
-// BTagging.BTaggingTool.RequireL1Tampering = true; 
+// ToolSvc.BTaggingTool.RequireTrigger     = true;
+// ToolSvc.BTaggingTool.RequireL1Tampering = true; 
 // tampering info is used only with NNet combination of taggers:
-// BTagging.BTaggingTool.CombinationTechnique = "NNet";
+// ToolSvc.BTaggingTool.CombinationTechnique = "NNet";
 ///---------------------------------------------------------------
 
 ///---------------------------------------------------------------
@@ -54,7 +54,9 @@ ApplicationMgr.DLLs   += { "VeloDAQ" };
 ApplicationMgr.TopAlg += { "DecodeVeloRawBuffer" };
 
 #include "$FLAVOURTAGGINGOPTS/BTagging.opts"
-BTagging.OutputLevel = 3;
+BTagging.OutputLevel = 2;
+ToolSvc.BTaggingTool.OutputLevel = 2;
+ToolSvc.BTaggingTool.PhysDesktop.OutputLevel = 2;
 
 ///---------------------------------------------------------------
 /// 		BTaggingChecker
@@ -72,7 +74,7 @@ EventSelector.PrintFreq  = 1;
 //---------------------------------------------------------------
 // Example input data 
 //---------------------------------------------------------------
-EventSelector.Input = {"DATAFILE='PFN:rfio:/castor/cern.ch/user/p/pkoppenb/L0L1TDR-Bs2DsK11.dst' TYP='POOL_ROOTTREE' OPT='READ'"}; //BsDsK selected events
+//EventSelector.Input = {"DATAFILE='PFN:rfio:/castor/cern.ch/user/p/pkoppenb/L0L1TDR-Bs2DsK11.dst' TYP='POOL_ROOTTREE' OPT='READ'"}; //BsDsK selected events
 //EventSelector.Input = {"DATAFILE='PFN:rfio:/castor/cern.ch/lhcb/DC04/00000641_00000005_5.dst' TYP='POOL_ROOTTREE' OPT='READ'"}; //again BsDsK events
-//EventSelector.Input = {"DATAFILE='PFN:rfio:/castor/cern.ch/user/p/pkoppenb/L0L1TDR-Bd2PiPi11.dst' TYP='POOL_ROOTTREE' OPT='READ'"}; //Bd2PiPi selected events
+EventSelector.Input = {"DATAFILE='PFN:rfio:/castor/cern.ch/user/p/pkoppenb/L0L1TDR-Bd2PiPi11.dst' TYP='POOL_ROOTTREE' OPT='READ'"}; //Bd2PiPi selected events
 //---------------------------------------------------------------
