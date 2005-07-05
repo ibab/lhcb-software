@@ -1,6 +1,10 @@
-! $Id: release.notes,v 1.77 2005-07-04 15:39:14 jpalac Exp $
+! $Id: release.notes,v 1.78 2005-07-05 09:45:49 jpalac Exp $
 package VeloDet
 package manager : Velo Group
+
+! 2005-07-05 - Juan PALACIOS
+ - Add std::vector<*> to dictionary. At the moment that only covers vectors of
+   DeVeloSensor , DeVeloRType and DeVeloPhiType pointers.
 
 ! 2005-07-04 - Juan PALACIOS
 
