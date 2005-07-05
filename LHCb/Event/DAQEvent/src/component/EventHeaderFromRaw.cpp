@@ -1,4 +1,4 @@
-// $Id: EventHeaderFromRaw.cpp,v 1.3 2005-03-07 13:07:40 cattanem Exp $
+// $Id: EventHeaderFromRaw.cpp,v 1.4 2005-07-05 11:54:24 cattanem Exp $
 // Include files 
 
 // from Gaudi
@@ -37,46 +37,23 @@ EventHeaderFromRaw::EventHeaderFromRaw( const std::string& name,
 EventHeaderFromRaw::~EventHeaderFromRaw() {}; 
 
 //=============================================================================
-// Initialization
-//=============================================================================
-StatusCode EventHeaderFromRaw::initialize() {
-  StatusCode sc = GaudiAlgorithm::initialize(); // must be executed first
-  if ( sc.isFailure() ) return sc;  // error printed already by GaudiAlgorithm
-
-  debug() << "==> Initialize" << endmsg;
-
-  return StatusCode::SUCCESS;
-};
-
-//=============================================================================
 // Main execution
 //=============================================================================
 StatusCode EventHeaderFromRaw::execute() {
 
-  debug() << "==> Execute" << endmsg;
-
   RawEvent* rawEvt = get<RawEvent>( RawEventLocation::Default );
   const std::vector<RawBank>& data = rawEvt->banks( RawBuffer::DAQ );
+
+  if( 0 == data.size() ) return Error( "DAQ bank missing from RawBuffer" );
 
   raw_int* evhData = (*(data.begin())).data();
   long evtNum = (*evhData++);
   long runNum = (*evhData++);
-  
+
   EventHeader* evtHeader = new EventHeader;
   evtHeader->setRunNum( runNum );
   evtHeader->setEvtNum( evtNum );
 
   return put( evtHeader, EventHeaderLocation::Default );
 };
-
-//=============================================================================
-//  Finalize
-//=============================================================================
-StatusCode EventHeaderFromRaw::finalize() {
-
-  debug() << "==> Finalize" << endmsg;
-
-  return GaudiAlgorithm::finalize();  // must be called after all other actions
-}
-
 //=============================================================================

@@ -1,4 +1,4 @@
-// $Id: EventHeaderFromRaw.h,v 1.1 2004-10-26 13:10:15 cattanem Exp $
+// $Id: EventHeaderFromRaw.h,v 1.2 2005-07-05 11:54:24 cattanem Exp $
 #ifndef COMPONENT_EVENTHEADERFROMRAW_H 
 #define COMPONENT_EVENTHEADERFROMRAW_H 1
 
@@ -20,9 +20,7 @@ public:
 
   virtual ~EventHeaderFromRaw( ); ///< Destructor
 
-  virtual StatusCode initialize();    ///< Algorithm initialization
   virtual StatusCode execute   ();    ///< Algorithm execution
-  virtual StatusCode finalize  ();    ///< Algorithm finalization
 
 protected:
 

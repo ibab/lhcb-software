@@ -3,6 +3,12 @@ Author: Jose' Helder Lopes
 Purpose: Define the L1Buffer,  L1Event, L1Bank, RawBuffer, RawEvent and 
          RawBank classes.
 
+!================ DAQEvent v5r2p2 2005-07-05 ==========================
+! 2005-07-05 - Marco Cattaneo
+ - In EventHeaderFromRaw, check existence of DAQ bank before accessing it, return
+   StatusCode::FAILURE if missing
+ - Add debug printout of buffer length to CreateL1Event and CreateRawEvent
+
 !================ DAQEvent v5r2p1 2005-06-24 ==========================
 ! 2005-06-24 - Marco Cattaneo
  - In CreateL1Event,CreateRawEvent, do not attempt to create if already existing 

@@ -1,4 +1,4 @@
-// $Id: CreateRawEvent.cpp,v 1.2 2005-06-24 14:44:08 cattanem Exp $
+// $Id: CreateRawEvent.cpp,v 1.3 2005-07-05 11:54:24 cattanem Exp $
 // Include files 
 
 // from Gaudi
@@ -35,10 +35,9 @@ CreateRawEvent::CreateRawEvent( const std::string& name,
 //=============================================================================
 StatusCode CreateRawEvent::execute() {
 
-  debug() << "==> Execute" << endmsg;
-
   if ( !exist<RawEvent>( RawEventLocation::Default ) ) {
     RawBuffer* buf = get<RawBuffer>( RawBufferLocation::Default );
+    debug() << "Raw buffer size: " << buf->currentSize() << endmsg;
     RawEvent* evt = new RawEvent( *buf );
     put( evt, RawEventLocation::Default );
   }

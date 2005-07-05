@@ -1,4 +1,4 @@
-// $Id: CreateL1Event.cpp,v 1.2 2005-06-24 14:44:08 cattanem Exp $
+// $Id: CreateL1Event.cpp,v 1.3 2005-07-05 11:54:24 cattanem Exp $
 // Include files 
 
 // from Gaudi
@@ -39,6 +39,7 @@ StatusCode CreateL1Event::execute() {
 
   if ( !exist<L1Event>( L1EventLocation::Default ) ) {
     L1Buffer* buf = get<L1Buffer>( L1BufferLocation::Default );
+    debug() << "L1 buffer size: " << buf->currentSize() << endmsg;
     L1Event* evt = new L1Event( *buf );
     put( evt, L1EventLocation::Default );
   }
