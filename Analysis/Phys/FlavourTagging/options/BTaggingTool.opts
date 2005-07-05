@@ -11,7 +11,7 @@ ToolSvc.BTaggingTool.SecondaryVertexName= "SVertexTool";//"TDR" type
 ToolSvc.BTaggingTool.CombinationTechnique = "NNet";
 //ToolSvc.BTaggingTool.CombinationTechnique = "TDR"; //old TDR categories
 
-ToolSvc.BTaggingTool.PhysDesktop.OutputLocation= "/Event/Phys/BTaggingTool/Particles";
+//ToolSvc.BTaggingTool.OutputLocation = "/Event/Phys/BTaggingTool"; // default
 
 //--------------
 //PID definition
@@ -34,7 +34,6 @@ ToolSvc.BTaggingTool.TaggerElectronTool.TrVeloCharge.Normalisation = 1.;
 ToolSvc.BTaggingTool.TaggerElectronTool.TrVeloCharge.Ratio = 0.7;
 ToolSvc.BTaggingTool.TaggerElectronTool.TrVeloCharge.OutputLevel = 3;
 
-ToolSvc.BTaggingTool.PhysDesktop.OutputLevel = 5;
 ToolSvc.BTaggingTool.UnconstVertexFitter.OutputLevel = 4;
 
 //-----------------------------------------------------------------------

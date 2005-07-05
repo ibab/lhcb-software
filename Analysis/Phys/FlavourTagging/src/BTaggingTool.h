@@ -1,4 +1,4 @@
-// $Id: BTaggingTool.h,v 1.3 2005-07-04 16:38:42 pkoppenb Exp $
+// $Id: BTaggingTool.h,v 1.4 2005-07-05 12:40:11 pkoppenb Exp $
 
 #ifndef USER_BTAGGINGTOOL_H 
 #define USER_BTAGGINGTOOL_H 1
@@ -91,6 +91,8 @@ private:
   bool m_EnableMuonTagger,m_EnableElectronTagger,m_EnableKaonOSTagger;
   bool m_EnableKaonSSTagger,m_EnablePionTagger,m_EnableVertexChargeTagger;
   bool m_EnableJetSameTagger;
+  std::string m_outputLocation ;
+  
 };
 
 //=======================================================================//

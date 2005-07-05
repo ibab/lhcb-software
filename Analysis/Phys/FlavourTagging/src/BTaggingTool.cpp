@@ -40,6 +40,7 @@ BTaggingTool::BTaggingTool( const std::string& type,
   declareProperty( "EnablePionTagger",m_EnablePionTagger        = true );
   declareProperty( "EnableVertexChargeTagger",m_EnableVertexChargeTagger= true);
   declareProperty( "EnableJetSameTagger",m_EnableJetSameTagger  = true );
+  declareProperty( "OutputLocation",m_outputLocation = "/Event/Phys/BTaggingTool" );
   m_nnet = 0;
   m_svtool = 0;
   m_taggerMu=m_taggerEle=m_taggerKaon=0;
@@ -60,6 +61,8 @@ StatusCode BTaggingTool::initialize() {
     fatal() << "Unable to retrieve PhysDesktop"<< endreq;
     return StatusCode::FAILURE;
   }
+  m_physd->imposeOutputLocation(m_outputLocation);
+
   m_Geom = tool<IGeomDispCalculator> ("GeomDispCalculator", this);
   if ( ! m_Geom ) {   
     fatal() << "GeomDispCalculator could not be found" << endreq;
@@ -183,13 +186,24 @@ FlavourTag* BTaggingTool::tag( const Particle* AXB0,
           << " Event " << evt->evtNum() << "  <<<<<" << endreq;
 
   //build desktop
-  if( !(m_physd->getEventInput()) ) return theTag;
-  ParticleVector parts = m_physd->particles();
-  VertexVector   verts = m_physd->primaryVertices();
-  if( !(m_physd->saveDesktop()) )   return theTag;
+  ParticleVector parts ;
+  if ( !exist<Particles>(m_outputLocation+"/Particles")) {
+    // make particles and save them
+    debug() << "Making tagging particles to be saved in " << m_outputLocation << endmsg ;
+    if( !(m_physd->getEventInput()) ) return theTag;
+    parts = m_physd->particles();
+    if( !(m_physd->saveDesktop()) ) return theTag;
+  } else {
+    debug() << "Getting tagging particles saved in " << m_outputLocation << endmsg ;
+    const Particles* ptmp = get<Particles>(m_outputLocation+"/Particles");
+    for( Particles::const_iterator icand = ptmp->begin(); icand != ptmp->end(); icand++ ) {
+      parts.push_back(*icand);
+    }
+  }
+  VertexVector verts = m_physd->primaryVertices();
   debug() << "  Nr Vertices: "  << verts.size() 
           << "  Nr Particles: " << parts.size() <<endreq;
-
+  
   //AXB0 is the signal B from selection
   bool isBd = false;
   bool isBs = false;

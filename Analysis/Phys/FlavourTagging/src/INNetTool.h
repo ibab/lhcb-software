@@ -1,4 +1,4 @@
-// $Id: INNetTool.h,v 1.3 2005-07-04 15:46:04 pkoppenb Exp $
+// $Id: INNetTool.h,v 1.4 2005-07-05 12:40:11 pkoppenb Exp $
 #ifndef NNETTOOL_INNETTOOL_H 
 #define NNETTOOL_INNETTOOL_H 1
 
@@ -6,7 +6,6 @@
 // from STL
 #include <string>
 // from Gaudi
-#include "Kernel/DVAlgorithm.h"
 #include "GaudiKernel/IAlgTool.h"
 
 static const InterfaceID IID_INNetTool("INNetTool", 1 , 0); 
