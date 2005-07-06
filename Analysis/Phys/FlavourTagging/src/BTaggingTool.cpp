@@ -24,24 +24,21 @@ BTaggingTool::BTaggingTool( const std::string& type,
 
   declareProperty( "SecondaryVertexName",
 		   m_SecondaryVertexToolName = "SVertexTool" );
-  declareProperty( "CombinationTechnique", m_CombinationTechnique = "NNet");
-  declareProperty( "ProbMin", m_ProbMin   = 0.52);
-  declareProperty( "VchOmega", m_VchOmega = 0.40);
+  declareProperty( "CombineTaggersName",
+		   m_CombineTaggersName = "CombineTaggersNNet" );
 
-  declareProperty( "RequireTrigger", m_RequireTrigger    = false );
-  declareProperty( "RequireL1Tampering", m_RequireL1Tamp = false );
   declareProperty( "RequireL0", m_RequireL0 = false );
   declareProperty( "RequireL1", m_RequireL1 = false );
   declareProperty( "RequireHLT",m_RequireHLT= false );
-  declareProperty( "EnableMuonTagger",m_EnableMuonTagger        = true );
-  declareProperty( "EnableElectronTagger",m_EnableElectronTagger= true );
-  declareProperty( "EnableKaonOSTagger",m_EnableKaonOSTagger    = true );
-  declareProperty( "EnableKaonSSTagger",m_EnableKaonSSTagger    = true );
-  declareProperty( "EnablePionTagger",m_EnablePionTagger        = true );
-  declareProperty( "EnableVertexChargeTagger",m_EnableVertexChargeTagger= true);
-  declareProperty( "EnableJetSameTagger",m_EnableJetSameTagger  = true );
-  declareProperty( "OutputLocation",m_outputLocation = "/Event/Phys/BTaggingTool" );
-  m_nnet = 0;
+  declareProperty( "EnableMuonTagger",m_EnableMuon        = true );
+  declareProperty( "EnableElectronTagger",m_EnableElectron= true );
+  declareProperty( "EnableKaonOSTagger",  m_EnableKaonOS  = true );
+  declareProperty( "EnableKaonSSTagger",  m_EnableKaonSS  = true );
+  declareProperty( "EnablePionTagger",    m_EnablePionSS  = true );
+  declareProperty( "EnableVertexChargeTagger",m_EnableVertexCharge= true);
+  declareProperty( "EnableJetSameTagger", m_EnableJetSame = false );
+  declareProperty( "OutputLocation",
+		   m_outputLocation = "/Event/Phys/BTaggingTool" );
   m_svtool = 0;
   m_taggerMu=m_taggerEle=m_taggerKaon=0;
   m_taggerKaonS=m_taggerPionS=m_taggerVtx=0 ;
@@ -73,11 +70,6 @@ StatusCode BTaggingTool::initialize() {
     warning()<< "No Vertex Charge tag will be used! " 
              << m_SecondaryVertexToolName <<endreq;
   }
-  m_nnet = tool<INNetTool> ("NNetTool", this);
-  if(! m_nnet) {
-    fatal() << "Unable to retrieve NNetTool"<< endreq;
-    return StatusCode::FAILURE;
-  }
   m_taggerMu = tool<ITagger> ("TaggerMuonTool", this);
   if(! m_taggerMu) {
     fatal() << "Unable to retrieve TaggerMuonTool"<< endreq;
@@ -103,9 +95,19 @@ StatusCode BTaggingTool::initialize() {
     fatal() << "Unable to retrieve TaggerPionSameTool"<< endreq;
     return StatusCode::FAILURE;
   }
+  m_taggerVtxCh= tool<ITagger> ("TaggerVertexChargeTool", this);
+  if(! m_taggerVtxCh) {
+    fatal() << "Unable to retrieve TaggerVertexChargeTool"<< endreq;
+    return StatusCode::FAILURE;
+  }
   m_taggerJetS = tool<ITagger> ("TaggerJetSameTool", this);
   if(! m_taggerJetS) {
     fatal() << "Unable to retrieve TaggerJetSameTool"<< endreq;
+    return StatusCode::FAILURE;
+  }
+  m_combine = tool<ICombineTaggersTool> (m_CombineTaggersName, this);
+  if(! m_combine) {
+    fatal() << "Unable to retrieve "<< m_CombineTaggersName << endreq;
     return StatusCode::FAILURE;
   }
 
@@ -137,15 +139,13 @@ StatusCode BTaggingTool::tag( FlavourTag& theTag, const Particle* AXB0,
     err() << "Unable to Retrieve Event" << endreq;
     return StatusCode::SUCCESS;
   }
-  // Retrieve trigger/tampering info
+  // Retrieve trigger info
   int trigger=-1;
-  double L0tamp=0;
-  double L1tamp=100;
-  debug()<<"Retrieve TrgDecision from "
-         <<TrgDecisionLocation::Default<<endreq;
   TrgDecision* trg = 0;
-  HltScore* hlt = 0 ;
-  if (m_RequireTrigger || m_RequireL1Tamp) {
+  HltScore*    hlt = 0 ;
+  if (m_RequireL0 || m_RequireL1 || m_RequireHLT) {
+    debug()<<"Retrieve TrgDecision from "
+	   <<TrgDecisionLocation::Default<<endreq;
     if ( !exist<TrgDecision>(TrgDecisionLocation::Default) ){
       warning() << "No TrgDecision" << endmsg ;
     } else {
@@ -165,18 +165,6 @@ StatusCode BTaggingTool::tag( FlavourTag& theTag, const Particle* AXB0,
     }
     if ( 0!=hlt ) trigger = 100* hlt->decision() + 10* trg->L1() + trg->L0();
     else trigger = 10* trg->L1() + trg->L0();
-
-    // Retrieve Tampering info
-    if( m_RequireL1Tamp ) {
-      if(exist<TamperingResults>(TamperingResultsLocation::Default)) {
-        TamperingResults* tampres = 
-          get<TamperingResults>(TamperingResultsLocation::Default);
-        L0tamp= tampres->L0TOB()*100 + tampres->L0TOS()*10 + tampres->L0TIS();
-        L1tamp= tampres->L1TOB()*100 + tampres->L1TOS()*10 + tampres->L1TIS();
-        debug() << "Tampering (TOB,TOS,TIS)  L0: "  << L0tamp 
-                << "   L1: " << L1tamp << "  Trig: "<< trigger <<endreq;
-      } else warning() << "TamperingResults not found" << endreq;
-    }
   }
 
   //----------------------------
@@ -186,16 +174,18 @@ StatusCode BTaggingTool::tag( FlavourTag& theTag, const Particle* AXB0,
 
   //build desktop
   ParticleVector parts ;
-  if ( !exist<Particles>(m_outputLocation+"/Particles")) {
-    // make particles and save them
-    debug() << "Making tagging particles to be saved in " << m_outputLocation << endmsg ;
+  if ( !exist<Particles>( m_outputLocation+"/Particles" )) {
+    debug() << "Making tagging particles to be saved in " 
+	    << m_outputLocation << endreq ;
     if( !(m_physd->getEventInput()) ) return StatusCode::SUCCESS;
     parts = m_physd->particles();
     if( !(m_physd->saveDesktop()) ) return StatusCode::SUCCESS;
   } else {
-    debug() << "Getting tagging particles saved in " << m_outputLocation << endmsg ;
-    const Particles* ptmp = get<Particles>(m_outputLocation+"/Particles");
-    for( Particles::const_iterator icand = ptmp->begin(); icand != ptmp->end(); icand++ ) {
+    debug() << "Getting tagging particles saved in " 
+	    << m_outputLocation << endmsg ;
+    const Particles* ptmp = get<Particles>( m_outputLocation+"/Particles" );
+    for( Particles::const_iterator icand = ptmp->begin(); 
+	 icand != ptmp->end(); icand++ ) {
       parts.push_back(*icand);
     }
   }
@@ -203,14 +193,6 @@ StatusCode BTaggingTool::tag( FlavourTag& theTag, const Particle* AXB0,
   debug() << "  Nr Vertices: "  << verts.size() 
           << "  Nr Particles: " << parts.size() <<endreq;
   
-  //AXB0 is the signal B from selection
-  bool isBd = false;
-  bool isBs = false;
-  bool isBu = false;
-  if( AXB0->particleID().hasDown() )    isBd = true;
-  if( AXB0->particleID().hasStrange() ) isBs = true;
-  if( AXB0->particleID().hasUp() )      isBu = true;
-
   //----------------------------
   if( RecVert == 0 ) {
     //choose as primary vtx the one with smallest IP wrt B signal
@@ -247,8 +229,10 @@ StatusCode BTaggingTool::tag( FlavourTag& theTag, const Particle* AXB0,
   }
 
   //loop over Particles, preselect taggers /////////////////////
+  //vector of B daughters:
+  theTag.setTaggedB( AXB0 );
   ParticleVector::iterator ip;
-  std::vector<const Particle*> axdaugh = FindDaughters(AXB0); //vector of B daughters
+  std::vector<const Particle*> axdaugh = FindDaughters(AXB0); 
   axdaugh.push_back(AXB0);
   if(vtags.size()==0) {
     for ( ip = parts.begin(); ip != parts.end(); ip++ ){
@@ -265,9 +249,9 @@ StatusCode BTaggingTool::tag( FlavourTag& theTag, const Particle* AXB0,
       calcIP( *ip, PileUpVtx, ippu, ippuerr );
       if(ippuerr) if( ippu/ippuerr<m_IPPU_cut ) continue;//preselection
 
-      ///////////////////////////////////////
-      vtags.push_back(*ip);               // store tagger candidate
-      /////////////////////////////////////
+      //////////////////////////////////
+      vtags.push_back(*ip);          // store tagger candidate
+      ////////////////////////////////
     }
   } else {
     for ( ip = parts.begin(); ip != parts.end(); ip++ ) {
@@ -275,358 +259,72 @@ StatusCode BTaggingTool::tag( FlavourTag& theTag, const Particle* AXB0,
     }
   }
 
-  ///------------------------------------------------------- Choose Taggers
-  //select muons (elecs, kaons) taggers in vtags
-  Particle *imuon, *iele, *ikaon, *ipionS, *ikaonS;
-  imuon=iele=ikaon=ipionS=ikaonS=0;
-  double qk = 0;
+  //AXB0 is the signal B from selection
+  bool isBd = false; if( AXB0->particleID().hasDown() )   isBd = true;
+  bool isBs = false; if( AXB0->particleID().hasStrange()) isBs = true;
+  bool isBu = false; if( AXB0->particleID().hasUp() )     isBu = true;
 
-  ///-- VertexCharge tagger
+  ///--- Inclusive Secondary Vertex ---
   //look for a secondary Vtx due to opposite B
   std::vector<Vertex> vvec(0);
-  double Vch = 0;  //contains the vertex charge
-  Vertex Vfit(0);  //secondary vertex found
-  std::vector<const Particle*>  Pfit(0); //particles in it
-  if(m_EnableVertexChargeTagger) if(m_svtool) {
+  Vertex Vfit(0); //secondary vertex found
+  if(m_svtool) {
     vvec = m_svtool->buildVertex(*RecVert, vtags);
-    if(vvec.size()) {
-      Vfit = vvec.at(0); //take first
-      Pfit = toStdVector(Vfit.products());
-      for(std::vector<const Particle*>::const_iterator ip=Pfit.begin(); ip!=Pfit.end(); ip++) Vch += (*ip)->charge();
-      debug() << " Vertex charge: " << Vch << endreq;
-    }
+    if(!vvec.empty()) Vfit = vvec.at(0); //take first
+  }
+  std::vector<const Vertex*> allVtx;
+  allVtx.push_back(RecVert);
+  if(!vvec.empty()) {
+    Vfit.setType( Vertex::Kink );
+    allVtx.push_back(&Vfit);
   }
 
-  ///-- Single particle taggers
-  if(m_EnableMuonTagger) {
-    ParticleVector vmuons = m_taggerMu->taggers(AXB0, RecVert, vtags);
-    if(vmuons.size()) imuon = vmuons.at(0); //take first
-  }
-  if(m_EnableElectronTagger) {
-    ParticleVector vele = m_taggerEle->taggers(AXB0, RecVert, vtags);
-    if(vele.size()) iele = vele.at(0);
-  }
-  if(m_EnableKaonOSTagger) {
-    ParticleVector vkaon = m_taggerKaon->taggers(AXB0, RecVert, vtags);
-    double ptmaxk = -99.0;
-    for(ip=vkaon.begin(); ip!=vkaon.end(); ip++) {
-      qk += (*ip)->charge(); //sum of taggers charge
-      if( (*ip)->pt()/GeV > ptmaxk ) { 
-        ikaon = (*ip);
-        ptmaxk = (*ip)->pt()/GeV;
-      }
-    }
-  }
-  if(m_EnableKaonSSTagger) if( isBs ) { 
-    ParticleVector vkaonS = m_taggerKaonS->taggers(AXB0, RecVert, vtags);
-    if(vkaonS.size()) ikaonS = vkaonS.at(0);
-  }
-  if(m_EnablePionTagger) if( isBd || isBu ) {
-    ParticleVector vpionS = m_taggerPionS->taggers(AXB0, RecVert, vtags);
-    if(vpionS.size()) ipionS = vpionS.at(0);
-  }
-  double JetS = 0;  //contains the Jet same side
-  if(m_EnableJetSameTagger) {
-    ParticleVector vjetS = m_taggerJetS->taggers(AXB0, RecVert, vtags);
-    // Construction of a Jet charge same side with no kaonS(pionS)
-    double aux  = 0;
-    double norm = 0;
-    double k    = 1.1;
-    double Jetcut= 0.2;
-    for(ip=vjetS.begin(); ip!=vjetS.end(); ip++) {
-      if ((*ip) != ikaonS || (*ip) != ipionS){
-	aux  += pow((*ip)->pt()/GeV,k)*(*ip)->charge();
-	norm += pow((*ip)->pt()/GeV,k);
-      }
-    }
-    //build jet charge same side
-    if (norm) if ( aux/norm<(-Jetcut) || aux/norm>Jetcut ) JetS = aux/norm;
-  }
-  //-----------------------------
-  //end of tagger cands selection
-
-  //--- itag is now the individual B-flavour guess of each separate tagger:
-  std::vector<int> itag;
-  for( int j=0; j!=6; j++ ) itag.push_back(0);
-  if( imuon ) itag.at(1)= imuon->charge()>0 ? -1: 1;
-  if( iele  ) itag.at(2)= iele ->charge()>0 ? -1: 1;
-  if( ikaon ) itag.at(3)= ikaon->charge()>0 ? -1: 1;
-  if( ikaonS) itag.at(4)= ikaonS->charge()>0?  1:-1; //SS kaon type
-  if( ipionS) itag.at(4)= ipionS->charge()>0?  1:-1; //SS pion type
-  if( isBu )  itag.at(4)= -itag.at(4);               //swap same-side if Bu
-  if( Vch )   itag.at(5)= Vch>0?  -1: 1;             //vertex charge tagger
-
-  //------------------------------------------------------------------------
+  ///Choose Taggers ------------------------------------------------------ 
+  debug() <<"determine taggers" <<endreq;
+  Tagger MuonTag, ElecTag, KaonTag, KaonSTag, PionSTag, VtxChTag, JetSTag;
+  if(m_EnableMuon)     MuonTag = m_taggerMu   -> tag(AXB0, allVtx, vtags);
+  if(m_EnableElectron) ElecTag = m_taggerEle  -> tag(AXB0, allVtx, vtags);
+  if(m_EnableKaonOS)   KaonTag = m_taggerKaon -> tag(AXB0, allVtx, vtags);
+  if(m_EnableKaonSS) if(isBs)  
+                       KaonSTag= m_taggerKaonS-> tag(AXB0, allVtx, vtags);
+  if(m_EnablePionSS) if(isBd || isBu)
+                       PionSTag= m_taggerPionS-> tag(AXB0, allVtx, vtags);
+  if(m_EnableVertexCharge) 
+                       VtxChTag= m_taggerVtxCh-> tag(AXB0, allVtx, vtags);
+  if(m_EnableJetSame)  JetSTag = m_taggerJetS -> tag(AXB0, allVtx, vtags);
+   std::vector<Tagger*> taggers;
+  taggers.push_back(&MuonTag);
+  taggers.push_back(&ElecTag);
+  taggers.push_back(&KaonTag);
+  if( isBs ) taggers.push_back(&KaonSTag);
+  if( isBu || isBd ) taggers.push_back(&PionSTag);
+  taggers.push_back(&VtxChTag);
+  ///---------------------------------------------------------------------
+    
+  //--------------------------------------------------
   //Now combine the individual tagger decisions into 
   //a final B flavour tagging decision. Such decision 
   //can be made and categorised in two ways: the "TDR" 
   //approach is based on the particle type, while the 
   //"NNet" approach is based on the wrong tag fraction
-  //-----------------------------------------  Combine taggers: TDR approach
-  int catt=0;
-  double tagdecision=0, pnsum=0.50;
-  std::vector<double> pn;
-  for( int j=0; j!=6; j++ ) pn.push_back(0.50);
-
-  if(m_CombinationTechnique == "TDR") {
-    //in case ele and muon both exist kill lower Pt one
-    if(imuon) if(iele) {
-      if(imuon->pt()/GeV > iele->pt()/GeV) iele= 0; else imuon= 0;
-    } 
-
-    //-----------------
-    int ic=0;
-    if( imuon ) ic+=1000;
-    if( iele  ) ic+= 100;
-    if( ikaon ) ic+=  10;
-    if( ikaonS || ipionS ) ic+= 1;
-
-    //if pion same side fill only category nr7
-    //(pion SS is only considered when no other tagger is present)
-    if((isBd || isBu ) && itag.at(4) && ic>1 ) ic--;
-
-    if(     ic==1000) {    // only muon
-      catt=1; tagdecision = itag.at(1);
-    }
-    else if(ic== 100) {    // only electron 
-      catt=2; tagdecision = itag.at(2);
-    }
-    else if(ic==  10) {    // only kaon
-      catt=3; if(qk) tagdecision = qk>0 ? -1 : 1;
-    }
-    else if(ic==1010) {   // mu-k (muon and kaon are both present)
-      catt=4; tagdecision = itag.at(1)+itag.at(3);
-    }
-    else if(ic== 110) {   // e-k 
-      catt=5; tagdecision = itag.at(2)+itag.at(3);
-    }
-    else if(ic==   0 && Vch!=0 ) { // vertex charge
-      catt=6; tagdecision = itag.at(5);
-    }
-    else if(ic==   1) {   // Same Side pion or kaon only
-      catt=7; tagdecision = itag.at(4);
-    }
-    else if(ic==1001) {   // mu-kS 
-      catt=8; tagdecision = itag.at(1)+itag.at(4);
-    }
-    else if(ic== 101) {   // e-kS 
-      catt=9; tagdecision = itag.at(2)+itag.at(4);
-    }
-    else if(ic==  11) {   // k-kS 
-      catt=10; tagdecision= itag.at(3)+itag.at(4);
-    }
-    else if(ic==1011) {   // mu-k-kS 
-      catt=11; tagdecision= itag.at(1)+itag.at(3)+itag.at(4);
-    }
-    else if(ic== 111) {   // e-k-kS 
-      catt=12; tagdecision= itag.at(2)+itag.at(3)+itag.at(4);
-    }
-    if(tagdecision) tagdecision = tagdecision>0 ? 1 : -1;
-  }
-
-  //--------------------------------------- Combine taggers: NNet approach 
-  else if(m_CombinationTechnique == "NNet") {
-
-    HepLorentzVector ptotB = AXB0->momentum();
-    double B0mass = ptotB.m()/GeV;
-    double B0the  = ptotB.theta();
-    double B0phi  = ptotB.phi();
-    double B0p    = ptotB.vect().mag()/GeV;
-    double pnsum_a, pnsum_b, rnet, IP, IPerr, ip, iperr, IPT=0.;
-
-    if(imuon) { // a muon tagger is present
-      debug()<< "Tagger Muon: " << imuon->p()/GeV <<endreq;
-      calcIP(imuon, RecVert, IP, IPerr); //re-calculate IP
-      if(Pfit.size()) {
-        calcIP(imuon, &Vfit, ip, iperr); //re-calculate IPT
-        if(!iperr) IPT = ip/iperr;
-      } else IPT = -1000.; 
-
-      //calculate the result of neural net, the higher rnet is,
-      //the more reliable is the tagger:
-      rnet = m_nnet->MLPm(B0p, B0the, vtags.size(), L1tamp, 
-                          imuon->p()/GeV, imuon->pt()/GeV, IP/IPerr, IPT);
-
-      //pn is the probability that the tagger is giving the
-      //correct answer for the B flavour. the hard-coded numbers
-      //are obtained by fitting the ratio of the 'rnet' distribution
-      //for right muon tags and wrong muon tags:
-      pn.at(1) = 1.0-pol3(rnet, 1.2939, -2.0406, 0.90781); //1-omega
-    }
-    if(iele) { //same story for all taggers, see above comments^
-      debug()<< "Tagger Ele : " << iele->p()/GeV <<endreq;
-      calcIP(iele, RecVert, IP, IPerr);
-      if(Pfit.size()) {
-        calcIP(iele, &Vfit, ip, iperr);
-        if(!iperr) IPT = ip/iperr;
-      } else IPT = -1000.; 
-      rnet = m_nnet->MLPe(B0p, B0the, vtags.size(), L1tamp, 
-                          iele->p()/GeV, iele->pt()/GeV, IP/IPerr, IPT);
-      pn.at(2) = 1.0-pol4(rnet, 0.4933, -0.6766, 1.761, -1.587); 
-    }
-    if(ikaon) {
-      debug()<< "Tagger Kaon: " << ikaon->p()/GeV <<endreq;
-      calcIP(ikaon, RecVert, IP, IPerr);
-      if(Pfit.size()) {
-        calcIP(ikaon, &Vfit, ip, iperr);
-        if(!iperr) IPT = ip/iperr;
-      } else IPT = -1000.; 
-      rnet = m_nnet->MLPk(B0p, B0the, vtags.size(), L1tamp, 
-                          ikaon->p()/GeV, ikaon->pt()/GeV,IP/IPerr, IPT);
-      pn.at(3) = 1.0-pol2(rnet, 0.52144, -0.27136);
-    }
-    if(ikaonS) {
-      debug()<< "Tagger KaonS: " << ikaonS->p()/GeV <<endreq;
-      double ang = asin((ikaonS->pt()/GeV)/(ikaonS->p()/GeV));
-      double deta= log(tan(B0the/2.))-log(tan(ang/2.));
-      double dphi= std::min(fabs(ikaonS->momentum().phi()-B0phi), 
-                            6.283-fabs(ikaonS->momentum().phi()-B0phi));
-      double dQ  = (ptotB+ikaonS->momentum()).m()/GeV - B0mass;
-      calcIP(ikaonS, RecVert, IP, IPerr);
-      if(Pfit.size()) {
-        calcIP(ikaonS, &Vfit, ip, iperr);
-        if(!iperr) IPT = ip/iperr;
-      } else IPT = -1000.; 
-      rnet = m_nnet->MLPkS(B0p, B0the, vtags.size(), L1tamp, 
-                           ikaonS->p()/GeV, ikaonS->pt()/GeV,IP/IPerr, IPT,
-                           deta, dphi, dQ);
-      pn.at(4) = 1.0-pol2(rnet, 1.0007, -1.0049);
-    }
-    if(ipionS) {
-      debug()<< "Tagger PionS: " << ipionS->p()/GeV <<endreq;
-      double ang = asin((ipionS->pt()/GeV)/(ipionS->p()/GeV));
-      double deta= log(tan(B0the/2.))-log(tan(ang/2.));
-      double dphi= std::min(fabs(ipionS->momentum().phi()-B0phi), 
-                            6.283-fabs(ipionS->momentum().phi()-B0phi));
-      double dQ  = (ptotB+ipionS->momentum()).m()/GeV - B0mass;
-      calcIP(ipionS, RecVert, IP, IPerr);
-      if(Pfit.size()) {
-        calcIP(ipionS, &Vfit, ip, iperr);
-        if(!iperr) IPT = ip/iperr;
-      } else IPT = -1000.; 
-      rnet = m_nnet->MLPpS(B0p, B0the, vtags.size(), L1tamp, 
-                           ipionS->p()/GeV, ipionS->pt()/GeV,IP/IPerr, IPT,
-                           deta, dphi, dQ);
-      if(rnet > m_ProbMin) pn.at(4) = 1.0-pol2(rnet, 1.0772, -1.1632); 
-      else { ipionS=0; itag.at(4) = 0; }
-    }
-    //Vertex charge tagger is given a fixed value for omega
-    //and this is tuned a posteriori
-    if( Vch ) pn.at(5) = 1.0 - m_VchOmega; 
-  
-    //---------------------------
-    //Make final tagging decision
-    pnsum_a= 0.50;             //hypothesis of truetag=+1
-    pnsum_b= 0.50;             //hypothesis of truetag=-1
-    for( int i = 1; i != 6; i++ ) { //multiply all probabilities
-      double mtag = itag.at(i);
-      pnsum_a *= ((1-mtag)/2+mtag* pn.at(i) ); // p
-      pnsum_b *= ((1+mtag)/2-mtag* pn.at(i) ); //(1-p)
-      debug()<<"i="<<i<<" itag="<<mtag<<" pn="<<pn.at(i)<<endreq;
-    }
-    if(pnsum_a > pnsum_b) tagdecision = +1;
-    if(pnsum_a < pnsum_b) tagdecision = -1;
-    //normalise probability to the only two possible flavours:
-    pnsum = std::max(pnsum_a,pnsum_b) /(pnsum_a + pnsum_b);
-
-    //throw away poorly significant tags
-    if(pnsum < m_ProbMin) {
-      pnsum = 0.50;
-      tagdecision = 0;
-    }
-    debug() << "pnsum=" << pnsum <<endreq;
-    
-    //sort decision into categories
-    //cat=1 will be least reliable, cat=5 most reliable
-    //ProbMin is a small offset to adjust for range of pnsum
-    double dpnsum = pnsum-m_ProbMin;
-    if(tagdecision) catt = ( (int)(10.0*dpnsum/fabs(1.-dpnsum)) ) +1;
-    if(catt>5) catt=5;
-    if(catt<0) catt=0;
-  }
-  else {
-    err() << "Unknown tagger combination: " 
-          << m_CombinationTechnique<<endreq;
-    return StatusCode::SUCCESS;
-  } 
-  if(tagdecision == 0) catt=0; 
+  //-------------------------------------------------- 
+  debug() <<"combine taggers "<< taggers.size() <<endreq;
+  int catt = m_combine -> combineTaggers( theTag, taggers );
 
   ///OUTPUT to Logfile ---------------------------------------------------
+  int samesideDec = KaonSTag.decision();
+  if(!samesideDec) samesideDec = PionSTag.decision();
   info() << "BTAGGING TAG   " << evt->runNum()
          << std::setw(4) << evt->evtNum()
          << std::setw(4) << trigger
-         << std::setw(5) << tagdecision
+         << std::setw(5) << theTag.decision()
          << std::setw(3) << catt       //category
-         << std::setw(5) << itag.at(1) //mu decision
-         << std::setw(3) << itag.at(2) //ele
-         << std::setw(3) << itag.at(3) //Kopp
-         << std::setw(3) << itag.at(4) //Ksame/Pi_same
-         << std::setw(3) << itag.at(5) //VtxCharge
+	 << std::setw(5) << MuonTag.decision()
+	 << std::setw(3) << ElecTag.decision()
+	 << std::setw(3) << KaonTag.decision()
+	 << std::setw(3) << samesideDec
+	 << std::setw(3) << VtxChTag.decision()
          << endreq;
-
-  ///fill FlavourTag object ---------------------------------------------
-  if(      tagdecision ==  1 ) theTag.setDecision( FlavourTag::bbar );
-  else if( tagdecision == -1 ) theTag.setDecision( FlavourTag::b );
-  else theTag.setDecision( FlavourTag::none );
-  theTag.setCategory( catt );
-  theTag.setOmega( 1-pnsum );
-  theTag.setTaggedB( AXB0 );
-
-  //fill in taggers info into FlavourTag object
-  if(imuon)  { 
-    Tagger* tagr = new Tagger;
-    tagr->setType( Tagger::OS_Muon ); 
-    tagr->setDecision( itag.at(1) );
-    tagr->setOmega( 1-pn.at(1) );
-    tagr->addTaggerPart(*imuon);
-    theTag.addTagger(*tagr); //save it <--
-    delete tagr;
-  }
-  if(iele)  { 
-    Tagger* tagr = new Tagger;
-    tagr->setType( Tagger::OS_Electron ); 
-    tagr->setDecision( itag.at(2) );
-    tagr->setOmega( 1-pn.at(2) );
-    tagr->addTaggerPart(*iele);
-    theTag.addTagger(*tagr); 
-    delete tagr;
-  }
-  if(ikaon)  { 
-    Tagger* tagr = new Tagger;
-    tagr->setType( Tagger::OS_Kaon ); 
-    tagr->setDecision( itag.at(3) );
-    tagr->setOmega( 1-pn.at(3) );
-    tagr->addTaggerPart(*ikaon);
-    theTag.addTagger(*tagr);
-    delete tagr;
-  }
-  if(ikaonS)  { 
-    Tagger* tagr = new Tagger;
-    tagr->setType( Tagger::SS_Kaon ); 
-    tagr->setDecision( itag.at(4) );
-    tagr->setOmega( 1-pn.at(4) );
-    tagr->addTaggerPart(*ikaonS);
-    theTag.addTagger(*tagr);
-    delete tagr;
-  }
-  if(ipionS)  { 
-    Tagger* tagr = new Tagger;
-    tagr->setType( Tagger::SS_Pion ); 
-    tagr->setDecision( itag.at(4) );
-    tagr->setOmega( 1-pn.at(4) );
-    tagr->addTaggerPart(*ipionS);
-    theTag.addTagger(*tagr);
-    delete tagr;
-  }
-  if(Vch)  { 
-    Tagger* tagr = new Tagger;
-    tagr->setType( Tagger::VtxCharge ); 
-    tagr->setDecision( itag.at(5) );
-    tagr->setOmega( 1-pn.at(5) );
-    for(std::vector<const Particle*>::const_iterator ip=Pfit.begin(); ip!=Pfit.end(); ip++) tagr->addTaggerPart(**ip);
-    theTag.addTagger(*tagr);
-    delete tagr;
-  }
 
   return StatusCode::SUCCESS;
 }
@@ -688,7 +386,6 @@ StatusCode BTaggingTool::calcIP( const Particle* axp,
 }
 //==========================================================================
 long BTaggingTool::trackType( const Particle* axp ) {
-
   long trtyp=0;
   const ContainedObject* contObj = axp->origin();
   if (contObj) {
@@ -700,13 +397,8 @@ long BTaggingTool::trackType( const Particle* axp ) {
       else if(track->isUpstream()  ) trtyp = 3;
       else if(track->isDownstream()) trtyp = 4;
       else if(track->isVelotrack() ) trtyp = 5;
-      else if(track->isTtrack()    ) trtyp = 6;
-      else if(track->isBackward()  ) trtyp = 7;
-      else if(track->follow()      ) trtyp = 8;
-      else if(track->ksTrack()     ) trtyp = 9;
     }
-  }
-  
+  }  
   return trtyp;
 }
 //==========================================================================
@@ -715,14 +407,6 @@ std::vector<const Particle*> BTaggingTool::toStdVector( const SmartRefVector<Par
   for( SmartRefVector<Particle>::const_iterator ip = refvector.begin();
        ip != refvector.end(); ++ip ) tvector.push_back( *ip );
   return tvector;
-}
-//==========================================================================
-double BTaggingTool::pol2(double x, double a0, double a1) { return a0+a1*x; }
-double BTaggingTool::pol3(double x, double a0, double a1, double a2) {
-  return a0+a1*x+a2*x*x;
-}
-double BTaggingTool::pol4(double x, double a0, double a1, double a2, double a3){
-  return a0+a1*x+a2*x*x+a3*pow(x,3);
 }
 //==========================================================================
 //return a vector containing all daughters of signal 

@@ -5,6 +5,10 @@
 #pragma print off
 #include "$DAVINCIROOT/options/DaVinciCommon.opts"
 #pragma print on
+//--------
+// #include "$DAVINCIROOT/options/L0.opts"
+// #include "$TRGSYSROOT/options/L1.opts"
+//--------
 #include "$DAVINCIROOT/options/DaVinciReco.opts"
 
 //includes upstream/downstream tracks (not mandatory) 
@@ -12,40 +16,18 @@ ChargedProtoPAlg.VeloTTTracks = true ;
 
 ////--------------------------------------------------------------
 ///example Bd Channel Selection -------------------
-#include "$B2HHROOT/options/DoTDRselBd2PiPi.opts"
-BTagging.PhysDesktop.InputLocations = { "Phys/TDRselBd2PiPi" };
-TamperingL1Alg.SelectionName = "TDRselBd2PiPi";
+//#include "$B2HHROOT/options/DoTDRselBd2PiPi.opts"
+//BTagging.PhysDesktop.InputLocations = { "Phys/TDRselBd2PiPi" };
 
 ///example Bs Channel Selection -----------------
 //#include "$B2HHROOT/options/DoTDRselBs2KK.opts"
 //BTagging.PhysDesktop.InputLocations = { "Phys/TDRselBs2KK" };
-//TamperingL1Alg.SelectionName = "TDRselBs2KK";
 
 //#include "$BS2DSHROOT/options/DoTDRselBs2DsK.opts"
 //BTagging.PhysDesktop.InputLocations = { "Phys/TDRselBs2DsK" };
-//TamperingL1Alg.SelectionName = "TDRselBs2DsK";
 
 ///or Cheated Selection ----------------------------
-//#include "$FLAVOURTAGGINGCHECKEROPTS/CheatedSelection.opts"
-
-///---------------------------------------------------------------
-//   L1 buffer TAMPERING
-///---------------------------------------------------------------
-// if you uncomment this part, to allow for tampering,
-// you will have slightly better performance, but
-// you need to run the Trigger first (uncomment what follows)
-//--------
-// #include "$DAVINCIROOT/options/L0.opts"
-// #include "$TRGSYSROOT/options/L1.opts"
-// #include "$TAMPERINGROOT/options/TamperingCommon.opts"
-// TamperingL1Alg.InputType = "Selection";
-// TamperingL0Alg.InputType = @TamperingL1Alg.InputType ;
-// TamperingL0Alg.SelectionName = @TamperingL1Alg.SelectionName ;
-// ToolSvc.BTaggingTool.RequireTrigger     = true;
-// ToolSvc.BTaggingTool.RequireL1Tampering = true; 
-// tampering info is used only with NNet combination of taggers:
-// ToolSvc.BTaggingTool.CombinationTechnique = "NNet";
-///---------------------------------------------------------------
+#include "$FLAVOURTAGGINGCHECKEROPTS/CheatedSelection.opts"
 
 ///---------------------------------------------------------------
 ///               BTagging
@@ -54,15 +36,15 @@ ApplicationMgr.DLLs   += { "VeloDAQ" };
 ApplicationMgr.TopAlg += { "DecodeVeloRawBuffer" };
 
 #include "$FLAVOURTAGGINGOPTS/BTagging.opts"
-BTagging.OutputLevel = 2;
-ToolSvc.BTaggingTool.OutputLevel = 2;
-ToolSvc.BTaggingTool.PhysDesktop.OutputLevel = 2;
+//BTagging.OutputLevel = 2;
+//ToolSvc.BTaggingTool.OutputLevel = 2;
 
 ///---------------------------------------------------------------
 /// 		BTaggingChecker
 /// example of an optional algorithm that reads in what is in TES
 ///---------------------------------------------------------------
 #include "$FLAVOURTAGGINGCHECKEROPTS/BTaggingChecker.opts"
+//BTaggingChecker.OutputLevel = 2;
 
 //---------------------------------------------------------------
 // Number of events to process, skip and printing frequency
@@ -74,7 +56,7 @@ EventSelector.PrintFreq  = 1;
 //---------------------------------------------------------------
 // Example input data 
 //---------------------------------------------------------------
-//EventSelector.Input = {"DATAFILE='PFN:rfio:/castor/cern.ch/user/p/pkoppenb/L0L1TDR-Bs2DsK11.dst' TYP='POOL_ROOTTREE' OPT='READ'"}; //BsDsK selected events
+EventSelector.Input = {"DATAFILE='PFN:rfio:/castor/cern.ch/user/p/pkoppenb/L0L1TDR-Bs2DsK11.dst' TYP='POOL_ROOTTREE' OPT='READ'"}; //BsDsK selected events
 //EventSelector.Input = {"DATAFILE='PFN:rfio:/castor/cern.ch/lhcb/DC04/00000641_00000005_5.dst' TYP='POOL_ROOTTREE' OPT='READ'"}; //again BsDsK events
-EventSelector.Input = {"DATAFILE='PFN:rfio:/castor/cern.ch/user/p/pkoppenb/L0L1TDR-Bd2PiPi11.dst' TYP='POOL_ROOTTREE' OPT='READ'"}; //Bd2PiPi selected events
+//EventSelector.Input = {"DATAFILE='PFN:rfio:/castor/cern.ch/user/p/pkoppenb/L0L1TDR-Bd2PiPi11.dst' TYP='POOL_ROOTTREE' OPT='READ'"}; //Bd2PiPi selected events
 //---------------------------------------------------------------

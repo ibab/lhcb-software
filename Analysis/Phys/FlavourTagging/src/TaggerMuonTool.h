@@ -1,4 +1,4 @@
-// $Id: TaggerMuonTool.h,v 1.2 2005-07-04 15:40:09 pkoppenb Exp $
+// $Id: TaggerMuonTool.h,v 1.3 2005-07-06 00:33:20 musy Exp $
 #ifndef USER_TAGGERMUONTOOL_H 
 #define USER_TAGGERMUONTOOL_H 1
 
@@ -7,7 +7,10 @@
 #include "GaudiKernel/AlgTool.h"
 #include "GaudiKernel/ToolFactory.h"
 // from Event
+#include "DaVinciTools/IGeomDispCalculator.h"
+#include "Event/FlavourTag.h"
 #include "Kernel/ITagger.h"
+#include "INNetTool.h"
 
 /** @class TaggerMuonTool TaggerMuonTool.h 
  *
@@ -30,11 +33,18 @@ public:
   StatusCode finalize  ();    ///<  finalization
 
   //-------------------------------------------------------------
-  ParticleVector taggers( const Particle*, const Vertex*, 
-				  const ParticleVector& );
+  virtual Tagger tag( const Particle*, 
+		      std::vector<const Vertex*>&, ParticleVector&);
   //-------------------------------------------------------------
 
 private:
+  IGeomDispCalculator *m_Geom;
+  INNetTool* m_nnet;
+  std::string m_CombinationTechnique;
+  double pol3(double x, double a0, double a1, double a2);
+  StatusCode calcIP( Particle* axp, 
+		     const Vertex* RecVert, 
+		     double& ip, double& iperr);
   //properties 
   double m_Pt_cut_muon;
   double m_P_cut_muon;

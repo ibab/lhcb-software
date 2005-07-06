@@ -1,4 +1,4 @@
-// $Id: TaggerKaonOppositeTool.h,v 1.2 2005-07-04 15:40:09 pkoppenb Exp $
+// $Id: TaggerKaonOppositeTool.h,v 1.3 2005-07-06 00:33:20 musy Exp $
 #ifndef USER_TAGGERKAONOPPOSITETOOL_H 
 #define USER_TAGGERKAONOPPOSITETOOL_H 1
 
@@ -8,8 +8,10 @@
 #include "GaudiKernel/ToolFactory.h"
 // from Event
 #include "Event/ProtoParticle.h"
+#include "Event/FlavourTag.h"
 #include "Kernel/ITagger.h"
 #include "Kernel/IGeomDispCalculator.h"
+#include "INNetTool.h"
 
 /** @class TaggerKaonOppositeTool TaggerKaonOppositeTool.h 
  *
@@ -25,21 +27,24 @@ class TaggerKaonOppositeTool : public GaudiTool,
 public: 
   /// Standard constructor
   TaggerKaonOppositeTool( const std::string& type,
-		  const std::string& name,
-		  const IInterface* parent );
+			  const std::string& name,
+			  const IInterface* parent );
   virtual ~TaggerKaonOppositeTool( ); ///< Destructor
   StatusCode initialize();    ///<  initialization
   StatusCode finalize  ();    ///<  finalization
 
   //-------------------------------------------------------------
-  ParticleVector taggers( const Particle*, const Vertex*, 
-				  const ParticleVector& );
+  virtual Tagger tag( const Particle*, 
+		      std::vector<const Vertex*>&, ParticleVector&);
   //-------------------------------------------------------------
 
 private:
   void calcIP( const Particle* , const Vertex* , double& , double& );
+  double pol2(double x, double a0, double a1);
 
   IGeomDispCalculator *m_Geom;
+  INNetTool* m_nnet;
+  std::string m_CombinationTechnique;
 
   //properties 
   double m_Pt_cut_kaon;

@@ -17,15 +17,13 @@ BTagging::BTagging(const std::string& name,
   DVAlgorithm(name, pSvcLocator){
   
   declareProperty( "WriteToTES", m_WriteToTES = true );
-  declareProperty( "TagOutputLocation", m_TagLocation = FlavourTagLocation::Default );
+  declareProperty( "TagOutputLocation", 
+		   m_TagLocation = FlavourTagLocation::Default );
 }
 BTagging::~BTagging() {}; 
 
 //=======================================================================
-StatusCode BTagging::initialize() {
-  
-  return StatusCode::SUCCESS; 
-}
+StatusCode BTagging::initialize() { return StatusCode::SUCCESS; }
 
 //=======================================================================
 // Main execution
@@ -33,11 +31,11 @@ StatusCode BTagging::initialize() {
 StatusCode BTagging::execute() {
 
   setFilterPassed( false );
-  debug() << "Entering BTagging" <<endreq;
 
   //look in location where Selection has put the B candidates
   ParticleVector parts = desktop()->particles();
   if( parts.empty()  ) return StatusCode::SUCCESS;
+  debug() << "BTagging will tag "<< parts.size() << " B hypos!" <<endreq;
 
   //-------------- loop on signal B candidates from selection
   FlavourTag theTag;

@@ -1,9 +1,18 @@
-! $Id: release.notes,v 1.67 2005-07-04 16:07:20 pkoppenb Exp $
+! $Id: release.notes,v 1.68 2005-07-06 00:33:19 musy Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Phys/FlavourTagging
 ! Responsible : Marco Musy (musy@cern.ch)
 ! Purpose     : Provide tools and algorithm for tagging B
 !-----------------------------------------------------------------------------
+
+! 2005-07-05 - M Musy
+  - added reorganised:
+    CombineTaggersNNet.cpp  to combine taggers
+    CombineTaggersTDR.cpp    same with old TDR definition
+    inheriting from same interface ICombineTaggersTool.h
+  - changed the ITagger interf to return a Tagger
+  - included TaggerVertexChargeTool.cpp and TaggerJetSameTool.cpp
+  - evaluation of omega is now done inside Tagger individually
 
 ! 2005-07-04 - P. Koppenburg
  - Add "const" where it seems reasonable

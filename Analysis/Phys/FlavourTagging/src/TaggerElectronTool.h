@@ -1,4 +1,4 @@
-// $Id: TaggerElectronTool.h,v 1.2 2005-07-04 15:40:09 pkoppenb Exp $
+// $Id: TaggerElectronTool.h,v 1.3 2005-07-06 00:33:19 musy Exp $
 #ifndef USER_TAGGERELECTRONTOOL_H 
 #define USER_TAGGERELECTRONTOOL_H 1
 
@@ -7,8 +7,10 @@
 #include "GaudiKernel/AlgTool.h"
 #include "GaudiKernel/ToolFactory.h"
 // from Event
+#include "DaVinciTools/IGeomDispCalculator.h"
 #include "RecoTools/ITrVeloCharge.h"
 #include "Kernel/ITagger.h"
+#include "INNetTool.h"
 
 /** @class TaggerElectronTool TaggerElectronTool.h 
  *
@@ -24,20 +26,26 @@ class TaggerElectronTool : public GaudiTool,
 public: 
   /// Standard constructor
   TaggerElectronTool( const std::string& type,
-		  const std::string& name,
-		  const IInterface* parent );
+		      const std::string& name,
+		      const IInterface* parent );
   virtual ~TaggerElectronTool( ); ///< Destructor
   StatusCode initialize();    ///<  initialization
   StatusCode finalize  ();    ///<  finalization
 
   //-------------------------------------------------------------
-  ParticleVector taggers( const Particle*, const Vertex*, 
-				  const ParticleVector& );
+  virtual Tagger tag( const Particle*, 
+		      std::vector<const Vertex*>&, ParticleVector&);
   //-------------------------------------------------------------
 
 private:
   std::string m_veloChargeName;
   ITrVeloCharge* m_veloCharge;
+  IGeomDispCalculator *m_Geom;
+  INNetTool* m_nnet;
+  std::string m_CombinationTechnique;
+
+  double pol4(double x, double a0, double a1, double a2, double a3);
+  StatusCode calcIP( Particle* , const Vertex* , double&, double&);
 
   //properties 
   double m_Pt_cut_ele;

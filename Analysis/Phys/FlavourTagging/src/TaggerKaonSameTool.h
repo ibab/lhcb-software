@@ -1,4 +1,4 @@
-// $Id: TaggerKaonSameTool.h,v 1.2 2005-07-04 15:40:09 pkoppenb Exp $
+// $Id: TaggerKaonSameTool.h,v 1.3 2005-07-06 00:33:20 musy Exp $
 #ifndef USER_TAGGERKAONSAMETOOL_H 
 #define USER_TAGGERKAONSAMETOOL_H 1
 
@@ -7,9 +7,11 @@
 #include "GaudiKernel/AlgTool.h"
 #include "GaudiKernel/ToolFactory.h"
 // from Event
+#include "Kernel/IGeomDispCalculator.h"
+#include "Event/FlavourTag.h"
 #include "Event/ProtoParticle.h"
 #include "Kernel/ITagger.h"
-#include "Kernel/IGeomDispCalculator.h"
+#include "INNetTool.h"
 
 /** @class TaggerKaonSameTool TaggerKaonSameTool.h 
  *
@@ -32,14 +34,17 @@ public:
   StatusCode finalize  ();    ///<  finalization
 
   //-------------------------------------------------------------
-  ParticleVector taggers( const Particle*, const Vertex*, 
-				  const ParticleVector& );
+  virtual Tagger tag( const Particle*, 
+		      std::vector<const Vertex*>&, ParticleVector&);
   //-------------------------------------------------------------
 
 private:
   void calcIP( const Particle* , const Vertex* , double& , double& );
+  double pol2(double x, double a0, double a1); 
 
   IGeomDispCalculator *m_Geom;
+  INNetTool* m_nnet;
+  std::string m_CombinationTechnique;
 
   //properties 
   double m_Pt_cut_kaonS;

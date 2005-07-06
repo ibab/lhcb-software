@@ -18,6 +18,7 @@ TaggerKaonSameTool::TaggerKaonSameTool( const std::string& type,
   GaudiTool ( type, name, parent ) {
   declareInterface<ITagger>(this);
 
+  declareProperty( "CombTech",  m_CombinationTechnique = "NNet" );
   declareProperty( "KaonSame_Pt_cut", m_Pt_cut_kaonS = 0.4 );
   declareProperty( "KaonSame_P_cut",  m_P_cut_kaonS  = 4.0 );
   declareProperty( "KaonSame_IP_cut", m_IP_cut_kaonS = 2.5 );
@@ -25,7 +26,8 @@ TaggerKaonSameTool::TaggerKaonSameTool( const std::string& type,
   declareProperty( "KaonSame_Eta_cut",m_etacut_kaonS = 1.0 );
   declareProperty( "KaonSame_dQ_cut", m_dQcut_kaonS  = 1.5 );
   declareProperty( "KaonS_upstreamTrack_LCS_cut", m_lcs_kSu = 2.5 );
-
+  m_nnet = 0;
+  m_Geom = 0;
 }
 TaggerKaonSameTool::~TaggerKaonSameTool() {}; 
 
@@ -37,23 +39,39 @@ StatusCode TaggerKaonSameTool::initialize() {
     fatal() << "GeomDispCalculator could not be found" << endreq;
     return StatusCode::FAILURE;
   }
+  m_nnet = tool<INNetTool> ("NNetTool", this);
+  if(! m_nnet) {
+    fatal() << "Unable to retrieve NNetTool"<< endreq;
+    return StatusCode::FAILURE;
+  }
 
   return StatusCode::SUCCESS; 
 }
 
 //=====================================================================
-ParticleVector TaggerKaonSameTool::taggers( const Particle* AXB0, 
-                                            const Vertex* RecVert, 
-                                            const ParticleVector& vtags ){
+Tagger TaggerKaonSameTool::tag( const Particle* AXB0, 
+				std::vector<const Vertex*>& allVtx, 
+				ParticleVector& vtags ){
+  Tagger tkaonS;
+  const Vertex *RecVert=0, *SecVert=0;
+  std::vector<const Vertex*>::const_iterator iv;
+  for( iv=allVtx.begin(); iv!=allVtx.end(); iv++){
+    if( (*iv)->type() == Vertex::Primary ) RecVert = (*iv);
+    if( (*iv)->type() == Vertex::Kink    ) SecVert = (*iv);
+  } 
+  if(!RecVert) return tkaonS;
+
+  HepLorentzVector ptotB = AXB0->momentum();
+  double B0mass= ptotB.m()/GeV;
+  double B0the = ptotB.theta();
+  double B0phi = ptotB.phi();
 
   //select kaonS sameside tagger(s)
   //if more than one satisfies cuts, take the highest Pt one
-  ParticleVector vkaonS(0);
-  Particle* kaonS=0;
+  Particle* ikaonS=0;
   double ptmaxkS = -99.0;
   ParticleVector::const_iterator ipart;
   for( ipart = vtags.begin(); ipart != vtags.end(); ipart++ ) {
-
     if( (*ipart)->particleID().abspid() != 321 ) continue;
     double Pt = (*ipart)->pt()/GeV;
     if( Pt < m_Pt_cut_kaonS )  continue;
@@ -69,11 +87,6 @@ ParticleVector TaggerKaonSameTool::taggers( const Particle* AXB0,
             << " IP=" << IP <<endreq;
 
     if(IPsig < m_IP_cut_kaonS) {
-
-      HepLorentzVector ptotB = AXB0->momentum();
-      double B0mass= ptotB.m()/GeV;
-      double B0the = ptotB.theta();
-      double B0phi = ptotB.phi();
       double deta  = fabs(log(tan(B0the/2.)/tan(asin(Pt/P)/2.)));
       double dphi  = fabs((*ipart)->momentum().phi() - B0phi); 
       if(dphi>3.1416) dphi=6.2832-dphi;
@@ -100,15 +113,41 @@ ParticleVector TaggerKaonSameTool::taggers( const Particle* AXB0,
       debug()<< "      trtyp=" << trtyp << " lcs=" << lcs << endreq; 
       if( trtyp==1 || (trtyp==3 && lcs< m_lcs_kSu ) ) {
         if( Pt > ptmaxkS ) { 
-          kaonS = (*ipart);
+          ikaonS  = (*ipart);
           ptmaxkS = Pt;
         }
       }
     }
   } 
-  if( kaonS ) vkaonS.push_back( kaonS );
+  if( ! ikaonS ) return tkaonS;
 
-  return vkaonS;
+  tkaonS.addTaggerPart(*ikaonS);
+  tkaonS.setDecision(ikaonS->charge()>0 ? 1: -1);
+
+  //calculate omega
+  double pn = 0.66;
+  if(m_CombinationTechnique == "NNet") {
+    double rnet, IP, IPerr, ip, iperr, IPT=0.;
+    double B0p = ptotB.vect().mag()/GeV;
+    double ang = asin((ikaonS->pt()/GeV)/(ikaonS->p()/GeV));
+    double deta= log(tan(B0the/2.))-log(tan(ang/2.));
+    double dphi= std::min(fabs(ikaonS->momentum().phi()-B0phi), 
+			  6.283-fabs(ikaonS->momentum().phi()-B0phi));
+    double dQ  = (ptotB+ikaonS->momentum()).m()/GeV - B0mass;
+    calcIP(ikaonS, RecVert, IP, IPerr);
+    if(SecVert) {
+      calcIP(ikaonS, SecVert, ip, iperr);
+      if(!iperr) IPT = ip/iperr;
+    } else IPT = -1000.; 
+    rnet = m_nnet->MLPkS(B0p, B0the, vtags.size(), 100, 
+			 ikaonS->p()/GeV, ikaonS->pt()/GeV,IP/IPerr, IPT,
+			 deta, dphi, dQ);
+    pn = 1.0-pol2(rnet, 1.0007, -1.0049);
+  }
+  tkaonS.setOmega( 1-pn );
+  tkaonS.setType( Tagger::SS_Kaon ); 
+
+  return tkaonS;
 }
 //====================================================================
 void TaggerKaonSameTool::calcIP( const Particle* axp, 
@@ -124,6 +163,9 @@ void TaggerKaonSameTool::calcIP( const Particle* axp,
     ip   = ipVec.z()>0 ? ip : -ip ; 
     iperr= iperr; 
   }
+}
+double TaggerKaonSameTool::pol2(double x, double a0, double a1) { 
+  return a0+a1*x; 
 }
 //==========================================================================
 StatusCode TaggerKaonSameTool::finalize() { return StatusCode::SUCCESS; }

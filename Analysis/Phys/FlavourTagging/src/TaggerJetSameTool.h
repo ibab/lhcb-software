@@ -1,4 +1,4 @@
-// $Id: TaggerJetSameTool.h,v 1.1 2005-07-04 16:51:53 pkoppenb Exp $
+// $Id: TaggerJetSameTool.h,v 1.2 2005-07-06 00:33:19 musy Exp $
 #ifndef USER_TAGGERJETSAMETOOL_H 
 #define USER_TAGGERJETSAMETOOL_H 1
 
@@ -7,6 +7,7 @@
 #include "GaudiKernel/AlgTool.h"
 #include "GaudiKernel/ToolFactory.h"
 // from Event
+#include "Event/FlavourTag.h"
 #include "Kernel/ITagger.h"
 
 /** @class TaggerJetSameTool TaggerJetSameTool.h 
@@ -30,12 +31,13 @@ public:
   StatusCode finalize  ();    ///<  finalization
 
   //-------------------------------------------------------------
-  virtual ParticleVector taggers( const Particle*, const Vertex*, 
-				  const ParticleVector& );
+  virtual Tagger tag( const Particle*, 
+		      std::vector<const Vertex*>&, ParticleVector&);
   //-------------------------------------------------------------
 
 private:
   //properties 
+  double  m_AverageOmega;
   double  m_Pt_cut_jetS, m_dR_cut_jetS;
 };
 //===============================================================//

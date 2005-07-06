@@ -1,4 +1,4 @@
-// $Id: BTaggingTool.h,v 1.6 2005-07-05 15:40:36 pkoppenb Exp $
+// $Id: BTaggingTool.h,v 1.7 2005-07-06 00:33:19 musy Exp $
 
 #ifndef USER_BTAGGINGTOOL_H 
 #define USER_BTAGGINGTOOL_H 1
@@ -13,19 +13,16 @@
 #include "GaudiKernel/ToolFactory.h"
 // from Event 
 #include "Event/ProtoParticle.h"
-#include "Kernel/IVertexFitter.h"
 #include "Event/EventHeader.h"
 #include "Event/FlavourTag.h"
 #include "Event/TrgDecision.h"
 #include "Event/HltScore.h"
-#include "Event/TamperingResults.h"
-// from RecoTools
 #include "Kernel/IGeomDispCalculator.h"
 #include "Kernel/IPhysDesktop.h"
 #include "Kernel/ISecondaryVertexTool.h"
-#include "INNetTool.h"
 #include "Kernel/IBTaggingTool.h" 
 #include "Kernel/ITagger.h" 
+#include "ICombineTaggersTool.h" 
 
 /** @class BTaggingTool BTaggingTool.h 
  *
@@ -64,35 +61,26 @@ private:
   std::vector<const Particle*> toStdVector( const SmartRefVector<Particle>& );
   std::vector<const Particle*> FindDaughters( const Particle* );
   long trackType( const Particle* );
-  double pol2(double, double, double );
-  double pol3(double, double, double, double );
-  double pol4(double, double, double, double, double );
-
-  std::string m_SecondaryVertexToolName, m_CombinationTechnique;
 
   ISecondaryVertexTool* m_svtool;
-  INNetTool* m_nnet;
   IDataProviderSvc* m_eventSvc;
   IGeomDispCalculator *m_Geom;
-
   IPhysDesktop *m_physd;
-  ITagger *m_taggerMu,*m_taggerEle,*m_taggerKaon;
+  ITagger *m_taggerMu,*m_taggerEle,*m_taggerKaon,*m_taggerVtxCh;
   ITagger *m_taggerKaonS,*m_taggerPionS, *m_taggerVtx, *m_taggerJetS ;
+  ICombineTaggersTool *m_combine;
 
   //properties ----------------
   double m_thetaMin;
   double m_IPPU_cut;
 
-  double m_ProbMin;
-  double m_VchOmega;
+  std::string m_SecondaryVertexToolName;
+  std::string m_outputLocation, m_CombineTaggersName;
 
   bool m_RequireL0, m_RequireL1, m_RequireHLT;
-  bool m_RequireTrigger, m_RequireL1Tamp;
-  bool m_EnableMuonTagger,m_EnableElectronTagger,m_EnableKaonOSTagger;
-  bool m_EnableKaonSSTagger,m_EnablePionTagger,m_EnableVertexChargeTagger;
-  bool m_EnableJetSameTagger;
-  std::string m_outputLocation ;
-  
+  bool m_EnableMuon,m_EnableElectron,m_EnableKaonOS;
+  bool m_EnableKaonSS,m_EnablePionSS,m_EnableVertexCharge;
+  bool m_EnableJetSame;
 };
 
 //=======================================================================//

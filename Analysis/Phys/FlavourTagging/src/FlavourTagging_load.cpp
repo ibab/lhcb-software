@@ -17,7 +17,10 @@ DECLARE_FACTORY_ENTRIES(FlavourTagging) {
   DECLARE_TOOL(TaggerKaonOppositeTool);
   DECLARE_TOOL(TaggerKaonSameTool);
   DECLARE_TOOL(TaggerPionSameTool);
+  DECLARE_TOOL(TaggerVertexChargeTool);
   DECLARE_TOOL(TaggerJetSameTool);
+  DECLARE_TOOL(CombineTaggersNNet);
+  DECLARE_TOOL(CombineTaggersTDR);
   DECLARE_TOOL(NNetTool);
   DECLARE_TOOL(SVertexTool);
   DECLARE_TOOL(SVertexNNTool);

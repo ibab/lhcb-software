@@ -7,11 +7,12 @@ ToolSvc.BTaggingTool.SecondaryVertexName= "SVertexTool";//"TDR" type
 //ToolSvc.BTaggingTool.SecondaryVertexName= "SVertexNNTool";//higher effic.
 //ToolSvc.BTaggingTool.SecondaryVertexName= "SVertexABTool";//two output vtxs
 
-//combination method of taggers
-ToolSvc.BTaggingTool.CombinationTechnique = "NNet";
-//ToolSvc.BTaggingTool.CombinationTechnique = "TDR"; //old TDR categories
+//combination method of taggers with NNet
+ToolSvc.BTaggingTool.CombineTaggersName = "CombineTaggersNNet";
+// or with old TDR id-type categories
+//ToolSvc.BTaggingTool.CombineTaggersName = "CombineTaggersTDR";
 
-//ToolSvc.BTaggingTool.OutputLocation = "/Event/Phys/BTaggingTool"; // default
+//ToolSvc.BTaggingTool.OutputLocation = "/Event/Phys/BTaggingTool"; //default
 
 //--------------
 //PID definition
