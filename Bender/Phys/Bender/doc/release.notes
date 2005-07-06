@@ -1,14 +1,28 @@
 <PRE>
 ! -----------------------------------------------------------------------------
-! $Id: release.notes,v 1.16 2005-06-14 15:24:32 ibelyaev Exp $
+! $Id: release.notes,v 1.17 2005-07-06 18:28:02 ibelyaev Exp $
 ! -----------------------------------------------------------------------------
-! CVS tag $Name: not supported by cvs2svn $ ; version $Revision: 1.16 $
+! CVS tag $Name: not supported by cvs2svn $ ; version $Revision: 1.17 $
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/Bender
 ! Responsible : Vanya BELYAEV Ivan.Belyaev@itep.ru
 ! Purpose     : The package is a result of "pythonization procedure"
 !                of the LoKi package
 ! -----------------------------------------------------------------------------
+
+! 2005-07-06 - Vanya BELYAEV
+ - python/benderclhep.py 
+   new module to get shorter names for HepGeom::Point3D<double> 
+
+ - python/bendermodule.py
+   import new module benderclhep 
+
+ - python/benderstr.py
+   resurrect a 'smart' printout for *ChannelID classes 
+
+ - cmt/requirements
+   version incrmeent to v5r2 
+
 
 ! 2005-06-14 - Vanya BELYAEV
  - add new features for Trg* stuff 

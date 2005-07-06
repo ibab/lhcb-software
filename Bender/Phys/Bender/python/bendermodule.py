@@ -1,9 +1,12 @@
 # =============================================================================
-# $Id: bendermodule.py,v 1.26 2005-06-16 17:45:31 ibelyaev Exp $ 
+# $Id: bendermodule.py,v 1.27 2005-07-06 18:28:02 ibelyaev Exp $ 
 # =============================================================================
 # CVS tag $NAme:$ 
 # =============================================================================
 # $Log: not supported by cvs2svn $
+# Revision 1.26  2005/06/16 17:45:31  ibelyaev
+#  add the usage of 'atexit(gaudi.exit())'
+#
 # Revision 1.25  2005/05/20 10:55:19  ibelyaev
 #  prepare for v4r8
 #
@@ -63,6 +66,7 @@ from   bendertuple     import *
 from   bendermatch     import *
 from   benderalgo      import *
 from   bendertools     import *
+from   benderclhep     import *
 
 AppMgr = gaudimodule.AppMgr 
 

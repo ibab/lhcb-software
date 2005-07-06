@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.28 2005-06-14 15:24:32 ibelyaev Exp $ 
+# $Id: requirements,v 1.29 2005-07-06 18:28:02 ibelyaev Exp $ 
 # =============================================================================
 # CVS tag $Name: not supported by cvs2svn $     
 # =============================================================================
@@ -6,7 +6,7 @@
 # Maintainer : Vanya BELYAEV Ivan.Belyaev@itep.ru
 # =============================================================================
 package           Bender
-version           v5r1
+version           v5r2
 
 # ============================================================================
 branches          cmt doc src python
@@ -45,6 +45,9 @@ apply_pattern     application_path
 
 # ============================================================================
 # $Log: not supported by cvs2svn $
+# Revision 1.28  2005/06/14 15:24:32  ibelyaev
+#  v5r1: update for Trg/MC
+#
 # Revision 1.27  2005/05/20 10:55:18  ibelyaev
 #  prepare for v4r8
 #
