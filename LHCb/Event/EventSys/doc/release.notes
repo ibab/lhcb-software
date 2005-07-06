@@ -1,9 +1,9 @@
 package EventSys
 package manager: Marco Cattaneo
 
-!======================== EventSys v20r7p1 2005-07-05 ======================
-! 2005-07-05 - Marco Cattaneo
- - Use DAQEvent v5r2p2
+!======================== EventSys v20r8 2005-07-06 ========================
+! 2005-07-06 - Marco Cattaneo
+ - Use DAQEvent v5r2p2, PhysEvent v8r10
 
 !======================== EventSys v20r7 2005-06-24 ========================
 ! 2005-06-24 - Marco Cattaneo
