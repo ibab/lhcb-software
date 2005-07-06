@@ -12,16 +12,16 @@ use  DaVinci                 	v12r12    Phys
 # packages included in PhysCoreSys
 #=======================================================                                                                                                                                                                            
 use  CommonParticles    	v1r5p3   Phys
-use  DaVinciFilter      	v2r0     Phys
-use  DaVinciKernel      	v3r4     Phys
-use  DaVinciTools       	v12r0    Phys
-use  FlavourTagging     	v5r6     Phys
+use  DaVinciFilter      	v3r0     Phys
+use  DaVinciKernel      	v3r5     Phys
+use  DaVinciTools       	v12r0p1  Phys
+use  FlavourTagging     	v6r0     Phys
 use  Ks2PiPiSel         	v1r6     Phys
 use  ParticleMaker      	v1r6     Phys
 use  PhysSelections		v6r12    Phys
 use  DaVinciTransporter 	v2r0p3   Phys
 use  VertexFit			v1r6p1   Phys
-use  Tampering                  v1r1p1   Phys
+use  Tampering                  v1r1     Phys
 # Generic tools 
 use  Utilities          	v2r0     Tools
 use  RecoTools          	v1r1     Rec
@@ -29,11 +29,12 @@ use  RecoTools          	v1r1     Rec
 #=======================================================
 # packages included in PhysMCSys
 #=======================================================
-use  DaVinciAssociators 	v5r4p1   Phys
+use  DaVinciAssociators 	v5r5     Phys
 use  DaVinciEff         	v3r3     Phys
-use  DaVinciMCTools     	v5r12    Phys
+use  DaVinciMCTools     	v5r13    Phys
 use  DaVinciTest        	v5r6     Phys
 use  DaVinciUser        	v5r2     Phys
+use  FlavourTaggingChecker      v1r0     Phys
 
 #=======================================================
 # packages included in LoKiSys
@@ -47,19 +48,23 @@ use  KtJet	             	v1r0     External
 #=======================================================
 # packages included in HltSys
 #=======================================================
-use HltGeneric                  v2r5     Hlt
-use HltSelections               v3r3     Hlt
-use HltSelChecker               v3r3     Hlt
+use HltGeneric                  v2r6     Hlt
+use HltSelections               v3r5     Hlt
+use HltSelChecker               v3r4     Hlt
 
 #=======================================================
-use  PhysSelSys			v8r4     PhysSel
+use  PhysSelSys			v8r5     PhysSel
 #=======================================================
+
+########################################################
+# NON-Phys stuff
+########################################################
 
 # Enable neutral ProtoParticles production and CaloPIDs
 use  CaloPIDs           	v2r4     Calo 
 use  CaloReco           	v2r7     Calo
 # Muon PID
-use  MuonID             	v3r7p1   Muon
+use  MuonID             	v3r8     Muon
 
 #-- RICH Trigger libraries 
 use RichHLTSys                  v1r0p1   Rich
@@ -82,7 +87,7 @@ use  L0MuonTrigger 		v2r3p1   L0
 use  L0mConf            	v2r2p3   L0
 
 #-- L1 Trigger libraries 
-use TrgSys                      v1r6     Trg
+use TrgSys                      v1r7     Trg
 
 ########################################################
 # FROM SyS
@@ -91,8 +96,8 @@ use TrgSys                      v1r6     Trg
 #=======================================================
 # Trg
 #=======================================================
-use TrgEvent		v5r3p1	Event
-use TrgTools		v6r3p1	Trg
+# use TrgEvent		v5r3p1	Event
+use TrgTools		v6r3p2	Trg
 use TrgVelo             v6r0p1  Trg
 use TrgVeloTT           v6r0    Trg
 use L1Reco              v6r1    Trg
@@ -101,15 +106,15 @@ use TrgChecker          v6r0    Trg
 use TrgForward          v4r0    Trg
 use TrgMonitor          v4r0    Trg
 use TrgMuonID           v3r0    Trg
-use TrgMuon             v1r2    Trg
-use TrgPrimVertex       v4r1    Trg
+use TrgMuon             v1r2p2  Trg
+use TrgPrimVertex       v4r2    Trg
 use TrgCalo             v1r0p2  Trg
 
 use MuonTools           v3r8    Muon
 
-#============================================================================
+#=======================================================
 # RICH HLT code
-#============================================================================
+#=======================================================
 # DAQ Decoding
 use RichDAQ           v1r6   Rich
 
@@ -128,8 +133,8 @@ use RichTrgTools      v1r0   Rich
 #use RichPIDMerge      v1r5   Rich
 
 # Online PID packages
-use RichTrgGlobalPID  v1r0p1   Rich
-use RichTrgLocalPID   v1r0     Rich
+use RichTrgLocalPID   v1r0   Rich
+use RichTrgGlobalPID  v1r0p1 Rich
 
 # MC packages
 use RichRecMCTools    v1r7   Rich
@@ -137,7 +142,6 @@ use RichRecMCTools    v1r7   Rich
 #=======================================================
 # Physics selections
 #=======================================================
-
 use  B2DstarX2D02hh             v2r1p1   PhysSel
 use  B2HH                       v2r5     PhysSel
 use  B2RhoRho                   v1r9     PhysSel
@@ -152,19 +156,19 @@ use  Bd2PhiKs                   v4r3     PhysSel
 use  Bd2PiPiPi0                 v2r2p2   PhysSel
 use  Bd2a1Dstar                 v2r4     PhysSel
 use  Bc2RhoPi                   v1r0     PhysSel  
-use  Bs2DsDs                    v2r1     PhysSel  
-use  Bs2DsH                     v3r4     PhysSel 
+use  Bs2DsDs                    v2r1p1   PhysSel
+use  Bs2DsH                     v3r4p1   PhysSel 
 use  Bs2JpsiEta                 v4r0p1   PhysSel
 use  Bs2JpsiPhi                 v2r3p2   PhysSel
 use  Bs2KsKs                    v2r3     PhysSel
 use  Bs2KstarKstar              v1r4     PhysSel
 use  Bs2MuMu                    v2r4p3   PhysSel
-use  Bs2PhiEtac                 v3r1     PhysSel
+use  Bs2PhiEtac                 v3r2     PhysSel
 use  Bs2PhiPhi                  v2r3p2   PhysSel
 use  Bu2KsPi                    v2r4     PhysSel
 use  Bu2LLK                     v2r0     PhysSel
 use  Bu2D0K                     v1r1p1   PhysSel
-use  D02MuMu                    v2r0p1   PhysSel 
+use  D02MuMu                    v2r1     PhysSel 
 use  DsSelector                 v1r1p1   PhysSel
 use  Gamma2ee                   v1r4p2   PhysSel
 use  Jpsi                       v1r1p1   PhysSel
@@ -172,3 +176,4 @@ use  Muon                       v1r2     PhysSel
 use  TriggerSel                 v1r0     PhysSel
 
 use  Stripping                  v2r2     Tools
+

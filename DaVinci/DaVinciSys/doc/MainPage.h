@@ -13,5 +13,12 @@
  * \li \ref lhcbdoxygenmain  "LHCbSys documentation"
  * \li \ref gaudidoxygenmain "Gaudi documentation"
  * \li \ref externaldocs     "Related external libraries"
+ *
+ * \sa
+ * <a href="../release.notes"><b>DaVinci release notes history</b></a>
+ *
+ * <hr>
+ * \htmlinclude new_release.notes
+ * <hr>
 
  */

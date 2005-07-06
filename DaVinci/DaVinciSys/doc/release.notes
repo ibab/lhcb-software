@@ -3,6 +3,559 @@ Package     : Phys/DaVinci
 Package Coordinator : Patrick Koppenburg
 Purpose     : LHCb analysis program 
 
+</PRE><H1><A NAME=v12r12>2005-07-06 DaVinci v12r12 - Updated DC04 version</A></H1><PRE>
+New version based on LHCb v16r5
+
+Main modifications:
+  FlavourTagging
+    The tagging is now a tool again (IBTaggingTool), that calls
+    ITagger tools. It returns a FlavourTag that contains all
+    necessary information (Marco Musy)
+    The BTagging is still working, but now only calls the tool.
+    Have a look at Marco's slides at the 07/07 Tagging WG meeting:
+    http://agenda.cern.ch/fullAgenda.php?ida=a053447#2005-07-07    
+    The BTagging is still working, but now only calls the tool.
+    New package FlavourTaggingChecker with all MC-truth stuff.
+  DaVinciKernel: 
+    DVAlgorithm now provides a method flavourTagging() 
+    interfacing the new tagging tool.
+  DaVinciFilter: 
+    All FilterCriteria now have a "flagging" mode where the cut is not 
+    applied but saved in a FilterCriterionResult
+    object on the TES. Allows to recover correlations of cuts.
+    Technicalities: New base-class FilterCriterionBase that all
+    FilterCriteria now implement. (Cristina Lazzeroni)
+  MuonID
+    New MuonIDFOI and MuonIDDLLTool with no-shared hits 
+    finally released (A.Massaferri).
+  HLT & DaVinciTools: 
+    Changes for RTTC (PK & Luis Fernandez)
+    Now the PV location and the geometry tools are obtained from
+    an OnOffline tool.
+  LoKi: v3r13p1  
+
+#######################################MM#######################################
+#                               DAVINCI v12r12                                 #
+################################################################################
+#################################### EXTERNAL ##################################
+###################################### L0 ######################################
+###################################### HLT #####################################
+!========================== HltGeneric v2r6 2005-06-27 ===================
+! 2005-06-17 - P. Koppenburg
+  - src/PlotTrackDeviation.{cpp,h}
+    . Moved to HltMonitor
+! 2005-06-13 - P. Koppenburg for Hugo Ruiz and Joe Helder Lopes
+  - src/PlotTrackDeviation.{cpp,h}
+    . New algorithm that monitors IP.  
+  - cmt/requirements
+    . import AIDA
+  - src/HltGeneric_load.cpp
+    . Add algorithm 
+! 2005-06-09 - P. Koppenburg
+  - src/TrgInsertTrackErrParam.*
+   . Moved from TrgTools
+   . New tuning by Hugo
+   - src/HltGeneric_load.cpp
+    . Add algorithm
+! 2005-06-09 - P. Koppenburg
+  - options/HltGeneric.opts
+    . Use TrgDispCalculator (just in case)
+! 2005-06-03 - P. Koppenburg
+  Allow to run HltGeneric when L1 is not executed in the same job 
+  (as in the RTTC)
+  - src/HltGenericDecision.{cpp,h}
+  - src/HltGenericMonitor.cpp
+    . Protect agains absence of L1score
+    . Initialize all member variables in constructor (except those having a 
+      default constructor).
+!========================== HltSelChecker v3r4 2005-07-06 ===================
+! 2005-07-01 - P. Koppenburg
+  Rename HLTFilterDs2KKPi into HLTSharedDs
+
+! 2005-06-29 - Luis Fernandez
+ - options/
+   . New option files for ntuples
+   . Clean-up of truth options, rename associators for each decay
+   . Note that association to muons does not work due to problem in TrgMuon
+! 2005-06-10 - P. Koppenburg
+  - options/TestHltScore.opts
+    . Moved to HltSelections
+! 2005-06-03 - P. Koppenburg
+  - src/TestHltScore.cpp
+    . Moved to HltSelections
+! 2005-05-25 - P. Koppenburg
+  - options/HLTExSelectionsNTuples.opts
+    . Removed
+!========================== HltSelections v3r5 2005-07-06 ===================
+! 2005-07-01 - P. Koppenburg
+  Rename HLTFilterDs2KKPi into HLTSharedDs
+! 2005-06-24 - Chris Jones
+ - Update UseRich.opts to adapt to new RICH reconstruction code
+
+! 2005-06-17 - P. Koppenburg
+  - src/Hlt2RawBuffer.cpp
+  - src/Hlt2RawBuffer.h
+  - src/HltCompare2RawBuffer.cpp
+  - src/HltCompare2RawBuffer.h
+  - src/HltDAQ.h
+  - src/TestHltScore.cpp
+  - src/TestHltScore.h
+  - options/TestHltScore.opts
+    . Moved to HltMonitor
+
+! 2005-06-10 - P. Koppenburg
+ - src/HltCompare2RawBuffer: same as below.
+
+! 2005-06-10 - Marco Cattaneo
+ - src/TestHltScore: remove online specific tests and job options, instead 
+   call directly declareInfo method of Algorithm base class, which makes the 
+   test internally
+
+! 2005-06-10 - P. Koppenburg
+  - src/TestHltScore.cpp
+    . Check message level outside of printStatistics method, as boost 
+      clashes info() when OutputLevel = 4.
+  - options/TestHltScore.cpp
+    . Moved from HltSelChecker  
+    
+! 2005-06-09 - P. Koppenburg
+  - src/HltCompare2RawBuffer.cpp
+    . Added Gaucho Monitoring
+    
+! 2005-06-08 - P. Koppenburg
+  - options/TrgTracks.opts
+    . Use OnOffline tool to set all vertex and geom tools
+    
+! 2005-06-08 - P. Koppenburg for Jose Helder Lopes
+  - src/TestHltScore.cpp
+    . Added Gaucho Monitoring
+! 2005-06-03 - P. Koppenburg
+  - src/testHltScore.cpp
+    . Moved from HltSelChecker
+! 2005-06-02 - P. Koppenburg
+  - src/HltDecision.cpp
+    . New FillTrgDecision (=true) option for writing out to TrgDecision
+  Convert HltScore class to rawbuffer. Many new files:
+  - src/Hlt2RawBuffer.{cpp,h}
+    . Store HltScore in raw buffer
+  - src/HltCompare2RawBuffer.{cpp,h}
+    . Compare HltScore in rawbuffer and as output by HLT
+  - src/HltDAQ.h
+    . Common enums
+ - src/HltSelections_load.cpp
+    . Modified accordingly
+! 2005-05-24 - P. Koppenburg
+  - options/
+    . Removed a few obsolete files
+##################################### MUON #####################################
+!========================== MuonID v3r8 2005-07-06 ===================
+! 2005-06-17 - P. Koppenburg
+  - src/MuonIDFOI.{cpp,h}
+    . Translate to GaudiAlgorithm
+    . Initialize all global variables
+  - src/MuonIDDLLTool.{cpp,h}
+    . Translate to GaudiAlgorithm
+    . Initialize all global variables
+
+! 2005-06-17 - P. Koppenburg for Andre Massafferri
+  - src/MuonIDFOI.{cpp,h}
+    . ADD SOME COMMENT HERE
+  - src/MuonIDDLLTool.{cpp,h}
+    . ADD SOME COMMENT HERE
+  - options/MuonIDDLLTool.opts
+    . ADD SOME COMMENT HERE
+  - options/MuonIDFOI.opts
+    . ADD SOME COMMENT HERE
+##################################### PHYS #####################################
+!========================== DaVinciAssociators v5r5 2005-07-06 ===================
+! 2005-06-29 - Luis Fernandez
+ - src/CompositeParticle2MCLinks.{h,cpp}
+   . New property to ignore PID (IgnorePID), e.g. running on Bs -> KK data and 
+     reconstructing B0 -> pi pi. Meant for hlt studies.
+!========================== DaVinciFilter v3r0 2005-07-06 ===================
+! 2005-07-06 - P. Koppenburg for Jan Almoraal
+ - DLLFilterCriterion
+   . New: Cuts according to the DLL of a Particle.
+! 2005-06-29 - P. Koppenburg
+ - VtxFilterCriterion.cpp
+   . Make the filter inactive when default options are not reset
+     (bug reporter by Mitesh Patel).
+! 2005-06-28 - Cristina Lazzeroni
+ - Update all filter tools to use new base class
+   Two new options:
+       declareProperty( "SaveFilterResults", m_saveResults = false );
+       declareProperty( "FlaggingMode",      m_flagMode    = false );
+   that loow to save the result of the cut and to run in flagging mode
+   (return true whatever the actual result is).
+ - Add filter result tool
+! 2005-06-08 - P. Koppenburg
+  - src/FlightDistanceFilterCriterion.{cpp,h}
+  - src/LifetimeSignificanceCriterion.{cpp,h}
+  - src/Momentum2FlightAngleFilterCriterion.{cpp,h}
+  - src/PVIPFilterCriterion.{cpp,h}
+  - src/VtxIsolationFilterCriterion.{cpp,h}
+    . Get GeomTool and Vertex fitter from IOnOffline tool.
+  - src/DaVinciFilter_load.cpp
+    . Reflect change
+! 2005-06-02 - P. Koppenburg
+  - src/OverlapFilterCriterion.{cpp,h}
+    . Allow to choose implementation of ICheckOverlap tool
+    . Bug fix in initialisation
+
+!========================== DaVinciKernel v3r5 2005-07-06 ===================
+! 2005-07-06 - P. Koppenburg
+  - Kernel/ITagger.h
+    . Return Tagger object
+    
+! 2005-07-05 - P. Koppenburg
+  - src/component/PhysDesktop.cpp
+    . Call getPrimaryVertices() in primaryVertices() method
+      in order to be able to avoid having to call getInput().
+    
+! 2005-07-04 - P. Koppenburg
+  - Kernel/DVAlgorithm.h
+  - src/Lib/DVAlgorithm.cpp
+    . Added flavourTagging() method
+    
+! 2005-07-04 - P. Koppenburg
+  - Kernel/IBTaggingTool.h
+  - Kernel/ISecondaryVertexTool.h
+  - Kernel/ITagger.h
+    . Tagging tools added here.
+
+! 2005-06-28 - Cristina Lazzeroni
+ - Kernel/FilterCriterionBase.h, 
+   src/Lib/FilterCriterionBase.cpp
+   . New base class for Filter tools 
+ - Kernel/IFilterCriteriaTESTool.h
+   . New interface for Filter result tool
+ - src/Lib/DVAlgorithm.cpp
+   . Moved from src/
+! 2005-06-09 - P. Koppenburg
+  Merged with head revision. From now on use head revision in v14 series and
+  make branches without Kernel/IParticleTransporter.h for v12 series.
+   
+! 2005-06-09 - P. Koppenburg
+  - Kernel/IDirectionFit.h
+  - Kernel/IMassVertexFit.h
+  - Kernel/IParticleCombiner.h
+  - Kernel/IParticleReFitter.h
+  - Kernel/IVertexFit.h
+    . New interfaces for vertex fitters
+
+! 2005-06-08 - P. Koppenburg
+  - Kernel/IOnOffline.h
+    . New tool that resturns online or offline environment
+      Knows about PV (replaces PVLocator) and what geom and vertex 
+      tools to use.
+  - Kernel/DVAlgorithm.h
+  - src/DVAlgorithm.cpp
+  - src/component/PhysDesktop.cpp
+  - src/component/PhysDesktop.h
+    . Use new tool
+  - Kernel/IPVLocator.h
+    . Removed
+  - src/IAlgorithm2ID.h
+    . Return size of algorithm array
+
+! 2005-06-02 - P. Koppenburg
+  - src/DVAlgorithm.{h,cpp}
+    . Allow change of CheckOverlap Tool implementation
+
+!========================== DaVinciMCTools v5r13 2005-07-06 ===================
+! 2005-06-29 - Luis Fernandez
+ - src/DecayChainNTuple.{cpp,h}
+   . Use composite associator, protections, Hlt score, ...
+
+! 2005-06-28 - Cristina Lazzeroni
+  - src/TrueMCFilterCriterion.cpp
+    . Update filter tool to use new base class
+
+! 2005-06-08 - P. Koppenburg
+ - src/ src/DecayChainNTuple.{cpp,h}
+   . Use IOnOfflineTool 
+
+!========================== DaVinciTools v12r0p1 2005-07-06 ===================
+! 2005-06-27 - P. Koppenburg
+  - cmt/requirements
+    . Restored boost linkopts for DC04 data
+! 2005-06-10 - P. Koppenburg
+  - cmt/requirements
+    . Removed boost linkopts
+! 2005-06-08 - P. Koppenburg
+  - src/PVLocator.cpp
+  - src/PVLocator.h
+  - src/ResetPVLocation.cpp
+  - src/ResetPVLocation.h
+    . Removed
+  - src/OnOfflineTool.cpp
+  - src/OnOfflineTool.h
+    . New global tool that defines Online or Offline environment
+      It knows about the PV location, the geom and vertex tools to use
+      and replaces the PVLocator
+  - src/ResetOnOffline.cpp
+  - src/ResetOnOffline.h
+    . New algorith that sets Online or Offline environment
+  - src/CheckPV.cpp
+  - src/CheckPV.h
+  - src/DaVinciTools_load.cpp
+  - src/SimplePlotTool.cpp
+  - src/SimplePlotTool.h
+    . Modified accordingly
+                                                                                                                                                                                  
+! 2005-06-08 - P. Koppenburg
+  - src/Algorithm2ID.h
+    . Return size of algorithm array
+                                                                                                                                                                                  
+! 2005-06-02 - P. Koppenburg based on an idea by Miriam Calvi
+  - src/CheckVeloOverlap.{cpp,h}
+    . New ICheckOverlap tool that checks for common velo clusters.
+      By default it returns true when theer are shared clusters. This can be
+      tuned using the MaxCommonClusters and MaxCommonFraction properties.
+! 2005-05-24 - P. Koppenburg
+  - options/PreLoadParticles.opts
+    . Moved to ParticleMaker
+         
+!========================== DaVinci v12r12 2005-07-06 ===================
+No major changes in Phys/DaVinci package. See DaVinciSys for details.
+!========================== FlavourTaggingChecker v1r0 2005-07-06 ===================
+! 2005-07-04 - P. Koppenburg
+  New package containing all MC-related stuff 
+
+! 2005-07-04 - M. Musy
+ - New version which exploits the new FlavourTag class definition 
+   in PhysEvent 
+ - BTagging has became BTaggingTool, while it remains for backward
+   compatibility and as an example of how to use the tagging tool
+ - BTaggingTool itself has been splitted in TaggerXXXTools which return
+   the tagger candidates to BTaggingTool which eventually combines them
+   into a final decision
+ - SecondaryVertexTool has been splitted into 3 separate tools all
+   inheriting from the same interface ISecondaryVertexTool which has been
+   modified to return a vector of vertices instead of a single vertex
+   A new SVertexABTool is created. It returns two vertices instead of 
+   just one, for the moment only for development purposes.
+
+!========================== FlavourTagging v6r0 2005-07-06 ===================
+! 2005-07-05 - M Musy
+  - added reorganised:
+    CombineTaggersNNet.cpp  to combine taggers
+    CombineTaggersTDR.cpp    same with old TDR definition
+    inheriting from same interface ICombineTaggersTool.h
+  - changed the ITagger interf to return a Tagger
+  - included TaggerVertexChargeTool.cpp and TaggerJetSameTool.cpp
+  - evaluation of omega is now done inside Tagger individually
+
+! 2005-07-04 - P. Koppenburg
+ - Add "const" where it seems reasonable
+ - Indent properly
+ - IMPORTANT: BTagging now uses the PhysDesktop to get it's input. 
+   ParticlesLocation is obsolete.
+ - BTagging.cpp now uses flavourTagging() method of DVAlgorithm 
+   (needs DaVinciKernel v3r5)
+ - Some reorganisation:
+  - FlavourTagging/IBTaggingTool.h
+  - FlavourTagging/INNetTool.h
+  - FlavourTagging/ISecondaryVertexTool.h
+    . Moved to DaVinciKernel
+  - FlavourTagging/ITagger.h
+    . Moved to src/
+
+! 2005-07-04 - M. Musy
+ - New version which exploits the new FlavourTag class definition 
+   in PhysEvent 
+ - BTagging has became BTaggingTool, while it remains for backward
+   compatibility and as an example of how to use the tagging tool
+ - BTaggingTool itself has been splitted in TaggerXXXTools which return
+   the tagger candidates to BTaggingTool which eventually combines them
+   into a final decision
+ - SecondaryVertexTool has been splitted into 3 separate tools all
+   inheriting from the same interface ISecondaryVertexTool which has been
+   modified to return a vector of vertices instead of a single vertex
+   A new SVertexABTool is created. It returns two vertices instead of 
+   just one, for the moment only for development purposes.
+
+! 2005-05-28 - M. Musy
+ - summary.cpp has been updated
+ - removed hlt part from options (no use case for the moment)
+ - a WEB page is now available for tagging :
+
+       ********************************************************
+       https://uimon.cern.ch/twiki/bin/view/LHCb/FlavourTagging
+       ********************************************************
+
+   where you can find technical infos and summary of performances
+
+! 2005-05-25 - M. Musy
+ - code has been cleaned up a bit.
+ - added new properties for most hard-coded numbers
+ - many comments added along the way
+ - each tagger can be disabled separately via property
+
+! 2005-05-25 - P. Koppenburg
+  - src/BTagging.{h,cpp}
+    . Protect get<> methods with exist<>
+    . Do not use TrgDecision::HLT as it is called hlt() in DaVinci v14
+    . Use HltScore instead
+    . Indent properly
+ - src/BTaggingMonitor.cpp
+    . Protect get<> methods with exist<>
+!========================== Ks2PiPiSel v1r6 2005-05-30 ===================
+! 2005-05-24 - P. Koppenburg
+ - options/DaVinciKshortLoose.opts
+ - options/DaVinciKshortTight.opts
+   . Moved from DaVinci (from v14r1)
+!========================== ParticleMaker v1r6 2005-05-30 ===================
+! 2005-05-24 - P. Koppenburg
+ - options/PreLoadCombinedParticles.opts
+ - options/PreLoadNoPIDParticles.opts
+   . Moved from DaVinci (v14r1)
+ - options/PreLoadParticles.opts
+   . Removed
+!========================== DaVinciTransporter v2r0p3 2005-06-13 ===================
+! 2005-06-08 - P. Koppenburg
+  - src/CombinedTransporter.cpp
+  - src/LinearTransporter.cpp
+  - src/ParabolicTransporter.cpp
+   . change the message level to debug() for "initialization starting"
+
+!========================== VertexFit v1r6p1 2005-05-30 ===================
+! 2005-05-24 - H.Ruiz
+  - src/TrgVertexFitter.cpp
+    . Reduced level of verbosity for debug mode. Most messages moved to 
+      verbose mode
+
+#################################### PHYSSEL ###################################
+!========================== Bs2DsDs v2r1p1 2005-07-06 ===================
+! 2005-06-29 - P. Koppenburg
+ - src/*Monitor.cpp
+   . Adapt to new format of FlavourTag class
+!========================== Bs2DsH v3r4p1 2005-07-06 ===================
+! 2005-06-29 - P. Koppenburg
+ - src/*Monitor.cpp
+   . Adapt to new format of FlavourTag class
+!========================== Bs2PhiEtac v3r2 2005-07-06 ===================
+! 2005-06-29 - Luis Fernandez
+ - options/
+   . Changes according to modifications of CompositeParticle2MCLinks and 
+     DecayChainNTuple
+
+! 2005-06-22 - Luis Fernandez
+ - src/AnalyzeBs2PhiEtac.{h, cpp}
+   . Add Hlt score, protection against 'get'
+ - options/DC04-Bs2PhiEtac.opts
+   . Comment out corrupted DC04 signal tapes
+ - options/TightCutsForPreselBs2PhiEtac.opts
+   . Tuning of final selection cuts on inclusive b, DC04-v1
+ - options/DVMonitorBs2PhiEtac.opts
+   . Run the Hlt
+
+! 2005-05-30 - Luis Fernandez
+ - options/DVMonitorBs2PhiEtac.opts
+   . Added option in AnalyzeBs2PhiEtac configuration when running without
+     DaVinciNeutrals.opts: only use ChargedPP2MCAsct associator
+!========================== D02MuMu v2r1 2005-07-06 ===================
+! 2005-03-09 - Alessio Sarti for Davide Pinci
+ - src/*Monitor.cpp
+   . Davide Reorganisation
+!========================== PhysSelSys v8r5 2005-07-06 ===================
+use  Bs2DsDs                    v2r1p1   PhysSel
+use  Bs2DsH                     v3r4p1   PhysSel
+use  Bs2PhiEtac                 v3r2     PhysSel
+use  D02MuMu                    v2r1     PhysSel
+#####################################  REC  ####################################
+##################################### RICH #####################################
+##################################### TOOLS ####################################
+!========================= LoKi v3r13p1 2005-06-16 ==================
+! 2005-06-02 - Vanya BELYAEV
+ - LoKi/LoopObj.h
+   src/LoopObj.cpp
+
+  New method for changing the particle ID for "loop"-object is introduced
+   
+  for ( Loop Bc = loop ( "psi pi" , "B_c+" ) ; Bc ; ++Bc ) 
+   {
+     // set particle ID according to the charge of the pion
+      Bc->setPID ( Q( Bc(2) ) > 0 ? "B_c+" : "B_c-" ) ; 
+      //
+      Bc->save("Bc") ;
+   }
+
+  IMPORTANT:
+  ==========
+  The treatment of setPID method is modified now.
+  The particle ID of existing effective particle will 
+  be modified (if proper ownership is establshed).
+  For some configurations (rare) it could result in 
+  deletion and recreation of existing particle object. 
+  In this case, the results of various fit procedures 
+  could be modified. Therefore *IT IS RECOMMENDED* to 
+  use this method *ONLY BEFORE* the  actual explicit 
+  constrains procedures, e.g.
+  
+  correct order: 
+
+      Bc->setPID( ... ) ; 
+      Bc->fit( FitMassVertex && FitLifeTime) ;  
+
+  "wrong" order: 
+
+     Bc->fit( FitMassVertex && FitLifeTime ) ;  
+     Bc->setPID( ... ) ;       
+
+   It could be wrong e.g. in the context:
+
+      for ( Bc = loop ("psi pi", "B+") ;  .... ) 
+        {
+            Bc->fit( FitMassVertex && FitLifeTime ) ;  // WRONG
+            Bc->setPID( "B_c+") ;                      // WRONG  
+            Bc->save("Bc") ;       
+        } 
+   Here for the saved object only Vertex-constrained fit is performed.
+   (Note the mismatch between "B+" and "B_c+") 
+
+
+   Many thanks to Andreas Wenger for use-cases.... 
+
+  - cmt/requirements
+    version increment to v3r13 
+!========================== LoKiJets v1r1 2005-06-13 ===================
+! 2005-06-02 - P. Koppenburg
+  KtJets moved to External/
+
+
+###################################### TRG #####################################
+!========================== TrgSys v1r7 2005-07-06 ===================
+! 2005-06-27 - P. Koppenburg
+  - New TrgPrimVertex
+  - New TrgMuon
+  - New TrgTools
+!========================= TrgTools v6r3p2 2005-06-27 ===================
+! 2005-06-27 - P.Koppenburg
+ - src/TrgInsertTrackErrParam.cpp
+   . Removed 
+ - src/TrgTools_load.cpp
+   . Removed TrgInsertTrackErrParam
+
+!========================== TrgPrimVertex v4r2 2005-06-23 ===================
+! 2005-06-23 - Marco Cattaneo
+ - Fix another memory leak, primary vertices added to myTrgVertices container
+   were never deleted
+ - Remove tests on StatusCode of methods called by execute(). This is because
+   these methods always return Success, and in any case special handling would
+   be needed in case of failure to avoid memory leaks from myTrgVertices
+ - Clean up requirements
+
+! 2005-06-22 - Olivier Callot
+ - Fix (I hope) a memory leak, whenever a primary vertex is not good.
+   delete statements were missing at 3 locations.
+
+!========================== TrgMuon v1r2p2 2005-06-22 ===================
+! 2005-06-22 - Marco Cattaneo
+ - Fix a memory leak due to only partially commented code...
+ - Remove the unneccessary LinkerEvent dependency...
+
+
 </PRE><H1><A NAME=v12r11>2005-05-19 DaVinci v12r11 - Bug fix version</A></H1><PRE>
 Fixes a bug in DaVinciAssociators and takes some updates in selections
 
