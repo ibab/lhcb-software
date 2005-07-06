@@ -1,4 +1,4 @@
-// $Id: BTaggingChecker.cpp,v 1.1.1.1 2005-07-04 15:24:22 pkoppenb Exp $
+// $Id: BTaggingChecker.cpp,v 1.2 2005-07-06 09:04:44 musy Exp $
 // local
 #include "BTaggingChecker.h"
 
@@ -80,6 +80,7 @@ StatusCode BTaggingChecker::execute() {
     debug() << "No tags found in " << m_tags_location << endreq;
     return StatusCode::SUCCESS;
   }
+  debug()<< tags->size()<<" tags found in "<<m_tags_location << endreq;
 
   FlavourTags::const_iterator ti;
   for( ti=tags->begin(); ti!=tags->end(); ti++ ) {

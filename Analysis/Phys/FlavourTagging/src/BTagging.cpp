@@ -107,6 +107,15 @@ StatusCode BTagging::execute() {
     if( !sc ) err() <<"Unable to register tags"<< endreq;
   }
 
+
+  FlavourTags* mmtags(0);
+  if( exist<FlavourTags>(  "/Event/Phys/Tagging"  ) ) {
+    mmtags = get<FlavourTags>( "/Event/Phys/Tagging" );
+    debug() << "Esiste!! con "<<mmtags->size()<< endreq;
+  } else {
+    debug() << "No Esiste!! "  << endreq;
+  }
+
   setFilterPassed( true );
   return StatusCode::SUCCESS;
 }

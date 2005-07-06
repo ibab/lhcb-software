@@ -36,7 +36,7 @@ ApplicationMgr.DLLs   += { "VeloDAQ" };
 ApplicationMgr.TopAlg += { "DecodeVeloRawBuffer" };
 
 #include "$FLAVOURTAGGINGOPTS/BTagging.opts"
-//BTagging.OutputLevel = 2;
+BTagging.OutputLevel = 2;
 //ToolSvc.BTaggingTool.OutputLevel = 2;
 
 ///---------------------------------------------------------------
@@ -44,7 +44,7 @@ ApplicationMgr.TopAlg += { "DecodeVeloRawBuffer" };
 /// example of an optional algorithm that reads in what is in TES
 ///---------------------------------------------------------------
 #include "$FLAVOURTAGGINGCHECKEROPTS/BTaggingChecker.opts"
-//BTaggingChecker.OutputLevel = 2;
+BTaggingChecker.OutputLevel = 2;
 
 //---------------------------------------------------------------
 // Number of events to process, skip and printing frequency
