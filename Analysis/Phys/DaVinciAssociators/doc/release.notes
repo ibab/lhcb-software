@@ -1,9 +1,10 @@
-! $Id: release.notes,v 1.71 2005-06-29 07:57:02 lfernan Exp $
+! $Id: release.notes,v 1.72 2005-07-06 14:37:20 pkoppenb Exp $
 !===================================================================================
 ! Package     : DaVinciAssociators
 ! Responsible : Philippe Charpentier
 !===================================================================================
 
+!========================== DaVinciAssociators v5r5 2005-07-06 ===================
 ! 2005-06-29 - Luis Fernandez
  - src/CompositeParticle2MCLinks.{h,cpp}
    . New property to ignore PID (IgnorePID), e.g. running on Bs -> KK data and 
