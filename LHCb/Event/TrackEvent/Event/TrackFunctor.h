@@ -136,8 +136,7 @@ namespace TrackFunctor
   public:
     // A predicate (unary bool function):
     // example:
-    // HasKey<Track> isBackward = 
-    // HasKey<Track>(&Track::checkFlag,TrackKeys::Backwards)
+    // HasKey<Track> isBackward(&Track::checkFlag,TrackKeys::Backwards)
     // if (isBackward(track)) ...
     typedef bool (T::* ptr_memfun) (unsigned int) const;
   private:
@@ -161,9 +160,20 @@ namespace TrackFunctor
     List.erase( it, List.end() );
   }
 
+  // Counts how many Measurements fulfill the predicate
+  // Make a predicate e.g. using the HasKey template
   template <class T>
-  unsigned int nMeasurements(const Track& track, T& pred) 
+  unsigned int nMeasurements(const Track& track, T pred) 
   {
+    const std::vector<Measurement*>& meas = track.measurements();
+    return std::count_if(meas.begin(),meas.end(),pred);
+  }
+
+  // Counts how many LHCbIDs fulfill the predicate
+  // Make a predicate e.g. using the HasKey template
+  template <class T>
+  unsigned int nLHCbIDs(const Track& track, T pred) 
+    {
     const std::vector<LHCbID>& ids = track.lhcbIDs();
     return std::count_if(ids.begin(),ids.end(),pred);
   }
