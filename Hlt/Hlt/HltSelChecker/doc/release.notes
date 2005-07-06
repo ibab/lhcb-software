@@ -4,6 +4,7 @@
 ! Purpose     : High-Level Trigger Exclusive Selections - Checking 
 !-----------------------------------------------------------------------------
 
+!========================== HltSelChecker v3r4 2005-07-06 ===================
 ! 2005-07-01 - P. Koppenburg
   Rename HLTFilterDs2KKPi into HLTSharedDs
 
