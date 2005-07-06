@@ -1,6 +1,6 @@
 // Add MC classes to Brunel DST
 
-DstWriter.OptItemList =
+DstWriter.OptItemList +=
 {
   "/Event/Prev#1"
 , "/Event/Prev/Header#1"
@@ -10,7 +10,7 @@ DstWriter.OptItemList =
 , "/Event/Next/Header#1"
 , "/Event/MC/Signal#1"
 }; 
-DstWriter.ItemList = 
+DstWriter.ItemList += 
 { "/Event/Gen#1"
 , "/Event/Gen/Header#1"
 , "/Event/Gen/HepMCEvents#1"
