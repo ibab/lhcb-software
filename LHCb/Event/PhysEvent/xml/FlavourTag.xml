@@ -4,120 +4,81 @@
 <gdd>
 
   <package name="PhysEvent">
-<!-- ****************************************************************
-     * FlavourTag                                                   *
-     ****************************************************************-->
 
-     <class
-      name="FlavourTag"
-      author="Olivier Dormond"
-      desc="The result of any tagging algorithm" 
-      stdVectorTypeDef="TRUE"
-      id="805" 
+<!-- ****************************************************************
+     * FlavourTag class definition                                  *
+     ****************************************************************-->
+      <class
+       desc  = "The result of the tagging algorithm" 
+       name  = "FlavourTag"
+       author= "Marco Musy"
+       id    = "805" 
+       stdVectorTypeDef = "TRUE"
       >
 
-      <base name="KeyedObject&lt;int&gt;"/>
+      &StlVector;
+
+      <base name= "KeyedObject&lt;int&gt;"/>
       &KeyedObject;
-      <import name="Event/Particle" soft="TRUE"
-        />
+
+      <import name= "Event/Particle"/>
+      <import name= "Event/Tagger" />
+
       <location
-        name="User"
-        place="/Event/Phys/User/Tags"
-        />
-      <location
-        name="Production"
-        place="/Event/Phys/Prod/Tags"
-        />
+        name ="Default"
+        place="/Event/Phys/Tagging"
+      />
 
       <enum
-        name="TagResult"
-        desc="Possible result of the tagging algorithm"
-        value="b = -1, bbar = 1, none = 0" access="PUBLIC"
-        />
-
-      <enum
-        name="TagType"
-        desc="The type of tagging algorithm which has produced this tag"
-        value="unTagged, singleParticle, jetCharge, vertexCharge, topology"
-        access="PUBLIC"
-        />
-
-       <constructor
-        argList="FlavourTag tag"
-        desc="Copy constructor"
-       />          
-       <method
-        name="clone"
-        desc="Clone FlavourTag"
-        type="FlavourTag *"
-        const="TRUE"
-       />
-       <method
-        desc="Assignment operator"
-        name="operator="
-        type="FlavourTag &amp;"
-       >
-         <arg name="orig" type="FlavourTag" const='TRUE'/>
-       </method>
-
+        desc  = "Possible result of the tagging algorithm"
+        name  = "TagResult"
+        value = "b = -1, bbar = 1, none = 0" 
+        access= "PUBLIC"
+      />
+      <attribute
+        desc = "The result of the tagging algorithm"
+        name = "decision"
+        type = "int"
+        init = "0"
+      />
       <relation
-        name="taggedB"
+        desc = "The B meson for which this tag has been made"
+        name = "taggedB"
+        type = "Particle"
         multiplicity="1"
-        type="Particle"
-        desc="The B meson for which this tag has been made"
-        />
-
-      <relation
-        name="tagger"
-        multiplicity="1"
-        type="Particle"
-        desc="The particle used to make the descision"
-        />
+      />
 
       <attribute
-        name="decision"
-        type="TagResult"
-        desc="The result of the tagging algorithm"
-        init="none"
-        getMeth="FALSE"
-        />
-      <method
-        name="decision"
-        desc="Retrieve the result of the tagging algorithm (non-const)"
-        type="TagResult"
-        />
-      <method
-        name="decision"
-        const="TRUE"
-        desc="Retrieve the result of the tagging algorithm"
-        type="TagResult"
-        />
-
+        desc = "Category of tag"
+        name = "category"
+        type = "int"
+        init = "0"
+      />
       <attribute
-        name="type"
-        type="TagType"
-        desc="The kind of tagging algorithm used"
-        init="unTagged"
-        getMeth="FALSE"
-        />
-      <method
-        name="type"
-        desc="Retrieve the kind of tagging algorithm used (non-const)"
-        type="TagType"
-        />
-      <method
-        name="type"
-        const="TRUE"
-        desc="Retrieve the kind of tagging algorithm used"
-        type="TagType"
-        />
+        desc = "Wrong tag fraction (predicted)"
+        name = "omega"
+        type = "double"
+        init = "0.50"
+      />
 
-      <attribute
-        name="category"
-        desc="Category of tag (muon, electron, muon and SS K...)"
-        type="int"
-        init="-1"
-       />
+      <attribute 
+	desc    = "Vector of Taggers" 
+	name    = "taggers" 
+	type    = "std::vector&lt;Tagger&gt;"
+	serialize = "FALSE"
+      />
+      <method
+        name    = "addTagger"
+        type    = "void"
+	argList = "Tagger HAS"
+        desc    = "add one Tagger">
+        <code>  
+          m_taggers.push_back(HAS); 
+          return;
+        </code>
+      </method>
+
     </class>
   </package>
-</gdd> 
+
+</gdd>

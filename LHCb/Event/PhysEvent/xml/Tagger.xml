@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE gdd SYSTEM "gdd.dtd" >
+
+<gdd>
+
+  <package name="PhysEvent">
+    <class 
+      name     = "Tagger"
+      author   = "Marco Musy"
+      desc     = "Individual tagger decision on B flavour" 
+      templateList   = "FALSE" 
+      templateVector = "FALSE" >
+
+      &StlVector;
+
+     <enum
+        name = "TaggerType"
+        desc = "The type of tagger which has produced this decision"
+        value= "none, unknown, OS_Muon, OS_Electron, OS_Kaon, 
+                SS_Kaon, SS_Pion, jetCharge, OS_jetCharge, SS_jetCharge, 
+                VtxCharge, Topology"
+        access="PUBLIC"
+     />
+     <attribute
+        desc = "The type of tagger"
+        name = "type"
+        type = "int"
+        init = "0"
+     />
+
+     <attribute 
+	desc = "decision of tagger"
+	name = "decision"
+	type = "int"
+        init = "0"
+     />
+		
+     <attribute 
+	desc = "wrong tag fraction of tagger from MC tuning"
+	name = "omega"
+	type = "double"
+        init = "0.50"
+     />		
+
+     <attribute 
+	desc    = "Vector of Particle(s) used to build the Tagger" 
+	name    = "taggerParts" 
+	type    = "std::vector&lt;Particle&gt;"
+	serialize = "FALSE"
+     />
+     <method
+        type    = "void"
+        name    = "addTaggerPart"
+	argList = "Particle HAS"
+        desc    = "add one Particle to Tagger list">
+        <code>  
+          m_taggerParts.push_back(HAS); 
+          return;
+        </code>
+     </method>
+
+    </class>
+  </package>
+
+</gdd>

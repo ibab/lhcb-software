@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE gdd SYSTEM "gdd.dtd" >
+
+<gdd>
+
+  <package name="PhysEvent">
+<class
+    author="C.Lazzeroni"
+    desc="Store the result of a filter criterion selection"
+    name="FilterCriterionResult"
+    id="861"
+    >
+  <base name="KeyedObject&lt;int&gt;"/>
+  &KeyedObject;
+  <import name="Event/Particle"/>
+  <location
+      name="Default"
+      place="/Event/Phys/FilterCriteria"
+      />
+  <attribute
+      name="filterName"
+      desc="Name of the filter crition tool that produced this result"
+      type="std::string"
+      serialize="FALSE"
+      />
+  <relation
+      name="filterParticle"
+      desc="Particle the filter was run on"
+      type="Particle"
+      serialize="FALSE"
+      />
+  <attribute
+      name="filterResult"
+      desc="The result of the filter criterion"
+      type="bool"
+      serialize="FALSE"
+      />
+</class>
+  </package>
+
+</gdd>

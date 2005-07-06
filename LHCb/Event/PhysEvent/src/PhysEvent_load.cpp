@@ -1,4 +1,4 @@
-// $Id: PhysEvent_load.cpp,v 1.12 2004-06-18 08:29:02 pkoppenb Exp $
+// $Id: PhysEvent_load.cpp,v 1.13 2005-07-06 05:45:27 pkoppenb Exp $
 
 // Include files
 #include "GaudiKernel/ContainerFactoryDefs.h"
@@ -49,6 +49,11 @@ _ImplementDataObjectFactory( V0s )
 _ImplementContainedObjectFactory(EffCheckResult)
 _ImplementDataObjectFactory(EffCheckResults)
 /// ===================================================================
+#include "Event/FilterCriterionResult.h"
+_ImplementContainedObjectFactory(FilterCriterionResult)
+_ImplementDataObjectFactory(FilterCriterionResults)
+
+/// ===================================================================
 // ====================================================================
 void PhysEvent_load()  {
 
@@ -74,9 +79,11 @@ void PhysEvent_load()  {
   DLL_DECL_OBJECTFACTORY( V0 );
   DLL_DECL_OBJECTFACTORY( V0s );
 
-  // Declaration of contained object factories
   DLL_DECL_OBJECTFACTORY( EffCheckResult );
   DLL_DECL_OBJECTFACTORY( EffCheckResults );
+
+  DLL_DECL_OBJECTFACTORY( FilterCriterionResult );
+  DLL_DECL_OBJECTFACTORY( FilterCriterionResults);
 
 }
 
