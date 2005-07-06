@@ -1,17 +1,28 @@
 package DetSys
 version v7r3
 
-branches cmt doc
+branches cmt doc dict
 
 use DetDesc	   	v15r3   Det
 use DetDescCnv		v2r7p1  Det
 use XmlTools		v3r5p1  Tools
 use VeloDet        	v9r8    Det
 use OTDet          	v5r5	Det
-use CaloDet	   	v6r9	Det
+use CaloDet	   	v6r9p1  Det
 use CaloDetXmlCnv  	v2r3p1	Det
 use MuonDet        	v4r8	Det
 use Magnet        	v2r8	Det
 use MuonTools	   	v3r8	Muon
 use RichDet	   	v8r4	Det
 use STDet          	v1r4	Det
+use DetCond		v7r4	Det
+
+# =============== LCG Dictionaries ============================================
+apply_pattern     lcg_dictionary                                       \
+                  dictionary=Det                                 \
+                  headerfiles=$(DETSYSROOT)/dict/DetDict.h     \
+                  selectionfile=$(DETSYSROOT)/dict/DetDict.xml \
+                  options=--split
+
+# =============== patterns ====================================================
+apply_pattern     library_path    library=DetDict

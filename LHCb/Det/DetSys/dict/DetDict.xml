@@ -1,0 +1,122 @@
+
+<lcgdict>
+  
+  <class pattern="DetDescPython::Interface<*>" />
+  <class pattern="GaudiPython::Interface<*>"   />
+  
+  <class name="IInterface"       />
+  <class name="IService"         />
+
+  <class name="ITime"            />
+  <class name="TimePoint"        />
+
+  <class name="IDetectorElement"  />
+  <class name="IGeometryInfo"     />
+  <class name="ILVolume"          />
+  <class name="IPVolume"          />
+  <class name="ISolid"            />
+  <class name="ITransportSvc"     />
+  <class name="IUpdateManagerSvc" />
+
+  <class name="IAlignment"        />
+  <class name="ICalibration"      />
+  <class name="IConditionInfo"    />
+  <class name="IFastControl"      />
+  <class name="ISlowControl"      />
+  <class name="IReadOut"          />
+
+
+  <class name="Material"         />
+  <class name="Mixture"          />
+  <class name="Element"          />
+  <class name="Isotope"          />
+
+  <class name="LogVolBase"       />
+  <class name="LVolume"          />
+  <class name="LAssembly"        />
+
+  <class name="Condition"            />
+  <class name="Surface"              />
+  <class name="DetectorElement"      />
+  <class name="TabulatedProperty"    />
+  <class name="ValidDataObject"      />
+  <class name="ParamValidDataObject" />
+
+  <class name="PVolume"              />
+  <class name="GeometryInfoPlus"     />
+  <class name="AlignmentInfo"        />
+  <class name="CalibrationInfo"      />
+  <class name="ConditionInfo"        />
+  <class name="FastControlInfo"      />
+  <class name="ReadOutInfo"          />
+  <class name="SlowControlInfo"      />
+  <class name="SimpleValidity"       />
+  
+  <class pattern="Solid*" />
+
+  <class name="ICondDBAccessSvc"     />
+  <class name="ICondDBCnvSvc"        />
+
+  <class name="DeVelo"        />
+  <class name="DeVeloSensor"  />
+  <class name="DeVeloPhiType" />
+  <class name="DeVeloRType"   />
+
+
+  <class name="DeCalorimeter"    />
+  <class name="DeSubCalorimeter" />
+  <class name="CellParam"        />
+  <class name="CardParam"        />
+
+  <class name="DeOTDetector"     />
+  <class name="DeOTStation"      />
+  <class name="DeOTLayer"        />
+  <class name="DeOTModule"       />
+  <class name="DeOTQuarter"      />
+
+  <class name="DeSTDetector"       />
+  <class name="STDetectionLayer"   />
+  <class name="STDetectionStation" />
+  <class name="ITLayer"            />
+  <class name="TTLayer"            />
+  <class name="STWafer"            />
+
+
+  <class name="DeRich"                    />
+  <class name="DeRich1"                   />
+  <class name="DeRich2"                   />
+  <class name="DeRich1CdfHPDPanel"        />
+  <class name="DeRichFlatMirror"          />
+  <class name="DeRichSphMirror"           />
+  <class name="DeRichHPDPanel"            />
+  <class name="DeRich1HPDPanel"           />
+  <class name="DeRich2HPDPanel"           />
+  <class name="DeRichRadiator"            />
+  <class name="DeRichMultiSolidRadiator"  />
+  <class name="DeRichSingleSolidRadiator" />
+  <class name="RichMirrorSegPosition"     />
+
+  <class name="DeMuonChamber"      />
+  <class name="DeMuonRegion"       />
+  <class name="DeMuonGasGap"       />
+  <class name="MuonBasicGeometry"  />
+  <class name="MuonReadoutCond"    />
+  <class name="MuonTSMap"          />
+  <class name="MuonL1Board"        />
+  <class name="MuonODEBoard"       />
+  <class name="MuonStationCabling" />
+  
+  <class pattern="std::vector<*>"    contid="VECTOR" />
+  <class pattern="std::pair<*>"                      />
+  <class pattern="SmartRef<*>"                       />
+  <class pattern="SmartRefVector<*>" contid="VECTOR" />
+
+  
+  <exclusion>
+    <class name="SolidPolycone::CmpZ" />
+    <class name="std::vector<MuonReadoutCond::_readoutParameter>" />
+    <class name="std::vector<MuonReadoutCond::_clus>"             />
+    <class name="std::vector<DeMuonRegion::logMap_>"              />
+  </exclusion>
+  
+</lcgdict>
