@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.68 2005-07-05 06:48:53 ibelyaev Exp $ 
+# $Id: requirements,v 1.69 2005-07-06 16:55:47 ibelyaev Exp $ 
 # =============================================================================
 # CVS tag $Name: not supported by cvs2svn $
 # =============================================================================
@@ -16,7 +16,7 @@ use           Bender         v5r1   Phys
 use           BenderLibs     v5r1   Tools 
 
 # =========== dictionaries for LoKi/Bender classes ============================
-use           BenderDet      v5r1   Det 
+use           BenderDet      v5r2   Det 
 
 # =========== dictionaries for LoKi/Bender classes ============================
 use           BenderDict     v5r1   Tools 
@@ -25,7 +25,7 @@ use           BenderDict     v5r1   Tools
 use           BenderRels     v5r1   Tools 
   
 # =========== Visualization ===================================================
-use           BenderVis      v5r1   Vis 
+use           BenderVis      v5r2   Vis 
 
 # =========== Hybrid(Python/C++) solution for efficient analysis ==============
 use           LoKiHybrid     v5r0   Tools
@@ -38,6 +38,9 @@ use           BenderExample  v5r1   Ex
 
 # =============================================================================
 # $Log: not supported by cvs2svn $
+# Revision 1.68  2005/07/05 06:48:53  ibelyaev
+#  v5r2
+#
 # =============================================================================
 # The END 
 # =============================================================================
