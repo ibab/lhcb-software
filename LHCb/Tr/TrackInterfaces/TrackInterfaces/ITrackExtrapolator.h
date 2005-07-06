@@ -24,6 +24,8 @@ static const InterfaceID IID_ITrackExtrapolator( "ITrackExtrapolator" , 2, 0 );
  *
  *  Interface for track extrapolator tools
  *
+ *  @author Edwin Bos (added method)
+ *  @date 06/07/2005
  *  @author Eduardo Rodrigues (changes and new features for new track event model)
  *  @date   14/12/2004
  *  @author Marco Cattaneo
@@ -36,6 +38,11 @@ class ITrackExtrapolator: virtual public IAlgTool {
 public:
   /// Return the interface ID
   static const InterfaceID& interfaceID() { return IID_ITrackExtrapolator; }
+
+  /// Predict where the plane will be intersected
+  virtual StatusCode predict( State& state,
+                              const HepPlane3D& plane,
+                              double& dZ );
 
   /// Propagate a track to a given z-position
   virtual StatusCode propagate( const Track& track,
@@ -57,6 +64,11 @@ public:
   /// Propagate a state to the intersection point with a given plane
   virtual StatusCode propagate( State& state,
                                 const HepPlane3D& plane,
+                                ParticleID pid = ParticleID(211) ) = 0;
+
+  /// Propagate a state to the closest point to the specified point
+  virtual StatusCode propagate( State& state,
+                                const HepPoint3D& point,
                                 ParticleID pid = ParticleID(211) ) = 0;
 
   /// Retrieve the position and momentum vectors and the corresponding
