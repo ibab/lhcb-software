@@ -1,7 +1,8 @@
-! $Id: release.notes,v 1.60 2005-07-06 05:36:16 pkoppenb Exp $
+! $Id: release.notes,v 1.61 2005-07-06 14:39:11 pkoppenb Exp $
 ! Package     : DaVinciKernel
 ! Responsible : P. Koppenburg
 
+!========================== DaVinciKernel v3r5 2005-07-06 ===================
 ! 2005-07-06 - P. Koppenburg
   - Kernel/ITagger.h
     . Return Tagger object
