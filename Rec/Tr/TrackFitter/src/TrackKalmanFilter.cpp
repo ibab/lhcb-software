@@ -1,4 +1,4 @@
-// $Id: TrackKalmanFilter.cpp,v 1.1 2005-06-29 15:35:02 erodrigu Exp $
+// $Id: TrackKalmanFilter.cpp,v 1.2 2005-07-06 16:46:26 ebos Exp $
 //
 //  Implementation of the TrackKalmanFilter tool
 //
@@ -40,7 +40,7 @@ TrackKalmanFilter::TrackKalmanFilter( const std::string& type,
   m_zPositions.push_back(  9450.0*mm );
   m_zPositions.push_back( 11900.0*mm );
 
-  declareProperty( "Extrapolator"     , m_extrapolatorName = "TrackFirstCleverExtrapolator" );
+  declareProperty( "Extrapolator"     , m_extrapolatorName = "TrackMasterExtrapolator" );
   declareProperty( "Projector"        , m_projectorName = "TrackMasterProjector" );
   declareProperty( "ZPositions"       , m_zPositions               );
   declareProperty( "StatesAtMeasZPos" , m_statesAtMeasZPos = false );
