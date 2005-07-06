@@ -1,29 +1,8 @@
-// $Id: DeCalorimeter.h,v 1.12 2002-12-17 15:39:53 ocallot Exp $ 
+// $Id: DeCalorimeter.h,v 1.13 2005-07-06 15:30:24 ibelyaev Exp $ 
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
-// Revision 1.11  2002/06/15 06:25:25  ocallot
-// new user parameters for x/y cell size and central hole
-//
-// Revision 1.10  2002/04/02 14:55:16  ibelyaev
-//  add 'const' qualifier to DeCalorimeter::Cell method
-//
-// Revision 1.9  2002/03/28 13:47:13  ibelyaev
-// new version of Kernel packages, move out all XMl-stuff
-//
-// Revision 1.8  2001/11/25 15:08:45  ibelyaev
-//  update for newer CaloKernel Package
-//
-// Revision 1.7  2001/08/21 13:05:08  ibelyaev
-// fix problems of user parameters on Win2K
-//
-// Revision 1.6  2001/07/02 17:17:59  ibelyaev
-// improvements in readability of DeCalorimeter.h
-//
-// Revision 1.5  2001/06/29 10:26:17  ibelyaev
-// update to use new features of DetDesc v7 package
-// 
 // ============================================================================
 #ifndef       CALODET_DECALORIMETER_H
 #define       CALODET_DECALORIMETER_H 1
@@ -67,8 +46,12 @@ namespace DeCalorimeterLocation {
  *  @author Olivier Callot Olivier.Callot@cern.ch
  *  @author Vanya Belyaev  Ivan.Belyaev@itep.ru  
  */
-class DeCalorimeter: public DetectorElement {
-
+class DeCalorimeter: public DetectorElement 
+{
+private:
+  
+  DeCalorimeter( const DeCalorimeter& ) ;
+  
 public:
   
   ///  Constructors

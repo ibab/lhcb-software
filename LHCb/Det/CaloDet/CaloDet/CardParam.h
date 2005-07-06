@@ -1,5 +1,5 @@
 /// ===========================================================================
-/// $Id: CardParam.h,v 1.3 2005-05-24 08:25:21 cattanem Exp $
+/// $Id: CardParam.h,v 1.4 2005-07-06 15:30:24 ibelyaev Exp $
 /// ===========================================================================
 #ifndef CALODET_CARDPARAM_H 
 #define CALODET_CARDPARAM_H 1
@@ -25,7 +25,9 @@ public:
       @param iRow   row 
       @param iCol   column
   */
-  CardParam( int iArea, int iRow, int iCol );
+  CardParam( int iArea = 0 , 
+             int iRow  = 0 , 
+             int iCol  = 0 ) ;
   
   /// destructor 
   ~CardParam();

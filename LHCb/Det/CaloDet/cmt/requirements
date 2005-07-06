@@ -1,7 +1,9 @@
-# $Id: requirements,v 1.37 2005-05-24 08:25:21 cattanem Exp $ 
+# $Id: requirements,v 1.38 2005-07-06 15:30:24 ibelyaev Exp $ 
+# =============================================================================
+# CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.38 $
 # =============================================================================
 package  CaloDet 
-version  v6r9
+version  v6r10
 
 # =============== structure ===================================================
 branches         src cmt doc options CaloDet 
@@ -26,3 +28,6 @@ library          CaloDet           component/*.cpp
 apply_pattern component_library library=CaloDet
 apply_pattern linker_library    library=CaloDetLib
 
+# =============================================================================
+# The END 
+# =============================================================================
