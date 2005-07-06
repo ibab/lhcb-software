@@ -2,6 +2,9 @@ Package: GaudiObjDesc
 Desccription: This package contains a set of tools used to generate code from the XML description of the data object classes.
 Package manager : Stefan Roiser
 
+!20050706 - Hubert Degaudenzi
+- fixed end of lines in gdd.dtd
+
 !20050525 - Stefan
 - adding template support for methods (attribute template)
 - no dictionaries for templated methods are created (if needed use lcgdict)
