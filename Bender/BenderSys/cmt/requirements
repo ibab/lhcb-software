@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.69 2005-07-06 16:55:47 ibelyaev Exp $ 
+# $Id: requirements,v 1.70 2005-07-06 18:29:43 ibelyaev Exp $ 
 # =============================================================================
 # CVS tag $Name: not supported by cvs2svn $
 # =============================================================================
@@ -10,7 +10,7 @@ version       v5r2
 author        Vanya BELYAEV
 
 # =========== Bender Application itself =======================================
-use           Bender         v5r1   Phys 
+use           Bender         v5r2   Phys 
  
 # =========== Bender Libraries ================================================
 use           BenderLibs     v5r1   Tools 
@@ -38,6 +38,9 @@ use           BenderExample  v5r1   Ex
 
 # =============================================================================
 # $Log: not supported by cvs2svn $
+# Revision 1.69  2005/07/06 16:55:47  ibelyaev
+#  add Det/BenderDet v5r2
+#
 # Revision 1.68  2005/07/05 06:48:53  ibelyaev
 #  v5r2
 #
