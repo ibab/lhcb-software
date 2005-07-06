@@ -1,21 +1,10 @@
-// $Id: TrackExtrapolator.cpp,v 1.5 2005-06-29 13:46:18 erodrigu Exp $
 // Include files
 
 // from Gaudi
 #include "GaudiKernel/ToolFactory.h" 
 
-// from TrackEvent
-#include "Event/Track.h"
-#include "Event/State.h"
-
 // local
 #include "TrackExtrapolator.h"
-
-//-----------------------------------------------------------------------------
-// Implementation file for class : TrackExtrapolator
-//
-// 2004-12-17 : Eduardo Rodrigues
-//-----------------------------------------------------------------------------
 
 // Declaration of the Tool Factory
 static const  ToolFactory<TrackExtrapolator>          s_factory ;
@@ -477,8 +466,8 @@ const HepMatrix& TrackExtrapolator::transportMatrix() const
 // Standard constructor, initializes variables
 //=============================================================================
 TrackExtrapolator::TrackExtrapolator( const std::string& type,
-                                const std::string& name,
-                                const IInterface* parent )
+				      const std::string& name,
+				      const IInterface* parent )
   : GaudiTool ( type, name , parent )
   , m_F()
 {
@@ -492,29 +481,3 @@ TrackExtrapolator::TrackExtrapolator( const std::string& type,
 // Destructor
 //=============================================================================
 TrackExtrapolator::~TrackExtrapolator() {}; 
-
-//=============================================================================
-// Update the properties of the state
-//=============================================================================
-void TrackExtrapolator::updateState( State& state, double z ) const
-{
-  // get reference to the State vector and covariance
-  HepVector& tX = state.stateVector();
-  HepSymMatrix& tC = state.covariance();
-
-  debug() << "Initial state vector at z = " << z << " ," << tX << endreq
-          << "and covariance matrix = " << tC << endreq
-          << "and transport matrix F = " << m_F << endreq;
-
-  // calculate new state
-  state.setZ( z );
-  tX = m_F * tX; // X*F  (can this be done more efficiently?)
-
-  tC = tC.similarity(m_F); // F*C*F.T()
-
-  debug() << "updated to state vector = " << tX << endreq
-          << "and covariance matrix = " << tC << endreq;
-
-}
-
-//=============================================================================

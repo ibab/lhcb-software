@@ -1,4 +1,3 @@
-// $Id: TrackTransportStep.h,v 1.2 2005-05-24 12:01:48 erodrigu Exp $
 #ifndef TRACKTRANSPORTSTEP_H 
 #define TRACKTRANSPORTSTEP_H 1
 
@@ -13,19 +12,16 @@
  *  @date   28-04-2000
  */
 
-class TrackTransportStep{ 
+class TrackTransportStep { 
 
 public:
 
   /// constructer
-  TrackTransportStep( ITrackExtrapolator* extrapolator, double zStop)
-    : m_extrapolator( extrapolator )
-    , m_Z( zStop ) 
-  { 
-  };
+  TrackTransportStep( ITrackExtrapolator* extrapolator, double zStop )
+    : m_extrapolator( extrapolator ), m_Z( zStop ) {}
 
   /// destructer
-  ~TrackTransportStep(){};
+  ~TrackTransportStep() {};
 
   /// get extrapolator to use
   ITrackExtrapolator* extrapolator() const;
@@ -36,15 +32,17 @@ public:
 private:
 
   ITrackExtrapolator* m_extrapolator;  ///< extrapolator to use
-  double m_Z;                      ///< z to extrapolate to
+  double m_Z;                          ///< z to extrapolate to
 
 };
 
-inline ITrackExtrapolator* TrackTransportStep::extrapolator() const{
+inline ITrackExtrapolator* TrackTransportStep::extrapolator() const
+{
   return m_extrapolator;
 }
 
-inline double TrackTransportStep::z() const{
+inline double TrackTransportStep::z() const
+{
   return m_Z;
 }
 

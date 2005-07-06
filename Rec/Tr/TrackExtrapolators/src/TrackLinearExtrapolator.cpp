@@ -1,43 +1,17 @@
-// $Id: TrackLinearExtrapolator.cpp,v 1.5 2005-06-29 13:46:18 erodrigu Exp $
 // Include files
 
 // from Gaudi
 #include "GaudiKernel/ToolFactory.h"
 
-// from TrEvent
-#include "Event/Track.h"
-#include "Event/State.h"
+// from TrackEvent
 #include "Event/TrackParameters.h"
 
 // local
 #include "TrackLinearExtrapolator.h"
 
-//-----------------------------------------------------------------------------
-// Implementation file for class : TrackLinearExtrapolator
-//
-// 2004-12-17 : Eduardo Rodrigues
-//-----------------------------------------------------------------------------
-
 // Declaration of the Tool Factory
 static const  ToolFactory<TrackLinearExtrapolator>          s_factory ;
 const        IToolFactory& TrackLinearExtrapolatorFactory = s_factory ;
-
-//=============================================================================
-// Extrapolate the State to z=zNew using the transport matrix  m_F
-// (i.e. it performs the mathematical calculation)
-//=============================================================================
-/*
-void TrackLinearExtrapolator::extrapolate( State* state ) const
-{
-  // get reference to the State vector and covariance
-  HepVector& tX = state -> stateVector();
-  HepSymMatrix& tC = state -> covariance();
-
-  // calculate new state
-  tX = m_F * tX;           // X * F
-  tC = tC.similarity(m_F); // F * C *F.T()
-}
-*/
 
 //=============================================================================
 // Propagate a State to a given z-position
@@ -46,23 +20,23 @@ StatusCode TrackLinearExtrapolator::propagate( State& state,
                                                double zNew,
                                                ParticleID pid )
 {
-  // create transport matrix
-  unsigned int ndim = state.nParameters();
-  
-  m_F = HepMatrix(ndim, ndim, 1);
-
-  // check current z-position
+  // Reset and update the transport matrix
+  m_F = HepMatrix(5, 5, 1);
   double dz = zNew - state.z();
-  // if ( fabs(dz) < TrackParameters::hiTolerance ) dz = 0.;
-  m_F[0][2] = dz; // tx*dz
-  m_F[1][3] = dz; // ty*dz
+  m_F(1,3) = dz;
+  m_F(2,4) = dz;
 
   debug() << "Transport matrix F =" << m_F << endreq;
   
-  // extrapolate
-  //extrapolate(state);
-  //state -> setZ( zNew );
-  updateState( state, zNew );
+  // Update the State
+  HepVector& tState = state.stateVector();
+  tState[0] += tState[2]*dz;
+  tState[1] += tState[3]*dz;
+  state.setZ( zNew );
+  
+  // update covariance
+  HepSymMatrix& tStateCov = state.covariance();
+  tStateCov = tStateCov.similarity(m_F); // F*C*F.T()
 
   debug() << " z propagation " << zNew
           << " propagated state " << state.stateVector()
@@ -76,8 +50,8 @@ StatusCode TrackLinearExtrapolator::propagate( State& state,
 // Propagate a State to the intersection point with a given plane
 //=============================================================================
 StatusCode TrackLinearExtrapolator::propagate( State& state,
-                                            HepPlane3D& plane,
-                                            ParticleID pid )
+                                               const HepPlane3D& plane,
+                                               ParticleID pid )
 {
   // calculation of the z-position by linear extrapolation to the plane
   // ------------------------------------------------------------------
@@ -91,21 +65,51 @@ StatusCode TrackLinearExtrapolator::propagate( State& state,
   HepPoint3D  posVec = state.position();
   HepVector3D slpVec = state.slopes();
 
-  double den = nVec.dot( slpVec );
+  // denominator 'den'
+  double den = nVec.dot(slpVec);
 
-  if ( den < TrackParameters::looseTolerance ) return StatusCode::FAILURE;
+  // devide by zero protection, indicates curling Track
+  if( den < TrackParameters::looseTolerance )
+  {
+    return StatusCode::FAILURE;
+    warning() << "Linear propagation requested devision by zero." << endreq;
+  }
 
-  slpVec *= ( state.z() );
-  posVec -= slpVec;
+  // nominator 'nom'  
+  double nom = nVec.dot(posVec) + plane.d();
   
-  double nom = - ( nVec.dot( posVec ) + plane.d() );
-  
-  double zNew = nom / den;
+  // z-value of intersection point
+  double zNew = - (nom / den) + state.z();
 
   debug() << " z propagation " << zNew 
           << " of particle pid " << pid.pid() << endreq;
 
-  return propagate( state, zNew, pid );
+  // Propagate to the intersection point  
+  StatusCode sc = propagate(state, zNew, pid);
+
+  return sc;
+}
+
+//=============================================================================
+// Propagate a State to the closest position to the specified point
+//=============================================================================
+StatusCode TrackLinearExtrapolator::propagate( State& state,
+                                               const HepPoint3D& point,
+                                               ParticleID pid )
+{
+  // Distance = sqrt((x'-x0-Tx*dz)^2+(y'-y0-Ty*dz)^2+(z'-z0-dz)^2)
+  // Find dz by solving: d(distance)/dz = 0
+  HepPoint3D  pos = state.position();
+  HepVector3D slo = state.slopes();
+  HepPoint3D  dif = pos - point;
+  
+  // Remember that slo[2]==1 by definition
+  double zNew = -2*( (dif[0]+dif[1]+dif[2]) / (slo[0]+slo[1]+1) );
+  
+  // Propagate to the point
+  StatusCode sc = propagate(state, zNew, pid);
+  
+  return sc;
 }
 
 //=============================================================================
@@ -114,10 +118,7 @@ StatusCode TrackLinearExtrapolator::propagate( State& state,
 TrackLinearExtrapolator::TrackLinearExtrapolator(const std::string& type,
                                                  const std::string& name,
                                                  const IInterface* parent )
-  : TrackExtrapolator ( type, name, parent )
-{
-  //declareInterface<ITrackExtrapolator>( this );
-}
+  : TrackExtrapolator ( type, name, parent ) {}
 
 //=============================================================================
 // Destructor

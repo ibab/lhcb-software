@@ -1,17 +1,21 @@
-// $Id: TrackHerabExtrapolator.h,v 1.2 2005-05-25 14:24:35 cattanem Exp $
 #ifndef TRACKHERABEXTRAPOLATOR_H
 #define TRACKHERABEXTRAPOLATOR_H 1
 
 // Include files
 #include "TrackExtrapolator.h"
 
+// Forward declarations
+
+class IMagneticFieldSvc;
+
 /** @class TrackHerabExtrapolator TrackHerabExtrapolator.h "TrackHerabExtrapolator.h"
  *
- *  A TrackHerabExtrapolator is a ITrExtrapolator which does a 'HerabRK5'
- *  extrapolation of a TrState. It doesn't take into account 
- *  Multiple Scattering.
- *  Note that it can only extrapolate a TrStateP.
+ *  A TrackHerabExtrapolator is a ITrackExtrapolator which does a 'HerabRK5'
+ *  extrapolation of a State.
+ *  It doesn't take into account Multiple Scattering.
  *
+ *  @author Edwin Bos
+ *  @date   06/07/2005
  *  @author Jose A. Hernando (14-03-05)
  *  @author Matt Needham
  *  @date   22-04-2000
@@ -24,20 +28,49 @@ public:
   /// Constructor
   TrackHerabExtrapolator( const std::string& type, 
                           const std::string& name, 
-                          const IInterface* parent);
+                          const IInterface* parent );
 
-  ///destructor
+  /// destructor
   virtual ~TrackHerabExtrapolator();
 
-  /// initialize and finalize
+  /// initialize
   virtual StatusCode initialize();
 
+  /// Predict where the plane will be intersected
+  virtual StatusCode predict( State& state,
+                              const HepPlane3D& plane,
+                              double& dZ )
+    {
+      warning() << "Operation not implemented for this class." << endreq;
+      return StatusCode::FAILURE;
+    }
 
-  /// propagate a Q/p state
+  /// Propagate a state to a given z-position
   virtual StatusCode propagate( State& pState, 
-                                double zNew = 0,
-                                ParticleID partId = ParticleID(211));
+                                double z,
+                                ParticleID partId = ParticleID(211) );
 
+  // Propagate a state to the intersection point with a given plane
+  // Taken care of in the TrackMasterExtrapolator
+  StatusCode propagate( State& state,
+			const HepPlane3D& plane,
+			double& dZ )
+    {
+      warning() << "Operation not implemented in this class,
+ please use the MaterExtrapolator." << endreq;
+      return StatusCode::FAILURE;
+    }
+  
+  // Propagate to the closest point to the specified point
+  StatusCode propagate( State& state,
+			const HepPoint3D& point,
+			double& dZ )
+    {
+      warning() << "Operation not implemented for this class." << endreq;
+
+    return StatusCode::FAILURE;
+    }
+  
 private:
  
   /// interface to Hera-b code

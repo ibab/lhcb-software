@@ -1,4 +1,3 @@
-// $Id: TrackExtrapolator.h,v 1.1 2005-05-25 14:24:35 cattanem Exp $
 #ifndef TRACKEXTRAPOLATORS_TRACKEXTRAPOLATOR_H 
 #define TRACKEXTRAPOLATORS_TRACKEXTRAPOLATOR_H 1
 
@@ -12,11 +11,15 @@
 
 // from TrackEvent
 #include "Event/Track.h"
+#include "Event/State.h"
 
 /** @class TrackExtrapolator TrackExtrapolator/TrackExtrapolator.h
  *  
  *  A TrackExtrapolator is a base class implementing methods
  *  from the ITrackExtrapolator interface.
+ *
+ *  @author Edwin Bos (added extrapolation methods)
+ *  @date   05/07/2005
  *
  *  @author Eduardo Rodrigues
  *  @date   2004-12-17
@@ -24,6 +27,11 @@
 class TrackExtrapolator : public GaudiTool,
                           virtual public ITrackExtrapolator {
 public: 
+  /// Predict where the plane will be intersected
+  virtual StatusCode predict( State& state,
+                              const HepPlane3D& plane,
+                              double& dZ );
+
   /// Propagate a track to a given z-position
   virtual StatusCode propagate( const Track& track,
                                 double z,
@@ -39,24 +47,17 @@ public:
   /// Propagate a state to a given z-position
   virtual StatusCode propagate( State& state,
                                 double z,
-                                ParticleID pid = ParticleID(211) ) 
-  { 
-    warning() << " can not propagate " << pid.pid() 
-              << " state " << state.position() << " at " << z << endreq;
-    return StatusCode::FAILURE;
-  }
+                                ParticleID pid = ParticleID(211) );
 
   /// Propagate a state to the intersection point with a given plane
   virtual StatusCode propagate( State& state,
                                 const HepPlane3D& plane,
-                                ParticleID pid = ParticleID(211) ) 
-  {
-    warning() << " can not propagate " << pid.pid() 
-              << "state " << state.position() << " at " << plane.normal() 
-              << endreq;
-    return StatusCode::FAILURE;
-  }
+                                ParticleID pid = ParticleID(211) );
   
+  /// Propagate a state to the closest point to the specified point
+  virtual StatusCode propagate( State& state,
+                                const HepPoint3D& point,
+                                ParticleID pid = ParticleID(211) );
 
   /** Retrieve the position and momentum vectors and the corresponding
       6D covariance matrix (pos:1->3,mom:4-6) of a track at a given z-position
@@ -204,20 +205,15 @@ public:
 
   /// Standard constructor
   TrackExtrapolator( const std::string& type, 
-                  const std::string& name,
-                  const IInterface* parent );
-
+		     const std::string& name,
+		     const IInterface* parent );
+  
   /// Destructor
   virtual ~TrackExtrapolator( );
 
 protected:
   /// Transport matrix
   HepMatrix m_F; 
-
-  /// Update the properties of the state
-  virtual void updateState( State& state, double z ) const;
-
-private:
 
 };
 #endif // TRACKEXTRAPOLATORS_TRACKEXTRAPOLATOR_H

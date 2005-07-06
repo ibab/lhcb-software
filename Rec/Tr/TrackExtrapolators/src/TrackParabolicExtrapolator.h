@@ -1,4 +1,3 @@
-// $Id: TrackParabolicExtrapolator.h,v 1.2 2005-05-25 14:24:35 cattanem Exp $
 #ifndef TRACKPARABOLICEXTRAPOLATOR_H
 #define TRACKPARABOLICEXTRAPOLATOR_H 1
 
@@ -15,6 +14,8 @@ class IMagneticFieldSvc;
  *  using a parabolic expansion of the trajectory. It doesn't take into
  *  account Multiple Scattering.
  *
+ *  @author Edwin Bos (added extrapolation methods)
+ *  @date   05/07/2005
  *  @author Jose A. Hernando (13-03-2005)
  *  @author Matt Needham
  *  @date   22-04-2000
@@ -32,18 +33,34 @@ public:
   /// Destructor
   virtual ~TrackParabolicExtrapolator();
   
-  /// initialize and finalize
+  /// initialize
   virtual StatusCode initialize();
   
+  // Predicts the distance in Z from the state to the plane
+  StatusCode predict( State& state,
+                      const HepPlane3D& plane,
+                      double& dZ );
 
   /// Propagate a state to a given z-position
   virtual StatusCode propagate( State& state,
                                 double z,
                                 ParticleID pid = ParticleID(211) );
+
+  // Propagate a state to the intersection point with a given plane
+  StatusCode propagate( State& state,
+                        const HepPlane3D& plane,
+                        ParticleID pid = ParticleID(211) );
+  
+  // Propagate a state to the closest position to the specified point
+  StatusCode propagate( State& state,
+                        const HepPoint3D& point,
+                        ParticleID pid = ParticleID(211) );
+
 protected:
 
   /// update transport matrix
-  virtual void updateTransportMatrix( const double dz, State& pState);
+  virtual void updateTransportMatrix( const double dz,
+				      State& State );
 
 protected:
 
@@ -53,6 +70,5 @@ protected:
   IMagneticFieldSvc* m_pIMF; ///< Pointer to the magnetic field service
 
 };
-
 
 #endif // TRACKPARABOLICEXTRAPOLATOR_H

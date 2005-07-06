@@ -4,6 +4,12 @@
 ! Purpose     : Package for tracking extrapolators
 !-----------------------------------------------------------------------------
 
+! 2005-07-06 - Edwin Bos
+ - Added Extrapolation methods 'to plane' and 'to point not on track'
+ - Moved TrackFirstCleverExtrapolator to TrackMasterExtrapolator
+ - TrackHerabExtrapolator is supposed to be called through the 
+   TrackMasterExtrapolator
+
 ! 2005-06-02 - Eduardo Rodrigues
  - debug statements added
 
