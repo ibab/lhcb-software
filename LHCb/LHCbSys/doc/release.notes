@@ -5,13 +5,14 @@
 ! Purpose     : LHCb OO kernel packages
 !-----------------------------------------------------------------------------
 
-</PRE><H1><A NAME=v18r7>2005-07-05 LHCbSys v18r8</A></H1><PRE>
+</PRE><H1><A NAME=v18r7>2005-07-06 LHCbSys v18r8</A></H1><PRE>
 This version uses Gaudi v16r4
 
  - New packages      : LinkerInstances v1r0 - dictionaries of Linker objects for
                                               use with GaudiPython
- - Modified packages : EventSys v20r7p1, DAQEvent v5r2p2, DetSys v7r3, 
-     DetDesc v15r3, DetDescCnv v2r7p1, VeloDet v9r8, MuonDet v4r8, TrgTools v7r5
+ - Modified packages : EventSys v20r8, DAQEvent v5r2p2, PhysEvent v8r10,
+     DetSys v7r3, DetDesc v15r3, DetDescCnv v2r7p1, VeloDet v9r8, MuonDet v4r8,
+     TrgTools v7r5
 
  - In DoxyFile.cfg
    . Get dot tool configuration from dottools.cfg, rather than from makedoc.py
@@ -19,6 +20,9 @@ This version uses Gaudi v16r4
  - In DAQEvent v5r2p2
    . EventHeaderFromRaw, check existence of DAQ bank before accessing it, return
      StatusCode::FAILURE if missing
+
+ - In PhysEvent v8r10
+   . Add FilterCriterion, Tagger classes. Update FlavourTag
 
  - In DetDesc v15r3
    . Changes to allow the construction of AlignmentConditions from alignment 

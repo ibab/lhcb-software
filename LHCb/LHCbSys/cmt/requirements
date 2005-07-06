@@ -43,7 +43,7 @@ use RichDet		v8r4	Det     # Chris Jones
 use STDet          	v1r4	Det     # Matt Needham
 
 # Event data model
-use EventSys		v20r7p1	Event   # Marco Cattaneo
+use EventSys		v20r8   Event   # Marco Cattaneo
 use Event        	v4r7	Event   # Marco Cattaneo
 use VeloEvent    	v13r2p1 Event   # Chris Parkes
 use ITEvent      	v13r2p1	Event   # Matt Needham
@@ -53,7 +53,7 @@ use RichEvent    	v8r4    Event   # Chris Jones
 use CaloEvent    	v13r9	Event   # Ivan Belyaev
 use MuonEvent    	v4r0	Event   # Alessia Satta
 use L0Event      	v14r3	Event   # O.Callot, O.Deschamps, A.Tsaregorodtsev
-use PhysEvent    	v8r9	Event   # Patrick Koppenburg
+use PhysEvent    	v8r10   Event   # Patrick Koppenburg
 use DAQEvent		v5r2p2  Event   # Marco Cattaneo
 use GenEvent    	v3r3p1	Event   # Gloria Corti
 use EventAssoc          v1r5    Event   # Ivan Belyaev
