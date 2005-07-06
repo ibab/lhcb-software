@@ -1,14 +1,15 @@
-! $Id: release.notes,v 1.44 2005-07-06 15:30:24 ibelyaev Exp $ 
+! $Id: release.notes,v 1.45 2005-07-06 16:51:16 cattanem Exp $ 
 ! =============================================================================
 Package         : CaloDet   
 Package manager : Vanya Belyaev Ivan.Belyaev@itep.ru
 
+!========================= CaloDet v6r9p1 2005-07-06 =========================
 ! 2005-07-06 - Vanya BELYAEV
  - CaloDet/DeCalorimeter.h
    CaloDet/CardParam.h
      minor fix to please the geenration of LCG-dictionaries (for Python)
  - cmt/requirements
-     version increment to v6r9 
+     version increment to v6r9p1 
 
 !========================= CaloDet v6r9 2005-05-24 =========================
 ! 2005-05-13 - Marco Clemencic
