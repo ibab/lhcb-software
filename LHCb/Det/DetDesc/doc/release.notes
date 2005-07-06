@@ -1,11 +1,17 @@
 ! =============================================================================
-! $Id: release.notes,v 1.197 2005-07-05 13:38:34 cattanem Exp $ 
+! $Id: release.notes,v 1.198 2005-07-06 13:45:14 jpalac Exp $ 
 ! =============================================================================
 ! package DetDesc
 ! package manager : Marco Clemencic, Juan Palacios
 ! =============================================================================
 
+! 2005-07006 - Juan Palacios
+ - Add public methods cache and updateMatrices to IGeometryInfo.h to allow
+   changing delta transformation matrices and propagating changes to daughters.
+ - Add or change implementations in GeometryInfoPlus class.
+
 !======================== DetDesc v15r3 2005-07-05 ========================
+
 ! 2005-07-05 - Juan Palacios
  - Remove GeometryInfo class.
  - Add methods to re-set AlignmentConditions to IGeometryInfo.

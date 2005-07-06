@@ -1,4 +1,4 @@
-// $Id: GeometryInfoPlus.h,v 1.4 2005-06-29 13:46:40 jpalac Exp $
+// $Id: GeometryInfoPlus.h,v 1.5 2005-07-06 13:45:14 jpalac Exp $
 #ifndef LIB_GEOMETRYINFOPLUS_H 
 #define LIB_GEOMETRYINFOPLUS_H 1
 
@@ -51,6 +51,10 @@ public:
   typedef std::vector<std::string>     ChildName;
 
   typedef std::vector<HepTransform3D>::const_iterator matrix_iterator;
+
+  typedef std::vector<IGeometryInfo*> IGIChildren;
+  typedef IGeometryInfo::IGIChildrens::iterator iGInfo_iterator;
+
   /** constructor, creates "ghost"
    *  @param de pointer to detector element 
    */
@@ -95,6 +99,9 @@ public:
 
   StatusCode initialize();
   StatusCode cache();
+
+  StatusCode updateMatrices(iGInfo_iterator childBegin,
+                            iGInfo_iterator childEnd);
 
   /// Is this "geometry object" assosiated with Logical Volume?
   inline bool hasLVolume() const { return m_gi_has_logical; }   //     
@@ -145,7 +152,6 @@ public:
   /// to this IGeometryInfo. Uses the transformations of parent 
   /// volumes that are on this detector element level.
   const HepTransform3D& localIdealMatrix() const;
-
 
   const HepTransform3D& localDeltaMatrix() const;
   

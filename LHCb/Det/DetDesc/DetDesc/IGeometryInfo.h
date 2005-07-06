@@ -1,4 +1,4 @@
-// $Id: IGeometryInfo.h,v 1.13 2005-07-05 13:28:34 jpalac Exp $ 
+// $Id: IGeometryInfo.h,v 1.14 2005-07-06 13:45:13 jpalac Exp $ 
 // ===========================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ===========================================================================
@@ -43,12 +43,18 @@ public:
 
   /// type of vector of daughter elements
   typedef  std::vector<IGeometryInfo*>  IGIChildrens;
-  
+  typedef IGeometryInfo::IGIChildrens::iterator IGIChildrenIterator;
+  typedef IGeometryInfo::IGIChildrens::const_iterator IGIChildrenConstIterator;
   /** retrieve the uniqie interface identifier 
    *  @return the unique interface identifier 
    */
   static const InterfaceID& interfaceID() { return IID_IGeometryInfo; }
   
+
+  virtual StatusCode cache()=0;
+  
+  virtual StatusCode updateMatrices(IGIChildrenIterator begin,
+                                    IGIChildrenIterator end)=0;
 
   /** Is the GeometryInfo object associated with Logical Volume?
    *  This is to distinguish the Ghost case from the others.

@@ -1,4 +1,4 @@
-// $Id: GeometryInfoPlus.cpp,v 1.6 2005-06-29 13:46:40 jpalac Exp $
+// $Id: GeometryInfoPlus.cpp,v 1.7 2005-07-06 13:45:14 jpalac Exp $
 // Include files 
 
 // GaudiKernel
@@ -316,6 +316,8 @@ StatusCode GeometryInfoPlus::calculateFullMatrices(matrix_iterator deltaFirst,
                         );
 
   m_matrixInv=new HepTransform3D( matrix().inverse() );
+
+  log() << MSG::VERBOSE << "calculated full matrices" << endmsg;
   
   return StatusCode::SUCCESS;
   
@@ -347,6 +349,9 @@ StatusCode GeometryInfoPlus::localDeltaMatrix(const HepTransform3D& newDelta)
 StatusCode GeometryInfoPlus::localDeltaParams(const std::vector<double>& trans,
                                               const std::vector<double>& rot)
 {
+  // should also make children re-calculate matrices by calling their
+  // calculateMatrices methods iteratively.
+
   if (this->hasAlignmentCondition()) {
     
     return (myAlignmentCondition()->setTransformation(trans, rot) ) ? 
@@ -363,6 +368,9 @@ StatusCode GeometryInfoPlus::setLocalDeltaMatrix(const HepTransform3D&
                                                  newDelta)
 {
 
+  // should also make children re-calculate matrices by calling their
+  // calculateMatrices methods iteratively.
+
   if (m_deltaMatrices.empty()) {
     log() << MSG::WARNING << "setLocalDeltaMatrix set failed!" << endmsg;
     return StatusCode::FAILURE;
@@ -373,17 +381,32 @@ StatusCode GeometryInfoPlus::setLocalDeltaMatrix(const HepTransform3D&
     m_localDeltaMatrix=0;
   }
 
+  log() << MSG::VERBOSE << "updating local delta matrix" << endmsg;
   m_localDeltaMatrix = new HepTransform3D(newDelta);
   m_deltaMatrices[0] = *m_localDeltaMatrix;
-  return calculateFullMatrices(deltaBegin(), deltaEnd(), idealBegin());
+  return (calculateFullMatrices(deltaBegin(), deltaEnd(), idealBegin()) ) ?
+    updateMatrices(this->childBegin(), this->childEnd() ) : 
+    StatusCode::FAILURE;
   
 }
+//=============================================================================
+StatusCode GeometryInfoPlus::updateMatrices(iGInfo_iterator childBegin,
+                                            iGInfo_iterator childEnd) 
+{ 
+  log() << MSG::VERBOSE << "updating child matrices for GI " 
+        << m_gi_lvolumeName << endmsg;
+  for (iGInfo_iterator gi = childBegin; gi!=childEnd; ++gi) {
 
+    (*gi)->cache();
+    (*gi)->updateMatrices( (*gi)->childBegin(), (*gi)->childEnd() ); 
+  }
+  return StatusCode::SUCCESS;
+}
 //=============================================================================
 void GeometryInfoPlus::clearMatrices() 
 {
 
-  //  if (!m_pvMatrices.empty()) m_pvMatrices.clear();
+  if (!m_pvMatrices.empty()) m_pvMatrices.clear();
   if (!m_deltaMatrices.empty()) m_deltaMatrices.clear();
 
   if( 0 != m_matrix ) { 
