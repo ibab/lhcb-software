@@ -25,8 +25,8 @@ This version uses Gaudi v16r4
    . Add FilterCriterion, Tagger classes. Update FlavourTag
 
  - In DetDesc v15r3
-   . Changes to allow the construction of AlignmentConditions from alignment 
-     parameters and the updating of AlignmentConditions by passing new parameters
+   . Various changes to IGeometryInfo, GeometryInfoPlus and AlignmentCondition to
+     setting and propagation of alignment transformation parameters
    . Remove GeometryInfo class
 
  - In DetDescCnv v2r7p1
