@@ -1,5 +1,6 @@
-// $Id: NNetTool.cpp,v 1.4 2005-07-04 08:20:05 pkoppenb Exp $
+// $Id: NNetTool.cpp,v 1.5 2005-07-06 15:16:41 pkoppenb Exp $
 // Include files 
+#include <math.h>
 // from Gaudi
 #include "GaudiKernel/ToolFactory.h"
 // local

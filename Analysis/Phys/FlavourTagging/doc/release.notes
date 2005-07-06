@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.69 2005-07-06 14:42:07 pkoppenb Exp $
+! $Id: release.notes,v 1.70 2005-07-06 15:16:41 pkoppenb Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Phys/FlavourTagging
 ! Responsible : Marco Musy (musy@cern.ch)
@@ -6,6 +6,9 @@
 !-----------------------------------------------------------------------------
 
 !========================== FlavourTagging v6r0 2005-07-06 ===================
+! 2005-07-06 - P. Koppenburg
+  - src/NNetTool.cpp
+    . include <math.h> for windows
 ! 2005-07-05 - M Musy
   - added reorganised:
     CombineTaggersNNet.cpp  to combine taggers
