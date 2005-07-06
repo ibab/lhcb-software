@@ -1,10 +1,11 @@
-! $Id: release.notes,v 1.1.1.1 2005-07-04 15:24:22 pkoppenb Exp $
+! $Id: release.notes,v 1.2 2005-07-06 14:41:47 pkoppenb Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Phys/FlavourTaggingChecker
 ! Responsible : Marco Musy (musy@cern.ch)
 ! Purpose     : Checker package for Phys/FlavourTagging
 !-----------------------------------------------------------------------------
 
+!========================== FlavourTaggingChecker v1r0 2005-07-06 ===================
 ! 2005-07-04 - P. Koppenburg
   New package containing all MC-related stuff 
 
