@@ -4,6 +4,8 @@
 ! Purpose     : Analysis program for LHCb
 !-----------------------------------------------------------------------------
 
+!========================== DaVinci v12r12 2005-07-06 ===================
+No major changes in Phys/DaVinci package. See DaVinciSys for details.
 !========================== DaVinci v12r11 2005-05-27 ===================
 ! 2005-06-08 - P. Koppenburg
   - cmt/requirements
@@ -17,7 +19,7 @@
     . Put algo in DaVinciSeq 
 !========================== DaVinci v12r10 2005-05-12 ===================
 ! 2005-05-10 - P. Koppenburg
-  - options/DVTRiggerFilter.opts
+  - options/DVTriggerFilter.opts
     . Include HLT
     . Switch off DstWriter by default
 !========================== DaVinci v12r9 2005-03-22 ===================
