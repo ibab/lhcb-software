@@ -1,4 +1,4 @@
-// $Id: UnpackTrStoredTrack.cpp,v 1.1.1.1 2005-06-02 08:54:21 cattanem Exp $
+// $Id: UnpackTrStoredTrack.cpp,v 1.2 2005-07-07 07:36:55 ocallot Exp $
 // Include files 
 
 // from Gaudi
@@ -68,6 +68,12 @@ StatusCode UnpackTrStoredTrack::execute() {
       pack.hintAndKey( *itI, dst, newTracks, hintID, key );
       SmartRef<TrState> ref( newTracks, hintID, key );
       track->addToStates( ref );
+    }
+    //== Measurements
+    for ( itI = src.measurements.begin() ; src.measurements.end() != itI ; ++itI ) {
+      pack.hintAndKey( *itI, dst, newTracks, hintID, key );
+      SmartRef<TrStoredMeasurement> ref( newTracks, hintID, key );
+      track->addToMeasurements( ref );
     }
   }
   return StatusCode::SUCCESS;

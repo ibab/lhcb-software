@@ -4,6 +4,9 @@
 ! Purpose     : Pack, Unpack and Compare containers for optimized persistency
 !-----------------------------------------------------------------------------
 
+! 2005-07-06 - Olivier Callot
+ - Decode the TrStoredMeasurements references in UnpackTrStoredTrack.cpp
+
 !======================== PackedEvent v1r0 2005-06-02 ========================
 ! 2005-06-02 - Marco Cattaneo
  - Package renamed PackedEvent
