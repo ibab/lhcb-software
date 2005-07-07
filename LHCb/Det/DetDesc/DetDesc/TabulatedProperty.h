@@ -1,10 +1,10 @@
-// $Id: TabulatedProperty.h,v 1.2 2003-04-25 08:52:24 sponce Exp $
+// $Id: TabulatedProperty.h,v 1.3 2005-07-07 12:20:38 marcocle Exp $
 #ifndef     DETDESC_TABULATEDPROPERTY_H
 #define     DETDESC_TABULATEDPROPERTY_H 1 
 /// STL
 #include <vector> 
 /// GaudiKernel
-#include "GaudiKernel/DataObject.h"
+#include "DetDesc/ValidDataObject.h"
 /// DetDesc
 #include "DetDesc/CLIDTabulatedProperty.h"
 ///
@@ -23,7 +23,7 @@ class StreamBuffer ;
     @date    26/02/2001
 */
 
-class TabulatedProperty: public DataObject
+class TabulatedProperty: public ValidDataObject
 {
   ///
 public:

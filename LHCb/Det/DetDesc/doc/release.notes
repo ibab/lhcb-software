@@ -1,9 +1,14 @@
 ! =============================================================================
-! $Id: release.notes,v 1.199 2005-07-06 14:22:21 cattanem Exp $ 
+! $Id: release.notes,v 1.200 2005-07-07 12:20:38 marcocle Exp $ 
 ! =============================================================================
 ! package DetDesc
 ! package manager : Marco Clemencic, Juan Palacios
 ! =============================================================================
+
+! 2005-07-07 - Marco Clemencic
+ - Moved interfaces from DetCond (for python bindings)
+ - TabulatedProperty inherits from ValidDataObject (first step to have it
+   in the CondDB)
 
 !======================== DetDesc v15r3 2005-07-06 ========================
 ! 2005-07-06 - Juan Palacios

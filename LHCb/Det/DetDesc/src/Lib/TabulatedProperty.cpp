@@ -1,4 +1,4 @@
-// $Id: TabulatedProperty.cpp,v 1.6 2003-04-25 08:52:24 sponce Exp $
+// $Id: TabulatedProperty.cpp,v 1.7 2005-07-07 12:20:38 marcocle Exp $
 
 // DetDesc 
 #include "DetDesc/TabulatedProperty.h"
@@ -9,7 +9,7 @@
 
 ////////////////////////////////////////////////////////////////////////////////
 TabulatedProperty::TabulatedProperty( const std::string& /*Name*/ )
-  : DataObject( )
+  : ValidDataObject( )
   , m_type    ( "(Unknown)" ) 
   , m_xAxis   ( "(empty)"   ) 
   , m_yAxis   ( "(empty)"   ) 
@@ -20,7 +20,7 @@ TabulatedProperty::~TabulatedProperty(){ table().clear(); }
 ////////////////////////////////////////////////////////////////////////////////
 StreamBuffer& TabulatedProperty::serialize  ( StreamBuffer& s ) const 
 { 
-  DataObject::serialize( s );
+  ValidDataObject::serialize( s );
   s << type ()  <<  xAxis()  << yAxis() ;
   s << table().size() ; 
   for( Table::const_iterator it = table().begin() ; table().end() !=it ; ++it )
@@ -30,7 +30,7 @@ StreamBuffer& TabulatedProperty::serialize  ( StreamBuffer& s ) const
 ////////////////////////////////////////////////////////////////////////////////
 StreamBuffer& TabulatedProperty::serialize  ( StreamBuffer& s )       
 {
-  DataObject::serialize( s ) ;
+  ValidDataObject::serialize( s ) ;
   s >> m_type >> m_xAxis >> m_yAxis ;
   ///
   Table::size_type  size     ; 
