@@ -1,16 +1,19 @@
 ! =============================================================================
-! $Id: release.notes,v 1.200 2005-07-07 12:20:38 marcocle Exp $ 
+! $Id: release.notes,v 1.201 2005-07-07 14:18:18 cattanem Exp $ 
 ! =============================================================================
 ! package DetDesc
 ! package manager : Marco Clemencic, Juan Palacios
 ! =============================================================================
+
+!======================== DetDesc v15r3 2005-07-07 ========================
+! 2005-07-07 - Marco Cattaneo
+ - Remove the dictionary stuff, moved to DetSys
 
 ! 2005-07-07 - Marco Clemencic
  - Moved interfaces from DetCond (for python bindings)
  - TabulatedProperty inherits from ValidDataObject (first step to have it
    in the CondDB)
 
-!======================== DetDesc v15r3 2005-07-06 ========================
 ! 2005-07-06 - Juan Palacios
  - Add public methods cache and updateMatrices to IGeometryInfo.h to allow
    changing delta transformation matrices and propagating changes to daughters.
