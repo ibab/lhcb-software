@@ -1,8 +1,11 @@
-! $Id: release.notes,v 1.171 2005-07-06 14:39:47 pkoppenb Exp $
+! $Id: release.notes,v 1.172 2005-07-07 11:57:40 pkoppenb Exp $
 ! Package     : DaVinciTools
 ! Responsible : P. Koppenburg
 
 !========================== DaVinciTools v12r0p1 2005-07-06 ===================
+! 2005-07-07 - P. Koppenburg
+  - DaVinciTools_load.cpp
+    . Added MakeResonances. Bug kindly reported by Stephane Poss.
 ! 2005-06-27 - P. Koppenburg
   - cmt/requirements
     . Restored boost linkopts for DC04 data
