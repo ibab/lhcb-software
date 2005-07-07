@@ -1,4 +1,4 @@
-// $Id: CondDBGenericCnv.h,v 1.6 2005-07-07 12:23:15 marcocle Exp $
+// $Id: CondDBGenericCnv.h,v 1.7 2005-07-07 14:49:16 cattanem Exp $
 #ifndef DETCOND_CONDDBGENERICCNV_H 
 #define DETCOND_CONDDBGENERICCNV_H 1
 
@@ -97,13 +97,11 @@ protected:
   /**
    * Get an object from the Conditions DB. It tries all the CondDBAccessSvcs
    * known by CondDBCnvSvc before returing a failure code.
-   * @input 
-   * @param path the path inside the CondDB
-   * @output
-   * @param obj shared pointer to the COOL object
-   * @param descr folder description string (used to know the storage type by RelyConverter)
-   * @param since start of the IOV
-   * @param until end of the IOV
+   * @param[in]  path  the path inside the CondDB
+   * @param[out] obj   shared pointer to the COOL object
+   * @param[out] descr folder description string (used to know the storage type by RelyConverter)
+   * @param[out] since start of the IOV
+   * @param[out] until end of the IOV
    * The IOV is inside the object itself as two cool::ValidityKey, the since and until are 
    * used to avoid the conversion outside this method.
    */
