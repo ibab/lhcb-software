@@ -5,8 +5,6 @@ branches doc cmt
 
 # nedit ../../*/*Sys/v*/cmt/requirements 
 
-use PhysEvent v8r10 Event
-
 #=======================================================
 use  PhysCoreSys                v1r3     Phys
 #=======================================================
