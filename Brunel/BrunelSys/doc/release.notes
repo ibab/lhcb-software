@@ -3,6 +3,15 @@ Package: Rec/Brunel
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb reconstruction program
 
+</PRE><H1><A NAME=v27r3p1>2005-07-07 Brunel v27r3p1</A></H1><PRE>
+This version uses Gaudi v16r4, LHCb v18r7, Rec v1r3, Lbcom v2r3
+Requires input data from Boole v9r2 or greater. Incompatible with DC04 versions
+
+ - Bug fix:
+   . Fix MCDstContent.opts, to not overwrite already defined Dst content, and
+     to correctly save the packed MC truth containers. This bug was affecting
+     Brunel v27r2 and v27r3, making DSTs produced by those versions unusable
+
 </PRE><H1><A NAME=v27r3>2005-06-28 Brunel v27r3</A></H1><PRE>
 This version uses Gaudi v16r4, LHCb v18r7, Rec v1r3, Lbcom v2r3
 Requires input data from Boole v9r2 or greater. Incompatible with DC04 versions
