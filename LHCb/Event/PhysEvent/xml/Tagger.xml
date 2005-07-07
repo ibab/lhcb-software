@@ -45,13 +45,13 @@
      <attribute 
 	desc    = "Vector of Particle(s) used to build the Tagger" 
 	name    = "taggerParts" 
-	type    = "std::vector&lt;Particle&gt;"
+	type    = "std::vector&lt;const Particle*&gt;"
 	serialize = "FALSE"
      />
      <method
         type    = "void"
         name    = "addTaggerPart"
-	argList = "Particle HAS"
+	argList = "const Particle* HAS"
         desc    = "add one Particle to Tagger list">
         <code>  
           m_taggerParts.push_back(HAS); 

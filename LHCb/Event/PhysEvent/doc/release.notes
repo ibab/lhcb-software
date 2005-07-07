@@ -1,6 +1,11 @@
-! $Id: release.notes,v 1.60 2005-07-06 05:45:27 pkoppenb Exp $
+! $Id: release.notes,v 1.61 2005-07-07 16:55:04 pkoppenb Exp $
 ! Package     : PhysEvent 
 ! Responsible : P. Koppenburg
+
+! 2005-07-07 - P. Koppenburg
+  - xml/Tagger.xml
+    . Contain std::vector<const Particle*>, not std::vector<Particle>
+      Bug reported by Vanya
 
 ! 2005-07-06 - P. Koppenburg
  - Changes already done in v8r5b1 branch:
