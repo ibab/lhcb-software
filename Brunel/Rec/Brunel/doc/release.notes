@@ -3,8 +3,9 @@ Package: Rec/Brunel
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb reconstruction program
 
-</PRE><H1><A NAME=v27r3p1>2005-07-06 Brunel v27r3p1</A></H1><PRE> 
- - Fix to MCDstContent.opts, to not overwrite already defined Dst content
+</PRE><H1><A NAME=v27r3p1>2005-07-07 Brunel v27r3p1</A></H1><PRE> 
+ - Fix to MCDstContent.opts, to not overwrite already defined Dst content, and
+   to correctly save the packed MC truth containers
 
 </PRE><H1><A NAME=v27r3>2005-06-28 Brunel v27r3</A></H1><PRE> 
  - Adapt requirements to use Rec v1r3, Lbcom v2r3, LHCb v18r7
