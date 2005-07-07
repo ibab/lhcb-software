@@ -1,4 +1,4 @@
-// $Id: PopulateDB.cpp,v 1.18 2005-06-23 09:33:37 marcocle Exp $
+// $Id: PopulateDB.cpp,v 1.19 2005-07-07 12:32:29 marcocle Exp $
 // Include files
 #include <iostream>
 #include <fstream>
@@ -12,8 +12,7 @@
 #include "GaudiKernel/TimePoint.h"
 
 #include "DetDesc/Condition.h"
-
-#include "DetCond/ICondDBAccessSvc.h"
+#include "DetDesc/ICondDBAccessSvc.h"
 
 // from COOL
 #include "CoolKernel/Exception.h"

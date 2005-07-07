@@ -1,11 +1,11 @@
-// $Id: TestCacheInjection.cpp,v 1.1 2005-06-23 15:30:54 marcocle Exp $
+// $Id: TestCacheInjection.cpp,v 1.2 2005-07-07 12:32:29 marcocle Exp $
 // Include files 
 
 // from Gaudi
 #include "GaudiKernel/AlgFactory.h"
 
 #include "DetDesc/Condition.h"
-#include "DetCond/ICondDBAccessSvc.h"
+#include "DetDesc/ICondDBAccessSvc.h"
 #include "DetDesc/IUpdateManagerSvc.h"
 
 // local

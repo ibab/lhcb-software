@@ -1,6 +1,9 @@
-#$Id: release.notes,v 1.42 2005-06-23 15:31:31 marcocle Exp $
+#$Id: release.notes,v 1.43 2005-07-07 12:32:29 marcocle Exp $
 Package Ex/DetCondExample
 Package manager : Marco Clemencic
+
+! 2005-07-07 - Marco Clemencic
+ - Adapted for the movement of interfaces from DetCond to DetDesc
 
 !=========== Ex/DetCondExample v7r3 2005-06-23 ===============================
 ! 2005-06-23 - Marco Clemencic
