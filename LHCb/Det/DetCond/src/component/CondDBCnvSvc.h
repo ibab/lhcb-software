@@ -1,11 +1,11 @@
-//$Id: CondDBCnvSvc.h,v 1.1 2005-06-14 13:14:30 marcocle Exp $
+//$Id: CondDBCnvSvc.h,v 1.2 2005-07-07 12:23:14 marcocle Exp $
 #ifndef DETCOND_CONDDBCNVSVC_H
 #define DETCOND_CONDDBCNVSVC_H 1
 
 /// Include files
 #include "GaudiKernel/ConversionSvc.h"
 
-#include "DetCond/ICondDBCnvSvc.h"
+#include "DetDesc/ICondDBCnvSvc.h"
 
 /// Forward and external declarations
 template <class TYPE> class SvcFactory;

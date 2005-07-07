@@ -1,4 +1,4 @@
-// $Id: CondDBGenericCnv.h,v 1.5 2005-06-23 14:11:54 marcocle Exp $
+// $Id: CondDBGenericCnv.h,v 1.6 2005-07-07 12:23:15 marcocle Exp $
 #ifndef DETCOND_CONDDBGENERICCNV_H 
 #define DETCOND_CONDDBGENERICCNV_H 1
 
@@ -10,7 +10,7 @@
 #include "GaudiKernel/ClassID.h"
 #include "GaudiKernel/TimePoint.h"
 
-#include "DetCond/ICondDBAccessSvc.h"
+#include "DetDesc/ICondDBAccessSvc.h"
 
 #include "CoolKernel/types.h"
 

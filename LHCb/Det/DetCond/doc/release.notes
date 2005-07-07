@@ -1,8 +1,9 @@
-# $Id: release.notes,v 1.43 2005-07-07 11:49:40 marcocle Exp $
+# $Id: release.notes,v 1.44 2005-07-07 12:23:15 marcocle Exp $
 Package Det/DetCond
 Package manager : Marco Clemencic
 
 ! 2005-07-07 - Marco CLEMENCIC
+ - Abstract interfaces moved to DetDesc (to allow python bindings)
  - Added CondDBAccessSvc::dumpCache(), it prints (level=DEBUG) the content
    of the cache.
 

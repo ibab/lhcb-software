@@ -1,10 +1,10 @@
-// $Id: CondDBAccessSvc.h,v 1.6 2005-07-07 11:49:40 marcocle Exp $
+// $Id: CondDBAccessSvc.h,v 1.7 2005-07-07 12:23:14 marcocle Exp $
 #ifndef COMPONENT_CONDDBACCESSSVC_H 
 #define COMPONENT_CONDDBACCESSSVC_H 1
 
 // Include files
 #include "GaudiKernel/Service.h"
-#include "DetCond/ICondDBAccessSvc.h"
+#include "DetDesc/ICondDBAccessSvc.h"
 
 // Forward declarations
 template <class TYPE> class SvcFactory;

@@ -1,8 +1,8 @@
-//$Id: CondDBCnvSvc.cpp,v 1.1 2005-06-14 13:14:30 marcocle Exp $
+//$Id: CondDBCnvSvc.cpp,v 1.2 2005-07-07 12:23:14 marcocle Exp $
 #include <string>
 
 #include "CondDBCnvSvc.h"
-#include "DetCond/ICondDBAccessSvc.h"
+#include "DetDesc/ICondDBAccessSvc.h"
 
 #include "GaudiKernel/GenericAddress.h"
 #include "GaudiKernel/IDetDataSvc.h"
