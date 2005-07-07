@@ -1,4 +1,4 @@
-// $Id: XmlGenericCnv.cpp,v 1.7 2005-06-20 12:40:28 jpalac Exp $
+// $Id: XmlGenericCnv.cpp,v 1.8 2005-07-07 12:48:14 marcocle Exp $
 
 // Include files
 #include "DetDescCnv/XmlGenericCnv.h"
@@ -91,181 +91,157 @@ StatusCode XmlGenericCnv::finalize() {
 // -----------------------------------------------------------------------
 StatusCode XmlGenericCnv::createObj (IOpaqueAddress* addr,
                                      DataObject*&    refpObject)  {
-   // creates a msg stream for debug purposes
-   MsgStream log( msgSvc(), "XmlGenericCnv" );
+  // creates a msg stream for debug purposes
+  MsgStream log( msgSvc(), "XmlGenericCnv" );
+  StatusCode sc = StatusCode::FAILURE;
    
-   // maked sure the address is not null
-   if (0 == addr) {
-     return StatusCode::FAILURE;
-   }
+  // maked sure the address is not null
+  if (0 == addr) {
+    return StatusCode::FAILURE;
+  }
 
-   // displays the address for debug purposes  
-   log << MSG::DEBUG << "Address : dbname = " << addr->par()[0]
-       << ", ObjectName = " << addr->par()[1]
-       << ", isString = " << addr->ipar()[0] << endreq;
+  // displays the address for debug purposes  
+  log << MSG::DEBUG << "Address : dbname = " << addr->par()[0]
+      << ", ObjectName = " << addr->par()[1]
+      << ", isString = " << addr->ipar()[0] << endreq;
 
-   // parses the xml file or the xml string and retrieves a DOM document
-   xercesc::DOMDocument* document = 0;
-   bool isAString = 1 == addr->ipar()[0];
-   if ( 0 == addr->ipar()[0] ) {
-     document = xmlSvc()->parse(addr->par()[0].c_str());
-   } else if ( isAString ) {
-     document = xmlSvc()->parseString(addr->par()[0].c_str());
-   } else {
-     log << MSG::FATAL
-         << "XmlParser failed, invalid flag isString="
-         << addr->ipar()[0] << "!" << endreq;
-     return StatusCode::FAILURE;
-   }
-   if (0 == document) {
-     log << MSG::FATAL
-         << "XmlParser failed, can't convert "
-         << addr->par()[1] << "!" << endreq;
-     return StatusCode::FAILURE;
-   }
+  // parses the xml file or the xml string and retrieves a DOM document
+  xercesc::DOMDocument* document = NULL;
+  bool isAString = 1 == addr->ipar()[0];
+  if ( 0 == addr->ipar()[0] ) {
+    document = xmlSvc()->parse(addr->par()[0].c_str()); // this also lock the cache entry (must be released)
+  } else if ( isAString ) {
+    document = xmlSvc()->parseString(addr->par()[0].c_str()); // this has to be released too
+  } else {
+    log << MSG::FATAL << "XmlParser failed, invalid flag isString=" << addr->ipar()[0] << "!" << endreq;
+    return StatusCode::FAILURE;
+  }
 
-   // checks version of the file
-   // first find the "DDDB" or "materials" element
-   xercesc::DOMNodeList* list = document->getChildNodes();
-   xercesc::DOMElement* mainNode = 0;
-   unsigned int index;
-   for (index = 0;
-        index < list->getLength() && 0 == mainNode;
-        index++) {
-     if (list->item(index)->getNodeType() == xercesc::DOMNode::ELEMENT_NODE) {
-       xercesc::DOMNode* childNode = list->item(index);
-       xercesc::DOMElement* childElement = (xercesc::DOMElement*) childNode;
-       log << MSG::VERBOSE << "found element "
-           << dom2Std (childElement->getNodeName())
-           << " at top level of xml file." << endreq;
-       if (0 == xercesc::XMLString::compareString(childElement->getNodeName(),
-                                         DDDBString) ||
-           0 == xercesc::XMLString::compareString(childElement->getNodeName(),
-                                         materialsString)) {
-         mainNode = childElement;
-       }
-     }
-   }
-   // check it exists
-   if (0 == mainNode) {
-     log << MSG::FATAL << addr->par()[1]
-         << " has no DDDB element at the beginning of the file."
-         << endreq;
-     // if we parsed a string we have to release the memory (no cache handling possible)
-     if ( isAString ) document->release();
-     return StatusCode::FAILURE;
-   } else {
-     // checks the version attribute
-     std::string versionAttribute;
-     std::string defaultMajorVersion;
-     std::string defaultMinorVersion;
-     if (0 == xercesc::XMLString::compareString
-         (mainNode->getNodeName(), DDDBString)) {
-       versionAttribute = dom2Std (mainNode->getAttribute (versionString));
-       defaultMajorVersion = "3";
-       defaultMinorVersion = "3";
-     } else {
-       versionAttribute = dom2Std (mainNode->getAttribute (DTD_VersionString));
-       defaultMajorVersion = "v5";
-       defaultMinorVersion = "0";
-     }
-     log << MSG::DEBUG
-         << "Detector Description Markup Language Version "
-         << versionAttribute << endreq;
-     std::string::size_type dotPos = versionAttribute.find ('.');
-     std::string majorVersion;
-     std::string minorVersion = "0";
-     if (dotPos == std::string::npos) {
-       majorVersion = versionAttribute;
-     } else {
-       majorVersion = versionAttribute.substr (0, dotPos);
-       minorVersion = versionAttribute.substr (dotPos + 1);
-     }
-     if (majorVersion != defaultMajorVersion) {
-       log << MSG::ERROR << "DDDB DTD Version " << defaultMajorVersion
-           << "." << defaultMinorVersion << " required. "
-           << "You are currently using Version " << versionAttribute
-           << ". Please update your DTD and XML data files. "
-           << "If you are using the XmlDDDB package, please "
-           << "get a new version of it."
-           << endreq;
-       // if we parsed a string we have to release the memory (no cache handling possible)
-       if ( isAString ) document->release();
-       return StatusCode::FAILURE;
-     } else if (minorVersion != defaultMinorVersion) {
-       log << MSG::WARNING << "DDDB DTD Version " << defaultMajorVersion
-           << "." << defaultMinorVersion << " recommanded. "
-           << "You are currently using Version " << versionAttribute
-           << ". Everything should work fine but you may get some "
-           << "error messages about unknown tags."
-           << endreq;
-     }
-   }
-   // deals with macro definitions
-   // get the parameters
-   xercesc::DOMNodeList* macroList =
-     mainNode->getElementsByTagName(macroString);
-   unsigned int k;
-   for (k = 0; k < macroList->getLength(); k++) {
-     xercesc::DOMNode* macroNode = macroList->item(k);
-     xercesc::DOMElement* macro = (xercesc::DOMElement*) macroNode;
-     std::string name = dom2Std (macro->getAttribute (nameString));
-     std::string value = dom2Std (macro->getAttribute (valueString));
-     xmlSvc()->addParameter(name, value);
-     log << MSG::DEBUG
-         << "Added DDDB Macro " << name << " = " << value << endreq;
-   }
-   // deals with old parameter definitions
-   // get the parameters
-   xercesc::DOMNodeList* parameterList =
-     mainNode->getElementsByTagName(parameterString);
-   unsigned int kk;
-   for (kk = 0; kk < parameterList->getLength(); kk++) {
-     xercesc::DOMNode* parameterNode = parameterList->item(kk);
-     xercesc::DOMElement* parameter = (xercesc::DOMElement*) parameterNode;
-     std::string name = dom2Std (parameter->getAttribute (nameString));
-     std::string value = dom2Std (parameter->getAttribute (valueString));
-     xmlSvc()->addParameter(name, value);
-     log << MSG::DEBUG
-         << "Added DDDB Parameter " << name << " = " << value << endreq;
-   }
+  if (document != NULL) {
+    // checks version of the file
+    // first find the "DDDB" or "materials" element
+    xercesc::DOMNodeList* list = document->getChildNodes();
+    xercesc::DOMElement* mainNode = NULL;
+    unsigned int index;
+    for (index = 0;
+         index < list->getLength() && 0 == mainNode;
+         ++index) {
+      if (list->item(index)->getNodeType() == xercesc::DOMNode::ELEMENT_NODE) {
+        xercesc::DOMNode* childNode = list->item(index);
+        xercesc::DOMElement* childElement = (xercesc::DOMElement*) childNode;
+        log << MSG::VERBOSE << "found element " << dom2Std (childElement->getNodeName())
+            << " at top level of xml file." << endreq;
+        if (0 == xercesc::XMLString::compareString(childElement->getNodeName(),DDDBString) ||
+            0 == xercesc::XMLString::compareString(childElement->getNodeName(),materialsString)) {
+          mainNode = childElement;
+        }
+      }
+    }
+    // check if it exists
+    if (mainNode != NULL) {
+      // checks the version attribute
+      std::string versionAttribute;
+      std::string defaultMajorVersion;
+      std::string defaultMinorVersion;
+      if (0 == xercesc::XMLString::compareString
+          (mainNode->getNodeName(), DDDBString)) {
+        versionAttribute = dom2Std (mainNode->getAttribute (versionString));
+        defaultMajorVersion = "3";
+        defaultMinorVersion = "3";
+      } else {
+        versionAttribute = dom2Std (mainNode->getAttribute (DTD_VersionString));
+        defaultMajorVersion = "v5";
+        defaultMinorVersion = "0";
+      }
+      log << MSG::DEBUG << "Detector Description Markup Language Version " << versionAttribute << endreq;
+      std::string::size_type dotPos = versionAttribute.find ('.');
+      std::string majorVersion;
+      std::string minorVersion = "0";
+      if (dotPos == std::string::npos) {
+        majorVersion = versionAttribute;
+      } else {
+        majorVersion = versionAttribute.substr (0, dotPos);
+        minorVersion = versionAttribute.substr (dotPos + 1);
+      }
+       
+      // I need `defaultMajorVersion'.`defaultMinorVersion'
+      if (majorVersion == defaultMajorVersion) { // fine
+        if (minorVersion != defaultMinorVersion) { // not perfect, just warn
+          log << MSG::WARNING << "DDDB DTD Version " << defaultMajorVersion
+              << "." << defaultMinorVersion << " recommanded. "
+              << "You are currently using Version " << versionAttribute
+              << ". Everything should work fine but you may get some "
+              << "error messages about unknown tags."
+              << endreq;
+        }
+        // deals with macro definitions
+        // get the parameters
+        xercesc::DOMNodeList* macroList = mainNode->getElementsByTagName(macroString);
+        unsigned int k;
+        for (k = 0; k < macroList->getLength(); k++) {
+          xercesc::DOMNode* macroNode = macroList->item(k);
+          xercesc::DOMElement* macro = (xercesc::DOMElement*) macroNode;
+          std::string name = dom2Std (macro->getAttribute (nameString));
+          std::string value = dom2Std (macro->getAttribute (valueString));
+          xmlSvc()->addParameter(name, value);
+          log << MSG::DEBUG << "Added DDDB Macro " << name << " = " << value << endreq;
+        }
+        // deals with old parameter definitions
+        // get the parameters
+        xercesc::DOMNodeList* parameterList = mainNode->getElementsByTagName(parameterString);
+        unsigned int kk;
+        for (kk = 0; kk < parameterList->getLength(); kk++) {
+          xercesc::DOMNode* parameterNode = parameterList->item(kk);
+          xercesc::DOMElement* parameter = (xercesc::DOMElement*) parameterNode;
+          std::string name = dom2Std (parameter->getAttribute (nameString));
+          std::string value = dom2Std (parameter->getAttribute (valueString));
+          xmlSvc()->addParameter(name, value);
+          log << MSG::DEBUG << "Added DDDB Parameter " << name << " = " << value << endreq;
+        }
    
-   // retrieve the name of the object we want to create. Removes the leading
-   // '/' if needed
-   std::string objectName = addr->par()[1];
-   unsigned int slashPosition = objectName.find_last_of('/');
-   if (std::string::npos != slashPosition) {
-     objectName= objectName.substr(slashPosition + 1);
-   }
+        // retrieve the name of the object we want to create. Removes the leading
+        // '/' if needed
+        std::string objectName = addr->par()[1];
+        unsigned int slashPosition = objectName.find_last_of('/');
+        if (std::string::npos != slashPosition) {
+          objectName= objectName.substr(slashPosition + 1);
+        }
   
-   // finds the corresponding node in the DOM tree
-   XMLCh* nameString = xercesc::XMLString::transcode(objectName.c_str());
-   xercesc::DOMElement* element = document->getElementById (nameString);
-   xercesc::XMLString::release(&nameString);
-   if (0 == element){
-     log << MSG::FATAL
-         << objectName << " : "
-         << "No such object in file " << addr->par()[0]
-         << endreq;
-     // if we parsed a string we have to release the memory (no cache handling possible)
-     if ( isAString ) document->release();
-     return StatusCode::FAILURE;
-   }
-   
-   try {
-     // deal with the node found itself
-     StatusCode sc = internalCreateObj (element, refpObject, addr);
-     if ( isAString ) document->release();
-     return sc;
-   } catch (GaudiException e) {
-     log << MSG::FATAL << "An exception went out of the conversion process : ";
-     e.printOut (log);
-     log << endreq;
-     // if we parsed a string we have to release the memory (no cache handling possible)
-     if ( isAString ) document->release();
-     return StatusCode::FAILURE;
-   }
-   
+        // finds the corresponding node in the DOM tree
+        XMLCh* nameString = xercesc::XMLString::transcode(objectName.c_str());
+        xercesc::DOMElement* element = document->getElementById (nameString);
+        xercesc::XMLString::release(&nameString);
+        if (element != NULL) {
+          try {
+            // deal with the node found itself
+            sc = internalCreateObj (element, refpObject, addr);
+          } catch (GaudiException e) {
+            log << MSG::FATAL << "An exception went out of the conversion process : ";
+            e.printOut (log);
+            log << endmsg;
+          }
+        } else { // (element == NULL)
+          log << MSG::FATAL << objectName << " : " << "No such object in file " << addr->par()[0] << endreq;
+        }
+      } else { // (majorVersion != defaultMajorVersion)
+        // this is a problem
+        log << MSG::ERROR << "DDDB DTD Version " << defaultMajorVersion
+            << "." << defaultMinorVersion << " required. "
+            << "You are currently using Version " << versionAttribute
+            << ". Please update your DTD and XML data files. "
+            << "If you are using the XmlDDDB package, please "
+            << "get a new version of it."
+            << endreq;
+      }
+    } else { // (mainNode == NULL)
+      log << MSG::FATAL << addr->par()[1] << " has no DDDB element at the beginning of the file." << endreq;
+    }
+    // ---- release the document
+    xmlSvc()->releaseDoc(document);
+  } else { // (document == NULL)
+    log << MSG::FATAL << "XmlParser failed, can't convert " << addr->par()[1] << "!" << endreq;
+  }
+  return sc;
 } // end createObj
 
 
