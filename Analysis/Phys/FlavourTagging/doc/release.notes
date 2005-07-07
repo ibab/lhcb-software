@@ -1,10 +1,20 @@
-! $Id: release.notes,v 1.70 2005-07-06 15:16:41 pkoppenb Exp $
+! $Id: release.notes,v 1.71 2005-07-07 16:53:30 pkoppenb Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Phys/FlavourTagging
 ! Responsible : Marco Musy (musy@cern.ch)
 ! Purpose     : Provide tools and algorithm for tagging B
 !-----------------------------------------------------------------------------
 
+! 2005-07-06 - P. Koppenburg
+  - src/BTagging.cpp
+  - src/TaggerElectronTool.cpp
+  - src/TaggerKaonOppositeTool.cpp
+  - src/TaggerKaonSameTool.cpp
+  - src/TaggerMuonTool.cpp
+  - src/TaggerPionSameTool.cpp
+  - src/TaggerVertexChargeTool.cpp
+  - src/NNetTool.cpp
+    .Tagger now takes const Particle*, not Particle
 !========================== FlavourTagging v6r0 2005-07-06 ===================
 ! 2005-07-06 - P. Koppenburg
   - src/NNetTool.cpp

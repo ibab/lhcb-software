@@ -51,7 +51,7 @@ Tagger TaggerVertexChargeTool::tag( const Particle* AXB0,
   tVch.setDecision( Vch>0 ? -1 : 1 );
   tVch.setOmega( m_AverageOmega );
   tVch.setType( Tagger::VtxCharge ); 
-  for(ip=Pfit.begin(); ip!=Pfit.end(); ip++) tVch.addTaggerPart(**ip);
+  for(ip=Pfit.begin(); ip!=Pfit.end(); ip++) tVch.addTaggerPart(*ip);
 
   return tVch;
 }

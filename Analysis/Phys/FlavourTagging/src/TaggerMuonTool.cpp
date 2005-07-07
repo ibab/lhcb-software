@@ -76,7 +76,7 @@ Tagger TaggerMuonTool::tag( const Particle* AXB0,
   }
   if( ! imuon ) return tmu;
 
-  tmu.addTaggerPart(*imuon);
+  tmu.addTaggerPart(imuon);
   tmu.setDecision(imuon->charge()>0 ? -1: 1);
 
   //calculate omega

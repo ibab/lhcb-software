@@ -112,7 +112,7 @@ Tagger TaggerElectronTool::tag( const Particle* AXB0,
     }
   }
   if( !iele ) return tele;
-  tele.addTaggerPart(*iele);
+  tele.addTaggerPart(iele);
   tele.setDecision(iele->charge()>0 ? -1: 1);
 
   //calculate omega

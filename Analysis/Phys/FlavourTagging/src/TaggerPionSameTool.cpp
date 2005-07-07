@@ -141,7 +141,7 @@ Tagger TaggerPionSameTool::tag( const Particle* AXB0,
   tpionS.setDecision( tagdecision );
   tpionS.setOmega( 1-pn );
   tpionS.setType( Tagger::SS_Pion ); 
-  tpionS.addTaggerPart(*ipionS);
+  tpionS.addTaggerPart(ipionS);
 
   return tpionS;
 }

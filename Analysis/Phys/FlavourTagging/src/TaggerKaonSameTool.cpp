@@ -121,7 +121,7 @@ Tagger TaggerKaonSameTool::tag( const Particle* AXB0,
   } 
   if( ! ikaonS ) return tkaonS;
 
-  tkaonS.addTaggerPart(*ikaonS);
+  tkaonS.addTaggerPart(ikaonS);
   tkaonS.setDecision(ikaonS->charge()>0 ? 1: -1);
 
   //calculate omega

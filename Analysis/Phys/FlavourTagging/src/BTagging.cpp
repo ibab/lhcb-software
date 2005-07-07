@@ -88,11 +88,11 @@ StatusCode BTagging::execute() {
         debug() << "    decision = "
                 << (itag->decision() > 0? "b":"bbar") <<endreq;
         debug() << "    omega    = " << itag->omega() <<endreq;
-        std::vector<Particle> taggerparts = itag->taggerParts();
-        std::vector<Particle>::iterator kp;
+        std::vector<const Particle*> taggerparts = itag->taggerParts();
+        std::vector<const Particle*>::iterator kp;
         for(kp=taggerparts.begin(); kp!=taggerparts.end(); kp++) {
-          debug() << "    ID:" <<std::setw(4)<< kp->particleID().pid() 
-                  << " p= "  << kp->p()/GeV << endreq;
+          debug() << "    ID:" <<std::setw(4)<< (*kp)->particleID().pid() 
+                  << " p= "  << (*kp)->p()/GeV << endreq;
         }
       }
     }
