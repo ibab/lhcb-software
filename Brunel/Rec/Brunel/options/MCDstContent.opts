@@ -55,7 +55,7 @@ DataOnDemandSvc.Algorithms += {
 
 // Add the packed containers to the DST
 DstWriter.ItemList += { 
-, "/Event/pSim/#1"
+, "/Event/pSim#1"
 , "/Event/pSim/MCParticles#1"
 , "/Event/pSim/MCVertices#1"
 , "/Event/pSim/Collisions#1"
