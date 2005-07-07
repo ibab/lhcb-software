@@ -1,4 +1,4 @@
-// $Id: DeVeloSensor.cpp,v 1.8 2005-06-02 14:11:41 jpalac Exp $
+// $Id: DeVeloSensor.cpp,v 1.9 2005-07-07 16:09:14 mtobin Exp $
 //==============================================================================
 #define VELODET_DEVELOSENSOR_CPP 1
 //==============================================================================
@@ -61,18 +61,25 @@ StatusCode DeVeloSensor::initialize()
   }
 
   initSensor();
-  IGeometryInfo* geom = this->geometry();
-  m_geometry = geom;
-  m_z = m_geometry->toGlobal(HepPoint3D(0,0,0)).z();
+  geometryCache();
+  
   msg << MSG::DEBUG << "Sensor full type " << m_fullType << " z= " << m_z
       << " R " << this->isR() 
-      << " Phi " 
-      << this->isPhi()  
+      << " Phi " << this->isPhi()  
       << " PU " << this->isPileUp()
       << " Left " << m_isLeft
       << " Right " << this->isRight() 
       << " Downstream " << this->isDownstream() << endreq;
   return StatusCode::SUCCESS;
+}
+//==============================================================================
+/// Cache geometry parameters
+//==============================================================================
+void DeVeloSensor::geometryCache() 
+{
+  IGeometryInfo* geom = this->geometry();
+  m_geometry = geom;
+  m_z = m_geometry->toGlobal(HepPoint3D(0,0,0)).z();
 }
 //==============================================================================
 /// Convert local position to global position

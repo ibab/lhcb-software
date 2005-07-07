@@ -1,4 +1,4 @@
-// $Id: DeVelo.h,v 1.26 2005-06-02 14:11:41 jpalac Exp $
+// $Id: DeVelo.h,v 1.27 2005-07-07 16:09:14 mtobin Exp $
 #ifndef       VELODET_DEVELO_H
 #define       VELODET_DEVELO_H 1
 // ============================================================================
@@ -15,6 +15,7 @@
  *  Velo detector element class.
  *
  *  @author David Hutchcroft David.Hutchcroft@cern.ch
+ *  @author Mark Tobin Mark.Tobin@cern.ch
  *  @date 22/4/2003
  */
 

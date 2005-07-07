@@ -1,4 +1,4 @@
-// $Id: DeVelo.cpp,v 1.49 2005-06-28 13:06:32 cattanem Exp $
+// $Id: DeVelo.cpp,v 1.50 2005-07-07 16:09:14 mtobin Exp $
 //
 // ============================================================================
 #define  VELODET_DEVELO_CPP 1
@@ -24,6 +24,7 @@
  *  Implementation of class :  DeVelo
  *
  *  @author David Hutchcroft David.Hutchcroft@cern.ch
+ *  @author Mark Tobin Mark.Tobin@cern.ch
  */
 
 

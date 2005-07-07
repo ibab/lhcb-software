@@ -1,4 +1,4 @@
-// $Id: DeVeloSensor.h,v 1.7 2005-06-02 14:11:41 jpalac Exp $
+// $Id: DeVeloSensor.h,v 1.8 2005-07-07 16:09:14 mtobin Exp $
 #ifndef VELODET_DEVELOSENSOR_H 
 #define VELODET_DEVELOSENSOR_H 1
 
@@ -174,15 +174,13 @@ public:
   
 protected:
 
-
-
-
   unsigned int m_numberOfZones;
 
 private:
 
   void initSensor();
-
+  void geometryCache();
+  
   unsigned int m_numberOfStrips;
   std::string m_type;
   std::string m_fullType;
