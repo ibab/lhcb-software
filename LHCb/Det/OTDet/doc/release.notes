@@ -1,6 +1,11 @@
-! $Id: release.notes,v 1.35 2005-05-24 08:31:09 cattanem Exp $
+! $Id: release.notes,v 1.36 2005-07-07 08:36:18 cattanem Exp $
 ! Package     : OTDet
 ! Responsible : J. van Tilburg & Jacopo Nardulli
+
+!========================== OTDet v5r5p1 2005-07-07 ========================
+! 2005-07-07 - Marco Cattaneo
+ - Comment out DeOTDetector::DeOTQuarter method declaration, as there is no
+   implementation, which causes a problem when generating lcg dictionaries
 
 !========================== OTDet v5r5 2005-05-24 ==========================
 ! 2005-05-13 - Marco Clemencic

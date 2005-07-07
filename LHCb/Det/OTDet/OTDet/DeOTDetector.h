@@ -1,4 +1,4 @@
-// $Id: DeOTDetector.h,v 1.16 2004-12-10 08:11:37 jnardull Exp $
+// $Id: DeOTDetector.h,v 1.17 2005-07-07 08:36:18 cattanem Exp $
 #ifndef OTDET_DEOTDETECTOR_H
 #define OTDET_DEOTDETECTOR_H 1
 
@@ -69,7 +69,7 @@ public:
   DeOTLayer* layer(OTChannelID aChannel) const;
 
   /// return the quarter for a given channelID
-  DeOTQuarter* quarter(OTChannelID aChannel) const;
+  // DeOTQuarter* quarter(OTChannelID aChannel) const;
 
   /// return the module for a given channel ID
   DeOTModule* module(OTChannelID aChannel) const;
