@@ -1,4 +1,4 @@
-// $Id: XmlCnvSvc.h,v 1.6 2005-03-18 14:52:34 cattanem Exp $
+// $Id: XmlCnvSvc.h,v 1.7 2005-07-07 13:01:10 marcocle Exp $
 
 #ifndef DETDESCCNV_XMLCNVSVC_H
 #define DETDESCCNV_XMLCNVSVC_H
@@ -23,6 +23,7 @@ template <class TYPE> class SvcFactory;
  *  @author Sebastien Ponce
  *  @author Radovan Chytracek
  *  @author Pere Mato
+ *  @author Marco Clemencic
  */
 class XmlCnvSvc : public ConversionSvc,
                   virtual public IXmlSvc {
@@ -100,6 +101,10 @@ public:
    * This clears the cache of previously parsed xml files.
    */
   virtual void clearCache();
+
+  /// Method to remove the lock from a document in the cache or to delete the document
+  /// generated from a string.
+  virtual void releaseDoc(xercesc::DOMDocument* doc);
 
   /////////////////////////////////////////////
   // implementation of the IXmlSvc interface //
@@ -254,6 +259,9 @@ private:
   
 
 private:
+
+  /// Name of the XmlParserSvc to use (option XmlCnvSvc.XmlParserSvc, default "XmlParserSvc")
+  std::string m_parserSvcName;
 
   /// XmlParserSvc used to parse xmlfiles
   IXmlParserSvc* m_parserSvc;

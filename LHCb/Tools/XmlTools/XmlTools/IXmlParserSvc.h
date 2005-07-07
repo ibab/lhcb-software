@@ -1,4 +1,4 @@
-// $Id: IXmlParserSvc.h,v 1.4 2005-04-22 13:31:18 marcocle Exp $
+// $Id: IXmlParserSvc.h,v 1.5 2005-07-07 13:01:10 marcocle Exp $
 
 #ifndef DETDESCCNV_IXMLPARSERSVC_H
 #define DETDESCCNV_IXMLPARSERSVC_H
@@ -29,7 +29,8 @@ class IXmlParserSvc : virtual public IInterface {
 
   /**
    * This method parses an xml file and produces the corresponding DOM
-   * document.
+   * document. The actual document is kept in a cache and locked. The user must
+   * call IXmlParserSvc::releaseDoc() when he does not need anymore the document.
    * @param fileName the name of the file to parse
    * @return the document issued from the parsing
    */
@@ -37,10 +38,10 @@ class IXmlParserSvc : virtual public IInterface {
 
   /**
    * This method parses XML from a string and produces the corresponding DOM
-   * document.
+   * document. Like for the DOMDocument generated from a file, this one has to be
+   * released with IXmlParserSvc::releaseDoc() too.
    * @param source the string to parse
    * @return the document issued from the parsing
-   * @warning The returned document should be freed by the user (with xercesc::DOMDocument::release()).
    */
   virtual xercesc::DOMDocument* parseString (std::string source) = 0;
 
@@ -48,6 +49,10 @@ class IXmlParserSvc : virtual public IInterface {
    * This clears the cache of previously parsed xml files.
    */
   virtual void clearCache() = 0;
+
+  /// Method to remove the lock from a document in the cache or to delete the document
+  /// generated from a string.
+  virtual void releaseDoc(xercesc::DOMDocument* doc) = 0;
 
 };
 

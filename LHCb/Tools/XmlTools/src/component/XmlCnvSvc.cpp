@@ -1,4 +1,4 @@
-// $Id: XmlCnvSvc.cpp,v 1.5 2004-07-21 08:01:50 cattanem Exp $
+// $Id: XmlCnvSvc.cpp,v 1.6 2005-07-07 13:01:10 marcocle Exp $
 
 // Include Files
 #include <xercesc/util/PlatformUtils.hpp>
@@ -39,6 +39,9 @@ XmlCnvSvc::XmlCnvSvc (const std::string& name, ISvcLocator* svc) :
 
   // Whether to check parameters for units or not
   declareProperty ("CheckUnits", m_checkUnits = true);
+
+  // Name of the XmlParserSvc to use
+  declareProperty ("XmlParserSvc", m_parserSvcName = "XmlParserSvc");
 }
 
 
@@ -57,25 +60,14 @@ StatusCode XmlCnvSvc::initialize() {
   StatusCode status = ConversionSvc::initialize();
 
   // Service MUST be initialized BEFORE!
-  MsgStream log (msgSvc(), "XmlCnvSvc");
+  MsgStream log (msgSvc(), name());
 
   if (!status.isSuccess()) {
     return status;  
   }
-
-  // Initialize the xerces system
-  try  {
-    xercesc::XMLPlatformUtils::Initialize();
-  } catch (const xercesc::XMLException& toCatch) {
-    char *message = xercesc::XMLString::transcode (toCatch.getMessage());
-    log << MSG::FATAL << "Error during initialization! :\n"
-        << message << endreq;
-    status = StatusCode::FAILURE;
-    xercesc::XMLString::release(&message);
-  } 
   
   // creation of a parser service
-  status = serviceLocator()->service("XmlParserSvc", m_parserSvc, true);
+  status = serviceLocator()->service(m_parserSvcName, m_parserSvc, true);
   if (status.isFailure()) {
     return status;
   }
@@ -205,7 +197,7 @@ xercesc::DOMDocument* XmlCnvSvc::parse (const char* fileName) {
   if (0 != m_parserSvc) {
     return m_parserSvc->parse(fileName);
   }
-  MsgStream log (msgSvc(), "XmlCnvSvc");
+  MsgStream log (msgSvc(), name());
   log << MSG::DEBUG << "null result returned in parse" << endreq;
   return 0;
 }
@@ -215,7 +207,7 @@ xercesc::DOMDocument* XmlCnvSvc::parse (const char* fileName) {
 // Parses an Xml file and provides the DOM tree representing it
 // -----------------------------------------------------------------------
 xercesc::DOMDocument* XmlCnvSvc::parseString (std::string source) {
-  MsgStream log (msgSvc(), "XmlCnvSvc");
+  MsgStream log (msgSvc(), name());
 
   // First prepend the proper DTD path where appropriate
   // Only one "relpath/file.dtd" or 'relpath/file.dtd' is expected in string
@@ -261,6 +253,16 @@ xercesc::DOMDocument* XmlCnvSvc::parseString (std::string source) {
 void XmlCnvSvc::clearCache() {
   if (0 != m_parserSvc) {
     m_parserSvc->clearCache();
+    return;
+  }
+}
+
+// -----------------------------------------------------------------------
+// release a DOMDocument pointer
+// -----------------------------------------------------------------------
+void XmlCnvSvc::releaseDoc(xercesc::DOMDocument* doc) {
+  if (0 != m_parserSvc) {
+    m_parserSvc->releaseDoc(doc);
     return;
   }
 }

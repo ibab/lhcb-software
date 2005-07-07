@@ -1,4 +1,4 @@
-// $Id: XmlParserSvc.cpp,v 1.8 2005-06-23 11:42:18 marcocle Exp $
+// $Id: XmlParserSvc.cpp,v 1.9 2005-07-07 13:01:10 marcocle Exp $
 
 // Include Files
 #include <limits.h>
@@ -28,7 +28,7 @@ const ISvcFactory& XmlParserSvcFactory = xmlparsersvc_factory;
 // ------------------------------------------------------------------------
 XmlParserSvc::XmlParserSvc (const std::string& name, ISvcLocator* svc) :
   Service (name, svc) {
-  MsgStream log (msgSvc(), "XmlParserSvc");
+  MsgStream log (msgSvc(), name);
 
   // initializes the xerces XML subsystem
   try {
@@ -76,8 +76,8 @@ XmlParserSvc::XmlParserSvc (const std::string& name, ISvcLocator* svc) :
 // ------------------------------------------------------------------------
 XmlParserSvc::~XmlParserSvc() {
   clearCache();
-  xercesc::XMLPlatformUtils::Terminate();
   delete m_parser;
+  xercesc::XMLPlatformUtils::Terminate();
 }
 
 
@@ -85,13 +85,14 @@ XmlParserSvc::~XmlParserSvc() {
 //  Parse
 // -----------------------------------------------------------------------
 xercesc::DOMDocument* XmlParserSvc::parse (const char* fileName) {
-  MsgStream log (msgSvc(), "XmlParserSvc");
+  MsgStream log (msgSvc(), name());
   // first look in the cache
   cacheType::iterator it = m_cache.find(fileName);
   // if something was there, update it and return the document
   if (it != m_cache.end()) {
     increaseCacheAge();
-    it->second.utility += 1;
+    ++it->second.utility;
+    ++it->second.lock;
     return it->second.document;
   }
   // There was nothing in the cache, try to parse the file if a parser exists
@@ -136,7 +137,7 @@ xercesc::DOMDocument* XmlParserSvc::parseString (std::string source) {
                                             "");
     // parses the file
     m_parser->parse(inputSource);
-    MsgStream log (msgSvc(), "XmlParserSvc");
+    MsgStream log (msgSvc(), name());
     log << MSG::DEBUG << "parsing xml string..." << endreq;
     // returns the parsed document
     return m_parser->adoptDocument();
@@ -155,6 +156,11 @@ void XmlParserSvc::clearCache() {
   m_parser->resetDocumentPool();
   //    release the memory used by the cached objects
   for (cacheType::iterator i = m_cache.begin(); i != m_cache.end(); ++i){
+    if ( i->second.lock > 0 ) {
+    MsgStream log (msgSvc(), name());
+    log << MSG::WARNING << "Item in cache with lock count = " << i->second.lock
+        << " " << i->first << endmsg;
+    }
     i->second.document->release();
   }
   //    then clear the chached pointers
@@ -162,12 +168,33 @@ void XmlParserSvc::clearCache() {
 }
 
 
+//=========================================================================
+//  Release the lock for documents in cache
+//=========================================================================
+void XmlParserSvc::releaseDoc(xercesc::DOMDocument* doc) {
+  // find the DOMDocument in the cache
+  cacheType::iterator it = m_cache.begin();
+  while (it != m_cache.end() && it->second.document != doc) {
+    ++it;
+  }
+  if ( it == m_cache.end() ) {
+    // the item was never cached (parsed from a string) ==> delete it
+    doc->release();
+  } else {
+    if ( --it->second.lock < 0 ) {
+      MsgStream log (msgSvc(), name());
+      log << MSG::WARNING << "XmlParserSvc::release request for an object which wasn't locked!" << endmsg;
+      it->second.lock = 0;
+    }
+  }
+}
+
 // -----------------------------------------------------------------------
 //  Implementations of the SAX ErrorHandler interface
 // -----------------------------------------------------------------------
 void XmlParserSvc::warning (const xercesc::SAXParseException& exception){
   
-  MsgStream log (msgSvc(), "XmlParserSvc");
+  MsgStream log (msgSvc(), name());
   
   char*        aSysId  = xercesc::XMLString::transcode(exception.getSystemId());
   unsigned int aLine   = exception.getLineNumber();
@@ -188,7 +215,7 @@ void XmlParserSvc::warning (const xercesc::SAXParseException& exception){
 // -----------------------------------------------------------------------
 void XmlParserSvc::error (const xercesc::SAXParseException& exception){
   
-  MsgStream log (msgSvc(), "XmlParserSvc");
+  MsgStream log (msgSvc(), name());
   
   char* aSysId = xercesc::XMLString::transcode (exception.getSystemId());
   unsigned int aLine   = exception.getLineNumber();
@@ -209,7 +236,7 @@ void XmlParserSvc::error (const xercesc::SAXParseException& exception){
 //  Implementations of the SAX ErrorHandler interface
 // -----------------------------------------------------------------------
 void XmlParserSvc::fatalError (const xercesc::SAXParseException& exception){
-  MsgStream log (msgSvc(), "XmlParserSvc");
+  MsgStream log (msgSvc(), name());
   
   char* aSysId = xercesc::XMLString::transcode (exception.getSystemId());
   unsigned int aLine   = exception.getLineNumber();
@@ -263,24 +290,24 @@ void XmlParserSvc::cacheItem (std::string fileName,
     // birthDate+cacheBehavior*utility
     unsigned long smallestScore = ULONG_MAX; // highest possible value
     cacheType::iterator winner = m_cache.end();
-    for (cacheType::iterator it = m_cache.begin(); it != m_cache.end(); it++) {
+    for (cacheType::iterator it = m_cache.begin(); it != m_cache.end(); ++it) {
       unsigned long score =
         it->second.birthDate + m_cacheBehavior * it->second.utility;
-      if (score < smallestScore) {
+      if (score < smallestScore && it->second.lock == 0) {
         smallestScore = score;
         winner = it;
       }
     }
     if (m_cache.end() == winner) {
-      // this is an error : the cache is empty and full at the same time
-      MsgStream log (msgSvc(), "XmlParserSvc");     
-      log << MSG::ERROR << "The cache is full and empty at the same time !!!"
-          << endreq;
+      // This means that the cache is too small: I increase it
+      MsgStream log (msgSvc(), name());
+      log << MSG::WARNING << "The cache is full and I cannot delete anything: I increase the max size to " 
+          << ++m_maxDocNbInCache << endmsg;
     } else {
       // else release the memory used by the winner
       winner->second.document->release();
       // and its entry in the map
-      m_cache.erase (winner);
+      m_cache.erase(winner);
     }
   }
 
@@ -288,6 +315,7 @@ void XmlParserSvc::cacheItem (std::string fileName,
   cachedItem newItem;
   newItem.birthDate = m_cacheAge;
   newItem.utility = 0;
+  newItem.lock = 1;
   newItem.document = document;
   m_cache[fileName] = newItem;
 }

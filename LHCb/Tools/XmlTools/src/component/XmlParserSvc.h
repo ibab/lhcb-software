@@ -1,4 +1,4 @@
-// $Id: XmlParserSvc.h,v 1.5 2005-04-22 13:31:18 marcocle Exp $
+// $Id: XmlParserSvc.h,v 1.6 2005-07-07 13:01:10 marcocle Exp $
 #ifndef DETDESCCNV_XMLPARSERSVC_H
 #define DETDESCCNV_XMLPARSERSVC_H
 
@@ -60,7 +60,8 @@ public:
 
   /**
    * This method parses an xml file and produces the corresponding DOM
-   * document.
+   * document. The actual document is kept in a cache and locked. The user must
+   * call IXmlParserSvc::releaseDoc() when he does not need anymore the document.
    * @param fileName the name of the file to parse
    * @return the document issued from the parsing
    */
@@ -68,10 +69,10 @@ public:
 
   /**
    * This method parses XML from a string and produces the corresponding DOM
-   * document.
+   * document. Like for the DOMDocument generated from a file, this one has to be
+   * released with IXmlParserSvc::releaseDoc() too.
    * @param source the string to parse
    * @return the document issued from the parsing
-   * @warning The returned document should be freed by the user (with xercesc::DOMDocument::release()).
    */
   virtual xercesc::DOMDocument* parseString (std::string source);
 
@@ -79,6 +80,11 @@ public:
    * This clears the cache of previously parsed xml files.
    */
   virtual void clearCache();
+
+  /// Method to remove the lock from a document in the cache or to delete the document
+  /// generated from a string.
+  virtual void releaseDoc(xercesc::DOMDocument* doc);
+
 
   //////////////////////////////////////////////////////
   // implementation of the SAX ErrorHandler interface //
@@ -163,13 +169,14 @@ private:
    * The birthDate is the age of the cache when this item arrived.
    * The utility is the number of times this item was retrieved since it is
    * in the cache.
-   * The rule is that an item is released if there is no more space
-   * and if it has the smallest birthDate+cacheBehavior*utility score.
+   * The rule is that an item is released if there is no more space,
+   * if it has the smallest birthDate+cacheBehavior*utility score and is not locked.
    */
-  typedef struct _cachedItem {
+  struct cachedItem {
     xercesc::DOMDocument* document;
     unsigned int birthDate, utility;
-  } cachedItem;
+    int lock;
+  };
 
   /**
    * This is the type of the cache : a map of cachedItems,
