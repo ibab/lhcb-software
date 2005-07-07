@@ -1,5 +1,5 @@
 package RecSys
-version v1r3
+version v1r4
 
 branches cmt doc
  
@@ -36,27 +36,27 @@ use TrackIdealPR        v1r1    Tr    # Eduardo Rodrigues, Jose Hernando
 use TrConverters        v1r1    Tr    # Eduardo Rodrigues, Jose Hernando
 
 # Trg reconstruction
-use TrgSys		v2r8	Trg   # Olivier Callot
+use TrgSys		v2r9	Trg   # Olivier Callot
 use TrgBrunel           v1r1    Trg   # Olivier Callot
 use TrgCalo		v2r0p1  Trg   # Olivier Deschamps
 use TrgChecker		v7r1	Trg   # Olivier Callot
 use TrgForward		v5r1p1	Trg   # Olivier Callot
 use TrgMonitor		v4r0	Trg   # Olivier Callot
-use TrgMuon		v1r2p2	Trg   # Alessia Satta
+use TrgMuon             v1r2p3  Trg   # Alessia Satta
 use TrgPrimVertex	v4r2	Trg   # Olivier Callot
-use TrgVelo             v7r3p2  Trg   # David Hutchcroft
+use TrgVelo             v7r4    Trg   # David Hutchcroft
 use TrgVeloTT		v7r0	Trg   # Olivier Callot
 
 # New pattern recognition
-use PatSys              v1r0    Pat   # Olivier Callot
+use PatSys              v1r1    Pat   # Olivier Callot
 use PatTools            v1r0    Pat   # Olivier Callot
 use PatUtils            v1r0    Pat   # Olivier Callot
-use PatVelo             v1r0    Pat   # Olivier Callot
+use PatVelo             v1r1    Pat   # Olivier Callot, David Hutchcroft
 use PatChecker          v1r0    Pat   # Olivier Callot
 
 # L1 reconstruction and decision
 use L1Reco		v7r0	Trg   # Mariusz Witek
-use L1Decision		v5r1    Trg   # Thomas Schietinger
+use L1Decision		v5r1p1  Trg   # Thomas Schietinger
 
 # Muon
 use MuonUtils		v1r0	Muon  # N.N.
