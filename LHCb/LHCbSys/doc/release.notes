@@ -5,14 +5,15 @@
 ! Purpose     : LHCb OO kernel packages
 !-----------------------------------------------------------------------------
 
-</PRE><H1><A NAME=v18r7>2005-07-06 LHCbSys v18r8</A></H1><PRE>
+</PRE><H1><A NAME=v18r7>2005-07-07 LHCbSys v18r8</A></H1><PRE>
 This version uses Gaudi v16r4
 
  - New packages      : LinkerInstances v1r0 - dictionaries of Linker objects for
                                               use with GaudiPython
  - Modified packages : EventSys v20r8, DAQEvent v5r2p2, PhysEvent v8r10,
-     DetSys v7r3, DetDesc v15r3, DetDescCnv v2r7p1, VeloDet v9r8, MuonDet v4r8,
-     TrgTools v7r5
+     PackedEvent v1r1, DetSys v7r3, DetDesc v15r3, DetDescCnv v2r8, VeloDet v9r8,
+     MuonDet v4r8, CaloDet v6r9p1, OTDet v5r5p1, XmlTools v3r6, TrgTools v7r5,
+     DetCond v7r5, XmlTools v3r6
 
  - In DoxyFile.cfg
    . Get dot tool configuration from dottools.cfg, rather than from makedoc.py
@@ -24,22 +25,40 @@ This version uses Gaudi v16r4
  - In PhysEvent v8r10
    . Add FilterCriterion, Tagger classes. Update FlavourTag
 
+ - In PackedEvent v1r1
+   . Restore the TrStoredMeasurement references when unpacking PackedTracks
+
+ - In DetSys v7r3
+   . Add creation of LCG dictionaries for all LHCb detector description classes,
+     to allow python bindings
+
  - In DetDesc v15r3
    . Various changes to IGeometryInfo, GeometryInfoPlus and AlignmentCondition to
      setting and propagation of alignment transformation parameters
-   . Remove GeometryInfo class
+   . Remove GeometryInfo class, add interfaces previously in DetCond
+   . TabulatedProperty now inherits from ValidDataObject
 
- - In DetDescCnv v2r7p1
+ - In XmlTools v3r6, DetDescCnv v2r8
+   . Implemented lock on cached documents (needs explicit release)
+
+ - In DetDescCnv v2r8
    . XmlBaseConditionCnv::fillObjRefs now returns status of internal call
-
- - In DetDesc v15r3, VeloDet v9r8
-   . Add creation of lcg dictionaries, to allow use of classes from python
 
  - In VeloDet v9r8, TrgTools v7r5
    . Backward compatible changes to cope with v200507 geometry
 
+ - In OTDet v5r5p1, CaloDet v6r9p1
+   . Trivial changes to allow creation of lcg dictionaries
+
  - In MuonDet v4r8
    . Fix memory leak in XmlMuonRegionCnv
+
+ - In DetCond v7r5
+   . Move abstract interfaces to DetDesc
+   . Added CondDBAccessSvc::dumpCache() to print content of the cache
+
+ - In DetCondExample v7r4
+   . Adapt to move of interfaces from DetCond to DetDesc
 
 </PRE><H1><A NAME=v18r7>2005-06-28 LHCbSys v18r7</A></H1><PRE>
  - Packages modified: KernelSys v4r13, LHCbKernel v5r12, RichKernel v5r5,
