@@ -1,4 +1,4 @@
-// $Id: CondDBAccessSvc.h,v 1.5 2005-06-23 14:14:46 marcocle Exp $
+// $Id: CondDBAccessSvc.h,v 1.6 2005-07-07 11:49:40 marcocle Exp $
 #ifndef COMPONENT_CONDDBACCESSSVC_H 
 #define COMPONENT_CONDDBACCESSSVC_H 1
 
@@ -90,6 +90,10 @@ public:
   ///Add an XML object to the cache (bypass the DB)
   virtual StatusCode cacheAddXMLObject(const std::string &path, const TimePoint &since, const TimePoint &until,
                                        const std::string& data);
+
+  /// Dump the cache (debug)
+  virtual void dumpCache() const;
+
 protected:
   /// Standard constructor
   CondDBAccessSvc(const std::string& name, ISvcLocator* svcloc); 

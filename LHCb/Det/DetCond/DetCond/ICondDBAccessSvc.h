@@ -1,4 +1,4 @@
-// $Id: ICondDBAccessSvc.h,v 1.5 2005-06-23 14:11:54 marcocle Exp $
+// $Id: ICondDBAccessSvc.h,v 1.6 2005-07-07 11:49:40 marcocle Exp $
 #ifndef DETCOND_ICONDDBACCESSSVC_H 
 #define DETCOND_ICONDDBACCESSSVC_H 1
 
@@ -103,6 +103,9 @@ public:
   /// Add an XML object to the cache (bypass the DB)
   virtual StatusCode cacheAddXMLObject(const std::string &path, const TimePoint &since, const TimePoint &until,
                                        const std::string& data) = 0;
+
+  /// Dump the cache (debug)
+  virtual void dumpCache() const = 0;
   
 protected:
 

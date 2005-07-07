@@ -1,4 +1,4 @@
-// $Id: CondDBAccessSvc.cpp,v 1.9 2005-06-23 14:14:46 marcocle Exp $
+// $Id: CondDBAccessSvc.cpp,v 1.10 2005-07-07 11:49:40 marcocle Exp $
 // Include files 
 #include <sstream>
 
@@ -497,14 +497,15 @@ TimePoint CondDBAccessSvc::valKeyToTime(const cool::ValidityKey &key) const {
 
 StatusCode CondDBAccessSvc::tagFolder(const std::string &path, const std::string &tagName,
                                       const std::string &description){
+  MsgStream log(msgSvc(),name());
+
   if ( !m_db ) {
-    MsgStream log(msgSvc(), name() );
     log << MSG::ERROR << "Unable to tag the folder \"" << path
         << "\": the database is not opened!" << endmsg;
     return StatusCode::FAILURE;
   }
+
   try {
-    MsgStream log(msgSvc(),name());
     log << MSG::DEBUG << "entering tagFolder: \"" << path << '"' << endmsg;
     // retrieve folder pointer
     StatusCode sc;
@@ -655,4 +656,11 @@ StatusCode CondDBAccessSvc::cacheAddXMLObject(const std::string &path, const Tim
   pool::AttributeList payload(*s_XMLstorageAttListSpec);
   payload["data"].setValue<std::string>(data);
   return cacheAddObject(path,since,until,payload);
+}
+
+//=========================================================================
+//  
+//=========================================================================
+void CondDBAccessSvc::dumpCache() const {
+  if (m_useCache) m_cache->dump();
 }

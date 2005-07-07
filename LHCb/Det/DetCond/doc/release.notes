@@ -1,6 +1,14 @@
-# $Id: release.notes,v 1.42 2005-06-23 15:27:36 marcocle Exp $
+# $Id: release.notes,v 1.43 2005-07-07 11:49:40 marcocle Exp $
 Package Det/DetCond
 Package manager : Marco Clemencic
+
+! 2005-07-07 - Marco CLEMENCIC
+ - Added CondDBAccessSvc::dumpCache(), it prints (level=DEBUG) the content
+   of the cache.
+
+! 2005-06-30 - Marco CLEMENCIC
+ - Added RelyConverter::fillObjectRefs (was missing, but needed for
+   initialization of objects)
 
 ================= Det/DetCond v7r4 2005-06-23 ================================
 ! 2005-06-23 - Marco Clemencic
