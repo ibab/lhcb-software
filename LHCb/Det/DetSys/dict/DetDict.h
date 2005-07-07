@@ -1,14 +1,6 @@
-// $Id: DetDict.h,v 1.1 2005-07-06 17:17:59 cattanem Exp $
+// $Id: DetDict.h,v 1.2 2005-07-07 15:21:13 cattanem Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.1 $
-// ============================================================================
-// $Log: not supported by cvs2svn $
-// Revision 1.3  2005/07/06 15:45:11  ibelyaev
-//  full set of 'Detector'-dictionaries
-//
-// Revision 1.2  2005/05/31 14:37:33  ibelyaev
-//  fix for new DetDesc
-//
+// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.2 $
 // ============================================================================
 #ifndef BENDERDET_BENDERDETDICT_H 
 #define BENDERDET_BENDERDETDICT_H 1
@@ -32,6 +24,8 @@
 // ============================================================================
 #include "DetDesc/IAlignment.h"
 #include "DetDesc/ICalibration.h"
+#include "DetDesc/ICondDBAccessSvc.h"
+#include "DetDesc/ICondDBCnvSvc.h"
 #include "DetDesc/IConditionInfo.h"
 #include "DetDesc/IFastControl.h"
 #include "DetDesc/ISlowControl.h"
@@ -77,11 +71,6 @@
 #include "DetDesc/../src/Lib/ReadOutInfo.h"
 #include "DetDesc/../src/Lib/SlowControlInfo.h"
 #include "DetDesc/../src/Lib/SimpleValidity.h"
-// ============================================================================
-// DetCond 
-// ============================================================================
-#include "DetCond/ICondDBAccessSvc.h"
-#include "DetCond/ICondDBCnvSvc.h"
 // ============================================================================
 // VeloDet
 // ============================================================================
@@ -145,10 +134,11 @@
 
 /** @file 
  *   
- *  The helper file to generate LCG dictionaries for DetDesc  
+ *  Helper file to generate LCG dictionaries for detector description classes
  *
  *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
  *  @date   2004-03-01
+ *  @date   updated 2005-07-07
  */
 
 namespace GaudiPython 
