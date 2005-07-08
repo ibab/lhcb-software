@@ -1,4 +1,4 @@
-// $Id: MakeResonances.cpp,v 1.6 2005-06-02 16:39:47 pkoppenb Exp $
+// $Id: MakeResonances.cpp,v 1.7 2005-07-08 07:19:35 pkoppenb Exp $
 // Include files 
 
 #include <algorithm>
@@ -208,7 +208,10 @@ StatusCode MakeResonances::createDecay(const std::string& mother,
       err() << "Cannot find particle property for mother " << *d << endmsg ;
       return StatusCode::FAILURE;
     }
-    dpid.push_back(pd->pdgID()) ;    
+    dpid.push_back(pd->pdgID()) ;
+    
+    // add to list of all daughter PIDs
+    if (!consideredPID(pd->pdgID())) m_allPids.push_back(pd->pdgID()) ;
   }
 
   double mass = pmother->mass();
@@ -236,7 +239,7 @@ StatusCode MakeResonances::execute() {
   debug() << "==> Execute" << endmsg;
 
   setFilterPassed(false);   // Mandatory. Set to true if event is accepted.
-  ParticleVector Daughters , Resonances ;
+  ParticleVector Daughters, Resonances ;
   StatusCode sc = applyFilter(desktop()->particles(),Daughters,m_daughterFilter);
   if (!sc) {
     err() << "Unable to filter daughters" << endmsg;
@@ -289,17 +292,32 @@ StatusCode MakeResonances::applyFilter(const ParticleVector& IN, ParticleVector&
     return StatusCode::SUCCESS;
   }
   for ( ParticleVector::const_iterator p = IN.begin() ; p!=IN.end(); ++p){
-    if (fc->isSatisfied(*p)) {
-      OUT.push_back(*p);
-      debug() << "Particle " << (*p)->key() << " ID=" << (*p)->particleID().pid() << " with momentum " << 
-        (*p)->momentum() << " m=" << (*p)->mass() << " passes cuts" << endmsg ;
-    } else {    
+    if ( consideredPID((*p)->particleID().pid() )){
+      if (fc->isSatisfied(*p)) {
+        OUT.push_back(*p);
+        debug() << "Particle " << (*p)->key() << " ID=" << (*p)->particleID().pid() << " with momentum " << 
+          (*p)->momentum() << " m=" << (*p)->mass() << " passes cuts" << endmsg ;
+      } else {    
+        verbose() << "Particle "  << (*p)->key() << " ID=" << (*p)->particleID().pid() << " with momentum " 
+                  << (*p)->momentum() << " m=" << (*p)->mass() << " fails cuts" << endmsg ;
+      }
       verbose() << "Particle "  << (*p)->key() << " ID=" << (*p)->particleID().pid() << " with momentum " 
-                << (*p)->momentum() << " m=" << (*p)->mass() << " fails cuts" << endmsg ;
+                << (*p)->momentum() << " m=" << (*p)->mass() << " is discarded" << endmsg ;
     }
   }  
 
   return StatusCode::SUCCESS;
+}
+//=============================================================================
+// Check if Particle needs to be considered
+//=============================================================================
+inline bool MakeResonances::consideredPID(const int& pid)const{
+  for ( std::vector<int>::const_iterator ap = m_allPids.begin() ; ap != m_allPids.end() ; ++ap ){
+    if ( *ap == pid ){
+      return true; // in list
+    }
+  }
+  return false ; // not in list
 }
 //=============================================================================
 // Apply one decay

@@ -1,8 +1,12 @@
-! $Id: release.notes,v 1.172 2005-07-07 11:57:40 pkoppenb Exp $
+! $Id: release.notes,v 1.173 2005-07-08 07:19:35 pkoppenb Exp $
 ! Package     : DaVinciTools
 ! Responsible : P. Koppenburg
 
 !========================== DaVinciTools v12r0p1 2005-07-06 ===================
+! 2005-07-08 - P. Koppenburg
+  - MakeResonances.{cpp,h}
+    . Discard not needed particles (wrong PID) befor one tried to run 
+      the filter
 ! 2005-07-07 - P. Koppenburg
   - DaVinciTools_load.cpp
     . Added MakeResonances. Bug kindly reported by Stephane Poss.
