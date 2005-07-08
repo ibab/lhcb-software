@@ -1,4 +1,4 @@
-// $Id: MakeResonances.cpp,v 1.7 2005-07-08 07:19:35 pkoppenb Exp $
+// $Id: MakeResonances.cpp,v 1.8 2005-07-08 07:21:19 pkoppenb Exp $
 // Include files 
 
 #include <algorithm>
@@ -304,8 +304,7 @@ StatusCode MakeResonances::applyFilter(const ParticleVector& IN, ParticleVector&
       verbose() << "Particle "  << (*p)->key() << " ID=" << (*p)->particleID().pid() << " with momentum " 
                 << (*p)->momentum() << " m=" << (*p)->mass() << " is discarded" << endmsg ;
     }
-  }  
-
+  }
   return StatusCode::SUCCESS;
 }
 //=============================================================================
@@ -313,9 +312,7 @@ StatusCode MakeResonances::applyFilter(const ParticleVector& IN, ParticleVector&
 //=============================================================================
 inline bool MakeResonances::consideredPID(const int& pid)const{
   for ( std::vector<int>::const_iterator ap = m_allPids.begin() ; ap != m_allPids.end() ; ++ap ){
-    if ( *ap == pid ){
-      return true; // in list
-    }
+    if ( *ap == pid ) return true; // in list
   }
   return false ; // not in list
 }

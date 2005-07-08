@@ -1,4 +1,4 @@
-// $Id: MakeResonances.h,v 1.3 2005-05-02 11:57:26 pkoppenb Exp $
+// $Id: MakeResonances.h,v 1.4 2005-07-08 07:19:35 pkoppenb Exp $
 #ifndef MAKERESONANCES_H 
 #define MAKERESONANCES_H 1
 
@@ -43,6 +43,7 @@ protected:
   StatusCode applyDecay(Decay&,ParticleVector& );
   StatusCode makeMother(Particle*&,const ParticleVector&,const ParticleID&) const;
   StatusCode makePlots(const ParticleVector&,IPlotTool*); ///< make plots
+  inline bool consideredPID(const int& pid)const ; ///< make plots
 
 private:
   // globals
@@ -78,6 +79,8 @@ private:
 
   typedef std::vector<Decay> Decays;
   Decays m_decays;
+
+  std::vector<int> m_allPids ; ///< all daughter PIDs in all decays
 
 //=============================================================================
 // Decay class
