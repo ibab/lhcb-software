@@ -1,4 +1,4 @@
-// $Id: UpdateManagerSvc.h,v 1.5 2005-06-23 14:21:30 marcocle Exp $
+// $Id: UpdateManagerSvc.h,v 1.6 2005-07-08 15:16:34 marcocle Exp $
 #ifndef UPDATEMANAGERSVC_H 
 #define UPDATEMANAGERSVC_H 1
 
@@ -7,6 +7,7 @@
 #include "GaudiKernel/TimePoint.h"
 #include "GaudiKernel/ClassID.h"
 #include "GaudiKernel/IOpaqueAddress.h"
+#include "GaudiKernel/IIncidentListener.h"
 
 #include "DetDesc/IUpdateManagerSvc.h"
 
@@ -17,6 +18,7 @@
 
 // Forward declarations
 template <class TYPE> class SvcFactory;
+class IIncidentSvc;
 
 /** @class UpdateManagerSvc UpdateManagerSvc.h
  *  
@@ -24,7 +26,7 @@ template <class TYPE> class SvcFactory;
  *  @author Marco Clemencic
  *  @date   2005-03-30
  */
-class UpdateManagerSvc: public virtual Service, public virtual IUpdateManagerSvc {
+class UpdateManagerSvc: public virtual Service, public virtual IUpdateManagerSvc, public virtual IIncidentListener {
 public: 
   /// Standard constructor
   UpdateManagerSvc(const std::string& name, ISvcLocator* svcloc); 
@@ -62,6 +64,10 @@ public:
 
   /// Debug method: it dumps the dependency network through the message service (not very readable, for experts only).
   virtual void dump();
+
+  // ---- Implement IIncidentListener interface ----
+  /// Handle BeginEvent incident.
+  virtual void handle(const Incident &inc);
 
 protected:
 
@@ -114,6 +120,9 @@ private:
   IDetDataSvc      *m_detDataSvc;
   /// Name of the DetDataSvc (set by the option DetDataSvc, by default empty, which means <i>the same as data provider</i>).
   std::string       m_detDataSvcName;
+
+  /// Pointer to the incident service;
+  IIncidentSvc     *m_incidentSvc;
 
   /// List used to keep track of all the registered items.
   Item::ItemList    m_all_items;

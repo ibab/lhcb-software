@@ -1,13 +1,15 @@
-// $Id: UpdateManagerSvc.cpp,v 1.4 2005-06-23 15:14:14 marcocle Exp $
+// $Id: UpdateManagerSvc.cpp,v 1.5 2005-07-08 15:16:34 marcocle Exp $
 // Include files 
 #include "GaudiKernel/SvcFactory.h"
 #include "GaudiKernel/MsgStream.h"
-#include <GaudiKernel/IDetDataSvc.h>
-#include <GaudiKernel/IDataProviderSvc.h>
+#include "GaudiKernel/IDetDataSvc.h"
+#include "GaudiKernel/IDataProviderSvc.h"
+#include "GaudiKernel/IRegistry.h"
+#include "GaudiKernel/GaudiException.h"
+#include "GaudiKernel/IIncidentSvc.h"
 
-#include <GaudiKernel/IRegistry.h>
+#include "DetDesc/ValidDataObject.h"
 
-#include <DetDesc/ValidDataObject.h>
 // local
 #include "UpdateManagerSvc.h"
 
@@ -25,7 +27,7 @@ const ISvcFactory &UpdateManagerSvcFactory = s_factory;
 // Standard constructor, initializes variables
 //=============================================================================
 UpdateManagerSvc::UpdateManagerSvc(const std::string& name, ISvcLocator* svcloc):
-  Service(name,svcloc),m_dataProvider(NULL),m_detDataSvc(NULL),m_head_since(1),m_head_until(-1)
+  Service(name,svcloc),m_dataProvider(NULL),m_detDataSvc(NULL),m_incidentSvc(NULL),m_head_since(1),m_head_until(-1)
 {
   declareProperty("DataProviderSvc", m_dataProviderName = "DetectorDataSvc");
   declareProperty("DetDataSvc",      m_detDataSvcName);
@@ -44,8 +46,12 @@ UpdateManagerSvc::~UpdateManagerSvc() {
 // IInterface implementation
 //=============================================================================
 StatusCode UpdateManagerSvc::queryInterface(const InterfaceID& riid, void** ppvUnknown){
-  if ( IID_IUpdateManagerSvc.versionMatch(riid) )   {
+  if ( IID_IUpdateManagerSvc.versionMatch(riid) ) {
     *ppvUnknown = (IUpdateManagerSvc*)this;
+    addRef();
+    return StatusCode::SUCCESS;
+  } else if ( IID_IIncidentListener.versionMatch(riid) ) {
+    *ppvUnknown = (IIncidentListener*)this;
     addRef();
     return StatusCode::SUCCESS;
   }
@@ -83,6 +89,27 @@ StatusCode UpdateManagerSvc::initialize(){
 	} else {
 		log << MSG::DEBUG << "Got pointer to IDetDataSvc \"" << m_detDataSvcName << '"' << endmsg;
 	}
+  
+  // before registering to the incident service I have to be sure that the EventClockSvc is ready
+  IService *evtClockSvc;
+  sc = service("EventClockSvc", evtClockSvc, true);
+  if ( sc.isSuccess() ) {
+		log << MSG::DEBUG << "Good: EventClockSvc found" << endmsg;
+    evtClockSvc->release();
+  } else {
+    log << MSG::WARNING << "Unable find EventClockSvc, probably I'll not work." << endmsg;
+  }  
+
+  // register to the incident service for BeginEvent incidents
+  sc = service("IncidentSvc", m_incidentSvc, false);
+  if ( sc.isSuccess() ) {
+    m_incidentSvc->addListener(this,IncidentType::BeginEvent);
+		log << MSG::DEBUG << "Got pointer to IncidentSvc" << endmsg;
+  } else {
+    log << MSG::WARNING << "Unable to register to the incident service." << endmsg;
+    m_incidentSvc = NULL;
+  }
+  
 	return StatusCode::SUCCESS;
 }
 
@@ -98,7 +125,12 @@ StatusCode UpdateManagerSvc::finalize(){
 	// release the interfaces used
 	if (m_dataProvider != NULL) m_dataProvider->release();
 	if (m_detDataSvc != NULL) m_detDataSvc->release();
-	
+	if (m_incidentSvc != NULL) {
+    // unregister from the incident svc
+    m_incidentSvc->removeListener(this,IncidentType::BeginEvent);
+    m_incidentSvc->release();
+  }
+
 	// base class finalization
 	return Service::finalize();
 }
@@ -333,5 +365,19 @@ void UpdateManagerSvc::setValidity(const std::string path, const TimePoint& sinc
   // adjust head validity
   if ( m_head_since < since ) m_head_since = since;
   if ( m_head_until > until ) m_head_until = until;
+}
+
+//=========================================================================
+//  Handle BeginEvent incident
+//=========================================================================
+void UpdateManagerSvc::handle(const Incident &inc) {
+  if ( inc.type() == IncidentType::BeginEvent ) {
+    MsgStream log( msgSvc(), name() );
+    log << MSG::DEBUG << "New BeginEvent incident received" << endmsg;
+    StatusCode sc = UpdateManagerSvc::newEvent();
+    if (!sc.isSuccess()) {
+      throw GaudiException("Failed to preform the update",name()+"Exception",sc);
+    }
+  }
 }
 //=============================================================================

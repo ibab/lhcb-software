@@ -1,9 +1,13 @@
 ! =============================================================================
-! $Id: release.notes,v 1.201 2005-07-07 14:18:18 cattanem Exp $ 
+! $Id: release.notes,v 1.202 2005-07-08 15:16:34 marcocle Exp $ 
 ! =============================================================================
 ! package DetDesc
 ! package manager : Marco Clemencic, Juan Palacios
 ! =============================================================================
+
+! 2005-07-08 - Marco Clemencic
+ - UpdateManagerSvc now registers as IncidentListener to BeginEvent
+ - Added the IncidentListener EventClockSvc to set the event time in DetDataSvc
 
 !======================== DetDesc v15r3 2005-07-07 ========================
 ! 2005-07-07 - Marco Cattaneo

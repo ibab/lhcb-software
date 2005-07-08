@@ -1,4 +1,4 @@
-// $Id: DetDesc_load.cpp,v 1.14 2005-05-03 12:40:08 marcocle Exp $
+// $Id: DetDesc_load.cpp,v 1.15 2005-07-08 15:16:34 marcocle Exp $
 // Include files
 #include "GaudiKernel/ObjectFactory.h"
 #include "GaudiKernel/DeclareFactoryEntries.h"
@@ -51,6 +51,7 @@ DECLARE_FACTORY_ENTRIES(DetDesc) {
   // services  
   DECLARE_SERVICE(   TransportSvc            ) ;
   DECLARE_SERVICE(   UpdateManagerSvc        ) ;
+  DECLARE_SERVICE(   EventClockSvc           ) ;
   
   // data objects 
   DECLARE_OBJECT(    LVolume                 ) ;
