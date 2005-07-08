@@ -4,6 +4,11 @@
 ! Purpose     : LHCb Simulation Application with Geant4
 !-----------------------------------------------------------------------------
 
+! 2005-07-08 - Gloria CORTI
+ - Remove useless option to set MagneticFieldSvc to be used by the FieldMgr
+   (the default is set to do so and the name of the tool used is incorrect)
+   . SimGeometry.opts
+
 ! 2005-07-04 - Gloria CORTI
  - Add use of RootHistCnv. Histograms and Ntuple are set to be saved in
    ROOT as default. 
