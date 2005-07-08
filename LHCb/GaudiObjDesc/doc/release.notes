@@ -2,6 +2,7 @@ Package: GaudiObjDesc
 Desccription: This package contains a set of tools used to generate code from the XML description of the data object classes.
 Package manager : Stefan Roiser
 
+===============================GaudiObjDesc v7r4============================
 !20050706 - Hubert Degaudenzi
 - fixed end of lines in gdd.dtd
 
