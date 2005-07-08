@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.74 2005-07-08 13:21:45 pkoppenb Exp $
+! $Id: release.notes,v 1.75 2005-07-08 14:38:45 ranjard Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Phys/FlavourTagging
 ! Responsible : Marco Musy (musy@cern.ch)
@@ -6,6 +6,9 @@
 !-----------------------------------------------------------------------------
 
 !========================== FlavourTagging v6r1 2005-07-08 ===================
+! 2005-07-08 - F.Ranjard
+  - bug fix for windows : add #include <math.h> in NNetTool.cpp
+
 ! 2005-07-06 - P. Koppenburg
   - bug fix for windows
   
