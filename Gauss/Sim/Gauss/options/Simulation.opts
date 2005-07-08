@@ -1,4 +1,4 @@
-// $Id: Simulation.opts,v 1.62 2005-07-08 09:46:18 gcorti Exp $ 
+// $Id: Simulation.opts,v 1.63 2005-07-08 12:46:30 gcorti Exp $ 
 #pragma print off
 
 /** @file 
@@ -140,4 +140,4 @@ GiGa.GiGaMgr.RunTools += { "GiGaSetSimAttributes" };
 GiGa.GiGaMgr.GiGaSetSimAttributes.OutputLevel = 4;
 
 // uncomment the following to save geometry in GDML format
-//#include "$GDMLG4WRITEROPTS/options/GDMLWriter.opts"
+//#include "$GDMLG4WRITEROPTS/GDMLWriter.opts"
