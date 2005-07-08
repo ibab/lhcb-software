@@ -1,10 +1,11 @@
-! $Id: release.notes,v 1.72 2005-07-08 11:32:06 pkoppenb Exp $
+! $Id: release.notes,v 1.73 2005-07-08 12:57:30 pkoppenb Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Phys/FlavourTagging
 ! Responsible : Marco Musy (musy@cern.ch)
 ! Purpose     : Provide tools and algorithm for tagging B
 !-----------------------------------------------------------------------------
 
+!========================== FlavourTagging v6r1 2005-07-08 ===================
 ! 2005-07-08 - M. Musy
   - fixed bug on writing FT object to tes
   - fixed bug on RequireTrigger, deleted by mistake
