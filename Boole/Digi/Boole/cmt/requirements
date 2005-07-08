@@ -1,5 +1,5 @@
 package Boole
-version v9r3
+version v9r4
 
 branches doc cmt job options
 
@@ -25,13 +25,13 @@ use ParamFiles	v3r11	-no_auto_imports
 use FieldMap	v4r5
 use BooleDQ	v1r0	DQ
 
-#-- LHCb libraries (from LHCB_v18r7)
-use LHCb	v18r7
+#-- LHCb libraries (from LHCB_v18r8)
+use LHCb	v18r8
 
-#-- Lbcom packages (from LBCOM_v2r3)
-use LbcomSys    v2r3
+#-- Lbcom packages (from LBCOM_v2r4)
+use LbcomSys    v2r4
 
-#-- BooleSys v9r3 packages
+#-- BooleSys v9r4 packages
 
 use DigiAlg		v3r0	Digi
 

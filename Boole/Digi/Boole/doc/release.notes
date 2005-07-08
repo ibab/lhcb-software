@@ -3,13 +3,18 @@ Package: Digi/Boole
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb Digitization program
 
+</PRE><H1><A NAME=v9r4>2005-07-08 Boole v9r4</A></H1><PRE>
+ - Adapt requirements to Lbcom v2r4, LHCb v18r8
+ - Add FromDigi.opts, ExpertCheck.opts. Remove (empty) BooleMoniProd.opts
+ - Add L0Checker algorithm to BooleMoni.opts
+
 </PRE><H1><A NAME=v9r3>2005-06-27 Boole v9r3</A></H1><PRE>
- - Adapt requirements to Lbcom v2r3, LHCb v18r7, Gaudi v16r4, XmlDDDB v26r0
+ - Adapt requirements to Lbcom v2r3, LHCb v18r7, XmlDDDB v26r0
  - Add pool persistency and dicts to Boole.opts
  - Add v200507.opts
 
 </PRE><H1><A NAME=v9r2>2005-06-13 Boole v9r2</A></H1><PRE>
- - Adapt requirements to Lbcom v2r2, LHCb v18r6, Gaudi v16r4, XmlDDDB v25r1
+ - Adapt requirements to Lbcom v2r2, LHCb v18r6, XmlDDDB v25r1
  - Save Event/pSim#2 instead of Event/Rdst#2 in DigiContent.opts
  - Split RelationsLinks sequence into constituents Velo,IT,OT,Links
  - Simplify Boole.opts to use LHCbApplication.opts

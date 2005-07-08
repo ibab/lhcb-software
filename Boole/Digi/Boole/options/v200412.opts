@@ -5,7 +5,7 @@
 #pragma print off
 InitDataSeq.Members += { "MergeEventAlg/SpilloverAlg" }; // Adds Spillover
 #include "$BOOLEOPTS/Boole.opts"          // Generic options for all jobs
-#include "$BOOLEOPTS/BooleMoniProd.opts"  // Default monitoring for production
+//#include "$BOOLEOPTS/ExpertCheck.opts"  // Uncomment for expert check histos
 ApplicationMgr.OutStream += { "DigiWriter" };  // Comment to switch off output
 //---------------------------------------------------------------------------
 // Database specific options

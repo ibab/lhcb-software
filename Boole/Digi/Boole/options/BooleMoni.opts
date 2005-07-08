@@ -15,19 +15,19 @@ Moni.DetectorList = { "VELO", "IT", "OT", "RICH", "CALO", "L0" };
 //--------------------------------------------------------------
 
 // L0 Trigger
+ApplicationMgr.DLLs += {"L0Checker"};
 MoniL0Seq.Members += { "L0CaloMonit" };
 MoniL0Seq.Members += { "L0Monitor" };
+MoniL0Seq.Members += { "L0Check" };
 
 // Velo
 MoniVELOSeq.Members += { "VeloMonitor" };
-//#include "$VELOALGORITHMSROOT/options/VeloMonitor.opts"
 
 // IT digitisation
 ApplicationMgr.DLLs += {"ITCheckers"};
 MoniITSeq.Members += { "MCITDepositChecker" };
 MoniITSeq.Members += { "MCITDigitChecker" };
 MoniITSeq.Members += { "ITDigitChecker" };
-//#include "$ITCHECKERSROOT/options/Boole.opts"
 
 // OT digitisation
 ApplicationMgr.DLLs += {"OTMonitor"};
@@ -38,7 +38,6 @@ MoniOTSeq.Members += { "OTTimeChecker" };
 // Rich
 ApplicationMgr.DLLs += { "RichDigiQC", "RichMCTools" };
 #include "$RICHDIGIQCOPTS/DigiQC_Boole.opts"    // standard monitoring
-//#include "$RICHREADOUTOPTS/BooleDigiMoni.opts" // detailed monitoring
 
 // Calorimeters
 ApplicationMgr.DLLs += { "CaloMoniDigi" };
@@ -47,12 +46,3 @@ MoniCALOSeq.Members += { "CaloDigitMonitor/PrsMoni" };
 MoniCALOSeq.Members += { "CaloDigitMonitor/EcalMoni" };
 MoniCALOSeq.Members += { "CaloDigitMonitor/HcalMoni" };
 #include "$CALOMONIDIGIOPTS/MoniDigi.opts"
-
-//--------------------------------------------------------------
-// Set up some profiling. Enable/Disable setting lines below to true/false
-//--------------------------------------------------------------
-//ApplicationMgr.DLLs += { "GaudiAud" };
-//AuditorSvc.Auditors  = { "NameAuditor", "ChronoAuditor", "MemoryAuditor" };
-//NameAuditor.Enable   = false;
-//ChronoAuditor.Enable = true;
-//MemoryAuditor.Enable = false;
