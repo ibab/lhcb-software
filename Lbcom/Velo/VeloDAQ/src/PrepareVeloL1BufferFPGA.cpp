@@ -1,4 +1,4 @@
-// $Id: PrepareVeloL1BufferFPGA.cpp,v 1.6 2005-07-08 09:56:39 cattanem Exp $
+// $Id: PrepareVeloL1BufferFPGA.cpp,v 1.7 2005-07-08 15:06:31 cattanem Exp $
 // Include files 
 
 // from Gaudi
@@ -91,7 +91,6 @@ StatusCode PrepareVeloL1BufferFPGA::initialize() {
 StatusCode PrepareVeloL1BufferFPGA::execute() {
 
   MsgStream  msg( msgSvc(), name() );
-  msg << MSG::DEBUG << "==> Execute" << endreq;
 
   bool verbose = msg.level() <= MSG::VERBOSE;
   bool debug   = msg.level() <= MSG::DEBUG;
@@ -123,7 +122,7 @@ StatusCode PrepareVeloL1BufferFPGA::execute() {
   } else {
     buffer = theL1Buffer;
   }
-  msg<< MSG::INFO << "---------L1Buffer-----------" <<endreq;
+
   //== First, do the clustering
   int    sensor;
   int    strip;
