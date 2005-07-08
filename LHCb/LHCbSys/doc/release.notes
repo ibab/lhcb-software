@@ -5,7 +5,7 @@
 ! Purpose     : LHCb OO kernel packages
 !-----------------------------------------------------------------------------
 
-</PRE><H1><A NAME=v18r7>2005-07-07 LHCbSys v18r8</A></H1><PRE>
+</PRE><H1><A NAME=v18r7>2005-07-08 LHCbSys v18r8</A></H1><PRE>
 This version uses Gaudi v16r4
 
  - New packages      : LinkerInstances v1r0 - dictionaries of Linker objects for
@@ -13,7 +13,7 @@ This version uses Gaudi v16r4
  - Modified packages : EventSys v20r8, DAQEvent v5r2p2, PhysEvent v8r10,
      PackedEvent v1r1, DetSys v7r3, DetDesc v15r3, DetDescCnv v2r8, VeloDet v9r8,
      MuonDet v4r8, CaloDet v6r9p1, OTDet v5r5p1, XmlTools v3r6, TrgTools v7r5,
-     DetCond v7r5, XmlTools v3r6
+     DetCond v7r5, XmlTools v3r6, DAQSys v1r5p1, VeloDAQ v2r3p2
 
  - In DoxyFile.cfg
    . Get dot tool configuration from dottools.cfg, rather than from makedoc.py
@@ -27,6 +27,10 @@ This version uses Gaudi v16r4
 
  - In PackedEvent v1r1
    . Restore the TrStoredMeasurement references when unpacking PackedTracks
+
+ - In VeloDAQ v2r3p2
+   . Bug fix: last Velo Phi bank was missing from in L1Buffer, in cases when this
+     bank would be empty
 
  - In DetSys v7r3
    . Add creation of LCG dictionaries for all LHCb detector description classes,
