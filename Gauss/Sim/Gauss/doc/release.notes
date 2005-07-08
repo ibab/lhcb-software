@@ -5,6 +5,14 @@
 !-----------------------------------------------------------------------------
 
 ! 2005-07-08 - Gloria CORTI
+ - Introduce possibility to write GDML file. This is optional and requires
+   uncommenting the necessary package "GDMLG4Writer" in the requirements
+   file. Remove obsolete options from first attemp (GDMLWriter.opts) replaced
+   by options in the package itself.
+   . Simulation.opts, modify example of how to include options to activate
+     writing of GDML file.
+
+! 2005-07-08 - Gloria CORTI
  - Remove useless option to set MagneticFieldSvc to be used by the FieldMgr
    (the default is set to do so and the name of the tool used is incorrect)
    . SimGeometry.opts
