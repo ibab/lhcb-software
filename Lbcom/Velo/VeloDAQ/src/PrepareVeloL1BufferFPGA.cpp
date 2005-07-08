@@ -1,4 +1,4 @@
-// $Id: PrepareVeloL1BufferFPGA.cpp,v 1.5 2004-11-29 14:16:06 cattanem Exp $
+// $Id: PrepareVeloL1BufferFPGA.cpp,v 1.6 2005-07-08 09:56:39 cattanem Exp $
 // Include files 
 
 // from Gaudi
@@ -123,7 +123,7 @@ StatusCode PrepareVeloL1BufferFPGA::execute() {
   } else {
     buffer = theL1Buffer;
   }
-  
+  msg<< MSG::INFO << "---------L1Buffer-----------" <<endreq;
   //== First, do the clustering
   int    sensor;
   int    strip;
@@ -156,7 +156,6 @@ StatusCode PrepareVeloL1BufferFPGA::execute() {
   // -------------------------------------------------------------------
   for ( MCVeloFEs::const_iterator feIt = fe->begin() ; 
         fe->end() >= feIt ; feIt++ ) {
-
     if ( fe->end() == feIt ) {  //== Extra iteration to flush the FPGA
       strip = 999;
       sensor = 999;
@@ -165,13 +164,14 @@ StatusCode PrepareVeloL1BufferFPGA::execute() {
       charge = (*feIt)->charge();
       strip  = (*feIt)->strip();
       sensor = (*feIt)->sensor();
-      if ( verbose ) msg << MSG::VERBOSE
-                       << " NT Loop over MCVeloFEs: " << sensor 
+      if ( verbose ) 
+      msg << MSG::VERBOSE
+                       << " -------NT Loop over MCVeloFEs------: " << sensor 
                        << " " << strip << " " << countStrips 
                        << " " << charge << endreq;    
     }
     if (sensor != previousSensor && countStrips > 1) {
-      msg << MSG::DEBUG
+      msg << MSG::VERBOSE
           << " NT Sensor "  <<  previousSensor
           << " has " << nClusInSensor << " clusters."
           << endreq;
@@ -392,8 +392,11 @@ StatusCode PrepareVeloL1BufferFPGA::execute() {
   data.clear(); 
   int lastSensorIndex = m_velo->sensorIndex(lastSensor);
   int finalSensorIndex = vpSensors.size(); finalSensorIndex--;
+  msg<< MSG::VERBOSE << "lastSensorIndex= " << lastSensorIndex
+     << "finalSensorIndex= " << finalSensorIndex 
+     << "vpSensors.size()= " << vpSensors.size() <<endreq;
   if (finalSensorIndex!=lastSensorIndex){
-    while (  ++lastSensorIndex != finalSensorIndex ) {
+    while (  lastSensorIndex++ != finalSensorIndex ) {
       lastSensor=vpSensors[lastSensorIndex]->sensorNumber();
       if ( m_velo->isRSensor( lastSensor )  ){
 	sourceID = numberOfR++;
