@@ -1,4 +1,4 @@
-// $Id: MakeResonances.cpp,v 1.8 2005-07-08 07:21:19 pkoppenb Exp $
+// $Id: MakeResonances.cpp,v 1.9 2005-07-08 07:36:39 pkoppenb Exp $
 // Include files 
 
 #include <algorithm>
@@ -55,6 +55,7 @@ MakeResonances::MakeResonances( const std::string& name,
   declareProperty( "DecayDescriptors", m_decayDescriptors );  
   //  declareProperty( "MakePlots" , m_makePlots = false) ;
   declareProperty( "MotherToNGammas" , m_motherToNGammas = false) ;
+  declareProperty ( "HistoProduce", m_produceHistos = false ) ; // overwrites GaudiHistoAlg.cpp
 }
 //=============================================================================
 // Destructor
@@ -92,7 +93,6 @@ StatusCode MakeResonances::initialize() {
     verbose() << "Got overlap tool" << endmsg ;
   }
   // histogramming 
-  //  GaudiHistoAlg::setProduceHistos( m_makePlots );
 
   if ( produceHistos() ){
     if ( m_daughterPlotTool != "none" ){

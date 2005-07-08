@@ -44,6 +44,7 @@ MakeResonances.MotherFilter.Selections = {"D_s- : VtxFilterCriterion/DsFilter"};
 MakeResonances.Window = 50*MeV ;
 MakeResonances.KillOverlap = true ;
 MakeResonances.MotherFilter.DsFilter.MaxChi2 = 200 ; // some filtering
+MakeResonances.OutputLevel = 3 ;
 //
 // Old way of doing the same thing
 //

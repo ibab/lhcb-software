@@ -1,4 +1,4 @@
-// $Id: MakeResonances.h,v 1.4 2005-07-08 07:19:35 pkoppenb Exp $
+// $Id: MakeResonances.h,v 1.5 2005-07-08 07:36:39 pkoppenb Exp $
 #ifndef MAKERESONANCES_H 
 #define MAKERESONANCES_H 1
 
@@ -44,6 +44,7 @@ protected:
   StatusCode makeMother(Particle*&,const ParticleVector&,const ParticleID&) const;
   StatusCode makePlots(const ParticleVector&,IPlotTool*); ///< make plots
   inline bool consideredPID(const int& pid)const ; ///< make plots
+  inline bool produceHistos()const{return m_produceHistos;} ; ///<overwrites GaudiHistoAlg::produceHistos()
 
 private:
   // globals
@@ -76,6 +77,8 @@ private:
   bool       m_killOverlap ;        ///< Kill candidates based on twice the same track
   //  bool       m_makePlots;           ///< Produce Histos. Overrides GaudiHistoAlg variable 
   bool       m_motherToNGammas;     ///< make mother to n gammas
+  bool       m_produceHistos ;      ///< overwrites GaudiHistoAlg::m_produceHistos
+  
 
   typedef std::vector<Decay> Decays;
   Decays m_decays;
