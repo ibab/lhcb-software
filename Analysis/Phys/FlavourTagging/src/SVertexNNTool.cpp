@@ -1,4 +1,4 @@
-// $Id: SVertexNNTool.cpp,v 1.2 2005-07-04 15:40:09 pkoppenb Exp $
+// $Id: SVertexNNTool.cpp,v 1.3 2005-07-08 13:21:45 pkoppenb Exp $
 #include "SVertexNNTool.h"
 
 //-----------------------------------------------------------------------------
@@ -251,7 +251,7 @@ double SVertexNNTool::NNseeding(double P1,
   double OUT6 = std::min(fabs(IP1/40.)-.05, 1.);
   double OUT7 = std::min(fabs(IP2/40.)-.05, 1.);
   double OUT8 = std::min(JVZ/30., 1.);
-  double OUT9 = std::log(JCHI)/10.;
+  double OUT9 = log(JCHI)/10.;
 
   double RIN1 = 9.391623e-01
     +(-5.951788e+00) * OUT1
