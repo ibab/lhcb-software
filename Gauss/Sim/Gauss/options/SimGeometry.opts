@@ -1,4 +1,4 @@
-// $Id: SimGeometry.opts,v 1.5 2005-06-17 15:52:24 gcorti Exp $
+// $Id: SimGeometry.opts,v 1.6 2005-07-08 08:50:42 gcorti Exp $
 
 /** @file
  *
@@ -54,7 +54,6 @@ GiGaGeo.FieldManager           = "GiGaFieldMgr/FieldMgr";
 GiGaGeo.FieldMgr.Stepper       = "ClassicalRK4";
 GiGaGeo.FieldMgr.Global        = true;
 GiGaGeo.FieldMgr.MagneticField = "GiGaMagFieldGlobal/LHCbField";
-GiGaGeo.LHCbField.MagneticFieldService = "MagneticFieldSvc";
 
 // declare external services needed MAGNETIC FIELD
 ApplicationMgr.DLLs   += { "Magnet" };
