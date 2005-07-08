@@ -6,6 +6,17 @@
 !             : Contains packages shared by Boole and other applications   
 !-----------------------------------------------------------------------------
 
+</PRE><H1><A NAME=v2r4>2005-07-08 LbcomSys v2r4</A></H1><PRE>
+This version is built against LHCb v18r8 and Gaudi v16r4.
+- Packages modified: L0Checker v3r1
+
+- In DoxyFile.cfg
+  . Get dot tool configuration from dottools.cfg, rather than from makedoc.py
+
+- In L0Checker v3r1
+  . Add new variables to end of L0Check::finalize summary
+  . L0Check default is now to not fill histogram or N-tuple
+
 </PRE><H1><A NAME=v2r3>2005-06-21 LbcomSys v2r3</A></H1><PRE>
 This version is built against LHCb v18r7 and Gaudi v16r4.
 - Packages modified: RichTools v1r7, RichMCTools v2r6
