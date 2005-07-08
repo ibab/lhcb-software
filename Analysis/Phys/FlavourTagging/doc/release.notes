@@ -1,9 +1,14 @@
-! $Id: release.notes,v 1.71 2005-07-07 16:53:30 pkoppenb Exp $
+! $Id: release.notes,v 1.72 2005-07-08 11:32:06 pkoppenb Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Phys/FlavourTagging
 ! Responsible : Marco Musy (musy@cern.ch)
 ! Purpose     : Provide tools and algorithm for tagging B
 !-----------------------------------------------------------------------------
+
+! 2005-07-08 - M. Musy
+  - fixed bug on writing FT object to tes
+  - fixed bug on RequireTrigger, deleted by mistake
+  - added property AverageOmega 
 
 ! 2005-07-06 - P. Koppenburg
   - src/BTagging.cpp
@@ -15,10 +20,13 @@
   - src/TaggerVertexChargeTool.cpp
   - src/NNetTool.cpp
     .Tagger now takes const Particle*, not Particle
+
 !========================== FlavourTagging v6r0 2005-07-06 ===================
+
 ! 2005-07-06 - P. Koppenburg
   - src/NNetTool.cpp
     . include <math.h> for windows
+
 ! 2005-07-05 - M Musy
   - added reorganised:
     CombineTaggersNNet.cpp  to combine taggers

@@ -16,7 +16,6 @@ BTagging::BTagging(const std::string& name,
                    ISvcLocator* pSvcLocator):
   DVAlgorithm(name, pSvcLocator){
   
-  declareProperty( "WriteToTES", m_WriteToTES = true );
   declareProperty( "TagOutputLocation", 
 		   m_TagLocation = FlavourTagLocation::Default );
 }
@@ -38,7 +37,8 @@ StatusCode BTagging::execute() {
   debug() << "BTagging will tag "<< parts.size() << " B hypos!" <<endreq;
 
   //-------------- loop on signal B candidates from selection
-  FlavourTag theTag;
+  //FlavourTag theTag;
+  FlavourTag *theTag = new FlavourTag;
   ParticleVector::const_iterator icandB;
   for ( icandB = parts.begin(); icandB != parts.end(); icandB++){
     if((*icandB)->particleID().hasBottom()) {
@@ -47,7 +47,7 @@ StatusCode BTagging::execute() {
 
       //--------------------- TAG THEM -------------------
       //use tool for tagging by just specifing the signal B
-      StatusCode sc = flavourTagging() -> tag( theTag, *icandB );
+      StatusCode sc = flavourTagging() -> tag( *theTag, *icandB );
 
       //use tool for tagging if you want to specify the Primary Vtx
       //StatusCode sc = flavourTagging() -> tag( theTag, *icandB, PVertex );
@@ -59,14 +59,14 @@ StatusCode BTagging::execute() {
 
       //--- PRINTOUTS ---
       //print the information in theTag
-      int tagdecision = theTag.decision();
+      int tagdecision = theTag->decision();
       debug() << "Flavour guessed: " << (tagdecision>0 ? "b":"bbar")<<endreq;
-      debug() << "estimated omega= " << theTag.omega() <<endreq;
-      Particle* tagB = theTag.taggedB();
+      debug() << "estimated omega= " << theTag->omega() <<endreq;
+      Particle* tagB = theTag->taggedB();
       if( tagB ) debug() << "taggedB p="<< tagB->p()/GeV <<endreq;
 
       ///print Taggers information
-      std::vector<Tagger> mytaggers = theTag.taggers();
+      std::vector<Tagger> mytaggers = theTag->taggers();
       std::vector<Tagger>::iterator itag;
       for(itag=mytaggers.begin(); itag!=mytaggers.end(); ++itag) {
         std::string tts;
@@ -88,33 +88,22 @@ StatusCode BTagging::execute() {
         debug() << "    decision = "
                 << (itag->decision() > 0? "b":"bbar") <<endreq;
         debug() << "    omega    = " << itag->omega() <<endreq;
-        std::vector<const Particle*> taggerparts = itag->taggerParts();
-        std::vector<const Particle*>::iterator kp;
+        std::vector<Particle> taggerparts = itag->taggerParts();
+        std::vector<Particle>::iterator kp;
         for(kp=taggerparts.begin(); kp!=taggerparts.end(); kp++) {
-          debug() << "    ID:" <<std::setw(4)<< (*kp)->particleID().pid() 
-                  << " p= "  << (*kp)->p()/GeV << endreq;
-        }
+          debug() << "    ID:" <<std::setw(4)<< kp->particleID().pid() 
+                  << " p= "  << kp->p()/GeV << endreq;
+	}
       }
     }
   }
 
   //-------------------------------------------
   ///Output to TES (for backward compatibility) 
-  if( m_WriteToTES ) if( theTag.decision() ) {
-    FlavourTags* tags = new FlavourTags;
-    tags->insert(&theTag);
-    StatusCode sc = put(tags,m_TagLocation);
-    if( !sc ) err() <<"Unable to register tags"<< endreq;
-  }
-
-
-  FlavourTags* mmtags(0);
-  if( exist<FlavourTags>(  "/Event/Phys/Tagging"  ) ) {
-    mmtags = get<FlavourTags>( "/Event/Phys/Tagging" );
-    debug() << "Esiste!! con "<<mmtags->size()<< endreq;
-  } else {
-    debug() << "No Esiste!! "  << endreq;
-  }
+  FlavourTags* tags = new FlavourTags;
+  tags->insert(theTag);
+  StatusCode sc = put(tags,m_TagLocation);
+  if( !sc ) err() <<"Unable to register tags"<< endreq;
 
   setFilterPassed( true );
   return StatusCode::SUCCESS;

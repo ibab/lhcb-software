@@ -1,4 +1,4 @@
-// $Id: BTaggingTool.h,v 1.7 2005-07-06 00:33:19 musy Exp $
+// $Id: BTaggingTool.h,v 1.8 2005-07-08 11:32:06 pkoppenb Exp $
 
 #ifndef USER_BTAGGINGTOOL_H 
 #define USER_BTAGGINGTOOL_H 1
@@ -77,7 +77,7 @@ private:
   std::string m_SecondaryVertexToolName;
   std::string m_outputLocation, m_CombineTaggersName;
 
-  bool m_RequireL0, m_RequireL1, m_RequireHLT;
+  bool m_RequireL0, m_RequireL1, m_RequireHLT, m_RequireTrigger;
   bool m_EnableMuon,m_EnableElectron,m_EnableKaonOS;
   bool m_EnableKaonSS,m_EnablePionSS,m_EnableVertexCharge;
   bool m_EnableJetSame;

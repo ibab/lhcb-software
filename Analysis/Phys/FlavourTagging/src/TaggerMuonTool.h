@@ -1,4 +1,4 @@
-// $Id: TaggerMuonTool.h,v 1.3 2005-07-06 00:33:20 musy Exp $
+// $Id: TaggerMuonTool.h,v 1.4 2005-07-08 11:32:06 pkoppenb Exp $
 #ifndef USER_TAGGERMUONTOOL_H 
 #define USER_TAGGERMUONTOOL_H 1
 
@@ -48,6 +48,7 @@ private:
   //properties 
   double m_Pt_cut_muon;
   double m_P_cut_muon;
+  double m_AverageOmega;
 };
 
 //===============================================================//

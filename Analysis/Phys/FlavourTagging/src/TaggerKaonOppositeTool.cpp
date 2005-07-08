@@ -28,6 +28,7 @@ TaggerKaonOppositeTool::TaggerKaonOppositeTool( const std::string& type,
   declareProperty( "Kaon_matchTrack_IP_cut",    m_IP_km  = 1.0 );
   declareProperty( "Kaon_upstreamTrack_IP_cut", m_IP_ku  = 1.0 );
   declareProperty( "CombTech",  m_CombinationTechnique = "NNet" );
+  declareProperty( "AverageOmega", m_AverageOmega = 0.355 );
   m_Geom = 0;
   m_nnet = 0;
 }
@@ -84,7 +85,6 @@ Tagger TaggerKaonOppositeTool::tag( const Particle* AXB0,
             << " IP=" << IP <<endreq;
 
     if(IPsig > m_IP_cut_kaon ) {
-      debug() << " czz0 "<<endreq;
       long   trtyp= 0;
       double lcs  = 1000.;
       ContainedObject* contObj = (*ipart)->origin();
@@ -112,11 +112,11 @@ Tagger TaggerKaonOppositeTool::tag( const Particle* AXB0,
   } 
   if( ! ikaon ) return tkaon;
 
-  tkaon.addTaggerPart(ikaon);
+  tkaon.addTaggerPart(*ikaon);
   tkaon.setDecision(ikaon->charge()>0 ? -1: 1);
 
   //calculate omega
-  double pn = 0.66;
+  double pn = 1-m_AverageOmega;
   if(m_CombinationTechnique == "NNet") {
     HepLorentzVector ptotB = AXB0->momentum();
     double B0the  = ptotB.theta();

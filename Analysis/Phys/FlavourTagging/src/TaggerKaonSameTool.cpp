@@ -26,6 +26,7 @@ TaggerKaonSameTool::TaggerKaonSameTool( const std::string& type,
   declareProperty( "KaonSame_Eta_cut",m_etacut_kaonS = 1.0 );
   declareProperty( "KaonSame_dQ_cut", m_dQcut_kaonS  = 1.5 );
   declareProperty( "KaonS_upstreamTrack_LCS_cut", m_lcs_kSu = 2.5 );
+  declareProperty( "AverageOmega",    m_AverageOmega = 0.336 );
   m_nnet = 0;
   m_Geom = 0;
 }
@@ -121,11 +122,11 @@ Tagger TaggerKaonSameTool::tag( const Particle* AXB0,
   } 
   if( ! ikaonS ) return tkaonS;
 
-  tkaonS.addTaggerPart(ikaonS);
+  tkaonS.addTaggerPart(*ikaonS);
   tkaonS.setDecision(ikaonS->charge()>0 ? 1: -1);
 
   //calculate omega
-  double pn = 0.66;
+  double pn = 1-m_AverageOmega;
   if(m_CombinationTechnique == "NNet") {
     double rnet, IP, IPerr, ip, iperr, IPT=0.;
     double B0p = ptotB.vect().mag()/GeV;

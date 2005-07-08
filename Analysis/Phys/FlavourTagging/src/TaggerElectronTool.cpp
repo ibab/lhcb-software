@@ -26,6 +26,7 @@ TaggerElectronTool::TaggerElectronTool( const std::string& type,
   declareProperty( "VeloChargeMin",m_VeloChMin  = 21  );
   declareProperty( "VeloChargeMax",m_VeloChMax  = 32  );
   declareProperty( "EoverP",       m_EoverP     = 0.8 );
+  declareProperty( "AverageOmega", m_AverageOmega = 0.30 );
   m_nnet = 0;
   m_Geom = 0;
 }
@@ -112,11 +113,11 @@ Tagger TaggerElectronTool::tag( const Particle* AXB0,
     }
   }
   if( !iele ) return tele;
-  tele.addTaggerPart(iele);
+  tele.addTaggerPart(*iele);
   tele.setDecision(iele->charge()>0 ? -1: 1);
 
   //calculate omega
-  double pn = 0.66;
+  double pn = 1-m_AverageOmega;
   if(m_CombinationTechnique == "NNet") {
     HepLorentzVector ptotB = AXB0->momentum();
     double B0the  = ptotB.theta();

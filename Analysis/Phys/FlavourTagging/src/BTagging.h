@@ -1,4 +1,4 @@
-// $Id: BTagging.h,v 1.15 2005-07-04 16:07:20 pkoppenb Exp $
+// $Id: BTagging.h,v 1.16 2005-07-08 11:32:06 pkoppenb Exp $
 #ifndef USER_BTAGGING_H 
 #define USER_BTAGGING_H 1
 
@@ -31,7 +31,7 @@ public:
   virtual StatusCode finalize  ();    ///< Algorithm finalization
 
 private:
-  bool m_WriteToTES; ///< write FlavourTag to TES
+  //bool m_WriteToTES; ///< write FlavourTag to TES
   std::string m_TagLocation; ///< Location of tags
 
 };

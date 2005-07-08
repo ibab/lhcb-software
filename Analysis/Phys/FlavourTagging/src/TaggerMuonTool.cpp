@@ -22,6 +22,7 @@ TaggerMuonTool::TaggerMuonTool( const std::string& type,
   declareProperty( "Muon_Pt_cut", m_Pt_cut_muon = 1.2 );
   declareProperty( "Muon_P_cut",  m_P_cut_muon  = 5.0 );
   declareProperty( "CombTech",  m_CombinationTechnique = "NNet" );
+  declareProperty( "AverageOmega", m_AverageOmega = 0.33 );
   m_nnet = 0;
   m_Geom = 0;
 }
@@ -76,11 +77,11 @@ Tagger TaggerMuonTool::tag( const Particle* AXB0,
   }
   if( ! imuon ) return tmu;
 
-  tmu.addTaggerPart(imuon);
+  tmu.addTaggerPart(*imuon);
   tmu.setDecision(imuon->charge()>0 ? -1: 1);
 
   //calculate omega
-  double pn = 0.66;
+  double pn = 1 - m_AverageOmega;
   if(m_CombinationTechnique == "NNet") {
     HepLorentzVector ptotB = AXB0->momentum();
     double B0the  = ptotB.theta();

@@ -27,6 +27,7 @@ BTaggingTool::BTaggingTool( const std::string& type,
   declareProperty( "CombineTaggersName",
 		   m_CombineTaggersName = "CombineTaggersNNet" );
 
+  declareProperty( "RequireTrigger", m_RequireTrigger = false );
   declareProperty( "RequireL0", m_RequireL0 = false );
   declareProperty( "RequireL1", m_RequireL1 = false );
   declareProperty( "RequireHLT",m_RequireHLT= false );
@@ -137,13 +138,13 @@ StatusCode BTaggingTool::tag( FlavourTag& theTag, const Particle* AXB0,
     evt = get<EventHeader> (EventHeaderLocation::Default);
   } else {
     err() << "Unable to Retrieve Event" << endreq;
-    return StatusCode::SUCCESS;
+    return StatusCode::FAILURE;
   }
   // Retrieve trigger info
   int trigger=-1;
   TrgDecision* trg = 0;
   HltScore*    hlt = 0 ;
-  if (m_RequireL0 || m_RequireL1 || m_RequireHLT) {
+  if (m_RequireTrigger) {
     debug()<<"Retrieve TrgDecision from "
 	   <<TrgDecisionLocation::Default<<endreq;
     if ( !exist<TrgDecision>(TrgDecisionLocation::Default) ){
@@ -309,7 +310,7 @@ StatusCode BTaggingTool::tag( FlavourTag& theTag, const Particle* AXB0,
   //"NNet" approach is based on the wrong tag fraction
   //-------------------------------------------------- 
   debug() <<"combine taggers "<< taggers.size() <<endreq;
-  int catt = m_combine -> combineTaggers( theTag, taggers );
+  int category = m_combine -> combineTaggers( theTag, taggers );
 
   ///OUTPUT to Logfile ---------------------------------------------------
   int samesideDec = KaonSTag.decision();
@@ -318,7 +319,7 @@ StatusCode BTaggingTool::tag( FlavourTag& theTag, const Particle* AXB0,
          << std::setw(4) << evt->evtNum()
          << std::setw(4) << trigger
          << std::setw(5) << theTag.decision()
-         << std::setw(3) << catt       //category
+         << std::setw(3) << category
 	 << std::setw(5) << MuonTag.decision()
 	 << std::setw(3) << ElecTag.decision()
 	 << std::setw(3) << KaonTag.decision()

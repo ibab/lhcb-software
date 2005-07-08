@@ -25,6 +25,7 @@ TaggerPionSameTool::TaggerPionSameTool( const std::string& type,
   declareProperty( "PionSame_IP_cut", m_IP_cut_pionS = 3.0 );
   declareProperty( "PionSame_dQ_cut", m_dQcut_pionS  = 3.0 );
   declareProperty( "PionS_upstreamTrack_LCS_cut", m_lcs_pSu = 2.5 );
+  declareProperty( "AverageOmega", m_AverageOmega = 0.44 );
   m_nnet = 0;
   m_Geom = 0;
 }
@@ -112,7 +113,7 @@ Tagger TaggerPionSameTool::tag( const Particle* AXB0,
   if( !ipionS ) return tpionS;
 
   //calculate omega
-  double pn = 0.66;
+  double pn = 1-m_AverageOmega;
   if(m_CombinationTechnique == "NNet") {
 
     double rnet, IP, IPerr, ip, iperr, IPT=0.;
@@ -141,7 +142,7 @@ Tagger TaggerPionSameTool::tag( const Particle* AXB0,
   tpionS.setDecision( tagdecision );
   tpionS.setOmega( 1-pn );
   tpionS.setType( Tagger::SS_Pion ); 
-  tpionS.addTaggerPart(ipionS);
+  tpionS.addTaggerPart(*ipionS);
 
   return tpionS;
 }
