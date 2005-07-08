@@ -1,5 +1,5 @@
 package DAQSys
-version v1r5
+version v1r5p1
 
 branches doc cmt options
 
@@ -9,6 +9,6 @@ use RichDAQ     v2r2    Rich
 use MuonDAQ     v1r2p2  Muon
 use OTDAQ       v3r2p1  OT
 use STDAQ       v1r5    IT
-use VeloDAQ     v2r3p1  Velo
+use VeloDAQ     v2r3p2  Velo
 use CaloDAQ     v1r1    Calo
 use L0MuonDAQ	v1r0	L0
