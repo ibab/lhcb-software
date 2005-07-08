@@ -9,3 +9,4 @@
 ApplicationMgr.EvtMax    = 10000 ;
 EventSelector.PrintFreq  = 1;
 
+ApplicationMgr.OutStream = { } ; // uncomment to write out nothing

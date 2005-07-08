@@ -1,8 +1,3 @@
-//*************************************************************
-//   Options to re-run the Level 0 trigger decision in DaVinci
-//=============================================================
-// Reimplemented by O.Callot for DC04
-
 // checking
 ApplicationMgr.DLLs    += { "L0Checker" };
 ApplicationMgr.TopAlg  += { "L0Check"};
