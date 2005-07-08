@@ -25,9 +25,6 @@ Main modifications:
     object on the TES. Allows to recover correlations of cuts.
     Technicalities: New base-class FilterCriterionBase that all
     FilterCriteria now implement. (Cristina Lazzeroni)
-  MuonID
-    New MuonIDFOI and MuonIDDLLTool with no-shared hits 
-    finally released (A.Massaferri).
   HLT & DaVinciTools: 
     Changes for RTTC (PK & Luis Fernandez)
     Now the PV location and the geometry tools are obtained from
