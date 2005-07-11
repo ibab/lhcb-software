@@ -1,4 +1,4 @@
-// $Id: DeOTDetector.cpp,v 1.14 2005-05-13 16:09:41 marcocle Exp $
+// $Id: DeOTDetector.cpp,v 1.15 2005-07-11 14:27:50 jnardull Exp $
 
 // CLHEP
 #include "CLHEP/Geometry/Point3D.h"
@@ -17,7 +17,6 @@
 DeOTDetector::DeOTDetector( const std::string& name ) :
   DetectorElement( name ),
   m_resolution(0.0),
-  m_resolutionCor(0.0),
   m_propagationDelay(0.0),
   m_maxDriftTime(0.0),
   m_maxDriftTimeCor(0.0),
@@ -53,7 +52,6 @@ StatusCode DeOTDetector::initialize()
 
   // get resolution parameters
   m_resolution = param<double>("resolution");
-  m_resolutionCor = param<double>("resolutionCor");
 
   // get the rt relation parameters
   m_propagationDelay = param<double>("propagationDelay");

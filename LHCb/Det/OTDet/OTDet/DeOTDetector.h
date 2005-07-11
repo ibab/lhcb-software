@@ -1,4 +1,4 @@
-// $Id: DeOTDetector.h,v 1.17 2005-07-07 08:36:18 cattanem Exp $
+// $Id: DeOTDetector.h,v 1.18 2005-07-11 14:28:09 jnardull Exp $
 #ifndef OTDET_DEOTDETECTOR_H
 #define OTDET_DEOTDETECTOR_H 1
 
@@ -140,7 +140,6 @@ public:
 private:
 
   double m_resolution;            ///< straw resolution
-  double m_resolutionCor;         ///< magn. field correction on resolution
   double m_propagationDelay;      ///< speed of propagation along wire
   double m_maxDriftTime;          ///< maximum drift time
   double m_maxDriftTimeCor;       ///< magn. correction on maximum drift time
@@ -185,7 +184,7 @@ inline double DeOTDetector::resolution(const double by) const
   // p1, p2 vary for different gas mixes
   // The parameterization is only valid for Bx<1.4T (or there abouts)
 
-  return ( m_resolution - (m_resolutionCor * by * by) );
+  return m_resolution ;
 }
 
 inline double DeOTDetector::maxDriftTimeFunc(const double by) const

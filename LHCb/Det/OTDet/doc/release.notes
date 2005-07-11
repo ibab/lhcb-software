@@ -1,6 +1,9 @@
-! $Id: release.notes,v 1.36 2005-07-07 08:36:18 cattanem Exp $
+! $Id: release.notes,v 1.37 2005-07-11 14:28:22 jnardull Exp $
 ! Package     : OTDet
 ! Responsible : J. van Tilburg & Jacopo Nardulli
+
+! 2005-06-29 Jacopo Nardullli
+ - Removing ResolutionCor in DeOTDetector (Test Beam 2005)
 
 !========================== OTDet v5r5p1 2005-07-07 ========================
 ! 2005-07-07 - Marco Cattaneo
