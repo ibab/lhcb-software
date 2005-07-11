@@ -1,4 +1,4 @@
-// $Id: PhysDesktop.cpp,v 1.21 2005-07-05 12:45:40 pkoppenb Exp $
+// $Id: PhysDesktop.cpp,v 1.22 2005-07-11 13:55:36 pkoppenb Exp $
 // Include files
 
 // from Gaudi
@@ -241,8 +241,7 @@ const VertexVector& PhysDesktop::secondaryVertices()
 StatusCode PhysDesktop::cleanDesktop()
 {
 
-  if ( msgLevel(MSG::VERBOSE) )
-  {
+  if ( ( msgLevel(MSG::VERBOSE)) && ( !m_parts.empty() )){
     verbose() << "cleanDesktop():: Removing all particles from desktop" << endmsg;
     // Some particle have been saved to the TES, so they belong to it
     // others do not and need to be deleted by the PhysDesktop
@@ -263,8 +262,7 @@ StatusCode PhysDesktop::cleanDesktop()
     }
   }
 
-  if ( msgLevel(MSG::VERBOSE) )
-  {
+  if (( msgLevel(MSG::VERBOSE) )&& ( !m_parts.empty() )){
     verbose() << "Particle in TES = " << iTEScount << endmsg;
     verbose() << "Removing all vertices from desktop" << endmsg;
     verbose() << "Number of vertices before cleaning = "
