@@ -10,6 +10,9 @@
 #include "$GAUDIPOOLDBROOT/options/GaudiPoolDbRoot.opts"
 #include "$EVENTSYSROOT/options/PoolDicts.opts"
 
+// Unpack MCParticles etc
+#include "$PACKEDEVENTROOT/options/UnpackSim.opts"
+
 // Objects to be written to output file
 #include "$BOOLEOPTS/DigiContent.opts"
 

@@ -73,7 +73,6 @@ DigiWriter.ItemList =
 };
 
 // Write some classes in compressed format
-ApplicationMgr.DLLs += { "PackedEvent" };
 Output.DetectorList += { "Pack" };
 OutputPackSeq.Members += { "PackCollision", "PackMCParticle", "PackMCVertex" };
 DigiWriter.ItemList += { 

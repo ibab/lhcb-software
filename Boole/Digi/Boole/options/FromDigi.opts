@@ -11,7 +11,14 @@ PrsSignal.PreviousDigits = "";
 SpdDigit.InputPrevData = "";
 PrsDigit.InputPrevData = "";
 
+EventDataSvc.InhibitPathes += { "/Event/Prev/MC", "/Event/Prev/Gen",
+                                "/Event/PrevPrev/MC",
+                                "/Event/Next/MC" };
+
+// Switch off creation of Packed Sim objects, already existing on input data
+OutputPackSeq.Members = { };
+
 // And provide a .digi input file
 EventSelector.Input = {
-   "DATAFILE='PFN:castor:/castor/cern.ch/user/c/cattanem/Boole/v9r3/11144100.500ev.digi' TYP='POOL_ROOT' OPT='READ'"
+   "DATAFILE='PFN:castor:/castor/cern.ch/user/c/cattanem/Boole/v9r3/0412-11144100.500ev.digi' TYP='POOL_ROOT' OPT='READ'"
 };  // 500 events B->J/Psi(mumu)Ks with Gauss v19r3
