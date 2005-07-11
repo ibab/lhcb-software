@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/GaudiOnline/src/DecisionSetterAlg.cpp,v 1.4 2005-06-10 10:08:44 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/GaudiOnline/src/DecisionSetterAlg.cpp,v 1.5 2005-07-11 09:22:23 frankb Exp $
 //	====================================================================
 //  DecisionSetterAlg.cpp
 //	--------------------------------------------------------------------
@@ -53,17 +53,17 @@ public:
 	    {
               SmartDataPtr<L1Score> l1_score(eventSvc(),L1ScoreLocation::Default);
               L1Score* score = l1_score;
-              const double ushort_max = 327670.;
+              //const double ushort_max = 327670.;
               if ( score ) {
                 int l1_decision = score->decisionPattern();
                 // Values according to T.Schietinger (10/06/2005)
-                l1_int pt1 = static_cast<l1_int>(std::max(ushort_max,score->pt1()));
-                l1_int pt2 = static_cast<l1_int>(std::max(ushort_max,score->pt2()));
-                l1_int ptm = static_cast<l1_int>(std::max(ushort_max,score->ptMu()));
-                l1_int dmm = static_cast<l1_int>(std::max(ushort_max,score->diMuMass()));
-                l1_int dmi = static_cast<l1_int>(std::max(ushort_max,score->diMuIP()));
-                l1_int ete = static_cast<l1_int>(std::max(ushort_max,score->etElec()));
-                l1_int etp = static_cast<l1_int>(std::max(ushort_max,score->etPhot()));
+                l1_int pt1 = static_cast<l1_int>(score->pt1());
+                l1_int pt2 = static_cast<l1_int>(score->pt2());
+                l1_int ptm = static_cast<l1_int>(score->ptMu());
+                l1_int dmm = static_cast<l1_int>(score->diMuMass());
+                l1_int dmi = static_cast<l1_int>(score->diMuIP());
+                l1_int ete = static_cast<l1_int>(score->etElec());
+                l1_int etp = static_cast<l1_int>(score->etPhot());
                 data[0] = score->eventNumber();
                 data[1] = ((l1_decision&0xFFFFFF)<<8) + (l1_decision&0x1);
                 data[2] = l1_decision;

@@ -1,6 +1,10 @@
 Package: GaudiOnline
 Author:  Markus Frank
 
+
+! 2005-07-11 Markus Frank
+  Fix bug in decision setting algorithm returning always maximum value
+
 !================== GaudiOnline v1r2 2005-06-27 =============================
 ! 2005-06-22 - Benjamin Gaidioz
   Adapt to change in SFC client library
