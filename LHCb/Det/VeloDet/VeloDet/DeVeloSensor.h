@@ -1,4 +1,4 @@
-// $Id: DeVeloSensor.h,v 1.8 2005-07-07 16:09:14 mtobin Exp $
+// $Id: DeVeloSensor.h,v 1.9 2005-07-11 15:31:49 mtobin Exp $
 #ifndef VELODET_DEVELOSENSOR_H 
 #define VELODET_DEVELOSENSOR_H 1
 
@@ -172,6 +172,9 @@ public:
     return m_associated;
   }
   
+  /// Cache the geometry information after changes to position from alignment
+  void cacheGeometry();
+
 protected:
 
   unsigned int m_numberOfZones;
@@ -179,7 +182,6 @@ protected:
 private:
 
   void initSensor();
-  void geometryCache();
   
   unsigned int m_numberOfStrips;
   std::string m_type;

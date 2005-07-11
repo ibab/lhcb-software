@@ -1,4 +1,4 @@
-// $Id: DeVeloSensor.cpp,v 1.9 2005-07-07 16:09:14 mtobin Exp $
+// $Id: DeVeloSensor.cpp,v 1.10 2005-07-11 15:31:50 mtobin Exp $
 //==============================================================================
 #define VELODET_DEVELOSENSOR_CPP 1
 //==============================================================================
@@ -61,7 +61,7 @@ StatusCode DeVeloSensor::initialize()
   }
 
   initSensor();
-  geometryCache();
+  cacheGeometry();
   
   msg << MSG::DEBUG << "Sensor full type " << m_fullType << " z= " << m_z
       << " R " << this->isR() 
@@ -75,7 +75,7 @@ StatusCode DeVeloSensor::initialize()
 //==============================================================================
 /// Cache geometry parameters
 //==============================================================================
-void DeVeloSensor::geometryCache() 
+void DeVeloSensor::cacheGeometry() 
 {
   IGeometryInfo* geom = this->geometry();
   m_geometry = geom;

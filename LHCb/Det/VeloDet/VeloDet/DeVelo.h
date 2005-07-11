@@ -1,4 +1,4 @@
-// $Id: DeVelo.h,v 1.27 2005-07-07 16:09:14 mtobin Exp $
+// $Id: DeVelo.h,v 1.28 2005-07-11 15:31:49 mtobin Exp $
 #ifndef       VELODET_DEVELO_H
 #define       VELODET_DEVELO_H 1
 // ============================================================================
@@ -183,8 +183,7 @@ public:
   StatusCode sensorAssociated( unsigned int sensor, 
                                std::vector<unsigned int> &assocSensor ) const;
   
-  /** Returns the offical (not alignment corrected) z position of this 
-      Velo sensor */
+  /// Returns the z position of this Velo sensor from the current cached geometry 
   inline double zSensor( unsigned int sensor )  const { 
     return m_sensorZ[sensorIndex(sensor)]; 
   }
@@ -334,6 +333,12 @@ public:
   ///  Return true if the two zones are matching for R sensors. 
   ///  Also returns true for neighbouring phi zones
   bool matchingZones(unsigned int zone1, unsigned int zone2) const;
+
+  /// Re-calculate the z position for all sensors after changes in geometry conditions
+  void recalculateZs();
+
+  /// Re-calculate z position for a given sensor of changes in geometry conditions
+  void recalculateZ(unsigned int sensor);
 
   ///=========================================================================
   /// REPLICATE OLD DeVelo Code with added rotations asumning perfect geometry

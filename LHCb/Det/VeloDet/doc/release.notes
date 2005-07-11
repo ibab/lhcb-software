@@ -1,8 +1,13 @@
-! $Id: release.notes,v 1.81 2005-07-07 16:09:14 mtobin Exp $
+! $Id: release.notes,v 1.82 2005-07-11 15:31:50 mtobin Exp $
 package VeloDet
 package manager : Velo Group
 
 !========================= VeloDet v9r8 2005-07-07 =========================
+! 2005-07-11 - Mark Tobin
+ - Added method to DeVelo to allow re-caching of geometry information and to
+ allow the recalculation of z position after changes to the geometry (eg after
+ changes to alignment parameters
+
 ! 2005-07-07 - Mark Tobin
  - Added method to cache geometry information outside of the initialise 
  method in DeVeloSensor.  Will allow geometry to be changed at later

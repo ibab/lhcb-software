@@ -1,4 +1,4 @@
-// $Id: DeVelo.cpp,v 1.50 2005-07-07 16:09:14 mtobin Exp $
+// $Id: DeVelo.cpp,v 1.51 2005-07-11 15:31:50 mtobin Exp $
 //
 // ============================================================================
 #define  VELODET_DEVELO_CPP 1
@@ -189,7 +189,8 @@ StatusCode DeVelo::initialize() {
         << m_nPhiSensors << " Phi type and "
         << m_nPileUpSensors << " pileup type sensors " << endreq;
   }
-  
+  msg << "Going to attempt to recalculate z positions\n";
+  recalculateZs();
   return StatusCode::SUCCESS;
 }
 
@@ -948,3 +949,36 @@ void DeVelo::scanDetectorElement(IDetectorElement* detElem,
   }
 }
 //=============================================================================
+// Re-cache sensor geometry and calculate z positions for all sensors
+void DeVelo::recalculateZs()
+{
+  MsgStream msg( msgSvc(), "DeVelo" );  
+  m_sensorZ.clear();
+  std::vector<DeVeloSensor*>::iterator iDeVeloSensor;
+  for(iDeVeloSensor=m_vpSensor.begin(); iDeVeloSensor!=m_vpSensor.end(); ++iDeVeloSensor){
+    (*iDeVeloSensor)->cacheGeometry();
+    m_sensorZ.push_back((*iDeVeloSensor)->z());
+    msg << MSG::DEBUG << "Sensor number " << (*iDeVeloSensor)->sensorNumber() 
+        << " is at z = " << (*iDeVeloSensor)->z() << "mm"
+        << " vector size is " << m_sensorZ.size()
+        << " with last entry " << m_sensorZ.back()
+        << endmsg;
+  }
+  /*  msg << MSG::DEBUG << "Now try to change each sensor" << endmsg;
+      for(unsigned int i=0;i<m_sensorZ.size();i++){
+      m_sensorZ[i]=-2234;
+      msg << MSG::DEBUG << "Index " << i 
+      << " sensor number " << m_vpSensor[i]->sensorNumber()
+      << " at z " << m_sensorZ[i];
+      recalculateZ(sensorNumber(i));
+      msg << " is now at "<< m_sensorZ[i] << endmsg;
+      }*/
+}
+//==============================================================================
+// Re-cache geometry and calculate z position of a given sensor
+void DeVelo::recalculateZ(unsigned int sensor)
+{
+  unsigned int index=sensorIndex(sensor);
+  m_vpSensor[index]->cacheGeometry();
+  m_sensorZ[index]=m_vpSensor[index]->z();
+}
