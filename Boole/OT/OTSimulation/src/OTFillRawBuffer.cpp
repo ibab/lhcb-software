@@ -1,4 +1,4 @@
-// $Id: OTFillRawBuffer.cpp,v 1.7 2005-04-15 06:37:33 cattanem Exp $
+// $Id: OTFillRawBuffer.cpp,v 1.8 2005-07-11 14:30:18 jnardull Exp $
 // Include files
 
 // From Gaudi
@@ -186,7 +186,7 @@ StatusCode OTFillRawBuffer::sortMcTimesIntoGol( vmcOTime* BankmcOTime )
 StatusCode OTFillRawBuffer::convertToRAWEmptyBank(dataBank* aBank)
 {
   // Creating the Tell1 Headers - 3 words of 32 bits - I do not fill them...
-  for(int i = 0; i < 3; i++){
+  for(int i = 0; i < 1; i++){
     raw_int tell1Header = 0;
     aBank->push_back(tell1Header);
   }
@@ -202,7 +202,7 @@ StatusCode OTFillRawBuffer::convertToRAWDataBank(vmcOTime* vToConvert,
                                                  dataBank* aBank)
 {
   // Creating the Tell1 Headers - 3 words of 32 bits - I do not fill them...
-  for(int i = 0; i < 3; i++){
+  for(int i = 0; i < 1; i++){
     raw_int tell1Header = 0;
     aBank->push_back(tell1Header);
   }
@@ -232,6 +232,9 @@ StatusCode OTFillRawBuffer::convertToRAWDataBank(vmcOTime* vToConvert,
 
     //The New Gol McTime Vector : 
     vmcOTime* aGolMCTime = (*iGol).second;  
+
+    //  Valid Header
+    int NoValidHeader = 0;
 
     //Defining iterator
     for(vmcOTime::iterator iTime = aGolMCTime->begin();
@@ -273,78 +276,99 @@ StatusCode OTFillRawBuffer::convertToRAWDataBank(vmcOTime* vToConvert,
       }
       size = 0;
     } 
-    // GolHeader
-    GolHeader golHeader(0, nStation, nLayer, nQuarter, nModule, 0 , size);
+    if(((nStation == 0) && (nQuarter== 0) && (nLayer == 0)) || (size == 0)){
+      NoValidHeader = 1;
+      debug() << " NO HIT IN MODULE " << nModule << " with Size " << size 
+              <<endmsg;
+    }
 
-    // pushing the Gol Header
-    aBank->push_back(golHeader);  
-    
-    // The Hits -- Some useful definitions
-    vmcOTime* pCurrent = 0;    
-    pCurrent = aGolMCTime;
-    vmcOTime::iterator iHitGolBegin = pCurrent->begin();
-    vmcOTime::iterator iHitGolEnd = pCurrent->end();
-    vmcOTime::iterator iTimeCurrent = iHitGolBegin;
-    
-    /* 
-     * Now the hits
-     * convert the channel + time inf. in RAW format: 8bit channel 
-     * 8 bit time 
-     * 8bit channel: 1 bit letf + 2 bit OTIS ID + 5 bit channel ID 
-     * 8 bit time: 2 bit BX + 6 bit time itself
-     */
-    
-    while( iTimeCurrent != pCurrent->end() ){ //While loop over the MCOTTime
-      MCOTTime* firstTime = (*iTimeCurrent);
-      //First Time - we get Otis and Straw Number
-      long firstOtisID = chID2Otis(  firstTime->channel() );
-      long firstStrawID = ( (firstTime->channel()).straw());
-      int firstTdcTime = ( (firstTime->channel()).tdcTime());
-
-      //Next 
-      vmcOTime::iterator iTimeNext = ++iTimeCurrent;
-
-      //First we get Otis and Straw Number
-      long nextOtisID = 0;
-      long nextStrawID = 0;
-      int nextTdcTime = 0;
-
-      if(iTimeNext != iHitGolEnd){
-        MCOTTime* nextTime = (*iTimeNext);
-        nextOtisID = chID2Otis(  nextTime->channel() );
-        nextStrawID = ((nextTime->channel()).straw());
-        nextTdcTime = ((nextTime->channel()).tdcTime());
-
-        /* Straw number conversion.
-         * Converting straw number from 1 to 128 in a number from 0 to 31
-         * The strange conversion depends on the fact that here we have a 
-         * straw numbering  different from the one in OTChannelID, and more 
-         * near to the eletronic scheme. 
-         */
-
-        if((nextOtisID == 0) || (nextOtisID == 1)){
-          nextStrawID = ( nextStrawID - 1 ) % 32;
-        } else if((nextOtisID == 2) || (nextOtisID == 3)){
-          nextStrawID = 31 - ((nextStrawID - 1) % 32);
-        }
-      }
-      // Straw Number Conversion
-      if((firstOtisID == 0) || (firstOtisID == 1)){
-        firstStrawID = ( firstStrawID - 1 ) % 32;
-      } else if((firstOtisID == 2) || (firstOtisID == 3)){
-        firstStrawID = 31 - ((firstStrawID - 1) % 32);
-      }
-
-      DataWord dataWord (1, firstOtisID, firstStrawID, firstTdcTime, 
-                         0, nextOtisID, nextStrawID, nextTdcTime);
-      aBank->push_back(dataWord);
-
-      if(iTimeNext != iHitGolEnd) iTimeCurrent++;
+    if(NoValidHeader != 1){
+      // DEBUG
+      debug() << " We Get " 
+              << format(" Station %d, Layer %d, Quarter %d, Module %d, Size %d",
+                        nStation, nLayer, nQuarter, nModule, size ) 
+              << endmsg;      
       
-    } //while loop over MCOTTimes
-    
-    aGolMCTime->erase( aGolMCTime->begin(),aGolMCTime->end() );
+      // GolHeader
+      GolHeader golHeader(0, nStation, nLayer, nQuarter, nModule, 0 , size);
+      // pushing the Gol Header
+      aBank->push_back(golHeader);  
+    }
 
+    if(NoValidHeader != 1){
+      // The Hits -- Some useful definitions
+      vmcOTime* pCurrent = 0;    
+      pCurrent = aGolMCTime;
+      vmcOTime::iterator iHitGolBegin = pCurrent->begin();
+      vmcOTime::iterator iHitGolEnd = pCurrent->end();
+      vmcOTime::iterator iTimeCurrent = iHitGolBegin;
+      
+      /* 
+       * Now the hits
+       * convert the channel + time inf. in RAW format: 8bit channel 
+       * 8 bit time 
+       * 8bit channel: 1 bit letf + 2 bit OTIS ID + 5 bit channel ID 
+       * 8 bit time: 2 bit BX + 6 bit time itself
+       */
+      
+      while( iTimeCurrent != pCurrent->end() ){ //While loop over the MCOTTime
+        MCOTTime* firstTime = (*iTimeCurrent);
+        //First Time - we get Otis and Straw Number
+        long firstOtisID = chID2Otis(  firstTime->channel() );
+        long firstStrawID = ( (firstTime->channel()).straw());
+        int firstTdcTime = ( (firstTime->channel()).tdcTime());
+        
+        //Next 
+        vmcOTime::iterator iTimeNext = ++iTimeCurrent;
+        
+        //First we get Otis and Straw Number
+        long nextOtisID = 0;
+        long nextStrawID = 0;
+        int nextTdcTime = 0;
+        
+        if(iTimeNext != iHitGolEnd){
+          MCOTTime* nextTime = (*iTimeNext);
+          nextOtisID = chID2Otis(  nextTime->channel() );
+          nextStrawID = ((nextTime->channel()).straw());
+          nextTdcTime = ((nextTime->channel()).tdcTime());
+          
+          /* Straw number conversion.
+           * Converting straw number from 1 to 128 in a number from 0 to 31
+           * The strange conversion depends on the fact that here we have a 
+           * straw numbering  different from the one in OTChannelID, and more 
+           * near to the eletronic scheme. 
+           */
+          
+          if((nextOtisID == 0) || (nextOtisID == 1)){
+            nextStrawID = ( nextStrawID - 1 ) % 32;
+          } else if((nextOtisID == 2) || (nextOtisID == 3)){
+            nextStrawID = 31 - ((nextStrawID - 1) % 32);
+        }
+        }
+        // Straw Number Conversion
+        if((firstOtisID == 0) || (firstOtisID == 1)){
+          firstStrawID = ( firstStrawID - 1 ) % 32;
+        } else if((firstOtisID == 2) || (firstOtisID == 3)){
+          firstStrawID = 31 - ((firstStrawID - 1) % 32);
+        }
+        debug() << " We Get " 
+                << format("firstOtisID %d, firstStrawID %d, firstTime %d," 
+                          "nextOtisID %d, nextStrawID %d, nextTime %d",
+                          firstOtisID, firstStrawID, firstTdcTime,
+                          nextOtisID, nextStrawID, nextTdcTime) 
+                << endmsg;
+        
+        DataWord dataWord (1, firstOtisID, firstStrawID, firstTdcTime, 
+                           0, nextOtisID, nextStrawID, nextTdcTime);
+        aBank->push_back(dataWord);
+        
+        if(iTimeNext != iHitGolEnd) iTimeCurrent++;
+        
+      } //while loop over MCOTTimes
+    
+      aGolMCTime->erase( aGolMCTime->begin(),aGolMCTime->end() );
+
+    }// Not Valid Header
   } // GOL Loop
 
   return StatusCode::SUCCESS;

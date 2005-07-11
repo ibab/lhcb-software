@@ -1,4 +1,4 @@
-// $Id: OTEffCalculator.cpp,v 1.4 2005-01-18 12:36:34 cattanem Exp $
+// $Id: OTEffCalculator.cpp,v 1.5 2005-07-11 14:30:09 jnardull Exp $
 
 // Gaudi files
 #include "GaudiKernel/SmartIF.h"
@@ -33,8 +33,13 @@ OTEffCalculator::OTEffCalculator(const std::string& type,
 { 
   // constructor
   // jobOptions
-  declareProperty("etaZero", m_etaZero = 0.99); 
-  declareProperty("rho", m_rho = 1.47/mm);
+  declareProperty("etaZero", m_etaZero = 0.99); // Test Beam 2000 & 2005
+  
+  // TestBeam 2000 Ar/CF4/Co2: 70/15/10
+  //declareProperty("rho", m_rho = 1.47/mm);
+  
+  // Test Beam 2005 Ar/Co2 : 70/30
+  declareProperty("rho", m_rho = 3.333/mm); 
 
   declareInterface<IOTEffCalculator>(this);
 }
