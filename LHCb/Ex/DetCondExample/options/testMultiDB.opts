@@ -1,4 +1,4 @@
-//$Id: testMultiDB.opts,v 1.4 2005-06-23 16:16:06 marcocle Exp $
+//$Id: testMultiDB.opts,v 1.5 2005-07-11 07:58:57 marcocle Exp $
 //==============================================================
 // Job options to test double CondDB usage in DetCondExample
 //==============================================================
@@ -11,8 +11,6 @@ DetectorDataSvc.DetDbLocation  = "$DETCONDEXAMPLE_XMLDDDB/multi.xml";
 //--------------------------------------------------------------
 ApplicationMgr.TopAlg  = { "GaudiSequencer" };
 GaudiSequencer.Members   = { };
-GaudiSequencer.Members  += { "EvtClock" };
-GaudiSequencer.Members  += { "FireUpdateManager" };
 GaudiSequencer.Members  += { "MultiDBTest" };
 GaudiSequencer.Members  += { "DumpDetectorStore" };
 //--------------------------------------------------------------
@@ -26,8 +24,8 @@ ApplicationMgr.EvtSel = "NONE";
 ApplicationMgr.EvtMax = 2;
 
 // Event clock attributes
-EvtClock.startTime = 5;
-EvtClock.delayTime = 10;
+EvtClockSvc.StartTime = 5;
+EvtClockSvc.TimeStep = 10;
 
 //--------------------------------------------------------------
 // Message service options
@@ -41,11 +39,8 @@ MessageSvc.OutputLevel = 1;
 // DetCond extra options
 //--------------------------------------------------------------
 ApplicationMgr.DLLs += { "DetCond" };
-ApplicationMgr.ExtSvc += { "CondDBAccessSvc/DB1" };
-ApplicationMgr.ExtSvc += { "CondDBAccessSvc/DB2" };
 
 CondDBCnvSvc.CondDBAccessServices = { "DB1", "DB2" };
-ApplicationMgr.ExtSvc += { "CondDBCnvSvc" };
 DetectorPersistencySvc.CnvServices += { "CondDBCnvSvc" };
 
 DB1.HostName     = "$CONDDBHOST";

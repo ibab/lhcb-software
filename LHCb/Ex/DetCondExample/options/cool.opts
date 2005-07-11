@@ -9,9 +9,6 @@
 // Dynamically load component library for DetCond services and converters
 ApplicationMgr.DLLs += { "DetCond" };
 
-// Add other external services to the list of known services
-ApplicationMgr.ExtSvc += { "CondDBAccessSvc" };
-
 //--------------------------------------------------------------
 // Access to the ConditionsDB
 //--------------------------------------------------------------

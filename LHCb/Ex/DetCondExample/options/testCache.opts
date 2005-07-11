@@ -1,4 +1,4 @@
-//$Id: testCache.opts,v 1.1 2005-06-23 15:30:54 marcocle Exp $
+//$Id: testCache.opts,v 1.2 2005-07-11 07:58:57 marcocle Exp $
 //==============================================================
 // Job options to test double CondDB usage in DetCondExample
 //==============================================================
@@ -17,8 +17,6 @@ CondDBAccessSvc.NoDB = true;
 //--------------------------------------------------------------
 ApplicationMgr.TopAlg  = { "Sequencer" };
 Sequencer.Members   = { };
-Sequencer.Members  += { "EvtClock" };
-Sequencer.Members  += { "FireUpdateManager" };
 Sequencer.Members  += { "TestCacheInjection" };
 Sequencer.Members  += { "DumpDetectorStore" };
 //--------------------------------------------------------------
@@ -32,8 +30,8 @@ ApplicationMgr.EvtSel = "NONE";
 ApplicationMgr.EvtMax = 3;
 
 // Event clock attributes
-EvtClock.startTime = 5;
-EvtClock.delayTime = 10;
+EvtClockSvc.StartTime = 5;
+EvtClockSvc.TimeStep = 10;
 
 //--------------------------------------------------------------
 // Message service options
@@ -47,8 +45,6 @@ MessageSvc.OutputLevel = 1;
 // DetCond extra options
 //--------------------------------------------------------------
 ApplicationMgr.DLLs += { "DetCond" };
-ApplicationMgr.ExtSvc += { "CondDBAccessSvc" };
-ApplicationMgr.ExtSvc += { "CondDBCnvSvc" };
 
 DetectorPersistencySvc.CnvServices += { "CondDBCnvSvc" };
 

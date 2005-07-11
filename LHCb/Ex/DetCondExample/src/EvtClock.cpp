@@ -1,4 +1,4 @@
-// $Id: EvtClock.cpp,v 1.6 2005-06-23 09:33:37 marcocle Exp $
+// $Id: EvtClock.cpp,v 1.7 2005-07-11 07:58:57 marcocle Exp $
 // Include files 
 
 // from Gaudi
@@ -50,7 +50,7 @@ StatusCode EvtClock::initialize() {
 
   try {
     
-    m_detDataSvc = svc<IDetDataSvc>(m_detDataSvcName);
+    m_detDataSvc = svc<IDetDataSvc>(m_detDataSvcName,true);
     
   } catch (GaudiException) {
     return StatusCode::FAILURE;

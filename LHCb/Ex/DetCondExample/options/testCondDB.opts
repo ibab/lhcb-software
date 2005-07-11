@@ -1,13 +1,10 @@
-//$Id: testCondDB.opts,v 1.9 2005-06-23 08:46:40 marcocle Exp $
+//$Id: testCondDB.opts,v 1.10 2005-07-11 07:58:57 marcocle Exp $
 //==============================================================
 // Job options for DetCondExample test of CondDB
 //==============================================================
 
 #include "../options/common.opts"
 #include "../options/cool.opts"
-
-// Add other external services to the list of known services
-ApplicationMgr.ExtSvc += { "CondDBCnvSvc" };
 
 // Detector Persistency service setup: 
 DetectorPersistencySvc.CnvServices += { "CondDBCnvSvc" };
@@ -17,8 +14,6 @@ DetectorPersistencySvc.CnvServices += { "CondDBCnvSvc" };
 //--------------------------------------------------------------
 ApplicationMgr.TopAlg  = { "GaudiSequencer" };
 GaudiSequencer.Members   = { };
-GaudiSequencer.Members  += { "EvtClock" };
-GaudiSequencer.Members  += { "FireUpdateManager" };
 GaudiSequencer.Members  += { "CondDBTestAlgorithm" };
 GaudiSequencer.Members  += { "DumpDetectorStore" };
 
@@ -33,8 +28,8 @@ ApplicationMgr.EvtSel = "NONE";
 ApplicationMgr.EvtMax = 6;
 
 // Event clock attributes
-EvtClock.startTime = 4;
-EvtClock.delayTime = 8;
+EventClockSvc.StartTime = 4;
+EventClockSvc.TimeStep  = 8;
 
 //--------------------------------------------------------------
 // Message service options

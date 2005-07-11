@@ -1,4 +1,4 @@
-// $Id: MultiDBTest.cpp,v 1.3 2005-07-07 12:32:29 marcocle Exp $
+// $Id: MultiDBTest.cpp,v 1.4 2005-07-11 07:58:57 marcocle Exp $
 // Include files 
 
 // from Gaudi
@@ -45,12 +45,12 @@ StatusCode MultiDBTest::initialize() {
   debug() << "==> Initialize" << endmsg;
   
   try {
-
+    
     // Locate the Database Access Service 1
-    m_dbAccSvc1 = svc<ICondDBAccessSvc>("DB1");
+    m_dbAccSvc1 = svc<ICondDBAccessSvc>("CondDBAccessSvc/DB1",true);
 
     // Locate the Database Access Service 2
-    m_dbAccSvc2 = svc<ICondDBAccessSvc>("DB2");
+    m_dbAccSvc2 = svc<ICondDBAccessSvc>("CondDBAccessSvc/DB2",true);
 
     info() << "*** prepare databases ***" << endmsg;
 
