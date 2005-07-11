@@ -1,7 +1,7 @@
-# $Id: requirements,v 1.1.1.1 2005-06-20 21:42:17 robbep Exp $ 
+# $Id: requirements,v 1.2 2005-07-11 16:18:41 gcorti Exp $ 
 # =============================================================================
 package       Generators
-version       v1r0
+version       v1r1
 
 # =========== structure =======================================================
 branches      Generators doc cmt src
@@ -24,3 +24,7 @@ library       Generators        component/*.cpp
 apply_pattern component_library library=Generators 
 apply_pattern linker_library    library=GeneratorsLib 
 apply_pattern library_stamps    library=GeneratorsLib 
+
+macro Generators_fflags " -fno-second-underscore " \
+      WIN32 ""
+  
