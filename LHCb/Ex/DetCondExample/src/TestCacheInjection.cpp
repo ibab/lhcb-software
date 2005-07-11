@@ -1,4 +1,4 @@
-// $Id: TestCacheInjection.cpp,v 1.2 2005-07-07 12:32:29 marcocle Exp $
+// $Id: TestCacheInjection.cpp,v 1.3 2005-07-11 09:04:29 marcocle Exp $
 // Include files 
 
 // from Gaudi
@@ -47,7 +47,7 @@ StatusCode TestCacheInjection::initialize() {
 
   try {
     // Locate the Database Access Service
-    m_dbAccSvc = svc<ICondDBAccessSvc>("CondDBAccessSvc");
+    m_dbAccSvc = svc<ICondDBAccessSvc>("CondDBAccessSvc",true);
 
     // Store sample data if the database is empty
     info() << "Inject data into the cache" << endreq;
