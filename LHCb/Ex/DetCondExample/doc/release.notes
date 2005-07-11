@@ -1,8 +1,12 @@
-#$Id: release.notes,v 1.44 2005-07-07 13:07:17 marcocle Exp $
+#$Id: release.notes,v 1.45 2005-07-11 09:05:05 marcocle Exp $
 Package Ex/DetCondExample
 Package manager : Marco Clemencic
 
-!=========== Ex/DetCondExample v7r4 2005-07-07 ===============================
+!=========== Ex/DetCondExample v7r4 2005-07-11 ===============================
+! 2005-07-11 - Marco Clemencic
+ - Removed the need for ApplicationMgr.ExtSvc
+ - Use EventClockSvc and remove usage of FireUpdateManager algorithm.
+
 ! 2005-07-07 - Marco Clemencic
  - Adapted for the movement of interfaces from DetCond to DetDesc
 

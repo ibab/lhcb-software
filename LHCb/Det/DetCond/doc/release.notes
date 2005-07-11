@@ -1,8 +1,11 @@
-# $Id: release.notes,v 1.46 2005-07-07 14:49:16 cattanem Exp $
+# $Id: release.notes,v 1.47 2005-07-11 09:07:15 marcocle Exp $
 Package Det/DetCond
 Package manager : Marco Clemencic
 
-================= Det/DetCond v7r5 2005-07-07 ================================
+================= Det/DetCond v7r5 2005-07-11 ================================
+! 2005-07-11 - Marco CLEMENCIC
+ - Removed unused pointers from CondDBCnvSvc
+
 ! 2005-07-07 - Marco Cattaneo
  - Fix a doxygen warning
 
