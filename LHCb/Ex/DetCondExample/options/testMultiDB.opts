@@ -1,4 +1,4 @@
-//$Id: testMultiDB.opts,v 1.5 2005-07-11 07:58:57 marcocle Exp $
+//$Id: testMultiDB.opts,v 1.6 2005-07-11 08:57:56 marcocle Exp $
 //==============================================================
 // Job options to test double CondDB usage in DetCondExample
 //==============================================================
@@ -24,8 +24,8 @@ ApplicationMgr.EvtSel = "NONE";
 ApplicationMgr.EvtMax = 2;
 
 // Event clock attributes
-EvtClockSvc.StartTime = 5;
-EvtClockSvc.TimeStep = 10;
+EventClockSvc.StartTime = 5;
+EventClockSvc.TimeStep = 10;
 
 //--------------------------------------------------------------
 // Message service options
