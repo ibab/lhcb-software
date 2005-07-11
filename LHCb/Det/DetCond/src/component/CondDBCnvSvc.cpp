@@ -1,4 +1,4 @@
-//$Id: CondDBCnvSvc.cpp,v 1.2 2005-07-07 12:23:14 marcocle Exp $
+//$Id: CondDBCnvSvc.cpp,v 1.3 2005-07-11 08:59:03 marcocle Exp $
 #include <string>
 
 #include "CondDBCnvSvc.h"
@@ -52,8 +52,7 @@ StatusCode CondDBCnvSvc::initialize()
   std::vector<std::string>::const_iterator svcName;
   for ( svcName = m_dbAccSvcNames.begin(); svcName != m_dbAccSvcNames.end(); ++svcName ){
     ICondDBAccessSvc *svcInt;
-    sc = serviceLocator()->getService(*svcName,
-                                      ICondDBAccessSvc::interfaceID(),(IInterface*&)svcInt);
+    sc = service("CondDBAccessSvc",*svcName,svcInt);
     if (  !sc.isSuccess() ) {
       log << MSG::ERROR << "Could not locate CondDBAccessSvc/" << *svcName << endreq;
       return sc;
@@ -61,57 +60,6 @@ StatusCode CondDBCnvSvc::initialize()
     m_dbAccSvcs.push_back(svcInt);
     log << MSG::DEBUG << "Retrieved CondDBAccessSvc/" << *svcName << endreq;
   }
-  
-  // Locate the Detector Data Service
-  IDataProviderSvc* pDDS = 0;
-  sc = serviceLocator()->getService("DetectorDataSvc",  IID_IDataProviderSvc, (IInterface*&)pDDS);
-  if ( !sc.isSuccess() ) {
-    log << MSG::ERROR << "Could not locate DetectorDataSvc" << endreq;
-    return sc;
-  }
-
-  // Set the DetectorDataSvc as data provider service
-  sc = setDataProvider ( pDDS );
-  if ( !sc.isSuccess() ) {
-    log << MSG::ERROR << "Could not set data provider" << endreq;
-    return sc;
-  }
-
-  // Query the IDetDataSvc interface of the detector data service
-  sc = pDDS->queryInterface(IID_IDetDataSvc, (void**) &m_detDataSvc);
-  if ( !sc.isSuccess() ) {
-    log << MSG::ERROR << "Cannot query IDetDataSvc interface of DetectorDataSvc" << endreq;
-    return sc;
-  } else {
-    log << MSG::DEBUG << "Retrieved IDetDataSvc interface of DetectorDataSvc" << endreq;
-  }
-
-  // Locate IConversionSvc interface of the DetectorPersistencySvc
-  sc = serviceLocator()->service 
-    ("DetectorPersistencySvc", m_detPersSvc, true);
-  if ( !sc.isSuccess() ) {
-    log << MSG::ERROR << "Cannot locate IConversionSvc interface of DetectorPersistencySvc" << endreq;
-    return sc;
-  } else {
-    log << MSG::DEBUG << "Retrieved IConversionSvc interface of DetectorPersistencySvc"	<< endreq;
-  }
-  
-  // Query the IAddressCreator interface of the detector persistency service
-  IAddressCreator* iAddrCreator;
-  sc = m_detPersSvc->queryInterface(IID_IAddressCreator, (void**) &iAddrCreator);
-  if ( !sc.isSuccess() ) {
-    log << MSG::ERROR << "Cannot query IAddressCreator interface of DetectorPersistencySvc" << endreq;
-    return sc;
-  } else {
-    log << MSG::DEBUG << "Retrieved IAddressCreator interface of DetectorPersistencySvc" << endreq;
-  }
-  log << MSG::DEBUG << "Set it as the address creator of the CondDBCnvSvc" << endreq;
-  sc = setAddressCreator( iAddrCreator );
-  if ( !sc.isSuccess() ) {
-    log << MSG::ERROR << "Cannot set the address creator" << endreq;
-    return sc;
-  }
-
   log << MSG::INFO << "Specific initialization completed" << endreq;
   return sc;
 }
@@ -125,8 +73,6 @@ StatusCode CondDBCnvSvc::finalize()
   log << MSG::DEBUG << "Finalizing" << endreq;
   std::vector<ICondDBAccessSvc*>::iterator accSvc;
   for ( accSvc = m_dbAccSvcs.begin(); accSvc != m_dbAccSvcs.end(); ++accSvc ) (*accSvc)->release();
-  m_detPersSvc->release();
-  m_detDataSvc->release();
   return ConversionSvc::finalize();
 }
 

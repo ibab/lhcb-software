@@ -1,4 +1,4 @@
-//$Id: CondDBCnvSvc.h,v 1.2 2005-07-07 12:23:14 marcocle Exp $
+//$Id: CondDBCnvSvc.h,v 1.3 2005-07-11 08:59:03 marcocle Exp $
 #ifndef DETCOND_CONDDBCNVSVC_H
 #define DETCOND_CONDDBCNVSVC_H 1
 
@@ -30,7 +30,7 @@ class CondDBCnvSvc : public ConversionSvc,
   /// Only factories can access protected constructors
   friend class SvcFactory<CondDBCnvSvc>;
 
- protected:
+protected:
   
   /// Constructor
   CondDBCnvSvc( const std::string& name, ISvcLocator* svc );
@@ -38,7 +38,7 @@ class CondDBCnvSvc : public ConversionSvc,
   /// Destructor
   virtual ~CondDBCnvSvc();
 
- public:
+public:
 
   // Overloaded from ConversionSvc
 
@@ -71,7 +71,7 @@ class CondDBCnvSvc : public ConversionSvc,
   /// Add converter object to conversion service.
   virtual StatusCode addConverter(const CLID& clid);
 
- public:
+public:
 
   /// Retrieve converter from list
   virtual IConverter* converter(const CLID& clid);
@@ -91,7 +91,7 @@ class CondDBCnvSvc : public ConversionSvc,
   */
   virtual StatusCode queryInterface(const InterfaceID& riid, void** ppvUnknown);
 
- private:
+private:
 
   /// List of all the names of the known databases. It is filled via the option
   /// CondDBCnvSvc.CondDBAccessServices. If none is given, "CondDBAccessSvc" is used.
@@ -99,12 +99,6 @@ class CondDBCnvSvc : public ConversionSvc,
 
   /// Handles to the database Access services
   std::vector<ICondDBAccessSvc*> m_dbAccSvcs;
-
-  /// Handle to the IConversionSvc interface of the DetectorPersistencySvc
-  IConversionSvc*      m_detPersSvc;
-
-  /// Handle to the IDetDataSvc interface of the DetectorDataSvc
-  IDetDataSvc*         m_detDataSvc;
 
 protected:
 
