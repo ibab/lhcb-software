@@ -1,4 +1,4 @@
-// $Id: MakeResonances.cpp,v 1.9 2005-07-08 07:36:39 pkoppenb Exp $
+// $Id: MakeResonances.cpp,v 1.10 2005-07-11 07:55:29 pkoppenb Exp $
 // Include files 
 
 #include <algorithm>
@@ -198,6 +198,7 @@ StatusCode MakeResonances::createDecay(const std::string& mother,
     return StatusCode::FAILURE;
   }
   int pid = pmother->pdgID() ;
+  if (!consideredPID(pid)) m_allPids.push_back(pid) ;
   
   //daughters
   std::vector<int> dpid ;
@@ -205,7 +206,7 @@ StatusCode MakeResonances::createDecay(const std::string& mother,
   // mother
     ParticleProperty* pd = ppSvc()->find(*d);
     if (!pd){
-      err() << "Cannot find particle property for mother " << *d << endmsg ;
+      err() << "Cannot find particle property for daughter " << *d << endmsg ;
       return StatusCode::FAILURE;
     }
     dpid.push_back(pd->pdgID()) ;
@@ -257,7 +258,7 @@ StatusCode MakeResonances::execute() {
     verbose() << "New Decay loop" << endmsg ;
     if (!d->fillPidParticles(Daughters)){
       debug() << "Not all necessary particles found for decay" << endmsg ;
-      continue ;      
+      continue ;
     }
     sc = applyDecay(*d,Resonances); // make the resonances
     if (!sc) return sc;
@@ -301,9 +302,11 @@ StatusCode MakeResonances::applyFilter(const ParticleVector& IN, ParticleVector&
         verbose() << "Particle "  << (*p)->key() << " ID=" << (*p)->particleID().pid() << " with momentum " 
                   << (*p)->momentum() << " m=" << (*p)->mass() << " fails cuts" << endmsg ;
       }
+    } else {
       verbose() << "Particle "  << (*p)->key() << " ID=" << (*p)->particleID().pid() << " with momentum " 
                 << (*p)->momentum() << " m=" << (*p)->mass() << " is discarded" << endmsg ;
     }
+    
   }
   return StatusCode::SUCCESS;
 }

@@ -1,8 +1,11 @@
-! $Id: release.notes,v 1.174 2005-07-08 07:36:39 pkoppenb Exp $
+! $Id: release.notes,v 1.175 2005-07-11 07:55:29 pkoppenb Exp $
 ! Package     : DaVinciTools
 ! Responsible : P. Koppenburg
 
 !========================== DaVinciTools v12r0p1 2005-07-06 ===================
+! 2005-07-11 - P. Koppenburg
+  - MakeResonances.{cpp,h}
+    . Bug fix: add mother to list of required particles.
 ! 2005-07-08 - P. Koppenburg
   - MakeResonances.{cpp,h}
     . Discard not needed particles (wrong PID) befor one tried to run 
