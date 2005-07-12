@@ -1,4 +1,4 @@
-// $Id: OTReadOutWindow.cpp,v 1.2 2004-11-10 13:02:08 jnardull Exp $
+// $Id: OTReadOutWindow.cpp,v 1.3 2005-07-12 09:35:19 jnardull Exp $
 
 // Gaudi files
 #include "GaudiKernel/ToolFactory.h"
@@ -31,7 +31,7 @@ OTReadOutWindow::OTReadOutWindow(const std::string& type,
   m_startReadOutGate.push_back(32.*ns);
 
   declareProperty("startReadoutGate",  m_startReadOutGate);
-  declareProperty("sizeOfReadoutGate", m_sizeOfReadOutGate = 50.*ns);
+  declareProperty("sizeOfReadoutGate", m_sizeOfReadOutGate = 75.*ns);
 
   declareInterface<IOTReadOutWindow>(this);
 }

@@ -1,4 +1,4 @@
-// $Id: OTTimeCreator.cpp,v 1.6 2004-12-10 08:10:25 jnardull Exp $
+// $Id: OTTimeCreator.cpp,v 1.7 2005-07-12 09:35:06 jnardull Exp $
 // Include files
 
 // local
@@ -92,9 +92,18 @@ StatusCode OTTimeCreator::execute() {
 
   // Loop over vector of banks (The Buffer)
   std::vector<RawBank>::const_iterator ibank;
+  long j = 0;
   for ( ibank = OTBanks.begin(); ibank != OTBanks.end(); ++ibank) {
     // Check the bank version
-    if( (*ibank).version() != OTBankVersion::v1 ) {
+    if( (*ibank).version() == OTBankVersion::v1 ) {
+      //set up decoding with one header word
+      j = 3;
+    }
+    else if( (*ibank).version() == OTBankVersion::v2 ) {
+      //set up decoding with one header word
+      j = 1;
+    }
+    else {
       error() << "Cannot decode OT raw buffer bank version "
               << (*ibank).version() << " with this version of OTDAQ" << endmsg;
       return StatusCode::FAILURE;
@@ -105,50 +114,46 @@ StatusCode OTTimeCreator::execute() {
     // Some Useful Initilisation
     GolHeader golHeader;
     DataWord dataWord;
-    int check = 1;
     unsigned nStation = 0;
     unsigned nLayer = 0;
     unsigned nQuarter = 0;
     unsigned nModule = 0;  
-  
-    
+    unsigned nSize = 0;
+    long k = 0;
+        
     // The bank are vec. of raw_int: Loop over the data words inside the bank 
     const raw_int * data = (*ibank).data();  
     for ( long i = 0; i < bankSize; ++i ) {
+    
       raw_int aDataWord = data[i];
-      raw_int isData = 0;
-      
-      /* Let's introduce the Golheader and the Data Word doing 
-       * a logical & between aDataWord and dataMask  
-       */
-      
-      if(i < 3 ){
-      } else if(i > 2) {
-        isData = dataMask & aDataWord;
-       
-        // We get an undefinedobjects: a golHeader or a data Word
-        if(isData != 0 ){
-          dataWord = aDataWord;
-          check = 0;
-        }
-        else if( isData == 0 ){
+      // Gol Header or DataWord     
+      if(i < j ){
+      } else if(i > j-1) {
+        if((i == j) || (i == 1 + nSize + k)){
           golHeader = aDataWord;
+          nSize = golHeader.size();      
           // Given Gol Header we Get Station, Layer, Quarter, Module Nr.
           nStation = golHeader.station();
           nLayer = golHeader.layer();
           nQuarter = golHeader.quarter();
           nModule = golHeader.module();
+          // DEBUG
+          debug() << " OTTIME " 
+                  << format("Station %d, Layer %d, Quarter %d,"
+                            "Module %d, Size %d", nStation, nLayer, 
+                            nQuarter, nModule, nSize) 
+                  << endmsg;
+          k = i;
         } 
+        else {
+          dataWord = aDataWord;
+          
+          // Given Station, Layer, Quarter, Module Nr. and  Data Word, 
+          // get the OT Time and put it in the output container
         
-        // Given Station, Layer, Quarter, Module Nr. and  Data Word, 
-        // get the OT Time and put it in the output container
-        
-        if(check == 0){ //To avoid filling OTTimes with Empty stuff
           raw2OTTime(nStation, nLayer, nQuarter, nModule, dataWord, 
                      *outputTimes);
-          check = 1;
-        } // To avoid useless Calling of Raw to OTTime function 
-        
+        }
       } // No Tell 1 Header
     }// Loop over the data words inside the bank    
   }  // Loop over vector of banks (The Buffer)
@@ -179,6 +184,13 @@ StatusCode OTTimeCreator::raw2OTTime(int station, int layer, int quarter,
   } else {
     Nstraw  = getStrawID (nextOtisID, nextChannelID);
   }
+  debug() << " OTTIME " 
+          << format("firstOtisID %d, firstStrawID %d, firstTime %d," 
+                    "nextOtisID %d, nextStrawID %d, nextTime %d",
+                    firstOtisID, firstChannelID, firstTime,
+                    nextOtisID, nextChannelID, nextTime) 
+          << endmsg;  
+
   
   //Get First ChannelID  
   OTChannelID fchannelID(station, layer, quarter, module, Fstraw, firstTime);

@@ -1,4 +1,4 @@
-// $Id: OTBankVersion.h,v 1.1 2004-10-28 14:34:24 cattanem Exp $
+// $Id: OTBankVersion.h,v 1.2 2005-07-12 09:35:39 jnardull Exp $
 #ifndef EVENT_OTBANKVERSION_H 
 #define EVENT_OTBANKVERSION_H 1
 
@@ -12,6 +12,6 @@
  */
 namespace OTBankVersion 
 {
-  enum versions { DC04=0, v1 };
+  enum versions { DC04=0, v1, v2 };
 }
 #endif // EVENT_OTBANKVERSION_H

@@ -1,4 +1,4 @@
-// $Id: OTTimeCreator.h,v 1.4 2004-12-10 09:25:08 cattanem Exp $
+// $Id: OTTimeCreator.h,v 1.5 2005-07-12 09:35:11 jnardull Exp $
 #ifndef OTDAQ_OTTIMECREATOR_H 
 #define OTDAQ_OTTIMECREATOR_H 1
 
@@ -51,9 +51,6 @@ protected:
 
 private:
   
-   enum DataMasks {dataMask = 0x80000000};
-
-
   // From Raw to OTTime
   StatusCode raw2OTTime(int station, int layer, int quarter, int module, 
                         DataWord dataWord, OTTimes& times);

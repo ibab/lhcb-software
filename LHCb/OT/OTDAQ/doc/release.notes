@@ -1,6 +1,11 @@
 Package         : OTDAQ
 Package manager : J. Nardulli
 
+! 2005-06-29 Jacopo Nardulli
+ - Fixing bug in OTTimeCreator  
+ - Moving from 50 to 75 ns in the ReadoutGateTool 
+ - Possibility to read Bank both with 1 and with 3 words as TELL1 Header
+
 !===================== OTDAQ v3r2p1 2005-03-07 =====================
 ! 2005-03-07 - Marco Cattaneo
  - Fix requirements to use DAQEvent v*
