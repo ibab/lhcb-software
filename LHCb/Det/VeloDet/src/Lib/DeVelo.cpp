@@ -1,4 +1,4 @@
-// $Id: DeVelo.cpp,v 1.51 2005-07-11 15:31:50 mtobin Exp $
+// $Id: DeVelo.cpp,v 1.52 2005-07-12 13:15:25 mtobin Exp $
 //
 // ============================================================================
 #define  VELODET_DEVELO_CPP 1
@@ -189,8 +189,8 @@ StatusCode DeVelo::initialize() {
         << m_nPhiSensors << " Phi type and "
         << m_nPileUpSensors << " pileup type sensors " << endreq;
   }
-  msg << "Going to attempt to recalculate z positions\n";
-  recalculateZs();
+  /*  msg << "Going to attempt to recalculate z positions\n";
+      recalculateZs();*/
   return StatusCode::SUCCESS;
 }
 
