@@ -1,0 +1,27 @@
+#printOptions 
+
+/** @file 
+ * 
+ *  Job options for Gauss to produce events with geometry version
+ *  lhcb-200506.opts (Rich1 EDR, Rotated Rich2, TT KLM layout, new Velo,
+ *  Tilted Calorimeters, Tilted Muons)
+ *
+ */
+
+//--------------------------------------------------------------------------
+// Execute a standard production Gauss job
+//--------------------------------------------------------------------------
+#include "$GAUSSOPTS/Gauss.opts"
+
+//--------------------------------------------------------------------------
+// Geometry database dependent options
+//--------------------------------------------------------------------------
+DetectorDataSvc.DetDbLocation = "$XMLDDDBROOT/DDDB/lhcb-200507.xml";
+
+//--------------------------------------------------------------------------
+// Switch off monitors of detectors in production
+//--------------------------------------------------------------------------
+Monitor.Members       = { "GaudiSequencer/GenMonitor" };
+GiGa.EventSeq.RichG4Event.RichEventActionHistoFillSet2 = false;
+GiGa.RunSeq.RichG4Run.DefineRichG4HistoSet2 = false;
+ 
