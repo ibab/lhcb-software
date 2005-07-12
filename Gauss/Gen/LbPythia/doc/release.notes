@@ -1,7 +1,8 @@
-! $Id: release.notes,v 1.4 2005-07-11 16:19:31 gcorti Exp $
+! $Id: release.notes,v 1.5 2005-07-12 16:01:37 gcorti Exp $
 ! Package     : Gen/LbPythia
 ! Responsible : 
 
+! ========================== LbPythia v1r0 ============================
 ! 2005-07-11 - Gloria CORTI
  - requirements: introduce macro for fortran flags (no second underscore)
 

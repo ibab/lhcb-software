@@ -1,7 +1,8 @@
-! $Id: release.notes,v 1.4 2005-07-11 16:18:41 gcorti Exp $
+! $Id: release.notes,v 1.5 2005-07-12 15:58:54 gcorti Exp $
 ! Package     : Gen/Generators
 ! Responsible : 
 
+!========================== Generators v1r1 ===========================
 ! 2005-07-11 - Gloria CORTI
  - requirements: introduce macro for fortran flags (no second underscore)
 
