@@ -4,6 +4,14 @@
 ! Purpose     : LHCb Simulation Application with Geant4
 !-----------------------------------------------------------------------------
 
+
+! 2005-07-12 - Juan PALACIO
+ - Introduce options to allow misalignement of VELO geometry. The options
+   need to be explicitely set. Requires XmlDDDB v26r0 or higher and LHCb
+   v18r7 or higher
+   . SimVeloGeometry.opts, options to allow misalignment
+   . SimGeometry.opts, example (commented) on how to allow Velo misalignment
+
 ! 2005-07-08 - Gloria CORTI
  - Introduce possibility to write GDML file. This is optional and requires
    uncommenting the necessary package "GDMLG4Writer" in the requirements

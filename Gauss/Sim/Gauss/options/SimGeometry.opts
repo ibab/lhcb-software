@@ -1,4 +1,4 @@
-// $Id: SimGeometry.opts,v 1.6 2005-07-08 08:50:42 gcorti Exp $
+// $Id: SimGeometry.opts,v 1.7 2005-07-12 09:32:44 gcorti Exp $
 
 /** @file
  *
@@ -29,7 +29,10 @@ ApplicationMgr.DLLs += { "GaussRICH"    };
 ApplicationMgr.DLLs += { "GaussCalo", "CaloEvent" };
 Geo.StreamItems         += {"/dd/Structure/LHCb/Pipe"};
 Geo.StreamItems         += {"/dd/Structure/LHCb/Magnet"};
-Geo.StreamItems         += {"/dd/Structure/LHCb/Velo"};
+// Comment out following line to enable misaligneable VELO
+Geo.StreamItems         += {"/dd/Structure/LHCb/Velo"};  
+// Uncomment following line to enable misaligneable VELO
+//#include "$GAUSSOPTS/SimVeloGeometry.opts"
 Geo.StreamItems         += {"/dd/Structure/LHCb/Velo2Rich1"};
 Geo.StreamItems         += {"/dd/Structure/LHCb/Rich1"};
 Geo.StreamItems         += {"/dd/Geometry/Rich1/Rich1Surfaces"};
