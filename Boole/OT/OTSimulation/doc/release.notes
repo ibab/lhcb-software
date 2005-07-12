@@ -1,6 +1,9 @@
-! $Id: release.notes,v 1.12 2005-07-11 14:29:46 jnardull Exp $
+! $Id: release.notes,v 1.13 2005-07-12 09:30:55 jnardull Exp $
 Package         : OTSimulation
 Package manager : Jacopo Nardulli
+
+! 2005-07-12 Jacopo Nardulli
+ - Introduction of the verion v2 in OTFillRawBuffer
 
 ! 2005-06-29 Jacopo Nardulli
  - Fixing bug in OTFillRawBuffer

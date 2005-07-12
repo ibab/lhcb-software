@@ -1,4 +1,4 @@
-// $Id: OTFillRawBuffer.cpp,v 1.8 2005-07-11 14:30:18 jnardull Exp $
+// $Id: OTFillRawBuffer.cpp,v 1.9 2005-07-12 09:31:19 jnardull Exp $
 // Include files
 
 // From Gaudi
@@ -104,7 +104,7 @@ StatusCode OTFillRawBuffer::execute()
 
     int bankID = (*iBank).first;
     dataBank& bBank = aBank;
-    rawBuffer->addBank( bankID , RawBuffer::OT, bBank, OTBankVersion::v1 );  
+    rawBuffer->addBank( bankID , RawBuffer::OT, bBank, OTBankVersion::v2 );  
     aBank.erase( aBank.begin(),aBank.end() );
   }
 
