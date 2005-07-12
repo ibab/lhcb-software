@@ -1,4 +1,4 @@
-// $Id: GeometryInfoPlus.h,v 1.5 2005-07-06 13:45:14 jpalac Exp $
+// $Id: GeometryInfoPlus.h,v 1.6 2005-07-12 16:21:18 jpalac Exp $
 #ifndef LIB_GEOMETRYINFOPLUS_H 
 #define LIB_GEOMETRYINFOPLUS_H 1
 
@@ -10,6 +10,7 @@
 #include <algorithm> 
 /* GaudiKernel includes */
 #include "GaudiKernel/IMessageSvc.h"
+#include "GaudiKernel/ISvcLocator.h"
 #include "GaudiKernel/StatusCode.h"
 #include "GaudiKernel/DataObject.h"
 /** DetDesc includes */ 
@@ -23,6 +24,8 @@
 /** forward declarations */
 class GaudiException   ;
 class IDataProviderSvc ;
+class ISvcLocator;
+class IUpdateManagerSvc;
 class AlignmentCondition;
 
 /** @class GeometryInfoPlus GeometryInfoPlus.h Lib/GeometryInfoPlus.h
@@ -98,11 +101,10 @@ public:
 public:
 
   StatusCode initialize();
+
   StatusCode cache();
 
-  StatusCode updateMatrices(iGInfo_iterator childBegin,
-                            iGInfo_iterator childEnd);
-
+  StatusCode updateChildren();
   /// Is this "geometry object" assosiated with Logical Volume?
   inline bool hasLVolume() const { return m_gi_has_logical; }   //     
                         
@@ -113,8 +115,6 @@ public:
   {
     return m_alignmentCondition;
   }
-
-
 
   /// transformation matrix from global reference
   /// system to the local one
@@ -377,6 +377,9 @@ private:
 
   IMessageSvc*       msgSvc() const;
   IDataProviderSvc* dataSvc() const;
+  ISvcLocator*      svcLocator() const;
+  IUpdateManagerSvc* m_ums;
+  
 
   inline MsgStream log() const  { return *m_log; }
 
@@ -418,6 +421,8 @@ private:
   
 
   StatusCode getAlignmentCondition();
+
+  StatusCode registerCondition();
 
   void clearMatrices();
 

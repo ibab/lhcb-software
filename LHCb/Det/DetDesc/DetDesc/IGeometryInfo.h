@@ -1,4 +1,4 @@
-// $Id: IGeometryInfo.h,v 1.14 2005-07-06 13:45:13 jpalac Exp $ 
+// $Id: IGeometryInfo.h,v 1.15 2005-07-12 16:21:18 jpalac Exp $ 
 // ===========================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ===========================================================================
@@ -53,8 +53,7 @@ public:
 
   virtual StatusCode cache()=0;
   
-  virtual StatusCode updateMatrices(IGIChildrenIterator begin,
-                                    IGIChildrenIterator end)=0;
+  virtual StatusCode updateChildren()=0;
 
   /** Is the GeometryInfo object associated with Logical Volume?
    *  This is to distinguish the Ghost case from the others.

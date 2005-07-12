@@ -1,9 +1,11 @@
-// $Id: GeometryInfoPlus.cpp,v 1.7 2005-07-06 13:45:14 jpalac Exp $
+// $Id: GeometryInfoPlus.cpp,v 1.8 2005-07-12 16:21:18 jpalac Exp $
 // Include files 
 
 // GaudiKernel
 #include "GaudiKernel/IInspector.h"
 #include "GaudiKernel/IDataProviderSvc.h"
+#include "DetDesc/IUpdateManagerSvc.h"
+
 #include "GaudiKernel/Kernel.h"
 #include "GaudiKernel/IRegistry.h"
 #include "GaudiKernel/DataObject.h"
@@ -196,36 +198,23 @@ StatusCode GeometryInfoPlus::initialize()
 {
 
   m_services = DetDesc::services();
+  svcLocator()->service("UpdateManagerSvc",m_ums,true);
+  
   m_hasAlignmentPath=!m_alignmentPath.empty();
+
   if( 0 == m_log ) m_log = new MsgStream(msgSvc(), "GeometryInfoPlus");
+
   log() << MSG::VERBOSE << "initialize" << endmsg;
   log() << MSG::VERBOSE << "alignment path " << m_alignmentPath << endmsg;
-  return cache();  
+
+  return ( getAlignmentCondition() ) ? cache() : StatusCode::FAILURE;  
 }
 //=============================================================================
 StatusCode GeometryInfoPlus::cache() 
 {
  
-  log() << MSG::VERBOSE << "cache() getting alignmentCondition" << endmsg;
-  StatusCode scAlignment = StatusCode::FAILURE;
-  
-  if ( this->needsAlignmentCondition() ) {
-    scAlignment=getAlignmentCondition();
-    if (!scAlignment) return scAlignment;
-  } else {
-    log() << MSG::VERBOSE 
-          << "cache() no alignmentCondition requested. Assigning identity transformation" 
-          << endmsg;;
-    
-  }
-  
-  
   log() << MSG::VERBOSE << "cache() calculating matrices" << endmsg;
-  calculateMatrices();
- 
-  log() << MSG::VERBOSE << "CACHED EVERYTHING" << endmsg;
-
-  return StatusCode::SUCCESS;
+  return calculateMatrices();
   
 }
 //=============================================================================
@@ -385,22 +374,18 @@ StatusCode GeometryInfoPlus::setLocalDeltaMatrix(const HepTransform3D&
   m_localDeltaMatrix = new HepTransform3D(newDelta);
   m_deltaMatrices[0] = *m_localDeltaMatrix;
   return (calculateFullMatrices(deltaBegin(), deltaEnd(), idealBegin()) ) ?
-    updateMatrices(this->childBegin(), this->childEnd() ) : 
+    updateChildren() : 
     StatusCode::FAILURE;
   
 }
 //=============================================================================
-StatusCode GeometryInfoPlus::updateMatrices(iGInfo_iterator childBegin,
-                                            iGInfo_iterator childEnd) 
-{ 
-  log() << MSG::VERBOSE << "updating child matrices for GI " 
-        << m_gi_lvolumeName << endmsg;
-  for (iGInfo_iterator gi = childBegin; gi!=childEnd; ++gi) {
-
+StatusCode GeometryInfoPlus::updateChildren() 
+{
+  for (iGInfo_iterator gi = this->childBegin(); gi!=this->childEnd(); ++gi) {
     (*gi)->cache();
-    (*gi)->updateMatrices( (*gi)->childBegin(), (*gi)->childEnd() ); 
+    (*gi)->updateChildren(); 
   }
-  return StatusCode::SUCCESS;
+  return StatusCode::SUCCESS;  
 }
 //=============================================================================
 void GeometryInfoPlus::clearMatrices() 
@@ -444,28 +429,51 @@ void GeometryInfoPlus::clearMatrices()
 StatusCode GeometryInfoPlus::getAlignmentCondition() 
 {
 
-  log() << MSG::VERBOSE << "getting AlignmentCondition with path "
-        << m_alignmentPath << endmsg;
+  StatusCode return_value = StatusCode::SUCCESS;
 
-  SmartDataPtr<AlignmentCondition> condition( dataSvc(), m_alignmentPath ); 
+  if ( this->needsAlignmentCondition() ) {
+    log() << MSG::VERBOSE << "getting AlignmentCondition with path "
+          << m_alignmentPath << endmsg;
 
-  if (condition) {
-    log() << MSG::VERBOSE <<"Found condition" << endmsg;
-    m_alignmentCondition=condition;
-    this->hasAlignmentCondition(true);
-    log() << MSG::VERBOSE << "getAlignmentCondition classID "
-          << condition->toXml() << endmsg;
-    return StatusCode::SUCCESS;
+    SmartDataPtr<AlignmentCondition> condition( dataSvc(), m_alignmentPath ); 
+
+    if (condition) {
+      log() << MSG::VERBOSE <<"Found condition" << endmsg;
+      m_alignmentCondition=condition;
+      this->hasAlignmentCondition(true);
+      log() << MSG::VERBOSE << "getAlignmentCondition classID "
+            << condition->toXml() << endmsg;
+      return_value = StatusCode::SUCCESS;
+    } else {
+      log() << MSG::ERROR <<"Did not find condition " 
+            << m_alignmentPath 
+            << " volume " << lvolumeName() << endmsg;
+      this->hasAlignmentCondition(false);
+      m_alignmentCondition=0;
+      return_value = StatusCode::FAILURE;
+    } 
   } else {
-    log() << MSG::ERROR <<"Did not find condition " 
-          << m_alignmentPath 
-          << " volume " << lvolumeName() << endmsg;
-    this->hasAlignmentCondition(false);
-    m_alignmentCondition=0;
-    return StatusCode::FAILURE;
+    log() << MSG::VERBOSE 
+          << "No alignmentCondition requested. Assigning identity transformation" 
+          << endmsg;; 
   }
-  
+
+  return registerCondition();
 }
+//=============================================================================
+StatusCode GeometryInfoPlus::registerCondition() 
+{
+
+
+  return (m_ums->registerCondition(this, 
+                                   m_alignmentPath, 
+                                   &GeometryInfoPlus::cache) ) ?
+    m_ums->registerCondition(this, 
+                             m_alignmentPath, 
+                             &GeometryInfoPlus::updateChildren)
+    : StatusCode::FAILURE;
+}
+
 //=============================================================================
 const HepTransform3D& GeometryInfoPlus::localIdealMatrix() const
 {
@@ -1145,6 +1153,12 @@ GeometryInfoPlus::~GeometryInfoPlus()
 
   m_services->release();
 };
+//=============================================================================
+ISvcLocator* GeometryInfoPlus::svcLocator() const 
+{
+  return m_services->svcLocator();
+}
+
 //=============================================================================
 IMessageSvc* GeometryInfoPlus::msgSvc() const {
   return m_services->msgSvc();
