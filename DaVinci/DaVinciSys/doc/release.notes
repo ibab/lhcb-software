@@ -5,6 +5,7 @@ Purpose     : LHCb analysis program
 
 </PRE><H1><A NAME=v12r12>2005-07-06 DaVinci v12r12 - Updated DC04 version</A></H1><PRE>
 New version based on LHCb v16r5
+use XmlDDDB v22r2 version used during DC04
 
 Main modifications:
   FlavourTagging

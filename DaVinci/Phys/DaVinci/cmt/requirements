@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.261 2005-07-08 13:31:16 pkoppenb Exp $
+# $Id: requirements,v 1.262 2005-07-12 09:08:04 ranjard Exp $
 # Created    : 07/02/2002
 # Maintainer : P. Koppenburg
 #
@@ -32,7 +32,7 @@ use HbookCnv            v*
 use RootHistCnv         v*
 
 #-- Database
-use XmlDDDB             v24r2     Det
+use XmlDDDB             v22r2     Det
 use FieldMap            v*
 use ParamFiles          v*    -no_auto_imports
 
