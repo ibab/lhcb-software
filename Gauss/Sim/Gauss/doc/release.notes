@@ -4,6 +4,21 @@
 ! Purpose     : LHCb Simulation Application with Geant4
 !-----------------------------------------------------------------------------
 
+! 2005-07-12 - Gloria CORTI
+ - Introduce use of new generator packages with more modular structure 
+   (Patrick ROBBE). All general utility algorithms are in Gen/Generators,
+   while Pythia specific code is in Gen/LbPythia. An additional possibility
+   is to use AcerMC, in which case the code is taken from Gen/LbAcerMC
+   . requirements, remove old package GeneratorsModules and introduce
+     use Generators v1r1
+     use LbPythia   v1r1
+     use LbAcerMC   v1r1 (commented)
+   . Common.opts, remove loading of GeneratorsModule DLL and introduce
+     that of Generators and LbPythia  
+ - Introduce new version of DecFiles v8r0
+ - Introduce use of XmlDDDB to allow VELO new geometry and misaligment
+   . use XmlDDDB v26r0
+   . v200506.opts, options to run with new VELO geometry
 
 ! 2005-07-12 - Juan PALACIO
  - Introduce options to allow misalignement of VELO geometry. The options

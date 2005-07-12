@@ -1,5 +1,5 @@
 package Gauss
-version v19r5
+version v20r0
 
 #=========================================================================
 #-- Structure
@@ -7,15 +7,17 @@ branches src doc options cmt job
 
 #=========================================================================
 #-- Databases
-use XmlDDDB             v25r1   Det   -no_auto_imports
+use XmlDDDB             v26r0   Det   -no_auto_imports
 use FieldMap            v4r5          -no_auto_imports
-use DecFiles            v7r3    Gen   -no_auto_imports
+use DecFiles            v8r0    Gen   -no_auto_imports
 use ParamFiles          v3r12         -no_auto_imports
 use Geant4Files		v52r0	      -no_auto_imports
 
 #========================================================================
 #-- Generator
-use GeneratorModules    v15r3   Gen
+use Generators          v1r1    Gen
+use LbPythia            v1r1    Gen
+#use LbAcerMC            v1r1    Gen
 
 #-- Simulation
 use GiGaCnv             v15r11  Sim
