@@ -1,9 +1,13 @@
-! $Id: release.notes,v 1.75 2005-07-08 14:38:45 ranjard Exp $
+! $Id: release.notes,v 1.76 2005-07-13 15:41:22 musy Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Phys/FlavourTagging
 ! Responsible : Marco Musy (musy@cern.ch)
 ! Purpose     : Provide tools and algorithm for tagging B
 !-----------------------------------------------------------------------------
+
+! 2005-07-13 - M. Musy
+  - bug fix for multiple candidates in BTagging.cpp
+  - small bug fix in summaryof.cpp for TDR categories
 
 !========================== FlavourTagging v6r1 2005-07-08 ===================
 ! 2005-07-08 - F.Ranjard
@@ -23,7 +27,7 @@
   - src/NNetTool.cpp
     . include <math.h> for windows
 
-! 2005-07-05 - M Musy
+! 2005-07-05 - M. Musy
   - added reorganised:
     CombineTaggersNNet.cpp  to combine taggers
     CombineTaggersTDR.cpp    same with old TDR definition

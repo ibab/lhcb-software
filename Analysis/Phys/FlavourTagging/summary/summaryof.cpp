@@ -134,7 +134,9 @@ int main(int argc, char **argv) {
     else if(it==13) 
       cout<<"---------------------------------------------------------"<<endl;
 
-    if(it<6) { rtag = nrt[it]; wtag = nwt[it]; }
+    int itmax=6;
+    if(*argv[3] == 'T') itmax=13;
+    if(it<itmax) { rtag = nrt[it]; wtag = nwt[it]; }
 
     if(rtag+wtag == 0) continue; //empty category
 
@@ -144,7 +146,7 @@ int main(int argc, char **argv) {
     double epsil = eftag*pow(1-2*omtag,2);      // effective efficiency
     if(rtag<wtag) epsil= -epsil;
 
-    if(it<6){
+    if(it<itmax){
       rtt      += rtag;
       wtt      += wtag;
       ef_tot   += eftag;
@@ -163,7 +165,7 @@ int main(int argc, char **argv) {
 
     //PRINT: ----------------------------------
     cout.setf(ios::fixed);
-    if(it<6) cout<<setw(2)<< it; else cout<<"**";
+    if(it<itmax) cout<<setw(2)<< it; else cout<<"**";
     cout<< cats
         <<" "<<setprecision(2)<<setw(8)<< epsil*100 << "+-" << epsilerr*100 
         <<" "<<setw(8)<< eftag*100 << "+-" <<eftag_err*100

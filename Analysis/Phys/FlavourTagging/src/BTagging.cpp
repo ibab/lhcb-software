@@ -33,29 +33,33 @@ StatusCode BTagging::execute() {
 
   //look in location where Selection has put the B candidates
   ParticleVector parts = desktop()->particles();
-  if( parts.empty()  ) return StatusCode::SUCCESS;
+  if( parts.empty() ) return StatusCode::SUCCESS;
   debug() << "BTagging will tag "<< parts.size() << " B hypos!" <<endreq;
 
   //-------------- loop on signal B candidates from selection
-  //FlavourTag theTag;
-  FlavourTag *theTag = new FlavourTag;
+  FlavourTags*  tags = new FlavourTags;
   ParticleVector::const_iterator icandB;
   for ( icandB = parts.begin(); icandB != parts.end(); icandB++){
     if((*icandB)->particleID().hasBottom()) {
       debug() << "About to tag candidate B of mass=" 
               << (*icandB)->momentum().mag()/GeV <<endreq;
 
-      //--------------------- TAG THEM -------------------
+      FlavourTag* theTag = new FlavourTag;
+
+      //--------------------- TAG IT ---------------------
       //use tool for tagging by just specifing the signal B
       StatusCode sc = flavourTagging() -> tag( *theTag, *icandB );
 
       //use tool for tagging if you want to specify the Primary Vtx
-      //StatusCode sc = flavourTagging() -> tag( theTag, *icandB, PVertex );
+      //StatusCode sc = flavourTagging() -> tag( *theTag, *icandB, PVertex );
 
       //use tool for tagging if you want to specify a list of particles
-      //StatusCode sc = flavourTagging() -> tag( theTag, *icandB, PVertex, vtags );
+      //StatusCode sc = flavourTagging() -> tag( *theTag, *icandB, PVertex, vtags );
       //--------------------------------------------------
-      if (!sc) return sc;
+      if (!sc) {
+	err() <<"Tagging Tool returned error."<< endreq;
+	delete theTag;
+      } else tags->insert(theTag);
 
       //--- PRINTOUTS ---
       //print the information in theTag
@@ -98,12 +102,11 @@ StatusCode BTagging::execute() {
     }
   }
 
-  //-------------------------------------------
   ///Output to TES (for backward compatibility) 
-  FlavourTags* tags = new FlavourTags;
-  tags->insert(theTag);
-  StatusCode sc = put(tags,m_TagLocation);
-  if( !sc ) err() <<"Unable to register tags"<< endreq;
+  if(! (tags->empty()) ) {
+    StatusCode sc = put(tags,m_TagLocation);
+    if( !sc ) err() <<"Unable to register tags"<< endreq;
+  }
 
   setFilterPassed( true );
   return StatusCode::SUCCESS;
