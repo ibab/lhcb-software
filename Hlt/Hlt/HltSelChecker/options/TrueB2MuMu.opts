@@ -2,7 +2,7 @@ TrueSignals.Members += {"FilterDesktop/SelectB2MuMu"};
 SelectB2MuMu.PhysDesktop.InputLocations = { "Phys/HltGeneric" } ; // muons from generic
 SelectB2MuMu.Filter.Selections =  {  "mu+ : TrueMCFilterCriterion" } ;
 SelectB2MuMu.Filter.TrueMCFilterCriterion.MCDecayFinder.Decay =  "[B_s0 -> ^mu- ^mu+]cc" ;
-SelectB2MuMu.Filter.TrueMCFilterCriterion.Particle2MCLinksAsct.Location = "Phys/Relations/Particle2MCLinksB2MuMu" ;
+SelectB2MuMu.Filter.TrueMCFilterCriterion.Particle2MCLinksAsct.Location = "Phys/Relations/Particle2MCLinksSelectB2MuMu" ;
 SelectB2MuMu.Filter.TrueMCFilterCriterion.Particle2MCLinksAsct.AlgorithmType = "Particle2MCLinks";
 SelectB2MuMu.Filter.TrueMCFilterCriterion.Particle2MCLinksAsct.AlgorithmName = "Particle2MCLinksSelectB2MuMu";
  

@@ -2,7 +2,7 @@ TrueSignals.Members += {"FilterDesktop/SelectDstar2Dpi"};
 SelectDstar2Dpi.PhysDesktop.InputLocations = { "Phys/HLTPions", "Phys/HLTKaons" } ;
 SelectDstar2Dpi.Filter.Selections =  { "pi+ : TrueMCFilterCriterion", "K+ : TrueMCFilterCriterion" } ;
 SelectDstar2Dpi.Filter.TrueMCFilterCriterion.MCDecayFinder.Decay =  "[D*(2010)- -> ^pi- (D~0 -> ^K+ ^pi-)]cc, [D*(2010)- -> ^pi- (D~0 -> ^pi+ ^pi-)]cc, [D*(2010)- -> ^pi- (D~0 -> ^K+ ^K-)]cc" ;
-SelectDstar2Dpi.Filter.TrueMCFilterCriterion.Particle2MCLinksAsct.Location = "Phys/Relations/Particle2MCLinksDstar2Dpi" ;
+SelectDstar2Dpi.Filter.TrueMCFilterCriterion.Particle2MCLinksAsct.Location = "Phys/Relations/Particle2MCLinksSelectDstar2Dpi" ;
 SelectDstar2Dpi.Filter.TrueMCFilterCriterion.Particle2MCLinksAsct.AlgorithmType = "Particle2MCLinks";
 SelectDstar2Dpi.Filter.TrueMCFilterCriterion.Particle2MCLinksAsct.AlgorithmName = "Particle2MCLinksSelectDstar2Dpi";
 

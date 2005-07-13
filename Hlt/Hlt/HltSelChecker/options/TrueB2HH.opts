@@ -7,22 +7,22 @@ SelectB2HH.Filter.BooleanFilterCriterion.OrList =  { "TrueMCFilterCriterion/Bd2P
                                                      "TrueMCFilterCriterion/Bs2KK" } ; 
 
 SelectB2HH.Filter.BooleanFilterCriterion.Bd2PiPi.MCDecayFinder.Decay = "[B0 -> ^pi- ^pi+]cc" ;
-SelectB2HH.Filter.BooleanFilterCriterion.Bd2PiPi.Particle2MCLinksAsct.Location = "Phys/Relations/Particle2MCLinksSelectB2HH";
+SelectB2HH.Filter.BooleanFilterCriterion.Bd2PiPi.Particle2MCLinksAsct.Location = "Phys/Relations/Particle2MCLinksSelectSelectB2HH";
 SelectB2HH.Filter.BooleanFilterCriterion.Bd2PiPi.Particle2MCLinksAsct.AlgorithmType = "Particle2MCLinks";
 SelectB2HH.Filter.BooleanFilterCriterion.Bd2PiPi.Particle2MCLinksAsct.AlgorithmName = "Particle2MCLinksSelectB2HH";
 
 SelectB2HH.Filter.BooleanFilterCriterion.Bd2KPi.MCDecayFinder.Decay = "{[[B0]nos -> ^K+ ^pi-]cc, [[B0]os -> ^K- ^pi+]cc}";
-SelectB2HH.Filter.BooleanFilterCriterion.Bd2KPi.Particle2MCLinksAsct.Location = "Phys/Relations/Particle2MCLinksSelectB2HH";
+SelectB2HH.Filter.BooleanFilterCriterion.Bd2KPi.Particle2MCLinksAsct.Location = "Phys/Relations/Particle2MCLinksSelectSelectB2HH";
 SelectB2HH.Filter.BooleanFilterCriterion.Bd2KPi.Particle2MCLinksAsct.AlgorithmType = "Particle2MCLinks";
 SelectB2HH.Filter.BooleanFilterCriterion.Bd2KPi.Particle2MCLinksAsct.AlgorithmName = "Particle2MCLinksSelectB2HH";
 
 SelectB2HH.Filter.BooleanFilterCriterion.Bs2PiK.MCDecayFinder.Decay = "{[[B_s0]nos -> ^K- ^pi+]cc, [[B_s0]os -> ^K+ ^pi-]cc}";
-SelectB2HH.Filter.BooleanFilterCriterion.Bs2PiK.Particle2MCLinksAsct.Location = "Phys/Relations/Particle2MCLinksSelectB2HH";
+SelectB2HH.Filter.BooleanFilterCriterion.Bs2PiK.Particle2MCLinksAsct.Location = "Phys/Relations/Particle2MCLinksSelectSelectB2HH";
 SelectB2HH.Filter.BooleanFilterCriterion.Bs2PiK.Particle2MCLinksAsct.AlgorithmType = "Particle2MCLinks";
 SelectB2HH.Filter.BooleanFilterCriterion.Bs2PiK.Particle2MCLinksAsct.AlgorithmName = "Particle2MCLinksSelectB2HH";
 
 SelectB2HH.Filter.BooleanFilterCriterion.Bs2KK.MCDecayFinder.Decay = "[B_s0 -> ^K- ^K+]cc" ;
-SelectB2HH.Filter.BooleanFilterCriterion.Bs2KK.Particle2MCLinksAsct.Location = "Phys/Relations/Particle2MCLinksSelectB2HH";
+SelectB2HH.Filter.BooleanFilterCriterion.Bs2KK.Particle2MCLinksAsct.Location = "Phys/Relations/Particle2MCLinksSelectSelectB2HH";
 SelectB2HH.Filter.BooleanFilterCriterion.Bs2KK.Particle2MCLinksAsct.AlgorithmType = "Particle2MCLinks";
 SelectB2HH.Filter.BooleanFilterCriterion.Bs2KK.Particle2MCLinksAsct.AlgorithmName = "Particle2MCLinksSelectB2HH";
 

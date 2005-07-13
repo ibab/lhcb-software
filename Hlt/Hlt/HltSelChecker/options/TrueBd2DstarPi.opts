@@ -3,7 +3,7 @@ SelectBd2DstarPi.PhysDesktop.InputLocations = { "Phys/HLTPions", "Phys/HLTKaons"
 SelectBd2DstarPi.Filter.Selections =  { "pi+ : TrueMCFilterCriterion","K+ : TrueMCFilterCriterion" } ;
 SelectBd2DstarPi.Filter.TrueMCFilterCriterion.MCDecayFinder.Decay =  "{[[B0]nos -> ^pi+ (D*(2010)- -> ^pi- (D~0 -> ^K+ ^pi-))]cc, [[B0]os -> ^pi- (D*(2010)+ -> ^pi+ (D0 -> ^K- ^pi+))]cc}" ;
 
-SelectBd2DstarPi.Filter.TrueMCFilterCriterion.Particle2MCLinksAsct.Location = "Phys/Relations/Particle2MCLinksBd2DstarPi" ;
+SelectBd2DstarPi.Filter.TrueMCFilterCriterion.Particle2MCLinksAsct.Location = "Phys/Relations/Particle2MCLinksSelectBd2DstarPi" ;
 SelectBd2DstarPi.Filter.TrueMCFilterCriterion.Particle2MCLinksAsct.AlgorithmType = "Particle2MCLinks";
 SelectBd2DstarPi.Filter.TrueMCFilterCriterion.Particle2MCLinksAsct.AlgorithmName = "Particle2MCLinksSelectBd2DstarPi";
 
