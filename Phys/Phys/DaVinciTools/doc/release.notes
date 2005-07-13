@@ -1,14 +1,18 @@
-! $Id: release.notes,v 1.175 2005-07-11 07:55:29 pkoppenb Exp $
+! $Id: release.notes,v 1.176 2005-07-13 12:57:13 pkoppenb Exp $
 ! Package     : DaVinciTools
 ! Responsible : P. Koppenburg
 
+! 2005-07-13 - P. Koppenburg
+  - MakeResonances.{cpp,h}
+    . set GaudiHistoAlg property HistoProduce, instead of reclearing it.
+      Bug reported by Yuehong.
 !========================== DaVinciTools v12r0p1 2005-07-06 ===================
 ! 2005-07-11 - P. Koppenburg
   - MakeResonances.{cpp,h}
     . Bug fix: add mother to list of required particles.
 ! 2005-07-08 - P. Koppenburg
   - MakeResonances.{cpp,h}
-    . Discard not needed particles (wrong PID) befor one tried to run 
+    . Discard not needed particles (wrong PID) before one tried to run 
       the filter
     . Do not produce histograms by default
 ! 2005-07-07 - P. Koppenburg
