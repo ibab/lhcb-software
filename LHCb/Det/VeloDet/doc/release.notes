@@ -1,6 +1,9 @@
-! $Id: release.notes,v 1.82 2005-07-11 15:31:50 mtobin Exp $
+! $Id: release.notes,v 1.83 2005-07-13 12:34:44 dhcroft Exp $
 package VeloDet
 package manager : Velo Group
+
+! 2005-07-13 - David Hutchcroft
+ - Removed Reversed phi ranges of R sectors: was not correct
 
 !========================= VeloDet v9r8 2005-07-07 =========================
 ! 2005-07-11 - Mark Tobin

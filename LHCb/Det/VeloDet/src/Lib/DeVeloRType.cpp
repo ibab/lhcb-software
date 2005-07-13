@@ -1,4 +1,4 @@
-// $Id: DeVeloRType.cpp,v 1.14 2005-06-30 14:47:45 dhcroft Exp $
+// $Id: DeVeloRType.cpp,v 1.15 2005-07-13 12:34:44 dhcroft Exp $
 //==============================================================================
 #define VELODET_DEVELORTYPE_CPP 1
 //==============================================================================
@@ -364,31 +364,15 @@ void DeVeloRType::phiZoneLimits()
   m_phiMin.clear();
   m_phiMax.clear();
 
-  if(!this->isDownstream()){
-    // upstream sensor
-    m_phiMin.push_back(-phi);
-    m_phiMin.push_back(-m_quarterAngle);
-    m_phiMin.push_back(0);
-    m_phiMin.push_back(m_quarterAngle);
-    
-    m_phiMax.push_back(-m_quarterAngle);
-    m_phiMax.push_back(0);
-    m_phiMax.push_back(m_quarterAngle);
-    m_phiMax.push_back(phi);
-
-  }else{
-    //downstream sensor (i.e. 180deg flip and sectors order in phi reversed)
-    m_phiMin.push_back(m_quarterAngle);
-    m_phiMin.push_back(0);
-    m_phiMin.push_back(-m_quarterAngle);
-    m_phiMin.push_back(-phi);
-    
-    m_phiMax.push_back(phi);
-    m_phiMax.push_back(m_quarterAngle);
-    m_phiMax.push_back(0);
-    m_phiMax.push_back(-m_quarterAngle);
-  }    
-
+  m_phiMin.push_back(-phi);
+  m_phiMin.push_back(-m_quarterAngle);
+  m_phiMin.push_back(0);
+  m_phiMin.push_back(m_quarterAngle);
+  
+  m_phiMax.push_back(-m_quarterAngle);
+  m_phiMax.push_back(0);
+  m_phiMax.push_back(m_quarterAngle);
+  m_phiMax.push_back(phi);
 }
 //==============================================================================
 /// Return the capacitance of the strip
