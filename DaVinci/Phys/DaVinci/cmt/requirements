@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.262 2005-07-12 09:08:04 ranjard Exp $
+# $Id: requirements,v 1.263 2005-07-13 12:16:42 pkoppenb Exp $
 # Created    : 07/02/2002
 # Maintainer : P. Koppenburg
 #
@@ -6,7 +6,7 @@
 # Allows reading of OO-DST data
 #============================================================================
 package           DaVinci
-version           v12r12
+version           v12r11
 
 # Structure, i.e. directories to process. 
 #============================================================================
@@ -41,18 +41,22 @@ use ParamFiles          v*    -no_auto_imports
 use LHCb                        v*  
 
 #=======================================================
+# DaVinciSys v12r11
+#=======================================================
+
+#=======================================================
 # packages included in PhysCoreSys
 #=======================================================                                                                                                                                                                            
 use  CommonParticles    	v1r5p3   Phys
-use  DaVinciFilter      	v3r0     Phys
-use  DaVinciKernel      	v3r5     Phys
-use  DaVinciTools       	v12r0p1  Phys
-use  FlavourTagging     	v6r1     Phys
-use  Ks2PiPiSel         	v1r6     Phys
-use  ParticleMaker      	v1r6     Phys
+use  DaVinciFilter      	v1r8     Phys
+use  DaVinciKernel      	v3r3     Phys
+use  DaVinciTools       	v11r8    Phys
+use  FlavourTagging     	v5r5     Phys
+use  Ks2PiPiSel         	v1r5     Phys
+use  ParticleMaker      	v1r5     Phys
 use  PhysSelections		v6r12    Phys
-use  DaVinciTransporter 	v2r0p3   Phys
-use  VertexFit			v1r6p1   Phys
+use  DaVinciTransporter 	v2r0p2   Phys
+use  VertexFit			v1r6     Phys
 use  Tampering                  v1r1     Phys
 # Generic tools 
 use  Utilities          	v2r0     Tools
@@ -61,31 +65,30 @@ use  RecoTools          	v1r1     Rec
 #=======================================================
 # packages included in PhysMCSys
 #=======================================================
-use  DaVinciAssociators 	v5r5     Phys
+use  DaVinciAssociators 	v5r4p1   Phys
 use  DaVinciEff         	v3r3     Phys
-use  DaVinciMCTools     	v5r13    Phys
+use  DaVinciMCTools     	v5r11    Phys
 use  DaVinciTest        	v5r6     Phys
 use  DaVinciUser        	v5r2     Phys
-use  FlavourTaggingChecker      v1r0     Phys
 
 #=======================================================
 # packages included in LoKiSys
 #=======================================================
-use  LoKi               	v3r13p1  Tools  
-use  LoKiHlt             	v2r2     Tools  
+use  LoKi               	v3r12p1  Tools  
+use  LoKiHlt             	v2r1     Tools  
 use  LoKiGen             	v1r0     Tools  
-use  LoKiJets             	v1r1     Tools  
-use  KtJet	             	v1r0     External
+use  LoKiJets             	v1r0     Tools  
+use  KtJet	             	v1r0      
 
 #=======================================================
 # packages included in HltSys
 #=======================================================
-use HltGeneric                  v2r6     Hlt
-use HltSelections               v3r5     Hlt
-use HltSelChecker               v3r4     Hlt
+use HltGeneric                  v2r4     Hlt
+use HltSelections               v3r1     Hlt
+use HltSelChecker               v3r1     Hlt
 
 #=======================================================
-use  PhysSelSys			v8r5     PhysSel
+use  PhysSelSys			v8r3     PhysSel
 #=======================================================
 
 ########################################################
@@ -119,7 +122,7 @@ use  L0MuonTrigger 		v2r3p1   L0
 use  L0mConf            	v2r2p3   L0
 
 #-- L1 Trigger libraries 
-use TrgSys                      v1r7     Trg
+use TrgSys                      v1r6     Trg
 
 use GaudiPython v*
 

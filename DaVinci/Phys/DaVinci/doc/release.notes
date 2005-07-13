@@ -4,8 +4,6 @@
 ! Purpose     : Analysis program for LHCb
 !-----------------------------------------------------------------------------
 
-!========================== DaVinci v12r12 2005-07-06 ===================
-No major changes in Phys/DaVinci package. See DaVinciSys for details.
 !========================== DaVinci v12r11 2005-05-27 ===================
 ! 2005-06-08 - P. Koppenburg
   - cmt/requirements
