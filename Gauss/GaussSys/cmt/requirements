@@ -1,5 +1,5 @@
 package GaussSys
-version v19r5
+version v20r0
 
 branches cmt doc
 
@@ -8,31 +8,36 @@ branches cmt doc
 #==================================================================
 
 # Gauss application
-use Gauss		v19r5	  Sim
+use Gauss		v20r0	  Sim
 
 # Generator stuff ...
 use GENSER              v2r100p0  Gen
 use HepEvt              v3r121p0  Gen
 use EvtGen              v8r4p1    Gen
-use GeneratorModules    v15r3     Gen
+use Generators          v1r1      Gen
+use LbPythia            v1r1      Gen
+use AcerMC              v1r23p0   Gen
+use LbAcerMC            v1r1      Gen
 
 # GiGa stuff...
-use GiGa        	v17r2	Sim        
-use GiGaCnv     	v15r11	Sim
-use GiGaVisUI		v3r0	Sim
-
-use VisSvc              v3r3    Vis
-use SimSvc              v4r1    Sim
+use GiGa        	v17r2	  Sim        
+use GiGaCnv     	v15r11	  Sim
+use SimSvc              v4r1      Sim
+use GiGaVisUI		v3r0	  Sim
+use VisSvc              v3r3      Vis
 
 # Gauss stuff...
-use GaussAlgs		v1r6    Sim
-use GaussTools	        v10r10	Sim
-use GaussRICH		v5r0	Sim
-use GaussTracker	v4r1	Sim
-use GaussCalo		v7r2	Sim
-use GaussPhysics	v3r1	Sim
-use GaussMonitor	v2r1	Sim
-use CaloMoniSim         v1r0    Calo
-use VeloAlgorithms      v3r3    Velo
-use MuonMoniSim         v1r1    Muon
+use GaussAlgs		v1r6      Sim
+use GaussTools	        v10r10	  Sim
+use GaussRICH		v5r0	  Sim
+use GaussTracker	v4r1	  Sim
+use GaussCalo		v7r2	  Sim
+use GaussPhysics	v3r1	  Sim
+use GaussMonitor	v2r1	  Sim
+use CaloMoniSim         v1r0      Calo
+use VeloAlgorithms      v3r3      Velo
+use MuonMoniSim         v1r1      Muon
 
+# GMDL
+use GDML                v1r210p0  Sim
+use GDMLG4Writer        v2r0      Sim

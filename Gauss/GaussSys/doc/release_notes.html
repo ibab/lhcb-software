@@ -3,6 +3,154 @@ Package : GaussSys
 Package manager : Gloria Corti
 </PRE>
 
+<H1><A NAME="v20r0">2005-07-13 - GaussSys v20r0</A></H1><PRE>
+<H3><A NAME="Use">
+ use Pythia 6_226.2, photos 209.2 (via GENSER 1_0_0), pdflib 804 
+     DecFiles v8r0, ParamFiles v3r12 
+     Geant4 v71r0,
+     LHCb v18r7 
+     XmlDDDB v26r0, FieldMap v4r5 </A></H3>
+
+<H3><A NAME="New">
+ New structure of generators packages 
+ Possible use of AcerMC
+ Possible use of GDML </A></H3>
+
+!============================= Gauss v20r0 ==================================
+ 2005-07-12 - Gloria CORTI
+ - Introduce use of new generator packages with more modular structure
+   (Patrick ROBBE). All general utility algorithms are in Gen/Generators,
+   while Pythia specific code is in Gen/LbPythia. An additional possibility
+   is to use AcerMC, in which case the code is taken from Gen/LbAcerMC
+   . requirements, remove old package GeneratorsModules and introduce
+     use Generators v1r1
+     use LbPythia   v1r1
+     use LbAcerMC   v1r1 (commented)
+   . Common.opts, remove loading of GeneratorsModule DLL and introduce
+     that of Generators and LbPythia
+ - Introduce new version of DecFiles v8r0
+ - Introduce use of XmlDDDB to allow VELO new geometry and misaligment
+   . use XmlDDDB v26r0
+   . v200506.opts, options to run with new VELO geometry
+ 
+! 2005-07-12 - Juan PALACIO
+ - Introduce options to allow misalignement of VELO geometry. The options
+   need to be explicitely set. Requires XmlDDDB v26r0 or higher and LHCb
+   v18r7 or higher
+   . SimVeloGeometry.opts, options to allow misalignment
+   . SimGeometry.opts, example (commented) on how to allow Velo misalignment
+ 
+! 2005-07-08 - Gloria CORTI
+ - Introduce possibility to write GDML file. This is optional and requires
+   uncommenting the necessary package "GDMLG4Writer" in the requirements
+   file. Remove obsolete options from first attemp (GDMLWriter.opts) replaced
+   by options in the package itself.
+   . Simulation.opts, modify example of how to include options to activate
+     writing of GDML file.
+ 
+! 2005-07-08 - Gloria CORTI
+ - Remove useless option to set MagneticFieldSvc to be used by the FieldMgr
+   (the default is set to do so and the name of the tool used is incorrect)
+   . SimGeometry.opts
+ 
+! 2005-07-04 - Gloria CORTI
+ - Add use of RootHistCnv. Histograms and Ntuple are set to be saved in
+   ROOT as default.
+         . use RootHistCnv
+   . Monitor.opts, add Dll of RootHistCnv and set output type
+ - Segment monitor in a default one with histograms for all detectors
+   (normally execute in Gauss but switched off in production: see options
+    v200412.opts or v200506.opts) and an additional one providing ntuples.
+   . MonitorInDetail.opts, new options
+   . Monitor.opts, remove part put in new file
+   . Gauss.opts, put commented use of MonitorInDetail.opts
+   . GaussRead.opts, put use of MonitorInDetail.opts
+ 
+! 2005-07-01 - Gloria CORTI
+ - Remove obsolete options to read files - jobread.opts - Should instead
+   use GaussRead.opts
+ 
+!========================== Generators v1r1 ===========================
+! 2005-07-11 - Gloria CORTI
+ - requirements: introduce macro for fortran flags (no second underscore)
+ 
+! 2005-06-24 - Gloria CORTI
+ - Import changes as done in GeneratorModules v15r3 for merging of
+   beam gas with min bias events
+  + Changes to add possibility to set with properties the Generator data
+   paths in the TES. By defaut they are set to XxxLocation::Default
+   . src/component/EvtDecayAlg.{h,cpp} - property "HepMCEventLocation"
+   . src/component/SetDecayAlg.{h,cpp} - property "HepMCEventLocation"
+   . src/component/SmearVertexAlg.{h,cpp} - property "HepMCEventLocation"
+   . Generators/GenBaseAlg.h
+     src/Lib/GenBaseAlg.cpp - property "HepMCEventLocation"
+                              property "HardInfoLocation"
+                              property "GenHeaderLocation"
+  + Changes to add possibility to apply smearing of primary vertex only
+   to events produced with a certain generator (identified by name in
+   HepMCEvent container). Controlled by setting name of generator in
+   property "ApplyTo". The default is set to an empty string, in which
+   case the smearing is applied to all events in container
+   . src/component/SmearVertexAlg.{h,cpp}
+     
+! 2005-06-20 - Patrick Robbe
+ - new package. This package contains the base classes used by the
+   generator algorithms and tools. It also contains generic algorithms
+   and tools for debugging (DumpMC, DumpMCDecay), for EvtGen access
+   (EvtGenTool, SetDecayAlg, EvtDecayAlg), for vertex smearing (SmearVertexAlg)
+   and also utility functions (random number interfaces, HepMC help functions,
+   String utilities to read generator Fortran-like options)
+ 
+! ========================== LbPythia v1r1 ============================
+! 2005-07-11 - Gloria CORTI
+ - requirements: introduce macro for fortran flags (no second underscore)
+ 
+! 2005-06-27 - Patrick Robbe
+ - Lib/pyinit.F: apply upinit only when there is a user process, for safety.
+ 
+! 2005-06-21 - Patrick Robbe
+ - New package: this package contains all functions related to the
+   use of Pythia in LHCb (PythiaAlg, HiggsPythiaAlg, TTbarPythiaAlg),
+   functions to access Pythia Fortran common block and reimplementation
+   of some Pythia functions for specific action in LHCb (forced fragmentation
+   mechanism).
+ 
+!======================== LbAcerMC v1r1 =============================
+! 2005-07-11 - Patrick Robbe
+ - requirements: add no_second_underscore Fortran flag to compile
+   the library correctly.
+ 
+! 2005-06-22 - Patrick Robbe
+ - new package: LHCb interface package to AcerMC. Contains 1 algorithm
+   to interface AcerMC with Pythia (AcerMCPythiaAlg) and several
+   utility functions to access Fortran common blocks.
+ 
+!======================== AcerMC v1r23p0 =============================
+! 2005-04-11 - Patrick Robbe
+ - Use AcerData repository to look for data
+ - Add pythia6.226.2 include file with large HEPMC common block
+ 
+!=========================== GDMLG4Writer v2r0 ===============================
+! 2005-07-12 - Gloria CORTI
+ - Modify options to set $GDMLG4WRITEROPTS enviroment variable
+ 
+! 2005-07-08 - Gloria CORTI
+ - Modified to use interface package Sim/GDML.
+   Contains specialized GiGaRunAction to write a GDML file in Gauss containing
+   all geometry used in a job called "GDMLRunAction".
+   An example of the options necessary to activate it and to set properties
+   in provided in options: GDMLWriter.opts
+   Possible options are:
+   "Output" to set the name of the file to be written (default = "LHCb.gdml")
+   "Schema" to set the GDML schema to be used
+ 
+!=============================== GDML v1r210p0 ===============================
+! 2005-07-08 - Gloria CORTI
+ - First version of the package, using GMDL from LCG application area
+   (version GDML_2_1_0).
+   Link options setup only for writing for the moment.
+
+!=============================================================================
 <H1><A NAME="v19r5">2005-06-24 - GaussSys v19r5</A></H1><PRE>
 <H3><A NAME="Use">
  use Pythia 6_226.2, photos 209.2 (via GENSER 1_0_0), pdflib 804 
