@@ -6,6 +6,22 @@ HLTVeloTracking.MeasureTime = true;
 HLTFullTracking.MeasureTime = true;
 HLTParticles.MeasureTime = true;
 HLTGenericSeq.MeasureTime = true ;
+CopyParticles.MeasureTime = true ;
+HLTNeutrals.MeasureTime = true ;
+HLTselB2HH.MeasureTime = true ;
+HLTselB2JpsiX.MeasureTime = true ;
+HLTselB2MuMu.MeasureTime = true ;
+HLTselBd2D0Kstar.MeasureTime = true ;
+HLTselBd2DstarPi.MeasureTime = true ;
+HLTselBd2MuMuKstar.MeasureTime = true ;
+HLTselBs2DsH.MeasureTime = true ;
+HLTselBs2PhiGamma.MeasureTime = true ;
+HLTselBs2PhiPhi.MeasureTime = true ;
+HLTselDstar.MeasureTime = true ;
+HLTSelections.MeasureTime = true ;
+HLTMakeResonances.MeasureTime = true ;
+HLTExclusive.MeasureTime = true ;
+TrgRICHReco.MeasureTime = true;
 
 //Also, if you wish to get the RichPID tables (useful to see if things are 
 //working...) then you can add

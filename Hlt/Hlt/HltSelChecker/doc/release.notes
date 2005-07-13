@@ -4,6 +4,10 @@
 ! Purpose     : High-Level Trigger Exclusive Selections - Checking 
 !-----------------------------------------------------------------------------
 
+! 2005-07-13 - P. Koppenburg
+  - options/True*.opts
+    . Give specific name to location
+
 !========================== HltSelChecker v3r4 2005-07-06 ===================
 ! 2005-07-01 - P. Koppenburg
   Rename HLTFilterDs2KKPi into HLTSharedDs

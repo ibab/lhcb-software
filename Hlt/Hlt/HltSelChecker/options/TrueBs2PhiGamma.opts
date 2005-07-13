@@ -2,7 +2,7 @@ TrueSignals.Members += {"FilterDesktop/SelectBs2PhiGamma"};
 SelectBs2PhiGamma.PhysDesktop.InputLocations = { "Phys/HLTPions", "Phys/HLTKaons", "Phys/HLTPhotons" } ;
 SelectBs2PhiGamma.Filter.Selections =  { "pi+ : TrueMCFilterCriterion",  "K+ : TrueMCFilterCriterion", "gamma : TrueMCFilterCriterion" } ; 
 SelectBs2PhiGamma.Filter.TrueMCFilterCriterion.MCDecayFinder.Decay =  "[B_s0 -> (phi(1020) -> ^K+ ^K-) ^gamma]cc" ;  
-SelectBs2PhiGamma.Filter.TrueMCFilterCriterion.Particle2MCLinksAsct.Location = "Phys/Relations/Particle2MCLinks" ;
+SelectBs2PhiGamma.Filter.TrueMCFilterCriterion.Particle2MCLinksAsct.Location = "Phys/Relations/Particle2MCLinksBs2PhiGamma" ;
 SelectBs2PhiGamma.Filter.TrueMCFilterCriterion.Particle2MCLinksAsct.AlgorithmType = "Particle2MCLinks";
 SelectBs2PhiGamma.Filter.TrueMCFilterCriterion.Particle2MCLinksAsct.AlgorithmName = "Particle2MCLinksSelectBs2PhiGamma";
 

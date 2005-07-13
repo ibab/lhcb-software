@@ -3,7 +3,7 @@ SelectBs2PhiPhi.PhysDesktop.InputLocations = { "Phys/HLTPions", "Phys/HLTKaons" 
 SelectBs2PhiPhi.Filter.Selections =  { "K+ : TrueMCFilterCriterion", "pi+ : TrueMCFilterCriterion"} ;
 
 SelectBs2PhiPhi.Filter.TrueMCFilterCriterion.MCDecayFinder.Decay =  "[B_s0 -> (phi(1020) -> ^K- ^K+) (phi(1020) -> ^K- ^K+)]cc" ;
-SelectBs2PhiPhi.Filter.TrueMCFilterCriterion.Particle2MCLinksAsct.Location = "Phys/Relations/Particle2MCLinks" ;
+SelectBs2PhiPhi.Filter.TrueMCFilterCriterion.Particle2MCLinksAsct.Location = "Phys/Relations/Particle2MCLinksBs2PhiPhi" ;
 SelectBs2PhiPhi.Filter.TrueMCFilterCriterion.Particle2MCLinksAsct.AlgorithmType = "Particle2MCLinks";
 SelectBs2PhiPhi.Filter.TrueMCFilterCriterion.Particle2MCLinksAsct.AlgorithmName = "Particle2MCLinksSelectBs2PhiPhi";
 

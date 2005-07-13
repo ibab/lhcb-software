@@ -3,7 +3,7 @@ TrueSignals.Members += {"FilterDesktop/SelectBd2MuMuKstar"};
 SelectBd2MuMuKstar.PhysDesktop.InputLocations = { "Phys/HLTPions", "Phys/HLTKaons"} ; 
 SelectBd2MuMuKstar.Filter.Selections =  { "pi+ : TrueMCFilterCriterion","K+ : TrueMCFilterCriterion" };
 SelectBd2MuMuKstar.Filter.TrueMCFilterCriterion.MCDecayFinder.Decay =  "{[[B0]nos -> mu+ mu- (K*(892)0 -> ^K+ ^pi-) {,gamma} {,gamma}]cc, [[B0]os -> mu- mu+ (K*(892)~0 -> ^K- ^pi+) {,gamma} {,gamma}]cc}" ;
-SelectBd2MuMuKstar.Filter.TrueMCFilterCriterion.Particle2MCLinksAsct.Location = "Phys/Relations/Particle2MCLinks" ;
+SelectBd2MuMuKstar.Filter.TrueMCFilterCriterion.Particle2MCLinksAsct.Location = "Phys/Relations/Particle2MCLinksBd2MuMuKstar" ;
 SelectBd2MuMuKstar.Filter.TrueMCFilterCriterion.Particle2MCLinksAsct.AlgorithmType = "Particle2MCLinks";
 SelectBd2MuMuKstar.Filter.TrueMCFilterCriterion.Particle2MCLinksAsct.AlgorithmName = "Particle2MCLinksSelectBd2MuMuKstar";
 

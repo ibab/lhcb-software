@@ -5,6 +5,7 @@
 HLTSelections.Members += { "ResetOnOffline/SetOffline" };
 SetOffline.ResetToOffline = true ;
 //------------------------------------------------------------------------------
+#include "$DAVINCIROOT/options/DaVinciElectrons.opts"
 #include "$DAVINCIROOT/options/DaVinciReco.opts"
 #include "$DAVINCIROOT/options/DaVinciNeutrals.opts"
 //------------------------------------------------------------------------------

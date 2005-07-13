@@ -5,7 +5,7 @@ SelectBs2DsH.Filter.BooleanFilterCriterion.OrList =  { "TrueMCFilterCriterion/Ds
                                                        "TrueMCFilterCriterion/DsK" } ;
 
 SelectBs2DsH.Filter.BooleanFilterCriterion.DsPi.MCDecayFinder.Decay =  "{[[B_s0]nos -> (D_s- => ^K+ ^K- ^pi-) ^pi+]cc, [[B_s0]os -> (D_s+ => ^K- ^K+ ^pi+) ^pi-]cc}" ;
-SelectBs2DsH.Filter.BooleanFilterCriterion.DsPi.Particle2MCLinksAsct.Location = "Phys/Relations/Particle2MCLinks" ;
+SelectBs2DsH.Filter.BooleanFilterCriterion.DsPi.Particle2MCLinksAsct.Location = "Phys/Relations/Particle2MCLinksBs2DsH" ;
 SelectBs2DsH.Filter.BooleanFilterCriterion.DsPi.Particle2MCLinksAsct.AlgorithmType = "Particle2MCLinks" ;
 SelectBs2DsH.Filter.BooleanFilterCriterion.DsPi.Particle2MCLinksAsct.AlgorithmName = "Particle2MCLinksSelectBs2DsH" ;
 
