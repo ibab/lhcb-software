@@ -3,7 +3,7 @@
  *
  *  Implementation file for detector description class : DeRichSphMirror
  *
- *  $Id: DeRichSphMirror.cpp,v 1.14 2005-05-13 16:11:37 marcocle Exp $
+ *  $Id: DeRichSphMirror.cpp,v 1.15 2005-07-13 15:28:24 papanest Exp $
  *
  *  @author Antonis Papanestis a.papanestis@rl.ac.uk
  *  @date   2004-06-18
@@ -13,6 +13,7 @@
 
 // Include files
 #include "GaudiKernel/MsgStream.h"
+#include "GaudiKernel/RegistryEntry.h"
 
 #include "CLHEP/Geometry/Vector3D.h"
 #include "CLHEP/Geometry/Transform3D.h"
@@ -22,6 +23,7 @@
 #include "DetDesc/IGeometryInfo.h"
 #include "DetDesc/SolidSphere.h"
 #include "DetDesc/SolidBoolean.h"
+#include "DetDesc/Surface.h"
 
 #include "RichDet/DeRichSphMirror.h"
 #include "RichDet/DeRich.h"
@@ -48,25 +50,47 @@ const CLID& DeRichSphMirror::classID()
 
 StatusCode DeRichSphMirror::initialize()
 {
-
-  const std::string::size_type pos = name().find("Rich");
-  m_name = ( std::string::npos != pos ? name().substr(pos) : 
-             "DeRichSphMirror_NO_NAME" );
-
-  MsgStream msg( msgSvc(), myName() );
-  msg << MSG::DEBUG << "Initializing spherical mirror" << endreq;
+  MsgStream msg( msgSvc(), "DeRichSphMirror" );
+  msg << MSG::DEBUG << "Initializing spherical mirror" << endmsg;
   //this->printOut(msg);
 
+  // find if this mirror is in Rich1 or Rich2
+  const std::string::size_type pos = name().find("Rich");
+  if ( std::string::npos != pos ) {
+    m_name = name().substr(pos);
+    std::string richNum = m_name.substr(4,1);
+    if ( richNum == "1" )
+      m_rich = Rich::Rich1;
+    else
+      if ( richNum == "2")
+        m_rich = Rich::Rich2;
+      else {
+        msg << MSG::FATAL<<"Could not identify Rich (1/2=="<<richNum<<" )"<<endmsg;
+        return StatusCode::FAILURE;
+      }
+  } else {
+    m_name = "DeRichSphMirror_NO_NAME";
+    msg << MSG::FATAL << "A spherical mirror without a number!" << endmsg;
+    return StatusCode::FAILURE;
+  }
+
+  // extract mirror number from detector element name
+  const std::string::size_type pos2 = name().find(':');
+  if ( std::string::npos == pos2 ) {
+    msg << MSG::FATAL << "A spherical mirror without a number!" << endmsg;
+    return StatusCode::FAILURE;
+  }
+  m_mirrorNumber = atoi( name().substr(pos2+1).c_str() );
+  const std::string mirNumString = name().substr(pos2+1);
+
   SmartDataPtr<DeRich> deRich2(dataSvc(), DeRichLocation::Rich2);
-
-  m_solid = geometry()->lvolume()->solid();
-  const std::string type = m_solid->typeName();
-
   double hexRadius = 510.0*mm;
   if ( deRich2->exists("Rich2SphMirrorHexDiameter") )
     hexRadius = deRich2->param<double>("Rich2SphMirrorHexDiameter")/2.0;
-
   const double flatToCentre = hexRadius*sin(60*degree);
+
+  m_solid = geometry()->lvolume()->solid();
+  const std::string type = m_solid->typeName();
 
   const SolidSphere* sphereSolid = 0;
   // find the sphere of the spherical mirror
@@ -89,7 +113,7 @@ StatusCode DeRichSphMirror::initialize()
       }
     }
     if ( !sphereSolid) {
-      msg << MSG::FATAL << "Problem finding a sphere solid in :- " << endreq;
+      msg << MSG::FATAL << "Problem finding a sphere solid in :- " << endmsg;
       compSolid->printOut();
       return StatusCode::FAILURE;
     }
@@ -108,13 +132,12 @@ StatusCode DeRichSphMirror::initialize()
                         sphereSolid->deltaPhiAngle()/2.0 );
   }
 
-
   ISolid::Ticks sphTicks;
-  unsigned int sphTicksSize = sphereSolid->
+  const unsigned int sphTicksSize = sphereSolid->
     intersectionTicks(zero, toSphCentre, sphTicks);
   if (sphTicksSize != 2) {
     msg << MSG::FATAL << "Problem getting mirror radius, noTicks: "
-        << sphTicksSize << endreq;
+        << sphTicksSize << endmsg;
     return StatusCode::FAILURE;
   }
   const HepPoint3D localMirrorCentre(sphTicks[0]*toSphCentre);
@@ -131,28 +154,82 @@ StatusCode DeRichSphMirror::initialize()
   // Ignore the rotation, it has been taken care of
   m_centreOfCurvature = geometry()->toGlobal(zero);
 
-  // extract mirror number from detector element name
-  const std::string::size_type pos2 = name().find(':');
-  if ( std::string::npos != pos2 ) {
-    m_mirrorNumber = atoi( name().substr(pos2+1).c_str() );
+  msg << MSG::DEBUG << "Mirror #" << m_mirrorNumber << " " << m_rich << " Radius:"
+      << m_radius << " Centre of curvature " << m_centreOfCurvature << endmsg;
+  msg << MSG::DEBUG << "Centre of mirror " << m_mirrorCentre << endmsg;
+
+  if( m_rich == Rich::Rich2 ) {
+    if( (m_mirrorNumber == 31) || (m_mirrorNumber < 28 && m_mirrorNumber != 0) )
+      msg << MSG::VERBOSE << "Right middle "
+          << geometry()->toGlobal(middleRightSide) << endmsg;
+    else
+      msg << MSG::VERBOSE << "Left middle "
+          << geometry()->toGlobal(middleLeftSide) << endmsg;
+  }
+
+  // find surface properties
+  std::string surfLocation, sphMirrorName, surfName;
+  if ( m_rich == Rich::Rich1 ) {
+    surfLocation = "/dd/Geometry/Rich1/Rich1Surfaces";
+    sphMirrorName = "Mirror1";
+    surfName = ":"+mirNumString;
+  }
+  else{
+    surfLocation = "/dd/Geometry/Rich2/Rich2Surfaces";
+    sphMirrorName = "SphMirror";
+    surfName = "HexSeg"+mirNumString;
+  }
+  bool foundSurface( false );
+  std::string surfEnd = ":"+mirNumString;
+
+  SmartDataPtr<DataObject> rich2SurfCat(dataSvc(),surfLocation);
+  DataSvcHelpers::RegistryEntry *rich2Reg = dynamic_cast<DataSvcHelpers::RegistryEntry *>
+    (rich2SurfCat->registry());
+  IRegistry* storeReg = 0;
+
+  // find the surface in the registry
+  for (DataSvcHelpers::RegistryEntry::Iterator child = rich2Reg->begin();
+       (child != rich2Reg->end() && !foundSurface); ++child){
+    // child is a const_iterator of vector<IRegistry*>
+    const std::string::size_type pos3 = (*child)->name().find(sphMirrorName);
+    if ( std::string::npos != pos3 ) {
+      const std::string::size_type pos4 = (*child)->name().find(surfName);
+      if ( std::string::npos != pos4 ) {
+        storeReg = (*child);
+        foundSurface = true;
+      }
+    }
+  }
+
+  bool foundRefl( false );
+  // get the surface, get the tabulated properties and find REFLECTIVITY
+  if ( foundSurface ) {
+    SmartDataPtr<DataObject> obj (dataSvc(), storeReg->identifier());
+    DataObject* pObj = obj;
+    msg << MSG::DEBUG << "Dynamic cast to surface " << obj->name() << endmsg;
+    Surface* surf = dynamic_cast<Surface*> (pObj);
+    const Surface::Tables surfTabProp = surf->tabulatedProperties();
+    for (Surface::Tables::const_iterator table_iter = surfTabProp.begin();
+         table_iter != surfTabProp.end(); ++table_iter) {
+      if ( (*table_iter)->type() == "REFLECTIVITY" ) {
+        m_reflectivity = (*table_iter);
+        foundRefl = true;
+        break;
+      }
+    }
+    if ( !foundRefl ) {
+      msg << MSG::DEBUG <<"Could not find REFLECTIVITY "<< surf->name() << endmsg;
+      return StatusCode::FAILURE;
+    }
   }
   else {
-    msg << MSG::FATAL << "A spherical mirror without a number!" << endreq;
+    msg << MSG::DEBUG <<"Could not find surface for mirror "<< myName() << endmsg;
     return StatusCode::FAILURE;
   }
 
-  msg << MSG::DEBUG << "Mirror #" << m_mirrorNumber << " Radius:" << m_radius
-      << " Centre of curvature " << m_centreOfCurvature << endreq;
-  msg << MSG::DEBUG << "Centre of mirror " << m_mirrorCentre << endreq;
-
-  if( (m_mirrorNumber == 31) || (m_mirrorNumber < 28 && m_mirrorNumber != 0) )
-    msg << MSG::VERBOSE << "Right middle "
-        << geometry()->toGlobal(middleRightSide) << endreq;
-  else
-    msg << MSG::VERBOSE << "Left middle "
-        << geometry()->toGlobal(middleLeftSide) << endreq;
-
-  msg << MSG::DEBUG <<"End initialisation for DeRichSphMirror" << endreq;
+  msg << MSG::DEBUG << "Reflectivity is from TabProp "
+      << m_reflectivity->name() << endmsg;
+  msg << MSG::DEBUG <<"End initialisation for DeRichSphMirror" << endmsg;
   return StatusCode::SUCCESS;
 }
 

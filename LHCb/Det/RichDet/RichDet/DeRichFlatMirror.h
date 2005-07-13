@@ -4,8 +4,11 @@
  *  Header file for detector description class : DeRichFlatMirror
  *
  *  CVS Log :-
- *  $Id: DeRichFlatMirror.h,v 1.7 2005-02-25 23:28:54 jonrob Exp $
+ *  $Id: DeRichFlatMirror.h,v 1.8 2005-07-13 15:28:24 papanest Exp $
  *  $Log: not supported by cvs2svn $
+ *  Revision 1.7  2005/02/25 23:28:54  jonrob
+ *  set printing to debug level
+ *
  *  Revision 1.6  2004/10/20 16:16:36  jonrob
  *  More minor updates to functions (adding const etc.)
  *
@@ -30,7 +33,9 @@
 
 #include "DetDesc/DetectorElement.h"
 #include "DetDesc/ISolid.h"
+#include "DetDesc/TabulatedProperty.h"
 
+#include "Kernel/RichDetectorType.h"
 
 // External declarations
 extern const CLID& CLID_DeRichFlatMirror;
@@ -59,7 +64,7 @@ public:
    * Retrieves reference to class identifier
    * @return the class identifier for this class
    */
-  const CLID& clID() const 
+  const CLID& clID() const
   {
     return classID();
   }
@@ -91,7 +96,7 @@ public:
    * Retrieves the centre of this flat mirror
    * @return The centre of this flat mirror on the reflective surface
    */
-  inline const HepPoint3D & mirrorCentre() const 
+  inline const HepPoint3D & mirrorCentre() const
   {
     return m_mirrorCentre;
   }
@@ -109,7 +114,7 @@ public:
    * Retrieves the number of this mirror (segment)
    * @return the number of this mirror
    */
-  inline int mirrorNumber() const 
+  inline int mirrorNumber() const
   {
     return m_mirrorNumber;
   }
@@ -119,7 +124,7 @@ public:
    * @return Status of intersection
    * @retval StatusCode::FAILURE No intersection
    */
-  StatusCode intersects ( const HepPoint3D& globalP, 
+  StatusCode intersects ( const HepPoint3D& globalP,
                           const HepVector3D& globalV ) const;
 
   /** Returns the name of this particular mirror
@@ -127,7 +132,22 @@ public:
    */
   inline const std::string & myName() const { return m_name; }
 
+  /**
+   * Returns a pointer to the tabulated property that holds the reflectivity
+   * of the mirror.
+   *
+   * @return Pointer to mirror reflectivity
+   */
+  inline const TabulatedProperty* reflectivity() const
+  {
+    return m_reflectivity;
+  }
+
 private:
+
+  Rich::DetectorType m_rich;        ///< The Rich detector of this mirror
+  /// mirror reflectivity
+  const TabulatedProperty* m_reflectivity;
 
   const ISolid* m_solid;       ///< The mirror solid
 

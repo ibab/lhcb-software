@@ -4,6 +4,9 @@
 ! Purpose     : interface to the xml description
 !-----------------------------------------------------------------------------
 
+! 2005-07-13 - Antonis Papanestis
+ - Allow for different reflectivity for every mirror segment.
+
 !========================= RichDet v8r4 2005-05-24 =========================
 ! 2005-05-13 - Marco Clemencic
  - Use new ParamValidDataObject interface (DetDesc >= v15)
