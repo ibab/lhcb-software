@@ -17,6 +17,7 @@ use Geant4Files		v52r0	      -no_auto_imports
 #-- Generator
 use Generators          v1r1    Gen
 use LbPythia            v1r1    Gen
+#   Optional AcerMC
 #use LbAcerMC            v1r1    Gen
 
 #-- Simulation

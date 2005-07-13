@@ -4,7 +4,8 @@
 ! Purpose     : LHCb Simulation Application with Geant4
 !-----------------------------------------------------------------------------
 
-! 2005-07-12 - Gloria CORTI
+!!============================= Gauss v20r0 ==================================
+ 2005-07-12 - Gloria CORTI
  - Introduce use of new generator packages with more modular structure 
    (Patrick ROBBE). All general utility algorithms are in Gen/Generators,
    while Pythia specific code is in Gen/LbPythia. An additional possibility
