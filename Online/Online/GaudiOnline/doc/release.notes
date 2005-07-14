@@ -1,6 +1,9 @@
 Package: GaudiOnline
 Author:  Markus Frank
 
+!================== GaudiOnline v1r2p1 2005-07-14 ===========================
+! 2005-07-14 - Marco Cattaneo
+ - Cleanup requirements to minimize exported dependencies
 
 ! 2005-07-11 Markus Frank
   Fix bug in decision setting algorithm returning always maximum value

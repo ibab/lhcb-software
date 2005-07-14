@@ -2,23 +2,24 @@
 # Maintainer : Markus Frank
 #============================================================================
 package           GaudiOnline 
-version           v1r2
+version           v1r2p1
 #============================================================================
 branches          cmt doc src GaudiOnline 
 include_dirs      $(GAUDIONLINEROOT)
 use DIM           v* Online
 use SFCClient     v* Online
 use EventSys      v* Event
-use GaudiSvc      v*
+use GaudiKernel   v*
+
 # ==================== component libraries ==================================
 library GaudiOnline  *.cpp
 apply_pattern component_library library=GaudiOnline 
 
+# ==================== private test application =============================
 private
-
-# needed to write raw data file....
 use GaudiConf     v*
-#use GaudiPoolDb   v*
+use GaudiSvc      v*
+use GaudiPoolDb   v*
 use PyDIM         v* Online
 
 application Gaudi "$(GAUDICONFROOT)/src/GaudiMain.cpp"
