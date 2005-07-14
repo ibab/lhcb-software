@@ -4,10 +4,10 @@
 ! Purpose     : collect Det packages
 !-----------------------------------------------------------------------------
 
-!========================= DetSys v7r3 2005-07-07 =========================
-! 2005-07-07 - Marco Cattaneo
+!========================= DetSys v7r3 2005-07-14 =========================
+! 2005-07-14 - Marco Cattaneo
  - Use DetDesc v15r3, DetDescCnv v2r8, VeloDet v9r8, MuonDet v4r8,
-       CaloDet v6r9p1, OTDet v5r5p1, XmlTools v3r6
+       CaloDet v6r9p1, OTDet v5r6, XmlTools v3r6
  - Add dict/DetDict.h, DetDict.xml and adapt requirements to build lcg 
    dictionaries of detector description classes for use with Python
 
