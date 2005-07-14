@@ -1,4 +1,4 @@
-// $Id: IUpdateManagerSvc.h,v 1.4 2005-06-23 14:21:30 marcocle Exp $
+// $Id: IUpdateManagerSvc.h,v 1.5 2005-07-14 14:59:21 marcocle Exp $
 #ifndef DETCOND_IUPDATEMANAGERSVC_H 
 #define DETCOND_IUPDATEMANAGERSVC_H 1
 
@@ -140,16 +140,16 @@ public:
   /// is updated, but only when all of them are up to date.
   /// \return StatusCode::SUCCESS if the registration went right.
   template <class CallerClass>
-  inline StatusCode registerCondition(CallerClass *instance, const std::string &condition,
-                                      const typename ObjectMemberFunction<CallerClass>::MemberFunctionType &mf){
-  	return registerCondition(condition, new ObjectMemberFunction<CallerClass>(instance,mf));
+  inline StatusCode registerCondition(CallerClass *instance, const std::string &condition = "",
+                                      const typename ObjectMemberFunction<CallerClass>::MemberFunctionType &mf = NULL){
+  	return i_registerCondition(condition, new ObjectMemberFunction<CallerClass>(instance,mf));
   }
 
   /// See above. Needed to avoid conflicts with the next one.
   template <class CallerClass>
   inline StatusCode registerCondition(CallerClass *instance, const char *condition,
-                                      const typename ObjectMemberFunction<CallerClass>::MemberFunctionType &mf){
-  	return registerCondition(std::string(condition), new ObjectMemberFunction<CallerClass>(instance,mf));
+                                      const typename ObjectMemberFunction<CallerClass>::MemberFunctionType &mf = NULL){
+  	return i_registerCondition(std::string(condition), new ObjectMemberFunction<CallerClass>(instance,mf));
   }
 
   /// Like the first version of registerCondition, but instead declaring the dependency on a condition of the service
@@ -157,8 +157,8 @@ public:
   /// object that depends on a ValidDataObject. The dependency network is kept consistent by the UpdateManagerSvc.
   template <class CallerClass, class ObjectClass>
   inline StatusCode registerCondition(CallerClass *instance, ObjectClass *obj,
-                                      const typename ObjectMemberFunction<CallerClass>::MemberFunctionType &mf){
-  	return registerCondition(dynamic_cast<void*>(obj), new ObjectMemberFunction<CallerClass>(instance,mf));
+                                      const typename ObjectMemberFunction<CallerClass>::MemberFunctionType &mf = NULL){
+  	return i_registerCondition(dynamic_cast<void*>(obj), new ObjectMemberFunction<CallerClass>(instance,mf));
   }
 
   /// Generic objects can be unregistered from the UpdateManagerSvc. The dependency network is always consistent, but
@@ -166,13 +166,13 @@ public:
   /// methods of this other nodes are called.}
   template <class CallerClass>
   inline StatusCode unregister(CallerClass *instance) {
-    return unregister(dynamic_cast<void*>(instance));
+    return i_unregister(dynamic_cast<void*>(instance));
   }
 
   /// Invalidate the given object in the dependency network. It means that all the objects depending on that one will
   /// be updated before the next event.
   template <class CallerClass>
-  inline void invalidate(CallerClass *instance) {invalidate(dynamic_cast<void*>(instance));}
+  inline void invalidate(CallerClass *instance) {i_invalidate(dynamic_cast<void*>(instance));}
 
   /// Retrieve the interval of validity (in the UpdateManagerSvc) of the given item.
   /// @return false if the item was not found.
@@ -194,7 +194,7 @@ public:
   /// that the needed operations is done immediately and not before the next event.
   template <class CallerClass>
   inline StatusCode update(CallerClass *instance){
-    return update(dynamic_cast<void*>(instance));
+    return i_update(dynamic_cast<void*>(instance));
   }
   
   /// Debug method: it dumps the dependency network through the message service (not very readable, for experts only).
@@ -202,11 +202,11 @@ public:
   
 protected:
 
-  virtual StatusCode registerCondition(const std::string &condition, BaseObjectMemberFunction *mf) = 0;
-  virtual StatusCode registerCondition(void *obj, BaseObjectMemberFunction *mf) = 0;
-  virtual StatusCode update(void *instance) = 0;
-  virtual StatusCode unregister(void *instance) = 0;
-  virtual void       invalidate(void *instance) = 0;
+  virtual StatusCode i_registerCondition(const std::string &condition, BaseObjectMemberFunction *mf) = 0;
+  virtual StatusCode i_registerCondition(void *obj, BaseObjectMemberFunction *mf) = 0;
+  virtual StatusCode i_update(void *instance) = 0;
+  virtual StatusCode i_unregister(void *instance) = 0;
+  virtual void       i_invalidate(void *instance) = 0;
 
 private:
 

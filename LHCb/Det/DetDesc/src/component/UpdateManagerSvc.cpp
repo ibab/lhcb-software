@@ -1,4 +1,4 @@
-// $Id: UpdateManagerSvc.cpp,v 1.6 2005-07-14 07:33:55 marcocle Exp $
+// $Id: UpdateManagerSvc.cpp,v 1.7 2005-07-14 14:59:21 marcocle Exp $
 // Include files 
 #include "GaudiKernel/SvcFactory.h"
 #include "GaudiKernel/MsgStream.h"
@@ -143,14 +143,21 @@ IDataProviderSvc *UpdateManagerSvc::dataProvider() const {
 IDetDataSvc *UpdateManagerSvc::detDataSvc() const {
 	return m_detDataSvc;
 }
-StatusCode UpdateManagerSvc::registerCondition(const std::string &condition, BaseObjectMemberFunction *mf){
+StatusCode UpdateManagerSvc::i_registerCondition(const std::string &condition, BaseObjectMemberFunction *mf){
 	MsgStream log(msgSvc(),name());
-  if (condition.empty()) {
-    log << MSG::WARNING << "Ignoring request for no condition (empty string given)" << endmsg;
-    return StatusCode::SUCCESS;
+//   if (condition.empty()) {
+//     log << MSG::WARNING << "Ignoring request for no condition (empty string given)" << endmsg;
+//     return StatusCode::SUCCESS;
+//   }
+  if (!condition.empty()) {
+    log << MSG::DEBUG << "registering condition \"" << condition
+        << "\" for object of type " << mf->type().name() << endmsg;
   }
-	log << MSG::DEBUG << "registering condition \"" << condition
-	    << "\" for object of type " << mf->type().name() << endmsg;
+  else {
+    log << MSG::DEBUG << "registering object of type " << mf->type().name()
+        << " (without condition)" << endmsg;
+  }
+  
   // find the object
   Item *mf_item = findItem(mf);
   if (!mf_item){ // a new OMF
@@ -158,21 +165,27 @@ StatusCode UpdateManagerSvc::registerCondition(const std::string &condition, Bas
     m_all_items.push_back(mf_item);
     m_head_items.push_back(mf_item); // since it is new, it has no parents
   }
-  // find the condition
-  Item *cond_item = findItem(condition);
-  if (!cond_item){ // a new condition
-    cond_item = new Item(condition);
-    m_all_items.push_back(cond_item);
+  if (!condition.empty()) {  
+    // find the condition
+    Item *cond_item = findItem(condition);
+    if (!cond_item){ // a new condition
+      cond_item = new Item(condition);
+      m_all_items.push_back(cond_item);
+    } else {
+      if (cond_item->isHead()) removeFromHead(cond_item);
+    }
+    link(mf_item,mf,cond_item);
+    // a new item means that we need an update
+    m_head_since = 1;
+    m_head_until = -1;
   } else {
-    if (cond_item->isHead()) removeFromHead(cond_item);
+    // if it does not depend on anything, it must be considered always valid
+    mf_item->resetIOV();
   }
-  link(mf_item,mf,cond_item);
-  // a new item means that we need an update
-  m_head_since = 1;
-  m_head_until = -1;
+  
 	return StatusCode::SUCCESS;
 }
-StatusCode UpdateManagerSvc::registerCondition(void *obj, BaseObjectMemberFunction *mf){
+StatusCode UpdateManagerSvc::i_registerCondition(void *obj, BaseObjectMemberFunction *mf){
 	MsgStream log(msgSvc(),name());
 	log << MSG::DEBUG << "registering object at " << std::hex << obj << std::dec
 	    << " for object of type " << mf->type().name() << endmsg;
@@ -225,7 +238,7 @@ StatusCode UpdateManagerSvc::newEvent(const ITime &evtTime){
   }
   return sc;
 }
-StatusCode UpdateManagerSvc::update(void *instance){
+StatusCode UpdateManagerSvc::i_update(void *instance){
   if (detDataSvc() != NULL){
 		if (detDataSvc()->validEventTime()) {
       Item *item = findItem(instance);
@@ -243,7 +256,7 @@ StatusCode UpdateManagerSvc::update(void *instance){
   }
   return StatusCode::FAILURE;
 }
-void UpdateManagerSvc::invalidate(void *instance){
+void UpdateManagerSvc::i_invalidate(void *instance){
   Item *item = findItem(instance);
   if (item) {
     item->invalidate();
@@ -252,7 +265,7 @@ void UpdateManagerSvc::invalidate(void *instance){
   }
 }
 
-StatusCode UpdateManagerSvc::unregister(void *instance){
+StatusCode UpdateManagerSvc::i_unregister(void *instance){
   Item *item = findItem(instance);
   if (item){
     // remove from parents

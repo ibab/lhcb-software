@@ -1,4 +1,4 @@
-// $Id: UpdateManagerSvc.h,v 1.6 2005-07-08 15:16:34 marcocle Exp $
+// $Id: UpdateManagerSvc.h,v 1.7 2005-07-14 14:59:21 marcocle Exp $
 #ifndef UPDATEMANAGERSVC_H 
 #define UPDATEMANAGERSVC_H 1
 
@@ -72,20 +72,20 @@ public:
 protected:
 
   /// Register a condition for an object
-  virtual StatusCode registerCondition(const std::string &condition, BaseObjectMemberFunction *mf);
+  virtual StatusCode i_registerCondition(const std::string &condition, BaseObjectMemberFunction *mf);
 
   /// Register a condition for an object
-  virtual StatusCode registerCondition(void *obj, BaseObjectMemberFunction *mf);
+  virtual StatusCode i_registerCondition(void *obj, BaseObjectMemberFunction *mf);
 
   /// Used to force an update of the given instance (ex. when the object is created during an event).
-  virtual StatusCode update(void *instance);
+  virtual StatusCode i_update(void *instance);
 
   /// Used to remove an object from the dependency network. 
   /// \warning{Removing an object is dangerous}
-  virtual StatusCode unregister(void *instance);
+  virtual StatusCode i_unregister(void *instance);
 
   /// Force an update of all the object depending on the given one for the next event.
-  virtual void       invalidate(void *instance);
+  virtual void       i_invalidate(void *instance);
 
 private:
 
