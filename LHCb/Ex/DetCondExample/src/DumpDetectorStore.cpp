@@ -1,4 +1,4 @@
-//$Id: DumpDetectorStore.cpp,v 1.2 2001-11-30 09:35:48 andreav Exp $
+//$Id: DumpDetectorStore.cpp,v 1.3 2005-07-14 15:11:17 marcocle Exp $
 #include <stdio.h>
 
 #include "DumpDetectorStore.h"
@@ -17,57 +17,43 @@ const IAlgFactory& DumpDetectorStoreFactory = Factory;
 //----------------------------------------------------------------------------
 
 /// Constructor
-DumpDetectorStore::DumpDetectorStore( const std::string&  name, 
-				      ISvcLocator*        pSvcLocator )
-  : Algorithm(name, pSvcLocator)
-{
-}
+DumpDetectorStore::DumpDetectorStore( const std::string&  name, ISvcLocator* pSvcLocator )
+  : GaudiAlgorithm(name, pSvcLocator)
+{}
 
 //----------------------------------------------------------------------------
 
-/// Initialization of the algorithm. 
-
-StatusCode DumpDetectorStore::initialize() {
-
-  MsgStream log(msgSvc(), name());
-  log << MSG::INFO << "Initialize()" << endreq;
-  return StatusCode::SUCCESS;
-
-}
-
-//----------------------------------------------------------------------------
-
-StatusCode DumpDetectorStore::execute( ) {
-  return StatusCode::SUCCESS;
-}
+StatusCode DumpDetectorStore::execute(){ return StatusCode::SUCCESS; }
 
 //----------------------------------------------------------------------------
 
 StatusCode DumpDetectorStore::finalize( ) {
 
+  StatusCode sc;
   MsgStream log(msgSvc(), name());
-  log << MSG::INFO << "Finalize()" << endreq;
+  log << MSG::INFO << "Finalize()" << endmsg;
   
   // Locate the IDataManagerSvc interface of the Detector Data Service
   IDataManagerSvc* detDataMgr;
-  StatusCode sc = detSvc()->queryInterface
-    ( IID_IDataManagerSvc, (void **)&detDataMgr);
+  sc = detSvc()->queryInterface ( IID_IDataManagerSvc, (void **)&detDataMgr);
   if( sc.isFailure() ) {
-    log << MSG::ERROR << "Can't query IDataManagerSvc interface" << endreq;
+    log << MSG::ERROR << "Can't query IDataManagerSvc interface" << endmsg;
     return sc;
   }
 
   // Traverse the transient data store and dump all contents
   DetDataAgent agent( msgSvc() );
-  log << MSG::INFO << "Now dump all contents of the data store" << endreq;
-  StatusCode status = detDataMgr->traverseTree( &agent );
-  if ( status.isSuccess() ) {
-    log << MSG::INFO << "Dumped all contents of the data store" << endreq;
+  log << MSG::INFO << "Now dump all contents of the data store" << endmsg;
+  sc = detDataMgr->traverseTree( &agent );
+  if ( sc.isSuccess() ) {
+    log << MSG::INFO << "Dumped all contents of the data store" << endmsg;
   } else {
-    log << MSG::INFO << "Nothing was found in the data store" << endreq;
+    log << MSG::INFO << "Nothing was found in the data store" << endmsg;
   }
   
-  return StatusCode::SUCCESS;
+  detDataMgr->release();
+  
+  return GaudiAlgorithm::finalize();
 }
 
 //----------------------------------------------------------------------------

@@ -1,9 +1,9 @@
-//$Header: /afs/cern.ch/project/cvs/reps/lhcb/Ex/DetCondExample/src/DumpDetectorStore.h,v 1.1.1.1 2001-09-14 15:45:03 andreav Exp $
+//$Header: /afs/cern.ch/project/cvs/reps/lhcb/Ex/DetCondExample/src/DumpDetectorStore.h,v 1.2 2005-07-14 15:11:17 marcocle Exp $
 #ifndef DETCONDEXAMPLE_DUMPDETECTORSTORE_H
 #define DETCONDEXAMPLE_DUMPDETECTORSTORE_H 1
 
 // Base class
-#include "GaudiKernel/Algorithm.h"
+#include "GaudiAlg/GaudiAlgorithm.h"
 
 ///---------------------------------------------------------------------------
 /** @class DumpDetectorStore DumpDetectorStore.h DetCondExample/DumpDetectorStore.h
@@ -14,15 +14,14 @@
     @date August 2001
 *///--------------------------------------------------------------------------
 
-class DumpDetectorStore : public Algorithm {
+class DumpDetectorStore : public GaudiAlgorithm {
 
  public:
 
   /// Constructor
   DumpDetectorStore ( const std::string& name, ISvcLocator* pSvcLocator ); 
   
-  // Algorithm standard methods
-  StatusCode initialize();
+  /// Only finalize is implemented (GaudiAlgorithm::initialize() is enough).
   StatusCode execute();
   StatusCode finalize();
   

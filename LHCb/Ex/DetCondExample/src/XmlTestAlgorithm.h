@@ -1,9 +1,10 @@
-// $Id: XmlTestAlgorithm.h,v 1.1 2001-12-17 20:13:25 andreav Exp $
+// $Id: XmlTestAlgorithm.h,v 1.2 2005-07-14 15:14:17 marcocle Exp $
 #ifndef DETCONDEXAMPLE_XMLTESTALGORITHM_H
 #define DETCONDEXAMPLE_XMLTESTALGORITHM_H 1
 
-// Base class
-#include "GaudiKernel/Algorithm.h"
+// Include files
+// from Gaudi
+#include "GaudiAlg/GaudiAlgorithm.h"
 
 ///---------------------------------------------------------------------------
 /** @class XmlTestAlgorithm XmlTestAlgorithm.h DetCondExample/XmlTestAlgorithm.h
@@ -17,18 +18,15 @@
     @date December 2001
 *///--------------------------------------------------------------------------
 
-class XmlTestAlgorithm : public Algorithm {
+class XmlTestAlgorithm : public GaudiAlgorithm {
 
  public:
 
   /// Constructor.
-  XmlTestAlgorithm( const std::string& name, 
-		    ISvcLocator* pSvcLocator ); 
+  XmlTestAlgorithm( const std::string& name, ISvcLocator* pSvcLocator ); 
 
   // Algorithm standard methods.
-  StatusCode initialize();
   StatusCode execute();
-  StatusCode finalize();
 
 };
 

@@ -1,9 +1,9 @@
-//$Id: DAQCondDBAlgorithm.h,v 1.4 2005-04-22 15:17:54 marcocle Exp $
+//$Id: DAQCondDBAlgorithm.h,v 1.5 2005-07-14 15:10:22 marcocle Exp $
 #ifndef DETCONDEXAMPLE_DAQCONDDBALGORITHM_H
 #define DETCONDEXAMPLE_DAQCONDDBALGORITHM_H 1
 
 // Base class
-#include "GaudiKernel/Algorithm.h"
+#include "GaudiAlg/GaudiAlgorithm.h"
 
 // Forward declarations
 class ICondDBAccessSvc;
@@ -22,7 +22,7 @@ namespace pool
     @date July 2002
 *///--------------------------------------------------------------------------
 
-class DAQCondDBAlgorithm : public Algorithm {
+class DAQCondDBAlgorithm : public GaudiAlgorithm {
 
  public:
 
