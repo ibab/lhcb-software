@@ -1,11 +1,14 @@
 ! =============================================================================
-! $Id: release.notes,v 1.207 2005-07-14 10:25:18 marcocle Exp $ 
+! $Id: release.notes,v 1.208 2005-07-14 13:01:47 marcocle Exp $ 
 ! =============================================================================
 ! package DetDesc
 ! package manager : Marco Clemencic, Juan Palacios
 ! =============================================================================
 
 !======================== DetDesc v15r3 2005-07-14 ========================
+! 2005-07-14 - Marco Clemencic
+ - EventClockSvc sets the DetDataSvc event time at initialization.
+
 ! 2005-07-14 - Juan Palacios
  - Switch off registering of conditions to UpdateManagerSvc in GeometryInfoPlus
    for time being. Needs re-structuring.

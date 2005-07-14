@@ -1,4 +1,4 @@
-// $Id: EventClockSvc.cpp,v 1.1 2005-07-08 15:16:34 marcocle Exp $
+// $Id: EventClockSvc.cpp,v 1.2 2005-07-14 13:01:47 marcocle Exp $
 // Include files 
 #include "GaudiKernel/SvcFactory.h"
 #include "GaudiKernel/MsgStream.h"
@@ -68,7 +68,6 @@ StatusCode EventClockSvc::initialize() {
 	} else {
 		log << MSG::DEBUG << "Got pointer to IDetDataSvc \"" << m_detDataSvcName << '"' << endmsg;
   }
-
   if (m_timeStep == 0) {
     sc = service(m_evtDataProviderName,m_evtDataProvider,true);
     if (!sc.isSuccess()) {
@@ -77,11 +76,15 @@ StatusCode EventClockSvc::initialize() {
     } else {
       log << MSG::DEBUG << "Got pointer to IDataProviderSvc \"" << m_evtDataProviderName << '"' << endmsg;
     }
-    log << MSG::WARNING << "!!!Only fake event times implemented!!!" << endmsg;
+    log << MSG::INFO << "Only fake event times implemented!" << endmsg;
   } else {
     log << MSG::INFO << "Event times generated from " << m_startTime << " with steps of " << m_timeStep << endmsg;
   }
-  
+
+  // Set the first event time at initialization.
+  m_detDataSvc->setEventTime(TimePoint(m_startTime));
+  log << MSG::DEBUG << "Event time initialized to " << m_startTime << endmsg;
+
   // register to the incident service for BeginEvent incidents
   sc = service("IncidentSvc", m_incidentSvc, false);
   if ( sc.isSuccess() ) {
