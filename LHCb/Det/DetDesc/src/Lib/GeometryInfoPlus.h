@@ -1,4 +1,4 @@
-// $Id: GeometryInfoPlus.h,v 1.6 2005-07-12 16:21:18 jpalac Exp $
+// $Id: GeometryInfoPlus.h,v 1.7 2005-07-14 16:13:32 jpalac Exp $
 #ifndef LIB_GEOMETRYINFOPLUS_H 
 #define LIB_GEOMETRYINFOPLUS_H 1
 
@@ -393,6 +393,10 @@ private:
   }
   
   inline bool childLoaded() const { return m_gi_childLoaded ; }
+
+  /// Register the parent IGeometryInfo. This should trigger a re-cahing
+  /// if a parent changes its validity.
+  StatusCode registerSupportGI();
 
   StatusCode calculateMatrices();
 

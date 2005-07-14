@@ -1,4 +1,4 @@
-// $Id: GeometryInfoPlus.cpp,v 1.9 2005-07-14 10:20:20 jpalac Exp $
+// $Id: GeometryInfoPlus.cpp,v 1.10 2005-07-14 16:13:32 jpalac Exp $
 // Include files 
 
 // GaudiKernel
@@ -207,7 +207,9 @@ StatusCode GeometryInfoPlus::initialize()
   log() << MSG::VERBOSE << "initialize" << endmsg;
   log() << MSG::VERBOSE << "alignment path " << m_alignmentPath << endmsg;
 
-  return ( getAlignmentCondition() ) ? cache() : StatusCode::FAILURE;  
+  //  return ( getAlignmentCondition() ) ? cache() : StatusCode::FAILURE;  
+  return ( getAlignmentCondition() ) ? 
+    m_ums->update(this) : StatusCode::FAILURE;  
 }
 //=============================================================================
 StatusCode GeometryInfoPlus::cache() 
@@ -373,10 +375,13 @@ StatusCode GeometryInfoPlus::setLocalDeltaMatrix(const HepTransform3D&
   log() << MSG::VERBOSE << "updating local delta matrix" << endmsg;
   m_localDeltaMatrix = new HepTransform3D(newDelta);
   m_deltaMatrices[0] = *m_localDeltaMatrix;
-  return (calculateFullMatrices(deltaBegin(), deltaEnd(), idealBegin()) ) ?
-    updateChildren() : 
-    StatusCode::FAILURE;
-  
+
+  if (!calculateFullMatrices(deltaBegin(), 
+                             deltaEnd(), 
+                             idealBegin()) ) return StatusCode::FAILURE;
+
+  m_ums->invalidate(this);
+  return m_ums->newEvent();    
 }
 //=============================================================================
 StatusCode GeometryInfoPlus::updateChildren() 
@@ -444,7 +449,6 @@ StatusCode GeometryInfoPlus::getAlignmentCondition()
       log() << MSG::VERBOSE << "getAlignmentCondition classID "
             << condition->toXml() << endmsg;
       return_value = StatusCode::SUCCESS;
-
     } else {
       log() << MSG::ERROR <<"Did not find condition " 
             << m_alignmentPath 
@@ -456,27 +460,40 @@ StatusCode GeometryInfoPlus::getAlignmentCondition()
   } else {
     log() << MSG::VERBOSE 
           << "No alignmentCondition requested. Assigning identity transformation" 
-          << endmsg;; 
+          << endmsg;
   }
 
-  //  return registerCondition();
-  return return_value;
+  return return_value && registerCondition() && registerSupportGI();
   
 }
 //=============================================================================
 StatusCode GeometryInfoPlus::registerCondition() 
 {
-
-
-  return (m_ums->registerCondition(this, 
-                                   m_alignmentPath, 
-                                   &GeometryInfoPlus::cache) ) ?
-    m_ums->registerCondition(this, 
-                             m_alignmentPath, 
-                             &GeometryInfoPlus::updateChildren)
-    : StatusCode::FAILURE;
+  log() << MSG::VERBOSE << "registerCondition" << endmsg;
+  return m_ums->registerCondition(this, 
+                                  m_alignmentPath, 
+                                  &GeometryInfoPlus::cache);
 }
+//=============================================================================
+StatusCode GeometryInfoPlus::registerSupportGI() 
+{
+  log() << MSG::VERBOSE << "registerSupportGI" << endmsg;
+  IGeometryInfo* gi = this->supportIGeometryInfo();
 
+//   return (gi) ? m_ums->registerCondition(this, gi, &IGeometryInfo::cache) :
+//     StatusCode::SUCCESS;
+  if (gi) {
+    log() << MSG::VERBOSE << "register parent GI!" << endmsg;
+    StatusCode sc = m_ums->registerCondition(this, gi, &IGeometryInfo::cache);
+    log() << MSG::VERBOSE << "Registered" << endmsg;
+    return sc;
+  } else {
+    log() << MSG::VERBOSE << "No parent " << endmsg;
+    return StatusCode::SUCCESS;
+  }
+  
+  
+}
 //=============================================================================
 const HepTransform3D& GeometryInfoPlus::localIdealMatrix() const
 {
