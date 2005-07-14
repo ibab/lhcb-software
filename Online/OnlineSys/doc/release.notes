@@ -5,6 +5,14 @@
 ! Purpose     : 
 !-----------------------------------------------------------------------------
 
+</PRE><H1><A NAME=v1r4>2005-07-15 OnlineSys v1r4</A></H1><PRE>
+This version uses Gaudi v16r4, LHCb v18r8
+
+ - Packages modified: GaudiOnline v1r2p1
+
+ - In GaudiOnline v1r2p1:
+   . Fix bug in decision setting algorithm returning always maximum value
+
 </PRE><H1><A NAME=v1r3>2005-06-27 OnlineSys v1r3</A></H1><PRE>
 This version uses Gaudi v16r4, LHCb v18r7
 
