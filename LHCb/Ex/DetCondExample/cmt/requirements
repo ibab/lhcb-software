@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.31 2005-07-07 13:07:17 marcocle Exp $
+# $Id: requirements,v 1.32 2005-07-14 15:28:56 marcocle Exp $
 package DetCondExample
 version v7r4
 
@@ -18,6 +18,9 @@ use DetDesc v* Det
 use DetDescCnv v* Det
 use XmlDDDB v* Det
 
+# Xml Parsing services (XmlCnvSvc)
+use XmlTools v* Tools
+
 # Detector Conditions
 use DetCond v* Det
 apply_tag NEEDS_COOL_FACTORY
@@ -29,25 +32,19 @@ use unixodbc v* LCG_Interfaces
 set ODBCINST $(unixodbc_home)
 
 # library path needed for sqlite backend
-#use sqlite   v* LCG_Interfaces
-#### sqlite is not yet working
+use sqlite   v* LCG_Interfaces
 
 # library path needed for oracle backend
 macro Oracle_version "10.1.0.3-1"
 macro Oracle_base "$(LCG_external)/oracle"
 path_remove LD_LIBRARY_PATH "/oracle/" WIN32 ""
-path_append LD_LIBRARY_PATH "$(Oracle_base)/$(Oracle_version)/$(CMTCONFIG)/lib" WIN32 "" \
-	    rh73_gcc323_dbg "$(Oracle_base)/$(Oracle_version)/rh73_gcc323/lib" \
-            slc3_ia32_gcc323_dbg "$(Oracle_base)/$(Oracle_version)/slc3_ia32_gcc323/lib"
+path_append LD_LIBRARY_PATH "$(Oracle_base)/$(Oracle_version)/$(LCG_system)/lib" WIN32 ""
 # remove entries due to Windows Oracle installation
 path_remove PATH "" WIN32 "\Oracle\"
 path_remove PATH "" WIN32 "\oracle\"
-path_append PATH "" WIN32 "$(Oracle_base)\$(Oracle_version)\win32_vc71\bin"
-set TNS_ADMIN "/afs/cern.ch/project/oracle/admin" WIN32 "Z:\cern.ch\project\oracle\admin"
+path_append PATH "" WIN32 "$(Oracle_base)\$(Oracle_version)\$(LCG_system)\bin"
+set TNS_ADMIN "$SITEROOT/project/oracle/admin" WIN32 "$SITEROOT\project\oracle\admin"
 
-
-# Xml Parsing services (XmlCnvSvc)
-use XmlTools v* Tools
 
 # XML detector description database location
 set DETCONDEXAMPLE_XMLDDDB ${DETCONDEXAMPLEROOT}/XMLDDDB
