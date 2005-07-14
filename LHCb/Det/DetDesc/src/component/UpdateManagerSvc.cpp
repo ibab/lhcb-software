@@ -1,4 +1,4 @@
-// $Id: UpdateManagerSvc.cpp,v 1.5 2005-07-08 15:16:34 marcocle Exp $
+// $Id: UpdateManagerSvc.cpp,v 1.6 2005-07-14 07:33:55 marcocle Exp $
 // Include files 
 #include "GaudiKernel/SvcFactory.h"
 #include "GaudiKernel/MsgStream.h"
@@ -145,6 +145,10 @@ IDetDataSvc *UpdateManagerSvc::detDataSvc() const {
 }
 StatusCode UpdateManagerSvc::registerCondition(const std::string &condition, BaseObjectMemberFunction *mf){
 	MsgStream log(msgSvc(),name());
+  if (condition.empty()) {
+    log << MSG::WARNING << "Ignoring request for no condition (empty string given)" << endmsg;
+    return StatusCode::SUCCESS;
+  }
 	log << MSG::DEBUG << "registering condition \"" << condition
 	    << "\" for object of type " << mf->type().name() << endmsg;
   // find the object
