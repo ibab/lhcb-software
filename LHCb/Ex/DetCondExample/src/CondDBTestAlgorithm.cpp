@@ -1,4 +1,4 @@
-// $Id: CondDBTestAlgorithm.cpp,v 1.8 2005-06-23 13:34:22 marcocle Exp $
+// $Id: CondDBTestAlgorithm.cpp,v 1.9 2005-07-14 15:26:22 marcocle Exp $
 // Include files 
 
 // from Gaudi
@@ -8,9 +8,7 @@
 
 #include "DetDesc/Condition.h"
 #include "DetDesc/DetectorElement.h"
-#include "DetDesc/IAlignment.h"
 #include "DetDesc/IGeometryInfo.h"
-#include "DetDesc/ISlowControl.h"
 #include "DetDesc/LVolume.h"
 
 #include "DetDesc/IUpdateManagerSvc.h"
@@ -105,13 +103,13 @@ StatusCode CondDBTestAlgorithm::execute() {
 
   // Retrieve alignment for the LHCb detector
   info() << "Retrieve the alignment Condition for the LHCb detector" << endmsg;
-  Condition* alLHCb = lhcb->alignment()->condition();
+  Condition* alLHCb = lhcb->condition("Alignment");
   sc = i_analyse( alLHCb );
   if( !sc.isSuccess() ) return sc;
 
   // Retrieve slowControl for the LHCb detector
   info() << "Retrieve the slowControl Condition for the LHCb detector" << endmsg;
-  Condition* scLHCb = lhcb->slowControl()->condition();
+  Condition* scLHCb = lhcb->condition("SlowControl");
   sc = i_analyse( scLHCb );
   if( !sc.isSuccess() ) return StatusCode::FAILURE;
   if (m_evtCount == 4){
@@ -143,7 +141,7 @@ StatusCode CondDBTestAlgorithm::execute() {
 
   // Retrieve slowControl for the Hcal detector
   info() << "Retrieve the slowControl Condition for the Hcal detector" << endmsg;
-  Condition* scHcal = hcal->slowControl()->condition();
+  Condition* scHcal = hcal->condition("SlowControl");
   sc = i_analyse( scHcal );
   if( !sc.isSuccess() ) return StatusCode::FAILURE;
 

@@ -1,13 +1,8 @@
-//$Id: XmlTestAlgorithm.cpp,v 1.3 2005-07-14 15:14:17 marcocle Exp $
+//$Id: XmlTestAlgorithm.cpp,v 1.4 2005-07-14 15:26:22 marcocle Exp $
 
 #include "XmlTestAlgorithm.h"
 #include "DetDesc/Condition.h"
 #include "DetDesc/DetectorElement.h"
-#include "DetDesc/IAlignment.h"
-#include "DetDesc/ICalibration.h"
-#include "DetDesc/IReadOut.h"
-#include "DetDesc/ISlowControl.h"
-#include "DetDesc/IFastControl.h"
 #include "GaudiKernel/AlgFactory.h"
 #include "GaudiKernel/SmartDataPtr.h"
 
