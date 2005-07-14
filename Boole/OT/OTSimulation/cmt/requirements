@@ -1,7 +1,7 @@
-# $Id: requirements,v 1.7 2005-04-15 06:37:33 cattanem Exp $
+# $Id: requirements,v 1.8 2005-07-14 06:23:27 cattanem Exp $
 package OTSimulation
 
-version v1r4
+version v2r0
 
 branches OTSimulation cmt doc src options
 
@@ -13,12 +13,6 @@ use OTDAQ v*  OT
 library OTSimulation ../src/*.cpp
 
 apply_pattern component_library library=OTSimulation
-
-
-
-
-
-
 
 
 

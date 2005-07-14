@@ -1,9 +1,11 @@
-! $Id: release.notes,v 1.13 2005-07-12 09:30:55 jnardull Exp $
+! $Id: release.notes,v 1.14 2005-07-14 06:23:27 cattanem Exp $
 Package         : OTSimulation
 Package manager : Jacopo Nardulli
 
+!==================== OTSimulation v2r0 2005-07-13 ======================
 ! 2005-07-12 Jacopo Nardulli
- - Introduction of the verion v2 in OTFillRawBuffer
+ - Introduction of the OT RawBank version v2 in OTFillRawBuffer. Requires OTDAQ
+   v3r3 or greater to decode
 
 ! 2005-06-29 Jacopo Nardulli
  - Fixing bug in OTFillRawBuffer
