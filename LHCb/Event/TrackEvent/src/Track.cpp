@@ -1,4 +1,4 @@
-// $Id: Track.cpp,v 1.12 2005-06-29 13:11:48 erodrigu Exp $ // Include files
+// $Id: Track.cpp,v 1.13 2005-07-14 10:17:00 hernando Exp $ // Include files
 
 // local
 #include "Event/Track.h"
@@ -262,12 +262,12 @@ void Track::addToStates(const State& state)
 {
   State* local = state.clone();
   int order = checkFlag(TrackKeys::Backward) ? -1 : 1;
-  std::vector<State*>::iterator i = 
+  std::vector<State*>::iterator ipos = 
     std::upper_bound(m_states.begin(),
                      m_states.end(),
                      local,  
                      TrackFunctor::orderByZ<State>(order));
-  m_states.insert(i,local);    
+  m_states.insert(ipos,local);    
 }
 
 //=============================================================================

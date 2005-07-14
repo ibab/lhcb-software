@@ -4,6 +4,10 @@
 ! Purpose     : Package for the tracking event model classes
 !-----------------------------------------------------------------------------
 
+! 2005-07-14 - Jose A. Hernando
+ - improving the streamer of Track
+ - fix bug in ordering adding the states to track
+
 ! 2005-06-28 - Eduardo Rodrigues
  - added Track clone method with key
 

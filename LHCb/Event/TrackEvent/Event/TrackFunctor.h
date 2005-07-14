@@ -100,7 +100,7 @@ namespace TrackFunctor
     bool operator()( const T* t1,
                      const T* t2 ) const
     {
-      return (m_order)*t1->z() > (m_order)*t2->z();
+      return (m_order)*t1->z() < (m_order)*t2->z();
     }
   };
 
