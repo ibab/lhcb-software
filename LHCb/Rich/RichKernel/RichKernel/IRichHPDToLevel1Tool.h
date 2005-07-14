@@ -5,7 +5,7 @@
  *  Header file for tool interface : IRichHPDToLevel1Tool
  *
  *  CVS Log :-
- *  $Id: IRichHPDToLevel1Tool.h,v 1.4 2005-05-13 14:30:09 jonrob Exp $
+ *  $Id: IRichHPDToLevel1Tool.h,v 1.5 2005-07-14 14:10:41 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   2004-12-18
@@ -92,6 +92,12 @@ public:
    *  @return Rich identifier
    */
   virtual const Rich::DetectorType richDetector( const RichDAQ::Level1ID l1ID ) const = 0;
+
+  /** Returns a list of all valid Level1 ids
+   *
+   *  @return List of all valid Level1 IDs
+   */
+  virtual const RichDAQ::Level1IDs & level1IDs() const = 0;
 
 };
 

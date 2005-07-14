@@ -5,7 +5,7 @@
  *  Header file for RICH DAQ general definitions
  *
  *  CVS Log :-
- *  $Id: RichDAQDefinitions.h,v 1.4 2005-05-13 14:30:09 jonrob Exp $
+ *  $Id: RichDAQDefinitions.h,v 1.5 2005-07-14 14:10:41 jonrob Exp $
  *
  *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
  *  @date   2003-11-06
@@ -66,6 +66,9 @@ namespace RichDAQ {
 
   /// Vector of HPD Hardware IDs
   typedef std::vector< HPDHardwareID >                      HPDHardwareIDs;
+
+  /// Vector of Level 1 IDs
+  typedef std::vector< Level1ID >                           Level1IDs;
 
   /// Mapping from Level1 ID to list of HPD RichSmartIDs
   typedef RichMap< const RichDAQ::Level1ID, RichSmartID::Collection > L1ToSmartIDs;
