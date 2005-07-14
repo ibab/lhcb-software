@@ -1,20 +1,19 @@
-! $Id: release.notes,v 1.83 2005-07-13 12:34:44 dhcroft Exp $
+! $Id: release.notes,v 1.84 2005-07-14 06:20:23 cattanem Exp $
 package VeloDet
 package manager : Velo Group
 
+!========================= VeloDet v9r8 2005-07-11 =========================
 ! 2005-07-13 - David Hutchcroft
  - Removed Reversed phi ranges of R sectors: was not correct
 
-!========================= VeloDet v9r8 2005-07-07 =========================
 ! 2005-07-11 - Mark Tobin
  - Added method to DeVelo to allow re-caching of geometry information and to
- allow the recalculation of z position after changes to the geometry (eg after
- changes to alignment parameters
+   allow the recalculation of z position after changes to the geometry (eg after
+   changes to alignment parameters
 
 ! 2005-07-07 - Mark Tobin
  - Added method to cache geometry information outside of the initialise 
- method in DeVeloSensor.  Will allow geometry to be changed at later
- time.
+   method in DeVeloSensor.  Will allow geometry to be changed at later time.
 
 ! 2005-07-07 - Marco Cattaneo
  - Remove dict stuff, moved to DetSys
