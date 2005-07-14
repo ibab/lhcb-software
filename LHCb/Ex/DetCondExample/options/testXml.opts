@@ -1,4 +1,4 @@
-//$Id: testXml.opts,v 1.6 2005-06-23 08:46:39 marcocle Exp $
+//$Id: testXml.opts,v 1.7 2005-07-14 15:15:13 marcocle Exp $
 //==============================================================
 // Job options for DetCondExample test of XML files
 //==============================================================
@@ -11,7 +11,7 @@
 
 ApplicationMgr.TopAlg  = { "GaudiSequencer" };
 GaudiSequencer.Members   = { };
-GaudiSequencer.Members  += { "EvtClock" };
+//GaudiSequencer.Members  += { "EvtClock" };
 GaudiSequencer.Members  += { "XmlTestAlgorithm" };
 GaudiSequencer.Members  += { "DumpDetectorStore" };
 
@@ -23,11 +23,13 @@ GaudiSequencer.Members  += { "DumpDetectorStore" };
 ApplicationMgr.EvtSel = "NONE";
 
 // Number of events to be processed (default is 10)
-ApplicationMgr.EvtMax = 3;
+ApplicationMgr.EvtMax = 2;
 
+// The event time is not really used but it is better to test it
+ApplicationMgr.ExtSvc += { "EventClockSvc" };
 // Event clock attributes
-EvtClock.startTime = 12;
-EvtClock.delayTime = 5;
+EventClockSvc.StartTime = 12;
+EventClockSvc.TimeStep  = 5;
 
 //--------------------------------------------------------------
 // Message service options
