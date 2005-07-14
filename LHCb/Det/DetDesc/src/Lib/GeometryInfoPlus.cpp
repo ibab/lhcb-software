@@ -1,4 +1,4 @@
-// $Id: GeometryInfoPlus.cpp,v 1.8 2005-07-12 16:21:18 jpalac Exp $
+// $Id: GeometryInfoPlus.cpp,v 1.9 2005-07-14 10:20:20 jpalac Exp $
 // Include files 
 
 // GaudiKernel
@@ -444,6 +444,7 @@ StatusCode GeometryInfoPlus::getAlignmentCondition()
       log() << MSG::VERBOSE << "getAlignmentCondition classID "
             << condition->toXml() << endmsg;
       return_value = StatusCode::SUCCESS;
+
     } else {
       log() << MSG::ERROR <<"Did not find condition " 
             << m_alignmentPath 
@@ -458,7 +459,9 @@ StatusCode GeometryInfoPlus::getAlignmentCondition()
           << endmsg;; 
   }
 
-  return registerCondition();
+  //  return registerCondition();
+  return return_value;
+  
 }
 //=============================================================================
 StatusCode GeometryInfoPlus::registerCondition() 

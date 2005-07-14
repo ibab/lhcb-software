@@ -1,9 +1,13 @@
 ! =============================================================================
-! $Id: release.notes,v 1.205 2005-07-14 07:37:11 marcocle Exp $ 
+! $Id: release.notes,v 1.206 2005-07-14 10:20:20 jpalac Exp $ 
 ! =============================================================================
 ! package DetDesc
 ! package manager : Marco Clemencic, Juan Palacios
 ! =============================================================================
+
+! 2005-07-14 - Juan Palacios
+ - Switch off registering of conditions to UpdateManagerSvc in GeometryInfoPlus
+   for time being. Needs re-structuring.
 
 !======================== DetDesc v15r3 2005-07-14 ========================
 ! 2005-07-14 - Marco Clemencic
