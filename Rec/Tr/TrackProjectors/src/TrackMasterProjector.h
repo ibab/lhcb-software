@@ -53,7 +53,7 @@ public:
 
 protected:
 
-  StatusCode selectProjector( const Measurement::Type& type );
+  StatusCode selectProjector( unsigned int type );
 
 private:
 
@@ -62,9 +62,9 @@ private:
   std::string m_VeloRProjName;
   std::string m_VeloPhiProjName;
 
-  std::map<Measurement::Type,ITrackProjector*> m_projectors;
+  std::map<unsigned int,ITrackProjector*> m_projectors;
 
-  Measurement::Type m_selectedMeasType;
+  unsigned int m_selectedMeasType;
 
   ITrackProjector*  m_selectedProjector;
 };

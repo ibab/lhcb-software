@@ -4,6 +4,9 @@
 ! Purpose     : Package for tracking projectors
 !-----------------------------------------------------------------------------
 
+! 2005-07-14 - Jose A. Hernando
+ - TrackMasterProjector uses now unsigned int instead of type of measurements
+
 !====================== TrackProjectors v1r1 2005-06-24 ======================
 ! 2005-06-15 - Eduardo Rodrigues
  - TrackMasterProjector can now handle all types of measurements

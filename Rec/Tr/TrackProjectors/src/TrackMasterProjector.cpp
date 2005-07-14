@@ -39,8 +39,7 @@ StatusCode TrackMasterProjector::project( const State& state,
 //=============================================================================
 // select the projector
 //=============================================================================
-StatusCode TrackMasterProjector::selectProjector
-( const Measurement::Type& type ) 
+StatusCode TrackMasterProjector::selectProjector( unsigned int type ) 
 {
   if ( m_projectors.find(type) == m_projectors.end() ) {
     fatal() << "No TrackXxxProjector in TrackMasterProjector for this measurement of type = " << type << "!";
