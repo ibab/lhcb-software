@@ -4,6 +4,11 @@
 ! Purpose     : collect Det packages
 !-----------------------------------------------------------------------------
 
+! 2005-07-14 - Juan Palacios
+ - Added AlignmentCondition to DetDict
+ - Make DetDictLib a components library in cmt/requirements for dictionary 
+   loading in Linux.
+
 !========================= DetSys v7r3 2005-07-14 =========================
 ! 2005-07-14 - Marco Cattaneo
  - Use DetDesc v15r3, DetDescCnv v2r8, VeloDet v9r8, MuonDet v4r8,

@@ -35,7 +35,7 @@
   <class name="LVolume"          />
   <class name="LAssembly"        />
 
-  <class name="Condition"            />
+  <class pattern="*Condition"        />
   <class name="Surface"              />
   <class name="DetectorElement"      />
   <class name="TabulatedProperty"    />

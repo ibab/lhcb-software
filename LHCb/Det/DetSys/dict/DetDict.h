@@ -1,6 +1,6 @@
-// $Id: DetDict.h,v 1.2 2005-07-07 15:21:13 cattanem Exp $
+// $Id: DetDict.h,v 1.3 2005-07-14 11:04:09 jpalac Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.2 $
+// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.3 $
 // ============================================================================
 #ifndef BENDERDET_BENDERDETDICT_H 
 #define BENDERDET_BENDERDETDICT_H 1
@@ -41,6 +41,7 @@
 #include "DetDesc/LAssembly.h"
 // ============================================================================
 #include "DetDesc/Condition.h"
+#include "DetDesc/AlignmentCondition.h"
 #include "DetDesc/Surface.h"
 #include "DetDesc/DetectorElement.h"
 #include "DetDesc/TabulatedProperty.h"
