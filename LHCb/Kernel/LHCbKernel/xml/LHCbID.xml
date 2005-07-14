@@ -216,9 +216,14 @@ return id;
         type    = "unsigned int"
         name    = "channelID"
         const   = "TRUE"
-        desc    = "Returns the ChannelID part, for printing...">
+        desc    = "General ID: returns detector ID = internal unsingned int">
         <code>
-return m_lhcbID &amp; IDMask;
+if (isVelo()) return veloID().channelID();
+if (isST()) return stID().channelID();
+if (isOT()) return otID().channelID();
+if (isRich()) return richID().key();
+if (isCalo()) return m_lhcbID &amp; IDMask;
+return 0;
         </code>
       </method>
 
