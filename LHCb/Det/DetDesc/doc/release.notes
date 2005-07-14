@@ -1,11 +1,14 @@
 ! =============================================================================
-! $Id: release.notes,v 1.204 2005-07-14 06:30:07 cattanem Exp $ 
+! $Id: release.notes,v 1.205 2005-07-14 07:37:11 marcocle Exp $ 
 ! =============================================================================
 ! package DetDesc
 ! package manager : Marco Clemencic, Juan Palacios
 ! =============================================================================
 
 !======================== DetDesc v15r3 2005-07-14 ========================
+! 2005-07-14 - Marco Clemencic
+ - UpdateManagerSvc ignore requests with empty condition paths.
+
 ! 2005-07-13 - Juan Palacios
  - Added UpdateManagerSvc to GeometryInfoPlus.
  - Changed StatusCode IGeometryInfo::updateMatrices(gi_iterator, gi_iterator)
