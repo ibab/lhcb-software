@@ -1,21 +1,16 @@
 
+//-----------------------------------------------------------------------------
 /** @file MCRichDigitsToRawBufferAlg.cpp
  *
  *  Implementation file for RICH DAQ algorithm : MCRichDigitsToRawBufferAlg
  *
  *  CVS Log :-
- *  $Id: MCRichDigitsToRawBufferAlg.cpp,v 1.1 2005-06-18 11:36:05 jonrob Exp $
- *  $Log: not supported by cvs2svn $
- *  Revision 1.2  2005/01/13 12:59:36  jonrob
- *  Update printout
- *
- *  Revision 1.1  2005/01/07 13:21:22  jonrob
- *  Add new algorithm
- *
+ *  $Id: MCRichDigitsToRawBufferAlg.cpp,v 1.2 2005-07-14 14:12:17 jonrob Exp $
  *
  *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
  *  @date   2003-11-09
  */
+//-----------------------------------------------------------------------------
 
 // local
 #include "MCRichDigitsToRawBufferAlg.h"
@@ -55,27 +50,35 @@ StatusCode MCRichDigitsToRawBufferAlg::initialize()
   acquireTool( "RichRawDataFormatTool", m_rawFormatT );
   acquireTool( "RichHPDToLevel1Tool",   m_level1     );
 
+  // create a dummy L1data object with an emtpy vector for each L1 board
+  m_dummyMap.clear();
+  for ( RichDAQ::Level1IDs::const_iterator iID = m_level1->level1IDs().begin();
+        iID != m_level1->level1IDs().end(); ++iID )
+  {
+    m_dummyMap[ *iID ];
+  }
+  debug() << "Created " << m_dummyMap.size() << " entries in empty L1 map : L1IDs = " 
+          << m_level1->level1IDs() << endreq;
+
   info() << "Using RICH Level1 buffer format : " << m_version << endreq;
 
-  return StatusCode::SUCCESS;
-};
+  return sc;
+}
 
 // Main execution
 StatusCode MCRichDigitsToRawBufferAlg::execute()
 {
 
-  // debug message
-  debug() << "Execute" << endreq;
-
   // Retrieve MCRichDigits
   const MCRichDigits * digits = get<MCRichDigits>( m_digitsLoc );
 
   // new rich data map
-  RichDAQ::L1Map L1Data;
+  RichDAQ::L1Map L1Data = m_dummyMap;
 
   // Loop over digits and sort according to L1 and HPD
   for ( MCRichDigits::const_iterator iDigit = digits->begin();
-        iDigit != digits->end(); ++iDigit ) {
+        iDigit != digits->end(); ++iDigit ) 
+  {
 
     // Get Level 1 ID number
     const RichDAQ::Level1ID L1ID = m_level1->levelL1ID( (*iDigit)->key() );
@@ -91,11 +94,15 @@ StatusCode MCRichDigitsToRawBufferAlg::execute()
   // Fill raw buffer
   m_rawFormatT->createDataBank( L1Data, (RichDAQ::BankVersion)m_version );
 
-  debug() << "Created " << L1Data.size() << " RICH L1 bank(s) for "
-          << digits->size() << " MCRichDigits" << endreq;
+  // debug printout
+  if ( msgLevel(MSG::DEBUG) )
+  {
+    debug() << "Created " << L1Data.size() << " RICH L1 bank(s) for "
+            << digits->size() << " MCRichDigits" << endreq;
+  }
 
   return StatusCode::SUCCESS;
-};
+}
 
 //  Finalize
 StatusCode MCRichDigitsToRawBufferAlg::finalize()

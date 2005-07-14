@@ -4,6 +4,11 @@
 ! Purpose     : Rich Digitisation
 !-----------------------------------------------------------------------------
 
+! 2005-07-14 - Chris Jones
+ - Add fix to make sure all a bank exists for all Level1 boards.
+   Previously, if a Level 1 board had no hits in any HPD, nothing was saved for
+   that board.
+
 !======================== RichReadout v1r13 2005-06-21 =======================
 ! 2005-06-21 - Chris Jones
  - Adapt to changes in RichKernel base classes and RichToolRegistry

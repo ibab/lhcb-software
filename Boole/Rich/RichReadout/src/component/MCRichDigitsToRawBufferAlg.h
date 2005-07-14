@@ -5,7 +5,7 @@
  *  Header file for RICH DAQ algorithm : MCRichDigitsToRawBufferAlg
  *
  *  CVS Log :-
- *  $Id: MCRichDigitsToRawBufferAlg.h,v 1.2 2005-06-23 15:10:12 jonrob Exp $
+ *  $Id: MCRichDigitsToRawBufferAlg.h,v 1.3 2005-07-14 14:12:17 jonrob Exp $
  *
  *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
  *  @date   2003-11-06
@@ -67,6 +67,9 @@ private: // data
 
   /// Data Format version
   unsigned int m_version;
+
+  /// starting map
+  RichDAQ::L1Map m_dummyMap;
 
 };
 
