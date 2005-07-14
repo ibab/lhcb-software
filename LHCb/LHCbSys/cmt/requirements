@@ -33,7 +33,7 @@ use VeloDet        	v9r8    Det     # Mark Tobin
 use DetDesc        	v15r3   Det     # Marco Clemencic, Juan Palacios
 use DetDescCnv          v2r8    Det     # Marco Clemencic, Juan Palacios
 use XmlTools            v3r6    Tools   # Marco Clemencic
-use OTDet               v5r5p1  Det     # Jacopo Nardulli
+use OTDet               v5r6    Det     # Jacopo Nardulli
 use CaloDet             v6r9p1  Det     # Ivan Belyaev
 use CaloDetXmlCnv	v2r3p1	Det     # Ivan Belyaev
 use MuonDet        	v4r8    Det     # Alessia Satta, Alessio Sarti
@@ -76,10 +76,10 @@ use MuonAssociators    	v1r5p1	Muon        # N.N.
 use AsctToLinker	v1r4	Rec         # N.N.
 
 # L1/Raw buffer encoding and decoding
-use DAQSys		v1r5p1  DAQ     # Marco Cattaneo
+use DAQSys		v1r6    DAQ     # Marco Cattaneo
 use MuonDAQ		v1r2p2	Muon    # Alessia Satta
 use STDAQ		v1r5    IT      # Matt Needham
-use OTDAQ		v3r2p1	OT      # Jacopo Nardulli
+use OTDAQ		v3r3    OT      # Jacopo Nardulli
 use VeloDAQ		v2r3p2	Velo    # Chris Parkes
 use RichDAQ		v2r2    Rich    # Chris Jones
 use CaloDAQ             v1r1    Calo    # Olivier Deschamps

@@ -5,15 +5,15 @@
 ! Purpose     : LHCb OO kernel packages
 !-----------------------------------------------------------------------------
 
-</PRE><H1><A NAME=v18r7>2005-07-08 LHCbSys v18r8</A></H1><PRE>
+</PRE><H1><A NAME=v18r7>2005-07-14 LHCbSys v18r8</A></H1><PRE>
 This version uses Gaudi v16r4
 
  - New packages      : LinkerInstances v1r0 - dictionaries of Linker objects for
                                               use with GaudiPython
  - Modified packages : EventSys v20r8, DAQEvent v5r2p2, PhysEvent v8r10,
      PackedEvent v1r1, DetSys v7r3, DetDesc v15r3, DetDescCnv v2r8, VeloDet v9r8,
-     MuonDet v4r8, CaloDet v6r9p1, OTDet v5r5p1, XmlTools v3r6, TrgTools v7r5,
-     DetCond v7r5, XmlTools v3r6, DAQSys v1r5p1, VeloDAQ v2r3p2
+     MuonDet v4r8, CaloDet v6r9p1, OTDet v5r6, XmlTools v3r6, TrgTools v7r5,
+     DetCond v7r5, XmlTools v3r6, DAQSys v1r6, VeloDAQ v2r3p2, OTDAQ v3r3
 
  - In DoxyFile.cfg
    . Get dot tool configuration from dottools.cfg, rather than from makedoc.py
@@ -32,6 +32,11 @@ This version uses Gaudi v16r4
    . Bug fix: last Velo Phi bank was missing from in L1Buffer, in cases when this
      bank would be empty
 
+ - In OTDAQ v3r3
+   . Add support for OT RawBank v2 (one Tell1 header word instead of 3)
+   . Change readout gate from 50ns to 75ns
+   . Do not create GOL header for empty GOLs
+
  - In DetSys v7r3
    . Add creation of LCG dictionaries for all LHCb detector description classes,
      to allow python bindings
@@ -41,6 +46,7 @@ This version uses Gaudi v16r4
      setting and propagation of alignment transformation parameters
    . Remove GeometryInfo class, add interfaces previously in DetCond
    . TabulatedProperty now inherits from ValidDataObject
+   . UpdateManagerSvc now registers as IncidentListener to BeginEvent
 
  - In XmlTools v3r6, DetDescCnv v2r8
    . Implemented lock on cached documents (needs explicit release)
@@ -48,11 +54,18 @@ This version uses Gaudi v16r4
  - In DetDescCnv v2r8
    . XmlBaseConditionCnv::fillObjRefs now returns status of internal call
 
- - In VeloDet v9r8, TrgTools v7r5
+ - In TrgTools v7r5
    . Backward compatible changes to cope with v200507 geometry
 
- - In OTDet v5r5p1, CaloDet v6r9p1
+ - In VeloDet v9r8
+   . Add caching methods for recalculation of Z position after alignment changes
+
+ - In CaloDet v6r9p1
    . Trivial changes to allow creation of lcg dictionaries
+
+ - In OTDet v5r6
+   . Trivial changes to allow creation of lcg dictionaries
+   . Remove ResolutionCor in DeOTDetector, following test beam 2005
 
  - In MuonDet v4r8
    . Fix memory leak in XmlMuonRegionCnv
