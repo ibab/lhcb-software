@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE DDDB SYSTEM "../DTD/structure.dtd">
-<!-- $Id: structure.xml,v 1.1 2001-12-17 15:46:31 andreav Exp $ -->
+<!-- $Id: structure.xml,v 1.2 2005-07-14 15:19:27 marcocle Exp $ -->
 <DDDB>
 
    <parameter name="InCell"      value="40.666667*mm" />
@@ -19,11 +19,11 @@
                        support="/dd/Structure/LHCb"
                        npath="EcalSubsystem" />
 
-         <alignmentinfo   condition="/dd/Alignment/Ecal/alEcal"/>
-         <calibrationinfo condition="/dd/Calibration/Ecal/caEcal"/>
-         <readoutinfo     condition="/dd/ReadOut/Ecal/roEcal"/>
-         <slowcontrolinfo condition="/dd/SlowControl/Ecal/scEcal"/>
-         <fastcontrolinfo condition="/dd/FastControl/Ecal/fcEcal"/>
+         <conditioninfo name="Alignment"   condition="/dd/Alignment/Ecal/alEcal"/>
+         <conditioninfo name="Calibration" condition="/dd/Calibration/Ecal/caEcal"/>
+         <conditioninfo name="Readout"     condition="/dd/ReadOut/Ecal/roEcal"/>
+         <conditioninfo name="SlowControl" condition="/dd/SlowControl/Ecal/scEcal"/>
+         <conditioninfo name="FastControl" condition="/dd/FastControl/Ecal/fcEcal"/>
 
          <detelemref href = "#EcalOuter"/>
          <detelemref href = "#EcalMiddle"/>

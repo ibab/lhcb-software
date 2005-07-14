@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE DDDB SYSTEM "../DTD/structure.dtd">
-<!-- $Id: structure.xml,v 1.1 2001-12-17 16:52:41 andreav Exp $ -->
+<!-- $Id: structure.xml,v 1.2 2005-07-14 15:19:27 marcocle Exp $ -->
 <DDDB>
 
   <parameter name="InCell"   value="131.3*mm"  />
@@ -20,7 +20,7 @@
 		       support = "/dd/Structure/LHCb"
                        npath   = "HcalSubsystem" />
 
-         <slowcontrolinfo condition="/dd/SlowControl/Hcal/scHcal"/>
+         <conditioninfo name="SlowControl" condition="/dd/SlowControl/Hcal/scHcal"/>
 
          <detelemref href = "#HcalOuter" />
          <detelemref href = "#HcalInner" />
