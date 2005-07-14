@@ -1,14 +1,16 @@
 
+//-----------------------------------------------------------------------------
 /** @file RawBufferToRichDigitsAlg.h
  *
  *  Header file for RICH DAQ algorithm : RawBufferToRichDigitsAlg
  *
  *  CVS Log :-
- *  $Id: RawBufferToRichDigitsAlg.h,v 1.7 2005-06-23 14:50:28 jonrob Exp $
+ *  $Id: RawBufferToRichDigitsAlg.h,v 1.8 2005-07-14 14:13:38 jonrob Exp $
  *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   2003-11-06
  */
+//-----------------------------------------------------------------------------
 
 #ifndef RICHDAQ_RAWBUFFERTORICHDIGITSALG_H
 #define RICHDAQ_RAWBUFFERTORICHDIGITSALG_H 1
@@ -25,6 +27,7 @@
 // Interfaces
 #include "RichKernel/IRichRawBufferToSmartIDsTool.h"
 
+//-----------------------------------------------------------------------------
 /** @class RawBufferToRichDigitsAlg RawBufferToRichDigitsAlg.h
  *
  *  Algorithm to create RichDigits from RawEvent object
@@ -32,6 +35,7 @@
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   2003-11-06
  */
+//-----------------------------------------------------------------------------
 
 class RawBufferToRichDigitsAlg : public RichAlgBase {
 

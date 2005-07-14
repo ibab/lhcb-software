@@ -5,7 +5,7 @@
  *  Implementation file for class : RichRawDataFormatTool
  *
  *  CVS Log :-
- *  $Id: RichRawDataFormatTool.cpp,v 1.14 2005-05-13 14:22:12 jonrob Exp $
+ *  $Id: RichRawDataFormatTool.cpp,v 1.15 2005-07-14 14:13:38 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date 2004-12-18
@@ -183,7 +183,7 @@ RichRawDataFormatTool::createDataBank( const RichSmartID::Collection & smartIDs,
       dataBank = (RichHPDDataBank*)zsData;
     }
 
-  } 
+  }
   else if ( RichDAQ::LHCb1 == version )
   {
     // Second iteration of bank format
@@ -218,7 +218,7 @@ RichRawDataFormatTool::createDataBank( const RichSmartID::Collection & smartIDs,
       dataBank = (RichHPDDataBank*) new RichNonZeroSuppDataV0::RichNonZeroSuppData( pdID, smartIDs );
     }
 
-  } 
+  }
   else
   {
     Warning ( "Unknown RICH Raw Buffer version " +
@@ -336,9 +336,10 @@ void RichRawDataFormatTool::createDataBank( const RichDAQ::L1Map & L1Data,
     // Also, each HPD is in its own bank...
     // To be removed once DC04 format no loner in use...
 
-    // Loop over all HPDs
+    // Loop over all L1 groups
     for ( RichDAQ::L1Map::const_iterator iL1 = L1Data.begin(); iL1 != L1Data.end(); ++iL1 )
     {
+      // loop over all HPDs
       for ( RichDAQ::PDMap::const_iterator iHPD = (*iL1).second.begin();
             iHPD != (*iL1).second.end(); ++iHPD )
       {
@@ -372,7 +373,8 @@ void RichRawDataFormatTool::createDataBank( const RichDAQ::L1Map & L1Data,
 
     }
 
-  } else
+  }
+  else
   {
     // Proper handling...
 
@@ -385,17 +387,20 @@ void RichRawDataFormatTool::createDataBank( const RichDAQ::L1Map & L1Data,
 
       // Loop over each active HPD for this Level1 board and fill RAWBank
       unsigned nHits(0);
-      for ( RichDAQ::PDMap::const_iterator iHPD = (*iL1).second.begin();
-            iHPD != (*iL1).second.end(); ++iHPD )
+      if ( !(*iL1).second.empty() )
       {
+        for ( RichDAQ::PDMap::const_iterator iHPD = (*iL1).second.begin();
+              iHPD != (*iL1).second.end(); ++iHPD )
+        {
 
-        // Get raw data bank for this HPD, and fill into RAWBank
-        const RichHPDDataBank * hpdData = createDataBank( (*iHPD).second, version );
-        hpdData->fillRAWBank( dataBank );
-        delete hpdData;
-        nHits += (*iHPD).second.size();
+          // Get raw data bank for this HPD, and fill into RAWBank
+          const RichHPDDataBank * hpdData = createDataBank( (*iHPD).second, version );
+          hpdData->fillRAWBank( dataBank );
+          delete hpdData;
+          nHits += (*iHPD).second.size();
 
-      } // end photon detector loop
+        } // end photon detector loop
+      }
 
       if ( m_summary )
       {
@@ -412,7 +417,7 @@ void RichRawDataFormatTool::createDataBank( const RichDAQ::L1Map & L1Data,
       if ( msgLevel(MSG::DEBUG) )
       {
         debug() << "Encoded " << format("%2i",(*iL1).second.size()) << " HPDs into Level1 Bank "
-                << format("%2i",(*iL1).first) << " : Size " << format("%4i",dataBank.size())
+                << format("%2i",(*iL1).first) << " : Size " << format("%4i",2+dataBank.size())
                 << " words : Version " << version << endreq;
       }
 
@@ -436,15 +441,6 @@ void RichRawDataFormatTool::decodeToSmartIDs( const RawBank & bank,
                boost::lexical_cast<std::string>(bank.bankType()) );
   }
 
-  // Check bank is of a reasonable size
-  if ( bank.dataSize() < 2 ) // Minimum is one header + one data line ...
-  {
-    Exception( "RICH Bank size is less than 2 !" );
-  }
-
-  // flag the tool as having been used this event
-  m_hasBeenCalled = true;
-
   // Get bank version and ID
   const RichDAQ::Level1ID L1ID       = static_cast< RichDAQ::Level1ID >    ( bank.bankSourceID() );
   const RichDAQ::BankVersion version = static_cast< RichDAQ::BankVersion > ( bank.version()      );
@@ -452,95 +448,110 @@ void RichRawDataFormatTool::decodeToSmartIDs( const RawBank & bank,
   // HPD count
   unsigned int nHPDbanks(0), startSize(smartIDs.size());
 
-  // DC04 bug fix hack
-  if ( RichDAQ::LHCb0 == version )
+  // Is this an empty bank ?
+  if ( bank.dataSize() > 0 )
   {
-    // Special handling for this format, due to bug in header word....
 
-    // Create data bank and decode into RichSmartIDs
-    const RichHPDDataBank * hpdBank ( createDataBank( &bank.data()[0],
-                                                      bank.dataSize()-1,
-                                                      version ) );
-    hpdBank->fillRichSmartIDs( smartIDs, m_hpdID );
-    delete hpdBank;
-    ++nHPDbanks;
-
-  }
-  else
-  {
-    // Proper handling...
-
-    // Loop over bank, find headers and produce a data bank for each
-    // Fill data into RichSmartIDs
-    long lineC(0);
-    while ( lineC < bank.dataSize() )
+    // ... otherwise, must have at least 2 entries
+    if ( bank.dataSize() < 2 )
     {
+      Exception( "Non-empty RICH Bank size is less than 2 !" );
+    }
 
-      // Find HPD bank start
-      const RichDAQHeaderPDBase header ( bank.data()[lineC] );
+    // flag the tool as having been used this event
+    m_hasBeenCalled = true;
 
-      // Is this a true header
-      if ( header.startPD() )
+    // DC04 bug fix hack
+    if ( RichDAQ::LHCb0 == version )
+    {
+      // Special handling for this format, due to bug in header word....
+
+      // Create data bank and decode into RichSmartIDs
+      const RichHPDDataBank * hpdBank ( createDataBank( &bank.data()[0],
+                                                        bank.dataSize()-1,
+                                                        version ) );
+      hpdBank->fillRichSmartIDs( smartIDs, m_hpdID );
+      delete hpdBank;
+      ++nHPDbanks;
+
+    }
+    else
+    {
+      // Proper handling...
+
+      // Loop over bank, find headers and produce a data bank for each
+      // Fill data into RichSmartIDs
+      long lineC(0);
+      while ( lineC < bank.dataSize() )
       {
 
-        if ( msgLevel(MSG::VERBOSE) )
-          verbose() << " Found HPD header at line " << lineC << " of " << bank.dataSize() << endreq;
+        // Find HPD bank start
+        const RichDAQHeaderPDBase header ( bank.data()[lineC] );
 
-        // Store start line for header
-        const long lineHeader = lineC;
-
-        // Find last line of block
-        long lineLast = lineC;
-        if ( header.zeroSuppressed() )
+        // Is this a true header
+        if ( header.startPD() )
         {
-          // For ZS blocks, have to search for the hext header to define the block length
-
-          bool cont = true;
-          while ( cont && lineC < bank.dataSize() )
-          {
-            ++lineC;
-            // Test if this is a new header
-            const RichDAQHeaderPDBase testheader ( bank.data()[lineC] );
-            if ( testheader.startPD() || lineC == bank.dataSize() )
-            {
-              lineLast = lineC-1;
-              cont = false;
-            }
-          }
 
           if ( msgLevel(MSG::VERBOSE) )
-            verbose() << "  -> Bank is zero surpressed : ends at " << lineLast << endreq;
+            verbose() << " Found HPD header at line " << lineC << " of " << bank.dataSize() << endreq;
+
+          // Store start line for header
+          const long lineHeader = lineC;
+
+          // Find last line of block
+          long lineLast = lineC;
+          if ( header.zeroSuppressed() )
+          {
+            // For ZS blocks, have to search for the hext header to define the block length
+
+            bool cont = true;
+            while ( cont && lineC < bank.dataSize() )
+            {
+              ++lineC;
+              // Test if this is a new header
+              const RichDAQHeaderPDBase testheader ( bank.data()[lineC] );
+              if ( testheader.startPD() || lineC == bank.dataSize() )
+              {
+                lineLast = lineC-1;
+                cont = false;
+              }
+            }
+
+            if ( msgLevel(MSG::VERBOSE) )
+              verbose() << "  -> Bank is zero surpressed : ends at " << lineLast << endreq;
+
+          }
+          else
+          {
+            // non-ZS blocks have fixed length, so skip straight to the end
+
+            lineC   += 1+RichDAQ::MaxDataSize; // data block + header
+            lineLast = lineC-1;
+
+            if ( msgLevel(MSG::VERBOSE) )
+              verbose() << "  -> Bank is non zero surpressed : ends at " << lineLast << endreq;
+
+          }
+
+          // Create data bank and decode into RichSmartIDs
+          const RichHPDDataBank * hpdBank ( createDataBank( &bank.data()[lineHeader],
+                                                            lineLast-lineHeader,
+                                                            version ) );
+          hpdBank->fillRichSmartIDs( smartIDs, m_hpdID );
+          ++nHPDbanks;
+          delete hpdBank;
 
         }
         else
         {
-          // non-ZS blocks have fixed length, so skip straight to the end
-
-          lineC   += 1+RichDAQ::MaxDataSize; // data block + header
-          lineLast = lineC-1;
-
-          if ( msgLevel(MSG::VERBOSE) )
-            verbose() << "  -> Bank is non zero surpressed : ends at " << lineLast << endreq;
-
+          ++lineC;
         }
 
-        // Create data bank and decode into RichSmartIDs
-        const RichHPDDataBank * hpdBank ( createDataBank( &bank.data()[lineHeader],
-                                                          lineLast-lineHeader,
-                                                          version ) );
-        hpdBank->fillRichSmartIDs( smartIDs, m_hpdID );
-        ++nHPDbanks;
-        delete hpdBank;
+      } // bank while loop
 
-      }
-      else
-      {
-        ++lineC;
-      }
+    } // DC04 bug fix if...
 
-    } // bank while loop
-
-  } // DC04 bug fix if...
+  } // data bank not empty
 
   if ( m_summary )
   {
@@ -558,7 +569,7 @@ void RichRawDataFormatTool::decodeToSmartIDs( const RawBank & bank,
   if ( msgLevel(MSG::DEBUG) )
   {
     debug() << "Decoded " << format("%2i",nHPDbanks) << " HPDs from Level1 Bank " << format("%2i",L1ID)
-            << " : Size " << format("%4i",bank.dataSize()) << " words : Version " << version << endreq;
+            << " : Size " << format("%4i",2+bank.dataSize()) << " words : Version " << version << endreq;
 
     // Print out decoded smartIDs
     if ( msgLevel(MSG::VERBOSE) )
@@ -621,7 +632,7 @@ RawEvent * RichRawDataFormatTool::rawEvent() const
       debug() << "Creating RawEvent from RawBuffer" << endreq;
 
       // Retrieve the RawBuffer
-      SmartDataPtr<RawBuffer> rawBuffer( evtSvc(), RawBufferLocation::Default );
+      SmartDataPtr<RawBuffer> rawBuffer( evtSvc(), m_rawBuffLoc );
       if ( !rawBuffer ) { m_rawEvent = 0; Exception("Unable to locate RawBuffer"); }
 
       // make new RawEvent and put into TES

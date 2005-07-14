@@ -4,6 +4,9 @@
 ! Purpose     : Package simulating the RICH DAQ system and data format
 !-----------------------------------------------------------------------------
 
+! 2005-07-14 - Chris Jones
+ - Add protections for empty Level1 board banks
+
 !========================== RichDAQ v2r2 2005-06-21 =========================
 ! 2005-06-21 - Chris Jones
  - Adapt to changes in RichKernel base classes and RichToolRegistry

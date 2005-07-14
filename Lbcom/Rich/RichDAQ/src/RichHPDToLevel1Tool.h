@@ -5,7 +5,7 @@
  *  Header file for tool : RichHPDToLevel1Tool
  *
  *  CVS Log :-
- *  $Id: RichHPDToLevel1Tool.h,v 1.6 2005-06-23 14:50:28 jonrob Exp $
+ *  $Id: RichHPDToLevel1Tool.h,v 1.7 2005-07-14 14:13:38 jonrob Exp $
  *
  *  @author Chris Jones    Christopher.Rob.Jones@cern.ch
  *  @date   2004-12-18
@@ -92,19 +92,18 @@ public: // methods (and doxygen comments) inherited from interface
   // Return which RICH detector a given Level 1 is used with
   const Rich::DetectorType richDetector( const RichDAQ::Level1ID l1ID ) const;
 
+  // Returns a list of all valid Level1 ids
+  const RichDAQ::Level1IDs & level1IDs() const;
+
 private: //methods
 
-  /// Build a temporary mapping between HPD and L1 numbers
-  void buildTempMapping();
+  /// Build mapping between HPD and L1 numbers
+  void buildMapping();
 
 private: // data
 
   // HPD information tool
   const IRichHPDInfoTool * m_hpdTool;
-
-  /// L1 data from job options
-  typedef std::vector< int > JOData;
-  JOData m_joData;
 
   /// Typedef for mapping from RichSmartID to Level1 ID
   typedef RichHashMap< const RichSmartID, RichDAQ::Level1ID > SmartIDToL1;
@@ -120,6 +119,9 @@ private: // data
 
   RichDAQ::L1ToSmartIDs m_l12smartids; ///< L1 ID to RichSmartIDs map
   RichDAQ::L1ToHardIDs  m_l12hardids;  ///< L1 ID to HPD hardware IDs map
+
+  /// List of all valid Level1 IDs
+  RichDAQ::Level1IDs m_l1IDs;
 
 };
 

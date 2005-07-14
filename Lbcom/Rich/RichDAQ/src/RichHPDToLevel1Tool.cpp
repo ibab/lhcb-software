@@ -5,7 +5,7 @@
  * Implementation file for class : RichHPDToLevel1Tool
  *
  * CVS Log :-
- * $Id: RichHPDToLevel1Tool.cpp,v 1.7 2005-06-23 14:50:28 jonrob Exp $
+ * $Id: RichHPDToLevel1Tool.cpp,v 1.8 2005-07-14 14:13:38 jonrob Exp $
  *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @date 2004-12-18
@@ -28,9 +28,8 @@ RichHPDToLevel1Tool::RichHPDToLevel1Tool( const std::string& type,
   : RichToolBase ( type, name , parent )
 {
 
+  // interface
   declareInterface<IRichHPDToLevel1Tool>(this);
-
-  declareProperty( "L1Mapping", m_joData );
 
 }
 
@@ -49,42 +48,7 @@ StatusCode RichHPDToLevel1Tool::initialize()
 
   // If map from job options is empty, build a temporary one
   // Used for old data base versions...
-  if ( m_joData.empty() ) { buildTempMapping(); return sc; }
-
-  // Use data from job options...
-  JOData::const_iterator iD = m_joData.begin();
-  bool newL1Bank = true;
-  RichDAQ::Level1ID L1ID = 0;
-  std::vector< unsigned int > nL1s( Rich::NRiches, 0 );
-  while ( iD != m_joData.end() )
-  {
-    if ( newL1Bank ) {
-      // Data is L1 ID for the coming block...
-      L1ID = *iD;
-      newL1Bank = false;
-    } else {
-      if ( *iD > 0 ) {
-        const RichDAQ::HPDHardwareID hardID = *iD;
-        // Get RichSmartID
-        const RichSmartID smartID = m_hpdTool->richSmartID( hardID );
-        // Fill maps
-        m_smartid2L1 [ smartID ] = L1ID;
-        m_hardid2L1  [ hardID  ] = L1ID;
-        if ( m_l12smartids[L1ID].empty() ) ++nL1s[smartID.rich()]; // temporary count
-        m_l12smartids[L1ID].push_back( smartID );
-        m_l12hardids[L1ID].push_back( hardID );
-        verbose() << "RichSmartID " << smartID << " HardID " << format("%3i",hardID)
-                  << " -> L1ID " << format("%2i",L1ID) << endreq;
-      } else {
-        newL1Bank = true;
-      }
-    }
-    ++iD;
-  }
-  m_joData.clear();
-
-  info() << "Created L1 ID <-> HPD map : # L1 Boards RICH(1/2) = " << nL1s[Rich::Rich1]
-         << " / " << nL1s[Rich::Rich2] << endreq;
+  buildMapping();
 
   return sc;
 }
@@ -179,9 +143,7 @@ RichHPDToLevel1Tool::richDetector( const RichDAQ::Level1ID l1ID ) const
   return (*rich).second;
 }
 
-// Used for "old" geometries which don't have job option defined layouts
-// To be removed when no longer needed
-void RichHPDToLevel1Tool::buildTempMapping()
+void RichHPDToLevel1Tool::buildMapping()
 {
   // acquire tools
   const IRichSmartIDTool * smartIDs;
@@ -198,6 +160,8 @@ void RichHPDToLevel1Tool::buildTempMapping()
   // Eventually, will need to come from some sort of data base
   std::vector< unsigned int > nL1s( Rich::NRiches, 0 );
   RichDAQ::Level1ID L1ID = 0;
+  m_l1IDs.clear();
+  m_l1IDs.push_back( L1ID );
   unsigned int iHPD = 0;
   Rich::DetectorType rich = Rich::InvalidDetector;
   for ( RichSmartID::Collection::const_iterator iID = pixels.begin(); iID != pixels.end(); ++iID )
@@ -211,7 +175,14 @@ void RichHPDToLevel1Tool::buildTempMapping()
 
       // Create L1 ID
       if ( iHPD >= nHPDsPerL1 ||
-           ( rich != Rich::InvalidDetector && rich != hpdID.rich() ) ) { ++L1ID; iHPD = 0; }
+           ( rich != Rich::InvalidDetector && rich != hpdID.rich() ) ) 
+      { 
+        ++L1ID; // increment l1 ID
+        iHPD = 0; 
+        m_l1IDs.push_back( L1ID ); // add to list 
+      }
+
+      // which rich ?
       rich = hpdID.rich();
 
       // Fill maps
@@ -233,4 +204,9 @@ void RichHPDToLevel1Tool::buildTempMapping()
 
   info() << "Created L1 ID <-> HPD map : # L1 Boards RICH(1/2) = " << nL1s[Rich::Rich1]
          << " / " << nL1s[Rich::Rich2] << endreq;
+}
+
+const RichDAQ::Level1IDs & RichHPDToLevel1Tool::level1IDs() const
+{
+  return m_l1IDs;
 }
