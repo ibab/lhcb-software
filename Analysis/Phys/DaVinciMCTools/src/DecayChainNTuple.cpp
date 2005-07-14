@@ -66,6 +66,7 @@ DecayChainNTuple::DecayChainNTuple( const std::string& name,
     , m_HltScoreLocation(HltScoreLocation::Default)
     , m_CaloClustersPath(CaloClusterLocation::Ecal)
     , m_TrgCaloClustersPath(TrgCaloClusterLocation::Ecal)
+    , m_TagLocation(FlavourTagLocation::Default)
 {
   declareProperty("Decay", m_Decay = "B0 -> ^pi+ ^pi-");
 #ifdef MCCheck
@@ -535,7 +536,7 @@ void DecayChainNTuple::HandleNTuple::FillNTuple(Particle& part, VertexVector& pv
   if(mclink){
     m_trueID[m_n] = mclink->particleID().pid();
   }
-  else{ // not a final state, take particle ID
+  else{ // not a final state or not associated, take particle ID
     m_trueID[m_n] = part.particleID().pid(); 
   }
 #endif
@@ -946,12 +947,32 @@ StatusCode DecayChainNTuple::BookNTuple(std::vector<Particle*>& mothervec) {
         sc = nt->addItem("nTags", m_nTags, 0, 10000);
         sc = nt->addIndexedItem("TagDecision", m_nTags, m_TagDecision);
         sc = nt->addIndexedItem("TagCat", m_nTags, m_TagCat);
-        // All taggers information
-        sc = nt->addItem("nTaggers", m_nTaggers, 0, 10); // maximum of 10 taggers for a given tag
-        sc = nt->addIndexedItem("IDTagger", m_nTags, 10, m_IDTagger);
-        sc = nt->addIndexedItem("pTagger", m_nTags, 10, m_pTagger);
-        sc = nt->addIndexedItem("ptTagger", m_nTags, 10, m_ptTagger);
-        sc = nt->addIndexedItem("sIPSTagger", m_nTags, 10, m_sIPSTagger);
+        sc = nt->addIndexedItem("TagW", m_nTags, m_TagW);
+
+        /*
+        // Beg of more detailed tagging information
+
+        // Total number of taggers for a given tag
+        sc = nt->addIndexedItem("nTaggers", m_nTags, m_nTaggers); 
+        // Total number of tagger particles for a given tag
+        sc = nt->addIndexedItem("nTaggerParts", m_nTags, m_nTaggerParts);
+
+        // All taggers information, maximum of 20 taggers for a given tag
+        sc = nt->addIndexedItem("TaggerType", m_nTags, 20, m_TaggerType);
+        // TaggerType {none = 0 ,unknown = 1, 
+        //             OS_Muon = 2, OS_Electron = 3, OS_Kaon = 4, SS_Kaon = 5, SS_Pion = 6, 
+        //             jetCharge = 7, OS_jetCharge = 8, SS_jetCharge = 9,VtxCharge = 10, Topology};
+        sc = nt->addIndexedItem("TaggerDecision", m_nTags, 20, m_TaggerDecision);
+        sc = nt->addIndexedItem("TaggerW", m_nTags, 20, m_TaggerW);
+
+        // the Particles used to build the Taggers,  maximum of 40 taggers for a given tag
+        sc = nt->addIndexedItem("IDTaggerPart", m_nTags, 40, m_IDTaggerPart);
+        sc = nt->addIndexedItem("pTaggerPart", m_nTags, 40, m_pTaggerPart);
+        sc = nt->addIndexedItem("ptTaggerPart", m_nTags, 40, m_ptTaggerPart);
+        sc = nt->addIndexedItem("sIPSTaggerPart", m_nTags, 40, m_sIPSTaggerPart);
+
+        // End of more detailed tagging information
+        */
 
         // Part of the keys and labels
         int forthekeymother = 0;
@@ -1252,79 +1273,123 @@ StatusCode DecayChainNTuple::WriteNTuple(std::vector<Particle*>& mothervec) {
     // Reset index
     m_nTags = 0;
 
-    // The tagging only looks at the first selected b-candidate ?
-
     FlavourTags* tags = NULL;
-    if (!exist<FlavourTags>("/Event/Phys/BTagging/Tags")){
-      Warning("You requested the tagging, make sure you run it. No FlavourTags at /Event/Phys/BTagging/Tags");
+    if (!exist<FlavourTags>(m_TagLocation)){
+      Warning("You requested the tagging, make sure you run it. No FlavourTags at " + m_TagLocation);
     } 
     else {
-      tags = get<FlavourTags>("/Event/Phys/BTagging/Tags");
+      tags = get<FlavourTags>(m_TagLocation);
       if(NULL == tags){
-        err() << "Null FlavourTags at " << "/Event/Phys/BTagging/Tags" << endreq;
+        err() << "Null FlavourTags at " << m_TagLocation << endreq;
         return StatusCode::FAILURE;
       }
       else{
+
+        debug() << "Number of tags found = " << tags->size() << endreq;
 
         FlavourTags::const_iterator itags;
         for(itags = tags->begin(); itags != tags->end(); ++itags){
 
           // not to be out of range ...
           if(m_nTags > 9999) break;
-    
-          // b = -1, bbar = 1, none = 0
-          debug() << "Tag decision = " << (*itags)->decision()
-                  << " and category = " << (*itags)->category()
+
+          FlavourTag* theTag = *itags;
+
+          // b quark = -1, bbar = 1 quark, none = 0
+          debug() << "Tag decision = " << theTag->decision()
+                  << " , category = " << theTag->category()
+                  << " , wrong tag = " << theTag->omega()
                   << endreq;
 
           // Fill variables for tags
-          m_TagDecision[m_nTags] = (*itags)->decision();
-          m_TagCat[m_nTags] = (*itags)->category();
+          m_TagDecision[m_nTags] = theTag->decision();
+          m_TagCat[m_nTags] = theTag->category();
+          m_TagW[m_nTags] = theTag->omega();
 
           // Particle for which this tag has been made
-          if((*itags)->taggedB()) debug() << "taggedPart pt = "<< (*itags)->taggedB()->pt() << endreq;
+          if(theTag->taggedB()) debug() << "taggedPart pt = "<< theTag->taggedB()->pt() << endreq;
 
-          //  The particles used to make the decision : how can I know what taggers belong to which tag ?
-          Particles* theTaggers = get<Particles>( "/Event/Phys/BTagging/Taggers");
-    
-          debug() << " Number of taggers found = " << theTaggers->size() << endreq;
-    
+          /*
+          // Beg of more detailed tagging information
+
+          // The taggers for this tag
+          std::vector<Tagger> theTaggers = theTag->taggers();
+          debug() << " Number of taggers found = " << theTaggers.size() << endreq;
+          
           // Reset index
-          m_nTaggers = 0;
-          Particles::const_iterator iTaggers;
-          for(iTaggers = theTaggers->begin(); iTaggers != theTaggers->end(); iTaggers++){
+          int nTaggers = 0;
+          int nTaggerParts = 0;
+
+          std::vector<Tagger>::iterator iTaggers;
+          for(iTaggers = theTaggers.begin(); iTaggers != theTaggers.end(); ++iTaggers){
 
             // not to be out of range ...
-            if(m_nTaggers > 9) break;
-      
-            // Smallest IPS to all primaries, not necessarily the best mother vertex
-            double normIPSMin = -1.;
+            if(nTaggers > 19) break;
 
-            Vertices::iterator iPV;
-            for(iPV = PVs.begin(); iPV != PVs.end(); iPV++){
-              double ip, ipe;
-              double normIPS;
-              m_IPTool->calcImpactPar(*(*iTaggers),**iPV,ip,ipe);
-              normIPS = ip/ipe;
-              verbose() << "normIPSMin = " << normIPSMin << " normIPS = " << normIPS << endreq;
-              if(normIPSMin<0||normIPS<normIPSMin) normIPSMin=normIPS;
-            }
-
-            debug() << "  -> tagger ID: " << (*iTaggers)->particleID().pid() 
-                    << " , p = " << (*iTaggers)->p() 
-                    << " pt = " << (*iTaggers)->pt()
-                    << " sIPS = " << normIPSMin
+            debug() << " --> tagger type: " << iTaggers->type()
+                    << " , decision = " << iTaggers->decision()
+                    << " , wrong tag = " << iTaggers->omega()
                     << endreq;
 
             // Fill variables for taggers
-            m_IDTagger[m_nTags][m_nTaggers] = (*iTaggers)->particleID().pid();
-            m_pTagger[m_nTags][m_nTaggers] = (*iTaggers)->p();
-            m_ptTagger[m_nTags][m_nTaggers] = (*iTaggers)->pt();
-            m_sIPSTagger[m_nTags][m_nTaggers] = normIPSMin;
+            m_TaggerType[m_nTags][nTaggers] = iTaggers->type();
+            m_TaggerDecision[m_nTags][nTaggers] = iTaggers->decision();
+            m_TaggerW[m_nTags][nTaggers] = iTaggers->omega();
+
+            // The vector of Particles used to build the Tagger
+            debug() << " Number of particles used to make this tagger = " 
+                    << iTaggers->taggerParts().size() << endreq;
+
+            std::vector<Particle>::iterator iTaggerParts;
+            for(iTaggerParts = iTaggers->taggerParts().begin(); 
+                iTaggerParts != iTaggers->taggerParts().end(); 
+                ++iTaggerParts){
+
+              // not to be out of range ...
+              if(nTaggerParts > 19) break;
+
+              // Smallest IPS to all primaries, not necessarily the best mother vertex
+              double normIPSMin = -1.;
+
+              Vertices::iterator iPV;
+              for(iPV = PVs.begin(); iPV != PVs.end(); iPV++){
+                double ip, ipe;
+                double normIPS;
+                m_IPTool->calcImpactPar(*iTaggerParts,**iPV,ip,ipe);
+                normIPS = ip/ipe;
+                verbose() << "      tagger part normIPSMin = " << normIPSMin 
+                          << " , normIPS = " << normIPS << endreq;
+                if(normIPSMin<0||normIPS<normIPSMin) normIPSMin=normIPS;
+              }
+
+              debug() << "  --> ID: " << iTaggerParts->particleID().pid()
+                      << " , p = " << iTaggerParts->p() 
+                      << " , pt = " << iTaggerParts->pt()
+                      << " , sIPS = " << normIPSMin
+                      << endreq;
+
+              // Fill variables for tagger parts
+              m_IDTaggerPart[m_nTags][nTaggerParts] = iTaggerParts->particleID().pid();
+              m_pTaggerPart[m_nTags][nTaggerParts] = iTaggerParts->p() ;
+              m_ptTaggerPart[m_nTags][nTaggerParts] = iTaggerParts->pt();
+              m_sIPSTaggerPart[m_nTags][nTaggerParts] = normIPSMin;
+
+              // Increment index
+              nTaggerParts++;
+              
+            } // iTaggerParts
 
             // Increment index
-            m_nTaggers++;
+            nTaggers++;
           } // iTaggers
+
+          // Fill total number of taggers and tagger particles for this tag
+          m_nTaggers[m_nTags] = nTaggers;
+          m_nTaggerParts[m_nTags] = nTaggerParts;
+
+          // End of more detailed tagging information
+          */
+          
           // Increment index
           m_nTags++;
         } // itags

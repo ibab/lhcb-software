@@ -185,6 +185,9 @@ private:
   std::string m_CaloClustersPath;
   std::string m_TrgCaloClustersPath;
 
+  // Tagging
+  std::string m_TagLocation;
+
   // NTuple global variables
   NTuple::Item<long> m_eventNumber,m_runNumber;
   NTuple::Item<long> m_nRecoPV;
@@ -211,13 +214,27 @@ private:
   NTuple::Item<long> m_nTags;
   NTuple::Array<long> m_TagDecision;
   NTuple::Array<long> m_TagCat;
+  NTuple::Array<double> m_TagW;
+
+  /*
+  // Beg of more detailed tagging information
+  NTuple::Array<long> m_nTaggers; // total number of all taggers for a given tag
+  NTuple::Array<long> m_nTaggerParts; // total number of all tagger particles for a given tag
   // All taggers information
-  NTuple::Item<long> m_nTaggers;
-  // Matrices indexed by nTags and nTaggers
-  NTuple::Matrix<long> m_IDTagger;
-  NTuple::Matrix<float> m_pTagger;
-  NTuple::Matrix<float> m_ptTagger;
-  NTuple::Matrix<float> m_sIPSTagger;
+  // Matrices indexed by nTags and number of taggers with a maximum of 20 taggers for a given tag
+  // Ex: TaggerType[0][1] = first tag, 2nd tagger type
+  NTuple::Matrix<long> m_TaggerType; 
+  NTuple::Matrix<float> m_TaggerDecision;
+  NTuple::Matrix<float> m_TaggerW;
+  // the Particles used to build the Taggers
+  // Matrices indexed by nTags and number of tagger particles with a maximum of 20 tagger particles for a given tag
+  // Ex: IDTaggerPart[2][3] = 3rd tag, 4th tagger particle ID
+  NTuple::Matrix<long> m_IDTaggerPart;
+  NTuple::Matrix<float> m_pTaggerPart;
+  NTuple::Matrix<float> m_ptTaggerPart;
+  NTuple::Matrix<float> m_sIPSTaggerPart;
+  // End of more detailed tagging information
+  */
 
 #ifdef MCCheck
   NTuple::Item<long> m_nMCPV;

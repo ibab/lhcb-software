@@ -1,7 +1,11 @@
-! $Id: release.notes,v 1.63 2005-07-06 14:39:27 pkoppenb Exp $
+! $Id: release.notes,v 1.64 2005-07-14 18:12:41 lfernan Exp $
 ! Package     : DaVinciMCTools
 ! Responsible : P. Koppenburg
 !=============================================================================
+
+! 2005-07-14 - Luis Fernandez
+ - src/DecayChainNTuple.{cpp,h}
+   . Adapt to new tagging code
 
 !========================== DaVinciMCTools v5r13 2005-07-06 ===================
 ! 2005-06-29 - Luis Fernandez
