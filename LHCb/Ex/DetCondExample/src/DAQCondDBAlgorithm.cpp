@@ -1,4 +1,4 @@
-//$Id: DAQCondDBAlgorithm.cpp,v 1.8 2005-07-14 15:10:22 marcocle Exp $
+//$Id: DAQCondDBAlgorithm.cpp,v 1.9 2005-07-14 15:27:05 marcocle Exp $
 
 #include "DAQCondDBAlgorithm.h"
 
@@ -124,8 +124,6 @@ StatusCode DAQCondDBAlgorithm::initialize() {
 
 StatusCode DAQCondDBAlgorithm::execute( ) {
 
-  static cool::ValidityKey val_since_fake = 0;
-
   debug() << "Execute()" << endmsg;
   ++m_daqEventNumber;
 
@@ -145,11 +143,6 @@ StatusCode DAQCondDBAlgorithm::execute( ) {
     db->getFolder(daqFolderFullName)
       ->storeObject(System::currentTime(System::nanoSec)-m_nsInitialized,
                     cool::ValidityKeyMax, payload);
-    /*
-      db->getFolder(daqFolderFullName)
-      ->storeObject(val_since_fake++,
-      cool::ValidityKeyMax, payload);
-    */
     longlong endIO = System::currentTime(System::nanoSec);
     if ( m_daqShowProgress > 0 ) {
       if ( m_daqEventNumber == 
