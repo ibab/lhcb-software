@@ -3,19 +3,30 @@ Package: Digi/Boole
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb Digitization program
 
-</PRE><H1><A NAME=v9r4>2005-07-08 Boole v9r4</A></H1><PRE>
-This version uses Gaudi v16r4, LHCb v18r8, Lbcom v2r4
-Requires input from Gauss v19r3 or greater. Output needs Brunel v27r2 or greater
+</PRE><H1><A NAME=v9r4>2005-07-14 Boole v9r4</A></H1><PRE>
+This version uses Gaudi v16r4, LHCb v18r8, Lbcom v2r4, XmlDDDB v26r1
+Requires input from Gauss v19r3 or greater. Output needs Brunel v27r4 or greater
 
 - New features:
   . Added FromDigi.opts:    example options for re-running Boole on .digi file
   . Added ExpertCheck.opts: documents available histograms for expert checking
   . Added L0Checker algorithm to MoniL0Seq sequence. Prints a summary table
 
+- New tuning
+  . Modification to OT efficiency calculation, following 2005 test beam 
+    (OTSimulation v2r0)
+  . Removed ResolutionCor from DeOTDetector, following 2005 tet beam (OTDet v5r6)
+  . Improvements to Velo description in 200507 geometry (XmlDDDB v26r1)
+
+- Persistency changes
+  . OT RawBank Tell1 headers reduced from three words to one (OTSimulation v2r0)
+    Backwards incompatible, requires OTDAQ v3r3 or greater to decode.
+
 - Bug fixes:
   . Last Velo Phi bank was missing from L1Buffer in cases when this bank would be
     empty (VeloDAQ v2r3p2)
   . Fix memory leak in XmlMuonRegionCnv (MuonDet v4r8)
+  . Do not create GOL headers for empty GOLs in OT RawBank (OTSimulation v2r0)
 
 </PRE><H1><A NAME=v9r3>2005-06-27 Boole v9r3</A></H1><PRE>
 This version uses Gaudi v16r4, LHCb v18r7, Lbcom v2r3

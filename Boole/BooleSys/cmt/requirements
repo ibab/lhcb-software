@@ -19,7 +19,7 @@ use CaloDigit           v1r8	Calo  # Olivier Callot
 use VeloAlgorithms      v3r3	Velo  # Chris Parkes
 
 # Outer Tracker
-use OTSimulation	v1r4	OT    # Jacopo Nardulli
+use OTSimulation	v2r0	OT    # Jacopo Nardulli
 
 # Muon
 use MuonAlgs            v5r7	Muon  # Alessia Satta
