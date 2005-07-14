@@ -20,7 +20,7 @@ use GaudiObjDesc 	v7r3
 use RootHistCnv         v9r4
 
 #-- Databases
-use XmlDDDB	v26r0	Det
+use XmlDDDB	v26r1	Det
 use ParamFiles	v3r11	-no_auto_imports
 use FieldMap	v4r5
 use BooleDQ	v1r0	DQ
@@ -43,7 +43,7 @@ use CaloDigit           v1r8	Calo
 use VeloAlgorithms      v3r3	Velo
 
 # Outer Tracker
-use OTSimulation	v1r4	OT
+use OTSimulation	v2r0	OT
 
 # Muon
 use MuonAlgs            v5r7	Muon
