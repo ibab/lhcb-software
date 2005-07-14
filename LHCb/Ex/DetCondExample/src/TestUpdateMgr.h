@@ -1,4 +1,4 @@
-// $Id: TestUpdateMgr.h,v 1.2 2005-06-23 13:57:14 marcocle Exp $
+// $Id: TestUpdateMgr.h,v 1.3 2005-07-14 15:13:24 marcocle Exp $
 #ifndef TESTUPDATEMGR_H 
 #define TESTUPDATEMGR_H 1
 
@@ -7,6 +7,7 @@
 #include "GaudiAlg/GaudiAlgorithm.h"
 
 class IUpdateManagerSvc;
+class DataObject;
 
 /** @class TestUpdateMgr TestUpdateMgr.h
  *  
@@ -49,6 +50,8 @@ private:
   IUpdateManagerSvc *m_ums;
 
   InternalClass m_intermediate;
+
+  DataObject *m_dummyUMSentry;
 
   size_t m_evtCount;
 

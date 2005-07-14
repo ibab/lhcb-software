@@ -1,8 +1,9 @@
-// $Id: TestUpdateMgr.cpp,v 1.2 2005-06-23 13:57:14 marcocle Exp $
+// $Id: TestUpdateMgr.cpp,v 1.3 2005-07-14 15:13:24 marcocle Exp $
 // Include files 
 
 // from Gaudi
 #include "GaudiKernel/AlgFactory.h" 
+#include "GaudiKernel/DataObject.h" 
 
 #include "DetDesc/IUpdateManagerSvc.h"
 #include "DetDesc/ValidDataObject.h"
@@ -29,11 +30,14 @@ TestUpdateMgr::TestUpdateMgr( const std::string& name,
   : GaudiAlgorithm ( name , pSvcLocator ),
     m_evtCount(0)
 {
+  m_dummyUMSentry = new DataObject();
 }
 //=============================================================================
 // Destructor
 //=============================================================================
-TestUpdateMgr::~TestUpdateMgr() {}; 
+TestUpdateMgr::~TestUpdateMgr() {
+  delete m_dummyUMSentry;
+}; 
 
 //=============================================================================
 // Initialization
@@ -58,6 +62,10 @@ StatusCode TestUpdateMgr::initialize() {
     m_ums->registerCondition(&m_intermediate,"/dd/SlowControl/Hcal/scHcal",&InternalClass::myTinyMethod);
     
     m_ums->registerCondition(this,&m_intermediate,&TestUpdateMgr::i_updateMethod4);
+
+    // I'm crazy... but that must work!
+    m_ums->registerCondition(m_dummyUMSentry);
+
   } catch (GaudiException) {
     return StatusCode::FAILURE;
   }
@@ -87,6 +95,7 @@ StatusCode TestUpdateMgr::finalize() {
   
   m_ums->dump();
   
+  m_ums->unregister(m_dummyUMSentry);
   m_ums->unregister(&m_intermediate);
   m_ums->unregister(this);
 
