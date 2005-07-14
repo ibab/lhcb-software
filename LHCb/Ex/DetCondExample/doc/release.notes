@@ -1,6 +1,12 @@
-#$Id: release.notes,v 1.45 2005-07-11 09:05:05 marcocle Exp $
+#$Id: release.notes,v 1.46 2005-07-14 15:32:07 marcocle Exp $
 Package Ex/DetCondExample
 Package manager : Marco Clemencic
+
+! 2005-07-14 - Marco Clemencic
+ - Moved other algorithms to GaudiAlgorithm
+ - Use EventClockSvc also for testXml.opts
+ - Added a test for the possibility of registering to UpdateManagerSvc objects
+   without any condition
 
 !=========== Ex/DetCondExample v7r4 2005-07-11 ===============================
 ! 2005-07-11 - Marco Clemencic
