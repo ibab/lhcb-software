@@ -1,5 +1,5 @@
 package OTDAQ
-version v3r2p1
+version v3r3
 
 branches OTDAQ cmt doc src options xml Event
 
@@ -7,8 +7,8 @@ include_dirs $(OTDAQROOT)
 
 use GaudiAlg    v*
 use DAQEvent	v*      Event
-use OTEvent	v14r*	Event
-use OTDet	v5r*	Det
+use OTEvent	v*	Event
+use OTDet	v*	Det
 
 #---- Produce Header-Files from XML description
 document obj2doth OTDAQObj2Doth ../xml/OTDAQ.xml

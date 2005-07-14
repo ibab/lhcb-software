@@ -1,6 +1,7 @@
 Package         : OTDAQ
 Package manager : J. Nardulli
 
+!====================== OTDAQ v3r3 2005-07-13 ======================
 ! 2005-06-29 Jacopo Nardulli
  - Fixing bug in OTTimeCreator  
  - Moving from 50 to 75 ns in the ReadoutGateTool 
