@@ -8,6 +8,10 @@
 // !! Do not modify position or order of included files !!
 //==============================================================
 
+// First algorithm, to clean up input data file if necessary
+ApplicationMgr.TopAlg  = { "EventNodeKiller" };
+EventNodeKiller.Nodes = { "Rec", "Raw" };
+
 // Standard LHCb application setup
 #include "$LHCBROOT/options/LHCbApplication.opts"
 

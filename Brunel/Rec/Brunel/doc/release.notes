@@ -3,6 +3,10 @@ Package: Rec/Brunel
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb reconstruction program
 
+</PRE><H1><A NAME=v27r4>2005-07-15 Brunel v27r4</A></H1><PRE> 
+ - Adapt requirements to use Rec v1r4, Lbcom v2r4, LHCb v18r8
+ - Add EventNodeKiller algorithm as first TopAlg in Brunel.opts
+
 </PRE><H1><A NAME=v27r3p1>2005-07-07 Brunel v27r3p1</A></H1><PRE> 
  - Fix to MCDstContent.opts, to not overwrite already defined Dst content, and
    to correctly save the packed MC truth containers
