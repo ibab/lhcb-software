@@ -8,7 +8,7 @@
 // Filter on L0YES
 #include "$BOOLEOPTS/L0Filter.opts"
 
-// Add Raw data output stream
+// Add Raw data output stream as second stream. 
 #include "$BOOLEOPTS/RawWriter.opts"
 
 // Output file for raw data stream

@@ -3,11 +3,13 @@ Package: Digi/Boole
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb Digitization program
 
-</PRE><H1><A NAME=v9r4>2005-07-08 Boole v9r4</A></H1><PRE>
+</PRE><H1><A NAME=v9r4>2005-07-15 Boole v9r4</A></H1><PRE>
  - Adapt requirements to Lbcom v2r4, LHCb v18r8
  - Use XmlDDDB v26r1, OTSimulation v2r0
  - Add FromDigi.opts, ExpertCheck.opts. Remove (empty) BooleMoniProd.opts
  - Add L0Checker algorithm to BooleMoni.opts
+ - Add EventNodeKiller algorithm to RawWriter.opts, and remove saving of empty
+   directories
 
 </PRE><H1><A NAME=v9r3>2005-06-27 Boole v9r3</A></H1><PRE>
  - Adapt requirements to Lbcom v2r3, LHCb v18r7, XmlDDDB v26r0
