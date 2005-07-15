@@ -6,7 +6,6 @@
 
 ! 2005-07-15 - Juan Palacios
  - Include VeloChannelID.h is dict/DetDict.h
- - Add class pattern "*ChannelID" to DetDict.xml
 
 !========================= DetSys v7r3 2005-07-14 =========================
 ! 2005-07-14 - Juan Palacios
