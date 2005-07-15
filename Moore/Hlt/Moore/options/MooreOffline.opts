@@ -1,5 +1,9 @@
 // Job options for running Moore in offline mode
 
+// Remove unneccessary nodes from input file, if they are there
+ApplicationMgr.TopAlg = { "EventNodeKiller" };
+EventNodeKiller.Nodes = { "Rec", "MC", "Raw", "Trig" };
+
 // Common Online+Offline configuration
 #include "$MOOREROOT/options/MooreCommon.opts"
 
@@ -12,9 +16,7 @@
 #include "$HLTSYSROOT/options/RTTCTestData.opts"
 EventSelector.PrintFreq  = 100 ;
 #pragma print on
-
 HistogramPersistencySvc.OutputFile = "Hlt.root";
 
 //Moore.HistoSize = 10000;
 //ApplicationMgr.EvtMax = 10000;
-

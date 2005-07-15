@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.9 2005-07-14 07:49:40 pkoppenb Exp $
+# $Id: requirements,v 1.10 2005-07-15 17:43:49 cattanem Exp $
 # Created    : 03/06/2005 by P. Koppenburg
 # Maintainer : P. Koppenburg & M. Cattaneo
 #
@@ -22,25 +22,25 @@ use GaudiPoolDb         v1r13
 use RootHistCnv         v9r4
 
 #-- Databases
-use XmlDDDB     v26r0   Det
+use XmlDDDB     v26r1   Det
 use ParamFiles  v3r11   -no_auto_imports
 use FieldMap    v4r5
 
-#-- LHCb libraries (from LHCB_v18r7)
-use LHCb        v18r7
+#-- LHCb libraries (from LHCB_v18r8)
+use LHCb        v18r8
 
-#-- Lbcom packages (from LBCOM_v2r3)
-use LbcomSys    v2r3
+#-- Lbcom packages (from LBCOM_v2r4)
+use LbcomSys    v2r4
 
-#-- Rec packages (from REC_v1r3)
-use RecSys      v1r3
+#-- Rec packages (from REC_v1r4)
+use RecSys      v1r4
 
-#-- Phys packages (from PHYS_v1r3)
-use PhysCoreSys v1r2   Phys
-use HltSys      v1r3   Hlt
+#-- Phys packages (from PHYS_v1r4)
+use PhysCoreSys v1r3   Phys
+use HltSys      v1r4   Hlt
 
-#-- Online packages (from Online v1r3) - not on Windows
-macro useOnline "OnlineSys v1r3" WIN32 ""
+#-- Online packages (from Online v1r4) - not on Windows
+macro useOnline "OnlineSys v1r4" WIN32 ""
 use $(useOnline)
 #
 #===== build Moore. On Win32 online app is same as offline... =====

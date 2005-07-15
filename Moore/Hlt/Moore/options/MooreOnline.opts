@@ -4,14 +4,12 @@
 #include "$MOOREROOT/options/MooreCommon.opts"
 
 // Set up the event input
-// GaudiPoolDB needed
+// GaudiPoolDB DLL needed for DataObject dictionary!!
 ApplicationMgr.DLLs   += { "GaudiOnline", "GaudiPoolDb" };
 EventPersistencySvc.CnvServices += { "OnlineCnvSvc" };
-//EventSelector.Input += {
-//  "DATA='sfc://${SFCC_SFC_MAC_ADDR}' SVC='GaudiOnline::EvtSelector' INPUT='HLT'"
-//};
 EventSelector.Input += {
-  "DATA='file:///tmp/rawmepraw.out' SVC='GaudiOnline::EvtSelector' INPUT='HLT'"
+  "DATA='sfc://${SFCC_SFC_MAC_ADDR}' SVC='GaudiOnline::EvtSelector' INPUT='HLT'"
+  //"DATA='file:///tmp/rawmepraw.out' SVC='GaudiOnline::EvtSelector' INPUT='HLT'"
 };
 
 // Start the monitoring service
@@ -22,12 +20,5 @@ ApplicationMgr.ExtSvc += { "MonitorSvc" };
 ApplicationMgr.TopAlg += { "DecisionSetterAlg" };
 
 // Comparison with offline result (RTTC data only)
+HltMonitoring.Members  += {"HltCompare2RawBuffer"};
 
-// Does not work with MooreOnline
-//HltMonitoring.Members  += {"HltCompare2RawBuffer"};
-EventSelector.PrintFreq  = 1 ;
-
-// This is needed to create the intermediate leaves
-DataOnDemandSvc.Nodes = {"DATA='/Event/Rec' TYPE='DataObject'",
-                         "DATA='/Event/Tr'  TYPE='DataObject'"
-                        };

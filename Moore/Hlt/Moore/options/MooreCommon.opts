@@ -1,7 +1,7 @@
 #pragma print off
 /** @file
  *
- *  These are the job options for running Moore in offline mode, on RTTC data
+ *  These are the job options common to online and offline running of Moore
  *
  *  @author P. Koppenburg, M.Cattaneo
  *  @date 2005-06-02
@@ -24,6 +24,9 @@
 
 // Database dependent configuration
 DetectorDataSvc.DetDbLocation = "$XMLDDDBROOT/DDDB/lhcb-200412.xml" ;
+
+// This is needed to avoid calling a CaloPID algorithm instead...
+DataOnDemandSvc.Nodes = {"DATA='/Event/Rec'  TYPE='DataObject'" };
 
 //=================================================================
 // Start Hlt sequence
