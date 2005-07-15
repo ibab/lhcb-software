@@ -40,7 +40,7 @@ use TrgSys		v2r9	Trg   # Olivier Callot
 use TrgBrunel           v1r1    Trg   # Olivier Callot
 use TrgCalo		v2r0p1  Trg   # Olivier Deschamps
 use TrgChecker		v7r1	Trg   # Olivier Callot
-use TrgForward		v5r1p1	Trg   # Olivier Callot
+use TrgForward		v5r2	Trg   # Olivier Callot
 use TrgMonitor		v4r0	Trg   # Olivier Callot
 use TrgMuon             v1r2p3  Trg   # Alessia Satta
 use TrgPrimVertex	v4r2	Trg   # Olivier Callot
@@ -64,9 +64,9 @@ use MuonRec             v2r4p1	Muon  # N.N.
 use MuonID              v3r7p2	Muon  # N.N.
 
 # Rich
-use RichRecSys		v1r17   Rich  # Chris Jones
+use RichRecSys		v1r18   Rich  # Chris Jones
 use RichRingRefit	v1r10   Rich  # Chris Jones
-use RichLocalPID	v1r11   Rich  # Chris Jones
+use RichLocalPID	v1r12   Rich  # Chris Jones
 use RichGlobalPID	v1r10   Rich  # Chris Jones
 use RichPIDMerge	v1r5	Rich  # Chris Jones
 use RichRecAlgorithms   v1r0    Rich  # Chris Jones
