@@ -1,10 +1,11 @@
 ! =============================================================================
-! $Id: release.notes,v 1.209 2005-07-14 16:13:32 jpalac Exp $ 
+! $Id: release.notes,v 1.210 2005-07-15 07:21:20 cattanem Exp $ 
 ! =============================================================================
 ! package DetDesc
 ! package manager : Marco Clemencic, Juan Palacios
 ! =============================================================================
 
+!======================== DetDesc v15r3 2005-07-15 ========================
 ! 2005-07-14 - Juan Palacios
  - Registering of conditions and parent IGeometryInfos enabled in 
    GeometryInfoPlus enabled and re-structured. Automatic re-calculation
@@ -15,16 +16,8 @@
  - Now it is possible to register an object to the UpdateManagerSvc without
    any condition
 
-!======================== DetDesc v15r3 2005-07-14 ========================
 ! 2005-07-14 - Marco Clemencic
  - EventClockSvc sets the DetDataSvc event time at initialization.
-
-! 2005-07-14 - Juan Palacios
- - Switch off registering of conditions to UpdateManagerSvc in GeometryInfoPlus
-   for time being. Needs re-structuring.
-
-! 2005-07-14 - Marco Clemencic
- - UpdateManagerSvc ignore requests with empty condition paths.
 
 ! 2005-07-13 - Juan Palacios
  - Added UpdateManagerSvc to GeometryInfoPlus.
