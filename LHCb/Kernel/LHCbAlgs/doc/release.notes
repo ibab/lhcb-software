@@ -4,6 +4,12 @@
 ! Purpose     : General purpose algorithms and tools for LHCb
 !-----------------------------------------------------------------------------
 
+!======================== LHCbAlgs v1r8 2005-07-15 =======================
+! 2005-07-15 - Marco Cattaneo
+ - Add EventNodeKiller algorithm to kill nodes in the event data store. Useful if
+   you want to make the application "forget" about the previous history of the
+   input file
+
 !======================== LHCbAlgs v1r7 2005-06-23 =======================
 ! 2005-06-23 - Marco Cattaneo
  - LbAppInit is now a GaudiHistoAlg, property "HistoProduce" replaces "doHistos"
