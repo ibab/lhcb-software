@@ -5,6 +5,8 @@ version v20r0
 #-- Structure
 branches src doc options cmt job
 
+#-- tags: AcerMC, Vis
+
 #=========================================================================
 #-- Databases
 use XmlDDDB             v26r0   Det   -no_auto_imports
@@ -18,7 +20,8 @@ use Geant4Files		v52r0	      -no_auto_imports
 use Generators          v1r1    Gen
 use LbPythia            v1r1    Gen
 #   Optional AcerMC
-#use LbAcerMC            v1r1    Gen
+macro LbAcerMC_use "" Linux&AcerMC "LbAcerMC v1r1 Gen"
+use $(LbAcerMC_use)
 
 #-- Simulation
 use GiGaCnv             v15r11  Sim
@@ -30,10 +33,12 @@ use GaussPhysics        v3r1    Sim
 use GaussAlgs		v1r6    Sim
 
 #-- Optional visualisation and UI
-#use GiGaVisUI           v3r0    Sim
+macro GiGaVisUI_use "" Linux&Vis "GiGaVisUI v3r0 Sim"
+use $(GiGaVisUI_use)
 
 #-- Optional GDML
-#use GDMLG4Writer        v2r0    Sim
+macro GDMLG4Writer_use "" Linux&GDML "GDMLG4Writer v2r0 Sim"
+use $(GDMLG4Writer_use)
 
 #-- Monitoring
 use GaussMonitor        v2r1    Sim
@@ -78,14 +83,22 @@ set  G4VRMLFILE_VIEWER         vrweb \
 set  G4VRML_PV_PICKABLE        "1"
 
 #========================================================================
+#  For UNIXes, to rename a <app>.exe to <app>
+make_fragment copy_exe -header=copy_exe_header
+
 #-- Build Main Program 
-application Gauss GaussMain.cpp 
+
+application Gauss "GaussMain.cpp"
+application GaussAcerMC "GaussMain.cpp"
+macro_remove constituents "GaussAcerMC" Linux&AcerMC "Gauss"
 
 #========================================================================
 #-- Set macros
 apply_pattern application_path 
 macro Gauss_linkopts  "$(application_linkopts)"
-macro_append Gauss_linkopts " -Wl,-Map,Linux.map " WIN32 ""
+macro_append Gauss_linkopts " -Wl,-Map,Linux.map " \
+             Linux&AcerMC   " -Wl,-Map,LinuxAcerMC.map "\
+             WIN32          ""
 
 #-- Make just executable "visible" 
 path_remove    PATH  "/Gauss/"
@@ -98,3 +111,4 @@ path_append    PATH  "${GAUSSROOT}/${BINDIR}"
 #-- Set usefull alias
 alias gauss " ${GAUSSROOT}/${BINDIR}/Gauss.exe ${GAUSSOPTS}/Gauss.opts "
 alias gaussvis " ${GAUSSROOT}/${BINDIR}/Gauss.exe ${GAUSSOPTS}/GaussVis.opts "
+alias gaussacer " ${GAUSSROOT}/${BINDIR}/GaussAcerMC.exe ${GAUSSOPTS}/Gauss.opts "
