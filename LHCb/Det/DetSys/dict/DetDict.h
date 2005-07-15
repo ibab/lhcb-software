@@ -1,6 +1,6 @@
-// $Id: DetDict.h,v 1.3 2005-07-14 11:04:09 jpalac Exp $
+// $Id: DetDict.h,v 1.4 2005-07-15 12:16:08 jpalac Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.3 $
+// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.4 $
 // ============================================================================
 #ifndef BENDERDET_BENDERDETDICT_H 
 #define BENDERDET_BENDERDETDICT_H 1
@@ -75,6 +75,7 @@
 // ============================================================================
 // VeloDet
 // ============================================================================
+#include "Kernel/VeloChannelID.h"
 #include "VeloDet/DeVelo.h"
 #include "VeloDet/DeVeloSensor.h"
 #include "VeloDet/DeVeloPhiType.h"
