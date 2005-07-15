@@ -1,4 +1,4 @@
-// $Id: UpdateManagerSvc.cpp,v 1.7 2005-07-14 14:59:21 marcocle Exp $
+// $Id: UpdateManagerSvc.cpp,v 1.8 2005-07-15 08:49:08 marcocle Exp $
 // Include files 
 #include "GaudiKernel/SvcFactory.h"
 #include "GaudiKernel/MsgStream.h"
@@ -175,14 +175,11 @@ StatusCode UpdateManagerSvc::i_registerCondition(const std::string &condition, B
       if (cond_item->isHead()) removeFromHead(cond_item);
     }
     link(mf_item,mf,cond_item);
-    // a new item means that we need an update
-    m_head_since = 1;
-    m_head_until = -1;
-  } else {
-    // if it does not depend on anything, it must be considered always valid
-    mf_item->resetIOV();
   }
-  
+  // a new item means that we need an update
+  m_head_since = 1;
+  m_head_until = -1;
+    
 	return StatusCode::SUCCESS;
 }
 StatusCode UpdateManagerSvc::i_registerCondition(void *obj, BaseObjectMemberFunction *mf){
