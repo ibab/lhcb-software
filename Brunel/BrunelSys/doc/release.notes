@@ -12,10 +12,20 @@ Requires input data from Boole v9r2 or greater. Incompatible with DC04 versions
      killed by executing EventNodeKiller as the first TopAlg. This enables to
      to transparently process both .raw and .digi files that may or may not have
      /Raw and /Rec already existing. (Brunel.opts, LHCbAlgs v1r8)
+   . Add support for OT RawBank v2 (OTDAQ v3r3, TrgForward v5r2)
 
- - Bug fix:
+ - New tuning:
+   . Removed ResolutionCor from DeOTDetector, following 2005 test beam
+     (OTDet v5r6)
+   . Improvements to Velo description in 200507 geometry (XmlDDDB v26r1)
+   . Change OT readout gate from 50ns to 75ns (OTDAQ v3r3)
+
+ - Bug fixes:
    . RichLocalPID tools were accessing TES before the start of the event loop,
-     in the beginEvent incident handler
+     in the beginEvent incident handler (RichLocalPID v1r12)
+   . Fixes to cope with v200507 geometry. Velo tracking efficiency is now the
+     same as for v200412 geometry (TrgVelo v7r4, TrgTools v7r5)
+   . Fix memory leak in XmlMuonRegionCnv (MuonDet v4r8)
 
 </PRE><H1><A NAME=v27r3p1>2005-07-07 Brunel v27r3p1</A></H1><PRE>
 This version uses Gaudi v16r4, LHCb v18r7, Rec v1r3, Lbcom v2r3
