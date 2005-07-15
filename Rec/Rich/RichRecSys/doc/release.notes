@@ -4,6 +4,10 @@
 ! Purpose     : Co-ordinates the RICH reconstruction packages
 !-----------------------------------------------------------------------------
 
+!====================== RichRecSys v1r18 2005-07-15 ======================
+! 2005-07-15 - Marco Cattaneo
+ - Use RichLocalPID v1r12
+
 !====================== RichRecSys v1r17 2005-06-24 ======================
 ! 2005-06-21 - Chris Jones
  - Changes needed to allow offline and HLT reconstructions to run in
