@@ -3,6 +3,31 @@ Package     : MooreSys
 Package Coordinator : Patrick Koppenburg and Marco Cattaneo
 Purpose     : LHCb HLT application
 
+</PRE><H1><A NAME=v1r2>2005-07-15 Moore v1r2</A></H1><PRE>
+This version uses LHCb v18r8, Lbcom v2r4, Rec v1r4, Phys v1r4, Online v1r4
+
+ - New feature:
+   . In offline mode, any /Raw, /Rec, /MC, /Trig node that may have been 
+     registered on the input file is killed by executing EventNodeKiller as the
+     first TopAlg. This enables to transparently process .raw files that may or
+     may not have these nodes already existing (MooreOffline.opts, LHCbAlgs v1r8)
+   . Add support for OT RawBank v2 (OTDAQ v3r3, TrgForward v5r2)
+
+ - New tuning:
+   . Removed ResolutionCor from DeOTDetector, following 2005 test beam
+     (OTDet v5r6)
+   . Change OT readout gate from 50ns to 75ns (OTDAQ v3r3)
+
+ - Bug fixes:
+   . Add /Event/Rec Node to DataOnDemandSvc, to prevent triggering a CaloPID
+     algorithm instead (MooreCommon.opts)
+   . Load GaudiPoolDb even in online (for Event dictionary) (MooreOnline.opts)
+   . RichLocalPID tools were accessing TES before the start of the event loop,
+     in the beginEvent incident handler (RichLocalPID v1r12)
+   . HltCompare2RawBuffer algorithm no longer tries to access RawBuffer, 
+     accesses RawEvent instead ()
+   . Fix memory leak in XmlMuonRegionCnv (MuonDet v4r8)
+
 </PRE><H1><A NAME=v1r1>2005-06-27 Moore v1r1</A></H1><PRE>
 This version uses LHCb v18r7, Lbcom v2r3, Rec v1r3, Phys v1r3, Online v1r3
 
