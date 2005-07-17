@@ -4,6 +4,10 @@
 ! Purpose     : High-Level Trigger Exclusive Selections - Checking 
 !-----------------------------------------------------------------------------
 
+! 2005-07-17 - Luis Fernandez
+ - options/NT*.opts
+   . Add Hlt generic filter before ntuples
+
 ! 2005-07-13 - P. Koppenburg
   - options/True*.opts
     . Give specific name to location

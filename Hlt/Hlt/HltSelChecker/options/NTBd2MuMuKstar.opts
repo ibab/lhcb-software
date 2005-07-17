@@ -14,18 +14,18 @@ CheckHLTBd2MuMuKstar.MeasureTime = false;
 
 CheckHLTBd2MuMuKstar.Members ={  "TrgL0Filter", "PrintHeader/PassedL0",
                                  "TrgL1Filter", "PrintHeader/PassedL1",
-                                //"HltFilter/HltGenericFilter", "PrintHeader/PassedHltGeneric",
-                                "CheckSelResult/MergeOffBd2MuMuKstar", 
-                                "DecayChainNTuple/OffBd2MuMuKstarTree",
-                                "CheckSelResult/MergeHLTBd2MuMuKstar",
-                                "ResetOnOffline/HLTBd2MuMuKstarTreeSetOnline",
-                                "DecayChainNTuple/HLTBd2MuMuKstarTree"};
+                                 "HltFilter/HltGenericFilter", "PrintHeader/PassedHltGeneric",
+                                 "CheckSelResult/MergeOffBd2MuMuKstar", 
+                                 "DecayChainNTuple/OffBd2MuMuKstarTree",
+                                 "CheckSelResult/MergeHLTBd2MuMuKstar",
+                                 "ResetOnOffline/HLTBd2MuMuKstarTreeSetOnline",
+                                 "DecayChainNTuple/HLTBd2MuMuKstarTree"};
 
 PassedL0.OutputLevel = 3;
 PassedL1.OutputLevel = 3;
-// PassedHltGeneric.OutputLevel = 3;
-// HltGenericFilter.RequireHLT = false;
-// HltGenericFilter.RequireGeneric = true;  
+PassedHltGeneric.OutputLevel = 3;
+HltGenericFilter.RequireHLT = false;
+HltGenericFilter.RequireGeneric = true;  
 
 MergeOffBd2MuMuKstar.Algorithms = { "TDRselBd2MuMuKstar"};
 MergeOffBd2MuMuKstar.ANDmode = false;

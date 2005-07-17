@@ -18,7 +18,7 @@ CheckHLTBs2PhiPhi.MeasureTime = false;
 
 CheckHLTBs2PhiPhi.Members ={ "TrgL0Filter", "PrintHeader/PassedL0",
                              "TrgL1Filter", "PrintHeader/PassedL1",
-                             //"HltFilter/HltGenericFilter", "PrintHeader/PassedHltGeneric",
+                             "HltFilter/HltGenericFilter", "PrintHeader/PassedHltGeneric",
                              "CheckSelResult/MergeOffBs2PhiPhi", "PrintHeader/PassedOffBs2PhiPhi",
                              "DecayChainNTuple/OffBs2PhiPhiTree", "PrintHeader/PassedOffBs2PhiPhiTree",
                              "CheckSelResult/MergeHLTBs2PhiPhi", "PrintHeader/PassedHLTBs2PhiPhi",
@@ -27,9 +27,9 @@ CheckHLTBs2PhiPhi.Members ={ "TrgL0Filter", "PrintHeader/PassedL0",
  
 PassedL0.OutputLevel = 3;
 PassedL1.OutputLevel = 3;
-// PassedHltGeneric.OutputLevel = 3;
-// HltGenericFilter.RequireHLT = false;
-// HltGenericFilter.RequireGeneric = true; 
+PassedHltGeneric.OutputLevel = 3;
+HltGenericFilter.RequireHLT = false;
+HltGenericFilter.RequireGeneric = true; 
 
 PassedOffBs2PhiPhi.OutputLevel = 3;
 PassedOffBs2PhiPhiTree.OutputLevel = 3;
