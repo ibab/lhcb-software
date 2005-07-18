@@ -25,7 +25,7 @@ This version uses LHCb v18r8, Lbcom v2r4, Rec v1r4, Phys v1r4, Online v1r4
    . RichLocalPID tools were accessing TES before the start of the event loop,
      in the beginEvent incident handler (RichLocalPID v1r12)
    . HltCompare2RawBuffer algorithm no longer tries to access RawBuffer, 
-     accesses RawEvent instead ()
+     accesses RawEvent instead (HltMonitor v1r1)
    . Fix memory leak in XmlMuonRegionCnv (MuonDet v4r8)
 
 </PRE><H1><A NAME=v1r1>2005-06-27 Moore v1r1</A></H1><PRE>
