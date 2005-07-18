@@ -5,8 +5,8 @@ Purpose: LHCb reconstruction packages.
          This project groups together all the reconstruction packages needed
          by one or more LHCb applications. 
 
-</PRE><H1><A NAME=v1r4>2005-07-15 RecSys v1r4</A></H1><PRE>
-This version uses Gaudi v16r4, LHCb v18r8
+</PRE><H1><A NAME=v1r4>2005-07-18 RecSys v1r4</A></H1><PRE>
+This version uses Gaudi v16r5, LHCb v18r8
 
 - Packages modified: TrgSys v7r5, TrgVelo v7r4, TrgMuon v1r2p3, TrgForward v5r2,
                      L1Decision v5r1p1, PatSys v1r1, PatVelo v1r1, 
