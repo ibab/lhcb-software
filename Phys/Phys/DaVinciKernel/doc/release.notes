@@ -1,7 +1,8 @@
-! $Id: release.notes,v 1.62 2005-07-11 13:55:36 pkoppenb Exp $
+! $Id: release.notes,v 1.63 2005-07-18 11:25:16 pkoppenb Exp $
 ! Package     : DaVinciKernel
 ! Responsible : P. Koppenburg
 
+!========================== DaVinciKernel v3r5p1 2005-07-18 ===================
 ! 2005-07-11 - P. Koppenburg
   - PhysDesktop.cpp
     . Be less verbose
