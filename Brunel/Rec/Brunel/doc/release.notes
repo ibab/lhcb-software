@@ -7,6 +7,7 @@ Purpose: LHCb reconstruction program
  - Adapt requirements to use Rec v1r4, Lbcom v2r4, LHCb v18r8, Gaudi v16r5
  - Use XmlDDDB v26r1
  - Add EventNodeKiller algorithm as first TopAlg in Brunel.opts
+ - Copy.opts is obsolete, includes generic $EVENTSYSROOT/options/PoolCopy.opts
 
 </PRE><H1><A NAME=v27r3p1>2005-07-07 Brunel v27r3p1</A></H1><PRE> 
  - Fix to MCDstContent.opts, to not overwrite already defined Dst content, and

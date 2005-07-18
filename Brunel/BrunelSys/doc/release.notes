@@ -27,6 +27,12 @@ Requires input data from Boole v9r2 or greater. Incompatible with DC04 versions
      geometry is now similar to v200412 geometry (TrgVelo v7r4, TrgTools v7r5)
    . Fix memory leak in XmlMuonRegionCnv (MuonDet v4r8)
 
+- Obsolete feature
+  . It is no longer necessary to have specific job options for copying a Brunel
+    output file, one can use instead the new InputCopyStream, as configured in
+    $EVENTSYSROOT/options/PoolCopy.opts, with any Gaudi application.
+    Copy.opts now simply includes PoolCopy.opts. (GaudiSvc v14r0, EventSys v20r8)
+
 </PRE><H1><A NAME=v27r3p1>2005-07-07 Brunel v27r3p1</A></H1><PRE>
 This version uses Gaudi v16r4, LHCb v18r7, Rec v1r3, Lbcom v2r3
 Requires input data from Boole v9r2 or greater. Incompatible with DC04 versions
