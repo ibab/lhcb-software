@@ -11,12 +11,12 @@ use GaudiPolicy v5r20
 
 #-- External libraries now taken from LCG, version defined by GaudiEnv
 
-#-- Gaudi libraries (from GAUDI_v16r4)
-use GaudiKernel		v19r2
-use GaudiSvc 		v13r4
-use GaudiAlg 		v8r8
-use GaudiPoolDb		v1r13
-use GaudiObjDesc 	v7r3
+#-- Gaudi libraries (from GAUDI_v16r5)
+use GaudiKernel		v19r3
+use GaudiSvc 		v14r0
+use GaudiAlg 		v8r9
+use GaudiPoolDb		v1r14
+use GaudiObjDesc 	v7r4
 use RootHistCnv         v9r4
 
 #-- Databases
