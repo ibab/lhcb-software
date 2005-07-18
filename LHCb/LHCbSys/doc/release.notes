@@ -19,6 +19,9 @@ This version uses Gaudi v16r5
  - In DoxyFile.cfg
    . Get dot tool configuration from dottools.cfg, rather than from makedoc.py
 
+ - In EventSys v20r8
+   . Add PoolCopy.opts: options for copying (or merging) Pool data files
+
  - In DAQEvent v5r2p2
    . EventHeaderFromRaw, check existence of DAQ bank before accessing it, return
      StatusCode::FAILURE if missing
