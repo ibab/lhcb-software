@@ -5,8 +5,8 @@
 ! Purpose     : 
 !-----------------------------------------------------------------------------
 
-</PRE><H1><A NAME=v1r4>2005-07-15 OnlineSys v1r4</A></H1><PRE>
-This version uses Gaudi v16r4, LHCb v18r8
+</PRE><H1><A NAME=v1r4>2005-07-18 OnlineSys v1r4</A></H1><PRE>
+This version uses Gaudi v16r5, LHCb v18r8
 
  - Packages modified: GaudiOnline v1r2p1
 
