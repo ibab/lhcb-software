@@ -1,9 +1,9 @@
-# $Id: requirements,v 1.27 2005-06-02 10:02:55 ibelyaev Exp $ 
+# $Id: requirements,v 1.28 2005-07-18 09:55:12 pkoppenb Exp $ 
 # =============================================================================
-# CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.27 $
+# CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.28 $
 # =============================================================================
 package         LoKiExample
-version         v3r12p1
+version         v3r14
 
 # ============= structure =====================================================
 branches        cmt doc src jobs options 
@@ -33,6 +33,9 @@ path_append PATH        ${LOKIEXAMPLEJOBS}
 
 # =============================================================================
 # $Log: not supported by cvs2svn $
+# Revision 1.27  2005/06/02 10:02:55  ibelyaev
+#  add example for B->PV associations
+#
 # =============================================================================
 # The END 
 # =============================================================================
