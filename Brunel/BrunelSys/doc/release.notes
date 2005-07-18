@@ -3,14 +3,14 @@ Package: Rec/Brunel
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb reconstruction program
 
-</PRE><H1><A NAME=v27r4>2005-07-15 Brunel v27r4</A></H1><PRE>
-This version uses Gaudi v16r4, LHCb v18r8, Rec v1r4, Lbcom v2r4
+</PRE><H1><A NAME=v27r4>2005-07-18 Brunel v27r4</A></H1><PRE>
+This version uses Gaudi v16r5, LHCb v18r8, Rec v1r4, Lbcom v2r4
 Requires input data from Boole v9r2 or greater. Incompatible with DC04 versions
 
  - New feature:
    . Any /Raw or /Rec node that may have been registered on the input file is
      killed by executing EventNodeKiller as the first TopAlg. This enables to
-     to transparently process both .raw and .digi files that may or may not have
+     transparently process both .raw and .digi files that may or may not have
      /Raw and /Rec already existing. (Brunel.opts, LHCbAlgs v1r8)
    . Add support for OT RawBank v2 (OTDAQ v3r3, TrgForward v5r2)
 
@@ -23,8 +23,8 @@ Requires input data from Boole v9r2 or greater. Incompatible with DC04 versions
  - Bug fixes:
    . RichLocalPID tools were accessing TES before the start of the event loop,
      in the beginEvent incident handler (RichLocalPID v1r12)
-   . Fixes to cope with v200507 geometry. Velo tracking efficiency is now the
-     same as for v200412 geometry (TrgVelo v7r4, TrgTools v7r5)
+   . Fixes to cope with v200507 geometry. Velo tracking efficiency for v200507
+     geometry is now similar to v200412 geometry (TrgVelo v7r4, TrgTools v7r5)
    . Fix memory leak in XmlMuonRegionCnv (MuonDet v4r8)
 
 </PRE><H1><A NAME=v27r3p1>2005-07-07 Brunel v27r3p1</A></H1><PRE>
