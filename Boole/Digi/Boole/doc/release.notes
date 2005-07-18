@@ -10,6 +10,8 @@ Purpose: LHCb Digitization program
  - Add L0Checker algorithm to BooleMoni.opts and remove L0Monitor
  - Add EventNodeKiller algorithm to RawWriter.opts, and remove saving of empty
    directories
+ - Copy.opts is obsolete, includes generic $EVENTSYSROOT/options/PoolCopy.opts
+ - Obsolete CopyRaw.opts removed 
 
 </PRE><H1><A NAME=v9r3>2005-06-27 Boole v9r3</A></H1><PRE>
  - Adapt requirements to Lbcom v2r3, LHCb v18r7, XmlDDDB v26r0

@@ -34,6 +34,13 @@ Requires input from Gauss v19r3 or greater. Output needs Brunel v27r4 or greater
   . Fix memory leak in XmlMuonRegionCnv (MuonDet v4r8)
   . Do not create GOL headers for empty GOLs in OT RawBank (OTSimulation v2r0)
 
+- Obsolete feature
+  . It is no longer necessary to have specific job options for copying a Boole
+    output file, one can use instead the new InputCopyStream, as configured in
+    $EVENTSYSROOT/options/PoolCopy.opts, with any Gaudi application. CopyRaw.opts
+    has been removed from the Boole options, Copy.opts now simply includes
+    PoolCopy.opts. (GaudiSvc v14r0, EventSys v20r8)
+
 </PRE><H1><A NAME=v9r3>2005-06-27 Boole v9r3</A></H1><PRE>
 This version uses Gaudi v16r4, LHCb v18r7, Lbcom v2r3
 Requires input from Gauss v19r3 or greater. Output needs Brunel v27r2 or greater
