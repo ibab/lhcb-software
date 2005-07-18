@@ -7,7 +7,7 @@ Purpose: LHCb Digitization program
  - Adapt requirements to Lbcom v2r4, LHCb v18r8, Gaudi v16r5
  - Use XmlDDDB v26r1, OTSimulation v2r0
  - Add FromDigi.opts, ExpertCheck.opts. Remove (empty) BooleMoniProd.opts
- - Add L0Checker algorithm to BooleMoni.opts
+ - Add L0Checker algorithm to BooleMoni.opts and remove L0Monitor
  - Add EventNodeKiller algorithm to RawWriter.opts, and remove saving of empty
    directories
 

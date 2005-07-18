@@ -10,12 +10,14 @@ Requires input from Gauss v19r3 or greater. Output needs Brunel v27r4 or greater
 - New features:
   . Added FromDigi.opts:    example options for re-running Boole on .digi file
   . Added ExpertCheck.opts: documents available histograms for expert checking
-  . Added L0Checker algorithm to MoniL0Seq sequence. Prints a summary table
+  . Replaced L0Monitor with L0Checker algorithm in MoniL0Seq sequence. Prints a
+    a more complete summary table (BooleMoni.opts)
 
 - New tuning
   . Modification to OT efficiency calculation, following 2005 test beam 
     (OTSimulation v2r0)
-  . Removed ResolutionCor from DeOTDetector, following 2005 tet beam (OTDet v5r6)
+  . Removed ResolutionCor from DeOTDetector, following 2005 test beam
+    (OTDet v5r6)
   . Improvements to Velo description in 200507 geometry (XmlDDDB v26r1)
 
 - Persistency changes

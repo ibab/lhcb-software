@@ -17,7 +17,7 @@ Moni.DetectorList = { "VELO", "IT", "OT", "RICH", "CALO", "L0" };
 // L0 Trigger
 ApplicationMgr.DLLs += {"L0Checker"};
 MoniL0Seq.Members += { "L0CaloMonit" };
-MoniL0Seq.Members += { "L0Monitor" };
+//MoniL0Seq.Members += { "L0Monitor" };
 MoniL0Seq.Members += { "L0Check" };
 
 // Velo
