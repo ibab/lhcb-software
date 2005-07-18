@@ -6,8 +6,8 @@
 !             : Contains packages shared by Boole and other applications   
 !-----------------------------------------------------------------------------
 
-</PRE><H1><A NAME=v2r4>2005-07-08 LbcomSys v2r4</A></H1><PRE>
-This version is built against LHCb v18r8 and Gaudi v16r4.
+</PRE><H1><A NAME=v2r4>2005-07-18 LbcomSys v2r4</A></H1><PRE>
+This version is built against LHCb v18r8 and Gaudi v16r5.
 - Packages modified: L0Checker v3r1
 
 - In DoxyFile.cfg
