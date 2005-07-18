@@ -1,9 +1,10 @@
 package EventSys
 package manager: Marco Cattaneo
 
-!======================== EventSys v20r8 2005-07-07 ========================
-! 2005-07-07 - Marco Cattaneo
+!======================== EventSys v20r8 2005-07-18 ========================
+! 2005-07-18 - Marco Cattaneo
  - Use DAQEvent v5r2p2, PhysEvent v8r10, PackedEvent v1r1
+ - Add PoolCopy.opts: options for copying or merging Pool files
 
 !======================== EventSys v20r7 2005-06-24 ========================
 ! 2005-06-24 - Marco Cattaneo
