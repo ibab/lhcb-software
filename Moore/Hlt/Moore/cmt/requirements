@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.10 2005-07-15 17:43:49 cattanem Exp $
+# $Id: requirements,v 1.11 2005-07-18 14:56:22 cattanem Exp $
 # Created    : 03/06/2005 by P. Koppenburg
 # Maintainer : P. Koppenburg & M. Cattaneo
 #
@@ -14,11 +14,11 @@ branches doc cmt options
 # Used packages. 
 #============================================================================
 
-#-- Gaudi libraries (from GAUDI_v16r4)
-use GaudiKernel         v19r2
-use GaudiSvc            v13r4
-use GaudiAlg            v8r8
-use GaudiPoolDb         v1r13
+#-- Gaudi libraries (from GAUDI_v16r5)
+use GaudiKernel         v19r3
+use GaudiSvc            v14r0
+use GaudiAlg            v8r9
+use GaudiPoolDb         v1r14
 use RootHistCnv         v9r4
 
 #-- Databases

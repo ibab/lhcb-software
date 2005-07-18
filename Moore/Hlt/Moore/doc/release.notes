@@ -2,7 +2,8 @@ Package     : Hlt/Moore
 Package Coordinator : Patrick Koppenburg and Marco Cattaneo
 Purpose     : LHCb HLT application
 
-</PRE><H1><A NAME=v1r2>2005-07-15 Moore v1r2</A></H1><PRE>
+</PRE><H1><A NAME=v1r2>2005-07-18 Moore v1r2</A></H1><PRE>
+ - Use Rec v1r4, Lbcom v2r4, LHCb v18r8, Phys v1r4, Gaudi v16r5, XmlDDDB v26r1
  - Add GaudiPoolDb to Online options (for DataObject dictionary!)
  - Add EventNodeKiller as first TopAlg in Offline options
  - Add /Event/Rec node to DataOnDemandSvc in Common options
