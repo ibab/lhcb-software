@@ -5,8 +5,8 @@
 ! Purpose     : LHCb OO kernel packages
 !-----------------------------------------------------------------------------
 
-</PRE><H1><A NAME=v18r8>2005-07-15 LHCbSys v18r8</A></H1><PRE>
-This version uses Gaudi v16r4
+</PRE><H1><A NAME=v18r8>2005-07-18 LHCbSys v18r8</A></H1><PRE>
+This version uses Gaudi v16r5
 
  - New packages      : LinkerInstances v1r0 - dictionaries of Linker objects for
                                               use with GaudiPython
