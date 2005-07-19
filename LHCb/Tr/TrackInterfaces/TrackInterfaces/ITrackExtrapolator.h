@@ -39,20 +39,9 @@ public:
   /// Return the interface ID
   static const InterfaceID& interfaceID() { return IID_ITrackExtrapolator; }
 
-  /// Predict where the plane will be intersected
-  virtual StatusCode predict( State& state,
-                              const HepPlane3D& plane,
-                              double& dZ );
-
   /// Propagate a track to a given z-position
   virtual StatusCode propagate( const Track& track,
                                 double z,
-      			        State& state,
-                                ParticleID pid = ParticleID(211) ) = 0;
-
-  /// Propagate a track to the intersection point with a given plane
-  virtual StatusCode propagate( const Track& track,
-                                const HepPlane3D& plane,
                                 State& state,
                                 ParticleID pid = ParticleID(211) ) = 0;
 
@@ -61,15 +50,28 @@ public:
                                 double z,
                                 ParticleID pid = ParticleID(211) ) = 0;
 
+  /// Propagate a track to the intersection point with a given plane
+  virtual StatusCode propagate( const Track& track,
+                                const HepPlane3D& plane,
+                                State& state,
+                                ParticleID pid = ParticleID(211) ) = 0;
+
   /// Propagate a state to the intersection point with a given plane
   virtual StatusCode propagate( State& state,
                                 const HepPlane3D& plane,
                                 ParticleID pid = ParticleID(211) ) = 0;
+  
+  /// Predict where the plane will be intersected
+  virtual StatusCode predict( const State& state,
+                              const HepPlane3D& plane,
+                              double& dZ ) = 0;
 
   /// Propagate a state to the closest point to the specified point
   virtual StatusCode propagate( State& state,
                                 const HepPoint3D& point,
                                 ParticleID pid = ParticleID(211) ) = 0;
+
+  //--------- ACCESS METHOD ---------------------------------------
 
   /// Retrieve the position and momentum vectors and the corresponding
   /// 6D covariance matrix (pos:1->3,mom:4-6) of a track at a given z-position

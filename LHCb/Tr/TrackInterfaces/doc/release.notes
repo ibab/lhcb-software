@@ -4,6 +4,9 @@
 ! Purpose     : package for tracking tools interfaces
 !-----------------------------------------------------------------------------
 
+! 2005-06-28 - Jose A. Hernando
+	- added predict() to a "plane" at the ITrackExtrapolator
+
 ! 2005-06-28 - Eduardo Rodrigues
  - added interface to MeasurementProvider tool (concrete tool in Tr/TrackTools)
 
