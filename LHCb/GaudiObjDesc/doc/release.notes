@@ -2,6 +2,10 @@ Package: GaudiObjDesc
 Desccription: This package contains a set of tools used to generate code from the XML description of the data object classes.
 Package manager : Stefan Roiser
 
+!20050719 - Hubert Degaudenzi
+- added removal of the xml/gdd.dtd file for the clean target of the 
+  makefile fragments. fixed bug #9584.
+
 ===============================GaudiObjDesc v7r4============================
 !20050706 - Hubert Degaudenzi
 - fixed end of lines in gdd.dtd

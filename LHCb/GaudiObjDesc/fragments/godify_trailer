@@ -5,7 +5,8 @@ clean :: ${CONSTITUENT}clean
 ${CONSTITUENT}clean ::
 	$(cleanup_echo) Removing GOD files
 	-$(cleanup_silent) rm *.godify
+	-$(cleanup_silent) rm -f $(dtdfile)
 
-	
+
 
  

@@ -6,5 +6,6 @@ ${CONSTITUENT}clean ::
 	$(cleanup_echo) dictionaries and .obj2dict files
 	-$(cleanup_silent) rm $(dest)*.obj2dict
 	-$(cleanup_silent) rm $(dest)*.cpp
+	-$(cleanup_silent) rm -f $(dtdfile)
 
  
