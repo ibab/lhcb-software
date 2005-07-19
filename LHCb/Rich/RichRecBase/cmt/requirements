@@ -2,11 +2,11 @@
 # Created    : 2002-11-19
 # Maintainer : Chris Jones   Christopher.Rob.Jones@cern.ch 
 #============================================================================
-# $Id: requirements,v 1.32 2005-06-21 14:26:23 cattanem Exp $
+# $Id: requirements,v 1.33 2005-07-19 11:34:33 cattanem Exp $
 #============================================================================
 
 package   RichRecBase
-version   v1r16
+version   v1r16p1
 
 #============================================================================
 # Structure
@@ -16,7 +16,7 @@ branches xml doc src cmt Event RichRecBase
 #============================================================================
 # Used packages.
 #============================================================================
-use   RichEvent      v8r*    Event
+use   RichEvent      v*      Event
 use   DAQEvent       v*      Event
 
 #============================================================================

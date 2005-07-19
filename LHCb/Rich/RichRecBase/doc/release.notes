@@ -4,6 +4,7 @@
 ! Purpose     : Base package for RICH Reconstruction Packages
 !-----------------------------------------------------------------------------
 
+!====================== RichRecBase v1r16p1 2005-07-13 =====================
 ! 2005-07-13 - Chris Jones
  - Add missing include of Kernel/RichRadiatorType.h to RichRecPixel.xml
 
