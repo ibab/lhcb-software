@@ -55,7 +55,7 @@ use PatVelo             v1r1    Pat   # Olivier Callot, David Hutchcroft
 use PatChecker          v1r0    Pat   # Olivier Callot
 
 # L1 reconstruction and decision
-use L1Reco		v7r0	Trg   # Mariusz Witek
+use L1Reco		v7r1    Trg   # Mariusz Witek
 use L1Decision		v5r1p1  Trg   # Thomas Schietinger
 
 # Muon
