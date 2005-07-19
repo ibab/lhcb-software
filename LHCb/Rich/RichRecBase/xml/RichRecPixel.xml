@@ -4,7 +4,7 @@
 <package name="RichRecBase">
 
 <!-- **************************************************************************
-  * $Id: RichRecPixel.xml,v 1.9 2005-06-23 15:13:05 jonrob Exp $
+  * $Id: RichRecPixel.xml,v 1.10 2005-07-19 10:33:53 jonrob Exp $
   *****************************************************************************
   * XML-description of RichRecPixel class                                     *
   * author: Chris Jones   Christopher.Rob.Jones@cern.ch                       *
@@ -25,11 +25,13 @@
         &KeyedObject;
             
         <import name="RichRecBase/RichRecPixelParentType"/>
+        <import name="Kernel/RichRadiatorType"/>
         <import name="Kernel/RichDetectorType"/>
 
         <import ignore="TRUE" name="Rich"/>
         <import ignore="TRUE" name="PixelParent"/>
         <import ignore="TRUE" name="Type"/>
+        <import ignore="TRUE" name="RadiatorType"/>
         <import ignore="TRUE" name="DetectorType"/>
         <import name="Kernel/RichSmartID"/>
 
