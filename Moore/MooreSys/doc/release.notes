@@ -3,8 +3,9 @@ Package     : MooreSys
 Package Coordinator : Patrick Koppenburg and Marco Cattaneo
 Purpose     : LHCb HLT application
 
-</PRE><H1><A NAME=v1r2>2005-07-15 Moore v1r2</A></H1><PRE>
+</PRE><H1><A NAME=v1r2>2005-07-19 Moore v1r2</A></H1><PRE>
 This version uses LHCb v18r8, Lbcom v2r4, Rec v1r4, Phys v1r4, Online v1r4
+                  Gaudi v16r5 and XmlDDDB v26r1
 
  - New feature:
    . In offline mode, any /Raw, /Rec, /MC, /Trig node that may have been 
@@ -19,6 +20,8 @@ This version uses LHCb v18r8, Lbcom v2r4, Rec v1r4, Phys v1r4, Online v1r4
    . Change OT readout gate from 50ns to 75ns (OTDAQ v3r3)
 
  - Bug fixes:
+   . For 2D tracks, get phi-zone geometry from Velo detector element. Fixes L1
+     accept rate problem in RTTC data (L1Reco v7r1)
    . Add /Event/Rec Node to DataOnDemandSvc, to prevent triggering a CaloPID
      algorithm instead (MooreCommon.opts)
    . Load GaudiPoolDb even in online (for Event dictionary) (MooreOnline.opts)
