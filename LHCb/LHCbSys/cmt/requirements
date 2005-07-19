@@ -91,7 +91,7 @@ use LHCbAlgs		v1r8	Kernel  # Marco Cattaneo
 use MCTools		v1r13	Phys    # Many
 use CaloInterfaces      v4r3    Calo    # Olivier Deschamps
 use CaloUtils           v4r9    Calo    # Olivier Deschamps
-use RichRecBase		v1r16   Rich    # Chris Jones
+use RichRecBase	        v1r16p1 Rich    # Chris Jones
 use STTools		v1r1	IT      # Matt Needham
 use TrackInterfaces 	v1r1	Tr      # Eduardo Rodrigues, Jose Hernando
 use DetCond             v7r5    Det     # Marco Clemencic
