@@ -74,7 +74,7 @@ use RichRecTools        v2r15   Rich  # Chris Jones
 use RichRecMCTools      v1r9    Rich  # Chris Jones
 use RichRecMonitors     v1r0    Rich  # Chris Jones
 use RichRecQC           v1r11   Rich  # Chris Jones
-use RichHLTSys		v1r1    Rich  # Chris Jones
+use RichHLTSys		v1r1p1  Rich  # Chris Jones
 use RichTrgGlobalPID	v2r0    Rich  # Chris Jones
 use RichTrgTools	v1r1    Rich  # Chris Jones
 
