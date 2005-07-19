@@ -34,24 +34,15 @@ public:
   virtual ~TrackLinearExtrapolator();
 
   /// Predict where the plane will be intersected
-  virtual StatusCode predict( State& state,
-                              const HepPlane3D& plane,
-                              double& dZ )
-    {
-      warning() << "Operation not implemented for this class." << endreq;
-      return StatusCode::FAILURE;
-    }
+  StatusCode predict( const State& state,
+                      const HepPlane3D& plane,
+                      double& dZ );
 
   /// Propagate a state to a given z-position
   StatusCode propagate( State& state,
                         double z,
                         ParticleID pid = ParticleID(211) );
-
-  /// Propagate a state to the intersection point with a given plane
-  StatusCode propagate( State& state,
-                        const HepPlane3D& plane,
-                        ParticleID pid = ParticleID(211) );
-
+  
   /// Propagate a state to the closest position to the specified point
   StatusCode propagate( State& state,
                         const HepPoint3D& point,

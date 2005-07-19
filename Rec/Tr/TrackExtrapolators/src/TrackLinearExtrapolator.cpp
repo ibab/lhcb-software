@@ -46,13 +46,13 @@ StatusCode TrackLinearExtrapolator::propagate( State& state,
   return StatusCode::SUCCESS;
 }
 
-//=============================================================================
-// Propagate a State to the intersection point with a given plane
-//=============================================================================
-StatusCode TrackLinearExtrapolator::propagate( State& state,
-                                               const HepPlane3D& plane,
-                                               ParticleID pid )
+StatusCode TrackLinearExtrapolator::predict(const State& state,
+                                            const HepPlane3D& plane,
+                                            double& dZ) 
 {
+  
+  StatusCode sc = StatusCode::SUCCESS;
+  
   // calculation of the z-position by linear extrapolation to the plane
   // ------------------------------------------------------------------
   // given the plane defined by (a,b,c,d) and the input state of
@@ -80,14 +80,13 @@ StatusCode TrackLinearExtrapolator::propagate( State& state,
   
   // z-value of intersection point
   double zNew = - (nom / den) + state.z();
+  dZ = zNew - state.z();
 
   debug() << " z propagation " << zNew 
-          << " of particle pid " << pid.pid() << endreq;
-
-  // Propagate to the intersection point  
-  StatusCode sc = propagate(state, zNew, pid);
+          << " delta-z " << dZ << endreq;
 
   return sc;
+
 }
 
 //=============================================================================

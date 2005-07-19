@@ -8,7 +8,6 @@
 #include "TrackTransportStep.h"
 
 // Forward declarations
-
 class ITransportSvc;
 class Material;
 
@@ -46,14 +45,6 @@ class TrackMasterExtrapolator: public TrackExtrapolator
   /// intialize
   virtual StatusCode initialize();
  
-  /// Predict where the plane will be intersected
-  virtual StatusCode predict( State& state,
-                              HepPlane3D& plane,
-                              double& dZ )
-    {
-      warning() << "Operation not implemented for this class." << endreq;
-      return StatusCode::FAILURE;
-    }
 
   /// Propagate a state to a given z-position
   virtual StatusCode propagate( State& state,
@@ -64,15 +55,6 @@ class TrackMasterExtrapolator: public TrackExtrapolator
   StatusCode propagate( State& state,
                         const HepPlane3D& plane,
                         ParticleID pid = ParticleID(211) );
-
-  // Propagate to the closest point to the specified point
-  StatusCode propagate( State& state,
-			const HepPoint3D& point,
-			ParticleID pid = ParticleID(211) )
-    {
-      warning() << "Operation not implemented for this class." << endreq;
-      return StatusCode::FAILURE; 
-    }
 
  private:
  
@@ -151,7 +133,7 @@ class TrackMasterExtrapolator: public TrackExtrapolator
 
 inline ITrackExtrapolator* 
 TrackMasterExtrapolator::chooseMagFieldExtrapolator( const double zStart,
-							  const double zTarget )
+                                                     const double zTarget )
 {
   //choose which extrapolator to use in magnetic field - simplifies the code
   return (fabs(zTarget-zStart)< m_shortDist ? m_shortFieldExtrapolator : m_longFieldExtrapolator);

@@ -36,41 +36,12 @@ public:
   /// initialize
   virtual StatusCode initialize();
 
-  /// Predict where the plane will be intersected
-  virtual StatusCode predict( State& state,
-                              const HepPlane3D& plane,
-                              double& dZ )
-    {
-      warning() << "Operation not implemented for this class." << endreq;
-      return StatusCode::FAILURE;
-    }
 
   /// Propagate a state to a given z-position
   virtual StatusCode propagate( State& pState, 
                                 double z,
                                 ParticleID partId = ParticleID(211) );
 
-  // Propagate a state to the intersection point with a given plane
-  // Taken care of in the TrackMasterExtrapolator
-  StatusCode propagate( State& state,
-			const HepPlane3D& plane,
-			double& dZ )
-    {
-      warning() << "Operation not implemented in this class,
- please use the MaterExtrapolator." << endreq;
-      return StatusCode::FAILURE;
-    }
-  
-  // Propagate to the closest point to the specified point
-  StatusCode propagate( State& state,
-			const HepPoint3D& point,
-			double& dZ )
-    {
-      warning() << "Operation not implemented for this class." << endreq;
-
-    return StatusCode::FAILURE;
-    }
-  
 private:
  
   /// interface to Hera-b code

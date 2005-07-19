@@ -5,10 +5,11 @@
 
 // local
 #include "TrackExtrapolator.h"
+#include "Event/TrackParameters.h"
 
 // Declaration of the Tool Factory
 static const  ToolFactory<TrackExtrapolator>          s_factory ;
-const        IToolFactory& TrackExtrapolatorFactory = s_factory ; 
+const        IToolFactory& TrackExtrapolatorFactory = s_factory ;
 
 //=============================================================================
 // Propagate a track to a given z-position
@@ -28,6 +29,20 @@ StatusCode TrackExtrapolator::propagate( const Track& track,
   return sc;
 }
 
+StatusCode TrackExtrapolator::propagate( State& state, 
+                                         double z,
+                                         ParticleID pid )
+{
+  StatusCode sc = StatusCode::FAILURE;
+
+  warning() << " can not propagate state at z" << state.z() << endreq;
+  warning() << " to the z position " << z << endreq;
+  warning() << " of pid " << pid.pid() << endreq;
+
+  return sc;
+}
+
+
 //=============================================================================
 // Propagate a track to the intersection point with a given plane
 //=============================================================================
@@ -45,6 +60,57 @@ StatusCode TrackExtrapolator::propagate( const Track& track,
 
   return sc;
 }
+
+//=============================================================================
+// Propagate a state to the intersection point with a given plane
+//=============================================================================
+StatusCode TrackExtrapolator::propagate( State& state, 
+                                         const HepPlane3D& plane, 
+                                         ParticleID pid )
+{
+  StatusCode sc;
+  
+  // Determine disitance in Z to the intersection point 
+  double dZ = 0.;
+  sc = predict(state, plane, dZ);
+  
+  if( dZ != 0. ) { propagate( state, state.z()+dZ, pid ); }
+  
+  // Check for success
+  HepPoint3D P= state.position();
+  if( TrackParameters::hiTolerance < fabs( plane.distance(P) ) )
+  {
+    sc = StatusCode::FAILURE;
+  }
+  
+  return sc;  
+}
+
+StatusCode TrackExtrapolator::predict(const State& state,
+                                      const HepPlane3D& plane,
+                                      double& dZ) 
+{
+  dZ = 0.;
+  warning() << " Can not *predict* state at " << state.z()  << endreq;
+  warning() <<"  to plane with normal" << plane.normal() << endreq;
+  return StatusCode::FAILURE;
+}
+
+StatusCode TrackExtrapolator::propagate( State& state,
+                                         const HepPoint3D& point,
+                                         ParticleID  pid )
+{
+  StatusCode sc = StatusCode::FAILURE;
+  warning() << " can not propagate state at " << state.z() << endreq;
+  warning() << " to point at z " << point.z() << endreq;
+  warning() << " of pid " << pid.pid() << endreq;
+  return sc;
+}
+
+
+//--------------------------------------------------------------------------
+//  ACCESS METHODS
+//--------------------------------------------------------------------------
 
 //=============================================================================
 // Retrieve the position and momentum vectors and the corresponding
@@ -203,9 +269,9 @@ StatusCode TrackExtrapolator::position( const Track& track,
 // track with a given plane
 //=============================================================================
 StatusCode TrackExtrapolator::position( const Track& track,
-                                     const HepPlane3D& plane,
-                                     HepPoint3D& pos,
-                                     ParticleID pid )
+                                        const HepPlane3D& plane,
+                                        HepPoint3D& pos,
+                                        ParticleID pid )
 {
   State tmpState;
 

@@ -37,7 +37,7 @@ public:
   virtual StatusCode initialize();
   
   // Predicts the distance in Z from the state to the plane
-  StatusCode predict( State& state,
+  StatusCode predict( const State& state,
                       const HepPlane3D& plane,
                       double& dZ );
 
@@ -46,10 +46,6 @@ public:
                                 double z,
                                 ParticleID pid = ParticleID(211) );
 
-  // Propagate a state to the intersection point with a given plane
-  StatusCode propagate( State& state,
-                        const HepPlane3D& plane,
-                        ParticleID pid = ParticleID(211) );
   
   // Propagate a state to the closest position to the specified point
   StatusCode propagate( State& state,

@@ -50,8 +50,8 @@ StatusCode TrackParabolicExtrapolator::initialize()
 
 // Propagate a state to a given z-position
 StatusCode TrackParabolicExtrapolator::propagate( State& state, 
-						  double zNew, 
-						  ParticleID )
+                                                  double zNew, 
+                                                  ParticleID )
 {
   // Reset the transport matrix
   m_F = HepMatrix(5, 5, 1);
@@ -98,35 +98,12 @@ StatusCode TrackParabolicExtrapolator::propagate( State& state,
   return StatusCode::SUCCESS;
 }
 
-//=============================================================================
-// Propagate a state to the intersection point with a given plane
-//=============================================================================
-StatusCode TrackParabolicExtrapolator::propagate( State& state, 
-                                                  const HepPlane3D& plane, 
-                                                  ParticleID pid )
-{
-  StatusCode sc;
-  
-  // Determine disitance in Z to the intersection point 
-  double dZ = 0.;
-  sc = predict(state, plane, dZ);
-  
-  if( dZ != 0. ) { propagate( state, state.z()+dZ ); }
-  
-  // Check for success
-  HepPoint3D P= state.position();
-  if( TrackParameters::hiTolerance < fabs( plane.distance(P) ) )
-  {
-    sc = StatusCode::FAILURE;
-  }
-  
-  return sc;  
-}
+
 
 //=============================================================================
 // Predicts the distance in Z from the State to the plane
 //=============================================================================
-StatusCode TrackParabolicExtrapolator::predict( State& state,
+StatusCode TrackParabolicExtrapolator::predict( const State& state,
                                                 const HepPlane3D& plane,
                                                 double& dZ ) 
 {
@@ -146,8 +123,8 @@ StatusCode TrackParabolicExtrapolator::predict( State& state,
   m_ax = norm*( Ty*(Tx*m_B.x()+m_B.z())-(gsl_pow_2(nTx)*m_B.y()));
   m_ay = norm*(-Tx*(Ty*m_B.y()+m_B.z())+(gsl_pow_2(nTy)*m_B.x()));
    
-  // get reference to the State vector
-  HepVector& tState = state.stateVector();
+  // get the State vector
+  const HepVector& tState = state.stateVector();
 
   double varA = 0.5*m_ax*tState[4]*eplus*c_light;
   double varB = 0.5*m_ay*tState[4]*eplus*c_light;

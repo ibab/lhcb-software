@@ -337,8 +337,8 @@ StatusCode TrackMasterExtrapolator::propagate( State& state,
 // Propagate a State to the intersection point with a given plane
 //=============================================================================
 StatusCode TrackMasterExtrapolator::propagate( State& state,
-                                                    const HepPlane3D& plane,
-                                                    ParticleID pid )
+                                               const HepPlane3D& plane,
+                                               ParticleID pid )
 {
   StatusCode sc = StatusCode::SUCCESS;
   
@@ -373,6 +373,9 @@ StatusCode TrackMasterExtrapolator::propagate( State& state,
 	  sc = myExtrapolator->propagate( state, plane );
 	}
     }
+
+  debug() << " propagated state at " << state.z() 
+          << " of particle pid " << pid.pid() << endreq;
   
   return sc;
 }
