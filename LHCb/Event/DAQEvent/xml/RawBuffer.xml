@@ -8,7 +8,8 @@
      ****************************************************************-->
      <class 
       author="Helder Lopes"
-      desc="Raw event buffer as read out by the DAQ after L1 trigger"
+      desc="Raw event buffer as read out by the DAQ after L1 trigger.
+            Important: the RawBuffer object is created either by the simulation, or when making the online data persistent. It does not exist in applications running in the online farm. Therefore, it should never be explicitly accessed for reading, use RawEvent instead"
       name="RawBuffer"
       location="DAQ/RawBuffer"
       id="1001"
@@ -16,7 +17,7 @@
        <enum
         desc="Define the bank types for Raw buffer"
         name="BankType"
-        value="L0Calo=0, L0DU, PrsE, EcalE, HcalE, PrsTrig, EcalTrig, HcalTrig, Velo, Rich, TT, IT, OT, Muon, L0PU, DAQ, ODIN, HLT"
+        value="L0Calo=0, L0DU, PrsE, EcalE, HcalE, PrsTrig, EcalTrig, HcalTrig, Velo, Rich, TT, IT, OT, Muon, L0PU, DAQ, ODIN, HLT, VeloFull"
         access="PUBLIC"
        />
        <enum
