@@ -5,12 +5,16 @@ Purpose: LHCb reconstruction packages.
          This project groups together all the reconstruction packages needed
          by one or more LHCb applications. 
 
-</PRE><H1><A NAME=v1r4>2005-07-19 RecSys v1r4</A></H1><PRE>
+</PRE><H1><A NAME=v1r4>2005-07-20 RecSys v1r4</A></H1><PRE>
 This version uses Gaudi v16r5, LHCb v18r8
+
+- Package added: TrgConverter v1r0 - Coverts Trg tracks into new track model
 
 - Packages modified: TrgSys v7r5, TrgVelo v7r4, TrgMuon v1r2p3, TrgForward v5r2,
                      L1Reco v7r1, L1Decision v5r1p1, PatSys v1r1, PatVelo v1r1, 
-                     RichRecSys v1r18, RichLocalPID v1r12, RichHltSys v1r1p1
+                     RichRecSys v1r18, RichLocalPID v1r12, RichHltSys v1r1p1,
+                     TrackFitEvent v1r2, TrackTools v1r2, TrConverters v1r2, 
+                     TrackProjectors v1r2, TrackExtrapolators v1r1
 
 - In DoxyFile.cfg
   . Get dot tool configuration from dottools.cfg, rather than from makedoc.py
@@ -34,6 +38,10 @@ This version uses Gaudi v16r5, LHCb v18r8
 
 - In RichLocalPID v1r12
   . Fixes to prevent accesses to TES before main event processing.
+
+- In TrackFitEvent v1r2, TrackTools v1r2, TrConverters v1r2, 
+     TrackProjectors v1r2, TrackExtrapolators v1r1
+  . Various updates to tools for new track model
 
 </PRE><H1><A NAME=v1r3>2005-06-27 RecSys v1r3</A></H1><PRE>
 This version uses Gaudi v16r4, LHCb v18r7 (also CLHEP 1.9, ROOT 4.0)
