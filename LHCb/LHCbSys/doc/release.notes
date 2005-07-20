@@ -10,12 +10,13 @@ This version uses Gaudi v16r5
 
  - New packages      : LinkerInstances v1r0 - dictionaries of Linker objects for
                                               use with GaudiPython
+                       TrackPython v1r0 - To expose track interfaces to Python
  - Modified packages : KernelSys v4r13p1, LHCbKernel v5r12p1,
      EventSys v20r8, DAQEvent v5r2p2, PhysEvent v8r10, TrackEvent v1r3,
      PackedEvent v1r1, DetSys v7r3, DetDesc v15r3, DetDescCnv v2r8, VeloDet v9r8,
      MuonDet v4r8, CaloDet v6r9p1, OTDet v5r6, XmlTools v3r6, TrgTools v7r5,
      DetCond v7r5, XmlTools v3r6, DAQSys v1r6, VeloDAQ v2r3p2, OTDAQ v3r3,
-     LHCbAlgs v1r8, RichRecBase v1r16p1
+     LHCbAlgs v1r8, RichRecBase v1r16p1, TrackInterfaces v1r2
 
  - In DoxyFile.cfg
    . Get dot tool configuration from dottools.cfg, rather than from makedoc.py
@@ -95,7 +96,11 @@ This version uses Gaudi v16r5
    . Add EventNodeKiller algorithm to kill nodes in the event data store 
 
  - In RichRecBase v1r16p1
-   . Add mising include Kerne/RichRadiatorType.h to RichRecPixel.xml
+   . Add missing include Kerne/RichRadiatorType.h to RichRecPixel.xml
+
+ - In TrackInterfaces v1r2
+   . Added propagate() and predict() methods to ITrackExtrapolator
+   . Add IMeasurementProvider tool interface
 
 </PRE><H1><A NAME=v18r7>2005-06-28 LHCbSys v18r7</A></H1><PRE>
  - Packages modified: KernelSys v4r13, LHCbKernel v5r12, RichKernel v5r5,
