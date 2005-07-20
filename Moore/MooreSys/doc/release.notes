@@ -13,6 +13,8 @@ This version uses LHCb v18r8, Lbcom v2r4, Rec v1r4, Phys v1r4, Online v1r4
      first TopAlg. This enables to transparently process .raw files that may or
      may not have these nodes already existing (MooreOffline.opts, LHCbAlgs v1r8)
    . Add support for OT RawBank v2 (OTDAQ v3r3, TrgForward v5r2)
+   . MakeResonances now does not make any plot by default, exclusive HLT options
+     have been updated accordingly
 
  - New tuning:
    . Removed ResolutionCor from DeOTDetector, following 2005 test beam
@@ -30,6 +32,8 @@ This version uses LHCb v18r8, Lbcom v2r4, Rec v1r4, Phys v1r4, Online v1r4
    . HltCompare2RawBuffer algorithm no longer tries to access RawBuffer, 
      accesses RawEvent instead (HltMonitor v1r1)
    . Fix memory leak in XmlMuonRegionCnv (MuonDet v4r8)
+   . Fixes to bugs found during RTTC in various HLT packages, see PhysSys
+     release notes for details 
 
 </PRE><H1><A NAME=v1r1>2005-06-27 Moore v1r1</A></H1><PRE>
 This version uses LHCb v18r7, Lbcom v2r3, Rec v1r3, Phys v1r3, Online v1r3
