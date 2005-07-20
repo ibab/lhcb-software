@@ -98,12 +98,6 @@ c      End
       
       weight_max = 1.0
            
-      Call hbook2(1,' Dalitz Plot ',500,0.,30.,500,0.,30.,0.)
-      Call hbook2(2,' B+ decay    ',500,0.,30.,500,0.,30.,0.)
-      Call hbook2(3,' B- decay    ',500,0.,30.,500,0.,30.,0.)
-      Call hbook1(4,' Weight      ',500,0., 5.,0.)
-      Call hbook1(5,' pi+pi0      ',500,0., 5.,0.)
-
 c run : Simulation of the Anders Ryd Generator
 
       Do number=1,N_asked ! weighted events as generated here 
@@ -140,7 +134,6 @@ c a Bp tag =>  the decay is one from a Bm
       Weight= ABm
       
       End If
-		     Call hf1(4,Real(Weight),1.) 
       If(Weight.Gt.evtranf()) Then
 c----------------------------------------------------------------------------         
 c unweighted event production
@@ -154,11 +147,6 @@ C here is just a Dalitz plot and a few prints
       m_rho12=m_rho12-(p_pi_plus (j)+p_gamma_1(j)+p_gamma_2(j))**2 
       m_rho13=m_rho13-(p_pi_plus (j)+p_gamma_3(j)+p_gamma_4(j))**2  
       end do                 
-                     Call hf2(1,Real(m_rho12),Real(m_rho13),1.)
-      If(Tag.gt.0.5) Call hf2(2,Real(m_rho12),Real(m_rho13),1.) 
-      If(Tag.lt.0.5) Call hf2(3,Real(m_rho12),Real(m_rho13),1.)  
-		     Call hf1(5,Real(m_rho12),1.) 
-		     Call hf1(5,Real(m_rho13),1.)
 		     
 c here is a check that weight_max is one
 
@@ -175,8 +163,6 @@ c end of the loop over events
       
       Print*,'number of unity-weight events generated : ',N_gener
       Print*,'number of trials                        : ',N_asked
-      
-      Call Hrput(0,'Test.hist','n')
       
       End
 C===================================================================

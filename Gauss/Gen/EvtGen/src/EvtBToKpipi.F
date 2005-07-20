@@ -68,7 +68,6 @@ C      Real Hmemor
 C      Common/Pawc/Hmemor(1000000)
 C      Call Hlimit(1000000)
 C      Call EvtHowToUse_Kpipi
-C      Call Hrput(0,'Test.hist','n')
 C      Stop
 C      End
       
@@ -95,16 +94,6 @@ C      End
       
       weight_max = 1.0
       
-      Call hbook1(1,' Weight      ',500,0., 5.,0.)           
-      Call hbook2(2,' Dalitz Plot ',300,0.,30.,300,0.,30.,0.)
-      Call hbook1(3,' K+pi0       ',300,0., 30.,0.)
-      Call hbook1(4,' K+pi-       ',300,0., 30.,0.)
-      Call hbook1(5,' pi-pi0      ',300,0., 30.,0.)
-      Call hbook1(13,' K+pi0       ',300,0., 3.,0.)
-      Call hbook1(14,' K+pi-       ',300,0., 3.,0.)
-      Call hbook1(15,' pi-pi0      ',300,0., 3.,0.)     
-      Call hbook2(6,' Dalitz Plot ',300,0.,30.,300,0.,30.,0.)      
-
 c run : Simulation of the Anders Ryd Generator
 
       Do number=1,N_asked ! weighted events as generated here 
@@ -137,7 +126,6 @@ c a B0    tag =>  the decay is one from a B0bar
       Weight= Real_B0bar   **2 + Imag_B0bar   **2
       
       End If
-		     Call hf1(1,Real(Weight),1.)
 		      
       If(Weight.Gt.Evtranf()) Then
 c----------------------------------------------------------------------------         
@@ -154,13 +142,6 @@ C here is just a Dalitz plot and a few prints
       m_rhom  =m_rhom   -(p_pi_minus (j)+p_gamma_1(j)+p_gamma_2(j))**2
       m_Kstar0=m_Kstar0 -(p_K_plus   (j)+p_pi_minus (j))           **2        
       end do                 
-                     Call hf2(2,Real(m_Kstarp),Real(m_Kstar0),1.)
-		     Call hf1(3,Real(m_Kstarp),1.)                     
-		     Call hf1(4,Real(m_Kstar0),1.) 
-		     Call hf1(5,Real(m_rhom  ),1.)
-		     Call hf1(13,Real(m_Kstarp),1.)                     
-		     Call hf1(14,Real(m_Kstar0),1.) 
-		     Call hf1(15,Real(m_rhom  ),1.)		     
 c here is the Dalitz plot when assuming the pion mass for the Kaon
 c the energy is redefined
       Wrong =0.  
@@ -175,7 +156,6 @@ c the energy is redefined
       m_Kstarp=m_Kstarp -(p_K_plus   (j)+p_gamma_1(j)+p_gamma_2(j))**2 
       m_Kstar0=m_Kstar0 -(p_K_plus   (j)+p_pi_minus (j))           **2        
       end do    		     
-		     Call hf2(6,Real(m_Kstarp),Real(m_rhom),1.)
 		     
 c here is a check that weight_max is one
 
@@ -192,8 +172,6 @@ c end of the loop over events
       
       Print*,'number of unity-weight events generated : ',N_gener
       Print*,'number of trials                        : ',N_asked
-      
-      Call Hrput(0,'Test.hist','n')
       
       End
 C===================================================================

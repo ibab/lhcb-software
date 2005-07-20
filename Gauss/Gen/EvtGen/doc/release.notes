@@ -1,6 +1,13 @@
 Package :EvtGen 
 Package manager : Patrick Robbe
 
+! 2005-07-20 - Patrick Robbe
+ - src/EvtBTo3pi.F
+ - src/EvtBTo3piMPP.F
+ - src/EvtBTo3piP00.F
+ - src/EvtBToKpipi.F: remove calls to hbook functions to remove dependency
+   to cernlib.
+
 !============================== EvtGen v8r4p1 =============================
 ! 2005-06-10 - Gloria CORTI
  - Changes to make code compatible with both CLHEP 1.8 and 1.9 (to

@@ -80,8 +80,6 @@ c      End
       subroutine EvtHowToUse 
       
       Implicit none     
-      Real Hmemor
-      Common/Pawc/Hmemor(1000000)
       Real*8  alphaCP
       Integer iset,number,i,j,jset,N_gener,N_asked
       Real*8  p_pi_plus(4),p_pi_minus(4),p_gamma_1(4),p_gamma_2(4)
@@ -93,8 +91,6 @@ c      End
       Real*8  m_rhop_2,m_rhom_2
       Real*4  Evtranf,Tag
       Real*8  Kin_moy,Kin_moy2,Kin,Lambda
-      
-      Call Hlimit(1000000)
       
       alphaCP      = 0.4
       Lambda     = Dsin(2.*alphaCP)
@@ -109,10 +105,6 @@ c xd is not needed by the generator but by the time-dependant
 C sector of the general BaBar Generator.
       xd         = 0.71
       
-      Call hbook2(1,' Dalitz Plot ',500,0.,30.,500,0.,30.,0.)
-      Call hbook2(2,' B0bar tag   ',500,0.,30.,500,0.,30.,0.)
-      Call hbook2(3,' B0    tag   ',500,0.,30.,500,0.,30.,0.)
-
 c run : Simulation of the Anders Ryd Generator
 
       Do number=1,N_asked ! weighted events as generated here 
@@ -181,10 +173,6 @@ C here is just a Dalitz plot and a few prints
       m_rhom_2=m_rhom_2-(p_pi_minus(j)+p_gamma_1(j)+p_gamma_2(j))**2  
       end do
            
-                     Call hf2(1,Real(m_rhop_2),Real(m_rhom_2),1.)
-      If(Tag.gt.0.5) Call hf2(2,Real(m_rhop_2),Real(m_rhom_2),1.) 
-      If(Tag.lt.0.5) Call hf2(3,Real(m_rhop_2),Real(m_rhom_2),1.)  
-
 c here is a check that weight_max is one
 
       If(Weight.gt.Weight_max) Then
@@ -262,8 +250,6 @@ c end of the loop over events
      +      Kin_moy/Kin_moy2
       Print*,' true value                             = ',Lambda
       
-      
-      Call Hrput(0,'Test.hist','n')
       
       End
 C===================================================================
