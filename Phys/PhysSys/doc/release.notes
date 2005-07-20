@@ -8,7 +8,7 @@ Purpose     : LHCb physics packages
   - Takes all modification already introduced in DaVinci v12r12.
   - Some reorganisation in HLT
 #######################################MM#######################################
-#                                  PHYS v1r2                                   #
+#                                  PHYS v1r4                                   #
 ################################################################################
 ##################################### PHYS #####################################
 !========================== DaVinciAssociators v5r5 2005-07-06 ===================
@@ -299,7 +299,6 @@ Purpose     : LHCb physics packages
      new example for usage of relations 
      between B-candidate and its primary vertex
 
-#################################### PHYSSEL ###################################
 
 </PRE><H1><A NAME=v1r3>2005-06-24 Phys v1r3 - Frozen trigger for RTTC</A></H1><PRE>
   - All packages identical to v1r2, but built against LHCb v16r7
