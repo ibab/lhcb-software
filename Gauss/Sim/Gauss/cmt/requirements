@@ -1,15 +1,15 @@
 package Gauss
-version v20r0
+version v20r1
 
 #=========================================================================
 #-- Structure
 branches src doc options cmt job
 
-#-- tags: AcerMC, Vis
+#-- tags: AcerMC, Vis, GDML
 
 #=========================================================================
 #-- Databases
-use XmlDDDB             v26r0   Det   -no_auto_imports
+use XmlDDDB             v26r1   Det   -no_auto_imports
 use FieldMap            v4r5          -no_auto_imports
 use DecFiles            v8r0    Gen   -no_auto_imports
 use ParamFiles          v3r12         -no_auto_imports

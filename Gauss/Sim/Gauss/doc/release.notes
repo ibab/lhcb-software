@@ -4,6 +4,10 @@
 ! Purpose     : LHCb Simulation Application with Geant4
 !-----------------------------------------------------------------------------
 
+! 2005-07-20 - Gloria CORTI
+ - Use newer version of XmlDDDB (v26r1) and LHCb (v18r8) 
+
+!============================= Gauss v20r0 ==================================
 ! 2005-07-15 - Florence RANJARD
  - requirements - introduce conditional use for
                     LbAcerMC     (tag=AcerMC),
@@ -16,8 +20,6 @@
                   will produce GaussAcerMC.exe
                   which can run with
                   > gaussacermc
-
-!============================= Gauss v20r0 ==================================
 
  2005-07-12 - Gloria CORTI
  - Introduce use of new generator packages with more modular structure 
