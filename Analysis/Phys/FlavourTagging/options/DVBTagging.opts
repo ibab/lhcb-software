@@ -36,7 +36,7 @@ ApplicationMgr.DLLs   += { "VeloDAQ" };
 ApplicationMgr.TopAlg += { "DecodeVeloRawBuffer" };
 
 #include "$FLAVOURTAGGINGOPTS/BTagging.opts"
-//ToolSvc.BTaggingTool.OutputLevel = 2;
+ToolSvc.BTaggingTool.OutputLevel = 2;
 
 ///---------------------------------------------------------------
 /// 		BTaggingChecker
@@ -47,7 +47,7 @@ ApplicationMgr.TopAlg += { "DecodeVeloRawBuffer" };
 
 //---------------------------------------------------------------
 // Number of events to process, skip and printing frequency
-MessageSvc.Format = "% F%40W%S%7W%R%T %0W%M";
+MessageSvc.Format = "% F%20W%S%7W%R%T %0W%M";
 ApplicationMgr.EvtMax    = 100;
 EventSelector.FirstEvent = 1;
 EventSelector.PrintFreq  = 1;

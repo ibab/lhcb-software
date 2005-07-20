@@ -1,11 +1,15 @@
-! $Id: release.notes,v 1.77 2005-07-18 11:26:04 pkoppenb Exp $
+! $Id: release.notes,v 1.78 2005-07-20 10:49:50 musy Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Phys/FlavourTagging
 ! Responsible : Marco Musy (musy@cern.ch)
 ! Purpose     : Provide tools and algorithm for tagging B
 !-----------------------------------------------------------------------------
 
-!========================== FlavourTagging v6r2 2005-07-18 ===================
+! 2005-07-20 - Marco Musy
+  - bug fix on the user predefined list of tracks to be used 
+    as tagger candidates (vtags in BTaggingTool)
+  - cosmetics
+
 ! 2005-07-13 - M. Musy
   - bug fix for multiple candidates in BTagging.cpp
   - small bug fix in summaryof.cpp for TDR categories
