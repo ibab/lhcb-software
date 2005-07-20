@@ -32,6 +32,7 @@ This version uses Gaudi v16r5
  - In DAQEvent v5r2p2
    . EventHeaderFromRaw, check existence of DAQ bank before accessing it, return
      StatusCode::FAILURE if missing
+   . Add "VeloFull" to RawBuffer bank types enum
 
  - In PhysEvent v8r10
    . Add FilterCriterion, Tagger classes. Update FlavourTag
