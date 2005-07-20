@@ -4,6 +4,10 @@
 ! Purpose     : interface package to GENSER
 !-----------------------------------------------------------------------------
 
+! 2005-07-20 - Patrick Robbe
+ - requirements - use cernlib with -no_auto_imports and replace packlib
+   library with mathlib library directly in pdflib link options.
+
 !========================= GENSER v2r100p0 ================================
 ! 2005-04-22 - Florence RANJARD
  - requirements - use Pythia static library

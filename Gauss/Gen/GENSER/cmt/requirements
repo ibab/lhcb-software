@@ -24,11 +24,10 @@ include_dirs $(LCG_releases)/GENSER/$(GENSER_native_version)/src/photos/$(photos
 macro photos_linkopts " $(GENSER_home)/lib/libphotos$(photos_native_version).a" \
              WIN32    " /libpath:$(GENSER_home)/lib photos$(photos_native_version).lib"
 
-use cernlib v* LCG_Interfaces
+use cernlib v* LCG_Interfaces -no_auto_imports
 
 macro pdflib_native_version "804"
-macro pdflib_linkopts  " -Wl,-u,pdfset_,-u,structm_,-u,structp_ -L$(cernlib_home)/lib -lpdflib$(pdflib_native_version) " \
+macro pdflib_linkopts  " -Wl,-u,pdfset_,-u,structm_,-u,structp_ -L$(cernlib_home)/lib -lpdflib$(pdflib_native_version) -lkernlib -lmathlib -lg2c " \
       WIN32   "/include:_PDFSET /include:_STRUCTM /include:_STRUCTP /libpath:$(cernlib_home)\lib pdflib$(pdflib_native_version).lib"
-
 
 macro GENSER_linkopts "$(pythia_linkopts) $(pdflib_linkopts) $(photos_linkopts)"
