@@ -15,8 +15,8 @@ use GaudiConf		v9r1
 use HepMC	v4r121p0	Sim     # Gloria Corti, Matt Dobbs
 
 # Kernel packages
-use KernelSys   	v4r13   Kernel  # Marco Cattaneo
-use LHCbKernel  	v5r12   Kernel  # Marco Cattaneo
+use KernelSys           v4r13p1 Kernel  # Marco Cattaneo
+use LHCbKernel          v5r12p1 Kernel  # Marco Cattaneo
 use Relations		v2r5	Kernel  # Ivan Belyaev
 use CaloKernel          v3r2    Calo    # Olivier Deschamps
 use MuonKernel  	v2r7	Muon    # Andrei Tsaregorodtsev
@@ -60,7 +60,7 @@ use EventAssoc          v1r5    Event   # Ivan Belyaev
 use LinkerEvent         v1r8    Event   # Olivier Callot
 use TrgEvent            v5r5    Event   # Olivier Callot
 use PackedEvent         v1r1    Event   # Marco Cattaneo, Olivier Callot
-use TrackEvent          v1r2    Event   # Eduardo Rodrigues, Jose Hernando
+use TrackEvent          v1r3    Event   # Eduardo Rodrigues, Jose Hernando
 use EventUtils		v1r0	Event   # Marco Cattaneo
 use LinkerInstances     v2r0    Event   # Thomas Ruf
 

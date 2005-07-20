@@ -5,12 +5,13 @@
 ! Purpose     : LHCb OO kernel packages
 !-----------------------------------------------------------------------------
 
-</PRE><H1><A NAME=v18r8>2005-07-19 LHCbSys v18r8</A></H1><PRE>
+</PRE><H1><A NAME=v18r8>2005-07-20 LHCbSys v18r8</A></H1><PRE>
 This version uses Gaudi v16r5
 
  - New packages      : LinkerInstances v1r0 - dictionaries of Linker objects for
                                               use with GaudiPython
- - Modified packages : EventSys v20r8, DAQEvent v5r2p2, PhysEvent v8r10,
+ - Modified packages : KernelSys v4r13p1, LHCbKernel v5r12p1,
+     EventSys v20r8, DAQEvent v5r2p2, PhysEvent v8r10, TrackEvent v1r3,
      PackedEvent v1r1, DetSys v7r3, DetDesc v15r3, DetDescCnv v2r8, VeloDet v9r8,
      MuonDet v4r8, CaloDet v6r9p1, OTDet v5r6, XmlTools v3r6, TrgTools v7r5,
      DetCond v7r5, XmlTools v3r6, DAQSys v1r6, VeloDAQ v2r3p2, OTDAQ v3r3,
@@ -19,6 +20,10 @@ This version uses Gaudi v16r5
  - In DoxyFile.cfg
    . Get dot tool configuration from dottools.cfg, rather than from makedoc.py
    . Add *.icpp to file patterns
+
+ - In LHCbKernel v5r12p1
+   . LHCbID::channelID() now returns the internal unsigned int of the specific
+     VeloChannelID, ITChannelID, etc.
 
  - In EventSys v20r8
    . Add PoolCopy.opts: options for copying (or merging) Pool data files
@@ -32,6 +37,10 @@ This version uses Gaudi v16r5
 
  - In PackedEvent v1r1
    . Restore the TrStoredMeasurement references when unpacking PackedTracks
+
+ - In TrackEvent v1r3
+   . Added Track clone method with key
+   . Fixed bug in ordering states added to a track
 
  - In VeloDAQ v2r3p2
    . Bug fix: last Velo Phi bank was missing from in L1Buffer, in cases when this
