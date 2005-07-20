@@ -4,6 +4,7 @@
 ! Purpose     : Package for the tracking fitting-related classes
 !-----------------------------------------------------------------------------
 
+!========================== TrackFitEvent v1r2 2005-07-20 ====================
 ! 2005-07-01 - Eduardo Rodrigues
  - clean-up of debugging statements
 
