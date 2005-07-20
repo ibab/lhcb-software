@@ -1,5 +1,4 @@
-// $Id: BTaggingTool.h,v 1.8 2005-07-08 11:32:06 pkoppenb Exp $
-
+// $Id: BTaggingTool.h,v 1.9 2005-07-20 10:49:50 musy Exp $
 #ifndef USER_BTAGGINGTOOL_H 
 #define USER_BTAGGINGTOOL_H 1
 
@@ -32,7 +31,7 @@
  *  @date   05/06/2005
  */
 
-class IGeomDispCalculator;
+typedef std::vector<const Particle*> CParticleVector;
 
 class BTaggingTool : public GaudiTool,
         virtual public IBTaggingTool {
@@ -54,12 +53,11 @@ public:
   //-------------------------------------------------------------
 
 private:
-  bool isinTree( const Particle*, std::vector<const Particle*>& );
+  bool isinTree( const Particle*, CParticleVector& );
   StatusCode calcIP( const Particle*, const Vertex*, double&, double& );
-  StatusCode calcIP( const Particle*, 
-		     const VertexVector, double&, double& ) ;
-  std::vector<const Particle*> toStdVector( const SmartRefVector<Particle>& );
-  std::vector<const Particle*> FindDaughters( const Particle* );
+  StatusCode calcIP( const Particle*, const VertexVector, double&, double& );
+  CParticleVector toStdVector( const SmartRefVector<Particle>& );
+  CParticleVector FindDaughters( const Particle* );
   long trackType( const Particle* );
 
   ISecondaryVertexTool* m_svtool;

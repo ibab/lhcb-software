@@ -19,19 +19,19 @@ BTaggingTool::BTaggingTool( const std::string& type,
 
   declareInterface<IBTaggingTool>(this);
 
-  declareProperty( "IPPU_cut",     m_IPPU_cut = 3.0 );
-  declareProperty( "thetaMin_cut", m_thetaMin = 0.012 );
-
   declareProperty( "SecondaryVertexName",
 		   m_SecondaryVertexToolName = "SVertexTool" );
   declareProperty( "CombineTaggersName",
 		   m_CombineTaggersName = "CombineTaggersNNet" );
 
-  declareProperty( "RequireTrigger", m_RequireTrigger = false );
-  declareProperty( "RequireL0", m_RequireL0 = false );
-  declareProperty( "RequireL1", m_RequireL1 = false );
-  declareProperty( "RequireHLT",m_RequireHLT= false );
-  declareProperty( "EnableMuonTagger",m_EnableMuon        = true );
+  declareProperty( "IPPU_cut",     m_IPPU_cut = 3.0 );
+  declareProperty( "thetaMin_cut", m_thetaMin = 0.012 );
+
+  declareProperty( "RequireTrigger",  m_RequireTrigger = false );
+  declareProperty( "RequireL0",       m_RequireL0      = false );
+  declareProperty( "RequireL1",       m_RequireL1      = false );
+  declareProperty( "RequireHLT",      m_RequireHLT     = false );
+  declareProperty( "EnableMuonTagger",    m_EnableMuon    = true );
   declareProperty( "EnableElectronTagger",m_EnableElectron= true );
   declareProperty( "EnableKaonOSTagger",  m_EnableKaonOS  = true );
   declareProperty( "EnableKaonSSTagger",  m_EnableKaonSS  = true );
@@ -66,9 +66,10 @@ StatusCode BTaggingTool::initialize() {
     fatal() << "GeomDispCalculator could not be found" << endreq;
     return StatusCode::FAILURE;
   }
-  m_svtool = tool<ISecondaryVertexTool> ("SVertexTool", m_SecondaryVertexToolName, this);
+  m_svtool = tool<ISecondaryVertexTool> ("SVertexTool", 
+					 m_SecondaryVertexToolName, this);
   if(! m_svtool) {
-    warning()<< "No Vertex Charge tag will be used! " 
+    warning()<< "*** No Vertex Charge tag will be used! " 
              << m_SecondaryVertexToolName <<endreq;
   }
   m_taggerMu = tool<ITagger> ("TaggerMuonTool", this);
@@ -116,21 +117,26 @@ StatusCode BTaggingTool::initialize() {
 }
 
 //==========================================================================
-StatusCode BTaggingTool::tag( FlavourTag& theTag, const Particle* AXB0 ) {
+StatusCode BTaggingTool::tag( FlavourTag& theTag, const Particle* AXB ) {
   ParticleVector p(0);
-  return tag( theTag, AXB0, 0, p ) ;
+  return tag( theTag, AXB, 0, p ) ;
 }
 //==========================================================================
-StatusCode BTaggingTool::tag( FlavourTag& theTag, const Particle* AXB0, 
+StatusCode BTaggingTool::tag( FlavourTag& theTag, const Particle* AXB, 
                               const Vertex* RecVert ) {
   ParticleVector p(0);
-  return tag( theTag, AXB0, RecVert, p );
+  return tag( theTag, AXB, RecVert, p );
 }
 //==========================================================================
-StatusCode BTaggingTool::tag( FlavourTag& theTag, const Particle* AXB0, 
+StatusCode BTaggingTool::tag( FlavourTag& theTag, const Particle* AXB, 
                               const Vertex* RecVert,
                               ParticleVector& vtags ) {
+
   theTag.setDecision( FlavourTag::none );
+  if ( ! AXB ) {
+    err() << "No B hypothesis to tag!" << endreq;
+    return StatusCode::FAILURE;
+  }
 
   // Retrieve informations about event
   EventHeader* evt=0;
@@ -195,26 +201,23 @@ StatusCode BTaggingTool::tag( FlavourTag& theTag, const Particle* AXB0,
           << "  Nr Particles: " << parts.size() <<endreq;
   
   //----------------------------
-  if( RecVert == 0 ) {
+  if( ! RecVert ) {
+    //if the prim vtx is not provided by the user,
     //choose as primary vtx the one with smallest IP wrt B signal
     //this is a guess for the actual PV chosen by the selection.
-    //in the future there will be a more solid association in DaVinci
-    Hep3Vector ipVec;
-    HepSymMatrix errMatrix;
     double kdmin = 1000000;
     Vertices::const_iterator iv;
     for(iv=verts.begin(); iv!=verts.end(); iv++){
-      if( (*iv)->type() == Vertex::Primary ){
-        double ip, iperr;
-        calcIP(AXB0, *iv, ip, iperr);
-        debug() <<"Vertex IP="<<ip/iperr<<endreq;
-        if(iperr) if( fabs(ip/iperr) < kdmin ) {
-          kdmin = fabs(ip/iperr);
-          RecVert = (*iv);
-        }     
-      }
+      if( (*iv)->type() != Vertex::Primary ) continue;
+      double ip, iperr;
+      calcIP(AXB, *iv, ip, iperr);
+      debug() << "Vertex IP="<<ip <<endreq;
+      if(iperr) if( fabs(ip/iperr) < kdmin ) {
+	kdmin = fabs(ip/iperr);
+	RecVert = (*iv);
+      }     
     }
-    if( !RecVert ) {
+    if( ! RecVert ) {
       err() <<"No Reconstructed Vertex!! Skip." <<endreq;
       return StatusCode::SUCCESS;
     }    
@@ -230,40 +233,39 @@ StatusCode BTaggingTool::tag( FlavourTag& theTag, const Particle* AXB0,
   }
 
   //loop over Particles, preselect taggers /////////////////////
-  //vector of B daughters:
-  theTag.setTaggedB( AXB0 );
+  theTag.setTaggedB( AXB );
   ParticleVector::iterator ip;
-  std::vector<const Particle*> axdaugh = FindDaughters(AXB0); 
-  axdaugh.push_back(AXB0);
-  if(vtags.size()==0) {
+  CParticleVector axdaugh = FindDaughters( AXB ); //B daughters
+  axdaugh.push_back( AXB );
+  if( vtags.empty() ) { //tagger candidate list is not provided, build one
     for ( ip = parts.begin(); ip != parts.end(); ip++ ){
 
       if( (*ip)->p()/GeV < 2.0 ) continue;               //preselection
       if( (*ip)->momentum().theta()<m_thetaMin) continue;//preselection
       if( (*ip)->charge() == 0 ) continue;               //preselection 
+      if( trackType(*ip) > 3 )   continue;               //preselection
       if( isinTree( *ip, axdaugh ) )  continue ;         //exclude signal
-      if( trackType(*ip) > 3 ) continue;                 //preselection
 
-      //eliminate from vtags all parts coming from a pileup vtx
       //calculate the min IP wrt all pileup vtxs
       double ippu, ippuerr;
       calcIP( *ip, PileUpVtx, ippu, ippuerr );
-      if(ippuerr) if( ippu/ippuerr<m_IPPU_cut ) continue;//preselection
+      //eliminate from vtags all parts coming from a pileup vtx
+      if(ippuerr) if( ippu/ippuerr<m_IPPU_cut ) continue; //preselection
 
       //////////////////////////////////
       vtags.push_back(*ip);          // store tagger candidate
       ////////////////////////////////
     }
   } else {
-    for ( ip = parts.begin(); ip != parts.end(); ip++ ) {
-      if( ! isinTree(*ip, axdaugh) ) vtags.push_back(*ip);
-    }
+    //tagger candidate list is already provided, it is the user responsibility
+    //to check that there is not a signal B daughter inside...
+    debug()<<"User tagger candidate list of size = "<<vtags.size()<<endreq;
   }
 
-  //AXB0 is the signal B from selection
-  bool isBd = false; if( AXB0->particleID().hasDown() )   isBd = true;
-  bool isBs = false; if( AXB0->particleID().hasStrange()) isBs = true;
-  bool isBu = false; if( AXB0->particleID().hasUp() )     isBu = true;
+  //AXB is the signal B from selection
+  bool isBd = false; if( AXB->particleID().hasDown() )   isBd = true;
+  bool isBs = false; if( AXB->particleID().hasStrange()) isBs = true;
+  bool isBu = false; if( AXB->particleID().hasUp() )     isBu = true;
 
   ///--- Inclusive Secondary Vertex ---
   //look for a secondary Vtx due to opposite B
@@ -282,29 +284,29 @@ StatusCode BTaggingTool::tag( FlavourTag& theTag, const Particle* AXB0,
 
   ///Choose Taggers ------------------------------------------------------ 
   debug() <<"determine taggers" <<endreq;
-  Tagger MuonTag, ElecTag, KaonTag, KaonSTag, PionSTag, VtxChTag, JetSTag;
-  if(m_EnableMuon)     MuonTag = m_taggerMu   -> tag(AXB0, allVtx, vtags);
-  if(m_EnableElectron) ElecTag = m_taggerEle  -> tag(AXB0, allVtx, vtags);
-  if(m_EnableKaonOS)   KaonTag = m_taggerKaon -> tag(AXB0, allVtx, vtags);
+  Tagger muonTag, elecTag, kaonTag, kaonSTag, pionSTag, vtxChTag, jetSTag;
+  if(m_EnableMuon)     muonTag = m_taggerMu   -> tag(AXB, allVtx, vtags);
+  if(m_EnableElectron) elecTag = m_taggerEle  -> tag(AXB, allVtx, vtags);
+  if(m_EnableKaonOS)   kaonTag = m_taggerKaon -> tag(AXB, allVtx, vtags);
   if(m_EnableKaonSS) if(isBs)  
-                       KaonSTag= m_taggerKaonS-> tag(AXB0, allVtx, vtags);
+                       kaonSTag= m_taggerKaonS-> tag(AXB, allVtx, vtags);
   if(m_EnablePionSS) if(isBd || isBu)
-                       PionSTag= m_taggerPionS-> tag(AXB0, allVtx, vtags);
+                       pionSTag= m_taggerPionS-> tag(AXB, allVtx, vtags);
   if(m_EnableVertexCharge) 
-                       VtxChTag= m_taggerVtxCh-> tag(AXB0, allVtx, vtags);
-  if(m_EnableJetSame)  JetSTag = m_taggerJetS -> tag(AXB0, allVtx, vtags);
-   std::vector<Tagger*> taggers;
-  taggers.push_back(&MuonTag);
-  taggers.push_back(&ElecTag);
-  taggers.push_back(&KaonTag);
-  if( isBs ) taggers.push_back(&KaonSTag);
-  if( isBu || isBd ) taggers.push_back(&PionSTag);
-  taggers.push_back(&VtxChTag);
+                       vtxChTag= m_taggerVtxCh-> tag(AXB, allVtx, vtags);
+  if(m_EnableJetSame)  jetSTag = m_taggerJetS -> tag(AXB, allVtx, vtags);
+  std::vector<Tagger*> taggers;
+  taggers.push_back(&muonTag);
+  taggers.push_back(&elecTag);
+  taggers.push_back(&kaonTag);
+  if( isBs ) taggers.push_back(&kaonSTag);
+  if( isBu || isBd ) taggers.push_back(&pionSTag);
+  taggers.push_back(&vtxChTag);
   ///---------------------------------------------------------------------
     
   //--------------------------------------------------
   //Now combine the individual tagger decisions into 
-  //a final B flavour tagging decision. Such decision 
+  //one final B flavour tagging decision. Such decision 
   //can be made and categorised in two ways: the "TDR" 
   //approach is based on the particle type, while the 
   //"NNet" approach is based on the wrong tag fraction
@@ -313,18 +315,18 @@ StatusCode BTaggingTool::tag( FlavourTag& theTag, const Particle* AXB0,
   int category = m_combine -> combineTaggers( theTag, taggers );
 
   ///OUTPUT to Logfile ---------------------------------------------------
-  int samesideDec = KaonSTag.decision();
-  if(!samesideDec) samesideDec = PionSTag.decision();
+  int sameside = kaonSTag.decision();
+  if(!sameside) sameside = pionSTag.decision();
   info() << "BTAGGING TAG   " << evt->runNum()
          << std::setw(4) << evt->evtNum()
          << std::setw(4) << trigger
          << std::setw(5) << theTag.decision()
          << std::setw(3) << category
-	 << std::setw(5) << MuonTag.decision()
-	 << std::setw(3) << ElecTag.decision()
-	 << std::setw(3) << KaonTag.decision()
-	 << std::setw(3) << samesideDec
-	 << std::setw(3) << VtxChTag.decision()
+	 << std::setw(5) << muonTag.decision()
+	 << std::setw(3) << elecTag.decision()
+	 << std::setw(3) << kaonTag.decision()
+	 << std::setw(3) << sameside
+	 << std::setw(3) << vtxChTag.decision()
          << endreq;
 
   return StatusCode::SUCCESS;
@@ -333,10 +335,9 @@ StatusCode BTaggingTool::tag( FlavourTag& theTag, const Particle* AXB0,
 StatusCode BTaggingTool::finalize() { return StatusCode::SUCCESS; }
 
 //==========================================================================
-bool BTaggingTool::isinTree( const Particle* axp, 
-                             std::vector<const Particle*>& sons ) {
+bool BTaggingTool::isinTree( const Particle* axp, CParticleVector& sons ) {
 
-  std::vector<const Particle*>::const_iterator ip;
+  CParticleVector::const_iterator ip;
   for( ip = sons.begin(); ip != sons.end(); ip++ ){
     if( (*ip)->origin() == axp->origin() ) {
       debug() << "excluding signal part: " 
@@ -403,25 +404,25 @@ long BTaggingTool::trackType( const Particle* axp ) {
   return trtyp;
 }
 //==========================================================================
-std::vector<const Particle*> BTaggingTool::toStdVector( const SmartRefVector<Particle>& refvector ){
-  std::vector<const Particle*>  tvector;
+CParticleVector BTaggingTool::toStdVector( const SmartRefVector<Particle>& refvector ){
+  CParticleVector  tvector;
   for( SmartRefVector<Particle>::const_iterator ip = refvector.begin();
        ip != refvector.end(); ++ip ) tvector.push_back( *ip );
   return tvector;
 }
 //==========================================================================
 //return a vector containing all daughters of signal 
-std::vector<const Particle*> BTaggingTool::FindDaughters( const Particle* axp ) {
+CParticleVector BTaggingTool::FindDaughters( const Particle* axp ) {
 
-  std::vector<const Particle*> apv, apv2, aplist;
+  CParticleVector apv, apv2, aplist;
   apv.push_back(axp);  
   do {
     apv2.clear();
-    for( std::vector<const Particle*>::const_iterator 
+    for( CParticleVector::const_iterator 
            ip=apv.begin(); ip!=apv.end(); ip++ ) {
       if( (*ip)->endVertex() ) {
-        std::vector<const Particle*> tmp = toStdVector((*ip)->endVertex()->products());
-        for( std::vector<const Particle*> ::const_iterator 
+        CParticleVector tmp = toStdVector((*ip)->endVertex()->products());
+        for( CParticleVector ::const_iterator 
                itmp=tmp.begin(); itmp!=tmp.end(); itmp++){
           apv2.push_back(*itmp);
           aplist.push_back(*itmp);
