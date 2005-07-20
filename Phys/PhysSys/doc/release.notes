@@ -5,6 +5,8 @@ Purpose     : LHCb physics packages
 
 </PRE><H1><A NAME=v1r4>2005-07-18 Phys v1r4 - Updated version fixing some bugs found in RTTC</A></H1><PRE>
   - Built against LHCb v18r8
+  - Takes all modification already introduced in DaVinci v12r12.
+  - Some reorganisation in HLT
 #######################################MM#######################################
 #                                  PHYS v1r2                                   #
 ################################################################################
