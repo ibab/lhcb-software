@@ -79,7 +79,6 @@ ApplicationMgr.TopAlg += { "GaudiSequencer/HltMonitoring" };
 ApplicationMgr.DLLs   += { "HltMonitor" };
 HltMonitoring.Members  += { "TestHltScore" };
 HltMonitoring.Members  += {"PlotTrackDeviation"}; // Monitor
-ApplicationMgr.ExtSvc += { "ParticlePropertySvc" }; // needed for PlotTrackDeviation
 
 // Input data, number of events, OutputLevels etc.
 TestHltScore.OutputLevel = 4 ;

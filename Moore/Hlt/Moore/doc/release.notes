@@ -2,16 +2,14 @@ Package     : Hlt/Moore
 Package Coordinator : Patrick Koppenburg and Marco Cattaneo
 Purpose     : LHCb HLT application
 
-</PRE><H1><A NAME=v1r2>2005-07-18 Moore v1r2</A></H1><PRE>
+</PRE><H1><A NAME=v1r2>2005-07-20 Moore v1r2</A></H1><PRE>
  - Use Rec v1r4, Lbcom v2r4, LHCb v18r8, Phys v1r4, Gaudi v16r5, XmlDDDB v26r1
-   Changes in Phys relevant to Moore are:
-     . MakeResonances now does not make any plot by default,
-     . Exclusive HLT options have been updated accordingly.
-     . Some bugs have been found during RTTC and fixed in various HLT packages
-     See PhysSys release notes for details.
  - Add GaudiPoolDb to Online options (for DataObject dictionary!)
  - Add EventNodeKiller as first TopAlg in Offline options
  - Add /Event/Rec node to DataOnDemandSvc in Common options
+ - Remove unneccessary ApplicationMgr.ExtSvc += { "ParticlePropertySvc" } from
+   MooreCommon.opts
+ - Default setting of Online EventSelector is to read from a file
 
 </PRE><H1><A NAME=v1r1>2005-06-27 Moore v1r1</A></H1><PRE>
  - Adapt requirements to use Rec v1r3, Lbcom v2r3, LHCb v18r7, Phys v1r3,

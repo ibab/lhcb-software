@@ -8,8 +8,8 @@
 ApplicationMgr.DLLs   += { "GaudiOnline", "GaudiPoolDb" };
 EventPersistencySvc.CnvServices += { "OnlineCnvSvc" };
 EventSelector.Input += {
-  "DATA='sfc://${SFCC_SFC_MAC_ADDR}' SVC='GaudiOnline::EvtSelector' INPUT='HLT'"
-  //"DATA='file:///tmp/rawmepraw.out' SVC='GaudiOnline::EvtSelector' INPUT='HLT'"
+  "DATA='file:///tmp/rawmepraw.out' SVC='GaudiOnline::EvtSelector' INPUT='HLT'"
+//"DATA='sfc://${SFCC_SFC_MAC_ADDR}' SVC='GaudiOnline::EvtSelector' INPUT='HLT'"
 };
 
 // Start the monitoring service
