@@ -2,9 +2,10 @@ Package LHCbKernel
 Package manager: M.Cattaneo
 Purpose: LHCb specific Kernel classes
 
+!===================== LHCbKernel v5r12p1 2005-07-20 ======================
 ! 2005-07-14 - Jose A. Hernando
- - in LHCbID, recuperaging the generality of channelID(), it returns the
-internal unsigned int of the specific VeloChannelID, ITChannelID, etc... 
+ - LHCbID::channelID() now returns the internal unsigned int of the specific
+   VeloChannelID, ITChannelID, etc... 
 
 !===================== LHCbKernel v5r12 2005-06-28 ========================
 ! 2005-06-28 - Olivier Callot

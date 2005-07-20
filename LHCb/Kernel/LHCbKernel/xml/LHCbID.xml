@@ -216,7 +216,7 @@ return id;
         type    = "unsigned int"
         name    = "channelID"
         const   = "TRUE"
-        desc    = "General ID: returns detector ID = internal unsingned int">
+        desc    = "General ID: returns detector ID = internal unsigned int">
         <code>
 if (isVelo()) return veloID().channelID();
 if (isST()) return stID().channelID();
