@@ -25,7 +25,7 @@ Package manager : Gloria Corti
    . requirements, remove old package GeneratorsModules and introduce
      use Generators v1r1
      use LbPythia   v1r1
-     use LbAcerMC   v1r1 (commented)
+     use LbAcerMC   v1r2 (commented)
    . Common.opts, remove loading of GeneratorsModule DLL and introduce
      that of Generators and LbPythia
  - Introduce new version of DecFiles v8r0
@@ -69,7 +69,20 @@ Package manager : Gloria Corti
 ! 2005-07-01 - Gloria CORTI
  - Remove obsolete options to read files - jobread.opts - Should instead
    use GaussRead.opts
+
+!========================== EvtGen v8r5 ====================================
+! 2005-07-20 - Patrick Robbe
+ - src/EvtBTo3pi.F
+ - src/EvtBTo3piMPP.F
+ - src/EvtBTo3piP00.F
+ - src/EvtBToKpipi.F: remove calls to hbook functions to remove dependency
+   to cernlib.
  
+!========================= GENSER v3r100p0 ================================
+! 2005-07-20 - Patrick Robbe
+ - requirements - use cernlib with -no_auto_imports and replace packlib
+   library with mathlib library directly in pdflib link options.
+
 !========================== Generators v1r1 ===========================
 ! 2005-07-11 - Gloria CORTI
  - requirements: introduce macro for fortran flags (no second underscore)
@@ -115,7 +128,11 @@ Package manager : Gloria Corti
    of some Pythia functions for specific action in LHCb (forced fragmentation
    mechanism).
  
-!======================== LbAcerMC v1r1 =============================
+!======================== LbAcerMC v1r2 =============================
+! 2005-07-20 - Patrick Robbe
+ - pythia_ac.F: use unit 29 instead of 21 to remove conflict with
+   the HbookCnv package.
+
 ! 2005-07-11 - Patrick Robbe
  - requirements: add no_second_underscore Fortran flag to compile
    the library correctly.
