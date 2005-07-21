@@ -26,6 +26,7 @@ This version uses Gaudi v16r5, LHCb v18r8
 - In L1Reco v7r1
   . For 2D tracks, get phi-zone geometry from Velo detector element. Fixes L1
     accept rate problem in RTTC data
+  . Retune cuts to recover nominal Velo-TT matching working point
 
 - In TrgVelo v7r4, PatVelo v1r1
   . Modified code to use reversed R sensors properly
