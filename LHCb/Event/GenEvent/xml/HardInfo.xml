@@ -2,7 +2,7 @@
 <!DOCTYPE gdd SYSTEM 'gdd.dtd' >
 
 <gdd>
-  <package name="HardInfo">
+  <package name="GenEvent">
     <class
       name   = "HardInfo"
       author = "G.Corti"

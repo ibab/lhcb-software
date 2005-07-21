@@ -2,7 +2,7 @@
 <!DOCTYPE gdd SYSTEM 'gdd.dtd' >
 
 <gdd>
-  <package name ="GenMCLink">
+  <package name ="GenEvent">
     <class
       name = "GenMCLink"
       author = "G.Corti" 

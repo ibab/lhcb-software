@@ -1,6 +1,10 @@
 Package Event/GenEvent
 package coordinator: W.Pokorski, G.Corti
 
+!================ GenEvent v3r3p2 2005-07-21 ==========================
+! 2005-07-21 - Marco Cattaneo
+ - Change package name to GenEvent in *.xml, for GOD Reflex dict generation
+
 !================ GenEvent v3r3p1 2005-02-08 ==========================
 ! 2005-02-08 - Marco Cattaneo
  - Add some template instantiations to please Root 4.

@@ -1,8 +1,7 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <!DOCTYPE gdd SYSTEM 'gdd.dtd'>
 <gdd>
-  <import name="MuonKernel/MuonTileID"/>
-  <package name='L0Muon' >
+  <package name='L0Event' >
 
     <namespace desc="L0Muon specific namespace" name="L0Muon" author='A. Tsaregorodtsev'>
       <enum desc="L0Muon candidate status codes" name="StatusCode" 

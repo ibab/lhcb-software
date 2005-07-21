@@ -4,6 +4,11 @@
 ! Purpose     : Implementation of the Linker package, to associate objects
 !-----------------------------------------------------------------------------
 
+!====================== LinkerEvent v1r8p1 2005-07-21 ========================
+! 2005-07-21 - Marco Cattaneo
+ - Change package name to LinkerEvent in LinksByKey.xml, for GOD Reflex dict
+   generation
+
 !====================== LinkerEvent v1r8 2005-05-04 ==========================
 ! 2005-05-04 - Vanya BELYAEV
 

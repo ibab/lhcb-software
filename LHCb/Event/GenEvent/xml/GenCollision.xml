@@ -2,7 +2,7 @@
 <!DOCTYPE gdd SYSTEM 'gdd.dtd' >
 
 <gdd>
-  <package name="GenCollision">
+  <package name="GenEvent">
    
     <class
       name   = "GenCollision"
