@@ -1,8 +1,11 @@
-# $Id: release.notes,v 1.47 2005-07-11 09:07:15 marcocle Exp $
+# $Id: release.notes,v 1.48 2005-07-21 07:57:50 marcocle Exp $
 Package Det/DetCond
 Package manager : Marco Clemencic
 
-================= Det/DetCond v7r5 2005-07-11 ================================
+================= Det/DetCond v7r5 2005-07-21 ================================
+! 2005-07-21 - Marco CLEMENCIC
+ - Apply always tag NEEDS_COOL_FACTORY (is needed by Windows and Python)
+
 ! 2005-07-11 - Marco CLEMENCIC
  - Removed unused pointers from CondDBCnvSvc
 
