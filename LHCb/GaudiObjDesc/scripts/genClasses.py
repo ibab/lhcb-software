@@ -185,7 +185,7 @@ class genClasses(genSrcUtils.genSrcUtils):
     if (scopeName and not dest.has_key('code')) : return s
     if ( not scopeName ) :
       s += '  /// %s\n  ' % dest['attrs']['desc']
-      if dest['virtual'] == 'TRUE' : s += 'virtual '
+      if dest['attrs']['virtual'] == 'TRUE' : s += 'virtual '
     else :
       s += 'inline '
       scopeName += '::'
