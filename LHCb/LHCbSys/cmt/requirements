@@ -52,12 +52,12 @@ use TrEvent      	v14r3	Event   # N.N.
 use RichEvent    	v8r4    Event   # Chris Jones
 use CaloEvent           v13r9   Event   # Olivier Deschamps
 use MuonEvent    	v4r0	Event   # Alessia Satta
-use L0Event      	v14r3	Event   # O.Callot, O.Deschamps, A.Tsaregorodtsev
+use L0Event      	v14r3p1 Event   # O.Callot, O.Deschamps, A.Tsaregorodtsev
 use PhysEvent    	v8r10   Event   # Patrick Koppenburg
 use DAQEvent		v5r2p2  Event   # Marco Cattaneo
-use GenEvent    	v3r3p1	Event   # Gloria Corti
+use GenEvent    	v3r3p2  Event   # Gloria Corti
 use EventAssoc          v1r5    Event   # Ivan Belyaev
-use LinkerEvent         v1r8    Event   # Olivier Callot
+use LinkerEvent         v1r8p1  Event   # Olivier Callot
 use TrgEvent            v5r5    Event   # Olivier Callot
 use PackedEvent         v1r1    Event   # Marco Cattaneo, Olivier Callot
 use TrackEvent          v1r3    Event   # Eduardo Rodrigues, Jose Hernando

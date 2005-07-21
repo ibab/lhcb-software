@@ -13,7 +13,8 @@ This version uses Gaudi v16r5
                        TrackPython v1r0 - To expose track interfaces to Python
  - Modified packages : KernelSys v4r13p1, LHCbKernel v5r12p1,
      EventSys v20r8, DAQEvent v5r2p2, PhysEvent v8r10, TrackEvent v1r3,
-     PackedEvent v1r1, DetSys v7r3, DetDesc v15r3, DetDescCnv v2r8, VeloDet v9r8,
+     PackedEvent v1r1, L0Event v14r3p1, GenEvent v3r3p2, LinkerEvent v1r8p1,
+     DetSys v7r3, DetDesc v15r3, DetDescCnv v2r8, VeloDet v9r8,
      MuonDet v4r8, CaloDet v6r9p1, OTDet v5r6, XmlTools v3r6, TrgTools v7r5,
      DetCond v7r5, XmlTools v3r6, DAQSys v1r6, VeloDAQ v2r3p2, OTDAQ v3r3,
      LHCbAlgs v1r8, RichRecBase v1r16p1, TrackInterfaces v1r2
@@ -43,6 +44,9 @@ This version uses Gaudi v16r5
  - In TrackEvent v1r3
    . Added Track clone method with key
    . Fixed bug in ordering states added to a track
+
+ - In DAQEvent v5r2p2, PhysEvent v8r10, TrackEvent v1r3
+   . Trivial fixes for GaudiObjDesc generation of Reflex dictionaries
 
  - In VeloDAQ v2r3p2
    . Bug fix: last Velo Phi bank was missing from in L1Buffer, in cases when this
