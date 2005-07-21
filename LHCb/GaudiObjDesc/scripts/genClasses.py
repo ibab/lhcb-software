@@ -183,7 +183,9 @@ class genClasses(genSrcUtils.genSrcUtils):
   def genDestructor(self,godClass,dest,scopeName=''):
     s = ''
     if (scopeName and not dest.has_key('code')) : return s
-    if ( not scopeName ) : s += '  /// %s\n  ' % dest['attrs']['desc']
+    if ( not scopeName ) :
+      s += '  /// %s\n  ' % dest['attrs']['desc']
+      if dest['virtual'] == 'TRUE' : s += 'virtual '
     else :
       s += 'inline '
       scopeName += '::'
@@ -509,10 +511,7 @@ class genClasses(genSrcUtils.genSrcUtils):
         s += '}\n\n'
     return s
 #--------------------------------------------------------------------------------
-  def doit(self,package,godClasses,outputDir,lname,isDictHeader=0):
-
-    dictext = ''
-    if isDictHeader : dictext = '_dict'
+  def doit(self,package,godClasses,outputDir,lname):
 
     for godClass in godClasses:
 
@@ -523,12 +522,10 @@ class genClasses(genSrcUtils.genSrcUtils):
       classDict = package.dict
       classname = godClass['attrs']['name']
 
-      fileName = '%s%s.h' % (classname, dictext)
+      fileName = '%s.h' % classname
 
       print '    File %s' % fileName.ljust(lname),
 
-      classDict['dictFriend']                   = ''
-      if isDictHeader : classDict['dictFriend'] = '  friend class %s_dict;\n' % classname
       classDict['classname']                    = classname
       classDict['classID']                      = self.genClassID(godClass)
       classDict['classVersion']                 = self.genClassVersion(godClass)

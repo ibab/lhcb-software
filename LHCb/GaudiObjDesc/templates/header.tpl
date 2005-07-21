@@ -37,7 +37,6 @@ class @@@classname@@@@@@inheritance@@@
 {
 public:
 
-@@@dictFriend@@@
 @@@publicTypedefs@@@
 @@@publicEnums@@@
 @@@constructorDecls@@@

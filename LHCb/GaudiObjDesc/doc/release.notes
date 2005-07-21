@@ -2,6 +2,19 @@ Package: GaudiObjDesc
 Desccription: This package contains a set of tools used to generate code from the XML description of the data object classes.
 Package manager : Stefan Roiser
 
+!20050721 - Stefan
+- move dictionary generation from Reflection to Reflex
+  - GOD now produces header files with proper includes and instantiations of 
+    templated classes plus a selection.xml file which will be passed to the 
+    SEAL lcgdict command to generate dictionary source code.
+  - rewrite of genClassDicts.py  
+  - remove genAssociations.py
+  - new file genAssocDicts.py for generation of Reflex dictionaries for Relations
+  - change ob2dict fragments to invoke lcgdict on generated headers
+  - remove template files: associations.tpl, dict.tpl
+  - new template files: selection_xml.tpl, dictionary_h.tpl
+- new attribute "virtual" (TRUE|FALSE) for generation of virtual destructors 
+
 !20050719 - Hubert Degaudenzi
 - added removal of the xml/gdd.dtd file for the clean target of the 
   makefile fragments. fixed bug #9584.

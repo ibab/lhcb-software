@@ -1,11 +1,21 @@
 
+$(dest)${package}.lcgdict : ${OBJS} 
+	@echo Producing dictionaries using lcgdict
+	cd $(dest); $(lcgdict_cmd) ${package}_dictionary.h --reflex -s ${package}_selection.xml $(includes) $(use_pp_cppflags)
+	@( if [ -e $(dest)${package}.lcgdict ]; then touch $(dest)${package}.lcgdict; \
+	else echo /dev/null > $(dest)${package}.lcgdict; fi ) 
+
 clean :: ${CONSTITUENT}clean
 	@cd .
 
 ${CONSTITUENT}clean ::
 	$(cleanup_echo) dictionaries and .obj2dict files
-	-$(cleanup_silent) rm $(dest)*.obj2dict
-	-$(cleanup_silent) rm $(dest)*.cpp
+	-$(cleanup_silent) rm -f $(dest)*.obj2dict
+	-$(cleanup_silent) rm -f $(dest)*.cpp
 	-$(cleanup_silent) rm -f $(dtdfile)
+	-$(cleanup_silent) rm -f $(dest)${package}_dictionary.h
+	-$(cleanup_silent) rm -f $(dest)${package}_selection.xml 
+	-$(cleanup_silent) rm -f $(dest)${package}_dictionary.xml 
+	-$(cleanup_silent) rm -f $(dest)${package}.lcgdict
 
  

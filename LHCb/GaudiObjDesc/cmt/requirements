@@ -1,6 +1,6 @@
 package GaudiObjDesc
 
-version v7r4
+version v8r0
 
 macro xmlsrc "xml"
 
@@ -9,7 +9,6 @@ macro xmlsrc "xml"
 make_fragment obj2doth -header=obj2doth_header -trailer=obj2doth_trailer
 # and dictionary production
 make_fragment obj2dict -header=obj2dict_header -trailer=obj2dict_trailer
-
 
 # New GOD fragment 
 make_fragment godify -header=godify_header -trailer=godify_trailer

@@ -1,8 +1,8 @@
 import xparser, getopt, sys, os
 import tools
-import genPackage, genClasses, genClassDicts, genNamespaces, genAssociations
+import genPackage, genClasses, genClassDicts, genNamespaces, genAssocDicts
 
-#================================================================================c
+#================================================================================
 class godII:
 #--------------------------------------------------------------------------------
   def __init__(self,args):
@@ -19,7 +19,7 @@ class godII:
     self.gClasses = 1
     self.gClassDicts = 1
     self.gNamespaces = 1
-    self.gAssociations = 1
+    self.gAssocDicts = 1
     self.parseArgs(args[1:])
 #--------------------------------------------------------------------------------
   def usage(self):
@@ -77,13 +77,13 @@ Produce c++ source files and dictionary files from xml descriptions
           gen = a
           self.gClasses      = 1
           self.gNamespaces   = 1
-          self.gAssociations = 0
+          self.gAssocDicts   = 0
           self.gClassDicts   = 0 
         elif a == 'dct':
           gen = a
           self.gClasses      = 0
           self.gNamespaces   = 0
-          self.gAssociations = 1
+          self.gAssocDicts   = 1
           self.gClassDicts   = 1
         else:
           print '%s: ERROR: value %s is not allowed in combination with -g' % (self.argv0, a)
@@ -139,7 +139,7 @@ Produce c++ source files and dictionary files from xml descriptions
 #--------------------------------------------------------------------------------
   def findLongestName(self,godPackage):
     lname = 0
-    if self.gAssociations and godPackage.has_key('assoc') :
+    if self.gAssocDicts and godPackage.has_key('assoc') :
       lname = len(godPackage['attrs']['name'])+22
     if godPackage.has_key('class') :
       classLName = self.tools.getLongestName(godPackage['class'])
@@ -174,10 +174,10 @@ Produce c++ source files and dictionary files from xml descriptions
 
     if self.gClasses : gClasses = genClasses.genClasses(cdb,self.godRoot)
     if self.gClassDicts :
-      gClassDicts = genClassDicts.genClassDicts(cdb, self.godRoot)
+      gClassDicts = genClassDicts.genClassDicts(self.godRoot, self.dictOutput, self.srcOutput)
       if not self.gClasses : gClasses = genClasses.genClasses(cdb, self.godRoot)
     if self.gNamespaces : gNamespaces = genNamespaces.genNamespaces(cdb, self.godRoot)
-    if self.gAssociations : gAssociations = genAssociations.genAssociations(cdb, self.godRoot)
+    if self.gAssocDicts : gAssocDicts = genAssocDicts.genAssocDicts(cdb, self.godRoot, self.dictOutput, self.srcOutput)
     
     for srcFile in srcFiles:
       gdd = x.parseSource(srcFile)
@@ -189,9 +189,9 @@ Produce c++ source files and dictionary files from xml descriptions
 
       lname = self.findLongestName(godPackage)
 
-      if godPackage.has_key('assoc') and self.gAssociations :
-        print '  Generating Associations'
-        gAssociations.doit(package,godPackage['assoc'],self.srcOutput,lname)
+      if godPackage.has_key('assoc') and self.gAssocDicts :
+        print '  Generating Dictioanries for Associations'
+        gAssocDicts.doit(godPackage)
         print '  - Done'
 
       if godPackage.has_key('namespace') and self.gNamespaces :
@@ -207,8 +207,7 @@ Produce c++ source files and dictionary files from xml descriptions
           
         if self.gClassDicts :
           print '  Generating Dictionaries'
-          gClasses.doit(package,godPackage['class'],self.dictOutput,lname, 1)
-          gClassDicts.doit(package,godPackage['class'],self.dictOutput,lname)
+          gClassDicts.doit(godPackage)
           print '  - Done'
 
       print '- Done '

@@ -12,27 +12,17 @@
 //   *                                                                        *
 //   **************************************************************************
 
+// Reflex include files
+#include "Reflex/Builder/ReflexBuilder.h"
 
-//Include files
-#include "Relations/RelationsDict.h"
-using namespace seal::reflect;
-
+// begin include files
 @@@includes@@@
+// end include files
 
-namespace
-{
-  struct _InitDict
-  {
-    _InitDict()
-    {
-@@@associations@@@
-    }
+namespace {
+  struct _Instantiations {
+    // begin instantiations
+@@@dictInstances@@@
+    // end instantiations
   };
-
-  static _InitDict __init;
-}
-
-void* __init_InitDict_@@@packagename@@@Assoc()
-{
-  return &__init;
 }

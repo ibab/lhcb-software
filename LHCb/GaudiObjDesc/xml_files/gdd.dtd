@@ -84,6 +84,7 @@
         desc             CDATA                             #REQUIRED
         argList          CDATA                             #IMPLIED
         argInOut         CDATA                             #IMPLIED  
+        virtual          (TRUE | FALSE)                    "FALSE"
 >
 <!ELEMENT method ((arg*, return?, arg*, code?, arg*) | (arg*, code?, arg*, return?, arg*))>
 <!-- candidates 4 deprication: argInOut -->
@@ -177,31 +178,31 @@
 >
 
 <!ENTITY KeyedObjectKey 'int'>
-<!ENTITY Reference '<template name="SmartRefDict"/>
-        <template name="SmartRefVectorDict"/>'
+<!ENTITY Reference '<template name="SmartRef"/>
+        <template name="SmartRefVector"/>'
 >
-<!ENTITY StlVector '<template name="VectorDict" t1="THIS"/>'
+<!ENTITY StlVector '<template name="vector" t1="THIS"/>'
 >
-<!ENTITY StlPtrVector '<template name="VectorDict" t1="THIS*"/>'
+<!ENTITY StlPtrVector '<template name="vector" t1="THIS*"/>'
 >
-<!ENTITY DataObject '<template name="SmartRefDict"/>
-        <template name="SmartRefVectorDict"/>'
+<!ENTITY DataObject '<template name="SmartRef"/>
+        <template name="SmartRefVector"/>'
 >
-<!ENTITY ContainedObject '<template name="SmartRefDict"/>
-        <template name="SmartRefVectorDict"/>
-        <template name="VectorDict" t1="THIS*"/>
-        <template name="ObjectVectorDict"/>'
+<!ENTITY ContainedObject '<template name="SmartRef"/>
+        <template name="SmartRefVector"/>
+        <template name="vector" t1="THIS*"/>
+        <template name="ObjectVector"/>'
 >
-<!ENTITY KeyedContainer '<template name="SmartRefDict"/>
-        <template name="SmartRefVectorDict"/>
-        <template name="VectorDict" t1="THIS*"/>
-        <template name="ObjectVectorDict"/>
-        <template name="KeyedContainerDict"/>'
+<!ENTITY KeyedContainer '<template name="SmartRef"/>
+        <template name="SmartRefVector"/>
+        <template name="vector" t1="THIS*"/>
+        <template name="ObjectVector"/>
+        <template name="KeyedContainer"/>'
 >
-<!ENTITY KeyedObject '<template name="KeyedObjectDict" t1="int"/>
-        <template name="SmartRefDict"/>
-        <template name="SmartRefVectorDict"/>
-        <template name="VectorDict" t1="THIS*"/>
-        <template name="ObjectVectorDict"/>
-        <template name="KeyedContainerDict"/>'
+<!ENTITY KeyedObject '<template name="KeyedObject" t1="int"/>
+        <template name="SmartRef"/>
+        <template name="SmartRefVector"/>
+        <template name="vector" t1="THIS*"/>
+        <template name="ObjectVector"/>
+        <template name="KeyedContainer"/>'
 >
