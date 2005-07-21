@@ -1,6 +1,7 @@
 Package :EvtGen 
 Package manager : Patrick Robbe
 
+!========================== EvtGen v8r5 ====================================
 ! 2005-07-20 - Patrick Robbe
  - src/EvtBTo3pi.F
  - src/EvtBTo3piMPP.F
