@@ -83,8 +83,6 @@ set  G4VRMLFILE_VIEWER         vrweb \
 set  G4VRML_PV_PICKABLE        "1"
 
 #========================================================================
-#  For UNIXes, to rename a <app>.exe to <app>
-make_fragment copy_exe -header=copy_exe_header
 
 #-- Build Main Program 
 
