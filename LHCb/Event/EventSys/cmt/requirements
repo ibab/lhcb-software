@@ -13,12 +13,12 @@ use TrEvent     v14r3   Event
 use RichEvent   v8r4    Event
 use CaloEvent   v13r9   Event
 use MuonEvent   v4r0    Event
-use L0Event     v14r3   Event
+use L0Event     v14r3p1 Event
 use PhysEvent   v8r10   Event
 use DAQEvent    v5r2p2  Event
-use GenEvent    v3r3p1  Event
+use GenEvent    v3r3p2  Event
 use EventAssoc  v1r5    Event
-use LinkerEvent v1r8    Event
+use LinkerEvent v1r8p1  Event
 use TrgEvent    v5r5    Event
 use TrackEvent  v1r3    Event
 use PackedEvent v1r1    Event
