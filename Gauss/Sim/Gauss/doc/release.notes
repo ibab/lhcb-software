@@ -4,10 +4,11 @@
 ! Purpose     : LHCb Simulation Application with Geant4
 !-----------------------------------------------------------------------------
 
-! 2005-07-20 - Gloria CORTI
- - Use newer version of XmlDDDB (v26r1) and LHCb (v18r8) 
 
 !============================= Gauss v20r0 ==================================
+! 2005-07-21 - Florence Ranjard
+ - requirements - use EvtGen v8r5 and LbAcerMC v1r2 fixed by P.Robbe
+
 ! 2005-07-15 - Florence RANJARD
  - requirements - introduce conditional use for
                     LbAcerMC     (tag=AcerMC),

@@ -1,5 +1,5 @@
 #printOptions 
-// $Id: Gauss.opts,v 1.67 2005-07-20 15:56:39 gcorti Exp $ 
+// $Id: Gauss.opts,v 1.68 2005-07-21 08:31:01 ranjard Exp $ 
 
 /** @file 
  * 
@@ -60,7 +60,7 @@ ApplicationMgr.OutStream +=  { "GaussTape" };
 //---------------------------------------------------------------------------
 // Number of events to process
 //---------------------------------------------------------------------------
-ApplicationMgr.EvtMax     = 500;
+ApplicationMgr.EvtMax     = 10;
 
 //---------------------------------------------------------------------------
 // Set run and first event number, hence setting random numbers to start with

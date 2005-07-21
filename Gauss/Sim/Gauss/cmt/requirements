@@ -1,5 +1,5 @@
 package Gauss
-version v20r1
+version v20r0
 
 #=========================================================================
 #-- Structure
@@ -9,7 +9,7 @@ branches src doc options cmt job
 
 #=========================================================================
 #-- Databases
-use XmlDDDB             v26r1   Det   -no_auto_imports
+use XmlDDDB             v26r0   Det   -no_auto_imports
 use FieldMap            v4r5          -no_auto_imports
 use DecFiles            v8r0    Gen   -no_auto_imports
 use ParamFiles          v3r12         -no_auto_imports
@@ -20,7 +20,7 @@ use Geant4Files		v52r0	      -no_auto_imports
 use Generators          v1r1    Gen
 use LbPythia            v1r1    Gen
 #   Optional AcerMC
-macro LbAcerMC_use "" Linux&AcerMC "LbAcerMC v1r1 Gen"
+macro LbAcerMC_use "" Linux&AcerMC "LbAcerMC v1r2 Gen"
 use $(LbAcerMC_use)
 
 #-- Simulation
