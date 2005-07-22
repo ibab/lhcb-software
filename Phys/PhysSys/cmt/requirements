@@ -76,7 +76,7 @@ use  Bd2DPi                     v1r0     PhysSel
 use  Bd2D0Kstar                 v4r3p2   PhysSel
 use  Bd2DstarPi                 v2r7p2   PhysSel
 use  Bd2JpsiKs                  v2r6p1   PhysSel
-use  Bd2JpsiKstar               v2r1p2   PhysSel
+use  Bd2JpsiKstar               v2r2     PhysSel
 use  Bd2MuMuKstar               v2r3p1   PhysSel
 use  Bd2PhiKs                   v4r3     PhysSel
 use  Bd2PiPiPi0                 v2r2p2   PhysSel
@@ -95,7 +95,7 @@ use  Bu2KsPi                    v2r4     PhysSel
 use  Bu2LLK                     v2r1     PhysSel
 use  Bu2D0K                     v1r1p1   PhysSel
 use  D02MuMu                    v2r1     PhysSel 
-use  DsSelector                 v1r1p1   PhysSel
+use  DsSelector                 v1r2     PhysSel
 use  Gamma2ee                   v1r4p2   PhysSel
 use  Jpsi                       v1r1p1   PhysSel
 use  Muon                       v1r2     PhysSel
