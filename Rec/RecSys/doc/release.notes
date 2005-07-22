@@ -24,7 +24,6 @@ This version uses Gaudi v16r5, LHCb v18r8
   . Fix 2kB/event memory leak in L1Info.cpp
 
 - In L1Reco v7r1
-  . Fix decoding of ST Raw Bank, was always decoding one word beyond end of bank
   . For 2D tracks, get phi-zone geometry from Velo detector element. Fixes L1
     accept rate problem in RTTC data
   . Retune cuts to recover nominal Velo-TT matching working point
@@ -36,6 +35,7 @@ This version uses Gaudi v16r5, LHCb v18r8
   . Fix in usage of std::vector.reserve() to fix execution problem on Windows
 
 - In TrgForward v5r2
+  . Fix decoding of ST Raw Bank, was always decoding one word beyond end of bank
   . Add support for OT RawBank v2
 
 - In RichLocalPID v1r12
