@@ -5,7 +5,7 @@ Purpose: LHCb reconstruction packages.
          This project groups together all the reconstruction packages needed
          by one or more LHCb applications. 
 
-</PRE><H1><A NAME=v1r4>2005-07-20 RecSys v1r4</A></H1><PRE>
+</PRE><H1><A NAME=v1r4>2005-07-21 RecSys v1r4</A></H1><PRE>
 This version uses Gaudi v16r5, LHCb v18r8
 
 - Package added: TrgConverter v1r0 - Coverts Trg tracks into new track model
@@ -24,6 +24,7 @@ This version uses Gaudi v16r5, LHCb v18r8
   . Fix 2kB/event memory leak in L1Info.cpp
 
 - In L1Reco v7r1
+  . Fix decoding of ST Raw Bank, was always decoding one word beyond end of bank
   . For 2D tracks, get phi-zone geometry from Velo detector element. Fixes L1
     accept rate problem in RTTC data
   . Retune cuts to recover nominal Velo-TT matching working point
