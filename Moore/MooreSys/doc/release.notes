@@ -26,6 +26,8 @@ This version uses LHCb v18r8, Lbcom v2r4, Rec v1r4, Phys v1r4, Online v1r4
  - Bug fixes:
    . For 2D tracks, get phi-zone geometry from Velo detector element. Fixes L1
      accept rate problem in RTTC data (L1Reco v7r1)
+   . Fix decoding of ST Raw Bank, was always decoding one word beyond end of bank
+     (TrgForward v5r2)
    . Add /Event/Rec Node to DataOnDemandSvc, to prevent triggering a CaloPID
      algorithm instead (MooreCommon.opts)
    . Load GaudiPoolDb even in online (for Event dictionary) (MooreOnline.opts)
@@ -36,6 +38,7 @@ This version uses LHCb v18r8, Lbcom v2r4, Rec v1r4, Phys v1r4, Online v1r4
    . Fix memory leak in XmlMuonRegionCnv (MuonDet v4r8)
    . Fixes to bugs found during RTTC in various HLT packages, see PhysSys
      release notes for details 
+   . Do not send L1 event number with Hlt decision (GaudiOnline v1r2p1)
 
 </PRE><H1><A NAME=v1r1>2005-06-27 Moore v1r1</A></H1><PRE>
 This version uses LHCb v18r7, Lbcom v2r3, Rec v1r3, Phys v1r3, Online v1r3
