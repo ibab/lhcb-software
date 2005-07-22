@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/GaudiOnline/src/DecisionSetterAlg.cpp,v 1.5 2005-07-11 09:22:23 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/GaudiOnline/src/DecisionSetterAlg.cpp,v 1.6 2005-07-22 09:09:31 bgaidioz Exp $
 //	====================================================================
 //  DecisionSetterAlg.cpp
 //	--------------------------------------------------------------------
@@ -81,15 +81,11 @@ public:
             break;
           case GaudiOnline::StreamDescriptor::DAQ_BUFFER:
 	    {
-              SmartDataPtr<L1Score> l1_score(eventSvc(),L1ScoreLocation::Default);
-              L1Score* score = l1_score;
-              if ( score ) {
-                // Values according to T.Schietinger (10/06/2005)
-                int hlt_decision = 1;
-                data[0] = score->eventNumber();
-                data[1] = ((~0x0)<<8) + (hlt_decision&0xFF);
-                return dsc->setDecision(&data[0], sizeof(data));
-	      }
+              // Values according to T.Schietinger (10/06/2005)
+              int hlt_decision = 1;
+              data[0] = 0;
+              data[1] = ((~0x0)<<8) + (hlt_decision&0xFF);
+              return dsc->setDecision(&data[0], sizeof(data));
 	    }
             break;
           }

@@ -1,6 +1,10 @@
 Package: GaudiOnline
 Author:  Markus Frank
 
+! 2005-07-22 - Gaidioz Benjamin
+ - Commit changes done by Markus a few days ago. Fixes a bug he has noticed
+   while discussing the code with Niko.
+
 !================== GaudiOnline v1r2p1 2005-07-14 ===========================
 ! 2005-07-14 - Marco Cattaneo
  - Cleanup requirements to minimize exported dependencies
