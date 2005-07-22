@@ -4,10 +4,13 @@
 ! Purpose     : collect Det packages
 !-----------------------------------------------------------------------------
 
-! 2005-07-15 - Juan Palacios
- - Include VeloChannelID.h is dict/DetDict.h
+!========================= DetSys v7r3 2005-07-22 =========================
+! 2005-07-22 - Florence Ranjard
+ - Component library name changed to DetDict, to follow CMT conventions
 
-!========================= DetSys v7r3 2005-07-14 =========================
+! 2005-07-15 - Juan Palacios
+ - Include VeloChannelID.h in dict/DetDict.h
+
 ! 2005-07-14 - Juan Palacios
  - Added AlignmentCondition to DetDict
  - Make DetDictLib a components library in cmt/requirements for dictionary 
