@@ -1,11 +1,11 @@
 Package: GaudiOnline
 Author:  Markus Frank
 
+!================== GaudiOnline v1r2p1 2005-07-22 ===========================
 ! 2005-07-22 - Gaidioz Benjamin
- - Commit changes done by Markus a few days ago. Fixes a bug he has noticed
-   while discussing the code with Niko.
+ - Fix another bug in decision setting algorithm, was accessing L1Score for
+   HLT event number. Now set to zero
 
-!================== GaudiOnline v1r2p1 2005-07-14 ===========================
 ! 2005-07-14 - Marco Cattaneo
  - Cleanup requirements to minimize exported dependencies
 
