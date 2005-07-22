@@ -18,6 +18,7 @@ use Generators          v1r1      Gen
 use LbPythia            v1r1      Gen
 use AcerMC              v1r23p0   Gen
 use LbAcerMC            v1r2      Gen
+use ParticleGuns	v1        Gen
 
 # GiGa stuff...
 use GiGa        	v17r2	  Sim        
