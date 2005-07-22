@@ -8,7 +8,7 @@
 </PRE><H1><A NAME=v18r8>2005-07-20 LHCbSys v18r8</A></H1><PRE>
 This version uses Gaudi v16r5
 
- - New packages      : LinkerInstances v1r0 - dictionaries of Linker objects for
+ - New packages      : LinkerInstances v2r0 - dictionaries of Linker objects for
                                               use with GaudiPython
                        TrackPython v1r0 - To expose track interfaces to Python
  - Modified packages : KernelSys v4r13p1, LHCbKernel v5r12p1,
