@@ -12,8 +12,9 @@ EventNodeKiller.Nodes = { "Rec", "MC", "Raw", "Trig" };
 #include "$GAUDIPOOLDBROOT/options/GaudiPoolDbRoot.opts"
 #include "$EVENTSYSROOT/options/PoolDicts.opts"
 
-// Input data
+// Input data (POOL data)
 #include "$HLTSYSROOT/options/RTTCTestData.opts"
+
 EventSelector.PrintFreq  = 100 ;
 #pragma print on
 HistogramPersistencySvc.OutputFile = "Hlt.root";

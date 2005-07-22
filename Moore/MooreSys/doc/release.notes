@@ -7,7 +7,7 @@ Purpose     : LHCb HLT application
 This version uses LHCb v18r8, Lbcom v2r4, Rec v1r4, Phys v1r4, Online v1r4
                   Gaudi v16r5 and XmlDDDB v26r1
 
- - New feature:
+ - New features:
    . In offline mode, any /Raw, /Rec, /MC, /Trig node that may have been 
      registered on the input file is killed by executing EventNodeKiller as the
      first TopAlg. This enables to transparently process .raw files that may or
@@ -15,6 +15,8 @@ This version uses LHCb v18r8, Lbcom v2r4, Rec v1r4, Phys v1r4, Online v1r4
    . Add support for OT RawBank v2 (OTDAQ v3r3, TrgForward v5r2)
    . MakeResonances now does not make any plot by default, exclusive HLT options
      have been updated accordingly
+   . Add example for reading online ("Markus file") format in MooreOffline
+     (MooreMF.opts)
 
  - New tuning:
    . Removed ResolutionCor from DeOTDetector, following 2005 test beam

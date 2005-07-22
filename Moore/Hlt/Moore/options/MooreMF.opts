@@ -1,0 +1,12 @@
+// Job options for running Moore in offline mode, reading data in online format
+
+#include "$MOOREROOT/options/MooreCommon.opts"
+
+// Example input in online ("Markus file") format
+ApplicationMgr.DLLs   += { "GaudiOnline" };
+EventPersistencySvc.CnvServices += { "OnlineCnvSvc" };
+EventSelector.Input = {
+  "DATA='file:///afs/cern.ch/user/n/niko/public/rttc/x.good' SVC='GaudiOnline::EvtSelector' INPUT='HLT'"
+};
+
+
