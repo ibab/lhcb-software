@@ -1,9 +1,18 @@
+#define TIMINGS 
 #include  <stdio.h>
 #include  <stdlib.h>
 #include  <assert.h>
+#include  <sched.h>
+#include  <sys/mman.h>
 #define fatal(s) do{perror(s);fprintf(stderr,s "fatal error %s:%d\n",__FILE__,__LINE__);abort();}while(0)
 #define SFCC_DEBUG 
 #define HEADER_TO_SKIP  0
+#define rdtscll(val) do { \
+     unsigned int __a,__d; \
+     asm volatile("rdtsc" : "=a" (__a), "=d" (__d)); \
+     (val) = ((unsigned long long)__a) | (((unsigned long long)__d)<<32); \
+} while(0)
+#define take_timestamp  rdtscll
 #define ENVSTRING(v,s) do{v=getenv(#s);if(v==NULL) {fprintf(stderr,"please define "#s"\n");fatal("getenv");}}while(0)
 #define ENVINT(i,s) do{char *v=getenv(#s);if(v==NULL) {fprintf(stderr,"please define "#s"\n");fatal("getenv");}else i=atoi(v);}while(0)
 #define p_data  0x01
@@ -22,8 +31,8 @@
 #include  <sys/socket.h>
 #include  <netpacket/packet.h>
 #define bug  if(0) printf
-#define info  if(1) printf
-#define debug  if(1) printf
+#define info  if(0) printf
+#define debug  if(0) printf
 
 #ifdef __LOCAL_DIR__
 #include "SFCClient.h"
@@ -39,8 +48,10 @@ struct msg_data {
 };
 
 struct msg_decision {
-	u_int32_t number;
-	u_int32_t decision;
+	u_int32_t decision_bytes[8];
+#ifdef TIMINGS
+	u_int64_t in1,in2,out,_;
+#endif
 };
 
 struct msg_header {
@@ -67,8 +78,8 @@ int r;
 
 static int his_port = 0;
 
-static char packets[100][MTU+HEADER_TO_SKIP];
-static struct iovec vectors[100];
+static char packets[500][MTU+HEADER_TO_SKIP];
+static struct iovec vectors[500];
 static int next_packet;
 static char *recv_packet = packets[0];
 static int recv_len;
@@ -124,6 +135,24 @@ int sfcc_register()
 	index = my_index;
 	type = protocol[my_level];
 	
+#if 0
+	{
+	struct sched_param sp;
+	int cpu_mask=0;
+	#ifndef notdef
+	cpu_set_t aff;
+	__CPU_ZERO(&aff);
+	__CPU_SET(cpu_mask,&aff);
+	if(-1==sched_setaffinity(0,&aff))perror("sched_setaffinity");
+	#else
+	unsigned long int aff=cpu_mask;
+	if(-1==sched_setaffinity(0,sizeof(aff),&aff))perror("sched_setaffinity");
+	#endif
+	sp.sched_priority=sched_get_priority_max(SCHED_FIFO);
+	if(sched_setscheduler(0,SCHED_FIFO,&sp)<0)perror("sched_setscheduler");
+	}
+#endif	
+	mlockall(MCL_FUTURE);
 	sock = socket(PF_PACKET,SOCK_DGRAM,type);
 	if(sock==-1) fatal("socket");
 	bzero(&who,sizeof(who));
@@ -139,6 +168,12 @@ int sfcc_register()
 	dev_string = my_dev;
 	
 	strncpy(ifr.ifr_name,dev_string,IFNAMSIZ);
+	{
+		int rmem = 1000000;
+		int r;
+		r=setsockopt(sock,SOL_SOCKET,SO_RCVBUF,&rmem,sizeof(rmem));
+		if(r==-1) {perror("setsockopt");abort();}
+	}
 	r = ioctl(sock,SIOCGIFINDEX,&ifr); if(r<0) fatal("ioctl");
 	who.sll_ifindex = ifr.ifr_ifindex;
 	r = ioctl(sock,SIOCGIFHWADDR,&ifr); if(r<0) fatal("ioctl");
@@ -204,6 +239,7 @@ int sfcc_read_event(struct sfcc_event_buffer *rbuf)
 	next_packet = 0;
 	rbuf->buffer_len = next_event_len;
         debug("sfcc_lib:next event is %d bytes long\n",next_event_len);
+	take_timestamp(send_msg->content.decision.in2);
         return 0;
 }
 
@@ -211,10 +247,15 @@ int sfcc_set_decision(struct sfcc_decision *dec)
 {
         debug("sfcc_lib:setting decision (length %d)\n",dec->buffer_len);
 	send_msg->type = p_both;
-	
-	debug("prepare decision\n");
-	send_msg->content.decision.decision = 0xab;
-	send_msg->content.decision.number = number;
+#if 0
+	if(dec->buffer_len!=sizeof(send_msg->content.decision.decision_bytes)) {
+#else
+	if(0) {
+#endif
+		printf("decision length is wrong\n");
+		return -1;
+	}
+	memcpy(send_msg->content.decision.decision_bytes,dec->buffer,dec->buffer_len);
         return 0;
 }
 
@@ -225,6 +266,7 @@ int sfcc_push_decision(void)
 	debug("send decision");
 	send_msg->sport = port;
 	send_msg->dport = his_port;
+	take_timestamp(send_msg->content.decision.out);
 	send_len = sendto(sock,send_packet,sizeof(struct msg_header),0,(struct sockaddr*)&who,sizeof(who));
 	if(send_len==-1) fatal("sendto");
 	if(send_len!=sizeof(struct msg_header)) {bug("send");abort();}
@@ -240,6 +282,7 @@ int sfcc_read_length(int *data_length)
 	debug("send decision");
 	send_msg->sport = port;
 	send_msg->dport = his_port;
+	take_timestamp(send_msg->content.decision.out);
 	send_len = sendto(sock,send_packet,sizeof(struct msg_header),0,(struct sockaddr*)&who,sizeof(who));
 	if(send_len==-1) fatal("sendto");
 	if(send_len!=sizeof(struct msg_header)) {bug("send");abort();}
@@ -272,6 +315,7 @@ int sfcc_read_length(int *data_length)
 			}
 	total_recved += recv_msg->content.data.len;
 	next_rank++;
+	take_timestamp(send_msg->content.decision.in1);
 	/* a packet has already been received, we know the
 		total length of the event, if the buffer is
 		too short, we return an error */

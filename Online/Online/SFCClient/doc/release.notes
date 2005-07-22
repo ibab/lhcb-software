@@ -1,6 +1,15 @@
 Package: SFCClient
 Author:  Benjamin Gaidioz
 
+! 2005-07-22 - Benjamin Gaidioz
+- Increase the recv socket buffer (bug, loosing frames with HLT),
+- call mlockall with the hope it will decrease the processing time of
+  the very first event,
+- added timings fields in the messages, take timestamps at various
+  places for RTTC purposes,
+- changed the message for decision (just talk about "bytes" and do not
+  care about the meaning of the bytes).
+
 !=================== SFCClient v1r1 2005-06-27 =============================
 ! 2005-06-22 - Benjamin Gaidioz
  - RTTC updates of the SFCClient library. Main change is that all parameters
