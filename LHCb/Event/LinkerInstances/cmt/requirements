@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.3 2005-07-04 09:55:04 cattanem Exp $
+# $Id: requirements,v 1.4 2005-07-22 09:24:18 cattanem Exp $
 # =============================================================================
 package LinkerInstances
 author  Stefan Roiser
@@ -35,5 +35,5 @@ apply_pattern component_library library=LinkerInstancesDict
 path_remove PATH "/LinkerInstances/" WIN32 "\LinkerInstances\"
 path_append PATH "${LINKERINSTANCESROOT}/$(BINDIR)" \
                  WIN32 "${LINKERINSTANCESROOT}\$(BINDIR)" 
-path_append PYTHONPATH "${LINKERINSTANCESROOT}/Python" \
-                 WIN32 "${LINKERINSTANCESROOT}\Python"
+path_append PYTHONPATH "${LINKERINSTANCESROOT}/python" \
+                 WIN32 "${LINKERINSTANCESROOT}\python"

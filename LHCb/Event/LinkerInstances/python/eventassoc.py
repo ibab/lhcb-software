@@ -1,7 +1,7 @@
 import gaudimodule
 
 import PyLCGDict
-PyLCGDict.loadDict('LinkerInstancesDict')
+gaudimodule.loaddict('LinkerInstancesDict')
 
 def linkedTo(t1, t2, location):
   gaudi = gaudimodule.AppMgr()
