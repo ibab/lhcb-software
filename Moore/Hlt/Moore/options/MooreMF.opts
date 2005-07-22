@@ -1,6 +1,6 @@
 // Job options for running Moore in offline mode, reading data in online format
 
-#include "$MOOREROOT/options/MooreCommon.opts"
+#include "$MOOREROOT/options/MooreOffline.opts"
 
 // Example input in online ("Markus file") format
 ApplicationMgr.DLLs   += { "GaudiOnline" };
