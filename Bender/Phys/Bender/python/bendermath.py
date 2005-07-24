@@ -1,10 +1,13 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: bendermath.py,v 1.2 2005-05-20 10:55:19 ibelyaev Exp $ 
+# $Id: bendermath.py,v 1.3 2005-07-24 14:04:41 ibelyaev Exp $ 
 # =============================================================================
-# CVS tag $Name: not supported by cvs2svn $ ; version $Revision: 1.2 $
+# CVS tag $Name: not supported by cvs2svn $ ; version $Revision: 1.3 $
 # =============================================================================
 # $Log: not supported by cvs2svn $
+# Revision 1.2  2005/05/20 10:55:19  ibelyaev
+#  prepare for v4r8
+#
 # Revision 1.1  2005/02/02 19:15:10  ibelyaev
 #  add new functions
 #

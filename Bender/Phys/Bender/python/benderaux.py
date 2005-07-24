@@ -1,8 +1,8 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: benderaux.py,v 1.13 2005-05-20 10:55:19 ibelyaev Exp $ 
+# $Id: benderaux.py,v 1.14 2005-07-24 14:04:41 ibelyaev Exp $ 
 # =============================================================================
-# CVS tag $Name: not supported by cvs2svn $ ; version $Revision: 1.13 $
+# CVS tag $Name: not supported by cvs2svn $ ; version $Revision: 1.14 $
 # =============================================================================
 """
 Helper module  to define the auxilalry 'enums' and constants 
@@ -144,6 +144,9 @@ DecayChain             = gbl.Bender.DecayChain
 
 # =============================================================================
 # $Log: not supported by cvs2svn $
+# Revision 1.13  2005/05/20 10:55:19  ibelyaev
+#  prepare for v4r8
+#
 # Revision 1.12  2005/03/05 16:08:11  ibelyaev
 #  add more functions from namespace LoKi::Extract
 #

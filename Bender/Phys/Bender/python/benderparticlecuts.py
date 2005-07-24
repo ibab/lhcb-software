@@ -1,10 +1,13 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: benderparticlecuts.py,v 1.8 2005-05-20 10:55:19 ibelyaev Exp $ 
+# $Id: benderparticlecuts.py,v 1.9 2005-07-24 14:04:41 ibelyaev Exp $ 
 # =============================================================================
 # CVS tag $Name: not supported by cvs2svn $ 
 # =============================================================================
 # $Log: not supported by cvs2svn $
+# Revision 1.8  2005/05/20 10:55:19  ibelyaev
+#  prepare for v4r8
+#
 # Revision 1.7  2005/02/02 19:15:10  ibelyaev
 #  add new functions
 #

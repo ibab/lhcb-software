@@ -1,6 +1,6 @@
-# $Id: benderconfig.py,v 1.10 2005-05-20 10:55:19 ibelyaev Exp $
+# $Id: benderconfig.py,v 1.11 2005-07-24 14:04:41 ibelyaev Exp $
 # =============================================================================
-# CVS version $Revision: 1.10 $ 
+# CVS version $Revision: 1.11 $ 
 # =============================================================================
 # CVS tag $Name: not supported by cvs2svn $ 
 # =============================================================================
@@ -233,6 +233,9 @@ gaudimodule.AppMgr.ntupSvc              = gaudimodule.AppMgr.ntuplesvc
 
 # =============================================================================
 # $Log: not supported by cvs2svn $
+# Revision 1.10  2005/05/20 10:55:19  ibelyaev
+#  prepare for v4r8
+#
 # Revision 1.9  2005/02/08 20:31:51  ibelyaev
 #  bug fix and some performace optimisation
 #

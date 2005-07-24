@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: bendersmartrefs.py,v 1.11 2005-06-14 15:24:32 ibelyaev Exp $ 
+# $Id: bendersmartrefs.py,v 1.12 2005-07-24 14:04:41 ibelyaev Exp $ 
 # =============================================================================
 # CVS tag $Name: not supported by cvs2svn $ version $Revison:$
 # =============================================================================
@@ -13,7 +13,7 @@ Helper module  to (re)define few sipmple methods for few useful event classes
 """
 # =============================================================================
 __author__  = "Vanya BELYAEV Ivan.Belyaev@itep.ru"
-__version__ = "CVS tag $Name: not supported by cvs2svn $ version: $Revision: 1.11 $ "
+__version__ = "CVS tag $Name: not supported by cvs2svn $ version: $Revision: 1.12 $ "
 # =============================================================================
 
 import gaudimodule
@@ -200,46 +200,13 @@ _list_  = [ 'MCVertex'      ,
             'ProtoParticle' ,
             'VeloCluster'   ,
             'MCCaloHit'     ,
-            'TrgTrack'      ,
             'TrStoredTrack' ]
 
 for name in _list_ :
     cnt = 'KeyedContainer<%s,Containers::KeyedObjectManager<Containers::hashmap> > >' % name
     klass  = gaudimodule.getClass( cnt )
     keyedContainerIteration( klass )
-
-
-class VectorIterator(object) :
-    """ Helper class: iterator over std::vector<> class """
-    def __init__ ( self , container ) :
-        self._vector_ = container  
-        self._index_  = 0
-        self._size_   = self._vector_.size()
-    def next     ( self ) :
-        index = self._index_ 
-        if not index < self._size_ : raise StopIteration   # exception! 
-        obj  = self._vector_.at(index) 
-        self._index_ = index + 1 
-        return obj
-
-def _create_v_iterator_( self ) :
-    return VectorIterator( self )
-
-def vectorIteration( klass ) :
-    setattr( klass , '__iter__' , _create_v_iterator_ )
-
-_list_ = [ ('VeloChannelID' , 'int' ) ,
-           ('ITChannelID'   , 'int' ) ,
-           ('OTChannelID'   , 'int' ) ,
-           ('MuonTileID'    , 'int' ) ]
-
-gaudimodule.loaddict('TrgEventDict')
-gaudimodule.loaddict('BenderDict')
-
-for name in _list_ :
-    klass = gaudimodule.gbl.std.vector('std::pair<%s,%s> ' % name )
-    vectorIteration( klass ) 
-
+    
 # =============================================================================
 # The END 
 # =============================================================================
