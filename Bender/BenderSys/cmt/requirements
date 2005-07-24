@@ -1,6 +1,6 @@
-# $Id: requirements,v 1.71 2005-07-24 13:00:43 ibelyaev Exp $ 
+# $Id: requirements,v 1.72 2005-07-24 14:12:07 ibelyaev Exp $ 
 # =============================================================================
-# CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.71 $
+# CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.72 $
 # =============================================================================
 # The management of the content of BENDER project:
 #                 LHCb Physics Analysis with Python  
@@ -12,14 +12,14 @@ author        Vanya BELYAEV
 use           GaudiPython    v6r12
 
 # =========== Bender Application itself =======================================
-use           Bender         v4r8   Phys 
+use           Bender         v4r8p1 Phys 
 use           BenderGCC      v1r1   Tools 
 # =========== Bender Libraries ================================================
 use           BenderLibs     v4r7   Tools 
 # =========== dictionaries for LoKi/Bender classes ============================
 use           BenderDet      v4r5   Det 
 # =========== dictionaries for LoKi/Bender classes ============================
-use           BenderDict     v4r7   Tools 
+use           BenderDict     v5r1   Tools 
 # =========== dictionaries for Relations ======================================
 use           BenderRels     v4r6   Tools 
 # =========== Bender & LoKi documentation =====================================
@@ -43,9 +43,6 @@ use           LoKiHybrid     v4r5   Tools
 
 # =============================================================================
 # $Log: not supported by cvs2svn $
-# Revision 1.63  2005/05/20 13:11:25  ibelyaev
-#  v4r8
-#
 # =============================================================================
 # The END 
 # =============================================================================
