@@ -1,6 +1,6 @@
-# $Id: requirements,v 1.72 2005-07-24 14:12:07 ibelyaev Exp $ 
+# $Id: requirements,v 1.73 2005-07-24 14:51:48 ibelyaev Exp $ 
 # =============================================================================
-# CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.72 $
+# CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.73 $
 # =============================================================================
 # The management of the content of BENDER project:
 #                 LHCb Physics Analysis with Python  
@@ -37,7 +37,9 @@ use           LoKiExample    v3r12  Ex
 use           BenderVis      v4r5   Vis 
 # =========== empty 'user' package ============================================
 use           BenderUser     v4r5   Phys
-use           LoKiUser       v1r0   Phys   
+use           LoKiUser       v5r0   Phys
+use           LoKiTutor      v1r0   Tutorial 
+use           LoKiJob        v12r12 Job    
 # =========== hybrid: Python/C++ solution =====================================
 use           LoKiHybrid     v4r5   Tools 
 
