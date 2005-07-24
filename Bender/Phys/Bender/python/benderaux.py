@@ -1,8 +1,8 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: benderaux.py,v 1.14 2005-07-24 14:04:41 ibelyaev Exp $ 
+# $Id: benderaux.py,v 1.15 2005-07-24 17:14:42 ibelyaev Exp $ 
 # =============================================================================
-# CVS tag $Name: not supported by cvs2svn $ ; version $Revision: 1.14 $
+# CVS tag $Name: not supported by cvs2svn $ ; version $Revision: 1.15 $
 # =============================================================================
 """
 Helper module  to define the auxilalry 'enums' and constants 

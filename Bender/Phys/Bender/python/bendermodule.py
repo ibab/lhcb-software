@@ -1,5 +1,5 @@
 # =============================================================================
-# $Id: bendermodule.py,v 1.28 2005-07-24 14:08:43 ibelyaev Exp $ 
+# $Id: bendermodule.py,v 1.29 2005-07-24 17:14:42 ibelyaev Exp $ 
 # =============================================================================
 # CVS tag $NAme:$ 
 # =============================================================================
@@ -69,7 +69,7 @@ from   bendertuple     import *
 from   bendermatch     import *
 from   benderalgo      import *
 from   bendertools     import *
-#from   benderclhep     import *
+from   benderclhep     import *
 
 AppMgr = gaudimodule.AppMgr 
 
