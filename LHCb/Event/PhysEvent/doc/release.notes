@@ -1,6 +1,12 @@
-! $Id: release.notes,v 1.61 2005-07-07 16:55:04 pkoppenb Exp $
+! $Id: release.notes,v 1.62 2005-07-25 06:41:52 pkoppenb Exp $
 ! Package     : PhysEvent 
 ! Responsible : P. Koppenburg
+
+!======================= PhysEvent v8r10 2005-07-25 ==========================
+! 2005-07-25 - P. Koppenburg
+  - xml/Tagger.xml
+    . Restore std::vector<Particle> version for consistency. 
+      To be revised later
 
 ! 2005-07-07 - P. Koppenburg
   - xml/Tagger.xml
