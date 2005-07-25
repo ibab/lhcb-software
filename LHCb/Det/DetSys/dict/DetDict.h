@@ -1,9 +1,15 @@
-// $Id: DetDict.h,v 1.4 2005-07-15 12:16:08 jpalac Exp $
+// $Id: DetDict.h,v 1.5 2005-07-25 17:11:38 cattanem Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.4 $
+#ifndef DETSYS_DETDICT_H 
+#define DETSYS_DETDICT_H 1
 // ============================================================================
-#ifndef BENDERDET_BENDERDETDICT_H 
-#define BENDERDET_BENDERDETDICT_H 1
+// Hack to get round gccxml parsing problem (SEAL bug 9704)
+// ============================================================================
+#ifdef _WIN32
+#define LONG_LONG_MAX     0x7fffffffffffffffLL  /*maximum signed __int64 value */
+#define LONG_LONG_MIN     0x8000000000000000LL  /*minimum signed __int64 value */
+#define ULONG_LONG_MAX    0xffffffffffffffffLL  /*maximum unsigned __int64 value */
+#endif
 // ============================================================================
 // GaudiKernel
 // ============================================================================
@@ -230,9 +236,4 @@ namespace DetDescPython
   
 };
 
-
-// ============================================================================
-// The END 
-// ============================================================================
-#endif // BENDERDET_BENDERDETDICT_H
-// ============================================================================
+#endif // DETSYS_DETDICT_H
