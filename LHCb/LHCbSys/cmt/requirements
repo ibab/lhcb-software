@@ -86,7 +86,7 @@ use CaloDAQ             v1r1    Calo    # Olivier Deschamps
 use L0MuonDAQ		v1r0	L0      # Andrei Tsaregorodtsev
 
 # Other stuff
-use LHCbInterfaces	v1r2	Kernel  # Marco Cattaneo
+use LHCbInterfaces	v1r3    Kernel  # Marco Cattaneo
 use LHCbAlgs		v1r8	Kernel  # Marco Cattaneo
 use MCTools		v1r13	Phys    # Many
 use CaloInterfaces      v4r3    Calo    # Olivier Deschamps

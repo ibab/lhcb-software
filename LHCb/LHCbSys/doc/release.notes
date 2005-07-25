@@ -5,7 +5,7 @@
 ! Purpose     : LHCb OO kernel packages
 !-----------------------------------------------------------------------------
 
-</PRE><H1><A NAME=v18r8>2005-07-20 LHCbSys v18r8</A></H1><PRE>
+</PRE><H1><A NAME=v18r8>2005-07-25 LHCbSys v18r8</A></H1><PRE>
 This version uses Gaudi v16r5
 
  - New packages      : LinkerInstances v2r0 - dictionaries of Linker objects for
@@ -17,7 +17,7 @@ This version uses Gaudi v16r5
      DetSys v7r3, DetDesc v15r3, DetDescCnv v2r8, VeloDet v9r8,
      MuonDet v4r8, CaloDet v6r9p1, OTDet v5r6, XmlTools v3r6, TrgTools v7r5,
      DetCond v7r5, XmlTools v3r6, DAQSys v1r6, VeloDAQ v2r3p2, OTDAQ v3r3,
-     LHCbAlgs v1r8, RichRecBase v1r16p1, TrackInterfaces v1r2
+     LHCbAlgs v1r8, RichRecBase v1r16p1, TrackInterfaces v1r2,LHCbInterfaces v1r3
 
  - In DoxyFile.cfg
    . Get dot tool configuration from dottools.cfg, rather than from makedoc.py
@@ -106,6 +106,9 @@ This version uses Gaudi v16r5
  - In TrackInterfaces v1r2
    . Added propagate() and predict() methods to ITrackExtrapolator
    . Add IMeasurementProvider tool interface
+
+ - In LHCbInterfaces v1r3
+   . Add LHCbInterfaces/IInAcceptance.h
 
 </PRE><H1><A NAME=v18r7>2005-06-28 LHCbSys v18r7</A></H1><PRE>
  - Packages modified: KernelSys v4r13, LHCbKernel v5r12, RichKernel v5r5,
