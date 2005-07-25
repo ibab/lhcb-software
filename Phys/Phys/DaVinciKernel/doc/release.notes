@@ -1,6 +1,29 @@
-! $Id: release.notes,v 1.63 2005-07-18 11:25:16 pkoppenb Exp $
+! $Id: release.notes,v 1.64 2005-07-25 09:31:33 ibelyaev Exp $
 ! Package     : DaVinciKernel
 ! Responsible : P. Koppenburg
+
+! 2005-07-25 - Vanya BELYAEV
+
+ - Kernel/ICheckSelResults.h 
+   src/Lib/ICheckSelResults.cpp
+
+   new abstract interface for the tool, which is able to check 
+   the "selection results". It is especuially convinient 
+   to inspect the results of stripping or sto study the correlations 
+   correlations between "(TDR,HLT,"Pre")-selection" and 
+   "preselection" or different (pre)-selections
+
+   Usage:
+   ======
+   
+   // locate the tool:
+   const ICheckSelResults* check = 
+    tool<ICheckSelResults> ( "CheckSelResultsTool" ) ;
+   
+   // use it e.g in filling of N-Tuple:
+   tuple -> column ( "mumu" , check -> isSelected ( "PreselBs2MuMu" ) ) ;
+	 tuple -> column ( "hh"   , check -> isSelected ( "PreselB2hh"    ) ) ;
+   
 
 !========================== DaVinciKernel v3r5p1 2005-07-18 ===================
 ! 2005-07-11 - P. Koppenburg
