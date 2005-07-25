@@ -1,4 +1,4 @@
-// $Id: AlignmentCondition.h,v 1.2 2005-06-29 13:46:40 jpalac Exp $
+// $Id: AlignmentCondition.h,v 1.3 2005-07-25 17:12:41 cattanem Exp $
 #ifndef DETDESC_ALIGNMENTCONDITION_H 
 #define DETDESC_ALIGNMENTCONDITION_H 1
 
@@ -30,7 +30,7 @@ public:
   /// Constructor
   AlignmentCondition (const ITime& since, const ITime& till);
   /// Copy constructor 
-  AlignmentCondition (Condition& obj);
+//  AlignmentCondition (Condition& obj);
 
   virtual ~AlignmentCondition( ); ///< Destructor
 
