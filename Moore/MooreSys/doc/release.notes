@@ -3,7 +3,7 @@ Package     : MooreSys
 Package Coordinator : Patrick Koppenburg and Marco Cattaneo
 Purpose     : LHCb HLT application
 
-</PRE><H1><A NAME=v1r2>2005-07-19 Moore v1r2</A></H1><PRE>
+</PRE><H1><A NAME=v1r2>2005-07-26 Moore v1r2</A></H1><PRE>
 This version uses LHCb v18r8, Lbcom v2r4, Rec v1r4, Phys v1r4, Online v1r4
                   Gaudi v16r5 and XmlDDDB v26r1
 
@@ -37,7 +37,9 @@ This version uses LHCb v18r8, Lbcom v2r4, Rec v1r4, Phys v1r4, Online v1r4
      accesses RawEvent instead (HltMonitor v1r1)
    . Fix memory leak in XmlMuonRegionCnv (MuonDet v4r8)
    . Fixes to bugs found during RTTC in various HLT packages, see PhysSys
-     release notes for details 
+     release notes for details
+   . Decode again Velo RawBuffer in Reco sequence to avoid Velo tracking 
+     interference with Hlt. (RecSys v1r4)
    . Do not send L1 event number with Hlt decision (GaudiOnline v1r2p1)
 
 </PRE><H1><A NAME=v1r1>2005-06-27 Moore v1r1</A></H1><PRE>
