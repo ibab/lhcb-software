@@ -1,6 +1,34 @@
-! $Id: release.notes,v 1.64 2005-07-25 09:31:33 ibelyaev Exp $
+! $Id: release.notes,v 1.65 2005-07-26 16:26:17 ibelyaev Exp $
 ! Package     : DaVinciKernel
 ! Responsible : P. Koppenburg
+
+! 2005-07-26 - Vanya BELYAEV
+
+ - Kernel/IJetMaker.h
+   serc/Lib/IJetMaker.cpp
+
+   New abstract interface for jet-finding tools
+
+   Usage:
+   ======
+
+   // get the tool
+   const IJetMaker* jetMaker = tool<IJetMaker> ( .... ) ;
+ 
+   IJetMaker::Jets  jets ;
+   IJetMaker::Inputs input = ... 
+ 
+   // find the jets! 
+   StatusCode sc = jetMaker -> makeJets ( input , jets ) ;
+
+   always << " Found " << jets.size() << " jets! " << endreq ;
+ 
+   * ATTENTION:
+   * ==========
+   * It is a responsibility of users (e.g. the algorithm) to 
+   * take care about the ownership of jets *AND* their vertices). 
+   * Tool is not intended to do it! 
+
 
 ! 2005-07-25 - Vanya BELYAEV
 
