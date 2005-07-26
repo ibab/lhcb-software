@@ -5,13 +5,14 @@
 ! Purpose     : 
 !-----------------------------------------------------------------------------
 
-</PRE><H1><A NAME=v1r4>2005-07-18 OnlineSys v1r4</A></H1><PRE>
+</PRE><H1><A NAME=v1r4>2005-07-26 OnlineSys v1r4</A></H1><PRE>
 This version uses Gaudi v16r5, LHCb v18r8
 
  - Packages modified: GaudiOnline v1r2p1
 
  - In GaudiOnline v1r2p1:
-   . Fix bug in decision setting algorithm returning always maximum value
+   . Fix two bugs in decision setting algorithm: was accessing L1Score for HLT 
+     event number, was returning always maximum value for L1Score variables
 
 </PRE><H1><A NAME=v1r3>2005-06-27 OnlineSys v1r3</A></H1><PRE>
 This version uses Gaudi v16r4, LHCb v18r7
