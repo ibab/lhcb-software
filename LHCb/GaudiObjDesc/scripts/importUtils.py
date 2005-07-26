@@ -36,7 +36,7 @@ class importUtils:
 #--------------------------------------------------------------------------------
   def typeIsTypedefOrEnum(self,type):
     for tde in self.typedefenums :
-      if type.find(tde) != -1 : return 1
+      if type == tde : return 1
     return 0
 #--------------------------------------------------------------------------------
   def genExcludes(self, godClass, excludes) :
