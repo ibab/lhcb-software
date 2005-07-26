@@ -5,7 +5,7 @@ Reco.DetectorList = { "VELO", "IT", "Tr", "RICH", "CALO", "MUON" };
 
 // Velo tracking
 ApplicationMgr.DLLs += { "TrgTools", "TrgVelo", "TrgBrunel" };
-RecoVELOSeq.Members += { "DecodeRawVelo"
+RecoVELOSeq.Members += { "DecodeRawVelo/BrunelDecodeRawVelo"
                         ,"VeloRTracking/BrunelVeloRTracking"
                         ,"VeloSpaceTracking/BrunelVeloSpaceTracking"
                         ,"ConvertToTrFitTrack"

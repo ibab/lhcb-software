@@ -5,7 +5,7 @@ Purpose: LHCb reconstruction packages.
          This project groups together all the reconstruction packages needed
          by one or more LHCb applications. 
 
-</PRE><H1><A NAME=v1r4>2005-07-21 RecSys v1r4</A></H1><PRE>
+</PRE><H1><A NAME=v1r4>2005-07-25 RecSys v1r4</A></H1><PRE>
 This version uses Gaudi v16r5, LHCb v18r8
 
 - Package added: TrgConverter v1r0 - Coverts Trg tracks into new track model
@@ -15,6 +15,10 @@ This version uses Gaudi v16r5, LHCb v18r8
                      RichRecSys v1r18, RichLocalPID v1r12, RichHltSys v1r1p1,
                      TrackFitEvent v1r2, TrackTools v1r2, TrConverters v1r2, 
                      TrackProjectors v1r2, TrackExtrapolators v1r1
+
+- In Reco.opts
+  . Change name of DecodeRawVelo to BrunelDecodeRawVelo, to avoid clash when 
+    running Reco sequence after HLT
 
 - In DoxyFile.cfg
   . Get dot tool configuration from dottools.cfg, rather than from makedoc.py
