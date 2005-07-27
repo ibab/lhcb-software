@@ -1,8 +1,11 @@
-// $Id: IJetMaker.h,v 1.1 2005-07-26 16:26:17 ibelyaev Exp $
+// $Id: IJetMaker.h,v 1.2 2005-07-27 08:12:38 ibelyaev Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.1 $
+// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.2 $
 // ============================================================================
-// $Log: not supported by cvs2svn $ 
+// $Log: not supported by cvs2svn $
+// Revision 1.1  2005/07/26 16:26:17  ibelyaev
+//  add new abstract interface IJetMaker
+// 
 // ============================================================================
 #ifndef DAVINCIKERNEL_IJETMAKER_H 
 #define DAVINCIKERNEL_IJETMAKER_H 1
@@ -50,11 +53,34 @@ public:
    *  // get the tool
    *  const IJetMaker* jetMaker = tool<IJetMaker> ( .... ) ;
    *
-   *  IJetMaker::Jets  jets ;
+   *  // input particles 
    *  IJetMaker::Inputs input = ... 
+   *  // 1) 
+   *  // const Particles* particles = .... ;
+   *  // // create the input container 
+   *  // IJetMaker::Inputs input( particles->begin() , particles->end() ) ;
+   *  // 2) 
+   *  // ParticleVector particles = .... ;
+   *  // // create the input container 
+   *  // IJetMaker::Inputs input( particles.begin() , particles.end() ) ;
+   *  // 3) 
+   *  // LoKi::Range particles = .... ;
+   *  // // create the input container 
+   *  // IJetMaker::Inputs input( particles.begin() , particles.end() ) ;
+   *
+   *  // placeholder for "output" jets 
+   *  IJetMaker::Jets   jets ;
    *
    *  // find the jets! 
    *  StatusCode sc = jetMaker -> makeJets ( input , jets ) ;
+   *
+   *  // make  a loop over jets:
+   *  for ( IJetMaker::Jets::const_iterator iJet = jets.begin() ; 
+   *        jets.end() != iJet ; ++iJet ) 
+   *    {
+   *        // get the jet 
+   *        Particle* jet = *iJet ;
+   *    }
    *
    *  @endcode 
    *
@@ -71,24 +97,63 @@ public:
   ( const Input& input , Jets& jets ) const = 0 ;
   
   /** perform jet-finding procedute getting the input data from
-   *  arbitrary sequence of data, convertible to "const Particle*"
+   *  arbitrary sequence of data, convertible to "const Particle*", 
+   *  e.g. ParticleVector, Particles, LoKi::Range, etc... 
    *
    *  @code 
    *  
    *  // get the tool
    *  const IJetMaker* jetMaker = tool<IJetMaker> ( .... ) ;
    *
-   *  IJetMaker::Jets  jets ;
-   *
    *  // get input data 
    *  const Particles* ps = get<Particles> ( ... ) ;
    * 
+   *  // output jets 
+   *  IJetMaker::Jets  jets ;
+   *
    *  // find the jets! 
    *  StatusCode sc = jetMaker -> makeJets ( ps -> begin () , 
    *                                         ps -> end   () , jets ) ;
    *
-   *  @endcode 
    *  
+   *  // make  a loop over jets:
+   *  for ( IJetMaker::Jets::const_iterator iJet = jets.begin() ; 
+   *        jets.end() != iJet ; ++iJet ) 
+   *    {
+   *        // get the jet 
+   *        Particle* jet = *iJet ;
+   *    }
+   *
+   *  @endcode 
+   *
+   *  One can use e.g. LoKi::Range 
+   * 
+   *  @code 
+   *  
+   *  // get the tool
+   *  const IJetMaker* jetMaker = tool<IJetMaker> ( .... ) ;
+   *
+   *  // get input data : get all basic particles 
+   *  Range basic = select( "basic" , HASORIGIN ) ; 
+   *`
+   *  // output jets 
+   *  IJetMaker::Jets  jets ;
+   *   
+   *  // find the jets! 
+   *  StatusCode sc = jetMaker -> makeJets ( basic.begin () , 
+   *                                         basic.end   () , jets ) ;
+   *
+   *  
+   *  // make  a loop over jets:
+   *  for ( IJetMaker::Jets::const_iterator iJet = jets.begin() ; 
+   *        jets.end() != iJet ; ++iJet ) 
+   *    {
+   *        // get the jet 
+   *        Particle* jet = *iJet ;
+   *    }
+   *
+   *  @endcode 
+   *
    *  @attention It is a responsibility of users (e.g. the algorithm) 
    *             to take care about the ownership of jets *AND* their 
    *             vertices). The tool is not intended to do it! 

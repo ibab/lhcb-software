@@ -1,6 +1,95 @@
-! $Id: release.notes,v 1.65 2005-07-26 16:26:17 ibelyaev Exp $
+! $Id: release.notes,v 1.66 2005-07-27 08:12:38 ibelyaev Exp $
 ! Package     : DaVinciKernel
 ! Responsible : P. Koppenburg
+
+! 2005-07-27 - Vanya BELYAEV
+
+ - Kernel/IJetMaker.h
+     update the doxygen comments for code examples: 
+
+     // get the tool
+     const IJetMaker* jetMaker = tool<IJetMaker> ( .... ) ;
+
+     How to use the method with 2-arguments: 
+     =======================================
+   
+     // input particles 
+     IJetMaker::Inputs input = ... 
+     // // (1)  
+     // const Particles* particles = .... ;
+     // // create the input container 
+     // IJetMaker::Inputs input( particles->begin() , particles->end() ) ;
+     // // (2) 
+     // ParticleVector particles = .... ;
+     // // create the input container 
+     // IJetMaker::Inputs input( particles.begin() , particles.end() ) ;
+     // // (3) 
+     // LoKi::Range particles = .... ;
+     // // create the input container 
+     // IJetMaker::Inputs input( particles.begin() , particles.end() ) ;
+   
+     // placeholder for "output" jets 
+     IJetMaker::Jets   jets ;
+   
+     // find the jets! 
+     StatusCode sc = jetMaker -> makeJets ( input , jets ) ;
+   
+     // make  a loop over jets:
+     for ( IJetMaker::Jets::const_iterator iJet = jets.begin() ; 
+           jets.end() != iJet ; ++iJet ) 
+       {
+           // get the jet 
+           Particle* jet = *iJet ;
+       }
+   
+     How to use the templated method with 3 arguments:
+     =================================================
+
+     // get the tool
+     const IJetMaker* jetMaker = tool<IJetMaker> ( .... ) ;
+   
+     // get input data 
+     const Particles* ps = get<Particles> ( ... ) ;
+    
+     // output jets 
+     IJetMaker::Jets  jets ;
+   
+     // find the jets! 
+     StatusCode sc = jetMaker -> makeJets ( ps -> begin () , 
+                                            ps -> end   () , jets ) ;
+   
+     
+     // make  a loop over jets:
+     for ( IJetMaker::Jets::const_iterator iJet = jets.begin() ; 
+           jets.end() != iJet ; ++iJet ) 
+       {
+           // get the jet 
+           Particle* jet = *iJet ;
+       }
+   
+     Use togather with LoKi: 
+     ======================= 
+
+     // get input data : get all basic particles 
+     Range basic = select( "basic" , HASORIGIN ) ; 
+   
+     // output jets 
+     IJetMaker::Jets  jets ;
+      
+     // find the jets! 
+     StatusCode sc = jetMaker -> makeJets ( basic.begin () , 
+                                            basic.end   () , jets ) ;
+   
+     
+     // make  a loop over jets:
+     for ( IJetMaker::Jets::const_iterator iJet = jets.begin() ; 
+           jets.end() != iJet ; ++iJet ) 
+       {
+           // get the jet 
+           Particle* jet = *iJet ;
+       }
+   
+
 
 ! 2005-07-26 - Vanya BELYAEV
 
