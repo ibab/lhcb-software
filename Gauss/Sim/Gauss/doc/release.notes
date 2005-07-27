@@ -4,6 +4,17 @@
 ! Purpose     : LHCb Simulation Application with Geant4
 !-----------------------------------------------------------------------------
 
+!============================= Gauss v20r1 ==================================
+! 2005-07-27 - Gloria CORTI
+ - Use latest version of XmlDDDB (v26r1)
+   . requirements
+ - Introduce option to have root histograms prefixed by "h"
+   . Monitor.opts
+ - In production options turn on histograms for detectors (for test production)
+   . options/v200412.opts, v200506.opts, v200507.opts
+ - Introduce use of ParticleGuns 
+   . requirements, use Gen/ParticleGuns v1r0
+   . Common.opts, load dll
 
 !============================= Gauss v20r0 ==================================
 ! 2005-07-21 - Florence Ranjard
