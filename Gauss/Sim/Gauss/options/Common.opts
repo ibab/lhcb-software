@@ -1,4 +1,4 @@
-// $Id: Common.opts,v 1.11 2005-07-12 16:03:54 gcorti Exp $ 
+// $Id: Common.opts,v 1.12 2005-07-27 17:35:27 gcorti Exp $ 
 #pragma print off
 
 /** @file 
@@ -31,6 +31,7 @@ ApplicationMgr.DLLs += { "GaudiAlg" } ;
 ApplicationMgr.DLLs += { "LHCbAlgs" } ;
 ApplicationMgr.DLLs += { "GaussTools"} ;
 ApplicationMgr.DLLs += { "GaussAlgs"  } ;
+ApplicationMgr.DLLs += { "ParticleGuns" };
 ApplicationMgr.DLLs += { "LbPythia", "Generators" } ;
 ApplicationMgr.DLLs += { "MCTools", "GaussMonitor" };
 
