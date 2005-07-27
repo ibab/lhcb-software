@@ -1,4 +1,4 @@
-// $Id: Monitor.opts,v 1.10 2005-07-04 17:20:39 gcorti Exp $ 
+// $Id: Monitor.opts,v 1.11 2005-07-27 17:37:15 gcorti Exp $ 
 
 /** @file 
  * 
@@ -11,6 +11,7 @@
 // Load the DLLs for histogram persistency - choose ROOT or HBook
 // #include "STDOPTS/HBookCnv.opts"
 #include "$STDOPTS/RootHist.opts"
+RootHistSvc.ForceAlphaIds = true;
 
 //---------------------------------------------------------------------
 // Generator Monitor Histograms: set of histograms from HepMC
