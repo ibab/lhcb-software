@@ -31,12 +31,16 @@ Digi.DetectorList += { "VELO" , "IT", "OT" , "RICH" , "CALO", "MUON" };
 Trigger.DetectorList = { "L0" };
 Relations.DetectorList = { "Velo", "IT", "OT", "L0", "Links" };
 
-// Spillover, LHC background, Initialization
-ApplicationMgr.DLLs += { "DigiAlg", "DAQEvent" };
-#include "$DIGIALGROOT/options/Spillover.opts"
+// Initialization
+ApplicationMgr.DLLs += { "DAQEvent" };
 InitBooleSeq.Members += { "LbAppInit/Boole" };
 InitBooleSeq.Members += { "CreateL1Buffer" };
 InitBooleSeq.Members += { "CreateRawBuffer" };
+
+// Spillover
+ApplicationMgr.DLLs += { "DigiAlg" };
+InitDataSeq.Members += { "MergeEventAlg/SpilloverAlg" };
+#include "$DIGIALGROOT/options/Spillover.opts"
 
 // Subdetector algorithms
 //--------------------------------------------------------------
@@ -88,6 +92,7 @@ ApplicationMgr.DLLs   += { "ITAlgorithms", "STDAQ", "STTools" };
 DigiITSeq.Members += { "MCITDepositCreator", "MCITDigitCreator" };
 DigiITSeq.Members += { "ITDigitCreator" };
 DigiITSeq.Members += { "STL1ClusterCreator" };
+#include "$STDAQROOT/options/stDAQ-v2.opts"
 #include "$ITALGORITHMSROOT/options/itDigi.opts"
 // Switch off LHC background until it can be done in Gauss
 MCITDepositCreator.spillVector = { "/", "/Prev/", "/PrevPrev/" };

@@ -46,3 +46,10 @@ MoniCALOSeq.Members += { "CaloDigitMonitor/PrsMoni" };
 MoniCALOSeq.Members += { "CaloDigitMonitor/EcalMoni" };
 MoniCALOSeq.Members += { "CaloDigitMonitor/HcalMoni" };
 #include "$CALOMONIDIGIOPTS/MoniDigi.opts"
+
+// Uncomment following options to print a line before and after every algorithm
+// Useful to debug sequencing problems, or segmentation faults
+// (need also to use GaudiAud v* in requirements)
+//ApplicationMgr.DLLs += { "GaudiAud" };
+//AuditorSvc.Auditors += { "NameAuditor" };
+//NameAuditor.Enable  = true;

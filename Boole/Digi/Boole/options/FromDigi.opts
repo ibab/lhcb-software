@@ -4,7 +4,7 @@
 #include "$BOOLEOPTS/v200412.opts"
 
 // Switch off spillover, does not work in this configuration
-InitDataSeq.Members = {};
+InitDataSeq.Members -= { "MergeEventAlg/SpilloverAlg" };
 
 SpdSignal.PreviousDigits = "";
 PrsSignal.PreviousDigits = "";
@@ -16,7 +16,7 @@ EventDataSvc.InhibitPathes += { "/Event/Prev/MC", "/Event/Prev/Gen",
                                 "/Event/Next/MC" };
 
 // Switch off creation of Packed Sim objects, already existing on input data
-OutputPackSeq.Members = { };
+OutputPackSeq.Members -= { "PackCollision", "PackMCParticle", "PackMCVertex" };
 
 // And provide a .digi input file
 EventSelector.Input = {

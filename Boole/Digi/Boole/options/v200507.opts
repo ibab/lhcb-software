@@ -3,21 +3,20 @@
 //  geometry lhcb-200507 (Tilted Calo and Muon, latest Velo)                 //
 ///////////////////////////////////////////////////////////////////////////////
 #pragma print off
-InitDataSeq.Members += { "MergeEventAlg/SpilloverAlg" }; // Adds Spillover
 #include "$BOOLEOPTS/Boole.opts"          // Generic options for all jobs
-//#include "$BOOLEOPTS/ExpertCheck.opts"  // Uncomment for expert check histos
-ApplicationMgr.OutStream += { "DigiWriter" };  // Comment to switch off output
+
+//---------------------------------------------------------------------------
+// Uncomment one or more of following lines for optional behaviour
+//--------------------------------------------------------------------------- 
+// #include "$BOOLEOPTS/ExpertCheck.opts"     // Switches on expert check histos
+// InitDataSeq.Members -= { "MergeEventAlg/SpilloverAlg" }; // Removes spillover
+// ApplicationMgr.OutStream -= { "DigiWriter" };    // Switches off event output
+
 //---------------------------------------------------------------------------
 // Database specific options
 //--------------------------------------------------------------------------- 
-#include "$STDAQROOT/options/stDAQ-v2.opts"
 #pragma print on
 DetectorDataSvc.DetDbLocation = "$XMLDDDBROOT/DDDB/lhcb-200507.xml";
-// Boole.PreloadGeometry = true;
-
-//---------------------------------------------------------------------------
-// Add here any job specific options, to over-ride previously defined options
-//---------------------------------------------------------------------------
 
 //---------------------------------------------------------------------------
 // Number of events to process, optionally skipping some events

@@ -1,5 +1,6 @@
 // Define Digi content for output of digitization
 // ----------------------------------------------
+ApplicationMgr.OutStream += { "DigiWriter" };
 DigiWriter.Preload     = false;
 DigiWriter.OptItemList =
 {
