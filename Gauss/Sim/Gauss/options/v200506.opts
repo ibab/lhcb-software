@@ -21,7 +21,7 @@ DetectorDataSvc.DetDbLocation = "$XMLDDDBROOT/DDDB/lhcb-200506.xml";
 //--------------------------------------------------------------------------
 // Switch off monitors of detectors in production
 //--------------------------------------------------------------------------
-Monitor.Members       = { "GaudiSequencer/GenMonitor" };
-GiGa.EventSeq.RichG4Event.RichEventActionHistoFillSet2 = false;
-GiGa.RunSeq.RichG4Run.DefineRichG4HistoSet2 = false;
+// Monitor.Members       = { "GaudiSequencer/GenMonitor" };
+// GiGa.EventSeq.RichG4Event.RichEventActionHistoFillSet2 = false;
+// GiGa.RunSeq.RichG4Run.DefineRichG4HistoSet2 = false;
  
