@@ -1,5 +1,5 @@
 package GaussSys
-version v20r0
+version v20r1
 
 branches cmt doc
 
@@ -8,7 +8,7 @@ branches cmt doc
 #==================================================================
 
 # Gauss application
-use Gauss		v20r0	  Sim
+use Gauss		v20r1	  Sim
 
 # Generator stuff ...
 use GENSER              v3r100p0  Gen
@@ -18,7 +18,7 @@ use Generators          v1r1      Gen
 use LbPythia            v1r1      Gen
 use AcerMC              v1r23p0   Gen
 use LbAcerMC            v1r2      Gen
-use ParticleGuns	v1        Gen
+use ParticleGuns	v1r0      Gen
 
 # GiGa stuff...
 use GiGa        	v17r2	  Sim        
