@@ -1,4 +1,4 @@
-// $Id: DetDict.h,v 1.5 2005-07-25 17:11:38 cattanem Exp $
+// $Id: DetDict.h,v 1.6 2005-07-28 10:18:06 jpalac Exp $
 // ============================================================================
 #ifndef DETSYS_DETDICT_H 
 #define DETSYS_DETDICT_H 1
@@ -230,7 +230,8 @@ namespace DetDescPython
     GaudiPython::Interface<IUpdateManagerSvc>   s2 ;
     GaudiPython::Interface<ICondDBAccessSvc>    s3 ;
     GaudiPython::Interface<ICondDBCnvSvc>       s4 ;
-    
+
+    SmartRef<Condition> sref_inst1;
     
   };
   

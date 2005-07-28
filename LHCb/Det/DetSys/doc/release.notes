@@ -4,6 +4,10 @@
 ! Purpose     : collect Det packages
 !-----------------------------------------------------------------------------
 
+! 2005-07-28 - Juan Palacios
+ - Add SmartRef<Condition> to __Instantiations struct in dict/DetDict.h to 
+   allow to retrieve conditions from detector elements.
+
 !========================= DetSys v7r3 2005-07-22 =========================
 ! 2005-07-22 - Florence Ranjard
  - Component library name changed to DetDict, to follow CMT conventions
