@@ -5,6 +5,18 @@
 ! Purpose     : LHCb OO kernel packages
 !-----------------------------------------------------------------------------
 
+</PRE><H1><A NAME=v18r8>2005-07-28 LHCbSys v18r9</A></H1><PRE>
+This version uses Gaudi v16r5
+
+ - Modified packages: DetSys v7r3p1, TrgTools v7r6
+
+ - In DetSys v7r3p1
+   . Add SmartRef<Condition> to __Instantiations struct in dict/DetDict.h
+
+ - In TrgTools v7r6
+   . Use relevant state for electrons in order to profit from Bremsstrahlung
+     corrections
+
 </PRE><H1><A NAME=v18r8>2005-07-25 LHCbSys v18r8</A></H1><PRE>
 This version uses Gaudi v16r5
 

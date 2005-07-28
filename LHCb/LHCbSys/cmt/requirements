@@ -1,5 +1,5 @@
 package LHCbSys
-version v18r8
+version v18r9
 
 branches doc cmt
 
@@ -7,7 +7,7 @@ branches doc cmt
 # LHCb packages used by all applications
 #===============================================================
 
-use LHCb		v18r8
+use LHCb		v18r9
 use GaudiConf		v9r1
 
 #                                         Maintainer
@@ -28,7 +28,7 @@ use L0MuonKernel	v3r0p1	L0      # Andrei Tsaregorodtsev
 use ProcessorKernel	v1r0p1  L0      # Andrei Tsaregorodtsev
 
 # Detector description
-use DetSys		v7r3    Det     # Marco Cattaneo
+use DetSys		v7r3p1  Det     # Marco Cattaneo
 use VeloDet        	v9r8    Det     # Mark Tobin
 use DetDesc        	v15r3   Det     # Marco Clemencic, Juan Palacios
 use DetDescCnv          v2r8    Det     # Marco Clemencic, Juan Palacios
@@ -98,7 +98,7 @@ use TrackPython         v1r0    Tr      # Eduardo Rodrigues, Jose Hernando
 use DetCond             v7r5    Det     # Marco Clemencic
 
 # Temporary, should be split
-use TrgTools		v7r5	Trg     # Olivier Callot
+use TrgTools		v7r6    Trg     # Olivier Callot
 
 # LHCb  Examples
 use DetDescChecks	v2r3	Det     # Ivan Belyaev
