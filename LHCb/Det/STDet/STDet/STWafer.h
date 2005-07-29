@@ -46,6 +46,9 @@ class STWafer {
 
     bool isInsideFullDetail(const double u, const double v, double zLocal = 0.) const;
 
+    /// Check if (u,v) is in this Wafer and check if it is in a vertical dead zone given some tolerance
+    bool isInVDeadZone(const double u, const double v, const double tolerance) const;
+
     /// Get number of strips in this subdivision
     int numStrips() const;
     
@@ -138,7 +141,7 @@ inline std::ostream& operator<<( std::ostream& os , const STWafer* aWafer )
 { return aWafer->printOut( os ); } 
 
 inline MsgStream& operator<<( MsgStream& os , const STWafer* aWafer )
-{ return aWafer->printOut( os ); } 
+{ return aWafer->printOut( os ); }
 
 inline int STWafer::numStrips() const { 
   return m_NumStrips; 
@@ -190,12 +193,3 @@ inline double STWafer::lowerV() const {
 }
 
 #endif
-
-
-
-
-
-
-
-
-

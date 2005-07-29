@@ -91,6 +91,33 @@ bool STWafer::isInsideFullDetail(const double u, const double v,
   return isInside;
 }
 
+/// Check if (u,v) is in this Wafer and check if it is in a vertical dead zone given some tolerance
+bool STWafer::isInVDeadZone(const double u, const double v, const double tolerance) const {
+
+  double vmax = v + tolerance;
+  double vmin = v - tolerance;
+  
+  // Check if point (u,v) is inside of this Wafer with tolerance
+  bool isInsideWafer = this->isInside(u, v, tolerance);
+
+  // To be in a dead zone, it also needs to be in a Wafer
+  bool isInsideDeadZone = false;
+
+  if(isInsideWafer == true){
+    std::vector<double>::const_iterator iterD = m_deadRegions.begin();
+    while((iterD != m_deadRegions.end()) && (isInsideDeadZone == false)){
+      if((fabs(vmax - *iterD) < m_deadWidth) || (fabs(vmin - *iterD) < m_deadWidth)){
+        isInsideDeadZone = true;
+      }
+      ++iterD;
+    } // iterD
+  }
+  
+  // return true if in a wafer and a dead zone
+  return isInsideDeadZone;
+}
+
+
 /// Get u-coordinate of a strip
 double STWafer::U(const int strip) const 
 {

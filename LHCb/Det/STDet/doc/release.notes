@@ -1,6 +1,10 @@
 !Package         : STDet
 !Package manager : M. Needham
 
+! 2005-07-27 - Luis Fernandez
+ - STWafer.{h,cpp}
+   . New method 'isInVDeadZone(...)' to check if (u,v) is inside a wafer
+     and in a vertical dead zone given some tolerance
 !========================= STDet v1r4 2005-05-24 =======================
 ! 2005-05-13 - Marco Clemencic
  - Use new ParamValidDataObject interface (DetDesc >= v15)
