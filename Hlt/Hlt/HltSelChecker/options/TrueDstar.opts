@@ -13,7 +13,7 @@ Particle2MCLinksSelectDstar2Dpi.InputData = { "Phys/HLTPions/Particles", "Phys/H
 TrueSignals.Members += {"MakeResonances/AllDstar2DpiTracks"};
 AllDstar2DpiTracks.PhysDesktop.InputLocations = {"Phys/SelectDstar2Dpi"};
 AllDstar2DpiTracks.DecayDescriptors = {"[D*(2010)- -> K+ pi- pi-]cc", "[D*(2010)- -> pi- pi+ pi-]cc", "[D*(2010)- -> pi- K+ K-]cc"};
-AllDstar2DpiTracks.DaughterFilter.Selections = {"e+ : TrackTypeFilterCriterion",
+AllDstar2DpiTracks.DaughterFilter.Selections = {"pi+ : TrackTypeFilterCriterion",
                                              "K+ : TrackTypeFilterCriterion"};
 AllDstar2DpiTracks.DaughterFilter.TrackTypeFilterCriterion.RequireLong = true ;
 

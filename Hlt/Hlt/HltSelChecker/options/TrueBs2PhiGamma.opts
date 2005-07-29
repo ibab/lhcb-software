@@ -13,5 +13,5 @@ Particle2MCLinksSelectBs2PhiGamma.InputData = {"Phys/HLTPions/Particles", "Phys/
 TrueSignals.Members += {"MakeResonances/AllBs2PhiGammaTracks"};
 AllBs2PhiGammaTracks.PhysDesktop.InputLocations = {"Phys/SelectBs2PhiGamma"};
 AllBs2PhiGammaTracks.DecayDescriptor = "B0 -> K+ K- gamma";
-AllBs2PhiGammaTrack.DaughterFilter.Selections = {"K+ : TrackTypeFilterCriterion"};
-AllBs2PhiGammaTrack.DaughterFilter.TrackTypeFilterCriterion.RequireLong = true ;
+AllBs2PhiGammaTracks.DaughterFilter.Selections = {"K+ : TrackTypeFilterCriterion"};
+AllBs2PhiGammaTracks.DaughterFilter.TrackTypeFilterCriterion.RequireLong = true ;
