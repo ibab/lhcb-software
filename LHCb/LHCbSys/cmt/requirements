@@ -28,7 +28,7 @@ use L0MuonKernel	v3r0p1	L0      # Andrei Tsaregorodtsev
 use ProcessorKernel	v1r0p1  L0      # Andrei Tsaregorodtsev
 
 # Detector description
-use DetSys		v7r3p1  Det     # Marco Cattaneo
+use DetSys              v7r4    Det     # Marco Cattaneo
 use VeloDet        	v9r8    Det     # Mark Tobin
 use DetDesc        	v15r3   Det     # Marco Clemencic, Juan Palacios
 use DetDescCnv          v2r8    Det     # Marco Clemencic, Juan Palacios
@@ -40,7 +40,7 @@ use MuonDet        	v4r8    Det     # Alessia Satta, Alessio Sarti
 use Magnet         	v2r8	Det     # N.N.
 use MuonTools      	v3r8	Muon    # Alessia Satta
 use RichDet		v8r4	Det     # Chris Jones
-use STDet          	v1r4	Det     # Matt Needham
+use STDet               v1r5    Det     # Matt Needham
 
 # Event data model
 use EventSys		v20r8   Event   # Marco Cattaneo
