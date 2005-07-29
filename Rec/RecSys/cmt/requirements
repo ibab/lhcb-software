@@ -1,5 +1,5 @@
 package RecSys
-version v1r4
+version v1r5
 
 branches cmt doc
  
@@ -37,7 +37,7 @@ use TrConverters        v1r2    Tr    # Eduardo Rodrigues, Jose Hernando
 use TrgConverter        v1r0    Trg   # Eduardo Rodrigues, Jose Hernando
 
 # Trg reconstruction
-use TrgSys		v2r9	Trg   # Olivier Callot
+use TrgSys		v2r10   Trg   # Olivier Callot
 use TrgBrunel           v1r1    Trg   # Olivier Callot
 use TrgCalo		v2r0p1  Trg   # Olivier Deschamps
 use TrgChecker		v7r1	Trg   # Olivier Callot
@@ -46,7 +46,7 @@ use TrgMonitor		v4r0	Trg   # Olivier Callot
 use TrgMuon             v1r2p3  Trg   # Alessia Satta
 use TrgPrimVertex	v4r2	Trg   # Olivier Callot
 use TrgVelo             v7r4    Trg   # David Hutchcroft
-use TrgVeloTT		v7r0	Trg   # Olivier Callot
+use TrgVeloTT		v8r0    Trg   # Luis Fernandez
 
 # New pattern recognition
 use PatSys              v1r1    Pat   # Olivier Callot
