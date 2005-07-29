@@ -15,3 +15,6 @@ TrueSignals.Members += {"MakeResonances/AllBd2MuMuKstarTracks"};
 AllBd2MuMuKstarTracks.PhysDesktop.InputLocations = {"Phys/SelectBd2MuMuKstar"};
 // AllBd2MuMuKstarTracks.DecayDescriptor = "[B0 -> mu+ mu- K+ pi-]cc" ;
 AllBd2MuMuKstarTracks.DecayDescriptor = "[B0 -> K+ pi-]cc" ;  // no muon association ...
+AllBd2MuMuKstarTracks.DaughterFilter.Selections = {"pi+ : TrackTypeFilterCriterion",
+                                             "K+ : TrackTypeFilterCriterion"};
+AllBd2MuMuKstarTracks.DaughterFilter.TrackTypeFilterCriterion.RequireLong = true ;

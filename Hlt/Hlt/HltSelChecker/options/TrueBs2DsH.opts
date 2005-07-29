@@ -21,3 +21,6 @@ Particle2MCLinksSelectBs2DsH.InputData = { "Phys/HLTPions/Particles", "Phys/HLTK
 TrueSignals.Members += {"MakeResonances/AllBs2DsHTracks"};
 AllBs2DsHTracks.PhysDesktop.InputLocations = {"Phys/SelectBs2DsH"};
 AllBs2DsHTracks.DecayDescriptor = "B_s0 -> K+ pi+ K- pi-" ; // no rich, bachelor always pi
+AllBs2DsHTracks.DaughterFilter.Selections = {"pi+ : TrackTypeFilterCriterion",
+                                             "K+ : TrackTypeFilterCriterion"};
+AllBs2DsHTracks.DaughterFilter.TrackTypeFilterCriterion.RequireLong = true ;

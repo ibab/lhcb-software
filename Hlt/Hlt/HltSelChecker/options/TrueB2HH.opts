@@ -33,3 +33,5 @@ Particle2MCLinksSelectB2HH.InputData = { "Phys/HLTPions/Particles", "Phys/HLTKao
 TrueSignals.Members += {"MakeResonances/AllB2HHTracks"};
 AllB2HHTracks.PhysDesktop.InputLocations = {"Phys/SelectB2HH"};
 AllB2HHTracks.DecayDescriptor = "B0 -> pi+ pi-" ; // always for B -> hh with pions
+AllB2HHTracks.DaughterFilter.Selections = {"pi+ : TrackTypeFilterCriterion"};
+AllB2HHTracks.DaughterFilter.TrackTypeFilterCriterion.RequireLong = true ;

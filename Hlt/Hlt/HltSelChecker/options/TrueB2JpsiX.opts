@@ -13,3 +13,5 @@ Particle2MCLinksSelectB2JpsiX.InputData = { "Phys/HltGeneric/Particles"};
 TrueSignals.Members += {"MakeResonances/AllJpsiTracks"};
 AllJpsiTracks.PhysDesktop.InputLocations = {"Phys/SelectB2JpsiX"};
 AllJpsiTracks.DecayDescriptor = "J/psi(1S) -> mu+ mu-" ; // no muon association ...
+AllJpsiTracks.DaughterFilter.Selections = {"mu+ : TrackTypeFilterCriterion"};
+AllJpsiTracks.DaughterFilter.TrackTypeFilterCriterion.RequireLong = true ;

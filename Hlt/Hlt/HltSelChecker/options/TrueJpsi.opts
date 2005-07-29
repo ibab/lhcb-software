@@ -13,6 +13,8 @@ Particle2MCLinksSelectJpsi2MuMu.InputData = { "Phys/HltGeneric/Particles"}; // n
 TrueSignals.Members += {"MakeResonances/AllJpsi2MuMuTracks"};
 AllJpsi2MuMuTracks.PhysDesktop.InputLocations = {"Phys/SelectJpsi2MuMu"};
 AllJpsi2MuMuTracks.DecayDescriptor = "J/psi(1S) -> mu+ mu-" ;  
+AllJpsi2MuMuTracks.DaughterFilter.Selections = {"mu+ : TrackTypeFilterCriterion"};
+AllJpsi2MuMuTracks.DaughterFilter.TrackTypeFilterCriterion.RequireLong = true ;
 
 // only here
 TrueSignals.Members += {"PrintTree/PrintJpsiTracks"};

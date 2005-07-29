@@ -13,3 +13,5 @@ Particle2MCLinksSelectB2MuMu.InputData = { "Phys/HltGeneric/Particles"}; // no m
 TrueSignals.Members += {"MakeResonances/AllB2MuMuTracks"};
 AllB2MuMuTracks.PhysDesktop.InputLocations = {"Phys/SelectB2MuMu"};
 AllB2MuMuTracks.DecayDescriptor = "B0 -> mu+ mu-" ;
+AllB2MuMuTracks.DaughterFilter.Selections = {"mu+ : TrackTypeFilterCriterion"};
+AllB2MuMuTracks.DaughterFilter.TrackTypeFilterCriterion.RequireLong = true ;

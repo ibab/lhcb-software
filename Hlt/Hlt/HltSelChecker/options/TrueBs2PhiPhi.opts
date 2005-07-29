@@ -14,3 +14,5 @@ Particle2MCLinksSelectBs2PhiPhi.InputData = { "Phys/HLTPions/Particles", "Phys/H
 TrueSignals.Members += {"MakeResonances/AllBs2PhiPhiTracks"};
 AllBs2PhiPhiTracks.PhysDesktop.InputLocations = {"Phys/SelectBs2PhiPhi"};
 AllBs2PhiPhiTracks.DecayDescriptor = "B_s0 -> K+ K+ K- K-" ;
+AllBs2PhiPhiTracks.DaughterFilter.Selections = {"K+ : TrackTypeFilterCriterion"};
+AllBs2PhiPhiTracks.DaughterFilter.TrackTypeFilterCriterion.RequireLong = true ;
