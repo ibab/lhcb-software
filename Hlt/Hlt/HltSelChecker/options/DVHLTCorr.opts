@@ -39,14 +39,14 @@ HltDecision.MakeCorrelations = true ;
 //#include "$HLTSELECTIONSROOT/options/L0L1-MB.opts"
 //==============================================================================
 // PK's stripping of signal passing L0, L1 and TDR:
-// #include "$HLTSELECTIONSROOT/options/L0L1TDR-AllSignals.opts"
+// #include "$HLTSELECTIONSROOT/options/L0TDR-AllSignals.opts"
 //==============================================================================
 // some sepcial signal!
 // Warning: Files are added up to EventSelector
 // in these options
 // Hence: re-initalize event selector
 EventSelector.Input   = {};
-#include "$HLTSELECTIONSROOT/options/L0L1TDR-Bs2JpsiPhi.opts"
+#include "$HLTSELECTIONSROOT/options/L0TDR-Bs2JpsiPhi.opts"
 
 ApplicationMgr.EvtMax    = 100 ;
 EventSelector.FirstEvent = 1 ;

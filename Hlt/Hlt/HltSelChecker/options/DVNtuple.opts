@@ -25,7 +25,7 @@ HltGenericDecision.Filter = false ; // false is default
 //==============================================================================
 //#include "$HLTSELECTIONSROOT/options/L0L1-MB.opts"
 //EventSelector.Input   = {};
-//#include "$HLTSELECTIONSROOT/options/L0L1TDR-Bd2D0Kstar.opts"
+//#include "$HLTSELECTIONSROOT/options/L0TDR-Bd2D0Kstar.opts"
 //EventSelector.Input   = {"DATAFILE='PFN:HLTAccepted.dst' TYP='POOL_ROOTTREE' OPT='READ'"};
 
 ApplicationMgr.TopAlg += { "GaudiSequencer/TupleSeq" }; 

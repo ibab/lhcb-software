@@ -43,7 +43,7 @@ EventSelector.Input   = {};
 // #include "$HLTSELECTIONSROOT/options/L0L1-MB.opts"
 //------------------------------------------------------------------------------
 // PK's stripping of signal passing L0, L1 and TDR:
-//#include "$HLTSELECTIONSROOT/options/L0L1TDR-AllSignals.opts"
+//#include "$HLTSELECTIONSROOT/options/L0TDR-AllSignals.opts"
 //------------------------------------------------------------------------------ 
 
 //==============================================================================
@@ -51,13 +51,13 @@ EventSelector.Input   = {};
 //==============================================================================
 // B-> H H
 // Bd -> Pi Pi
-// #include "$HLTSELECTIONSROOT/options/L0L1TDR-Bd2PiPi.opts"
+// #include "$HLTSELECTIONSROOT/options/L0TDR-Bd2PiPi.opts"
 // Bd -> K Pi
-// #include "$HLTSELECTIONSROOT/options/L0L1TDR-Bd2KPi.opts"
+// #include "$HLTSELECTIONSROOT/options/L0TDR-Bd2KPi.opts"
 // Bs -> K K
-// #include "$HLTSELECTIONSROOT/options/L0L1TDR-Bs2KK.opts"
+// #include "$HLTSELECTIONSROOT/options/L0TDR-Bs2KK.opts"
 // Bs -> Pi K
-// #include "$HLTSELECTIONSROOT/options/L0L1TDR-Bs2PiK.opts"
+// #include "$HLTSELECTIONSROOT/options/L0TDR-Bs2PiK.opts"
 
 // #include "$HLTSELCHECKERROOT/options/NTB2HH.opts"
 
@@ -65,7 +65,7 @@ EventSelector.Input   = {};
 // Checking B_s0 -> phi(1020) phi(1020)
 //==============================================================================
 // Bs -> Phi Phi
-#include "$HLTSELECTIONSROOT/options/L0L1TDR-Bs2PhiPhi.opts"
+#include "$HLTSELECTIONSROOT/options/L0TDR-Bs2PhiPhi.opts"
 
 #include "$HLTSELCHECKERROOT/options/NTBs2PhiPhi.opts"
 
@@ -73,7 +73,7 @@ EventSelector.Input   = {};
 // Checking B0 -> (D~0 -> K+ pi-) (K*(892)0 -> K+ pi-) and cc
 //==============================================================================
 // Bd -> D0 K*
-// #include "$HLTSELECTIONSROOT/options/L0L1TDR-Bd2D0Kstar.opts"
+// #include "$HLTSELECTIONSROOT/options/L0TDR-Bd2D0Kstar.opts"
 
 // #include "$HLTSELCHECKERROOT/options/NTBd2D0Kstar.opts"
 
@@ -81,7 +81,7 @@ EventSelector.Input   = {};
 // Checking B0 -> (D*(2010)- -> (D~0 -> K+ pi-)  pi-) pi+ and cc
 //==============================================================================
 // Bd -> D* Pi
-// #include "$HLTSELECTIONSROOT/options/L0L1TDR-Bd2DstarPi.opts"
+// #include "$HLTSELECTIONSROOT/options/L0TDR-Bd2DstarPi.opts"
 
 // #include "$HLTSELCHECKERROOT/options/NTBd2DstarPi.opts"
 
@@ -89,9 +89,9 @@ EventSelector.Input   = {};
 // Checking B_s0 -> (D_s- -> K+ K- pi-) h+ and cc
 //==============================================================================
 // Bs -> Ds(KKPi) K
-// #include "$HLTSELECTIONSROOT/options/L0L1TDR-Bs2DsK.opts"
+// #include "$HLTSELECTIONSROOT/options/L0TDR-Bs2DsK.opts"
 // Bs -> Ds(KKPi) Pi
-// #include "$HLTSELECTIONSROOT/options/L0L1TDR-Bs2DsPi.opts"
+// #include "$HLTSELECTIONSROOT/options/L0TDR-Bs2DsPi.opts"
 
 // #include "$HLTSELCHECKERROOT/options/NTBs2DsH.opts"
 
@@ -99,7 +99,7 @@ EventSelector.Input   = {};
 // Checking B_s0 -> phi(1020) gamma
 //==============================================================================
 // Bs -> Phi Gamma
-// #include "$HLTSELECTIONSROOT/options/L0L1TDR-Bs2PhiGamma.opts"
+// #include "$HLTSELECTIONSROOT/options/L0TDR-Bs2PhiGamma.opts"
 
 // #include "$HLTSELCHECKERROOT/options/NTBs2PhiGamma.opts"
 
@@ -107,9 +107,9 @@ EventSelector.Input   = {};
 // Checking Hot J/Psi
 //==============================================================================
 // Bd -> J/Psi(MuMu)Ks
-// #include "$HLTSELECTIONSROOT/options/L0L1TDR-Bd2JpsiKs.opts"
+// #include "$HLTSELECTIONSROOT/options/L0TDR-Bd2JpsiKs.opts"
 // Bs -> J/Psi(MuMu) Phi
-// #include "$HLTSELECTIONSROOT/options/L0L1TDR-Bs2JpsiPhi.opts"
+// #include "$HLTSELECTIONSROOT/options/L0TDR-Bs2JpsiPhi.opts"
 
 // #include "$HLTSELCHECKERROOT/options/NTB2JpsiX.opts"
 
@@ -117,7 +117,7 @@ EventSelector.Input   = {};
 // Checking 
 //==============================================================================
 // Bs -> Mu Mu
-// #include "$HLTSELECTIONSROOT/options/L0L1TDR-Bs2MuMu.opts"
+// #include "$HLTSELECTIONSROOT/options/L0TDR-Bs2MuMu.opts"
 
 // #include "$HLTSELCHECKERROOT/options/NTB2MuMu.opts"
 
@@ -125,7 +125,7 @@ EventSelector.Input   = {};
 // Checking 
 //==============================================================================
 // Bs -> Mu Mu K*
-// #include "$HLTSELECTIONSROOT/options/L0L1TDR-Bd2MuMuKstar.opts"
+// #include "$HLTSELECTIONSROOT/options/L0TDR-Bd2MuMuKstar.opts"
 
 // #include "$HLTSELCHECKERROOT/options/NTBd2MuMuKstar.opts"
 
@@ -133,7 +133,7 @@ EventSelector.Input   = {};
 // Checking 
 //==============================================================================
 // D* -> D0 pi
-// #include "$HLTSELECTIONSROOT/options/L0L1TDR-Bd2DstarPi.opts"
+// #include "$HLTSELECTIONSROOT/options/L0TDR-Bd2DstarPi.opts"
 
 // #include "$HLTSELCHECKERROOT/options/NTDstar.opts"
 
