@@ -1,5 +1,5 @@
 package DetSys
-version v7r3p1
+version v7r4
 
 branches cmt doc dict
 
@@ -14,7 +14,7 @@ use MuonDet        	v4r8	Det
 use Magnet        	v2r8	Det
 use MuonTools	   	v3r8	Muon
 use RichDet	   	v8r4	Det
-use STDet          	v1r4	Det
+use STDet          	v1r5    Det
 
 
 # =============== LCG Dictionaries ============================================

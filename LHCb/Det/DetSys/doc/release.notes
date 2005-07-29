@@ -4,7 +4,10 @@
 ! Purpose     : collect Det packages
 !-----------------------------------------------------------------------------
 
-!========================= DetSys v7r3p1 2005-07-28 =========================
+!========================= DetSys v7r4 2005-07-29 =========================
+! 2005-07-29 - Marco Cattaneo
+ - Use STDet v1r5
+
 ! 2005-07-28 - Juan Palacios
  - Add SmartRef<Condition> to __Instantiations struct in dict/DetDict.h to 
    allow to retrieve conditions from detector elements.
