@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.32 2005-07-30 12:41:34 ibelyaev Exp $ 
+# $Id: requirements,v 1.33 2005-07-30 12:43:24 ibelyaev Exp $ 
 # =============================================================================
 # CVS tag $Name: not supported by cvs2svn $     
 # =============================================================================
@@ -22,6 +22,7 @@ use               BenderDict  v*  Tools
 use               BenderRels  v*  Tools 
 use               LoKiHybrid  v*  Tools 
 
+use               LoKiSys     v*  Tools 
 use               DetSys      v*  Det 
 
 # =============== consituents =================================================
