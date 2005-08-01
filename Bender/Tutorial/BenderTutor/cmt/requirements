@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.6 2005-01-24 17:29:40 ibelyaev Exp $ 
+# $Id: requirements,v 1.7 2005-08-01 16:04:23 ibelyaev Exp $ 
 # ============================================================================
 # CVS tag $Name: not supported by cvs2svn $
 # ============================================================================
@@ -6,7 +6,7 @@
 # Maintainer : Vanya Belyaev belyaev@lapp.in2p3.fr 
 # ============================================================================
 package           BenderTutor
-version           v4r5
+version           v4r8p1
 
 # =============== structure ==================================================
 branches          cmt doc python options solution
@@ -26,7 +26,6 @@ path_append       PATH  $(BENDERTUTORPYTHON)
 path_append       PATH  $(BENDERTUTORSOLUTION)
 
 # =============== dependencies ===============================================
-use               BenderExample      v*    Ex
 use               BenderUser         v*    Phys 
 # ============================================================================
 

@@ -1,8 +1,7 @@
-#!/usr/bin/env python
 
 from bendermodule import *
 
-gaudi.config( files = ['$BENDERTUTOROPTS/BenderTutor.opts'] )
+gaudi.config( files = ['$DAVINCIROOT/options/DaVinci.opts'] )
 
 gaudi.run(100)
 

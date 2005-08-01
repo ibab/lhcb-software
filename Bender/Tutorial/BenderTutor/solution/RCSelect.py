@@ -1,10 +1,8 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: RCSelect.py,v 1.5 2005-01-24 17:29:40 ibelyaev Exp $
+# $Id: RCSelect.py,v 1.6 2005-08-01 16:04:24 ibelyaev Exp $
 # =============================================================================
-# CVS version $Revision: 1.5 $ 
-# =============================================================================
-# CVS tag     $Name: not supported by cvs2svn $ 
+# CVS tag     $Name: not supported by cvs2svn $ , version $Revision: 1.6 $
 # =============================================================================
 """ 'Solution'-file for 'RCselect.py' example (Bender Tutorial) """ 
 # =============================================================================
@@ -16,6 +14,7 @@
 # @date   2004-10-12
 # =============================================================================
 __author__ = 'Vanya BELYAEV  belyaev@lapp.in2p3.fr'
+# =============================================================================
 
 
 # import everything from BENDER
@@ -39,7 +38,7 @@ class RCSelect(Algo):
         if kaons.empty() : return SUCCESS
 
         # delta mass cut fro J/psi  
-        dm1 = ADMASS('J/psi(1S)') < ( 50 * MeV )
+        dmPsi = ADMASS('J/psi(1S)') < ( 50 * MeV )
         
         psis = self.loop ( formula = 'mu mu' , pid = 'J/psi(1S)' )
         for psi in psis :
@@ -53,11 +52,11 @@ class RCSelect(Algo):
                        value = M(psi) / GeV ,
                        low   = 2.5          ,
                        high  = 3.5          ) 
-            if not dm1( psi ) : continue
+            if not dmPsi( psi ) : continue
             psi.save( 'psi' )
             
         # delta mass cut for phi 
-        dm2 = ADMASS('phi(1020)') < ( 12 * MeV )        
+        dmPhi = ADMASS('phi(1020)') < ( 12 * MeV )        
             
         phis = self.loop( formula = 'K K' , pid = 'phi(1020)' )
         for phi in phis :
@@ -71,11 +70,11 @@ class RCSelect(Algo):
                         value = M(phi) / GeV  ,
                         low   = 1.0           ,
                         high  = 1.050         )
-            if not dm2( phi ) : continue
+            if not dmPhi( phi ) : continue
             phi.save('phi')
 
         # delta mass cut for Bs 
-        dm3 = ADMASS('B_s0') < ( 100 * MeV )      
+        dmBs = ADMASS('B_s0') < ( 100 * MeV )      
         bs = self.loop( formula = 'psi phi' , pid = 'B_s0' )
         for B in bs :
             mass = B.mass(1,2)
@@ -86,7 +85,7 @@ class RCSelect(Algo):
                         value = M(B) / GeV ,
                         low   = 5.0        ,
                         high  = 6.0        )
-            if not dm2 ( B ) : continue
+            if not dmBs ( B ) : continue
             B.save('Bs')
             
         Bs = self.selected('Bs')
@@ -99,7 +98,9 @@ class RCSelect(Algo):
 # =============================================================================
 def configure() :
     
-    gaudi.config ( files = ['$BENDERTUTOROPTS/BenderTutor.opts' ] )
+    gaudi.config ( files =
+                   [ '$DAVINCIROOT/options/DaVinciCommon.opts'   ,
+                     '$DAVINCIROOT/options/DaVinciReco.opts'     ] )
     
     # modify/update the configuration:
     
@@ -112,8 +113,8 @@ def configure() :
     preload.Charged ( Name  = 'Charged'                                , 
                       Kaons = [ "det='RICH' k-pi='-5.0' k-p='-5.0'"  ] ,
                       Pions = [ "det='RICH' pi-k='-5.0' pi-p='-5.0'" ] )
-
-
+    
+    
     # 1) create the algorithm
     alg = RCSelect( 'RCSelect' )
     
@@ -131,21 +132,51 @@ def configure() :
     # add the printout of the histograms
     hsvc = gaudi.service( 'HbookHistSvc' )
     hsvc.PrintHistos = True
+
+    # suppress printout form DaVinci
+    dv = gaudi.algorithm('DaVinci')
+    dv.doHistos = False
     
     # redefine input files 
     evtsel = gaudi.evtSel()
-    evtsel.open( [ 'LFN:/lhcb/production/DC04/v1/DST/00000543_00000017_5.dst',
-                   'LFN:/lhcb/production/DC04/v1/DST/00000543_00000018_5.dst',
-                   'LFN:/lhcb/production/DC04/v1/DST/00000543_00000016_5.dst',
-                   'LFN:/lhcb/production/DC04/v1/DST/00000543_00000020_5.dst',
-                   'LFN:/lhcb/production/DC04/v1/DST/00000543_00000024_5.dst',
-                   'LFN:/lhcb/production/DC04/v1/DST/00000543_00000019_5.dst',
-                   'LFN:/lhcb/production/DC04/v1/DST/00000543_00000021_5.dst',
-                   'LFN:/lhcb/production/DC04/v1/DST/00000543_00000022_5.dst',
-                   'LFN:/lhcb/production/DC04/v1/DST/00000543_00000001_5.dst',
-                   'LFN:/lhcb/production/DC04/v1/DST/00000543_00000002_5.dst' ] )
+    evtsel.PrintFreq = 20 
+    # Bs -> Kpsi(mu+mu-) phi(K+K-_) data 
+    evtsel.open( stream = [
+        'PFN:castor:/castor/cern.ch/lhcb/DC04/00000543_00000017_5.dst' ,
+        'PFN:castor:/castor/cern.ch/lhcb/DC04/00000543_00000018_5.dst' ,
+        'PFN:castor:/castor/cern.ch/lhcb/DC04/00000543_00000016_5.dst' , 
+        'PFN:castor:/castor/cern.ch/lhcb/DC04/00000543_00000020_5.dst' ,
+        'PFN:castor:/castor/cern.ch/lhcb/DC04/00000543_00000024_5.dst' ,
+        'PFN:castor:/castor/cern.ch/lhcb/DC04/00000543_00000019_5.dst' ,
+        'PFN:castor:/castor/cern.ch/lhcb/DC04/00000543_00000021_5.dst' ,
+        'PFN:castor:/castor/cern.ch/lhcb/DC04/00000543_00000022_5.dst' ,
+        'PFN:castor:/castor/cern.ch/lhcb/DC04/00000543_00000001_5.dst' ,
+        'PFN:castor:/castor/cern.ch/lhcb/DC04/00000543_00000002_5.dst' ,
+        'PFN:castor:/castor/cern.ch/lhcb/DC04/00000543_00000003_5.dst' ,
+        'PFN:castor:/castor/cern.ch/lhcb/DC04/00000543_00000004_5.dst' ,
+        'PFN:castor:/castor/cern.ch/lhcb/DC04/00000543_00000005_5.dst' ,
+        'PFN:castor:/castor/cern.ch/lhcb/DC04/00000543_00000006_5.dst' ,
+        'PFN:castor:/castor/cern.ch/lhcb/DC04/00000543_00000007_5.dst' ,
+        'PFN:castor:/castor/cern.ch/lhcb/DC04/00000543_00000008_5.dst' ,
+        'PFN:castor:/castor/cern.ch/lhcb/DC04/00000543_00000009_5.dst' ,
+        'PFN:castor:/castor/cern.ch/lhcb/DC04/00000543_00000010_5.dst' ,
+        'PFN:castor:/castor/cern.ch/lhcb/DC04/00000543_00000012_5.dst' ,
+        'PFN:castor:/castor/cern.ch/lhcb/DC04/00000543_00000013_5.dst' ,
+        'PFN:castor:/castor/cern.ch/lhcb/DC04/00000543_00000014_5.dst' ,
+        'PFN:castor:/castor/cern.ch/lhcb/DC04/00000543_00000015_5.dst' ,
+        'PFN:castor:/castor/cern.ch/lhcb/DC04/00000543_00000023_5.dst' ,
+        'PFN:castor:/castor/cern.ch/lhcb/DC04/00000543_00000025_5.dst' ,
+        'PFN:castor:/castor/cern.ch/lhcb/DC04/00000543_00000026_5.dst' ,
+        'PFN:castor:/castor/cern.ch/lhcb/DC04/00000543_00000027_5.dst' ,
+        'PFN:castor:/castor/cern.ch/lhcb/DC04/00000543_00000028_5.dst' ,
+        'PFN:castor:/castor/cern.ch/lhcb/DC04/00000543_00000029_5.dst' ,
+        'PFN:castor:/castor/cern.ch/lhcb/DC04/00000543_00000030_5.dst' ,
+        'PFN:castor:/castor/cern.ch/lhcb/DC04/00000543_00000031_5.dst' ,
+        'PFN:castor:/castor/cern.ch/lhcb/DC04/00000543_00000032_5.dst' ,
+        'PFN:castor:/castor/cern.ch/lhcb/DC04/00000543_00000033_5.dst' ] )
     
     return SUCCESS
+
 # =============================================================================
 
 # =============================================================================
@@ -158,10 +189,6 @@ if __name__ == '__main__' :
 
     # event loop 
     gaudi.run(500)
-
-    # for the interactive mode it is better to comment the last line
-    gaudi.exit()
-# =============================================================================
 
 # =============================================================================
 # The END 

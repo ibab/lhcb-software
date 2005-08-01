@@ -1,16 +1,15 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: Minimalistic_2.py,v 1.2 2005-01-24 17:29:40 ibelyaev Exp $ 
+# $Id: Minimalistic_2.py,v 1.3 2005-08-01 16:04:24 ibelyaev Exp $ 
 # =============================================================================
-# CVS version $Revision: 1.2 $
-# =============================================================================
-# CVS tag $Name: not supported by cvs2svn $
+# CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.3 $
 # =============================================================================
 """
 Simple script to run 'DaVinci' job in Bender environment
 """
-__author__ = 'Vanya BELYAEV Ivan.Belyaev@itep.ru'
-
+# =============================================================================
+__author__ = 'Vanya BELYAEV Ivan.Belyaev@lapp.in2p3.fr'
+# =============================================================================
 
 from bendermodule import *
 
@@ -22,15 +21,26 @@ def configure() :
     This is the configuration method for module Minimalistic_1.py
     """
     # get the confgigurtaion for *.opts file
-    gaudi.config( files = ['$BENDERTUTOROPTS/BenderTutor.opts'] )
+    gaudi.config( files = ['$DAVINCIROOT/options/DaVinci.opts'] )
     
-    # define input data file:
-    evtsel = gaudi.evtSel()
-    evtsel.open( [ 'LFN:/lhcb/production/DC04/v1/DST/00000543_00000017_5.dst' , 
-                   'LFN:/lhcb/production/DC04/v1/DST/00000543_00000018_5.dst' ,
-                   'LFN:/lhcb/production/DC04/v1/DST/00000543_00000016_5.dst' ,
-                   'LFN:/lhcb/production/DC04/v1/DST/00000543_00000020_5.dst' ] )
+    # define input data files :
+    #    1) get the Event Selector from Gaudi
+    evtSel = gaudi.evtSel()
+    #    2) configure Event Selector 
+    #       files from $DAVINCIROOT/options/DaVinciTestData.opts 
+    evtSel.open( [
+        'PFN:castor:/castor/cern.ch/lhcb/DC04/00000541_00000665_9.dst' ,
+        'PFN:castor:/castor/cern.ch/lhcb/DC04/00000541_00000645_9.dst' ,
+        'PFN:castor:/castor/cern.ch/lhcb/DC04/00000541_00000648_9.dst' ,
+        'PFN:castor:/castor/cern.ch/lhcb/DC04/00000541_00000652_9.dst' ,
+        'PFN:castor:/castor/cern.ch/lhcb/DC04/00000541_00000656_9.dst' ,
+        'PFN:castor:/castor/cern.ch/lhcb/DC04/00000541_00000658_9.dst' ,
+        'PFN:castor:/castor/cern.ch/lhcb/DC04/00000541_00000659_9.dst' ,
+        'PFN:castor:/castor/cern.ch/lhcb/DC04/00000541_00000667_9.dst' ,
+        'PFN:castor:/castor/cern.ch/lhcb/DC04/00000541_00000670_9.dst' ,
+        'PFN:castor:/castor/cern.ch/lhcb/DC04/00000541_00000672_9.dst' ] ) 
     
+
     return SUCCESS
 
 # =============================================================================
@@ -44,11 +54,9 @@ if __name__ == '__main__' :
     # event loop 
     gaudi.run(50)
     
-    # for the interactive mode it is better to comment the last line
-    gaudi.exit()
 
 # =============================================================================
-# $Log: not supported by cvs2svn $ 
+# $Log: not supported by cvs2svn $
 # =============================================================================
 # The END 
 # =============================================================================

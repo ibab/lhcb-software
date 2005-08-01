@@ -1,10 +1,8 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: HandsOn3.py,v 1.5 2005-01-24 17:29:40 ibelyaev Exp $
+# $Id: HandsOn3.py,v 1.6 2005-08-01 16:04:24 ibelyaev Exp $
 # =============================================================================
-# CVS version $Revision: 1.5 $ 
-# =============================================================================
-# CVS tag     $Name: not supported by cvs2svn $ 
+# CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.6 $
 # =============================================================================
 """ 'Solution'-file for 'HandsOn3.py' example (Bender Tutorial) """
 # =============================================================================
@@ -16,6 +14,7 @@
 # @date   2004-10-12
 # =============================================================================
 __author__ = 'Vanya BELYAEV  belyaev@lapp.in2p3.fr'
+# =============================================================================
 
 # import everything from BENDER
 from bendermodule import *
@@ -30,13 +29,14 @@ class MCKaons( Algo ) :
         mc = self.mctruth()
         
         # get all kaons from the tree :
-        kaons  = mc.find( decay = ' [B_s0 -> J/psi(1S) ( phi(1020) -> ^K+ ^K- ) ]cc' )
+        kaons  = mc.find(
+            decay = ' [B_s0 -> J/psi(1S) ( phi(1020) -> ^K+ ^K- ) ]cc' )
         
         tup = self.nTuple( title = 'My N-Tuple' )
         for K in kaons :            
             print ' Kaon: %s PT=%s GeV' % ( nameFromPID( K.particleID() ) ,
                                             K.momentum().perp() / GeV     ) 
-            self.plot ( title = ' PT of Kaons from psi '   ,
+            self.plot ( title = ' PT of Kaons from phi '   ,
                         value = MCPT( K ) / GeV            ,
                         high  = 5                          ) 
             
@@ -58,7 +58,8 @@ class MCKaons( Algo ) :
 # =============================================================================
 def configure() :
     
-    gaudi.config ( files = ['$BENDERTUTOROPTS/BenderTutor.opts' ] )
+    gaudi.config ( files =
+                   [ '$DAVINCIROOT/options/DaVinciCommon.opts' ] )
     
     # modify/update the configuration:
     
@@ -75,26 +76,52 @@ def configure() :
     # add the printout of the histograms
     hsvc = gaudi.service( 'HbookHistSvc' )
     hsvc.PrintHistos = True
-
+    
     # configure the N-Tuples:
     ntsvc = gaudi.nTupleSvc()
     ntsvc.defineOutput( { 'MC' : 'mytuples.hbook' } , 'HBOOK' )
     
     myAlg = gaudi.algorithm('MCKaons')
     myAlg.NTupleLUN = 'MC'
+    myAlg.MCppAssociators = []
     
     # redefine input files 
     evtsel = gaudi.evtSel()
-    evtsel.open( [ 'LFN:/lhcb/production/DC04/v1/DST/00000543_00000017_5.dst',
-                   'LFN:/lhcb/production/DC04/v1/DST/00000543_00000018_5.dst',
-                   'LFN:/lhcb/production/DC04/v1/DST/00000543_00000016_5.dst',
-                   'LFN:/lhcb/production/DC04/v1/DST/00000543_00000020_5.dst',
-                   'LFN:/lhcb/production/DC04/v1/DST/00000543_00000024_5.dst',
-                   'LFN:/lhcb/production/DC04/v1/DST/00000543_00000019_5.dst',
-                   'LFN:/lhcb/production/DC04/v1/DST/00000543_00000021_5.dst',
-                   'LFN:/lhcb/production/DC04/v1/DST/00000543_00000022_5.dst',
-                   'LFN:/lhcb/production/DC04/v1/DST/00000543_00000001_5.dst',
-                   'LFN:/lhcb/production/DC04/v1/DST/00000543_00000002_5.dst' ] )
+    evtsel.PrintFreq = 50 
+    # Bs -> Kpsi(mu+mu-) phi(K+K-_) data 
+    evtsel.open( stream = [
+        'PFN:castor:/castor/cern.ch/lhcb/DC04/00000543_00000017_5.dst' ,
+        'PFN:castor:/castor/cern.ch/lhcb/DC04/00000543_00000018_5.dst' ,
+        'PFN:castor:/castor/cern.ch/lhcb/DC04/00000543_00000016_5.dst' , 
+        'PFN:castor:/castor/cern.ch/lhcb/DC04/00000543_00000020_5.dst' ,
+        'PFN:castor:/castor/cern.ch/lhcb/DC04/00000543_00000024_5.dst' ,
+        'PFN:castor:/castor/cern.ch/lhcb/DC04/00000543_00000019_5.dst' ,
+        'PFN:castor:/castor/cern.ch/lhcb/DC04/00000543_00000021_5.dst' ,
+        'PFN:castor:/castor/cern.ch/lhcb/DC04/00000543_00000022_5.dst' ,
+        'PFN:castor:/castor/cern.ch/lhcb/DC04/00000543_00000001_5.dst' ,
+        'PFN:castor:/castor/cern.ch/lhcb/DC04/00000543_00000002_5.dst' ,
+        'PFN:castor:/castor/cern.ch/lhcb/DC04/00000543_00000003_5.dst' ,
+        'PFN:castor:/castor/cern.ch/lhcb/DC04/00000543_00000004_5.dst' ,
+        'PFN:castor:/castor/cern.ch/lhcb/DC04/00000543_00000005_5.dst' ,
+        'PFN:castor:/castor/cern.ch/lhcb/DC04/00000543_00000006_5.dst' ,
+        'PFN:castor:/castor/cern.ch/lhcb/DC04/00000543_00000007_5.dst' ,
+        'PFN:castor:/castor/cern.ch/lhcb/DC04/00000543_00000008_5.dst' ,
+        'PFN:castor:/castor/cern.ch/lhcb/DC04/00000543_00000009_5.dst' ,
+        'PFN:castor:/castor/cern.ch/lhcb/DC04/00000543_00000010_5.dst' ,
+        'PFN:castor:/castor/cern.ch/lhcb/DC04/00000543_00000012_5.dst' ,
+        'PFN:castor:/castor/cern.ch/lhcb/DC04/00000543_00000013_5.dst' ,
+        'PFN:castor:/castor/cern.ch/lhcb/DC04/00000543_00000014_5.dst' ,
+        'PFN:castor:/castor/cern.ch/lhcb/DC04/00000543_00000015_5.dst' ,
+        'PFN:castor:/castor/cern.ch/lhcb/DC04/00000543_00000023_5.dst' ,
+        'PFN:castor:/castor/cern.ch/lhcb/DC04/00000543_00000025_5.dst' ,
+        'PFN:castor:/castor/cern.ch/lhcb/DC04/00000543_00000026_5.dst' ,
+        'PFN:castor:/castor/cern.ch/lhcb/DC04/00000543_00000027_5.dst' ,
+        'PFN:castor:/castor/cern.ch/lhcb/DC04/00000543_00000028_5.dst' ,
+        'PFN:castor:/castor/cern.ch/lhcb/DC04/00000543_00000029_5.dst' ,
+        'PFN:castor:/castor/cern.ch/lhcb/DC04/00000543_00000030_5.dst' ,
+        'PFN:castor:/castor/cern.ch/lhcb/DC04/00000543_00000031_5.dst' ,
+        'PFN:castor:/castor/cern.ch/lhcb/DC04/00000543_00000032_5.dst' ,
+        'PFN:castor:/castor/cern.ch/lhcb/DC04/00000543_00000033_5.dst' ] )
     
     return SUCCESS
 # =============================================================================
@@ -103,17 +130,16 @@ def configure() :
 # The control flow 
 # =============================================================================
 if __name__ == '__main__' :
-
+    
     # job configuration
     configure()
-
+    
     # event loop 
     gaudi.run(500)
+    
 
-    # for the interactive mode it is better to comment the last line
-    gaudi.exit()
 # =============================================================================
-
+# $Log: not supported by cvs2svn $ 
 # =============================================================================
 # The END 
 # =============================================================================

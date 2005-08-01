@@ -1,10 +1,8 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: HandsOn1.py,v 1.4 2005-01-24 17:29:40 ibelyaev Exp $
+# $Id: HandsOn1.py,v 1.5 2005-08-01 16:04:23 ibelyaev Exp $
 # =============================================================================
-# CVS version $Revision: 1.4 $ 
-# =============================================================================
-# CVS tag $Name: not supported by cvs2svn $ 
+# CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.5 $
 # =============================================================================
 """ 'Solution'-file for 'DataAccess/GetData' example (Bender Tutorial) """
 # =============================================================================
@@ -16,6 +14,7 @@
 # @date   2004-10-12
 # =============================================================================
 __author__ = 'Vanya BELYAEV  belyaev@lapp.in2p3.fr'
+# =============================================================================
 
 # import everything from BENDER
 from bendermodule import *
@@ -26,15 +25,15 @@ from bendermodule import *
 class GetData(Algo):
     def analyse( self ) :
         
-        # get all MC vertices  as python list 
-        mcvs = self.get( address = 'MC/Vertices' ,
-                          list    = TRUE           )
+        # get all MC vertices 
+        mcvs = self.get( address = 'MC/Vertices' )
+        
         for mcv in mcvs :            
             x = mcv.position().x() / cm  
             y = mcv.position().y() / cm  
             z = mcv.position().z() / cm
-            if z > 30 : continue 
-            print ' MCVertex x,y,z[cm] is ' , x,y,z   
+            if not 10 < z < 20 : continue
+            print 'MCVertex x/y/z:  %s/%s/%s [cm] ' %(x,y,z)
         
         return SUCCESS
 # =============================================================================
@@ -44,8 +43,9 @@ class GetData(Algo):
 # =============================================================================
 def configure() :
     
-    gaudi.config ( files = ['$BENDERTUTOROPTS/BenderTutor.opts' ] )
-    
+    # general configuration :
+    gaudi.config ( files = [ '$DAVINCIROOT/options/DaVinciCommon.opts' ] )
+     
     # modify/update the configuration:
     
     # 1) create the algorithm
@@ -54,6 +54,24 @@ def configure() :
     # 2) replace the list of top level algorithm by only *THIS* algorithm
     gaudi.setAlgorithms( [alg] ) 
 
+    # define input data files :
+    #    1) get the Event Selector from Gaudi
+    evtSel = gaudi.evtSel()
+    #    2) configure Event Selector 
+    #       files from $DAVINCIROOT/options/DaVinciTestData.opts 
+    evtSel.open( [
+        'PFN:castor:/castor/cern.ch/lhcb/DC04/00000541_00000665_9.dst' ,
+        'PFN:castor:/castor/cern.ch/lhcb/DC04/00000541_00000645_9.dst' ,
+        'PFN:castor:/castor/cern.ch/lhcb/DC04/00000541_00000648_9.dst' ,
+        'PFN:castor:/castor/cern.ch/lhcb/DC04/00000541_00000652_9.dst' ,
+        'PFN:castor:/castor/cern.ch/lhcb/DC04/00000541_00000656_9.dst' ,
+        'PFN:castor:/castor/cern.ch/lhcb/DC04/00000541_00000658_9.dst' ,
+        'PFN:castor:/castor/cern.ch/lhcb/DC04/00000541_00000659_9.dst' ,
+        'PFN:castor:/castor/cern.ch/lhcb/DC04/00000541_00000667_9.dst' ,
+        'PFN:castor:/castor/cern.ch/lhcb/DC04/00000541_00000670_9.dst' ,
+        'PFN:castor:/castor/cern.ch/lhcb/DC04/00000541_00000672_9.dst' ] ) 
+    
+    
     return SUCCESS
 
 # =============================================================================
@@ -63,14 +81,9 @@ if __name__ == '__main__' :
 
     # job configuration
     configure()
-
-    # event loop 
-    gaudi.run(50)
-
-    # for the interactive mode it is better to comment the last line
-    gaudi.exit()
-# =============================================================================
     
+    # event loop 
+    gaudi.run(10)
 
 # =============================================================================
 # $Log: not supported by cvs2svn $

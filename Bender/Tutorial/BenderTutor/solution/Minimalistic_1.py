@@ -1,15 +1,15 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: Minimalistic_1.py,v 1.2 2005-01-24 17:29:40 ibelyaev Exp $ 
+# $Id: Minimalistic_1.py,v 1.3 2005-08-01 16:04:24 ibelyaev Exp $ 
 # =============================================================================
-# CVS version $Revison: $ 
-# =============================================================================
-# CVS tag $Name: not supported by cvs2svn $ 
+# CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.3 $
 # =============================================================================
 """
 Simple script to run 'DaVinci' job in Bender environment
 """
-__author__ = 'Vanya BELYAEV Ivan.Belyaev@itep.ru'
+# =============================================================================
+__author__ = 'Vanya BELYAEV Ivan.Belyaev@lapp.in2p3.fr'
+# =============================================================================
 
 from bendermodule import *
 
@@ -19,7 +19,7 @@ def configure() :
     This is the configuration method for module Minimalistic_1.py
     """
     # get the confgigurtaion for *.opts file
-    gaudi.config( files = ['$BENDERTUTOROPTS/BenderTutor.opts'] )
+    gaudi.config( files = ['$DAVINCIROOT/options/DaVinci.opts'] )
     return SUCCESS
 
 if __name__ == '__main__' :
@@ -30,12 +30,8 @@ if __name__ == '__main__' :
     # event loop 
     gaudi.run(50)
     
-    # for the interactive mode it is better to comment the last line
-    gaudi.exit()
-
-
 # =============================================================================
-# $Log: not supported by cvs2svn $ 
+# $Log: not supported by cvs2svn $
 # =============================================================================
 # The END 
 # =============================================================================

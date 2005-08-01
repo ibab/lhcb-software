@@ -1,10 +1,8 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: Minimalistic.py,v 1.4 2005-01-24 17:29:40 ibelyaev Exp $
+# $Id: Minimalistic.py,v 1.5 2005-08-01 16:04:24 ibelyaev Exp $
 # =============================================================================
-# CVS version $Revision: 1.4 $ 
-# =============================================================================
-# CVS tag $Name: not supported by cvs2svn $ 
+# CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.5 $
 # =============================================================================
 """
 This is the simplest  Bender module to run the analysis job
@@ -29,18 +27,25 @@ def configure() :
     """
     The  basic configuration method
     """
-    # get the major configuration from '*'.opts file 
-    gaudi.config( files = ['$BENDERTUTOROPTS/BenderTutor.opts' ] )
-    
-    # define input data files :
-    #    1) get the Event Selector from Gaudi
+    # get the confgigurtaion for *.opts file
+    gaudi.config( files = ['$DAVINCIROOT/options/DaVinci.opts'] )
+
+        
     evtSel = gaudi.evtSel()
     #    2) configure Event Selector 
-    evtSel.open( [ 'LFN:/lhcb/production/DC04/v1/DST/00000543_00000017_5.dst' , 
-                   'LFN:/lhcb/production/DC04/v1/DST/00000543_00000018_5.dst' ,
-                   'LFN:/lhcb/production/DC04/v1/DST/00000543_00000016_5.dst' ,
-                   'LFN:/lhcb/production/DC04/v1/DST/00000543_00000020_5.dst' ] )
-
+    #       files from $DAVINCIROOT/options/DaVinciTestData.opts 
+    evtSel.open( [
+        'PFN:castor:/castor/cern.ch/lhcb/DC04/00000541_00000665_9.dst' ,
+        'PFN:castor:/castor/cern.ch/lhcb/DC04/00000541_00000645_9.dst' ,
+        'PFN:castor:/castor/cern.ch/lhcb/DC04/00000541_00000648_9.dst' ,
+        'PFN:castor:/castor/cern.ch/lhcb/DC04/00000541_00000652_9.dst' ,
+        'PFN:castor:/castor/cern.ch/lhcb/DC04/00000541_00000656_9.dst' ,
+        'PFN:castor:/castor/cern.ch/lhcb/DC04/00000541_00000658_9.dst' ,
+        'PFN:castor:/castor/cern.ch/lhcb/DC04/00000541_00000659_9.dst' ,
+        'PFN:castor:/castor/cern.ch/lhcb/DC04/00000541_00000667_9.dst' ,
+        'PFN:castor:/castor/cern.ch/lhcb/DC04/00000541_00000670_9.dst' ,
+        'PFN:castor:/castor/cern.ch/lhcb/DC04/00000541_00000672_9.dst' ] ) 
+    
     return SUCCESS 
 # =============================================================================
 
@@ -56,9 +61,6 @@ if __name__ == '__main__' :
     # event loop 
     g.run(100)
 
-    # terminate  Gaudi application  
-    g.exit()
-# =============================================================================
 
 # =============================================================================
 # $Log: not supported by cvs2svn $
