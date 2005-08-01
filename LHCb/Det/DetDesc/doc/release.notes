@@ -1,9 +1,12 @@
 ! =============================================================================
-! $Id: release.notes,v 1.210 2005-07-15 07:21:20 cattanem Exp $ 
+! $Id: release.notes,v 1.211 2005-08-01 14:24:51 marcocle Exp $ 
 ! =============================================================================
 ! package DetDesc
 ! package manager : Marco Clemencic, Juan Palacios
 ! =============================================================================
+
+! 2005-08-01 - Marco Clemencic
+ - fixed a Win32 warning about Param.h and a bug when writing empty vectors.
 
 !======================== DetDesc v15r3 2005-07-15 ========================
 ! 2005-07-14 - Juan Palacios

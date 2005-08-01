@@ -1,4 +1,4 @@
-// $Id: Param.h,v 1.1 2005-05-13 16:01:10 marcocle Exp $
+// $Id: Param.h,v 1.2 2005-08-01 14:24:51 marcocle Exp $
 #ifndef DETDESC_PARAM_H 
 #define DETDESC_PARAM_H 1
 
@@ -14,14 +14,23 @@ template <class _CharT, class _Traits, class T>
 std::basic_ostream<_CharT, _Traits>&
 operator<<(std::basic_ostream<_CharT, _Traits>&os,
            const std::vector<T> &v){
-  typename std::vector<T>::const_iterator i;
   // print a "white space" separated list of elements
-  bool is_string = typeid(T) == typeid(std::string);
-  // the first element does not have the space in front
+
+  if (v.empty()) return os; // print nothing for empty vectors
+
+  typename std::vector<T>::const_iterator i;
+
+  // check if the contained type is a string
+  // (funny: type_info::operator== returns an int!)
+  int is_string = (typeid(T) == typeid(std::string));
+
+  // the first element does not need the space in front
   i = v.begin();
   os << *i;
   ++i;
-  for ( ; i != v.end() ; ++i ){
+
+  // loop over other elements
+  for ( ; i !=v.end(); ++i ){
     os << " ";
     if (is_string) os << '"'; // enclose strings in quotes
     os << *i;
