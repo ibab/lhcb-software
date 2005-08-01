@@ -1,8 +1,8 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: CaloMatch.py,v 1.1 2005-02-05 13:47:41 ibelyaev Exp $
+# $Id: CaloMatch.py,v 1.2 2005-08-01 09:50:19 ibelyaev Exp $
 # =============================================================================
-# CVS tag $Name: not supported by cvs2svn $ ; version $Revision: 1.1 $
+# CVS tag $Name: not supported by cvs2svn $ ; version $Revision: 1.2 $
 # =============================================================================
 # @file
 # Simple script to test the CaloCLuster -> TrStoredTrack matching
@@ -69,8 +69,9 @@ class CaloMatch(Algo):
 def configure () :    
     # Generic job configuration     
     gaudi.config( files   =
-                  [ '$BENDEREXAMPLEOPTS/BenderExample.opts'     ,   # general options 
-                    '$DAVINCIROOT/options/DaVinciTestData.opts' ] ) # input data 
+                  [ '$DAVINCIROOT/options/DaVinciCommon.opts'   ,   # common options 
+                    '$DAVINCIROOT/options/DaVinciReco.opts'     ,   # general 'Reco' options 
+                    '$DAVINCIROOT/options/DaVinciTestData.opts' ] ) 
 
     # specific job configuration 
     # create analysis algorithm and add it to the list of
@@ -89,6 +90,10 @@ def configure () :
     evtSel = gaudi.evtSel()
     evtSel.PrintFreq = 50
     
+    # switch off native DaVinci histograms
+    dv = gaudi.algorithm('DaVinci')
+    dv.HistoProduce = False
+    
     return SUCCESS 
 
 # =============================================================================
@@ -100,11 +105,8 @@ if __name__ == '__main__' :
     configure()
 
     # execute 
-    gaudi.run( 1000 )
+    gaudi.run( 100)
     
-    # terminate 
-    gaudi.exit()
-
 # =============================================================================
 # $Log: not supported by cvs2svn $
 # =============================================================================

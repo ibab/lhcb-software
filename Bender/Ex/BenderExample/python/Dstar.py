@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: Dstar.py,v 1.12 2004-11-12 14:24:42 ibelyaev Exp $
+# $Id: Dstar.py,v 1.13 2005-08-01 09:50:19 ibelyaev Exp $
 # =============================================================================
 # CVS tag $Name: not supported by cvs2svn $ 
 # =============================================================================
@@ -102,17 +102,9 @@ class Dstar(Algo):
 def configure() :
     # Generic job configuration 
     gaudi.config( files   =
-                  [ '$BENDEREXAMPLEOPTS/BenderExample.opts' ,   # general options 
-                    '$BENDEREXAMPLEOPTS/PoolCatalogs.opts'  ,   # pool catalogs
-                    '$BENDEREXAMPLEOPTS/Bd_DstA1.opts'      ] , # input data 
-                  options =                                     # extra options 
-                  [ 'EcalPIDmu.OutputLevel     =   5  ' , 
-                    'HcalPIDmu.OutputLevel     =   5  ' ,
-                    'EcalPIDe.OutputLevel      =   5  ' ,
-                    'HcalPIDe.OutputLevel      =   5  ' ,
-                    'BremPIDe.OutputLevel      =   5  ' ,
-                    'PrsPIDe.OutputLevel       =   5  ' ,
-                    'EventSelector.PrintFreq   =  50  ' ] )
+                  [ '$DAVINCIROOT/options/DaVinciCommon.opts'   ,   # common options 
+                    '$DAVINCIROOT/options/DaVinciReco.opts'     ,   # general 'Reco' options 
+                    '$DAVINCIROOT/options/DaVinciTestData.opts' ] ) 
     
     # specific job configuration 
     # preload algorithm(s)
@@ -136,6 +128,7 @@ def configure() :
     hsvc.OutputFile = 'dstar.hbook'
     
     nsvc = gaudimodule.iProperty( 'NTupleSvc' )
+    gaudi.HistogramPersistency = "HBOOK" 
     #nsvc = gaudi.service( 'NTupleSvc' )
     nsvc.Output =[ "DSTAR DATAFILE='dstar_tup.hbook' TYP='HBOOK' OPT='NEW'" ]
     
@@ -152,8 +145,6 @@ if __name__ == '__main__' :
     configure() 
     # run job 
     gaudi.run  ( 100 )
-    # terminate the Application Manager 
-    gaudi.exit ()
     
 # =============================================================================
 # $Log: not supported by cvs2svn $

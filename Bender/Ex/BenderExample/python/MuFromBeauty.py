@@ -1,8 +1,8 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: MuFromBeauty.py,v 1.1 2005-02-02 19:16:09 ibelyaev Exp $
+# $Id: MuFromBeauty.py,v 1.2 2005-08-01 09:50:19 ibelyaev Exp $
 # =============================================================================
-# CVS tag $Name: not supported by cvs2svn $ ; version $Revision: 1.1 $
+# CVS tag $Name: not supported by cvs2svn $ ; version $Revision: 1.2 $
 # =============================================================================
 # @file
 # Simple script to select muons from beauty 
@@ -75,16 +75,9 @@ class MuFromB(Algo):
 def configure () :    
     # Generic job configuration     
     gaudi.config( files   =
-                  [ '$BENDEREXAMPLEOPTS/BenderExample.opts'     ,   # general options 
-                    '$DAVINCIROOT/options/DaVinciTestData.opts' ] , # input data 
-                  options =                                     # extra options 
-                  [ 'EcalPIDmu.OutputLevel     =   5  ' , 
-                    'HcalPIDmu.OutputLevel     =   5  ' ,
-                    'EcalPIDe.OutputLevel      =   5  ' ,
-                    'HcalPIDe.OutputLevel      =   5  ' ,
-                    'BremPIDe.OutputLevel      =   5  ' ,
-                    'PrsPIDe.OutputLevel       =   5  ' ,
-                    'EventSelector.PrintFreq   =  50  ' ] )
+                  [ '$DAVINCIROOT/options/DaVinciCommon.opts'   ,   # common options 
+                    '$DAVINCIROOT/options/DaVinciReco.opts'     ,   # general 'Reco' options 
+                    '$DAVINCIROOT/options/DaVinciTestData.opts' ] ) 
     
     # specific job configuration 
     # create analysis algorithm and add it to the list of
@@ -102,8 +95,6 @@ if __name__ == '__main__' :
     configure()
     # execute 
     gaudi.run( 100  )
-    # terminate 
-    gaudi.exit()
 
 # =============================================================================
 # $Log: not supported by cvs2svn $

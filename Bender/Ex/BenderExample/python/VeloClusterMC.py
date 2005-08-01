@@ -1,8 +1,8 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: VeloClusterMC.py,v 1.1 2005-02-08 20:34:24 ibelyaev Exp $
+# $Id: VeloClusterMC.py,v 1.2 2005-08-01 09:50:19 ibelyaev Exp $
 # =============================================================================
-# CVS version $Revision: 1.1 $
+# CVS version $Revision: 1.2 $
 # =============================================================================
 # CVS tag     $Name: not supported by cvs2svn $
 # =============================================================================
@@ -131,11 +131,13 @@ class VeloClusterMC(Algo):
 # Generic job configuration 
 # =============================================================================
 def configure() :
+    
     gaudi.config( files   =
-                  [ '$BENDEREXAMPLEOPTS/BenderExample.opts'         , # general options  
-                    '$BENDEREXAMPLEOPTS/PoolCatalogs.opts'          ,  # pool catalogs
-                    '$LOKIEXAMPLEOPTS/Bs_Jpsiphimm_DIGI_DC04.opts'  ] ) # input data
-
+                  [ '$DAVINCIROOT/options/DaVinciCommon.opts'   ,   # common options 
+                    '$DAVINCIROOT/options/DaVinciReco.opts'     ,   # general 'Reco' options
+                    '$VELOASSOCIATORSROOT/options/VeloAssociators.opts' ,
+                    '$DAVINCIROOT/options/DaVinciTestData.opts' ] )
+     
     # add extra libraries 
     if not 'VeloDAQ'         in gaudi.DLLs   : gaudi.DLLs   += ['VeloDAQ']
     if not 'VeloAssociators' in gaudi.DLLs   : gaudi.DLLs   += ['VeloAssociators']
@@ -179,9 +181,6 @@ if __name__ == '__main__' :
     configure() 
     # run job 
     gaudi.run  ( 100 )
-    
-    # terminate the Application Manager 
-    gaudi.exit ()
     
 # =============================================================================
 # $Log: not supported by cvs2svn $

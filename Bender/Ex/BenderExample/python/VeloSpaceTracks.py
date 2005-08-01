@@ -1,8 +1,8 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: VeloSpaceTracks.py,v 1.1 2005-06-14 16:17:19 ibelyaev Exp $ 
+# $Id: VeloSpaceTracks.py,v 1.2 2005-08-01 09:50:19 ibelyaev Exp $ 
 # =============================================================================
-# CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.1 $
+# CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.2 $
 # =============================================================================
 
 # import benderROOT as root
@@ -17,7 +17,7 @@ class VeloSpaceTrack(Algo) :
     # get the relation table TrgTrack->MCParticle form TES 
     table  = self.get('Rec/Relations/TrgTracks2MCParticles')
 
-    # get teh container of TrgTracks 
+    # get the container of TrgTracks 
     tracks = self.get('Rec/Trg/VeloSpaceTracks')
     if not tracks :
       print 'No trigger tracks are found '
@@ -96,6 +96,3 @@ if __name__ == '__main__' :
 
   #root.plot( histo )
 
-  # terminate the Application Manager 
-  gaudi.exit ()
-  

@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: Decays.py,v 1.4 2004-11-12 14:24:42 ibelyaev Exp $
+# $Id: Decays.py,v 1.5 2005-08-01 09:50:19 ibelyaev Exp $
 # =============================================================================
 # CVS tag $Name: not supported by cvs2svn $ 
 # =============================================================================
@@ -72,17 +72,9 @@ class Decays(Algo):
 def configure () :    
     # Generic job configuration     
     gaudi.config( files   =
-                  [ '$BENDEREXAMPLEOPTS/BenderExample.opts' ,   # general options 
-                    '$BENDEREXAMPLEOPTS/PoolCatalogs.opts'  ,   # pool catalogs
-                    '$BENDEREXAMPLEOPTS/Bd_DstA1.opts'      ] , # input data 
-                  options =                                     # extra options 
-                  [ 'EcalPIDmu.OutputLevel     =   5  ' , 
-                    'HcalPIDmu.OutputLevel     =   5  ' ,
-                    'EcalPIDe.OutputLevel      =   5  ' ,
-                    'HcalPIDe.OutputLevel      =   5  ' ,
-                    'BremPIDe.OutputLevel      =   5  ' ,
-                    'PrsPIDe.OutputLevel       =   5  ' ,
-                    'EventSelector.PrintFreq   =  50  ' ] )
+                  [ '$DAVINCIROOT/options/DaVinciCommon.opts'   ,   # common options 
+                    '$DAVINCIROOT/options/DaVinciReco.opts'     ,   # general 'Reco' options 
+                    '$DAVINCIROOT/options/DaVinciTestData.opts' ] ) 
     
     # specific job configuration 
     # create analysis algorithm and add it to the list of
@@ -112,8 +104,6 @@ if __name__ == '__main__' :
     configure()
     # execute 
     gaudi.run( 100  )
-    # terminate 
-    gaudi.exit()
 
 # =============================================================================
 # $Log: not supported by cvs2svn $

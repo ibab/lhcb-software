@@ -1,8 +1,8 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: BtoPV.py,v 1.1 2005-06-14 16:17:19 ibelyaev Exp $
+# $Id: BtoPV.py,v 1.2 2005-08-01 09:50:19 ibelyaev Exp $
 # =============================================================================
-# CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.1 $
+# CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.2 $
 # =============================================================================
 # @file 
 # "Demo" algorithm for B -> PV association 
@@ -29,9 +29,11 @@ class BtoPV(Algo):
         # reset filter
         self.setFilterPassed ( FALSE )
         # get all primary vertices
-        prims = self.vselect( tag = 'PVs' , cuts = VertexType.Primary == VTYPE )
+        prims = self.vselect( tag = 'PVs' ,
+                              cuts = VertexType.Primary == VTYPE )
         if prims.empty() :
-            return self.Error ( message = "N Promary vertices found!" , code = SUCCESS )
+            return self.Error ( message = "No Primary vertices found!" ,
+                                code = SUCCESS )
         
         piplus  = self.select( tag = "pi+" , cuts = 'pi+' == ID ) ;
         piminus = self.select( tag = "pi-" , cuts = 'pi-' == ID ) ;
@@ -66,19 +68,9 @@ class BtoPV(Algo):
 def configure () :
     # Generic job configuration & input data 
     gaudi.config( files   =
-                  [ '$BENDEREXAMPLEOPTS/BenderExample.opts'        , # general options 
-                    '$DAVINCIROOT/options/DaVinciTestData.opts'  ] , # input data 
-                  options =
-                  [ 'EcalPIDmu.OutputLevel     =   5  ' ,
-                    'HcalPIDmu.OutputLevel     =   5  ' ,
-                    'EcalPIDe.OutputLevel      =   5  ' ,
-                    'NTupleSvc.OutputLevel     =   2  ' ,
-                    'HcalPIDe.OutputLevel      =   5  ' ,
-                    'BremPIDe.OutputLevel      =   5  ' ,
-                    'PrsPIDe.OutputLevel       =   5  ' ,
-                    'NeutralPP2MC.OutputLevel  =   5  ' ,
-                    'Hadrons.OutputLevel       =   5  ' ,
-                    'EventSelector.PrintFreq   = 100  ' ] )
+                  [ '$DAVINCIROOT/options/DaVinciCommon.opts'      , # general options 
+                    '$DAVINCIROOT/options/DaVinciReco.opts'        , # general options 
+                    '$DAVINCIROOT/options/DaVinciTestData.opts'  ] ) # input data 
     
     # specific job configuration 
     # preload algorithm(s)
@@ -96,8 +88,7 @@ def configure () :
     # output histogram file 
     hsvc = gaudi.histoSvc()
     hsvc.setOutput( 'b2pv_his.hbook' , 'HBOOK')
-    
-    
+
     bs = gaudi.algorithm('BtoPV')
     bs.OutputLevel = 5
     bs.NTupleLUN  = "B2PV"
@@ -115,15 +106,10 @@ if __name__ == '__main__' :
     # configure the job 
     configure()
     # execute 
-    gaudi.run( 100  )
-    # terminate 
-    gaudi.exit()
+    gaudi.run( 20  )
   
 # =============================================================================
 # $Log: not supported by cvs2svn $
-# Revision 1.4  2005/01/24 17:33:00  ibelyaev
-#  update for v4r5
-#
 # =============================================================================
 # The END 
 # =============================================================================

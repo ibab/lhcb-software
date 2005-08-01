@@ -1,8 +1,8 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: Phi.py,v 1.10 2005-01-24 17:33:00 ibelyaev Exp $
+# $Id: Phi.py,v 1.11 2005-08-01 09:50:19 ibelyaev Exp $
 # =============================================================================
-# CVS version $Revision: 1.10 $
+# CVS version $Revision: 1.11 $
 # =============================================================================
 # CVS tag     $Name: not supported by cvs2svn $
 # =============================================================================
@@ -26,20 +26,24 @@ class Phi(Algo):
     " My own analysis algorithm for selection of phi -> K+ K- "
     def analyse ( self ) :
         # get kaons 
-        kplus  = self.select( tag="K+" , cuts = 'K+' == ID )
-        kminus = self.select( tag="K-" , cuts = 'K-' == ID )
+        kplus  = self.select ( tag = "K+" , cuts = 'K+' == ID )
+        kminus = self.select ( tag = "K-" , cuts = 'K-' == ID )
         # create loop
-        phis   = self.loop( formula = "K+ K-" , pid = "phi(1020)" )
+        phis   = self.loop ( formula = "K+ K-" , pid = "phi(1020)" )
         # loop over KK combinations 
         for phi in phis:
             if phi.mass(1,2) > 1050 * MeV : continue
-            global h1
+            vxChi2 = VCHI2 ( phi )
+            if 100 < vxChi2  or  0 > vxChi2  : continue
             h1 = self.plot ( title = "K+ K- mass"      ,
                              value = M ( phi ) / MeV   ,
                              low   = 1000              ,
                              high  = 1050              )
             phi.save('phi')
-            
+
+        if not self.selected('phi').empty() :
+            self.setFilterPassed ( True )
+                
         return SUCCESS 
         
 
@@ -48,19 +52,9 @@ class Phi(Algo):
 # =============================================================================
 def configure() :
     gaudi.config( files   =
-                  [ '$BENDEREXAMPLEOPTS/BenderExample.opts' ,   # general options 
-                    '$BENDEREXAMPLEOPTS/PoolCatalogs.opts'  ,   # pool catalogs
-                    '$LOKIEXAMPLEOPTS/Bs_phiphi_DC04.opts'  ] , # input data 
-                  options =
-                  [ 'EcalPIDmu.OutputLevel     =   5  ' ,
-                    'HcalPIDmu.OutputLevel     =   5  ' ,
-                    'EcalPIDe.OutputLevel      =   5  ' ,
-                    'HcalPIDe.OutputLevel      =   5  ' ,
-                    'BremPIDe.OutputLevel      =   5  ' ,
-                    'PrsPIDe.OutputLevel       =   5  ' ,
-                    'NeutralPP2MC.OutputLevel  =   5  ' ,
-                    'Hadrons.OutputLevel       =   5  ' ,
-                    'EventSelector.PrintFreq   = 100  ' ] )
+                  [ '$DAVINCIROOT/options/DaVinciCommon.opts'   ,   # common options 
+                    '$DAVINCIROOT/options/DaVinciReco.opts'     ,   # general 'Reco' options 
+                    '$DAVINCIROOT/options/DaVinciTestData.opts' ] ) 
     
     # specific job configuration 
     
@@ -74,19 +68,20 @@ def configure() :
     
     desktop = gaudi.tool('Phi.PhysDesktop')
     desktop.InputLocations  = [ "/Event/Phys/Hadrons"]
-
+    
     # output histogram file 
     hsvc = gaudi.service( 'HistogramPersistencySvc' )
     hsvc.HistogramPersistency = "HBOOK" 
+    gaudi.HistogramPersistency = "HBOOK" 
     hsvc.OutputFile = 'phi.hbook'
     
     # add the printout of the histograms
     hsvc = gaudi.service( 'HbookHistSvc' )
     hsvc.PrintHistos = True
 
-    # switch off Davinci histograms
+    # switch off native DaVinci histograms
     dv = gaudi.algorithm('DaVinci')
-    dv.doHistos = False
+    dv.HistoProduce = False
     
     return SUCCESS
 
@@ -99,9 +94,7 @@ if __name__ == '__main__' :
     # configure the job
     configure() 
     # run job 
-    gaudi.run  ( 2500 )
-    # terminate the Application Manager 
-    gaudi.exit ()
+    gaudi.run  ( 500 )
     
 # =============================================================================
 # $Log: not supported by cvs2svn $

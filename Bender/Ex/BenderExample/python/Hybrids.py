@@ -1,8 +1,8 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: Hybrids.py,v 1.4 2005-01-24 17:33:00 ibelyaev Exp $
+# $Id: Hybrids.py,v 1.5 2005-08-01 09:50:19 ibelyaev Exp $
 # =============================================================================
-# CVS version $Revision: 1.4 $ 
+# CVS version $Revision: 1.5 $ 
 # =============================================================================
 # CVS tag $Name: not supported by cvs2svn $ 
 # =============================================================================
@@ -39,13 +39,13 @@ class Hybrids(Algo):
         
         return SUCCESS 
 
-def configure() :    
-    # Generic job configuration 
+def configure() :
     
-    gaudi.config( files =
-                  [ '$BENDEREXAMPLEOPTS/BenderExample.opts' ,   # general options 
-                    '$BENDEREXAMPLEOPTS/PoolCatalogs.opts'  ,   # pool catalogs
-                    '$LOKIEXAMPLEOPTS/Bs_phiphi_DC04.opts'  ] ) # input data 
+    # Generic job configuration     
+    gaudi.config( files   =
+                  [ '$DAVINCIROOT/options/DaVinciCommon.opts'   ,   # common options 
+                    '$DAVINCIROOT/options/DaVinciReco.opts'     ,   # general 'Reco' options 
+                    '$DAVINCIROOT/options/DaVinciTestData.opts' ] ) 
     
     # specific job configuration 
     gaudi.addAlgorithm( 'LoKiPreLoad/Hadrons' ) 
@@ -81,8 +81,6 @@ if __name__ == '__main__' :
     configure() 
     # run job 
     g.run  ( 100  )
-    # terminate the Application Manager 
-    g.exit ()
  
 # =============================================================================
 # $Log: not supported by cvs2svn $

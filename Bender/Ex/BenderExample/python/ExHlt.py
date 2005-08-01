@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: ExHlt.py,v 1.5 2005-02-10 12:27:21 ibelyaev Exp $
+# $Id: ExHlt.py,v 1.6 2005-08-01 09:50:19 ibelyaev Exp $
 # =============================================================================
 # CVS tag $Name: not supported by cvs2svn $
 # =============================================================================
@@ -64,65 +64,53 @@ class ExHlt(Algo):
 # Generic job configuration 
 # =============================================================================
 def configure() :
-    gaudi.config( files   =
-                  [ '$BENDEREXAMPLEOPTS/BenderExample.opts' ,   # general options 
-                    '$BENDEREXAMPLEOPTS/PoolCatalogs.opts'  ,   # pool catalogs
-                    '$LOKIEXAMPLEOPTS/Bs_phiphi_DC04.opts'  ,   # input data 
+     gaudi.config( files   =
+                  [ '$DAVINCIROOT/options/DaVinciCommon.opts'   , # common options 
+                    '$DAVINCIROOT/options/DaVinciReco.opts'     , # general 'Reco' options 
+                    '$DAVINCIROOT/options/DaVinciTestData.opts' , 
                     '$TRGSYSROOT/options/L1.opts'           ,   # L1 procession 
-                    '$TRGSYSROOT/options/Hlt.opts'              # HLT configuration
-                    #'$BENDEREXAMPLEOPTS/TrgTracks.opts'    ,   # HLT configuration
-                    #'$TRGSYSROOT/options/TrgChecking.opts'
-                    ] , # HLT configuration
-                  options =
-                  [ 'EcalPIDmu.OutputLevel     =   5  ' ,
-                    'HcalPIDmu.OutputLevel     =   5  ' ,
-                    'EcalPIDe.OutputLevel      =   5  ' ,
-                    'HcalPIDe.OutputLevel      =   5  ' ,
-                    'BremPIDe.OutputLevel      =   5  ' ,
-                    'PrsPIDe.OutputLevel       =   5  ' ,
-                    'NeutralPP2MC.OutputLevel  =   5  ' ,
-                    'Hadrons.OutputLevel       =   5  ' ,
-                    'EventSelector.PrintFreq   = 100  ' ] )
-    
-    _libs_ = ( 'TrgTools' , 'TrgVelo' , 'TrgVeloTT' ,
-               'STDAQ' , 'TrgChecker' , 'PhysSelections' )
-    for lib in _libs_ :
-        if not lib in gaudi.DLLs : gaudi.DLLs += [ lib ]
-
-    seq = gaudi.algorithm('TrgChecking')
-    seq.MeasureTime = True
-    seq = gaudi.algorithm('L1Processing')
-    seq.MeasureTime = True
-    seq = gaudi.algorithm('HLTPRocessing')
-    seq.MeasureTime = True
-
-    # specific job configuration 
-
-    gaudi.addAlgorithm ( 'GaudiSequencer/Links2Tables' )
-    seq = gaudi.algorithm ('Links2Tables')
-    
-    seq.Members = [ 'TrgTrackToContainer'             ,
-                    'TrgTrack2MCParticle'             ,
-                    'TrgLinks2TrgTables/Trg2MCTables' ]
-    
-    seq.MeasureTime = True
-    
-    # create analysis algorithm and add it to the list of
-    ex = ExHlt('ExHlt')
-    
-    gaudi.addAlgorithm ( ex ) 
-    
-    ex        = gaudi.algorithm('ExHlt')
-    ex.TRG2MC = [ 'Rec/Relations/TrgTracks2MCParticles' ]
-    
-    desktop = gaudi.tool('ExHlt.PhysDesktop')
-    desktop.InputLocations  = [
-        "Phys/Trg"      ,
-        "Phys/HLTPions" ,
-        "Phys/HLTMuons"
-        ]
-    
-    return SUCCESS
+                    '$TRGSYSROOT/options/Hlt.opts'          ,
+                    '$TRGSYSROOT/options/TrgChecking.opts' ] ) # HLT configuration
+     
+     _libs_ = ( 'TrgTools' , 'TrgVelo' , 'TrgVeloTT' ,
+                'STDAQ' , 'TrgChecker' , 'PhysSelections' )
+     for lib in _libs_ :
+         if not lib in gaudi.DLLs : gaudi.DLLs += [ lib ]
+         
+     seq = gaudi.algorithm('TrgChecking')
+     seq.MeasureTime = True
+     seq = gaudi.algorithm('L1Processing')
+     seq.MeasureTime = True
+     seq = gaudi.algorithm('HLTPRocessing')
+     seq.MeasureTime = True
+     
+     # specific job configuration 
+     
+     gaudi.addAlgorithm ( 'GaudiSequencer/Links2Tables' )
+     seq = gaudi.algorithm ('Links2Tables')
+     
+     seq.Members = [ 'TrgTrackToContainer'             ,
+                     'TrgTrack2MCParticle'             ,
+                     'TrgLinks2TrgTables/Trg2MCTables' ]
+     
+     seq.MeasureTime = True
+     
+     # create analysis algorithm and add it to the list of
+     ex = ExHlt('ExHlt')
+     
+     gaudi.addAlgorithm ( ex ) 
+     
+     ex        = gaudi.algorithm('ExHlt')
+     ex.TRG2MC = [ 'Rec/Relations/TrgTracks2MCParticles' ]
+     
+     desktop = gaudi.tool('ExHlt.PhysDesktop')
+     desktop.InputLocations  = [
+         "Phys/Trg"      ,
+         "Phys/HLTPions" ,
+         "Phys/HLTMuons"
+         ]
+     
+     return SUCCESS
 
 # =============================================================================
 # job execution 
@@ -134,10 +122,6 @@ if __name__ == '__main__' :
     configure() 
     # run job 
     gaudi.run  ( 100 )
-    evtSvc = gaudi.evtSvc()
-    
-    # terminate the Application Manager 
-    gaudi.exit ()
     
 # =============================================================================
 # $Log: not supported by cvs2svn $

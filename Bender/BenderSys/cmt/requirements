@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.74 2005-07-30 12:14:33 ibelyaev Exp $ 
+# $Id: requirements,v 1.75 2005-08-01 09:51:36 ibelyaev Exp $ 
 # =============================================================================
 # CVS tag $Name: not supported by cvs2svn $
 # =============================================================================
@@ -25,7 +25,7 @@ use           BenderRels     v5r1   Tools
 use           BenderVis      v5r2   Vis 
 
 # =========== examples of usage of Bender "in practice" =======================
-use           BenderExample  v5r1   Ex
+use           BenderExample  v5r2   Ex
 
 # =============================================================================
 # $Log: not supported by cvs2svn $
