@@ -1,4 +1,4 @@
-// $Id: XmlCnvSvc.cpp,v 1.6 2005-07-07 13:01:10 marcocle Exp $
+// $Id: XmlCnvSvc.cpp,v 1.7 2005-08-01 14:57:54 marcocle Exp $
 
 // Include Files
 #include <xercesc/util/PlatformUtils.hpp>
@@ -613,6 +613,7 @@ bool XmlCnvSvc::exprHasUnit (std::string s,
   } else {
     // else we consider that having an alphabetic character at the first
     // place means there is a unit
-    return isalpha(s[realBaseIndex]);
+
+    return isalpha(s[realBaseIndex]) != 0;
   }
 }
