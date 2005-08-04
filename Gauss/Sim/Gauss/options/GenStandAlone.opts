@@ -16,10 +16,10 @@
 //     --- "/Event/Gen/HepMCEvents" with the whole event 
 //     --- "/Event/Gen/BHadronTree" with only the B hadron decay tree in the lab frame.
 // Add those missing from standard output stream
-GaussTape.ItemList += { 
-  "/Event/Gen/SignalDecay"  
+GaussTape.OptItemList += { 
+  "/Event/Gen/SignalDecay" 
 };
-GaussTape.OptItemList += {
+GaussTape.OptItemList += { 
   "/Event/Gen/BHadronTree"
 };
 
@@ -30,4 +30,4 @@ GaussTape.OptItemList += {
 
 //
 // Comment the line below if you do not want "/Event/Gen/BHadronTree"
-EvtDecayAlg.IsolateSignal = true ;
+EvtDecayAlg.IsolateSignal = true;

@@ -4,6 +4,12 @@
 ! Purpose     : LHCb Simulation Application with Geant4
 !-----------------------------------------------------------------------------
 
+! 2005-08-04 - Gloria CORTI
+ - Set additional items in GaussTape as optional in options to be added to
+   run generator in stand alone mode, as to be able to write all type of
+   evnets (it worked only for signal)
+   . GenStandAlone.opts
+
 !============================= Gauss v20r1 ==================================
 ! 2005-07-27 - Gloria CORTI
  - Use latest version of XmlDDDB (v26r1)
