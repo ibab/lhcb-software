@@ -4,6 +4,10 @@
 ! Purpose     : High-Level Trigger Exclusive Selections - Checking 
 !-----------------------------------------------------------------------------
 
+! 2005-08-07 - Luis Fernandez
+ - options/
+   . Add dummy HltFilter/CorrTrgHltGen
+
 ! 2005-07-13 - P. Koppenburg
   - New files L0TDR replace L0L1TDR
   - options/True*.opts

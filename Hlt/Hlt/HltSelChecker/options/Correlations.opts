@@ -4,6 +4,10 @@
 ApplicationMgr.TopAlg += { "GaudiSequencer/MakeCorrelations" };
 
 MakeCorrelations.Members += { "TrgL1Filter/CorrTrg" };
+MakeCorrelations.Members += { "HltFilter/CorrTrgHltGen" };
+CorrTrgHltGen.RequireHLT = false;
+CorrTrgHltGen.RequireGeneric = false; // set to true to get correlations only on Hlt generic triggered events
+
 MakeCorrelations.Members += { "GaudiSequencer/HLTCorrelations" };
 HLTCorrelations.IgnoreFilterPassed = true ;
 
