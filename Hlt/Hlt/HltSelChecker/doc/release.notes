@@ -4,6 +4,10 @@
 ! Purpose     : High-Level Trigger Exclusive Selections - Checking 
 !-----------------------------------------------------------------------------
 
+! 2005-08-08 - P. Koppenburg
+ - options/
+   . Don't include TestHltScore
+
 ! 2005-08-07 - Luis Fernandez
  - options/
    . Add dummy HltFilter/CorrTrgHltGen
