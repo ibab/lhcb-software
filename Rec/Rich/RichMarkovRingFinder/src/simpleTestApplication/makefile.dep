@@ -157,13 +157,14 @@ CrudeSampler.o: ../GenericRingFinder/GenericInput.h
 CrudeSampler.o: ../GenericRingFinder/GenericInput.fwd
 CrudeSampler.o: ../GenericRingFinder/GenericHit.h
 CrudeSampler.o: ../GenericRingFinder/GenericHit.fwd
-CrudeSampler.o: ../GenericRingFinder/GenericResults.h
-CrudeSampler.o: ../GenericRingFinder/GenericResults.fwd
 CrudeSampler.o: ../GenericRingFinder/GenericRing.h
-CrudeSampler.o: ../GenericRingFinder/GenericRing.fwd Data.h Hit.h Constants.h
-CrudeSampler.o: ../Utils/MathsConstants.h /usr/include/g++-3/cmath
-CrudeSampler.o: /usr/include/math.h /usr/include/bits/huge_val.h
-CrudeSampler.o: /usr/include/bits/mathdef.h /usr/include/bits/mathcalls.h
+CrudeSampler.o: ../GenericRingFinder/GenericRing.fwd
+CrudeSampler.o: ../GenericRingFinder/GenericResults.h
+CrudeSampler.o: ../GenericRingFinder/GenericResults.fwd Data.h Hit.h
+CrudeSampler.o: Constants.h ../Utils/MathsConstants.h
+CrudeSampler.o: /usr/include/g++-3/cmath /usr/include/math.h
+CrudeSampler.o: /usr/include/bits/huge_val.h /usr/include/bits/mathdef.h
+CrudeSampler.o: /usr/include/bits/mathcalls.h
 CrudeSampler.o: /atlas/lester/usr/local/include/CLHEP/Vector/TwoVector.h
 CrudeSampler.o: /atlas/lester/usr/local/include/CLHEP/config/CLHEP.h
 CrudeSampler.o: /atlas/lester/usr/local/include/CLHEP/config/CLHEP-default.h
@@ -552,6 +553,9 @@ Rich.o: ../GenericRingFinder/GenericResults.h
 Rich.o: ../GenericRingFinder/GenericResults.fwd /usr/include/g++-3/list
 Rich.o: /usr/include/g++-3/stl_list.h ../GenericRingFinder/GenericRing.h
 Rich.o: ../GenericRingFinder/GenericRing.fwd Data.h
+Rich.o: ../GenericRingFinder/GenericInput.h
+Rich.o: ../GenericRingFinder/GenericInput.fwd
+Rich.o: ../GenericRingFinder/GenericHit.h ../GenericRingFinder/GenericHit.fwd
 Rich.o: ../Utils/LogarithmicTools.h
 RichModels.o: RichModels.h FiniteRelativeProbabilityChooser.h
 RichModels.o: /usr/include/g++-3/map /usr/include/g++-3/stl_tree.h
@@ -754,7 +758,15 @@ ThreePointCircleProposerB.o: ../Utils/SampleModule.fwd
 ThreePointCircleProposerB.o: ../Utils/ProbabilityModule.h
 ThreePointCircleProposerB.o: ../Utils/ProbabilityModule.fwd
 ThreePointCircleProposerB.o: ../Utils/LogarithmicTools.h Data.h Hit.h
-ThreePointCircleProposerB.o: RichPriors.h ../Utils/NormalDistribution.h
+ThreePointCircleProposerB.o: RichPriors.h ../GenericRingFinder/GenericInput.h
+ThreePointCircleProposerB.o: ../GenericRingFinder/GenericInput.fwd
+ThreePointCircleProposerB.o: /usr/include/g++-3/list
+ThreePointCircleProposerB.o: /usr/include/g++-3/stl_list.h
+ThreePointCircleProposerB.o: ../GenericRingFinder/GenericHit.h
+ThreePointCircleProposerB.o: ../GenericRingFinder/GenericHit.fwd
+ThreePointCircleProposerB.o: ../GenericRingFinder/GenericRing.h
+ThreePointCircleProposerB.o: ../GenericRingFinder/GenericRing.fwd
+ThreePointCircleProposerB.o: ../Utils/NormalDistribution.h
 ThreePointCircleProposerB.o: ../Utils/NormalDistribution.fwd HitIndexTriple.h
 ThreePointCircleProposerB.o: HitIndexTriple.fwd RegularCPQuantizer.h
 ThreePointCircleProposerB.o: RegularCPQuantizer.fwd CPQuantizer.h
@@ -862,7 +874,15 @@ ThreePointCircleProposer.o: ../Utils/SampleModule.h ../Utils/SampleModule.fwd
 ThreePointCircleProposer.o: ../Utils/ProbabilityModule.h
 ThreePointCircleProposer.o: ../Utils/ProbabilityModule.fwd
 ThreePointCircleProposer.o: ../Utils/LogarithmicTools.h Data.h Hit.h
-ThreePointCircleProposer.o: RichPriors.h ../Utils/NormalDistribution.h
+ThreePointCircleProposer.o: RichPriors.h ../GenericRingFinder/GenericInput.h
+ThreePointCircleProposer.o: ../GenericRingFinder/GenericInput.fwd
+ThreePointCircleProposer.o: /usr/include/g++-3/list
+ThreePointCircleProposer.o: /usr/include/g++-3/stl_list.h
+ThreePointCircleProposer.o: ../GenericRingFinder/GenericHit.h
+ThreePointCircleProposer.o: ../GenericRingFinder/GenericHit.fwd
+ThreePointCircleProposer.o: ../GenericRingFinder/GenericRing.h
+ThreePointCircleProposer.o: ../GenericRingFinder/GenericRing.fwd
+ThreePointCircleProposer.o: ../Utils/NormalDistribution.h
 ThreePointCircleProposer.o: ../Utils/NormalDistribution.fwd HitIndexTriple.h
 ThreePointCircleProposer.o: HitIndexTriple.fwd
 ThreePointCircleProposer.o: ../Utils/CannotConstructException.h
@@ -900,13 +920,14 @@ crudeSampler.o: ../GenericRingFinder/GenericInput.h
 crudeSampler.o: ../GenericRingFinder/GenericInput.fwd
 crudeSampler.o: ../GenericRingFinder/GenericHit.h
 crudeSampler.o: ../GenericRingFinder/GenericHit.fwd
-crudeSampler.o: ../GenericRingFinder/GenericResults.h
-crudeSampler.o: ../GenericRingFinder/GenericResults.fwd
 crudeSampler.o: ../GenericRingFinder/GenericRing.h
-crudeSampler.o: ../GenericRingFinder/GenericRing.fwd Data.h Hit.h Constants.h
-crudeSampler.o: ../Utils/MathsConstants.h /usr/include/g++-3/cmath
-crudeSampler.o: /usr/include/math.h /usr/include/bits/huge_val.h
-crudeSampler.o: /usr/include/bits/mathdef.h /usr/include/bits/mathcalls.h
+crudeSampler.o: ../GenericRingFinder/GenericRing.fwd
+crudeSampler.o: ../GenericRingFinder/GenericResults.h
+crudeSampler.o: ../GenericRingFinder/GenericResults.fwd Data.h Hit.h
+crudeSampler.o: Constants.h ../Utils/MathsConstants.h
+crudeSampler.o: /usr/include/g++-3/cmath /usr/include/math.h
+crudeSampler.o: /usr/include/bits/huge_val.h /usr/include/bits/mathdef.h
+crudeSampler.o: /usr/include/bits/mathcalls.h
 crudeSampler.o: /atlas/lester/usr/local/include/CLHEP/Vector/TwoVector.h
 crudeSampler.o: /atlas/lester/usr/local/include/CLHEP/config/CLHEP.h
 crudeSampler.o: /atlas/lester/usr/local/include/CLHEP/config/CLHEP-default.h

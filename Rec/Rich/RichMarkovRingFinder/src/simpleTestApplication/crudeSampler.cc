@@ -53,13 +53,8 @@ int main(int nArgs, char * args[]) {
 
   // Convert data to the generic input format:
   GenRingF::GenericInput input;
-  for (Lester::Data::Hits::const_iterator it = data.hits.begin();
-       it!= data.hits.end();
-       ++it) {
-    static unsigned int i=0;
-    input.hits.push_back(GenRingF::GenericHit(i++, it->x(), it->y()));
-  };
- 
+  data.copyTo(input); 
+  std::cout << "Input was " << input << std::endl;
 
   /*
   std::cout << p << std::endl;

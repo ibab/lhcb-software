@@ -31,13 +31,7 @@ public:
 
 
       Lester::Data data;
-      for (std::list<GenRingF::GenericHit>::const_iterator it = input.hits.begin();
-	   it != input.hits.end();
-	   ++it) {
-	data.hits.push_back(Lester::Hit(it->x(), it->y()));
-	std::cout << "MOO " << it->x() << " "  << it->y() << std::endl;
-      };
-
+      data.setFrom(input);
       
   /*Lester::ThreePointCircleProposer p(data, 
     Lester::Constants::circleMeanRadiusParameter*0.1,
@@ -67,7 +61,7 @@ public:
 
 
   clock_t startTime = clock();
-  while(clock()-startTime<3*CLOCKS_PER_SEC) {
+  while(clock()-startTime<300*CLOCKS_PER_SEC) {
     // decide what to do
 
     // suggest insert/remove/jitter each with prob 1/3:
