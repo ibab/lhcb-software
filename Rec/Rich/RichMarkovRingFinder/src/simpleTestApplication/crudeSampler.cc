@@ -20,8 +20,8 @@ int main(int nArgs, char * args[]) {
   std::cout << "Hello " << epsFileName2 << std::endl;
 
 #ifdef LESTER_USE_GRAPHICS
-  GraphicsObjects::globalCanvas = new Canvas(nArgs, args, "First 100 proposals",400,400,10,50);
-  GraphicsObjects::globalCanvas2 = new Canvas(nArgs, args, "Just the hits",400,400,420,50);
+  GraphicsObjects::globalCanvas = new Canvas(nArgs, args, "Fit status",400,400,10,50);
+  GraphicsObjects::globalCanvas2 = new Canvas(nArgs, args, "Hits and MC truth",400,400,420,50);
     
   GraphicsObjects::wc = new WarpableCanvas(*GraphicsObjects::globalCanvas, Constants::viewRangeParameter);
   GraphicsObjects::wc2 = new WarpableCanvas(*GraphicsObjects::globalCanvas2, Constants::viewRangeParameter);
