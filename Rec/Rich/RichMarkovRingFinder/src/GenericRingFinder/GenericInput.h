@@ -21,7 +21,19 @@ class GenericInput {
 // virtual ~GenericInput() {};
 public:
   std::ostream & printMeTo(std::ostream & os) const {
-    os << "GenericInput[]";
+    os << "GenericInput[Hits=";
+    for (std::list<GenericHit>::const_iterator it = hits.begin();
+	 it != hits.end();
+	 ++it) {
+      os << *it <<",";
+    };
+    os << " MCRings=";
+    for (std::list<GenericRing>::const_iterator it = ringsFromMonteCarlo.begin();
+	 it != ringsFromMonteCarlo.end();
+	 ++it) {
+      os << *it <<",";
+    };
+    os <<"]";
     return os;
   };
   std::list<GenericHit> hits; // The hits that you want to fit
