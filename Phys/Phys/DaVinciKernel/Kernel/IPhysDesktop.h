@@ -1,4 +1,4 @@
-// $Id: IPhysDesktop.h,v 1.2 2005-02-09 07:32:54 pkoppenb Exp $
+// $Id: IPhysDesktop.h,v 1.3 2005-08-09 14:11:59 pkoppenb Exp $
 #ifndef DAVINCIKERNEL_IPHYSDESKTOP_H 
 #define DAVINCIKERNEL_IPHYSDESKTOP_H 1
 
@@ -8,10 +8,11 @@
 // Forward declarations
 class StatusCode;
 class Vertex;
+class PrimVertex;
 class Particle;
 
 // Declaration of the interface ID ( interface id, major version, minor version)
-static const InterfaceID IID_IPhysDesktop("IPhysDesktop", 1, 1);
+static const InterfaceID IID_IPhysDesktop("IPhysDesktop", 1, 2);
 
 
 /** @class IPhysDesktop IPhysDesktop.h Kernel/IPhysDesktop.h
@@ -37,6 +38,9 @@ public:
 
   /// Retrieve the PV from vertex container
   virtual const VertexVector& primaryVertices() = 0;
+
+  /// Retrieve the PV as primary vertex. Needs a different name
+  virtual const std::vector<const PrimVertex*> primaries() = 0;
 
   /// Retrieve the secondary vertices
   virtual const VertexVector& secondaryVertices() = 0;

@@ -1,6 +1,15 @@
-! $Id: release.notes,v 1.66 2005-07-27 08:12:38 ibelyaev Exp $
+! $Id: release.notes,v 1.67 2005-08-09 14:11:59 pkoppenb Exp $
 ! Package     : DaVinciKernel
 ! Responsible : P. Koppenburg
+
+! 2005-08-09 - P. Koppenburg
+  - IPhysDesktop.h and implementation
+    . New method 
+        const std::vector<const PrimVertex*> primaries()
+      that dynamic_casts the primary vertices to PrimVertex*
+    
+ const std::vector<const PrimVertex*> primaries()
+
 
 ! 2005-07-27 - Vanya BELYAEV
 
@@ -88,8 +97,6 @@
            // get the jet 
            Particle* jet = *iJet ;
        }
-   
-
 
 ! 2005-07-26 - Vanya BELYAEV
 

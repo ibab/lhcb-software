@@ -1,4 +1,4 @@
-// $Id: PhysDesktop.cpp,v 1.22 2005-07-11 13:55:36 pkoppenb Exp $
+// $Id: PhysDesktop.cpp,v 1.23 2005-08-09 14:11:59 pkoppenb Exp $
 // Include files
 
 // from Gaudi
@@ -10,6 +10,7 @@
 // data
 #include "Event/EventHeader.h"
 #include "Event/Vertex.h"
+#include "Event/PrimVertex.h"
 #include "Event/Particle.h"
 
 // local
@@ -225,6 +226,19 @@ const VertexVector& PhysDesktop::primaryVertices()
   // @todo Find a smarter way of checking this is done only once...
   if ( m_primVerts.empty()) getPrimaryVertices();
   return m_primVerts;
+}
+
+//=============================================================================
+//  Retrieve the PV from vertex container ! does a dynamic_cast
+//=============================================================================
+const std::vector<const PrimVertex*> PhysDesktop::primaries(){
+  const VertexVector pvs = primaryVertices() ;
+  std::vector<const PrimVertex*> primaries;
+  for ( VertexVector::const_iterator ipv = pvs.begin() ; ipv != pvs.end() ; ++ipv ){
+    const PrimVertex* pv = dynamic_cast<PrimVertex*>(*ipv) ;
+    primaries.push_back(pv);
+  }
+  return primaries ;
 }
 
 //=============================================================================

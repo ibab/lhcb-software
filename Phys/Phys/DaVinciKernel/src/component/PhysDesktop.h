@@ -1,4 +1,4 @@
-// $Id: PhysDesktop.h,v 1.11 2005-06-28 15:32:27 lazzecri Exp $
+// $Id: PhysDesktop.h,v 1.12 2005-08-09 14:11:59 pkoppenb Exp $
 #ifndef PHYSDESKTOP_H 
 #define PHYSDESKTOP_H 1
 
@@ -60,6 +60,9 @@ public:
   
   /// Retrieve the PV from vertex container
   const VertexVector& primaryVertices() ;
+
+  /// Retrieve the PV from vertex container ! does a dynamic_cast
+  const std::vector<const PrimVertex*> primaries() ;
 
   /// Retrieve the secondary vertices
   const VertexVector& secondaryVertices() ;
