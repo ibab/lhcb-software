@@ -5,6 +5,11 @@
 ! Purpose     : Uses a Markov Chain sampler to do ring finding without tracks
 !-----------------------------------------------------------------------------
 
+! 2005-08-09 - Chris Jones
+ - Start of a new era. Move over to newest CGL markov stuff
+
+! ----------------------------- v1r1 -----------------------------------------
+
 ! 2005-03-23 - Andy Buckley
  - src/component/RichMarkovRingFinderMoni.*
    . Added new histograms and changed some histo ranges

@@ -1,0 +1,46 @@
+
+clear
+
+line2d +0.3 +0.3 -0.3 +0.3
+line2d -0.3 -0.3 -0.3 +0.3
+line2d -0.3 -0.3 +0.3 -0.3
+line2d +0.3 +0.3 +0.3 -0.3
+circle 0 0 0.3 30
+
+circle 0 0 0.6 30
+circle 0 0 1.2 30
+
+parallelepiped
+-.3 -.3 -.3
+.6 0 0
+0 .6 0
+0 0 .6 
+
+parallelepiped
++.3 +.3 +.3
+.6 0 0
+0 .6 0
+0 0 .6 
+
+parallelepiped
+-.9 -.9 -.9
+.6 0 0
+0 .6 0
+0 0 .6 
+
+approve
+
+
+clear
+
+approve
+
+
+parallelepiped
++.3 +.3 +.3
+.6 0 0
+0 .6 0
+0 0 .6 
+
+approve
+

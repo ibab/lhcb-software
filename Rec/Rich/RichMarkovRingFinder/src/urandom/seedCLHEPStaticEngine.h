@@ -1,9 +1,9 @@
-#ifndef RICHMARKOV_SEED_CLHEP_STATIC_ENGINE_H
-#define RICHMARKOV_SEED_CLHEP_STATIC_ENGINE_H
+#ifndef LESTER_SEED_CLHEP_STATIC_ENGINE_H
+#define LESTER_SEED_CLHEP_STATIC_ENGINE_H
 
-namespace RichMarkov {
-  void seedCLHEPStaticEngine(); // FwdDec
-}
+namespace Lester {
+  long seedCLHEPStaticEngine(); // FwdDec
+};
 
 #include "urandom/jamesRandomSeed.h"
 #include "CLHEP/Random/Random.h"
@@ -11,22 +11,39 @@ namespace RichMarkov {
 #include <typeinfo>
 #include <string>
 
-namespace RichMarkov {
+namespace Lester {
 
-  void seedCLHEPStaticEngine() {
+  inline long seedCLHEPStaticEngine() {
     try {
-      HepJamesRandom & engine
-        = dynamic_cast<HepJamesRandom &>(*HepRandom::getTheEngine());
+      HepJamesRandom & engine 
+	= dynamic_cast<HepJamesRandom &>(*HepRandom::getTheEngine());
       // If we got this far, the static engine WAS a jamesRandom, so:
-      engine.setSeed(jamesRandomSeed());
+      const long seed = jamesRandomSeed();
+      engine.setSeed(seed);
+      return seed;
     }
     catch (std::bad_cast) {
       // Oh dear! The CLHEP standard changed, and the static engine is no
       // longer a JamesRandom :(
-      throw FinderExternalException(std::string("Oh dear! The CLHEP standard changed, and the static engine is no longer a JamesRandom :("));
+      throw;
     };
-  };
+  }; 
 
-}
+  inline long seedCLHEPStaticEngineWith(const long seed) {
+	    try {
+      HepJamesRandom & engine
+        = dynamic_cast<HepJamesRandom &>(*HepRandom::getTheEngine());
+      // If we got this far, the static engine WAS a jamesRandom, so:
+      engine.setSeed(seed);
+      return seed;
+    }
+    catch (std::bad_cast) {
+      // Oh dear! The CLHEP standard changed, and the static engine is no
+      // longer a JamesRandom :(
+      throw;
+    };
+ 
+  };
+};
 
 #endif

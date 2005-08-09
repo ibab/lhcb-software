@@ -1,0 +1,3 @@
+
+#include "GenericRingFinder/GenericHit.h"
+

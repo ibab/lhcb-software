@@ -2,24 +2,11 @@
 # Created    : 2003-12-02
 # Maintainer : Chris Jones
 #============================================================================
-# $Id: requirements,v 1.7 2005-03-23 15:29:54 abuckley Exp $
-# $Log: not supported by cvs2svn $
-# Revision 1.6  2004/12/13 18:24:53  abuckley
-# Markov weighting with the right sort of scaling now in place
-#
-# Revision 1.5  2004/10/22 19:15:27  abuckley
-# Started tracing back ring normals to the radiator volume and lots more histogramming. Now requires head release of e.g. RichKernel for trace-back method and new GOD methods
-#
-# Revision 1.4  2004/10/08 19:00:40  abuckley
-# Various updates to finder and hit-ring association
-#
-# Revision 1.3  2004/07/30 11:08:57  jonrob
-# Add CVS log to requirements file
-#
+# $Id: requirements,v 1.8 2005-08-09 13:17:40 jonrob Exp $
 #============================================================================
 
 package           RichMarkovRingFinder
-version           v1r0
+version           v2r0
 
 #============================================================================
 # Structure
@@ -36,28 +23,16 @@ set RICHMARKOVRINGFINDEROPTS $(RICHMARKOVRINGFINDERROOT)/options
 #============================================================================
 use   AIDA             v*    LCG_Interfaces -no_auto_imports
 use   RichRecBase      v1r*  Rich
-use   MCTools          v*    Phys
-use   RichDet          v*    Det
-use   PhysEvent        v*    Event
-use   RichKernel       v*    Rich
-use   RichMCTools      v*    Rich
-use   RichRecSys       v*    Rich
-use   DaVinciAssociators v5r* Phys
 
 #============================================================================
 # Component library building rule
 #============================================================================
-library RichMarkovRingFinder -import=CLHEP -import=AIDA  ../src/opengl/*.cpp \
-                                                         ../src/finder/*.cpp  \
-                                                         ../src/component/*.cpp \
-                                                         ../src/geometry/*.cpp
-#macro_append cppflags " -pedantic "
+library RichMarkovRingFinder -import=CLHEP -import=AIDA ../src/component/*.cpp
 
 #============================================================================
 # define component library link options
 #============================================================================
-apply_pattern    package_Clinkopts
-apply_pattern    packageShr
+apply_pattern component_library library=RichMarkovRingFinder
 
 #============================================================================
 private

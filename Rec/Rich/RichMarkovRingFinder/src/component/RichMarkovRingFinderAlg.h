@@ -1,55 +1,40 @@
-// $Id: RichMarkovRingFinderAlg.h,v 1.17 2005-03-23 15:29:54 abuckley Exp $
+
+//-----------------------------------------------------------------------------
+/** @file RichMarkovRingFinderAlg.h
+ *
+ *  Header file for algorithm : RichMarkovRingFinderAlg
+ *
+ *  CVS Log :-
+ *  $Id: RichMarkovRingFinderAlg.h,v 1.18 2005-08-09 13:17:42 jonrob Exp $
+ *
+ *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
+ *  @date   2005-08-09
+ */
+//-----------------------------------------------------------------------------
+
 #ifndef RICHMARKOVRINGFINDER_RICHMARKOVRINGFINDERALG_H
 #define RICHMARKOVRINGFINDER_RICHMARKOVRINGFINDERALG_H 1
 
-// Include files
-#include <string>
-#include <iostream>
-#include <limits>
+// RichRecBase
+#include "RichRecBase/RichRecMoniAlgBase.h"
 
-// from Gaudi
-#include "GaudiKernel/AlgFactory.h"
-#include "GaudiKernel/MsgStream.h"
-#include "GaudiKernel/SmartDataPtr.h"
+//-----------------------------------------------------------------------
+/** @class RichMarkovRingFinderAlg RichMarkovRingFinderAlg.h
+ *  
+ *  Tracklessm ring finder using a Markov Chaion Monte Carlo
+ *
+ *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
+ *  @date   2005-08-09
+ */
+//-----------------------------------------------------------------------
 
-// Rich base
-#include "RichRecBase/RichRecAlgBase.h"
-#include "RichRecBase/RichRecProcCode.h"
-#include "RichDet/DeRich1.h"
-#include "RichDet/DeRich2.h"
+class RichMarkovRingFinderAlg : public RichRecMoniAlgBase
+{
 
-// Event model
-#include "Event/ProcStatus.h"
-#include "Event/RichRecStatus.h"
-#include "Event/RichRecRing.h"
+public: 
 
-// Kernel
-#include "Kernel/RichSide.h"
-
-// interfaces
-#include "RichRecBase/IRichCherenkovAngle.h"
-#include "RichKernel/IRichSmartIDTool.h"
-
-// Ring finder stuff
-#include "finder/Hit.h"
-#include "finder/Rich1Configuration.h"
-#include "finder/Rich2Configuration.h"
-#include "finder/RichMarkovRingFinder.h"
-#include "stringToNumber/stringToNumber.h"
-
-///////////////////////////////////////////////////////////////////////////
-/// @class  RichMarkovRingFinderAlg
-/// @brief  Templated base class for concrete Markov Ring Finder Algorithms
-/// @author Chris Lester  lester@hep.phy.cam.ac.uk
-/// @author Chris Jones   Christoper.Rob.Jones@cern.ch
-/// @author Andy Buckley  Andrew.Buckley@cern.ch
-/// @date   2003-12-02
-///////////////////////////////////////////////////////////////////////////
-
-template <class MyFinder>
-class RichMarkovRingFinderAlg : public RichRecAlgBase {
-
-public:
+  /// Standard constructor
+  RichMarkovRingFinderAlg( const std::string& name, ISvcLocator* pSvcLocator );
 
   virtual ~RichMarkovRingFinderAlg( ); ///< Destructor
 
@@ -59,192 +44,7 @@ public:
 
 protected:
 
-  /// Standard constructor
-  RichMarkovRingFinderAlg( const std::string& name,
-                           ISvcLocator* pSvcLocator,
-                           const Rich::DetectorType rich,
-                           const Rich::Side panel );
-
-private: // methods
-
-  /// Check in the given segment is in the currently configured detector region
-  const bool inCorrectArea( const RichRecSegment * segment ) const;
-
-  /// Check in the given pixel is in the currently configured detector region
-  const bool inCorrectArea( const RichRecPixel * pixel ) const;
-
-  /// Process the event
-  const StatusCode processEvent();
-
-  /// Adds data points to Markov Chain initialisation object
-  template <class AnInitialisationObject>
-  const StatusCode addDataPoints( AnInitialisationObject & eio ) const;
-
-  /// Add initial circle suggestions to Markov Chain initialisation object
-  template <class AnInitialisationObject>
-  const StatusCode addCircleSuggestions( AnInitialisationObject & eio ) const;
-
-  /// Fill the ring points in the final reconstructed rings
-  void buildRingPoints( RichRecRing * ring,
-                        const double scale,
-                        const unsigned int nPoints = 100 ) const;
-
-protected:
-
-  /// Returns the RICH Detector
-  inline const Rich::DetectorType rich() const { return m_rich; }
-
-  /// Returns the RICH panel
-  inline const Rich::Side panel() const { return m_panel; }
-
-private: // data
-
-  // tool pointers
-  IRichCherenkovAngle * m_ckAngle;  ///< Pointer to Cherenkov angle tool
-  IRichSmartIDTool * m_smartIDTool; ///< Pointer to RichSmartID tool
-
-  bool m_useRichSeed; ///< Inialise ring finder using suggested circles from tracks
-
-  const Rich::DetectorType m_rich;  ///< which Rich Detector
-  const Rich::Side         m_panel; ///< which Rich Panel
-
-  // The ring finder
-  MyFinder * m_finder; ///< Pointer to internal Ring Finder
-
-  /// Scale factor for converting from a pixel bg prob and a bg likelihood contribution
-  double m_bgprobToBgcontribScaleFactor;
-
-  /// Horrible arbitrary scaling parameter for the bg likelihood distribution. Please don't use!
-  double m_ScalingHackParam;
-
-  /// Location of output rings in TES
-  std::string m_ringLocation;
-
-  /// Location of output pixels in TES
-  std::string m_pixelLocation;
-
-  /// Location of output matched rings in TES
-  std::string m_matchedRingLocation;
-
-  /// Location of output matched pixels in TES
-  std::string m_matchedPixelLocation;
-
-  /// Probability of associating a hit to a Markov circle above 
-  /// which counts as a positive association
-  double m_CutoffHitOnCircleProbability;
-
-  /// Fraction of ring radius which an extrapolated track segment must lie within
-  /// to be considered associated to the ring
-  double m_CutoffSegPositionInRing;
-
-  /// Probability of being a background hit, above which the hit is discarded
-  double m_HitIsBgProbabilityLowCut;
-
-  /// Do we assign pixels to only "belong" to the ring which has the best probability 
-  /// of having produced it or are we a little more flexible?
-  bool m_OnlyMatchPixelToBestRing;
-
-  /// The fraction of the hit->ring "best-match" probability which must be
-  /// reached if multiple hit->ring associations are allowed (\sa m_OnlyMatchPixelToBestRing)
-  double m_FractionOfBestProbReqdForHitCircleAssoc;
-
-  /// Distance in ring radius units which pixel has to be within in order to 
-  /// be considered as associated to that ring.
-  double m_pixDistFromMCMCRing;
-  
-  /// Do the matching of pixs to rings purely by distance from the ring
-  bool m_pixToRingMatchByProximity;
-
-  /// Apply a scaling to the PD planes to make the rings more circular for the finder
-  bool m_useDistortedRings;
-
-  /// Include pixels from untracked rings when calculating the background probabilities for pixels
-  bool m_CountUntrackedRingsAsBg;
-};
-
-
-///////////////////////////////////////////////////////////////////////////
-/// @class  Rich1LMarkovRingFinderAlg
-/// @brief  Standalone ring finder for RICH1 lower panel using Markov Chain
-///
-/// @author Chris Lester  lester@hep.phy.cam.ac.uk
-/// @author Chris Jones   Christopher.Rob.Jones@cern.ch
-/// @date   2003-12-02
-///////////////////////////////////////////////////////////////////////////
-typedef RichMarkov::RichMarkovRingFinder<RichMarkov::Rich1Configuration, RichMarkov::globalRich1LConfiguration> Rich1LMarkovRingFinder;
-class Rich1LMarkovRingFinderAlg : public RichMarkovRingFinderAlg<Rich1LMarkovRingFinder> {
-
-public:
-
-  Rich1LMarkovRingFinderAlg( const std::string& name,
-                             ISvcLocator* pSvcLocator )
-    : RichMarkovRingFinderAlg<Rich1LMarkovRingFinder>(name,pSvcLocator,
-                                                      Rich::Rich1,Rich::bottom) { }
-
-};
-
-
-///////////////////////////////////////////////////////////////////////////
-/// @class  Rich1UMarkovRingFinderAlg
-/// @brief  Standalone ring finder for RICH1 upper panel using Markov Chain
-///
-/// @author Chris Lester  lester@hep.phy.cam.ac.uk
-/// @author Chris Jones   Christopher.Rob.Jones@cern.ch
-/// @date   2003-12-02
-///////////////////////////////////////////////////////////////////////////
-typedef RichMarkov::RichMarkovRingFinder<RichMarkov::Rich1Configuration, RichMarkov::globalRich1UConfiguration> Rich1UMarkovRingFinder;
-class Rich1UMarkovRingFinderAlg : public RichMarkovRingFinderAlg<Rich1UMarkovRingFinder> {
-
-public:
-
-  Rich1UMarkovRingFinderAlg( const std::string& name,
-                             ISvcLocator* pSvcLocator )
-    : RichMarkovRingFinderAlg<Rich1UMarkovRingFinder>(name, pSvcLocator,
-                                                      Rich::Rich1,Rich::top) { }
-
-};
-
-
-///////////////////////////////////////////////////////////////////////////
-/// @class  Rich2LMarkovRingFinderAlg
-/// @brief  Standalone ring finder for RICH2 left panel using Markov Chain
-///
-/// @author Chris Lester  lester@hep.phy.cam.ac.uk
-/// @author Chris Jones   Christopher.Rob.Jones@cern.ch
-/// @date   2003-12-02
-///////////////////////////////////////////////////////////////////////////
-
-typedef RichMarkov::RichMarkovRingFinder<RichMarkov::Rich2Configuration, RichMarkov::globalRich2LConfiguration> Rich2LMarkovRingFinder;
-class Rich2LMarkovRingFinderAlg : public RichMarkovRingFinderAlg<Rich2LMarkovRingFinder> {
-
-public:
-
-  Rich2LMarkovRingFinderAlg( const std::string& name, 
-                             ISvcLocator* pSvcLocator )
-    : RichMarkovRingFinderAlg<Rich2LMarkovRingFinder>(name, pSvcLocator,
-                                                      Rich::Rich2,Rich::left) { }
-
-};
-
-
-///////////////////////////////////////////////////////////////////////////
-/// @class  Rich2RMarkovRingFinderAlg
-/// @brief  Standalone ring finder for RICH2 right panel using Markov Chain
-///
-/// @author Chris Lester  lester@hep.phy.cam.ac.uk
-/// @author Chris Jones   Christopher.Rob.Jones@cern.ch
-/// @date   2003-12-02
-///////////////////////////////////////////////////////////////////////////
-
-typedef RichMarkov::RichMarkovRingFinder<RichMarkov::Rich2Configuration, RichMarkov::globalRich2RConfiguration> Rich2RMarkovRingFinder;
-class Rich2RMarkovRingFinderAlg : public RichMarkovRingFinderAlg<Rich2RMarkovRingFinder> {
-
-public:
-
-  Rich2RMarkovRingFinderAlg( const std::string& name, 
-                             ISvcLocator* pSvcLocator )
-    : RichMarkovRingFinderAlg<Rich2RMarkovRingFinder>(name, pSvcLocator,
-                                                      Rich::Rich2,Rich::right) { }
+private:
 
 };
 

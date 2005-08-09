@@ -1,0 +1,5 @@
+Try running this program with
+
+cat example.canvas.stream | ./StreamCanvas
+
+
