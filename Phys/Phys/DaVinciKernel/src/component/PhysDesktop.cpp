@@ -1,4 +1,4 @@
-// $Id: PhysDesktop.cpp,v 1.23 2005-08-09 14:11:59 pkoppenb Exp $
+// $Id: PhysDesktop.cpp,v 1.24 2005-08-10 13:42:07 pkoppenb Exp $
 // Include files
 
 // from Gaudi
@@ -227,20 +227,6 @@ const VertexVector& PhysDesktop::primaryVertices()
   if ( m_primVerts.empty()) getPrimaryVertices();
   return m_primVerts;
 }
-
-//=============================================================================
-//  Retrieve the PV from vertex container ! does a dynamic_cast
-//=============================================================================
-const std::vector<const PrimVertex*> PhysDesktop::primaries(){
-  const VertexVector pvs = primaryVertices() ;
-  std::vector<const PrimVertex*> primaries;
-  for ( VertexVector::const_iterator ipv = pvs.begin() ; ipv != pvs.end() ; ++ipv ){
-    const PrimVertex* pv = dynamic_cast<PrimVertex*>(*ipv) ;
-    primaries.push_back(pv);
-  }
-  return primaries ;
-}
-
 //=============================================================================
 // Provides a reference to its internal container of vertices
 //=============================================================================

@@ -1,15 +1,12 @@
-! $Id: release.notes,v 1.67 2005-08-09 14:11:59 pkoppenb Exp $
+! $Id: release.notes,v 1.68 2005-08-10 13:42:07 pkoppenb Exp $
 ! Package     : DaVinciKernel
 ! Responsible : P. Koppenburg
 
-! 2005-08-09 - P. Koppenburg
-  - IPhysDesktop.h and implementation
-    . New method 
-        const std::vector<const PrimVertex*> primaries()
-      that dynamic_casts the primary vertices to PrimVertex*
-    
- const std::vector<const PrimVertex*> primaries()
-
+! 2005-08-10 - P. Koppenburg
+  - IPhysDesktop.h
+    . New method that returns the primary vertex as PrimVertex.
+      Usage:
+      std::vector<const PrimVertex*> primaries = desktop()->primaryVertices<PrimVertex>() ;
 
 ! 2005-07-27 - Vanya BELYAEV
 

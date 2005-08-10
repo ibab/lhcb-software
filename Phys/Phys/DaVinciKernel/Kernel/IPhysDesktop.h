@@ -1,4 +1,4 @@
-// $Id: IPhysDesktop.h,v 1.3 2005-08-09 14:11:59 pkoppenb Exp $
+// $Id: IPhysDesktop.h,v 1.4 2005-08-10 13:42:07 pkoppenb Exp $
 #ifndef DAVINCIKERNEL_IPHYSDESKTOP_H 
 #define DAVINCIKERNEL_IPHYSDESKTOP_H 1
 
@@ -38,9 +38,6 @@ public:
 
   /// Retrieve the PV from vertex container
   virtual const VertexVector& primaryVertices() = 0;
-
-  /// Retrieve the PV as primary vertex. Needs a different name
-  virtual const std::vector<const PrimVertex*> primaries() = 0;
 
   /// Retrieve the secondary vertices
   virtual const VertexVector& secondaryVertices() = 0;
@@ -87,6 +84,16 @@ public:
   // virtual void findAllTree( Particle*, ParticleVector&, VertexVector& ) = 0;
   // virtual void findAllTree( Vertex*, ParticleVector&, VertexVector& )= 0;
   
+  /// Retrieve the PV from vertex container !WARNING: does a dynamic_cast 
+  template <class V> const std::vector<const V*> primaryVertices(){
+    const VertexVector pvs = primaryVertices() ;
+    std::vector<const V*> primaries;
+    for ( VertexVector::const_iterator ipv = pvs.begin() ; ipv != pvs.end() ; ++ipv ){
+      const V* pv = dynamic_cast<V*>(*ipv) ;
+      primaries.push_back(pv);
+    }
+    return primaries ;
+  };
 
 protected:
 
