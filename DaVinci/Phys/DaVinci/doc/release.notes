@@ -4,6 +4,9 @@
 ! Purpose     : Analysis program for LHCb
 !-----------------------------------------------------------------------------
 
+! 2005-08-12 - P. Koppenburg
+  - options/L0.opts
+    . Optional high lumi tuning.
 !========================== DaVinci v12r12 2005-07-06 ===================
 No major changes in Phys/DaVinci package. See DaVinciSys for details.
 !========================== DaVinci v12r11 2005-05-27 ===================
