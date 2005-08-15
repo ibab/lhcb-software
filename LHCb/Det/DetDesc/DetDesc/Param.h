@@ -1,4 +1,4 @@
-// $Id: Param.h,v 1.2 2005-08-01 14:24:51 marcocle Exp $
+// $Id: Param.h,v 1.3 2005-08-15 14:00:22 marcocle Exp $
 #ifndef DETDESC_PARAM_H 
 #define DETDESC_PARAM_H 1
 
@@ -109,5 +109,12 @@ private:
   T m_val;
 
 };
+
+std::string Param<double>::toStr() {
+  std::ostringstream o;
+  o.precision(16);
+  o << m_val;
+  return o.str();
+}
 
 #endif // DETDESC_PARAM_H
