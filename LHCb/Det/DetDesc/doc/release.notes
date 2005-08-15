@@ -1,9 +1,20 @@
 ! =============================================================================
-! $Id: release.notes,v 1.211 2005-08-01 14:24:51 marcocle Exp $ 
+! $Id: release.notes,v 1.212 2005-08-15 14:04:17 marcocle Exp $ 
 ! =============================================================================
 ! package DetDesc
 ! package manager : Marco Clemencic, Juan Palacios
 ! =============================================================================
+
+! 2005-08-15 - Marco CLEMENCIC
+ - Fixed a bug in ParamValidDataObject: the parameter's comments where not
+   really added.
+ - Improved the handling of parameter's comments in ParamValidDataObject
+   (they can be removed by setting the comment to an empty string)
+ - Fix in Condition: comments are properly put in the generated XML string
+ - Increased the precision used when converting Param<double> to string.
+ - Added the method toXml() to TabulatedProperty in order to make it simple
+   to generate XML strings to store in the CondDB (as it was already done
+   for Condition)
 
 ! 2005-08-01 - Marco Clemencic
  - fixed a Win32 warning about Param.h and a bug when writing empty vectors.
