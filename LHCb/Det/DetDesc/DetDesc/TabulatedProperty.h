@@ -1,4 +1,4 @@
-// $Id: TabulatedProperty.h,v 1.3 2005-07-07 12:20:38 marcocle Exp $
+// $Id: TabulatedProperty.h,v 1.4 2005-08-15 14:01:06 marcocle Exp $
 #ifndef     DETDESC_TABULATEDPROPERTY_H
 #define     DETDESC_TABULATEDPROPERTY_H 1 
 /// STL
@@ -74,6 +74,8 @@ public:
   template< class Func , class Iter> 
   inline const StatusCode fill( Func func , Iter first , Iter last );
   ///
+  /// Prepare an XML string representing the object.
+  virtual std::string toXml(const std::string &name = std::string()) const;
 private:
   ///
   std::string m_type  ;
