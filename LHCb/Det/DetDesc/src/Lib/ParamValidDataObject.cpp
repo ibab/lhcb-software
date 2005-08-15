@@ -1,5 +1,5 @@
-//$Id: ParamValidDataObject.cpp,v 1.3 2005-05-13 16:01:10 marcocle Exp $
-#include <string> 
+//$Id: ParamValidDataObject.cpp,v 1.4 2005-08-15 13:20:32 marcocle Exp $
+#include <string>
 
 #include "DetDesc/ParamValidDataObject.h"
 
@@ -96,11 +96,20 @@ void ParamValidDataObject::setComment (const std::string &name, const char *comm
 
   CommentMap::iterator i = m_comments.find(name);
   if (i != m_comments.end()) {
-    i->second = comm;
+    // set the comment only if is not empty (or a null pointer)
+    if (comm != NULL && std::strlen(comm) != 0) {
+      i->second = comm;
+    } else {
+      // if the comment is an empty string or a null pointer, remove the comment
+      m_comments.erase(i);
+    }
   } else {
-    m_comments.insert(make_pair(name,std::string(comm)));
+    // do not add the comment if empty (ora a null pointer)
+    if (comm != NULL && std::strlen(comm) != 0)
+      m_comments.insert(make_pair(name,std::string(comm)));
   }
 }
+
 
 //----------------------------------------------------------------------------
 /// Get the value of a parameter, as a string.
