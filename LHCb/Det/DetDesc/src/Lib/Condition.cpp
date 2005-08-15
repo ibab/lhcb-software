@@ -1,4 +1,4 @@
-//$Id: Condition.cpp,v 1.8 2005-06-20 12:23:43 jpalac Exp $
+//$Id: Condition.cpp,v 1.9 2005-08-15 13:54:59 marcocle Exp $
 #include <string> 
 
 #include "DetDesc/Condition.h"
@@ -72,6 +72,9 @@ std::string Condition::toXml(const std::string &name) const{
     } else { // OTHER
       xml << "other";
     }
+    std::string comm = comment(*i);
+    if (!comm.empty()) xml << "\" comment=\"" << comm;
+
     xml << "\">" << paramToString(*i) << "</param";
   	if ( is_vect_param ) xml << "Vector";
     xml << ">";
