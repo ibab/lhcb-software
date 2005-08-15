@@ -1,4 +1,4 @@
-//$Id: ParamValidDataObject.h,v 1.3 2005-05-13 16:01:10 marcocle Exp $
+//$Id: ParamValidDataObject.h,v 1.4 2005-08-15 13:19:43 marcocle Exp $
 #ifndef DETDESC_PARAMVALIDDATAOBJECT_H
 #define DETDESC_PARAMVALIDDATAOBJECT_H 1
 
@@ -138,7 +138,7 @@ public:
   template <class T>
   void addParam(const std::string &name, const T &value, const std::string &comment=std::string()){
   	m_paramList.add(name,value);
-  	if (comment.empty()) {
+  	if (!comment.empty()) {
   	  m_comments[name] = comment;
   	}
   }
