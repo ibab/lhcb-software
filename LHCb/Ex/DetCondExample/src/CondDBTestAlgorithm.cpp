@@ -1,4 +1,4 @@
-// $Id: CondDBTestAlgorithm.cpp,v 1.9 2005-07-14 15:26:22 marcocle Exp $
+// $Id: CondDBTestAlgorithm.cpp,v 1.10 2005-08-16 09:28:52 marcocle Exp $
 // Include files 
 
 // from Gaudi
@@ -7,6 +7,7 @@
 #include "GaudiKernel/IDetDataSvc.h"
 
 #include "DetDesc/Condition.h"
+#include "DetDesc/TabulatedProperty.h"
 #include "DetDesc/DetectorElement.h"
 #include "DetDesc/IGeometryInfo.h"
 #include "DetDesc/LVolume.h"
@@ -69,6 +70,7 @@ StatusCode CondDBTestAlgorithm::initialize() {
     m_ums->registerCondition(this,"/dd/SlowControl/Hcal/scHcal",&CondDBTestAlgorithm::i_updateCacheHcal);
     m_ums->registerCondition(this,"/dd/SlowControl/Hcal/scHcal",&CondDBTestAlgorithm::i_updateCache);
     m_ums->registerCondition(this,"/dd/SlowControl/LHCb/scLHCb",NULL);
+    m_ums->registerCondition(this,"/dd/Properties/TestFunction");
     m_ums->update(this);
   }
   catch (GaudiException){
@@ -86,9 +88,11 @@ StatusCode CondDBTestAlgorithm::execute() {
   debug() << "==> Execute" << endmsg;
 
   info() << "-------------------------------------" << endmsg;
+  info() << "Event" << dynamic_cast<IDetDataSvc*>(detSvc())->eventTime() << endmsg;
   info() << "Temperature check: LHCb = " << m_LHCb_temp << endmsg;
   info() << "                   Hcal = " << m_Hcal_temp << endmsg;
   info() << "                   avg  = " << m_avg_temp << endmsg;
+  info() << *(get<TabulatedProperty>(detSvc(),"/dd/Properties/TestFunction")) << endmsg;
   info() << "-------------------------------------" << endmsg;
   
   ++m_evtCount;

@@ -1,6 +1,10 @@
-#$Id: release.notes,v 1.46 2005-07-14 15:32:07 marcocle Exp $
+#$Id: release.notes,v 1.47 2005-08-16 09:28:52 marcocle Exp $
 Package Ex/DetCondExample
 Package manager : Marco Clemencic
+
+! 2005-08-16 - Marco Clemencic
+ - Commented TNS_ADMIN in the requirements (it is not really needed)
+ - Added example for TabulatedProperty in the CondDB
 
 ! 2005-07-14 - Marco Clemencic
  - Moved other algorithms to GaudiAlgorithm

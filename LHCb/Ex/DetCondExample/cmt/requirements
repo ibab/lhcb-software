@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.32 2005-07-14 15:28:56 marcocle Exp $
+# $Id: requirements,v 1.33 2005-08-16 09:28:52 marcocle Exp $
 package DetCondExample
 version v7r4
 
@@ -43,7 +43,7 @@ path_append LD_LIBRARY_PATH "$(Oracle_base)/$(Oracle_version)/$(LCG_system)/lib"
 path_remove PATH "" WIN32 "\Oracle\"
 path_remove PATH "" WIN32 "\oracle\"
 path_append PATH "" WIN32 "$(Oracle_base)\$(Oracle_version)\$(LCG_system)\bin"
-set TNS_ADMIN "$SITEROOT/project/oracle/admin" WIN32 "$SITEROOT\project\oracle\admin"
+#set TNS_ADMIN "$SITEROOT/project/oracle/admin" WIN32 "$SITEROOT\project\oracle\admin"
 
 
 # XML detector description database location

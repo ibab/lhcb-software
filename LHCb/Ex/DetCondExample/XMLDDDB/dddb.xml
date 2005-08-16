@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE DDDB SYSTEM "DTD/structure.dtd">
-<!-- $Id: dddb.xml,v 1.2 2005-04-22 15:17:48 marcocle Exp $ -->
+<!-- $Id: dddb.xml,v 1.3 2005-08-16 09:28:52 marcocle Exp $ -->
 <DDDB> 
   <!--  ***********************************************************  -->
   <!--  * Structure of the main Detector Description Data Base    *  --> 
@@ -39,5 +39,6 @@
         <conditionref href="conddb:/SlowControl/DummyDE#DummyDE"/>
       </catalog>
     </catalog>
+    <catalogref href="properties.xml#Properties"/>
    </catalog> 
-</DDDB> 
+</DDDB>

@@ -1,7 +1,8 @@
-//$Id: XmlTestAlgorithm.cpp,v 1.4 2005-07-14 15:26:22 marcocle Exp $
+//$Id: XmlTestAlgorithm.cpp,v 1.5 2005-08-16 09:28:52 marcocle Exp $
 
 #include "XmlTestAlgorithm.h"
 #include "DetDesc/Condition.h"
+#include "DetDesc/TabulatedProperty.h"
 #include "DetDesc/DetectorElement.h"
 #include "GaudiKernel/AlgFactory.h"
 #include "GaudiKernel/SmartDataPtr.h"
@@ -191,6 +192,44 @@ StatusCode XmlTestAlgorithm::execute() {
       << fcEcal->paramNames().size() << " parameters" << std::endl
       << fcEcal->printParams() << endmsg;
   */
+
+  log << MSG::INFO << " ===== test XML string generation =====" << endmsg;
+  // Prepare a nice condition
+  Condition myCond;
+  myCond.addParam<int>("i",12345,"an int");
+  myCond.addParam<double>("d",1.2345678901234567890,"a double");
+  myCond.addParam<std::string>("s","test1","a string");
+  std::vector<int> vi;
+  vi.push_back(1);
+  vi.push_back(2);
+  vi.push_back(3);
+  std::vector<double> vd;
+  vd.push_back(1.1);
+  vd.push_back(2.2);
+  vd.push_back(3.3);
+  myCond.addParam<std::vector<int> >("vi",vi,"a vector of ints");
+  myCond.addParam<std::vector<double> >("vd",vd,"a vector of doubles");
+  
+  info() << "myCond has " << myCond.paramNames().size() << " parameters\n"
+         << myCond.printParams() << endmsg;
+  info() << "XML is:" << endmsg;
+  info() << myCond.toXml() << endmsg;
+
+  TabulatedProperty tabProp;
+  tabProp.setType("testing");
+  tabProp.setXAxis("x");
+  tabProp.setYAxis("y");
+
+  tabProp.table().push_back(TabulatedProperty::Entry(1,1));
+  tabProp.table().push_back(TabulatedProperty::Entry(1.2,2.1));
+  tabProp.table().push_back(TabulatedProperty::Entry(1.3,3.2));
+
+  info() << tabProp << endmsg;
+
+  info() << "XML is:" << endmsg;
+  info() << tabProp.toXml() << endmsg;
+
+
   // Event processing completed
   return StatusCode::SUCCESS;
 

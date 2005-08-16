@@ -1,4 +1,4 @@
-// $Id: PopulateDB.cpp,v 1.19 2005-07-07 12:32:29 marcocle Exp $
+// $Id: PopulateDB.cpp,v 1.20 2005-08-16 09:28:52 marcocle Exp $
 // Include files
 #include <iostream>
 #include <fstream>
@@ -12,6 +12,7 @@
 #include "GaudiKernel/TimePoint.h"
 
 #include "DetDesc/Condition.h"
+#include "DetDesc/TabulatedProperty.h"
 #include "DetDesc/ICondDBAccessSvc.h"
 
 // from COOL
@@ -152,11 +153,12 @@ StatusCode PopulateDB::i_condDBStoreSampleData() {
     typedef std::pair<std::string,std::string> str_pair;
     typedef std::vector<str_pair> vec_str_pair;
     vec_str_pair foldersets;
-    foldersets.reserve(9);
+    foldersets.reserve(10);
     foldersets.push_back(str_pair("/SlowControl",     "Main SlowControl folderSet"));
     foldersets.push_back(str_pair("/SlowControl/LHCb","SlowControl folderSet for the LHCb detector"));
     foldersets.push_back(str_pair("/SlowControl/Hcal","SlowControl folderSet for the Hcal detector"));
     foldersets.push_back(str_pair("/ReadOut",         "Main ReadOut folderSet"));
+    foldersets.push_back(str_pair("/Properties",      "FolderSet for tabulated properties"));
     foldersets.push_back(str_pair("/Geometry",        "Main Geometry folderSet"));
     foldersets.push_back(str_pair("/Geometry2",       "Test Geometry folderSet"));
     foldersets.push_back(str_pair("/Alignment",       "Main Alignment folderSet"));
@@ -173,7 +175,7 @@ StatusCode PopulateDB::i_condDBStoreSampleData() {
     }
 
     vec_str_pair xmlfolders;
-    xmlfolders.reserve(8);
+    xmlfolders.reserve(9);
     xmlfolders.push_back(str_pair("/SlowControl/LHCb/scLHCb",""));
     xmlfolders.push_back(str_pair("/SlowControl/Hcal/scHcal",""));
     xmlfolders.push_back(str_pair("/Geometry/LHCb",""));
@@ -182,6 +184,7 @@ StatusCode PopulateDB::i_condDBStoreSampleData() {
     xmlfolders.push_back(str_pair("/Alignment/Ecal/alEcal",""));
     xmlfolders.push_back(str_pair("/SlowControl/DummyDE",""));
     xmlfolders.push_back(str_pair("/ReadOut/DummyDE",""));
+    xmlfolders.push_back(str_pair("/Properties/TestFunction",""));
     
     debug() << "Create folders (multi-version)" << endmsg;
     for(vec_str_pair::iterator f = xmlfolders.begin(); f != xmlfolders.end(); ++f ){
@@ -387,6 +390,24 @@ StatusCode PopulateDB::i_condDBStoreSampleData() {
     m_dbAccSvc->tagFolder("/Geometry2","COLD");
     m_dbAccSvc->tagFolder("/Geometry2","HOT");
     m_dbAccSvc->tagFolder("/Geometry2","PRODUCTION");
+
+    // ---- Add a tabulated property
+    debug() << "Add a TabulatedProperty from 0 to 30" << endmsg;
+    TabulatedProperty tp1;
+    for(double x = 0. ; x < 2. ; x += 0.2){
+      double y = x*x;
+      tp1.table().push_back(TabulatedProperty::Entry(x,y));
+    }
+    m_dbAccSvc->storeXMLString("/Properties/TestFunction",tp1.toXml("TestFunction"),TimePoint(0), TimePoint(30));
+
+    debug() << "Add a second TabulatedProperty from 30 to +inf" << endmsg;
+    tp1.table().clear();
+    for(double x = 0. ; x < 2. ; x += 0.2){
+      double y = x*x*0.5;
+      tp1.table().push_back(TabulatedProperty::Entry(x,y));
+    }
+    m_dbAccSvc->storeXMLString("/Properties/TestFunction",tp1.toXml("TestFunction"),TimePoint(30), time_absolutefuture);
+    
 
     debug() << "Tagging everything (FORFUN)" << endmsg;
     m_dbAccSvc->tagFolder("/","FORFUN");
