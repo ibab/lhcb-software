@@ -7,12 +7,11 @@
  */
 // ============================================================================
 
-GiGaGeo.Spd.StartVolumes = 
-  {
-    "/dd/Geometry/Spd/Modules/InnCell"  ,
-    "/dd/Geometry/Spd/Modules/MidCell"  ,
-    "/dd/Geometry/Spd/Modules/OutCell"
-  };
+GiGaGeo.Spd.StartVolumes = {
+  "/dd/Geometry/Spd/Modules/InnCell"  ,
+  "/dd/Geometry/Spd/Modules/MidCell"  ,
+  "/dd/Geometry/Spd/Modules/OutCell"
+};
 
 GiGaGeo.Spd.EndVolume      =  "/dd/Geometry/Spd/Installation/Spd" ;
 GiGaGeo.Spd.CollectionName =  "SpdHits"                            ;
@@ -24,12 +23,18 @@ GiGaGeo.Spd.DetectorPath   =  "/LHCb/Calo"             ;
 
 GiGaGeo.Spd.IntegrationDelays = { 18.5 * ns , 17.5 * ns , 16.5 * ns } ;
 
-GiGaGeo.Spd.Histograms = 
-  { 	
-    "GaussCalo/SPDTIME/1", 
-    "GaussCalo/SPDTIME/2",
-    "GaussCalo/SPDTIME/3" 
-  };
+// Input Root histograms
+GiGaGeo.Spd.Histograms = { 	
+  "GaussCalo/SPDTIME/h1", 
+  "GaussCalo/SPDTIME/h2",
+  "GaussCalo/SPDTIME/h3" 
+};
+// Input Hbook histograms
+// GiGaGeo.Spd.Histograms = { 	
+//   "GaussCalo/SPDTIME/1", 
+//   "GaussCalo/SPDTIME/2",
+//   "GaussCalo/SPDTIME/3" 
+// };
 
 // ============================================================================
 // The END 

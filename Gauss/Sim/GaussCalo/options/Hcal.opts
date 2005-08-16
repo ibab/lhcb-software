@@ -7,13 +7,11 @@
  */
 // ============================================================================
 
-GiGaGeo.Hcal.StartVolumes = 
-  {
-    "/dd/Geometry/Hcal/Cells/lvHcalInnCellUpScTile"  ,
-    "/dd/Geometry/Hcal/Cells/lvHcalInnCellLowScTile"      , 
-    "/dd/Geometry/Hcal/Cells/lvHcalOutCellScTile"
-  };
-
+GiGaGeo.Hcal.StartVolumes = {
+  "/dd/Geometry/Hcal/Cells/lvHcalInnCellUpScTile"  ,
+  "/dd/Geometry/Hcal/Cells/lvHcalInnCellLowScTile"      , 
+  "/dd/Geometry/Hcal/Cells/lvHcalOutCellScTile"
+};
 
 GiGaGeo.Hcal.EndVolume      =  "/dd/Geometry/Hcal/Installation/lvHcal" ;
 GiGaGeo.Hcal.CollectionName =  "HcalHits"                            ;
@@ -23,11 +21,16 @@ GiGaGeo.Hcal.zMax           =  15000. * mm ;
 
 GiGaGeo.Hcal.DetectorPath   =  "/LHCb/Calo"             ;
 
-GiGaGeo.Hcal.Histograms = 
-  { 
-    "GaussCalo/HCALTIME/1" ,
-    "GaussCalo/HCALTIME/2" 
-  };
+// Input Root histograms
+GiGaGeo.Hcal.Histograms = { 
+  "GaussCalo/HCALTIME/h1" ,
+  "GaussCalo/HCALTIME/h2" 
+};
+// Input Hbook histograms
+// GiGaGeo.Hcal.Histograms = { 
+//   "GaussCalo/HCALTIME/1" ,
+//   "GaussCalo/HCALTIME/2" 
+// };
 
 // ============================================================================
 // The END 

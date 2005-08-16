@@ -7,12 +7,11 @@
  */
 // ============================================================================
 
-GiGaGeo.Ecal.StartVolumes = 
-  {
-    "/dd/Geometry/Ecal/Modules/InnCell",
-    "/dd/Geometry/Ecal/Modules/MidCell",
-    "/dd/Geometry/Ecal/Modules/OutCell"
-  };
+GiGaGeo.Ecal.StartVolumes = {
+  "/dd/Geometry/Ecal/Modules/InnCell",
+  "/dd/Geometry/Ecal/Modules/MidCell",
+  "/dd/Geometry/Ecal/Modules/OutCell"
+};
 
 GiGaGeo.Ecal.EndVolume      =  "/dd/Geometry/Ecal/Installation/Ecal" ;
 GiGaGeo.Ecal.CollectionName =  "EcalHits"                            ;
@@ -22,11 +21,16 @@ GiGaGeo.Ecal.zMax           =  15000. * mm ;
 
 GiGaGeo.Ecal.DetectorPath   =  "/LHCb/Calo"             ;
 
-GiGaGeo.Ecal.Histograms = 
-  { 
-    "GaussCalo/ECALTIME/1" ,
-    "GaussCalo/ECALTIME/2" 
-  };
+// Input Root histograms
+GiGaGeo.Ecal.Histograms = { 
+  "GaussCalo/ECALTIME/h1" ,
+  "GaussCalo/ECALTIME/h2" 
+};
+// Input Hbook histograms
+// GiGaGeo.Ecal.Histograms = { 
+//   "GaussCalo/ECALTIME/1" ,
+//   "GaussCalo/ECALTIME/2" 
+// };
 
 // ============================================================================
 // The END 

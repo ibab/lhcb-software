@@ -7,6 +7,11 @@
 !                  : G4 actions, etc for LHCb calorimeters
 !-----------------------------------------------------------------------------
 
+! 2005-08-16 - Gloria CORTI
+ - options/Calo.opts, Ecal.opts, Hcal.opts, Prs.opts, Spd.opts
+   modify to use input histograms from root file (gausscalo.root) instead
+   of hbook
+
 !====================== GaussCalo v7r2 ===================================
 ! 2004-12-14 - Gloria CORTI
  - src/GaussSensPlaneHit.cpp

@@ -7,12 +7,11 @@
  */
 // ============================================================================
 
-GiGaGeo.Prs.StartVolumes = 
-  {
-    "/dd/Geometry/Prs/Modules/InnCell"  ,
-    "/dd/Geometry/Prs/Modules/MidCell"  ,
-    "/dd/Geometry/Prs/Modules/OutCell"
-  };
+GiGaGeo.Prs.StartVolumes = {
+  "/dd/Geometry/Prs/Modules/InnCell"  ,
+  "/dd/Geometry/Prs/Modules/MidCell"  ,
+  "/dd/Geometry/Prs/Modules/OutCell"
+};
 
 GiGaGeo.Prs.EndVolume      =  "/dd/Geometry/Prs/Installation/Prs" ;
 GiGaGeo.Prs.CollectionName =  "PrsHits"                            ;
@@ -24,12 +23,18 @@ GiGaGeo.Prs.DetectorPath   =  "/LHCb/Calo"             ;
 
 GiGaGeo.Prs.IntegrationDelays = { 18.5 * ns , 17.5 * ns , 16.5 * ns } ;
 
-GiGaGeo.Prs.Histograms = 
-  { 
-    "GaussCalo/PRSTIME/1" , 
-    "GaussCalo/PRSTIME/2" , 
-    "GaussCalo/PRSTIME/3" 
-  };
+// Input Root histograms
+GiGaGeo.Prs.Histograms = { 
+  "GaussCalo/PRSTIME/h1" , 
+  "GaussCalo/PRSTIME/h2" , 
+  "GaussCalo/PRSTIME/h3" 
+};
+// Input Hbook histograms
+// GiGaGeo.Prs.Histograms = { 
+//   "GaussCalo/PRSTIME/1" , 
+//   "GaussCalo/PRSTIME/2" , 
+//   "GaussCalo/PRSTIME/3" 
+// };
 
 // ============================================================================
 // The END 
