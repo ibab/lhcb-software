@@ -1,10 +1,11 @@
-// $Id: TabulatedProperty.cpp,v 1.8 2005-08-15 14:01:06 marcocle Exp $
+// $Id: TabulatedProperty.cpp,v 1.9 2005-08-16 09:04:59 marcocle Exp $
 
 // DetDesc 
 #include "DetDesc/TabulatedProperty.h"
 
 // GaudiKernel
 #include "GaudiKernel/IRegistry.h"
+#include "GaudiKernel/GaudiException.h"
 
 // STL
 #include <string>
@@ -82,16 +83,17 @@ MsgStream&    TabulatedProperty::fillStream ( MsgStream&    s ) const
     }
   return s ;
 };
+
 ////////////////////////////////////////////////////////////////////////////////
+
 std::string TabulatedProperty::toXml(const std::string &name) const {
   std::ostringstream xml;
   // XML header
-  xml << "<?xml version=\"1.0\" encoding=\"UTF-8\"?><!DOCTYPE DDDB SYSTEM \"tabproperty.dtd\">";
+  xml << "<?xml version=\"1.0\" encoding=\"UTF-8\"?><!DOCTYPE DDDB SYSTEM \"geometry.dtd\">";
   // DDDB open
   xml << "<DDDB>";
   // condition open
-  xml << "<tabproperty classID=\"" << this->clID()
-      << "\" name=\"";
+  xml << "<tabproperty name=\"";
   if (name.empty()) {
     if (registry()){
       xml << registry()->name();
@@ -121,6 +123,25 @@ std::string TabulatedProperty::toXml(const std::string &name) const {
   return xml.str();
 }
 
+//=========================================================================
+//  Perform a deep copy from another TabulatedProperty
+//=========================================================================
+void TabulatedProperty::update ( ValidDataObject& obj ) {
+  // first check the class
+  TabulatedProperty *tp = dynamic_cast<TabulatedProperty *>(&obj);
+  if (0 == tp){
+    throw GaudiException("Trying to do a deep copy between different classes","TabulatedProperty::update",StatusCode::FAILURE);
+  }
+  // call the parent update method
+  ValidDataObject::update(obj);
+
+  // copy the internal data
+  m_type  = tp->m_type;
+  m_xAxis = tp->m_xAxis;
+  m_yAxis = tp->m_yAxis;
+  m_table = tp->m_table;
+  
+}
 ////////////////////////////////////////////////////////////////////////////////
 
 

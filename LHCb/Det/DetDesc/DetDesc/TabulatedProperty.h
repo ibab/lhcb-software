@@ -1,4 +1,4 @@
-// $Id: TabulatedProperty.h,v 1.4 2005-08-15 14:01:06 marcocle Exp $
+// $Id: TabulatedProperty.h,v 1.5 2005-08-16 09:04:59 marcocle Exp $
 #ifndef     DETDESC_TABULATEDPROPERTY_H
 #define     DETDESC_TABULATEDPROPERTY_H 1 
 /// STL
@@ -21,6 +21,9 @@ class StreamBuffer ;
     
     @author  Vanya Belyaev
     @date    26/02/2001
+    @author  Marco Clemencic
+    @date    16/08/2005
+    
 */
 
 class TabulatedProperty: public ValidDataObject
@@ -76,6 +79,11 @@ public:
   ///
   /// Prepare an XML string representing the object.
   virtual std::string toXml(const std::string &name = std::string()) const;
+
+  /// Perform a deep copy (needed for usage in CondDB). A GaudiException is
+  /// thrown if the object is not a TabulatedProperty.
+  virtual void update ( ValidDataObject& obj );
+  
 private:
   ///
   std::string m_type  ;
