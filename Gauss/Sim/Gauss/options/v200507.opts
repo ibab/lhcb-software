@@ -3,7 +3,7 @@
 /** @file 
  * 
  *  Job options for Gauss to produce events with geometry version
- *  lhcb-200506.opts (Rich1 EDR, Rotated Rich2, TT KLM layout, new Velo,
+ *  lhcb-200507.opts (Rich1 EDR, Rotated Rich2, TT KLM layout, new Velo,
  *  Tilted Calorimeters, Tilted Muons)
  *
  */
