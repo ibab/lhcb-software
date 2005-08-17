@@ -4,6 +4,10 @@
 ! Purpose     : interface package to GENSER
 !-----------------------------------------------------------------------------
 
+! 2005-08-17 - Gloria CORTI
+ - requirements - use GENSER_1_1_0 and adapt to static libraries beeing
+   in lib/archive
+
 !========================= GENSER v3r100p0 ================================
 ! 2005-07-20 - Patrick Robbe
  - requirements - use cernlib with -no_auto_imports and replace packlib
