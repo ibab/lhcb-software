@@ -4,6 +4,16 @@
 ! Purpose     : LHCb Simulation Application with Geant4
 !-----------------------------------------------------------------------------
 
+! 2005-08-17 - Gloria CORTI
+ - Use latest version of ParamFiles (v3r13) and GaussCalo (v7r3) to use input
+   histograms in Root for calorimeter
+ - Use latest version of DecFiles (v8r1)
+ - Use new version of GaussMonitor (v2r2)
+ - Set as default latest geometry
+   . Common.opts
+ - Set as default Root as presistency for histograms for all jobs.
+   . Common.opts, Monitor.opts
+
 ! 2005-08-04 - Gloria CORTI
  - Set additional items in GaussTape as optional in options to be added to
    run generator in stand alone mode, as to be able to write all type of
