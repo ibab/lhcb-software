@@ -1,4 +1,4 @@
-// $Id: MCDecayCounter.cpp,v 1.1 2004-04-29 17:19:13 gcorti Exp $
+// $Id: MCDecayCounter.cpp,v 1.2 2005-08-17 16:47:29 gcorti Exp $
 // Include files 
 
 // from Gaudi
@@ -29,7 +29,7 @@ const        IAlgFactory& MCDecayCounterFactory = s_factory ;
 //=============================================================================
 MCDecayCounter::MCDecayCounter( const std::string& name,
                                 ISvcLocator* pSvcLocator)
-  : Algorithm ( name , pSvcLocator )
+  : GaudiAlgorithm ( name , pSvcLocator )
   , m_nEvents(0)
   , m_nMCFound(0)
   , m_mcFinder(NULL)
@@ -46,17 +46,14 @@ MCDecayCounter::~MCDecayCounter() {};
 //=============================================================================
 StatusCode MCDecayCounter::initialize() {
 
-  MsgStream msg(msgSvc(), name());
+  StatusCode sc = GaudiAlgorithm::initialize(); // must be executed first
+  if ( sc.isFailure() ) return sc;  // error printed already by GaudiAlgorithm
+
+  debug() << "==> Initialize" << endmsg;
 
   // Retrieve MCDecayfinder tool to check if signal is what looked for
-  StatusCode sc = toolSvc()->retrieveTool( "MCDecayFinder", m_mcFinder, this );
-  if( sc.isFailure() ) {
-    msg << MSG::FATAL << "Unable to retrieve " << name() << "."
-        << "MCDecayFinder"
-        << endreq;
-    return sc;
-  }
-  
+  m_mcFinder = tool<IMCDecayFinder>( "MCDecayFinder", this );
+
   return StatusCode::SUCCESS;
 };
 
@@ -65,7 +62,7 @@ StatusCode MCDecayCounter::initialize() {
 //=============================================================================
 StatusCode MCDecayCounter::execute() {
 
-  MsgStream  msg( msgSvc(), name() );
+  debug() << "==> Execute" << endmsg;
 
   // Counter of events processed
   m_nEvents++;
@@ -73,57 +70,39 @@ StatusCode MCDecayCounter::execute() {
   // Retrieve signal from summaryInfo
   SmartDataPtr<GenMCLinks> sigLinks(evtSvc(), GenMCLinkLocation::Default);
   if( 0 == sigLinks ) {
-    msg << MSG::DEBUG << "GenMCLinks not found at"
-        << GenMCLinkLocation::Default
-        << endreq;
-    return StatusCode::FAILURE;
+    Warning("GenMCLinks not found at"+GenMCLinkLocation::Default);    
   }
   else {
     if( sigLinks->size() != 1 ) {
-      msg << MSG::DEBUG << "More than one signal found"
-          << endreq;
+      Warning("More than one signal found");
     }
     // Full print out with connection between MCParticle and HepMC
     if( m_debug ) {
       for( GenMCLinks::iterator aLink = sigLinks->begin();
            sigLinks->end() != aLink; ++aLink ) {
 
-        msg << MSG::DEBUG << "Signal info from " << GenMCLinkLocation::Default
-            << endreq;
+        debug() << "Signal info from " << GenMCLinkLocation::Default
+                  << endmsg;
         MCParticle* mcSignal = (*aLink)->signal();
-        msg << MSG::DEBUG << "== Signal Process type = "
-            << (*aLink)->hepMCEvent()->pGenEvt()->signal_process_id()
-            << endreq;
+        debug() << "== Signal Process type = "
+                  << (*aLink)->hepMCEvent()->pGenEvt()->signal_process_id()
+                  << endmsg;
 
         HepMC::GenEvent* genEvt = (*aLink)->hepMCEvent()->pGenEvt();
         HepMC::GenParticle* genP = 
           genEvt->barcode_to_particle((*aLink)->genBarCode() );
-        msg << MSG::DEBUG << "== HepMC id = " 
-            << genP->pdg_id() 
-            << " , momentum = (" << genP->momentum().px()
-            << " ," << genP->momentum().py()
-            << " ," << genP->momentum().pz()
-            << " ," << genP->momentum().e()
-            << " )" << endreq;
-
-        msg << MSG::DEBUG << "== MCParticle "
-            << " id = "
-            << mcSignal->particleID().pid()
-            << " , momentum = (" << mcSignal->momentum().px() 
-            << " ," << mcSignal->momentum().py() 
-            << " ," << mcSignal->momentum().pz() 
-            << " ," << mcSignal->momentum().e() 
-            << " )" << endreq;
+        verbose() << "== HepMC id = " << genP->pdg_id() 
+                  << " , momentum = " << genP->momentum()
+                  << endmsg;
+        verbose() << "== MCParticle id = " << mcSignal->particleID().pid()
+                  << " , momentum = " << mcSignal->momentum() 
+                  << endmsg;
       }      
     }
   }  
   
-  SmartDataPtr<MCParticles> kmcparts(eventSvc(), MCParticleLocation::Default );
-  if( !kmcparts ) {
-    msg << MSG::FATAL << "Enable to find MC particles at '"
-        << MCParticleLocation::Default << "'" << endreq;
-    return StatusCode::FAILURE;
-  }
+  MCParticles* kmcparts =
+    get<MCParticles>( eventSvc(), MCParticleLocation::Default );
   
   // Find decay as described in MCDecayFinder
   const MCParticle *mcpart = NULL;
@@ -131,29 +110,25 @@ StatusCode MCDecayCounter::execute() {
   while( m_mcFinder->findDecay( mcparts, mcpart ) ) {
     m_nMCFound++;
     bool sigIsTheSame = false;
-    for( GenMCLinks::iterator aLink = sigLinks->begin();
-         sigLinks->end() != aLink; ++aLink ) {
-      if( (*aLink)->signal() == mcpart ) {
-        sigIsTheSame = true;
-        break;
-      }
-      if( !sigIsTheSame ) {
-        msg << MSG::WARNING << "Pointer to signal is not the same as in "
-            << GenMCLinkLocation::Default
-            << endreq;
-      }
+    if( 0 != sigLinks ) {
+      for( GenMCLinks::iterator aLink = sigLinks->begin();
+           sigLinks->end() != aLink; ++aLink ) {
+        if( (*aLink)->signal() == mcpart ) {
+          sigIsTheSame = true;
+          break;
+        }
+        if( !sigIsTheSame ) {
+          Warning("Pointer to signal is not the same as in "+
+                  GenMCLinkLocation::Default);
+        }
+      } 
     }
     if( m_debug ) {
-      msg << MSG::DEBUG << "Signal info from " << MCParticleLocation::Default
-          << endreq;
-      msg << MSG::DEBUG << "== MCParticle "
-        << " id = "
-        << mcpart->particleID().pid()
-        << " , momentum = (" << mcpart->momentum().px() 
-        << " ," << mcpart->momentum().py() 
-        << " ," << mcpart->momentum().pz() 
-        << " ," << mcpart->momentum().e() 
-        << " )" << endreq;
+      verbose() << "Signal info from " << MCParticleLocation::Default
+                << endmsg;
+      verbose() << "== MCParticle id = " << mcpart->particleID().pid()
+                << " , momentum = " << mcpart->momentum() 
+                << endmsg;
     }
   }
   
@@ -165,19 +140,27 @@ StatusCode MCDecayCounter::execute() {
 //=============================================================================
 StatusCode MCDecayCounter::finalize() {
 
-  MsgStream msg(msgSvc(), name());
+  debug() << "==> Finalize" << endmsg;
+
   std::string decayAnalyzed = "Unknown";
   if( 0 != m_mcFinder ) {
     decayAnalyzed =  m_mcFinder->decay();
-    toolSvc()->releaseTool(m_mcFinder);
   }  
-  double multiplicity = m_nMCFound/m_nEvents;
-  msg << MSG::INFO << "Number of events found for decay "
-      << decayAnalyzed << " = " << m_nMCFound 
-      << " ( = " << multiplicity << "/event )"
-      << endreq;
+
+  double multiplicity = double(m_nMCFound)/double(m_nEvents);
+
+  info() << endmsg
+         << " Decay analyzed   = " << decayAnalyzed
+         << endmsg
+         << "   events processed = " << format( "%8d", m_nEvents )
+         << endmsg
+         << "   events found     = " << format( "%8d", m_nMCFound )
+         << endmsg
+         << "   fraction/event   = " << format( "%8.2f", multiplicity )
+         << endmsg;
+
+  return GaudiAlgorithm::finalize();  // must be called after all other actions
   
-  return StatusCode::SUCCESS;
 }
 
 //=============================================================================

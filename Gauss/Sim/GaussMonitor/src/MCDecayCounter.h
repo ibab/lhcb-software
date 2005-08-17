@@ -1,4 +1,4 @@
-// $Id: MCDecayCounter.h,v 1.1 2004-04-29 17:19:13 gcorti Exp $
+// $Id: MCDecayCounter.h,v 1.2 2005-08-17 16:47:29 gcorti Exp $
 #ifndef MCDECAYCOUNTER_H 
 #define MCDECAYCOUNTER_H 1
 
@@ -7,7 +7,7 @@
 #include <string>
 
 // from Gaudi
-#include "GaudiKernel/Algorithm.h"
+#include "GaudiAlg/GaudiAlgorithm.h"
 
 // from LHCb
 #include "MCTools/IMCDecayFinder.h"
@@ -20,7 +20,7 @@
  *  @author Gloria CORTI
  *  @date   2004-04-26
  */
-class MCDecayCounter : public Algorithm {
+class MCDecayCounter : public GaudiAlgorithm {
 public: 
   /// Standard constructor
   MCDecayCounter( const std::string& name, ISvcLocator* pSvcLocator );
