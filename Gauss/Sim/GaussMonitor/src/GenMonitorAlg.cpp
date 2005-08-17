@@ -1,4 +1,4 @@
-// $Id: GenMonitorAlg.cpp,v 1.5 2005-07-01 11:51:19 gcorti Exp $
+// $Id: GenMonitorAlg.cpp,v 1.6 2005-08-17 16:47:09 gcorti Exp $
 // Include files 
 
 // from Gaudi
@@ -78,6 +78,10 @@ StatusCode GenMonitorAlg::initialize() {
            << m_dataPath << endmsg; 
   }
 
+  if( produceHistos() ) {
+    bookHistos();
+  }
+  
   return StatusCode::SUCCESS;
 };
 
@@ -86,7 +90,7 @@ StatusCode GenMonitorAlg::initialize() {
 //=============================================================================
 StatusCode GenMonitorAlg::execute() {
 
-  debug() << "==> Execute" << endreq;
+  debug() << "==> Execute" << endmsg;
 
   // Initialize counters
   int nParticles(0), nParticlesStable(0);
@@ -97,7 +101,7 @@ StatusCode GenMonitorAlg::execute() {
   SmartDataPtr< HepMCEvents > hepMCptr( eventSvc() , m_dataPath );
 
   if( 0 == hepMCptr ) {
-    info() << "No HepMCEvents at location " << m_dataPath << endreq;
+    info() << "No HepMCEvents at location " << m_dataPath << endmsg;
   } else {
     HepMCEvents::iterator it ;
     for( it = hepMCptr->begin() ; it != hepMCptr->end(); ++it ) {
@@ -110,10 +114,11 @@ StatusCode GenMonitorAlg::execute() {
       }
       debug() << "Monitor for " << (*it)->generatorName()
               << endmsg;
-
-      // Plot process type
-      plot( (*it)->pGenEvt()->signal_process_id(), 5, "Process type", 
-            -0.5, 110.5, 111);
+      
+      // Plot process type 
+      if( produceHistos() ) {
+        m_hProcess->fill( (*it)->pGenEvt()->signal_process_id() );
+      }
 
       bool primFound = false;
       nPileUp++;
@@ -127,20 +132,14 @@ StatusCode GenMonitorAlg::execute() {
           if( !primFound ) {
             if( (hepMCpart->status() == 1) || (hepMCpart->status() == 888 ) ) {
               primFound = true;
-              plot( hepMCpart->production_vertex()->position().x(), 11,
-                    "PrimaryVertex x (mm)", -0.5, 0.5, 100 );
-              plot( hepMCpart->production_vertex()->position().y(), 12,
-                    "PrimaryVertex y (mm)", -0.5, 0.5, 100 );
-              plot( hepMCpart->production_vertex()->position().z(), 13,
-                    "PrimaryVertex z (mm)", -200., 200., 100 );
-              plot( hepMCpart->production_vertex()->position().z(), 14,
-                    "PrimaryVertex z, all Velo (mm)", -1000., 1000., 100 );
+              m_hPrimX->fill( hepMCpart->production_vertex()->position().x() );
+              m_hPrimY->fill( hepMCpart->production_vertex()->position().y() );
+              m_hPrimZ->fill( hepMCpart->production_vertex()->position().z() );
+              m_hPrimZZ->fill( hepMCpart->production_vertex()->position().z() );
             }
-          }
-          plot( hepMCpart->momentum().vect().mag(), 21, 
-                "Momentum of all particles (GeV)", 0., 100., 100 );
-          plot( hepMCpart->pdg_id(), 22,
-                "PDGid of all particles", -4999., 5000., 10000 );
+          } 
+          m_hPartP->fill( hepMCpart->momentum().vect().mag() );
+          m_hPartPDG->fill( hepMCpart->pdg_id() );
         }
         // Note that the following is really multiplicity of particle defined
         // as stable by Pythia just after hadronization: all particles known by
@@ -149,12 +148,9 @@ StatusCode GenMonitorAlg::execute() {
         if( ( hepMCpart->status() != 2 ) && ( hepMCpart->status() != 3 ) ) {
           nParticlesStable++;
           if( produceHistos() ) {
-            plot( hepMCpart->momentum().vect().mag(), 31,
-                  "Momentum of protostable particles (GeV)", 0., 100., 100 );
-            plot( hepMCpart->pdg_id(), 32,
-                  "PDGid of protostable particles", -4999., 5000., 10000 );
-            plot( lifetime( hepMCpart ), 33,
-                  "Lifetime protostable particles", -1.5e-10, 1.5e-10, 100 );
+            m_hProtoP->fill( hepMCpart->momentum().vect().mag() );
+            m_hProtoPDG->fill( hepMCpart->pdg_id() );
+            m_hProtoLTime->fill( lifetime( hepMCpart ) );
           }
           // Charged stable particles meaning really stable after EvtGen
           ParticleID pID( hepMCpart->pdg_id() );
@@ -170,11 +166,7 @@ StatusCode GenMonitorAlg::execute() {
                 ++nParChStabEtaAcc;
               }
               if( produceHistos() ) {
-                plot( pseudoRap, 44,
-                      "Pseudorapidity stable charged particles",
-                      -15., 15., 150 );
-                plot( hepMCpart->momentum().perp(), 45, 
-                      "Pt stable charged particles", 0., 20., 100 );
+                m_hStableEta->fill( pseudoRap, hepMCpart->momentum().perp() );
               }
             }
           }    
@@ -183,15 +175,11 @@ StatusCode GenMonitorAlg::execute() {
     }
   }
   if( produceHistos() ) {
-    plot( nParticles, 1, "Multiplicity all particles", 0., 2999., 300 );
-    plot( nParticlesStable, 2,
-          "Multiplicity protostable particles", 0., 2999., 300 );
-    plot( nParticlesStableCharged, 3,
-          "Multiplicity stable charged particles", -0.5, 299.5, 300 );
-    plot( nParChStabEtaAcc, 4,
-          "Multiplicity stable charged particles in LHCb eta",
-          -0.5, 299.5, 300 );
-    plot( nPileUp, 10, "Num. of primary interaction per bunch", -0.5, 10.5, 11 );
+    m_hNPart->fill( nParticles );
+    m_hNStable->fill( nParticlesStable );
+    m_hNSCharg->fill( nParticlesStableCharged );
+    m_hNSChEta->fill( nParChStabEtaAcc );
+    m_hNPileUp->fill( nPileUp );
   }
   m_counter += nParticles ;
   m_counterstable += nParticlesStable ;
@@ -200,8 +188,8 @@ StatusCode GenMonitorAlg::execute() {
   m_nEvents++ ;
   
   info() << "Event number " << m_nEvents << " contains "
-         << nParticles << " particles" << endreq ;  
-
+         << nParticles << " particles" << endmsg;
+  
   return StatusCode::SUCCESS;
 };
 
@@ -210,7 +198,7 @@ StatusCode GenMonitorAlg::execute() {
 //=============================================================================
 StatusCode GenMonitorAlg::finalize() {
 
-  debug() << "==> Finalize" << endreq;
+  debug() << "==> Finalize" << endmsg;
   
   info() << std::endl 
          << "======================== Generators Statistics ====================" 
@@ -253,7 +241,7 @@ StatusCode GenMonitorAlg::finalize() {
          << "=                                                                 ="
          << std::endl 
          << "==================================================================="
-         << endreq;
+         << endmsg;
 
   return GaudiHistoAlg::finalize();
   
@@ -272,5 +260,36 @@ double GenMonitorAlg::lifetime( HepMC::GenParticle* thePart )
   } else {
     return -1.e-10 ;
   }
+}
+
+//============================================================================
+// Booking of histograms
+//============================================================================
+void GenMonitorAlg::bookHistos() 
+{
+
+  debug() << "==> Book histograms" << endmsg;
+ 
+  m_hNPart   = book(  1, "Multiplicity all particles", 0., 2999., 300 );
+  m_hNStable = book(  2, "Multiplicity protostable particles", 0., 2999., 300 );
+  m_hNSCharg = book(  3, "Multiplicity stable charged particles", -0.5, 299.5, 300 );
+  m_hNSChEta = book(  4, "Multiplicity stable charged particles in LHCb eta",
+                      -0.5, 299.5, 300 );
+  m_hProcess = book(  5, "Process type", -0.5, 110.5, 111);
+  m_hNPileUp = book( 10, "Num. of primary interaction per bunch", -0.5, 10.5, 11 );
+  m_hPrimX   = book( 11, "PrimaryVertex x (mm)", -0.5, 0.5, 100 );
+  m_hPrimY   = book( 12, "PrimaryVertex y (mm)", -0.5, 0.5, 100 );
+  m_hPrimZ   = book( 13, "PrimaryVertex z (mm)", -200., 200., 100 ); 
+  m_hPrimZZ  = book( 14, "PrimaryVertex z, all Velo (mm)", -1000., 1000., 100 );
+  m_hPartP   = book( 21, "Momentum of all particles (GeV)", 0., 100., 100 );
+  m_hPartPDG = book( 22, "PDGid of all particles", -4999., 5000., 10000 );
+  m_hProtoP  = book( 31, "Momentum of protostable particles (GeV)", 0., 100., 100);
+  m_hProtoPDG = book( 32, "PDGid of protostable particles", -4999., 5000., 10000 );
+  m_hProtoLTime = book( 33, "Lifetime protostable particles", -1.5e-10, 1.5e-10, 100 );
+  m_hStableEta = book( 44, "Pseudorapidity stable charged particles", -15., 15., 150 );
+  m_hStablePt  = book( 45, "Pt stable charged particles", 0., 20., 100 );
+
+  return;
+
 }
 
