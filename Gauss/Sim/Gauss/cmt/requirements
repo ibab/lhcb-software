@@ -1,5 +1,5 @@
 package Gauss
-version v20r1
+version v20r2
 
 #=========================================================================
 #-- Structure
@@ -11,8 +11,8 @@ branches src doc options cmt job
 #-- Databases
 use XmlDDDB             v26r1   Det   -no_auto_imports
 use FieldMap            v4r5          -no_auto_imports
-use DecFiles            v8r0    Gen   -no_auto_imports
-use ParamFiles          v3r12         -no_auto_imports
+use DecFiles            v8r1    Gen   -no_auto_imports
+use ParamFiles          v3r13         -no_auto_imports
 use Geant4Files		v52r0	      -no_auto_imports
 
 #========================================================================
@@ -29,7 +29,7 @@ use GiGaCnv             v15r11  Sim
 use GaussTools          v10r10 	Sim
 use GaussTracker        v4r1    Sim
 use GaussRICH           v5r0    Sim
-use GaussCalo           v7r2    Sim
+use GaussCalo           v7r3    Sim
 use GaussPhysics        v3r1    Sim
 use GaussAlgs		v1r6    Sim
 
@@ -42,7 +42,7 @@ macro GDMLG4Writer_use "" Linux&GDML "GDMLG4Writer v2r0 Sim"
 use $(GDMLG4Writer_use)
 
 #-- Monitoring
-use GaussMonitor        v2r1    Sim
+use GaussMonitor        v2r2    Sim
 use CaloMoniSim         v1r0    Calo
 use VeloAlgorithms      v3r3    Velo
 use MuonMoniSim         v1r1    Muon
