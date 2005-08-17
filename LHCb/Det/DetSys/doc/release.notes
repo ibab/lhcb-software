@@ -4,6 +4,12 @@
 ! Purpose     : collect Det packages
 !-----------------------------------------------------------------------------
 
+! 2005-08-17 - Juan Palacios
+ - Add GaudiKernel/IDetDataSvc.h to dict/DetDict.h includes and 
+   GaudiPython::Interface<IDetDataSvc> to __Instantiations struct in 
+   dict/DetDict.h for use in CondDB browser
+ - Add class IDetDataSvc to dict/DetDict.xml
+
 !========================= DetSys v7r4 2005-07-29 =========================
 ! 2005-07-29 - Marco Cattaneo
  - Use STDet v1r5

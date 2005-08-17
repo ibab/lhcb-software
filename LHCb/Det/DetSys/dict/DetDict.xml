@@ -2,9 +2,13 @@
   
   <class pattern="DetDescPython::Interface<*>" />
   <class pattern="GaudiPython::Interface<*>"   />
+
+
   
   <class name="IInterface"       />
   <class name="IService"         />
+
+  <class name="IDetDataSvc"       />
 
   <class name="ITime"            />
   <class name="TimePoint"        />
