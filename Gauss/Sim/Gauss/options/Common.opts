@@ -1,4 +1,4 @@
-// $Id: Common.opts,v 1.12 2005-07-27 17:35:27 gcorti Exp $ 
+// $Id: Common.opts,v 1.13 2005-08-17 17:14:45 gcorti Exp $ 
 #pragma print off
 
 /** @file 
@@ -35,6 +35,8 @@ ApplicationMgr.DLLs += { "ParticleGuns" };
 ApplicationMgr.DLLs += { "LbPythia", "Generators" } ;
 ApplicationMgr.DLLs += { "MCTools", "GaussMonitor" };
 
+ApplicationMgr.DLLs += { "RootHistCnv" };
+RootHistSvc.ForceAlphaIds = true;        // Prepend histograms with "h" 
 
 // No events are read as input
 ApplicationMgr.EvtSel  = "NONE" ;
@@ -53,7 +55,8 @@ MessageSvc.Format = "% F%24W%S%7W%R%T %0W%M";  // Longer "algorithm" identifier 
 #include "$STDOPTS/DetDesc.opts"
 ApplicationMgr.DLLS += { "CaloDetXmlCnv" };
 
-DetectorDataSvc.DetDbLocation = "$XMLDDDBROOT/DDDB/lhcb-200506.xml";
+// "Default" geometry version: the latest
+DetectorDataSvc.DetDbLocation = "$XMLDDDBROOT/DDDB/lhcb-200507.xml";
 
 // Transient store setup
 EventDataSvc.ForceLeaves         = true ;
