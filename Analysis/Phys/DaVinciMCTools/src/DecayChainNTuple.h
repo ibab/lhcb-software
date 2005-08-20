@@ -24,6 +24,7 @@ class IMCDecayFinder;
 #include "DaVinciAssociators/Particle2MCLinksAsct.h"
 #include "Relations/IAssociatorWeighted.h"
 #include "Event/CaloCluster.h"
+#include "MCTools/IVisPrimVertTool.h"
 #endif
 
 /** @class DecayChainNTuple DecayChainNTuple.h
@@ -156,6 +157,9 @@ private:
   typedef IAsctCl2MCP::DirectType DirectType;
   typedef IAsctCl2MCP::InverseType InverseType;
   const IAsctCl2MCP* m_pAsctCl2MCP;
+
+  // Check if the MCPV is visible
+  IVisPrimVertTool* m_visPrimVertTool;
 #endif
 
   //=============================================================================
@@ -242,6 +246,8 @@ private:
   NTuple::Array<float> m_MCPVx;
   NTuple::Array<float> m_MCPVy;
   NTuple::Array<float> m_MCPVz;
+  // Is the MCPV visible?
+  NTuple::Array<long> m_VisMCPV;
 #endif
 
   //-----------------------------------------------------------------------------
@@ -296,6 +302,11 @@ private:
     // Global Rich PIDs
     NTuple::Array<float> m_globdllpi; // dll pion
     NTuple::Array<float> m_globdllk; // dll kaon
+
+    // Track information
+    NTuple::Array<float> m_trchitwo;
+    NTuple::Array<float> m_trDoF;
+    NTuple::Array<float> m_trtype;
 
     // State vector of the track (x,y,tx,ty,Q/P), tx = dx/dz, ty = dy/dz
     NTuple::Array<float> m_stateX;

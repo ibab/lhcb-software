@@ -165,6 +165,8 @@ StatusCode DecayChainNTuple::initialize() {
     return sc;
   }
 
+  // Check if the MCPV is visible
+  m_visPrimVertTool = tool<IVisPrimVertTool>("VisPrimVertTool", this);
 #endif
 
   return StatusCode::SUCCESS;
@@ -332,6 +334,9 @@ StatusCode DecayChainNTuple::finalize() {
     return sc;
   }
 
+  // Call destructor
+  m_pCompositeAsct->~Particle2MCLink();
+  
   return StatusCode::SUCCESS;
 }
 
@@ -444,6 +449,11 @@ DecayChainNTuple::HandleNTuple::HandleNTuple(NTuplePtr& nt, unsigned int& number
   // sc = nt->addIndexedItem("taufit_lab"+label,m_n,m_taufit);
   // sc = nt->addIndexedItem("taufitErr_lab"+label,m_n,m_taufitErr);
   // sc = nt->addIndexedItem("ctfitChi2_lab"+label,m_n,m_ctfitChi2);
+
+  // Track information
+  sc = nt->addIndexedItem("trchitwo_lab"+label,m_n,m_trchitwo);
+  sc = nt->addIndexedItem("trDoF_lab"+label,m_n,m_trDoF);
+  sc = nt->addIndexedItem("trtype_lab"+label,m_n,m_trtype);
 
   // State vector of the track (x,y,tx,ty,Q/P), tx = dx/dz, ty = dy/dz
   sc = nt->addIndexedItem("stateX_lab"+label,m_n,m_stateX);
@@ -564,6 +574,11 @@ void DecayChainNTuple::HandleNTuple::FillNTuple(Particle& part, VertexVector& pv
   // Global Rich PIDs
   m_globdllpi[m_n] = -999.;
   m_globdllk[m_n] = -999.; 
+
+  // Track information
+  m_trchitwo[m_n] = -999.;
+  m_trDoF[m_n] = -999.;
+  m_trtype[m_n] = -999.;
   
   m_stateX[m_n] = -999.;
   m_stateXErr[m_n] = -999.;
@@ -596,6 +611,33 @@ void DecayChainNTuple::HandleNTuple::FillNTuple(Particle& part, VertexVector& pv
     // dll(p-pi)
     m_dllppi[m_n] = pporig->detPIDvalue( ProtoParticle::LkhPIDp );
 
+    const TrStoredTrack* track = pporig->track();
+ 
+    // Track types (numbering as in online):  
+    // - Unknown = 0 (e.g. gammas)
+    // - Velo = 1
+    // - none = 2
+    // - VeloTT/upstream = 3
+    // - Long = 4
+    // - Downstream = 5
+    // - T = 6
+    // - Backward = 7
+
+    if(!track){
+      m_trtype[m_n] = 0.;  // neutral track
+    } 
+    else{
+      if(track->isLong()) m_trtype[m_n]= 4.;  // Long track
+      else if (track->isVelotrack()) m_trtype[m_n]= 1.;  // Velo track
+      else if (track->isUpstream()) m_trtype[m_n]= 3.;  // Upstream track
+      else if (track->isDownstream()) m_trtype[m_n]= 5.;  // Downstream track
+      else if (track->isTtrack()) m_trtype[m_n]= 6.;  // T track
+      else if (track->isBackward()) m_trtype[m_n]= 7.;  // Backward track
+      
+      m_trchitwo[m_n] = track->lastChiSq();
+      m_trDoF[m_n] = track->measurements().size() - 5.;
+    }
+
     // Error**2 = Variance = sigma**2
 
     // state vector TrStateP closest to IP
@@ -620,6 +662,21 @@ void DecayChainNTuple::HandleNTuple::FillNTuple(Particle& part, VertexVector& pv
 
   }
   else if (TrgT){ // the particle is a Trg track
+
+    // TrgTrack::Type:
+    // - Unknown = 0
+    // - TypeVeloR = 1
+    // - TypeVelo3D = 2
+    // - TypeVeloTT = 3
+    // - TypeLong = 4
+    // - TypeDownstream = 5
+    // - TypeKShort = 6
+                                           
+    m_trtype[m_n] = (float) TrgT->type();
+    // std::cout << "This particle was made with a trigger track of type " << TrgT->type() << std::endl;
+    
+    m_trchitwo[m_n] = TrgT->chiSquared();
+    m_trDoF[m_n] = TrgT->degreeOfFreedom();
 
     // Global Rich PIDs
     if(globalPIDs){
@@ -927,6 +984,8 @@ StatusCode DecayChainNTuple::BookNTuple(std::vector<Particle*>& mothervec) {
         sc = nt->addIndexedItem("MCPVx", m_nMCPV, m_MCPVx);
         sc = nt->addIndexedItem("MCPVy", m_nMCPV, m_MCPVy);
         sc = nt->addIndexedItem("MCPVz", m_nMCPV, m_MCPVz);
+        // Is the MCPV visible?
+        sc = nt->addIndexedItem("VisMCPV", m_nMCPV, m_VisMCPV);
 #endif
         sc = nt->addItem("L0Decision", m_L0Decision);
         sc = nt->addItem("L1Decision", m_L1Decision);
@@ -1118,6 +1177,13 @@ StatusCode DecayChainNTuple::WriteNTuple(std::vector<Particle*>& mothervec) {
     m_MCPVz[m_nMCPV] = (*icollision)->primVtxPosition().z();
     // Increment index
     m_nMCPV++;
+
+    // Check if the MCPV is visible
+    bool isMCPVvisible = m_visPrimVertTool->isVisible(*icollision);
+    debug() << " -> is a visible interaction: " << isMCPVvisible << endreq;
+    // Fill NTuple
+    m_VisMCPV[m_nMCPV] = (long) isMCPVvisible;
+
   } // end loop over collisions
   //---------------------------------------------
 
