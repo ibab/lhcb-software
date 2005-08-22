@@ -1,4 +1,4 @@
-C $Id: lunhep.F,v 1.1.1.1 2005-06-21 12:40:51 robbep Exp $
+C $Id: lunhep.F,v 1.2 2005-08-22 16:23:36 ranjard Exp $
       integer function lunhep(mconv)
 
 C...Purpose: to convert JETSET event record contents to or from
@@ -17,7 +17,11 @@ C...Commonblocks.
       COMMON/PYDAT2/KCHG(500,4),PMAS(500,4),PARF(2000),VCKM(4,4)
       SAVE /PYJETS/,/PYDAT1/,/PYDAT2/
 C...HEPEVT commonblock.
-      INCLUDE 'hepevt.inc'
+      PARAMETER (NMXHEP=10000)
+      COMMON/HEPEVT/NEVHEP,NHEP,ISTHEP(NMXHEP),IDHEP(NMXHEP),
+     &JMOHEP(2,NMXHEP),JDAHEP(2,NMXHEP),PHEP(5,NMXHEP),VHEP(4,NMXHEP)
+      DOUBLE PRECISION PHEP,VHEP
+      SAVE /HEPEVT/
 
 C...      NEVHEP       - event number
 C...      NHEP         - number of entries in this event

@@ -1,6 +1,10 @@
-! $Id: release.notes,v 1.6 2005-07-13 18:13:12 gcorti Exp $
+! $Id: release.notes,v 1.7 2005-08-22 16:23:36 ranjard Exp $
 ! Package     : Gen/LbPythia
 ! Responsible : 
+
+! ========================= LbPythia v1r2 ============================
+! 2005-08-22 - Florence RANJARD
+ - src/Lib/lunep.F - do not include nmxhep.inc but copy the content.
 
 ! ========================== LbPythia v1r1 ============================
 ! 2005-07-11 - Gloria CORTI
