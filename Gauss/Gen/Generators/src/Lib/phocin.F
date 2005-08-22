@@ -1,4 +1,4 @@
-C $Id: phocin.F,v 1.1.1.1 2005-06-20 21:42:17 robbep Exp $
+C $Id: phocin.F,v 1.2 2005-08-22 16:21:09 ranjard Exp $
       SUBROUTINE PHOCIN
 C.----------------------------------------------------------------------
 C.
@@ -18,9 +18,7 @@ C.----------------------------------------------------------------------
       IMPLICIT NONE
       INTEGER d_h_NMXHEP
 
-      PARAMETER (d_h_NMXHEP=
-#include "nmxhep.inc"
-*      PARAMETER (d_h_NMXHEP=4000)
+      PARAMETER (d_h_NMXHEP=10000)
 
       LOGICAL QEDRAD
       COMMON/PHOQED/QEDRAD(d_h_NMXHEP)

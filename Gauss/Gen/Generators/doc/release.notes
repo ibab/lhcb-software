@@ -1,6 +1,10 @@
-! $Id: release.notes,v 1.5 2005-07-12 15:58:54 gcorti Exp $
+! $Id: release.notes,v 1.6 2005-08-22 16:21:09 ranjard Exp $
 ! Package     : Gen/Generators
 ! Responsible : 
+
+!========================= Generators v1r2 ===========================
+! 2005-08-22 - Florence RANJARD
+ - phocin.F - remove the #include nmxhep.inc, replace it with 10000.
 
 !========================== Generators v1r1 ===========================
 ! 2005-07-11 - Gloria CORTI
