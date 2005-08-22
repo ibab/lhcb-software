@@ -3,7 +3,50 @@ Package : GaussSys
 Package manager : Gloria Corti
 Purpose: LHCb Simulation program
 </PRE>
-<H1><A NAME="v20r0">2005-07-13 - GaussSys v20r1</A></H1><PRE>
+
+<H1><A NAME="v20r2">2005-08-22 - GaussSys v20r2</A></H1><PRE>
+<H3><A NAME="Use">This version uses:
+   Pythia 6_226.2, photos 209.2 (via GENSER 1_1_0), pdflib 804 
+   DecFiles v8r0, ParamFiles v3r12 
+   Geant4 v71r0p1,
+   LHCb v18r8
+   XmlDDDB v26r1, FieldMap v4r5 </A></H3>
+
+!======================== GENSER v1r110p1 ================================
+! 2005-08-22 - Florence RANJARD
+ - requirements - remove setting of include_dirs nolonger necessary
+
+! 2005-08-17 - Gloria CORTI
+ - requirements - use GENSER_1_1_0 and use static libraries.
+
+!========================= Generators v1r2 ===========================
+! 2005-08-22 - Florence RANJARD
+ - phocin.F - remove the #include nmxhep.inc, replace it with 10000.
+
+! ========================= LbPythia v1r2 ============================
+! 2005-08-22 - Florence RANJARD
+ - src/Lib/lunep.F - do not include hepevt.inc but copy the content.
+
+!========================== GaussCalo v7r3 =================================
+! 2005-08-16 - Gloria CORTI
+ - options/Calo.opts, Ecal.opts, Hcal.opts, Prs.opts, Spd.opts
+   modify to use input histograms from root file (gausscalo.root) instead
+   of hbook. Requires ParamFiles v3r13 where gausscalo.root has been
+   introduced
+
+!========================== GaussMonitor v2r2 ============================
+! 2005-08-17 - Gloria CORTI
+ - src/GenMonitorAlg.{h,cpp}
+         . use book and fill for histograms, instead of plot
+ - src/MCDecayCounter.{h,cpp}
+   . adapt to GaudiAlgorithm and clean up
+
+! 2005-07-01 - Gloria CORTI
+ - src/GenMonitorAlg.cpp
+   . Add new histogram on event process type
+
+!==========================================================================
+<H1><A NAME="v20r1">2005-07-13 - GaussSys v20r1</A></H1><PRE>
 <H3><A NAME="Use">This version uses:
    Pythia 6_226.2, photos 209.2 (via GENSER 1_0_0), pdflib 804 
    DecFiles v8r0, ParamFiles v3r12 

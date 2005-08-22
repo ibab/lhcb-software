@@ -15,11 +15,12 @@ use DecFiles            v8r1    Gen   -no_auto_imports
 use ParamFiles          v3r13         -no_auto_imports
 use Geant4Files		v52r0	      -no_auto_imports
 
+
 #========================================================================
 #-- Generator
 use ParticleGuns        v1r0    Gen
-use Generators          v1r1    Gen
-use LbPythia            v1r1    Gen
+use Generators          v1r2    Gen
+use LbPythia            v1r2    Gen
 #   Optional AcerMC
 macro LbAcerMC_use "" Linux&AcerMC "LbAcerMC v1r2 Gen"
 use $(LbAcerMC_use)
@@ -57,7 +58,7 @@ use GaudiSvc            v*
 use GaudiPoolDb         v*
 
 #-- Histogram persistency 
-use HbookCnv            v*
+#use HbookCnv            v*
 use RootHistCnv         v*
 
 #-- LHCb
@@ -72,6 +73,9 @@ set  GAUSSOPTS "${GAUSSROOT}/options"
 
 #-- Set behaviour of inelastic scattering
 set AlwaysKillLeadingHadron 1
+
+#-- Set NeutronCrossSections file for low-energy Neutron background
+set NeutronHPCrossSections $(GEANT4FILESROOT)/data/G4NDL
 
 #-- Set visualization environment
 set  G4DAWNFILE_DEST_DIR       "../job/"
