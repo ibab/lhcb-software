@@ -18,50 +18,57 @@
 // Include files
 @@@includes@@@
 
-// Forward declarations
-@@@forwardDecls@@@
-@@@classID@@@
-@@@classVersion@@@
-@@@locations@@@
+//namespace LHCb 
+//{
 
-/** @class @@@classname@@@ @@@classname@@@.h
- *
- * @@@desc@@@ 
- *
- * @author @@@author@@@
- * created @@@today@@@
- * 
- */
+  // Forward declarations
+  @@@forwardDecls@@@
+  @@@classID@@@
+  @@@classVersion@@@
+  @@@locations@@@
 
-class @@@classname@@@@@@inheritance@@@
-{
-public:
+  /** @class @@@classname@@@ @@@classname@@@.h
+   *
+   * @@@desc@@@ 
+   *
+   * @author @@@author@@@
+   * created @@@today@@@
+   * 
+   */
 
-@@@publicTypedefs@@@
-@@@publicEnums@@@
-@@@constructorDecls@@@
-@@@destructorDecl@@@
-@@@classIDDecl@@@
-@@@streamerDecl@@@
-@@@publicMethodDecls@@@
-@@@getSetMethodDecls@@@
-@@@publicBitfieldEnums@@@
-@@@publicAttributes@@@
-protected:
+  class @@@classname@@@@@@inheritance@@@
+  {
+  public:
 
-@@@protectedTypedefs@@@
-@@@protectedEnums@@@
-@@@protectedMethodDecls@@@
-@@@protectedBitfieldEnums@@@
-@@@protectedAttributes@@@
-private:
+  @@@publicTypedefs@@@
+  @@@publicEnums@@@
+  @@@constructorDecls@@@
+  @@@destructorDecl@@@
+  @@@classIDDecl@@@
+  @@@streamerDecl@@@
+  @@@publicMethodDecls@@@
+  @@@getSetMethodDecls@@@
+  @@@publicBitfieldEnums@@@
+  @@@publicAttributes@@@
+  protected:
 
-@@@privateTypedefs@@@
-@@@privateEnums@@@
-@@@privateMethodDecls@@@
-@@@privateBitfieldEnums@@@
-@@@privateAttributes@@@
-};
+  @@@protectedTypedefs@@@
+  @@@protectedEnums@@@
+  @@@protectedMethodDecls@@@
+  @@@protectedBitfieldEnums@@@
+  @@@protectedAttributes@@@
+  private:
+
+  @@@privateTypedefs@@@
+  @@@privateEnums@@@
+  @@@privateMethodDecls@@@
+  @@@privateBitfieldEnums@@@
+  @@@privateAttributes@@@
+  }; // class @@@classname@@@
+//} // namespace LHCb
+
+// using statement for namespace LHCb 
+//using namespace LHCb;
 
 // -----------------------------------------------------------------------------
 //   end of class

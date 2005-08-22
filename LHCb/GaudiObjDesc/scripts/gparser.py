@@ -64,13 +64,18 @@ class gparser:
       else:
         i = 0
         line2 = ''
-        for word in line.split(self.delimiter):
+	splitElems = line.split(self.delimiter)
+	indent = 0
+	if splitElems[0].isspace() : indent = len(splitElems[0])
+        for word in splitElems:
           if not i%2 :
             line2 += word
           else:
             if dict.has_key(word):
-              if len(dict[word]):
-                line2 += dict[word]
+	      dword = dict[word]
+              if len(dword):
+		if indent : dword = dword.replace('\n','\n%s'%(' '*indent))
+                line2 += dword
             else:
               print self.argv0 + ':ERROR: Could not find dictionary key ' + word + self.currpos()
           i += 1        

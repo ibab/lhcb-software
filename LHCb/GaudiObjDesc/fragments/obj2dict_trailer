@@ -1,7 +1,7 @@
 
 $(dest)${package}.lcgdict : ${OBJS} 
 	@echo Producing dictionaries using lcgdict
-	cd $(dest); $(lcgdict_cmd) ${package}_dictionary.h --reflex -s ${package}_selection.xml $(includes) $(use_pp_cppflags)
+	export LD_LIBRARY_PATH=$(Python_home)/lib; cd $(dest); $(pythonexe) $(SEAL_home)/bin/lcgdict.py ${package}_dictionary.h --reflex --selection_file ${package}_selection.xml --capabilities=${package}_capabilities.cpp --gccxmlpath=$(GCCXML_home)/bin $(includes) $(use_pp_cppflags)
 	@( if [ -e $(dest)${package}.lcgdict ]; then touch $(dest)${package}.lcgdict; \
 	else echo /dev/null > $(dest)${package}.lcgdict; fi ) 
 

@@ -27,15 +27,20 @@
  * 
  */
 
+//namespace LHCb 
+//{
+  namespace @@@namespacename@@@
+  {
+  @@@typedefs@@@
+  @@@enums@@@
+  @@@classes@@@
+  @@@attributes@@@
+  @@@methods@@@
+  } // namespace @@@namespacename@@@
+//} // namespace LHCb
 
-namespace @@@namespacename@@@
-{
-@@@typedefs@@@
-@@@enums@@@
-@@@classes@@@
-@@@attributes@@@
-@@@methods@@@
-};
+// using statement for namespace LHCb 
+//using namespace LHCb;
 
 // -----------------------------------------------------------------------------
 //   end of namespace

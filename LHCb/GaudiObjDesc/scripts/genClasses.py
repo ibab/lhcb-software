@@ -422,7 +422,7 @@ class genClasses(genSrcUtils.genSrcUtils):
         s  = 'inline const CLID& %s::clID() const\n{\n' % scopeName 
         s += '  return %s::classID();\n}\n\n' % scopeName                        
         s += 'inline const CLID& %s::classID()\n{\n' % scopeName 
-        s += '  return CLID_%s;\n}\n' % scopeName
+        s += '  return CLID_%s;\n}\n' % scopeName.split('::')[-1]
     return s                                                                    
 #--------------------------------------------------------------------------------
   def genClassTypedefs(self, godClass):
@@ -473,7 +473,11 @@ class genClasses(genSrcUtils.genSrcUtils):
       else         :
         s += '  /// Operator overloading for stringoutput\n  friend '
         indent = 2*' '
-      s += 'std::ostream& operator<< (std::ostream& str,\n' 
+      scopename = ''
+      if className :
+	scopename = '::'.join(className.split('::')[:-2])
+	if scopename : scopename += '::'
+      s += 'std::ostream& %soperator<< (std::ostream& str,\n' % scopename 
       s += '                                 %sconst %s& obj)' % ( indent, godClass['attrs']['name'])
       if className : s += '\n{\n  return obj.fillStream(str);\n}\n\n'
       else         : s += ';\n\n'
@@ -521,6 +525,8 @@ class genClasses(genSrcUtils.genSrcUtils):
 
       classDict = package.dict
       classname = godClass['attrs']['name']
+      ##scoped_classname = 'LHCb::'+classname
+      scoped_classname = classname
 
       fileName = '%s.h' % classname
 
@@ -544,14 +550,14 @@ class genClasses(genSrcUtils.genSrcUtils):
         classDict[modifier+'BitfieldEnums']     = self.bitfieldEnums[modifier]
         classDict[modifier+'Enums']             = self.genEnums(modifier,godClass)
         classDict[modifier+'MethodDecls']       = self.genMethods(modifier,godClass)
-        classDict[modifier+'MethodDefs']        = self.genMethods(modifier,godClass,classname)
+        classDict[modifier+'MethodDefs']        = self.genMethods(modifier,godClass,scoped_classname)
       classDict['streamerDecl']                 = self.genStreamer(godClass)
-      classDict['streamerDef']                  = self.genStreamer(godClass,classname)
+      classDict['streamerDef']                  = self.genStreamer(godClass,scoped_classname)
       classDict['getSetMethodDecls']            = self.genGetSetMethods(godClass)
-      classDict['constructorDefs']              = self.genConstructors(godClass,classname)
-      classDict['destructorDef']                = self.genDestructors(godClass,classname)
-      classDict['classIDDef']                   = self.genClassIDFun(godClass,classname)
-      classDict['getSetMethodDefs']             = self.genGetSetMethods(godClass,classname)
+      classDict['constructorDefs']              = self.genConstructors(godClass,scoped_classname)
+      classDict['destructorDef']                = self.genDestructors(godClass,scoped_classname)
+      classDict['classIDDef']                   = self.genClassIDFun(godClass,scoped_classname)
+      classDict['getSetMethodDefs']             = self.genGetSetMethods(godClass,scoped_classname)
 
       classDict['includes']                     = self.genIncludes()
       classDict['forwardDecls']                 = self.genForwardDecls()
