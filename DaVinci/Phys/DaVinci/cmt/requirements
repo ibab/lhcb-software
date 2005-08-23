@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.266 2005-08-23 15:56:33 pkoppenb Exp $
+# $Id: requirements,v 1.267 2005-08-23 16:20:13 pkoppenb Exp $
 # Created    : 07/02/2002
 # Maintainer : P. Koppenburg
 #
@@ -71,7 +71,7 @@ use  FlavourTaggingChecker      v1r0     Phys
 #=======================================================
 # packages included in LoKiSys
 #=======================================================
-use  LoKi               	v3r14    Tools  
+use  LoKi               	v3r14p1  Tools  
 use  LoKiHlt             	v2r2     Tools  
 use  LoKiGen             	v2r1     Tools  
 use  LoKiJets             	v1r1     Tools  
