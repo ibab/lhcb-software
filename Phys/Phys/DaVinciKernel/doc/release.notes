@@ -1,7 +1,8 @@
-! $Id: release.notes,v 1.68 2005-08-10 13:42:07 pkoppenb Exp $
+! $Id: release.notes,v 1.69 2005-08-23 16:02:02 pkoppenb Exp $
 ! Package     : DaVinciKernel
 ! Responsible : P. Koppenburg
 
+!========================== DaVinciKernel v3r6 2005-08-23 ===================
 ! 2005-08-10 - P. Koppenburg
   - IPhysDesktop.h
     . New method that returns the primary vertex as PrimVertex.
