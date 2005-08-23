@@ -27,7 +27,7 @@ class genClassDicts:
   def genPackageDict(self,godPackage):    
     if godPackage.has_key('class'):
       for cl in godPackage['class']:
-        #clname = 'LHCb::'+cl['attrs']['name']
+        ##clname = 'LHCb::'+cl['attrs']['name']
         clname = cl['attrs']['name']
         # add include file line
         self.sIncludes = self.conc(self.sIncludes, '#include "%s%s.h"' % (self.srcOutputDir, cl['attrs']['name']))
@@ -66,8 +66,8 @@ class genClassDicts:
               self.sDictInstances = self.conc(self.sDictInstances, '%s<%s> m_%s_%s;' % (tcname, t1name, tcname, self.clean(t1name)))
               # include element for selection file
 	      kc =  '  <class name="%s<%s,Containers::KeyedObjectManager<Containers::hashmap> >">' % (tcname, t1name)
-	      kc += ' <field name="m_contd" transient="true"/>'
-	      kc += ' <field name="m_data" transient="true"/>'
+	      kc += ' <field name="m_cont" transient="true"/>'
+	      kc += ' <field name="m_random" transient="true"/>'
 	      kc += ' </class>'
               self.sClassSelections = self.conc(self.sClassSelections, kc)
 	    elif tcname == "SmartRef":	
