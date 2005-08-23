@@ -1,0 +1,36 @@
+#============================================================================
+# Created    : 2005-08-23
+# Maintainer : Marco CLEMENCIC
+#
+# $Id: requirements,v 1.1.1.1 2005-08-23 10:00:41 marcocle Exp $
+#
+# Documentation on the requirement file can be found at
+# http://cern.ch/lhcb-comp/Support/html/new_structure.pdf
+#============================================================================
+package           DimCond
+version           v1r0
+
+#============================================================================
+# This template is an example for a standard Algorithm package
+#
+# Structure, i.e. directories to process. 
+#============================================================================
+branches          cmt doc src
+include_path      none
+#============================================================================
+# Used packages. Specify the version, * at the end specifies 'any revision'
+#    Put as many lines as needed, with all packages, without the '#'
+#============================================================================
+# use   Package      v1r*    Hat
+use Gaucho  v* Online
+use DetDesc v* Det
+use DetCond v* Det
+
+#============================================================================
+# Component library building rule
+#============================================================================
+library          DimCond    ../src/component/*.cpp 
+#============================================================================
+# define component library link options
+#============================================================================
+apply_pattern    component_library library=DimCond

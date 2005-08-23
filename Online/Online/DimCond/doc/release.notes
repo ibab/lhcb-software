@@ -1,0 +1,13 @@
+!-----------------------------------------------------------------------------
+! Package     : Online/DimCond
+! Responsible : Marco CLEMENCIC
+! Purpose     : Provide a DIM command server to fill the memory cache of
+!               CondDBAccessSvc (Det/DetCond)
+!-----------------------------------------------------------------------------
+
+! 2005-08-23 - Marco CLEMENCIC
+ - First version. The package provides DimCondSvc which siply instanciate
+   correctly the command handler DimCondCommand.  The command hadler is able
+   to interact with CondDBAccessSvc and UpdateManagerSvc to add new data to
+   the cache.
+
