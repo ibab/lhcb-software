@@ -3,6 +3,493 @@ Package     : Phys/DaVinci
 Package Coordinator : Patrick Koppenburg
 Purpose     : LHCb analysis program 
 
+</PRE><H1><A NAME=v12r13>2005-08-24 DaVinci v12r13 - Updated DC04 version</A></H1><PRE>
+
+
+Main modifications:
+#######################################MM#######################################
+################################################################################
+#################################### EXTERNAL ##################################
+###################################### L0 ######################################
+!========================= L0DU v6r7p5 2005-08-12 =========================
+! 2005-08-23 - P. Koppenburg
+ - Do not re-run L0DU for high-lumi stuff, to follow the L1 syntax
+! 2005-08-12 - P. Koppenburg for Eduardo Rodrigues
+ - New settings for high Lumi
+ See http://erodrigu.home.cern.ch/erodrigu/lhcb/trigger/L0/bwd.html#2005-05
+###################################### HLT #####################################
+!========================== HltSelChecker v3r6 2005-08-23 ===================
+! 2005-08-08 - P. Koppenburg
+ - options/
+   . Don't include TestHltScore
+
+! 2005-08-07 - Luis Fernandez
+ - options/
+   . Add dummy HltFilter/CorrTrgHltGen
+
+! 2005-07-13 - P. Koppenburg
+  - New files L0TDR replace L0L1TDR
+  - options/True*.opts
+    . Check for long tracks
+!========================== HltSelections v3r7 2005-08-23 ===================
+! 2005-08-18 - P. Koppenburg
+  - HLTSelections.opts
+    . Always run HltGeneric
+! 2005-07-29 - P. Koppenburg
+  - Added new L0TDR stripped data that replaces the old L0L1TDR data.
+  Warning: re-run L1 to get the same results.
+  - Removed all L0L1TDR files.
+##################################### MUON #####################################
+##################################### PHYS #####################################
+!========================== DaVinciEff v3r4 2005-08-23 ===================
+! 2005-07-14 - Luis Fernandez
+ - src/EffSelCheck.cpp
+   . Go back to previous version (2005-04-12); problem when the selected mothers 
+     are saved several times to the TES (e.g. using RefineSelection) since 
+     EffSelCheck reads all locations in SelResults ...
+
+! 2005-07-13 - Luis Fernandez
+ - src/EffSelCheck.cpp
+   . Dirty bug fix: count as different candidates selected mothers with same
+     mass but final states arranged in different composite daughters.
+
+!========================== DaVinciFilter v3r1p1 2005-08-23 ===================
+! 2005-07-27 - P. Koppenburg
+  - DLLFilterCriterion
+    . Kaon can be "k" or "K". Reported by Luis Fernandez.
+
+!========================== DaVinciKernel v3r6 2005-08-23 ===================
+! 2005-08-10 - P. Koppenburg
+  - IPhysDesktop.h
+    . New method that returns the primary vertex as PrimVertex.
+      Usage:
+      std::vector<const PrimVertex*> primaries = desktop()->primaryVertices<PrimVertex>() ;
+
+! 2005-07-27 - Vanya BELYAEV
+
+ - Kernel/IJetMaker.h
+     update the doxygen comments for code examples: 
+
+     // get the tool
+     const IJetMaker* jetMaker = tool<IJetMaker> ( .... ) ;
+
+     How to use the method with 2-arguments: 
+     =======================================
+   
+     // input particles 
+     IJetMaker::Inputs input = ... 
+     // // (1)  
+     // const Particles* particles = .... ;
+     // // create the input container 
+     // IJetMaker::Inputs input( particles->begin() , particles->end() ) ;
+     // // (2) 
+     // ParticleVector particles = .... ;
+     // // create the input container 
+     // IJetMaker::Inputs input( particles.begin() , particles.end() ) ;
+     // // (3) 
+     // LoKi::Range particles = .... ;
+     // // create the input container 
+     // IJetMaker::Inputs input( particles.begin() , particles.end() ) ;
+   
+     // placeholder for "output" jets 
+     IJetMaker::Jets   jets ;
+   
+     // find the jets! 
+     StatusCode sc = jetMaker -> makeJets ( input , jets ) ;
+   
+     // make  a loop over jets:
+     for ( IJetMaker::Jets::const_iterator iJet = jets.begin() ; 
+           jets.end() != iJet ; ++iJet ) 
+       {
+           // get the jet 
+           Particle* jet = *iJet ;
+       }
+   
+     How to use the templated method with 3 arguments:
+     =================================================
+
+     // get the tool
+     const IJetMaker* jetMaker = tool<IJetMaker> ( .... ) ;
+   
+     // get input data 
+     const Particles* ps = get<Particles> ( ... ) ;
+    
+     // output jets 
+     IJetMaker::Jets  jets ;
+   
+     // find the jets! 
+     StatusCode sc = jetMaker -> makeJets ( ps -> begin () , 
+                                            ps -> end   () , jets ) ;
+   
+     
+     // make  a loop over jets:
+     for ( IJetMaker::Jets::const_iterator iJet = jets.begin() ; 
+           jets.end() != iJet ; ++iJet ) 
+       {
+           // get the jet 
+           Particle* jet = *iJet ;
+       }
+   
+     Use together with LoKi: 
+     ======================= 
+
+     // get input data : get all basic particles 
+     Range basic = select( "basic" , HASORIGIN ) ; 
+   
+     // output jets 
+     IJetMaker::Jets  jets ;
+      
+     // find the jets! 
+     StatusCode sc = jetMaker -> makeJets ( basic.begin () , 
+                                            basic.end   () , jets ) ;
+   
+     
+     // make  a loop over jets:
+     for ( IJetMaker::Jets::const_iterator iJet = jets.begin() ; 
+           jets.end() != iJet ; ++iJet ) 
+       {
+           // get the jet 
+           Particle* jet = *iJet ;
+       }
+
+! 2005-07-26 - Vanya BELYAEV
+
+ - Kernel/IJetMaker.h
+   serc/Lib/IJetMaker.cpp
+
+   New abstract interface for jet-finding tools
+
+   Usage:
+   ======
+
+   // get the tool
+   const IJetMaker* jetMaker = tool<IJetMaker> ( .... ) ;
+ 
+   IJetMaker::Jets  jets ;
+   IJetMaker::Inputs input = ... 
+ 
+   // find the jets! 
+   StatusCode sc = jetMaker -> makeJets ( input , jets ) ;
+
+   always << " Found " << jets.size() << " jets! " << endreq ;
+ 
+   * ATTENTION:
+   * ==========
+   * It is a responsibility of users (e.g. the algorithm) to 
+   * take care about the ownership of jets *AND* their vertices). 
+   * Tool is not intended to do it! 
+
+
+! 2005-07-25 - Vanya BELYAEV
+
+ - Kernel/ICheckSelResults.h 
+   src/Lib/ICheckSelResults.cpp
+
+   new abstract interface for the tool, which is able to check 
+   the "selection results". It is especuially convinient 
+   to inspect the results of stripping or sto study the correlations 
+   correlations between "(TDR,HLT,"Pre")-selection" and 
+   "preselection" or different (pre)-selections
+
+   Usage:
+   ======
+   
+   // locate the tool:
+   const ICheckSelResults* check = 
+    tool<ICheckSelResults> ( "CheckSelResultsTool" ) ;
+   
+   // use it e.g in filling of N-Tuple:
+   tuple -> column ( "mumu" , check -> isSelected ( "PreselBs2MuMu" ) ) ;
+	 tuple -> column ( "hh"   , check -> isSelected ( "PreselB2hh"    ) ) ;
+   
+
+!========================== DaVinciMCTools v5r15 2005-08-23 ===================
+! 2005-08-20 - Luis Fernandez
+ - src/DecayChainNTuple.{cpp,h}
+   . Add a few variables
+!========================== DaVinci v12r13 2005-08-23 ===================
+! 2005-08-23 - P. Koppenburg
+  - options/DVTriggerFilter.opts
+  - options/DaVinci.opts
+    . Optional high lumi tuning for L1
+    
+    For High Luminosity simply inclde two of:
+//#include "$L0DUROOT/options/L0-lumi3e32.opts"
+//#include "$L0DUROOT/options/L0-lumi5e32.opts"
+//#include "$L1DECISIONROOT/options/L1-lumi3e32.opts"
+//#include "$L1DECISIONROOT/options/L1-lumi5e32.opts"
+
+    WARNING: HltGeneric is now included in HLTSelections.opts.
+    There is no need to include it anymore.    
+    
+! 2005-08-12 - P. Koppenburg
+  - options/L0.opts
+    . Optional high lumi tuning.
+!========================== FlavourTagging v6r2 2005-07-22 ===================
+! 2005-07-20 - Marco Musy
+  - bug fix on the user predefined list of tracks to be used 
+    as tagger candidates (vtags in BTaggingTool)
+  - cosmetics
+
+! 2005-07-13 - M. Musy
+  - bug fix for multiple candidates in BTagging.cpp
+  - small bug fix in summaryof.cpp for TDR categories
+
+!========================== Ks2PiPiSel v1r7 2005-07-18 ===================
+! 2005-05-24 - P. Koppenburg
+ - src/KShortMonitor.* 
+   . Removed as it clashes with a class in Rec.
+ - src/PIDCheck/*
+   . Also removed
+ - options/KsCheckMC.opts, src/Ks2PiPiSel_load.cpp
+   . Adapted accordingly
+!========================== Tampering v1r2 2005-08-23 ===================
+! 2005-07-19 - Mariusz Witek
+  - L?TamperingAlg.cpp
+    . Memory leak correction
+#################################### PHYSSEL ###################################
+!========================== B2DstarX2D02hh v2r1p2 2004-07-25 ===================
+! 2005-07-25 - P. Koppenburg
+  - options/*.opts
+    . Don't use MCppAssociators. Does not exist in LoKi anymore.
+!=========================== Bd2JpsiKstar v2r2 2007-07-22 ====================
+! 2008-07-22- P. Koppenburg
+ - options/DVTDRselBd2Jpsi2MuMu_Kstar2KPi.opts
+   . TDRselBd2JpsiKstar should be TDRselBd2Jpsi2MuMu_Kstar2KPi
+     Bug kindly reported by Lauran Somerville
+!========================== Bs2JpsiEta v4r2 2005-08-23 ===================
+! 2005-08-22 - Luis Fernandez for Benjamin Carron
+ - options/
+   . Final selection cuts
+ - src/AnalyzeBs2JpsiEta.{h,cpp}
+   . More variables
+
+!========================== Bs2PhiEtac v3r4 2005-08-23 ===================
+! 2005-08-07 - Luis Fernandez
+ - options/
+   . Final offline selection cuts
+
+! 2005-07-31 - Luis Fernandez
+ - options/
+   . Tune HLT exclusive cuts, add dst and some options
+
+!========================== Bs2PhiPhi v2r3p3 2005-07-25 ===================
+! 2005-07-25 - P. Koppenburg
+  - options/*.opts
+    . Don't use MCppAssociators. Does not exist in LoKi anymore.
+
+!========================== Bu2D0K v1r1p2 2005-08-23 ===================
+! 2005-038-22 - P. Koppenburg
+  - src/D02HHForBu2D0K.cpp
+    . Don't use FATAL instaed of ALWAYS
+    . Translated to GaudiAlgorithm shortcuts
+    . Removed useless includes
+    . Initialised all global variables (except histos) 
+
+!========================== Bu2LLK v2r2 2005-08-23 ===================
+! 2005-08-15 - P. Koppenburg
+  - analysis/*
+    . Analysis code
+! 2005-08-10 - P. Koppenburg
+  - src/Bu2LLKTuple.cpp
+    . Use new primaryVertices<PrimVertex>() method
+! 2005-08-08 - P. Koppenburg
+  - src/Bu2LLKTuple.cpp
+    . More possibilities for MC truth.
+! 2005-07-20 - P. Koppenburg
+  - src/Bu2LLKTuple.cpp
+    . DLLs
+! 2005-07-19 - P. Koppenburg
+  - src/Bu2LLKTruthTuple.cpp
+  - src/Bu2LLKTuple.cpp
+    . More variables.
+! 2005-07-18 - P. Koppenburg
+## prepare inclusive B->Dilepton stream
+  - options/HLTselB2DiLepton.opts
+  - options/HLTselB2DiLepton.opts
+    . New
+!========================== DsSelector v1r3 2005-08-23 ===================
+! 2005-XX-XX - A. Sarti
+ - undocumented changes.
+!========================== PhysSelSys v8r7 2005-08-23 ===================
+use  B2DstarX2D02hh             v2r1p2   PhysSel
+use  Bs2JpsiEta                 v4r2     PhysSel
+use  Bs2PhiEtac                 v3r4     PhysSel
+use  Bs2PhiPhi                  v2r3p3   PhysSel
+use  Bu2LLK                     v2r2     PhysSel
+use  Bu2D0K                     v1r1p2   PhysSel
+use  DsSelector                 v1r3     PhysSel
+use  TriggerSel                 v1r0p2   PhysSel
+use  Stripping                  v3r0     Tools
+!========================== TriggerSel v1r0p2 2005-08-23 ===================
+! 2005-08-11 - P. Koppenburg
+  Un-rename TrgL1Filter instance
+! 2005-07-25 - P. Koppenburg
+  Rename TrgL1Filter instance
+#####################################  REC  ####################################
+!========================== PrimVtx v2r1p1 2004-08-17 ===================
+! 2003-08-03 - P. Koppenburg
+  Rename release_notes to release.notes
+##################################### RICH #####################################
+##################################### TOOLS ####################################
+!========================== LoKiGen v2r1 2005-08-23 ===================
+! 2005-07-14 - Vanya BELYAEV
+
+ - redesign of the package
+   1) remove the ugly functionality from the tool.
+      Now tool is just a super-light class, teh actual 
+      work is delegated to the algorithm (and Data-On-Demand service)
+   2) Add the algorithm to build the relation tables 
+ 
+  "Typical" usage is 
+
+     #include "Relations/IRelation2D.h"
+     #incldue "MCTools/HepMC2MC.h"
+
+     typedef IRelation2D<HepMC::GenParticle*,MCParticle> Table ;
+  
+     const Table* table = get<Table>( HepMC2MCLocation::Default ) ;
+
+     const HepMC::GenParticle* genp = ... ;
+  
+     // get the corresponding MCparticle(s) 
+     Table::Range  mcps = table->relations( gen ) ; 
+     // loop over related particles:
+     for ( Table::Range::iterator mc = mcps.begin() ;  
+      mcps.end() != mc ; ++mc ) 
+      {
+        const MCParticle* mcps = mc->to() ;
+      }
+  
+  In principle number of rleations is either 0 or 1 (by construction), therefore 
+  the loop coudl be substituted:
+  
+   const MCParticle* mcp = 0 ;  
+   if ( !mc.empty() ) { mcp = mc.front().to() ;}
+ 
+
+  For inverse relations (get HepMC::Particle, related to a given MCparticle) :
+
+   typedef Table::InverseType   ITable ;
+   
+   // use "inverted" itable:
+   const ITable* itable = table->inverse() ;
+
+   const MCParticle*  mcp = ... ;
+
+   // get the corresponding HepMC::GenParticle(s) 
+   ITable::Range  genps = itable->relations( gen ) ; 
+   // loop over related particles:
+   for ( ITable::Range::iterator gen = genps.begin() ;  
+      genps.end() != gen ; ++gen ) 
+      {
+        const HepMC::GenParticle* genp = get->to() ;
+      } 
+  
+   // OR: 
+
+   const HepMC::GenParticle* genp = 0 ;  
+   if ( !genps.empty() ) { genp = genps.front().to() ;}
+
+
+   To use these functionality, incldue the following lines into your *.opts file: 
+
+      #include "$LOKIGENOPTS/HepMC2MC.opts" 
+      ApplicationMgr.DLLs += {"LoKiGen"} ;
+
+
+  For easy navigation of mother/daughter relations in 
+  MC trees and HepMC structures, use the function 
+  FROMGTREE and GMCMOTH
+
+
+ - src/LoKi_HepMC2MCAlg.cpp 
+   new file (the algorithm iteself)
+ - MCTools/HepMC2MC.h 
+   definition of "default" TES location for relation table 
+ - options/HepMC2MC.opts
+   the configuration of Data-On-Demand Service  
+   
+   =========================================================
+      It has been proved that all links from GenMCLink
+           structure are reproduced correctly.
+   =========================================================
+
+ - cmt/requirements 
+   version increment to v2r1 
+
+!========================= LoKi v3r14p1 2005-08-23 ==================
+! 2005-07-14 - Vanya BELYAEV
+  
+ - remove *ALL* associators from the code, 
+   direct manipulation with relations tables 
+   (and Data-On-Demand) service is performed now 
+
+!========================== Stripping v3r0 2005-08-23 ===================
+! 2005-08-12 - P. Koppenburg for Hugo Ruiz
+  New implementation:
+  - Now supports DC04sel
+  - Takes list of selections from PhysSelSys requireemnts
+  - Produces merging options.
+
+! 2005-07-25 - P. Koppenburg
+  - python/strip.py
+    . Protect against TrgL1Filter from TriggerFilter
+!========================== Utilities v2r1 2005-08-23 ===================
+! 2005-07-25 - Vanya BELYAEV
+ - src/CheckSelResultsTool.cpp
+   new tool which implements abstract interface ICheckSelResults, 
+   which allows to check the "selection results". It is especuially 
+   convinient 
+   to inspect the results of stripping or sto study the correlations 
+   correlations between "(TDR,HLT,"Pre")-selection" and 
+   "preselection" or different (pre)-selections
+
+   Usage:
+   ======
+   
+   // locate the tool:
+   const ICheckSelResults* check = 
+    tool<ICheckSelResults> ( "CheckSelResultsTool" ) ;
+   
+   // use it e.g in filling of N-Tuple:
+   tuple -> column ( "mumu" , check -> isSelected ( "PreselBs2MuMu" ) ) ;
+         tuple -> column ( "hh"   , check -> isSelected ( "PreselB2hh"    ) ) ;
+   
+    Selections and flags are either specified exlicitely throught 
+    the arguments of the  2nd and 3rd form of "isSelected" method, 
+    or specified through the properties of the tool (for the first 
+    form of "isSelected" method. In this case:
+    
+   
+    <XXX>.CheckSelResultsTool.Selections = { "PreselBs2MuMu" , 
+                                             "PreselB2hh"    } ;
+    <XXX>.CheckSelResultsTool.ANDmode    = false               ; // default
+    <XXX>.CheckSelResultsTool.Prefix     = "/Event/Phys/"      ; // default
+ 
+  - src/Utilities_load.cpp 
+    add new tool 
+  
+###################################### TRG #####################################
+!========================== L1Decision v4r5 2005-08-23 ===================
+! 2005-08-23 - P. Koppenburg
+ - New options for high luminosities
+
+! 2005-08-23 - Thomas Martin Schietinger
+ - src/L1Muon.*/L1MaxPt.*/L1Decision.*: finalize multi PV upgrade
+ - src/L1Check.cpp: minor bug fix.
+
+! 2005-08-12 - Thomas Martin Schietinger
+ - src/L1MaxPt.cpp: enable treatment of more than 2 primary vertices
+
+!========================== TrgSys v1r8 2005-08-12 ===================
+! 2005-08-12 - P. Koppenburg
+  - New L1Decision
+!=========================== TrgTools v6r4 2005-08-23 ===================
+! 2005-07-27 - P.Koppenburg for Cristina Carloganu
+ - src/TrgParticleMaker.cpp
+   . Use state with brem-corrected energy when making electrons
+
 </PRE><H1><A NAME=v12r12>2005-07-06 DaVinci v12r12 - Updated DC04 version</A></H1><PRE>
 New version based on LHCb v16r5
 use XmlDDDB v22r2 version used during DC04
