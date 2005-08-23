@@ -24,6 +24,12 @@ class genClassDicts:
     str = str.replace(':','_')
     return str
 #--------------------------------------------------------------------------------
+  def genFirstLevelIncludes(self, godPackage):
+    if godPackage.has_key('class'):
+      pass
+    elif godPackage.has_key('namespace'):
+      pass
+#--------------------------------------------------------------------------------
   def genPackageDict(self,godPackage):    
     if godPackage.has_key('class'):
       for cl in godPackage['class']:
@@ -83,14 +89,18 @@ class genClassDicts:
 	    elif tcname == "SmartRefVector":
               # "GaudiKernel" hardcoded here to avoid usage of the inclusion mechanism (not nice)
               self.sIncludes = self.conc(self.sIncludes, '#include "GaudiKernel/SmartRefVector.h"')
+              self.sIncludes = self.conc(self.sIncludes, '#include "GaudiKernel/SmartRef.h"')
+              self.sIncludes = self.conc(self.sIncludes, '#include <vector>')
               # include template instantiation
               self.sDictInstances = self.conc(self.sDictInstances, 'SmartRefVector<%s> m_SmartRefVector_%s;' % (t1name, self.clean(t1name)))
+              self.sDictInstances = self.conc(self.sDictInstances, 'std::vector<SmartRef<%s> > m_std_vector_SmartRef_%s;' % (t1name, self.clean(t1name)))
               # include element for selection file
 	      srv =  '  <class name="SmartRefVector<%s>">' % (t1name)
 	      srv += ' <field name="m_contd" transient="true"/>'
 	      srv += ' <field name="m_data" transient="true"/>'
 	      srv += ' </class>'
               self.sClassSelections = self.conc(self.sClassSelections, srv)
+              self.sClassSelections = self.conc(self.sClassSelections, '  <class name="std::vector<SmartRef<%s> >"/>' % (t1name))
             else:
               # "GaudiKernel" hardcoded here to avoid usage of the inclusion mechanism (not nice)
               self.sIncludes = self.conc(self.sIncludes, '#include "GaudiKernel/%s.h"' % tcname)
