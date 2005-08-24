@@ -9,6 +9,7 @@ DstWriter.OptItemList =
 , "/Event/Next#1"
 , "/Event/Next/Header#1"
 , "/Event/MC/Signal#1"
+, "/Event/Trig/AlgUsedTimes#1"
 }; 
 DstWriter.ItemList = 
 {
@@ -24,7 +25,6 @@ DstWriter.ItemList =
 , "/Event/MC/Vertices#1"
 , "/Event/MC/MCTrackInfo#1"
 , "/Event/Trig#1"
-, "/Event/Trig/AlgUsedTimes#1"
 , "/Event/Trig/L0#1"
 , "/Event/Trig/L0/Muon#1"
 , "/Event/Trig/L0/PuVeto#1"
