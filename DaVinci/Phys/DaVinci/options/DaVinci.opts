@@ -19,9 +19,6 @@
 // Re-run L0 and L1 Trigger with DC04 tuning
 //#include "$DAVINCIROOT/options/L0.opts"
 //#include "$TRGSYSROOT/options/L1.opts"
-// HLT: include either of both:
-// #include "$TRGSYSROOT/options/Hlt.opts"            // Hlt tracking
-// #include "$HLTGENERICROOT/options/HltGeneric.opts" // Hlt tracking + L1 confirmation
 //--------------------------------------------------------------
 // High luminosity: Include two of                
 //#include "$L0DUROOT/options/L0-lumi3e32.opts"
@@ -29,6 +26,11 @@
 //#include "$L1DECISIONROOT/options/L1-lumi3e32.opts"
 //#include "$L1DECISIONROOT/options/L1-lumi5e32.opts"
 //--------------------------------------------------------------
+//--------------------------------------------------------------
+// HLT: include three lines
+//#include "$HLTSELECTIONSROOT/options/HLTSelections.opts"
+//ApplicationMgr.TopAlg += { "ResetOnOffline/SetOffline" } ; // Reset to offline  (see below).
+//SetOffline.ResetToOffline = true ;
 
 // #include "$DAVINCIROOT/options/L0Checking.opts"  // for L0 checks
 // #include "$TRGSYSROOT/options/TrgChecking.opts"  // for L1 & HlT checks

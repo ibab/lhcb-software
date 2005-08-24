@@ -30,6 +30,9 @@
 //--------------------------------------------------------------
 // Run HLT generic and HLT selections
 #include "$HLTSELECTIONSROOT/options/HLTSelections.opts"
+// Include this is you need to do some offline stuff:
+//ApplicationMgr.TopAlg += { "ResetOnOffline/SetOffline" } ; // Reset to offline  (see below).
+//SetOffline.ResetToOffline = true ;
 
 //#include "$TRGSYSROOT/options/TrgChecking.opts"
 //--------------------------------------------------------------
