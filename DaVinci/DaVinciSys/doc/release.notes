@@ -5,8 +5,42 @@ Purpose     : LHCb analysis program
 
 </PRE><H1><A NAME=v12r13>2005-08-24 DaVinci v12r13 - Updated DC04 version</A></H1><PRE>
 
-
 Main modifications:
+ 
+ - L0 and L1 Triggers: New options for high luminosity samples. Simply add
+          #include "$L0DUROOT/options/L0-lumi3e32.opts"
+          #include "$L1DECISIONROOT/options/L1-lumi3e32.opts"
+     or
+          #include "$L0DUROOT/options/L0-lumi5e32.opts"
+          #include "$L1DECISIONROOT/options/L1-lumi5e32.opts"
+     to your options.                                                                                                                                                       
+     See http://erodrigu.home.cern.ch/erodrigu/lhcb/trigger/L0/bwd.html#2005-05
+     and http://tschieti.home.cern.ch/tschieti/lhcb/L1/highLumi.html
+ 
+ - L1 retuned. No cut on number of PVs anymore. Warning: different results 
+      than from DC04v2 stripping to be expected.
+     
+ - HLT: HltGeneric is always run. The explicit inclusion of  
+     $HLTGENERICROOT/options/HltGeneric.opts is not necessary anymore. Just do:
+          // Run HLT generic and HLT selections
+          #include "$HLTSELECTIONSROOT/options/HLTSelections.opts"
+       TrgParticleMaker now knows how to make protons and Bremsstrahlung-
+       corrected electrons.
+ 
+ - PhysDesktop: New method that returns the primary vertex as PrimVertex.
+     Usage:
+     std::vector<const PrimVertex*> primaries = desktop()->primaryVertices<PrimVertex>() ;
+ 
+ - Kernel/IJetMaker.h
+     Jet finding tools. See DaVinciKernel release.notes.
+ 
+ - New CheckSelResultsTool (ICheckSelResults) that checks for SelResults.
+   See Tools/Utilities release.notes
+
+ - Memory leaks fixes in Tampering and BTagging
+
+ - The stripping scripts have been rewritten.
+
 #######################################MM#######################################
 ################################################################################
 #################################### EXTERNAL ##################################
@@ -486,6 +520,12 @@ use  Stripping                  v3r0     Tools
 ! 2005-08-12 - P. Koppenburg
   - New L1Decision
 !=========================== TrgTools v6r4 2005-08-23 ===================
+! 2005-08-24 - P.Koppenburg for Luis Fernandez and Federica Legger
+ - src/TrgParticleMaker.cpp
+   . Make protons from all tracks
+     To switch on do:
+     TrgParticleMaker.MakeProton = true ;
+                                                                                                                                                         
 ! 2005-07-27 - P.Koppenburg for Cristina Carloganu
  - src/TrgParticleMaker.cpp
    . Use state with brem-corrected energy when making electrons
