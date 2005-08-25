@@ -1,4 +1,4 @@
-// $Id: DetectorElement.cpp,v 1.26 2005-06-03 10:19:44 jpalac Exp $ 
+// $Id: DetectorElement.cpp,v 1.27 2005-08-25 12:26:23 marcocle Exp $
 #include "GaudiKernel/Kernel.h"
 #include "GaudiKernel/ISvcLocator.h"
 #include "GaudiKernel/IDataManagerSvc.h"
@@ -228,7 +228,17 @@ void DetectorElement::createCondition(std::string &name, std::string &path) {
   m_de_conditions.insert(ConditionMap::value_type(name,SmartRef<Condition>(this,hint)));
 }
 
+//-- N. Gilardi; 2005.07.08 ---------------------------------------------
+/// Get the list of existing conditions.
+std::vector<std::string> DetectorElement::conditionNames() const {
+  std::vector<std::string> v;
+  ConditionMap::const_iterator      i;
 
+  for (i = m_de_conditions.begin(); i != m_de_conditions.end(); ++i){
+    v.push_back(i->first);
+  }
+  return v;
+}
 // ----------------------------------------------------------------------
 
 /////

@@ -1,4 +1,4 @@
-// $Id: DetectorElement.h,v 1.26 2005-06-03 10:19:44 jpalac Exp $ 
+// $Id: DetectorElement.h,v 1.27 2005-08-25 12:26:23 marcocle Exp $
 #ifndef  DETDESC_DETECTORELEMENT_H
 #define  DETDESC_DETECTORELEMENT_H 1
 
@@ -53,6 +53,8 @@ class DetectorElement: public ParamValidDataObject,
   friend class DataObjectFactory<DetectorElement> ;  
 
 public:
+  /// Type of the internal list of used conditions
+  typedef std::map<std::string,SmartRef<Condition> > ConditionMap;
 
   /// Constructors 
   DetectorElement (const std::string& name = "NotYetDefined");
@@ -87,6 +89,14 @@ public:
 
   /// Return the SmartRef for the condition called 'name'.
   virtual SmartRef<Condition> condition(const std::string &name) const;
+
+  /// Iterator to the first element of the list of conditions.
+  inline  ConditionMap::const_iterator conditionBegin() const 
+  { return m_de_conditions.begin(); }
+  
+  /// Iterator to the last+1 element of the list of conditions.
+  inline  ConditionMap::const_iterator conditionEnd() const 
+  { return m_de_conditions.end(); }
 
   /// delegation for geometry 
   inline        IGeometryInfo* geometry(); 
@@ -254,6 +264,11 @@ public:
   /// Used to create a link with a given name to the condition at 'path' in the detector data store.
   void createCondition(std::string &name, std::string &path);
 
+  //-- N. Gilardi; 2005.07.08 ---------------------------------------------
+  /// Returns list of existing parameter vectors as a vector of their names
+  virtual std::vector<std::string> conditionNames() const;
+  //-----------------------------------------------------------------------
+
   ///
   /// specific   
   // create "ghost" 
@@ -327,7 +342,6 @@ private:
   ISlowControl*          m_de_iSlowControl  ;
   IFastControl*          m_de_iFastControl  ;
 
-  typedef std::map<std::string,SmartRef<Condition> > ConditionMap;
   /// Container of the SmartRefs for the conditions.
   ConditionMap m_de_conditions;
 

@@ -1,9 +1,17 @@
 ! =============================================================================
-! $Id: release.notes,v 1.213 2005-08-16 09:04:59 marcocle Exp $ 
+! $Id: release.notes,v 1.214 2005-08-25 12:26:23 marcocle Exp $ 
 ! =============================================================================
 ! package DetDesc
 ! package manager : Marco Clemencic, Juan Palacios
 ! =============================================================================
+
+! 2005-08-25 - Marco Clemencic
+ - Added DetectorElement::conditionBegin() and DetectorElement::conditionEnd()
+   to allow efficient loops over the declared conditions.
+
+! 2005-08-25 - Nicolas Gilardi
+ - Added a method to return the list of the names of the conditions used in a
+   DetectorElement.
 
 ! 2005-08-16 - Marco Clemencic
  - Added to TabulatedProperty the method update, needed to change the content
