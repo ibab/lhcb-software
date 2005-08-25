@@ -1,11 +1,15 @@
 ! =============================================================================
-! $Id: release.notes,v 1.214 2005-08-25 12:26:23 marcocle Exp $ 
+! $Id: release.notes,v 1.215 2005-08-25 16:17:22 marcocle Exp $ 
 ! =============================================================================
 ! package DetDesc
 ! package manager : Marco Clemencic, Juan Palacios
 ! =============================================================================
 
 ! 2005-08-25 - Marco Clemencic
+ - Fixed a bug in UpdateManagerSvc. It was not protected against changes in the
+   list of "head" items (those which are not used by any other item) happening
+   while updating everything in UpdateManagerSvc::newEvent(). Now the situation
+   is properly handled.
  - Added DetectorElement::conditionBegin() and DetectorElement::conditionEnd()
    to allow efficient loops over the declared conditions.
 

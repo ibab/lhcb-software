@@ -1,4 +1,4 @@
-// $Id: UpdateManagerSvc.cpp,v 1.8 2005-07-15 08:49:08 marcocle Exp $
+// $Id: UpdateManagerSvc.cpp,v 1.9 2005-08-25 16:17:22 marcocle Exp $
 // Include files 
 #include "GaudiKernel/SvcFactory.h"
 #include "GaudiKernel/MsgStream.h"
@@ -221,18 +221,36 @@ StatusCode UpdateManagerSvc::newEvent(const ITime &evtTime){
   StatusCode sc = StatusCode::SUCCESS;
   // Check head validity
   if ( evtTime >= m_head_since && evtTime < m_head_until ) return sc; // no need to update
-  // Reset head IOV
-  m_head_since = time_absolutepast;
-  m_head_until = time_absolutefuture;
-  // loop over the registered items of the head (unless a problem occurs)
+
   Item::ItemList::iterator it;
-  for (it = m_head_items.begin(); it != m_head_items.end() && sc.isSuccess(); ++it){
-    sc = (*it)->update(dataProvider(),evtTime);
-    if (sc.isSuccess()) {
-      if ( m_head_since < (*it)->since )  m_head_since = (*it)->since;
-      if ( m_head_until > (*it)->until )  m_head_until = (*it)->until;
+
+  // The head list may change while updating, I'll loop until it's stable (or a problem occurs)
+  bool head_has_changed = false;
+  do {
+    if ( m_outputLevel <= MSG::DEBUG ) {
+      MsgStream log(msgSvc(),name());
+      log << MSG::DEBUG << "newEvent(evtTime): loop over head items" << endmsg;
     }
-  }
+    // firt I make a copy of the current head
+    Item::ItemList head_copy(m_head_items);
+    // Start from a clean IOV (I cannot use m_head_X because the head is not stableand they may change)
+    TimePoint head_copy_since(time_absolutepast);
+    TimePoint head_copy_until(time_absolutefuture);
+    for (it = head_copy.begin(); it != head_copy.end() && sc.isSuccess(); ++it){
+      sc = (*it)->update(dataProvider(),evtTime);
+      if (sc.isSuccess()) {
+        if ( head_copy_since < (*it)->since )  head_copy_since = (*it)->since;
+        if ( head_copy_until > (*it)->until )  head_copy_until = (*it)->until;
+      }
+    }
+    // now it is safe to set m_head_X
+    m_head_since = head_copy_since;
+    m_head_until = head_copy_until;
+
+    // check if we need to re-do the loop (success and a change in the head)
+    head_has_changed = sc.isSuccess() && (head_copy != m_head_items);
+  } while ( head_has_changed );
+  
   return sc;
 }
 StatusCode UpdateManagerSvc::i_update(void *instance){
