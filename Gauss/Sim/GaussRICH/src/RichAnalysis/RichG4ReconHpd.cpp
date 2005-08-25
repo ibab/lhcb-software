@@ -1,4 +1,4 @@
-// $Id: RichG4ReconHpd.cpp,v 1.3 2005-06-16 11:39:59 seaso Exp $
+// $Id: RichG4ReconHpd.cpp,v 1.4 2005-08-25 12:20:51 seaso Exp $
 // Include files 
 
 #include "GaudiKernel/Kernel.h"
@@ -112,10 +112,10 @@ RichG4ReconHpd::RichG4ReconHpd():
     //   m_HpdPixelXNumRow=
     //  Rich1DE->userParameterAsInt("RichHpdNumPixelRow" );
 
-    double PhCathiodeCoCZ= 
+    double PhCathodeCoCZ= 
       Rich1DE->param<double>("RichHpdPhCathodeCoCZ");
 
-    //    double PhCathiodeCoCZ= 
+    //    double PhCathodeCoCZ= 
     //  Rich1DE->userParameterAsDouble("RichHpdPhCathodeCoCZ");
     
     //        RichG4HpdReconlog<<MSG::INFO
@@ -125,6 +125,78 @@ RichG4ReconHpd::RichG4ReconHpd():
     //                 <<"  "<< m_HpdPhCathodeRad<< "  "
     //                     <<PhCathiodeCoCZ<< endreq;
     
+    // test print 
+    //   double Rich1Mirr2NominalCCLHCbXR0C0 =
+    //  Rich1DE->param<double>("Rich1Mirror2NominalCCLHCbXR0C0");
+    // double Rich1Mirr2NominalCCLHCbYR0C0 =
+    //  Rich1DE->param<double>("Rich1Mirror2NominalCCLHCbYR0C0");
+    // double Rich1Mirr2NominalCCLHCbZR0C0 =
+    //  Rich1DE->param<double>("Rich1Mirror2NominalCCLHCbZR0C0");   
+
+    // double Rich1Mirr2NominalCCLHCbXR0C2 =
+    //  Rich1DE->param<double>("Rich1Mirror2NominalCCLHCbXR0C2");
+    // double Rich1Mirr2NominalCCLHCbYR0C2 =
+    //  Rich1DE->param<double>("Rich1Mirror2NominalCCLHCbYR0C2");
+    // double Rich1Mirr2NominalCCLHCbZR0C2 =
+    //  Rich1DE->param<double>("Rich1Mirror2NominalCCLHCbZR0C2");   
+
+    // double Rich1Mirr2NominalCCLHCbXR2C0 =
+    //  Rich1DE->param<double>("Rich1Mirror2NominalCCLHCbXR2C0");
+    // double Rich1Mirr2NominalCCLHCbYR2C0 =
+    //  Rich1DE->param<double>("Rich1Mirror2NominalCCLHCbYR2C0");
+    //  double Rich1Mirr2NominalCCLHCbZR2C0 =
+    //  Rich1DE->param<double>("Rich1Mirror2NominalCCLHCbZR2C0");   
+
+    // double Rich1Mirr2NominalCCLHCbXR2C2 =
+    //  Rich1DE->param<double>("Rich1Mirror2NominalCCLHCbXR2C2");
+    // double Rich1Mirr2NominalCCLHCbYR2C2 =
+    //  Rich1DE->param<double>("Rich1Mirror2NominalCCLHCbYR2C2");
+    // double Rich1Mirr2NominalCCLHCbZR2C2 =
+    //  Rich1DE->param<double>("Rich1Mirror2NominalCCLHCbZR2C2");   
+
+    // double  Rich1Mirror2CoCNominalDeltaX =
+    //  Rich1DE->param<double>("Rich1Mirror2CoCNominalDeltaX");
+    // double  Rich1Mirror2CoCNominalDeltaY =
+    //  Rich1DE->param<double>("Rich1Mirror2CoCNominalDeltaY");
+    // double  Rich1Mirror2CoCNominalDeltaZ =
+    //  Rich1DE->param<double>("Rich1Mirror2CoCNominalDeltaZ");
+   
+
+
+    //   double Rich1Mirr2NominalRadiusC =
+    //   Rich1DE->param<double>("Rich1Mirror2NominalRadiusC");
+    //   RichG4HpdReconlog<<MSG::INFO
+    //                  <<" Rich1Mirror2r0c0 XYZ radius "
+    //                 <<Rich1Mirr2NominalCCLHCbXR0C0<<"    "
+    //                 << Rich1Mirr2NominalCCLHCbYR0C0<<"   "
+    //                 <<Rich1Mirr2NominalCCLHCbZR0C0<<"    "
+    //                 <<Rich1Mirr2NominalRadiusC<<endreq;   
+    //  RichG4HpdReconlog<<MSG::INFO
+    //                  <<" Rich1Mirror2r0c2 XYZ radius "
+    //                 <<Rich1Mirr2NominalCCLHCbXR0C2<<"    "
+    //                 << Rich1Mirr2NominalCCLHCbYR0C2<<"   "
+    //                 <<Rich1Mirr2NominalCCLHCbZR0C2<<"    "
+    //                 <<Rich1Mirr2NominalRadiusC<<endreq;   
+    //  RichG4HpdReconlog<<MSG::INFO
+    //                 <<" Rich1Mirror2r2c0 XYZ radius "
+    //                 <<Rich1Mirr2NominalCCLHCbXR2C0<<"    "
+    //                 << Rich1Mirr2NominalCCLHCbYR2C0<<"   "
+    //                 <<Rich1Mirr2NominalCCLHCbZR2C0<<"    "
+    //                 <<Rich1Mirr2NominalRadiusC<<endreq;   
+    //  RichG4HpdReconlog<<MSG::INFO
+    //                 <<" Rich1Mirror2r2c2 XYZ radius "
+    //                 <<Rich1Mirr2NominalCCLHCbXR2C2<<"    "
+    //                 << Rich1Mirr2NominalCCLHCbYR2C2<<"   "
+    //                 <<Rich1Mirr2NominalCCLHCbZR2C2<<"    "
+    //                 <<Rich1Mirr2NominalRadiusC<<endreq;   
+    //
+    //  RichG4HpdReconlog<<MSG::INFO
+    //                 <<" Rich1Mirror2 delta xyz "
+    //                 <<Rich1Mirror2CoCNominalDeltaX<<"    "
+    //                 <<Rich1Mirror2CoCNominalDeltaY<<"    "
+    //                 <<Rich1Mirror2CoCNominalDeltaZ<<endreq; 
+    //
+     // end of test print
   }
   
 

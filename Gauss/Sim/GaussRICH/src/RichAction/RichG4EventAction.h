@@ -13,6 +13,8 @@
 #include "../RichAnalysis/RichG4HistoFillTimer.h"
 #include "../RichAnalysis/RichG4EventHitCount.h"
 #include "../RichAnalysis/RichG4HitRecon.h"
+#include "../RichAnalysis/RichG4InputMon.h"
+
 // forward declaration
 template <class TYPE> class GiGaFactory;
 
@@ -114,7 +116,16 @@ public:
   {
     return  m_RichG4EventActivateCkvRecon;    
   }
+
+  RichG4InputMon* getRichG4InputMon() 
+  {    return m_RichG4InputMon;}
   
+
+  bool RichG4InputMonActivate() 
+  {
+    return m_RichG4InputMonActivate;
+  } 
+ 
 private:
  
   RichG4EventAction() ; ///< no default constructor
@@ -137,8 +148,10 @@ private:
   RichG4HistoFillSet4* m_RichG4HistoFillSet4;
   RichG4HistoFillTimer* m_RichG4HistoFillTimer;
   RichG4EventHitCount* m_RichG4EventHitCounter;
-  RichG4HitRecon* m_RichG4HitRecon;  
+  RichG4HitRecon* m_RichG4HitRecon;
+  RichG4InputMon* m_RichG4InputMon;
   
+
   int m_RichEventActionVerboseLevel;
   bool m_RichEventActionHistoFillActivateSet1;
   bool m_RichEventActionHistoFillActivateSet2;
@@ -150,7 +163,9 @@ private:
 
   bool m_RichG4HitReconUseSatHit;
   bool m_RichG4HitReconUseMidRadiator;
- 
+
+  bool m_RichG4InputMonActivate;
+  
 };
 // ============================================================================
 

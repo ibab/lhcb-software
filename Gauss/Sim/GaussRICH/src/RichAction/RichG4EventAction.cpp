@@ -55,6 +55,7 @@ RichG4EventAction::RichG4EventAction( const std::string& type   ,
     m_RichG4HistoFillTimer(0),
     m_RichG4EventHitCounter(0),
     m_RichG4HitRecon(0),
+    m_RichG4InputMon(0),
     m_RichEventActionVerboseLevel(0),
     m_RichEventActionHistoFillActivateSet1(false),
     m_RichEventActionHistoFillActivateSet2(false),
@@ -64,7 +65,8 @@ RichG4EventAction::RichG4EventAction( const std::string& type   ,
     m_RichG4EventHitActivateCount(false),
     m_RichG4EventActivateCkvRecon(false),
     m_RichG4HitReconUseSatHit(true),
-    m_RichG4HitReconUseMidRadiator(false)
+    m_RichG4HitReconUseMidRadiator(false),
+    m_RichG4InputMonActivate(false)
 {
   declareProperty( "RichEventActionVerbose",
                    m_RichEventActionVerboseLevel );
@@ -90,6 +92,9 @@ RichG4EventAction::RichG4EventAction( const std::string& type   ,
                   m_RichG4HitReconUseSatHit);
   declareProperty("RichG4EventHitReconUseMidRadiator",
                   m_RichG4HitReconUseMidRadiator);
+
+  declareProperty("RichG4InputMonitorActivate",
+		  m_RichG4InputMonActivate);
 
 
   m_RichHitCName= new RichG4HitCollName();
@@ -124,7 +129,9 @@ RichG4EventAction::RichG4EventAction( const std::string& type   ,
   // ckv angle for test
   m_RichG4HitRecon = new RichG4HitRecon();
 
-
+  // now intialise the Rich input monitors.
+  
+  m_RichG4InputMon = new RichG4InputMon();
 
 };
 // ============================================================================
@@ -140,7 +147,7 @@ RichG4EventAction::~RichG4EventAction( ){
   delPointer( m_RichG4HistoFillSet4 );
   delPointer( m_RichG4HistoFillTimer );
   delPointer( m_RichG4EventHitCounter );
-
+  delPointer( m_RichG4InputMon);
 };
 // ============================================================================
 
@@ -166,6 +173,20 @@ void RichG4EventAction::BeginOfEventAction ( const G4Event* /* aEvt */ )
 
   RichG4Counters* aRichCounter=RichG4Counters::getInstance();
   aRichCounter->InitRichEventCounters();
+  // now monitor the material input properties to Rich
+  // This is done only at the beginning of the first event.
+  // This is under a switch so that by default it is not activated.
+
+  if(m_RichG4InputMonActivate) {
+
+    if(m_RichG4InputMon->FirstMonInstance()) {
+      
+      m_RichG4InputMon->MonitorRich1GasRadiatorRefIndex();
+      m_RichG4InputMon->setFirstMonInstance(false);
+
+    }
+  
+  }
 
   // now for the reconstruction for test.
 

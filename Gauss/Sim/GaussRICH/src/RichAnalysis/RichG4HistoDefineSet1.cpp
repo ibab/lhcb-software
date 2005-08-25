@@ -73,14 +73,14 @@ void RichG4HistoDefineSet1::bookRichG4HistogramsSet1() {
 
     m_hGlobalRich1PeOriginPosHitXY = 
       CurHistoSvc->book(m_RichG4HistoPathSet1+"4",title,
-     280,-700.0,700.0,80,800.0, 1200.0);
+     280,-700.0,700.0,80,800.0, 2400.0);
 
 
     title="Global hit coordinate from Agel positive Y vs X for Rich1 ";
 
     m_hGlobalPEOriginAgelPosXY= 
          CurHistoSvc->book(m_RichG4HistoPathSet1+"122",title,
-     280,-700.0,700.0,80,800.0, 1200.0);
+     280,-700.0,700.0,80,800.0, 2400.0);
 
 
     //  title="GlobalPhotoelectron Origin from Agel Y vs X for Rich1 ";
@@ -114,7 +114,7 @@ void RichG4HistoDefineSet1::bookRichG4HistogramsSet1() {
 
     m_hGlobalPEOriginC4F10PosXY= 
          CurHistoSvc->book(m_RichG4HistoPathSet1+"152",title,
-     280,-700.0,700.0,80,800.0, 1200.0);
+     280,-700.0,700.0,80,800.0, 2400.0);
 
 
     //   title="GlobalPhotoelectron Origin from C4F10 Y vs X for Rich1 ";
