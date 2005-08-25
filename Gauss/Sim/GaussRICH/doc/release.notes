@@ -4,6 +4,15 @@
 ! Responsible	     : Gloria Corti
 ! Purpose          : collection of sensitive detectors, G4 actions, etc for RICH
 !-----------------------------------------------------------------------------
+!======================== GaussRICH v5r0 ==================================
+2005-08-20   - Sajan Easo
+- Add montoring Print statements to EventAction to verify the
+  refractive indices from RichCondition. This is done using the
+  RichG4InputMon.h and  RichG4InputMon.cpp and modifying the RichG4EventAction
+  By default this is switched off. To activate this one needs to set
+  GiGa.EventSeq.RichG4Event.RichG4InputMonitorActivate=true;
+  in RichAnalysis.opts.
+- Changed some histogram limits in RichG4HistoDefineSet1.
 
 !======================== GaussRICH v4r15 ==================================
 !2005-06-16 - Sajan Easo
