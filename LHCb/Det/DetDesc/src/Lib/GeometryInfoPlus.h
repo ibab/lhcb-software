@@ -1,4 +1,4 @@
-// $Id: GeometryInfoPlus.h,v 1.7 2005-07-14 16:13:32 jpalac Exp $
+// $Id: GeometryInfoPlus.h,v 1.8 2005-08-26 09:34:19 jpalac Exp $
 #ifndef LIB_GEOMETRYINFOPLUS_H 
 #define LIB_GEOMETRYINFOPLUS_H 1
 
@@ -163,7 +163,9 @@ public:
   /// Update the transformation parametrs in this GeometryInfo's
   /// AlignmentCondifion and re-do calculation of all matrices.
   StatusCode localDeltaParams(const std::vector<double>& trans,
-                              const std::vector<double>& rot);
+                              const std::vector<double>& rot,
+                              const std::vector<double>& pivot =
+                              std::vector<double>(3) );
 
   /// tranform the point from the global reference systemn 
   /// to the local reference system  

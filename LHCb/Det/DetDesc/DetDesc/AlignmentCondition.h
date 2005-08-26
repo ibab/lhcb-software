@@ -1,4 +1,4 @@
-// $Id: AlignmentCondition.h,v 1.3 2005-07-25 17:12:41 cattanem Exp $
+// $Id: AlignmentCondition.h,v 1.4 2005-08-26 09:34:19 jpalac Exp $
 #ifndef DETDESC_ALIGNMENTCONDITION_H 
 #define DETDESC_ALIGNMENTCONDITION_H 1
 
@@ -25,7 +25,9 @@ public:
   AlignmentCondition( );
   ///
   AlignmentCondition(const std::vector<double>& translation,
-                     const std::vector<double>& rotation );
+                     const std::vector<double>& rotation,
+                     const std::vector<double>& pivot =
+                     std::vector<double>(3) ) ;
   
   /// Constructor
   AlignmentCondition (const ITime& since, const ITime& till);
@@ -58,9 +60,10 @@ public:
   }
 
   inline StatusCode setTransformation( const std::vector<double>& translation,
-                                       const std::vector<double>& rotation) 
+                                       const std::vector<double>& rotation,
+                                       const std::vector<double>& pivot ) 
   {
-    loadParams(translation, rotation);
+    loadParams(translation, rotation, pivot);
     return makeMatrices();
   }
   
@@ -72,10 +75,12 @@ protected:
 private:
 
   inline void loadParams(const std::vector<double>& translation,
-                         const std::vector<double>& rotation     ) 
+                         const std::vector<double>& rotation,
+                         const std::vector<double>& pivot) 
   {
-    this->addParam(m_translationString, translation);
-    this->addParam(m_rotationString, rotation);
+    this->addParam(m_translationString, translation );
+    this->addParam(m_rotationString,    rotation    );
+    this->addParam(m_pivotString,       pivot       );
   }
   
 
@@ -93,6 +98,7 @@ private:
 
   const std::string m_translationString;
   const std::string m_rotationString;
+  const std::string m_pivotString;
 
 };
 #endif // DETDESC_ALIGNMENTCONDITION_H

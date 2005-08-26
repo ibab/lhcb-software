@@ -1,4 +1,4 @@
-// $Id: AlignmentCondition.cpp,v 1.3 2005-06-29 13:46:40 jpalac Exp $
+// $Id: AlignmentCondition.cpp,v 1.4 2005-08-26 09:34:19 jpalac Exp $
 // Include files
 
 #include "DetDesc/AlignmentCondition.h"
@@ -20,7 +20,8 @@ AlignmentCondition::AlignmentCondition(  ) :
   Condition(),
   m_services(DetDesc::services()),
   m_translationString("dPosXYZ"),
-  m_rotationString("dRotXYZ")
+  m_rotationString("dRotXYZ"),
+  m_pivotString("pivotXYZ")
 {
   MsgStream log(msgSvc(), "AlignmentCondition");
   log << MSG::VERBOSE << "Constructing default AlignmentCondition, classID " 
@@ -29,21 +30,21 @@ AlignmentCondition::AlignmentCondition(  ) :
 
 }
 //=============================================================================
-AlignmentCondition::AlignmentCondition(const std::vector<double>& 
-                                       translation,
-                                       const std::vector<double>& 
-                                       rotation ) : 
+AlignmentCondition::AlignmentCondition(const std::vector<double>& translation,
+                                       const std::vector<double>& rotation,
+                                       const std::vector<double>& pivot) : 
   Condition(),
   m_services(DetDesc::services()),
   m_translationString("dPosXYZ"),
-  m_rotationString("dRotXYZ")
+  m_rotationString("dRotXYZ"),
+  m_pivotString("pivotXYZ")
 {
   MsgStream log(msgSvc(), "AlignmentCondition");
   log << MSG::VERBOSE << "Constructing AlignmentCondition from transformation parameters. classID " 
       << classID()
       << endmsg;
 
-  setTransformation(translation, rotation);
+  setTransformation(translation, rotation, pivot);
 
 }
 
@@ -55,7 +56,8 @@ AlignmentCondition::AlignmentCondition(const ITime& since, const ITime& till )
   Condition (since, till),
   m_services(DetDesc::services()),
   m_translationString("dPosXYZ"),
-  m_rotationString("dRotXYZ")
+  m_rotationString("dRotXYZ"),
+  m_pivotString("pivotXYZ")
 {
   MsgStream log(msgSvc(), "AlignmentCondition");
   log << MSG::VERBOSE << "Constructing AlignmentCondition classID "
@@ -104,13 +106,20 @@ StatusCode AlignmentCondition::makeMatrices()
   
   std::vector<double> translations = paramAsDoubleVect (m_translationString);
   std::vector<double> rotations    = paramAsDoubleVect (m_rotationString);
+  std::vector<double> pivot = (exists(m_pivotString) ) ? 
+    paramAsDoubleVect(m_pivotString) : std::vector<double>(3);
 
-  if (translations.size()==3) {
-    log <<  MSG::VERBOSE << "Translations " 
-        << " X " << translations[0]
-        << " Y " << translations[1]
-        << " z " << translations[2] << endmsg;
-    m_matrixInv =  (*XYZTranslation(translations)) * (*XYZRotation(rotations));
+  std::transform(pivot.begin(), pivot.end(), 
+                 pivot.begin(), std::negate<double>());
+  
+  if (translations.size()==3  && rotations.size()==3 && pivot.size()==3) {
+
+    m_matrixInv =  
+      ( *XYZTranslation( translations ) ) *
+      ( ( *XYZTranslation( pivot )).inverse() *
+      ( ( *XYZRotation( rotations )       ) *
+        ( *XYZTranslation( pivot )        ) ));
+
     m_matrix = m_matrixInv.inverse();
     return StatusCode::SUCCESS;
   } else {

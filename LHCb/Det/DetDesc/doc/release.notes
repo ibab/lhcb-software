@@ -1,9 +1,16 @@
 ! =============================================================================
-! $Id: release.notes,v 1.215 2005-08-25 16:17:22 marcocle Exp $ 
+! $Id: release.notes,v 1.216 2005-08-26 09:34:19 jpalac Exp $ 
 ! =============================================================================
 ! package DetDesc
 ! package manager : Marco Clemencic, Juan Palacios
 ! =============================================================================
+
+! 2005-08-26 - Juan Palacios
+ - Added possibility to apply misalignments about an arbitrary pivot in the
+   local frame of the detector element. Changes to IGeometryInfo public
+   interface, and GeometryInfoPlus and AlignmentCondition public interfaces
+   and implementations. Interfaces are backwards compatible but all clients
+   of DetDesc require re-compilation.
 
 ! 2005-08-25 - Marco Clemencic
  - Fixed a bug in UpdateManagerSvc. It was not protected against changes in the

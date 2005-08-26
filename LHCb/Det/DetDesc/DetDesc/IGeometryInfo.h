@@ -1,4 +1,4 @@
-// $Id: IGeometryInfo.h,v 1.15 2005-07-12 16:21:18 jpalac Exp $ 
+// $Id: IGeometryInfo.h,v 1.16 2005-08-26 09:34:19 jpalac Exp $ 
 // ===========================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ===========================================================================
@@ -117,7 +117,9 @@ public:
   /// Update the transformation parametrs in this GeometryInfo's
   /// AlignmentCondifion.
   virtual StatusCode localDeltaParams(const std::vector<double>& trans,
-                                      const std::vector<double>& rot) =0;
+                                      const std::vector<double>& rot,
+                                      const std::vector<double>& pivot =
+                                       std::vector<double>(3)) =0;
 
   /**  transformation matrix  from Local Reference System
    *   to the Global Reference System of

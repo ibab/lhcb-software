@@ -1,4 +1,4 @@
-// $Id: GeometryInfoPlus.cpp,v 1.10 2005-07-14 16:13:32 jpalac Exp $
+// $Id: GeometryInfoPlus.cpp,v 1.11 2005-08-26 09:34:19 jpalac Exp $
 // Include files 
 
 // GaudiKernel
@@ -338,14 +338,15 @@ StatusCode GeometryInfoPlus::localDeltaMatrix(const HepTransform3D& newDelta)
 }
 //=============================================================================
 StatusCode GeometryInfoPlus::localDeltaParams(const std::vector<double>& trans,
-                                              const std::vector<double>& rot)
+                                              const std::vector<double>& rot,
+                                              const std::vector<double>& pivot)
 {
   // should also make children re-calculate matrices by calling their
   // calculateMatrices methods iteratively.
 
   if (this->hasAlignmentCondition()) {
     
-    return (myAlignmentCondition()->setTransformation(trans, rot) ) ? 
+    return (myAlignmentCondition()->setTransformation(trans, rot, pivot) ) ? 
       setLocalDeltaMatrix(myAlignmentCondition()->matrix()) :
       StatusCode::FAILURE;
   }
