@@ -1,4 +1,4 @@
-// $Id: MagneticFieldSvc.cpp,v 1.13 2005-01-25 14:09:49 cattanem Exp $
+// $Id: MagneticFieldSvc.cpp,v 1.14 2005-08-29 11:18:17 mneedham Exp $
 
 // Include files
 #include "GaudiKernel/AlgFactory.h"
@@ -329,22 +329,22 @@ void MagneticFieldSvc::fieldGrid (const HepPoint3D& r,
   if( fabs(h111) > 0.0 && 
       cx111 > 9.0e5 && cy111 > 9.0e5 && cz111 > 9.0e5) return;
 
-  bf(0) = ( cx000*h000 + cx001*h001 + cx010*h010 + cx011*h011 +
+  bf[0] = ( cx000*h000 + cx001*h001 + cx010*h010 + cx011*h011 +
             cx100*h100 + cx101*h101 + cx110*h110 + cx111*h111);
-  bf(1) = ( cy000*h000 + cy001*h001 + cy010*h010 + cy011*h011 +
+  bf[1] = ( cy000*h000 + cy001*h001 + cy010*h010 + cy011*h011 +
             cy100*h100 + cy101*h101 + cy110*h110 + cy111*h111 );
-  bf(2) = ( cz000*h000 + cz001*h001 + cz010*h010 + cz011*h011 +
+  bf[2] = ( cz000*h000 + cz001*h001 + cz010*h010 + cz011*h011 +
             cz100*h100 + cz101*h101 + cz110*h110 + cz111*h111 );
 
   if( r.x() < 0. && r.y() >= 0. ){
-    bf(0) = -bf(0);
+    bf[0] = -bf[0];
   }
   else if(  r.x() < 0. &&  r.y()  < 0. ){
-    bf(2) = -bf(2);
+    bf[2] = -bf[2];
   }
   else if( r.x() >= 0. && r.y() < 0. ){    
-    bf(0) = -bf(0);
-    bf(2) = -bf(2);
+    bf[0] = -bf[0];
+    bf[2] = -bf[2];
   } 
   return;      
 }

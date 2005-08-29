@@ -4,6 +4,9 @@
 ! Purpose     : Provides magnetic field map
 !-----------------------------------------------------------------------------
 
+! 2004-08-29 M. Needham
+! Use [] instead of () everywhere in B field calculations
+
 !====================== Magnet v2r8 2005-01-20 ==========================
 ! 2005-01-20 - Marco Cattaneo
  - Fixes for CLHEP 1.9
