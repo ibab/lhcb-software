@@ -15,17 +15,22 @@ CheckHLTBs2PhiGamma.MeasureTime = false;
 CheckHLTBs2PhiGamma.Members ={ "TrgL0Filter", "PrintHeader/PassedL0",
                                "TrgL1Filter", "PrintHeader/PassedL1",
                                "HltFilter/HltGenericFilter", "PrintHeader/PassedHltGeneric",
-                               "CheckSelResult/MergeOffBs2PhiGamma",
-                               "DecayChainNTuple/OffBs2PhiGammaTree",
-                               "CheckSelResult/MergeHLTBs2PhiGamma",
+                               "CheckSelResult/MergeOffBs2PhiGamma",  "PrintHeader/PassedOffBs2PhiGamma",
+                               "DecayChainNTuple/OffBs2PhiGammaTree", "PrintHeader/PassedOffBs2PhiGammaTree",
+                               "CheckSelResult/MergeHLTBs2PhiGamma", "PrintHeader/PassedHLTBs2PhiGamma",
                                "ResetOnOffline/HLTBs2PhiGammaTreeSetOnline",
-                               "DecayChainNTuple/HLTBs2PhiGammaTree"};
+                               "DecayChainNTuple/HLTBs2PhiGammaTree", "PrintHeader/PassedHLTBs2PhiGammaTree"};
  
 PassedL0.OutputLevel = 3;
 PassedL1.OutputLevel = 3;
 PassedHltGeneric.OutputLevel = 3;
 HltGenericFilter.RequireHLT = false;
 HltGenericFilter.RequireGeneric = true; 
+
+PassedOffBs2PhiGamma.OutputLevel = 3;
+PassedOffBs2PhiGammaTree.OutputLevel = 3;
+PassedHLTBs2PhiGamma.OutputLevel = 3;
+PassedHLTBs2PhiGammaTree.OutputLevel = 3;
  
 MergeOffBs2PhiGamma.Algorithms = {"TDRselBs2PhiGamma"};
 MergeHLTBs2PhiGamma.Algorithms = {"HLTFilterBs2PhiGamma"};

@@ -15,17 +15,22 @@ CheckHLTBd2D0Kstar.MeasureTime = false;
 CheckHLTBd2D0Kstar.Members ={ "TrgL0Filter", "PrintHeader/PassedL0",
                               "TrgL1Filter", "PrintHeader/PassedL1",
                               "HltFilter/HltGenericFilter", "PrintHeader/PassedHltGeneric",
-                              "CheckSelResult/MergeOffBd2D02KpiKstar",
-                              "DecayChainNTuple/OffBd2D02KpiKstarTree",
-                              "CheckSelResult/MergeHLTBd2D0Kstar",
+                              "CheckSelResult/MergeOffBd2D02KpiKstar", "PrintHeader/PassedOffBd2D02KpiKstar",
+                              "DecayChainNTuple/OffBd2D02KpiKstarTree", "PrintHeader/PassedOffBd2D02KpiKstarTree",
+                              "CheckSelResult/MergeHLTBd2D0Kstar", "PrintHeader/PassedHLTBd2D0Kstar",
                               "ResetOnOffline/HLTBd2D0KstarTreeSetOnline",
-                              "DecayChainNTuple/HLTBd2D0KstarTree"};
+                              "DecayChainNTuple/HLTBd2D0KstarTree", "PrintHeader/PassedHLTBd2D0KstarTree"};
  
 PassedL0.OutputLevel = 3;
 PassedL1.OutputLevel = 3;
 PassedHltGeneric.OutputLevel = 3;
 HltGenericFilter.RequireHLT = false;
 HltGenericFilter.RequireGeneric = true; 
+
+PassedOffBd2D02KpiKstar.OutputLevel = 3;
+PassedOffBd2D02KpiKstarTree.OutputLevel = 3;
+PassedHLTBd2D0Kstar.OutputLevel = 3;
+PassedHLTBd2D0KstarTree.OutputLevel = 3;
 
 MergeOffBd2D02KpiKstar.Algorithms = {"TDRselBd2D02KpiKstar"};
 MergeHLTBd2D0Kstar.Algorithms = {"HLTFilterBd2D0Kstar"};

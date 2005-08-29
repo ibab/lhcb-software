@@ -16,17 +16,22 @@ CheckHLTBs2DsH.MeasureTime = false;
 CheckHLTBs2DsH.Members ={ "TrgL0Filter", "PrintHeader/PassedL0",
                           "TrgL1Filter", "PrintHeader/PassedL1",
                           "HltFilter/HltGenericFilter", "PrintHeader/PassedHltGeneric",
-                          "CheckSelResult/MergeOffBs2DsH", 
-                          "DecayChainNTuple/OffBs2DsHTree",
-                          "CheckSelResult/MergeHLTBs2DsH",
+                          "CheckSelResult/MergeOffBs2DsH", "PrintHeader/PassedOffBs2DsH",
+                          "DecayChainNTuple/OffBs2DsHTree", "PrintHeader/PassedOffBs2DsHTree",
+                          "CheckSelResult/MergeHLTBs2DsH", "PrintHeader/PassedHLTBs2DsH",
                           "ResetOnOffline/HLTBs2DsHTreeSetOnline",
-                          "DecayChainNTuple/HLTBs2DsHTree"};
+                          "DecayChainNTuple/HLTBs2DsHTree", "PrintHeader/PassedHLTBs2DsHTree"};
 
 PassedL0.OutputLevel = 3;
 PassedL1.OutputLevel = 3;
 PassedHltGeneric.OutputLevel = 3;
 HltGenericFilter.RequireHLT = false;
 HltGenericFilter.RequireGeneric = true;  
+
+PassedOffBs2DsH.OutputLevel = 3;
+PassedOffBs2DsHTree.OutputLevel = 3;
+PassedHLTBs2DsH.OutputLevel = 3;
+PassedHLTBs2DsHTree.OutputLevel = 3;
 
 MergeOffBs2DsH.Algorithms = {"TDRselBs2DsPi", "TDRselBs2DsK"};
 MergeOffBs2DsH.ANDmode = false;

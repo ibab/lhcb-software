@@ -19,17 +19,22 @@ CheckHLTB2JpsiX.MeasureTime = false;
 CheckHLTB2JpsiX.Members ={ "TrgL0Filter", "PrintHeader/PassedL0",
                            "TrgL1Filter", "PrintHeader/PassedL1",
                            "HltFilter/HltGenericFilter", "PrintHeader/PassedHltGeneric",
-                           "CheckSelResult/MergeOffB2JpsiX", 
-                           "DecayChainNTuple/OffB2JpsiXTree",
-                           "CheckSelResult/MergeHLTB2JpsiX",
+                           "CheckSelResult/MergeOffB2JpsiX",  "PrintHeader/PassedOffB2JpsiX",
+                           "DecayChainNTuple/OffB2JpsiXTree", "PrintHeader/PassedOffB2JpsiXTree",
+                           "CheckSelResult/MergeHLTB2JpsiX", "PrintHeader/PassedHLTB2JpsiX",
                            "ResetOnOffline/HLTB2JpsiXTreeSetOnline",
-                           "DecayChainNTuple/HLTB2JpsiXTree"};
+                           "DecayChainNTuple/HLTB2JpsiXTree", "PrintHeader/PassedHLTB2JpsiXTree"};
 
 PassedL0.OutputLevel = 3;
 PassedL1.OutputLevel = 3;
 PassedHltGeneric.OutputLevel = 3;
 HltGenericFilter.RequireHLT = false;
 HltGenericFilter.RequireGeneric = true;  
+
+PassedOffB2JpsiX.OutputLevel = 3;
+PassedOffB2JpsiXTree.OutputLevel = 3;
+PassedHLTB2JpsiX.OutputLevel = 3;
+PassedHLTB2JpsiXTree.OutputLevel = 3;
 
 MergeOffB2JpsiX.Algorithms = { "TDRselBd2Jpsi2MuMu_Ks2PiPi","TDRselBs2Jpsi2MuMu_Phi2KK"};
 MergeOffB2JpsiX.ANDmode = false;

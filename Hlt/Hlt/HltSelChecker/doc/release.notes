@@ -4,6 +4,10 @@
 ! Purpose     : High-Level Trigger Exclusive Selections - Checking 
 !-----------------------------------------------------------------------------
 
+! 2005-08-29 - Luis Fernandez
+ - options/
+   . Print headers
+
 !========================== HltSelChecker v3r6 2005-08-23 ===================
 ! 2005-08-08 - P. Koppenburg
  - options/

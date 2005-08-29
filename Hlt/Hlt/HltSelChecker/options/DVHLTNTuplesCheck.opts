@@ -22,6 +22,7 @@ ApplicationMgr.DLLs += {"HltSelChecker"};
 // OfflineTracks.opts not included
 #include "$DAVINCIROOT/options/DaVinciReco.opts"
 #include "$DAVINCIROOT/options/DaVinciNeutrals.opts"
+Neutrals.Members  = { "CaloDigitsFromRaw" };
 
 // Define PV for the offline selections check
 // Important !!!
