@@ -1,4 +1,4 @@
-// $Id: PopulateDB.cpp,v 1.20 2005-08-16 09:28:52 marcocle Exp $
+// $Id: PopulateDB.cpp,v 1.21 2005-08-30 14:58:44 marcocle Exp $
 // Include files
 #include <iostream>
 #include <fstream>
@@ -442,7 +442,11 @@ StatusCode PopulateDB::i_condDBDumpSampleData() {
   tags.push_back("FORFUN");
 
   // List all stored Folders 
+#ifndef COOL_1_2
   std::vector<std::string> fldr_names = db->listFolders();
+#else
+  std::vector<std::string> fldr_names = db->listAllNodes();
+#endif
   info() << " --> List of CondDB Folders" << endmsg;
   for ( std::vector<std::string>::iterator fldr_name = fldr_names.begin();
         fldr_name != fldr_names.end(); fldr_name++ ){

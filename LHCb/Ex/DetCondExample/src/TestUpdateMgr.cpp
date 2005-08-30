@@ -1,4 +1,4 @@
-// $Id: TestUpdateMgr.cpp,v 1.3 2005-07-14 15:13:24 marcocle Exp $
+// $Id: TestUpdateMgr.cpp,v 1.4 2005-08-30 14:58:44 marcocle Exp $
 // Include files 
 
 // from Gaudi
@@ -65,6 +65,7 @@ StatusCode TestUpdateMgr::initialize() {
 
     // I'm crazy... but that must work!
     m_ums->registerCondition(m_dummyUMSentry);
+    //m_ums->registerCondition(this,m_dummyUMSentry);
 
   } catch (GaudiException) {
     return StatusCode::FAILURE;

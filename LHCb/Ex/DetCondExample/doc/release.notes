@@ -1,9 +1,14 @@
 ! =============================================================================
-! $Id: release.notes,v 1.48 2005-08-16 09:31:57 marcocle Exp $
+! $Id: release.notes,v 1.49 2005-08-30 14:58:44 marcocle Exp $
 ! =============================================================================
 ! package Ex/DetCondExample
 ! package manager : Marco Clemencic
 ! =============================================================================
+
+!=========== Ex/DetCondExample v7r5 2005-08-30 ===============================
+! 2005-08-30 - Marco Clemencic
+ - Test cool::ChannelId in the CondDBCache (DetCond >= v7r6)
+ - Test that the conflict finder works also in more tricky cases
 
 ! 2005-08-16 - Marco Clemencic
  - Commented TNS_ADMIN in the requirements (it is not really needed)

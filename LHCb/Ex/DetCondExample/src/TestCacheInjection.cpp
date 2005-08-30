@@ -1,4 +1,4 @@
-// $Id: TestCacheInjection.cpp,v 1.3 2005-07-11 09:04:29 marcocle Exp $
+// $Id: TestCacheInjection.cpp,v 1.4 2005-08-30 14:58:44 marcocle Exp $
 // Include files 
 
 // from Gaudi
@@ -60,6 +60,8 @@ StatusCode TestCacheInjection::initialize() {
     info() << "*** register conditions ***" << endreq;
     m_ums->registerCondition(this,"/dd/CacheTest/Object1",NULL);
     m_ums->registerCondition(this,"/dd/CacheTest/Object2",NULL);
+    m_ums->registerCondition(this,"/dd/CacheTest/Object3",NULL);
+    m_ums->registerCondition(this,"/dd/CacheTest/Object4",NULL);
     m_ums->update(this);
   }
   catch (GaudiException) {
@@ -113,12 +115,20 @@ StatusCode TestCacheInjection::execute() {
 
   SmartDataPtr<Condition> cond1( detSvc(), "/dd/CacheTest/Object1" );
   SmartDataPtr<Condition> cond2( detSvc(), "/dd/CacheTest/Object2" );
+  SmartDataPtr<Condition> cond3( detSvc(), "/dd/CacheTest/Object3" );
+  SmartDataPtr<Condition> cond4( detSvc(), "/dd/CacheTest/Object4" );
 
   info() << "Object1: " << cond1->validSince() << " -> " << cond1->validTill() << endmsg;
   info() << "         data = " << cond1->paramAsString("data") << endmsg;
   
   info() << "Object2: " << cond2->validSince() << " -> " << cond2->validTill() << endmsg;
   info() << "         data = " << cond2->paramAsString("data") << endmsg;
+  
+  info() << "Object3: " << cond3->validSince() << " -> " << cond3->validTill() << endmsg;
+  info() << "         data = " << cond3->paramAsString("data") << endmsg;
+  
+  info() << "Object4: " << cond4->validSince() << " -> " << cond4->validTill() << endmsg;
+  info() << "         data = " << cond4->paramAsString("data") << endmsg;
   
   return StatusCode::SUCCESS;
 };
@@ -141,7 +151,7 @@ StatusCode TestCacheInjection::i_injectData() {
   // add a couple of folders
   if (!m_dbAccSvc->cacheAddXMLFolder("/test/cache/folder1")) return StatusCode::FAILURE;
   if (!m_dbAccSvc->cacheAddXMLFolder("/test/cache/folder2")) return StatusCode::FAILURE;
-
+  if (!m_dbAccSvc->cacheAddXMLFolder("/test/cache/folder3")) return StatusCode::FAILURE;
   
   // then the objects
   Condition testCond;
@@ -158,6 +168,24 @@ StatusCode TestCacheInjection::i_injectData() {
   
   testCond.param<std::string>("data") = "object 2";
   if (!m_dbAccSvc->cacheAddXMLObject("/test/cache/folder2",0,time_absolutefuture,testCond.toXml("Object2"))) {
+    return StatusCode::FAILURE;
+  }
+
+  testCond.param<std::string>("data") = "object 3.1";
+  if (!m_dbAccSvc->cacheAddXMLObject("/test/cache/folder3",20,time_absolutefuture,testCond.toXml("Object3"))) {
+    return StatusCode::FAILURE;
+  }
+  testCond.param<std::string>("data") = "object 3.0";
+  if (!m_dbAccSvc->cacheAddXMLObject("/test/cache/folder3",0,20,testCond.toXml("Object3"))) {
+    return StatusCode::FAILURE;
+  }
+  testCond.param<std::string>("data") = "object 3.2";
+  if (!m_dbAccSvc->cacheAddXMLObject("/test/cache/folder3",30,time_absolutefuture,testCond.toXml("Object3"))) {
+    return StatusCode::FAILURE;
+  }
+
+  testCond.param<std::string>("data") = "object 4";
+  if (!m_dbAccSvc->cacheAddXMLObject("/test/cache/folder3",0,time_absolutefuture,testCond.toXml("Object4"),1)) {
     return StatusCode::FAILURE;
   }
 

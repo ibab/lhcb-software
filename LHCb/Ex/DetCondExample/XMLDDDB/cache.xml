@@ -5,6 +5,8 @@
     <catalog name="CacheTest">
       <conditionref href="conddb:/test/cache/folder1#Object1"/>
       <conditionref href="conddb:/test/cache/folder2#Object2"/>
+      <conditionref href="conddb:/test/cache/folder3#Object3"/>
+      <conditionref href="conddb:/test/cache/folder3:1#Object4"/>
     </catalog>
   </catalog>
 </DDDB>
