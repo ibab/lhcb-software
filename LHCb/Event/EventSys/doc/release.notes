@@ -1,6 +1,11 @@
 package EventSys
 package manager: Marco Cattaneo
 
+!======================== EventSys v20r9 2005-08-30 ========================
+! 2005-08-30 - Marco Cattaneo
+ - Use TrgEvent v5r6
+ - Add TrackEventDict to PoolDicts.opts
+
 !======================== EventSys v20r8 2005-07-21 ========================
 ! 2005-07-21 - Marco Cattaneo
  - Use DAQEvent v5r2p2, PhysEvent v8r10, PackedEvent v1r1, TrackEvent v1r3,
