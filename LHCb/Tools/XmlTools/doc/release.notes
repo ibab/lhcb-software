@@ -4,6 +4,7 @@
 ! Purpose     : Interface to XML Xerces Parser plus some extra services
 !-----------------------------------------------------------------------------
 
+!================= XmlTools v3r6p1 2005-08-30 ==========================
 ! 2005-08-01 - Marco Clemencic
  - fixed a Win32 warning in XmlCnvSvc.cpp
 
