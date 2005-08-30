@@ -4,7 +4,7 @@
 ! Purpose     : collect Det packages
 !-----------------------------------------------------------------------------
 
-!========================= DetSys v7r5 2005-08-30 =========================
+!========================= DetSys v7r4 2005-08-30 =========================
 ! 2005-08-30 - Marco Cattaneo
  - Use DetDesc v15r4, DetDescCnv v2r9, Magnet v1r13p1, XmlTools v3r6p1
 
@@ -14,7 +14,6 @@
    dict/DetDict.h for use in CondDB browser
  - Add class IDetDataSvc to dict/DetDict.xml
 
-!========================= DetSys v7r4 2005-07-29 =========================
 ! 2005-07-29 - Marco Cattaneo
  - Use STDet v1r5
 
