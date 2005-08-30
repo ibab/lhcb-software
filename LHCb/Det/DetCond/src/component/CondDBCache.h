@@ -1,4 +1,4 @@
-// $Id: CondDBCache.h,v 1.1 2005-06-23 14:14:46 marcocle Exp $
+// $Id: CondDBCache.h,v 1.2 2005-08-30 14:37:38 marcocle Exp $
 #ifndef COMPONENT_CONDDBCACHE_H 
 #define COMPONENT_CONDDBCACHE_H 1
 
@@ -38,28 +38,39 @@ public:
 
   /// Add a new data object to the cache.
   /// \warning {no check performed}
-  bool insert(const cool::IFolderPtr &folder,const cool::IObjectPtr &obj);
+  bool insert(const cool::IFolderPtr &folder,const cool::IObjectPtr &obj, const cool::ChannelId &channel = 0);
 
   bool addFolder(const std::string &path, const std::string &descr, const pool::AttributeListSpecification& spec);
   bool addObject(const std::string &path, const cool::ValidityKey &since, const cool::ValidityKey &until,
-                 const pool::AttributeList& al, IOVType *iov_before = NULL);
+                 const pool::AttributeList& al, const cool::ChannelId &channel, IOVType *iov_before = NULL);
+  /// (version kept for backward compatibility)
+  inline bool addObject(const std::string &path, const cool::ValidityKey &since, const cool::ValidityKey &until,
+                        const pool::AttributeList& al, IOVType *iov_before = NULL)
+  {
+    return addObject(path,since,until,al,0,iov_before);
+  }
+  
 
   /// Search an entry in the cache and returns the data string or an empty string if no object is found.
   bool get(const std::string &path, const cool::ValidityKey &when,
+           const cool::ChannelId &channel,
            cool::ValidityKey &since, cool::ValidityKey &until,
            std::string &descr, boost::shared_ptr<pool::AttributeList> &payload) ;
+
+  /// Search an entry in the cache and returns the data string or an empty string if no object is found.
+  /// (version kept for backward compatibility)
+  inline bool get(const std::string &path, const cool::ValidityKey &when,
+                  cool::ValidityKey &since, cool::ValidityKey &until,
+                  std::string &descr, boost::shared_ptr<pool::AttributeList> &payload) {
+    return get(path,when,0,since,until,descr,payload);
+  }
+  
 
   /// Remove all entries from the cache;
   inline void clear() {m_cache.clear();}
   
   /// Get the number of items cached.
-  inline size_t size() const {
-    size_t count = 0;
-    std::map<std::string,CondFolder>::const_iterator folder;
-    for (folder = m_cache.begin(); folder != m_cache.end(); ++folder)
-      count += folder->second.items.size();
-    return count;
-  }
+  inline size_t size() const;
   
   inline void setHighLevel(size_t lvl) { m_highLvl = lvl; }
   inline void setLowLevel(size_t lvl) { m_lowLvl = lvl; }
@@ -74,7 +85,7 @@ public:
   inline bool hasPath(const std::string &path) const { return m_cache.count(path); }
   
   /// Check if the given path,time pair is present in the cash.
-  bool hasTime(const std::string &path, const cool::ValidityKey &when) const;
+  bool hasTime(const std::string &path, const cool::ValidityKey &when, const cool::ChannelId &channel = 0) const;
 
   void dump();
   
@@ -89,8 +100,7 @@ private:
   //typedef std::vector<CondItem> ItemListType;
   typedef std::list<CondItem> ItemListType;
   //  typedef std::map<FolderIdType,CondFolder> FolderListType;
-  typedef std::map<FolderIdType,CondFolder> StorageType;
-  
+  typedef std::map<FolderIdType,CondFolder> StorageType;  
 
   /// Internal class used to record IOV+data pairs
   struct CondItem {
@@ -125,6 +135,8 @@ private:
   /// Internal class used to keep the items common to a given path.
   struct CondFolder {
 
+    typedef std::map<cool::ChannelId,ItemListType> StorageType;
+    
     CondFolder(const cool::IFolderPtr &fld):
       description(fld->description()),spec(new pool::AttributeListSpecification),sticky(false) {
       for (pool::AttributeListSpecification::const_iterator a = fld->payloadSpecification().begin();
@@ -142,45 +154,49 @@ private:
     }
     std::string description;
     boost::shared_ptr<pool::AttributeListSpecification> spec;
-    ItemListType items;
+    StorageType items;
     bool sticky;
     /// Search for the first item in the storage valid at the given time.
-    inline ItemListType::iterator find(const cool::ValidityKey &when) {
+    inline ItemListType::iterator find(const cool::ValidityKey &when, const cool::ChannelId &channel = 0) {
+      ItemListType &lst = items[channel];
       ItemListType::iterator i;
-      for ( i = items.begin(); i != items.end() && !i->valid(when) ; ++i ){}
+      for ( i = lst.begin(); i != lst.end() && !i->valid(when) ; ++i ){}
       return i;
     }
     /// Const version of the search method.
-    inline ItemListType::const_iterator find(const cool::ValidityKey &when) const {
+    inline ItemListType::const_iterator find(const cool::ValidityKey &when, const cool::ChannelId &channel = 0) const {
+      const ItemListType &lst = (*const_cast<StorageType *>(&items))[channel];
       ItemListType::const_iterator i;
-      for ( i = items.begin(); i != items.end() && !i->valid(when) ; ++i ){}
+      for ( i = lst.begin(); i != lst.end() && !i->valid(when) ; ++i ){}
       return i;
     }
-    inline ItemListType::iterator conflict(const cool::ValidityKey &since, const cool::ValidityKey &until) {
+    inline ItemListType::iterator conflict(const cool::ValidityKey &since, const cool::ValidityKey &until,
+                                           const cool::ChannelId &channel = 0) {
+      ItemListType &lst = items[channel];
       ItemListType::iterator i;
-      for ( i = items.begin(); i != items.end() ; --i ){
-        if ( ( i->iov.first >= since ? i->iov.first : since ) <  ( i->iov.second <= until ? i->iov.second : until ) ) return i;
+      for ( i = lst.begin(); i != lst.end() ; ++i ){
+        if ( ( i->iov.first >= since ? i->iov.first : since ) < ( i->iov.second <= until ? i->iov.second : until ) ) return i;
       }
       return i;
     }
-    inline ItemListType::const_iterator conflict(const cool::ValidityKey &since, const cool::ValidityKey &until) const {
+    inline ItemListType::const_iterator conflict(const cool::ValidityKey &since, const cool::ValidityKey &until,
+                                                 const cool::ChannelId &channel = 0) const {
+      const ItemListType &lst = (*const_cast<StorageType *>(&items))[channel];
       ItemListType::const_iterator i;
-      for ( i = items.begin(); i != items.end() ; --i ){
-        /*
-        if ( ( i->iov.first >= since && i->iov.first < until )
-             || ( i->iov.second > since && i->iov.second < until )
-             || ( i->iov.first < since && i->iov.second >= until ) ) {
-          std::cout << "old " << i->iov.first << " - " << i->iov.second << std::endl;
-          std::cout << "new " << since << " - " << until << std::endl;
-          return i;
-          }
-        */
-        if ( ( i->iov.first >= since ? i->iov.first : since ) <  ( i->iov.second <= until ? i->iov.second : until ) ) return i;
+      for ( i = lst.begin(); i != lst.end() ; ++i ){
+        if ( ( i->iov.first >= since ? i->iov.first : since ) < ( i->iov.second <= until ? i->iov.second : until ) ) return i;
       }
       return i;
     }
-    inline void erase (const cool::ValidityKey &when) { items.erase(find(when)); }
-    inline bool empty() const { return items.empty(); }
+    inline void erase (const cool::ValidityKey &when, const cool::ChannelId &channel = 0) {
+      items[channel].erase(find(when,channel));
+    }
+    inline bool empty() const {
+      for (StorageType::const_iterator ch = items.begin(); ch != items.end(); ++ch ) {
+        if (! ch->second.empty()) return false;
+      }    
+      return true;
+    }
       
   };
 
@@ -195,4 +211,15 @@ private:
 
   cool::ValidityKey m_lastRequestedTime;
 };
+
+inline size_t CondDBCache::size() const {
+  size_t count = 0;
+  StorageType::const_iterator folder;
+  for (folder = m_cache.begin(); folder != m_cache.end(); ++folder) {
+    for (CondFolder::StorageType::const_iterator ch = folder->second.items.begin(); ch != folder->second.items.end(); ++ch)
+      count += ch->second.size();
+  }
+  return count;
+}
+
 #endif // COMPONENT_CONDDBCACHE_H

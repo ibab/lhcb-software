@@ -1,4 +1,4 @@
-//$Id: CondDBCnvSvc.cpp,v 1.3 2005-07-11 08:59:03 marcocle Exp $
+//$Id: CondDBCnvSvc.cpp,v 1.4 2005-08-30 14:37:38 marcocle Exp $
 #include <string>
 
 #include "CondDBCnvSvc.h"
@@ -85,7 +85,7 @@ StatusCode CondDBCnvSvc::finalize()
 StatusCode CondDBCnvSvc::createAddress( long svc_type,
 					      const CLID& clid,
 					      const std::string* par, 
-					      const unsigned long* /*ipar*/,
+					      const unsigned long* ipar,
 					      IOpaqueAddress*& refpAddress ) {
   
   // First check that requested address is of type CONDDB_StorageType
@@ -106,11 +106,15 @@ StatusCode CondDBCnvSvc::createAddress( long svc_type,
   // for instance in the case of XML files with more than one element).
   std::string entryName = par[1];
 
+  // iPar[0] is the cool::ChannelId
+  unsigned long channelId = ipar[0];
+  
   // Now create the address
   refpAddress = new GenericAddress( CONDDB_StorageType, 
-				    clid, 
-				    folderName,
-				    entryName );
+                                    clid,
+                                    folderName,
+                                    entryName,
+                                    channelId );
   return StatusCode::SUCCESS;
 
 }

@@ -1,4 +1,4 @@
-// $Id: CondDBAccessSvc.h,v 1.7 2005-07-07 12:23:14 marcocle Exp $
+// $Id: CondDBAccessSvc.h,v 1.8 2005-08-30 14:37:38 marcocle Exp $
 #ifndef COMPONENT_CONDDBACCESSSVC_H 
 #define COMPONENT_CONDDBACCESSSVC_H 1
 
@@ -48,12 +48,12 @@ public:
   
   /// Utility function that simplifies the storage of an XML string.
   virtual StatusCode storeXMLString(const std::string &path, const std::string &data,
-                                    const TimePoint &since, const TimePoint &until) const;
+                                    const TimePoint &since, const TimePoint &until, cool::ChannelId channel = 0) const;
   
   /// Utility function that simplifies the storage of an XML string.
   /// (Useful for Python, the times are in seconds)
   virtual StatusCode storeXMLString(const std::string &path, const std::string &data,
-                                    const double since_s, const double until_s) const;
+                                    const double since_s, const double until_s, cool::ChannelId channel = 0) const;
   
   /// Convert from TimePoint class to cool::ValidityKey.
   virtual cool::ValidityKey timeToValKey(const TimePoint &time) const;
@@ -70,11 +70,11 @@ public:
   /// Tag the given folder with the given tag-name. If the requested folder is
   /// a folderset, the tag is applied to all the folders below it. (waiting for HVS)
   virtual StatusCode tagFolder(const std::string &path, const std::string &tagName,
-                               const std::string &description);
+                               const std::string &description, cool::ChannelId channel = 0);
 
   virtual StatusCode getObject (const std::string &path, const TimePoint &when,
                                 boost::shared_ptr<pool::AttributeList> &data,
-                                std::string &descr, TimePoint &since, TimePoint &until);
+                                std::string &descr, TimePoint &since, TimePoint &until, cool::ChannelId channel = 0);
 
   /// Add a folder to the cache (bypass the DB)
   virtual StatusCode cacheAddFolder(const std::string &path, const std::string &descr,
@@ -85,11 +85,11 @@ public:
   
   ///Add an object to the cache (bypass the DB)
   virtual StatusCode cacheAddObject(const std::string &path, const TimePoint &since, const TimePoint &until,
-                                    const pool::AttributeList& payload);
+                                    const pool::AttributeList& payload, cool::ChannelId channel = 0);
   
   ///Add an XML object to the cache (bypass the DB)
   virtual StatusCode cacheAddXMLObject(const std::string &path, const TimePoint &since, const TimePoint &until,
-                                       const std::string& data);
+                                       const std::string& data, cool::ChannelId channel = 0);
 
   /// Dump the cache (debug)
   virtual void dumpCache() const;

@@ -1,4 +1,4 @@
-// $Id: CondDBGenericCnv.cpp,v 1.5 2005-07-07 12:23:14 marcocle Exp $
+// $Id: CondDBGenericCnv.cpp,v 1.6 2005-08-30 14:37:38 marcocle Exp $
 // Include files 
 #include "GaudiKernel/IDetDataSvc.h"
 #include "GaudiKernel/TimePoint.h"
@@ -111,7 +111,8 @@ void CondDBGenericCnv::setObjValidity(TimePoint &since, TimePoint &till, DataObj
 //=========================================================================
 //  get an object from the conditions database
 //=========================================================================
-StatusCode CondDBGenericCnv::getObject (const std::string &path, boost::shared_ptr<pool::AttributeList> &data,
+StatusCode CondDBGenericCnv::getObject (const std::string &path, const cool::ChannelId &channel,
+                                        boost::shared_ptr<pool::AttributeList> &data,
                                         std::string &descr, TimePoint &since, TimePoint &until) {
 
   MsgStream log(msgSvc(),"CondDBGenericCnv");
@@ -127,7 +128,7 @@ StatusCode CondDBGenericCnv::getObject (const std::string &path, boost::shared_p
   
   for ( std::vector<ICondDBAccessSvc*>::iterator accSvc = m_condDBCnvSvc->accessServices().begin();
         accSvc !=  m_condDBCnvSvc->accessServices().end() && ! found_object ; ++accSvc ) {
-    found_object = (*accSvc)->getObject(path,now,data,descr,since,until).isSuccess();
+    found_object = (*accSvc)->getObject(path,now,data,descr,since,until,channel).isSuccess();
   }
   return (found_object) ? StatusCode::SUCCESS : StatusCode::FAILURE;
 }

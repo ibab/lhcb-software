@@ -1,4 +1,4 @@
-// $Id: RelyConverter.cpp,v 1.9 2005-06-30 16:16:58 marcocle Exp $
+// $Id: RelyConverter.cpp,v 1.10 2005-08-30 14:37:38 marcocle Exp $
 // Include files 
 #include "RelyConverter.h"
 
@@ -183,7 +183,7 @@ StatusCode RelyConverter::i_delegatedCreation(IOpaqueAddress* pAddress, DataObje
   std::string description;
   TimePoint since,until;
   
-  sc = getObject(pAddress->par()[0], data, description, since, until);
+  sc = getObject(pAddress->par()[0], pAddress->ipar()[0], data, description, since, until);
   if ( !sc.isSuccess() ) return sc;
 
   long storage_type = getStorageType(description);

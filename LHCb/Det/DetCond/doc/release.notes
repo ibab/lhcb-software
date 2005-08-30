@@ -1,23 +1,31 @@
-# $Id: release.notes,v 1.48 2005-07-21 07:57:50 marcocle Exp $
+# $Id: release.notes,v 1.49 2005-08-30 14:37:38 marcocle Exp $
 Package Det/DetCond
 Package manager : Marco Clemencic
 
+================= Det/DetCond v7r6 2005-08-30 ================================
+! 2005-08-30 - Marco Clemencic
+ - Added support to cool::ChannelId
+   (needs DetDesc >= v15r4 and DetDescCnv > v2r8)
+ - Fixed a bug in CondDBCache
+   (the search of conflicts in the IOVs worked only in a well defined case,
+    the one tested!)
+
 ================= Det/DetCond v7r5 2005-07-21 ================================
-! 2005-07-21 - Marco CLEMENCIC
+! 2005-07-21 - Marco Clemencic
  - Apply always tag NEEDS_COOL_FACTORY (is needed by Windows and Python)
 
-! 2005-07-11 - Marco CLEMENCIC
+! 2005-07-11 - Marco Clemencic
  - Removed unused pointers from CondDBCnvSvc
 
 ! 2005-07-07 - Marco Cattaneo
  - Fix a doxygen warning
 
-! 2005-07-07 - Marco CLEMENCIC
+! 2005-07-07 - Marco Clemencic
  - Abstract interfaces moved to DetDesc (to allow python bindings)
  - Added CondDBAccessSvc::dumpCache(), it prints (level=DEBUG) the content
    of the cache.
 
-! 2005-06-30 - Marco CLEMENCIC
+! 2005-06-30 - Marco Clemencic
  - Added RelyConverter::fillObjectRefs (was missing, but needed for
    initialization of objects)
 

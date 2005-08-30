@@ -1,4 +1,4 @@
-// $Id: CondDBCache.cpp,v 1.1 2005-06-23 14:14:46 marcocle Exp $
+// $Id: CondDBCache.cpp,v 1.2 2005-08-30 14:37:38 marcocle Exp $
 // Include files 
 
 
@@ -38,7 +38,7 @@ CondDBCache::~CondDBCache() {
 //=========================================================================
 //  Add a new item to the cache
 //=========================================================================
-bool CondDBCache::insert(const cool::IFolderPtr &folder,const cool::IObjectPtr &obj) {
+bool CondDBCache::insert(const cool::IFolderPtr &folder,const cool::IObjectPtr &obj, const cool::ChannelId &channel) {
   // increment object count and check the limit
   if ( m_level >= highLevel() ){
     // needs clean up
@@ -46,12 +46,15 @@ bool CondDBCache::insert(const cool::IFolderPtr &folder,const cool::IObjectPtr &
     clean_up();
   }
   m_log << MSG::DEBUG << "Insert  Folder '" << folder->fullPath()
-        << "', IOV : " << obj->since() << " - " << obj->until() << endmsg;
-  std::map<std::string,CondFolder>::iterator f = m_cache.find(folder->fullPath());
+        << "', IOV : " << obj->since() << " - " << obj->until()
+        << ", channel : " << channel << endmsg;
+  
+  FolderIdType id(folder->fullPath());
+  StorageType::iterator f = m_cache.find(id);
   if (f == m_cache.end()){
-    f = m_cache.insert(std::pair<std::string,CondFolder>(folder->fullPath(),CondFolder(folder))).first;
+    f = m_cache.insert(StorageType::value_type(id,CondFolder(folder))).first;
   } else {
-    if (f->second.conflict(obj->since(),obj->until()) != f->second.items.end()) {
+    if (f->second.items[channel].end() != f->second.conflict(obj->since(),obj->until(),channel)) {
       m_log << MSG::WARNING << "Conflict found: item not inserted" << endmsg;
       return false;
     }
@@ -59,7 +62,7 @@ bool CondDBCache::insert(const cool::IFolderPtr &folder,const cool::IObjectPtr &
   // for vectors
   //  f->second.items.push_back(CondItem(&f->second,obj));
   // for lists
-  f->second.items.push_front(CondItem(&f->second,obj));
+  f->second.items[channel].push_front(CondItem(&f->second,obj));
   ++m_level;
   return true;
 }
@@ -69,9 +72,9 @@ bool CondDBCache::insert(const cool::IFolderPtr &folder,const cool::IObjectPtr &
 //=========================================================================
 bool CondDBCache::addFolder(const std::string &path, const std::string &descr,
                             const pool::AttributeListSpecification& spec) {
-  std::map<std::string,CondFolder>::iterator f = m_cache.find(path);
+  StorageType::iterator f = m_cache.find(path);
   if (f == m_cache.end()){
-    f = m_cache.insert(std::pair<std::string,CondFolder>(path,CondFolder(descr,spec))).first;
+    f = m_cache.insert(StorageType::value_type(path,CondFolder(descr,spec))).first;
   }
   return true;
 }
@@ -80,7 +83,7 @@ bool CondDBCache::addFolder(const std::string &path, const std::string &descr,
 //  Add a new object to a given folder
 //=========================================================================
 bool CondDBCache::addObject(const std::string &path, const cool::ValidityKey &since, const cool::ValidityKey &until,
-                            const pool::AttributeList& al, IOVType *iov_before) {
+                            const pool::AttributeList& al, const cool::ChannelId &channel, IOVType *iov_before) {
   // new objects cannot be already valid. check it!
   if ( m_lastRequestedTime != 0 && ( since <= m_lastRequestedTime && m_lastRequestedTime < until ) ) {
     m_log << MSG::WARNING << "New item IOV is compatible with last requested time: I cannot add it" << endmsg;
@@ -92,7 +95,7 @@ bool CondDBCache::addObject(const std::string &path, const cool::ValidityKey &si
     m_log << MSG::DEBUG << "Level above max threshold" << endmsg;
     clean_up();
   }
-  std::map<std::string,CondFolder>::iterator f = m_cache.find(path);
+  StorageType::iterator f = m_cache.find(path);
   if (f == m_cache.end()){
     m_log << MSG::WARNING << "Could not find the folder: object not added" << endmsg;
     return false;
@@ -106,8 +109,8 @@ bool CondDBCache::addObject(const std::string &path, const cool::ValidityKey &si
   */
   // **** COOL single version style --> [x;+inf] + [y(>x);z] = [x;y], [y;z]
   // scan for conflicting items (from the end)
-  ItemListType::iterator i = f->second.conflict(since,until);
-  if ( i != f->second.items.end() ) { // conflict found
+  ItemListType::iterator i = f->second.conflict(since,until,channel);
+  if ( i != f->second.items[channel].end() ) { // conflict found
     if ( i->iov.second == cool::ValidityKeyMax && i->iov.first < since ) {
       // solvable conflict
       if (iov_before) *iov_before = i->iov;
@@ -123,7 +126,7 @@ bool CondDBCache::addObject(const std::string &path, const cool::ValidityKey &si
   // for vectors
   //  f->second.items.push_back(CondItem(&f->second,since,until,al));
   // for lists
-  f->second.items.push_front(CondItem(&f->second,since,until,al));
+  f->second.items[channel].push_front(CondItem(&f->second,since,until,al));
   ++m_level;
   return true;
 }
@@ -132,15 +135,16 @@ bool CondDBCache::addObject(const std::string &path, const cool::ValidityKey &si
 //  Get data from given path and valid at given time
 //=========================================================================
 bool CondDBCache::get(const std::string &path, const cool::ValidityKey &when,
+                      const cool::ChannelId &channel,
                       cool::ValidityKey &since, cool::ValidityKey &until,
                       std::string &descr, boost::shared_ptr<pool::AttributeList> &payload ) {
   m_log << MSG::DEBUG << "Request Folder '" << path 
-        << "'  @ " << when ;
+        << "'  @ " << when << " channel " << channel;
   m_lastRequestedTime = when;
-  std::map<std::string,CondFolder>::iterator folder = m_cache.find(path);
+  StorageType::iterator folder = m_cache.find(path);
   if (folder != m_cache.end()) {
-    ItemListType::iterator i = folder->second.find(when);
-    if ( i != folder->second.items.end() ) {
+    ItemListType::iterator i = folder->second.find(when,channel);
+    if ( i != folder->second.items[channel].end() ) {
       since   = i->iov.first;
       until   = i->iov.second;
       descr   = folder->second.description;
@@ -159,7 +163,8 @@ bool CondDBCache::get(const std::string &path, const cool::ValidityKey &when,
 //=========================================================================
 
 void CondDBCache::clean_up(){
-  typedef std::vector<std::pair<float,std::pair<CondDBCache::CondFolder*,cool::ValidityKey> > > _vec_t;
+  typedef std::vector<std::pair<float,std::pair<CondDBCache::CondFolder*,std::pair<cool::ValidityKey,cool::ChannelId> > > >
+    _vec_t;
   _vec_t all_items;
   float score = 0;
   size_t old_level = level();
@@ -169,21 +174,26 @@ void CondDBCache::clean_up(){
   // collect all items info in order
   StorageType::iterator folder;
   for ( folder = m_cache.begin() ; folder != m_cache.end() ; ++folder ) {
+    CondFolder::StorageType::iterator ch;
     ItemListType::iterator i;
     m_log << MSG::DEBUG << "Folder " << folder->first << endmsg;
-    for ( i = folder->second.items.begin(); i != folder->second.items.end() ; ++i ){
-      m_log << MSG::DEBUG << "  IOV : " << i->iov.first << " - " << i->iov.second << endmsg;
-      if ( ! (i->iov.first <= m_lastRequestedTime && i->iov.second > m_lastRequestedTime) ) {
-        if ( m_lastRequestedTime < i->iov.first ) {
-          score = (float)m_lastRequestedTime - i->iov.first;
-        } else {
-          score = (float)i->iov.second - m_lastRequestedTime;
+    for ( ch = folder->second.items.begin(); ch != folder->second.items.end() ; ++ch ){
+      m_log << MSG::DEBUG << " channel : " << ch->first << endmsg;
+      for ( i = ch->second.begin(); i != ch->second.end() ; ++i ){
+        m_log << MSG::DEBUG << "  IOV : " << i->iov.first << " - " << i->iov.second << endmsg;
+        if ( ! (i->iov.first <= m_lastRequestedTime && i->iov.second > m_lastRequestedTime) ) {
+          if ( m_lastRequestedTime < i->iov.first ) {
+            score = (float)m_lastRequestedTime - i->iov.first;
+          } else {
+            score = (float)i->iov.second - m_lastRequestedTime;
+          }
+          m_log << MSG::DEBUG << "     score = " << score << endmsg;
+          all_items.push_back(
+             std::make_pair(score,
+                std::make_pair(&folder->second,
+                   std::make_pair(i->iov.first,ch->first))));
+          //        i->score = 0;
         }
-        m_log << MSG::DEBUG << "     score = " << score << endmsg;
-        all_items.push_back(
-           std::make_pair(score,
-              std::make_pair<CondDBCache::CondFolder*,cool::ValidityKey>(&folder->second,i->iov.first)));
-        //        i->score = 0;
       }
     }
   }
@@ -193,11 +203,12 @@ void CondDBCache::clean_up(){
   // remove items
   _vec_t::iterator it = all_items.begin();
   while ( m_level > m_lowLvl && it != all_items.end()) {
-    m_log << MSG::DEBUG << "Remove item since " << it->second.second <<
+    m_log << MSG::DEBUG << "Remove item since " << it->second.second.first <<
+      " channel " << it->second.second.second <<
       // " from '" << it->second.first->path << "'" <<
       " (score =" << it->first << ")" << endmsg;
     // folder                    when
-    it->second.first->erase(it->second.second);
+    it->second.first->erase(it->second.second.first,it->second.second.second);
     --m_level;
     ++it;
   }
@@ -225,11 +236,12 @@ void CondDBCache::clean_up(){
 //=========================================================================
 //  Check if an entry for the give path+time is in the cache
 //=========================================================================
-bool CondDBCache::hasTime(const std::string &path, const cool::ValidityKey &when) const {
-  std::map<std::string,CondFolder>::const_iterator folder = m_cache.find(path);
+bool CondDBCache::hasTime(const std::string &path, const cool::ValidityKey &when, const cool::ChannelId &channel) const {
+  StorageType::const_iterator folder = m_cache.find(path);
   if (folder != m_cache.end()) {
-    ItemListType::const_iterator i = folder->second.find(when);
-    return i != folder->second.items.end();
+    ItemListType::const_iterator i = folder->second.find(when,channel);
+    const ItemListType &lst = (*const_cast<CondFolder::StorageType *>(&folder->second.items))[channel];
+    return i != lst.end();
   }
   return false;
 }
@@ -246,14 +258,17 @@ void CondDBCache::dump() {
     std::ostringstream type_spec;
     i->second.spec->print(type_spec);
     m_log << MSG::DEBUG << "     Type: " << type_spec.str() << endmsg;
-    size_t cnt = 0;
-    for(ItemListType::const_iterator j = i->second.items.begin(); j != i->second.items.end(); ++j) {
-      std::ostringstream data;
-      j->data->print(data);
-      m_log << MSG::DEBUG << "  Object " << cnt++ << endmsg;
-      m_log << MSG::DEBUG << "    Score: " << j->score << endmsg;
-      m_log << MSG::DEBUG << "    Validity: " << j->iov.first << " - " << j->iov.second << endmsg;
-      m_log << MSG::DEBUG << "    Data: " << data.str()  << endmsg;
+    for(CondFolder::StorageType::const_iterator ch = i->second.items.begin(); ch != i->second.items.end(); ++ch) {
+      m_log << MSG::DEBUG << "  Channel " << ch->first << endmsg;
+      size_t cnt = 0;
+      for(ItemListType::const_iterator j = ch->second.begin(); j != ch->second.end(); ++j) {
+        std::ostringstream data;
+        j->data->print(data);
+        m_log << MSG::DEBUG << "  Object " << cnt++ << endmsg;
+        m_log << MSG::DEBUG << "    Score: " << j->score << endmsg;
+        m_log << MSG::DEBUG << "    Validity: " << j->iov.first << " - " << j->iov.second << endmsg;
+        m_log << MSG::DEBUG << "    Data: " << data.str()  << endmsg;
+      }
     }
   }
   m_log << MSG::DEBUG << "Cache content dump --------------------- END" << endmsg;  

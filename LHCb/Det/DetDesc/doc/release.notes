@@ -1,11 +1,15 @@
 ! =============================================================================
-! $Id: release.notes,v 1.217 2005-08-30 11:42:36 cattanem Exp $ 
+! $Id: release.notes,v 1.218 2005-08-30 14:36:25 marcocle Exp $ 
 ! =============================================================================
 ! package DetDesc
 ! package manager : Marco Clemencic, Juan Palacios
 ! =============================================================================
 
 !======================== DetDesc v15r4 2005-08-30 ========================
+! 2005-08-30 - Marco Clemencic
+ - Modified ICondDBAccessSvc in order to support cool::ChannelId
+   (needs DetCond >= v7r6)
+
 ! 2005-08-30 - Marco Cattaneo
  - Fix some doxygen warnings
 

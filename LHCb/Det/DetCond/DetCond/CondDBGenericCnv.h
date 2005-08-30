@@ -1,4 +1,4 @@
-// $Id: CondDBGenericCnv.h,v 1.7 2005-07-07 14:49:16 cattanem Exp $
+// $Id: CondDBGenericCnv.h,v 1.8 2005-08-30 14:37:38 marcocle Exp $
 #ifndef DETCOND_CONDDBGENERICCNV_H 
 #define DETCOND_CONDDBGENERICCNV_H 1
 
@@ -80,7 +80,7 @@ protected:
 
   /**
    * Ask to the DetectorDataSvc the curren event time.
-   * @return StatusCode::SUCCECC if the event time was defined.
+   * @return StatusCode::SUCCESS if the event time was defined.
    */
   StatusCode eventTime(TimePoint &time) const;
 
@@ -98,6 +98,7 @@ protected:
    * Get an object from the Conditions DB. It tries all the CondDBAccessSvcs
    * known by CondDBCnvSvc before returing a failure code.
    * @param[in]  path  the path inside the CondDB
+   * @param[in]  channel  CondDB channel id
    * @param[out] obj   shared pointer to the COOL object
    * @param[out] descr folder description string (used to know the storage type by RelyConverter)
    * @param[out] since start of the IOV
@@ -105,8 +106,18 @@ protected:
    * The IOV is inside the object itself as two cool::ValidityKey, the since and until are 
    * used to avoid the conversion outside this method.
    */
-  StatusCode getObject(const std::string &path, boost::shared_ptr<pool::AttributeList> &obj,
+  StatusCode getObject(const std::string &path, const cool::ChannelId &channel,
+                       boost::shared_ptr<pool::AttributeList> &obj,
                        std::string &descr, TimePoint &since, TimePoint &until);
+
+  /// Method kept for backward compatibility
+  inline StatusCode getObject(const std::string &path,
+                              boost::shared_ptr<pool::AttributeList> &obj,
+                              std::string &descr, TimePoint &since, TimePoint &until)
+  {
+    return getObject(path,0,obj,descr,since,until);
+  }
+  
 
 private:
 

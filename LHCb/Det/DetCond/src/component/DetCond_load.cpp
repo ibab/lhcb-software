@@ -1,4 +1,4 @@
-//$Id: DetCond_load.cpp,v 1.6 2005-06-14 13:14:30 marcocle Exp $
+//$Id: DetCond_load.cpp,v 1.7 2005-08-30 14:37:38 marcocle Exp $
 #include "GaudiKernel/DeclareFactoryEntries.h"
 
 DECLARE_FACTORY_ENTRIES( DetCond ) {
@@ -10,5 +10,7 @@ DECLARE_FACTORY_ENTRIES( DetCond ) {
   // converters ======================
   // --------- Fall-back converter
   DECLARE_CONVERTER( RelyConverter ) ;
+  // algorithms ======================
+  DECLARE_ALGORITHM( PrepareDBCache );
 };
 

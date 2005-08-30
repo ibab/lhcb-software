@@ -1,4 +1,4 @@
-// $Id: CondDBAccessSvc.cpp,v 1.10 2005-07-07 11:49:40 marcocle Exp $
+// $Id: CondDBAccessSvc.cpp,v 1.11 2005-08-30 14:37:38 marcocle Exp $
 // Include files 
 #include <sstream>
 
@@ -447,7 +447,7 @@ StatusCode CondDBAccessSvc::createFolder(const std::string &path,
 }
 
 StatusCode CondDBAccessSvc::storeXMLString(const std::string &path, const std::string &data,
-                                           const TimePoint &since, const TimePoint &until) const {
+                                           const TimePoint &since, const TimePoint &until, cool::ChannelId channel) const {
   if ( !m_db ) {
     MsgStream log(msgSvc(), name() );
     log << MSG::ERROR << "Unable to store the object \"" << path
@@ -466,7 +466,7 @@ StatusCode CondDBAccessSvc::storeXMLString(const std::string &path, const std::s
     }
     pool::AttributeList payload(*s_XMLstorageAttListSpec);
     payload["data"].setValue<std::string>(data);
-    folder->storeObject(timeToValKey(since),timeToValKey(until),payload);
+    folder->storeObject(timeToValKey(since),timeToValKey(until),payload,channel);
   } catch (cool::Exception &e){
     MsgStream log(msgSvc(), name() );
     log << MSG::ERROR << "Unable to store the XML string into \"" << path
@@ -476,8 +476,8 @@ StatusCode CondDBAccessSvc::storeXMLString(const std::string &path, const std::s
   return StatusCode::SUCCESS;
 }
 StatusCode CondDBAccessSvc::storeXMLString(const std::string &path, const std::string &data,
-                                           const double since_s, const double until_s) const {
-  return storeXMLString(path,data,TimePoint((long long int)(since_s * 1e9)),TimePoint((long long int)(until_s * 1e9)));
+                                           const double since_s, const double until_s, cool::ChannelId channel) const {
+  return storeXMLString(path,data,TimePoint((long long int)(since_s * 1e9)),TimePoint((long long int)(until_s * 1e9)),channel);
 }
 
 cool::ValidityKey CondDBAccessSvc::timeToValKey(const TimePoint &time) const {
@@ -496,7 +496,7 @@ TimePoint CondDBAccessSvc::valKeyToTime(const cool::ValidityKey &key) const {
 }
 
 StatusCode CondDBAccessSvc::tagFolder(const std::string &path, const std::string &tagName,
-                                      const std::string &description){
+                                      const std::string &description, cool::ChannelId /* channel */){
   MsgStream log(msgSvc(),name());
 
   if ( !m_db ) {
@@ -544,24 +544,29 @@ StatusCode CondDBAccessSvc::tagFolder(const std::string &path, const std::string
 
 StatusCode CondDBAccessSvc::getObject(const std::string &path, const TimePoint &when,
                                       boost::shared_ptr<pool::AttributeList> &data,
-                                      std::string &descr, TimePoint &since, TimePoint &until){
+                                      std::string &descr, TimePoint &since, TimePoint &until, cool::ChannelId channel){
 
   try {
     if (m_useCache) {
       cool::ValidityKey vk_when = timeToValKey(when);
       cool::ValidityKey vk_since, vk_until;
-      if (!m_cache->get(path,vk_when,vk_since,vk_until,descr,data)) {
-        // go to the database
-        cool::IFolderPtr folder = database()->getFolder(path);
-        cool::IObjectPtr obj;
-        if (tag() == "HEAD" || tag() == ""){
-          obj = folder->findObject(vk_when);
+      if (!m_cache->get(path,vk_when,channel,vk_since,vk_until,descr,data)) {
+        if (!m_noDB) {
+          // go to the database
+          cool::IFolderPtr folder = database()->getFolder(path);
+          cool::IObjectPtr obj;
+          if (tag() == "HEAD" || tag() == ""){
+            obj = folder->findObject(vk_when,channel);
+          } else {
+            obj = folder->findObject(vk_when,channel,folder->fullPath()+"-"+tag());
+          }
+          m_cache->insert(folder,obj,channel);
+          // now the object is in the cache
+          m_cache->get(path,vk_when,channel,vk_since,vk_until,descr,data);
         } else {
-          obj = folder->findObject(vk_when,0,folder->fullPath()+"-"+tag());
+          // we are not using the db: no way of getting the object from it
+          return StatusCode::FAILURE;
         }
-        m_cache->insert(folder,obj);
-        // now the object is in the cache
-        m_cache->get(path,vk_when,vk_since,vk_until,descr,data);
       }
       since = valKeyToTime(vk_since);
       until = valKeyToTime(vk_until);
@@ -572,9 +577,9 @@ StatusCode CondDBAccessSvc::getObject(const std::string &path, const TimePoint &
 
       cool::IObjectPtr obj;
       if (tag() == "HEAD" || tag() == ""){
-        obj = folder->findObject(timeToValKey(when));
+        obj = folder->findObject(timeToValKey(when),channel);
       } else {
-        obj = folder->findObject(timeToValKey(when),0,folder->fullPath()+"-"+tag());
+        obj = folder->findObject(timeToValKey(when),channel,folder->fullPath()+"-"+tag());
       }
     
       // deep copy of the attr. list
@@ -639,23 +644,25 @@ StatusCode CondDBAccessSvc::cacheAddXMLFolder(const std::string &path) {
 //  
 //=========================================================================
 StatusCode CondDBAccessSvc::cacheAddObject(const std::string &path, const TimePoint &since, const TimePoint &until,
-                                           const pool::AttributeList& payload) {
+                                           const pool::AttributeList& payload, cool::ChannelId channel) {
   if (!m_useCache) {
     MsgStream log(msgSvc(),name());
     log << MSG::ERROR << "Cache not in use: I cannot add an object to it." << endmsg;
     return StatusCode::FAILURE;
   }
-  return m_cache->addObject(path,timeToValKey(since),timeToValKey(until),payload) ? StatusCode::SUCCESS : StatusCode::FAILURE;
+  return m_cache->addObject(path,timeToValKey(since),timeToValKey(until),payload,channel)
+    ? StatusCode::SUCCESS
+    : StatusCode::FAILURE;
 }
 
 //=========================================================================
 //  
 //=========================================================================
 StatusCode CondDBAccessSvc::cacheAddXMLObject(const std::string &path, const TimePoint &since, const TimePoint &until,
-                                           const std::string &data) {
+                                           const std::string &data, cool::ChannelId channel) {
   pool::AttributeList payload(*s_XMLstorageAttListSpec);
   payload["data"].setValue<std::string>(data);
-  return cacheAddObject(path,since,until,payload);
+  return cacheAddObject(path,since,until,payload,channel);
 }
 
 //=========================================================================
