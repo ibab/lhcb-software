@@ -4,6 +4,7 @@
 ! Purpose     : standard converters for the LHCb Detector Description
 !-----------------------------------------------------------------------------
 
+!================ DetDescCnv v2r9 2005-08-30 ===========================
 ! 2005-08-30 - Marco Clemencic
  - Added support for COOL Channel Id in the CondDB address.
 
