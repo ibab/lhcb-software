@@ -1,4 +1,4 @@
-// $Id: XmlGenericCnv.cpp,v 1.8 2005-07-07 12:48:14 marcocle Exp $
+// $Id: XmlGenericCnv.cpp,v 1.9 2005-08-30 10:38:52 marcocle Exp $
 
 // Include files
 #include "DetDescCnv/XmlGenericCnv.h"
@@ -65,10 +65,12 @@ StatusCode XmlGenericCnv::initialize() {
   // Initializes the grand father
   StatusCode status = Converter::initialize();
 
+  /*
   // Locate the Xml Conversion Service
   serviceLocator()->getService ("XmlCnvSvc",
                                 IID_IXmlSvc,
                                 (IInterface*&)m_xmlSvc);
+  */
 
   // returns
   return status;
@@ -80,7 +82,7 @@ StatusCode XmlGenericCnv::initialize() {
 // -----------------------------------------------------------------------
 StatusCode XmlGenericCnv::finalize() {
   // release XmlCnvSvc
-  m_xmlSvc->release();
+  //  m_xmlSvc->release();
   // RIP dear grand father!
   return Converter::finalize();
 }
@@ -423,11 +425,20 @@ XmlGenericCnv::createAddressForHref (std::string href,
     // gets the directory in the CondDB
     std::string path = href.substr(slashPosition, 
                                    poundPosition - slashPosition);
+    // extract the channel id from the path
+    unsigned long channelId = 0;
+    unsigned int pathEnd = path.find_first_of(':');
+    if (pathEnd != path.npos) {
+      std::istringstream chString(path.substr(pathEnd+1));
+      chString >> channelId;
+      path = path.substr(0,pathEnd);
+    }
     log << MSG::VERBOSE 
         << "Now build a CondDB address for path=" << path
+        << " channelId=" << channelId
         << " and entryName=" << entryName << endreq;
     // Then build a new Address
-    return createCondDBAddress (path, entryName, clid);    
+    return createCondDBAddress (path, entryName, channelId, clid);    
   } else {
     log << MSG::VERBOSE 
         << "Href points to a a regular URL: " << href << endreq;
@@ -505,21 +516,23 @@ IOpaqueAddress* XmlGenericCnv::createXmlAddress (std::string location,
 // -----------------------------------------------------------------------
 IOpaqueAddress* XmlGenericCnv::createCondDBAddress (std::string path,
                                                     std::string entryName,
+                                                    unsigned long channelId,
                                                     CLID clid) const {
   const std::string par[2] = {path, entryName};
   IOpaqueAddress* result;
   StatusCode sc = addressCreator()->createAddress (CONDDB_StorageType,
                                                    clid,
                                                    par,
-                                                   0,
+                                                   &channelId,
                                                    result);
   if (!sc.isSuccess()) {
     throw XmlCnvException ("XmlGenericCnv : Unable to create Address from href",
                            sc);
   }
   MsgStream log( msgSvc(), "XmlGenericCnv" );
-  log << MSG::DEBUG << "New address created : path = "
-      << path << ", entry name = " << entryName << endreq;
+  log << MSG::DEBUG << "New address created : path = " << path
+      << ", channel id = " << channelId
+      << ", entry name = " << entryName << endreq;
   return result;
 }
 

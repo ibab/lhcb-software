@@ -1,10 +1,14 @@
-// $Id: XmlGenericCnv.h,v 1.5 2005-03-24 16:21:17 cattanem Exp $
+// $Id: XmlGenericCnv.h,v 1.6 2005-08-30 10:38:52 marcocle Exp $
 
 #ifndef DETDESCCNV_XMLGENERICCNV_H
 #define DETDESCCNV_XMLGENERICCNV_H
 
 // Include files
 #include "GaudiKernel/Converter.h"
+#include "GaudiKernel/IConversionSvc.h"
+
+#include "XmlTools/IXmlSvc.h"
+
 #include <string>
 
 #include <xercesc/dom/DOMElement.hpp>
@@ -85,6 +89,7 @@ class XmlGenericCnv : public Converter {
    *  @return status depending on the completion of the call
    */
   IXmlSvc* xmlSvc() {
+    if (!m_xmlSvc) m_xmlSvc = dynamic_cast<IXmlSvc*>(conversionSvc());
     return m_xmlSvc;
   }
 
@@ -211,6 +216,7 @@ protected:
    */
   IOpaqueAddress* createCondDBAddress (std::string path,
                                        std::string entryName,
+                                       unsigned long cannelId,
                                        CLID clid) const;
 
   /**
