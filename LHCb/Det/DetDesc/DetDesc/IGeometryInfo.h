@@ -1,4 +1,4 @@
-// $Id: IGeometryInfo.h,v 1.16 2005-08-26 09:34:19 jpalac Exp $ 
+// $Id: IGeometryInfo.h,v 1.17 2005-08-30 11:42:36 cattanem Exp $ 
 // ===========================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ===========================================================================
@@ -90,7 +90,7 @@ public:
 
   virtual const AlignmentCondition* alignmentCondition() const = 0;
 
-  /** @defgroup PureGeometricalInfo pure geometrical information
+  /** @defgroup PureGeometricalInfo IGeometryInfo pure geometrical information
    *
    *  @author Vanya Belyaev Ivan.Belyaev@itep.ru 
    *  @{
@@ -171,10 +171,9 @@ public:
    *  @return true if point "is inside" of the Geometry Info element
    */
   virtual bool isInside( const HepPoint3D& GlobalPoint ) const = 0;
-  ///@} end of group PureGeometricalInfo
+  /** @} */ // end of group PureGeometricalInfo
 
-  /** @defgroup BelongsTo  To which daughter the given global point belongs to
-   *  "Find daughter by point" family
+  /** @defgroup BelongsTo  IGeometryInfo "Find daughter by point" family
    *  @author Vanya Belyaev Ivan.Belyaev@itep.ru 
    *  @{
    */
@@ -273,9 +272,9 @@ public:
    */
   virtual IGeometryInfo* belongsTo 
   ( const HepPoint3D& globalPoint , const int         level ) = 0;
-  ///@} end of group BelongsTo
+  /** @} */ // end of group BelongsTo
 
-  /** @defgroup FullGeomtryInfo Full geometry information
+  /** @defgroup FullGeometryInfo IGeometryInfo Full geometry information
    *
    *  Sometimes is is nesessary to know the exact full geometry location
    *  of a Point in the most detailed way then DetectorElement tree allows.
@@ -349,7 +348,7 @@ public:
     const int                level       ,
     std::string&             start       ,
     ILVolume::ReplicaPath&   replicaPath ) = 0;
-  ///@} end of group FullGeometryInfo
+  /** @} */ // end of group FullGeometryInfo
 
   /** How to answer the question -
    *  What is the distance in radiation lengths between 2 points? @n
@@ -404,7 +403,7 @@ public:
   ( std::string&           start ,
     ILVolume::ReplicaPath& replicaPath ) const = 0;
   
-  /** @defgroup LogVol  get Logical Volume by its full address
+  /** @defgroup LogVol IGeometryInfo get Logical Volume by its full address
    *  "start" point in DetectorDescription Tree  and the replica path in the
    *  Actual Geometry Tree, starting with the logical volume
    *  associated with "starting point"
@@ -447,9 +446,9 @@ public:
   ( IGeometryInfo*               start       ,
     const ILVolume::ReplicaPath& replicaPath ) = 0;
   
-  ///@} end of group LogVol
+  /** @} */ // end of group LogVol
   
-  /** @defgroup Navigation functions for simplifications of navigation functions
+  /** @defgroup Navigation IGeometryInfo navigation functions
    * (according to feedback from users to release v3)
    *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
    * @{
@@ -498,9 +497,9 @@ public:
    *  return "end" iterator
    */
   virtual IGeometryInfo::IGIChildrens::const_iterator  childEnd  () const = 0 ;
-  ///@} end of group Navigation
+  /** @} */ // end of group Navigation
 
-  /** @defgroup IGeometryInfoPrintOut printout method for class IGeometryInfo
+  /** @defgroup IGeometryInfoPrintOut IGeometryInfo printout methods
    *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
    *  @{
    */
@@ -515,7 +514,7 @@ public:
    *  return reference to Message stream
    */
   virtual MsgStream&    printOut ( MsgStream&                   ) const = 0;
-  ///@} end of group IGeometryInfoPrintOut
+  /** @} */ // end of group IGeometryInfoPrintOut
   
   /** reset to the initial state, clear cache
    *  @return self-reference
@@ -527,7 +526,7 @@ public:
 };
 
 // ============================================================================
-/** @defgroup IGeometryInfoOperators inline operators for class IGeometryInfo
+/** @defgroup IGeometryInfoOperators IGeometryInfo inline operators
  * 
  * @{
  */
@@ -599,12 +598,12 @@ inline StreamBuffer& operator>>( StreamBuffer&   os ,
                                  IGeometryInfo&  gi )
 { return gi.serialize( os ); };
 // ============================================================================
-///@} end of group IGeometryInfoOperators
+/** @} */ // end of group IGeometryInfoOperators
 // ============================================================================
 
 
 // ============================================================================
-/** @defgroup IGeometryInfoPredficates useful predicates for class IGeometryInfo
+/** @defgroup IGeometryInfoPredficates IGeometryInfo useful predicates
  *
  *  @author Vanya Belyaev Ivan.Belyaev@itep.ru 
  *  @{ 
@@ -641,7 +640,7 @@ private:
   
 };
 // ============================================================================
-//@} end of group IGeometryInfoPredicates 
+/** @} */ // end of group IGeometryInfoPredicates 
 // ============================================================================
 
 /// ===========================================================================

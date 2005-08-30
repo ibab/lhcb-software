@@ -1,4 +1,4 @@
-// $Id: UpdateManagerSvc_Item.icpp,v 1.3 2005-06-23 14:21:30 marcocle Exp $
+// $Id: UpdateManagerSvc_Item.icpp,v 1.4 2005-08-30 11:42:37 cattanem Exp $
 #ifndef UPDATEMANAGERSVC_ITEM_ICPP
 #define UPDATEMANAGERSVC_ITEM_ICPP 1
 
@@ -33,11 +33,11 @@ struct Item {
 
   /// Type used for the collections of items.
   typedef std::vector<Item*> ItemList;
-  /// Type used as pointer to an iten that is using this one, a \e parent.
+  /// Type used as pointer to an item that is using this one, a \e parent.
   typedef std::pair<Item*,BaseObjectMemberFunction*> ParentItem;
   /// Type for the list of \e parents.
   typedef std::vector<ParentItem> ParentList;
-  /// \class MembFunc, used inside \class Item to identify a registered member function.
+  /// Used inside Item to identify a registered member function.
   struct MembFunc {
     /// Simple constructor.
     MembFunc(BaseObjectMemberFunction *mf_p): mf(mf_p),since(1),until(-1) { items = new ItemList; }

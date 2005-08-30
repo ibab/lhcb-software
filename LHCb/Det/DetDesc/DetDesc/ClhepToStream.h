@@ -1,4 +1,4 @@
-// $Id: ClhepToStream.h,v 1.4 2004-07-09 14:19:40 cattanem Exp $
+// $Id: ClhepToStream.h,v 1.5 2005-08-30 11:42:36 cattanem Exp $
 /// ===========================================================================
 /// CVS tag $Name: not supported by cvs2svn $
 /// ===========================================================================
@@ -12,7 +12,7 @@
 #include "CLHEP/Vector/Rotation.h"                
 #include "CLHEP/Geometry/Transform3D.h" 
 
-/**  @file ClhepTostream.h
+/**  @file ClhepToStream.h
  *
  *   small collection of output operators of some 
  *   CLHEP objects to StreamBuffer 
@@ -21,7 +21,7 @@
  *   @date xx/xx/xxxx
  */
 
-/** @defgroup  Hep3Vector  Serialization of class Hep3Vector
+/** @defgroup StreamBuffer StreamBuffer serializers
  *  @{ 
  */
 inline StreamBuffer& operator<<( StreamBuffer& sb , const Hep3Vector& Vect ) 
@@ -37,11 +37,7 @@ inline StreamBuffer& operator>>( StreamBuffer& sb ,       Hep3Vector& Vect )
   ///
   return sb; 
 };
-///@}
 
-/** @defgroup  HepRotation  Serialization of class HepRotation
- *  @{ 
- */
 inline StreamBuffer& operator<<( StreamBuffer& sb , const HepRotation& Rot ) 
 {
   Hep3Vector Axis  ; double     Angle ;
@@ -55,11 +51,7 @@ inline StreamBuffer& operator>>( StreamBuffer& sb ,       HepRotation& Rot )
   Rot = HepRotation().rotate( Angle , Axis );
   return sb; 
 };
-///@}
 
-/** @defgroup  HepTransform3D  Serialization of class HepTransform3D
- *  @{ 
- */
 inline StreamBuffer& operator<<( StreamBuffer& sb , const HepTransform3D& Tr ) 
 { return sb << Tr.getTranslation() << Tr.getRotation() ; };
 inline StreamBuffer& operator>>( StreamBuffer& sb ,       HepTransform3D& Tr ) 
@@ -71,13 +63,8 @@ inline StreamBuffer& operator>>( StreamBuffer& sb ,       HepTransform3D& Tr )
   Tr = HepTransform3D( rot , pos ); 
   return sb; 
 };
-///@}
-
+/** @} */ // End of StreamBuffer group
 
 /// ===========================================================================
 #endif  ///<  DETDESC_CLHEP_TO_STREAM_H
 /// ===========================================================================
-
-
-
-
