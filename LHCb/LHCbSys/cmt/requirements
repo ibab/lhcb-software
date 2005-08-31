@@ -88,7 +88,7 @@ use L0MuonDAQ		v1r0	L0      # Andrei Tsaregorodtsev
 # Other stuff
 use LHCbInterfaces	v1r3    Kernel  # Marco Cattaneo
 use LHCbAlgs		v1r8	Kernel  # Marco Cattaneo
-use MCTools		v1r13p1 Phys    # Many
+use MCTools		v1r14   Phys    # Many
 use CaloInterfaces      v4r3    Calo    # Olivier Deschamps
 use CaloUtils           v4r9    Calo    # Olivier Deschamps
 use RichRecBase	        v1r16p1 Rich    # Chris Jones
