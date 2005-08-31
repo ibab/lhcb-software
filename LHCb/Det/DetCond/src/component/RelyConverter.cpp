@@ -1,4 +1,4 @@
-// $Id: RelyConverter.cpp,v 1.10 2005-08-30 14:37:38 marcocle Exp $
+// $Id: RelyConverter.cpp,v 1.11 2005-08-31 16:00:29 marcocle Exp $
 // Include files 
 #include "RelyConverter.h"
 
@@ -152,6 +152,23 @@ StatusCode RelyConverter::updateObj (IOpaqueAddress* pAddress, DataObject* pObje
 }
 
 //=========================================================================
+// Update references of the transient representation
+//=========================================================================
+StatusCode RelyConverter::updateObjRefs (IOpaqueAddress* pAddress, DataObject *pObject)
+{
+  MsgStream log(msgSvc(),"RelyConverter");
+  log << MSG::DEBUG << "entering updateObjRefs" << endmsg;
+
+  StatusCode sc = i_delegatedCreation(pAddress,pObject,UpdateObjectRefs);
+  if (sc.isFailure()){
+    log << MSG::ERROR << "Cannot update object's refs" << endmsg;
+    return sc;
+  }
+
+  return StatusCode::SUCCESS;
+}
+
+//=========================================================================
 // Create the persistent representation
 //=========================================================================
 StatusCode RelyConverter::createRep (DataObject* /*pObject*/, IOpaqueAddress*& /*pAddress*/)
@@ -238,6 +255,9 @@ StatusCode RelyConverter::i_delegatedCreation(IOpaqueAddress* pAddress, DataObje
     break;
   case FillObjectRefs:
     sc = m_detPersSvc->fillObjRefs ( tmpAddress, pObject );
+    break;
+  case UpdateObjectRefs:
+    sc = m_detPersSvc->updateObjRefs ( tmpAddress, pObject );
   }
   
   tmpAddress->release();

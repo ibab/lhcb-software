@@ -1,8 +1,12 @@
-# $Id: release.notes,v 1.49 2005-08-30 14:37:38 marcocle Exp $
+# $Id: release.notes,v 1.50 2005-08-31 16:00:29 marcocle Exp $
 Package Det/DetCond
 Package manager : Marco Clemencic
 
-================= Det/DetCond v7r6 2005-08-30 ================================
+================= Det/DetCond v7r6 2005-08-31 ================================
+! 2005-08-31 - Marco Clemencic
+ - Implemented RelyConverter::updateObjRefs in order to re-initialize
+   correctly the updated conditions.
+
 ! 2005-08-30 - Marco Clemencic
  - Added support to cool::ChannelId
    (needs DetDesc >= v15r4 and DetDescCnv > v2r8)

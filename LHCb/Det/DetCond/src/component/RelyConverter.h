@@ -1,4 +1,4 @@
-// $Id: RelyConverter.h,v 1.2 2005-06-30 16:16:58 marcocle Exp $
+// $Id: RelyConverter.h,v 1.3 2005-08-31 16:00:29 marcocle Exp $
 #ifndef COMPONENT_RELYCONVERTER_H 
 #define COMPONENT_RELYCONVERTER_H 1
 
@@ -28,7 +28,8 @@ public:
   /// Operations that can be performed by delegation
   enum Operation {
     CreateObject,
-    FillObjectRefs
+    FillObjectRefs,
+    UpdateObjectRefs
   };
 
   /**
@@ -59,6 +60,14 @@ public:
    */
   virtual StatusCode fillObjRefs (IOpaqueAddress *pAddress,
                                   DataObject *pObject);
+  /**
+   * Resolve the references of the just updated transient object.
+   * @param  pAddress the address of the object representation
+   * @param  pObject the object created
+   * @return status depending on the completion of the call
+   */
+  virtual StatusCode updateObjRefs (IOpaqueAddress *pAddress,
+                                    DataObject *pObject);
   /**
    * Updates the transient object from the other representation (not implemented).
    * @param pAddress the address of the object representation
