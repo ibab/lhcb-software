@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE DDDB SYSTEM "../DTD/structure.dtd">
+<!-- $Id: alignment.xml,v 1.1 2005-08-31 16:02:49 marcocle Exp $ -->
+<DDDB>
+  <catalog name ="Velo">
+    <conditionref href="conddb:/Alignment/Velo/Modules:00#Module00"/>
+    <conditionref href="conddb:/Alignment/Velo/Modules:01#Module01"/>
+    <conditionref href="conddb:/Alignment/Velo/Modules:02#Module02"/>
+    <conditionref href="conddb:/Alignment/Velo/Modules:03#Module03"/>
+    <conditionref href="conddb:/Alignment/Velo/Modules:04#Module04"/>
+    <conditionref href="conddb:/Alignment/Velo/Modules:05#Module05"/>
+    <conditionref href="conddb:/Alignment/Velo/Modules:06#Module06"/>
+    <conditionref href="conddb:/Alignment/Velo/Modules:07#Module07"/>
+    <conditionref href="conddb:/Alignment/Velo/Modules:08#Module08"/>
+    <conditionref href="conddb:/Alignment/Velo/Modules:09#Module09"/>
+    <conditionref href="conddb:/Alignment/Velo/Modules:10#Module10"/>
+    <conditionref href="conddb:/Alignment/Velo/Modules:11#Module11"/>
+    <conditionref href="conddb:/Alignment/Velo/Modules:12#Module12"/>
+    <conditionref href="conddb:/Alignment/Velo/Modules:13#Module13"/>
+    <conditionref href="conddb:/Alignment/Velo/Modules:14#Module14"/>
+    <conditionref href="conddb:/Alignment/Velo/Modules:15#Module15"/>
+    <conditionref href="conddb:/Alignment/Velo/Modules:16#Module16"/>
+    <conditionref href="conddb:/Alignment/Velo/Modules:17#Module17"/>
+    <conditionref href="conddb:/Alignment/Velo/Modules:18#Module18"/>
+    <conditionref href="conddb:/Alignment/Velo/Modules:19#Module19"/>
+    <conditionref href="conddb:/Alignment/Velo/Modules:20#Module20"/>
+    <conditionref href="conddb:/Alignment/Velo/Modules:21#Module21"/>
+    <conditionref href="conddb:/Alignment/Velo/Modules:22#Module22"/>
+    <conditionref href="conddb:/Alignment/Velo/Modules:23#Module23"/>
+    <conditionref href="conddb:/Alignment/Velo/Modules:24#Module24"/>
+    <conditionref href="conddb:/Alignment/Velo/Modules:25#Module25"/>
+    <conditionref href="conddb:/Alignment/Velo/Modules:26#Module26"/>
+    <conditionref href="conddb:/Alignment/Velo/Modules:27#Module27"/>
+    <conditionref href="conddb:/Alignment/Velo/Modules:28#Module28"/>
+    <conditionref href="conddb:/Alignment/Velo/Modules:29#Module29"/>
+    <conditionref href="conddb:/Alignment/Velo/Modules:30#Module30"/>
+    <conditionref href="conddb:/Alignment/Velo/Modules:31#Module31"/>
+    <conditionref href="conddb:/Alignment/Velo/Modules:32#Module32"/>
+    <conditionref href="conddb:/Alignment/Velo/Modules:33#Module33"/>
+    <conditionref href="conddb:/Alignment/Velo/Modules:34#Module34"/>
+    <conditionref href="conddb:/Alignment/Velo/Modules:35#Module35"/>
+    <conditionref href="conddb:/Alignment/Velo/Modules:36#Module36"/>
+    <conditionref href="conddb:/Alignment/Velo/Modules:37#Module37"/>
+    <conditionref href="conddb:/Alignment/Velo/Modules:38#Module38"/>
+    <conditionref href="conddb:/Alignment/Velo/Modules:39#Module39"/>
+    <conditionref href="conddb:/Alignment/Velo/Modules:40#Module40"/>
+    <conditionref href="conddb:/Alignment/Velo/Modules:41#Module41"/>
+  </catalog>
+</DDDB>

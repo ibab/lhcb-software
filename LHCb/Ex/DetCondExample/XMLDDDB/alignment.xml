@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE DDDB SYSTEM "DTD/structure.dtd">
-<!-- $Id: alignment.xml,v 1.1 2001-12-17 15:45:57 andreav Exp $ -->
+<!-- $Id: alignment.xml,v 1.2 2005-08-31 16:02:49 marcocle Exp $ -->
 <DDDB>
   <catalog name="Alignment">
     <!-- ****************************************************** -->
@@ -8,5 +8,6 @@
     <!-- ****************************************************** -->
     <catalogref href="LHCb/alignment.xml#LHCb"/>
     <catalogref href="Ecal/alignment.xml#Ecal"/>
+    <catalogref href="Velo/alignment.xml#Velo"/>
   </catalog>
 </DDDB>

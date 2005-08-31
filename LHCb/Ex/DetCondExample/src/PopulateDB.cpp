@@ -1,4 +1,4 @@
-// $Id: PopulateDB.cpp,v 1.21 2005-08-30 14:58:44 marcocle Exp $
+// $Id: PopulateDB.cpp,v 1.22 2005-08-31 16:02:49 marcocle Exp $
 // Include files
 #include <iostream>
 #include <fstream>
@@ -12,6 +12,7 @@
 #include "GaudiKernel/TimePoint.h"
 
 #include "DetDesc/Condition.h"
+#include "DetDesc/AlignmentCondition.h"
 #include "DetDesc/TabulatedProperty.h"
 #include "DetDesc/ICondDBAccessSvc.h"
 
@@ -162,7 +163,7 @@ StatusCode PopulateDB::i_condDBStoreSampleData() {
     foldersets.push_back(str_pair("/Geometry",        "Main Geometry folderSet"));
     foldersets.push_back(str_pair("/Geometry2",       "Test Geometry folderSet"));
     foldersets.push_back(str_pair("/Alignment",       "Main Alignment folderSet"));
-    foldersets.push_back(str_pair("/Alignment/Ecal",  "Ecal Alignment folderSet"));
+    foldersets.push_back(str_pair("/Alignment/Velo",  "Velo Alignment folderSet"));
     foldersets.push_back(str_pair("/OnLine/Cave",     "Measurements for the cave"));
 
     debug() << "Create foldersets" << endmsg;
@@ -181,7 +182,7 @@ StatusCode PopulateDB::i_condDBStoreSampleData() {
     xmlfolders.push_back(str_pair("/Geometry/LHCb",""));
     xmlfolders.push_back(str_pair("/Geometry2/LHCb",""));
     xmlfolders.push_back(str_pair("/Geometry2/lvLHCb",""));
-    xmlfolders.push_back(str_pair("/Alignment/Ecal/alEcal",""));
+    xmlfolders.push_back(str_pair("/Alignment/Velo/Modules",""));
     xmlfolders.push_back(str_pair("/SlowControl/DummyDE",""));
     xmlfolders.push_back(str_pair("/ReadOut/DummyDE",""));
     xmlfolders.push_back(str_pair("/Properties/TestFunction",""));
@@ -351,23 +352,30 @@ StatusCode PopulateDB::i_condDBStoreSampleData() {
       m_dbAccSvc->storeXMLString("/ReadOut/DummyDE",s,TimePoint(i*24), TimePoint((i+1)*24));
     }
 
-    /// test alignment (TODO: remove)
-    double ecalpos[3][3] = { { 0,0,0 }, { 0,1,0 }, { 0,0,2 } };    
-    double fallbackpos[3] = {-1.,-1.,-1.};
+    /// test alignment condition
+    std::vector<double> pos(3);
+    std::vector<double> rot(3);
     
-    //    for ( i=-1; i<3; i++ ) {
-    for ( i=-1; i<3; i++ ) {
-      // alEcal
-      if (i>=0){
-        m_dbAccSvc->storeXMLString("/Alignment/Ecal/alEcal",
-                                   i_encodeXmlParamVector( ecalpos[i%3], "alEcal","Ecal position" ),
-                                   time_absolutepast,time_absolutefuture);
-      } else {
-        m_dbAccSvc->storeXMLString("/Alignment/Ecal/alEcal",
-                                   i_encodeXmlParamVector( fallbackpos, "alEcal","Ecal position" ),
-                                   time_absolutepast,time_absolutefuture);
-      }
+    AlignmentCondition align(pos,rot);
+
+    // store null alignment (for 42 modules)
+    for ( i = 0; i < 42; ++i ) {
+      std::ostringstream obj_name;
+      obj_name << "Module";
+      obj_name.width(2);
+      obj_name.fill('0');
+      obj_name << i;
+      m_dbAccSvc->storeXMLString("/Alignment/Velo/Modules",
+                                 align.toXml(obj_name.str()),
+                                 time_absolutepast, time_absolutefuture, i);
     }
+
+    // change placement of one of the modules
+    pos[2] = 2*cm;
+    AlignmentCondition align2(pos,rot);
+    m_dbAccSvc->storeXMLString("/Alignment/Velo/Modules",
+                               align2.toXml("Module12"),
+                               TimePoint(30), TimePoint(50), 12);
 
     std::string s;
 

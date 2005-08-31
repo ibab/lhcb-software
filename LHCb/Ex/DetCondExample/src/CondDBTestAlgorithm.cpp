@@ -1,4 +1,4 @@
-// $Id: CondDBTestAlgorithm.cpp,v 1.10 2005-08-16 09:28:52 marcocle Exp $
+// $Id: CondDBTestAlgorithm.cpp,v 1.11 2005-08-31 16:02:49 marcocle Exp $
 // Include files 
 
 // from Gaudi
@@ -71,6 +71,8 @@ StatusCode CondDBTestAlgorithm::initialize() {
     m_ums->registerCondition(this,"/dd/SlowControl/Hcal/scHcal",&CondDBTestAlgorithm::i_updateCache);
     m_ums->registerCondition(this,"/dd/SlowControl/LHCb/scLHCb",NULL);
     m_ums->registerCondition(this,"/dd/Properties/TestFunction");
+    m_ums->registerCondition(this,"/dd/Alignment/Velo/Module01");
+    m_ums->registerCondition(this,"/dd/Alignment/Velo/Module12");
     m_ums->update(this);
   }
   catch (GaudiException){
@@ -149,11 +151,36 @@ StatusCode CondDBTestAlgorithm::execute() {
   sc = i_analyse( scHcal );
   if( !sc.isSuccess() ) return StatusCode::FAILURE;
 
-  // Retrieve the Hcal detector element
+  // Retrieve the Dummy detector element
   info() << "Test DummyDE detector /dd/Structure/LHCb/Dummy" << endmsg;
   SmartDataPtr<DetectorElement> dummy( detSvc(), "/dd/Structure/LHCb/Dummy" );
   sc = i_analyse( dummy );
   if( !sc.isSuccess() ) return StatusCode::FAILURE;
+
+  // Test alignment (and cool::ChannelId)
+  info() << "Test AlignmentConditions detector /dd/Alignment/Velo/ModuleXX" << endmsg;
+  AlignmentCondition* m01 = getDet<AlignmentCondition>("/dd/Alignment/Velo/Module01");
+  AlignmentCondition* m12 = getDet<AlignmentCondition>("/dd/Alignment/Velo/Module12");
+
+  //  info() << m01->name() << " dPosXYZ = " << m01->param<std::vector<double> >("dPosXYZ")
+  //         << " transformation = \n"
+  info() << m01->name() << ":\n"
+         << m01->printParams()
+         << "\n transformation =  \n"
+         << m01->matrix()[0][0] << " " << m01->matrix()[0][1] << " " << m01->matrix()[0][2] << " " << m01->matrix()[0][3] << "\n"
+         << m01->matrix()[1][0] << " " << m01->matrix()[1][1] << " " << m01->matrix()[1][2] << " " << m01->matrix()[1][3] << "\n"
+         << m01->matrix()[2][0] << " " << m01->matrix()[2][1] << " " << m01->matrix()[2][2] << " " << m01->matrix()[2][3] << "\n"
+         << m01->matrix()[3][0] << " " << m01->matrix()[3][1] << " " << m01->matrix()[3][2] << " " << m01->matrix()[3][3] << "\n"
+         << endmsg;
+
+  info() << m12->name() << ":\n"
+         << m12->printParams()
+         << "\n transformation =  \n"
+         << m12->matrix()[0][0] << " " << m12->matrix()[0][1] << " " << m12->matrix()[0][2] << " " << m12->matrix()[0][3] << "\n"
+         << m12->matrix()[1][0] << " " << m12->matrix()[1][1] << " " << m12->matrix()[1][2] << " " << m12->matrix()[1][3] << "\n"
+         << m12->matrix()[2][0] << " " << m12->matrix()[2][1] << " " << m12->matrix()[2][2] << " " << m12->matrix()[2][3] << "\n"
+         << m12->matrix()[3][0] << " " << m12->matrix()[3][1] << " " << m12->matrix()[3][2] << " " << m12->matrix()[3][3] << "\n"
+         << endmsg;
 
   // Event processing completed
   return StatusCode::SUCCESS;
