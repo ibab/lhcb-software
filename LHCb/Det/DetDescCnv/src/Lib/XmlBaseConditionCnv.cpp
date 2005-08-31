@@ -1,4 +1,4 @@
-// $Id: XmlBaseConditionCnv.cpp,v 1.6 2005-06-29 12:38:56 jpalac Exp $
+// $Id: XmlBaseConditionCnv.cpp,v 1.7 2005-08-31 15:53:49 marcocle Exp $
 
 // include files
 #include "GaudiKernel/CnvFactory.h"
@@ -87,6 +87,20 @@ StatusCode XmlBaseConditionCnv::initialize() {
 // -----------------------------------------------------------------------
 StatusCode XmlBaseConditionCnv::fillObjRefs (IOpaqueAddress* /*childElement*/,
                                              DataObject* refpObject) {
+  // gets the object
+  Condition* dataObj = dynamic_cast<Condition*> (refpObject);
+
+  // initialise it and return the status
+  return dataObj->initialize();
+
+}
+
+
+// -----------------------------------------------------------------------
+// Resolve the references of the just updated transient object.
+// -----------------------------------------------------------------------
+StatusCode XmlBaseConditionCnv::updateObjRefs (IOpaqueAddress* /*childElement*/,
+                                               DataObject* refpObject) {
   // gets the object
   Condition* dataObj = dynamic_cast<Condition*> (refpObject);
 

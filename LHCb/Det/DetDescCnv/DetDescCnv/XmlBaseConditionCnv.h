@@ -1,4 +1,4 @@
-///  $Id: XmlBaseConditionCnv.h,v 1.4 2005-03-24 16:21:17 cattanem Exp $
+///  $Id: XmlBaseConditionCnv.h,v 1.5 2005-08-31 15:53:49 marcocle Exp $
 
 #ifndef DETDESCCNV_XMLCONDITIONCNV_H
 #define DETDESCCNV_XMLCONDITIONCNV_H
@@ -61,6 +61,12 @@ protected:
    */
   virtual StatusCode fillObjRefs(IOpaqueAddress* pAddress, 
                                  DataObject* pObject);
+
+  /**
+   * Resolves the references of the just updated transient object.
+   */
+  virtual StatusCode updateObjRefs(IOpaqueAddress* pAddress,
+                                   DataObject* pObject);
 
   /** Creates the transient representation of an object from a DOMElement.
    * Overrides the default method in XmlGenericCnv
