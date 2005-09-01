@@ -1,4 +1,4 @@
-// $Id: DimCondCommand.cpp,v 1.1.1.1 2005-08-23 10:00:41 marcocle Exp $
+// $Id: DimCondCommand.cpp,v 1.2 2005-09-01 13:54:34 marcocle Exp $
 // Include files 
 
 #include <string>
@@ -80,19 +80,25 @@ void DimCondCommand::commandHandler(){
         } else if ( "object" == tokens[1] ) {
           // ****************************** add-object
           if ( tokens.size() < 5 ) {
-            log << MSG::ERROR << "syntax error: 'add object' needs path, data, since and optionally until" << endmsg;
+            log << MSG::ERROR << "syntax error: 'add object' needs "
+              "path, data, since and optionally until and channel id" << endmsg;
             return;
           }
           longlong since,until;
+          long channel_id;
           std::istringstream is_since(tokens[4]);
           is_since >> since;
           if ( tokens.size() > 5 ) { // "until" is specified
             std::istringstream is_until(tokens[5]);
             is_until >> until;
+            if ( tokens.size() > 6 ) { // "channel id" is specified
+              std::istringstream is_channel_id(tokens[6]);
+              is_channel_id >> channel_id;
+            }
           } else { // "until" not specified: use maximum
             until = time_absolutefuture.absoluteTime();
           }
-          StatusCode sc = m_db->cacheAddXMLObject(tokens[2],since,until,tokens[3]);
+          StatusCode sc = m_db->cacheAddXMLObject(tokens[2],since,until,tokens[3],channel_id);
           if ( !sc.isSuccess() ) {
             log << MSG::ERROR << "add-object failed! (couldn't insert into cache)" << endmsg;
             return;

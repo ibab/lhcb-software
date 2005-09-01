@@ -1,4 +1,4 @@
-// $Id: DimCondCommand.h,v 1.1.1.1 2005-08-23 10:00:41 marcocle Exp $
+// $Id: DimCondCommand.h,v 1.2 2005-09-01 13:54:34 marcocle Exp $
 #ifndef DIMCONDCOMMAND_H 
 #define DIMCONDCOMMAND_H 1
 
@@ -24,7 +24,7 @@ class ICondDBAccessSvc;
  *  Possible commands are:<dl>
  *  <dt>add folder "/folder/path"
  *  <dd>Add to the CondDBCache an XML folder at the given path
- *  <dt>add object "/folder/path" "data string" <em>since</em> [<em>until</em>]
+ *  <dt>add object "/folder/path" "data string" <em>since</em> [<em>until</em> [<em>channel_id</em>]]
  *  <dd>Add to the given folder a new object containing the data "data string", the validity is
  *  from <em>since</em> to <em>until</em> or to +inf if <em>until</em> is not privided
  *  <dt>dump

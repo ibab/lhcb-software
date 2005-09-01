@@ -5,6 +5,9 @@
 !               CondDBAccessSvc (Det/DetCond)
 !-----------------------------------------------------------------------------
 
+! 2005-09-01 - Marco Clemencic
+ - Support cool::ChannelID (DetCond >= v7r6)
+
 !======================== DimCond v1r0 2005-08-23 ========================
 ! 2005-08-23 - Marco CLEMENCIC
  - First version. The package provides DimCondSvc which siply instanciate
