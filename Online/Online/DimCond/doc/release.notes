@@ -5,6 +5,7 @@
 !               CondDBAccessSvc (Det/DetCond)
 !-----------------------------------------------------------------------------
 
+!======================== DimCond v1r0 2005-08-23 ========================
 ! 2005-08-23 - Marco CLEMENCIC
  - First version. The package provides DimCondSvc which siply instanciate
    correctly the command handler DimCondCommand.  The command hadler is able
