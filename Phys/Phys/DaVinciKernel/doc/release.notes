@@ -1,6 +1,12 @@
-! $Id: release.notes,v 1.69 2005-08-23 16:02:02 pkoppenb Exp $
+! $Id: release.notes,v 1.70 2005-09-02 16:33:02 xieyu Exp $
 ! Package     : DaVinciKernel
 ! Responsible : P. Koppenburg
+
+
+! 2005-09-02 - Yuehong Xie
+  - add Kernel/IPVReFitter.h
+    . a new interface for PV refitter
+    . test version. to be reviewed.
 
 !========================== DaVinciKernel v3r6 2005-08-23 ===================
 ! 2005-08-10 - P. Koppenburg
