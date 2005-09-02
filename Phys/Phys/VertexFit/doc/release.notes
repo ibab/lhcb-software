@@ -1,6 +1,14 @@
-! $Id: release.notes,v 1.33 2005-05-30 09:45:41 pkoppenb Exp $
+! $Id: release.notes,v 1.34 2005-09-02 16:50:15 xieyu Exp $
 ! Package     : VertexFit
 ! Responsible : P. Koppenburg
+
+! 2005-09-02 - Yuehong Xie
+  - src/PVReFitter.cpp 
+  - src/PVReFitter.h
+    . New PV refit tool
+    . refit a primary type vertex 
+    . remove all tracks of a particle from PV and refit PV
+    . the problem of Velo/veloBack track charge is fixed by using Q=sign(tx)
 
 !========================== VertexFit v1r6p1 2005-05-30 ===================
 ! 2005-05-24 - H.Ruiz
