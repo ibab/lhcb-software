@@ -4,6 +4,11 @@
 ! Responsible	     : Gloria Corti
 ! Purpose          : collection of sensitive detectors, G4 actions, etc for RICH
 !-----------------------------------------------------------------------------
+
+! 2005-09-02 - Chris Jones
+ - Add some more counters to GiGa converter for MCRichHits to monitor for
+   various problems
+
 !======================== GaussRICH v5r0 ==================================
 2005-08-20   - Sajan Easo
 - Add montoring Print statements to EventAction to verify the

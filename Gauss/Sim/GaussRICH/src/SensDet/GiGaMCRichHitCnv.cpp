@@ -4,13 +4,7 @@
  *  Implementation file for GiGa converter : GiGaMCRichHitCnv
  *
  *  CVS History :
- *  $Id: GiGaMCRichHitCnv.cpp,v 1.12 2005-02-17 13:32:16 jonrob Exp $
- *  $Log: not supported by cvs2svn $
- *  Revision 1.11  2005/01/19 10:38:52  jonrob
- *  add simple printout to GiGa converters
- *
- *  Revision 1.10  2004/07/30 13:42:13  jonrob
- *  Add doxygen file documentation and CVS information
+ *  $Id: GiGaMCRichHitCnv.cpp,v 1.13 2005-09-02 16:37:28 jonrob Exp $
  *
  *  @author Chris Jones    Christopher.Rob.Jones@cern.ch
  *  @date   2004-03-29
@@ -75,7 +69,14 @@ GiGaMCRichHitCnv::GiGaMCRichHitCnv( ISvcLocator* Locator )
   : GiGaCnvBase( storageType() , classID() , Locator ),
     m_RichG4HitCollectionName ( 0 ),
     m_nEvts                   ( 0 ),
-    m_hitTally                ( 2, 0 )
+    m_hitTally                ( Rich::NRiches, 0 ),
+    m_radHits                 ( Rich::NRadiatorTypes, 0 ),
+    m_invalidRadHits          ( Rich::NRiches, 0 ),
+    m_invalidRichHits         ( 0 ),
+    m_ctkHits                 ( Rich::NRadiatorTypes, 0 ),
+    m_scatHits                ( Rich::NRadiatorTypes, 0 ),
+    m_bkgHits                 ( Rich::NRadiatorTypes, 0 ),
+    m_nomcpHits               ( Rich::NRadiatorTypes, 0 )
 {
 
   setNameOfGiGaConversionService( IGiGaCnvSvcLocation::Hits ) ;
@@ -130,9 +131,36 @@ StatusCode GiGaMCRichHitCnv::finalize()
   // Printout final numbers
   const RichStatDivFunctor occ;
   MsgStream msg( msgSvc(), name() );
-  msg << MSG::ALWAYS << "Av. # MCRichHits           : Rich1 = "
+
+  msg << MSG::ALWAYS 
+      << "Av. # Invalid RICH flags           = " << occ(m_invalidRichHits,m_nEvts)
+      << endreq
+      << "Av. # Invalid rad. flags   : Rich1 = " << occ(m_invalidRadHits[Rich::Rich1],m_nEvts)
+      << " Rich2 = " << occ(m_invalidRadHits[Rich::Rich2],m_nEvts)
+      << endreq
+      << "Av. # MCRichHits           : Rich1 = "
       << occ(m_hitTally[Rich::Rich1],m_nEvts)
       << " Rich2 = " << occ(m_hitTally[Rich::Rich2],m_nEvts)
+      << endreq
+      << "Av. # MCRichHits           : Aero  = " << occ(m_radHits[Rich::Aerogel],m_nEvts)
+      << " C4F10 = " <<  occ(m_radHits[Rich::C4F10],m_nEvts)
+      << " CF4 = "   <<  occ(m_radHits[Rich::CF4],m_nEvts)
+      << endreq
+      << "Av. # Charged Track hits   : Aero  = " << occ(m_ctkHits[Rich::Aerogel],m_nEvts)
+      << " C4F10 = " <<  occ(m_ctkHits[Rich::C4F10],m_nEvts)
+      << " CF4 = "   <<  occ(m_ctkHits[Rich::CF4],m_nEvts)
+      << endreq
+      << "Av. # Scattered hits       : Aero  = " << occ(m_scatHits[Rich::Aerogel],m_nEvts)
+      << " C4F10 = " <<  occ(m_scatHits[Rich::C4F10],m_nEvts)
+      << " CF4 = "   <<  occ(m_scatHits[Rich::CF4],m_nEvts)
+      << endreq
+      << "Av. # background hits      : Aero  = " << occ(m_bkgHits[Rich::Aerogel],m_nEvts)
+      << " C4F10 = " <<  occ(m_bkgHits[Rich::C4F10],m_nEvts)
+      << " CF4 = "   <<  occ(m_bkgHits[Rich::CF4],m_nEvts)
+      << endreq
+      << "Av. # MCParticle-less hits : Aero  = " << occ(m_nomcpHits[Rich::Aerogel],m_nEvts)
+      << " C4F10 = " <<  occ(m_nomcpHits[Rich::C4F10],m_nEvts)
+      << " CF4 = "   <<  occ(m_nomcpHits[Rich::CF4],m_nEvts)
       << endreq;
 
   // finalise base class and return
@@ -278,6 +306,7 @@ StatusCode GiGaMCRichHitCnv::updateObj ( IOpaqueAddress*  address ,
           // Rich detector information
           if ( g4hit->GetCurRichDetNum() < 0 ) {
             mchit->setRichInfoValid( false );
+            Warning( "Found RichG4Hit with invalid RICH flag" );
           } else {
             mchit->setRichInfoValid( true );
             mchit->setRich(static_cast<Rich::DetectorType>(g4hit->GetCurRichDetNum()));
@@ -289,6 +318,7 @@ StatusCode GiGaMCRichHitCnv::updateObj ( IOpaqueAddress*  address ,
           // Radiator information
           if ( g4hit->GetRadiatorNumber() < 0 ) {
             mchit->setRadiatorInfoValid( false );
+            Warning( "Found RichG4Hit with invalid radiator flag" );
           } else {
             mchit->setRadiatorInfoValid( true );
             mchit->setRadiator(static_cast<Rich::RadiatorType>(g4hit->GetRadiatorNumber()));
@@ -331,8 +361,26 @@ StatusCode GiGaMCRichHitCnv::updateObj ( IOpaqueAddress*  address ,
           }
 
           // Count hits
-          if      ( Rich::Rich1 == mchit->rich() ) ++m_hitTally[Rich::Rich1];
-          else if ( Rich::Rich2 == mchit->rich() ) ++m_hitTally[Rich::Rich2];
+          if ( !mchit->richInfoValid() )
+          {
+            ++m_invalidRichHits;
+          }
+          else
+          {
+            ++m_hitTally[mchit->rich()];
+          }
+          if ( !mchit->radiatorInfoValid() )
+          {
+            if ( mchit->richInfoValid() ) ++m_invalidRadHits[mchit->rich()];
+          }
+          else
+          {
+            ++m_radHits[mchit->radiator()];
+            if ( mchit->chargedTrack()    ) ++m_ctkHits[mchit->radiator()];
+            if ( mchit->scatteredPhoton() ) ++m_scatHits[mchit->radiator()];
+            if ( mchit->backgroundHit()   ) ++m_bkgHits[mchit->radiator()];
+            if ( !mcPart                  ) ++m_nomcpHits[mchit->radiator()];
+          }
 
           // finally increment key
           ++globalKey;

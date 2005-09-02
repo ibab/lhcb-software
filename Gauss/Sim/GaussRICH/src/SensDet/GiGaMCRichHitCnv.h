@@ -4,11 +4,7 @@
  *  Header file for GiGa converter : GiGaMCRichHitCnv
  *
  *  CVS History :
- *  $Id: GiGaMCRichHitCnv.h,v 1.3 2005-01-19 10:38:52 jonrob Exp $
- *  $Log: not supported by cvs2svn $
- *  Revision 1.2  2004/07/30 13:42:13  jonrob
- *  Add doxygen file documentation and CVS information
- *
+ *  $Id: GiGaMCRichHitCnv.h,v 1.4 2005-09-02 16:37:28 jonrob Exp $
  *
  *  @author Chris Jones    Christopher.Rob.Jones@cern.ch
  *  @date   2004-03-29
@@ -137,8 +133,29 @@ private: // data
   /// Count number of events processed
   unsigned long int m_nEvts;
 
-  /// Count hits in each detector
+  /// overall count hits in each detector
   std::vector< unsigned long int > m_hitTally;
+
+  /// overall hit count in each radiator
+  std::vector< unsigned long int > m_radHits;
+
+  /// overall number of invalid radiator flag hits per event
+  std::vector< unsigned long int > m_invalidRadHits;
+
+  /// number of hits with invalid RICH flag
+  unsigned long int m_invalidRichHits;
+
+  /// overall charged track hit count in each radiator
+  std::vector< unsigned long int > m_ctkHits;
+
+  /// overall scattered hit count in each radiator
+  std::vector< unsigned long int > m_scatHits;
+  
+  /// overall background hit count in each radiator
+  std::vector< unsigned long int > m_bkgHits;
+
+  /// overall MCParticle-less hit count in each radiator
+  std::vector< unsigned long int > m_nomcpHits;
   
 };
 
