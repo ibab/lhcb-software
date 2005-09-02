@@ -5,13 +5,37 @@ Purpose: LHCb reconstruction packages.
          This project groups together all the reconstruction packages needed
          by one or more LHCb applications. 
 
-</PRE><H1><A NAME=v1r5>2005-07-29 RecSys v1r5</A></H1><PRE>
+</PRE><H1><A NAME=v1r5>2005-09-02 RecSys v1r5</A></H1><PRE>
 This version uses Gaudi v16r5, LHCb v18r9
 
-- Packages modified; TrgSys v7r6, TrgVeloTT v8r0
+- Packages added:    PatVeloTT v1r0 - Adaptation of TrgVeloTT to Pat project
+                    PatForward v1r0 - New implementation of Forward track PatRec
+                         PatPV v1r0 - Adaptation of L1Reco 2D prim vtx to Pat
+                  PatFitParams v1r0 - Fit MC tracks to compute PatForward params
+- Packages modified: TrgSys v7r6, TrgVeloTT v8r0, L1Decision v5r2, PatSys v1r2,
+                     PatTools v1r1, PatUtils v1r1, PatVelo v1r2, PatChecker v1r1
 
 - In TrgVeloTT v8r0
   . Port new implementation from DC04 branch. See details in release notes
+
+- In L1Decision v5r2
+  . Upgrade to accept multiple primary vertices
+
+- In PatTools v1r1
+  . Add containers for PatTCoord and PatTTCoord
+
+- In PatUtils v1r1
+  . Add PatTrack2TES algorithm to convert (L1) trcks in PatDataStore to standard
+    TES tracks and containers
+
+- In PatVelo v1r2
+  . Changed the extra track flags definition from PatTrack to TrackKeys
+    namespace, for future inclusion in the normal TrackKeys namespace.
+
+- In PatChecker v1r1
+  . Implement the checking of TT and Forwardtracks.
+  . Use 'context' and no longer name for L1/HLT checking
+  . Remove from PatTrack2MCParticle conversion from PatDataStore to TES tracks
 
 </PRE><H1><A NAME=v1r4>2005-07-25 RecSys v1r4</A></H1><PRE>
 This version uses Gaudi v16r5, LHCb v18r8

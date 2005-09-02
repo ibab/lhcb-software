@@ -49,15 +49,19 @@ use TrgVelo             v7r4    Trg   # David Hutchcroft
 use TrgVeloTT		v8r0    Trg   # Luis Fernandez
 
 # New pattern recognition
-use PatSys              v1r1    Pat   # Olivier Callot
-use PatTools            v1r0    Pat   # Olivier Callot
-use PatUtils            v1r0    Pat   # Olivier Callot
-use PatVelo             v1r1    Pat   # Olivier Callot, David Hutchcroft
-use PatChecker          v1r0    Pat   # Olivier Callot
+use PatSys              v1r2    Pat   # Olivier Callot
+use PatTools            v1r1    Pat   # Olivier Callot
+use PatUtils            v1r1    Pat   # Olivier Callot
+use PatVelo             v1r2    Pat   # Olivier Callot, David Hutchcroft
+use PatVeloTT           v1r0    Pat   # Olivier Callot, Luis Fernandez
+use PatForward          v1r0    Pat   # Olivier Callot
+use PatPV               v1r0    Pat   # Olivier Callot
+use PatChecker          v1r1    Pat   # Olivier Callot
+use PatFitParams        v1r0    Pat   # Olivier Callot
 
 # L1 reconstruction and decision
 use L1Reco		v7r1    Trg   # Mariusz Witek
-use L1Decision		v5r1p1  Trg   # Thomas Schietinger
+use L1Decision          v5r2    Trg   # Thomas Schietinger
 
 # Muon
 use MuonUtils		v1r0	Muon  # N.N.
