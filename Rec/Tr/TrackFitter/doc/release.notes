@@ -3,6 +3,11 @@
 ! Responsible : Eduardo Rodrigues, Jose A. Hernando
 !----------------------------------------------------------------------------
 
+! 2005-09-02 - Eduardo Rodrigues
+ - first usable version of the Kalman filter
+ - version with extra debugging for tests and comparisons with old model
+ - several omissions and bugs corrected
+
 ! 2005-06-29 - Eduardo Rodrigues
  - KalmanFilter tool renamed to TrackKalmanFilter. And functionality added
  - Windows necessary files TrackFitter_load.cpp and TrackFitter_dll.cpp added

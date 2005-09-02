@@ -1,4 +1,4 @@
-// $Id: TrackEventFitter.cpp,v 1.1 2005-06-29 15:35:02 erodrigu Exp $
+// $Id: TrackEventFitter.cpp,v 1.2 2005-09-02 17:05:03 erodrigu Exp $
 // Include files
 // -------------
 // from Gaudi
@@ -38,7 +38,7 @@ TrackEventFitter::TrackEventFitter( const std::string& name,
                    m_tracksInContainer = TrackLocation::Default );
   declareProperty( "TracksOutContainer", 
                    m_tracksOutContainer = "Rec/Track/FitIdeal" );
-  declareProperty( "FitterName"      , m_fitterName = "KalmanFilter" );
+  declareProperty( "FitterName"      , m_fitterName = "TrackKalmanFilter" );
   declareProperty( "FitUpstream"     , m_fitUpstream   = false );
 }
 
@@ -103,12 +103,11 @@ StatusCode TrackEventFitter::execute() {
 
   // Loop over the tracks and fit them
   // ---------------------------------
-  //Tracks::const_iterator iTrack = tracksCont -> begin();
-  Tracks::const_iterator iTrack;
+  Tracks::const_iterator iTrack = tracksCont -> begin();
   unsigned int nFitFail = 0;
 
-  debug() << "-> tarting loop over input Tracks ..." << endmsg;
-  for ( iTrack=tracksCont->begin(); iTrack != tracksCont->end(); ++iTrack ) {
+  debug() << "-> starting loop over input Tracks ..." << endmsg;
+  for ( iTrack; iTrack != tracksCont->end(); ++iTrack ) {
 
     // Make a new track keeping the same key
     Track& track = *( (*iTrack) -> cloneWithKey() );
@@ -123,11 +122,18 @@ StatusCode TrackEventFitter::execute() {
 
     // get the seed state
     if ( track.nStates() == 0 )
-      return Error( "Track has no state!", StatusCode::FAILURE);
+      return Error( "Track has no state! Can not fit.", StatusCode::FAILURE);
 
     State& seed = seedState( track );
 
     debug() << "#### Fitting Track # " << track.key() << " ####" << endreq;
+    debug() << "# of states before fit:" << track.nStates() << endreq;
+    debug() << "States at z-positions: ";
+    const std::vector<State*>& allstates = track.states();
+    for ( unsigned int it = 0; it < allstates.size(); it++ ) {
+      debug() << allstates[it]->z() << " ";
+    }
+    debug() << endreq;
 
     if ( m_fitUpstream ) {  // fit upstream from last measurement
       //sc = m_tracksFitter -> fitReverse( track );
@@ -138,6 +144,15 @@ StatusCode TrackEventFitter::execute() {
 
     if ( sc.isSuccess() ) {
       debug() << "Fitted successfully track # " << track.key() << endreq;
+      debug() << "# of states after fit:" << track.nStates() << endreq;
+      debug() << "States are: ";
+      const std::vector<State*>& allstates = track.states();
+      for ( unsigned int it2 = 0; it2 < allstates.size(); it2++ ) {
+        debug() << "-- at z = " << allstates[it2]->z() << endreq
+                << "state vector:" << allstates[it2]->stateVector() << endreq
+                << "covariance:" << allstates[it2]->covariance() << endreq;
+      }
+      debug() << endreq;
       track.setStatus( TrackKeys::Fitted );
       // Add the track to the new Tracks container
       // -----------------------------------------

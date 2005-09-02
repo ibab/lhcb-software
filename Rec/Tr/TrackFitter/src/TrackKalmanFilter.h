@@ -1,4 +1,4 @@
-// $Id: TrackKalmanFilter.h,v 1.1 2005-06-29 15:35:02 erodrigu Exp $
+// $Id: TrackKalmanFilter.h,v 1.2 2005-09-02 17:05:03 erodrigu Exp $
 #ifndef TRACKFITTER_TRACKKALMANFILTER_H 
 #define TRACKFITTER_TRACKKALMANFILTER_H 1
 
@@ -73,7 +73,15 @@ protected:
   
   //! compute the chi2
   void computeChiSq(Track& track);
-  
+
+  //! determine track state at various z positions
+  StatusCode determineStates(Track& track);
+
+  //! predict state at a z position
+  State& predictState(const double zPos);
+
+  //! update the current state
+  StatusCode updateCurrentState(State& state, FitNode& lastNode);
 protected:
   
   // ! check that the contents of the cov matrix are fine
@@ -93,7 +101,7 @@ protected:
 
 protected:
 
-  //! internal clone of the state (pointer onwer by Kalman)
+  //! internal clone of the state (pointer owned by Kalman)
   State* m_state;
 
   // internal copy of the nodes of the track (track owns them)

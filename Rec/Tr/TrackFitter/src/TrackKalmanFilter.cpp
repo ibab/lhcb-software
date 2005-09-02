@@ -1,4 +1,4 @@
-// $Id: TrackKalmanFilter.cpp,v 1.2 2005-07-06 16:46:26 ebos Exp $
+// $Id: TrackKalmanFilter.cpp,v 1.3 2005-09-02 17:05:03 erodrigu Exp $
 //
 //  Implementation of the TrackKalmanFilter tool
 //
@@ -17,6 +17,7 @@
 
 // from TrackEvent
 #include "Event/TrackKeys.h"
+#include "Event/TrackFunctor.h"
 
 // local
 #include "TrackKalmanFilter.h"
@@ -40,8 +41,10 @@ TrackKalmanFilter::TrackKalmanFilter( const std::string& type,
   m_zPositions.push_back(  9450.0*mm );
   m_zPositions.push_back( 11900.0*mm );
 
-  declareProperty( "Extrapolator"     , m_extrapolatorName = "TrackMasterExtrapolator" );
-  declareProperty( "Projector"        , m_projectorName = "TrackMasterProjector" );
+  declareProperty( "Extrapolator"     , m_extrapolatorName =
+                                        "TrackMasterExtrapolator" );
+  declareProperty( "Projector"        , m_projectorName =
+                                        "TrackMasterProjector" );
   declareProperty( "ZPositions"       , m_zPositions               );
   declareProperty( "StatesAtMeasZPos" , m_statesAtMeasZPos = false );
   declareProperty( "StateAtBeamLine"  , m_stateAtBeamLine  = true  );
@@ -65,9 +68,9 @@ TrackKalmanFilter::~TrackKalmanFilter() {
 //=========================================================================
 StatusCode TrackKalmanFilter::initialize() 
 {
-  m_extrapolator = tool<ITrackExtrapolator>(m_extrapolatorName);
+  m_extrapolator = tool<ITrackExtrapolator>( m_extrapolatorName );
 
-  m_projector    = tool<ITrackProjector>(m_projectorName);
+  m_projector    = tool<ITrackProjector>( m_projectorName );
 
   m_debugLevel   = msgLevel( MSG::DEBUG );
   
@@ -88,21 +91,22 @@ StatusCode TrackKalmanFilter::failure(const std::string& comment) {
 StatusCode TrackKalmanFilter::iniKalman(Track & track) 
 {
   // destroy the previous state if not null
-  if (m_state != NULL) { delete m_state; m_state = 0; }
+  if ( m_state != NULL ) { delete m_state; m_state = 0; }
 
-  // Kalman has private copy of the nodes to acelerate the computations
-  // remember that the track owns the Nodes, so it is responsability of the
-  // Track destructor to delete them!
+  // the Kalman filter has a private copy of the nodes to accelerate
+  // the computations. The track owns the Nodes, so it is responsability
+  // of the Track destructor to delete them!
   m_nodes.clear();
-  debug() << "- iniKalman: getting track measurements ..." << endreq;
+  debug() << "- iniKalman: getting the "
+          << track.nMeasurements() << "track measurements ..." << endreq;
   std::vector<Measurement*>& measures = track.measurements();
-  debug() << "- iniKalman: getting track nodes ..." << endreq;
+  //debug() << "- iniKalman: getting track nodes ..." << endreq;
   std::vector<Node*>& nodes = track.nodes();
   if (nodes.size() > 0) 
     for (std::vector<Node*>::iterator it = nodes.begin(); it != nodes.end();
          it++) delete *it;  
   nodes.clear();
-  debug() << "- iniKalman: private nodes vector cleared ..." << endreq;
+  //debug() << "- iniKalman: private nodes vector cleared ..." << endreq;
   // reserve some space in node vector
   m_nodes.reserve(measures.size());
   for (std::vector<Measurement*>::iterator it = measures.begin(); 
@@ -112,7 +116,7 @@ StatusCode TrackKalmanFilter::iniKalman(Track & track)
     m_nodes.push_back(node);
     track.addToNodes(node);
   }
-  debug() << "- iniKalman: private nodes vector rebuilt ..." << endreq;
+  //debug() << "- iniKalman: private nodes vector rebuilt ..." << endreq;
 
   if ( m_debugLevel )
     debug() << " track nodes size \t" << m_nodes.size() << endreq;
@@ -127,12 +131,49 @@ StatusCode TrackKalmanFilter::fit(Track& track, const State& state)
 {
   debug() << "-> calling filter(track,state) ..." << endreq;
   StatusCode sc = filter(track,state);
-  if (sc.isFailure()) return failure(" unable to filter the track");
+  if (sc.isFailure()) return failure("unable to filter the track");
 
+  debug() << "### Nodes after filtering:" << endreq;
+  std::vector<FitNode*>::iterator iNode;
+  for (iNode = m_nodes.begin(); iNode != m_nodes.end(); ++iNode) {
+    FitNode& node = *(*iNode);
+    debug() << "-- at z = " << node.z()
+            << "best state = " << node.state().stateVector() << endreq
+            << "predicted state = " << node.predictedState().stateVector() << endreq
+            << "filtered state = " << node.filteredState().stateVector() << endreq
+            << endreq;
+  }
+  
   debug() << "-> calling smoother(track) ..." << endreq;
   sc = smoother(track);
-  if (sc.isFailure()) return failure(" unable to smooth the track");
-  
+  if (sc.isFailure()) return failure("unable to smooth the track");
+
+  debug() << "### Nodes after smoothing:" << endreq;
+  //std::vector<FitNode*>::iterator iNode;
+  for (iNode = m_nodes.begin(); iNode != m_nodes.end(); ++iNode) {
+    FitNode& node = *(*iNode);
+    debug() << "-- at z = " << node.z()
+            << "best state = " << node.state().stateVector() << endreq
+            << "predicted state = " << node.predictedState().stateVector() << endreq
+            << "filtered state = " << node.filteredState().stateVector() << endreq
+            << endreq;
+  }
+
+  //update the best state
+  //std::vector<FitNode*>::iterator iNode = m_nodes.begin();
+  //updateCurrentState( state, *(*iNode) );
+
+  debug() << "-> calling determineStates(track) ..." << endreq;
+  //determine the track states at user defined z positions
+  sc = determineStates( track );
+  if ( sc.isFailure() ) {
+    warning()
+        << "Failed determining states at z positions" << endmsg;
+    //clear the node Vector
+    //cleanUp();
+    return sc;
+  }
+
   return sc;
 }
 
@@ -143,14 +184,12 @@ StatusCode TrackKalmanFilter::filter(Track& track, const State& state)
 {
   StatusCode sc = StatusCode::SUCCESS;
   sc = iniKalman(track);
-  if (sc.isFailure()) return failure(" not able to create Nodes");
-
-  m_state = state.clone();
+  if (sc.isFailure()) return failure("not able to create Nodes");
 
   if ( m_debugLevel ) {
-    debug() << " seed state at z \t " << m_state->z() << endreq
-            << " seed state vector \t" << m_state->stateVector() << endreq    
-            << " seed state cov \t" << m_state->covariance() << endreq
+    debug() << " seed state at z \t " << state.z() << endreq
+            << " seed state vector \t" << state.stateVector() << endreq
+            << " seed state cov \t" << state.covariance() << endreq
             << " track nodes size \t" << m_nodes.size() << endreq;
   }
 
@@ -160,27 +199,44 @@ StatusCode TrackKalmanFilter::filter(Track& track, const State& state)
   debug() << "Z-positions of seed state/meas.begin = "
           << state.z() << " / " << z << endreq;
 
+  // keep seed state so we can use it in another iteration
+  m_state = state.clone();
+
   debug() << "- propagating the state ..." << endreq;
   // sc = m_extrapolator->propagate(*m_state,z,m_particleID);
   sc = m_extrapolator->propagate(*m_state,z);
   if (sc.isFailure()) 
-    return failure(" unable to extrapolate to 1st measurement");
+    return failure("unable to extrapolate to measurement");
+
+  debug() << " -after extrapolation, seed state at z \t " << m_state->z() << endreq
+          << " seed state vector \t" << m_state->stateVector() << endreq ;
 
   // TODO: handle different iterations
   unsigned int nNodes = 0;
   debug() << "- looping over nodes ..." << endreq;
   for (iNode = m_nodes.begin(); iNode != m_nodes.end(); ++iNode) {
     FitNode& node = *(*iNode);
-    debug() << "-> predict(...) for node # " << nNodes << endreq;
+    debug() << "-> predict(...) for node # " << nNodes
+            << " at z = " << node.measurement().z() << endreq;
     sc = predict(node,*m_state);
-    if (sc.isFailure()) return failure(" unable to predict at node");
+    if (sc.isFailure()) return failure("unable to predict at node");
     debug() << "-> filter(...) for node # " << nNodes++ << endreq;
+    debug() << "-- just before calling filter(node): z = " << node.z() << endreq
+            //<< "best state = " << node.state().stateVector() << endreq
+            << "predicted state = " << node.predictedState().stateVector() << endreq
+            //<< "filtered state = " << node.filteredState().stateVector() << endreq
+            << endreq;
     sc = filter(node);
-    if (sc.isFailure()) return failure(" unable to filter node ");
-  }  
-
+    if (sc.isFailure()) return failure("unable to filter node ");
+    debug() << "-- at end of cycle: z = " << node.z()
+            << "best state = " << node.state().stateVector() << endreq
+            << "predicted state = " << node.predictedState().stateVector() << endreq
+            << "filtered state = " << node.filteredState().stateVector() << endreq
+            << endreq;
+  }
+  
   computeChiSq(track);
-
+  
   return sc;
 }
 
@@ -189,32 +245,62 @@ StatusCode TrackKalmanFilter::filter(Track& track, const State& state)
 //=========================================================================
 StatusCode TrackKalmanFilter::predict(FitNode& aNode, State& aState) {
 
-  Measurement& thisMeasure = aNode.measurement();
+  debug() << "predict: state at z = " << aState.z() << endreq
+          << " state vector: " << aState.stateVector() << endreq
+          << " state cov:" << aState.covariance() << endreq;
 
+  Measurement& thisMeasure = aNode.measurement();
+  
   // only use extrapolator in first iteration; else use stored parameters
   HepVector prevStateVec = aState.stateVector();
   HepSymMatrix prevStateCov = aState.covariance();
   double z = thisMeasure.z();
-  // StatusCode sc = m_extrapolator->propagate(state,z,m_particleID);
-  StatusCode sc = m_extrapolator->propagate(aState,z);
-  if (sc.isFailure()) 
-    return failure(" Unable to predit state at next measurement");
-
-  const HepMatrix& F = m_extrapolator->transportMatrix();
-  aNode.setTransportMatrix( F );
-  aNode.setTransportVector( aState.stateVector() - F * prevStateVec );
-  aNode.setNoiseMatrix( aState.covariance() - prevStateCov.similarity(F) );
+  if ( aNode.transportVector()[0] == 0. ) {
+    debug() << "transportVector empty" << endreq;
+  // TODO: how to translate this into the new TEM!!!?
+  ////if ( !(aNode.predictedState()) || !m_storeTransport ) { 
+    // first iteration only: need to call extrapolator to get 
+    // the predicted state at measurement
+    StatusCode sc = m_extrapolator->propagate(aState,z);
+    if (sc.isFailure()) 
+      return failure("unable to predict state at next measurement");
+    debug() << "... extrapolation done." << endreq
+            << "-> state at z = " << aState.z() << endreq
+            << " state vector: " << aState.stateVector() << endreq
+            << " state cov:" << aState.covariance() << endreq;
+    // store transport matrix F, noise matrix and vector for next iterations
+    const HepMatrix& F = m_extrapolator->transportMatrix();
+    aNode.setTransportMatrix( F );
+    aNode.setTransportVector( aState.stateVector() - F * prevStateVec );
+    aNode.setNoiseMatrix( aState.covariance() - prevStateCov.similarity(F) );
+  }
+  else{ // next iterations
+    // update node with information from 1st iteration
+    debug() << "transportVector non-empty, = " << endreq
+            << aNode.transportVector() << endreq;
+    const HepMatrix& F = aNode.transportMatrix();
+    HepVector& stateVec = aState.stateVector();
+    HepSymMatrix& stateCov = aState.covariance();
+    stateVec = F * stateVec + aNode.transportVector();
+    stateCov = stateCov.similarity(F) + aNode.noiseMatrix();
+    aState.setZ( z );
+  }
 
   // save predicted state
   aNode.setPredictedState(aState);
 
   if ( m_debugLevel ) {
-    debug() << " predicted  state at z \t" << z << endreq;
-    debug() << " predicted  state vector  \t" << aState.stateVector() << endreq;
-    debug() << " predicted  state cov \t" << aState.covariance() << endreq;
-    debug() << " transport matrix \t" << aNode.transportMatrix() << endreq;
-    debug() << " transport vector \t" << aNode.transportVector() << endreq;
-    debug() << " noise matrix \t" << aNode.noiseMatrix() << endreq;
+    debug() << " predicted  state at z \t" << z << endreq
+            << " predicted  state vector  \t" << aState.stateVector() << endreq
+            << " predicted  state cov \t" << aState.covariance() << endreq
+            << " transport matrix \t" << aNode.transportMatrix() << endreq
+            << " transport vector \t" << aNode.transportVector() << endreq
+            << " noise matrix \t" << aNode.noiseMatrix() << endreq;
+    debug() << "-- at end of predict(...): z = " << aNode.z() << endreq
+            //<< "best state = " << aNode.state().stateVector() << endreq
+            << "predicted state = " << aNode.predictedState().stateVector() << endreq
+            //<< "filtered state = " << aNode.filteredState().stateVector() << endreq
+            << endreq;
   } 
 
   return StatusCode::SUCCESS;
@@ -227,21 +313,36 @@ StatusCode TrackKalmanFilter::filter(FitNode& node)
 {
   
   Measurement& meas = node.measurement();
-  State& state      = node.state();
+  // set a temporary "value" for the filtered state
+  node.setFilteredState( node.predictedState() );
+  //State& state      = node.state();
+  //State& state      = node.predictedState();
+  State& state = node.filteredState();
 
-  debug() << "z-position of State = " << state.z() << endreq;
-  debug() << "z-position of Meas  = " << meas.z() << endreq;
-  debug() << "-> calling filter(state,meas) ..." << endreq;
+  debug() << "filter(node): predicted  state at z \t" << state.z() << endreq
+          << " predicted state vector  \t" << state.stateVector() << endreq;
+
+  // keep a copy - needed!
+  double stateX = state.x();
+  double stateY = state.y();
+  //HepSymMatrix& tmpC = state.covariance();
+
+  //debug() << "z-position of State = " << state.z() << endreq;
+  //debug() << "z-position of Meas  = " << meas.z() << endreq;
+  //debug() << "-> calling filter(state,meas) ..." << endreq;
   StatusCode sc = filter(state, meas);
-  if (sc.isFailure()) return failure("Unable to filter the node!");
+  if (sc.isFailure()) return failure("unable to filter the node!");
 
-  debug() << "z-position of State = " << state.z() << endreq;
-  debug() << "z-position of Meas  = " << meas.z() << endreq;
+  //debug() << "z-position of State = " << state.z() << endreq;
+  //debug() << "z-position of Meas  = " << meas.z() << endreq;
 
   double tMeasureError = meas.errMeasure();
+  //TODO: find a less ugly way to implement this!
+  if ( meas.type() == Measurement::VeloPhi )
+    tMeasureError *= sqrt( stateX*stateX + stateY*stateY );
+  const HepVector& H = m_projector->projectionMatrix();
   debug() << "getting info from projection ..." << endreq;
   double res = m_projector->residual();  // projection just made in filter(,)
-  const HepVector& H = m_projector->projectionMatrix();
 
   // save it for later use
   node.setProjectionMatrix( H );
@@ -254,12 +355,15 @@ StatusCode TrackKalmanFilter::filter(FitNode& node)
 
   debug() << "setting info in node ..." << endreq;
   node.setResidual(res);
-  node.setErrResidual(sqrt(errorRes));
+  //node.setErrResidual(sqrt(errorRes));
+  node.setErrResidual(errorRes);
 
   // save predicted state
   debug() << "setting filteredState" << endreq;
-  node.setFilteredState(state);
+  // not needed as I had retrieved a reference to it!
+  //node.setFilteredState(state);
   debug() << "just set filteredState" << endreq;
+  node.setState(state);
 
   if ( m_debugLevel ) {
     debug() << " bef print" << endreq;  
@@ -292,19 +396,29 @@ StatusCode TrackKalmanFilter::filter(State& state, Measurement& meas)  {
   HepVector&    tX = state.stateVector();
   HepSymMatrix& tC = state.covariance();
 
-  debug() << "filter(state,meas): projecting ..." << endreq;
+  debug() << "filter(state,meas): projecting ..."
+          << " of type" << meas.type() << endreq;
   // project the state into the measurement 
   StatusCode sc = m_projector->project(state,meas);
   if (sc.isFailure()) 
-    return failure(" Not able to project a state into a measurement");
+    return failure("not able to project a state into a measurement");
   debug() << "filter(state,meas): projection done" << endreq;
 
   // calculate predicted residuals
   double errorMeas = meas.errMeasure();
+  //TODO: find a less ugly way to implement this!
+  if ( meas.type() == Measurement::VeloPhi )
+    errorMeas *= sqrt( state.x()*state.x() + state.y()*state.y() );
+  const HepVector& H = m_projector->projectionMatrix();
   double res       = m_projector->residual();
   double errorRes  = m_projector->errResidual();
   double errorRes2 = (errorRes*errorRes);
-  const HepVector& H = m_projector->projectionMatrix();
+  if ( meas.type() == Measurement::VeloPhi ) {
+    errorRes2 = errorMeas*errorMeas + tC.similarity( H );
+  }
+  
+  debug() << "m_errorRes2 = " << errorRes2 << endreq
+          << "and cov" << tC << endreq;
 
   // calculate gain matrix K
   m_K = (tC * H)/errorRes2;
@@ -315,6 +429,9 @@ StatusCode TrackKalmanFilter::filter(State& state, Measurement& meas)  {
   HepMatrix B  = HepDiagMatrix(tC.num_row(), 1) - ( m_K * H.T());
   tC.assign( B * tC * B.T() + ( m_K * pow(errorMeas, 2.0) * m_K.T()));
 
+  m_state -> setState( state.stateVector() );
+  m_state -> setCovariance( state.covariance() );
+
  if ( m_debugLevel ) {
     debug() << " measure and error \t" << meas.measure() << ", " 
             << errorMeas << endreq
@@ -323,10 +440,36 @@ StatusCode TrackKalmanFilter::filter(State& state, Measurement& meas)  {
             << " projection matrix \t" << H << endreq
             << " gain matrix \t" << m_K << endreq
             << " filter state vector \t" << tX << endreq
-            << " filter state covariance \t"<< tC << endreq;
+            << " filter state covariance \t"<< tC << endreq
+            << "state.stateVector()" << state.stateVector() << endreq;
   }
   
   return sc;
+}
+
+//=========================================================================
+// 
+//=========================================================================
+StatusCode TrackKalmanFilter::smoother(Track& track) 
+{
+  StatusCode sc = StatusCode::SUCCESS;
+  // smoother loop - runs in opposite direction to filter
+  std::vector<FitNode*>::reverse_iterator riNode = m_nodes.rbegin();
+  FitNode* oldNode = *riNode;
+  ++riNode;
+
+  debug() << "starting loop over nodes..." << endreq;  
+  while (riNode != m_nodes.rend()) {
+    debug() << " call to smooth(node0,node1)..." << endreq;  
+    sc = smooth( *(*riNode), *oldNode );
+    if ( sc.isFailure() ) return failure("Unable to smooth node!");      
+    oldNode = *riNode;
+    ++riNode;
+  }
+
+  computeChiSq(track);
+
+  return StatusCode::SUCCESS;
 }
 
 //----------------------------------------------------------------
@@ -336,9 +479,18 @@ StatusCode TrackKalmanFilter::filter(State& state, Measurement& meas)  {
 // M. Needham 9/11/99
 //----------------------------------------------------------------
 StatusCode TrackKalmanFilter::smooth(FitNode& thisNode,
-                                const FitNode& prevNode)
+                                     const FitNode& prevNode)
 {
-  debug() << "just entered smooth(node0,node1)" << endreq;  
+  debug() << "just entered smooth(node0,node1)" << endreq;
+
+  debug() << "thisNode: z = "<< thisNode.z()
+          << " predicted state = "
+          << thisNode.predictedState().stateVector() << endreq;
+
+  debug() << "prevNode: z = "<< prevNode.z()
+          << " predicted state = "
+          << prevNode.predictedState().stateVector() << endreq;
+
   // preliminaries, first we need to invert the _predicted_ covariance
   // matrix at k+1
   const HepVector&    prevNodeX = prevNode.predictedState().stateVector();
@@ -347,13 +499,13 @@ StatusCode TrackKalmanFilter::smooth(FitNode& thisNode,
   debug() << "calling checkInvertMatrix ..." << endreq;  
   // check that the elements are not too large else dsinv will crash
   StatusCode sc = checkInvertMatrix(prevNodeC);
-  if ( sc.isFailure() ) return failure(" not valid matrix in smoother"); 
+  if ( sc.isFailure() ) return failure("not valid matrix in smoother"); 
 
-  debug() << "inverting matrix ..." << endreq;  
+  debug() << "inverting matrix ..." << endreq;
   //invert the covariance matrix
   HepSymMatrix invPrevNodeC = prevNodeC;
   sc = invertMatrix(invPrevNodeC);
-  if ( sc.isFailure() ) return failure(" inverting matrix in smoother");
+  if ( sc.isFailure() ) return failure("inverting matrix in smoother");
   debug() << "matrix inverted ..." << endreq;  
 
   //references to _predicted_ state + cov of this node from the first step
@@ -416,31 +568,6 @@ StatusCode TrackKalmanFilter::smooth(FitNode& thisNode,
 //=========================================================================
 // 
 //=========================================================================
-StatusCode TrackKalmanFilter::smoother(Track& track) 
-{
-  StatusCode sc = StatusCode::SUCCESS;
-  // smoother loop - runs in opposite direction to filter
-  std::vector<FitNode*>::reverse_iterator riNode = m_nodes.rbegin();
-  FitNode* oldNode = *riNode;
-  ++riNode;
-
-  debug() << "starting loop over nodes..." << endreq;  
-  while (riNode != m_nodes.rend()) {
-    debug() << " call to smooth(node0,node1)..." << endreq;  
-    sc = smooth( *(*riNode), *oldNode );
-    if ( sc.isFailure() ) return failure("Unable to smooth node!");      
-    oldNode = *riNode;
-    ++riNode;
-  }
-
-  computeChiSq(track);
-
-  return StatusCode::SUCCESS;
-}
-
-//=========================================================================
-// 
-//=========================================================================
 void TrackKalmanFilter::computeChiSq(Track& track) 
 {
   double chi2 = 0.;
@@ -464,6 +591,115 @@ void TrackKalmanFilter::computeChiSq(Track& track)
             << track.chi2PerDoF() << endreq;
   }
   
+}
+
+//=============================================================================
+// 
+//=============================================================================
+StatusCode TrackKalmanFilter::determineStates( Track& track )
+{
+  debug() << "In determineStates" << endreq;
+
+  // clean the non-fitted states in the track!
+  debug() << "beg: # states = " << track.nStates() << endreq;
+  const std::vector<State*> allstates = track.states();
+  for ( std::vector<State*>::const_iterator it = allstates.begin();
+        it != allstates.end(); it++) track.removeFromStates( *it );
+  debug() << "aft: # states = " << track.nStates() << endreq;
+
+  // use copy of z pos vector
+  std::vector<double> tZPositions = m_zPositions;
+  std::sort( tZPositions.begin(), tZPositions.end() );
+  
+  if ( m_statesAtMeasZPos ) {
+    // just copy the "best state" properties from the vector of nodes
+    // into the track's vector of states
+    std::vector<FitNode*>::const_iterator it;
+    for ( it = m_nodes.begin(); it < m_nodes.end(); it++ ) {
+      State& newState = (*it) -> state();
+      track.addToStates( newState );
+    }
+  }
+  else {
+    // determine states
+    std::vector<double>::const_iterator zPos;
+    for ( zPos = tZPositions.begin(); zPos != tZPositions.end(); ++zPos ) {
+
+      // get predicted state
+      State& newState = predictState( *zPos );
+
+      //add state to container
+      track.addToStates( newState );
+    }
+  }
+
+  // extrapolate current state to position closest to the beam line
+  if ( m_stateAtBeamLine ) {
+    //TODO: implement this part ...
+  }
+
+  return StatusCode::SUCCESS;
+
+}
+
+//=============================================================================
+// 
+//=============================================================================
+State& TrackKalmanFilter::predictState( const double zPos )
+{
+  debug() << " - predict state at z = " << zPos << endreq;
+  // loop to find the closest node
+  std::vector<FitNode*>::iterator iNode;
+  double diffZ = 99999.*mm;
+  FitNode* closestNode = 0;
+  for ( iNode = m_nodes.begin(); iNode != m_nodes.end(); ++iNode){
+    if ( fabs(zPos-(*iNode)->z()) < diffZ ) {
+      diffZ = fabs(zPos-(*iNode)->z());
+      closestNode = *iNode;
+    }
+  } // loop nodes
+  //std::vector<FitNode*>::iterator it =
+    //std::max_element( m_nodes.begin(), m_nodes.end(),
+                      //TrackFunctor::closestToZ<FitNode>(zPos) );
+  //if ( it == m_nodes.end() )
+    //throw GaudiException( "No node closest to z","TrackKalmanFilter.cpp",
+                          //StatusCode::FAILURE );
+  
+  State* closeState = closestNode -> state().clone();
+  
+  StatusCode sc = m_extrapolator -> propagate( *closeState, zPos );
+  if ( sc.isFailure() ) {
+    warning() << " Unable to extrapolate to z = " << zPos << endreq;
+    closeState -> setZ( zPos );
+  }
+
+  debug() << "node.state: z = " << closestNode->state().z() << endreq
+          << "state vector" << closestNode->state().stateVector() << endreq
+          << "covariance" << closestNode->state().covariance() << endreq
+          << "-> track state: z = " << closeState->z() << endreq
+          << "state vector" << closeState->stateVector() << endreq
+          << "covariance" << closeState->covariance() << endreq;
+  
+  return (*closeState);
+}
+
+
+//=========================================================================
+//
+//=========================================================================
+StatusCode TrackKalmanFilter::updateCurrentState( State& state,
+                                                  FitNode& lastNode )
+{
+  // get reference to the state vector and cov
+  HepVector& tX = state.stateVector();
+  HepSymMatrix& tC = state.covariance();
+
+  //update
+  tX = lastNode.state().stateVector();
+  tC = lastNode.state().covariance();
+  state.setZ( lastNode.z() );
+
+  return StatusCode::SUCCESS;
 }
 
 //=========================================================================
