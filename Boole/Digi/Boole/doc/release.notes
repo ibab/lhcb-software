@@ -3,8 +3,9 @@ Package: Digi/Boole
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb Digitization program
 
-</PRE><H1><A NAME=v9r5>2005-08-30 Boole v9r5</A></H1><PRE>
+</PRE><H1><A NAME=v9r5>2005-09-05 Boole v9r5</A></H1><PRE>
  - Adapt requirements to Lbcom v2r5, LHCb v18r9
+ - Use XmlDDDB v26r2
  - Cleanup options files, to take advantage of new -= syntax for array options
 
 </PRE><H1><A NAME=v9r4>2005-07-18 Boole v9r4</A></H1><PRE>
