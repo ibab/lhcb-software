@@ -231,15 +231,13 @@ StatusCode  PVReFitter::fitTwoTracks( TrStoredTrack* tr1, TrStoredTrack* tr2,
      X(6)=workStateP2.y();
      X(7)=workStateP2.tx();
      X(8)=workStateP2.ty();
-                                                                                                                                   
      HepSymMatrix Cx(8,0);
      Cx*=0.;
      Cx.sub(1,workStateP1.stateCov().sub(1,4));
      Cx.sub(5,workStateP2.stateCov().sub(1,4));
 
      verbose() << "X=  " << X << endreq;
-     //verbose() << "Cx=  " << Cx << endreq;
-                                                                                                                                   
+     //verbose() << "Cx=  " << Cx << endreq; 
      HepVector  vfit=X;
      HepSymMatrix cfit=Cx;
 
@@ -256,20 +254,15 @@ StatusCode  PVReFitter::fitTwoTracks( TrStoredTrack* tr1, TrStoredTrack* tr2,
      HepVector f(1);
      f(1)=(vfit(5)-vfit(1))*(vfit(8)-vfit(4))-(vfit(6)-vfit(2))*(vfit(7)-vfit(3));
      HepVector d= f - D*vfit;
-                                                                                                                                   
-     verbose() << "initial constraint values   " << f << endreq;
-                                                                                                                                   
+     verbose() << "initial constraint values   " << f << endreq;     
      double chi2Previous=9999.;
      chi2=999999.;
-                                                                                                                                   
      bool converged=false;
      int iter=0;
-                                                                                                                                   
      while(!converged && iter< m_maxIter)  {
        iter++;
        verbose() << ":-) Iteration   " << iter << endreq;
        //verbose() << "D=  " << D << endreq;
-                                                                                                                                   
        int ier=0;
        HepSymMatrix VD=Cx.similarity(D);
        //verbose() << "VD before inversion  " << VD << endreq;
@@ -281,9 +274,6 @@ StatusCode  PVReFitter::fitTwoTracks( TrStoredTrack* tr1, TrStoredTrack* tr2,
              <<endreq;
          return StatusCode::FAILURE;
        }
-
-       //verbose() << "VD after inversion  " << VD << endreq;
-                                                                                                                                   
        HepVector alpha=D*X+d;
        HepVector lamda=VD*alpha;
        vfit=X-Cx*D.T()*lamda;
@@ -306,20 +296,16 @@ StatusCode  PVReFitter::fitTwoTracks( TrStoredTrack* tr1, TrStoredTrack* tr2,
        HepVector S=lamda.T()*f;
        chi2=Q(1,1)+2.*S(1);
        //chi2=Q(1,1);
-                                                                                                                                   
        verbose() << "New fitTwoTracks chi2=  " << chi2 << endreq;
        verbose() << "Previous fitTwoTracks chi2=  " << chi2Previous << endreq;
-                                                                                                                                   
        verbose() << "vfit= "<<vfit << endreq;
        verbose() << "z vertex "<< zestimate - (vfit(5)-vfit(1))/(vfit(7)-vfit(3)) << endreq;
-                                                                                                                                   
        if(fabs(chi2-chi2Previous)<m_maxDeltaChiSq) {
          converged=true;
        } else {
          chi2Previous=chi2;
        }
      }
-                                                                                                                                   
      if(!converged)  {
        debug()<<"fitTwoTracks not converged"<<endreq;
        return StatusCode::FAILURE;
@@ -332,7 +318,6 @@ StatusCode  PVReFitter::fitTwoTracks( TrStoredTrack* tr1, TrStoredTrack* tr2,
      par(3)=zestimate - (vfit(5)-vfit(1))/(vfit(7)-vfit(3));
 
      verbose() <<"par= "<< par<<endreq;
-                                                                                                                                   
      HepMatrix JA(3,8,0);
      JA(1,1)=1. + vfit(3)/(vfit(7)-vfit(3));
      JA(1,3)= - (vfit(5)-vfit(1))/(vfit(7)-vfit(3))
@@ -349,15 +334,12 @@ StatusCode  PVReFitter::fitTwoTracks( TrStoredTrack* tr1, TrStoredTrack* tr2,
      JA(3,3)= - (vfit(5)-vfit(1))/(vfit(7)-vfit(3))/(vfit(7)-vfit(3));
      JA(3,5)= - 1./(vfit(7)-vfit(3));
      JA(3,7)= (vfit(5)-vfit(1))/(vfit(7)-vfit(3))/(vfit(7)-vfit(3));
-                                                                                                                                   
      cov=cfit.similarity(JA);
 
      //verbose() <<"Ce= "<< Ce<<endreq;
-                                                                                                                                   
      zfit=zestimate - (vfit(5)-vfit(1))/(vfit(7)-vfit(3));
      verbose() <<"zestimate= "<< zestimate<<endreq;
      verbose() <<"zfit= "<< zfit<<endreq;
-                                                                                                                                   
   }
 
   debug() <<" fitTwoTracks successful " <<endreq;
@@ -368,7 +350,7 @@ StatusCode  PVReFitter::fitTwoTracks( TrStoredTrack* tr1, TrStoredTrack* tr2,
 StatusCode   PVReFitter::addTr( TrStoredTrack* tr,
                                  HepVector& par, HepSymMatrix& cov, double& chi2)
 {
-  StatusCode sc=StatusCode::SUCCESS;                                                                                                                     
+  StatusCode sc=StatusCode::SUCCESS;
   TrStateP stateP;
   sc= getInitialStateP(tr, stateP);
   if(!sc.isSuccess()) {
@@ -400,7 +382,7 @@ StatusCode   PVReFitter::addTr( TrStoredTrack* tr,
   HepVector  vfit=X;
   HepSymMatrix cfit=Cx;
 
-  double z2=zestimate;                                                                                
+  double z2=zestimate;
   HepMatrix D(2,7,0);
   D(1,1)=1.;
   D(1,3)=-vfit(6);
@@ -458,7 +440,6 @@ StatusCode   PVReFitter::addTr( TrStoredTrack* tr,
     D(1,3)=-vfit(6);
     D(1,4)=-1.;
     D(1,6)=(z2-vfit(3));
-                                                                                                                     
     D(2,2)=1.;
     D(2,3)=-vfit(7);
     D(2,5)=-1.;
