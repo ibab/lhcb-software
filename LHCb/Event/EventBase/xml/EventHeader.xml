@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE gdd SYSTEM "gdd.dtd" >
+<gdd>
+  <package name='Event'>
+
+<!-- ****************************************************************
+     * EventHeader                                                  *
+     ****************************************************************-->
+     <class 
+      author="Marco Cattaneo"
+      desc="Global event header, created when event is first created"
+      name="EventHeader"
+      location="Header"
+      id="101"
+     >
+       &DataObject;
+       <import name="GaudiKernel/TimePoint"/>
+       <base name="DataObject"/>
+       <attribute
+        desc="Event number"
+        name="evtNum"
+        type="long"
+       />
+       <attribute
+        desc="Run number"
+        name="runNum"
+        type="long"
+       />
+       <attribute
+        desc="Reserved for time when event was created: DAQ or event generator"
+        name="evtTime"
+        type="TimePoint"
+        init="0"
+        setMeth="FALSE"
+        getMeth="FALSE"
+       /> 
+     </class>
+  </package>
+</gdd>

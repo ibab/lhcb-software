@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!DOCTYPE gdd SYSTEM 'gdd.dtd' >
+
+<gdd>
+  <package name='Event'>
+
+    <class 
+      name   = "ProcStatus" 
+      author = "Olivier Callot" 
+      desc   = "Record the status of the Brunel processing"
+      location = "Rec/Status" 
+      id     = "5001" >
+
+      <base name = "DataObject" />
+      &DataObject;
+      <attribute 
+	name = "aborted" 
+	type = "bool"
+	desc = "Indicate if the processing should be aborted" 
+        init = "false" />
+
+      <method
+	name = "addAlgorithmStatus"
+	type = "void"
+	desc = "Add an entry for an algorithm"
+	argList = "const std::string name, int status" >
+        <code>
+  for ( unsigned int jj=0 ; m_algs.size() > jj ; jj++ ) {
+    if ( m_algs[jj] == name ) {
+      m_stat[jj] = status;
+      return;
+    }
+  }
+  m_algs.push_back( name   );
+  m_stat.push_back( status );
+        </code>
+      </method>
+
+      <method
+	name = "algorithmStatus" 
+	type = "int"
+	desc = "Status of this algorithm" 
+	argList = "const std::string name" >
+        <code>
+  for ( unsigned int jj=0 ; m_algs.size() > jj ; jj++ ) {
+    if ( m_algs[jj] == name ) {
+      return m_stat[jj];
+    }
+  }
+  return 0;
+        </code>
+      </method>
+
+      <method
+	name = "listOfAlgorithms"
+	type = "std::vector&lt;std::string&gt;&amp;"
+	desc = "returns the list of algorithms for which there is a status" >
+        <code> return m_algs; </code>
+      </method>
+
+      <attribute
+	name = "algs"
+	type = "std::vector&lt;std::string&gt;"
+	desc = "List of algorithms for which there is a status"
+	access="PRIVATE"/>
+      <attribute 
+	name="stat" 
+	type="std::vector&lt;int&gt;" 
+	desc="list of status. Just for proper Event Model handling" 
+	access="PRIVATE"/>
+	
+    </class>
+  </package>
+</gdd>

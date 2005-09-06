@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE gdd SYSTEM "gdd.dtd" >
+<gdd>
+  <package name='Event'>
+<!-- ****************************************************************
+     * AlgUsedTime                                                  *
+     ****************************************************************-->
+     <class 
+      author="Massimiliano Ferro-Luzzi"
+      desc="store name of algorithm instance and CPU time it used"
+      name="AlgUsedTime"
+      location="Trig/AlgUsedTimes"
+      id="5002"
+     >
+       &KeyedObject;
+       <base name="KeyedObject&lt;int&gt;"/>
+       <attribute
+        desc="name of timed algorithm instance"
+        name="algName"
+        type="std::string"
+        init=""
+       />
+       <attribute
+        desc="USER time consumed by algorithm instance"
+        name="userTime"
+        type="float"
+        init="0"
+       />
+       <attribute
+        desc="ELAPSED time consumed by algorithm instance"
+        name="elapTime"
+        type="float"
+        init="0"
+       />
+    </class>
+  </package>
+</gdd>

@@ -1,0 +1,11 @@
+! $Id: release.notes,v 1.1.1.1 2005-09-06 07:11:44 pkoppenb Exp $
+! Package     : Event/EventBase
+! Responsible : Marco Cattaneo, Gloria Corti
+! Purpose     : LHCb Event model
+
+! 2005-09-06 - P. Koppenburg
+  - Split package Event/Event into Event/MCEvent and Event/EventBase because 
+    . Packages called Foo/Foo cause problems in cvs
+    . Everything was depending on it which is not that nice since it contains
+      MCParticle for instance
+

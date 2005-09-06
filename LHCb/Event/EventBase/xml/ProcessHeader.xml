@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!--- $Id: -->
+<!--- Author  : Patrick KOPPENBURG -->
+<!--- Created : 2005-08-17 -->
+
+<!DOCTYPE gdd SYSTEM "gdd.dtd" >
+<gdd>
+  <package name='Event'>
+<!-- ****************************************************************
+     * ProcessHeader                                                *
+     ****************************************************************-->
+     <class 
+      author="P. Koppenburg"
+      desc="Common base class for all process headers: GenHeader, MCHeader... @todo ASK MARCO FOR ID"
+      name="ProcessHeader"
+      location="Gen/Header"
+      id="199"
+     >
+       &DataObject;
+       <base name="DataObject"/>
+       <attribute
+        desc="random number seeds for this step (int or long?)"
+        name="randomSeeds"
+        type="std::vector &lt; int &gt;"
+       />
+       <attribute
+        desc="Application or Program Name (e.g. Gauss, Boole or Pythia)"
+        name="applicationName"
+        type="std::string"
+        init='"Unknown"'
+       />
+       <attribute
+        desc="Application or Program version"
+        name="applicationVersion"
+        type="std::string"
+        init='"Unknown"'
+       />
+     </class>
+  </package>
+
+</gdd>
