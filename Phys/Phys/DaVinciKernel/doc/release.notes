@@ -1,7 +1,13 @@
-! $Id: release.notes,v 1.70 2005-09-02 16:33:02 xieyu Exp $
+! $Id: release.notes,v 1.71 2005-09-06 12:36:13 pkoppenb Exp $
 ! Package     : DaVinciKernel
 ! Responsible : P. Koppenburg
 
+
+! 2005-09-06 - P. Koppenburg
+  - src/component/PhysDesktop.cpp
+    . Do not use desktop() methods of Particle and Vertex anymore to
+      prepare for the new event model. Instead the desktop stores an internal
+      std::set of particles that don't need a new.
 
 ! 2005-09-02 - Yuehong Xie
   - add Kernel/IPVReFitter.h

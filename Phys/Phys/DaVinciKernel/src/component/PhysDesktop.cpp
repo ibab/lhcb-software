@@ -1,4 +1,4 @@
-// $Id: PhysDesktop.cpp,v 1.24 2005-08-10 13:42:07 pkoppenb Exp $
+// $Id: PhysDesktop.cpp,v 1.25 2005-09-06 12:36:13 pkoppenb Exp $
 // Include files
 
 // from Gaudi
@@ -254,12 +254,8 @@ StatusCode PhysDesktop::cleanDesktop()
     Particle* ipart = m_parts.back();
     m_parts.pop_back();
     // Particles in KeyedContainers (=>TES) have parent
-    if( ipart->parent() ) {
-      ++iTEScount;
-    }
-    else {
-      delete ipart;
-    }
+    if( ipart->parent() ) ++iTEScount; 
+    else delete ipart; 
   }
 
   if (( msgLevel(MSG::VERBOSE) )&& ( !m_parts.empty() )){
@@ -273,23 +269,18 @@ StatusCode PhysDesktop::cleanDesktop()
   while ( m_secVerts.size() > 0 ) {
     Vertex* ivert = m_secVerts.back();
     m_secVerts.pop_back();
-    if( ivert->parent() ) {
-      iTEScount++;
-    }
-    else {
-      delete ivert;
-    }
+    if( ivert->parent() ) iTEScount++;
+    else delete ivert;
   }
   while ( m_primVerts.size() > 0 ) {
     Vertex* ivert = m_primVerts.back();
     m_primVerts.pop_back();
-    if( ivert->parent() ) {
-      iTEScount++;
-    }
-    else {
-      delete ivert;
-    }
+    if( ivert->parent() ) iTEScount++;
+    else delete ivert;
   }
+
+  m_partsInTES.clear();
+  m_vertsInTES.clear();
 
   return StatusCode::SUCCESS;
 
@@ -307,16 +298,14 @@ StatusCode PhysDesktop::finalize()
 //=============================================================================
 // Create a new particle in the DeskTop
 //=============================================================================
-Particle* PhysDesktop::createParticle( Particle* partToSave )
-{
+Particle* PhysDesktop::createParticle( Particle* partToSave ){
 
   if ( msgLevel(MSG::VERBOSE) )
     verbose() << "createParticle in desktop" << endmsg;
 
   // Input particle is given check if it already exist in the stack
-  if( ( 0 != partToSave ) && ( 0 != partToSave->desktop() ) ) {
-    if ( msgLevel(MSG::VERBOSE) )
-    {
+  if( ( 0 != partToSave ) && ( inDesktop( partToSave ) )) {
+    if ( msgLevel(MSG::VERBOSE) ){
       verbose() << "Input particle momentum = "
                 << partToSave->momentum().px() << " ,"
                 << partToSave->momentum().py() << " ,"
@@ -327,8 +316,7 @@ Particle* PhysDesktop::createParticle( Particle* partToSave )
 
   // Create new particle on the heap
   Particle* saveP = new Particle();
-  if ( msgLevel(MSG::VERBOSE) )
-  {
+  if ( msgLevel(MSG::VERBOSE) ){
     verbose() << "New particle momentum = "
               << saveP->momentum().px() << " ,"
               << saveP->momentum().py() << " ,"
@@ -336,12 +324,11 @@ Particle* PhysDesktop::createParticle( Particle* partToSave )
   }
 
   // Input Particle from stack is given as input to fill newly created particle
-  if( ( 0 != partToSave) && ( 0 == partToSave->desktop() ) ) {
+  if( ( 0 != partToSave) && ( !inDesktop ( partToSave ) ) ) {
     // Copy contents to newly created particle
     Particle& savePcont = *saveP;
     savePcont = *partToSave;
-    if ( msgLevel(MSG::VERBOSE) )
-    {
+    if ( msgLevel(MSG::VERBOSE) ){
       verbose() << "Input particle momentum = "
                 << saveP->momentum().px() << " ,"
                 << saveP->momentum().py() << " ,"
@@ -358,9 +345,8 @@ Particle* PhysDesktop::createParticle( Particle* partToSave )
   }
 
   // Put in the desktop container
-  saveP->setDesktop(1);
-  if ( msgLevel(MSG::VERBOSE) )
-  {
+  setInDesktop(saveP);
+  if ( msgLevel(MSG::VERBOSE) ){
     verbose() << "Momentum of new particle in desktop = "
               << saveP->momentum().px() << " ,"
               << saveP->momentum().py() << " ,"
@@ -379,7 +365,7 @@ Vertex* PhysDesktop::createVertex( Vertex* vtxToSave ){
     verbose() << "createVertex in desktop" << endmsg;
 
   // Input vertex is given check if it already exist in the stack
-  if( ( 0 != vtxToSave ) && ( 0 != vtxToSave->desktop() ) ) {
+  if( ( 0 != vtxToSave ) && ( inDesktop( vtxToSave ) ) ) {
     if ( msgLevel(MSG::VERBOSE) )
     {
       verbose() << "Input vertex position = "
@@ -401,7 +387,7 @@ Vertex* PhysDesktop::createVertex( Vertex* vtxToSave ){
   }
 
   // Input vertex from stack is given as input to fill new created vertex
-  if( ( 0 != vtxToSave ) && ( 0 == vtxToSave->desktop() ) ) {
+  if( ( 0 != vtxToSave ) && ( !inDesktop( vtxToSave ) ) ) {
     if ( msgLevel(MSG::VERBOSE) )
     {
       verbose() << "Input vertex position = "
@@ -423,9 +409,8 @@ Vertex* PhysDesktop::createVertex( Vertex* vtxToSave ){
   }
 
   // Put in the desktop container
-  saveV->setDesktop(1);
-  if ( msgLevel(MSG::VERBOSE) )
-  {
+  setInDesktop(saveV);
+  if ( msgLevel(MSG::VERBOSE) ){
     verbose() << "Position of new vertex in desktop = "
               << saveV->position().x() << " ,"
               << saveV->position().y() << " ,"
@@ -787,12 +772,11 @@ StatusCode PhysDesktop::getParticles(){
         }
 
         for( Particles::iterator icand = parts->begin(); icand != parts->end(); icand++ ) {
-          (*icand)->setDesktop(1);
+          setInDesktop(*icand);
           m_parts.push_back(*icand);
         }
       }
-      if ( msgLevel(MSG::VERBOSE) )
-      {
+      if ( msgLevel(MSG::VERBOSE) ){
         verbose() << "Number of Particles after adding "
                   << location << " = " << m_parts.size() << endmsg;
       }
@@ -830,7 +814,7 @@ StatusCode PhysDesktop::getParticles(){
 
         for( Vertices::iterator ivert = verts->begin();
              ivert != verts->end(); ++ivert ) {
-          (*ivert)->setDesktop(1);
+          setInDesktop(*ivert);
           m_secVerts.push_back(*ivert);
         }
       }
@@ -899,7 +883,7 @@ StatusCode PhysDesktop::getPrimaryVertices(){
                   << endmsg;
       }
       // Put them in local containers
-      (*ivert)->setDesktop(1);
+      setInDesktop(*ivert);
       m_primVerts.push_back(*ivert);
     }
   }

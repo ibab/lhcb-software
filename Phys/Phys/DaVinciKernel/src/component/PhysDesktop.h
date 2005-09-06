@@ -1,10 +1,11 @@
-// $Id: PhysDesktop.h,v 1.13 2005-08-10 13:42:07 pkoppenb Exp $
+// $Id: PhysDesktop.h,v 1.14 2005-09-06 12:36:13 pkoppenb Exp $
 #ifndef PHYSDESKTOP_H 
 #define PHYSDESKTOP_H 1
 
 // Include files
 // from STL
 #include <string>
+#include <set>
 
 // from Gaudi
 #include "GaudiAlg/GaudiTool.h"
@@ -117,6 +118,20 @@ private: // methods
   StatusCode getPrimaryVertices(); ///< get PV
   StatusCode getParticles();       ///< get Particles
   
+  ///  Is in Desktop
+  inline bool inDesktop(const Particle* P){
+    verbose() << "Particle " << P << " is in desktop " << (m_partsInTES.find(P)!=m_partsInTES.end()) << endmsg ;
+    return (m_partsInTES.find(P)!=m_partsInTES.end()) ;};
+  ///  Is in Desktop
+  inline bool inDesktop(const Vertex* V){
+    verbose() << "Vertex " << V << " is in desktop " << (m_vertsInTES.find(V)!=m_vertsInTES.end()) << endmsg ;
+    return (m_vertsInTES.find(V)!=m_vertsInTES.end());};
+  inline void setInDesktop(const Particle* P){m_partsInTES.insert(P); 
+  verbose() << "Inserted Particle " << P << " (" << m_partsInTES.size() << ")" << endmsg ; return ;}; ///< Add to Desktop
+  inline void setInDesktop(const Vertex* V){m_vertsInTES.insert(V); 
+  verbose() << "Inserted Vertex " << V << " (" << m_vertsInTES.size() << ")" << endmsg ; 
+  return ;}; ///< Add to Desktop
+  
 private: // data
 
   /// TES pathname for Primary Vertices 
@@ -129,7 +144,10 @@ private: // data
   ParticleVector m_parts;          ///< Local Container of particles
   VertexVector m_secVerts;         ///< Local Container of secondary vertices
   VertexVector m_primVerts;        ///< Local Container of primary vertices
-  VertexVector m_verts;            ///< Obsolete "on-demand" conatiner
+  VertexVector m_verts;            ///< Obsolete "on-demand" container
+  
+  std::set<const Particle*> m_partsInTES ; ///< particles that do not need to be deleted 
+  std::set<const Vertex*>   m_vertsInTES ; ///< vertices  that do not need to be deleted 
 
   IParticleMaker* m_pMaker;        ///< Reference to Particle maker tool
 
