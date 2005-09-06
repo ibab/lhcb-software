@@ -1,4 +1,4 @@
-// $Id: PhysDesktop.h,v 1.14 2005-09-06 12:36:13 pkoppenb Exp $
+// $Id: PhysDesktop.h,v 1.15 2005-09-06 12:55:13 pkoppenb Exp $
 #ifndef PHYSDESKTOP_H 
 #define PHYSDESKTOP_H 1
 
@@ -8,8 +8,8 @@
 #include <set>
 
 // from Gaudi
-#include "GaudiAlg/GaudiTool.h"
 #include "GaudiKernel/IIncidentListener.h"
+#include "GaudiAlg/GaudiTool.h"
 // from DaVinci
 #include "Kernel/IPhysDesktop.h"
 

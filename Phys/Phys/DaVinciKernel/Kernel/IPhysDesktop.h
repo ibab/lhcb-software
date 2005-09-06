@@ -1,4 +1,4 @@
-// $Id: IPhysDesktop.h,v 1.4 2005-08-10 13:42:07 pkoppenb Exp $
+// $Id: IPhysDesktop.h,v 1.5 2005-09-06 12:55:13 pkoppenb Exp $
 #ifndef DAVINCIKERNEL_IPHYSDESKTOP_H 
 #define DAVINCIKERNEL_IPHYSDESKTOP_H 1
 
@@ -7,9 +7,9 @@
 
 // Forward declarations
 class StatusCode;
-class Vertex;
 class PrimVertex;
-class Particle;
+#include "Event/Vertex.h"
+#include "Event/Particle.h"
 
 // Declaration of the interface ID ( interface id, major version, minor version)
 static const InterfaceID IID_IPhysDesktop("IPhysDesktop", 1, 2);

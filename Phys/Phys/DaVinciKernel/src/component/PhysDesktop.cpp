@@ -1,22 +1,18 @@
-// $Id: PhysDesktop.cpp,v 1.25 2005-09-06 12:36:13 pkoppenb Exp $
+// $Id: PhysDesktop.cpp,v 1.26 2005-09-06 12:55:13 pkoppenb Exp $
 // Include files
 
 // from Gaudi
 #include "GaudiKernel/ToolFactory.h"
-#include "GaudiKernel/GaudiException.h"
+//#include "GaudiKernel/GaudiException.h"
 #include "GaudiKernel/IIncidentSvc.h"
-#include "GaudiKernel/IAlgorithm.h"
-
-// data
-#include "Event/EventHeader.h"
-#include "Event/Vertex.h"
-#include "Event/PrimVertex.h"
-#include "Event/Particle.h"
+//#include "GaudiKernel/IAlgorithm.h"
 
 // local
 #include "PhysDesktop.h"
 #include "Kernel/IParticleMaker.h"
 #include "Kernel/IOnOffline.h"
+
+#include "Event/PrimVertex.h"
 
 /*-----------------------------------------------------------------------------
  * Implementation file for class : PhysDesktop base class
@@ -115,10 +111,9 @@ PhysDesktop::PhysDesktop( const std::string& type,
     // try to overwrite the name from  parents's "OutputLocation" property:
     void* tmp = 0 ;
     StatusCode sc = p->queryInterface ( IProperty::interfaceID() , &tmp ) ;
-    if ( sc.isSuccess() && 0 != tmp )
-    {
+    if ( sc.isSuccess() && 0 != tmp ){
       IProperty* pp = static_cast<IProperty*>( tmp ) ;
-      StringProperty output = StringProperty ( "OutputLocation" , "NOTDEDINED" ) ;
+      StringProperty output = StringProperty ( "OutputLocation" , "NOTDEFINED" ) ;
       sc = pp->getProperty( &output ) ;
       if ( sc.isSuccess() ) { m_outputLocn = output.value() ; }   // NB !!
       // release the used interface
@@ -126,7 +121,10 @@ PhysDesktop::PhysDesktop( const std::string& type,
     }
   };
   // check that output location is set to *SOME* value
-  Assert ( !m_outputLocn.empty() , "OutputLocation is not set" );
+  if (m_outputLocn.empty()){
+    err() << "OutputLocation is not set" << endmsg ;
+    return StatusCode::FAILURE ; 
+  }
 
 } ;
 
@@ -732,7 +730,7 @@ StatusCode PhysDesktop::makeParticles(){
 
   // Flag these particles to be in PhysDesktop
   for( ParticleVector::iterator ip = m_parts.begin(); ip != m_parts.end(); ip++ ) {
-    (*ip)->setDesktop(1);
+    setInDesktop(*ip);
   }
   return sc;
 }
