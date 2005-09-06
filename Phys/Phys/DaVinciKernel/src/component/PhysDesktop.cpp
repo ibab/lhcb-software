@@ -1,4 +1,4 @@
-// $Id: PhysDesktop.cpp,v 1.26 2005-09-06 12:55:13 pkoppenb Exp $
+// $Id: PhysDesktop.cpp,v 1.27 2005-09-06 12:57:17 pkoppenb Exp $
 // Include files
 
 // from Gaudi
@@ -121,10 +121,7 @@ PhysDesktop::PhysDesktop( const std::string& type,
     }
   };
   // check that output location is set to *SOME* value
-  if (m_outputLocn.empty()){
-    err() << "OutputLocation is not set" << endmsg ;
-    return StatusCode::FAILURE ; 
-  }
+  if (m_outputLocn.empty()) Exception("OutputLocation is not set") ;
 
 } ;
 
