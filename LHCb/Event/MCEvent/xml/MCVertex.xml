@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE gdd SYSTEM "gdd.dtd" >
+<gdd>
+  <package name='Event'>
+<!-- ****************************************************************
+     * MCVertex                                                     *
+     ****************************************************************-->
+
+    <class
+      author="Gloria Corti, revised by P. Koppenburg"
+      desc="Monte Carlo vertex information (currently converted from SICB AVMC bank)" 
+      name="MCVertex"
+      id="220"
+      location="MC/Vertices"
+    >
+       &KeyedObject;
+       <import name="Event/LHCbTypedefs"/>
+       <import name="MathCore/LorentzVectorfwd"/>
+       <import name="MathCore/LorentzVector"/>
+       <import name="MathCore/Point3D"/>
+       <enum
+        desc="Describe the physics process related to the vertex"
+        name="MCVertexType"
+        value="Unknown=0, ppCollision, DecayVertex, OscillatedAndDecay, HadronicInteraction=100, Bremsstrahlung, PairProduction, Compton, DeltaRay, PhotoElectric, Annihilation, RICHPhotoElectric, Cerenkov, LHCHalo=200, MuonBackground=300, MuonBackgroundFlat, MuonBackgroundSpillover"
+        access="PUBLIC"
+       />
+       <base name="KeyedObject&lt;int&gt;"/>
+       <attribute
+        desc="Position in LHCb reference system" 
+        name="position"
+        type="LHCb::Point3D"
+        init="0.0, 0.0, 0.0"
+       />
+       <attribute
+        desc="Time since pp interaction"
+        name="time"
+        type="double"
+        init="0.0"
+       />
+       <method
+        desc="position time 4-vector @todo should be an XYZTPoint"
+        name="position4vector"
+        type="LHCb::Point4D"
+       >
+       <code>return LHCb::Point4D(m_position.X(),m_position.Y(), m_position.Z(), m_time );</code>
+       </method>
+       <attribute
+        desc="How the vertex was made"
+        name="type"
+        type="MCVertexType"
+        init="MCVertex::Unknown"
+       />
+       <relation
+        desc="Pointer to parent particle that decay or otherwise end in this vertex"
+        name="mother"
+        type="MCParticle"
+       />
+       <relation
+        desc="Pointer to daughter particles"
+        multiplicity="N"
+        name="products"
+        type="MCParticle"
+       />
+       <method
+        const="TRUE"
+        desc="Returns true if this vertex is a primary vertex"
+        name="isPrimary"
+        type="bool"
+       >
+         <code> return m_type == MCVertex::ppCollision ; </code>
+       </method>
+       <method
+        const="TRUE"
+        desc="Returns true if this vertex is a decay vertex"
+        name="isDecay"
+        type="bool"
+       >
+         <code> 
+  return ((m_type == MCVertex::DecayVertex) || 
+          (m_type == MCVertex::OscillatedAndDecay))  ; 
+       </code>
+       </method>
+       <method
+        const="TRUE"
+        desc="Get primary vertex up the decay tree"
+        name="primaryVertex"
+        type="const MCVertex*"
+       >
+         <code> 
+  return ( this->isPrimary() ? this : ( m_mother!=0 ? m_mother->primaryVertex() : NULL ) ); 
+         </code>
+       </method>
+     </class>
+  </package>
+</gdd>

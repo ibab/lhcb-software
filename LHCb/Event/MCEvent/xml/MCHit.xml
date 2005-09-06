@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE gdd SYSTEM "gdd.dtd" >
+<gdd>
+  <package name='Event'>
+<!-- ****************************************************************
+     * MCHit                                                        *
+     ****************************************************************-->
+
+    <class name='MCHit' 
+           author='Marco Cattaneo' 
+           desc='GEANT tracking hit' 
+           id='230' >
+      <import name="CLHEP/Geometry/Point3D"/>
+      &KeyedObject;
+      <base     name="KeyedObject&lt;int&gt;"/>
+      <location name="ITHits"   place="MC/IT/Hits"   />
+      <location name="OTHits"   place="MC/OT/Hits"   />
+
+      <constructor desc = "Default constructor"
+                   initList = "m_entry(), m_displacement(0.,0.,0.), m_energy(0.0), m_timeOfFlight(0.0)"
+      />
+
+      <attribute name='entry' 
+                 type='HepGeom::Point3D&lt;double&gt;' 
+                 desc='Entry point (mm)' />
+      <attribute name='displacement' 
+                 type='HepGeom::BasicVector3D&lt;double&gt;' 
+                 desc='Difference between exit and entry points (mm)' />
+      <attribute name='energy' 
+                 type='double' 
+                 desc='Energy deposited (MeV)'/>
+      <attribute name='timeOfFlight' 
+                 type='double' 
+                 desc='Time of flight (ns)'/>
+      <method name="exit"
+              const="TRUE"
+              desc="Exit point (mm)"
+              type="const HepGeom::Point3D&lt;double&gt;"
+      >
+         <code>
+   return( this->entry() + this->displacement() );
+         </code>
+      </method>
+      <method name="pathLength"
+              const="TRUE"
+              desc="Distance between exit and entry points"
+              type="double"
+      >
+         <code>
+   return( this->displacement().mag() );
+         </code>
+      </method>
+      <method name="dxdz"
+              const="TRUE"
+              desc="dxdz slope between exit and entry points"
+              type="double"
+      >
+         <code>
+   double dxdz = 9999.;
+   if( 1.e-4*mm &lt; fabs(this->displacement().z()) ) {
+     dxdz = this->displacement().x() / this->displacement().z();
+   }
+   return dxdz;
+         </code>
+      </method>
+      <method name="dydz"
+              const="TRUE"
+              desc="dydz slope between exit and entry points"
+              type="double"
+      >
+         <code>
+   double dydz = 9999.;
+   if( 1.e-4*mm &lt; fabs(this->displacement().z()) ) {
+     dydz = this->displacement().y() / this->displacement().z();
+   }
+   return dydz;
+         </code>
+      </method>
+
+      <relation name='MCParticle' 
+                type='MCParticle' 
+                desc='Pointer to MCParticle causing the hit'/>
+    </class>
+  </package>
+</gdd>

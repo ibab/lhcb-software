@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE gdd SYSTEM "gdd.dtd" >
+<gdd>
+  <package name='Event'>
+<!-- ****************************************************************
+     * MCProperty                                                   *
+     ****************************************************************-->
+  <class 
+    name        = "MCProperty" 
+    author      = "OlivierCallot" 
+    desc        = "Give an int attribute to an MC particle" 
+    id          = "300">
+    
+    <base name="DataObject"/>
+    <import name="Event/MCParticle"/>
+    &DataObject;
+   
+    <attribute
+      type      = "std::vector&lt;std::pair&lt;int,int&gt; &gt;"
+      name      = "property"
+      setMeth   = "FALSE"
+      getMeth   = "FALSE"
+      desc      = "List of linked objects" />
+    
+    <method
+      type    = "void"
+      name    = "setProperty"
+      argList = "const MCParticle* part, int property"
+      desc    = "Sets the property for the specified particle" >
+    </method>
+    
+    <method
+      type    = "int"
+      name    = "property"
+      argList = "const MCParticle* part"
+      desc    = "Returns the property for the specified particle" >
+    </method>
+
+    <method
+      type    = "bool"
+      name    = "findIndex"
+      access  = "PROTECTED"
+      desc    = "Returns the index of the key. True if key exist, else inserting position" >
+      <arg type = "int" name = "key" inout="BYVALUE"/>
+      <arg type = "int" name = "index" inout = "BOTH" />
+    </method>
+ 
+
+  </class>
+  </package>
+</gdd>

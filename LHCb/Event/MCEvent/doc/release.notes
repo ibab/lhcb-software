@@ -1,0 +1,156 @@
+! $Id: release.notes,v 1.1.1.1 2005-09-06 07:06:43 pkoppenb Exp $
+! Package     : Event/MCEvent
+! Responsible : Marco Cattaneo, Gloria Corti
+! Purpose     : LHCb Event model
+
+! 2005-09-06 - P. Koppenburg
+  - Split package Event/Event into Event/MCEvent and Event/EventBase because 
+    . Packages called Foo/Foo cause problems in cvs
+    . Everything was depending on it which is not that nice since it contains
+      MCParticle for instance
+
+!========================== Event v4r7 2005-03-23 ==========================
+! 2005-03-23 - Marco Cattaneo
+ - Change internal representation of MCHit. Now store entry point plus vector
+   displacement to exit point, instead of exit point. Interface is backwards
+   compatible, but data is incompatible (schema evolution not possible) 
+ - Remove m_collision member of MCParticle. Retain const collision() accessor,
+   returns collision of originVertex()
+ - Change type of m_helicity member of MCParticle, and of corresponding
+   accessors, from double to int
+ - Split xml to have one independent xml file per class, and remove Event.xml
+ - Remove obsolete includes of LHCbStreams.h, CLHEPStreams.h
+ - Make use of GaudiObjDesc private in requirements
+
+!========================== Event v4r6 2004-12-06 ==========================
+! 2004-12-06 - Marco Cattaneo
+ - Remove obsolete serialize method from MCVertex, and unneccessary MCVertex.cpp
+   implementation, for compatibility with GaudiObjDesc v7r*
+
+!========================== Event v4r5 2004-07-19 ==========================
+! 2004-07-19 - Marco Cattaneo
+ - Move to Gaudi v15 (use LHCbKernel v5r* in requirements)
+ - Add explicit use of GaudiObjDesc (no longer inherited from LHCbKernel)
+   Should be made private when all Event packages explicitly use it also
+
+!========================== Event v4r4 2004-06-08 ==========================
+! 2004-06-18 - P. Koppenburg for C. Jacoby
+ - xml/MCEffParticle.xml
+ - xml/MCEffTree.xml
+ - src/MCEffTree.cpp
+   . Defines MCEffTree and MCEffParticle classes. The MCEffTree class represents 
+     the decay of interest (DoI) and provides reconstructible/reconstructed 
+     information for it. It also provides the decay descriptor string of the DoI,
+     a SmartDataPtr to its head MCParticle, a boolean flag if the DoI is found and
+     a vector of MCEffParticles. It is stored in a TES container. The MCEffParticle
+     class provides a SmartDataPtr to a stable MCParticle of the DoI plus 
+     reconstructible/reconstructed information for it. This class in not stored 
+     directly in a TES container but is accessible through the MCEffTree class.
+
+! 2004-06-08 - Marco Cattaneo
+ - Fix a bug in MCHit::dxdz and MCHit::dydz (slope was only calculated if
+   entry and exit points were closer than 0.1 micron!!)
+
+!========================== Event v4r3 2004-05-04 ==========================
+! 2004-05-03 - Gloria CORTI
+ - Introduce new enum in MCVertexType for Cerenkov
+
+!========================== Event v4r2 2004-03-31 ==========================
+! 2004-03-31 - Gloria CORTI
+ - Introduce new enum in MCVertexType for LHCHalo, RICHPhoto, Annihil, Photo
+
+!========================== Event v4r1 2004-01-26 ==========================
+! 2004-01-26 - Olivier Callot
+ - Replace the std::map by a std::vector in MCProperty, but sort the vector
+   according to the key. This allows fast access by binary search, faster than
+   with std::map.
+
+!========================== Event v4r0 2004-01-16 ==========================
+! 2004-01-14 - Olivier Callot
+ - Add MCProperty, to store an int (bit flags) associated to the key of an 
+   MCParticle. This is used in MCTrackInfo tool (Phys/MCTools)
+
+! 2004-01-06 - Marco Cattaneo
+ - Modifications for SEAL persistency (Gaudi v14)
+ - Add ProcStatus (moved from TrEvent)
+ - Add Event/MCTruth.h, src/MCTruth.cpp (moved from obsolete EventKernel package)
+ - Remove ParticleID (moved to LHCbKernel)
+
+!========================== Event v3r7 2003-12-08 ==========================
+! 2003-12-08 - Marco Cattaneo
+ - Move to Gaudi v13 (use LHCbKernel v3r*, EventKernel v4r* in requirements)
+
+!========================== Event v3r6 2003-12-02 ==========================
+! 2003-12-02 - Marco Cattaneo
+ - MCParticle: add methods beta(), gamma(), pseudoRapidity()
+ - MCHit     : add methods pathLength(), dxdz(), dydz() 
+               (distance, x slope, y slope between exit and entry points)
+
+!========================== Event v3r5 2003-10-06 ==========================
+! 2003-10-06 - Marco Cattaneo
+ - Use EventKernel v3r*
+
+!========================== Event v3r4 2003-07-03 ==========================
+! 2003-07-03 - Marco Cattaneo
+ - MCHit.xml: Remove default location for Rich hits. MCHit base class is no 
+      longer used for Rich hits, use instead MCRichHit in RichEvent package   
+
+!========================== Event v3r3 2003-06-17 ==========================
+! 2003-06-16 - Sebastien Ponce
+ - use more recent GaudiObjDesc
+
+!============================== Event v3r2 2002-11-21 ========================
+! 2002-11-13 - Marco Cattaneo
+ - AlgUsedTime: Add elapTime attribute
+                Change classID to prevent reading old data with new definition
+
+!=============================== Event v3r1 2002-10-10 =====================
+! 2002-10-10 - Florence Ranjard
+ - requirements - use GaudiObjDesc v*
+
+!============================ Event v3r0 2002-07-15 =========================
+! 2002-07-15 - Florence Ranjard
+ - use LHCbKernel v2r0 to use CLHEP 1.8.0.0
+
+!============================ Event v2r0 2002-07-09 =========================
+! 2002-07-04 - Marco Cattaneo
+ - Bug fix to MCVertex input serialiser
+
+! 2002-07-04 - David Hutchcroft
+ - Added the MCVertex types MuonBackground, MuonBackgroundFlat, 
+  MuonBackgroundSpillover, to temporaillly fix the problems caused by
+  simmubg
+
+! 2002-07-04 - Pere Mato
+ - Added /include:_<package>_loadRef in <package>_linkopts for Windiws
+
+! 2002-07-02 - Massi Ferro-Luzzi
+ - Add class AlgUsedTime to contain event by event timing of algorithms
+
+! 2002-06-18
+ - changed use-statement of GaudiObjDesc to v4r4
+
+! 2002-06-14 - Marco Cattaneo
+ - Increase version to v2r0, to use EventKernel v2r* 
+ - Bug fix to particleID::isNucleus() (was returning always true)
+
+!================== Event v1r1 2002-05-22 ========================
+! 2002-05-22 - Marco Cattaneo
+ - Remove leading "/Event" from EventHeader and GenHeader location
+
+!=================== Event v1r0 ==================================
+! 2002/05/14 Marco Cattaneo
+  - MCHit.xml: add default location for Rich hits
+
+! 20020430 Marco Cattaneo
+  - requirements: remove run time dependency on GaudiIntrospection
+
+! 20020418 (M.Cattaneo)
+  - Build separate library for the dictionaries
+
+! 20020417 (M.Cattaneo)
+  - Use GaudiObjDesc v4
+  - Change evtTime type to TimePoint
+
+! 20020319 (M.Cattaneo)
+  - First import into CVS. Contains top level event and generic MC event classes

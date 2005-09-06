@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE gdd SYSTEM "gdd.dtd" >
+<gdd>
+  <package name='Event'>
+<!-- ****************************************************************
+     * MCParticle                                                   *
+     ****************************************************************-->
+
+     <class
+      author="Gloria Corti, revised by P. Koppenburg"
+      desc="The Monte Carlo particle kinematics information"
+      id="210"
+      name="MCParticle"
+      location="MC/Particles"
+     >
+       &KeyedObject;
+       <import name="Event/LHCbTypedefs"/>
+       <import name="CLHEP/Units/PhysicalConstants"/>
+       <import name="Kernel/ParticleID"/>
+       <import name="MathCore/LorentzVectorfwd"/>
+       <import name="MathCore/LorentzVector"/>
+       <base name="KeyedObject&lt;int&gt;"/>
+       <attribute
+        desc="4-momentum-vector"
+        name="momentum"
+        type="LHCb::Momentum"
+        init="0.0, 0.0, 0.0, -1*GeV" 
+       />
+       <attribute
+        desc="Particle ID"
+        name="particleID"
+        type="ParticleID"
+        init="0"
+       />
+       <method
+        const="TRUE"
+        desc="Describe if a particle has oscillated"
+        name="hasOscillated"
+        type="bool"
+       >
+         <code>  ; 
+  for ( SmartRefVector &lt; MCVertex &gt;::const_iterator v = this->endVertices().begin() ;
+         v != this->endVertices().end() ; ++v){
+    if ( (*v)->type() == MCVertex::OscillatedAndDecay ) return true ;
+  }
+  return false ;
+         </code>
+       </method>
+       <method
+        const="TRUE"
+        desc="Retrieve virtual mass, i.e. sqrt(E^2-P^2)"
+        name="virtualMass"
+        type="double"
+       >
+         <code>  return m_momentum.M(); </code>
+       </method>
+       <method
+        const="TRUE"
+        desc="Short-cut to pt value"
+        name="pt"
+        type="double"
+       >
+         <code> return m_momentum.Pt(); </code>
+       </method>
+       <method
+        name="p"
+        const="TRUE"
+        desc="short cut for |P|" 
+        type="double"
+       > 
+         <code> return m_momentum.R(); </code>
+       </method>
+       <method
+        const="TRUE"
+        desc="Pointer to parent particle"
+        name="mother"
+        type="const MCParticle*"
+       >
+         <code>
+  return ( originVertex() ? originVertex()->mother() :0 ) ;
+         </code>
+       </method>
+       <method
+        const="TRUE"
+        desc="Beta of the particle - no method in XYZTVector ?"
+        name="beta"
+        type="double"
+       >
+         <code>
+  return ( m_momentum.E() > 0. ? m_momentum.R()/m_momentum.E() : 1.) ;
+         </code>
+       </method>
+       <method
+        const="TRUE"
+        desc="Gamma of the particle"
+        name="gamma"
+        type="double"
+       >
+         <code>
+  return ( m_momentum.M() > 0. ? m_momentum.E()/m_momentum.M() : -999.) ;
+         </code>
+       </method>
+       <method
+        const="TRUE"
+        desc="Pseudorapidity of the particle"
+        name="pseudoRapidity"
+        type="double"
+       >
+         <code>
+  return  m_momentum.eta() ;
+         </code>
+       </method>
+       <relation
+        desc="Pointer to origin vertex"
+        name="originVertex"
+        type="MCVertex"
+       />
+       <relation
+        desc="Vector of pointers to decay vertices"
+        multiplicity="M"
+        name="endVertices"
+        type="MCVertex"
+       />
+       <method
+        const="TRUE"
+        desc="Get primary vertex up the decay tree"
+        name="primaryVertex"
+        type="const MCVertex*"
+       >
+         <code> 
+  return ( originVertex() ? originVertex()->primaryVertex() : 0 ) ;
+         </code>
+       </method>
+     </class>
+  </package>
+</gdd>

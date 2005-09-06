@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE gdd SYSTEM "gdd.dtd" >
+<gdd>
+  <package name='Event'>
+<!-- ****************************************************************
+     * MCEffParticle                                                *
+     ****************************************************************-->
+     <class
+       name="MCEffParticle"
+       author="Christian Jacoby"
+       desc="Access to MC particle information for efficiency algorithms"
+       templateList   = "FALSE"
+       templateVector = "FALSE"
+       serializers = "FALSE"
+      >
+      &StlVector;
+      
+      <import name="Event/MCParticle"/>
+     
+      <relation
+            name="mcStable"
+            type="MCParticle"
+            desc="stable MC particle"
+      />
+
+      <attribute
+            name="recble"
+            desc="reconstructible flag (0=not rec'ble, 1=long 2=TTT, 3=VTT, 4=neutral)"
+            type="int"
+      />
+
+      <attribute
+             name="rected"
+             desc="reconstructed flag (0=not rec'ted, 1=long, 2=TTT, 3=VTT, 4=neutral)"
+             type="int"
+       />
+
+     </class>
+  </package>
+</gdd>

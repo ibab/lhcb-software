@@ -1,0 +1,41 @@
+# $Id: requirements,v 1.1.1.1 2005-09-06 07:06:43 pkoppenb Exp $
+# Created    : 08/03/2002
+# Maintainer : Marco Cattaneo
+#
+package           MCEvent
+version           v1r0
+
+# Structure, i.e. directories to process. 
+#============================================================================
+branches          cmt dict doc src xml Event
+
+# Include directories
+#============================================================================
+include_dirs $(MCEVENTROOT)
+
+# Used packages. 
+#============================================================================
+use LHCbKernel   v5r*    Kernel
+use MathLib      v*  LCG_Interfaces
+use EventBase    v*      Event
+
+# Produce Header-Files & dictionary from XML description
+#============================================================================
+document obj2doth MCEventObj2Doth ../xml/*.xml
+document obj2dict MCEventObj2Dict ../xml/*.xml
+
+# Build libraries (including dictionary)
+#============================================================================
+library          MCEvent      *.cpp
+library          MCEventDict  ../dict/*.cpp
+
+# Define link options
+#============================================================================
+apply_pattern component_library library=MCEventDict
+apply_pattern linker_library    library=MCEvent
+macro_append MCEvent_linkopts "" WIN32 "/include:_MCEvent_loadRef"
+                                                                                                                                                           
+private
+
+private
+use GaudiObjDesc v*

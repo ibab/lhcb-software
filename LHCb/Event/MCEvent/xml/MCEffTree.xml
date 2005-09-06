@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE gdd SYSTEM "gdd.dtd" >
+<gdd>
+  <package name='Event'>
+<!-- ****************************************************************
+     * MCEffTree                                                    *
+     ****************************************************************-->
+     <class
+       name="MCEffTree"
+       author="Christian Jacoby"
+       desc="Access to MC decay tree information for efficiency algorithms" 
+       stdVectorTypeDef="TRUE"
+       templateList   = "FALSE"
+       templateVector = "TRUE" 
+       serializers = "FALSE"
+       id="250"
+     >
+     <import name="Event/MCParticle"/>
+     <import name="Event/MCEffParticle"/>
+     &KeyedObject;
+     <base name="KeyedObject&lt;int&gt;"/> 
+
+     <location
+            name="Phys"
+            place="/Event/Phys/MCEffTrees"
+     />
+ 
+     <location
+            name="Trg"
+            place="/Event/Trg/MCEffTrees"
+     />
+
+    
+ 
+     <attribute
+             name="decay"
+             desc="complete descriptions of the decay tree"
+             type="std::string"
+     />
+
+     <attribute
+            name="foundDecay"
+	    type="bool"
+            desc="TRUE if DoI found"
+     />
+
+
+     <relation
+            name="mcHead"
+            type="MCParticle"
+            desc="The head of a MC decay tree"
+     />
+
+     <attribute
+            name="allStables"
+            desc="vector of stable MCEffParticles"
+            setMeth="FALSE"
+            type = "std::vector&lt;MCEffParticle&gt;" 
+       />
+
+     <method
+            name="addMCEffParticle"
+            desc="add MCEffParticle to allStables"
+            argList="int recble, int rected, MCParticle* mcParticle"
+     />
+    
+     <attribute
+            name="recble"
+            desc="reconstructible flag (0=not rec'ble, 1=long 2=TTT, 3=VTT, 4=neutral)"
+            type="int"
+     />
+
+     <attribute
+             name="rected"
+             desc="reconstructed flag (0=not rec'ted, 1=long, 2=TTT, 3=VTT, 4=neutral)"
+             type="int"
+     />
+
+    </class>
+  </package>
+</gdd>
