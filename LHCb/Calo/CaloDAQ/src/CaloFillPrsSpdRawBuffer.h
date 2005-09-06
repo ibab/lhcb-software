@@ -1,4 +1,4 @@
-// $Id: CaloFillPrsSpdRawBuffer.h,v 1.1.1.1 2005-01-11 07:51:47 ocallot Exp $
+// $Id: CaloFillPrsSpdRawBuffer.h,v 1.2 2005-09-06 14:50:01 ocallot Exp $
 #ifndef CALOFILLPRSSPDRAWBUFFER_H 
 #define CALOFILLPRSSPDRAWBUFFER_H 1
 
@@ -8,6 +8,7 @@
 
 #include "Event/RawBuffer.h"
 #include "CaloDet/DeCalorimeter.h"
+#include "CaloDAQ/CaloReadoutTool.h"
 
 /** @class CaloFillPrsSpdRawBuffer CaloFillPrsSpdRawBuffer.h
  *  
@@ -46,6 +47,8 @@ protected:
 
   void fillTriggerBank ( );
 
+  void fillPackedBank ( );
+
 private:
   std::string m_inputBank;
   std::string m_prsBank;
@@ -57,11 +60,13 @@ private:
   int    m_dataCodingType;
 
   DeCalorimeter* m_calo;
+  CaloReadoutTool* m_roTool;
 
   // Statistics
   
   double m_totDataSize;
   double m_totTrigSize;
+  std::vector<double> m_dataSize;
   int m_nbEvents;
   std::vector< std::vector<raw_int> > m_banks;
   std::vector< std::vector<raw_int> > m_trigBanks;

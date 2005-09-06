@@ -1,4 +1,4 @@
-// $Id: CaloSpdBitFromRaw.h,v 1.2 2005-05-09 06:38:53 ocallot Exp $
+// $Id: CaloSpdBitFromRaw.h,v 1.3 2005-09-06 14:50:01 ocallot Exp $
 #ifndef CALOSPDBITFROMRAW_H 
 #define CALOSPDBITFROMRAW_H 1
 
@@ -7,6 +7,7 @@
 #include "GaudiAlg/GaudiTool.h"
 #include "CaloDAQ/ICaloTriggerFromRaw.h"            // Interface
 
+#include "CaloDAQ/CaloReadoutTool.h"
 #include "Event/RawEvent.h"
 
 /** @class CaloSpdBitFromRaw CaloSpdBitFromRaw.h
@@ -24,6 +25,8 @@ public:
 
   virtual ~CaloSpdBitFromRaw( ); ///< Destructor
 
+  virtual StatusCode initialize();
+
   virtual void prepare( int type );
 
   virtual StatusCode nextCell( CaloCellID& id, int& adc );
@@ -37,5 +40,15 @@ private:
   int m_lastData;
   int m_lastID;
   raw_int* m_data;
+  CaloReadoutTool* m_roTool;
+  std::vector<CaloCellID> m_chanID;
+  int m_version;
+  int m_sourceID;
+  int m_offset;
+  int m_cardNum;
+  int m_lenAdc;
+  int m_lenTrig;
+  std::vector<CaloCellID> m_results;
+  std::vector<CaloCellID>::const_iterator m_resultsIt;
 };
 #endif // CALOSPDBITFROMRAW_H

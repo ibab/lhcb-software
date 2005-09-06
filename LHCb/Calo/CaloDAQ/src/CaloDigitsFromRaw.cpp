@@ -1,4 +1,4 @@
-// $Id: CaloDigitsFromRaw.cpp,v 1.1.1.1 2005-01-11 07:51:47 ocallot Exp $
+// $Id: CaloDigitsFromRaw.cpp,v 1.2 2005-09-06 14:50:01 ocallot Exp $
 // Include files 
 
 // CLHEP
@@ -27,7 +27,8 @@ const        IAlgFactory& CaloDigitsFromRawFactory = s_factory ;
 CaloDigitsFromRaw::CaloDigitsFromRaw( const std::string& name,
                                       ISvcLocator* pSvcLocator)
   : GaudiAlgorithm ( name , pSvcLocator ) 
-{  m_calo = CaloCellCode::CaloNumFromName( name ) ;
+{  
+  m_calo = CaloCellCode::CaloNumFromName( name ) ;
   if ( m_calo < 0 || m_calo >= (int) CaloCellCode::CaloNums ) 
   { m_calo = CaloCellCode::CaloNumFromName( "Ecal" ) ; }
   

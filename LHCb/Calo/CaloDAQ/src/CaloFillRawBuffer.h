@@ -1,4 +1,4 @@
-// $Id: CaloFillRawBuffer.h,v 1.1.1.1 2005-01-11 07:51:47 ocallot Exp $
+// $Id: CaloFillRawBuffer.h,v 1.2 2005-09-06 14:50:01 ocallot Exp $
 #ifndef CALOFILLRAWBUFFER_H 
 #define CALOFILLRAWBUFFER_H 1
 
@@ -8,6 +8,7 @@
 
 #include "Event/RawBuffer.h"
 #include "CaloDet/DeCalorimeter.h"
+#include "CaloDAQ/CaloReadoutTool.h"
 
 /** @class CaloFillRawBuffer CaloFillRawBuffer.h
  *  Fills the Raw Buffer banks for the calorimeter
@@ -51,6 +52,8 @@ protected:
 
   void fillDataBankShort ( );
 
+  void fillPackedBank ( );
+
   void fillTriggerBank ( );
 
 private:
@@ -64,10 +67,12 @@ private:
   int    m_dataCodingType;
 
   DeCalorimeter* m_calo;
+  CaloReadoutTool* m_roTool;
 
   // Statistics
   
   double m_totDataSize;
+  std::vector<double> m_dataSize;
   double m_totTrigSize;
   int m_nbEvents;
   std::vector< std::vector<raw_int> > m_banks;

@@ -4,6 +4,27 @@
 ! Purpose     : Convert Calo Digit and Trigger information to RawBuffer banks.
 !-----------------------------------------------------------------------------
 
+! 2005-09-06 - Olivier Callot
+ - New tool CaloReadoutTool for a description of the cards and readout, 1 MHz version
+ - Implementation of the proposed 1 MHz coding, with packing instead of
+   zero suppression. Starts from EcalFull and HcalFull digit containers
+   Affects CaloFillRawBuffer and CaloFillPrsSpdRawBuffer. Note that this coding is 
+   NOT the default, one has to add the options :
+    EcalFillRawBuffer.DataCodingType = 2;
+    HcalFillRawBuffer.DataCodingType = 2;
+    CaloFillPrsSpdRawBuffer.DataCodingType = 3;
+ - Process thenew format in the decoding algorithms CaloEnergyFromRaw, CaloTriggerFromRaw, 
+   CaloPrsBitFromRaw and CaloSpdBitFromRaw,
+
+ - Adjust the comparison algorithm. New option 'packedRawBuffer' to be set to
+   true when using the 1 MHz coding type.
+
+  Decoding speed can be improved by inlining the 'nextCell' method, i.e. changing the
+  interface of this package. One could also implement just a begin and end accessor
+  to the local array where the unpacking is performed. But this makes visible
+  the internal implementation. To be done when the 1 MHz readout becomes the
+  baseline scenario.
+
 !========================== CaloDAQ v1r1 2005-05-10 ==========================
 ! 2005-05-11 - Vanya BELYAEV
  - src/CaloReCreateMCLinks.cpp

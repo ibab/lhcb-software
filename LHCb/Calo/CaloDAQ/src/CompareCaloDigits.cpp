@@ -1,4 +1,4 @@
-// $Id: CompareCaloDigits.cpp,v 1.2 2005-01-31 14:15:27 cattanem Exp $
+// $Id: CompareCaloDigits.cpp,v 1.3 2005-09-06 14:50:01 ocallot Exp $
 // Include files 
 
 // STL
@@ -32,7 +32,8 @@ CompareCaloDigits::CompareCaloDigits( const std::string& name,
                                       ISvcLocator* pSvcLocator)
   : GaudiAlgorithm ( name , pSvcLocator ) 
 {
-  declareProperty( "Extension", m_extension = "Test" );  
+  declareProperty( "Extension",       m_extension = "Test" );  
+  declareProperty( "PackedRawBuffer", m_packedRawBuffer = false );
 }
 
 //=============================================================================
@@ -47,6 +48,13 @@ StatusCode CompareCaloDigits::execute() {
 
   debug() << "==> Execute" << endmsg;
 
+  std::string ecalName =  CaloDigitLocation::Ecal;
+  std::string hcalName =  CaloDigitLocation::Hcal;
+  if ( m_packedRawBuffer ) {
+    ecalName =  CaloDigitLocation::FullEcal;
+    hcalName =  CaloDigitLocation::FullHcal;
+  }  
+
   //== SPD. Digits are yes/no -> tolerance = .5
   CaloDigits* spd1 = get<CaloDigits>( CaloDigitLocation::Spd );
   CaloDigits* spd2 = get<CaloDigits>( CaloDigitLocation::Spd + m_extension );
@@ -58,12 +66,12 @@ StatusCode CompareCaloDigits::execute() {
   compareContainers( prs1, prs2, 0.1 );
 
   //== Ecal.
-  CaloDigits* ecal1 = get<CaloDigits>( CaloDigitLocation::Ecal );
+  CaloDigits* ecal1 = get<CaloDigits>( ecalName );
   CaloDigits* ecal2 = get<CaloDigits>( CaloDigitLocation::Ecal + m_extension );
   compareContainers( ecal1, ecal2, 1. );
 
   //== Hcal. 
-  CaloDigits* hcal1 = get<CaloDigits>( CaloDigitLocation::Hcal );
+  CaloDigits* hcal1 = get<CaloDigits>( hcalName );
   CaloDigits* hcal2 = get<CaloDigits>( CaloDigitLocation::Hcal + m_extension );
   compareContainers( hcal1, hcal2, 1. );
 

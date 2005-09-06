@@ -1,4 +1,4 @@
-// $Id: CompareCaloDigits.h,v 1.1.1.1 2005-01-11 07:51:47 ocallot Exp $
+// $Id: CompareCaloDigits.h,v 1.2 2005-09-06 14:50:01 ocallot Exp $
 #ifndef COMPONENT_COMPARECALODIGITS_H 
 #define COMPONENT_COMPARECALODIGITS_H 1
 
@@ -30,5 +30,6 @@ protected:
   
 private:
   std::string m_extension;
+  bool m_packedRawBuffer;
 };
 #endif // COMPONENT_COMPARECALODIGITS_H

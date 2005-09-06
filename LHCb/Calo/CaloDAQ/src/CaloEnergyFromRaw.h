@@ -1,4 +1,4 @@
-// $Id: CaloEnergyFromRaw.h,v 1.2 2005-05-09 06:38:53 ocallot Exp $
+// $Id: CaloEnergyFromRaw.h,v 1.3 2005-09-06 14:50:01 ocallot Exp $
 #ifndef CALOENERGYFROMRAW_H 
 #define CALOENERGYFROMRAW_H 1
 
@@ -8,6 +8,7 @@
 #include "CaloDAQ/ICaloEnergyFromRaw.h"            // Interface
 #include "CaloDet/DeCalorimeter.h"
 #include "Event/RawEvent.h"
+#include "CaloDAQ/CaloReadoutTool.h"
 
 /** @class CaloEnergyFromRaw CaloEnergyFromRaw.h
  *  Decode the calorimeter energies, accodrding to version
@@ -40,10 +41,22 @@ private:
   int m_dataSize;
   int m_lastData;
   int m_lastID;
+  int m_sourceID;
   raw_int* m_data;
   int m_version;
   double m_scale;
   double m_pedShift;
+  int    m_offset;
+  int    m_bitNum;
+  int    m_cardNum;
+  int    m_chanNum;
+  int    m_lenAdc;
+  int    m_lenTrig;
+  int    m_pattern;
   DeCalorimeter* m_calo;
+  CaloReadoutTool* m_roTool;
+  std::vector<CaloCellID> m_chanID;
+  std::vector<std::pair<CaloCellID, double> > m_results;
+  std::vector<std::pair<CaloCellID, double> >::const_iterator m_resultsIt;
 };
 #endif // CALOENERGYFROMRAW_H

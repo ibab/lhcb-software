@@ -1,4 +1,4 @@
-// $Id: CaloFillPrsSpdRawBuffer.cpp,v 1.2 2005-01-12 09:08:33 ocallot Exp $
+// $Id: CaloFillPrsSpdRawBuffer.cpp,v 1.3 2005-09-06 14:50:01 ocallot Exp $
 // Include files 
 // CLHEP
 #include "CLHEP/Units/SystemOfUnits.h"
@@ -55,6 +55,11 @@ StatusCode CaloFillPrsSpdRawBuffer::initialize() {
   debug() << "==> Initialize" << endmsg;
 
   m_calo = getDet<DeCalorimeter>( "/dd/Structure/LHCb/Prs" );
+  m_roTool = tool<CaloReadoutTool>( "CaloReadoutTool/PrsReadoutTool" );
+
+  if ( 3 == m_dataCodingType ) {
+    m_numberOfBanks =  m_roTool->nbTell1();
+  }  
 
   m_nbEvents    = 0;
   m_totDataSize = 0;
@@ -65,13 +70,14 @@ StatusCode CaloFillPrsSpdRawBuffer::initialize() {
   for ( int kk = 0 ; m_numberOfBanks > kk ; kk++ ) {
     m_banks.push_back( a );
     m_trigBanks.push_back( a );
+    m_dataSize.push_back( 0 );
   }
 
   info() << "Data coding type " << m_dataCodingType 
          << " energy scale " << m_energyScale/MeV << " MeV"
          << endreq;
 
-  if ( 1 < m_dataCodingType || 0 > m_dataCodingType ) {
+  if ( 3 < m_dataCodingType || 0 > m_dataCodingType ) {
     Error( "Invalid Data coding type", StatusCode::FAILURE );
   }
 
@@ -96,11 +102,14 @@ StatusCode CaloFillPrsSpdRawBuffer::execute() {
     fillDataBank( );
   } else if ( 1 == m_dataCodingType ) {
     fillDataBankShort( );
+  } else if ( 2 == m_dataCodingType ) {
+  } else if ( 3 == m_dataCodingType ) {
+    fillPackedBank( );
   }
   
   //== Build the trigger banks
 
-  fillTriggerBank( );
+  if ( 2 > m_dataCodingType ) fillTriggerBank( );
   
   int totDataSize = 0;
   int totTrigSize = 0;
@@ -110,8 +119,11 @@ StatusCode CaloFillPrsSpdRawBuffer::execute() {
   for ( unsigned int kk = 0; m_banks.size() > kk; kk++ ) {
     rawBuffer->addBank( board, m_bankType, m_banks[kk], m_dataCodingType );
     totDataSize += m_banks[kk].size();
-    rawBuffer->addBank( board, m_triggerBankType, m_trigBanks[kk] );
-    totTrigSize += m_trigBanks[kk].size();
+    m_dataSize[kk] += m_banks[kk].size();
+    if ( 2 > m_dataCodingType ) {
+      rawBuffer->addBank( board, m_triggerBankType, m_trigBanks[kk] );
+      totTrigSize += m_trigBanks[kk].size();
+    } 
     board++;
   }
 
@@ -165,15 +177,23 @@ StatusCode CaloFillPrsSpdRawBuffer::execute() {
 //=============================================================================
 StatusCode CaloFillPrsSpdRawBuffer::finalize() {
 
- if ( 0 < m_nbEvents ) {
+  if ( 0 < m_nbEvents ) {
     m_totDataSize /= m_nbEvents;
     m_totTrigSize /= m_nbEvents;
-    info() << "Average bank size : " 
-           << format( "%7.1f words for energy + %7.1f words for trigger.", 
-                      m_totDataSize, m_totTrigSize )
-           << endreq;
+    info() << "Average event size : " 
+           << format( "%7.1f words, %7.1f for trigger", m_totDataSize, m_totTrigSize );
+    double meanSize = 0.;
+    double maxSize  = 0.;
+    for ( unsigned int kk = 0; m_dataSize.size() > kk ; ++kk ) {
+      m_dataSize[kk] /= m_nbEvents;
+      meanSize += m_dataSize[kk];
+      if ( maxSize < m_dataSize[kk] ) maxSize = m_dataSize[kk];
+    }
+    meanSize /= m_dataSize.size();
+    info() << format ( "  Mean bank size %7.1f, maximum size %7.1f", 
+                       meanSize, maxSize ) << endreq;
   }
-
+  
   return GaudiAlgorithm::finalize();  // must be called after all other actions
 }
 //=========================================================================
@@ -280,6 +300,98 @@ void CaloFillPrsSpdRawBuffer::fillTriggerBank ( ) {
               << id << endreq;
     m_trigBanks[bufIndx].push_back( word );
   }
+}
+
+//=========================================================================
+//  Packed data format, trigger and data in the same bank. Process ALL digits
+//=========================================================================
+void CaloFillPrsSpdRawBuffer::fillPackedBank ( ) {
+  CaloDigits*  digs = get<CaloDigits>( m_inputBank );
+  L0PrsSpdHits* prs = get<L0PrsSpdHits>( m_prsBank );
+  L0PrsSpdHits* spd = get<L0PrsSpdHits>( m_spdBank );
+  
+  for ( int kTell1 = 0 ; m_numberOfBanks > kTell1 ; kTell1++ ) {
+    std::vector<int> feCards = m_roTool->feCardsInTell1( kTell1 );
+    for ( std::vector<int>::iterator iFe = feCards.begin(); feCards.end() != iFe; ++iFe ) {
+      int cardNum = *iFe;
+      int sizeIndex  = m_banks[kTell1].size();
+      m_banks[kTell1].push_back( m_roTool->cardCode( cardNum ) << 14 );
+      int sizeAdc = 0;
+      int sizeTrig = 0;
+
+      std::vector<CaloCellID> ids = m_roTool->cellInFECard( cardNum );
+      int num = 0;
+      int word   = 0;
+      
+      for ( std::vector<CaloCellID>::const_iterator itId = ids.begin();
+            ids.end() != itId; ++itId ) {
+        CaloCellID id = *itId;
+        CaloDigit* dig = digs->object( id );
+        if ( 0 != dig ) {
+          int adc = int( floor( dig->e() / m_calo->cellGain(id) + .5 ) );
+          adc = ( adc & 0x3FF ) | ( num << 10 );
+          if ( 0 == word ) {
+            word = adc;
+          } else {
+            word |= ( adc<<16);
+            m_banks[kTell1].push_back( word );
+            word = 0;
+          }
+          sizeAdc += 1;
+        }
+        num++;  
+      }
+
+      //== Now the trigger bits
+
+      num = 0;
+      int offset = 0;
+      if ( 0 != word ) offset = 16;
+      int nTrigWord = 0;
+      
+      for ( std::vector<CaloCellID>::const_iterator itId = ids.begin();
+            ids.end() != itId; ++itId ) {
+        CaloCellID id = *itId;
+        int  mask = 0;
+        L0PrsSpdHits::const_iterator itT;
+        for ( itT = prs->begin(); prs->end() != itT; ++itT ) {
+          if ( id == (*itT)->cellID() ) {
+            mask |= 0x40;
+            break;
+          }
+        }
+        CaloCellID id2( 0, id.area(), id.row(), id.col() );
+        for ( itT = spd->begin(); spd->end() != itT; ++itT ) {
+          if ( id2 == (*itT)->cellID() ) {
+            mask |= 0x80;
+            break;
+          }
+        }
+        if ( 0 != mask ) {
+          mask |= num;
+          mask = mask << offset;
+          word |= mask;
+          offset += 8;
+          if ( 32 == offset ) {
+            m_banks[kTell1].push_back( word );
+            word = 0;
+            offset = 0;
+            nTrigWord++;
+          }
+          sizeTrig += 1;
+        }
+        num++;  
+      }
+      
+      if ( 0 != word ) {
+        m_banks[kTell1].push_back( word );
+        word = 0;
+        nTrigWord++;
+      }
+      m_banks[kTell1][sizeIndex] |= (sizeAdc << 7) + sizeTrig;
+      m_totTrigSize += nTrigWord;
+    }
+  }  
 }
 
 //=============================================================================
