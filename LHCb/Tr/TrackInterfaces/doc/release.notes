@@ -4,6 +4,10 @@
 ! Purpose     : package for tracking tools interfaces
 !-----------------------------------------------------------------------------
 
+!====================== TrackInterfaces v1r3 2005-09-06 ======================
+! 2005-09-06 - Marco Cattaneo
+ - Remove IBIntegrator.h, moved to Kernel directory in LHCbKernel
+
 !====================== TrackInterfaces v1r2 2005-07-20 ======================
 ! 2005-07-19 - Jose A. Hernando
 	- added predict() to a "plane" to ITrackExtrapolator
