@@ -1,4 +1,4 @@
-// $Id: TrackPtKick.h,v 1.1 2005-05-25 15:40:12 cattanem Exp $
+// $Id: TrackPtKick.h,v 1.2 2005-09-07 12:32:10 cattanem Exp $
 #ifndef TRACKTOOLS_TRACKPTKICK_H 
 #define TRACKTOOLS_TRACKPTKICK_H 1
 
@@ -9,7 +9,9 @@
 
 // from TrackInterfaces
 #include "TrackInterfaces/ITrackPtKick.h"            // Interface
-#include "TrackInterfaces/IBIntegrator.h"
+
+// from LHCbKernel
+#include "Kernel/IBIntegrator.h"
 
 /** @class TrackPtKick TrackPtKick.h TrackTools/TrackPtKick.h
  *  

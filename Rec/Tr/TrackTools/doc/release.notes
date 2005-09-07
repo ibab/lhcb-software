@@ -4,6 +4,10 @@
 ! Purpose     : Package for tracking tools not accessing MC information
 !-----------------------------------------------------------------------------
 
+!======================== TrackTools v1r2 2005-09-06 =========================
+! 2005-09-06 - Marco Cattaneo
+ - Remove BIntegrator tool, moved to Magnet package
+
 !======================== TrackTools v1r1 2005-07-20 =========================
 ! 2005-06-29 - Eduardo Rodrigues
  - MeasurementProvider inherits from new IMeasurementProvider interface
