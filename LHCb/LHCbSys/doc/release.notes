@@ -5,12 +5,25 @@
 ! Purpose     : LHCb OO kernel packages
 !-----------------------------------------------------------------------------
 
-</PRE><H1><A NAME=v18r8>2005-08-31 LHCbSys v18r9</A></H1><PRE>
+</PRE><H1><A NAME=v18r8>2005-09-07 LHCbSys v18r9</A></H1><PRE>
 This version uses Gaudi v16r5
 
- - Modified packages: EventSys v20r9, TrgEvent v5r6, DetSys v7r4, DetDesc v15r4,
-     DetDescCnv v2r9, DetCond v7r6, STDet v1r5, Magnet v2r8p1, XmlTools v3r6p1,
-     TrgTools v7r6, MCTools v1r13p1, DetCondExample v7r5
+ - Packages removed:  LHCbInterfaces. All interfaces moved to LHCbKernel/Kernel
+ - Modified packages: KernelSys v4r14, LHCbKernel v5r13, TrackInterfaces v4r14,
+     EventSys v20r9, TrgEvent v5r6, DetSys v7r4, DetDesc v15r4, DetDescCnv v2r9,
+     DetCond v7r6, STDet v1r5, Magnet v2r9, XmlTools v3r6p1, LHCbAlgs v1r9
+     TrgTools v7r6, MCTools v1r14, TrackPython v1r1, DetCondExample v7r5
+
+ - In LHCbKernel v5r13
+   . Add IBdlTool, IBIntegrator, ICheckTool, IInAcceptance, INormalizeTool
+     interfaces to Kernel directory
+
+ - In TrackInterfaces v1r3
+   . Remove IBIntegrator interface, moved to LHCbKernel
+
+ - In TrackPython v1r1, LHCbAlgs v1r9, MCTools v1r14
+   . Remove LHCbInterfaces dependency and adapt to new interfaces location in 
+     LHCbKernel
 
  - In EventSys v20r9
    . Add TrackEventDict to PoolDicts.opts
@@ -40,7 +53,8 @@ This version uses Gaudi v16r5
    . New method 'isInVDeadZone(...)' to check if (u,v) is inside a wafer
      and in a vertical dead zone given some tolerance
 
- - In Magnet v2r8p1
+ - In Magnet v2r9
+   . Add BdlTool and BIntegrator tools, moved from various tracking packages
    . Use [] instead of () everywhere in B field calculations, to avoid possible
      confusion over ranges of indices in CLHEP vectors
 

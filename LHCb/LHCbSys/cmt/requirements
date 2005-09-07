@@ -15,8 +15,8 @@ use GaudiConf		v9r1
 use HepMC	v4r121p0	Sim     # Gloria Corti, Matt Dobbs
 
 # Kernel packages
-use KernelSys           v4r13p1 Kernel  # Marco Cattaneo
-use LHCbKernel          v5r12p1 Kernel  # Marco Cattaneo
+use KernelSys           v4r14   Kernel  # Marco Cattaneo
+use LHCbKernel          v5r13   Kernel  # Marco Cattaneo
 use Relations		v2r5	Kernel  # Ivan Belyaev
 use CaloKernel          v3r2    Calo    # Olivier Deschamps
 use MuonKernel  	v2r7	Muon    # Andrei Tsaregorodtsev
@@ -37,7 +37,7 @@ use OTDet               v5r6    Det     # Jacopo Nardulli
 use CaloDet             v6r9p1  Det     # Ivan Belyaev
 use CaloDetXmlCnv	v2r3p1	Det     # Ivan Belyaev
 use MuonDet        	v4r8    Det     # Alessia Satta, Alessio Sarti
-use Magnet         	v2r8p1  Det     # N.N.
+use Magnet         	v2r9    Det     # N.N.
 use MuonTools      	v3r8	Muon    # Alessia Satta
 use RichDet		v8r4	Det     # Chris Jones
 use STDet               v1r5    Det     # Matt Needham
@@ -86,15 +86,14 @@ use CaloDAQ             v1r1    Calo    # Olivier Deschamps
 use L0MuonDAQ		v1r0	L0      # Andrei Tsaregorodtsev
 
 # Other stuff
-use LHCbInterfaces	v1r3    Kernel  # Marco Cattaneo
-use LHCbAlgs		v1r8	Kernel  # Marco Cattaneo
+use LHCbAlgs            v1r9    Kernel  # Marco Cattaneo
 use MCTools		v1r14   Phys    # Many
 use CaloInterfaces      v4r3    Calo    # Olivier Deschamps
 use CaloUtils           v4r9    Calo    # Olivier Deschamps
 use RichRecBase	        v1r16p1 Rich    # Chris Jones
 use STTools		v1r1	IT      # Matt Needham
-use TrackInterfaces 	v1r2    Tr      # Eduardo Rodrigues, Jose Hernando
-use TrackPython         v1r0    Tr      # Eduardo Rodrigues, Jose Hernando
+use TrackInterfaces 	v1r3    Tr      # Eduardo Rodrigues, Jose Hernando
+use TrackPython         v1r1    Tr      # Eduardo Rodrigues, Jose Hernando
 use DetCond             v7r6    Det     # Marco Clemencic
 
 # Temporary, should be split
