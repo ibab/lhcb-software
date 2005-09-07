@@ -1,8 +1,13 @@
 !-----------------------------------------------------------------------------
 ! Package     : Det/Magnet
-! Responsible : Edgar De Oliveira
-! Purpose     : Provides magnetic field map
+! Responsible : 
+! Purpose     : Provides magnetic field map and Bdl tools
 !-----------------------------------------------------------------------------
+
+!====================== Magnet v2r9 2005-09-06 ===============================
+! 2005-09-06 - Marco Cattaneo
+ - Add BdlTool and BIntegrator tools, moved from duplicate implementations in
+   TrgVeloTT, PatVeloTT, TrTools, TrackTools
 
 !====================== Magnet v2r8p1 2005-08-30 ==========================
 ! 2005-08-29 M. Needham

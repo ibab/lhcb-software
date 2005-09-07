@@ -1,11 +1,12 @@
-# $Id: requirements,v 1.15 2005-08-30 11:54:49 cattanem Exp $
+# $Id: requirements,v 1.16 2005-09-07 12:20:25 cattanem Exp $
 #============================================================================
 package           Magnet
-version           v2r8p1
+version           v2r9
 
 branches          cmt doc src 
 
-use GaudiKernel v*
+use LHCbKernel  v*      Kernel
+use GaudiAlg    v*
 use CLHEP	v*	LCG_Interfaces
 
 library          Magnet    ../src/*.cpp

@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/Magnet/src/Magnet_load.cpp,v 1.2 2004-04-07 15:24:34 cattanem Exp $
+// $Id: Magnet_load.cpp,v 1.3 2005-09-07 12:20:25 cattanem Exp $
 
 // Include Files
 #include "GaudiKernel/DeclareFactoryEntries.h"
@@ -8,4 +8,6 @@
 DECLARE_FACTORY_ENTRIES(Magnet) {
   DECLARE_SERVICE( MagneticFieldSvc );
   DECLARE_ALGORITHM( MagFieldReader );
+  DECLARE_TOOL( BdlTool );
+  DECLARE_TOOL( BIntegrator );
 }
