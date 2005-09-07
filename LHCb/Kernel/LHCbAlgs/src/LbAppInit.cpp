@@ -1,4 +1,4 @@
-// $Id: LbAppInit.cpp,v 1.11 2005-06-24 06:45:54 cattanem Exp $
+// $Id: LbAppInit.cpp,v 1.12 2005-09-07 12:23:40 cattanem Exp $
 
 // Include files
 #include "LbAppInit.h"
@@ -9,7 +9,7 @@
 #include "GaudiKernel/IDataManagerSvc.h"
 #include "Event/EventHeader.h"
 #include "Event/ProcStatus.h"
-#include "Tools/INormalizeTool.h"
+#include "Kernel/INormalizeTool.h"
 #include "DetDesc/DataStoreLoadAgent.h"
 
 #include "boost/format.hpp"

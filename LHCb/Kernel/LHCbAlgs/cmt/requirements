@@ -3,7 +3,7 @@
 # Maintainer : Marco Cattaneo
 #============================================================================
 package LHCbAlgs
-version v1r8
+version v1r9
 
 #============================================================================
 # Structure, i.e. directories to process. 
@@ -16,7 +16,6 @@ include_path    none
 #    Put as many lines as needed, with all packages, without the '#'
 #============================================================================
 use GaudiAlg    	v*
-use LHCbInterfaces	v*	Kernel
 use Event    	        v*      Event
 use DetDesc		v*	Det
 

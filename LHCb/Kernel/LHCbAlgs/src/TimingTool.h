@@ -1,4 +1,4 @@
-// $Id: TimingTool.h,v 1.2 2004-07-21 08:02:14 cattanem Exp $
+// $Id: TimingTool.h,v 1.3 2005-09-07 12:23:40 cattanem Exp $
 #ifndef TIMINGTOOL_H 
 #define TIMINGTOOL_H 1
 
@@ -9,8 +9,8 @@
 #include "GaudiKernel/Chrono.h"
 #include "GaudiKernel/IRndmGenSvc.h"
 
-// from this package
-#include "Tools/INormalizeTool.h"
+// from LHCbKernel
+#include "Kernel/INormalizeTool.h"
 
 
 /** @class TimingTool TimingTool.h
