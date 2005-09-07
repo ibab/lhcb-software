@@ -19,7 +19,7 @@ use TrFitAssociators	v1r3	Tr    # N.N.
 use TrCheck             v2r8	Tr    # N.N.
 use LongTrack           v1r15	Tr    # Olivier Callot
 use TrFitter            v4r0	Tr    # N.N.
-use TrTools             v2r6	Tr    # N.N.
+use TrTools             v2r7	Tr    # N.N.
 use Seeding             v2r10	Tr    # N.N.
 use TrMatching          v2r10p2	Tr    # N.N.
 use TrCleanEx           v2r11	Tr    # N.N.
@@ -28,7 +28,7 @@ use TrKShort		v1r6	Tr    # Olivier Callot
 
 # New tracking
 use TrackExtrapolators  v1r1    Tr    # Eduardo Rodrigues, Jose Hernando
-use TrackTools          v1r1    Tr    # Eduardo Rodrigues, Jose Hernando
+use TrackTools          v1r2    Tr    # Eduardo Rodrigues, Jose Hernando
 use TrackMCTools        v1r1    Tr    # Eduardo Rodrigues, Jose Hernando
 use TrackProjectors     v1r2    Tr    # Eduardo Rodrigues, Jose Hernando
 use TrackFitEvent       v1r2    Tr    # Eduardo Rodrigues, Jose Hernando
@@ -46,14 +46,14 @@ use TrgMonitor		v4r0	Trg   # Olivier Callot
 use TrgMuon             v1r2p3  Trg   # Alessia Satta
 use TrgPrimVertex	v4r2	Trg   # Olivier Callot
 use TrgVelo             v7r4    Trg   # David Hutchcroft
-use TrgVeloTT		v8r0    Trg   # Luis Fernandez
+use TrgVeloTT		v8r1    Trg   # Luis Fernandez
 
 # New pattern recognition
 use PatSys              v1r2    Pat   # Olivier Callot
 use PatTools            v1r1    Pat   # Olivier Callot
 use PatUtils            v1r1    Pat   # Olivier Callot
 use PatVelo             v1r2    Pat   # Olivier Callot, David Hutchcroft
-use PatVeloTT           v1r0    Pat   # Olivier Callot, Luis Fernandez
+use PatVeloTT           v1r1    Pat   # Olivier Callot, Luis Fernandez
 use PatForward          v1r0    Pat   # Olivier Callot
 use PatPV               v1r0    Pat   # Olivier Callot
 use PatChecker          v1r1    Pat   # Olivier Callot

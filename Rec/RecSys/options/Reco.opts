@@ -65,6 +65,12 @@ RecoTrSeq.Members += { "TrFit2StoredTrackCnv/StoreBest" };
 #include "$TRCLEANEXROOT/options/Brunel.opts"
 TrTrackCloneKiller.flagMode = true;
 
+// Conversion to Track
+ApplicationMgr.DLLs += { "TrackTools", "TrConverters" };
+RecoTrSeq.Members += { "TrFitTrack2TrackCnv/StoreBestTrack" };
+StoreBestTrack.InputTracks  = "Rec/FitTrack/Best";
+StoreBestTrack.OutputTracks = "Rec/Track/Best";
+
 // Rich
 ApplicationMgr.DLLs += { "RichTools", "RichRecTools", "RichRecAlgorithms",
                          "RichGlobalPID", "RichLocalPID", 
