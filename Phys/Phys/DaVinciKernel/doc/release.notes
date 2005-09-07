@@ -1,8 +1,9 @@
-! $Id: release.notes,v 1.71 2005-09-06 12:36:13 pkoppenb Exp $
+! $Id: release.notes,v 1.72 2005-09-07 15:51:43 pkoppenb Exp $
 ! Package     : DaVinciKernel
 ! Responsible : P. Koppenburg
 
 
+!========================== DaVinciKernel v3r7 2005-09-07 ===================
 ! 2005-09-06 - P. Koppenburg
   - src/component/PhysDesktop.cpp
     . Do not use desktop() methods of Particle and Vertex anymore to

@@ -1,4 +1,4 @@
-// $Id: IPhysDesktop.h,v 1.5 2005-09-06 12:55:13 pkoppenb Exp $
+// $Id: IPhysDesktop.h,v 1.6 2005-09-07 15:51:43 pkoppenb Exp $
 #ifndef DAVINCIKERNEL_IPHYSDESKTOP_H 
 #define DAVINCIKERNEL_IPHYSDESKTOP_H 1
 
@@ -51,28 +51,22 @@ public:
   /// Save the particles to the TES
   virtual StatusCode saveDesktop() = 0;
  
-  /// Save the particles to the TES
+  /// Save the particles to the TES (used by HLT)
   virtual StatusCode saveDesktop(ParticleVector&,VertexVector& ) = 0;
  
   /// Save a vector of Particles
   /// If a particle is composite its descendents are also saved
   virtual StatusCode saveTrees( ParticleVector& ) = 0;
   
-  /// Save a vector of vertices. all descendents of a vertex are also saved
+  /// Save a vector of vertices. all descendents of a vertex are also saved (not used)
   virtual StatusCode saveTrees( VertexVector& ) = 0;
 
   /// Save all Particles with a given particleID code
   virtual StatusCode saveTrees( int pid ) = 0;
 
   /// Clone all particles given by a list. This duplicates information on the TES
-  /// and should be used only when necessary.
+  /// and should be used only when necessary. (Used by Filters)
   virtual StatusCode cloneTrees( ParticleVector& ) = 0;
-
-  //Save all Particles with a given particleID
-  // virtual StatusCode saveTrees( const ParticleID& pid ) = 0;
-
-  //Save all Particles with a given particleID, and a minimum ConfLevel
-  //  virtual StatusCode saveTrees( int pid, double cl ) = 0;
 
   /// Impose output location
   virtual void imposeOutputLocation(std::string outputLocationString) = 0;
