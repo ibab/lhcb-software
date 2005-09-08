@@ -4,6 +4,10 @@
 ! Purpose     : package for tracking tools interfaces
 !-----------------------------------------------------------------------------
 
+! 2005-09-08 - Eduardo Rodrigues
+ - added ITrackChi2Calculator interface, moved from TrMatching, for the
+   new  track event model
+
 !====================== TrackInterfaces v1r3 2005-09-06 ======================
 ! 2005-09-06 - Marco Cattaneo
  - Remove IBIntegrator.h, moved to Kernel directory in LHCbKernel
