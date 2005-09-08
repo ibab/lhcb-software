@@ -2,6 +2,11 @@ Package: GaudiObjDesc
 Desccription: This package contains a set of tools used to generate code from the XML description of the data object classes.
 Package manager : Stefan Roiser
 
+!20050908 - Pere
+- modified nmake fragments for the production of lcgdict (reflex) based dictionaries
+  fragments/nmake/obj2dict_header
+  fragments/nmake/obj2dict_trailer
+
 !20050822 - Stefan
 - preparation for using namespace LHCb for Event classes and namespaces (not activated yet)
 - small changes for fragment (linux)

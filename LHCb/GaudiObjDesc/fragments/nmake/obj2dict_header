@@ -6,7 +6,7 @@ dtdfile       = ..\$(xmlsrc)\gdd.dtd
 
 ${CONSTITUENT}_output = $(dest)
 
-${CONSTITUENT} :: $(dtdfile) ${OBJS}
+${CONSTITUENT} :: $(dtdfile) $(dest)$(package).lcgdict
 	@echo "-----> ${CONSTITUENT} ok"
 
 $(dtdfile) : $(GAUDIOBJDESCROOT)\xml_files\gdd.dtd

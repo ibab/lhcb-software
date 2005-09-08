@@ -1,3 +1,8 @@
+$(dest)$(package).lcgdict : ${OBJS} 
+	@echo Producing dictionaries using lcgdict
+	@cd $(dest)
+	@"$(pythonexe)" "$(SEAL_home)/bin/lcgdict.py" $(package)_dictionary.h --reflex --split --selection_file $(package)_selection.xml --capabilities=$(package)_capabilities.cpp --gccxmlpath=$(GCCXML_home)/bin $(includes) $(use_pp_cppflags)
+	@echo "" > $(package).lcgdict 
 
 clean :: ${CONSTITUENT}clean
 	@cd .
@@ -7,5 +12,10 @@ ${CONSTITUENT}clean ::
 	-$(cleanup_silent) del $(dest)*.obj2dict
 	-$(cleanup_silent) del $(dest)*.cpp
 	-$(cleanup_silent) del $(dtdfile)
+	-$(cleanup_silent) del $(dest)$(package)_dictionary.h
+	-$(cleanup_silent) del $(dest)$(package)_selection.xml 
+	-$(cleanup_silent) del $(dest)$(package)_dictionary.xml 
+	-$(cleanup_silent) del $(dest)$(package).lcgdict
+
 
  
