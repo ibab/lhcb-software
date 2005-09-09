@@ -1,0 +1,37 @@
+#============================================================================
+# Created    : 2005-03-07
+# Maintainer : Eduardo Rodrigues
+#
+# Documentation on the requirement file can be found at
+# http://cern.ch/lhcb-comp/Support/html/new_structure.pdf
+#============================================================================
+package           TrackMatching
+version           v1r0
+
+#============================================================================
+# This template is an example for a standard Algorithm package
+#
+# Structure, i.e. directories to process. 
+#============================================================================
+branches          cmt doc src TrackMatching
+
+include_dirs $(TRACKMATCHINGROOT)
+
+include_path      none
+#============================================================================
+# Used packages. Specify the version, * at the end specifies 'any revision'
+#    Put as many lines as needed, with all packages, without the '#'
+#============================================================================
+use   GaudiAlg         v*
+use   TrackEvent       v*      Event
+use   TrackFitEvent    v*      Tr
+use   TrackInterfaces  v*      Tr
+
+#============================================================================
+# Component library building rule
+#============================================================================
+library          TrackMatching    ../src/*.cpp 
+#============================================================================
+# define component library link options
+#============================================================================
+apply_pattern    component_library library=TrackMatching

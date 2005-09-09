@@ -1,0 +1,16 @@
+!-----------------------------------------------------------------------------
+! Package     : Tr/TrackMatching
+! Responsible : Eduardo Rodrigues
+! Purpose     : Package for the track matching algorithms
+!-----------------------------------------------------------------------------
+
+! 2005-09-09 - Eduardo Rodrigues
+ - creation of the package. It contains the velo-seed track matching
+   algorithm from Jeroen van Tilburg, adapted to the new track event model
+ - it contains:
+   - TrackMatchVeloSeed: the matching algorithm
+   - TrackMatch.h: a class which holds the matches between the velo tracks
+                   and the seed tracks
+   - TTCandidate: a class which holds a set of TT clusters which can be used
+                  as a candidate set of TT clusters for a matched track
+   - TrackMatchingDataFunctor: helper functor used for sorting
