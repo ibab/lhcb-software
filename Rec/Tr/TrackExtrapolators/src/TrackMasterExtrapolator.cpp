@@ -12,6 +12,8 @@
 
 // Local 
 #include "TrackMasterExtrapolator.h"
+#include "GaudiKernel/IChronoStatSvc.h"
+
 
 // GSL
 #include "gsl/gsl_math.h"
@@ -110,8 +112,7 @@ StatusCode TrackMasterExtrapolator::propagate( State& state,
     }
 
   // check whether upstream or downstream
-  if( zStart > zNew ) { m_upStream = true;  }
-  else                { m_upStream = false; }
+  zStart > zNew ? m_upStream = true : m_upStream = false; 
 
   int    nbStep = (int)( fabs( zNew-zStart ) / m_maxStepSize ) + 1;
   double zStep  = ( zNew - zStart ) / nbStep;
@@ -184,68 +185,28 @@ StatusCode TrackMasterExtrapolator::propagate( State& state,
 	} 
       else
 	{
-	  // chronoSvc()->chronoStart("TransportSvcT");
-	  nWall = m_transportSvc->intersections( start, vect, 0., 1., 
-						 intersept, m_minRadThreshold );
-
-	  // if (nWall == 0) warning() << " zero walls !" << endmsg; 
-      
-	  // chronoSvc()->chronoStop("TransportSvcT");
-	  if (msgLevel(MSG::DEBUG))
-	    {
-	      debug() << "Transport : " << nWall
-		      << " intersepts between z= " << start.z() << " and " 
-		      << start.z() + vect.z()                 << endreq;
-	      //       << " time " << chronoSvc()->chronoDelta("TransportSvcT" , 
-	      // IChronoStatSvc::ELAPSED )
-	    }
-	}
+	chronoSvc()->chronoStart("TransportSvcT");
+	nWall = m_transportSvc->intersections( start, vect, 0., 1., 
+         					 intersept, m_minRadThreshold );
+	chronoSvc()->chronoStop("TransportSvcT");
+	  
+      }
   
-      std::vector<double> zWall;                // z positions of walls
-      std::vector<double> tWall;                // thickness of the wall
-      std::vector<double> radLengthWall;        // rad length of walls
-      std::vector<const Material*> matWall;     // Materials of the walls
-
-      double t1, t2, dz;
-      double pos, thick, radl;
-      for ( int ii = 0 ; nWall > ii ; ++ii )
-	{
-	  t1 = intersept[ii].first.first  * zStep;
-	  t2 = intersept[ii].first.second * zStep;
-	  dz = zScatter(t1,t2);
-	  pos   = start.z() + dz;
-	  thick = fabs( t2 - t1 );
-	  radl  = thick / intersept[ii].second->radiationLength();
-	  if ( m_minRadThreshold < radl  )
-	    {
-	      zWall.push_back( pos );
-	      tWall.push_back( thick);
-	      radLengthWall.push_back( radl );
-	      matWall.push_back( intersept[ii].second );
-	    }
-
-	  if ((msgLevel(MSG::DEBUG))&& (m_minRadThreshold < radl))
-	    { 
-	      debug() << format(" %2i x%8.2f y%8.2f z%10.3f thick%8.3f radl%7.3f %%",
-				ii , 
-				tX[0] + dz * tX[2], 
-				tX[1] + dz * tX[3], 
-				pos, thick, 100.*radl) <<endreq ;
-	    }
-	} // ii
-
-      zWall.push_back( start.z() + zStep );
-      radLengthWall.push_back( 0. );
-      tWall.push_back( 0. );
-      matWall.push_back( 0);
-      nWall = tWall.size();
-
+      // local to global transformation
+      transformToGlobal(zStep,start.z(),intersept);
+ 
+      // add virtual wall at target
+      ILVolume::Interval inter(start.z() + zStep, start.z() + zStep);
+      const Material* dummyMat = 0;
+      intersept.push_back(std::make_pair(inter,dummyMat));
+       
       // loop over the walls - last wall is `virtual one at target z'
       for (int iStep=0; iStep<nWall; ++iStep)
 	{
 	  //break transport into steps using different extrapolators
 	  std::list<TrackTransportStep> transStepList;
-	  sc = createTransportSteps( state.z(), zWall[iStep], transStepList );
+          double zWall = zScatter(intersept[iStep].first.first,intersept[iStep].first.second);
+	  sc = createTransportSteps( state.z(), zWall, transStepList );
       
 	  if (transStepList.empty())
 	    {
@@ -296,32 +257,38 @@ StatusCode TrackMasterExtrapolator::propagate( State& state,
 	      return StatusCode::FAILURE;
 	    }
       
+	  // number we need
+          double tWall = fabs(intersept[iStep].first.first - intersept[iStep].first.second);
+          const Material* theMatieral = intersept[iStep].second;
+
 	  // multiple scattering
-	  if (m_applyMultScattCorr == true)
+	  if ((m_applyMultScattCorr == true)&& (0 !=  theMaterial ))
 	    {
-	      if (tWall[iStep] < m_thickWall)
+	      if (tWall < m_thickWall)
 		{
-		  sc = thinScatter( state, radLengthWall[iStep] );
+		  sc = thinScatter( state, tWall/theMaterial->radiationLength() );
 		}
 	      else
 		{
-		  sc = thickScatter( state, tWall[iStep], radLengthWall[iStep] );
+		  sc = thickScatter( state, tWall, tWall/theMaterial->radiationLength()  );
 		}
 	    }
       
 	  // dE_dx energy loss
-	  if (( m_applyEnergyLossCorr == true)&&(matWall[iStep] != 0))
+	  if (( m_applyEnergyLossCorr == true)&&(theMaterial != 0))
 	    {
-	      sc = energyLoss( state, tWall[iStep], matWall[iStep] );
+	      sc = energyLoss( state, tWall, theMaterial );
 	    }
       
 	  // electron energy loss
-	  if ((m_applyElectronEnergyLossCorr == true) &&(11 == partId.abspid()))
+	  if ((m_applyElectronEnergyLossCorr == true) 
+            && (11 == partId.abspid())
+            && (theMaterial != 0) )
 	    {
 	      if ((state.z() > m_startElectronCorr) &&
 		  (state.z() < m_stopElectronCorr))
 		{
-		  sc = electronEnergyLoss(state,radLengthWall[iStep]);
+		  sc = electronEnergyLoss(state,theMaterial);
 		}
 	    }
       
@@ -699,8 +666,7 @@ StatusCode TrackMasterExtrapolator::electronEnergyLoss( State& state,
   double t;
   double norm = sqrt(1.0+gsl_pow_2(state.tx())+gsl_pow_2(state.ty()));
 
-  if (m_upStream) { t = radLength*norm; }
-  else { t = -radLength*norm; }
+  m_upStream == true ?  t = radLength*norm : t = -radLength*norm; 
 
   // protect against t too big
   if (fabs(t)>m_tMax) { t = GSL_SIGN(t)*m_tMax; }
@@ -710,7 +676,7 @@ StatusCode TrackMasterExtrapolator::electronEnergyLoss( State& state,
   HepSymMatrix& tC = state.covariance();
 
   tC.fast(5,5) += gsl_pow_2(tX[4]) * (exp(-t*log(3.0)/log(2.0))-exp(-2.0*t));
-  tX(4) *= exp(-t);
+  tX[4] *= exp(-t);
 
   return StatusCode::SUCCESS;
 }
@@ -727,8 +693,12 @@ double TrackMasterExtrapolator::zScatter( const double z1,
   else
     {
       // thick scatter
-      if (m_upStream == true) { zS = GSL_MIN(z1,z2); }
-      else { zS = GSL_MAX(z1,z2); }
+      if (m_upStream == true) {  
+        zS = GSL_MIN(z1,z2); }
+      else {  
+        zS = GSL_MAX(z1,z2); }
     }
   return zS;
 }
+
+

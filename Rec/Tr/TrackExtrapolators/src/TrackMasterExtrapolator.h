@@ -6,6 +6,7 @@
 // local
 #include "TrackExtrapolator.h"
 #include "TrackTransportStep.h"
+#include "DetDesc/ILVolume.h"
 
 // Forward declarations
 class ITransportSvc;
@@ -129,6 +130,11 @@ class TrackMasterExtrapolator: public TrackExtrapolator
   double zScatter(const double z1,
 		  const double z2 ) const;
 
+
+  void transformToGlobal(const double zStep, const double zStart,
+                         ILVolume::Intersections& intersept);
+
+
 };
 
 inline ITrackExtrapolator* 
@@ -144,6 +150,16 @@ inline void TrackMasterExtrapolator::updateTransportMatrix
 {
   //update F - after transport step
   m_F = newStepF* m_F;
+}
+
+inline void TrackMasterExtrapolator::transformToGlobal( const double zStep, const double zStart,
+                                                        ILVolume::Intersections& intersept) {
+
+  // convert from transport service ticks to mm in the LHCb frame
+  for (unsigned int iW = 0 ;  intersept.size() > iW ; ++iW ) {
+    intersept[iW].first.first  = (intersept[iW].first.first*zStep)+zStart;
+    intersept[iW].first.second = (intersept[iW].first.second*zStep)+zStart;
+  } // iW
 }
 
 #endif // TRACKMASTEREXTRAPOLATOR_H
