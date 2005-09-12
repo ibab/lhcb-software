@@ -1,9 +1,13 @@
 ! =============================================================================
-! $Id: release.notes,v 1.218 2005-08-30 14:36:25 marcocle Exp $ 
+! $Id: release.notes,v 1.219 2005-09-12 16:24:24 marcocle Exp $ 
 ! =============================================================================
 ! package DetDesc
 ! package manager : Marco Clemencic, Juan Palacios
 ! =============================================================================
+
+! 2005-09-12 - Marco Clemencic
+ - Fixed a memory leak in UpdateManagerSvc occurring when registering without
+   condition
 
 !======================== DetDesc v15r4 2005-08-30 ========================
 ! 2005-08-30 - Marco Clemencic
