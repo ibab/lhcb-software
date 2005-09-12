@@ -1,4 +1,4 @@
-// $Id: UpdateManagerSvc.cpp,v 1.9 2005-08-25 16:17:22 marcocle Exp $
+// $Id: UpdateManagerSvc.cpp,v 1.10 2005-09-12 13:46:06 marcocle Exp $
 // Include files 
 #include "GaudiKernel/SvcFactory.h"
 #include "GaudiKernel/MsgStream.h"
@@ -175,6 +175,19 @@ StatusCode UpdateManagerSvc::i_registerCondition(const std::string &condition, B
       if (cond_item->isHead()) removeFromHead(cond_item);
     }
     link(mf_item,mf,cond_item);
+  } else {
+    // this is usually don inside Item::addChild (called by "link")
+    Item::MembFuncList::iterator mfIt = mf_item->find(mf);
+    if (mfIt == mf_item->memFuncs.end()) {
+      // I do not have the MF registered inside the item
+      // so I add it
+      mf_item->memFuncs.insert(mfIt,Item::MembFunc(mf));
+    } else {
+      // the MF is already there
+      if (mfIt->mf != mf) // but it has a different pointer
+        // so I do not need to keep the copy I have
+        delete mf;
+    }
   }
   // a new item means that we need an update
   m_head_since = 1;
