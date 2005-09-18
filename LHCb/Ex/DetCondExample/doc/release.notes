@@ -1,9 +1,14 @@
 ! =============================================================================
-! $Id: release.notes,v 1.50 2005-08-31 16:02:49 marcocle Exp $
+! $Id: release.notes,v 1.51 2005-09-18 16:15:16 marcocle Exp $
 ! =============================================================================
 ! package Ex/DetCondExample
 ! package manager : Marco Clemencic
 ! =============================================================================
+
+! 2005-09-18 - Marco Clemencic
+ - replaced relative paths with environment variables in #include statements
+   inside option files
+ - added file dddb-nodb.xml for testXml.opts
 
 !=========== Ex/DetCondExample v7r5 2005-08-31 ===============================
 ! 2005-08-31 - Marco Clemencic

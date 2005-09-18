@@ -1,9 +1,11 @@
-//$Id: testXml.opts,v 1.7 2005-07-14 15:15:13 marcocle Exp $
+//$Id: testXml.opts,v 1.8 2005-09-18 16:15:16 marcocle Exp $
 //==============================================================
 // Job options for DetCondExample test of XML files
 //==============================================================
 
-#include "../options/common.opts"
+#include "$DETCONDEXAMPLEROOT/options/common.opts"
+
+DetectorDataSvc.DetDbLocation  = "$DETCONDEXAMPLE_XMLDDDB/dddb-nodb.xml";
 
 //--------------------------------------------------------------
 // Sequence of algorithms to be applied

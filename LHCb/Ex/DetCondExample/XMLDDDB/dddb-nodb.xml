@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE DDDB SYSTEM "DTD/structure.dtd">
+<!-- $Id: dddb-nodb.xml,v 1.1 2005-09-18 16:15:16 marcocle Exp $ -->
+<DDDB> 
+  <!--  ***********************************************************  -->
+  <!--  * Structure of the main Detector Description Data Base    *  --> 
+  <!--  * Declaration of the main catalogs                        *  --> 
+  <!--  ***********************************************************  -->
+  <catalog name="dd">
+
+    <catalogref    href = "structure.xml#Structure" />
+      <!-- Catalog of Detector Elements   (Structure Catalog) --> 
+
+    <catalogref    href = "geometry.xml#Geometry"  /> 
+      <!-- Catalog (palette) of Geometry Object (Logical Volumes) --> 
+
+    <catalogref    href = "materials/materials.xml#Materials" />
+      <!-- Catalog of Materials (Isotopes, Elements, etc.)  --> 
+
+    <catalogref    href = "alignment.xml#Alignment" />
+      <!-- Catalog (palette) of Alignment condition data  --> 
+
+    <catalogref    href = "calibration.xml#Calibration" />
+      <!-- Catalog (palette) of Calibration condition data  --> 
+
+    <catalogref    href = "readout.xml#ReadOut" />
+      <!-- Catalog (palette) of Readout condition data  --> 
+
+    <catalogref    href = "slowcontrol.xml#SlowControl" />
+      <!-- Catalog (palette) of SlowControl condition data  --> 
+
+    <catalogref    href = "fastcontrol.xml#FastControl" />
+      <!-- Catalog (palette) of FastControl condition data  --> 
+    <catalog name="Conditions">
+      <catalog name="ReadOut">
+      </catalog>
+      <catalog name="SlowControl">
+      </catalog>
+    </catalog>
+    <catalogref href="properties.xml#Properties"/>
+
+  </catalog>
+</DDDB>

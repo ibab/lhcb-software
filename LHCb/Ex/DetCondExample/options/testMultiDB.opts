@@ -1,9 +1,10 @@
-//$Id: testMultiDB.opts,v 1.6 2005-07-11 08:57:56 marcocle Exp $
+//$Id: testMultiDB.opts,v 1.7 2005-09-18 16:15:16 marcocle Exp $
 //==============================================================
 // Job options to test double CondDB usage in DetCondExample
 //==============================================================
 
-#include "../options/common.opts"
+#include "$DETCONDEXAMPLEROOT/options/common.opts"
+
 DetectorDataSvc.DetDbLocation  = "$DETCONDEXAMPLE_XMLDDDB/multi.xml";
 
 //--------------------------------------------------------------

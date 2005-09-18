@@ -1,9 +1,9 @@
-//$Id: fillCondDB.opts,v 1.5 2005-07-11 07:58:57 marcocle Exp $
+//$Id: fillCondDB.opts,v 1.6 2005-09-18 16:15:16 marcocle Exp $
 //==============================================================
 // Job options to populate the CondDB in DetCondExample
 //==============================================================
 
-#include "../options/cool.opts"
+#include "$DETCONDEXAMPLEROOT/options/cool.opts"
 
 //--------------------------------------------------------------
 // Sequence of algorithms to be applied
