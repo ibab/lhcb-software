@@ -1,4 +1,4 @@
-// $Id: ICondDBAccessSvc.h,v 1.2 2005-08-30 14:36:25 marcocle Exp $
+// $Id: ICondDBAccessSvc.h,v 1.3 2005-09-18 16:09:39 marcocle Exp $
 #ifndef DETCOND_ICONDDBACCESSSVC_H 
 #define DETCOND_ICONDDBACCESSSVC_H 1
 
@@ -89,9 +89,15 @@ public:
                                 boost::shared_ptr<pool::AttributeList> &data,
                                 std::string &descr, TimePoint &since, TimePoint &until, cool::ChannelId channel = 0) = 0;
 
+  /// Retrieve the names of the children nodes of a FolderSet.
+  virtual StatusCode getChildNodes (const std::string &path, std::vector<std::string> &node_names) = 0;
+
   /// Add a folder to the cache (bypass the DB)
   virtual StatusCode cacheAddFolder(const std::string &path, const std::string &descr,
                                     const pool::AttributeListSpecification& spec) = 0;
+  
+  /// Add a folder-set to the cache (bypass the DB)
+  virtual StatusCode cacheAddFolderSet(const std::string &path, const std::string &descr) = 0;
   
   /// Add an XML folder to the cache (bypass the DB)
   virtual StatusCode cacheAddXMLFolder(const std::string &path) = 0;

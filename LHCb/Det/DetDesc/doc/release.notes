@@ -1,5 +1,5 @@
 ! =============================================================================
-! $Id: release.notes,v 1.220 2005-09-18 15:15:15 marcocle Exp $ 
+! $Id: release.notes,v 1.221 2005-09-18 16:09:39 marcocle Exp $ 
 ! =============================================================================
 ! package DetDesc
 ! package manager : Marco Clemencic, Juan Palacios
@@ -7,6 +7,8 @@
 
 ! 2005-09-18 - Marco Clemencic
  - ParamValidDataObject: print also the comments when printing the parameters
+ - Added 2 new methods to ICondDBAccessSvc (to match the new definition in
+   DetCond v7r7)
 
 ! 2005-09-12 - Marco Clemencic
  - Fixed a memory leak in UpdateManagerSvc occurring when registering without
