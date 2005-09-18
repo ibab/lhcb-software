@@ -1,4 +1,4 @@
-// $Id: XmlCatalogCnv.cpp,v 1.5 2005-03-24 16:21:18 cattanem Exp $
+// $Id: XmlCatalogCnv.cpp,v 1.6 2005-09-18 15:11:31 marcocle Exp $
 
 // include files
 #include <stdlib.h>
@@ -218,19 +218,20 @@ StatusCode XmlCatalogCnv::i_fillObj (xercesc::DOMElement* childElement,
      tagName,
      xercesc::XMLString::stringLen(tagName) - 3,
      xercesc::XMLString::stringLen(tagName));
+  
+  // in order to handle properly both XML files and CondDB XML strings
+  // we use always the "createAddressForHref" system
+  std::string referenceValue;
   if (0 == xercesc::XMLString::compareString(refString, tagNameEnd)) {
-    // gets the reference value and the position of the '#' in it
-    std::string referenceValue =
-      dom2Std (childElement->getAttribute (hrefString));
-    // creates the address
-    xmlAddr = createAddressForHref (referenceValue, clsID, address);
+    // that's a real *ref entry
+    referenceValue = dom2Std (childElement->getAttribute (hrefString));
   } else {
-    // builds an entryName
-    entryName =
-      std::string("/") + dom2Std (childElement->getAttribute (nameString));
-    // Then builds an XmlAdress
-    xmlAddr = createXmlAddress (address->par()[0], entryName, clsID);
+    // it is an element: build a (fake) reference
+    referenceValue = std::string("#") + dom2Std (childElement->getAttribute (nameString));
   }
+  // creates the address
+  xmlAddr = createAddressForHref (referenceValue, clsID, address);
+
   delete[] tagNameEnd;
 
   // Now we have a new entry name and a corresponding xml address,
