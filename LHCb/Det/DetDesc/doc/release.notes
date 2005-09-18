@@ -1,9 +1,12 @@
 ! =============================================================================
-! $Id: release.notes,v 1.219 2005-09-12 16:24:24 marcocle Exp $ 
+! $Id: release.notes,v 1.220 2005-09-18 15:15:15 marcocle Exp $ 
 ! =============================================================================
 ! package DetDesc
 ! package manager : Marco Clemencic, Juan Palacios
 ! =============================================================================
+
+! 2005-09-18 - Marco Clemencic
+ - ParamValidDataObject: print also the comments when printing the parameters
 
 ! 2005-09-12 - Marco Clemencic
  - Fixed a memory leak in UpdateManagerSvc occurring when registering without

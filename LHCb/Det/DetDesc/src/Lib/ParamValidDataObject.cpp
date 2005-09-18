@@ -1,4 +1,4 @@
-//$Id: ParamValidDataObject.cpp,v 1.4 2005-08-15 13:20:32 marcocle Exp $
+//$Id: ParamValidDataObject.cpp,v 1.5 2005-09-18 15:15:15 marcocle Exp $
 #include <string>
 
 #include "DetDesc/ParamValidDataObject.h"
@@ -189,8 +189,11 @@ std::string ParamValidDataObject::printParams() const {
   std::ostringstream os;
   ParamList::const_iterator i;
   for ( i = m_paramList.begin(); i != m_paramList.end() ; ++i ){    
-    os << "(" << i->second->type().name() << ") " << i->first << " = "
-       << i->second->toStr() << "\n";
+    os << "(" << i->second->type().name() << ") " << i->first ;
+    
+    CommentMap::const_iterator c = m_comments.find(i->first);
+    if ( c != m_comments.end() ) os << " (" << c->first << ")";
+    os << " = " << i->second->toStr() << "\n";
   }
   return os.str();
 }
