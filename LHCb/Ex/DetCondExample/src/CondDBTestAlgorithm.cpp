@@ -1,4 +1,4 @@
-// $Id: CondDBTestAlgorithm.cpp,v 1.11 2005-08-31 16:02:49 marcocle Exp $
+// $Id: CondDBTestAlgorithm.cpp,v 1.12 2005-09-18 16:19:04 marcocle Exp $
 // Include files 
 
 // from Gaudi
@@ -182,6 +182,22 @@ StatusCode CondDBTestAlgorithm::execute() {
          << m12->matrix()[3][0] << " " << m12->matrix()[3][1] << " " << m12->matrix()[3][2] << " " << m12->matrix()[3][3] << "\n"
          << endmsg;
 
+  info() << "Test COOL FolderSets mapping to catalogs (get /dd/CondDBRoot/OnLine/Cave)" << endmsg;
+  DataObject* dataObj = getDet<DataObject>("/dd/CondDBRoot/OnLine/Cave");
+  
+  if ( dataObj ) {
+    info() << "Found the DataObject " << dataObj->registry()->identifier() << endmsg;
+  } else {
+    error() << "DataObject not found!" << endmsg;
+    return StatusCode::FAILURE;
+  }
+
+  info() << "Test self-referencing XML string (get /dd/CondDBRoot/TestFolder/TestSubFolder/TestCondition)" << endmsg;
+  Condition* testCond = getDet<Condition>("/dd/CondDBRoot/TestFolder/TestSubFolder/TestCondition");
+
+  sc = i_analyse( testCond );
+  if( !sc.isSuccess() ) return StatusCode::FAILURE;
+  
   // Event processing completed
   return StatusCode::SUCCESS;
 };

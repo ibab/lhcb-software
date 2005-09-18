@@ -1,4 +1,4 @@
-// $Id: PopulateDB.cpp,v 1.22 2005-08-31 16:02:49 marcocle Exp $
+// $Id: PopulateDB.cpp,v 1.23 2005-09-18 16:19:04 marcocle Exp $
 // Include files
 #include <iostream>
 #include <fstream>
@@ -176,7 +176,7 @@ StatusCode PopulateDB::i_condDBStoreSampleData() {
     }
 
     vec_str_pair xmlfolders;
-    xmlfolders.reserve(9);
+    xmlfolders.reserve(10);
     xmlfolders.push_back(str_pair("/SlowControl/LHCb/scLHCb",""));
     xmlfolders.push_back(str_pair("/SlowControl/Hcal/scHcal",""));
     xmlfolders.push_back(str_pair("/Geometry/LHCb",""));
@@ -186,7 +186,9 @@ StatusCode PopulateDB::i_condDBStoreSampleData() {
     xmlfolders.push_back(str_pair("/SlowControl/DummyDE",""));
     xmlfolders.push_back(str_pair("/ReadOut/DummyDE",""));
     xmlfolders.push_back(str_pair("/Properties/TestFunction",""));
-    
+
+    xmlfolders.push_back(str_pair("/TestFolder",""));
+
     debug() << "Create folders (multi-version)" << endmsg;
     for(vec_str_pair::iterator f = xmlfolders.begin(); f != xmlfolders.end(); ++f ){
       sc = m_dbAccSvc->createFolder(f->first,f->second,ICondDBAccessSvc::XML);
@@ -416,6 +418,21 @@ StatusCode PopulateDB::i_condDBStoreSampleData() {
     }
     m_dbAccSvc->storeXMLString("/Properties/TestFunction",tp1.toXml("TestFunction"),TimePoint(30), time_absolutefuture);
     
+    // Let's try to put an XML string with self referencing
+    std::string test_self_referenced_xml = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>"
+      "<!DOCTYPE DDDB SYSTEM \"structure.dtd\">"
+      "<DDDB>"
+      "<catalog name=\"TestFolder\">"
+      "<catalog name=\"TestSubFolder\">"
+      "<conditionref href=\"#TestCondition\"/>"
+      "</catalog>"
+      "</catalog>"
+      "<condition name=\"TestCondition\">"
+      "<paramVector name=\"ChannelMap\" type=\"int\">1 2 3 4</paramVector>"
+      "</condition>"
+      "</DDDB>";
+    
+    m_dbAccSvc->storeXMLString("/TestFolder",test_self_referenced_xml,TimePoint(0), time_absolutefuture);
 
     debug() << "Tagging everything (FORFUN)" << endmsg;
     m_dbAccSvc->tagFolder("/","FORFUN");
@@ -450,11 +467,7 @@ StatusCode PopulateDB::i_condDBDumpSampleData() {
   tags.push_back("FORFUN");
 
   // List all stored Folders 
-#ifndef COOL_1_2
   std::vector<std::string> fldr_names = db->listFolders();
-#else
-  std::vector<std::string> fldr_names = db->listAllNodes();
-#endif
   info() << " --> List of CondDB Folders" << endmsg;
   for ( std::vector<std::string>::iterator fldr_name = fldr_names.begin();
         fldr_name != fldr_names.end(); fldr_name++ ){

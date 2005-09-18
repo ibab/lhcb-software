@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE DDDB SYSTEM "DTD/structure.dtd">
-<!-- $Id: dddb.xml,v 1.3 2005-08-16 09:28:52 marcocle Exp $ -->
+<!-- $Id: dddb.xml,v 1.4 2005-09-18 16:19:04 marcocle Exp $ -->
 <DDDB> 
   <!--  ***********************************************************  -->
   <!--  * Structure of the main Detector Description Data Base    *  --> 
@@ -33,12 +33,15 @@
       <!-- Catalog (palette) of FastControl condition data  --> 
     <catalog name="Conditions">
       <catalog name="ReadOut">
-        <conditionref href="conddb:/ReadOut/DummyDE#DummyDE"/>
+        <conditionref href="conddb:/ReadOut/DummyDE"/>
       </catalog>
       <catalog name="SlowControl">
-        <conditionref href="conddb:/SlowControl/DummyDE#DummyDE"/>
+        <conditionref href="conddb:/SlowControl/DummyDE"/>
       </catalog>
     </catalog>
     <catalogref href="properties.xml#Properties"/>
-   </catalog> 
+
+    <catalogref href = "conddb:/#CondDBRoot" />
+
+  </catalog>
 </DDDB>
