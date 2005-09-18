@@ -1,5 +1,5 @@
 ! =============================================================================
-! $Id: release.notes,v 1.51 2005-09-18 16:15:16 marcocle Exp $
+! $Id: release.notes,v 1.52 2005-09-18 16:19:35 marcocle Exp $
 ! =============================================================================
 ! package Ex/DetCondExample
 ! package manager : Marco Clemencic
@@ -9,6 +9,11 @@
  - replaced relative paths with environment variables in #include statements
    inside option files
  - added file dddb-nodb.xml for testXml.opts
+ - added tests for:
+    + self-referencing XML strings
+    + direct mapping of CondDB structure to DetDataSvc tree
+    + simplified CondDB address
+   (DetCond v7r7)
 
 !=========== Ex/DetCondExample v7r5 2005-08-31 ===============================
 ! 2005-08-31 - Marco Clemencic
