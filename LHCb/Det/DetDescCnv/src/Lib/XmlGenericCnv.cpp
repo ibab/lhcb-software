@@ -1,4 +1,4 @@
-// $Id: XmlGenericCnv.cpp,v 1.9 2005-08-30 10:38:52 marcocle Exp $
+// $Id: XmlGenericCnv.cpp,v 1.10 2005-09-18 15:10:23 marcocle Exp $
 
 // Include files
 #include "DetDescCnv/XmlGenericCnv.h"
@@ -110,6 +110,10 @@ StatusCode XmlGenericCnv::createObj (IOpaqueAddress* addr,
   // parses the xml file or the xml string and retrieves a DOM document
   xercesc::DOMDocument* document = NULL;
   bool isAString = 1 == addr->ipar()[0];
+
+  if (isAString) 
+    log << MSG::DEBUG << "Original address = " << addr->par()[2] << endmsg;
+
   if ( 0 == addr->ipar()[0] ) {
     document = xmlSvc()->parse(addr->par()[0].c_str()); // this also lock the cache entry (must be released)
   } else if ( isAString ) {
@@ -417,22 +421,41 @@ XmlGenericCnv::createAddressForHref (std::string href,
   if (condDB) {
     log << MSG::VERBOSE 
         << "Href points to a conddb URL: " << href << endreq;
-    // first parse the href to get entryName and path in the CondDB
-    unsigned int slashPosition = href.find_first_of('/');
-    unsigned int poundPosition = href.find_last_of('#');
-    // builds an entryName
-    std::string entryName = "/" + href.substr( poundPosition+1 );
-    // gets the directory in the CondDB
-    std::string path = href.substr(slashPosition, 
-                                   poundPosition - slashPosition);
-    // extract the channel id from the path
-    unsigned long channelId = 0;
-    unsigned int pathEnd = path.find_first_of(':');
-    if (pathEnd != path.npos) {
-      std::istringstream chString(path.substr(pathEnd+1));
-      chString >> channelId;
-      path = path.substr(0,pathEnd);
+
+    // the href should have the format:
+    // "conddb:/path/to/folder[:channel_id][#object_name]"
+    // the default values are:
+    // channel_id = 0
+    // object_name = "folder"
+
+    size_t start = href.find_first_of(':')+1;
+    size_t columnPos = href.find_first_of(':',start);
+    size_t hashPos = href.find_first_of('#',start);
+    size_t pathEnd = href.size();
+    
+    std::string entryName,path;
+    unsigned int channelId = 0;
+    
+    if ( hashPos != href.npos ) {
+      // I do have an object_name
+      pathEnd = hashPos;
+      entryName = "/" + href.substr(hashPos+1);
     }
+    
+    if ( columnPos != href.npos ) {
+      // I do have a channel id
+      pathEnd = columnPos;
+      std::istringstream chString(href.substr(columnPos + 1, hashPos - columnPos - 1));
+      chString >> channelId;
+    }
+    
+    path = href.substr(start, pathEnd - start);
+    
+    if ( entryName.empty() ) {
+      // this means that I didn't find '#' or the name was not given (ex: "conddb:/path/to/folder#")
+      entryName = "/" + path.substr(path.find_last_of('/')+1);
+    }
+
     log << MSG::VERBOSE 
         << "Now build a CondDB address for path=" << path
         << " channelId=" << channelId
@@ -452,7 +475,19 @@ XmlGenericCnv::createAddressForHref (std::string href,
     if( location.empty() ) {
       // This means that "href" has the form "#objectID" and referenced
       // object resides in the same file we are currently parsing
-      location = parent->par()[0];
+
+      if ( parent->ipar()[0] == 1 ) {
+
+	// If we got here, it means that an XML string contains something like href="#blahblah"
+	// This means that the address should point to the "href" of the parent (par[2]) with just the name
+	// of the object replaced.
+	// In oreder to handle properly the new href, I have to recurse.
+	return createAddressForHref (parent->par()[2] + href.substr(poundPosition), clid, parent);
+
+      } else {
+	// The address points to a file (usual situation)
+	location = parent->par()[0];
+      }
     } else {
       // gets the directory where the xmlFile is located
       unsigned int dPos  = parent->par()[0].find_last_of('/');
