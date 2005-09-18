@@ -1,4 +1,4 @@
-// $Id: CondDBCache.cpp,v 1.2 2005-08-30 14:37:38 marcocle Exp $
+// $Id: CondDBCache.cpp,v 1.3 2005-09-18 16:08:39 marcocle Exp $
 // Include files 
 
 
@@ -80,6 +80,17 @@ bool CondDBCache::addFolder(const std::string &path, const std::string &descr,
 }
 
 //=========================================================================
+//  Add a new folder using the given specification and description. (Bypass the real DB)
+//=========================================================================
+bool CondDBCache::addFolderSet(const std::string &path, const std::string &descr) {
+  StorageType::iterator f = m_cache.find(path);
+  if (f == m_cache.end()){
+    f = m_cache.insert(StorageType::value_type(path,CondFolder(descr))).first;
+  }
+  return true;
+}
+
+//=========================================================================
 //  Add a new object to a given folder
 //=========================================================================
 bool CondDBCache::addObject(const std::string &path, const cool::ValidityKey &since, const cool::ValidityKey &until,
@@ -100,6 +111,11 @@ bool CondDBCache::addObject(const std::string &path, const cool::ValidityKey &si
     m_log << MSG::WARNING << "Could not find the folder: object not added" << endmsg;
     return false;
   }
+  if (!f->second.spec) { // no specification means FolderSet
+    m_log << MSG::WARNING << '"' << path << '"' << " is a FolderSet: object not added" << endmsg;
+    return false;
+  }
+  
   // when bypassing the DB, the conflicts must be solved
   /*
   if (f->second.conflict(since,until) != f->second.items.end()) {
@@ -143,6 +159,13 @@ bool CondDBCache::get(const std::string &path, const cool::ValidityKey &when,
   m_lastRequestedTime = when;
   StorageType::iterator folder = m_cache.find(path);
   if (folder != m_cache.end()) {
+    if ( ! folder->second.spec ) {
+      // It's a FolderSet! no objects inside
+      descr = folder->second.description;
+      payload.reset();
+      m_log << " FOUND (FolderSet)" << endmsg;
+      return true;
+    }
     ItemListType::iterator i = folder->second.find(when,channel);
     if ( i != folder->second.items[channel].end() ) {
       since   = i->iov.first;
@@ -159,6 +182,22 @@ bool CondDBCache::get(const std::string &path, const cool::ValidityKey &when,
 }
 
 //=========================================================================
+//  
+//=========================================================================
+void CondDBCache::getSubNodes (const std::string &path, std::vector<std::string> &node_names) {
+
+  node_names.clear();
+
+  StorageType::iterator f;
+  for ( f = m_cache.begin(); f != m_cache.end(); ++f ) {
+    const std::string &p = f->first;
+    if ( p.find(path) == 0  // the string must start with path
+         && ( p.find('/',path.size()+1) == p.npos ) ) { // and I should have only one extra name
+      node_names.push_back(p.substr(path.size()+1));
+    }
+  }
+}
+//=========================================================================
 //  Remove unused entries from the cache
 //=========================================================================
 
@@ -174,6 +213,9 @@ void CondDBCache::clean_up(){
   // collect all items info in order
   StorageType::iterator folder;
   for ( folder = m_cache.begin() ; folder != m_cache.end() ; ++folder ) {
+
+    if ( ! folder->second.spec ) continue; // It's a FolderSet! no objects inside: skip it
+
     CondFolder::StorageType::iterator ch;
     ItemListType::iterator i;
     m_log << MSG::DEBUG << "Folder " << folder->first << endmsg;
@@ -239,6 +281,9 @@ void CondDBCache::clean_up(){
 bool CondDBCache::hasTime(const std::string &path, const cool::ValidityKey &when, const cool::ChannelId &channel) const {
   StorageType::const_iterator folder = m_cache.find(path);
   if (folder != m_cache.end()) {
+
+    if ( !folder->second.spec ) return true; // It's a FolderSet! They ignore time
+
     ItemListType::const_iterator i = folder->second.find(when,channel);
     const ItemListType &lst = (*const_cast<CondFolder::StorageType *>(&folder->second.items))[channel];
     return i != lst.end();
@@ -254,7 +299,12 @@ void CondDBCache::dump() {
   m_log << MSG::DEBUG << " Thresholds (high/low) -> " <<  m_highLvl << '/' << m_lowLvl << endmsg;
   m_log << MSG::DEBUG << " Level = " << level() << endmsg;
   for(StorageType::const_iterator i = m_cache.begin(); i != m_cache.end(); ++i ) {
-    m_log << MSG::DEBUG << "Folder '" << i->first << "' " << ((i->second.sticky)?"(sticky)":"") << endmsg;
+    if ( !i->second.spec ) { // It's a FolderSet! They ignore time
+      m_log << MSG::DEBUG << "FolderSet '" << i->first << "' " << ((i->second.sticky)?"(sticky)":"") << endmsg;
+      continue;
+    } else {
+      m_log << MSG::DEBUG << "Folder '" << i->first << "' " << ((i->second.sticky)?"(sticky)":"") << endmsg;
+    }
     std::ostringstream type_spec;
     i->second.spec->print(type_spec);
     m_log << MSG::DEBUG << "     Type: " << type_spec.str() << endmsg;

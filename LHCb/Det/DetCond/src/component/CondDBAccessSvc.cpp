@@ -1,4 +1,4 @@
-// $Id: CondDBAccessSvc.cpp,v 1.11 2005-08-30 14:37:38 marcocle Exp $
+// $Id: CondDBAccessSvc.cpp,v 1.12 2005-09-18 16:08:39 marcocle Exp $
 // Include files 
 #include <sstream>
 
@@ -527,9 +527,9 @@ StatusCode CondDBAccessSvc::tagFolder(const std::string &path, const std::string
       }
     } else {
       if (folder->versioningMode() == cool::FolderVersioning::SINGLE_VERSION){
-        log << MSG::WARNING << "not tagging folder \"" << path << "\": single-version" << endmsg;
+        log << MSG::WARNING << "Not tagging folder \"" << path << "\": single-version" << endmsg;
       } else {
-        log << MSG::DEBUG << "tagging folder \"" << path << "\": " << tagName << endmsg;
+        log << MSG::DEBUG << "Tagging folder \"" << path << "\": " << tagName << endmsg;
         folder->tag(folder->fullPath() + "-" + tagName,description);
       }
     }
@@ -551,7 +551,14 @@ StatusCode CondDBAccessSvc::getObject(const std::string &path, const TimePoint &
       cool::ValidityKey vk_when = timeToValKey(when);
       cool::ValidityKey vk_since, vk_until;
       if (!m_cache->get(path,vk_when,channel,vk_since,vk_until,descr,data)) {
+        // not found
         if (!m_noDB) {
+          if (database()->existsFolderSet(path)) {
+            // with FolderSets, I put an empty entry and clear the shared_ptr
+            m_cache->addFolderSet(path,"");
+            data.reset();
+            return StatusCode::SUCCESS;
+          }
           // go to the database
           cool::IFolderPtr folder = database()->getFolder(path);
           cool::IObjectPtr obj;
@@ -572,6 +579,12 @@ StatusCode CondDBAccessSvc::getObject(const std::string &path, const TimePoint &
       until = valKeyToTime(vk_until);
     } else if (!m_noDB){
       
+      if (database()->existsFolderSet(path)) {
+        // with FolderSets, I clear the shared_ptr (it's the folderset signature)
+        data.reset();
+        return StatusCode::SUCCESS;
+      }
+
       cool::IFolderPtr folder = database()->getFolder(path);
       descr = folder->description();
 
@@ -621,6 +634,52 @@ StatusCode CondDBAccessSvc::getObject(const std::string &path, const TimePoint &
 //=========================================================================
 //  
 //=========================================================================
+StatusCode CondDBAccessSvc::getChildNodes (const std::string &path, std::vector<std::string> &node_names) {
+
+  MsgStream log(msgSvc(),name());
+  log << MSG::ERROR << "Entering \"getChildNodes\"" << endmsg;
+
+  node_names.clear();
+
+  try {
+    
+    if (!m_noDB) { // If I have the DB I always use it!
+      if (database()->existsFolderSet(path)) {
+        log << MSG::DEBUG << "FolderSet \"" << path  << "\" exists" << endmsg;
+        
+        std::vector<std::string> fldr_names = database()->listFolders();
+        //std::vector<std::string> fldr_names = database()->listAllNodes();
+        for ( std::vector<std::string>::iterator f = fldr_names.begin(); f != fldr_names.end(); ++f ) {
+          log << MSG::DEBUG << *f << endmsg;
+          if ( *f != path // if (*f == path) we match also the following conditions (which is not what we want)
+               && f->find(path) == 0  // the string must start with path
+               && ( f->find('/',path.size()+1) == f->npos ) ) { // and I should have only one extra name
+            node_names.push_back(f->substr(path.size()));
+          }
+        }
+        
+        log << MSG::DEBUG << "got " << node_names.size() << " sub folders" << endmsg;
+      } else {
+        // cannot get the sub-nodes of a folder!
+        return StatusCode::FAILURE;
+      }
+    } else if (m_useCache) {
+      // if no db, but cache, let's assume we know everything is in there
+      m_cache->getSubNodes(path,node_names);
+    } else {
+      // no cache and no db
+      return StatusCode::FAILURE;
+    }
+  } catch ( cool::FolderNotFound /*&e*/) {
+    //log << MSG::ERROR << e << endmsg;
+    return StatusCode::FAILURE;
+  }
+  return StatusCode::SUCCESS;
+
+}
+//=========================================================================
+//  
+//=========================================================================
 StatusCode CondDBAccessSvc::cacheAddFolder(const std::string &path, const std::string &descr,
                                            const pool::AttributeListSpecification& spec) {
   if (!m_useCache) {
@@ -629,6 +688,18 @@ StatusCode CondDBAccessSvc::cacheAddFolder(const std::string &path, const std::s
     return StatusCode::FAILURE;
   }
   return m_cache->addFolder(path,descr,spec) ? StatusCode::SUCCESS : StatusCode::FAILURE;
+}
+
+//=========================================================================
+//  
+//=========================================================================
+StatusCode CondDBAccessSvc::cacheAddFolderSet(const std::string &path, const std::string &descr) {
+  if (!m_useCache) {
+    MsgStream log(msgSvc(),name());
+    log << MSG::ERROR << "Cache not in use: I cannot add a folder-set to it." << endmsg;
+    return StatusCode::FAILURE;
+  }
+  return m_cache->addFolderSet(path,descr) ? StatusCode::SUCCESS : StatusCode::FAILURE;
 }
 
 //=========================================================================

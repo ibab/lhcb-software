@@ -1,6 +1,15 @@
-# $Id: release.notes,v 1.50 2005-08-31 16:00:29 marcocle Exp $
-Package Det/DetCond
-Package manager : Marco Clemencic
+# $Id: release.notes,v 1.51 2005-09-18 16:08:39 marcocle Exp $
+!-----------------------------------------------------------------------------
+! Package     : Det/DetCond
+! Responsible : Marco Clemencic
+! Purpose     : Interface between LHCb and LGC/COOL project
+!-----------------------------------------------------------------------------
+
+! 2005-09-18 - Marco Clemencic
+ - Allow direct mapping of the CondDB structure to the DetectorDataSvc tree
+   (no need to pass through an XML file/string with only catalogs)
+ - Use the 3rd string of the GenericAddress to store the origin of the XML
+   string (needed for self referencing XML string with DetDescCnv > v2r9)
 
 ================= Det/DetCond v7r6 2005-08-31 ================================
 ! 2005-08-31 - Marco Clemencic

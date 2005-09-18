@@ -1,4 +1,4 @@
-// $Id: CondDBAccessSvc.h,v 1.8 2005-08-30 14:37:38 marcocle Exp $
+// $Id: CondDBAccessSvc.h,v 1.9 2005-09-18 16:08:39 marcocle Exp $
 #ifndef COMPONENT_CONDDBACCESSSVC_H 
 #define COMPONENT_CONDDBACCESSSVC_H 1
 
@@ -72,13 +72,21 @@ public:
   virtual StatusCode tagFolder(const std::string &path, const std::string &tagName,
                                const std::string &description, cool::ChannelId channel = 0);
 
+  /// Try to retrieve an object from the Condition DataBase. If path points to a FolderSet,
+  /// channel and when are ignored and data is set ot NULL.
   virtual StatusCode getObject (const std::string &path, const TimePoint &when,
                                 boost::shared_ptr<pool::AttributeList> &data,
                                 std::string &descr, TimePoint &since, TimePoint &until, cool::ChannelId channel = 0);
 
+  /// Retrieve the names of the children nodes of a FolderSet.
+  virtual StatusCode getChildNodes (const std::string &path, std::vector<std::string> &node_names);
+
   /// Add a folder to the cache (bypass the DB)
   virtual StatusCode cacheAddFolder(const std::string &path, const std::string &descr,
                                     const pool::AttributeListSpecification& spec);
+  
+  /// Add a folder-set to the cache (bypass the DB)
+  virtual StatusCode cacheAddFolderSet(const std::string &path, const std::string &descr);
   
   /// Add a folder to the cache (bypass the DB)
   virtual StatusCode cacheAddXMLFolder(const std::string &path);

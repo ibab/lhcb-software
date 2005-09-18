@@ -1,4 +1,4 @@
-// $Id: CondDBGenericCnv.cpp,v 1.6 2005-08-30 14:37:38 marcocle Exp $
+// $Id: CondDBGenericCnv.cpp,v 1.7 2005-09-18 16:08:39 marcocle Exp $
 // Include files 
 #include "GaudiKernel/IDetDataSvc.h"
 #include "GaudiKernel/TimePoint.h"
@@ -133,5 +133,20 @@ StatusCode CondDBGenericCnv::getObject (const std::string &path, const cool::Cha
   return (found_object) ? StatusCode::SUCCESS : StatusCode::FAILURE;
 }
 
+//=========================================================================
+//  
+//=========================================================================
+StatusCode CondDBGenericCnv::getChildNodes(const std::string &path,std::vector<std::string> &node_names){
+  bool found_folderset = false;
+  
+  MsgStream log(msgSvc(),"CondDBGenericCnv");
+  log << MSG::DEBUG << "Entering \"getChildNodes\"" << endmsg;
+
+  for ( std::vector<ICondDBAccessSvc*>::iterator accSvc = m_condDBCnvSvc->accessServices().begin();
+        accSvc !=  m_condDBCnvSvc->accessServices().end() && ! found_folderset ; ++accSvc ) {
+    found_folderset = (*accSvc)->getChildNodes(path,node_names).isSuccess();
+  }
+  return (found_folderset) ? StatusCode::SUCCESS : StatusCode::FAILURE; 
+}
 //=============================================================================
 

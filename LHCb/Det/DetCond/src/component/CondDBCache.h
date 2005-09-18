@@ -1,4 +1,4 @@
-// $Id: CondDBCache.h,v 1.2 2005-08-30 14:37:38 marcocle Exp $
+// $Id: CondDBCache.h,v 1.3 2005-09-18 16:08:39 marcocle Exp $
 #ifndef COMPONENT_CONDDBCACHE_H 
 #define COMPONENT_CONDDBCACHE_H 1
 
@@ -41,6 +41,7 @@ public:
   bool insert(const cool::IFolderPtr &folder,const cool::IObjectPtr &obj, const cool::ChannelId &channel = 0);
 
   bool addFolder(const std::string &path, const std::string &descr, const pool::AttributeListSpecification& spec);
+  bool addFolderSet(const std::string &path, const std::string &descr);
   bool addObject(const std::string &path, const cool::ValidityKey &since, const cool::ValidityKey &until,
                  const pool::AttributeList& al, const cool::ChannelId &channel, IOVType *iov_before = NULL);
   /// (version kept for backward compatibility)
@@ -64,7 +65,8 @@ public:
                   std::string &descr, boost::shared_ptr<pool::AttributeList> &payload) {
     return get(path,when,0,since,until,descr,payload);
   }
-  
+
+  void getSubNodes(const std::string &path, std::vector<std::string> &node_names);
 
   /// Remove all entries from the cache;
   inline void clear() {m_cache.clear();}
@@ -152,6 +154,9 @@ private:
         spec->push_back(a->name(),a->type());
       }
     }
+    // for a folderset (FolderSets are identified by missing spec)
+    CondFolder(const std::string &descr):
+      description(descr),sticky(true) {}
     std::string description;
     boost::shared_ptr<pool::AttributeListSpecification> spec;
     StorageType items;

@@ -1,4 +1,4 @@
-// $Id: RelyConverter.cpp,v 1.11 2005-08-31 16:00:29 marcocle Exp $
+// $Id: RelyConverter.cpp,v 1.12 2005-09-18 16:08:39 marcocle Exp $
 // Include files 
 #include "RelyConverter.h"
 
@@ -10,6 +10,7 @@
 #include "GaudiKernel/DataObject.h"
 #include "GaudiKernel/TimePoint.h"
 #include "GaudiKernel/CnvFactory.h"
+#include "GaudiKernel/IDataManagerSvc.h"
 
 #include "DetDesc/ValidDataObject.h"
 
@@ -200,8 +201,62 @@ StatusCode RelyConverter::i_delegatedCreation(IOpaqueAddress* pAddress, DataObje
   std::string description;
   TimePoint since,until;
   
+  log << MSG::DEBUG << "Entering \"i_delegatedCreation\"" << endmsg;
+
   sc = getObject(pAddress->par()[0], pAddress->ipar()[0], data, description, since, until);
   if ( !sc.isSuccess() ) return sc;
+
+  if ( !data ) {
+    switch (op) {
+    case CreateObject:
+      log << MSG::DEBUG << "Path points to a FolderSet: create a directory" << endmsg;
+    
+      // I hit a FolderSet!!! I handle it here (at least for the moment, since it's the only CondDB real converter)
+      pObject = new DataObject();
+
+      break;
+      
+    case FillObjectRefs:
+      {
+	log << MSG::DEBUG << "Create addresses for sub-folders" << endmsg;
+	std::string path = pAddress->par()[0];
+	
+	// find subnodes
+	std::vector<std::string> children;
+	
+	sc = getChildNodes(path,children);
+	if ( !sc.isSuccess() ) return sc;
+	
+	// add registries for the sub folders
+	for ( std::vector<std::string>::iterator c = children.begin(); c != children.end(); ++c ) {
+	  
+	  IOpaqueAddress *childAddress;
+	  std::string par[2] = { path + *c, *c };
+	  unsigned long ipar[2] = { 0,0 };
+	  
+	  log << MSG::VERBOSE << "Create address for " << par[0] << endmsg;      
+	  sc = conversionSvc()->addressCreator()->createAddress(CONDDB_StorageType,
+								CLID_Catalog,
+								par,
+								ipar,
+								childAddress);
+	  if ( !sc.isSuccess() ) return sc;
+	  log << MSG::VERBOSE << "Address created" << endmsg;
+	  
+	  sc = dataManager()->registerAddress(pAddress->registry(), *c, childAddress);
+	  if ( !sc.isSuccess() ) return sc;
+	  log << MSG::VERBOSE << "Address registered" << endmsg;
+	}
+      }
+      break;
+      
+    case UpdateObjectRefs:
+      log << MSG::DEBUG << "Update references not supported for FolderSet" << endmsg;      
+      break;
+    }
+	  
+    return StatusCode::SUCCESS;
+  }
 
   long storage_type = getStorageType(description);
   if (storage_type <= 0) {
@@ -223,8 +278,13 @@ StatusCode RelyConverter::i_delegatedCreation(IOpaqueAddress* pAddress, DataObje
     return StatusCode::FAILURE;
   }
   
-  const std::string par[2] = { xml_data, 
-                               pAddress->par()[1] };
+  // for XML string temporary address, I need a way to know which is the originating href
+  std::ostringstream src_href;
+  src_href <<  "conddb:" << pAddress->par()[0] << ":" << pAddress->ipar()[0];
+
+  const std::string par[3] = { xml_data, 
+                               pAddress->par()[1],
+                               src_href.str() };
   sc = conversionSvc()->addressCreator()
     ->createAddress( storage_type,pAddress->clID() , par, 0, tmpAddress );
   if (sc.isFailure()){

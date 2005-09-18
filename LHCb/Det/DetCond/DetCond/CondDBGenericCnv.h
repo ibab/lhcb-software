@@ -1,4 +1,4 @@
-// $Id: CondDBGenericCnv.h,v 1.8 2005-08-30 14:37:38 marcocle Exp $
+// $Id: CondDBGenericCnv.h,v 1.9 2005-09-18 16:08:39 marcocle Exp $
 #ifndef DETCOND_CONDDBGENERICCNV_H 
 #define DETCOND_CONDDBGENERICCNV_H 1
 
@@ -104,7 +104,9 @@ protected:
    * @param[out] since start of the IOV
    * @param[out] until end of the IOV
    * The IOV is inside the object itself as two cool::ValidityKey, the since and until are 
-   * used to avoid the conversion outside this method.
+   * used to avoid the conversion outside this method.<BR>
+   * If the path point to a FolderSet, channel is ignored and the boost::shared_ptr obj is
+   * set to NULL.
    */
   StatusCode getObject(const std::string &path, const cool::ChannelId &channel,
                        boost::shared_ptr<pool::AttributeList> &obj,
@@ -118,6 +120,11 @@ protected:
     return getObject(path,0,obj,descr,since,until);
   }
   
+  /// Find the children nodes of a given FolderSet path.
+  /// When using multiple databases, only the first one which contains
+  /// this folderset is used, so it must have at least dummy entries for each sub-node
+  /// (to be changed in the future).
+  StatusCode getChildNodes(const std::string &path,std::vector<std::string> &node_names);
 
 private:
 
