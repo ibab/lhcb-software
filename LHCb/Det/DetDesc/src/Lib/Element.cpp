@@ -1,4 +1,4 @@
-// $Id: Element.cpp,v 1.7 2005-06-13 11:34:29 cattanem Exp $
+// $Id: Element.cpp,v 1.8 2005-09-19 14:25:29 mneedham Exp $
 /// STL and STD 
 #include <math.h>
 /// GaudiKernel
@@ -94,6 +94,13 @@ void Element::compute()
   
   ComputeCoulombFactor();
   ComputeLradTsaiFactor();
+
+  // radiation length
+  ComputeRadiationLength();
+ 
+  // compute and set the interaction length
+  ComputeInteractionLength(); 
+
 }
 /////////////////////////////////////////////////////////////////////////////////
 void Element::ComputeCoulombFactor()
@@ -198,3 +205,17 @@ std::ostream&     Element::fillStream ( std::ostream& s ) const
     }
   return s;
 };    
+
+void Element::ComputeInteractionLength(){
+  double intLen = 35.0 * pow(N(),1./3.) * (1./density()) * g/cm2;
+  setAbsorptionLength(intLen);
+}
+
+
+void  Element::ComputeRadiationLength(){
+
+ // compute radiation length
+ double radleninv = Avogadro * tsaiFactor() / A();
+ setRadiationLength(1.0 / radleninv / density());
+
+};

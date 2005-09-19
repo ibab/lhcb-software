@@ -1,5 +1,5 @@
-// $Id: Element.h,v 1.11 2005-06-13 11:34:29 cattanem Exp $
-/// $Id: Element.h,v 1.11 2005-06-13 11:34:29 cattanem Exp $
+// $Id: Element.h,v 1.12 2005-09-19 14:26:01 mneedham Exp $
+/// $Id: Element.h,v 1.12 2005-09-19 14:26:01 mneedham Exp $
 #ifndef DETDESC_ELEMENT_H
 #define DETDESC_ELEMENT_H 1 
 /// STL
@@ -94,6 +94,12 @@ public:
   void    ComputeCoulombFactor  ();
   /// Comput Tsai factor
   void    ComputeLradTsaiFactor ();
+
+  /// compute interaction length
+  void ComputeInteractionLength();
+
+  /// compute radiation length
+  void ComputeRadiationLength();
 
   /// serialization for read and write 
   virtual StreamBuffer& serialize( StreamBuffer& s )       ; 

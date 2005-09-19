@@ -1,9 +1,13 @@
 ! =============================================================================
-! $Id: release.notes,v 1.221 2005-09-18 16:09:39 marcocle Exp $ 
+! $Id: release.notes,v 1.222 2005-09-19 14:25:29 mneedham Exp $ 
 ! =============================================================================
 ! package DetDesc
 ! package manager : Marco Clemencic, Juan Palacios
 ! =============================================================================
+
+! 2005-09-19
+
+ - Add radiation and interaction length calculation to elements
 
 ! 2005-09-18 - Marco Clemencic
  - ParamValidDataObject: print also the comments when printing the parameters
