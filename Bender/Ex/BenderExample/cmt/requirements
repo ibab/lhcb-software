@@ -1,6 +1,6 @@
-# $Id: requirements,v 1.25 2005-08-01 09:50:19 ibelyaev Exp $ 
+# $Id: requirements,v 1.26 2005-09-19 16:10:44 ibelyaev Exp $ 
 # ============================================================================
-# CVS tag $Name: not supported by cvs2svn $; version $Revision: 1.25 $
+# CVS tag $Name: not supported by cvs2svn $; version $Revision: 1.26 $
 # ============================================================================
 # Created    : 2003-09-10
 # Maintainer : Vanya BELYAEV Ivan.Belyaev@itep.ru
@@ -17,7 +17,7 @@ set              BENDEREXAMPLEPYTHON  $(BENDEREXAMPLEROOT)/python
 set              BENDEREXAMPLEOPTS    $(BENDEREXAMPLEROOT)/options
 set              BENDEREXAMPLEJOBS    $(BENDEREXAMPLEROOT)/jobs 
 
-use XmlDDDB             v24r2     Det
+# use XmlDDDB             v24r2     Det
 
 # ============== dependencies ================================================
 use              Bender      v* Phys 
@@ -39,6 +39,9 @@ apply_pattern    application_path
 
 # ============================================================================
 # $Log: not supported by cvs2svn $
+# Revision 1.25  2005/08/01 09:50:19  ibelyaev
+#  update for v5r2
+#
 # ============================================================================
 # The END 
 # ============================================================================
