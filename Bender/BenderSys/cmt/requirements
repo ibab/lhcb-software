@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.75 2005-08-01 09:51:36 ibelyaev Exp $ 
+# $Id: requirements,v 1.76 2005-09-19 15:27:37 ibelyaev Exp $ 
 # =============================================================================
 # CVS tag $Name: not supported by cvs2svn $
 # =============================================================================
@@ -13,7 +13,7 @@ author        Vanya BELYAEV
 use           Bender         v5r2   Phys 
  
 # =========== Bender Libraries ================================================
-use           BenderLibs     v5r1   Tools 
+use           BenderLibs     v5r2   Tools 
 
 # =========== dictionaries for LoKi/Bender classes ============================
 use           BenderDict     v5r1   Tools 
@@ -29,6 +29,9 @@ use           BenderExample  v5r2   Ex
 
 # =============================================================================
 # $Log: not supported by cvs2svn $
+# Revision 1.75  2005/08/01 09:51:36  ibelyaev
+#  update for v5r2
+#
 # =============================================================================
 # The END 
 # =============================================================================
