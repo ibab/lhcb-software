@@ -4,6 +4,11 @@
 ! Purpose     : standard converters for the LHCb Detector Description
 !-----------------------------------------------------------------------------
 
+! 2005-09-19 M. Needham
+
+ - Add calculation of radiation length and interaction length to 
+   element convertor
+
 !================ DetDescCnv v2r10 2005-09-19 ===========================
 ! 2005-09-18 - Marco Clemencic
  - Improved the conddb address. Now it is not compulsory to specify the name,
@@ -40,8 +45,10 @@
     environment variable expansion from AddressTools. If failure to resolve
     environment variable exception is thrown.
 
+>>>>>>> 1.29
 !================ DetDescCnv v2r6 2005-06-13 ===========================
 ! 2005-06-13 - Marco Cattaneo
+
  - Remove parsing of "N" attribute for isotopes, removed from XmlDDDB
  - Change OutputLevel of many DEBUG messages to VERBOSE
 
