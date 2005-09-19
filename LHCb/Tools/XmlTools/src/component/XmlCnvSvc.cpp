@@ -1,4 +1,4 @@
-// $Id: XmlCnvSvc.cpp,v 1.7 2005-08-01 14:57:54 marcocle Exp $
+// $Id: XmlCnvSvc.cpp,v 1.8 2005-09-19 13:40:46 marcocle Exp $
 
 // Include Files
 #include <xercesc/util/PlatformUtils.hpp>
@@ -186,6 +186,13 @@ StatusCode XmlCnvSvc::createAddress(long  svc_type,
 				    source,
 				    entryName,
 				    isString );
+
+  if (isString) {
+    // add the third string ... :-/
+    std::string* tmpPar = const_cast<std::string*>(refpAddress->par());
+    tmpPar[2] = par[2];
+  }
+
   return StatusCode::SUCCESS;
 }
 
