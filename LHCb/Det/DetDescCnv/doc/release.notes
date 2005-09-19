@@ -45,7 +45,6 @@
     environment variable expansion from AddressTools. If failure to resolve
     environment variable exception is thrown.
 
->>>>>>> 1.29
 !================ DetDescCnv v2r6 2005-06-13 ===========================
 ! 2005-06-13 - Marco Cattaneo
 

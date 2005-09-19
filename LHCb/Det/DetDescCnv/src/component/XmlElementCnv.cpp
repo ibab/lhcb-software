@@ -1,4 +1,4 @@
-// $Id: XmlElementCnv.cpp,v 1.5 2003-12-18 15:34:28 cattanem Exp $ 
+// $Id: XmlElementCnv.cpp,v 1.6 2005-09-19 14:34:05 mneedham Exp $ 
 #include "GaudiKernel/CnvFactory.h"
 #include "GaudiKernel/DataObject.h"
 #include "GaudiKernel/ICnvManager.h"
@@ -144,7 +144,7 @@ StatusCode XmlElementCnv::i_createObj (xercesc::DOMElement* element,
   if (!symbolAttribute.empty()) {
     dataObj->setSymbol (symbolAttribute);
   }
-  
+
   // returns
   return StatusCode::SUCCESS;
 } // end i_createObj
@@ -268,6 +268,12 @@ StatusCode XmlElementCnv::i_processObj (DataObject*        refpObject ,
     // the derived quantities
     dataObj->ComputeCoulombFactor();
     dataObj->ComputeLradTsaiFactor();
+   
+    dataObj->ComputeInteractionLength(); 
+    dataObj->ComputeRadiationLength();
+
+
+  
   }
 
   // returns
