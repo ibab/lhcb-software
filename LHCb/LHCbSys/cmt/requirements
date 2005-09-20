@@ -32,7 +32,7 @@ use DetSys              v7r4    Det     # Marco Cattaneo
 use VeloDet        	v9r8    Det     # Mark Tobin
 use DetDesc        	v15r4   Det     # Marco Clemencic, Juan Palacios
 use DetDescCnv          v2r9    Det     # Marco Clemencic, Juan Palacios
-use XmlTools            v3r6p1  Tools   # Marco Clemencic
+use XmlTools            v3r7    Tools   # Marco Clemencic
 use OTDet               v5r6    Det     # Jacopo Nardulli
 use CaloDet             v6r9p1  Det     # Ivan Belyaev
 use CaloDetXmlCnv	v2r3p1	Det     # Ivan Belyaev
