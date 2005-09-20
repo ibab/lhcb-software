@@ -1,5 +1,5 @@
-#ifndef TRACKINTERFACES_ISTATECREATOR_H
-#define TRACKINTERFACES_ISTATECREATOR_H 1
+#ifndef TRACKINTERFACES_IIDEALSTATECREATOR_H
+#define TRACKINTERFACES_IIDEALSTATECREATOR_H 1
 
 // Include files
 // -------------
@@ -9,9 +9,9 @@
 class MCParticle;
 class State;
 
-/** @class IStateCreator IStateCreator.h "TrackInterfaces/IStateCreator.h"
+/** @class IIdealStateCreator IIdealStateCreator.h "TrackInterfaces/IIdealStateCreator.h"
  *
- *  Interface class for TrueStateCreator (in Tr/TrackChecker).
+ *  Interface class for IdealStateCreator (in Tr/TrackMCTools).
  *
  *  @author Eduardo Rodrigues (adaptations to new track event model)
  *  @date   2005-04-04
@@ -20,12 +20,12 @@ class State;
  *  @date   4-7-2002
  */
 
-static const InterfaceID IID_IStateCreator( "IStateCreator", 1, 0 );
+static const InterfaceID IID_IIdealStateCreator( "IIdealStateCreator", 1, 0 );
 
-class IStateCreator: virtual public IAlgTool {
+class IIdealStateCreator: virtual public IAlgTool {
 public:
   /// Retrieve interface ID
-  static const InterfaceID& interfaceID() { return IID_IStateCreator; }
+  static const InterfaceID& interfaceID() { return IID_IIdealStateCreator; }
   
   /// create a state at z-position from MCParticle entry/exit points
   virtual StatusCode createState( const MCParticle* mcPart,
@@ -37,4 +37,4 @@ public:
                                         State*& pState ) const = 0;
 };
 
-#endif // TRACKINTERFACES_ISTATECREATOR_H
+#endif // TRACKINTERFACES_IIDEALSTATECREATOR_H

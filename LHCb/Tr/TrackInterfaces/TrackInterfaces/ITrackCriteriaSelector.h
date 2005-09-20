@@ -1,5 +1,5 @@
-#ifndef TRACKINTERFACES_ITRACKSELECTOR_H 
-#define TRACKINTERFACES_ITRACKSELECTOR_H 1
+#ifndef TRACKINTERFACES_ITRACKCRITERIASELECTOR_H 
+#define TRACKINTERFACES_ITRACKCRITERIASELECTOR_H 1
 
 // from Gaudi
 #include "GaudiKernel/IAlgTool.h"
@@ -7,21 +7,21 @@
 class MCParticle;
 class Track;
 
-/** @class ITrackSelector ITrackSelector.h "TrackInterfaces/ITrackSelector.h"
+/** @class ITrackCriteriaSelector ITrackCriteriaSelector.h "TrackInterfaces/ITrackCriteriaSelector.h"
  *
- *  Interface class for the TrackSelector tool.
+ *  Interface class for the TrackCriteriaSelector tool.
  *
  *  @author Jeroen van Tilburg
  *  @date   2003-07-28
  */
 
-static const InterfaceID IID_ITrackSelector( "ITrackSelector", 1, 0 );
+static const InterfaceID IID_ITrackCriteriaSelector( "ITrackCriteriaSelector", 1, 0 );
 
-class ITrackSelector : virtual public IAlgTool
+class ITrackCriteriaSelector : virtual public IAlgTool
 {
 public:
   /// Retrieve interface ID
-  static const InterfaceID& interfaceID() { return IID_ITrackSelector; }
+  static const InterfaceID& interfaceID() { return IID_ITrackCriteriaSelector; }
 
   virtual bool select( Track* track ) const = 0;
   virtual bool select( MCParticle* mcParticle ) = 0;
@@ -36,4 +36,4 @@ public:
 
 };
 
-#endif // TRACKINTERFACES_ITRACKSELECTOR_H
+#endif // TRACKINTERFACES_ITRACKCRITERIASELECTOR_H

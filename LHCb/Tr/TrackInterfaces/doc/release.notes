@@ -4,6 +4,11 @@
 ! Purpose     : package for tracking tools interfaces
 !-----------------------------------------------------------------------------
 
+! 2005-09-20 - Eduardo Rodrigues
+ - renamings to avoid clashes with same algorithm of the old track event model:
+   - ITrackSelector renamed to ITrackCriteriaSelector
+   - IStateCreator renamed to IIdealStateCreator
+
 ! 2005-09-08 - Eduardo Rodrigues
  - added ITrackChi2Calculator interface, moved from TrMatching, for the
    new  track event model
