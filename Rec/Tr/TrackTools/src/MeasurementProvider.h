@@ -1,4 +1,4 @@
-// $Id: MeasurementProvider.h,v 1.2 2005-06-29 14:41:19 erodrigu Exp $
+// $Id: MeasurementProvider.h,v 1.3 2005-09-20 13:59:29 hernando Exp $
 #ifndef TRACKTOOLS_MEASUREMENTPROVIDER_H 
 #define TRACKTOOLS_MEASUREMENTPROVIDER_H 1
 
@@ -51,7 +51,7 @@ public:
 
   StatusCode load( Track& track );  
 
-  Measurement& measurement( const LHCbID&, 
+  Measurement* measurement( const LHCbID&, 
                             double par0 = 999.,
                             double par1 = 999.);
 

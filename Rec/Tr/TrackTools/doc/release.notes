@@ -4,6 +4,9 @@
 ! Purpose     : Package for tracking tools not accessing MC information
 !-----------------------------------------------------------------------------
 
+! 2005-09-20 - Jose A. Hernando
+	- MeasurementProvider returns ownership of Measurement,
+
 ! 2005-09-08 - Eduardo Rodrigues
  - TrackChi2Calculator tool added, moved from TrMatching, for the new
    track event model

@@ -1,4 +1,4 @@
-// $Id: MeasurementProvider.cpp,v 1.4 2005-09-20 13:51:13 hernando Exp $
+// $Id: MeasurementProvider.cpp,v 1.5 2005-09-20 13:59:29 hernando Exp $
 // Include files 
 // -------------
 // from Gaudi
@@ -88,8 +88,9 @@ StatusCode MeasurementProvider::load( Track& track )
   for (std::vector<LHCbID>::const_iterator it = ids.begin();
        it != ids.end(); it++) {
     const LHCbID& id = *it;
-    Measurement meas = measurement(id);
-    track.addToMeasurements(meas);
+    Measurement* meas = measurement(id);
+    track.addToMeasurements(*meas);
+    delete meas;
   }
   return StatusCode::SUCCESS;
 }
@@ -97,7 +98,7 @@ StatusCode MeasurementProvider::load( Track& track )
 //=============================================================================
 // 
 //=============================================================================
-Measurement MeasurementProvider::measurement ( const LHCbID& id,
+Measurement* MeasurementProvider::measurement ( const LHCbID& id,
                                                 double par0,
                                                 double par1 ) {
 
@@ -108,9 +109,9 @@ Measurement MeasurementProvider::measurement ( const LHCbID& id,
     VeloCluster* clus = m_veloClusters->object( vid );
     if (clus != NULL) {
       if (vid.isRType()) {
-        meas = VeloRMeasurement(*clus,*m_veloDet, par0);
+        meas = new VeloRMeasurement(*clus,*m_veloDet, par0);
       } else {
-        meas =  VeloPhiMeasurement(*clus,*m_veloDet);
+        meas =  new VeloPhiMeasurement(*clus,*m_veloDet);
       }
     }
     else {
