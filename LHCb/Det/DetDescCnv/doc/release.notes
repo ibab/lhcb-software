@@ -4,19 +4,17 @@
 ! Purpose     : standard converters for the LHCb Detector Description
 !-----------------------------------------------------------------------------
 
+!================ DetDescCnv v2r9 2005-09-19 ===========================
 ! 2005-09-19 M. Needham
-
  - Add calculation of radiation length and interaction length to 
    element convertor
 
-!================ DetDescCnv v2r10 2005-09-19 ===========================
 ! 2005-09-18 - Marco Clemencic
  - Improved the conddb address. Now it is not compulsory to specify the name,
    of the object: if the name is not specified, the folder name is used.
  - Better handling of self-referring XML: it works also for strings (using 
    the 3rd string of the XML address as original source of the XML string)
 
-!================ DetDescCnv v2r9 2005-08-31 ===========================
 ! 2005-08-31 - Marco Clemencic
  - Added implementation of XmlBaseConditionCnv::updateObjRefs to allow user
    defined conditions to be properly re-initialized when updated
