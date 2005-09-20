@@ -1,4 +1,4 @@
-// $Id: DetDict.h,v 1.7 2005-08-17 14:08:56 jpalac Exp $
+// $Id: DetDict.h,v 1.8 2005-09-20 11:45:50 cattanem Exp $
 // ============================================================================
 #ifndef DETSYS_DETDICT_H 
 #define DETSYS_DETDICT_H 1
@@ -19,6 +19,11 @@
 #include "GaudiKernel/IDetDataSvc.h"
 #include "GaudiKernel/ContainedObject.h"
 // ============================================================================
+// DetCond 
+// ============================================================================
+#include "DetCond/ICondDBAccessSvc.h"
+#include "DetCond/ICondDBCnvSvc.h"
+// ============================================================================
 // DetDesc 
 // ============================================================================
 #include "DetDesc/IDetectorElement.h"
@@ -31,8 +36,6 @@
 // ============================================================================
 #include "DetDesc/IAlignment.h"
 #include "DetDesc/ICalibration.h"
-#include "DetDesc/ICondDBAccessSvc.h"
-#include "DetDesc/ICondDBCnvSvc.h"
 #include "DetDesc/IConditionInfo.h"
 #include "DetDesc/IFastControl.h"
 #include "DetDesc/ISlowControl.h"

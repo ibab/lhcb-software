@@ -5,7 +5,7 @@ branches cmt doc dict
 
 use DetDesc	   	v15r4   Det
 use DetDescCnv		v2r9    Det
-use XmlTools		v3r6p1  Tools
+use XmlTools		v3r7    Tools
 use VeloDet        	v9r8    Det
 use OTDet          	v5r6    Det
 use CaloDet	   	v6r9p1  Det
@@ -27,6 +27,6 @@ apply_pattern     lcg_dictionary                                       \
 # =============== patterns ====================================================
 apply_pattern     component_library    library=DetDict
 
-# ==== COOL needed to compile DetDict
+# ==== DetCond needed to compile DetDict
 private
-use COOL v* LCG_Interfaces
+use DetCond v* Det
