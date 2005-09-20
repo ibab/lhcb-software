@@ -1,4 +1,4 @@
-// $Id: TrackMatchVeloSeed.cpp,v 1.1.1.1 2005-09-09 08:51:16 erodrigu Exp $
+// $Id: TrackMatchVeloSeed.cpp,v 1.2 2005-09-20 15:24:41 erodrigu Exp $
 // Include files 
 // -------------
 // from Gaudi
@@ -190,9 +190,7 @@ StatusCode TrackMatchVeloSeed::matchTracks( Tracks* veloTracks,
         ++iTrack1 ) {
 
     // Remove seed tracks with bad chi2/ndf
-    //int ndf = (*iTrack1) -> nMeasurements() - 5;
     int ndf = (*iTrack1) -> nDoF();
-    //double chi2ndf = (*iTrack1)->lastChi2()/ndf;
     double chi2ndf = (*iTrack1) -> chi2PerDoF();
     if ( ndf < 1 || chi2ndf > 100.0 ) continue;
 
@@ -215,7 +213,6 @@ StatusCode TrackMatchVeloSeed::matchTracks( Tracks* veloTracks,
           ++iTrack2) {
 
       // Check on backward going velo tracks
-      //if ( (*iTrack2)->veloBack() ) continue;
       if ( (*iTrack2) -> checkFlag( TrackKeys::Backward ) ) continue;
 
       // Remove uninteresting tracks
@@ -360,8 +357,6 @@ StatusCode TrackMatchVeloSeed::addTTClusters( TrackMatches*& matchCont )
     const Track* veloTrack = (*iterMatch)->veloTrack();
     const Track* seedTrack = (*iterMatch)->seedTrack();
     const State& veloState = veloTrack -> closestState(0.);
-    //State& aState = seedTrack->closestState(9900.);
-    //TrStateP* seedState = dynamic_cast<TrStateP*>(aState);
     const State& seedState = seedTrack->closestState(9900.);
     double z = veloState.z();
     HepVector stateVec(5);
@@ -370,8 +365,6 @@ StatusCode TrackMatchVeloSeed::addTTClusters( TrackMatches*& matchCont )
     HepSymMatrix stateCov(5,1);
     stateCov.sub(1,veloState.covariance());
     stateCov(5,5) = pow (0.015 * stateVec(5), 2.);
-    //TrStateP* state = new TrStateP(z, stateVec, stateCov);
-    //State* state = new State(z, stateVec, stateCov);
     State* state = new State();
     state -> setZ( z );
     state -> setState( stateVec );
@@ -390,8 +383,6 @@ StatusCode TrackMatchVeloSeed::addTTClusters( TrackMatches*& matchCont )
         // For this TT layer: extrapolate the new State to the z of the layer
         aChan = ITChannelID( iStation, iLayer, 0, 0 );
         STDetectionLayer* aLayer = m_itTracker->layer( aChan );
-        //StatusCode sc = 
-          //state->extrapolate( m_extrapolatorSeed, aLayer->z(), m_particleID );
         StatusCode sc =
           m_extrapolatorSeed -> propagate( *state, aLayer -> z(), m_particleID );
         if ( sc.isFailure() ) { 
@@ -530,16 +521,11 @@ StatusCode TrackMatchVeloSeed::storeTracks( TrackMatches*& matchCont )
     const Track* seedTrack = (*iterMatch) -> seedTrack();
     Track* aTrack = new Track();
 
-    //aTrack->setCharge(seedTrack->charge());
-
     // copy velo hits
-    //TrTrack::const_measure_iterator iMeasure = veloTrack->beginM();
     const std::vector<Measurement*>& vmeasures = veloTrack -> measurements();
     std::vector<Measurement*>::const_iterator iMeasure = vmeasures.begin();
     while ( iMeasure != vmeasures.end() ) {
       // copy measure to this
-
-      //aTrack->addMeasurement( (*iMeasure)->clone() );
       aTrack -> addToMeasurements( *(*iMeasure) );
       // next measure
       ++iMeasure;
@@ -550,34 +536,27 @@ StatusCode TrackMatchVeloSeed::storeTracks( TrackMatches*& matchCont )
     std::vector<ITCluster*>::const_iterator iClus = ttClusters.begin();
     while ( iClus != ttClusters.end() ) {
       // make a new ITClusterOnTrack
-      //ITClusterOnTrack* ttMeas = new ITClusterOnTrack(*iClus, m_itTracker);
-      //aTrack->addMeasurement( ttMeas );
       ITMeasurement* ttMeas = new ITMeasurement( *(*iClus), *m_itTracker );
-      aTrack -> addToMeasurements( *ttMeas);
+      aTrack -> addToMeasurements( *ttMeas);  //  addToMeasurements clones and owns
+      delete ttMeas;
       ++iClus;
     }
     // copy seed hits
-    //TrTrack::const_measure_iterator jMeasure = seedTrack->beginM();
     const std::vector<Measurement*>& smeasures = seedTrack -> measurements();
     std::vector<Measurement*>::const_iterator jMeasure = smeasures.begin();
     while ( jMeasure != smeasures.end() ) {
       // copy measure to this
-      //aTrack->addMeasurement( (*jMeasure)->clone() );
       aTrack -> addToMeasurements( *(*jMeasure) );
       // next measure
       ++jMeasure;
     }
 
     // initial parameters
-    //TrTrack::const_measure_iterator lastMeas = aTrack->endM();
     std::vector<Measurement*>::const_iterator lastMeas =
       seedTrack -> measurements().end();
     --lastMeas;
-    //TrState* closestState = seedTrack->closestState( (*lastMeas)->z());
-    //TrState* aState = closestState->clone();
     const State& closestState = seedTrack -> closestState( (*lastMeas)->z() );
     State* aState = closestState.clone();
-    //sc= aState->extrapolate(m_extrapolatorSeed, (*lastMeas)->z(), m_particleID);
     sc = m_extrapolatorSeed -> propagate( *aState, (*lastMeas)->z(), m_particleID );
     if ( sc.isFailure() ) {
       debug() << "extrapolation of state to z = "
@@ -598,25 +577,19 @@ StatusCode TrackMatchVeloSeed::storeTracks( TrackMatches*& matchCont )
     tC.fast(4,4) *= m_errorTy2;
     tC.fast(5,5) = pow( stateVector(5)*m_errorP, 2);
 
-    //aTrack->addState( aState );
     aTrack -> addToStates( *aState );
-    //aTrack->setMatch(1);
     aTrack -> setType( TrackKeys::Long );
     aTrack -> setHistory( TrackKeys::TrMatching );
     trackCont -> add( aTrack );
+    delete aState;
   } // iterMatch
 
   // Here the new tracks are registered
-  //sc = this->eventSvc()->registerObject(TrackLocation::Match, trackCont);
-  //if ( sc.isFailure() ) {
-    //error() << "Unable to store tracks in EvDS (sc=" << sc.getCode()
-     //       << ")" << endmsg;
-  //}
   sc = put( trackCont, TrackLocation::Match );
   if( sc.isFailure() ) {
     delete trackCont;
     error() << "Unable to register the output container "
-            << TrackLocation::Match << ". Status is " << sc << endreq;
+            << TrackLocation::Match << ". Status is " << sc.getCode() << endreq;
     return sc ;
   }
   else {

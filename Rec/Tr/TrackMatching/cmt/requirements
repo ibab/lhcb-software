@@ -13,7 +13,7 @@ version           v1r0
 #
 # Structure, i.e. directories to process. 
 #============================================================================
-branches          cmt doc src TrackMatching
+branches          cmt doc src
 
 include_dirs $(TRACKMATCHINGROOT)
 

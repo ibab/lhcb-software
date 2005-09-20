@@ -4,6 +4,9 @@
 ! Purpose     : Package for the track matching algorithms
 !-----------------------------------------------------------------------------
 
+! 2005-09-20 - Eduardo Rodrigues
+ - clean-up
+
 ! 2005-09-09 - Eduardo Rodrigues
  - creation of the package. It contains the velo-seed track matching
    algorithm from Jeroen van Tilburg, adapted to the new track event model
