@@ -1,4 +1,4 @@
-// $Id: MeasurementProvider.cpp,v 1.3 2005-06-29 14:41:19 erodrigu Exp $
+// $Id: MeasurementProvider.cpp,v 1.4 2005-09-20 13:51:13 hernando Exp $
 // Include files 
 // -------------
 // from Gaudi
@@ -71,11 +71,11 @@ StatusCode MeasurementProvider::initialize() {
 // 
 //=============================================================================
 void MeasurementProvider::load() {
-
+  
   m_otTimes      = get<OTTimes>( OTTimeLocation::Default );
-
+  
   m_itClusters   = get<ITClusters>( ITClusterLocation::Default );
-
+  
   m_veloClusters = get<VeloClusters>( VeloClusterLocation::Default );
 } 
 
@@ -88,7 +88,7 @@ StatusCode MeasurementProvider::load( Track& track )
   for (std::vector<LHCbID>::const_iterator it = ids.begin();
        it != ids.end(); it++) {
     const LHCbID& id = *it;
-    Measurement& meas = measurement(id);
+    Measurement meas = measurement(id);
     track.addToMeasurements(meas);
   }
   return StatusCode::SUCCESS;
@@ -97,7 +97,7 @@ StatusCode MeasurementProvider::load( Track& track )
 //=============================================================================
 // 
 //=============================================================================
-Measurement& MeasurementProvider::measurement ( const LHCbID& id,
+Measurement MeasurementProvider::measurement ( const LHCbID& id,
                                                 double par0,
                                                 double par1 ) {
 
@@ -108,9 +108,9 @@ Measurement& MeasurementProvider::measurement ( const LHCbID& id,
     VeloCluster* clus = m_veloClusters->object( vid );
     if (clus != NULL) {
       if (vid.isRType()) {
-        meas = new VeloRMeasurement(*clus,*m_veloDet, par0);
+        meas = VeloRMeasurement(*clus,*m_veloDet, par0);
       } else {
-        meas = new VeloPhiMeasurement(*clus,*m_veloDet);
+        meas =  VeloPhiMeasurement(*clus,*m_veloDet);
       }
     }
     else {
@@ -144,7 +144,7 @@ Measurement& MeasurementProvider::measurement ( const LHCbID& id,
           << " channel " << id.channelID() 
           << " pars : " << par0 << ","<< par1 << endreq;
 
-  return *meas;  
+  return meas;  
 }
 
 //=============================================================================
