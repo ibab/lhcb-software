@@ -1,8 +1,8 @@
-//$Id: DAQCondDBAlgorithm.cpp,v 1.9 2005-07-14 15:27:05 marcocle Exp $
+//$Id: DAQCondDBAlgorithm.cpp,v 1.10 2005-09-20 11:44:28 cattanem Exp $
 
 #include "DAQCondDBAlgorithm.h"
 
-#include "DetDesc/ICondDBAccessSvc.h"
+#include "DetCond/ICondDBAccessSvc.h"
 
 #include "GaudiKernel/AlgFactory.h"
 #include "GaudiKernel/MsgStream.h"

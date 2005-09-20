@@ -1,4 +1,4 @@
-// $Id: ICondDBAccessSvc.h,v 1.3 2005-09-18 16:09:39 marcocle Exp $
+// $Id: ICondDBAccessSvc.h,v 1.8 2005-09-20 11:43:43 cattanem Exp $
 #ifndef DETCOND_ICONDDBACCESSSVC_H 
 #define DETCOND_ICONDDBACCESSSVC_H 1
 

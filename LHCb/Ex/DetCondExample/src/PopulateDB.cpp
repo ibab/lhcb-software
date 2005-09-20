@@ -1,4 +1,4 @@
-// $Id: PopulateDB.cpp,v 1.23 2005-09-18 16:19:04 marcocle Exp $
+// $Id: PopulateDB.cpp,v 1.24 2005-09-20 11:44:28 cattanem Exp $
 // Include files
 #include <iostream>
 #include <fstream>
@@ -14,7 +14,7 @@
 #include "DetDesc/Condition.h"
 #include "DetDesc/AlignmentCondition.h"
 #include "DetDesc/TabulatedProperty.h"
-#include "DetDesc/ICondDBAccessSvc.h"
+#include "DetCond/ICondDBAccessSvc.h"
 
 // from COOL
 #include "CoolKernel/Exception.h"

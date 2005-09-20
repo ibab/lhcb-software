@@ -1,4 +1,4 @@
-// $Id: ICondDBCnvSvc.h,v 1.1 2005-07-07 12:20:38 marcocle Exp $
+// $Id: ICondDBCnvSvc.h,v 1.3 2005-09-20 11:43:43 cattanem Exp $
 #ifndef DETCOND_ICONDDBCNVSVC_H 
 #define DETCOND_ICONDDBCNVSVC_H 1
 

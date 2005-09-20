@@ -1,25 +1,23 @@
-# $Id: release.notes,v 1.52 2005-09-19 13:45:49 marcocle Exp $
+# $Id: release.notes,v 1.53 2005-09-20 11:43:44 cattanem Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Det/DetCond
 ! Responsible : Marco Clemencic
 ! Purpose     : Interface between LHCb and LGC/COOL project
 !-----------------------------------------------------------------------------
 
-================= Det/DetCond v7r7 2005-09-19 ================================
+================= Det/DetCond v7r6 2005-09-19 ================================
 ! 2005-09-18 - Marco Clemencic
  - Allow direct mapping of the CondDB structure to the DetectorDataSvc tree
    (no need to pass through an XML file/string with only catalogs)
  - Use the 3rd string of the GenericAddress to store the origin of the XML
-   string (needed for self referencing XML string with DetDescCnv > v2r9)
+   string (needed for self referencing XML string with DetDescCnv > v2r8)
 
-================= Det/DetCond v7r6 2005-08-31 ================================
 ! 2005-08-31 - Marco Clemencic
  - Implemented RelyConverter::updateObjRefs in order to re-initialize
    correctly the updated conditions.
 
 ! 2005-08-30 - Marco Clemencic
- - Added support to cool::ChannelId
-   (needs DetDesc >= v15r4 and DetDescCnv > v2r8)
+ - Added support to cool::ChannelId (needs DetDescCnv > v2r8)
  - Fixed a bug in CondDBCache
    (the search of conflicts in the IOVs worked only in a well defined case,
     the one tested!)

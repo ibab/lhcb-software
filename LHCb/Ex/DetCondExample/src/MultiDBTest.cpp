@@ -1,4 +1,4 @@
-// $Id: MultiDBTest.cpp,v 1.4 2005-07-11 07:58:57 marcocle Exp $
+// $Id: MultiDBTest.cpp,v 1.5 2005-09-20 11:44:28 cattanem Exp $
 // Include files 
 
 // from Gaudi
@@ -7,7 +7,7 @@
 
 #include "DetDesc/Condition.h"
 #include "DetDesc/IUpdateManagerSvc.h"
-#include "DetDesc/ICondDBAccessSvc.h"
+#include "DetCond/ICondDBAccessSvc.h"
 
 // local
 #include "MultiDBTest.h"

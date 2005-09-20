@@ -1,4 +1,4 @@
-// $Id: CondDBGenericCnv.cpp,v 1.7 2005-09-18 16:08:39 marcocle Exp $
+// $Id: CondDBGenericCnv.cpp,v 1.8 2005-09-20 11:43:44 cattanem Exp $
 // Include files 
 #include "GaudiKernel/IDetDataSvc.h"
 #include "GaudiKernel/TimePoint.h"
@@ -8,8 +8,6 @@
 
 #include "DetDesc/IDetectorElement.h"
 #include "DetDesc/ValidDataObject.h"
-#include "DetDesc/ICondDBAccessSvc.h"
-#include "DetDesc/ICondDBCnvSvc.h"
 
 #include "CoolKernel/ValidityKey.h"
 #include "CoolKernel/IFolder.h"
@@ -18,6 +16,8 @@
 #include "CoolKernel/Exception.h"
 
 // local
+#include "DetCond/ICondDBAccessSvc.h"
+#include "DetCond/ICondDBCnvSvc.h"
 #include "DetCond/CondDBGenericCnv.h"
 
 //-----------------------------------------------------------------------------

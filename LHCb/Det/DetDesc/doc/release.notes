@@ -1,27 +1,23 @@
 ! =============================================================================
-! $Id: release.notes,v 1.222 2005-09-19 14:25:29 mneedham Exp $ 
+! $Id: release.notes,v 1.223 2005-09-20 11:40:03 cattanem Exp $ 
 ! =============================================================================
 ! package DetDesc
 ! package manager : Marco Clemencic, Juan Palacios
 ! =============================================================================
 
-! 2005-09-19
+!======================== DetDesc v15r4 2005-09-19 ========================
+! 2005-09-19 - Marco Cattaneo
+ - Move ICondDBAccessSvc and ICondDBSvc interfaces back to DetCond package
 
+! 2005-09-19 - Matt Needham
  - Add radiation and interaction length calculation to elements
 
 ! 2005-09-18 - Marco Clemencic
  - ParamValidDataObject: print also the comments when printing the parameters
- - Added 2 new methods to ICondDBAccessSvc (to match the new definition in
-   DetCond v7r7)
 
 ! 2005-09-12 - Marco Clemencic
  - Fixed a memory leak in UpdateManagerSvc occurring when registering without
    condition
-
-!======================== DetDesc v15r4 2005-08-30 ========================
-! 2005-08-30 - Marco Clemencic
- - Modified ICondDBAccessSvc in order to support cool::ChannelId
-   (needs DetCond >= v7r6)
 
 ! 2005-08-30 - Marco Cattaneo
  - Fix some doxygen warnings
