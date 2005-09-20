@@ -1,4 +1,4 @@
-// $Id: IMeasurementProvider.h,v 1.1 2005-06-28 15:59:57 erodrigu Exp $
+// $Id: IMeasurementProvider.h,v 1.2 2005-09-20 14:01:32 hernando Exp $
 #ifndef TRACKINTERFACES_IMEASUREMENTPROVIDER_H 
 #define TRACKINTERFACES_IMEASUREMENTPROVIDER_H 1
 
@@ -33,7 +33,7 @@ public:
 
   virtual StatusCode load( Track& track ) = 0;
 
-  virtual Measurement& measurement( const LHCbID&, 
+  virtual Measurement* measurement( const LHCbID&, 
                                     double par0 = 999.,
                                     double par1 = 999.) = 0;
 
