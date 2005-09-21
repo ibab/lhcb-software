@@ -3,11 +3,12 @@ Package: Digi/Boole
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb Digitization program
 
-</PRE><H1><A NAME=v9r5>2005-09-05 Boole v9r5</A></H1><PRE>
+</PRE><H1><A NAME=v9r5>2005-09-21 Boole v9r5</A></H1><PRE>
 This version uses Gaudi v16r5, LHCb v18r9, Lbcom v2r5, XmlDDDB v26r2
 
 - New features:
   . Cleanup options files, to take advantage of new -= syntax for array options
+  . valgrind.job now uses faster addrcheck tool instead of memcheck
 
 </PRE><H1><A NAME=v9r4>2005-07-18 Boole v9r4</A></H1><PRE>
 This version uses Gaudi v16r5, LHCb v18r8, Lbcom v2r4, XmlDDDB v26r1
@@ -20,6 +21,7 @@ Requires input from Gauss v19r3 or greater. Output needs Brunel v27r4 or greater
     a more complete summary table (BooleMoni.opts)
 
 - New tuning
+  . New 75 ns readout gate for OT (OTDAQ v1r3)
   . Modification to OT efficiency calculation, following 2005 test beam 
     (OTSimulation v2r0)
   . Removed ResolutionCor from DeOTDetector, following 2005 test beam
