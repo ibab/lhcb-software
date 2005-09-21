@@ -6,7 +6,7 @@
 # http://cern.ch/lhcb-comp/Support/html/new_structure.pdf
 #============================================================================
 package           TrackTools
-version           v1r3
+version           v1r2
 
 #============================================================================
 # This template is an example for a standard Algorithm package

@@ -4,14 +4,14 @@
 ! Purpose     : Package for tracking tools not accessing MC information
 !-----------------------------------------------------------------------------
 
+!======================== TrackTools v1r2 2005-09-20 =========================
 ! 2005-09-20 - Jose A. Hernando
-	- MeasurementProvider returns ownership of Measurement,
+	- MeasurementProvider returns ownership of Measurement
 
 ! 2005-09-08 - Eduardo Rodrigues
- - TrackChi2Calculator tool added, moved from TrMatching, for the new
+ - TrackChi2Calculator tool added, copied from TrMatching, for the new
    track event model
 
-!======================== TrackTools v1r2 2005-09-06 =========================
 ! 2005-09-06 - Marco Cattaneo
  - Remove BIntegrator tool, moved to Magnet package
 
