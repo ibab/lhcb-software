@@ -61,7 +61,7 @@ else
 endif
 
 # == run the excutable ================================
-valgrind --tool=memcheck --demangle=no --error-limit=no --leak-check=yes --num-callers=20 --suppressions=$STDOPTS/Gaudi.supp --suppressions=$SuppFile tmpjob_$Dver.exe $BOOLEOPTS/$Dver.opts >& mem_errors.log
+valgrind --tool=addrcheck --demangle=no --error-limit=no --leak-check=yes --num-callers=20 --suppressions=$STDOPTS/addrcheck.supp --suppressions=$SuppFile tmpjob_$Dver.exe $BOOLEOPTS/$Dver.opts >& addrcheck.log
 
 # == job is finished: remove temporary files ==========
 rm tmpjob_$Dver.exe
