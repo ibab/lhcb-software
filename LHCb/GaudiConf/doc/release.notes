@@ -1,6 +1,11 @@
 package GaudiConf
 package manager: M.Cattaneo
 
+!======================== GaudiConf v9r2 2005-09-21 ========================
+! 2005-09-21 - Marco Cattaneo
+ - New file options/addrcheck.supp, contains suppressions for addrcheck tool
+   of valgrind (recommended instead of memcheck, as it is much faster)
+
 !======================== GaudiConf v9r1 2005-04-19 ========================
 ! 2005-04-19 - Marco Cattaneo
  - Modify GaudiMain.cpp and requirements to set program name and version
