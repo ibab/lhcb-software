@@ -4,6 +4,7 @@
 ! Purpose     : package for tracking tools accessing MC information
 !-----------------------------------------------------------------------------
 
+!======================= TrackMCTools v1r2 2005-09-21 ========================
 ! 2005-09-21 - Eduardo Rodrigues
  - renamings to avoid clashes with same tools of the old track event model:
    - TrackSelector renamed to TrackCriteriaSelector

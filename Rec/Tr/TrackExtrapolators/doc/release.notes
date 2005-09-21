@@ -4,6 +4,7 @@
 ! Purpose     : Package for tracking extrapolators
 !-----------------------------------------------------------------------------
 
+!======================= TrackExtrapolators v1r2 2005-09-22 ==================
 ! 2005-09-21 - Eduardo Rodrigues
  - improvement to Parabolic extrapolator (from M. Needham)
  - bug in TrackMasterExtrapolator corrected

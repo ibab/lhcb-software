@@ -13,7 +13,7 @@
 #include "Event/Track.h"
 #include "Event/State.h"
 
-/** @class TrackExtrapolator TrackExtrapolator/TrackExtrapolator.h
+/** @class TrackExtrapolator TrackExtrapolator.h
  *  
  *  A TrackExtrapolator is a base class implementing methods
  *  from the ITrackExtrapolator interface.
@@ -65,11 +65,11 @@ public:
   /** Retrieve the position and momentum vectors and the corresponding
       6D covariance matrix (pos:1->3,mom:4-6) of a track at a given z-position
       @return status code
-              the position of the track
-              the momentum of the track
-              the full position-momentum covariance matrix
-      @param the input track
-      @param the z-position at which to extrapolate
+      @param[out] pos     the position of the track
+      @param[out] mom     the momentum of the track
+      @param[out] cov6D   the full position-momentum covariance matrix
+      @param[in]  track   the input track
+      @param[in]  z       the z-position at which to extrapolate
   */
   virtual StatusCode positionAndMomentum( const Track& track,
                                           double z,

@@ -4,6 +4,7 @@
 ! Purpose     : Perfect pattern recognition
 !-----------------------------------------------------------------------------
 
+!======================= TrackIdealPR v1r2 2005-09-21 ========================
 ! 2005-09-21 - Eduardo Rodrigues
  - TrueTracksCreator renamed to IdealTracksCreator, to avoid clashes with
    same algorithm of the old track event model
