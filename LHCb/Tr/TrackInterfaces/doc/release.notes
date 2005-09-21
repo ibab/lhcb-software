@@ -4,6 +4,7 @@
 ! Purpose     : package for tracking tools interfaces
 !-----------------------------------------------------------------------------
 
+!====================== TrackInterfaces v1r3 2005-09-20 ======================
 ! 2005-09-20 - Eduardo Rodrigues
  - renamings to avoid clashes with same algorithm of the old track event model:
    - ITrackSelector renamed to ITrackCriteriaSelector
@@ -13,7 +14,6 @@
  - added ITrackChi2Calculator interface, moved from TrMatching, for the
    new  track event model
 
-!====================== TrackInterfaces v1r3 2005-09-06 ======================
 ! 2005-09-06 - Marco Cattaneo
  - Remove IBIntegrator.h, moved to Kernel directory in LHCbKernel
 
