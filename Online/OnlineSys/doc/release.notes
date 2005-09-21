@@ -5,6 +5,14 @@
 ! Purpose     : 
 !-----------------------------------------------------------------------------
 
+</PRE><H1><A NAME=v1r5>2005-09-21 OnlineSys v1r5</A></H1><PRE>
+This version uses Gaudi v16r5, LHCb v18r9
+
+ - Packages modified: SFCClient v1r2
+
+ - In SFCClient v1r2:
+   . Various internal changes, see SFCClient release notes
+
 </PRE><H1><A NAME=v1r4>2005-07-26 OnlineSys v1r4</A></H1><PRE>
 This version uses Gaudi v16r5, LHCb v18r8
 
