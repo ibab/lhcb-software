@@ -1,6 +1,6 @@
-# $Id: requirements,v 1.26 2005-09-19 16:10:44 ibelyaev Exp $ 
+# $Id: requirements,v 1.27 2005-09-21 13:40:59 ranjard Exp $ 
 # ============================================================================
-# CVS tag $Name: not supported by cvs2svn $; version $Revision: 1.26 $
+# CVS tag $Name: not supported by cvs2svn $; version $Revision: 1.27 $
 # ============================================================================
 # Created    : 2003-09-10
 # Maintainer : Vanya BELYAEV Ivan.Belyaev@itep.ru
@@ -27,6 +27,11 @@ use              LoKiExample v* Ex
 use              LoKiHybrid  v* Tools 
 use              LoKiHlt     v* Tools 
 
+# to use it with Panoramix
+#use	Panoramix	v*	Vis
+# to use it with HippoDraw
+#use	HippoDraw	v*	LCG_Interfaces
+
 # ============== nesessary paths =============================================
 path_remove      PYTHONPATH "BenderExample" 
 path_prepend     PYTHONPATH "$(BENDEREXAMPLEROOT)/python"
@@ -39,6 +44,9 @@ apply_pattern    application_path
 
 # ============================================================================
 # $Log: not supported by cvs2svn $
+# Revision 1.26  2005/09/19 16:10:44  ibelyaev
+#  remove the explicit dependency on XmlDDDB
+#
 # Revision 1.25  2005/08/01 09:50:19  ibelyaev
 #  update for v5r2
 #

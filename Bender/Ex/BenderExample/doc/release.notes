@@ -1,12 +1,15 @@
-! $Id: release.notes,v 1.8 2005-06-14 16:17:19 ibelyaev Exp $
+! $Id: release.notes,v 1.9 2005-09-21 13:40:59 ranjard Exp $
 ! -----------------------------------------------------------------------------
-! CVS tag $Name: not supported by cvs2svn $; version $Revision: 1.8 $
+! CVS tag $Name: not supported by cvs2svn $; version $Revision: 1.9 $
 ! -----------------------------------------------------------------------------
 ! Package     : Ex/BenderExample
 ! Responsible : Vanya  BELYAEV Ivan.Belyaev@itep.ru
 ! Purpose     : collection of examples to run Bender - 
 !             :                    -Python based physic sanalysis 
 ! -----------------------------------------------------------------------------
+
+! 2005-09-21 - Florence RANJARD
+ - requirements - add comments to show how to use Panoramix and HippoDraw
 
 ! 2005-06-14 - Vanya BELYAEV
  - VeloSpaceTracks.py
