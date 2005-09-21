@@ -3,6 +3,24 @@ Package: Rec/Brunel
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb reconstruction program
 
+</PRE><H1><A NAME=v27r5>2005-09-21 Brunel v27r5</A></H1><PRE>
+This version uses Gaudi v16r5, LHCb v18r9, Rec v1r5, Lbcom v2r5
+Requires input data from Boole v9r2 or greater. Incompatible with DC04 versions
+
+ - New features:
+   . valgrind.job now uses faster addrcheck tool instead of memcheck
+   . FitTrack/Best tracks are converted to new model Tracks in Rec/Track/Best
+     (Reco.opts, TrConverters v1r3)
+
+ - New tuning
+   . Radiation and interaction length of elements is now calculated in DetDesc,
+     no longer picked up from hardcoded numbers in XmlDDDB
+     (DetDesc v15r4, DetDescCnv v2r9, XmlDDDB v26r2)
+
+ - Persistency changes:
+   . Rec/Track/Best added to DST. This is a temporary measure for testing, will
+     eventually replace old track model tracks in pDst
+
 </PRE><H1><A NAME=v27r4>2005-07-18 Brunel v27r4</A></H1><PRE>
 This version uses Gaudi v16r5, LHCb v18r8, Rec v1r4, Lbcom v2r4
 Requires input data from Boole v9r2 or greater. Incompatible with DC04 versions
