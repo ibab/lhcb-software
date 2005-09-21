@@ -1,6 +1,7 @@
 Package: SFCClient
 Author:  Benjamin Gaidioz
 
+!=================== SFCClient v1r2 2005-09-21 =============================
 ! 2005-07-22 - Benjamin Gaidioz
 - Increase the recv socket buffer (bug, loosing frames with HLT),
 - call mlockall with the hope it will decrease the processing time of
