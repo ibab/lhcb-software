@@ -4,11 +4,11 @@ version v18r9
 branches doc cmt
 
 #===============================================================
-# LHCb packages used by all applications
+# LHCb packages visible to all applications
 #===============================================================
 
 use LHCb		v18r9
-use GaudiConf		v9r1
+use GaudiConf		v9r2
 
 #                                         Maintainer
 # External package used by GenEvent
