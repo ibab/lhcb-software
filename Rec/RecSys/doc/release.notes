@@ -5,16 +5,18 @@ Purpose: LHCb reconstruction packages.
          This project groups together all the reconstruction packages needed
          by one or more LHCb applications. 
 
-</PRE><H1><A NAME=v1r5>2005-09-07 RecSys v1r5</A></H1><PRE>
+</PRE><H1><A NAME=v1r5>2005-09-21 RecSys v1r5</A></H1><PRE>
 This version uses Gaudi v16r5, LHCb v18r9
 
 - Packages added:    PatVeloTT v1r1 - Adaptation of TrgVeloTT to Pat project
                     PatForward v1r0 - New implementation of Forward track PatRec
                          PatPV v1r0 - Adaptation of L1Reco 2D prim vtx to Pat
                   PatFitParams v1r0 - Fit MC tracks to compute PatForward params
+                 TrackMatching v1r0 - Adaptation of TrMatching to new Track model
 - Packages modified: TrgSys v7r6, TrgVeloTT v8r1, L1Decision v5r2, PatSys v1r2,
                      PatTools v1r1, PatUtils v1r1, PatVelo v1r2, PatChecker v1r1
-                     TrackTools v1r7, TrTools v2r7
+                     TrackTools v1r2, TrackMCTools v1r2, TrackIdealPR v1r2, 
+                     TrackExtrapolators v1r2, TrTools v2r7, TrConverters v1r3
 
 - In TrgVeloTT v8r1
   . Port new implementation from DC04 branch. See details in v8r0 release notes
@@ -43,6 +45,16 @@ This version uses Gaudi v16r5, LHCb v18r9
 - In TrTools v2r7, TrackTools v1r2
   . Remove BIntegrator tool (moved to Det/Magnet), pick up interface from new 
     location in LHCbKernel
+
+- In TrConverters v1r3, TrackTools v1r2
+  . Adapt to change in MeasurementProvider interface, and fix memory leaks
+
+- In TrackMCTools v1r2, TrackIdealPR v1r2
+  . Change names of components to avoid clashes with old event model versions
+
+- In TrackExtrapolators v1r2
+  . Improvement to Parabolic extrapolator
+  . Remove temporary vectors from TrackMasterExtrapolator
 
 </PRE><H1><A NAME=v1r4>2005-07-25 RecSys v1r4</A></H1><PRE>
 This version uses Gaudi v16r5, LHCb v18r8

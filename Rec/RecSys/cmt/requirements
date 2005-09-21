@@ -27,13 +27,14 @@ use VeloTT              v1r13	Tr    # Yuehong Xie
 use TrKShort		v1r6	Tr    # Olivier Callot
 
 # New tracking
-use TrackExtrapolators  v1r1    Tr    # Eduardo Rodrigues, Jose Hernando
+use TrackExtrapolators  v1r2    Tr    # Eduardo Rodrigues, Jose Hernando
 use TrackTools          v1r2    Tr    # Eduardo Rodrigues, Jose Hernando
-use TrackMCTools        v1r1    Tr    # Eduardo Rodrigues, Jose Hernando
+use TrackMCTools        v1r2    Tr    # Eduardo Rodrigues, Jose Hernando
 use TrackProjectors     v1r2    Tr    # Eduardo Rodrigues, Jose Hernando
 use TrackFitEvent       v1r2    Tr    # Eduardo Rodrigues, Jose Hernando
-use TrackIdealPR        v1r1    Tr    # Eduardo Rodrigues, Jose Hernando
-use TrConverters        v1r2    Tr    # Eduardo Rodrigues, Jose Hernando
+use TrackIdealPR        v1r2    Tr    # Eduardo Rodrigues, Jose Hernando
+use TrackMatching       v1r0    Tr    # Eduardo Rodrigues
+use TrConverters        v1r3    Tr    # Eduardo Rodrigues, Jose Hernando
 use TrgConverter        v1r0    Trg   # Eduardo Rodrigues, Jose Hernando
 
 # Trg reconstruction
