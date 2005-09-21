@@ -16,14 +16,14 @@
 #include "Event/VeloPhiMeasurement.h"
 
 // Local
-#include "TrueTracksCreator.h"
+#include "IdealTracksCreator.h"
 
-static const AlgFactory<TrueTracksCreator>    s_factory;
-const IAlgFactory& TrueTracksCreatorFactory = s_factory;
+static const AlgFactory<IdealTracksCreator>    s_factory;
+const IAlgFactory& IdealTracksCreatorFactory = s_factory;
 
-/** @file TrueTracksCreator.cpp
+/** @file IdealTracksCreator.cpp
  *
- *  Implementation of TrueTracksCreator.
+ *  Implementation of IdealTracksCreator.
  *
  *  @author Eduardo Rodrigues (adaptations to new track event model, 18-04-2005)
  *  @author M. Needham
@@ -35,8 +35,8 @@ const IAlgFactory& TrueTracksCreatorFactory = s_factory;
 //=============================================================================
 // Standard constructor, initializes variables
 //=============================================================================
-TrueTracksCreator::TrueTracksCreator( const std::string& name,
-                                      ISvcLocator* pSvcLocator )
+IdealTracksCreator::IdealTracksCreator( const std::string& name,
+                                        ISvcLocator* pSvcLocator )
   : GaudiAlgorithm( name, pSvcLocator )
   , m_otTim2MCHit(0)
   , m_itClus2MCP(0)
@@ -79,12 +79,12 @@ TrueTracksCreator::TrueTracksCreator( const std::string& name,
 //=============================================================================
 // Destructor
 //=============================================================================
-TrueTracksCreator::~TrueTracksCreator() {}
+IdealTracksCreator::~IdealTracksCreator() {}
 
 //=============================================================================
 // Initialization
 //=============================================================================
-StatusCode TrueTracksCreator::initialize()
+StatusCode IdealTracksCreator::initialize()
 {
   StatusCode sc = GaudiAlgorithm::initialize(); // must be executed first
 
@@ -107,11 +107,12 @@ StatusCode TrueTracksCreator::initialize()
    m_velo      = getDet<DeVelo>( m_veloPath );
    debug() << "Geometry read in." << endreq;
 
-  // Retrieve the TrackSelector tool
-  m_trackSelector = tool<ITrackSelector>( "TrackSelector" );
+  // Retrieve the TrackCriteriaSelector tool
+   m_trackSelector = tool<ITrackCriteriaSelector>( "TrackCriteriaSelector",
+                                                   "select", this );
 
-  // Retrieve the TrueStateCreator tool
-  m_stateCreator = tool<IStateCreator>( "TrueStateCreator" );
+  // Retrieve the IdealStateCreator tool
+  m_stateCreator = tool<IIdealStateCreator>( "IdealStateCreator" );
 
   if ( m_fitTracks ) {
     always() << "Fitting part of algorithm not yet done!" << endreq;
@@ -137,7 +138,7 @@ StatusCode TrueTracksCreator::initialize()
 //=============================================================================
 // Main execution
 //=============================================================================
-StatusCode TrueTracksCreator::execute()
+StatusCode IdealTracksCreator::execute()
 {
   debug() << "==> Execute" << endreq;
 
@@ -178,6 +179,15 @@ StatusCode TrueTracksCreator::execute()
   MCParticles::const_iterator iPart;
   for ( iPart = particles->begin(); particles->end() != iPart; ++iPart ) {
     MCParticle* mcParticle = *iPart;
+    verbose() << endreq
+            << "- MCParticle of type "
+            << m_trackSelector -> trackType( mcParticle )
+            << " , (key # " << mcParticle -> key() << ")" << endreq
+            << "    - momentum = " << mcParticle -> momentum() << " MeV" << endreq
+            << "    - P        = " << mcParticle -> momentum().vect().mag()
+            << " MeV" <<endreq
+            << "    - charge   = "
+            << ( mcParticle -> particleID().threeCharge() / 3 ) << endreq;
     if ( m_trackSelector -> select( mcParticle ) ) {
       debug() << endreq
               << "Selected MCParticle of type "
@@ -321,6 +331,18 @@ StatusCode TrueTracksCreator::execute()
         }        
       }
 
+      debug() << "At the end: states at z-positions: ";
+      const std::vector<State*>& allstates = track->states();
+      for ( unsigned int it = 0; it < allstates.size(); it++ ) {
+        debug() << allstates[it] -> z() << " ";
+      }
+      debug() << endreq;
+      for ( unsigned int it2 = 0; it2 < allstates.size(); it2++ ) {
+        debug() << "state vectors:" << endreq
+                << allstates[it2] -> stateVector() << endreq;
+      }
+      debug() << endreq;
+
       // Add the track to the Tracks container and fill the relations table
       // ------------------------------------------------------------------
       tracksCont -> add( track );
@@ -372,7 +394,7 @@ StatusCode TrueTracksCreator::execute()
 //=============================================================================
 // Finalize
 //=============================================================================
-StatusCode TrueTracksCreator::finalize()
+StatusCode IdealTracksCreator::finalize()
 {
   debug() << "==> Finalize" << endreq;
 
@@ -381,7 +403,6 @@ StatusCode TrueTracksCreator::finalize()
   if ( m_veloClus2MCP )     toolSvc()->releaseTool( m_veloClus2MCP );
   if ( m_itClus2MCP )       toolSvc()->releaseTool( m_itClus2MCP );
   if ( m_otTim2MCHit  )     toolSvc()->releaseTool( m_otTim2MCHit );
-  if ( m_trackSelector )    toolSvc()->releaseTool( m_trackSelector );
 
   //if ( m_tracksFitter )     toolSvc()->releaseTool( m_tracksFitter );
   //if ( m_veloTracksFitter ) toolSvc()->releaseTool( m_veloTracksFitter );
@@ -393,9 +414,9 @@ StatusCode TrueTracksCreator::finalize()
 //=============================================================================
 //  
 //=============================================================================
-StatusCode TrueTracksCreator::addOTTimes( OTTimes* times,
-                                          MCParticle* mcPart,
-                                          Track* track )
+StatusCode IdealTracksCreator::addOTTimes( OTTimes* times,
+                                           MCParticle* mcPart,
+                                           Track* track )
 {
   unsigned int nOTMeas = 0;
 
@@ -448,8 +469,8 @@ StatusCode TrueTracksCreator::addOTTimes( OTTimes* times,
 //=============================================================================
 //  
 //=============================================================================
-StatusCode TrueTracksCreator::addITClusters( MCParticle* mcPart,
-                                             Track* track )
+StatusCode IdealTracksCreator::addITClusters( MCParticle* mcPart,
+                                              Track* track )
 {
   unsigned int nITMeas = 0;
 
@@ -471,8 +492,8 @@ StatusCode TrueTracksCreator::addITClusters( MCParticle* mcPart,
 //=============================================================================
 //  
 //=============================================================================
-StatusCode TrueTracksCreator::addVeloClusters( MCParticle* mcPart, 
-                                               Track* track )
+StatusCode IdealTracksCreator::addVeloClusters( MCParticle* mcPart, 
+                                                Track* track )
 {
   unsigned int nVeloRMeas   = 0;
   unsigned int nVeloPhiMeas = 0;
@@ -489,7 +510,7 @@ StatusCode TrueTracksCreator::addVeloClusters( MCParticle* mcPart,
       double phi = 999.0;
       State* tempState;
       StatusCode sc = m_stateCreator -> createState( mcPart, z, tempState );
-      if ( sc.isSuccess() ) {
+if ( sc.isSuccess() ) {
         HepVector vec = tempState -> stateVector();
         phi = atan2( vec[1], vec[0] );
       }
@@ -515,7 +536,7 @@ StatusCode TrueTracksCreator::addVeloClusters( MCParticle* mcPart,
 //=============================================================================
 // Register the tracks container in the TES. TES becomes owner of the cont.
 //=============================================================================
-StatusCode TrueTracksCreator::registerTracks( Tracks* tracksCont )
+StatusCode IdealTracksCreator::registerTracks( Tracks* tracksCont )
 {
   StatusCode sc = put( tracksCont, m_tracksTESPath );
   if ( sc.isFailure() )
@@ -529,9 +550,9 @@ StatusCode TrueTracksCreator::registerTracks( Tracks* tracksCont )
 //=============================================================================
 // Initialize seed state
 //=============================================================================
-StatusCode TrueTracksCreator::initializeState( double z,
-                                               Track* track,
-                                               MCParticle* mcPart )
+StatusCode IdealTracksCreator::initializeState( double z,
+                                                Track* track,
+                                                MCParticle* mcPart )
 {
   State* state;
   StatusCode sc = m_stateCreator -> createState( mcPart, z, state );
@@ -565,7 +586,7 @@ StatusCode TrueTracksCreator::initializeState( double z,
 //=============================================================================
 // Delete all states on the track
 //=============================================================================
-StatusCode TrueTracksCreator::deleteStates( Track* track )
+StatusCode IdealTracksCreator::deleteStates( Track* track )
 {
   std::vector<State*> tmpStates = track -> states();
   for ( std::vector<State*>::const_iterator it  = tmpStates.begin();

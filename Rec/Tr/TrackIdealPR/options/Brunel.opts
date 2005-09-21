@@ -9,38 +9,38 @@ ApplicationMgr.TopAlg     += { "ProcessPhase/BrunelCheck" };
 ApplicationMgr.DLLs += { "TrackIdealPR" };
 
 BrunelCheck.DetectorList    = { "Tr" };
-BrunelCheckTrSeq.Members   += { "TrueTracksCreator" };
+BrunelCheckTrSeq.Members   += { "IdealTracksCreator" };
 
-//TrueTracksCreator.AddOTTimes      = true;
-//TrueTracksCreator.AddITClusters   = true;
-//TrueTracksCreator.AddVeloClusters = true;
+//IdealTracksCreator.AddOTTimes      = true;
+//IdealTracksCreator.AddITClusters   = true;
+//IdealTracksCreator.AddVeloClusters = true;
 
-//TrueTracksCreator.InitState   = true;
-//TrueTracksCreator.FitTracks   = true;
-//TrueTracksCreator.FitUpstream = true;
-//TrueTracksCreator.TrueStatesAtMeasZPos = false;
+//IdealTracksCreator.InitState   = true;
+//IdealTracksCreator.FitTracks   = true;
+//IdealTracksCreator.FitUpstream = true;
+//IdealTracksCreator.TrueStatesAtMeasZPos = false;
 
-//TrueTracksCreator.TracksTESPath = "Rec/Track/Ideal";
+//IdealTracksCreator.TracksTESPath = "Rec/Track/Ideal";
 
-//TrueTracksCreator.RelationTable = "Rec/Relations/IdealTr2MCP";
+//IdealTracksCreator.RelationTable = "Rec/Relations/IdealTr2MCP";
 
-//TrueTracksCreator.OTGeometryPath   = DeOTDetectorLocation::Default ;
-//TrueTracksCreator.ITGeometryPath"  = DeSTDetectorLocation::Default ;
-//TrueTracksCreator.VeloGeometryPath = "/dd/Structure/LHCb/Velo";
+//IdealTracksCreator.OTGeometryPath   = DeOTDetectorLocation::Default ;
+//IdealTracksCreator.ITGeometryPath"  = DeSTDetectorLocation::Default ;
+//IdealTracksCreator.VeloGeometryPath = "/dd/Structure/LHCb/Velo";
 
-//TrueTracksCreator.MinNHits = 6;
-//TrueTracksCreator.ErrorX2  = 4.0;
-//TrueTracksCreator.ErrorY2  = 400.0;
-//TrueTracksCreator.ErrorTx2 = 6.e-5;
-//TrueTracksCreator.ErrorTy2 = 1.e-4;
-//TrueTracksCreator.ErrorP   = 0.15;
+//IdealTracksCreator.MinNHits = 6;
+//IdealTracksCreator.ErrorX2  = 4.0;
+//IdealTracksCreator.ErrorY2  = 400.0;
+//IdealTracksCreator.ErrorTx2 = 6.e-5;
+//IdealTracksCreator.ErrorTy2 = 1.e-4;
+//IdealTracksCreator.ErrorP   = 0.15;
 
-TrueTracksCreator.OutputLevel   = 3;
+IdealTracksCreator.OutputLevel   = 3;
 
-//ToolSvc.TrackSelector.TrAcceptance.minNVeloRHits   = 3;
-//ToolSvc.TrackSelector.TrAcceptance.minNVeloPhiHits = 3;
-//ToolSvc.TrackSelector.TrAcceptance.minNTTHits = 1;
-//ToolSvc.TrackSelector.TrAcceptance.minNT1Hits = 1;
-//ToolSvc.TrackSelector.TrAcceptance.minNT2Hits = 1;
-//ToolSvc.TrackSelector.TrAcceptance.minNT3Hits = 1;
+//ToolSvc.TrackCriteriaSelector.TrAcceptance.minNVeloRHits   = 3;
+//ToolSvc.TrackCriteriaSelector.TrAcceptance.minNVeloPhiHits = 3;
+//ToolSvc.TrackCriteriaSelector.TrAcceptance.minNTTHits = 1;
+//ToolSvc.TrackCriteriaSelector.TrAcceptance.minNT1Hits = 1;
+//ToolSvc.TrackCriteriaSelector.TrAcceptance.minNT2Hits = 1;
+//ToolSvc.TrackCriteriaSelector.TrAcceptance.minNT3Hits = 1;
 

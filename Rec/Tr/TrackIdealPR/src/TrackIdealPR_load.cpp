@@ -2,6 +2,6 @@
 
 DECLARE_FACTORY_ENTRIES( TrackIdealPR ) {
 
-  DECLARE_ALGORITHM( TrueTracksCreator );
+  DECLARE_ALGORITHM( IdealTracksCreator );
 
 }

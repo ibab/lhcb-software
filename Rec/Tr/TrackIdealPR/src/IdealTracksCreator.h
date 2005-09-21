@@ -1,5 +1,5 @@
-#ifndef TRACKIDEALPR_TRUETRACKSCREATOR_H
-#define TRACKIDEALPR_TRUETRACKSCREATOR_H 1
+#ifndef TRACKIDEALPR_IDEALTRACKSCREATOR_H
+#define TRACKIDEALPR_IDEALTRACKSCREATOR_H 1
 
 // Include files
 // -------------
@@ -18,8 +18,8 @@
 #include "VeloAssociators/VeloCluster2MCParticleAsct.h"
 
 // from TrackInterfaces
-#include "TrackInterfaces/IStateCreator.h"
-#include "TrackInterfaces/ITrackSelector.h"
+#include "TrackInterfaces/IIdealStateCreator.h"
+#include "TrackInterfaces/ITrackCriteriaSelector.h"
 //#include "Event/ITrackFitter.h"
 
 // Forward declarations
@@ -27,9 +27,9 @@ class DeOTDetector;
 class DeSTDetector;
 class DeVelo;
 
-/** @class TrueTracksCreator TrueTracksCreator.h
+/** @class IdealTracksCreator IdealTracksCreator.h
  *
- *  A TrueTracksCreator is an Algorithm that creates tracks from MCParticles.
+ *  A IdealTracksCreator is an Algorithm that creates tracks from MCParticles.
  *  Clusters which are associated to a single MCParticle are added to the 
  *  'true' track. The relation table from Tracks to MCParticles is 
  *  automatically filled.
@@ -60,14 +60,14 @@ class DeVelo;
  *  @date   27-07-1999
  */
 
-class TrueTracksCreator: public GaudiAlgorithm {
+class IdealTracksCreator: public GaudiAlgorithm {
 
 public:
 
   /// Standard constructor
-  TrueTracksCreator( const std::string& name, ISvcLocator* pSvcLocator );
+  IdealTracksCreator( const std::string& name, ISvcLocator* pSvcLocator );
 
-  virtual ~TrueTracksCreator( );      ///< Destructor
+  virtual ~IdealTracksCreator( );      ///< Destructor
 
   virtual StatusCode initialize();    ///< Algorithm initialization
   virtual StatusCode execute   ();    ///< Algorithm execution
@@ -114,8 +114,8 @@ private:
   std::string   m_veloPath;        ///< Name of the Velo XML geom path
 
   // Interfaces
-  ITrackSelector* m_trackSelector;     ///< Track selection tool
-  IStateCreator*  m_stateCreator;      ///< Create 'seed' state at last measurement
+  ITrackCriteriaSelector* m_trackSelector;  ///< Track selection tool
+  IIdealStateCreator*     m_stateCreator;   ///< Create 'seed' state at last measurement
 //  ITrackFitter*  m_tracksFitter;       ///< General fitter tool
 //  ITrackFitter*  m_veloTracksFitter;   ///< Fitter tool for velo and veloBack
 //  ITrackFitter*  m_veloTTTracksFitter; ///< Fitter tool for veloTT
@@ -139,4 +139,4 @@ private:
   double m_errorP;        ///< dp/p
 };
 
-#endif // TRACKIDEALPR_TRUETRACKSCREATOR_H
+#endif // TRACKIDEALPR_IDEALTRACKSCREATOR_H
