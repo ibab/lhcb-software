@@ -37,8 +37,8 @@ class TrackMasterExtrapolator: public TrackExtrapolator
  public:
   /// Constructor
   TrackMasterExtrapolator( const std::string& type, 
-                                const std::string& name, 
-                                const IInterface* parent);
+                           const std::string& name, 
+                           const IInterface* parent);
 
   /// destructor
   virtual ~TrackMasterExtrapolator();
@@ -49,8 +49,8 @@ class TrackMasterExtrapolator: public TrackExtrapolator
 
   /// Propagate a state to a given z-position
   virtual StatusCode propagate( State& state,
-				double z,
-				ParticleID partId = ParticleID(211) );
+                                double z,
+                                ParticleID partId = ParticleID(211) );
 
   // Propagate a state to the intersection point with a given plane
   StatusCode propagate( State& state,
@@ -152,7 +152,8 @@ inline void TrackMasterExtrapolator::updateTransportMatrix
   m_F = newStepF* m_F;
 }
 
-inline void TrackMasterExtrapolator::transformToGlobal( const double zStep, const double zStart,
+inline void TrackMasterExtrapolator::transformToGlobal( const double zStep,
+                                                        const double zStart,
                                                         ILVolume::Intersections& intersept) {
 
   // convert from transport service ticks to mm in the LHCb frame

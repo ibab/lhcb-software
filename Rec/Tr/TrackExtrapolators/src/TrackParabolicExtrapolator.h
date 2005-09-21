@@ -56,7 +56,7 @@ protected:
 
   /// update transport matrix
   virtual void updateTransportMatrix( const double dz,
-				      State& State );
+                                      State& State );
 
 protected:
 

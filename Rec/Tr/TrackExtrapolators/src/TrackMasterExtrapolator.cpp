@@ -94,8 +94,8 @@ StatusCode TrackMasterExtrapolator::initialize()
 //  Main method: Extrapolate a State
 //=========================================================================
 StatusCode TrackMasterExtrapolator::propagate( State& state, 
-                                                    double zNew,
-                                                    ParticleID partId )
+                                               double zNew,
+                                               ParticleID partId )
 {
   StatusCode sc;
 
@@ -259,7 +259,7 @@ StatusCode TrackMasterExtrapolator::propagate( State& state,
       
 	  // number we need
           double tWall = fabs(intersept[iStep].first.first - intersept[iStep].first.second);
-          const Material* theMatieral = intersept[iStep].second;
+          const Material* theMaterial = intersept[iStep].second;
 
 	  // multiple scattering
 	  if ((m_applyMultScattCorr == true)&& (0 !=  theMaterial ))
@@ -288,7 +288,7 @@ StatusCode TrackMasterExtrapolator::propagate( State& state,
 	      if ((state.z() > m_startElectronCorr) &&
 		  (state.z() < m_stopElectronCorr))
 		{
-		  sc = electronEnergyLoss(state,theMaterial);
+		  sc = electronEnergyLoss( state, theMaterial->radiationLength() );
 		}
 	    }
       
@@ -542,7 +542,7 @@ StatusCode TrackMasterExtrapolator::createTransportSteps
 // apply thick scatter Q/p state
 //============================================================================
 StatusCode TrackMasterExtrapolator::thinScatter( State& state,
-						      double radLength )
+                                                 double radLength )
 {
   // apply multiple scattering - thin scatter
 
@@ -581,8 +581,8 @@ StatusCode TrackMasterExtrapolator::thinScatter( State& state,
 // apply thick scatter Q/p state
 //============================================================================
 StatusCode TrackMasterExtrapolator::thickScatter( State& state,
-                                                       double tWall,
-                                                       double radLength )
+                                                  double tWall,
+                                                  double radLength )
 {
   // apply - thick scatter multiple scattering
   double scatLength = 0.;
@@ -635,8 +635,8 @@ StatusCode TrackMasterExtrapolator::thickScatter( State& state,
 // apply energy loss P state
 //============================================================================
 StatusCode TrackMasterExtrapolator::energyLoss( State& state,
-                                                     double tWall,
-                                                     const Material* aMaterial )
+                                                double tWall,
+                                                const Material* aMaterial )
 {
   // Apply correction for dE/dx energy loss (Bethe-Block)
   double norm = sqrt(1.0+gsl_pow_2(state.tx())+gsl_pow_2(state.ty()));
@@ -659,14 +659,14 @@ StatusCode TrackMasterExtrapolator::energyLoss( State& state,
 // electron energy loss Q/p state
 //============================================================================
 StatusCode TrackMasterExtrapolator::electronEnergyLoss( State& state,
-							     double radLength )
+                                                        double radLength )
 {
   //hard energy loss for electrons
 
   double t;
   double norm = sqrt(1.0+gsl_pow_2(state.tx())+gsl_pow_2(state.ty()));
 
-  m_upStream == true ?  t = radLength*norm : t = -radLength*norm; 
+  m_upStream == true ?  t = radLength*norm : t = -radLength*norm;
 
   // protect against t too big
   if (fabs(t)>m_tMax) { t = GSL_SIGN(t)*m_tMax; }
@@ -681,8 +681,11 @@ StatusCode TrackMasterExtrapolator::electronEnergyLoss( State& state,
   return StatusCode::SUCCESS;
 }
 
+//=============================================================================
+//
+//=============================================================================
 double TrackMasterExtrapolator::zScatter( const double z1, 
-					       const double z2 ) const
+                                          const double z2 ) const
 {
   double zS;
   if (fabs(z1-z2) <= m_thickWall){
@@ -701,4 +704,4 @@ double TrackMasterExtrapolator::zScatter( const double z1,
   return zS;
 }
 
-
+//=============================================================================

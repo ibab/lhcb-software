@@ -6,14 +6,14 @@
 # http://cern.ch/lhcb-comp/Support/html/new_structure.pdf
 #============================================================================
 package           TrackExtrapolators
-version           v1r1
+version           v1r2
 
 #============================================================================
 # This template is an example for a standard Algorithm package
 #
 # Structure, i.e. directories to process. 
 #============================================================================
-branches          cmt doc src TrackExtrapolators
+branches          cmt doc src
 
 include_path      none
 

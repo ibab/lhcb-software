@@ -65,9 +65,11 @@ StatusCode TrackParabolicExtrapolator::propagate( State& state,
     return StatusCode::SUCCESS; 
   }
 
-  //get the B field  
-  HepPoint3D P = state.position();
-  m_pIMF->fieldVector( P, m_B );
+  //get the B field at midpoint
+  double xMid = state.x() + (0.5*state.tx()*dz);
+  double yMid = state.y() + (0.5*state.ty()*dz);
+  HepPoint3D P( xMid, yMid, state.z()+(0.5*dz) );
+  m_pIMF -> fieldVector( P, m_B );
 
   // to save some typing...
   double Tx = state.tx();
@@ -107,10 +109,11 @@ StatusCode TrackParabolicExtrapolator::predict( const State& state,
                                                 const HepPlane3D& plane,
                                                 double& dZ ) 
 {
-  HepPoint3D P = state.position();
-
-  // get the B field  
-  m_pIMF->fieldVector( P, m_B );
+  //get the B field at midpoint
+  double xMid = state.x() + (0.5*state.tx()*dZ);
+  double yMid = state.y() + (0.5*state.ty()*dZ);
+  HepPoint3D P( xMid, yMid, state.z()+(0.5*dZ) );
+  m_pIMF -> fieldVector( P, m_B );
 
   // to save some typing...
   double Tx   = state.tx();

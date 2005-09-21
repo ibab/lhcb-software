@@ -4,15 +4,18 @@
 ! Purpose     : Package for tracking extrapolators
 !-----------------------------------------------------------------------------
 
-!======================= TrackExtrapolators v1r1 2005-07-20 ==================
+! 2005-09-21 - Eduardo Rodrigues
+ - improvement to Parabolic extrapolator (from M. Needham)
+ - bug in TrackMasterExtrapolator corrected
 
 ! 2005-09-09  M. Needham
-       - Remove temporary vectors from Master extrapolator
+ - Remove temporary vectors from Master extrapolator
 
+!======================= TrackExtrapolators v1r1 2005-07-20 ==================
 ! 2005-07-19 - Jose A. Hernando
-	- relocating some of the methods to propagate to the plane to be in the 
-	base class, and reparing some virtual method dependencies
-	- solving the warning messages
+ - relocating some of the methods to propagate to the plane to be in the 
+ base class, and reparing some virtual method dependencies
+ - solving the warning messages
 
 ! 2005-07-06 - Edwin Bos
  - Added Extrapolation methods 'to plane' and 'to point not on track'
