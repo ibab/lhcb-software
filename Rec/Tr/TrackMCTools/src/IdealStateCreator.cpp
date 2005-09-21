@@ -10,10 +10,10 @@
 #include "Event/TrackParameters.h"
 
 // local
-#include "TrueStateCreator.h"
+#include "IdealStateCreator.h"
 
 //-----------------------------------------------------------------------------
-// Implementation file for class : TrueStateCreator
+// Implementation file for class : IdealStateCreator
 //
 // 2005-04-06 : Eduardo Rodrigues (adaptations to new track event model)
 //
@@ -21,15 +21,15 @@
 //-----------------------------------------------------------------------------
 
 // Declaration of the Tool Factory
-static const  ToolFactory<TrueStateCreator>          s_factory;
-const        IToolFactory& TrueStateCreatorFactory = s_factory;
+static const  ToolFactory<IdealStateCreator>          s_factory;
+const        IToolFactory& IdealStateCreatorFactory = s_factory;
 
 //=============================================================================
 // Standard constructor, initializes variables
 //=============================================================================
-TrueStateCreator::TrueStateCreator( const std::string& type,
-                                    const std::string& name,
-                                    const IInterface* parent )
+IdealStateCreator::IdealStateCreator( const std::string& type,
+                                      const std::string& name,
+                                      const IInterface* parent )
   : GaudiTool( type, name, parent )
   , m_velo(0)
   , m_p2VeloHitAsct(0)
@@ -46,7 +46,7 @@ TrueStateCreator::TrueStateCreator( const std::string& type,
   , m_eP(0.005)  
 {  
   // interfaces
-  declareInterface<IStateCreator>(this);
+  declareInterface<IIdealStateCreator>(this);
 
   // declare properties
   declareProperty( "MCP2VeloMCHitAscName",
@@ -67,12 +67,12 @@ TrueStateCreator::TrueStateCreator( const std::string& type,
 //=============================================================================
 // Destructor
 //=============================================================================
-TrueStateCreator::~TrueStateCreator() {};
+IdealStateCreator::~IdealStateCreator() {};
 
 //=============================================================================
 // Initialization
 //=============================================================================
-StatusCode TrueStateCreator::initialize()
+StatusCode IdealStateCreator::initialize()
 {
   debug() << "==> Initialize" << endreq;
 
@@ -117,9 +117,9 @@ StatusCode TrueStateCreator::initialize()
 // Creates a state at a z position,
 // from a MCParticle using the entry/exit points of the MCHits
 //=============================================================================
-StatusCode TrueStateCreator::createState( const MCParticle* mcPart,
-                                          double zRec,
-                                          State*& state ) const {
+StatusCode IdealStateCreator::createState( const MCParticle* mcPart,
+                                           double zRec,
+                                           State*& state ) const {
   // First create the state
   HepSymMatrix stateCov = HepSymMatrix(5, 1);
   State* pState = new State();
@@ -285,8 +285,8 @@ StatusCode TrueStateCreator::createState( const MCParticle* mcPart,
 // Creates a state at the origin vertex
 // from a MCParticle using the entry/exit points of the MCHits
 //=============================================================================
-StatusCode TrueStateCreator::createStateVertex( const MCParticle* mcParticle,
-                                                State*& state ) const
+StatusCode IdealStateCreator::createStateVertex( const MCParticle* mcParticle,
+                                                 State*& state ) const
 {
   /// Create state at track vertex of MCParticle.
   HepSymMatrix stateCov = HepSymMatrix(5, 1);
@@ -343,7 +343,7 @@ StatusCode TrueStateCreator::createStateVertex( const MCParticle* mcParticle,
 //=============================================================================
 // Determine Q/P for a MCParticle
 //=============================================================================
-double TrueStateCreator::qOverP( const MCParticle* mcPart ) const
+double IdealStateCreator::qOverP( const MCParticle* mcPart ) const
 {
   /// Determine Q/P for a MCParticle
   double momentum = mcPart -> momentum().vect().mag();

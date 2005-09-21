@@ -3,7 +3,7 @@
 DECLARE_FACTORY_ENTRIES( TrackMCTools ) {
 
   DECLARE_TOOL( TrackAcceptance );
-  DECLARE_TOOL( TrackSelector );
-  DECLARE_TOOL( TrueStateCreator );
+  DECLARE_TOOL( TrackCriteriaSelector );
+  DECLARE_TOOL( IdealStateCreator );
 
 }

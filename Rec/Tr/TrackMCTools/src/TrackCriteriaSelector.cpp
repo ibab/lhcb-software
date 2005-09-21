@@ -10,10 +10,10 @@
 #include "Event/TrackKeys.h"
 
 // local
-#include "TrackSelector.h"
+#include "TrackCriteriaSelector.h"
 
 //-----------------------------------------------------------------------------
-// Implementation file for class : TrackSelector
+// Implementation file for class : TrackCriteriaSelector
 //
 // 2005-05-04 : Eduardo Rodrigues (adaptations to new track event model)
 //
@@ -21,22 +21,22 @@
 //-----------------------------------------------------------------------------
 
 // Declaration of the Tool Factory
-static const  ToolFactory<TrackSelector>          s_factory ;
-const        IToolFactory& TrackSelectorFactory = s_factory ;
+static const  ToolFactory<TrackCriteriaSelector>          s_factory ;
+const        IToolFactory& TrackCriteriaSelectorFactory = s_factory ;
 
 //=============================================================================
 // Standard constructor, initializes variables
 //=============================================================================
-TrackSelector::TrackSelector( const std::string& type,
-                              const std::string& name,
-                              const IInterface* parent )
+TrackCriteriaSelector::TrackCriteriaSelector( const std::string& type,
+                                              const std::string& name,
+                                              const IInterface* parent )
   : GaudiTool ( type, name , parent )
   , m_mcParticleJudge( 0 )
   , m_previousTrackType( TrackKeys::TypeUnknown )
   , m_previousMCParticle( 0 )
 {
   // interfaces
-  declareInterface<ITrackSelector>(this);
+  declareInterface<ITrackCriteriaSelector>(this);
   // job options
   declareProperty( "UniqueFlag",  m_uniqueFlag = true );
   declareProperty( "ValidFlag",   m_validFlag = true );
@@ -49,12 +49,12 @@ TrackSelector::TrackSelector( const std::string& type,
 //=============================================================================
 // Destructor
 //=============================================================================
-TrackSelector::~TrackSelector() {};
+TrackCriteriaSelector::~TrackCriteriaSelector() {};
 
 //=============================================================================
 // Initialization
 //=============================================================================
-StatusCode TrackSelector::initialize()
+StatusCode TrackCriteriaSelector::initialize()
 {
   StatusCode sc = GaudiTool::initialize(); // must be executed first
   if ( sc.isFailure() ) return sc;  
@@ -70,7 +70,7 @@ StatusCode TrackSelector::initialize()
 //=============================================================================
 // Select the track
 //=============================================================================
-bool TrackSelector::select( Track* track ) const
+bool TrackCriteriaSelector::select( Track* track ) const
 {
   bool selected = true;
 
@@ -90,7 +90,7 @@ bool TrackSelector::select( Track* track ) const
 //=============================================================================
 // Select the MCParticle
 //=============================================================================
-bool TrackSelector::select( MCParticle* mcParticle )
+bool TrackCriteriaSelector::select( MCParticle* mcParticle )
 {
   bool selected = true;
 
@@ -107,7 +107,7 @@ bool TrackSelector::select( MCParticle* mcParticle )
 //=============================================================================
 // Select the Track only by track type, unique- and valid-flag
 //=============================================================================
-bool TrackSelector::selectByTrackType( Track* track ) const
+bool TrackCriteriaSelector::selectByTrackType( Track* track ) const
 {
   bool selected = true;
 
@@ -132,7 +132,7 @@ bool TrackSelector::selectByTrackType( Track* track ) const
 //=============================================================================
 // Select the MCParticle only by track type
 //=============================================================================
-bool TrackSelector::selectByTrackType( MCParticle* mcParticle )
+bool TrackCriteriaSelector::selectByTrackType( MCParticle* mcParticle )
 {
   bool selected = true;
 
@@ -149,7 +149,7 @@ bool TrackSelector::selectByTrackType( MCParticle* mcParticle )
 //=============================================================================
 // Get the track type identifyer of the MCParticle
 //=============================================================================
-unsigned int TrackSelector::trackType( MCParticle* mcPart )
+unsigned int TrackCriteriaSelector::trackType( MCParticle* mcPart )
 {
   bool hasVelo = m_mcParticleJudge -> hasVelo( mcPart );
   bool hasSeed = m_mcParticleJudge -> hasSeed( mcPart );
@@ -180,8 +180,8 @@ unsigned int TrackSelector::trackType( MCParticle* mcPart )
 //=============================================================================
 // Set the track type of a Track with an MCParticle's type
 //=============================================================================
-StatusCode TrackSelector::setTrackType( MCParticle* mcPart,
-                                        Track*& track )
+StatusCode TrackCriteriaSelector::setTrackType( MCParticle* mcPart,
+                                                Track*& track )
 {
   unsigned int tracktype = TrackKeys::TypeUnknown;
   

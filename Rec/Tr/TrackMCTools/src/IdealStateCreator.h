@@ -1,5 +1,5 @@
-#ifndef TRACKMCTOOLS_TRUESTATECREATOR_H
-#define TRACKMCTOOLS_TRUESTATECREATOR_H 1
+#ifndef TRACKMCTOOLS_IDEALSTATECREATOR_H
+#define TRACKMCTOOLS_IDEALSTATECREATOR_H 1
 
 // Include files
 // -------------
@@ -19,13 +19,13 @@
 
 // from TrackInterfacces
 #include "TrackInterfaces/ITrackExtrapolator.h"
-#include "TrackInterfaces/IStateCreator.h"
+#include "TrackInterfaces/IIdealStateCreator.h"
 
 class State;
 
-/** @class TrueStateCreator TrueStateCreator.h "TrackMCTools/TrueStateCreator.h"
+/** @class IdealStateCreator IdealStateCreator.h "TrackMCTools/IdealStateCreator.h"
  * 
- *  A TrueStateCreator is a IStateCreator tool that creates a
+ *  A IdealStateCreator is a IIdealStateCreator tool that creates a
  *  State. There are two methods: one creates a state at a certain 
  *  z-position using the closest two extry/exit points from a MCParticle, 
  *  and a track extrapolator. The other creates a state at the vertex, using 
@@ -41,20 +41,20 @@ class State;
  *  @date   3-7-2002
  */
 
-class TrueStateCreator: public GaudiTool,
-                        virtual public IStateCreator {
+class IdealStateCreator: public GaudiTool,
+                         virtual public IIdealStateCreator {
 public:
   /// Typedefs
   typedef IAssociator<MCParticle, MCHit>     MCHitAsct;
   typedef IAssociator<MCParticle, MCVeloHit> MCVeloHitAsct;
 
   /// Standard constructor
-  TrueStateCreator( const std::string& type,
-                    const std::string& name,
-                    const IInterface* parent );
+  IdealStateCreator( const std::string& type,
+                     const std::string& name,
+                     const IInterface* parent );
 
   /// Destructor
-  virtual ~TrueStateCreator();
+  virtual ~IdealStateCreator();
 
   /// Tool initialization
   virtual StatusCode initialize();
@@ -104,4 +104,4 @@ private:
 };
 
 
-#endif // TRACKMCTOOLS_TRUESTATECREATOR_H
+#endif // TRACKMCTOOLS_IDEALSTATECREATOR_H

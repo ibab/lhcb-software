@@ -1,5 +1,5 @@
-#ifndef TRACKMCTOOLS_TRACKSELECTOR_H 
-#define TRACKMCTOOLS_TRACKSELECTOR_H 1
+#ifndef TRACKMCTOOLS_TRACKCRITERIASELECTOR_H 
+#define TRACKMCTOOLS_TRACKCRITERIASELECTOR_H 1
 
 // from Gaudi
 #include "GaudiAlg/GaudiTool.h"
@@ -9,13 +9,13 @@
 #include "Event/Track.h"
 
 // from TrackInterfaces
-#include "TrackInterfaces/ITrackSelector.h"
+#include "TrackInterfaces/ITrackCriteriaSelector.h"
 #include "TrackInterfaces/ITrackReconstructible.h"
 
 // local
 //#include "TrackMCTools/TrackAcceptance.h"
 
-/** @class TrackSelector TrackSelector.h "TrackMCTools/TrackSelector.h"
+/** @class TrackCriteriaSelector TrackCriteriaSelector.h "TrackMCTools/TrackCriteriaSelector.h"
  *
  *  This tool selects Tracks and MCParticles based on certain criteria.
  *  These criteria, which can be set with job options, are:
@@ -37,16 +37,17 @@
  *  @date   2003-07-28
  */
 
-class TrackSelector : public GaudiTool, virtual public ITrackSelector
+class TrackCriteriaSelector : public GaudiTool,
+                              virtual public ITrackCriteriaSelector
 {
 public:
   /// Constructor
-  TrackSelector( const std::string& type, 
-                 const std::string& name,
-                 const IInterface* parent );
+  TrackCriteriaSelector( const std::string& type, 
+                         const std::string& name,
+                         const IInterface* parent );
 
   /// Destructor
-  virtual ~TrackSelector( ); 
+  virtual ~TrackCriteriaSelector( ); 
 
   /// Tool initialization
   virtual StatusCode initialize();
@@ -110,4 +111,4 @@ private:
   std::string m_mcParticleJudgeName;
 
 };
-#endif // TRACKMCTOOLS_TRACKSELECTOR_H 
+#endif // TRACKMCTOOLS_TRACKCRITERIASELECTOR_H 
