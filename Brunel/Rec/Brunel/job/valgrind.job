@@ -76,7 +76,7 @@ endif
 # == run the excutable ================================
 set SuppFile = "./Brunel.supp"
 
-valgrind --tool=memcheck --demangle=no --error-limit=no --leak-check=yes --num-callers=20 --suppressions=$STDOPTS/Gaudi.supp --suppressions=$SuppFile tmpjob_$Dver.exe $BRUNELOPTS/$Dver.opts >& mem_errors.log
+valgrind --tool=addrcheck --demangle=no --error-limit=no --leak-check=yes --num-callers=20 --suppressions=$STDOPTS/addrcheck.supp --suppressions=$SuppFile tmpjob_$Dver.exe $BRUNELOPTS/$Dver.opts >& addrcheck.log
 
 # == job is finished: remove temporary files ==========
 rm tmpjob_$Dver.exe
