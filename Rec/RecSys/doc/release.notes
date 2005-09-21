@@ -18,6 +18,10 @@ This version uses Gaudi v16r5, LHCb v18r9
                      TrackTools v1r2, TrackMCTools v1r2, TrackIdealPR v1r2, 
                      TrackExtrapolators v1r2, TrTools v2r7, TrConverters v1r3
 
+- In Reco.opts
+  . Add conversion of Rec/FitTrack/Best into Rec/Track/Best (new track model)
+    at the end of tracking sequence
+
 - In TrgVeloTT v8r1
   . Port new implementation from DC04 branch. See details in v8r0 release notes
   . Remove BdlTool (moved to Det/Magnet), pick up IBdlTool interface from 
