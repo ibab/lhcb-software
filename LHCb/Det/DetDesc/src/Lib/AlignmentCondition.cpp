@@ -1,5 +1,6 @@
-// $Id: AlignmentCondition.cpp,v 1.4 2005-08-26 09:34:19 jpalac Exp $
+// $Id: AlignmentCondition.cpp,v 1.5 2005-09-22 07:52:19 cattanem Exp $
 // Include files
+#include <algorithm>
 
 #include "DetDesc/AlignmentCondition.h"
 
