@@ -122,6 +122,7 @@
     <class name="std::vector<DeMuonRegion::logMap_>"              />
     <class name="std::pair<const std::basic_string<char>,BasicParam*>" />
     <class name="std::pair<const std::basic_string<char>,std::basic_string<char> >" />
+    <class name="std::pair<const std::basic_string<char>,SmartRef<Condition> >" />
   </exclusion>
   
 </lcgdict>
