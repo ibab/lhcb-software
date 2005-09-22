@@ -1,0 +1,14 @@
+!----------------------------------------------------------------------------
+! Package     : Tr/TrackAssociators
+! Responsible : Edwin Bos
+! Purpose     : Associators to MC truth for Tracks
+!----------------------------------------------------------------------------
+
+! 2005-09-21 - Eduardo Rodrigues
+ - minor improvements (latest Gaudies) and fixes
+
+! 2005-09-13 - Edwin Bos
+ - Creation of package from Tr/TrFitAssociators and Tr/TrAssociators
+   of the old track event model
+ - Adapted to the new event model
+
