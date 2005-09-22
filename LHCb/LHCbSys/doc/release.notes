@@ -13,7 +13,7 @@ This version uses Gaudi v16r5
      EventSys v20r9, TrgEvent v5r6, DetSys v7r4, DetDesc v15r4, DetDescCnv v2r9,
      DetCond v7r6, STDet v1r5, Magnet v2r9, XmlTools v3r7, LHCbAlgs v1r9
      TrgTools v7r6, MCTools v1r14, TrackPython v1r1, DetCondExample v7r5,
-     GaudiConf v9r2, DAQSys v1r6p1, MuonDAQ v1r2p3
+     GaudiConf v9r2, DAQSys v1r6p1, MuonDAQ v1r2p3, HepMC v4r126p0
 
  - In LHCbKernel v5r13
    . Add IBdlTool, IBIntegrator, ICheckTool, IInAcceptance, INormalizeTool
@@ -95,6 +95,10 @@ This version uses Gaudi v16r5
 
  - In MuonDAQ v1r2p3
    . Fix uninitialised variable in MuonRawBuffer2Digit
+
+ - In HepMC v4r126p0
+   . Split new MattDobbs HepMC 1.26 version between HepMC and HepEvt
+     This version contains the HERWIG interface
 
 </PRE><H1><A NAME=v18r8>2005-07-25 LHCbSys v18r8</A></H1><PRE>
 This version uses Gaudi v16r5

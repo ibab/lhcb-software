@@ -12,7 +12,7 @@ use GaudiConf		v9r2
 
 #                                         Maintainer
 # External package used by GenEvent
-use HepMC	v4r121p0	Sim     # Gloria Corti, Matt Dobbs
+use HepMC	v4r126p0	Sim     # Gloria Corti, Matt Dobbs
 
 # Kernel packages
 use KernelSys           v4r14   Kernel  # Marco Cattaneo
