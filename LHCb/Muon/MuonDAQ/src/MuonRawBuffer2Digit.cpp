@@ -1,4 +1,4 @@
-// $Id: MuonRawBuffer2Digit.cpp,v 1.7 2004-08-31 10:06:10 asatta Exp $
+// $Id: MuonRawBuffer2Digit.cpp,v 1.8 2005-09-22 08:50:43 cattanem Exp $
 // Include files 
 
 // from Gaudi
@@ -48,6 +48,7 @@ StatusCode MuonRawBuffer2Digit::initialize() {
   msg << MSG::DEBUG << "==> Initialise" << endreq;
   // initialize Look-up for the decoding //
   int addL1=0;
+  m_TotL1Board = 0;
   StatusCode sc=toolSvc()->retrieveTool("MuonGetInfoTool",m_pGetInfo);
   if(sc.isFailure())return StatusCode::FAILURE;
 

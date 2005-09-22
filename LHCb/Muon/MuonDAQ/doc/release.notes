@@ -4,6 +4,10 @@
 ! Purpose     : Muon System Raw Buffer coding and decoding algorithms
 !-----------------------------------------------------------------------------
 
+!========================= MuonDAQ v1r2p3 2005-09-22 ======================
+! 2005-09-22 - Marco Cattaneo
+ - Fix uninitialized varriable m_TotL1Board in MuonRawBuffer2Digit.cpp
+
 !========================= MuonDAQ v1r2p2 2005-04-01 ======================
 ! 2005-04-01 - Marco Cattaneo
  - Update requirements to use MuonEvent v*
