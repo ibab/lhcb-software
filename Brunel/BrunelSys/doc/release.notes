@@ -3,7 +3,7 @@ Package: Rec/Brunel
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb reconstruction program
 
-</PRE><H1><A NAME=v27r5>2005-09-21 Brunel v27r5</A></H1><PRE>
+</PRE><H1><A NAME=v27r5>2005-09-22 Brunel v27r5</A></H1><PRE>
 This version uses Gaudi v16r5, LHCb v18r9, Rec v1r5, Lbcom v2r5
 Requires input data from Boole v9r2 or greater. Incompatible with DC04 versions
 
@@ -20,6 +20,9 @@ Requires input data from Boole v9r2 or greater. Incompatible with DC04 versions
  - Persistency changes:
    . Rec/Track/Best added to DST. This is a temporary measure for testing, will
      eventually replace old track model tracks in pDst
+
+ - Bug fixes:
+   . Fix uninitialised variable in MuonRawBuffer2Digit (MuonDAQ v1r2p3)
 
 </PRE><H1><A NAME=v27r4>2005-07-18 Brunel v27r4</A></H1><PRE>
 This version uses Gaudi v16r5, LHCb v18r8, Rec v1r4, Lbcom v2r4
