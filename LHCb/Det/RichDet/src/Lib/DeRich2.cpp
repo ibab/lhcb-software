@@ -3,7 +3,7 @@
  *
  *  Implementation file for detector description class : DeRich2
  *
- *  $Id: DeRich2.cpp,v 1.17 2005-09-23 15:27:28 papanest Exp $
+ *  $Id: DeRich2.cpp,v 1.18 2005-09-23 16:09:13 papanest Exp $
  *
  *  @author Antonis Papanestis a.papanestis@rl.ac.uk
  *  @date   2004-06-18
@@ -63,7 +63,7 @@ StatusCode DeRich2::initialize()
   // get the parameters of the nominal flat mirror plane in the form
   // Ax+By+Cz+D=0
   std::vector<double> nominalFMirrorPlane;
-  if ( exists("Rich1NominalSecMirrorPlane") ) 
+  if ( exists("Rich2NominalSecMirrorPlane") ) 
     nominalFMirrorPlane = param<std::vector<double> >("Rich2NominalSecMirrorPlane");
   else
     nominalFMirrorPlane = param<std::vector<double> >("Rich2NominalFlatMirrorPlane");
