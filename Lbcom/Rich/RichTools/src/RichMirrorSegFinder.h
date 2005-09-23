@@ -5,7 +5,7 @@
  *  Header file for tool : RichMirrorSegFinder
  *
  *  CVS Log :-
- *  $Id: RichMirrorSegFinder.h,v 1.5 2005-06-17 15:15:55 jonrob Exp $
+ *  $Id: RichMirrorSegFinder.h,v 1.6 2005-09-23 15:48:32 papanest Exp $
  *
  *  @author Antonis Papanestis
  *  @date   2003-11-04
@@ -81,16 +81,26 @@ public: // methods (and doxygen comments) inherited from public interface
                                           const Rich::Side side,
                                           const HepPoint3D& reflPoint ) const;
 
+  // Locates the secondary mirror Segment given a reflection point,
+  // RICH identifier and panel
+  const DeRichSphMirror* findSecMirror( const Rich::DetectorType rich,
+                                        const Rich::Side side,
+                                        const HepPoint3D& reflPoint ) const;
+
+
 private:
 
   /// Enumeration for falt and spherical mirror types
-  enum mirrorType { sph = 0, flat = 1 };
+  enum mirrorType { sph = 0, flat = 1, sec = 1 };
 
   /// Pointers to the spherical mirror detector elements
   const DeRichSphMirror* m_sphMirrors[Rich::NRiches][Rich::NHPDPanelsPerRICH][30];
 
   /// Pointers to the flat mirror detector elements
   const DeRichFlatMirror* m_flatMirrors[Rich::NRiches][Rich::NHPDPanelsPerRICH][30];
+
+  /// Pointers to the secondary (spherical) mirror detector elements
+  const DeRichSphMirror* m_secMirrors[Rich::NRiches][Rich::NHPDPanelsPerRICH][30];
 
   /// The max mirror number for each RICH and HPD panel
   unsigned int m_maxMirror[Rich::NRiches][Rich::NHPDPanelsPerRICH][2];

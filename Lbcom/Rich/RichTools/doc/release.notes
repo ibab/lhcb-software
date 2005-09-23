@@ -4,6 +4,10 @@
 ! Purpose     : General purpose Rich Tools
 !-----------------------------------------------------------------------------
 
+! 2005-09-23 - Antonis Papanestis
+ - New tools for the spherical secondary mirrors
+   RichRayTracingAllSph and RichPhotonRecoUsingQuarticSolnAllSph
+
 !=========================== RichTools v1r7 2005-06-21 =======================
 ! 2005-06-21 - Chris Jones
  - Adapt to changes in RichKernel base classes and RichToolRegistry
