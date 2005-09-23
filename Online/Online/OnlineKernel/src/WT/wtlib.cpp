@@ -33,7 +33,7 @@ struct wt_enabled_fac_header : public qentry  {
 }; 
 
 void wtc_print_space();
-wt_fac_entry* _wtc_find_facility(int facility,qentry* fac_head);
+wt_fac_entry* _wtc_find_facility(unsigned int facility,qentry* fac_head);
 static int _wtc_add_fired(wt_queue_entry* entry,wt_enabled_fac_header* mask_ptr,wt_fac_entry* fac);
 int _wtc_restore_stack(void);
 void _wtc_print_entry(wt_queue_entry *e);

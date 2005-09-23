@@ -13,6 +13,17 @@ MBM::Consumer::~Consumer()
 {
 }
 
+// Switch to non-blocking execution mode
+void MBM::Consumer::setNonBlocking(int facility, bool subscribe) {
+  Client::setNonBlocking(facility,false);
+  if ( subscribe ) {
+    int status = wtc_subscribe(facility, eventRearm, eventAction, this);
+    if( status != WT_SUCCESS ) {
+      throw std::runtime_error("Failed to subscribe action:"+m_buffName+" [Internal Error]");
+    }
+  }
+}
+
 int MBM::Consumer::eventAst(void* param) {
   Consumer* cons = (Consumer*)param;
   return cons->eventAst();

@@ -31,9 +31,12 @@ namespace MBM {
     virtual ~Producer();
 
     /// Access to event descriptor
-    const EventDesc& event() const {
+    EventDesc& event() {
       return m_event;
     }
+
+    /// Switch to non-blocking asynchronous execution mode using WT
+    virtual void setNonBlocking(int facility, bool subscribe);
 
     /// Ast to be called on event receival (may be overloaded by clients)
     virtual int spaceAst();
@@ -43,6 +46,12 @@ namespace MBM {
 
     /// Event receival rearm
     virtual int spaceRearm(int new_length);
+
+    /// Get space call to fill event data
+    int getSpace(int len);
+
+    /// Send and declare event to consumers
+    int sendEvent();
   };
 }
 #endif  // _MBM_CONSUMER_H

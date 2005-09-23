@@ -1,10 +1,11 @@
 #ifndef _RTL_INTERNAL_H
 #define _RTL_INTERNAL_H
 
+#ifndef _WIN32
 #define USE_PTHREADS
+#endif
 
 #ifdef USE_PTHREADS
-
   #include "pthread.h"
   #include "semaphore.h"
   typedef pthread_t lib_rtl_thread_t;
@@ -13,9 +14,8 @@
 
 #elif defined(_WIN32)
   #include <windows.h>
-  typedef void* lib_rtl_event_t;
-  typedef void* lib_rtl_thread_t;
-  typedef void* lib_rtl_lock_handle_t;
+  typedef HANDLE lib_rtl_event_t;
+  typedef HANDLE lib_rtl_lock_handle_t;
   extern "C" __declspec(dllimport) BOOL __stdcall CancelWaitableTimer(void*);
   extern "C" __declspec(dllimport) void* __stdcall CreateWaitableTimerA(void*, DWORD, void*);
   extern "C" __declspec(dllimport) BOOL __stdcall SetWaitableTimer(void*, const LARGE_INTEGER*, DWORD, void*, void*, BOOL);

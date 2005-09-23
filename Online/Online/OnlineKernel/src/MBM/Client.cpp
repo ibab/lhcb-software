@@ -1,11 +1,17 @@
 #include "RTL/rtl.h"
+#include "WT/wtdef.h"
 #include "MBM/Client.h"
 #include <stdexcept>
 
 // Initializing constructor
 MBM::Client::Client(const std::string& buffer_name, const std::string& client_name, int partition_id)
-  : m_buffName(buffer_name), m_name(client_name), m_partID(partition_id), m_facility(0), m_blocking(0)
+  : m_buffName(buffer_name), m_name(client_name), m_partID(partition_id), m_facility(0), m_blocking(true)
 {
+  static bool first = true;
+  if ( first )  {
+    first = false;
+    ::wtc_init();
+  }
   m_bmid = ::mbm_include(m_buffName.c_str(),m_name.c_str(),m_partID);
   if ( int(m_bmid) == -1 )  {
     throw std::runtime_error("Failed to include into MBM buffer:"+m_buffName);
@@ -24,26 +30,20 @@ MBM::Client::~Client()
 }
 
 // Access to process id
-int MBM::Client::pid() const {
+int MBM::Client::pid()  {
   return lib_rtl_pid();
 }
 
 // Switch to non-blocking execution mode
-void MBM::Client::setNonBlocking(int facility, bool subscribe) {
+void MBM::Client::setNonBlocking(int facility, bool /* subscribe */) {
   m_blocking = false;
   m_facility = facility;
-  if ( subscribe ) {
-    int status = wtc_subscribe(facility, eventRearm, eventAction, this);
-    if( status != WT_SUCCESS ) {
-      throw std::runtime_error("Failed to subscribe action:"+m_buffName+" [Internal Error]");
-    }
-  }
 }
 
 // Switch to non-blocking execution mode
 void MBM::Client::setBlocking() {
-  if ( m_blocking) {
-    wtc_remove(m_facility);
+  if ( !m_blocking ) {
+    ::wtc_remove(m_facility);
   }
   m_blocking = true;
   m_facility = 0;
@@ -53,8 +53,10 @@ void MBM::Client::setBlocking() {
 // Run the application with WT
 int MBM::Client::run() {
   while(1)  {
-    int sub_status, userpar, facility;
-    status = ::wtc_wait(&facility, &userpar, &sub_status);
+    int sub_status;
+    void* userpar;
+    unsigned int facility;
+    int status = ::wtc_wait(&facility, &userpar, &sub_status);
     ::printf("Exited WAIT>>>> Facility = %d Status=%d Sub-Status = %d\n", 
       facility, status, sub_status);
   }

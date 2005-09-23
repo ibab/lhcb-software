@@ -30,6 +30,9 @@ namespace MBM {
     /// Standard destructor
     virtual ~Consumer();
 
+    /// Switch to non-blocking asynchronous execution mode using WT
+    virtual void setNonBlocking(int facility, bool subscribe);
+
     /// Access to event descriptor
     const EventDesc& event() const {
       return m_event;

@@ -77,7 +77,6 @@ int lib_rtl_create_named_event (const char* name, int* event_flag)    {
   lib_rtl_event_t hdl = 0;
 #if defined(USE_PTHREADS)
   int sc = 0;
-  name = 0;
   if ( name )  {
     hdl = (lib_rtl_event_t)::sem_open(name, _O_CREAT, 0644, 1);
   }

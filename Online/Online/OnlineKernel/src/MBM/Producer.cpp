@@ -12,6 +12,17 @@ MBM::Producer::~Producer()
 {
 }
 
+// Switch to non-blocking execution mode
+void MBM::Producer::setNonBlocking(int facility, bool subscribe) {
+  Client::setNonBlocking(facility,false);
+  if ( subscribe ) {
+    int status = wtc_subscribe(facility, spaceRearm, spaceAction, this);
+    if( status != WT_SUCCESS ) {
+      throw std::runtime_error("Failed to subscribe action:"+m_buffName+" [Internal Error]");
+    }
+  }
+}
+
 int MBM::Producer::spaceAst(void* param) {
   Producer* prod = (Producer*)param;
   return prod->spaceAst();
@@ -24,7 +35,7 @@ int MBM::Producer::spaceAst() {
     if ( !m_blocking ) {
       sc = ::wtc_insert(m_facility, this);
       if( sc == WT_SUCCESS ) {
-	return MBM_NORMAL;
+        return MBM_NORMAL;
       }
       throw std::runtime_error("Failed to wtc_insert on get space AST:"+m_buffName+" [Internal Error]");
       return MBM_ERROR;
@@ -54,7 +65,7 @@ int MBM::Producer::spaceAction() {
     if ( status == MBM_NORMAL )  {
       status = ::mbm_send_space(m_bmid);
       if ( status == MBM_NORMAL )  {
-	return MBM_NORMAL;
+        return MBM_NORMAL;
       }
       throw std::runtime_error("Failed to send space for MBM buffer:"+m_buffName+" [Internal Error]");
     }
@@ -82,7 +93,7 @@ int MBM::Producer::spaceRearm(int new_length) {
     if ( status == MBM_NORMAL )  {
       status = m_blocking ? ::mbm_wait_space(m_bmid) : ::mbm_wait_space_a(m_bmid);
       if ( status == MBM_NORMAL )  {
-	return MBM_NORMAL;
+        return MBM_NORMAL;
       }
       throw std::runtime_error("Failed to wait space for MBM buffer:"+m_buffName+" [Internal Error]");
     }
@@ -90,5 +101,15 @@ int MBM::Producer::spaceRearm(int new_length) {
   }
   throw std::runtime_error("Failed to declare event for MBM buffer:"+m_buffName+" [Buffer not connected]");
   return MBM_ERROR;
+}
+
+// Get space call to fill event data
+int MBM::Producer::getSpace(int len)  {
+  return spaceRearm(len);
+}
+
+/// Send and declare event to consumers
+int MBM::Producer::sendEvent()  {
+  return spaceAction();
 }
 

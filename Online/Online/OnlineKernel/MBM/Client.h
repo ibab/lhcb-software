@@ -61,7 +61,7 @@ namespace MBM {
     }
 
     /// Switch to non-blocking asynchronous execution mode using WT
-    void setNonBlocking(int facility, bool subscribe);
+    virtual void setNonBlocking(int facility, bool subscribe);
 
     /// Switch to blocking synchronous execution mode
     void setBlocking();

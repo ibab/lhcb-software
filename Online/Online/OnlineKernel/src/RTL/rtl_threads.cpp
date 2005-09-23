@@ -22,14 +22,13 @@ int lib_rtl_start_thread(lib_rtl_thread_routine_t start_routine, void* thread_ar
     return 0;
   }
 #elif defined(_WIN32)
-  DWORD dwThreadId, dwThrdParam = 1;
   handle->h = ::CreateThread( 
       NULL,                        // default security attributes 
       0,                           // use default stack size  
       (LPTHREAD_START_ROUTINE)start_routine,               // thread function 
       thread_arg,                  // argument to thread function 
       0,                           // use default creation flags 
-      &handle->p);                  // returns the thread identifier 
+      (LPDWORD)&handle->p);        // returns the thread identifier 
   // Check the return value for success.  
   if (handle->h == 0)    {
     lib_rtl_signal_message(LIB_RTL_OS, "CreateThread failed");
@@ -47,7 +46,7 @@ int lib_rtl_delete_thread(lib_rtl_thread_t handle)  {
   return 1;
 #elif defined(_WIN32)
   if ( handle.h )  {
-    ::CloseHandle(handle);
+    ::CloseHandle(handle.h);
     return 1;
   }
   lib_rtl_signal_message(LIB_RTL_DEFAULT, "lib_rtl_delete_thread failed [Invalid Handle]");

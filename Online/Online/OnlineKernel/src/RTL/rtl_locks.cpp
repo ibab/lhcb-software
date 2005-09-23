@@ -40,7 +40,6 @@ int lib_rtl_create_lock(const char* mutex_name, lib_rtl_lock_handle_t* handle)  
   return status;
 #elif defined(USE_PTHREADS)
   int sc = 0;
-  mutex_name = 0;
   if ( mutex_name )  {
     *handle = (lib_rtl_lock_handle_t)::sem_open(mutex_name, O_CREAT, 0644, 1);
   }
