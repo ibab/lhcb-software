@@ -3,7 +3,7 @@
  *
  *  Implementation file for detector description class : DeRich
  *
- *  $Id: DeRich.cpp,v 1.10 2005-05-13 16:11:37 marcocle Exp $
+ *  $Id: DeRich.cpp,v 1.11 2005-09-23 15:27:28 papanest Exp $
  *
  *  @author Antonis Papanestis a.papanestis@rl.ac.uk
  *  @date   2004-06-18
@@ -29,7 +29,7 @@ DeRich::DeRich()
     m_gasWinAbsLength       ( 0 ),
     m_HPDQuantumEff         ( 0 ),
     m_nominalSphMirrorRefl  ( 0 ),
-    m_nominalFlatMirrorRefl ( 0 ),
+    m_nominalSecMirrorRefl  ( 0 ),
     m_name                  ( "DeRich" )
 { }
 
@@ -52,10 +52,18 @@ StatusCode DeRich::initialize ( )
   {
     m_sphMirrorSegRows  = param<int>( "SphMirrorSegRows" );
     m_sphMirrorSegCols  = param<int>( "SphMirrorSegColumns" );
-    m_flatMirrorSegRows = param<int>( "FlatMirrorSegRows" );
-    m_flatMirrorSegCols = param<int>( "FlatMirrorSegColumns" );
     m_positionInfo      = true;
   }
+
+  if ( exists( "SecMirrorSegRows" ) ) {
+    m_flatMirrorSegRows = param<int>( "SecMirrorSegRows" );
+    m_flatMirrorSegCols = param<int>( "SecMirrorSegColumns" );
+  } else if ( exists( "FlatMirrorSegRows" ) ){
+    m_flatMirrorSegRows = param<int>( "FlatMirrorSegRows" );
+    m_flatMirrorSegCols = param<int>( "FlatMirrorSegColumns" );
+  }
+  
+  
 
   return StatusCode::SUCCESS;
 }

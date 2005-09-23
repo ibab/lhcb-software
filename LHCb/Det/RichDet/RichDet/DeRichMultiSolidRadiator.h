@@ -4,8 +4,11 @@
  *  Header file for detector description class : DeRichMultiSolidRadiator
  *
  *  CVS Log :-
- *  $Id: DeRichMultiSolidRadiator.h,v 1.6 2004-10-20 16:16:36 jonrob Exp $
+ *  $Id: DeRichMultiSolidRadiator.h,v 1.7 2005-09-23 15:27:28 papanest Exp $
  *  $Log: not supported by cvs2svn $
+ *  Revision 1.6  2004/10/20 16:16:36  jonrob
+ *  More minor updates to functions (adding const etc.)
+ *
  *  Revision 1.5  2004/10/18 09:21:49  jonrob
  *  Minor updates to functions (adding const etc.)
  *
@@ -24,6 +27,7 @@
 
 // Include files
 #include "RichDet/DeRichRadiator.h"
+#include "CLHEP/Geometry/Transform3D.h"
 
 // External declarations
 extern const CLID& CLID_DeRichMultiSolidRadiator;
@@ -108,15 +112,24 @@ public:
 
 private:
 
+  StatusCode addVolumes(const ILVolume* lv, 
+                        const std::string volName,
+                        const HepTransform3D& toUpperLevel);
+
+
   /// vector of solids
   typedef std::vector<const ISolid*> Solids;
   /// vector of physical volumes
   typedef std::vector<const IPVolume*> PVolumes;
-  /// vector of tabulated properties
+  /// vector of transformation matrices
+  typedef std::vector<HepTransform3D> Transforms;
+   /// vector of tabulated properties
   typedef std::vector<const TabulatedProperty*> TabProps;
 
   Solids m_solids;        ///< The solids that make up this radiator
   PVolumes m_pVolumes;    ///< The physical volumes
+  Transforms m_toTopLevel; ///< Tranforms to top level of the detector element
+  Transforms m_toLowLevel; ///< Tranforms to low (solid) level of the detector element
   TabProps m_refIndices;  ///< refractive indices (for each solid)
   TabProps m_rayleighVector; ///< Rayleigh scattering properties
 };

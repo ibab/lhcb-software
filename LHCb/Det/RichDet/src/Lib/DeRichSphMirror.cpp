@@ -3,7 +3,7 @@
  *
  *  Implementation file for detector description class : DeRichSphMirror
  *
- *  $Id: DeRichSphMirror.cpp,v 1.15 2005-07-13 15:28:24 papanest Exp $
+ *  $Id: DeRichSphMirror.cpp,v 1.16 2005-09-23 15:27:28 papanest Exp $
  *
  *  @author Antonis Papanestis a.papanestis@rl.ac.uk
  *  @date   2004-06-18
@@ -50,9 +50,16 @@ const CLID& DeRichSphMirror::classID()
 
 StatusCode DeRichSphMirror::initialize()
 {
-  MsgStream msg( msgSvc(), "DeRichSphMirror" );
-  msg << MSG::DEBUG << "Initializing spherical mirror" << endmsg;
+  MsgStream msgStart( msgSvc(), "DeRichSphMirror" );
+  msgStart << MSG::VERBOSE << "Initializing spherical mirror" << endmsg;
   //this->printOut(msg);
+
+  // find if this is a primary or secondary mirror
+  bool secondary( true );
+  const std::string::size_type secPos = name().find("SecMirror");
+  if ( std::string::npos == secPos ) secondary = false;
+  std::string localName = ( secondary ? "DeRichSecMirror" : "DeRichSphMirror" );
+  MsgStream msg( msgSvc(), localName );
 
   // find if this mirror is in Rich1 or Rich2
   const std::string::size_type pos = name().find("Rich");
@@ -143,6 +150,7 @@ StatusCode DeRichSphMirror::initialize()
   const HepPoint3D localMirrorCentre(sphTicks[0]*toSphCentre);
   m_mirrorCentre = geometry()->toGlobal(localMirrorCentre);
 
+  // right and left middle points are for verification of the hex segment position
   const HepPoint3D middleRightSide(sqrt(m_radius*m_radius-flatToCentre*flatToCentre),
                                    0.0,
                                    flatToCentre);
@@ -158,15 +166,25 @@ StatusCode DeRichSphMirror::initialize()
       << m_radius << " Centre of curvature " << m_centreOfCurvature << endmsg;
   msg << MSG::DEBUG << "Centre of mirror " << m_mirrorCentre << endmsg;
 
-  if( m_rich == Rich::Rich2 ) {
-    if( (m_mirrorNumber == 31) || (m_mirrorNumber < 28 && m_mirrorNumber != 0) )
-      msg << MSG::VERBOSE << "Right middle "
-          << geometry()->toGlobal(middleRightSide) << endmsg;
-    else
-      msg << MSG::VERBOSE << "Left middle "
-          << geometry()->toGlobal(middleLeftSide) << endmsg;
-  }
+  // the following lines can be uncommented for debug
+  //if( m_rich == Rich::Rich2 ) {
+  //  if( (m_mirrorNumber == 31) || (m_mirrorNumber < 28 && m_mirrorNumber != 0) )
+  //    msg << MSG::VERBOSE << "Right middle "
+  //        << geometry()->toGlobal(middleRightSide) << endmsg;
+  //  else
+  //    msg << MSG::VERBOSE << "Left middle "
+  //        << geometry()->toGlobal(middleLeftSide) << endmsg;
+  //}
 
+  // centre normal vector
+  const HepVector3D localCentreNormal( -localMirrorCentre/localMirrorCentre.mag() );
+  m_centreNormal = localCentreNormal;
+  m_centreNormal.transform( geometry()->matrixInv() );
+  msg << MSG::DEBUG << "Normal vector at the centre" << m_centreNormal << endmsg;
+  
+  m_centreNormalPlane = HepPlane3D(m_centreNormal, m_mirrorCentre);
+  msg << MSG::DEBUG << "centreNormalPlane " << m_centreNormalPlane << endmsg;
+  
   // find surface properties
   std::string surfLocation, sphMirrorName, surfName;
   if ( m_rich == Rich::Rich1 ) {
@@ -176,11 +194,10 @@ StatusCode DeRichSphMirror::initialize()
   }
   else{
     surfLocation = "/dd/Geometry/Rich2/Rich2Surfaces";
-    sphMirrorName = "SphMirror";
-    surfName = "HexSeg"+mirNumString;
+    sphMirrorName = ( secondary  ? "SecMirror" : "SphMirror");
+    surfName = "Seg"+mirNumString;
   }
   bool foundSurface( false );
-  std::string surfEnd = ":"+mirNumString;
 
   SmartDataPtr<DataObject> rich2SurfCat(dataSvc(),surfLocation);
   DataSvcHelpers::RegistryEntry *rich2Reg = dynamic_cast<DataSvcHelpers::RegistryEntry *>
@@ -206,7 +223,7 @@ StatusCode DeRichSphMirror::initialize()
   if ( foundSurface ) {
     SmartDataPtr<DataObject> obj (dataSvc(), storeReg->identifier());
     DataObject* pObj = obj;
-    msg << MSG::DEBUG << "Dynamic cast to surface " << obj->name() << endmsg;
+    msg << MSG::VERBOSE << "Dynamic cast to surface " << obj->name() << endmsg;
     Surface* surf = dynamic_cast<Surface*> (pObj);
     const Surface::Tables surfTabProp = surf->tabulatedProperties();
     for (Surface::Tables::const_iterator table_iter = surfTabProp.begin();
@@ -229,7 +246,7 @@ StatusCode DeRichSphMirror::initialize()
 
   msg << MSG::DEBUG << "Reflectivity is from TabProp "
       << m_reflectivity->name() << endmsg;
-  msg << MSG::DEBUG <<"End initialisation for DeRichSphMirror" << endmsg;
+  msg << MSG::VERBOSE <<"End initialisation for DeRichSphMirror" << endmsg;
   return StatusCode::SUCCESS;
 }
 

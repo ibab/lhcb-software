@@ -3,7 +3,7 @@
  *
  *  Implementation file for detector description class : DeRichMultiSolidRadiator
  *
- *  $Id: DeRichMultiSolidRadiator.cpp,v 1.9 2005-02-23 10:26:00 jonrob Exp $
+ *  $Id: DeRichMultiSolidRadiator.cpp,v 1.10 2005-09-23 15:27:28 papanest Exp $
  *
  *  @author Antonis Papanestis a.papanestis@rl.ac.uk
  *  @date   2004-06-18
@@ -18,7 +18,6 @@
 #include "GaudiKernel/MsgStream.h"
 
 // CLHEP files
-#include "CLHEP/Geometry/Transform3D.h"
 #include "CLHEP/Geometry/Vector3D.h"
 
 /// Detector description classes
@@ -45,16 +44,60 @@ StatusCode DeRichMultiSolidRadiator::initialize()
 {
   if ( DeRichRadiator::initialize().isFailure() ) return StatusCode::FAILURE;
  
-  MsgStream log( msgSvc(), myName() );
+  MsgStream log( msgSvc(), "DeRichMultiSolidRadiator" );
   log << MSG::DEBUG <<"Starting initialisation for DeRichMultiSolidRadiator "
-      << name() << endreq;
+      << name() << endmsg;
 
   // multi solid specific initialisation
-  const ILVolume* lv = geometry()->lvolume();
+  const ILVolume* topLV = geometry()->lvolume();
+
+  // look for Aerogel container left
+  const IPVolume* contR = topLV->pvolume("pvRich1AerogelContainerRight:0");
+  if ( contR )
+    if ( !addVolumes(contR->lvolume(), "AerogelT", contR->matrix() ) ) return StatusCode::FAILURE;
+  
+  // look for Aerogel container right
+  const IPVolume* contL = topLV->pvolume("pvRich1AerogelContainerLeft:1");
+  if ( contL ) {
+    if ( !addVolumes(contL->lvolume(), "AerogelT", contL->matrix() ) ) return StatusCode::FAILURE;
+  }
+  // old geometry with aerogel quarters
+  else 
+    if ( !addVolumes(topLV, "AerogelQuad", HepTransform3D() ) ) return StatusCode::FAILURE;
+  
+  if ( m_refIndices.empty() ) 
+  {
+    log << MSG::ERROR << "Radiator " << name() << " without refractive index"
+        << endmsg;
+    return StatusCode::FAILURE;
+  }
+  // for the time being use the refIndex of the first volume for the whole 
+  // radiator
+  m_refIndex = m_refIndices[0];
+
+  if ( !m_rayleighVector.empty() ) m_rayleigh = m_rayleighVector[0];
+  
+  return StatusCode::SUCCESS;
+}
+
+
+//=========================================================================
+// add physical volumes to multi solid radiator  
+//=========================================================================
+StatusCode DeRichMultiSolidRadiator::addVolumes (const ILVolume* lv, 
+                                                 const std::string volName,
+                                                 const HepTransform3D& toLowerLevel) {
+
+  MsgStream log( msgSvc(), "DeRichMultiSolidRadiator" );
+
+  // while string volumes also store the total transformation to 
+  // get to/from the low level volume to the top level volume
   ILVolume::PVolumes::const_iterator pviter;
   for (pviter=lv->pvBegin(); pviter!=lv->pvEnd(); ++pviter) {
-    if( (*pviter)->name().find("AerogelQuad") != std::string::npos ) {
+    if( (*pviter)->name().find(volName) != std::string::npos ) {
       m_pVolumes.push_back( (*pviter) );
+      m_toLowLevel.push_back( toLowerLevel*(*pviter)->matrix() );
+      m_toTopLevel.push_back( toLowerLevel.inverse()*(*pviter)->matrixInv() );
       m_solids.push_back( (*pviter)->lvolume()->solid() );
       log << MSG::DEBUG << "Storing pvolume " << (*pviter)->name();
 
@@ -78,21 +121,8 @@ StatusCode DeRichMultiSolidRadiator::initialize()
     }
   }
 
-  if ( m_refIndices.empty() ) 
-  {
-    log << MSG::ERROR << "Radiator " << name() << " without refractive index"
-        << endmsg;
-    return StatusCode::FAILURE;
-  }
-  // for the time being use the refIndex of the first volume for the whole 
-  // radiator
-  m_refIndex = m_refIndices[0];
-
-  if ( !m_rayleighVector.empty() ) m_rayleigh = m_rayleighVector[0];
-  
   return StatusCode::SUCCESS;
 }
-
 
 //=========================================================================
 //  returns the next intersection point
@@ -114,14 +144,13 @@ DeRichMultiSolidRadiator::nextIntersectionPoint( const HepPoint3D&  pGlobal,
   bool foundTick(false);
 
   for (unsigned int solid=0; solid<m_solids.size(); ++solid) {
-    HepVector3D solidLocalVector = vLocal;
+    HepVector3D solidLocalVector( m_toLowLevel[solid]*vLocal );
+    HepPoint3D solidLocalPoint( m_toLowLevel[solid]*pLocal );
+
     if ( m_solids[solid]->
-         intersectionTicks(m_pVolumes[solid]->toLocal(pLocal),
-                           solidLocalVector.transform(m_pVolumes[solid]->
-                                                      matrix()),
-                           ticks) ) {
-      localNextTempPoint = m_pVolumes[solid]->
-        toMother(m_pVolumes[solid]->toLocal(pLocal)+solidLocalVector*ticks[0]);
+         intersectionTicks(solidLocalPoint,solidLocalVector,ticks) ) {
+      HepPoint3D localNext( solidLocalPoint+solidLocalVector*ticks[0] );
+      localNextTempPoint = m_toTopLevel[solid]*localNext;
       if ( localNextTempPoint.z() < localNextPoint.z() )
         localNextPoint = localNextTempPoint;
       foundTick = true;
@@ -158,17 +187,15 @@ DeRichMultiSolidRadiator::intersectionPoints( const HepPoint3D&  position,
   bool foundTick(false);
 
   for (unsigned int solid=0; solid<m_solids.size(); ++solid) {
-    HepPoint3D solidLocalVector = vLocal;
+    HepVector3D solidLocalVector( m_toLowLevel[solid]*vLocal );
+    HepPoint3D solidLocalPoint( m_toLowLevel[solid]*pLocal );
+    
     if ( m_solids[solid]->
-         intersectionTicks(m_pVolumes[solid]->toLocal(pLocal),
-                           solidLocalVector.transform(m_pVolumes[solid]->
-                                                      matrix()),
-                           ticks) ) {
-      localEntryTempPoint = m_pVolumes[solid]->
-        toMother(m_pVolumes[solid]->toLocal(pLocal)+solidLocalVector*ticks[0]);
-      localExitTempPoint = m_pVolumes[solid]->
-        toMother(m_pVolumes[solid]->toLocal(pLocal)+solidLocalVector*
-                 ticks[ticks.size()-1]);
+         intersectionTicks(solidLocalPoint,solidLocalVector,ticks) ) {
+      HepPoint3D localEntryStep1( solidLocalPoint+solidLocalVector*ticks[0] );
+      localEntryTempPoint = m_toTopLevel[solid]*localEntryStep1;
+      HepPoint3D localExitStep1 ( solidLocalPoint+solidLocalVector*ticks[ticks.size()-1]);
+      localExitTempPoint = m_toTopLevel[solid]*localExitStep1;
 
       if ( localEntryTempPoint.z() < localEntryPoint.z() )
         localEntryPoint = localEntryTempPoint;

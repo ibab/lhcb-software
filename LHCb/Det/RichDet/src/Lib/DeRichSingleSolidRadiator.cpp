@@ -3,7 +3,7 @@
  *
  *  Implementation file for detector description class : DeRichSingleSolidRadiator
  *
- *  $Id: DeRichSingleSolidRadiator.cpp,v 1.10 2005-02-23 10:26:00 jonrob Exp $
+ *  $Id: DeRichSingleSolidRadiator.cpp,v 1.11 2005-09-23 15:27:28 papanest Exp $
  *
  *  @author Antonis Papanestis a.papanestis@rl.ac.uk
  *  @date   2004-06-18
@@ -45,7 +45,7 @@ StatusCode DeRichSingleSolidRadiator::initialize()
 {
   if ( DeRichRadiator::initialize().isFailure() ) return StatusCode::FAILURE;
 
-  MsgStream log( msgSvc(), myName() );
+  MsgStream log( msgSvc(), "DeRichSingleSolidRadiator" );
   log << MSG::DEBUG << "Starting initialisation for DeRichSingleSolidRadiator "
       << name() << endreq;
 

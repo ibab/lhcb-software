@@ -3,7 +3,7 @@
  *
  *  Implementation file for detector description class : DeRich1
  *
- *  $Id: DeRich1.cpp,v 1.15 2005-05-13 16:11:37 marcocle Exp $
+ *  $Id: DeRich1.cpp,v 1.16 2005-09-23 15:27:28 papanest Exp $
  *
  *  @author Antonis Papanestis a.papanestis@rl.ac.uk
  *  @date   2004-06-18
@@ -65,7 +65,12 @@ StatusCode DeRich1::initialize()
 
   // get the parameters of the nominal flat mirror plane in the form
   // Ax+By+Cz+D=0
-  const std::vector<double> & nominalFMirrorPlane = param<std::vector<double> >("Rich1NominalFlatMirrorPlane");
+  std::vector<double> nominalFMirrorPlane;
+  if ( exists("Rich1NominalSecMirrorPlane") ) 
+    nominalFMirrorPlane = param<std::vector<double> >("Rich1NominalSecMirrorPlane");
+  else
+    nominalFMirrorPlane = param<std::vector<double> >("Rich1NominalFlatMirrorPlane");
+
   m_nominalPlaneTop = HepPlane3D(nominalFMirrorPlane[0],nominalFMirrorPlane[1],
                                  nominalFMirrorPlane[2],nominalFMirrorPlane[3]);
   m_nominalPlaneBottom = HepPlane3D(nominalFMirrorPlane[0],-nominalFMirrorPlane[1],
@@ -129,16 +134,16 @@ StatusCode DeRich1::initialize()
         << sphMirrorReflLoc << endmsg;
   }
 
-  // get the nominal reflectivity of the flat mirror
-  const std::string flatMirrorReflLoc = 
+  // get the nominal reflectivity of the secondary mirror
+  const std::string secMirrorReflLoc = 
     "/dd/Geometry/Rich1/Rich1SurfaceTabProperties/Rich1Mirror2SurfaceIdealReflectivityPT";
-  SmartDataPtr<TabulatedProperty> flatMirrorRefl(dataSvc(),flatMirrorReflLoc);
-  if ( !flatMirrorRefl )
-    msg << MSG::ERROR << "No info on flat mirror reflectivity" << endmsg;
+  SmartDataPtr<TabulatedProperty> secMirrorRefl(dataSvc(),secMirrorReflLoc);
+  if ( !secMirrorRefl )
+    msg << MSG::ERROR << "No info on secondary mirror reflectivity" << endmsg;
   else {
-    m_nominalFlatMirrorRefl = flatMirrorRefl;
-    msg << MSG::DEBUG << "Loaded flat mirror reflectivity from: "
-        << flatMirrorReflLoc << endmsg;
+    m_nominalSecMirrorRefl = secMirrorRefl;
+    msg << MSG::DEBUG << "Loaded secondary mirror reflectivity from: "
+        << secMirrorReflLoc << endmsg;
   }
 
   return StatusCode::SUCCESS;

@@ -4,8 +4,11 @@
  *  Header file for detector description class : DeRichSphMirror
  *
  *  CVS Log :-
- *  $Id: DeRichSphMirror.h,v 1.10 2005-07-13 15:28:24 papanest Exp $
+ *  $Id: DeRichSphMirror.h,v 1.11 2005-09-23 15:27:28 papanest Exp $
  *  $Log: not supported by cvs2svn $
+ *  Revision 1.10  2005/07/13 15:28:24  papanest
+ *  Individual reflectivity for all mirror segments
+ *
  *  Revision 1.9  2005/02/25 23:28:54  jonrob
  *  set printing to debug level
  *
@@ -28,6 +31,8 @@
 
 // Include files
 #include "CLHEP/Geometry/Point3D.h"
+#include "CLHEP/Geometry/Vector3D.h"
+#include "CLHEP/Geometry/Plane3D.h"
 
 #include "DetDesc/DetectorElement.h"
 #include "DetDesc/ISolid.h"
@@ -86,7 +91,7 @@ public:
    * Retrieves the centre of curvarute of this mirror
    * @return The centre of curvature of this mirror as a HepPoint3D
    */
-  inline const HepPoint3D & centreOfCurvature() const
+  inline const HepPoint3D& centreOfCurvature() const
   {
     return m_centreOfCurvature;
   }
@@ -95,7 +100,7 @@ public:
    * Retrieves the centre this mirror on the reflective surface.
    * @return The mirror centre as HepPoint3D
    */
-  inline const HepPoint3D & mirrorCentre() const
+  inline const HepPoint3D& mirrorCentre() const
   {
     return m_mirrorCentre;
   }
@@ -151,6 +156,24 @@ public:
     return m_reflectivity;
   }
 
+  /**
+   * Retrieves the normal vector at the centre of the mirror
+   * @return Normal vector at the mirror centre
+   */
+  inline const HepVector3D& centreNormal() const
+  {
+    return m_centreNormal;
+  }
+
+  /**
+   * Retrieves the normal vector at the centre of the mirror
+   * @return Normal vector at the mirror centre
+   */
+  inline const HepPlane3D& centreNormalPlane() const
+  {
+    return m_centreNormalPlane;
+  }
+
 
 private:
 
@@ -174,6 +197,10 @@ private:
 
   std::string m_name; ///< The name of this mirror
 
+  ///< The normal vector at the centre of the mirror
+  HepVector3D m_centreNormal; 
+  /// The normal vector at the centre of the mirror
+  HepPlane3D m_centreNormalPlane; 
 };
 
 #endif    //  RICHDET_DERICHSPHMIRROR_H

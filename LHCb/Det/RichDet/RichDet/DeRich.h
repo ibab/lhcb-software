@@ -4,8 +4,11 @@
  *  Header file for detector description class : DeRich
  *
  *  CVS Log :-
- *  $Id: DeRich.h,v 1.12 2005-02-25 23:28:54 jonrob Exp $
+ *  $Id: DeRich.h,v 1.13 2005-09-23 15:27:28 papanest Exp $
  *  $Log: not supported by cvs2svn $
+ *  Revision 1.12  2005/02/25 23:28:54  jonrob
+ *  set printing to debug level
+ *
  *  Revision 1.11  2004/10/20 22:41:54  jonrob
  *  Tidy up inline and virtual functions (whilst solving a windows problem)
  *
@@ -188,7 +191,7 @@ public:
    */
   inline const TabulatedProperty* nominalFlatMirrorRefl() const
   {
-    return m_nominalFlatMirrorRefl;
+    return m_nominalSecMirrorRefl;
   }
 
   /**
@@ -269,7 +272,7 @@ protected:
   /// spherical mirror reflectivity
   const TabulatedProperty* m_nominalSphMirrorRefl;
   /// flat mirror reflectivity
-  const TabulatedProperty* m_nominalFlatMirrorRefl;
+  const TabulatedProperty* m_nominalSecMirrorRefl;
 
   std::string m_name; ///< The name of this detector
 

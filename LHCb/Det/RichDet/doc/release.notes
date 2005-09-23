@@ -4,6 +4,10 @@
 ! Purpose     : interface to the xml description
 !-----------------------------------------------------------------------------
 
+! 2005-09-23 - Antonis Papanestis
+ - Modifications in DeRichSphMirror for the secondary spherical mirrors
+ - MultiSolid radiator for the new aerogel
+
 ! 2005-07-13 - Antonis Papanestis
  - Allow for different reflectivity for every mirror segment.
 

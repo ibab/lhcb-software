@@ -3,7 +3,7 @@
  *
  *  Implementation file for detector description class : DeRichFlatMirror
  *
- *  $Id: DeRichFlatMirror.cpp,v 1.11 2005-07-13 15:28:24 papanest Exp $
+ *  $Id: DeRichFlatMirror.cpp,v 1.12 2005-09-23 15:27:28 papanest Exp $
  *
  *  @author Antonis Papanestis a.papanestis@rl.ac.uk
  *  @date   2004-06-18
@@ -104,11 +104,12 @@ StatusCode DeRichFlatMirror::initialize()
 
   // create the mirror plane
   m_mirrorPlane = HepPlane3D(m_normalVector, m_mirrorCentre);
-
+  msg << MSG::DEBUG << "mirrorPlane " << m_mirrorPlane << endmsg;
+  
   // extract mirror number from detector element name
   const std::string::size_type pos2 = name().find(':');
   if( std::string::npos == pos2 ) {
-    msg << MSG::FATAL << "A mirror without a number!" << endreq;
+    msg << MSG::FATAL << "A mirror without a number!" << endmsg;
     return StatusCode::FAILURE;
   }
   m_mirrorNumber = atoi( name().substr(pos2 + 1).c_str() );
