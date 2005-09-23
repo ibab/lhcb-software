@@ -23,13 +23,13 @@ namespace MBM {
   class Client {
   protected:
     BMID         m_bmid;
-    std::string  m_name;
     std::string  m_buffName;
+    std::string  m_name;
     int          m_partID;
-    /// Flag to run in blocking mode
-    bool         m_blocking;
     /// Facility code for asynchronous operation
     unsigned int m_facility;
+    /// Flag to run in blocking mode
+    bool         m_blocking;
   public:
     /// Initializing constructor
     Client(const std::string& buffer_name, const std::string& client_name, int partition_id);

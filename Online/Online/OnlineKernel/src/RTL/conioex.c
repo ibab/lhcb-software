@@ -1,5 +1,5 @@
 // created by renkoe@tbkoenig.de
-
+#if defined(_WIN32)
 #if defined(__BORLANDC__) || (_MSC_VER >= 1200)
   #pragma hdrstop
 #endif
@@ -234,3 +234,4 @@ void TBK_CONIOEXAPI _setcursortype(int cur_t)
 
   return;
 }
+#endif

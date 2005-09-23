@@ -18,13 +18,12 @@ extern "C" {
   struct EXHDEF;
   typedef void* lib_rtl_handle_t;
 #ifndef _RTL_INTERNAL_H
-  struct lib_rtl_thread_t {
-    void *h, *p;
-  };
+  typedef void* lib_rtl_thread_t;
   typedef void* lib_rtl_lock_handle_t;
   typedef void* lib_rtl_event_t;
 #endif
   typedef int (*RTL_ast_t)(void*);
+  typedef int (*lib_rtl_rundown_handler_t)(void*);
   inline bool lib_rtl_is_success(int status) { return status&1; }
   int lib_rtl_create_lock(const char* lock_name, lib_rtl_lock_handle_t* lock_handle);
   int lib_rtl_delete_lock(const char* lock_name, lib_rtl_lock_handle_t  lock_handle);

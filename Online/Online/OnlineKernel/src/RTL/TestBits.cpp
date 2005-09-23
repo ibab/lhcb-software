@@ -1,7 +1,7 @@
 #include <cstdio>
 #include "RTL/rtl.h"
 
-extern "C" int mbm_testffx(int argc,char **argv) {
+extern "C" int mbm_testffx(int,char **) {
   static unsigned int mask[] = {
     0x00000001, 0x00000002, 0x00000004, 0x00000008,
     0x00000010, 0x00000020, 0x00000040, 0x00000080,
@@ -12,7 +12,7 @@ extern "C" int mbm_testffx(int argc,char **argv) {
     0x01000000, 0x02000000, 0x04000000, 0x08000000, 
     0x10000000, 0x20000000, 0x40000000, 0x80000000
   };
-  for ( int i=0; i<sizeof(mask)/sizeof(mask[0]); ++i)  {
+  for (size_t i=0; i<sizeof(mask)/sizeof(mask[0]); ++i)  {
     for (int start=0; start < 32; ++start)  {
       int val = mask[i];
       int len = 32-start;

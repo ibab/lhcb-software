@@ -1,5 +1,5 @@
-#ifdef WIN32
-#include <windows.h>
+#ifdef _WIN32
+  #include <windows.h>
   #define LOAD_LIB(x)  ::LoadLibrary( #x )
   #define GETPROC(h,x) ::GetProcAddress ( HMODULE(h), x )
   #define DLERROR      __dl_error()

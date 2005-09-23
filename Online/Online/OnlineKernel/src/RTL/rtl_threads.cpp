@@ -22,7 +22,7 @@ int lib_rtl_start_thread(lib_rtl_thread_routine_t start_routine, void* thread_ar
     return 0;
   }
 #elif defined(_WIN32)
-  handle->h = ::CreateThread( 
+  *handle = ::CreateThread( 
       NULL,                        // default security attributes 
       0,                           // use default stack size  
       (LPTHREAD_START_ROUTINE)start_routine,               // thread function 
@@ -46,7 +46,7 @@ int lib_rtl_delete_thread(lib_rtl_thread_t handle)  {
   return 1;
 #elif defined(_WIN32)
   if ( handle.h )  {
-    ::CloseHandle(handle.h);
+    ::CloseHandle(handle);
     return 1;
   }
   lib_rtl_signal_message(LIB_RTL_DEFAULT, "lib_rtl_delete_thread failed [Invalid Handle]");
@@ -55,40 +55,39 @@ int lib_rtl_delete_thread(lib_rtl_thread_t handle)  {
 }
 
 int lib_rtl_suspend_thread(lib_rtl_thread_t handle)  {
+  if ( handle )  {
 #ifdef USE_PTHREADS
-    int sc = ::pthread_detach(*(pthread_t*)&handle); 
+    int sc = ::pthread_detach(handle); 
     if ( sc == 0 )  {
       return 1;
     }
     lib_rtl_signal_message(LIB_RTL_ERRNO, "lib_rtl_suspend_thread failed");
 #elif defined(_WIN32)
-  if ( handle.h )  {
-    DWORD ret=::SuspendThread(handle.h);
+    DWORD ret=::SuspendThread(handle);
     if ( ret == -1 )  {
       lib_rtl_signal_message(LIB_RTL_OS, "lib_rtl_suspend_thread failed");
     }
     return 1;
+#endif
   }
   lib_rtl_signal_message(LIB_RTL_DEFAULT, "lib_rtl_suspend_thread failed [Invalid Handle]");
-#endif
   return 0;
 }
 
 int lib_rtl_resume_thread(lib_rtl_thread_t handle)  {
+  if ( handle )  {
 #ifdef USE_PTHREADS
-  lib_rtl_signal_message(LIB_RTL_DEFAULT, "lib_rtl_resume_thread failed [No pthread call]");
-  return 0;
+    lib_rtl_signal_message(LIB_RTL_DEFAULT,"lib_rtl_resume_thread failed [No pthread call]");
+    return 0;
 #elif defined(_WIN32)
-  if ( handle.h )  {
-    DWORD ret=::ResumeThread(handle.h);
+    DWORD ret=::ResumeThread(handle);
     if ( ret == -1 )  {
-      lib_rtl_signal_message(LIB_RTL_OS, "lib_rtl_resume_thread failed");
+      lib_rtl_signal_message(LIB_RTL_OS,"lib_rtl_resume_thread failed");
       return 0;
     }
     return 1;
-  }
-  lib_rtl_signal_message(LIB_RTL_DEFAULT, "lib_rtl_resume_thread failed [Invalid Handle]");
 #endif
+  }
+  lib_rtl_signal_message(LIB_RTL_DEFAULT,"lib_rtl_resume_thread failed [Invalid Handle]");
   return 0;
 }
-

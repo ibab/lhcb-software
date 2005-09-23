@@ -16,5 +16,7 @@ apply_pattern ld_library_path
 apply_pattern linker_library	library=OnlineKernel
 apply_pattern linker_library	library=pthread
 application   test ../main/*.cpp
-
 document      install_includes install_includes
+macro_append  use_linkopts " -ldl " WIN32 ""
+
+ 

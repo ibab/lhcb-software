@@ -2,12 +2,12 @@
 #include <vector>
 #include <map>
 #include <string>
+#include <cerrno>
 #include <fcntl.h>
 
 #ifdef USE_PTHREADS
-extern "C" __declspec(dllimport) long __stdcall Sleep(long millisecs);
+#include <unistd.h>
 
-#include <process.h>
 const char* errorString(int status)  {
   return strerror(status);
 }
@@ -35,6 +35,7 @@ const char* errorString(int status)  {
 }
 
 #endif
+
 int getError()   {
 #ifdef USE_PTHREADS
   return errno;
@@ -82,11 +83,11 @@ namespace {
   }
 }
 
-int lib_rtl_remove_rundown( int (*hdlr)(void*) ,void* param)    {
+int lib_rtl_remove_rundown(lib_rtl_rundown_handler_t,void*)    {
   return 1;
 }
 
-int lib_rtl_declare_rundown( int (*hdlr)(void*) ,void* param)   {
+int lib_rtl_declare_rundown(lib_rtl_rundown_handler_t,void*)   {
   return 1;
 }
 
@@ -119,8 +120,23 @@ int lib_rtl_pid()  {
 
 int lib_rtl_signal_message(int action, const char* fmt)  {
   if ( fmt )  {
-    int err = getError();
-    ::printf("%s : %d  %s\n",fmt, err, errorString(err));
+    int err;
+    switch(action) {
+    case LIB_RTL_OS:
+      err = getError();
+      ::printf("%s : %d  %s\n",fmt, err, errorString(err));
+    case LIB_RTL_ERRNO:
+      err = errno;
+      ::printf("%s : %d  %s\n",fmt, err, errorString(err));
+      break;
+    case LIB_RTL_DEFAULT:
+      ::printf("%s\n",fmt);
+      break;
+    default:
+      err = getError();
+      ::printf("%s : %d  %s\n",fmt, err, errorString(err));
+      break;
+    }
   }
   return 1;
 }
@@ -140,7 +156,7 @@ int lib_rtl_sleep(int millisecs)    {
 #ifdef _WIN32
   ::Sleep(millisecs);
 #elif linux
-  usleep();
+  ::usleep(1000*millisecs);
 #endif
   return 1;
 }

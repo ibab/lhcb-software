@@ -75,8 +75,8 @@ int BF_alloc(char *base, int bf_size, int size_wanted, int* pos_found)   {
 
 int BF_count(const char* base,int bf_size,int* pos,int* size) {
   bool set = 0;  
-  int max_pos = bf_size, max_len = 0;
-  for(int i=0, j=0, start_pos=0, len=0; i < bf_size/8; ++i, j=0)  {
+  int max_pos = bf_size, max_len = 0, len = 0, start_pos = 0;
+  for(int i=0, j=0; i < bf_size/8; ++i, j=0)  {
     if ( base[i] )  {
       for( ;j<8; ++j)  {
         if ( 0 == (base[i] & (1<<j)) )  {
@@ -156,7 +156,7 @@ int BF_free(char* base,int pos, int len) {
   return 1;
 }
 
-static inline int ffs(int x)  {
+static inline int generic_ffs(int x)  {
 	int r = 1;
 	if (!x)
     return 0;
@@ -183,7 +183,7 @@ static inline int ffs(int x)  {
 	return r;
 }
 
-static inline int ffc(int x)  {
+static inline int generic_ffc(int x)  {
 	int r = 1;
 	if (!x)
     return 0;
@@ -222,8 +222,9 @@ static unsigned int mask[] = {
 };
 
 int lib_rtl_ffc (int* start, int* len, const void* base, int* position)  {
+  unsigned int i, j, v;
   char* b = ((char*)base) + ((*start)/8);
-  for (unsigned int i=*start, j=i+*len, v=*(unsigned int*)b; i<j; ++i)  {
+  for (i=*start, j=i+*len, v=*(unsigned int*)b; i<j; ++i)  {
     if ( (v & mask[i%32]) == 0 )  {
       *position = i;
       return 1;

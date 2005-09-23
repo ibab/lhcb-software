@@ -1356,7 +1356,7 @@ int  mbm_wait_space_a(BMDESCRIPT* bm)    {
   USER* us = user.user();
   if ( us )  {
     int sc = 0;
-    if ( 0 == bm->pThread.h )  {
+    if ( 0 == bm->pThread )  {
       sc = lib_rtl_start_thread(_mbm_wait_space_a, bm, &bm->pThread);
       if ( !(sc & 1) )  {
         lib_rtl_signal_message(0,"Failed to manipulate producer BM thread");

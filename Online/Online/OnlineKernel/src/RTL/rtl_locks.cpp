@@ -3,9 +3,9 @@
 #include <fcntl.h>
 
 int lib_rtl_create_lock(const char* mutex_name, lib_rtl_lock_handle_t* handle)   {
-  char mutexName[128] = "";
 #ifdef VMS
   int iosb[2];
+  char mutexName[128] = "";
   TABNAM_LIST name[2];
   $DESCRIPTOR(ltab,"LNM$SYSTEM");
   $DESCRIPTOR(lnam,"SYS$NODE");
@@ -15,7 +15,7 @@ int lib_rtl_create_lock(const char* mutex_name, lib_rtl_lock_handle_t* handle)  
   name[0].len     = sizeof(eqname);
   name[0].code    = LNM$_STRING;
   name[0].addr    = eqname;
-  name[0].retaddr	= &eqlen;
+  name[0].retaddr = &eqlen;
   name[1].len     = 0;
   name[1].code    = 0;
   int status = sys$trnlnm (0, &ltab, &lnam,0, &name) ;
@@ -41,11 +41,13 @@ int lib_rtl_create_lock(const char* mutex_name, lib_rtl_lock_handle_t* handle)  
 #elif defined(USE_PTHREADS)
   int sc = 0;
   if ( mutex_name )  {
-    *handle = (lib_rtl_lock_handle_t)::sem_open(mutex_name, O_CREAT, 0644, 1);
+    *handle = ::sem_open(mutex_name, O_CREAT, 0644, 1);
   }
   else  {
-    sc = ::sem_init(handle, 0, 1);     
+    *handle = new sem_t;
+    sc = ::sem_init(*handle, 0, 1);     
     if ( sc != 0 )  {
+      delete *handle;
       *handle = 0;
     }
   }
@@ -77,11 +79,12 @@ int lib_rtl_delete_lock(const char* mutex_name, lib_rtl_lock_handle_t handle)   
 #elif defined(USE_PTHREADS)
     int status;
     if ( mutex_name )  {
-      status = ::sem_close(&handle);
+      status = ::sem_close(handle);
       ::sem_unlink(mutex_name);
     }
     else {
-      status = ::sem_destroy(&handle);
+      status = ::sem_destroy(handle);
+      delete handle;
     }
 #elif defined(_WIN32)
     if ( ::CloseHandle(handle) == S_OK ) 
@@ -106,7 +109,9 @@ int lib_rtl_cancel_lock(const char* lock_name, lib_rtl_lock_handle_t lock_handle
   kutil_enable_kill();
   return status;
 #elif defined(USE_PTHREADS)
-  return 1;
+  if ( lock_name ) {}
+  int status = ::sem_post(lock_handle);
+  return status==0 ? 1 : 0;
 #elif defined(_WIN32)
   return 1;
 #endif
@@ -133,7 +138,8 @@ int lib_rtl_lock(const char* lock_name, lib_rtl_lock_handle_t lock_handle) {
     }
     return status;
 #elif defined(USE_PTHREADS)
-    int sc = sem_wait(&lock_handle);
+    if ( lock_name ) {}
+    int sc = sem_wait(lock_handle);
     if ( sc != 0 )
 #elif defined(_WIN32)
     DWORD sc = WAIT_TIMEOUT;
@@ -178,7 +184,8 @@ int lib_rtl_unlock(const char* lock_name, lib_rtl_lock_handle_t lock_handle) {
     errno = status;
     kutil_enable_kill();
 #elif defined(USE_PTHREADS)
-    if ( ::sem_post(&lock_handle) == 0 )   {
+    if ( lock_name ) {}
+    if ( ::sem_post(lock_handle) == 0 )   {
       return 1;
     }
 #elif defined(_WIN32)
