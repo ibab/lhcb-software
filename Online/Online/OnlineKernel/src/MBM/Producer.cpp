@@ -1,80 +1,94 @@
-#include <cstdlib>
-#include <cstdio>
-#include <cerrno>
-#include "bm_struct.h"
-#include "RTL/rtl.h"
+#include "MBM/Producer.h"
+#include "WT/wtdef.h"
+#include <stdexcept>
 
-using namespace MBM;
-
-namespace {
-  int space_ast(void* param)    {
-    BMDESCRIPT *bm = (BMDESCRIPT*)param;
-    USER *us = bm->_user();
-    if ( us == (void*)0 )  {
-      return 1;
-    }
-    if (us->p_state != S_wspace_ast_queued)   {
-      printf("us->p_state Not S_wspace_ast_queued, but is %d\n",us->p_state);
-      us->p_state = S_wspace_ast_handled;
-      us->reason = -1;
-      return 1;
-    }
-    us->p_state = S_active;
-    if ( !(us->reason&BM_K_INT_SPACE) )   {
-      printf("space_ast spurious wakeup reason = %d\n",us->reason);
-      us->p_state = S_wspace_ast_handled;
-      us->reason = -1;
-      return 1;
-    }
-    *us->ws_ptr_add = (int*)(us->space_add+bm->buffer_add);
-    *us->ws_ptr_add += sizeof(int);
-    us->p_state = S_wspace_ast_handled;
-    us->reason = -1;
-    return 1;
-  }
-
-  int prod_exit(int c)  {
-    exit(c);
-  }
+// Initializing constructor
+MBM::Producer::Producer(const std::string& buffer_name, const std::string& client_name, int partition_id)
+: Client(buffer_name, client_name, partition_id)  {
 }
 
-extern "C" int mbm_prod(int argc,char **argv) {
-  int trnumber = 0, icode;
-  char *name = argv[1];  
-  BMID bmid = mbm_include("0", name,0x103);
-  if ( int(bmid) == -1 ) exit(errno);
+// Standard destructor
+MBM::Producer::~Producer()
+{
+}
 
-  ::printf("Producer \"%s\" (pid:%d) included in buffer:\"%s\"\n",name,lib_rtl_pid(),"0");
-  while(1)  {
-    BMDESCRIPT* bm = (BMDESCRIPT*)bmid;
-    int len = 1792, flen;
-    int* add = 0;
+int MBM::Producer::spaceAst(void* param) {
+  Producer* prod = (Producer*)param;
+  return prod->spaceAst();
+}
+
+// Ast to be called on event receival (may be overloaded by clients)
+int MBM::Producer::spaceAst() {
+  int sc = mbm_get_space_ast((void*)m_bmid);
+  if ( sc == MBM_NORMAL ) {
+    if ( !m_blocking ) {
+      sc = ::wtc_insert(m_facility, this);
+      if( sc == WT_SUCCESS ) {
+	return MBM_NORMAL;
+      }
+      throw std::runtime_error("Failed to wtc_insert on get space AST:"+m_buffName+" [Internal Error]");
+      return MBM_ERROR;
+    }
+    return MBM_NORMAL;
+  }
+  throw std::runtime_error("Failed mbm_get_space_ast MBM buffer:"+m_buffName+" [Internal Error]");
+  return MBM_ERROR;
+}
+
+// Static action to be called on space receival
+int MBM::Producer::spaceAction(unsigned int facility, void* param) {
+  Producer* prod = (Producer*)param;
+  if ( facility != prod->m_facility ) {
+    // Error ?
+  }
+  return prod->spaceAction();
+}
+
+// Action to be called on space receival
+int MBM::Producer::spaceAction() {
+  if ( int(m_bmid) != -1 ) {
+    int flen;
     void *fadd;
-    icode = mbm_get_space_a(bmid, len, &add, space_ast);
-    if ( icode != MBM_NORMAL )  {
-      prod_exit(icode);
+    EventDesc& e = m_event;
+    int status = ::mbm_declare_event(m_bmid, e.len, e.type, e.mask, 0, &fadd, &flen, m_partID);
+    if ( status == MBM_NORMAL )  {
+      status = ::mbm_send_space(m_bmid);
+      if ( status == MBM_NORMAL )  {
+	return MBM_NORMAL;
+      }
+      throw std::runtime_error("Failed to send space for MBM buffer:"+m_buffName+" [Internal Error]");
     }
-    icode = mbm_wait_space(bmid);
-    if ( icode != MBM_NORMAL ) {
-      prod_exit(icode);
-    }
-    *add = trnumber;
-    unsigned int mask[4] = {0x103, 0, 0, 0,};
-    icode = mbm_declare_event(bmid, len, 1, mask, 0, &fadd, &flen, 0x103);
-    if ( icode != MBM_NORMAL ) {
-      prod_exit(icode);
-    }
-    icode = mbm_send_space(bmid);
-    if ( icode != MBM_NORMAL ) {
-      prod_exit(icode);
-    }
-    if ( trnumber % 10 )   {
-      trnumber++;
-    }
-    else  {
-      trnumber++;
-    }
+    throw std::runtime_error("Failed to declare event for MBM buffer:"+m_buffName+" [Internal Error]");
   }
-  icode = mbm_exclude(bmid);
-  if(icode) exit(icode);
+  throw std::runtime_error("Failed to declare event for MBM buffer:"+m_buffName+" [Buffer not connected]");
+  return MBM_ERROR;
 }
+
+// Rearm action to be called on space receival
+int MBM::Producer::spaceRearm(unsigned int facility, void* param) {
+  Producer* prod = (Producer*)param;
+  if ( facility != prod->m_facility ) {
+    // Error ?
+  }
+  return prod->spaceRearm(prod->m_event.len);
+}
+
+// Space receival rearm
+int MBM::Producer::spaceRearm(int new_length) {
+  if ( int(m_bmid) != -1 ) {
+    EventDesc& e = m_event;
+    e.len = new_length;
+    int status = ::mbm_get_space_a(m_bmid, e.len, &e.data, spaceAst, this);
+    if ( status == MBM_NORMAL )  {
+      status = m_blocking ? ::mbm_wait_space(m_bmid) : ::mbm_wait_space_a(m_bmid);
+      if ( status == MBM_NORMAL )  {
+	return MBM_NORMAL;
+      }
+      throw std::runtime_error("Failed to wait space for MBM buffer:"+m_buffName+" [Internal Error]");
+    }
+    throw std::runtime_error("Failed to get event for MBM buffer:"+m_buffName+" [Internal Error]");
+  }
+  throw std::runtime_error("Failed to declare event for MBM buffer:"+m_buffName+" [Buffer not connected]");
+  return MBM_ERROR;
+}
+

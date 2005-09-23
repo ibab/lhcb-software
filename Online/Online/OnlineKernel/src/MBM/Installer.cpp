@@ -58,7 +58,7 @@ int MBM::Installer::optparse (const char* c)  {
     iret = sscanf(c+1,"=%d",&p_size);
     if( iret != 1 ) 	   {
       writeln(2,"Error reading buffer size parameter\n",80);
-      _exit(0);
+      exit(0);
     }
     p_size = ((p_size+1)>>1)<<1;
     break;
@@ -66,39 +66,39 @@ int MBM::Installer::optparse (const char* c)  {
     iret = sscanf(c+1,"=%x",&p_base);
     if( iret != 1 ) 	   {
       writeln(2,"Error reading base address parameter\n",80);
-      _exit(0);
+      exit(0);
     }
     break;
   case 'y':				/*     spy base address       */	
     iret = sscanf(c+1,"=%x",&spy_base);
     if( iret != 1 ) 	   {
       writeln(2,"Error reading spy base address parameter\n",80);
-      _exit(0);
+      exit(0);
     }
     break;
   case 'e':				/*      maximum events        */	
     iret = sscanf(c+1,"=%d",&p_emax);
     if( iret != 1 ) 	   {
       writeln(2,"Error reading maximum events parameter\n",80);
-      _exit(0);
+      exit(0);
     }
     break;
   case 'u':				/*      maximum users        */	
     iret = sscanf(c+1,"=%d",&p_umax);
     if( iret != 1 )  {
       writeln(2,"Error reading maximum users parameter\n",80);
-      _exit(0);
+      exit(0);
     }
     if( p_umax > 128 )    {
       writeln(2,"Maximum users exeeded maximum (128)\n",80);
-      _exit(0);
+      exit(0);
     }
     break;
   case 'i':				/*      maximum users        */	
     iret = sscanf(c+1,"=%s",buff_id);
     if( iret != 1 ) 	   {
       writeln(2,"Error reading Buffer identifier parameter\n",80);
-      _exit(0);
+      exit(0);
     }
     bm_id = buff_id;
     break;

@@ -6,18 +6,17 @@
 
 #ifdef VMS
 #define lock_prio  14
-typedef struct
-{
+typedef struct  {
   short len,code;
   int addr,retaddr;
-}TABNAM_LIST;
+}  TABNAM_LIST;
 static int def_prio;
 #include <secdef.h>
 #include <psldef.h>
 
 #elif linux
 
-#include <mmap.h>
+#include <sys/mman.h>
 
 #elif _WIN32
 #include <windows.h>
@@ -37,6 +36,7 @@ int _mbm_create_section(const char* sec_name,int size, void* address) {
   str$upcase (&name, &name);
   return sys$crmpsc (inadd, add, PSL$C_USER, flags, &name, 0,0,0,size,0,0,0); 
 #elif linux
+
   return 1;
 #elif _WIN32
   // Setup inherited security attributes (FIXME: merge somewhere else)
@@ -73,16 +73,19 @@ int _mbm_map_section(const char* sec_name, void* address)   {
   int status = sys$mgblsc (inadd,add,PSL$C_USER,flags,&name,0,0);
   return status;
 #elif linux
+  int fd = 0;
   int sysprot  = PROT_READ+PROT_WRITE;
   int sysflags = MAP_SHARED+MAP_ANONYMOUS;
 # ifdef MAP_ANONYMOUS
   sysflags |= MAP_ANONYMOUS;
 # else
-  int fd = ::open("/dev/zero",O_RDWR|O_BINARY);
+  fd = ::open("/dev/zero",O_RDWR|O_BINARY);
   // Must have a real file or /dev/zero opened in initialise().
   ASSERT (fd != IOFD_INVALID);
 # endif
-  void *address = mmap (0, length, sysprot, sysflags, fd, pos);
+  int length = 1024, pos=0;
+  add[0] = fd;
+  add[1] = (int)mmap (0, length, sysprot, sysflags, fd, pos);
 #elif _WIN32
   HANDLE hMap = ::OpenFileMapping(FILE_MAP_ALL_ACCESS,FALSE,sec_name);
   if ( hMap )  {
@@ -109,6 +112,8 @@ int _mbm_unmap_section(void* address)   {
 }
 
 int _mbm_flush_sections(BMDESCRIPT* bm)   {
+#ifdef VMS
+#elif _WIN32
   DWORD sc;
   sc=::FlushViewOfFile(bm->ctrl_add[0],0);
   sc=::FlushViewOfFile(bm->event_add[0],0);
@@ -116,5 +121,6 @@ int _mbm_flush_sections(BMDESCRIPT* bm)   {
   sc=::FlushViewOfFile(bm->bitm_add[0],0);
   sc=::FlushViewOfFile(bm->buff_add[0],0);
   return 1;
+#endif
 }
 

@@ -1,62 +1,125 @@
-#include <cstring>
-#include <cstdlib>
-#include <cstdio>
-#include <cerrno>
-//#include "bmdef.h"
-#include "RTL/rtl.h"
-#include "bm_struct.h"
-using namespace MBM;
+#include "MBM/Consumer.h"
+#include "WT/wtdef.h"
+#include <stdexcept>
 
-int get_event_ast(void* par) {
-  mbm_get_event_ast(par);  // Call default implementation
-  BMDESCRIPT* bm = (BMDESCRIPT*)par;
-  USER*       us = bm->user+bm->owner;
-  EVENT*      ev = bm->event+us->held_eid;
-  //printf("EVENT: id=%d uid:%d count=%d %08X data=%d\n",ev->eid, us->held_eid, ev->count, ev->ev_add, **(int**)us->we_ptr_add);
-  return 1;
+// Initializing constructor
+MBM::Consumer::Consumer(const std::string& buffer_name, const std::string& client_name, int partition_id)
+: Client(buffer_name, client_name, partition_id)
+{
 }
 
-extern "C" int mbm_cons(int argc,char **argv) {
-  int  trnumber = 0;
-  char* name = argv[1];
-  BMID bmid = mbm_include("0",name,0x103);
-  if ( int(bmid) == -1 ) exit(errno);
-  //int mbm_add_req (BMDESCRIPT *bm, int evtype, int trmask[4], int veto[4], int masktype, 
-  //               int usertype, int freqmode, float freq);
-  ::printf("Consumer \"%s\" (pid:%d) included in buffer:\"%s\"\n",name,lib_rtl_pid(),"0");
+// Standard destructor
+MBM::Consumer::~Consumer()
+{
+}
 
-  int trmask[4] = {-1,-1,-1,-1};
-  int vetomask[4] = {0,0,0,0};
-  int icode = mbm_add_req(bmid,1,trmask,vetomask,BM_MASK_ANY,BM_REQ_VIP,BM_FREQ_PERC,100.);
-  if ( icode != MBM_NORMAL ) exit(icode);
-  int nmiss_match = 0;
-  bool first = true;
-  while(1)  {
-    int  *prt = 0;
-    int  len,evtype, flag=0;
-    int triggermask[4] = {-1,-1,-1,-1};
-    // int mbm_get_event_a (BMDESCRIPT *bm, int* ptr, int* size, int* evtype, int* trmask, int part_id, int astadd) {
+int MBM::Consumer::eventAst(void* param) {
+  Consumer* cons = (Consumer*)param;
+  return cons->eventAst();
+}
 
-    icode = mbm_get_event_a(bmid,&prt,&len,&evtype,triggermask, 0x103, get_event_ast);
-    if( icode != MBM_NORMAL && icode != MBM_NO_EVENT ) ::printf("Error in mbm_get_event_a:%d\n",icode);
-    icode = mbm_wait_event(bmid);
-    if( icode != MBM_NORMAL ) ::printf("Error in mbm_get_event_a:%d\n",icode);
-    if ( first )  {
-      first = false;
-      trnumber = *prt;
+// Ast to be called on event receival (may be overloaded by clients)
+int MBM::Consumer::eventAst() {
+  int sc = ::mbm_get_event_ast((void*)m_bmid);
+  if ( sc == MBM_NORMAL ) {
+    if ( !m_blocking ) {
+      sc = ::wtc_insert(m_facility, this);
+      if( sc == WT_SUCCESS ) {
+	return MBM_NORMAL;
+      }
+      throw std::runtime_error("Failed to wtc_insert on get event AST:"+m_buffName+" [Internal Error]");
+      return MBM_ERROR;
     }
-    else if( trnumber != *prt ) {
-      nmiss_match++;
-      ::printf("======= Mismatch [%d] found %d %d [0x%08X] flag=%d\n",
-        nmiss_match, trnumber, *prt, prt, flag);
-      trnumber = *prt;
-    }
-    else  {
-      //::printf("========= Data found %d %d [0x%08X] flag=%d\n",trnumber,*prt, prt, flag);
-    }
-    trnumber++;
-    mbm_free_event(bmid);
+    return MBM_NORMAL;
   }
-  icode = mbm_exclude(bmid);
-  if(icode) exit(icode);
+  throw std::runtime_error("Failed mbm_get_event_ast MBM buffer:"+m_buffName+" [Internal Error]");
+  return MBM_ERROR;
+}
+
+// Static action to be called on event receival
+int MBM::Consumer::eventAction(unsigned int facility, void* param) {
+  Consumer* cons = (Consumer*)param;
+  if ( facility != cons->m_facility ) {
+    // Error ?
+  }
+  return cons->eventAction();
+}
+
+// Static event receival rearm
+int MBM::Consumer::eventRearm(unsigned int facility, void* param) {
+  Consumer* cons = (Consumer*)param;
+  if ( facility != cons->m_facility ) {
+    // Error ?
+  }
+  return cons->eventRearm();
+}
+
+// Action to be called on event receival
+int MBM::Consumer::eventAction() {
+  return freeEvent();
+}
+
+// Event receival rearm
+int MBM::Consumer::eventRearm() {
+  EventDesc& e = m_event;
+  ::memset(&e, 0x0, sizeof(EventDesc));
+  int sc = ::mbm_get_event_a(m_bmid,&e.data,&e.len,&e.type,e.mask,m_partID,eventAst,this);
+  if( sc == MBM_NORMAL || sc == MBM_NO_EVENT ) {
+    sc = (m_blocking) ? ::mbm_wait_event(m_bmid) : ::mbm_wait_event_a(m_bmid);
+    if( sc == MBM_NORMAL ) {
+      return sc;
+    }
+    throw std::runtime_error("Failed to rearm event action:"+m_buffName+" [Internal Error]");
+  }
+  throw std::runtime_error("Failed to queue event access:"+m_buffName+" [Internal Error]");
+  return sc;
+}
+
+void MBM::Consumer::addRequest(int evtype, int trmask[4], int vetomask[4], int masktype, int usertype, int freqmode, float freq)
+{
+  if ( int(m_bmid) != -1 ) {
+    int status = ::mbm_add_req(m_bmid,evtype,trmask,vetomask,masktype,usertype,freqmode,freq);
+    if ( status == MBM_NORMAL )  {
+      return;
+    }
+    throw std::runtime_error("Failed to add request to MBM buffer:"+m_buffName+" [Internal Error]");
+  }
+  throw std::runtime_error("Failed to add request to MBM buffer:"+m_buffName+" [Buffer not connected]");
+}
+
+int MBM::Consumer::getEventAsync() {
+  if ( int(m_bmid) != -1 ) {
+    EventDesc& e = m_event;
+    int status = ::mbm_get_event_a(m_bmid,&e.data,&e.len,&e.type,e.mask,m_partID,eventAst,this);
+    if ( status == MBM_NORMAL )  {
+      return MBM_NORMAL;
+    }
+    throw std::runtime_error("Failed to get event from MBM buffer:"+m_buffName+" [Internal Error]");
+  }
+  throw std::runtime_error("Failed to get event from MBM buffer:"+m_buffName+" [Buffer not connected]");
+}
+
+int MBM::Consumer::getEvent() {
+  if ( int(m_bmid) != -1 ) {
+    EventDesc& e = m_event;
+    int status = ::mbm_get_event(m_bmid,&e.data,&e.len,&e.type,e.mask,m_partID);
+    if ( status == MBM_NORMAL )  {
+      return MBM_NORMAL;
+    }
+    throw std::runtime_error("Failed to get event from MBM buffer:"+m_buffName+" [Internal Error]");
+  }
+  throw std::runtime_error("Failed to get event from MBM buffer:"+m_buffName+" [Buffer not connected]");
+  return MBM_ERROR;
+}
+
+int MBM::Consumer::freeEvent() {
+  if ( int(m_bmid) != -1 ) {
+    int status = ::mbm_free_event(m_bmid);
+    if ( status == MBM_NORMAL )  {
+      return MBM_NORMAL;
+    }
+    throw std::runtime_error("Failed to free event from MBM buffer:"+m_buffName+" [Internal Error]");
+  }
+  throw std::runtime_error("Failed to free event from MBM buffer:"+m_buffName+" [Buffer not connected]");
+  return MBM_ERROR;
 }

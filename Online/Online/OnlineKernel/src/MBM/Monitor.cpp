@@ -19,7 +19,7 @@
 #include <cstring>
 #include <cstdarg>
 #include <ctime>
-#include "RTL/conioex.h"
+#include "RTL/screen.h"
 #include "bm_struct.h"
 #include "Manager.h"
 
@@ -30,28 +30,13 @@
 
 #define writeln(a,b,c) printf(b)
 #define E_MNF	221
-#define double          printf("\033#6")
-#define single          printf("\033#5")
-#define	bold		printf("\033[1m")
-#define	flashing	printf("\033[5m")
-#define	underline	printf("\033[4m")
-#define	inverse		printf("\033[7m")
-#define	plain		printf("\033[0m")
-#define clear_scr	printf("\033[2J")
-#define cursor(x,y)	printf("\033[%d;%dH",x,y)
-#define scroll(top,bot)	printf("\033[%d;%dr",top,bot)
-#define beep		printf("\007")
-#define cr		printf("\n")
-#define ascii		printf("\033(B")
-#define graphics	printf("\033(0")
-#define checker printf("\141");
 
 #define writeln(a,b,c) printf(b)
 #define _CHECK( x )  { int sc = x ; if ( !(sc&1) ) { printf ( "Error in:%s, status=%d\n", #x , sc ); return sc; } }
 
 static int USER_next_off;
 static char    *sstat[13] = {" nl", "   ", "*SL","*EV","*SP","WSL","WEV","WSP","wsl","wev","wsp"," ps"," ac"};
-static char    *spy[2]  = {" ","s"};
+// static char    *spy[2]  = {" ","s"};
 
 int cont = 1;
 int end  = 1;
@@ -59,7 +44,7 @@ int end  = 1;
 namespace MBM {
   struct Monitor : public Manager {
     struct ManagerImp : public Manager {
-      virtual int  optparse (const char* c) {
+      virtual int  optparse (const char*) {
         return 1;
       }
       ManagerImp() {}
@@ -104,7 +89,7 @@ namespace MBM {
       line[255] = 0;
       return draw_line(line);
     }
-    int draw_buffer(int which, const char* name, CONTROL* ctrl);
+    int draw_buffer(const char* name, CONTROL* ctrl);
     void draw_a_process(const char* line)  {
       draw_line(line);
     }
@@ -142,12 +127,11 @@ namespace MBM {
 
 int MBM::Monitor::draw_bar(float ratio,int full_scale)    {
   int barlen  =  int(0.5+ratio*float(full_scale));
-  graphics;
+  graphics();
   printf("\164");
-  for (int i=0;i<barlen;i++) checker;
-  for (int j=barlen;j<full_scale;j++) printf("\161");
-  printf("\165");
-  ascii;
+  for (int j=barlen;j<full_scale;j++) ::printf("\161");
+  ::printf("\165");
+  ascii();
   return 0;
 }
 
@@ -158,7 +142,6 @@ int MBM::Monitor::monitor() {
   //signal (SIGABRT,handler);
 
   get_bm_list();    
-  _setcursortype(_NOCURSOR);      // hide the cursor
   clrscr();                       // clear the screen
   _setcursortype(_NOCURSOR);      // hide the cursor
   textcolor(YELLOW);              // change textcolor to YELLOW
@@ -178,7 +161,7 @@ int MBM::Monitor::monitor() {
   return 1;
 }
 
-int MBM::Monitor::draw_buffer(int which, const char* name, CONTROL* ctr)  {
+int MBM::Monitor::draw_buffer(const char* name, CONTROL* ctr)  {
   int i, m;
   char txt[256];
   sprintf(txt," \"%s\"",name);
@@ -205,20 +188,20 @@ int MBM::Monitor::draw_buffer(int which, const char* name, CONTROL* ctr)  {
 int MBM::Monitor::put_inf()   {
   static int old_i,new_i;
   USER *us;
-  static int count = 0;
   int i, j;
   float perc;
   const char* head=" Name    Partition  Pid Type State Produced    #seen seen Buffer";
-  char line[256], tim[32], dat[32];
-
-  ::strtime(tim);
-  ::strdate(dat);
+  char line[256], tim[64];
+  time_t nowt;
+  time(&nowt);
+  struct tm *now = localtime(&nowt);
+  ::strftime(tim,sizeof(tim),"%a %d %b %Y  %H:%M:%S",now);
   draw_line("");
-  draw_line("                               Buffer Manager Monitor [%s %s]", dat, tim);
+  draw_line("                               Buffer Manager Monitor [%s]",tim);
   draw_line("");
   for (i=0;i<nbms;i++)  {
     BMDESCRIPT* dsc = bms[i].m_mgr.m_bm;
-    draw_buffer(i,dsc->bm_name, dsc->ctrl);
+    draw_buffer(dsc->bm_name, dsc->ctrl);
     draw_line("");
   }
   if ( nbms <= 0 )  {
@@ -303,7 +286,7 @@ int mbm_mon(int argc , char** argv) {
   MBM::Monitor mon(argc, argv);
   return mon.monitor();
 }
-extern "C" int mbm_ascii(int argc , char** argv) {
+extern "C" int mbm_ascii(int /* argc */, char** /* argv */) {
   for ( unsigned char i=0; i < 255; ++i)  {
     printf("%3d  %03X   \"%c\"\n", i,i,i);
   }

@@ -3,7 +3,7 @@
 
 #define MBM_IMPLEMENTATION
 
-#include "RTL/Bits.h"
+#include "RTL/bits.h"
 #include "RTL/que.h"
 #include "RTL/rtl.h"
 
@@ -67,12 +67,12 @@ struct USER : public qentry_t  {
   qentry wsnext;
   qentry_t wenext;
   qentry_t wesnext;
-  int  block_id;	
+  unsigned int  block_id;	
   int  busy;		/*36*/	/* slot busy flag  	 */
   int  uid;		/*40*/	/* BM user id  	 */
-  int  c_state;	/*44*/	/* consumer state (Active,Pause) */
-  int  p_state;	/*48*/	/* producer state (Active,Wspace)*/
-  int	 partid;	/*52*/	/* user partition ID		 */
+  int  c_state;	        /*44*/	/* consumer state (Active,Pause) */
+  int  p_state;	        /*48*/	/* producer state (Active,Wspace)*/
+  int  partid;	        /*52*/	/* user partition ID		 */
   char name[16];	/*68*/	/* user name			 */
   int pid;		/*72*/	/* process id			 */
   int fork;		          /*76*/	/* time when forked		 */
@@ -114,7 +114,7 @@ struct USER : public qentry_t  {
 };
 
 struct EVENT : public qentry_t {
-  int   block_id;	
+  unsigned int block_id;	
   int   busy;		    /*12*/	/* event busy flag		 */
   int   eid;		      /*16*/	/* event ID			 */
   UserMask umask0;    /*32*/

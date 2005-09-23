@@ -27,17 +27,24 @@ extern "C"  {
   int  mbm_mon(int argc , char** argv);
   BMID mbm_include (const char* bm_name, const char* name, int partid);
   int  mbm_exclude (BMID bm);
-  int  mbm_add_req (BMID bm, int evtype, int trmask[4], int veto[4], int masktype, 
+  int  mbm_add_req (BMID bm, int evtype, int* trmask, int* veto, int masktype, 
                     int usertype, int freqmode, float freq);
-  int  mbm_get_event_a (BMID bm, int** ptr, int* size, int* evtype, int* trmask, int part_id, MBM_ast_t astadd);
+  int  mbm_get_event_a(BMID bm, int** ptr, int* size, int* evtype, int* trmask, int part_id, MBM_ast_t astadd, void* ast_par);
+  int  mbm_get_event  (BMID bm, int** ptr, int* size, int* evtype, int* trmask, int part_id);
   int  mbm_free_event (BMID bm);
-  int  mbm_pause (BMID bm);
-  int  mbm_get_space   (BMID bm, int size, int** ptr);
-  int  mbm_get_space_a (BMID bm, int size, int** ptr, MBM_ast_t astadd);
-  int  mbm_declare_event (BMID bm, int len, int evtype, unsigned int trmask[4], const char* dest,
+  int  mbm_pause      (BMID bm);
+
+  int  mbm_get_space  (BMID bm, int size, int** ptr);
+  int  mbm_get_space_a(BMID bm, int size, int** ptr, MBM_ast_t astadd, void* ast_par);
+  int  mbm_declare_event(BMID bm, int len, int evtype, int* trmask, const char* dest,
     void** free_add, int* free_size, int part_id);
   int  mbm_free_space (BMID bm);
   int  mbm_send_space (BMID bm);
+  int  mbm_wait_space(BMID bm);
+  int  mbm_wait_space_a(BMID bm);
+  /// Default AST implementation on get_space
+  int  mbm_get_space_ast(void* par);
+
   int  mbm_cancel_request (BMID bm);
   int  mbm_grant_update (BMID bm);
   int  mbm_events_actual (BMID bm, int *events);
@@ -48,12 +55,10 @@ extern "C"  {
   int  mbm_events_in_buffer (BMID bm, int* events);
   int  mbm_space_in_buffer (BMID bm, int* total, int* large);
   int  mbm_process_exists (BMID bm, const char* name, int* exists);
-  int  mbm_pid();
+
   int  mbm_wait_event(BMID bm);
   int  mbm_wait_event_a(BMID bm);
-  int  mbm_wait_space(BMID bm);
-  int  mbm_wait_space_a(BMID bm);
   /// Default AST implementation on get_event
-  int mbm_get_event_ast(void* par);
+  int  mbm_get_event_ast(void* par);
 };
 #endif // _MBM_MBMDEF_H

@@ -33,20 +33,20 @@ extern "C" {
 
   int _mbm_rel_event (BMDESCRIPT *, int);
   /* try to get event ... */
-  int _mbm_get_ev (BMDESCRIPT *bm, USER* us, int** ptr, int* size, int* evtype, TriggerMask* trmask);
+  int _mbm_get_ev (BMDESCRIPT *bm, USER* us);
   int _mbm_del_wes ( BMDESCRIPT* , USER* );
   int _mbm_check_wes (BMDESCRIPT*);
   /// add user in the wait_event_slot queue
   int _mbm_add_wes (BMDESCRIPT *bm, USER *us, MBM_ast_t astadd);
   /// add user in wait_event queue
-  int _mbm_add_wev (BMDESCRIPT *bm, USER *us, int** ptr, int* size, int* evtype, TriggerMask* trmask, int part_id, MBM_ast_t astadd);
+  int _mbm_add_wev (BMDESCRIPT *bm, USER *us, int** ptr, int* size, int* evtype, TriggerMask* trmask, int part_id, MBM_ast_t astadd, void* astpar);
 
   int _mbm_del_wsp (BMDESCRIPT *, USER*);
   int _mbm_get_sp (BMDESCRIPT *, USER*, int , int**);
   int _mbm_check_rmode (BMDESCRIPT *);
   int _mbm_check_wsp (BMDESCRIPT *bmid, int bit, int nbit);
   /// add user in the wait_space queue
-  int _mbm_add_wsp (BMDESCRIPT *bm, USER* us, int size, int** ptr, MBM_ast_t astadd);
+  int _mbm_add_wsp (BMDESCRIPT *bm, USER* us, int size, int** ptr, MBM_ast_t astadd, void* astpar);
 
   int _mbm_findnam (BMDESCRIPT *bm, const char* name);
   /// find matching req

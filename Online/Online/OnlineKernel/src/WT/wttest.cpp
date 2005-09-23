@@ -4,12 +4,9 @@
 #include "WT/wtdef.h"
 #include "WT/wt_facilities.h"
 #include "RTL/rtl.h"
-// #include <screen.h>
-#include <cstdio>
+#include "RTL/screen.h"
 #include <cstdlib>
 #include <cstdarg>
-
-#include "RTL/conioex.h"
 
 enum {FALSE, TRUE};
 
@@ -26,25 +23,24 @@ void print_at(int x, int y, const char* fmt, ...)  {
   gotoxy(x, y);
   va_start( args, fmt );
   ::vprintf( fmt, args);
-  //cr;
 }
 
 int ast1(void* par)  {
   static int count = 0;
   print_at(50, 4, "%5d",++count);
-  int status = wtc_insert(WT_FACILITY_TIMER1);
+  int status = wtc_insert(WT_FACILITY_TIMER1, par);
   if( status != WT_SUCCESS ) exit(status);
   return WT_SUCCESS;
 }
 
-int rearm1(int fac, int par)  {
+int rearm1(unsigned int /* fac */, void* /* par */)  {
   static int count = 0;
   print_at(40, 4, "%5d",++count);
   int sc = lib_rtl_set_timer(INTERVAL1, ast1, 0, &alarm1);
   return lib_rtl_is_success(sc) ? WT_SUCCESS : WT_ERROR;
 }
 
-int action1(int fac, int par) {
+int action1(unsigned int /* fac */, void* /* par */) {
   static int count = 0;
   print_at(30, 4, "%5d",++count);
   return 1;
@@ -53,64 +49,64 @@ int action1(int fac, int par) {
 int ast2(void* par) {
   static int count = 0;
   print_at(50, 5, "%5d",++count);
-  int status = wtc_insert(WT_FACILITY_TIMER2);
+  int status = wtc_insert(WT_FACILITY_TIMER2,par);
   if( status != WT_SUCCESS ) exit(status);
   return 1;
 }
 
-int rearm2(int fac, int par)  {
+int rearm2(unsigned int /* fac */, void* /* par */)  {
   static int count = 0;
   print_at(40, 5, "%5d",++count);
   return lib_rtl_set_timer(INTERVAL2, ast2, 0, &alarm2);
 }
 
-int action2(int fac, int par) {
+int action2(unsigned int /* fac */, void* /* par */) {
   static int count = 0;
   print_at(30, 5, "%5d",++count);
   return 1;
 }
 
-int ast3(void* param)  {
+int ast3(void* par)  {
   static int count = 0;
   print_at(50, 6, "%5d",++count);
-  int status = wtc_insert(WT_FACILITY_TIMER3);
+  int status = wtc_insert(WT_FACILITY_TIMER3, par);
   if( status != WT_SUCCESS ) exit(status);
   return 1;
 }
 
-int rearm3(int fac, int par)  {
+int rearm3(unsigned int /* fac */, void* /* par */)  {
   static int count = 0;
   print_at(40, 6, "%5d",++count);
   return lib_rtl_set_timer(INTERVAL3, ast3, 0, &alarm3);
 }
 
-int action3(int fac, int par) {
+int action3(unsigned int /* fac */, void* /* par */) {
   static int count = 0;
   print_at(30, 6, "%5d",++count);
   return 1;
 }
 
-int ast4(void* param)  {
+int ast4(void* par)  {
   static int count = 0;
   print_at(50, 7, "%5d",++count);
-  int status = wtc_insert(WT_FACILITY_TIMER4);
+  int status = wtc_insert(WT_FACILITY_TIMER4, par);
   if( status != WT_SUCCESS ) exit(status);
   return 1;
 }
 
-int rearm4(int fac, int par)  {
+int rearm4(unsigned int /* fac */, void* /* par */)  {
   static int count = 0;
   print_at(40, 7, "%5d",++count);
   return lib_rtl_set_timer(INTERVAL4, ast4, 0, &alarm4);
 }
 
-int action4(int fac, int par) {
+int action4(unsigned int /* fac */, void* /* par */) {
   static int count = 0;
   print_at(30, 7, "%5d",++count);
   return 1;
 }
 
-extern "C" int wtc_test(int argc, char** argv)   {  
+extern "C" int wtc_test(int /* argc */, char** /* argv */)   {  
   int status = wtc_init();
   if( status != WT_SUCCESS ) exit(status);
 
@@ -138,9 +134,12 @@ extern "C" int wtc_test(int argc, char** argv)   {
   if( status != WT_SUCCESS ) exit(status);
 
   while(1)  {
-    int sub_status, userpar, facility;
+    unsigned int facility;
+    int sub_status;
+    void* userpar;
     status = wtc_wait(&facility, &userpar, &sub_status);
     printf("Exited WAIT>>>> Facility = %d Status=%d Sub-Status = %d\n", 
       facility, status, sub_status);
   }
+  return 1;
 }

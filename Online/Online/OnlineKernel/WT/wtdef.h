@@ -12,34 +12,36 @@ enum WT_Constants{
   WT_CHILDDEATH     =(WT_FAC*256+14),
   WT_NOEF           =(WT_FAC*256+16)
 };
+
+struct wt_enabled_fac_header;
 #ifdef __cplusplus
   extern "C" {
-  typedef int (*wt_callback_type)(int,int);
+  typedef int (*wt_callback_t)(unsigned int,void*);
 #define DEF_ARG(x)   =x
 #else
-  typedef int (*wt_callback_type)();
+  typedef int (*wt_callback_t)();
 #define DEF_ARG(x) 
 #endif
 
 int wtc_init(void);
-int wtc_subscribe (int facility, wt_callback_type rearm,wt_callback_type action);
-int wtc_remove(int);
-int wtc_insert(int facility, int parameter DEF_ARG(0));
-int wtc_insert_head(int facility, int parameter DEF_ARG(0));
+int wtc_subscribe (int facility, wt_callback_t rearm,wt_callback_t action, void* param DEF_ARG(0));
+int wtc_remove(unsigned int facility);
+int wtc_insert(unsigned int facility, void* parameter DEF_ARG(0));
+int wtc_insert_head(unsigned int facility, void* parameter DEF_ARG(0));
 int wtc_test_input(void);
-int wtc_wait(int*,int*,int*);
+int wtc_wait(unsigned int* facility,void** userparameter,int* sub_status);
 int wtc_create_enable_mask(void **p);
 #ifdef IMPLEMENTING
-int wtc_wait_with_mask(int*,int*,int*, wt_enabled_fac_header*);
-int wtc_add_to_en_fac(wt_enabled_fac_header *,int);
+int wtc_wait_with_mask(unsigned int*,void** userpar, int* substatus, wt_enabled_fac_header*);
+int wtc_add_to_en_fac(wt_enabled_fac_header *,unsigned int);
 #else
 int wtc_wait_with_mask(int*,int*,int*, int);
 int wtc_add_to_en_fac(int,int);
 #endif
-int wtc_flush (int);
-int wtc_flushp (int,int);
+int wtc_flush (unsigned int facility);
+int wtc_flushp (unsigned int facility , void* userparameter);
 int wtc_add_stack(int ,int);
-int wtc_spy_next_entry(int*,int*);
+int wtc_spy_next_entry(unsigned int* facility, void** parameter);
 int wtc_error(int status);
 #ifdef __cplusplus
 }

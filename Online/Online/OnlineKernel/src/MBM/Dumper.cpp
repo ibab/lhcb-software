@@ -7,8 +7,6 @@
 
 #define writeln(a,b,c) printf(b)
 
-static int USER_next_off;
-
 namespace MBM {
   struct Dumper : public Manager {
     int All;
@@ -58,7 +56,7 @@ int MBM::Dumper::optparse (const char* c)   {
     iret = sscanf(c+1,"=%s",buff_id);
     if( iret != 1 )      {
       writeln(2,"Error reading Buffer identifier parameter\n",80);
-      _exit(0);
+      exit(0);
     }
     bm_id = buff_id;
     break;
@@ -87,7 +85,7 @@ int MBM::Dumper::print()  {
 }
 
 void MBM::Dumper::print_control_table(const CONTROL* ctrl)  {
-  printf("Control table starts at %x(hex) %d(dec)\n",ctrl,ctrl);
+  printf("Control table starts at %p(hex) %ld(dec)\n",ctrl,long(ctrl));
 
   print_queue("ctrl->u_head\t%8x %d\t-----> user at address %x\n",   (long*)&ctrl->u_head,0);
   print_queue("ctrl->u_tail\t%8x %d\t-----> user at address %x\n",   (long*)&ctrl->u_head.prev,1);
@@ -99,10 +97,10 @@ void MBM::Dumper::print_control_table(const CONTROL* ctrl)  {
   print_queue("ctrl->wes_tail\t%8x %d\t-----> user at address %x\n", (long*)&ctrl->wes_head.prev,1);
   print_queue("ctrl->e_head\t%8x %d\t-----> event at address %x\n",  (long*)&ctrl->e_head,0);
   print_queue("ctrl->e_tail\t%8x %d\t-----> event at address %x\n",  (long*)&ctrl->e_head.prev,1);
-  print_item("ctrl->buff_ptr\t%8x %d\n",ctrl->buff_ptr);
+  print_item("ctrl->buff_ptr\t%8p %d\n",ctrl->buff_ptr);
   print_item("ctrl->buff_size\t%8x %d\n",ctrl->buff_size);
-  print_item("ctrl->user\t%8x %d\t\n",ctrl->user);
-  print_item("ctrl->event\t%8x %d\n",ctrl->event);
+  print_item("ctrl->user\t%8p %d\t\n",ctrl->user);
+  print_item("ctrl->event\t%8p %d\n",ctrl->event);
   print_item("ctrl->p_umax\t%8x %d\n",ctrl->p_umax);
   print_item("ctrl->p_emax\t%8x %d\n",ctrl->p_emax);
   print_item("ctrl->p_base\t%8x %d\n",ctrl->p_base);
@@ -124,7 +122,7 @@ void MBM::Dumper::print_user_table(const USER* user)  {
       return;
     }
   }
-  printf("User table starts at %x(hex) %d(dec)\n",user,user);
+  printf("User table starts at %p(hex) %ld(dec)\n",user,long(user));
   print_queue("user->next\t%x %d\t-----> user at address %x\n",&user->next,0);
   print_queue("user->prev\t%x %d\t-----> user at address %x\n",&user->prev,1);
   print_queue("user->wsnext\t%x %d\t-----> user at address %x\n",(long*)&user->wsnext,0);
@@ -149,7 +147,7 @@ void MBM::Dumper::print_user_table(const USER* user)  {
   print_item("user->we_ptr\t%x %d\n",user->we_ptr);
   print_item("user->we_size\t%x %d\n",user->we_size);
   print_item("user->we_evtype\t%x %d\n",user->we_evtype);
-  print_item("user->we_trmask\t%x\n",user->we_trmask);
+  print_item("user->we_trmask\t%x\n",user->we_trmask.bits());
   print_item("user->ws_ptr_add\t%x %d\n",user->ws_ptr_add);
   print_item("user->we_ptr_add\t%x %d\n",user->we_ptr_add);
   print_item("user->we_size_add\t%x %d\n",user->we_size_add);
@@ -171,7 +169,7 @@ void MBM::Dumper::print_user_table(const USER* user)  {
   print_item("user->get_asts_run\t%x %d\n",user->get_asts_run);
   printf ("\nNumber of Requirements declared %d\n",user->n_req);
   for(int i=0;i<8;i++)  {
-    printf("Requirement Number %d    Event Type %d\n",i);
+    printf("Requirement Number %d    Event Type %d\n",i,user->req[i].ev_type);
     print_mask("\tReq. Trigger Mask \t%0x %0x %0x %0x\n",user->req[i].tr_mask.bits());
     print_mask("\tVeto Mask\t%0x %0x %0x %0x\n",user->req[i].vt_mask.bits());
     print_item("\tRequirement Type  \t%d\n",user->req[i].masktype);
@@ -186,7 +184,7 @@ void MBM::Dumper::print_event_table(const EVENT* event)  {
       return;
     }
   }
-  printf("Event table starts at %x(hex) %d(dec)\n",event,event);
+  printf("Event table starts at %p(hex) %ld(dec)\n",event,long(event));
   print_queue("event->next\t%x %d\t-----> Event at address %x\n",(long*)&event->next,0);
   print_queue("event->prev\t%x %d\t-----> Event at address %x\n",(long*)&event->prev,1);
   print_item("event->block_id\t%x %d\n",event->block_id);
