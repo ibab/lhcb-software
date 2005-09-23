@@ -1,3 +1,5 @@
+typedef long (*func)(int, char**);
+
 #ifdef _WIN32
   #include <windows.h>
   #define LOAD_LIB(x)  ::LoadLibrary( #x )
@@ -22,7 +24,7 @@
   #include <dlfcn.h>
   #include <unistd.h>
   #define LOAD_LIB(x)  ::dlopen( "lib" #x ".so" , RTLD_NOW)
-  #define GETPROC(h,x) ::dlsym ( h, #x )
+  inline void* GETPROC(void* h, const char* x) {  return ::dlsym(h,x); }
   #define DLERROR      ::dlerror()
 #endif
 #include <string>
@@ -30,7 +32,6 @@
 #include <iostream>
 
 int main (int argc, char** argv)  {
-  typedef long (*func)(int, char**);
   void* handle = LOAD_LIB( OnlineKernel );
   if ( 0 != handle )  {
     func fun = (func)GETPROC(handle, argv[1] );

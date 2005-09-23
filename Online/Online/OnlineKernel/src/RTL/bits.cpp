@@ -209,7 +209,10 @@ static inline int generic_ffc(int x)  {
 	}
 	return r;
 }
-
+#ifdef _WIN32
+#define ffs generic_ffs
+#define ffc generic_ffc
+#endif
 static unsigned int mask[] = {
   0x00000001, 0x00000002, 0x00000004, 0x00000008,
   0x00000010, 0x00000020, 0x00000040, 0x00000080,
