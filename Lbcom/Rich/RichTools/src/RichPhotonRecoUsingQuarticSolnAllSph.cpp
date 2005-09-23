@@ -5,7 +5,7 @@
  * Implementation file for class : RichPhotonRecoUsingQuarticSolnAllSph
  *
  * CVS Log :-
- * $Id: RichPhotonRecoUsingQuarticSolnAllSph.cpp,v 1.1 2005-09-23 15:48:32 papanest Exp $
+ * $Id: RichPhotonRecoUsingQuarticSolnAllSph.cpp,v 1.2 2005-09-23 16:51:33 jonrob Exp $
  *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @author Antonis Papanestis
@@ -25,22 +25,26 @@ const        IToolFactory& RichPhotonRecoUsingQuarticSolnAllSphFactory = Factory
 //=============================================================================
 RichPhotonRecoUsingQuarticSolnAllSph::
 RichPhotonRecoUsingQuarticSolnAllSph( const std::string& type,
-                                const std::string& name,
-                                const IInterface* parent )
+                                      const std::string& name,
+                                      const IInterface* parent )
   : RichToolBase      ( type, name, parent ),
     m_mirrorSegFinder ( 0 ),
     m_rayTracing      ( 0 ),
     m_idTool          ( 0 ),
-    m_refIndex        ( 0 )
+    m_refIndex        ( 0 ),
+    m_nQits           ( Rich::NRadiatorTypes )
 {
 
   // declare interface
   declareInterface<IRichPhotonReconstruction>(this);
 
   // job options
-
-  declareProperty( "FindUnambiguousPhotons",    m_testForUnambigPhots = true );
-  declareProperty( "UseMirrorSegmentAllignment", m_useAlignedMirrSegs = true );
+  declareProperty( "FindUnambiguousPhotons",    m_testForUnambigPhots = false );
+  declareProperty( "UseMirrorSegmentAllignment", m_useAlignedMirrSegs = true  );
+  m_nQits[Rich::Aerogel] = 1;
+  m_nQits[Rich::C4F10]   = 1;
+  m_nQits[Rich::CF4]     = 1;
+  declareProperty( "NQuarticIterationsForSecMirrors", m_nQits                 );
 
 }
 
@@ -86,6 +90,12 @@ StatusCode RichPhotonRecoUsingQuarticSolnAllSph::initialize()
   m_nomSphMirrorRadius[Rich::Rich1] = r1->sphMirrorRadius();
   m_nomSphMirrorRadius[Rich::Rich2] = r2->sphMirrorRadius();
 
+  // check iterations
+  if ( m_nQits[Rich::Aerogel]<1 ) return Error( "# Aerogel iterations < 1" );
+  if ( m_nQits[Rich::C4F10]<1   ) return Error( "# C4F10   iterations < 1" );
+  if ( m_nQits[Rich::CF4]<1     ) return Error( "# CF4     iterations < 1" );
+
+  // information printout about configuration
   if ( m_testForUnambigPhots )
   {
     info() << "Will test for unambiguous photons" << endreq;
@@ -102,6 +112,8 @@ StatusCode RichPhotonRecoUsingQuarticSolnAllSph::initialize()
   {
     info() << "Will use nominal mirrors for reconstruction" << endreq;
   }
+  info() << "Number of secondary mirror iterations (aero/C4F10/CF4) : "
+         << m_nQits << endreq;
 
   return sc;
 }
@@ -145,6 +157,11 @@ reconstructPhoton ( const RichTrackSegment& trSeg,
   HepPoint3D & emissionPoint = gPhoton.emissionPoint();
   emissionPoint = trSeg.bestPoint();
 
+  // Final reflection points on sec and spherical mirrors
+  // operate directly on photon data
+  HepPoint3D & sphReflPoint = gPhoton.sphMirReflectionPoint();
+  HepPoint3D & secReflPoint = gPhoton.flatMirReflectionPoint();
+
   // fraction of segment path length accessible to the photon
   double fraction(1);
 
@@ -157,12 +174,16 @@ reconstructPhoton ( const RichTrackSegment& trSeg,
 
   // find the reflection of the detection point in the sec mirror
   // (virtual detection point) starting with nominal values
+  // At this we are assuming a flat nominal mirror common to all segments
   double distance = m_nominalSecMirrorPlane[rich][side].distance(detectionPoint);
   HepPoint3D virtDetPoint =
     ( detectionPoint - 2.0 * distance * m_nominalSecMirrorPlane[rich][side].normal() );
 
   // --------------------------------------------------------------------------------------
   // For gas radiators, try start and end points to see if photon is unambiguous
+  // NOTE : For this we are using the virtual detection point determined using
+  // the noimnal flat secondary mirror plane. Now the secondary mirrors are actually
+  // spherical this may be introducing some additional uncertainties.
   // --------------------------------------------------------------------------------------
   if ( m_testForUnambigPhots )
   {
@@ -214,26 +235,23 @@ reconstructPhoton ( const RichTrackSegment& trSeg,
       if ( (sphSegment1 == sphSegment2) && (secSegment1 == secSegment2) )
       {
         // Set pointers to the mirror detector objects
-        sphSegment  = sphSegment1;
+        sphSegment = sphSegment1;
         secSegment = secSegment1;
+        // rough guesses at reflection points (improved later on)
+        sphReflPoint = (sphReflPoint1+sphReflPoint2)/2;
+        secReflPoint = (secReflPoint1+secReflPoint2)/2;
         // photon is not unambiguous
         unambigPhoton = true;
       }
 
     } // end radiator type if
-
   } // end do test if
   // --------------------------------------------------------------------------------------
 
-  // Final reflection points on sec and spherical mirrors
-  // operate directly on photon data
-  HepPoint3D& sphReflPoint  = gPhoton.sphMirReflectionPoint();
-  HepPoint3D& secReflPoint = gPhoton.flatMirReflectionPoint();
-
   // --------------------------------------------------------------------------------------
-  // if aerogel or ambiguous gas photon, try again using best emission point and
-  // nominal mirror geometries to get the spherical and sec mirrors
-  // Also, force this reconstruction if the above unambiguous test was skipped
+  // if aerogel (which hasn't yet been treated at all) or ambiguous gas photon, try again
+  // using best emission point and nominal mirror geometries to get the spherical and sec
+  // mirrors. Also, force this reconstruction if the above unambiguous test was skipped
   // --------------------------------------------------------------------------------------
   if ( !m_testForUnambigPhots || Rich::Aerogel == radiator || !unambigPhoton )
   {
@@ -255,33 +273,53 @@ reconstructPhoton ( const RichTrackSegment& trSeg,
                                   secReflPoint);
 
     // Get pointers to the spherical and sec mirror detector objects
+    sphSegment = m_mirrorSegFinder->findSphMirror ( rich, side, sphReflPoint );
     secSegment = m_mirrorSegFinder->findSecMirror ( rich, side, secReflPoint );
-    sphSegment  = m_mirrorSegFinder->findSphMirror  ( rich, side, sphReflPoint  );
 
   }
   // --------------------------------------------------------------------------------------
 
   // --------------------------------------------------------------------------------------
-  // Finally, reconstruct the photon using best emission point and
-  // the best mirror segments
+  // Finally, reconstruct the photon using best emission point and the best mirror segments
   // --------------------------------------------------------------------------------------
   if ( m_useAlignedMirrSegs )
   {
 
-    // re-find the reflection of the detection point in the sec mirror
-    // (virtual detection point) with the final (best) detector information
-    distance     = secSegment->centreNormalPlane().distance(detectionPoint);
-    virtDetPoint = detectionPoint - 2.0 * distance * secSegment->centreNormalPlane().normal();
-
-    // solve the quartic
-    if ( !solveQuarticEq( emissionPoint,
-                          sphSegment->centreOfCurvature(),
-                          virtDetPoint,
-                          sphSegment->radius(),
-                          sphReflPoint ) )
+    // Iterate to final solution, improving the flat mirror data
+    int iIt(0);
+    while ( iIt < m_nQits[radiator] )
     {
-      //return Warning( "Failed to reconstruct photon using mirror segments" );
-      return StatusCode::FAILURE;
+
+      // Get secondary mirror reflection point,
+      // using the best actual secondary mirror segment
+      m_rayTracing->intersectPlane( sphReflPoint,
+                                    virtDetPoint - sphReflPoint,
+                                    secSegment->centreNormalPlane(),
+                                    secReflPoint );
+
+      // Construct plane tangential to secondary mirror passing through reflection point
+      const HepPlane3D 
+        plane( HepNormal3D( secSegment->centreOfCurvature() - secReflPoint ).unit(), 
+               secReflPoint );
+
+      // re-find the reflection of the detection point in the sec mirror
+      // (virtual detection point) with this mirror plane
+      distance     = plane.distance(detectionPoint);
+      virtDetPoint = detectionPoint - 2.0 * distance * plane.normal();
+
+      // solve the quartic using the new data
+      if ( !solveQuarticEq( emissionPoint,
+                            sphSegment->centreOfCurvature(),
+                            virtDetPoint,
+                            sphSegment->radius(),
+                            sphReflPoint ) )
+      {
+        //return Warning( "Failed to reconstruct photon using mirror segments" );
+        return StatusCode::FAILURE;
+      }
+
+      // increment iteration counter and continue until max iterations has been done
+      ++iIt;
     }
 
   }
@@ -290,7 +328,7 @@ reconstructPhoton ( const RichTrackSegment& trSeg,
   // --------------------------------------------------------------------------------------
   // check that spherical mirror reflection point is on the same side as track point
   // --------------------------------------------------------------------------------------
-  if ( radiator == Rich::CF4 )
+  if ( rich == Rich::Rich2 )
   {
     if ( sphReflPoint.x() * virtDetPoint.x() < 0.0 )
     {
@@ -298,13 +336,14 @@ reconstructPhoton ( const RichTrackSegment& trSeg,
       return StatusCode::FAILURE;
     }
   }
-  else
-    // RICH 1
+  else // RICH 1
+  {
     if ( sphReflPoint.y() * virtDetPoint.y() < 0.0 )
     {
       //return Warning( "RICH1 : Reflection point on wrong side" );
       return StatusCode::FAILURE;
     }
+  }
   // --------------------------------------------------------------------------------------
 
   // --------------------------------------------------------------------------------------
@@ -321,10 +360,10 @@ reconstructPhoton ( const RichTrackSegment& trSeg,
   // --------------------------------------------------------------------------------------
 
   // --------------------------------------------------------------------------------------
-  // calculate the cherenkov angles
+  // calculate the cherenkov angles using the photon and track vectors
   // --------------------------------------------------------------------------------------
   HepVector3D photonDirection = sphReflPoint - emissionPoint;
-  double thetaCerenkov, phiCerenkov;
+  double thetaCerenkov(0), phiCerenkov(0);
   trSeg.angleToDirection( photonDirection, thetaCerenkov, phiCerenkov );
   // --------------------------------------------------------------------------------------
 
@@ -332,7 +371,9 @@ reconstructPhoton ( const RichTrackSegment& trSeg,
   // Correct Cherenkov theta for refraction at exit of aerogel
   // --------------------------------------------------------------------------------------
   if ( Rich::Aerogel == radiator )
+  {
     correctAeroRefraction( trSeg, photonDirection, thetaCerenkov );
+  }
   // --------------------------------------------------------------------------------------
 
   // --------------------------------------------------------------------------------------
@@ -343,7 +384,7 @@ reconstructPhoton ( const RichTrackSegment& trSeg,
   gPhoton.setActiveSegmentFraction  ( static_cast<float>(fraction)      );
   gPhoton.setDetectionPoint         ( detectionPoint );
   gPhoton.setMirrorNumValid         ( unambigPhoton  );
-  gPhoton.setSphMirrorNum           ( sphSegment  ? sphSegment->mirrorNumber()  : 0 );
+  gPhoton.setSphMirrorNum           ( sphSegment ? sphSegment->mirrorNumber() : 0 );
   gPhoton.setFlatMirrorNum          ( secSegment ? secSegment->mirrorNumber() : 0 );
   // --------------------------------------------------------------------------------------
 
@@ -378,7 +419,7 @@ findMirrorData( const Rich::DetectorType rich,
                                 virtDetPoint - sphReflPoint,
                                 m_nominalSecMirrorPlane[rich][side],
                                 secReflPoint);
-  secSegment = m_mirrorSegFinder->findSecMirror(rich, side, secReflPoint );
+  secSegment = m_mirrorSegFinder->findSecMirror(rich, side, secReflPoint);
 
   return true;
 }
@@ -423,7 +464,7 @@ getBestGasEmissionPoint( const Rich::RadiatorType radiator,
     }
 
   }
-  else
+  else if ( radiator == Rich::CF4 )
   {
     // First sphReflPoint and hit point on same x side ?
     const bool sameSide1 = ( sphReflPoint1.x() * detectionPoint.x() > 0 );
@@ -448,6 +489,7 @@ getBestGasEmissionPoint( const Rich::RadiatorType radiator,
       return false;
     }
   }
+  else { Error( "::getBestGasEmissionPoint() called for Aerogel segment !!" ); }
 
   return true;
 }
@@ -460,12 +502,17 @@ correctAeroRefraction( const RichTrackSegment& trSeg,
                        HepVector3D& photonDirection,
                        double & thetaCerenkov ) const
 {
+  // Normalise photon vector
   photonDirection.setMag(1);
-  const double refAero  = m_refIndex->refractiveIndex( Rich::Aerogel, trSeg.avPhotonEnergy() );
-  const double refc4f10 = m_refIndex->refractiveIndex( Rich::C4F10,   trSeg.avPhotonEnergy() );
+  // get refractive indices for aerogel and c4f10
+  const double refAero  
+    = m_refIndex->refractiveIndex( Rich::Aerogel, trSeg.avPhotonEnergy() );
+  const double refc4f10 
+    = m_refIndex->refractiveIndex( Rich::C4F10,   trSeg.avPhotonEnergy() );
   const double RratioSq = (refAero*refAero)/(refc4f10*refc4f10);
-  HepVector3D newDir;
-  newDir.setZ( sqrt(1. - ( 1. - photonDirection.z()*photonDirection.z() )/RratioSq ));
+  // Apply Snells law and update angle
+  HepVector3D newDir( 0, 0, 
+                      sqrt(1.-(1.-photonDirection.z()*photonDirection.z())/RratioSq ) );
   const double R = photonDirection.y()/photonDirection.x();
   newDir.setX( sqrt( (1.-newDir.z()*newDir.z())/(1. + R*R) ) );
   if ( photonDirection.x() < 0 ) newDir.setX( -newDir.x() );
@@ -475,7 +522,8 @@ correctAeroRefraction( const RichTrackSegment& trSeg,
 }
 
 //=========================================================================
-//  setup and solve quartic equation
+// Setup and solve quartic equation in the form
+// x^4 + a x^3 + b x^2 + c x + d = 0
 //=========================================================================
 bool RichPhotonRecoUsingQuarticSolnAllSph::
 solveQuarticEq (const HepPoint3D& emissionPoint,
@@ -484,8 +532,6 @@ solveQuarticEq (const HepPoint3D& emissionPoint,
                 const double radius,
                 HepPoint3D& sphReflPoint) const
 {
-
-  // solve quartic in the form  x^4 + a x^3 + b x^2 + c x + d = 0
 
   // vector from mirro centre of curvature to assumed emission point
   HepVector3D evec = emissionPoint - CoC;

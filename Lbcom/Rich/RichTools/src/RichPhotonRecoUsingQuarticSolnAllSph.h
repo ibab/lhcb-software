@@ -5,7 +5,7 @@
  *  Header file for tool : RichPhotonRecoUsingQuarticSoln
  *
  *  CVS Log :-
- *  $Id: RichPhotonRecoUsingQuarticSolnAllSph.h,v 1.1 2005-09-23 15:48:32 papanest Exp $
+ *  $Id: RichPhotonRecoUsingQuarticSolnAllSph.h,v 1.2 2005-09-23 16:51:33 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @author Antonis Papanestis
@@ -188,7 +188,7 @@ private: // data
   /// Refractive index tool
   const IRichRefractiveIndex * m_refIndex;
 
-  /** Flag to indicate if the unambiguous photon test should be performed
+  /** @brief Flag to indicate if the unambiguous photon test should be performed
    *
    *  If set to true the reconstruction is first performed twice, using the
    *  track segment start and end points as the assumed emission points and the
@@ -203,7 +203,7 @@ private: // data
    */
   bool m_testForUnambigPhots;
 
-  /** Flag to indicate if Cherenkov angles should be computed using the
+  /** @brief Flag to indicate if Cherenkov angles should be computed using the
    *  absolute mirror segment alignment.
    *
    *  If set to true, then the reconstruction will be performed twice,
@@ -211,8 +211,18 @@ private: // data
    *  mirror segments, and then again with thos segments.
    *
    *  If false, only the nominal mirror allignment will be used
+   *
+   *  @attention
+   *  This is really only a 'developer' option, used for reconstruction studies.
+   *  Turning it off will degrade the Cherenkov resolution so in general should
+   *  not be done.
    */
   bool m_useAlignedMirrSegs;
+
+  /** Number of iterations of the quartic solution, for each radiator, in order 
+   *  to account for the non-flat secondary mirrors. 
+   */
+  std::vector<int> m_nQits;
 
 };
 
