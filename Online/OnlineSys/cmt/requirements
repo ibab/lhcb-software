@@ -7,12 +7,13 @@ branches cmt doc
 # LHCb Online packages
 #=======================================================
 
-use DIM		  v1r1   Online
-use Gaucho        v3r1   Online
-use GauchoJob     v2r3   Online
-use GaudiOnline   v1r2p1 Online
-use SFCClient     v1r2   Online
+use DIM		  v1r0   Online
+use Gaucho        v3r0   Online
+use GauchoJob     v2r1   Online
+use GaudiOnline   v1r1   Online
+use SFCClient     v1r0   Online
 use PyDIM         v1r0   Online
+use OnlineKernel  v1r0   Online
 
 private
 use ExampleGaucho v1r0   Online
