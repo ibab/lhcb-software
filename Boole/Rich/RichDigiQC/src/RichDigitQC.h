@@ -5,7 +5,7 @@
  *  Header file for RICH Digitisation Quality Control algorithm : RichDigitQC
  *
  *  CVS Log :-
- *  $Id: RichDigitQC.h,v 1.13 2005-06-23 14:52:32 jonrob Exp $
+ *  $Id: RichDigitQC.h,v 1.14 2005-09-25 09:55:14 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   2003-09-08
@@ -27,6 +27,7 @@
 // from Gaudi
 #include "GaudiKernel/IHistogramSvc.h"
 #include "GaudiKernel/SmartDataPtr.h"
+#include "GaudiKernel/AlgFactory.h"
 
 // Event model
 #include "Event/MCRichDigit.h"
