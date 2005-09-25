@@ -5,7 +5,7 @@
  *  Implementation file for RICH Global PID algorithm class : RichGlobalPIDTrTrackSel
  *
  *  CVS Log :-
- *  $Id: RichGlobalPIDTrTrackSel.cpp,v 1.22 2005-06-23 14:54:25 jonrob Exp $
+ *  $Id: RichGlobalPIDTrTrackSel.cpp,v 1.23 2005-09-25 10:01:43 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   17/04/2002
@@ -56,16 +56,16 @@ StatusCode RichGlobalPIDTrTrackSel::initialize()
   if ( sc.isFailure() ) { return sc; }
 
   // Acquire tools
-  m_tkSignal = expTrackSignalTool();
+  acquireTool( "RichExpectedTrackSignal", m_tkSignal );
 
   // Configure track selector
   if ( !m_trSelector.configureTrackTypes() ) return StatusCode::FAILURE;
   m_trSelector.printTrackSelection( info() );
 
   // trick to force pre-loading of various tools. Avoids loading
-  // during first processed event and thus biased any timing numbers
-  trackCreator();   // pre-load the track creator
-  segmentCreator(); // pre-load the segment creator
+  // during first processed event and thus biasing any timing numbers
+  trackCreator();
+  segmentCreator();
 
   return sc;
 }

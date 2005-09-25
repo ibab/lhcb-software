@@ -5,7 +5,7 @@
  *  Implementation file for RICH Global PID algorithm class : RichGlobalPIDAlg
  *
  *  CVS Log :-
- *  $Id: RichGlobalPIDAlg.cpp,v 1.24 2005-06-23 14:54:25 jonrob Exp $
+ *  $Id: RichGlobalPIDAlg.cpp,v 1.25 2005-09-25 10:01:43 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   17/04/2002
@@ -74,12 +74,12 @@ StatusCode RichGlobalPIDAlg::initialize()
   if ( sc.isFailure() ) { return sc; }
 
   // Acquire tools
-  m_photonSig = expPhotonSignalTool();
-  m_tkSignal = expTrackSignalTool();
+  acquireTool( "RichPhotonSignal",        m_photonSig );
+  acquireTool( "RichExpectedTrackSignal", m_tkSignal  );
 
   // trick to force pre-loading of various tools. Avoids loading
-  // during first processed event and thus biased any timing numbers
-  photonCreator(); // pre-load the photon creator tool
+  // during first processed event and thus biasing any timing numbers
+  photonCreator();
 
   // Initialise parameters
   m_logMinSig = log(m_minSig);
@@ -111,7 +111,8 @@ StatusCode RichGlobalPIDAlg::execute()
   if ( !richPhotons() ) return StatusCode::FAILURE;
   if ( richPhotons()->empty() ) {
     photonCreator()->reconstructPhotons();
-    debug() << "Reconstructed " << richPhotons()->size() << " photon candidates" << endreq;
+    if ( msgLevel(MSG::DEBUG) )
+      debug() << "Reconstructed " << richPhotons()->size() << " photon candidates" << endreq;
     if ( richPhotons()->empty() )
       return Warning("No reconstructed photons -> Abort",StatusCode::SUCCESS);
   }
@@ -124,8 +125,11 @@ StatusCode RichGlobalPIDAlg::execute()
   if ( !initMinLogLikelihood() ) return StatusCode::FAILURE;
 
   const double finalLL = logLikelihood();
-  debug() << "LogLL before/after initial minimisation = "
-          << m_currentBestLL << "/" << finalLL << endreq;
+  if ( msgLevel(MSG::DEBUG) )
+  {
+    debug() << "LogLL before/after initial minimisation = "
+            << m_currentBestLL << "/" << finalLL << endreq;
+  }
   m_currentBestLL = finalLL;
 
   // iterate to minimum solution
@@ -133,25 +137,34 @@ StatusCode RichGlobalPIDAlg::execute()
   minTrList minTracks;
   m_lastChance = false;
   bool tryAgain = true;
-  while ( tryAgain || 0 == m_trackIteration || !minTracks.empty() ) {
-    if ( m_trackIteration > m_maxTrackIterations ) {
-      Warning("Taken more than max number of iterations -> quitting");
+  while ( tryAgain || 0 == m_trackIteration || !minTracks.empty() ) 
+  {
+    if ( m_trackIteration > m_maxTrackIterations ) 
+    {
+      Warning( "Taken more than max number of iterations -> quitting", 
+               StatusCode::SUCCESS );
       break;
     }
-
+    
     // Iterate finding the min likelihood
     findMinLogLikelihood( minTracks );
 
     // set track hypotheses to the minimum
-    if ( !minTracks.empty() ) {
+    if ( !minTracks.empty() ) 
+    {
       m_lastChance = false;
       minTrList::iterator iTrack;
-      for ( iTrack = minTracks.begin(); iTrack != minTracks.end(); ++iTrack ) {
-        if ( Rich::Unknown == iTrack->second ) {
+      for ( iTrack = minTracks.begin(); iTrack != minTracks.end(); ++iTrack ) 
+      {
+        if ( Rich::Unknown == iTrack->second ) 
+        {
           err() << "Track " << (iTrack->first)->key()
                 << " has been Id'ed as Unknown !!" << endreq;
-        } else {
-          if ( msgLevel(MSG::VERBOSE) ) {
+        } 
+        else 
+        {
+          if ( msgLevel(MSG::VERBOSE) ) 
+          {
             verbose() << "Changing Track " << (iTrack->first)->key()
                       << " hypothesis to from "
                       << (iTrack->first)->richRecTrack()->currentHypothesis()
@@ -164,18 +177,25 @@ StatusCode RichGlobalPIDAlg::execute()
           (iTrack->first)->globalPID()->setParticleDeltaLL( iTrack->second, 0 );
         }
       }
-    } else if ( !m_lastChance && m_tryAgain && 0 != m_trackIteration ) {
+    } 
+    else if ( !m_lastChance && m_tryAgain && 0 != m_trackIteration ) 
+    {
       m_lastChance = true;
-    } else {
+    } 
+    else 
+    {
       tryAgain = false;
     }
 
     ++m_trackIteration;
   }
 
-  debug() << "Performed " << m_trackIteration
-          << " track minimisation iteration(s). Final LogL = "
-          << m_currentBestLL << endreq;
+  if ( msgLevel(MSG::DEBUG) )
+  {
+    debug() << "Performed " << m_trackIteration
+            << " track minimisation iteration(s). Final LogL = "
+            << m_currentBestLL << endreq;
+  }
 
   // update event LL vector after processing
   m_GPIDSummary->addToEventLL( m_currentBestLL );
