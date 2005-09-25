@@ -1,4 +1,4 @@
-// $Id: RichDigiDataObjVerifier.h,v 1.6 2005-06-18 11:27:15 jonrob Exp $
+// $Id: RichDigiDataObjVerifier.h,v 1.7 2005-09-25 09:57:22 jonrob Exp $
 #ifndef RICHDIGIQC_RICHDIGIDATOBJVERIFIER_H
 #define RICHDIGIQC_RICHDIGIDATOBJVERIFIER_H 1
 
@@ -13,8 +13,6 @@
 // Event model
 #include "Event/RichDigit.h"
 #include "Event/MCRichDigit.h"
-//#include "Event/MCRichDeposit.h"
-//#include "Event/MCRichSummedDeposit.h"
 #include "Event/MCRichHit.h"
 
 // Kernel
