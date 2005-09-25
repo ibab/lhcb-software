@@ -5,7 +5,7 @@
  * Implementation file for class : RichRawBufferToSmartIDsTool
  *
  * CVS Log :-
- * $Id: RichRawBufferToSmartIDsTool.cpp,v 1.10 2005-05-13 14:22:12 jonrob Exp $
+ * $Id: RichRawBufferToSmartIDsTool.cpp,v 1.11 2005-09-25 09:50:25 jonrob Exp $
  *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @date 14/01/2002
@@ -25,7 +25,7 @@ RichRawBufferToSmartIDsTool::RichRawBufferToSmartIDsTool( const std::string& typ
                                                           const IInterface* parent )
   : RichToolBase       ( type, name, parent ),
     m_rawFormatT       ( 0     ),
-    m_sortIDs          ( false ),
+    m_sortIDs          ( true  ),
     m_newEvent         ( true  )
 {
 
@@ -33,7 +33,7 @@ RichRawBufferToSmartIDsTool::RichRawBufferToSmartIDsTool( const std::string& typ
   declareInterface<IRichRawBufferToSmartIDsTool>(this);
 
   // job options
-  declareProperty( "SortRichSmartIDs", m_sortIDs = false );
+  declareProperty( "SortRichSmartIDs", m_sortIDs );
 
 }
 

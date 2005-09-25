@@ -4,6 +4,9 @@
 ! Purpose     : Package simulating the RICH DAQ system and data format
 !-----------------------------------------------------------------------------
 
+! 2005-09-25 - Chris Jones
+ - Turn on sorting of RichSmartIDs from RawBuffer by default
+
 ! 2005-07-14 - Chris Jones
  - Add protections for empty Level1 board banks
 

@@ -12,5 +12,3 @@ ToolSvc.RichToolRegistry.Tools += { "RichHPDInfoTool/RichHPDInfoTool" };
 ToolSvc.RichToolRegistry.Tools += { "RichHPDToLevel1Tool/RichHPDToLevel1Tool" };
 ToolSvc.RichToolRegistry.Tools += { "RichRawDataFormatTool/RichRawDataFormatTool" };
 
-// Sort the decoded RichSmartIDs ?
-ToolSvc.RichSmartIDDecoder.SortRichSmartIDs = true;
