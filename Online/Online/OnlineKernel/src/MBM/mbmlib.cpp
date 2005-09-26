@@ -166,14 +166,14 @@ BMDESCRIPT *mbm_include (const char* bm_name, const char* name, int partid) {
 
   strcpy(bm->bm_name,bm_name);
   sprintf(text, "bm_ctrl_%s",   bm_name);
-  status  = _mbm_map_section(text,bm->ctrl_add);
+  status  = _mbm_map_section(text, sizeof(CONTROL), bm->ctrl_add);
   if (!lib_rtl_is_success(status))    {
     ::printf("failure to map control section for %s. Status = %d\n",bm_name,status);
     return (BMDESCRIPT*)-1;
   }
   bm->ctrl = (CONTROL*)bm->ctrl_add[0];
   sprintf(text, "bm_event_%s",  bm_name);
-  status  = _mbm_map_section(text,bm->event_add);
+  status  = _mbm_map_section(text, bm->ctrl->p_emax*sizeof(EVENT), bm->event_add);
   if (!lib_rtl_is_success(status))  {
     _mbm_unmap_section(bm->ctrl_add);
     ::printf("failure to map event section for %s. Status = %d\n",bm_name,status);
@@ -181,7 +181,7 @@ BMDESCRIPT *mbm_include (const char* bm_name, const char* name, int partid) {
   }
   bm->event = (EVENT*)bm->event_add[0];
   sprintf(text, "bm_user_%s",   bm_name);
-  status  = _mbm_map_section(text,bm->user_add);
+  status  = _mbm_map_section(text, bm->ctrl->p_umax*sizeof(USER), bm->user_add);
   if (!lib_rtl_is_success(status))  {
     _mbm_unmap_section(bm->event_add);
     _mbm_unmap_section(bm->ctrl_add);
@@ -190,7 +190,7 @@ BMDESCRIPT *mbm_include (const char* bm_name, const char* name, int partid) {
   }
   bm->user = (USER*)bm->user_add[0];
   sprintf(text, "bm_bitmap_%s", bm_name);
-  status  = _mbm_map_section(text,bm->bitm_add);
+  status  = _mbm_map_section(text, bm->ctrl->bm_size, bm->bitm_add);
   if (!lib_rtl_is_success(status))  {
     _mbm_unmap_section(bm->user_add);
     _mbm_unmap_section(bm->event_add);
@@ -200,7 +200,7 @@ BMDESCRIPT *mbm_include (const char* bm_name, const char* name, int partid) {
   }
   bm->bitmap = (char*)bm->bitm_add[0];
   sprintf(text, "bm_buffer_%s", bm_name);
-  status  = _mbm_map_section(text,bm->buff_add);
+  status  = _mbm_map_section(text, bm->ctrl->buff_size, bm->buff_add);
   if (!lib_rtl_is_success(status))  {
     _mbm_unmap_section(bm->bitm_add);
     _mbm_unmap_section(bm->user_add);
@@ -1697,3 +1697,29 @@ int _mbm_cancel_lock(BMDESCRIPT *bm)   {
   return 0;
 }
 
+
+int _mbm_create_section(const char* sec_name, int size, void* address) {
+  return lib_rtl_create_section(sec_name, size, address);
+}
+
+int _mbm_delete_section(const char *sec_name)  {
+  return lib_rtl_delete_section(sec_name);
+}
+
+int _mbm_map_section(const char* sec_name, int size, void* address)   {
+  return lib_rtl_map_section(sec_name, size, address);
+}
+
+/// Unmap global section: address is quadword: void*[2]
+int _mbm_unmap_section(void* address)   {
+  return lib_rtl_unmap_section(address);
+}
+
+int _mbm_flush_sections(BMDESCRIPT* bm)   {
+  lib_rtl_flush_section(bm->ctrl_add, sizeof(CONTROL));
+  lib_rtl_flush_section(bm->event_add,bm->ctrl->p_emax*sizeof(EVENT));
+  lib_rtl_flush_section(bm->user_add, bm->ctrl->p_umax*sizeof(USER));
+  lib_rtl_flush_section(bm->buff_add, bm->ctrl->buff_size);
+  lib_rtl_flush_section(bm->bitm_add, bm->ctrl->bm_size);
+  return 1;
+}

@@ -11,25 +11,24 @@ extern "C" int rtl_testGBL(int,char **) {
   char txt[132];
   const char* name = "Sem_test"; // argv[1];
   int status = RTL::Lock::create(name, id);
-  int len;
   if ( lib_rtl_is_success(status) )  {
-    RTL::GlobalSection gbl("MyMemory",512);
+    RTL::GlobalSection gbl("MyMemory",512, true);
     if ( gbl )  {
       char* buff = gbl.buffer();
       for( int i=0; i <100; ++i )  {
         ::lib_rtl_sleep(msecs);
         RTL::Lock lck(name, id);
         if ( i != 0 ) {
-	  ::printf("%4d[%06d] >> Read from shared memory: %s\n",i,pid,buff);
-	  if ( strcmp(buff,txt) != 0 )   {
-	    ::printf("Found changed shared memory.....\n");
-	  }
-	}
-	::sprintf(txt,"%s (%05d):%3d",name,lib_rtl_pid(),i);
-	::strcpy(buff,txt);
-	{
-	  ::printf("%4d[%06d] >> Wrote to shared memory:  %s\n",i,pid,buff);
-	}
+          ::printf("%4d[%06d] >> Read from shared memory: %s\n",i,pid,buff);
+          if ( strcmp(buff,txt) != 0 )   {
+            ::printf("Found changed shared memory.....\n");
+          }
+        }
+        ::sprintf(txt,"%s (%05d):%3d",name,lib_rtl_pid(),i);
+        ::strcpy(buff,txt);
+        {
+          ::printf("%4d[%06d] >> Wrote to shared memory:  %s\n",i,pid,buff);
+        }
       }
     }
   }
