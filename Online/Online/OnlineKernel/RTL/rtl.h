@@ -17,6 +17,7 @@ template <class T, class Q> static inline T* add_ptr(T* a, Q b)  {
 extern "C" {
   struct EXHDEF;
   typedef void* lib_rtl_handle_t;
+  typedef void* lib_rtl_gbl_t;
 #ifndef _RTL_INTERNAL_H
   typedef void* lib_rtl_thread_t;
   typedef void* lib_rtl_lock_t;
@@ -32,15 +33,15 @@ extern "C" {
   int lib_rtl_unlock(lib_rtl_lock_t lock_handle);
 
   /// Create named global section
-  int lib_rtl_create_section(const char* sec_name,int size, void* address);
+  int lib_rtl_create_section(const char* sec_name,int size, lib_rtl_gbl_t address);
   /// Delete named global section
   int lib_rtl_delete_section(const char *sec_name);
   /// Flush global section to disk file
-  int lib_rtl_flush_section(void* address, int len);
+  int lib_rtl_flush_section(lib_rtl_gbl_t address, int len);
   /// Unmap global section: address is quadword: void*[2]
-  int lib_rtl_unmap_section(void* address);
+  int lib_rtl_unmap_section(lib_rtl_gbl_t address);
   /// Map global section a a specific address
-  int lib_rtl_map_section(const char* sec_name, void* address);
+  int lib_rtl_map_section(const char* sec_name, int size, lib_rtl_gbl_t address);
 
   int lib_rtl_set_timer(int milli_seconds, int (*ast)(void*), void* ast_param, unsigned int* timer_id);
   int lib_rtl_kill_timer(int timer_id);

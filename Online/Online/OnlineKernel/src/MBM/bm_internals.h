@@ -74,7 +74,7 @@ extern "C" {
   int _mbm_create_section(const char *section_name, int size, void* address);
   int _mbm_delete_section(const char *section_name);
   /// Map global section: address is quadword: void*[2]
-  int _mbm_map_section(const char*, void* address);
+  int _mbm_map_section(const char *section_name, int size, void* address);
   /// Unmap global section: address is quadword: void*[2]
   int _mbm_unmap_section(void* address);
 

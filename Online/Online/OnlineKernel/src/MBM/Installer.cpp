@@ -213,7 +213,7 @@ int MBM::Installer::install()  {
 int MBM::Installer::deinstall()  {
   int status;
   if (p_force != 1)  {
-    status    = _mbm_map_section(ctrl_mod,m_bm->ctrl_add);
+    status    = _mbm_map_section(ctrl_mod, sizeof(CONTROL), m_bm->ctrl_add);
     m_bm->ctrl = m_bm->ctrl_add[0];
     if( !lib_rtl_is_success(status)) return(0);   
     if( m_bm->ctrl->i_users > 0 )    {

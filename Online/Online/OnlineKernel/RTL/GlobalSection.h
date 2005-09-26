@@ -21,8 +21,7 @@ namespace RTL  {
     /// Lock identifier
     lib_rtl_lock_t m_id;
   public:
-    GlobalSection(const std::string& nam);
-    GlobalSection(const std::string& nam, int size);
+    GlobalSection(const std::string& nam, int size, bool=false);
     virtual ~GlobalSection();
     char* buffer()  const   {
       return (m_status&1) ? (char*)m_address[0] : 0;
