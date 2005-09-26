@@ -40,16 +40,18 @@ int lib_rtl_create_lock(const char* mutex_name, lib_rtl_lock_t* handle)   {
   return status;
 #elif defined(USE_PTHREADS)
   int sc = 0;
+  int shared = 0;
   if ( mutex_name )  {
     *handle = ::sem_open(mutex_name, O_CREAT, 0644, 1);
+    shared = 1;
   }
   else  {
     *handle = new sem_t;
-    sc = ::sem_init(*handle, 0, 1);     
-    if ( sc != 0 )  {
-      delete *handle;
-      *handle = 0;
-    }
+  }
+  sc = ::sem_init(*handle, shared, 1);     
+  if ( sc != 0 )  {
+    delete *handle;
+    *handle = 0;
   }
 #elif defined(_WIN32)
   // Create a mutex with no initial owner.
@@ -184,7 +186,6 @@ int lib_rtl_unlock(lib_rtl_lock_t lock_handle) {
     errno = status;
     kutil_enable_kill();
 #elif defined(USE_PTHREADS)
-    if ( lock_name ) {}
     if ( ::sem_post(lock_handle) == 0 )   {
       return 1;
     }

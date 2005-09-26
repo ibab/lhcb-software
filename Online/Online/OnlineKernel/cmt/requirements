@@ -7,7 +7,7 @@ use GaudiPolicy v*
 macro_append  pthread_cppflags ' -I"/pthreads" -DNEED_SEM -D__CLEANUP_C -DWIN32 -D_DEBUG -D_WINDOWS -D_USRDLL -DPTW32_BUILD'
 library       OnlineKernel ../src/WT/*.cpp ../src/MBM/*.cpp ../src/RTL/*.cpp ../src/RTL/*.c 
 macro_append  OnlineKernel_cppflags ' -I"/pthreads" '
-macro_append  OnlineKernel_shlibflags ' -lpthread ' \
+macro_append  OnlineKernel_shlibflags ' -lpthread -lrt ' \
    WIN32                              ' ../$(CMTCONFIG)/pthread.lib '
 #library       pthread  ' '
 #   WIN32               'J:/pthreads/pthread.c '

@@ -75,28 +75,28 @@ struct USER : public qentry_t  {
   int  partid;	        /*52*/	/* user partition ID		 */
   char name[16];	/*68*/	/* user name			 */
   int pid;		/*72*/	/* process id			 */
-  int fork;		          /*76*/	/* time when forked		 */
+  int fork;             /*76*/	/* time when forked		 */
   _MBM_ast_t c_astadd;	/*72*/	/* consumer signal to be send	 */
   _MBM_ast_t p_astadd;	/*76*/	/* producer signal to be send	 */
   int ws_size;	        /*80*/	/* size of waiting space	 */
-  int ws_ptr;		        /*84*/	/* pointer of waiting space	 */
-  int we_ptr;		        /*88*/	/* pointer of waiting exent	 */
+  int ws_ptr;           /*84*/	/* pointer of waiting space	 */
+  int we_ptr;           /*88*/	/* pointer of waiting exent	 */
   int we_size;	        /*92*/	/* size of waiting exent	 */
-  int we_evtype;	      /*96*/	/* evtype of waiting exent	 */
-  TriggerMask we_trmask;	    /*112*/	/* trmask of waiting exent	 */
-  int **ws_ptr_add;	    /*116*/	/* pointer of waiting space	 */
-  int **we_ptr_add;	    /*120*/	/* pointer of waiting exent	 */
-  int *we_size_add;	    /*124*/	/* size of waiting exent	 */
-  int *we_evtype_add;	  /*128*/	/* evtype of waiting exent	 */
+  int we_evtype;        /*96*/	/* evtype of waiting exent	 */
+  TriggerMask we_trmask;/*112*/	/* trmask of waiting exent	 */
+  int **ws_ptr_add;     /*116*/	/* pointer of waiting space	 */
+  int **we_ptr_add;     /*120*/	/* pointer of waiting exent	 */
+  int *we_size_add;     /*124*/	/* size of waiting exent	 */
+  int *we_evtype_add;   /*128*/	/* evtype of waiting exent	 */
   TriggerMask *we_trmask_add;	  /*132*/	/* trmask of waiting exent	 */
-  int space_add;	      /*136*/	/* address of allocated space  */
-  int space_size;	      /*140*/	/* size in bytes		 */
+  int space_add;        /*136*/	/* address of allocated space  */
+  int space_size;       /*140*/	/* size in bytes		 */
   int held_eid;	        /*144*/	/* held event index		 */
-  int ev_produced;	    /*148*/	/* events produced counter	 */
-  int ev_actual;	      /*152*/	/* events matching req 		 */
-  int ev_seen;	/*156*/	/* events seen			 */
-  int n_req;		/*160*/	/* number of requierements	 */
-  int c_partid;	/*164*/
+  int ev_produced;      /*148*/	/* events produced counter	 */
+  int ev_actual;        /*152*/	/* events matching req 		 */
+  int ev_seen;          /*156*/	/* events seen			 */
+  int n_req;            /*160*/	/* number of requierements	 */
+  int c_partid;         /*164*/
   void* c_astpar;	/*168*/
   void* p_astpar;	/*172*/
   int reason;		/*176*/
@@ -131,32 +131,27 @@ struct EVENT : public qentry_t {
 
 struct CONTROL  {
   qentry_t u_head;		/* active consumers		 */
-  // USER *u_tail;
   qentry_t wev_head;		/* consumers waiting events  */
-  //USER *wev_tail;
   qentry_t wsp_head;		/* producers waiting space	 */
-  //USER *wsp_tail;
   qentry_t wes_head;		/* producers waiting event slots */
-  //USER *wes_tail;
   qentry_t e_head;		/* general event queue		 */
-  //EVENT *e_tail;
   char *buff_ptr;		/* Event Buffer pointer		 */
   int buff_size;		/* Event Buffer size		 */
   USER *user;			/* user reserved space 		 */
   EVENT *event;		/* event reserved space		 */
-  int p_umax;			/* maximum users		 */
-  int p_emax;			/* maximum events		 */
-  int p_base;			/* Memory base address   */
-  int spy_base;		/* spy memory base address   */
-  int tot_produced;		/* events produced counter	 */
-  int tot_actual;		/* events matching req 		 */
-  int tot_seen;		/* events seen			 */
-  int i_events;		/* instantaneous event number	 */
-  int i_space;		/* instantaneous free  space   */
-  int i_users;		/* instantaneous sctive users	 */
-  int last_bit;		/* last bit on the bipmap	 */
-  int bm_size;		/* size of bit map in bytes	 */
-  int last_alloc;		/* Byte Offset of last allocation */
+  int p_umax;		/* maximum users		 */
+  int p_emax;		/* maximum events		 */
+  int p_base;		/* Memory base address            */
+  int spy_base;		/* spy memory base address        */
+  int tot_produced;	/* events produced counter	  */
+  int tot_actual;	/* events matching req 		  */
+  int tot_seen;		/* events seen			  */
+  int i_events;		/* instantaneous event number     */
+  int i_space;		/* instantaneous free  space      */
+  int i_users;	        /* instantaneous sctive users	  */
+  int last_bit;		/* last bit on the bipmap	  */
+  int bm_size;		/* size of bit map in bytes	  */
+  int last_alloc;	/* Byte Offset of last allocation */
   int spare1;
 };
 

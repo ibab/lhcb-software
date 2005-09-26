@@ -36,7 +36,7 @@ extern "C" {
   /// Delete named global section
   int lib_rtl_delete_section(const char *sec_name);
   /// Flush global section to disk file
-  int lib_rtl_flush_section(void* address);
+  int lib_rtl_flush_section(void* address, int len);
   /// Unmap global section: address is quadword: void*[2]
   int lib_rtl_unmap_section(void* address);
   /// Map global section a a specific address
