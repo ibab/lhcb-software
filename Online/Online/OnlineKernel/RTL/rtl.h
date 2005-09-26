@@ -19,17 +19,28 @@ extern "C" {
   typedef void* lib_rtl_handle_t;
 #ifndef _RTL_INTERNAL_H
   typedef void* lib_rtl_thread_t;
-  typedef void* lib_rtl_lock_handle_t;
+  typedef void* lib_rtl_lock_t;
   typedef void* lib_rtl_event_t;
 #endif
   typedef int (*RTL_ast_t)(void*);
   typedef int (*lib_rtl_rundown_handler_t)(void*);
   inline bool lib_rtl_is_success(int status) { return status&1; }
-  int lib_rtl_create_lock(const char* lock_name, lib_rtl_lock_handle_t* lock_handle);
-  int lib_rtl_delete_lock(const char* lock_name, lib_rtl_lock_handle_t  lock_handle);
-  int lib_rtl_cancel_lock(const char* lock_name, lib_rtl_lock_handle_t  lock_handle);
-  int lib_rtl_lock(const char* lock_name,   lib_rtl_lock_handle_t lock_handle);
-  int lib_rtl_unlock(const char* lock_name, lib_rtl_lock_handle_t lock_handle);
+  int lib_rtl_create_lock(const char* lock_name, lib_rtl_lock_t* lock_handle);
+  int lib_rtl_delete_lock(const char* lock_name, lib_rtl_lock_t  lock_handle);
+  int lib_rtl_cancel_lock(const char* lock_name, lib_rtl_lock_t  lock_handle);
+  int lib_rtl_lock(const char* lock_name,   lib_rtl_lock_t lock_handle);
+  int lib_rtl_unlock(lib_rtl_lock_t lock_handle);
+
+  /// Create named global section
+  int lib_rtl_create_section(const char* sec_name,int size, void* address);
+  /// Delete named global section
+  int lib_rtl_delete_section(const char *sec_name);
+  /// Flush global section to disk file
+  int lib_rtl_flush_section(void* address);
+  /// Unmap global section: address is quadword: void*[2]
+  int lib_rtl_unmap_section(void* address);
+  /// Map global section a a specific address
+  int lib_rtl_map_section(const char* sec_name, void* address);
 
   int lib_rtl_set_timer(int milli_seconds, int (*ast)(void*), void* ast_param, unsigned int* timer_id);
   int lib_rtl_kill_timer(int timer_id);

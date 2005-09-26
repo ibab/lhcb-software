@@ -64,7 +64,7 @@ public:
     m_status = WT_NOTINIT;
   }
   virtual ~WTLock() {
-    m_status = lib_rtl_unlock(wt_mutex_name,wt_mutex_id);
+    m_status = lib_rtl_unlock(wt_mutex_id);
     if ( !m_status )  {
       // throw exception ?
     }
@@ -230,7 +230,7 @@ int wtc_wait_with_mask (unsigned int* facility, void** userpar1, int* sub_status
           wt_fac_entry* fac = _wtc_find_facility(entry->facility,fac_list);
           if ( fac != fac_list)    {
             if ( fac->rearm != 0 )    {
-              lib_rtl_unlock(wt_mutex_name,wt_mutex_id);
+              lib_rtl_unlock(wt_mutex_id);
               (*fac->rearm)(fac->facility,entry->userpar1);
               lib_rtl_lock(wt_mutex_name,wt_mutex_id);
             }
@@ -242,7 +242,7 @@ int wtc_wait_with_mask (unsigned int* facility, void** userpar1, int* sub_status
         if( !(entry = (wt_queue_entry*)q_remove_head( wt_queue )))  {
           lib_rtl_clear_event (wt_EventFlag);
           if( !(entry = (wt_queue_entry*)q_remove_head( wt_queue )))   {
-            lib_rtl_unlock(wt_mutex_name,wt_mutex_id);
+            lib_rtl_unlock(wt_mutex_id);
             lib_rtl_wait_for_event (wt_EventFlag);
             lib_rtl_lock(wt_mutex_name,wt_mutex_id);
           }
@@ -263,7 +263,7 @@ int wtc_wait_with_mask (unsigned int* facility, void** userpar1, int* sub_status
       fac = _wtc_find_facility(entry->facility,fac_list);
       if ( fac != fac_list )  {
         if ( fac->action )    {
-          lib_rtl_unlock(wt_mutex_name,wt_mutex_id);
+          lib_rtl_unlock(wt_mutex_id);
           int status = (*fac->action)(entry->facility, entry->userpar1);
           lib_rtl_lock(wt_mutex_name,wt_mutex_id);
           if ( status != WT_SUCCESS )    {

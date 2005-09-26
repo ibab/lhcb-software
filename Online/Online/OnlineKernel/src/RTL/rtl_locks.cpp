@@ -2,7 +2,7 @@
 #include <cstdio>
 #include <fcntl.h>
 
-int lib_rtl_create_lock(const char* mutex_name, lib_rtl_lock_handle_t* handle)   {
+int lib_rtl_create_lock(const char* mutex_name, lib_rtl_lock_t* handle)   {
 #ifdef VMS
   int iosb[2];
   char mutexName[128] = "";
@@ -67,7 +67,7 @@ int lib_rtl_create_lock(const char* mutex_name, lib_rtl_lock_handle_t* handle)  
   return 1;
 }
 
-int lib_rtl_delete_lock(const char* mutex_name, lib_rtl_lock_handle_t handle)   {
+int lib_rtl_delete_lock(const char* mutex_name, lib_rtl_lock_t handle)   {
   if ( handle )  {
 #ifdef VMS
     int status = sys$deq(handle,0,3,0) ;
@@ -100,7 +100,7 @@ int lib_rtl_delete_lock(const char* mutex_name, lib_rtl_lock_handle_t handle)   
   return 0;
 }
 
-int lib_rtl_cancel_lock(const char* lock_name, lib_rtl_lock_handle_t lock_handle) {
+int lib_rtl_cancel_lock(const char* lock_name, lib_rtl_lock_t lock_handle) {
 #ifdef VMS
   int status = sys$deq (lock_handle,0,3,LCK$M_CANCEL) ;
   if (!lib_rtl_is_success(status))  {
@@ -117,7 +117,7 @@ int lib_rtl_cancel_lock(const char* lock_name, lib_rtl_lock_handle_t lock_handle
 #endif
 }
 
-int lib_rtl_lock(const char* lock_name, lib_rtl_lock_handle_t lock_handle) {
+int lib_rtl_lock(const char* lock_name, lib_rtl_lock_t lock_handle) {
   if ( lock_handle )  {
 #ifdef VMS
     int iosb[2] = {0,lock_handle};
@@ -168,7 +168,7 @@ int lib_rtl_lock(const char* lock_name, lib_rtl_lock_handle_t lock_handle) {
   return 0;
 }
 
-int lib_rtl_unlock(const char* lock_name, lib_rtl_lock_handle_t lock_handle) {
+int lib_rtl_unlock(lib_rtl_lock_t lock_handle) {
   if ( lock_handle )  {
 #ifdef VMS
     int iosb[2] = {0,lock_handle};

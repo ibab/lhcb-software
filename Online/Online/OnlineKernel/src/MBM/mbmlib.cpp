@@ -247,7 +247,7 @@ BMDESCRIPT *mbm_include (const char* bm_name, const char* name, int partid) {
   us->c_state = S_active;
   us->p_state = S_active;
   us->partid = partid;
-  strncpy (us->name, name, NAME_LENGTH);
+  ::strncpy (us->name, name, NAME_LENGTH);
   us->pid = lib_rtl_pid ();
   us->space_add     = 0;
   us->space_size    = 0;
@@ -1657,7 +1657,7 @@ int _mbm_lock_tables(BMDESCRIPT *bm)  {
 
 int _mbm_unlock_tables(BMDESCRIPT *bm)    {
   if ( bm->lockid )  {
-    int status = lib_rtl_unlock(bm->mutexName,bm->lockid);
+    int status = lib_rtl_unlock(bm->lockid);
     if (!lib_rtl_is_success(status))    { 
       ::printf("error in unlocking tables %s. Status %d\n",bm->mutexName,status);
     }
