@@ -11,6 +11,7 @@
       desc        = 'Measurement is the base class for offline and online measurements.'
       serializers = 'FALSE' >
 
+      <import name='CLHEP/Matrix/Vector' />
       <import name='Kernel/LHCbID' />
 
       &StlPtrVector;
@@ -97,6 +98,16 @@
         virtual = 'TRUE'>
         <code>
   Measurement* me = new Measurement(); *me = *this; return me;
+        </code>
+      </method>
+
+      <method
+        name    = 'update'
+        desc    = 'Update Measurement paremeters'
+        argList = 'const HepVector refVector'
+        virtual = 'TRUE'>
+        <code>
+
         </code>
       </method>
 
