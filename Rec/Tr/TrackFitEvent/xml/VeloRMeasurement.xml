@@ -36,6 +36,16 @@
         desc = 'Pointer to the VeloRCluster'/>
 
       <method
+        name    = 'update'
+        desc    = 'Update the Measurement parameters'
+        argList = 'const HepVector refVector'>
+        <code>
+  if ( refVector.num_row() &gt;= 2 )
+    m_phi = atan2( refVector[1], refVector[0] );
+        </code>
+      </method>
+
+      <method
         type    = 'VeloRMeasurement*'
         name    = 'clone'
         desc    = 'Clone the VeloRMeasurement'

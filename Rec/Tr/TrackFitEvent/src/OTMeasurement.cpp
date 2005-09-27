@@ -1,6 +1,6 @@
-// $Id: OTMeasurement.cpp,v 1.4 2005-06-29 13:36:20 erodrigu Exp $
+// $Id: OTMeasurement.cpp,v 1.5 2005-09-27 17:21:23 erodrigu Exp $
 // Include files
-
+// -------------
 // local
 #include "Event/OTMeasurement.h"
 
@@ -18,13 +18,13 @@
 OTMeasurement::OTMeasurement( OTTime& otTime,
                               DeOTDetector& geom,
                               int ambiguity,
-                              double tu ) {
-
+                              double tu )
+{
   m_mtype = Measurement::OT;
 
-  m_tu        = tu;
   m_time      = &otTime;        // pointer to hit
   m_ambiguity = ambiguity;      // drift ambiguity
+  m_tu        = tu;             // reference trajectory
 
   // set the LHCbID and ambiguity
   setLhcbID( LHCbID( m_time -> channel() ) );
@@ -48,11 +48,12 @@ OTMeasurement::OTMeasurement( OTTime& otTime,
   DeOTModule* module = geom.module( OTChan );
   HepPoint3D wirePos = module->centerOfStraw( OTChan.straw() );
 
-  // double stereoAngle      = module->stereoAngle();
+  m_stereoAngle = module->stereoAngle();
   // double mwirePos =  wirePos.x() * cos(stereoAngle) +
   //   wirePos.y() * sin(stereoAngle);
-  m_z                = wirePos.z();
-//  m_wireLength       = module->wireLength();
+  m_z = wirePos.z();
+  //  m_wireLength       = module->wireLength();
 
 }
+
 //=============================================================================

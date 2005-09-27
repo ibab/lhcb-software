@@ -4,6 +4,10 @@
 ! Purpose     : Package for the tracking fitting-related classes
 !-----------------------------------------------------------------------------
 
+! 2005-09-27 - Eduardo Rodrigues
+ - method to update measurements parameters (useful for Kalman fit)
+   implemented (relevant for OT and VeloR measurements)
+
 !========================== TrackFitEvent v1r2 2005-07-20 ====================
 ! 2005-07-01 - Eduardo Rodrigues
  - clean-up of debugging statements

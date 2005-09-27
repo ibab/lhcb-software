@@ -66,7 +66,6 @@ void FitNode::setPredictedState( const State& predictedState )
   //if pointer not set clone state - else copy (not great)
   if (m_predictedState) delete m_predictedState;
   m_predictedState = predictedState.clone();
-  setState(predictedState);
 }
 
 //=============================================================================
