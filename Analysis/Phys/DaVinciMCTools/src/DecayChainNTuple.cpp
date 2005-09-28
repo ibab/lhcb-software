@@ -1683,9 +1683,12 @@ StatusCode DecayChainNTuple::WriteNTuple(std::vector<Particle*>& mothervec) {
         } // if endVertex
       }
       
+      if(mclink) verbose() << "Direct linked MC ID: " << mclink->particleID().pid() << " and p: " << mclink->momentum() << endreq;
+      else verbose() << "No direct link MC" << endreq;
+      
       // Just for the case with association but not from signal
       if(!isSig) mclink = 0;
-      
+
       debug() << "Is the particle signal (1: yes, 0: false)? ==> " << isSig << endreq;
 
 #endif
