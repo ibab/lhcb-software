@@ -1,11 +1,13 @@
-Package         : MuonMoniSim
+Package         : MuonMoniDigi
 Package manager : A Sarti
 
-======================= MuonMoniSim v1r0 2005-05-05 ========================
-! 2005-06-09 A. Sarti
-  Fixed a normalization bug. Added more printout
+======================= MuonMoniDigi v1r0 2005-09-28 ========================
+! 2005-09-28 A. Sarti
+  Fixed the release notes file.
+  -> options/* Removed ad hoc option files
  
-======================= MuonMoniSim v1r0 2005-05-05 ========================
-! 2005-05-55 A. Sarti
-  New package to hold Muon Sim checking/monitoring algorithms
+======================= MuonMoniDigi v1r0 2005-05-05 ========================
+! 2005-05-05 A. Sarti
+  First porting
+  New package to hold Muon Digi checking/monitoring algorithms
  
