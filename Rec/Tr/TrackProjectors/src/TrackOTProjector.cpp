@@ -3,6 +3,9 @@
 // from Gaudi
 #include "GaudiKernel/ToolFactory.h" 
 
+// from GSL
+#include "gsl/gsl_math.h"
+
 // local
 #include "TrackOTProjector.h"
 #include "Event/OTMeasurement.h"
@@ -59,8 +62,8 @@ StatusCode TrackOTProjector::project( const State& state,
   m_H[1] = sinA * cosU * driftVelocity
            - otmeas.ambiguity() * wireVelocity * y/fabs(y);
   if ( tu > 990.0 ) {
-    m_H[2] = -du * tu * pow( cosU, 3) * cosA;
-    m_H[3] = -du * tu * pow( cosU, 3) * sinA;
+    m_H[2] = -du * tu * gsl_pow_3( cosU ) * cosA;
+    m_H[3] = -du * tu * gsl_pow_3( cosU ) * sinA;
   }
   else {
     m_H[2] = 0.;

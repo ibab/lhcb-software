@@ -24,10 +24,8 @@ const        IToolFactory& TrackVeloRProjectorFactory = s_factory ;
 StatusCode TrackVeloRProjector::project( const State& state,
                                          Measurement& meas )
 {
-  double h = 0;
-
-  double x  = state.x();
-  double y  = state.y();
+  double x = state.x();
+  double y = state.y();
 
   VeloRMeasurement& veloRMeas = *( dynamic_cast<VeloRMeasurement*>(&meas) );
 
@@ -37,6 +35,7 @@ StatusCode TrackVeloRProjector::project( const State& state,
   m_H = HepVector(n,0);
   
   // calculate h (predicted R)
+  double h = 0;
   if ( phi > 990.0 ) {
     h      = sqrt( x*x + y*y );
     m_H[0] = x / h;

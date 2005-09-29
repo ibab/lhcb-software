@@ -4,6 +4,10 @@
 ! Purpose     : Package for tracking projectors
 !-----------------------------------------------------------------------------
 
+! 2005-09-29 - Eduardo Rodrigues
+ - pow functions replaced by GSL corresponding versions
+ - clean-up of unnecessary debugging
+
 !====================== TrackProjectors v1r2 2005-07-20 ======================
 ! 2005-07-14 - Jose A. Hernando
  - TrackMasterProjector uses now unsigned int instead of type of measurements
