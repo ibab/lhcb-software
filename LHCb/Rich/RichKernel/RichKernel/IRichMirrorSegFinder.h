@@ -4,7 +4,7 @@
  *
  *  Header file for tool interface : IRichMirrorSegFinder
  *
- *  $Id: IRichMirrorSegFinder.h,v 1.8 2005-06-17 14:26:46 jonrob Exp $
+ *  $Id: IRichMirrorSegFinder.h,v 1.9 2005-09-29 13:00:17 papanest Exp $
  *
  *  @author Antonis Papanestis
  *  @date   2003-11-04
@@ -78,6 +78,20 @@ public:
   findFlatMirror( const Rich::DetectorType rich,
                   const Rich::Side side,
                   const HepPoint3D & reflPoint ) const = 0;
+
+  /** Locates the secondary (spherical) mirror Segment given a reflection point,
+   *  RICH identifier and panel
+   *
+   *  @param rich       The RICH detector
+   *  @param side       The RICH HPD panel side
+   *  @param reflPoint  The reflection point on the secondary mirror
+   *
+   *  @return Const pointer to DeRichSphMirror object for the associated mirror segment
+   */
+  virtual const DeRichSphMirror*
+  findSecMirror( const Rich::DetectorType rich,
+                 const Rich::Side side,
+                 const HepPoint3D & reflPoint ) const = 0;
 
 };
 

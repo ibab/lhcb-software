@@ -1,7 +1,10 @@
-! $Id: release.notes,v 1.75 2005-07-14 14:10:31 jonrob Exp $
+! $Id: release.notes,v 1.76 2005-09-29 13:00:17 papanest Exp $
 ! Package     : Rich/RichKernel
 ! Responsible : Chris Jones
 ! Purpose     : General purpose RICH classes
+
+! 2005-09-23 - Antonis Papanestis
+ - changes to IRichMirrorSegFinder to include secondary (spherical) mirrors
 
 ! 2005-07-14 - Chris Jones
  - Updates to Level1 ID tool to give access to all valid Level1 IDs
