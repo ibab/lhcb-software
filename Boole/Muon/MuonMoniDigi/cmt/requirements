@@ -13,14 +13,14 @@ version v1r0
 #
 # Structure, i.e. directories to process. 
 #============================================================================
-branches src cmt options doc
+branches src cmt doc
 
 #============================================================================
 # Used packages. 
 #============================================================================
-use MuonDet     v4r*    Det
-use MuonTools   v3r8    Muon
-use MuonEvent	v4r*	Event
+use MuonDet     v*    Det
+use MuonTools   v*    Muon
+use MuonEvent   v*    Event
 
 #============================================================================
 # Component library building rule
@@ -30,10 +30,4 @@ library MuonMoniDigi  ../src/*.cpp -import=AIDA
 #============================================================================
 # define component library link options
 #============================================================================
-apply_pattern    package_Clinkopts
-apply_pattern    packageShr
 apply_pattern    component_library library=MuonMoniDigi
-
-#===============================================================
-private
-apply_pattern package_Cshlibflags    
