@@ -1,12 +1,11 @@
 Package         : MuonMoniDigi
 Package manager : A Sarti
 
-======================= MuonMoniDigi v1r0 2005-09-28 ========================
+!======================= MuonMoniDigi v1r0 2005-09-28 ========================
 ! 2005-09-28 A. Sarti
   Fixed the release notes file.
   -> options/* Removed ad hoc option files
  
-======================= MuonMoniDigi v1r0 2005-05-05 ========================
 ! 2005-05-05 A. Sarti
   First porting
   New package to hold Muon Digi checking/monitoring algorithms
