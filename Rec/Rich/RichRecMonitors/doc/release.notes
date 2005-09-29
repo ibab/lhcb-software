@@ -4,6 +4,9 @@
 ! Purpose     : 
 !-----------------------------------------------------------------------------
 
+! 2005-09-29 - Antonis Papanestis
+ - Added the option to pre book histograms in RichAlignmentMonitor
+
 !====================== RichRecMonitors v1r0 2005-06-24 ======================
 ! 2005-06-21 - Chris Jones
  - Adapt to changes in RichKernel base classes and RichToolRegistry, and 

@@ -4,7 +4,7 @@
  *  Header file for algorithm class : RichAlignmentMonitor
  *
  *  CVS Log :-
- *  $Id: RichAlignmentMonitor.h,v 1.2 2005-06-23 15:14:55 jonrob Exp $
+ *  $Id: RichAlignmentMonitor.h,v 1.3 2005-09-29 10:22:14 papanest Exp $
  *
  *  @author Antonis Papanestis   a.papanestis@rl.ac.uk
  *  @date   2004-02-19
@@ -132,6 +132,7 @@ private: // data
   IHistogram2D* m_alignmentHist[3000];
   int m_histCounter;
   int m_histIndex[4][2][6000];
+  std::vector<int> m_preBookHistos;
 
   double m_saturatedAngle[2];
 

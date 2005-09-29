@@ -4,7 +4,7 @@
  *  Implementation file for algorithm class : RichAlignmentMonitor
  *
  *  CVS Log :-
- *  $Id: RichAlignmentMonitor.cpp,v 1.2 2005-06-23 15:14:55 jonrob Exp $
+ *  $Id: RichAlignmentMonitor.cpp,v 1.3 2005-09-29 10:22:14 papanest Exp $
  *
  *  @author Antonis Papanestis
  *  @date   2004-02-19
@@ -39,6 +39,7 @@ RichAlignmentMonitor::RichAlignmentMonitor( const std::string& name,
   declareProperty( "UseAllTracks", m_useAllTracks   = false );
   declareProperty( "AssocTrackPhoton", m_assocTrackPhoton = false );
   declareProperty( "HighSatEnergyRich2", m_highSatEnergyRich2= false );
+  declareProperty( "PreBookHistos", m_preBookHistos );
 
   m_saturationEnergy[0] = m_saturationEnergyR1;
   m_saturationEnergy[1] = m_saturationEnergyR2;
@@ -204,16 +205,31 @@ StatusCode RichAlignmentMonitor::execute() {
       double delTheta = thetaRec - thetaExpected;
       if ( fabs(delTheta) > m_deltaThetaRange ) continue;
 
-      bool unAmbiguousPhoton = photon->geomPhoton().mirrorNumValid();
-      m_ambigMirrorsHist[rich]->fill(static_cast<int>(unAmbiguousPhoton));
-      if (!unAmbiguousPhoton) continue;
-
       double delThetaTrue(0.0);
       bool trueParent( false );
       if ( m_useMCTruth ) {
         delThetaTrue = thetaRec - thetaExpTrue;
         trueParent = m_richRecMCTruth->trueCherenkovPhoton( photon );
       }
+
+      bool unAmbiguousPhoton = photon->geomPhoton().mirrorNumValid();
+      m_ambigMirrorsHist[rich]->fill(static_cast<int>(unAmbiguousPhoton));
+
+      if (m_useMCTruth && trueParent && trType == Rich::Track::Forward) {
+          plot( delThetaTrue, hrich*100+90, "Ch angle error MC forward ALL",
+                -m_deltaThetaHistoRange, m_deltaThetaHistoRange);
+        
+        if ( unAmbiguousPhoton )
+          plot( delThetaTrue, hrich*100+91, "Ch angle error MC forward Unambiguous",
+                -m_deltaThetaHistoRange, m_deltaThetaHistoRange);
+        else
+          plot( delThetaTrue, hrich*100+92, "Ch angle error MC forward Ambiguous",
+                -m_deltaThetaHistoRange, m_deltaThetaHistoRange);
+      }
+      
+
+      if (!unAmbiguousPhoton) continue;
+
 
       if ( rich == Rich::Rich2 ){
         if ( ptot > 30*GeV ) {
@@ -398,10 +414,10 @@ StatusCode RichAlignmentMonitor::bookHistos() {
     book(m_histPth, 24, "Ch Angle Error (All b=1 tracks R2)",50,-0.005,0.005);
 
   m_ChAngleErrorvPhiUnamb[0] = histoSvc()->
-    book(m_histPth, 16, "Ch Angle Error (Unamb. b=1 tracks R1)", 20, 0, 6.28,
+    book(m_histPth, 17, "Ch Angle Error (Unamb. b=1 tracks R1)", 20, 0, 6.28,
          40, -0.01, 0.01);
   m_ChAngleErrorvPhiUnamb[1] = histoSvc()->
-    book(m_histPth, 26, "Ch Angle Error (Unamb. b=1 tracks R2)", 20, 0, 6.28,
+    book(m_histPth, 27, "Ch Angle Error (Unamb. b=1 tracks R2)", 20, 0, 6.28,
          40, -0.01, 0.01);
 
   m_sphMirReflPoint[0] = histoSvc()->
@@ -424,6 +440,13 @@ StatusCode RichAlignmentMonitor::bookHistos() {
 
     m_trackBeta[1]=histoSvc()->
       book(m_histPth,28,"Track Segment Beta Rich2",100,0.9,1.0);
+  }
+
+  for ( unsigned int hi=0; hi<m_preBookHistos.size(); ++hi ) {
+    bookPhiHisto( NO_MC, m_preBookHistos[hi] );
+    if ( m_highSatEnergyRich2 ) bookPhiHisto( NO_MC2_RICH2, m_preBookHistos[hi] );
+    if ( m_assocTrackPhoton ) bookPhiHisto( TRACK, m_preBookHistos[hi] );
+    if ( m_useAllTracks ) bookPhiHisto( TR_A_ANGLE, m_preBookHistos[hi] );
   }
 
   debug() << "Finished booking Histos" << endmsg;
