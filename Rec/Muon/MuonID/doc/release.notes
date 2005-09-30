@@ -1,10 +1,10 @@
-! $Id: release.notes,v 1.32 2005-09-30 11:58:34 pkoppenb Exp $
+! $Id: release.notes,v 1.33 2005-09-30 12:23:59 pkoppenb Exp $
 ! Package     : MuonID
 ! Responsible : Erica Polycarpo
 
 ! 2005-09-30 - P. Koppenburg
   - src/MuonIDNSharedHitsTool.h
-    . Make all private methods and memebers really private
+    . Make all private methods and members really private
   - src/MuonIDNSharedHitsTool.cpp
     . Initialize all member variables
     . Use tool<> 
