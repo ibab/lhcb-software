@@ -17,7 +17,7 @@ namespace RTL  {
     lib_rtl_lock_t m_id;
   public:
     /// Initializing constructor
-    Lock(const char* name, lib_rtl_lock_t id);
+    Lock(lib_rtl_lock_t id);
     /// Standard destructor
     virtual ~Lock();
     /// Create now named lock

@@ -140,8 +140,7 @@ int MBM::Monitor::monitor() {
   //signal (SIGABRT,handler);
 
   get_bm_list();    
-  m_window = initscr();
-  clrscr();                       // clear the screen
+  m_window = initscreen();
   _setcursortype(_NOCURSOR);      // hide the cursor
   textcolor(YELLOW);              // change textcolor to YELLOW
   textbackground(BLUE);           // change backgroundcolor to BLUE

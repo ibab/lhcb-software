@@ -9,9 +9,9 @@ RTL::GlobalSection::GlobalSection(const std::string& nam, int size, bool create)
 : m_name(nam), m_status(0)
 {
   if ( create )
-    m_status = lib_rtl_create_section(nam.c_str(), size, m_address);
+    m_status = lib_rtl_create_section(nam.c_str(), size, &m_address);
   else
-    m_status = lib_rtl_map_section(nam.c_str(), size, m_address);
+    m_status = lib_rtl_map_section(nam.c_str(), size, &m_address);
   if ( !lib_rtl_is_success(m_status) )  {
     ::printf("Failed to map global section:%s\n",nam.c_str());
   }

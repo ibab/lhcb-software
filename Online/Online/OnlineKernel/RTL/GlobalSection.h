@@ -14,17 +14,17 @@ namespace RTL  {
   class GlobalSection  {
     /// Section name
     std::string    m_name;
-    /// Address of mapping
-    void*          m_address[2];
     /// Lock status
     int            m_status;
+    /// Address of mapping
+    lib_rtl_gbl_t  m_address;
     /// Lock identifier
     lib_rtl_lock_t m_id;
   public:
     GlobalSection(const std::string& nam, int size, bool=false);
     virtual ~GlobalSection();
     char* buffer()  const   {
-      return (m_status&1) ? (char*)m_address[0] : 0;
+      return (m_status&1) ? (char*)m_address->address : 0;
     }
     int status()  const   {
       return m_status;

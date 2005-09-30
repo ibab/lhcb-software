@@ -10,7 +10,7 @@ extern "C" int rtl_testSemaphore(int,char**) {
   if ( lib_rtl_is_success(status) )  {
     for( int i=0; i <100; ++i )  {
       ::printf("%d >> Process %d waiting for lock %s....\n",i,lib_rtl_pid(),name);
-      RTL::Lock lck(name, id);
+      RTL::Lock lck(id);
       ::printf("%d >> Process %d holds lock %s for %d milliseconds....\n",i,lib_rtl_pid(),name,msecs);
       lib_rtl_sleep(msecs);
     }

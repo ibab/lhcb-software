@@ -3,6 +3,7 @@
 #include <map>
 #include <string>
 #include <cerrno>
+#include <cstdarg>
 #include <fcntl.h>
 
 #ifdef USE_PTHREADS
@@ -20,6 +21,7 @@ const char* errorString(int status)  {
 
 const char* errorString(int status)  {
   static char s[1024] = "No error reporting implemented";
+  static int len = sizeof(s)-1;
   void* lpMessageBuffer;
   ::FormatMessage( 
     FORMAT_MESSAGE_ALLOCATE_BUFFER |  FORMAT_MESSAGE_FROM_SYSTEM,
@@ -29,7 +31,10 @@ const char* errorString(int status)  {
     (LPTSTR) &lpMessageBuffer,
     0,
     NULL );
-  strcpy(s, (const char*)lpMessageBuffer);
+  strncpy(s, (const char*)lpMessageBuffer, len);
+  s[len] = 0;
+  int l = strlen(s);
+  if ( l > 0 ) s[l-1] = 0;
   ::LocalFree( lpMessageBuffer ); 
   return s;
 }
@@ -47,10 +52,6 @@ int getError()   {
 const char* errorString()  {
   return errorString(getError());
 }
-
-const char* printError()  {
-  return "RTL library error";
-};
 
 RTL::ExitHandler::ExitHandler() {
 }
@@ -77,25 +78,6 @@ std::vector<EXHDEF>& RTL::ExitHandler::exitHandlers() {
   return s_exitHandlers;
 }
 
-namespace RTL { struct EventHandlers : public lib_rtl_event_map_t  {};  }
-lib_rtl_event_map_t& RTL::eventHandlers() {
-  static EventHandlers s_Handlers;
-  return s_Handlers;
-}
-
-namespace RTL { struct NamedEventHandlers : public lib_rtl_named_event_map_t  {
-  ~NamedEventHandlers()  { ::printf("Shutdown event flags....");  }
-}; }
-lib_rtl_named_event_map_t& RTL::namedEventHandlers() {
-  static NamedEventHandlers s_Handlers;
-  return s_Handlers;
-}
-
-lib_rtl_thread_map_t& RTL::waitEventThreads() {
-  static lib_rtl_thread_map_t s_map;
-  return s_map;
-}
-
 int lib_rtl_remove_rundown(lib_rtl_rundown_handler_t,void*)    {
   return 1;
 }
@@ -118,6 +100,22 @@ int lib_rtl_declare_exit(EXHDEF* handler_block) {
 #endif
 }
 
+int lib_rtl_remove_exit(EXHDEF* handler_block) {
+#ifdef _VMS
+#elif defined(_WIN32) || defined(linux)
+  RTL::ExitHandler::iterator i=RTL::ExitHandler::exitHandlers().begin();
+  RTL::ExitHandler::iterator j=RTL::ExitHandler::exitHandlers().end();
+  for(; i!=j; ++i)  {
+    if ( (*i).exit_handler == handler_block->exit_handler )  {
+      RTL::ExitHandler::exitHandlers().erase(i);
+      return 1;
+    }
+  }
+  return 0;
+#endif
+  return 1;
+}
+
 int lib_rtl_run_ast (RTL_ast_t astadd, void* param, int)    {
 #if defined(_WIN32) || defined(linux)
   if ( astadd )  {
@@ -131,24 +129,38 @@ int lib_rtl_pid()  {
   return getpid();
 }
 
-int lib_rtl_signal_message(int action, const char* fmt)  {
+int lib_rtl_signal_message(int action, const char* fmt, ...)  {
+  va_list args;
+  va_start( args, fmt );
   if ( fmt )  {
     int err;
     switch(action) {
-    case LIB_RTL_OS:
-      err = getError();
-      ::printf("%s : %d  %s\n",fmt, err, errorString(err));
     case LIB_RTL_ERRNO:
       err = errno;
-      ::printf("%s : %d  %s\n",fmt, err, errorString(err));
-      break;
+      if ( err != 0 )  {
+        ::printf("RTL: %8d : %s\n",err, errorString(err));
+        ::printf("                ");
+        ::vprintf(fmt, args);
+        ::printf("\n");
+        return 0;
+      }
+      return 1;
     case LIB_RTL_DEFAULT:
-      ::printf("%s\n",fmt);
+      ::printf("RTL: ");
+      ::vprintf(fmt, args);
+      ::printf("\n");
       break;
+    case LIB_RTL_OS:
     default:
       err = getError();
-      ::printf("%s : %d  %s\n",fmt, err, errorString(err));
-      break;
+      if ( err != ERROR_SUCCESS )   {
+        ::printf("RTL: %8d : %s\n",err, errorString(err));
+        ::printf("                ");
+        ::vprintf(fmt, args);
+        ::printf("\n");
+        return 0;
+      }
+      return 1;
     }
   }
   return 1;

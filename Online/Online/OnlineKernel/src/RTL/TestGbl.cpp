@@ -17,7 +17,7 @@ extern "C" int rtl_testGBL(int,char **) {
       char* buff = gbl.buffer();
       for( int i=0; i <100; ++i )  {
         ::lib_rtl_sleep(msecs);
-        RTL::Lock lck(name, id);
+        RTL::Lock lck(id);
         if ( i != 0 ) {
           ::printf("%4d[%06d] >> Read from shared memory: %s\n",i,pid,buff);
           if ( strcmp(buff,txt) != 0 )   {

@@ -1,5 +1,6 @@
 #include "RTL/que.h"
 #include "RTL/rtl.h"
+#include "RTL/Lock.h"
 #define IMPLEMENTING
 #include "WT/wtdef.h"
 #include <cstdlib>
@@ -47,37 +48,10 @@ static qentry    *wt_queue;
 static qentry    *wt_stack;
 static qentry    *wt_fired;
 static int        inited = FALSE;
-static int        wt_EventFlag;
-static char       wt_mutex_name[32];
+static lib_rtl_event_t wt_EventFlag;
 static void*      wt_mutex_id = 0;
+typedef RTL::Lock WTLock;
 
-class WTLock  {
-  int m_status;
-public:
-  WTLock() {
-    if ( inited )  {
-      m_status = lib_rtl_lock(wt_mutex_name,wt_mutex_id);
-      if ( !lib_rtl_is_success(m_status) )   {
-        errno = m_status;
-        ::printf("error in locking WT tables. Status %d\n",m_status);
-      }
-      return;
-    }
-    m_status = WT_NOTINIT;
-  }
-  virtual ~WTLock() {
-    m_status = lib_rtl_unlock(wt_mutex_id);
-    if ( !m_status )  {
-      // throw exception ?
-    }
-  }
-  operator int ()   {
-    return lib_rtl_is_success(m_status);
-  }
-  int status()      const   {
-    return m_status;
-  }
-};
 /*----------------------------------------------------------------------*/
 static inline qentry *q_remove_head(qentry *head )   {
   qentry *entry = 0;
@@ -91,13 +65,12 @@ static inline qentry *q_remove( qentry *entry )  {
 }
 /*----------------------------------------------------------------------*/
 int wtc_exit(void*)  {
-  return lib_rtl_delete_lock(wt_mutex_name, &wt_mutex_id);
+  return lib_rtl_delete_lock(wt_mutex_id);
 }
 /*----------------------------------------------------------------------*/
 int wtc_init()    {
   if ( !inited )  {
-    ::sprintf(wt_mutex_name,"WT_%d",lib_rtl_pid());
-    int status = lib_rtl_create_lock(wt_mutex_name, &wt_mutex_id);
+    int status = lib_rtl_create_lock(0,&wt_mutex_id);
     if ( lib_rtl_is_success(status) )  {
       if ( !inited ) inited = TRUE;
       if (wt_exh_block.exit_param == 0)  {
@@ -106,9 +79,9 @@ int wtc_init()    {
         wt_exh_block.exit_status   = &wt_exit_status;
         lib_rtl_declare_exit (&wt_exh_block);
       }
-      WTLock lock;
+      WTLock lock(wt_mutex_id);
       if ( lock )  {
-        int status = lib_rtl_create_event(&wt_EventFlag);
+        int status = lib_rtl_create_event(0,&wt_EventFlag);
         if ( !lib_rtl_is_success(status) )  {
           return WT_NOEF;
         }
@@ -126,7 +99,7 @@ int wtc_init()    {
 }
 /*----------------------------------------------------------------------*/
 int wtc_subscribe( int facility, wt_callback_t rearm, wt_callback_t action, void* par)   {
-  WTLock lock;
+  WTLock lock(wt_mutex_id);
   if ( lock )  {
     wt_fac_entry* fac = _wtc_find_facility(facility, fac_list);
     if ( fac == fac_list )   {
@@ -143,7 +116,7 @@ int wtc_subscribe( int facility, wt_callback_t rearm, wt_callback_t action, void
 }
 /*----------------------------------------------------------------------*/
 int wtc_remove(unsigned int facility)    {
-  WTLock lock;
+  WTLock lock(wt_mutex_id);
   if ( lock )  {
     qentry *e, park(0,0);
     wt_queue_entry  *entry;
@@ -166,7 +139,7 @@ int wtc_remove(unsigned int facility)    {
 }
 /*----------------------------------------------------------------------*/
 int wtc_insert(unsigned int facility, void* userpar1)    {
-  WTLock lock;
+  WTLock lock(wt_mutex_id);
   if ( lock )  {
     qentry* e = new wt_queue_entry(facility, userpar1);
     if ( !e )   {
@@ -183,7 +156,7 @@ int wtc_insert(unsigned int facility, void* userpar1)    {
 }
 /*----------------------------------------------------------------------*/
 int wtc_insert_head(unsigned int facility, void* userpar1)   {
-  WTLock lock;
+  WTLock lock(wt_mutex_id);
   if ( lock )  {
     qentry* e = new wt_queue_entry(facility, userpar1);
     if ( !e )   {
@@ -200,7 +173,7 @@ int wtc_insert_head(unsigned int facility, void* userpar1)   {
 }
 /*----------------------------------------------------------------------*/
 int wtc_test_input()    {
-  WTLock lock;
+  WTLock lock(wt_mutex_id);
   if ( lock )  {
     qentry *e = q_remove_head( wt_queue );
     if( e )  {
@@ -226,7 +199,7 @@ int wtc_wait_with_mask (unsigned int* facility, void** userpar1, int* sub_status
   if (sub_status != 0)  {
     *sub_status = 0;
   }
-  WTLock lock;
+  WTLock lock(wt_mutex_id);
   if ( lock )  {
     while(TRUE)  {
       if (mask_ok != 1)   {
@@ -236,7 +209,7 @@ int wtc_wait_with_mask (unsigned int* facility, void** userpar1, int* sub_status
             if ( fac->rearm != 0 )    {
               lib_rtl_unlock(wt_mutex_id);
               (*fac->rearm)(fac->facility,entry->userpar1);
-              lib_rtl_lock(wt_mutex_name,wt_mutex_id);
+              lib_rtl_lock(wt_mutex_id);
             }
           }
           delete entry;
@@ -248,7 +221,7 @@ int wtc_wait_with_mask (unsigned int* facility, void** userpar1, int* sub_status
           if( !(entry = (wt_queue_entry*)q_remove_head( wt_queue )))   {
             lib_rtl_unlock(wt_mutex_id);
             lib_rtl_wait_for_event (wt_EventFlag);
-            lib_rtl_lock(wt_mutex_name,wt_mutex_id);
+            lib_rtl_lock(wt_mutex_id);
           }
         }
       } while (!entry);
@@ -269,7 +242,7 @@ int wtc_wait_with_mask (unsigned int* facility, void** userpar1, int* sub_status
         if ( fac->action )    {
           lib_rtl_unlock(wt_mutex_id);
           int status = (*fac->action)(entry->facility, entry->userpar1);
-          lib_rtl_lock(wt_mutex_name,wt_mutex_id);
+          lib_rtl_lock(wt_mutex_id);
           if ( status != WT_SUCCESS )    {
             if (sub_status != 0)   {
               *sub_status = status;
@@ -303,7 +276,7 @@ int wtc_wait_with_mask (unsigned int* facility, void** userpar1, int* sub_status
 }
 /*----------------------------------------------------------------------*/
 int wtc_flush (unsigned int facility ) {
-  WTLock lock;
+  WTLock lock(wt_mutex_id);
   if ( lock )  {
     wt_queue_entry  *entry;
     qentry *e, park(0,0);
@@ -322,7 +295,7 @@ int wtc_flush (unsigned int facility ) {
 }
 /*----------------------------------------------------------------------*/
 int wtc_flushp (unsigned int facility, void* param )   {
-  WTLock lock;
+  WTLock lock(wt_mutex_id);
   if ( lock )  {
     wt_queue_entry  *entry;
     qentry *e, park(0,0);
@@ -341,13 +314,13 @@ int wtc_flushp (unsigned int facility, void* param )   {
   return lock.status();
 }
 /*----------------------------------------------------------------------*/
-int wtc_get_wait_ef(int* ef)  {
+int wtc_get_wait_ef(lib_rtl_event_t* ef)  {
   *ef = wt_EventFlag;
   return WT_SUCCESS;
 }
 /*----------------------------------------------------------------------*/
 int wtc_spy_next_entry(unsigned int* fac,void** par)   {
-  WTLock lock;
+  WTLock lock(wt_mutex_id);
   if ( lock )  {
     wt_queue_entry  *entry  = (wt_queue_entry*)q_remove_head( wt_queue );
     if( entry )  {
@@ -368,7 +341,7 @@ int wtc_create_enable_mask(wt_enabled_fac_header** p)  {
 /*----------------------------------------------------------------------*/
 int wtc_add_to_en_fac(wt_enabled_fac_header *h, unsigned int fac)  {
   if (h->facility == WT_PATTERN)  {
-    WTLock lock;
+    WTLock lock(wt_mutex_id);
     if ( lock )  {
       wt_enabled_fac_header *p1 = new wt_enabled_fac_header(fac);
       insqti(p1, h);
@@ -380,7 +353,7 @@ int wtc_add_to_en_fac(wt_enabled_fac_header *h, unsigned int fac)  {
 }
 /*----------------------------------------------------------------------*/
 int wtc_get_routines(unsigned int fac,wt_callback_t* rea,wt_callback_t* act) {
-  WTLock lock;
+  WTLock lock(wt_mutex_id);
   if ( lock )  {
     wt_fac_entry *f = _wtc_find_facility(fac,fac_list);
     if ( f == fac_list )   {

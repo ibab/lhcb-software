@@ -161,28 +161,29 @@ struct BMDESCRIPT : public qentry_t  {
   CONTROL*      ctrl;		          /*20*/
   USER*         user;	            /*24*/
   EVENT*        event;            /*28*/
-  char*         bitmap;		        /*32*/
-  unsigned int  bitmap_size;		  /*36*/
-  char*         buffer_add;		    /*40*/
-  unsigned int  buffer_size;      /*44*/
-  unsigned int  bpb;			        /*48*/
-  int           owner;			      /*52*/
-  void*         lockid;			      /*56*/
-  CONTROL*      ctrl_add[2];		  /*64*/
-  EVENT*        event_add[2];		  /*72*/
-  USER*         user_add[2];		  /*80*/
-  char*         bitm_add[2];		  /*88*/
-  char*         buff_add[2];		  /*96*/
-  int spare4;			  /*100*/
-  int spare3;			  /*104*/
-  int spare2;			  /*108*/
-  int spare1;			  /*112*/
-  char bm_name[32];		  /*144*/
-  int  WES_event_flag;
-  int  WEV_event_flag;
-  int  WSP_event_flag;
-  int  WEVA_event_flag;
-  int  WSPA_event_flag;
+  char*          bitmap;		        /*32*/
+  unsigned int   bitmap_size;		  /*36*/
+  char*          buffer_add;		    /*40*/
+  unsigned int   buffer_size;      /*44*/
+  unsigned int   bpb;			        /*48*/
+  int            owner;			      /*52*/
+  void*          lockid;			      /*56*/
+  lib_rtl_gbl_t  ctrl_add, c1;
+  lib_rtl_gbl_t  event_add, c2;
+  lib_rtl_gbl_t  user_add, c3;
+  lib_rtl_gbl_t  bitm_add, c4;
+  lib_rtl_gbl_t  buff_add, c5;
+  char bm_name[32];
+  lib_rtl_event_t  WES_event_flag;
+  int d1;
+  lib_rtl_event_t  WEV_event_flag;
+  int d2;
+  lib_rtl_event_t  WSP_event_flag;
+  int d3;
+  lib_rtl_event_t  WEVA_event_flag;
+  int d4;
+  lib_rtl_event_t  WSPA_event_flag;
+  int d5;
   char mutexName[128];
   lib_rtl_thread_t pThread;
   lib_rtl_thread_t cThread;

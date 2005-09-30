@@ -139,48 +139,48 @@ int MBM::Installer::install()  {
   int icode = deinstall();
   if(icode == -1) exit(0);
 
-  int status = _mbm_create_section(ctrl_mod,sizeof(CONTROL),m_bm->ctrl_add);
-  m_bm->ctrl = m_bm->ctrl_add[0];
+  int status = _mbm_create_section(ctrl_mod,sizeof(CONTROL),&m_bm->ctrl_add);
   if(!lib_rtl_is_success(status))   {	
     printf("Cannot create section %s. Exiting....",ctrl_mod);
     exit(status);
   }
-  status = _mbm_create_section(user_mod,sizeof(USER)*p_umax ,m_bm->user_add);
-  m_bm->user = m_bm->user_add[0];
+  m_bm->ctrl = (CONTROL*)m_bm->ctrl_add->address;
+  status = _mbm_create_section(user_mod,sizeof(USER)*p_umax ,&m_bm->user_add);
   if(!lib_rtl_is_success(status))   {	
-    _mbm_delete_section(ctrl_mod);
+    _mbm_delete_section(m_bm->ctrl_add);
     printf("Cannot create section %s. Exiting....",user_mod);
     exit(status);
   }
-  status = _mbm_create_section(event_mod,sizeof(EVENT)*p_emax ,m_bm->event_add);
-  m_bm->event = m_bm->event_add[0];
+  m_bm->user = (USER*)m_bm->user_add->address;
+  status = _mbm_create_section(event_mod,sizeof(EVENT)*p_emax ,&m_bm->event_add);
   if(!lib_rtl_is_success(status))   {	
-    _mbm_delete_section(ctrl_mod);
-    _mbm_delete_section(user_mod);
+    _mbm_delete_section(m_bm->ctrl_add);
+    _mbm_delete_section(m_bm->user_add);
     printf("Cannot create section %s. Exiting....",event_mod);
     exit(status);
   }
-  status = _mbm_create_section(bitmap_mod,(p_size<<(Bits_p_kByte-1))>>3,m_bm->bitm_add);
-  m_bm->bitmap = m_bm->bitm_add[0];
+  m_bm->event = (EVENT*)m_bm->event_add->address;
+  status = _mbm_create_section(bitmap_mod,(p_size<<(Bits_p_kByte-1))>>3,&m_bm->bitm_add);
   if(!lib_rtl_is_success(status))   {	
-    _mbm_delete_section(ctrl_mod);
-    _mbm_delete_section(user_mod);
-    _mbm_delete_section(event_mod);
+    _mbm_delete_section(m_bm->ctrl_add);
+    _mbm_delete_section(m_bm->user_add);
+    _mbm_delete_section(m_bm->event_add);
     printf("Cannot create section %s. Exiting....",bitmap_mod);
     exit(status);
   }
-  status = _mbm_create_section(buff_mod,p_size<<10,m_bm->buff_add);
-  m_bm->buffer_add = m_bm->buff_add[0];
+  m_bm->bitmap = (char*)m_bm->bitm_add->address;
+  status = _mbm_create_section(buff_mod,p_size<<10,&m_bm->buff_add);
   if(!lib_rtl_is_success(status))   {	
-    _mbm_delete_section(ctrl_mod);
-    _mbm_delete_section(user_mod);
-    _mbm_delete_section(event_mod);
-    _mbm_delete_section(bitmap_mod);
+    _mbm_delete_section(m_bm->ctrl_add);
+    _mbm_delete_section(m_bm->user_add);
+    _mbm_delete_section(m_bm->event_add);
+    _mbm_delete_section(m_bm->buff_add);
     printf("Cannot create section %s. Exiting....",buff_mod);
     exit(status);
   }
-  CONTROL* ctrl = m_bm->ctrl;
-  USER*    user = m_bm->user;
+  m_bm->buffer_add = (char*)m_bm->buff_add->address;
+  CONTROL* ctrl  = m_bm->ctrl;
+  USER*    user  = m_bm->user;
   EVENT*   event = m_bm->event;
   memset(ctrl,0,sizeof(CONTROL));
   ctrl->p_umax       = p_umax;
@@ -211,39 +211,38 @@ int MBM::Installer::install()  {
 }
 
 int MBM::Installer::deinstall()  {
-  int status;
+  lib_rtl_gbl_t handle;
+  int status = _mbm_map_section(ctrl_mod, sizeof(CONTROL), &handle);
+  if( !lib_rtl_is_success(status)) 
+    return 1;
   if (p_force != 1)  {
-    status    = _mbm_map_section(ctrl_mod, sizeof(CONTROL), m_bm->ctrl_add);
-    m_bm->ctrl = m_bm->ctrl_add[0];
-    if( !lib_rtl_is_success(status)) return(0);   
+    m_bm->ctrl = (CONTROL*)handle->address;
     if( m_bm->ctrl->i_users > 0 )    {
       printf("++bm_init++ Unable to de-install BM (%d users still active)\n", m_bm->ctrl->i_users);
       return(-1);
     }
-    {
-      //int inadd[2];
-      //inadd[0]	= (int)ctrl;
-      //inadd[1]	= ctrl+p-1;
-      //FIXME      sys$deltva (inadd, 0, 3);
-    }
   }
-  status = _mbm_delete_section(ctrl_mod);
+  status = _mbm_delete_section(handle);
   if (!lib_rtl_is_success(status))  {
     printf("problem deleting section %s status %d\n",ctrl_mod,status);
   }
-  status = _mbm_delete_section(user_mod);
+  status = _mbm_map_section(user_mod, sizeof(USER), &handle);
+  status = _mbm_delete_section(handle);
   if (!lib_rtl_is_success(status))  {
     printf("problem deleting section %s status %d\n",user_mod,status);
   }
-  status = _mbm_delete_section(buff_mod);
+  status = _mbm_map_section(buff_mod, 1, &handle);
+  status = _mbm_delete_section(handle);
   if (!lib_rtl_is_success(status))  {
     printf("problem deleting section %s status %d\n",buff_mod,status);
   }
-  status = _mbm_delete_section(event_mod);
+  status = _mbm_map_section(event_mod, 1, &handle);
+  status = _mbm_delete_section(handle);
   if (!lib_rtl_is_success(status))  {
     printf("problem deleting section %s status %d\n",event_mod,status);
   }
-  status = _mbm_delete_section(bitmap_mod);
+  status = _mbm_map_section(bitmap_mod, 1, &handle);
+  status = _mbm_delete_section(handle);
   if (!lib_rtl_is_success(status))  {
     printf("problem deleting section %s status %d\n",bitmap_mod,status);
   }

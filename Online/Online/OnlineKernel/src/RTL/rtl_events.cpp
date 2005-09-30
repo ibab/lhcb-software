@@ -1,169 +1,82 @@
 #include "rtl_internal.h"
+#include <map>
 #include <vector>
 #include <fcntl.h>
 
 using namespace RTL;
-
-static lib_rtl_event_t getEventHandle(int flag)  {
-  EventLock lock;
-  if ( lock )  {
-    lib_rtl_event_map_t::const_iterator i=eventHandlers().find(flag);
-    if ( i != eventHandlers().end() ) {
-      return (*i).second;
-    }
-    else {
-      ::printf("Failed to get event flag [UNKNOWN EVENT FLAG]\n");
-    }
-  }
-  return 0;
-}
-
-/* Not used ....
-static lib_rtl_event_t getEventHandle(const char* name)  {
-  EventLock lock;
-  if ( lock )  {
-    NamedEventHandlers::const_iterator i=namedEventHandlers().find(name);
-    if ( i != namedEventHandlers().end() ) {
-      return (*i).second;
-    }
-    else {
-      ::printf("Failed to get event flag %s [UNKNOWN EVENT FLAG]\n", name);
-    }
-  }
-  return 0;
-}
-*/
-
-static lib_rtl_event_t openEventHandle(const char* name)  {
-  EventLock lock;
-  if ( lock )  {
-    lib_rtl_named_event_map_t::const_iterator i=namedEventHandlers().find(name);
-    if ( i == namedEventHandlers().end() ) {
-      int evt_flag = 0;
-      lib_rtl_create_named_event(name, &evt_flag);
-      return getEventHandle(evt_flag);
-    }
-    return (*i).second;
-  }
-  return 0;
+typedef std::map<lib_rtl_event_t, lib_rtl_thread_t> lib_rtl_thread_map_t;
+static lib_rtl_thread_map_t& waitEventThreads() {
+  static lib_rtl_thread_map_t s_map;
+  return s_map;
 }
 
 /// Create named event for inter process communication
-int lib_rtl_create_named_event (const char* name, int* event_flag)    {
-  static int s_flg = 0;
-  lib_rtl_event_t hdl = 0;
+int lib_rtl_create_event (const char* name, lib_rtl_event_t* event_flag)    {
+  std::auto_ptr<rtl_event> hdl(new rtl_event);
 #if defined(USE_PTHREADS)
   int sc = 0;
-  if ( name )  {
-    hdl = ::sem_open(name, O_CREAT, 0644, 1);
-  }
-  else {
-    hdl = new sem_t;
-    sc = ::sem_init(hdl, 0, 1); 
+  hdl->handle = name ? ::sem_open(name, O_CREAT, 0644, 1) : &hdl->handle2;
+  if ( !name )  {
+    sc = ::sem_init(hdl->handle, 0, 1); 
     if ( sc != 0 )  {
-      hdl = 0;
+      hdl->handle = 0;
     }
   }
 #elif defined(_WIN32)
-  hdl = ::CreateEvent(NULL,TRUE,FALSE,name);
+  hdl->handle = ::CreateEvent(NULL,TRUE,FALSE,name);
 #endif
-  if ( hdl == 0 )  {
-    const char* n = name ? name : "<unnamed>";
-    ::printf("Failed to create %s event flag [%s]\n", n, printError());
+  if ( hdl->handle == 0 )  {
+    lib_rtl_signal_message(LIB_RTL_OS,"Failed to create %s event flag [%s]", 
+          name ? name : "<unnamed>");
     *event_flag = 0;
     return 0;
   }
-  EventLock lock;
-  if ( lock )  {
-    if ( name )  {
-      namedEventHandlers().insert(std::make_pair(name,hdl));
-    }
-    *event_flag = ++s_flg;
-    eventHandlers().insert(std::make_pair(*event_flag,hdl));
-    return 1;
-  }
-  return lock.status();
+  *event_flag = hdl.release();
+  return 1;
 }
 
-int lib_rtl_delete_named_event(const char* name, int* flag)   {
-  EventLock lock;
-  if ( lock )  {
-    if ( name )  {
-      lib_rtl_named_event_map_t::iterator j=namedEventHandlers().find(name);
-      if ( j != namedEventHandlers().end() )  {
-        namedEventHandlers().erase(j);
-      }
-    }
-    lib_rtl_thread_map_t::iterator k = waitEventThreads().find(*flag);
-    if ( k != waitEventThreads().end() )  {
-      waitEventThreads().erase(k);
-    }
-    lib_rtl_event_map_t::iterator i=eventHandlers().find(*flag);
-    if ( i != eventHandlers().end() ) {
-      lib_rtl_event_t hdl = (*i).second;
-      eventHandlers().erase(i);
+int lib_rtl_delete_event(lib_rtl_event_t handle)   {
+  if ( handle )  {
+    std::auto_ptr<rtl_event> h(handle);
 #if defined(USE_PTHREADS)
-      int status;
-      if ( name )  {
-        status = ::sem_close(hdl);
-        ::sem_unlink(name);
-      }
-      else {
-        status = ::sem_destroy(hdl);
-        delete hdl;
-      }
+    int status = h->name[0] ? ::sem_close(h->handle) : ::sem_destroy(h->handle);
+    if ( h->handle == &h->handle2 )  {
+      ::sem_unlink(h->name);
+    }
 #elif defined(_WIN32)
-      ::CloseHandle(hdl);
+    HRESULT sc = ::CloseHandle(h->handle);
+    if ( sc != 0 )  {
+      return lib_rtl_signal_message(LIB_RTL_OS,"Failed to delete event flag 0x%08X", h->handle);
+    }
 #endif
-      *flag = 0;
-      return 1;
-    }
-    else {
-      ::printf("Failed to delete event flag [UNKNOWN EVENT FLAG]\n");
-    }
+    return 1;
   }
+  lib_rtl_signal_message(LIB_RTL_DEFAULT,"Failed to delete event flag [UNKNOWN EVENT FLAG]");
   return 0;
 }
 
-/// Create unnamed event for local process
-int lib_rtl_create_event (int* event_flag)  {
-  return lib_rtl_create_named_event(0, event_flag);
-}
-
-/// Create unnamed event for local process
-int lib_rtl_delete_event (int* event_flag)  {
-  return lib_rtl_delete_named_event(0, event_flag);
-}
-
-int lib_rtl_clear_event(int event_flag) {
-  EventLock lock;
-  if ( lock )  {
-    lib_rtl_event_map_t::const_iterator i=eventHandlers().find(event_flag);
-    if ( i != eventHandlers().end() ) {
-      lib_rtl_event_t hdl = (*i).second;
+int lib_rtl_clear_event(lib_rtl_event_t h) {
+  if ( h )  {
 #if defined(USE_PTHREADS)
-      ::sem_trywait(hdl);
+    ::sem_trywait(h->handle);
 #elif defined(_WIN32)
-      if ( ::ResetEvent(hdl) )
+    if ( ::ResetEvent(h->handle) )
 #endif
-      {
-        return 1;
-      }
-      ::printf("Failed to clear event flag [%s]\n", printError());
+    {
+      return 1;
     }
-    ::printf("Failed to clear event flag [UNKNOWN EVENT FLAG]\n");
+    lib_rtl_signal_message(LIB_RTL_OS,"Failed to clear event flag 0x%08X", h->handle);
     return 0;
   }
-  return lock.status();
+  return 1;
 }
 
-int lib_rtl_wait_for_event(int event_flag)    {
-  lib_rtl_event_t hdl = getEventHandle(event_flag);
-  if ( hdl )  {
+int lib_rtl_wait_for_event(lib_rtl_event_t h)    {
+  if ( h )  {
 #if defined(USE_PTHREADS)
-    if ( ::sem_wait(hdl) == 0 )
+    if ( ::sem_wait(h->handle) == 0 )
 #elif defined(_WIN32)
-    if ( ::WaitForSingleObjectEx(hdl, INFINITE, TRUE) == WAIT_OBJECT_0 )  
+    if ( ::WaitForSingleObjectEx(h->handle, INFINITE, TRUE) == WAIT_OBJECT_0 )  
 #endif
     {
       return 1;
@@ -185,7 +98,7 @@ long lib_rtl_wait_event_a_call(void* param)  {
 }
 
 /// Wait asynchronously for an event flag
-int lib_rtl_wait_for_event_a(int flag, lib_rtl_thread_routine_t action, void* param)  {
+int lib_rtl_wait_for_event_a(lib_rtl_event_t flag, lib_rtl_thread_routine_t action, void* param)  {
   int sc = 0;
   if ( waitEventThreads().find(flag) == waitEventThreads().end() )  {
     lib_rtl_action* act = new lib_rtl_action;
@@ -208,28 +121,12 @@ int lib_rtl_wait_for_multiple_events(int /* count */, void** /* handles */)   {
   return 1;
 }
 
-int lib_rtl_set_event(int event_flag)   {
-  lib_rtl_event_t hdl = getEventHandle(event_flag);
-  if ( hdl )  {
+int lib_rtl_set_event(lib_rtl_event_t h)   {
+  if ( h )  {
 #if defined(USE_PTHREADS)
-    if ( ::sem_post(hdl) == 0 )
+    if ( ::sem_post(h->handle) == 0 )
 #elif defined(_WIN32)
-    if ( ::SetEvent(hdl) == WAIT_OBJECT_0 )  
-#endif
-    {
-      return 1;
-    }
-  }
-  return 0;
-}
-
-int lib_rtl_wakeup_process(int /* pid */, const char* flag_name, RTL_ast_t /* astadd */, void* /* astpar */, int /*mode*/)    {
-  lib_rtl_event_t hdl = openEventHandle(flag_name);
-  if ( hdl )  {
-#if defined(USE_PTHREADS)
-    if ( ::sem_post(hdl) == 0 )
-#elif defined(_WIN32)
-    if ( ::SetEvent(hdl) != 0 )  
+    if ( ::SetEvent(h->handle) == WAIT_OBJECT_0 )  
 #endif
     {
       return 1;

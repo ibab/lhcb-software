@@ -166,31 +166,31 @@ BMDESCRIPT *mbm_include (const char* bm_name, const char* name, int partid) {
 
   strcpy(bm->bm_name,bm_name);
   sprintf(text, "bm_ctrl_%s",   bm_name);
-  status  = _mbm_map_section(text, sizeof(CONTROL), bm->ctrl_add);
+  status  = _mbm_map_section(text, sizeof(CONTROL), &bm->ctrl_add);
   if (!lib_rtl_is_success(status))    {
     ::printf("failure to map control section for %s. Status = %d\n",bm_name,status);
     return (BMDESCRIPT*)-1;
   }
-  bm->ctrl = (CONTROL*)bm->ctrl_add[0];
+  bm->ctrl = (CONTROL*)bm->ctrl_add->address;
   sprintf(text, "bm_event_%s",  bm_name);
-  status  = _mbm_map_section(text, bm->ctrl->p_emax*sizeof(EVENT), bm->event_add);
+  status  = _mbm_map_section(text, bm->ctrl->p_emax*sizeof(EVENT), &bm->event_add);
   if (!lib_rtl_is_success(status))  {
     _mbm_unmap_section(bm->ctrl_add);
     ::printf("failure to map event section for %s. Status = %d\n",bm_name,status);
     return (BMDESCRIPT*)-1;
   }
-  bm->event = (EVENT*)bm->event_add[0];
+  bm->event = (EVENT*)bm->event_add->address;
   sprintf(text, "bm_user_%s",   bm_name);
-  status  = _mbm_map_section(text, bm->ctrl->p_umax*sizeof(USER), bm->user_add);
+  status  = _mbm_map_section(text, bm->ctrl->p_umax*sizeof(USER), &bm->user_add);
   if (!lib_rtl_is_success(status))  {
     _mbm_unmap_section(bm->event_add);
     _mbm_unmap_section(bm->ctrl_add);
     ::printf("failure to map user section for %s. Status = %d\n",bm_name,status);
     return (BMDESCRIPT*)-1;
   }
-  bm->user = (USER*)bm->user_add[0];
+  bm->user = (USER*)bm->user_add->address;
   sprintf(text, "bm_bitmap_%s", bm_name);
-  status  = _mbm_map_section(text, bm->ctrl->bm_size, bm->bitm_add);
+  status  = _mbm_map_section(text, bm->ctrl->bm_size, &bm->bitm_add);
   if (!lib_rtl_is_success(status))  {
     _mbm_unmap_section(bm->user_add);
     _mbm_unmap_section(bm->event_add);
@@ -198,9 +198,9 @@ BMDESCRIPT *mbm_include (const char* bm_name, const char* name, int partid) {
     ::printf("failure to map bit-map section for %s. Status = %d\n",bm_name,status);
     return (BMDESCRIPT*)-1;
   }
-  bm->bitmap = (char*)bm->bitm_add[0];
+  bm->bitmap = (char*)bm->bitm_add->address;
   sprintf(text, "bm_buffer_%s", bm_name);
-  status  = _mbm_map_section(text, bm->ctrl->buff_size, bm->buff_add);
+  status  = _mbm_map_section(text, bm->ctrl->buff_size, &bm->buff_add);
   if (!lib_rtl_is_success(status))  {
     _mbm_unmap_section(bm->bitm_add);
     _mbm_unmap_section(bm->user_add);
@@ -209,7 +209,7 @@ BMDESCRIPT *mbm_include (const char* bm_name, const char* name, int partid) {
     ::printf("failure to map buffer section for %s. Status = %d\n",bm_name,status);
     return (BMDESCRIPT*)-1;
   }
-  bm->buffer_add = (char*)bm->buff_add[0];
+  bm->buffer_add = (char*)bm->buff_add->address;
 
   status = _mbm_create_lock(bm.get());
   if (!lib_rtl_is_success(status))  {
@@ -265,15 +265,15 @@ BMDESCRIPT *mbm_include (const char* bm_name, const char* name, int partid) {
 
   // Activate this user
   sprintf(us->wes_flag, "bm_%s_WES_%d", bm_name, lib_rtl_pid());
-  lib_rtl_create_named_event(us->wes_flag, &bm->WES_event_flag);
+  lib_rtl_create_event(us->wes_flag, &bm->WES_event_flag);
   sprintf(us->wev_flag, "bm_%s_WEV_%d", bm_name, lib_rtl_pid());
-  lib_rtl_create_named_event(us->wev_flag, &bm->WEV_event_flag);
+  lib_rtl_create_event(us->wev_flag, &bm->WEV_event_flag);
   sprintf(us->wsp_flag, "bm_%s_WSP_%d", bm_name, lib_rtl_pid());
-  lib_rtl_create_named_event(us->wsp_flag, &bm->WSP_event_flag);
+  lib_rtl_create_event(us->wsp_flag, &bm->WSP_event_flag);
   sprintf(us->wspa_flag, "bm_%s_WSPA_%d", bm_name, lib_rtl_pid());
-  lib_rtl_create_named_event(us->wspa_flag, &bm->WSPA_event_flag);
+  lib_rtl_create_event(us->wspa_flag, &bm->WSPA_event_flag);
   sprintf(us->weva_flag, "bm_%s_WEVA_%d", bm_name, lib_rtl_pid());
-  lib_rtl_create_named_event(us->weva_flag, &bm->WEVA_event_flag);
+  lib_rtl_create_event(us->weva_flag, &bm->WEVA_event_flag);
 
   insqhi (bm.get(), desc_head);
   if (exh_block.exit_param == 0)  {
@@ -290,37 +290,40 @@ BMDESCRIPT *mbm_include (const char* bm_name, const char* name, int partid) {
 
 /// Exclude from buffer manager
 int mbm_exclude (BMDESCRIPT *bm)  {
-  Lock lock(bm);
-  if ( lock )  {
-    int owner = bm->owner;
-    if (owner == -1)    {
-      _mbm_return_err (MBM_ILL_CONS);
+  {
+    Lock lock(bm);
+    if ( lock )  {
+      int owner = bm->owner;
+      if (owner == -1)    {
+        _mbm_return_err (MBM_ILL_CONS);
+      }
+      USER* us = bm->user + bm->owner;
+      lib_rtl_delete_event(bm->WES_event_flag);
+      lib_rtl_delete_event(bm->WEV_event_flag);
+      lib_rtl_delete_event(bm->WSP_event_flag);
+      lib_rtl_delete_event(bm->WSPA_event_flag);
+      lib_rtl_delete_event(bm->WEVA_event_flag);
+      lib_rtl_remove_rundown(_mbm_shutdown,0);
+      lib_rtl_remove_exit (&exh_block);
+      _mbm_uclean(bm);
+      _mbm_unmap_section(bm->buff_add);
+      _mbm_unmap_section(bm->bitm_add);
+      _mbm_unmap_section(bm->user_add);
+      _mbm_unmap_section(bm->event_add);
+      _mbm_unmap_section(bm->ctrl_add);
     }
-    USER* us = bm->user + bm->owner;
-    lib_rtl_delete_named_event(us->wes_flag,  &bm->WES_event_flag);
-    lib_rtl_delete_named_event(us->wev_flag,  &bm->WEV_event_flag);
-    lib_rtl_delete_named_event(us->wsp_flag,  &bm->WSP_event_flag);
-    lib_rtl_delete_named_event(us->wspa_flag, &bm->WSPA_event_flag);
-    lib_rtl_delete_named_event(us->weva_flag, &bm->WEVA_event_flag);
-    lib_rtl_remove_rundown(_mbm_shutdown,0);
-    _mbm_uclean(bm);
-    _mbm_unmap_section(bm->buff_add);
-    _mbm_unmap_section(bm->bitm_add);
-    _mbm_unmap_section(bm->user_add);
-    _mbm_unmap_section(bm->event_add);
-    _mbm_unmap_section(bm->ctrl_add);
+    else {
+      return lock.status();
+    }
   }
-  else {
-    return lock.status();
-  }
-  _mbm_delete_lock(bm);
-  qentry_t *dummy, *hd	= add_ptr(bm->next,&bm->prev);
+  qentry_t *dummy, *hd	= add_ptr(bm,bm->prev);
   remqhi (hd , &dummy);
+  _mbm_delete_lock(bm);
 
-  free(dummy);
+  delete dummy;
   reference_count--;
   if (reference_count == 0)  {
-    free(desc_head);
+    delete desc_head;
     desc_head = 0;
   }
   return MBM_NORMAL;
@@ -1089,17 +1092,16 @@ int _mbm_shutdown (void* /* param */) {
     BMDESCRIPT *bm = (BMDESCRIPT *)q;
     USER       *us = bm->user + bm->owner;
     _mbm_cancel_lock(bm);
-    _mbm_delete_lock(bm);
     if (disable_rundown == 1)    {
       continue;
     }
     //_mbm_create_lock(bm);
     _mbm_lock_tables(bm);
-    lib_rtl_delete_named_event(us->wes_flag,  &bm->WES_event_flag);
-    lib_rtl_delete_named_event(us->wev_flag,  &bm->WEV_event_flag);
-    lib_rtl_delete_named_event(us->wsp_flag,  &bm->WSP_event_flag);
-    lib_rtl_delete_named_event(us->wspa_flag, &bm->WSPA_event_flag);
-    lib_rtl_delete_named_event(us->weva_flag, &bm->WEVA_event_flag);
+    lib_rtl_delete_event(bm->WES_event_flag);
+    lib_rtl_delete_event(bm->WEV_event_flag);
+    lib_rtl_delete_event(bm->WSP_event_flag);
+    lib_rtl_delete_event(bm->WSPA_event_flag);
+    lib_rtl_delete_event(bm->WEVA_event_flag);
     _mbm_uclean (bm);
     _mbm_unmap_section(bm->buff_add);
     _mbm_unmap_section(bm->bitm_add);
@@ -1107,7 +1109,7 @@ int _mbm_shutdown (void* /* param */) {
     _mbm_unmap_section(bm->event_add);
     _mbm_unmap_section(bm->ctrl_add);
     _mbm_unlock_tables(bm);
-    //_mbm_delete_lock(bm);
+    _mbm_delete_lock(bm);
   }
   /*  bm_exh_unlink (); */
   return MBM_NORMAL;
@@ -1381,13 +1383,13 @@ int _mbm_wake_process (int reason, USER* us) {
   int status = 0;
   switch(reason)  {
     case BM_K_INT_EVENT:
-      status = lib_rtl_wakeup_process(us->pid, us->wev_flag, us->c_astadd, us->c_astpar, 3);
+      status = lib_rtl_set_event(us->wev_flag);
       break;
     case BM_K_INT_ESLOT:
-      status = lib_rtl_wakeup_process(us->pid, us->wes_flag, us->p_astadd, us->p_astpar, 3);
+      status = lib_rtl_set_event(us->wes_flag);
       break;
     case BM_K_INT_SPACE:
-      status = lib_rtl_wakeup_process(us->pid, us->wsp_flag, us->p_astadd, us->p_astpar, 3);
+      status = lib_rtl_set_event(us->wsp_flag);
       break;
   }
   if (!lib_rtl_is_success(status))  {
@@ -1651,7 +1653,7 @@ int _mbm_create_lock(BMDESCRIPT *bm)    {
 
 int _mbm_lock_tables(BMDESCRIPT *bm)  {
   if ( bm->lockid )  {
-    int status = lib_rtl_lock(bm->mutexName,bm->lockid);
+    int status = lib_rtl_lock(bm->lockid);
     if (!lib_rtl_is_success(status))    { 
       ::printf("error in unlocking tables. Status %d\n",status);
     }
@@ -1675,7 +1677,7 @@ int _mbm_unlock_tables(BMDESCRIPT *bm)    {
 
 int _mbm_delete_lock(BMDESCRIPT *bm)    {
   if ( bm->lockid )  {
-    int status = lib_rtl_delete_lock(bm->mutexName,bm->lockid);
+    int status = lib_rtl_delete_lock(bm->lockid);
     if (!lib_rtl_is_success(status))    { 
       ::printf("error in deleting lock %s. Status %d\n",bm->mutexName,status);
     }
@@ -1690,12 +1692,9 @@ int _mbm_delete_lock(BMDESCRIPT *bm)    {
 
 int _mbm_cancel_lock(BMDESCRIPT *bm)   {
   if ( bm->lockid )  {
-    int status = lib_rtl_cancel_lock(bm->mutexName,bm->lockid);
+    int status = lib_rtl_cancel_lock(bm->lockid);
     if (!lib_rtl_is_success(status))    { 
       ::printf("error in cancelling lock %s. Status %d\n",bm->mutexName,status);
-    }
-    else  {
-      bm->lockid = 0;
     }
     return status;
   }
@@ -1704,28 +1703,28 @@ int _mbm_cancel_lock(BMDESCRIPT *bm)   {
 }
 
 
-int _mbm_create_section(const char* sec_name, int size, void* address) {
+int _mbm_create_section(const char* sec_name, int size, lib_rtl_gbl_t* address) {
   return lib_rtl_create_section(sec_name, size, address);
 }
 
-int _mbm_delete_section(const char *sec_name)  {
-  return lib_rtl_delete_section(sec_name);
+int _mbm_delete_section(lib_rtl_gbl_t address)  {
+  return lib_rtl_delete_section(address);
 }
 
-int _mbm_map_section(const char* sec_name, int size, void* address)   {
+int _mbm_map_section(const char* sec_name, int size, lib_rtl_gbl_t* address)   {
   return lib_rtl_map_section(sec_name, size, address);
 }
 
 /// Unmap global section: address is quadword: void*[2]
-int _mbm_unmap_section(void* address)   {
+int _mbm_unmap_section(lib_rtl_gbl_t address)   {
   return lib_rtl_unmap_section(address);
 }
 
 int _mbm_flush_sections(BMDESCRIPT* bm)   {
-  lib_rtl_flush_section(bm->ctrl_add, sizeof(CONTROL));
-  lib_rtl_flush_section(bm->event_add,bm->ctrl->p_emax*sizeof(EVENT));
-  lib_rtl_flush_section(bm->user_add, bm->ctrl->p_umax*sizeof(USER));
-  lib_rtl_flush_section(bm->buff_add, bm->ctrl->buff_size);
-  lib_rtl_flush_section(bm->bitm_add, bm->ctrl->bm_size);
+  lib_rtl_flush_section(bm->ctrl_add);
+  lib_rtl_flush_section(bm->event_add);
+  lib_rtl_flush_section(bm->user_add);
+  lib_rtl_flush_section(bm->buff_add);
+  lib_rtl_flush_section(bm->bitm_add);
   return 1;
 }

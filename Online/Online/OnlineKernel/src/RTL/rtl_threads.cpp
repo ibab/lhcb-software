@@ -13,7 +13,8 @@ namespace {   // Don't clutter global namespace
 int lib_rtl_start_thread(lib_rtl_thread_routine_t start_routine, void* thread_arg, lib_rtl_thread_t* handle)  {
 #ifdef USE_PTHREADS
   typedef void* (*pthread_fun)(void*);
-  int sc = ::pthread_create(handle,                 // Thread handle
+  pthread_t h;
+  int sc = ::pthread_create(&h,                     // Thread handle
                             0,                      // Thread attribute (0=default)
                             (pthread_fun)start_routine,      // thread function 
                             thread_arg);            // argument to thread function 
@@ -21,9 +22,11 @@ int lib_rtl_start_thread(lib_rtl_thread_routine_t start_routine, void* thread_ar
     lib_rtl_signal_message(LIB_RTL_ERRNO, "lib_rtl_suspend_thread failed");
     return 0;
   }
+  *handle = new lib_rtl_thread;
+  (*handle)->handle = h;
 #elif defined(_WIN32)
   DWORD thr_id;
-  *handle = ::CreateThread( 
+  HANDLE h = ::CreateThread( 
       NULL,                        // default security attributes 
       0,                           // use default stack size  
       (LPTHREAD_START_ROUTINE)start_routine,               // thread function 
@@ -35,6 +38,8 @@ int lib_rtl_start_thread(lib_rtl_thread_routine_t start_routine, void* thread_ar
     lib_rtl_signal_message(LIB_RTL_OS, "CreateThread failed");
     return 0;
   }
+  *handle = new rtl_thread;
+  (*handle)->handle = h;
 #endif
   return 1;
 }
@@ -43,11 +48,12 @@ int lib_rtl_delete_thread(lib_rtl_thread_t handle)  {
   if ( handle )  {
 #ifdef USE_PTHREADS
     void* value = 0;
-    ::pthread_cancel(handle);
-    ::pthread_join(handle, &value);
+    ::pthread_cancel(handle->handle);
+    ::pthread_join(handle->handle, &value);
 #elif defined(_WIN32)
-    ::CloseHandle(handle);
+    ::CloseHandle(handle->handle);
 #endif
+    delete handle;
     return 1;
   }
   lib_rtl_signal_message(LIB_RTL_DEFAULT, "lib_rtl_delete_thread failed [Invalid Handle]");
@@ -57,13 +63,13 @@ int lib_rtl_delete_thread(lib_rtl_thread_t handle)  {
 int lib_rtl_suspend_thread(lib_rtl_thread_t handle)  {
   if ( handle )  {
 #ifdef USE_PTHREADS
-    int sc = ::pthread_detach(handle); 
+    int sc = ::pthread_detach(handle->handle); 
     if ( sc == 0 )  {
       return 1;
     }
     lib_rtl_signal_message(LIB_RTL_ERRNO, "lib_rtl_suspend_thread failed");
 #elif defined(_WIN32)
-    DWORD ret=::SuspendThread(handle);
+    DWORD ret=::SuspendThread(handle->handle);
     if ( ret == -1 )  {
       lib_rtl_signal_message(LIB_RTL_OS, "lib_rtl_suspend_thread failed");
     }
@@ -80,7 +86,7 @@ int lib_rtl_resume_thread(lib_rtl_thread_t handle)  {
     lib_rtl_signal_message(LIB_RTL_DEFAULT,"lib_rtl_resume_thread failed [No pthread call]");
     return 0;
 #elif defined(_WIN32)
-    DWORD ret=::ResumeThread(handle);
+    DWORD ret=::ResumeThread(handle->handle);
     if ( ret == -1 )  {
       lib_rtl_signal_message(LIB_RTL_OS,"lib_rtl_resume_thread failed");
       return 0;

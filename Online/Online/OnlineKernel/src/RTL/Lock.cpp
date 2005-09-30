@@ -5,11 +5,11 @@
 #include <cerrno>
 #include <cstdio>
 
-RTL::Lock::Lock(const char* name, lib_rtl_lock_t id) : m_id(id) {
-  m_status = lib_rtl_lock(name,id);
+RTL::Lock::Lock(lib_rtl_lock_t id) : m_id(id) {
+  m_status = lib_rtl_lock(id);
   if ( !lib_rtl_is_success(m_status) )   {
     errno = m_status;
-    ::printf("Cannot aquire lock %s. Status %d\n",name, m_status);
+    ::printf("Cannot aquire lock. Status %d\n", m_status);
   }
 }
 

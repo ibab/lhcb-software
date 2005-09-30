@@ -52,16 +52,16 @@ void MBM::Manager::getOptions(int argc, char** argv)    {
 
 int MBM::Manager::mapSections(Manager* m)  {
   BMDESCRIPT* dsc = m->m_bm;
-  _CHECK( _mbm_map_section(m->ctrl_mod, sizeof(CONTROL), dsc->ctrl_add) )
-  dsc->ctrl = dsc->ctrl_add[0];
-  _CHECK( _mbm_map_section(m->event_mod, dsc->ctrl->p_emax*sizeof(EVENT), dsc->event_add) );
-  dsc->event = dsc->event_add[0];
-  _CHECK( _mbm_map_section(m->user_mod, dsc->ctrl->p_umax*sizeof(USER), dsc->user_add) );
-  dsc->user = dsc->user_add[0];
-  _CHECK( _mbm_map_section(m->bitmap_mod, dsc->ctrl->bm_size, dsc->bitm_add) );
-  dsc->bitmap = dsc->bitm_add[0];
-  _CHECK( _mbm_map_section(m->buff_mod, dsc->ctrl->buff_size, dsc->buff_add) );
-  dsc->buffer_add = dsc->buff_add[0];
+  _CHECK( _mbm_map_section(m->ctrl_mod, sizeof(CONTROL), &dsc->ctrl_add) )
+  dsc->ctrl = (CONTROL*)dsc->ctrl_add->address;
+  _CHECK( _mbm_map_section(m->event_mod, dsc->ctrl->p_emax*sizeof(EVENT), &dsc->event_add) );
+  dsc->event = (EVENT*)dsc->event_add->address;
+  _CHECK( _mbm_map_section(m->user_mod, dsc->ctrl->p_umax*sizeof(USER), &dsc->user_add) );
+  dsc->user = (USER*)dsc->user_add->address;
+  _CHECK( _mbm_map_section(m->bitmap_mod, dsc->ctrl->bm_size, &dsc->bitm_add) );
+  dsc->bitmap = (char*)dsc->bitm_add->address;
+  _CHECK( _mbm_map_section(m->buff_mod, dsc->ctrl->buff_size, &dsc->buff_add) );
+  dsc->buffer_add = (char*)dsc->buff_add->address;
   dsc->bitmap_size = dsc->ctrl->bm_size;
   dsc->buffer_size = dsc->ctrl->buff_size;
   dsc->ctrl->buff_ptr = dsc->buffer_add;
