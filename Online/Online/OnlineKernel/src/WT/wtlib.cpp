@@ -8,6 +8,8 @@
 #include <cerrno>
 
 enum Booleans { FALSE, TRUE };
+static EXHDEF wt_exh_block;
+static int    wt_exit_status;
 
 /*----------------------------DEFINITIONS-------------------------------*/
 #define WT_PATTERN 0xfeadbabe
@@ -76,8 +78,6 @@ public:
     return m_status;
   }
 };
-
-
 /*----------------------------------------------------------------------*/
 static inline qentry *q_remove_head(qentry *head )   {
   qentry *entry = 0;
@@ -90,13 +90,22 @@ static inline qentry *q_remove( qentry *entry )  {
   return q_remove_head(head);
 }
 /*----------------------------------------------------------------------*/
-
+int wtc_exit(void*)  {
+  return lib_rtl_delete_lock(wt_mutex_name, &wt_mutex_id);
+}
+/*----------------------------------------------------------------------*/
 int wtc_init()    {
   if ( !inited )  {
-    ::sprintf(wt_mutex_name,"WT_%08X",lib_rtl_pid());
+    ::sprintf(wt_mutex_name,"WT_%d",lib_rtl_pid());
     int status = lib_rtl_create_lock(wt_mutex_name, &wt_mutex_id);
     if ( lib_rtl_is_success(status) )  {
       if ( !inited ) inited = TRUE;
+      if (wt_exh_block.exit_param == 0)  {
+        wt_exh_block.exit_handler  = wtc_exit;
+        wt_exh_block.exit_param    = &wt_EventFlag;
+        wt_exh_block.exit_status   = &wt_exit_status;
+        lib_rtl_declare_exit (&wt_exh_block);
+      }
       WTLock lock;
       if ( lock )  {
         int status = lib_rtl_create_event(&wt_EventFlag);
@@ -115,7 +124,6 @@ int wtc_init()    {
   }
   return WT_SUCCESS;    
 }
-
 /*----------------------------------------------------------------------*/
 int wtc_subscribe( int facility, wt_callback_t rearm, wt_callback_t action, void* par)   {
   WTLock lock;
@@ -133,7 +141,6 @@ int wtc_subscribe( int facility, wt_callback_t rearm, wt_callback_t action, void
   }
   return lock.status();
 }
-
 /*----------------------------------------------------------------------*/
 int wtc_remove(unsigned int facility)    {
   WTLock lock;
@@ -174,7 +181,6 @@ int wtc_insert(unsigned int facility, void* userpar1)    {
   }
   return lock.status();
 }
-
 /*----------------------------------------------------------------------*/
 int wtc_insert_head(unsigned int facility, void* userpar1)   {
   WTLock lock;
@@ -192,7 +198,6 @@ int wtc_insert_head(unsigned int facility, void* userpar1)   {
   }
   return lock.status();
 }
-
 /*----------------------------------------------------------------------*/
 int wtc_test_input()    {
   WTLock lock;
@@ -206,7 +211,6 @@ int wtc_test_input()    {
   }
   return lock.status();
 }
-
 /*----------------------------------------------------------------------*/
 int wtc_wait_with_mask (unsigned int* facility, void** userpar1, int* sub_status, wt_enabled_fac_header* mask_ptr) {
   wt_queue_entry  *entry;
@@ -297,7 +301,6 @@ int wtc_wait_with_mask (unsigned int* facility, void** userpar1, int* sub_status
   }
   return lock.status();
 }
-
 /*----------------------------------------------------------------------*/
 int wtc_flush (unsigned int facility ) {
   WTLock lock;
@@ -317,7 +320,6 @@ int wtc_flush (unsigned int facility ) {
   }
   return lock.status();
 }
-
 /*----------------------------------------------------------------------*/
 int wtc_flushp (unsigned int facility, void* param )   {
   WTLock lock;
@@ -338,13 +340,11 @@ int wtc_flushp (unsigned int facility, void* param )   {
   }
   return lock.status();
 }
-
 /*----------------------------------------------------------------------*/
 int wtc_get_wait_ef(int* ef)  {
   *ef = wt_EventFlag;
   return WT_SUCCESS;
 }
-
 /*----------------------------------------------------------------------*/
 int wtc_spy_next_entry(unsigned int* fac,void** par)   {
   WTLock lock;
@@ -360,13 +360,11 @@ int wtc_spy_next_entry(unsigned int* fac,void** par)   {
   }
   return lock.status();
 }
-
 /*----------------------------------------------------------------------*/
 int wtc_create_enable_mask(wt_enabled_fac_header** p)  {
   *p = new wt_enabled_fac_header(WT_PATTERN);
   return WT_SUCCESS;
 }
-
 /*----------------------------------------------------------------------*/
 int wtc_add_to_en_fac(wt_enabled_fac_header *h, unsigned int fac)  {
   if (h->facility == WT_PATTERN)  {
@@ -380,7 +378,6 @@ int wtc_add_to_en_fac(wt_enabled_fac_header *h, unsigned int fac)  {
   }
   return WT_BADACTIONSTAT;
 }
-
 /*----------------------------------------------------------------------*/
 int wtc_get_routines(unsigned int fac,wt_callback_t* rea,wt_callback_t* act) {
   WTLock lock;
@@ -399,19 +396,16 @@ int wtc_get_routines(unsigned int fac,wt_callback_t* rea,wt_callback_t* act) {
   }
   return lock.status();
 }
-
 /*----------------------------------------------------------------------*/
 int wtc_wait(unsigned int* facility,void** userpar1,int* sub_status)   {
   return wtc_wait_with_mask(facility,userpar1,sub_status,0);
 }
-
 /*----------------------------------------------------------------------*/
 void wtc_print_space()   {
   for (wt_queue_entry *fac = (wt_queue_entry*)((int)wt_queue->next+(int)wt_queue);
     fac != (void*)wt_queue ; fac = (wt_queue_entry*)((int)fac->next+(int)fac))
     _wtc_print_entry(fac);
 }
-
 /*----------------------------------------------------------------------*/
 int wtc_error(int status)  {
   switch(status)  {
@@ -431,7 +425,6 @@ int wtc_error(int status)  {
   }
   return WT_SUCCESS;
 }
-
 /*----------------------------------------------------------------------*/
 int _wtc_restore_stack() {
   qentry  *entry;
@@ -440,7 +433,6 @@ int _wtc_restore_stack() {
   }
   return WT_SUCCESS;
 }
-
 /*----------------------------------------------------------------------*/
 wt_fac_entry* _wtc_find_facility(unsigned int facility,qentry* fac_head)  {
   wt_fac_entry *fac = 0;
@@ -449,7 +441,6 @@ wt_fac_entry* _wtc_find_facility(unsigned int facility,qentry* fac_head)  {
     if( fac->facility == facility ) break;
   return fac;
 }
-
 /*----------------------------------------------------------------------*/
 static int _wtc_add_fired(wt_queue_entry* entry,wt_enabled_fac_header* mask_ptr,wt_fac_entry* fac)  {
   int mask_ok   = 0;
@@ -482,9 +473,7 @@ static int _wtc_add_fired(wt_queue_entry* entry,wt_enabled_fac_header* mask_ptr,
   }
   return WT_SUCCESS;
 }
-
 /*----------------------------------------------------------------------*/
 void _wtc_print_entry(wt_queue_entry *e)  {
   ::printf(" Entry facility: %8X  parameter:%p\n",e->facility, e->userpar1);
 }
-

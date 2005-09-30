@@ -62,30 +62,29 @@ namespace MBM {
     int monitor();
     int put_inf();
     int m_color;
+    WINDOW* m_window;
     void setTextcolor(int col)  {
       m_color = col;
-      //textcolor(col);
+      textcolor(col);
     }
 
     int draw_line(const char* format,...)  {
       va_list args;
-      unsigned char buffer[1024];
-      gotoxy(1, m_currLine++);
+      char buffer[1024];
       va_start( args, format );
-      buffer[0] = 0xba;
-      int len = ::vsprintf((char*)&buffer[1], format, args)+1;
+      buffer[0] = VERT_BAR;
+      int len = ::vsprintf(&buffer[1], format, args)+1;
       if ( len < 130 )  {
-        memset(buffer+len,' ',sizeof(buffer)-len);
+        ::memset(buffer+len,' ',sizeof(buffer)-len);
       }
-      buffer[131] = 0xba;
+      buffer[131] = VERT_BAR;
       buffer[132] = 0;
-      ::printf((char*)buffer);
-      printf("%c",0xba);
+      printxy(1, m_currLine++, buffer);
       return m_currLine;
     }
     int draw_bar()  {
       char line[256];
-      ::memset(line,0xfe,sizeof(line));
+      ::memset(line,FAT_VERT_BAR,sizeof(line));
       line[255] = 0;
       return draw_line(line);
     }
@@ -94,29 +93,28 @@ namespace MBM {
       draw_line(line);
     }
     void begin_update()  {
-      unsigned char buffer[256];
-      ::memset(buffer,0xcd,sizeof(buffer));
-      buffer[0]   = 0xc9;
-      buffer[131] = 0xbb;
+      char buffer[256];
+      ::memset(buffer,HORZ_BAR,sizeof(buffer));
+      buffer[0]   = LEFT_UP_EDGE;
+      buffer[131] = RIGHT_UP_EDGE;
       buffer[132] = 0;
-      gotoxy(1,m_currLine=1);
       textcolor(YELLOW);
-      ::printf((char*)buffer);
-      gotoxy(1,m_currLine=2);
+      printxy(1, m_currLine=1, buffer);
+      m_currLine = 2;
     }
     void end_update() {
-      unsigned char buffer[256];
-      ::memset(buffer,0xcd,sizeof(buffer));
-      buffer[0]   = 0xc8;
-      buffer[131] = 0xbc;
+      char buffer[256];
+      ::memset(buffer,HORZ_BAR,sizeof(buffer));
+      buffer[0]   = LEFT_LOW_EDGE;
+      buffer[131] = RIGHT_LOW_EDGE;
       buffer[132] = 0;
-      gotoxy(1, m_currLine++);
-      ::printf((char*)buffer);
+      printxy(1, m_currLine++, buffer);
+      refresh();
     }
     virtual int  optparse (const char* c);
     int MBM::Monitor::get_bm_list();
     int draw_bar(float ratio,int full_scale);
-    Monitor(int argc , char** argv) {
+    Monitor(int argc , char** argv) : m_window(0)  {
       getOptions(argc, argv);
       nbms = 1;
       bms[0].m_mgr.setup("0");
@@ -142,6 +140,7 @@ int MBM::Monitor::monitor() {
   //signal (SIGABRT,handler);
 
   get_bm_list();    
+  m_window = initscr();
   clrscr();                       // clear the screen
   _setcursortype(_NOCURSOR);      // hide the cursor
   textcolor(YELLOW);              // change textcolor to YELLOW
@@ -151,6 +150,7 @@ int MBM::Monitor::monitor() {
     while( end )    {
       begin_update();
       put_inf();
+      end_update();
       lib_rtl_sleep(1000);
     }      
   }
@@ -172,13 +172,13 @@ int MBM::Monitor::draw_buffer(const char* name, CONTROL* ctr)  {
 
   sprintf(txt,"  Occupancy [Events]:            ");
   for (i=0, m=125; i<m; ++i)  {
-    txt[i+28] = int(float(ctr->i_events)/float(ctr->p_emax)*float(m)) > (i) ? 0xdb : 0xb0;
+    txt[i+28] = int(float(ctr->i_events)/float(ctr->p_emax)*float(m)) > (i) ? FAT_VERT_BAR : DIM_VERT_BAR;
   }
   txt[i] = 0;
   draw_line(txt);
   sprintf(txt,"            [Space]:             ");
   for (i=0, m=125; i<m; ++i)  {
-    txt[i+28] = int(float(ctr->bm_size-ctr->i_space)/float(ctr->bm_size)*float(m)) > (i) ? 0xdb : 0xb0;
+    txt[i+28] = int(float(ctr->bm_size-ctr->i_space)/float(ctr->bm_size)*float(m)) > (i) ? FAT_VERT_BAR : DIM_VERT_BAR;
   }
   txt[i] = 0;
   draw_line(txt);
@@ -241,7 +241,6 @@ int MBM::Monitor::put_inf()   {
     j++;
   }
   old_i = new_i;    
-  end_update();
   return 1;
 }
 

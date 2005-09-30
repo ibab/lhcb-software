@@ -33,4 +33,29 @@ const char* printError();
   void* param;
 };
 
+#include <map>
+#include <string>
+#include <vector>
+typedef std::map<int, lib_rtl_event_t>         lib_rtl_event_map_t;
+typedef std::map<std::string, lib_rtl_event_t> lib_rtl_named_event_map_t;
+typedef std::map<int, lib_rtl_thread_t>        lib_rtl_thread_map_t;
+
+namespace RTL  {
+  struct ExitHandler : public std::vector<EXHDEF>  {
+    ExitHandler();
+    ~ExitHandler();
+    static void execute();
+    static std::vector<EXHDEF>& exitHandlers();
+  };
+  struct EventLock  {
+    EventLock() {}
+    ~EventLock() {}
+    int status() const { return 1; }
+    operator bool()  const { return true; }
+  };
+  lib_rtl_event_map_t&       eventHandlers();
+  lib_rtl_named_event_map_t& namedEventHandlers();
+  lib_rtl_thread_map_t&      waitEventThreads();
+}
+
 #endif // _RTL_INTERNAL_H

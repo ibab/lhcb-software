@@ -1087,13 +1087,19 @@ int _mbm_shutdown (void* /* param */) {
   }
   for(int sc=remqhi(bmq,&q); QR_success(sc); sc=remqhi(bmq,&q))  {
     BMDESCRIPT *bm = (BMDESCRIPT *)q;
+    USER       *us = bm->user + bm->owner;
     _mbm_cancel_lock(bm);
     _mbm_delete_lock(bm);
     if (disable_rundown == 1)    {
       continue;
     }
-    _mbm_create_lock(bm);
+    //_mbm_create_lock(bm);
     _mbm_lock_tables(bm);
+    lib_rtl_delete_named_event(us->wes_flag,  &bm->WES_event_flag);
+    lib_rtl_delete_named_event(us->wev_flag,  &bm->WEV_event_flag);
+    lib_rtl_delete_named_event(us->wsp_flag,  &bm->WSP_event_flag);
+    lib_rtl_delete_named_event(us->wspa_flag, &bm->WSPA_event_flag);
+    lib_rtl_delete_named_event(us->weva_flag, &bm->WEVA_event_flag);
     _mbm_uclean (bm);
     _mbm_unmap_section(bm->buff_add);
     _mbm_unmap_section(bm->bitm_add);

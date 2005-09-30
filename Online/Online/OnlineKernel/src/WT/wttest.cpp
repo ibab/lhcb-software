@@ -8,8 +8,6 @@
 #include <cstdlib>
 #include <cstdarg>
 
-enum {FALSE, TRUE};
-
 #define NORMAL 1
 #define INTERVAL1 6*NORMAL
 #define INTERVAL2 60*NORMAL
@@ -20,9 +18,11 @@ unsigned int alarm1, alarm2, alarm3, alarm4;
 
 void print_at(int x, int y, const char* fmt, ...)  {
   va_list args;
-  gotoxy(x, y);
+  char buff[256];
   va_start( args, fmt );
-  ::vprintf( fmt, args);
+  ::vsprintf( buff, fmt, args);
+  printxy(x,y,buff);
+  refresh();
 }
 
 int ast1(void* par)  {
@@ -110,7 +110,7 @@ extern "C" int wtc_test(int /* argc */, char** /* argv */)   {
   int status = wtc_init();
   if( status != WT_SUCCESS ) exit(status);
 
-  clrscr();                       // clear the screen
+  initscreen();      // clear + initialize the screen
   print_at(4,2,"Object name             Actions    Rearms      Asts");
   print_at(4,4,"Timer 1 (%5d msecs):",INTERVAL1);
   print_at(4,5,"Timer 2 (%5d msecs):",INTERVAL2);

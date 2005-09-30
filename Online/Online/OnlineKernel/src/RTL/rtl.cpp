@@ -52,35 +52,48 @@ const char* printError()  {
   return "RTL library error";
 };
 
-
-namespace {
-  struct ExitHandler : public std::vector<EXHDEF>  {
-    ExitHandler() {
-    }
-    ~ExitHandler() {
-      execute();
-    }
-    static void execute();
-  };
-  std::vector<EXHDEF>& exitHandlers() {
-    static ExitHandler s_exitHandlers;
-    return s_exitHandlers;
-  }
-  void ExitHandler::execute()  {
-    static bool executing = false;
-    if ( !executing )  {
-      executing = true;
-      const std::vector<EXHDEF>& v = exitHandlers();
-      for (std::vector<EXHDEF>::const_iterator i=v.begin(); i != v.end(); ++i)  {
-        const EXHDEF& hdlr = *i;
-        if ( hdlr.exit_handler )  {
-          (*hdlr.exit_handler)(hdlr.exit_param);
-        }
+RTL::ExitHandler::ExitHandler() {
+}
+RTL::ExitHandler::~ExitHandler() {
+  execute();
+}
+void RTL::ExitHandler::execute()  {
+  static bool executing = false;
+  if ( !executing )  {
+    executing = true;
+    const std::vector<EXHDEF>& v = exitHandlers();
+    for (std::vector<EXHDEF>::const_iterator i=v.begin(); i != v.end(); ++i)  {
+      const EXHDEF& hdlr = *i;
+      if ( hdlr.exit_handler )  {
+        (*hdlr.exit_handler)(hdlr.exit_param);
       }
-      exitHandlers().clear();
-      executing = false;
     }
+    exitHandlers().clear();
+    executing = false;
   }
+}
+std::vector<EXHDEF>& RTL::ExitHandler::exitHandlers() {
+  static ExitHandler s_exitHandlers;
+  return s_exitHandlers;
+}
+
+namespace RTL { struct EventHandlers : public lib_rtl_event_map_t  {};  }
+lib_rtl_event_map_t& RTL::eventHandlers() {
+  static EventHandlers s_Handlers;
+  return s_Handlers;
+}
+
+namespace RTL { struct NamedEventHandlers : public lib_rtl_named_event_map_t  {
+  ~NamedEventHandlers()  { ::printf("Shutdown event flags....");  }
+}; }
+lib_rtl_named_event_map_t& RTL::namedEventHandlers() {
+  static NamedEventHandlers s_Handlers;
+  return s_Handlers;
+}
+
+lib_rtl_thread_map_t& RTL::waitEventThreads() {
+  static lib_rtl_thread_map_t s_map;
+  return s_map;
 }
 
 int lib_rtl_remove_rundown(lib_rtl_rundown_handler_t,void*)    {
@@ -98,9 +111,9 @@ int lib_rtl_declare_exit(EXHDEF* handler_block) {
   static bool first = true;
   if ( first )  {
     first = false;
-    atexit(ExitHandler::execute);
+    atexit(RTL::ExitHandler::execute);
   }
-  exitHandlers().push_back(*handler_block);
+  RTL::ExitHandler::exitHandlers().push_back(*handler_block);
   return 1;
 #endif
 }
@@ -164,4 +177,3 @@ int lib_rtl_sleep(int millisecs)    {
 const char* lib_rtl_error_message(int status)  {
   return errorString(status);
 }
-

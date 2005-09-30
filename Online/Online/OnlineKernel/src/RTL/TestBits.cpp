@@ -1,7 +1,7 @@
 #include <cstdio>
 #include "RTL/rtl.h"
 
-extern "C" int mbm_testffx(int,char **) {
+extern "C" int rtl_testffx(int,char **) {
   static unsigned int mask[] = {
     0x00000001, 0x00000002, 0x00000004, 0x00000008,
     0x00000010, 0x00000020, 0x00000040, 0x00000080,

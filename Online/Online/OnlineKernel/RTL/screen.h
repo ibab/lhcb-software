@@ -6,11 +6,14 @@
 #if defined(_WIN32)
 
 #include "RTL/conioex.h"
+typedef void* WINDOW;
 static inline void ascii()          {  }
 static inline void graphics()       {  }
+static inline void refresh()        {  }
+static inline WINDOW* initscreen()  {  WINDOW* w=initscr(); clrscr(); return w; }
+static inline void printxy(int x, int y, const char* buff) {  gotoxy(x,y);  ::printf(buff); }
 
-//#elif defined(VT100)
-#else
+#elif defined(VT100)
 
 static inline void dbl_hi_top()     { ::printf("\033#3"); }
 static inline void dbl_hi_botm()    { ::printf("\033#4"); }
@@ -30,12 +33,24 @@ static inline void cr()             { ::printf("\n"); }
 static inline void ascii()          { ::printf("\033(B"); }
 static inline void graphics()       { ::printf("\033(0"); }
 static inline void col80()          { ::printf("\033[?2h"); }
-
+static inline void printxy(int x, int y, const char* buff) {  gotoxy(x,y);  ::printf(buff); }
 #define YELLOW 1
 #define RED 2
 #define BLUE 3
 #define _NOCURSOR 0
 #define _NORMALCURSOR 1
+
+#define VERT_BAR 0xba
+#define HORZ_BAR 0xcd
+
+#define FAT_VERT_BAR 0xb0
+#define DIM_VERT_BAR 0xdb
+
+#define LEFT_UP_EDGE 0xc9
+#define RIGHT_UP_EDGE 0xbb
+#define LEFT_LOW_EDGE 0xc8
+#define RIGHT_LOW_EDGE 0xbc
+
 static inline void _setcursortype(int) {}
 static inline void textcolor(int) {}
 static inline void textbackground(int) {}
@@ -73,7 +88,40 @@ static inline void textbackground(int) {}
 #define g_pound      125
 #define g_tit        126
 #define g_del        127
-                                                
+
+#else
+
+#include <curses.h>
+
+#define clrscr    clear
+#define RED     COLOR_RED
+#define BLUE    COLOR_BLUE
+#define YELLOW  COLOR_YELLOW
+#define BLACK   COLOR_BLACK
+static inline WINDOW* initscreen()  {  WINDOW* w=initscr(); clrscr(); return w; }
+static inline void gotoxy(int x, int y) { ::move(x-1,y-1); }
+static inline void printxy(int x, int y, const char* buff) { ::mvprintw(y-1,x-1,buff); }
+static inline void printxyw(WINDOW* w,int x, int y, const char* buff) {  ::mvwprintw(w,x-1,y-1,buff); }
+
+#define _NOCURSOR 0
+#define _NORMALCURSOR 1
+
+static inline void _setcursortype(int) {}
+static inline void textcolor(int) {}
+static inline void textbackground(int) {}
+static inline void ascii()          {  }
+static inline void graphics()       {  }
+
+#define VERT_BAR '|'
+#define HORZ_BAR '-'
+#define FAT_VERT_BAR 'X'
+#define DIM_VERT_BAR '.'
+#define LEFT_UP_EDGE '+'
+#define RIGHT_UP_EDGE '+'
+#define LEFT_LOW_EDGE '+'
+#define RIGHT_LOW_EDGE '+'
+
+
 #endif
 
 #endif // _RTL_SCREEN_H

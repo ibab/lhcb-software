@@ -1,38 +1,13 @@
 #include "rtl_internal.h"
 #include <vector>
-#include <map>
-#include <string>
 #include <fcntl.h>
 
-namespace {
-  struct EventLock  {
-    EventLock() {}
-    int status() const { return 1; }
-    operator bool()  const { return true; }
-  };
-  struct EventHandlers : public std::map<int, lib_rtl_event_t>  {
-  };
-  std::map<int, lib_rtl_event_t>& eventHandlers() {
-    static EventHandlers s_Handlers;
-    return s_Handlers;
-  }
-  struct NamedEventHandlers : public std::map<std::string, lib_rtl_event_t>  {
-  };
-  std::map<std::string, lib_rtl_event_t>& namedEventHandlers() {
-    static NamedEventHandlers s_Handlers;
-    return s_Handlers;
-  }
-  typedef std::map<int, lib_rtl_thread_t> lib_rtl_thread_map_t;
-  lib_rtl_thread_map_t& waitEventThreads() {
-    static lib_rtl_thread_map_t s_map;
-    return s_map;
-  }
-}
+using namespace RTL;
 
 static lib_rtl_event_t getEventHandle(int flag)  {
   EventLock lock;
   if ( lock )  {
-    EventHandlers::const_iterator i=eventHandlers().find(flag);
+    lib_rtl_event_map_t::const_iterator i=eventHandlers().find(flag);
     if ( i != eventHandlers().end() ) {
       return (*i).second;
     }
@@ -62,7 +37,7 @@ static lib_rtl_event_t getEventHandle(const char* name)  {
 static lib_rtl_event_t openEventHandle(const char* name)  {
   EventLock lock;
   if ( lock )  {
-    NamedEventHandlers::const_iterator i=namedEventHandlers().find(name);
+    lib_rtl_named_event_map_t::const_iterator i=namedEventHandlers().find(name);
     if ( i == namedEventHandlers().end() ) {
       int evt_flag = 0;
       lib_rtl_create_named_event(name, &evt_flag);
@@ -114,7 +89,7 @@ int lib_rtl_delete_named_event(const char* name, int* flag)   {
   EventLock lock;
   if ( lock )  {
     if ( name )  {
-      NamedEventHandlers::iterator j=namedEventHandlers().find(name);
+      lib_rtl_named_event_map_t::iterator j=namedEventHandlers().find(name);
       if ( j != namedEventHandlers().end() )  {
         namedEventHandlers().erase(j);
       }
@@ -123,7 +98,7 @@ int lib_rtl_delete_named_event(const char* name, int* flag)   {
     if ( k != waitEventThreads().end() )  {
       waitEventThreads().erase(k);
     }
-    EventHandlers::iterator i=eventHandlers().find(*flag);
+    lib_rtl_event_map_t::iterator i=eventHandlers().find(*flag);
     if ( i != eventHandlers().end() ) {
       lib_rtl_event_t hdl = (*i).second;
       eventHandlers().erase(i);
@@ -163,7 +138,7 @@ int lib_rtl_delete_event (int* event_flag)  {
 int lib_rtl_clear_event(int event_flag) {
   EventLock lock;
   if ( lock )  {
-    EventHandlers::const_iterator i=eventHandlers().find(event_flag);
+    lib_rtl_event_map_t::const_iterator i=eventHandlers().find(event_flag);
     if ( i != eventHandlers().end() ) {
       lib_rtl_event_t hdl = (*i).second;
 #if defined(USE_PTHREADS)
