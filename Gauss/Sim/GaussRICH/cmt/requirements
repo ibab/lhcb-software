@@ -2,8 +2,11 @@
 # Created    : 2002-12-12
 # Maintainer : Sajan Easo
 #============================================================================
-# $Id: requirements,v 1.29 2005-06-15 15:22:50 gcorti Exp $
+# $Id: requirements,v 1.30 2005-09-30 12:14:59 seaso Exp $
 # $Log: not supported by cvs2svn $
+# Revision 1.29  2005/06/15 15:22:50  gcorti
+# set new version
+#
 # Revision 1.28  2005/04/20 12:49:55  gcorti
 # change version number
 #
@@ -46,8 +49,10 @@ branches          cmt src doc
 # =============== explicit dependencies =======================================  
 use GaussTools    v*     Sim
 use AIDA          v*     LCG_Interfaces
+use RichCondition v*     Rich
 # =============== Event =======================================================
 use RichEvent     v*     Event
+use RichKernel    v*   Rich
 
 # ============== component library ============================================
 library          GaussRICH    *.cpp             \

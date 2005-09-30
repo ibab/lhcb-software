@@ -4,6 +4,13 @@
 ! Responsible	     : Gloria Corti
 ! Purpose          : collection of sensitive detectors, G4 actions, etc for RICH
 !-----------------------------------------------------------------------------
+!
+! 2005-09-30  - Sajan easo
+ - Added RichG4RunConditionAction.h and RichG4RunConditionAction.h which
+   are to activate the RichCondition tool. The RichCondition tool
+   interface is in Rich/RichKernel. Hence this version needs both the
+   RichCondition and RichKernel packages. The requirements file is
+   modified accordingly. 
 
 ! 2005-09-02 - Chris Jones
  - Add some more counters to GiGa converter for MCRichHits to monitor for
