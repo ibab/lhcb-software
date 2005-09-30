@@ -1,4 +1,4 @@
-// $Id: CombineTaggersTDR.h,v 1.1 2005-07-06 00:36:03 musy Exp $
+// $Id: CombineTaggersTDR.h,v 1.2 2005-09-30 07:33:49 musy Exp $
 #ifndef COMBINETAGGERSTDR_H 
 #define COMBINETAGGERSTDR_H 1
 // Include files
@@ -6,7 +6,6 @@
 #include "GaudiAlg/GaudiTool.h"
 #include "GaudiKernel/AlgTool.h"
 #include "ICombineTaggersTool.h"            // Interface
-#include "Event/Tagger.h"
 
 /** @class CombineTaggersTDR CombineTaggersTDR.h CombineTaggersTDR.h
  *  
@@ -19,8 +18,8 @@ class CombineTaggersTDR : public GaudiTool,
 public:
   /// Standard constructor
   CombineTaggersTDR( const std::string& type, 
-	    const std::string& name,
-	    const IInterface* parent );
+		     const std::string& name,
+		     const IInterface* parent );
 
   virtual ~CombineTaggersTDR( ); ///< Destructor
 

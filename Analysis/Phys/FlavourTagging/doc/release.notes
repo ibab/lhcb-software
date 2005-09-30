@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.79 2005-07-22 09:53:28 pkoppenb Exp $
+! $Id: release.notes,v 1.80 2005-09-30 07:33:49 musy Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Phys/FlavourTagging
 ! Responsible : Marco Musy (musy@cern.ch)
@@ -6,6 +6,10 @@
 !-----------------------------------------------------------------------------
 
 !========================== FlavourTagging v6r2 2005-07-22 ===================
+! 2005-09-30 - Marco Musy
+  - bug fix in CombineTaggersTDR.cpp, it affects the numer and type 
+    of taggers to be put in FlavourTag obj
+
 ! 2005-07-20 - Marco Musy
   - bug fix on the user predefined list of tracks to be used 
     as tagger candidates (vtags in BTaggingTool)
