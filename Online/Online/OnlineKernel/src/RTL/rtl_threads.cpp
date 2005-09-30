@@ -22,7 +22,7 @@ int lib_rtl_start_thread(lib_rtl_thread_routine_t start_routine, void* thread_ar
     lib_rtl_signal_message(LIB_RTL_ERRNO, "lib_rtl_suspend_thread failed");
     return 0;
   }
-  *handle = new lib_rtl_thread;
+  *handle = new rtl_thread;
   (*handle)->handle = h;
 #elif defined(_WIN32)
   DWORD thr_id;

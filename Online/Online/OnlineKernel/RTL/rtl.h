@@ -69,8 +69,10 @@ extern "C" {
   int lib_rtl_create_event (const char* name, lib_rtl_event_t* event_flag);
   /// Delete event
   int lib_rtl_delete_event(lib_rtl_event_t event_flag);
-  /// Set event flag
+  /// Set local event flag
   int lib_rtl_set_event(lib_rtl_event_t event_flag);
+  /// Set global event flag
+  int lib_rtl_set_global_event(const char* name);
   /// Clear event flag
   int lib_rtl_clear_event(lib_rtl_event_t event_flag);
   /// Wait for event flag

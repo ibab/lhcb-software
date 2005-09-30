@@ -118,7 +118,7 @@ int lib_rtl_map_section(const char* sec_name, int size, lib_rtl_gbl_t* address) 
 #elif linux
   int sysprot  = PROT_READ+PROT_WRITE;
   int sysflags = MAP_SHARED;
-  h->fd = ::shm_open(n.c_str(),O_RDWR|O_CREAT,0644);
+  h->fd = ::shm_open(h->name,O_RDWR|O_CREAT,0644);
   if ( h->fd ) {
     ::ftruncate(h->fd, h->size);
   }
@@ -154,7 +154,7 @@ int lib_rtl_unmap_section(lib_rtl_gbl_t h)   {
     int status = sys$deltva (inadd, radd, PSL$C_USER);
     int sc = sys$purgws (inadd);
 #elif linux
-    int sc = ::munmap(h->address[0],h->size)==0 ? 1 : 0;
+    int sc = ::munmap(h->address,h->size)==0 ? 1 : 0;
 #elif _WIN32
     int sc = (::UnmapViewOfFile(h->address) == 0) ? 0 : 1;
 #endif

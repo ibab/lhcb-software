@@ -8,7 +8,7 @@
 
 #ifdef USE_PTHREADS
 #include <unistd.h>
-
+#define ERROR_SUCCESS 0
 const char* errorString(int status)  {
   return strerror(status);
 }

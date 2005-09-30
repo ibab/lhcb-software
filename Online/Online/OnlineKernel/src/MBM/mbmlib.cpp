@@ -1383,13 +1383,13 @@ int _mbm_wake_process (int reason, USER* us) {
   int status = 0;
   switch(reason)  {
     case BM_K_INT_EVENT:
-      status = lib_rtl_set_event(us->wev_flag);
+      status = lib_rtl_set_global_event(us->wev_flag);
       break;
     case BM_K_INT_ESLOT:
-      status = lib_rtl_set_event(us->wes_flag);
+      status = lib_rtl_set_global_event(us->wes_flag);
       break;
     case BM_K_INT_SPACE:
-      status = lib_rtl_set_event(us->wsp_flag);
+      status = lib_rtl_set_global_event(us->wsp_flag);
       break;
   }
   if (!lib_rtl_is_success(status))  {

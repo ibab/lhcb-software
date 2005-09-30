@@ -9,7 +9,7 @@ library       OnlineKernel ../src/WT/*.cpp ../src/MBM/*.cpp ../src/RTL/*.cpp ../
 macro_append  OnlineKernel_cppflags ' -I"/pthreads" '
 macro_append  OnlineKernel_shlibflags ' -lpthread -lrt -lcurses ' \
    WIN32                              ' ../$(CMTCONFIG)/pthread.lib '
-library       pthread  'J:/pthreads/pthread.c '
+#library       pthread  'J:/pthreads/pthread.c '
 
 apply_pattern ld_library_path
 apply_pattern linker_library	library=OnlineKernel

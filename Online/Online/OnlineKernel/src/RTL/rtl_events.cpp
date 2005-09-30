@@ -1,6 +1,9 @@
 #include "rtl_internal.h"
 #include <map>
+#include <string>
+#include <memory>
 #include <vector>
+#include <cerrno>
 #include <fcntl.h>
 
 using namespace RTL;
@@ -12,26 +15,28 @@ static lib_rtl_thread_map_t& waitEventThreads() {
 
 /// Create named event for inter process communication
 int lib_rtl_create_event (const char* name, lib_rtl_event_t* event_flag)    {
-  std::auto_ptr<rtl_event> hdl(new rtl_event);
+  std::auto_ptr<rtl_event> h(new rtl_event);
+  ::memset(h->name,0,sizeof(h->name));
+  if ( name )  {
+    ::sprintf(h->name,"/%s",name);
+    h->name[sizeof(h->name)-1] = 0;
+  }
 #if defined(USE_PTHREADS)
-  int sc = 0;
-  hdl->handle = name ? ::sem_open(name, O_CREAT, 0644, 1) : &hdl->handle2;
-  if ( !name )  {
-    sc = ::sem_init(hdl->handle, 0, 1); 
-    if ( sc != 0 )  {
-      hdl->handle = 0;
-    }
+  h->handle = h->name[0] ? ::sem_open(h->name, O_CREAT, 0644, 1) : &h->handle2;
+  int sc = h->handle ? ::sem_init(h->handle, h->name[0] ? 1 : 0, 1) : (errno=EBADR); 
+  if ( sc != 0 )  {
+    h->handle = 0;
   }
 #elif defined(_WIN32)
-  hdl->handle = ::CreateEvent(NULL,TRUE,FALSE,name);
+  h->handle = ::CreateEvent(NULL,TRUE,FALSE,name ? h->name : 0);
 #endif
-  if ( hdl->handle == 0 )  {
+  if ( h->handle == 0 )  {
     lib_rtl_signal_message(LIB_RTL_OS,"Failed to create %s event flag [%s]", 
           name ? name : "<unnamed>");
     *event_flag = 0;
     return 0;
   }
-  *event_flag = hdl.release();
+  *event_flag = h.release();
   return 1;
 }
 
@@ -39,7 +44,7 @@ int lib_rtl_delete_event(lib_rtl_event_t handle)   {
   if ( handle )  {
     std::auto_ptr<rtl_event> h(handle);
 #if defined(USE_PTHREADS)
-    int status = h->name[0] ? ::sem_close(h->handle) : ::sem_destroy(h->handle);
+    h->name[0] ? ::sem_close(h->handle) : ::sem_destroy(h->handle);
     if ( h->handle == &h->handle2 )  {
       ::sem_unlink(h->name);
     }
@@ -122,6 +127,33 @@ int lib_rtl_wait_for_multiple_events(int /* count */, void** /* handles */)   {
 }
 
 int lib_rtl_set_event(lib_rtl_event_t h)   {
+  if ( h )  {
+#if defined(USE_PTHREADS)
+    if ( ::sem_post(h->handle) == 0 )
+#elif defined(_WIN32)
+    if ( ::SetEvent(h->handle) == WAIT_OBJECT_0 )  
+#endif
+    {
+      return 1;
+    }
+  }
+  return 0;
+}
+
+int lib_rtl_set_global_event(const char* name)   {
+  typedef std::map<std::string,lib_rtl_event_t> event_map;
+  static event_map events;
+  event_map::const_iterator i = events.find(std::string(name));
+  lib_rtl_event_t h;
+  if ( i == events.end() ) {
+    int sc = lib_rtl_create_event(name, &h);
+    if ( sc == 1 ) {
+      events.insert(event_map::value_type(name,h));
+    }
+  }
+  else {
+    h = (*i).second;
+  }
   if ( h )  {
 #if defined(USE_PTHREADS)
     if ( ::sem_post(h->handle) == 0 )

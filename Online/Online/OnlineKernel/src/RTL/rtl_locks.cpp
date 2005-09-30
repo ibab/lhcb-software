@@ -6,7 +6,7 @@ int lib_rtl_create_lock(const char* mutex_name, lib_rtl_lock_t* handle)   {
   std::auto_ptr<rtl_lock> h(new rtl_lock); 
   ::memset(h->name,0,sizeof(h->name));
   if ( mutex_name )  {
-    strncpy(h->name,mutex_name,sizeof(h->name)-1);
+    ::sprintf(h->name,"/%s",mutex_name);
     h->name[sizeof(h->name)-1] = 0;
   }
 #ifdef VMS
@@ -46,8 +46,8 @@ int lib_rtl_create_lock(const char* mutex_name, lib_rtl_lock_t* handle)   {
   return status;
 #elif defined(USE_PTHREADS)
   h->handle = h->name[0] ? ::sem_open(h->name, O_CREAT, 0644, 1) : &h->handle2;
-  int sc = ::sem_init(&h->handle, h->handle==&h->handle2 ? 0 : 1, 1);     
-  if ( sc == 0 )  {
+  int sc = ::sem_init(h->handle, h->name[0] ? 0 : 1, 1);     
+  if ( sc != 0 )  {
     h->handle = 0;
   }
 #elif defined(_WIN32)
