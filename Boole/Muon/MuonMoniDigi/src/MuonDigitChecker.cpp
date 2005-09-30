@@ -5,7 +5,24 @@
 //
 //   Author: A. Sarti
 //   Created: 20-04-2005
+
+// from STL
+#include <string>
+
+// From Gaudi
 #include "GaudiKernel/AlgFactory.h"
+
+// For Muons
+#include "MuonDet/MuonBasicGeometry.h"
+#include "MuonTools/IMuonGetInfoTool.h"  
+#include "MuonKernel/MuonTile.h"
+
+//From event
+#include "Event/EventHeader.h"
+#include "Event/MCHit.h"   
+#include "Event/MCMuonHit.h"   
+#include "Event/MCMuonDigit.h"   
+#include "Event/MuonDigit.h"
 
 // local
 #include "MuonDigitChecker.h"
@@ -59,7 +76,7 @@ StatusCode MuonDigitChecker::initialize() {
     }
     for(int i=0; i<5; i++) {
       for(int j=0; j<4; j++) {
-	nDhit[i][j][ix] = Dcnt[i][j][ix] = 0;
+        nDhit[i][j][ix] = Dcnt[i][j][ix] = 0;
       }
     }
   }
@@ -83,7 +100,7 @@ StatusCode MuonDigitChecker::execute() {
     }
     for(int i=0; i<5; i++) {
       for(int j=0; j<4; j++) {
-	tnDhit[i][j][ix] = 0;
+        tnDhit[i][j][ix] = 0;
       }
     }
   }
@@ -168,7 +185,7 @@ StatusCode MuonDigitChecker::execute() {
 	    MCParticle* particle=(*iter)->mcParticle();
 	    if(particle){            
 	      if(abs(particle->particleID().pid())<100000){
-		m_id.push_back(particle->particleID().pid());
+          m_id.push_back(particle->particleID().pid());
 	      }
 
 	      m_px.push_back(particle->momentum().px());
@@ -185,9 +202,9 @@ StatusCode MuonDigitChecker::execute() {
 	    
 	      const MCParticle * madre=particle->mother();
 	      if(madre && (abs(madre->particleID().pid())<100000)){
-		m_mom.push_back(madre->particleID().pid()); 
+          m_mom.push_back(madre->particleID().pid()); 
 	      } else {
-		m_mom.push_back(0);
+          m_mom.push_back(0);
 	      }
 	    } else {
 	      m_id.push_back(0);	    m_px.push_back(0);	    m_py.push_back(0);
@@ -203,9 +220,9 @@ StatusCode MuonDigitChecker::execute() {
     }
     for(int r=0; r<4; r++) {
       for(int s=0; s<5; s++) {
-	//Looking at mean number of hits
-	cnt[s][r]++;
-	nhit[s][r]+= tnhit[s][r];
+        //Looking at mean number of hits
+        cnt[s][r]++;
+        nhit[s][r]+= tnhit[s][r];
       }  
     }    
   }    
@@ -270,8 +287,8 @@ StatusCode MuonDigitChecker::execute() {
   for(int c=0; c<6; c++) {
     for(int r=0; r<4; r++) {
       for(int s=0; s<5; s++) {
-	Dcnt[s][r][c]++;
-	nDhit[s][r][c]+= tnDhit[s][r][c];
+        Dcnt[s][r][c]++;
+        nDhit[s][r][c]+= tnDhit[s][r][c];
       }  
     }    
   }    
@@ -342,11 +359,11 @@ StatusCode MuonDigitChecker::finalize() {
     info()<<" M1      M2      M3      M4      M5 "<<endmsg;
     for(int r=0; r<4; r++) {
       for(int s=0; s<5; s++) {
-	if(cnt[s][r])  {
-	  info()<<format("%5.3lf  ",(double)nhit[s][r]/cnt[s][r]);
-	} else {
-	  info()<<"0.000  ";
-	}
+        if(cnt[s][r])  {
+          info()<<format("%5.3lf  ",(double)nhit[s][r]/cnt[s][r]);
+        } else {
+          info()<<"0.000  ";
+        }
       }
       info()<<" R"<<r+1<<endmsg;
     }
@@ -382,6 +399,3 @@ StatusCode MuonDigitChecker::finalize() {
 
   return StatusCode::SUCCESS;
 }
-
-
-
