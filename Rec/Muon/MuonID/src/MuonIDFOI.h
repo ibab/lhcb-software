@@ -1,26 +1,20 @@
-
-// $Id: MuonIDFOI.h,v 1.6 2005-06-15 06:26:39 pkoppenb Exp $
-
+// $Id: MuonIDFOI.h,v 1.7 2005-09-30 08:48:34 pkoppenb Exp $
 #ifndef MUONIDFOI_H 
 #define MUONIDFOI_H 1
 
 // Include files
 // from STL
-
 #include <string>
 
 // from Gaudi
-
-#include "GaudiAlg/GaudiAlgorithm.h"
+#include "GaudiKernel/Algorithm.h"
 #include "MuonDet/MuonBasicGeometry.h"
 
 // forward declaration of tools
-
 class IMuonTileXYZTool;
 class IMuonGeometryTool;
 
 //forward declaration of MuonID and TrStoredTrack from Event classes
-
 class MuonID;
 class TrStoredTrack;
 
@@ -35,25 +29,23 @@ class TrStoredTrack;
  *  updated by jtmn, miriam 22/04/2003
  *  
  */
-
-class MuonIDFOI : public GaudiAlgorithm {
+class MuonIDFOI : public Algorithm {
 public:
-
   /// Standard constructor
-
   MuonIDFOI( const std::string& name, ISvcLocator* pSvcLocator );
 
   virtual ~MuonIDFOI( ); ///< Destructor
 
   virtual StatusCode initialize();    ///< Algorithm initialization
   virtual StatusCode execute   ();    ///< Algorithm execution
+  virtual StatusCode finalize  ();    ///< Algorithm finalization
 
 protected:
 
 private:
 
   /// Do the identification
-  // StatusCode doID(MuonID * pMuid);
+  StatusCode doID(MuonID * pMuid);
 
   /// check the track is in the p and angle acceptance
   StatusCode preSelection(MuonID * pMuid, bool &passed);
@@ -65,7 +57,7 @@ private:
   void clearCoordVectors();
 
   /// Set the MuonCoords used in this ID
-  // StatusCode setCoords(MuonID *pMuid);
+  StatusCode setCoords(MuonID *pMuid);
 
   /// Extract the momentum and extrapolate the track to each station
   StatusCode trackExtrapolate(TrStoredTrack *pTrack);
@@ -74,9 +66,6 @@ private:
   double foiX(const int &station, const int &region, const double &p, const double &dx);
   /// return the FOI in y in a station and region for momentum (in MeV/c)
   double foiY(const int &station, const int &region, const double &p, const double &dy);
-  /// function to calculate the dll_probability , a copy of DLL algorithm
-  // double landau_root(double x, double mpv, double sigma);
-  
   
   /// clear track based local variables
   void resetTrackLocals();
@@ -90,23 +79,20 @@ private:
   std::string m_MuonIDsPath;
 
   /// Preselection momentum (no attempt to ID below this)
-  std::vector<double> m_PreSelMomentum;
+  double m_PreSelMomentum;
 
   /// Momentum ranges: different treatement of M4/M5 in each
   std::vector<double> m_MomentumCuts; // vector of momentum ranges
 
-  int m_MakeNoShared;
-	    
+
   // function that defines the field of interest size
-  // formula is p(1) + p(2)*momentum + p(3)*exp(-p(4)*momentum)
+  // formula is p(1) + p(2)*exp(-p(3)*momentum)
   std::vector< double >     m_xfoiParam1;
   std::vector< double >     m_xfoiParam2;
   std::vector< double >     m_xfoiParam3;
-  std::vector< double >     m_xfoiParam4;
   std::vector< double >     m_yfoiParam1;
   std::vector< double >     m_yfoiParam2;
   std::vector< double >     m_yfoiParam3;
-  std::vector< double >     m_yfoiParam4;
 
   // Number of stations
   int m_NStation;
@@ -129,16 +115,18 @@ private:
   
   // These are indexed [station]
   std::vector<double> m_stationZ; // station position
-  
+
   // local track parameters: momentum and linear extrapolation to each station
   double m_Momentum; // in MeV/c
-  double m_trackSlopeX,m_trackSlopeY;
+  double m_trackSlopeX;
   std::vector<double> m_trackX; // position of track in x(mm) in each station
   std::vector<double> m_trackY; // position of track in y(mm) in each station  
 
-  // store X and Y of hits
-  std::vector<double> m_CoordX,m_CoordDX,m_CoordY,m_CoordDY;
-  // int m_xMatchStation; // first station to calculate slope (M2)
+  //test if found a hit in the MuonStations
+  std::vector<int> m_occupancy;
+  // store X of hits for dx/dz matching with track (only need M2/M3)
+  std::vector<double> m_CoordX;
+  int m_xMatchStation; // first station to calculate slope (M2)
   
   // MuonTileID to ZYX tool
   IMuonTileXYZTool *m_iTileTool;
@@ -150,14 +138,11 @@ private:
   public:
     coordExtent_(double x, double dx, double y, double dy, MuonCoord *pCoord) :
       m_x(x), m_dx(dx), m_y(y), m_dy(dy), m_pCoord(pCoord)  {};
-
     double m_x;
     double m_dx;
     double m_y;
     double m_dy;
-
     MuonCoord *m_pCoord;
-
   };
 
   // vector of positions of coords (innner vector coords, 

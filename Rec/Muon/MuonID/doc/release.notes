@@ -1,7 +1,9 @@
-! $Id: release.notes,v 1.29 2005-07-06 14:36:50 pkoppenb Exp $
+! $Id: release.notes,v 1.30 2005-09-30 08:48:34 pkoppenb Exp $
 ! Package     : MuonID
 ! Responsible : Andre Massafferri
 
+! 2005-09-30 - P. Koppenburg
+  Go back to v3r7p2, tagged as v3r8back
 !========================== MuonID v3r8 2005-07-06 ===================
 ! 2005-06-17 - P. Koppenburg
   - src/MuonIDFOI.{cpp,h}
