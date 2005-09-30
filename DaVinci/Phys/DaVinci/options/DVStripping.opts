@@ -6,7 +6,9 @@
 
 #include "$DAVINCIROOT/options/DaVinciTestData.opts" 
 
-ApplicationMgr.EvtMax    = 10000 ;
+ApplicationMgr.EvtMax    = 100 ;
 EventSelector.PrintFreq  = 1;
+
+DaVinci.OutputLevel = 2 ;
 
 ApplicationMgr.OutStream = { } ; // uncomment to write out nothing
