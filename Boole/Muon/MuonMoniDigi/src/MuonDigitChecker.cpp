@@ -45,6 +45,9 @@ MuonDigitChecker::MuonDigitChecker( const std::string& name,
     m_hitMonitor   ( false ), 
     m_detailedMonitor   ( false )
 {
+  setProperty( "HistoTopDir",  "MUON/" );
+  setProperty( "NTupleTopDir", "MUON/" );
+  
   declareProperty( "hitMonitor"              ,m_hitMonitor );
   declareProperty( "DetailedMonitor"         ,m_detailedMonitor );
 }
@@ -59,8 +62,6 @@ MuonDigitChecker::~MuonDigitChecker() {};
 //=============================================================================
 StatusCode MuonDigitChecker::initialize() {
 
-  //  if( "" == histoTopDir() ) setHistoTopDir("ST/");
-  
   StatusCode sc = GaudiTupleAlg::initialize();
   if (sc.isFailure()){
     return Error("Failed to initialize", sc);
@@ -155,7 +156,7 @@ StatusCode MuonDigitChecker::crNtuples() {
 //=============================================================================
 StatusCode MuonDigitChecker::execute() {
 
-  info() << "==> Execute MuonDigitChecker" << endmsg;
+  debug() << "==> Execute MuonDigitChecker" << endmsg;
  // Header
   const EventHeader* evt = get<EventHeader>(EventHeaderLocation::Default);
   int tnhit[5][4];    int tnDhit[5][4][6];  
@@ -233,12 +234,12 @@ StatusCode MuonDigitChecker::execute() {
 	    float zpos=((*iter)->entry().z()+(*iter)->exit().z())/2.0;
 	    float time=(*iter)->timeOfFlight();
 
-	    //New monitored quantities
-	    float plen=(*iter)->pathLength();
-	    float hene=(*iter)->energy();
-	    float hdis=(*iter)->displacement().x();
-	    float hdxz=(*iter)->dxdz();
-	    float hdyz=(*iter)->dydz();
+	    //New monitored quantities. Not used for now
+      //	    float plen=(*iter)->pathLength();
+      //	    float hene=(*iter)->energy();
+      //	    float hdis=(*iter)->displacement().x();
+      //	    float hdxz=(*iter)->dxdz();
+      //	    float hdyz=(*iter)->dydz();
 
 	    double tof=time-sqrt(xpos*xpos+ypos*ypos+zpos*zpos)/300.0;
 	    if(tof<0.1)tof=0.1;

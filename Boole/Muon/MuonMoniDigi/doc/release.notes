@@ -1,7 +1,10 @@
 Package         : MuonMoniDigi
 Package manager : A Sarti
 
-!======================= MuonMoniDigi v1r0 2005-09-28 ========================
+!======================= MuonMoniDigi v1r0 2005-09-30 ========================
+! 2005-09-30 - Marco Cattaneo
+ - Set the top directory default value to follow LHCb conventions
+
 ! 2005-09-28 A. Sarti
   Fixed the release notes file.
   -> options/* Removed ad hoc option files
