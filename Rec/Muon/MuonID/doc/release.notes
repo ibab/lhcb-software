@@ -1,6 +1,19 @@
-! $Id: release.notes,v 1.30 2005-09-30 08:48:34 pkoppenb Exp $
+! $Id: release.notes,v 1.31 2005-09-30 09:04:12 pkoppenb Exp $
 ! Package     : MuonID
 ! Responsible : Andre Massafferri
+
+! 2005-09-30 - P. Koppenburg
+  - src/MuonIDNSharedHitsTool.h
+    . Make all private methods and memebers really private
+  - src/MuonIDNSharedHitsTool.cpp
+    . Initialize all member variables
+    . Use tool<> 
+
+! 2005-09-30 - P. Koppenburg for Erica Polycarpo and Myriam Gandelman
+  - MuonID/IMuonIDNSharedHitsTool.h
+  - src/MuonIDNSharedHitsTool.{cpp,h}
+    . New tool that calculates the number of muonID's that share a hit
+      with a given MuonID and are closest to the hit than this one.
 
 ! 2005-09-30 - P. Koppenburg
   Go back to v3r7p2, tagged as v3r8back

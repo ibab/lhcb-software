@@ -1,4 +1,4 @@
-// $Id: MuonIDNSharedHitsTool.h,v 1.1 2005-09-30 08:53:52 pkoppenb Exp $
+// $Id: MuonIDNSharedHitsTool.h,v 1.2 2005-09-30 09:04:12 pkoppenb Exp $
 #ifndef MUONIDNSHAREDHITSTOOL_H
 #define MUONIDNSHAREDHITSTOOL_H 1
 
@@ -16,17 +16,17 @@ class IMuonTileXYZTool;
  *
  * @author Andre Massafferri, Erica Polycarpo, Miriam Gandelman
  * @date 30/09/2005 
-*/
+ */
 
 class MuonIDNSharedHitsTool : public GaudiTool,
-                   virtual public IMuonIDNSharedHitsTool {
+                              virtual public IMuonIDNSharedHitsTool {
 
 public:
 
   /// Standard Constructor
   MuonIDNSharedHitsTool( const std::string& type,
-               const std::string& name,
-               const IInterface* parent );
+                         const std::string& name,
+                         const IInterface* parent );
 
   /// Standard Destructor
   virtual ~MuonIDNSharedHitsTool() { }
@@ -37,11 +37,20 @@ public:
   /// Input: a MuonID object
   StatusCode calcSharedHits( const MuonID* muonid, int& nSharedHits );
 
+private :
+
   /// Calculates the distance from the hit to the extrapolated position
   /// Input: a MuonID object
-  double m_dist;
   StatusCode calcDist( const MuonID* muonid );
+  /// Extracts the momentum and extrapolate the track to each station
+  StatusCode trackExtrapolate(const TrStoredTrack *pTrack);
+  /// clear track based local variables
+  void resetTrackLocals();
+  /// Compare the coordinates of two MuonIDs
+  bool compareHits( const MuonID* muonid1, const MuonID* muonid2 );
 
+
+  double m_dist;
   double m_Momentum;
   double m_trackSlopeX;
   std::vector<double> m_trackX; // position of track in x(mm) in each station
@@ -50,14 +59,7 @@ public:
   IMuonTileXYZTool *m_iTileTool;
   IMuonGeometryTool *m_iGeomTool;
   int m_NStation;
-  /// Extracts the momentum and extrapolate the track to each station
-  StatusCode trackExtrapolate(const TrStoredTrack *pTrack);
 
-  /// clear track based local variables
-  void resetTrackLocals();
-
- /// Compare the coordinates of two MuonIDs
-  bool compareHits( const MuonID* muonid1, const MuonID* muonid2 );
 };
 
 #endif // MUONIDNSHAREDHITSTOOL_H
