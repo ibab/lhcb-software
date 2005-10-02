@@ -1,4 +1,4 @@
-// $Id: DeVeloPhiType.cpp,v 1.14 2005-06-02 14:11:41 jpalac Exp $
+// $Id: DeVeloPhiType.cpp,v 1.15 2005-10-02 14:31:21 mtobin Exp $
 //==============================================================================
 #define VELODET_DEVELOPHITYPE_CPP 1
 //==============================================================================
@@ -110,6 +110,9 @@ StatusCode DeVeloPhiType::initialize()
   
   /// Parametrize strips as lines
   calcStripLines();
+
+  /// Build up map of strips to routing lines
+  BuildRoutingLineMap();
 
   return StatusCode::SUCCESS;
 }
@@ -474,3 +477,37 @@ double DeVeloPhiType::stripCapacitance(unsigned int /*strip*/) const
   double C=0.0;
   return C;
 }
+//=============================================================================
+// Build map of strips to routing line and back
+//=============================================================================
+void DeVeloPhiType::BuildRoutingLineMap(){
+  unsigned int strip=0;
+  m_patternConfig.push_back(std::pair<unsigned int,unsigned int>(m_nbInner,4));
+  m_patternConfig.push_back(std::pair<unsigned int,unsigned int>(0,2));
+  m_patternConfig.push_back(std::pair<unsigned int,unsigned int>(m_nbInner+1,4));
+  m_patternConfig.push_back(std::pair<unsigned int,unsigned int>(1,2));
+  m_patternConfig.push_back(std::pair<unsigned int,unsigned int>(m_nbInner+2,4));
+  m_patternConfig.push_back(std::pair<unsigned int,unsigned int>(m_nbInner+3,4));
+
+  unsigned int count=0;
+  MsgStream msg( msgSvc(), "DeVeloPhiType" );
+  msg << MSG::DEBUG << "Building routing line map for sensor " 
+      << (this->sensorNumber()) << endreq;
+  for(unsigned int routLine=m_minRoutingLine;routLine<=m_maxRoutingLine;routLine++){
+    if(0 == count%6){
+      msg << MSG::DEBUG << "Pattern of six ---------------------------------------\n";
+    }
+    strip=this->strip(routLine);
+    
+    m_mapStripToRoutingLine[strip]=routLine;
+    m_mapRoutingLineToStrip[routLine]=strip;
+    
+    msg << MSG::DEBUG << "Routing line " << routLine 
+        << " Patttern element " << (patternElement(routLine))
+        << " number " << (patternNumber(routLine))
+        << " strip " << strip
+        << endreq;
+    count++;
+  }
+}
+

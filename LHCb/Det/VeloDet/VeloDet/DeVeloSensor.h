@@ -1,4 +1,4 @@
-// $Id: DeVeloSensor.h,v 1.9 2005-07-11 15:31:49 mtobin Exp $
+// $Id: DeVeloSensor.h,v 1.10 2005-10-02 14:31:21 mtobin Exp $
 #ifndef VELODET_DEVELOSENSOR_H 
 #define VELODET_DEVELOSENSOR_H 1
 
@@ -175,15 +175,67 @@ public:
   /// Cache the geometry information after changes to position from alignment
   void cacheGeometry();
 
+  /// Convert routing line to chip channel (1234 -> 0213)
+  unsigned int RoutingLineToChipChannel(unsigned int routLine){
+    routLine = (2048-routLine);
+    if(1 == routLine%4){
+      routLine++;
+    }else if(2 == routLine%4){
+      routLine--;
+    } 
+    return routLine;
+  }
+  /// Convert chip channel to routing line (0213 -> 1234)
+  unsigned int ChipChannelToRoutingLine(unsigned int chipChan){
+    if(1 == chipChan%4){
+      chipChan++;
+    } else if(2 == chipChan%4) {
+      chipChan--;
+    }
+    return (2048-chipChan);
+  }  
+  /// Convert chip channel to strip number
+  unsigned int ChipChannelToStrip(unsigned int chipChan){
+    return RoutingLineToStrip(ChipChannelToRoutingLine(chipChan));
+  };
+  /// Convert strip number to chip channel
+  unsigned int StripToChipChannel(unsigned int strip){
+    return RoutingLineToChipChannel(StripToRoutingLine(strip));
+  };
+
+  /// Convert routing line to strip number
+  unsigned int RoutingLineToStrip(unsigned int routLine){return m_mapRoutingLineToStrip[routLine];};
+  /// Convert strip number to routing line
+  unsigned int StripToRoutingLine(unsigned int strip){return m_mapStripToRoutingLine[strip];};
+
+  /// Get the chip number from the routing line
+  unsigned int ChipFromRoutingLine(unsigned int routLine){return ChipFromChipChannel(RoutingLineToChipChannel(routLine));};
+  /// Get the chip number from the chip channel
+  unsigned int ChipFromChipChannel(unsigned int chipChan){return static_cast<int>(chipChan/128);};
+  /// Get the Chip from the Velo ChannelID
+  unsigned int ChipFromStrip(unsigned int strip){return ChipFromChipChannel(StripToChipChannel(strip));};
+
+  /// Return the validity of a strip
+  bool OKStrip(unsigned int strip){return (strip<m_numberOfStrips && !m_badStrips[strip]);};
+  
+  /// Returns the validity of a given channel
+  bool OKChipChannel(unsigned int chipChan){
+    return (chipChan<m_numberOfStrips && OKStrip(ChipChannelToStrip(chipChan)));
+  };
+
 protected:
 
   unsigned int m_numberOfZones;
-
+  static const unsigned int m_minRoutingLine=1;
+  static const unsigned int m_maxRoutingLine=2048;
+  std::map<unsigned int, unsigned int> m_mapRoutingLineToStrip;//<Map of routing line to strips
+  std::map<unsigned int, unsigned int> m_mapStripToRoutingLine;//<Map of strips to routing line
+  
 private:
 
   void initSensor();
   
-  unsigned int m_numberOfStrips;
+  static const unsigned int m_numberOfStrips=2048;
   std::string m_type;
   std::string m_fullType;
   bool m_isLeft;
@@ -198,6 +250,7 @@ private:
   double m_z;
   double m_innerRadius;
   double m_outerRadius;
+  std::map<unsigned int,bool> m_badStrips;//<Map of all known bad strips
 
   IGeometryInfo* m_geometry;
 };

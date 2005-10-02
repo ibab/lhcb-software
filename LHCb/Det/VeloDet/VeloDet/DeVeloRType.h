@@ -1,4 +1,4 @@
-// $Id: DeVeloRType.h,v 1.7 2005-06-02 14:11:41 jpalac Exp $
+// $Id: DeVeloRType.h,v 1.8 2005-10-02 14:31:21 mtobin Exp $
 #ifndef VELODET_DEVELORTYPE_H 
 #define VELODET_DEVELORTYPE_H 1
 
@@ -219,5 +219,27 @@ private:
   double m_halfAngle;
   double m_quarterAngle;
   double m_phiGap;
+
+  /// Build up map of strip to routing line conversions
+  void BuildRoutingLineMap();
+  // Reverse middle group of four strips (0123->0213)
+  unsigned int ScrambleStrip(unsigned int strip){
+    if(1 == strip%4){
+      strip++;
+    } else if(2 == strip%4) {
+      strip--;
+    }
+    return strip;
+  }
+  /// Select routing line area
+  /// (0) Chips 15 to 13, (1) Chip 12, (2) Chip 11 and (3) Chips 10 to 8
+  unsigned int RoutingLineArea(unsigned int routingLine);
+  /// Return strip from routing line area
+  unsigned int RoutLineToStrip(unsigned int routLine, unsigned int routArea);
+  /// Number of strips in each readout area
+  static const unsigned int m_nChan0=384;
+  static const unsigned int m_nChan1=128;
+  static const unsigned int m_nChan2=128;
+  static const unsigned int m_nChan3=384;
 };
 #endif // VELODET_DEVELORTYPE_H

@@ -1,9 +1,9 @@
-// $Id: DeVelo.h,v 1.28 2005-07-11 15:31:49 mtobin Exp $
+// $Id: DeVelo.h,v 1.29 2005-10-02 14:31:21 mtobin Exp $
 #ifndef       VELODET_DEVELO_H
 #define       VELODET_DEVELO_H 1
 // ============================================================================
 /// from STL
-#include <vector>
+//#include <vector>
 
 /// Local
 #include "VeloDet/DeVeloSensor.h"
@@ -340,6 +340,62 @@ public:
   /// Re-calculate z position for a given sensor of changes in geometry conditions
   void recalculateZ(unsigned int sensor);
 
+  /// Convert chip channel to VeloChannelID for a given sensor
+  VeloChannelID ChipChannelToVeloChannelID(unsigned int sensor, unsigned int chipChan){
+    return VeloChannelID(sensor,m_vpSensor[sensorIndex(sensor)]->ChipChannelToStrip(chipChan));
+  };
+  /// Convert VeloChannelID to chip channel
+  unsigned int VeloChannelIDToChipChannel(VeloChannelID channel){
+    return m_vpSensor[sensorIndex(channel.sensor())]->StripToChipChannel(channel.strip());
+  };
+  
+  /// Convert routing line to chip channel for a given sensor (chip channel run clock-wise
+  /// but routing line run anti-clockwise)
+  unsigned int RoutingLineToChipChannel(unsigned int sensor, unsigned int routLine){
+    return m_vpSensor[sensorIndex(sensor)]->RoutingLineToChipChannel(routLine);
+  };
+  /// Convert chip channel to routing line for a given sensor
+  unsigned int ChipChannelToRoutingLine(unsigned int sensor, unsigned int chipChan){
+    return m_vpSensor[sensorIndex(sensor)]->ChipChannelToRoutingLine(chipChan);
+  };
+  
+  /// Convert routing line to VeloChannelID for a given sensor
+  unsigned int RoutingLineToVeloChannelID(unsigned int sensor, unsigned int routLine){
+    return VeloChannelID(sensor,m_vpSensor[sensorIndex(sensor)]->RoutingLineToStrip(routLine));
+  };
+  /// Convert VeloChannelId to routing line
+  unsigned int VeloChannelIDToRoutingLine(VeloChannelID channel){
+    return m_vpSensor[sensorIndex(channel.sensor())]->StripToRoutingLine(channel.strip());
+  };
+
+  /// Get the chip number from the routing line for a given sensor
+  unsigned int ChipFromRoutingLine(unsigned int sensor, unsigned int routLine){
+    return m_vpSensor[sensorIndex(sensor)]->ChipFromRoutingLine(routLine);
+  };
+  /// Get the chip number from the chip channel for a given sensor
+  unsigned int ChipFromChipChannel(unsigned int sensor, unsigned int chipChan){    
+    return m_vpSensor[sensorIndex(sensor)]->ChipFromChipChannel(chipChan);
+  };
+  /// Get the chip number from the VeloChannelID
+  unsigned int ChipFromVeloChannelID(VeloChannelID channel){   
+    return m_vpSensor[sensorIndex(channel.sensor())]->ChipFromStrip(channel.strip());
+  };
+  
+  /// Check validity of VeloChannelID
+  bool OKVeloChannelID(VeloChannelID channel){
+    return m_vpSensor[sensorIndex(channel.sensor())]->OKStrip(channel.strip());
+  }
+  
+  /// Check validity of chip channel for a given sensor
+  bool OKChipChannel(unsigned int sensor, unsigned int chipChan){
+    return m_vpSensor[sensorIndex(sensor)]->OKChipChannel(chipChan);
+  }
+  
+  /// Check validity of a given sensor
+  bool OKSensor(unsigned int sensor){
+    return m_validSensors[sensor];
+  };
+  
   ///=========================================================================
   /// REPLICATE OLD DeVelo Code with added rotations asumning perfect geometry
   ///=========================================================================
@@ -369,7 +425,7 @@ protected:
 private:
 
   /// Find DeVeloSensors inside DeVelo detector element tree.
-  std::vector<DeVeloSensor*> getVeloSensors();
+  std::vector<DeVeloSensor*> findVeloSensors();
 
   /// Navigate DeVelo detector element tree recursively.
   /// Store DeVeloSensors in "sensors" wherever they might be found.
@@ -425,6 +481,8 @@ private:
 
   ///
   double m_zVertex;
+
+  std::map<unsigned int,bool> m_validSensors;//< Map of all valid sensors
 };
 
 // ============================================================================

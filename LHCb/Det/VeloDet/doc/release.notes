@@ -1,8 +1,12 @@
-! $Id: release.notes,v 1.84 2005-07-14 06:20:23 cattanem Exp $
+! $Id: release.notes,v 1.85 2005-10-02 14:31:21 mtobin Exp $
 package VeloDet
 package manager : Velo Group
 
 !========================= VeloDet v9r8 2005-07-11 =========================
+! 2005-10-02 - Mark Tobin
+ - Added methods to convert strip number to routing line to chip channel
+   and back.  
+
 ! 2005-07-13 - David Hutchcroft
  - Removed Reversed phi ranges of R sectors: was not correct
 

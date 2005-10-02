@@ -1,4 +1,4 @@
-// $Id: DeVeloRType.cpp,v 1.15 2005-07-13 12:34:44 dhcroft Exp $
+// $Id: DeVeloRType.cpp,v 1.16 2005-10-02 14:31:21 mtobin Exp $
 //==============================================================================
 #define VELODET_DEVELORTYPE_CPP 1
 //==============================================================================
@@ -83,6 +83,9 @@ StatusCode DeVeloRType::initialize()
   /// Calculate the strip radii/phi limits 
   calcStripLimits();
 
+  /// Build up map of strips to routing lines
+  BuildRoutingLineMap();
+  
   return StatusCode::SUCCESS;
 }
 //==============================================================================
@@ -381,4 +384,73 @@ double DeVeloRType::stripCapacitance(unsigned int /*strip*/) const
 {
   double C=0.0;
   return C;
+}
+//==============================================================================
+/// Build up routing line map
+//==============================================================================
+void DeVeloRType::BuildRoutingLineMap(){
+  MsgStream msg( msgSvc(), "DeVeloRType" );
+  msg << MSG::DEBUG << "Building routing line map for sensor " 
+      << (this->sensorNumber()) << endreq;
+  for(unsigned int routLine=m_minRoutingLine;routLine<=m_maxRoutingLine/2;routLine++){
+    unsigned int routArea=RoutingLineArea(routLine);
+    unsigned int strip=RoutLineToStrip(routLine,routArea);
+    // Sector 1
+    m_mapStripToRoutingLine[strip]=routLine;
+    m_mapRoutingLineToStrip[routLine]=strip;
+    // sector 3
+    m_mapStripToRoutingLine[strip+1024]=routLine+1024;
+    m_mapRoutingLineToStrip[routLine+1024]=strip+1024;
+    msg << MSG::DEBUG << "Routing line " << routLine 
+        << " strip " << m_mapRoutingLineToStrip[routLine]
+        << " +1024 line " << routLine+1024
+        << " +1024 strip " << m_mapRoutingLineToStrip[routLine+1024]
+        << endreq;
+    /*    msg << MSG::DEBUG << "Routing line " << routLine 
+        << " strip " << RoutingLineToStrip(routLine)
+        << " chip channel " << RoutingLineToChipChannel(routLine)
+        << " and back " << ChipChannelToRoutingLine(RoutingLineToChipChannel(routLine))
+        << " from strip " << endreq;*/
+  }
+}
+//=============================================================================
+// Select routing line area
+// (0) Chips 15 to 13 
+// (1) Chip 12
+// (2) Chip 11 
+// (3) Chips 10 to 8
+//=============================================================================
+unsigned int DeVeloRType::RoutingLineArea(unsigned int routingLine){
+  if(m_maxRoutingLine/2 < routingLine) routingLine /= 2;
+  if(routingLine <= m_nChan0){
+    return 0;
+  } else if(routingLine <= m_nChan0+m_nChan1){
+    return 1;
+  } else if(routingLine <= m_nChan0+m_nChan1+m_nChan2){
+    return 2;
+  } else if (routingLine <= m_nChan0+m_nChan1+m_nChan2+m_nChan3){
+    return 3;
+  }
+  return 999;
+}
+//=============================================================================
+// Return strip from routing line area (first 1024 strips only)
+//=============================================================================
+unsigned int DeVeloRType::RoutLineToStrip(unsigned int routLine, unsigned int routArea){
+  unsigned int strip;
+  //  std::cout << "routLine " << routLine << " area " << routArea << std::endl;
+  if(0 == routArea){
+    strip = (m_nChan1+routLine-1);
+  } else if(1 == routArea) {
+    strip = (routLine-m_nChan0-1);
+  } else if(2 == routArea){
+    strip = (m_maxRoutingLine-m_nChan0-m_nChan1-m_nChan3-routLine);
+  } else if(3 == routArea){
+    strip = (m_maxRoutingLine-m_nChan3-routLine);
+  } else strip=9999;
+  //  std::cout << "strip " << strip << " scram " << ScrambleStrip(strip) 
+  //            << " rl " << routLine << " scram " << ScrambleStrip(routLine)
+  //        << std::endl;
+  
+  return ScrambleStrip(strip);
 }

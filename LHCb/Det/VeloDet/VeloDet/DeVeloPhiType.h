@@ -1,4 +1,4 @@
-// $Id: DeVeloPhiType.h,v 1.8 2005-06-02 14:11:41 jpalac Exp $
+// $Id: DeVeloPhiType.h,v 1.9 2005-10-02 14:31:21 mtobin Exp $
 #ifndef VELODET_DEVELOPHITYPE_H 
 #define VELODET_DEVELOPHITYPE_H 1
 
@@ -224,6 +224,21 @@ private:
   double m_outerCoverage;
   double m_halfCoverage;
   bool m_down;
-  
+
+  /// Pattern is based on sequence of six strips (outer, inner, outer, inner, outer, outer)
+  void BuildRoutingLineMap();
+
+  /// Return the element in the pattern (0 to 5)
+  unsigned int patternElement(unsigned int routLine){return ((routLine-1)%6);};
+  /// Return number of times pattern has been repeated
+  unsigned int patternNumber(unsigned int routLine){return ((routLine-1)/6);};
+  /// Configuration for pattern (1st strip number in sequence, number of inner/outer strips in sequence)
+  std::vector<std::pair<unsigned int,unsigned int> > m_patternConfig;
+  /// Return strip number for given routing line
+  unsigned int strip(unsigned int routLine){
+    unsigned int patElem=this->patternElement(routLine);
+    unsigned int patternNumber=this->patternNumber(routLine);
+    return m_patternConfig[patElem].first+patternNumber*m_patternConfig[patElem].second;
+  };
 };
 #endif // VELODET_DEVELOPHITYPE_H

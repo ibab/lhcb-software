@@ -1,4 +1,4 @@
-// $Id: DeVeloSensor.cpp,v 1.10 2005-07-11 15:31:50 mtobin Exp $
+// $Id: DeVeloSensor.cpp,v 1.11 2005-10-02 14:31:21 mtobin Exp $
 //==============================================================================
 #define VELODET_DEVELOSENSOR_CPP 1
 //==============================================================================
@@ -61,6 +61,8 @@ StatusCode DeVeloSensor::initialize()
   }
 
   initSensor();
+  IGeometryInfo* geom = this->geometry();
+  m_geometry = geom;
   cacheGeometry();
   
   msg << MSG::DEBUG << "Sensor full type " << m_fullType << " z= " << m_z
@@ -77,8 +79,6 @@ StatusCode DeVeloSensor::initialize()
 //==============================================================================
 void DeVeloSensor::cacheGeometry() 
 {
-  IGeometryInfo* geom = this->geometry();
-  m_geometry = geom;
   m_z = m_geometry->toGlobal(HepPoint3D(0,0,0)).z();
 }
 //==============================================================================
@@ -141,7 +141,6 @@ StatusCode DeVeloSensor::channelDistance(const VeloChannelID& start,
 void DeVeloSensor::initSensor()
 {
   // Set the sensor type from name in XML
-  m_numberOfStrips = 2048;
   m_innerRadius = this->param<double>("InnerRadius");
   m_outerRadius = this->param<double>("OuterRadius");
   m_siliconThickness = this->param<double>("SiThick");

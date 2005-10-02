@@ -1,4 +1,4 @@
-// $Id: DeVelo.cpp,v 1.52 2005-07-12 13:15:25 mtobin Exp $
+// $Id: DeVelo.cpp,v 1.53 2005-10-02 14:31:21 mtobin Exp $
 //
 // ============================================================================
 #define  VELODET_DEVELO_CPP 1
@@ -78,7 +78,7 @@ StatusCode DeVelo::initialize() {
   unsigned int nextPileUp=this->param<int>("FirstPileUp");
 
   // get all of the pointers to the child detector elements
-  std::vector<DeVeloSensor*> veloSensors = this->getVeloSensors();
+  std::vector<DeVeloSensor*> veloSensors = this->findVeloSensors();
   
   msg << MSG::DEBUG << "Found " << veloSensors.size() 
       << " sensors in the XML" << endreq;
@@ -127,6 +127,7 @@ StatusCode DeVelo::initialize() {
     } else {
       msg << MSG::ERROR << "Sensor type is unknown\n";
     }
+    m_validSensors[m_vpSensor[index]->sensorNumber()]=true;
     msg << MSG::DEBUG << "Sensor number " << m_vpSensor[index]->sensorNumber()
         << " pSensor " << (*iDESensor)->sensorNumber()
         << " type " << m_vpSensor[index]->fullType() 
@@ -913,7 +914,7 @@ double DeVelo::trgPhiDirectionOfStrip( VeloChannelID channel,
   }
 }
 //=============================================================================
-std::vector<DeVeloSensor*> DeVelo::getVeloSensors()
+std::vector<DeVeloSensor*> DeVelo::findVeloSensors()
 {
 
   std::vector<DeVeloSensor*> mySensors;
