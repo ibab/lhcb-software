@@ -4,6 +4,11 @@
 ! Purpose     : Hold monitoring algorithms for Gauss
 !-----------------------------------------------------------------------------
 
+! 2005-10-02 - Gloria CORTI
+ - src/MCTruthMonitor.{h,cpp}
+   . new algorithm to fill a few reference histograms for MC Truth
+     (MCParticles and MCVertices)
+
 !===================== GaussMonitor v2r2 ===================================
 ! 2005-08-17 - Gloria CORTI
  - src/GenMonitorAlg.{h,cpp}

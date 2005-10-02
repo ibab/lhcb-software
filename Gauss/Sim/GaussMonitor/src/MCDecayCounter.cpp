@@ -1,4 +1,4 @@
-// $Id: MCDecayCounter.cpp,v 1.2 2005-08-17 16:47:29 gcorti Exp $
+// $Id: MCDecayCounter.cpp,v 1.3 2005-10-02 15:14:03 gcorti Exp $
 // Include files 
 
 // from Gaudi
@@ -70,7 +70,7 @@ StatusCode MCDecayCounter::execute() {
   // Retrieve signal from summaryInfo
   SmartDataPtr<GenMCLinks> sigLinks(evtSvc(), GenMCLinkLocation::Default);
   if( 0 == sigLinks ) {
-    Warning("GenMCLinks not found at"+GenMCLinkLocation::Default);    
+    Warning("GenMCLinks not found at "+GenMCLinkLocation::Default);    
   }
   else {
     if( sigLinks->size() != 1 ) {
