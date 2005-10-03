@@ -1,4 +1,4 @@
-// $Id: PythiaAlg.h,v 1.1.1.1 2005-06-21 12:40:51 robbep Exp $
+// $Id: PythiaAlg.h,v 1.2 2005-10-03 12:07:56 robbep Exp $
 
 #ifndef LBPYTHIA_PYTHIAALG_H
 #define LBPYTHIA_PYTHIAALG_H 1
@@ -144,6 +144,9 @@ protected:
 
   /// Particle Property Svc Interface 
   IParticlePropertySvc * m_ppSvc ;
+
+  /// EvtGen Tool interface
+  IEvtGenTool * m_evtTool ;
   
 private:  
   /// +/- crossing angle in the vertical plane (microrad)
@@ -205,9 +208,6 @@ private:
   
 	/// PYMSSM (SUSY) Common Block data
 	Pymssm m_pymssm;
-
-  /// EvtGen Tool interface
-  IEvtGenTool * m_evtTool ;
 
   /// Minimum mass of the particles to generate as signal
   double m_minBMass ;

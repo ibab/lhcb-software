@@ -1,4 +1,4 @@
-// $Id: PythiaAlg.cpp,v 1.3 2005-10-03 10:34:23 robbep Exp $
+// $Id: PythiaAlg.cpp,v 1.4 2005-10-03 12:08:27 robbep Exp $
 // ------------------------------------------------------------- 
 // GeneratorModules/PythiaAlg.cxx Description: Allows the user
 // to generate Pythia events and store the result in the
@@ -98,6 +98,7 @@ PythiaAlg::PythiaAlg(const std::string& name,
   m_beam( "p+" )              ,
   m_target( "p+" )            ,
   m_win( 0. )                 ,
+  m_evtTool( 0 )              ,
   m_anglesmear( 0. )          ,
   m_eventlistlevel( -1 )      ,
   m_initlistlevel( 1 )        ,
@@ -105,7 +106,6 @@ PythiaAlg::PythiaAlg(const std::string& name,
   m_fortout( 0 )              ,
   m_pystatlevel( 1 )          ,
   m_events( 0 )               ,
-  m_evtTool( 0 )              ,
   m_minBMass( 20 * TeV )      ,
   m_targetIdMinBMass( -1 )    ,
   m_obtainedSignalType( 0 )   ,
