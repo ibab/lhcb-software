@@ -1,4 +1,4 @@
-// $Id: EvtGenTool.cpp,v 1.2 2005-06-22 09:29:03 robbep Exp $
+// $Id: EvtGenTool.cpp,v 1.3 2005-10-03 10:11:51 robbep Exp $
 // Header file
 #include "EvtGenTool.h"
 
@@ -47,7 +47,7 @@ extern "C" {
 static const  ToolFactory<EvtGenTool>          s_factory ;
 const        IToolFactory& EvtGenToolFactory = s_factory ;
 
-MsgStream * evtgenStream ;
+extern MsgStream * evtgenStream ;
 
 //=============================================================================
 // Standard constructor, initializes variables
@@ -930,26 +930,29 @@ EvtGaudiRandomEngine::~EvtGaudiRandomEngine( ) { }
 //=============================================================================
 // Reimplementation of print facility of EvtGen
 //=============================================================================
-std::ostream & report( Severity severity , const char * facility ) 
-{
-  if ( severity < WARNING ) {
-    (*evtgenStream) << endreq ;
-    if ( 0 != facility[0] ) { 
-      std::cerr << facility << ":" ;
-      (*evtgenStream) << MSG::ERROR << facility << " Error from EvtGen" 
-                      << endreq ;
-    }
-    else (*evtgenStream) << MSG::ERROR << "Error from EvtGen" 
-                         << endreq ;
-    return ( std::cerr ) ;
-  }
+// std::ostream & report( Severity severity , const char * facility ) 
+// {
+//   if ( severity < WARNING ) {
+//     (*oldEvtgenStream) << endreq ;
+//     if ( 0 != facility[0] ) { 
+//       std::cerr << facility << ":" ;
+//       (*oldEvtgenStream) << MSG::ERROR << facility << " Error from EvtGen" 
+//                       << endreq ;
+//     }
+//     else (*oldEvtgenStream) << MSG::ERROR << "Error from EvtGen" 
+//                             << endreq ;
+//     return ( std::cerr ) ;
+//   }
   
-  if ( severity < INFO ) {
-    if ( 0 != facility[0] ) (*evtgenStream) << MSG::INFO << facility << ":" ;
-    else (*evtgenStream) << MSG::INFO ;
-  } else {
-    if ( 0 != facility[0] ) (*evtgenStream) << MSG::DEBUG << facility << ":" ;
-    else (*evtgenStream) << MSG::DEBUG ;
-  }
-  return evtgenStream -> stream() ;
-}
+//   if ( severity < INFO ) {
+//     if ( 0 != facility[0] ) (*oldEvtgenStream) << MSG::INFO 
+//                                                << facility << ":" ;
+//     else (*oldEvtgenStream) << MSG::INFO ;
+//   } else {
+//     if ( 0 != facility[0] ) (*oldEvtgenStream) << MSG::DEBUG << facility 
+//                                                << ":" ;
+//     else (*oldEvtgenStream) << MSG::DEBUG ;
+//   }
+//   return oldEvtgenStream -> stream() ;
+// }
+
