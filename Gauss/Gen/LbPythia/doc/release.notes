@@ -1,6 +1,11 @@
-! $Id: release.notes,v 1.7 2005-08-22 16:23:36 ranjard Exp $
+! $Id: release.notes,v 1.8 2005-10-03 10:35:29 robbep Exp $
 ! Package     : Gen/LbPythia
 ! Responsible : 
+
+! 2005-10-03 - Patrick Robbe
+ - Pythia.h : new utility class to interface Pythia FORTRAN functions.
+ - PythiaProduction: Production tool interfacing Pythia.
+ - PythiaAlgorithm : use new HepMC sort function.
 
 ! ========================= LbPythia v1r2 ============================
 ! 2005-08-22 - Florence RANJARD

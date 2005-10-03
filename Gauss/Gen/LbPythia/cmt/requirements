@@ -1,7 +1,7 @@
-# $Id: requirements,v 1.3 2005-08-22 16:23:36 ranjard Exp $ 
+# $Id: requirements,v 1.4 2005-10-03 10:35:14 robbep Exp $ 
 # =============================================================================
 package       LbPythia
-version       v1r2
+version       v2r0
 
 # =========== structure =======================================================
 branches      LbPythia doc cmt src
