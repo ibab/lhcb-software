@@ -1,4 +1,4 @@
- //  $Id: LbPythia_entries.cpp,v 1.1.1.1 2005-06-21 12:40:51 robbep Exp $
+ //  $Id: LbPythia_entries.cpp,v 1.2 2005-10-03 10:34:52 robbep Exp $
 //====================================================================
 //  LbPythia_entries.cxx
 //--------------------------------------------------------------------
@@ -16,5 +16,6 @@ DECLARE_FACTORY_ENTRIES( LbPythia ) {
   DECLARE_ALGORITHM( PythiaAlg );
   DECLARE_ALGORITHM( HiggsPythiaAlg );
   DECLARE_ALGORITHM( TTbarPythiaAlg );
+  DECLARE_TOOL( PythiaProduction ) ;
 }
   
