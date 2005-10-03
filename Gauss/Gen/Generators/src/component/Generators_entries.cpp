@@ -1,4 +1,4 @@
-//  $Id: Generators_entries.cpp,v 1.1.1.1 2005-06-20 21:42:17 robbep Exp $
+//  $Id: Generators_entries.cpp,v 1.2 2005-10-03 10:31:30 robbep Exp $
 //====================================================================
 //  Generators_entries.cxx
 //--------------------------------------------------------------------
@@ -20,5 +20,13 @@ DECLARE_FACTORY_ENTRIES(Generators) {
   DECLARE_ALGORITHM( SetDecayAlg );
   DECLARE_ALGORITHM( SmearVertexAlg);
   DECLARE_ALGORITHM( SignalDecayAlg ) ;
+  DECLARE_ALGORITHM( Generation ) ;
+  DECLARE_TOOL( VariableLuminosity ) ;
+  DECLARE_TOOL( FixedNInteractions ) ;
+  DECLARE_TOOL( MinimumBias ) ;
+  DECLARE_TOOL( CollidingBeams ) ;
+  DECLARE_TOOL( FixedTarget ) ;
+  DECLARE_TOOL( EvtGenDecay ) ;
+  DECLARE_TOOL( LHCbAcceptance ) ;
 }
   
