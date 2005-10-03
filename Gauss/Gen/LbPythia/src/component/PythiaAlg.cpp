@@ -1,4 +1,4 @@
-// $Id: PythiaAlg.cpp,v 1.2 2005-07-01 16:19:26 robbep Exp $
+// $Id: PythiaAlg.cpp,v 1.3 2005-10-03 10:34:23 robbep Exp $
 // ------------------------------------------------------------- 
 // GeneratorModules/PythiaAlg.cxx Description: Allows the user
 // to generate Pythia events and store the result in the
@@ -669,9 +669,9 @@ StatusCode PythiaAlg::fillEvt( HepMC::GenEvent* evt) {
     // to be able to reproduce events
     
     GenParticles theHepMCVector ;
-    HepMCUtils::SortHepMCVector( theHepMCVector , evt -> particles_size() ,
-                                 evt -> particles_begin( ) , 
-                                 evt -> particles_end( ) ) ;
+    HepMCUtils::SortHepMC( theHepMCVector , evt -> particles_size() ,
+                           evt -> particles_begin( ) , 
+                           evt -> particles_end( ) ) ;
     
     // ID are transformed from PythiaID to PDG Id in lunhep_ 
     ParticleProperty * partProp ;
@@ -756,9 +756,9 @@ bool PythiaAlg::selectEvt( HepMC::GenEvent * evt ) {
   // status equal to 3
   
   GenParticles theHepMCVector ;
-  HepMCUtils::SortHepMCVector( theHepMCVector , evt -> particles_size() ,
-                               evt -> particles_begin() ,
-                               evt -> particles_end() ) ;
+  HepMCUtils::SortHepMC( theHepMCVector , evt -> particles_size() ,
+                         evt -> particles_begin() ,
+                         evt -> particles_end() ) ;
  
   // Vector to contain pointers to particle which are in acceptance
   GenParticles theAcceptanceVector ;
