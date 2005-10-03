@@ -3,6 +3,7 @@
 
 // Include files
 // -------------
+#include <stdio.h>
 #include <functional>
 #include "Event/Track.h"
 
@@ -63,10 +64,10 @@ namespace TrackFunctor
     double m_z0;
   public:
     explicit closestToZ( double z0 = 0.):m_z0(z0) {}
-    const T* operator()( const T* t1,
-                         const T* t2 ) const
+    bool operator()( const T* t1,
+                     const T* t2 ) const
     {
-      return (fabs(t1->z()-m_z0) < fabs(t2->z()-m_z0))? t1:t2;
+      return ( (fabs(t1->z()-m_z0) < fabs(t2->z()-m_z0)) );
     }
   };
 
@@ -79,12 +80,12 @@ namespace TrackFunctor
     HepPlane3D m_plane;
   public:
     explicit closestToPlane(const HepPlane3D& plane):m_plane(plane) {}
-    const T* operator()( const T* t1,
-                         const T* t2 ) const
+    bool operator()( const T* t1,
+                     const T* t2 ) const
     {
       double d1 = fabs(m_plane.distance(t1->position()));
       double d2 = fabs(m_plane.distance(t2->position()));
-      return (d1 < d2)? t1:t2;
+      return (d1 < d2);
     }
   };
 
