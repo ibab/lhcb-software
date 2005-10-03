@@ -1,4 +1,4 @@
-// $Id: Track.cpp,v 1.14 2005-10-03 15:12:42 hernando Exp $ // Include files
+// $Id: Track.cpp,v 1.15 2005-10-03 15:14:10 hernando Exp $ // Include files
 
 // local
 #include "Event/Track.h"
@@ -107,7 +107,7 @@ State & Track::closestState( double z )
 const State & Track::closestState( double z ) const
 {
   std::vector<State*>::const_iterator iter = 
-    std::max_element(m_states.begin(),m_states.end(),
+    std::min_element(m_states.begin(),m_states.end(),
                      TrackFunctor::closestToZ<State>(z));
   if (iter == m_states.end())
     throw GaudiException( "No state closest to z","Track.cpp",
@@ -121,7 +121,7 @@ const State & Track::closestState( double z ) const
 State & Track::closestState( const HepPlane3D &plane )
 {
   std::vector<State*>::iterator iter = 
-    std::max_element(m_states.begin(),m_states.end(),
+    std::min_element(m_states.begin(),m_states.end(),
                      TrackFunctor::closestToPlane<State>(plane));
   if (iter == m_states.end())
     throw GaudiException( "No state closest to plane","Track.cpp",
@@ -135,7 +135,7 @@ State & Track::closestState( const HepPlane3D &plane )
 const State & Track::closestState( const HepPlane3D &plane ) const
 {
   std::vector<State*>::const_iterator iter = 
-    std::max_element(m_states.begin(),m_states.end(),
+    std::min_element(m_states.begin(),m_states.end(),
                      TrackFunctor::closestToPlane<State>(plane));
   if (iter == m_states.end())
     throw GaudiException( "No state closest to plane","Track.cpp",
