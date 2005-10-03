@@ -1,6 +1,45 @@
-! $Id: release.notes,v 1.6 2005-08-22 16:21:09 ranjard Exp $
+! $Id: release.notes,v 1.7 2005-10-03 10:31:53 robbep Exp $
 ! Package     : Gen/Generators
 ! Responsible : 
+
+! 2005-10-03 - Patrick Robbe
+ - HepMCUtils : use a static class instead of a namespace and add 
+   IsBAtProduction utility function.
+ - EvtDecayAlg : use new name of sort function.
+ - EvtGenTool : declare global stream variable extern to avoid conflicts
+ - Generators/IBeamTool.h : New abstract interface to tools to obtain beam
+     parameters in generator interfaces.
+ - Generators/IDecayTool.h : New abstract interface to decay generators.
+ - Generators/IGenCutTool.h : New abstract interface to generator level cut
+     tools.
+ - Generators/IPileUpTool.h : New abstract interface to tools computing the 
+     number of pile up interactions.
+ - Generators/IProductionTool.h : New abstract interface to production 
+     generators.
+ - Generators/ISampleGenerationTool.h : New abstract interface to tools
+     producing the different samples.
+ - Generators/IVertexSmearingTool.h : New abstract interface to vertex smearing
+     tools.
+ - VariableLuminosity: pile up tool to decide the number of pile up 
+     interactions depending on the current luminosity.
+ - FixedNInteractions: pile up tool with fixed number of interactions per 
+     event.
+ - CollidingBeams: Beam tool for colliding beams and beam smearing
+ - FixedTarget: Beam tool for fixed target
+ - BeamSpotSmearVertex: vertex smearing tool for gaussian smearing.
+ - FlatZSmearVertex: vertex smearing with flat Z distribution.
+ - LHCbAcceptance: generator level cut tool with angular cut.
+ - ExternalGenerator: base class for sample generation tool using an 
+     external generator.
+ - Signal: base class for sample generation tool using an external generator
+     and generating signal samples.
+ - EvtGenDecay: Decay tool interfacing EvtGen
+ - Generation: Main algorithm steering production of event samples with an 
+     external generator.
+ - MinimumBias: Sample generation tool to generate minimum bias.
+ - Inclusive: Sample generation tool to generate inclusive events.
+ - SignalPlain: Sample generation tool to generate signal events with plain 
+     method.
 
 !========================= Generators v1r2 ===========================
 ! 2005-08-22 - Florence RANJARD
