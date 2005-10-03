@@ -1,4 +1,4 @@
-// $Id: Track.cpp,v 1.13 2005-07-14 10:17:00 hernando Exp $ // Include files
+// $Id: Track.cpp,v 1.14 2005-10-03 15:12:42 hernando Exp $ // Include files
 
 // local
 #include "Event/Track.h"
@@ -93,7 +93,7 @@ void Track::posMomCovariance( HepSymMatrix &cov6D ) const
 State & Track::closestState( double z )
 {
   std::vector<State*>::iterator iter = 
-    std::max_element(m_states.begin(),m_states.end(),
+    std::min_element(m_states.begin(),m_states.end(),
                      TrackFunctor::closestToZ<State>(z));
   if (iter == m_states.end())
     throw GaudiException( "No state closest to z","Track.cpp",
