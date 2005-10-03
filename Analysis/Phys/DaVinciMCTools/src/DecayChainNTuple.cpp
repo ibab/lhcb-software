@@ -546,7 +546,7 @@ void DecayChainNTuple::HandleNTuple::FillNTuple(Particle& part, VertexVector& pv
   if(mclink){
     m_trueID[m_n] = mclink->particleID().pid();
   }
-  else{ // not a final state or not associated, take particle ID
+  else{ // not associated, take particle ID
     m_trueID[m_n] = part.particleID().pid(); 
   }
 #endif
@@ -1551,9 +1551,6 @@ StatusCode DecayChainNTuple::WriteNTuple(std::vector<Particle*>& mothervec) {
       } // if mclink 
     } // if endVertex
 
-      // Just for the case with association but not from signal
-    if(!isSig) mclink = 0;    
-
     // Warning: the head can be associated for 'wrong' combinations like
     // B -> A(K1 K2) C(K3 K4) or B -> A(K1 K3) C(K2 K4)
     // --> check subdecays in ntuple
@@ -1686,9 +1683,6 @@ StatusCode DecayChainNTuple::WriteNTuple(std::vector<Particle*>& mothervec) {
       if(mclink) verbose() << "Direct linked MC ID: " << mclink->particleID().pid() << " and p: " << mclink->momentum() << endreq;
       else verbose() << "No direct link MC" << endreq;
       
-      // Just for the case with association but not from signal
-      if(!isSig) mclink = 0;
-
       debug() << "Is the particle signal (1: yes, 0: false)? ==> " << isSig << endreq;
 
 #endif
