@@ -1,4 +1,4 @@
-// $Id: EvtDecayAlg.cpp,v 1.2 2005-06-24 16:32:47 gcorti Exp $
+// $Id: EvtDecayAlg.cpp,v 1.3 2005-10-03 09:40:09 robbep Exp $
 
 // include files
 // This class
@@ -64,9 +64,9 @@ StatusCode EvtDecayAlg::execute() {
       // copy iterator in another iterator to sort it
       GenParticles theHepMCVector ;
       HepMC::GenEvent * pEvt = (*it) -> pGenEvt() ;
-      HepMCUtils::SortHepMCVector( theHepMCVector , pEvt -> particles_size() ,
-                                   pEvt -> particles_begin() , 
-                                   pEvt -> particles_end  () ) ;
+      HepMCUtils::SortHepMC( theHepMCVector , pEvt -> particles_size() ,
+                             pEvt -> particles_begin() , 
+                             pEvt -> particles_end  () ) ;
       
       GenParticles::iterator itp ;
       for( itp = theHepMCVector.begin() ; itp != theHepMCVector.end() ; 
@@ -219,10 +219,9 @@ StatusCode EvtDecayAlg::boostTree( HepMC::GenParticle * theMother ,
     // copy iterator in another iterator to sort it
     GenParticles theHepMCVector ;
     HepMC::GenVertex * sVertex = theSignal->end_vertex() ;
-    HepMCUtils::SortHepMCVector( theHepMCVector , 
-                                 sVertex -> particles_out_size()  , 
-                                 sVertex->particles_begin( HepMC::children ) ,
-                                 sVertex->particles_end  ( HepMC::children ) );
+    HepMCUtils::SortHepMC( theHepMCVector , sVertex -> particles_out_size()  , 
+                           sVertex->particles_begin( HepMC::children ) ,
+                           sVertex->particles_end  ( HepMC::children ) );
 
     GenParticles::iterator child ;
     for ( child = theHepMCVector.begin( ) ; child != theHepMCVector.end( ) ; 
@@ -320,10 +319,9 @@ StatusCode EvtDecayAlg::fillHepMCEvent( HepMC::GenEvent    * theEvent ,
 
     // copy iterator in another iterator to sort it
     GenParticles theHepMCVector ;
-    HepMCUtils::SortHepMCVector( theHepMCVector ,
-                                 oVertex->particles_out_size() ,
-                                 oVertex->particles_begin( HepMC::children ),
-                                 oVertex->particles_end  ( HepMC::children ));
+    HepMCUtils::SortHepMC( theHepMCVector , oVertex->particles_out_size() ,
+                           oVertex->particles_begin( HepMC::children ),
+                           oVertex->particles_end  ( HepMC::children ));
     
     GenParticles::iterator child ;
     for (child = theHepMCVector.begin( ) ; child != theHepMCVector.end( ) ; 
