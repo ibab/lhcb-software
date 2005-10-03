@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.8 2005-10-03 10:35:29 robbep Exp $
+! $Id: release.notes,v 1.9 2005-10-03 12:09:34 robbep Exp $
 ! Package     : Gen/LbPythia
 ! Responsible : 
 
@@ -6,6 +6,7 @@
  - Pythia.h : new utility class to interface Pythia FORTRAN functions.
  - PythiaProduction: Production tool interfacing Pythia.
  - PythiaAlgorithm : use new HepMC sort function.
+ - WZPythiaAlg : add algorithms to generate W and Z events.
 
 ! ========================= LbPythia v1r2 ============================
 ! 2005-08-22 - Florence RANJARD
