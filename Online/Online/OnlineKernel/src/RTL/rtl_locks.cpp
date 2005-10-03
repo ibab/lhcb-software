@@ -2,6 +2,15 @@
 #include <memory>
 #include <fcntl.h>
 
+
+extern "C" int lib_rtl_lock_value(lib_rtl_lock_t handle, int* value)   {
+  if ( handle ) {
+    int sc = sem_getvalue(handle->handle, value);
+    return sc==0 ? 1 : 0;
+  }
+  return 0;
+}
+
 int lib_rtl_create_lock(const char* mutex_name, lib_rtl_lock_t* handle)   {
   std::auto_ptr<rtl_lock> h(new rtl_lock); 
   ::memset(h->name,0,sizeof(h->name));
@@ -9,6 +18,7 @@ int lib_rtl_create_lock(const char* mutex_name, lib_rtl_lock_t* handle)   {
     ::sprintf(h->name,"/%s",mutex_name);
     h->name[sizeof(h->name)-1] = 0;
   }
+  h->held = 0;
 #ifdef VMS
   int iosb[2];
   char mutexName[128] = "";
@@ -45,8 +55,14 @@ int lib_rtl_create_lock(const char* mutex_name, lib_rtl_lock_t* handle)   {
   }
   return status;
 #elif defined(USE_PTHREADS)
-  h->handle = h->name[0] ? ::sem_open(h->name, O_CREAT, 0644, 1) : &h->handle2;
-  int sc = ::sem_init(h->handle, h->name[0] ? 0 : 1, 1);     
+  int sc = 0;
+  h->handle = h->name[0] ? ::sem_open(h->name, O_CREAT|O_EXCL, 0644, 1) : &h->handle2;
+  if ( h->handle ) {
+    sc = ::sem_init(h->handle, h->name[0] ? 0 : 1, 1);
+  }
+  else if ( h->name[0] ) {
+    h->handle = ::sem_open(h->name, O_CREAT, 0644, 1);
+  }
   if ( sc != 0 )  {
     h->handle = 0;
   }
@@ -101,13 +117,22 @@ int lib_rtl_cancel_lock(lib_rtl_lock_t h) {
 #ifdef VMS
     int status = sys$deq (h,0,3,LCK$M_CANCEL) ;
     if (!lib_rtl_is_success(status))  {
-      ::printf("error in cancelling lock %s. Status %d\n",h->name, status);
+      ::printf("Error in cancelling lock %s. Status %d\n",h->name, status);
     }
     kutil_enable_kill();
     return status;
 #elif defined(USE_PTHREADS)
-    int status = ::sem_post(h->handle);
-    return status==0 ? 1 : 0;
+    int val;
+    lib_rtl_lock_value(h, &val);
+    if ( val == 0 ) {
+      int status = ::sem_post(h->handle);
+      h->held = 0;
+      return status==0 ? 1 : 0;
+    }
+    else {
+      ::printf("Cannot cancel lock [%s]. Semaphore count is:%d\n",h->name, val);
+    }
+    return 0;
 #elif defined(_WIN32)
     return 1;
 #endif
@@ -137,6 +162,13 @@ int lib_rtl_lock(lib_rtl_lock_t h) {
     return status;
 #elif defined(USE_PTHREADS)
     int sc = ::sem_wait(h->handle);
+    if ( sc != 0 ) {
+      int val;
+      lib_rtl_lock_value(h, &val);
+      if ( val != 0 ) {
+	printf("Lock: Bad lock count [%s]:%d Held:%d\n",h->name,val,h->held);
+      }
+    }
     if ( sc != 0 )
 #elif defined(_WIN32)
     DWORD sc = WAIT_TIMEOUT;
@@ -155,6 +187,7 @@ int lib_rtl_lock(lib_rtl_lock_t h) {
     {
       return lib_rtl_signal_message(LIB_RTL_OS,"Error locking semaphore [%s]: %08X",h->name,h->handle);
     }
+    h->held = 1;
     return 1;
   }
   return lib_rtl_signal_message(LIB_RTL_DEFAULT,"Error in locking semaphore [INVALID MUTEX].");
@@ -176,8 +209,18 @@ int lib_rtl_unlock(lib_rtl_lock_t h) {
     errno = status;
     kutil_enable_kill();
 #elif defined(USE_PTHREADS)
-    if ( ::sem_post(h->handle) == 0 )   {
-      return 1;
+    int val;
+    lib_rtl_lock_value(h, &val);
+    if ( val == 0 ) {
+      if ( ::sem_post(h->handle) == 0 )   {
+	h->held = 0;
+	return 1;
+      }
+      return lib_rtl_signal_message(LIB_RTL_OS,"Error in unlocking semaphore [%s] %08X Held:%d",
+				    h->name,h->handle,h->held);
+    }
+    else {
+      printf("Unlock: Bad lock count [%s]:%d\n",h->name,val);
     }
 #elif defined(_WIN32)
     if ( ::ReleaseMutex(h->handle) )    {

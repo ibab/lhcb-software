@@ -152,6 +152,7 @@ struct CONTROL  {
   int last_bit;		/* last bit on the bipmap	  */
   int bm_size;		/* size of bit map in bytes	  */
   int last_alloc;	/* Byte Offset of last allocation */
+  int spare0;
   int spare1;
 };
 

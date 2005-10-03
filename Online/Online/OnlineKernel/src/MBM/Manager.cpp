@@ -34,11 +34,11 @@ MBM::Manager::~Manager()  {
 void MBM::Manager::setup(const char* id)  {
   if ( id ) bm_id = (char*)id;
   strcpy(m_bm->bm_name,bm_id);
-  strcat(strcpy(ctrl_mod,"bm_ctrl_"),bm_id);
-  strcat(strcpy(user_mod,"bm_user_"),bm_id);
-  strcat(strcpy(event_mod,"bm_event_"),bm_id);
+  strcat(strcpy(ctrl_mod,  "bm_ctrl_"),bm_id);
+  strcat(strcpy(user_mod,  "bm_user_"),bm_id);
+  strcat(strcpy(event_mod, "bm_event_"),bm_id);
   strcat(strcpy(bitmap_mod,"bm_bitmap_"),bm_id);
-  strcat(strcpy(buff_mod,"bm_buffer_"),bm_id);
+  strcat(strcpy(buff_mod,  "bm_buffer_"),bm_id);
 }
 
 void MBM::Manager::getOptions(int argc, char** argv)    {

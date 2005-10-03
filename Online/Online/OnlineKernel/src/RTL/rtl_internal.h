@@ -15,11 +15,13 @@
     sem_t* handle;
     sem_t  handle2;
     char   name[32];
+    int    held;
   };
   struct rtl_event  {
     sem_t* handle;
     sem_t  handle2;
     char  name[32];
+    int    held;
   };
 
 #elif defined(_WIN32)
@@ -30,10 +32,12 @@
   struct rtl_lock  {
     HANDLE handle;
     char   name[32];
+    int    held;
   };
   struct rtl_event  {
     HANDLE handle;
     char   name[32];
+    int    held;
   };
   extern "C" __declspec(dllimport) BOOL  __stdcall CancelWaitableTimer(void*);
   extern "C" __declspec(dllimport) void* __stdcall CreateWaitableTimerA(void*, DWORD, void*);
