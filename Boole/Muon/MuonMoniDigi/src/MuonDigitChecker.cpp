@@ -14,12 +14,9 @@
 
 // For Muons
 #include "MuonDet/MuonBasicGeometry.h"
-#include "MuonTools/IMuonGetInfoTool.h"  
-#include "MuonKernel/MuonTile.h"
 
 //From event
 #include "Event/EventHeader.h"
-#include "Event/MCHit.h"   
 #include "Event/MCMuonHit.h"   
 #include "Event/MCMuonDigit.h"   
 #include "Event/MuonDigit.h"
@@ -409,6 +406,6 @@ StatusCode MuonDigitChecker::finalize() {
     }
   }
   
-
-  return StatusCode::SUCCESS;
+  // Execute the base class finalize
+  return GaudiTupleAlg::finalize();
 }
