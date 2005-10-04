@@ -90,7 +90,7 @@ int lib_rtl_wait_for_event(lib_rtl_event_t h)    {
   return 0;
 }
 
-long lib_rtl_wait_event_a_call(void* param)  {
+int lib_rtl_wait_event_a_call(void* param)  {
   lib_rtl_action* pars = (lib_rtl_action*)param;
   while(1)  {
     lib_rtl_clear_event(pars->flag);
@@ -108,8 +108,8 @@ int lib_rtl_wait_for_event_a(lib_rtl_event_t flag, lib_rtl_thread_routine_t acti
   if ( waitEventThreads().find(flag) == waitEventThreads().end() )  {
     lib_rtl_action* act = new lib_rtl_action;
     act->action = action;
-    act->param = param;
-    act->flag = flag;
+    act->param  = param;
+    act->flag   = flag;
     lib_rtl_thread_t thread;
     sc = lib_rtl_start_thread(lib_rtl_wait_event_a_call, act, &thread);
     if ( !lib_rtl_is_success(sc) )  {

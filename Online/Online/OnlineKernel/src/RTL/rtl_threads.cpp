@@ -79,21 +79,3 @@ int lib_rtl_suspend_thread(lib_rtl_thread_t handle)  {
   lib_rtl_signal_message(LIB_RTL_DEFAULT, "lib_rtl_suspend_thread failed [Invalid Handle]");
   return 0;
 }
-
-int lib_rtl_resume_thread(lib_rtl_thread_t handle)  {
-  if ( handle )  {
-#ifdef USE_PTHREADS
-    lib_rtl_signal_message(LIB_RTL_DEFAULT,"lib_rtl_resume_thread failed [No pthread call]");
-    return 0;
-#elif defined(_WIN32)
-    DWORD ret=::ResumeThread(handle->handle);
-    if ( ret == -1 )  {
-      lib_rtl_signal_message(LIB_RTL_OS,"lib_rtl_resume_thread failed");
-      return 0;
-    }
-    return 1;
-#endif
-  }
-  lib_rtl_signal_message(LIB_RTL_DEFAULT,"lib_rtl_resume_thread failed [Invalid Handle]");
-  return 0;
-}

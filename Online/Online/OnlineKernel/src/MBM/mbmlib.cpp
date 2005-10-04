@@ -155,9 +155,6 @@ int mbm_error()  {
 #undef MBM_ERROR
 #define  MBM_ERROR mbm_error();
 
-static EXHDEF exh_block;
-static int exit_status;
-
 using namespace MBM;
 
 BMDESCRIPT *mbm_include (const char* bm_name, const char* name, int partid) {
@@ -270,7 +267,6 @@ BMDESCRIPT *mbm_include (const char* bm_name, const char* name, int partid) {
   us->get_asts_run  = 0;	
 
   bm->ctrl->i_users++;
-  reference_count++;
 
   // Activate this user
   sprintf(us->wes_flag, "bm_%s_WES_%d", bm_name, lib_rtl_pid());
@@ -285,15 +281,13 @@ BMDESCRIPT *mbm_include (const char* bm_name, const char* name, int partid) {
   lib_rtl_create_event(us->weva_flag, &bm->WEVA_event_flag);
 
   insqhi (bm.get(), desc_head);
-  if (exh_block.exit_param == 0)  {
-    exh_block.exit_handler  = _mbm_exit;
-    exh_block.exit_param    = (void*)0;
-    exh_block.exit_status   = &exit_status;
-    lib_rtl_declare_exit (&exh_block);
+  if (reference_count == 0)  {
+    lib_rtl_declare_exit (_mbm_shutdown, 0);
   }
   lib_rtl_declare_rundown(_mbm_shutdown,0);
   errno = 0;
   _mbm_unlock_tables(bm.get());
+  reference_count++;
   return bm.release();
 }
 
@@ -311,7 +305,7 @@ int mbm_exclude (BMDESCRIPT *bm)  {
     lib_rtl_delete_event(bm->WSPA_event_flag);
     lib_rtl_delete_event(bm->WEVA_event_flag);
     lib_rtl_remove_rundown(_mbm_shutdown,0);
-    lib_rtl_remove_exit (&exh_block);
+    lib_rtl_remove_exit (_mbm_shutdown, 0);
     _mbm_uclean(bm);
     _mbm_unmap_section(bm->buff_add);
     _mbm_unmap_section(bm->bitm_add);
@@ -1084,11 +1078,6 @@ int _mbm_req_upd (BMDESCRIPT *bm, USER *us)   {
 }
 
 /// clean-up this user in all buffers
-int _mbm_exit(void* )    {
-  _mbm_shutdown(0);
-  return MBM_NORMAL;
-}
-
 int _mbm_shutdown (void* /* param */) {
   qentry_t *q, *bmq = desc_head;
   if (bmq == 0)  {
@@ -1351,7 +1340,7 @@ wait:
   _mbm_return_err (MBM_ILL_CONS);
 }
 
-long _mbm_wait_space_a(void* param)  {
+int _mbm_wait_space_a(void* param)  {
   BMDESCRIPT* bm = (BMDESCRIPT*)param;
   while(1)  {
     lib_rtl_clear_event(bm->WSPA_event_flag);

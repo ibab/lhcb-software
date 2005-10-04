@@ -6,6 +6,23 @@
 #include <cstdarg>
 #include <fcntl.h>
 
+namespace RTL  {
+  struct EXHDEF   {
+    int   flink;
+    int  (*exit_handler)(void*);
+    void *exit_param;
+    int  *exit_status;
+  };
+  struct ExitHandler : public std::vector<EXHDEF>  {
+    ExitHandler();
+    ~ExitHandler();
+    static void execute();
+    static std::vector<EXHDEF>& exitHandlers();
+  };
+}
+
+static int exit_status;
+
 #ifdef USE_PTHREADS
 #include <unistd.h>
 #define ERROR_SUCCESS 0
@@ -55,9 +72,11 @@ const char* errorString()  {
 
 RTL::ExitHandler::ExitHandler() {
 }
+
 RTL::ExitHandler::~ExitHandler() {
   execute();
 }
+
 void RTL::ExitHandler::execute()  {
   static bool executing = false;
   if ( !executing )  {
@@ -73,7 +92,8 @@ void RTL::ExitHandler::execute()  {
     executing = false;
   }
 }
-std::vector<EXHDEF>& RTL::ExitHandler::exitHandlers() {
+
+std::vector<RTL::EXHDEF>& RTL::ExitHandler::exitHandlers() {
   static ExitHandler s_exitHandlers;
   return s_exitHandlers;
 }
@@ -86,27 +106,28 @@ int lib_rtl_declare_rundown(lib_rtl_rundown_handler_t,void*)   {
   return 1;
 }
 
-int lib_rtl_declare_exit(EXHDEF* handler_block) {
-#ifdef _VMS
-  return sys$dclexh (handler_block);
-#elif defined(_WIN32) || defined(linux)
+int lib_rtl_declare_exit(int (*hdlr)(void*), void* param)  {
+#if defined(_WIN32) || defined(linux)
   static bool first = true;
   if ( first )  {
     first = false;
     atexit(RTL::ExitHandler::execute);
   }
-  RTL::ExitHandler::exitHandlers().push_back(*handler_block);
+  RTL::EXHDEF h;
+  h.exit_handler = hdlr;
+  h.exit_param   = param;
+  h.exit_status  = &exit_status;
+  RTL::ExitHandler::exitHandlers().push_back(h);
   return 1;
 #endif
 }
 
-int lib_rtl_remove_exit(EXHDEF* handler_block) {
-#ifdef _VMS
-#elif defined(_WIN32) || defined(linux)
+int lib_rtl_remove_exit(int (*hdlr)(void*), void* param) {
+#if defined(_WIN32) || defined(linux)
   RTL::ExitHandler::iterator i=RTL::ExitHandler::exitHandlers().begin();
   RTL::ExitHandler::iterator j=RTL::ExitHandler::exitHandlers().end();
   for(; i!=j; ++i)  {
-    if ( (*i).exit_handler == handler_block->exit_handler )  {
+    if ( (*i).exit_handler == hdlr && (*i).exit_param == param )  {
       RTL::ExitHandler::exitHandlers().erase(i);
       return 1;
     }

@@ -61,19 +61,7 @@ const char* errorString();
 #include "RTL/rtl.h"
   struct lib_rtl_action  {
   lib_rtl_event_t flag;
-  long (*action)(void*);
+  int (*action)(void*);
   void* param;
 };
-
-
-#include <vector>
-namespace RTL  {
-  struct ExitHandler : public std::vector<EXHDEF>  {
-    ExitHandler();
-    ~ExitHandler();
-    static void execute();
-    static std::vector<EXHDEF>& exitHandlers();
-  };
-}
-
 #endif // _RTL_INTERNAL_H

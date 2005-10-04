@@ -9,8 +9,6 @@
 #include <cerrno>
 
 enum Booleans { FALSE, TRUE };
-static EXHDEF wt_exh_block;
-static int    wt_exit_status;
 
 /*----------------------------DEFINITIONS-------------------------------*/
 #define WT_PATTERN 0xfeadbabe
@@ -70,18 +68,15 @@ int wtc_exit(void*)  {
 /*----------------------------------------------------------------------*/
 int wtc_init()    {
   if ( !inited )  {
-    int status = lib_rtl_create_lock(0,&wt_mutex_id);
+    int status = lib_rtl_create_lock(0, &wt_mutex_id);
     if ( lib_rtl_is_success(status) )  {
-      if ( !inited ) inited = TRUE;
-      if (wt_exh_block.exit_param == 0)  {
-        wt_exh_block.exit_handler  = wtc_exit;
-        wt_exh_block.exit_param    = &wt_EventFlag;
-        wt_exh_block.exit_status   = &wt_exit_status;
-        lib_rtl_declare_exit (&wt_exh_block);
+      if ( !inited ) {
+        inited = TRUE;
+        lib_rtl_declare_exit(wtc_exit, &wt_EventFlag);
       }
       WTLock lock(wt_mutex_id);
       if ( lock )  {
-        int status = lib_rtl_create_event(0,&wt_EventFlag);
+        int status = lib_rtl_create_event(0, &wt_EventFlag);
         if ( !lib_rtl_is_success(status) )  {
           return WT_NOEF;
         }

@@ -2,11 +2,14 @@
 #include <memory>
 #include <fcntl.h>
 
-
 extern "C" int lib_rtl_lock_value(lib_rtl_lock_t handle, int* value)   {
   if ( handle ) {
-    int sc = sem_getvalue(handle->handle, value);
+#if defined(USE_PTHREADS)
+    int sc = ::sem_getvalue(handle->handle, value);
     return sc==0 ? 1 : 0;
+#elif defined(_WIN32)
+    return 0;
+#endif
   }
   return 0;
 }
@@ -19,42 +22,7 @@ int lib_rtl_create_lock(const char* mutex_name, lib_rtl_lock_t* handle)   {
     h->name[sizeof(h->name)-1] = 0;
   }
   h->held = 0;
-#ifdef VMS
-  int iosb[2];
-  char mutexName[128] = "";
-  TABNAM_LIST name[2];
-  $DESCRIPTOR(ltab,"LNM$SYSTEM");
-  $DESCRIPTOR(lnam,"SYS$NODE");
-  $DESCRIPTOR(lonam,mutexName);
-  char eqname[32];
-  int eqlen = 0;
-  name[0].len     = sizeof(eqname);
-  name[0].code    = LNM$_STRING;
-  name[0].addr    = eqname;
-  name[0].retaddr = &eqlen;
-  name[1].len     = 0;
-  name[1].code    = 0;
-  int status = sys$trnlnm (0, &ltab, &lnam,0, &name) ;
-  eqname[eqlen]=0;
-  strcpy(mutexName, eqname);
-  strcat(mutexName,mutex_name);
-  DESCRIPTOR(lonam,mutexName);
-  str$upcase(&lonam,&lonam);
-  status  = sys$enqw (0, LCK$K_NLMODE, iosb, LCK$M_SYSTEM+LCK$M_NODLCKWT,&lonam,0,0,0,0,3,0);
-  if (lib_rtl_is_success(status))    {
-    status = iosb[0];
-    if (iosb[0] & 1)      {
-      *handle = lib_rtl_handle_t(iosb[1]);
-    }
-    else      {
-      ::printf("error in creating lock:%s. IOSB %d\n",mutex_name,status);
-    }
-  }
-  else    {
-    ::printf("error in creating lock:%s. Status %d\n",mutex_name,status);
-  }
-  return status;
-#elif defined(USE_PTHREADS)
+#if defined(USE_PTHREADS)
   int sc = 0;
   h->handle = h->name[0] ? ::sem_open(h->name, O_CREAT|O_EXCL, 0644, 1) : &h->handle2;
   if ( h->handle ) {
@@ -85,14 +53,7 @@ int lib_rtl_create_lock(const char* mutex_name, lib_rtl_lock_t* handle)   {
 int lib_rtl_delete_lock(lib_rtl_lock_t handle)   {
   if ( handle )  {
     std::auto_ptr<rtl_lock> h(handle);
-#ifdef VMS
-    int status = sys$deq(h->handle,0,3,0) ;
-    if (!(lib_rtl_is_success(status)))  {
-      ::printf("error in deleting lock %s. Status %d\n",mutex_name,status);
-    }
-    kutil_enable_kill();
-    return status;
-#elif defined(USE_PTHREADS)
+#if defined(USE_PTHREADS)
     int status;
     if ( h->name[0] )  {
       status = ::sem_close(h->handle);
@@ -114,14 +75,7 @@ int lib_rtl_delete_lock(lib_rtl_lock_t handle)   {
 
 int lib_rtl_cancel_lock(lib_rtl_lock_t h) {
   if ( h )  {
-#ifdef VMS
-    int status = sys$deq (h,0,3,LCK$M_CANCEL) ;
-    if (!lib_rtl_is_success(status))  {
-      ::printf("Error in cancelling lock %s. Status %d\n",h->name, status);
-    }
-    kutil_enable_kill();
-    return status;
-#elif defined(USE_PTHREADS)
+#if defined(USE_PTHREADS)
     int val;
     lib_rtl_lock_value(h, &val);
     if ( val == 0 ) {
@@ -142,25 +96,7 @@ int lib_rtl_cancel_lock(lib_rtl_lock_t h) {
 
 int lib_rtl_lock(lib_rtl_lock_t h) {
   if ( h )  {
-#ifdef VMS
-    int iosb[2] = {0,h};
-    int status = sys$enqw(0,LCK$K_EXMODE,iosb,LCK$M_CONVERT+LCK$M_NODLCKWT+LCK$M_SYNCSTS,0,0,0,0,0,3,0);
-    if (lib_rtl_is_success(status))  {
-      status = iosb[0];
-      if (lib_rtl_is_success(status))    {
-        kutil_disable_kill();
-        /*	    kutil_boost_prio(lock_prio, &def_prio);*/
-        return 1;
-      }
-      else    {
-        ::printf("error in locking tables. IOSB %d\n",status);
-      }
-    }
-    else  {
-      ::printf("error in locking tables. Status %d\n",status);
-    }
-    return status;
-#elif defined(USE_PTHREADS)
+#if defined(USE_PTHREADS)
     int sc = ::sem_wait(h->handle);
     if ( sc != 0 ) {
       int val;
@@ -195,20 +131,7 @@ int lib_rtl_lock(lib_rtl_lock_t h) {
 
 int lib_rtl_unlock(lib_rtl_lock_t h) {
   if ( h )  {
-#ifdef VMS
-    int iosb[2] = {0,h};
-    int status = sys$enqw (0,LCK$K_NLMODE,iosb,LCK$M_CONVERT+LCK$M_NODLCKWT+LCK$M_SYNCSTS,0,0,0,0,0,3,0);
-    if (lib_rtl_is_success(status))  {
-      status = iosb[0];
-      if (lib_rtl_is_success(status))    {
-        kutil_enable_kill();
-        /*	    kutil_boost_prio(def_prio, &def_prio);*/
-        return 1;
-      }
-    }
-    errno = status;
-    kutil_enable_kill();
-#elif defined(USE_PTHREADS)
+#if defined(USE_PTHREADS)
     int val;
     lib_rtl_lock_value(h, &val);
     if ( val == 0 ) {
