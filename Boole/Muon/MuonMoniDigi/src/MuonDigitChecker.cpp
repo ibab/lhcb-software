@@ -67,10 +67,10 @@ StatusCode MuonDigitChecker::initialize() {
   m_partition=basegeometry.getPartitions();
 
   for(int ix=0; ix<6; ix++) {
-    if(ix == 0 && m_hitMonitor) {
+    if(ix <4 && m_hitMonitor) {
       for(int i=0; i<5; i++) {
 	for(int j=0; j<4; j++) {
-	  nhit[i][j] = cnt[i][j] = 0;
+	  nhit[i][j][ix] = cnt[i][j][ix] = 0;
 	}
       }
     }
@@ -89,12 +89,12 @@ StatusCode MuonDigitChecker::initialize() {
 StatusCode MuonDigitChecker::execute() {
 
   const EventHeader* evt = get<EventHeader>(EventHeaderLocation::Default);
-  int tnhit[5][4];    int tnDhit[5][4][6];  
+  int tnhit[5][4][4];    int tnDhit[5][4][6];  
   for(int ix=0; ix<6; ix++) {
-    if(ix == 0 && m_hitMonitor) {
+    if(ix <4 && m_hitMonitor) {
       for(int i=0; i<5; i++) {
 	for(int j=0; j<4; j++) {
-	  tnhit[i][j] = 0;
+	  tnhit[i][j][ix] = 0;
 	}
       }
     }
@@ -140,7 +140,7 @@ StatusCode MuonDigitChecker::execute() {
 	std::string TESContainer[4]=
 	  {"Hits","ChamberNoiseHits","FlatSpilloverHits","BackgroundHits"};
 
-	sprintf(subpath,"%s %d %s %d %s","/MC/Muon/",station,"/R",region,"/");
+	sprintf(subpath,"%s%d%s%d%s","/MC/Muon/M",station+1,"/R",region+1,"/");
 	std::string path="/Event"+spill[0]+subpath+TESContainer[container];
 
       
@@ -213,16 +213,19 @@ StatusCode MuonDigitChecker::execute() {
 	      m_mom.push_back(0);
 	    }          
 
-	    tnhit[station][region]++;
+	    tnhit[station][region][container]++;
 	  } 
 	}
       }
     }
-    for(int r=0; r<4; r++) {
-      for(int s=0; s<5; s++) {
-        //Looking at mean number of hits
-        cnt[s][r]++;
-        nhit[s][r]+= tnhit[s][r];
+
+    for(int ic=0; ic<4; ic++) {
+      for(int r=0; r<4; r++) {
+	for(int s=0; s<5; s++) {
+	  //Looking at mean number of hits
+	  cnt[s][r][ic]++;
+	  nhit[s][r][ic]+= tnhit[s][r][ic];
+	}  
       }  
     }    
   }    
@@ -355,21 +358,31 @@ StatusCode MuonDigitChecker::finalize() {
   info() << "-----------------------------------------------------------------"
 	 << endmsg;
   if(fullDetail() == true && m_hitMonitor) {
+    std::string TESn[4]=
+      {"Hits","ChamberNoiseHits","FlatSpilloverHits","BackgroundHits"};
+
     info() << "       Hit Information     " << endmsg;
-    info()<<" M1      M2      M3      M4      M5 "<<endmsg;
-    for(int r=0; r<4; r++) {
-      for(int s=0; s<5; s++) {
-        if(cnt[s][r])  {
-          info()<<format("%5.3lf  ",(double)nhit[s][r]/cnt[s][r]);
-        } else {
-          info()<<"0.000  ";
-        }
+
+    for(int c=0; c<4; c++) {
+      std::string myTes = TESn[c];
+      info() << "-----------------------------------------------------------------" << endmsg;
+      info() << "----- TES Container: "<< myTes << "------------------------" << endmsg;
+      info() << "-----------------------------------------------------------------" << endmsg;
+      info()<<" M1      M2      M3      M4      M5 "<<endmsg;
+      for(int r=0; r<4; r++) {
+	for(int s=0; s<5; s++) {
+	  if(cnt[s][r][c])  {
+	    info()<<format("%5.3lf  ",(double)nhit[s][r][c]/cnt[s][r][c]);
+	  } else {
+	    info()<<"0.000  ";
+	  }
+	}
+	info()<<" R"<<r+1<<endmsg;
       }
-      info()<<" R"<<r+1<<endmsg;
     }
-    info() << "-----------------------------------------------------------------" << endmsg;
   }
 
+  info() << "-----------------------------------------------------------------" << endmsg;
   info() << "    Digi Information     " << endmsg;
   info() << "-----------------------------------------------------------------" << endmsg;
 

@@ -1,6 +1,12 @@
 Package         : MuonMoniDigi
 Package manager : A Sarti
 
+!======================= MuonMoniDigi v1r0 2005-10-04 ========================
+! 2005-10-04 - A. Sarti
+ - src/MuonDigitChecker.{cpp,h}
+	- Fixed bug in TES string for hit monitoring
+	- Added the Hit monitoring as a function of TES container
+
 !======================= MuonMoniDigi v1r0 2005-09-30 ========================
 ! 2005-09-30 - A. Sarti
  - Cleanup suggested by M.Cattaneo

@@ -1,4 +1,4 @@
-// $Id: MuonDigitChecker.h,v 1.5 2005-09-30 15:52:45 cattanem Exp $
+// $Id: MuonDigitChecker.h,v 1.6 2005-10-04 17:02:04 asarti Exp $
 #ifndef MuonDigitChecker_H 
 #define MuonDigitChecker_H 1
 
@@ -34,7 +34,7 @@ protected:
 private:
   IMuonTileXYZTool* m_MuonTileXYZ ;
 
-  int nhit[5][4],cnt[5][4];
+  int nhit[5][4][4],cnt[5][4][4];
   int nDhit[5][4][6],Dcnt[5][4][6];
 
   bool m_hitMonitor;
