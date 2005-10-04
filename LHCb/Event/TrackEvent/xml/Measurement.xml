@@ -57,6 +57,16 @@
         desc    = 'the measurement error'
         access  = 'PROTECTED' />
 
+      <method
+        type    = 'double'
+        name    = 'errMeasure2'
+        desc    = 'Retrieve const  the measurement error squared'
+        const   = 'TRUE'>
+        <code>
+  return m_errMeasure * m_errMeasure;
+        </code>
+      </method>
+
       <attribute
         type    = 'LHCbID'
         name    = 'lhcbID'
@@ -64,19 +74,9 @@
         access  = 'PROTECTED' />
 
       <method
-        type    = 'double'
-        name    = 'errMeasure2'
-        desc    = 'return the error squared'
-        const   = 'TRUE'>
-        <code>
-  return m_errMeasure*m_errMeasure;
-        </code>
-      </method>
-
-      <method
         type    = 'unsigned int'
         name    = 'type'
-        desc    = 'Retrieve measurement type'
+        desc    = 'Retrieve the measurement type'
         const   = 'TRUE'>
         <code>
   return (Measurement::Type)((m_mtype &amp; typeMask) &gt;&gt; typeBits);
@@ -93,7 +93,7 @@
       <method
         type    = 'Measurement*'
         name    = 'clone'
-        desc    = 'Clone the Measurement'
+        desc    = 'Clone the measurement'
         const   = 'TRUE'
         virtual = 'TRUE'>
         <code>
@@ -103,7 +103,7 @@
 
       <method
         name    = 'update'
-        desc    = 'Update Measurement paremeters'
+        desc    = 'Update measurement parameters'
         argList = 'const HepVector refVector'
         virtual = 'TRUE'>
         <code>

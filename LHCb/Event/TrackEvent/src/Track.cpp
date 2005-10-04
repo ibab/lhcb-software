@@ -1,4 +1,4 @@
-// $Id: Track.cpp,v 1.15 2005-10-03 15:14:10 hernando Exp $ // Include files
+// $Id: Track.cpp,v 1.16 2005-10-04 14:09:32 erodrigu Exp $ // Include files
 
 // local
 #include "Event/Track.h"
@@ -271,6 +271,8 @@ void Track::addToStates(const State& state)
 }
 
 //=============================================================================
+// 
+//=============================================================================
 void Track::addToMeasurements(const Measurement& meas) 
 {
   const LHCbID& id = meas.lhcbID();
@@ -285,8 +287,10 @@ void Track::addToMeasurements(const Measurement& meas)
                      TrackFunctor::orderByZ<Measurement>(order));
   m_measurements.insert(i,local);
 }
-//=============================================================================
 
+//=============================================================================
+// 
+//=============================================================================
 void Track::removeFromMeasurements(Measurement* meas) 
 {
   const LHCbID& id = meas->lhcbID();
@@ -294,12 +298,20 @@ void Track::removeFromMeasurements(Measurement* meas)
   TrackFunctor::deleteFromList<Measurement>(m_measurements,meas);
 }
 
+//=============================================================================
+// 
+//=============================================================================
 void Track::removeFromNodes(Node* node) 
 {
   TrackFunctor::deleteFromList<Node>(m_nodes,node);
 }
 
+//=============================================================================
+// 
+//=============================================================================
 void Track::removeFromStates(State* state) 
 {
   TrackFunctor::deleteFromList<State>(m_states,state);
 }
+
+//=============================================================================

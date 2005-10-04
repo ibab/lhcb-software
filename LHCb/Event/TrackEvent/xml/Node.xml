@@ -76,7 +76,7 @@
         type    = 'double'
         name    = 'chi2'
         const   = 'TRUE'
-        desc    = 'Retrieve the local chi2 '>
+        desc    = 'Retrieve the local chi^2 '>
         <code>
   if (    (m_residual > TrackParameters::lowTolerance)
        &amp;&amp; (m_errResidual > TrackParameters::lowTolerance)
@@ -101,8 +101,8 @@
       <method
         type    = 'Measurement &amp;'
         name    = 'measurement'
-        const   = 'TRUE'
-        desc    = 'Retrieve the reference to the measurement'>
+        desc    = 'Retrieve const  the reference to the measurement'
+        const   = 'TRUE'>
         <code>
   return *m_measurement;
         </code>
@@ -120,8 +120,8 @@
       <method
         type    = 'State &amp;'
         name    = 'state'
-        const   = 'TRUE'
-        desc    = 'Retrieve the reference to the state'>
+        desc    = 'Retrieve const  the reference to the state'
+        const   = 'TRUE'>
         <code>
   return *m_state;
         </code>
@@ -155,9 +155,9 @@
 	type = 'double'
         name    = 'errResidual2'
 	const   = 'TRUE'
-        desc    = 'return the error squared of the residuals'>
+        desc    = 'Return the error on the residual squared'>
         <code>
-  return m_errResidual*m_errResidual;
+  return m_errResidual * m_errResidual;
         </code>
       </method>
 

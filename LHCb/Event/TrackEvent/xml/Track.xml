@@ -169,7 +169,7 @@
       <method
         type    = 'HepPoint3D'
         name    = 'position'
-        desc    = 'Retrieve the 3D-position vector of the state'
+        desc    = 'Retrieve the 3D-position vector at the first state'
         const   = 'TRUE'>
         <code>
    return firstState().position();
@@ -189,7 +189,7 @@
         type    = 'HepVector3D'
         name    = 'slopes'
         const   = 'TRUE'
-        desc    = 'Retrieve the slopes (Tx=dx/dz,Ty=dy/dz,1.) of the state'>
+        desc    = 'Retrieve the slopes (Tx=dx/dz,Ty=dy/dz,1.) and errors at the first state'>
         <code>
    return firstState().slopes();
         </code>
@@ -208,7 +208,7 @@
         type    = 'HepVector3D'
         name    = 'momentum'
         const   = 'TRUE'
-        desc    = 'Retrieve the momentum vector of the state'>
+        desc    = 'Retrieve the momentum vector at the first state'>
         <code>
    return firstState().momentum();
         </code>
@@ -246,7 +246,7 @@
       <method
         type    = 'State &amp;'
         name    = 'firstState'
-        desc    = 'Retrieve the the first state'
+        desc    = 'Retrieve the first state on the track'
         const   = 'TRUE'>
         <code>
   // check at least the &quot;first state&quot; exists
@@ -273,7 +273,7 @@
         type    = 'double'
         name    = 'chi2'
         const   = 'TRUE'
-        desc    = 'Retrieve the Chi^2 of the track'>
+        desc    = 'Retrieve the Chi^2 of the track (fit)'>
         <code>
   return ( m_chi2PerDoF * double(m_nDoF) );
         </code>
@@ -283,7 +283,7 @@
         type    = 'unsigned int'
         name    = 'nStates'
         const   = 'TRUE'
-        desc    = 'number of states on track'>
+        desc    = 'Retrieve the number of states on the track'>
         <code>
   return m_states.size();
         </code>
@@ -333,26 +333,26 @@
         type    = 'bool'
         name    = 'hasStateAt'
         argList = 'unsigned int location'
-        desc    = 'check the existence of a state at a certain predefined location. See State class.'
+        desc    = 'Check the existence of a state at a certain predefined location (see the Location enum in StateKeys.h)'
         const   = 'TRUE' />
 
       <method
         type    = 'State &amp;'
         name    = 'stateAt'
         argList = 'unsigned int location'
-        desc    = 'Retrieve the state at a certain predefined location. See State class.' />
+        desc    = 'Retrieve the state at a certain predefined location (see the Location enum in StateKeys.h)' />
 
       <method
         type    = 'const State &amp;'
         name    = 'stateAt'
         argList = 'unsigned int location'
-        desc    = 'Retrieve the const state at a certain predefined location. See State class.'
+        desc    = 'Retrieve the const state at a certain predefined location (see the Location enum in StateKeys.h)'
         const   = 'TRUE' />
 
       <method
         type    = 'unsigned int'
         name    = 'nMeasurements'
-        desc    = 'number of measurements on track'
+        desc    = 'Retrieve the number of measurements on the track'
         const   = 'TRUE'>
         <code>
   unsigned int n = m_measurements.size();
@@ -367,7 +367,7 @@
       type="unsigned int"  
       name="nMeasurements" 
       const="TRUE" 
-      desc="return the number of measurements fulfiling a condition/predicate on LHCbIDs">
+      desc="return the number of measurements fulfilling a condition/predicate on LHCbIDs">
       <arg type="Pred" name="pred"/>
       <code>  
    return std::count_if(m_meas.begin(),m_meas.end(),pred); 
@@ -378,7 +378,7 @@
 
       <method
         name    = 'addToMeasurements'
-        desc    = 'add a measurement to the list associated to the track'>
+        desc    = 'Add a measurement to the list associated to the track'>
         <arg type = 'const Measurement' name='meas' />
       </method>
 
@@ -390,7 +390,7 @@
 
       <method
         name    = 'addToNodes'
-        desc    = 'add a Node to the list of nodes (note: Track will take the ownership of this pointer!!)'>
+        desc    = 'Add a Node to the list of nodes (note: Track will take the ownership of this pointer!!)'>
         <arg type = 'Node*' name='node' />
         <code>
   m_nodes.push_back( node );
@@ -425,7 +425,7 @@
 
       <method
         name    = 'addToAncestors'
-        desc    = 'add a track to the list of ancestors of this track'>
+        desc    = 'Add a track to the list of ancestors of this track'>
         <arg type = 'const Track ' name='ancestor' />
         <code>
   m_ancestors.push_back( (Track*) &amp;ancestor );
@@ -470,7 +470,7 @@
         type    = 'bool'
         name    = 'checkType'
         argList = 'unsigned int value'
-        desc    = 'check the type of the track'
+        desc    = 'Check the type of the track (see the Types enum in TrackKeys.h)'
         const   = 'TRUE'>
         <code>
   return type() == value;
@@ -481,7 +481,7 @@
         type    = 'bool'
         name    = 'checkHistory'
         argList = 'unsigned int value'
-        desc    = 'check the history of the track'
+        desc    = 'Check the history of the track (see the History enum in TrackKeys.h)'
         const   = 'TRUE'>
         <code>
   return history() == value;
@@ -492,7 +492,7 @@
         type    = 'bool'
         name    = 'checkHistoryFit'
         argList = 'unsigned int value'
-        desc    = 'check the fit history of the track'
+        desc    = 'Check the fit history of the track (see the HistoryFit enum in TrackKeys.h)'
         const   = 'TRUE'>
         <code>
   return historyFit() == value;
@@ -502,7 +502,7 @@
       <method
         name    = 'setFlag'
         argList = 'unsigned int flag, bool ok'
-        desc    = 'Update the flag (see TrackKeys::Flags)'>
+        desc    = 'Update the flag (see the Flags enum in TrackKeys.h)'>
         <code>
   unsigned int val = (((unsigned int) flag) &lt;&lt; flagBits) &amp; flagMask;
   if (ok) m_flags |= val;
@@ -514,7 +514,7 @@
         type    = 'bool'
         name    = 'checkFlag'
         argList = 'unsigned int flag'
-        desc    = 'check the status of the flag'
+        desc    = 'Check the status of the flag (see the Flags enum in TrackKeys.h)'
         const   = 'TRUE'>
         <code>
   unsigned int val = ((unsigned int) flag &lt;&lt; flagBits);  
