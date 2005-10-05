@@ -1,4 +1,4 @@
-// $Id: CondDBAccessSvc.cpp,v 1.12 2005-09-18 16:08:39 marcocle Exp $
+// $Id: CondDBAccessSvc.cpp,v 1.13 2005-10-05 15:46:55 marcocle Exp $
 // Include files 
 #include <sstream>
 
@@ -517,7 +517,7 @@ StatusCode CondDBAccessSvc::tagFolder(const std::string &path, const std::string
       	sub_path += "/";
       }
       // discover child folders
-      std::vector<std::string> fldr_names = m_db->listFolders();
+      std::vector<std::string> fldr_names = m_db->listAllNodes();
       std::vector<std::string>::iterator i;
       for ( i = fldr_names.begin(); i != fldr_names.end(); ++i ){
         if ( *i != sub_path // avoid infinite recursion on folderset "/". TODO: refine
@@ -647,8 +647,7 @@ StatusCode CondDBAccessSvc::getChildNodes (const std::string &path, std::vector<
       if (database()->existsFolderSet(path)) {
         log << MSG::DEBUG << "FolderSet \"" << path  << "\" exists" << endmsg;
         
-        std::vector<std::string> fldr_names = database()->listFolders();
-        //std::vector<std::string> fldr_names = database()->listAllNodes();
+        std::vector<std::string> fldr_names = database()->listAllNodes();
         for ( std::vector<std::string>::iterator f = fldr_names.begin(); f != fldr_names.end(); ++f ) {
           log << MSG::DEBUG << *f << endmsg;
           if ( *f != path // if (*f == path) we match also the following conditions (which is not what we want)

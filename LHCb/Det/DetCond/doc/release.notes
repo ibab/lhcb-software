@@ -1,9 +1,12 @@
-# $Id: release.notes,v 1.53 2005-09-20 11:43:44 cattanem Exp $
+# $Id: release.notes,v 1.54 2005-10-05 15:46:55 marcocle Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Det/DetCond
 ! Responsible : Marco Clemencic
 ! Purpose     : Interface between LHCb and LGC/COOL project
 !-----------------------------------------------------------------------------
+
+! 2005-10-05 - Marco Clemencic
+ - Minimal update to follow API changes from COOL_1_1_0 to COOL_1_2_4
 
 ================= Det/DetCond v7r6 2005-09-19 ================================
 ! 2005-09-18 - Marco Clemencic
