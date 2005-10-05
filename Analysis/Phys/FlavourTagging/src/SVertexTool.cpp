@@ -1,4 +1,4 @@
-// $Id: SVertexTool.cpp,v 1.2 2005-07-04 15:40:09 pkoppenb Exp $
+// $Id: SVertexTool.cpp,v 1.3 2005-10-05 11:05:45 musy Exp $
 #include "SVertexTool.h"
 
 //-----------------------------------------------------------------------------
@@ -62,7 +62,8 @@ std::vector<Vertex> SVertexTool::buildVertex( const Vertex& RecVert,
   for ( jp = vtags.begin(); jp != vtags.end(); jp++ ) {
 
     //FIRST seed particle -----------------------------------
-    if( (*jp)->particleID().abspid()==13 ) continue;           //exclude muons
+    if( (*jp)->particleID().abspid()==13 
+	&& (*jp)->pt()/GeV >1.2 && (*jp)->p()/GeV >5.0 ) continue;//exclude mu
     sc = geom->calcImpactPar(**jp, RecVert, ipl, iperrl, ipVec, errMatrix);
     if( sc.isFailure() ) continue;
     if( iperrl > 1.0 ) continue;                                //preselection
@@ -83,7 +84,8 @@ std::vector<Vertex> SVertexTool::buildVertex( const Vertex& RecVert,
     //SECOND seed particle -----------------------------------
     for ( kp = (jp+1) ; kp != vtags.end(); kp++ ) {
 
-      if( (*kp)->particleID().abspid()==13 ) continue;
+      if( (*kp)->particleID().abspid()==13 
+	  && (*kp)->pt()/GeV >1.2 && (*kp)->p()/GeV >5.0 ) continue;
 
       sc = geom->calcImpactPar(**kp, RecVert, ips, iperrs, ipVec, errMatrix);
       if( sc.isFailure() ) continue;  
@@ -159,7 +161,8 @@ std::vector<Vertex> SVertexTool::buildVertex( const Vertex& RecVert,
       if( (*jpp) == p1 ) continue;
       if( (*jpp) == p2 ) continue;
       if( (*jpp)->p()/GeV < 2.0 ) continue;
-      if( (*jpp)->particleID().abspid()==13 ) continue;  //exclude muons
+      if( (*jpp)->particleID().abspid()==13 
+	  && (*jpp)->pt()/GeV >1.2 && (*jpp)->p()/GeV >5.0 ) continue;
 
       double ip, ipe;
       sc = geom->calcImpactPar(**jpp, RecVert, ip, ipe, ipVec, errMatrix);

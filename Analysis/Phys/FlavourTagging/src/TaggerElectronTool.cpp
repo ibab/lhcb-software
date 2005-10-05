@@ -101,9 +101,9 @@ Tagger TaggerElectronTool::tag( const Particle* AXB0,
 
     if(Emeas/P > m_EoverP || Emeas<0) {
       if(trtyp == 1) {
-        double veloch = m_veloCharge->calculate(*ipart);
-        debug() << "      veloch=" <<veloch << endreq;
-        if(veloch > m_VeloChMin && veloch < m_VeloChMax ) {
+	double veloch = m_veloCharge->calculate(*ipart);
+	debug() << "      veloch=" <<veloch << endreq;
+	if(veloch > m_VeloChMin && veloch < m_VeloChMax ) {
           if( Pt > ptmaxe ) { 
             iele = (*ipart);
             ptmaxe = Pt;

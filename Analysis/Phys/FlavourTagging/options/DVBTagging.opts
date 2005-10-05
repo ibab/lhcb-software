@@ -23,8 +23,11 @@ ChargedProtoPAlg.VeloTTTracks = true ;
 //#include "$B2HHROOT/options/DoTDRselBs2KK.opts"
 //BTagging.PhysDesktop.InputLocations = { "Phys/TDRselBs2KK" };
 
-#include "$BS2DSHROOT/options/DoTDRselBs2DsK.opts"
-BTagging.PhysDesktop.InputLocations = { "Phys/TDRselBs2DsK" };
+//#include "$BS2DSHROOT/options/DoTDRselBs2DsK.opts"
+//BTagging.PhysDesktop.InputLocations = { "Phys/TDRselBs2DsK" };
+
+#include "$BS2JPSIPHIROOT/options/DoTDRselBs2Jpsi2MuMu_Phi2KK.opts"
+BTagging.PhysDesktop.InputLocations = { "Phys/TDRselBs2Jpsi2MuMu_Phi2KK" };
 
 ///or Cheated Selection ----------------------------
 //#include "$FLAVOURTAGGINGCHECKEROPTS/CheatedSelection.opts"
@@ -36,7 +39,7 @@ ApplicationMgr.DLLs   += { "VeloDAQ" };
 ApplicationMgr.TopAlg += { "DecodeVeloRawBuffer" };
 
 #include "$FLAVOURTAGGINGOPTS/BTagging.opts"
-//ToolSvc.BTaggingTool.OutputLevel = 2;
+ToolSvc.BTaggingTool.OutputLevel = 2;
 
 ///---------------------------------------------------------------
 /// 		BTaggingChecker
@@ -47,15 +50,18 @@ ApplicationMgr.TopAlg += { "DecodeVeloRawBuffer" };
 
 //---------------------------------------------------------------
 // Number of events to process, skip and printing frequency
-MessageSvc.Format = "% F%20W%S%7W%R%T %0W%M";
-ApplicationMgr.EvtMax    = 100;
+MessageSvc.Format = "% F%40W%S%7W%R%T %0W%M";
+ApplicationMgr.EvtMax    = -1;
 EventSelector.FirstEvent = 1;
 EventSelector.PrintFreq  = 1;
 
 //---------------------------------------------------------------
 // Example input data 
 //---------------------------------------------------------------
-EventSelector.Input = {"DATAFILE='PFN:rfio:/castor/cern.ch/user/p/pkoppenb/L0L1TDR-Bs2DsK11.dst' TYP='POOL_ROOTTREE' OPT='READ'"}; //BsDsK selected events
+//EventSelector.Input = {"DATAFILE='/afs/cern.ch/user/o/ooleroy/public/Bs2DsPiTest.dst' TYP='POOL_ROOTTREE' OPT='READ'"};
 //EventSelector.Input = {"DATAFILE='PFN:rfio:/castor/cern.ch/lhcb/DC04/00000641_00000005_5.dst' TYP='POOL_ROOTTREE' OPT='READ'"}; //again BsDsK events
+//EventSelector.Input = {"DATAFILE='PFN:rfio:/castor/cern.ch/user/j/jbabel/L0TDR-Bs2DsK01.dst' TYP='POOL_ROOTTREE' OPT='READ'"};//again BsDsK events
+EventSelector.Input = {"DATAFILE='PFN:rfio:/castor/cern.ch/user/l/lfernan/L0TDR-Bs2JpsiPhi01.dst' TYP='POOL_ROOTTREE' OPT='READ'"};// BsJPsiPhi
 //EventSelector.Input = {"DATAFILE='PFN:rfio:/castor/cern.ch/user/p/pkoppenb/L0L1TDR-Bd2PiPi11.dst' TYP='POOL_ROOTTREE' OPT='READ'"}; //Bd2PiPi selected events
 //---------------------------------------------------------------
+

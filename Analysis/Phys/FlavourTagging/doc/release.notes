@@ -1,11 +1,17 @@
-! $Id: release.notes,v 1.80 2005-09-30 07:33:49 musy Exp $
+! $Id: release.notes,v 1.81 2005-10-05 11:05:45 musy Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Phys/FlavourTagging
-! Responsible : Marco Musy (musy@cern.ch)
+! Responsible : Marco Musy (marco.musy@cern.ch)
 ! Purpose     : Provide tools and algorithm for tagging B
 !-----------------------------------------------------------------------------
 
 !========================== FlavourTagging v6r2 2005-07-22 ===================
+! 2005-10-05 - Marco Musy
+  - SVertexTool.cpp has been changed: muon are now rejected only
+    if they are possible taggers
+    - VertexCharge is evaluated with pT weights.
+    - NoSharedHit Tool added for muon taggers
+
 ! 2005-09-30 - Marco Musy
   - bug fix in CombineTaggersTDR.cpp, it affects the numer and type 
     of taggers to be put in FlavourTag obj

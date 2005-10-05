@@ -1,4 +1,4 @@
-// $Id: CombineTaggersTDR.cpp,v 1.2 2005-09-30 07:33:49 musy Exp $
+// $Id: CombineTaggersTDR.cpp,v 1.3 2005-10-05 11:05:45 musy Exp $
 #include "CombineTaggersTDR.h"
 
 //-----------------------------------------------------------------------------
@@ -29,7 +29,6 @@ int CombineTaggersTDR::combineTaggers(FlavourTag& theTag,
   double tagdecision=0;
   std::vector<int> itag;
   //itag is now the individual B-flavour guess of each separate tagger:
-  for( int j=0; j!=6; j++ ) itag.push_back(0);
   for( int j=1; j!=6; j++ ) itag.at(j) = (vtg.at(j-1))->decision();
 
   int ic=0;

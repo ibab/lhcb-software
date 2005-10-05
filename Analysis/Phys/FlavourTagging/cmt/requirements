@@ -24,6 +24,7 @@ use TrgEvent        v*  Event
 use GenEvent        v*  Event
 use RecoTools       v*  Rec
 use Tampering       v*  Phys
+use MuonID          v*  Muon
 
 # Component library building rule
 #============================================================================

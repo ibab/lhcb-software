@@ -1,4 +1,4 @@
-// $Id: TaggerVertexChargeTool.h,v 1.1 2005-07-06 00:36:03 musy Exp $
+// $Id: TaggerVertexChargeTool.h,v 1.2 2005-10-05 11:05:45 musy Exp $
 #ifndef USER_TAGGERVERTEXCHARGETOOL_H 
 #define USER_TAGGERVERTEXCHARGETOOL_H 1
 
@@ -24,8 +24,8 @@ class TaggerVertexChargeTool : public GaudiTool,
 public: 
   /// Standard constructor
   TaggerVertexChargeTool( const std::string& type,
-		  const std::string& name,
-		  const IInterface* parent );
+			  const std::string& name,
+			  const IInterface* parent );
   virtual ~TaggerVertexChargeTool( ); ///< Destructor
   StatusCode initialize();    ///<  initialization
   StatusCode finalize  ();    ///<  finalization
@@ -36,8 +36,10 @@ public:
   //-------------------------------------------------------------
 
 private:
-  std::vector<const Particle*> toStdVector( const SmartRefVector<Particle>& refvector );
-  double m_AverageOmega;
+  std::vector<const Particle*> 
+    toStdVector( const SmartRefVector<Particle>& refvector );
+  std::string m_CombinationTechnique;
+  double m_AverageOmega, m_PowerK, m_MinimumCharge, m_P0, m_P1, m_P2;
 };
 
 //===============================================================//
