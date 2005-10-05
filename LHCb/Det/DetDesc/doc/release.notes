@@ -1,9 +1,12 @@
 ! =============================================================================
-! $Id: release.notes,v 1.223 2005-09-20 11:40:03 cattanem Exp $ 
+! $Id: release.notes,v 1.224 2005-10-05 15:46:12 marcocle Exp $ 
 ! =============================================================================
 ! package DetDesc
 ! package manager : Marco Clemencic, Juan Palacios
 ! =============================================================================
+
+! 2005-10-05 - Marco Clemencic
+ - Moved EventClockSvc properties from "long" to "longlong".
 
 !======================== DetDesc v15r4 2005-09-19 ========================
 ! 2005-09-19 - Marco Cattaneo
