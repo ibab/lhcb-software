@@ -1,9 +1,16 @@
 ! =============================================================================
-! $Id: release.notes,v 1.54 2005-09-20 11:44:28 cattanem Exp $
+! $Id: release.notes,v 1.55 2005-10-05 15:48:03 marcocle Exp $
 ! =============================================================================
 ! package Ex/DetCondExample
 ! package manager : Marco Clemencic
 ! =============================================================================
+
+! 2005-10-05 - Marco Clemencic
+ - Minimal update to follow API changes from COOL_1_1_0 to COOL_1_2_4
+ - Minor change to match a change in GaudiAlgorithm
+   (get<T>(IDataProvider*,std::string) is missing)
+ - A couple of libraries from POOL and SEAL have to be linked
+   (not in the default *_linkopts macros)
 
 !=========== Ex/DetCondExample v7r5 2005-09-19 ===============================
 ! 2005-09-18 - Marco Clemencic

@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.36 2005-09-20 11:44:28 cattanem Exp $
+# $Id: requirements,v 1.37 2005-10-05 15:48:03 marcocle Exp $
 package DetCondExample
 version v7r5
 
@@ -66,5 +66,9 @@ private
 
 #==> Detector Conditions example
 application DetCondExample *.cpp $(GAUDICONFROOT)/src/GaudiMain.cpp
+
+
+macro_append SEAL_linkopts ' -llcg_SealServices ' WIN32 ' lcg_SealServices.lib '
+macro_append POOL_linkopts ' -llcg_CollectionBase ' WIN32 ' lcg_CollectionBase.lib '
 
 path JOBOPTSEARCHPATH ../options

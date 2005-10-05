@@ -1,4 +1,4 @@
-// $Id: CondDBTestAlgorithm.cpp,v 1.12 2005-09-18 16:19:04 marcocle Exp $
+// $Id: CondDBTestAlgorithm.cpp,v 1.13 2005-10-05 15:48:03 marcocle Exp $
 // Include files 
 
 // from Gaudi
@@ -94,7 +94,7 @@ StatusCode CondDBTestAlgorithm::execute() {
   info() << "Temperature check: LHCb = " << m_LHCb_temp << endmsg;
   info() << "                   Hcal = " << m_Hcal_temp << endmsg;
   info() << "                   avg  = " << m_avg_temp << endmsg;
-  info() << *(get<TabulatedProperty>(detSvc(),"/dd/Properties/TestFunction")) << endmsg;
+  info() << *(getDet<TabulatedProperty>("/dd/Properties/TestFunction")) << endmsg;
   info() << "-------------------------------------" << endmsg;
   
   ++m_evtCount;
