@@ -56,9 +56,9 @@ namespace MBM {
       int m_stat_row;
     };
     DISP_BMDES bms[10];
-    int nbms;
-    int m_currLine;
-    void draw_frame() {}
+    int  nbms;
+    size_t m_currLine;
+
     int monitor();
     int put_inf();
     int m_color;
@@ -68,49 +68,54 @@ namespace MBM {
       textcolor(col);
     }
 
-    int draw_line(const char* format,...)  {
+    int draw_line()  {
+      print_char(1, m_currLine, TEE_LEFT);
+      for(size_t i=1; i < term_width()-1; ++i)
+        print_char(i+1, m_currLine, HORZ_BAR);
+      print_char(term_width(), m_currLine, TEE_RIGHT);
+      return ++m_currLine;
+    }
+    int draw_bar()  {
+      print_char(1, m_currLine, VERT_BAR);
+      for(size_t i=1; i < term_width()-1; ++i)
+        print_char(i+1, m_currLine, FAT_VERT_BAR);
+      print_char(term_width(), m_currLine, VERT_BAR);      
+      return ++m_currLine;
+    }
+    int draw_line(int flags, const char* format,...)  {
       va_list args;
       char buffer[1024];
       va_start( args, format );
-      buffer[0] = VERT_BAR;
-      int len = ::vsprintf(&buffer[1], format, args)+1;
-      if ( len < 130 )  {
-        ::memset(buffer+len,' ',sizeof(buffer)-len);
+      size_t len = ::vsprintf(buffer, format, args);
+      print_char(1, m_currLine, VERT_BAR);
+      for(size_t j=0; j<len && j<term_width()-1; ++j) {
+	print_char(j+2, m_currLine, flags|buffer[j]);
       }
-      buffer[131] = VERT_BAR;
-      buffer[132] = 0;
-      printxy(1, m_currLine++, buffer);
-      return m_currLine;
-    }
-    int draw_bar()  {
-      char line[256];
-      ::memset(line,FAT_VERT_BAR,sizeof(line));
-      line[255] = 0;
-      return draw_line(line);
-    }
-    int draw_buffer(const char* name, CONTROL* ctrl);
-    void draw_a_process(const char* line)  {
-      draw_line(line);
+      for(size_t i=len; i < term_width()-1; ++i)
+	print_char(i+2, m_currLine, ' '|flags);
+      print_char(term_width(), m_currLine, VERT_BAR);
+      return ++m_currLine;
     }
     void begin_update()  {
-      char buffer[256];
-      ::memset(buffer,HORZ_BAR,sizeof(buffer));
-      buffer[0]   = LEFT_UP_EDGE;
-      buffer[131] = RIGHT_UP_EDGE;
-      buffer[132] = 0;
-      textcolor(YELLOW);
-      printxy(1, m_currLine=1, buffer);
+      ::textcolor(YELLOW);
+      m_currLine = 1;
+      print_char(1,m_currLine,LEFT_UP_EDGE);
+      for(size_t i=1; i < term_width()-1; ++i)
+        print_char(i+1,m_currLine,HORZ_BAR);
+      print_char(term_width(),m_currLine,RIGHT_UP_EDGE);      
       m_currLine = 2;
     }
     void end_update() {
-      char buffer[256];
-      ::memset(buffer,HORZ_BAR,sizeof(buffer));
-      buffer[0]   = LEFT_LOW_EDGE;
-      buffer[131] = RIGHT_LOW_EDGE;
-      buffer[132] = 0;
-      printxy(1, m_currLine++, buffer);
+      print_char(1,m_currLine,LEFT_LOW_EDGE);
+      for(size_t i=1; i < term_width()-1; ++i)
+        print_char(i+1,m_currLine,HORZ_BAR);
+      print_char(term_width(),m_currLine,RIGHT_LOW_EDGE);      
+      m_currLine++;
       refresh();
     }
+
+    int draw_buffer(const char* name, CONTROL* ctrl);
+
     virtual int  optparse (const char* c);
     int MBM::Monitor::get_bm_list();
     int draw_bar(float ratio,int full_scale);
@@ -144,7 +149,6 @@ int MBM::Monitor::monitor() {
   _setcursortype(_NOCURSOR);      // hide the cursor
   textcolor(YELLOW);              // change textcolor to YELLOW
   textbackground(BLUE);           // change backgroundcolor to BLUE
-  draw_frame();
   if( cont )    {
     while( end )    {
       begin_update();
@@ -161,59 +165,48 @@ int MBM::Monitor::monitor() {
 }
 
 int MBM::Monitor::draw_buffer(const char* name, CONTROL* ctr)  {
-  int i, m;
+  size_t i, m;
   char txt[256];
-  sprintf(txt," \"%s\"",name);
-  draw_line("%-26s  Events: Produced:%d Actual:%d Seen:%d Pending:%d Max:%d",
+  sprintf(txt," Buffer \"%s\"",name);
+  draw_line(NORMAL,"%-26s  Events: Produced:%d Actual:%d Seen:%d Pending:%d Max:%d",
     txt, ctr->tot_produced, ctr->tot_actual, ctr->tot_seen, ctr->i_events, ctr->p_emax);
-  draw_line("%-26s  Space(kB):[Tot:%d Free:%d] Users:[Tot:%d Max:%d]",
+  draw_line(NORMAL,"%-26s  Space(kB):[Tot:%d Free:%d] Users:[Tot:%d Max:%d]",
     "",ctr->bm_size, ctr->i_space, ctr->i_users, ctr->p_umax);
 
-  sprintf(txt,"  Occupancy [Events]:            ");
-  for (i=0, m=125; i<m; ++i)  {
-    txt[i+28] = int(float(ctr->i_events)/float(ctr->p_emax)*float(m)) > (i) ? FAT_VERT_BAR : DIM_VERT_BAR;
+  draw_line(NORMAL,"  Occupancy [Events]:");
+  for (i=0, m=term_width()-30; i<m; ++i)  {
+    print_char(i+30,m_currLine-1,float(ctr->i_events)/float(ctr->p_emax)*float(m) > float(i) ? FAT_VERT_BAR : DIM_VERT_BAR);
   }
-  txt[i] = 0;
-  draw_line(txt);
-  sprintf(txt,"            [Space]:             ");
-  for (i=0, m=125; i<m; ++i)  {
-    txt[i+28] = int(float(ctr->bm_size-ctr->i_space)/float(ctr->bm_size)*float(m)) > (i) ? FAT_VERT_BAR : DIM_VERT_BAR;
+  draw_line(NORMAL,"            [Space]: ");
+  for (i=0, m=term_width()-30; i<m; ++i)  {
+    print_char(i+30,m_currLine-1,float(ctr->bm_size-ctr->i_space)/float(ctr->bm_size)*float(m) > float(i) ? FAT_VERT_BAR : DIM_VERT_BAR);
   }
-  txt[i] = 0;
-  draw_line(txt);
   return 1;
 }
 
 int MBM::Monitor::put_inf()   {
-  static int old_i,new_i;
-  USER *us;
   int i, j;
-  float perc;
+  time_t nowt;
   const char* head=" Name    Partition  Pid Type State Produced    #seen seen Buffer";
   char line[256], tim[64];
-  time_t nowt;
-  time(&nowt);
-  struct tm *now = localtime(&nowt);
+  ::time(&nowt);
+  struct tm *now = ::localtime(&nowt);
   ::strftime(tim,sizeof(tim),"%a %d %b %Y  %H:%M:%S",now);
-  draw_line("");
-  draw_line("                               Buffer Manager Monitor [%s]",tim);
-  draw_line("");
+  draw_line();
+  draw_line(REVERSE,  "                               Buffer Manager Monitor [%s]",tim);
+  draw_line();
+  draw_line(NORMAL,"");
   for (i=0;i<nbms;i++)  {
     BMDESCRIPT* dsc = bms[i].m_mgr.m_bm;
     draw_buffer(dsc->bm_name, dsc->ctrl);
-    draw_line("");
+    draw_line(NORMAL,"");
   }
-  if ( nbms <= 0 )  {
-    draw_line("");
-    draw_line("               No active buffers present");
-    draw_line("");
-  }
-  draw_bar();
-  draw_line(head);
-  draw_bar();
+  draw_line();
+  draw_line(NORMAL,nbms<=0 ? "               No active buffers present" : head);
+  draw_line();
 
-  new_i	= 0;
   for (i=0;i<nbms;i++)  {
+    USER *us;
     BMDESCRIPT* dsc = bms[i].m_mgr.m_bm;
     for (j=0,us = dsc->user;j<dsc->ctrl->p_umax;j++,us++)    {
       if (us->busy == 0) continue;
@@ -222,7 +215,7 @@ int MBM::Monitor::put_inf()   {
           us->name,us->partid,us->pid,"P",sstat[us->p_state+1],us->ev_produced,dsc->bm_name);    
       }
       else if (us->ev_actual>0)        {
-        perc	= ((float)us->ev_seen/(float)us->ev_actual)*100;
+        float perc = ((float)us->ev_seen/(float)us->ev_actual)*100;
         sprintf(line," %-13s%4x%5X%5s%6s         %9d  %3.0f%7s",
           us->name,us->partid,us->pid,"C",sstat[us->c_state+1],
           us->ev_seen,perc+0.1,dsc->bm_name);    
@@ -230,16 +223,11 @@ int MBM::Monitor::put_inf()   {
       else        {
         sprintf(line," %-13s%4x%5X%5s    %32s",us->name,us->partid,us->pid,"?",dsc->bm_name);    
       }
-      draw_line(line);
-      new_i++;
+      draw_line(NORMAL,line);
     }
   }
-  j = new_i;
-  while( j < old_i )   {
-    draw_line("");
-    j++;
-  }
-  old_i = new_i;    
+  while(m_currLine<term_height()-1) 
+    draw_line(NORMAL,"");
   return 1;
 }
 

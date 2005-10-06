@@ -12,6 +12,9 @@ static inline void graphics()       {  }
 static inline void refresh()        {  }
 static inline WINDOW* initscreen()  { clrscr(); return 0; }
 static inline void printxy(int x, int y, const char* buff) {  gotoxy(x,y);  ::printf(buff); }
+static inline void print_char(int x, int y, int c) {  gotoxy(x,y); putc(c); }
+static inline size_t term_height() {  return   24; }
+static inline size_t term_width()  {   return 132; }
 
 #define VERT_BAR ((char)0xba)
 #define HORZ_BAR ((char)0xcd)
@@ -46,16 +49,26 @@ static inline void textcolor(int) {}
 static inline void textbackground(int) {}
 static inline void ascii()          {  }
 static inline void graphics()       {  }
+static inline void print_char(int x, int y, int c) {  mvaddch(y, x-1, c); }
+static inline size_t term_height() {  return LINES; }
+static inline size_t term_width()  {   return COLS; }
 
-#define VERT_BAR '|'
-#define HORZ_BAR '-'
-#define FAT_VERT_BAR 'X'
-#define DIM_VERT_BAR '.'
-#define LEFT_UP_EDGE '+'
-#define RIGHT_UP_EDGE '+'
-#define LEFT_LOW_EDGE '+'
-#define RIGHT_LOW_EDGE '+'
 
+#define NORMAL          A_NORMAL
+#define BOLD            A_BOLD
+#define REVERSE         A_TOP
+
+
+#define VERT_BAR        ACS_VLINE
+#define HORZ_BAR        ACS_HLINE
+#define FAT_VERT_BAR   (A_REVERSE|' ')
+#define DIM_VERT_BAR   (A_UNDERLINE|'.')
+#define LEFT_UP_EDGE    ACS_ULCORNER
+#define RIGHT_UP_EDGE   ACS_URCORNER
+#define LEFT_LOW_EDGE   ACS_LLCORNER
+#define RIGHT_LOW_EDGE  ACS_LRCORNER
+#define TEE_LEFT        ACS_LTEE
+#define TEE_RIGHT       ACS_RTEE
 
 #endif
 
