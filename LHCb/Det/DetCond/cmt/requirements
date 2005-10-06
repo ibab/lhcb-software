@@ -1,7 +1,7 @@
-# $Id: requirements,v 1.41 2005-09-20 11:43:44 cattanem Exp $
+# $Id: requirements,v 1.42 2005-10-06 08:42:57 cattanem Exp $
 # =============================================================================
 package       DetCond
-version       v7r6
+version       v7r7
 
 # =========== structure =======================================================
 branches      DetCond doc cmt src
