@@ -48,4 +48,4 @@ apply_pattern linker_library	library=TrackFitEvent
 macro_append TrackFitEvent_linkopts  "" WIN32 "/include:_TrackFitEvent_loadRef" 
 
 private
-use GaudiObjDesc v7*
+use GaudiObjDesc v*
