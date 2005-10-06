@@ -72,11 +72,13 @@ public:
     if ( !(m_status&1) ) {
       lib_rtl_signal_message(LIB_RTL_OS,"%5d: LOCK: System Lock error on BM tables.",lib_rtl_pid());
     }
+#ifdef linux
     int val;
     int sc = lib_rtl_lock_value(m_bm->lockid,&val);
     if ( val != 0 ) {
       ::printf("%5d LOCK: Seamphore value:%d\n",lib_rtl_pid(), val);
     }
+#endif
     if ( m_bm->_control()->spare1 != 0 )  {
       lib_rtl_signal_message(LIB_RTL_OS,"%5d: LOCK: Lock error on BM tables:%d",lib_rtl_pid(),
 			     m_bm->_control()->spare1);
@@ -90,11 +92,13 @@ public:
     }
     m_bm->_control()->spare1 = 0;
     //  _mbm_flush_sections(m_bm);
+#ifdef linux
     int val;
     int sc = lib_rtl_lock_value(m_bm->lockid,&val);
     if ( val != 0 ) {
       ::printf("%5d UNLOCK: Seamphore value:%d\n",lib_rtl_pid(), val);
     }
+#endif
     m_status = _mbm_unlock_tables(m_bm);
     if ( !(1&m_status) )  {
       lib_rtl_signal_message(LIB_RTL_OS,"%5d: UNLOCK: System Lock error on BM tables\n",lib_rtl_pid());

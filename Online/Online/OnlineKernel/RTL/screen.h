@@ -11,21 +11,29 @@ static inline void ascii()          {  }
 static inline void graphics()       {  }
 static inline void refresh()        {  }
 static inline WINDOW* initscreen()  { clrscr(); return 0; }
-static inline void printxy(int x, int y, const char* buff) {  gotoxy(x,y);  ::printf(buff); }
-static inline void print_char(int x, int y, int c) {  gotoxy(x,y); putc(c); }
+static inline void printxy(int x, int y, const char* buff) {  ::gotoxy(x,y);  ::printf(buff); }
+static inline void print_char(int x, int y, int c) {  ::gotoxy(x,y); ::putchar(c); }
 static inline size_t term_height() {  return   24; }
 static inline size_t term_width()  {   return 132; }
 
-#define VERT_BAR ((char)0xba)
-#define HORZ_BAR ((char)0xcd)
+#define NORMAL          0
+#define BOLD            0
+#define REVERSE         0
+
+#define VERT_BAR       ((char)0xba)
+#define HORZ_BAR       ((char)0xcd)
 
 #define FAT_VERT_BAR   ((char)0xdb)
 #define DIM_VERT_BAR   ((char)0xb0)
 
-#define LEFT_UP_EDGE   ((char)0xc9)
-#define RIGHT_UP_EDGE  ((char)0xbb)
-#define LEFT_LOW_EDGE  ((char)0xc8)
-#define RIGHT_LOW_EDGE ((char)0xbc)
+#define LEFT_UP_EDGE     ((char)0xc9)
+#define RIGHT_UP_EDGE    ((char)0xbb)
+#define LEFT_LOW_EDGE    ((char)0xc8)
+#define RIGHT_LOW_EDGE   ((char)0xbc)
+#define TEE_LEFT         ((char)0xcc)
+#define TEE_RIGHT        ((char)0xb9)
+#define TEE_LEFT_SIMPLE  ((char)0xc3)
+#define TEE_RIGHT_SIMPLE ((char)0xb4)
 
 #else
 
@@ -56,8 +64,7 @@ static inline size_t term_width()  {   return COLS; }
 
 #define NORMAL          A_NORMAL
 #define BOLD            A_BOLD
-#define REVERSE         A_TOP
-
+#define REVERSE         A_REVERSE
 
 #define VERT_BAR        ACS_VLINE
 #define HORZ_BAR        ACS_HLINE

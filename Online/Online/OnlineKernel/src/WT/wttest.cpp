@@ -8,11 +8,11 @@
 #include <cstdlib>
 #include <cstdarg>
 
-#define NORMAL 1
-#define INTERVAL1 6*NORMAL
-#define INTERVAL2 60*NORMAL
-#define INTERVAL3 600*NORMAL
-#define INTERVAL4 6000*NORMAL
+#define INTERVAL_NORMAL 1
+#define INTERVAL1 6*INTERVAL_NORMAL
+#define INTERVAL2 60*INTERVAL_NORMAL
+#define INTERVAL3 600*INTERVAL_NORMAL
+#define INTERVAL4 6000*INTERVAL_NORMAL
 
 unsigned int alarm1, alarm2, alarm3, alarm4;
 

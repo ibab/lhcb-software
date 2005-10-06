@@ -174,12 +174,14 @@ int MBM::Monitor::draw_buffer(const char* name, CONTROL* ctr)  {
     "",ctr->bm_size, ctr->i_space, ctr->i_users, ctr->p_umax);
 
   draw_line(NORMAL,"  Occupancy [Events]:");
+  float f1=float(ctr->i_events)/float(ctr->p_emax);
   for (i=0, m=term_width()-30; i<m; ++i)  {
-    print_char(i+30,m_currLine-1,float(ctr->i_events)/float(ctr->p_emax)*float(m) > float(i) ? FAT_VERT_BAR : DIM_VERT_BAR);
+    print_char(i+30,m_currLine-1,f1*m > i ? FAT_VERT_BAR : DIM_VERT_BAR);
   }
   draw_line(NORMAL,"            [Space]: ");
+  f1 = float(ctr->bm_size-ctr->i_space)/float(ctr->bm_size);
   for (i=0, m=term_width()-30; i<m; ++i)  {
-    print_char(i+30,m_currLine-1,float(ctr->bm_size-ctr->i_space)/float(ctr->bm_size)*float(m) > float(i) ? FAT_VERT_BAR : DIM_VERT_BAR);
+    print_char(i+30,m_currLine-1,f1*m > i ? FAT_VERT_BAR : DIM_VERT_BAR);
   }
   return 1;
 }
