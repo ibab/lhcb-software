@@ -83,7 +83,7 @@ public:
     }
 #ifdef linux
     int val;
-    int sc = lib_rtl_lock_value(m_bm->lockid,&val);
+    lib_rtl_lock_value(m_bm->lockid,&val);
     if ( val != 0 ) {
       ::printf("%5d LOCK: Seamphore value:%d\n",lib_rtl_pid(), val);
     }
@@ -103,7 +103,7 @@ public:
     //  _mbm_flush_sections(m_bm);
 #ifdef linux
     int val;
-    int sc = lib_rtl_lock_value(m_bm->lockid,&val);
+    lib_rtl_lock_value(m_bm->lockid,&val);
     if ( val != 0 ) {
       ::printf("%5d UNLOCK: Seamphore value:%d\n",lib_rtl_pid(), val);
     }
@@ -851,7 +851,6 @@ EVENT* _mbm_ealloc (BMDESCRIPT *bm)  {
   EVENT *e = bm->event;
   for (CONTROL *ctrl = bm->ctrl; i < ctrl->p_emax; ++i, ++e)  {
     if (e->isValid() && e->busy == 0)    {
-      int c = e->count;
       e->busy = 2;
       e->eid  = i;
       e->count = cnt++;
@@ -864,7 +863,7 @@ EVENT* _mbm_ealloc (BMDESCRIPT *bm)  {
 }
 
 /// free user slot
-int _mbm_ufree (BMDESCRIPT *bm, USER* u)  {
+int _mbm_ufree (BMDESCRIPT* /* bm */, USER* u)  {
   if ( u->busy == 1 )  {
     u->busy = 0;
     u->uid  = 0;
@@ -1213,7 +1212,7 @@ int  mbm_wait_space(BMID bm)    {
   USER* us = bm->_user();
 wait:
   if ( us->p_state == S_weslot_ast_queued )  {
-    int sc = lib_rtl_wait_for_event(bm->WES_event_flag);
+    lib_rtl_wait_for_event(bm->WES_event_flag);
     lib_rtl_clear_event(bm->WES_event_flag);
     lib_rtl_run_ast(us->p_astadd, us->p_astpar, 3);
   }
