@@ -4,6 +4,11 @@
 ! Purpose          : GiGa visualisation and UI 
 !-----------------------------------------------------------------------------
 
+!========================= GiGaVisUI v3r1 2005-10-07 ======================
+! 2005-10-07 - Florence Ranjard
+ - requirements - move setting of DAWN related environment variables 
+                  from Gauss to GiGaVisUI
+
 !========================= GiGaVisUI v3r0 2003-12-10 =====================
 ! 2003-12-10 - Florence RANJARD
  - requirements - remove explicit version numbers

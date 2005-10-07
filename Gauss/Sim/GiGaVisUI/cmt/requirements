@@ -1,6 +1,6 @@
 # =============================================================================
 package GiGaVisUI
-version v2r2
+version v3r1
 
 # =============== package structure ===========================================
 branches         cmt src doc
@@ -18,6 +18,13 @@ include_dirs     $(GIGAVISUIROOT)
         
 # ============== standard patterns ===========================================
 apply_pattern    component_library library=GiGaVisUI
+
+# =============== visualization  ==============================================
+set  G4DAWNFILE_DEST_DIR       "../job/"
+set  G4DAWNFILE_PS_VIEWER      "gv"
+set  G4DAWN_MULTI_WINDOW       "1"
+set  G4DAWNFILE_MULTI_WINDOW   "1"
+
 # ============================================================================
 # The END 
 # ============================================================================
