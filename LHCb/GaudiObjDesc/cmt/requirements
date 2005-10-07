@@ -18,7 +18,7 @@ make_fragment godify -header=godify_header -trailer=godify_trailer
 use Python v* LCG_Interfaces
 
 #----Patch to while waiting a release od SEAL----TO BE DELETED-----
-use SEAL   v* LCG_interfaces
+use SEAL   v* LCG_Interfaces
 macro lcgdict_cmd "$(Python_home)/bin/python $(GAUDIOBJDESCROOT)/scripts/lcgdict.py" \
       WIN32       '"$(Python_home)/python" $(GAUDIOBJDESCROOT)\scripts\lcgdict.py'
 path_prepend PYTHONPATH "$(SEAL_home)/bin"
