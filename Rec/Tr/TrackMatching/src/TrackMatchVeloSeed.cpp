@@ -1,4 +1,4 @@
-// $Id: TrackMatchVeloSeed.cpp,v 1.2 2005-09-20 15:24:41 erodrigu Exp $
+// $Id: TrackMatchVeloSeed.cpp,v 1.3 2005-10-07 08:15:39 cattanem Exp $
 // Include files 
 // -------------
 // from Gaudi
@@ -579,7 +579,7 @@ StatusCode TrackMatchVeloSeed::storeTracks( TrackMatches*& matchCont )
 
     aTrack -> addToStates( *aState );
     aTrack -> setType( TrackKeys::Long );
-    aTrack -> setHistory( TrackKeys::TrMatching );
+    aTrack -> setHistory( TrackKeys::TrackMatching );
     trackCont -> add( aTrack );
     delete aState;
   } // iterMatch
