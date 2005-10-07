@@ -7,9 +7,11 @@ template <class T, class Q> static inline T* add_ptr(T* a, Q b)  {
   return (T*)((void*)((int)(a)+(int)(b)));
 }
 
+#ifdef __cplusplus
 namespace RTL {}
-
 extern "C" {
+#endif
+
   typedef void* lib_rtl_handle_t;
 #ifndef _RTL_INTERNAL_H
   typedef void* lib_rtl_thread_t;
@@ -107,5 +109,37 @@ extern "C" {
   /// Declare exit handler
   int lib_rtl_sleep(int millisecs);
   const char* lib_rtl_error_message(int status);
-};
+#ifdef __cplusplus
+}
+
+#include <string>
+/*
+ *
+ */
+namespace RTL  {
+
+  class CLI  {
+  private:
+    int    m_argc;
+    char** m_argv;
+    void (*m_help)();
+    int getopt(const char* name, int nchars, void* value, const char* fmt, int (*deformat)(const char*, const char*,...));
+
+  public:
+    CLI(int argc, char** argv, void (*help)()) : m_argc(argc), m_argv(argv), m_help(help) {}
+    const char* getopt(const char* name, int nchars);
+    int getopt(const char* name, int nchars, char& value);
+    int getopt(const char* name, int nchars, unsigned char& value);
+    int getopt(const char* name, int nchars, short& value);
+    int getopt(const char* name, int nchars, unsigned short& value);
+    int getopt(const char* name, int nchars, int& value);
+    int getopt(const char* name, int nchars, unsigned int& value);
+    int getopt(const char* name, int nchars, long& value);
+    int getopt(const char* name, int nchars, unsigned long& value);
+    int getopt(const char* name, int nchars, float& value);
+    int getopt(const char* name, int nchars, double& value);
+    int getopt(const char* name, int nchars, std::string& value);
+  };
+}
+#endif
 #endif // _RTL_H
