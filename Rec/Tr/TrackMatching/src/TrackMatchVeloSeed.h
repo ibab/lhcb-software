@@ -1,4 +1,4 @@
-// $Id: TrackMatchVeloSeed.h,v 1.1.1.1 2005-09-09 08:51:16 erodrigu Exp $
+// $Id: TrackMatchVeloSeed.h,v 1.2 2005-10-07 08:26:52 cattanem Exp $
 #ifndef TRACKMATCHING_TRACKMATCHVELOSEED_H 
 #define TRACKMATCHING_TRACKMATCHVELOSEED_H 1
 
@@ -97,7 +97,7 @@ private:
   double m_interStationCut;
   /// maximum distance difference between TT clusters of same station
   double m_intraStationCut;
-  /** The quality is defined as: |<distance>| + m_spreadWeight*spread   
+  /** The quality is defined as: |distance| + m_spreadWeight*spread   
    *  The quality the the criterium to select the best TTCandidate (= set
    *  of TT clusters.)
    */
