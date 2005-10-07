@@ -7,7 +7,7 @@
 #define Max(a,b) (a>b)?a:b;
 #define Min(a,b) (a>b)?b:a;
 
-int mask_and (const unsigned int* mask1,const unsigned int* mask2,unsigned int* mask3,int mask_size)   {
+int mask_and2 (const unsigned int* mask1,const unsigned int* mask2,unsigned int* mask3,int mask_size)   {
   int	    result=0;
   for (int i=0; i<mask_size; i++)  {
     mask3[i] = mask1[i] & mask2[i];
@@ -16,7 +16,16 @@ int mask_and (const unsigned int* mask1,const unsigned int* mask2,unsigned int* 
   return result;
 }
 
-int mask_or (const unsigned int* mask1, const unsigned int* mask2,unsigned int* mask3,const int mask_size)   {
+int mask_and3 (const unsigned int* mask1,const unsigned int* mask2,const unsigned int* mask3,unsigned int* mask4,int mask_size)   {
+  int	    result=0;
+  for (int i=0; i<mask_size; i++)  {
+    mask4[i] = ((mask1[i] & mask2[i]) & mask3[i]);
+    result	|= mask3[i];
+  }
+  return result;
+}
+
+int mask_or2 (const unsigned int* mask1, const unsigned int* mask2,unsigned int* mask3,const int mask_size)   {
   int result = 0;
   for (int i=0;i<mask_size;i++)  {
     mask3[i] = mask1[i] | mask2[i];
@@ -25,7 +34,16 @@ int mask_or (const unsigned int* mask1, const unsigned int* mask2,unsigned int* 
   return result;
 }
 
-int mask_and_ro (const unsigned int* mask1,const unsigned int* mask2,const int mask_size)   {
+int mask_or3 (const unsigned int* mask1, const unsigned int* mask2,const unsigned int* mask3,unsigned int* mask4,const int mask_size)   {
+  int result = 0;
+  for (int i=0;i<mask_size;i++)  {
+    mask4[i] = mask1[i] | mask2[i] | mask3[i];
+    result	|= mask3[i];
+  }
+  return result;
+}
+
+int mask_and_ro2 (const unsigned int* mask1,const unsigned int* mask2,const int mask_size)   {
   int	    result=0;
   for (int i=0;i<mask_size;i++)  {
     result	|= (mask1[i] & mask2[i]);
@@ -33,10 +51,26 @@ int mask_and_ro (const unsigned int* mask1,const unsigned int* mask2,const int m
   return result;
 }
 
-int mask_or_ro (const unsigned int* mask1,const unsigned int* mask2, const int mask_size) {
+int mask_and_ro3 (const unsigned int* mask1,const unsigned int* mask2, const unsigned int* mask3,const int mask_size)   {
+  int	    result=0;
+  for (int i=0;i<mask_size;i++)  {
+    result	|= ((mask1[i] & mask2[i]) & mask3[i]);
+  }
+  return result;
+}
+
+int mask_or_ro2 (const unsigned int* mask1,const unsigned int* mask2, const int mask_size) {
   int result = 0;
   for (int i=0;i<mask_size;i++)  {
     result	|= (mask1[i] | mask2[i]);
+  }
+  return result;
+}
+
+int mask_or_ro3 (const unsigned int* mask1,const unsigned int* mask2, const unsigned int* mask3, const int mask_size) {
+  int result = 0;
+  for (int i=0;i<mask_size;i++)  {
+    result	|= (mask1[i] | mask2[i] | mask3[i]);
   }
   return result;
 }

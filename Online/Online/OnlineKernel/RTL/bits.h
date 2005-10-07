@@ -16,10 +16,14 @@ extern "C" {
   inline int bit_test (const unsigned int *mask,int pos)    {
     return (mask[pos/32] & (1<<(pos%32)));
   }
-  int mask_and    (const unsigned int* mask1,const unsigned int* mask2,unsigned int* mask3,int mask_size);
-  int mask_or     (const unsigned int* mask1, const unsigned int* mask2,unsigned int* mask3,const int mask_size);
-  int mask_and_ro (const unsigned int* mask1,const unsigned int* mask2,const int mask_size);
-  int mask_or_ro  (const unsigned int* mask1,const unsigned int* mask2, const int mask_size);
+  int mask_and2   (const unsigned int* mask1,const unsigned int* mask2,unsigned int* mask3,int mask_size);
+  int mask_and3   (const unsigned int* mask1,const unsigned int* mask2,const unsigned int* mask3,unsigned int* mask4,int mask_size);
+  int mask_or2    (const unsigned int* mask1,const unsigned int* mask2,unsigned int* mask3,const int mask_size);
+  int mask_or3    (const unsigned int* mask1,const unsigned int* mask2,const unsigned int* mask3,unsigned int* mask4,const int mask_size);
+  int mask_and_ro2(const unsigned int* mask1,const unsigned int* mask2,const int mask_size);
+  int mask_and_ro3(const unsigned int* mask1,const unsigned int* mask2,const unsigned int* mask3,const int mask_size);
+  int mask_or_ro2 (const unsigned int* mask1,const unsigned int* mask2,const int mask_size);
+  int mask_or_ro3 (const unsigned int* mask1,const unsigned int* mask2,const unsigned int* mask3, const int mask_size);
   int mask_summ   (const unsigned int* mask, int mask_size);
   int BF_alloc    (char *base, int bf_size,int size_wanted,int* pos_found);
   int BF_count    (const char* base,int bf_size,int* pos,int* size);
@@ -38,22 +42,28 @@ namespace Bits  {
     void clear()  {
       ::memset(m_mask, 0, i * sizeof(m_mask[0]));
     }
-    int mask_or_ro(const BitMask<i>& mask)  const   {
-      return ::mask_or_ro(m_mask, mask.m_mask, i);
+    int mask_or(const BitMask<i>& mask)  const   {
+      return ::mask_or_ro2(m_mask, mask.m_mask, i);
+    }
+    int mask_or(const BitMask<i>& mask1, const BitMask<i>& mask2)  const   {
+      return ::mask_or_ro3(m_mask, mask1.m_mask, mask2.m_mask, i);
     }
     int mask_summ()  const    {
       return ::mask_summ(m_mask,i);
     }
     int mask_and(const BitMask<i>& mask1, const BitMask<i>& mask2)  {
-      return ::mask_and(mask1.m_mask, mask2.m_mask, m_mask, i);
+      return ::mask_and2(mask1.m_mask, mask2.m_mask, m_mask, i);
     }
-    void bit_set(int which)  {
+    int mask_and(const BitMask<i>& mask1, const BitMask<i>& mask2, const BitMask<i>& mask3)  {
+      return ::mask_and3(mask1.m_mask, mask2.m_mask, mask.m_mask3, m_mask, i);
+    }
+    void set(int which)  {
       ::bit_set(m_mask,which);
     }
-    void bit_clear(int which)  {
+    void clear(int which)  {
       ::bit_clear(m_mask,which);
     }
-    int bit_test(int which) const  {
+    int test(int which) const  {
       return ::bit_test(m_mask,which);
     }
     BitMask& operator=(const int val[i]) {

@@ -3,14 +3,23 @@
 
 #include "bmssdef.h"
 
-#define BM_MASK_ANY	 0
-#define BM_MASK_ALL	 1
-#define BM_NOTALL 0
-#define BM_REQ_USER  0
-#define BM_REQ_VIP   1
-#define BM_REQ_ALL   1
-#define BM_FREQ_MANY 0
-#define BM_FREQ_PERC 1
+enum MBM_MaskTypes  {
+  BM_MASK_ANY   = 0,
+  BM_MASK_ALL   = 1
+};
+
+enum MBM_RequestTypes  {
+  BM_NOTALL    = 0,
+  BM_REQ_USER  = 0,
+  BM_REQ_VIP   = 1,
+  BM_REQ_ALL   = 1,
+  BM_REQ_ONE   = 2
+};
+
+enum MBM_FrequencyTypes  {
+  BM_FREQ_MANY = 0,
+  BM_FREQ_PERC = 1
+};
 
 typedef int (*MBM_ast_t)(void*);
 
@@ -40,7 +49,7 @@ extern "C"  {
     void** free_add, int* free_size, int part_id);
   int  mbm_free_space (BMID bm);
   int  mbm_send_space (BMID bm);
-  int  mbm_wait_space(BMID bm);
+  int  mbm_wait_space (BMID bm);
   int  mbm_wait_space_a(BMID bm);
   /// Default AST implementation on get_space
   int  mbm_get_space_ast(void* par);

@@ -2,6 +2,7 @@
 ** QUEUE ROUTINES BY TIM CHARITY - Sep 89
 */
 #include "RTL/que.h"
+#include "RTL/rtl.h"
 
 typedef signed long QENT;
 /*
@@ -105,4 +106,14 @@ extern "C" int remqti(qentry_t *head, qentry_t **qent)  {
   }
   (*qent)->next = (*qent)->prev = 0;
   return 1;
+}
+
+qentry_t* remqent(qentry_t* e)  {
+  if ( e )  {
+    qentry_t* dummy = 0;
+    qentry_t *hd = add_ptr(e->prev,&e->next);
+    remqhi(hd, &dummy);
+    return dummy;
+  }
+  return 0;
 }

@@ -1,6 +1,6 @@
 /*-----------------------------------------------------------------------*/
 /*                                                                       */
-/*                       OS-9 BUFFER MANAGER  	                         */
+/*                       OS-9 BUFFER MANAGER                             */
 /*                  INSTALLATION PROGRAM FOR THE AEB                     */
 /*                                                                       */
 /* Edition History                                                       */
@@ -29,7 +29,7 @@
 #endif
 
 #define writeln(a,b,c) printf(b)
-#define E_MNF	221
+#define E_MNF  221
 
 #define writeln(a,b,c) printf(b)
 #define _CHECK( x )  { int sc = x ; if ( !(sc&1) ) { printf ( "Error in:%s, status=%d\n", #x , sc ); return sc; } }
@@ -89,10 +89,10 @@ namespace MBM {
       size_t len = ::vsprintf(buffer, format, args);
       print_char(1, m_currLine, VERT_BAR);
       for(size_t j=0; j<len && j<term_width()-1; ++j) {
-	print_char(j+2, m_currLine, flags|buffer[j]);
+  print_char(j+2, m_currLine, flags|buffer[j]);
       }
       for(size_t i=len; i < term_width()-1; ++i)
-	print_char(i+2, m_currLine, ' '|flags);
+  print_char(i+2, m_currLine, ' '|flags);
       print_char(term_width(), m_currLine, VERT_BAR);
       return ++m_currLine;
     }
@@ -237,10 +237,10 @@ int MBM::Monitor::optparse (const char* c)  {
   char buff_id[32];
   register int iret;
   switch (*c | 0x20)  {
-  case 's':				/*      Single Update*/	
+  case 's':        /*      Single Update*/  
     cont = 0;
     break;
-  case 'i':				/*      buffer_id        */	
+  case 'i':        /*      buffer_id        */  
     iret = sscanf(c+1,"=%s",buff_id);
     if( iret != 1 )      {
       writeln(2,"Error reading Buffer identifier parameter\n",80);
@@ -264,8 +264,8 @@ int MBM::Monitor::get_bm_list()   {
   for (int i = 0; i < nbms; ++i)  {
     int sc = mapSections(&bms[i].m_mgr);
     if ( !lib_rtl_is_success(sc) ) exit(sc);
-    bms[i].m_bm_row	= 4+i*4;
-    bms[i].m_stat_row	= bms[i].m_bm_row+2;
+    bms[i].m_bm_row  = 4+i*4;
+    bms[i].m_stat_row  = bms[i].m_bm_row+2;
   }
   return 1;
 }

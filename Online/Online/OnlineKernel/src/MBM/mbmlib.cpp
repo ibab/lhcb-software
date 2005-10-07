@@ -7,16 +7,16 @@
 *
 *  #   Date  Comments   By
 * -- -------- ----------------------------------------------- ---
-*  0  28/09/88  Initial version				PM
-*  1  11/11/88  Released version 1.0				PM
-*  2  29/11/88  Multibuffer and spy introduced			PM
-*  3  15/12/88  Released version 2.0				PM
-*  4  14/03/89  Minor corrections				PM
+*  0  28/09/88  Initial version        PM
+*  1  11/11/88  Released version 1.0        PM
+*  2  29/11/88  Multibuffer and spy introduced      PM
+*  3  15/12/88  Released version 2.0        PM
+*  4  14/03/89  Minor corrections        PM
 *  5  24/09/91  Allow waiting space and event at the same time PM
-*  6  06/10/92  Add update request for reformatting tasks	PM/BJ
+*  6  06/10/92  Add update request for reformatting tasks  PM/BJ
 * ---
-*  7  ??/12/92  Multi-Buffer Manager calls			BJ
-*  8  25/03/93  Basic clean-up					AMi8
+*  7  ??/12/92  Multi-Buffer Manager calls      BJ
+*  8  25/03/93  Basic clean-up          AMi8
 */
 /*-----------------------------------------------------------------------*/
 #define MBM_IMPLEMENTATION
@@ -27,8 +27,31 @@
 #include <cerrno>
 #include <memory>
 #include "bm_struct.h"
+#include "RTL/DoubleLinkedQueue.h"
 
-#define _mbm_return_err(a)	{ errno = a; return (a); }
+#define _mbm_return_err(a)  { errno = a; return (a); }
+
+int mbm_error()  {  ::printf("MBM Error:Bad!!!!\n");  return MBM_ERROR;  }
+#undef MBM_ERROR
+#define  MBM_ERROR mbm_error();
+#define  MBMQueue RTL::DoubleLinkedQueue
+using namespace MBM;
+
+static qentry_t *desc_head;
+static int reference_count = 0;
+
+static int USER_next_off;
+static int USER_ws_off;
+static int USER_we_off;
+static int USER_wes_off;
+static int EVENT_next_off;
+static int CONTROL_cons_off;
+static int CONTROL_cwe_off;
+static int CONTROL_pws_off;
+static int CONTROL_wes_off;
+static int CONTROL_ev_off;
+static MBM_ast_t _mbm_wes_ast_add = 0;
+static int disable_rundown=0;
 
 inline int _mbm_printf(const char* , ...)  {
 //inline int _mbm_printf(const char* fmt, ...)  {
@@ -49,20 +72,6 @@ template <class T> void print_queue(const char* format,const T* ptr, int type)  
   }
 }
 
-inline void Check_EVENT(const EVENT* ev) {
-  if ( ev->block_id != MBM::BID_EVENT )    {
-    lib_rtl_signal_message (0, "bad EVENT pointer");
-  }
-}
-inline void Check_USER(const USER* us) {
-  if ( us->block_id != MBM::BID_USER )   {
-    lib_rtl_signal_message(0, "bad USER pointer");
-  }
-}
-
-extern "C" int lib_rtl_lock_value(lib_rtl_lock_t handle, int* value);
-
-typedef qentry_t* PQ_t;
 class Lock  {
   BMDESCRIPT *m_bm;
   int m_status;
@@ -81,14 +90,14 @@ public:
 #endif
     if ( m_bm->_control()->spare1 != 0 )  {
       lib_rtl_signal_message(LIB_RTL_OS,"%5d: LOCK: Lock error on BM tables:%d",lib_rtl_pid(),
-			     m_bm->_control()->spare1);
+           m_bm->_control()->spare1);
     }
     m_bm->_control()->spare1 = lib_rtl_pid();
   }
   virtual ~Lock() {
     if ( m_bm->_control()->spare1 != lib_rtl_pid() )  {
       lib_rtl_signal_message(LIB_RTL_OS,"%5d: UNLOCK: Lock error on BM tables:%d",lib_rtl_pid(),
-			     m_bm->_control()->spare1);
+           m_bm->_control()->spare1);
     }
     m_bm->_control()->spare1 = 0;
     //  _mbm_flush_sections(m_bm);
@@ -134,33 +143,6 @@ public:
   }
 };
 
-static qentry_t *desc_head;
-static int reference_count = 0;
-
-static int USER_next_off;
-static int USER_ws_off;
-static int USER_we_off;
-static int USER_wes_off;
-static int EVENT_next_off;
-static int CONTROL_cons_off;
-static int CONTROL_cwe_off;
-static int CONTROL_pws_off;
-static int CONTROL_wes_off;
-static int CONTROL_ev_off;
-static MBM_ast_t _mbm_wes_ast_add = 0;
-static int disable_rundown=0;
-
-#define QR_success(a) ((a) > 0)
-
-int mbm_error()  {
-  ::printf("Bad\n");
-  return MBM_ERROR;
-}
-#undef MBM_ERROR
-#define  MBM_ERROR mbm_error();
-
-using namespace MBM;
-
 BMDESCRIPT *mbm_include (const char* bm_name, const char* name, int partid) {
   char text[32]="";
   int status;
@@ -168,7 +150,7 @@ BMDESCRIPT *mbm_include (const char* bm_name, const char* name, int partid) {
   _mbm_fill_offsets();
   _mbm_wes_ast_add  = _mbm_wes_ast;
   if ( reference_count == 0 )  {
-    desc_head	= new qentry_t;
+    desc_head  = new qentry_t;
     memset(desc_head,0,sizeof(qentry_t));
   }
   std::auto_ptr<BMDESCRIPT> bm(new BMDESCRIPT);
@@ -245,15 +227,13 @@ BMDESCRIPT *mbm_include (const char* bm_name, const char* name, int partid) {
   bm->bitmap_size = bm->ctrl->bm_size;
   bm->buffer_size = bm->ctrl->buff_size;
 
-  int owner = _mbm_ualloc (bm.get());	/* find free slot */
-  if (owner == -1)  {
+  USER* us = _mbm_ualloc (bm.get());  /* find free slot */
+  if (us == 0)  {
     _mbm_unlock_tables(bm.get());
     errno = MBM_NO_FREE_US;
     return (BMDESCRIPT*)-1;
   }
-  bm->owner = owner;
-
-  USER* us = bm->user + bm->owner;
+  bm->owner = us->uid;
   us->c_state = S_active;
   us->p_state = S_active;
   us->partid = partid;
@@ -267,8 +247,8 @@ BMDESCRIPT *mbm_include (const char* bm_name, const char* name, int partid) {
   us->held_eid      = -1;
   us->n_req         = 0;
   us->get_ev_calls  = 0;
-  us->get_wakeups   = 0;	
-  us->get_asts_run  = 0;	
+  us->get_wakeups   = 0;  
+  us->get_asts_run  = 0;  
 
   bm->ctrl->i_users++;
 
@@ -321,8 +301,7 @@ int mbm_exclude (BMDESCRIPT *bm)  {
   else {
     return sc;
   }
-  qentry_t *dummy, *hd	= add_ptr(bm,bm->prev);
-  remqhi (hd , &dummy);
+  qentry_t *dummy = remqent(bm);
   //_mbm_delete_lock(bm);
 
   delete dummy;
@@ -357,9 +336,8 @@ int mbm_add_req (BMDESCRIPT *bm, int evtype, int trg_mask[4], int veto_mask[4], 
     rq->masktype  = masktype;
     rq->freqmode  = freqmode;
     rq->user_type = usertype;
-    rq->freq	    = freq;
+    rq->freq      = freq;
     us->n_req    += 1;
-    return MBM_NORMAL;
   }
   return user.status();
 }
@@ -386,7 +364,7 @@ int mbm_del_req (BMDESCRIPT *bm, int evtype, int trmask[4], int veto[4], int mas
 }
 
 int mbm_get_event_a (BMDESCRIPT *bm, int** ptr, int* size, int* evtype, int trmask[4], 
-		     int part_id, MBM_ast_t astadd, void* astpar) {
+         int part_id, MBM_ast_t astadd, void* astpar) {
   UserLock user(bm);
   USER* us = user.user();
   if ( us )  {
@@ -396,7 +374,7 @@ int mbm_get_event_a (BMDESCRIPT *bm, int** ptr, int* size, int* evtype, int trma
       return MBM_NORMAL;
     }
     if (us->held_eid != -1)    {
-      _mbm_rel_event(bm, bm->owner);
+      _mbm_rel_event(bm, us);
     }
     if (us->c_state == S_pause)    {
       us->c_state = S_active;
@@ -438,8 +416,7 @@ int mbm_free_event (BMDESCRIPT *bm) {
     if (us->held_eid == -1)    {
       _mbm_return_err (MBM_NO_EVENT);
     }
-    _mbm_rel_event (bm, bm->owner);	/* release event held by him  */
-    return MBM_NORMAL;
+    _mbm_rel_event (bm, us);  /* release event held by him  */
   }
   return user.status();
 }
@@ -448,32 +425,22 @@ int mbm_pause (BMDESCRIPT *bm)  {
   UserLock user(bm);
   USER* us = user.user();
   if ( us )  {
-    std::auto_ptr<qentry_t> park(new qentry_t(0,0));
-    CONTROL* ctrl = bm->_control();
-    if ( ctrl )  {
-      EVENT *ev1;
-      if (us->held_eid != -1)  {
-        _mbm_rel_event (bm, bm->owner);
-      }
-      us->c_state = S_pause;
-      for(int sc = remqhi(&ctrl->e_head,(qentry_t**)&ev1);
-          QR_success(sc);
-          sc = remqhi(&ctrl->e_head,(qentry_t**)&ev1) )
-      {
-        insqhi (ev1, park.get());
-        EVENT* ev = add_ptr(ev1,-EVENT_next_off);
-        Check_EVENT(ev);
-        if (ev->umask0.bit_test(us->uid) || ev->umask1.bit_test(us->uid) )    {
-          ev->umask0.bit_clear(us->uid);
-          ev->umask1.bit_clear(us->uid);
-          if ( !ev->umask0.mask_or_ro(ev->umask1) )	  {  /* no more consumers */
-            /* de-allocate event space */
-            _mbm_sfree (bm, ev->ev_add, ev->ev_size);
-            _mbm_efree (bm, ev->eid);	/* de-allocate event slot */
-          }
+    if (us->held_eid != -1)  {
+      _mbm_rel_event (bm, us);
+    }
+    us->c_state = S_pause;
+    MBMQueue<EVENT> que(&bm->ctrl->e_head, -EVENT_next_off);
+    for(EVENT* e = que.get(); e; e = que.get())  {
+      e->isValid();
+      if (e->umask0.test(us->uid) || e->umask1.test(us->uid) || e->umask2.test(us->uid) )    {
+        e->umask0.clear(us->uid);
+        e->umask1.clear(us->uid);
+        e->umask2.clear(us->uid);
+        if ( !e->umask0.mask_or(e->umask1,e->umask2) )    {  // no more consumers
+          _mbm_sfree (bm, e->ev_add, e->ev_size);            // de-allocate event space
+          _mbm_efree (bm, e);                                // de-allocate event slot
         }
       }
-      return _mbm_restore_park_queue(park.get(),&ctrl->e_head);
     }
   }
   return user.status();
@@ -526,7 +493,6 @@ int mbm_get_space_a (BMDESCRIPT *bm, int size, int** ptr, MBM_ast_t astadd, void
       us->p_astpar    = astpar;
       lib_rtl_set_event (bm->WSP_event_flag);
     }
-    return MBM_NORMAL;
   }
   return user.status();
 }
@@ -551,7 +517,7 @@ int mbm_declare_event_and_send (BMDESCRIPT *bm, int len, int evtype, int* trmask
       sc = _mbm_send_space(bm);
       if (lib_rtl_is_success(sc))      {
         *free_add = 0;
-        *free_size	= 0;
+        *free_size  = 0;
       }
     }
     return sc;
@@ -617,7 +583,6 @@ int mbm_cancel_request (BMDESCRIPT *bm)   {
     if (us->p_state == S_weslot)    {
       _mbm_del_wes (bm, us);
     }
-    return MBM_NORMAL;
   }
   return user.status();
 }
@@ -626,30 +591,22 @@ int mbm_cancel_request (BMDESCRIPT *bm)   {
 
 /// clear events with freqmode = notall
 int _mbm_check_freqmode (BMDESCRIPT *bm)  {
-  EVENT *ev, *ev1;
-  CONTROL *ctrl = bm->ctrl;
-  std::auto_ptr<qentry_t> park(new qentry_t(0,0));
   int ret = -1;
-  for(int sc = remqhi(&ctrl->e_head,(qentry_t**)&ev1);
-      QR_success(sc);
-      sc = remqhi(&ctrl->e_head,(qentry_t**)&ev1) )
-  {
-    insqhi (ev1, park.get());
-    ev  = add_ptr(ev1,-EVENT_next_off);
-    Check_EVENT(ev);
-    if (!ev->umask0.mask_summ() && ev->umask1.mask_summ() && !ev->held_mask.mask_summ() )    {
-      _mbm_sfree (bm, ev->ev_add, ev->ev_size);      /* de-allocate event space */
-      _mbm_efree (bm, ev->eid);                      /* de-allocate event slot  */
+  MBMQueue<EVENT> que(&bm->ctrl->e_head, -EVENT_next_off);
+  for(EVENT* ev=que.get(); ev; ev = que.get() )  {
+    ev->isValid();
+    if (!ev->umask0.mask_summ() && ev->umask1.mask_summ() && !ev->umask2.mask_summ() && !ev->held_mask.mask_summ() )    {
+      _mbm_sfree (bm, ev->ev_add, ev->ev_size);      // de-allocate event space
+      _mbm_efree (bm, ev);                           // de-allocate event slot
       ret = 0;
     }
   }
-  _mbm_restore_park_queue(park.get(),&ctrl->e_head);
-  return (ret);
+  return ret;
 }
 
 /// try to get space ...
 int _mbm_get_sp (BMDESCRIPT *bmid, USER* us, int size, int** ptr)  {
-  int bit, nbit = (size + Bytes_p_Bit) >> Shift_p_Bit;	/* round size to block */
+  int bit, nbit = (size + Bytes_p_Bit) >> Shift_p_Bit;  // round size to block
   CONTROL *ctrl = bmid->ctrl;
   char *bitmap = bmid->bitmap;
   ctrl->last_alloc = 0;
@@ -665,7 +622,7 @@ int _mbm_get_sp (BMDESCRIPT *bmid, USER* us, int size, int** ptr)  {
     ctrl->i_space -= nbit;
     us->ws_ptr = (bit << Shift_p_Bit);
     *ptr = (int*)(bmid->buffer_add + (bit << Shift_p_Bit));
-    us->space_add = (bit<<Shift_p_Bit);	/* keep space inf... */
+    us->space_add = (bit<<Shift_p_Bit);  /* keep space inf... */
     us->space_size = nbit << Shift_p_Bit;
     _mbm_printf("Got space: %08X %d Bytes\n",us->ws_ptr, size);
     return MBM_NORMAL;
@@ -674,38 +631,34 @@ int _mbm_get_sp (BMDESCRIPT *bmid, USER* us, int size, int** ptr)  {
 }
 
 /* try to get event ... */  
-int _mbm_get_ev(BMDESCRIPT *bm, USER* us)  {
-  EVENT *ev1;
-  CONTROL *ctrl = bm->ctrl;
-  std::auto_ptr<qentry_t> park(new qentry_t(0,0));
-  for(int sc = remqhi(&ctrl->e_head,(qentry_t**)&ev1);
-    QR_success(sc);
-    sc = remqhi(&ctrl->e_head,(qentry_t**)&ev1)    )
-  {
-    insqhi (ev1, park.get());
-    EVENT* e  = add_ptr(ev1,-EVENT_next_off);
-    Check_EVENT(e);
-    if ( (e->busy !=2) && (e->busy !=0) )  {
-      if ( e->umask0.bit_test(us->uid) || e->umask1.bit_test(us->uid) )  {
-        us->we_ptr    = e->ev_add;
-        us->we_size   = e->ev_size;
-        us->we_evtype = e->ev_type;
-        us->we_trmask = e->tr_mask;
-        us->held_eid  = e->eid;
-        e->held_mask.bit_set(us->uid);
-        us->ev_seen++;
-        ctrl->tot_seen++;
-        return _mbm_restore_park_queue(park.get(),&ctrl->e_head);
+int _mbm_get_ev(BMDESCRIPT *bm, USER* u)  {
+  MBMQueue<EVENT> que(&bm->ctrl->e_head, -EVENT_next_off);
+  for(EVENT* e = que.get(); e != 0; e = que.get() )  {
+    if ( e->isValid() && (e->busy !=2) && (e->busy !=0) )  {
+      int req_one = e->umask2.test(u->uid);
+      if ( req_one || e->umask0.test(u->uid) || e->umask1.test(u->uid) )  {
+        u->we_ptr    = e->ev_add;
+        u->we_size   = e->ev_size;
+        u->we_evtype = e->ev_type;
+        u->we_trmask = e->tr_mask;
+        u->held_eid  = e->eid;
+        e->held_mask.set(u->uid);
+        if ( req_one )  { // BM_REQ_ONE consumer: No other may see this event
+          e->umask2.clear();
+          e->umask2.set(u->uid);
+        }
+        u->ev_seen++;
+        bm->ctrl->tot_seen++;
+        return MBM_NORMAL;
       }
     }
   }
-  _mbm_restore_park_queue(park.get(),&ctrl->e_head);
   return MBM_NO_EVENT;
 }
 
 /// add user in wait_event queue
 int _mbm_add_wev(BMDESCRIPT *bm, USER *us, int** ptr, int* size, int* evtype, TriggerMask* trmask, 
-		 int part_id, MBM_ast_t astadd, void* astpar)  {
+     int part_id, MBM_ast_t astadd, void* astpar)  {
   static int calls = 0;
   CONTROL *ctrl     = bm->ctrl;
   us->c_state       = S_wevent;
@@ -718,51 +671,48 @@ int _mbm_add_wev(BMDESCRIPT *bm, USER *us, int** ptr, int* size, int* evtype, Tr
   us->c_astpar      = astpar;
   us->held_eid      = -1;
   _mbm_printf("WEV ADD> %d State:%d\n",calls++, us->c_state);
-  insqti(&us->wenext, (qentry_t *)&ctrl->wev_head.next);
+  insqti(&us->wenext, &ctrl->wev_head);
   return MBM_NORMAL;
 }
 
 /// del user from the wait_event queue
-int _mbm_del_wev (BMDESCRIPT* /* bm */, USER* us) {
+int _mbm_del_wev (BMDESCRIPT* /* bm */, USER* u) {
   static int calls = 0;
-  if ( us->c_state != S_wevent )  {
+  if ( u->c_state != S_wevent )  {
     ::printf("INCONSISTENCY: Delete user from WEV queue without state S_wevent");
   }
   _mbm_printf("WEV DEL> %d\n",calls++);
-  us->c_state = S_wevent_ast_queued;
-  qentry_t *dummy, *hd	= add_ptr(&us->wenext,us->wenext.prev);
-  remqhi (hd, &dummy);
+  u->c_state = S_wevent_ast_queued;
+  remqent(&u->wenext);
   return MBM_NORMAL;
 }
 
 /// check wait event queue
-int _mbm_check_wev (BMDESCRIPT *bm, EVENT* ev)  {
-  USER *us1;
-  CONTROL *ctrl = bm->ctrl;
-  std::auto_ptr<qentry_t> park(new qentry_t(0,0));
-  for (int sc=remqhi(&ctrl->wev_head,(qentry_t**)&us1); QR_success(sc);
-           sc = remqhi(&ctrl->wev_head,(qentry_t**)&us1) )
-  {
-    insqhi (us1, park.get());
-    USER* us  = add_ptr(us1,-USER_we_off);
-    Check_USER(us);
-    ev->held_mask.bit_set(us->uid);
-    if (ev->umask0.bit_test(us->uid) || ev->umask1.bit_test(us->uid))    {
-      us->we_ptr    = ev->ev_add;
-      us->we_size   = ev->ev_size;
-      us->we_evtype = ev->ev_type;
-      us->we_trmask = ev->tr_mask;
-      us->held_eid  = ev->eid;
-      ev->held_mask.bit_set(us->uid);
-      us->ev_seen++;
-      ctrl->tot_seen++;
-      _mbm_del_wev (bm, us);
-      us->get_wakeups++;
-      _mbm_printf("EVENT: id=%d  %d %08X -> %s\n",ev->eid, ev->count, ev->ev_add, us->name);
-      _mbm_wake_process(BM_K_INT_EVENT, us);
+int _mbm_check_wev (BMDESCRIPT *bm, EVENT* e)  {
+  MBMQueue<USER> que(&bm->ctrl->wev_head, -USER_we_off);
+  for(USER* u = que.get(); u != 0; u = que.get() )  {
+    u->isValid();
+    e->held_mask.set(u->uid);
+    int req_one = e->umask2.test(u->uid);
+    if ( req_one || e->umask0.test(u->uid) || e->umask1.test(u->uid) )  {
+      u->we_ptr    = e->ev_add;
+      u->we_size   = e->ev_size;
+      u->we_evtype = e->ev_type;
+      u->we_trmask = e->tr_mask;
+      u->held_eid  = e->eid;
+      e->held_mask.set(u->uid);
+      if ( req_one )  { // BM_REQ_ONE consumer: No other may see this event
+        e->umask2.clear();
+        e->umask2.set(u->uid);
+      }
+      u->ev_seen++;
+      bm->ctrl->tot_seen++;
+      _mbm_del_wev (bm, u);
+      u->get_wakeups++;
+      _mbm_printf("EVENT: id=%d  %d %08X -> %s\n",e->eid, e->count, e->ev_add, u->name);
+      _mbm_wake_process(BM_K_INT_EVENT, u);
     }
   }
-  _mbm_restore_park_queue(park.get(),&ctrl->wev_head);
   return MBM_NORMAL;
 }
 
@@ -783,28 +733,22 @@ int _mbm_del_wsp (BMDESCRIPT* /* bm */, USER* us) {
   if (us->p_state != S_wspace)  {
     _mbm_printf("INCONSISTENCY: Delete user from WSP queue without state S_wspace");
   }
-  qentry_t *dummy, *hd = add_ptr(&us->wsnext,us->wsnext.prev);
-  remqhi (hd , &dummy);
+  remqent(&us->wsnext);
   us->p_state = S_wspace_ast_queued;
   return MBM_NORMAL;
 }
 
 /// check wait space queue
 int _mbm_check_wsp (BMDESCRIPT *bmid, int bit, int nbit)  {
-  USER *us1;
   CONTROL *ctrl   = bmid->ctrl;
   char    *bitmap = bmid->bitmap;
   int      size   = nbit << Shift_p_Bit;
-  std::auto_ptr<qentry_t> park(new qentry_t(0,0));
-  for(int sc = remqhi(&ctrl->wsp_head,(qentry_t**)&us1); QR_success(sc);
-    sc = remqhi(&ctrl->wsp_head,(qentry_t**)&us1) )
-  {
-    insqhi(us1, park.get());
-    USER* us  = add_ptr(us1,-USER_ws_off);
-    Check_USER(us);
-    _mbm_printf("WSP: User %s\n",us->name);
-    if ( us->p_state == S_wspace && us->ws_size <= size)      {
-      int ubit = (us->ws_size + Bytes_p_Bit) >> Shift_p_Bit;
+  MBMQueue<USER> que(&ctrl->wsp_head, -USER_ws_off);
+  for (USER* u=que.get(); u; u = que.get() )  {
+    u->isValid();
+    _mbm_printf("WSP: User %s\n",u->name);
+    if ( u->p_state == S_wspace && u->ws_size <= size)      {
+      int ubit = (u->ws_size + Bytes_p_Bit) >> Shift_p_Bit;
       ctrl->last_alloc = 0;
       int status = BF_alloc(bitmap+ctrl->last_alloc,ctrl->bm_size-(ctrl->last_alloc<<3),ubit,&bit);
       if (!lib_rtl_is_success(status))      {
@@ -813,44 +757,35 @@ int _mbm_check_wsp (BMDESCRIPT *bmid, int bit, int nbit)  {
       }
       if (lib_rtl_is_success(status))       {
         bit += ctrl->last_alloc<<3 ;
-        ctrl->last_alloc  = (bit+ubit)>>3;
-        ctrl->last_bit    = bit;
-        ctrl->i_space    -= ubit;
-        us->ws_ptr        = (bit << Shift_p_Bit);
-        us->space_add     = us->ws_ptr;
-        us->space_size    = ubit << Shift_p_Bit;
-        _mbm_del_wsp (bmid, us);
-        _mbm_wake_process(BM_K_INT_SPACE, us);
+        ctrl->last_alloc = (bit+ubit)>>3;
+        ctrl->last_bit   = bit;
+        ctrl->i_space   -= ubit;
+        u->ws_ptr        = (bit << Shift_p_Bit);
+        u->space_add     = u->ws_ptr;
+        u->space_size    = ubit << Shift_p_Bit;
+        _mbm_del_wsp (bmid, u);
+        _mbm_wake_process(BM_K_INT_SPACE, u);
         break;
       }
     }
   }
-  return _mbm_restore_park_queue(park.get(),&ctrl->wsp_head);
+  return MBM_NORMAL;
 }
 
 /// find matching req
 int _mbm_match_req (BMDESCRIPT *bm, int partid, int evtype, TriggerMask& trmask, 
-                    UserMask& mask0, UserMask& mask1)  
+                    UserMask& mask0, UserMask& mask1, UserMask& mask2)  
 {
-  USER *us1;
   UserMask dummy;
-  CONTROL *ctrl = bm->ctrl;
-  std::auto_ptr<qentry_t> park(new qentry_t(0,0));
-  for(int sc = remqhi(&ctrl->u_head,(qentry_t**)&us1);
-    QR_success(sc);
-    sc = remqhi(&ctrl->u_head,(qentry_t**)&us1)
-    )
-  {
+  MBMQueue<USER> que(&bm->ctrl->u_head, -USER_next_off);
+  for(USER* u=que.get(); u; u=que.get() )  {
     int i;
     REQ *rq;
-    insqhi(us1, park.get());
-    USER* us  = add_ptr(us1,-USER_next_off);
-    Check_USER(us);
-
-    if (((us->partid != 0) && (partid != 0) && (us->partid != partid)) || (us->c_state == S_pause))  {
+    u->isValid();
+    if (((u->partid != 0) && (partid != 0) && (u->partid != partid)) || (u->c_state == S_pause))  {
       continue;
     }
-    for (i = 0, rq = us->req; i < us->n_req; i++, rq++)  {
+    for (i = 0, rq = u->req; i < u->n_req; i++, rq++)  {
       if (evtype <= TOPTYP)  {
         if (evtype != rq->ev_type)
           continue;
@@ -863,132 +798,117 @@ int _mbm_match_req (BMDESCRIPT *bm, int partid, int evtype, TriggerMask& trmask,
         else if ( dummy.mask_and(trmask, rq->vt_mask) )  
           continue;
       }
-      else if (rq->ev_type <=TOPTYP)
+      else if (rq->ev_type <= TOPTYP)
         continue;
       else if ( evtype < rq->ev_type || evtype > (int)rq->tr_mask.word(0) )
         continue;
       else if ( (float(::rand())/float(RAND_MAX)*100.0) > rq->freq)
         continue;
 
-      (rq->user_type == BM_REQ_VIP) ? mask0.bit_set(us->uid) : mask1.bit_set(us->uid);
-      us->ev_actual++;
-      ctrl->tot_actual++;
+      if ( rq->user_type == BM_REQ_ONE )    
+        mask2.set(u->uid);
+      else if ( rq->user_type == BM_REQ_VIP )
+        mask0.set(u->uid);
+      else
+        mask1.set(u->uid);
+      u->ev_actual++;
+      bm->ctrl->tot_actual++;
       break;
     }
   }
-  return _mbm_restore_park_queue(park.get(),&ctrl->u_head);
+  return MBM_NORMAL;
 }
 
 /// check existance of name
 int _mbm_findnam (BMDESCRIPT *bm, const char* name) {
-  USER *us1;
-  CONTROL *ctrl = bm->ctrl;
-  std::auto_ptr<qentry_t> park(new qentry_t(0,0));
-  for(int sc = remqhi(&ctrl->u_head,(qentry_t**)&us1); QR_success(sc); )  {
-    insqhi(us1, park.get());
-    USER* us  = add_ptr(us1,-USER_next_off);
-    Check_USER(us);
-    if (strncmp (us->name, name, NAME_LENGTH) == 0)  {
-      _mbm_restore_park_queue(park.get(),&ctrl->u_head);
-      return us->uid;
+  MBMQueue<USER> que(&bm->ctrl->u_head,-USER_next_off);
+  for(USER* u=que.get(); u; u=que.get())  {
+    if ( u->isValid() && ::strncmp(u->name, name, NAME_LENGTH) == 0 )  {
+      return u->uid;
     }
-    sc = remqhi(&ctrl->u_head,(qentry_t**)&us1);
   }
-  _mbm_restore_park_queue(park.get(),&ctrl->u_head);
   return (-1);
 }
 
 /// alloc user slot
-int _mbm_ualloc (BMDESCRIPT *bm)  {
-  USER *us = bm->user;
-  int i = 0;
-  for (CONTROL *ctrl = bm->ctrl; i < ctrl->p_umax; i++, us++)  {
-    if (us->busy == 0)    {
-      us->busy = 1;
-      us->uid = i;
-      insqti(us, &ctrl->u_head);
-      return (i);
+USER* _mbm_ualloc (BMDESCRIPT *bm)  {
+  USER *u = bm->user;
+  for (int i = 0; i < bm->ctrl->p_umax; ++i, ++u)  {
+    if (u->busy == 0)    {
+      u->busy = 1;
+      u->uid  = i;
+      insqti(u, &bm->ctrl->u_head);
+      return u;
     }
   }
-  return (-1);
+  return 0;
 }
 
 /// alloc event slot
-int _mbm_ealloc (BMDESCRIPT *bm)  {
+EVENT* _mbm_ealloc (BMDESCRIPT *bm)  {
   int i = 0;
   static int cnt = 0;
-  EVENT *ev = bm->event;
-  for (CONTROL *ctrl = bm->ctrl; i < ctrl->p_emax; i++, ev++)  {
-    Check_EVENT(ev);
-    if (ev->busy == 0)    {
-      int c = ev->count;
-      ev->busy = 2;
-      ev->eid  = i;
-      ev->count = cnt++;
+  EVENT *e = bm->event;
+  for (CONTROL *ctrl = bm->ctrl; i < ctrl->p_emax; ++i, ++e)  {
+    if (e->isValid() && e->busy == 0)    {
+      int c = e->count;
+      e->busy = 2;
+      e->eid  = i;
+      e->count = cnt++;
       ctrl->i_events++;
-      insqti(ev, &ctrl->e_head);
-      _mbm_printf("Got EVENT Slot: %d %d [%d]\n",ev->eid,ev->count,c);
-      return i;
+      insqti(e, &bm->ctrl->e_head);
+      return e;
     }
   }
-  return (-1);
+  return 0;
 }
 
 /// free user slot
-int _mbm_ufree (BMDESCRIPT *bm, int i)  {
-  USER* us = bm->user + i;
-  if (us->busy != 1 || us->uid != i)  {
-    _mbm_return_err (MBM_INTERNAL);
+int _mbm_ufree (BMDESCRIPT *bm, USER* u)  {
+  if ( u->busy == 1 )  {
+    u->busy = 0;
+    u->uid  = 0;
+    remqent(u);
+    return MBM_NORMAL;
   }
-  us->busy = 0;
-  us->uid  = 0;
-  qentry_t *dummy, *hd	= add_ptr(us->prev,&us->next);
-  remqhi (hd, &dummy);
-  return MBM_NORMAL;
+  _mbm_return_err (MBM_INTERNAL);
 }
 
 /// free event slot
-int _mbm_efree (BMDESCRIPT *bm, int i)  {
-  if (i == -1)  {
+int _mbm_efree (BMDESCRIPT *bm, EVENT* e)  {
+  if (e == 0)  {
     _mbm_return_err (MBM_INTERNAL);
   }
-  EVENT* ev = bm->event + i;
-  if (ev->busy == 0 || ev->eid != i)  {
+  else if (e->busy == 0)  {
     _mbm_return_err (MBM_INTERNAL);
   }
-  ev->busy = 0;
-  _mbm_printf("Free slot: %d %d\n",ev->eid, ev->count);
-  qentry_t* dummy;
-  qentry_t *hd = add_ptr(ev->prev,&ev->next);
-  remqhi(hd, &dummy);
+  e->busy = 0;
+  _mbm_printf("Free slot: %d %d\n",e->eid, e->count);
+  remqent(e);
   bm->ctrl->i_events--;
   _mbm_check_wes (bm);
   return MBM_NORMAL;
 }
 
 /// release event held by this user
-int _mbm_rel_event (BMDESCRIPT *bm, int uid)  {
-  USER  *us = bm->user + uid;
-  EVENT *ev = bm->event + us->held_eid;
-  us->held_eid = -1;
-  ev->umask0.bit_clear(uid);
-  ev->umask1.bit_clear(uid);
-  ev->held_mask.bit_clear(uid);
-  if ( !ev->umask0.mask_or_ro(ev->umask1) )	{  // no more consumers
-    _mbm_sfree (bm, ev->ev_add, ev->ev_size);  // de-allocate event space
-    _mbm_efree (bm, ev->eid);                  // de-allocate event slot
+int _mbm_rel_event (BMDESCRIPT *bm, USER* u)  {
+  EVENT *e = bm->event + u->held_eid;
+  u->held_eid = -1;
+  e->umask0.clear(u->uid);
+  e->umask1.clear(u->uid);
+  e->umask2.clear(u->uid);
+  e->held_mask.clear(u->uid);
+  if ( !e->umask0.mask_or(e->umask1,e->umask2) )  {  // no more consumers
+    _mbm_sfree (bm, e->ev_add, e->ev_size);          // de-allocate event space
+    _mbm_efree (bm, e);                              // de-allocate event slot
   }
   return MBM_NORMAL;
 }
 
 /// clean-up this user
 int _mbm_uclean (BMDESCRIPT *bm)  {
-  EVENT *ev1;
-  int uid = bm->owner;
-  CONTROL* ctrl = bm->ctrl;
-  USER*    us   = bm->user + uid;
-  std::auto_ptr<qentry_t> park(new qentry_t(0,0));
-
+  int   uid = bm->owner;
+  USER* us  = bm->user + uid;
   if (us->c_state == S_wevent)  {
     _mbm_del_wev (bm, us);
   }
@@ -999,32 +919,28 @@ int _mbm_uclean (BMDESCRIPT *bm)  {
     _mbm_del_wes (bm, us);
   }
 
-  if (us->space_size)	 {	/* free the held space */
+  if (us->space_size)   {  /* free the held space */
     _mbm_sfree (bm, us->space_add, us->space_size);
     us->space_add = 0;
     us->space_size = 0;
   }
-  if (us->held_eid != -1)	  { /* free the held event */
-    _mbm_rel_event (bm, uid);	/* release event */
+  if (us->held_eid != -1)    { // free the held event
+    _mbm_rel_event (bm, us);   // release event
   }
-  for(int sc = remqhi(&ctrl->e_head,(qentry_t**)&ev1); QR_success(sc);
-    sc = remqhi(&ctrl->e_head,(qentry_t**)&ev1)
-    )
-  {
-    insqhi (ev1, park.get());
-    EVENT* ev  = add_ptr(ev1,-EVENT_next_off);
-    Check_EVENT(ev);
-    ev->umask0.bit_clear(uid);
-    ev->umask1.bit_clear(uid);
-    ev->held_mask.bit_clear(uid);
-    if ( !ev->umask0.mask_or_ro(ev->umask1) || ((ev->busy == 2) && ev->held_mask.mask_summ()))  {
-      _mbm_sfree (bm, ev->ev_add, ev->ev_size);
-      _mbm_efree (bm, ev->eid);
+  MBMQueue<EVENT> que(&bm->ctrl->e_head,-EVENT_next_off);
+  for(EVENT* e=que.get(); e; e=que.get() )  {
+    e->isValid();
+    e->umask0.clear(uid);
+    e->umask1.clear(uid);
+    e->umask2.clear(uid);
+    e->held_mask.clear(uid);
+    if ( !e->umask0.mask_or(e->umask1,e->umask2) || ((e->busy == 2) && e->held_mask.mask_summ()))  {
+      _mbm_sfree (bm, e->ev_add, e->ev_size);
+      _mbm_efree (bm, e);
     }
   }
-  _mbm_restore_park_queue(park.get(),&ctrl->e_head);
-  _mbm_ufree (bm, uid);	/* de-allocate user slot */
-  ctrl->i_users--;
+  _mbm_ufree (bm, us);  // de-allocate user slot
+  bm->ctrl->i_users--;
   return MBM_NORMAL;
 }
 
@@ -1047,38 +963,36 @@ int _mbm_sfree (BMDESCRIPT *bm, int add, int size)  {
 
 int mbm_grant_update (BMDESCRIPT *bm)   {
   UserLock user(bm);
-  USER* us = user.user();
-  if ( us )  {
-    if (us->held_eid == -1)  {
+  USER* u = user.user();
+  if ( u )  {
+    if (u->held_eid == -1)  {
       _mbm_return_err (MBM_NO_EVENT);
     }
-    return _mbm_req_upd (bm, us);	/* convert event to space */
+    EVENT* e = bm->event + u->held_eid;  // convert event to space
+    int held_eid = u->held_eid;
+    int add = (int)e->ev_add ;
+    int siz = e->ev_size;
+    u->held_eid = -1;
+    e->held_mask.clear(u->uid);
+    e->umask0.clear(u->uid);
+    e->umask1.clear(u->uid);
+    e->umask2.clear(u->uid);
+    if ( !e->umask0.mask_or(e->umask1,e->umask2) )  {
+      //  no more consumers - convert event into space de-allocate event slot
+      _mbm_efree (bm, e);
+      u->space_add  = add;
+      u->space_size = siz;
+      return 0;
+    }
+    // Still other consumers for this event. Restore old situation and return error
+    e->held_mask.set(u->uid);
+    e->umask0.set(u->uid);
+    e->umask1.set(u->uid);
+    e->umask2.set(u->uid);
+    u->held_eid = held_eid;
+    _mbm_return_err (MBM_ILL_REQ);
   }
   return user.status();
-}
-
-int _mbm_req_upd (BMDESCRIPT *bm, USER *us)   {
-  EVENT* ev = bm->event + us->held_eid;
-  int held_eid = us->held_eid;
-  int add = (int)ev->ev_add ;
-  int siz = ev->ev_size;
-  us->held_eid = -1;
-  ev->held_mask.bit_clear(us->uid);
-  ev->umask0.bit_clear(us->uid);
-  ev->umask1.bit_clear(us->uid);
-  if ( !ev->umask0.mask_or_ro(ev->umask1) )  {
-    //  no more consumers - convert event into space de-allocate event slot
-    _mbm_efree (bm, ev->eid);
-    us->space_add = add;
-    us->space_size = siz;
-    return 0;
-  }
-  // Still other consumers for this event. Restore old situation and return error
-  ev->held_mask.bit_set(us->uid);
-  ev->umask0.bit_set(us->uid);
-  ev->umask1.bit_set(us->uid);
-  us->held_eid = held_eid;
-  _mbm_return_err (MBM_ILL_REQ);
 }
 
 /// clean-up this user in all buffers
@@ -1086,8 +1000,8 @@ int _mbm_shutdown (void* /* param */) {
   qentry_t *q, *bmq = desc_head;
   if (bmq == 0)  {
     return MBM_NORMAL;
-  }
-  for(int sc=remqhi(bmq,&q); QR_success(sc); sc=remqhi(bmq,&q))  {
+  }  
+  for(int sc=remqhi(bmq,&q); lib_rtl_queue_success(sc); sc=remqhi(bmq,&q))  {
     BMDESCRIPT *bm = (BMDESCRIPT *)q;
     _mbm_cancel_lock(bm);
     if (disable_rundown == 1)    {
@@ -1116,7 +1030,7 @@ int _mbm_find_buffer (const char* bm_name)  {
   int l = strlen (bm_name);
   for(BMDESCRIPT *bm=(BMDESCRIPT*)add_ptr(bmq,bmq->next); bmq != bm; bm=add_ptr(bm,next))  {
     int l1 = strlen (bm->bm_name);
-    next	= bm->next ;
+    next  = bm->next ;
     if (l1 == l)    {
       if (strncmp (bm->bm_name, bm_name, l) == 0)      {
         return 0;
@@ -1138,72 +1052,56 @@ int _mbm_add_wes (BMDESCRIPT *bm, USER *us, MBM_ast_t astadd)  {
 
 /// del user from the wait_event_slot queue
 int _mbm_del_wes (BMDESCRIPT* /* bm */, USER* us)   {
-  qentry_t* dummy, *hd	= add_ptr(&us->wesnext,us->wesnext.prev);
   us->p_state = S_weslot_ast_queued;
-  remqhi (hd , &dummy);
+  remqent(&us->wesnext);
   return MBM_NORMAL;
 }
 
 /// check wait event slot
 int _mbm_check_wes (BMDESCRIPT *bm)   {
-  USER *us1;
-  CONTROL *ctrl = bm->ctrl;
-  std::auto_ptr<qentry_t> park(new qentry_t(0,0));
-  for(int sc = remqhi(&ctrl->wes_head,(qentry_t**)&us1);
-      QR_success(sc);
-      sc = remqhi(&ctrl->wes_head,(qentry_t**)&us1))  {
-    insqhi (us1, park.get());
-    USER* us  = add_ptr(us1,-USER_wes_off);
-    Check_USER(us);
-    if (us->p_state == S_weslot)    {
-      _mbm_del_wes (bm, us);
-      _mbm_wake_process (BM_K_INT_ESLOT, us);
+  MBMQueue<USER> que(&bm->ctrl->wes_head,-USER_wes_off);
+  for(USER* u=que.get(); u; u=que.get() )  {
+    if (u->isValid() && u->p_state == S_weslot)    {
+      _mbm_del_wes (bm, u);
+      _mbm_wake_process (BM_K_INT_ESLOT, u);
       break;
     }
   }
-  return _mbm_restore_park_queue(park.get(),&ctrl->wes_head);
+  return MBM_NORMAL;
 }
 
 
-/* Statistics routines */
+/// Statistics routines
 int mbm_events_actual (BMDESCRIPT *bm, int *events)   {
   UserLock user(bm);
-  USER* us = user.user();
-  if ( us )  {
-    *events = us->ev_actual;
-    return MBM_NORMAL;
+  if ( user.user() )  {
+    *events = user.user()->ev_actual;
   }
   return user.status();
 }
 
 int mbm_events_produced (BMDESCRIPT *bm, int *events)   {
   UserLock user(bm);
-  USER* us = user.user();
-  if ( us )  {
-    *events = us->ev_produced;
-    return MBM_NORMAL;
+  if ( user.user() )  {
+    *events = user.user()->ev_produced;
   }
   return user.status();
 }
 
 int mbm_events_seen (BMDESCRIPT *bm, int *events)   {
   UserLock user(bm);
-  USER* us = user.user();
-  if ( us )  {
-    *events = us->ev_seen;
-    return MBM_NORMAL;
+  if ( user.user() )  {
+    *events = user.user()->ev_seen;
   }
   return user.status();
 }
 
 int mbm_reset_statistics (BMDESCRIPT *bm) {
   UserLock user(bm);
-  USER* us = user.user();
-  if ( us )  {
-    us->ev_actual   = 0;
-    us->ev_produced = 0;
-    us->ev_seen     = 0;
-    return MBM_NORMAL;
+  if ( user.user() )  {
+    user.user()->ev_actual   = 0;
+    user.user()->ev_produced = 0;
+    user.user()->ev_seen     = 0;
   }
   return user.status();
 }
@@ -1211,12 +1109,10 @@ int mbm_reset_statistics (BMDESCRIPT *bm) {
 int mbm_buffer_size (BMDESCRIPT *bm, int* size) {
   Lock lock(bm);
   if ( lock )  {
-    CONTROL *ctrl = bm->_control();
-    if ( ctrl )  {
-      *size = ctrl->buff_size;
-      return MBM_NORMAL;
+    if ( !bm->_control() )  {
+      _mbm_return_err (MBM_ILL_CONS);
     }
-    _mbm_return_err (MBM_ILL_CONS);
+    *size = bm->_control()->buff_size;
   }
   return lock.status();
 }
@@ -1224,12 +1120,10 @@ int mbm_buffer_size (BMDESCRIPT *bm, int* size) {
 int mbm_events_in_buffer (BMDESCRIPT *bm, int* events)  {
   Lock lock(bm);
   if ( lock )  {
-    CONTROL *ctrl = bm->_control();
-    if ( ctrl )  {
-      *events = ctrl->i_events;
-      return MBM_NORMAL;
+    if ( !bm->_control() )  {
+      _mbm_return_err (MBM_ILL_CONS);
     }
-    _mbm_return_err (MBM_ILL_CONS);
+    *events = bm->_control()->i_events;
   }
   return lock.status();
 }
@@ -1252,8 +1146,7 @@ int mbm_space_in_buffer (BMDESCRIPT *bm, int* total, int* large)  {
 }
 
 int mbm_process_exists (BMDESCRIPT *bm, const char* name, int* exists)  {
-  int owner = bm->owner;
-  if (owner == -1)  {
+  if (bm->owner == -1)  {
     _mbm_return_err (MBM_ILL_CONS);
   }
   int status = _mbm_findnam (bm, name);
@@ -1262,8 +1155,8 @@ int mbm_process_exists (BMDESCRIPT *bm, const char* name, int* exists)  {
 }
 
 int  mbm_wait_event(BMDESCRIPT *bm)    {
-  int sc, owner = bm->owner;
-  if (owner == -1)  {
+  int sc;
+  if (bm->owner == -1)  {
     _mbm_return_err (MBM_ILL_CONS);
   }
   USER* us = bm->_user();
@@ -1271,7 +1164,7 @@ int  mbm_wait_event(BMDESCRIPT *bm)    {
     Lock lock(bm);
     _mbm_printf("WEV: State=%d  %s \n", us->c_state, us->c_state == S_wevent_ast_queued ? "OK" : "BAAAAD");
     if ( us->c_state == S_wevent_ast_queued )  {
-      lib_rtl_clear_event (	bm->WEV_event_flag);
+      lib_rtl_clear_event (  bm->WEV_event_flag);
       us->reason        = BM_K_INT_EVENT;
       us->get_wakeups++;
       lib_rtl_run_ast(us->c_astadd, us->c_astpar, 3);
@@ -1287,7 +1180,7 @@ Again:
   }
   if ( lib_rtl_is_success(sc) )  {
     Lock lock(bm);
-    lib_rtl_clear_event (	bm->WEV_event_flag);
+    lib_rtl_clear_event (  bm->WEV_event_flag);
     if (us->held_eid == -1)    {
       goto Again;
     }
@@ -1303,8 +1196,7 @@ Again:
 
 int mbm_wait_event_a(BMDESCRIPT* bm)    {
   UserLock user(bm);
-  USER* us = user.user();
-  if ( us )  {
+  if ( user.user() )  {
     int sc = lib_rtl_wait_for_event_a(bm->WEVA_event_flag,(lib_rtl_thread_routine_t)mbm_wait_event,bm);
     if ( lib_rtl_is_success(sc) )  {
       return MBM_NORMAL;
@@ -1315,21 +1207,19 @@ int mbm_wait_event_a(BMDESCRIPT* bm)    {
 }
 
 int  mbm_wait_space(BMID bm)    {
-  int sc = 1;
-  int owner = bm->owner;
-  if (owner == -1)  {
+  if (bm->owner == -1)  {
     _mbm_return_err (MBM_ILL_REQ);
   }
   USER* us = bm->_user();
 wait:
   if ( us->p_state == S_weslot_ast_queued )  {
-    sc = lib_rtl_wait_for_event(bm->WES_event_flag);
+    int sc = lib_rtl_wait_for_event(bm->WES_event_flag);
     lib_rtl_clear_event(bm->WES_event_flag);
     lib_rtl_run_ast(us->p_astadd, us->p_astpar, 3);
   }
   else if ( us->p_state == S_wspace_ast_queued )    {
     _mbm_printf("Wait...lib_rtl_wait_for_event\n");
-    sc = lib_rtl_wait_for_event(bm->WSP_event_flag);
+    int sc = lib_rtl_wait_for_event(bm->WSP_event_flag);
     if ( lib_rtl_is_success(sc) )  {
       lib_rtl_clear_event(bm->WSP_event_flag);
       if ( us->p_state == S_wspace_ast_queued )  {
@@ -1357,11 +1247,9 @@ int _mbm_wait_space_a(void* param)  {
 
 int  mbm_wait_space_a(BMDESCRIPT* bm)    {
   UserLock user(bm);
-  USER* us = user.user();
-  if ( us )  {
-    int sc = 0;
+  if ( user.user() )  {
     if ( 0 == bm->pThread )  {
-      sc = lib_rtl_start_thread(_mbm_wait_space_a, bm, &bm->pThread);
+      int sc = lib_rtl_start_thread(_mbm_wait_space_a, bm, &bm->pThread);
       if ( !(sc & 1) )  {
         lib_rtl_signal_message(0,"Failed to manipulate producer BM thread");
         return MBM_INTERNAL;
@@ -1420,7 +1308,7 @@ int mbm_get_event_ast(void* par) {
     return 1;
   }
   us->c_state = S_active;
-  EVENT* ev	= bm->event+us->held_eid;
+  EVENT* ev  = bm->event+us->held_eid;
   if (us->reason != BM_K_INT_EVENT)  {
     ::printf("event_ast spurious wakeup reason = %d\n",us->reason);
     us->reason = S_wevent_ast_handled;
@@ -1436,7 +1324,7 @@ int mbm_get_event_ast(void* par) {
   return MBM_NORMAL;
 }
 
-int  mbm_get_space_ast(void* par) {
+int mbm_get_space_ast(void* par) {
   BMDESCRIPT *bm = (BMDESCRIPT*)par;
   USER *us = bm->_user();
   if ( us == 0 )  {
@@ -1465,9 +1353,9 @@ int  mbm_get_space_ast(void* par) {
 /// Wait event space AST function
 int _mbm_wes_ast(void* par)   {
   BMDESCRIPT *bm = (BMDESCRIPT*)par;
-  USER *us	= bm->user+bm->owner;
+  USER *us  = bm->user+bm->owner;
   if (us->p_state == S_weslot_ast_queued)  {
-    us->p_state	= S_active;
+    us->p_state  = S_active;
     // lib_rtl_set_event (bm->WES_event_flag);
     return 1;
   }
@@ -1475,30 +1363,16 @@ int _mbm_wes_ast(void* par)   {
   return 0;
 }
 
-
-int _mbm_restore_park_queue(qentry_t *p, qentry_t *d) {
-  qentry_t *e;
-  for (int sc=remqhi(p,&e);QR_success(sc);sc=remqhi(p,&e))  {
-    insqhi (e, d);
-  }
-  return MBM_NORMAL;
-}
-
 int _mbm_declare_event (BMDESCRIPT *bm, int len, int evtype, TriggerMask& trmask,
                         const char* dest, void** free_add, int* free_size, int part_id)
 {
-  char*  add;
-  int eid, uid, rlen;
-  UserMask mask0(0);
-  UserMask mask1(0);
-  int      owner = bm->owner;
+  UserMask mask0(0), mask1(0), mask2(0);
   CONTROL* ctrl  = bm->ctrl;
-
-  if (owner == -1)  {
+  if (bm->owner == -1)  {
     _mbm_return_err (MBM_ILL_CONS);
   }
-  USER* us = bm->user + owner;
-  if (us->uid != owner)  {
+  USER* us = bm->user + bm->owner;
+  if (us->uid != bm->owner)  {
     _mbm_return_err (MBM_INTERNAL);
   }
   if (!us->space_size)  {
@@ -1510,25 +1384,26 @@ int _mbm_declare_event (BMDESCRIPT *bm, int len, int evtype, TriggerMask& trmask
   if (len > us->space_size)  {
     _mbm_return_err (MBM_EV_TOO_BIG);
   }
-  rlen = ((len + Bytes_p_Bit) >> Shift_p_Bit) << Shift_p_Bit;
-  add = us->space_add+bm->buffer_add;
+  int   rlen = ((len + Bytes_p_Bit) >> Shift_p_Bit) << Shift_p_Bit;
+  char* add  = us->space_add+bm->buffer_add;
   /* find all destinations */
   *(int*)add = len/4;
   if (dest)  {
-    uid = _mbm_findnam (bm, dest);
+    int uid = _mbm_findnam (bm, dest);
     if (uid != -1)    {
-      mask0.bit_set(uid);
+      mask0.set(uid);
     }
   }
+  EVENT* ev = 0;
   do  {
-    eid = _mbm_ealloc (bm);
-    if (eid == -1)    {
+    ev = _mbm_ealloc (bm);
+    if ( ev == 0 )    {
       if (_mbm_check_freqmode (bm) == 0)  {
-        eid = _mbm_ealloc (bm);
-        if (eid == -1)   {
+        ev = _mbm_ealloc (bm);
+        if ( ev == 0 )   {
           /* add on the wait event slot queue */
           _mbm_add_wes (bm, us, _mbm_wes_ast_add);
-          lib_rtl_clear_event (	bm->WES_event_flag);
+          lib_rtl_clear_event (  bm->WES_event_flag);
           int sp = ctrl->spare1;
           ctrl->spare1 = 0;
           _mbm_unlock_tables(bm);
@@ -1539,33 +1414,31 @@ int _mbm_declare_event (BMDESCRIPT *bm, int len, int evtype, TriggerMask& trmask
           _mbm_lock_tables(bm);
           ctrl->spare1 = sp;
           if (us->p_state != S_active)   {
-            _mbm_return_err (MBM_REQ_CANCEL); /* other reasons */
+            _mbm_return_err (MBM_REQ_CANCEL); // other reasons
           }
         }
       }
-      else   {
-        /* add on the wait event slot queue */
+      else   {       // add on the wait event slot queue
         _mbm_add_wes (bm, us, _mbm_wes_ast_add);
-        lib_rtl_clear_event (	bm->WES_event_flag);
-	int sp = ctrl->spare1;
-	ctrl->spare1 = 0;
+        lib_rtl_clear_event (  bm->WES_event_flag);
+        int sp = ctrl->spare1;
+        ctrl->spare1 = 0;
         _mbm_unlock_tables(bm);
         lib_rtl_wait_for_event (bm->WES_event_flag);
         if (us->p_state == S_weslot_ast_queued)  {
           lib_rtl_run_ast(us->p_astadd, us->p_astpar, 3);
         }
         _mbm_lock_tables(bm);
-	ctrl->spare1 = sp;
+        ctrl->spare1 = sp;
         if (us->p_state != S_active)        {
-          _mbm_return_err (MBM_REQ_CANCEL);	/* other reasons */
+          _mbm_return_err (MBM_REQ_CANCEL);  // other reasons
         }
       }
     }
-  } while (eid == -1);
-  _mbm_match_req (bm, part_id, evtype, trmask, mask0, mask1);
-  if ( mask0.mask_or_ro(mask1) )  {
-    EVENT *ev = bm->event + eid;
-    ev->busy    = 2;		/* exclusive use of event */
+  } while ( ev == 0 );
+  _mbm_match_req (bm, part_id, evtype, trmask, mask0, mask1, mask2);
+  if ( mask0.mask_or(mask1,mask2) )  {
+    ev->busy    = 2;    /* exclusive use of event */
     ev->partid  = part_id;
     ev->ev_type = evtype;
     ev->tr_mask = trmask;
@@ -1573,19 +1446,20 @@ int _mbm_declare_event (BMDESCRIPT *bm, int len, int evtype, TriggerMask& trmask
     ev->ev_size = len;
     ev->umask0  = mask0;
     ev->umask1  = mask1;
+    ev->umask2  = mask2;
     ev->held_mask.clear();
-    ev->held_mask.bit_set(owner);
+    ev->held_mask.set(bm->owner);
     _mbm_printf("Got slot:%d %d  %08X\n",ev->eid, ev->count, ev->ev_add);
   }
   else  {
-    _mbm_efree (bm, eid);
-    _mbm_sfree (bm, us->space_add, rlen);	/* free event space */
+    _mbm_efree (bm, ev);
+    _mbm_sfree (bm, us->space_add, rlen);  // free event space
   }
   *free_add = add + rlen;
-  us->space_add = (int)*free_add - (int)bm->buffer_add;
+  us->space_add  = (int)*free_add - (int)bm->buffer_add;
   us->space_size = (*free_size = us->space_size - rlen);
   if (us->space_size == 0)  {
-    us->space_add = 0;	/* if size zero, address zero */
+    us->space_add = 0;                    // if size zero, address zero
   }
   ctrl->tot_produced++;
   us->ev_produced++;
@@ -1593,11 +1467,7 @@ int _mbm_declare_event (BMDESCRIPT *bm, int len, int evtype, TriggerMask& trmask
 }
 
 int _mbm_check_cons (BMDESCRIPT *bm)  {
-  EVENT *ev, *ev1;
-  int      owner = bm->owner;
-  CONTROL* ctrl  = bm->ctrl;
-  std::auto_ptr<qentry_t> park(new qentry_t(0,0));
-
+  int owner = bm->owner;
   if (owner == -1)  {
     _mbm_return_err (MBM_ILL_CONS);
   }
@@ -1605,24 +1475,19 @@ int _mbm_check_cons (BMDESCRIPT *bm)  {
   if (us->uid != owner)  {
     _mbm_return_err (MBM_INTERNAL);
   }
-  for (int sc = remqhi(&ctrl->e_head,(qentry_t**)&ev1);
-       QR_success(sc);
-       sc = remqhi(&ctrl->e_head,(qentry_t**)&ev1) )
-  {
-    insqhi (ev1, park.get());
-    ev  = add_ptr(ev1,-EVENT_next_off);
-    Check_EVENT(ev);
-    if (ev->busy != 2)     {
+  MBMQueue<EVENT> que(&bm->ctrl->e_head, -EVENT_next_off);
+  for(EVENT* e=que.get(); e; e=que.get() )  {
+    e->isValid();
+    if (e->busy != 2)     {
       continue;
     }
-    if ( ev->held_mask.bit_test(owner) )      {
-      ev->held_mask.bit_clear(owner);
-      ev->busy = 1;
-      _mbm_printf("_mbm_send_space EVENT: %d %d\n",ev->eid, ev->count);
-      _mbm_check_wev (bm, ev);	/* check wev queue */
+    if ( e->held_mask.test(owner) )      {
+      e->held_mask.clear(owner);
+      e->busy = 1;
+      _mbm_printf("_mbm_send_space EVENT: %d %d\n",e->eid, e->count);
+      _mbm_check_wev (bm, e);  /* check wev queue */
     }
   }
-  _mbm_restore_park_queue(park.get(),&ctrl->e_head);
   return MBM_NORMAL;
 }
 
@@ -1632,7 +1497,7 @@ int _mbm_send_space (BMDESCRIPT *bm)  {
     USER* us = bm->user + bm->owner;
     if (us->space_size)  {
       _mbm_printf("_mbm_send_space> Free event space\n");
-      _mbm_sfree (bm, us->space_add, us->space_size);	/* free space */
+      _mbm_sfree (bm, us->space_add, us->space_size);  /* free space */
     }
     us->space_add = 0;
     us->space_size = 0;

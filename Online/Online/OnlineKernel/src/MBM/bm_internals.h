@@ -20,21 +20,21 @@ typedef long UserMask;
 #endif
 
 extern "C" {
-  ///	find free user slot 
-  int _mbm_ualloc (BMDESCRIPT *);
-  int _mbm_uclean (BMDESCRIPT *);
+  ///  find free user slot 
+  USER* _mbm_ualloc (BMDESCRIPT *);
+  int _mbm_uclean   (BMDESCRIPT *);
   /// free user slot
-  int _mbm_ufree (BMDESCRIPT *bm, int i);
+  int _mbm_ufree    (BMDESCRIPT *bm, USER* us);
   int _mbm_flush_sections(BMDESCRIPT* bm);
-  int _mbm_ealloc (BMDESCRIPT*);
-  int _mbm_efree (BMDESCRIPT *, int);	/* de-allocate event slot */
+  EVENT* _mbm_ealloc(BMDESCRIPT*);
+  int _mbm_efree    (BMDESCRIPT* bm, EVENT* e);  /* de-allocate event slot */
+  int _mbm_sfree    (BMDESCRIPT* bm, int , int);
 
-  int _mbm_sfree (BMDESCRIPT *, int , int);
+  int _mbm_rel_event(BMDESCRIPT* bm, USER* us);
 
-  int _mbm_rel_event (BMDESCRIPT *, int);
   /* try to get event ... */
-  int _mbm_get_ev (BMDESCRIPT *bm, USER* us);
-  int _mbm_del_wes ( BMDESCRIPT* , USER* );
+  int _mbm_get_ev   (BMDESCRIPT* bm, USER* us);
+  int _mbm_del_wes  (BMDESCRIPT* bm, USER* us);
   int _mbm_check_wes (BMDESCRIPT*);
   /// add user in the wait_event_slot queue
   int _mbm_add_wes (BMDESCRIPT *bm, USER *us, MBM_ast_t astadd);
@@ -50,10 +50,10 @@ extern "C" {
 
   int _mbm_findnam (BMDESCRIPT *bm, const char* name);
   /// find matching req
-  int _mbm_match_req (BMDESCRIPT *bm, int partid, int evtype, TriggerMask& trmask, UserMask& mask0, UserMask& mask1);
+  int _mbm_match_req (BMDESCRIPT *bm, int partid, int evtype, 
+                      TriggerMask& trmask, UserMask& mask0, UserMask& mask1, UserMask& mask2);
   int _mbm_check_wev (BMDESCRIPT*,EVENT*);
   int _mbm_del_wev (BMDESCRIPT*,USER*);
-  int _mbm_req_upd (BMDESCRIPT*,USER*);
   /// Wakeup process to continue processing
   int _mbm_wake_process (int reason, USER* us);
 
@@ -65,8 +65,6 @@ extern "C" {
 
   int _mbm_declare_event (BMDESCRIPT *bm, int len, int evtype, TriggerMask& trmask,
     const char* dest, void** free_add, int* free_size, int part_id);
-
-  int _mbm_restore_park_queue(qentry_t *p, qentry_t *d);
 
   int _mbm_check_freqmode (BMDESCRIPT *bm);
   int _mbm_send_space (BMDESCRIPT *bm);
