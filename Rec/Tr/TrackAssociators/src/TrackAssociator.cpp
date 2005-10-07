@@ -1,4 +1,4 @@
-// $Id: TrackAssociator.cpp,v 1.1.1.1 2005-09-22 08:27:06 erodrigu Exp $
+// $Id: TrackAssociator.cpp,v 1.2 2005-10-07 12:13:25 mneedham Exp $
 // Include files 
 // -------------
 // from Gaudi
@@ -28,8 +28,11 @@
 // local
 #include "TrackAssociator.h"
 
+// Linker
+#include "Linker/LinkerWithKey.h"
+
 //-----------------------------------------------------------------------------
-// Implementation file for class : TrackAssociator
+// Implementation file for class : TrackAssociator (based on TrAssociator by O. Callot)
 //
 // 2005-09-12 : Edwin Bos
 //-----------------------------------------------------------------------------
@@ -50,6 +53,8 @@ TrackAssociator::TrackAssociator( const std::string& name,
   declareProperty( "OutputTable" ,    m_outputTable    = "" );
   declareProperty( "MinimalZ"    ,    m_minimalZ       = 5000.*mm );
   declareProperty( "FractionOK"  ,    m_fractionOK     = 0.70 );
+  declareProperty( "MakeLinker" , m_makeLinker     = false );
+
 }
 
 //=============================================================================
@@ -63,19 +68,17 @@ TrackAssociator::~TrackAssociator() {};
 StatusCode TrackAssociator::initialize() {
 
   StatusCode sc = GaudiAlgorithm::initialize(); // must be executed first
-  if ( sc.isFailure() ) return sc;  // error printed already by GaudiAlgorithm
+  if ( sc.isFailure() ){ 
+    return Error("Failed to initialize", sc);
+  }
 
-  debug() << "==> Initialise" << endreq;
+  m_veloClusToMCP = tool<VeloClusAsct>("VeloCluster2MCParticleAsct");
 
-  sc = toolSvc()->retrieveTool( "VeloCluster2MCParticleAsct",m_veloClusToMCP );
-  if ( !sc ) { return sc; }
+  m_itClusToMCP =  tool<ITClusAsct>("ITCluster2MCParticleAsct");
 
-  sc = toolSvc()->retrieveTool( "ITCluster2MCParticleAsct", m_itClusToMCP );
-  if ( !sc ) { return sc; }
+  m_otTimToMCP =  tool<OTTimAsct>("OTTime2MCParticleAsct");
 
-  sc = toolSvc()->retrieveTool( "OTTime2MCParticleAsct", m_otTimToMCP );
-  if ( !sc ) { return sc; }
-
+ 
   return StatusCode::SUCCESS;
 };
 
@@ -91,7 +94,7 @@ StatusCode TrackAssociator::execute() {
   MCParticles* mcParts = get<MCParticles>( MCParticleLocation::Default );
 
   // Create relation table and register it in the transient event store
-  typedef RelationWeighted2D< Track, MCParticle, float >  Table;
+  typedef RelationWeighted2D< Track, MCParticle, double >  Table;
   Table* table = new Table();
   StatusCode sc = put( table, m_outputTable );
   if ( sc.isFailure() ) {
@@ -127,7 +130,7 @@ StatusCode TrackAssociator::execute() {
   MCParticle* part;
   const VeloCluster* clu;
 
-  for ( it = tracks->begin() ; tracks->end() != it; it++ ) {
+  for ( it = tracks->begin() ; tracks->end() != it; ++it ) {
     const Track* tr = *it;
     m_nTotSeed = 0.;
     m_nTotTT1  = 0.;
@@ -144,7 +147,7 @@ StatusCode TrackAssociator::execute() {
 
     std::vector<Measurement*>::const_iterator itm;
     for ( itm = (tr->measurements()).begin();
-          (tr->measurements()).end() != itm  ; itm++  ) {
+          (tr->measurements()).end() != itm  ; ++itm  ) {
       clu = 0;
       VeloPhiMeasurement* meas = dynamic_cast<VeloPhiMeasurement*>(*itm);
       if ( 0 != meas ) {
@@ -162,7 +165,7 @@ StatusCode TrackAssociator::execute() {
         // Count each VELO cluster match
         m_nTotVelo += 1.;
         VeloClusAsct::DirectType::Range range = dirTable->relations( clu );
-        for ( itv = range.begin(); range.end() != itv; itv++ ) {
+        for ( itv = range.begin(); range.end() != itv; ++itv ) {
           part = itv->to();
           if ( 0 == part ) {
             error() << "Null track pointer associated to a Velo cluster";
@@ -275,7 +278,7 @@ StatusCode TrackAssociator::execute() {
     }
     
     //== We have collected the information. Now decide...
-    for ( unsigned int jj = 0 ; m_parts.size() > jj ; jj++  ) {
+    for ( unsigned int jj = 0 ; m_parts.size() > jj ; ++jj  ) {
 
       //== Velo part : OK if less than 3 hits, else more than m_fractionOK.
       bool veloOK = true;
@@ -315,24 +318,22 @@ StatusCode TrackAssociator::execute() {
       }
     }
   }
+
+
+  //== Convert to Linker relations if option set.
+  if ( m_makeLinker ) {
+    typedef IAssociatorWeighted<Track,MCParticle,double>  TrAsct ;
+    LinkerWithKey<MCParticle> myLink( eventSvc(), msgSvc(), m_inputContainer );
+    for ( it = tracks->begin() ; tracks->end() != it; ++it ) {
+      TrAsct::DirectType::Range ran = table->relations( *it );
+      for (  TrAsct::DirectType::iterator itT = ran.begin(); ran.end() != itT; ++itT ){
+        myLink.link( *it, itT->to(), itT->weight() );
+      } // itT
+    } // it
+  } // if
+
   debug() << " Track matching finished." << endreq;
 
   return StatusCode::SUCCESS;
 };
 
-//=============================================================================
-//  Finalize
-//=============================================================================
-StatusCode TrackAssociator::finalize() {
-
-  debug() << "==> Finalize" << endreq;
-  
-  // Release all tools
-  if( m_veloClusToMCP ) toolSvc()->releaseTool( m_veloClusToMCP );
-  if( m_itClusToMCP )   toolSvc()->releaseTool( m_itClusToMCP );
-  if( m_otTimToMCP )    toolSvc()->releaseTool( m_otTimToMCP );
-  
-  return GaudiAlgorithm:: finalize();  // must be called after all other actions
-}
-
-//=============================================================================

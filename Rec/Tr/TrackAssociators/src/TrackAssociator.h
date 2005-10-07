@@ -1,4 +1,4 @@
-// $Id: TrackAssociator.h,v 1.1.1.1 2005-09-22 08:27:06 erodrigu Exp $
+// $Id: TrackAssociator.h,v 1.2 2005-10-07 12:13:25 mneedham Exp $
 #ifndef TRACKASSOCIATORS_TRACKASSOCIATOR_H 
 #define TRACKASSOCIATORS_TRACKASSOCIATOR_H 1
 
@@ -44,7 +44,6 @@ public:
 
   virtual StatusCode initialize();    ///< Algorithm initialization
   virtual StatusCode execute   ();    ///< Algorithm execution
-  virtual StatusCode finalize  ();    ///< Algorithm finalization
 
   typedef ITCluster2MCParticleAsct::IAsct    ITClusAsct ;
   typedef OTTime2MCParticleAsct::IAsct       OTTimAsct ;
@@ -58,7 +57,7 @@ protected:
                     double incTT1,
                     double incSeed ) {
     bool found = false;
-    for ( unsigned int jj = 0 ; m_parts.size() > jj ; jj++  ) {
+    for ( unsigned int jj = 0 ; m_parts.size() > jj ; ++jj  ) {
       if ( m_parts[jj] == part ) {
         m_nVelo[jj] += incVelo;
         m_nTT1[jj]  += incTT1 ;
@@ -81,6 +80,9 @@ private:
   std::string m_outputTable;      ///< Name of the association table
   double      m_minimalZ;         ///< minimal Z for IT/OT, to ignore TT1
   double      m_fractionOK;       ///< minimal good matching fraction
+  bool        m_makeLinker;       ///< Option to construct the linker relations
+
+
 
   VeloClusAsct* m_veloClusToMCP;
   ITClusAsct*   m_itClusToMCP;

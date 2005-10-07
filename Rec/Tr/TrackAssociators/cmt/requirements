@@ -21,6 +21,7 @@ use	VeloAssociators	v*	Velo
 use	ITAssociators	v*	IT
 use	OTAssociators	v*	OT
 use	TrackFitEvent	v*	Tr
+use     LinkerEvent     v1r*    Event
 
 #============================================================================
 # Component library building rule
