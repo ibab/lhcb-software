@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.38 2005-10-06 08:46:22 cattanem Exp $
+# $Id: requirements,v 1.39 2005-10-07 15:39:40 marcocle Exp $
 package DetCondExample
 version v7r6
 
@@ -32,7 +32,8 @@ use unixodbc v* LCG_Interfaces
 set ODBCINST $(unixodbc_home)
 
 # library path needed for sqlite backend
-#use sqlite   v* LCG_Interfaces
+use sqlite   v* LCG_Interfaces
+set POOL_OUTMSG_LEVEL W
 
 # library path needed for oracle backend
 macro Oracle_version "10.1.0.3-1"
