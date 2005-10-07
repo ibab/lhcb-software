@@ -20,7 +20,7 @@ extern "C" int mbm_prod(int argc,char **argv) {
   cli.getopt("size",1,len);
   MBM::Producer p("0",name,0x103);
   ::printf("Producer \"%s\" (pid:%d) included in buffer:\"%s\" len=%d nevt=%d\n",
-	   name, MBM::Producer::pid(), "0", len, nevt);
+	   name.c_str(), MBM::Producer::pid(), "0", len, nevt);
   while(nevt--)  {
     if ( p.getSpace(len) == MBM_NORMAL ) {
       MBM::EventDesc& e = p.event();

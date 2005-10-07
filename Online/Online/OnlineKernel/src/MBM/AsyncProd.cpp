@@ -1,9 +1,14 @@
 #include <cstdio>
 #include "MBM/Producer.h"
+#include "RTL/rtl.h"
 #include "WT/wtdef.h"
 #include "WT/wt_facilities.h"
 
 namespace {
+  static void help()  {
+    ::printf("mbm_prod_a -opt [-opt]\n");
+    ::printf("    -n=<name>      buffer member name\n");
+  }
   struct Prod  : public MBM::Producer  {
     int trnumber;
     Prod(const std::string& nam) : MBM::Producer("0",nam,0x103), trnumber(0)   {
@@ -25,9 +30,11 @@ namespace {
 }
 
 extern "C" int mbm_prod_a(int argc,char **argv) {
-  const char *name = argc>1 ? argv[1] : "producer";  
+  RTL::CLI cli(argc, argv, help);
+  std::string name = "producer";
+  cli.getopt("name",1,name);
   int status = wtc_init();
   if( status != WT_SUCCESS ) exit(status);
-  ::printf("Asynchronous Producer \"%s\" (pid:%d) included in buffer:\"%s\"\n",name,Prod::pid(),"0");
+  ::printf("Asynchronous Producer \"%s\" (pid:%d) included in buffer:\"%s\"\n",name.c_str(),Prod::pid(),"0");
   return Prod(name).run();
 }

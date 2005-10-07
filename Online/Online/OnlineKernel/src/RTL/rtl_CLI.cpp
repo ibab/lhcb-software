@@ -17,9 +17,9 @@ static int string_assign(const char* p, const char* fmt, ...)  {
 const char* RTL::CLI::getopt(const char* name, int nchars)  {
   if ( name )  {
     for (int i=1; i<m_argc; ++i)  {
-      const char* cptr = m_argv[m_argc];
+      const char* cptr = m_argv[i];
       if ( *cptr == '-' || *cptr == '/' ) {
-        if ( cptr[1] == name[1] && ::strncmp(name,cptr+1,nchars)==0 )  {
+        if ( cptr[1] == name[0] && ::strncmp(name,cptr+1,nchars)==0 )  {
           char* loc=::strchr(cptr+1,'=');
           if ( loc )  {
             return loc+1;
@@ -28,6 +28,7 @@ const char* RTL::CLI::getopt(const char* name, int nchars)  {
         }
       }
     }
+    return 0;
   }
   if ( m_help ) {
     (*m_help)();
@@ -40,7 +41,7 @@ int RTL::CLI::getopt(const char* name, int nchars, void* value, const char* fmt,
   const char* loc = getopt(name, nchars);
   if ( loc )  {
     if ( value && fmt )  {
-      (*deformat)(loc+1,fmt,value);
+      (*deformat)(loc,fmt,value);
     }
     return 1;
   }

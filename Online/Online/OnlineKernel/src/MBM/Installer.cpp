@@ -51,6 +51,21 @@ namespace MBM {
   };
 }
 
+static void help()  {
+  writeln(2,"Syntax: bm_init [<-opt>]\n",80);
+  writeln(2,"Function: Buffer Manager Installation\n",80);
+  writeln(2,"Options:\n",80);
+  writeln(2,"    -s=<size> [10]      Buffer size (kbytes)\n",80);
+  writeln(2,"    -e=<max>  [32]      Maximum number of events\n",80);
+  writeln(2,"    -u=<max>  [5]       Maximum number of users\n",80);
+  writeln(2,"    -b=<base> [1000000] Event Memory base address (hex)\n",80);
+  writeln(2,"    -y=<base> [0000000] Spy Memory base address (hex)\n",80);
+  writeln(2,"    -i=<id>   [ ]       Buffer Identifier \n",80);
+  writeln(2,"    -l        [ ]       Local memory buffer (data module)\n",80);
+  writeln(2,"    -x        [ ]       Allow allocation across memories\n",80);
+  writeln(2,"    -f        [ ]       force deinstall\n",80);
+  writeln(2,"    -m        [ ]       Start monitor after installer\n",80);
+}
 int MBM::Installer::optparse (const char* c)  {
   register int iret;
   switch (*c | 0x20)    {
@@ -117,19 +132,7 @@ int MBM::Installer::optparse (const char* c)  {
   case '?':
   case 'h':
   default:
-    writeln(2,"Syntax: bm_init [<-opt>]\n",80);
-    writeln(2,"Function: Buffer Manager Installation\n",80);
-    writeln(2,"Options:\n",80);
-    writeln(2,"    -s=<size> [10]      Buffer size (kbytes)\n",80);
-    writeln(2,"    -e=<max>  [32]      Maximum number of events\n",80);
-    writeln(2,"    -u=<max>  [5]       Maximum number of users\n",80);
-    writeln(2,"    -b=<base> [1000000] Event Memory base address (hex)\n",80);
-    writeln(2,"    -y=<base> [0000000] Spy Memory base address (hex)\n",80);
-    writeln(2,"    -i=<id>   [ ]       Buffer Identifier \n",80);
-    writeln(2,"    -l        [ ]       Local memory buffer (data module)\n",80);
-    writeln(2,"    -x        [ ]       Allow allocation across memories\n",80);
-    writeln(2,"    -f        [ ]       force deinstall\n",80);
-    writeln(2,"    -m        [ ]       Start monitor after installer\n",80);
+    help();
     exit(0);
   }
   return 0;

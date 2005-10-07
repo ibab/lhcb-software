@@ -1,4 +1,5 @@
 #include <cstdio>
+#include "RTL/rtl.h"
 #include "WT/wtdef.h"
 #include "WT/wt_facilities.h"
 #include "MBM/Consumer.h"
@@ -28,10 +29,18 @@ namespace {
   };
 }
 
+static void help()  {
+  ::printf("mbm_cons_a -opt [-opt]\n");
+  ::printf("    -n=<name>      buffer member name\n");
+  ::printf("    -s=<number>    sleep interval between events [milli seconds]\n");
+}
+
 extern "C" int mbm_cons_a(int argc,char **argv) {  
-  const char* name = argc > 1 ? argv[1] : "consumer";
+  RTL::CLI cli(argc, argv, help);
+  std::string name = "consumer";
+  cli.getopt("name",1,name);
   int status = wtc_init();
   if( status != WT_SUCCESS ) exit(status);
-  ::printf("Asynchronous Consumer \"%s\" (pid:%d) running in buffer:\"%s\"\n",name,Cons::pid(),"0");
+  ::printf("Asynchronous Consumer \"%s\" (pid:%d) running in buffer:\"%s\"\n",name.c_str(),Cons::pid(),"0");
   return Cons(name).run();
 }
