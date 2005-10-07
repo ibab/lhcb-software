@@ -2,6 +2,7 @@ package GaudiObjDesc
 
 version v8r0p1
 
+include_path none
 macro xmlsrc "xml"
 
 # Old GOD fragments (retained for backward compatibility)
