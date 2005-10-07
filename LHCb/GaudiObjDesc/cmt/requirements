@@ -1,6 +1,6 @@
 package GaudiObjDesc
 
-version v8r0
+version v8r0p1
 
 macro xmlsrc "xml"
 
@@ -16,3 +16,9 @@ make_fragment godify -header=godify_header -trailer=godify_trailer
 #private
 
 use Python v* LCG_Interfaces
+
+#----Patch to while waiting a release od SEAL----TO BE DELETED-----
+use SEAL   v* LCG_interfaces
+macro lcgdict_cmd "$(Python_home)/bin/python $(GAUDIOBJDESCROOT)/scripts/lcgdict.py" \
+      WIN32       '"$(Python_home)/python" $(GAUDIOBJDESCROOT)\scripts\lcgdict.py'
+path_prepend PYTHONPATH "$(SEAL_home)/bin"

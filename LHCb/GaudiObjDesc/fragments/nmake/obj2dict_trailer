@@ -1,7 +1,7 @@
 $(dest)$(package).lcgdict : ${OBJS} 
 	@echo Producing dictionaries using lcgdict
 	@cd $(dest)
-	@"$(pythonexe)" "$(SEAL_home)/bin/lcgdict.py" $(package)_dictionary.h --reflex --split --selection_file $(package)_selection.xml --capabilities=$(package)_capabilities.cpp --gccxmlpath=$(GCCXML_home)/bin $(includes) $(use_pp_cppflags)
+	@$(lcgdict_cmd) $(package)_dictionary.h --reflex --no_membertypedefs --split --selection_file $(package)_selection.xml --capabilities=$(package)_capabilities.cpp --gccxmlpath=$(GCCXML_home)/bin $(includes) $(use_pp_cppflags)
 	@echo "" > $(package).lcgdict 
 
 clean :: ${CONSTITUENT}clean

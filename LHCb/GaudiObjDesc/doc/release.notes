@@ -2,6 +2,11 @@ Package: GaudiObjDesc
 Desccription: This package contains a set of tools used to generate code from the XML description of the data object classes.
 Package manager : Stefan Roiser
 
+===============================GaudiObjDesc v8r0p1============================
+!20051007 - Pere
+- added lcgdict.py and gendict2.py files in /scrips with patches included at SEAL head
+- modified requirements to make use of them 
+
 ===============================GaudiObjDesc v8r0============================
 !20050908 - Pere
 - modified nmake fragments for the production of lcgdict (reflex) based dictionaries
