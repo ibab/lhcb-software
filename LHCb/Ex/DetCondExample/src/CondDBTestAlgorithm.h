@@ -1,4 +1,4 @@
-// $Id: CondDBTestAlgorithm.h,v 1.4 2005-06-23 13:34:23 marcocle Exp $
+// $Id: CondDBTestAlgorithm.h,v 1.5 2005-10-07 15:40:20 marcocle Exp $
 #ifndef CONDDBTESTALGORITHM_H 
 #define CONDDBTESTALGORITHM_H 1
 
@@ -10,6 +10,7 @@
 class DataObject;
 class Condition;
 class IUpdateManagerSvc;
+class IDetDataSvc;
 
 /** @class CondDBTestAlgorithm CondDBTestAlgorithm.h
  *  
@@ -59,6 +60,8 @@ private:
   double m_avg_temp;
 
   size_t m_evtCount;
+
+  IDetDataSvc *m_dds;
 
 };
 #endif // CONDDBTESTALGORITHM_H

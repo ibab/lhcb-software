@@ -1,4 +1,4 @@
-// $Id: CondDBTestAlgorithm.cpp,v 1.13 2005-10-05 15:48:03 marcocle Exp $
+// $Id: CondDBTestAlgorithm.cpp,v 1.14 2005-10-07 15:40:20 marcocle Exp $
 // Include files 
 
 // from Gaudi
@@ -74,6 +74,9 @@ StatusCode CondDBTestAlgorithm::initialize() {
     m_ums->registerCondition(this,"/dd/Alignment/Velo/Module01");
     m_ums->registerCondition(this,"/dd/Alignment/Velo/Module12");
     m_ums->update(this);
+
+    m_dds = svc<IDetDataSvc>("DetectorDataSvc",true);
+
   }
   catch (GaudiException){
     return StatusCode::FAILURE;
@@ -90,7 +93,7 @@ StatusCode CondDBTestAlgorithm::execute() {
   debug() << "==> Execute" << endmsg;
 
   info() << "-------------------------------------" << endmsg;
-  info() << "Event" << dynamic_cast<IDetDataSvc*>(detSvc())->eventTime() << endmsg;
+  info() << "Event" << m_dds->eventTime() << endmsg;
   info() << "Temperature check: LHCb = " << m_LHCb_temp << endmsg;
   info() << "                   Hcal = " << m_Hcal_temp << endmsg;
   info() << "                   avg  = " << m_avg_temp << endmsg;
@@ -234,11 +237,11 @@ StatusCode CondDBTestAlgorithm::i_analyse( DataObject* pObj ) {
       //<< "(0x" << std::hex << pVDO->validTill().absoluteTime() << ")"
            << "[" << endmsg;
     
-    if ( pVDO->isValid( svc<IDetDataSvc>("DetectorDataSvc")->eventTime() ) ) {
+    if ( pVDO->isValid( m_dds->eventTime() ) ) {
       info() << "(currently valid)" << endmsg;
     }
     else {
-      error() << "Object is not valid at the current event time! (" << svc<IDetDataSvc>("DetectorDataSvc")->eventTime()
+      error() << "Object is not valid at the current event time! (" << m_dds->eventTime()
               << ")" << endmsg;
       return StatusCode::FAILURE;
     }
