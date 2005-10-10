@@ -1,6 +1,11 @@
 Package Event/GenEvent
 package coordinator: W.Pokorski, G.Corti
 
+!================ GenEvent v3r4 2005-10-10 ============================
+! 2005-10-10 - Marco Cattaneo
+ - Modify requirements to produce reflex dictionaries
+ - Modify HepMC_dict.h, .xml to work as template for GaudiObjDesc
+
 !================ GenEvent v3r3p2 2005-07-21 ==========================
 ! 2005-07-21 - Marco Cattaneo
  - Change package name to GenEvent in *.xml, for GOD Reflex dict generation

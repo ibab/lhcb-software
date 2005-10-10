@@ -1,6 +1,17 @@
+// Additional classes to be added to automatically generated lcgdict
+
+// Reflex include files
+#include "Reflex/Builder/ReflexBuilder.h"
+
+// begin include files
 #include "HepMC/GenEvent.h"
-namespace 
-{
-  std::pair<int,HepMC::GenParticle*> b;
-  std::pair<int,HepMC::GenVertex*> a;
+// end include files
+
+namespace {
+  struct _Instantiations {
+    // begin instantiations
+    std::pair<int,HepMC::GenParticle*> m_std_pair_int_HepMC_GenParticleP;
+    std::pair<int,HepMC::GenVertex*>   m_std_pair_int_HepMC_GenVertexP;
+    // end instantiations
+  };
 }
