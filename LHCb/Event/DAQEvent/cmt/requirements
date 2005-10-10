@@ -23,19 +23,13 @@ use Event       v* Event
 document obj2doth DAQEventObj2Doth ../xml/*.xml
 document obj2dict DAQEventObj2Dict ../xml/*.xml
 
-# Additional dictionaries not produced automatically
-apply_pattern     lcg_dictionary                                              \
-                  dictionary=DAQEvent                                         \
-                  headerfiles=$(DAQEVENTROOT)/Event/lcgStl.h                  \
-                  selectionfile=$(DAQEVENTROOT)/xml/lcgdict/lcg_selection.xml \
-                  options=--split --reflex
-
 # ==================== linker library =======================================
 library DAQEventLib     *.cpp
 
 # ==================== component libraries ==================================
 library DAQEvent        component/*.cpp
-library DAQEventDict    ../dict/*.cpp ../$(tag)/dict/DAQEvent/*.cpp
+library DAQEventDict    ../dict/*.cpp
+#library DAQEventDict    ../dict/*.cpp ../$(tag)/dict/DAQEvent/*.cpp
 
 # ==================== Standard patterns (order is important!) ==============
 apply_pattern component_library library=DAQEventDict
@@ -44,3 +38,10 @@ apply_pattern linker_library    library=DAQEventLib
 
 private
 use GaudiObjDesc v*
+# Additional dictionaries not generated automatically by GaudiObjDesc
+action DAQEvent_custom_dict \
+   "if !(test -r ../dict/DAQEvent_selection.xml) then \
+     cp ../Event/lcgStl.h ../dict/DAQEvent_dictionary.h;  \ 
+     cp ../xml/lcgdict/lcg_selection.xml ../dict/DAQEvent_selection.xml; fi" \
+  WIN32 ""
+macro DAQEventObj2Dict_dependencies DAQEvent_custom_dict

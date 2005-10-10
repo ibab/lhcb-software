@@ -6,6 +6,7 @@ Purpose: Define the L1Buffer,  L1Event, L1Bank, RawBuffer, RawEvent and
 !================ DAQEvent v5r3 2005-10-10 ============================
 ! 2005-10-10 - Marco Cattaneo
  - Modify requirements to produce reflex dictionaries
+ - Modify lcgStl.h and lcg_selection.xml to work as template for GaudiObjDesc
 
 !================ DAQEvent v5r2p2 2005-07-20 ==========================
 ! 2005-07-20 - Marco Cattaneo
