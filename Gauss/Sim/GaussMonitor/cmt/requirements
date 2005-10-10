@@ -14,12 +14,9 @@ branches          cmt doc src options
 
 # Used packages.
 #============================================================================
-use   GenEvent     v*      Event
-use   Event        v*      Event
-use   DetDesc      v*      Det 
-use   MCTools      v*      Phys
-use   AIDA         v*      LCG_Interfaces
 use   EvtGen       v*      Gen
+use   GenEvent     v*      Event
+use   MCTools      v*      Phys
 
 # Component library building rule
 #============================================================================
