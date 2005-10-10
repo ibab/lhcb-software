@@ -3,6 +3,10 @@ Author: Jose' Helder Lopes
 Purpose: Define the L1Buffer,  L1Event, L1Bank, RawBuffer, RawEvent and 
          RawBank classes.
 
+!================ DAQEvent v5r3 2005-10-10 ============================
+! 2005-10-10 - Marco Cattaneo
+ - Modify requirements to produce reflex dictionaries
+
 !================ DAQEvent v5r2p2 2005-07-20 ==========================
 ! 2005-07-20 - Marco Cattaneo
  - Add "VeloFull" to RawBuffer bank types enum
