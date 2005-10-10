@@ -1,36 +1,29 @@
-// $Id: IRichConditionsOverall.h,v 1.3 2005-10-07 16:06:57 seaso Exp $
-#ifndef RICHCONDITION_IRICHCONDITIONSOVERALL_H 
+// $Id: IRichConditionsOverall.h,v 1.4 2005-10-10 08:11:11 jonrob Exp $
+#ifndef RICHCONDITION_IRICHCONDITIONSOVERALL_H
 #define RICHCONDITION_IRICHCONDITIONSOVERALL_H 1
 
-// Include files
 // from Gaudi
-
 #include "GaudiKernel/IAlgTool.h"
-// Local
-#include "IRich1PresTempMonitor.h"
-#include "IRich2PresTempMonitor.h"
 
 static const InterfaceID IID_IRichConditionsOverall ( "IRichConditionsOverall", 1, 0 );
 
-/** @class IRichConditionsOverall IRichConditionsOverall.h RichCondition/IRichConditionsOverall.h
- *  
+/** @class IRichConditionsOverall IRichConditionsOverall.h RichKernel/IRichConditionsOverall.h
+ *
+ *  Simple tool to simply instantiate various objects to allow Gauss to use various
+ *  conditions data
  *
  *  @author Sajan EASO
  *  @date   2005-08-29
  */
-class IRichConditionsOverall : virtual public IAlgTool {
-public: 
+
+class IRichConditionsOverall : virtual public IAlgTool
+{
+
+public:
 
   // Return the interface ID
   static const InterfaceID& interfaceID() { return IID_IRichConditionsOverall; }
 
-  virtual IRich1PresTempMonitor* getRich1PresTempMonitor() = 0;
-  virtual IRich2PresTempMonitor* getRich2PresTempMonitor() = 0;
-  
- 
-protected:
-
-private:
-
 };
+
 #endif // RICHCONDITION_IRICHCONDITIONSOVERALL_H
