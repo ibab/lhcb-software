@@ -2,6 +2,10 @@ Package LinkerInstances
 Package manager: T.Ruf
 Purpose: Creates dictionaries for the use of Linker relations in Python
 
+!===================== LinkerInstances v2r1 2005-10-11 ========================
+! 2005-10-11 - Marco Cattaneo
+ - Update requirements to produce reflex dictionaries
+
 !===================== LinkerInstances v2r0 2005-07-22 ========================
 ! 2005-07-22 - Florence Ranjard
  - Fixes to make the dictionary work both on Linux and Windows

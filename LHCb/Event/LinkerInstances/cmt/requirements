@@ -1,10 +1,10 @@
-# $Id: requirements,v 1.4 2005-07-22 09:24:18 cattanem Exp $
+# $Id: requirements,v 1.5 2005-10-11 06:52:27 cattanem Exp $
 # =============================================================================
 package LinkerInstances
 author  Stefan Roiser
 manager Thomas Ruf
 
-version v2r0
+version v2r1
 
 include_dirs $(LINKERINSTANCESROOT)
 
@@ -20,14 +20,15 @@ use TrEvent      v*    Event
 
 # Produce lcg dictionary for instances of Linker classes
 #============================================================================
-document lcg_dictionary_generator LinkerInstancesGen \
-      $(LINKERINSTANCESROOT)/dict/linker_instances.h dictionary=LinkerInstances
-macro_append LinkerInstances_lcgdict_options \
-      '--select=$(LINKERINSTANCESROOT)/xml/lcg_selection.xml --split $(includes)'
+apply_pattern lcg_dictionary                                             \
+              dictionary=LinkerInstances                                 \
+              headerfiles=$(LINKERINSTANCESROOT)/dict/linker_instances.h \
+              selectionfile=$(LINKERINSTANCESROOT)/xml/lcg_selection.xml \
+              options=--split --reflex
 
 # Build libraries (including dictionary)
 #============================================================================
-library LinkerInstancesDict ../dict/*.cpp ../$(tag)/dict/LinkerInstances/*.cpp
+library LinkerInstancesDict ../$(tag)/dict/LinkerInstances/*.cpp
         
 # Standard patterns
 #============================================================================
