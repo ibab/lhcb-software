@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.5 2005-10-11 06:52:27 cattanem Exp $
+# $Id: requirements,v 1.6 2005-10-11 12:19:09 cattanem Exp $
 # =============================================================================
 package LinkerInstances
 author  Stefan Roiser
@@ -24,7 +24,7 @@ apply_pattern lcg_dictionary                                             \
               dictionary=LinkerInstances                                 \
               headerfiles=$(LINKERINSTANCESROOT)/dict/linker_instances.h \
               selectionfile=$(LINKERINSTANCESROOT)/xml/lcg_selection.xml \
-              options=--split --reflex
+              options="--split --reflex"
 
 # Build libraries (including dictionary)
 #============================================================================
