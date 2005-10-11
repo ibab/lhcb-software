@@ -1,18 +1,3 @@
-/*-----------------------------------------------------------------------*/
-/*                                                                       */
-/*                       OS-9 BUFFER MANAGER  	                         */
-/*                  INSTALLATION PROGRAM FOR THE AEB                     */
-/*                                                                       */
-/* Edition History                                                       */
-/*                                                                       */
-/*  #   Date    Comments                                       By        */
-/* -- -------- ----------------------------------------------- ---       */
-/*  0  28/09/88  Initial version                               PM        */
-/*  1  11/11/88  Released version 1.0                          PM        */
-/*  2  29/11/88  Spy and Multibuffer included                  PM        */
-/*  3  15/12/88  Released version 2.0                          PM        */
-/*  4  21/02/90  Now it can allocate buffer across memories    PM        */
-/*-----------------------------------------------------------------------*/
 #define MBM_IMPLEMENTATION
 #include <cstdio>
 #include <cstdlib>

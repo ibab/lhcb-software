@@ -1,4 +1,3 @@
-#include <cstdio>
 #include "RTL/rtl.h"
 #include "WT/wtdef.h"
 #include "WT/wt_facilities.h"

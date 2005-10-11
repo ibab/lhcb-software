@@ -23,11 +23,6 @@
 #include "bm_struct.h"
 #include "Manager.h"
 
-#ifdef _WIN32
-#define strdate _strdate
-#define strtime _strtime
-#endif
-
 #define writeln(a,b,c) printf(b)
 #define E_MNF  221
 
@@ -88,11 +83,10 @@ namespace MBM {
       va_start( args, format );
       size_t len = ::vsprintf(buffer, format, args);
       print_char(1, m_currLine, VERT_BAR);
-      for(size_t j=0; j<len && j<term_width()-1; ++j) {
-  print_char(j+2, m_currLine, flags|buffer[j]);
-      }
+      for(size_t j=0; j<len && j<term_width()-1; ++j)
+        print_char(j+2, m_currLine, flags|buffer[j]);
       for(size_t i=len; i < term_width()-1; ++i)
-  print_char(i+2, m_currLine, ' '|flags);
+        print_char(i+2, m_currLine, ' '|flags);
       print_char(term_width(), m_currLine, VERT_BAR);
       return ++m_currLine;
     }
@@ -274,6 +268,7 @@ int mbm_mon(int argc , char** argv) {
   MBM::Monitor mon(argc, argv);
   return mon.monitor();
 }
+
 extern "C" int mbm_ascii(int /* argc */, char** /* argv */) {
   for ( unsigned char i=0; i < 255; ++i)  {
     printf("%3d  %03X   \"%c\"\n", i,i,i);

@@ -1,4 +1,3 @@
-#include <cstdio>
 #include "MBM/Producer.h"
 #include "RTL/rtl.h"
 #include "WT/wtdef.h"
