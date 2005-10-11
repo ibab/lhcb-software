@@ -31,6 +31,7 @@ int MBM::Consumer::eventAst(void* param) {
 
 // Ast to be called on event receival (may be overloaded by clients)
 int MBM::Consumer::eventAst() {
+  //::printf("Consumer AST\n");
   int sc = ::mbm_get_event_ast((void*)m_bmid);
   if ( sc == MBM_NORMAL ) {
     if ( !m_blocking ) {
@@ -62,6 +63,7 @@ int MBM::Consumer::eventRearm(unsigned int facility, void* param) {
   if ( facility != cons->m_facility ) {
     // Error ?
   }
+  //::printf("Consumer Rearm\n");
   return cons->eventRearm();
 }
 
@@ -78,6 +80,7 @@ int MBM::Consumer::eventRearm() {
   if( sc == MBM_NORMAL || sc == MBM_NO_EVENT ) {
     sc = (m_blocking) ? ::mbm_wait_event(m_bmid) : ::mbm_wait_event_a(m_bmid);
     if( sc == MBM_NORMAL ) {
+      //::printf("Consumer Rearm done....\n");
       return sc;
     }
     throw std::runtime_error("Failed to rearm event action:"+m_buffName+" [Internal Error]");
@@ -127,6 +130,7 @@ int MBM::Consumer::freeEvent() {
   if ( int(m_bmid) != -1 ) {
     int status = ::mbm_free_event(m_bmid);
     if ( status == MBM_NORMAL )  {
+      //::printf("Consumer Action done....\n");
       return MBM_NORMAL;
     }
     throw std::runtime_error("Failed to free event from MBM buffer:"+m_buffName+" [Internal Error]");
