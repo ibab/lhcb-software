@@ -39,7 +39,7 @@ apply_pattern     lcg_dictionary                                         \
                   dictionary=PackedEvent                                 \
                   headerfiles=$(PACKEDEVENTROOT)/Event/*.h               \
                   selectionfile=$(PACKEDEVENTROOT)/xml/lcg_selection.xml \
-                  options=--split --reflex
+                  options="--split --reflex"
 
 library PackedEventDict    ../$(tag)/dict/PackedEvent/*.cpp
 apply_pattern component_library library=PackedEventDict
