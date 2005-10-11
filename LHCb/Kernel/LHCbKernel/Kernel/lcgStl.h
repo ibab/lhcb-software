@@ -1,11 +1,13 @@
-// $Id: lcgStl.h,v 1.10 2005-06-24 06:43:39 cattanem Exp $
+// $Id: lcgStl.h,v 1.11 2005-10-11 09:16:37 cattanem Exp $
 #ifndef KERNEL_LCGSTL_H 
 #define KERNEL_LCGSTL_H 1
 
-// Dummy use of complex STL classes used in LHCb event model
-// For lcg dictionary generation
+// Additional classes to be added to automatically generated lcgdict
 
-// Include files
+// Reflex include files
+#include "Reflex/Builder/ReflexBuilder.h"
+
+// begin include files
 #include <vector>
 #include <map>
 #include <utility>
@@ -18,19 +20,34 @@
 #include "CLHEP/Geometry/Point3D.h"
 #include "CLHEP/Geometry/Vector3D.h"
 
+// end include files
+
 namespace {
-  std::vector<std::pair<int,int> >           a;
-  std::vector<std::pair<long,double> >       b;
-  std::vector<std::pair<int,double> >        c;
-  std::vector<std::pair<double,double> >     d;
-  std::map<int,int>                          e;
-  SmartRefVector<ContainedObject>            f;
-  std::vector<std::pair<VeloChannelID,int> > g;
-  std::vector<std::pair<ITChannelID,int> >   h;
-  std::vector<std::pair<OTChannelID,int> >   i;
-  std::vector<std::pair<double,CaloCellID> > k;
-  std::vector<HepGeom::Vector3D<double> >    l;
-  std::vector<HepGeom::Point3D<double> >     m;
+  struct _Instantiations {
+    // begin instantiations
+    std::pair<int,int>                         m_std_pair_int_int;
+    std::pair<long,double>                     m_std_pair_long_double;
+    std::pair<int,double>                      m_std_pair_int_double;
+    std::pair<double,double>                   m_std_pair_double_double;
+    std::vector<std::pair<int,int> >           m_std_vector_std_pair_int_int;
+    std::vector<std::pair<long,double> >       m_std_vector_std_pair_long_double;
+    std::vector<std::pair<int,double> >        m_std_vector_std_pair_int_double;
+    std::vector<std::pair<double,double> >     m_std_vector_std_pair_double_double;
+    std::map<int,int>                          m_std_map_int_int;
+    SmartRef<ContainedObject>                  m_SmartRef_ContainedObject;
+    SmartRefVector<ContainedObject>            m_SmartRefVector_ContainedObject;
+    std::pair<VeloChannelID,int>               m_std_pair_VeloChannelID_int;
+    std::pair<ITChannelID,int>                 m_std_pair_ITChannelID_int;
+    std::pair<OTChannelID,int>                 m_std_pair_OTChannelID_int;
+    std::pair<double,CaloCellID>               m_std_pair_double_CaloCellID;
+    std::vector<std::pair<VeloChannelID,int> > m_std_vector_std_pair_VeloChannelID_int;
+    std::vector<std::pair<ITChannelID,int> >   m_std_vector_std_pair_ITChannelID_int;
+    std::vector<std::pair<OTChannelID,int> >   m_std_vector_std_pair_OTChannelID_int;
+    std::vector<std::pair<double,CaloCellID> > m_std_vector_std_pair_double_CaloCellID;
+    std::vector<HepGeom::Vector3D<double> >    m_std_vector_HepGeom_Vector3D_double;
+    std::vector<HepGeom::Point3D<double> >     m_std_vector_HepGeom_Point3D_double;
+    // end instantiations
+  };
 }
 
 #endif // KERNEL_LCGSTL_H

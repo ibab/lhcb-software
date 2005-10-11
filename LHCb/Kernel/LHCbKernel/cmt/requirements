@@ -1,10 +1,10 @@
-# $Id: requirements,v 1.79 2005-09-07 12:16:20 cattanem Exp $
+# $Id: requirements,v 1.80 2005-10-11 09:16:37 cattanem Exp $
 # =============================================================================
 package LHCbKernel
 author  M.Frank    CERN/LHCb
 manager M.Cattaneo CERN/LHCb
 
-version v5r13
+version v5r14
 
 include_dirs $(LHCBKERNELROOT)
 
@@ -16,19 +16,16 @@ use CLHEP        v*    LCG_Interfaces
 macro LHCbKernelObj2Doth_GODflags " -s ../Kernel/ " \
       WIN32                       " -s ..\Kernel\ "
 document obj2doth LHCbKernelObj2Doth ../xml/*.xml
-document obj2dict LHCbKernelObj2Dict ../xml/*.xml
 
-# Produce lcg dictionary for stl containers used in LHCb
-document lcg_dictionary_generator LHCbKernelGen \
-      $(LHCBKERNELROOT)/Kernel/lcgStl.h dictionary=LHCbKernel
-macro_append LHCbKernel_lcgdict_options \
-      '--select=$(LHCBKERNELROOT)/xml/lcgdict/lcg_selection.xml --split \
-       -I"$(POOL_home)/../include" $(includes)'
+macro LHCbKernelObj2Dict_GODflags " -s ../Kernel/ " \
+      WIN32                       " -s ..\Kernel\ "
+document obj2dict LHCbKernelObj2Dict ../xml/*.xml
 
 # Build libraries (including dictionary)
 #============================================================================
 library LHCbKernel     *.cpp
-library LHCbKernelDict ../dict/*.cpp ../$(tag)/dict/LHCbKernel/*.cpp
+library LHCbKernelDict ../dict/*.cpp 
+#../$(tag)/dict/LHCbKernel/*.cpp
 
 # Debug flag for RichSmartID
 macro_append LHCbKernel_cppflags "" \
@@ -40,4 +37,14 @@ apply_pattern component_library library=LHCbKernelDict
 apply_pattern linker_library    library=LHCbKernel
 
 private
+#============================================================================
 use GaudiObjDesc v*
+
+# Additional dictionaries not generated automatically by GaudiObjDesc
+#============================================================================
+action LHCbKernel_custom_dict \
+  "if !(test -r ../dict/LHCbKernel_selection.xml) then \
+     cp ../Kernel/lcgStl.h ../dict/LHCbKernel_dictionary.h;  \
+     cp ../xml/lcgdict/lcg_selection.xml ../dict/LHCbKernel_selection.xml; fi" \
+  WIN32 ""
+macro LHCbKernelObj2Dict_dependencies LHCbKernel_custom_dict

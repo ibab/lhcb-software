@@ -2,6 +2,10 @@ Package LHCbKernel
 Package manager: M.Cattaneo
 Purpose: LHCb specific Kernel classes
 
+!===================== LHCbKernel v5r14 2005-10-11 ========================
+! 2005-10-11 - Marco Cattaneo
+ - Modifications to produce reflex dictionaries, for use with Gaudi v17
+
 !===================== LHCbKernel v5r13 2005-09-06 ========================
 ! 2005-09-06 - Marco Cattaneo
  - Add Kernel/IBIntegrator.h interface (moved from TrackInterfaces)

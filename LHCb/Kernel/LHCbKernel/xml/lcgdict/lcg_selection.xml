@@ -14,13 +14,8 @@
   <class name="std::pair<ITChannelID,int>"/>
   <class name="std::vector<std::pair<OTChannelID,int> >"/>
   <class name="std::pair<OTChannelID,int>"/>
-  <class name="SmartRef<ContainedObject>">
-    <field name="m_target" transient="true"/>  
-  </class>
-  <class name="SmartRefVector<ContainedObject>">
-    <field name="m_data" transient="true"/>  
-    <field name="m_contd" transient="true"/>  
-  </class>
+  <class name="SmartRef<ContainedObject>"> <field name="m_target" transient="true"/> </class>
+  <class name="SmartRefVector<ContainedObject>"> <field name="m_data" transient="true"/> <field name="m_contd" transient="true"/>  </class>
   <class name="std::vector<SmartRef<ContainedObject> >"/>
   <class name="std::pair<double,CaloCellID>"/>
   <class name="std::vector<std::pair<double,CaloCellID> >"/>
