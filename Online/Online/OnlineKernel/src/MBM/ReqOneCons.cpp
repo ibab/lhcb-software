@@ -8,7 +8,7 @@ static void help()  {
 }
 
 extern "C" int mbm_cons_one(int argc,char **argv) {
-  int  trnumber  = -1, nbad = 0, sleep_msecs = 0;
+  int  trnumber  = -1, sleep_msecs = 0;
   int  trmask[4] = {-1,-1,-1,-1};
   int  vetomask[4] = {0,0,0,0};
 
