@@ -1,5 +1,5 @@
 package DetSys
-version v7r4
+version v7r5
 
 branches cmt doc dict
 
@@ -22,7 +22,7 @@ apply_pattern     lcg_dictionary                                       \
                   dictionary=Det                                 \
                   headerfiles=$(DETSYSROOT)/dict/DetDict.h     \
                   selectionfile=$(DETSYSROOT)/dict/DetDict.xml \
-                  options=--split
+                  options=--split --reflex
 
 # =============== patterns ====================================================
 apply_pattern     component_library    library=DetDict

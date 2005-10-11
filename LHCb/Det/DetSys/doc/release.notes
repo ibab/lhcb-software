@@ -4,6 +4,10 @@
 ! Purpose     : collect Det packages
 !-----------------------------------------------------------------------------
 
+!========================= DetSys v7r5 2005-10-11 =========================
+! 2005-10-11 - Marco Cattaneo
+ - Modify requirements to produce reflex dictionaries
+
 !========================= DetSys v7r4 2005-09-19 =========================
 ! 2005-09-19 - Marco Cattaneo
  - Add private use of DetCond, to pick up DetCond interfaces for DetDict
