@@ -43,10 +43,13 @@ extern "C" {
 
   /// Thread execution call signature
   typedef int (*lib_rtl_thread_routine_t)(void*);
+  void* lib_rtl_thread_id();
   /// Start new thread.
   int lib_rtl_start_thread(lib_rtl_thread_routine_t exec, void* thread_arg, lib_rtl_thread_t* handle);
   /// Stop and kill executing thread
   int lib_rtl_delete_thread(lib_rtl_thread_t handle);
+  /// Joind (and wait for finishing) executing thread
+  int lib_rtl_join_thread(lib_rtl_thread_t handle);
   /// Suspend executing thread from execution
   int lib_rtl_suspend_thread(lib_rtl_thread_t handle);
 

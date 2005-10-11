@@ -10,6 +10,15 @@ namespace {   // Don't clutter global namespace
   };
 }
 
+void* lib_rtl_thread_id()  {
+#ifdef USE_PTHREADS
+  pthread_t id = ::pthread_self();
+#elif defined(_WIN32)
+  DWORD id = ::GetCurrentThreadId();
+#endif
+  return (void*)id;
+}
+
 int lib_rtl_start_thread(lib_rtl_thread_routine_t start_routine, void* thread_arg, lib_rtl_thread_t* handle)  {
 #ifdef USE_PTHREADS
   typedef void* (*pthread_fun)(void*);
@@ -79,3 +88,33 @@ int lib_rtl_suspend_thread(lib_rtl_thread_t handle)  {
   lib_rtl_signal_message(LIB_RTL_DEFAULT, "lib_rtl_suspend_thread failed [Invalid Handle]");
   return 0;
 }
+
+/// Joind (and wait for finishing) executing thread
+int lib_rtl_join_thread(lib_rtl_thread_t handle)   {
+  if ( handle )  {
+#ifdef USE_PTHREADS
+    void* ret;
+    int sc = ::pthread_join(handle->handle, &ret); 
+    if ( sc == 0 )  {
+      return 1;
+    }
+    lib_rtl_signal_message(LIB_RTL_ERRNO, "lib_rtl_join_thread failed");
+#elif defined(_WIN32)
+    DWORD sc = ::WaitForSingleObject(handle->handle, INFINITE);
+   switch(sc)  {
+     case WAIT_OBJECT_0:
+     case WAIT_ABANDONED:
+      ::CloseHandle(handle->handle);
+      delete handle;
+      return 1;
+     case WAIT_TIMEOUT:
+      lib_rtl_signal_message(LIB_RTL_OS, "lib_rtl_join_thread failed");
+      delete handle;
+      return 0;
+   }
+#endif
+  }
+  lib_rtl_signal_message(LIB_RTL_DEFAULT, "lib_rtl_join_thread failed [Invalid Handle]");
+  return 0;
+}
+
