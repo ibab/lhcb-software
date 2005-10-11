@@ -37,4 +37,4 @@ pattern dict_check \
 macro apply_check "" \
       Linux&debug dict_check
 
-apply_pattern ${apply_check}
+# apply_pattern ${apply_check}
