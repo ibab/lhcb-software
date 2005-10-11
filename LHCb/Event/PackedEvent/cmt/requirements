@@ -6,7 +6,7 @@
 # http://cern.ch/lhcb-comp/Support/html/new_structure.pdf
 #============================================================================
 package           PackedEvent
-version           v1r1
+version           v1r2
 
 #============================================================================
 # This template is an example for a standard Algorithm package
@@ -35,10 +35,11 @@ apply_pattern    component_library library=PackedEvent
 #============================================================================
 # Produce lcg dictionary for stl containers used in PackedEvent
 #============================================================================
-document lcg_dictionary_generator PackedEventGen $(PACKEDEVENTROOT)/Event/*.h dictionary=PackedEvent
-macro_append PackedEvent_lcgdict_options '--select=$(PACKEDEVENTROOT)/xml/lcg_selection.xml --split $(includes)'
+apply_pattern     lcg_dictionary                                         \
+                  dictionary=PackedEvent                                 \
+                  headerfiles=$(PACKEDEVENTROOT)/Event/*.h               \
+                  selectionfile=$(PACKEDEVENTROOT)/xml/lcg_selection.xml \
+                  options=--split --reflex
+
 library PackedEventDict    ../$(tag)/dict/PackedEvent/*.cpp
 apply_pattern component_library library=PackedEventDict
-
-#private
-#use GaudiObjDesc v*
