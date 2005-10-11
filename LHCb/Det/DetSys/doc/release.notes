@@ -7,6 +7,8 @@
 !========================= DetSys v7r5 2005-10-11 =========================
 ! 2005-10-11 - Marco Cattaneo
  - Modify requirements to produce reflex dictionaries
+ - Disable dictionary for TTLayer, due to limitation in SEAL to a maximum of
+   15 arguments in the constructor
 
 !========================= DetSys v7r4 2005-09-19 =========================
 ! 2005-09-19 - Marco Cattaneo

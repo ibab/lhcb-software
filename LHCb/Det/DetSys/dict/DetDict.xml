@@ -81,7 +81,7 @@
   <class name="STDetectionLayer"   />
   <class name="STDetectionStation" />
   <class name="ITLayer"            />
-  <class name="TTLayer"            />
+  <!-- class name="TTLayer"            -->
   <class name="STWafer"            />
 
 
