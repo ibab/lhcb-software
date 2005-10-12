@@ -10,4 +10,4 @@ xterm -e "../slc3_ia32_gcc323_dbg/test.exe mbm_cons_a   -n=cons_a_2" &
 xterm -e "../slc3_ia32_gcc323_dbg/test.exe mbm_cons_one -n=cons_o_0" &
 xterm -e "../slc3_ia32_gcc323_dbg/test.exe mbm_cons_one -n=cons_o_1" &
 xterm -e "../slc3_ia32_gcc323_dbg/test.exe mbm_cons_one -n=cons_o_2" &
-echo xterm -e "../slc3_ia32_gcc323_dbg/test.exe mbm_prod     -n=prod_0    -m=10  -s=3500" &
+echo "../slc3_ia32_gcc323_dbg/test.exe mbm_prod     -n=prod_0    -m=1000  -s=3500"
