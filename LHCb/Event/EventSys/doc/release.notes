@@ -1,9 +1,10 @@
 package EventSys
 package manager: Marco Cattaneo
 
-!======================== EventSys v20r10 2005-10-11 =======================
-! 2005-10-11 - Marco Cattaneo
+!======================== EventSys v20r10 2005-10-14 =======================
+! 2005-10-14 - Marco Cattaneo
  - Use TrackEvent v1r4, DAQEvent v5r3, GenEvent v3r4, PackedEvent v1r2
+ - Add DC04Hacks v1r0
  - Change PoolDicts.opts to load SEAL Reflex dictionaries
  - Disable dictionary checking script, not yet working with Reflex
 

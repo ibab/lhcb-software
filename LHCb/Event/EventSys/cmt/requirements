@@ -23,6 +23,7 @@ use TrgEvent    v5r6    Event
 use TrackEvent  v1r4    Event
 use PackedEvent v1r2    Event
 use EventUtils  v1r0    Event
+use DC04Hacks   v1r0    Event
 
 private
 
