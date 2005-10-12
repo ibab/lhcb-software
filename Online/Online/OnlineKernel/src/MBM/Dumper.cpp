@@ -139,7 +139,6 @@ void MBM::Dumper::print_user_table(const USER* user)  {
   print_item("user->partid\t%x %d\n",user->partid);
   print_sitem("user->name\t%s\n",user->name);
   print_item("user->pid\t%x %d\n",user->pid);
-  print_item("user->fork\t%x %d\n",user->fork);
   print_item("user->c_astadd\t%x %d\n",user->c_astadd);
   print_item("user->p_astadd\t%x %d\n",user->p_astadd);
   print_item("user->ws_size\t%x %d\n",user->ws_size);

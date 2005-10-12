@@ -259,10 +259,8 @@ BMDESCRIPT *mbm_include (const char* bm_name, const char* name, int partid) {
   lib_rtl_create_event(us->wev_flag, &bm->WEV_event_flag);
   sprintf(us->wsp_flag, "bm_%s_WSP_%d", bm_name, lib_rtl_pid());
   lib_rtl_create_event(us->wsp_flag, &bm->WSP_event_flag);
-  sprintf(us->wspa_flag, "bm_%s_WSPA_%d", bm_name, lib_rtl_pid());
-  lib_rtl_create_event(us->wspa_flag, &bm->WSPA_event_flag);
-  sprintf(us->weva_flag, "bm_%s_WEVA_%d", bm_name, lib_rtl_pid());
-  lib_rtl_create_event(us->weva_flag, &bm->WEVA_event_flag);
+  lib_rtl_create_event(0, &bm->WSPA_event_flag);
+  lib_rtl_create_event(0, &bm->WEVA_event_flag);
 
   insqhi (bm.get(), desc_head);
   if (reference_count == 0)  {
