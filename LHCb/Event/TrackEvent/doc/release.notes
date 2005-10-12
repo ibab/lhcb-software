@@ -4,6 +4,10 @@
 ! Purpose     : Package for the tracking event model classes
 !-----------------------------------------------------------------------------
 
+! 2005-10-12 - Eduardo Rodrigues
+ - changes to tracks enums in TrackKeys.h
+ - sizes in the tracks bitfield adjusted as needed
+
 !========================= TrackEvent v1r4 2005-10-06 ========================
 ! 2005-10-04 - Eduardo Rodrigues
  - improvements in documentation

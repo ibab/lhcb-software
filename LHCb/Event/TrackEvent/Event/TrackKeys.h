@@ -27,14 +27,14 @@ namespace TrackKeys
                 TrackIdealPR,
                 TrackSeeding,
                 PatVelo,
-                PatVeloTT,
-                TrgVeloTT,
-                PatLong,
+                PatVeloTT,     ///< Online Velo-TT pattern recognition
+                TrackVeloTT,   ///< Offline Velo-TT pattern recognition
+                PatForward,
                 TrgForward,
                 TrackMatching,
                 TrackKShort,
                 TsaTrack,
-                CnvSeed,       ///< Seed tracks converted from old Track Event Model tracks
+                CnvSeed=24,    ///< Seed tracks converted from old Track Event Model tracks
                 CnvVelo,       ///< Velo tracks converted from old Track Event Model tracks
                 CnvVeloBack,   ///< Velo Backwards tracks converted from old Track Event Model tracks
                 CnvVeloTT,     ///< VeloTT tracks converted from old Track Event Model tracks

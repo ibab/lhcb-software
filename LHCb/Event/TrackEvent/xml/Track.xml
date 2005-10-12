@@ -72,14 +72,14 @@
          checkMeth = 'FALSE' />
        <bitfield
          name      = 'history'
-         length    = '5'
+         length    = '7'
          desc      = 'specifies the pattern recogn algorithm that created the track'
          setMeth   = 'TRUE'
          getMeth   = 'TRUE'
          checkMeth = 'FALSE' />
        <bitfield
          name      = 'historyFit'
-         length    = '5'
+         length    = '3'
          desc      = 'specifies the fitting algorithm the fitted the track)'
          setMeth   = 'TRUE'
          getMeth   = 'TRUE'
