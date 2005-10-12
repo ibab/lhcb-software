@@ -392,6 +392,7 @@ int mbm_get_event_a (BMDESCRIPT *bm, int** ptr, int* size, int* evtype, int trma
       us->c_astpar      = astpar;
       us->reason        = BM_K_INT_EVENT;
       us->get_wakeups++;
+      lib_rtl_set_event(bm->WEV_event_flag);
       return MBM_NORMAL;
     }
     /// add wait event queue
@@ -1163,8 +1164,8 @@ int  mbm_wait_event(BMDESCRIPT *bm)    {
     Lock lock(bm);
     _mbm_printf("WEV: State=%d  %s \n", us->c_state, us->c_state == S_wevent_ast_queued ? "OK" : "BAAAAD");
     if ( us->c_state == S_wevent_ast_queued )  {
-      lib_rtl_clear_event (  bm->WEV_event_flag);
-      us->reason        = BM_K_INT_EVENT;
+      lib_rtl_clear_event(bm->WEV_event_flag);
+      us->reason = BM_K_INT_EVENT;
       us->get_wakeups++;
       lib_rtl_run_ast(us->c_astadd, us->c_astpar, 3);
       us->c_state = S_active;
@@ -1179,11 +1180,11 @@ Again:
   }
   if ( lib_rtl_is_success(sc) )  {
     Lock lock(bm);
-    lib_rtl_clear_event (  bm->WEV_event_flag);
+    lib_rtl_clear_event(bm->WEV_event_flag);
     if (us->held_eid == -1)    {
       goto Again;
     }
-    us->reason        = BM_K_INT_EVENT;
+    us->reason = BM_K_INT_EVENT;
     us->get_wakeups++;
     lib_rtl_run_ast(us->c_astadd, us->c_astpar, 3);
     us->c_state = S_active;

@@ -6,6 +6,14 @@
 #include <cerrno>
 #include <fcntl.h>
 
+inline int rtl_printf(const char* , ...)  {
+//inline int rtl_printf(const char* fmt, ...)  {
+//  va_list args;
+//  va_start(args, fmt);
+//  return vprintf(fmt, args);
+  return 1;
+}
+
 using namespace RTL;
 typedef std::map<lib_rtl_event_t, lib_rtl_thread_t> lib_rtl_thread_map_t;
 static lib_rtl_thread_map_t& waitEventThreads() {
@@ -126,14 +134,25 @@ int lib_rtl_set_global_event(const char* name)   {
 }
 
 int lib_rtl_wait_event_a_call(void* param)  {
+  bool start = true;
   lib_rtl_action* pars = (lib_rtl_action*)param;
   while(1)  {
-    lib_rtl_clear_event(pars->flag);
-    if ( pars->action )  {
-      (*pars->action)(pars->param);
+    try {
+      rtl_printf("wait...\n");
+      lib_rtl_wait_for_event(pars->flag);
+      lib_rtl_clear_event(pars->flag);
+      start = false;
+      if ( pars->action )  {
+	rtl_printf("action...\n");
+	(*pars->action)(pars->param);
+	rtl_printf("action...done.\n");
+      }
     }
-    lib_rtl_wait_for_event(pars->flag);
+    catch(...) {
+      rtl_printf("Exception!!!\n");
+    }
   }
+  delete pars;
   return 1;
 }
 
@@ -152,7 +171,9 @@ int lib_rtl_wait_for_event_a(lib_rtl_event_t flag, lib_rtl_thread_routine_t acti
       return 0;
     }
     waitEventThreads().insert(std::make_pair(flag,thread));
+    lib_rtl_sleep(1);
   }
+  rtl_printf("Set event...\n");
   lib_rtl_set_event(flag);
   return 1;
 }

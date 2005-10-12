@@ -29,6 +29,7 @@ extern "C" int mbm_prod(int argc,char **argv) {
       e.mask[3] = 0;
       e.len     = len;
       p.sendEvent();
+      // lib_rtl_sleep(1);
    }
   }
   //exit(0);

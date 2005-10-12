@@ -42,7 +42,7 @@ namespace MBM {
     void addRequest(int evtype, int trmask[4], int vetomask[4], int masktype, int usertype, int freqmode, float freq);
 
     /// Get synchronously event
-    int  getEvent();
+    int getEvent();
 
     /// Get event asynchronously
     int getEventAsync();
