@@ -2,6 +2,9 @@ Package LHCbKernel
 Package manager: M.Cattaneo
 Purpose: LHCb specific Kernel classes
 
+! 2005-10-12 Matt Needham
+  - Add number of strips per Beetle to constants
+
 !===================== LHCbKernel v5r14 2005-10-11 ========================
 ! 2005-10-11 - Marco Cattaneo
  - Modifications to produce reflex dictionaries, for use with Gaudi v17
@@ -50,6 +53,7 @@ Purpose: LHCb specific Kernel classes
 ! 2005-04-08 - Jose Hernando
  - LHCbID class revisited:
 		. using 26 bits for ST, 2 bits used for size 
+
 
 !====================== LHCbKernel v5r9 2005-04-07 ========================
 ! 2005-04-07 - Marco Cattaneo

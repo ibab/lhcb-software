@@ -1,4 +1,4 @@
-// $Id: LHCbConstants.h,v 1.2 2004-03-26 08:42:39 cattanem Exp $
+// $Id: LHCbConstants.h,v 1.3 2005-10-12 15:32:41 mneedham Exp $
 #ifndef KERNEL_LHCBCONSTANTS_H 
 #define KERNEL_LHCBCONSTANTS_H 1
 
@@ -19,6 +19,8 @@ namespace LHCbConstants {
 
   // Description of Beetle chip (M.Needham)
   static const unsigned int nStripsInPort = 32;
+  static const unsigned int nStripsInBeetle = 128;
+
 
 };
 #endif // KERNEL_LHCBCONSTANTS_H
