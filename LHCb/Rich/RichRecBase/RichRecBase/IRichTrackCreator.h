@@ -5,11 +5,7 @@
  *  Header file for RICH reconstruction tool interface : IRichTrackCreator
  *
  *  CVS Log :-
- *  $Id: IRichTrackCreator.h,v 1.6 2005-05-26 16:45:51 jonrob Exp $
- *  $Log: not supported by cvs2svn $
- *  Revision 1.5  2004/07/26 18:00:58  jonrob
- *  Various improvements to the doxygen comments
- *
+ *  $Id: IRichTrackCreator.h,v 1.7 2005-10-13 15:38:41 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -73,7 +69,7 @@ public:
    */
   virtual RichRecTracks * richTracks() const = 0;
 
-  /** Number of tracks in the input track container (e.g. TrStoredTracks or TrgTracks)
+  /** Number of tracks in the input track container (e.g. Tracks, TrStoredTracks or TrgTracks)
    *
    *  @todo   Review if this method is really needed
    *

@@ -5,7 +5,7 @@
  *  Implementation file for tool base class : RichPhotonCreatorBase
  *
  *  CVS Log :-
- *  $Id: RichPhotonCreatorBase.cpp,v 1.4 2005-06-23 15:13:05 jonrob Exp $
+ *  $Id: RichPhotonCreatorBase.cpp,v 1.5 2005-10-13 15:38:41 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   20/05/2005
@@ -65,6 +65,15 @@ RichPhotonCreatorBase::RichPhotonCreatorBase( const std::string& type,
   m_minPhotonProb.push_back( 1e-15 ); // cf4
   declareProperty( "MinPhotonProbability", m_minPhotonProb );
 
+  if      ( context() == "Offline" )
+  {
+    m_richRecPhotonLocation = RichRecPhotonLocation::Offline;
+  }
+  else if ( context() == "HLT" )
+  {
+    m_richRecPhotonLocation = RichRecPhotonLocation::HLT;
+  }
+
 }
 
 StatusCode RichPhotonCreatorBase::initialize()
@@ -73,26 +82,16 @@ StatusCode RichPhotonCreatorBase::initialize()
   const StatusCode sc = RichRecToolBase::initialize();
   if ( sc.isFailure() ) { return sc; }
 
-  // Configure output location depending on processing stage
-  // to be replace by common "context" when available
-  if      ( processingStage() == "Offline" )
-  {
-    m_richRecPhotonLocation = RichRecPhotonLocation::Offline;
-  }
-  else if ( processingStage() == "HLT" )
-  {
-    m_richRecPhotonLocation = RichRecPhotonLocation::HLT;
-  }
   if ( msgLevel(MSG::DEBUG) )
   {
     debug() << "RichRecPhoton location : " << m_richRecPhotonLocation << endreq;
   }
 
   // get tools
-  acquireTool( m_photPredName, m_photonPredictor );
-  m_photonSignal = expPhotonSignalTool();
-  m_ckAngle      = cherenkovAngleTool();
-  m_ckRes        = cherenkovAngleResolutionTool();
+  acquireTool( m_photPredName, m_photonPredictor  );
+  acquireTool( "RichPhotonSignal", m_photonSignal );
+  acquireTool( "RichCherenkovAngle",  m_ckAngle   );
+  acquireTool( "RichCherenkovResolution", m_ckRes );
 
   // Setup incident services
   incSvc()->addListener( this, IncidentType::BeginEvent );
@@ -138,24 +137,24 @@ void RichPhotonCreatorBase::handle ( const Incident& incident )
 void RichPhotonCreatorBase::printStats() const
 {
 
-  if ( m_Nevts > 0
+  if ( nEvents() > 0
        && !( m_photCount[Rich::Aerogel] == 0 &&
              m_photCount[Rich::C4F10]   == 0 &&
              m_photCount[Rich::CF4]     == 0  ) )
   {
 
     // statistical tool
-    RichStatDivFunctor occ("%10.2f +-%7.2f");
+    const RichStatDivFunctor occ("%10.2f +-%7.2f");
 
     // Print out final stats
     info() << "=================================================================" << endreq
-           << "  Photon candidate summary : " << m_Nevts << " events :-" << endreq
+           << "  Photon candidate summary : " << nEvents() << " events :-" << endreq
            << "    Aerogel   : "
-           << occ(m_photCount[Rich::Aerogel],m_Nevts) << "  photons/event" << endreq
+           << occ(m_photCount[Rich::Aerogel],nEvents()) << "  photons/event" << endreq
            << "    C4F10     : "
-           << occ(m_photCount[Rich::C4F10],m_Nevts)   << "  photons/event" << endreq
+           << occ(m_photCount[Rich::C4F10],nEvents())   << "  photons/event" << endreq
            << "    CF4       : "
-           << occ(m_photCount[Rich::CF4],m_Nevts)     << "  photons/event" << endreq
+           << occ(m_photCount[Rich::CF4],nEvents())     << "  photons/event" << endreq
            << "=================================================================" << endreq;
 
   }
@@ -417,4 +416,24 @@ void RichPhotonCreatorBase::buildCrossReferences( RichRecPhoton * photon ) const
     segment->richRecTrack()->addToRichRecPixels( pixel );
   }
 
+}
+
+void RichPhotonCreatorBase::InitNewEvent()
+{
+  m_hasBeenCalled = false;
+  if ( bookKeep() ) m_photonDone.clear();
+  m_photons = 0;
+  m_photCountLast = m_photCount;
+}
+
+void RichPhotonCreatorBase::FinishEvent()
+{
+  if ( m_hasBeenCalled ) ++m_Nevts;
+  if ( msgLevel(MSG::DEBUG) )
+  {
+    debug() << "Created " << richPhotons()->size() << " RichRecPhotons : Aerogel="
+            << m_photCount[Rich::Aerogel]-m_photCountLast[Rich::Aerogel]
+            << " C4F10=" << m_photCount[Rich::C4F10]-m_photCountLast[Rich::C4F10]
+            << " CF4=" << m_photCount[Rich::CF4]-m_photCountLast[Rich::CF4] << endreq;
+  }
 }

@@ -1,0 +1,56 @@
+
+//-----------------------------------------------------------------------------
+/** @file RichRecBase.icpp
+ *
+ *  Implementation file for RICH reconstruction base class : RichRecBase
+ *
+ *  CVS Log :-
+ *  $Id: RichRecBase.icpp,v 1.1 2005-10-13 15:38:41 jonrob Exp $
+ *
+ *  @author Chris Jones    Christopher.Rob.Jones@cern.ch
+ *  @date   2005-08-26
+ */
+//-----------------------------------------------------------------------------
+
+// local
+#include "RichRecBase/RichRecBase.h"
+
+//=============================================================================
+// Standard constructor
+//=============================================================================
+template <class PBASE>
+RichRecBase<PBASE>::RichRecBase( PBASE * base )
+  : m_base          ( base ),
+    m_pixTool       ( 0    ),
+    m_tkTool        ( 0    ),
+    m_segTool       ( 0    ),
+    m_photTool      ( 0    ),
+    m_statTool      ( 0    ),
+    m_trackCrName   ( "RichTrackCreator"   ),
+    m_pixelCrName   ( "RichPixelCreator"   ),
+    m_segmentCrName ( "RichSegmentCreator" ),
+    m_photonCrName  ( "RichPhotonCreator"  ),
+    m_statusCrName  ( "RichStatusCreator"  )
+{
+}
+//=============================================================================
+
+//=============================================================================
+// Initialisation
+//=============================================================================
+template <class PBASE>
+StatusCode RichRecBase<PBASE>::initialiseRichReco()
+{
+  return StatusCode::SUCCESS;
+}
+//=============================================================================
+
+//=============================================================================
+// Finalisation
+//=============================================================================
+template <class PBASE>
+StatusCode RichRecBase<PBASE>::finaliseRichReco()
+{
+  return StatusCode::SUCCESS;
+}
+//=============================================================================

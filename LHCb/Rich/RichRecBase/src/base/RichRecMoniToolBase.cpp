@@ -5,7 +5,7 @@
  *  Implementation file for RICH reconstruction tool base class : RichRecMoniToolBase
  *
  *  CVS Log :-
- *  $Id: RichRecMoniToolBase.cpp,v 1.3 2005-06-23 15:13:05 jonrob Exp $
+ *  $Id: RichRecMoniToolBase.cpp,v 1.4 2005-10-13 15:38:41 jonrob Exp $
  *
  *  @author Chris Jones    Christopher.Rob.Jones@cern.ch
  *  @date   2005/01/13
@@ -15,43 +15,58 @@
 // local
 #include "RichRecBase/RichRecMoniToolBase.h"
 
-// Standard constructor, initializes variables
+// ============================================================================
+// Disable warning on windows about using 'this' in constructors
+#ifdef _WIN32
+#pragma warning ( disable:4355 )
+#endif 
+// ============================================================================
+
+// ============================================================================
+// Force creation of templated class
+#include "RichRecBase.icpp"
+template class RichRecBase<RichMoniToolBase> ;
+// ============================================================================
+
+// ============================================================================
+// Standard constructor
+// ============================================================================
 RichRecMoniToolBase::RichRecMoniToolBase( const std::string& type,
                                           const std::string& name,
                                           const IInterface* parent )
   : RichMoniToolBase ( type, name, parent ),
-    m_pixTool        ( 0 ),
-    m_tkTool         ( 0 ),
-    m_segTool        ( 0 ),
-    m_photTool       ( 0 ),
-    m_statTool       ( 0 ),
-    m_ckAngleTool    ( 0 ),
-    m_expTkSigTool   ( 0 ),
-    m_exPhotSigTool  ( 0 ),
-    m_ckAngleResTool ( 0 ),
-    m_geomEffTool    ( 0 ),
-    m_geometryTool   ( 0 )
+    RichRecBase<RichMoniToolBase> ( this )
 {
-
-  // job options
-  declareProperty( "ProcessingStage", m_procStage = "Undefined" );
-
 }
+// ============================================================================
 
+// ============================================================================
+// Initialise
+// ============================================================================
 StatusCode RichRecMoniToolBase::initialize()
 {
   // Initialise base class
-  const StatusCode sc = RichMoniToolBase::initialize();
-  if ( sc.isFailure() ) return sc;
+  StatusCode sc = RichMoniToolBase::initialize();
+  if ( sc.isFailure() ) return Error( "Failed to initialise RichMoniToolBase", sc );
 
   // Common initialisation
-  #include "RichRecInitOptions.icpp"
+  sc = initialiseRichReco();
+  if ( sc.isFailure() ) return Error( "Failed to initialise RichRecBase", sc );
 
   return sc;
 }
+// ============================================================================
 
+// ============================================================================
+// Finalise
+// ============================================================================
 StatusCode RichRecMoniToolBase::finalize()
 {
+  // Common finalisation
+  const StatusCode sc = finaliseRichReco();
+  if ( sc.isFailure() ) return Error( "Failed to finalise RichRecBase", sc );
+
   // base class finalize
   return RichMoniToolBase::finalize();
 }
+// ============================================================================

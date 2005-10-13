@@ -5,7 +5,7 @@
  *  Header file for tool base class : RichPhotonCreatorBase
  *
  *  CVS Log :-
- *  $Id: RichPhotonCreatorBase.h,v 1.3 2005-06-23 15:13:05 jonrob Exp $
+ *  $Id: RichPhotonCreatorBase.h,v 1.4 2005-10-13 15:38:41 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   20/05/2005
@@ -103,10 +103,10 @@ public: // methods from interface
 protected: // methods
 
   /// Initialise for a new event
-  void InitNewEvent();
+  virtual void InitNewEvent();
 
   /// Finalise current event
-  void FinishEvent();
+  virtual void FinishEvent();
 
   /** Should book-keeping be performed ?
    *
@@ -223,6 +223,9 @@ protected: // methods
    */
   void buildCrossReferences( RichRecPhoton * photon ) const;
 
+  /// Returns the number of processed events
+  inline unsigned int nEvents() const { return m_Nevts; }
+
 protected: // data
 
   /// Flag to indicate if the tool has been used in a given event
@@ -283,29 +286,9 @@ private: // methods
 
 };
 
-inline void RichPhotonCreatorBase::InitNewEvent()
-{
-  m_hasBeenCalled = false;
-  if ( bookKeep() ) m_photonDone.clear();
-  m_photons = 0;
-  m_photCountLast = m_photCount;
-}
-
-inline void RichPhotonCreatorBase::FinishEvent()
-{
-  if ( m_hasBeenCalled ) ++m_Nevts;
-  if ( msgLevel(MSG::DEBUG) )
-  {
-    debug() << "Created " << richPhotons()->size() << " RichRecPhotons : Aerogel="
-            << m_photCount[Rich::Aerogel]-m_photCountLast[Rich::Aerogel]
-            << " C4F10=" << m_photCount[Rich::C4F10]-m_photCountLast[Rich::C4F10]
-            << " CF4=" << m_photCount[Rich::CF4]-m_photCountLast[Rich::CF4] << endreq;
-  }
-}
-
 inline double
 RichPhotonCreatorBase::ckSearchRange( RichRecSegment * segment,
-                                      const Rich::ParticleIDType id ) const
+                                      const Rich::ParticleIDType /* id */ ) const
 {
   // Range depends on track resolution
   //return m_CKTol[segment->trackSegment().radiator()] * m_ckRes->ckThetaResolution(segment,id);

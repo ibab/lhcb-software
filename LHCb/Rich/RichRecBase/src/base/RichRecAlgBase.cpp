@@ -5,7 +5,7 @@
  *  Implementation file for RICH reconstruction algorithm base class : RichRecAlgBase
  *
  *  CVS Log :-
- *  $Id: RichRecAlgBase.cpp,v 1.22 2005-06-23 15:13:05 jonrob Exp $
+ *  $Id: RichRecAlgBase.cpp,v 1.23 2005-10-13 15:38:41 jonrob Exp $
  *
  *  @author Chris Jones    Christopher.Rob.Jones@cern.ch
  *  @date   2003-05-10
@@ -18,58 +18,67 @@
 // local
 #include "RichRecBase/RichRecAlgBase.h"
 
+// ============================================================================
+// Disable warning on windows about using 'this' in constructors
+#ifdef _WIN32
+#pragma warning ( disable:4355 )
+#endif 
+// ============================================================================
+
+// ============================================================================
+// Force creation of templated class
+#include "RichRecBase.icpp"
+template class RichRecBase<RichAlgBase> ;
+// ============================================================================
+
+// ============================================================================
 // Standard constructor
+// ============================================================================
 RichRecAlgBase::RichRecAlgBase( const std::string& name,
                                 ISvcLocator* pSvcLocator )
   : RichAlgBase ( name, pSvcLocator ),
-    m_pixTool        ( 0 ),
-    m_tkTool         ( 0 ),
-    m_segTool        ( 0 ),
-    m_photTool       ( 0 ),
-    m_statTool       ( 0 ),
-    m_ckAngleTool    ( 0 ),
-    m_expTkSigTool   ( 0 ),
-    m_exPhotSigTool  ( 0 ),
-    m_ckAngleResTool ( 0 ),
-    m_geomEffTool    ( 0 ),
-    m_geometryTool   ( 0 )
+    RichRecBase<RichAlgBase> ( this )
 {
-
-  // job options
-  declareProperty( "ProcessingStage", m_procStage = "Undefined" );
-
 }
+// ============================================================================
 
-// Destructor
-RichRecAlgBase::~RichRecAlgBase() {};
-
+// ============================================================================
 // Initialise
+// ============================================================================
 StatusCode RichRecAlgBase::initialize()
 {
   // Initialise base class
-  const StatusCode sc = RichAlgBase::initialize();
-  if ( sc.isFailure() ) return sc;
+  StatusCode sc = RichAlgBase::initialize();
+  if ( sc.isFailure() ) return Error( "Failed to initialise RichAlgBase", sc );
 
   // Common initialisation
-  #include "RichRecInitOptions.icpp"
+  sc = initialiseRichReco();
+  if ( sc.isFailure() ) return Error( "Failed to initialise RichRecBase", sc );
 
   return sc;
 }
+// ============================================================================
 
+// ============================================================================
 // Main execute method
+// ============================================================================
 StatusCode RichRecAlgBase::execute()
 {
   // All algorithms should re-implement this method
   return Error ( "Default RichRecAlgBase::execute() called !!" );
 }
+// ============================================================================
 
-// Finalize
+// ============================================================================
+// Finalise
+// ============================================================================
 StatusCode RichRecAlgBase::finalize()
 {
-  //
-  // Leave space to do something here later on if needed
-  //
+  // Common finalisation
+  const StatusCode sc = finaliseRichReco();
+  if ( sc.isFailure() ) return Error( "Failed to finalise RichRecBase", sc );
 
   // Finalize base class
   return RichAlgBase::finalize();
 }
+// ============================================================================

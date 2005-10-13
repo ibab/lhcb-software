@@ -5,7 +5,7 @@
  *  Implementation file for tool base class : RichPixelCreatorBase
  *
  *  CVS Log :-
- *  $Id: RichPixelCreatorBase.cpp,v 1.4 2005-06-23 15:13:05 jonrob Exp $
+ *  $Id: RichPixelCreatorBase.cpp,v 1.5 2005-10-13 15:38:41 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   20/04/2005
@@ -39,6 +39,15 @@ RichPixelCreatorBase::RichPixelCreatorBase( const std::string& type,
   // Define the interface
   declareInterface<IRichPixelCreator>(this);
 
+  if      ( context() == "Offline" )
+  {
+    m_richRecPixelLocation = RichRecPixelLocation::Offline;
+  }
+  else if ( context() == "HLT" )
+  {
+    m_richRecPixelLocation = RichRecPixelLocation::HLT;
+  }
+
   // Define job option parameters
   declareProperty( "DoBookKeeping",      m_bookKeep  );
   declareProperty( "UseDetectors",       m_usedDets  );
@@ -52,23 +61,13 @@ StatusCode RichPixelCreatorBase::initialize()
   const StatusCode sc = RichRecToolBase::initialize();
   if ( sc.isFailure() ) { return sc; }
 
-  // Configure output location depending on processing stage
-  // to be replace by common "context" when available
-  if      ( processingStage() == "Offline" )
-  {
-    m_richRecPixelLocation = RichRecPixelLocation::Offline;
-  }
-  else if ( processingStage() == "HLT" )
-  {
-    m_richRecPixelLocation = RichRecPixelLocation::HLT;
-  }
   if ( msgLevel(MSG::DEBUG) )
   {
     debug() << "RichRecPixel location : " << m_richRecPixelLocation << endreq;
   }
 
   // get tools
-  m_recGeom = geometryTool();
+  acquireTool( "RichRecGeometry", m_recGeom );
   if ( m_hpdCheck )
   {
     acquireTool( "RichHPDInfoTool", m_hpdTool );

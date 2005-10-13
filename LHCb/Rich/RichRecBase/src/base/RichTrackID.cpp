@@ -5,7 +5,7 @@
  *  Implementation file for class : RichTrackID
  *
  *  CVS Log :-
- *  $Id: RichTrackID.cpp,v 1.10 2005-05-13 14:54:57 jonrob Exp $
+ *  $Id: RichTrackID.cpp,v 1.11 2005-10-13 15:38:41 jonrob Exp $
  *
  *  @author Chris Jones    Christopher.Rob.Jones@cern.ch
  *  @date   2003-09-23
@@ -28,6 +28,7 @@ std::string Rich::text( const Rich::TrackParent::Type parent )
 {
   switch( parent ) {
   case Rich::TrackParent::TrgTrack:       return "TrgTrack";  // Place first for speed
+  case Rich::TrackParent::Track:          return "Track";
   case Rich::TrackParent::TrStoredTrack:  return "TrStoredTrack";
   case Rich::TrackParent::MCParticle:     return "MCParticle";
   default:                                return "SHOULD NEVER SEE THIS";
@@ -73,9 +74,38 @@ Rich::Track::Type Rich::Track::type( const std::string & name )
 }
 
 // Returns the enumerated type for a given TrStoredTrack
+Rich::Track::Type Rich::Track::type( const ::Track * track )
+{
+  if ( track ) 
+  {
+    // track algorithm type
+    const TrackKeys::History hist = (TrackKeys::History)track->history();
+    // check all known track types (order according to abundance)
+    // Convertered track types
+    if      ( TrackKeys::CnvForward  == hist )  { return Rich::Track::Forward;  }
+    else if ( TrackKeys::CnvMatch    == hist )  { return Rich::Track::Match;    }
+    else if ( TrackKeys::CnvSeed     == hist )  { return Rich::Track::Seed;     }
+    else if ( TrackKeys::CnvKsTrack  == hist )  { return Rich::Track::KsTrack;  }
+    else if ( TrackKeys::CnvVeloTT   == hist )  { return Rich::Track::VeloTT;   }
+    else if ( TrackKeys::CnvVelo     == hist )  { return Rich::Track::Velo;     }
+    else if ( TrackKeys::CnvVeloBack == hist )  { return Rich::Track::Unusable; }
+    else 
+    { // Should not get here ...
+      std::ostringstream mess;
+      mess << "Unknown Track type : TrackKeys::History = " << track->history();
+      throw GaudiException( mess.str(), "*Rich::Track::type*", StatusCode::FAILURE );
+    }
+  }
+
+  // Should not get here either ...
+  throw GaudiException( "Null Track pointer", "*Rich::Track::type*", StatusCode::FAILURE );
+}
+
+// Returns the enumerated type for a given TrStoredTrack
 Rich::Track::Type Rich::Track::type( const TrStoredTrack * track )
 {
-  if ( track ) {
+  if ( track ) 
+  {
     // check all known track types (order according to abundance)
     if      ( track->forward()  )     { return Rich::Track::Forward;  }
     else if ( track->match()    )     { return Rich::Track::Match;    }

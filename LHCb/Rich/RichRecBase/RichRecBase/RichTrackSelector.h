@@ -5,7 +5,7 @@
  * Header file for utility class : RichTrackSelector
  *
  * CVS Log :-
- * $Id: RichTrackSelector.h,v 1.10 2005-05-13 14:54:57 jonrob Exp $
+ * $Id: RichTrackSelector.h,v 1.11 2005-10-13 15:38:41 jonrob Exp $
  *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @date   2003-06-20
@@ -20,6 +20,8 @@
 #include "GaudiKernel/MsgStream.h"
 
 // Event model
+#include "Event/Track.h"
+#include "Event/TrackKeys.h" // should be in Event/Track.h
 #include "Event/TrStoredTrack.h"
 #include "Event/TrgTrack.h"
 #include "Event/RichRecTrack.h"
@@ -72,6 +74,16 @@ public:
    *  @return Maximum momentum cut value for that track
    */
   const double maxMomentum( const Rich::Track::Type type ) const;
+
+  /** Test if the given Track is selected under the current criteria
+   *
+   *  @param track Pointer to a Track
+   *
+   *  @return Boolean indicating if the track is selected
+   *  @retval true  Track is selected
+   *  @retval false Track is rejected
+   */
+  bool trackSelected( const ::Track * track ) const;
 
   /** Test if the given TrStoredTrack is selected under the current criteria
    *
@@ -208,6 +220,18 @@ inline bool RichTrackSelector::trackSelected( const TrStoredTrack * track ) cons
            ( m_chargeSel*track->charge() >= 0 ) &&  // track charge
            ( trackPState->p()/GeV > minMomentum(type) ) &&  // Momentum cuts
            ( trackPState->p()/GeV < maxMomentum(type) )     // Momentum cuts
+           );
+}
+
+inline bool RichTrackSelector::trackSelected( const ::Track * track ) const
+{
+  const Rich::Track::Type type = Rich::Track::type(track);
+  return ( track &&                  // Track info OK
+           (!m_uniqueTrOnly || track->checkFlag(TrackKeys::Unique)) &&  // Unique tracks
+           m_tkTypeSel[type] &&                     // tracking algorithm type
+           ( m_chargeSel*track->charge() >= 0 ) &&  // track charge
+           ( track->p()/GeV > minMomentum(type) ) &&  // Momentum cuts
+           ( track->p()/GeV < maxMomentum(type) )     // Momentum cuts
            );
 }
 

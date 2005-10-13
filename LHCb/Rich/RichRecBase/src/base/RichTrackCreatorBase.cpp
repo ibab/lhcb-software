@@ -5,7 +5,7 @@
  *  Implementation file for tool base class : RichTrackCreatorBase
  *
  *  CVS Log :-
- *  $Id: RichTrackCreatorBase.cpp,v 1.2 2005-06-23 15:13:05 jonrob Exp $
+ *  $Id: RichTrackCreatorBase.cpp,v 1.3 2005-10-13 15:38:41 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   20/05/2005
@@ -32,6 +32,15 @@ RichTrackCreatorBase::RichTrackCreatorBase( const std::string& type,
   // Define the interface
   declareInterface<IRichTrackCreator>(this);
 
+  if      ( context() == "Offline" )
+  {
+    m_richRecTrackLocation = RichRecTrackLocation::Offline;
+  }
+  else if ( context() == "HLT" )
+  {
+    m_richRecTrackLocation = RichRecTrackLocation::HLT;
+  }
+
   // job options
   declareProperty( "DoBookKeeping",        m_bookKeep                        );
   declareProperty( "DoBookKeeping",        m_bookKeep                        );
@@ -46,16 +55,6 @@ StatusCode RichTrackCreatorBase::initialize()
   const StatusCode sc = RichRecToolBase::initialize();
   if ( sc.isFailure() ) { return sc; }
 
-  // Configure output location depending on processing stage
-  // to be replace by common "context" when available
-  if      ( processingStage() == "Offline" )
-  {
-    m_richRecTrackLocation = RichRecTrackLocation::Offline;
-  }
-  else if ( processingStage() == "HLT" )
-  {
-    m_richRecTrackLocation = RichRecTrackLocation::HLT;
-  }
   if ( msgLevel(MSG::DEBUG) )
   {
     debug() << "RichRecTrack location : " << m_richRecTrackLocation << endreq;
@@ -158,7 +157,7 @@ void RichTrackCreatorBase::FinishEvent()
       nTotTried += (*i).second.triedTracks - m_nTracksLast[(*i).first].triedTracks;
       nTotSel   += (*i).second.selectedTracks - m_nTracksLast[(*i).first].selectedTracks;
     }
-    debug() << "Selected " << nTotSel << "/" << nTotTried << " TrStoredTracks :";
+    debug() << "Selected " << nTotSel << "/" << nTotTried << " Tracks :";
     for ( TrackTypeCount::iterator i = m_nTracksAll.begin(); i != m_nTracksAll.end(); ++i )
     {
       const std::string name =
