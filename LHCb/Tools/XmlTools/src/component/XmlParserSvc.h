@@ -1,4 +1,4 @@
-// $Id: XmlParserSvc.h,v 1.6 2005-07-07 13:01:10 marcocle Exp $
+// $Id: XmlParserSvc.h,v 1.7 2005-10-13 16:52:01 marcocle Exp $
 #ifndef DETDESCCNV_XMLPARSERSVC_H
 #define DETDESCCNV_XMLPARSERSVC_H
 
@@ -13,6 +13,8 @@
 #include "XmlTools/IXmlParserSvc.h"
 
 // Forward and external declarations
+class IXmlEntityResolverSvc;
+
 template <class TYPE> class SvcFactory;
 
 
@@ -54,6 +56,12 @@ public:
   virtual StatusCode queryInterface ( const InterfaceID& riid,
                                       void** ppvInterface );
 
+  /// Initialize the service
+  virtual StatusCode initialize();
+
+  /// Finalize the service
+  virtual StatusCode finalize();
+
   ///////////////////////////////////////////////////
   // implementation of the IXmlParserSvc interface //
   ///////////////////////////////////////////////////
@@ -84,7 +92,6 @@ public:
   /// Method to remove the lock from a document in the cache or to delete the document
   /// generated from a string.
   virtual void releaseDoc(xercesc::DOMDocument* doc);
-
 
   //////////////////////////////////////////////////////
   // implementation of the SAX ErrorHandler interface //
@@ -197,6 +204,12 @@ private:
   
   /// The maximum number of cached documents
   unsigned int m_maxDocNbInCache;
+
+  /// Name of the service which will provide the xercesc::EntityResolver pointer (option "EntityResolverSvc").
+  std::string m_resolverSvcName;
+
+  /// Pointer to the IXmlEntityResolverSvc.
+  IXmlEntityResolverSvc *m_resolverSvc;
 
 };
 
