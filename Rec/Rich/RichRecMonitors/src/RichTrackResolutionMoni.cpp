@@ -5,7 +5,7 @@
  *  Implementation file for algorithm class : RichTrackResolutionMoni
  *
  *  CVS Log :-
- *  $Id: RichTrackResolutionMoni.cpp,v 1.1.1.1 2005-06-18 11:44:46 jonrob Exp $
+ *  $Id: RichTrackResolutionMoni.cpp,v 1.2 2005-10-13 15:45:45 jonrob Exp $
  *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   05/04/2002
@@ -284,7 +284,7 @@ StatusCode RichTrackResolutionMoni::execute() {
     const RichTrackSegment & trackSeg = segment->trackSegment();
 
     //const Rich::DetectorType iRich = trackSeg.rich();    // which rich detector
-    const Rich::RadiatorType iRad = trackSeg.radiator(); // which radiator
+    const Rich::RadiatorType iRad = trackSeg.radiator();   // which radiator
     ++nSegs[iRad]; // count segments per radiator
 
     verbose() << "Selected " << segment->richRecTrack()->trackID().trackType()

@@ -5,7 +5,7 @@
  *  Implementation file for RICH reconstruction tool : RichRecMCTruthTool
  *
  *  CVS Log :-
- *  $Id: RichRecMCTruthTool.cpp,v 1.15 2005-05-13 14:59:51 jonrob Exp $
+ *  $Id: RichRecMCTruthTool.cpp,v 1.16 2005-10-13 15:41:01 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   08/07/2004
@@ -57,38 +57,46 @@ const MCParticle *
 RichRecMCTruthTool::mcParticle( const RichRecTrack * richTrack ) const
 {
   const ContainedObject * obj = richTrack->parentTrack();
-  if ( !obj ) {
+  if ( !obj ) 
+  {
     Warning ( "RichRecTrack has NULL pointer to parent" );
     return NULL;
   }
 
-  // What sort of track is this...
-  if ( const TrStoredTrack * offTrack = dynamic_cast<const TrStoredTrack*>(obj) ) {
+  // What sort of track is this ...
 
+  if ( const Track * offTrack = dynamic_cast<const Track*>(obj) ) 
+  {
+    // Track
+    debug() << "RichRecTrack " << richTrack->key()
+            << " has parent track Track " << offTrack->key() << endreq;
+    return m_truth->mcParticle( offTrack );
+  } 
+  else if ( const TrStoredTrack * troffTrack = dynamic_cast<const TrStoredTrack*>(obj) ) 
+  {
     // TrStoredTrack
     debug() << "RichRecTrack " << richTrack->key()
-            << " has parent track TrStoredTrack " << offTrack->key() << endreq;
-    return m_truth->mcParticle( offTrack );
-
-  } else if ( const TrgTrack * onTrack = dynamic_cast<const TrgTrack*>(obj) ) {
-
+            << " has parent track TrStoredTrack " << troffTrack->key() << endreq;
+    return m_truth->mcParticle( troffTrack );
+  } 
+  else if ( const TrgTrack * onTrack = dynamic_cast<const TrgTrack*>(obj) ) 
+  {
     // TrgTrack
     debug() << "RichRecTrack " << richTrack->key()
             << " has parent track TrgTrack " << onTrack->key() << endreq;
     return m_truth->mcParticle( onTrack );
-
-  } else if ( const MCParticle * mcPart = dynamic_cast<const MCParticle*>(obj) ) {
-
+  } 
+  else if ( const MCParticle * mcPart = dynamic_cast<const MCParticle*>(obj) ) 
+  {
     // MCParticle
     debug() << "RichRecTrack " << richTrack->key()
             << " has parent track MCParticle " << mcPart->key() << endreq;
     return mcPart;
-
-  } else {
-
+  } 
+  else 
+  {
     Warning ( "Unknown RichRecTrack parent track type" );
     return NULL;
-
   }
 
 }

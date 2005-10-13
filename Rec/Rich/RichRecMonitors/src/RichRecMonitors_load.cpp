@@ -4,7 +4,7 @@
  *  Declaration of objects in the component library RichRecMonitors
  *
  *  CVS Log :-
- *  $Id: RichRecMonitors_load.cpp,v 1.1.1.1 2005-06-18 11:44:46 jonrob Exp $
+ *  $Id: RichRecMonitors_load.cpp,v 1.2 2005-10-13 15:45:45 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   05/04/2002
@@ -22,6 +22,7 @@ DECLARE_FACTORY_ENTRIES( RichRecMonitors )
   DECLARE_ALGORITHM( RichPhotonMonitor       ); ///< Monitors the photon reconstruction
   DECLARE_ALGORITHM( RichRecTimeMonitor      ); ///< Monitor for recontruction algorithm timing
   DECLARE_ALGORITHM( RichRecDataObjVerifier  ); ///< Printout of the reconstruction objects
+  DECLARE_ALGORITHM( RichCherenkovResMoni    ); ///< CK theta resolution monitor
 
   // Allignment monitor
   DECLARE_ALGORITHM( RichAlignmentMonitor    ); ///< Mirror allignment monitor

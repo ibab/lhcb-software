@@ -4,7 +4,7 @@
  *  Header file for algorithm class : RichAlignmentMonitor
  *
  *  CVS Log :-
- *  $Id: RichAlignmentMonitor.h,v 1.3 2005-09-29 10:22:14 papanest Exp $
+ *  $Id: RichAlignmentMonitor.h,v 1.4 2005-10-13 15:45:45 jonrob Exp $
  *
  *  @author Antonis Papanestis   a.papanestis@rl.ac.uk
  *  @date   2004-02-19
@@ -36,7 +36,7 @@
 // Interfaces
 #include "RichRecBase/IRichRecMCTruthTool.h"
 #include "RichKernel/IRichRefractiveIndex.h"
-#include "RichRecBase/IRichParticleProperties.h"
+#include "RichKernel/IRichParticleProperties.h"
 #include "RichRecBase/IRichCherenkovAngle.h"
 
 // Kernel

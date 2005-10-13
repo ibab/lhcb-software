@@ -4,7 +4,7 @@
  *  Implementation file for algorithm class : RichAlignmentMonitor
  *
  *  CVS Log :-
- *  $Id: RichAlignmentMonitor.cpp,v 1.3 2005-09-29 10:22:14 papanest Exp $
+ *  $Id: RichAlignmentMonitor.cpp,v 1.4 2005-10-13 15:45:45 jonrob Exp $
  *
  *  @author Antonis Papanestis
  *  @date   2004-02-19
@@ -71,8 +71,8 @@ StatusCode RichAlignmentMonitor::initialize()
   const StatusCode sc = RichRecMoniAlgBase::initialize();
   if ( sc.isFailure() ) { return sc; }
 
-  acquireTool( "RichRefractiveIndex",    m_richRefIndexTool );
-  m_ckAngle = cherenkovAngleTool();
+  acquireTool( "RichRefractiveIndex",  m_richRefIndexTool );
+  acquireTool( "RichCherenkovAngle",   m_ckAngle          );
 
   if ( m_useMCTruth ) {
     acquireTool( "RichRecMCTruthTool",    m_richRecMCTruth );
@@ -170,7 +170,7 @@ StatusCode RichAlignmentMonitor::execute() {
         mcParticleType( segment );
       if ( Rich::Unknown == mcType ) continue;
       debug() << "mcType:" << mcType << endmsg;
-      const double beta = m_richPartProp->beta( segment, mcType );
+      const double beta = m_richPartProp->beta( segment->trackSegment().bestMomentum().mag(), mcType );
       m_trackBeta[rich]->fill(beta);
       // Expected Cherenkov theta angle for true particle type
 

@@ -5,7 +5,7 @@
  *  Header file for RICH reconstruction tool : RichPhotonCreatorWithGaussianCKSmear
  *
  *  CVS Log :-
- *  $Id: RichPhotonCreatorWithGaussianCKSmear.h,v 1.4 2005-06-23 15:14:12 jonrob Exp $
+ *  $Id: RichPhotonCreatorWithGaussianCKSmear.h,v 1.5 2005-10-13 15:41:01 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   20/05/2005
@@ -63,6 +63,11 @@ public: // methods for Gaudi framework
   // Finalize method
   StatusCode finalize();
 
+protected: // methods
+
+  /// Initialise for a new event
+  virtual void InitNewEvent();
+
 private: // private methods
 
   /// Form a Photon candidate from a Segment and a pixel.
@@ -91,6 +96,12 @@ private: // private data
 
   /// Gaussian random distributions
   mutable boost::array< Rndm::Numbers, Rich::NRadiatorTypes > m_rand;
+
+  /// photon smearing done map
+  mutable RichHashMap<long int, bool> m_photSmearDone;
+
+  /// count of smeared photons
+  mutable std::vector<unsigned long int> m_smearCount;
 
 };
 

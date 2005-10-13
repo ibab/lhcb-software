@@ -4,7 +4,7 @@
  *
  *  Implementation file for algorithm class : RichTrackGeomMoni
  *
- *  $Id: RichTrackGeomMoni.cpp,v 1.2 2005-06-23 15:14:56 jonrob Exp $
+ *  $Id: RichTrackGeomMoni.cpp,v 1.3 2005-10-13 15:45:45 jonrob Exp $
  *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   05/04/2002
@@ -52,7 +52,7 @@ StatusCode RichTrackGeomMoni::initialize()
   // Acquire instances of tools
   acquireTool( "RichRayTracing",       m_rayTrace       );
   acquireTool( "RichRecMCTruthTool",   m_richRecMCTruth );
-  m_geomTool = geometryTool();
+  acquireTool( "RichRecGeometry",      m_geomTool       );
   acquireTool( "RichGeomEff",          m_geomEffic      );
   acquireTool( "RichMCTrackInfoTool",  m_mcTkInfo       );
 

@@ -5,7 +5,7 @@
  *  Implementation file for algorithm class : RichPhotonMonitor
  *
  *  CVS Log :-
- *  $Id: RichPhotonMonitor.cpp,v 1.2 2005-06-23 15:14:55 jonrob Exp $
+ *  $Id: RichPhotonMonitor.cpp,v 1.3 2005-10-13 15:45:45 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   2002-07-02
@@ -64,13 +64,12 @@ StatusCode RichPhotonMonitor::initialize()
 
   // Acquire instances of tools
   acquireTool( "ForcedRichPhotonCreator", m_forcedPhotCreator, this );
-  m_photonSig = expPhotonSignalTool();
-  m_tkSignal = expTrackSignalTool();
-  //m_geomEffic = geomEffTool();
+  acquireTool( "RichPhotonSignal",        m_photonSig );
+  acquireTool( "RichExpectedTrackSignal", m_tkSignal  );
   acquireTool( "RichGeomEffFix",          m_geomEfficFix, this   );
   acquireTool( "RichGeomEffRay",          m_geomEfficRay, this   );
-  m_geomTool = geometryTool();
-  m_ckAngle = cherenkovAngleTool();
+  acquireTool( "RichRecGeometry",         m_geomTool  );
+  acquireTool( "RichCherenkovAngle",      m_ckAngle   );
   acquireTool( "RichParticleProperties",  m_richPartProp  );
   acquireTool( "RichRefractiveIndex",     m_refIndex      );
   if ( m_truth )
@@ -178,7 +177,7 @@ StatusCode RichPhotonMonitor::bookHistograms()
 
     } // end hypo loop
 
-    for ( unsigned iTkType = 0; iTkType<Rich::Track::NTrTypes; ++iTkType ) 
+    for ( unsigned iTkType = 0; iTkType<Rich::Track::NTrTypes; ++iTkType )
     {
 
       title = "Trk-Pix Hit sep local : " + Rich::text((Rich::Track::Type)iTkType) + " : " + radiator[iRad];
@@ -370,8 +369,8 @@ StatusCode RichPhotonMonitor::bookMCHistograms()
     title = "Non-recon. true photons : Sep V CK-Theta MC : " + radiator[iRad];
     id = radOffset*(iRad+1) + 708;
     m_notFoundSepLVCKTMC[iRad] = histoSvc()->book(m_mcHistPth,id,title,
-                                                nbins,minCkTheta[iRad],maxCkTheta[iRad],
-                                                nbins,tkHitSepMin[iRad],tkHitSepMax[iRad] );
+                                                  nbins,minCkTheta[iRad],maxCkTheta[iRad],
+                                                  nbins,tkHitSepMin[iRad],tkHitSepMax[iRad] );
 
     title = "Non-recon. true photons : Sep V CK-Phi : " + radiator[iRad];
     id = radOffset*(iRad+1) + 709;
@@ -618,34 +617,33 @@ StatusCode RichPhotonMonitor::bookMCHistograms()
 };
 
 // Main execution
-StatusCode RichPhotonMonitor::execute() 
+StatusCode RichPhotonMonitor::execute()
 {
-  debug() << "Execute" << endreq;
 
   // Check Status
   if ( !richStatus()->eventOK() ) return StatusCode::SUCCESS;
 
   // If any containers are empty, form them
-  if ( richTracks()->empty() ) 
+  if ( richTracks()->empty() )
   {
     if ( !trackCreator()->newTracks() ) return StatusCode::FAILURE;
     debug() << "No tracks found : Created " << richTracks()->size()
             << " RichRecTracks " << richSegments()->size()
             << " RichRecSegments" << endreq;
   }
-  if ( richTracks()->size() > m_maxUsedTracks ) 
+  if ( richTracks()->size() > m_maxUsedTracks )
   {
     debug() << "Found " << richTracks()->size() << ">"
             << m_maxUsedTracks << " max usable tracks, stopping." << endreq;
     return StatusCode::SUCCESS;
   }
-  if ( richPixels()->empty() ) 
+  if ( richPixels()->empty() )
   {
     if ( !pixelCreator()->newPixels() ) return StatusCode::FAILURE;
     debug() << "No Pixels found : Created "
             << richPixels()->size() << " RichRecPixels" << endreq;
   }
-  if ( m_buildPhotons && richPhotons()->empty() ) 
+  if ( m_buildPhotons && richPhotons()->empty() )
   {
     photonCreator()->reconstructPhotons();
     debug() << "No photons found : Created "
@@ -685,23 +683,23 @@ StatusCode RichPhotonMonitor::execute()
     const Rich::ParticleIDType mcType = m_richRecMCTruth->mcParticleType( segment );
 
     // beta for true type
-    const double beta = m_richPartProp->beta( segment, mcType );
+    const double beta = m_richPartProp->beta( segment->trackSegment().bestMomentum().mag(), mcType );
 
     // Track type
     const Rich::Track::Type trType = segment->richRecTrack()->trackID().trackType();
 
-    if ( msgLevel(MSG::DEBUG) )
+    if ( msgLevel(MSG::VERBOSE) )
     {
-      debug() << "Segment " << segment->key()
-              << " Track " << segment->richRecTrack()->key() << " : "
-              << rad << " : MCType " << mcType
-              << " : TrTrackType " << trType << " : pTot " << ptot
-              << " pthLen " << segment->trackSegment().pathLength()
-              << endreq
-              << " Entry : Point " << segment->trackSegment().entryPoint()
-              << " Momentum " << segment->trackSegment().entryMomentum() << endreq
-              << " Exit  : Point " << segment->trackSegment().exitPoint()
-              << " Momentum " << segment->trackSegment().exitMomentum() << endreq;
+      verbose() << "Segment " << segment->key()
+                << " Track " << segment->richRecTrack()->key() << " : "
+                << rad << " : MCType " << mcType
+                << " : TrTrackType " << trType << " : pTot " << ptot
+                << " pthLen " << segment->trackSegment().pathLength()
+                << endreq
+                << " Entry : Point " << segment->trackSegment().entryPoint()
+                << " Momentum " << segment->trackSegment().entryMomentum() << endreq
+                << " Exit  : Point " << segment->trackSegment().exitPoint()
+                << " Momentum " << segment->trackSegment().exitMomentum() << endreq;
     }
 
     // Loop over all particle codes
@@ -725,21 +723,21 @@ StatusCode RichPhotonMonitor::execute()
       {
         m_geomEffFix[rad][iHypo]->fill( geomEffFix );
         m_geomEffRay[rad][iHypo]->fill( geomEffRay );
-        m_geomEffCorr[rad][iHypo]->fill(  geomEffRay, geomEffFix ); 
+        m_geomEffCorr[rad][iHypo]->fill(  geomEffRay, geomEffFix );
       }
 
       // Average Cherenkov Theta angle
       const double thetaExp = m_ckAngle->avgCherenkovTheta(segment,hypo);
       if ( thetaExp>0 ) m_avCKTheta[rad][iHypo]->fill( thetaExp );
 
-      if ( msgLevel(MSG::DEBUG) )
+      if ( msgLevel(MSG::VERBOSE) )
       {
-        debug() << " " << hypo << " emitted " << emitPhots
-                << " detable " << m_tkSignal->nDetectablePhotons( segment, hypo )
-                << " Signal " << m_tkSignal->nSignalPhotons( segment, hypo )
-                << " Scatter " << m_tkSignal->nScatteredPhotons( segment, hypo )
-                << " ObsSignal " << sigPhots << " geomEffRay " << geomEffRay
-                << " ckExp " << thetaExp << endreq;
+        verbose() << " " << hypo << " emitted " << emitPhots
+                  << " detable " << m_tkSignal->nDetectablePhotons( segment, hypo )
+                  << " Signal " << m_tkSignal->nSignalPhotons( segment, hypo )
+                  << " Scatter " << m_tkSignal->nScatteredPhotons( segment, hypo )
+                  << " ObsSignal " << sigPhots << " geomEffRay " << geomEffRay
+                  << " ckExp " << thetaExp << endreq;
       }
 
     } // end loop over particle codes
@@ -783,7 +781,7 @@ StatusCode RichPhotonMonitor::execute()
 
     for ( RichRecSegment::Photons::const_iterator iPhot = photons.begin();
           iPhot != photons.end();
-          ++iPhot ) 
+          ++iPhot )
     {
       RichRecPhoton * photon = *iPhot;
       RichRecPixel  * pixel  = photon->richRecPixel();
@@ -1087,13 +1085,12 @@ StatusCode RichPhotonMonitor::execute()
   } // end loop over segments
 
   // Fill final plots
-  for ( int iRad = 0; iRad < Rich::NRadiatorTypes; ++iRad ) 
+  for ( int iRad = 0; iRad < Rich::NRadiatorTypes; ++iRad )
   {
     m_nPhotsPerRad[iRad]->fill( nPhots[iRad] );
     m_nTruePhotsPerRad[iRad]->fill( nPhotsT[iRad] );
   }
 
-  debug() << "Finished event processing" << endreq;
   return StatusCode::SUCCESS;
 }
 
@@ -1102,7 +1099,7 @@ StatusCode RichPhotonMonitor::finalize()
 {
 
   // final debug printout
-  for ( unsigned iTkType = 0; iTkType<Rich::Track::NTrTypes; ++iTkType ) 
+  for ( unsigned iTkType = 0; iTkType<Rich::Track::NTrTypes; ++iTkType )
   {
     const std::string tk = Rich::text( static_cast<Rich::Track::Type>(iTkType) );
     info() << "Max/Min track-hit seps local : " << tk
@@ -1110,7 +1107,7 @@ StatusCode RichPhotonMonitor::finalize()
            << " : C4F10 " << m_maxTrueHitSepL[1][iTkType] << "/" << m_minTrueHitSepL[1][iTkType]
            << " : CF4 " << m_maxTrueHitSepL[2][iTkType] << "/" << m_minTrueHitSepL[2][iTkType] << endreq;
   }
-  for ( int iRad = 0; iRad < Rich::NRadiatorTypes; ++iRad ) 
+  for ( int iRad = 0; iRad < Rich::NRadiatorTypes; ++iRad )
   {
     info() << "Max/Min " << static_cast<Rich::RadiatorType>(iRad) << " Phot. Energy at Prod : "
            << m_maxPhotEnAtProd[iRad] << "/" << m_minPhotEnAtProd[iRad] << endreq;

@@ -5,7 +5,7 @@
  *  Header file for algorithm class : RichPhotonMonitor
  *
  *  CVS Log :-
- *  $Id: RichPhotonMonitor.h,v 1.2 2005-06-23 15:14:55 jonrob Exp $
+ *  $Id: RichPhotonMonitor.h,v 1.3 2005-10-13 15:45:45 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   05/04/2002
@@ -43,7 +43,7 @@
 
 // Interfaces
 #include "RichRecBase/IRichRecMCTruthTool.h"
-#include "RichRecBase/IRichParticleProperties.h"
+#include "RichKernel/IRichParticleProperties.h"
 #include "RichRecBase/IRichPhotonSignal.h"
 #include "RichRecBase/IRichExpectedTrackSignal.h"
 #include "RichRecBase/IRichGeomEff.h"

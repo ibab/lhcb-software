@@ -4,7 +4,7 @@
  *  Header file for algorithm class : RichRecTimeMonitor
  *
  *  CVS Log :-
- *  $Id: RichRecTimeMonitor.h,v 1.2 2005-06-23 15:14:56 jonrob Exp $
+ *  $Id: RichRecTimeMonitor.h,v 1.3 2005-10-13 15:45:45 jonrob Exp $
  *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   05/04/2002
@@ -81,6 +81,9 @@ private: // data
   IHistogram1D* m_time;         ///< Overall event processing time
   IHistogram1D* m_timePerPID;   ///< Event processing time per PID
   IHistogram2D* m_timeVnPIDs;   ///< Event processing time versus # PIDs
+  IHistogram2D* m_timeVnPixels; ///< Event processing time versus # pixels
+  IHistogram2D* m_timePerPIDVnPIDs;   ///< Event processing time per PID versus # PIDs
+  IHistogram2D* m_timePerPIDVnPixels;   ///< Event processing time per PID versus # pixels
 
   // Vector of pointers to RichPIDs
   std::vector<ContainedObject*> m_richPIDs;

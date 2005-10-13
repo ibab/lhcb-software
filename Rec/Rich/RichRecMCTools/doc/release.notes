@@ -4,6 +4,10 @@
 ! Purpose     : Monte Carlo Utility tools for RICH reconstruction algorithms
 !------------------------------------------------------------------------------
 
+! 2005-10-13 - Chris Jones
+ - Adapt to use of context()
+ - Some improvements to Cherenkov theta smearing tool
+
 !====================== RichRecMCTools v1r9 2005-06-24 =====================
 ! 2005-06-21 - Chris Jones
  - Adapt to changes in RichKernel base classes and RichToolRegistry, and 

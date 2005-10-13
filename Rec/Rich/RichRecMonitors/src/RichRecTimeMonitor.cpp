@@ -4,11 +4,7 @@
  *  Implementation file for algorithm class : RichRecTimeMonitor
  *
  *  CVS Log :-
- *  $Id: RichRecTimeMonitor.cpp,v 1.1.1.1 2005-06-18 11:44:46 jonrob Exp $
- *  $Log: not supported by cvs2svn $
- *  Revision 1.12  2004/07/27 09:48:05  jonrob
- *  Add doxygen file documentation and CVS information
- *
+ *  $Id: RichRecTimeMonitor.cpp,v 1.2 2005-10-13 15:45:45 jonrob Exp $
  *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   05/04/2002
@@ -47,8 +43,8 @@ RichRecTimeMonitor::RichRecTimeMonitor( const std::string& name,
   declareProperty( "HistoPath", m_histPth = "RICH/TIMING/" );
 
   // Timing boundaries
-  declareProperty( "MaxEventTime", m_maxTime       = 30  );
-  declareProperty( "MaxEventTime", m_maxTimePerPID = 0.5 );
+  declareProperty( "MaxEventTime",       m_maxTime       = 3000 );
+  declareProperty( "MaxEventTimePerPID", m_maxTimePerPID = 50   );
 
 }
 
@@ -71,23 +67,42 @@ StatusCode RichRecTimeMonitor::initialize()
 StatusCode RichRecTimeMonitor::bookHistograms()
 {
   std::string title;
-  const int maxTracks        = 300;
-  const int nBins            = 100;
+  const int maxTracks        = 150;
+  const int maxPixels        = 5000;
+  const int nBins            = 30;
   int id = 0;
 
-  title = m_name+" processing time (sec)";
+  title = m_name+" total processing time (ms)";
   id = 1;
   m_time = histoSvc()->book(m_histPth,id,title,nBins,0.,m_maxTime);
 
-  title = m_name+" processing time per PID (sec)";
+  title = m_name+" processing time per PID (ms)";
   id = 2;
   m_timePerPID = histoSvc()->book(m_histPth,id,title,nBins,0.,m_maxTimePerPID);
 
-  title = m_name+" processing time (sec) V #PIDs";
+  title = m_name+" total processing time (ms) V #PIDs";
   id = 3;
   m_timeVnPIDs = histoSvc()->book( m_histPth,id,title,
                                    1+maxTracks,0.5,maxTracks+0.5,
                                    nBins,0,m_maxTime );
+
+  title = m_name+" total processing time (ms) V #Pixels";
+  id = 4;
+  m_timeVnPixels = histoSvc()->book( m_histPth,id,title,
+                                     nBins,0.5,maxPixels+0.5,
+                                     nBins,0,m_maxTime );
+
+  title = m_name+" processing time per PID (ms) V #PIDs";
+  id = 5;
+  m_timePerPIDVnPIDs = histoSvc()->book( m_histPth,id,title,
+                                         1+maxTracks,0.5,maxTracks+0.5,
+                                         nBins,0,m_maxTimePerPID );
+
+  title = m_name+" processing time per PID (ms) V #Pixels";
+  id = 6;
+  m_timePerPIDVnPixels = histoSvc()->book( m_histPth,id,title,
+                                           nBins,0.5,maxPixels+0.5,
+                                           nBins,0,m_maxTimePerPID );
 
   return StatusCode::SUCCESS;
 }
@@ -102,15 +117,16 @@ StatusCode RichRecTimeMonitor::execute()
   if ( !loadPIDData() ) return StatusCode::SUCCESS;
   const unsigned nPIDs = m_richPIDs.size();
 
-  // Processing time in seconds - sum time for selected algorithms
+  // Processing time - sum time for selected algorithms
   double time = 0;
   for ( AlgorithmNames::const_iterator name = m_algNames.begin();
-        name != m_algNames.end(); ++name ) {
-    time += chronoSvc()->chronoDelta((*name)+":execute",IChronoStatSvc::ELAPSED)/ms;
+        name != m_algNames.end(); ++name )
+  {
+    time += chronoSvc()->chronoDelta((*name)+":execute",IChronoStatSvc::ELAPSED)/1000;
   }
   const double timePerPID = time/static_cast<double>(nPIDs);
-  debug() << m_name << " : Time = " << time << " sec for " << nPIDs << " PIDs. "
-          << timePerPID << " sec/PID" << endreq;
+  debug() << m_name << " : Time = " << time << " ms for " << nPIDs << " PIDs. "
+          << timePerPID << " ms/PID" << endreq;
 
   // Time counters
   m_totTime += time;
@@ -118,10 +134,14 @@ StatusCode RichRecTimeMonitor::execute()
   m_nPIDs += nPIDs;
 
   // Fill histograms
-  if ( !m_noHists ) {
+  if ( !m_noHists )
+  {
     m_time->fill( time );
     m_timeVnPIDs->fill( nPIDs, time );
     m_timePerPID->fill( timePerPID );
+    m_timeVnPixels->fill( richPixels()->size(), time );
+    m_timePerPIDVnPIDs->fill( nPIDs, timePerPID );
+    m_timePerPIDVnPixels->fill( richPixels()->size(), timePerPID );
   }
 
   return StatusCode::SUCCESS;

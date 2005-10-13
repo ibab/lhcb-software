@@ -5,7 +5,7 @@
  *  Implementation file for RICH reconstruction tool : RichPhotonCreatorWithGaussianCKSmear
  *
  *  CVS Log :-
- *  $Id: RichPhotonCreatorWithGaussianCKSmear.cpp,v 1.2 2005-06-17 15:28:34 jonrob Exp $
+ *  $Id: RichPhotonCreatorWithGaussianCKSmear.cpp,v 1.3 2005-10-13 15:41:01 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   08/07/2004
@@ -31,7 +31,8 @@ RichPhotonCreatorWithGaussianCKSmear( const std::string& type,
     m_delPhotCr           ( 0 ),
     m_applySmearingToAll  ( true ),
     m_smearRad            ( Rich::NRadiatorTypes, true ),
-    m_smearWid            ( Rich::NRadiatorTypes, 0 )
+    m_smearWid            ( Rich::NRadiatorTypes, 0 ),
+    m_smearCount          ( Rich::NRadiatorTypes, 0 )
 {
 
   // job options
@@ -62,7 +63,7 @@ StatusCode RichPhotonCreatorWithGaussianCKSmear::initialize()
         return Error( "Failed to initialize Gaussian smear for " +
                       Rich::text((Rich::RadiatorType)iRad) );
       }
-      info() << "Applying a Gaussian smear of " << m_smearWid[iRad] << " mrad to "
+      info() << "Applying a Gaussian smear of " << 1000*m_smearWid[iRad] << " mrad to "
              << Rich::text((Rich::RadiatorType)iRad) << " photons" << endreq;
       willSmear = true;
     }
@@ -80,7 +81,8 @@ StatusCode RichPhotonCreatorWithGaussianCKSmear::initialize()
   }
   else
   {
-    Warning( "Using CK theta smearing tool, but no radiators selected", StatusCode::SUCCESS );
+    Warning( "Using CK theta smearing tool, but no radiators selected for smearing",
+             StatusCode::SUCCESS );
   }
 
   return sc;
@@ -88,6 +90,30 @@ StatusCode RichPhotonCreatorWithGaussianCKSmear::initialize()
 
 StatusCode RichPhotonCreatorWithGaussianCKSmear::finalize()
 {
+
+  // printout smear count
+  if ( nEvents() > 0 )
+  {
+
+    // statistical tool
+    const RichStatDivFunctor occ("%10.2f +-%7.2f");
+
+    // Print out final stats
+    info() << "=================================================================" << endreq
+           << "  Photon smearing summary : " << nEvents() << " events :-" << endreq
+           << "    Aerogel   : "
+           << occ(m_smearCount[Rich::Aerogel],nEvents()) << "  photons/event " 
+           << 1000*m_smearWid[Rich::Aerogel] << " mrad smear" << endreq
+           << "    C4F10     : "
+           << occ(m_smearCount[Rich::C4F10],nEvents())   << "  photons/event "
+           << 1000*m_smearWid[Rich::C4F10] << " mrad smear" << endreq
+           << "    CF4       : "
+           << occ(m_smearCount[Rich::CF4],nEvents())     << "  photons/event " 
+           << 1000*m_smearWid[Rich::CF4] << " mrad smear" << endreq
+           << "=================================================================" << endreq;
+
+  }
+
   // finalise random numbers
   for ( int iRad = 0; iRad < Rich::NRadiatorTypes; ++iRad )
   {
@@ -109,38 +135,51 @@ RichPhotonCreatorWithGaussianCKSmear::buildPhoton( RichRecSegment * segment,
   if ( !newPhoton ) return newPhoton; // if null, return
 
   // has this photon already been smeared ?
-  if ( !m_photonDone[key] )
+  if ( !m_photSmearDone[key] )
   {
 
     // This is a new photon , so add to reference map
-    m_photonDone[key] = true;
+    m_photSmearDone[key] = true;
 
     // Now, smear this photon
-
     const Rich::RadiatorType rad = segment->trackSegment().radiator();
     if ( m_smearRad[rad] )
     {
 
       // See if there is a true cherenkov photon for this segment/pixel pair
-      if ( !m_applySmearingToAll &&
-           !richMCRecTool()->trueOpticalPhoton(segment,pixel) ) return newPhoton;
-
-      // Smear the Cherenkov theta
-      const double smear = (m_rand[rad])();
-      const double newCKtheta = smear + newPhoton->geomPhoton().CherenkovTheta();
-      if ( msgLevel(MSG::VERBOSE) )
+      if ( m_applySmearingToAll ||
+           richMCRecTool()->trueOpticalPhoton(segment,pixel) )
       {
-        verbose() << rad << " photon. Applying theta smearing " << smear
-                  << ": theta = " << newPhoton->geomPhoton().CherenkovTheta()
-                  << " -> " << newCKtheta << endreq;
-      }
-      newPhoton->geomPhoton().setCherenkovTheta( newCKtheta );
 
-    }
+        // Smear the Cherenkov theta
+        const double smear      = (m_rand[rad])();
+        const double newCKtheta = smear + newPhoton->geomPhoton().CherenkovTheta();
+        if ( msgLevel(MSG::VERBOSE) )
+        {
+          verbose() << rad << " photon. Applying theta smearing " << smear
+                    << ": theta = " << newPhoton->geomPhoton().CherenkovTheta()
+                    << " -> " << newCKtheta << endreq;
+        }
+        newPhoton->geomPhoton().setCherenkovTheta( newCKtheta );
 
-  }
+        // count smeared photons
+        ++m_smearCount[rad];
+
+      } // photon is to be smeared
+
+    } // radiator is to be smeared
+
+  } // photon allready smeared
 
   // Return pointer to this photon
   return newPhoton;
 
+}
+
+void RichPhotonCreatorWithGaussianCKSmear::InitNewEvent()
+{
+  // initialize base class
+  RichPhotonCreatorBase::InitNewEvent();
+  // local stuff
+  m_photSmearDone.clear();
 }

@@ -1,14 +1,19 @@
 // Rich Reconstruction timing monitors
 
+// Note : requires the ChronoSvc to be activated - Use
+//ApplicationMgr.DLLs += { "GaudiAud" };
+//AuditorSvc.Auditors  = { "ChronoAuditor" };
+//ChronoAuditor.Enable = true;
+
 // overall rich reconstruction
 CheckRICHSeq.Members += { "RichRecTimeMonitor/RichRecTime" };
 RichRecTime.MCHistoPath = "RICH/TIME/MC/";
 RichRecTime.HistoPath   = "RICH/TIME/";
-RichRecTime.TimingName = "BrunelRecoRICHSeq";
-RichRecTime.Algorithms = { "BrunelRecoRICHSeq" };
+RichRecTime.TimingName = "RecoRICHSeq";
+RichRecTime.Algorithms = { "RecoRICHSeq" };
 
 // overall tracking
 CheckRICHSeq.Members += { "RichRecTimeMonitor/TrTime" };
 TrTime.NoHistograms = true;
-TrTime.TimingName = "BrunelRecoTrSeq";
-TrTime.Algorithms = { "BrunelRecoTrSeq" };
+TrTime.TimingName = "RecoTrSeq";
+TrTime.Algorithms = { "RecoTrSeq" };
