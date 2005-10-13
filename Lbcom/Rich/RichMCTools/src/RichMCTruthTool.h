@@ -5,7 +5,7 @@
  *  Header file for tool : RichMCTruthTool
  *
  *  CVS Log :-
- *  $Id: RichMCTruthTool.h,v 1.17 2005-04-08 13:18:15 jonrob Exp $
+ *  $Id: RichMCTruthTool.h,v 1.18 2005-10-13 15:23:04 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -35,6 +35,7 @@
 #include "RichKernel/RichParticleIDType.h"
 
 // Event model
+#include "Event/Track.h"
 #include "Event/TrStoredTrack.h"
 #include "Event/TrgTrack.h"
 #include "Event/MCParticle.h"
@@ -65,6 +66,8 @@
  *
  *  @todo Keep an eye on the method RichMCTruthTool::mcParticle( const TrgTrack * track )
  *        it is using the access by int method
+ *
+ *  @todo Add MC association for new Track model when available. Currently returns NULL
  */
 //-----------------------------------------------------------------------------
 
@@ -97,8 +100,14 @@ public: // methods (and doxygen comments) inherited from interface
   // Find best MCParticle association for a given TrStoredTrack
   const MCParticle * mcParticle( const TrStoredTrack * track ) const;
 
+  // Find best MCParticle association for a given reconstructed Track
+  const MCParticle * mcParticle( const Track * track ) const;
+
   // Find best MCParticle association for a given TrgTrack
   const MCParticle * mcParticle( const TrgTrack * track ) const;
+
+  // Determines the particle mass hypothesis for a given reconstructed Track
+  Rich::ParticleIDType mcParticleType( const Track * track ) const;
 
   // Determines the particle mass hypothesis for a given TrStoredTrack
   Rich::ParticleIDType mcParticleType( const TrStoredTrack * track ) const;
@@ -147,6 +156,9 @@ private: // definitions
   /// typedef of the Linker object for TrgTracks to MCParticles
   typedef LinkedTo<MCParticle,TrgTrack> TrgTrackToMCP;
 
+  /// typedef of the Linker object for TrStoredTracks to MCParticles
+  typedef LinkedTo<MCParticle,TrStoredTrack> TrStoredTrackToMCP;
+
 private: // private methods
 
   /// Returns the linker object for MCParticles to MCRichTracks
@@ -155,8 +167,11 @@ private: // private methods
   /// Returns the linker object for MCRichHits to MCRichOpticalPhotons
   MCRichHitToPhoton * mcPhotonLinks() const;
 
-  ///  Returns the linker object for TrgTracks to MCParticles
+  /// Returns the linker object for TrgTracks to MCParticles
   TrgTrackToMCP * trgTrackToMCPLinks() const;
+
+  /// Returns the linker object for TrStoredTracks to MCParticles
+  TrStoredTrackToMCP * trStoredTrackToMCPLinks() const;
 
   /// clean up current linker objects
   void cleanUpLinkers();
@@ -178,7 +193,7 @@ private: // private methods
   /// Initialise for a new event
   void InitNewEvent();
 
-  /// Load the (offline) track associator on demand
+  /// Load the (offline) track relations associator on demand
   inline TrackAsct * trackAsct() const
   {
     if ( !m_trackToMCP ) { m_trackToMCP = tool<TrackAsct>( m_trAsctType, m_trAsctName ); }
@@ -208,6 +223,9 @@ private: // private data
   /// Linker for TrgTracks to MCParticles
   mutable TrgTrackToMCP * m_trgTrToMCPLinks;
 
+  /// Linker for TrStoredTracks to MCParticles
+  mutable TrStoredTrackToMCP * m_trStoredTrToMCPLinks;
+
   /// Location of MCRichDigits in EDS
   std::string m_mcRichDigitsLocation;
 
@@ -226,9 +244,10 @@ private: // private data
 
 inline void RichMCTruthTool::cleanUpLinkers()
 {
-  if ( m_mcTrackLinks    ) { delete m_mcTrackLinks;    m_mcTrackLinks    = 0; }
-  if ( m_mcPhotonLinks   ) { delete m_mcPhotonLinks;   m_mcPhotonLinks   = 0; }
-  if ( m_trgTrToMCPLinks ) { delete m_trgTrToMCPLinks; m_trgTrToMCPLinks = 0; }
+  if ( m_mcTrackLinks         ) { delete m_mcTrackLinks;         m_mcTrackLinks         = 0; }
+  if ( m_mcPhotonLinks        ) { delete m_mcPhotonLinks;        m_mcPhotonLinks        = 0; }
+  if ( m_trgTrToMCPLinks      ) { delete m_trgTrToMCPLinks;      m_trgTrToMCPLinks      = 0; }
+  if ( m_trStoredTrToMCPLinks ) { delete m_trStoredTrToMCPLinks; m_trStoredTrToMCPLinks = 0; }
 }
 
 inline void RichMCTruthTool::InitNewEvent()

@@ -5,7 +5,7 @@
  * Implementation file for class : RichMCTruthTool
  *
  * CVS Log :-
- * $Id: RichMCTruthTool.cpp,v 1.20 2005-06-17 15:50:06 jonrob Exp $
+ * $Id: RichMCTruthTool.cpp,v 1.21 2005-10-13 15:23:04 jonrob Exp $
  *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @date 14/01/2002
@@ -23,15 +23,16 @@ const        IToolFactory& RichMCTruthToolFactory = s_factory ;
 RichMCTruthTool::RichMCTruthTool( const std::string& type,
                                   const std::string& name,
                                   const IInterface* parent )
-  : RichToolBase       ( type, name, parent ),
-    m_mcRichDigitsDone ( false ),
-    m_mcRichHitsDone   ( false ),
-    m_mcRichDigits     ( 0     ),
-    m_mcRichHits       ( 0     ),
-    m_mcTrackLinks     ( 0     ),
-    m_mcPhotonLinks    ( 0     ),
-    m_trgTrToMCPLinks  ( 0     ),
-    m_trackToMCP       ( 0     )
+  : RichToolBase           ( type, name, parent ),
+    m_mcRichDigitsDone     ( false ),
+    m_mcRichHitsDone       ( false ),
+    m_mcRichDigits         ( 0     ),
+    m_mcRichHits           ( 0     ),
+    m_mcTrackLinks         ( 0     ),
+    m_mcPhotonLinks        ( 0     ),
+    m_trgTrToMCPLinks      ( 0     ),
+    m_trStoredTrToMCPLinks ( 0     ),
+    m_trackToMCP           ( 0     )
 {
 
   declareInterface<IRichMCTruthTool>(this);
@@ -45,7 +46,6 @@ RichMCTruthTool::RichMCTruthTool( const std::string& type,
                    m_trAsctType = "AssociatorWeighted<TrStoredTrack,MCParticle,double>");
 
 }
-
 
 StatusCode RichMCTruthTool::initialize()
 {
@@ -93,7 +93,7 @@ void RichMCTruthTool::handle ( const Incident& incident )
 
 const MCRichDigits * RichMCTruthTool::mcRichDigits() const
 {
-  if ( !m_mcRichDigitsDone ) 
+  if ( !m_mcRichDigitsDone )
   {
     m_mcRichDigitsDone = true;
 
@@ -114,8 +114,8 @@ const MCRichDigits * RichMCTruthTool::mcRichDigits() const
           }
         }
       }
-    } 
-    else 
+    }
+    else
     {
       m_mcRichDigits = NULL;
       Warning( "Failed to locate MCRichDigits at "+m_mcRichDigitsLocation );
@@ -128,7 +128,7 @@ const MCRichDigits * RichMCTruthTool::mcRichDigits() const
 
 const MCRichHits * RichMCTruthTool::mcRichHits() const
 {
-  if ( !m_mcRichHitsDone ) 
+  if ( !m_mcRichHitsDone )
   {
     m_mcRichHitsDone = true;
 
@@ -138,27 +138,49 @@ const MCRichHits * RichMCTruthTool::mcRichHits() const
       m_mcRichHits = get<MCRichHits>(m_mcRichHitsLocation);
       debug() << "Successfully located " << m_mcRichHits->size()
               << " MCRichHits at " << m_mcRichHitsLocation << endreq;
-    } 
-    else 
+    }
+    else
     {
       m_mcRichHits = NULL;
       Warning( "Failed to locate MCRichHits at "+m_mcRichHitsLocation );
     }
-    
+
   }
-  
+
   return m_mcRichHits;
+}
+
+const MCParticle *
+RichMCTruthTool::mcParticle( const Track * /* track */ ) const
+{
+  // nothing available yet !
+  return NULL;
 }
 
 const MCParticle *
 RichMCTruthTool::mcParticle( const TrStoredTrack * track ) const
 {
-  if ( track ) {
-    return trackAsct()->associatedFrom(track);
-  } else {
+  if ( !track )
+  {
     Warning ( "::mcParticle : NULL TrStoredTrack pointer" );
     return NULL;
   }
+
+  // First, try with linkers
+  if ( trStoredTrackToMCPLinks() && !trStoredTrackToMCPLinks()->notFound() )
+  {
+    return trStoredTrackToMCPLinks()->first(track->key());
+  }
+
+  // Otherwise try using relations
+  if ( trackAsct() )
+  {
+    return trackAsct()->associatedFrom(track);
+  }
+
+  // If get here, both failed
+  Warning( "No MC association available for TrStoredTracks" );
+  return NULL;
 }
 
 const MCParticle *
@@ -202,6 +224,12 @@ const MCRichDigit * RichMCTruthTool::mcRichDigit( const RichSmartID id ) const
   const MCRichDigit * mcDigit = ( mcRichDigits() ? mcRichDigits()->object(id) : 0 );
   if ( !mcDigit ) Warning( "Failed to locate MCRichDigit from RichSmartID" );
   return mcDigit;
+}
+
+Rich::ParticleIDType
+RichMCTruthTool::mcParticleType( const Track * track ) const
+{
+  return mcParticleType( mcParticle(track) );
 }
 
 Rich::ParticleIDType
@@ -251,7 +279,7 @@ bool RichMCTruthTool::isBackground( const MCRichDigit * digit ) const
   // Check digit is OK
   if ( !digit ) return true;
   for ( SmartRefVector<MCRichHit>::const_iterator iHit = digit->hits().begin();
-        iHit != digit->hits().end(); ++iHit ) 
+        iHit != digit->hits().end(); ++iHit )
   {
     if ( *iHit && !isBackground(*iHit) ) return false;
   }
@@ -267,12 +295,12 @@ bool RichMCTruthTool::isBackground( const MCRichHit * hit ) const
 
 RichMCTruthTool::MCRichHitToPhoton * RichMCTruthTool::mcPhotonLinks() const
 {
-  if ( !m_mcPhotonLinks ) 
+  if ( !m_mcPhotonLinks )
   {
     m_mcPhotonLinks =
       new MCRichHitToPhoton( evtSvc(), msgSvc(),
                              MCRichOpticalPhotonLocation::LinksFromMCRichHits );
-    if ( m_mcPhotonLinks->notFound() ) 
+    if ( m_mcPhotonLinks->notFound() )
     {
       Warning( "Linker for MCRichHits to MCRichOpticalPhotons not found for '" +
                MCRichOpticalPhotonLocation::LinksFromMCRichHits + "'" );
@@ -283,12 +311,12 @@ RichMCTruthTool::MCRichHitToPhoton * RichMCTruthTool::mcPhotonLinks() const
 
 RichMCTruthTool::MCPartToRichTracks * RichMCTruthTool::mcTrackLinks() const
 {
-  if ( !m_mcTrackLinks ) 
+  if ( !m_mcTrackLinks )
   {
     m_mcTrackLinks =
       new MCPartToRichTracks( evtSvc(), msgSvc(),
                               MCRichTrackLocation::LinksFromMCParticles );
-    if ( m_mcTrackLinks->notFound() ) 
+    if ( m_mcTrackLinks->notFound() )
     {
       Warning( "Linker for MCParticles to MCRichTracks not found for '" +
                MCRichTrackLocation::LinksFromMCParticles + "'" );
@@ -299,15 +327,31 @@ RichMCTruthTool::MCPartToRichTracks * RichMCTruthTool::mcTrackLinks() const
 
 RichMCTruthTool::TrgTrackToMCP * RichMCTruthTool::trgTrackToMCPLinks() const
 {
-  if ( !m_trgTrToMCPLinks ) 
+  if ( !m_trgTrToMCPLinks )
   {
     m_trgTrToMCPLinks =
       new TrgTrackToMCP( evtSvc(), msgSvc(), TrgTrackLocation::Long );
-    if ( m_trgTrToMCPLinks->notFound() ) 
+    if ( m_trgTrToMCPLinks->notFound() )
     {
       Warning( "Linker for TrgTracks to MCParticles not found for '" +
                TrgTrackLocation::Long + "'" );
     }
   }
   return m_trgTrToMCPLinks;
+}
+
+RichMCTruthTool::TrStoredTrackToMCP * 
+RichMCTruthTool::trStoredTrackToMCPLinks() const
+{
+  if ( !m_trStoredTrToMCPLinks )
+  {
+    m_trStoredTrToMCPLinks =
+      new TrStoredTrackToMCP( evtSvc(), msgSvc(), TrStoredTrackLocation::Default );
+    if ( m_trStoredTrToMCPLinks->notFound() )
+    {
+      Warning( "Linker for TrStoredTracks to MCParticles not found for '" +
+               TrStoredTrackLocation::Default + "'" );
+    }
+  }
+  return m_trStoredTrToMCPLinks;
 }

@@ -4,6 +4,15 @@
 ! Purpose     : Provides basic tools for RICH MC information
 !-----------------------------------------------------------------------------
 
+! 2005-10-13 - Chris Jones
+ - Add support for linker based TrStoredTrack MC associations
+ - Add (currently empty) support for MC associations for the new track
+   event model. To be updates when available.
+
+! 2005-10-04 - Chris Jones
+ - Move algorithms BuildMCRichDigitLinks, MCPartToMCRichTrackAlg and 
+   MCRichHitToMCRichOpPhotAlg to new RichMCAssociators package
+
 !========================== RichMCTools v2r6 2005-06-21 ======================
 ! 2005-06-21 - Chris Jones
  - Adapt to changes in RichKernel base classes and RichToolRegistry
