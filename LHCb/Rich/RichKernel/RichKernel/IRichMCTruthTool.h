@@ -5,7 +5,7 @@
  *  Header file for tool interface : IRichMCTruthTool
  *
  *  CVS Log :-
- *  $Id: IRichMCTruthTool.h,v 1.10 2005-03-03 15:44:21 jonrob Exp $
+ *  $Id: IRichMCTruthTool.h,v 1.11 2005-10-13 15:03:41 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   2003-07-31
@@ -27,6 +27,7 @@ class MCParticle;
 class MCRichHit;
 class RichDigit;
 class TrStoredTrack;
+class Track;
 class TrgTrack;
 
 /// Static Interface Identification
@@ -51,6 +52,17 @@ public:
    */
   static const InterfaceID& interfaceID() { return IID_IRichMCTruthTool; }
 
+  /** Find best MCParticle association for a given reconstructed Track
+   *
+   *  @param track Pointer to a Track
+   *
+   *  @return Pointer to MCParticle
+   *  @retval NULL  No Monte Carlo association was possible
+   *  @retval !NULL Association was successful
+   */
+  virtual const MCParticle *
+  mcParticle ( const Track * track ) const = 0;
+
   /** Find best MCParticle association for a given TrStoredTrack
    *
    *  @param track Pointer to a TrStoredTrack
@@ -72,6 +84,15 @@ public:
    */
   virtual const MCParticle *
   mcParticle ( const TrgTrack * track ) const = 0;
+
+  /** Determines the particle mass hypothesis for a given reconstructed Track
+   *
+   *  @param track Pointer to a Track
+   *
+   *  @return The true particle type of the TrStoredTrack
+   */
+  virtual Rich::ParticleIDType
+  mcParticleType ( const Track * track ) const = 0;
 
   /** Determines the particle mass hypothesis for a given TrtStoredTrack
    *

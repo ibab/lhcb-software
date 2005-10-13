@@ -5,7 +5,7 @@
  *  Header file for utility has map for the RICH : Rich::HashMap
  *
  *  CVS Log :-
- *  $Id: RichMap.h,v 1.2 2005-03-05 16:52:17 jonrob Exp $
+ *  $Id: RichMap.h,v 1.3 2005-10-13 15:03:42 jonrob Exp $
  *
  *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
  *  @date   2005-01-11
@@ -21,7 +21,7 @@
 //--------------------------------------------------------------------------------
 /** @class RichMap RichMap.h RichKernel/RichMap.h
  *
- *  A utility class providing a standard map object.
+ *  A utility class providing a standard std::map like object.
  *  Provides a convenient single point of definition for optimisation studies.
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch

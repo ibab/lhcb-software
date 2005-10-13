@@ -5,7 +5,7 @@
  *  Header file for tool interface : IRichRefractiveIndex
  *
  *  CVS Log :-
- *  $Id: IRichRefractiveIndex.h,v 1.7 2005-06-23 15:07:02 jonrob Exp $
+ *  $Id: IRichRefractiveIndex.h,v 1.8 2005-10-13 15:03:41 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -74,6 +74,15 @@ public:
    *  @return The overall average refractive index
    */
   virtual double refractiveIndex ( const Rich::RadiatorType rad ) const = 0;
+
+  /** Calculates the refractive index R.M.S. for a given radiator type
+   *  for all visable photon energies.
+   *
+   *  @param rad       The radiator type
+   *
+   *  @return The overall average refractive index
+   */
+  virtual double refractiveIndexRMS ( const Rich::RadiatorType rad ) const = 0;
 
 };
 

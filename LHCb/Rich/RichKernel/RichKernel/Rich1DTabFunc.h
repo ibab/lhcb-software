@@ -1,20 +1,16 @@
 
+//============================================================================
 /** @file Rich1DTabFunc.h
  *
  *  Header file for utility class : Rich1DTabFunc
  *
  *  CVS Log :-
- *  $Id: Rich1DTabFunc.h,v 1.7 2005-01-13 12:16:26 jonrob Exp $ 
- *  $Log: not supported by cvs2svn $
- *  Revision 1.6  2004/11/03 13:27:49  jonrob
- *  Update doxygen comments
- *
- *  Revision 1.5  2004/07/26 17:53:17  jonrob
- *  Various improvements to the doxygen comments
+ *  $Id: Rich1DTabFunc.h,v 1.8 2005-10-13 15:03:41 jonrob Exp $ 
  *  
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   2003-08-13
  */
+//============================================================================
 
 #ifndef RICHKERNEL_RICH1DTABFUNC_H
 #define RICHKERNEL_RICH1DTABFUNC_H 1
@@ -31,17 +27,20 @@
 // RichKernel
 #include "RichKernel/RichMap.h"
 
+//============================================================================
 /** @class Rich1DTabFunc Rich1DTabFunc.h RichKernel/Rich1DTabFunc.h
  *
  *  A class describing a function based on the interpolation of data points
  *  The interpolation is based on the GSL library, with the default interpolation
- *  type based on a cubic spline algorithm 'gsl_interp_cspline'. For other
- *  possibilities see
+ *  type based on a simple linear algorithm 'gsl_interp_linear'. 
+ *  
+ *  For other possibilities see
  *  http://www.gnu.org/software/gsl/manual/gsl-ref_26.html#SEC389
  *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   2003-08-13
  */
+//============================================================================
 
 class Rich1DTabFunc {
 
@@ -136,6 +135,18 @@ public:
    */
   double secondDerivative( const double x ) const;
 
+  /** Computes the R.M.S. value between the given parameter limits
+   *
+   *  @param from    The lower parameter limit
+   *  @param to      The upper parameter limit
+   *  @param samples Number of sample points to use in calculating the RMS
+   *
+   *  @return the r.m.s. value
+   */
+  double rms( const double from, 
+              const double to,
+              const unsigned int samples = 100 ) const;
+
   /** The minimum parameter value for which the function is defined
    *
    *  @return The minimum valid paramter value
@@ -183,6 +194,12 @@ public:
    *  @retval false The interpolator failed to initialise correctly
    */
   bool initInterpolator( const gsl_interp_type * interType );
+
+  /** Access the number of data points defining the interpolator
+   *
+   *  @return The number of data (x,y) points
+   */
+  unsigned int nDataPoints() const;
 
   /// clear the interpolator
   void clearInterpolator();
@@ -294,4 +311,12 @@ inline bool Rich1DTabFunc::withinInputRange( const double x ) const
   return ( x <= maxX() && minX() <= x );
 }
 
+//============================================================================
+
+inline unsigned int Rich1DTabFunc::nDataPoints() const
+{
+  return m_data.size();
+}
+
+//============================================================================
 #endif // RICHKERNEL_RICH1DTABFUNC_H

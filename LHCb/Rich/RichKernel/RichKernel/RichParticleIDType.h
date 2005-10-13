@@ -5,7 +5,7 @@
  *  Header file for RICH particle ID enumeration : RichParticleIDType
  *
  *  CVS Log :-
- *  $Id: RichParticleIDType.h,v 1.18 2005-02-20 18:41:06 jonrob Exp $
+ *  $Id: RichParticleIDType.h,v 1.19 2005-10-13 15:03:42 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   08/07/2004
@@ -25,13 +25,11 @@
 #include "GaudiKernel/MsgStream.h"
 
 // General namespace for RICH specific definitions documented in RichSide.h
-namespace Rich {
+namespace Rich 
+{
 
   /// Number of RICH particle types
   static const int NParticleTypes = 5;
-
-  /// Number of RICH particle types, kept for backward compatibility
-  static const int NRichParticleTypes = 5;
 
   //--------------------------------------------------------------------------
   /** @enum ParticleIDType
@@ -53,7 +51,7 @@ namespace Rich {
     };
 
   /// Text conversion for Rich::ParticleIDType enumeration
-  std::string text( const Rich::ParticleIDType& particle );
+  std::string text( const Rich::ParticleIDType particle );
 
   /// Std Vector typedef
   typedef std::vector<ParticleIDType> ParticleIDTypeVector;
@@ -62,7 +60,8 @@ namespace Rich {
 
 /// Implement StreamBuffer >> method for Rich::ParticleIDType enumeration
 inline StreamBuffer& operator >> ( StreamBuffer& s,
-                                   Rich::ParticleIDType& particle ) {
+                                   Rich::ParticleIDType& particle ) 
+{
   int intType;
   s >> intType;
   particle = static_cast<Rich::ParticleIDType>(intType);
@@ -71,21 +70,24 @@ inline StreamBuffer& operator >> ( StreamBuffer& s,
 
 /// Implement StreamBuffer << method for Rich::ParticleIDType enumeration
 inline StreamBuffer& operator << ( StreamBuffer& s,
-                                   const Rich::ParticleIDType& particle ) {
+                                   const Rich::ParticleIDType& particle ) 
+{
   s << static_cast<int>(particle);
   return s;
 }
 
 /// Implement textual ostream << method for Rich::ParticleIDType enumeration
 inline std::ostream& operator << ( std::ostream& s,
-                                   const Rich::ParticleIDType& particle ) {
+                                   const Rich::ParticleIDType& particle ) 
+{
   s << Rich::text( particle );
   return s;
 }
 
 /// Implement textual MsgStream << method for Rich::ParticleIDType enumeration
 inline MsgStream& operator << ( MsgStream& s,
-                                const Rich::ParticleIDType& particle ) {
+                                const Rich::ParticleIDType& particle ) 
+{
   s << Rich::text( particle );
   return s;
 }

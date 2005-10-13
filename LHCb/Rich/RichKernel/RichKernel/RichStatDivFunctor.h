@@ -5,8 +5,7 @@
  *  Header file for poisson efficiency functor : RichStatDivFunctor
  *
  *  CVS Log :-
- *  $Id: RichStatDivFunctor.h,v 1.1 2005-01-07 13:16:36 jonrob Exp $
- *  $Log: not supported by cvs2svn $
+ *  $Id: RichStatDivFunctor.h,v 1.2 2005-10-13 15:03:42 jonrob Exp $
  *
  *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
  *  @date   2003-09-08
@@ -26,7 +25,12 @@ class RichStatDivFunctor;
 
 /** @class RichStatDivFunctorResult RichStatDivFunctor.h RichKernel/RichStatDivFunctor.h
  *
- *  Result object for statisical division calculator.
+ *  Simple utility class to provide an easy way to produce a formated output division
+ *  calculation, with the associated error.
+ *
+ *  @code
+ *  RichStatDivFunctor result("%8.2f +-%6.2f");
+ *  info() << "Result = " << result(a,b) << endreq;
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   2004-12-20

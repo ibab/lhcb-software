@@ -5,11 +5,7 @@
  *  Implementation file for class : Rich1DTabFunc
  *
  *  CVS Log :-
- *  $Id: Rich1DTabFunc.cpp,v 1.4 2005-01-13 12:21:37 jonrob Exp $
- *  $Log: not supported by cvs2svn $
- *  Revision 1.3  2004/07/26 17:53:17  jonrob
- *  Various improvements to the doxygen comments
- *
+ *  $Id: Rich1DTabFunc.cpp,v 1.5 2005-10-13 15:03:42 jonrob Exp $
  *
  *  @author Chris Jones    Christopher.Rob.Jones@cern.ch
  *  @date   2003-08-13
@@ -168,4 +164,36 @@ void Rich1DTabFunc::clearInterpolator()
     m_weightedDistAcc = 0;
   }
 
+}
+
+double Rich1DTabFunc::rms( const double from, 
+                           const double to,
+                           const unsigned int samples ) const
+{
+  if ( samples < 2 ) 
+  {
+    throw GaudiException( "rms() : samples must be > 1",
+                          "*Rich1DTabFunc*", StatusCode::FAILURE );
+  }
+
+  // mean value
+  const double avgX = meanX(from,to);
+
+  // x increment
+  const double xInc = (to-from)/(samples-1);
+
+  double rms(0), sum(0);
+  for ( unsigned int i = 0; i < samples; ++i )
+  {
+    const double X = from + i*xInc;
+    const double Y = value(X);
+    if ( Y>0 )
+    {
+      rms += Y*(X-avgX)*(X-avgX);
+      sum += Y;
+    }
+  }
+  rms /= sum;
+
+  return sqrt(rms);
 }

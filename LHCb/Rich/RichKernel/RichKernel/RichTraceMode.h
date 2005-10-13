@@ -1,17 +1,15 @@
+//=======================================================================================
 /** @file RichTraceMode.h
  *
  *  Header file for utility class : RichTraceMode
  *
  *  CVS History :-
- *  $Id: RichTraceMode.h,v 1.5 2005-01-18 10:49:40 cattanem Exp $
- *  $Log: not supported by cvs2svn $
- *  Revision 1.4  2004/07/22 14:45:21  jonrob
- *  test CVS log in file
- *
+ *  $Id: RichTraceMode.h,v 1.6 2005-10-13 15:03:42 jonrob Exp $
  *
  *  @author Antonis Papanestis a.papanestis@rl.ac.uk
  *  @date   2004-06-18
  */
+//=======================================================================================
 
 #ifndef RICHKERNEL_RICHTRACEMODE_H
 #define RICHKERNEL_RICHTRACEMODE_H 1
@@ -19,6 +17,7 @@
 // Gaudi
 #include "GaudiKernel/MsgStream.h"
 
+//=======================================================================================
 /** @namespace RichTraceModeNames
  *
  *  Namespace for bit-packing parameters used by the utility class RichTraceMode
@@ -26,34 +25,37 @@
  *  @author Antonis Papanestis a.papanestis@rl.ac.uk
  *  @date   2004-06-18
  */
-namespace RichTraceModeNames {
+//=======================================================================================
+namespace RichTraceModeNames 
+{
 
   // Type for dataword
   typedef unsigned int ShortType;
 
   // Number of bits for each field
-  static const ShortType BitsForcedSide   = 1; ///< number of bits for the forced side flag
-  static const ShortType BitsOutMirBound  = 1; ///< number of bits for outside mirror boundary flag
-  static const ShortType BitsDetPrecision = 1; ///< number of bits for detection precision flag
-  static const ShortType BitsDetPlaneBound = 1; ///< number of bits for detection plane boundary flag
-  static const ShortType BitsMirrorSegBound = 1; ///< number of bits mirror segment boundary flag
+  static const ShortType BitsForcedSide     = 1; ///< Number of bits for the forced side flag
+  static const ShortType BitsOutMirBound    = 1; ///< Number of bits for outside mirror boundary flag
+  static const ShortType BitsDetPrecision   = 1; ///< Number of bits for detection precision flag
+  static const ShortType BitsDetPlaneBound  = 1; ///< Number of bits for detection plane boundary flag
+  static const ShortType BitsMirrorSegBound = 1; ///< Number of bits mirror segment boundary flag
 
   // Shifts
-  static const ShortType ShiftForcedSide   = 0;
-  static const ShortType ShiftOutMirBound  = BitsOutMirBound + ShiftForcedSide;
-  static const ShortType ShiftDetPrecision = BitsDetPrecision + ShiftOutMirBound;
-  static const ShortType ShiftDetPlaneBound = BitsDetPlaneBound + ShiftDetPrecision;
+  static const ShortType ShiftForcedSide     = 0;
+  static const ShortType ShiftOutMirBound    = BitsOutMirBound + ShiftForcedSide;
+  static const ShortType ShiftDetPrecision   = BitsDetPrecision + ShiftOutMirBound;
+  static const ShortType ShiftDetPlaneBound  = BitsDetPlaneBound + ShiftDetPrecision;
   static const ShortType ShiftMirrorSegBound = BitsMirrorSegBound + ShiftDetPlaneBound;
 
   // Create the Masks
-  static const ShortType MaskForcedSide = ((1 << BitsForcedSide)-1) << ShiftForcedSide;
-  static const ShortType MaskOutMirBound = ((1 << BitsOutMirBound)-1) << ShiftOutMirBound;
-  static const ShortType MaskDetPrecision = ((1 << BitsDetPrecision)-1) << ShiftDetPrecision;
-  static const ShortType MaskDetPlaneBound = ((1 << BitsDetPlaneBound)-1) << ShiftDetPlaneBound;
+  static const ShortType MaskForcedSide     = ((1 << BitsForcedSide)-1) << ShiftForcedSide;
+  static const ShortType MaskOutMirBound    = ((1 << BitsOutMirBound)-1) << ShiftOutMirBound;
+  static const ShortType MaskDetPrecision   = ((1 << BitsDetPrecision)-1) << ShiftDetPrecision;
+  static const ShortType MaskDetPlaneBound  = ((1 << BitsDetPlaneBound)-1) << ShiftDetPlaneBound;
   static const ShortType MaskMirrorSegBound = ((1 << BitsMirrorSegBound)-1) << ShiftMirrorSegBound;
 
 }
 
+//=======================================================================================
 /** @class RichTraceMode RichTraceMode.h RichKernel/RichTraceMode.h
  *
  *  Helper class used to configure the ray tracing options in
@@ -62,28 +64,33 @@ namespace RichTraceModeNames {
  *  @author Antonis Papanestis a.papanestis@rl.ac.uk
  *  @date   2004-06-18
  */
+//=======================================================================================
 class RichTraceMode {
 
 public:
 
+  //=======================================================================================
   /** Enumeration for the RichTraceMode to flag the precision mode to use
    *  when calculating the acceptance on the HPD panels
    *
    *  @author Antonis Papanestis a.papanestis@rl.ac.uk
    *  @date   2004-06-18
    */
+  //=======================================================================================
   enum detectPrecision
     {
       circle = 0,   ///< Approximate the HPD window acceptance by circles (fast)
       window        ///< Use the full detector description for the HPDs (slower)
     };
 
+  //=======================================================================================
   /** Enumeration for the RichTraceMode to flag how to treat the HPD
    *  panel boundaries
    *
    *  @author Antonis Papanestis a.papanestis@rl.ac.uk
    *  @date   2004-06-18
    */
+  //=======================================================================================
   enum detPlaneBoundary
     {
       loose = 0,    ///< Dis-regard the physical HPD boundaries (assume infinite plane)

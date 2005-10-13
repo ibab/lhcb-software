@@ -1,0 +1,122 @@
+
+//-----------------------------------------------------------------------------
+/** @file RichCommonBase.icpp
+ *
+ *  Implementation file for RICH base class : RichCommonBase
+ *
+ *  CVS Log :-
+ *  $Id: RichCommonBase.icpp,v 1.1 2005-10-13 15:03:42 jonrob Exp $
+ *
+ *  @author Chris Jones    Christopher.Rob.Jones@cern.ch
+ *  @date   2005-08-27
+ */
+//-----------------------------------------------------------------------------
+
+// local
+#include "RichKernel/RichCommonBase.h"
+
+// Gaudi
+#include "GaudiKernel/IJobOptionsSvc.h"
+
+//=============================================================================
+// Destructor
+//=============================================================================
+template <class PBASE>
+RichCommonBase<PBASE>::~RichCommonBase() {}
+
+//=============================================================================
+// Initialisation
+//=============================================================================
+template <class PBASE>
+StatusCode RichCommonBase<PBASE>::initialize()
+{
+  // Execute the base class initialize
+  const StatusCode sc = PBASE::initialize();
+  if ( sc.isFailure() )
+  { return Error( "Failed to initialise Gaudi Base class", sc ); }
+
+  // Printout from initialization
+  debug() << "Initialize : "
+          << "Tool registry = " << toolRegistry()->name() << endreq;
+  
+  return sc;
+}
+//=============================================================================
+
+//=============================================================================
+// Finalisation
+//=============================================================================
+template <class PBASE>
+StatusCode RichCommonBase<PBASE>::finalize()
+{
+  // Printout from finalization
+  debug() << "Finalize" << endreq;
+
+  // Finalise base class and return
+  return PBASE::finalize();
+}
+//=============================================================================
+
+//=============================================================================
+// Access job options service
+//=============================================================================
+template <class PBASE>
+IJobOptionsSvc* RichCommonBase<PBASE>::joSvc() const
+{
+  if (!m_jos) { m_jos = this -> template svc<IJobOptionsSvc>( "JobOptionsSvc" ); }
+  return m_jos;
+}
+//=============================================================================
+
+//=============================================================================
+// Sets context
+//=============================================================================
+template <class PBASE>
+StatusCode RichCommonBase<PBASE>::setContext( const std::string & name ) const
+{
+
+  // Tool registry context
+  const std::string newContext = toolRegistry()->getContext();
+  if ( !newContext.empty() )
+  {
+
+    // full tool name
+    const std::string fullname = "ToolSvc." + name;
+
+    // get properties for this name
+    bool found = false;
+    const std::vector<const Property*> * properties = joSvc()->getProperties( fullname );
+    if ( properties )
+    {
+      for ( std::vector<const Property*>::const_iterator itProp = properties->begin();
+            itProp != properties->end(); ++itProp )
+      {
+        const StringProperty * sp = dynamic_cast<const StringProperty*>(*itProp);
+        if ( 0 != sp )
+        {
+          if ( "Context" == (*itProp)->name() )
+          {
+            if ( msgLevel(MSG::DEBUG) )
+            { debug() << "Found Context " << *sp << " for " << fullname << endreq; }
+            found = true;
+            break;
+          }
+        }
+      }
+    }
+
+    // If Context not set, set it
+    if ( !found )
+    {
+      if ( msgLevel(MSG::DEBUG) )
+      { debug() << "Setting Context '" << newContext << "' for " << fullname << endreq; }
+      joSvc()->addPropertyToCatalogue( fullname,
+                                       new StringProperty( "Context",
+                                                           '"'+ newContext +'"' ) );
+    }
+
+  }
+
+  return StatusCode::SUCCESS;
+}
+//=============================================================================
