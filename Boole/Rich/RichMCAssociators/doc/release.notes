@@ -1,0 +1,10 @@
+!-----------------------------------------------------------------------------
+! Package     : Rich/RichMCAssociators
+! Responsible : Chris Jones
+! Purpose     : 
+!-----------------------------------------------------------------------------
+
+! 2005-10-04 - Chris Jones
+ - First version
+ - Import algorithms BuildMCRichDigitLinks, MCPartToMCRichTrackAlg and 
+   MCRichHitToMCRichOpPhotAlg from RichMCTools package

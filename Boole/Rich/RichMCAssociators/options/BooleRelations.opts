@@ -1,0 +1,7 @@
+
+// Default relations
+RelationsRICHSeq.Members += { "RichDigitSummaryAlg" };
+
+// Extended relations
+//RelationsRICHSeq.Members += { "MCPartToMCRichTrackAlg/MCPToRichTrack",
+//                              "MCRichHitToMCRichOpPhotAlg/MCRichHitToPhoton" };
