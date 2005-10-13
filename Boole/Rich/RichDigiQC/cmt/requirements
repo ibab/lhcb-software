@@ -2,11 +2,11 @@
 # Created    : 2002-06-13
 # Maintainer : Chris Jones
 #============================================================================
-# $Id: requirements,v 1.16 2005-06-22 13:31:22 cattanem Exp $
+# $Id: requirements,v 1.17 2005-10-13 14:55:56 jonrob Exp $
 #============================================================================
 
 package           RichDigiQC
-version           v2r2
+version           v2r3
 
 # Structure, i.e. directories to process. 
 #============================================================================
