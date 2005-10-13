@@ -1,6 +1,9 @@
-! $Id: release.notes,v 1.9 2005-10-03 12:09:34 robbep Exp $
+! $Id: release.notes,v 1.10 2005-10-13 21:46:28 robbep Exp $
 ! Package     : Gen/LbPythia
 ! Responsible : 
+
+! 2005-10-13 - Patrick Robbe
+ - PythiaAlg: set printPythiaParameters in protected section
 
 ! 2005-10-03 - Patrick Robbe
  - Pythia.h : new utility class to interface Pythia FORTRAN functions.
