@@ -1,4 +1,4 @@
-// $Id: PythiaAlg.h,v 1.2 2005-10-03 12:07:56 robbep Exp $
+// $Id: PythiaAlg.h,v 1.3 2005-10-13 21:45:42 robbep Exp $
 
 #ifndef LBPYTHIA_PYTHIAALG_H
 #define LBPYTHIA_PYTHIAALG_H 1
@@ -147,6 +147,10 @@ protected:
 
   /// EvtGen Tool interface
   IEvtGenTool * m_evtTool ;
+
+  /// Print Pythia parameters
+  void printPythiaParameter( ) ;
+
   
 private:  
   /// +/- crossing angle in the vertical plane (microrad)
@@ -219,11 +223,7 @@ private:
   int m_obtainedSignalType ;
 
   /// Total branching fraction of the signal decay mode
-  double m_signalBr ;
-  
-  /// Print Pythia parameters
-  void printPythiaParameter( ) ;
-  
+  double m_signalBr ;  
 };
 
 #endif  // LBPYTHIA_PYTHIAALG_H
