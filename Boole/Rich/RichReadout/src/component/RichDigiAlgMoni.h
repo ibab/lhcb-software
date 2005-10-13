@@ -1,4 +1,4 @@
-// $Id: RichDigiAlgMoni.h,v 1.2 2005-06-23 15:10:12 jonrob Exp $
+// $Id: RichDigiAlgMoni.h,v 1.3 2005-10-13 15:26:47 jonrob Exp $
 #ifndef RICHMONITOR_RICHDIGIALGMONI_H
 #define RICHMONITOR_RICHDIGIALGMONI_H 1
 
@@ -6,6 +6,7 @@
 #include "RichKernel/RichAlgBase.h"
 
 // from Gaudi
+#include "GaudiKernel/AlgFactory.h"
 #include "GaudiKernel/SmartDataPtr.h"
 #include "GaudiKernel/IParticlePropertySvc.h"
 #include "GaudiKernel/ParticleProperty.h"
@@ -48,7 +49,8 @@
  *  @date   2003-09-08
  */
 
-class RichDigiAlgMoni : public RichAlgBase {
+class RichDigiAlgMoni : public RichAlgBase 
+{
 
 public:
 

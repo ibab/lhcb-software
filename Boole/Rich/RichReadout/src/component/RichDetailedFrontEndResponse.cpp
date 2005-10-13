@@ -5,7 +5,7 @@
  *  Implementation file for RICH digitisation algorithm : RichDetailedFrontEndResponse
  *
  *  CVS Log :-
- *  $Id: RichDetailedFrontEndResponse.cpp,v 1.2 2005-06-23 15:10:12 jonrob Exp $
+ *  $Id: RichDetailedFrontEndResponse.cpp,v 1.3 2005-10-13 15:26:47 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @author Alex Howard   a.s.howard@ic.ac.uk
@@ -160,7 +160,8 @@ StatusCode RichDetailedFrontEndResponse::Analog()
           const bool dead = ( binZero < 0 && binZero > -50 );
 
           // electrons
-          const double e  = ( dead ? 0 : ((*iDep)->energy()*m_Calibration) + m_gaussNoise()/el_per_adc );
+          const double e  = 
+            ( dead ? 0 : ((*iDep)->energy()*m_Calibration) + m_gaussNoise()/el_per_adc );
 
           // Loop over time sample and fill for this deposit
           for ( unsigned int bin = 0; bin < ts.size(); ++bin )

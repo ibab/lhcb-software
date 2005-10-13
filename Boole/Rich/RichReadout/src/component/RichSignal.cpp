@@ -5,7 +5,7 @@
  *  Implementation file for RICH digitisation algorithm : RichSignal
  *
  *  CVS Log :-
- *  $Id: RichSignal.cpp,v 1.2 2005-06-23 15:10:12 jonrob Exp $
+ *  $Id: RichSignal.cpp,v 1.3 2005-10-13 15:26:47 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @author Alex Howard   a.s.howard@ic.ac.uk
@@ -66,6 +66,7 @@ StatusCode RichSignal::initialize()
 
   // detector tool
   acquireTool( "RichSmartIDTool", m_smartIDTool );
+  acquireTool( "RichMCTruthTool", m_truth       );
 
   return sc;
 }
@@ -74,7 +75,7 @@ StatusCode RichSignal::execute()
 {
   debug() << "Execute" << endreq;
 
-  // Form a new containers of MCRichSummedDeposits and MCRichDeposits
+  // Form new containers of MCRichSummedDeposits and MCRichDeposits
   m_mcSummedDeposits = new MCRichSummedDeposits();
   put( m_mcSummedDeposits, m_RichSummedDepositLocation );
   m_mcDeposits = new MCRichDeposits();
@@ -130,7 +131,9 @@ StatusCode RichSignal::ProcessEvent( const std::string & hitLoc,
   }
 
   unsigned int nDeps(0), nSumDeps(0);
-  for ( MCRichHits::const_iterator iHit = hits->begin(); iHit != hits->end(); ++iHit ) {
+  for ( MCRichHits::const_iterator iHit = hits->begin(); 
+        iHit != hits->end(); ++iHit ) 
+  {
 
     RichSmartID tempID;
     // Is hit in active pixel
@@ -141,8 +144,9 @@ StatusCode RichSignal::ProcessEvent( const std::string & hitLoc,
       const RichSmartID id = tempID.pixelID();
 
       // Find out if we already have a hit for this super-pixel
-      MCRichSummedDeposit * sumdep = m_mcSummedDeposits->object(id);
-      if ( tofOffset < -1 && sumdep ) {
+      MCRichSummedDeposit * sumDep = m_mcSummedDeposits->object(id);
+      if ( tofOffset < -1 && sumDep ) 
+      {
         // Toss a coin to see if we add this hit to the existing deposits
         // Simulate a 1/8 chance of additional hit falling in same sub-pixel as
         // already existing hit
@@ -150,40 +154,51 @@ StatusCode RichSignal::ProcessEvent( const std::string & hitLoc,
       }
 
       // Then create a new deposit
-      MCRichDeposit* newDeposit = new MCRichDeposit();
-      m_mcDeposits->insert( newDeposit );
+      MCRichDeposit* dep = new MCRichDeposit();
+      m_mcDeposits->insert( dep );
       ++nDeps;
 
       // set parent hit
-      newDeposit->setParentHit( *iHit );
+      dep->setParentHit( *iHit );
 
       // Hit energy
-      newDeposit->setEnergy( (*iHit)->energy() );
+      dep->setEnergy( (*iHit)->energy() );
 
       // TOF
       double tof = tofOffset + (*iHit)->timeOfFlight();
       // Global shift for Rich2.
       if ( Rich::Rich2 == (*iHit)->rich() ) tof -= 40;
-      newDeposit->setTime( tof );
+      dep->setTime( tof );
 
       // Add to the set of other deposits in the pixel
-      if ( !sumdep )
+      if ( !sumDep )
       {
-        sumdep = new MCRichSummedDeposit();
-        m_mcSummedDeposits->insert( sumdep, id );
+        sumDep = new MCRichSummedDeposit();
+        m_mcSummedDeposits->insert( sumDep, id );
         ++nSumDeps;
       }
-      sumdep->addToDeposits(newDeposit);
+      sumDep->addToDeposits(dep);
 
       // summed energy
-      sumdep->setSummedEnergy( sumdep->summedEnergy() + newDeposit->energy() );
+      sumDep->setSummedEnergy( sumDep->summedEnergy() + dep->energy() );
 
       // store type event type
-      if      (  0 == eventType ) { newDeposit->setSignalEvent(true);   sumdep->setSignalEvent(true);   }
-      else if ( -1 == eventType ) { newDeposit->setPrevEvent(true);     sumdep->setPrevEvent(true);     }
-      else if ( -2 == eventType ) { newDeposit->setPrevPrevEvent(true); sumdep->setPrevPrevEvent(true); }
-      else if (  1 == eventType ) { newDeposit->setNextEvent(true);     sumdep->setNextEvent(true);     }
-      else if (  2 == eventType ) { newDeposit->setNextNextEvent(true); sumdep->setNextNextEvent(true); }
+      if      (  0 == eventType ) { dep->setSignalEvent(true);   sumDep->setSignalEvent(true);   }
+      else if ( -1 == eventType ) { dep->setPrevEvent(true);     sumDep->setPrevEvent(true);     }
+      else if ( -2 == eventType ) { dep->setPrevPrevEvent(true); sumDep->setPrevPrevEvent(true); }
+      else if (  1 == eventType ) { dep->setNextEvent(true);     sumDep->setNextEvent(true);     }
+      else if (  2 == eventType ) { dep->setNextNextEvent(true); sumDep->setNextNextEvent(true); }
+
+      // store history in summed deposit
+      if ( !m_truth->isBackground( *iHit ) ) 
+      {
+        if      ( (*iHit)->radiator() == Rich::Aerogel ) { sumDep->setAerogelHit(true); }
+        else if ( (*iHit)->radiator() == Rich::C4F10   ) { sumDep->setC4f10Hit(true);   }
+        else if ( (*iHit)->radiator() == Rich::CF4     ) { sumDep->setCf4Hit(true);     }
+      } 
+      if ( (*iHit)->scatteredPhoton() ) { sumDep->setScatteredHit(true);  }
+      if ( (*iHit)->chargedTrack()    ) { sumDep->setChargedTrack(true);  }
+      if ( (*iHit)->backgroundHit()   ) { sumDep->setBackgroundHit(true); }
 
     } // active hit if
 

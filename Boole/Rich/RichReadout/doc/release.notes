@@ -4,6 +4,10 @@
 ! Purpose     : Rich Digitisation
 !-----------------------------------------------------------------------------
 
+! 2005-10-13 - Chris Jones
+ - Add missing AlgFactory includes
+ - Add more history information to MCRichDigits
+
 ! 2005-07-14 - Chris Jones
  - Add fix to make sure all a bank exists for all Level1 boards.
    Previously, if a Level 1 board had no hits in any HPD, nothing was saved for

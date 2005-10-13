@@ -5,7 +5,7 @@
  *  Header file for RICH digitisation algorithm : RichSignal
  *
  *  CVS Log :-
- *  $Id: RichSignal.h,v 1.2 2005-06-23 15:10:12 jonrob Exp $
+ *  $Id: RichSignal.h,v 1.3 2005-10-13 15:26:47 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @author Alex Howard   a.s.howard@ic.ac.uk
@@ -35,6 +35,7 @@
 
 // interfaces
 #include "RichKernel/IRichSmartIDTool.h"
+#include "RichKernel/IRichMCTruthTool.h"
 
 // kernel
 #include "Kernel/ParticleID.h"
@@ -92,6 +93,10 @@ private: // data
   /// Pointer to RichSmartID tool
   const IRichSmartIDTool * m_smartIDTool;
 
+  /// Pointer to RichMCTruth tool
+  const IRichMCTruthTool * m_truth;
+
+  /// random number generator
   mutable Rndm::Numbers m_rndm;
 
 };

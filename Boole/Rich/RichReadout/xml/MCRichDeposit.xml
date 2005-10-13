@@ -4,7 +4,7 @@
 <package name="RichEvent">
 
 <!-- **************************************************************************
-  * $Id: MCRichDeposit.xml,v 1.1 2005-06-22 12:39:26 jonrob Exp $
+  * $Id: MCRichDeposit.xml,v 1.2 2005-10-13 15:26:47 jonrob Exp $
   *****************************************************************************
   * XML-description of MCRichDeposit class                                    *
   * author: Chris Jones   Christopher.Rob.Jones@cern.ch                       *
@@ -48,7 +48,7 @@
                 <bitfield desc="Deposit is associated to a Prev event MCRichHit"      length="1" name="prevEvent" />
                 <bitfield desc="Deposit is associated to a PrevPrev event MCRichHit"  length="1" name="prevPrevEvent" />
                 <bitfield desc="Deposit is associated to a Next event MCRichHit"      length="1" name="nextEvent" />
-                <bitfield desc="Deposit is associated to a sNextNext event MCRichHit" length="1" name="nextNextEvent" />
+                <bitfield desc="Deposit is associated to a NextNext event MCRichHit"  length="1" name="nextNextEvent" />
         </attribute>
            
         <relation 
