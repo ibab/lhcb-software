@@ -4,6 +4,9 @@
 ! Purpose     : package for tracking tools accessing MC information
 !-----------------------------------------------------------------------------
 
+! 2005-10-13 - Eduardo Rodrigues
+ - propagation of changes from TrackEvent
+
 !======================= TrackMCTools v1r2 2005-09-21 ========================
 ! 2005-09-21 - Eduardo Rodrigues
  - renamings to avoid clashes with same tools of the old track event model:

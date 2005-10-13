@@ -1,13 +1,10 @@
 // Include files
 // -------------
 // LHCbKernel
-#include "Relations/RelationWeighted1D.h"
+#include "Relations/RelationWeighted2D.h"
 
 // from LHCbEvent
 #include "Event/EventHeader.h"
-
-// from TrackEvent
-#include "Event/TrackKeys.h"
 
 // from TrackFitEvent
 #include "Event/OTMeasurement.h"
@@ -158,7 +155,7 @@ StatusCode IdealTracksCreator::execute()
   Tracks* tracksCont = new Tracks();
 
   // create relation table and register it in the event transient store
-  typedef RelationWeighted1D<Track,MCParticle,double>  Table;
+  typedef RelationWeighted2D<Track,MCParticle,double>  Table;
   Table* table = new Table();
   StatusCode sc = eventSvc() -> registerObject( m_relationTable, table );
   if( sc.isFailure() ) {
@@ -206,9 +203,9 @@ StatusCode IdealTracksCreator::execute()
       m_trackSelector -> setTrackType( mcParticle, track );
 
       // Check whether a Velo track is backward
-      if ( TrackKeys::Velo == track -> type() ) {
+      if ( Track::Velo == track -> type() ) {
         const double pz = mcParticle -> momentum().pz();
-        if ( pz < 0.0 ) track -> setFlag( TrackKeys::Backward, true );
+        if ( pz < 0.0 ) track -> setFlag( Track::Backward, true );
       }
 
       // Add Velo clusters
@@ -280,20 +277,20 @@ StatusCode IdealTracksCreator::execute()
 
       // Set some of the track properties
       // --------------------------------
-      track -> setStatus( TrackKeys::PatRecMeas );
-      track -> setFlag( TrackKeys::Unique, true );
-      track -> setHistory( TrackKeys::TrackIdealPR );
+      track -> setStatus( Track::PatRecMeas );
+      track -> setFlag( Track::Unique, true );
+      track -> setHistory( Track::TrackIdealPR );
       // Fit the track
       //if ( m_initState && m_fitTracks ) {
         // select appropriate track fitter
         //ITrackFitter* fitter = m_tracksFitter;
-        //if( track -> type() == TrackKeys::Velo
-            //|| track -> checkFlag( TrackKeys::Backward ) )
+        //if( track -> type() == Track::Velo
+            //|| track -> checkFlag( Track::Backward ) )
           //fitter = m_veloTracksFitter;
         //if ( track->velo() || track->veloBack() ) fitter = m_veloTracksFitter;
-        //if ( track -> type() == TrackKeys::Upstream ) fitter = m_veloTTTracksFitter;
+        //if ( track -> type() == Track::Upstream ) fitter = m_veloTTTracksFitter;
         //if ( track->veloTT() ) fitter = m_veloTTTracksFitter;
-        //if ( track -> type() == TrackKeys::Ttrack ) fitter = m_seedTracksFitter;
+        //if ( track -> type() == Track::Ttrack ) fitter = m_seedTracksFitter;
         //if ( track->seed() ) fitter = m_seedTracksFitter;
         // Fit the track 
         //if ( m_upstream ) { // do upstream fit
@@ -302,7 +299,7 @@ StatusCode IdealTracksCreator::execute()
 //          sc = fitter->fitDownstream(track, track->beginM(), track->endM() );
         //}
         // Set error flag if fit failed
-        //if ( sc.isFailure() ) track -> setStatus( TrackKeys::Failed );
+        //if ( sc.isFailure() ) track -> setStatus( Track::Failed );
         //if ( sc.isFailure() ) track -> setErrorFlag(1);
       //}
 
@@ -353,10 +350,10 @@ StatusCode IdealTracksCreator::execute()
       debug()
         << "-> Track with key # " << track -> key() << endreq
         << "  * charge         = " << track -> charge() << endreq
-        << "  * is Invalid     = " << track -> checkFlag( TrackKeys::Invalid ) << endreq
-        << "  * is Unique      = " << track -> checkFlag( TrackKeys::Unique ) << endreq
+        << "  * is Invalid     = " << track -> checkFlag( Track::Invalid ) << endreq
+        << "  * is Unique      = " << track -> checkFlag( Track::Unique ) << endreq
         << "  * is of type     = " << track -> type() << endreq
-        << "  * is Backward    = " << track -> checkFlag( TrackKeys::Backward ) << endreq
+        << "  * is Backward    = " << track -> checkFlag( Track::Backward ) << endreq
         << "  * # measurements = " << track -> nMeasurements() << endreq;
       
       // print the measurements

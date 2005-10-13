@@ -29,7 +29,7 @@
  *  - MCParticles: the criterium-tool for MCParticles
  *                 (e.g. TrackReconstructible or TrackAcceptance)
  *  The type of a track is taken from the available types defined
- *  in TrackKeys.h
+ *  in Track.h
  *
  *  2005-05-04 : Eduardo Rodrigues (adaptations to new track event model)
  *
@@ -77,7 +77,7 @@ public:
   virtual bool selectByTrackType( MCParticle* mcParticle );
 
   /** Get the track type identifyer of the MCParticle.
-   *  @return Track type identifyer as defined in TrackKeys.h
+   *  @return Track type identifyer as defined in Track.h
    *  @param  mcParticle, Input MCParticle.
    */
   virtual unsigned int trackType( MCParticle* mcPart );

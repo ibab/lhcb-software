@@ -6,9 +6,6 @@
 // from CLHEP
 #include "CLHEP/Units/SystemOfUnits.h"
 
-// from TrackEvent
-#include "Event/TrackKeys.h"
-
 // local
 #include "TrackCriteriaSelector.h"
 
@@ -32,7 +29,7 @@ TrackCriteriaSelector::TrackCriteriaSelector( const std::string& type,
                                               const IInterface* parent )
   : GaudiTool ( type, name , parent )
   , m_mcParticleJudge( 0 )
-  , m_previousTrackType( TrackKeys::TypeUnknown )
+  , m_previousTrackType( Track::TypeUnknown )
   , m_previousMCParticle( 0 )
 {
   // interfaces
@@ -112,16 +109,16 @@ bool TrackCriteriaSelector::selectByTrackType( Track* track ) const
   bool selected = true;
 
   // Check the Unique flag
-  if ( m_uniqueFlag && !( track->checkFlag( TrackKeys::Unique ) ) )
+  if ( m_uniqueFlag && !( track->checkFlag( Track::Unique ) ) )
     selected = false;
 
   // Check the validity flag
-  if ( m_validFlag && track->checkFlag( TrackKeys::Invalid ) )
+  if ( m_validFlag && track->checkFlag( Track::Invalid ) )
     selected = false;
 
   // Check if the track is of the requested type
   int tracktype = track -> type();
-  if ( tracktype == TrackKeys::TypeUnknown ||
+  if ( tracktype == Track::TypeUnknown ||
        ( !m_tracktypes.empty() &&  
          std::find( m_tracktypes.begin(), m_tracktypes.end(), 
                     tracktype ) == m_tracktypes.end() ) ) selected = false;
@@ -138,7 +135,7 @@ bool TrackCriteriaSelector::selectByTrackType( MCParticle* mcParticle )
 
   // Check if the MCParticle is of the requested type
   int tracktype = trackType( mcParticle );
-  if ( tracktype == TrackKeys::TypeUnknown ||
+  if ( tracktype == Track::TypeUnknown ||
        ( !m_tracktypes.empty() &&
          std::find( m_tracktypes.begin(), m_tracktypes.end(),  
                     tracktype ) == m_tracktypes.end() ) ) selected = false;
@@ -157,19 +154,19 @@ unsigned int TrackCriteriaSelector::trackType( MCParticle* mcPart )
 
   const HepLorentzVector fourMom = mcPart->momentum();
 
-  unsigned int tracktype = TrackKeys::TypeUnknown;
+  unsigned int tracktype = Track::TypeUnknown;
 
   if ( hasVelo && hasSeed ) {            // long track
-    tracktype = TrackKeys::Long;
+    tracktype = Track::Long;
   } else if ( hasVelo && hasTT ) {       // upstream track
-    tracktype = TrackKeys::Upstream;
+    tracktype = Track::Upstream;
   } else if ( hasSeed && hasTT ) {       // downstream track
-    tracktype = TrackKeys::Downstream;
+    tracktype = Track::Downstream;
   } else if ( hasVelo ) {                // velo track
-    tracktype = TrackKeys::Velo;
+    tracktype = Track::Velo;
   } else if ( hasSeed ) {                // seed track
-    tracktype = TrackKeys::Ttrack;
-  } 
+    tracktype = Track::Ttrack;
+  }
 
   m_previousTrackType  = tracktype;
   m_previousMCParticle = mcPart;
@@ -183,7 +180,7 @@ unsigned int TrackCriteriaSelector::trackType( MCParticle* mcPart )
 StatusCode TrackCriteriaSelector::setTrackType( MCParticle* mcPart,
                                                 Track*& track )
 {
-  unsigned int tracktype = TrackKeys::TypeUnknown;
+  unsigned int tracktype = Track::TypeUnknown;
   
   if ( mcPart == m_previousMCParticle ) {
     tracktype = m_previousTrackType;
@@ -193,8 +190,8 @@ StatusCode TrackCriteriaSelector::setTrackType( MCParticle* mcPart,
   }
 
   track -> setType ( tracktype );
-  if ( TrackKeys::TypeUnknown == tracktype ) return StatusCode::FAILURE;
-  else                                       return StatusCode::SUCCESS;
+  if ( Track::TypeUnknown == tracktype ) return StatusCode::FAILURE;
+  else                                   return StatusCode::SUCCESS;
 }
 
 //=============================================================================

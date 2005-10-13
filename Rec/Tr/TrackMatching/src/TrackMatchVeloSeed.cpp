@@ -1,11 +1,8 @@
-// $Id: TrackMatchVeloSeed.cpp,v 1.3 2005-10-07 08:15:39 cattanem Exp $
+// $Id: TrackMatchVeloSeed.cpp,v 1.4 2005-10-13 14:57:10 erodrigu Exp $
 // Include files 
 // -------------
 // from Gaudi
 #include "GaudiKernel/AlgFactory.h" 
-
-// from TrackEvent
-#include "Event/TrackKeys.h"
 
 // from TrackFit Event
 #include "Event/ITMeasurement.h"
@@ -213,7 +210,7 @@ StatusCode TrackMatchVeloSeed::matchTracks( Tracks* veloTracks,
           ++iTrack2) {
 
       // Check on backward going velo tracks
-      if ( (*iTrack2) -> checkFlag( TrackKeys::Backward ) ) continue;
+      if ( (*iTrack2) -> checkFlag( Track::Backward ) ) continue;
 
       // Remove uninteresting tracks
       State& veloState = (*iTrack2) -> closestState( 0.0 );
@@ -578,8 +575,8 @@ StatusCode TrackMatchVeloSeed::storeTracks( TrackMatches*& matchCont )
     tC.fast(5,5) = pow( stateVector(5)*m_errorP, 2);
 
     aTrack -> addToStates( *aState );
-    aTrack -> setType( TrackKeys::Long );
-    aTrack -> setHistory( TrackKeys::TrackMatching );
+    aTrack -> setType( Track::Long );
+    aTrack -> setHistory( Track::TrackMatching );
     trackCont -> add( aTrack );
     delete aState;
   } // iterMatch
