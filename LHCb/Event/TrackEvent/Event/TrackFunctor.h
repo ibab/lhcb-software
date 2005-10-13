@@ -137,7 +137,7 @@ namespace TrackFunctor
   public:
     // A predicate (unary bool function):
     // example:
-    // HasKey<Track> isBackward(&Track::checkFlag,TrackKeys::Backwards)
+    // HasKey<Track> isBackward(&Track::checkFlag,Track::Backwards)
     // if (isBackward(track)) ...
     typedef bool (T::* ptr_memfun) (unsigned int) const;
   private:

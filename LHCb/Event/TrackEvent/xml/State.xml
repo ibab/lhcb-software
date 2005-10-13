@@ -19,6 +19,42 @@
       <import name='CLHEP/Geometry/Vector3D' />
       &StlPtrVector;
 
+<!--
+  /** State location enumerations
+   *
+   *    State
+   *    LocationUnknown   : at undefined location
+   *    ClosestToBeam     : closest to the beam-line
+   *    FirstMeasurement  : at the first measurement
+   *    EndVelo           : at the end of the VELO
+   *    AtTT              : at the TT stations
+   *    AtT               : at the T seeding stations
+   *    BegRich1          : at the beginning of RICH1
+   *    EndRich1          : at the end of RICH1
+   *    BegRich2          : at the beginning of RICH2
+   *    EndRich2          : atthe end of RICH2
+   *    Calo              : in the calorimeter
+   *    Muon              : in the muon stations
+   *
+   */
+-->
+      <enum
+        name  = 'Location'
+        desc  = 'State location enumerations'
+        value = 'LocationUnknown,
+                 ClosestToBeam,
+                 FirstMeasurement,
+                 EndVelo,
+                 AtTT,
+                 AtT,
+                 BegRich1,
+                 EndRich1,
+                 BegRich2,
+                 EndRich2,
+                 Calo,
+                 Muon'
+       access = 'PUBLIC' />
+
       <constructor
         desc    = 'Default constructor' />
 

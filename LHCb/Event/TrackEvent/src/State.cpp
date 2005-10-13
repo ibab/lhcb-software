@@ -1,11 +1,10 @@
-// $Id: State.cpp,v 1.6 2005-05-25 10:08:20 hernando Exp $
+// $Id: State.cpp,v 1.7 2005-10-13 13:19:35 erodrigu Exp $
 
 #include <math.h>
 #include <gsl/gsl_math.h>
 
 // local
 #include "Event/State.h"
-#include "Event/StateKeys.h"
 
 #include "CLHEP/Matrix/Matrix.h"
 
@@ -19,7 +18,7 @@
 // Default constructor
 //=============================================================================
 State::State() {
-  setLocation( StateKeys::LocationUnknown );
+  setLocation( State::LocationUnknown );
   m_z           = 0.;
   m_stateVector = HepVector(5,0);
   m_covariance  = HepSymMatrix(5,0);
@@ -207,7 +206,7 @@ double State::errQOverPperp2() const
 State* State::clone() const
 {
   State* state = new State(*this);
-  state->setLocation( StateKeys::LocationUnknown );
+  state->setLocation( State::LocationUnknown );
   return state;
 };
 

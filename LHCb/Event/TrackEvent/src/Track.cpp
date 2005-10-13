@@ -1,8 +1,7 @@
-// $Id: Track.cpp,v 1.16 2005-10-04 14:09:32 erodrigu Exp $ // Include files
+// $Id: Track.cpp,v 1.17 2005-10-13 13:19:36 erodrigu Exp $ // Include files
 
 // local
 #include "Event/Track.h"
-#include "Event/TrackKeys.h"
 #include "Event/TrackFunctor.h"
 #include <functional>
 
@@ -261,7 +260,7 @@ Track* Track::clone() const
 void Track::addToStates(const State& state) 
 {
   State* local = state.clone();
-  int order = checkFlag(TrackKeys::Backward) ? -1 : 1;
+  int order = checkFlag(Track::Backward) ? -1 : 1;
   std::vector<State*>::iterator ipos = 
     std::upper_bound(m_states.begin(),
                      m_states.end(),
@@ -279,7 +278,7 @@ void Track::addToMeasurements(const Measurement& meas)
   if (std::find(m_lhcbIDs.begin(),m_lhcbIDs.end(),id) == m_lhcbIDs.end())
     addToLhcbIDs(id);
   Measurement* local = meas.clone();
-  int order = checkFlag(TrackKeys::Backward) ? -1 : 1;
+  int order = checkFlag(Track::Backward) ? -1 : 1;
   std::vector<Measurement*>::iterator i = 
     std::upper_bound(m_measurements.begin(),
                      m_measurements.end(),

@@ -32,6 +32,139 @@
       <import name='Kernel/LHCbID' />
       <import name='CLHEP/Geometry/Plane3D' />
 
+<!--
+  /** Track history enumerations:
+   *  each entry corresponds to the name of the pattern recognition
+   *  algorithm that produced the track
+   *
+   *   HistoryUnknown   : unkown history (i.e. history not set)
+   *   TrackIdealPR     : track produced with the ideal pattern recognition
+   *   TrackSeeding     : track produced with the seeding pattern recognition 
+   *   PatVelo          : track produced with the VELO pattern recognition 
+   *   PatVeloTT        : track produced with the online Velo-TT pattern recognition
+   *   TrackVeloTT      : track produced with the offline Velo-TT pattern recognition
+   *   PatForward
+   *   TrgForward
+   *   TrackMatching
+   *   TrackKShort
+   *   TsaTrack
+   *   CnvSeed         : seed tracks converted from old Track Event Model tracks
+   *   CnvVelo         : velo tracks converted from old Track Event Model tracks
+   *   CnvVeloBack     : velo Backwards tracks converted from old Track Event Model tracks
+   *   CnvVeloTT       : veloTT tracks converted from old Track Event Model tracks
+   *   CnvForward      : forward tracks converted from old Track Event Model tracks
+   *   CnvMatch        : match tracks converted from old Track Event Model tracks
+   *   CnvKsTrack      :
+   *
+   */
+-->
+      <enum
+        name   = 'History'
+        desc   = 'Track history enumerations'
+        value  = 'HistoryUnknown=0,
+                  TrackIdealPR,
+                  TrackSeeding,
+                  PatVelo,
+                  PatVeloTT,
+                  TrackVeloTT,
+                  PatForward,
+                  TrgForward,
+                  TrackMatching,
+                  TrackKShort,
+                  TsaTrack,
+                  CnvSeed=24,
+                  CnvVelo,
+                  CnvVeloBack,
+                  CnvVeloTT,
+                  CnvForward,
+                  CnvMatch,
+                  CnvKsTrack'
+        access = 'PUBLIC' />
+
+<!--
+  /** Track fit history enumerations
+   *
+   *   FiUnknown   : track not fitted yet (fit history not set)
+   *   Kalman      : track fitted with the Kalman fitter
+   *
+   */
+-->
+      <enum
+        name   = 'HistoryFit'
+        desc   = 'Track fit history enumerations'
+        value  = 'FitUnknown=0,
+                  Kalman'
+        access = 'PUBLIC' />
+
+<!--
+  /** Track type enumerations
+   *
+   *   TypeUnknown   : track of undefined type (not to be used!)
+   *   Velo          : VELO track
+   *   VeloR         : 2D VELO track
+   *   Long          : forward track
+   *   Upstream      : upstream track
+   *   Downstream    : downstream track
+   *   Ttrack        : seed track
+   *
+   */
+-->
+      <enum
+        name   = 'Types'
+        desc   = 'Track type enumerations'
+        value  = 'TypeUnknown=0,
+                  Velo,
+                  VeloR,
+                  Long,
+                  Upstream,
+                  Downstream,
+                  Ttrack'
+        access = 'PUBLIC' />
+
+<!--
+  /** Track status flag enumerations:
+   *  The flag specifies in which state of the reconstruction phase the
+   *  track is. The status flag is set by the relevant algorithms
+   *
+   *   StatusUnknown   : track in an undefined status
+   *   PatRecIDs       : pattern recognition track with LHCbIDs
+   *   PatRecMeas      : pattern recognition track with Measurements added
+   *   Fitted          : fitted track
+   *   FitFailed       : track for which the track fit failed
+   *
+   */
+-->
+      <enum
+        name   = 'Status'
+        desc   = 'Track status flag enumerations'
+        value  = 'StatusUnknown=0,
+                  PatRecIDs,
+                  PatRecMeas,
+                  Fitted,
+                  FitFailed'
+        access = 'PUBLIC' />
+
+<!--
+  /** Track general flags enumerations
+   *
+   *   Backward      : VELO track in the backward direction
+   *   Invalid       : invalid track for physics
+   *   Unique        : unique track, i.e. with no (known) clones
+   *   IPSelected    :
+   *   PIDSelected   : 
+   *
+   */
+-->
+      <enum
+        name   = 'Flags'
+        desc   = 'Track general flags enumerations'
+        value  = 'Backward=1,
+                  Invalid=2,
+                  Unique=4,
+                  IPSelected=8,
+                  PIDSelected=16'
+        access = 'PUBLIC' />
+
       <constructor 
 	desc     = "Constructor with assigned key" 
 	argList  = "int key "
