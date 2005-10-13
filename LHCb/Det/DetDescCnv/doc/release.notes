@@ -9,6 +9,7 @@
    Ex.: if the XML string come from "conddb:/path/to/folder#Object" and
         it contains href="../new/folder2#Obj2" it is mapped to
         "conddb:/path/new/folder2#Obj2"
+   (by Nicolas Gilardi)
 
 !================ DetDescCnv v2r9 2005-09-19 ===========================
 ! 2005-09-19 M. Needham
