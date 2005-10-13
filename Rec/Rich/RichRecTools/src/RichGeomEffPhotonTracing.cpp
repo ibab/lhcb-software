@@ -5,7 +5,7 @@
  *  Implementation file for tool : RichGeomEffPhotonTracing
  *
  *  CVS Log :-
- *  $Id: RichGeomEffPhotonTracing.cpp,v 1.14 2005-06-23 15:17:41 jonrob Exp $
+ *  $Id: RichGeomEffPhotonTracing.cpp,v 1.15 2005-10-13 16:01:55 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -53,7 +53,7 @@ StatusCode RichGeomEffPhotonTracing::initialize()
 
   // Acquire instances of tools
   acquireTool( "RichRayTracing",     m_rayTrace );
-  m_ckAngle = cherenkovAngleTool();
+  acquireTool( "RichCherenkovAngle", m_ckAngle  );
   if ( m_hpdCheck )
   {
     acquireTool( "RichHPDInfoTool", m_hpdTool );

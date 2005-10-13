@@ -5,7 +5,7 @@
  *  Implementation file for tool : RichTrackCreatorFromTrStoredTracks
  *
  *  CVS Log :-
- *  $Id: RichTrackCreatorFromTrStoredTracks.cpp,v 1.29 2005-06-23 15:17:42 jonrob Exp $
+ *  $Id: RichTrackCreatorFromTrStoredTracks.cpp,v 1.30 2005-10-13 16:01:56 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -34,7 +34,7 @@ RichTrackCreatorFromTrStoredTracks( const std::string& type,
     m_segMaker             ( 0 ),
     m_signal               ( 0 ),
     m_trTracksLocation     ( TrStoredTrackLocation::Default ),
-    m_trSegToolNickName    ( "RichDetTrSegMaker"            ),
+    m_trSegToolNickName    ( "RichTrSegMakerFromTrStoredTracks" ),
     m_allDone              ( false ),
     m_buildHypoRings       ( false )
 {
@@ -57,7 +57,7 @@ StatusCode RichTrackCreatorFromTrStoredTracks::initialize()
 
   // Acquire instances of tools
   acquireTool( "RichRayTracing",          m_rayTrace    );
-  m_signal = expTrackSignalTool();
+  acquireTool( "RichExpectedTrackSignal", m_signal      );
   acquireTool( "RichSmartIDTool",         m_smartIDTool );
   acquireTool( m_trSegToolNickName,       m_segMaker    );
   if ( m_buildHypoRings ) acquireTool( "RichMassHypoRings", m_massHypoRings );
@@ -216,10 +216,11 @@ RichTrackCreatorFromTrStoredTracks::newTrack ( const ContainedObject * obj ) con
           {
 
             // Get PD panel hit point in local coordinates
-            // need to for fixed-value geom-eff tool
-            // Need to make this "on demand"
+            // need to do before test below, since potentially needed by geom eff tool
+            // need to make this data "on-demand" to avoid this sort of thing
             newSegment->pdPanelHitPointLocal() = m_smartIDTool->globalToPDPanel(hitPoint);
 
+            // test if this segment has valid information
             if ( m_signal->hasRichInfo(newSegment) )
             {
 

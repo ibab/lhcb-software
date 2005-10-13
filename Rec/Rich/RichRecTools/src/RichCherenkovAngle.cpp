@@ -5,7 +5,7 @@
  *  Implementation file for tool : RichCherenkovAngle
  *
  *  CVS Log :-
- *  $Id: RichCherenkovAngle.cpp,v 1.14 2005-06-23 15:17:41 jonrob Exp $
+ *  $Id: RichCherenkovAngle.cpp,v 1.15 2005-10-13 16:01:55 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -47,7 +47,7 @@ StatusCode RichCherenkovAngle::initialize()
   // Acquire instances of tools
   acquireTool( "RichRayTracing",          m_rayTrace     );
   acquireTool( "RichSmartIDTool",         m_smartIDTool  );
-  m_signal = expTrackSignalTool();
+  acquireTool( "RichExpectedTrackSignal", m_signal       );
   acquireTool( "RichRefractiveIndex",     m_refIndex     );
   acquireTool( "RichParticleProperties",  m_richPartProp );
 
@@ -84,7 +84,7 @@ RichCherenkovAngle::avgCherenkovTheta( RichRecSegment * segment,
     double angle = 0;
 
     // total unscattered signal
-    double unscat = m_signal->nSignalPhotons( segment, id );
+    const double unscat = m_signal->nSignalPhotons( segment, id );
     if ( unscat > 0 ) 
     {
 
@@ -92,7 +92,7 @@ RichCherenkovAngle::avgCherenkovTheta( RichRecSegment * segment,
       const Rich::RadiatorType rad = segment->trackSegment().radiator();
 
       // Beta for this segment
-      const double beta = m_richPartProp->beta(segment, id);
+      const double beta = m_richPartProp->beta(segment->trackSegment().bestMomentum().mag(), id);
 
       // loop over energy bins
       RichPhotonSpectra<RichRecSegment::FloatType> & sigSpectra = segment->signalPhotonSpectra();

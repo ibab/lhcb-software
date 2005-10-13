@@ -1,11 +1,11 @@
 
 //-----------------------------------------------------------------------------
-/** @file RichBinnedCKResVthetaForTrStoredTracks.cpp
+/** @file RichBinnedCKResVthetaForRecoTracks.cpp
  *
- *  Implementation file for tool : RichBinnedCKResVthetaForTrStoredTracks
+ *  Implementation file for tool : RichBinnedCKResVthetaForRecoTracks
  *
  *  CVS Log :-
- *  $Id: RichBinnedCKResVthetaForTrStoredTracks.cpp,v 1.7 2005-06-23 15:17:41 jonrob Exp $
+ *  $Id: RichBinnedCKResVthetaForRecoTracks.cpp,v 1.1 2005-10-13 16:01:55 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -18,7 +18,7 @@
 #include "GaudiKernel/IParticlePropertySvc.h"
 
 // local
-#include "RichBinnedCKResVthetaForTrStoredTracks.h"
+#include "RichBinnedCKResVthetaForRecoTracks.h"
 
 // CLHEP
 #include "CLHEP/Units/PhysicalConstants.h"
@@ -26,14 +26,14 @@
 //-----------------------------------------------------------------------------
 
 // Declaration of the Tool Factory
-static const  ToolFactory<RichBinnedCKResVthetaForTrStoredTracks>          s_factory ;
-const        IToolFactory& RichBinnedCKResVthetaForTrStoredTracksFactory = s_factory ;
+static const  ToolFactory<RichBinnedCKResVthetaForRecoTracks>          s_factory ;
+const        IToolFactory& RichBinnedCKResVthetaForRecoTracksFactory = s_factory ;
 
 // Standard constructor
-RichBinnedCKResVthetaForTrStoredTracks::
-RichBinnedCKResVthetaForTrStoredTracks ( const std::string& type,
-                                         const std::string& name,
-                                         const IInterface* parent )
+RichBinnedCKResVthetaForRecoTracks::
+RichBinnedCKResVthetaForRecoTracks ( const std::string& type,
+                                     const std::string& name,
+                                     const IInterface* parent )
   : RichRecToolBase( type, name, parent ),
     m_ckAngle ( 0 )
 {
@@ -137,14 +137,14 @@ RichBinnedCKResVthetaForTrStoredTracks ( const std::string& type,
 
 }
 
-StatusCode RichBinnedCKResVthetaForTrStoredTracks::initialize()
+StatusCode RichBinnedCKResVthetaForRecoTracks::initialize()
 {
   // Sets up various tools and services
   const StatusCode sc = RichRecToolBase::initialize();
   if ( sc.isFailure() ) { return sc; }
 
   // Acquire instances of tools
-  m_ckAngle = cherenkovAngleTool();
+  acquireTool( "RichCherenkovAngle", m_ckAngle );
 
   // Informational Printout
   debug() << " Using binned track resolutions for TrStoredTracks" << endreq;
@@ -161,15 +161,15 @@ StatusCode RichBinnedCKResVthetaForTrStoredTracks::initialize()
   return sc;
 }
 
-StatusCode RichBinnedCKResVthetaForTrStoredTracks::finalize()
+StatusCode RichBinnedCKResVthetaForRecoTracks::finalize()
 {
   // Execute base class method
   return RichRecToolBase::finalize();
 }
 
 double
-RichBinnedCKResVthetaForTrStoredTracks::ckThetaResolution( RichRecSegment * segment,
-                                                           const Rich::ParticleIDType id ) const
+RichBinnedCKResVthetaForRecoTracks::ckThetaResolution( RichRecSegment * segment,
+                                                       const Rich::ParticleIDType id ) const
 {
 
   if ( !segment->ckThetaResolution().dataIsValid(id) )
@@ -178,34 +178,44 @@ RichBinnedCKResVthetaForTrStoredTracks::ckThetaResolution( RichRecSegment * segm
     // Reference to track ID object
     const RichTrackID & tkID = segment->richRecTrack()->trackID();
 
-    // Check track parent type is TrStoredTrack
-    if ( Rich::TrackParent::TrStoredTrack != tkID.parentType() )
+    // Check track parent type is Track or TrStoredTrack
+    if ( Rich::TrackParent::Track         != tkID.parentType() &&
+         Rich::TrackParent::TrStoredTrack != tkID.parentType() )
     {
-      Exception( "Track parent type is not TrStoredTrack" );
+      Exception( "Track parent type is not Track or TrStoredTrack" );
     }
+
+    double res = 0;
 
     // Expected Cherenkov theta angle
     const double thetaExp = m_ckAngle->avgCherenkovTheta( segment, id );
-    if ( thetaExp < 0.000001 ) return 0;
+    if ( thetaExp > 1e-6 )
+    {
 
-    const Rich::RadiatorType rad = segment->trackSegment().radiator();
-    const Rich::Track::Type type = tkID.trackType();
-    double res = 0;
-    if ( thetaExp > 0. &&  thetaExp < (m_binEdges[rad])[0] )
-    {
-      res = (m_theerr[rad][type])[0];
-    }
-    else if ( thetaExp > (m_binEdges[rad])[0] &&
-              thetaExp < (m_binEdges[rad])[1] )
-    {
-      res = (m_theerr[rad][type])[1];
-    }
-    else if ( thetaExp > (m_binEdges[rad])[1] )
-    {
-      res = (m_theerr[rad][type])[2];
+      const Rich::RadiatorType rad = segment->trackSegment().radiator();
+      const Rich::Track::Type type = tkID.trackType();
+
+      if ( thetaExp > 0. &&  thetaExp < (m_binEdges[rad])[0] )
+      {
+        res = (m_theerr[rad][type])[0];
+      }
+      else if ( thetaExp > (m_binEdges[rad])[0] &&
+                thetaExp < (m_binEdges[rad])[1] )
+      {
+        res = (m_theerr[rad][type])[1];
+      }
+      else if ( thetaExp > (m_binEdges[rad])[1] )
+      {
+        res = (m_theerr[rad][type])[2];
+      }
+
     }
 
     segment->setCKThetaResolution( id, res );
+    if ( msgLevel(MSG::VERBOSE) )
+    {
+      verbose() << "Segment " << segment->key() << " : " << id << " ckRes " << res << endreq;
+    }
 
   }
 

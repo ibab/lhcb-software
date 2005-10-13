@@ -5,7 +5,7 @@
  *  Header file for tool : RichSellmeirFunc
  *
  *  CVS Log :-
- *  $Id: RichSellmeirFunc.h,v 1.9 2005-02-17 09:56:20 jonrob Exp $
+ *  $Id: RichSellmeirFunc.h,v 1.10 2005-10-13 16:01:55 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -31,7 +31,7 @@
 
 // interfaces
 #include "RichRecBase/IRichSellmeirFunc.h"
-#include "RichRecBase/IRichParticleProperties.h"
+#include "RichKernel/IRichParticleProperties.h"
 
 //-----------------------------------------------------------------------------
 /** @class RichSellmeirFunc RichSellmeirFunc.h

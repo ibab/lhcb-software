@@ -1,19 +1,19 @@
 
 //---------------------------------------------------------------------------------------
-/** @file RichInterpCKResVpForTrStoredTracks.h
+/** @file RichInterpCKResVthetaForRecoTracks.h
  *
- *  Header file for tool : RichInterpCKResVpForTrStoredTracks
+ *  Header file for tool : RichInterpCKResVthetaForRecoTracks
  *
  *  CVS Log :-
- *  $Id: RichInterpCKResVpForTrStoredTracks.h,v 1.4 2005-06-23 15:17:41 jonrob Exp $
+ *  $Id: RichInterpCKResVthetaForRecoTracks.h,v 1.1 2005-10-13 16:01:55 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
  */
 //---------------------------------------------------------------------------------------
 
-#ifndef RICHRECTOOLS_RICHINTERPCKRESVPFORTRSTOREDTRACKS_H
-#define RICHRECTOOLS_RICHINTERPCKRESVPFORTRSTOREDTRACKS_H 1
+#ifndef RICHRECTOOLS_RICHINTERPCKRESVTHETAFORRECOTRACKS_H
+#define RICHRECTOOLS_RICHINTERPCKRESVTHETAFORRECOTRACKS_H 1
 
 // base class
 #include "RichRecBase/RichRecToolBase.h"
@@ -21,7 +21,7 @@
 // Event model
 #include "Event/RichRecSegment.h"
 
-// RichKernel
+// Kernel
 #include "RichKernel/Rich1DTabFunc.h"
 
 // CLHEP
@@ -29,31 +29,33 @@
 
 // interfaces
 #include "RichRecBase/IRichCherenkovResolution.h"
+#include "RichRecBase/IRichCherenkovAngle.h"
 
 //---------------------------------------------------------------------------------------
-/** @class RichInterpCKResVpForTrStoredTracks RichInterpCKResVpForTrStoredTracks.h
+/** @class RichInterpCKResVthetaForRecoTracks RichInterpCKResVthetaForRecoTracks.h
  *
  *  Tool to calculate the Cherenkov angle resolution. This implementation is
- *  for TrStoredTracks and uses an interpolation of the measured Cherenkov resolution
- *  against the RichRecSegment momentum.
+ *  for reconstructed Tracks and uses an interpolation of the error against the
+ *  cherenkov angle theta
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
  */
 //---------------------------------------------------------------------------------------
 
-class RichInterpCKResVpForTrStoredTracks : public RichRecToolBase,
-                                           virtual public IRichCherenkovResolution {
+class RichInterpCKResVthetaForRecoTracks : public RichRecToolBase,
+                                           virtual public IRichCherenkovResolution
+{
 
 public: // Methods for Gaudi Framework
 
   /// Standard constructor
-  RichInterpCKResVpForTrStoredTracks( const std::string& type,
+  RichInterpCKResVthetaForRecoTracks( const std::string& type,
                                       const std::string& name,
                                       const IInterface* parent );
 
   /// Destructor
-  virtual ~RichInterpCKResVpForTrStoredTracks() {};
+  virtual ~RichInterpCKResVthetaForRecoTracks() {};
 
   // Initialize method
   StatusCode initialize();
@@ -69,13 +71,16 @@ public: // methods (and doxygen comments) inherited from public interface
 
 private:  // Private data
 
+  /// Pointer to RichCherenkovAngle interface
+  const IRichCherenkovAngle * m_ckAngle;
+
   // data containers from job options
   std::vector<double> m_theerr[Rich::NRadiatorTypes][Rich::Track::NTrTypes];
   std::vector<double> m_thebin[Rich::NRadiatorTypes];
 
-  /// Interpolator for the CK resolution
+  /// Interpolators
   Rich1DTabFunc * m_ckRes[Rich::NRadiatorTypes][Rich::Track::NTrTypes];
 
 };
 
-#endif // RICHRECTOOLS_RICHINTERPCKRESVPFORTRSTOREDTRACKS_H
+#endif // RICHRECTOOLS_RICHINTERPCKRESVTHETAFORRECOTRACKS_H

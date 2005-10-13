@@ -5,7 +5,7 @@
  *  Header file for tool : RichCherenkovAngle
  *
  *  CVS Log :-
- *  $Id: RichCherenkovAngle.h,v 1.7 2005-06-23 15:17:41 jonrob Exp $
+ *  $Id: RichCherenkovAngle.h,v 1.8 2005-10-13 16:01:55 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -35,7 +35,7 @@
 #include "RichRecBase/IRichCherenkovAngle.h"
 #include "RichRecBase/IRichExpectedTrackSignal.h"
 #include "RichKernel/IRichRefractiveIndex.h"
-#include "RichRecBase/IRichParticleProperties.h"
+#include "RichKernel/IRichParticleProperties.h"
 
 // GSL
 #include "gsl/gsl_math.h"

@@ -5,7 +5,7 @@
  *  Implementation file for tool : RichRecGeomTool
  *
  *  CVS Log :-
- *  $Id: RichRecGeomTool.cpp,v 1.7 2005-06-23 15:17:41 jonrob Exp $
+ *  $Id: RichRecGeomTool.cpp,v 1.8 2005-10-13 16:01:55 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -50,7 +50,7 @@ StatusCode RichRecGeomTool::initialize()
 
   // Acquire instances of tools
   acquireTool( "RichDetParameters",  m_detParams );
-  m_ckAngle = cherenkovAngleTool();
+  acquireTool( "RichCherenkovAngle", m_ckAngle   );
 
   // Cache the acceptance data
   m_radOutLimLoc[Rich::Aerogel] = m_detParams->AvAcceptOuterLimitsLocal(Rich::Aerogel);

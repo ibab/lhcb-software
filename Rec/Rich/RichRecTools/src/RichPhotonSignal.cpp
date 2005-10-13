@@ -5,7 +5,7 @@
  *  Implementation file for tool : RichPhotonSignal
  *
  *  CVS Log :-
- *  $Id: RichPhotonSignal.cpp,v 1.18 2005-06-23 15:17:41 jonrob Exp $
+ *  $Id: RichPhotonSignal.cpp,v 1.19 2005-10-13 16:01:55 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -39,9 +39,9 @@ StatusCode RichPhotonSignal::initialize()
   if ( sc.isFailure() ) { return sc; }
 
   // Acquire instances of tools
-  m_signal  = expTrackSignalTool();
-  m_ckAngle = cherenkovAngleTool();
-  m_ckRes   = cherenkovAngleResolutionTool();
+  acquireTool( "RichCherenkovAngle", m_ckAngle );
+  acquireTool( "RichExpectedTrackSignal", m_signal ); 
+  acquireTool( "RichCherenkovResolution", m_ckRes  );
 
   // Get Rich Detector elements
   const DeRich1 * Rich1DE = getDet<DeRich1>( DeRichLocation::Rich1 );

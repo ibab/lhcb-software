@@ -4,6 +4,11 @@
 ! Purpose     : Utility tools for RICH reconstruction algorithms
 !------------------------------------------------------------------------------
 
+! 2005-10-13 - Chris Jones
+ - Update tools to new track event model
+ - Adapt to changes due to use of context() in base classes
+ - Move RichParticleProperties tool to RichTools package
+
 !===================== RichRecTools v2r15 2005-06-24 ======================
 ! 2005-06-21 - Chris Jones
  - Changes needed to allow offline and HLT reconstructions to run in

@@ -1,11 +1,11 @@
 
 //---------------------------------------------------------------------------------------------
-/** @file RichDelegatedTrackCreatorFromTrStoredTracks.cpp
+/** @file RichDelegatedTrackCreatorFromRecoTracks.cpp
  *
- *  Implementation file for tool : RichDelegatedTrackCreatorFromTrStoredTracks
+ *  Implementation file for tool : RichDelegatedTrackCreatorFromRecoTracks
  *
  *  CVS Log :-
- *  $Id: RichDelegatedTrackCreatorFromTrStoredTracks.cpp,v 1.9 2005-10-13 16:01:55 jonrob Exp $
+ *  $Id: RichDelegatedTrackCreatorFromRecoTracks.cpp,v 1.1 2005-10-13 16:01:55 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -13,18 +13,18 @@
 //---------------------------------------------------------------------------------------------
 
 // local
-#include "RichDelegatedTrackCreatorFromTrStoredTracks.h"
+#include "RichDelegatedTrackCreatorFromRecoTracks.h"
 
 //---------------------------------------------------------------------------------------------
 // Declaration of the Tool Factory
-static const  ToolFactory<RichDelegatedTrackCreatorFromTrStoredTracks>          s_factory ;
-const        IToolFactory& RichDelegatedTrackCreatorFromTrStoredTracksFactory = s_factory ;
+static const  ToolFactory<RichDelegatedTrackCreatorFromRecoTracks>          s_factory ;
+const        IToolFactory& RichDelegatedTrackCreatorFromRecoTracksFactory = s_factory ;
 
 // Standard constructor
-RichDelegatedTrackCreatorFromTrStoredTracks::
-RichDelegatedTrackCreatorFromTrStoredTracks( const std::string& type,
-                                             const std::string& name,
-                                             const IInterface* parent )
+RichDelegatedTrackCreatorFromRecoTracks::
+RichDelegatedTrackCreatorFromRecoTracks( const std::string& type,
+                                         const std::string& name,
+                                         const IInterface* parent )
   : RichTrackCreatorBase ( type, name, parent ),
     m_trTracks       ( 0     ),
     m_allDone        ( false ),
@@ -35,14 +35,14 @@ RichDelegatedTrackCreatorFromTrStoredTracks( const std::string& type,
   declareInterface<IRichTrackCreator>(this);
 
   // job options
-  declareProperty( "TrStoredTracksLocation",
-                   m_trTracksLocation = TrStoredTrackLocation::Default );
+  declareProperty( "RecoTracksLocation",
+                   m_trTracksLocation = TrackLocation::Default );
   // the real track tools to delegate the work to
   declareProperty( "ToolsByTrackType", m_names );
 
 }
 
-StatusCode RichDelegatedTrackCreatorFromTrStoredTracks::initialize()
+StatusCode RichDelegatedTrackCreatorFromRecoTracks::initialize()
 {
   // Sets up various tools and services
   const StatusCode sc = RichTrackCreatorBase::initialize();
@@ -51,7 +51,7 @@ StatusCode RichDelegatedTrackCreatorFromTrStoredTracks::initialize()
   // setup mapping between track type and tool pointer
   RichMap< std::string, const IRichTrackCreator * > tmpMap;
   for ( ToolList::iterator it = m_names.begin();
-        it != m_names.end(); ++it ) 
+        it != m_names.end(); ++it )
   {
     const int slash = (*it).find_first_of( "/" );
     const std::string trackType = ( slash>0 ? (*it).substr(0,slash) : *it );
@@ -59,12 +59,12 @@ StatusCode RichDelegatedTrackCreatorFromTrStoredTracks::initialize()
     info() << "Track type '" << trackType
            << "' will use RichTrackCreator '" << toolType << "'" << endreq;
     const Rich::Track::Type tkType = Rich::Track::type(trackType);
-    if ( 0 == tmpMap[toolType] ) 
+    if ( 0 == tmpMap[toolType] )
     {
       if ( !m_tkToPtn[tkType] ) acquireTool( toolType, m_tkToPtn[tkType] );
       tmpMap[toolType] = m_tkToPtn[tkType];
-    } 
-    else 
+    }
+    else
     {
       m_tkToPtn[tkType] = tmpMap[toolType];
     }
@@ -75,13 +75,13 @@ StatusCode RichDelegatedTrackCreatorFromTrStoredTracks::initialize()
   return sc;
 }
 
-StatusCode RichDelegatedTrackCreatorFromTrStoredTracks::finalize()
+StatusCode RichDelegatedTrackCreatorFromRecoTracks::finalize()
 {
   // Execute base class method
   return RichTrackCreatorBase::finalize();
 }
 
-const StatusCode RichDelegatedTrackCreatorFromTrStoredTracks::newTracks() const
+const StatusCode RichDelegatedTrackCreatorFromRecoTracks::newTracks() const
 {
 
   if ( !m_allDone )
@@ -89,9 +89,9 @@ const StatusCode RichDelegatedTrackCreatorFromTrStoredTracks::newTracks() const
     m_allDone = true;
 
     // Iterate over all reco tracks, and create new RichRecTracks
-    richTracks()->reserve( trStoredTracks()->size() );
-    for ( TrStoredTracks::const_iterator track = trStoredTracks()->begin();
-          track != trStoredTracks()->end();
+    richTracks()->reserve( recoTracks()->size() );
+    for ( Tracks::const_iterator track = recoTracks()->begin();
+          track != recoTracks()->end();
           ++track) { newTrack( *track ); } // Make new RichRecTrack
 
   }
@@ -99,39 +99,39 @@ const StatusCode RichDelegatedTrackCreatorFromTrStoredTracks::newTracks() const
   return StatusCode::SUCCESS;
 }
 
-const long RichDelegatedTrackCreatorFromTrStoredTracks::nInputTracks() const
+const long RichDelegatedTrackCreatorFromRecoTracks::nInputTracks() const
 {
-  return ( trStoredTracks() ? trStoredTracks()->size() : 0 );
+  return ( recoTracks() ? recoTracks()->size() : 0 );
 }
 
-const TrStoredTracks *
-RichDelegatedTrackCreatorFromTrStoredTracks::trStoredTracks() const
+const Tracks *
+RichDelegatedTrackCreatorFromRecoTracks::recoTracks() const
 {
   if ( !m_trTracks )
   {
-    // Obtain smart data pointer to TrStoredTracks
-    m_trTracks = get<TrStoredTracks>( m_trTracksLocation );
-    debug() << "located " << m_trTracks->size() << " TrStoredTracks at "
+    // Obtain smart data pointer to Tracks
+    m_trTracks = get<Tracks>( m_trTracksLocation );
+    debug() << "located " << m_trTracks->size() << " Tracks at "
             << m_trTracksLocation << endreq;
   }
 
   return m_trTracks;
 }
 
-// Forms a new RichRecTrack object from a TrStoredTrack
+// Forms a new RichRecTrack object from a Track
 RichRecTrack *
-RichDelegatedTrackCreatorFromTrStoredTracks::newTrack ( const ContainedObject * obj ) const
+RichDelegatedTrackCreatorFromRecoTracks::newTrack ( const ContainedObject * obj ) const
 {
 
-  // Is this a TrStoredTrack ?
-  const TrStoredTrack * trTrack = dynamic_cast<const TrStoredTrack*>(obj);
+  // Is this a Track ?
+  const Track * trTrack = dynamic_cast<const Track*>(obj);
   if ( !trTrack ) return NULL;
 
   // track type
   const Rich::Track::Type trType = Rich::Track::type(trTrack);
   if ( Rich::Track::Unknown == trType )
   {
-    Warning( "TrStoredTrack of unknown algorithm type" );
+    Warning( "Track of unknown algorithm type" );
     return NULL;
   }
 
@@ -139,19 +139,19 @@ RichDelegatedTrackCreatorFromTrStoredTracks::newTrack ( const ContainedObject * 
   if ( !Rich::Track::isUsable(trType) ) return NULL;
 
   // See if this RichRecTrack already exists
-  if ( bookKeep() && m_trackDone[trTrack->key()] ) 
+  if ( bookKeep() && m_trackDone[trTrack->key()] )
   {
 
     // track already done
     return richTracks()->object(trTrack->key());
 
-  } 
-  else 
+  }
+  else
   {
 
     if ( msgLevel(MSG::VERBOSE) )
     {
-      verbose() << "TrStoredTrack " << trTrack->key()
+      verbose() << "Track " << trTrack->key()
                 << " type " << trType
                 << " -> delegating to " << tkTool(trType)->name() << endreq;
     }
@@ -167,7 +167,7 @@ RichDelegatedTrackCreatorFromTrStoredTracks::newTrack ( const ContainedObject * 
   return 0;
 }
 
-void RichDelegatedTrackCreatorFromTrStoredTracks::InitNewEvent()
+void RichDelegatedTrackCreatorFromRecoTracks::InitNewEvent()
 {
   RichTrackCreatorBase::InitNewEvent();
   m_allDone  = false;

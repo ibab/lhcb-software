@@ -5,7 +5,7 @@
  *  Implementation file for tool : RichMassHypothesisRingCreator
  *
  *  CVS Log :-
- *  $Id: RichMassHypothesisRingCreator.cpp,v 1.9 2005-06-23 15:17:41 jonrob Exp $
+ *  $Id: RichMassHypothesisRingCreator.cpp,v 1.10 2005-10-13 16:01:55 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -45,7 +45,7 @@ StatusCode RichMassHypothesisRingCreator::initialize()
   if ( sc.isFailure() ) { return sc; }
 
   // Acquire instances of tools
-  m_ckAngle = cherenkovAngleTool();
+  acquireTool( "RichCherenkovAngle", m_ckAngle );
 
   // Setup incident services
   incSvc()->addListener( this, IncidentType::BeginEvent );

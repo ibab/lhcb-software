@@ -5,7 +5,7 @@
  *  Implementation file for tool : RichSegmentCreator
  *
  *  CVS Log :-
- *  $Id: RichSegmentCreator.cpp,v 1.19 2005-06-24 13:49:02 jonrob Exp $
+ *  $Id: RichSegmentCreator.cpp,v 1.20 2005-10-13 16:01:55 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -39,9 +39,18 @@ RichSegmentCreator::RichSegmentCreator ( const std::string& type,
   declareInterface<IRichSegmentCreator>(this);
 
   // Define job option parameters
+
   declareProperty( "EnergyBins", m_binsEn );
-  declareProperty( "RichRecSegmentLocation",
-                   m_richRecSegmentLocation = RichRecSegmentLocation::Default );
+
+  if ( context() == "Offline" )
+  { 
+    m_richRecSegmentLocation = RichRecSegmentLocation::Offline;
+  } 
+  else if ( context() == "HLT" )
+  {
+    m_richRecSegmentLocation = RichRecSegmentLocation::HLT;
+  }
+  declareProperty( "RichRecSegmentLocation", m_richRecSegmentLocation );
 
 }
 
@@ -51,16 +60,6 @@ StatusCode RichSegmentCreator::initialize()
   const StatusCode sc = RichRecToolBase::initialize();
   if ( sc.isFailure() ) { return sc; }
 
-  // Configure output location depending on processing stage
-  // to be replace by common "context" when available
-  if      ( processingStage() == "Offline" )
-  {
-    m_richRecSegmentLocation = RichRecSegmentLocation::Offline;
-  }
-  else if ( processingStage() == "HLT" )
-  {
-    m_richRecSegmentLocation = RichRecSegmentLocation::HLT;
-  }
   if ( msgLevel(MSG::DEBUG) )
   {
     debug() << "RichRecSegment location : " << m_richRecSegmentLocation << endreq;

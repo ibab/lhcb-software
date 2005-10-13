@@ -5,7 +5,7 @@
  *  Implementation file for tool : RichExpectedTrackSignal
  *
  *  CVS Log :-
- *  $Id: RichExpectedTrackSignal.cpp,v 1.13 2005-06-23 15:17:41 jonrob Exp $
+ *  $Id: RichExpectedTrackSignal.cpp,v 1.14 2005-10-13 16:01:55 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -43,7 +43,7 @@ StatusCode RichExpectedTrackSignal::initialize()
   if ( sc.isFailure() ) { return sc; }
 
   // Acquire instances of tools
-  m_geomEff = geomEffTool();
+  acquireTool( "RichGeomEff" ,           m_geomEff      );
   acquireTool( "RichSellmeirFunc",       m_sellmeir     );
   acquireTool( "RichSignalDetectionEff", m_sigDetEff    );
   acquireTool( "RichParticleProperties", m_richPartProp );
@@ -60,16 +60,16 @@ StatusCode RichExpectedTrackSignal::finalize()
 }
 
 double RichExpectedTrackSignal::nEmittedPhotons ( RichRecSegment * segment,
-                                                  const Rich::ParticleIDType id ) const 
+                                                  const Rich::ParticleIDType id ) const
 {
 
-  if ( !segment->nEmittedPhotons().dataIsValid(id) ) 
+  if ( !segment->nEmittedPhotons().dataIsValid(id) )
   {
 
     // loop over energy bins
     double signal = 0;
     RichPhotonSpectra<RichRecSegment::FloatType> & spectra = segment->emittedPhotonSpectra();
-    for ( unsigned int iEnBin = 0; iEnBin < spectra.energyBins(); ++iEnBin ) 
+    for ( unsigned int iEnBin = 0; iEnBin < spectra.energyBins(); ++iEnBin )
     {
 
       double phots =
@@ -90,10 +90,10 @@ double RichExpectedTrackSignal::nEmittedPhotons ( RichRecSegment * segment,
 }
 
 double RichExpectedTrackSignal::nDetectablePhotons ( RichRecSegment * segment,
-                                                     const Rich::ParticleIDType id ) const 
+                                                     const Rich::ParticleIDType id ) const
 {
 
-  if ( !segment->nDetectablePhotons().dataIsValid(id) ) 
+  if ( !segment->nDetectablePhotons().dataIsValid(id) )
   {
 
     // Make sure emitted Photons are calculated
@@ -103,7 +103,7 @@ double RichExpectedTrackSignal::nDetectablePhotons ( RichRecSegment * segment,
     double signal = 0;
     RichPhotonSpectra<RichRecSegment::FloatType> & emitSpectra = segment->emittedPhotonSpectra();
     RichPhotonSpectra<RichRecSegment::FloatType> & detSpectra  = segment->detectablePhotonSpectra();
-    for ( unsigned int iEnBin = 0; iEnBin < emitSpectra.energyBins(); ++iEnBin ) 
+    for ( unsigned int iEnBin = 0; iEnBin < emitSpectra.energyBins(); ++iEnBin )
     {
       const double sig = (emitSpectra.energyDist(id))[iEnBin] *
         m_sigDetEff->photonDetEfficiency( segment, emitSpectra.binEnergy(iEnBin) );
@@ -122,14 +122,14 @@ double
 RichExpectedTrackSignal::nSignalPhotons ( RichRecSegment * segment,
                                           const Rich::ParticleIDType id ) const {
 
-  if ( !segment->nSignalPhotons().dataIsValid( id ) ) 
+  if ( !segment->nSignalPhotons().dataIsValid( id ) )
   {
     double signal  = 0;
     double scatter = 0;
 
     // compute detectable emitted photons
     double detectablePhots = nDetectablePhotons( segment, id );
-    if ( detectablePhots > 0 ) 
+    if ( detectablePhots > 0 )
     {
 
       // which radiator
@@ -138,7 +138,7 @@ RichExpectedTrackSignal::nSignalPhotons ( RichRecSegment * segment,
       // loop over energy bins
       RichPhotonSpectra<RichRecSegment::FloatType> & sigSpectra = segment->signalPhotonSpectra();
       const RichPhotonSpectra<RichRecSegment::FloatType> & detSpectra = segment->detectablePhotonSpectra();
-      for ( unsigned int iEnBin = 0; iEnBin < detSpectra.energyBins(); ++iEnBin ) 
+      for ( unsigned int iEnBin = 0; iEnBin < detSpectra.energyBins(); ++iEnBin )
       {
 
         const double scattProb =
@@ -174,7 +174,7 @@ RichExpectedTrackSignal::avgSignalPhotEnergy( RichRecSegment * segment,
   double nSig = nSignalPhotons ( segment, id );
 
   double avgEnergy = 0;
-  if ( nSig> 0 ) 
+  if ( nSig> 0 )
   {
 
     // loop over energy bins
@@ -201,7 +201,7 @@ RichExpectedTrackSignal::avgEmitPhotEnergy( RichRecSegment * segment,
   const double nSig = nEmittedPhotons ( segment, id );
 
   double avgEnergy = 0;
-  if ( nSig> 0 ) 
+  if ( nSig> 0 )
   {
 
     // loop over energy bins
@@ -230,15 +230,6 @@ RichExpectedTrackSignal::nScatteredPhotons ( RichRecSegment * segment,
   return segment->nScatteredPhotons( id );
 }
 
-bool RichExpectedTrackSignal::hasRichInfo( RichRecSegment * segment ) const
-{
-  for ( int iHypo = 0; iHypo < Rich::NParticleTypes; ++iHypo ) {
-    if ( m_geomEff->geomEfficiency(segment,(Rich::ParticleIDType)iHypo) > 0 ) return true;
-  }
-
-  return false;
-}
-
 double
 RichExpectedTrackSignal::nTotalObservablePhotons ( RichRecSegment * segment,
                                                    const Rich::ParticleIDType id ) const
@@ -259,21 +250,6 @@ RichExpectedTrackSignal::nObservableScatteredPhotons ( RichRecSegment * segment,
                                                        const Rich::ParticleIDType id ) const
 {
   return m_geomEff->geomEfficiencyScat(segment,id) * nScatteredPhotons(segment,id);
-}
-
-bool
-RichExpectedTrackSignal::aboveThreshold( RichRecSegment * segment,
-                                         const Rich::ParticleIDType type ) const
-{
-  // Geometrical track segment
-  const RichTrackSegment & tkSeg = segment->trackSegment();
-
-  // max possible momentum for this segment
-  //const double minP = tkSeg.bestMomentum().mag();
-  const double minP = tkSeg.bestMomentum().mag() + tkSeg.middleErrors().errP();
-
-  // is this momentum above the treshod momentum
-  return ( minP > m_richPartProp->thresholdMomentum(type,segment->trackSegment().radiator()) );
 }
 
 double
@@ -400,12 +376,28 @@ RichExpectedTrackSignal::activeInRadiator( RichRecTrack * track,
   for ( RichRecTrack::Segments::iterator segment =
           track->richRecSegments().begin();
         segment != track->richRecSegments().end();
-        ++segment ) {
-    if ( rad == (*segment)->trackSegment().radiator() ) {
+        ++segment )
+  {
+    if ( rad == (*segment)->trackSegment().radiator() )
+    {
       if ( nEmittedPhotons(*segment,id) > 0 ) return true;
     }
   }
 
+  return false;
+}
+
+bool RichExpectedTrackSignal::hasRichInfo( RichRecSegment * segment ) const
+{
+  // above electron hypothesis ?
+  if ( aboveThreshold( segment, Rich::Electron ) )
+  {
+    // see if any mass hypothesis is detectable
+    for ( int iHypo = 0; iHypo < Rich::NParticleTypes; ++iHypo )
+    {
+      if ( m_geomEff->geomEfficiency(segment,(Rich::ParticleIDType)iHypo) > 0 ) return true;
+    }
+  }
   return false;
 }
 
@@ -414,11 +406,28 @@ bool RichExpectedTrackSignal::hasRichInfo( RichRecTrack * track ) const
   for ( RichRecTrack::Segments::iterator segment =
           track->richRecSegments().begin();
         segment != track->richRecSegments().end();
-        ++segment ) {
+        ++segment )
+  {
     if ( hasRichInfo(*segment) ) return true;
   }
-
   return false;
+}
+
+bool
+RichExpectedTrackSignal::aboveThreshold( RichRecSegment * segment,
+                                         const Rich::ParticleIDType type ) const
+{
+  // Geometrical track segment
+  const RichTrackSegment & tkSeg = segment->trackSegment();
+
+  // momentum for this track segment
+  const double P2 = tkSeg.bestMomentum().mag2();
+  // Adjust momentum to account for a 1 sigma fluctuation,
+  // so segment is really above threshold but measured below
+  //P += tkSeg.middleErrors().errP();
+
+  // is this momentum above the cherenkov threshold momentum
+  return ( P2 > m_richPartProp->thresholdMomentumSq(type,tkSeg.radiator()) );
 }
 
 bool
@@ -426,13 +435,12 @@ RichExpectedTrackSignal::aboveThreshold( RichRecTrack * track,
                                          const Rich::ParticleIDType type ) const
 {
   // loop over segments
-  for ( RichRecTrack::Segments::iterator segment =
-          track->richRecSegments().begin();
+  for ( RichRecTrack::Segments::iterator segment = track->richRecSegments().begin();
         segment != track->richRecSegments().end();
-        ++segment ) {
+        ++segment )
+  {
     if ( aboveThreshold(*segment,type) ) return true;
   }
-
   return false;
 }
 
@@ -442,15 +450,14 @@ RichExpectedTrackSignal::aboveThreshold( RichRecTrack * track,
                                          const Rich::RadiatorType radiator ) const
 {
   // loop over segments
-  for ( RichRecTrack::Segments::iterator segment =
-          track->richRecSegments().begin();
+  for ( RichRecTrack::Segments::iterator segment = track->richRecSegments().begin();
         segment != track->richRecSegments().end();
         ++segment ) {
-    if ( radiator == (*segment)->trackSegment().radiator() ) {
+    if ( radiator == (*segment)->trackSegment().radiator() )
+    {
       if ( aboveThreshold( *segment, type ) ) return true;
     }
   }
-
   return false;
 }
 
@@ -465,6 +472,7 @@ void RichExpectedTrackSignal::setThresholdInfo( RichRecTrack * track,
   pid->setPionHypoAboveThres(true);
   pid->setKaonHypoAboveThres(true);
   pid->setProtonHypoAboveThres(true);
+
   // Now find those which aren't
   if ( aboveThreshold(track,Rich::Proton) &&
        nTotalObservablePhotons(track,Rich::Proton)>0 ) { return; }
@@ -495,6 +503,7 @@ void RichExpectedTrackSignal::setThresholdInfo( RichRecSegment * segment,
   pid->setPionHypoAboveThres(true);
   pid->setKaonHypoAboveThres(true);
   pid->setProtonHypoAboveThres(true);
+
   // Now find those which aren't
   if ( aboveThreshold(segment,Rich::Proton) &&
        nTotalObservablePhotons(segment,Rich::Proton)>0 ) { return; }

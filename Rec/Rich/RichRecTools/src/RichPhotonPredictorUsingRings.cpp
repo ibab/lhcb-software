@@ -5,7 +5,7 @@
  *  Implementation file for tool : RichPhotonPredictorUsingRings
  *
  *  CVS Log :-
- *  $Id: RichPhotonPredictorUsingRings.cpp,v 1.6 2005-06-23 15:17:41 jonrob Exp $
+ *  $Id: RichPhotonPredictorUsingRings.cpp,v 1.7 2005-10-13 16:01:55 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -55,7 +55,7 @@ StatusCode RichPhotonPredictorUsingRings::initialize()
   if ( sc.isFailure() ) { return sc; }
 
   // get tools
-  m_geomTool = geometryTool();
+  acquireTool( "RichRecGeometry", m_geomTool );
 
   // Initialise some variables
   m_minROI2.push_back( m_minROI[0]*m_minROI[0] );

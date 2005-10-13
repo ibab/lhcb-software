@@ -5,7 +5,7 @@
  *  Declaration of objects in the component library RichRecTools
  *
  *  CVS Log :-
- *  $Id: RichRecTools_load.cpp,v 1.21 2005-06-17 15:08:36 jonrob Exp $
+ *  $Id: RichRecTools_load.cpp,v 1.22 2005-10-13 16:01:55 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -18,7 +18,9 @@ DECLARE_FACTORY_ENTRIES( RichRecTools )
 {
 
   // Rich reconstruction working object creators
+  DECLARE_TOOL( RichDelegatedTrackCreatorFromRecoTracks );
   DECLARE_TOOL( RichDelegatedTrackCreatorFromTrStoredTracks );
+  DECLARE_TOOL( RichTrackCreatorFromRecoTracks );
   DECLARE_TOOL( RichTrackCreatorFromTrStoredTracks );
   DECLARE_TOOL( RichSegmentCreator );
   DECLARE_TOOL( RichPixelCreatorFromRichDigits );
@@ -44,17 +46,16 @@ DECLARE_FACTORY_ENTRIES( RichRecTools )
 
   // Physical properties
   DECLARE_TOOL( RichSellmeirFunc );
-  DECLARE_TOOL( RichParticleProperties );
   DECLARE_TOOL( RichFunctionalRayleighScatter );
   DECLARE_TOOL( RichTabulatedRayleighScatter );
   DECLARE_TOOL( RichTabulatedGasQuartzWindowAbs );
 
   // Cherenkov angle tools
   DECLARE_TOOL( RichCherenkovAngle );
-  DECLARE_TOOL( RichBinnedCKResVthetaForTrStoredTracks );
-  DECLARE_TOOL( RichInterpCKResVthetaForTrStoredTracks );
-  DECLARE_TOOL( RichFunctionalCKResVpForTrStoredTracks );
-  DECLARE_TOOL( RichInterpCKResVpForTrStoredTracks );
+  DECLARE_TOOL( RichBinnedCKResVthetaForRecoTracks );
+  DECLARE_TOOL( RichFunctionalCKResVpForRecoTracks );
+  DECLARE_TOOL( RichInterpCKResVthetaForRecoTracks );
+  DECLARE_TOOL( RichInterpCKResVpForRecoTracks     );
 
   // ray tracing
   DECLARE_TOOL( RichRayTraceCherenkovCone );

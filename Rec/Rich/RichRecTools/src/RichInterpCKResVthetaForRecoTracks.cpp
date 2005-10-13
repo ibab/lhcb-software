@@ -1,37 +1,36 @@
 
-/** @file RichInterpCKResVpForTrStoredTracks.cpp
+//-----------------------------------------------------------------------------
+/** @file RichInterpCKResVthetaForRecoTracks.cpp
  *
- *  Implementation file for tool : RichInterpCKResVpForTrStoredTracks
+ *  Implementation file for tool : RichInterpCKResVthetaForRecoTracks
  *
  *  CVS Log :-
- *  $Id: RichInterpCKResVpForTrStoredTracks.cpp,v 1.5 2005-06-17 15:08:36 jonrob Exp $
- *  $Log: not supported by cvs2svn $
- *  Revision 1.4  2004/07/27 20:15:30  jonrob
- *  Add doxygen file documentation and CVS information
- *
+ *  $Id: RichInterpCKResVthetaForRecoTracks.cpp,v 1.1 2005-10-13 16:01:55 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
  */
+//-----------------------------------------------------------------------------
 
 // from Gaudi
 #include "GaudiKernel/ToolFactory.h"
 
 // local
-#include "RichInterpCKResVpForTrStoredTracks.h"
+#include "RichInterpCKResVthetaForRecoTracks.h"
 
 //-----------------------------------------------------------------------------
 
 // Declaration of the Tool Factory
-static const  ToolFactory<RichInterpCKResVpForTrStoredTracks>          s_factory ;
-const        IToolFactory& RichInterpCKResVpForTrStoredTracksFactory = s_factory ;
+static const  ToolFactory<RichInterpCKResVthetaForRecoTracks>          s_factory ;
+const        IToolFactory& RichInterpCKResVthetaForRecoTracksFactory = s_factory ;
 
 // Standard constructor
-RichInterpCKResVpForTrStoredTracks::
-RichInterpCKResVpForTrStoredTracks ( const std::string& type,
+RichInterpCKResVthetaForRecoTracks::
+RichInterpCKResVthetaForRecoTracks ( const std::string& type,
                                      const std::string& name,
                                      const IInterface* parent )
-  : RichRecToolBase( type, name, parent )
+  : RichRecToolBase( type, name, parent ),
+    m_ckAngle ( 0 )
 {
 
   declareInterface<IRichCherenkovResolution>(this);
@@ -66,23 +65,30 @@ RichInterpCKResVpForTrStoredTracks ( const std::string& type,
   declareProperty( "CF4VeloRes",     m_theerr[Rich::CF4][Rich::Track::Velo] );
 
   // set interpolator pointers to NULL
-  for ( int iR = 0; iR < Rich::NRadiatorTypes; ++iR ) {
+  for ( int iR = 0; iR < Rich::NRadiatorTypes; ++iR )
+  {
     for ( unsigned iT = 0; iT < Rich::Track::NTrTypes; ++iT ) { m_ckRes[iR][iT] = 0; }
   }
 
 }
 
-StatusCode RichInterpCKResVpForTrStoredTracks::initialize()
+StatusCode RichInterpCKResVthetaForRecoTracks::initialize()
 {
   // Sets up various tools and services
-  StatusCode sc = RichRecToolBase::initialize();
+  const StatusCode sc = RichRecToolBase::initialize();
   if ( sc.isFailure() ) { return sc; }
 
+  // Acquire instances of tools
+  acquireTool( "RichCherenkovAngle", m_ckAngle );
+
   // initialise interpolators
-  for ( int iR = 0; iR < Rich::NRadiatorTypes; ++iR ) {
-    for ( unsigned iT = 0; iT < Rich::Track::NTrTypes; ++iT ) {
+  for ( int iR = 0; iR < Rich::NRadiatorTypes; ++iR )
+  {
+    for ( unsigned iT = 0; iT < Rich::Track::NTrTypes; ++iT )
+    {
       m_ckRes[iR][iT] = new Rich1DTabFunc( m_thebin[iR], m_theerr[iR][iT] );
-      if ( !(m_ckRes[iR][iT])->valid() ) {
+      if ( !(m_ckRes[iR][iT])->valid() )
+      {
         err() << "Failed to initialise interpolator for "
               << (Rich::RadiatorType)iR << " " << (Rich::Track::Type)iT << endreq;
         return StatusCode::FAILURE;
@@ -90,14 +96,16 @@ StatusCode RichInterpCKResVpForTrStoredTracks::initialize()
     }
   }
 
-  return StatusCode::SUCCESS;
+  return sc;
 }
 
-StatusCode RichInterpCKResVpForTrStoredTracks::finalize()
+StatusCode RichInterpCKResVthetaForRecoTracks::finalize()
 {
   // clean up interpolators
-  for ( int iR = 0; iR < Rich::NRadiatorTypes; ++iR ) {
-    for ( unsigned iT = 0; iT < Rich::Track::NTrTypes; ++iT ) {
+  for ( int iR = 0; iR < Rich::NRadiatorTypes; ++iR )
+  {
+    for ( unsigned iT = 0; iT < Rich::Track::NTrTypes; ++iT )
+    {
       if ( m_ckRes[iR][iT] ) { delete m_ckRes[iR][iT]; m_ckRes[iR][iT] = 0; }
     }
   }
@@ -107,7 +115,7 @@ StatusCode RichInterpCKResVpForTrStoredTracks::finalize()
 }
 
 double
-RichInterpCKResVpForTrStoredTracks::ckThetaResolution( RichRecSegment * segment,
+RichInterpCKResVthetaForRecoTracks::ckThetaResolution( RichRecSegment * segment,
                                                        const Rich::ParticleIDType id ) const
 {
 
@@ -117,24 +125,28 @@ RichInterpCKResVpForTrStoredTracks::ckThetaResolution( RichRecSegment * segment,
     // Reference to track ID object
     const RichTrackID & tkID = segment->richRecTrack()->trackID();
 
-    // Check track parent type is TrStoredTrack
-    if ( Rich::TrackParent::TrStoredTrack != tkID.parentType() ) {
-      Exception( "Track parent type is not TrStoredTrack" );
+    // Check track parent type is Track or TrStoredTrack
+    if ( Rich::TrackParent::Track         != tkID.parentType() &&
+         Rich::TrackParent::TrStoredTrack != tkID.parentType() )
+    {
+      Exception( "Track parent type is not Track or TrStoredTrack" );
     }
 
-    // momentum for this segment
-    const double ptot = segment->trackSegment().bestMomentum().mag();
+    // Expected Cherenkov theta angle
+    const double thetaExp = m_ckAngle->avgCherenkovTheta( segment, id );
+    if ( thetaExp < 0.000001 ) return 0;
 
     // track type
-    const Rich::Track::Type type = segment->richRecTrack()->trackID().trackType();
+    const Rich::Track::Type type = tkID.trackType();
 
     // which radiator
     const Rich::RadiatorType rad = segment->trackSegment().radiator();
 
-    // fill the resolution
-    segment->setCKThetaResolution( id, (m_ckRes[rad][type])->value(ptot) );
+    // compute the interpolated resolution
+    segment->setCKThetaResolution( id, (m_ckRes[rad][type])->value(thetaExp) );
 
   }
 
   return segment->ckThetaResolution( id );
+
 }

@@ -5,7 +5,7 @@
  *  Implementation file for tool : RichStatusCreator
  *
  *  CVS Log :-
- *  $Id: RichStatusCreator.cpp,v 1.10 2005-06-24 13:49:02 jonrob Exp $
+ *  $Id: RichStatusCreator.cpp,v 1.11 2005-10-13 16:01:56 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -25,14 +25,22 @@ const        IToolFactory& RichStatusCreatorFactory = s_factory ;
 RichStatusCreator::RichStatusCreator( const std::string& type,
                                       const std::string& name,
                                       const IInterface* parent )
-  : RichRecToolBase( type, name, parent ),
-    m_status ( 0 )
+  : RichRecToolBase      ( type, name, parent ),
+    m_status             ( 0 ),
+    m_richStatusLocation ( RichRecStatusLocation::Default )
 {
 
   declareInterface<IRichStatusCreator>(this);
 
-  declareProperty( "RichRecStatusLocation",
-                   m_richStatusLocation = RichRecStatusLocation::Default );
+  if ( context() == "Offline" )
+  {
+    m_richStatusLocation = RichRecStatusLocation::Offline;
+  }
+  else if ( context() == "HLT" )
+  {
+    m_richStatusLocation = RichRecStatusLocation::HLT;
+  }
+  declareProperty( "RichRecStatusLocation", m_richStatusLocation );
 
 }
 
@@ -45,16 +53,6 @@ StatusCode RichStatusCreator::initialize()
   // Setup incident services
   incSvc()->addListener( this, IncidentType::BeginEvent );
 
-  // Configure output location depending on processing stage
-  // to be replace by common "context" when available
-  if      ( processingStage() == "Offline" )
-  {
-    m_richStatusLocation = RichRecStatusLocation::Offline;
-  }
-  else if ( processingStage() == "HLT" )
-  {
-    m_richStatusLocation = RichRecStatusLocation::HLT;
-  }
   if ( msgLevel(MSG::DEBUG) )
   {
     debug() << "RichRecStatus location : " << m_richStatusLocation << endreq;

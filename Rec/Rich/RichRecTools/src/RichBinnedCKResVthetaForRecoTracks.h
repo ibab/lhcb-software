@@ -1,18 +1,16 @@
 
-/** @file RichBinnedCKResVthetaForTrStoredTracks.h
+//-----------------------------------------------------------------------------
+/** @file RichBinnedCKResVthetaForRecoTracks.h
  *
- *  Header file for tool : RichBinnedCKResVthetaForTrStoredTracks
+ *  Header file for tool : RichBinnedCKResVthetaForRecoTracks
  *
  *  CVS Log :-
- *  $Id: RichBinnedCKResVthetaForTrStoredTracks.h,v 1.3 2005-06-23 15:17:41 jonrob Exp $
- *  $Log: not supported by cvs2svn $
- *  Revision 1.2  2004/07/27 20:15:29  jonrob
- *  Add doxygen file documentation and CVS information
- *
+ *  $Id: RichBinnedCKResVthetaForRecoTracks.h,v 1.1 2005-10-13 16:01:55 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
  */
+//-----------------------------------------------------------------------------
 
 #ifndef RICHRECTOOLS_RICHBINNEDCKRESVTHETAFORTRSTOREDTRACKS_H
 #define RICHRECTOOLS_RICHBINNEDCKRESVTHETAFORTRSTOREDTRACKS_H 1
@@ -27,28 +25,31 @@
 #include "RichRecBase/IRichCherenkovResolution.h"
 #include "RichRecBase/IRichCherenkovAngle.h"
 
-/** @class RichBinnedCKResVthetaForTrStoredTracks RichBinnedCKResVthetaForTrStoredTracks.h
+//-----------------------------------------------------------------------------
+/** @class RichBinnedCKResVthetaForRecoTracks RichBinnedCKResVthetaForRecoTracks.h
  *
  *  Tool to calculate the Cherenkov angle resolution. This version is
- *  for TrStoredTracks and implements an approach that uses simple bins in the
+ *  for reconstructed Tracks and implements an approach that uses simple bins in the
  *  cherenkov angle theta space and also varies according to the track algorithm type.
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
  */
+//-----------------------------------------------------------------------------
 
-class RichBinnedCKResVthetaForTrStoredTracks : public RichRecToolBase,
-                                               virtual public IRichCherenkovResolution {
+class RichBinnedCKResVthetaForRecoTracks : public RichRecToolBase,
+                                           virtual public IRichCherenkovResolution
+{
 
 public: // Methods for Gaudi Framework
 
   /// Standard constructor
-  RichBinnedCKResVthetaForTrStoredTracks( const std::string& type,
-                                          const std::string& name,
-                                          const IInterface* parent );
+  RichBinnedCKResVthetaForRecoTracks( const std::string& type,
+                                      const std::string& name,
+                                      const IInterface* parent );
 
   /// Destructor
-  virtual ~RichBinnedCKResVthetaForTrStoredTracks() {};
+  virtual ~RichBinnedCKResVthetaForRecoTracks() {};
 
   // Initialize method
   StatusCode initialize();

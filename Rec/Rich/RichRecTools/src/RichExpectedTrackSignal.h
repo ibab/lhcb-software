@@ -5,7 +5,7 @@
  *  Header file for tool : RichExpectedTrackSignal
  *
  *  CVS Log :-
- *  $Id: RichExpectedTrackSignal.h,v 1.10 2005-06-23 15:17:41 jonrob Exp $
+ *  $Id: RichExpectedTrackSignal.h,v 1.11 2005-10-13 16:01:55 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -34,7 +34,7 @@
 #include "RichRecBase/IRichGeomEff.h"
 #include "RichRecBase/IRichSellmeirFunc.h"
 #include "RichRecBase/IRichSignalDetectionEff.h"
-#include "RichRecBase/IRichParticleProperties.h"
+#include "RichKernel/IRichParticleProperties.h"
 #include "RichRecBase/IRichRayleighScatter.h"
 #include "RichRecBase/IRichGasQuartzWindowAbs.h"
 
