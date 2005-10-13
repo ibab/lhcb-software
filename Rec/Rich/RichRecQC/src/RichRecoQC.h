@@ -5,7 +5,7 @@
  *  Header file for RICH reconstruction monitoring algorithm : RichRecoQC
  *
  *  CVS Log :-
- *  $Id: RichRecoQC.h,v 1.7 2005-06-23 15:15:54 jonrob Exp $
+ *  $Id: RichRecoQC.h,v 1.8 2005-10-13 15:52:48 jonrob Exp $
  *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   2002-07-02
@@ -31,6 +31,9 @@
 // temporary histogramming numbers
 #include "RichRecBase/RichDetParams.h"
 
+// rec helpers
+#include "RichRecBase/RichTrackSelector.h"
+
 // Event
 #include "Event/RichRecStatus.h"
 
@@ -39,7 +42,7 @@
 #include "AIDA/IHistogram2D.h"
 
 // interfaces
-#include "RichRecBase/IRichParticleProperties.h"
+#include "RichKernel/IRichParticleProperties.h"
 #include "RichRecBase/IRichCherenkovAngle.h"
 
 // RichKernel
@@ -96,6 +99,9 @@ private: // data
 
   std::vector<unsigned int> m_truePhotCount;
   std::vector<unsigned int> m_nSegs;
+
+  /// Track selector
+  RichTrackSelector m_trSelector;
 
 };
 

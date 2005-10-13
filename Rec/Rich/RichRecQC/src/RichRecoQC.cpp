@@ -5,7 +5,7 @@
  *  Implementation file for RICH reconstruction monitoring algorithm : RichRecoQC
  *
  *  CVS Log :-
- *  $Id: RichRecoQC.cpp,v 1.13 2005-06-23 15:15:54 jonrob Exp $
+ *  $Id: RichRecoQC.cpp,v 1.14 2005-10-13 15:52:48 jonrob Exp $
  *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   2002-07-02
@@ -38,6 +38,10 @@ RichRecoQC::RichRecoQC( const std::string& name,
   declareProperty( "HistoPath",   m_histPth = "RICH/RECOQC/" );
   declareProperty( "MinBeta",     m_minBeta = 0.999 );
 
+  // track selector
+  declareProperty( "TrackSelection", m_trSelector.selectedTrackTypes() );
+  declareProperty( "TrackMomentumCuts", m_trSelector.setMomentumCuts() );
+
 }
 
 // Destructor
@@ -52,19 +56,23 @@ StatusCode RichRecoQC::initialize()
 
   // acquire tools
   acquireTool( "RichParticleProperties", m_richPartProp );
-  m_ckAngle = cherenkovAngleTool();
+  acquireTool( "RichCherenkovAngle",      m_ckAngle   );
   acquireTool( "RichRecMCTruthTool",   m_richRecMCTruth );
+
+  // Configure track selector
+  if ( !m_trSelector.configureTrackTypes() ) return StatusCode::FAILURE;
+  m_trSelector.printTrackSelection( info() );
 
   // Book histograms
   if ( !bookHistograms() || !bookMCHistograms() ) return StatusCode::FAILURE;
 
   return sc;
-};
+}
 
 StatusCode RichRecoQC::bookHistograms() 
 {
   return StatusCode::SUCCESS;
-};
+}
 
 StatusCode RichRecoQC::bookMCHistograms() 
 {
@@ -98,8 +106,6 @@ StatusCode RichRecoQC::bookMCHistograms()
 StatusCode RichRecoQC::execute() 
 {
 
-  debug() << "Execute" << endreq;
-
   // Event status
   if ( !richStatus()->eventOK() ) return StatusCode::SUCCESS;
 
@@ -109,6 +115,9 @@ StatusCode RichRecoQC::execute()
   {
     RichRecSegment * segment = *iSeg;
 
+    // track selection
+    if ( !m_trSelector.trackSelected(segment->richRecTrack()) ) continue;
+
     // Radiator info
     const Rich::RadiatorType rad = segment->trackSegment().radiator();
 
@@ -117,7 +126,7 @@ StatusCode RichRecoQC::execute()
     if ( Rich::Unknown == mcType ) continue; // skip tracks with unknown MC type
 
     // beta for true type
-    const double beta = m_richPartProp->beta( segment, mcType );
+    const double beta = m_richPartProp->beta( segment->trackSegment().bestMomentum().mag(), mcType );
     if ( beta < m_minBeta ) continue; // skip non-saturated tracks
 
     // Expected Cherenkov theta angle for true particle type

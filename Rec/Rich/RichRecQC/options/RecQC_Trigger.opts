@@ -1,4 +1,8 @@
 
+// MC tools
+ToolSvc.RichToolRegistry.Tools += { "RichMCTruthTool/RichMCTruthTool" };
+ToolSvc.RichToolRegistry.Tools += { "RichRecMCTruthTool/RichRecMCTruthTool" };
+
 // Reco QC - disabled due to POOL MC problems
 //CheckRICHSeq.Members += { "RichRecoQC" };
 

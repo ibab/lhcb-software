@@ -5,7 +5,7 @@
  *  Header file for RICH reconstruction monitoring algorithm : RichPIDQC
  *
  *  CVS Log :-
- *  $Id: RichPIDQC.h,v 1.21 2005-06-23 15:15:54 jonrob Exp $
+ *  $Id: RichPIDQC.h,v 1.22 2005-10-13 15:52:48 jonrob Exp $
  *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   2002-06-13
@@ -33,6 +33,7 @@
 
 // Event model
 #include "Event/RichPID.h"
+#include "Event/Track.h"
 #include "Event/TrStoredTrack.h"
 #include "Event/MCParticle.h"
 
@@ -103,6 +104,9 @@ private: // methods
   const TrStateP * getTrStateP ( const TrStoredTrack * track, ///< Pointer to a TrStoredTrack
                                  const double zPos = -999999  ///< z position at which to get the state
                                  ) const;
+
+  /// Count all Tracks in given location passing the selection criteria
+  void countTracks( const std::string & location );
 
   /// Count all TrStoredTracks in given location passing the selection criteria
   void countTrStoredTracks( const std::string & location );

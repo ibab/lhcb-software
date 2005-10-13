@@ -27,8 +27,12 @@ ToolSvc.RichToolRegistry.Tools += { "RichRecMCTruthTool/RichRecMCTruthTool" };
 #include "$RICHRECQCOPTS/pid/AllNegativeTracks_Para.opts"
 
 // Event track multiplicities
-#include "$RICHRECQCOPTS/pid/BrunelMoni_EventMult.opts"
-#include "$RICHRECQCOPTS/pid/EventMult_Para.opts"
+//#include "$RICHRECQCOPTS/pid/BrunelMoni_EventMult.opts"
+//#include "$RICHRECQCOPTS/pid/EventMult_Para.opts"
+
+// Different DLL cuts
+#include "$RICHRECQCOPTS/pid/BrunelMoni_AllTracks_dllcut.opts"
+#include "$RICHRECQCOPTS/pid/AllTracks_Para_dllcut.opts"
 
 // Suppress errors from Linker
 MessageSvc.setFatal += { "LinkedTo::MC/Rich/MCPartsToMCRichTracks",
