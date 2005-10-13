@@ -1,4 +1,4 @@
-// $Id: GenBaseAlg.h,v 1.2 2005-06-24 16:32:47 gcorti Exp $
+// $Id: GenBaseAlg.h,v 1.3 2005-10-13 21:42:21 robbep Exp $
 // --------------------------------------------------
 //
 // Initial code by M. Shapiro
@@ -17,7 +17,6 @@
 
 class HepMCEvent ;
 class HardInfo ;
-class HepRandomEngine ;
 
 /** @class GenBaseAlg GenBaseAlg.h Algorithms/GenBaseAlg.h
  *  
