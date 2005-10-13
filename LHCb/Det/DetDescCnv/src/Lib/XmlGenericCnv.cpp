@@ -1,4 +1,4 @@
-// $Id: XmlGenericCnv.cpp,v 1.10 2005-09-18 15:10:23 marcocle Exp $
+// $Id: XmlGenericCnv.cpp,v 1.11 2005-10-13 16:59:33 marcocle Exp $
 
 // Include files
 #include "DetDescCnv/XmlGenericCnv.h"
@@ -68,8 +68,8 @@ StatusCode XmlGenericCnv::initialize() {
   /*
   // Locate the Xml Conversion Service
   serviceLocator()->getService ("XmlCnvSvc",
-                                IID_IXmlSvc,
-                                (IInterface*&)m_xmlSvc);
+  IID_IXmlSvc,
+  (IInterface*&)m_xmlSvc);
   */
 
   // returns
@@ -102,10 +102,15 @@ StatusCode XmlGenericCnv::createObj (IOpaqueAddress* addr,
     return StatusCode::FAILURE;
   }
 
-  // displays the address for debug purposes  
-  log << MSG::DEBUG << "Address : dbname = " << addr->par()[0]
-      << ", ObjectName = " << addr->par()[1]
-      << ", isString = " << addr->ipar()[0] << endreq;
+  // displays the address for debug purposes 
+  if ( addr->ipar()[0] == 1) {
+    log << MSG::DEBUG << "Address for string: orig. path = " << addr->par()[2]
+        << ", ObjectName = " << addr->par()[1]
+        << ", string = " << addr->par()[0].substr(0,25) << endmsg;
+  } else {
+    log << MSG::DEBUG << "Address: filename = " << addr->par()[0]
+        << ", ObjectName = " << addr->par()[1] << endmsg;
+  }
 
   // parses the xml file or the xml string and retrieves a DOM document
   xercesc::DOMDocument* document = NULL;
@@ -478,23 +483,53 @@ XmlGenericCnv::createAddressForHref (std::string href,
 
       if ( parent->ipar()[0] == 1 ) {
 
-	// If we got here, it means that an XML string contains something like href="#blahblah"
-	// This means that the address should point to the "href" of the parent (par[2]) with just the name
-	// of the object replaced.
-	// In oreder to handle properly the new href, I have to recurse.
-	return createAddressForHref (parent->par()[2] + href.substr(poundPosition), clid, parent);
+        // If we got here, it means that an XML string contains something like href="#blahblah"
+        // This means that the address should point to the "href" of the parent (par[2]) with just the name
+        // of the object replaced.
+        // In oreder to handle properly the new href, I have to recurse.
+        return createAddressForHref (parent->par()[2] + href.substr(poundPosition), clid, parent);
 
       } else {
-	// The address points to a file (usual situation)
-	location = parent->par()[0];
+        // The address points to a file (usual situation)
+        location = parent->par()[0];
       }
     } else {
       // gets the directory where the xmlFile is located
-      unsigned int dPos  = parent->par()[0].find_last_of('/');
-      std::string locDir = parent->par()[0].substr( 0, dPos + 1 );
+      std::string locDir;
+      
+      if ( parent->ipar()[0] == 0) {
+        // The address points to a file
+        unsigned int dPos  = parent->par()[0].find_last_of('/');
+        locDir = parent->par()[0].substr( 0, dPos + 1 );
+      } else {
+        // The address is an xml string
+        unsigned int dPos  = parent->par()[2].find_last_of('/');
+        locDir = parent->par()[2].substr( 0, dPos + 1 );
+      }
       location = locDir + location;
     }
-    log << MSG::VERBOSE 
+
+    // Handle the relative path problem of "../".
+    // the idea is that each time the pattern "../" is found, the
+    // pattern and the parent directory are removed from the final location.
+    // The operation is repeated until no pattern is found.
+
+    // I'm including the leading '/' of "../" to ease the search
+    // for the start of the parent directory name.
+    std::string  upwardString    = std::string("/../");
+    unsigned int upwardStringPos = location.find(upwardString);
+
+    while (location.size() > upwardStringPos){
+      unsigned int parentDirPos = location.find_last_of('/', upwardStringPos - 1);
+      unsigned int cutLength    = (upwardStringPos + upwardString.size()) - (parentDirPos + 1);
+      location = location.erase(parentDirPos + 1, cutLength);
+      upwardStringPos = location.find(upwardString);
+    }
+    // Now, location should be a clean absolute path.
+    if ( parent->ipar()[0] == 1 )
+      return createAddressForHref(location + href.substr(poundPosition), clid, parent);
+
+    log << MSG::VERBOSE
         << "Now build an XML address for location=" << location
         << " and entryName=" << entryName << endreq;
     // Then build a new Address
