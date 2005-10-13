@@ -5,7 +5,7 @@
  *  Header file for tool : RichSmartIDTool
  *
  *  CVS Log :-
- *  $Id: RichSmartIDTool.h,v 1.9 2005-05-13 15:21:58 jonrob Exp $
+ *  $Id: RichSmartIDTool.h,v 1.10 2005-10-13 16:11:07 jonrob Exp $
  *
  *  @author Antonis Papanestis
  *  @date   2003-10-28
@@ -41,7 +41,8 @@
 //-----------------------------------------------------------------------------
 
 class RichSmartIDTool : public RichToolBase,
-                        virtual public IRichSmartIDTool {
+                        virtual public IRichSmartIDTool 
+{
 
 public: // Methods for Gaudi Framework
 

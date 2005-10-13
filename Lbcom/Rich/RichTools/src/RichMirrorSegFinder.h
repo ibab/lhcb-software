@@ -5,7 +5,7 @@
  *  Header file for tool : RichMirrorSegFinder
  *
  *  CVS Log :-
- *  $Id: RichMirrorSegFinder.h,v 1.6 2005-09-23 15:48:32 papanest Exp $
+ *  $Id: RichMirrorSegFinder.h,v 1.7 2005-10-13 16:11:07 jonrob Exp $
  *
  *  @author Antonis Papanestis
  *  @date   2003-11-04
@@ -50,7 +50,8 @@
 //-----------------------------------------------------------------------------
 
 class RichMirrorSegFinder : public RichToolBase,
-                            virtual public IRichMirrorSegFinder {
+                            virtual public IRichMirrorSegFinder 
+{
 
 public: // Methods for Gaudi Framework
 
@@ -69,20 +70,20 @@ public: // Methods for Gaudi Framework
 
 public: // methods (and doxygen comments) inherited from public interface
 
-  // Locates the spherical mirror Segment given a reflection point,
-  // RICH identifier and panel
+  /// Locates the spherical mirror Segment given a reflection point,
+  /// RICH identifier and panel
   const DeRichSphMirror* findSphMirror( const Rich::DetectorType rich,
                                         const Rich::Side side,
                                         const HepPoint3D& reflPoint ) const;
 
-  // Locates the flat mirror Segment given a reflection point,
-  // RICH identifier and panel
+  /// Locates the flat mirror Segment given a reflection point,
+  /// RICH identifier and panel
   const DeRichFlatMirror* findFlatMirror( const Rich::DetectorType rich,
                                           const Rich::Side side,
                                           const HepPoint3D& reflPoint ) const;
 
-  // Locates the secondary mirror Segment given a reflection point,
-  // RICH identifier and panel
+  /// Locates the secondary mirror Segment given a reflection point,
+  /// RICH identifier and panel
   const DeRichSphMirror* findSecMirror( const Rich::DetectorType rich,
                                         const Rich::Side side,
                                         const HepPoint3D& reflPoint ) const;

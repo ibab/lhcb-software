@@ -5,7 +5,7 @@
  *  Header file for tool : RichDetParameters
  *
  *  CVS History :
- *  $Id: RichRayTracingAllSph.h,v 1.1 2005-09-23 15:48:33 papanest Exp $
+ *  $Id: RichRayTracingAllSph.h,v 1.2 2005-10-13 16:11:07 jonrob Exp $
  *
  *  @author Chris Jones    Christopher.Rob.Jones@cern.ch
  *  @date   2004-03-29
@@ -19,7 +19,7 @@
 #include "GaudiKernel/ToolFactory.h"
 
 // Base class and interface
-#include "RichKernel/RichToolBase.h"
+#include "RichKernel/RichMoniToolBase.h"
 #include "RichKernel/IRichRayTracing.h"
 
 // RichKernel
@@ -57,7 +57,7 @@
  */
 //-----------------------------------------------------------------------------
 
-class RichRayTracingAllSph : public RichToolBase,
+class RichRayTracingAllSph : public RichMoniToolBase,
                              virtual public IRichRayTracing 
 {
 
@@ -142,33 +142,23 @@ private: // methods
 
   StatusCode bookHistos();
 
-  IHistogramSvc* histoSvc() const;
-
 private: // data
 
-  /// Rich1 and Rich2
-  DeRich* m_rich[Rich::NRiches];
+  /// Rich1 and Rich2 pointers
+  std::vector< const DeRich* > m_rich;
 
-  // photodetector panels
+  /// photodetector panels per rich
   typedef boost::array<DeRichHPDPanel*, 2> HPDPanelsPerRich;
-  boost::array<HPDPanelsPerRich, 2> m_photoDetPanels;
+  /// photodetector for each rich
+  boost::array<HPDPanelsPerRich, Rich::NRiches> m_photoDetPanels;
 
-  /// Spherical mirror nominal center of curvature
-  HepPoint3D m_nominalCoC[Rich::NRiches][2];
-
-  /// Secondary mirror nominal planes
-  HepPlane3D m_nominalSecMirrorPlane[Rich::NRiches][2];
-  double m_nomSphMirrorRadius[Rich::NRiches];
-  int m_sphMirrorSegRows[Rich::NRiches];
-  int m_sphMirrorSegCols[Rich::NRiches];
-  int m_secMirrorSegRows[Rich::NRiches];
-  int m_secMirrorSegCols[Rich::NRiches];
+  std::vector<int> m_sphMirrorSegRows;
+  std::vector<int> m_sphMirrorSegCols;
+  std::vector<int> m_secMirrorSegRows;
+  std::vector<int> m_secMirrorSegCols;
 
   /// Mirror segment finder tool
   const IRichMirrorSegFinder* m_mirrorSegFinder;
-
-  /// Histogram service
-  mutable IHistogramSvc* m_HDS;
 
   /// monitoring histograms (true/false)
   bool m_moni;

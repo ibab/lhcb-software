@@ -5,7 +5,7 @@
  * Implementation file for class : RichToolRegistry
  *
  * CVS Log :-
- * $Id: RichToolRegistry.cpp,v 1.9 2005-06-23 15:20:05 jonrob Exp $
+ * $Id: RichToolRegistry.cpp,v 1.10 2005-10-13 16:11:08 jonrob Exp $
  *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @date 14/01/2002
@@ -66,13 +66,22 @@ RichToolRegistry::toolType( const std::string & nickname ) const
   // test instance name is defined
   if ( m_myTools[nickname].empty() )
   {
-    Exception( "Unknown RICH tool nickname '" + nickname + "'" );
-    // Add entry to map with same nickname and instance name
-    // addEntry( nickname, nickname );
+    // Don't allow any missing tool entries
+    // Exception( "Unknown RICH tool nickname '" + nickname + "'" );
+    // or... just assume same as nickname and issue a Warning
+    Warning( "Unknown nickname " + nickname + " -> Assuming same class name",
+             StatusCode::SUCCESS );
+    addEntry( nickname, nickname );
   }
 
   // All OK, so return instance name for this nickname
   return m_myTools[nickname];
+}
+
+const std::string 
+RichToolRegistry::toolName( const std::string & nickname ) const
+{
+  return ( context().empty() ? nickname : context()+"."+nickname );
 }
 
 void RichToolRegistry::addEntry( const std::string & nickname,
@@ -80,8 +89,8 @@ void RichToolRegistry::addEntry( const std::string & nickname,
 {
   if ( !m_myTools[nickname].empty() && type != m_myTools[nickname] )
   {
-    Warning( "Changing tool nickname implementation from " + m_myTools[nickname]
-             + " to " + type, StatusCode::SUCCESS );
+    Warning( "Changing tool nickname implementation from '" + m_myTools[nickname]
+             + "' to '" + type + "'", StatusCode::SUCCESS );
   }
   if ( msgLevel(MSG::DEBUG) )
   {
@@ -89,4 +98,9 @@ void RichToolRegistry::addEntry( const std::string & nickname,
             << "' maps to type '" << type << "'" << endreq;
   }
   m_myTools[nickname] = type;
+}
+
+const std::string RichToolRegistry::getContext() const
+{
+  return context();
 }

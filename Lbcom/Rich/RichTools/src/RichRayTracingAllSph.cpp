@@ -5,7 +5,7 @@
  * Implementation file for class : RichRayTracingAllSph
  *
  * CVS Log :-
- * $Id: RichRayTracingAllSph.cpp,v 1.1 2005-09-23 15:48:33 papanest Exp $
+ * $Id: RichRayTracingAllSph.cpp,v 1.2 2005-10-13 16:11:07 jonrob Exp $
  *
  * @author Antonis Papanestis
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
@@ -39,7 +39,13 @@ const        IToolFactory& RichRayTracingAllSphFactory = Factory ;
 RichRayTracingAllSph::RichRayTracingAllSph( const std::string& type,
                                             const std::string& name,
                                             const IInterface* parent)
-  : RichToolBase ( type, name, parent ), m_HDS( 0 )
+  : RichMoniToolBase     ( type, name, parent  ),
+    m_rich               ( Rich::NRiches       ),
+    m_sphMirrorSegRows   ( Rich::NRiches, 0    ),
+    m_sphMirrorSegCols   ( Rich::NRiches, 0    ),
+    m_secMirrorSegRows   ( Rich::NRiches, 0    ),
+    m_secMirrorSegCols   ( Rich::NRiches, 0    ),
+    m_RichDetSeparationPointZ ( 8000.0 )
 {
   declareInterface<IRichRayTracing>(this);
 
@@ -59,83 +65,83 @@ StatusCode RichRayTracingAllSph::initialize()
 {
 
   // intialise base class
-  const StatusCode sc = RichToolBase::initialize();
+  const StatusCode sc = RichMoniToolBase::initialize();
   if ( sc.isFailure() ) return sc;
 
+  // get tools
+  acquireTool( "RichMirrorSegFinder", m_mirrorSegFinder );
+
+  // HPD panel names
   const std::string pdPanelName[2][2]  = { { DeRichHPDPanelLocation::Rich1Panel0,
                                              DeRichHPDPanelLocation::Rich1Panel1 },
                                            { DeRichHPDPanelLocation::Rich2Panel0,
                                              DeRichHPDPanelLocation::Rich2Panel1 } };
+  
+  // RICH detector elements
+  const DeRich * rich1 = getDet<DeRich>( DeRichLocation::Rich1 );
+  const DeRich * rich2 = getDet<DeRich>( DeRichLocation::Rich2 );
+  m_rich[Rich::Rich1] = rich1;
+  m_rich[Rich::Rich2] = rich2;
 
-  DeRich* rich1 = getDet<DeRich>( DeRichLocation::Rich1 );
-  DeRich* rich2 = getDet<DeRich>( DeRichLocation::Rich2 );
-
-  //loop over riches and photo detector panels
+  // loop over riches and photo detector panels
   unsigned int rich, panel;
-  for( rich=0; rich<m_photoDetPanels.size(); ++rich){
-    for( panel=0; panel<m_photoDetPanels[rich].size(); ++panel) {
+  for ( rich=0; rich<m_photoDetPanels.size(); ++rich)
+  {
+    for ( panel=0; panel<m_photoDetPanels[rich].size(); ++panel) 
+    {
       m_photoDetPanels[rich][panel] = getDet<DeRichHPDPanel>( pdPanelName[rich][panel] );
       debug() << "Stored photodetector panel "
               << m_photoDetPanels[rich][panel]->name() << endreq;
     }
   }
 
-  // load the nominal centre of curvature and secondary mirror plane
-  m_nominalCoC[Rich::Rich1][Rich::top] = rich1->
-    nominalCentreOfCurvature(Rich::top);
-  m_nominalCoC[Rich::Rich1][Rich::bottom] = rich1->
-    nominalCentreOfCurvature(Rich::bottom);
-
-  m_nominalCoC[Rich::Rich2][Rich::left] = rich2->
-    nominalCentreOfCurvature(Rich::left);
-  m_nominalCoC[Rich::Rich2][Rich::right] = rich2->
-    nominalCentreOfCurvature(Rich::right);
-
-  m_nominalSecMirrorPlane[Rich::Rich1][Rich::top] = rich1->
-    nominalPlane(Rich::top);
-  m_nominalSecMirrorPlane[Rich::Rich1][Rich::bottom]= rich1->
-    nominalPlane(Rich::bottom);
-
-  m_nominalSecMirrorPlane[Rich::Rich2][Rich::left] = rich2->
-    nominalPlane(Rich::left);
-  m_nominalSecMirrorPlane[Rich::Rich2][Rich::right] = rich2->
-    nominalPlane(Rich::right);
-
-  m_nomSphMirrorRadius[Rich::Rich1] = rich1->sphMirrorRadius();
-  m_nomSphMirrorRadius[Rich::Rich2] = rich2->sphMirrorRadius();
-
-  m_rich[Rich::Rich1] = rich1;
-  m_rich[Rich::Rich2] = rich2;
-
-  if( rich1->exists("SphMirrorSegRows") ) {
-    m_sphMirrorSegRows[Rich::Rich1] = rich1->param<int>( "SphMirrorSegRows" );
+  if ( rich1->exists("SphMirrorSegRows") )
+  {
+    m_sphMirrorSegRows[Rich::Rich1] = rich1->param<int>( "SphMirrorSegRows"    );
     m_sphMirrorSegCols[Rich::Rich1] = rich1->param<int>( "SphMirrorSegColumns" );
   }
-  if( rich1->exists("SecMirrorSegRows") ) {
-    m_secMirrorSegRows[Rich::Rich1] = rich1->param<int>( "SecMirrorSegRows" );
+  else
+  {
+    return Error ( "No primary mirrors for RICH1 found !" );
+  }
+  if ( rich1->exists("SecMirrorSegRows") )
+  {
+    m_secMirrorSegRows[Rich::Rich1] = rich1->param<int>( "SecMirrorSegRows"    );
     m_secMirrorSegCols[Rich::Rich1] = rich1->param<int>( "SecMirrorSegColumns" );
-  } 
-  else if( rich1->exists("FlatMirrorSegRows") ) {
-    m_secMirrorSegRows[Rich::Rich1] = rich1->param<int>( "FlatMirrorSegRows" );
+  }
+  else if ( rich1->exists("FlatMirrorSegRows") )
+  {
+    m_secMirrorSegRows[Rich::Rich1] = rich1->param<int>( "FlatMirrorSegRows"    );
     m_secMirrorSegCols[Rich::Rich1] = rich1->param<int>( "FlatMirrorSegColumns" );
   }
+  else
+  {
+    return Error ( "No secondary mirrors for RICH1 found !" );
+  }
 
-  if( rich2->exists("SphMirrorSegRows") ) {
+  if ( rich2->exists("SphMirrorSegRows") )
+  {
     m_sphMirrorSegRows[Rich::Rich2] = rich2->param<int>( "SphMirrorSegRows" );
     m_sphMirrorSegCols[Rich::Rich2] = rich2->param<int>( "SphMirrorSegColumns" );
   }
-  if( rich2->exists("SecMirrorSegRows") ) {
+  else
+  {
+    return Error ( "No primary mirrors for RICH2 found !" );
+  }
+  if ( rich2->exists("SecMirrorSegRows") )
+  {
     m_secMirrorSegRows[Rich::Rich2] = rich2->param<int>( "SecMirrorSegRows" );
     m_secMirrorSegCols[Rich::Rich2] = rich2->param<int>( "SecMirrorSegColumns" );
-  } 
-  else if( rich2->exists("FlatMirrorSegRows") ) {
+  }
+  else if ( rich2->exists("FlatMirrorSegRows") )
+  {
     m_secMirrorSegRows[Rich::Rich2] = rich2->param<int>( "FlatMirrorSegRows" );
     m_secMirrorSegCols[Rich::Rich2] = rich2->param<int>( "FlatMirrorSegColumns" );
   }
-
-  m_RichDetSeparationPointZ = 8000.0;
-
-  acquireTool( "RichMirrorSegFinder", m_mirrorSegFinder );
+  else
+  {
+    return Error ( "No secondary mirrors for RICH2 found !" );
+  }
 
   if ( m_moni ) bookHistos();
 
@@ -148,12 +154,11 @@ StatusCode RichRayTracingAllSph::initialize()
 StatusCode RichRayTracingAllSph::finalize()
 {
   debug() << "Finalize" << endreq;
-  if ( 0 != m_HDS ) { m_HDS->release(); m_HDS=0; }
+  //if ( 0 != m_HDS ) { m_HDS->release(); m_HDS=0; }
 
   // finalize base class
-  return RichToolBase::finalize();
+  return RichMoniToolBase::finalize();
 }
-
 
 //=============================================================================
 // reflect the trajectory on the mirror, and determine the position where
@@ -193,8 +198,10 @@ StatusCode RichRayTracingAllSph::traceToDetector ( const Rich::DetectorType rich
 StatusCode RichRayTracingAllSph::intersectPDPanel ( const Rich::DetectorType,
                                                     const HepPoint3D&,
                                                     const HepVector3D&,
-                                                    RichGeomPhoton& ) const {
-  return StatusCode::SUCCESS;
+                                                    RichGeomPhoton& ) const 
+{
+  
+  return Warning ( "Unimplemented method", StatusCode::SUCCESS );
 }
 
 //=============================================================================
@@ -208,7 +215,7 @@ RichRayTracingAllSph::traceToDetectorWithoutEff( const Rich::DetectorType rich,
                                                  const HepVector3D& direction,
                                                  HepPoint3D& hitPosition,
                                                  const RichTraceMode mode,
-                                                 const Rich::Side forcedSide ) const 
+                                                 const Rich::Side forcedSide ) const
 {
 
   HepPoint3D tmpPosition( position );
@@ -243,8 +250,8 @@ StatusCode RichRayTracingAllSph::reflectBothMirrors( const Rich::DetectorType ri
 
   // Spherical mirror reflection with nominal parameters
   if ( !reflectSpherical( tmpPosition, tmpDirection,
-                          m_nominalCoC[rich][side],
-                          m_nomSphMirrorRadius[rich]) )
+                          m_rich[rich]->nominalCentreOfCurvature(side),
+                          m_rich[rich]->sphMirrorRadius() ) )
     return StatusCode::FAILURE;
 
   // if not forced, check if still same side, if not change sides
@@ -255,8 +262,8 @@ StatusCode RichRayTracingAllSph::reflectBothMirrors( const Rich::DetectorType ri
       tmpPosition = position;
       tmpDirection = direction;
       if ( !reflectSpherical( tmpPosition, tmpDirection,
-                              m_nominalCoC[rich][side],
-                              m_nomSphMirrorRadius[rich]) )
+                              m_rich[rich]->nominalCentreOfCurvature(side),
+                              m_rich[rich]->sphMirrorRadius() ) )
         return StatusCode::FAILURE;
     }
   }
@@ -321,8 +328,10 @@ StatusCode RichRayTracingAllSph::reflectBothMirrors( const Rich::DetectorType ri
 
   HepPoint3D planeIntersection;
   // sec mirror reflection with nominal parameters
-  if ( !intersectPlane( tmpPosition, tmpDirection,
-                     m_nominalSecMirrorPlane[rich][side], planeIntersection) )
+  if ( !intersectPlane( tmpPosition, 
+                        tmpDirection,
+                        m_rich[rich]->nominalPlane(side),
+                        planeIntersection) )
     return StatusCode::FAILURE;
 
   // find segment
@@ -381,10 +390,7 @@ StatusCode RichRayTracingAllSph::reflectBothMirrors( const Rich::DetectorType ri
   direction = tmpDirection;
 
   return StatusCode::SUCCESS;
-
 }
-
-
 
 
 //=========================================================================
@@ -405,11 +411,13 @@ RichRayTracingAllSph::traceBackFromDetector ( const HepPoint3D& startPoint,
   const Rich::DetectorType rich = ( startPoint.z()/mm < m_RichDetSeparationPointZ ?
                                     Rich::Rich1 : Rich::Rich2 );
   const Rich::Side side = m_rich[rich]->side(startPoint);
-  
+
   HepPoint3D planeIntersection;
   // sec mirror reflection with nominal parameters
-  if ( !intersectPlane( tmpStartPoint, tmpStartDir,
-                        m_nominalSecMirrorPlane[rich][side], planeIntersection ) )
+  if ( !intersectPlane( tmpStartPoint,
+                        tmpStartDir,
+                        m_rich[rich]->nominalPlane(side),
+                        planeIntersection ) )
     return StatusCode::FAILURE;
 
   // find segment
@@ -427,9 +435,11 @@ RichRayTracingAllSph::traceBackFromDetector ( const HepPoint3D& startPoint,
 
   // Spherical mirror reflection with nominal parameters
   if ( !reflectSpherical( tmpStartPoint, tmpStartDir,
-                          m_nominalCoC[rich][side],
-                          m_nomSphMirrorRadius[rich]) )
+                          m_rich[rich]->nominalCentreOfCurvature(side),
+                          m_rich[rich]->sphMirrorRadius() ) )
+  {
     return StatusCode::FAILURE;
+  }
 
   // find segment
   const DeRichSphMirror* sphSegment = m_mirrorSegFinder->
@@ -500,8 +510,6 @@ StatusCode RichRayTracingAllSph::reflectFlatPlane ( HepPoint3D& position,
   return StatusCode::SUCCESS;
 }
 
-
-
 //=========================================================================
 //  intersect a plane
 //=========================================================================
@@ -558,17 +566,4 @@ StatusCode RichRayTracingAllSph::bookHistos() {
   return StatusCode::FAILURE;
 }
 
-
-//=========================================================================
-//  get histogram service
-//=========================================================================
-IHistogramSvc* RichRayTracingAllSph::histoSvc() const {
-  if ( 0 == m_HDS ) {
-    StatusCode sc = service( "HistogramDataSvc", m_HDS, true );
-    if( sc.isFailure() ) {
-      throw GaudiException("Service [HistogramDataSvc] not found", name(),sc);
-    }
-  }
-  return m_HDS;
-}
 //=========================================================================

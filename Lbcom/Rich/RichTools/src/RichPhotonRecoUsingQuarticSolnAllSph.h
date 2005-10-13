@@ -5,7 +5,7 @@
  *  Header file for tool : RichPhotonRecoUsingQuarticSoln
  *
  *  CVS Log :-
- *  $Id: RichPhotonRecoUsingQuarticSolnAllSph.h,v 1.2 2005-09-23 16:51:33 jonrob Exp $
+ *  $Id: RichPhotonRecoUsingQuarticSolnAllSph.h,v 1.3 2005-10-13 16:11:07 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @author Antonis Papanestis
@@ -166,15 +166,6 @@ private: // data
 
   /// Rich1 and Rich2 detector elements
   const DeRich * m_rich[Rich::NRiches];
-
-  /// nominal centre of curvature for each RICH and side spherical mirrors
-  HepPoint3D m_nominalCoC[Rich::NRiches][Rich::NHPDPanelsPerRICH];
-
-  /// nominal normal vector for each RICH and side secondary mirrors
-  HepPlane3D m_nominalSecMirrorPlane[Rich::NRiches][Rich::NHPDPanelsPerRICH];
-
-  /// Nominal radius of curvature for each RICH spherical mirrors
-  double m_nomSphMirrorRadius[Rich::NRiches];
 
   /// Tool to locate the appropriate mirror segments for a given reflection point
   const IRichMirrorSegFinder* m_mirrorSegFinder;

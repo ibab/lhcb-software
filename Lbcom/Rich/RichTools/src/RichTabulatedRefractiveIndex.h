@@ -5,7 +5,7 @@
  *  Header file for tool : RichTabulatedRefractiveIndex
  *
  *  CVS Log :-
- *  $Id: RichTabulatedRefractiveIndex.h,v 1.6 2005-06-23 15:20:05 jonrob Exp $
+ *  $Id: RichTabulatedRefractiveIndex.h,v 1.7 2005-10-13 16:11:08 jonrob Exp $
  *
  *  @author Chris Jones    Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -20,6 +20,9 @@
 #include "GaudiKernel/SmartDataPtr.h"
 #include "GaudiKernel/ParticleProperty.h"
 #include "GaudiKernel/IParticlePropertySvc.h"
+
+// Det Desc
+#include "DetDesc/IUpdateManagerSvc.h"
 
 // CLHEP
 #include "CLHEP/Units/PhysicalConstants.h"
@@ -46,6 +49,9 @@
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
+ *
+ *  @todo Fix RMS calculations
+ *  @todo Update UMS dependencies to be more 'fine grained'
  */
 //-----------------------------------------------------------------------------
 
@@ -86,17 +92,45 @@ public: // methods (and doxygen comments) inherited from interface
   // for a all visable photon energies.
   double refractiveIndex ( const Rich::RadiatorType rad ) const;
 
-private:  // Private data
+  // Calculates the refractive index R.M.S. for a given radiator type
+  // for all visable photon energies.
+  double refractiveIndexRMS ( const Rich::RadiatorType rad ) const;
+
+private: // methods
+
+  /// UMS update method for Aerogel refractive index
+  StatusCode updateAerogelRefIndex();
+
+  /// UMS update method for C4F10 refractive index
+  StatusCode updateC4F10RefIndex();
+
+  /// UMS update method for CF4 refractive index
+  StatusCode updateCF4RefIndex();
+
+  /// Update refractive index for given radiator
+  StatusCode updateRefIndex( const Rich::RadiatorType rad );
+
+private: // Private data
 
   /// Quantum Efficiency function.
   Rich1DTabProperty * m_QE;
 
-  /// Detector paramters tool
+  /// Detector parameters tool
   const IRichDetParameters * m_detParams;
 
-  /// Pointers to refractive indices for each radiator type
+  /// Pointers to RICH radiator detector elements
+  std::vector<DeRichRadiator *> m_deRads;
+
+  /// typdef for container of Pointers to refractive indices for each radiator type
   typedef boost::array<Rich1DTabProperty*,Rich::NRadiatorTypes> RefractiveIndices;
+  /// Pointers to refractive indices for each radiator type
   RefractiveIndices m_refIndex;
+
+  /// refractive index RMS values
+  std::vector<double> m_refI;
+
+  /// refractive index RMS values
+  std::vector<double> m_refRMS;
 
 };
 

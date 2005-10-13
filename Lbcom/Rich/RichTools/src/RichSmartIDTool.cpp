@@ -5,7 +5,7 @@
  * Implementation file for class : RichSmartIDTool
  *
  * CVS Log :-
- * $Id: RichSmartIDTool.cpp,v 1.14 2005-05-13 15:21:58 jonrob Exp $
+ * $Id: RichSmartIDTool.cpp,v 1.15 2005-10-13 16:11:07 jonrob Exp $
  *
  * @author Antonis Papanestis
  * @date 2003-10-28
@@ -26,16 +26,15 @@ const        IToolFactory& RichSmartIDToolFactory = s_factory ;
 RichSmartIDTool::RichSmartIDTool( const std::string& type,
                                   const std::string& name,
                                   const IInterface* parent )
-  : RichToolBase( type, name , parent )
+  : RichToolBase( type, name, parent )
 {
   declareInterface<IRichSmartIDTool>(this);
 }
 
 //=============================================================================
 ///Destructor
-RichSmartIDTool::~RichSmartIDTool(){}
+RichSmartIDTool::~RichSmartIDTool() {}
 //=============================================================================
-
 
 //=============================================================================
 StatusCode RichSmartIDTool::initialize()
@@ -114,43 +113,49 @@ StatusCode RichSmartIDTool::smartID ( const HepPoint3D& globalPoint,
                                       RichSmartID& smartid ) const
 {
 
-  try {
-
+  try 
+  {
     if (globalPoint.z() < 8000.0)
+    {
       // Rich1
-      if (globalPoint.y() > 0.0) {
+      if (globalPoint.y() > 0.0) 
+      {
         // top side
         smartid.setRich(Rich::Rich1);
         smartid.setPanel(Rich::top);
         return ( m_photoDetPanels[Rich::Rich1][Rich::top]->smartID(globalPoint, smartid) );
       }
-      else {
+      else 
+      {
         // bottom side
         smartid.setRich(Rich::Rich1);
         smartid.setPanel(Rich::bottom);
         return ( m_photoDetPanels[Rich::Rich1][Rich::bottom]->smartID(globalPoint, smartid) );
       }
+    }
     else
+    {
       // Rich2
-      if (globalPoint.x() > 0.0) {
+      if (globalPoint.x() > 0.0) 
+      {
         // left side
         smartid.setRich(Rich::Rich2);
         smartid.setPanel(Rich::left);
         return ( m_photoDetPanels[Rich::Rich2][Rich::left]->smartID(globalPoint, smartid) );
       }
-      else {
+      else
+      {
         // right side
         smartid.setRich(Rich::Rich2);
         smartid.setPanel(Rich::right);
         return ( m_photoDetPanels[Rich::Rich2][Rich::right]->smartID(globalPoint, smartid) );
       }
-
+    }
   }
 
   // Catch any GaudiExceptions thrown
   catch ( const GaudiException & excpt )
   {
-
     // Print exception as an error
     Error ( "Caught GaudiException " + excpt.tag() + " message '" + excpt.message() + "'" );
 
@@ -159,7 +164,6 @@ StatusCode RichSmartIDTool::smartID ( const HepPoint3D& globalPoint,
 
     // return failure status
     return StatusCode::FAILURE;
-
   }
 
 }
@@ -171,10 +175,10 @@ StatusCode RichSmartIDTool::smartID ( const HepPoint3D& globalPoint,
 HepPoint3D RichSmartIDTool::globalToPDPanel ( const HepPoint3D& globalPoint ) const
 {
   if (globalPoint.z() < 8000.0)
+  {
     // Rich1
     if (globalPoint.y() > 0.0) {
       // top side
-
       HepPoint3D tempPoint( m_photoDetPanels[Rich::Rich1][Rich::top]->
                             //globalToPDPanel(globalPoint) );
                             geometry()->toLocal( globalPoint ) );
@@ -191,8 +195,9 @@ HepPoint3D RichSmartIDTool::globalToPDPanel ( const HepPoint3D& globalPoint ) co
       tempPoint.setZ( 0.0 );
       return tempPoint;
     }
-  else
-    // Rich2
+  }
+  else   // Rich2
+  {
     if (globalPoint.x() > 0.0) {
       // left side
       HepPoint3D tempPoint( m_photoDetPanels[Rich::Rich2][Rich::left]->
@@ -212,6 +217,7 @@ HepPoint3D RichSmartIDTool::globalToPDPanel ( const HepPoint3D& globalPoint ) co
       tempPoint.setZ( 0.0 );
       return tempPoint;
     }
+  }
 
 }
 

@@ -5,7 +5,7 @@
  * Implementation file for class : RichPhotonRecoUsingQuarticSolnAllSph
  *
  * CVS Log :-
- * $Id: RichPhotonRecoUsingQuarticSolnAllSph.cpp,v 1.2 2005-09-23 16:51:33 jonrob Exp $
+ * $Id: RichPhotonRecoUsingQuarticSolnAllSph.cpp,v 1.3 2005-10-13 16:11:07 jonrob Exp $
  *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @author Antonis Papanestis
@@ -74,26 +74,10 @@ StatusCode RichPhotonRecoUsingQuarticSolnAllSph::initialize()
   acquireTool( "RichSmartIDTool",     m_idTool          );
   acquireTool( "RichRefractiveIndex", m_refIndex        );
 
-  // load the nominal centre of curvature
-  m_nominalCoC[Rich::Rich1][Rich::top]    = r1->nominalCentreOfCurvature(Rich::top);
-  m_nominalCoC[Rich::Rich1][Rich::bottom] = r1->nominalCentreOfCurvature(Rich::bottom);
-  m_nominalCoC[Rich::Rich2][Rich::left]   = r2->nominalCentreOfCurvature(Rich::left);
-  m_nominalCoC[Rich::Rich2][Rich::right]  = r2->nominalCentreOfCurvature(Rich::right);
-
-  // load the nominal secondary mirror planes
-  m_nominalSecMirrorPlane[Rich::Rich1][Rich::top]    = r1->nominalPlane(Rich::top);
-  m_nominalSecMirrorPlane[Rich::Rich1][Rich::bottom] = r1->nominalPlane(Rich::bottom);
-  m_nominalSecMirrorPlane[Rich::Rich2][Rich::left]   = r2->nominalPlane(Rich::left);
-  m_nominalSecMirrorPlane[Rich::Rich2][Rich::right]  = r2->nominalPlane(Rich::right);
-
-  // load the nominal radii of curvature
-  m_nomSphMirrorRadius[Rich::Rich1] = r1->sphMirrorRadius();
-  m_nomSphMirrorRadius[Rich::Rich2] = r2->sphMirrorRadius();
-
   // check iterations
-  if ( m_nQits[Rich::Aerogel]<1 ) return Error( "# Aerogel iterations < 1" );
-  if ( m_nQits[Rich::C4F10]<1   ) return Error( "# C4F10   iterations < 1" );
-  if ( m_nQits[Rich::CF4]<1     ) return Error( "# CF4     iterations < 1" );
+  if ( m_nQits[Rich::Aerogel] < 1 ) return Error( "# Aerogel iterations < 1" );
+  if ( m_nQits[Rich::C4F10]   < 1 ) return Error( "# C4F10   iterations < 1" );
+  if ( m_nQits[Rich::CF4]     < 1 ) return Error( "# CF4     iterations < 1" );
 
   // information printout about configuration
   if ( m_testForUnambigPhots )
@@ -175,9 +159,9 @@ reconstructPhoton ( const RichTrackSegment& trSeg,
   // find the reflection of the detection point in the sec mirror
   // (virtual detection point) starting with nominal values
   // At this we are assuming a flat nominal mirror common to all segments
-  double distance = m_nominalSecMirrorPlane[rich][side].distance(detectionPoint);
+  double distance = m_rich[rich]->nominalPlane(side).distance(detectionPoint);
   HepPoint3D virtDetPoint =
-    ( detectionPoint - 2.0 * distance * m_nominalSecMirrorPlane[rich][side].normal() );
+    ( detectionPoint - 2.0 * distance * m_rich[rich]->nominalPlane(side).normal() );
 
   // --------------------------------------------------------------------------------------
   // For gas radiators, try start and end points to see if photon is unambiguous
@@ -257,9 +241,9 @@ reconstructPhoton ( const RichTrackSegment& trSeg,
   {
 
     if ( !solveQuarticEq( emissionPoint,
-                          m_nominalCoC[rich][side],
+                          m_rich[rich]->nominalCentreOfCurvature(side),
                           virtDetPoint,
-                          m_nomSphMirrorRadius[rich],
+                          m_rich[rich]->sphMirrorRadius(),
                           sphReflPoint ) )
     {
       //return Warning( "Failed to reconstruct photon using nominal mirrors" );
@@ -269,7 +253,7 @@ reconstructPhoton ( const RichTrackSegment& trSeg,
     // Get secondary mirror reflection point
     m_rayTracing->intersectPlane( sphReflPoint,
                                   virtDetPoint - sphReflPoint,
-                                  m_nominalSecMirrorPlane[rich][side],
+                                  m_rich[rich]->nominalPlane(side),
                                   secReflPoint);
 
     // Get pointers to the spherical and sec mirror detector objects
@@ -406,9 +390,9 @@ findMirrorData( const Rich::DetectorType rich,
 {
   // solve quartic equation with nominal values and find spherical mirror reflection point
   if ( !solveQuarticEq( emissionPoint,
-                        m_nominalCoC[rich][side],
+                        m_rich[rich]->nominalCentreOfCurvature(side),
                         virtDetPoint,
-                        m_nomSphMirrorRadius[rich],
+                        m_rich[rich]->sphMirrorRadius(),
                         sphReflPoint ) ) { return false; }
 
   // find the spherical mirror segment
@@ -417,7 +401,7 @@ findMirrorData( const Rich::DetectorType rich,
   // find the sec mirror intersction point and secondary mirror segment
   m_rayTracing->intersectPlane( sphReflPoint,
                                 virtDetPoint - sphReflPoint,
-                                m_nominalSecMirrorPlane[rich][side],
+                                m_rich[rich]->nominalPlane(side),
                                 secReflPoint);
   secSegment = m_mirrorSegFinder->findSecMirror(rich, side, secReflPoint);
 

@@ -5,7 +5,7 @@
  *  Header file for tool : RichToolRegistry
  *
  *  CVS Log :-
- *  $Id: RichToolRegistry.h,v 1.8 2005-06-23 15:20:05 jonrob Exp $
+ *  $Id: RichToolRegistry.h,v 1.9 2005-10-13 16:11:08 jonrob Exp $
  *
  *  @author Chris Jones    Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -64,6 +64,12 @@ public: // methods (and doxygen comments) inherited from interface
 
   // Converts a tool nickname into a particular class name
   const std::string & toolType( const std::string & nickname ) const;
+
+  // Converts a tool "nickname" into a particular instance name
+  const std::string toolName( const std::string & nickname ) const;
+
+  // Returns the context for the tool registry
+  const std::string getContext() const;
 
 private: // methods
 

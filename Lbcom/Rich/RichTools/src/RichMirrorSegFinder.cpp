@@ -5,7 +5,7 @@
  * Implementation file for class : RichMirrorSegFinder
  *
  * CVS Log :-
- * $Id: RichMirrorSegFinder.cpp,v 1.10 2005-09-23 15:48:32 papanest Exp $
+ * $Id: RichMirrorSegFinder.cpp,v 1.11 2005-10-13 16:11:07 jonrob Exp $
  *
  * @date   2003-11-05
  * @author Antonis Papanestis
@@ -101,23 +101,28 @@ StatusCode RichMirrorSegFinder::initialize( )
       }
     }
 
-    if ( detName.find("Mirror2") != std::string::npos ) {
+    if ( detName.find("Mirror2") != std::string::npos ) 
+    {
       // try to get it as a spherical (secondary) mirror
-      if( existDet<DeRichSphMirror>( detName ) ) {
+      if( existDet<DeRichSphMirror>( detName ) ) 
+      {
         const DeRichSphMirror* secm = getDet<DeRichSphMirror>( detName );
-        if ( secm->mirrorCentre().y() > 0.0 ) {
+        if ( secm->mirrorCentre().y() > 0.0 ) 
+        {
           mirrorNum = m_maxMirror[Rich::Rich1][Rich::top][sec];
           m_secMirrors[Rich::Rich1][Rich::top][mirrorNum] = secm;
           ++m_maxMirror[Rich::Rich1][Rich::top][sec];
         }
-        else {
+        else 
+        {
           mirrorNum = m_maxMirror[Rich::Rich1][Rich::bottom][sec];
           m_secMirrors[Rich::Rich1][Rich::bottom][mirrorNum] = secm;
           ++m_maxMirror[Rich::Rich1][Rich::bottom][sec];
         }
         foundSecMirrors = true;
       }
-      else {
+      else 
+      {
         // try to get it as a flat mirror
         const DeRichFlatMirror* fm = getDet<DeRichFlatMirror>( detName );
         if ( fm->mirrorCentre().y() > 0.0 )
@@ -139,9 +144,9 @@ StatusCode RichMirrorSegFinder::initialize( )
   }}
 
   if( foundSecMirrors && foundFlatMirrors )
-    return Error( "Found mixture of flat and seconday mirrors in Rich1" );
+    return Error( "Found mixture of flat and spherical secondary mirrors in Rich1" );
   if( !foundSecMirrors && !foundFlatMirrors )
-    return Error( "Found no flat or seconday mirrors in Rich1" );
+    return Error( "Found no flat or spherical seconday mirrors in Rich1" );
 
   if( foundSecMirrors ) 
     debug() << "Rich1 has secondary spherical mirrors" << endmsg;
@@ -224,24 +229,23 @@ StatusCode RichMirrorSegFinder::initialize( )
 
   if ( msgLevel(MSG::VERBOSE) )
   {
-
     {for ( unsigned int r=0; r<2; ++r )
       for ( unsigned int s=0; s<2; ++s )
         for ( unsigned int num=0; num<m_maxMirror[r][s][sph]; ++num )
-          debug() << "Stored spherical mirror "
+          verbose() << "Stored spherical mirror "
                   << m_sphMirrors[r][s][num]->name() << endreq;
     }
     //     {for ( unsigned int r=0; r<2; ++r )
     //       for ( unsigned int s=0; s<2; ++s )
     //         for ( unsigned int num=0; num<m_maxMirror[r][s][flat]; ++num )
-    //           debug() << "Stored flat mirror "
-    //                   <<m_flatMirrors[r][s][num]->name() << endreq;
+    //           verbose() << "Stored flat mirror "
+    //                     << m_flatMirrors[r][s][num]->name() << endreq;
     //     }
     //     {for ( unsigned int r=0; r<2; ++r )
     //       for ( unsigned int s=0; s<2; ++s )
     //         for ( unsigned int num=0; num<m_maxMirror[r][s][sec]; ++num )
-    //           debug() << "Stored secondary mirror "
-    //                   <<m_secMirrors[r][s][num]->name() << endreq;
+    //           verbose() << "Stored secondary mirror "
+    //                     << m_secMirrors[r][s][num]->name() << endreq;
     //     }
 
   }

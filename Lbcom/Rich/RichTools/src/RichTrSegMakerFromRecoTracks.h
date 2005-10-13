@@ -1,34 +1,35 @@
 
 //---------------------------------------------------------------------------------
-/** @file RichTrSegMakerFromTrStoredTracks.h
+/** @file RichTrSegMakerFromRecoTracks.h
  *
- *  Header file for tool : RichTrSegMakerFromTrStoredTracks
+ *  Header file for tool : RichTrSegMakerFromRecoTracks
  *
  *  CVS Log :-
- *  $Id: RichTrSegMakerFromTrStoredTracks.h,v 1.11 2005-10-13 16:11:08 jonrob Exp $
+ *  $Id: RichTrSegMakerFromRecoTracks.h,v 1.1 2005-10-13 16:11:08 jonrob Exp $
  *
- *  @author Chris Jones         Christopher.Rob.Jones@cern.ch
- *  @author Antonis Papanestis  a.papanestis@rl.ac.uk
+ *  @author Chris Jones    Christopher.Rob.Jones@cern.ch
  *  @date   14/01/2002
  */
 //---------------------------------------------------------------------------------
 
-#ifndef RICHTOOLS_RICHTRSEGMAKERFROMTRSTOREDTRACKS_H
-#define RICHTOOLS_RICHTRSEGMAKERFROMTRSTOREDTRACKS_H 1
+#ifndef RICHTOOLS_RICHTRSEGMAKERFROMRECOTRACKS_H
+#define RICHTOOLS_RICHTRSEGMAKERFROMRECOTRACKS_H 1
 
 // from Gaudi
 #include "GaudiKernel/ToolFactory.h"
-#include "GaudiKernel/MsgStream.h"
 #include "GaudiKernel/IToolSvc.h"
 #include "GaudiKernel/IDataProviderSvc.h"
-#include "GaudiKernel/GaudiException.h"
 
 // base class and interface
 #include "RichKernel/RichToolBase.h"
 #include "RichKernel/IRichTrSegMaker.h"
 
+// Det Desc
+#include "DetDesc/IUpdateManagerSvc.h"
+
 // Event model
-#include "Event/TrStoredTrack.h"
+#include "Event/Track.h"
+#include "Event/TrackKeys.h" // should be in Track.h !!
 
 // RichEvent
 #include "RichEvent/RichTrackSegment.h"
@@ -46,42 +47,43 @@
 #include "RichDet/DeRich.h"
 #include "RichDet/DeRichRadiator.h"
 
-// Tr Extrapolator
-#include "TrKernel/ITrExtrapolator.h"
+// Track Extrapolator
+#include "TrackInterfaces/ITrackExtrapolator.h"
 
 // CLHEP
 #include "CLHEP/Random/RandFlat.h"
 #include "CLHEP/Units/PhysicalConstants.h"
 
 //---------------------------------------------------------------------------------
-/** @class RichTrSegMakerFromTrStoredTracks RichTrSegMakerFromTrStoredTracks.h
+/** @class RichTrSegMakerFromRecoTracks RichTrSegMakerFromRecoTracks.h
  *
- *  Tool to create RichTrackSegments from TrStoredTracks. 
+ *  Tool to create RichTrackSegments from Tracks.
  *
- *  Uses the tracking extrapolation tools to access the state information at the 
- *  entrance and exit points to the radiators, which is then used to create the 
+ *  Uses the tracking extrapolation tools to access the state information at the
+ *  entrance and exit points to the radiators, which is then used to create the
  *  RichTrackSegments.
  *
- *  @author Chris Jones         Christopher.Rob.Jones@cern.ch
- *  @author Antonis Papanestis  a.papanestis@rl.ac.uk
+ *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   14/01/2002
  *
  *  @todo Reduce the verbose level printout, once tool is stabilised
+ *  @todo Update UMS dependencies to be more 'fine grained'
  */
 //---------------------------------------------------------------------------------
 
-class RichTrSegMakerFromTrStoredTracks : public RichToolBase,
-                                         virtual public IRichTrSegMaker {
+class RichTrSegMakerFromRecoTracks : public RichToolBase,
+                                     virtual public IRichTrSegMaker
+{
 
 public: // Methods for Gaudi Framework
 
   /// Standard Constructor
-  RichTrSegMakerFromTrStoredTracks( const std::string& type,
-                                    const std::string& name,
-                                    const IInterface* parent );
+  RichTrSegMakerFromRecoTracks( const std::string& type,
+                                const std::string& name,
+                                const IInterface* parent );
 
   /// Standard Destructor
-  virtual ~RichTrSegMakerFromTrStoredTracks( );
+  virtual ~RichTrSegMakerFromRecoTracks( );
 
   // Initialization of the tool after creation
   virtual StatusCode initialize();
@@ -92,7 +94,7 @@ public: // Methods for Gaudi Framework
 public: // methods (and doxygen comments) inherited from interface
 
   // Create RichTrackSegments for a given tracking object
-  int constructSegments( const ContainedObject* track, 
+  int constructSegments( const ContainedObject* track,
                          std::vector<RichTrackSegment>& segments ) const;
 
 private: // methods
@@ -104,8 +106,8 @@ private: // methods
    *  @param state        State information to correct
    *  @param refState     Reference starting state.
    */
-  void fixC4F10EntryPoint( TrStateP *& state, 
-                           TrStateP * refState = 0  ) const;
+  void fixC4F10EntryPoint( State *& state,
+                           const State * refState = 0  ) const;
 
   /** Correct the exit state to the point where the track traverses the spherical mirror
    *
@@ -113,9 +115,9 @@ private: // methods
    *  @param state        State information to correct
    *  @param refState     Reference starting state.
    */
-  void correctRadExitMirror( const DeRichRadiator* radiator, 
-                             TrStateP *& state,
-                             TrStateP * refState = 0  ) const;
+  void correctRadExitMirror( const DeRichRadiator* radiator,
+                             State *& state,
+                             const State * refState = 0  ) const;
 
   /** Extrapolate a state to a new z position
    *
@@ -125,12 +127,24 @@ private: // methods
    *
    * @return The status of the extrapolation
    * @retval StatusCode::SUCCESS State was successfully extrapolated to the new z position
-   * @retval StatusCode::FAILURE State could not be extrapolated to the z position. 
+   * @retval StatusCode::FAILURE State could not be extrapolated to the z position.
    *         State remains unaltered.
    */
-  StatusCode moveState( TrStateP *& stateToMove,
+  StatusCode moveState( State *& stateToMove,
                         const double z,
-                        TrStateP * refState = 0 ) const;
+                        const State * refState = 0 ) const;
+
+  /** Finds the state closest to a given z
+   *  Temporary, whilst the track method doesn't work !!
+   */
+  const State * myClosestState( const Track * track,
+                                const double z ) const;
+
+  /// UMS Update method for Rich1 nominal radius of curvature
+  StatusCode updateR1nomRad();
+
+  /// UMS Update method for Rich2 nominal radius of curvature
+  StatusCode updateR2nomRad();
 
 private: // data
 
@@ -142,12 +156,6 @@ private: // data
 
   /// Rich1 and Rich2 detector elements
   DeRich* m_rich[Rich::NRiches];
-
-  /// Spherical mirror nominal centre of curvature
-  HepPoint3D m_nominalCoC[Rich::NRiches][2];
-
-  /// Spherical mirror radius of curvature
-  std::vector<double> m_nomSphMirrorRadius;
 
   /// typedef of array of DeRichRadiators
   typedef boost::array<const DeRichRadiator*, Rich::NRadiatorTypes> Radiators;
@@ -167,8 +175,8 @@ private: // data
   std::vector<double> m_minStateDiff;
 
   // Track extrapolators
-  ITrExtrapolator * m_trExt1; ///< Primary track extrapolation tool
-  ITrExtrapolator * m_trExt2; ///< Secondary (backup if primary fails) track extrapolation tool
+  ITrackExtrapolator * m_trExt1; ///< Primary track extrapolation tool
+  ITrackExtrapolator * m_trExt2; ///< Secondary (backup if primary fails) track extrapolation tool
   std::string m_Ext1; ///< Primary track extrapolation tool name
   std::string m_Ext2; ///< Secondary track extrapolation tool name
 
@@ -180,5 +188,22 @@ private: // data
 
 };
 
+inline const State *
+RichTrSegMakerFromRecoTracks::myClosestState( const Track * track,
+                                              const double z ) const
+{
+  // should use this, but doesn't work yet
+  // return &Track->closestState(z);
+  // so instead do things by hand
+  double zDiff = 999999999;
+  const State * st(0);
+  for ( std::vector<State*>::const_iterator iS = track->states().begin();
+        iS != track->states().end(); ++iS )
+  {
+    const double diff = fabs( (*iS)->z() - z );
+    if ( diff < zDiff ) { zDiff = diff; st = (*iS); }
+  }
+  return st;
+}
 
-#endif // RICHTOOLS_RICHTRSEGMAKERFROMTRSTOREDTRACKS_H
+#endif // RICHTOOLS_RICHTRSEGMAKERFROMRECOTRACKS_H
