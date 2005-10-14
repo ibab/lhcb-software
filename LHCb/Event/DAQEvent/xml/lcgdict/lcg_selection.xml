@@ -9,5 +9,5 @@
   </class>
   <class name="std::vector<LHCb::RawEvent::Bank>"/>
   <class name="std::vector<LHCb::RawBank*>"/>
-  <class name="std::map<int, std::vector<LHCb::RawBank*> >"/>
+  <class name="std::map<LHCb::RawBank::BankType, std::vector<LHCb::RawBank*> >"/>
 </lcgdict>

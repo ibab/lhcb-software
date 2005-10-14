@@ -23,8 +23,8 @@ apply_pattern linker_library    library=DAQEventLib
 
 private
 #========= Uncomment 5 lines to build and run the Test application ==========
-use GaudiConf   v*      -no_auto_imports
-use GaudiSvc    v*      -no_auto_imports
-macro_append  TestRawEventlinkopts '$(DAQEvent_linkopts)'
-application   TestRawEvent $(GAUDICONFROOT)/src/GaudiMain.cpp ../tests/*.cpp
-apply_pattern application_path
+#use GaudiConf   v*      -no_auto_imports
+#use GaudiSvc    v*      -no_auto_imports
+#macro_append  TestRawEventlinkopts '$(DAQEvent_linkopts)'
+#application   TestRawEvent $(GAUDICONFROOT)/src/GaudiMain.cpp ../tests/*.cpp
+#apply_pattern application_path
