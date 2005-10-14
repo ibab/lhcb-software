@@ -1,5 +1,6 @@
 #define RTL_IMPLEMENTATION
 #include <map>
+#include <cerrno>
 #include <cstdio>
 #include <cstdlib>
 #include <string>
@@ -91,6 +92,12 @@ int lib_rtl_map_section(const char* sec_name, int size, lib_rtl_gbl_t* address) 
 #if defined(linux)
   int sysprot  = PROT_READ+PROT_WRITE;
   int sysflags = MAP_SHARED;
+  h->fd = ::shm_open(h->name,O_RDWR|O_CREAT|O_EXCL,0644);
+  if ( 0 == h->fd )  {
+    ::close(h->fd);
+    ::shm_unlink(h->name);
+    return 0;
+  }
   h->fd = ::shm_open(h->name,O_RDWR|O_CREAT,0644);
   if ( h->fd ) {
     ::ftruncate(h->fd, h->size);

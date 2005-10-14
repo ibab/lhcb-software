@@ -162,9 +162,14 @@ int MBM::Monitor::monitor() {
   if( cont )    {
     while( end )    {
       get_bm_list();    
-      begin_update();
-      put_inf();
-      end_update();
+      try {
+	begin_update();
+	put_inf();
+	end_update();
+      }
+      catch(...) {
+	draw_line(NORMAL," Exception during buffer monitoring.");
+      }
       lib_rtl_sleep(1000);
     }      
   }

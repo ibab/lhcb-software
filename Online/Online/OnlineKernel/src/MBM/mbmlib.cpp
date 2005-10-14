@@ -572,8 +572,9 @@ int mbm_map_global_buffer_info(lib_rtl_gbl_t* handle)  {
     BUFFERS* buffs = (BUFFERS*)h->address;
     ::memset(buffs,0,len);
     buffs->nbuffer = 0;
-    buffs->p_bmax = MBM_MAX_BUFF;
   }
+  BUFFERS* b = (BUFFERS*)h->address;
+  b->p_bmax = MBM_MAX_BUFF;
   *handle = h;
   return MBM_NORMAL;
 }
