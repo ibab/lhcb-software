@@ -1,8 +1,8 @@
 #ifndef _MBM_MBMDEF_H 
 #define _MBM_MBMDEF_H
 
-#include "bmssdef.h"
-#include "rtl/rtl.h"
+#include "MBM/bmssdef.h"
+#include "RTL/rtl.h"
 
 enum MBM_MaskTypes  {
   BM_MASK_ANY   = 0,

@@ -5,18 +5,20 @@
 *
 * Edition History
 *
-*  #   Date  Comments   By
-* -- -------- ----------------------------------------------- ---
-*  0  28/09/88  Initial version        PM
-*  1  11/11/88  Released version 1.0        PM
-*  2  29/11/88  Multibuffer and spy introduced      PM
-*  3  15/12/88  Released version 2.0        PM
-*  4  14/03/89  Minor corrections        PM
-*  5  24/09/91  Allow waiting space and event at the same time PM
-*  6  06/10/92  Add update request for reformatting tasks  PM/BJ
+*  #   Date     Comments                                              By
+* -- -------- ------------------------------------------------------ ---
+*  0  28/09/88  Initial version                                       PM
+*  1  11/11/88  Released version 1.0                                  PM
+*  2  29/11/88  Multibuffer and spy introduced                        PM
+*  3  15/12/88  Released version 2.0                                  PM
+*  4  14/03/89  Minor corrections                                     PM
+*  5  24/09/91  Allow waiting space and event at the same time        PM
+*  6  06/10/92  Add update request for reformatting tasks          PM/BJ
 * ---
-*  7  ??/12/92  Multi-Buffer Manager calls      BJ
-*  8  25/03/93  Basic clean-up          AMi8
+*  7  ??/12/92  Multi-Buffer Manager calls                            BJ
+*  8  25/03/93  Basic clean-up                                      AMi8
+*  9  10/10/06  Major cleanup, move to C++ and implementation
+*               on linux and WIN32                                   MSF
 */
 /*-----------------------------------------------------------------------*/
 #define MBM_IMPLEMENTATION
@@ -54,13 +56,17 @@ static int CONTROL_ev_off;
 static MBM_ast_t _mbm_wes_ast_add = 0;
 static int disable_rundown=0;
 
-inline int _mbm_printf(const char* , ...)  {
-//inline int _mbm_printf(const char* fmt, ...)  {
-//  va_list args;
-//  va_start(args, fmt);
-//  return vprintf(fmt, args);
-  return 1;
+#ifndef MBM_PRINT
+inline int _mbm_printf(const char* , ...)  {  return 1;   }
+#else
+inline int _mbm_printf(const char* fmt, ...)  {
+  va_list args;
+  va_start(args, fmt);
+  int len = vprintf(fmt, args);
+  printf("\n");
+  return len;
 }
+#endif
 
 template <class T> void print_queue(const char* format,const T* ptr, int type)  {
   switch (type)  {
@@ -166,13 +172,13 @@ int mbm_unmap_memory(BMDESCRIPT* bm)  {
 
 BMDESCRIPT *mbm_include (const char* bm_name, const char* name, int partid) {
   int status;
-  char text[32]="";
   _mbm_fill_offsets();
   _mbm_wes_ast_add  = _mbm_wes_ast;
   std::auto_ptr<BMDESCRIPT> bm(mbm_map_memory(bm_name));
   if ( !bm.get() )  {
+    lib_rtl_signal_message(LIB_RTL_OS,"Cannot map memory sections for %s.",
+			   bm_name);
     _mbm_unmap_sections(bm.get());
-    ::printf("failure to memory sections for %s. Status = %d\n",bm_name);
     return (BMDESCRIPT*)-1;
   }
 
@@ -181,16 +187,18 @@ BMDESCRIPT *mbm_include (const char* bm_name, const char* name, int partid) {
     ::strcat(bm->mutexName,bm->bm_name);
     status = lib_rtl_create_lock(bm->mutexName, &bm->lockid);
     if (!lib_rtl_is_success(status))    {
+      lib_rtl_signal_message(LIB_RTL_OS,
+			     "Failed to create lock %s for %s.",
+			     bm->mutexName,bm_name);
       _mbm_unmap_sections(bm.get());
-      ::printf("Failed to create lock %s for %s. Status %d\n",bm->mutexName,bm_name,status);
       return (BMDESCRIPT*)-1;
     }
   }
   status = _mbm_lock_tables(bm.get());
   if (!lib_rtl_is_success(status))  {
+    lib_rtl_signal_message(LIB_RTL_OS,"Failed to lock tables for %s.",bm_name);
     _mbm_unmap_sections(bm.get());
     _mbm_unlock_tables(bm.get());
-    ::printf("failure to lock tables for %s. Status = %d\n",bm_name,status);
     return (BMDESCRIPT*)-1;
   }
   USER* us = _mbm_ualloc (bm.get());  // find free user slot
@@ -332,7 +340,7 @@ int mbm_get_event_a (BMDESCRIPT *bm, int** ptr, int* size, int* evtype, int trma
   if ( us )  {
     TriggerMask* mask = (TriggerMask*)trmask;
     if (us->c_state == S_wevent)    {
-      ::printf("Too many calls to mbm_get_event_a\n");
+      lib_rtl_signal_message(0,"Too many calls to mbm_get_event_a");
       return MBM_NORMAL;
     }
     if (us->held_eid != -1)    {
@@ -424,7 +432,7 @@ int mbm_get_space_a (BMDESCRIPT *bm, int size, int** ptr, MBM_ast_t astadd, void
       _mbm_del_wsp (bm, us);
     }
     if (us->space_size)    {
-      _mbm_printf("mbm_get_space_a> Free event space:%08X \n",us->space_add);
+      _mbm_printf("mbm_get_space_a> Free event space:%08X",us->space_add);
       _mbm_sfree (bm, us->space_add, us->space_size);
       us->space_add = 0;
       us->space_size = 0;
@@ -558,7 +566,7 @@ int mbm_map_global_buffer_info(lib_rtl_gbl_t* handle)  {
   if( !lib_rtl_is_success(status))  {
     status = lib_rtl_create_section("bm_buffers", len, &h);
     if(!lib_rtl_is_success(status))   {	
-      printf("Cannot access section bm_buffers.\n");
+      lib_rtl_signal_message(LIB_RTL_OS,"Cannot access section bm_buffers.");
       return MBM_ERROR;
     }
     BUFFERS* buffs = (BUFFERS*)h->address;
@@ -625,7 +633,7 @@ int _mbm_get_sp (BMDESCRIPT *bmid, USER* us, int size, int** ptr)  {
     *ptr = (int*)(bmid->buffer_add + (bit << Shift_p_Bit));
     us->space_add = (bit<<Shift_p_Bit);  /* keep space inf... */
     us->space_size = nbit << Shift_p_Bit;
-    _mbm_printf("Got space: %08X %d Bytes\n",us->ws_ptr, size);
+    _mbm_printf("Got space: %08X %d Bytes",us->ws_ptr, size);
     return MBM_NORMAL;
   }
   return MBM_NO_ROOM;
@@ -671,7 +679,7 @@ int _mbm_add_wev(BMDESCRIPT *bm, USER *us, int** ptr, int* size, int* evtype, Tr
   us->c_astadd      = astadd;
   us->c_astpar      = astpar;
   us->held_eid      = -1;
-  _mbm_printf("WEV ADD> %d State:%d\n",calls++, us->c_state);
+  _mbm_printf("WEV ADD> %d State:%d",calls++, us->c_state);
   insqti(&us->wenext, &ctrl->wev_head);
   return MBM_NORMAL;
 }
@@ -680,9 +688,10 @@ int _mbm_add_wev(BMDESCRIPT *bm, USER *us, int** ptr, int* size, int* evtype, Tr
 int _mbm_del_wev (BMDESCRIPT* /* bm */, USER* u) {
   static int calls = 0;
   if ( u->c_state != S_wevent )  {
-    ::printf("INCONSISTENCY: Delete user from WEV queue without state S_wevent");
+    lib_rtl_signal_message(0,"INCONSISTENCY: Delete user from WEV queue "
+			   "without state S_wevent");
   }
-  _mbm_printf("WEV DEL> %d\n",calls++);
+  _mbm_printf("WEV DEL> %d",calls++);
   u->c_state = S_wevent_ast_queued;
   remqent(&u->wenext);
   return MBM_NORMAL;
@@ -710,7 +719,7 @@ int _mbm_check_wev (BMDESCRIPT *bm, EVENT* e)  {
       bm->ctrl->tot_seen++;
       _mbm_del_wev (bm, u);
       u->get_wakeups++;
-      _mbm_printf("EVENT: id=%d  %d %08X -> %s\n",e->eid, e->count, e->ev_add, u->name);
+      _mbm_printf("EVENT: id=%d  %d %08X -> %s",e->eid, e->count, e->ev_add, u->name);
       _mbm_wake_process(BM_K_INT_EVENT, u);
     }
   }
@@ -747,7 +756,7 @@ int _mbm_check_wsp (BMDESCRIPT *bmid, int bit, int nbit)  {
   MBMQueue<USER> que(&ctrl->wsp_head, -USER_ws_off);
   for (USER* u=que.get(); u; u = que.get() )  {
     u->isValid();
-    _mbm_printf("WSP: User %s\n",u->name);
+    _mbm_printf("WSP: User %s",u->name);
     if ( u->p_state == S_wspace && u->ws_size <= size)      {
       int ubit = (u->ws_size + Bytes_p_Bit) >> Shift_p_Bit;
       ctrl->last_alloc = 0;
@@ -883,7 +892,7 @@ int _mbm_efree (BMDESCRIPT *bm, EVENT* e)  {
     _mbm_return_err (MBM_INTERNAL);
   }
   e->busy = 0;
-  _mbm_printf("Free slot: %d %d\n",e->eid, e->count);
+  _mbm_printf("Free slot: %d %d",e->eid, e->count);
   remqent(e);
   bm->ctrl->i_events--;
   _mbm_check_wes (bm);
@@ -952,7 +961,7 @@ int _mbm_sfree (BMDESCRIPT *bm, int add, int size)  {
   BF_free(bm->bitmap,bit,nbit);
   ctrl->last_alloc = 0;
   ctrl->i_space += nbit;
-  _mbm_printf("Free space  add=%08X  size=%d\n",add,size);
+  _mbm_printf("Free space  add=%08X  size=%d",add,size);
   if ( ctrl->wsp_head.next )  {
     int s, l;
     BF_count(bm->bitmap, ctrl->bm_size, &s, &l);    // find largest block 
@@ -1006,11 +1015,12 @@ int _mbm_shutdown (void* /* param */) {
     if ( bm->lockid )  {
       int status = lib_rtl_cancel_lock(bm->lockid);
       if (!lib_rtl_is_success(status))    { 
-        ::printf("error in cancelling lock %s. Status %d\n",bm->mutexName,status);
+	lib_rtl_signal_message(LIB_RTL_OS,"Error cancelling lock %s. Status %d",
+			       bm->mutexName,status);
       }
     }
     else  {
-      ::printf("error in cancelling lock %s [Invalid Mutex].\n", bm->mutexName);
+	lib_rtl_signal_message(0,"Error cancelling lock %s [Invalid Mutex].", bm->mutexName);
     }
     if (disable_rundown == 1)    {
       continue;
@@ -1170,7 +1180,7 @@ int  mbm_wait_event(BMDESCRIPT *bm)    {
   USER* us = bm->_user();
   if ( us->held_eid != -1 )  {
     Lock lock(bm);
-    _mbm_printf("WEV: State=%d  %s \n", us->c_state, us->c_state == S_wevent_ast_queued ? "OK" : "BAAAAD");
+    _mbm_printf("WEV: State=%d  %s", us->c_state, us->c_state == S_wevent_ast_queued ? "OK" : "BAAAAD");
     if ( us->c_state == S_wevent_ast_queued )  {
       lib_rtl_clear_event(bm->WEV_event_flag);
       us->reason = BM_K_INT_EVENT;
@@ -1183,7 +1193,7 @@ int  mbm_wait_event(BMDESCRIPT *bm)    {
 Again:
   sc = 1;
   if ( us->c_state != S_wevent_ast_queued )  {
-    _mbm_printf("Wait...lib_rtl_wait_for_event\n");
+    _mbm_printf("Wait...lib_rtl_wait_for_event");
     sc = lib_rtl_wait_for_event(bm->WEV_event_flag);
   }
   if ( lib_rtl_is_success(sc) )  {
@@ -1226,13 +1236,13 @@ wait:
     lib_rtl_run_ast(us->p_astadd, us->p_astpar, 3);
   }
   else if ( us->p_state == S_wspace_ast_queued )    {
-    _mbm_printf("Wait...lib_rtl_wait_for_event\n");
+    _mbm_printf("Wait...lib_rtl_wait_for_event");
     int sc = lib_rtl_wait_for_event(bm->WSP_event_flag);
     if ( lib_rtl_is_success(sc) )  {
       lib_rtl_clear_event(bm->WSP_event_flag);
       if ( us->p_state == S_wspace_ast_queued )  {
         Lock lock(bm);
-        _mbm_printf("Got space\n");
+        _mbm_printf("Got space");
         lib_rtl_run_ast(us->p_astadd, us->p_astpar, 3);
         return MBM_NORMAL;
       }
@@ -1312,13 +1322,13 @@ int mbm_get_event_ast(void* par) {
   }
   us->get_asts_run++;
   if (us->c_state != S_wevent_ast_queued)  {
-    ::printf("us->c_state Not S_wevent_ast_queued, but is %d\n",us->c_state);
+    lib_rtl_signal_message(0,"us->c_state Not S_wevent_ast_queued, but is %d",us->c_state);
     return 1;
   }
   us->c_state = S_active;
   EVENT* ev  = bm->event+us->held_eid;
   if (us->reason != BM_K_INT_EVENT)  {
-    ::printf("event_ast spurious wakeup reason = %d\n",us->reason);
+    lib_rtl_signal_message(0,"Event_ast spurious wakeup reason = %d",us->reason);
     us->reason = S_wevent_ast_handled;
     return 1;
   }
@@ -1339,14 +1349,14 @@ int mbm_get_space_ast(void* par) {
     return MBM_NORMAL;
   }
   if (us->p_state != S_wspace_ast_queued)   {
-    printf("us->p_state Not S_wspace_ast_queued, but is %d\n",us->p_state);
+    lib_rtl_signal_message(0,"us->p_state Not S_wspace_ast_queued, but is %d",us->p_state);
     us->p_state = S_wspace_ast_handled;
     us->reason = -1;
     return MBM_NORMAL;
   }
   us->p_state = S_active;
   if ( !(us->reason&BM_K_INT_SPACE) )   {
-    printf("space_ast spurious wakeup reason = %d\n",us->reason);
+    lib_rtl_signal_message(0,"space_ast spurious wakeup reason = %d",us->reason);
     us->p_state = S_wspace_ast_handled;
     us->reason = -1;
     return MBM_NORMAL;
@@ -1367,7 +1377,7 @@ int _mbm_wes_ast(void* par)   {
     // lib_rtl_set_event (bm->WES_event_flag);
     return 1;
   }
-  ::printf("_mbm_wes_ast state is not S_weslot_ast_queued is %d. IGNORED\n",us->p_state);
+  lib_rtl_signal_message(0,"_mbm_wes_ast state is not S_weslot_ast_queued is %d. IGNORED",us->p_state);
   return 0;
 }
 
@@ -1457,7 +1467,7 @@ int _mbm_declare_event (BMDESCRIPT *bm, int len, int evtype, TriggerMask& trmask
     ev->umask2  = mask2;
     ev->held_mask.clear();
     ev->held_mask.set(bm->owner);
-    _mbm_printf("Got slot:%d %d  %08X\n",ev->eid, ev->count, ev->ev_add);
+    _mbm_printf("Got slot:%d %d  %08X",ev->eid, ev->count, ev->ev_add);
   }
   else  {
     _mbm_efree (bm, ev);
@@ -1492,7 +1502,7 @@ int _mbm_check_cons (BMDESCRIPT *bm)  {
     if ( e->held_mask.test(owner) )      {
       e->held_mask.clear(owner);
       e->busy = 1;
-      _mbm_printf("_mbm_send_space EVENT: %d %d\n",e->eid, e->count);
+      _mbm_printf("_mbm_send_space EVENT: %d %d",e->eid, e->count);
       _mbm_check_wev (bm, e);  /* check wev queue */
     }
   }
@@ -1504,7 +1514,7 @@ int _mbm_send_space (BMDESCRIPT *bm)  {
   if ( sc == MBM_NORMAL )   {
     USER* us = bm->user + bm->owner;
     if (us->space_size)  {
-      _mbm_printf("_mbm_send_space> Free event space\n");
+      _mbm_printf("_mbm_send_space> Free event space");
       _mbm_sfree (bm, us->space_add, us->space_size);  /* free space */
     }
     us->space_add = 0;
@@ -1517,11 +1527,11 @@ int _mbm_lock_tables(BMDESCRIPT *bm)  {
   if ( bm->lockid )  {
     int status = lib_rtl_lock(bm->lockid);
     if (!lib_rtl_is_success(status))    { 
-      ::printf("error in unlocking tables. Status %d\n",status);
+      lib_rtl_signal_message(LIB_RTL_OS,"error in unlocking tables. Status %d",status);
     }
     return status;
   }
-  ::printf("error in unlocking tables [Invalid Mutex] %s.\n",bm->mutexName);
+  lib_rtl_signal_message(0,"Error in unlocking tables [Invalid Mutex] %s",bm->mutexName);
   return 0;
 }
 
@@ -1529,11 +1539,11 @@ int _mbm_unlock_tables(BMDESCRIPT *bm)    {
   if ( bm->lockid )  {
     int status = lib_rtl_unlock(bm->lockid);
     if (!lib_rtl_is_success(status))    { 
-      ::printf("error in unlocking tables %s. Status %d\n",bm->mutexName,status);
+      lib_rtl_signal_message(LIB_RTL_OS,"Error in unlocking tables %s. Status %d",bm->mutexName,status);
     }
     return status;
   }
-  ::printf("error in unlocking tables %s [Invalid Mutex].\n",bm->mutexName);
+  lib_rtl_signal_message(0,"Error in unlocking tables %s [Invalid Mutex].",bm->mutexName);
   return 0;
 }
 
@@ -1541,14 +1551,14 @@ int _mbm_delete_lock(BMDESCRIPT *bm)    {
   if ( bm->lockid )  {
     int status = lib_rtl_delete_lock(bm->lockid);
     if (!lib_rtl_is_success(status))    { 
-      ::printf("error in deleting lock %s. Status %d\n",bm->mutexName,status);
+      lib_rtl_signal_message(LIB_RTL_OS,"Error deleting lock %s. Status %d",bm->mutexName,status);
     }
     else  {
       bm->lockid = 0;
     }
     return status;
   }
-  ::printf("error in deleting lock %s [Invalid Mutex].\n", bm->mutexName);
+  lib_rtl_signal_message(0,"Error deleting lock %s [Invalid Mutex].", bm->mutexName);
   return 0;
 }
 
@@ -1559,39 +1569,44 @@ int _mbm_map_sections(BMDESCRIPT* bm)  {
   sprintf(text, "bm_ctrl_%s", bm->bm_name);
   int status  = lib_rtl_map_section(text, sizeof(CONTROL), &bm->ctrl_add);
   if (!lib_rtl_is_success(status))    {
-    ::printf("failure to map control section for %s. Status = %d\n",bm_name,status);
+    lib_rtl_signal_message(LIB_RTL_OS,"Error mapping control section for %s.Status=%d",
+			   bm_name,status);
     return MBM_ERROR;
   }
   bm->ctrl = (CONTROL*)bm->ctrl_add->address;
   sprintf(text, "bm_event_%s",  bm_name);
   status  = lib_rtl_map_section(text, bm->ctrl->p_emax*sizeof(EVENT), &bm->event_add);
   if (!lib_rtl_is_success(status))  {
+    lib_rtl_signal_message(LIB_RTL_OS,"Error mapping event section for %s. Status=%d",
+			   bm_name,status);
     _mbm_unmap_sections(bm);
-    ::printf("failure to map event section for %s. Status = %d\n",bm_name,status);
     return MBM_ERROR;
   }
   bm->event = (EVENT*)bm->event_add->address;
   sprintf(text, "bm_user_%s",   bm_name);
   status  = lib_rtl_map_section(text, bm->ctrl->p_umax*sizeof(USER), &bm->user_add);
   if (!lib_rtl_is_success(status))  {
+    lib_rtl_signal_message(LIB_RTL_OS,"Error mapping user section for %s. Status=%d",
+			   bm_name,status);
     _mbm_unmap_sections(bm);
-    ::printf("failure to map user section for %s. Status = %d\n",bm_name,status);
     return MBM_ERROR;
   }
   bm->user = (USER*)bm->user_add->address;
   sprintf(text, "bm_bitmap_%s", bm_name);
   status  = lib_rtl_map_section(text, bm->ctrl->bm_size, &bm->bitm_add);
   if (!lib_rtl_is_success(status))  {
+    lib_rtl_signal_message(LIB_RTL_OS,"Error mapping bit-map section for %s. Status=%d",
+			   bm_name,status);
     _mbm_unmap_sections(bm);
-    ::printf("failure to map bit-map section for %s. Status = %d\n",bm_name,status);
     return MBM_ERROR;
   }
   bm->bitmap = (char*)bm->bitm_add->address;
   sprintf(text, "bm_buffer_%s", bm_name);
   status  = lib_rtl_map_section(text, bm->ctrl->buff_size, &bm->buff_add);
   if (!lib_rtl_is_success(status))  {
+    lib_rtl_signal_message(LIB_RTL_OS,"Error mapping buffer section for %s. Status=%d",
+			   bm_name,status);
     _mbm_unmap_sections(bm);
-    ::printf("failure to map buffer section for %s. Status = %d\n",bm_name,status);
     return MBM_ERROR;
   }
   bm->buffer_add  = bm->ctrl->buff_ptr = (char*)bm->buff_add->address;
