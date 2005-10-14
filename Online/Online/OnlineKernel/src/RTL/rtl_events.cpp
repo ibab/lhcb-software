@@ -93,8 +93,7 @@ int lib_rtl_wait_for_event(lib_rtl_event_t h)    {
 #if defined(USE_PTHREADS)
     if ( 0 == ::sem_wait(h->handle) )
 #elif defined(_WIN32)
-    DWORD diff = (milliseconds>0) ? milliseconds : INFINITE;
-    if ( ::WaitForSingleObjectEx(h->handle,diff, TRUE) == WAIT_OBJECT_0 )  
+    if ( ::WaitForSingleObjectEx(h->handle,INFINITE, TRUE) == WAIT_OBJECT_0 )  
 #endif
       return 1;
   }

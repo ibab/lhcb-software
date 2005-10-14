@@ -1,9 +1,8 @@
 #include "rtl_internal.h"
 #include "RTL/que.h"
 #include "RTL/DoubleLinkedQueue.h"
-#include <vector>
-#include <map>
-#include <string>
+
+#define GENERIC_TIMERS 1
 
 typedef unsigned long long int uint64_t;
 namespace {
@@ -19,29 +18,14 @@ namespace {
       : qentry_t(0,0), magic(0xFEEDBABE), hdl(0), ast(r), param(a), period(p) {}
   };
 }
-#if defined(_WIN32)
-#include <windows.h>
-  extern "C" __declspec(dllimport) BOOL  __stdcall CancelWaitableTimer(void*);
-  extern "C" __declspec(dllimport) void* __stdcall CreateWaitableTimerA(void*, DWORD, void*);
-  extern "C" __declspec(dllimport) BOOL  __stdcall SetWaitableTimer(void*, const LARGE_INTEGER*, DWORD, void*, void*, BOOL);
+#if defined(GENERIC_TIMERS)
 
-static void CALLBACK lib_rtl_timer_proc(void* arg, DWORD dwTimeHigh, DWORD dwTimeLow)  {
-  timer_entry_t *t = (timer_entry_t*)arg;
-  ::CloseHandle( t->hdl );
-  if ( t->ast )  {
-    t->ast ( t->arg );
-  }
-  delete t;
-}
-
-#elif defined(USE_PTHREADS)
-
-#include <time.h>
+#include <ctime>
 
 namespace RTL {
 
   /** @class SysTime
-    */
+  */
   class SysTime {
   protected:
     uint64_t m_start;
@@ -55,16 +39,20 @@ namespace RTL {
   public:
     static uint64_t start() {  return instance().m_start;    }
     static uint64_t now()   {
+#ifdef _WIN32
+      return ::GetTickCount();
+#else
       timespec t;
       ::clock_gettime(CLOCK_REALTIME,&t);
       return uint64_t(t.tv_sec*1000) + uint64_t(t.tv_nsec)/1000000;
+#endif
     }
     static uint64_t uptime() { return now() - start(); }
   };
 
 
   /** @class TimerThread
-    */
+  */
   class TimerThread {
     lib_rtl_thread_t        m_thread;
     lib_rtl_lock_t          m_lock;
@@ -114,13 +102,28 @@ namespace RTL {
       return t;
     }
   };
-
 }
+#elif defined(_WIN32)
+
+#include <windows.h>
+extern "C" __declspec(dllimport) BOOL  __stdcall CancelWaitableTimer(void*);
+extern "C" __declspec(dllimport) void* __stdcall CreateWaitableTimerA(void*, DWORD, void*);
+extern "C" __declspec(dllimport) BOOL  __stdcall SetWaitableTimer(void*, const LARGE_INTEGER*, DWORD, void*, void*, BOOL);
+
+static void CALLBACK lib_rtl_timer_proc(void* arg, DWORD dwTimeHigh, DWORD dwTimeLow)  {
+  timer_entry_t *t = (timer_entry_t*)arg;
+  ::CloseHandle( t->hdl );
+  if ( t->ast )  {
+    t->ast ( t->arg );
+  }
+  delete t;
+}
+
 #endif
 
 /// Standard Constructor
 RTL::TimerThread::TimerThread() 
-  : m_head(new qentry_t(0,0)), m_active(false) 
+: m_head(new qentry_t(0,0)), m_active(false) 
 {
   m_waitTime = 9999999999999L;
   int sc = lib_rtl_create_lock(0,&m_lock);
@@ -167,7 +170,7 @@ int RTL::TimerThread::remove(timer_entry_t* entry) {
   if ( !isActive() ) start();
   return 1;
 }
-  
+
 /// Exit handler for timer thread
 int RTL::TimerThread::exit_timers(void* param) {
   TimerThread* thr = (TimerThread*)param;
@@ -218,13 +221,13 @@ uint64_t RTL::TimerThread::check() {
       nent++;
       //printf("Now: %lld Entry:%lld\n",now, e->expire);
       if ( now >= e->expire ) {
-	lib_rtl_run_ast(e->ast, e->param, 0);
-	if ( 0 == e->period ) {
-	  remqent(e);
-	  delete e;
-	  continue;
-	}
-	e->expire += e->period;
+        lib_rtl_run_ast(e->ast, e->param, 0);
+        if ( 0 == e->period ) {
+          remqent(e);
+          delete e;
+          continue;
+        }
+        e->expire += e->period;
       }
       if ( next > (e->expire-now) ) next = e->expire-now;
     }
@@ -263,7 +266,7 @@ int RTL::TimerThread::stop() {
   }
   return lib_rtl_unlock(m_lock);
 }
-  
+
 int64_t lib_rtl_get_ticks()  {
   return RTL::SysTime::now();
 }
@@ -271,7 +274,13 @@ int64_t lib_rtl_get_ticks()  {
 int lib_rtl_set_timer(int milli_seconds, timer_ast_t ast, void* ast_param, unsigned int* timer_id)  {
   timer_entry_t* t = new timer_entry_t(ast, ast_param, 0);
   t->expire = RTL::SysTime::uptime()+milli_seconds;
-#if defined(_WIN32)
+#if defined(GENERIC_TIMERS)
+  int sc = RTL::TimerThread::instance().add(t);
+  if ( lib_rtl_is_success(sc) ) {
+    *timer_id = (int)t;
+    return sc;
+  }
+#elif defined(_WIN32)
   LARGE_INTEGER liDueTime;
   liDueTime.QuadPart=-10000*milli_seconds;
   t->hdl = ::CreateWaitableTimerA(0,TRUE,0);
@@ -283,12 +292,6 @@ int lib_rtl_set_timer(int milli_seconds, timer_ast_t ast, void* ast_param, unsig
     }
     ::CloseHandle(t->hdl);
   }
-#elif defined(USE_PTHREADS)
-  int sc = RTL::TimerThread::instance().add(t);
-  if ( lib_rtl_is_success(sc) ) {
-    *timer_id = (int)t;
-    return sc;
-  }
 #endif
   delete t;
   return 0;
@@ -298,15 +301,15 @@ int lib_rtl_kill_timer(int timer_id) {
   timer_entry_t* t = (timer_entry_t*)timer_id;
   if ( t )  {
     if ( t->magic == 0xFEEDBABE ) {
-#if defined(_WIN32)
+#if defined(GENERIC_TIMERS)
+      int sc = RTL::TimerThread::instance().remove(t);
+      delete t;
+      return sc;
+#elif defined(_WIN32)
       BOOL result = ::CancelWaitableTimer(t->hdl);
       result = ::CloseHandle( t->hdl );
       delete t;
       return 1;
-#elif defined(USE_PTHREADS)
-      int sc = RTL::TimerThread::instance().remove(t);
-      delete t;
-      return sc;
 #endif
     }
   }
