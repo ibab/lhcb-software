@@ -113,6 +113,9 @@ extern "C" {
   /// Stop timer. Asynchronous callback will not be called
   int lib_rtl_kill_timer(int timer_id);
 
+  /// Get tick count since image startup
+  unsigned int lib_rtl_get_ticks();
+
   int lib_rtl_ffc (int* start, int* len, const void* base, int* position);
   int lib_rtl_ffs (int* start, int* len, const void* base, int* position);
   int lib_rtl_run_ast (RTL_ast_t astadd, void* bm, int);
