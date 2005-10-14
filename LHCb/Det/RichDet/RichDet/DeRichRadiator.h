@@ -5,7 +5,7 @@
  *  Header file for detector description class : DeRichRadiator
  *
  *  CVS Log :-
- *  $Id: DeRichRadiator.h,v 1.14 2005-02-23 10:26:00 jonrob Exp $
+ *  $Id: DeRichRadiator.h,v 1.15 2005-10-14 08:21:37 jonrob Exp $
  *
  *  @author Antonis Papanestis a.papanestis@rl.ac.uk
  *  @date   2004-06-18
@@ -25,8 +25,12 @@
 #include "DetDesc/Material.h"
 #include "DetDesc/IGeometryInfo.h"
 
+// Kernel
 #include "Kernel/RichRadiatorType.h"
 #include "Kernel/RichDetectorType.h"
+
+// GaudiKernel
+class IAlgTool;
 
 /** @namespace DeRichRadiatorLocation
  *
@@ -45,7 +49,7 @@ namespace DeRichRadiatorLocation {
   /// Aerogel segment Q3 location
   static const std::string& AerogelQ3 = "/dd/Structure/LHCb/Rich1/AerogelQ3";
   /// Multi solid aerogel location
-  static const std::string& Aerogel = "/dd/Structure/LHCb/Rich1/Aerogel";
+  static const std::string& Aerogel   = "/dd/Structure/LHCb/Rich1/Aerogel";
   /// Rich1 gas (C4F10) location
   static const std::string& C4F10     = "/dd/Structure/LHCb/Rich1/C4F10";
   /// Rich2 gas (CF4) location
@@ -68,13 +72,17 @@ class DeRichRadiator: public DetectorElement {
 public:
 
   /// Default constructor
-  DeRichRadiator::DeRichRadiator()
+  DeRichRadiator()
     : DetectorElement (),
       m_radiatorID    ( Rich::InvalidRadiator ),
       m_rich          ( Rich::InvalidDetector ),
       m_refIndex      ( 0                     ),
       m_rayleigh      ( 0                     ),
-      m_name          ( "UnInitialized"       ) { }
+      m_name          ( "UnInitialized"       ),
+      m_condTool      ( 0                     ) { }
+
+  /// Destructor
+  virtual ~DeRichRadiator();
 
   /**
    * This is where most of the geometry is read and variables initialised
@@ -129,6 +137,7 @@ public:
   virtual StatusCode nextIntersectionPoint( const HepPoint3D& pGlobal,
                                             const HepVector3D& vGlobal,
                                             HepPoint3D& returnPoint ) const = 0;
+
   /**
    * Finds the entry and exit points of the radiator. For boolean solids
    * this is the first and last intersection point.
@@ -171,6 +180,10 @@ protected:
 private:
 
   std::string m_name; ///< The name of this radiator
+
+  /// Pointer to RichCondition tool that maintains the 
+  /// refractive index tabulated properties
+  IAlgTool * m_condTool;
 
 };
 

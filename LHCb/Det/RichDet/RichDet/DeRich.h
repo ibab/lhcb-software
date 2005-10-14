@@ -4,29 +4,7 @@
  *  Header file for detector description class : DeRich
  *
  *  CVS Log :-
- *  $Id: DeRich.h,v 1.13 2005-09-23 15:27:28 papanest Exp $
- *  $Log: not supported by cvs2svn $
- *  Revision 1.12  2005/02/25 23:28:54  jonrob
- *  set printing to debug level
- *
- *  Revision 1.11  2004/10/20 22:41:54  jonrob
- *  Tidy up inline and virtual functions (whilst solving a windows problem)
- *
- *  Revision 1.10  2004/10/20 16:16:36  jonrob
- *  More minor updates to functions (adding const etc.)
- *
- *  Revision 1.9  2004/10/18 11:17:44  papanest
- *  mirror reflectivity
- *
- *  Revision 1.8  2004/10/18 09:21:48  jonrob
- *  Minor updates to functions (adding const etc.)
- *
- *  Revision 1.7  2004/09/01 15:20:19  papanest
- *  added functions for TabProps
- *
- *  Revision 1.6  2004/07/27 08:55:22  jonrob
- *  Add doxygen file documentation and CVS information
- *
+ *  $Id: DeRich.h,v 1.14 2005-10-14 08:21:37 jonrob Exp $
  *
  *  @author Antonis Papanestis a.papanestis@rl.ac.uk
  *  @date   2004-06-18

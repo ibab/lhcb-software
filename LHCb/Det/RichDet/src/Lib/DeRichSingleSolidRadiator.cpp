@@ -3,7 +3,7 @@
  *
  *  Implementation file for detector description class : DeRichSingleSolidRadiator
  *
- *  $Id: DeRichSingleSolidRadiator.cpp,v 1.11 2005-09-23 15:27:28 papanest Exp $
+ *  $Id: DeRichSingleSolidRadiator.cpp,v 1.12 2005-10-14 08:21:37 jonrob Exp $
  *
  *  @author Antonis Papanestis a.papanestis@rl.ac.uk
  *  @date   2004-06-18
@@ -71,10 +71,10 @@ StatusCode DeRichSingleSolidRadiator::initialize()
   }
 
   const HepPoint3D zero(0.0, 0.0, 0.0);
-  log << MSG::DEBUG << "Found  TabProp " << m_refIndex->name() << " type "
+  log << MSG::DEBUG << "Found TabProp " << m_refIndex->name() << " type "
       << m_refIndex->type() << endmsg;
   if ( m_rayleigh )
-    log << MSG::DEBUG << "Found  TabProp " << m_rayleigh->name() << " type "
+    log << MSG::DEBUG << "Found TabProp " << m_rayleigh->name() << " type "
         << m_rayleigh->type() << endmsg;
   log << MSG::DEBUG <<" Centre:" << geometry()->toGlobal(zero) << endreq;
 

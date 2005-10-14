@@ -4,19 +4,7 @@
  *  Header file for detector description class : DeRichMultiSolidRadiator
  *
  *  CVS Log :-
- *  $Id: DeRichMultiSolidRadiator.h,v 1.7 2005-09-23 15:27:28 papanest Exp $
- *  $Log: not supported by cvs2svn $
- *  Revision 1.6  2004/10/20 16:16:36  jonrob
- *  More minor updates to functions (adding const etc.)
- *
- *  Revision 1.5  2004/10/18 09:21:49  jonrob
- *  Minor updates to functions (adding const etc.)
- *
- *  Revision 1.4  2004/09/01 15:20:19  papanest
- *  added functions for TabProps
- *
- *  Revision 1.3  2004/07/27 08:55:22  jonrob
- *  Add doxygen file documentation and CVS information
+ *  $Id: DeRichMultiSolidRadiator.h,v 1.8 2005-10-14 08:21:37 jonrob Exp $
  *
  *  @author Antonis Papanestis  a.papanestis@rl.ac.uk
  *  @date   2004-06-18

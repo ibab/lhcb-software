@@ -4,6 +4,12 @@
 ! Purpose     : interface to the xml description
 !-----------------------------------------------------------------------------
 
+! 2005-10-14 - Chris Jones
+ - Additions to radiator detector elements to load up RichCondition tools.
+   Needed to ensure these tools are initialised before the detector elememts.
+   Note - not entriely happy with this approach, but it seems to work. 
+   It is should be considered under review.
+
 ! 2005-09-23 - Antonis Papanestis
  - Modifications in DeRichSphMirror for the secondary spherical mirrors
  - MultiSolid radiator for the new aerogel

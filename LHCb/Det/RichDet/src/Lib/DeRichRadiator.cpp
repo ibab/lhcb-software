@@ -4,7 +4,7 @@
  *
  *  Implementation file for detector description class : DeRichRadiator
  *
- *  $Id: DeRichRadiator.cpp,v 1.12 2005-02-25 23:28:54 jonrob Exp $
+ *  $Id: DeRichRadiator.cpp,v 1.13 2005-10-14 08:21:37 jonrob Exp $
  *
  *  @author Antonis Papanestis a.papanestis@rl.ac.uk
  *  @date   2004-06-18
@@ -18,10 +18,14 @@
 
 // Gaudi
 #include "GaudiKernel/MsgStream.h"
+#include "GaudiKernel/Bootstrap.h"
+#include "GaudiKernel/ISvcLocator.h"
+#include "GaudiKernel/IToolSvc.h"
+#include "GaudiKernel/IAlgTool.h"
 
 //----------------------------------------------------------------------------
 
-StatusCode DeRichRadiator::initialize() 
+StatusCode DeRichRadiator::initialize()
 {
 
   // store the name of the radiator
@@ -52,7 +56,58 @@ StatusCode DeRichRadiator::initialize()
     }
   }
 
-  msg << MSG::DEBUG << "Initializing Radiator : " << m_rich << " " << m_radiatorID << endreq;
+  msg << MSG::DEBUG << "Initializing Radiator : " << rich() << " " << radiatorID() << endreq;
 
+  // Trick to load up the RichConditions tool for this detector element
+  // need to make sure it is created before this object is initialised
+  const std::string richConName =
+    ( Rich::Rich1 ==  rich() ? "Rich1PresTempMonitor" : "Rich2PresTempMonitor" );
+  StatusCode sc = StatusCode::FAILURE;
+  // get the Gaudi service locator
+  static ISvcLocator * svcLoc = Gaudi::svcLocator();
+  if (svcLoc)
+  {
+    // get the tool service
+    IToolSvc * toolSvc;
+    svcLoc->service( "ToolSvc", toolSvc, true );
+    if (toolSvc)
+    {
+      // load the RICH conditions tool for this element
+      msg << MSG::DEBUG << "Loading tool " << richConName << endreq;
+      sc = toolSvc->retrieveTool ( richConName , m_condTool , 0 , true ) ;
+    }
+    else
+    {
+      msg << MSG::ERROR << "Failed to find ToolSvc" << endreq;
+      return StatusCode::FAILURE;
+    }
+  } 
+  else
+  {
+    msg << MSG::ERROR << "Failed to find Gaudi::svcLocator()" << endreq;
+    return StatusCode::FAILURE;
+  }
+  if (!sc)
+  {
+    static bool errPrinted = false;
+    if ( !errPrinted )
+    {
+      msg << MSG::WARNING 
+          << "Failed to load RichCondition tools" << endreq
+          << "Some conditions data will not be updated properly" << endreq
+          << "Please add 'RichCondition' to the list of DLLs" << endreq;
+      errPrinted = true;
+    }
+  }
+  
   return StatusCode::SUCCESS;
+}
+
+DeRichRadiator::~DeRichRadiator()
+{
+  // CRJ : Note sure if this should be done ??
+  //     : Probably should be in a finalize() method but DetectorElements
+  //     : do not have this method. If done here causes a crash at the end
+  //     : of the job :(
+  // if ( m_condTool ) { m_condTool->release(); }
 }

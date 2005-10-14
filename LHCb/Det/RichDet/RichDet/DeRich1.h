@@ -4,14 +4,7 @@
  *  Header file for detector description class : DeRich1
  *
  *  CVS Log :-
- *  $Id: DeRich1.h,v 1.11 2004-10-20 22:41:54 jonrob Exp $
- *  $Log: not supported by cvs2svn $
- *  Revision 1.10  2004/10/18 09:21:48  jonrob
- *  Minor updates to functions (adding const etc.)
- *
- *  Revision 1.9  2004/07/27 08:55:22  jonrob
- *  Add doxygen file documentation and CVS information
- *
+ *  $Id: DeRich1.h,v 1.12 2005-10-14 08:21:37 jonrob Exp $
  *
  *  @author Antonis Papanestis   a.papanestis@rl.ac.uk
  *  @date   2004-06-18

@@ -5,7 +5,7 @@
  *  Header file for detector description class : DeRichSingleSolidRadiator
  *
  *  CVS Log :-
- *  $Id: DeRichSingleSolidRadiator.h,v 1.6 2005-02-23 10:26:00 jonrob Exp $
+ *  $Id: DeRichSingleSolidRadiator.h,v 1.7 2005-10-14 08:21:37 jonrob Exp $
  *
  *  @author Antonis Papanestis a.papanestis@rl.ac.uk
  *  @date   2004-06-18
@@ -49,7 +49,8 @@ public:
    * Retrieves reference to class identifier
    * @return the class identifier for this class
    */
-  const CLID& clID() const {
+  inline const CLID& clID() const 
+  {
     return classID();
   }
 
