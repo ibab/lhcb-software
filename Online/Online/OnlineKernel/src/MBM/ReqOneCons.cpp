@@ -5,6 +5,7 @@ static void help()  {
   ::printf("mbm_cons_one -opt [-opt]\n");
   ::printf("    -n=<name>      buffer member name\n");
   ::printf("    -s=<number>    sleep interval between events [milli seconds]\n");
+  ::printf("    -b=<name>      Buffer identifier \n");
 }
 
 extern "C" int mbm_cons_one(int argc,char **argv) {
@@ -13,12 +14,13 @@ extern "C" int mbm_cons_one(int argc,char **argv) {
   int  vetomask[4] = {0,0,0,0};
 
   RTL::CLI cli(argc, argv, help);
-  std::string name = "cons_one";
+  std::string name = "cons_one", buffer="0";
   cli.getopt("name", 1,name);
   cli.getopt("sleep",1,sleep_msecs);
+  cli.getopt("buffer",1,buffer);
 
-  MBM::Consumer c("0",name,0x103);
-  ::printf("Consumer \"%s\" (pid:%d) including buffer:\"%s\"\n",name.c_str(),c.pid(),"0");
+  MBM::Consumer c(buffer,name,0x103);
+  ::printf("Consumer \"%s\" (pid:%d) including buffer:\"%s\"\n",name.c_str(),c.pid(),buffer.c_str());
   c.addRequest(1,trmask,vetomask,BM_MASK_ANY,BM_REQ_ONE,BM_FREQ_PERC,100.);
   while(1)  {
     c.getEvent();

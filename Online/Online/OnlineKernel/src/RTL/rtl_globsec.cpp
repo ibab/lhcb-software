@@ -71,9 +71,11 @@ int lib_rtl_delete_section(lib_rtl_gbl_t h)    {
   if ( h )  {
 #ifdef linux
     sc = ::shm_unlink(h->name)==0 ? 1 : 0;
-    if ( 0 == sc ) delete h;
+    delete h;
+    if ( sc == 0 ) sc = 1;
 #else
-    sc = 1;
+    sc = lib_rtl_unmap_section(h);
+    delete h;
 #endif
   }
   return sc;
@@ -100,6 +102,8 @@ int lib_rtl_map_section(const char* sec_name, int size, lib_rtl_gbl_t* address) 
   }
   int err = getError();
   ::shm_unlink(h->name);
+  ::printf("error mapping section [%s]. Status %d [%s]\n",h->name,err,errorString(err));
+  return 0;
 #elif defined(_WIN32)
   h->addaux = ::OpenFileMapping(FILE_MAP_ALL_ACCESS,FALSE,h->name);
   if ( h->addaux )  {
@@ -109,11 +113,11 @@ int lib_rtl_map_section(const char* sec_name, int size, lib_rtl_gbl_t* address) 
       *address = h.release();
       return 1;
     }
+    int err = getError();
+    ::printf("error mapping section [%s]. Status %d [%s]\n",h->name,err,errorString(err));
   }
-  int err = getError();
-#endif
-  ::printf("error mapping section [%s]. Status %d [%s]\n",h->name,err,errorString(err));
   return 0;
+#endif
 }
 
 /// Unmap global section: address is quadword: void*[2]
@@ -123,6 +127,7 @@ int lib_rtl_unmap_section(lib_rtl_gbl_t h)   {
     int sc = ::munmap(h->address,h->size)==0 ? 1 : 0;
 #elif defined(_WIN32)
     int sc = (::UnmapViewOfFile(h->address) == 0) ? 0 : 1;
+    ::CloseHandle(h->address);
 #endif
     return sc;
   }

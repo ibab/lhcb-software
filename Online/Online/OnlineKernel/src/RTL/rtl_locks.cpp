@@ -70,7 +70,7 @@ int lib_rtl_delete_lock(lib_rtl_lock_t handle)   {
     }
     return lib_rtl_signal_message(LIB_RTL_OS,"error in deleting lock %s %08X.",h->name,h->handle);
   }
-  return lib_rtl_signal_message(LIB_RTL_DEFAULT,"Error in deleting semaphore [INVALID MUTEX].");
+  return lib_rtl_signal_message(LIB_RTL_DEFAULT,"Cannot delete lock [INVALID HANDLE].");
 }
 
 int lib_rtl_cancel_lock(lib_rtl_lock_t h) {
@@ -91,7 +91,7 @@ int lib_rtl_cancel_lock(lib_rtl_lock_t h) {
     return 1;
 #endif
   }
-  return 0;
+  return lib_rtl_signal_message(LIB_RTL_DEFAULT,"Cannot cancel lock [INVALID HANDLE].");
 }
 
 int lib_rtl_lock(lib_rtl_lock_t h) {

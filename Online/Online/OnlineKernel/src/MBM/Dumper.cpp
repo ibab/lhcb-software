@@ -74,7 +74,7 @@ int MBM::Dumper::optparse (const char* c)   {
 }
 
 int MBM::Dumper::print()  {
-  int status  = mapSections(this);
+  int status  = mapSections();
   if ( lib_rtl_is_success(status) )  {
     int i;
     print_control_table(m_bm->ctrl);

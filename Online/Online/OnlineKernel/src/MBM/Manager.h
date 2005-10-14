@@ -12,12 +12,14 @@ namespace MBM {
     char event_mod[32];
     char bitmap_mod[32];
     char* bm_id;     /* Buffer id                   */
+    lib_rtl_gbl_t bm_all;
     Manager();
     virtual ~Manager();
-    static int mapSections(Manager* m);
-    virtual int  optparse (const char* c) = 0;
-    void getOptions(int argc, char** argv);
-    void setup(const char* id=0);
+    virtual int mapSections();
+    virtual int unmapSections();
+    virtual int optparse (const char* c) = 0;
+    virtual void getOptions(int argc, char** argv);
+    virtual void setup(const char* id=0);
   };
 }
 #endif // _MBM_MANAGER_H

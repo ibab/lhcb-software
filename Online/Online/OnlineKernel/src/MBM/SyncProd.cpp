@@ -6,18 +6,20 @@ static void help()  {
   ::printf("    -n=<name>      buffer member name\n");
   ::printf("    -m=<number>    number of events\n");
   ::printf("    -s=<number>    event size [bytes]\n");
+  ::printf("    -b=<name>      Buffer identifier \n");
 }
 
 extern "C" int mbm_prod(int argc,char **argv) {
   RTL::CLI cli(argc, argv, help);
-  std::string name = "producer";
+  std::string name = "producer", buffer="0";
   int trnumber = -1, len = 1792, nevt = 1000000;
   cli.getopt("name",1,name);
   cli.getopt("m",1,nevt);
   cli.getopt("size",1,len);
-  MBM::Producer p("0",name,0x103);
+  cli.getopt("buffer",1,buffer);
+  MBM::Producer p(buffer,name,0x103);
   ::printf("Producer \"%s\" (pid:%d) included in buffer:\"%s\" len=%d nevt=%d\n",
-	   name.c_str(), MBM::Producer::pid(), "0", len, nevt);
+	   name.c_str(), MBM::Producer::pid(), buffer.c_str(), len, nevt);
   while(nevt--)  {
     if ( p.getSpace(len) == MBM_NORMAL ) {
       MBM::EventDesc& e = p.event();

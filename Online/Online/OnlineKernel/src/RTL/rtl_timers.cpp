@@ -18,7 +18,6 @@ namespace {
   extern "C" __declspec(dllimport) BOOL  __stdcall SetWaitableTimer(void*, const LARGE_INTEGER*, DWORD, void*, void*, BOOL);
 #endif
 
-
 #if defined(_WIN32)
 static void CALLBACK lib_rtl_timer_proc(void* arg, DWORD dwTimeHigh, DWORD dwTimeLow)  {
   timer_entry_t *t = (timer_entry_t*)arg;
@@ -30,6 +29,46 @@ static void CALLBACK lib_rtl_timer_proc(void* arg, DWORD dwTimeHigh, DWORD dwTim
 }
 #elif defined(USE_PTHREADS)
 #endif
+
+#include <list>
+struct lib_rtl_timer_entry  {
+  timer_ast_t  ast;
+  void*        param;
+  lib_rtl_timer_entry() : ast(0), param(0) {}
+  lib_rtl_timer_entry(timer_ast_t a, void* p) : ast(a), param(p) {}
+  lib_rtl_timer_entry(const lib_rtl_timer_entry& copy) : ast(copy.ast), param(copy.param) {}
+  lib_rtl_timer_entry& operator=(const lib_rtl_timer_entry c)  {
+    ast = c.ast;
+    param = c.param;
+    return *this;
+  }
+  void execute()  {
+    lib_rtl_run_ast(ast, param, 3);
+  }
+};
+
+typedef std::list<lib_rtl_timer_entry> timer_collection_t;
+timer_collection_t& timers()  {
+  static timer_collection_t s;
+  return s;
+}
+
+int lib_rtl_get_ticks()  {
+  return 0;
+}
+
+static int lib_rtl_timer_call(void* param)  {
+  timer_collection_t* c = (timer_collection_t*)param;
+  if ( c )  {
+    int now = lib_rtl_get_ticks();
+//    for (timer_collection_t::iterator i=c->begin(); i!=c->end(); ++i)  {
+//      timer_entry_t* e = (*i).second;
+//      if ( now - e->start >= e->count )  {
+//      }
+//    }
+  }
+  return 1;
+}
 
 int lib_rtl_set_timer(int milli_seconds, timer_ast_t ast, void* ast_param, unsigned int* timer_id)  {
   timer_entry_t* t = new timer_entry_t;
@@ -48,6 +87,18 @@ int lib_rtl_set_timer(int milli_seconds, timer_ast_t ast, void* ast_param, unsig
     ::CloseHandle(t->hdl);
   }
 #elif defined(USE_PTHREADS)
+  timers().push_back(lib_rtl_timer_entry(ast,ast_param));
+  *timer_id = id;  
+  lib_rtl_action* act = new lib_rtl_action;
+  act->action = action;
+  act->param  = param;
+  act->flag   = flag;
+  lib_rtl_thread_t thread;
+  sc = lib_rtl_start_thread(lib_rtl_timer_call, &timers(), &thread);
+  if ( !lib_rtl_is_success(sc) )  {
+    lib_rtl_signal_message(0,"Failed to manipulate asynchronous wait event thread");
+    return 0;
+  }
 #endif
   delete t;
   return 0;
@@ -62,6 +113,10 @@ int lib_rtl_kill_timer(int timer_id) {
     delete t;
     return 1;
 #elif defined(USE_PTHREADS)
+    timer_collection_t::iterator i=timers().find(timer_id);
+    if ( i != timers().end() )  {
+      timers().erase(i);
+    }
 #endif
   }
   return 0;

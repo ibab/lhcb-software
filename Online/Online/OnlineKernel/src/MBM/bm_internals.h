@@ -69,20 +69,15 @@ extern "C" {
   int _mbm_check_freqmode (BMDESCRIPT *bm);
   int _mbm_send_space (BMDESCRIPT *bm);
 
-  int _mbm_create_section(const char *section_name, int size, lib_rtl_gbl_t* address);
-  int _mbm_delete_section(lib_rtl_gbl_t handle);
-  /// Map global section: address is quadword: void*[2]
-  int _mbm_map_section(const char *section_name, int size, lib_rtl_gbl_t* address);
-  /// Unmap global section: address is quadword: void*[2]
-  int _mbm_unmap_section(lib_rtl_gbl_t address);
-
-  int _mbm_create_lock(BMDESCRIPT *);
   int _mbm_lock_tables(BMDESCRIPT *);
   int _mbm_unlock_tables(BMDESCRIPT *);
   int _mbm_delete_lock(BMDESCRIPT *);
-  int _mbm_cancel_lock (BMDESCRIPT *);
   /// Wait event space AST function
   int _mbm_wes_ast(void* par);
+  /// Map buffer manager memory sections
+  int _mbm_map_sections(BMDESCRIPT* bm);
+  /// Unmap buffer manager memory sections
+  int _mbm_unmap_sections(BMDESCRIPT* bm);
 };
 
 #define _CHECK( x )  { int sc = x ; if ( !(sc&1) ) { printf ( "Error in:%s, status=%d\n", #x , sc ); return sc; } }

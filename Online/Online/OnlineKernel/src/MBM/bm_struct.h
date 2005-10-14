@@ -165,6 +165,16 @@ struct CONTROL  {
   int spare1;
 };
 
+struct BUFFERS  {
+  struct BUFF {
+    char name[32];
+    int  used;
+  };
+  int   p_bmax;           // Maximum number of buffers
+  int   nbuffer;          // Current number of buffers
+  BUFF  buffers[1];       // Buffer descriptors
+};
+
 struct BMDESCRIPT : public qentry_t  {
   CONTROL*         ctrl;
   USER*            user;

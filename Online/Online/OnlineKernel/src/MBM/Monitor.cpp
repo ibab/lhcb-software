@@ -37,7 +37,7 @@ int cont = 1;
 int end  = 1;
 
 namespace MBM {
-  struct Monitor : public Manager {
+  struct Monitor {
     struct ManagerImp : public Manager {
       virtual int  optparse (const char*) {
         return 1;
@@ -46,18 +46,21 @@ namespace MBM {
       virtual ~ManagerImp() {}
     };
     struct DISP_BMDES   {
-      ManagerImp m_mgr;
-      int m_bm_row;
-      int m_stat_row;
+      ManagerImp      m_mgr;
+      BUFFERS::BUFF*  m_buff;
     };
-    DISP_BMDES bms[10];
-    int  nbms;
+    DISP_BMDES* m_bms;
+    int  m_numBM;
     size_t m_currLine;
+    char m_buffID[32];
+    char* m_bmid;
+    lib_rtl_gbl_t m_bm_all;
+    WINDOW* m_window;
+    BUFFERS* m_buffers;
+    int m_color;
 
     int monitor();
     int put_inf();
-    int m_color;
-    WINDOW* m_window;
     void setTextcolor(int col)  {
       m_color = col;
       textcolor(col);
@@ -110,18 +113,25 @@ namespace MBM {
 
     int draw_buffer(const char* name, CONTROL* ctrl);
 
-    virtual int  optparse (const char* c);
+    void getOptions(int argc, char** argv);
+    virtual int optparse (const char* c);
     int MBM::Monitor::get_bm_list();
     int draw_bar(float ratio,int full_scale);
     Monitor(int argc , char** argv) : m_window(0)  {
+      m_bmid = 0;
       getOptions(argc, argv);
-      nbms = 1;
-      bms[0].m_mgr.setup("0");
       m_color = YELLOW;
     }
   };
 }
 
+void MBM::Monitor::getOptions(int argc, char** argv)    {
+  while (--argc > 0) {                                  /* process options  */
+    const char* cptr = *++argv;
+    if ( *cptr == '-' || *cptr == '/' )
+      optparse (cptr+1);
+  }
+}
 int MBM::Monitor::draw_bar(float ratio,int full_scale)    {
   int barlen  =  int(0.5+ratio*float(full_scale));
   graphics();
@@ -137,14 +147,21 @@ int MBM::Monitor::monitor() {
 
   //signal (SIGINT,handler);
   //signal (SIGABRT,handler);
+  int status = mbm_map_global_buffer_info(&m_bm_all);
+  if(!lib_rtl_is_success(status))   {	
+    printf("Cannot map global buffer information....\n");
+    exit(status);
+  }
+  m_buffers = (BUFFERS*)m_bm_all->address;
+  m_bms = new DISP_BMDES[m_buffers->p_bmax];
 
-  get_bm_list();    
   m_window = initscreen();
   _setcursortype(_NOCURSOR);      // hide the cursor
   textcolor(YELLOW);              // change textcolor to YELLOW
   textbackground(BLUE);           // change backgroundcolor to BLUE
   if( cont )    {
     while( end )    {
+      get_bm_list();    
       begin_update();
       put_inf();
       end_update();
@@ -192,34 +209,38 @@ int MBM::Monitor::put_inf()   {
   draw_line(REVERSE,  "                               Buffer Manager Monitor [%s]",tim);
   draw_line();
   draw_line(NORMAL,"");
-  for (i=0;i<nbms;i++)  {
-    BMDESCRIPT* dsc = bms[i].m_mgr.m_bm;
-    draw_buffer(dsc->bm_name, dsc->ctrl);
-    draw_line(NORMAL,"");
+  for (i=0;i<m_buffers->p_bmax;i++)  {
+    if ( m_bms[i].m_buff != 0 )  {
+      BMDESCRIPT* dsc = m_bms[i].m_mgr.m_bm;
+      draw_buffer(dsc->bm_name, dsc->ctrl);
+      draw_line(NORMAL,"");
+    }
   }
   draw_line();
-  draw_line(NORMAL,nbms<=0 ? "               No active buffers present" : head);
+  draw_line(NORMAL,m_numBM<=0 ? "               No active buffers present" : head);
   draw_line();
 
-  for (i=0;i<nbms;i++)  {
-    USER *us;
-    BMDESCRIPT* dsc = bms[i].m_mgr.m_bm;
-    for (j=0,us = dsc->user;j<dsc->ctrl->p_umax;j++,us++)    {
-      if (us->busy == 0) continue;
-      if (us->ev_produced>0)      {
-        sprintf(line," %-13s%4x%5X%5s%6s%9d%21s",
-          us->name,us->partid,us->pid,"P",sstat[us->p_state+1],us->ev_produced,dsc->bm_name);    
+  for (i=0;i<m_buffers->p_bmax;i++)  {
+    if ( m_bms[i].m_buff != 0 )  {
+      USER *us;
+      BMDESCRIPT* dsc = m_bms[i].m_mgr.m_bm;
+      for (j=0,us = dsc->user;j<dsc->ctrl->p_umax;j++,us++)    {
+        if (us->busy == 0) continue;
+        if (us->ev_produced>0)      {
+          sprintf(line," %-13s%4x%5X%5s%6s%9d%21s",
+            us->name,us->partid,us->pid,"P",sstat[us->p_state+1],us->ev_produced,dsc->bm_name);    
+        }
+        else if (us->ev_actual>0)        {
+          float perc = ((float)us->ev_seen/(float)us->ev_actual)*100;
+          sprintf(line," %-13s%4x%5X%5s%6s         %9d  %3.0f%7s",
+            us->name,us->partid,us->pid,"C",sstat[us->c_state+1],
+            us->ev_seen,perc+0.1,dsc->bm_name);    
+        }
+        else        {
+          sprintf(line," %-13s%4x%5X%5s    %32s",us->name,us->partid,us->pid,"?",dsc->bm_name);    
+        }
+        draw_line(NORMAL,line);
       }
-      else if (us->ev_actual>0)        {
-        float perc = ((float)us->ev_seen/(float)us->ev_actual)*100;
-        sprintf(line," %-13s%4x%5X%5s%6s         %9d  %3.0f%7s",
-          us->name,us->partid,us->pid,"C",sstat[us->c_state+1],
-          us->ev_seen,perc+0.1,dsc->bm_name);    
-      }
-      else        {
-        sprintf(line," %-13s%4x%5X%5s    %32s",us->name,us->partid,us->pid,"?",dsc->bm_name);    
-      }
-      draw_line(NORMAL,line);
     }
   }
   while(m_currLine<term_height()-1) 
@@ -228,24 +249,23 @@ int MBM::Monitor::put_inf()   {
 }
 
 int MBM::Monitor::optparse (const char* c)  {
-  char buff_id[32];
   register int iret;
   switch (*c | 0x20)  {
   case 's':        /*      Single Update*/  
     cont = 0;
     break;
   case 'i':        /*      buffer_id        */  
-    iret = sscanf(c+1,"=%s",buff_id);
+    iret = sscanf(c+1,"=%s",m_buffID);
     if( iret != 1 )      {
       writeln(2,"Error reading Buffer identifier parameter\n",80);
       exit(0);
     }
-    bm_id = (char*)c+2;
+    m_bmid = m_buffID;
     break;
   case '?':
   case 'h':
   default:
-    writeln(2,"bm - Buffer Manager Monitor\n",80);
+    writeln(2,"mbm_mon - Buffer Manager Monitor\n",80);
     writeln(2,"Options:\n",80);
     writeln(2,"    -i=<bm_name>   Select Buffer Identifier\n",80);
     writeln(2,"    -s             Single update \n",80);
@@ -255,11 +275,22 @@ int MBM::Monitor::optparse (const char* c)  {
 }
 
 int MBM::Monitor::get_bm_list()   {
-  for (int i = 0; i < nbms; ++i)  {
-    int sc = mapSections(&bms[i].m_mgr);
-    if ( !lib_rtl_is_success(sc) ) exit(sc);
-    bms[i].m_bm_row  = 4+i*4;
-    bms[i].m_stat_row  = bms[i].m_bm_row+2;
+  m_numBM = 0;
+  for (int i = 0, j=0; i < m_buffers->p_bmax; ++i)  {
+    if ( m_buffers->buffers[i].used == 1 )  {
+      if ( m_bmid != 0 && strcmp(m_bmid,m_buffers->buffers[i].name) != 0 )  {
+        continue;
+      }
+      m_bms[i].m_mgr.setup(m_buffers->buffers[i].name);
+      int sc = m_bms[i].m_mgr.mapSections();
+      if ( !lib_rtl_is_success(sc) ) exit(sc);
+      m_bms[i].m_buff = &m_buffers->buffers[i];
+      m_numBM++;
+    }
+    else if ( m_bms[i].m_buff != 0 )  {
+      m_bms[i].m_mgr.unmapSections();
+      m_bms[i].m_buff = 0;
+    }
   }
   return 1;
 }

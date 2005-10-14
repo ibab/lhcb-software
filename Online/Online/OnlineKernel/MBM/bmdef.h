@@ -2,6 +2,7 @@
 #define _MBM_MBMDEF_H
 
 #include "bmssdef.h"
+#include "rtl/rtl.h"
 
 enum MBM_MaskTypes  {
   BM_MASK_ANY   = 0,
@@ -30,6 +31,7 @@ typedef long BMID;
 #endif
 
 extern "C"  {
+  struct BUFFERS;
   int  mbm_install(int argc , char** argv);
   int  mbm_deinstall(int argc , char** argv);
   int  mbm_dump(int argc , char** argv);
@@ -69,5 +71,13 @@ extern "C"  {
   int  mbm_wait_event_a(BMID bm);
   /// Default AST implementation on get_event
   int  mbm_get_event_ast(void* par);
+  /// Map buffer memory sections
+  BMID mbm_map_memory(const char* bm_name);
+  /// Unmap buffer memory sections
+  int mbm_unmap_memory(BMID bm);
+  /// Map global buffer information on this machine
+  int mbm_map_global_buffer_info(lib_rtl_gbl_t* handle);
+  /// Unmap global buffer information on this machine
+  int mbm_unmap_global_buffer_info(lib_rtl_gbl_t handle);
 };
 #endif // _MBM_MBMDEF_H

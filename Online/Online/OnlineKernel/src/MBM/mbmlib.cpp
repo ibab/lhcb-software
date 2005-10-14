@@ -28,6 +28,7 @@
 #include <memory>
 #include "bm_struct.h"
 #include "RTL/DoubleLinkedQueue.h"
+#define MBM_MAX_BUFF  32
 
 #define _mbm_return_err(a)  { errno = a; return (a); }
 
@@ -143,91 +144,56 @@ public:
   }
 };
 
-BMDESCRIPT *mbm_include (const char* bm_name, const char* name, int partid) {
-  char text[32]="";
-  int status;
-
-  _mbm_fill_offsets();
-  _mbm_wes_ast_add  = _mbm_wes_ast;
-  if ( reference_count == 0 )  {
-    desc_head  = new qentry_t;
-    memset(desc_head,0,sizeof(qentry_t));
-  }
+BMDESCRIPT* mbm_map_memory(const char* bm_name)  {
   std::auto_ptr<BMDESCRIPT> bm(new BMDESCRIPT);
   memset(bm.get(),0,sizeof(BMDESCRIPT));
-
   strcpy(bm->bm_name,bm_name);
-  sprintf(text, "bm_ctrl_%s",   bm_name);
-  status  = _mbm_map_section(text, sizeof(CONTROL), &bm->ctrl_add);
-  if (!lib_rtl_is_success(status))    {
-    ::printf("failure to map control section for %s. Status = %d\n",bm_name,status);
-    return (BMDESCRIPT*)-1;
+  bm->owner = -1;
+  int sc = _mbm_map_sections(bm.get());
+  if ( sc == MBM_NORMAL )  {
+    return bm.release();
   }
-  bm->ctrl = (CONTROL*)bm->ctrl_add->address;
-  sprintf(text, "bm_event_%s",  bm_name);
-  status  = _mbm_map_section(text, bm->ctrl->p_emax*sizeof(EVENT), &bm->event_add);
-  if (!lib_rtl_is_success(status))  {
-    _mbm_unmap_section(bm->ctrl_add);
-    ::printf("failure to map event section for %s. Status = %d\n",bm_name,status);
-    return (BMDESCRIPT*)-1;
-  }
-  bm->event = (EVENT*)bm->event_add->address;
-  sprintf(text, "bm_user_%s",   bm_name);
-  status  = _mbm_map_section(text, bm->ctrl->p_umax*sizeof(USER), &bm->user_add);
-  if (!lib_rtl_is_success(status))  {
-    _mbm_unmap_section(bm->event_add);
-    _mbm_unmap_section(bm->ctrl_add);
-    ::printf("failure to map user section for %s. Status = %d\n",bm_name,status);
-    return (BMDESCRIPT*)-1;
-  }
-  bm->user = (USER*)bm->user_add->address;
-  sprintf(text, "bm_bitmap_%s", bm_name);
-  status  = _mbm_map_section(text, bm->ctrl->bm_size, &bm->bitm_add);
-  if (!lib_rtl_is_success(status))  {
-    _mbm_unmap_section(bm->user_add);
-    _mbm_unmap_section(bm->event_add);
-    _mbm_unmap_section(bm->ctrl_add);
-    ::printf("failure to map bit-map section for %s. Status = %d\n",bm_name,status);
-    return (BMDESCRIPT*)-1;
-  }
-  bm->bitmap = (char*)bm->bitm_add->address;
-  sprintf(text, "bm_buffer_%s", bm_name);
-  status  = _mbm_map_section(text, bm->ctrl->buff_size, &bm->buff_add);
-  if (!lib_rtl_is_success(status))  {
-    _mbm_unmap_section(bm->bitm_add);
-    _mbm_unmap_section(bm->user_add);
-    _mbm_unmap_section(bm->event_add);
-    _mbm_unmap_section(bm->ctrl_add);
-    ::printf("failure to map buffer section for %s. Status = %d\n",bm_name,status);
-    return (BMDESCRIPT*)-1;
-  }
-  bm->buffer_add = (char*)bm->buff_add->address;
+  return 0;
+}
 
-  status = _mbm_create_lock(bm.get());
-  if (!lib_rtl_is_success(status))  {
-    _mbm_unmap_section(bm->buff_add);
-    _mbm_unmap_section(bm->bitm_add);
-    _mbm_unmap_section(bm->user_add);
-    _mbm_unmap_section(bm->event_add);
-    _mbm_unmap_section(bm->ctrl_add);
-    ::printf("failure to create lock for %s. Status = %d\n",bm_name,status);
+int mbm_unmap_memory(BMDESCRIPT* bm)  {
+  std::auto_ptr<BMDESCRIPT> mbm(bm);
+  if ( mbm.get() )  {
+    return _mbm_unmap_sections(mbm.get());
+  }
+  return MBM_ERROR;
+}
+
+BMDESCRIPT *mbm_include (const char* bm_name, const char* name, int partid) {
+  int status;
+  char text[32]="";
+  _mbm_fill_offsets();
+  _mbm_wes_ast_add  = _mbm_wes_ast;
+  std::auto_ptr<BMDESCRIPT> bm(mbm_map_memory(bm_name));
+  if ( !bm.get() )  {
+    _mbm_unmap_sections(bm.get());
+    ::printf("failure to memory sections for %s. Status = %d\n",bm_name);
     return (BMDESCRIPT*)-1;
+  }
+
+  if ( !bm->lockid )  {
+    ::strcpy(bm->mutexName,"BM_");
+    ::strcat(bm->mutexName,bm->bm_name);
+    status = lib_rtl_create_lock(bm->mutexName, &bm->lockid);
+    if (!lib_rtl_is_success(status))    {
+      _mbm_unmap_sections(bm.get());
+      ::printf("Failed to create lock %s for %s. Status %d\n",bm->mutexName,bm_name,status);
+      return (BMDESCRIPT*)-1;
+    }
   }
   status = _mbm_lock_tables(bm.get());
   if (!lib_rtl_is_success(status))  {
-    _mbm_unmap_section(bm->buff_add);
-    _mbm_unmap_section(bm->bitm_add);
-    _mbm_unmap_section(bm->user_add);
-    _mbm_unmap_section(bm->event_add);
-    _mbm_unmap_section(bm->ctrl_add);
+    _mbm_unmap_sections(bm.get());
     _mbm_unlock_tables(bm.get());
     ::printf("failure to lock tables for %s. Status = %d\n",bm_name,status);
     return (BMDESCRIPT*)-1;
   }
-  bm->bitmap_size = bm->ctrl->bm_size;
-  bm->buffer_size = bm->ctrl->buff_size;
-
-  USER* us = _mbm_ualloc (bm.get());  /* find free slot */
+  USER* us = _mbm_ualloc (bm.get());  // find free user slot
   if (us == 0)  {
     _mbm_unlock_tables(bm.get());
     errno = MBM_NO_FREE_US;
@@ -253,23 +219,25 @@ BMDESCRIPT *mbm_include (const char* bm_name, const char* name, int partid) {
   bm->ctrl->i_users++;
 
   // Activate this user
-  sprintf(us->wes_flag, "bm_%s_WES_%d", bm_name, lib_rtl_pid());
+  ::sprintf(us->wes_flag, "bm_%s_WES_%d", bm_name, lib_rtl_pid());
   lib_rtl_create_event(us->wes_flag, &bm->WES_event_flag);
-  sprintf(us->wev_flag, "bm_%s_WEV_%d", bm_name, lib_rtl_pid());
+  ::sprintf(us->wev_flag, "bm_%s_WEV_%d", bm_name, lib_rtl_pid());
   lib_rtl_create_event(us->wev_flag, &bm->WEV_event_flag);
-  sprintf(us->wsp_flag, "bm_%s_WSP_%d", bm_name, lib_rtl_pid());
+  ::sprintf(us->wsp_flag, "bm_%s_WSP_%d", bm_name, lib_rtl_pid());
   lib_rtl_create_event(us->wsp_flag, &bm->WSP_event_flag);
   lib_rtl_create_event(0, &bm->WSPA_event_flag);
   lib_rtl_create_event(0, &bm->WEVA_event_flag);
 
-  insqhi (bm.get(), desc_head);
-  if (reference_count == 0)  {
+  if ( reference_count == 0 )  {
+    desc_head  = new qentry_t;
+    ::memset(desc_head,0,sizeof(qentry_t));
     lib_rtl_declare_exit (_mbm_shutdown, 0);
+    lib_rtl_declare_rundown(_mbm_shutdown,0);
   }
-  lib_rtl_declare_rundown(_mbm_shutdown,0);
+  insqhi (bm.get(), desc_head);
+  reference_count++;
   errno = 0;
   _mbm_unlock_tables(bm.get());
-  reference_count++;
   return bm.release();
 }
 
@@ -286,14 +254,8 @@ int mbm_exclude (BMDESCRIPT *bm)  {
     lib_rtl_delete_event(bm->WSP_event_flag);
     lib_rtl_delete_event(bm->WSPA_event_flag);
     lib_rtl_delete_event(bm->WEVA_event_flag);
-    lib_rtl_remove_rundown(_mbm_shutdown,0);
-    lib_rtl_remove_exit (_mbm_shutdown, 0);
     _mbm_uclean(bm);
-    _mbm_unmap_section(bm->buff_add);
-    _mbm_unmap_section(bm->bitm_add);
-    _mbm_unmap_section(bm->user_add);
-    _mbm_unmap_section(bm->event_add);
-    _mbm_unmap_section(bm->ctrl_add);
+    _mbm_unmap_sections(bm);
     _mbm_unlock_tables(bm);
   }
   else {
@@ -305,6 +267,8 @@ int mbm_exclude (BMDESCRIPT *bm)  {
   delete dummy;
   reference_count--;
   if (reference_count == 0)  {
+    lib_rtl_remove_rundown(_mbm_shutdown,0);
+    lib_rtl_remove_exit(_mbm_shutdown,0);
     delete desc_head;
     desc_head = 0;
   }
@@ -584,6 +548,44 @@ int mbm_cancel_request (BMDESCRIPT *bm)   {
     }
   }
   return user.status();
+}
+
+/// Map global buffer information on this machine
+int mbm_map_global_buffer_info(lib_rtl_gbl_t* handle)  {
+  lib_rtl_gbl_t h;
+  size_t len = sizeof(BUFFERS)+(MBM_MAX_BUFF-1)*sizeof(BUFFERS::BUFF);
+  int status = lib_rtl_map_section("bm_buffers", len, &h);
+  if( !lib_rtl_is_success(status))  {
+    status = lib_rtl_create_section("bm_buffers", len, &h);
+    if(!lib_rtl_is_success(status))   {	
+      printf("Cannot access section bm_buffers.\n");
+      return MBM_ERROR;
+    }
+    BUFFERS* buffs = (BUFFERS*)h->address;
+    ::memset(buffs,0,len);
+    buffs->nbuffer = 0;
+    buffs->p_bmax = MBM_MAX_BUFF;
+  }
+  *handle = h;
+  return MBM_NORMAL;
+}
+
+/// Unmap global buffer information on this machine
+int mbm_unmap_global_buffer_info(lib_rtl_gbl_t handle)  {
+  if ( handle )  {
+    int status;
+    BUFFERS* buffs = (BUFFERS*)handle->address;
+    if ( buffs->nbuffer == 0 )  {
+      status = lib_rtl_delete_section(handle);
+    }
+    else {
+      status = lib_rtl_unmap_section(handle);
+    }
+    if( lib_rtl_is_success(status) )   {	
+      return MBM_NORMAL;
+    }
+  }
+  return MBM_ERROR;
 }
 
 /// Utility routines
@@ -998,10 +1000,18 @@ int _mbm_shutdown (void* /* param */) {
   qentry_t *q, *bmq = desc_head;
   if (bmq == 0)  {
     return MBM_NORMAL;
-  }  
+  }
   for(int sc=remqhi(bmq,&q); lib_rtl_queue_success(sc); sc=remqhi(bmq,&q))  {
     BMDESCRIPT *bm = (BMDESCRIPT *)q;
-    _mbm_cancel_lock(bm);
+    if ( bm->lockid )  {
+      int status = lib_rtl_cancel_lock(bm->lockid);
+      if (!lib_rtl_is_success(status))    { 
+        ::printf("error in cancelling lock %s. Status %d\n",bm->mutexName,status);
+      }
+    }
+    else  {
+      ::printf("error in cancelling lock %s [Invalid Mutex].\n", bm->mutexName);
+    }
     if (disable_rundown == 1)    {
       continue;
     }
@@ -1012,11 +1022,11 @@ int _mbm_shutdown (void* /* param */) {
     lib_rtl_delete_event(bm->WSPA_event_flag);
     lib_rtl_delete_event(bm->WEVA_event_flag);
     _mbm_uclean (bm);
-    _mbm_unmap_section(bm->buff_add);
-    _mbm_unmap_section(bm->bitm_add);
-    _mbm_unmap_section(bm->user_add);
-    _mbm_unmap_section(bm->event_add);
-    _mbm_unmap_section(bm->ctrl_add);
+    lib_rtl_unmap_section(bm->buff_add);
+    lib_rtl_unmap_section(bm->bitm_add);
+    lib_rtl_unmap_section(bm->user_add);
+    lib_rtl_unmap_section(bm->event_add);
+    lib_rtl_unmap_section(bm->ctrl_add);
     _mbm_unlock_tables(bm);
   }
   /*  bm_exh_unlink (); */
@@ -1503,19 +1513,6 @@ int _mbm_send_space (BMDESCRIPT *bm)  {
   return sc;
 }
 
-int _mbm_create_lock(BMDESCRIPT *bm)    {
-  if ( !bm->lockid )  {
-    ::strcpy(bm->mutexName,"BM_");
-    ::strcat(bm->mutexName,bm->bm_name);
-    int status = lib_rtl_create_lock(bm->mutexName, &bm->lockid);
-    if (!lib_rtl_is_success(status))    {
-      ::printf("error in creating lock %s. Status %d\n",bm->mutexName,status);
-    }
-    return status;
-  }
-  return 0;
-}
-
 int _mbm_lock_tables(BMDESCRIPT *bm)  {
   if ( bm->lockid )  {
     int status = lib_rtl_lock(bm->lockid);
@@ -1555,34 +1552,61 @@ int _mbm_delete_lock(BMDESCRIPT *bm)    {
   return 0;
 }
 
-int _mbm_cancel_lock(BMDESCRIPT *bm)   {
-  if ( bm->lockid )  {
-    int status = lib_rtl_cancel_lock(bm->lockid);
-    if (!lib_rtl_is_success(status))    { 
-      ::printf("error in cancelling lock %s. Status %d\n",bm->mutexName,status);
-    }
-    return status;
+/// MAP buffer manager sections
+int _mbm_map_sections(BMDESCRIPT* bm)  {
+  char text[128];
+  const char* bm_name = bm->bm_name;
+  sprintf(text, "bm_ctrl_%s", bm->bm_name);
+  int status  = lib_rtl_map_section(text, sizeof(CONTROL), &bm->ctrl_add);
+  if (!lib_rtl_is_success(status))    {
+    ::printf("failure to map control section for %s. Status = %d\n",bm_name,status);
+    return MBM_ERROR;
   }
-  ::printf("error in cancelling lock %s [Invalid Mutex].\n", bm->mutexName);
-  return 0;
+  bm->ctrl = (CONTROL*)bm->ctrl_add->address;
+  sprintf(text, "bm_event_%s",  bm_name);
+  status  = lib_rtl_map_section(text, bm->ctrl->p_emax*sizeof(EVENT), &bm->event_add);
+  if (!lib_rtl_is_success(status))  {
+    _mbm_unmap_sections(bm);
+    ::printf("failure to map event section for %s. Status = %d\n",bm_name,status);
+    return MBM_ERROR;
+  }
+  bm->event = (EVENT*)bm->event_add->address;
+  sprintf(text, "bm_user_%s",   bm_name);
+  status  = lib_rtl_map_section(text, bm->ctrl->p_umax*sizeof(USER), &bm->user_add);
+  if (!lib_rtl_is_success(status))  {
+    _mbm_unmap_sections(bm);
+    ::printf("failure to map user section for %s. Status = %d\n",bm_name,status);
+    return MBM_ERROR;
+  }
+  bm->user = (USER*)bm->user_add->address;
+  sprintf(text, "bm_bitmap_%s", bm_name);
+  status  = lib_rtl_map_section(text, bm->ctrl->bm_size, &bm->bitm_add);
+  if (!lib_rtl_is_success(status))  {
+    _mbm_unmap_sections(bm);
+    ::printf("failure to map bit-map section for %s. Status = %d\n",bm_name,status);
+    return MBM_ERROR;
+  }
+  bm->bitmap = (char*)bm->bitm_add->address;
+  sprintf(text, "bm_buffer_%s", bm_name);
+  status  = lib_rtl_map_section(text, bm->ctrl->buff_size, &bm->buff_add);
+  if (!lib_rtl_is_success(status))  {
+    _mbm_unmap_sections(bm);
+    ::printf("failure to map buffer section for %s. Status = %d\n",bm_name,status);
+    return MBM_ERROR;
+  }
+  bm->buffer_add  = bm->ctrl->buff_ptr = (char*)bm->buff_add->address;
+  bm->bitmap_size = bm->ctrl->bm_size;
+  bm->buffer_size = bm->ctrl->buff_size;
+  return MBM_NORMAL;
 }
 
-
-int _mbm_create_section(const char* sec_name, int size, lib_rtl_gbl_t* address) {
-  return lib_rtl_create_section(sec_name, size, address);
-}
-
-int _mbm_delete_section(lib_rtl_gbl_t address)  {
-  return lib_rtl_delete_section(address);
-}
-
-int _mbm_map_section(const char* sec_name, int size, lib_rtl_gbl_t* address)   {
-  return lib_rtl_map_section(sec_name, size, address);
-}
-
-/// Unmap global section: address is quadword: void*[2]
-int _mbm_unmap_section(lib_rtl_gbl_t address)   {
-  return lib_rtl_unmap_section(address);
+int _mbm_unmap_sections(BMDESCRIPT* bm)  {
+  if ( bm->buffer_add ) lib_rtl_unmap_section(bm->buff_add);
+  if ( bm->bitmap     ) lib_rtl_unmap_section(bm->bitm_add);
+  if ( bm->user       ) lib_rtl_unmap_section(bm->user_add);
+  if ( bm->event      ) lib_rtl_unmap_section(bm->event_add);
+  if ( bm->ctrl       ) lib_rtl_unmap_section(bm->ctrl_add);
+  return MBM_NORMAL;
 }
 
 int _mbm_flush_sections(BMDESCRIPT* bm)   {
@@ -1593,3 +1617,4 @@ int _mbm_flush_sections(BMDESCRIPT* bm)   {
   lib_rtl_flush_section(bm->bitm_add);
   return 1;
 }
+

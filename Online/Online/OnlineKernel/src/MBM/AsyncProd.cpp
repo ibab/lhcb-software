@@ -7,10 +7,11 @@ namespace {
   static void help()  {
     ::printf("mbm_prod_a -opt [-opt]\n");
     ::printf("    -n=<name>      buffer member name\n");
+    ::printf("    -b=<name>      Buffer identifier \n");
   }
   struct Prod  : public MBM::Producer  {
     int trnumber;
-    Prod(const std::string& nam) : MBM::Producer("0",nam,0x103), trnumber(0)   {
+    Prod(const std::string& buff, const std::string& nam) : MBM::Producer(buff,nam,0x103), trnumber(0)   {
       setNonBlocking(WT_FACILITY_DAQ_SPACE, true);
     }
     int spaceRearm(int) {
@@ -30,10 +31,11 @@ namespace {
 
 extern "C" int mbm_prod_a(int argc,char **argv) {
   RTL::CLI cli(argc, argv, help);
-  std::string name = "producer";
+  std::string name = "producer", buffer="0";
   cli.getopt("name",1,name);
+  cli.getopt("buffer",1,buffer);
   int status = wtc_init();
   if( status != WT_SUCCESS ) exit(status);
-  ::printf("Asynchronous Producer \"%s\" (pid:%d) included in buffer:\"%s\"\n",name.c_str(),Prod::pid(),"0");
-  return Prod(name).run();
+  ::printf("Asynchronous Producer \"%s\" (pid:%d) included in buffer:\"%s\"\n",name.c_str(),Prod::pid(),buffer.c_str());
+  return Prod(buffer,name).run();
 }
