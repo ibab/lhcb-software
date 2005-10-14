@@ -4,10 +4,10 @@
 ! Purpose     : Package for the track matching algorithms
 !-----------------------------------------------------------------------------
 
+!======================= TrackMatching v1r1 2005-10-10 =======================
 ! 2005-10-13 - Eduardo Rodrigues
  - propagation of changes from TrackEvent
 
-!======================= TrackMatching v1r0p1 2005-10-07 =====================
 ! 2005-10-07 - Marco Cattaneo
  - Adapt to new version of TrackKeys.h
 
