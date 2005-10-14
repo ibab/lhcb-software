@@ -1,8 +1,13 @@
 <lcgdict>
-  <class name="std::vector<RawBank>"/>
-  <class name="std::vector<L1Bank>"/>
-  <class name="std::map<int,std::vector<L1Bank> >"/>
-  <class name="std::map<int,std::vector<RawBank> >"/>
-  <class name="BufferSerializer<RawBuffer>"/>
-  <class name="BufferSerializer<L1Buffer>"/>
+  <class name="LHCb::RawEvent" id="000003EA-0000-0000-0000-000000000000">
+    <field name="m_eventMap" transient="true"/>  
+    <field name="m_mapped" transient="true"/>  
+  </class>
+  <class name="LHCb::RawBank"/>
+  <class name="LHCb::RawEvent::Bank">
+    <field name="m_owns" transient="true"/>  
+  </class>
+  <class name="std::vector<LHCb::RawEvent::Bank>"/>
+  <class name="std::vector<LHCb::RawBank*>"/>
+  <class name="std::map<int, std::vector<LHCb::RawBank*> >"/>
 </lcgdict>

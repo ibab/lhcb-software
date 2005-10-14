@@ -1,35 +1,20 @@
-#============================================================================
-# Created    : 2003-07-22
-# Maintainer : Helder Lopes
-#============================================================================
-package           DAQEvent
-version           v5r3
+package DAQEvent
+version v6r0
 
-# Structure, i.e. directories to process. 
-#============================================================================
-branches          cmt dict doc src xml Event 
+use GaudiAlg  v*
 
-# Include directories
-#============================================================================
 include_dirs $(DAQEVENTROOT)
 
-# Used packages.
-#============================================================================
-use GaudiAlg    v*
-use Event       v* Event
-
-# Produce Header-Files & dictionary from XML description
-#============================================================================
-document obj2doth DAQEventObj2Doth ../xml/*.xml
-document obj2dict DAQEventObj2Dict ../xml/*.xml
+# ==================== Produce LCG dictionary ===============================
+document lcg_dictionary_generator DAQEventGen $(DAQEVENTROOT)/Event/RawEvent.h dictionary=DAQEvent
+macro_append DAQEvent_lcgdict_options '-s $(DAQEVENTROOT)/xml/lcgdict/lcg_selection.xml -c capabilities.cpp --split --reflex --comments $(includes) '
 
 # ==================== linker library =======================================
 library DAQEventLib     *.cpp
 
 # ==================== component libraries ==================================
 library DAQEvent        component/*.cpp
-library DAQEventDict    ../dict/*.cpp
-#library DAQEventDict    ../dict/*.cpp ../$(tag)/dict/DAQEvent/*.cpp
+library DAQEventDict    ../$(tag)/dict/DAQEvent/*.cpp
 
 # ==================== Standard patterns (order is important!) ==============
 apply_pattern component_library library=DAQEventDict
@@ -37,11 +22,9 @@ apply_pattern component_library library=DAQEvent
 apply_pattern linker_library    library=DAQEventLib
 
 private
-use GaudiObjDesc v*
-# Additional dictionaries not generated automatically by GaudiObjDesc
-action DAQEvent_custom_dict \
-   "if !(test -r ../dict/DAQEvent_selection.xml) then \
-     cp ../Event/lcgStl.h ../dict/DAQEvent_dictionary.h;  \ 
-     cp ../xml/lcgdict/lcg_selection.xml ../dict/DAQEvent_selection.xml; fi" \
-  WIN32 ""
-macro DAQEventObj2Dict_dependencies DAQEvent_custom_dict
+#========= Uncomment 5 lines to build and run the Test application ==========
+use GaudiConf   v*      -no_auto_imports
+use GaudiSvc    v*      -no_auto_imports
+macro_append  TestRawEventlinkopts '$(DAQEvent_linkopts)'
+application   TestRawEvent $(GAUDICONFROOT)/src/GaudiMain.cpp ../tests/*.cpp
+apply_pattern application_path

@@ -1,0 +1,9 @@
+//--------------------------------------------------------------
+// Private Application Configuration options
+//--------------------------------------------------------------
+ApplicationMgr.DLLs   += { "GaudiAlg", "DAQEvent" };
+ApplicationMgr.TopAlg += { "ByteStreamTests", "RawEventCreator", "RawEventDump" };
+ApplicationMgr.EvtMax = 1;
+ApplicationMgr.EvtSel = "NONE";
+EventDataSvc.ForceLeaves = 1;
+RawEventDump.DumpData = true;

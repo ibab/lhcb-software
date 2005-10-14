@@ -1,7 +1,23 @@
 Package: DAQEvent
-Author: Jose' Helder Lopes
-Purpose: Define the L1Buffer,  L1Event, L1Bank, RawBuffer, RawEvent and 
-         RawBank classes.
+Author:  Markus Frank (based on work by Jose' Helder Lopes)
+Purpose: Define the classes delivered to the online farm by the DAQ
+
+!================ DAQEvent v6r0 2005-10-14 ============================
+! 2005-10-14 - Marco Cattaneo
+ - Major changes to follow 1MHz readout:
+   . Remove RawBuffer and all L1 classes
+   . Reimplement RawEvent, RawBank (Markus Frank, backwards incompatible)
+     Due to non-standard tricks needed both to make these classes persistent
+     and to create them in the online farm, they are not described in XML.
+     The header files and LCG dictionary selection files are hand made.
+   . BankType enum now defined in RawBank. Added TTFull and ITFull. 
+   . In component library:
+     - add RawEventDump
+     - remove CreateRawEvent (will be reimplemented in Boole project)
+     - remove EventHeaderFromRaw (will be reimplemented in Rec project)
+   . Add SmartBank, Bytestream and BankWriter helper classes (Matt Needham)
+   . All Event and helper classes are defined in /Event, inside LHCb namespace
+   . Add tests subdirectory, with usage examples
 
 !================ DAQEvent v5r3 2005-10-10 ============================
 ! 2005-10-10 - Marco Cattaneo

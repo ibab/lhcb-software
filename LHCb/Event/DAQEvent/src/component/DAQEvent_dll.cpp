@@ -1,4 +1,4 @@
-// $Id: DAQEvent_dll.cpp,v 1.1 2004-06-28 11:41:03 cattanem Exp $
+// $Id: DAQEvent_dll.cpp,v 1.2 2005-10-14 12:48:50 cattanem Exp $
 // Include files 
 
 #include "GaudiKernel/LoadFactoryEntries.h"
