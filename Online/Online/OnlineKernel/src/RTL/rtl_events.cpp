@@ -91,13 +91,34 @@ int lib_rtl_clear_event(lib_rtl_event_t h) {
 int lib_rtl_wait_for_event(lib_rtl_event_t h)    {
   if ( h )  {
 #if defined(USE_PTHREADS)
-    if ( ::sem_wait(h->handle) == 0 )
+    if ( 0 == ::sem_wait(h->handle) )
 #elif defined(_WIN32)
-    if ( ::WaitForSingleObjectEx(h->handle, INFINITE, TRUE) == WAIT_OBJECT_0 )  
+    DWORD diff = (milliseconds>0) ? milliseconds : INFINITE;
+    if ( ::WaitForSingleObjectEx(h->handle,diff, TRUE) == WAIT_OBJECT_0 )  
 #endif
-    {
       return 1;
-    }
+  }
+  return 0;
+}
+
+int lib_rtl_timedwait_for_event(lib_rtl_event_t h, int milliseconds)    {
+  if ( h )  {
+#if defined(USE_PTHREADS)
+    timespec sp;
+    ::clock_gettime(CLOCK_REALTIME, &sp);    
+    milliseconds += sp.tv_nsec/1000000;
+    sp.tv_sec  += milliseconds/1000;
+    sp.tv_nsec  = (milliseconds%1000)*1000000;
+    int sc = milliseconds==LIB_RTL_INFINITE 
+      ? ::sem_wait(h->handle) 
+      : ::sem_timedwait(h->handle, &sp);
+    if ( sc != 0 && errno == ETIMEDOUT ) sc = 0;
+    if ( sc == 0 )
+#elif defined(_WIN32)
+    DWORD diff = (milliseconds>0) ? milliseconds : INFINITE;
+    if ( ::WaitForSingleObjectEx(h->handle,diff, TRUE) == WAIT_OBJECT_0 )  
+#endif
+      return 1;
   }
   return 0;
 }
@@ -109,9 +130,8 @@ int lib_rtl_set_event(lib_rtl_event_t h)   {
 #elif defined(_WIN32)
     int sc = ::SetEvent(h->handle)==0 ? -1 : 0;
 #endif
-    if ( sc == 0 )    {
+    if ( sc == 0 )
       return 1;
-    }
   }
   return 0;
 }
@@ -134,14 +154,12 @@ int lib_rtl_set_global_event(const char* name)   {
 }
 
 int lib_rtl_wait_event_a_call(void* param)  {
-  bool start = true;
   lib_rtl_action* pars = (lib_rtl_action*)param;
   while(1)  {
     try {
       rtl_printf("wait...\n");
       lib_rtl_wait_for_event(pars->flag);
       lib_rtl_clear_event(pars->flag);
-      start = false;
       if ( pars->action )  {
 	rtl_printf("action...\n");
 	(*pars->action)(pars->param);
@@ -171,7 +189,6 @@ int lib_rtl_wait_for_event_a(lib_rtl_event_t flag, lib_rtl_thread_routine_t acti
       return 0;
     }
     waitEventThreads().insert(std::make_pair(flag,thread));
-    lib_rtl_sleep(1);
   }
   rtl_printf("Set event...\n");
   lib_rtl_set_event(flag);

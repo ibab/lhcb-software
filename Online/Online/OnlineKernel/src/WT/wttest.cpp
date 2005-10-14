@@ -17,12 +17,15 @@
 unsigned int alarm1, alarm2, alarm3, alarm4;
 
 void print_at(int x, int y, const char* fmt, ...)  {
+  static int cnt=0;
   va_list args;
   char buff[256];
   va_start( args, fmt );
   ::vsprintf( buff, fmt, args);
   printxy(x,y,buff);
-  refresh();
+  //printf(buff);
+  //printf("\n");
+  if ( (cnt++%100)==0 ) refresh();
 }
 
 int ast1(void* par)  {

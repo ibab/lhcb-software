@@ -11,7 +11,11 @@ template <class T, class Q> static inline T* add_ptr(T* a, Q b)  {
 namespace RTL {}
 extern "C" {
 #endif
-
+#ifdef _WIN32
+  typedef __int64       int64_t;
+#else
+  typedef long long int int64_t;
+#endif
   typedef void* lib_rtl_handle_t;
 #ifndef _RTL_INTERNAL_H
   typedef void* lib_rtl_thread_t;
@@ -26,6 +30,14 @@ extern "C" {
   typedef int (*RTL_ast_t)(void*);
   typedef int (*lib_rtl_rundown_handler_t)(void*);
   inline bool lib_rtl_is_success(int status) { return status&1; }
+
+  enum {
+    LIB_RTL_DEFAULT = 0,
+    LIB_RTL_ERRNO = 1,
+    LIB_RTL_OS,
+    LIB_RTL_INFINITE = 0
+  };
+
 
   /// Access to process ID
   int lib_rtl_pid();
@@ -78,6 +90,8 @@ extern "C" {
   int lib_rtl_clear_event(lib_rtl_event_t event_flag);
   /// Wait for event flag
   int lib_rtl_wait_for_event(lib_rtl_event_t event_flag);
+  /// Wait for event flag with timeout
+  int lib_rtl_timedwait_for_event(lib_rtl_event_t event_flag, int milliseconds);
   /// Wait asynchronously for an event flag
   int lib_rtl_wait_for_event_a(lib_rtl_event_t flag, lib_rtl_thread_routine_t action, void* param);
 
@@ -103,12 +117,8 @@ extern "C" {
   int lib_rtl_ffs (int* start, int* len, const void* base, int* position);
   int lib_rtl_run_ast (RTL_ast_t astadd, void* bm, int);
 
+  /// Issue system error message
   int lib_rtl_signal_message(int, const char* fmt, ...);
-  enum {
-    LIB_RTL_DEFAULT = 0,
-    LIB_RTL_ERRNO = 1,
-    LIB_RTL_OS
-  };
   /// Declare exit handler
   int lib_rtl_sleep(int millisecs);
   const char* lib_rtl_error_message(int status);
