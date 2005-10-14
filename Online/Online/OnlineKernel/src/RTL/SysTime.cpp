@@ -1,9 +1,13 @@
 #include "RTL/SysTime.h"
+#ifdef _WIN32
+#include <windows.h>
+#else
 #include <ctime>
+#endif
 
 unsigned int RTL::SysTime::start() {  
   static unsigned int s_start = SysTime::now();
-  s_start;
+  return s_start;
 }
 
 unsigned int RTL::SysTime::now()   {
