@@ -1,4 +1,4 @@
-// $Id: EvtGenTool.cpp,v 1.4 2005-10-16 22:25:02 robbep Exp $
+// $Id: EvtGenTool.cpp,v 1.5 2005-10-16 22:32:03 robbep Exp $
 // Header file
 #include "EvtGenTool.h"
 
@@ -90,7 +90,7 @@ EvtGenTool::EvtGenTool( const std::string& type,
     declareProperty("RepeatedHadronization" , 
                     m_repeatedHadronization = true ) ;
     // Generate Polarized Lambda_b decays
-    declareProperty("PolarizedLambdad" , m_generatePolLambdab = false ) ;
+    declareProperty("PolarizedLambdab" , m_generatePolLambdab = false ) ;
 
     // Helicity Density matrix for Polarized Lambda_b decays (default values 
     // are for full polarization along the z-axis)
