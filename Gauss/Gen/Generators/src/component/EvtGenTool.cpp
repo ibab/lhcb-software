@@ -1,4 +1,4 @@
-// $Id: EvtGenTool.cpp,v 1.3 2005-10-03 10:11:51 robbep Exp $
+// $Id: EvtGenTool.cpp,v 1.4 2005-10-16 22:25:02 robbep Exp $
 // Header file
 #include "EvtGenTool.h"
 
@@ -91,7 +91,21 @@ EvtGenTool::EvtGenTool( const std::string& type,
                     m_repeatedHadronization = true ) ;
     // Generate Polarized Lambda_b decays
     declareProperty("PolarizedLambdad" , m_generatePolLambdab = false ) ;
-    
+
+    // Helicity Density matrix for Polarized Lambda_b decays (default values 
+    // are for full polarization along the z-axis)
+    declareProperty("Rho11", m_rho11 = 1.); 
+    declareProperty("Rho12", m_rho12 = 0.); 
+    declareProperty("Rho21", m_rho21 = 0.);  
+    declareProperty("Rho22", m_rho22 = 0.); 
+    // Euler angles to rotate the helicity matrix into the appropriate 
+    // helicity basis
+    // default values are for transversal pol. (along x-axis) -- for 
+    // longitudinal pol. (along z-axis) use (0.,0.,0.) 
+    declareProperty("Alpha", m_alpha = PI/2.); 
+    declareProperty("Beta", m_beta = PI/2.);  
+    declareProperty("Gamma", m_gamma = 0.);
+
   // Initialize bId and bbarId
   m_bId = EvtId( -1, -1 ) ;
   m_bbarId = EvtId( -1, -1 ) ;
@@ -892,11 +906,12 @@ const {
        ( abs( theHepMCPart -> pdg_id() ) == 5122 ) ) {
     EvtSpinDensity rho ;
     rho.SetDim( 2 ) ;
-    rho.Set( 0 , 0 , 1.0 ) ;
-    rho.Set( 0 , 1 , 0.0 ) ;
-    rho.Set( 1 , 0 , 0.0 ) ;
-    rho.Set( 1 , 1 , 0.0 ) ;
-    thePart -> setSpinDensityForwardHelicityBasis( rho ) ;
+    rho.Set( 0 , 0 , m_rho11 ) ;
+    rho.Set( 0 , 1 , m_rho21 ) ;
+    rho.Set( 1 , 0 , m_rho12 ) ;
+    rho.Set( 1 , 1 , m_rho22 ) ;
+    thePart -> setSpinDensityForwardHelicityBasis( rho, m_alpha, m_beta,  
+                                                   m_gamma ) ;
   } else {
     thePart -> setDiagonalSpinDensity( ) ;
   }

@@ -1,4 +1,4 @@
-// $Id: EvtGenTool.h,v 1.1.1.1 2005-06-20 21:42:17 robbep Exp $
+// $Id: EvtGenTool.h,v 1.2 2005-10-16 22:25:02 robbep Exp $
 #ifndef GENERATORS_EVTGENTOOL_H 
 #define GENERATORS_EVTGENTOOL_H 1
 
@@ -156,6 +156,10 @@ public:
 protected:
 
 private:
+
+  static double const PI = 3.14159265358979;
+
+
   /** Make a HepMCTree tree from an EvtGen particle stopping at the PDG
    *  Id targetId
    *
@@ -265,6 +269,12 @@ private:
 
   /// Flag for polarized Lambda_b production
   bool m_generatePolLambdab ;
+
+  /// helicity density matrix for polarized Lambda_b production
+  double m_rho11, m_rho12, m_rho21, m_rho22 ; 
+  /// Euler angles to rotate the helicity matrix into the appropriate 
+  /// helicity basis
+  double m_alpha, m_beta, m_gamma; 
 };
 
 //=============================================================================

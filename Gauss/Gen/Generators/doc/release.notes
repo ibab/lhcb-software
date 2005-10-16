@@ -1,6 +1,10 @@
-! $Id: release.notes,v 1.8 2005-10-13 21:43:07 robbep Exp $
+! $Id: release.notes,v 1.9 2005-10-16 22:25:02 robbep Exp $
 ! Package     : Gen/Generators
 ! Responsible : 
+
+! 2005-10-17 - Patrick Robbe
+ - EvtGenTool : add possibility to control polarization parameters
+   by job options.
 
 ! 2005-10-13 - Patrick Robbe
  - Generators/GenBaseAlg : remove forward declaration not used
