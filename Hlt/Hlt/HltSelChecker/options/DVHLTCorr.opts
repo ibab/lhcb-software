@@ -32,7 +32,7 @@ HltDecision.MakeCorrelations = true ;
 
 //==============================================================================
 // PK's stripping of MB passing L0 and L1:
-#include "$HLTSELECTIONSROOT/options/L0L1-MB.opts"
+//#include "$HLTSELECTIONSROOT/options/L0L1-MB.opts"
 //==============================================================================
 // PK's stripping of signal passing L0, L1 and TDR:
 // #include "$HLTSELECTIONSROOT/options/L0TDR-AllSignals.opts"
@@ -42,9 +42,9 @@ HltDecision.MakeCorrelations = true ;
 // in these options
 // Hence: re-initalize event selector
 // EventSelector.Input   = {};
-// #include "$HLTSELECTIONSROOT/options/L0TDR-Bs2JpsiPhi.opts"
+#include "$HLTSELECTIONSROOT/options/L0TDR-Bs2JpsiPhi.opts"
 
-ApplicationMgr.EvtMax    = 1000 ;
+ApplicationMgr.EvtMax    = 1 ;
 EventSelector.FirstEvent = 1 ;
 
 MessageSvc.Format = "% F%50W%S%7W%R%T %0W%M";
@@ -79,3 +79,4 @@ DaVinci.OutputLevel = 2 ;
 //TrgParticleMaker.KaonDLLCut = 15 ; // default
 
 HltDecision.OutputLevel = 3 ;
+

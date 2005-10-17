@@ -4,6 +4,10 @@
 ! Purpose     : High-Level Trigger Exclusive Selections - Checking 
 !-----------------------------------------------------------------------------
 
+! 2005-10-17 - P. Koppenburg
+ - options/
+   . Do not use ResetOnOffline but context.
+
 !========================== HltSelChecker v3r7 2005-09-07 ===================
 ! 2005-08-29 - Luis Fernandez
  - options/

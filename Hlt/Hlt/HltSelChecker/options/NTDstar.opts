@@ -18,7 +18,6 @@ CheckHLTDstar.Members ={ "TrgL0Filter", "PrintHeader/PassedL0",
                          "CheckSelResult/MergeOffBd2DstarPi", "PrintHeader/PassedOffBd2DstarPi",
                          "DecayChainNTuple/OffBd2DstarPiTree", "PrintHeader/PassedOffBd2DstarPiTree",
                          "CheckSelResult/MergeHLTDstar", "PrintHeader/PassedHLTDstar",
-                         "ResetOnOffline/HLTDstarTreeSetOnline",
                          "DecayChainNTuple/HLTDstarTree", "PrintHeader/PassedHLTDstarTree"};
  
 PassedL0.OutputLevel = 3;
@@ -38,8 +37,6 @@ MergeHLTDstar.Algorithms = {"HLTFilterDstar"};
 MergeOffBd2DstarPi.OutputLevel = 4;
 MergeHLTDstar.OutputLevel = 4;
 
-// Important !!!
-HLTDstarTreeSetOnline.ResetToOnline = true;
 
 //------------------------------------------------------------------------------
 // Write Tree for Off selection
@@ -79,6 +76,7 @@ HLTDstarTree.LinkAsct.Location      = "Phys/Relations/Particle2MCLinksHLTDstar";
 HLTDstarTree.LinkAsct.AlgorithmType = "Particle2MCLinks";
 HLTDstarTree.LinkAsct.AlgorithmName = "Particle2MCLinksHLTDstar";
 HLTDstarTree.LinkAsct.OutputLevel = 3;
+HLTDstarTree.Context = "HLT" ;
 
 Particle2MCLinksHLTDstar.InputData  = {"Phys/HLTPions/Particles", "Phys/HLTKaons/Particles", 
                                        "Phys/HLTPreselPions/Particles", "Phys/HLTPreselKaons/Particles", 
