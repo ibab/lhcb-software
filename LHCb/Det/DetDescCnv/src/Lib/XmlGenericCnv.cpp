@@ -1,4 +1,4 @@
-// $Id: XmlGenericCnv.cpp,v 1.13 2005-10-17 16:17:50 marcocle Exp $
+// $Id: XmlGenericCnv.cpp,v 1.14 2005-10-17 20:03:01 marcocle Exp $
 
 // Include files
 #include "DetDescCnv/XmlGenericCnv.h"
@@ -475,7 +475,7 @@ XmlGenericCnv::createAddressForHref (std::string href,
     return createCondDBAddress (path, entryName, channelId, clid);    
   } else {
     log << MSG::VERBOSE 
-        << "Href points to a a regular URL: " << href << endreq;
+        << "Href points to a regular URL: " << href << endreq;
     // here we deal with a regular URL
     // first parse the href to get entryName and location
     unsigned int poundPosition = href.find_last_of('#');
@@ -502,17 +502,19 @@ XmlGenericCnv::createAddressForHref (std::string href,
     } else {
       // gets the directory where the xmlFile is located
       std::string locDir;
-      
-      if ( parent->ipar()[0] == 0) {
-        // The address points to a file
-        unsigned int dPos  = parent->par()[0].find_last_of('/');
-        locDir = parent->par()[0].substr( 0, dPos + 1 );
-      } else {
-        // The address is an xml string
-        unsigned int dPos  = parent->par()[2].find_last_of('/');
-        locDir = parent->par()[2].substr( 0, dPos + 1 );
+      // I need to prepend the parent path only if the ref is not pointing to an absolute path
+      if ( location[0] != '/' ) {
+        if ( parent->ipar()[0] == 0) {
+          // The address points to a file
+          unsigned int dPos  = parent->par()[0].find_last_of('/');
+          locDir = parent->par()[0].substr( 0, dPos + 1 );
+        } else {
+          // The address is an xml string
+          unsigned int dPos  = parent->par()[2].find_last_of('/');
+          locDir = parent->par()[2].substr( 0, dPos + 1 );
+        }
+        location = locDir + location;
       }
-      location = locDir + location;
     }
 
     // Handle the relative path problem of "../".
@@ -531,8 +533,9 @@ XmlGenericCnv::createAddressForHref (std::string href,
       location = location.erase(parentDirPos + 1, cutLength);
       upwardStringPos = location.find(upwardString);
     }
-    // Now, location should be a clean absolute path.
-    if ( parent->ipar()[0] == 1 )
+    // Now, location should be a clean URL or absolute path.
+    if ( parent->ipar()[0] == 1
+         && location[0] != '/' ) // avoid infinite loops
       return createAddressForHref(location + href.substr(poundPosition), clid, parent);
 
     log << MSG::VERBOSE

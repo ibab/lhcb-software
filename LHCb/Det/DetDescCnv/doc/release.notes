@@ -5,6 +5,7 @@
 !-----------------------------------------------------------------------------
 
 ! 2005-10-17 - Marco Clemencic
+ - Fixed handling of absolute paths in hrefs in XmlGenericCnv
  - Fixed a problem in XmlGenericCnv when handling URLs with a ':' in the
    object name (it was conflicting with the ChannelId syntax)
  - Fixed handling of nested objects (in case of XML strings) in
