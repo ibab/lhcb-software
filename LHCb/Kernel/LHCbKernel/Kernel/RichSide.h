@@ -5,7 +5,7 @@
  *  Header file for RICH particle ID enumeration : RichSide
  *
  *  CVS Log :-
- *  $Id: RichSide.h,v 1.7 2005-05-13 14:16:53 jonrob Exp $
+ *  $Id: RichSide.h,v 1.8 2005-10-17 08:57:18 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   08/07/2004
@@ -60,15 +60,7 @@ namespace Rich {
    *  @param side Rich Side enumeration
    *  @return Rich Side as an std::string
    */
-  inline std::string text( const Rich::Side & side )
-  {
-    switch( side ) {
-    case Rich::top:           return "top or left"; // Note also covers  Rich::left
-    case Rich::bottom:        return "bottom or right"; // Note also covers Rich::right
-    case Rich::InvalidSide:   return "Invalid side";
-    default:                  return "SHOULD NEVER SEE THIS";
-    }
-  }
+  std::string text( const Rich::Side side );
 
   /// Std Vector typedef
   typedef std::vector<Side> RichSideVector;
@@ -77,14 +69,16 @@ namespace Rich {
 
 /// Implement textual ostream << method for Rich::Side enumeration
 inline std::ostream& operator << ( std::ostream & s,
-                                   const Rich::Side & side ) {
+                                   const Rich::Side & side ) 
+{
   s << Rich::text( side );
   return s;
 }
 
 /// Implement textual MsgStream << method for Rich::Side enumeration
 inline MsgStream& operator << ( MsgStream & s,
-                                const Rich::Side & side ) {
+                                const Rich::Side & side ) 
+{
   s << Rich::text( side );
   return s;
 }

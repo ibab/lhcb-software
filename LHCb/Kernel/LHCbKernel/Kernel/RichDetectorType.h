@@ -5,7 +5,7 @@
  *  Header file for RICH particle ID enumeration : RichDetectorType
  *
  *  CVS Log :-
- *  $Id: RichDetectorType.h,v 1.7 2005-05-13 14:16:15 jonrob Exp $
+ *  $Id: RichDetectorType.h,v 1.8 2005-10-17 08:57:18 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   08/07/2004
@@ -49,15 +49,7 @@ namespace Rich {
    *  @param detector RICH detector enumeration
    *  @return Detector type as a string
    */
-  inline std::string text( const Rich::DetectorType & detector )
-  {
-    switch( detector ) {
-    case Rich::Rich1:              return "Rich1";
-    case Rich::Rich2:              return "Rich2";
-    case Rich::InvalidDetector:    return "Invalid Detector";
-    default:                       return "SHOULD NEVER SEE THIS";
-    }
-  }
+  std::string text( const Rich::DetectorType detector );
 
   /// Std Vector typedef
   typedef std::vector<Rich::DetectorType> DetectorVector;
@@ -66,7 +58,8 @@ namespace Rich {
 
 /// Implement StreamBuffer >> method for Rich::DetectorType enumeration
 inline StreamBuffer& operator >> ( StreamBuffer & s,
-                                   Rich::DetectorType & detector ) {
+                                   Rich::DetectorType & detector ) 
+{
   int intType;
   s >> intType;
   detector = static_cast<Rich::DetectorType>(intType);
@@ -75,21 +68,24 @@ inline StreamBuffer& operator >> ( StreamBuffer & s,
 
 /// Implement StreamBuffer << method for Rich::DetectorType enumeration
 inline StreamBuffer& operator << ( StreamBuffer & s,
-                                   const Rich::DetectorType & detector ) {
+                                   const Rich::DetectorType & detector ) 
+{
   s << static_cast<int>(detector);
   return s;
 }
 
 /// Implement textual ostream << method for Rich::DetectorType enumeration
 inline std::ostream& operator << ( std::ostream & s,
-                                   const Rich::DetectorType & detector ) {
+                                   const Rich::DetectorType & detector ) 
+{
   s << Rich::text( detector );
   return s;
 }
 
 /// Implement textual MsgStream << method for Rich::DetectorType enumeration
 inline MsgStream& operator << ( MsgStream& s,
-                                const Rich::DetectorType detector ) {
+                                const Rich::DetectorType detector ) 
+{
   s << Rich::text( detector );
   return s;
 }
