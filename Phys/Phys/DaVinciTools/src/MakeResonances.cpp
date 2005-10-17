@@ -1,4 +1,4 @@
-// $Id: MakeResonances.cpp,v 1.11 2005-07-13 12:57:13 pkoppenb Exp $
+// $Id: MakeResonances.cpp,v 1.12 2005-10-17 12:28:42 pkoppenb Exp $
 // Include files 
 
 #include <algorithm>
@@ -75,15 +75,7 @@ StatusCode MakeResonances::initialize() {
   if ( m_minMomentum > 0.) info() << ">>>   Minimum P  " << m_minMomentum << endmsg;
 
   m_daughterFilter = tool<IFilterCriterion>("ByPIDFilterCriterion",m_daughterFilterName , this ) ;
-  if ( !m_daughterFilter){
-    err() << "Cannot retrieve " << m_daughterFilterName << endmsg ;
-    return StatusCode::FAILURE ;    
-  }
   m_motherFilter = tool<IFilterCriterion>("ByPIDFilterCriterion", m_motherFilterName, this ) ;
-  if ( !m_motherFilter){
-    err() << "Cannot retrieve " << m_motherFilterName << endmsg ;
-    return StatusCode::FAILURE ;    
-  }
   if ( m_killOverlap ){
     m_checkOverlap = checkOverlap() ;
     if ( !m_checkOverlap ){
@@ -122,7 +114,7 @@ StatusCode MakeResonances::initialize() {
   }
 
   StatusCode sc = createDecays();
-  if ( sc.isFailure()) return sc ;  
+  if ( sc.isFailure()) return sc ;
 
   return StatusCode::SUCCESS;
 };

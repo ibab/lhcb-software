@@ -1,7 +1,15 @@
-! $Id: release.notes,v 1.177 2005-07-18 11:25:46 pkoppenb Exp $
+! $Id: release.notes,v 1.178 2005-10-17 12:28:42 pkoppenb Exp $
 ! Package     : DaVinciTools
 ! Responsible : P. Koppenburg
 
+! 2005-10-17 - P. Koppenburg
+  - src/OnOfflineTool.{cpp,h}
+    . Uses context now. Thus this tool *must* be private.
+      No setOnline(bool) method anymore.
+  - src/SimplePlotTool.cpp
+  - src/CheckPV.cpp
+    . Use OnOffline tool privately.
+                                                                                                                                                                           
 !========================== DaVinciTools v12r1 2005-07-18 ===================
 ! 2005-07-13 - P. Koppenburg
   - MakeResonances.{cpp,h}

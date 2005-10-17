@@ -1,8 +1,9 @@
-// $Id: OnOfflineTool.cpp,v 1.2 2005-06-08 16:41:44 pkoppenb Exp $
+// $Id: OnOfflineTool.cpp,v 1.3 2005-10-17 12:28:42 pkoppenb Exp $
 // Include files 
 
 // from Gaudi
 #include "GaudiKernel/ToolFactory.h" 
+#include "GaudiKernel/IToolSvc.h" 
 
 // from Event model
 #include "Event/Vertex.h" 
@@ -44,20 +45,36 @@ OnOfflineTool::OnOfflineTool( const std::string& type,
 OnOfflineTool::~OnOfflineTool() {}; 
 
 //=============================================================================
+// initialize
+//=============================================================================
+StatusCode OnOfflineTool::initialize(){
+  StatusCode sc = GaudiTool::initialize();
+  if (!sc) return sc ;
+  
+  if ( context()=="HLT" ) {
+    info() << "Running in HLT context: Online = true" << endmsg ;
+    m_online = true ;
+  } else if ( context()!="" ){
+    warning() << "Running in " << context() << " context" << endmsg ;
+  }
+  
+  // check it is not global
+  const IToolSvc* par = dynamic_cast<const IToolSvc*>( this->parent() );
+  if ( 0!=par ){
+    err() << "Parent of OnOfflineTool is ToolSvc. OnOfflineTool *must* be private" << endmsg ;
+    return StatusCode::FAILURE;
+  }
+
+  return sc;
+   
+}
+
+//=============================================================================
 // get PV
 //=============================================================================
 std::string OnOfflineTool::getPVLocation(void) const {
   if ( m_online ) return m_onlinePVLocation ;
   else return m_offlinePVLocation ;
-};
-//=============================================================================
-// set Online
-//=============================================================================
-StatusCode OnOfflineTool::setOnline(const bool& online){
-  m_online = online ;
-  if ( m_online ) debug() << "Reset to online" << endmsg ;
-  else debug() << "Reset to offline" << endmsg ;
-  return StatusCode::SUCCESS ;
 };
 //=============================================================================
 // 

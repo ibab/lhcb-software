@@ -1,4 +1,4 @@
-// $Id: SimplePlotTool.cpp,v 1.10 2005-06-08 16:15:32 pkoppenb Exp $
+// $Id: SimplePlotTool.cpp,v 1.11 2005-10-17 12:28:42 pkoppenb Exp $
 // Include files 
 #include "gsl/gsl_math.h"
 // from Gaudi
@@ -77,7 +77,7 @@ StatusCode SimplePlotTool::firstInitialize () {
     return StatusCode::FAILURE;
   }          
 
-  m_onOfflineTool = tool<IOnOffline>("OnOfflineTool");
+  m_onOfflineTool = tool<IOnOffline>("OnOfflineTool",this );
   if( !m_onOfflineTool ) {
     err() << "Unable to get OnOfflineTool" << endreq;
     return StatusCode::FAILURE;

@@ -1,4 +1,4 @@
-// $Id: CheckPV.cpp,v 1.6 2005-06-08 16:15:32 pkoppenb Exp $
+// $Id: CheckPV.cpp,v 1.7 2005-10-17 12:28:42 pkoppenb Exp $
 // Include files 
 
 // from Gaudi
@@ -49,7 +49,7 @@ StatusCode CheckPV::initialize() {
 
   debug() << "==> Initialize" << endmsg;
 
-  m_OnOfflineTool = tool<IOnOffline>("OnOfflineTool");
+  m_OnOfflineTool = tool<IOnOffline>("OnOfflineTool", this);
   if( !m_OnOfflineTool ){
     err() << " Unable to retrieve PV Locator tool" << endreq;
     return StatusCode::FAILURE;

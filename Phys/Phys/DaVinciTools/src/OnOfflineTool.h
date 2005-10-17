@@ -1,4 +1,4 @@
-// $Id: OnOfflineTool.h,v 1.2 2005-06-08 16:41:44 pkoppenb Exp $
+// $Id: OnOfflineTool.h,v 1.3 2005-10-17 12:28:42 pkoppenb Exp $
 #ifndef ONOFFLINETOOL_H 
 #define ONOFFLINETOOL_H 1
 
@@ -22,11 +22,10 @@ public:
 
   virtual ~OnOfflineTool( ); ///< Destructor
 
-  /// On or Offline ?
-  bool online(void) const {return m_online;} ;
+  StatusCode initialize();
 
   /// On or Offline ?
-  StatusCode setOnline(const bool&)  ;
+  bool online(void) const {return m_online;} ;
 
   /// Return DispCalculator
   std::string dispCalculator() const  ;
