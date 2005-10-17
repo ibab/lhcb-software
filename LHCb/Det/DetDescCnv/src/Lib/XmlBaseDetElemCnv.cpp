@@ -1,4 +1,4 @@
-// $Id: XmlBaseDetElemCnv.cpp,v 1.8 2005-06-09 11:14:31 cattanem Exp $
+// $Id: XmlBaseDetElemCnv.cpp,v 1.9 2005-10-17 16:17:50 marcocle Exp $
 
 // include files
 
@@ -189,19 +189,20 @@ StatusCode XmlBaseDetElemCnv::i_fillObj (xercesc::DOMElement* childElement,
   if ((0 == xercesc::XMLString::compareString(detelemrefString, tagName)) ||
       (0 == xercesc::XMLString::compareString(detelemString, tagName))) {
     IOpaqueAddress* addr;
+
+    // in order to handle properly both XML files and CondDB XML strings
+    // we use always the "createAddressForHref" system
+    std::string referenceValue;
     if (0 == xercesc::XMLString::compareString(detelemrefString, tagName)) {
-      // gets the reference value and the position of the '#' in it
-      std::string referenceValue =
-        dom2Std (childElement->getAttribute(hrefString));
-      // creates the address
-      addr = createAddressForHref
-        (referenceValue, CLID_DetectorElement, address);
-    } else { // here detelemString == tagName
-      std::string entryName =
-        "/" + dom2Std (childElement->getAttribute(nameString));
-      std::string location = address->par()[0];
-      addr = createXmlAddress (location, entryName, CLID_DetectorElement);
+      // that's a real detelemref entry
+      referenceValue = dom2Std (childElement->getAttribute (hrefString));
+    } else {
+      // it is an element: build a (fake) reference
+      referenceValue = std::string("#") + dom2Std (childElement->getAttribute (nameString));
     }
+    // creates the address
+    addr = createAddressForHref (referenceValue, CLID_DetectorElement, address);
+
     // Registers the address to current data object we're converting now
     IDataProviderSvc* dsvc = dataProvider();
     IDataManagerSvc* mgr = 0;

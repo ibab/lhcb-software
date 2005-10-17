@@ -1,4 +1,4 @@
-// $Id: XmlGenericCnv.cpp,v 1.12 2005-10-13 17:37:39 marcocle Exp $
+// $Id: XmlGenericCnv.cpp,v 1.13 2005-10-17 16:17:50 marcocle Exp $
 
 // Include files
 #include "DetDescCnv/XmlGenericCnv.h"
@@ -102,8 +102,12 @@ StatusCode XmlGenericCnv::createObj (IOpaqueAddress* addr,
     return StatusCode::FAILURE;
   }
 
+  // parses the xml file or the xml string and retrieves a DOM document
+  xercesc::DOMDocument* document = NULL;
+  bool isAString = 1 == addr->ipar()[0];
+
   // displays the address for debug purposes 
-  if ( addr->ipar()[0] == 1) {
+  if ( isAString ) {
     log << MSG::DEBUG << "Address for string: orig. path = " << addr->par()[2]
         << ", ObjectName = " << addr->par()[1] << ", string = ";
     if ( addr->par()[0].size() > 25 ) {
@@ -116,13 +120,6 @@ StatusCode XmlGenericCnv::createObj (IOpaqueAddress* addr,
     log << MSG::DEBUG << "Address: filename = " << addr->par()[0]
         << ", ObjectName = " << addr->par()[1] << endmsg;
   }
-
-  // parses the xml file or the xml string and retrieves a DOM document
-  xercesc::DOMDocument* document = NULL;
-  bool isAString = 1 == addr->ipar()[0];
-
-  if (isAString) 
-    log << MSG::DEBUG << "Original address = " << addr->par()[2] << endmsg;
 
   if ( 0 == addr->ipar()[0] ) {
     document = xmlSvc()->parse(addr->par()[0].c_str()); // this also lock the cache entry (must be released)
@@ -441,6 +438,10 @@ XmlGenericCnv::createAddressForHref (std::string href,
     size_t start = href.find_first_of(':')+1;
     size_t columnPos = href.find_first_of(':',start);
     size_t hashPos = href.find_first_of('#',start);
+    if (columnPos > hashPos) {
+      // ':' is part of the object name
+      columnPos = href.npos; // let's pretend that we didn't find it
+    }
     size_t pathEnd = href.size();
     
     std::string entryName,path;
