@@ -43,8 +43,22 @@ class genClassDicts:
           sid = ' id="%08x-0000-0000-0000-000000000000"' %int(id)
         else:
           sid=''
+        cnstr =  '  <class name="%s"%s' % (clname,sid)
+        trans = False
+        # add transient flags if they exist
+        if cl.has_key('attribute'):
+          for attr in cl['attribute']:
+            if attr['attrs'].get('transient') == 'TRUE' :
+              if trans == False :
+                cnstr += '>'
+                trans = True
+	      cnstr += ' <field name="m_%s" transient="true"/>' % (attr['attrs']['name'])
+        if trans:
+          cnstr += ' </class>'
+        else:
+          cnstr += '/>'
         # add class name for selection file
-        self.sClassSelections = self.conc(self.sClassSelections, '  <class name="%s"%s/>' %(clname,sid) )
+        self.sClassSelections = self.conc(self.sClassSelections, cnstr)
         if cl.has_key('template'):
           for t in cl['template']:
             # name of template class
