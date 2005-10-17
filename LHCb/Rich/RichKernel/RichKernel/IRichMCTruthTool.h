@@ -5,7 +5,7 @@
  *  Header file for tool interface : IRichMCTruthTool
  *
  *  CVS Log :-
- *  $Id: IRichMCTruthTool.h,v 1.11 2005-10-13 15:03:41 jonrob Exp $
+ *  $Id: IRichMCTruthTool.h,v 1.12 2005-10-17 09:08:58 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   2003-07-31
@@ -15,8 +15,9 @@
 #ifndef RICHKERNEL_IRICHMCTRUTHTOOL_H
 #define RICHKERNEL_IRICHMCTRUTHTOOL_H 1
 
-// RichKernel
+// Kernel
 #include "RichKernel/RichParticleIDType.h"
+#include "Kernel/RichRadiatorType.h"
 
 // Event Model
 class MCRichOpticalPhoton;
@@ -51,6 +52,15 @@ public:
    *  @return unique interface identifier
    */
   static const InterfaceID& interfaceID() { return IID_IRichMCTruthTool; }
+
+  /** Get a vector of MCParticles associated to given RichSmartID
+   *
+   *  @param id RichSmartID identifying the RICH readout channel
+   *
+   *  @return boolean indicating if any associated MCParticles where found
+   */
+  virtual bool mcParticles( const RichSmartID id,
+                            std::vector<const MCParticle*> & mcParts ) const = 0;
 
   /** Find best MCParticle association for a given reconstructed Track
    *
@@ -187,6 +197,17 @@ public:
   virtual const MCRichOpticalPhoton *
   mcOpticalPhoton ( const MCRichHit * mcHit ) const = 0;
 
+  /** Checks if the given RichSmartID is the result of a background
+   *  hit, i.e. not a true Cherenkov hit
+   *
+   *  @param id RichSmartID
+   *
+   *  @return Boolean indicating if the digit is background
+   *  @retval true  MCRichDigit originated from a background hit
+   *  @retval false MCRichDigit originated from Cherenkov Radiation
+   */
+  virtual bool isBackground ( const RichSmartID id ) const = 0;
+
   /** Checks if the given MCRichDigit is the result of a background
    *  hit, i.e. not a true Cherenkov hit
    *
@@ -208,6 +229,20 @@ public:
    *  @retval false MCRichHit originated from Cherenkov Radiation
    */
   virtual bool isBackground ( const MCRichHit * hit ) const = 0;
+
+  /** Checks if the given RichSmartID is the result of true Cherenkov
+   *  radiation from the given radiator
+   *
+   *  @param id  RichSmartID identifying channel
+   *  @param rad Radiator medium
+   * 
+   *  @return Boolean indicating if the hit is Cherenkov radiation 
+   *          in given radiator
+   *  @retval true  RichSmartID did originate from Cherenkov radiation
+   *  @retval false RichSmartID did not originate from Cherenkov radiation
+   */
+  virtual bool isCherenkovRadiation( const RichSmartID id,
+                                     const Rich::RadiatorType rad ) const = 0;
 
 };
 

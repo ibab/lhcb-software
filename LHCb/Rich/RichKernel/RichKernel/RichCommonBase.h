@@ -5,7 +5,7 @@
  *  Header file for RICH base class : RichCommonBase
  *
  *  CVS Log :-
- *  $Id: RichCommonBase.h,v 1.1 2005-10-13 15:03:41 jonrob Exp $
+ *  $Id: RichCommonBase.h,v 1.2 2005-10-17 09:08:58 jonrob Exp $
  *
  *  @author Chris Jones    Christopher.Rob.Jones@cern.ch
  *  @date   2005-08-27
@@ -87,19 +87,23 @@ public:
    *  Uses the RichToolRegistry tool to convert tool nicknames
    *  in the appropriate class name.
    *
-   *  @param tName   The nickname of the requested tool
-   *  @param pTool   Returned pointer to the requested tool
-   *  @param parent  Pointer to parent (used to access private tools)
+   *  @param tName      The nickname of the requested tool
+   *  @param pTool      Returned pointer to the requested tool
+   *  @param parent     Pointer to parent (used to access private tools)
+   *  @param commonTool Flags if this tool should be acquired as common (true) or
+   *                    via the tool registry as a context specifc tool (false)
    *
    *  @return Pointer to the tool associated to the given nickname
    */
   template <typename TOOL>
   inline const TOOL* acquireTool( const std::string & tName,
                                   const TOOL*& pTool,
-                                  const IInterface * parent = 0 ) const
+                                  const IInterface * parent = 0,
+                                  const bool commonTool = false ) const
   {
     // Construct name
-    const std::string fullname = ( parent ? tName : toolRegistry()->toolName(tName) );
+    const std::string fullname = 
+      ( commonTool || parent ? tName : toolRegistry()->toolName(tName) );
     // If private tool - Check Context option
     if ( !parent )
     {
@@ -109,9 +113,10 @@ public:
       }
     }
     // get tool
-    pTool = this -> template tool<TOOL>( toolRegistry()->toolType(tName),
-                                         fullname,
-                                         parent );
+    pTool = 
+      this -> template tool<TOOL>( toolRegistry()->toolType(tName),
+                                   fullname,
+                                   parent );
     if ( msgLevel(MSG::DEBUG) )
     {
       debug() << " Acquired tool '" << pTool->name()
