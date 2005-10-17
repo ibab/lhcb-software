@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.269 2005-09-30 09:07:37 pkoppenb Exp $
+# $Id: requirements,v 1.270 2005-10-17 14:19:18 pkoppenb Exp $
 # Created    : 07/02/2002
 # Maintainer : P. Koppenburg
 #
@@ -46,16 +46,16 @@ use LHCb                        v*
 # packages included in PhysCoreSys
 #=======================================================                                                                                                                                                                            
 use  CommonParticles    	v1r5p3   Phys
-use  DaVinciFilter      	v3r1p1   Phys
-use  DaVinciKernel      	v3r6     Phys
-use  DaVinciTools       	v12r1    Phys
+use  DaVinciFilter      	v3r2     Phys
+use  DaVinciKernel      	v3r8     Phys
+use  DaVinciTools       	v12r2    Phys
 use  FlavourTagging     	v6r2     Phys
 use  Ks2PiPiSel         	v1r7     Phys
 use  ParticleMaker      	v1r6     Phys
 use  PhysSelections		v6r12    Phys
 use  DaVinciTransporter 	v2r1     Phys
-use  VertexFit			v1r6p1   Phys
-use  Tampering                  v1r2     Phys
+use  VertexFit			v1r8     Phys
+use  Tampering                  v1r3     Phys
 # Generic tools 
 use  Utilities          	v2r1     Tools
 use  RecoTools          	v1r1     Rec
@@ -83,9 +83,9 @@ use  KtJet	             	v1r0     External
 #=======================================================
 # packages included in HltSys
 #=======================================================
-use HltGeneric                  v2r6     Hlt
-use HltSelections               v3r7     Hlt
-use HltSelChecker               v3r6     Hlt
+use HltGeneric                  v2r7     Hlt
+use HltSelections               v3r8     Hlt
+use HltSelChecker               v3r7     Hlt
 
 #=======================================================
 use  PhysSelSys			v8r7     PhysSel
