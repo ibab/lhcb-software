@@ -1,4 +1,4 @@
-// $Id: TrgVertexFitter.cpp,v 1.8 2005-05-24 13:28:40 hruiz Exp $
+// $Id: TrgVertexFitter.cpp,v 1.9 2005-10-17 08:57:51 pkoppenb Exp $
 // Include files 
 
 // from Gaudi
@@ -132,12 +132,12 @@ StatusCode TrgVertexFitter::fitVertex(Particle& iPart, Particle& jPart,  Vertex&
 // Method to fit the vertex between three given Particles
 //=============================================================================
 
-  // ==============================================================
-  // HAVING THE EXPLICIT IMPLEMENTATION FOR TWO AND THREE PARTICLES
-  // SEEMS TO SAVE A FACTOR OF TWO IN TIMING!!!
-  // ==============================================================
+// ==============================================================
+// HAVING THE EXPLICIT IMPLEMENTATION FOR TWO AND THREE PARTICLES
+// SEEMS TO SAVE A FACTOR OF TWO IN TIMING!!!
+// ==============================================================
 
-  StatusCode TrgVertexFitter::fitVertex(Particle& iPart, Particle& jPart, Particle& kPart,  Vertex& V)
+StatusCode TrgVertexFitter::fitVertex(Particle& iPart, Particle& jPart, Particle& kPart,  Vertex& V)
 {
   // Track point and error on point
   const Hep3Vector& iPoint = iPart.pointOnTrack();
@@ -220,7 +220,9 @@ StatusCode TrgVertexFitter::fitVertex( const  ParticleVector& parts,  Vertex& V)
 
   // Vector of input photons
   ParticleVector inputPhotons;
-
+  int nLongLived = 0;
+  bool noFit = false;
+  
   // Main loop on input particles
   for ( ParticleVector::const_iterator iPart=parts.begin(); iPart!=parts.end(); ++iPart ) {
     
@@ -233,7 +235,7 @@ StatusCode TrgVertexFitter::fitVertex( const  ParticleVector& parts,  Vertex& V)
     const Vertex* endVertexPointer = par.endVertex();
 
 
-    // Take actions 1) 2) or 3) according to particle type
+    // Take actions 1) 2) 3) or 4) according to particle type
 
     // 1) Photons are not used for vertexing, just added to the vertex at the end
     if ( par.origin() && m_photonID == par.particleID().pid() ) { 
@@ -256,8 +258,14 @@ StatusCode TrgVertexFitter::fitVertex( const  ParticleVector& parts,  Vertex& V)
       }
       
     }
+    // 3) FL: Long lived composite
+    else if ( m_useDaughters && endVertexPointer && !(par.isResonance()) ){
+      verbose() << "Long lived particle added to list for fit: " << par.particleID() << endreq;
+      partsToFit.push_back(parPointer);
+		  nLongLived++;
+    }
 
-    // 3) In any other case, particle will be used directly in the fit
+    // 4) In any other case, particle will be used directly in the fit
     else {
       partsToFit.push_back(parPointer);
       verbose() << "Input particle added to list for fit: " << parPointer->particleID() << endreq;
@@ -274,17 +282,57 @@ StatusCode TrgVertexFitter::fitVertex( const  ParticleVector& parts,  Vertex& V)
   // Number of photons to be added at the end
   verbose() << "Number of photons that will be added to the vertex: " << inputPhotons.size() << endreq;
   
+  // FL: check this first
+  if ( nLongLived==1 && inputPhotons.size()>0 ){
+  
+    verbose() << "Special case: won't refit, but add " << inputPhotons.size() << " gamma(s) to existing vertex" << endreq;
+	 
+    // Get the composite vertex in case of no fit (no X -> n gammas)
+      
+    for ( std::vector<const Particle*>::const_iterator iPart=partsToFit.begin(); iPart!=partsToFit.end(); ++iPart ) {
+
+      const Particle* composite = *iPart;
+      const Vertex* Vtemp = composite->endVertex();
+		
+      //Should not only decay to gammas    
+      unsigned int ngammas = 0;
+      
+      const SmartRefVector<Particle> daughters= Vtemp->products();
+      for ( SmartRefVector<Particle>::const_iterator iDaught=daughters.begin();iDaught!=daughters.end();++iDaught) {
+        if((*iDaught)->origin() && m_photonID == (*iDaught)->particleID().pid()) ngammas++;
+      } // iDaught
+    
+      // Do not use if only decays to gammas, e.g. J/Psi eta(2g)
+      if(ngammas == Vtemp->products().size()) continue;
+    
+      // We have our vertex
+      verbose() << " composite ID " << composite->particleID().pid() << " will be used to add gammas" << endmsg;
+    
+      verbose() << " composite decay vertex position: " << Vtemp->position() << " , and chi2 " << Vtemp->chi2() << endmsg;
+				
+      if(Vtemp) V = *Vtemp;
+      else{
+        fatal() << "No existing vertex found!" << endmsg;
+        return StatusCode::FAILURE;
+      }  
+    } // iPart
+ 	 
+  }  
   // Check wether enough particles
-  if ( (nPartsToFit == 0) || (nPartsToFit == 1)){
+  else if ( (nPartsToFit == 0) || (nPartsToFit == 1)){
     fatal() << "Not enough particles to fit!" << endreq;
     return StatusCode::FAILURE;
-  }
+  } else {  
+  
+    // Do the fit!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+  
+    StatusCode scFit = doFit( partsToFit, V );
+    if ( !scFit) {
+      fatal() << "doFit failed" << endreq;
+      return StatusCode::FAILURE;
 
-  // Do the fit!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-  StatusCode scFit = doFit( partsToFit, V );
-  if ( !scFit) {
-    fatal() << "doFit failed" << endreq;
-    return StatusCode::FAILURE;
+    }
+  
   }
   
   // Update "pointOnTrack" for photons
@@ -367,7 +415,7 @@ StatusCode TrgVertexFitter::doFit(std::vector<const Particle*>& partsToFit, Vert
   if (!stPosAndErr){
     fatal() << "vertexPositionAndError failed" << endreq;
     return StatusCode::FAILURE;
-    };
+  };
 
   // Chi2
   double chi2 = 0;
@@ -400,7 +448,7 @@ StatusCode TrgVertexFitter::vertexPositionAndError(const double& AX, const doubl
   HepPoint3D vPos = HepPoint3D (vX, vY, vZ);
   V.setPosition(vPos);
   
-   // Covariance matrix
+  // Covariance matrix
   HepSymMatrix fastCov(3);
   double invDet = 1./( BX*BY*( DX + DY ) - CX*CX*BY - CY*CY*BX );
   fastCov(1,1) = invDet * ( -CY*CY + ( BY * ( DX + DY )));
