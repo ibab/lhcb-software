@@ -5,7 +5,7 @@
  *  Implementation file for RICH Digitisation Quality Control algorithm : RichDigitQC
  *
  *  CVS Log :-
- *  $Id: RichDigitQC.cpp,v 1.19 2005-06-18 11:27:15 jonrob Exp $
+ *  $Id: RichDigitQC.cpp,v 1.20 2005-10-17 09:06:53 jonrob Exp $
  *
  *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
  *  @date   2003-09-08
@@ -52,10 +52,10 @@ StatusCode RichDigitQC::initialize()
   if ( sc.isFailure() ) { return sc; }
 
   // acquire tools
-  acquireTool( "RichHPDToLevel1Tool", m_level1   );
-  acquireTool( "RichHPDInfoTool",     m_hpdID    );
-  acquireTool( "RichSmartIDTool" ,    m_smartIDs );
-  acquireTool( "RichMCTruthTool",     m_mcTool   );
+  acquireTool( "RichHPDToLevel1Tool", m_level1,   0, true );
+  acquireTool( "RichHPDInfoTool",     m_hpdID,    0, true );
+  acquireTool( "RichSmartIDTool" ,    m_smartIDs, 0, true );
+  acquireTool( "RichMCTruthTool",     m_mcTool,   0, true );
 
   // Initialise variables
   m_evtC = 0;
