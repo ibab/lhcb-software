@@ -69,6 +69,6 @@ ToolSvc.FitTrackToMCP.OutputLevel = 5;
 ToolSvc.FitTrackToMCP.Location      = "Rec/Relations/IdealTr2MCP" ;
 DataOnDemandSvc.Algorithms +={ "DATA='/Event/Rec/Relations/IdealTrack2MCP'
                                 TYPE='TrackAssociator/IdealTr2MCP'"};
-Best2MCP.InputTracks = "Rec/Track/FitIdeal" ;   // TrackLocation::Default
-Best2MCP.OutputTable = "Rec/Relations/IdealTrack2MCP" ;
+Ideal2MCP.InputTracks = "Rec/Track/FitIdeal" ;   // TrackLocation::Default
+Ideal2MCP.OutputTable = "Rec/Relations/IdealTrack2MCP" ;
 ToolSvc.FitTrackToMCP.OutputLevel = 5;

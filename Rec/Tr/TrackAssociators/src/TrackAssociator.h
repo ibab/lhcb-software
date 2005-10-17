@@ -1,4 +1,4 @@
-// $Id: TrackAssociator.h,v 1.2 2005-10-07 12:13:25 mneedham Exp $
+// $Id: TrackAssociator.h,v 1.3 2005-10-17 16:30:21 ebos Exp $
 #ifndef TRACKASSOCIATORS_TRACKASSOCIATOR_H 
 #define TRACKASSOCIATORS_TRACKASSOCIATOR_H 1
 
@@ -49,33 +49,13 @@ public:
   typedef OTTime2MCParticleAsct::IAsct       OTTimAsct ;
   typedef VeloCluster2MCParticleAsct::IAsct  VeloClusAsct ;
 
-protected:
+private:
 
-// Adjust the counters for this particle, create one if needed 
   void countMCPart( const MCParticle* part, 
                     double incVelo, 
                     double incTT1,
-                    double incSeed ) {
-    bool found = false;
-    for ( unsigned int jj = 0 ; m_parts.size() > jj ; ++jj  ) {
-      if ( m_parts[jj] == part ) {
-        m_nVelo[jj] += incVelo;
-        m_nTT1[jj]  += incTT1 ;
-        m_nSeed[jj] += incSeed;
-        found = true;
-        break;
-      }
-    }
-    if ( !found ) {
-      m_parts.push_back( part );
-      m_nVelo.push_back( incVelo );
-      m_nTT1.push_back(  incTT1  );
-      m_nSeed.push_back( incSeed );
-    }
-  }
-
-private:
-
+                    double incSeed );
+    
   std::string m_inputContainer;   ///< Name of the track container
   std::string m_outputTable;      ///< Name of the association table
   double      m_minimalZ;         ///< minimal Z for IT/OT, to ignore TT1

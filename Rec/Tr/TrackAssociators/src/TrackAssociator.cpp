@@ -1,4 +1,4 @@
-// $Id: TrackAssociator.cpp,v 1.2 2005-10-07 12:13:25 mneedham Exp $
+// $Id: TrackAssociator.cpp,v 1.3 2005-10-17 16:30:21 ebos Exp $
 // Include files 
 // -------------
 // from Gaudi
@@ -32,9 +32,14 @@
 #include "Linker/LinkerWithKey.h"
 
 //-----------------------------------------------------------------------------
-// Implementation file for class : TrackAssociator (based on TrAssociator by O. Callot)
+// Implementation file for class : TrackAssociator
 //
+// Copy of TrFitTrackMCTruthAlg & adaptations to new tracking event model
 // 2005-09-12 : Edwin Bos
+//
+// Author : Olivier Callot
+// Date:    28/04/2002
+//
 //-----------------------------------------------------------------------------
 
 // Declaration of the Algorithm Factory
@@ -152,12 +157,12 @@ StatusCode TrackAssociator::execute() {
       VeloPhiMeasurement* meas = dynamic_cast<VeloPhiMeasurement*>(*itm);
       if ( 0 != meas ) {
         clu = meas->cluster();
-        verbose() << " ..VP hit z " << meas->z();
+        verbose() << " ..VP hit z " << meas->z() << endreq;
       } else {
         VeloRMeasurement* meas = dynamic_cast<VeloRMeasurement*>(*itm);
         if ( 0 != meas ) {
           clu = meas->cluster();
-          verbose() << " ..VR hit z " << meas->z();
+          verbose() << " ..VR hit z " << meas->z() << endreq;
         }
       }
 
@@ -168,15 +173,15 @@ StatusCode TrackAssociator::execute() {
         for ( itv = range.begin(); range.end() != itv; ++itv ) {
           part = itv->to();
           if ( 0 == part ) {
-            error() << "Null track pointer associated to a Velo cluster";
+            error() << "Null track pointer associated to a Velo cluster" << endreq;
           } else if( mcParts != part->parent() ) {
-            error() << " (other BX " <<  part->key() << ")";
+            error() << " (other BX " <<  part->key() << ")" << endreq;
           } else {
-            error() << " " << part->key();
+            debug() << " " << part->key() << endreq;
             countMCPart( part, 1., 0., 0. );
           }
         }
-        error() << endreq;   // Ends also the possible ERROR message.
+        
         continue;
       } else {
         bool inTT1 = ( m_minimalZ > (*itm)->z() );  // ignore TT1
@@ -190,22 +195,21 @@ StatusCode TrackAssociator::execute() {
           } else {
             m_nTotSeed += 1.;
           }
-          verbose() << " ..IT hit z " << itc->z() ;
+          verbose() << " ..IT hit z " << itc->z() << endreq;
           
           ITClusAsct::DirectType::Range itRange = itTable->relations( itCl );
           for ( itr = itRange.begin(); itRange.end() != itr; itr++ ) {
             part = itr->to();
             if ( 0 == part ) {
-              error() << "Null track pointer associated to an IT cluster";
+              error() << "Null track pointer associated to an IT cluster" << endreq;
             } else if( mcParts != part->parent() ) {
-              error() << " (other BX " <<  part->key() << ")";
+              error() << " (other BX " <<  part->key() << ")" << endreq;
             } else {
-              error() << " " << part->key();
+              debug() << " " << part->key() << endreq;
               if ( inTT1 ) { countMCPart( part, 0., 1., 0. ); }
               else { countMCPart( part, 0., 0., 1. ); }
             }
           }
-          error() << endreq;   // Ends also the possible ERROR message.
           continue;
         }
         
@@ -215,22 +219,21 @@ StatusCode TrackAssociator::execute() {
           OTTime* otTim = otc->time();
           if ( inTT1 ) { m_nTotTT1 += 1.; }
           else { m_nTotSeed += 1.; }
-          verbose() << " ..OT hit z " << otc->z();
+          verbose() << " ..OT hit z " << otc->z() << endreq;
           
           OTTimAsct::DirectType::Range otRange = otTable->relations( otTim );
           for ( otr = otRange.begin(); otRange.end() != otr; otr++ ) {
             part = otr->to();
             if ( 0 == part ) {
-              error() << "Null track pointer associated to an OT cluster";
+              error() << "Null track pointer associated to an OT cluster" << endreq;
             } else if( mcParts != part->parent() ) {
-              error() << " (other BX " <<  part->key() << ")";
+              error() << " (other BX " <<  part->key() << ")" << endreq;
             } else {
-              error() << " " << part->key();
+              debug() << " " << part->key() << endreq;
               if ( inTT1 ) { countMCPart( part, 0., 1., 0. ); }
               else { countMCPart( part, 0., 0., 1. ); }
             }
           }
-          error() << endreq;   // Ends also the possible ERROR message.
           continue;
         }
         debug() << " ..?? hit z " << (*itm)->z() << endreq;
@@ -337,3 +340,25 @@ StatusCode TrackAssociator::execute() {
   return StatusCode::SUCCESS;
 };
 
+// Adjust the counters for this particle, create one if needed 
+void TrackAssociator::countMCPart( const MCParticle* part, 
+                                   double incVelo, 
+                                   double incTT1,
+                                   double incSeed ) {
+  bool found = false;
+  for ( unsigned int jj = 0 ; m_parts.size() > jj ; ++jj  ) {
+    if ( m_parts[jj] == part ) {
+      m_nVelo[jj] += incVelo;
+      m_nTT1[jj]  += incTT1 ;
+      m_nSeed[jj] += incSeed;
+      found = true;
+      break;
+    }
+  }
+  if ( !found ) {
+    m_parts.push_back( part );
+    m_nVelo.push_back( incVelo );
+    m_nTT1.push_back(  incTT1  );
+    m_nSeed.push_back( incSeed );
+  }
+}

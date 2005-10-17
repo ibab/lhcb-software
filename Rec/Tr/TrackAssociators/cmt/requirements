@@ -1,10 +1,10 @@
 #============================================================================
-# Created    : 2005-09-19
+# Created    : 2005-09-13
 # Maintainer : Edwin Bos
 #
 #============================================================================
 package          TrackAssociators
-version          v1r0
+version          v1r3
 
 #============================================================================
 # This template is an example for a standard Algorithm package
