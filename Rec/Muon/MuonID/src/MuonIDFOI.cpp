@@ -1,10 +1,9 @@
-// $Id: MuonIDFOI.cpp,v 1.11 2005-09-30 08:48:34 pkoppenb Exp $
+// $Id: MuonIDFOI.cpp,v 1.12 2005-10-17 08:16:34 pkoppenb Exp $
 // Include files
 #include <cstdio>
 
 // from Gaudi
 #include "GaudiKernel/AlgFactory.h"
-#include "GaudiKernel/MsgStream.h"
 #include "GaudiKernel/SmartDataPtr.h"
 
 // From event packages
@@ -41,7 +40,7 @@ const        IAlgFactory& MuonIDFOIFactory = s_factory ;
 //=============================================================================
 MuonIDFOI::MuonIDFOI( const std::string& name,
                       ISvcLocator* pSvcLocator)
-  : Algorithm ( name , pSvcLocator ) {
+  : GaudiAlgorithm ( name , pSvcLocator ) {
 
   // Source of track to ID
   declareProperty("TrackLocation",
@@ -81,23 +80,22 @@ MuonIDFOI::~MuonIDFOI() {};
 //=============================================================================
 StatusCode MuonIDFOI::initialize() {
 
-  MsgStream saida(msgSvc(), name());
-  saida << MSG::DEBUG << "==> Initialise" << endreq;
+  debug()  << "==> Initialise" << endreq;
 
-  saida << MSG::DEBUG << "Input tracks in : " << m_TrStoredTracksPath << endreq;
-  saida << MSG::DEBUG << "Output MuonID in : " << m_MuonIDsPath<< endreq;
+  debug()  << "Input tracks in : " << m_TrStoredTracksPath << endreq;
+  debug()  << "Output MuonID in : " << m_MuonIDsPath<< endreq;
 
   // get geometry tool
   StatusCode sc =
     toolSvc()->retrieveTool("MuonTileIDXYZ", m_iTileTool);
   if( sc.isFailure() ) {
-    saida << MSG::FATAL << "    Unable to create MuonTileIDToXYZ tool" << endreq;
+    fatal() << "    Unable to create MuonTileIDToXYZ tool" << endreq;
     return sc;
   }
 
   sc = toolSvc()->retrieveTool("MuonGeometryTool", m_iGeomTool);
   if( sc.isFailure() ) {
-    saida << MSG::FATAL << "    Unable to create MuonGeometry tool" << endreq;
+    fatal() << "    Unable to create MuonGeometry tool" << endreq;
     return sc;
   }
 
@@ -110,7 +108,7 @@ StatusCode MuonIDFOI::initialize() {
   int i=0;
   while(i<m_NStation){  
     m_stationNames.push_back(basegeometry.getStationName(i));
-    //    saida<<MSG::DEBUG<<" station "<<i<<" "<<m_stationNames[i]<<endreq;
+    // debug()   <<" station "<<i<<" "<<m_stationNames[i]<<endreq;
     i++;
   }
 
@@ -149,14 +147,14 @@ StatusCode MuonIDFOI::initialize() {
     }
   }
   
-          saida << MSG::DEBUG << "Outer X M1 = " << m_regionOuterX[3] << endreq;       
-	  saida << MSG::DEBUG << "Outer Y M1 = " << m_regionOuterY[3] << endreq;
-          saida << MSG::DEBUG << "Outer X M5 = " << m_regionOuterX[19] << endreq;
-          saida << MSG::DEBUG << "Outer Y M5 = " << m_regionOuterY[19] << endreq;
-          saida << MSG::DEBUG << "Inner X M1 = " << m_regionInnerX[0] << endreq;
-          saida << MSG::DEBUG << "Inner Y M1 = " << m_regionInnerY[0] << endreq;
-          saida << MSG::DEBUG << "Inner X M5 = " << m_regionInnerX[16] << endreq;
-          saida << MSG::DEBUG << "Inner Y M5 = " << m_regionInnerY[16] << endreq;
+          debug()  << "Outer X M1 = " << m_regionOuterX[3] << endreq;       
+	  debug()  << "Outer Y M1 = " << m_regionOuterY[3] << endreq;
+          debug()  << "Outer X M5 = " << m_regionOuterX[19] << endreq;
+          debug()  << "Outer Y M5 = " << m_regionOuterY[19] << endreq;
+          debug()  << "Inner X M1 = " << m_regionInnerX[0] << endreq;
+          debug()  << "Inner Y M1 = " << m_regionInnerY[0] << endreq;
+          debug()  << "Inner X M5 = " << m_regionInnerX[16] << endreq;
+          debug()  << "Inner Y M5 = " << m_regionInnerY[16] << endreq;
   
   if( m_MomentumCuts.empty() || 
       m_xfoiParam1.size() != (unsigned)m_NStation*m_NRegion || 
@@ -166,7 +164,7 @@ StatusCode MuonIDFOI::initialize() {
       m_yfoiParam2.size() != (unsigned)m_NStation*m_NRegion ||
       m_yfoiParam3.size() != (unsigned)m_NStation*m_NRegion  
       ){
-    saida << MSG::ERROR << "OPTIONS initialising MuonIDFOI are missing"
+    err() << "OPTIONS initialising MuonIDFOI are missing"
         << " or wrong size for " << m_NStation << " stations and " 
         << m_NRegion << " regions"
         << endreq;
@@ -174,21 +172,20 @@ StatusCode MuonIDFOI::initialize() {
   }
   
   if( m_MomentumCuts.size() != 2 ){
-    saida << MSG::ERROR 
+    err() 
         << "OPTIONS are wrong:"
         << " size of MomentumCuts vector is not correct" 
         << endreq;
     return StatusCode::FAILURE;
   }
 
-  saida << MSG::DEBUG << " Momentum bins are (MeV/c) " <<endreq;
-  saida << MSG::DEBUG << " PreSelMomentum = "<<  m_PreSelMomentum << endreq;
+  debug()  << " Momentum bins are (MeV/c) " <<endreq;
+  debug()  << " PreSelMomentum = "<<  m_PreSelMomentum << endreq;
 
   std::vector<double>::const_iterator iMom;
   for(iMom = m_MomentumCuts.begin() ; iMom != m_MomentumCuts.end() ; iMom++){
-    saida << MSG::DEBUG << "Mom. cuts = " << *iMom << endreq ;
+    debug()  << "Mom. cuts = " << *iMom << endreq ;
   }
-  saida << endreq;
   
   return StatusCode::SUCCESS;
 }
@@ -198,8 +195,7 @@ StatusCode MuonIDFOI::initialize() {
 //=============================================================================
 StatusCode MuonIDFOI::execute() {
 
-  MsgStream  saida( msgSvc(), name() );
-  saida << MSG::DEBUG << "==> Execute" << endreq;
+  debug()  << "==> Execute" << endreq;
 
   StatusCode sc = fillCoordVectors();
   if(sc.isFailure()){
@@ -208,11 +204,11 @@ StatusCode MuonIDFOI::execute() {
 
   SmartDataPtr<TrStoredTracks> trTracks(eventSvc(),m_TrStoredTracksPath);
   if(!trTracks){
-    saida << MSG::ERROR << " Failed to get TrStoredTrack container "
+    err() << " Failed to get TrStoredTrack container "
         <<  m_TrStoredTracksPath << endreq;
     return StatusCode::FAILURE;
   }
-  saida << MSG::DEBUG << "Number of input tracks " << trTracks->size() << endreq;
+  debug()  << "Number of input tracks " << trTracks->size() << endreq;
 
   MuonIDs * pMuids = new MuonIDs;
 
@@ -238,14 +234,14 @@ StatusCode MuonIDFOI::execute() {
   }
 
   // Debug : muon identification event summary
-  saida << MSG::DEBUG << "Number of MuonID objects created " << pMuids->size()
+  debug()  << "Number of MuonID objects created " << pMuids->size()
       << endreq;
 
   // Register the MuonID container to the TES
 
   sc = eventSvc()->registerObject(m_MuonIDsPath,pMuids);
   if(sc.isFailure()){
-    saida << MSG::ERROR << "TES rejected the muonIDs into location "
+    err() << "TES rejected the muonIDs into location "
         << m_MuonIDsPath << endreq;
     return sc;
   }
@@ -260,8 +256,7 @@ StatusCode MuonIDFOI::execute() {
 //=============================================================================
 StatusCode MuonIDFOI::finalize() {
 
-  MsgStream saida(msgSvc(), name());
-  saida << MSG::DEBUG << "==> Finalize" << endreq;
+  debug()  << "==> Finalize" << endreq;
 
   // Release the tools
   if( m_iTileTool ) toolSvc()->releaseTool( m_iTileTool );
@@ -300,8 +295,7 @@ StatusCode MuonIDFOI::fillCoordVectors(){
 
     SmartDataPtr<MuonCoords> coords(eventSvc(),TESPath);
     if(!coords){
-      MsgStream saida(msgSvc(), name());
-      saida << MSG::ERROR << "Failed to read TES path "
+      err() << "Failed to read TES path "
           << TESPath << " looking for MuonCoords" << endreq;
     }
 
@@ -313,8 +307,7 @@ StatusCode MuonIDFOI::fillCoordVectors(){
       StatusCode sc = 
         m_iTileTool->calcTilePos((*iCoord)->key(),x,dx,y,dy,z,dz);
       if(sc.isFailure()){
-        MsgStream saida(msgSvc(), name());
-        saida << MSG::ERROR << "Failed to get x,y,z of tile " << (*iCoord)->key()
+        err() << "Failed to get x,y,z of tile " << (*iCoord)->key()
             << endreq;
         return sc;
       }
@@ -335,7 +328,6 @@ void MuonIDFOI::clearCoordVectors(){
 
 // Do the identification
 StatusCode MuonIDFOI::doID(MuonID *pMuid){
-  MsgStream saida(msgSvc(), name());
 
   // First do a preselection:
   // track is in acceptance? Track has minimum momentum?
@@ -347,7 +339,7 @@ StatusCode MuonIDFOI::doID(MuonID *pMuid){
 
   // OK: track failed preselection say so and return
   if(!passed){
-    saida <<MSG::DEBUG << " Track failed preselection " << endreq;
+    debug() << " Track failed preselection " << endreq;
     return StatusCode::SUCCESS;
   }
 
@@ -417,13 +409,13 @@ StatusCode MuonIDFOI::doID(MuonID *pMuid){
     pMuid->setMuProb(0.0);
   }
 
-  saida << MSG::DEBUG << "IsMuon = " << pMuid->IsMuon() 
+  debug()  << "IsMuon = " << pMuid->IsMuon() 
 	<< " bin = "   << momentumBin <<" " << " p = " << m_Momentum << endreq; 
-  saida    << " coord in FOI ("; 
+  debug()  << " coord in FOI ("; 
        for(station = 0; station < m_NStation ; station++ ){
-    saida << m_occupancy[station] << "," ;
+  debug() << m_occupancy[station] << "," ;
   }
-  saida << ")" << endreq;
+  debug() << ")" << endreq;
  
   return StatusCode::SUCCESS;
 }
@@ -480,7 +472,6 @@ StatusCode MuonIDFOI::preSelection(MuonID * pMuid, bool &passed){
 
 StatusCode MuonIDFOI::setCoords(MuonID *pMuid){
 
-  MsgStream saida(msgSvc(), name());
   int station;
   for(station = 0 ; station < m_NStation ; station++){
     int region;
@@ -507,10 +498,10 @@ StatusCode MuonIDFOI::setCoords(MuonID *pMuid){
           if(  ( fabs( x - m_trackX[station] ) < foiXDim ) &&
                ( fabs( y - m_trackY[station] ) < foiYDim )  ) {
 
-           saida << MSG::DEBUG << "ratioX = " << fabs( x - m_trackX[station]) 
+           debug()  << "ratioX = " << fabs( x - m_trackX[station]) 
                  << "ratioY = " << fabs( y - m_trackY[station]) << " foiXDim = " 
                  << foiXDim <<" foiYDim = " << foiYDim <<endreq;
-           saida << MSG::DEBUG << "padX = " << dx << " padY = " << dy << endreq;
+           debug()  << "padX = " << dx << " padY = " << dy << endreq;
 
             // it is in the window
             // add the hit to the MuonID
@@ -545,8 +536,7 @@ StatusCode MuonIDFOI::trackExtrapolate(TrStoredTrack *pTrack){
   const TrStateP *stateP =
     dynamic_cast<const TrStateP*>(pTrack->closestState(m_stationZ[0]));
   if(!stateP){
-    MsgStream saida(msgSvc(), name());
-    saida << MSG::ERROR << " Failed to get stateP from track " << endreq;
+    err() << " Failed to get stateP from track " << endreq;
     return StatusCode::FAILURE;
   }
 

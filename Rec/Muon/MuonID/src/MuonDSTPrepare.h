@@ -1,4 +1,4 @@
-// $Id: MuonDSTPrepare.h,v 1.1 2002-05-17 13:13:47 dhcroft Exp $
+// $Id: MuonDSTPrepare.h,v 1.2 2005-10-17 08:16:34 pkoppenb Exp $
 #ifndef MUONDSTPREPARE_H 
 #define MUONDSTPREPARE_H 1
 
@@ -7,7 +7,7 @@
 #include <string>
 
 // from Gaudi
-#include "GaudiKernel/Algorithm.h"
+#include "GaudiAlg/GaudiAlgorithm.h"
 
 // From MuonEvent
 #include "Event/MuonCoord.h"
@@ -18,8 +18,10 @@
  *
  *  @author David Hutchcroft
  *  @date   16/05/2002
+ *          Erica Polycarpo, Miriam Gandelman
+ *  @date   28/09/2005 New message service sintaxe> move to GaudiAlgorithm
  */
-class MuonDSTPrepare : public Algorithm {
+class MuonDSTPrepare : public GaudiAlgorithm {
 public:
   /// Standard constructor
   MuonDSTPrepare( const std::string& name, ISvcLocator* pSvcLocator );

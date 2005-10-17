@@ -1,4 +1,4 @@
-// $Id: MuonIDFOI.h,v 1.7 2005-09-30 08:48:34 pkoppenb Exp $
+// $Id: MuonIDFOI.h,v 1.8 2005-10-17 08:16:34 pkoppenb Exp $
 #ifndef MUONIDFOI_H 
 #define MUONIDFOI_H 1
 
@@ -7,7 +7,7 @@
 #include <string>
 
 // from Gaudi
-#include "GaudiKernel/Algorithm.h"
+#include "GaudiAlg/GaudiAlgorithm.h"
 #include "MuonDet/MuonBasicGeometry.h"
 
 // forward declaration of tools
@@ -29,7 +29,7 @@ class TrStoredTrack;
  *  updated by jtmn, miriam 22/04/2003
  *  
  */
-class MuonIDFOI : public Algorithm {
+class MuonIDFOI : public GaudiAlgorithm{
 public:
   /// Standard constructor
   MuonIDFOI( const std::string& name, ISvcLocator* pSvcLocator );

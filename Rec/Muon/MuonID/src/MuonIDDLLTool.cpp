@@ -1,9 +1,8 @@
-// $Id: MuonIDDLLTool.cpp,v 1.3 2005-09-30 08:48:34 pkoppenb Exp $
+// $Id: MuonIDDLLTool.cpp,v 1.4 2005-10-17 08:16:34 pkoppenb Exp $
 
 // Include files
 // from Gaudi
 #include "GaudiKernel/ToolFactory.h"
-#include "GaudiKernel/MsgStream.h"
 #include "GaudiKernel/IToolSvc.h"
 #include "GaudiKernel/GaudiException.h"
 
@@ -34,7 +33,7 @@ const IToolFactory& MuonIDDLLToolFactory = s_factory;
 //==================================================================
 MuonIDDLLTool::MuonIDDLLTool(const std::string& type, 
                     const std::string& name, const IInterface* parent) 
-  : AlgTool( type, name, parent)
+  : GaudiTool( type, name, parent)
 {
 
   declareInterface<IMuonIDDLLTool>(this);
@@ -47,18 +46,17 @@ MuonIDDLLTool::MuonIDDLLTool(const std::string& type,
 //==================================================================
 StatusCode MuonIDDLLTool::initialize() {
   
-  MsgStream saida(msgSvc(), name());
-  saida << MSG::DEBUG << "==> Initialise" << endreq;
+  debug()  << "==> Initialise" << endreq;
    // get geometry tool
      StatusCode sc;
      sc = toolSvc()->retrieveTool("MuonTileIDXYZ", m_iTileTool);
            if( sc.isFailure() ) {
-            saida << MSG::FATAL << "    Unable to create MuonTileIDToXYZ tool" << endreq;
+            fatal() << "    Unable to create MuonTileIDToXYZ tool" << endreq;
             return sc;
            }
      sc = toolSvc()->retrieveTool("MuonGeometryTool", m_iGeomTool);
 	   if( sc.isFailure() ) {
-	    saida << MSG::FATAL << "    Unable to create MuonGeometry tool" << endreq;
+	    fatal() << "    Unable to create MuonGeometry tool" << endreq;
 	   return sc;
 	   }
 
@@ -77,7 +75,7 @@ StatusCode MuonIDDLLTool::initialize() {
         }
     }
     if( m_distPion.size() == 0 || m_distMuon.size() == 0){
-          saida << MSG::ERROR
+          err()
            << "OPTIONS are wrong:"
            << " size of m_distPion or m_distMuon vector is not correct"
            << endreq;
@@ -93,7 +91,6 @@ StatusCode MuonIDDLLTool::initialize() {
 //==================================================================
 StatusCode MuonIDDLLTool::calcMuonDLL( const MuonID* muonid, double& dll ) {
 
-  MsgStream saida(msgSvc(), name());
 
   if ( !muonid->IsMuon() ) {
       return StatusCode::FAILURE;
@@ -102,7 +99,7 @@ StatusCode MuonIDDLLTool::calcMuonDLL( const MuonID* muonid, double& dll ) {
      // do the track extrapolations
      StatusCode sc = trackExtrapolate(pTrack);
      if(!sc){
-           saida << MSG::ERROR << "stopped in trackExtrapolate"  << endreq;
+           err() << "stopped in trackExtrapolate"  << endreq;
            return StatusCode::FAILURE;
      }
 
@@ -114,8 +111,7 @@ StatusCode MuonIDDLLTool::calcMuonDLL( const MuonID* muonid, double& dll ) {
         StatusCode sc =
          m_iTileTool->calcTilePos((*iCoord)->key(),x,dx,y,dy,z,dz);
          if(sc.isFailure()){
-            MsgStream saida(msgSvc(), name());
-            saida << MSG::ERROR << "Failed to get x,y,z of tile " << (*iCoord)->key() << endreq;
+            err() << "Failed to get x,y,z of tile " << (*iCoord)->key() << endreq;
             return sc;
 	 }
         int station = (*iCoord)->key().station();
@@ -128,10 +124,10 @@ StatusCode MuonIDDLLTool::calcMuonDLL( const MuonID* muonid, double& dll ) {
      double nbins = 30.;
      double small = 1.*pow(10,-20);
      int ibin = (int)( dist * nbins / distmax );
-     saida << MSG::DEBUG << "ibin =  " << ibin << endreq;
-     saida << MSG::DEBUG << "mdistpion =  " << m_distPion[0] << endreq;
-     saida << MSG::DEBUG << "m_distPion[ibin] =  " << m_distPion[ibin] << endreq;
-     saida << MSG::DEBUG << "m_distMuon[ibin] =  " << m_distMuon[ibin] << endreq;
+     debug()  << "ibin =  " << ibin << endreq;
+     debug()  << "mdistpion =  " << m_distPion[0] << endreq;
+     debug()  << "m_distPion[ibin] =  " << m_distPion[ibin] << endreq;
+     debug()  << "m_distMuon[ibin] =  " << m_distMuon[ibin] << endreq;
      if (dist < distmax && m_distPion[ibin] >0.) {
 	 dll = m_distMuon[ibin] / m_distPion[ibin];
 	 if (dll < small) {
@@ -144,8 +140,8 @@ StatusCode MuonIDDLLTool::calcMuonDLL( const MuonID* muonid, double& dll ) {
      else {
            return StatusCode::FAILURE;
      }
-     saida << MSG::DEBUG << "dist =  " << dist << endreq;
-     saida << MSG::DEBUG << "dll =  " << dll << endreq;
+     debug()  << "dist =  " << dist << endreq;
+     debug()  << "dll =  " << dll << endreq;
 
   return StatusCode::SUCCESS;
 
@@ -156,15 +152,13 @@ StatusCode MuonIDDLLTool::calcMuonDLL( const MuonID* muonid, double& dll ) {
 //=============================================================================
 StatusCode MuonIDDLLTool::trackExtrapolate(const TrStoredTrack *pTrack){
 
-  MsgStream saida(msgSvc(), name());
   resetTrackLocals();
 
   // get state closest to M1
   const TrStateP *stateP =
      dynamic_cast<const TrStateP*>(pTrack->closestState(m_stationZ[0]));
      if(!stateP){
-       MsgStream saida(msgSvc(), name());
-       saida << MSG::ERROR << " Failed to get stateP from track " << endreq;
+       err() << " Failed to get stateP from track " << endreq;
      return StatusCode::FAILURE;
      }
 
@@ -183,10 +177,10 @@ StatusCode MuonIDDLLTool::trackExtrapolate(const TrStoredTrack *pTrack){
         m_trackY.push_back(stateP->y() + ( stateP->ty() * 
 				(m_stationZ[station] - stateP->z()) ));
       }
-       saida << MSG::DEBUG << " mom =  " << m_Momentum << endreq;
-       saida << MSG::DEBUG << " z =  " << m_stationZ[0] << endreq;
-       saida << MSG::DEBUG << " m_trackX " << m_trackX[0] << endreq;
-       saida << MSG::DEBUG << " m_trackY " << m_trackY[0] << endreq;
+       debug()  << " mom =  " << m_Momentum << endreq;
+       debug()  << " z =  " << m_stationZ[0] << endreq;
+       debug()  << " m_trackX " << m_trackX[0] << endreq;
+       debug()  << " m_trackY " << m_trackY[0] << endreq;
 
  return StatusCode::SUCCESS;
 }

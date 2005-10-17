@@ -1,9 +1,8 @@
-// $Id: MuonDSTPrepare.cpp,v 1.1 2002-05-17 13:13:47 dhcroft Exp $
+// $Id: MuonDSTPrepare.cpp,v 1.2 2005-10-17 08:16:34 pkoppenb Exp $
 // Include files 
 
 // from Gaudi
 #include "GaudiKernel/AlgFactory.h"
-#include "GaudiKernel/MsgStream.h" 
 #include "GaudiKernel/SmartDataPtr.h"
 #include "GaudiKernel/SmartRef.h"
  
@@ -17,6 +16,7 @@
 // Implementation file for class : MuonDSTPrepare
 //
 // 16/05/2002 : David Hutchcroft
+// 28/09/2005 : Erica Polycarpo (change to new message service sintaxe)
 //-----------------------------------------------------------------------------
 
 // Declaration of the Algorithm Factory
@@ -29,7 +29,7 @@ const        IAlgFactory& MuonDSTPrepareFactory = s_factory ;
 //=============================================================================
 MuonDSTPrepare::MuonDSTPrepare( const std::string& name,
                                 ISvcLocator* pSvcLocator)
-  : Algorithm ( name , pSvcLocator ) {
+  : GaudiAlgorithm ( name , pSvcLocator ) {
 
   // TES string(s) for the MuonID objects
   declareProperty("IDLocation",
@@ -63,7 +63,7 @@ StatusCode MuonDSTPrepare::execute() {
   // get the existing MuonIDs from the TES
   SmartDataPtr<MuonIDs> muonIDs(eventSvc(),m_MuonIDsPath);
   if(!muonIDs){
-    log << MSG::ERROR << "MuonIDs were not in TES at "
+    err() << "MuonIDs were not in TES at "
         << m_MuonIDsPath << endreq;
     return StatusCode::FAILURE;
   }
@@ -90,7 +90,7 @@ StatusCode MuonDSTPrepare::execute() {
     std::string TESPath = stationPath;
     SmartDataPtr<MuonCoords> pCoords(eventSvc(),TESPath);
     if(!pCoords){
-      log << MSG::ERROR << "Failed to read TES path "
+      err() << "Failed to read TES path "
           << TESPath << " looking for MuonCoords" << endreq;
     }
     int oldSize = pCoords->size();
@@ -99,7 +99,7 @@ StatusCode MuonDSTPrepare::execute() {
       return sc;
     }
     int newSize = pCoords->size();
-    log << MSG::DEBUG << "Removed " << oldSize-newSize
+    debug()  << "Removed " << oldSize-newSize
         << " MuonCoords not used in MuonIDs in station "
         << station+1 << endreq;
   }

@@ -1,9 +1,9 @@
-// $Id: MuonIDDLLTool.h,v 1.3 2005-09-30 08:48:34 pkoppenb Exp $
+// $Id: MuonIDDLLTool.h,v 1.4 2005-10-17 08:16:34 pkoppenb Exp $
 #ifndef MUONIDDLLTOOL_H
 #define MUONIDDLLTOOL_H 1
 
 // from Gaudi
-#include "GaudiKernel/AlgTool.h"
+#include "GaudiAlg/GaudiTool.h"
 
 // from DaVinciTools
 #include "MuonID/IMuonIDDLLTool.h"
@@ -15,9 +15,11 @@ class IMuonTileXYZTool;
  *
  * @author Joao R. Torres de Mello Neto, Miriam Gandelman
  * @date 24/04/2003 
+ * @author Erica Polycarpo, Miriam Gandelman
+ * @date 28/09/2005 new message service sintaxe: change to GaudiTool 
 */
 
-class MuonIDDLLTool : public AlgTool,
+class MuonIDDLLTool : public GaudiTool,
                    virtual public IMuonIDDLLTool {
 
 public:
