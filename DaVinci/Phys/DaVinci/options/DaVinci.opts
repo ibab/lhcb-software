@@ -27,10 +27,8 @@
 //#include "$L1DECISIONROOT/options/L1-lumi5e32.opts"
 //--------------------------------------------------------------
 //--------------------------------------------------------------
-// HLT: include three lines
+// HLT: include this line
 //#include "$HLTSELECTIONSROOT/options/HLTSelections.opts"
-//ApplicationMgr.TopAlg += { "ResetOnOffline/SetOffline" } ; // Reset to offline  (see below).
-//SetOffline.ResetToOffline = true ;
 
 // #include "$DAVINCIROOT/options/L0Checking.opts"  // for L0 checks
 // #include "$TRGSYSROOT/options/TrgChecking.opts"  // for L1 & HlT checks

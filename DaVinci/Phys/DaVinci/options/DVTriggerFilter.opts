@@ -91,3 +91,4 @@ StagerSvc.InitialStage = 3 ; // m: the number of blocks staged at the beginning 
 
 ApplicationMgr.HistogramPersistency = "HBOOK";
 HistogramPersistencySvc.OutputFile = "DVTrigger.hbook";
+
