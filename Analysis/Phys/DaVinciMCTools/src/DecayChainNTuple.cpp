@@ -123,7 +123,7 @@ StatusCode DecayChainNTuple::initialize() {
 
 
   // OnOfflineTool 
-  m_OnOfflineTool = tool<IOnOffline>("OnOfflineTool");
+  m_OnOfflineTool = tool<IOnOffline>("OnOfflineTool", this );
 
   m_PVContainer = m_OnOfflineTool->getPVLocation() ;
   info() << "Getting PV from " << m_PVContainer << endreq ;

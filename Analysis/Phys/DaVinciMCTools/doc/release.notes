@@ -1,7 +1,11 @@
-! $Id: release.notes,v 1.69 2005-10-03 14:26:14 lfernan Exp $
+! $Id: release.notes,v 1.70 2005-10-17 12:45:27 pkoppenb Exp $
 ! Package     : DaVinciMCTools
 ! Responsible : P. Koppenburg
 !=============================================================================
+
+! 2005-10-17 - P. Koppenburg
+ - src/DecayChainNTuple.cpp
+   . OnOffline tool must be private
 
 ! 2005-10-03 - Luis Fernandez
  - src/DecayChainNTuple.cpp

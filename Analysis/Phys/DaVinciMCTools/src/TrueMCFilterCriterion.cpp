@@ -1,4 +1,4 @@
-// $Id: TrueMCFilterCriterion.cpp,v 1.7 2005-06-28 15:37:27 lazzecri Exp $
+// $Id: TrueMCFilterCriterion.cpp,v 1.8 2005-10-17 12:45:27 pkoppenb Exp $
 // Include files 
 
 // from Gaudi
@@ -55,10 +55,7 @@ StatusCode TrueMCFilterCriterion::initialize( ){
   if ( !sc) return sc ;
 
   m_pMCDecFinder = tool<IMCDecayFinder>("MCDecayFinder", this); 
-  if(!m_pMCDecFinder){
-    fatal() << "Unable to retrieve MCDecayFinder tool" << endreq;
-    return sc;
-  }
+
   std::string MCDecay = m_pMCDecFinder->decay();
   if (MCDecay == "")  {
     fatal() << "MC decay is empty! " << endreq;
@@ -66,18 +63,12 @@ StatusCode TrueMCFilterCriterion::initialize( ){
   } else info() << "MC decay is " << MCDecay << endreq ;
   
   m_pAsct = tool<Particle2MCLinksAsct::IAsct>("Particle2MCLinksAsct", this);
-  if(!m_pAsct){
-    fatal() << "Unable to retrieve the Particle2MCLinks associator" << endreq;
-    return sc;
-  }
 
   // for calo clusters association
   m_pAsctCl2MCP = tool<IAsctCl2MCP>("AssociatorWeighted<CaloCluster,MCParticle,float>", "CCs2MCPs");
-  if(!m_pAsctCl2MCP){
-    err() << "Unable to retrieve the AssociatorWeighted<CaloCluster,MCParticle,float>" << endreq;
-    return sc;
-  }
   
+  verbose() << "Initialised happily" << endreq ;
+
   return sc ;
 }
 //=============================================================================
@@ -214,6 +205,8 @@ bool TrueMCFilterCriterion::testParticle( const Particle* const & part ) {
 // get MC particles
 //=============================================================================
 bool TrueMCFilterCriterion::findMCParticle( const MCParticle* MC ) {
+
+  verbose() << "TrueMCFilterCriterion find MC" << endreq ;
 
   // MC list
   // std::vector<const MCParticle*> mclist;
