@@ -5,7 +5,7 @@
  * Implementation file for class : RichHPDToLevel1Tool
  *
  * CVS Log :-
- * $Id: RichHPDToLevel1Tool.cpp,v 1.8 2005-07-14 14:13:38 jonrob Exp $
+ * $Id: RichHPDToLevel1Tool.cpp,v 1.9 2005-10-17 09:06:25 jonrob Exp $
  *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @date 2004-12-18
@@ -44,7 +44,7 @@ StatusCode RichHPDToLevel1Tool::initialize()
   if ( sc.isFailure() ) return sc;
 
   // acquire tools
-  acquireTool( "RichHPDInfoTool", m_hpdTool );
+  acquireTool( "RichHPDInfoTool", m_hpdTool, 0, true );
 
   // If map from job options is empty, build a temporary one
   // Used for old data base versions...
@@ -147,7 +147,7 @@ void RichHPDToLevel1Tool::buildMapping()
 {
   // acquire tools
   const IRichSmartIDTool * smartIDs;
-  acquireTool( "RichSmartIDTool", smartIDs );
+  acquireTool( "RichSmartIDTool", smartIDs, 0, true );
 
   // Get list of all valid readout channels
   const RichSmartID::Collection & pixels = smartIDs->readoutChannelList();

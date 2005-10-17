@@ -7,6 +7,7 @@ DataOnDemandSvc.Algorithms +=
 };
 
 // utility tools
+ToolSvc.RichToolRegistry.Tools += { "RichSmartIDTool/RichSmartIDTool" };
 ToolSvc.RichToolRegistry.Tools += { "RichRawBufferToSmartIDsTool/RichSmartIDDecoder" };
 ToolSvc.RichToolRegistry.Tools += { "RichHPDInfoTool/RichHPDInfoTool" };
 ToolSvc.RichToolRegistry.Tools += { "RichHPDToLevel1Tool/RichHPDToLevel1Tool" };

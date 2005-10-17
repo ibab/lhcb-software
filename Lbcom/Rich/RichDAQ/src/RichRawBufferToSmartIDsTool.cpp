@@ -5,7 +5,7 @@
  * Implementation file for class : RichRawBufferToSmartIDsTool
  *
  * CVS Log :-
- * $Id: RichRawBufferToSmartIDsTool.cpp,v 1.11 2005-09-25 09:50:25 jonrob Exp $
+ * $Id: RichRawBufferToSmartIDsTool.cpp,v 1.12 2005-10-17 09:06:25 jonrob Exp $
  *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @date 14/01/2002
@@ -44,13 +44,19 @@ StatusCode RichRawBufferToSmartIDsTool::initialize()
   if ( sc.isFailure() ) return sc;
 
   // acquire tools
-  acquireTool( "RichRawDataFormatTool", m_rawFormatT );
+  acquireTool( "RichRawDataFormatTool", m_rawFormatT, 0, true );
 
   // Setup incident services
   incSvc()->addListener( this, IncidentType::BeginEvent );
 
   if (m_sortIDs) 
+  {
     info() << "Data will be sorted according to RICH and HPD panel" << endreq;
+  }
+  else
+  {
+    info() << "Data will NOT be sorted according to RICH and HPD panel" << endreq;
+  }
 
   return sc;
 }

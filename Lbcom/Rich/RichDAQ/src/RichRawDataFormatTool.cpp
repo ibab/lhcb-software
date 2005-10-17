@@ -5,7 +5,7 @@
  *  Implementation file for class : RichRawDataFormatTool
  *
  *  CVS Log :-
- *  $Id: RichRawDataFormatTool.cpp,v 1.15 2005-07-14 14:13:38 jonrob Exp $
+ *  $Id: RichRawDataFormatTool.cpp,v 1.16 2005-10-17 09:06:25 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date 2004-12-18
@@ -54,8 +54,8 @@ StatusCode RichRawDataFormatTool::initialize()
   if ( sc.isFailure() ) return sc;
 
   // acquire tools
-  acquireTool( "RichHPDInfoTool",     m_hpdID  );
-  acquireTool( "RichHPDToLevel1Tool", m_l1Tool );
+  acquireTool( "RichHPDInfoTool",     m_hpdID,  0, true );
+  acquireTool( "RichHPDToLevel1Tool", m_l1Tool, 0, true );
 
   // Setup incident services
   incSvc()->addListener( this, IncidentType::BeginEvent );

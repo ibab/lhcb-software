@@ -5,7 +5,7 @@
  *  Implementation file for class : RichHPDInfoTool
  *
  *  CVS Log :-
- *  $Id: RichHPDInfoTool.cpp,v 1.3 2005-06-23 14:50:28 jonrob Exp $
+ *  $Id: RichHPDInfoTool.cpp,v 1.4 2005-10-17 09:06:25 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date 2004-12-18
@@ -73,7 +73,7 @@ StatusCode RichHPDInfoTool::buildHPDMappings()
 {
   // get RichSmartID tool
   const IRichSmartIDTool * smartIDs;
-  acquireTool( "RichSmartIDTool" , smartIDs );
+  acquireTool( "RichSmartIDTool" , smartIDs, 0, true );
 
   // Get list of all valid readout channels
   const RichSmartID::Collection & pixels = smartIDs->readoutChannelList();
