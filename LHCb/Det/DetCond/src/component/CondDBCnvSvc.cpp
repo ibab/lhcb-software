@@ -1,4 +1,4 @@
-//$Id: CondDBCnvSvc.cpp,v 1.5 2005-09-20 11:43:44 cattanem Exp $
+//$Id: CondDBCnvSvc.cpp,v 1.6 2005-10-18 15:49:36 marcocle Exp $
 #include <string>
 
 #include "CondDBCnvSvc.h"
@@ -20,8 +20,7 @@ const ISvcFactory& CondDBCnvSvcFactory = CondDBCnvSvc_factory;
 //----------------------------------------------------------------------------
 
 /// Constructor
-CondDBCnvSvc::CondDBCnvSvc( const std::string& name, 
-				        ISvcLocator* svc)
+CondDBCnvSvc::CondDBCnvSvc( const std::string& name, ISvcLocator* svc)
   : ConversionSvc ( name, svc, CONDDB_StorageType )
 {
   declareProperty("CondDBAccessServices",m_dbAccSvcNames);
@@ -30,8 +29,7 @@ CondDBCnvSvc::CondDBCnvSvc( const std::string& name,
 //----------------------------------------------------------------------------
 
 /// Destructor
-CondDBCnvSvc::~CondDBCnvSvc()
-{}
+CondDBCnvSvc::~CondDBCnvSvc() {}
 
 //----------------------------------------------------------------------------
 
@@ -44,7 +42,7 @@ StatusCode CondDBCnvSvc::initialize()
   if ( !sc.isSuccess() ) return sc;
 
   // Now we can get a handle to the MessageSvc
-  MsgStream log(msgSvc(), "CondDBCnvSvc" );
+  MsgStream log(msgSvc(), name() );
   log << MSG::INFO << "Specific initialization starting" << endreq;
 
   // Locate the Database Access Service
@@ -69,7 +67,7 @@ StatusCode CondDBCnvSvc::initialize()
 /// Finalize the service.
 StatusCode CondDBCnvSvc::finalize()
 {
-  MsgStream log(msgSvc(), "CondDBCnvSvc" );
+  MsgStream log(msgSvc(), name() );
   log << MSG::DEBUG << "Finalizing" << endreq;
   std::vector<ICondDBAccessSvc*>::iterator accSvc;
   for ( accSvc = m_dbAccSvcs.begin(); accSvc != m_dbAccSvcs.end(); ++accSvc ) (*accSvc)->release();
@@ -83,19 +81,19 @@ StatusCode CondDBCnvSvc::finalize()
 /// Par[1] is entry name in the string (which may contain many conditions,
 /// for instance in the case of XML files with more than one element).
 StatusCode CondDBCnvSvc::createAddress( long svc_type,
-					      const CLID& clid,
-					      const std::string* par, 
-					      const unsigned long* ipar,
-					      IOpaqueAddress*& refpAddress ) {
+                                        const CLID& clid,
+                                        const std::string* par, 
+                                        const unsigned long* ipar,
+                                        IOpaqueAddress*& refpAddress ) {
   
   // First check that requested address is of type CONDDB_StorageType
-  MsgStream log(msgSvc(), "CondDBCnvSvc" );
-  log << MSG::INFO << "entering createAddress" << endmsg;
+  MsgStream log(msgSvc(), name() );
+  log << MSG::DEBUG << "entering createAddress" << endmsg;
   if ( svc_type!= CONDDB_StorageType ) {
     log << MSG::ERROR 
-	<< "Cannot create addresses of type " << (int)svc_type 
-	<< " which is different from " << (int)CONDDB_StorageType 
-	<< endreq;
+        << "Cannot create addresses of type " << (int)svc_type 
+        << " which is different from " << (int)CONDDB_StorageType 
+        << endreq;
     return StatusCode::FAILURE;
   }
   
@@ -123,7 +121,7 @@ StatusCode CondDBCnvSvc::createAddress( long svc_type,
 extern const ICnvFactory &RelyConverterFactory;
 
 StatusCode CondDBCnvSvc::addConverter(const CLID& clid){
-  MsgStream log(msgSvc(), "CondDBCnvSvc" );
+  MsgStream log(msgSvc(), name() );
   StatusCode status = ConversionSvc::addConverter(clid);
   if (status.isSuccess()){
     return status;
