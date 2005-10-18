@@ -24,11 +24,6 @@ ApplicationMgr.DLLs += {"HltSelChecker"};
 #include "$DAVINCIROOT/options/DaVinciNeutrals.opts"
 Neutrals.Members  = { "CaloDigitsFromRaw" };
 
-// Define PV for the offline selections check
-// Important !!!
-ApplicationMgr.TopAlg += {"ResetOnOffline/SetOffline"};
-SetOffline.ResetToOffline = true;
-
 // Several selection have the same instance of PreLoadParticles ... comment in some DoTDRsel*
 // and add it here ... 
 ApplicationMgr.TopAlg += { "PreLoadParticles/Combined" } ;

@@ -44,7 +44,7 @@ HltDecision.MakeCorrelations = true ;
 // EventSelector.Input   = {};
 #include "$HLTSELECTIONSROOT/options/L0TDR-Bs2JpsiPhi.opts"
 
-ApplicationMgr.EvtMax    = 1 ;
+ApplicationMgr.EvtMax    = -1 ;
 EventSelector.FirstEvent = 1 ;
 
 MessageSvc.Format = "% F%50W%S%7W%R%T %0W%M";
@@ -53,7 +53,7 @@ ChronoStatSvc.ChronoPrintLevel = 4 ; // forces printout even with 4
 ApplicationMgr.HistogramPersistency = "HBOOK";
 HistogramPersistencySvc.OutputFile = "test.hbook"; 
 
-MessageSvc.OutputLevel = 4 ;
+MessageSvc.OutputLevel = 3 ;
 ToolSvc.OutputLevel    = 4;
 ToolSvc.SequencerTimerTool.OutputLevel = 3 ;// for timing statistics
 
@@ -80,3 +80,8 @@ DaVinci.OutputLevel = 2 ;
 
 HltDecision.OutputLevel = 3 ;
 
+// StagerSvc - At CERN Only //
+ApplicationMgr.ExtSvc += { "StagerSvc" }; 
+ApplicationMgr.Dlls += { "GaudiSiteSvc" } ; // library containing the StagerSvc
+StagerSvc.BlockSize = 50 ; // n: the number of files in each block
+StagerSvc.InitialStage = 3 ; // m: the number of blocks staged at the beginning of the job
