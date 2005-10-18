@@ -2,10 +2,10 @@ Package: DAQEvent
 Author:  Markus Frank (based on work by Jose' Helder Lopes)
 Purpose: Define the classes delivered to the online farm by the DAQ
 
-! 2005-18-10 - M. Needham
+!================ DAQEvent v6r0 2005-10-18 ============================
+! 2005-10-18 - M. Needham
   - Bug fix in Bytestream
 
-!================ DAQEvent v6r0 2005-10-14 ============================
 ! 2005-10-14 - Marco Cattaneo
  - Major changes to follow 1MHz readout:
    . Remove RawBuffer and all L1 classes
