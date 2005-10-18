@@ -6,8 +6,9 @@
 
 ! 2005-10-13 - Chris Jones
  - Add support for linker based TrStoredTrack MC associations
- - Add (currently empty) support for MC associations for the new track
-   event model. To be updates when available.
+ - Add support for MC associations for the new track event model.
+ - Add support for new DST summary objects MCRichDigitSummary which link
+   RichSmartIDs to MCParticles and history codes.
 
 ! 2005-10-04 - Chris Jones
  - Move algorithms BuildMCRichDigitLinks, MCPartToMCRichTrackAlg and 

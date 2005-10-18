@@ -5,7 +5,7 @@
  * Implementation file for class : RichMCTrackInfoTool
  *
  * CVS Log :-
- * $Id: RichMCTrackInfoTool.cpp,v 1.7 2005-06-17 15:50:06 jonrob Exp $
+ * $Id: RichMCTrackInfoTool.cpp,v 1.8 2005-10-18 12:42:26 jonrob Exp $
  *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @date 15/03/2002
@@ -37,8 +37,8 @@ StatusCode RichMCTrackInfoTool::initialize()
   if ( sc.isFailure() ) { return sc; }
 
   // Acquire instances of tools
-  acquireTool( "RichRayTracing",   m_rayTrace    );
-  acquireTool( "RichSmartIDTool",  m_smartIDTool );
+  acquireTool( "RichRayTracing",   m_rayTrace             );
+  acquireTool( "RichSmartIDTool",  m_smartIDTool, 0, true );
 
   // Configure the ray-tracing mode
   m_traceMode.setDetPrecision      ( RichTraceMode::circle );
