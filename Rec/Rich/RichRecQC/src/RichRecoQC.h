@@ -5,7 +5,7 @@
  *  Header file for RICH reconstruction monitoring algorithm : RichRecoQC
  *
  *  CVS Log :-
- *  $Id: RichRecoQC.h,v 1.8 2005-10-13 15:52:48 jonrob Exp $
+ *  $Id: RichRecoQC.h,v 1.9 2005-10-18 12:49:06 jonrob Exp $
  *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   2002-07-02
@@ -16,7 +16,7 @@
 #define RICHRECQC_RICHRECOQC_H 1
 
 // base class
-#include "RichRecBase/RichRecAlgBase.h"
+#include "RichRecBase/RichRecMoniAlgBase.h"
 
 // from Gaudi
 #include "GaudiKernel/AlgFactory.h"
@@ -58,7 +58,8 @@
  */
 //---------------------------------------------------------------------------------
 
-class RichRecoQC : public RichRecAlgBase {
+class RichRecoQC : public RichRecMoniAlgBase 
+{
 
 public:
 

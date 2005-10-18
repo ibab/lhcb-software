@@ -5,7 +5,7 @@
  *  Implementation file for RICH reconstruction monitoring algorithm : RichPIDQC
  *
  *  CVS Log :-
- *  $Id: RichPIDQC.cpp,v 1.42 2005-10-13 15:52:48 jonrob Exp $
+ *  $Id: RichPIDQC.cpp,v 1.43 2005-10-18 12:49:06 jonrob Exp $
  *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   2002-06-13
@@ -39,7 +39,7 @@ RichPIDQC::RichPIDQC( const std::string& name,
   declareProperty( "MaximumTrackMultiplicity", m_maxMultCut = 999999 );
   declareProperty( "HistoBins",     m_bins = 50 );
   declareProperty( "FinalPrintout", m_finalPrintOut = true );
-  declareProperty( "ExtraHistos",   m_extraHistos = true );
+  declareProperty( "ExtraHistos",   m_extraHistos = false );
   declareProperty( "IgnoreThresholds", m_ignoreThres = false );
   declareProperty( "KaonDLLCut", m_dllKaonCut = -9999999 );
   declareProperty( "PionDLLCut", m_dllPionCut = -9999999 );
@@ -562,7 +562,7 @@ void RichPIDQC::countTracks( const std::string & location )
   for ( Tracks::const_iterator iTrk = tracks->begin();
         iTrk != tracks->end(); ++iTrk ) 
   {
-    if ( (*iTrk)->checkFlag(TrackKeys::Unique ) ) ++m_multiplicity;
+    if ( (*iTrk)->checkFlag(::Track::Unique ) ) ++m_multiplicity;
     if ( !m_trSelector.trackSelected( *iTrk ) ) continue;
     const State* state = &(*iTrk)->firstState();
     const double tkPtot = ( state ? state->p()/GeV : 0 );

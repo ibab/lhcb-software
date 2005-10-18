@@ -5,7 +5,7 @@
  *  Implementation file for RICH reconstruction monitoring algorithm : RichRecoQC
  *
  *  CVS Log :-
- *  $Id: RichRecoQC.cpp,v 1.14 2005-10-13 15:52:48 jonrob Exp $
+ *  $Id: RichRecoQC.cpp,v 1.15 2005-10-18 12:49:06 jonrob Exp $
  *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   2002-07-02
@@ -25,12 +25,12 @@ const        IAlgFactory& RichRecoQCFactory = s_factory ;
 // Standard constructor, initializes variables
 RichRecoQC::RichRecoQC( const std::string& name,
                         ISvcLocator* pSvcLocator )
-  : RichRecAlgBase   ( name, pSvcLocator ),
-    m_richPartProp   ( 0 ),
-    m_ckAngle        ( 0 ),
-    m_richRecMCTruth ( 0 ),    
-    m_truePhotCount  ( Rich::NRadiatorTypes, 0 ),
-    m_nSegs          ( Rich::NRadiatorTypes, 0 )
+  : RichRecMoniAlgBase ( name, pSvcLocator ),
+    m_richPartProp     ( 0 ),
+    m_ckAngle          ( 0 ),
+    m_richRecMCTruth   ( 0 ),    
+    m_truePhotCount    ( Rich::NRadiatorTypes, 0 ),
+    m_nSegs            ( Rich::NRadiatorTypes, 0 )
 {
 
   // Declare job options
@@ -51,7 +51,7 @@ RichRecoQC::~RichRecoQC() {};
 StatusCode RichRecoQC::initialize()
 {
   // Sets up various tools and services
-  const StatusCode sc = RichRecAlgBase::initialize();
+  const StatusCode sc = RichRecMoniAlgBase::initialize();
   if ( sc.isFailure() ) { return sc; }
 
   // acquire tools
@@ -105,6 +105,7 @@ StatusCode RichRecoQC::bookMCHistograms()
 // Main execution
 StatusCode RichRecoQC::execute() 
 {
+  debug() << "Execute" << endreq;
 
   // Event status
   if ( !richStatus()->eventOK() ) return StatusCode::SUCCESS;
@@ -182,5 +183,5 @@ StatusCode RichRecoQC::finalize()
          << occ(m_truePhotCount[Rich::CF4],m_nSegs[Rich::CF4]) << " photons/segment" << endreq;
 
   // Execute base class method
-  return RichRecAlgBase::finalize();
+  return RichRecMoniAlgBase::finalize();
 }

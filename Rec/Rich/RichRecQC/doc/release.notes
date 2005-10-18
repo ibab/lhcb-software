@@ -7,6 +7,8 @@
 ! 2005-10-13 - Chris Jones
  - Add support for new track event model
  - Adapt to context() 
+ - Re-activate RichRecoQC algorithm previously turned off due to MC 
+   association problems
 
 !======================= RichRecQC v1r11 2005-06-24 ========================
 ! 2005-06-21 - Chris Jones
