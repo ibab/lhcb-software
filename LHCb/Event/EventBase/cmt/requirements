@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.1.1.1 2005-09-06 07:11:44 pkoppenb Exp $
+# $Id: requirements,v 1.2 2005-10-18 14:09:34 pkoppenb Exp $
 # Created    : 17/08/2005
 # Maintainer : Marco Cattaneo
 #
@@ -15,9 +15,7 @@ include_dirs $(EVENTBASEROOT)
 
 # Used packages. 
 #============================================================================
-use LHCbKernel   v5r*    Kernel
-use MathLib      v*  LCG_Interfaces
-use  ROOT        v*  LCG_Interfaces
+use LHCbKernel   v*    Kernel
 
 # Produce Header-Files & dictionary from XML description
 #============================================================================
@@ -34,7 +32,7 @@ library          EventBaseDict  ../dict/*.cpp
 apply_pattern component_library library=EventBaseDict
 apply_pattern linker_library    library=EventBase
 macro_append EventBase_linkopts "" WIN32 "/include:_EventBase_loadRef"
-                                                                                                                                                           
+
 private
 
 private
