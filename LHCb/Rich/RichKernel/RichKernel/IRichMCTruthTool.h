@@ -5,7 +5,7 @@
  *  Header file for tool interface : IRichMCTruthTool
  *
  *  CVS Log :-
- *  $Id: IRichMCTruthTool.h,v 1.12 2005-10-17 09:08:58 jonrob Exp $
+ *  $Id: IRichMCTruthTool.h,v 1.13 2005-10-18 12:33:11 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   2003-07-31
@@ -30,6 +30,7 @@ class RichDigit;
 class TrStoredTrack;
 class Track;
 class TrgTrack;
+class MCRichDigitSummary;
 
 /// Static Interface Identification
 static const InterfaceID IID_IRichMCTruthTool( "IRichMCTruthTool", 1, 0 );
@@ -196,6 +197,18 @@ public:
    */
   virtual const MCRichOpticalPhoton *
   mcOpticalPhoton ( const MCRichHit * mcHit ) const = 0;
+
+  /** Access the bit-pack history objects for the given RichSmartID
+   *
+   *  @param id        RichSmartID
+   *  @param histories Vector of pointers to history objects
+   *  
+   *  @return Boolean indicating if at least one history object was found
+   *  @retval true  History objects were found
+   *  @retval false No history objects were found
+   */
+  virtual bool getMcHistories( const RichSmartID id,
+                               std::vector<MCRichDigitSummary*> & histories ) const = 0;
 
   /** Checks if the given RichSmartID is the result of a background
    *  hit, i.e. not a true Cherenkov hit
