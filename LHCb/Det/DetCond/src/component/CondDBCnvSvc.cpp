@@ -1,4 +1,4 @@
-//$Id: CondDBCnvSvc.cpp,v 1.6 2005-10-18 15:49:36 marcocle Exp $
+//$Id: CondDBCnvSvc.cpp,v 1.7 2005-10-18 16:25:32 marcocle Exp $
 #include <string>
 
 #include "CondDBCnvSvc.h"
@@ -174,7 +174,7 @@ const std::vector<ICondDBAccessSvc*> &CondDBCnvSvc::accessServices() const { ret
 // Implementation of IInterface
 StatusCode CondDBCnvSvc::queryInterface(const InterfaceID& riid,
                                         void** ppvUnknown){
-  if ( IID_ICondDBCnvSvc.versionMatch(riid) )   {
+  if ( IID_ICondDBCnvSvc.versionMatch(riid) ) {
     *ppvUnknown = (ICondDBCnvSvc*)this;
     addRef();
     return SUCCESS;
