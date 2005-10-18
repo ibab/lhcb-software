@@ -5,7 +5,7 @@
 # http://cern.ch/lhcb-comp/Support/html/new_structure.pdf
 #============================================================================
 package           FlavourTagging
-version           v6r2
+version           v6r3
 
 # Structure, i.e. directories to process. 
 #============================================================================
@@ -36,5 +36,5 @@ apply_pattern component_library library=FlavourTagging
 
 # =================== summary application  ==================================
 private 
-# application       summaryof      ../summary/summaryof.cpp
+ application       summaryof      ../summary/summaryof.cpp
  apply_pattern     application_path
