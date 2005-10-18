@@ -1,11 +1,11 @@
 
-// Options to create RichRecTracks from cheated TrStoredTrack reconstructed information
-// The TrStoredTrack is used as a starting point, but the gemoetrical and momentum
+// Options to create RichRecTracks from cheated Track reconstructed information
+// The Track is used as a starting point, but the gemoetrical and momentum
 // information is then extracted from the associated MCRichTrack
 
 // Define the primary RichTrackCreator to be the delegator tool
 // This tool sends the real work to other tools depending on the configuration
-ToolSvc.Offline.RichToolRegistry.Tools += { "RichDelegatedTrackCreatorFromTrStoredTracks/RichTrackCreator" };
+ToolSvc.Offline.RichToolRegistry.Tools += { "RichDelegatedTrackCreatorFromRecoTracks/RichTrackCreator" };
 
 // Example configuration, use MC for all but forward tracks...
 ToolSvc.Offline.RichTrackCreator.ToolsByTrackType = { "forward/RichTrackCreatorMC",
@@ -16,7 +16,7 @@ ToolSvc.Offline.RichTrackCreator.ToolsByTrackType = { "forward/RichTrackCreatorM
                                                       "velo/RichTrackCreatorMC" };
 
 // The delegated RichTrackCreator that uses full reco information
-ToolSvc.Offline.Tools += { "RichTrackCreatorFromTrStoredTracks/RichTrackCreatorReco" };
+ToolSvc.Offline.Tools += { "RichTrackCreatorFromRecoTracks/RichTrackCreatorReco" };
 ToolSvc.Offline.RichTrackCreatorReco.TrackSelection =
   {
     "unique","positive","negative","seed","match","forward","KsTrack","veloTT"
@@ -31,14 +31,14 @@ ToolSvc.Offline.RichTrackCreatorReco.TrackMomentumCuts = { "forward/0/9999999",
                                                            "velo/999999/9999999" };
 
 // Configure the RichTrackSegment maker for reconstructed tracks
-ToolSvc.Offline.RichToolRegistry.Tools += { "RichTrSegMakerFromTrStoredTracks/RichDetTrSegMakerReco" };
+ToolSvc.Offline.RichToolRegistry.Tools += { "RichTrSegMakerFromRecoTracks/RichDetTrSegMakerReco" };
 ToolSvc.Offline.RichDetTrSegMakerReco.PrimaryTrackExtrapolator = "TrHerabExtrapolator";
 ToolSvc.Offline.RichDetTrSegMakerReco.BackupTrackExtrapolator  = "TrParabolicExtrapolator";
 // which radiators to use                              Aerogel   C4F10    CF4
 ToolSvc.Offline.RichDetTrSegMakerReco.UseRadiators = { true,     true,    true };
 
 // The delegated RichTrackCreator that uses MC information
-ToolSvc.Offline.RichToolRegistry.Tools += { "RichTrackCreatorFromTrStoredTracks/RichTrackCreatorMC" };
+ToolSvc.Offline.RichToolRegistry.Tools += { "RichTrackCreatorFromRecoTracks/RichTrackCreatorMC" };
 ToolSvc.Offline.RichTrackCreatorMC.TrackSelection =
   { "unique","positive","negative","seed","match","forward","KsTrack","veloTT" };
 ToolSvc.Offline.RichTrackCreatorMC.TrackSegmentTool = "RichDetTrSegMakerMC";

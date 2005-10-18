@@ -1,8 +1,8 @@
 
 // Analytical resolution as a function of momentum
 
-ToolSvc.RichToolRegistry.Tools += {
-  "RichFunctionalCKResVpForTrStoredTracks/RichCherenkovResolutionOffline"
+ToolSvc.Offline.RichToolRegistry.Tools += {
+  "RichFunctionalCKResVpForTrStoredTracks/RichCherenkovResolution"
 };
 
 

@@ -1,0 +1,11 @@
+
+// Reset some options to go back to flat secondary mirror compatibility
+ToolSvc.Offline.RichToolRegistry.Tools += { "RichRayTracing/RichRayTracing" };
+ToolSvc.Offline.RichToolRegistry.Tools += { "RichPhotonRecoUsingQuarticSoln/PhotonParams" };
+
+// disable Rich Condition updates
+ToolSvc.Rich1PresTempMonitor.DisableAllUpdates = true;
+ToolSvc.Rich2PresTempMonitor.DisableAllUpdates = true;
+
+// remove one moni alg
+CheckRICHSeq.Members -= { "RichRecoQC" };

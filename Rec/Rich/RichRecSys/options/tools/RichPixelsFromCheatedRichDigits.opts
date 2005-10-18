@@ -2,7 +2,7 @@
 // Uses RichDigits as the base object but cheats to the true hit position on the
 // HPD entrance window - obtained from the associated MCRichOpticalPhoton object
 
-ToolSvc.RichToolRegistry.Tools += { "RichPixelCreatorFromCheatedRichDigits/RichPixelCreatorOffline" };
+ToolSvc.Offline.RichToolRegistry.Tools += { "RichPixelCreatorFromCheatedRichDigits/RichPixelCreator" };
 
-// Choose which radiators to use                 Aero   C4F10   CF4
-ToolSvc.RichPixelCreatorOffline.UseRadiators = { true,  true,   true };
+// Choose which radiators to use                  Aero   C4F10   CF4
+ToolSvc.Offline.RichPixelCreator.UseRadiators = { true,  true,   true };

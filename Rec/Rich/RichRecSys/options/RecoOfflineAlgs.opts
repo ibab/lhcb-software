@@ -4,6 +4,9 @@
 // Run the offline quality algorithms on offline tracks
 // ============================================================================
 
+// Set offline mode
+RecoRICHSeq.Context = "Offline";
+
 // Run the Local PID algorithm first
 RecoRICHSeq.Members += { "RichLocalPIDAlg/RichLocPID" };
 
@@ -48,10 +51,10 @@ ToolSvc.RichLocPIDTool.MinProbThresholdHighP = { 0.03,  0.01, 0.02, 0.02 };
 ToolSvc.RichLocPIDTool.MinProbThresholdLowP  = { 0.1,   0.1,  0.1,  0.09 };
 ToolSvc.RichLocPIDTool.CherenkovThetaRes     = { 0.002, 0.0014, 0.0007   };
 // Cherenkov angle space tool
-ToolSvc.RichToolRegistry.Tools += { "RichLocalPIDToolAngleSpace/RichLocPIDTool" };
+ToolSvc.Offline.RichToolRegistry.Tools += { "RichLocalPIDToolAngleSpace/RichLocPIDTool" };
 // Local XY tool
 //RichLocPID.ReconstructPhotons                = false;
-//ToolSvc.RichToolRegistry.Tools += { "RichLocalPIDToolLocalXYSpace/RichLocPIDTool" };
+//ToolSvc.Offline.RichToolRegistry.Tools += { "RichLocalPIDToolLocalXYSpace/RichLocPIDTool" };
 
 // Global PID digit selection
 RichGloPIDDigSel.MaxUsedPixels            = 8000;
@@ -109,17 +112,3 @@ MergeRichPIDs.UseLocalPIDs     = true;
 MergeRichPIDs.UseGlobalPIDs    = true;
 //MergeRichPIDs.OutputPIDLocation = "Rec/Rich/NewPIDs";
 
-//===============================================================================================
-// options related to getting things into "Offline" mode
-// hopefully eventually handled by context
-
-RichLocPID.ProcessingStage             = "Offline";
-ToolSvc.RichLocPIDTool.ProcessingStage = "Offline";
-RichGloPIDInit.ProcessingStage         = "Offline";
-RichGloPIDDigSel.ProcessingStage       = "Offline";
-RichGloPIDTrSel.ProcessingStage        = "Offline";
-RichBckEst1.ProcessingStage            = "Offline";
-RichGloPIDIt1.ProcessingStage          = "Offline";
-RichBckEst2.ProcessingStage            = "Offline";
-RichGloPIDIt2.ProcessingStage          = "Offline";
-RichGloPIDFin.ProcessingStage          = "Offline";

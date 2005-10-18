@@ -3,10 +3,20 @@
 // Configuration to run the offline quality reconstruction on offline tracks
 //=============================================================================================
 
-// ================================== Track Creators ==========================================
+// ============================ Track Creators - New Model ====================================
 
-// RichTrackCreator using full reconstructed information (Default)
-#include "$RICHRECSYSOPTS/tools/RichTracksFromTrStoredTracks.opts"
+// RichTrackCreator using full reconstructed information : New track model (Default)
+#include "$RICHRECSYSOPTS/tools/RichTracksFromRecoTracks.opts"
+
+// RichTrackCreator using TrStoredTracks but cheating the tracking information by
+// using the associated MCRichTrack. In the include file below the cheating can be tuned
+// at the level of the tracking algorithm.
+//#include "$RICHRECSYSOPTS/tools/RichTracksFromCheatedRecoTracks.opts"
+
+// ============================ Track Creators - Old Model ====================================
+
+// RichTrackCreator using full reconstructed information : Old track model
+//#include "$RICHRECSYSOPTS/tools/RichTracksFromTrStoredTracks.opts"
 
 // RichTrackCreator using full reconstructed information
 // Uses new experimental optical extrapolators
@@ -69,39 +79,41 @@
 
 // =================================== Miscellaneous ===========================================
 
+ToolSvc.Offline.RichToolRegistry.Context = "Offline";
+
 // RichRecRing creator for mass hypothesis rings
-ToolSvc.RichToolRegistry.Tools += { "RichMassHypothesisRingCreator/RichMassHypoRings" };
+ToolSvc.Offline.RichToolRegistry.Tools += { "RichMassHypothesisRingCreator/RichMassHypoRings" };
 
 // Cherenkov Cone ray tracing
-ToolSvc.RichToolRegistry.Tools += { "RichRayTraceCherenkovCone/RichRayTraceCKCone" };
-ToolSvc.RichRayTraceCKCone.NPhotonsRayTrace = 100;
+ToolSvc.Offline.RichToolRegistry.Tools += { "RichRayTraceCherenkovCone/RichRayTraceCKCone" };
+ToolSvc.Offline.RichRayTraceCKCone.NPhotonsRayTrace = 100;
 
 // Segment creator
-ToolSvc.RichToolRegistry.Tools += { "RichSegmentCreator/RichSegmentCreatorOffline" };
-ToolSvc.RichSegmentCreatorOffline.RichRecSegmentLocation = "Rec/Rich/RecoEvent/OfflineSegments";
-//                                               Aerogel  C4F10   CF4
-ToolSvc.RichSegmentCreatorOffline.EnergyBins = { 5,       5,      5   };
+ToolSvc.Offline.RichToolRegistry.Tools += { "RichSegmentCreator/RichSegmentCreator" };
+ToolSvc.Offline.RichSegmentCreator.RichRecSegmentLocation = "Rec/Rich/RecoEvent/OfflineSegments";
+//                                        Aerogel  C4F10   CF4
+ToolSvc.Offline.RichSegmentCreator.EnergyBins = { 5,       5,      5   };
 
 // Status Creator
-ToolSvc.RichToolRegistry.Tools += { "RichStatusCreator/RichStatusCreatorOffline" };
-ToolSvc.RichStatusCreatorOffline.RichRecStatusLocation = "Rec/Rich/RecoEvent/OfflineStatus";
+ToolSvc.Offline.RichToolRegistry.Tools += { "RichStatusCreator/RichStatusCreator" };
+ToolSvc.Offline.RichStatusCreator.RichRecStatusLocation = "Rec/Rich/RecoEvent/OfflineStatus";
 
 // Geometrical efficiency from full ray tracing
-ToolSvc.RichToolRegistry.Tools += { "RichGeomEffPhotonTracing/RichGeomEffOffline" };
-ToolSvc.RichGeomEffOffline.NPhotonsGeomEffCalc          = 50;
-ToolSvc.RichGeomEffOffline.NPhotonsGeomEffBailout       = 15;
+ToolSvc.Offline.RichToolRegistry.Tools += { "RichGeomEffPhotonTracing/RichGeomEff" };
+ToolSvc.Offline.RichGeomEff.NPhotonsGeomEffCalc          = 50;
+ToolSvc.Offline.RichGeomEff.NPhotonsGeomEffBailout       = 15;
 
 // Fixed value
-//ToolSvc.RichToolRegistry.Tools += { "RichGeomEffFixedValue/RichGeomEffOffline" };
+//ToolSvc.Offline.RichToolRegistry.Tools += { "RichGeomEffFixedValue/RichGeomEff" };
 //                                                        Aerogel  C4F10   CF4
-//ToolSvc.RichGeomEffOffline.FixedSignalEfficiency   =  { 0.55,    0.62,   0.55  };
-//ToolSvc.RichGeomEffOffline.FixedScatterEfficiency  =  0.55;
+//ToolSvc.Offline.RichToolRegistry.RichGeomEff.FixedSignalEfficiency   =  { 0.55,    0.62,   0.55  };
+//ToolSvc.Offline.RichToolRegistry.RichGeomEff.FixedScatterEfficiency  =  0.55;
 
 // Track signals
-ToolSvc.RichToolRegistry.Tools += { "RichExpectedTrackSignal/RichExpectedTrackSignalOffline" };
+ToolSvc.Offline.RichToolRegistry.Tools += { "RichExpectedTrackSignal/RichExpectedTrackSignal" };
 
 // Photon signals
-ToolSvc.RichToolRegistry.Tools += { "RichPhotonSignal/RichPhotonSignalOffline" };
+ToolSvc.Offline.RichToolRegistry.Tools += { "RichPhotonSignal/RichPhotonSignal" };
 
 // Cherenkov resolution - fixed binned implementation as a function of cherenkov angle
 #include "$RICHRECSYSOPTS/tools/BinnedCherenkovResVtheta.opts"
@@ -112,54 +124,57 @@ ToolSvc.RichToolRegistry.Tools += { "RichPhotonSignal/RichPhotonSignalOffline" }
 // Interpolated cherenkov resolution function of momentum
 //#include "$RICHRECSYSOPTS/tools/InterpCherenkovResVmomentum.opts"
 
-// analytical cherenkov resolution as a function of momentum
+// analytical cherenkov resolution calculation
 //#include "$RICHRECSYSOPTS/tools/FunctionalCherenkovResVmomentum.opts"
 
 // Expected Cherenkov angles
-ToolSvc.RichToolRegistry.Tools += { "RichCherenkovAngle/RichCherenkovAngleOffline" };
+ToolSvc.Offline.RichToolRegistry.Tools += { "RichCherenkovAngle/RichCherenkovAngle" };
 
 // Reco geometry tool
-ToolSvc.RichToolRegistry.Tools += { "RichRecGeomTool/RichRecGeometryOffline" };
-//ToolSvc.RichRecGeometryOffline.RadOpticalCorrections = { 0.037, 0.0105, -0.014 };
-
-// The following options are shared between online and offline
-// ======================================================================================
+ToolSvc.Offline.RichToolRegistry.Tools += { "RichRecGeomTool/RichRecGeometry" };
+//ToolSvc.RichRecGeometry.RadOpticalCorrections = { 0.037, 0.0105, -0.014 };
 
 // Refractive index using XML tabulation
-ToolSvc.RichToolRegistry.Tools += { "RichTabulatedRefractiveIndex/RichRefractiveIndex" };
+ToolSvc.Offline.RichToolRegistry.Tools += { "RichTabulatedRefractiveIndex/RichRefractiveIndex" };
 
 // Rayleigh scattering using XML tabulation
-ToolSvc.RichToolRegistry.Tools += { "RichTabulatedRayleighScatter/RichRayleighScatter" };
+ToolSvc.Offline.RichToolRegistry.Tools += { "RichTabulatedRayleighScatter/RichRayleighScatter" };
 // Rayleigh scattering using analytic function
-//ToolSvc.RichToolRegistry.Tools += { "RichFunctionalRayleighScatter/RichRayleighScatter" };
+//ToolSvc.Offline.RichToolRegistry.Tools += { "RichFunctionalRayleighScatter/RichRayleighScatter" };
 
 // Sellmeir function
-ToolSvc.RichToolRegistry.Tools += { "RichSellmeirFunc/RichSellmeirFunc" };
-ToolSvc.RichSellmeirFunc.WaveIndpTrans = 1.0;
-//ToolSvc.RichSellmeirFunc.WaveIndpTrans = 0.9368;
+ToolSvc.Offline.RichToolRegistry.Tools += { "RichSellmeirFunc/RichSellmeirFunc" };
+ToolSvc.Offline.RichSellmeirFunc.WaveIndpTrans = 1.0;
+//ToolSvc.Offline.RichSellmeirFunc.WaveIndpTrans = 0.9368;
 
 // Photon detection efficiency using XML tabulation
-ToolSvc.RichToolRegistry.Tools += { "RichTabulatedSignalDetectionEff/RichSignalDetectionEff" };
+ToolSvc.Offline.RichToolRegistry.Tools += { "RichTabulatedSignalDetectionEff/RichSignalDetectionEff" };
 
 // Rich particle properties
-ToolSvc.RichToolRegistry.Tools += { "RichParticleProperties/RichParticleProperties" };
+ToolSvc.Offline.RichToolRegistry.Tools += { "RichParticleProperties/RichParticleProperties" };
 
 // Gas Quartz window transmission
-ToolSvc.RichToolRegistry.Tools += { "RichTabulatedGasQuartzWindowAbs/RichGasQuartzWindow" };
+ToolSvc.Offline.RichToolRegistry.Tools += { "RichTabulatedGasQuartzWindowAbs/RichGasQuartzWindow" };
 
 // Detector Parameters
-ToolSvc.RichToolRegistry.Tools += { "RichDetParameters/RichDetParameters" };
+ToolSvc.Offline.RichToolRegistry.Tools += { "RichDetParameters/RichDetParameters" };
 //                                            Aerogel  C4F10   CF4
-ToolSvc.RichDetParameters.MinPhotonEnergy = { 1.75,    1.75,   1.75 };
-ToolSvc.RichDetParameters.MaxPhotonEnergy = { 3.75,    7.00,   7.00 };
+ToolSvc.Offline.RichDetParameters.MinPhotonEnergy = { 1.75,    1.75,   1.75 };
+ToolSvc.Offline.RichDetParameters.MaxPhotonEnergy = { 3.75,    7.00,   7.00 };
 
 // SmartID manipulation
-ToolSvc.RichToolRegistry.Tools += { "RichSmartIDTool/RichSmartIDTool" };
+ToolSvc.Offline.RichToolRegistry.Tools += { "RichSmartIDTool/RichSmartIDTool" };
 
 // Detector ray-tracing
-ToolSvc.RichToolRegistry.Tools += { "RichRayTracing/RichRayTracing" };
+//ToolSvc.Offline.RichToolRegistry.Tools += { "RichRayTracing/RichRayTracing" };
+ToolSvc.Offline.RichToolRegistry.Tools += { "RichRayTracingAllSph/RichRayTracing" };
 
 // mirror segment finder
-ToolSvc.RichToolRegistry.Tools += { "RichMirrorSegFinder/RichMirrorSegFinder" };
+ToolSvc.Offline.RichToolRegistry.Tools += { "RichMirrorSegFinder/RichMirrorSegFinder" };
 
+// Raw Buffer decoding
+ToolSvc.Offline.RichToolRegistry.Tools += { "RichRawBufferToSmartIDsTool/RichSmartIDDecoder" };
 
+// RichCondition
+ToolSvc.Rich1C4F10Property.PhotonEnergyBins = 50;
+ToolSvc.Rich2CF4Property.PhotonEnergyBins   = 50;

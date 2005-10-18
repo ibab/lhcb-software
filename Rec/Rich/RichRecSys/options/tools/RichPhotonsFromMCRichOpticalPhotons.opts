@@ -1,4 +1,4 @@
 
 // RichRecPhoton Creator - Uses the MC information from MCRichOptical photons
 // to only reconstruct true photons with the MC geometry
-ToolSvc.RichToolRegistry.Tools += { "RichPhotonCreatorFromMCRichOpticalPhotons/RichPhotonCreatorOffline" };
+ToolSvc.Offline.RichToolRegistry.Tools += { "RichPhotonCreatorFromMCRichOpticalPhotons/RichPhotonCreator" };

@@ -3,48 +3,47 @@
 // information for fake associations
 
 // Main photon creator - delegates work to MC or Reco creators
-ToolSvc.RichToolRegistry.Tools += { "RichPhotonCreatorWithMCSignal/RichPhotonCreatorOffline" };
+ToolSvc.Offline.RichToolRegistry.Tools += { "RichPhotonCreatorWithMCSignal/RichPhotonCreator" };
 
 // Reco creator
 //=================================================================================================
 
-ToolSvc.RichToolRegistry.Tools += { "RichSepVCKthetaPhotonPredictor/RichPhotonPredictorOffline" };
-//                                                        Aero     C4F10    CF4
-ToolSvc.RichPhotonPredictorOffline.MinTrackROI       = {  110.0,   0.0,    0.0  };
-ToolSvc.RichPhotonPredictorOffline.MaxTrackROI       = {  380.0,  85.0,  155.0  };
-ToolSvc.RichPhotonPredictorOffline.CKthetaMax        = {  0.25,   0.05,  0.030  };
-ToolSvc.RichPhotonPredictorOffline.Sep2GMax          = {  360.0,  72.0,  135.0  };
-ToolSvc.RichPhotonPredictorOffline.TolerenceFactor   = {  25,     10,    20     };
+ToolSvc.Offline.RichToolRegistry.Tools += { "RichSepVCKthetaPhotonPredictor/RichPhotonPredictor" };
+//                                                         Aero     C4F10    CF4
+ToolSvc.Offline.RichPhotonPredictor.MinTrackROI       = {  110.0,   0.0,    0.0  };
+ToolSvc.Offline.RichPhotonPredictor.MaxTrackROI       = {  380.0,  85.0,  155.0  };
+ToolSvc.Offline.RichPhotonPredictor.CKthetaMax        = {  0.25,   0.05,  0.030  };
+ToolSvc.Offline.RichPhotonPredictor.Sep2GMax          = {  360.0,  72.0,  135.0  };
+ToolSvc.Offline.RichPhotonPredictor.TolerenceFactor   = {  25,     10,    20     };
 
 // RichRecPhoton Creator
-ToolSvc.RichToolRegistry.Tools += { "RichPhotonCreator/RichPhotonCreatorReco" };
-ToolSvc.RichPhotonCreatorReco.PhotonPredictor = "RichPhotonPredictorOffline";
-//                                                            Aero     C4F10    CF4
+ToolSvc.Offline.RichToolRegistry.Tools += { "RichPhotonCreator/RichPhotonCreatorReco" };
+ToolSvc.Offline.RichPhotonCreatorReco.PhotonPredictor = "RichPhotonPredictor";
+//                                                                    Aero     C4F10    CF4
 // absolute max and min allowed Cherenkov theta angles
-ToolSvc.RichPhotonCreatorReco.MinAllowedCherenkovTheta   = {  0.075,   0.005,   0.005  };
-ToolSvc.RichPhotonCreatorReco.MaxAllowedCherenkovTheta   = {  0.29,    0.075,   0.035  };
+ToolSvc.Offline.RichPhotonCreatorReco.MinAllowedCherenkovTheta   = {  0.075,   0.005,   0.005  };
+ToolSvc.Offline.RichPhotonCreatorReco.MaxAllowedCherenkovTheta   = {  0.29,    0.075,   0.035  };
 // minimum probability for a photon to be retained (for at least one hypothesis)
-ToolSvc.RichPhotonCreatorReco.MinPhotonProbability       = {  1e-15,   1e-15,   1e-15  };
+ToolSvc.Offline.RichPhotonCreatorReco.MinPhotonProbability       = {  1e-15,   1e-15,   1e-15  };
 // Fixed range around expected Cherenkov theta
-ToolSvc.RichPhotonCreatorReco.CherenkovThetaTolerence    = {  0.025,     0.007,   0.003 };
+ToolSvc.Offline.RichPhotonCreatorReco.CherenkovThetaTolerence    = {  0.025,     0.007,   0.003 };
 
 // geometrical photon reconstruction
 // use Quartic solving tool
-ToolSvc.RichPhotonCreatorRecoOffline.PhotonRecoTool  = "PhotonParams";
-ToolSvc.RichToolRegistry.Tools += { "RichPhotonRecoUsingQuarticSoln/PhotonParams" };
-ToolSvc.RichPhotonCreatorRecoOffline.PhotonParams.FindUnambiguousPhotons     = false;
-ToolSvc.RichPhotonCreatorRecoOffline.PhotonParams.UseMirrorSegmentAllignment = true;
+ToolSvc.Offline.RichPhotonCreatorReco.PhotonRecoTool  = "PhotonParams";
+ToolSvc.Offline.RichToolRegistry.Tools += { "RichPhotonRecoUsingQuarticSoln/PhotonParams" };
+ToolSvc.Offline.RichPhotonCreatorReco.PhotonParams.FindUnambiguousPhotons     = false;
+ToolSvc.Offline.RichPhotonCreatorReco.PhotonParams.UseMirrorSegmentAllignment = true;
 
 // MC creator
 //=================================================================================================
-ToolSvc.RichToolRegistry.Tools += { "RichPhotonCreatorFromMCRichOpticalPhotons/RichPhotonCreatorMC" };
-ToolSvc.RichPhotonCreatorMC.PhotonPredictor = "RichPhotonPredictorOffline";
-//                                                          Aero     C4F10    CF4
+ToolSvc.Offline.RichToolRegistry.Tools += { "RichPhotonCreatorFromMCRichOpticalPhotons/RichPhotonCreatorMC" };
+ToolSvc.Offline.RichPhotonCreatorMC.PhotonPredictor = "RichPhotonPredictor";
+//                                                                  Aero     C4F10    CF4
 // absolute max and min allowed Cherenkov theta angles
-ToolSvc.RichPhotonCreatorMC.MinAllowedCherenkovTheta   = {  0.075,   0.005,   0.005  };
-ToolSvc.RichPhotonCreatorMC.MaxAllowedCherenkovTheta   = {  0.29,    0.075,   0.035  };
+ToolSvc.Offline.RichPhotonCreatorMC.MinAllowedCherenkovTheta   = {  0.075,   0.005,   0.005  };
+ToolSvc.Offline.RichPhotonCreatorMC.MaxAllowedCherenkovTheta   = {  0.29,    0.075,   0.035  };
 // minimum probability for a photon to be retained (for at least one hypothesis)
-ToolSvc.RichPhotonCreatorMC.MinPhotonProbability       = {  1e-15,   1e-15,   1e-15  };
+ToolSvc.Offline.RichPhotonCreatorMC.MinPhotonProbability       = {  1e-15,   1e-15,   1e-15  };
 // Fixed range around expected Cherenkov theta
-ToolSvc.RichPhotonCreatorMC.CherenkovThetaTolerence    = {  0.025,     0.007,   0.003 };
-
+ToolSvc.Offline.RichPhotonCreatorMC.CherenkovThetaTolerence    = {  0.025,     0.007,   0.003 };

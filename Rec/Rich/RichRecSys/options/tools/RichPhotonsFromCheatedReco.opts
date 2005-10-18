@@ -3,27 +3,27 @@
 
 // RichRecPhoton predictor
 // Uses MC information to check if a given pixel/segment combination is a true Cherenkov hit
-ToolSvc.RichToolRegistry.Tools += { "RichPhotonPredictorUsingMCRichOpticalPhotons/RichPhotonPredictorOffline" };
+ToolSvc.Offline.RichToolRegistry.Tools += { "RichPhotonPredictorUsingMCRichOpticalPhotons/RichPhotonPredictor" };
 
 // RichRecPhoton Creator
-ToolSvc.RichToolRegistry.Tools += { "RichPhotonCreator/RichPhotonCreatorOffline" };
-ToolSvc.RichPhotonCreatorOffline.PhotonPredictor = "RichPhotonPredictorOffline";
-//                                                               Aero     C4F10    CF4
+ToolSvc.Offline.RichToolRegistry.Tools += { "RichPhotonCreator/RichPhotonCreator" };
+ToolSvc.Offline.RichPhotonCreator.PhotonPredictor = "RichPhotonPredictor";
+//                                                                Aero     C4F10    CF4
 // absolute max and min allowed Cherenkov theta angles
-ToolSvc.RichPhotonCreatorOffline.MinAllowedCherenkovTheta   = {  0.075,   0.005,   0.005  };
-ToolSvc.RichPhotonCreatorOffline.MaxAllowedCherenkovTheta   = {  0.29,    0.075,   0.035  };
-//ToolSvc.RichPhotonCreatorOffline.MinAllowedCherenkovTheta   = {  0.0,     0.0,     0.0    };
-//ToolSvc.RichPhotonCreatorOffline.MaxAllowedCherenkovTheta   = {  0.5,     0.15,    0.07   };
+ToolSvc.Offline.RichPhotonCreator.MinAllowedCherenkovTheta   = {  0.075,   0.005,   0.005  };
+ToolSvc.Offline.RichPhotonCreator.MaxAllowedCherenkovTheta   = {  0.29,    0.075,   0.035  };
+//ToolSvc.Offline.RichPhotonCreator.MinAllowedCherenkovTheta   = {  0.0,     0.0,     0.0    };
+//ToolSvc.Offline.RichPhotonCreator.MaxAllowedCherenkovTheta   = {  0.5,     0.15,    0.07   };
 // minimum probability for a photon to be retained (for at least one hypothesis)
-ToolSvc.RichPhotonCreatorOffline.MinPhotonProbability       = {  1e-15,   1e-15,   1e-15  };
-//ToolSvc.RichPhotonCreatorOffline.MinPhotonProbability       = {  1e-99,   1e-99,   1e-99  };
+ToolSvc.Offline.RichPhotonCreator.MinPhotonProbability       = {  1e-15,   1e-15,   1e-15  };
+//ToolSvc.Offline.RichPhotonCreator.MinPhotonProbability       = {  1e-99,   1e-99,   1e-99  };
 // Fixed range around expected Cherenkov theta
-ToolSvc.RichPhotonCreatorOffline.CherenkovThetaTolerence    = {  0.025,     0.007,   0.003 };
-//ToolSvc.RichPhotonCreatorOffline.CherenkovThetaTolerence    = {  999,    999,   999 };
+ToolSvc.Offline.RichPhotonCreator.CherenkovThetaTolerence    = {  0.025,     0.007,   0.003 };
+//ToolSvc.Offline.RichPhotonCreator.CherenkovThetaTolerence    = {  999,    999,   999 };
 
 // geometrical photon reconstruction
 // use Quartic solving tool
-ToolSvc.RichPhotonCreatorOffline.PhotonRecoTool  = "PhotonParams";
-ToolSvc.RichToolRegistry.Tools += { "RichPhotonRecoUsingQuarticSoln/PhotonParams" };
-ToolSvc.RichPhotonCreatorOffline.PhotonParams.FindUnambiguousPhotons     = false;
-ToolSvc.RichPhotonCreatorOffline.PhotonParams.UseMirrorSegmentAllignment = true;
+ToolSvc.Offline.RichPhotonCreator.PhotonRecoTool  = "PhotonParams";
+ToolSvc.Offline.RichToolRegistry.Tools += { "RichPhotonRecoUsingQuarticSoln/PhotonParams" };
+ToolSvc.Offline.RichPhotonCreator.PhotonParams.FindUnambiguousPhotons     = false;
+ToolSvc.Offline.RichPhotonCreator.PhotonParams.UseMirrorSegmentAllignment = true;

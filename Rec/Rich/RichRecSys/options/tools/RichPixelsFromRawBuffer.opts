@@ -1,13 +1,13 @@
 
 // use the tool that decodes directly from RawBuffer
-ToolSvc.RichToolRegistry.Tools += { "RichPixelCreatorFromRawBuffer/RichPixelCreatorOffline" };
+ToolSvc.Offline.RichToolRegistry.Tools += { "RichPixelCreatorFromRawBuffer/RichPixelCreator" };
 
-// Which RICH detectors to use                     RICH1   RICH2
-ToolSvc.RichPixelCreatorOffline.UseDetectors  = {  true,   true   };
+// Which RICH detectors to use                                 RICH1   RICH2
+ToolSvc.Offline.RichPixelCreator.UseDetectors  = {  true,   true   };
 
 // Do not perform book keeping in order to speed things up
-ToolSvc.RichPixelCreatorOffline.DoBookKeeping = false;
+ToolSvc.Offline.RichPixelCreator.DoBookKeeping = false;
 
 // Random HPD killing options
-ToolSvc.RichHPDInfoTool.KillRandomHPDs         = false;
-ToolSvc.RichHPDInfoTool.FractionToRandomlyKill = 0.0;
+ToolSvc.Offline.RichHPDInfoTool.KillRandomHPDs         = false;
+ToolSvc.Offline.RichHPDInfoTool.FractionToRandomlyKill = 0.0;

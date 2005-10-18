@@ -4,37 +4,40 @@
 // RichRecPhoton predictor (quick test if a given pixel/segment combination
 // is likely to yield a good photon)
 
-//ToolSvc.RichToolRegistry.Tools += { "RichSimplePhotonPredictor/RichPhotonPredictorOffline" };
+//ToolSvc.Offline.RichToolRegistry.Tools += { "RichSimplePhotonPredictor/RichPhotonPredictor" };
+//                                                           Aero    C4F10    CF4
 // select all
-//ToolSvc.RichPhotonPredictorOffline.MinTrackROI        = {   0.0,   0.0,    0.0  };
-//ToolSvc.RichPhotonPredictorOffline.MaxTrackROI        = {   999,   999,    999  };
+//ToolSvc.Offline.RichPhotonPredictor.MinTrackROI        = {   0.0,   0.0,    0.0  };
+//ToolSvc.Offline.RichPhotonPredictor.MaxTrackROI        = {   999,   999,    999  };
 // Course cut
-//ToolSvc.RichPhotonPredictorOffline.MinTrackROI        = { 110.0,   0.0,    0.0  };
-//ToolSvc.RichPhotonPredictorOffline.MaxTrackROI        = { 380.0,  85.0,  155.0  };
+//ToolSvc.Offline.RichPhotonPredictor.MinTrackROI        = { 110.0,   0.0,    0.0  };
+//ToolSvc.Offline.RichPhotonPredictor.MaxTrackROI        = { 380.0,  85.0,  155.0  };
 
-ToolSvc.RichToolRegistry.Tools += { "RichSepVCKthetaPhotonPredictor/RichPhotonPredictorOffline" };
-//                                                        Aero     C4F10    CF4
-ToolSvc.RichPhotonPredictorOffline.MinTrackROI       = {  110.0,   0.0,    0.0  };
-ToolSvc.RichPhotonPredictorOffline.MaxTrackROI       = {  380.0,  85.0,  155.0  };
-ToolSvc.RichPhotonPredictorOffline.CKthetaMax        = {  0.25,   0.05,  0.030  };
-ToolSvc.RichPhotonPredictorOffline.Sep2GMax          = {  360.0,  72.0,  135.0  };
-ToolSvc.RichPhotonPredictorOffline.TolerenceFactor   = {  25,     10,    20     };
+ToolSvc.Offline.RichToolRegistry.Tools += { "RichSepVCKthetaPhotonPredictor/RichPhotonPredictor" };
+//                                                         Aero     C4F10    CF4
+ToolSvc.Offline.RichPhotonPredictor.MinTrackROI       = {  110.0,   0.0,    0.0  };
+ToolSvc.Offline.RichPhotonPredictor.MaxTrackROI       = {  380.0,  85.0,  155.0  };
+ToolSvc.Offline.RichPhotonPredictor.CKthetaMax        = {  0.25,   0.05,  0.030  };
+ToolSvc.Offline.RichPhotonPredictor.Sep2GMax          = {  360.0,  72.0,  135.0  };
+ToolSvc.Offline.RichPhotonPredictor.TolerenceFactor   = {  25,     10,    20     };
 
 // RichRecPhoton Creator
-ToolSvc.RichToolRegistry.Tools += { "RichPhotonCreator/RichPhotonCreatorOffline" };
-ToolSvc.RichPhotonCreatorOffline.PhotonPredictor = "RichPhotonPredictorOffline";
-//                                                               Aero     C4F10    CF4
+ToolSvc.Offline.RichToolRegistry.Tools += { "RichPhotonCreator/RichPhotonCreator" };
+ToolSvc.Offline.RichPhotonCreator.PhotonPredictor = "RichPhotonPredictor";
+//                                                                Aero     C4F10    CF4
 // absolute max and min allowed Cherenkov theta angles
-ToolSvc.RichPhotonCreatorOffline.MinAllowedCherenkovTheta   = {  0.075,   0.005,   0.005  };
-ToolSvc.RichPhotonCreatorOffline.MaxAllowedCherenkovTheta   = {  0.29,    0.075,   0.035  };
+ToolSvc.Offline.RichPhotonCreator.MinAllowedCherenkovTheta   = {  0.075,   0.005,   0.005  };
+ToolSvc.Offline.RichPhotonCreator.MaxAllowedCherenkovTheta   = {  0.29,    0.075,   0.035  };
 // minimum probability for a photon to be retained (for at least one hypothesis)
-ToolSvc.RichPhotonCreatorOffline.MinPhotonProbability       = {  1e-15,   1e-15,   1e-15  };
+ToolSvc.Offline.RichPhotonCreator.MinPhotonProbability       = {  1e-15,   1e-15,   1e-15  };
 // Fixed range around expected Cherenkov theta
-ToolSvc.RichPhotonCreatorOffline.CherenkovThetaTolerence    = {  0.025,   0.007,   0.003  };
+ToolSvc.Offline.RichPhotonCreator.CherenkovThetaTolerence    = {  0.025,   0.007,   0.003  };
 
 // geometrical photon reconstruction
 // use Quartic solving tool
-ToolSvc.RichPhotonCreatorOffline.PhotonRecoTool  = "PhotonParams";
-ToolSvc.RichToolRegistry.Tools += { "RichPhotonRecoUsingQuarticSoln/PhotonParams" };
-ToolSvc.RichPhotonCreatorOffline.PhotonParams.FindUnambiguousPhotons     = false;
-ToolSvc.RichPhotonCreatorOffline.PhotonParams.UseMirrorSegmentAllignment = true;
+ToolSvc.Offline.RichPhotonCreator.PhotonRecoTool  = "PhotonParams";
+//ToolSvc.Offline.RichToolRegistry.Tools += { "RichPhotonRecoUsingQuarticSoln/PhotonParams" };
+ToolSvc.Offline.RichToolRegistry.Tools += { "RichPhotonRecoUsingQuarticSolnAllSph/PhotonParams" }; // all spherical
+ToolSvc.Offline.RichPhotonCreator.PhotonParams.FindUnambiguousPhotons     = false;
+ToolSvc.Offline.RichPhotonCreator.PhotonParams.UseMirrorSegmentAllignment = true;
+ToolSvc.Offline.RichPhotonCreator.PhotonParams.NQuarticIterationsForSecMirrors = { 1,1,1 };

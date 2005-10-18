@@ -4,6 +4,9 @@
 // Run the online quality algorithms on offline tracks
 // ============================================================================
 
+// Set offline mode
+RecoRICHSeq.Context = "Offline";
+
 // Fast Global PID
 //===========================================================================
 RecoRICHSeq.Members += { "RichTrgGlobalPIDAlg/RichHltGlobalPID" };
@@ -11,7 +14,6 @@ RichHltGlobalPID.TrackSelection    =
   { "unique","seed","match","forward","follow","KsTrack","veloTT" };
 RichHltGlobalPID.OutputPIDLocation = "Rec/Rich/PIDs";
 // Monitoring options
-RichHltGlobalPID.NTupleProduce = false;
+RichHltGlobalPID.NTupleProduce = true;
 RichHltGlobalPID.HistoProduce  = false;
-// tell algorithm it is offline
-RichHltGlobalPID.ProcessingStage = "Offline";
+
