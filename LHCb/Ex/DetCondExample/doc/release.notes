@@ -1,9 +1,13 @@
 ! =============================================================================
-! $Id: release.notes,v 1.57 2005-10-07 15:42:11 marcocle Exp $
+! $Id: release.notes,v 1.58 2005-10-18 16:33:31 marcocle Exp $
 ! =============================================================================
 ! package Ex/DetCondExample
 ! package manager : Marco Clemencic
 ! =============================================================================
+
+! 2005-10-18 - Marco Clemencic
+ - Changed CLID_DummyDetectorElement, conflicting with another DetectorElement
+   in XmlDDDB.
 
 !=========== Ex/DetCondExample v7r6 2005-10-07 ===============================
 ! 2005-10-07 - Marco Clemencic
