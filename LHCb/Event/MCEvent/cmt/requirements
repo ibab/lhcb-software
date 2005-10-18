@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.1.1.1 2005-09-06 07:06:43 pkoppenb Exp $
+# $Id: requirements,v 1.2 2005-10-18 14:14:37 pkoppenb Exp $
 # Created    : 08/03/2002
 # Maintainer : Marco Cattaneo
 #
@@ -16,7 +16,7 @@ include_dirs $(MCEVENTROOT)
 # Used packages. 
 #============================================================================
 use LHCbKernel   v5r*    Kernel
-use MathLib      v*  LCG_Interfaces
+use MathLib      v*      LCG_Interfaces
 use EventBase    v*      Event
 
 # Produce Header-Files & dictionary from XML description

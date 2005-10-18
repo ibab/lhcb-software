@@ -23,7 +23,7 @@
        <attribute
         desc="4-momentum-vector"
         name="momentum"
-        type="LHCb::Momentum"
+        type="LHCb::Lorentz"
         init="0.0, 0.0, 0.0, -1*GeV" 
        />
        <attribute
