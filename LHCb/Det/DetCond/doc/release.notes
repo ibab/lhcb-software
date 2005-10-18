@@ -1,9 +1,14 @@
-# $Id: release.notes,v 1.55 2005-10-06 08:42:57 cattanem Exp $
+# $Id: release.notes,v 1.56 2005-10-18 16:10:37 marcocle Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Det/DetCond
 ! Responsible : Marco Clemencic
 ! Purpose     : Interface between LHCb and LGC/COOL project
 !-----------------------------------------------------------------------------
+
+! 2005-10-18 - Marco Clemencic
+ - Cosmetic improvements
+   (RelyConverter, CondDBGenericCnv, CondDBAccessSvc, CondDBCnvSvc)
+ - Added `#include <vector>' in ICondDBAccessSvc.h and ICondDBCnvSvc.h
 
 ================= Det/DetCond v7r7 2005-10-06 ================================
 ! 2005-10-05 - Marco Clemencic
