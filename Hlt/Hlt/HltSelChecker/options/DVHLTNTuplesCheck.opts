@@ -22,7 +22,6 @@ ApplicationMgr.DLLs += {"HltSelChecker"};
 // OfflineTracks.opts not included
 #include "$DAVINCIROOT/options/DaVinciReco.opts"
 #include "$DAVINCIROOT/options/DaVinciNeutrals.opts"
-Neutrals.Members  = { "CaloDigitsFromRaw" };
 
 // Several selection have the same instance of PreLoadParticles ... comment in some DoTDRsel*
 // and add it here ... 
