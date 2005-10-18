@@ -1,4 +1,4 @@
-// $Id: RelyConverter.cpp,v 1.12 2005-09-18 16:08:39 marcocle Exp $
+// $Id: RelyConverter.cpp,v 1.13 2005-10-18 15:38:48 marcocle Exp $
 // Include files 
 #include "RelyConverter.h"
 
@@ -87,7 +87,7 @@ StatusCode RelyConverter::createObj (IOpaqueAddress* pAddress, DataObject *&pObj
 
   StatusCode sc = i_delegatedCreation(pAddress,pObject,CreateObject);
   if (sc.isFailure()){
-    log << MSG::ERROR << "Cannot create the object" << endmsg;
+    log << MSG::ERROR << "Cannot create the object " << pAddress->registry()->identifier() << endmsg;
     return sc;
   }
 

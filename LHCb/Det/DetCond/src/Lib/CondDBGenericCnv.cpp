@@ -1,4 +1,4 @@
-// $Id: CondDBGenericCnv.cpp,v 1.8 2005-09-20 11:43:44 cattanem Exp $
+// $Id: CondDBGenericCnv.cpp,v 1.9 2005-10-18 15:39:33 marcocle Exp $
 // Include files 
 #include "GaudiKernel/IDetDataSvc.h"
 #include "GaudiKernel/TimePoint.h"
@@ -101,7 +101,7 @@ void CondDBGenericCnv::setObjValidity(TimePoint &since, TimePoint &till, DataObj
   
     // I cannot set the validity range
     MsgStream log(msgSvc(),"CondDBGenericCnv");
-    log << MSG::WARNING
+    log << MSG::DEBUG
         << "Created object (CLID = " << pObject->clID()
         << ") does not implement IValidity: cannot set validity"
         << endreq;

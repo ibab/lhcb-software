@@ -1,4 +1,4 @@
-// $Id: CondDBAccessSvc.cpp,v 1.13 2005-10-05 15:46:55 marcocle Exp $
+// $Id: CondDBAccessSvc.cpp,v 1.14 2005-10-18 15:44:00 marcocle Exp $
 // Include files 
 #include <sstream>
 
@@ -637,7 +637,7 @@ StatusCode CondDBAccessSvc::getObject(const std::string &path, const TimePoint &
 StatusCode CondDBAccessSvc::getChildNodes (const std::string &path, std::vector<std::string> &node_names) {
 
   MsgStream log(msgSvc(),name());
-  log << MSG::ERROR << "Entering \"getChildNodes\"" << endmsg;
+  log << MSG::DEBUG << "Entering \"getChildNodes\"" << endmsg;
 
   node_names.clear();
 
