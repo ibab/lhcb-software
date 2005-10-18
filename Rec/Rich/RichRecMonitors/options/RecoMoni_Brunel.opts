@@ -2,7 +2,6 @@
 
 CheckRICHSeq.Context = "Offline";
 
-/*
 // MC tools
 ToolSvc.RichToolRegistry.Tools += { "RichMCTruthTool/RichMCTruthTool" };
 ToolSvc.RichToolRegistry.Tools += { "RichRecMCTruthTool/RichRecMCTruthTool" };
@@ -101,8 +100,6 @@ RiRecPhotonMoni.RichGeomEffRay.NPhotonsGeomEffBailout       = 25;
 RiRecPhotonMoni.RichGeomEffFix.FixedSignalEfficiency   =  { 0.55,    0.62,   0.55  };
 RiRecPhotonMoni.RichGeomEffFix.FixedScatterEfficiency  =  0.55;
 //RiRecPhotonMoni.ProcessingStage = "Offline";
-
-*/
 
 // Timing monitors
 #include "$RICHRECMONITORSOPTS/RecoTiming_Brunel.opts"
