@@ -5,7 +5,7 @@
  *  Implementation file for tool : RichPixelCreatorFromRichDigits
  *
  *  CVS Log :-
- *  $Id: RichPixelCreatorFromRichDigits.cpp,v 1.20 2005-06-17 15:08:36 jonrob Exp $
+ *  $Id: RichPixelCreatorFromRichDigits.cpp,v 1.21 2005-10-18 13:03:51 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -42,7 +42,7 @@ StatusCode RichPixelCreatorFromRichDigits::initialize()
   if ( sc.isFailure() ) { return sc; }
 
   // Acquire instances of tools
-  acquireTool( "RichSmartIDTool", m_idTool  );
+  acquireTool( "RichSmartIDTool", m_idTool, 0, true  );
 
   return sc;
 }

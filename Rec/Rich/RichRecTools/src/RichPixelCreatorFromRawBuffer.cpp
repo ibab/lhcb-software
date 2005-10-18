@@ -5,7 +5,7 @@
  *  Implementation file for tool : RichPixelCreatorFromRawBuffer
  *
  *  CVS Log :-
- *  $Id: RichPixelCreatorFromRawBuffer.cpp,v 1.9 2005-06-17 15:08:36 jonrob Exp $
+ *  $Id: RichPixelCreatorFromRawBuffer.cpp,v 1.10 2005-10-18 13:03:51 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   30/10/2004
@@ -37,8 +37,8 @@ StatusCode RichPixelCreatorFromRawBuffer::initialize()
   if ( sc.isFailure() ) { return sc; }
 
   // Acquire instances of tools
-  acquireTool( "RichSmartIDTool",    m_idTool  );
-  acquireTool( "RichSmartIDDecoder", m_decoder );
+  acquireTool( "RichSmartIDTool",    m_idTool,  0, true );
+  acquireTool( "RichSmartIDDecoder", m_decoder, 0, true );
 
   return sc;
 }

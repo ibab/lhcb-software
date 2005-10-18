@@ -5,7 +5,7 @@
  *  Implementation file for tool : RichRayTraceCherenkovCone
  *
  *  CVS Log :-
- *  $Id: RichRayTraceCherenkovCone.cpp,v 1.11 2005-10-13 16:01:55 jonrob Exp $
+ *  $Id: RichRayTraceCherenkovCone.cpp,v 1.12 2005-10-18 13:03:51 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -47,7 +47,7 @@ StatusCode RichRayTraceCherenkovCone::initialize()
   // Acquire instances of tools
   acquireTool( "RichRayTracing",     m_rayTrace );
   acquireTool( "RichCherenkovAngle", m_ckAngle  );
-  acquireTool( "RichSmartIDTool", m_smartIDTool );
+  acquireTool( "RichSmartIDTool", m_smartIDTool, 0, true );
 
   // Set up cached parameters for photon tracing
   m_incPhi = M_2PI / static_cast<double>(m_nRayTrace) ;

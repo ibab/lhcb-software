@@ -5,7 +5,7 @@
  *  Implementation file for tool : RichTrackCreatorFromTrStoredTracks
  *
  *  CVS Log :-
- *  $Id: RichTrackCreatorFromTrStoredTracks.cpp,v 1.30 2005-10-13 16:01:56 jonrob Exp $
+ *  $Id: RichTrackCreatorFromTrStoredTracks.cpp,v 1.31 2005-10-18 13:03:51 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -58,7 +58,7 @@ StatusCode RichTrackCreatorFromTrStoredTracks::initialize()
   // Acquire instances of tools
   acquireTool( "RichRayTracing",          m_rayTrace    );
   acquireTool( "RichExpectedTrackSignal", m_signal      );
-  acquireTool( "RichSmartIDTool",         m_smartIDTool );
+  acquireTool( "RichSmartIDTool",         m_smartIDTool, 0, true );
   acquireTool( m_trSegToolNickName,       m_segMaker    );
   if ( m_buildHypoRings ) acquireTool( "RichMassHypoRings", m_massHypoRings );
 

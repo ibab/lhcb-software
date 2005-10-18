@@ -5,7 +5,7 @@
  *  Implementation file for tool : RichCherenkovAngle
  *
  *  CVS Log :-
- *  $Id: RichCherenkovAngle.cpp,v 1.15 2005-10-13 16:01:55 jonrob Exp $
+ *  $Id: RichCherenkovAngle.cpp,v 1.16 2005-10-18 13:03:51 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -46,7 +46,7 @@ StatusCode RichCherenkovAngle::initialize()
 
   // Acquire instances of tools
   acquireTool( "RichRayTracing",          m_rayTrace     );
-  acquireTool( "RichSmartIDTool",         m_smartIDTool  );
+  acquireTool( "RichSmartIDTool",         m_smartIDTool, 0, true  );
   acquireTool( "RichExpectedTrackSignal", m_signal       );
   acquireTool( "RichRefractiveIndex",     m_refIndex     );
   acquireTool( "RichParticleProperties",  m_richPartProp );
