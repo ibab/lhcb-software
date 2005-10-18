@@ -1,4 +1,4 @@
-// $Id: RichDigiAlgMoni.cpp,v 1.1 2005-06-18 11:36:05 jonrob Exp $
+// $Id: RichDigiAlgMoni.cpp,v 1.2 2005-10-18 12:43:06 jonrob Exp $
 
 // local
 #include "RichDigiAlgMoni.h"
@@ -40,8 +40,8 @@ StatusCode RichDigiAlgMoni::initialize()
   if ( sc.isFailure() ) { return sc; }
 
   // get tools
-  acquireTool( "RichSmartIDTool", m_smartIDTool );
-  acquireTool( "RichMCTruthTool", m_mcTool      );
+  acquireTool( "RichSmartIDTool", m_smartIDTool, 0, true );
+  acquireTool( "RichMCTruthTool", m_mcTool,      0, true );
 
   // Book histograms
   if ( !bookHistograms() ) return StatusCode::FAILURE;

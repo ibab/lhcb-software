@@ -20,3 +20,5 @@ ToolSvc.RichRefractiveIndex.QETableLocation =
 
 // SmartID manipulation
 ToolSvc.RichToolRegistry.Tools += { "RichSmartIDTool/RichSmartIDTool" };
+
+

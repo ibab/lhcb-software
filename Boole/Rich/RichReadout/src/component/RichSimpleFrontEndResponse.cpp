@@ -5,7 +5,7 @@
  *  Implementation file for RICH digitisation algorithm : RichSimpleFrontEndResponse
  *
  *  CVS Log :-
- *  $Id: RichSimpleFrontEndResponse.cpp,v 1.2 2005-06-23 15:10:12 jonrob Exp $
+ *  $Id: RichSimpleFrontEndResponse.cpp,v 1.3 2005-10-18 12:43:06 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @author Alex Howard   a.s.howard@ic.ac.uk
@@ -47,7 +47,7 @@ StatusCode RichSimpleFrontEndResponse::initialize()
 
   // create a collection of all pixels
   const IRichSmartIDTool * smartIDs;
-  acquireTool( "RichSmartIDTool" , smartIDs );
+  acquireTool( "RichSmartIDTool" , smartIDs, 0, true );
   const RichSmartID::Collection & pixels = smartIDs->readoutChannelList();
   actual_base = theRegistry.GetNewBase( pixels );
   releaseTool( smartIDs );

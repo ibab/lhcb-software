@@ -5,7 +5,7 @@
  *  Implementation file for RICH DAQ algorithm : MCRichDigitsToRawBufferAlg
  *
  *  CVS Log :-
- *  $Id: MCRichDigitsToRawBufferAlg.cpp,v 1.2 2005-07-14 14:12:17 jonrob Exp $
+ *  $Id: MCRichDigitsToRawBufferAlg.cpp,v 1.3 2005-10-18 12:43:06 jonrob Exp $
  *
  *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
  *  @date   2003-11-09
@@ -47,8 +47,8 @@ StatusCode MCRichDigitsToRawBufferAlg::initialize()
   if ( sc.isFailure() ) { return sc; }
 
   // acquire tools
-  acquireTool( "RichRawDataFormatTool", m_rawFormatT );
-  acquireTool( "RichHPDToLevel1Tool",   m_level1     );
+  acquireTool( "RichRawDataFormatTool", m_rawFormatT, 0, true );
+  acquireTool( "RichHPDToLevel1Tool",   m_level1              );
 
   // create a dummy L1data object with an emtpy vector for each L1 board
   m_dummyMap.clear();

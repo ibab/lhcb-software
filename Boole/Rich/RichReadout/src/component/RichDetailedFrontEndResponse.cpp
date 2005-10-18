@@ -5,7 +5,7 @@
  *  Implementation file for RICH digitisation algorithm : RichDetailedFrontEndResponse
  *
  *  CVS Log :-
- *  $Id: RichDetailedFrontEndResponse.cpp,v 1.3 2005-10-13 15:26:47 jonrob Exp $
+ *  $Id: RichDetailedFrontEndResponse.cpp,v 1.4 2005-10-18 12:43:06 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @author Alex Howard   a.s.howard@ic.ac.uk
@@ -54,7 +54,7 @@ StatusCode RichDetailedFrontEndResponse::initialize()
 
   // create a collection of all pixels
   const IRichSmartIDTool * smartIDs;
-  acquireTool( "RichSmartIDTool" , smartIDs );
+  acquireTool( "RichSmartIDTool" , smartIDs, 0, true );
   const RichSmartID::Collection & pixels = smartIDs->readoutChannelList();
   actual_base = theRegistry.GetNewBase( pixels );
   releaseTool( smartIDs );
@@ -187,6 +187,7 @@ StatusCode RichDetailedFrontEndResponse::Digital()
 
   // new RichDigit container to Gaudi data store
   MCRichDigits * mcRichDigits = new MCRichDigits();
+  put( mcRichDigits, m_mcRichDigitsLocation );
 
   for ( samplecache_t::iterator tsc_it = tscache.begin();
         tsc_it != tscache.end(); ++tsc_it ) 
@@ -221,7 +222,6 @@ StatusCode RichDetailedFrontEndResponse::Digital()
 
   } // loop over time samples
 
-  put( mcRichDigits, m_mcRichDigitsLocation );
   if ( msgLevel(MSG::DEBUG) )
   {
     debug() << "Registered " << mcRichDigits->size()

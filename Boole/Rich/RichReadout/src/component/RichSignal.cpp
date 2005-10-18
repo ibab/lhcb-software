@@ -5,7 +5,7 @@
  *  Implementation file for RICH digitisation algorithm : RichSignal
  *
  *  CVS Log :-
- *  $Id: RichSignal.cpp,v 1.3 2005-10-13 15:26:47 jonrob Exp $
+ *  $Id: RichSignal.cpp,v 1.4 2005-10-18 12:43:06 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @author Alex Howard   a.s.howard@ic.ac.uk
@@ -64,9 +64,9 @@ StatusCode RichSignal::initialize()
     return Error( "Unable to create Random generator" );
   }
 
-  // detector tool
-  acquireTool( "RichSmartIDTool", m_smartIDTool );
-  acquireTool( "RichMCTruthTool", m_truth       );
+  // tools
+  acquireTool( "RichSmartIDTool", m_smartIDTool, 0, true );
+  acquireTool( "RichMCTruthTool", m_truth, 0, true       );
 
   return sc;
 }
@@ -117,11 +117,12 @@ StatusCode RichSignal::ProcessEvent( const std::string & hitLoc,
   // Load hits
   if ( !exist<MCRichHits>(hitLoc) )
   {
-    if ( msgLevel(MSG::DEBUG) )
-    {
-      debug() << "Cannot locate MCRichHits at " << hitLoc << endreq;
-    }
-    return StatusCode::SUCCESS;
+    //if ( msgLevel(MSG::DEBUG) )
+    //{
+    //  debug() << "Cannot locate MCRichHits at " << hitLoc << endreq;
+    //}
+    return Warning( "Cannot locate MCRichHits at " + hitLoc, 
+                    StatusCode::SUCCESS, 0 );
   }
   MCRichHits * hits = get<MCRichHits>( hitLoc );
   if ( msgLevel(MSG::DEBUG) )
@@ -192,9 +193,9 @@ StatusCode RichSignal::ProcessEvent( const std::string & hitLoc,
       // store history in summed deposit
       if ( !m_truth->isBackground( *iHit ) ) 
       {
-        if      ( (*iHit)->radiator() == Rich::Aerogel ) { sumDep->setAerogelHit(true); }
-        else if ( (*iHit)->radiator() == Rich::C4F10   ) { sumDep->setC4f10Hit(true);   }
-        else if ( (*iHit)->radiator() == Rich::CF4     ) { sumDep->setCf4Hit(true);     }
+        if      ( Rich::Aerogel == (*iHit)->radiator() ) { sumDep->setAerogelHit(true); }
+        else if ( Rich::C4F10   == (*iHit)->radiator() ) { sumDep->setC4f10Hit(true);   }
+        else if ( Rich::CF4     == (*iHit)->radiator() ) { sumDep->setCf4Hit(true);     }
       } 
       if ( (*iHit)->scatteredPhoton() ) { sumDep->setScatteredHit(true);  }
       if ( (*iHit)->chargedTrack()    ) { sumDep->setChargedTrack(true);  }
