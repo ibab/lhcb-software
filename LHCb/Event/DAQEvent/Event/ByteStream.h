@@ -1,4 +1,4 @@
-// $Id: ByteStream.h,v 1.1 2005-10-14 12:51:59 cattanem Exp $
+// $Id: ByteStream.h,v 1.2 2005-10-18 06:45:49 mneedham Exp $
 #ifndef EVENT_BYTESTREAM_H 
 #define EVENT_BYTESTREAM_H 1
 
@@ -27,7 +27,7 @@ namespace LHCb
 
     /** templated streamer */
     template<class TYPE>
-    ByteStream & operator >> (TYPE value);
+    ByteStream & operator >> (TYPE& value);
 
   private:
 
@@ -46,7 +46,7 @@ namespace LHCb
   }
 
   template <class TYPE>
-  inline ByteStream& ByteStream::operator >> (TYPE value){
+  inline ByteStream& ByteStream::operator >> (TYPE& value){
 
     TYPE* tmp = reinterpret_cast<TYPE*>(&m_start[m_pos]);
     value = *tmp;
