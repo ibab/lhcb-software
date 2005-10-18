@@ -5,7 +5,7 @@
  *  Implementation file for RICH Digitisation Quality Control algorithm : RichDigitQC
  *
  *  CVS Log :-
- *  $Id: RichDigitQC.cpp,v 1.20 2005-10-17 09:06:53 jonrob Exp $
+ *  $Id: RichDigitQC.cpp,v 1.21 2005-10-18 12:32:13 jonrob Exp $
  *
  *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
  *  @date   2003-09-08
@@ -82,16 +82,17 @@ StatusCode RichDigitQC::execute()
   SpillDetCount spills(Rich::NRiches);
   for ( MCRichDigits::const_iterator iDigit = richDigits->begin();
         iDigit != richDigits->end(); ++iDigit )
-  {
+  {    
+    const MCRichDigit * mcDig = *iDigit;
 
     // Get Rich ID
-    const Rich::DetectorType rich = (*iDigit)->key().rich();
+    const Rich::DetectorType rich = mcDig->key().rich();
 
     // count in each HPD for this event
-    ++(nHPD[rich])[(*iDigit)->key().pdID()];
+    ++(nHPD[rich])[mcDig->key().pdID()];
 
     // Location of parent MCHit
-    const std::string location = mchitLocation( *iDigit );
+    const std::string location = mchitLocation( mcDig );
     m_evtLocs[location] = true;
 
     // Count hits
@@ -99,7 +100,7 @@ StatusCode RichDigitQC::execute()
     ++(spills[rich])[location];
 
     // Check if digit is background
-    if ( m_mcTool->isBackground(*iDigit) ) { ++m_bkgHits[rich]; ++backs[rich]; }
+    if ( m_mcTool->isBackground(mcDig) ) { ++m_bkgHits[rich]; ++backs[rich]; }
 
   }
 

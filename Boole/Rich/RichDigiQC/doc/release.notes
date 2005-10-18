@@ -4,6 +4,9 @@
 ! Purpose     : Quality Control monitoring algorithms for RICH digitisation
 !-----------------------------------------------------------------------------
 
+! 2005-10-18 - Chris Jones
+ - Add fix for weird problem of wrong interface method being called !
+
 ! 2005-09-25 - Chris Jones
  - Add missing include for AlgFactory.h to RichDigitQC.h
 
