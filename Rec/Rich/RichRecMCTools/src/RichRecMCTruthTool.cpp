@@ -5,7 +5,7 @@
  *  Implementation file for RICH reconstruction tool : RichRecMCTruthTool
  *
  *  CVS Log :-
- *  $Id: RichRecMCTruthTool.cpp,v 1.16 2005-10-13 15:41:01 jonrob Exp $
+ *  $Id: RichRecMCTruthTool.cpp,v 1.17 2005-10-18 12:46:37 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   08/07/2004
@@ -119,12 +119,15 @@ RichRecMCTruthTool::mcRichDigit( const RichRecPixel * richPixel ) const
   }
 
   const MCRichDigit * mcDigit = 0;
-  if ( Rich::PixelParent::RawBuffer == richPixel->parentType() ) {
+  if ( Rich::PixelParent::RawBuffer == richPixel->parentType() ) 
+  {
 
     // use RichSmartID to locate MC information
     mcDigit = m_truth->mcRichDigit( richPixel->smartID() );
 
-  } else if ( Rich::PixelParent::Digit == richPixel->parentType() ) {
+  } 
+  else if ( Rich::PixelParent::Digit == richPixel->parentType() ) 
+  {
 
     // try to get parent RichDigit
     const RichDigit * digit = dynamic_cast<const RichDigit*>( richPixel->parentPixel() );
@@ -133,13 +136,17 @@ RichRecMCTruthTool::mcRichDigit( const RichRecPixel * richPixel ) const
     // All OK, so find and return MCRichDigit for this RichDigit
     mcDigit = m_truth->mcRichDigit( digit );
 
-  } else if ( Rich::PixelParent::NoParent == richPixel->parentType() ) {
+  } 
+  else if ( Rich::PixelParent::NoParent == richPixel->parentType() ) 
+  {
 
     // Pixel has no parent, so MC association cannot be done
     Warning( "Parentless RichRecPixel -> MC association impossible",StatusCode::SUCCESS );
     return NULL;
 
-  } else {
+  } 
+  else 
+  {
 
     // unknown Pixel type
     Warning( "Do not know how to access MC for RichRecPixel type " + 
@@ -151,34 +158,11 @@ RichRecMCTruthTool::mcRichDigit( const RichRecPixel * richPixel ) const
   return mcDigit;
 }
 
-bool RichRecMCTruthTool::mcParticle( const RichRecPixel * richPixel,
-                                     std::vector<const MCParticle*> & mcParts ) const
+bool 
+RichRecMCTruthTool::mcParticle( const RichRecPixel * richPixel,
+                                std::vector<const MCParticle*> & mcParts ) const
 {
-
-  // Clean vector
-  mcParts.clear();
-
-  // Loop over all MCRichHits associated to the pixel
-  const SmartRefVector<MCRichHit> & hits = mcRichHits( richPixel );
-  if ( hits.empty() ) return false;
-  for ( SmartRefVector<MCRichHit>::const_iterator iHit = hits.begin();
-        iHit != hits.end(); ++iHit ) {
-
-    // protect against bad hits
-    if ( !(*iHit) ) continue;
-
-    // find MCParticle
-    const MCParticle * mcPart = (*iHit)->mcParticle();
-    if ( !mcPart ) continue;
-
-    // Add to vector, once per MCParticle
-    std::vector<const MCParticle*>::const_iterator iFind =
-      std::find( mcParts.begin(), mcParts.end(), mcPart );
-    if ( mcParts.end() == iFind ) mcParts.push_back( mcPart );
-
-  }
-
-  return true;
+  return m_truth->mcParticles( richPixel->smartID(), mcParts );
 }
 
 const MCParticle *
@@ -199,11 +183,15 @@ const MCParticle * RichRecMCTruthTool::trueRecPhoton( const RichRecSegment * seg
   const MCParticle * mcTrack = ( track ? mcParticle(track) : NULL );
   if ( !mcTrack ) return NULL;
 
-  // Loop over all MCRichHits associated to the pixel
-  const SmartRefVector<MCRichHit> & hits = mcRichHits( pixel );
-  for ( SmartRefVector<MCRichHit>::const_iterator iHit = hits.begin();
-        iHit != hits.end(); ++iHit ) {
-    if ( (*iHit) && ( mcTrack == (*iHit)->mcParticle() ) ) return mcTrack;
+  // Get MCParticles for the pixel
+  std::vector<const MCParticle *> mcParts;
+  m_truth->mcParticles(pixel->smartID(),mcParts);
+
+  // Loop over all MCParticles associated to the pixel
+  for ( std::vector<const MCParticle *>::const_iterator iMCP = mcParts.begin();
+        iMCP != mcParts.end(); ++iMCP ) 
+  {
+    if ( mcTrack == (*iMCP) ) return mcTrack;
   }
 
   return NULL;
@@ -221,6 +209,11 @@ RichRecMCTruthTool::trueCherenkovPhoton( const RichRecSegment * segment,
                                          const RichRecPixel * pixel ) const
 {
   if ( !segment || !pixel ) return NULL;
+  if ( msgLevel(MSG::DEBUG) )
+  {
+    debug() << "Testing RichRecSegment " << segment->key() 
+            << " and RichRecPixel " << pixel->key() << endreq;
+  }
   const MCParticle * mcPart = trueRecPhoton( segment, pixel );
   return ( !mcPart ? NULL :
            trueCherenkovRadiation( pixel, segment->trackSegment().radiator() ) );
@@ -230,6 +223,18 @@ const MCParticle *
 RichRecMCTruthTool::trueCherenkovRadiation( const RichRecPixel * pixel,
                                             const Rich::RadiatorType rad ) const
 {
+  // Test if hit is background
+  if ( m_truth->isBackground(pixel->smartID()) ) return NULL;
+
+  // Test if hit is from correct radiator
+  if ( !m_truth->isCherenkovRadiation(pixel->smartID(),rad) ) return NULL;
+
+  // All OK so find correct MCParticle
+  std::vector<const MCParticle *> mcParts;
+  m_truth->mcParticles(pixel->smartID(),mcParts);
+  return ( mcParts.empty() ? NULL : mcParts.front() );
+
+  /*
   // Loop over all MCRichHits for this pixel
   const SmartRefVector<MCRichHit> & hits = mcRichHits( pixel );
   for ( SmartRefVector<MCRichHit>::const_iterator iHit = hits.begin();
@@ -238,8 +243,8 @@ RichRecMCTruthTool::trueCherenkovRadiation( const RichRecPixel * pixel,
          rad == (*iHit)->radiator() &&
          !m_truth->isBackground(*iHit) ) return (*iHit)->mcParticle();
   }
-
   return NULL;
+  */
 }
 
 Rich::ParticleIDType
@@ -267,18 +272,17 @@ RichRecMCTruthTool::mcRichOpticalPhoton( const RichRecPixel * richPixel,
   phots.clear();
   const SmartRefVector<MCRichHit> & hits = mcRichHits(richPixel);
   for ( SmartRefVector<MCRichHit>::const_iterator iHit = hits.begin();
-        iHit != hits.end(); ++iHit ) {
-
+        iHit != hits.end(); ++iHit ) 
+  {
     // protect against bad hits
     if ( !(*iHit) ) continue;
 
     // Find MC photon
     const MCRichOpticalPhoton * phot = m_truth->mcOpticalPhoton( *iHit );
     if ( phot ) phots.push_back( phot );
-
   }
 
-  // Return boolean indicating if any photons where found
+  // Return boolean indicating if any photons were found
   return !phots.empty();
 }
 
@@ -312,7 +316,7 @@ RichRecMCTruthTool::mcRichTrack( const RichRecTrack * track ) const
 
 bool RichRecMCTruthTool::isBackground( const RichRecPixel * pixel ) const
 {
-  return m_truth->isBackground( mcRichDigit(pixel) );
+  return m_truth->isBackground( pixel->smartID() );
 }
 
 const MCRichHit *
@@ -320,12 +324,13 @@ RichRecMCTruthTool::trueCherenkovHit( const RichRecPhoton * photon ) const
 {
   // Track MCParticle
   const MCParticle * trackMCP = mcParticle( photon->richRecSegment() );
-  if ( trackMCP ) {
-
+  if ( trackMCP ) 
+  {
     // Loop over all MCRichHits for the pixel associated to this photon
     const SmartRefVector<MCRichHit> & hits = mcRichHits( photon->richRecPixel() );
     for ( SmartRefVector<MCRichHit>::const_iterator iHit = hits.begin();
-          iHit != hits.end(); ++iHit ) {
+          iHit != hits.end(); ++iHit ) 
+    {
       if ( !(*iHit) ) continue;
       const MCParticle * pixelMCP = (*iHit)->mcParticle();
       if ( pixelMCP == trackMCP ) return *iHit;
@@ -333,6 +338,7 @@ RichRecMCTruthTool::trueCherenkovHit( const RichRecPhoton * photon ) const
 
   }
 
+  // Not a true combination...
   return NULL;
 }
 
@@ -353,16 +359,16 @@ RichRecMCTruthTool::trueOpticalPhoton( const RichRecSegment * segment,
 {
   // Is this a true cherenkov combination
   const MCParticle * mcPart = trueCherenkovPhoton(segment,pixel);
-  if ( mcPart ) {
-
+  if ( mcPart ) 
+  {
     // Now find associated MCRichOpticalPhoton
     const SmartRefVector<MCRichHit> & hits = mcRichHits(pixel);
     for ( SmartRefVector<MCRichHit>::const_iterator iHit = hits.begin();
-          iHit != hits.end(); ++iHit ) {
+          iHit != hits.end(); ++iHit ) 
+    {
       if ( *iHit &&
            (*iHit)->mcParticle() == mcPart ) return m_truth->mcOpticalPhoton(*iHit);
     }
-
   }
 
   // Not a true combination...

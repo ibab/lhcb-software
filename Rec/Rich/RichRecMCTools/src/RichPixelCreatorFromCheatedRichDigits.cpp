@@ -5,7 +5,7 @@
  *  Implementation file for RICH reconstruction tool : RichPixelCreatorFromCheatedRichDigits
  *
  *  CVS Log :-
- *  $Id: RichPixelCreatorFromCheatedRichDigits.cpp,v 1.16 2005-06-17 15:28:34 jonrob Exp $
+ *  $Id: RichPixelCreatorFromCheatedRichDigits.cpp,v 1.17 2005-10-18 12:46:37 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/09/2003
@@ -46,8 +46,8 @@ StatusCode RichPixelCreatorFromCheatedRichDigits::initialize()
   if ( sc.isFailure() ) { return sc; }
 
   // Acquire instances of tools
-  acquireTool( "RichSmartIDTool", m_smartIDTool );
-  acquireTool( "RichMCTruthTool", m_mcTool      );
+  acquireTool( "RichSmartIDTool", m_smartIDTool, 0, true );
+  acquireTool( "RichMCTruthTool", m_mcTool,      0, true );
 
   // Check which radiators to use
   if ( !m_usedRads[Rich::Aerogel] ) Warning("Pixel data for Aerogel is disabled",StatusCode::SUCCESS);

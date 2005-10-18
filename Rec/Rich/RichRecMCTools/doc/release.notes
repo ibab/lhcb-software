@@ -4,6 +4,9 @@
 ! Purpose     : Monte Carlo Utility tools for RICH reconstruction algorithms
 !------------------------------------------------------------------------------
 
+! 2005-10-18 - Chris Jones
+ - Improvements to MC truth tool. Delegate more to the lower level tool.
+
 ! 2005-10-13 - Chris Jones
  - Adapt to use of context()
  - Some improvements to Cherenkov theta smearing tool

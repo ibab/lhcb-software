@@ -5,7 +5,7 @@
  *  Implementation file for RICH reconstruction tool : RichPixelCreatorFromRichDigitsWithBg
  *
  *  CVS Log :-
- *  $Id: RichPixelCreatorFromRichDigitsWithBg.cpp,v 1.12 2005-06-17 15:28:34 jonrob Exp $
+ *  $Id: RichPixelCreatorFromRichDigitsWithBg.cpp,v 1.13 2005-10-18 12:46:37 jonrob Exp $
  *
  *  @author Andy Buckley  buckley@hep.phy.cam.ac.uk
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
@@ -44,8 +44,8 @@ StatusCode RichPixelCreatorFromRichDigitsWithBg::initialize()
   if ( sc.isFailure() ) { return sc; }
 
   // Acquire instances of tools
-  acquireTool( "RichSmartIDTool", m_smartIDTool );
-  acquireTool( "RichMCTruthTool", m_mcTool      );
+  acquireTool( "RichSmartIDTool", m_smartIDTool, 0, true );
+  acquireTool( "RichMCTruthTool", m_mcTool, 0, true      );
 
   // warn that this background adding creator is being used
   info() << "Using background adding pixel creator : Will add " << m_numBgTracksToAdd[Rich::Rich1]
