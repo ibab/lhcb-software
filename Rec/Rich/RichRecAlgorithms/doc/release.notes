@@ -4,6 +4,9 @@
 ! Purpose     : Common reconstruction algorithms for the RICH
 !-----------------------------------------------------------------------------
 
+! 2005-10-13 - Chris Jones
+ - Adaptions due to changes when switch over to using context() functionality
+
 !===================== RichRecAlgorithms v1r0 2005-06-24 =====================
 ! 2005-06-21 - Chris Jones
  - Adapt to changes in RichKernel base classes and RichToolRegistry

@@ -5,6 +5,7 @@
  *  Header file for algorithm class : RichRecBackgroundEsti
  *
  *  CVS Log :-
+ *  $Id: RichRecBackgroundEsti.h,v 1.3 2005-10-18 12:44:06 jonrob Exp $
  *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   10/01/2003
@@ -55,16 +56,13 @@ public:
 
 private:   // Private data members
 
-  // definitions
-  typedef RichMap<RichSmartID::KeyType,double> PDsignals;
-
   /// Pointers to expected track signal tool
   const IRichExpectedTrackSignal * m_tkSignal;
 
   /// Maximum number of iterations in background normalisation
   int m_maxBkgIterations;
 
-  // Working parameters
+  /// Number of pixels per HPD without cathode acceptance
   double m_nPixelsPerPD;
 
 };

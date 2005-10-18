@@ -5,9 +5,9 @@
  *  Implementation file for algorithm class : RichRecBackgroundEsti
  *
  *  CVS Log :-
- *  $Id: RichRecBackgroundEsti.cpp,v 1.2 2005-06-23 15:10:56 jonrob Exp $
+ *  $Id: RichRecBackgroundEsti.cpp,v 1.3 2005-10-18 12:44:06 jonrob Exp $
  *
- *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
+ *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   17/04/2002
  */
 //--------------------------------------------------------------------------
@@ -44,21 +44,29 @@ StatusCode RichRecBackgroundEsti::initialize()
 {
   // Sets up various tools and services
   const StatusCode sc = RichRecAlgBase::initialize();
-  if ( sc.isFailure() ) { return sc; }
+  if ( sc.isFailure() ) { return Error( "Failed to initialize base class", sc ); }
 
   // Acquire instances of tools
-  m_tkSignal = expTrackSignalTool();
+  acquireTool( "RichExpectedTrackSignal", m_tkSignal );
 
   return sc;
 }
 
-
 StatusCode RichRecBackgroundEsti::execute()
 {
-  debug() << "Execute" << endreq;
+  if (msgLevel(MSG::DEBUG)) debug() << "Execute" << endreq;
 
   // Event Status
   if ( !richStatus()->eventOK() ) return StatusCode::SUCCESS;
+
+  // Check segments and pixels
+  if ( !richSegments() ) return Error( "Failed to access RichRecSegments" );
+  if ( !richPixels()   ) return Error( "Failed to access RichRecPixels"   );
+  if ( msgLevel(MSG::DEBUG) )
+  {
+    debug() << "Found " << richSegments()->size() << " RichRecSegments" << endreq
+            << "Found " << richPixels()->size() << " RichRecPixels" << endreq;
+  }
 
   // Get reference to detector backgrounds
   std::vector<RichRecStatus::FloatType> & bckEstimate = richStatus()->detOverallBkg();
@@ -66,17 +74,14 @@ StatusCode RichRecBackgroundEsti::execute()
   // Initialise detector backgrounds
   bckEstimate[Rich::Rich1] = 0;
   bckEstimate[Rich::Rich2] = 0;
+  typedef RichMap<RichSmartID::KeyType,double> PDsignals;
   PDsignals obsPDsignals[Rich::NRiches];
   PDsignals expPDsignals[Rich::NRiches];
   PDsignals expPDbkg    [Rich::NRiches];
-  std::vector<double> sigRich(Rich::NRiches);
-  sigRich[Rich::Rich1] = 0; sigRich[Rich::Rich2] = 0;
-  std::vector<double> expRich(Rich::NRiches);
-  expRich[Rich::Rich1] = 0; expRich[Rich::Rich2] = 0;
+  std::vector<double> sigRich(Rich::NRiches,0);
+  std::vector<double> expRich(Rich::NRiches,0);
 
   // loop over segments
-  if ( !richSegments() ) return StatusCode::FAILURE;
-  debug() << "Found " << richSegments()->size() << " RichRecSegments" << endreq;
   for ( RichRecSegments::iterator segment = richSegments()->begin();
         segment != richSegments()->end(); ++segment ) 
   {
@@ -102,8 +107,6 @@ StatusCode RichRecBackgroundEsti::execute()
   } // end RichRecSegment loop
 
     // Loop over pixels
-  if ( !richPixels() ) return StatusCode::FAILURE;
-  debug() << "Found " << richPixels()->size() << " RichRecPixels" << endreq;
   {for ( RichRecPixels::iterator pixel = richPixels()->begin();
          pixel != richPixels()->end(); ++pixel ) 
   {
@@ -127,16 +130,15 @@ StatusCode RichRecBackgroundEsti::execute()
     while ( cont ) 
     {
 
-      int nBelow = 0;
-      int nAbove = 0;
+      int nBelow(0), nAbove(0);
       double tBelow = 0.0;
       for ( PDsignals::iterator iPD = obsPDsignals[iRich].begin();
             iPD !=  obsPDsignals[iRich].end();
             ++iPD ) 
       {
         const RichSmartID::KeyType pd = iPD->first;
-        double & obs = iPD->second;
-        double & exp = (expPDsignals[iRich])[pd];
+        const double obs = iPD->second;
+        const double exp = (expPDsignals[iRich])[pd];
         double & bkg = (expPDbkg[iRich])[pd];
 
         if ( 1 == iter ) 
@@ -195,11 +197,10 @@ StatusCode RichRecBackgroundEsti::execute()
   {
 
     const RichSmartID::KeyType pd = (*pixel)->smartID().pdID();
-    const Rich::DetectorType det = (Rich::DetectorType)(*pixel)->smartID().rich();
+    const Rich::DetectorType  det = (Rich::DetectorType)(*pixel)->smartID().rich();
 
-    double rbckexp = (obsPDsignals[det])[pd] - (expPDsignals[det])[pd];
-    rbckexp = ( rbckexp>0 ? rbckexp/m_nPixelsPerPD : 0 );
-    (*pixel)->setCurrentBackground( rbckexp );
+    const double rbckexp = (obsPDsignals[det])[pd] - (expPDsignals[det])[pd];
+    (*pixel)->setCurrentBackground( rbckexp>0 ? rbckexp/m_nPixelsPerPD : 0 );
 
     // Debug printout
     if ( msgLevel(MSG::VERBOSE) ) 
@@ -214,7 +215,9 @@ StatusCode RichRecBackgroundEsti::execute()
   }}
 
   if ( msgLevel(MSG::DEBUG) )
+  {
     debug() << "Overall backgrounds RICH1/2 : " << bckEstimate << endreq;
+  }
 
   return StatusCode::SUCCESS;
 }

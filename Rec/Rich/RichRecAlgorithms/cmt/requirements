@@ -4,7 +4,7 @@
 #            : Common reconstruction algorithms for the RICH
 #============================================================================
 package           RichRecAlgorithms
-version           v1r0
+version           v1r1
 
 #============================================================================
 # Structure, i.e. directories to process. 
