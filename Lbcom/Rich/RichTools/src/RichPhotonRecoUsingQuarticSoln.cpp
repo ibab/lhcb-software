@@ -5,7 +5,7 @@
  * Implementation file for class : RichPhotonRecoUsingQuarticSoln
  *
  * CVS Log :-
- * $Id: RichPhotonRecoUsingQuarticSoln.cpp,v 1.1 2005-06-17 15:15:55 jonrob Exp $
+ * $Id: RichPhotonRecoUsingQuarticSoln.cpp,v 1.2 2005-10-18 13:04:28 jonrob Exp $
  *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @author Antonis Papanestis
@@ -67,7 +67,7 @@ StatusCode RichPhotonRecoUsingQuarticSoln::initialize()
   // Get tools
   acquireTool( "RichMirrorSegFinder", m_mirrorSegFinder );
   acquireTool( "RichRayTracing",      m_rayTracing      );
-  acquireTool( "RichSmartIDTool",     m_idTool          );
+  acquireTool( "RichSmartIDTool",     m_idTool, 0, true );
   acquireTool( "RichRefractiveIndex", m_refIndex        );
 
   // load the nominal centre of curvature

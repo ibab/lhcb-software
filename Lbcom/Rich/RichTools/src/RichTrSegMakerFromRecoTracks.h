@@ -5,7 +5,7 @@
  *  Header file for tool : RichTrSegMakerFromRecoTracks
  *
  *  CVS Log :-
- *  $Id: RichTrSegMakerFromRecoTracks.h,v 1.1 2005-10-13 16:11:08 jonrob Exp $
+ *  $Id: RichTrSegMakerFromRecoTracks.h,v 1.2 2005-10-18 13:04:28 jonrob Exp $
  *
  *  @author Chris Jones    Christopher.Rob.Jones@cern.ch
  *  @date   14/01/2002
@@ -29,7 +29,6 @@
 
 // Event model
 #include "Event/Track.h"
-#include "Event/TrackKeys.h" // should be in Track.h !!
 
 // RichEvent
 #include "RichEvent/RichTrackSegment.h"
