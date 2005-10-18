@@ -147,13 +147,10 @@ EventSelector.PrintFreq  = 1;
 // set this to 2 to get memory usage at each event
 DaVinci.OutputLevel = 4 ;                                                                                                
 
-//***************************************************************
-// Interactive prompt: 
-// 1) Add "use GaudiPython v*" to the requirements 
-// 2) source setup.csh
-// 3) Uncomment the following:
-//ApplicationMgr.DLLs += { "GaudiPython" };
-//ApplicationMgr.Runable = "PythonScriptingSvc";
-// 4) Run DaVinci interactively as usual.
-//***************************************************************
-
+//---------------------------------------------------------------
+// StagerSvc - At CERN Only //
+//---------------------------------------------------------------
+// ApplicationMgr.ExtSvc += { "StagerSvc" }; 
+// ApplicationMgr.Dlls += { "GaudiSiteSvc" } ; // library containing the StagerSvc
+// StagerSvc.BlockSize = 20 ; // n: the number of files in each block
+// StagerSvc.InitialStage = 3 ; // m: the number of blocks staged at the beginning of the job

@@ -83,7 +83,9 @@ EventSelector.FirstEvent = 1;
 ApplicationMgr.EvtMax    = 1000000 ;
 EventSelector.PrintFreq  = 1000;
 
-// TEST //
+//---------------------------------------------------------------
+// StagerSvc - At CERN Only //
+//---------------------------------------------------------------
 ApplicationMgr.ExtSvc += { "StagerSvc" }; 
 ApplicationMgr.Dlls += { "GaudiSiteSvc" } ; // library containing the StagerSvc
 StagerSvc.BlockSize = 50 ; // n: the number of files in each block

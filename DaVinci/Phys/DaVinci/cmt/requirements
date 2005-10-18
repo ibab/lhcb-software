@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.270 2005-10-17 14:19:18 pkoppenb Exp $
+# $Id: requirements,v 1.271 2005-10-18 06:48:47 pkoppenb Exp $
 # Created    : 07/02/2002
 # Maintainer : P. Koppenburg
 #
@@ -49,7 +49,7 @@ use  CommonParticles    	v1r5p3   Phys
 use  DaVinciFilter      	v3r2     Phys
 use  DaVinciKernel      	v3r8     Phys
 use  DaVinciTools       	v12r2    Phys
-use  FlavourTagging     	v6r2     Phys
+use  FlavourTagging     	v6r3     Phys
 use  Ks2PiPiSel         	v1r7     Phys
 use  ParticleMaker      	v1r6     Phys
 use  PhysSelections		v6r12    Phys
@@ -84,11 +84,11 @@ use  KtJet	             	v1r0     External
 # packages included in HltSys
 #=======================================================
 use HltGeneric                  v2r7     Hlt
-use HltSelections               v3r8     Hlt
-use HltSelChecker               v3r7     Hlt
+use HltSelections               v3r9     Hlt
+use HltSelChecker               v3r8     Hlt
 
 #=======================================================
-use  PhysSelSys			v8r7     PhysSel
+use  PhysSelSys			v8r8     PhysSel
 #=======================================================
 
 ########################################################
