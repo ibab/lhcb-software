@@ -8,3 +8,5 @@
  - First version
  - Import algorithms BuildMCRichDigitLinks, MCPartToMCRichTrackAlg and 
    MCRichHitToMCRichOpPhotAlg from RichMCTools package
+ - Add new algorithm MCRichDigitSummaryAlg which creates summary objects 
+   linking RichSmartIDs to MCParticles and bit-packed history codes

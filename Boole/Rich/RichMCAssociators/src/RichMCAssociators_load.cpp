@@ -5,7 +5,7 @@
  * Declaration of entries in the RichMCAssociators component library
  *
  * CVS Log :-
- * $Id: RichMCAssociators_load.cpp,v 1.1.1.1 2005-10-13 15:13:40 jonrob Exp $
+ * $Id: RichMCAssociators_load.cpp,v 1.2 2005-10-18 12:40:30 jonrob Exp $
  *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @date 04/10/2005
@@ -26,7 +26,7 @@ DECLARE_FACTORY_ENTRIES ( RichMCAssociators )
   // Create links between RichDigits and MCRichDigits
   DECLARE_ALGORITHM( BuildMCRichDigitLinks );
 
-  // Create summary objects for RichDigits (RichSmartIDs)
-  DECLARE_ALGORITHM( RichDigitSummaryAlg );
+  // Create MCRichDigit summary objects for DST
+  DECLARE_ALGORITHM( MCRichDigitSummaryAlg );
 
 }

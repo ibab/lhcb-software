@@ -1,6 +1,6 @@
 
-// Default relations
-RelationsRICHSeq.Members += { "RichDigitSummaryAlg" };
+// DST relations
+RelationsRICHSeq.Members += { "MCRichDigitSummaryAlg" };
 
 // Extended relations
 //RelationsRICHSeq.Members += { "MCPartToMCRichTrackAlg/MCPToRichTrack",
