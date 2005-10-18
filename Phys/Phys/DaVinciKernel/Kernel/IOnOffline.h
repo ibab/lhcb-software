@@ -1,4 +1,4 @@
-// $Id: IOnOffline.h,v 1.2 2005-06-09 13:10:40 pkoppenb Exp $
+// $Id: IOnOffline.h,v 1.3 2005-10-18 15:44:38 pkoppenb Exp $
 #ifndef DAVINCIKERNEL_IONOFFLINE_H 
 #define DAVINCIKERNEL_IONOFFLINE_H 1
 
@@ -9,12 +9,12 @@
 // from Gaudi
 #include "GaudiKernel/IAlgTool.h"
 
-static const InterfaceID IID_IOnOffline ( "IOnOffline", 1, 0 );
+static const InterfaceID IID_IOnOffline ( "IOnOffline", 2, 0 );
 
 /** @class IOnOfflineTool IOnOfflineTool.h Kernel/IOnOffline.h
  *  
  *  Tool that tells the application if one runs in On or Offline Mode
- *  Replaces the IPVLocator tool
+ *  Now uses context. Can only be used as private tool.
  *
  *  @author Patrick KOPPENBURG
  *  @date   2005-06-08
@@ -27,9 +27,6 @@ public:
 
   /// On or Offline ?
   virtual bool online(void) const = 0 ;
-
-  /// On or Offline ?
-  virtual StatusCode setOnline(const bool&) = 0 ;
 
   /// Return DispCalculator
   virtual std::string dispCalculator() const = 0 ;

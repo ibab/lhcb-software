@@ -83,105 +83,48 @@ StatusCode DVAlgorithm::loadTools() {
 
   msg << MSG::DEBUG << ">>> Retrieving PhysDesktop" << endreq;
   m_pDesktop = tool<IPhysDesktop>("PhysDesktop",this);  
-  if( !m_pDesktop ) {
-    msg << MSG::ERROR << ">>> DVAlgorithm[PhysDesktop] not found" << endreq;
-    return StatusCode::FAILURE;
-  }
 
   msg << MSG::DEBUG << ">>> Retrieving " << m_typeLagFit 
       << " as IMassVertexFitter" << endreq;
   m_pLagFit = tool<IMassVertexFitter>(m_typeLagFit, this);
-  if ( !m_pLagFit ) {
-    msg << MSG::ERROR << ">>> DVAlgorithm[" << m_typeLagFit 
-        << "] not found" << endreq;
-    return StatusCode::FAILURE;
-  }
 
   // vertex fitter
   IOnOffline* onof = NULL;
   std::string tvf = m_typeVertexFit ;
   if ( tvf == "Default" ){
-    onof = tool<IOnOffline>("OnOfflineTool");
-    if (onof==0) {
-       msg << MSG::ERROR << ">>> DVAlgorithm[OnOfflineTool] not found" << endreq;
-       return StatusCode::FAILURE;
-    }
+    onof = tool<IOnOffline>("OnOfflineTool",this);
     tvf = onof->vertexFitter();
   }
   msg << MSG::DEBUG << ">>> Retrieving " << tvf
         << " as IVertexFitter" << endreq;
   m_pVertexFit = tool<IVertexFitter>(tvf, this);
-  if ( !m_pVertexFit ) {
-    msg << MSG::ERROR << ">>> DVAlgorithm[" << m_typeVertexFit 
-        << "] not found" << endreq;
-    return StatusCode::FAILURE;
-  }
   
   // geom
   std::string gdc = m_typeGeomTool ;
   if ( gdc == "Default" ){
-    if (onof==0) onof = tool<IOnOffline>("OnOfflineTool");
-    if (onof==0) {
-       msg << MSG::ERROR << ">>> DVAlgorithm[OnOfflineTool] not found" << endreq;
-       return StatusCode::FAILURE;
-    }
+    if (onof==0) onof = tool<IOnOffline>("OnOfflineTool",this);
     gdc = onof->dispCalculator();
   }
   msg << MSG::DEBUG << ">>> Retrieving" << gdc << " as IGeomDispCalculator" << endreq;
   m_pGeomDispCalc = tool<IGeomDispCalculator>(gdc, this);
-  if ( !m_pGeomDispCalc ) {
-    msg << MSG::ERROR << ">>> DVAlgorithm[" << gdc << "] not found" 
-        << endreq;
-    return StatusCode::FAILURE;
-  }
   
   msg << MSG::DEBUG << ">>> Retrieving ParticleStuffer" << endreq;
   m_pStuffer = tool<IParticleStuffer>("ParticleStuffer", this);
-  if ( !m_pStuffer  ) {
-    msg << MSG::ERROR << ">>> DVAlgorithm[ParticleStuffer] not found" 
-        << endreq;
-    return StatusCode::FAILURE;
 
-  }
   msg << MSG::DEBUG << ">>> Retrieving one ParticleFilter" << endreq;
   m_pFilter = tool<IParticleFilter>("ParticleFilter", this);
-  if ( !m_pFilter ) {
-    msg << MSG::ERROR << ">>> DVAlgorithm[ParticleFilter] not found" 
-        << endreq;
-    return StatusCode::FAILURE;
-  }
 
   msg << MSG::DEBUG << ">>> Retrieving ParticlePropertySvc" << endreq;
   m_ppSvc = svc<IParticlePropertySvc>("ParticlePropertySvc", true);
-  if( !m_ppSvc ) {
-    msg << MSG::ERROR << "    Unable to locate Particle Property Service" 
-        << endreq;
-    return StatusCode::FAILURE;
-  }  
   
   msg << MSG::DEBUG << ">>> Retrieving CheckOverlap Tool" << endreq;
   m_checkOverlap = tool<ICheckOverlap>(m_typeCheckOverlap);
-  if ( !m_checkOverlap ) {
-    msg << MSG::ERROR << ">>> DVAlgorithm["<< m_typeCheckOverlap << "] not found" 
-        << endreq;
-    return StatusCode::FAILURE;
-  }
 
   msg << MSG::DEBUG << ">>> Retrieving Algorithm2ID Tool" << endreq;
   m_algorithm2IDTool = tool<IAlgorithm2ID>("Algorithm2ID");
-  if ( !m_algorithm2IDTool ) {
-    msg << MSG::ERROR << ">>> DVAlgorithm[Algorithm2ID] not found" 
-        << endreq;
-    return StatusCode::FAILURE;
-  }
 
   msg << MSG::DEBUG << ">>> Retrieving BTagging Tool" << endreq;
   m_taggingTool = tool<IBTaggingTool>("BTaggingTool");
-  if ( !m_taggingTool ) {
-    msg << MSG::ERROR << ">>> DVAlgorithm[BTaggingTool] not found" 
-        << endreq;
-    return StatusCode::FAILURE;
-  }
 
   return StatusCode::SUCCESS;
 }

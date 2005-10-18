@@ -1,7 +1,15 @@
-! $Id: release.notes,v 1.72 2005-09-07 15:51:43 pkoppenb Exp $
+! $Id: release.notes,v 1.73 2005-10-18 15:44:38 pkoppenb Exp $
 ! Package     : DaVinciKernel
 ! Responsible : P. Koppenburg
 
+
+! 2005-10-17 - P. Koppenburg
+  - Kernel/IOnOffline.h
+    . Uses context now. Thus this tool *must* be private.
+      No setOnline(bool) method anymore.
+  - Kernel/Lib/DVAlgorithm.cpp
+  - Kernel/component/PhysDesktop.cpp
+    . Use OnOffline tool privately.
 
 !========================== DaVinciKernel v3r7 2005-09-07 ===================
 ! 2005-09-06 - P. Koppenburg

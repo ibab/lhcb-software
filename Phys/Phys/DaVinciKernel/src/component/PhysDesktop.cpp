@@ -1,4 +1,4 @@
-// $Id: PhysDesktop.cpp,v 1.27 2005-09-06 12:57:17 pkoppenb Exp $
+// $Id: PhysDesktop.cpp,v 1.28 2005-10-18 15:44:38 pkoppenb Exp $
 // Include files
 
 // from Gaudi
@@ -172,11 +172,7 @@ StatusCode PhysDesktop::initialize()
   }
 
   // OnOffline tool
-  m_OnOffline = tool<IOnOffline>("OnOfflineTool");
-  if( !m_OnOffline )
-  {
-    return Error( " Unable to retrieve OnOfflineTool" );
-  }
+  m_OnOffline = tool<IOnOffline>("OnOfflineTool",this);
 
   return sc;
 }
