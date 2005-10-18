@@ -29,7 +29,6 @@ namespace LHCb
     ~RawBank() {}
 
   public:   
-    typedef unsigned int data_type_t;
 
     /// Define bank types for RawBank
     enum BankType{ L0Calo=0,
@@ -89,10 +88,10 @@ namespace LHCb
     void setSourceID(int val)       {    m_sourceID = (val&0xFFFF); }
 
     /// Return pointer to begining of data body of the bank
-    data_type_t* data()             {    return &m_data[0];         }
+    unsigned int* data()            {    return &m_data[0];         }
 
     /// Return pointer to begining of data body of the bank (const data access)
-    const data_type_t* data() const {    return &m_data[0];         }
+    const unsigned int* data() const {   return &m_data[0];         }
 
     /// Begin iterator 
     template <typename T> T* begin(){    return (T*)m_data;         }
@@ -118,7 +117,7 @@ namespace LHCb
     /// Source ID (valid source IDs are > 0; invalid ones 0)
     short          m_sourceID;
     /// Opaque data block
-    data_type_t    m_data[1];
+    unsigned int   m_data[1];
   }; // class RawBank
 } // namespace LHCb
 

@@ -3,6 +3,12 @@ Author:  Markus Frank (based on work by Jose' Helder Lopes)
 Purpose: Define the classes delivered to the online farm by the DAQ
 
 !================ DAQEvent v6r0 2005-10-18 ============================
+! 2005-10-18 - Marco Cattaneo
+ - Internal representation of Bank is unsigned int
+   . RawEvent->addBank method takes std::vector<unsigned int>
+   . Removed data_type_t typedef, use native type directly, to decouple 
+     Root from lcgdict
+
 ! 2005-10-18 - M. Needham
   - Bug fix in Bytestream
 

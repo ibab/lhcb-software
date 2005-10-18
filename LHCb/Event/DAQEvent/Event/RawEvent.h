@@ -43,13 +43,13 @@ namespace LHCb
      * @version 1.0
      */
     struct Bank  {
-      int   m_len;      // Bank length
-      char  m_owns;     //! transient data member: ownership flag
-      int*  m_buff;     //[m_len]
+      int           m_len;      // Bank length
+      char          m_owns;     //! transient data member: ownership flag
+      unsigned int* m_buff;     //[m_len]
       /// Default constructor
       Bank() : m_len(0), m_owns(1), m_buff(0) {}
       /// Initializing constructor
-      Bank(int len, char owns, int* b) : m_len(len), m_owns(owns), m_buff(b) {}
+      Bank(int len, char owns, unsigned int* b) : m_len(len), m_owns(owns), m_buff(b) {}
       /// Copy constructor
       Bank(const Bank& c) : m_len(c.m_len), m_owns(c.m_owns), m_buff(c.m_buff) {
       }
@@ -87,7 +87,7 @@ namespace LHCb
     void addBank(int sourceID,
                  RawBank::BankType bankType,
                  int version,
-                 const std::vector <int>& data);
+                 const std::vector<unsigned int>& data);
 
     /// For offline use only: copy data into a bank, adding bank header internally.
     void addBank(RawBank* data);             // Pointer to data block (payload) of bank

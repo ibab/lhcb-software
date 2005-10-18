@@ -1,11 +1,11 @@
-// $Id: RawEvent.cpp,v 1.6 2005-10-14 12:48:50 cattanem Exp $
+// $Id: RawEvent.cpp,v 1.7 2005-10-18 11:41:25 cattanem Exp $
 #include "Event/RawEvent.h"
 
 namespace {
   inline size_t memLength(size_t len)  {
-    size_t mem_len = len+sizeof(LHCb::RawBank)-sizeof(LHCb::RawBank::data_type_t);
-    if ( mem_len%sizeof(LHCb::RawBank::data_type_t) )  {    // Need padding
-      mem_len = (mem_len/sizeof(LHCb::RawBank::data_type_t) + 1)*sizeof(LHCb::RawBank::data_type_t);
+    size_t mem_len = len+sizeof(LHCb::RawBank)-sizeof(unsigned int);
+    if ( mem_len%sizeof(unsigned int) )  {    // Need padding
+      mem_len = (mem_len/sizeof(unsigned int) + 1)*sizeof(unsigned int);
     }
     return mem_len;
   }
@@ -49,8 +49,8 @@ const std::vector<LHCb::RawBank*>& LHCb::RawEvent::mapBanks(RawBank::BankType ba
 void LHCb::RawEvent::addBank( int srcID, 
                               LHCb::RawBank::BankType typ, 
                               int vsn, 
-                              const std::vector<int>& data)  {
-  adoptBank( createBank( srcID, typ, vsn, data.size()*sizeof(int), &(*data.begin()) ), true );
+                              const std::vector<unsigned int>& data)  {
+  adoptBank( createBank( srcID, typ, vsn, data.size()*sizeof(unsigned int), &(*data.begin()) ), true );
 }
 
 LHCb::RawBank* LHCb::RawEvent::createBank( int srcID, 
@@ -72,7 +72,7 @@ LHCb::RawBank* LHCb::RawEvent::createBank( int srcID,
 
 /// For offline use only: copy data into a bank, adding bank header internally.
 void LHCb::RawEvent::addBank(RawBank* data)     {
-  size_t len = data->size() + sizeof(LHCb::RawBank) - sizeof(LHCb::RawBank::data_type_t);
+  size_t len = data->size() + sizeof(LHCb::RawBank) - sizeof(unsigned int);
   LHCb::RawBank* bank = allocateBank(len);
   ::memcpy(bank, data, len);
   adoptBank(bank, true);
@@ -83,5 +83,5 @@ void LHCb::RawEvent::adoptBank(LHCb::RawBank* bank, bool adopt_memory)     {
   size_t len = memLength(bank->size());
   if ( !m_mapped ) mapBanks(bank->type());
   m_eventMap[bank->type()].push_back(bank);
-  m_banks.push_back(Bank(len/sizeof(int), adopt_memory, (int*)bank));
+  m_banks.push_back(Bank(len/sizeof(unsigned int), adopt_memory, (unsigned int*)bank));
 }
