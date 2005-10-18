@@ -4,6 +4,9 @@
 ! Purpose     : Base package for RICH Reconstruction Packages
 !-----------------------------------------------------------------------------
 
+! 2005-10-18 - Chris Jones
+ - Updates for new style enums in Track event model
+
 ! 2005-10-13 - Chris Jones
  - Rework of common tool and algorithm base classes to use a common
    code base

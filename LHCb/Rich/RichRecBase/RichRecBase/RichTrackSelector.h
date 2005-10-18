@@ -5,7 +5,7 @@
  * Header file for utility class : RichTrackSelector
  *
  * CVS Log :-
- * $Id: RichTrackSelector.h,v 1.11 2005-10-13 15:38:41 jonrob Exp $
+ * $Id: RichTrackSelector.h,v 1.12 2005-10-18 12:45:10 jonrob Exp $
  *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @date   2003-06-20
@@ -21,7 +21,6 @@
 
 // Event model
 #include "Event/Track.h"
-#include "Event/TrackKeys.h" // should be in Event/Track.h
 #include "Event/TrStoredTrack.h"
 #include "Event/TrgTrack.h"
 #include "Event/RichRecTrack.h"
@@ -227,7 +226,7 @@ inline bool RichTrackSelector::trackSelected( const ::Track * track ) const
 {
   const Rich::Track::Type type = Rich::Track::type(track);
   return ( track &&                  // Track info OK
-           (!m_uniqueTrOnly || track->checkFlag(TrackKeys::Unique)) &&  // Unique tracks
+           (!m_uniqueTrOnly || track->checkFlag(::Track::Unique)) &&  // Unique tracks
            m_tkTypeSel[type] &&                     // tracking algorithm type
            ( m_chargeSel*track->charge() >= 0 ) &&  // track charge
            ( track->p()/GeV > minMomentum(type) ) &&  // Momentum cuts

@@ -4,7 +4,7 @@
  *
  * Header file for utility class : RichTrackID
  *
- * $Id: RichTrackID.h,v 1.16 2005-10-13 15:38:41 jonrob Exp $
+ * $Id: RichTrackID.h,v 1.17 2005-10-18 12:45:10 jonrob Exp $
  *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @date   08/07/2004
@@ -16,7 +16,6 @@
 
 // Event
 #include "Event/Track.h"
-#include "Event/TrackKeys.h" // should be included by Track.h !!
 #include "Event/MCParticle.h"
 // to be removed
 #include "Event/TrStoredTrack.h"
@@ -217,26 +216,27 @@ public:
 
   /** Constructor from a Track
    *
-   * @param track Pointer to a TrStoredTrack
+   *  @param track Pointer to a TrStoredTrack
    */
   explicit RichTrackID( const ::Track * track )
     : m_tkType     ( Rich::Track::type(track)            ),
       m_parentType ( Rich::TrackParent::Track            ),
-      m_unique     ( track->checkFlag(TrackKeys::Unique) ) { }
+      m_unique     ( track->checkFlag(::Track::Unique) ) { }
 
   /** Constructor from a TrStoredTrack
    *
-   * @param track Pointer to a TrgTrack
+   *  @param track Pointer to a TrgTrack
+   *
+   *  @todo Decide what to do about unique flag
    */
   explicit RichTrackID( const TrgTrack * track )
     : m_tkType     ( Rich::Track::type(track)         ),
       m_parentType ( Rich::TrackParent::TrgTrack      ),
-      m_unique     ( true                             ) ///< Need to decide what to do here
-  { }
+      m_unique     ( true                             ) { }
 
   /** Constructor from an MCParticle
    *
-   * @param mcPart Pointer to an MCParticle
+   *  @param mcPart Pointer to an MCParticle
    */
   explicit RichTrackID( const MCParticle * mcPart )
     : m_tkType     ( Rich::Track::Unknown             ),
@@ -335,7 +335,7 @@ inline void RichTrackID::initialiseFor( const Track * track )
 {
   setParentType ( Rich::TrackParent::Track            );
   setTrackType  ( Rich::Track::type(track)            );
-  setUnique     ( track->checkFlag(TrackKeys::Unique) );
+  setUnique     ( track->checkFlag(::Track::Unique) );
 }
 
 inline void RichTrackID::initialiseFor( const TrStoredTrack * track )

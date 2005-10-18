@@ -5,7 +5,7 @@
  *  Implementation file for class : RichTrackID
  *
  *  CVS Log :-
- *  $Id: RichTrackID.cpp,v 1.11 2005-10-13 15:38:41 jonrob Exp $
+ *  $Id: RichTrackID.cpp,v 1.12 2005-10-18 12:45:10 jonrob Exp $
  *
  *  @author Chris Jones    Christopher.Rob.Jones@cern.ch
  *  @date   2003-09-23
@@ -79,20 +79,20 @@ Rich::Track::Type Rich::Track::type( const ::Track * track )
   if ( track ) 
   {
     // track algorithm type
-    const TrackKeys::History hist = (TrackKeys::History)track->history();
+    const ::Track::History hist = (::Track::History)track->history();
     // check all known track types (order according to abundance)
     // Convertered track types
-    if      ( TrackKeys::CnvForward  == hist )  { return Rich::Track::Forward;  }
-    else if ( TrackKeys::CnvMatch    == hist )  { return Rich::Track::Match;    }
-    else if ( TrackKeys::CnvSeed     == hist )  { return Rich::Track::Seed;     }
-    else if ( TrackKeys::CnvKsTrack  == hist )  { return Rich::Track::KsTrack;  }
-    else if ( TrackKeys::CnvVeloTT   == hist )  { return Rich::Track::VeloTT;   }
-    else if ( TrackKeys::CnvVelo     == hist )  { return Rich::Track::Velo;     }
-    else if ( TrackKeys::CnvVeloBack == hist )  { return Rich::Track::Unusable; }
+    if      ( ::Track::CnvForward  == hist )  { return Rich::Track::Forward;  }
+    else if ( ::Track::CnvMatch    == hist )  { return Rich::Track::Match;    }
+    else if ( ::Track::CnvSeed     == hist )  { return Rich::Track::Seed;     }
+    else if ( ::Track::CnvKsTrack  == hist )  { return Rich::Track::KsTrack;  }
+    else if ( ::Track::CnvVeloTT   == hist )  { return Rich::Track::VeloTT;   }
+    else if ( ::Track::CnvVelo     == hist )  { return Rich::Track::Velo;     }
+    else if ( ::Track::CnvVeloBack == hist )  { return Rich::Track::Unusable; }
     else 
     { // Should not get here ...
       std::ostringstream mess;
-      mess << "Unknown Track type : TrackKeys::History = " << track->history();
+      mess << "Unknown Track type : Track::History = " << track->history();
       throw GaudiException( mess.str(), "*Rich::Track::type*", StatusCode::FAILURE );
     }
   }

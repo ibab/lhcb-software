@@ -5,7 +5,7 @@
  *  Implementation file for tool base class : RichPixelCreatorBase
  *
  *  CVS Log :-
- *  $Id: RichPixelCreatorBase.cpp,v 1.5 2005-10-13 15:38:41 jonrob Exp $
+ *  $Id: RichPixelCreatorBase.cpp,v 1.6 2005-10-18 12:45:10 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   20/04/2005
@@ -70,7 +70,7 @@ StatusCode RichPixelCreatorBase::initialize()
   acquireTool( "RichRecGeometry", m_recGeom );
   if ( m_hpdCheck )
   {
-    acquireTool( "RichHPDInfoTool", m_hpdTool );
+    acquireTool( "RichHPDInfoTool", m_hpdTool, 0, true );
     Warning( "Will check each pixel for HPD status. Takes additional CPU.",
              StatusCode::SUCCESS );
   }
