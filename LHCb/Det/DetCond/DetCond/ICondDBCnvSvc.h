@@ -1,10 +1,11 @@
-// $Id: ICondDBCnvSvc.h,v 1.3 2005-09-20 11:43:43 cattanem Exp $
+// $Id: ICondDBCnvSvc.h,v 1.4 2005-10-18 15:40:50 marcocle Exp $
 #ifndef DETCOND_ICONDDBCNVSVC_H 
 #define DETCOND_ICONDDBCNVSVC_H 1
 
 // Include files
 // from STL
 #include <string>
+#include <vector>
 
 // from Gaudi
 #include "GaudiKernel/IInterface.h"

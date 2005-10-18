@@ -1,10 +1,11 @@
-// $Id: ICondDBAccessSvc.h,v 1.8 2005-09-20 11:43:43 cattanem Exp $
+// $Id: ICondDBAccessSvc.h,v 1.9 2005-10-18 15:40:50 marcocle Exp $
 #ifndef DETCOND_ICONDDBACCESSSVC_H 
 #define DETCOND_ICONDDBACCESSSVC_H 1
 
 // Include files
 // from STL
 #include <string>
+#include <vector>
 
 // from Gaudi
 #include <GaudiKernel/IInterface.h>
