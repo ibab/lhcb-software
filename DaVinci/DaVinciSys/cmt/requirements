@@ -143,8 +143,6 @@ use TrgMuon             v1r3    Trg
 use TrgPrimVertex       v4r2    Trg
 use TrgCalo             v1r0p2  Trg
 
-use MuonTools           v3r8    Muon
-
 # DAQ Decoding
 use RichDAQ           v1r6   Rich
 
