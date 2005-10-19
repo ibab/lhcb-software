@@ -1,7 +1,8 @@
-! $Id: release.notes,v 1.178 2005-10-17 12:28:42 pkoppenb Exp $
+! $Id: release.notes,v 1.179 2005-10-19 07:32:38 pkoppenb Exp $
 ! Package     : DaVinciTools
 ! Responsible : P. Koppenburg
 
+!========================== DaVinciTools v12r2 2005-10-19 ===================
 ! 2005-10-17 - P. Koppenburg
   - src/OnOfflineTool.{cpp,h}
     . Uses context now. Thus this tool *must* be private.
