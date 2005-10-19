@@ -1,7 +1,22 @@
-! $Id: release.notes,v 1.17 2005-06-13 07:35:11 pkoppenb Exp $
+! $Id: release.notes,v 1.18 2005-10-19 05:44:09 pkoppenb Exp $
 ! Package     : DaVinciTransporter
 ! Responsible : Yuehong Xie
 
+! 2005-09-02 - P. Koppenburg
+  - src/ParabolicTransporter.cpp
+    . Bug reported by Matt Needham:
+      "There is a bug in the TrParabolic extrapolator. Since the DaVinci 
+       transporter is a copy of this the bug also exists there.
+       The bug has little or no effect for long tracks (maybe there are some 
+       subtle effects if you look in detail). For seed or VeloTT tracks it can 
+       have more effect. ie I cannot tell you whether you need to urgently fix it 
+       or not.
+       The problem is that the field is taken to be constant and equal to that 
+       at the start of the extrapolation. This is wrong. Better is to integrate 
+       the field along the trajectory. In practice I get similar results to 
+       integrating  by taking the field at the midpoint of the extrapolation. ie 
+       in the TrParabolicExtrapolator (similar in the ParabolicTransporter)"
+        
 !========================== DaVinciTransporter v2r0p3 2005-06-13 ===================
 ! 2005-06-08 - P. Koppenburg
   - src/CombinedTransporter.cpp

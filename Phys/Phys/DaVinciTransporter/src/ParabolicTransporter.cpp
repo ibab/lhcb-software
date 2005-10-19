@@ -194,11 +194,22 @@ StatusCode ParabolicTransporter::magfTransport(const Particle *& workParticle,
   double R = sqrt(R2);
 
 
-  // get the B field
   HepVector3D fB(0.0,0.0,0.0);
-  m_pIMF->fieldVector( oldPOT, fB );
 
+  //get the B field at midpoint
+  double xMid = oldPOT.x() + (0.5*workParticle->slopeX()*dz) ;
+  double yMid = oldPOT.y() + (0.5*workParticle->slopeY()*dz) ;
+  HepPoint3D P( xMid, yMid, oldPOT.z() + (0.5*dz));
+  m_pIMF->fieldVector( P, fB );
 
+  if ( msgLevel( MSG::DEBUG ) ){
+    // get the B field at point on track (old way)
+    HepVector3D fB2(0.0,0.0,0.0);
+    m_pIMF->fieldVector( oldPOT, fB2 );
+    debug() << "Got B field " << fB << " at " << P << " instead of " 
+            << fB2 << " at " << oldPOT << endmsg ;
+  }
+  
   // Parabolic extrapolation
   // U = u + u'*dz + (1/2)*u''*dz*dz, u={x,y}, ' = d/dz(u)
   // d/dz(d/dz)(x) = (q/p)*R*{sx*sy*Bx - (1. + sx*sx)*By + sy*Bz}
