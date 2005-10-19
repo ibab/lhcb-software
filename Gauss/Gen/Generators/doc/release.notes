@@ -1,7 +1,8 @@
-! $Id: release.notes,v 1.9 2005-10-16 22:25:02 robbep Exp $
+! $Id: release.notes,v 1.10 2005-10-19 14:42:43 gcorti Exp $
 ! Package     : Gen/Generators
 ! Responsible : 
 
+!========================= Generators v2r0 ===========================
 ! 2005-10-17 - Patrick Robbe
  - EvtGenTool : add possibility to control polarization parameters
    by job options.
