@@ -1,8 +1,9 @@
-! $Id: release.notes,v 1.73 2005-10-18 15:44:38 pkoppenb Exp $
+! $Id: release.notes,v 1.74 2005-10-19 07:31:52 pkoppenb Exp $
 ! Package     : DaVinciKernel
 ! Responsible : P. Koppenburg
 
 
+!========================== DaVinciKernel v3r8 2005-10-19 ===================
 ! 2005-10-17 - P. Koppenburg
   - Kernel/IOnOffline.h
     . Uses context now. Thus this tool *must* be private.
