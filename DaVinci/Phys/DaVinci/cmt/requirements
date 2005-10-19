@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.271 2005-10-18 06:48:47 pkoppenb Exp $
+# $Id: requirements,v 1.272 2005-10-19 07:12:05 pkoppenb Exp $
 # Created    : 07/02/2002
 # Maintainer : P. Koppenburg
 #
@@ -57,7 +57,7 @@ use  DaVinciTransporter 	v2r1     Phys
 use  VertexFit			v1r8     Phys
 use  Tampering                  v1r3     Phys
 # Generic tools 
-use  Utilities          	v2r1     Tools
+use  Utilities          	v2r1p1   Tools
 use  RecoTools          	v1r1     Rec
 
 #=======================================================
@@ -114,7 +114,7 @@ use  PrimVtx            	v2r1p1   Rec
 use  TrExtrapolator     	v2r14    Tr
 
 # L0 Trigger packages
-use  L0DU               	v6r7p5   L0
+use  L0DU               	v6r7p6   L0
 use  L0Calo             	v7r6     L0
 use  L0Checker          	v3r2     L0
 use  L0MuonKernel 		v2r4     L0
