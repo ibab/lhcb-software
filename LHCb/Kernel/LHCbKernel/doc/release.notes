@@ -2,10 +2,10 @@ Package LHCbKernel
 Package manager: M.Cattaneo
 Purpose: LHCb specific Kernel classes
 
+!===================== LHCbKernel v5r14 2005-10-17 ========================
 ! 2005-10-17 - Chris Jones
  - Clean up some of the RICH enums
 
-!===================== LHCbKernel v5r14 2005-10-12 ========================
 ! 2005-10-12 Matt Needham
   - Add number of strips per Beetle to constants
 
