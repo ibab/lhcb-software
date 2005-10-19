@@ -3,6 +3,395 @@ Package     : Phys/DaVinci
 Package Coordinator : Patrick Koppenburg
 Purpose     : LHCb analysis program 
 
+</PRE><H1><A NAME=v12r14>2005-10-19 DaVinci v12r14 - Updated DC04 version</A></H1><PRE>
+
+Main modifications:
+  - LHCb v16r6:
+    . Change in STDet that allows upgrade of VeloTT (Luis Fernandez)
+  - Gaudi v15r7: Backported some changes
+    . New StagerSvc !only for CERN! (Hubert Degaudenzi)
+    . Context for sequencers, algorithms and tools (Olivier Callot)
+    . Support for -= in array job options (PK)
+  - L0: New tunings (Julien Cogan & Shafik Benchouk)
+  - HLT: Use context ("HLT") instead of ResetOnOffline algorithm (PK)
+    WARNING: ResetOnOffline does not exist anymore. To run an algorithm
+    in HLT mode do 
+    Algo.Context = "HLT" ; 
+    or
+    Sequence.Context = "HLT" ; 
+  - MuonID: MuonIDNSharedHitsTool released (Erica Polycarpo)
+  - New MomentumMotherDirectionFilterCriterion (Federica Legger)
+  - OnOffline tool does not have a Set method anymore (PK) 
+    Takes On/Offline behviour from Context. 
+    WARNING: *MUST* be used as private tool
+  - Bug fix in parabolic transporter (Matt Needham)
+  - Corrected Run number bug (PK)
+  - Writing out of Raw/Velo on DST mandatory (noticed by tagging group)
+  - BTaggingTool uses NoSharedHit Tool (Marco Musy)
+  - New package PVEff for PV efficiency on and offline (Mariusz Witek)
+  - Updated tampering (Mariusz Witek)
+  - Many updates in physics selections
+  - Options for writing L0TDR dsts released (PK)
+  - Stripping now considers DC04 selections (PK)
+  - L1 decision tuned for new muon matching and new L0 (Thomas Schietinger)
+  - New muon matching for L1 (Rio)
+  - Updated TrgMuon (Alessia Satta)
+    Makes TrgMuonID obsolete -> Removed
+################################################################################
+###################################### L0 ######################################
+!========================== L0DU v6r7p6 2005-10-19 ===================
+! 2005-10-19 - P. Koppenburg fo Julien Cogan
+ - New tunings for L0 for 1,2,3,4,5,6 10^32
+###################################### HLT #####################################
+!========================== HltGeneric v2r7 2005-10-19 ===================
+! 2005-10-17 - P. Koppenburg
+  - options/HltGeneric.opts
+    . Added HltMuonRec according to $TRGMUONIDROOT/doc/release.notes
+!========================== HltSelChecker v3r8 2005-10-19 ===================
+! 2005-10-17 - P. Koppenburg
+ - options/
+   . Do not use ResetOnOffline but context.
+! 2005-08-29 - Luis Fernandez
+ - options/
+   . Print headers
+!========================== HltSelections v3r9 2005-10-19 ===================
+! 2005-10-17 - P. Koppenburg
+  - options/TrgTracks.opts
+    . Do not use ResetOnOffline.Use context from HLT sequence.
+! 2005-08-27 - Luis Fernandez
+ - options/UseRich.opts
+   . Add missing options to have the online Rich
+! 2005-08-26 - Luis Fernandez
+ - options/HLTSelections.opts
+   . Online Rich before making particles
+##################################### MUON #####################################
+!========================== MuonID v3r9 2005-10-19 ===================
+! 2005-10-17 - P. Koppenburg for Erica Polycarpo
+  - src/*.{cpp,h}
+    . Modernize code.
+! 2005-10-17 - P. Koppenburg for Erica Polycarpo
+  - options/MuonIDDLLTool.opts
+  - options/MuonIDFOI.opts
+    . New options.
+! 2005-09-30 - P. Koppenburg
+  - src/MuonIDNSharedHitsTool.h
+    . Make all private methods and members really private
+  - src/MuonIDNSharedHitsTool.cpp
+    . Initialize all member variables
+    . Use tool<> 
+! 2005-09-30 - P. Koppenburg for Erica Polycarpo and Myriam Gandelman
+  - MuonID/IMuonIDNSharedHitsTool.h
+  - src/MuonIDNSharedHitsTool.{cpp,h}
+    . New tool that calculates the number of muonID's that share a hit
+      with a given MuonID and are closest to the hit than this one.
+! 2005-09-30 - P. Koppenburg
+  Go back to v3r7p2, tagged as v3r8back
+##################################### PHYS #####################################
+!========================== DaVinciFilter v3r2 2005-10-19 ===================
+! 2005-10-17 - P. Koppenburg
+  - src/FlightDistanceFilterCriterion.cpp
+  - src/LifetimeSignificanceCriterion.cpp
+  - src/Momentum2FlightAngleFilterCriterion.cpp
+  - src/PVIPFilterCriterion.cpp
+  - src/VtxIsolationFilterCriterion.cpp
+    . OnOfflineTool must be private as it is using the context.
+! 2005-10-17 - P. Koppenburg for F. Legger
+  - src/MomentumMotherDirectionFilterCriterion.{cpp,h}
+    . New tool that filters particles according to the projection of the
+      momentum of a particle on the direction of the mother momentum 
+      (it's a cut I borrowed from Bs->phi /K* gamma).
+! 2005-09-09 - P. Koppenburg
+  - src/FilterCriteriaTESTool.h
+    . Don't use DaVinciTools/ but Kernel/
+!========================== DaVinciKernel v3r8 2005-10-19 ===================
+! 2005-10-17 - P. Koppenburg
+  - Kernel/IOnOffline.h
+    . Uses context now. Thus this tool *must* be private.
+      No setOnline(bool) method anymore.
+  - Kernel/Lib/DVAlgorithm.cpp
+  - Kernel/component/PhysDesktop.cpp
+    . Use OnOffline tool privately.
+!========================== DaVinciMCTools v5r15 2005-10-19 ===================
+! 2005-10-17 - P. Koppenburg
+ - src/DecayChainNTuple.cpp
+   . OnOffline tool must be private
+! 2005-10-03 - Luis Fernandez
+ - src/DecayChainNTuple.cpp
+   . True ID
+! 2005-09-28 - Luis Fernandez
+ - src/DecayChainNTuple.{cpp,h}
+   . Verbose
+!========================== DaVinciTools v12r2 2005-10-19 ===================
+! 2005-10-17 - P. Koppenburg
+  - src/OnOfflineTool.{cpp,h}
+    . Uses context now. Thus this tool *must* be private.
+      No setOnline(bool) method anymore.
+  - src/SimplePlotTool.cpp
+  - src/CheckPV.cpp
+    . Use OnOffline tool privately.
+!========================== DaVinciTransporter v2r1 2005-10-19 ===================
+! 2005-09-02 - P. Koppenburg
+  - src/ParabolicTransporter.cpp
+    . Bug reported by Matt Needham:
+      "There is a bug in the TrParabolic extrapolator. Since the DaVinci 
+       transporter is a copy of this the bug also exists there.
+       The bug has little or no effect for long tracks (maybe there are some 
+       subtle effects if you look in detail). For seed or VeloTT tracks it can 
+       have more effect. ie I cannot tell you whether you need to urgently fix it 
+       or not.
+       The problem is that the field is taken to be constant and equal to that 
+       at the start of the extrapolation. This is wrong. Better is to integrate 
+       the field along the trajectory. In practice I get similar results to 
+       integrating  by taking the field at the midpoint of the extrapolation. ie 
+       in the TrParabolicExtrapolator (similar in the ParabolicTransporter)"
+!========================== DaVinci v12r14 2005-10-19 ===================
+! 2005-09-01 - P. Koppenburg
+  - options/DaVinciCommon.opts
+    . Added decoding of event header:
+> Event and run number are wrong (Run = 1, Event = # events processed) when 
+> DaVinci is run on recent DC04v2 data. It was due to a slight change in the 
+> content of the dst (the EventHeader is not saved anymore but can be restored 
+> from the raw data) as has been pointed out by Marco.
+
+!========================== FlavourTagging v6r3 2005-10-19 ===================
+! 2005-10-05 - Marco Musy
+  - SVertexTool.cpp has been changed: muon are now rejected only
+    if they are possible taggers
+    - VertexCharge is evaluated with pT weights.
+    - NoSharedHit Tool added for muon taggers
+! 2005-09-30 - Marco Musy
+  - bug fix in CombineTaggersTDR.cpp, it affects the numer and type 
+    of taggers to be put in FlavourTag obj
+
+!========================== PVEff v1r0 2005-10-19 ===================
+! 2005-09-27 - M. Witek
+ - first version for HLT and L1 reconstruction of PV
+ - PVCheck is a common algorithm which collects MC and Rec info
+   by dedicated tools with common interface PVEff/IRecbleMCPV.h
+!========================== Tampering v1r3 2005-10-19 ===================
+! 2005-10-15 - Mariusz Witek
+  - more info exposed to user (L1Score and L0DUReport after TIS TOS)
+  - L0TamperingAlg: remove all L0 candidates around the track path
+                    bremstrahlung photons removal included
+  - modified files
+    xml/TamperingResults_Event.xml
+    src/TamperingL0Alg.cpp .h
+    src/TamperingL1Alg.cpp
+    src/TamperResRead.cpp
+!========================== VertexFit v1r8 2005-10-19 ===================
+! 2005-10-17 - P. Koppenburg for F. Legger
+  - src/TrgVertexFitter.cpp
+    . Adapt to needs of Lb->Lambda gamma channel.
+#################################### PHYSSEL ###################################
+!========================== Bd2D0Kstar v4r4 2005-10-19 ===================
+! 2005-10-19 - P. Koppenburg
+ - options//DVPreselB2KstarD0viaK0S.opts
+   . Replace bestKs2PiPi by Ks2PiPi (loose) to avoid conflicts)
+   ## WARNING: To be revised ##
+! 2005-10-19 - P. Koppenburg for Kirill Igorevich Voronchev
+ - options//DVPreselB2KstarD0viaK0S.opts
+ - src/LoKi_PreselB2KstarD0viaK0S.cpp
+   . New selection for B->KstarD0(KsPiPi)
+!========================== Bd2MuMuKstar v2r3p2 2005-10-19 ===================
+! 2004-10-19 - P. Koppenburg
+  - options/DoTDRselBd2MuMuKstar.opts
+    . GaudiSequencer
+!========================== Bs2DsDs v2r2 2005-10-19 ===================
+! 2005-09-07 - A. Sarti
+ - options/ABsStudy(LoKi_Stripper).opts
+   . Updated options
+ - src/BsMonitor.cpp minor change
+!========================== Bs2JpsiEta v4r2p1 2005-10-19 ===================
+! 2005-10-17 - P. Koppenburg
+  - options/DVMonitorBs2Jpsi2MuMu_Eta2GammaGamma.opts
+  - options/DVMonitorBs2Jpsi2MuMu_Eta2PiPiPi0.opts
+    . Don't use obsolete ResetOnOffline anymore. 
+      HLT behaviour is given by "context()" now.
+!========================== Bs2JpsiPhi v2r3p4 2005-10-19 ===================
+! 2005-10-18 - P. Koppenburg
+  - options/*Bu2JpsiK*.opts
+    . Removed. See Bu2JpsiK package.
+ !========================== Bs2PhiEtac v3r6 2005-10-19 ===================
+! 2005-10-17 - P. Koppenburg
+  - options/*.opts
+    . Don't use obsolete ResetOnOffline anymore. 
+      HLT behaviour is given by "context()" now.    
+! 2005-10-03 - Luis Fernandez
+ - options/
+   Clean-up
+!========================== Bu2JpsiK v1r0 2005-10-19 ===================
+! 2005-10-18 - P. Koppenburg
+  New package containing a selection for B+ -> J/psi K+. Requested by O. Leroy
+  for tagging studies.
+  The cuts have been copied from Bu2LLK (B+ -> l+l-K+) but adding a J/psi mass
+  cut and remiving all IP/PV separation cuts. 
+  The package only contains a DC04 selection and no preselection. Use
+  the J/psi preselection in PhysSel/Jpsi instead.
+  There is only a genric selection selection both the ee and mumu modes. Experience
+  with Bu2LLK shows that the efficiencies of each selection on the other signal 
+  sample is very low.
+  
+  Files:
+  - options/DVDC04selBu2JpsiK.opts
+    . Main option file
+  - options/DoDC04selBu2JpsiK.opts
+    . Actually does the selection. Can be included in trigger jobs for instance.
+  - options/JpsiForDC04selBu2JpsiK.opts
+    . Cuts for the J/psi -> mu+ mu- and J/psi -> e+ e- selection
+  - options/DC04selBu2JpsiK.opts
+    . Cuts for the B+ -> J/psi K selection
+  - options/StandardCombined.opts
+    . Options for the standard particle maker
+!========================== Bu2LLK v2r4 2005-10-19 ===================
+! 2005-10-17 - P. Koppenburg
+  - options/HLT*Tuple.opts
+    . Use Context instead of ResetOnOffline
+!========================== D02MuMu v2r2 2005-10-19 ===================
+! 2005-08-25 - Alessio Sarti for Davide Pinci
+ - src/*Monitor.cpp
+   . Monitor Upgrade. Added MC matching study
+!========================== DsSelector v1r4 2005-10-19 ===================
+! 2005-09-07 - A. Sarti
+ - Revised selection cuts
+! 2005-09-07 - A. Sarti
+ - Added L1 dumping to the monitor. DsMonitor.cpp(h)
+ - Updated the LoKi_stripper/monitor.opts files for easy job configuration/running
+   inside Bs2DsDs, corrected the settings in GeV
+ - Changed the Rho+/- making inside the LoKi loops and code structure
+   
+##################################### TOOLS ####################################
+!========================== Stripping v3r1 2005-10-19 ===================
+! 2005-10-19 - P. Koppenburg
+  - ooptions/L0TDRstrip-Bs2DsK-5e32.opts
+    . Options for L0xTDR stripping with 5e32 lumi
+! 2005-10-19 - P. Koppenburg
+  - python/stripping/py
+    . Add DC04 selections to combined options.
+! 2005-10-18 - P. Koppenburg
+  - options/L0TDRstrip-*.opts
+    . Options for L0xTDR stripping
+       
+###################################### TRG ##################################### 
+!========================== L1Decision v4r6 2005-10-19 ===================
+! 2005-10-18 - P. Koppenburg
+ - options/L1-lumi5e32.opts 
+ - options/L1-lumi3e32.opts
+   . Removed as they do not match the new L0 tunings by CPPM.
+   
+! 2005-10-14 - Thomas Martin Schietinger
+ - src/L1Decision.cpp: new thresholds for DaVinci v12r14
+ - src/L1Check.cpp/.h: add tagging flag and event flavor
+ - options/DVL1BdPiPi.opts, DVL1BsDsK.opts, DVL1BsPhiGamma.opts
+     DVL1BsJpsi2MuMuPhi.opts: examples how to run with tagging
+
+! 2005-10-04 - Thomas Martin Schietinger
+ - src/L1Check.cpp/.h: add L0 lines
+
+! 2005-09-20 - Thomas Martin Schietinger
+ - src/L1Check.cpp/.h: add some ntuple options
+
+! 2005-08-25 - Thomas Martin Schietinger
+ - src/L1MaxPt.cpp: bug fix
+
+!========================== L1Reco v6r2 2005-10-19 ===================
+! 2005-09-30 - P. Koppenburg for Sandra Amato
+ - L1Match2dMuonHits and L1Match3dMuonHits
+   . Check that L0Muon has found the events.
+  
+! 2005-09-23 - P. Koppenburg for Sandra Amato
+ - Added new algorithms L1Match2dMuonHits and L1Match3dMuonHits
+   . L1Match2dMuonHits.cpp:
+     Try to do the match between 2d velo tacks and muon segments
+     reconstructed using the muon hits in M2-M5.
+     The algorithm is executed only in case there has been at least one match
+     with L0MuonCandidate.
+     Reconstruct all the muon segments.
+     For a given 2d velo track, loop over the muon segments. Take the y
+     position of its M2 hit, extrapolate to the z of the velo track and check
+     if it is inside the corresponding velo sector. In case this is true,
+     calculate the x as x**2+y**2 = R**2. Estimate the slope in x as xVelo /
+     (trackZ - zpv) where zpv is given by zpv =z - r/slr. 
+     Extrapolate the x position of velo 2d to the center of magnet,
+     extrapolate the muon segment to the same z, and choose the muon segment
+     with the smallest difference in the extrapolation. Apply some cut to
+     this difference depending on the region. Having passed the cut, the 2d
+     is selected as muon candidate.
+
+   . L1Match3dMuonHits:
+     Try to do the match between 3d velo tacks and muon segments
+     reconstructed using the muon hits in M2-M5.
+     The algorithm is executed only in case there has been at least one match
+     with L0MuonCandidate.
+     Reconstruct all the muon segments. Use only the ones that have not been
+     matched previously as L0MuonCandidate.
+     For a given 3d velo track, loop over the muon segments.
+     Extrapolate the x velo track to the center of magnet, and x muon segment
+     to the same z.
+     Extrapolate the y velo track to M2.
+     Take the muon segment with the smallest Delta y and Delta x, and apply
+     cuts on these distances, depending on the region.
+     If several velo tracks are matched to the same muon segment, take only
+     the two with smallest Delta y.
+     Assign a momentum to the velo track.
+
+!========================== TrgSys v1r10 2005-10-19 ===================
+! 2005-10-18 - P. Koppenburg
+  - Remove TrgMuonID. All its functionality is taken over by TrgMuon
+    run in the HltGeneric sequence.
+  
+! 2005-09-23 - P. Koppenburg for Sandra Amoto
+  - New muon matching
+  
+! 2005-09-02 - P. Koppenburg for Mariusz Witek
+  - New TrgTools
+  - Added TrgVertex2Container to TrgChecking sequence
+
+!========================== TrgTools v6r5 2005-10-19 ===================
+! 2005-10-18 - P.Koppenburg for V. Gligorov
+ - TrgTools/ITrgTrack2TrStoredTrack.h
+   . New method doubleMatched().
+ - src/TrgTrack2TrStoredTrack.{h,cpp}
+   
+! 2005-09-30 - P.Koppenburg for V. Gligorov
+ - src/TrgTrack2TrStoredTrack.{h,cpp}
+ - TrgTools/ITrgTrack2TrStoredTrack.h
+   . New tool that associates TrgTracks to TrStoredTracks
+   
+! 2005-09-02 - P.Koppenburg for Mariusz Witek
+ - src/TrgVertexToContainer
+   . Algorithm allowing to look at L1 and HLT vertices in TES instead of 
+     those in dedicated trigger.
+!========================== TrgMuon v1r3 2005-10-15 ===================
+! 2005-10-15 - Alessia Satta
+ - Main modification:  
+   a standalone algorithm for muon reconstruction for trigger has been 
+   created (named TrgMuonRec)
+   This algo can be used by Hlt and L1 muonID setting the appropriate 
+   output container where the muon segments are stored.
+   The muon identification of velo tracks is performed in the HltMuonRec 
+   which uses the utput of TrgMuonRec in input.
+   Additional improvement: the decoding of the muon buffer has been optimized
+	 in speed. 
+   Some better tuning of the reconstruction cuts has been implemented.
+   To use this new version a different HltGeneric sequence should be used
+   an example is reported here:
+   HLTGenericSeq.Members =  {
+     "TrgMuonRec"
+    ,"HltMuonRec"
+    ,"HltGenericSelection"
+    ,"DecodeTTFromRaw/GenMakeTTHit"
+    ,"TrgVeloTT/GenVeloTT"
+    ,"TrgMuonRecover"
+    ,"FwdHitFromRawBuffer/GenMakeTHit"
+    ,"TrgForwardAlg/GenForward"
+    ,"TrgMuonRefine"
+    ,"TrgInsertTrackErrParam/GenErrParam"
+    ,"TrgParticleMaker/GenParticleMaker"
+    ,"HltGenericDecision"
+  };
+  where the explicit call to HltMuonRec has been added.
+   
+
 </PRE><H1><A NAME=v12r13>2005-08-24 DaVinci v12r13 - Updated DC04 version</A></H1><PRE>
 
 Main modifications:
