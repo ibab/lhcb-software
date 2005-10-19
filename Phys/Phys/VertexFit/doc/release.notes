@@ -1,7 +1,8 @@
-! $Id: release.notes,v 1.36 2005-10-17 08:57:51 pkoppenb Exp $
+! $Id: release.notes,v 1.37 2005-10-19 07:53:56 pkoppenb Exp $
 ! Package     : VertexFit
 ! Responsible : P. Koppenburg
 
+!========================== VertexFit v1r8 2005-10-19 ===================
 ! 2005-10-17 - P. Koppenburg for F. Legger
   - src/TrgVertexFitter.cpp
     . Adapt to needs of Lb->Lambda gamma channel.
