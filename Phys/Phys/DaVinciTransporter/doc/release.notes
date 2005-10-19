@@ -1,7 +1,8 @@
-! $Id: release.notes,v 1.18 2005-10-19 05:44:09 pkoppenb Exp $
+! $Id: release.notes,v 1.19 2005-10-19 07:32:58 pkoppenb Exp $
 ! Package     : DaVinciTransporter
 ! Responsible : Yuehong Xie
 
+!========================== DaVinciTransporter v2r1 2005-10-19 ===================
 ! 2005-09-02 - P. Koppenburg
   - src/ParabolicTransporter.cpp
     . Bug reported by Matt Needham:
