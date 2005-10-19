@@ -6,37 +6,39 @@ Purpose     : LHCb analysis program
 </PRE><H1><A NAME=v12r14>2005-10-19 DaVinci v12r14 - Updated DC04 version</A></H1><PRE>
 
 Main modifications:
-  - LHCb v16r6:
+  LHCb v16r6:
     . Change in STDet that allows upgrade of VeloTT (Luis Fernandez)
-  - Gaudi v15r7: Backported some changes
+  Gaudi v15r7: Backported some changes
     . New StagerSvc !only for CERN! (Hubert Degaudenzi)
     . Context for sequencers, algorithms and tools (Olivier Callot)
     . Support for -= in array job options (PK)
+  DaVinci v12r14:
   - L0: New tunings (Julien Cogan & Shafik Benchouk)
+  - New muon matching for L1 (Rio)
+  - L1 decision tuned for new muon matching and new L0 (Thomas Schietinger)
+    Makes TrgMuonID obsolete -> Removed
+  - Updated TrgMuon (Alessia Satta)
+  - OnOffline tool does not have a Set method anymore (PK) 
+    Takes On/Offline behviour from Context. 
+    WARNING: *MUST* be used as private tool
   - HLT: Use context ("HLT") instead of ResetOnOffline algorithm (PK)
     WARNING: ResetOnOffline does not exist anymore. To run an algorithm
     in HLT mode do 
     Algo.Context = "HLT" ; 
     or
-    Sequence.Context = "HLT" ; 
-  - MuonID: MuonIDNSharedHitsTool released (Erica Polycarpo)
+    Sequence.Context = "HLT" ;
+     
   - New MomentumMotherDirectionFilterCriterion (Federica Legger)
-  - OnOffline tool does not have a Set method anymore (PK) 
-    Takes On/Offline behviour from Context. 
-    WARNING: *MUST* be used as private tool
+  - BTaggingTool uses NoSharedHit Tool (Marco Musy)
   - Bug fix in parabolic transporter (Matt Needham)
+  - MuonID: MuonIDNSharedHitsTool released (Erica Polycarpo)
   - Corrected Run number bug (PK)
   - Writing out of Raw/Velo on DST mandatory (noticed by tagging group)
-  - BTaggingTool uses NoSharedHit Tool (Marco Musy)
   - New package PVEff for PV efficiency on and offline (Mariusz Witek)
   - Updated tampering (Mariusz Witek)
   - Many updates in physics selections
   - Options for writing L0TDR dsts released (PK)
   - Stripping now considers DC04 selections (PK)
-  - L1 decision tuned for new muon matching and new L0 (Thomas Schietinger)
-  - New muon matching for L1 (Rio)
-  - Updated TrgMuon (Alessia Satta)
-    Makes TrgMuonID obsolete -> Removed
 ################################################################################
 ###################################### L0 ######################################
 !========================== L0DU v6r7p6 2005-10-19 ===================
