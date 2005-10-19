@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.17 2005-05-17 06:58:15 cattanem Exp $ 
+! $Id: release.notes,v 1.18 2005-10-19 12:50:54 cattanem Exp $ 
 ! -----------------------------------------------------------------------------
 ! CVS tag $Name: not supported by cvs2svn $ 
 ! -----------------------------------------------------------------------------
@@ -6,6 +6,10 @@
 ! Responsible : Vanya BELYAEV   Ivan.Belyaev@lapp.in2p3.fr 
 ! Purpose     : General purposes templated relations between classes
 !-----------------------------------------------------------------------------
+
+! ====================== Relations v2r5 2005-10-19 ============================
+! 2005-10-19 - Markus Frank
+ - Reimplement RelationsDict.h for Reflex persistency
 
 ! ====================== Relations v2r5 2005-05-17 ============================
 ! 2005-05-13 - Vanya BELYAEV   
