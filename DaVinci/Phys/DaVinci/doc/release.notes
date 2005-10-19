@@ -4,6 +4,7 @@
 ! Purpose     : Analysis program for LHCb
 !-----------------------------------------------------------------------------
 
+!========================== DaVinci v12r14 2005-10-19 ===================
 ! 2005-09-01 - P. Koppenburg
   - options/DaVinciCommon.opts
     . Added decoding of event header:
