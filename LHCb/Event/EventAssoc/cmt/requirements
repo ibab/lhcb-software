@@ -1,13 +1,13 @@
-# $Id: requirements,v 1.7 2005-05-09 14:16:57 cattanem Exp $
+# $Id: requirements,v 1.8 2005-10-19 13:38:24 cattanem Exp $
 # Created    : 19/12/2003
 # Maintainer : Marco Cattaneo
 #
 package           EventAssoc
-version           v1r5
+version           v2r0
 
 # Structure, i.e. directories to process. 
 #============================================================================
-branches          cmt doc xml
+branches          cmt doc src
 
 # Used packages. 
 #============================================================================
@@ -15,14 +15,7 @@ use L0Event   v* Event
 use PhysEvent v* Event
 use Relations v* Kernel
 
-# Produce dictionary from XML description
-#============================================================================
-document obj2dict EventAssocObj2Dict ../xml/EventAssoc.xml
-
 # Build the dictionaries
 #============================================================================
 library          EventAssocDict  ../dict/*.cpp
 apply_pattern component_library library=EventAssocDict
-
-private
-use GaudiObjDesc v*
