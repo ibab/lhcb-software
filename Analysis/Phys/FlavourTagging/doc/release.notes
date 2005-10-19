@@ -1,10 +1,11 @@
-! $Id: release.notes,v 1.82 2005-10-18 13:40:58 pkoppenb Exp $
+! $Id: release.notes,v 1.83 2005-10-19 07:34:19 pkoppenb Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Phys/FlavourTagging
 ! Responsible : Marco Musy (marco.musy@cern.ch)
 ! Purpose     : Provide tools and algorithm for tagging B
 !-----------------------------------------------------------------------------
 
+!========================== FlavourTagging v6r3 2005-10-19 ===================
 ! 2005-10-05 - Marco Musy
   - SVertexTool.cpp has been changed: muon are now rejected only
     if they are possible taggers
