@@ -1,4 +1,4 @@
-// $Id: RelationsDict.h,v 1.4 2005-10-19 12:50:54 cattanem Exp $
+// $Id: RelationsDict.h,v 1.5 2005-10-19 13:47:59 cattanem Exp $
 //====================================================================
 //	RelationsDict.h
 //--------------------------------------------------------------------
@@ -541,7 +541,7 @@ GaudiDict::Relation1DDict<FROM,TO>::Relation1DDict() {
   if ( !Type::byName(_me_) )  {
     static char clid_txt[64];
     sprintf(clid_txt,"%08X-0000-0000-0000-000000000000",(int)_Me_::classID());
-    std::cout << "Creating dictionary for " << _me_ << " GUID=" << clid_txt << std::endl;
+    // std::cout << "Creating dictionary for " << _me_ << " GUID=" << clid_txt << std::endl;
     std::string b = templateName2("Relations::Relation", typeid(FROM),typeid(TO));
     seal::reflex::ClassBuilder<_Me_> c(_me_.c_str(),CLASS|VIRTUAL|PUBLIC);
     c//.addBase< ::DataObject >(PUBLIC)
@@ -550,7 +550,7 @@ GaudiDict::Relation1DDict<FROM,TO>::Relation1DDict() {
       .addFunctionMember(void_func(), "Relation1D",ctor,0,0,PUBLIC|CONSTRUCTOR)
       .addFunctionMember(void_func(),"~Relation1D",dtor,0,0,PUBLIC|DESTRUCTOR|VIRTUAL)
       .addFunctionMember(voids_func(),"getBasesTable", getBases, 0, 0, PUBLIC);
-    std::cout << "Creating bases for " << _me_ << " GUID=" << clid_txt << std::endl;
+    // std::cout << "Creating bases for " << _me_ << " GUID=" << clid_txt << std::endl;
     ClassBuilderImpl* imp = &((CBImpl*)&c)->m_impl;
     imp->addBase(type("DataObject"),seal::reflex::baseOffset<_Me_,DataObject>::get(),PUBLIC);
   }
@@ -703,7 +703,7 @@ GaudiDict::RelationWeightedDict<FROM,TO,WEIGHT>::RelationWeightedDict() {
   RelationWeightedBaseDict<FROM,TO,WEIGHT>();
   if ( !Type::byName(_me_) )  {
     std::string  _b_ = templateName3("Relations::RelationWeightedBase", typeid(FROM),typeid(TO),typeid(WEIGHT));
-    std::cout << "Creating dictionary for " << _me_ << std::endl;
+    // std::cout << "Creating dictionary for " << _me_ << std::endl;
     seal::reflex::ClassBuilder<_Me_>(_me_.c_str(), PUBLIC|CLASS|VIRTUAL)
       .addDataMember(type(_b_), "m_direct", OffsetOf(_Me_,m_direct), PRIVATE)
       .addDataMember(pointer(_b_), "m_inverse",OffsetOf(_Me_,m_inverse), PRIVATE|TRANSIENT)
@@ -745,7 +745,7 @@ GaudiDict::RelationWeighted1DDict<FROM,TO,WEIGHT>::RelationWeighted1DDict() {
     static char clid_txt[64];
     std::string m = templateName3("Relations::RelationWeighted", typeid(FROM),typeid(TO),typeid(WEIGHT));
     sprintf(clid_txt,"%08X-0000-0000-0000-000000000000",(int)_Me_::classID());
-    std::cout << "Creating dictionary for " << _me_ << " GUID=" << clid_txt << std::endl;
+    // std::cout << "Creating dictionary for " << _me_ << " GUID=" << clid_txt << std::endl;
     seal::reflex::ClassBuilder<_Me_> c(_me_.c_str(),CLASS|VIRTUAL|PUBLIC);
       c//.addBase< ::DataObject >(PUBLIC)
       .addProperty("ClassID", clid_txt)
@@ -753,7 +753,7 @@ GaudiDict::RelationWeighted1DDict<FROM,TO,WEIGHT>::RelationWeighted1DDict() {
       .addFunctionMember(void_func(), "RelationWeighted1D", ctor, 0, 0, PUBLIC|CONSTRUCTOR)
       .addFunctionMember(void_func(), "~RelationWeighted1D",dtor,0,0,PUBLIC|DESTRUCTOR|VIRTUAL)
       .addFunctionMember(voids_func(),"getBasesTable", getBases,0,0,PUBLIC);
-    std::cout << "Instaniated classbuilder for " << _me_ << " GUID=" << clid_txt << std::endl;
+      // std::cout << "Instaniated classbuilder for " << _me_ << " GUID=" << clid_txt << std::endl;
     ClassBuilderImpl* imp = &((CBImpl*)&c)->m_impl;
     imp->addBase(type("DataObject"),seal::reflex::baseOffset<_Me_,DataObject>::get(),PUBLIC);
   }
@@ -803,7 +803,7 @@ GaudiDict::Relation2Dict<FROM,TO>::Relation2Dict() {
   RelationDict<FROM,TO>();
   RelationDict<TO,FROM>();
   if ( !Type::byName(_me_) )  {
-    std::cout << "Creating dictionary for " << _me_ << std::endl;
+    // std::cout << "Creating dictionary for " << _me_ << std::endl;
     std::string  _p_ = templateName2("Relations::Relation", typeid(FROM),typeid(TO));
     std::string  _q_ = templateName2("Relations::Relation", typeid(TO),typeid(FROM));
     seal::reflex::ClassBuilder<_Me_>(_me_.c_str(), PUBLIC|CLASS|VIRTUAL)
@@ -848,7 +848,7 @@ GaudiDict::Relation2DDict<FROM,TO>::Relation2DDict() {
   if ( !Type::byName(_me_) )  {
     static char clid_txt[64];
     sprintf(clid_txt,"%08X-0000-0000-0000-000000000000",(int)_Me_::classID());
-    std::cout << "Creating dictionary for " << _me_ << " GUID=" << clid_txt << std::endl;
+    // std::cout << "Creating dictionary for " << _me_ << " GUID=" << clid_txt << std::endl;
     std::string b = templateName2("Relations::Relation2", typeid(FROM),typeid(TO));
     seal::reflex::ClassBuilder<_Me_> c(_me_.c_str(),CLASS|VIRTUAL|PUBLIC);
       c//.addBase< ::DataObject >(PUBLIC)
@@ -906,7 +906,7 @@ GaudiDict::Relation2WeightedDict<FROM,TO,WEIGHT>::Relation2WeightedDict() {
   RelationWeightedDict<FROM,TO,WEIGHT>();
   RelationWeightedDict<TO,FROM,WEIGHT>();
   if ( !Type::byName(_me_) )  {
-    std::cout << "Creating dictionary for " << _me_ << std::endl;
+    // std::cout << "Creating dictionary for " << _me_ << std::endl;
     std::string  _p_ = templateName3("Relations::RelationWeighted",typeid(FROM),typeid(TO),typeid(WEIGHT));
     std::string  _q_ = templateName3("Relations::RelationWeighted",typeid(TO),typeid(FROM),typeid(WEIGHT));
     seal::reflex::ClassBuilder<_Me_>(_me_.c_str(), PUBLIC|CLASS|VIRTUAL)
@@ -950,7 +950,7 @@ GaudiDict::RelationWeighted2DDict<FROM,TO,WEIGHT>::RelationWeighted2DDict() {
   if ( !Type::byName(_me_) )  {
     static char clid_txt[64];
     sprintf(clid_txt,"%08X-0000-0000-0000-000000000000",(int)_Me_::classID());
-    std::cout << "Creating dictionary for " << _me_ << " GUID=" << clid_txt << std::endl;
+    // std::cout << "Creating dictionary for " << _me_ << " GUID=" << clid_txt << std::endl;
     std::string b = templateName3("Relations::Relation2Weighted", typeid(FROM), typeid(TO), typeid(WEIGHT));
     seal::reflex::ClassBuilder<_Me_> c(_me_.c_str(),CLASS|VIRTUAL|PUBLIC);
       c//.addBase< ::DataObject >(PUBLIC)
