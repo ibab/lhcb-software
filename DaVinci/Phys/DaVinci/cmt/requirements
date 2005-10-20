@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.273 2005-10-19 07:45:25 pkoppenb Exp $
+# $Id: requirements,v 1.274 2005-10-20 10:45:55 pkoppenb Exp $
 # Created    : 07/02/2002
 # Maintainer : P. Koppenburg
 #
@@ -65,7 +65,7 @@ use  RecoTools          	v1r1     Rec
 #=======================================================
 use  DaVinciAssociators 	v5r5     Phys
 use  DaVinciEff         	v3r4     Phys
-use  DaVinciMCTools     	v5r15    Phys
+use  DaVinciMCTools     	v5r16    Phys
 use  DaVinciTest        	v5r6     Phys
 use  DaVinciUser        	v5r2     Phys
 use  FlavourTaggingChecker      v1r0     Phys

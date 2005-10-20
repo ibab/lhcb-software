@@ -32,7 +32,7 @@ use  RecoTools          	v1r1     Rec
 #=======================================================
 use  DaVinciAssociators 	v5r5     Phys
 use  DaVinciEff         	v3r4     Phys
-use  DaVinciMCTools     	v5r15    Phys
+use  DaVinciMCTools     	v5r16    Phys
 use  DaVinciTest        	v5r6     Phys
 use  DaVinciUser        	v5r2     Phys
 use  FlavourTaggingChecker      v1r0     Phys
