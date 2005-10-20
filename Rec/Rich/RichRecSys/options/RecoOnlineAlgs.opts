@@ -9,11 +9,10 @@ RecoRICHSeq.Context = "Offline";
 
 // Fast Global PID
 //===========================================================================
-RecoRICHSeq.Members += { "RichTrgGlobalPIDAlg/RichHltGlobalPID" };
-RichHltGlobalPID.TrackSelection    = 
+RecoRICHSeq.Members += { "RichTrgGlobalPIDAlg/RichHltGlobalPIDOff" };
+RichHltGlobalPIDOff.TrackSelection    = 
   { "unique","seed","match","forward","follow","KsTrack","veloTT" };
-RichHltGlobalPID.OutputPIDLocation = "Rec/Rich/PIDs";
+RichHltGlobalPIDOff.OutputPIDLocation = "Rec/Rich/PIDs";
 // Monitoring options
-RichHltGlobalPID.NTupleProduce = true;
-RichHltGlobalPID.HistoProduce  = false;
-
+RichHltGlobalPIDOff.NTupleProduce = false;
+RichHltGlobalPIDOff.HistoProduce  = false;
