@@ -75,7 +75,7 @@ use HltSelChecker               v3r8     Hlt
 use HltMonitor                  v1r1     Hlt
 
 #=======================================================
-use  PhysSelSys			v8r9     PhysSel
+use  PhysSelSys			v8r9p1   PhysSel
 #=======================================================
 # packages included in PhysSelSys	
 #=======================================================
@@ -104,7 +104,7 @@ use  Bs2PhiEtac                 v3r6     PhysSel
 use  Bs2PhiPhi                  v2r3p3   PhysSel
 use  Bu2KsPi                    v2r4     PhysSel
 use  Bu2LLK                     v2r4     PhysSel
-use  Bu2JpsiK                   v1r0     PhysSel
+use  Bu2JpsiK                   v1r0p1   PhysSel
 use  Bu2D0K                     v1r1p2   PhysSel
 use  D02MuMu                    v2r2     PhysSel 
 use  DsSelector                 v1r4     PhysSel
