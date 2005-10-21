@@ -6,6 +6,18 @@
 !             : Contains packages shared by Boole and other applications   
 !-----------------------------------------------------------------------------
 
+</PRE><H1><A NAME=v3r0>2005-10-21 LbcomSys v3r0</A></H1><PRE>
+This version is built against LHCb v19r0 and Gaudi v17r1.
+
+- Packages modified: L0Checker v3r2, ITAlgorithms v15r1
+
+- In L0Checker v3r2
+  . Move to GaudiTupleAlg
+
+- In ITAlgorithms v15r1
+  . Cluster by Beetle
+  . Move to use ISTClusterPosition tool
+
 </PRE><H1><A NAME=v2r5>2005-08-31 LbcomSys v2r5</A></H1><PRE>
 This version is built against LHCb v18r9 and Gaudi v16r5.
 

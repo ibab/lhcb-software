@@ -1,5 +1,5 @@
 package LbcomSys
-version v2r5
+version v3r0
 
 branches doc cmt
 
@@ -12,7 +12,7 @@ use L0Calo          v8r2    L0   # Olivier Callot
 use L0DU            v6r9p1  L0   # Eduardo Rodrigues   
 use L0MuonTrigger   v3r0    L0   # Andrei Tsaregorodtsev
 use PuVeto          v6r0p1  L0   # N.N.
-use L0Checker       v3r1    L0   # Eduardo Rodrigues
+use L0Checker       v3r2    L0   # Eduardo Rodrigues
 
 # Outer tracker
 use OTMonitor       v1r1    OT   # Jacopo Nardulli
@@ -22,7 +22,7 @@ use RichTools       v1r7    Rich # Chris Jones
 use RichMCTools     v2r6    Rich # Chris Jones
 
 # Inner Tracker
-use ITAlgorithms    v15r0   IT   # Matt Needham
+use ITAlgorithms    v15r1   IT   # Matt Needham
 use ITCheckers      v2r5    IT   # Matt Needham
 
 # Calorimeter calibration
