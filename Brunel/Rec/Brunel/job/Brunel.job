@@ -42,7 +42,7 @@ else
   shift
 endif
 #   
-set Bversion = "v27r5"
+set Bversion = "v28r0"
 echo "Executing Brunel $Bversion using options file $Dver.opts"
 #
 

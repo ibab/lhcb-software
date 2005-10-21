@@ -8,7 +8,7 @@ RootHistCnv.ForceAlphaIds = true;
 //--------------------------------------------------------------
 // Detectors to monitor
 //--------------------------------------------------------------
-Moni.DetectorList = { "IT","OT" };
+Moni.DetectorList = { "IT","OT", "MUON" };
 
 //--------------------------------------------------------------
 // Monitoring algorithms
@@ -21,3 +21,7 @@ MoniITSeq.Members   += { "ITClusterChecker" };
 // OT reconstruction
 ApplicationMgr.DLLs += { "OTMonitor" };
 MoniOTSeq.Members   += { "OTTimeMonitor" };
+
+// Muon reconstruction
+ApplicationMgr.DLLs += { "MuonMoniDst" };
+MoniMUONSeq.Members += { "MuonRecChecker" };

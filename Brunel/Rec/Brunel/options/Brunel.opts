@@ -23,6 +23,7 @@ EventNodeKiller.Nodes = { "Rec", "Raw" };
 #include "$BRUNELOPTS/DstContent.opts"
 
 // Data on demand service for decoding RawBuffer
+ApplicationMgr.ExtSvc += { "DataOnDemandSvc" };
 #include "$DAQSYSROOT/options/RawBuffer.opts"
 
 //----------------------------------------------------------------------------
