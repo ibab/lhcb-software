@@ -4,7 +4,7 @@
  *  Implementation file for algorithm class : RichRecTimeMonitor
  *
  *  CVS Log :-
- *  $Id: RichRecTimeMonitor.cpp,v 1.2 2005-10-13 15:45:45 jonrob Exp $
+ *  $Id: RichRecTimeMonitor.cpp,v 1.3 2005-10-21 15:05:12 jonrob Exp $
  *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   05/04/2002
@@ -154,8 +154,8 @@ StatusCode RichRecTimeMonitor::finalize()
   // Printout timing info
   const double evtTime = ( m_nEvents>0 ? m_totTime/static_cast<double>(m_nEvents) : 0 );
   const double pidTime = ( m_nPIDs>0   ? m_totTime/static_cast<double>(m_nPIDs)   : 0 );
-  info() << "Average timing : " << evtTime << " sec/event, "
-         << pidTime << " sec/PID" << endreq;
+  info() << "Average timing : " << evtTime << " ms/event, "
+         << pidTime << " ms/PID" << endreq;
 
   return RichRecAlgBase::finalize();
 }
