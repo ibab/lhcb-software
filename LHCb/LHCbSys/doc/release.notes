@@ -5,7 +5,69 @@
 ! Purpose     : LHCb OO kernel packages
 !-----------------------------------------------------------------------------
 
-</PRE><H1><A NAME=v18r8>2005-09-22 LHCbSys v18r9</A></H1><PRE>
+</PRE><H1><A NAME=v19r0>2005-10-12 LHCbSys v19r0</A></H1><PRE>
+This version uses Gaudi v17r1 and produces reflex dictionaries
+It is backwards compatible for RTTC data
+
+ - New packages     : DC04Hacks v1r0 - temporary, to read DC04 data with Reflex
+ - Modified packages: KernelSys v4r15, LHCbKernel v5r14, Relations v2r6, 
+     EventSys v20r10, TrackEvent v1r4, DAQEvent v5r3, GenEvent v3r4,
+     PackedEvent v1r2, LinkerInstances v2r1, EventAssoc v2r0, STTools v1r2, 
+     DetSys v7r5, DetCond v7r7, DetCondExample v7r6, DAQSys v1r7, STDAQ v1r6,
+     IOExample v1r5
+
+>>>>>>>> NB This is not yet a fully functional clean release <<<<<<<<
+>>>>>>>>      Following need to be fixed before release      <<<<<<<<
+ - In LHCbKernel v5r14, DetCond v7r7
+   . Add hacks to pick up SEAL_1_7_5 (for Cintex fix, binary compatible with
+     1_7_4) and COOL_1_2_4 (because 1_2_5 from LCGCMT not yet existing)
+ - SmartRefs, at last in MCHits, are not read back correctly from POOL files
+ - AssociatorSys DLLs need to be loaded ahead of POOL dictionaries, not yet
+   understood why
+>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>><<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+
+ - In LHCb v19r0
+   . Remove creation of DataOnDemandSvc from LHCbApplication.opts, as this must
+     be done *after* creation of PoolDbCacheSvc in GaudiPoolDbRoot.opts
+
+ - In LHCbKernel v5r14,  DAQEvent v5r3, GenEvent v3r4, LinkerInstances v2r1, 
+      PackedEvent v1r2, DetSys v7r5
+   . Modify requirements to produce reflex dictionaries
+
+ - In LHCbKernel v5r14
+   . Add no. of strips per Beetle to constants
+   . Clean up some of the RICH enums
+
+ - In Relations v2r6, EventAssoc v2r0
+   . Change custom dictionary for Reflex
+
+ - In EventSys v20r10
+   . Change PoolDicts.opts to load SEAL Reflex dictionaries
+   . Disable lcgdictcheck test, not yet working with Reflex
+
+ - In TrackEvent v1r4
+   . TrackKeys.h and StateKeys.h files removed. Enumerations now produced in
+     Track.xml and State.xml
+   . Bug fixes in closestState, closestToZ, closestToPlane methods of Track
+   . Bug fix to Node chi2 calculation
+   . Added Measurement::update() method
+   . Added history enums for converted tracks
+   . Improved doxygen documentation
+
+ - In DetCond v7r7, DetCondExample v7r6
+   . Minimal changes to follow changes in Gaudi, COOL, SEAL, POOL
+
+ - In STDAQ v1r6
+   . Change job option, to cluster by Beetle instead of by port
+
+ - In STTools v1r2
+   . Add tool to give cluster properties (position and error), with interface
+     ISTClusterPosition
+
+ - In IOExample v1r5
+   . Various cleanups for Reflex persistency
+
+</PRE><H1><A NAME=v18r9>2005-09-22 LHCbSys v18r9</A></H1><PRE>
 This version uses Gaudi v16r5
 
  - Packages removed:  LHCbInterfaces. All interfaces moved to LHCbKernel/Kernel
