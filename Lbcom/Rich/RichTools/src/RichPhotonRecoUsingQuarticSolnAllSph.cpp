@@ -5,7 +5,7 @@
  * Implementation file for class : RichPhotonRecoUsingQuarticSolnAllSph
  *
  * CVS Log :-
- * $Id: RichPhotonRecoUsingQuarticSolnAllSph.cpp,v 1.4 2005-10-18 13:04:28 jonrob Exp $
+ * $Id: RichPhotonRecoUsingQuarticSolnAllSph.cpp,v 1.5 2005-10-21 09:31:57 jonrob Exp $
  *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @author Antonis Papanestis
@@ -41,6 +41,7 @@ RichPhotonRecoUsingQuarticSolnAllSph( const std::string& type,
   // job options
   declareProperty( "FindUnambiguousPhotons",    m_testForUnambigPhots = false );
   declareProperty( "UseMirrorSegmentAllignment", m_useAlignedMirrSegs = true  );
+  declareProperty( "AssumeFlatSecondaries",     m_forceFlatAssumption = false );
   m_nQits[Rich::Aerogel] = 1;
   m_nQits[Rich::C4F10]   = 1;
   m_nQits[Rich::CF4]     = 1;
@@ -63,10 +64,8 @@ StatusCode RichPhotonRecoUsingQuarticSolnAllSph::initialize()
   if ( sc.isFailure() ) return sc;
 
   // get the detector elements
-  const DeRich * r1 = getDet<DeRich>( DeRichLocation::Rich1 );
-  const DeRich * r2 = getDet<DeRich>( DeRichLocation::Rich2 );
-  m_rich[Rich::Rich1] = r1;
-  m_rich[Rich::Rich2] = r2;
+  m_rich[Rich::Rich1] = getDet<DeRich>( DeRichLocation::Rich1 );
+  m_rich[Rich::Rich2] = getDet<DeRich>( DeRichLocation::Rich2 );
 
   // Get tools
   acquireTool( "RichMirrorSegFinder", m_mirrorSegFinder );
@@ -98,6 +97,9 @@ StatusCode RichPhotonRecoUsingQuarticSolnAllSph::initialize()
   }
   info() << "Number of secondary mirror iterations (aero/C4F10/CF4) : "
          << m_nQits << endreq;
+
+  if ( m_forceFlatAssumption )
+    Warning( "Assuming perfectly flat secondary mirrors", StatusCode::SUCCESS );
 
   return sc;
 }
@@ -269,29 +271,14 @@ reconstructPhoton ( const RichTrackSegment& trSeg,
   if ( m_useAlignedMirrSegs )
   {
 
-    // Iterate to final solution, improving the flat mirror data
-    int iIt(0);
-    while ( iIt < m_nQits[radiator] )
+    if ( m_forceFlatAssumption )
     {
+      // assume secondary mirrors are perfectly flat
 
-      // Get secondary mirror reflection point,
-      // using the best actual secondary mirror segment
-      m_rayTracing->intersectPlane( sphReflPoint,
-                                    virtDetPoint - sphReflPoint,
-                                    secSegment->centreNormalPlane(),
-                                    secReflPoint );
+      distance     = secSegment->centreNormalPlane().distance(detectionPoint);
+      virtDetPoint = detectionPoint - 2.0 * distance * secSegment->centreNormal();
 
-      // Construct plane tangential to secondary mirror passing through reflection point
-      const HepPlane3D 
-        plane( HepNormal3D( secSegment->centreOfCurvature() - secReflPoint ).unit(), 
-               secReflPoint );
-
-      // re-find the reflection of the detection point in the sec mirror
-      // (virtual detection point) with this mirror plane
-      distance     = plane.distance(detectionPoint);
-      virtDetPoint = detectionPoint - 2.0 * distance * plane.normal();
-
-      // solve the quartic using the new data
+      // solve the quartic
       if ( !solveQuarticEq( emissionPoint,
                             sphSegment->centreOfCurvature(),
                             virtDetPoint,
@@ -302,9 +289,49 @@ reconstructPhoton ( const RichTrackSegment& trSeg,
         return StatusCode::FAILURE;
       }
 
-      // increment iteration counter and continue until max iterations has been done
-      ++iIt;
     }
+    else
+    {
+      // Default mode. Use full spherical nature of secondaries
+
+      // Iterate to final solution, improving the flat mirror data
+      int iIt(0);
+      while ( iIt < m_nQits[radiator] )
+      {
+
+        // Get secondary mirror reflection point,
+        // using the best actual secondary mirror segment
+        m_rayTracing->intersectPlane( sphReflPoint,
+                                      virtDetPoint - sphReflPoint,
+                                      secSegment->centreNormalPlane(),
+                                      secReflPoint );
+
+        // Construct plane tangential to secondary mirror passing through reflection point
+        const HepPlane3D
+          plane( HepNormal3D( secSegment->centreOfCurvature() - secReflPoint ).unit(),
+                 secReflPoint );
+
+        // re-find the reflection of the detection point in the sec mirror
+        // (virtual detection point) with this mirror plane
+        distance     = plane.distance(detectionPoint);
+        virtDetPoint = detectionPoint - 2.0 * distance * plane.normal();
+
+        // solve the quartic using the new data
+        if ( !solveQuarticEq( emissionPoint,
+                              sphSegment->centreOfCurvature(),
+                              virtDetPoint,
+                              sphSegment->radius(),
+                              sphReflPoint ) )
+        {
+          //return Warning( "Failed to reconstruct photon using mirror segments" );
+          return StatusCode::FAILURE;
+        }
+
+        // increment iteration counter and continue until max iterations has been done
+        ++iIt;
+      }
+
+    } // end mirror type if
 
   }
   // --------------------------------------------------------------------------------------
@@ -489,13 +516,13 @@ correctAeroRefraction( const RichTrackSegment& trSeg,
   // Normalise photon vector
   photonDirection.setMag(1);
   // get refractive indices for aerogel and c4f10
-  const double refAero  
+  const double refAero
     = m_refIndex->refractiveIndex( Rich::Aerogel, trSeg.avPhotonEnergy() );
-  const double refc4f10 
+  const double refc4f10
     = m_refIndex->refractiveIndex( Rich::C4F10,   trSeg.avPhotonEnergy() );
   const double RratioSq = (refAero*refAero)/(refc4f10*refc4f10);
   // Apply Snells law and update angle
-  HepVector3D newDir( 0, 0, 
+  HepVector3D newDir( 0, 0,
                       sqrt(1.-(1.-photonDirection.z()*photonDirection.z())/RratioSq ) );
   const double R = photonDirection.y()/photonDirection.x();
   newDir.setX( sqrt( (1.-newDir.z()*newDir.z())/(1. + R*R) ) );
@@ -549,13 +576,13 @@ solveQuarticEq (const HepPoint3D& emissionPoint,
   // use full 'GSL' function
   gsl_complex solutions[4];
   if ( 0 == gsl_poly_complex_solve_quartic( a[1]/a[0], // a
-                                            a[2]/a[0], // b
-                                            a[3]/a[0], // c
-                                            a[4]/a[0], // d
-                                            &solutions[0],
-                                            &solutions[1],
-                                            &solutions[2],
-                                            &solutions[3] ) ) { return false; }
+  a[2]/a[0], // b
+  a[3]/a[0], // c
+  a[4]/a[0], // d
+  &solutions[0],
+  &solutions[1],
+  &solutions[2],
+  &solutions[3] ) ) { return false; }
 
   // normal vector to reflection plane
   const HepVector3D nvec1 = evec.cross(dvec);
@@ -565,12 +592,12 @@ solveQuarticEq (const HepPoint3D& emissionPoint,
   int j = 0;
   for ( int i = 0; i<4 && j<2; ++i )
   {
-    if ( 0 == GSL_IMAG(solutions[i]) )
-    {
-      delta[j] = evec;
-      delta[j].setMag(radius);
-      delta[j++].rotate( asin(GSL_REAL(solutions[i])), nvec1);
-    }
+  if ( 0 == GSL_IMAG(solutions[i]) )
+  {
+  delta[j] = evec;
+  delta[j].setMag(radius);
+  delta[j++].rotate( asin(GSL_REAL(solutions[i])), nvec1);
+  }
   }
 
   // Finally, form the reflection point on the spherical mirror

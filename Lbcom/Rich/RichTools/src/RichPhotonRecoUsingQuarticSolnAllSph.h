@@ -5,7 +5,7 @@
  *  Header file for tool : RichPhotonRecoUsingQuarticSoln
  *
  *  CVS Log :-
- *  $Id: RichPhotonRecoUsingQuarticSolnAllSph.h,v 1.3 2005-10-13 16:11:07 jonrob Exp $
+ *  $Id: RichPhotonRecoUsingQuarticSolnAllSph.h,v 1.4 2005-10-21 09:31:57 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @author Antonis Papanestis
@@ -209,6 +209,14 @@ private: // data
    *  not be done.
    */
   bool m_useAlignedMirrSegs;
+
+  /** @brief Flag to force the assumption that the secondary mirrors are perfectly flat
+   *
+   *  If set to true then the photon reconstruction will assume the secondary mirrors
+   *  are perfectly flat. If false (default) then the true spherical nature of the 
+   *  secondary mirrors is taken into account
+   */
+  bool m_forceFlatAssumption;
 
   /** Number of iterations of the quartic solution, for each radiator, in order 
    *  to account for the non-flat secondary mirrors. 
