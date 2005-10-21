@@ -5,7 +5,7 @@
  * Implementation file for class : RichRayTracingAllSph
  *
  * CVS Log :-
- * $Id: RichRayTracingAllSph.cpp,v 1.2 2005-10-13 16:11:07 jonrob Exp $
+ * $Id: RichRayTracingAllSph.cpp,v 1.3 2005-10-21 12:51:46 jonrob Exp $
  *
  * @author Antonis Papanestis
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
@@ -108,11 +108,13 @@ StatusCode RichRayTracingAllSph::initialize()
   {
     m_secMirrorSegRows[Rich::Rich1] = rich1->param<int>( "SecMirrorSegRows"    );
     m_secMirrorSegCols[Rich::Rich1] = rich1->param<int>( "SecMirrorSegColumns" );
+    info() << "Found spherical secondary mirrors for RICH1" << endreq;
   }
   else if ( rich1->exists("FlatMirrorSegRows") )
   {
     m_secMirrorSegRows[Rich::Rich1] = rich1->param<int>( "FlatMirrorSegRows"    );
     m_secMirrorSegCols[Rich::Rich1] = rich1->param<int>( "FlatMirrorSegColumns" );
+    info() << "Found flat secondary mirrors for RICH1" << endreq;
   }
   else
   {
@@ -132,11 +134,13 @@ StatusCode RichRayTracingAllSph::initialize()
   {
     m_secMirrorSegRows[Rich::Rich2] = rich2->param<int>( "SecMirrorSegRows" );
     m_secMirrorSegCols[Rich::Rich2] = rich2->param<int>( "SecMirrorSegColumns" );
+    info() << "Found spherical secondary mirrors for RICH2" << endreq;
   }
   else if ( rich2->exists("FlatMirrorSegRows") )
   {
     m_secMirrorSegRows[Rich::Rich2] = rich2->param<int>( "FlatMirrorSegRows" );
     m_secMirrorSegCols[Rich::Rich2] = rich2->param<int>( "FlatMirrorSegColumns" );
+    info() << "Found flat secondary mirrors for RICH2" << endreq;
   }
   else
   {
@@ -200,7 +204,6 @@ StatusCode RichRayTracingAllSph::intersectPDPanel ( const Rich::DetectorType,
                                                     const HepVector3D&,
                                                     RichGeomPhoton& ) const 
 {
-  
   return Warning ( "Unimplemented method", StatusCode::SUCCESS );
 }
 
@@ -241,7 +244,10 @@ StatusCode RichRayTracingAllSph::reflectBothMirrors( const Rich::DetectorType ri
                                                      HepVector3D& direction,
                                                      RichGeomPhoton& photon,
                                                      const RichTraceMode mode,
-                                                     const Rich::Side forcedSide ) const {
+                                                     const Rich::Side forcedSide ) const 
+{
+
+
 
   HepPoint3D tmpPosition( position );
   HepVector3D tmpDirection( direction );
@@ -255,9 +261,11 @@ StatusCode RichRayTracingAllSph::reflectBothMirrors( const Rich::DetectorType ri
     return StatusCode::FAILURE;
 
   // if not forced, check if still same side, if not change sides
-  if ( !mode.forcedSide() ) {
+  if ( !mode.forcedSide() ) 
+  {
     const Rich::Side tmpSide = m_rich[rich]->side(tmpPosition);
-    if ( side != tmpSide ) {
+    if ( side != tmpSide ) 
+    {
       side = tmpSide;
       tmpPosition = position;
       tmpDirection = direction;
@@ -269,20 +277,23 @@ StatusCode RichRayTracingAllSph::reflectBothMirrors( const Rich::DetectorType ri
   }
 
   // find segment
-  const DeRichSphMirror* sphSegment = m_mirrorSegFinder->
-    findSphMirror( rich, side, tmpPosition);
+  const DeRichSphMirror* sphSegment = m_mirrorSegFinder->findSphMirror( rich, side, tmpPosition);
 
   // depending on the tracing flag:
-  if ( mode.mirrorSegBoundary() ) {
+  if ( mode.mirrorSegBoundary() ) 
+  {
     // if reflection from a mirror segment is required
     if ( !sphSegment->intersects( position, direction ) ) {
       if (m_moni) m_sphMirMissedGap[rich]->fill(tmpPosition.x(), tmpPosition.y());
       return StatusCode::FAILURE;
     }
 
-  } else if (  mode.outMirrorBoundary() ) {
+  }
+  else if (  mode.outMirrorBoundary() ) 
+  {
     // check the outside boundaries of the (whole) mirror
-    if ( !sphSegment->intersects( position, direction ) ) {
+    if ( !sphSegment->intersects( position, direction ) ) 
+    {
       const RichMirrorSegPosition pos = m_rich[rich]->sphMirrorSegPos( sphSegment->mirrorNumber() );
       const HepPoint3D & mirCentre = sphSegment->mirrorCentre();
       bool fail( false );
