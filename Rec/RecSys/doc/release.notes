@@ -5,6 +5,63 @@ Purpose: LHCb reconstruction packages.
          This project groups together all the reconstruction packages needed
          by one or more LHCb applications. 
 
+</PRE><H1><A NAME=v2r0>2005-10-21 RecSys v2r0</A></H1><PRE>
+This version uses Gaudi v17r1, LHCb v19r0. Backwards compatible for RTTC data
+
+- Packages added:    MuonMoniDst v1r0 - Monitoring algorithms for Muon from DST
+
+- Packages modified: PatSys v1r3, PatTools v1r2, PatVelo v1r3, PatVeloTT v1r2,
+    PatPV v1r0p1, PatForward v1r1, PatChecker v1r2, PatFitParams v1r1,
+    TrackFitEvent v1r3, TrConverters v1r4, TrackProjectors v1r2p1,
+    TrackMatching v1r1, TrackMCTools v1r3, TrackIdealPR v1r3, TrgSys v2r11,
+    TrgMuon v1r3, TrgConverter v1r0p1
+
+- In PatTools v1r2
+  . Add projection number to PatTTCoord and sort according to it
+  . Fix wrong initialization of an iterator, causing random crashes in destructor
+
+- In PatVelo v1r3
+  . Set the history value of the track
+
+- In PatVeloTT v1r2
+  . New algorithm to add truth information to the PatTTCoord, for debugging
+  . Test wafer pointer before using it in call to STWafer::isInVDeadZone()
+
+- In PatForward v1r1
+  . Compute state after T stations, with momentum. Add momentum to firstState
+  . Ghost rejection using TT information, add TT measurements to track
+  . Refit X after adding stereo hits before fitting Y. Slightly slower, but
+    improves efficiency and ghost rejection
+  . Add IPatForwardTool, to reconstruct one track at a time. PatForward becomes
+    a simple loop on the input container
+
+- In PatChecker v1r2
+  . Count the expected hit according to the selected pattern in PatCounter
+
+- In PatFitParams v1r1
+  . Fit also the momentum. Remove the fit of the old parameters no longer used
+  . Allow to use the fitted MC Velo track instead of the PatVelo found one
+
+- In TrackFitEvent v1r3
+  . add method to update measurements parameters
+
+- In TrackProjectors v1r3
+  . Replace pow(x,3) by gsl_pow_3(x)
+
+- In TrConverters v1r4
+  . Added setHistory methods, tiny changes for speed optimization
+
+- In TrgMuon v1r3
+  . Provide a single algorithm for both HLT and MuonID muon track reconstruction
+  . Add HltMuonRec for Muon identification of Velo tracks
+  . Improved tuning of cuts, faster muon buffer decoding
+  . Requires changes in HltGeneric sequence, see release notes
+
+- In TrConverters v1r4, TrackMCTools v1r3, TrackMatching v1r1, TrackIdealPR v1r3,
+     PatPV v1r0p1, PatForward v1r1, PatVelo v1r3, PatVeloTT v1r2,
+     TrgConverter v1r0p1
+  . Adapt to changes in TrackKeys etc. enums, and move to Track.h and State.h
+
 </PRE><H1><A NAME=v1r5>2005-09-21 RecSys v1r5</A></H1><PRE>
 This version uses Gaudi v16r5, LHCb v18r9
 
