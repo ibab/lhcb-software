@@ -5,7 +5,7 @@
  * Implementation file for class : RichPhotonRecoUsingQuarticSolnAllSph
  *
  * CVS Log :-
- * $Id: RichPhotonRecoUsingQuarticSolnAllSph.cpp,v 1.5 2005-10-21 09:31:57 jonrob Exp $
+ * $Id: RichPhotonRecoUsingQuarticSolnAllSph.cpp,v 1.6 2005-10-21 13:34:41 jonrob Exp $
  *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @author Antonis Papanestis
@@ -294,7 +294,7 @@ reconstructPhoton ( const RichTrackSegment& trSeg,
     {
       // Default mode. Use full spherical nature of secondaries
 
-      // Iterate to final solution, improving the flat mirror data
+      // Iterate to final solution, improving the secondary mirror info
       int iIt(0);
       while ( iIt < m_nQits[radiator] )
       {
