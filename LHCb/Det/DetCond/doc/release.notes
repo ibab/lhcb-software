@@ -1,16 +1,20 @@
-# $Id: release.notes,v 1.56 2005-10-18 16:10:37 marcocle Exp $
+# $Id: release.notes,v 1.57 2005-10-21 16:34:07 cattanem Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Det/DetCond
 ! Responsible : Marco Clemencic
 ! Purpose     : Interface between LHCb and LGC/COOL project
 !-----------------------------------------------------------------------------
 
+================= Det/DetCond v7r7 2005-10-21 ================================
+! 2005-10-21 - Marco Cattaneo
+ - Add HACK in requirements to force using COOL_1_2_4. To be removed when LCGCMT
+   version used by Gaudi will provide a consistent set of libraries
+
 ! 2005-10-18 - Marco Clemencic
  - Cosmetic improvements
    (RelyConverter, CondDBGenericCnv, CondDBAccessSvc, CondDBCnvSvc)
  - Added `#include <vector>' in ICondDBAccessSvc.h and ICondDBCnvSvc.h
 
-================= Det/DetCond v7r7 2005-10-06 ================================
 ! 2005-10-05 - Marco Clemencic
  - Minimal update to follow API changes from COOL_1_1_0 to COOL_1_2_4
 
