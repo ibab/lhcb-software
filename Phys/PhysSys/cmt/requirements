@@ -6,39 +6,46 @@ branches doc cmt
 # nedit ../../*/*Sys/v*/cmt/requirements 
 
 #=======================================================
-use  PhysCoreSys                v1r4     Phys
+use  PhysCoreSys                v1r5     Phys
 #=======================================================
 # packages included in PhysCoreSys
 #=======================================================                                                                                                                                                                            
 use  CommonParticles    	v1r5p3   Phys
-use  DaVinciFilter      	v3r1p1   Phys
-use  DaVinciKernel      	v3r7     Phys
-use  DaVinciTools       	v12r1    Phys
-use  FlavourTagging     	v6r2     Phys
+use  DaVinciFilter      	v3r2     Phys
+use  DaVinciKernel      	v3r8     Phys
+use  DaVinciTools       	v12r2    Phys
+use  FlavourTagging     	v6r3     Phys
 use  Ks2PiPiSel         	v1r7     Phys
 use  ParticleMaker      	v1r6     Phys
 use  PhysSelections		v6r12    Phys
-use  DaVinciTransporter 	v2r0p3   Phys
-use  VertexFit			v1r7     Phys
-use  Tampering                  v1r2p1   Phys
+use  DaVinciTransporter 	v2r1     Phys
+use  VertexFit			v1r8     Phys
+use  Tampering                  v1r3p1   Phys
 # Generic tools 
 use  Utilities          	v2r1p1   Tools
 use  RecoTools          	v1r1     Rec
 
+# Temporary
+use  MuonID             	v3r9     Muon
+use  RecoTools          	v1r1     Rec
+
+
 # Not in DaVinci v12rX
 use  KaliCalo            	v1r0     Phys
 
+
 #=======================================================
-use PhysMCSys                   v1r4     Phys
+use PhysMCSys                   v1r5     Phys
 #=======================================================
 # packages included in PhysMCSys
 #=======================================================
-use  DaVinciAssociators 	v5r5     Phys 	
-use  DaVinciEff         	v3r4     Phys 	
-use  DaVinciMCTools     	v5r15    Phys 	
-use  DaVinciTest        	v5r6     Phys 	
-use  DaVinciUser        	v5r2     Phys 	
+use  DaVinciAssociators 	v5r5     Phys
+use  DaVinciEff         	v3r4     Phys
+use  DaVinciMCTools     	v5r16    Phys
+use  DaVinciTest        	v5r6     Phys
+use  DaVinciUser        	v5r2     Phys
 use  FlavourTaggingChecker      v1r0     Phys
+use  PVEff	                v1r0p1   Phys
 
 #=======================================================
 use LoKiSys                     v1r4     Tools
@@ -62,13 +69,13 @@ use HltSys                      v1r5     Hlt
 #=======================================================
 # packages included in HltSys
 #=======================================================
-use HltGeneric                  v2r6     Hlt
-use HltSelections               v3r8     Hlt
-use HltSelChecker               v3r7     Hlt
+use HltGeneric                  v2r7     Hlt
+use HltSelections               v3r9     Hlt
+use HltSelChecker               v3r8     Hlt
 use HltMonitor                  v1r1     Hlt
 
 #=======================================================
-use  PhysSelSys			v8r8     PhysSel
+use  PhysSelSys			v8r9     PhysSel
 #=======================================================
 # packages included in PhysSelSys	
 #=======================================================
@@ -77,32 +84,33 @@ use  B2HH                       v2r5     PhysSel
 use  B2RhoRho                   v1r9     PhysSel
 use  B2XGamma                   v3r1     PhysSel
 use  Bd2DPi                     v1r0     PhysSel
-use  Bd2D0Kstar                 v4r3p2   PhysSel
+use  Bd2D0Kstar                 v4r4     PhysSel
 use  Bd2DstarPi                 v2r7p2   PhysSel
 use  Bd2JpsiKs                  v2r6p1   PhysSel
 use  Bd2JpsiKstar               v2r2     PhysSel
-use  Bd2MuMuKstar               v2r3p1   PhysSel
+use  Bd2MuMuKstar               v2r3p2   PhysSel
 use  Bd2PhiKs                   v4r3     PhysSel
 use  Bd2PiPiPi0                 v2r2p2   PhysSel
 use  Bd2a1Dstar                 v2r4     PhysSel
 use  Bc2RhoPi                   v1r0     PhysSel  
-use  Bs2DsDs                    v2r1p1   PhysSel
+use  Bs2DsDs                    v2r2     PhysSel
 use  Bs2DsH                     v3r4p1   PhysSel 
-use  Bs2JpsiEta                 v4r2     PhysSel
-use  Bs2JpsiPhi                 v2r3p3   PhysSel
+use  Bs2JpsiEta                 v4r2p1   PhysSel
+use  Bs2JpsiPhi                 v2r3p4   PhysSel
 use  Bs2KsKs                    v2r3     PhysSel
 use  Bs2KstarKstar              v1r4     PhysSel
 use  Bs2MuMu                    v2r4p3   PhysSel
-use  Bs2PhiEtac                 v3r5     PhysSel
+use  Bs2PhiEtac                 v3r6     PhysSel
 use  Bs2PhiPhi                  v2r3p3   PhysSel
 use  Bu2KsPi                    v2r4     PhysSel
-use  Bu2LLK                     v2r3     PhysSel
+use  Bu2LLK                     v2r4     PhysSel
+use  Bu2JpsiK                   v1r0     PhysSel
 use  Bu2D0K                     v1r1p2   PhysSel
-use  D02MuMu                    v2r1     PhysSel 
-use  DsSelector                 v1r3     PhysSel
+use  D02MuMu                    v2r2     PhysSel 
+use  DsSelector                 v1r4     PhysSel
 use  Gamma2ee                   v1r4p2   PhysSel
 use  Jpsi                       v1r1p1   PhysSel
 use  Muon                       v1r2     PhysSel
 use  TriggerSel                 v1r0p2   PhysSel
 
-use  Stripping                  v3r0     Tools
+use  Stripping                  v3r1     Tools
