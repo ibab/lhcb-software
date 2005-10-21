@@ -1,4 +1,4 @@
-// Include files 
+// Include files
 #include "TaggerVertexChargeTool.h"
 
 //--------------------------------------------------------------------
@@ -50,7 +50,7 @@ Tagger TaggerVertexChargeTool::tag( const Particle* AXB0,
   std::vector<const Particle*>::const_iterator ip;
   std::vector<const Particle*> Pfit = toStdVector(SecVert->products());;
   for(ip=Pfit.begin(); ip!=Pfit.end(); ip++) { 
-    double a = std::pow((*ip)->pt(), m_PowerK);
+    double a = pow((*ip)->pt(), m_PowerK);
     Vch += (*ip)->charge() * a;
     norm+= a;
   }

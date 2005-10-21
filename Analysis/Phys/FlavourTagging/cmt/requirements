@@ -14,16 +14,12 @@ branches          cmt doc src options summary
 # Set the default paths for the Tagging options
 #============================================================================
 set FLAVOURTAGGINGOPTS ${FLAVOURTAGGINGROOT}/options
-# include_dirs           $(FLAVOURTAGGINGROOT)
 
 # Used packages. 
 #============================================================================
 use DaVinciKernel   v*  Phys
-use L0Event	    v*  Event
 use TrgEvent        v*  Event
-use GenEvent        v*  Event
 use RecoTools       v*  Rec
-use Tampering       v*  Phys
 use MuonID          v*  Muon
 
 # Component library building rule
