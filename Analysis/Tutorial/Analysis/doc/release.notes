@@ -8,6 +8,12 @@
 !
 !-----------------------------------------------------------------------------
 
+! 2005-10-21 - P. Koppenburg 
+  - cmt/requirements
+    . Use DaVinci v12r14
+  - solution2/TutorialAlgorithm.cpp
+    . Typo in name of J/psi
+  
 ! 2004-11-08 - P. Koppenburg 
   - cmt/requirements
     . Use DaVinci. That's much simpler. Thanks to Andrew for noticing.

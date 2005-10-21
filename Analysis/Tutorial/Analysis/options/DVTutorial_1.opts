@@ -35,6 +35,7 @@ Tutorial.Members += { "TutorialAlgorithm/Jpsi2MuMu" };
 Jpsi2MuMu.PhysDesktop.InputLocations = { "Phys/PreLoadParticles" } ;
 Jpsi2MuMu.ParticleFilter.CriteriaNames = { "PIDFilterCriterion/Muons" } ;
 Jpsi2MuMu.ParticleFilter.Muons.ParticleNames = {"mu+", "mu-"} ;
+Jpsi2MuMu.Particle = "J/psi(1S)" ;
 Jpsi2MuMu.MassWindow = 50*MeV ;
 Jpsi2MuMu.MaxChi2 = 100 ;
 Jpsi2MuMu.OutputLevel = 3 ;

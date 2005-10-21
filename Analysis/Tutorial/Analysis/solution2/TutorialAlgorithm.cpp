@@ -1,4 +1,4 @@
-// $Id: TutorialAlgorithm.cpp,v 1.2 2004-11-09 14:59:01 pkoppenb Exp $
+// $Id: TutorialAlgorithm.cpp,v 1.3 2005-10-21 08:50:29 pkoppenb Exp $
 // Include files 
 
 // from Gaudi
@@ -31,7 +31,7 @@ TutorialAlgorithm::TutorialAlgorithm( const std::string& name,
 {
   declareProperty("MassWindow", m_MassWin = 10.*GeV); 
   declareProperty("MaxChi2",    m_Chi2 = 1000.);
-  declareProperty("Particle",   m_Name = "J/Psi(1S)");
+  declareProperty("Particle",   m_Name = "J/psi(1S)");
 }
 //=============================================================================
 // Destructor
