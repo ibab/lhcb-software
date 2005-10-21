@@ -3,6 +3,25 @@ Package: Rec/Brunel
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb reconstruction program
 
+</PRE><H1><A NAME=v28r0>2005-10-21 Brunel v28r0</A></H1><PRE>
+This version uses Gaudi v17r1, LHCb v19r0, Lbcom v3r0, Rec v2r0, XmlDDDB v26r2
+Requires input from Gauss v19r3 or greater.
+
+>>>> Not yet ready for release
+>>>> Currently crashes due to problem reading MCHits with Gaudi v17r1
+>>>> Can be used to test reconstruction by switching off monitoring and DstWriter
+
+ - New features:
+   . Add MUON sequence to Moni phase, executes MuonRecChecker (MuonMoniDst v1r0)
+
+ - New tuning
+   . ST clustering by Beetle instead of by port (STDAQ v1r6, ITAlgorithms v15r1)
+   . Use ISTClusterPosition tool in ITClusterCreator
+    (STTools v1r2, ITAlgorithms v15r1)
+
+ - Persistency changes:
+   . Uses SEAL Reflex persistency
+
 </PRE><H1><A NAME=v27r5>2005-09-22 Brunel v27r5</A></H1><PRE>
 This version uses Gaudi v16r5, LHCb v18r9, Rec v1r5, Lbcom v2r5
 Requires input data from Boole v9r2 or greater. Incompatible with DC04 versions
