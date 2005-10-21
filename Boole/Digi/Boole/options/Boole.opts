@@ -125,6 +125,7 @@ DigiVELOSeq.Members += { "PrepareVeloRawBuffer" };
 //--------------------------------------------------------------
 // Relations to MC truth. Built unconditionally regardless of monitoring
 //--------------------------------------------------------------
+ApplicationMgr.ExtSvc += { "DataOnDemandSvc" };
 DataOnDemandSvc.Nodes += { "DATA='/Event/Rec'           TYPE='DataObject'",
                            "DATA='/Event/Rec/Relations' TYPE='DataObject'" };
 

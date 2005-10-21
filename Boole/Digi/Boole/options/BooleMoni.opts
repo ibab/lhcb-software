@@ -8,7 +8,7 @@ RootHistCnv.ForceAlphaIds = true;
 //--------------------------------------------------------------
 // Detectors to monitor
 //--------------------------------------------------------------
-Moni.DetectorList = { "VELO", "IT", "OT", "RICH", "CALO", "L0" };
+Moni.DetectorList = { "VELO", "IT", "OT", "RICH", "CALO", "MUON", "L0" };
 
 //--------------------------------------------------------------
 // Monitoring algorithms
@@ -46,6 +46,10 @@ MoniCALOSeq.Members += { "CaloDigitMonitor/PrsMoni" };
 MoniCALOSeq.Members += { "CaloDigitMonitor/EcalMoni" };
 MoniCALOSeq.Members += { "CaloDigitMonitor/HcalMoni" };
 #include "$CALOMONIDIGIOPTS/MoniDigi.opts"
+
+// Muon
+ApplicationMgr.DLLs += { "MuonMoniDigi" };
+MoniMUONSeq.Members += { "MuonDigitChecker" };
 
 // Uncomment following options to print a line before and after every algorithm
 // Useful to debug sequencing problems, or segmentation faults

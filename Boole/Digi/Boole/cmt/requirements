@@ -1,5 +1,5 @@
 package Boole
-version v9r5
+version v10r0
 
 branches doc cmt job options
 
@@ -7,51 +7,52 @@ branches doc cmt job options
 set BOOLEOPTS  $(BOOLEROOT)/options
 
 #-- CMT and GaudiPolicy
-use GaudiPolicy v5r20
+use GaudiPolicy v5r21
 
 #-- External libraries now taken from LCG, version defined by GaudiEnv
 
-#-- Gaudi libraries (from GAUDI_v16r5)
-use GaudiKernel		v19r3
-use GaudiSvc 		v14r0
-use GaudiAlg 		v8r9
-use GaudiPoolDb		v1r14
-use GaudiObjDesc 	v7r4
-use RootHistCnv         v9r4
+#-- Gaudi libraries (from GAUDI_v17r1)
+use GaudiKernel		v20r0
+use GaudiSvc 		v14r2        -no_auto_imports
+use GaudiAlg 		v9r1         -no_auto_imports
+use GaudiPoolDb		v2r1         -no_auto_imports
+use GaudiObjDesc 	v8r2         -no_auto_imports
+use RootHistCnv         v9r5         -no_auto_imports
 
 #-- Databases
-use XmlDDDB	v26r2   Det
-use ParamFiles	v3r11	-no_auto_imports
-use FieldMap	v4r5
-use BooleDQ	v1r0	DQ
+use XmlDDDB            v26r2    Det  -no_auto_imports
+use ParamFiles	       v3r11	     -no_auto_imports
+use FieldMap	        v4r5         -no_auto_imports
+use BooleDQ	        v1r0	DQ   -no_auto_imports
 
-#-- LHCb libraries (from LHCB_v18r9)
-use LHCb	v18r9
+#-- LHCb libraries (from LHCB_v19r0)
+use LHCb	       v19r0         -no_auto_imports
 
-#-- Lbcom packages (from LBCOM_v2r5)
-use LbcomSys    v2r5
+#-- Lbcom packages (from LBCOM_v3r0)
+use LbcomSys            v3r0         -no_auto_imports
 
-#-- BooleSys v9r5 packages
+#-- BooleSys v10r0 packages
 
-use DigiAlg		v3r0	Digi
+use DigiAlg		v3r0	Digi -no_auto_imports
 
 # Calorimeter
-use CaloMoniDigi        v1r0	Calo
-use CaloDigit           v1r8	Calo
+use CaloMoniDigi        v1r0	Calo -no_auto_imports
+use CaloDigit           v1r8	Calo -no_auto_imports
 
 # Velo
-use VeloAlgorithms      v3r3	Velo
+use VeloAlgorithms      v3r3	Velo -no_auto_imports
 
 # Outer Tracker
-use OTSimulation	v2r0	OT
+use OTSimulation	v2r0	OT   -no_auto_imports
 
 # Muon
-use MuonAlgs            v5r7	Muon
-use MuonBackground	v1r10p1	Muon
+use MuonAlgs            v5r7	Muon -no_auto_imports
+use MuonBackground	v1r10p1	Muon -no_auto_imports
+use MuonMoniDigi        v1r0    Muon -no_auto_imports
 
 # Rich
-use RichDigiQC	        v2r2  	Rich
-use RichReadout		v1r13	Rich
+use RichDigiQC	        v2r2  	Rich -no_auto_imports
+use RichReadout		v1r13	Rich -no_auto_imports
 
 #===== build Boole =========================
 application Boole $(GAUDICONFROOT)/src/GaudiMain.cpp
