@@ -1,8 +1,11 @@
-! $Id: release.notes,v 1.74 2005-10-19 07:31:52 pkoppenb Exp $
+! $Id: release.notes,v 1.75 2005-10-21 14:47:05 pkoppenb Exp $
 ! Package     : DaVinciKernel
 ! Responsible : P. Koppenburg
 
 
+! 2005-10-21 - P. Koppenburg
+  - Kernel/IParticleDescendants.h
+    . New utility tool that returns the daughters of a Particle
 !========================== DaVinciKernel v3r8 2005-10-19 ===================
 ! 2005-10-17 - P. Koppenburg
   - Kernel/IOnOffline.h

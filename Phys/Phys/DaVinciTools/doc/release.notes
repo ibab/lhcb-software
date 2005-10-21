@@ -1,7 +1,10 @@
-! $Id: release.notes,v 1.179 2005-10-19 07:32:38 pkoppenb Exp $
+! $Id: release.notes,v 1.180 2005-10-21 14:48:07 pkoppenb Exp $
 ! Package     : DaVinciTools
 ! Responsible : P. Koppenburg
 
+! 2005-10-21 - P. Koppenburg
+  - src/ParticleDescendants.{h,cpp}
+    . New utility tool that returns the daughters of a Particle
 !========================== DaVinciTools v12r2 2005-10-19 ===================
 ! 2005-10-17 - P. Koppenburg
   - src/OnOfflineTool.{cpp,h}
