@@ -1,16 +1,18 @@
-# $Id: requirements,v 1.20 2005-04-21 11:43:06 cattanem Exp $
+# $Id: requirements,v 1.21 2005-10-21 16:27:25 cattanem Exp $
 package IOExample
-version v1r4p2
+version v1r5
 
 branches doc options cmt
 
-use GaudiSvc            v*
-use GaudiPoolDb         v*
+use GaudiKernel         v*
 
-use GaudiConf           v*
-use MCTools		v* Phys
-use EventSys            v* Event
-use AssociatorsSys	v* Associators
+# Remaining uses only needed to define environment variables, not for linking
+use GaudiSvc            v*              -no_auto_imports
+use GaudiPoolDb         v*              -no_auto_imports
+use GaudiConf           v*              -no_auto_imports
+use MCTools		v* Phys         -no_auto_imports
+use EventSys            v* Event        -no_auto_imports
+use AssociatorsSys	v* Associators  -no_auto_imports
         
 #==> IO example
 application IOMin    "$(GAUDICONFROOT)/src/GaudiMain.cpp"

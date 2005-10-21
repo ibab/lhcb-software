@@ -8,19 +8,16 @@ EventSelector.PrintFreq = 1;
 // Job options to set up the POOL persistency
 #include "$GAUDIPOOLDBROOT/options/GaudiPoolDbRoot.opts"
 
-// DLLs that contain the necessary dictionaries and factories
-ApplicationMgr.DLLs += { "CaloEvent", "DAQEvent" };
+// DLLs that contain the necessary dictionaries
 #include "$EVENTSYSROOT/options/PoolDicts.opts"
 
 // Updates the local POOL catalog with the created file
 PoolDbCacheSvc.Catalog = {"xmlcatalog_file:MyCatalog.xml"};
 
-//--------------------------------------------------------------
-// Persistency service setup: 
-//--------------------------------------------------------------
-EventDataSvc.RootCLID = 1;
-EventDataSvc.ForceLeaves = 1;
+// Set up the OutputStream that copies an event data file
+ApplicationMgr.OutStream += {"InputCopyStream/InputCopyStream"};
 
-#include "$IOEXAMPLEROOT/options/PoolDst.opts"  // Copy a OODST
-//#include "$IOEXAMPLEROOT/options/PoolDigi.opts"  // Copy a OODIGI
-//#include "$IOEXAMPLEROOT/options/PoolSim.opts"  // Copy a OOSIM
+// Select an input file type
+#include "$IOEXAMPLEROOT/options/PoolDst.opts"   // Copy a DST
+//#include "$IOEXAMPLEROOT/options/PoolDigi.opts"  // Copy a DIGI
+//#include "$IOEXAMPLEROOT/options/PoolSim.opts"   // Copy a SIM
