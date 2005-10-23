@@ -5,7 +5,7 @@
  * Implementation file for class : RichTrSegMakerFromRecoTracks
  *
  * CVS Log :-
- * $Id: RichTrSegMakerFromRecoTracks.cpp,v 1.1 2005-10-13 16:11:08 jonrob Exp $
+ * $Id: RichTrSegMakerFromRecoTracks.cpp,v 1.2 2005-10-23 15:45:13 jonrob Exp $
  *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @date 14/01/2002
@@ -180,7 +180,7 @@ int RichTrSegMakerFromRecoTracks::constructSegments( const ContainedObject * obj
     // choose appropriate z start position for initial track states for this radiator
     const double zStart = ( Rich::CF4 == rad ? m_nomZstates[2] : m_nomZstates[0] );
     // Get the track entry state points
-    const State * entryPStateRaw = myClosestState( track, zStart );
+    const State * entryPStateRaw = &(track->closestState(zStart));
     if ( !entryPStateRaw || fabs(zStart-entryPStateRaw->z()) > m_zTolerance[rad] ) continue;
 
     // check above electron threshold
@@ -196,7 +196,7 @@ int RichTrSegMakerFromRecoTracks::constructSegments( const ContainedObject * obj
     // choose appropriate z end position for initial track states for this radiator
     const double zEnd   = ( Rich::CF4 == rad ? m_nomZstates[3] : m_nomZstates[1] );
     // Get the track enrty state points
-    const State * exitPStateRaw = myClosestState( track, zEnd );
+    const State * exitPStateRaw = &(track->closestState(zEnd));
     if ( !exitPStateRaw || fabs(zEnd-exitPStateRaw->z()) > m_zTolerance[rad] ) continue;
 
     // Clone entry state

@@ -7,6 +7,9 @@
 ! 2005-10-21 - Chris Jones
  - Add option to force flat secondary mirror assumption
 
+! 2005-10-18 - Chris Jones
+ - Add support for new Track event model. New tool RichTrSegMakerFromRecoTracks.
+
 ! 2005-10-13 - Chris Jones
  - Import RichParticleProperties tool from RichRecTools
  - Add beginnings of support for conditions data base. 

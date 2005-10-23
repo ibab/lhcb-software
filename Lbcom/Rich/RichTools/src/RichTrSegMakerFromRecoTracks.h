@@ -5,7 +5,7 @@
  *  Header file for tool : RichTrSegMakerFromRecoTracks
  *
  *  CVS Log :-
- *  $Id: RichTrSegMakerFromRecoTracks.h,v 1.2 2005-10-18 13:04:28 jonrob Exp $
+ *  $Id: RichTrSegMakerFromRecoTracks.h,v 1.3 2005-10-23 15:45:13 jonrob Exp $
  *
  *  @author Chris Jones    Christopher.Rob.Jones@cern.ch
  *  @date   14/01/2002
@@ -133,12 +133,6 @@ private: // methods
                         const double z,
                         const State * refState = 0 ) const;
 
-  /** Finds the state closest to a given z
-   *  Temporary, whilst the track method doesn't work !!
-   */
-  const State * myClosestState( const Track * track,
-                                const double z ) const;
-
   /// UMS Update method for Rich1 nominal radius of curvature
   StatusCode updateR1nomRad();
 
@@ -186,23 +180,5 @@ private: // data
   bool m_extrapFromRef;
 
 };
-
-inline const State *
-RichTrSegMakerFromRecoTracks::myClosestState( const Track * track,
-                                              const double z ) const
-{
-  // should use this, but doesn't work yet
-  // return &Track->closestState(z);
-  // so instead do things by hand
-  double zDiff = 999999999;
-  const State * st(0);
-  for ( std::vector<State*>::const_iterator iS = track->states().begin();
-        iS != track->states().end(); ++iS )
-  {
-    const double diff = fabs( (*iS)->z() - z );
-    if ( diff < zDiff ) { zDiff = diff; st = (*iS); }
-  }
-  return st;
-}
 
 #endif // RICHTOOLS_RICHTRSEGMAKERFROMRECOTRACKS_H
