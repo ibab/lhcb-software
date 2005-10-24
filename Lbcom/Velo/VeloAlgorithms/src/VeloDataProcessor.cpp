@@ -11,12 +11,13 @@
 
 // local
 #include "VeloDataProcessor.h"
-#include "VeloSim.h"
+//#include "VeloSim.h"
 
 // Velo
 #include "Event/MCVeloFE.h"
 #include "Event/MCVeloFE.h"
-#include "Event/VeloFullDigit.h"
+#include "Event/VeloFullFPGADigit.h"
+#include "Event/VeloDigit.h"
 #include "VeloKernel/VeloDigiParams.h"
 #include "VeloKernel/VeloSimParams.h"
 #include "VeloAlgorithms/VeloEventFunctor.h"
@@ -31,13 +32,15 @@ const        IAlgFactory& VeloDataProcessorFactory = Factory ;
 VeloDataProcessor::VeloDataProcessor( const std::string& name,
                                       ISvcLocator* pSvcLocator)   
   : Algorithm ( name , pSvcLocator )
-  , m_inputContainer       ( MCVeloFELocation::Default )
-  , m_outputContainer      ( VeloFullDigitLocation::Default )
-  , m_noiseConstant        (VeloSimParams::noiseConstant)
+  , m_inputContainer           ( MCVeloFELocation::Default )
+  , m_outputVeloFPGADigit      ( VeloFullFPGADigitLocation::Default )
+  , m_outputVeloDigit          ( VeloDigitLocation::Default )
+  , m_noiseConstant            (VeloSimParams::noiseConstant)
   {
-  declareProperty( "InputContainer"      ,m_inputContainer  );
-  declareProperty( "OutputContainer"     ,m_outputContainer );
-  declareProperty( "NoiseConstant"       ,m_noiseConstant);
+  declareProperty( "InputContainer"          ,m_inputContainer  );
+  declareProperty( "OutputVeloFPGADigit"     ,m_outputVeloFPGADigit );
+  declareProperty( "OutputVeloDigit"         ,m_outputVeloDigit );
+  declareProperty( "NoiseConstant"           ,m_noiseConstant);
 }
 
 //=============================================================================
@@ -74,7 +77,8 @@ StatusCode VeloDataProcessor::execute() {
 
   // make digits 
 
-   VeloFullDigits* mydigitvector=new VeloFullDigits();
+   VeloFullFPGADigits* fpgaDigitVec=new VeloFullFPGADigits();
+   VeloDigits* veloDigitVec=new VeloDigits();
    
    log <<  MSG::DEBUG << "Retrieved " << MCFEs->size() << " MCVeloFEs" << endreq;
    int icount=0;
@@ -82,40 +86,40 @@ StatusCode VeloDataProcessor::execute() {
         MCFEs->end() != MCFEIt ; MCFEIt++ ) {
      icount++;
 
-    // take an MCFE make a VeloFullDigit
+    // take an MCFE make a VeloFullFPGADigit and VeloDigit
      VeloChannelID myKey((*MCFEIt)->key());
-     VeloFullDigit* mydigit = new VeloFullDigit(myKey);
+     VeloFullFPGADigit* fpgaDigit = new VeloFullFPGADigit(myKey);
+     VeloDigit* veloDigit=new VeloDigit(myKey);
      int ADC=int(digitise(float((*MCFEIt)->charge()))); 
-     mydigit->setRawADCValue(ADC);
-
-     // following will come from data processing 
-     // but currently no pedestals/CM noise applied
-     mydigit->setADCValue(ADC);
-     mydigit->setSubtractedPedestal(0.);
-     mydigit->setSubtractedCM(0.);
-     // noise - use sigma of generator distribution
+     fpgaDigit->setRawADCValue(ADC);
+     veloDigit->setADCValue(ADC);
      float noise=digitise(float(noiseSigma()));
-     mydigit->setRawNoise(noise);
-     mydigit->setNoise(noise);
-     mydigitvector->insert(mydigit);  
+     fpgaDigit->setRawNoise(noise);
+     fpgaDigit->setNoise(noise);
+     fpgaDigitVec->insert(fpgaDigit);
+     veloDigitVec->insert(veloDigit);
 
    }
 
-// sort VeloFullDigits into order of ascending sensor + strip
-  std::stable_sort(mydigitvector->begin(),mydigitvector->end(),VeloEventFunctor::Less_by_key<const VeloFullDigit*>());
+// sort VeloFullFPGADigits into order of ascending sensor + strip
+  std::stable_sort(fpgaDigitVec->begin(),fpgaDigitVec->end(),
+                   VeloEventFunctor::Less_by_key<const VeloFullFPGADigit*>());
+  std::stable_sort(veloDigitVec->begin(), veloDigitVec->end(),
+                   VeloEventFunctor::Less_by_key<const VeloDigit*>());
 
-  StatusCode sc = eventSvc()->registerObject(m_outputContainer,mydigitvector);
+  StatusCode scA = eventSvc()->registerObject(m_outputVeloFPGADigit, fpgaDigitVec);
+  StatusCode scB = eventSvc()->registerObject(m_outputVeloDigit, veloDigitVec);
 
-  if ( sc ) {
-   log << MSG::DEBUG << "Stored " << mydigitvector->size() << " VeloFullDigits at " 
-       << m_outputContainer << endreq;
+  if ( scA&&scB ) {
+   log << MSG::DEBUG << " ==> Stored " << fpgaDigitVec->size() 
+       << " VeloFullFPGADigits at " << m_outputVeloFPGADigit
+       << "/n and VeloDigits at " << m_outputVeloDigit << endreq;
   }
   else{
-    log << MSG::ERROR << "Unable to store VeloFullDigits at " 
-        << m_outputContainer << endreq;
+    log << MSG::ERROR << " ==> Unable to store Digits vectors!!" << endreq;
    }
 
-   return sc;
+   return (scA&&scB);
 }
 
 StatusCode VeloDataProcessor::finalize() {

@@ -17,7 +17,7 @@
 // from Event
 #include "Event/MCVeloFE.h"
 #include "Event/VeloCluster.h"
-#include "Event/VeloFullDigit.h"
+#include "Event/VeloFullFPGADigit.h"
 #include "Kernel/VeloChannelID.h"
 // local
 #include "VeloClusterMaker.h"
@@ -33,7 +33,7 @@ const        IAlgFactory& VeloClusterMakerFactory = Factory ;
 VeloClusterMaker::VeloClusterMaker( const std::string& name,
                                     ISvcLocator* pSvcLocator) 
   : GaudiAlgorithm ( name , pSvcLocator )
-  , m_inputContainer                 ( VeloFullDigitLocation::Default )
+  , m_inputContainer                 ( VeloFullFPGADigitLocation::Default )
   , m_outputContainer                ( VeloClusterLocation::Default )
   , m_defaultSignalToNoiseCut        (3.0F)
   , m_defaultClusterSignalToNoiseCut (3.0F)
@@ -80,7 +80,7 @@ StatusCode VeloClusterMaker::initialize() {
 //  Main execution
 //=========================================================================
 StatusCode VeloClusterMaker::execute() {
-  // make clusters from VeloFullDigits
+  // make clusters from VeloFullFPGADigits
  
   debug() << "==> Execute" << endreq;
   makeClusters();
@@ -137,7 +137,7 @@ void VeloClusterMaker::makeClusters(){
   // still be made and stored
   m_clusters = new VeloClusters;
   // get all hits from which the clusters will be made
-  m_digits = get<VeloFullDigits>(m_inputContainer);
+  m_digits = get<VeloFullFPGADigits>(m_inputContainer);
 
   std::vector< DeVeloSensor * >::iterator iSens;
   std::vector< DeVeloSensor * > sensors = m_velo->vpSensors();
@@ -155,27 +155,27 @@ void VeloClusterMaker::makeClusters(){
     m_channelUsed.insert( m_channelUsed.begin(), 
                           m_velo->numberStrips(m_sensor), false); 
     // retrieve hits of detector 
-    std::pair<VeloFullDigits::iterator,VeloFullDigits::iterator> 
-      range=getVeloFullDigitsOfSensor(m_sensor);
+    std::pair<VeloFullFPGADigits::iterator,VeloFullFPGADigits::iterator> 
+      range=getVeloFullFPGADigitsOfSensor(m_sensor);
     if(isDebug) debug() << "makeClusters:retrieved digits for det " 
 			<< detIndex << " size " 
 			<< range.second - range.first << endreq;
     
     // sort by increasing ADC value          
     std::sort(range.first, range.second, 
-	      VeloEventFunctor::Less_by_adcValue<const VeloFullDigit*>());
+	      VeloEventFunctor::Less_by_adcValue<const VeloFullFPGADigit*>());
     // swap to decreasing ADC
     std::reverse(range.first, range.second);
 
     // iterate over hits
     
-    for (VeloFullDigits::iterator digIt = range.first; 
+    for (VeloFullFPGADigits::iterator digIt = range.first; 
          digIt!=range.second; digIt++) { 
       // try to make cluster from this hit
       float currentClusterSTN=0;
-      VeloFullDigit* currentDigit=*digIt;    
+      VeloFullFPGADigit* currentDigit=*digIt;    
       if(isVerbose) verbose()  <<"makeClusters: sorted by ADC  " 
-			       << currentDigit->adcValue() << " for sensor" 
+			       << currentDigit->adcValue(VeloFullFPGADigit::RAW) << " for sensor" 
 			       <<  currentDigit->sensor() << endreq;  
       VeloCluster* currentCluster=
 	makeClusterFromDigit(currentDigit,currentClusterSTN);
@@ -226,7 +226,7 @@ void VeloClusterMaker::makeClusters(){
 //  
 //=========================================================================
 VeloCluster* 
-VeloClusterMaker::makeClusterFromDigit(VeloFullDigit* currentDigit , 
+VeloClusterMaker::makeClusterFromDigit(VeloFullFPGADigit* currentDigit , 
 				       float& currentClusterSTN){
 
   bool isVerbose = msgLevel( MSG::VERBOSE );
@@ -288,7 +288,7 @@ VeloClusterMaker::makeClusterFromDigit(VeloFullDigit* currentDigit ,
 //=========================================================================
 bool VeloClusterMaker::TryToAddCentralChannel(VeloCluster * currentCluster,
                                               float& currentClusterSTN,
-                                              VeloFullDigit*  currentDigit){
+                                              VeloFullFPGADigit*  currentDigit){
   bool isVerbose = msgLevel( MSG::VERBOSE );
   // is this a suitable start for a cluster
 
@@ -297,7 +297,7 @@ bool VeloClusterMaker::TryToAddCentralChannel(VeloCluster * currentCluster,
 
   if ( m_channelUsed[stripIndex] ) return false;   // Channel already used
 
-  int signAdjust = ( currentDigit->adcValue() <= 0.0 ) ? -1 : +1;
+  int signAdjust=(currentDigit->adcValue(VeloFullFPGADigit::RAW)<=0.0) ? -1 : +1;
   bool passesDetectorSTNCut = ( signAdjust*currentDigit->signalToNoise() > 
 				signalToNoiseCut(m_sensor) ); 
   if ( !passesDetectorSTNCut) {
@@ -311,7 +311,7 @@ bool VeloClusterMaker::TryToAddCentralChannel(VeloCluster * currentCluster,
   addDigit(currentCluster,currentClusterSTN,currentDigit,0);
 
   if(isVerbose) verbose()  << " stripID" << stripId 
-			   << " ADC " << currentDigit->adcValue() 
+			   << " ADC " << currentDigit->adcValue(VeloFullFPGADigit::RAW) 
 			   << " STN " << currentClusterSTN << endmsg;
   // All done OK
   return true;
@@ -322,7 +322,7 @@ bool VeloClusterMaker::TryToAddCentralChannel(VeloCluster * currentCluster,
 //=========================================================================
 bool VeloClusterMaker::TryToAddChannel(VeloCluster * currentCluster,
                                        float& currentClusterSTN, 
-                                       VeloFullDigit*  currentDigit, 
+                                       VeloFullFPGADigit*  currentDigit, 
                                        int offset){
 
   bool isVerbose = msgLevel( MSG::VERBOSE );
@@ -335,7 +335,7 @@ bool VeloClusterMaker::TryToAddChannel(VeloCluster * currentCluster,
   if (!sc) return false; // no available neighbour
   int nearbyStripIndex = nearbyStripId.strip();
   if ( m_channelUsed[nearbyStripIndex] ) return false;  // Channel already used
-  VeloFullDigit *nearbyDigit =m_digits->object(nearbyStripId);
+  VeloFullFPGADigit *nearbyDigit =m_digits->object(nearbyStripId);
   if ( NULL==nearbyDigit) return false; // no hit on nearby strip
  
   // if (A or B) {
@@ -373,7 +373,7 @@ bool VeloClusterMaker::TryToAddChannel(VeloCluster * currentCluster,
 
   // This bit is check C above and is only used for strips outside the 
   // central three:
-  int signAdjust = ( currentDigit->adcValue() <= 0.0 ) ? -1 : +1;
+  int signAdjust=(currentDigit->adcValue(VeloFullFPGADigit::RAW)<=0.0) ? -1 : +1;
 
   if ( abs(offset)>1 ) {
     // Strip is outside the central three - make an extra cut:
@@ -388,7 +388,7 @@ bool VeloClusterMaker::TryToAddChannel(VeloCluster * currentCluster,
       return false;
     }
     // Hit object corresponding to that strip
-    VeloFullDigit* innerDigit = m_digits->object(innerStripId); 
+    VeloFullFPGADigit* innerDigit = m_digits->object(innerStripId); 
     if ( NULL==innerDigit ) {
       // Invalid channel somehow, though this shouldn't happen.
       return false;
@@ -425,7 +425,8 @@ bool VeloClusterMaker::TryToAddChannel(VeloCluster * currentCluster,
   addDigit(currentCluster,currentClusterSTN,nearbyDigit,offset);
  
   if(isVerbose) verbose()  << " stripID" << nearbyStripId.strip() << " ADC " 
-			   << nearbyDigit->adcValue() << " STN " << currentClusterSTN << endreq;
+			   << nearbyDigit->adcValue(VeloFullFPGADigit::RAW)
+         << " STN " << currentClusterSTN << endreq;
 
   // All done OK
   return true;
@@ -437,11 +438,12 @@ bool VeloClusterMaker::TryToAddChannel(VeloCluster * currentCluster,
 //=========================================================================
 void VeloClusterMaker::addDigit(VeloCluster* currentCluster,
                                 float& currentClusterSTN,
-                                VeloFullDigit* nearbyDigit,
+                                VeloFullFPGADigit* nearbyDigit,
                                 signed int offset) {
   // add ADC Value to end of cluster
   std::vector<std::pair<long,double> > signals = currentCluster->stripSignals();
-  std::pair<long,double> newpair(nearbyDigit->strip(),nearbyDigit->adcValue()); 
+  std::pair<long,double> newpair(nearbyDigit->strip(),
+                                 nearbyDigit->adcValue(VeloFullFPGADigit::RAW)); 
   if (offset>0) signals.push_back(newpair);
   else{
     // add ADC value and this becomes first hit in cluster
@@ -514,22 +516,22 @@ StatusCode VeloClusterMaker::storeClusters(){
 //=========================================================================
 //  
 //=========================================================================
-std::pair<VeloFullDigits::iterator,VeloFullDigits::iterator> 
-VeloClusterMaker::getVeloFullDigitsOfSensor(int sensorId) {
+std::pair<VeloFullFPGADigits::iterator, VeloFullFPGADigits::iterator> 
+VeloClusterMaker::getVeloFullFPGADigitsOfSensor(int sensorId) {
   // get position of velo digits in vector for the specified sensor
   // this makes use of fact that Digits from each sensor have already been
   // sorted so that they are adjacent
 
   int idum=0; //dummy strip number
-  VeloFullDigit selObj(VeloChannelID(sensorId,idum,VeloChannelID::Null));
+  VeloFullFPGADigit selObj(VeloChannelID(sensorId,idum,VeloChannelID::Null));
   // ensure sorted   
   std::stable_sort(m_digits->begin(),m_digits->end(),
-		   VeloEventFunctor::Less_by_sensor<const VeloFullDigit*>());
+		   VeloEventFunctor::Less_by_sensor<const VeloFullFPGADigit*>());
 
   // get range with required sensor no.
-  std::pair<VeloFullDigits::iterator,VeloFullDigits::iterator>
+  std::pair<VeloFullFPGADigits::iterator, VeloFullFPGADigits::iterator>
     range = std::equal_range(m_digits->begin(),m_digits->end(),&selObj,
-			     VeloEventFunctor::Less_by_sensor<const VeloFullDigit*>());
+			     VeloEventFunctor::Less_by_sensor<const VeloFullFPGADigit*>());
 
   return range;
 

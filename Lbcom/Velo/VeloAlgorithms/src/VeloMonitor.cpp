@@ -9,17 +9,19 @@
 // Gaudi
 #include "GaudiKernel/AlgFactory.h"
 #include "Event/MCParticle.h"
+#include "GaudiKernel/ObjectVector.h"
 #include "GaudiKernel/SmartRefVector.h"
 #include "GaudiKernel/IHistogramSvc.h"
 #include "AIDA/IHistogram1D.h"
 #include "AIDA/IHistogram2D.h"
 #include "Relations/IAssociatorWeighted.h"
+#include "GaudiKernel/IToolSvc.h"
 #include "Kernel/LHCbMath.h"
 
 //- Velo classes ----------------------------------------------
 #include "Event/MCVeloHit.h"
 #include "Event/MCVeloFE.h"
-#include "Event/VeloFullDigit.h"
+#include "Event/VeloFullFPGADigit.h"
 #include "Event/VeloCluster.h"
 #include "Kernel/VeloChannelID.h"
 #include "VeloDet/DeVelo.h"
@@ -33,7 +35,7 @@
 //	VeloMonitor: algorithm to produce some standard ouput
 //                   for checking purposes. 
 //
-// Writes out some info. on MCVeloHits, MCVeloFEs, VeloFullDigits, VeloClusters
+// Writes out some info. on MCVeloHits, MCVeloFEs, VeloFullFPGADigits, VeloClusters
 //
 //	Authors :   Chris Parkes, Juan Palacios
 //
@@ -50,21 +52,21 @@ const IAlgFactory& VeloMonitorFactory = Factory;
 VeloMonitor::VeloMonitor(const std::string& name, ISvcLocator* pSvcLocator) 
   : GaudiAlgorithm(name, pSvcLocator),
     m_printout (0),
-    m_detailedMonitor   ( false ),
-    m_testMCVeloHit     ( true  ),
-    m_testPUMCVeloHit   ( true  ),
-    m_testMCVeloFE      ( true  ),
-    m_testVeloFullDigit ( true  ),
-    m_testVeloCluster   ( true  ),
-    m_resolution        ( false ),
-    m_detElement        ( false ),
-    m_drawSensors       ( false )
+    m_detailedMonitor       ( false ),
+    m_testMCVeloHit         ( true  ),
+    m_testPUMCVeloHit       ( true  ),
+    m_testMCVeloFE          ( true  ),
+    m_testVeloFullFPGADigit ( true  ),
+    m_testVeloCluster       ( true  ),
+    m_resolution            ( false ),
+    m_detElement            ( false ),
+    m_drawSensors           ( false )
 {
   declareProperty( "DetailedMonitor"         ,m_detailedMonitor );
   declareProperty( "TestMCVeloHit"           ,m_testMCVeloHit );
   declareProperty( "TestPUMCVeloHit"         ,m_testPUMCVeloHit );
   declareProperty( "TestMCVeloFE"            ,m_testMCVeloFE );
-  declareProperty( "TestVeloFullDigit"       ,m_testVeloFullDigit );
+  declareProperty( "TestVeloFullFPGADigit"       ,m_testVeloFullFPGADigit );
   declareProperty( "TestVeloCluster"         ,m_testVeloCluster );
   declareProperty( "Resolution"              ,m_resolution );
   declareProperty( "Printout"                ,m_printout);
@@ -136,7 +138,7 @@ StatusCode VeloMonitor::execute() {
       if (m_testMCVeloHit) testMCVeloHit();
       if (m_testPUMCVeloHit) testPileUpMCVeloHit();
       if (m_testMCVeloFE) testMCVeloFE();
-      if (m_testVeloFullDigit) testVeloFullDigit();
+      if (m_testVeloFullFPGADigit) testVeloFullFPGADigit();
       if (m_testVeloCluster) {
         testVeloCluster();
         if (m_resolution)  resolution(); // determine cluster resolution
@@ -192,7 +194,7 @@ StatusCode VeloMonitor::finalize() {
   } else {
     info() << "No FEs found" << endmsg;
   }
-  info() << "Number of VeloFullDigits    / Event " << m_nFD <<"+/-" << errnFD
+  info() << "Number of VeloFullFPGADigits    / Event " << m_nFD <<"+/-" << errnFD
 	 << endmsg;
   info() << "Number of VeloClusters      / Event " << m_nVC <<"+/-" << errnVC
 	 << endmsg;
@@ -241,15 +243,15 @@ StatusCode VeloMonitor::retrieveData() {
       m_mcfes=get<MCVeloFEs>(MCVeloFELocation::Default);
     }
   }
-  if (m_testVeloFullDigit) {
-    if(isDebug) debug() << "Retrieving " << VeloFullDigitLocation::Default
+  if (m_testVeloFullFPGADigit) {
+    if(isDebug) debug() << "Retrieving " << VeloFullFPGADigitLocation::Default
 			<< endmsg;
-    if ( !exist<VeloFullDigits>(VeloFullDigitLocation::Default) ){
-      error() << " ----  No VeloFullDigits container retrieved --- "
+    if ( !exist<VeloFullFPGADigits>(VeloFullFPGADigitLocation::Default) ){
+      error() << " ----  No VeloFullFPGADigits container retrieved --- "
 	      << endmsg;
-      m_testVeloFullDigit=false;
+      m_testVeloFullFPGADigit=false;
     }else{
-      m_digits=get<VeloFullDigits>(VeloFullDigitLocation::Default);
+      m_digits=get<VeloFullFPGADigits>(VeloFullFPGADigitLocation::Default);
     }
   }
   if (m_testVeloCluster) {
@@ -276,8 +278,8 @@ StatusCode VeloMonitor::retrieveData() {
     if (m_testMCVeloFE) 
       info() << "********* Number of MCVeloFEs found         "
           << m_mcfes->size() << "**********" << endmsg;
-    if (m_testVeloFullDigit)
-      info() << "********* Number of VeloFullDigits found    "
+    if (m_testVeloFullFPGADigit)
+      info() << "********* Number of VeloFullFPGADigits found    "
           << m_digits->size() << "**********" << endmsg;
     if (m_testVeloCluster)
       info() << "********* Number of VeloClusters found      "
@@ -483,10 +485,10 @@ StatusCode VeloMonitor::bookHistograms() {
       book("velo/141", "MCVeloFE Phi direction (trg) vs. Z (cm) Outer",
            1000, -20., 80.,60,-180.,360.);
   }
-  if (m_testVeloFullDigit && m_detailedMonitor) {
-    // VeloFullDigit
+  if (m_testVeloFullFPGADigit && m_detailedMonitor) {
+    // VeloFullFPGADigit
     m_VDNHits = histoSvc()->
-      book("velo/201", "Number of VeloFullDigits per event", 100, 0., 2000.);
+      book("velo/201", "Number of VeloFullFPGADigits per event", 100, 0., 2000.);
   
     m_VDADC  = histoSvc()->
       book("velo/202", "ADC counts after correction", 256, 0., 256.);
@@ -911,36 +913,36 @@ StatusCode VeloMonitor::testMCVeloFE() {
   return StatusCode::SUCCESS;
 }
 
-StatusCode VeloMonitor::testVeloFullDigit() {
+StatusCode VeloMonitor::testVeloFullFPGADigit() {
 
   m_VDNHits->fill(m_digits->size(),1.);
 
   //  Define an iterator to the VELO digit vector and loop through it  
-  VeloFullDigits::iterator itdv;
+  VeloFullFPGADigits::iterator itdv;
   for (itdv=m_digits->begin(); itdv!=m_digits->end(); itdv++) {
     // printout some info.
     if (m_printout>m_NEvent){
-      info() << "testVeloFullDigit:" 
+      info() << "testVeloFullFPGADigit:" 
 	  << " sensorNumber " << (*itdv)->sensor() 
 	  << " strip Number " << (*itdv)->strip()
-	  << " ADCValue " << (*itdv)->adcValue()
-	  << " rawADCValue " << (*itdv)->rawADCValue()
-	  << " subtractedPedestal " << (*itdv)->subtractedPedestal()
-	  << " subtractedCM " << (*itdv)->subtractedCM()
+        //	  << " ADCValue " << (*itdv)->adcValue()
+	  << " rawADCValue " << (*itdv)->adcValue(VeloFullFPGADigit::RAW)
+        //	  << " subtractedPedestal " << (*itdv)->subtractedPedestal()
+        //	  << " subtractedCM " << (*itdv)->subtractedCM()
 	  << " noise " << (*itdv)->noise()
 	  << " rawNoise " << (*itdv)->rawNoise()
 	  << endmsg;
     }
 
     m_VDSensorStrip->fill((*itdv)->sensor(),(*itdv)->strip(),1.0); 
-    m_VDADC->fill((*itdv)->adcValue());
-    m_VDRawADC->fill((*itdv)->rawADCValue());
-    m_VDPedestal->fill((*itdv)->subtractedPedestal());
-    m_VDCMNoise->fill((*itdv)->subtractedCM());
+    m_VDADC->fill((*itdv)->adcValue(VeloFullFPGADigit::RAW));
+    //    m_VDRawADC->fill((*itdv)->rawADCValue());
+    //    m_VDPedestal->fill((*itdv)->subtractedPedestal());
+    //    m_VDCMNoise->fill((*itdv)->subtractedCM());
     m_VDNoise->fill((*itdv)->noise());
     m_VDRawNoise->fill((*itdv)->rawNoise());
   }
-  // to relate a VeloFullDigit to an mcdigit  use the strip and sensor number 
+  // to relate a VeloFullFPGADigit to an mcdigit  use the strip and sensor number 
 
   return StatusCode::SUCCESS;
 
@@ -976,7 +978,7 @@ StatusCode VeloMonitor::testVeloCluster() {
     }
 
     float adcSum=0.;
-    for (int i=0;i<size;i++) {adcSum+=float((*itcv)->adcValue(i));}
+    for (int i=0;i<size;i++) {adcSum+=(*itcv)->adcValue(i);}
     m_VCSensorStrip->fill((*itcv)->sensor(),(*itcv)->strip(0));
     m_VCADCSum->fill(adcSum);
     if (signal) {
@@ -1254,14 +1256,14 @@ StatusCode VeloMonitor::basicMonitor() {
       if (other) m_nMCFEo++;
     }
   }
-  //VeloFullDigits
-  if (m_testVeloFullDigit) {
+  //VeloFullFPGADigits
+  if (m_testVeloFullFPGADigit) {
     if ( 0== m_digits ) { 
-      error() << " ----  No VeloFullDigits container retrieved --- "
+      error() << " ----  No VeloFullFPGADigits container retrieved --- "
           << endmsg;
       return StatusCode::FAILURE;
     } else {
-      if(isDebug) debug() << "Retrieved VeloFullDigits in standard monitor()"
+      if(isDebug) debug() << "Retrieved VeloFullFPGADigits in standard monitor()"
 			  << endmsg;
     }
     size=m_digits->size(); m_nFD+= size; m_nFD2+= size*size; 
@@ -1498,7 +1500,7 @@ StatusCode VeloMonitor::checkTests() {
 	    + m_testPUMCVeloHit
 	    + m_testMCVeloFE
 	    + m_testMCVeloFE
-	    + m_testVeloFullDigit
+	    + m_testVeloFullFPGADigit
 	    + m_testVeloCluster) ) {
     error() << "VeloMonitor asked to monitor nothing!!!" 
 	    << endmsg;

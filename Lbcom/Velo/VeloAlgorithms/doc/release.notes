@@ -1,6 +1,14 @@
 ! Package     : VeloAlgorithms
 ! Responsible : Chris Parkes
 
+!===================== VeloAlgorithms v4r0 2005-20-10 =====================
+! 2005-20-10 - Tomasz Szumlak & Chris Parkes
+- Move VeloSim.cpp/.h into its own new package (VeloSimulation)
+This is the first part of revised splitting of the Velo software 
+packages
+- Update Data Model to include new VeloDigit and VeloFullFPGADigit
+- Old VeloFullDigit is dropped. 
+
 !===================== VeloAlgorithms v3r3 2005-02-10 =====================
 ! 2005-02-10 - Marco Cattaneo
  - Fix windows compilation warnings

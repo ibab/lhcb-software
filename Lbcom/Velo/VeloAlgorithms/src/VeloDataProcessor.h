@@ -1,4 +1,4 @@
-// $Id: VeloDataProcessor.h,v 1.3 2003-04-14 07:34:26 cattanem Exp $
+// $Id: VeloDataProcessor.h,v 1.4 2005-10-24 15:48:43 mtobin Exp $
 #ifndef VELODATAPROC_H 
 #define VELODATAPROC_H 1
 
@@ -13,7 +13,7 @@
 
 /** @class VeloDataProcessor VeloDataProcessor.h
  *
- * Fill VeloFullDigit, based on MCVeloFE
+ * Fill VeloFullFPGADigit, based on MCVeloFE
  * Emulate Data Processor Board 
  * Currently just a fast test version.
  *  @author Chris Parkes
@@ -40,41 +40,12 @@ private:
   virtual float digitise(float electrons);
 
   // data members
-  std::string m_inputContainer;       ///< Name of input container
-  std::string m_outputContainer;      ///< Name of output container
-  
+  std::string m_inputContainer;        ///< Name of input container
+  std::string m_outputVeloFPGADigit;        ///< Name of output container for digi
+  std::string m_outputVeloDigit; ///< And for history object
+
   double noiseSigma();
   double m_noiseConstant;
 
 };
-
-
-
 #endif // VELODATAPROC_H
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

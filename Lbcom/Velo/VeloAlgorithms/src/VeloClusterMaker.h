@@ -3,12 +3,12 @@
 
 /** @class VeloClusterMaker VeloClusterMaker.h
  *
- * Fill VeloCluster, based on VeloFullDigit
+ * Fill VeloCluster, based on VeloFullFPGADigit
  * Emulate Data Processor Board 
  * This is a ported version of the testbeam code version by Mat Charles 
  * (originally David Steele)
  * rewritten to use STL rather than root
- *  @author Chris Parkes
+ *  @author Chris Parkes, update Tomasz Szumlak
  *  @date   04/02/02
  */
 
@@ -17,7 +17,8 @@
 // from Event
 #include "Event/VeloCluster.h"
 // fwd declarations
-class VeloFullDigit;
+class VeloFullFPGADigit;
+class VeloDigit;
 
 class VeloClusterMaker : public GaudiAlgorithm {
 
@@ -45,36 +46,36 @@ class VeloClusterMaker : public GaudiAlgorithm {
 //////////////////////////////////////////////////////////////////////////////
 // Private member functions
  private:
-  /// make Clusters from VeloFullDigits
+  /// make Clusters from VeloFullFPGADigits
   void    makeClusters();
   /// after making all clusters for the event store them on TDS 
   StatusCode VeloClusterMaker::storeClusters();
 
   /// Try to make a cluster using currentDigit as the central hit
-  VeloCluster* makeClusterFromDigit(VeloFullDigit* currentDigit, 
+  VeloCluster* makeClusterFromDigit(VeloFullFPGADigit* currentDigit, 
                                     float& currentClusterSTN);
   /// Try to add a neighbouring channel to the cluster
   bool TryToAddChannel(VeloCluster* currentCluster, 
                        float& currentClusterSTN, 
-                       VeloFullDigit* currentDigit, 
+                       VeloFullFPGADigit* currentDigit, 
                        int offset);
   bool TryToAddCentralChannel(VeloCluster* currentCluster, 
                               float& currentClusterSTN, 
-                              VeloFullDigit* currentDigit);
+                              VeloFullFPGADigit* currentDigit);
 
 
   /// increase the size of a cluster by adding an extra digit
   void addDigit(VeloCluster* currentCluster, 
                 float& currentClusterSTN, 
-                VeloFullDigit* nearbyDigit, 
+                VeloFullFPGADigit* nearbyDigit, 
                 signed int offset);
   /// perform final check that cluster is OK (S/N cut)
   bool checkCluster(VeloCluster* currentCluster, float& currentClusterSTN);
   /// rejected a cluster allowing the hits in it to be used in other clusters
   void unmarkCluster(VeloCluster* currentCluster);
   /// 
-  std::pair<VeloFullDigits::iterator,VeloFullDigits::iterator> 
-          getVeloFullDigitsOfSensor(int detId);
+  std::pair<VeloFullFPGADigits::iterator, VeloFullFPGADigits::iterator> 
+          getVeloFullFPGADigitsOfSensor(int detId);
 
 private:
 
@@ -83,7 +84,7 @@ private:
 
   std::string m_inputContainer;       ///< Name of input container
   std::string m_outputContainer;      ///< Name of output container
-  VeloFullDigits* m_digits; ///< store digits for event considered
+  VeloFullFPGADigits* m_digits; ///< store digits for event considered
   std::vector<bool> m_channelUsed; ///< store channels used on current detector
   int m_sensor; // current sensor
   VeloClusters* m_clusters; ///< vector to store clusters

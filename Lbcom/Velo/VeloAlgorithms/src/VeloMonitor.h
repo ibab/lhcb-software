@@ -7,7 +7,7 @@
 #include "GaudiKernel/RndmGenerators.h"
 
 #include "Event/MCVeloFE.h"
-#include "Event/VeloFullDigit.h"
+#include "Event/VeloFullFPGADigit.h"
 #include "Event/VeloCluster.h"
 
 class IHistogram1D;
@@ -46,7 +46,7 @@ class VeloMonitor : public GaudiAlgorithm {
   StatusCode testMCVeloHit();
   StatusCode testPileUpMCVeloHit();
   StatusCode testMCVeloFE();
-  StatusCode testVeloFullDigit();
+  StatusCode testVeloFullFPGADigit();
   StatusCode testVeloCluster();
   StatusCode testDetElement();
 
@@ -222,7 +222,7 @@ class VeloMonitor : public GaudiAlgorithm {
   MCVeloHits* m_mchits;
   MCVeloHits* m_pumchits;
   MCVeloFEs*  m_mcfes;
-  VeloFullDigits* m_digits;
+  VeloFullFPGADigits* m_digits;
   VeloClusters* m_clusters;
 
   int m_printout;
@@ -231,7 +231,7 @@ class VeloMonitor : public GaudiAlgorithm {
   bool m_testMCVeloHit;
   bool m_testPUMCVeloHit;
   bool m_testMCVeloFE;
-  bool m_testVeloFullDigit;
+  bool m_testVeloFullFPGADigit;
   bool m_testVeloCluster;
   bool m_resolution;
   bool m_detElement;

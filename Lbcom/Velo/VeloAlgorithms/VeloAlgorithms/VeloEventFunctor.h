@@ -92,9 +92,9 @@ template <class TYPE1, class TYPE2 = TYPE1 >
      */
     inline bool operator() ( TYPE1 obj1 , TYPE2 obj2 ) const 
     { 
-      return 
-        ( !obj1 ) ? true  : 
-      ( !obj2 ) ? false : obj1->adcValue() < obj2->adcValue() ; 
+      return
+      ( !obj1 )?true: 
+      (!obj2)?false:obj1->adcValue()<obj2->adcValue();
     }
     ///
   };
@@ -149,24 +149,6 @@ public:
     return ((!obj) ? false : testID.sensor() >obj->channelID().sensor());
   }
 };
-    
-
-
-
 
 };
-
-
 #endif // _VeloEventFunctor_H_
-
-
-
-
-
-
-
-
-
-
-
-
