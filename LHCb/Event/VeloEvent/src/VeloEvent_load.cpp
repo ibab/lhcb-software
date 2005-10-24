@@ -1,4 +1,4 @@
-// $Id: VeloEvent_load.cpp,v 1.2 2003-12-18 15:33:09 cattanem Exp $
+// $Id: VeloEvent_load.cpp,v 1.3 2005-10-24 15:55:33 mtobin Exp $
 // Include files 
 #include "GaudiKernel/ContainerFactoryDefs.h"
 
@@ -19,9 +19,16 @@ _ImplementContainedObjectFactory(MCVeloFE)
 _ImplementDataObjectFactory(MCVeloFEs)
 
 /// ===================================================================
-#include "Event/VeloFullDigit.h"
-_ImplementContainedObjectFactory(VeloFullDigit)
-_ImplementDataObjectFactory(VeloFullDigits)
+#include "Event/VeloFullFPGADigit.h"
+  //_ImplementContainedObjectFactory(VeloFullDigit)
+  //_ImplementDataObjectFactory(VeloFullDigits)
+_ImplementContainedObjectFactory(VeloFullFPGADigit)
+_ImplementDataObjectFactory(VeloFullFPGADigits)
+
+/// ==================================================================
+#include "Event/VeloDigit.h"
+_ImplementContainedObjectFactory(VeloDigit)
+_ImplementDataObjectFactory(VeloDigits)
 
 /// ===================================================================
 #include "Event/VeloCluster.h"
@@ -39,11 +46,18 @@ void VeloEvent_load() {
   DLL_DECL_OBJECTFACTORY( MCVeloFE );
   DLL_DECL_OBJECTFACTORY( MCVeloFEs );
   
-  DLL_DECL_OBJECTFACTORY( VeloFullDigit );
-  DLL_DECL_OBJECTFACTORY( VeloFullDigits );
+  //  DLL_DECL_OBJECTFACTORY( VeloFullDigit );
+  //  DLL_DECL_OBJECTFACTORY( VeloFullDigits );
+
+  DLL_DECL_OBJECTFACTORY(VeloFullFPGADigit);
+  DLL_DECL_OBJECTFACTORY(VeloFullFPGADigits);
+
+  DLL_DECL_OBJECTFACTORY(VeloDigit);
+  DLL_DECL_OBJECTFACTORY(VeloDigits);
   
   DLL_DECL_OBJECTFACTORY( VeloCluster );
   DLL_DECL_OBJECTFACTORY( VeloClusters );
+  
 }
 
 extern "C" void VeloEvent_loadRef()  {

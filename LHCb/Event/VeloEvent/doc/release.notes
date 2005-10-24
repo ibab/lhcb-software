@@ -1,6 +1,11 @@
-! $Id: release.notes,v 1.31 2005-04-07 15:32:43 cattanem Exp $
+! $Id: release.notes,v 1.32 2005-10-24 15:55:33 mtobin Exp $
 package Event/VeloEvent
 package manager: C.Parkes
+
+!====================== VeloEvent v14r0 2005-04-07 ========================
+! 2005-10-20 - Tomasz Szumlak & Chris Parkes
+ - VeloFullDigit was removed
+ - Two new objects VeloFullFPGADigit and VeloDigit are created
 
 !====================== VeloEvent v13r2p1 2005-04-07 ======================
 ! 2005-04-07 - Marco Cattaneo

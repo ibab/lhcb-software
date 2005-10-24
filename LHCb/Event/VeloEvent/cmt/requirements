@@ -1,10 +1,11 @@
-# $Id: requirements,v 1.29 2005-04-07 15:32:43 cattanem Exp $
+# $Id: requirements,v 1.30 2005-10-24 15:55:33 mtobin Exp $
 package VeloEvent
-version v13r2p1
+version v14r0
 
 branches Event src xml cmt doc dict
 
 use Event        v* Event
+use VeloTELL1Alg v2r0 Velo
 
 include_dirs	 $(VELOEVENTROOT)
 

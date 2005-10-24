@@ -91,54 +91,357 @@ stored for a single silicon/output channel. Constructed from MCVeloHits
            </method> 
 
     </class>
-
-    <class name="VeloFullDigit" 
-           id="4003"
-           author="Chris Parkes" 
-           desc="Full information on a reconstructed single digitised velo 
-channel. This info. is available inside the data processor but is not normally 
-output on DAQ stream for all channels. It does not contain any simulation 
-information"
+<!--   -->
+<!-- Updated VeloFullDigit at present as VeloFullFPGADigit -->
+<!-- Comments: Tomasz Szumlak -->
+<!--   -->
+  <class name="VeloFullFPGADigit" 
+   id="4003"
+   author="Chris Parkes, update Tomasz Szumlak" 
+   desc="Full information on a reconstructed single digitised velo channel. 
+   This info. is available inside the data processor but is not normally output 
+   on DAQ stream for all channels. Updated VeloFullDigit object contains 
+   info. about ADC sample througout all stages of FPGA processing"
 	   location="Raw/Velo/FullDigits">
-           <base name="KeyedObject&lt;VeloChannelID&gt;"/>
-           &KeyedContainer;
-           <constructor desc="Constructor with key" 
-                        initList="KeyedObject&lt;VeloChannelID&gt;(key),
-                                  m_ADCValue(0.0),
-                                  m_rawADCValue(0),
-                                  m_subtractedPedestal(0.0),
-                                  m_subtractedCM(0.0),
-                                  m_rawNoise(0.0),
-                                  m_noise(0.0)">
-             <arg type="VeloChannelID" name="key" const="TRUE"/>
-             <code/>                 
-           </constructor> 
-           <method name="channelID" type="VeloChannelID" desc="combined sensor and strip number ID" const="TRUE">
-                   <code>return key();</code>
-           </method>
-           <method name="sensor" type="long" desc="Sensor Number" const="TRUE">
-                  <code>return key().sensor();</code>
-           </method>
-           <method name="strip" type="long" desc="Strip Number" const="TRUE">
-                 <code>return key().strip();</code>
-           </method>
+  <base 
+   name="KeyedObject&lt;VeloChannelID&gt;"
+  />
+   &KeyedContainer;
 
-           <attribute name="ADCValue" type="double" desc="ADC value with common mode noise and pedestal subtracted"/>
-           <attribute name="rawADCValue" type="long" desc="ADC value WITHOUT common mode noise and pedestal subtracted i.e. an integer"/>
-           <attribute name="subtractedPedestal" type="double" desc="pedestal subtracted from channel during processing"/>
-           <attribute name="subtractedCM" type="double" desc="CM subtracted from channel during processing"/>
-           <attribute name="rawNoise" type="double" desc="noise value WITHOUT common mode subtracted"/>
-           <attribute name="noise" type="double" desc="noise value WITH common mode subtracted"/>
-           <method name="signalToNoise" type="double" desc="signal to noise after common mode subtracted" const="TRUE">
-                 <code>return (noise()>0.) ? adcValue()/noise() : adcValue();</code>
-           </method>
-    </class>
+   <constructor desc="Constructor with key" 
+    initList="KeyedObject&lt;VeloChannelID&gt;(key),
+    m_processingList(0),
+    m_rawADCValue(0),
+    m_ADCValueFIR(0.0),
+    m_ADCValuePedestalSubtracted(0.0),
+    m_ADCValueCMSubtracted(0.0),
+    m_rawNoise(0.0),
+    m_noise(0.0),
+    m_flag()"
+   >
+     <arg 
+      type="VeloChannelID" 
+      name="key" 
+      const="TRUE"
+     />              
+   </constructor> 
+  
+   <enum
+    name="processingStages"
+    value="RAW=0, FIR, PedestalSubtracted, CMSubtracted"
+    desc="processing stages performed by FPGA processor"
+    access="PUBLIC"
+   />
+  
+   <enum
+    name="processingListMasks"
+    value="mRAW=0x01, mFIR=0x02, mPedestalSubtracted=0x04, mCMSubtracted=0x08"
+    desc="masks"
+    access="PUBLIC"
+   />
+
+   <method 
+    name="channelID" 
+    type="VeloChannelID" 
+    desc="combined sensor and strip number ID" 
+    const="TRUE"
+   >          
+    <code>
+     return key();
+    </code>
+   </method>
+
+   <method 
+    name="sensor" 
+    type="long" 
+    desc="Sensor Number" 
+    const="TRUE"
+   >
+    <code>
+     return key().sensor();
+    </code>
+   </method>
+   
+   <method 
+    name="strip" 
+    type="long" 
+    desc="Strip Number" 
+    const="TRUE"
+   >
+    <code>
+     return key().strip();
+    </code>
+   </method>
+
+   <attribute
+    name="processingList" 
+    type="short int"
+    desc="processing history"
+    setMeth="FALSE"
+    getMeth="FALSE"
+    static="TRUE"
+   />
+    
+
+   <attribute 
+    name="rawADCValue" 
+    type="double"
+    desc=" "
+    setMeth="FALSE"
+    getMeth="FALSE"
+   />
+  
+   <attribute 
+    name="ADCValueFIR" 
+    type="double" 
+    desc=" "
+    setMeth="FALSE"
+    getMeth="FALSE"
+   />
+
+   <attribute 
+    name="ADCValuePedestalSubtracted" 
+    type="double" 
+    desc=" "
+    setMeth="FALSE"
+    getMeth="FALSE"
+   />
+
+   <attribute 
+    name="ADCValueCMSubtracted" 
+    type="double" 
+    desc=" "
+    setMeth="FALSE"
+    getMeth="FALSE"
+   />
+
+   <attribute 
+    name="rawNoise" 
+    type="double" 
+    desc=" "
+   />
+
+   <attribute 
+    name="noise" 
+    type="double" 
+    desc=" "
+   />
+
+   <attribute
+    name="flag"
+    type="processingStages"
+    desc=" "
+    getMeth="FALSE"
+    setMeth="FALSE"
+   />
+
+   <method
+    desc="Set the value of the Raw ADC and proper flag"
+    name="setRawADCValue"
+    type="void"
+   >
+    <arg type="double" name="value"/>
+     <code>
+      m_processingList=m_processingList^mRAW;
+      m_flag=RAW;
+      m_rawADCValue=value;
+     </code>
+   </method>
+
+   <method
+    desc="Set the ADC value after FIR corrections"
+    name="setADCValueFIR"
+    type="void"
+   >
+    <arg type="double" name="value"/>
+     <code>
+      m_processingList=m_processingList^mFIR;
+      m_flag=FIR;
+      m_ADCValueFIR=value;
+     </code>
+   </method>
+
+   <method
+    desc="Set the ADC value after Pedestal following/subtraction"
+    name="setADCValuePedestalSubtracted"
+    type="void"
+   >
+    <arg type="double" name="value"/>
+     <code>
+      m_processingList=m_processingList^mPedestalSubtracted;
+      m_flag=PedestalSubtracted;
+      m_ADCValuePedestalSubtracted=value;
+     </code>
+   </method>
+
+   <method
+    desc="Set the ADC value after Common Mode Subtraction"
+    name="setADCValueCMSubtracted"
+    type="void"
+   >
+    <arg type="double" name="value"/>
+     <code>
+      m_processingList=m_processingList^mCMSubtracted;
+      m_flag=CMSubtracted;
+      m_ADCValueCMSubtracted=value;
+     </code>
+   </method>
+
+   <method
+    desc="Returns processing stage flag as integer"
+    name="processingStageValue"
+    type="int"
+    const="TRUE"
+   >
+    <code>
+     return m_flag;
+    </code>
+   </method>
+
+   <method
+    desc="Returns processing stage flag as name of the processing stage"
+    name="processingStageName"
+    type="std::string"
+    const="TRUE"
+   >
+    <code>
+     switch(m_flag){
+      case RAW: return ("RAW"); break;
+      case FIR: return ("FIR"); break;
+      case PedestalSubtracted: return ("PedestalSubtracted"); break;
+      case CMSubtracted: return ("CMSubtracted"); break;
+      default: return (" " ); break;
+     }
+    </code>
+   </method>
+
+   <method
+    desc="Returns current ADC Value related with appropriate stage of processing"
+    name="adcValue"
+    type="double"
+    const="TRUE"
+   >
+    <arg type="int" name="stage"/>
+     <code>
+      switch(stage){
+       case RAW: return (m_rawADCValue); break;
+       case FIR: return (m_ADCValueFIR); break;
+       case PedestalSubtracted: return (m_ADCValuePedestalSubtracted); break;
+       case CMSubtracted: return (m_ADCValueCMSubtracted); break;
+       default: return 0.0; break;
+      }
+     </code>
+   </method> 
+
+   <method
+    desc="returns rawADCValue"
+    name="adcValue"
+    type="double"
+    const="TRUE"
+   >
+    <code>
+     return m_rawADCValue;
+    </code>
+   </method>
+
+   <method
+    desc="returns history of the processing"
+    name="getProcessingList"
+    type="int"
+    const="TRUE"
+   >
+    <code>
+     int temp=0;
+     if(m_processingList&amp;mRAW) temp+=1;
+     if(m_processingList&amp;mFIR) temp+=10;
+     if(m_processingList&amp;mPedestalSubtracted) temp+=100;
+     if(m_processingList&amp;mCMSubtracted) temp+=1000;
+     return temp;
+    </code>
+   </method>
+
+   <method 
+    name="signalToNoise" 
+    type="double" 
+    desc="signal to noise after common mode subtracted" 
+    const="TRUE"
+   >
+    <code>
+     return (noise()>0.) ? adcValue(CMSubtracted)/noise() : adcValue(CMSubtracted);
+    </code>
+   </method>
+  </class>
+
+<!-- VeloDigit -->
+<!-- Simpler version of the VeloFullFPGADigit to store the FPGA objects -->
+<!--           -->
+
+ <class
+  author="Tomasz Szumlak"
+  desc="VeloDigit is a temporary object to store the ADC value obtained during
+        one of the FPGA processing stages. The object is much more simple than
+        VeloFullFPGADigit (has only one data member)"
+  name="VeloDigit"
+  location="Raw/Velo/Digits"
+  >
+   <base name="KeyedObject&lt;VeloChannelID&gt;"/>
+   &KeyedContainer;
+
+  <constructor
+   desc="constructor with key"
+   initList="KeyedObject&lt;VeloChannelID&gt;(key),
+   m_ADCValue(0)"
+  >
+   <arg type="VeloChannelID" name="key" const="TRUE"/>
+  </constructor>
+ 
+  <method 
+   name="channelID" 
+   type="VeloChannelID" 
+   desc="combined sensor and strip number ID" 
+   const="TRUE"
+  >          
+   <code>
+    return key();
+   </code>
+  </method>
+
+  <method 
+   name="sensor" 
+   type="long" 
+   desc="Sensor Number" 
+   const="TRUE"
+  >
+   <code>
+    return key().sensor();
+   </code>
+  </method>
+   
+  <method
+   name="strip"
+   type="long"
+   desc=" "
+   const="TRUE"
+  >
+   <code>
+    return key().strip();
+   </code>
+  </method>
+
+  <attribute
+   name="ADCValue"
+   type="short int"
+   desc=" "
+   setMeth="TRUE"
+   getMeth="TRUE"
+  />     
+ </class>
 
     <class name="VeloCluster" 
-           id="4004"
-           author="Chris Parkes" 
-           desc="A cluster as on the DAQ output, after the data processor and 
-without applying any additional processing. It contains no simulation info."
+     id="4004"
+     author="Chris Parkes" 
+     desc="A cluster as on the DAQ output, after the data processor and 
+     without applying any additional processing. It contains no simulation info."
 	   location="Raw/Velo/Clusters">
            <import name="Kernel/SerializeStl"/>
            <import name="Kernel/VeloChannelID"/>
