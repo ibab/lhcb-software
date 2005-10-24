@@ -28,7 +28,7 @@ use  RecoTools          	v1r1     Rec
 # Temporary
 use  MuonID             	v3r9     Muon
 use  RecoTools          	v1r1     Rec
-
+use  TrgMuon             	v1r3     Trg
 
 # Not in DaVinci v12rX
 use  KaliCalo            	v1r0     Phys
