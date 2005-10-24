@@ -70,7 +70,7 @@ use HltSys                      v1r5     Hlt
 # packages included in HltSys
 #=======================================================
 use HltGeneric                  v2r7     Hlt
-use HltSelections               v3r9     Hlt
+use HltSelections               v3r9p1   Hlt
 use HltSelChecker               v3r8     Hlt
 use HltMonitor                  v1r1     Hlt
 
