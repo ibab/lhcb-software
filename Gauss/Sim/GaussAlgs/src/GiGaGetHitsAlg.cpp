@@ -1,4 +1,4 @@
-// $Id: GiGaGetHitsAlg.cpp,v 1.5 2005-04-20 12:55:40 gcorti Exp $
+// $Id: GiGaGetHitsAlg.cpp,v 1.6 2005-10-25 17:56:33 gcorti Exp $
 // Include files
 
 // from Gaudi
@@ -45,16 +45,7 @@ const        IAlgFactory& GiGaGetHitsAlgFactory = s_factory ;
 GiGaGetHitsAlg::GiGaGetHitsAlg( const std::string& name,
                                 ISvcLocator* pSvcLocator)
   : GaudiAlgorithm ( name , pSvcLocator )
-  , m_othits       ( MCHitLocation::OTHits   )
-  , m_sthits       ( MCHitLocation::ITHits   )
-  , m_velohits     ( MCVeloHitLocation::Default )
-  , m_puvelohits   ( MCVeloHitLocation::PuVeto )
-  , m_muonhits     ( MCMuonHitLocation::MCMuonHits )
-  , m_richhits     ( MCRichHitLocation::Default )
-  , m_richop       ( MCRichOpticalPhotonLocation::Default )
-  , m_richsegments ( MCRichSegmentLocation::Default )
-  , m_richtracks   ( MCRichTrackLocation::Default )
-  , m_caloHits     ()
+    , m_caloHits     ()
 {
   m_caloHits.push_back ( MCCaloHitLocation::Spd  ) ;
   m_caloHits.push_back ( MCCaloHitLocation::Prs  ) ;
@@ -65,16 +56,20 @@ GiGaGetHitsAlg::GiGaGetHitsAlg( const std::string& name,
   m_caloDet.push_back ( "Ecal" );
   m_caloDet.push_back ( "Hcal" );
 
-  declareProperty( "OTHits"    , m_othits     );
-  declareProperty( "STHits"    , m_sthits     );
-  declareProperty( "VeloHits"  , m_velohits   );
-  declareProperty( "PuVeloHits", m_puvelohits );
-  declareProperty( "MuonHits"  , m_muonhits   );
-  declareProperty( "RichHits"  , m_richhits   );
-  declareProperty( "RichOpticalPhotons", m_richop        );
-  declareProperty( "RichTracks",         m_richtracks    );
-  declareProperty( "RichSegments",       m_richsegments  );
+  declareProperty( "OTHits"    , m_othits = MCHitLocation::OTHits );
+  declareProperty( "STHits"    , m_sthits = MCHitLocation::ITHits );
+  declareProperty( "VeloHits"  , m_velohits = MCVeloHitLocation::Default );
+  declareProperty( "PuVeloHits", m_puvelohits = MCVeloHitLocation::PuVeto );
+  declareProperty( "MuonHits"  , m_muonhits = MCMuonHitLocation::MCMuonHits );
+  declareProperty( "RichHits"  , m_richhits = MCRichHitLocation::Default );
+  declareProperty( "RichOpticalPhotons", 
+                   m_richop = MCRichOpticalPhotonLocation::Default    );
+  declareProperty( "RichTracks",
+                   m_richtracks = MCRichTrackLocation::Default );
+  declareProperty( "RichSegments",  
+                   m_richsegments = MCRichSegmentLocation::Default  );
   declareProperty( "CaloHits",           m_caloHits      );
+  declareProperty( "ExtraHits",          m_extraHits = "" );
   
 }
 
@@ -132,6 +127,9 @@ StatusCode GiGaGetHitsAlg::execute() {
 
   // Muon hits
   infoMuon();
+
+  // Extra detector hits
+  hitsTracker( "Extra" , m_extraHits );
 
   return StatusCode::SUCCESS;
 

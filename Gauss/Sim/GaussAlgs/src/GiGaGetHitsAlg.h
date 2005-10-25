@@ -1,4 +1,4 @@
-// $Id: GiGaGetHitsAlg.h,v 1.3 2005-02-02 15:05:54 gcorti Exp $
+// $Id: GiGaGetHitsAlg.h,v 1.4 2005-10-25 17:56:30 gcorti Exp $
 #ifndef GIGAGETHITSALG_H 
 #define GIGAGETHITSALG_H 1
 
@@ -56,5 +56,7 @@ private:
 
   std::vector<std::string> m_caloDet; ///< List of calorimeters detecotors
 
+  std::string   m_extraHits;
+  
 };
 #endif // GIGAGETHITSALG_H
