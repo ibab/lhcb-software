@@ -1,7 +1,15 @@
-! $Id: release.notes,v 1.106 2005-02-28 12:56:56 gcorti Exp $
+! $Id: release.notes,v 1.107 2005-10-25 17:22:45 gcorti Exp $
 ! =============================================================================
 Package:          GiGa
 Package manager : Vanya Belyaev
+
+! 2005-10-25 - Gloria CORTI
+ - GiGaFieldMgrBase.cpp
+   . introduce two new properties to control tracking in magnetic field
+     MinEpsilonStep and MaxEpsilonStep controlling min and max value allowed
+     for error on dl/l and dp/p.
+ - GiGa.cpp
+   . fix bug of uninitialized value for property PringG4Particles (def=false)
 
 !======================= GiGa v17r2 =====================================
 ! 2005-02-28 - Gloria Corti

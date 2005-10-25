@@ -1,8 +1,11 @@
-// $Id: GiGaFieldMgrBase.cpp,v 1.8 2004-07-05 16:06:19 gcorti Exp $
+// $Id: GiGaFieldMgrBase.cpp,v 1.9 2005-10-25 17:21:32 gcorti Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.8  2004/07/05 16:06:19  gcorti
+// introduce property DeltaChord
+//
 // Revision 1.7  2004/02/17 18:26:51  ibelyaev
 //  fix with external physics constructors/lists
 //
@@ -15,6 +18,7 @@
 #include "G4MagIntegratorStepper.hh"
 #include "G4TransportationManager.hh"
 #include "G4ChordFinder.hh"
+#include "G4PropagatorInField.hh"
 // 
 #include "G4ExplicitEuler.hh"
 #include "G4ImplicitEuler.hh"
@@ -68,23 +72,27 @@ GiGaFieldMgrBase::GiGaFieldMgrBase
   const std::string& name   , 
   const IInterface*  parent )
   : GiGaBase        ( type , name , parent )
-    , m_global        ( false                )
-    , m_manager       ( 0                    )
-    , m_minStep       ( 0.01*mm              )
-    , m_deltaintersection (0.001*mm)
-    , m_deltaonestep      (0.001*mm)
-    , m_deltaChord    ( 0.25 * mm            )
-    , m_stepperType   ( "UNDEFINED"          )
-    , m_stepper       ( 0                    )
+    , m_global        ( false )
+    , m_manager       ( 0 )
+    , m_minStep       ( 0.01*mm )
+    , m_deltaChord    ( 0.25 * mm )
+    , m_deltaintersection ( 0.001*mm )
+    , m_deltaonestep      ( 0.001*mm )
+    , m_minimumEpsilonStep( 5e-05*mm )
+    , m_maximumEpsilonStep( 0.001*mm )
+    , m_stepperType   ( "UNDEFINED" )
+    , m_stepper       ( 0 )
 {
   declareInterface<IGiGaFieldMgr> ( this ) ;
   // 
   declareProperty ("MinStep", m_minStep);
   declareProperty ("Stepper", m_stepperType);
-  declareProperty ("Global", m_global);
+  declareProperty ("Global",  m_global);
+  declareProperty ("DeltaChord",        m_deltaChord);
   declareProperty ("DeltaIntersection", m_deltaintersection);
-  declareProperty ("DeltaOneStep", m_deltaonestep);
-  declareProperty ("DeltaChord", m_deltaChord);
+  declareProperty ("DeltaOneStep",      m_deltaonestep);
+  declareProperty ("MinEpsilonStep",    m_minimumEpsilonStep);
+  declareProperty ("MaxEpsilonStep",    m_maximumEpsilonStep);
   //
 #ifdef GIGA_DEBUG
   //
@@ -286,6 +294,15 @@ StatusCode GiGaFieldMgrBase::createFieldMgr () const
   m_manager -> SetDeltaIntersection(m_deltaintersection);
   m_manager -> SetDeltaOneStep(m_deltaonestep);
   m_manager -> GetChordFinder() -> SetDeltaChord(m_deltaChord);
+  m_manager -> SetMinimumEpsilonStep(m_minimumEpsilonStep);
+  m_manager -> SetMaximumEpsilonStep(m_maximumEpsilonStep);
+
+  // print the value of epsilon step min and max
+  log << MSG::INFO << "Minimum and Maximum Epsilon Step" << std::endl
+      << m_manager->GetMinimumEpsilonStep()
+      << " " 
+      << m_manager->GetMaximumEpsilonStep()
+      << endmsg;
   
   return StatusCode::SUCCESS ;
 };

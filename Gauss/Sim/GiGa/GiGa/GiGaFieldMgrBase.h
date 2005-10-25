@@ -1,8 +1,11 @@
-// $Id: GiGaFieldMgrBase.h,v 1.3 2004-07-05 16:06:19 gcorti Exp $
+// $Id: GiGaFieldMgrBase.h,v 1.4 2005-10-25 17:21:40 gcorti Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.3  2004/07/05 16:06:19  gcorti
+// introduce property DeltaChord
+//
 // Revision 1.2  2003/10/30 16:33:33  witoldp
 // modified GiGaFieldManager
 //
@@ -104,18 +107,19 @@ private:
   
 private:
 
-  // global/local flag 
-  bool m_global;
-  // field managet itself 
-  mutable G4FieldManager* m_manager;
-  // minimal step 
-  double m_minStep;
-  // delta intersection
-  double m_deltaintersection;
-  // delta one step
-  double m_deltaonestep;
-  // delta chord
+  bool m_global;                         ///< global/local flag 
+  mutable G4FieldManager* m_manager;     ///< field manager itself 
+  double m_minStep;                      ///< minimal step
+  // delta chord - minimal distance between chord and curved trajectory
   double m_deltaChord;
+  // delta intersection - max acceptable error on volume intersection
+  double m_deltaintersection;
+  // delta one step - max acceptable error on integration step (pos and mom)
+  double m_deltaonestep;
+  // min epsilon step - if deltaonestep < this, this is max acceptable error
+  double m_minimumEpsilonStep;
+  // max epsilon step - if deltaonestep > this, this is max acceptable error 
+  double m_maximumEpsilonStep;
   // stepper type 
   std::string                     m_stepperType ;
   // the stepper itself 
