@@ -1,4 +1,4 @@
-// $Id: TrackKalmanFilter.h,v 1.2 2005-09-02 17:05:03 erodrigu Exp $
+// $Id: TrackKalmanFilter.h,v 1.3 2005-10-25 12:50:05 erodrigu Exp $
 #ifndef TRACKFITTER_TRACKKALMANFILTER_H 
 #define TRACKFITTER_TRACKKALMANFILTER_H 1
 
@@ -19,90 +19,115 @@
 /** @class TrackKalmanFilter TrackKalmanFilter.h
  *  
  *
- *  @author Jose Angel Hernando Morata 
+ *  @author Jose Angel Hernando Morata, Eduardo Rodrigues
  *  @date   2005-04-15
  *  reusing the previous code
  *  @author Rutger van der Eijk  07-04-1999
  *  @author Mattiew Needham 
  */
 
-class TrackKalmanFilter : public GaudiTool, public ITrackFitter {
+class TrackKalmanFilter : public GaudiTool,
+                          virtual public ITrackFitter {
 public: 
   /// Standard constructor
   TrackKalmanFilter( const std::string& type, 
                      const std::string& name,
-                     const IInterface* parent);
+                     const IInterface* parent );
 
   /// Destructor
   virtual ~TrackKalmanFilter( );
 
   StatusCode initialize();
-  
-  //! fit the track (filter and smoother)
-  StatusCode fit(Track& track) {
-    //track.setHistoryFit( TrackKeys::Kalman );
-    info() << " not implemented yet!" << track.nMeasurements() << endreq;
+
+  //! fit a track upstream without a seed state (filter and smooth)
+  StatusCode fitUpstream( Track& track ) {
+    // TODO: implement this method!
+    info() << "Not implemented yet!" << endreq;
     return StatusCode::SUCCESS;
   }
 
-  //! fit the track (filter and smoother)
-  StatusCode fit(Track& track, const State& seed);
+  //! fit a track downstream without a seed state (filter and smooth)
+  StatusCode fitDownstream( Track& track ) {
+    // TODO: implement this method!
+    info() << "Not implemented yet!" << endreq;
+    return StatusCode::SUCCESS;
+  }
+
+  //! fit the track upstream with a seed state (filter and smooth)
+  virtual StatusCode fitUpstream( Track& track, State& seed );
+
+  //! fit the track downstream with a seed state (filter and smooth)
+  virtual StatusCode fitDownstream( Track& track, State& seed );
   
-  //! filter the track (only filter)
-  StatusCode filter(Track& track, const State& seed);
+  //! filter the track (only filter) with a seed state
+  StatusCode filter( Track& track, State& seed );
   
-  //! filter/update state with this measurement
-  StatusCode filter(State& state, Measurement& meas);
+  //! filter/update the state with this measurement
+  StatusCode filter( State& state, Measurement& meas );
   
 protected:
 
-  //! initialize the filter to fit/filter his track
-  StatusCode iniKalman(Track& track);
+  //! initialize the Kalman filter
+  void iniKalman( Track& track );
   
-  //! Predict the state to this node
-  StatusCode predict(FitNode& node, State& state);
+  //! predict the state at this node
+  StatusCode predict( FitNode& node, State& state );
   
   //! filter this node
-  StatusCode filter(FitNode& node);
+  StatusCode filter( FitNode& node, State& state );
   
   //! smooth the track
-  StatusCode smoother(Track& track);
+  StatusCode smoother( Track& track );
   
   //! smooth 2 nodes
-  StatusCode smooth(FitNode& node0, const FitNode& node1);
+  StatusCode smooth( FitNode& node0, const FitNode& node1 );
   
   //! compute the chi2
-  void computeChiSq(Track& track);
+  void computeChiSq( Track& track );
 
   //! determine track state at various z positions
-  StatusCode determineStates(Track& track);
+  StatusCode determineStates( Track& track );
 
   //! predict state at a z position
-  State& predictState(const double zPos);
+  State& predictState( const double zPos );
 
   //! update the current state
-  StatusCode updateCurrentState(State& state, FitNode& lastNode);
+  void updateCurrentState( State& state, FitNode& lastNode );
+
+  //! remove outliers from the node vector
+  bool outlierRemoved( Track& track );
+
+  //! inflate the covariance errors before next iteration
+  StatusCode reSeed( State& seedState, State& state );
+
+  //! update the reference vector for each measurement before the next iteration
+  void updateMeasurements();
+
+  //! clear the (internal) nodes vector
+  void clearNodes();
+
+//! determine the z-position of the closest approach to the beam line
+//! by linear extrapolation.
+  double closestToBeamLine( State& state );
+
 protected:
   
   // ! check that the contents of the cov matrix are fine
-  StatusCode checkInvertMatrix(const HepSymMatrix& mat);
+  StatusCode checkInvertMatrix( const HepSymMatrix& mat );
 
   // ! check that the contents of the cov matrix are fine
-  StatusCode checkPositiveMatrix(HepSymMatrix& mat);
+  StatusCode checkPositiveMatrix( HepSymMatrix& mat );
 
   // ! invert this matrix
-  StatusCode invertMatrix(HepSymMatrix& mat);
-  
+  StatusCode invertMatrix( HepSymMatrix& mat );
+
   //! change of units to facilitate inversion
-  StatusCode cToG3(HepSymMatrix& C);
-  
+  void cToG3( HepSymMatrix& C );
+
   //! change of units to facilitate inversion
-  StatusCode cToG4(HepSymMatrix& invC);
+  void cToG4( HepSymMatrix& invC );
 
 protected:
-
-  //! internal clone of the state (pointer owned by Kalman)
-  State* m_state;
 
   // internal copy of the nodes of the track (track owns them)
   std::vector<FitNode*> m_nodes;
@@ -130,8 +155,8 @@ private:
   double m_chi2Outliers;            ///< chi2 of outliers to be removed
   double m_storeTransport;          ///< store the transport of the extrapolator
 
-  //! print comment of failure 
-  StatusCode failure(const std::string& comment);
+  //! helper to print a failure comment
+  StatusCode failure( const std::string& comment );
 
   bool m_debugLevel;
   

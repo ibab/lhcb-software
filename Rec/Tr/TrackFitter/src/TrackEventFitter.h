@@ -1,4 +1,4 @@
-// $Id: TrackEventFitter.h,v 1.1 2005-06-29 15:35:02 erodrigu Exp $
+// $Id: TrackEventFitter.h,v 1.2 2005-10-25 12:50:05 erodrigu Exp $
 #ifndef TRACKFITTER_TRACKEVENTFITTER_H 
 #define TRACKFITTER_TRACKEVENTFITTER_H 1
 
@@ -57,6 +57,10 @@ private:
 
   /// Perform the fit upstream/downstream?
   bool m_fitUpstream;
+
+  // counters
+  unsigned int m_nTracks;
+  unsigned int m_nFittedTracks;
 
 };
 #endif // TRACKFITTER_TRACKEVENTFITTER_H

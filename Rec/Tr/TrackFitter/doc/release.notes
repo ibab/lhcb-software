@@ -3,6 +3,23 @@
 ! Responsible : Eduardo Rodrigues, Jose A. Hernando
 !----------------------------------------------------------------------------
 
+! 2005-10-25 - Eduardo Rodrigues
+ - TrackEventFitter and TrackKalmanFilter cope with both upstream and
+   downstream fitting (only downstream fitting possible before)
+ - buglet corrected in dealing with residual errors
+
+! 2005-10-21 - Eduardo Rodrigues
+ - TrackKalmanFilter: sequence filtering-smoothing fully working
+
+! 2005-10-13 - Eduardo Rodrigues
+ - propagation of changes from TrackEvent
+
+! 2005-09-28 - Eduardo Rodrigues
+ - update of measurements (so-called reference trajectories) implemented
+
+! 2005-09-26 - Eduardo Rodrigues
+ - outliers removal implemented
+
 ! 2005-09-02 - Eduardo Rodrigues
  - first usable version of the Kalman filter
  - version with extra debugging for tests and comparisons with old model
