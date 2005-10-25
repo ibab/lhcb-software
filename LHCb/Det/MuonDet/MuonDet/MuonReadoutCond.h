@@ -1,8 +1,11 @@
-// $Id: MuonReadoutCond.h,v 1.4 2002-08-05 18:14:07 asatta Exp $
+// $Id: MuonReadoutCond.h,v 1.5 2005-10-25 06:55:46 asarti Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.4  2002/08/05 18:14:07  asatta
+// few bug fixes for pad edge effect x-talk calculation
+//
 // Revision 1.3  2002/06/04 16:08:33  dhcroft
 // Added time jitter pdfs to the readouts
 //

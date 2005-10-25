@@ -1,8 +1,12 @@
-// $Id: DeMuonGasGap.h,v 1.3 2002-02-21 16:38:30 dhcroft Exp $
+// $Id: DeMuonGasGap.h,v 1.4 2005-10-25 06:55:46 asarti Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.3  2002/02/21 16:38:30  dhcroft
+// Added methods to retrieve the number of the station, region, chamber and gas gap to DeMuonChamber and
+// DeMuonGasGap objects. Modified XmlMuonRegionCnv to fill these parameters when making the objects.
+//
 // Revision 1.2  2002/01/31 10:00:09  dhcroft
 // Moved CLIDs to seperate files for Visual C linker
 //
@@ -17,7 +21,6 @@
 #include <string>
 
 #include "DetDesc/DetectorElement.h"
-#include "MuonDet/CLID_DeMuonGasGap.h"
 
 /// Gaudi interfaces
 #include "GaudiKernel/IService.h"
@@ -32,6 +35,11 @@
  *  @author David Hutchcroft
  *  @date   21/01/2002
  */
+
+
+/// CLID of a Muon system gas gap
+static const CLID& CLID_DEMuonGasGap = 11007;  
+
 class DeMuonGasGap: public DetectorElement {
 
 public:
@@ -45,13 +53,12 @@ public:
   /// Destructor
   ~DeMuonGasGap();
 
-  inline virtual const CLID& clID() const {
-    return classID();
-  }
-
-  /// Retrieve reference to class identifier
   inline static const CLID& classID(){
     return CLID_DEMuonGasGap;
+  }
+
+  inline virtual const CLID& clID() const {
+    return classID();
   }
 
   /// get Station Number

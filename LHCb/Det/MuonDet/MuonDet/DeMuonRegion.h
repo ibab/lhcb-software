@@ -1,4 +1,4 @@
-// $Id: DeMuonRegion.h,v 1.6 2003-11-24 14:54:39 cattanem Exp $
+// $Id: DeMuonRegion.h,v 1.7 2005-10-25 06:55:46 asarti Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
@@ -8,7 +8,6 @@
 
 // Include files
 #include "DetDesc/DetectorElement.h"
-#include "MuonDet/CLID_DeMuonRegion.h"
 #include "MuonDet/MuonParameters.h"
 
 /** @class DeMuonRegion DeMuonRegion.h MuonDet/DeMuonRegion.h
@@ -22,6 +21,9 @@
  *  @date   21/01/2002
  */
 
+/// Class ID of DeMuonRegion
+static const CLID& CLID_DEMuonRegion = 11005;  
+
 class DeMuonRegion: public DetectorElement {
 
 public:
@@ -31,15 +33,12 @@ public:
   /// Destructor
   ~DeMuonRegion();
 
-  /// Class ID of DeMuonRegion
+
   inline virtual const CLID& clID() const {
     return classID();
   }
 
-  /// Retrieve reference to class identifier
-  inline static const CLID& classID(){
-    return CLID_DEMuonRegion;
-  }
+  static const CLID& classID(){  return CLID_DEMuonRegion;  }
 
   /// Set the number of chambers in the region
   void setchamberNum( int numberChambers ){
@@ -115,6 +114,8 @@ public:
   inline unsigned int numberLogicalMap() const {
     return m_logMap.size();
   }
+
+  StatusCode initialize();
 
   /// Get the logical mappings beween FE readout channels and 
   /// logical channels (or pads if not crossed)

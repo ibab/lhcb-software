@@ -1,4 +1,4 @@
-// $Id: DeMuonChamber.h,v 1.4 2002-09-27 13:59:36 dhcroft Exp $
+// $Id: DeMuonChamber.h,v 1.5 2005-10-25 06:55:46 asarti Exp $
 // ============================================================================
 // CVS tag $Name:
 // ============================================================================
@@ -13,11 +13,6 @@
 #include <string>
 
 #include "DetDesc/DetectorElement.h"
-#include "MuonDet/CLID_DeMuonChamber.h"
-
-/// Gaudi interfaces
-#include "GaudiKernel/IService.h"
-#include "GaudiKernel/SmartDataPtr.h"
 
 /** @class DeMuonChamber DeMuonChamber.h MuonDet/DeMuonChamber.h
  *  
@@ -26,6 +21,9 @@
  *  @author David Hutchcroft
  *  @date   21/01/2002
  */
+
+/// Class ID of chambers 
+static const CLID& CLID_DEMuonChamber = 11006;  
 
 class DeMuonChamber: public DetectorElement {
 
@@ -36,19 +34,21 @@ public:
 
   /// Constructor used by XmlMuonRegionCnv to create chambers
   /// pad sizes in mm 
-  DeMuonChamber( int nStation, int nRegion, int nChamber, int nGasGaps);
+  DeMuonChamber( int nStation, int nRegion, int nChamber);
 
   /// Destructor
   ~DeMuonChamber();
+
+  inline static const CLID& classID(){
+    return CLID_DEMuonChamber;
+  }
 
   inline virtual const CLID& clID() const {
     return classID();
   }
 
-  /// Retrieve reference to class identifier
-  inline static const CLID& classID(){
-    return CLID_DEMuonChamber;
-  }
+  //Initialize
+  StatusCode initialize();
 
   /// get Station Number
   inline int stationNumber() const {
@@ -80,17 +80,20 @@ public:
     m_ChamberNumber = nChamber;
   }
 
-  /// Stores the number of active gas gaps in the detector
-  void setNumberGasGaps( int nGasGaps ){
-    m_NumberGasGaps=nGasGaps;
+  /// get chamber Grid 
+  inline std::string getchmbGrid() const {
+    return m_chmbGrid;
   }
 
-  /// Returns the number of active gas gaps in the detector
-  inline int numberGasGaps() const {
-    return m_NumberGasGaps;
+  /// set chamber Grid
+  void setchmbGrid(std::string grid){
+    m_chmbGrid = grid;
   }
-  
+
 private:
+
+  /// Chamber Grid
+  std::string m_chmbGrid;
 
   /// Station number
   int m_StationNumber;
@@ -100,9 +103,6 @@ private:
 
   /// Chamber number in region
   int m_ChamberNumber;
-
-  /// Number of gas gaps in this chamber
-  int m_NumberGasGaps;
 
 };
 
