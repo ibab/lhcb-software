@@ -1,8 +1,11 @@
-// $Id: GiGa.cpp,v 1.10 2005-02-28 12:56:56 gcorti Exp $ 
+// $Id: GiGa.cpp,v 1.11 2005-10-25 17:21:05 gcorti Exp $ 
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.10  2005/02/28 12:56:56  gcorti
+// optionally print G4Particles
+//
 // Revision 1.9  2004/08/02 13:13:47  gcorti
 // adapt to Gaudi v16r0
 //
@@ -117,6 +120,7 @@ GiGa::GiGa( const std::string& name, ISvcLocator* svcloc )
   , m_rndmSvcName          ( "RndmGenSvc"     )
   , m_rndmSvc              (   0              )
   ///
+  , m_printParticles       ( false )
   , m_errors               ()
   , m_warnings             ()
   , m_exceptions           ()
