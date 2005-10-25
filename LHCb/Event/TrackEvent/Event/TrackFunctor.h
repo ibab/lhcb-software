@@ -132,6 +132,9 @@ namespace TrackFunctor
     }
   };
 
+//=============================================================================
+// 
+//=============================================================================
   template <class T>
   class HasKey: public std::unary_function<T*, bool> {
   public:
@@ -152,17 +155,22 @@ namespace TrackFunctor
     }
   };  
 
+//=============================================================================
+// Class to delete an element from a vector
+//=============================================================================
   template <class T>
   void deleteFromList(std::vector<T*>& List, T* value) 
   {
     typename std::vector<T*>::iterator it;
-    it = std::remove(List.begin(), List.end(), value );
+    it = std::find(List.begin(), List.end(), value );
     delete *it;
-    List.erase( it, List.end() );
+    List.erase( it );
   }
 
-  // Counts how many Measurements fulfill the predicate
-  // Make a predicate e.g. using the HasKey template
+//=============================================================================
+// Class to count how many Measurements fulfill the predicate
+// tip: make a predicate e.g. using the HasKey template
+//=============================================================================
   template <class T>
   unsigned int nMeasurements(const Track& track, T pred) 
   {
@@ -170,8 +178,10 @@ namespace TrackFunctor
     return std::count_if(meas.begin(),meas.end(),pred);
   }
 
-  // Counts how many LHCbIDs fulfill the predicate
-  // Make a predicate e.g. using the HasKey template
+//=============================================================================
+// Class to count how many LHCbIDs fulfill the predicate
+// tip: make a predicate e.g. using the HasKey template
+//=============================================================================
   template <class T>
   unsigned int nLHCbIDs(const Track& track, T pred) 
     {

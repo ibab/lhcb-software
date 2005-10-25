@@ -4,6 +4,9 @@
 ! Purpose     : Package for the tracking event model classes
 !-----------------------------------------------------------------------------
 
+! 2005-10-20 - Eduardo Rodrigues
+ - minor change to TrackFunctor.h
+
 !========================= TrackEvent v1r4 2005-10-14 ========================
 ! 2005-10-13 - Eduardo Rodrigues
  - TrackKeys.h and StateKeys.h files removed. Enumerations now produced
