@@ -4,6 +4,18 @@
 ! Responsible : G.Corti
 ! -----------------------------------------------------------------------------
 
+! 2005-10-25 - Gloria CORTI
+ - src/GiGaGetHitsAlg.{h,cpp}
+   . add possible additional location for MCHits printing controlled by 
+     ExtraHits property (def="")
+ - src/GeneratorToG4.{h,cpp}
+   . new algorithm to fill G4Primary event with HepMC content from generator.
+     Used instead of combination of "GiGaInputStream/Kine" and 
+     "GiGaHepMCCnv" to provide generator events to Geant4.
+     The algorithmic choice to pass particles is the same as in converter.
+ - src/GaussAlgs_load.cpp
+   . add declaration of GeneratorToG4 algorithm
+
 !============================ GaussAlgs v1r6 ==============================
 ! 2005-04-22 - Gloria Corti
  - src/GaussInitialisation.{h,cpp}
