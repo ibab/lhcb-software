@@ -19,11 +19,9 @@
       </constructor>	
       <constructor
         desc="Constructor with all the arguments"
-        argList="int station,int layer,int readout,const IMuonLayout lay,
+        argList="int station,const IMuonLayout lay,
 	       int region,int quarter,int x,int y" initList="m_muonid(0)">
       <code>           setStation(station);
-	   setLayer(layer);
-	   setReadout(readout);
 	   setRegion(region);
 	   setQuarter(quarter);
 	   setX(x);
@@ -74,13 +72,10 @@
     str = endptr+1;
     long ny = strtol(str,&amp;endptr,0);
 
-    //m_muonid =  MuonTileID(sta,0,0,MuonLayout(mlx,mly),quarter,region,nx,ny).m_muonid;
     setStation(sta);
     setLayout(MuonLayout(mlx,mly));
     setQuarter(quarter);
     setRegion(region);
-    setLayer(0);
-    setReadout(0);
     setX(nx);
     setY(ny);
 	</code>
@@ -94,16 +89,6 @@
           desc="Function to extract station">
 	 <code> return ( m_muonid &amp; MuonBase::MaskStation ) &gt;&gt; MuonBase::ShiftStation ;</code>
       </method> 
-      <method const="TRUE"  name="layer" type="const unsigned int"
-          inline="TRUE"
-          desc="Function to extract layer">
-	 <code> return ( m_muonid &amp; MuonBase::MaskLayer ) &gt;&gt; MuonBase::ShiftLayer ;</code>
-      </method>
-      <method const="TRUE"  name="readout" type="const unsigned int"
-          inline="TRUE"
-          desc="Function to extract readout">
-	 <code> return ( m_muonid &amp; MuonBase::MaskReadout ) &gt;&gt; MuonBase::ShiftReadout ;</code>
-      </method>
       <method const="TRUE"  name="region" type="const unsigned int"
           inline="TRUE"
           desc="Function to extract region">
@@ -196,16 +181,6 @@ given IMuonLayout"
           desc="update station identifier"
 	  argList="const unsigned int station">
 	  <code>set( station, MuonBase::ShiftStation, MuonBase::MaskStation ) ;</code>  
-      </method>
-      <method  name="setLayer" inline="TRUE"
-          desc="update layer identifier"
-	  argList="const unsigned int layer">
-	  <code>set( layer, MuonBase::ShiftLayer, MuonBase::MaskLayer ) ;</code>  
-      </method>
-      <method  name="setReadout" inline="TRUE"
-          desc="update readout identifier"
-	  argList="const unsigned int readout">
-	  <code>set( readout, MuonBase::ShiftReadout, MuonBase::MaskReadout ) ;</code>  
       </method>
       <method  name="setRegion" inline="TRUE"
           desc="update region identifier"

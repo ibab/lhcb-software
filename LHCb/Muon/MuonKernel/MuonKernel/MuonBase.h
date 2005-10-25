@@ -1,4 +1,4 @@
-// $Id: MuonBase.h,v 1.2 2002-02-18 09:22:52 atsareg Exp $
+// $Id: MuonBase.h,v 1.3 2005-10-25 18:51:43 asatta Exp $
 //
 #ifndef      L0MUON_MUONBASE_H
 #define      L0MUON_MUONBASE_H 1
@@ -21,8 +21,8 @@ namespace MuonBase {
   static const unsigned int BitsY         = 4 ;
   static const unsigned int BitsQuarter   = 2 ; 
   static const unsigned int BitsRegion    = 2 ;
-  static const unsigned int BitsReadout   = 1 ;
-  static const unsigned int BitsLayer     = 2 ;
+  static const unsigned int BitsReadout   = 0 ;
+  static const unsigned int BitsLayer     = 0 ;
   static const unsigned int BitsStation   = 3 ; 
   static const unsigned int BitsLayoutX   = 6 ;
   static const unsigned int BitsLayoutY   = 4 ;

@@ -1,5 +1,10 @@
 Package MuonKernel
 Package manager: A.Tsaregorodtsev
+!======================= MuonKernel v3r0 2005-10-25 =======================
+! 2005-10-25 - Alessia Satta
+ - Compact the MuonTileID in 28 bits to allow the use ad LHCbID. 
+   The Layer and Reaodut bits have been removed with  
+   the corresponding accessors methods.
 
 !======================= MuonKernel v2r7 2005-04-05 =======================
 ! 2005-04-05 - Marco Cattaneo

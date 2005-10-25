@@ -1,6 +1,6 @@
 package MuonKernel
 
-version v2r7
+version v3r0
 
 branches cmt src MuonKernel doc 
 

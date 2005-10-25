@@ -1,4 +1,4 @@
-// $Id: MuonLayout.cpp,v 1.10 2005-04-28 09:39:15 jucogan Exp $
+// $Id: MuonLayout.cpp,v 1.11 2005-10-25 18:51:43 asatta Exp $
 // Include files
 #include <iostream>
 #include <algorithm>
@@ -83,18 +83,19 @@ std::vector<MuonTileID> MuonLayout::tilesInArea(const MuonTileID& pad,
   int nreg = pad.region();
   int sta = pad.station();
 
-  // cout << quarter << " " << nreg << " " << rfactor(nreg) << endl;	
-  // cout << m_xgrid << m_ygrid << endl;		
-  // cout << playout.xGrid() << playout.yGrid() << endl;	
+   //std::cout << quarter << " " << nreg << " " << rfactor(nreg) << std::endl;	
+   //std::cout << m_xgrid << m_ygrid << endl;		
+   //cout << playout.xGrid() << playout.yGrid() << endl;	
 
   // the finest grid of the two layouts
   int mxgrid = std::max(m_xgrid, playout.xGrid() );
   int mygrid = std::max(m_ygrid, playout.yGrid() );
 
-  // cout << mxgrid << mygrid << endl;	    
+//   std::cout << mxgrid << mygrid << std::endl;	    
 
   MuonLayout fineGrid(mxgrid,mygrid);
 
+//std::cout<<" punto 3"<<std::endl;
   int xratio = m_xgrid/playout.xGrid();
   int yratio = m_ygrid/playout.yGrid();
 
@@ -106,13 +107,13 @@ std::vector<MuonTileID> MuonLayout::tilesInArea(const MuonTileID& pad,
 //   int maxY = (pad.nY()+areaY+1)*playout.rfactor(nreg)*yratio-1;
 //   int minX = maxX - playout.rfactor(nreg)*xratio*(2*areaX+1) + 1;
 //   int minY = maxY - playout.rfactor(nreg)*yratio*(2*areaY+1) + 1;
-
+//std::cout<<"punto 4"<<std::endl;
   // input pad area in terms of the finest grid and smallest region  
   int maxX = (pad.nX()+1)*rfactor(nreg)*xratio+areaX*rfactor(nreg)-1;
   int maxY = (pad.nY()+1)*rfactor(nreg)*yratio+areaY*rfactor(nreg)-1;
   int minX = maxX - rfactor(nreg)*xratio - 2*areaX*rfactor(nreg) + 1;
   int minY = maxY - rfactor(nreg)*yratio - 2*areaY*rfactor(nreg) + 1;
-  
+//std::cout<<"punto 6"<<std::endl;  
   
   minX = std::max(0,minX);
   minY = std::max(0,minY);
@@ -127,7 +128,9 @@ std::vector<MuonTileID> MuonLayout::tilesInArea(const MuonTileID& pad,
   bool regleap = false;
   int nr = 0;
   int nrx = 0;
-  
+
+  //std::cout<<"cavolo "<<std::endl;
+
   while ( ix <= maxX ) {
     nrx = fineGrid.region(ix,iy);
     if( nrx == -1 ) nrx = 0;
@@ -141,7 +144,8 @@ std::vector<MuonTileID> MuonLayout::tilesInArea(const MuonTileID& pad,
 	unsigned int newx = ix/rfactor(nr)/xratio; 	  
 	unsigned int newy = iy/rfactor(nr)/yratio;
 	if(newy < 2*yGrid() && newx < 2*xGrid()) {
-          MuonTileID newtile(sta,0,0,*this,nr,quarter,newx,newy); 
+//std::cout<<"prima "<<std::endl;
+          MuonTileID newtile(sta,*this,nr,quarter,newx,newy); 
 	  if(newtile.isValid()) {
 	    vmt.push_back(newtile);
 	  } 
@@ -157,6 +161,7 @@ std::vector<MuonTileID> MuonLayout::tilesInArea(const MuonTileID& pad,
     iy = minY;
     ix += rfactor(nrx)*xratio;
   }    
+//std::cout<<" esce"<<std::endl;
   return vmt;
 }
 
@@ -206,12 +211,12 @@ std::vector<MuonTileID> MuonLayout::tiles(int iq, int ir) const {
   unsigned int ix; unsigned int iy;
   for(ix = 0; ix < 2*xGrid(); ix++) {
     for(iy = yGrid(); iy < 2*yGrid(); iy++) {
-      vmt.push_back(MuonTileID(0,0,0,*this,ir,iq,ix,iy));
+      vmt.push_back(MuonTileID(0,*this,ir,iq,ix,iy));
     }
   }
   for(ix = xGrid(); ix < 2*xGrid(); ix++) {
     for(iy = 0; iy < yGrid(); iy++) {
-      vmt.push_back(MuonTileID(0,0,0,*this,ir,iq,ix,iy));
+      vmt.push_back(MuonTileID(0,*this,ir,iq,ix,iy));
     }
   }
   return vmt; 
@@ -239,7 +244,7 @@ std::vector<MuonTileID> MuonLayout::tilesInRegion(const MuonTileID& pad,
 	int factor = rfactor(pregion)/rfactor(nr);
 	int newX = ivmt->nX()/factor;
 	int newY = ivmt->nY()/factor;
-	MuonTileID tile(sta,0,0,*this,pregion,nq,newX,newY);
+	MuonTileID tile(sta,*this,pregion,nq,newX,newY);
 	nvmt.push_back(tile);
       } else {
         int factor = rfactor(nr)/rfactor(pregion);
@@ -247,7 +252,7 @@ std::vector<MuonTileID> MuonLayout::tilesInRegion(const MuonTileID& pad,
 	int minY = ivmt->nY()*factor;
         for(int ix=0; ix<factor; ix++) {
 	  for(int iy=0; iy<factor; iy++) {
-	    MuonTileID tile(sta,0,0,*this,pregion,nq,minX+ix,minY+iy);
+	    MuonTileID tile(sta,*this,pregion,nq,minX+ix,minY+iy);
 	    nvmt.push_back(tile);
 	  }
 	}
@@ -461,7 +466,7 @@ std::vector<MuonTileID> MuonLayout::neighboursInArea(const MuonTileID& pad,
 	unsigned int newy = iy/rfactor(nr)/yratio;
 	// New tile should not come out of its region
 	if(newy < 2*yGrid() && newx < 2*xGrid()) {
-	  MuonTileID newtile(sta,0,0,*this,nr,quarter,newx,newy);
+	  MuonTileID newtile(sta,*this,nr,quarter,newx,newy);
 	  if (newtile.isValid()) {
 	    vmt.push_back(newtile);
 	  }
