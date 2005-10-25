@@ -5,6 +5,14 @@
 !                    tracker like detectors (Velo, OT, IT, Muon)
 !-----------------------------------------------------------------------------
 
+! 2005-10-25 - Gloria CORTI
+ - src/GetTrackerHitsAlg.{h,cpp}
+   . new algorithm to fill MCHits in a given location in TES (settable via
+     property "MCHitsLocation" starting from TrcakerHits in a G4 collection
+     (settable via property "CollectionName")
+ - src/GiGaSensDetTracker.{h,cpp}
+   . follow LHCb convention of having data members starting with m_
+
 !=========================== GaussTracker v4r1 ================================
 ! 2005-06-03 - Gloria CORTI
  - src/GiGaSensDetMuon.cpp
