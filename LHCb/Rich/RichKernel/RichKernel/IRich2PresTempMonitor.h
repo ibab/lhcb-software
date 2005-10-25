@@ -1,6 +1,19 @@
-// $Id: IRich2PresTempMonitor.h,v 1.1 2005-10-07 09:00:11 jonrob Exp $
-#ifndef RICHCONDITION_IRICH2PRESTEMPMONITOR_H 
-#define RICHCONDITION_IRICH2PRESTEMPMONITOR_H 1
+
+//-----------------------------------------------------------------------------
+/** @file IRich2PresTempMonitor.h
+ *
+ *  Header file for tool interface : IRich2PresTempMonitor
+ *
+ *  CVS Log :-
+ *  $Id: IRich2PresTempMonitor.h,v 1.2 2005-10-25 17:25:02 jonrob Exp $
+ *
+ *  @author Sajan EASO
+ *  @date   2005-08-26
+ */
+//-----------------------------------------------------------------------------
+
+#ifndef RICHKERNEL_IRICH2PRESTEMPMONITOR_H 
+#define RICHKERNEL_IRICH2PRESTEMPMONITOR_H 1
 
 // Include files
 // from Gaudi
@@ -13,12 +26,18 @@ class TimePoint;
 
 static const InterfaceID IID_IRich2PresTempMonitor ( "IRich2PresTempMonitor", 1, 0 );
 
+//-----------------------------------------------------------------------------------------
 /** @class IRich2PresTempMonitor IRich2PresTempMonitor.h RichKernel/IRich2PresTempMonitor.h
  *  
+ *  Interface to tool that handles updates of RICH1 tabulated properties 
+ *  when conditions change.
+ *
+ *  It is sufficent to simply instantiate this tool, there are no user interface methods.
  *
  *  @author Sajan EASO
  *  @date   2005-08-26
  */
+//-----------------------------------------------------------------------------------------
 
 class IRich2PresTempMonitor : virtual public IAlgTool 
 {
@@ -28,11 +47,6 @@ public:
   /// Return the interface ID
   static const InterfaceID& interfaceID() { return IID_IRich2PresTempMonitor; }
 
-  virtual StatusCode Rich2CF4MaterialGasPropertyUpdate() = 0;
-  virtual StatusCode Rich2CF4MaterialRefIndexUpdate()    = 0;
-  virtual StatusCode Rich2CF4PressureUpdate()            = 0;
-  virtual StatusCode Rich2CF4TemperatureUpdate()         = 0;
-
 };
 
-#endif // RICHCONDITION_IRICH2PRESTEMPMONITOR_H
+#endif // RICHKERNEL_IRICH2PRESTEMPMONITOR_H
