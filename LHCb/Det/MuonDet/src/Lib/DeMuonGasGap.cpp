@@ -1,4 +1,4 @@
-// $Id: DeMuonGasGap.cpp,v 1.4 2003-11-24 14:54:39 cattanem Exp $
+// $Id: DeMuonGasGap.cpp,v 1.5 2005-10-25 06:59:08 asarti Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
@@ -14,6 +14,11 @@
  *
  */
 
+#include "DetDescCnv/XmlUserDetElemCnv.h"
+
+typedef XmlUserDetElemCnv<DeMuonGasGap>       XmlDeMuonGasGap;
+static CnvFactory<XmlDeMuonGasGap>           s_XmlDeMuonGasGapFactory ;
+const ICnvFactory&  XmlDeMuonGasGapFactory = s_XmlDeMuonGasGapFactory ;
 
 DeMuonGasGap::DeMuonGasGap() :
   m_StationNumber(0),

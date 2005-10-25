@@ -1,4 +1,4 @@
-// $Id: DeMuonRegion.cpp,v 1.6 2003-11-24 14:54:39 cattanem Exp $
+// $Id: DeMuonRegion.cpp,v 1.7 2005-10-25 06:59:08 asarti Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
@@ -13,6 +13,11 @@
  * @author David Hutchcroft, David.Hutchcroft@cern.ch
  *
  */
+#include "DetDescCnv/XmlUserDetElemCnv.h"
+
+typedef XmlUserDetElemCnv<DeMuonRegion>       XmlDeMuonRegion;
+static CnvFactory<XmlDeMuonRegion>           s_XmlDeMuonRegionFactory ;
+const ICnvFactory&  XmlDeMuonRegionFactory = s_XmlDeMuonRegionFactory ;
 
 /// Standard Constructor
 DeMuonRegion::DeMuonRegion()
@@ -26,6 +31,38 @@ DeMuonRegion::DeMuonRegion()
 DeMuonRegion::~DeMuonRegion()
 {
 }
+  
+StatusCode DeMuonRegion::initialize()  
+{
+  MsgStream msg( msgSvc(), name() );
+
+  StatusCode sc = DetectorElement::initialize();
+  if( sc.isFailure() ) { 
+    msg << MSG::ERROR << "Failure to initialize DetectorElement" << endreq;
+    return sc ; 
+  }
+
+  // get resolution parameters
+  m_GapsPerFE     = param<int>("gapsPerFe");
+  m_FEAnodeX      = param<int>("feAnodeX");
+  m_FEAnodeY      = param<int>("feAnodeY");
+  m_chamberNum    = param<int>("chmbNum");
+
+  // for now with MWPCs and RPCs this is a good formula
+  setGapsPerFE(m_GapsPerFE);
+  setFEAnodeX(m_FEAnodeX);
+
+  //  setFEAnodeY(1);
+  addLogicalMap(MuonParameters::Anode, 1, 1);
+  //  setFECathodeX( atol(NFEChamberX.c_str()) );
+  //  setFECathodeY( atol(NFEChamberY.c_str()) );
+  //  setchamberNum(gasGapChamber);
+
+
+  return sc;
+}
+
+
   
 /// Add a logical mapping between FE readout channels and 
 /// logical channels (or pads if not crossed)
