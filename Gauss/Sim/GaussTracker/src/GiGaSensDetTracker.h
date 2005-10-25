@@ -48,7 +48,7 @@ private:
   ///
 private:
   ///
-  TrackerHitsCollection *trackerCol;
+  TrackerHitsCollection* m_trackerCol;
 };
 
 // ============================================================================
