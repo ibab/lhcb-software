@@ -1,10 +1,11 @@
-! $Id: release.notes,v 1.81 2005-10-25 17:25:02 jonrob Exp $
+! $Id: release.notes,v 1.82 2005-10-25 17:25:37 jonrob Exp $
 ! Package     : Rich/RichKernel
 ! Responsible : Chris Jones
 ! Purpose     : General purpose RICH classes
 
 ! 2005-10-25 - Chris Jones
- - Improve doxygen comments for RichCondition tools
+ - Improve doxygen comments for RichCondition tools plus tidy up 
+   their interfaces a little more
 
 ! 2005-10-17 - Chris Jones
  - Update IRichMCTruthTool interface with new methods
