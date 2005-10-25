@@ -4,6 +4,9 @@
 ! Purpose     : Package for the tracking fitting-related classes
 !-----------------------------------------------------------------------------
 
+! 2005-10-19 - Eduardo Rodrigues
+ - method name change in FitNode
+
 !========================== TrackFitEvent v1r3 2005-10-06 ====================
 ! 2005-09-27 - Eduardo Rodrigues
  - method to update measurements parameters (useful for Kalman fit)

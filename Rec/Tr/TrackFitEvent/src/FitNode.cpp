@@ -84,7 +84,7 @@ void FitNode::setFilteredState( const State& filteredState )
 //=============================================================================
 // Add the transport transformation of prevNode to this node
 //=============================================================================
-void FitNode::addNode( const FitNode& prevNode )
+void FitNode::updateTransport( const FitNode& prevNode )
 {
   // add the transport transformation of prevNode to this node
   m_transportVector += m_transportMatrix * prevNode.transportVector() ;

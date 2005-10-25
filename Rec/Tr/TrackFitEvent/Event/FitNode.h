@@ -85,7 +85,7 @@ public:
   void setFilteredState( const State& filteredState );
 
   /// add the transport transformation of prevNode to this node
-  void addNode( const FitNode& node );
+  void updateTransport( const FitNode& node );
 
   /// z position of Node
   double z() const   { return m_measurement->z(); };
