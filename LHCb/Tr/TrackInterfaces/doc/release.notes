@@ -4,6 +4,13 @@
 ! Purpose     : package for tracking tools interfaces
 !-----------------------------------------------------------------------------
 
+! 2005-10-24 - Eduardo Rodrigues
+ - ITrackFitter interface modified to provide both upstream and
+   downstream fitting
+
+! 2005-10-20 - Eduardo Rodrigues
+ - seed State no longer const in ITrackFitter
+
 !====================== TrackInterfaces v1r3 2005-09-20 ======================
 ! 2005-09-20 - Eduardo Rodrigues
  - renamings to avoid clashes with same algorithm of the old track event model:
