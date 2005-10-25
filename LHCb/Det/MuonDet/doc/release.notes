@@ -1,9 +1,25 @@
-! $Id: release.notes,v 1.41 2005-07-01 09:48:19 cattanem Exp $
+! $Id: release.notes,v 1.42 2005-10-25 07:18:58 asarti Exp $
 !
 ! Package     : MuonDet
 ! Responsible : Alessia Satta
 
 !========================= MuonDet v4r8 2005-07-01 =========================
+! 2005-10-25 - Alessio Sarti
+ - Major changes in almost all code. Made the Converters and classes
+   compliant with LHCb templates. Need soon a v5r0 tag.
+   - src/component/*
+	removed all the Xml converters that are not "dummy". The building
+	of DeMuon* objects and grid is automagically done directly in Xml
+   - src/Lib/*
+	added MuonDetector, MuonChamberGrid and MuonChamberLayout needed
+	for new Event model and for alignment studies.
+	DeMuon* objects ahve been modifies accordingly to the LHCb
+	conventions
+   - MuonDet/*
+	Removed the CLID files [now the classID is directly in the .h
+	file]. Adapted DeMuon*.h files to changes in cpp.
+	Added .h classes for MuonDetector,Chamber Grid and ChamberLayout
+
 ! 2005-07-01 - Marco Cattaneo
  - Fix memory leak in XmlMuonRegionCnv, occuring whn trying to add the same
    chamber twice (due to circular dependency of MuonRegion, see below)
