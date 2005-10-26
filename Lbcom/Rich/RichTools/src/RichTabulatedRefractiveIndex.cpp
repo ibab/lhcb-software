@@ -5,7 +5,7 @@
  * Implementation file for class : RichTabulatedRefractiveIndex
  *
  * CVS Log :-
- * $Id: RichTabulatedRefractiveIndex.cpp,v 1.6 2005-10-13 16:11:07 jonrob Exp $
+ * $Id: RichTabulatedRefractiveIndex.cpp,v 1.7 2005-10-26 10:39:00 jonrob Exp $
  *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @date 15/03/2002
@@ -64,24 +64,24 @@ StatusCode RichTabulatedRefractiveIndex::initialize()
   sc = ums->registerCondition( this,
                                DeRichRadiatorLocation::Aerogel,
                                &RichTabulatedRefractiveIndex::updateAerogelRefIndex );
-  if (!sc)
+  if (sc.isFailure())
     return Error( "Failed registering dependency on '"+m_deRads[Rich::Aerogel]->name()+"'",sc );
   // C4F10
   sc = ums->registerCondition( this,
                                DeRichRadiatorLocation::C4F10,
                                &RichTabulatedRefractiveIndex::updateC4F10RefIndex );
-  if (!sc)
+  if (sc.isFailure())
     return Error( "Failed registering dependency on '"+m_deRads[Rich::C4F10]->name()+"'",sc );
   // CF4
   sc = ums->registerCondition( this,
                                DeRichRadiatorLocation::CF4,
                                &RichTabulatedRefractiveIndex::updateCF4RefIndex );
-  if (!sc)
+  if (sc.isFailure())
     return Error( "Failed registering dependency on '"+m_deRads[Rich::CF4]->name()+"'",sc );
 
   // force first updates
   sc = ums->update(this);
-  if (!sc) return Error ( "Failed first update", sc );
+  if (sc.isFailure()) return Error ( "Failed first UMS update", sc );
 
   return sc;
 }
