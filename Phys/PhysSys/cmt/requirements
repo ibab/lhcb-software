@@ -26,7 +26,7 @@ use  Utilities          	v2r1p1   Tools
 use  RecoTools          	v1r1     Rec
 
 # Temporary
-use  MuonID             	v3r9     Muon
+use  MuonID             	v3r9p1   Muon
 use  RecoTools          	v1r1     Rec
 use  TrgMuon             	v1r3     Trg
 
