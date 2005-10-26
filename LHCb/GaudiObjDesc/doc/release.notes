@@ -2,6 +2,15 @@ Package: GaudiObjDesc
 Desccription: This package contains a set of tools used to generate code from the XML description of the data object classes.
 Package manager : Stefan Roiser
 
+! 2005-10-26 Stefan
+- The length of bitfields can be changed by the "type" attribute of the <attribute> element.
+  For the time being  type='bitfield' generated a bitfield of 32 bit (unsigned int). In addition the following types are possible
+  - bitfield8 (unsigned char)
+  - bitfield16 (unsigned short int)
+  - bitfield32 (same as the old bitfield - unsigned int)
+  - bitfield64 (ulonglong - platform independent defintion for unsigned long long from GaudiKernel/Kernel.h)
+
+
 ===============================GaudiObjDesc v8r1============================
 ! 2005-10-17 - Marco Cattaneo
  - genClassDicts.py was ignoring "transient" tag in XML description of class 

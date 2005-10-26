@@ -97,9 +97,13 @@ class genSrcUtils(importUtils.importUtils):
       for att in godClass['attribute'] :
         attAtt = att['attrs']
         if attAtt['access'] == modifier.upper() or modifier == 'all':
-          if attAtt['type'] == 'bitfield':
+	  attType = attAtt['type']
+          if attType in ['bitfield8','bitfield16','bitfield','bitfield32','bitfield64']:
             self.bitfieldEnums[modifier.lower()] += self.genBitfield(att)
-            attAtt['type'] = 'unsigned int'
+	    if   attType in ['bitfield8']             : attAtt['type'] = 'unsigned char'
+	    elif attType in ['bitfield16']            : attAtt['type'] = 'unsigned short int'
+	    elif attType in ['bitfield','bitfield32'] : attAtt['type'] = 'unsigned int'
+	    elif attType in ['bitfield64']            : attAtt['type'] = 'ulonglong'
           self.addInclude(attAtt['type'])
           name = attAtt['name']
           namespaceInit = ''
