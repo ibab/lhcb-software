@@ -1,4 +1,4 @@
-// $Id: Monitor.opts,v 1.13 2005-10-26 17:43:19 gcorti Exp $ 
+// $Id: Monitor.opts,v 1.14 2005-10-26 18:04:26 gcorti Exp $ 
 
 /** @file 
  * 
@@ -24,13 +24,16 @@ GenHistos.OutputLevel     = 4;
 GenHistos.HistoProduce    = true;
 
 //---------------------------------------------------------------------
-// Check if event type and events produced correspond
+// Check if event type and events produced correspond to what set
 //---------------------------------------------------------------------
 //SimMonitor.Members += { "EvtTypeChecker" };
 
 //---------------------------------------------------------------------
 // Simulation Monitor Histograms: from MCParticles and MCHits
 //---------------------------------------------------------------------
+// MCParticles & MCVertices
+SimMonitor.Members   += { "MCTruthMonitor" };
+
 // VELO 
 ApplicationMgr.DLLs += { "VeloAlgorithms", "VeloDet" };
 SimMonitor.Members  += { "VeloMonitor" };
