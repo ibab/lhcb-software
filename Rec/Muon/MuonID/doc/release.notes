@@ -1,6 +1,12 @@
-! $Id: release.notes,v 1.36 2005-10-19 07:30:52 pkoppenb Exp $
+! $Id: release.notes,v 1.37 2005-10-26 06:18:00 pkoppenb Exp $
 ! Package     : MuonID
 ! Responsible : Erica Polycarpo
+
+!========================== MuonID v3r9p1 2005-10-26 ===================
+! 2005-10-26 - P. Koppenburg
+  - src/MuonIDDLLTool.cpp
+  - src/MuonIDNSharedHitsTool.cpp
+    . initialize GaudiTool in initialize()
 
 !========================== MuonID v3r9 2005-10-19 ===================
 ! 2005-10-17 - P. Koppenburg for Erica Polycarpo

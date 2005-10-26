@@ -1,4 +1,4 @@
-// $Id: MuonIDNSharedHitsTool.cpp,v 1.2 2005-09-30 09:04:12 pkoppenb Exp $
+// $Id: MuonIDNSharedHitsTool.cpp,v 1.3 2005-10-26 06:18:00 pkoppenb Exp $
 
 // Include files
 // from Gaudi
@@ -60,12 +60,15 @@ MuonIDNSharedHitsTool::MuonIDNSharedHitsTool(const std::string& type,
 //==================================================================
 StatusCode MuonIDNSharedHitsTool::initialize() {
   
+  StatusCode sc = GaudiTool::initialize();
+  if (!sc) return sc;
+
   info() << "==> Initialise" << endreq;
   // get geometry tool
   m_iTileTool = tool<IMuonTileXYZTool>("MuonTileIDXYZ");
   m_iGeomTool = tool<IMuonGeometryTool>("MuonGeometryTool");
 
-  StatusCode sc = m_iGeomTool->nStation(m_NStation);
+  sc = m_iGeomTool->nStation(m_NStation);
 
   if(!sc) return sc;
   m_stationZ.resize(m_NStation);
