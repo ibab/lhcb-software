@@ -68,7 +68,28 @@ class genSrcUtils(importUtils.importUtils):
           for value in values[1:] :
             s += ',\n%s %s' % ( indent, value.strip() )
           s += ' };\n'
-    return s 
+    return s
+#--------------------------------------------------------------------------------
+  def genEnum2MsgStream(self, godClass):
+    s = ''
+    if godClass.has_key('enum'):
+      for enum in godClass['enum']:
+	enumAtt = enum['attrs']
+	values = enumAtt['value'].split(',')
+	clname = godClass['attrs']['name']
+	enumType = clname+'::'+enumAtt['name']
+	s += 'inline MsgStream & operator << (MsgStream & s, %s e) {\n' % (enumType)
+	s += '  switch (e) {\n'
+	maxLen = 0
+	for v in values :
+	  maxLen = max(len(v.split('=')[0].strip()),maxLen)
+	for v in values :
+	  v1 = v.split('=')[0].strip()
+	  s += '    case %s::%s : return s << "%s";\n' % ( clname, v1.ljust(maxLen), v1 )
+	s += '    default : return s << "ERROR wrong value for enum %s";\n' % enumType
+	s += '  }\n'
+	s += '}\n\n'
+    return s
 #--------------------------------------------------------------------------------
   def genAttributes(self,modifier,godClass,namespace=0):
     s = ''

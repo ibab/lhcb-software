@@ -379,17 +379,21 @@ class genClasses(genSrcUtils.genSrcUtils):
     if att.has_key('bitfield'):
       maxLenName = 0
       for bf in att['bitfield'] : maxLenName = max(maxLenName,len(bf['attrs']['name']))
-      bf0Att = att['bitfield'][0]['attrs']
+      bfNum = 0
+      comma = ','
+      numBfs = len(att['bitfield'])
       indent = (len(attName) + 11) * ' '
+      offset = 0
       s += '  /// Offsets of bitfield %s\n' % attName
-      s += '  enum %sBits{%s = 0' % (attName, (bf0Att['name']+'Bits').ljust(maxLenName+4))
-      offset = string.atoi(bf0Att['length'])
-      for bf in att['bitfield'][1:]:
-        bfAtt = bf['attrs']
-        if bfAtt['length'].isdigit():
-          s += ',\n%s %s = %d' % (indent, (bfAtt['name']+'Bits').ljust(maxLenName+4), offset)
-          offset += string.atoi(bfAtt['length'])
-      s += '};\n\n'
+      s += '  enum %sBits{' % attName
+      for bf in att['bitfield']:
+	bfAtt = bf['attrs']
+	bfNum += 1
+	if bfNum == numBfs : comma = ''
+	if bfNum != 1 : s += '\n%s ' % indent
+	s += '%s = %s ///< %s' % ((bfAtt['name']+'Bits').ljust(maxLenName+4), (str(offset)+comma).ljust(3), bfAtt['desc'])
+	offset += string.atoi(bfAtt['length'])
+      s += '\n%s};\n\n' % indent    
       s += '  /// Bitmasks for bitfield %s\n' % attName
       offset = 0
       indent += '  '
@@ -408,7 +412,7 @@ class genClasses(genSrcUtils.genSrcUtils):
           mask = ''
           for m in masks : mask += m.strip() + 'Mask + '
           s += '%s = %s' % ((bfAtt['name']+'Mask').ljust(maxLenName+4), mask[:-3])
-      s += '};\n\n'
+      s += '\n%s};\n\n' % indent[1:]
     return s
 #--------------------------------------------------------------------------------
   def genClassIDFun(self,godClass,scopeName='') :
@@ -551,6 +555,7 @@ class genClasses(genSrcUtils.genSrcUtils):
         classDict[modifier+'Enums']             = self.genEnums(modifier,godClass)
         classDict[modifier+'MethodDecls']       = self.genMethods(modifier,godClass)
         classDict[modifier+'MethodDefs']        = self.genMethods(modifier,godClass,scoped_classname)
+      classDict['enum2MsgStream']               = self.genEnum2MsgStream(godClass)
       classDict['streamerDecl']                 = self.genStreamer(godClass)
       classDict['streamerDef']                  = self.genStreamer(godClass,scoped_classname)
       classDict['getSetMethodDecls']            = self.genGetSetMethods(godClass)

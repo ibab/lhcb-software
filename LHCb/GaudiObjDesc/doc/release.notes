@@ -9,7 +9,8 @@ Package manager : Stefan Roiser
   - bitfield16 (unsigned short int)
   - bitfield32 (same as the old bitfield - unsigned int)
   - bitfield64 (ulonglong - platform independent defintion for unsigned long long from GaudiKernel/Kernel.h)
-
+- Added description for bitfields enums in header files
+- Added automatic overloading to MsgStream for enums
 
 ===============================GaudiObjDesc v8r1============================
 ! 2005-10-17 - Marco Cattaneo

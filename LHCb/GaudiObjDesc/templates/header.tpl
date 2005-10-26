@@ -77,6 +77,7 @@
 // Including forward declarations
 @@@forwardIncludes@@@
 
+@@@enum2MsgStream@@@
 @@@constructorDefs@@@
 @@@destructorDef@@@
 @@@classIDDef@@@
