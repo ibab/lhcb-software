@@ -58,7 +58,7 @@ IdealTracksCreator::IdealTracksCreator( const std::string& name,
   declareProperty( "TracksTESPath",
                    m_tracksTESPath = "Rec/Track/Ideal" );
   declareProperty( "RelationTable",
-                   m_relationTable = "Rec/Relations/IdealTr2MCP" );
+                   m_relationTablePath = "Rec/Relations/IdealTrack2MCP" );
   declareProperty( "OTGeometryPath",
                    m_otTrackerPath = DeOTDetectorLocation::Default );
   declareProperty( "ITGeometryPath",
@@ -155,16 +155,16 @@ StatusCode IdealTracksCreator::execute()
   Tracks* tracksCont = new Tracks();
 
   // create relation table and register it in the event transient store
-  typedef RelationWeighted2D<Track,MCParticle,double>  Table;
+  typedef RelationWeighted2D<Track, MCParticle, float> Table;
   Table* table = new Table();
-  StatusCode sc = eventSvc() -> registerObject( m_relationTable, table );
+  StatusCode sc = eventSvc() -> registerObject( m_relationTablePath, table );
   if( sc.isFailure() ) {
     error() << "Unable to register the relation container = "
-            << m_relationTable << " status = " << sc << endreq;
+            << m_relationTablePath << " status = " << sc << endreq;
     return sc ;
   }
   else {
-    verbose() << "Relations container " << m_relationTable
+    debug() << "Relations container " << m_relationTablePath
               << " registered" << endreq;
   }
 

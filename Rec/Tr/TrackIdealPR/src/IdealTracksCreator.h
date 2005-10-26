@@ -129,8 +129,8 @@ private:
   bool m_fitTracks;       ///< if true then the tracks are fitted
   bool m_upstream;        ///< upstream or downstream fit
   bool m_trueStatesAtMeas;///< Store true states at each measurement position
-  std::string m_tracksTESPath;    ///< TrTracks container path in EvDS
-  std::string m_relationTable;    ///< Location of the associator table
+  std::string m_tracksTESPath;      ///< TrTracks container path in EvDS
+  std::string m_relationTablePath;  ///< Location of the associator table
   int m_minNHits;         ///< Minimum number of hits on the track
   double m_errorX2;       ///< Error^2 on x
   double m_errorY2;       ///< Error^2 on y
