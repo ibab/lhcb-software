@@ -1,4 +1,4 @@
-// $Id: MonitorInDetail.opts,v 1.1 2005-07-04 17:21:03 gcorti Exp $ 
+// $Id: MonitorInDetail.opts,v 1.2 2005-10-26 16:59:17 gcorti Exp $ 
 
 /** @file 
  * 
@@ -8,23 +8,6 @@
  *  @date 2005-07-04
  */
 
-
-//------------------------------------------------------------------------
-// Check events
-//------------------------------------------------------------------------
-// Check MCSignal info (only for complete production)
-// SimMonitor.Members    += { "MCDecayCounter" };
-MCDecayCounter.DetailedPrintOut          = true;
-MCDecayCounter.OutputLevel               = 2;
-MCDecayCounter.MCDecayFinder.OutputLevel = 3;
-//MCDecayCounter.EvtCodeFromData = true;
-//MCDecayCounter.EvtCode = 0;
-
-//------------------------------------------------------------------------
-// Dump of event at various phases in text form
-//------------------------------------------------------------------------
-// Dump on screen content of generator full info
-//GenMonitor.Members += {"DumpMC"};
 
 //------------------------------------------------------------------------
 // Detailed Monitor
@@ -38,5 +21,23 @@ GenMonitor.Members       += { "GeneratorFullMonitor" };
 
 // Algorithm filling detailed info in an ntuple from MCParticle
 SimMonitor.Members       += { "MCTruthFullMonitor" };
+
+// Add more detail histograms for MCTruth
+MCTruthMonitor.DetailedHistos = true;
+
+//------------------------------------------------------------------------
+// Check events
+//------------------------------------------------------------------------
+// Check MCSignal info (only for complete production)
+// SimMonitor.Members    += { "MCDecayCounter" };
+MCDecayCounter.DetailedPrintOut          = true;
+//MCDecayCounter.MCDecayFinder.Decay = "[B0 -> (KS0 -> pi+ pi-) (J/psi(1S) -> mu+ mu- {,gamma} {,gamma}) ]cc";
+
+//------------------------------------------------------------------------
+// Dump of event at various phases in text form
+//------------------------------------------------------------------------
+// Dump on screen content of generator full info
+//GenMonitor.Members += {"DumpMC"};
+
 
 
