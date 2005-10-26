@@ -1,5 +1,5 @@
 #printOptions 
-// $Id: GaussRead.opts,v 1.5 2005-07-04 17:23:16 gcorti Exp $ 
+// $Id: GaussRead.opts,v 1.6 2005-10-26 17:51:37 gcorti Exp $ 
 
 /** @file 
  * 
@@ -13,8 +13,13 @@
 //---------------------------------------------------------------------------
 // Phases to be executed: initialization + monitor
 //---------------------------------------------------------------------------
-ApplicationMgr.TopAlg  = { "LbAppInit/Gauss" };
+ApplicationMgr.TopAlg  = { "GaudiSequencer/Initialize" };
 ApplicationMgr.TopAlg += { "GaudiSequencer/Monitor" }; 
+
+//---------------------------------------------------------------------------
+// Initialize the application
+//---------------------------------------------------------------------------
+Initializer.Members    = { "LbAppInit/Gauss" };
 
 //---------------------------------------------------------------------------
 // Monitor phase: as in production + user monitor
@@ -31,6 +36,8 @@ Monitor.MeasureTime = true;
 // Algorithm in User monitor
 UserMonitor.Members   += { "GiGaGetEventAlg" };
 UserMonitor.Members   += { "GiGaGetHitsAlg" };
+UserMonitor.Members   += { "MCDecayCounter" };
+MCDecayCounter.MCDecayFinder.Decay = "KS0 -> pi+ pi-";
 
 // The following are set explicitely since not in standard sim file
 GiGaGetHitsAlg.RichOpticalPhotons = "";
@@ -48,18 +55,18 @@ EventDataSvc.RootCLID = 1;
 // Add here any job specific options, to over-ride previously defined options
 //---------------------------------------------------------------------------
 //MessageSvc.OutputLevel    = 3;
-MCTruthFullMonitor.OutputLevel   = 2;
-GeneratorFullMonitor.OutputLevel = 2;
+//MCTruthFullMonitor.OutputLevel   = 2;
+//GeneratorFullMonitor.OutputLevel = 2;
 
 //---------------------------------------------------------------------------
-// Number of events to read
+// Number of events to read: all in input file
 //---------------------------------------------------------------------------
-ApplicationMgr.EvtMax      = 10;
+ApplicationMgr.EvtMax      = -1;
 
 //---------------------------------------------------------------------------
 // Detector used to produce the file read in: uncomment the chosen one
 //---------------------------------------------------------------------------
-DetectorDataSvc.DetDbLocation = "$XMLDDDBROOT/DDDB/lhcb-200506.xml";
+DetectorDataSvc.DetDbLocation = "$XMLDDDBROOT/DDDB/lhcb-200507.xml";
 //DetectorDataSvc.DetDbLocation = "$XMLDDDBROOT/DDDB/lhcb-200412.xml";
 
 
@@ -71,6 +78,11 @@ EventSelector.Input   = {
 };
 
 //---------------------------------------------------------------------------
-// Output file. 
+// Output file(s). 
+// The NtupleSvc is set in MonitorInDetail.opts.
 //---------------------------------------------------------------------------
 HistogramPersistencySvc.OutputFile = "GaussReadHistos.root";
+
+// Overwrite file name as set in MonitorInDetails.opts
+NTupleSvc.Output={"FILE1 DATAFILE='GaussReadMonitor.root' TYP='ROOT' OPT='NEW'"};
+
