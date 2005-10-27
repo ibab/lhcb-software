@@ -10,6 +10,9 @@
    . Monitor.opts
  - Introduce GaudiSequencer also for initialization
    . Gauss.opts
+ - Move checking of status of Geant4 event just after triggering the
+   simulation
+   . Simulation.opts
 
 !============================ Gauss v20r2 ================================
 ! 2005-08-17 - Gloria CORTI

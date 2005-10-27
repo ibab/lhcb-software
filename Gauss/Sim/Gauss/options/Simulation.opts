@@ -1,4 +1,4 @@
-// $Id: Simulation.opts,v 1.63 2005-07-08 12:46:30 gcorti Exp $ 
+// $Id: Simulation.opts,v 1.64 2005-10-27 09:31:47 gcorti Exp $ 
 #pragma print off
 
 /** @file 
@@ -44,12 +44,12 @@ Kine.StreamItems         += {"/Event/Gen/HepMCEvents"};
 
 // Perform the Geant4 simulation
 Simulation.Members += { "GiGaFlushAlgorithm" };
+// Check the G4Event processing status
+Simulation.Members += { "GiGaCheckEventStatus" };
 // Populate the MCParticles/MCVertices in the TES
 Simulation.Members += { "GiGaGetEventAlg" };
 // Populate sensitive hits in the TES
 Simulation.Members += { "GiGaGetHitsAlg" };
-// Check the G4Event processing status
-Simulation.Members += { "GiGaCheckEventStatus" };
 
 // Simulation configuration: Geant4 control
 // Physics list and the production cuts  
