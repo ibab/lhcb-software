@@ -179,7 +179,6 @@ stored for a single silicon/output channel. Constructed from MCVeloHits
     desc="processing history"
     setMeth="FALSE"
     getMeth="FALSE"
-    static="TRUE"
    />
     
 
