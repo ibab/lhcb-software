@@ -1,4 +1,4 @@
-// $Id: MuonChamberLayout.h,v 1.1 2005-10-25 06:54:28 asarti Exp $
+// $Id: MuonChamberLayout.h,v 1.2 2005-10-28 09:59:40 asarti Exp $
 #ifndef PUBLIC_MUONCHAMBERLAYOUT_H 
 #define PUBLIC_MUONCHAMBERLAYOUT_H 1
 
@@ -49,6 +49,9 @@ public:
   //Return the tiles of the neighbor Chambers
   std::vector<DeMuonChamber*> neighborChambers(DeMuonChamber *Chmb, int x_direction, int y_direction);
   
+  //Return the tiles of the neighbor Chambers
+  std::vector<DeMuonChamber*> neighborChambers(int chmbNum, int sta, int reg, int x_dir, int y_dir);
+  
   //Convert tiles in chambers
   std::vector<DeMuonChamber*> createChambers(std::vector<int> mytiles, int station);
 
@@ -69,7 +72,10 @@ public:
   void gridPosition(float x, float y, int iS, int &idx, int &idy, int &reg);
 
   //Sets the xS, yS reference values (needed for grid computation)
-  void setGridStep(int station);
+  void setGridStep();
+
+  //Checks if a region lowering is needed
+  bool shouldLowReg(int idX, int idY, int reg);
 
   //Returns the layout
   MuonLayout layout(int region);
@@ -84,8 +90,10 @@ public:
   //Sets the layout
   void setLayout(int region, MuonLayout lay);
 
+  //Assigna a given encode to the chamber
   void setChamberInGrid(int enc, int num);
 
+  //Reconstruct the encode of a given chamber
   int getEncode(int idx, int idy, int reg);
 
   //Set the data Provider
@@ -107,7 +115,7 @@ private:
   MuonLayout m_layout[4];
 
   //ChamberVector as a function of the ixds in the region grid
-  std::vector<unsigned int> m_chamberGrid;
+  std::vector<int> m_chamberGrid;
 
   //My data provider
   IDataProviderSvc* m_detSvc;

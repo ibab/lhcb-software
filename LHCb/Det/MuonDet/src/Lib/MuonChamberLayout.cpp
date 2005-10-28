@@ -1,4 +1,4 @@
-// $Id: MuonChamberLayout.cpp,v 1.1 2005-10-25 06:54:28 asarti Exp $
+// $Id: MuonChamberLayout.cpp,v 1.2 2005-10-28 09:59:40 asarti Exp $
 // Include files 
 
 //Muon
@@ -32,7 +32,7 @@ MuonChamberLayout::MuonChamberLayout() {
 
   //When initialized in this way needs un update for the Layout
   MuonChamberLayout(R1,R2,R3,R4,this->dataSvc());
-
+  std::cout<<"Det Elem name:: "<<this->name()<<std::endl;
 }
 
 
@@ -56,7 +56,7 @@ MuonChamberLayout::MuonChamberLayout(MuonLayout R1,
 
 StatusCode MuonChamberLayout::initialize() {
 
-  bool debug = true;
+  bool debug = false;
   StatusCode sc = DetectorElement::initialize();
   if( sc.isFailure() ) { 
     if(debug) std::cout << "Failure to initialize DetectorElement" << std::endl;
@@ -92,7 +92,7 @@ MuonChamberLayout::~MuonChamberLayout() {};
 
 void MuonChamberLayout::Copy(MuonChamberLayout &lay) {
   //Copy constructor
-  bool debug = true;
+  bool debug = false;
   for(int iL = 0; iL<4; iL++) {
     if(debug) std::cout<<"My Copied layout: "<<iL<<std::endl;
     lay.setLayout(iL,this->layout(iL));
@@ -108,33 +108,27 @@ std::vector<DeMuonChamber*> MuonChamberLayout::neighborChambers(DeMuonChamber *C
   int sC_idY(0),sC_idX(0),reg(0);
   bool debug = false;
 
-  if(debug) std::cout<<"My Chamber under test. "<<Chmb->chamberNumber()<<" "<<Chmb->stationNumber()<<std::endl;
+  if(debug) std::cout<<"My Chamber under test. "<<Chmb->chamberNumber()<<" "<<Chmb->regionNumber()<<" "<<Chmb->stationNumber()<<std::endl;
   
   float myX = (Chmb->geometry())->toGlobal(HepPoint3D(0,0,0)).x();
   float myY = (Chmb->geometry())->toGlobal(HepPoint3D(0,0,0)).y();
+
   gridPosition(myX,myY,Chmb->stationNumber(),sC_idX,sC_idY,reg);
 
-  //Deciding the corner
-  if(x_direction>0 && y_direction>0) {
-    //Up-right corner
-    chamberXY(sC_idX,sC_idY,1,1,reg,myChambers);
-    chamberXY(sC_idX,sC_idY,1,0,reg,myChambers);
-    chamberXY(sC_idX,sC_idY,0,1,reg,myChambers);
-  } else if (x_direction>0 && y_direction<0) {
-    //Down-right corner
-    chamberXY(sC_idX,sC_idY,1,-1,reg,myChambers);
-    chamberXY(sC_idX,sC_idY,1,0,reg,myChambers);
-    chamberXY(sC_idX,sC_idY,0,-1,reg,myChambers);
-  } else if (x_direction<0 && y_direction<0) {
-    //Down-left corner
-    chamberXY(sC_idX,sC_idY,-1,-1,reg,myChambers);
-    chamberXY(sC_idX,sC_idY,-1,0,reg,myChambers);
-    chamberXY(sC_idX,sC_idY,0,-1,reg,myChambers);
-  } else if (x_direction<0 && y_direction>0) {
-    //Down-right corner
-    chamberXY(sC_idX,sC_idY,-1,1,reg,myChambers);
-    chamberXY(sC_idX,sC_idY,-1,0,reg,myChambers);
-    chamberXY(sC_idX,sC_idY,0,1,reg,myChambers);
+  if(debug) std::cout<<"Position in the grid "<<sC_idX<<" "<<sC_idY<<" "<<reg<<" "<<x_direction<<" "<<y_direction<<std::endl;
+
+  //Deciding the corner-side
+  int scX(0),scY(0);
+  if(x_direction != 0) scX++;
+  if(y_direction != 0) scY++;
+
+  for(int ix = 0; ix <= scX; ix++) {
+    for(int iy = 0; iy <= scY; iy++) {
+      //Do the computation only for OTHER chambers
+      if(ix || iy) {
+	chamberXY(sC_idX,sC_idY,ix*x_direction,iy*y_direction,reg,myChambers);
+      }
+    }
   }
 
   if(debug) std::cout<<"Returning chambers: "<<myChambers<<std::endl;
@@ -146,6 +140,21 @@ std::vector<DeMuonChamber*> MuonChamberLayout::neighborChambers(DeMuonChamber *C
 
 }
 
+std::vector<DeMuonChamber*> MuonChamberLayout::neighborChambers(int chmbNum, int sta, int reg, int x_dir, int y_dir) {
+
+  char pt[200]; bool debug = false;
+  sprintf(pt,"/dd/Structure/LHCb/Muon/M%d/R%d/Cham%03d",sta+1,reg+1,chmbNum+1);
+  SmartDataPtr<DeMuonChamber> deChmb(m_detSvc,pt);
+  std::vector<DeMuonChamber*> myChams;
+  //Create a chamber * Chmb.
+  if(deChmb) {
+    myChams = neighborChambers(deChmb,x_dir,y_dir);
+  } else {
+    if(debug)  std::cout<<"Not found chamber! "<<std::endl;
+  }
+  return myChams;
+}
+
 std::vector<DeMuonChamber*> MuonChamberLayout::createChambers(std::vector<int> mytiles, int station){
 
   std::vector<int>::iterator idTile;
@@ -154,81 +163,148 @@ std::vector<DeMuonChamber*> MuonChamberLayout::createChambers(std::vector<int> m
   bool debug = false;
   for(idTile = mytiles.begin(); idTile<mytiles.end(); idTile++){
     const long int cTile = *idTile;
-    int region = findRegion(cTile);
-    if(debug)  std::cout<<station<<" "<<region<<" "<<cTile<<" "<<m_offSet.at(region)<<std::endl;
-    DeMuonChamber * myChmb = new DeMuonChamber(station,region,cTile-m_offSet.at(region));
-    myChambers.push_back(myChmb);
-
+    //Added protection against non existing chamber
+    if(cTile>0) {
+      int region = findRegion(cTile);
+      if(debug)  std::cout<<"Returned chambers:: "<<station+1<<" "<<region+1<<" "<<cTile-m_offSet.at(region)<<std::endl;
+      DeMuonChamber * myChmb = new DeMuonChamber(station,region,cTile-m_offSet.at(region)-1);
+      myChambers.push_back(myChmb);
+    }
   }
+  if(debug)  std::cout<<"Exiting from chamber creation "<<std::endl;
 
   return myChambers;
 }
 
 void MuonChamberLayout::chamberXY(int sx, int sy, int shx, int shy, int reg, std::vector<int> &chamberNumber){
 
-  int chN = -1;  bool debug = false;
+  int vSize(0); int chN = -1;  bool debug = false;
   int fx = sx + shx;
   int fy = sy + shy;
 
   if(debug) std::cout<<" Chamber XY. Reg: "<<reg<<" "<<m_cgX.at(reg)<<" "<<m_cgY.at(reg)<<" "<<fx<<" "<<fy<<" "<<sx<<" "<<sy<<" "<<shx<<" "<<shy<<std::endl;
 
-  //Protect against chambers outside the maximum allowed range
+  //Protect against chambers outside the current region grid
   if(fx<0 || fy<0 || fx >= 4*m_cgX.at(reg) 
      || fy >= 4*m_cgY.at(reg)) {
-    sx = (sx / (2/m_cgX.at(reg)))+m_cgX.at(reg);
+
+    //Starting point in the new (larger) grid
     sy = sy + 2*m_cgY.at(reg);
+    if(reg<2) {
+      if(sx < 2*m_cgX.at(reg)) { sx = 1; }
+      else { sx = 2;}
+    } 
+
+    //Goes to other region
     if(reg+1<4) {
+      sx = (sx / (2/m_cgX.at(reg+1)))+m_cgX.at(reg+1);
+      //Checks in larger grid (higher region)
       chamberXY(sx,sy,shx,shy,reg+1,chamberNumber);
     } else {
+      //Exits [chamber outside the R4 grid]
+      if(debug) std::cout<<" Chamber not Found (>3) "<<chN<<std::endl;
       chamberNumber.push_back(-1);
+      goto exit;
+    }
+    //Fix the chamber number for chambers in region != from starting one
+    vSize = chamberNumber.size();
+    if(vSize>0) {
+      if(debug) std::cout<<" Encode and chamber in first call: "<<chN<<" :: "<<chamberNumber.at(vSize-1)<<" "<<chamberNumber.size()<<" "<<reg+1<<std::endl;
+      if(chamberNumber.at(vSize-1)>-1) {
+	chN = chamberNumber.at(vSize-1);
+	goto exit;
+      }
     }
   } else {
     //Look inside the grid
     int enc = fx+4*m_cgX.at(reg)*fy+m_offSet.at(reg);
     chN = m_chamberGrid.at(enc);
-    if(debug) std::cout<<" Encode and chamber: "<<enc<<" "<<chN<<std::endl;
+    if(debug) std::cout<<" Encode and chamber in first call: "<<chN<<" "<<enc<<" "<<reg<<" "<<fx<<" "<<fy<<std::endl;
   }
-  
-  if(chN<0) {
 
-    if(reg-1>0) {
-      chamberXY(fx,fy,0,-m_cgY.at(reg),reg-1,chamberNumber);
+  //If a chamber number is <0 this means that 
+  //-> The chamber is in a different region
+  //-> The chamber has NOT been turned on in the xml  
+  if(chN<0 && shouldLowReg(fx,fy,reg)) {
+    //Found a -1 chamber: need to low
+    //the region number (if > 1) to look in inside inner region 
+    if(reg-1>=0) {
+      //When dropping down the region number 
+      if(reg < 3){
+	if(fx < 2*m_cgX.at(reg)) { shx = -1; }
+	else { shx = 1; }
+	} else {
+	  shx = -2;
+	}
+      shy = m_cgY.at(reg);
+      if(debug) std::cout<<" Subcall 2: "<<fx<<" "<<fy<<" "<<shx<<" "<<-shy<<" "<<reg-1<<std::endl;
+      chamberXY(fx,fy,shx,-shy,reg-1,chamberNumber);
     } else {
+      //lowest (inner) region. Exiting
       if(debug) std::cout<<" Chamber not Found (<0) "<<chN<<std::endl;
       chamberNumber.push_back(-1);
+      goto exit;
     }
-
-    if(reg <3) {
-      int sign = -1;
-      if(fx>1) sign = +1;
-      //Second chamber needed for regions 0,1,2
-      if(reg-1>0) { 
-	chamberXY(fx,fy,sign,-m_cgY.at(reg),reg-1,chamberNumber);
-      } else {
-	if(debug) std::cout<<" Chamber not Found "<<std::endl;
-	chamberNumber.push_back(-1);
+    vSize = chamberNumber.size();
+    if(vSize>0) {
+      if(debug) std::cout<<" Encode and chamber in second call: "<<chN<<" :: "<<chamberNumber.at(vSize-1)<<" "<<chamberNumber.size()<<" "<<std::endl;
+      if(chamberNumber.at(vSize-1)>-1) {
+	chN = chamberNumber.at(vSize-1);
       }
     }
-  } else if(chN != -1 && chN != 0) {
-    chamberNumber.push_back(chN+m_offSet.at(reg));
+    
+    //Second chamber needed for regions 0,1,2
+    if(reg <3) {
+      if((sy/m_cgY.at(reg) < 1) || (sy/m_cgY.at(reg) > 2)) {
+	if(reg-1>0) { 
+	  if(debug) std::cout<<" Third call "<<std::endl;
+	  chamberXY(fx,fy,0,-m_cgY.at(reg),reg-1,chamberNumber);
+	} else {
+	  if(debug) std::cout<<" Chamber not Found "<<std::endl;
+	  chamberNumber.push_back(-1);
+	  goto exit;
+	}
+	vSize = chamberNumber.size();
+	if(vSize) {
+	  if(debug) std::cout<<" Encode and chamber in third call: "<<chN<<" :: "<<chamberNumber.at(vSize-1)<<" "<<chamberNumber.size()<<" "<<std::endl;
+	  if(chamberNumber.at(vSize-1)>-1) {
+	    chN = chamberNumber.at(vSize-1);
+	    goto exit;
+	  }
+	}
+      }
+    }
+  } else if(chN != -1) {
+    //Need a +1 to avoid skipping chamber n.1 (idx 0)
+    chamberNumber.push_back(chN+m_offSet.at(reg)+1);
     if(debug) std::cout << "Closing Chamber " << chN 
 			<< " in R" << reg
 			<< " xIndex " << fx
 			<< " yIndex " << fy << std::endl;
+  } else {
+    std::cout << "Chamber " << chN 
+	      << " in R" << reg
+	      << " xIndex " << fx
+	      << " yIndex " << fy
+	      << " is not in TES/xml. " << std::endl;
   }
+
+ exit:
+
   return;
 }
 
 int MuonChamberLayout::findRegion(int chamber){
   int reg(0);
+  int offset[4] = {16,48,112,368};
   for(reg=0; reg<4; reg++) {
-    if(chamber < m_offSet.at(reg)) break;
+    if(chamber < offset[reg]) break;
   }
   if(reg>3) {
-    std::cout<<"Region not found. Go back and check the code!"<<std::endl;
+    std::cout<<"Region not found for chamber: "<<chamber<<". Go back and check the code!"<<std::endl;
     reg = -1;
   }
-  return reg-1; 
+  return reg; 
 }
 
 void MuonChamberLayout::chamberMostLikely(float x,float y, int station, int& chmb, int& reg){
@@ -267,7 +343,7 @@ MuonTileID MuonChamberLayout::tileChamber(DeMuonChamber* chmb){
   myTile.setRegion(reg);
 
   //Gap is not used here
-  myTile.setLayer(-1);
+  myTile.setLayer(0);
 
   myTile.setLayout(MuonLayout(m_cgX.at(reg),m_cgY.at(reg)));
 
@@ -319,10 +395,8 @@ MuonTileID MuonChamberLayout::tileChamber(DeMuonChamber* chmb){
 MuonTileID MuonChamberLayout::tileChamberNumber(int sta, int reg, int chmbNum){
 
 
-  bool debug = false; char pt[200];
-  MuonTileID myTile;
-
-  sprintf(pt,"/dd/Structure/LHCb/Muon/M%d/R%d/Cham%3d",sta,reg,chmbNum+1);
+  char pt[200];  MuonTileID myTile;
+  sprintf(pt,"/dd/Structure/LHCb/Muon/M%d/R%d/Cham%03d",sta+1,reg+1,chmbNum+1);
 
   SmartDataPtr<DeMuonChamber> deChmb(m_detSvc,pt);
   if(deChmb) {
@@ -364,11 +438,7 @@ void MuonChamberLayout::gridPosition(float x, float y, int iS, int &idx, int &id
   return;
 }
 
-void MuonChamberLayout::setGridStep(int station){
-
-  //Comment the following and uncomment after "Initialize the step for the grid"
-  //to compute chamber dimensions directly from detector elements
-
+void MuonChamberLayout::setGridStep(){
   float dimX[5] = {240,301.363,325.155,348.947,372.739};
   float dimY[5] = {200,251.136,270.962,290.789,310.615};
   for(int iDum = 0; iDum<5; iDum++) {
@@ -387,10 +457,10 @@ void MuonChamberLayout::fillChambersVector(IDataProviderSvc* detSvc) {
   //Getting stations
   IDetectorElement::IDEContainer::iterator itSt=muonSys->childBegin();
   int iS = 0;
+  //Set the grid steps for the various stations
+  setGridStep();
+  
   for(itSt=muonSys->childBegin(); itSt<muonSys->childEnd(); itSt++){
-    
-    //Set the grid steps for the various stations
-    setGridStep(iS);
     
     //Getting regions
     IDetectorElement::IDEContainer::iterator itRg=(*itSt)->childBegin();
@@ -415,4 +485,12 @@ void MuonChamberLayout::fillChambersVector(IDataProviderSvc* detSvc) {
   }
   std::cout<<"Filled chamber vector"<<std::endl;
   return;
+}
+
+bool MuonChamberLayout::shouldLowReg(int idX, int idY, int reg){
+  bool lower = true;
+  bool iXnz = (((idX <  m_cgX.at(reg))&&(idX>0)) || ((idX>=3*m_cgX.at(reg))&&(idX<4*m_cgX.at(reg))));
+  bool iYnz = (((idY <  m_cgY.at(reg))&&(idY>0)) || ((idY>=4*m_cgY.at(reg))&&(idX<4*m_cgY.at(reg))));
+  if(iXnz && iYnz) {lower = false;}
+  return lower;
 }

@@ -1,9 +1,19 @@
-! $Id: release.notes,v 1.42 2005-10-25 07:18:58 asarti Exp $
+! $Id: release.notes,v 1.43 2005-10-28 09:59:40 asarti Exp $
 !
 ! Package     : MuonDet
 ! Responsible : Alessia Satta
 
 !========================= MuonDet v4r8 2005-07-01 =========================
+! 2005-10-28 - Alessio Sarti
+ - First version with running DeMuonDetector
+   - src/component/DeMuonDetector.cpp
+	implemented first methods for xyz->chamber conversion
+   - src/component/MuonChamberLayout.cpp
+	small cleanup and some bugfixes for chamber retrieval
+	in the grid
+   - MuonDet/*h 
+	changes accordingly to previous *cpp files...
+
 ! 2005-10-25 - Alessio Sarti
  - Major changes in almost all code. Made the Converters and classes
    compliant with LHCb templates. Need soon a v5r0 tag.
