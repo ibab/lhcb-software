@@ -4,6 +4,14 @@
 ! Purpose     : Package for tracking projectors
 !-----------------------------------------------------------------------------
 
+! 2005-10-28 - Jose A. Hernando
+ - RayIntersector
+  A class that computes the distance between two straight lines (rays)  
+and the derivation of that distance.
+ - TrackOTRayProjector
+ Computing the OT projection using the Ray Intersector
+  (first version)
+
 !====================== TrackProjectors v1r3 2005-10-07 ======================
 ! 2005-09-29 - Eduardo Rodrigues
  - pow functions replaced by GSL corresponding versions
