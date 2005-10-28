@@ -1,4 +1,4 @@
-// $Id: DeMuonDetector.h,v 1.1 2005-10-25 06:54:28 asarti Exp $
+// $Id: DeMuonDetector.h,v 1.2 2005-10-28 09:55:34 asarti Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
@@ -44,12 +44,22 @@ public:
 
   //Initialize of Detector Element
   virtual StatusCode initialize();
- 
+
+
+  StatusCode Hit2ChamberNumber(HepPoint3D myPoint, 
+			       int station, 
+			       int & chamberNumber, int& regNum);
+  
   StatusCode Pos2ChamberNumber(const double x,
                                const double y,
                                const double z,
                                int & chamberNumber, int& regNum);
 
+  StatusCode Pos2ChamberNumber(const double x,
+                               const double y,
+                               int station ,
+                               int & chamberNumber, int& regNum);
+  
   StatusCode Pos2ChamberTile(const double x,
                              const double y,
                              const double z,
@@ -57,6 +67,9 @@ public:
   
   //Returns the station index starting from the z position
   int getStation(const double z);
+
+  //Returns a detector element identified by chmb, reg, num
+  IDetectorElement* ReturnADetElement(int lsta, int lreg, int lchm);
 
   /*
 
@@ -78,11 +91,6 @@ public:
                                 const double y,
                                 const double z,
                                 DeMuonChamber* & chamberPointer);
-  
-  StatusCode Pos2ChamberNumber(const double x,
-                               const double y,
-                               const int station ,
-                               int & chamberNumber);
   
   StatusCode Pos2ChamberPointer(const double x,
                                 const double y,
