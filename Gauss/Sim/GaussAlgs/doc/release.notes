@@ -4,6 +4,14 @@
 ! Responsible : G.Corti
 ! -----------------------------------------------------------------------------
 
+! 2005-10-30 - Gloria CORTI
+ - src/G4HepMCToMCTruth.{h,cpp}
+   . new algorithm to fill MCParticles/MCVertices from HepMC as filled 
+     during G4 tracking (initial version from Witek Pokorski, small
+     modifications to follow new GaudiAlg conventions)
+ - src/GaussAlgs_load.cpp
+   . add declaration of G4HepMCToMCTruth algorithm
+
 ! 2005-10-25 - Gloria CORTI
  - src/GiGaGetHitsAlg.{h,cpp}
    . add possible additional location for MCHits printing controlled by 

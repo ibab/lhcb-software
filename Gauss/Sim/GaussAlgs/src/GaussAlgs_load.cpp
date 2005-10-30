@@ -1,8 +1,11 @@
-// $Id: GaussAlgs_load.cpp,v 1.4 2005-10-25 18:04:00 gcorti Exp $
+// $Id: GaussAlgs_load.cpp,v 1.5 2005-10-30 21:58:49 gcorti Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.4  2005/10/25 18:04:00  gcorti
+// new algorithm
+//
 // Revision 1.3  2005/04/22 14:46:48  gcorti
 // remove obsolete algorithm
 //
@@ -29,6 +32,7 @@ DECLARE_FACTORY_ENTRIES(GaussAlgs) {
   DECLARE_ALGORITHM ( PrintEventAlg       ) ;
   DECLARE_ALGORITHM ( GiGaCheckEventStatus ) ;
   DECLARE_ALGORITHM ( GeneratorToG4       ) ;
+  DECLARE_ALGORITHM ( G4HepMCToMCTruth    );
   
 };
 
