@@ -1,4 +1,4 @@
-// $Id: GetTrackerHitsAlg.cpp,v 1.1 2005-10-25 18:52:52 gcorti Exp $
+// $Id: GetTrackerHitsAlg.cpp,v 1.2 2005-10-30 21:49:15 gcorti Exp $
 // Include files 
 
 // from Gaudi
@@ -84,8 +84,15 @@ StatusCode GetTrackerHitsAlg::execute() {
   }
 
   // Create the MCHits and put them in the TES
-  MCHits* hits = getOrCreate<MCHits,MCHits>( m_hitsLocation );
-
+  // Cannot use 
+  // MCHits* hits = getOrCreate<MCHits,MCHits>( m_hitsLocation );
+  // because triggers convertion
+  MCHits* hits = new MCHits();
+  StatusCode sc = put( hits, m_hitsLocation );
+  if( sc.isFailure() ) {
+    return Error( " Unable to register MCHits in " + m_hitsLocation );
+  }                    
+  
   // Get the G4 necessary hit collection from GiGa
   G4HCofThisEvent* hitsCollections = 0;
   GiGaHitsByName col( m_colName );
@@ -107,8 +114,8 @@ StatusCode GetTrackerHitsAlg::execute() {
     return Error( "MCParticles do not exist at'" 
                   + MCParticleLocation::Default +"'" );
   }
-    
-  MCParticles* parts = get<MCParticles>( MCParticleLocation::Default );
+  
+  // MCParticles* parts = get<MCParticles>( MCParticleLocation::Default );
 
   // Get the Geant4->MCParticle table
   GiGaKineRefTable& table = kineSvc()->table();

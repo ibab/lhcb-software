@@ -5,6 +5,11 @@
 !                    tracker like detectors (Velo, OT, IT, Muon)
 !-----------------------------------------------------------------------------
 
+! 2005-10-30 - Gloria CORTI
+ - src/GetTrackerHitsAlg.cpp
+   . replace getOrCreate method with put(), since the first cannot be
+     used to preempt triggering of converters with identical location in TES.
+
 ! 2005-10-25 - Gloria CORTI
  - src/GetTrackerHitsAlg.{h,cpp}
    . new algorithm to fill MCHits in a given location in TES (settable via
