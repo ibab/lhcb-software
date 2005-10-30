@@ -17,6 +17,7 @@ branches          cmt doc src options
 use   EvtGen       v*      Gen
 use   GenEvent     v*      Event
 use   MCTools      v*      Phys
+use   AIDA         v*      LCG_Interfaces
 
 # Component library building rule
 #============================================================================
