@@ -1,4 +1,4 @@
-// $Id: Simulation.opts,v 1.64 2005-10-27 09:31:47 gcorti Exp $ 
+// $Id: Simulation.opts,v 1.65 2005-10-31 11:24:12 gcorti Exp $ 
 #pragma print off
 
 /** @file 
@@ -32,24 +32,50 @@ Simulation.Members += { "GiGaDataStoreAlgorithm/GiGaStore" };
 Simulation.Members += { "GiGaInputStream/Geo" };
 #include "$GAUSSOPTS/SimGeometry.opts"
 
-// Load the initial kinematics
-// In initialize retrieve the GiGaKine service
-// It is executed for each event
-Simulation.Members += { "GiGaInputStream/Kine" };
-// configuration of kinematics event "Kine" data stream = default
-Kine.ConversionSvcName    = "GiGaKine" ; 
-Kine.DataProviderSvcName  = "EventDataSvc"   ; 
-// Where in the TES the INITIAL kinematic is located
-Kine.StreamItems         += {"/Event/Gen/HepMCEvents"};
+// // ---> OLD WAY: Uncomment if you still want it
+// // Load the initial kinematics
+// // In initialize retrieve the GiGaKine service
+// // It is executed for each event
+// Simulation.Members += { "GiGaInputStream/Kine" };
+// // configuration of kinematics event "Kine" data stream = default
+// Kine.ConversionSvcName    = "GiGaKine" ; 
+// Kine.DataProviderSvcName  = "EventDataSvc"   ; 
+// // Where in the TES the INITIAL kinematic is located
+// Kine.StreamItems         += {"/Event/Gen/HepMCEvents"};
 
+// // Perform the Geant4 simulation
+// Simulation.Members += { "GiGaFlushAlgorithm" };
+// // Check the G4Event processing status
+// Simulation.Members += { "GiGaCheckEventStatus" };
+// // Populate the MCParticles/MCVertices in the TES
+// Simulation.Members += { "GiGaGetEventAlg" };
+// // Populate sensitive hits in the TES
+// Simulation.Members += { "GiGaGetHitsAlg" };
+// // ---> OLD WAY: END
+
+// ---> NEW WAY: 
+// Pass the generator event to Geant4
+Simulation.Members += { "GeneratorToG4" };            // NEW algorithm
 // Perform the Geant4 simulation
 Simulation.Members += { "GiGaFlushAlgorithm" };
 // Check the G4Event processing status
 Simulation.Members += { "GiGaCheckEventStatus" };
 // Populate the MCParticles/MCVertices in the TES
 Simulation.Members += { "GiGaGetEventAlg" };
-// Populate sensitive hits in the TES
+Simulation.Members += { "G4HepMCToMCTruth" };         // With HEPMC internally
+G4HepMCToMCTruth.Particles = "MC/TestParticles";
+G4HepMCToMCTruth.Vertices = "MC/TestVertices";
+// Populate sensitive hits in the TES for ST/OT
+Simulation.Members += { "GetTrackerHitsAlg/GetSTHits" }; // NEW algorithm
+Simulation.Members += { "GetTrackerHitsAlg/GetOTHits" }; // NEW algorithm
+GetSTHits.CollectionName = "ITSDet/Hits";
+GetSTHits.MCHitsLocation = "/Event/MC/IT/Hits";
+GetOTHits.CollectionName = "OTSDet/Hits";
+GetOTHits.MCHitsLocation = "/Event/MC/OT/Hits";
+// All other detectors
 Simulation.Members += { "GiGaGetHitsAlg" };
+// ---> NEW WAY: END
+
 
 // Simulation configuration: Geant4 control
 // Physics list and the production cuts  
@@ -87,6 +113,7 @@ GiGa.RunSeq.RunCommand.BeginOfRunCommands     =
 
 // Mandatory event action  
 GiGa.EventAction           =   "GiGaEventActionSequence/EventSeq"      ;
+GiGa.EventSeq.Members      += { "GaussEventActionHepMC/HepMCEvent" }; // NEW
 
 // Mandatory tracking action (1/2)
 // Must be in two steps, when a trajectory is created
@@ -118,6 +145,7 @@ GiGa.ModularPL.GiGaPhysConstructorOp.RichMaxNumPhotPerCherenkovStep=40;
 // mandatory tracking action (2/2)
 // ... and when a trajectory ends
 GiGa.TrackSeq.Members      += { "GaussPostTrackAction/PostTrack" } ;
+GiGa.TrackSeq.Members      += { "GaussTrackActionHepMC/HepMCTrack" } ; // NEW
 GiGa.TrackSeq.PostTrack.StoreAll  = false; 
 GiGa.TrackSeq.PostTrack.StorePrimaries = true;
 GiGa.TrackSeq.PostTrack.StoreMarkedTracks = true;

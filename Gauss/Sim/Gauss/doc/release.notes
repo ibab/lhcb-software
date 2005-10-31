@@ -4,15 +4,33 @@
 ! Purpose     : LHCb Simulation Application with Geant4
 !-----------------------------------------------------------------------------
 
+! 2005-10-31 - Gloria CORTI
+ - Introduce possibility to store G4 history in HepMC structure (optional),
+   algorithm to pass Generator info to G4 primary, algorithm to fill MCHits
+   from G4 collections. Set use of these instead of converters, old way
+   available but commented
+   . GaussAlgs v1r7, GaussTools v10r11, GaussTracker v4r2
+   . Simulation.opts
+ - Introduce use of new structure for generation of min bias events
+   . Generator v2r0, LbPythia v2r0, LbAcerMC v1r3
+   . Generator.opts
+   Note that DecFiles v9r1 still supports options for "old" algorithms
+   generator structure. Need to modify options to use it.
+ - Use latest version of Geant4Files (v71r0) compatible with Geant4 7.1
+ - Use new version of FieldMap v4r6. By default will read new field map
+   "field046.cdf". Previous field is also available and can set in options.
+
+! 2005-10-27 - Gloria CORTI
+ - Move checking of status of Geant4 event just after triggering the
+   simulation
+   . Simulation.opts
+
 ! 2005-10-26 - Gloria CORTI
  - Introduce new algorithm to fill MCParticle/MCVertex histograms in
    SimMonitor sequence (MCTruthMonitor)
    . Monitor.opts
  - Introduce GaudiSequencer also for initialization
    . Gauss.opts
- - Move checking of status of Geant4 event just after triggering the
-   simulation
-   . Simulation.opts
 
 !============================ Gauss v20r2 ================================
 ! 2005-08-17 - Gloria CORTI

@@ -1,5 +1,5 @@
 #printOptions 
-// $Id: Gauss.opts,v 1.69 2005-10-26 18:04:26 gcorti Exp $ 
+// $Id: Gauss.opts,v 1.70 2005-10-31 11:25:36 gcorti Exp $ 
 
 /** @file 
  * 
@@ -53,7 +53,23 @@ Monitor.Members       += { "GaudiSequencer/GenMonitor" };
 Monitor.Members       += { "GaudiSequencer/SimMonitor" };
 #include "$GAUSSOPTS/Monitor.opts"
 //#include "$GAUSSOPTS/MonitorInDetail.opts" // ntuples and commented examples
-Monitor.MeasureTime = true;
+Monitor.MeasureTime    = true;
+GenMonitor.MeasureTime = true;
+SimMonitor.MeasureTime = true;
+
+// Test new structure
+// Generator.Members  += { "DumpMC" };
+// SimMonitor.Members += { "GiGaDumpPrimaryAlg" };
+// SimMonitor.Members += { "PrintEventAlg/PrintOne" };
+// SimMonitor.Members += { "PrintEventAlg/PrintTwo" };
+// PrintTwo.Particles = "MC/TestParticles";
+// PrintTwo.Vertices  = "MC/TestVertices";
+// GeneratorToG4.OutputLevel  = 2;
+// GiGaGetHitsAlg.OutputLevel = 1;
+// GetSTHits.OutputLevel      = 2;
+// GetOTHits.OutputLevel      = 2;
+// G4HepMCToMCTruth.OutputLevel   = 2;
+// GiGa.EventSeq.HepMCEvent.OutputLevel = 2;
 
 //---------------------------------------------------------------------------
 // Write an output file (contents listed in GaussTape.opts)
@@ -77,6 +93,7 @@ GaussTape.Output = "DATAFILE='PFN:Gauss.sim' TYP='POOL_ROOTTREE' OPT='RECREATE'"
 PoolDbCacheSvc.Catalog = { "xmlcatalog_file:NewCatalog.xml" };
 
 HistogramPersistencySvc.OutputFile = "GaussHistos.root";  // Monitoring histos
+//NTupleSvc.Output={"FILE1 DATAFILE='GaussMonitor.root' TYP='ROOT' OPT='NEW'"};
 
 //---------------------------------------------------------------------------
 // Event type to simulate: for <evttype> put a line similar to the following
