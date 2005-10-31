@@ -5,7 +5,7 @@
  *  Implementation file for RICH Digitisation Quality Control algorithm : RichDigitQC
  *
  *  CVS Log :-
- *  $Id: RichDigitQC.cpp,v 1.21 2005-10-18 12:32:13 jonrob Exp $
+ *  $Id: RichDigitQC.cpp,v 1.22 2005-10-31 13:27:35 jonrob Exp $
  *
  *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
  *  @date   2003-09-08
@@ -24,15 +24,15 @@ const        IAlgFactory& RichDigitQCFactory = s_factory ;
 // Standard constructor, initializes variables
 RichDigitQC::RichDigitQC( const std::string& name,
                           ISvcLocator* pSvcLocator)
-  : RichMoniAlgBase ( name, pSvcLocator ),
-    m_level1        ( 0                 ),
-    m_hpdID         ( 0                 ),
-    m_smartIDs      ( 0                 ),
-    m_mcTool        ( 0                 ),
-    m_evtC          ( 0                 ),
-    m_spillDigits   ( Rich::NRiches     ),
-    m_totalSpills   ( Rich::NRiches     ),
-    m_bkgHits       ( Rich::NRiches, 0  )
+  : RichHistoAlgBase ( name, pSvcLocator ),
+    m_level1         ( 0                 ),
+    m_hpdID          ( 0                 ),
+    m_smartIDs       ( 0                 ),
+    m_mcTool         ( 0                 ),
+    m_evtC           ( 0                 ),
+    m_spillDigits    ( Rich::NRiches     ),
+    m_totalSpills    ( Rich::NRiches     ),
+    m_bkgHits        ( Rich::NRiches, 0  )
 {
 
   // Declare job options
@@ -48,7 +48,7 @@ RichDigitQC::~RichDigitQC() {}
 StatusCode RichDigitQC::initialize()
 {
   // Initialize base class
-  const StatusCode sc = RichMoniAlgBase::initialize();
+  const StatusCode sc = RichHistoAlgBase::initialize();
   if ( sc.isFailure() ) { return sc; }
 
   // acquire tools
@@ -267,6 +267,6 @@ StatusCode RichDigitQC::finalize()
   info() << "===============================================================================================" << endreq;
 
   // finalize base class
-  return RichMoniAlgBase::finalize();
+  return RichHistoAlgBase::finalize();
 }
 

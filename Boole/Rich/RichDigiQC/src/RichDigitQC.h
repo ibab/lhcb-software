@@ -5,7 +5,7 @@
  *  Header file for RICH Digitisation Quality Control algorithm : RichDigitQC
  *
  *  CVS Log :-
- *  $Id: RichDigitQC.h,v 1.14 2005-09-25 09:55:14 jonrob Exp $
+ *  $Id: RichDigitQC.h,v 1.15 2005-10-31 13:27:35 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   2003-09-08
@@ -22,7 +22,7 @@
 #include "boost/lexical_cast.hpp"
 
 // base class
-#include "RichKernel/RichMoniAlgBase.h"
+#include "RichKernel/RichHistoAlgBase.h"
 
 // from Gaudi
 #include "GaudiKernel/IHistogramSvc.h"
@@ -63,7 +63,8 @@
  *  @date   2003-09-08
  */
 
-class RichDigitQC : public RichMoniAlgBase {
+class RichDigitQC : public RichHistoAlgBase 
+{
 
 public:
 
