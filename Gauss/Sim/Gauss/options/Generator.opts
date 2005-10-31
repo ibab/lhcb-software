@@ -9,6 +9,7 @@
  * 
  */
 
+// 2005-10-26 OLD WAY: STILL VALID, BUT OVERWRITTEN BELOW WITH NEW WAY
 // Generate signal B at rest
 Generator.Members = { "SignalDecayAlg" };
 
@@ -36,3 +37,13 @@ Generator.Members += {"GenMonitorAlg"};
 
 // Additional options to be uncommented when running generator in stand-alone
 //#include "$GAUSSOPTS/GenStandAlone.opts"
+
+// END OF OLD WAY
+
+// NEW WAY: COMMENT IF YOU STILL WANT THE OLD WAY - MIN BIAS ONLY
+Generator.Members  = { "Generation" };
+Generator.Members += { "GenMonitorAlg" };
+
+Generation.EventType                  = 30000000;
+Generation.SampleGenerationTool       = "MinimumBias";
+Generation.MinimumBias.ProductionTool = "PythiaProduction";
