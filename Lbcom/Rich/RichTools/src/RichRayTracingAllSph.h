@@ -5,7 +5,7 @@
  *  Header file for tool : RichDetParameters
  *
  *  CVS History :
- *  $Id: RichRayTracingAllSph.h,v 1.2 2005-10-13 16:11:07 jonrob Exp $
+ *  $Id: RichRayTracingAllSph.h,v 1.3 2005-10-31 13:32:43 jonrob Exp $
  *
  *  @author Chris Jones    Christopher.Rob.Jones@cern.ch
  *  @date   2004-03-29
@@ -19,7 +19,7 @@
 #include "GaudiKernel/ToolFactory.h"
 
 // Base class and interface
-#include "RichKernel/RichMoniToolBase.h"
+#include "RichKernel/RichHistoToolBase.h"
 #include "RichKernel/IRichRayTracing.h"
 
 // RichKernel
@@ -57,7 +57,7 @@
  */
 //-----------------------------------------------------------------------------
 
-class RichRayTracingAllSph : public RichMoniToolBase,
+class RichRayTracingAllSph : public RichHistoToolBase,
                              virtual public IRichRayTracing 
 {
 

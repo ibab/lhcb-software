@@ -5,7 +5,7 @@
  * Implementation file for class : RichRayTracingAllSph
  *
  * CVS Log :-
- * $Id: RichRayTracingAllSph.cpp,v 1.3 2005-10-21 12:51:46 jonrob Exp $
+ * $Id: RichRayTracingAllSph.cpp,v 1.4 2005-10-31 13:32:43 jonrob Exp $
  *
  * @author Antonis Papanestis
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
@@ -39,12 +39,12 @@ const        IToolFactory& RichRayTracingAllSphFactory = Factory ;
 RichRayTracingAllSph::RichRayTracingAllSph( const std::string& type,
                                             const std::string& name,
                                             const IInterface* parent)
-  : RichMoniToolBase     ( type, name, parent  ),
-    m_rich               ( Rich::NRiches       ),
-    m_sphMirrorSegRows   ( Rich::NRiches, 0    ),
-    m_sphMirrorSegCols   ( Rich::NRiches, 0    ),
-    m_secMirrorSegRows   ( Rich::NRiches, 0    ),
-    m_secMirrorSegCols   ( Rich::NRiches, 0    ),
+  : RichHistoToolBase     ( type, name, parent  ),
+    m_rich                ( Rich::NRiches       ),
+    m_sphMirrorSegRows    ( Rich::NRiches, 0    ),
+    m_sphMirrorSegCols    ( Rich::NRiches, 0    ),
+    m_secMirrorSegRows    ( Rich::NRiches, 0    ),
+    m_secMirrorSegCols    ( Rich::NRiches, 0    ),
     m_RichDetSeparationPointZ ( 8000.0 )
 {
   declareInterface<IRichRayTracing>(this);
@@ -65,7 +65,7 @@ StatusCode RichRayTracingAllSph::initialize()
 {
 
   // intialise base class
-  const StatusCode sc = RichMoniToolBase::initialize();
+  const StatusCode sc = RichHistoToolBase::initialize();
   if ( sc.isFailure() ) return sc;
 
   // get tools
@@ -157,11 +157,8 @@ StatusCode RichRayTracingAllSph::initialize()
 //=============================================================================
 StatusCode RichRayTracingAllSph::finalize()
 {
-  debug() << "Finalize" << endreq;
-  //if ( 0 != m_HDS ) { m_HDS->release(); m_HDS=0; }
-
   // finalize base class
-  return RichMoniToolBase::finalize();
+  return RichHistoToolBase::finalize();
 }
 
 //=============================================================================

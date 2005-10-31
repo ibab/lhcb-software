@@ -4,6 +4,9 @@
 ! Purpose     : General purpose Rich Tools
 !-----------------------------------------------------------------------------
 
+! 2005-10-31 - Chris Jones
+ - Update to new base classes
+
 ! 2005-10-21 - Chris Jones
  - Add option to force flat secondary mirror assumption
 
