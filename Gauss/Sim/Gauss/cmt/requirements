@@ -10,10 +10,10 @@ branches src doc options cmt job
 #=========================================================================
 #-- Databases
 use XmlDDDB             v26r1   Det   -no_auto_imports
-use FieldMap            v4r5          -no_auto_imports
+use FieldMap            v4r6          -no_auto_imports
 use DecFiles            v9r1    Gen   -no_auto_imports
 use ParamFiles          v3r13         -no_auto_imports
-use Geant4Files		v52r0	      -no_auto_imports
+use Geant4Files		v71r0	      -no_auto_imports
 
 
 #========================================================================
@@ -27,7 +27,7 @@ use $(LbAcerMC_use)
 
 #-- Simulation
 use GiGaCnv             v15r11  Sim
-use GaussTools          v10r10 	Sim
+use GaussTools          v10r11 	Sim
 use GaussTracker        v4r2    Sim
 use GaussRICH           v5r0    Sim
 use GaussCalo           v7r3    Sim
