@@ -1,12 +1,12 @@
 
 //-----------------------------------------------------------------------------
-/** @file RichRecMoniAlgBase.cpp
+/** @file RichRecHistoAlgBase.cpp
  *
  *  Implementation file for RICH reconstruction monitor
- *  algorithm base class : RichRecMoniAlgBase
+ *  algorithm base class : RichRecHistoAlgBase
  *
  *  CVS Log :-
- *  $Id: RichRecMoniAlgBase.cpp,v 1.5 2005-10-13 15:38:41 jonrob Exp $
+ *  $Id: RichRecHistoAlgBase.cpp,v 1.1 2005-10-31 13:30:16 jonrob Exp $
  *
  *  @author Chris Jones    Christopher.Rob.Jones@cern.ch
  *  @date   2005/01/13
@@ -17,28 +17,28 @@
 #include "GaudiKernel/AlgFactory.h"
 
 // local
-#include "RichRecBase/RichRecMoniAlgBase.h"
+#include "RichRecBase/RichRecHistoAlgBase.h"
 
 // ============================================================================
 // Disable warning on windows about using 'this' in constructors
 #ifdef _WIN32
 #pragma warning ( disable:4355 )
-#endif 
+#endif
 // ============================================================================
 
 // ============================================================================
 // Force creation of templated class
 #include "RichRecBase.icpp"
-template class RichRecBase<RichMoniAlgBase> ;
+template class RichRecBase<RichHistoAlgBase> ;
 // ============================================================================
 
 // ============================================================================
 // Standard constructor
 // ============================================================================
-RichRecMoniAlgBase::RichRecMoniAlgBase( const std::string& name,
-                                        ISvcLocator* pSvcLocator )
-  : RichMoniAlgBase  ( name, pSvcLocator ),
-    RichRecBase<RichMoniAlgBase> ( this )
+RichRecHistoAlgBase::RichRecHistoAlgBase( const std::string& name,
+                                          ISvcLocator* pSvcLocator )
+  : RichHistoAlgBase  ( name, pSvcLocator ),
+    RichRecBase<RichHistoAlgBase> ( this )
 {
 }
 // ============================================================================
@@ -46,15 +46,17 @@ RichRecMoniAlgBase::RichRecMoniAlgBase( const std::string& name,
 // ============================================================================
 // Initialise
 // ============================================================================
-StatusCode RichRecMoniAlgBase::initialize()
+StatusCode RichRecHistoAlgBase::initialize()
 {
   // Initialise base class
-  StatusCode sc = RichMoniAlgBase::initialize();
-  if ( sc.isFailure() ) return Error( "Failed to initialise RichMoniAlgBase", sc );
+  StatusCode sc = RichHistoAlgBase::initialize();
+  if ( sc.isFailure() )
+    return Error( "Failed to initialise RichHistoAlgBase", sc );
 
   // Common initialisation
   sc = initialiseRichReco();
-  if ( sc.isFailure() ) return Error( "Failed to initialise RichRecBase", sc );
+  if ( sc.isFailure() )
+    return Error( "Failed to initialise RichRecBase", sc );
 
   return sc;
 }
@@ -63,23 +65,23 @@ StatusCode RichRecMoniAlgBase::initialize()
 // ============================================================================
 // Main execute method
 // ============================================================================
-StatusCode RichRecMoniAlgBase::execute()
+StatusCode RichRecHistoAlgBase::execute()
 {
   // All algorithms should re-implement this method
-  return Error ( "Default RichRecMoniAlgBase::execute() called !!" );
+  return Error ( "Default RichRecHistoAlgBase::execute() called !!" );
 }
 // ============================================================================
 
 // ============================================================================
 // Finalize
 // ============================================================================
-StatusCode RichRecMoniAlgBase::finalize()
+StatusCode RichRecHistoAlgBase::finalize()
 {
   // Common finalisation
   const StatusCode sc = finaliseRichReco();
   if ( sc.isFailure() ) return Error( "Failed to finalise RichRecBase", sc );
 
   // Finalize base class
-  return RichMoniAlgBase::finalize();
+  return RichHistoAlgBase::finalize();
 }
 // ============================================================================

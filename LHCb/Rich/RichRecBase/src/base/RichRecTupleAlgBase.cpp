@@ -1,41 +1,44 @@
 
 //-----------------------------------------------------------------------------
-/** @file RichRecMoniToolBase.cpp
+/** @file RichRecTupleAlgBase.cpp
  *
- *  Implementation file for RICH reconstruction tool base class : RichRecMoniToolBase
+ *  Implementation file for RICH reconstruction monitor
+ *  algorithm base class : RichRecTupleAlgBase
  *
  *  CVS Log :-
- *  $Id: RichRecMoniToolBase.cpp,v 1.4 2005-10-13 15:38:41 jonrob Exp $
+ *  $Id: RichRecTupleAlgBase.cpp,v 1.1 2005-10-31 13:30:16 jonrob Exp $
  *
  *  @author Chris Jones    Christopher.Rob.Jones@cern.ch
  *  @date   2005/01/13
  */
 //-----------------------------------------------------------------------------
 
+// from Gaudi
+#include "GaudiKernel/AlgFactory.h"
+
 // local
-#include "RichRecBase/RichRecMoniToolBase.h"
+#include "RichRecBase/RichRecTupleAlgBase.h"
 
 // ============================================================================
 // Disable warning on windows about using 'this' in constructors
 #ifdef _WIN32
 #pragma warning ( disable:4355 )
-#endif 
+#endif
 // ============================================================================
 
 // ============================================================================
 // Force creation of templated class
 #include "RichRecBase.icpp"
-template class RichRecBase<RichMoniToolBase> ;
+template class RichRecBase<RichTupleAlgBase> ;
 // ============================================================================
 
 // ============================================================================
 // Standard constructor
 // ============================================================================
-RichRecMoniToolBase::RichRecMoniToolBase( const std::string& type,
-                                          const std::string& name,
-                                          const IInterface* parent )
-  : RichMoniToolBase ( type, name, parent ),
-    RichRecBase<RichMoniToolBase> ( this )
+RichRecTupleAlgBase::RichRecTupleAlgBase( const std::string& name,
+                                          ISvcLocator* pSvcLocator )
+  : RichTupleAlgBase  ( name, pSvcLocator ),
+    RichRecBase<RichTupleAlgBase> ( this )
 {
 }
 // ============================================================================
@@ -43,30 +46,42 @@ RichRecMoniToolBase::RichRecMoniToolBase( const std::string& type,
 // ============================================================================
 // Initialise
 // ============================================================================
-StatusCode RichRecMoniToolBase::initialize()
+StatusCode RichRecTupleAlgBase::initialize()
 {
   // Initialise base class
-  StatusCode sc = RichMoniToolBase::initialize();
-  if ( sc.isFailure() ) return Error( "Failed to initialise RichMoniToolBase", sc );
+  StatusCode sc = RichTupleAlgBase::initialize();
+  if ( sc.isFailure() )
+    return Error( "Failed to initialise RichTupleAlgBase", sc );
 
   // Common initialisation
   sc = initialiseRichReco();
-  if ( sc.isFailure() ) return Error( "Failed to initialise RichRecBase", sc );
+  if ( sc.isFailure() )
+    return Error( "Failed to initialise RichRecBase", sc );
 
   return sc;
 }
 // ============================================================================
 
 // ============================================================================
-// Finalise
+// Main execute method
 // ============================================================================
-StatusCode RichRecMoniToolBase::finalize()
+StatusCode RichRecTupleAlgBase::execute()
+{
+  // All algorithms should re-implement this method
+  return Error ( "Default RichRecTupleAlgBase::execute() called !!" );
+}
+// ============================================================================
+
+// ============================================================================
+// Finalize
+// ============================================================================
+StatusCode RichRecTupleAlgBase::finalize()
 {
   // Common finalisation
   const StatusCode sc = finaliseRichReco();
   if ( sc.isFailure() ) return Error( "Failed to finalise RichRecBase", sc );
 
-  // base class finalize
-  return RichMoniToolBase::finalize();
+  // Finalize base class
+  return RichTupleAlgBase::finalize();
 }
 // ============================================================================

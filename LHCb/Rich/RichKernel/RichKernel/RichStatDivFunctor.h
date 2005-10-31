@@ -1,16 +1,16 @@
 
-//------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------
 /** @file RichStatDivFunctor.h
  *
  *  Header file for poisson efficiency functor : RichStatDivFunctor
  *
  *  CVS Log :-
- *  $Id: RichStatDivFunctor.h,v 1.2 2005-10-13 15:03:42 jonrob Exp $
+ *  $Id: RichStatDivFunctor.h,v 1.3 2005-10-31 13:26:11 jonrob Exp $
  *
  *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
  *  @date   2003-09-08
  */
-//------------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------
 
 #ifndef RICHKERNEL_RICHSTATDIVFUNCTOR_H
 #define RICHKERNEL_RICHSTATDIVFUNCTOR_H 1
@@ -23,18 +23,16 @@
 
 class RichStatDivFunctor;
 
+//--------------------------------------------------------------------------------------
 /** @class RichStatDivFunctorResult RichStatDivFunctor.h RichKernel/RichStatDivFunctor.h
  *
- *  Simple utility class to provide an easy way to produce a formated output division
- *  calculation, with the associated error.
- *
- *  @code
- *  RichStatDivFunctor result("%8.2f +-%6.2f");
- *  info() << "Result = " << result(a,b) << endreq;
+ *  Result object for efficency and error calculator RichStatDivFunctor.
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   2004-12-20
  */
+//--------------------------------------------------------------------------------------
+
 class RichStatDivFunctorResult : private std::pair<double,double>
 {
 
@@ -68,13 +66,22 @@ private:
 
 };
 
+//------------------------------------------------------------------------------------
 /** @class RichStatDivFunctor RichStatDivFunctor.h RichKernel/RichStatDivFunctor.h
  *
- *  Calculator for the division and statistical error of two numbers
+ *  Simple utility class to provide an easy way to produce a formated output division
+ *  calculation, with the associated statistical error.
+ *
+ *  @code
+ *  RichStatDivFunctor result("%8.2f +-%6.2f");
+ *  info() << "Result = " << result(a,b) << endreq;
+ *  @endcode
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   2004-12-20
  */
+//------------------------------------------------------------------------------------
+
 class RichStatDivFunctor
   : public std::binary_function< const double,
                                  const double,

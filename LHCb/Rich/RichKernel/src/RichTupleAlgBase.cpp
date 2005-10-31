@@ -1,11 +1,11 @@
 
 //-----------------------------------------------------------------------------
-/** @file RichMoniAlgBase.cpp
+/** @file RichTupleAlgBase.cpp
  *
- *  Implementation file for class : RichMoniAlgBase
+ *  Implementation file for class : RichTupleAlgBase
  *
  *  CVS Log :-
- *  $Id: RichMoniAlgBase.cpp,v 1.4 2005-10-13 15:03:42 jonrob Exp $
+ *  $Id: RichTupleAlgBase.cpp,v 1.1 2005-10-31 13:26:11 jonrob Exp $
  *
  *  @author Chris Jones    Christopher.Rob.Jones@cern.ch
  *  @date   2002-04-05
@@ -13,7 +13,7 @@
 //-----------------------------------------------------------------------------
 
 // local
-#include "RichKernel/RichMoniAlgBase.h"
+#include "RichKernel/RichTupleAlgBase.h"
 
 // ============================================================================
 // Force creation of templated class

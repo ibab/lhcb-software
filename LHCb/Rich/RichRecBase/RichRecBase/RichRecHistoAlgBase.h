@@ -1,51 +1,49 @@
 
 //-----------------------------------------------------------------------------
-/** @file RichRecMoniAlgBase.h
+/** @file RichRecHistoAlgBase.h
  *
- *  Header file for reconstruction monitor algorithm base class : RichRecMoniAlgBase
+ *  Header file for RICH reconstruction monitor algorithm base class :
+ *  RichRecHistoAlgBase
  *
  *  CVS Log :-
- *  $Id: RichRecMoniAlgBase.h,v 1.5 2005-10-13 15:38:41 jonrob Exp $
+ *  $Id: RichRecHistoAlgBase.h,v 1.1 2005-10-31 13:30:16 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   2005/01/13
  */
 //-----------------------------------------------------------------------------
 
-#ifndef RICHRECBASE_RICHRECMONIALGBASE_H
-#define RICHRECBASE_RICHRECMONIALGBASE_H 1
+#ifndef RICHRECBASE_RICHRECHISTOALGBASE_H
+#define RICHRECBASE_RICHRECHISTOALGBASE_H 1
 
 // base classes
-#include "RichKernel/RichMoniAlgBase.h"
+#include "RichKernel/RichHistoAlgBase.h"
 #include "RichRecBase/RichRecBase.h"
 
 //-----------------------------------------------------------------------------
-/** @class RichRecMoniAlgBase RichRecMoniAlgBase.h RichRecBase/RichRecMoniAlgBase.h
+/** @class RichRecHistoAlgBase RichRecHistoAlgBase.h RichRecBase/RichRecHistoAlgBase.h
  *
  *  Abstract base class for RICH reconstruction algorithms providing
  *  some basic functionality (identical to RichRecAlgBase) but with additional
- *  histogram and ntuple functionality provided by GaudiTupleAlg base class
+ *  histogram functionality provided by GaudiHistoAlg base class
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   2005/01/13
- *
- *  @todo Review if common functionality between RichRecMoniAlgBase 
- *        and RichRecAlgBase can be merged
  */
 //-----------------------------------------------------------------------------
 
-class RichRecMoniAlgBase : public RichMoniAlgBase,
-                           public RichRecBase<RichMoniAlgBase>
+class RichRecHistoAlgBase : public RichHistoAlgBase,
+                            public RichRecBase<RichHistoAlgBase>
 {
 
 public:
 
   /// Standard constructor
-  RichRecMoniAlgBase( const std::string& name,
-                      ISvcLocator* pSvcLocator );
+  RichRecHistoAlgBase( const std::string& name,
+                       ISvcLocator* pSvcLocator );
 
   /// Destructor
-  virtual ~RichRecMoniAlgBase() {};
+  virtual ~RichRecHistoAlgBase() {};
 
   /** Initialization of the algorithm after creation
    *
@@ -73,4 +71,4 @@ public:
 
 };
 
-#endif // RICHRECBASE_RICHRECMONIALGBASE_H
+#endif // RICHRECBASE_RICHRECHISTOALGBASE_H

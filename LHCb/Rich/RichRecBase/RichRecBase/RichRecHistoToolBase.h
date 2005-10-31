@@ -1,48 +1,49 @@
 
 //-----------------------------------------------------------------------------
-/** @file RichRecMoniToolBase.h
+/** @file RichRecHistoToolBase.h
  *
- * Header file for reconstruction tool base class : RichRecMoniToolBase
+ * Header file for reconstruction tool base class : RichRecHistoToolBase
  *
  * CVS Log :-
- * $Id: RichRecMoniToolBase.h,v 1.4 2005-10-13 15:38:41 jonrob Exp $
+ * $Id: RichRecHistoToolBase.h,v 1.1 2005-10-31 13:30:16 jonrob Exp $
  *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @date   2005/01/13
  */
 //-----------------------------------------------------------------------------
 
-#ifndef RICHRECALGS_RICHRECMONITOOLBASE_H
-#define RICHRECALGS_RICHRECMONITOOLBASE_H 1
+#ifndef RICHRECBASE_RICHRECHISTOTOOLBASE_H
+#define RICHRECBASE_RICHRECHISTOTOOLBASE_H 1
 
 // Base class
-#include "RichKernel/RichMoniToolBase.h"
+#include "RichKernel/RichHistoToolBase.h"
 #include "RichRecBase/RichRecBase.h"
 
 //-----------------------------------------------------------------------------
-/** @class RichRecMoniToolBase RichRecMoniToolBase.h RichRecBase/RichRecMoniToolBase.h
+/** @class RichRecHistoToolBase RichRecHistoToolBase.h RichRecBase/RichRecHistoToolBase.h
  *
  *  Abstract base class for RICH reconstruction tools providing
- *  some basic functionality.
+ *  some basic functionality (identical to RichRecToolBase) but with additional
+ *  histogram functionality provided by GaudiHistoTool base class.
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   2005/01/13
  */
 //-----------------------------------------------------------------------------
 
-class RichRecMoniToolBase : public RichMoniToolBase,
-                            public RichRecBase<RichMoniToolBase>
+class RichRecHistoToolBase : public RichHistoToolBase,
+                             public RichRecBase<RichHistoToolBase>
 {
 
 public:
 
   /// Standard constructor
-  RichRecMoniToolBase( const std::string& type,
-                       const std::string& name,
-                       const IInterface* parent );
+  RichRecHistoToolBase( const std::string& type,
+                        const std::string& name,
+                        const IInterface* parent );
 
   /// Destructor
-  virtual ~RichRecMoniToolBase() {};
+  virtual ~RichRecHistoToolBase() {};
 
   /** Initialization of the tool after creation
    *
@@ -62,4 +63,4 @@ public:
 
 };
 
-#endif // RICHRECALGS_RICHRECMONITOOLBASE_H
+#endif // RICHRECBASE_RICHRECHISTOTOOLBASE_H

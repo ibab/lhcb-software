@@ -5,7 +5,7 @@
  *  Header file for poisson efficiency functor : RichPoissonEffFunctor
  *
  *  CVS Log :-
- *  $Id: RichPoissonEffFunctor.h,v 1.3 2005-10-13 15:03:42 jonrob Exp $
+ *  $Id: RichPoissonEffFunctor.h,v 1.4 2005-10-31 13:26:11 jonrob Exp $
  *
  *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
  *  @date   2003-09-08
@@ -23,6 +23,7 @@
 
 class RichPoissonEffFunctor;
 
+//--------------------------------------------------------------------------------
 /** @class RichPoissonEffFunctorResult RichPoissonEffFunctor.h RichKernel/RichPoissonEffFunctor.h
  *
  *  Result object for poisson efficency and error calculator.
@@ -30,6 +31,8 @@ class RichPoissonEffFunctor;
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   2004-12-20
  */
+//--------------------------------------------------------------------------------
+
 class RichPoissonEffFunctorResult : private std::pair<double,double>
 {
 
@@ -63,13 +66,22 @@ private:
 
 };
 
+//--------------------------------------------------------------------------------
 /** @class RichPoissonEffFunctor RichPoissonEffFunctor.h RichKernel/RichPoissonEffFunctor.h
  *
- *  Calculator for the poisson efficency and error
+ *  Simple utility class to provide an easy way to produce a formated output division
+ *  calculation, with the associated poisson error.
+ *
+ *  @code
+ *  RichStatDivFunctor result("%8.2f +-%6.2f");
+ *  info() << "Result = " << result(a,b) << endreq;
+ *  @endcode
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   2004-12-20
  */
+//--------------------------------------------------------------------------------
+
 class RichPoissonEffFunctor
   : public std::binary_function< const double,
                                  const double,

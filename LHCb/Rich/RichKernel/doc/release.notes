@@ -1,7 +1,12 @@
-! $Id: release.notes,v 1.82 2005-10-25 17:25:37 jonrob Exp $
+! $Id: release.notes,v 1.83 2005-10-31 13:26:11 jonrob Exp $
 ! Package     : Rich/RichKernel
 ! Responsible : Chris Jones
 ! Purpose     : General purpose RICH classes
+
+! 2005-10-31 - Chris Jones
+ - Split up "Moni" base classes into Tuple and Histo versions, to allow
+   histogram creation without havinf to inherit Tuple stuff as well.
+ - Add RichHistoID class
 
 ! 2005-10-25 - Chris Jones
  - Improve doxygen comments for RichCondition tools plus tidy up 
