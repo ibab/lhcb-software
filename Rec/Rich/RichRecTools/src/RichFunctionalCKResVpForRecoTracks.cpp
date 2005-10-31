@@ -4,7 +4,7 @@
  *
  *  Implementation file for tool : RichFunctionalCKResVpForRecoTracks
  *
- *  $Id: RichFunctionalCKResVpForRecoTracks.cpp,v 1.1 2005-10-13 16:01:55 jonrob Exp $
+ *  $Id: RichFunctionalCKResVpForRecoTracks.cpp,v 1.2 2005-10-31 13:32:12 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   17/10/2004
@@ -171,10 +171,6 @@ ckThetaResolution( RichRecSegment * segment,
       // tan(cktheta)
       const double tanCkExp = tan(ckExp);
 
-      if ( rad == Rich::CF4 )
-        debug() << "Track " << segment->richRecTrack()->key() << " " << id
-                << " : ptot " << ptot << " ckExp " << ckExp << endreq;
-
       // asymtopic error
       const double asymptotErr = gsl_pow_2( (m_asmpt[rad])[tkType] );
       res2 += asymptotErr;
@@ -184,15 +180,13 @@ ckThetaResolution( RichRecSegment * segment,
       res2 += chromatErr;
 
       // multiple scattering
-      const double tx = tkSeg.entryMomentum().x() / tkSeg.entryMomentum().z();
-      const double ty = tkSeg.entryMomentum().y() / tkSeg.entryMomentum().z();
+      const HepVector3D & entV = tkSeg.entryMomentum();
+      const double tx = ( fabs(entV.z())>0 ? entV.x() / entV.z() : 0 );
+      const double ty = ( fabs(entV.z())>0 ? entV.y() / entV.z() : 0 );
       const double effectiveLength = sqrt( 1 + tx*tx + ty*ty ) * m_matThickness[rad];
       const double multScattCoeff  = m_scatt * sqrt(effectiveLength)*(1+0.038*log(effectiveLength));
-      const double scattErr = 2 * gsl_pow_2(multScattCoeff/ptot);
+      const double scattErr        = 2 * gsl_pow_2(multScattCoeff/ptot);
       res2 += scattErr;
-      if ( rad == Rich::CF4 )
-        debug() << "  tx " << tx << " ty " << ty << " matT " << m_matThickness[rad]
-                << " effL " << effectiveLength << " scatt " <<  m_scatt << endreq;
 
       // track curvature in the radiator volume
       const double curvErr = (gsl_pow_2(m_curvX[rad]) + gsl_pow_2(m_curvY[rad]))/(ptot*ptot);
@@ -205,14 +199,18 @@ ckThetaResolution( RichRecSegment * segment,
       // momentum error
       const double mass2 = m_richPartProp->massSq(id)/(GeV*GeV);
       const double massFactor = mass2 / ( mass2 + ptot*ptot );
-      const double momErr =
-        tkSeg.entryErrors().errP2()/(GeV*GeV) * gsl_pow_2( massFactor / ptot / tanCkExp );
+      const double momErr = ( tkSeg.entryErrors().errP2()/(GeV*GeV) * 
+                              gsl_pow_2( massFactor / ptot / tanCkExp ) );
       res2 += momErr;
 
-      if ( rad == Rich::CF4 )
+      if ( msgLevel(MSG::DEBUG) )
+      {
+        debug() << "Track " << segment->richRecTrack()->key() << " " << id
+                << " : ptot " << ptot << " ckExp " << ckExp << endreq;
         debug() << "  Asmy " << asymptotErr << " chro " << chromatErr << " scatt "
                 << scattErr << " curv " << curvErr << " dir " << dirErr
                 << " mom " << momErr << " : " << sqrt(res2) << endreq;
+      }
 
     }
 
