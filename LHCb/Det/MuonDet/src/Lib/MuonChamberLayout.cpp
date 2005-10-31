@@ -1,4 +1,4 @@
-// $Id: MuonChamberLayout.cpp,v 1.2 2005-10-28 09:59:40 asarti Exp $
+// $Id: MuonChamberLayout.cpp,v 1.3 2005-10-31 15:27:28 asarti Exp $
 // Include files 
 
 //Muon
@@ -32,7 +32,6 @@ MuonChamberLayout::MuonChamberLayout() {
 
   //When initialized in this way needs un update for the Layout
   MuonChamberLayout(R1,R2,R3,R4,this->dataSvc());
-  std::cout<<"Det Elem name:: "<<this->name()<<std::endl;
 }
 
 
@@ -204,16 +203,13 @@ void MuonChamberLayout::chamberXY(int sx, int sy, int shx, int shy, int reg, std
       //Exits [chamber outside the R4 grid]
       if(debug) std::cout<<" Chamber not Found (>3) "<<chN<<std::endl;
       chamberNumber.push_back(-1);
-      goto exit;
+      return;
     }
     //Fix the chamber number for chambers in region != from starting one
     vSize = chamberNumber.size();
     if(vSize>0) {
       if(debug) std::cout<<" Encode and chamber in first call: "<<chN<<" :: "<<chamberNumber.at(vSize-1)<<" "<<chamberNumber.size()<<" "<<reg+1<<std::endl;
-      if(chamberNumber.at(vSize-1)>-1) {
-	chN = chamberNumber.at(vSize-1);
-	goto exit;
-      }
+      if(chamberNumber.at(vSize-1)>-1) return;
     }
   } else {
     //Look inside the grid
@@ -243,7 +239,7 @@ void MuonChamberLayout::chamberXY(int sx, int sy, int shx, int shy, int reg, std
       //lowest (inner) region. Exiting
       if(debug) std::cout<<" Chamber not Found (<0) "<<chN<<std::endl;
       chamberNumber.push_back(-1);
-      goto exit;
+      return;
     }
     vSize = chamberNumber.size();
     if(vSize>0) {
@@ -262,15 +258,12 @@ void MuonChamberLayout::chamberXY(int sx, int sy, int shx, int shy, int reg, std
 	} else {
 	  if(debug) std::cout<<" Chamber not Found "<<std::endl;
 	  chamberNumber.push_back(-1);
-	  goto exit;
+	  return;
 	}
 	vSize = chamberNumber.size();
 	if(vSize) {
 	  if(debug) std::cout<<" Encode and chamber in third call: "<<chN<<" :: "<<chamberNumber.at(vSize-1)<<" "<<chamberNumber.size()<<" "<<std::endl;
-	  if(chamberNumber.at(vSize-1)>-1) {
-	    chN = chamberNumber.at(vSize-1);
-	    goto exit;
-	  }
+	  if(chamberNumber.at(vSize-1)>-1) return;
 	}
       }
     }
@@ -288,8 +281,6 @@ void MuonChamberLayout::chamberXY(int sx, int sy, int shx, int shy, int reg, std
 	      << " yIndex " << fy
 	      << " is not in TES/xml. " << std::endl;
   }
-
- exit:
 
   return;
 }
@@ -355,38 +346,40 @@ MuonTileID MuonChamberLayout::tileChamber(DeMuonChamber* chmb){
     for(fy = 0; fy<4*m_cgY.at(reg); fy++){
       enc = fx+4*m_cgX.at(reg)*fy+m_offSet.at(reg);
       mychN = m_chamberGrid.at(enc);
-      if(chN == mychN) goto exit;
+      if(chN == mychN) {
+
+	//set X and Y
+	myTile.setX(fx);
+	myTile.setY(fy);
+	
+	// quarter definition according to D.Hutchcroft
+	//      +y          
+	//    3 | 0
+	//   ---+--- +x
+	//    2 | 1
+	
+	//Why do I need to care about Quarter? Still I implement it
+	int myQuarter = -1;
+	if(fx >= m_cgX.at(reg)/2) {
+	  myQuarter = 0;
+	  if(fy >= m_cgY.at(reg)/2) {
+	    myQuarter = 1;
+	  }
+	} else {
+	  myQuarter = 3;
+	  if(fy >= m_cgY.at(reg)/2) {
+	    myQuarter = 2;
+	  }
+	}
+	myTile.setQuarter(myQuarter);
+	
+	if(debug) std::cout<<"X, Y and Q " <<fx<<" "<<fy<<" "<<myQuarter<<" for chamber "<<chN<<" "<<reg<<std::endl;
+	return myTile;
+      }
     }
   }
- exit:
-
-  //set X and Y
-  myTile.setX(fx);
-  myTile.setY(fy);
-
-  // quarter definition according to D.Hutchcroft
-  //      +y          
-  //    3 | 0
-  //   ---+--- +x
-  //    2 | 1
-
-  //Why do I need to care about Quarter? Still I implement it
-  int myQuarter = -1;
-  if(fx >= m_cgX.at(reg)/2) {
-    myQuarter = 0;
-    if(fy >= m_cgY.at(reg)/2) {
-      myQuarter = 1;
-    }
-  } else {
-    myQuarter = 3;
-    if(fy >= m_cgY.at(reg)/2) {
-      myQuarter = 2;
-    }
-  }
-  myTile.setQuarter(myQuarter);
-
-  if(debug) std::cout<<"X, Y and Q " <<fx<<" "<<fy<<" "<<myQuarter<<" for chamber "<<chN<<" "<<reg<<std::endl;
-
+  
+  std::cout<<"X, Y and Q not found! Check for grid problems" <<std::endl;
   return myTile;
 }
 
@@ -450,7 +443,7 @@ void MuonChamberLayout::setGridStep(){
 void MuonChamberLayout::fillChambersVector(IDataProviderSvc* detSvc) {
   
   int idx(-1),idy(-1),reg(-1);
-
+  bool debug = false;
   SmartDataPtr<DetectorElement> muonSys (detSvc,
 					 "/dd/Structure/LHCb/Muon"); 
 
@@ -477,13 +470,13 @@ void MuonChamberLayout::fillChambersVector(IDataProviderSvc* detSvc) {
 	
 	int enc = idx+4*m_cgX.at(reg)*idy+m_offSet.at(reg);
 	m_chamberGrid.at(enc) = deChmb->chamberNumber();
-	//	if(debug)  std::cout<<"Grid initialization: "<<enc<<" "<<deChmb->chamberNumber()<<std::endl;
+	if(debug)  std::cout<<"Grid initialization: "<<enc<<" "<<deChmb->chamberNumber()<<std::endl;
       }
     }
     //next station
     iS++;
   }
-  std::cout<<"Filled chamber vector"<<std::endl;
+  if(debug) std::cout<<"Filled chamber vector"<<std::endl;
   return;
 }
 

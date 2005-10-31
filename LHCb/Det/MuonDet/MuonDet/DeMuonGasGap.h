@@ -1,8 +1,11 @@
-// $Id: DeMuonGasGap.h,v 1.4 2005-10-25 06:55:46 asarti Exp $
+// $Id: DeMuonGasGap.h,v 1.5 2005-10-31 15:27:28 asarti Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.4  2005/10/25 06:55:46  asarti
+// New .h classes
+//
 // Revision 1.3  2002/02/21 16:38:30  dhcroft
 // Added methods to retrieve the number of the station, region, chamber and gas gap to DeMuonChamber and
 // DeMuonGasGap objects. Modified XmlMuonRegionCnv to fill these parameters when making the objects.
@@ -60,6 +63,9 @@ public:
   inline virtual const CLID& clID() const {
     return classID();
   }
+
+  //Initialize of Detector Element
+  virtual StatusCode initialize();
 
   /// get Station Number
   inline int stationNumber() const {

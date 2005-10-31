@@ -1,9 +1,24 @@
-! $Id: release.notes,v 1.43 2005-10-28 09:59:40 asarti Exp $
+! $Id: release.notes,v 1.44 2005-10-31 15:27:28 asarti Exp $
 !
 ! Package     : MuonDet
 ! Responsible : Alessia Satta
 
 !========================= MuonDet v4r8 2005-07-01 =========================
+! 2005-10-31 - Alessio Sarti
+ - Some cleanup and bugfixes after first feedback from users
+   - src/component/DeMuonGasGap.cpp, MuonDet/DeMuonGasGap.h
+	Initialized the gas gap properties (station,region,chamber)
+   - src/Lib/MuonChamberLayout.cpp
+	Removed all goto instructions. Replaced with return
+   - src/Lib/DeMuonChamber.cpp (and .h)
+	Renamed the grid name methods
+   - src/component/DeMuonDetector.cpp, MuonDet/DeMuonDetector.h
+	a) Using a vector of chamber pointers to return the chamber
+	instead of a loop on detector elements [speed up the code]
+	b) Removed all goto instructions with use of return
+	c) Implemented methods that can convert x,y,z information
+	into chamber, gap, region one.
+
 ! 2005-10-28 - Alessio Sarti
  - First version with running DeMuonDetector
    - src/component/DeMuonDetector.cpp

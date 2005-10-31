@@ -1,4 +1,4 @@
-// $Id: DeMuonChamber.h,v 1.5 2005-10-25 06:55:46 asarti Exp $
+// $Id: DeMuonChamber.h,v 1.6 2005-10-31 15:27:28 asarti Exp $
 // ============================================================================
 // CVS tag $Name:
 // ============================================================================
@@ -81,12 +81,12 @@ public:
   }
 
   /// get chamber Grid 
-  inline std::string getchmbGrid() const {
+  inline std::string getGridName() const {
     return m_chmbGrid;
   }
 
   /// set chamber Grid
-  void setchmbGrid(std::string grid){
+  void setGridName(std::string grid){
     m_chmbGrid = grid;
   }
 

@@ -1,4 +1,4 @@
-// $Id: DeMuonDetector.h,v 1.2 2005-10-28 09:55:34 asarti Exp $
+// $Id: DeMuonDetector.h,v 1.3 2005-10-31 15:27:28 asarti Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
@@ -50,29 +50,65 @@ public:
 			       int station, 
 			       int & chamberNumber, int& regNum);
   
+  StatusCode Hit2GapNumber(HepPoint3D myPoint, 
+			   int station, int & gapNumber,
+			   int & chamberNumber, int& regNum);
+  
   StatusCode Pos2ChamberNumber(const double x,
                                const double y,
                                const double z,
                                int & chamberNumber, int& regNum);
 
+  StatusCode Pos2GapNumber(const double x,
+			   const double y,
+			   const double z, int & gapNumber,
+			   int & chamberNumber, int& regNum);
+
   StatusCode Pos2ChamberNumber(const double x,
                                const double y,
                                int station ,
                                int & chamberNumber, int& regNum);
+
+  StatusCode Pos2GapNumber(const double x,
+			   const double y,
+			   int station , int & gapNumber,
+			   int & chamberNumber, int& regNum);
   
   StatusCode Pos2ChamberTile(const double x,
                              const double y,
                              const double z,
                              MuonTileID& tile);
+
+  StatusCode Pos2ChamberPointer(const double x,
+                                const double y,
+                                int station ,
+                                DeMuonChamber* & chamberPointer);
+  
+  StatusCode Pos2ChamberPointer(const double x,
+                                const double y,
+                                const double z,
+                                DeMuonChamber* & chamberPointer);
+  
   
   //Returns the station index starting from the z position
   int getStation(const double z);
-
+  
   //Returns a detector element identified by chmb, reg, num
   IDetectorElement* ReturnADetElement(int lsta, int lreg, int lchm);
+  
+  // Return pad size in a region
+  StatusCode getPadSize(const int station, const int region,
+			double &sizeX, double &sizeY);
+  
+  // Return the chamber pointer from m_ChmbPtr
+  DeMuonChamber* getChmbPtr(const int station, const int region,
+			    const int chmb);
 
+  //Fills the vector of chamber pointers  
+  void fillChmbPtr();
+  
   /*
-
+    
   int stations();
   int regions();
   int regions(int stations);
@@ -87,29 +123,9 @@ public:
                                  double& y, double& deltay,
                                  double& z, double& deltaz);
 
-  StatusCode Pos2ChamberPointer(const double x,
-                                const double y,
-                                const double z,
-                                DeMuonChamber* & chamberPointer);
-  
-  StatusCode Pos2ChamberPointer(const double x,
-                                const double y,
-                                const int station ,
-                                DeMuonChamber* & chamberPointer);
-
-  StatusCode ChamberNumber2Pointer(const int chamberNumber ,
-                                   DeMuonChamber* & chamberPointer);
-  
-  
- 
-  
-  
   // sotto e' preso da muongeometrytool da cui si puo' prendere l 
   // inizializzazione
 
-  /// Return pad size in a region
-  StatusCode getPadSize(const int station, const int region,
-                                double &sizeX, double &sizeY);
   /// return the number of horizonal logical channels in X across a 
   /// 1/4 of the region (use for MuonTileID grid)
   int logChanHorizGridX(const int station, const int region);
@@ -134,7 +150,14 @@ private:
   //My data provider
   IDataProviderSvc* m_detSvc;
 
+  //My vector of Chamber pointers
+  std::vector<DeMuonChamber*> m_ChmbPtr;
+
+  //Chamber Layout
   MuonChamberLayout m_chamberLayout;
+
+  //Maximum number of chambers allowed per region
+  int MaxRegions[4];
 
 };
 

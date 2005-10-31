@@ -1,4 +1,4 @@
-// $Id: DeMuonGasGap.cpp,v 1.5 2005-10-25 06:59:08 asarti Exp $
+// $Id: DeMuonGasGap.cpp,v 1.6 2005-10-31 15:27:28 asarti Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
@@ -39,4 +39,30 @@ DeMuonGasGap::DeMuonGasGap(int nStation, int nRegion,
 
 DeMuonGasGap::~DeMuonGasGap()
 {
+}
+
+
+StatusCode DeMuonGasGap::initialize()  
+{
+  MsgStream msg( msgSvc(), name() );
+
+  StatusCode sc = DetectorElement::initialize();
+  if( sc.isFailure() ) { 
+    msg << MSG::ERROR << "Failure to initialize DetectorElement" << endreq;
+    return sc ; 
+  }
+
+  int sta(0),reg(0),chm(0),gap(0);
+  char patt[400]; 
+  sprintf(patt,"%s",(this->name()).data());
+  sscanf(patt,"/dd/Structure/LHCb/Muon/M%d/R%d/Cham%d/Gap%d",&sta,&reg,&chm,&gap);
+
+  this->setStationNumber(sta-1);
+  this->setRegionNumber(reg-1);
+  this->setChamberNumber(chm-1);
+  this->setGasGapNumber(gap-1);
+
+  //  msg << MSG::INFO << "Gap INFO? " << sta <<" "<< reg<<" "<< chm<<" "<<gap<<endreq;
+
+  return sc;
 }

@@ -1,4 +1,4 @@
-// $Id: DeMuonChamber.cpp,v 1.5 2005-10-25 06:59:08 asarti Exp $
+// $Id: DeMuonChamber.cpp,v 1.6 2005-10-31 15:27:28 asarti Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
@@ -71,6 +71,6 @@ StatusCode DeMuonChamber::initialize()
   m_chmbGrid     = param<std::string>("Grid");
 
   // for now with MWPCs and RPCs this is a good formula
-  setchmbGrid(m_chmbGrid);
+  setGridName(m_chmbGrid);
   return sc;
 }
