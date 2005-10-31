@@ -1,24 +1,25 @@
 
+//-----------------------------------------------------------------------------
 /** @file RichRecTimeMonitor.h
  *
  *  Header file for algorithm class : RichRecTimeMonitor
  *
  *  CVS Log :-
- *  $Id: RichRecTimeMonitor.h,v 1.3 2005-10-13 15:45:45 jonrob Exp $
+ *  $Id: RichRecTimeMonitor.h,v 1.4 2005-10-31 13:30:58 jonrob Exp $
  *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   05/04/2002
  */
+//-----------------------------------------------------------------------------
 
 #ifndef RICHRECMONITOR_RICHRECTIMEMONITOR_H
 #define RICHRECMONITOR_RICHRECTIMEMONITOR_H 1
 
 // base class
-#include "RichRecBase/RichRecAlgBase.h"
+#include "RichRecBase/RichRecHistoAlgBase.h"
 
 // from Gaudi
 #include "GaudiKernel/AlgFactory.h"
-#include "GaudiKernel/SmartDataPtr.h"
 
 // Event
 #include "Event/RichPID.h"
@@ -27,13 +28,7 @@
 // temporary histogramming numbers
 #include "RichRecBase/RichDetParams.h"
 
-// Histogramming
-#include "AIDA/IHistogram1D.h"
-#include "AIDA/IHistogram2D.h"
-
-// Units
-#include "CLHEP/Units/PhysicalConstants.h"
-
+//-----------------------------------------------------------------------------
 /** @class RichRecTimeMonitor RichRecTimeMonitor.h
  *
  *  Monitor class for Rich Reconstruction processing time
@@ -41,14 +36,16 @@
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   05/04/2002
  */
+//-----------------------------------------------------------------------------
 
-class RichRecTimeMonitor : public RichRecAlgBase {
+class RichRecTimeMonitor : public RichRecHistoAlgBase
+{
 
 public:
 
   /// Standard constructor
-  RichRecTimeMonitor( const std::string& name, 
-                    ISvcLocator* pSvcLocator );
+  RichRecTimeMonitor( const std::string& name,
+                      ISvcLocator* pSvcLocator );
 
   virtual ~RichRecTimeMonitor( ); ///< Destructor
 
@@ -61,29 +58,15 @@ private: // methods
   /// Loads the PID data from configured location
   StatusCode loadPIDData();
 
-  /// Book histograms
-  StatusCode bookHistograms();
-
 private: // data
 
   // job options
-  std::string m_histPth;     ///< Output histogram path
-  std::string m_mcHistPth;   ///< Output MC truth histogram path
   std::string m_PIDLocation; ///< Location of PID results in TES
-  std::string m_name;        ///< Name of Algorithm being monitored
+  std::string m_name;        ///< Name given to algorithm or group of algorithms being monitored
 
   /// Definition of algorithm name list
   typedef std::vector<std::string> AlgorithmNames;
-  AlgorithmNames m_algNames; ///< algorithm(s) to include in timing
-  bool m_noHists;            ///< Flag to turn off histogramming
-  
-  // Histograms
-  IHistogram1D* m_time;         ///< Overall event processing time
-  IHistogram1D* m_timePerPID;   ///< Event processing time per PID
-  IHistogram2D* m_timeVnPIDs;   ///< Event processing time versus # PIDs
-  IHistogram2D* m_timeVnPixels; ///< Event processing time versus # pixels
-  IHistogram2D* m_timePerPIDVnPIDs;   ///< Event processing time per PID versus # PIDs
-  IHistogram2D* m_timePerPIDVnPixels;   ///< Event processing time per PID versus # pixels
+  AlgorithmNames m_algNames; ///< List of algorithm(s) to include in timing
 
   // Vector of pointers to RichPIDs
   std::vector<ContainedObject*> m_richPIDs;

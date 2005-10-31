@@ -5,7 +5,7 @@
  *  Implementation file for algorithm class : RichCherenkovResMoni
  *
  *  CVS Log :-
- *  $Id: RichCherenkovResMoni.cpp,v 1.1 2005-10-21 15:04:49 jonrob Exp $
+ *  $Id: RichCherenkovResMoni.cpp,v 1.2 2005-10-31 13:30:58 jonrob Exp $
  *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   05/04/2002
@@ -24,15 +24,13 @@ const        IAlgFactory& RichCherenkovResMoniFactory = s_factory ;
 // Standard constructor, initializes variables
 RichCherenkovResMoni::RichCherenkovResMoni( const std::string& name,
                                             ISvcLocator* pSvcLocator )
-  : RichRecMoniAlgBase ( name, pSvcLocator ),
-    m_richRecMCTruth   ( 0 ),
-    m_ckAngle          ( 0 ),
-    m_ckAngleRes       ( 0 )
+  : RichRecHistoAlgBase ( name, pSvcLocator ),
+    m_richRecMCTruth    ( 0 ),
+    m_ckAngle           ( 0 ),
+    m_ckAngleRes        ( 0 )
 {
-
   // track selector
   declareProperty( "TrackSelection", m_trSelector.selectedTrackTypes() );
-
 }
 
 // Destructor
@@ -42,7 +40,7 @@ RichCherenkovResMoni::~RichCherenkovResMoni() {};
 StatusCode RichCherenkovResMoni::initialize()
 {
   // Sets up various tools and services
-  const StatusCode sc = RichRecMoniAlgBase::initialize();
+  const StatusCode sc = RichRecHistoAlgBase::initialize();
   if ( sc.isFailure() ) { return sc; }
 
   // Acquire instances of tools
@@ -64,6 +62,9 @@ StatusCode RichCherenkovResMoni::execute()
   // Check event status
   if ( !richStatus()->eventOK() ) return StatusCode::SUCCESS;
 
+  // Histogramming
+  const RichHistoID hid;
+
   // Iterate over segments
   for ( RichRecSegments::const_iterator iSeg = richSegments()->begin();
         iSeg != richSegments()->end(); ++iSeg )
@@ -79,8 +80,6 @@ StatusCode RichCherenkovResMoni::execute()
 
     // track segment
     const RichTrackSegment & trackSeg = segment->trackSegment();
-    // track type
-    const Rich::Track::Type tkType = segment->richRecTrack()->trackID().trackType();
 
     // radiator
     const Rich::RadiatorType rad = trackSeg.radiator();
@@ -95,8 +94,6 @@ StatusCode RichCherenkovResMoni::execute()
     // histo range
     const double ckMax[]    = { 0.3, 0.06, 0.04 };
     const double ckResMax[] = { 0.011, 0.011, 0.003 };
-    // name tag
-    const std::string nameTag = Rich::text(rad)+" "+Rich::text(tkType);
 
     // Loop over all particle codes
     for ( int iHypo = 0; iHypo < Rich::NParticleTypes; ++iHypo )
@@ -111,12 +108,15 @@ StatusCode RichCherenkovResMoni::execute()
       if ( ckang > 0 )
       {
         // histograms
-        plot1D( ckres, "Calculated CKres "+nameTag, 0, ckResMax[rad] );
-        plot2D( ckang, ckres, "Calculated CKres V CKangle "+nameTag, 0, ckMax[rad], 0, ckResMax[rad] );
-        plot2D( ptot, ckres, "Calculated CKres V ptot "+nameTag, 0, 100, 0, ckResMax[rad] );
-        //profile1D( ckang, ckres, "Calculated CKres V CKangle "+nameTag, 0, ckMax[rad] );
-        //profile1D( ptot, ckres, "Calculated CKres V ptot "+nameTag, 0, 100 );
-        //profile2D( ptot, ckang, ckres, "Calculated CKres V ptot+ckang "+nameTag, 0, 100, 0, ckMax[rad] );
+        plot1D( ckres, hid(rad,"ckres"), "Calculated CKres", 0, ckResMax[rad] );
+        plot2D( ckang, ckres, hid(rad,"ckresVcktheta"), "Calculated CKres V CKangle", 
+                0, ckMax[rad], 0, ckResMax[rad] );
+        plot2D( ptot, ckres, hid(rad,"ckresVptot"), "Calculated CKres V ptot", 
+                0, 100, 0, ckResMax[rad] );
+        profile1D( ckang, ckres, hid(rad,"ckresVckangP"), "Calculated CKres V CKangle", 0, ckMax[rad] );
+        profile1D( ptot, ckres, hid(rad,"ckresVptotp"), "Calculated CKres V ptot", 0, 100 );
+        profile2D( ptot, ckang, ckres, hid(rad,"ckresVptotVckang"), 
+                   "Calculated CKres V ptot+ckang", 0, 100, 0, ckMax[rad] );
       }
 
     } // particle ID codes
@@ -133,23 +133,24 @@ StatusCode RichCherenkovResMoni::execute()
       const MCRichOpticalPhoton * mcPhot = m_richRecMCTruth->trueOpticalPhoton(photon);
       if ( mcPhot )
       {
-        
         // Cherenkov angles
         const double thetaRec = photon->geomPhoton().CherenkovTheta();
         const double thetaMC  = mcPhot->cherenkovTheta();
         const double delCK    = thetaRec-thetaMC;
 
-        plot2D( delCK, trueCKres, "True V calculated CKres "+nameTag, 0, ckResMax[rad], 0, ckResMax[rad] );
-        plot2D( trueCKang, delCK, "True CKres V true CK angle "+nameTag, 0, ckMax[rad], 0, ckResMax[rad] );
-        //profile1D( delCK, trueCKres, "True V calculated CKres "+nameTag, 0, ckResMax[rad] );
-        //profile1D( trueCKang, delCK, "True CKres V true CK angle "+nameTag, 0, ckMax[rad] );
-
+        plot2D( delCK, trueCKres, hid(rad,"trueVcalCKres"), "True V calculated CKres", 
+                0, ckResMax[rad], 0, ckResMax[rad] );
+        plot2D( trueCKang, delCK, hid(rad,"trueCKresVang"), "True CKres V true CK angle", 
+                0, ckMax[rad], 0, ckResMax[rad] );
+        profile1D( delCK, trueCKres, hid(rad,"trueVcalCKresP"), "True V calculated CKres", 
+                   0, ckResMax[rad] );
+        profile1D( trueCKang, delCK, hid(rad,"trueCKresVangP"), "True CKres V true CK angle", 
+                   0, ckMax[rad] );
       }
 
     }
 
   }
-
 
   return StatusCode::SUCCESS;
 }
@@ -158,5 +159,5 @@ StatusCode RichCherenkovResMoni::execute()
 StatusCode RichCherenkovResMoni::finalize()
 {
   // Execute base class method
-  return RichRecMoniAlgBase::finalize();
+  return RichRecHistoAlgBase::finalize();
 }

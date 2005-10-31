@@ -4,6 +4,9 @@
 ! Purpose     : 
 !-----------------------------------------------------------------------------
 
+! 2005-10-31 - Chris Jones
+ - Update to new base classes
+
 ! 2005-10-13 - Chris Jones
  - Update to use of new context() functionality
 

@@ -4,7 +4,7 @@
  *  Implementation file for algorithm class : RichAlignmentMonitor
  *
  *  CVS Log :-
- *  $Id: RichAlignmentMonitor.cpp,v 1.4 2005-10-13 15:45:45 jonrob Exp $
+ *  $Id: RichAlignmentMonitor.cpp,v 1.5 2005-10-31 13:30:58 jonrob Exp $
  *
  *  @author Antonis Papanestis
  *  @date   2004-02-19
@@ -24,7 +24,7 @@ const        IAlgFactory& RichAlignmentMonitorFactory = s_factory ;
 //=============================================================================
 RichAlignmentMonitor::RichAlignmentMonitor( const std::string& name,
                                             ISvcLocator* pSvcLocator)
-  : RichRecMoniAlgBase ( name , pSvcLocator ), m_histCounter(0)
+  : RichRecHistoAlgBase ( name , pSvcLocator ), m_histCounter(0)
 {
 
   declareProperty( "HistoPath", m_histPth = "RICH/ALIGN/" );
@@ -68,7 +68,7 @@ RichAlignmentMonitor::~RichAlignmentMonitor() {};
 StatusCode RichAlignmentMonitor::initialize()
 {
   // Sets up various tools and services
-  const StatusCode sc = RichRecMoniAlgBase::initialize();
+  const StatusCode sc = RichRecHistoAlgBase::initialize();
   if ( sc.isFailure() ) { return sc; }
 
   acquireTool( "RichRefractiveIndex",  m_richRefIndexTool );
@@ -351,7 +351,7 @@ StatusCode RichAlignmentMonitor::execute() {
 StatusCode RichAlignmentMonitor::finalize()
 {
   // Execute base class method
-  return RichRecMoniAlgBase::finalize();
+  return RichRecHistoAlgBase::finalize();
 }
 
 //=========================================================================

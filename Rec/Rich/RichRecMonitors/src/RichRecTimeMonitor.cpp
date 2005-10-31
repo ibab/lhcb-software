@@ -1,14 +1,16 @@
 
+//-----------------------------------------------------------------------------
 /** @file RichRecTimeMonitor.cpp
  *
  *  Implementation file for algorithm class : RichRecTimeMonitor
  *
  *  CVS Log :-
- *  $Id: RichRecTimeMonitor.cpp,v 1.3 2005-10-21 15:05:12 jonrob Exp $
+ *  $Id: RichRecTimeMonitor.cpp,v 1.4 2005-10-31 13:30:58 jonrob Exp $
  *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   05/04/2002
  */
+//-----------------------------------------------------------------------------
 
 // local
 #include "RichRecTimeMonitor.h"
@@ -22,10 +24,10 @@ const        IAlgFactory& RichRecTimeMonitorFactory = s_factory ;
 // Standard constructor, initializes variables
 RichRecTimeMonitor::RichRecTimeMonitor( const std::string& name,
                                         ISvcLocator* pSvcLocator)
-  : RichRecAlgBase ( name, pSvcLocator ),
-    m_nEvents   ( 0 ),
-    m_nPIDs     ( 0 ),
-    m_totTime   ( 0 )
+  : RichRecHistoAlgBase ( name, pSvcLocator ),
+    m_nEvents           ( 0 ),
+    m_nPIDs             ( 0 ),
+    m_totTime           ( 0 )
 {
 
   // Location of RichPIDs in TES
@@ -36,11 +38,6 @@ RichRecTimeMonitor::RichRecTimeMonitor( const std::string& name,
 
   // List of algorithms
   declareProperty( "Algorithms", m_algNames );
-
-  // histograms
-  declareProperty( "NoHistograms", m_noHists = false );
-  declareProperty( "MCHistoPath", m_mcHistPth = "RICH/TIMING/MC/" );
-  declareProperty( "HistoPath", m_histPth = "RICH/TIMING/" );
 
   // Timing boundaries
   declareProperty( "MaxEventTime",       m_maxTime       = 3000 );
@@ -55,54 +52,10 @@ RichRecTimeMonitor::~RichRecTimeMonitor() {};
 StatusCode RichRecTimeMonitor::initialize()
 {
   // Sets up various tools and services
-  const StatusCode sc = RichRecAlgBase::initialize();
+  const StatusCode sc = RichRecHistoAlgBase::initialize();
   if ( sc.isFailure() ) { return sc; }
 
-  // Book histograms
-  if ( !m_noHists && !bookHistograms() ) return StatusCode::FAILURE;
-
-  return StatusCode::SUCCESS;
-}
-
-StatusCode RichRecTimeMonitor::bookHistograms()
-{
-  std::string title;
-  const int maxTracks        = 150;
-  const int maxPixels        = 5000;
-  const int nBins            = 30;
-  int id = 0;
-
-  title = m_name+" total processing time (ms)";
-  id = 1;
-  m_time = histoSvc()->book(m_histPth,id,title,nBins,0.,m_maxTime);
-
-  title = m_name+" processing time per PID (ms)";
-  id = 2;
-  m_timePerPID = histoSvc()->book(m_histPth,id,title,nBins,0.,m_maxTimePerPID);
-
-  title = m_name+" total processing time (ms) V #PIDs";
-  id = 3;
-  m_timeVnPIDs = histoSvc()->book( m_histPth,id,title,
-                                   1+maxTracks,0.5,maxTracks+0.5,
-                                   nBins,0,m_maxTime );
-
-  title = m_name+" total processing time (ms) V #Pixels";
-  id = 4;
-  m_timeVnPixels = histoSvc()->book( m_histPth,id,title,
-                                     nBins,0.5,maxPixels+0.5,
-                                     nBins,0,m_maxTime );
-
-  title = m_name+" processing time per PID (ms) V #PIDs";
-  id = 5;
-  m_timePerPIDVnPIDs = histoSvc()->book( m_histPth,id,title,
-                                         1+maxTracks,0.5,maxTracks+0.5,
-                                         nBins,0,m_maxTimePerPID );
-
-  title = m_name+" processing time per PID (ms) V #Pixels";
-  id = 6;
-  m_timePerPIDVnPixels = histoSvc()->book( m_histPth,id,title,
-                                           nBins,0.5,maxPixels+0.5,
-                                           nBins,0,m_maxTimePerPID );
+  // do any init things here ...
 
   return StatusCode::SUCCESS;
 }
@@ -125,48 +78,60 @@ StatusCode RichRecTimeMonitor::execute()
     time += chronoSvc()->chronoDelta((*name)+":execute",IChronoStatSvc::ELAPSED)/1000;
   }
   const double timePerPID = time/static_cast<double>(nPIDs);
-  debug() << m_name << " : Time = " << time << " ms for " << nPIDs << " PIDs. "
-          << timePerPID << " ms/PID" << endreq;
 
-  // Time counters
-  m_totTime += time;
-  ++m_nEvents;
-  m_nPIDs += nPIDs;
-
-  // Fill histograms
-  if ( !m_noHists )
+  if ( msgLevel(MSG::DEBUG) )
   {
-    m_time->fill( time );
-    m_timeVnPIDs->fill( nPIDs, time );
-    m_timePerPID->fill( timePerPID );
-    m_timeVnPixels->fill( richPixels()->size(), time );
-    m_timePerPIDVnPIDs->fill( nPIDs, timePerPID );
-    m_timePerPIDVnPixels->fill( richPixels()->size(), timePerPID );
+    debug() << m_name << " : Time = " << time << " ms for " << nPIDs << " PIDs. "
+            << timePerPID << " ms/PID" << endreq;
   }
 
+  // increment counters
+  ++m_nEvents;
+  m_totTime += time;
+  m_nPIDs   += nPIDs;
+
+  // Fill histograms
+
+  const int maxTracks  = 150;
+  const int maxPixels  = 5000;
+
+  plot1D( time, "totTime", m_name+" total processing time (ms)", 0, m_maxTime );
+  plot1D( timePerPID, "pidTime", m_name+" processing time per PID (ms)",0,m_maxTimePerPID );
+
+  plot2D( nPIDs, time, "tottimeVnpids", m_name+" total processing time (ms) V #PIDs",
+          0.5, maxTracks+0.5, 0, m_maxTime, 1+maxTracks );
+  plot2D( richPixels()->size(), time, "tottimeVnpixs", m_name+" total processing time (ms) V #Pixels",
+          0.5,maxPixels+0.5,0,m_maxTime );
+  plot2D( nPIDs, timePerPID, "pidtimeVnpids", m_name+" processing time per PID (ms) V #PIDs",
+          0.5,maxTracks+0.5, 0,m_maxTimePerPID, 1+maxTracks );
+  plot2D( richPixels()->size(), timePerPID, "pidtimeVnpixs",
+          m_name+" processing time per PID (ms) V #Pixels",0.5,maxPixels+0.5,0,m_maxTimePerPID );
+
   return StatusCode::SUCCESS;
-};
+}
 
 //  Finalize
 StatusCode RichRecTimeMonitor::finalize()
 {
-
   // Printout timing info
   const double evtTime = ( m_nEvents>0 ? m_totTime/static_cast<double>(m_nEvents) : 0 );
   const double pidTime = ( m_nPIDs>0   ? m_totTime/static_cast<double>(m_nPIDs)   : 0 );
   info() << "Average timing : " << evtTime << " ms/event, "
          << pidTime << " ms/PID" << endreq;
 
-  return RichRecAlgBase::finalize();
+  // return
+  return RichRecHistoAlgBase::finalize();
 }
 
 StatusCode RichRecTimeMonitor::loadPIDData()
 {
   // Load PIDs
   DataObject *pObject;
-  if ( eventSvc()->retrieveObject( m_PIDLocation, pObject ) ) {
+  if ( eventSvc()->retrieveObject( m_PIDLocation, pObject ) )
+  {
     if ( KeyedContainer<RichPID, Containers::HashMap> * pids =
-         static_cast<KeyedContainer<RichPID, Containers::HashMap>*> (pObject) ) {
+         static_cast<KeyedContainer<RichPID, Containers::HashMap>*> (pObject) )
+    {
       m_richPIDs.erase( m_richPIDs.begin(), m_richPIDs.end() );
       pids->containedObjects( m_richPIDs );
       return StatusCode::SUCCESS;

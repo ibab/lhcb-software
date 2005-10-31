@@ -4,7 +4,7 @@
  *
  *  Implementation file for algorithm class : RichTrackGeomMoni
  *
- *  $Id: RichTrackGeomMoni.cpp,v 1.3 2005-10-13 15:45:45 jonrob Exp $
+ *  $Id: RichTrackGeomMoni.cpp,v 1.4 2005-10-31 13:30:58 jonrob Exp $
  *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   05/04/2002
@@ -23,20 +23,14 @@ const        IAlgFactory& RichTrackGeomMoniFactory = s_factory ;
 // Standard constructor, initializes variables
 RichTrackGeomMoni::RichTrackGeomMoni( const std::string& name,
                                       ISvcLocator* pSvcLocator )
-  : RichRecMoniAlgBase ( name, pSvcLocator ),
-    m_rayTrace         ( 0 ),
-    m_richRecMCTruth   ( 0 ),
-    m_geomTool         ( 0 ),
-    m_geomEffic        ( 0 )
+  : RichRecHistoAlgBase ( name, pSvcLocator ),
+    m_rayTrace          ( 0 ),
+    m_richRecMCTruth    ( 0 ),
+    m_geomTool          ( 0 ),
+    m_geomEffic         ( 0 )
 {
-
-  // histogram locations
-  declareProperty( "MCHistoPath", m_mcHistPth = "RICH/RecTrGeom/MC/" );
-  declareProperty( "HistoPath",   m_histPth   = "RICH/RecTrGeom/" );
-
   // track selector
   declareProperty( "TrackSelection", m_trSelector.selectedTrackTypes() );
-
 }
 
 // Destructor
@@ -46,7 +40,7 @@ RichTrackGeomMoni::~RichTrackGeomMoni() {};
 StatusCode RichTrackGeomMoni::initialize()
 {
   // Sets up various tools and services
-  const StatusCode sc = RichRecMoniAlgBase::initialize();
+  const StatusCode sc = RichRecHistoAlgBase::initialize();
   if ( sc.isFailure() ) { return sc; }
 
   // Acquire instances of tools
@@ -58,9 +52,6 @@ StatusCode RichTrackGeomMoni::initialize()
 
   // Configure track selector
   if ( !m_trSelector.configureTrackTypes() ) return StatusCode::FAILURE;
-
-  // Book histograms
-  if ( !bookHistograms() || !bookMCHistograms() ) return StatusCode::FAILURE;
 
   // Configure the ray-tracing mode
   m_traceMode.setDetPrecision      ( RichTraceMode::circle );
@@ -78,346 +69,9 @@ StatusCode RichTrackGeomMoni::initialize()
   return sc;
 }
 
-const StatusCode RichTrackGeomMoni::bookHistograms()
-{
-
-  std::string title;
-  int id;
-  const int nBins = 100;
-
-  // Defines for various parameters
-  RICH_HISTO_OFFSET;
-  RAD_HISTO_OFFSET;
-  RICH_NAMES;
-  RADIATOR_NAMES;
-  PD_GLOBAL_POSITIONS;
-  PD_LOCAL_POSITIONS;
-  RADIATOR_GLOBAL_POSITIONS;
-  SPHERICAL_MIRROR_GLOBAL_POSITIONS;
-  FLAT_MIRROR_GLOBAL_POSITIONS;
-
-  for ( int iRich = 0; iRich<2; ++iRich )
-  {
-
-    title = rich[iRich]+" projected track PD hits x global";
-    id = richOffset*(iRich+1) + 1;
-    m_projPDHitsXGlo[iRich] =
-      histoSvc()->book(m_histPth,id,title,nBins,xMinPDGlo[iRich],xMaxPDGlo[iRich]);
-
-    title = rich[iRich]+" projected track PD hits y global";
-    id = richOffset*(iRich+1) + 2;
-    m_projPDHitsYGlo[iRich] =
-      histoSvc()->book(m_histPth,id,title,nBins,yMinPDGlo[iRich],yMaxPDGlo[iRich]);
-
-    title = rich[iRich]+" projected track PD hits z global";
-    id = richOffset*(iRich+1) + 3;
-    m_projPDHitsZGlo[iRich] =
-      histoSvc()->book(m_histPth,id,title,nBins,zMinPDGlo[iRich],zMaxPDGlo[iRich]);
-
-    title = rich[iRich]+" projected track PD hits yVx global";
-    id = richOffset*(iRich+1) + 4;
-    m_projPDHitsXYGlo[iRich] =
-      histoSvc()->book(m_histPth,id,title,
-                       nBins,xMinPDGlo[iRich],xMaxPDGlo[iRich],
-                       nBins,yMinPDGlo[iRich],yMaxPDGlo[iRich]);
-
-    title = rich[iRich]+" projected track PD hits xVz global";
-    id = richOffset*(iRich+1) + 5;
-    m_projPDHitsXZGlo[iRich] =
-      histoSvc()->book(m_histPth,id,title,
-                       nBins,zMinPDGlo[iRich],zMaxPDGlo[iRich],
-                       nBins,xMinPDGlo[iRich],xMaxPDGlo[iRich]);
-
-    title = rich[iRich]+" projected track PD hits yVz global";
-    id = richOffset*(iRich+1) + 6;
-    m_projPDHitsYZGlo[iRich] =
-      histoSvc()->book(m_histPth,id,title,
-                       nBins,zMinPDGlo[iRich],zMaxPDGlo[iRich],
-                       nBins,yMinPDGlo[iRich],yMaxPDGlo[iRich]);
-
-    // Spherical mirror plots
-
-    title = rich[iRich]+" projected track SpheMir hits x global";
-    id = richOffset*(iRich+1) + 11;
-    m_projSpheHitsXGlo[iRich] =
-      histoSvc()->book(m_histPth,id,title,
-                       nBins,xMinSpheGlo[iRich],xMaxSpheGlo[iRich]);
-
-    title = rich[iRich]+" projected track SpheMir hits y global";
-    id = richOffset*(iRich+1) + 12;
-    m_projSpheHitsYGlo[iRich] =
-      histoSvc()->book(m_histPth,id,title,nBins,yMinSpheGlo[iRich],yMaxSpheGlo[iRich]);
-
-    title = rich[iRich]+" projected track SpheMir hits z global";
-    id = richOffset*(iRich+1) + 13;
-    m_projSpheHitsZGlo[iRich] =
-      histoSvc()->book(m_histPth,id,title,nBins,zMinSpheGlo[iRich],zMaxSpheGlo[iRich]);
-
-    title = rich[iRich]+" projected track SpheMir hits yVx global";
-    id = richOffset*(iRich+1) + 14;
-    m_projSpheHitsXYGlo[iRich] =
-      histoSvc()->book(m_histPth,id,title,
-                       nBins,xMinSpheGlo[iRich],xMaxSpheGlo[iRich],
-                       nBins,yMinSpheGlo[iRich],yMaxSpheGlo[iRich]);
-
-    title = rich[iRich]+" projected track SpheMir hits xVz global";
-    id = richOffset*(iRich+1) + 15;
-    m_projSpheHitsXZGlo[iRich] =
-      histoSvc()->book(m_histPth,id,title,
-                       nBins,zMinSpheGlo[iRich],zMaxSpheGlo[iRich],
-                       nBins,xMinSpheGlo[iRich],xMaxSpheGlo[iRich]);
-
-    title = rich[iRich]+" projected track SpheMir hits yVz global";
-    id = richOffset*(iRich+1) + 16;
-    m_projSpheHitsYZGlo[iRich] =
-      histoSvc()->book(m_histPth,id,title,
-                       nBins,zMinSpheGlo[iRich],zMaxSpheGlo[iRich],
-                       nBins,yMinSpheGlo[iRich],yMaxSpheGlo[iRich]);
-
-    // Flat mirror plots
-
-    title = rich[iRich]+" projected track FlatMir hits x global";
-    id = richOffset*(iRich+1) + 21;
-    m_projFlatHitsXGlo[iRich] =
-      histoSvc()->book(m_histPth,id,title,nBins,xMinFlatGlo[iRich],xMaxFlatGlo[iRich]);
-
-    title = rich[iRich]+" projected track FlatMir hits y global";
-    id = richOffset*(iRich+1) + 22;
-    m_projFlatHitsYGlo[iRich] =
-      histoSvc()->book(m_histPth,id,title,nBins,yMinFlatGlo[iRich],yMaxFlatGlo[iRich]);
-
-    title = rich[iRich]+" projected track FlatMir hits z global";
-    id = richOffset*(iRich+1) + 23;
-    m_projFlatHitsZGlo[iRich] =
-      histoSvc()->book(m_histPth,id,title,nBins,zMinFlatGlo[iRich],zMaxFlatGlo[iRich]);
-
-    title = rich[iRich]+" projected track FlatMir hits yVx global";
-    id = richOffset*(iRich+1) + 24;
-    m_projFlatHitsXYGlo[iRich] =
-      histoSvc()->book(m_histPth,id,title,
-                       nBins,xMinFlatGlo[iRich],xMaxFlatGlo[iRich],
-                       nBins,yMinFlatGlo[iRich],yMaxFlatGlo[iRich]);
-
-    title = rich[iRich]+" projected track FlatMir hits xVz global";
-    id = richOffset*(iRich+1) + 25;
-    m_projFlatHitsXZGlo[iRich] =
-      histoSvc()->book(m_histPth,id,title,
-                       nBins,zMinFlatGlo[iRich],zMaxFlatGlo[iRich],
-                       nBins,xMinFlatGlo[iRich],xMaxFlatGlo[iRich]);
-
-    title = rich[iRich]+" projected track FlatMir hits yVz global";
-    id = richOffset*(iRich+1) + 26;
-    m_projFlatHitsYZGlo[iRich] =
-      histoSvc()->book(m_histPth,id,title,
-                       nBins,zMinFlatGlo[iRich],zMaxFlatGlo[iRich],
-                       nBins,yMinFlatGlo[iRich],yMaxFlatGlo[iRich]);
-
-    // PD Panel hits
-
-    title = rich[iRich]+" projected track PDPanel hits x global";
-    id = richOffset*(iRich+1) + 31;
-    m_projPDPanelHitsXGlo[iRich] =
-      histoSvc()->book(m_histPth,id,title,nBins,xMinPDGlo[iRich],xMaxPDGlo[iRich]);
-
-    title = rich[iRich]+" projected track PDPanel hits y global";
-    id = richOffset*(iRich+1) + 32;
-    m_projPDPanelHitsYGlo[iRich] =
-      histoSvc()->book(m_histPth,id,title,nBins,yMinPDGlo[iRich],yMaxPDGlo[iRich]);
-
-    title = rich[iRich]+" projected track PDPanel hits z global";
-    id = richOffset*(iRich+1) + 33;
-    m_projPDPanelHitsZGlo[iRich] =
-      histoSvc()->book(m_histPth,id,title,nBins,zMinPDGlo[iRich],zMaxPDGlo[iRich]);
-
-    title = rich[iRich]+" projected track PDPanel hits yVx global";
-    id = richOffset*(iRich+1) + 34;
-    m_projPDPanelHitsXYGlo[iRich] =
-      histoSvc()->book(m_histPth,id,title,
-                       nBins,xMinPDGlo[iRich],xMaxPDGlo[iRich],
-                       nBins,yMinPDGlo[iRich],yMaxPDGlo[iRich]);
-
-    title = rich[iRich]+" projected track PDPanel hits xVz global";
-    id = richOffset*(iRich+1) + 35;
-    m_projPDPanelHitsXZGlo[iRich] =
-      histoSvc()->book(m_histPth,id,title,
-                       nBins,zMinPDGlo[iRich],zMaxPDGlo[iRich],
-                       nBins,xMinPDGlo[iRich],xMaxPDGlo[iRich]);
-
-    title = rich[iRich]+" projected track PDPanel hits yVz global";
-    id = richOffset*(iRich+1) + 36;
-    m_projPDPanelHitsYZGlo[iRich] =
-      histoSvc()->book(m_histPth,id,title,
-                       nBins,zMinPDGlo[iRich],zMaxPDGlo[iRich],
-                       nBins,yMinPDGlo[iRich],yMaxPDGlo[iRich]);
-
-    title = rich[iRich]+" projected track PD hits x local";
-    id = richOffset*(iRich+1) + 51;
-    m_projPDHitsXLoc[iRich] =
-      histoSvc()->book(m_histPth,id,title,nBins,xMinPDLoc[iRich],xMaxPDLoc[iRich]);
-
-    title = rich[iRich]+" projected track PD hits y local";
-    id = richOffset*(iRich+1) + 52;
-    m_projPDHitsYLoc[iRich] =
-      histoSvc()->book(m_histPth,id,title,nBins,yMinPDLoc[iRich],yMaxPDLoc[iRich]);
-
-    title = rich[iRich]+" projected track PD hits z local";
-    id = richOffset*(iRich+1) + 53;
-    m_projPDHitsZLoc[iRich] =
-      histoSvc()->book(m_histPth,id,title,nBins,zMinPDLoc[iRich],zMaxPDLoc[iRich]);
-
-    title = rich[iRich]+" projected track PD hits yVx local";
-    id = richOffset*(iRich+1) + 54;
-    m_projPDHitsXYLoc[iRich] =
-      histoSvc()->book(m_histPth,id,title,
-                       nBins,xMinPDLoc[iRich],xMaxPDLoc[iRich],
-                       nBins,yMinPDLoc[iRich],yMaxPDLoc[iRich]);
-
-    title = rich[iRich]+" projected track PDPanel hits x local";
-    id = richOffset*(iRich+1) + 61;
-    m_projPDPanelHitsXLoc[iRich] =
-      histoSvc()->book(m_histPth,id,title,nBins,xMinPDLoc[iRich],xMaxPDLoc[iRich]);
-
-    title = rich[iRich]+" projected track PDPanel hits y local";
-    id = richOffset*(iRich+1) + 62;
-    m_projPDPanelHitsYLoc[iRich] =
-      histoSvc()->book(m_histPth,id,title,nBins,yMinPDLoc[iRich],yMaxPDLoc[iRich]);
-
-    title = rich[iRich]+" projected track PDPanel hits z local";
-    id = richOffset*(iRich+1) + 63;
-    m_projPDPanelHitsZLoc[iRich] =
-      histoSvc()->book(m_histPth,id,title,nBins,zMinPDLoc[iRich],zMaxPDLoc[iRich]);
-
-    title = rich[iRich]+" projected track PDPanel hits yVx local";
-    id = richOffset*(iRich+1) + 64;
-    m_projPDPanelHitsXYLoc[iRich] =
-      histoSvc()->book(m_histPth,id,title,
-                       nBins,xMinPDLoc[iRich],xMaxPDLoc[iRich],
-                       nBins,yMinPDLoc[iRich],yMaxPDLoc[iRich]);
-
-  } // end Rich loop
-
-  // radiator loop
-  for ( int iRad = 0; iRad < Rich::NRadiatorTypes; ++iRad ) 
-  {
-
-    // which RICH ?
-    const int iRich = ( iRad == Rich::CF4 ? Rich::Rich2 : Rich::Rich1 ); 
-
-    title = "Track entrance z : "+radiator[iRad];
-    id = radOffset*(iRad+1) + 1;
-    m_trEntrZ[iRad] =
-      histoSvc()->book(m_histPth,id,title,nBins,zRadEntGlo[iRad],zRadExitGlo[iRad]);
-
-    title = "Track exit z : "+radiator[iRad];
-    id = radOffset*(iRad+1) + 2;
-    m_trExitZ[iRad] =
-      histoSvc()->book(m_histPth,id,title,nBins,zRadEntGlo[iRad],zRadExitGlo[iRad]);
-
-    title = "Track entrance yVx : "+radiator[iRad];
-    id = radOffset*(iRad+1) + 3;
-    m_trEntrXY[iRad] =
-      histoSvc()->book(m_histPth,id,title,
-                       nBins,-xRadEntGlo[iRad],xRadEntGlo[iRad],
-                       nBins,-yRadEntGlo[iRad],yRadEntGlo[iRad]);
-
-    title = "Track exit yVx : "+radiator[iRad];
-    id = radOffset*(iRad+1) + 4;
-    m_trExitXY[iRad] =
-      histoSvc()->book(m_histPth,id,title,
-                       nBins,-xRadExitGlo[iRad],xRadExitGlo[iRad],
-                       nBins,-yRadExitGlo[iRad],yRadExitGlo[iRad]);
-
-    title = "Track length : "+radiator[iRad];
-    id = radOffset*(iRad+1) + 5;
-    m_trLength[iRad] =
-      histoSvc()->book(m_histPth,id,title,
-                       nBins,zRadLenMin[iRad],zRadLenMax[iRad]);
-
-    title = radiator[iRad]+" HPD panel acceptance (electron) V x";
-    id = radOffset*(iRad+1) + 6;
-    m_hpdPanAccVx[iRad] =
-      histoSvc()->book(m_histPth,id,title,
-                       nBins,1.1*xMinPDLoc[iRich],1.1*xMaxPDLoc[iRich],
-                       nBins,0,1.05);
-
-    title = radiator[iRad]+" HPD panel acceptance (electron) V y";
-    id = radOffset*(iRad+1) + 7;
-    m_hpdPanAccVy[iRad] =
-      histoSvc()->book(m_histPth,id,title,
-                       nBins,1.1*yMinPDLoc[iRich],1.1*yMaxPDLoc[iRich],
-                       nBins,0,1.05);
-
-    title = radiator[iRad]+" HPD acceptance (electron) V x";
-    id = radOffset*(iRad+1) + 8;
-    m_geomEffVx[iRad] =
-      histoSvc()->book(m_histPth,id,title,
-                       nBins,1.1*xMinPDLoc[iRich],1.1*xMaxPDLoc[iRich],
-                       nBins,0,1.05 );
-
-    title = radiator[iRad]+" HPD acceptance (electron) V y";
-    id = radOffset*(iRad+1) + 9;
-    m_geomEffVy[iRad] =
-      histoSvc()->book(m_histPth,id,title,
-                       nBins,1.1*yMinPDLoc[iRich],1.1*yMaxPDLoc[iRich],
-                       nBins,0,1.05 );
-
-  } // end radiator loop
-
-  return StatusCode::SUCCESS;
-}
-
-const StatusCode RichTrackGeomMoni::bookMCHistograms()
-{
-
-  std::string title;
-  int id;
-  const int nBins = 100;
-
-  // Defines for various parameters
-  RAD_HISTO_OFFSET;
-  RADIATOR_NAMES;
-  RADIATOR_GLOBAL_POSITIONS;
-
-  for ( int iRad = 0; iRad < Rich::NRadiatorTypes; ++iRad ) {
-
-    title = "MC Track entrance z : "+radiator[iRad];
-    id = radOffset*(iRad+1) + 1;
-    m_mctrEntrZ[iRad] =
-      histoSvc()->book(m_mcHistPth,id,title,nBins,zRadEntGlo[iRad],zRadExitGlo[iRad]);
-
-    title = "MC Track exit z : "+radiator[iRad];
-    id = radOffset*(iRad+1) + 2;
-    m_mctrExitZ[iRad] =
-      histoSvc()->book(m_mcHistPth,id,title,nBins,zRadEntGlo[iRad],zRadExitGlo[iRad]);
-
-    title = "MC Track entrance yVx : "+radiator[iRad];
-    id = radOffset*(iRad+1) + 3;
-    m_mctrEntrXY[iRad] =
-      histoSvc()->book(m_mcHistPth,id,title,
-                       nBins,-xRadEntGlo[iRad],xRadEntGlo[iRad],
-                       nBins,-yRadEntGlo[iRad],yRadEntGlo[iRad]);
-
-    title = "MC Track exit yVx : "+radiator[iRad];
-    id = radOffset*(iRad+1) + 4;
-    m_mctrExitXY[iRad] =
-      histoSvc()->book(m_mcHistPth,id,title,
-                       nBins,-xRadExitGlo[iRad],xRadExitGlo[iRad],
-                       nBins,-yRadExitGlo[iRad],yRadExitGlo[iRad]);
-
-    title = "MC Track length : "+radiator[iRad];
-    id = radOffset*(iRad+1) + 5;
-    m_mctrLength[iRad] =
-      histoSvc()->book(m_mcHistPth,id,title,
-                       nBins,zRadLenMin[iRad],zRadLenMax[iRad]);
-
-  } // radiator loop
-
-  return StatusCode::SUCCESS;
-}
-
 // Main execution
-StatusCode RichTrackGeomMoni::execute() {
-
+StatusCode RichTrackGeomMoni::execute() 
+{
   debug() << "Execute" << endreq;
 
   // Check event status
@@ -435,9 +89,18 @@ StatusCode RichTrackGeomMoni::execute() {
   unsigned int nSegs[Rich::NRadiatorTypes]   = { 0, 0, 0 };
   unsigned int nMCSegs[Rich::NRadiatorTypes] = { 0, 0, 0 };
 
+  // Histogramming
+  const RichHistoID hid;
+  PD_GLOBAL_POSITIONS;
+  PD_LOCAL_POSITIONS;
+  RADIATOR_GLOBAL_POSITIONS;
+  SPHERICAL_MIRROR_GLOBAL_POSITIONS;
+  FLAT_MIRROR_GLOBAL_POSITIONS;
+
   // Iterate over segments
   for ( RichRecSegments::const_iterator iSeg = richSegments()->begin();
-        iSeg != richSegments()->end(); ++iSeg ) {
+        iSeg != richSegments()->end(); ++iSeg ) 
+  {
     RichRecSegment * segment = *iSeg;
 
     debug() << "Looking at RichRecSegment " << segment->key() << endreq;
@@ -465,51 +128,86 @@ StatusCode RichTrackGeomMoni::execute() {
 
     // radiator entry/exit information
     const HepVector3D & trackDir = trackSeg.bestMomentum();
-    m_trEntrZ[iRad]->fill( trackSeg.entryPoint().z() );
 
-    m_trExitZ[iRad]->fill( trackSeg.exitPoint().z() );
-    m_trEntrXY[iRad]->fill( trackSeg.entryPoint().x(),
-                            trackSeg.entryPoint().y() );
-    m_trExitXY[iRad]->fill( trackSeg.exitPoint().x(),
-                            trackSeg.exitPoint().y() );
-    m_trLength[iRad]->fill( trackSeg.pathLength() );
+    // entry/exit point histograms
+    plot1D( trackSeg.entryPoint().z(), hid(iRad,"zEntry"), "Track entrance z",
+            zRadEntGlo[iRad],zRadExitGlo[iRad] );
+    plot1D( trackSeg.exitPoint().z(), hid(iRad,"zExit"), "Track exit z",
+            zRadEntGlo[iRad],zRadExitGlo[iRad] );
+    plot2D( trackSeg.entryPoint().x(),trackSeg.entryPoint().y(),
+            hid(iRad,"xyEntry"), "Track entrance yVx",
+            -xRadEntGlo[iRad],xRadEntGlo[iRad],-yRadEntGlo[iRad],yRadEntGlo[iRad] );
+    plot2D( trackSeg.exitPoint().x(),trackSeg.exitPoint().y(),
+            hid(iRad,"xyExit"), "Track exit yVx",
+            -xRadExitGlo[iRad],xRadExitGlo[iRad],-yRadExitGlo[iRad],yRadExitGlo[iRad] );
+    plot1D( trackSeg.pathLength(), hid(iRad,"pathL"), "Path length",
+            zRadLenMin[iRad],zRadLenMax[iRad] );
 
     // Ray traced hit point on PDPanel
-    m_projPDPanelHitsXGlo[iRich]->fill( pdPoint.x() );
-    m_projPDPanelHitsYGlo[iRich]->fill( pdPoint.y() );
-    m_projPDPanelHitsZGlo[iRich]->fill( pdPoint.z() );
-    m_projPDPanelHitsXYGlo[iRich]->fill( pdPoint.x(), pdPoint.y() );
-    m_projPDPanelHitsXZGlo[iRich]->fill( pdPoint.z(), pdPoint.x() );
-    m_projPDPanelHitsYZGlo[iRich]->fill( pdPoint.z(), pdPoint.y() );
-    m_projPDPanelHitsXLoc[iRich]->fill( pdPointLoc.x() );
-    m_projPDPanelHitsYLoc[iRich]->fill( pdPointLoc.y() );
-    m_projPDPanelHitsZLoc[iRich]->fill( pdPointLoc.z() );
-    m_projPDPanelHitsXYLoc[iRich]->fill( pdPointLoc.x(), pdPointLoc.y() );
+    plot1D( pdPoint.x(), hid(iRich,"xTkPDpan"), "Projected track PDPanel hits x global",
+            xMinPDGlo[iRich], xMaxPDGlo[iRich] );
+    plot1D( pdPoint.y(), hid(iRich,"yTkPDpan"), "Projected track PDPanel hits y global",
+            yMinPDGlo[iRich], yMaxPDGlo[iRich] );
+    plot1D( pdPoint.z(), hid(iRich,"zTkPDpan"), "Projected track PDPanel hits z global",
+            zMinPDGlo[iRich], zMaxPDGlo[iRich] );
+
+    plot2D( pdPoint.x(), pdPoint.y(), 
+            hid(iRich,"xyTkPDpan"), "Projected track PDPanel hits yVx global",
+            xMinPDGlo[iRich],xMaxPDGlo[iRich],yMinPDGlo[iRich],yMaxPDGlo[iRich] );
+    plot2D( pdPoint.z(), pdPoint.x(), 
+            hid(iRich,"xzTkPDpan"), "Projected track PDPanel hits xVz global",
+            zMinPDGlo[iRich],zMaxPDGlo[iRich],xMinPDGlo[iRich],xMaxPDGlo[iRich] );
+    plot2D( pdPoint.z(), pdPoint.y(), 
+            hid(iRich,"yzTkPDpan"), "Projected track PDPanel hits yVz global",
+            zMinPDGlo[iRich],zMaxPDGlo[iRich],yMinPDGlo[iRich],yMaxPDGlo[iRich] );
+
+    plot1D( pdPointLoc.x(), hid(iRich,"xTkPDpanLoc"), "Projected track PD hits x local",
+            xMinPDLoc[iRich],xMaxPDLoc[iRich] );
+    plot1D( pdPointLoc.y(), hid(iRich,"yTkPDpanLoc"), "Projected track PD hits y local",
+            yMinPDLoc[iRich],yMaxPDLoc[iRich] );
+    plot1D( pdPointLoc.z(), hid(iRich,"zTkPDpanLoc"), "Projected track PD hits z local",
+            zMinPDLoc[iRich],zMaxPDLoc[iRich] );
+
+    plot2D( pdPointLoc.x(), pdPointLoc.y(),
+            hid(iRich,"xyTkPDpanLoc"), "Projected track PD hits yVx local",
+            xMinPDLoc[iRich],xMaxPDLoc[iRich],yMinPDLoc[iRich],yMaxPDLoc[iRich] );
 
     // HPD panel acceptance
     const double hpdPanAcc = m_geomTool->hpdPanelAcceptance(segment,Rich::Electron);
-    m_hpdPanAccVx[iRad]->fill( pdPointLoc.x(), hpdPanAcc );
-    m_hpdPanAccVy[iRad]->fill( pdPointLoc.y(), hpdPanAcc );
+    plot2D( pdPointLoc.x(), hpdPanAcc, 
+            hid(iRad,"hpdPanAccX"), "HPD panel acceptance (electron) V x",
+            1.1*xMinPDLoc[iRich],1.1*xMaxPDLoc[iRich],0,1.05 );
+    plot2D( pdPointLoc.y(), hpdPanAcc, 
+            hid(iRad,"hpdPanAccY"), "HPD panel acceptance (electron) V y",
+            1.1*yMinPDLoc[iRich],1.1*yMaxPDLoc[iRich],0,1.05 );
 
     // HPD panel acceptance
     const double hpdAcc = m_geomEffic->geomEfficiency(segment,Rich::Electron);
-    m_geomEffVx[iRad]->fill( pdPointLoc.x(), hpdAcc );
-    m_geomEffVy[iRad]->fill( pdPointLoc.y(), hpdAcc );
+    plot2D( pdPointLoc.x(), hpdAcc,
+            hid(iRad,"hpdGeomEffX"), "HPD geom. eff. (electron) V x",
+            1.1*xMinPDLoc[iRich],1.1*xMaxPDLoc[iRich],0,1.05 );
+    plot2D( pdPointLoc.y(), hpdAcc,
+            hid(iRad,"hpdGeomEffY"), "HPD geom. eff. (electron) V y",
+            1.1*yMinPDLoc[iRich],1.1*yMaxPDLoc[iRich],0,1.05 );
 
     // Get associated RichMCSegment
     const MCRichSegment * mcSegment = m_richRecMCTruth->mcRichSegment(segment);
-    if ( mcSegment ) {
+    if ( mcSegment ) 
+    {
       ++nMCSegs[iRad]; // count MC segments per radiator
-
       // entry/exit coordinates
-      m_mctrEntrZ[iRad]->fill( mcSegment->entryPoint().z() );
-      m_mctrExitZ[iRad]->fill( mcSegment->exitPoint().z() );
-      m_mctrEntrXY[iRad]->fill( mcSegment->entryPoint().x(),
-                                mcSegment->entryPoint().y() );
-      m_mctrExitXY[iRad]->fill( mcSegment->exitPoint().x(),
-                                mcSegment->exitPoint().y() );
-      m_mctrLength[iRad]->fill( mcSegment->pathLength() );
-
+      plot1D( mcSegment->entryPoint().z(), hid(iRad,"mcEntryZ"), "MC Track entrance z",
+              zRadEntGlo[iRad],zRadExitGlo[iRad] );
+      plot1D( mcSegment->exitPoint().z(),  hid(iRad,"mcExitZ"),  "MC Track exit z",
+              zRadEntGlo[iRad],zRadExitGlo[iRad] );
+      plot2D( mcSegment->entryPoint().x(), mcSegment->entryPoint().y(),
+              hid(iRad,"mcEntryXY"),  "MC Track entrance yVx",
+              -xRadEntGlo[iRad],xRadEntGlo[iRad],-yRadEntGlo[iRad],yRadEntGlo[iRad] );
+      plot2D( mcSegment->exitPoint().x(), mcSegment->exitPoint().y(),
+              hid(iRad,"mcExitXY"),  "MC Track exit yVx",
+              -xRadExitGlo[iRad],xRadExitGlo[iRad],-yRadExitGlo[iRad],yRadExitGlo[iRad] );
+      plot1D( mcSegment->pathLength(), hid(iRad,"mcPathL"), "MC Track length",
+              zRadLenMin[iRad],zRadLenMax[iRad] );
     }
 
     // Project track direction to active detector plane and histogram hits
@@ -518,40 +216,73 @@ StatusCode RichTrackGeomMoni::execute() {
                                       trackSeg.bestPoint(),
                                       trackDir,
                                       photon,
-                                      m_traceMode ) != 0 ) {
+                                      m_traceMode ) != 0 ) 
+    {
 
       // Ray traced hit point on PDs, global
       const HepPoint3D & photPoint = photon.detectionPoint();
-      m_projPDHitsXGlo[iRich]->fill( photPoint.x() );
-      m_projPDHitsYGlo[iRich]->fill( photPoint.y() );
-      m_projPDHitsZGlo[iRich]->fill( photPoint.z() );
-      m_projPDHitsXYGlo[iRich]->fill( photPoint.x(), photPoint.y() );
-      m_projPDHitsXZGlo[iRich]->fill( photPoint.z(), photPoint.x() );
-      m_projPDHitsYZGlo[iRich]->fill( photPoint.z(), photPoint.y() );
+      plot1D( photPoint.x(), hid(iRich,"xTkPD"), "Projected track PD hits x global",
+              xMinPDGlo[iRich], xMaxPDGlo[iRich] );
+      plot1D( photPoint.y(), hid(iRich,"yTkPD"), "Projected track PD hits y global",
+              yMinPDGlo[iRich], yMaxPDGlo[iRich] );
+      plot1D( photPoint.z(), hid(iRich,"zTkPD"), "Projected track PD hits z global",
+              zMinPDGlo[iRich], zMaxPDGlo[iRich] );
+      plot2D( photPoint.x(), photPoint.y(),
+              hid(iRich,"xyTkPD"), "Projected track PD hits yVx global",
+              xMinPDGlo[iRich],xMaxPDGlo[iRich],yMinPDGlo[iRich],yMaxPDGlo[iRich] );
+      plot2D( photPoint.z(), photPoint.x(),
+              hid(iRich,"xzTkPD"), "Projected track PD hits xVz global",
+              zMinPDGlo[iRich],zMaxPDGlo[iRich],xMinPDGlo[iRich],xMaxPDGlo[iRich] );
+      plot2D( photPoint.z(), photPoint.y(),
+              hid(iRich,"yzTkPD"), "Projected track PD hits yVz global",
+              zMinPDGlo[iRich],zMaxPDGlo[iRich],yMinPDGlo[iRich],yMaxPDGlo[iRich] );
 
       // Ray traced hit point on PDs, local
-      m_projPDHitsXLoc[iRich]->fill( pdPointLoc.x() );
-      m_projPDHitsYLoc[iRich]->fill( pdPointLoc.y() );
-      m_projPDHitsZLoc[iRich]->fill( pdPointLoc.z() );
-      m_projPDHitsXYLoc[iRich]->fill( pdPointLoc.x(), pdPointLoc.y() );
+      plot1D( pdPointLoc.x(), hid(iRich,"xTkPDLoc"), "Projected track PD hits x local",
+              xMinPDLoc[iRich], xMaxPDLoc[iRich] );
+      plot1D( pdPointLoc.y(), hid(iRich,"yTkPDLoc"), "Projected track PD hits y local",
+              yMinPDLoc[iRich], yMaxPDLoc[iRich] );
+      plot1D( pdPointLoc.z(), hid(iRich,"zTkPDLoc"), "Projected track PD hits z local",
+              zMinPDLoc[iRich], zMaxPDLoc[iRich] );
+      plot2D( pdPointLoc.x(), pdPointLoc.y(),
+              hid(iRich,"xyTkPDLoc"), "Projected track PD hits yVx local",
+              xMinPDLoc[iRich],xMaxPDLoc[iRich],yMinPDLoc[iRich],yMaxPDLoc[iRich] );
 
       // Ray traced reflection point on spherical mirror
       const HepPoint3D & photSpeMir = photon.sphMirReflectionPoint();
-      m_projSpheHitsXGlo[iRich]->fill( photSpeMir.x() );
-      m_projSpheHitsYGlo[iRich]->fill( photSpeMir.y() );
-      m_projSpheHitsZGlo[iRich]->fill( photSpeMir.z() );
-      m_projSpheHitsXYGlo[iRich]->fill( photSpeMir.x(), photSpeMir.y() );
-      m_projSpheHitsXZGlo[iRich]->fill( photSpeMir.z(), photSpeMir.x() );
-      m_projSpheHitsYZGlo[iRich]->fill( photSpeMir.z(), photSpeMir.y() );
+      plot1D( photSpeMir.x(), hid(iRich,"xTkPD"), "Projected track SpheMir hits x global",
+              xMinSpheGlo[iRich],xMaxSpheGlo[iRich] );
+      plot1D( photSpeMir.y(), hid(iRich,"yTkPD"), "Projected track SpheMir hits y global",
+              yMinSpheGlo[iRich],yMaxSpheGlo[iRich] );
+      plot1D( photSpeMir.z(), hid(iRich,"zTkPD"), "Projected track SpheMir hits z global",
+              zMinSpheGlo[iRich],zMaxSpheGlo[iRich] );
+      plot2D( photSpeMir.x(), photSpeMir.y(),
+              hid(iRich,"xyTkPD"), "Projected track SpheMir hits yVx global",
+              xMinSpheGlo[iRich],xMaxSpheGlo[iRich],yMinSpheGlo[iRich],yMaxSpheGlo[iRich] );
+      plot2D( photSpeMir.z(), photSpeMir.x(),
+              hid(iRich,"xzTkPD"), "Projected track SpheMir hits xVz global",
+              zMinSpheGlo[iRich],zMaxSpheGlo[iRich],xMinSpheGlo[iRich],xMaxSpheGlo[iRich] );
+      plot2D( photSpeMir.z(), photSpeMir.y(),
+              hid(iRich,"yzTkPD"), "Projected track SpheMir hits yVz global",
+              zMinSpheGlo[iRich],zMaxSpheGlo[iRich],yMinSpheGlo[iRich],yMaxSpheGlo[iRich] );
 
       // Ray traced reflection point on flat mirror
       const HepPoint3D & photFlatMir = photon.flatMirReflectionPoint();
-      m_projFlatHitsXGlo[iRich]->fill( photFlatMir.x() );
-      m_projFlatHitsYGlo[iRich]->fill( photFlatMir.y() );
-      m_projFlatHitsZGlo[iRich]->fill( photFlatMir.z() );
-      m_projFlatHitsXYGlo[iRich]->fill( photFlatMir.x(), photFlatMir.y() );
-      m_projFlatHitsXZGlo[iRich]->fill( photFlatMir.z(), photFlatMir.x() );
-      m_projFlatHitsYZGlo[iRich]->fill( photFlatMir.z(), photFlatMir.y() );
+      plot1D( photFlatMir.x(), hid(iRich,"xTkPD"), "Projected track FlatMir hits x global",
+              xMinFlatGlo[iRich],xMaxFlatGlo[iRich] );
+      plot1D( photFlatMir.y(), hid(iRich,"yTkPD"), "Projected track FlatMir hits y global",
+              yMinFlatGlo[iRich],yMaxFlatGlo[iRich] );
+      plot1D( photFlatMir.z(), hid(iRich,"zTkPD"), "Projected track FlatMir hits z global",
+              zMinFlatGlo[iRich],zMaxFlatGlo[iRich] );
+      plot2D( photFlatMir.x(), photFlatMir.y(),
+              hid(iRich,"xyTkPD"), "Projected track FlatMir hits yVx global",
+              xMinFlatGlo[iRich],xMaxFlatGlo[iRich],yMinFlatGlo[iRich],yMaxFlatGlo[iRich] );
+      plot2D( photFlatMir.z(), photFlatMir.x(),
+              hid(iRich,"xzTkPD"), "Projected track FlatMir hits xVz global",
+              zMinFlatGlo[iRich],zMaxFlatGlo[iRich],xMinFlatGlo[iRich],xMaxFlatGlo[iRich] );
+      plot2D( photFlatMir.z(), photFlatMir.y(),
+              hid(iRich,"yzTkPD"), "Projected track FlatMir hits yVz global",
+              zMinFlatGlo[iRich],zMaxFlatGlo[iRich],yMinFlatGlo[iRich],yMaxFlatGlo[iRich] );
 
       // find out pd positions
       m_xHits[photon.smartID().pdID()] += photPoint.x();
@@ -596,93 +327,9 @@ StatusCode RichTrackGeomMoni::execute() {
   return StatusCode::SUCCESS;
 }
 
-const StatusCode RichTrackGeomMoni::bookFinalHistograms() {
-
-  // book pd number histograms
-  RICH_HISTO_OFFSET;
-  RICH_NAMES;
-  PD_GLOBAL_POSITIONS;
-  const std::string panel[] = { "panel0", "panel1" };
-  int nBins = 25;
-  int id;
-  std::string title;
-
-  for ( int iRich = 0; iRich<2; ++iRich ) {
-    for ( int iPan = 0; iPan<2; ++iPan ) {
-
-      title = rich[iRich]+" "+panel[iPan]+" PDCol yVx";
-      id = richOffset*(iRich+1) + 101 +iPan*3;
-      m_pdColNumXY[iRich][iPan] =
-        histoSvc()->book(m_histPth,id,title,
-                         nBins,xMinPDGlo[iRich],xMaxPDGlo[iRich],
-                         nBins,yMinPDGlo[iRich],yMaxPDGlo[iRich]);
-
-      title = rich[iRich]+" "+panel[iPan]+" PDCol xVz";
-      id = richOffset*(iRich+1) + 102 +iPan*3;
-      m_pdColNumXZ[iRich][iPan] =
-        histoSvc()->book(m_histPth,id,title,
-                         nBins,zMinPDGlo[iRich],zMaxPDGlo[iRich],
-                         nBins,xMinPDGlo[iRich],xMaxPDGlo[iRich]);
-
-      title = rich[iRich]+" "+panel[iPan]+" PDCol yVz";
-      id = richOffset*(iRich+1) + 103 +iPan*3;
-      m_pdColNumYZ[iRich][iPan] =
-        histoSvc()->book(m_histPth,id,title,
-                         nBins,zMinPDGlo[iRich],zMaxPDGlo[iRich],
-                         nBins,yMinPDGlo[iRich],yMaxPDGlo[iRich]);
-
-      title = rich[iRich]+" "+panel[iPan]+" PDRow yVx";
-      id = richOffset*(iRich+1) + 201 +iPan*3;
-      m_pdRowNumXY[iRich][iPan] =
-        histoSvc()->book(m_histPth,id,title,
-                         nBins,xMinPDGlo[iRich],xMaxPDGlo[iRich],
-                         nBins,yMinPDGlo[iRich],yMaxPDGlo[iRich]);
-
-      title = rich[iRich]+" "+panel[iPan]+" PDRow xVz";
-      id = richOffset*(iRich+1) + 202 +iPan*3;
-      m_pdRowNumXZ[iRich][iPan] =
-        histoSvc()->book(m_histPth,id,title,
-                         nBins,zMinPDGlo[iRich],zMaxPDGlo[iRich],
-                         nBins,xMinPDGlo[iRich],xMaxPDGlo[iRich]);
-
-      title = rich[iRich]+" "+panel[iPan]+" PDRow yVz";
-      id = richOffset*(iRich+1) + 203 +iPan*3;
-      m_pdRowNumYZ[iRich][iPan] =
-        histoSvc()->book(m_histPth,id,title,
-                         nBins,zMinPDGlo[iRich],zMaxPDGlo[iRich],
-                         nBins,yMinPDGlo[iRich],yMaxPDGlo[iRich]);
-
-    }
-  } // rich loop
-
-  return StatusCode::SUCCESS;
-}
-
 //  Finalize
 StatusCode RichTrackGeomMoni::finalize()
 {
-  // Book final histograms
-  if ( !bookFinalHistograms() ) return StatusCode::FAILURE;
-
-  debug() << "Track PD Positions :-" << endreq;
-  for ( RichMap<RichSmartID, double>::const_iterator ix = m_xHits.begin();
-        ix != m_xHits.end(); ++ix )
-  {
-    const int hits = m_hitCount[ix->first];
-    const double avX = ( hits>0 ? ix->second/hits : 0 );
-    const double avY = ( hits>0 ? m_yHits[ix->first]/hits : 0 );
-    const double avZ = ( hits>0 ? m_zHits[ix->first]/hits : 0 );
-    debug() << "PD " << ix->first << " Pos. " << HepPoint3D(avX,avY,avZ)
-            << " Hits " << hits << endreq;
-    const Rich::DetectorType iRich = ( avZ>5000 ? Rich::Rich2 : Rich::Rich1 );
-    m_pdColNumXY[iRich][ix->first.panel()]->fill( avX, avY, ix->first.pdCol() );
-    m_pdColNumXZ[iRich][ix->first.panel()]->fill( avZ, avX, ix->first.pdCol() );
-    m_pdColNumYZ[iRich][ix->first.panel()]->fill( avZ, avY, ix->first.pdCol() );
-    m_pdRowNumXY[iRich][ix->first.panel()]->fill( avX, avY, ix->first.pdRow() );
-    m_pdRowNumXZ[iRich][ix->first.panel()]->fill( avZ, avX, ix->first.pdRow() );
-    m_pdRowNumYZ[iRich][ix->first.panel()]->fill( avZ, avY, ix->first.pdRow() );
-  }
-
   // Execute base class method
-  return RichRecMoniAlgBase::finalize();
+  return RichRecHistoAlgBase::finalize();
 }

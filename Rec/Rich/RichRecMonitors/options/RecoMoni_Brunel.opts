@@ -13,65 +13,51 @@ CheckRICHSeq.Members += { "RichPixelMonitor/RiRecPixelMoni" };
 // Track geometry monitor
 CheckRICHSeq.Members += { "RichTrackGeomMoni/RiRecTkGeomMoni" };
 RiRecTkGeomMoni.TrackSelection = { "unique","seed","match","forward","follow","KsTrack","veloTT" };
-RiRecTkGeomMoni.MCHistoPath = "RICH/RECTR/Geom/MC/";
-RiRecTkGeomMoni.HistoPath   = "RICH/RECTR/Geom/";
 
 // CK res moni
-CheckRICHSeq.Members += { "RichCherenkovResMoni/RiCKResMoni" };
+CheckRICHSeq.Members += { "RichCherenkovResMoni/RiRecAllTkCKResMoni" };
+// forward tracks
+CheckRICHSeq.Members += { "RichCherenkovResMoni/RiRecFrwdTkCKResMoni" };
+RiRecFrwdTkCKResMoni.TrackSelection = { "unique","forward" };
+// match tracks
+CheckRICHSeq.Members += { "RichCherenkovResMoni/RiRecMatchTkCKResMoni" };
+RiRecMatchTkCKResMoni.TrackSelection = { "unique","match" };
+// seed tracks
+CheckRICHSeq.Members += { "RichCherenkovResMoni/RiRecSeedTkCKResMoni" };
+RiRecSeedTkCKResMoni.TrackSelection = { "unique","seed" };
+// velott tracks
+CheckRICHSeq.Members += { "RichCherenkovResMoni/RiRecVTTTkCKResMoni" };
+RiRecVTTTkCKResMoni.TrackSelection = { "unique","veloTT" };
+// KsTracks tracks
+CheckRICHSeq.Members += { "RichCherenkovResMoni/RiRecKsTkCKResMoni" };
+RiRecKsTkCKResMoni.TrackSelection = { "unique","KsTrack" };
 
 // Track resolution monitors
 // all tracks combined
 CheckRICHSeq.Members += { "RichTrackResolutionMoni/RiRecAllTkResMoni" };
-RiRecAllTkResMoni.TrackSelection = { "unique","seed","match","forward","follow","KsTrack","veloTT" };
-RiRecAllTkResMoni.MCHistoPath = "RICH/RECTR/Res/All/MC/";
-RiRecAllTkResMoni.HistoPath   = "RICH/RECTR/Res/All/";
-
 // forward tracks - positive
 CheckRICHSeq.Members += { "RichTrackResolutionMoni/RiRecFrwdTkPosResMoni" };
-RiRecFrwdTkPosResMoni.TrackSelection = { "unique","forward" };
-RiRecFrwdTkPosResMoni.TrackChargeSel = 1;
-RiRecFrwdTkPosResMoni.MCHistoPath = "RICH/RECTR/Res/Frwd/Pos/MC/";
-RiRecFrwdTkPosResMoni.HistoPath   = "RICH/RECTR/Res/Frwd/Pos/";
-
+RiRecFrwdTkPosResMoni.TrackSelection = { "unique","positive","forward" };
 // forward tracks - negative
 CheckRICHSeq.Members += { "RichTrackResolutionMoni/RiRecFrwdTkNegResMoni" };
-RiRecFrwdTkNegResMoni.TrackSelection = { "unique","forward" };
-RiRecFrwdTkNegResMoni.TrackChargeSel = -1;
-RiRecFrwdTkNegResMoni.MCHistoPath = "RICH/RECTR/Res/Frwd/Neg/MC/";
-RiRecFrwdTkNegResMoni.HistoPath   = "RICH/RECTR/Res/Frwd/Neg/";
-
+RiRecFrwdTkNegResMoni.TrackSelection = { "unique","negative","forward" };
 // match tracks - positive
 CheckRICHSeq.Members += { "RichTrackResolutionMoni/RiRecMatchTkPosResMoni" };
-RiRecMatchTkPosResMoni.TrackSelection = { "unique","match" };
-RiRecMatchTkPosResMoni.TrackChargeSel = 1;
-RiRecMatchTkPosResMoni.MCHistoPath = "RICH/RECTR/Res/Match/Pos/MC/";
-RiRecMatchTkPosResMoni.HistoPath   = "RICH/RECTR/Res/Match/Pos/";
-
+RiRecMatchTkPosResMoni.TrackSelection = { "unique","positive","match" };
 // match tracks - negative
 CheckRICHSeq.Members += { "RichTrackResolutionMoni/RiRecMatchTkNegResMoni" };
-RiRecMatchTkNegResMoni.TrackSelection = { "unique","match" };
-RiRecMatchTkNegResMoni.TrackChargeSel = -1;
-RiRecMatchTkNegResMoni.MCHistoPath = "RICH/RECTR/Res/Match/Neg/MC/";
-RiRecMatchTkNegResMoni.HistoPath   = "RICH/RECTR/Res/Match/Neg/";
-
+RiRecMatchTkNegResMoni.TrackSelection = { "unique","negative","match" };
 // seed tracks
 CheckRICHSeq.Members += { "RichTrackResolutionMoni/RiRecSeedTkResMoni" };
 RiRecSeedTkResMoni.TrackSelection = { "unique","seed" };
-RiRecSeedTkResMoni.MCHistoPath = "RICH/RECTR/Res/Seed/MC/";
-RiRecSeedTkResMoni.HistoPath   = "RICH/RECTR/Res/Seed/";
-
 // velott tracks
 CheckRICHSeq.Members += { "RichTrackResolutionMoni/RiRecVTTTkResMoni" };
 RiRecVTTTkResMoni.TrackSelection = { "unique","veloTT" };
-RiRecVTTTkResMoni.MCHistoPath = "RICH/RECTR/Res/VTT/MC/";
-RiRecVTTTkResMoni.HistoPath   = "RICH/RECTR/Res/VTT/";
-
 // KsTracks tracks
 CheckRICHSeq.Members += { "RichTrackResolutionMoni/RiRecKsTkResMoni" };
 RiRecKsTkResMoni.TrackSelection = { "unique","KsTrack" };
-RiRecKsTkResMoni.MCHistoPath = "RICH/RECTR/Res/KsTr/MC/";
-RiRecKsTkResMoni.HistoPath   = "RICH/RECTR/Res/KsTr/";
 
+/*
 // Reconstruction monitor
 CheckRICHSeq.Members += { "RichPhotonMonitor/RiRecPhotonMoni" };
 RiRecPhotonMoni.MaxRichRecTracks  = 230;
@@ -99,7 +85,7 @@ RiRecPhotonMoni.RichGeomEffRay.NPhotonsGeomEffCalc          = 100;
 RiRecPhotonMoni.RichGeomEffRay.NPhotonsGeomEffBailout       = 25;
 RiRecPhotonMoni.RichGeomEffFix.FixedSignalEfficiency   =  { 0.55,    0.62,   0.55  };
 RiRecPhotonMoni.RichGeomEffFix.FixedScatterEfficiency  =  0.55;
-//RiRecPhotonMoni.ProcessingStage = "Offline";
+*/
 
 // Timing monitors
 #include "$RICHRECMONITORSOPTS/RecoTiming_Brunel.opts"

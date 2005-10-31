@@ -4,7 +4,7 @@
  *  Header file for algorithm class : RichAlignmentMonitor
  *
  *  CVS Log :-
- *  $Id: RichAlignmentMonitor.h,v 1.4 2005-10-13 15:45:45 jonrob Exp $
+ *  $Id: RichAlignmentMonitor.h,v 1.5 2005-10-31 13:30:58 jonrob Exp $
  *
  *  @author Antonis Papanestis   a.papanestis@rl.ac.uk
  *  @date   2004-02-19
@@ -15,14 +15,10 @@
 
 // Include files
 // base class
-#include "RichRecBase/RichRecMoniAlgBase.h"
+#include "RichRecBase/RichRecHistoAlgBase.h"
 
 // from Gaudi
 #include "GaudiKernel/AlgFactory.h"
-
-// Relations
-//#include "Relations/IAssociatorWeighted.h"
-//#include "Relations/IRelationWeighted.h"
 
 // Event
 #include "Event/RichRecStatus.h"
@@ -53,7 +49,7 @@
  *  @date   2004-02-19
  */
 
-class RichAlignmentMonitor : public RichRecMoniAlgBase {
+class RichAlignmentMonitor : public RichRecHistoAlgBase {
 
 public:
 

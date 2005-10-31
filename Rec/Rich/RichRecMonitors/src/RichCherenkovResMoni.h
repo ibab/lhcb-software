@@ -5,7 +5,7 @@
  *  Header file for algorithm class : RichCherenkovResMoni
  *
  *  CVS Log :-
- *  $Id: RichCherenkovResMoni.h,v 1.1 2005-10-21 15:04:49 jonrob Exp $
+ *  $Id: RichCherenkovResMoni.h,v 1.2 2005-10-31 13:30:58 jonrob Exp $
  *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   05/04/2002
@@ -16,7 +16,7 @@
 #define RICHRECMONITOR_RICHTRACKRESOLUTIONMONI_H 1
 
 // base class
-#include "RichRecBase/RichRecMoniAlgBase.h"
+#include "RichRecBase/RichRecHistoAlgBase.h"
 #include "RichRecBase/RichTrackSelector.h"
 
 // from Gaudi
@@ -41,7 +41,8 @@
  */
 //---------------------------------------------------------------------------
 
-class RichCherenkovResMoni : public RichRecMoniAlgBase {
+class RichCherenkovResMoni : public RichRecHistoAlgBase 
+{
 
 public:
 
@@ -54,9 +55,6 @@ public:
   virtual StatusCode initialize();    // Algorithm initialization
   virtual StatusCode execute   ();    // Algorithm execution
   virtual StatusCode finalize  ();    // Algorithm finalization
-
-private: // methods
-
 
 private: // data
 
