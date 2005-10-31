@@ -79,6 +79,20 @@ public:
    */
   GaussTrackInformation& setCreatedHit ( const bool value )
   { m_createdHit = value ; return *this ; }
+
+  //
+  const bool noDirectParent() const {return m_noDirectParent;}
+
+  //
+  GaussTrackInformation& setNoDirectParent(const bool value)
+  { m_noDirectParent = value; return *this;}
+  
+  //
+  const bool storeHepMC() const {return m_storeHepMC;}
+
+  //
+  GaussTrackInformation& setStoreHepMC(const bool value)
+  { m_storeHepMC = value; return *this;}
   
   /** add hit pointer
    *  @param hit hit to be added into list of connected hits
@@ -128,6 +142,11 @@ private:
   bool m_toBeStored ;
   /// flag indicating that track created a hit
   bool m_createdHit ;
+  /// flag indicating that the direct parent particle was not stored 
+  /// in HepMC event this will be represented by a special 'dummy' link
+  bool m_noDirectParent;
+  // flag indicating that the track should be stored in HepMC record
+  bool m_storeHepMC;
 
   /// vector of pointers to hits created by that track
   Hits  m_hits;

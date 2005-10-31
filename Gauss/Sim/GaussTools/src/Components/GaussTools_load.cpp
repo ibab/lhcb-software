@@ -32,10 +32,11 @@ void GaussTools_load()
   DECLARE_GiGaFactory     (    GiGaSensDetBudget       ) ;
   
   /// tracking action 
-  DECLARE_GiGaFactory     (    CommandTrackAction     );
+  DECLARE_GiGaFactory     (    CommandTrackAction      );
   DECLARE_GiGaFactory     (    GaussPreTrackAction     );
   DECLARE_GiGaFactory     (    GaussPostTrackAction    );
   DECLARE_GiGaFactory     (    GiGaTrackActionSequence );
+  DECLARE_GiGaFactory     (    GaussTrackActionHepMC   );
   //
   DECLARE_GiGaFactory     (    GaussTrackActionStart        ) ;
   DECLARE_GiGaFactory     (    GaussTrackActionGeneral      ) ;
@@ -58,6 +59,7 @@ void GaussTools_load()
   DECLARE_GiGaFactory     (    TrCutsRunAction         ) ;
 
   /// event action 
+  DECLARE_GiGaFactory     (    GaussEventActionHepMC   ) ;
   DECLARE_GiGaFactory     (    GiGaEventActionDraw     ) ;
   DECLARE_GiGaFactory     (    GiGaEventActionSequence ) ;
   DECLARE_GiGaFactory     (    GiGaEventActionCommand  ) ;

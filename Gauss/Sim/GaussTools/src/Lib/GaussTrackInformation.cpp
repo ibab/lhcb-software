@@ -1,8 +1,11 @@
-// $Id: GaussTrackInformation.cpp,v 1.3 2003-07-28 10:26:23 witoldp Exp $
+// $Id: GaussTrackInformation.cpp,v 1.4 2005-10-31 09:29:44 gcorti Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.3  2003/07/28 10:26:23  witoldp
+// added WorldCuts and DetTrackInfo
+//
 // Revision 1.2  2003/04/09 12:07:37  witoldp
 // added pointer to RICHInfo
 //
@@ -55,6 +58,8 @@ GaussTrackInformation::GaussTrackInformation()
   : m_appendStep(false)
   , m_toBeStored(false)
   , m_createdHit(false)
+  , m_noDirectParent(false)
+  , m_storeHepMC(false)
   , m_hits()
   , m_detInfo(0)
 {
@@ -74,6 +79,8 @@ GaussTrackInformation:: GaussTrackInformation
   , m_appendStep(right.m_appendStep)
   , m_toBeStored(right.m_toBeStored)
   , m_createdHit(right.m_createdHit)
+  , m_noDirectParent(right.m_noDirectParent)
+  , m_storeHepMC(right.m_storeHepMC)
   , m_hits(right.m_hits)
   , m_detInfo(right.m_detInfo) 
 {

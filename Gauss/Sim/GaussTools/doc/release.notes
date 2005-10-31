@@ -4,6 +4,28 @@
 ! Purpose       : G4 actions and some miscellaneous algs for Gauss
 !-----------------------------------------------------------------------------
 
+! 2005-10-31 - Gloria CORTI
+ - New classes originally from Witek Pokorski to store history of Geant4
+   tracking (processes and particles produced) in HepMC tree structure
+ - GaussTools/MCTruthManager.h
+   src/Lib/MCTruthManager.cpp
+   . new class (singleton) to manage HepMC event used in Geant4 tracking
+ - GaussTools/GaussTrackInformation.h
+   src/Lib/GaussTrackInformation.cpp
+   . introduce flag to store a G4Track in HepMC and flag indicating if direct
+     mother has been stored, if not use a special "dummy" link
+ - src/Components/GaussPostTrackAction.cpp
+   . set flag to store a G4Track in HepMC depending on conditions chosen
+ - src/Components/GaussTrackActionHepMC.{h,cpp}
+   . new specialization of G4UserTrackingAction to store in HepMC structure
+     new particles when flag has been set, also handle cases when direct
+     mother has not been stored
+ - src/Components/GaussEventActionHepMC.{h,cpp}
+   . new specialization of G4UserEventAction to execute some commands for
+     managment and debugging of HepMC as used in G4 tracking
+ - src/Components/GaussTools_load.cpp
+   . add declaration of GaussTrackActionHepMC and GaussEventActionHepMC
+
 ! 2005-06-24 - Gloria CORTI
  - src/Components/SpecialCuts.cpp
    . put back compatibility to geant4.7.0   

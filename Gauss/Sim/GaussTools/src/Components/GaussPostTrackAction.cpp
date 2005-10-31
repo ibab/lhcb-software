@@ -273,6 +273,10 @@ void GaussPostTrackAction::PostUserTrackingAction ( const G4Track* track )
   // (2) already marked to be stored  
   // if (      trackMgr()->GetStoreTrajectory () )  { return ; } /// RETURN  
   //
+  
+  G4VUserTrackInformation* ui = track->GetUserInformation(); 
+  GaussTrackInformation* gi = (GaussTrackInformation*) ui;
+
   trackMgr()->SetStoreTrajectory( false );
   // if only to a certain z, check z and set flag
   bool zstore = true;
@@ -294,6 +298,7 @@ void GaussPostTrackAction::PostUserTrackingAction ( const G4Track* track )
   if ( m_storeAll && zstore )                                        
     {      
       trackMgr()->SetStoreTrajectory( true );
+      gi->setStoreHepMC(true); // flag for storing in HepMC (Witek)
       
       if(track->GetCreatorProcess())
         {
@@ -357,6 +362,7 @@ void GaussPostTrackAction::PostUserTrackingAction ( const G4Track* track )
                 }
             }
           trackMgr()->SetStoreTrajectory( true );
+          gi->setStoreHepMC(true); // flag for storing in HepMC (Witek)
 
           if(track->GetCreatorProcess())
             {
@@ -396,7 +402,8 @@ void GaussPostTrackAction::PostUserTrackingAction ( const G4Track* track )
           traj->setProcessName(track->GetCreatorProcess()->GetProcessName());
         }
 
-      trackMgr()->SetStoreTrajectory( true );     
+      trackMgr()->SetStoreTrajectory( true );
+      gi->setStoreHepMC(true); // flag for storing in HepMC (Witek)
       
       if ( track->GetDynamicParticle() ) {
         if ( track->GetDynamicParticle()->GetPrimaryParticle() ) {
@@ -450,6 +457,8 @@ void GaussPostTrackAction::PostUserTrackingAction ( const G4Track* track )
       }  
       
       trackMgr()->SetStoreTrajectory( true ) ;     
+      gi->setStoreHepMC(true); // flag for storing in HepMC (Witek)
+
       return ; } /// RETURN !!! 
   // (6) store all predefined particle types: 
   if ( m_storeByOwnType  
@@ -485,6 +494,8 @@ void GaussPostTrackAction::PostUserTrackingAction ( const G4Track* track )
       }  
       
       trackMgr()->SetStoreTrajectory( true );     
+      gi->setStoreHepMC(true); // flag for storing in HepMC (Witek)
+
       return; } /// RETURN !!!
   // (7) store the particle if it has a certain type of daughter particle 
   //     or at least one from secondaries  particle have kinetic energy over 
@@ -529,6 +540,8 @@ void GaussPostTrackAction::PostUserTrackingAction ( const G4Track* track )
       }  
       
       trackMgr()->SetStoreTrajectory( true );   
+      gi->setStoreHepMC(true); // flag for storing in HepMC (Witek)
+
       return; } /// RETURN 
           //
           if( m_storeByChildType
@@ -566,6 +579,8 @@ void GaussPostTrackAction::PostUserTrackingAction ( const G4Track* track )
               }  
               
               trackMgr()->SetStoreTrajectory( true );   
+              gi->setStoreHepMC(true); // flag for storing in HepMC (Witek)
+
               return; } /// RETURN
               ///
               }
@@ -612,6 +627,8 @@ void GaussPostTrackAction::PostUserTrackingAction ( const G4Track* track )
               }  
               
               trackMgr()->SetStoreTrajectory( true );   
+              gi->setStoreHepMC(true); // flag for storing in HepMC (Witek)
+
               return; /// RETURN
             } 
           ///
@@ -651,6 +668,8 @@ void GaussPostTrackAction::PostUserTrackingAction ( const G4Track* track )
           }  
           
           trackMgr()->SetStoreTrajectory( true );   
+          gi->setStoreHepMC(true); // flag for storing in HepMC (Witek)
+
           return; /// RETURN
         } 
       ///
@@ -659,8 +678,8 @@ void GaussPostTrackAction::PostUserTrackingAction ( const G4Track* track )
   // (8) store  tracks, marked through GaussTrackInformation class
   if( m_storeMarkedTracks ) 
     {
-      G4VUserTrackInformation* ui = track->GetUserInformation(); 
-      GaussTrackInformation* gi = (GaussTrackInformation*) ui;
+//       G4VUserTrackInformation* ui = track->GetUserInformation(); 
+//       GaussTrackInformation* gi = (GaussTrackInformation*) ui;
       if( 0 != gi && gi->toBeStored() ) 
         { 
           if(track->GetCreatorProcess())
@@ -689,19 +708,26 @@ void GaussPostTrackAction::PostUserTrackingAction ( const G4Track* track )
           }  
           
           trackMgr()->SetStoreTrajectory( true );   
+          gi->setStoreHepMC(true); // flag for storing in HepMC (Witek)
+
           return; }  /// RETURN 
     }
   
   //  
-  // check if track is to be stored 
-  if (trackMgr()->GetStoreTrajectory()) { return; } /// RETURN 
+  // check if track is to be stored ???????????????????????????????????????
+  if (trackMgr()->GetStoreTrajectory()) { 
+    gi->setStoreHepMC(true);
+    return;
+  } /// RETURN 
   
   // if track is not to be stored, propagate it's parent ID (stored) to its
   // secondaries
-  if( 0 != trackMgr()->GimmeSecondaries() ) 
+  //if (!(gi->storeHepMC()))  // in the future
+  {
+    if( 0 != trackMgr()->GimmeSecondaries() ) 
     {
-      if( 0 == track->GetParentID() ) 
-        { Error("Dangerouse:Primary Particle is not requested to be stored");}
+      if( 0 == track->GetParentID() )
+      { Error("Dangerouse:Primary Particle is not requested to be stored");}
       
       G4TrackVector* childrens = trackMgr()->GimmeSecondaries() ;
       for( unsigned int index = 0 ; index < childrens->size() ; ++index )
@@ -713,13 +739,28 @@ void GaussPostTrackAction::PostUserTrackingAction ( const G4Track* track )
             { Error("Could not reconstruct properly the parent!") ; } 
           //
           tr->SetParentID( track->GetParentID() );
-          //
-        }      
+        // set the flag saying that the direct mother is not stored
+        G4VUserTrackInformation* duinf = tr->GetUserInformation();
+        GaussTrackInformation* dti; 
+        if(duinf)
+        {
+          dti = (GaussTrackInformation*) duinf;
+        }
+        else
+        {
+          dti = new GaussTrackInformation(); 
+          tr->SetUserInformation(dti);
+        }   
+        dti->setNoDirectParent(true); 
+        //
+      }      
     }
-  // also update the trackID in the hits
-  G4VUserTrackInformation* uinf = track->GetUserInformation(); 
-  GaussTrackInformation* ginf = (GaussTrackInformation*) uinf;
-  ginf->updateHitsTrackID( track->GetParentID() );
+    // also update the trackID in the hits
+    //  G4VUserTrackInformation* uinf = track->GetUserInformation(); 
+    //  GaussTrackInformation* ginf = (GaussTrackInformation*) uinf;
+    //  ginf->updateHitsTrackID( track->GetParentID() );
+    gi->updateHitsTrackID( track->GetParentID() );
+  }
   
   // delete the trajectory by hand 
   if ( !trackMgr()->GetStoreTrajectory() )
