@@ -11,7 +11,8 @@
    available but commented
    . GaussAlgs v1r7, GaussTools v10r11, GaussTracker v4r2
    . Simulation.opts
- - Introduce use of new structure for generation of min bias events
+ - Introduce use of new structure for generation of min bias events with
+   example for generic b
    . Generator v2r0, LbPythia v2r0, LbAcerMC v1r3
    . Generator.opts
    Note that DecFiles v9r1 still supports options for "old" algorithms

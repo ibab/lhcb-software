@@ -44,6 +44,20 @@ Generator.Members += {"GenMonitorAlg"};
 Generator.Members  = { "Generation" };
 Generator.Members += { "GenMonitorAlg" };
 
+// Example options for Minimum bias
 Generation.EventType                  = 30000000;
 Generation.SampleGenerationTool       = "MinimumBias";
 Generation.MinimumBias.ProductionTool = "PythiaProduction";
+ToolSvc.EvtGenDecay.UserDecayFile     = "$DECFILESROOT/dkfiles/minbias.dec";
+
+// Example options for inclusive b
+// Generation.EventType                  = 10000000;
+// Generation.SampleGenerationTool       = "Inclusive";
+// Generation.Inclusive.ProductionTool   = "PythiaProduction";
+// Generation.Inclusive.InclusivePIDList = {
+//   521, -521, 511, -511, 531, -531, 541, -541,
+//   5122, -5122, 5222, -5222, 5212, -5212, 5112, -5112, 
+//   5312, -5312, 5322, -5322, 5332, -5332, 5132, -5132, 5232, -5232
+// };
+// ToolSvc.EvtGenDecay.UserDecayFile     = "$DECFILESROOT/dkfiles/incl_b.dec";
+
