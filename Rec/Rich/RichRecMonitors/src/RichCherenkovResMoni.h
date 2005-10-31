@@ -5,7 +5,7 @@
  *  Header file for algorithm class : RichCherenkovResMoni
  *
  *  CVS Log :-
- *  $Id: RichCherenkovResMoni.h,v 1.2 2005-10-31 13:30:58 jonrob Exp $
+ *  $Id: RichCherenkovResMoni.h,v 1.3 2005-10-31 15:25:49 jonrob Exp $
  *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   05/04/2002
@@ -29,6 +29,9 @@
 #include "RichRecBase/IRichRecMCTruthTool.h"
 #include "RichRecBase/IRichCherenkovAngle.h"
 #include "RichRecBase/IRichCherenkovResolution.h"
+
+// temporary histogramming numbers
+#include "RichRecBase/RichDetParams.h"
 
 //---------------------------------------------------------------------------
 /** @class RichCherenkovResMoni RichCherenkovResMoni.h

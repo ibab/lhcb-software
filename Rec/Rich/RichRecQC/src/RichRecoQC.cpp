@@ -5,7 +5,7 @@
  *  Implementation file for RICH reconstruction monitoring algorithm : RichRecoQC
  *
  *  CVS Log :-
- *  $Id: RichRecoQC.cpp,v 1.16 2005-10-31 13:31:39 jonrob Exp $
+ *  $Id: RichRecoQC.cpp,v 1.17 2005-10-31 15:25:33 jonrob Exp $
  *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   2002-07-02
@@ -75,8 +75,6 @@ StatusCode RichRecoQC::execute()
 
   // Histo ranges               Aero   C4F10  CF4
   const double ckResRange[] = { 0.015, 0.01,  0.005 };
-  MAX_CKTHETA_RAD;
-  MIN_CKTHETA_RAD;
 
   // Iterate over segments
   for ( RichRecSegments::const_iterator iSeg = richSegments()->begin();
@@ -124,15 +122,12 @@ StatusCode RichRecoQC::execute()
         ++truePhotons;
         // resolution plot
         plot1D( thetaRec-thetaExpTrue,
-                hid(rad,"ckRes"), "Rec-Exp Cktheta : beta=1", -ckResRange[rad], ckResRange[rad] );
+                hid(rad,mcType,"ckRes"), "Rec-Exp Cktheta : beta=1", -ckResRange[rad], ckResRange[rad] );
         if ( resExpTrue>0 )
         {
           // pull plot
           const double ckPull = (thetaRec-thetaExpTrue)/resExpTrue;
-          plot1D( ckPull, hid(rad,"ckPull"), "(Rec-Exp)/Res Cktheta : beta=1", -5, 5 );     
-          // profile plot of pull versus theta
-          profile1D( thetaRec, ckPull, hid(rad,"ckPullVt"),
-                     "(Rec-Exp)/Res Cktheta V theta : beta=1", minCkTheta[rad], maxCkTheta[rad], 50 );
+          plot1D( ckPull, hid(rad,mcType,"ckPull"), "(Rec-Exp)/Res Cktheta : beta=1", -5, 5 );     
         }
 
       }
@@ -142,7 +137,7 @@ StatusCode RichRecoQC::execute()
     // number of true photons
     if ( truePhotons > 0 )
     {
-      plot1D( truePhotons, hid(rad,"nCKphots"), "True # p.e.s : beta=1", -0.5, 50, 51 );
+      plot1D( truePhotons, hid(rad,mcType,"nCKphots"), "True # p.e.s : beta=1", -0.5, 50, 51 );
       m_truePhotCount[rad] += truePhotons;
       ++m_nSegs[rad];
     }

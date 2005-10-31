@@ -5,7 +5,7 @@
  *  Implementation file for algorithm class : RichCherenkovResMoni
  *
  *  CVS Log :-
- *  $Id: RichCherenkovResMoni.cpp,v 1.2 2005-10-31 13:30:58 jonrob Exp $
+ *  $Id: RichCherenkovResMoni.cpp,v 1.3 2005-10-31 15:25:49 jonrob Exp $
  *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   05/04/2002
@@ -65,6 +65,13 @@ StatusCode RichCherenkovResMoni::execute()
   // Histogramming
   const RichHistoID hid;
 
+  // Histo ranges               Aero   C4F10  CF4
+  //const double ckResRange[] = { 0.015, 0.01,  0.005 };
+  const double ckMax[]    =   { 0.3,   0.06,  0.04  };
+  const double ckResMax[] =   { 0.011, 0.011, 0.003 };
+  MAX_CKTHETA_RAD;
+  MIN_CKTHETA_RAD;
+
   // Iterate over segments
   for ( RichRecSegments::const_iterator iSeg = richSegments()->begin();
         iSeg != richSegments()->end(); ++iSeg )
@@ -91,10 +98,6 @@ StatusCode RichCherenkovResMoni::execute()
     const double trueCKres = m_ckAngleRes->ckThetaResolution(segment,mcType);
     const double trueCKang = m_ckAngle->avgCherenkovTheta(segment,mcType);
 
-    // histo range
-    const double ckMax[]    = { 0.3, 0.06, 0.04 };
-    const double ckResMax[] = { 0.011, 0.011, 0.003 };
-
     // Loop over all particle codes
     for ( int iHypo = 0; iHypo < Rich::NParticleTypes; ++iHypo )
     {
@@ -108,14 +111,14 @@ StatusCode RichCherenkovResMoni::execute()
       if ( ckang > 0 )
       {
         // histograms
-        plot1D( ckres, hid(rad,"ckres"), "Calculated CKres", 0, ckResMax[rad] );
-        plot2D( ckang, ckres, hid(rad,"ckresVcktheta"), "Calculated CKres V CKangle", 
+        plot1D( ckres, hid(rad,hypo,"ckres"), "Calculated CKres", 0, ckResMax[rad] );
+        plot2D( ckang, ckres, hid(rad,hypo,"ckresVcktheta"), "Calculated CKres V CKangle",
                 0, ckMax[rad], 0, ckResMax[rad] );
-        plot2D( ptot, ckres, hid(rad,"ckresVptot"), "Calculated CKres V ptot", 
+        plot2D( ptot, ckres, hid(rad,hypo,"ckresVptot"), "Calculated CKres V ptot",
                 0, 100, 0, ckResMax[rad] );
-        profile1D( ckang, ckres, hid(rad,"ckresVckangP"), "Calculated CKres V CKangle", 0, ckMax[rad] );
-        profile1D( ptot, ckres, hid(rad,"ckresVptotp"), "Calculated CKres V ptot", 0, 100 );
-        profile2D( ptot, ckang, ckres, hid(rad,"ckresVptotVckang"), 
+        profile1D( ckang, ckres, hid(rad,hypo,"ckresVckangP"), "Calculated CKres V CKangle", 0, ckMax[rad] );
+        profile1D( ptot, ckres, hid(rad,hypo,"ckresVptotp"), "Calculated CKres V ptot", 0, 100 );
+        profile2D( ptot, ckang, ckres, hid(rad,hypo,"ckresVptotVckang"),
                    "Calculated CKres V ptot+ckang", 0, 100, 0, ckMax[rad] );
       }
 
@@ -138,14 +141,27 @@ StatusCode RichCherenkovResMoni::execute()
         const double thetaMC  = mcPhot->cherenkovTheta();
         const double delCK    = thetaRec-thetaMC;
 
-        plot2D( delCK, trueCKres, hid(rad,"trueVcalCKres"), "True V calculated CKres", 
+        plot2D( delCK, trueCKres, hid(rad,mcType,"trueVcalCKres"), "True V calculated CKres",
                 0, ckResMax[rad], 0, ckResMax[rad] );
-        plot2D( trueCKang, delCK, hid(rad,"trueCKresVang"), "True CKres V true CK angle", 
+        plot2D( trueCKang, delCK, hid(rad,mcType,"trueCKresVang"), "True CKres V true CK angle",
                 0, ckMax[rad], 0, ckResMax[rad] );
-        profile1D( delCK, trueCKres, hid(rad,"trueVcalCKresP"), "True V calculated CKres", 
+        profile1D( delCK, trueCKres, hid(rad,mcType,"trueVcalCKresP"), "True V calculated CKres",
                    0, ckResMax[rad] );
-        profile1D( trueCKang, delCK, hid(rad,"trueCKresVangP"), "True CKres V true CK angle", 
+        profile1D( trueCKang, delCK, hid(rad,mcType,"trueCKresVangP"), "True CKres V true CK angle",
                    0, ckMax[rad] );
+
+        // pulls
+        const double ckTruePull = ( trueCKres>0 ? (thetaRec-thetaMC)/trueCKres   : -999 );
+        const double ckExpPull  = ( trueCKres>0 ? (thetaRec-trueCKang)/trueCKres : -999 );
+
+        plot1D( ckTruePull, hid(rad,mcType,"ckPullMC"),  "(Rec-MC)/Rex Cktheta",  -5, 5 );
+        plot1D( ckExpPull,  hid(rad,mcType,"ckPullExp"), "(Rec-Exp)/Rex Cktheta", -5, 5 );
+
+        profile1D( thetaRec, ckTruePull, hid(rad,mcType,"ckPullMCVt"),
+                   "(Rec-MC)/Res Cktheta V theta",  minCkTheta[rad], maxCkTheta[rad], 50 );
+        profile1D( thetaRec, ckExpPull, hid(rad,mcType,"ckPullExpVt"),
+                   "(Rec-Exp)/Res Cktheta V theta", minCkTheta[rad], maxCkTheta[rad], 50 );
+
       }
 
     }
