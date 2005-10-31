@@ -4,6 +4,9 @@
 ! Purpose     : Quality Control monitoring algorithms for RICH reconstruction
 !-----------------------------------------------------------------------------
 
+! 2005-10-31 - Chris Jones
+ - Update to new base classes
+
 ! 2005-10-13 - Chris Jones
  - Add support for new track event model
  - Adapt to context() 

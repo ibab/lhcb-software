@@ -5,7 +5,7 @@
  *  Implementation file for RICH reconstruction monitoring algorithm : RichRecoQC
  *
  *  CVS Log :-
- *  $Id: RichRecoQC.cpp,v 1.15 2005-10-18 12:49:06 jonrob Exp $
+ *  $Id: RichRecoQC.cpp,v 1.16 2005-10-31 13:31:39 jonrob Exp $
  *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   2002-07-02
@@ -21,27 +21,22 @@
 static const  AlgFactory<RichRecoQC>          s_factory ;
 const        IAlgFactory& RichRecoQCFactory = s_factory ;
 
-
 // Standard constructor, initializes variables
 RichRecoQC::RichRecoQC( const std::string& name,
                         ISvcLocator* pSvcLocator )
-  : RichRecMoniAlgBase ( name, pSvcLocator ),
-    m_richPartProp     ( 0 ),
-    m_ckAngle          ( 0 ),
-    m_richRecMCTruth   ( 0 ),    
-    m_truePhotCount    ( Rich::NRadiatorTypes, 0 ),
-    m_nSegs            ( Rich::NRadiatorTypes, 0 )
+  : RichRecHistoAlgBase ( name, pSvcLocator ),
+    m_richPartProp      ( 0 ),
+    m_ckAngle           ( 0 ),
+    m_richRecMCTruth    ( 0 ),
+    m_truePhotCount     ( Rich::NRadiatorTypes, 0 ),
+    m_nSegs             ( Rich::NRadiatorTypes, 0 )
 {
-
   // Declare job options
-  declareProperty( "MCHistoPath", m_mcHistPth = "RICH/RECOQC/MC/" );
-  declareProperty( "HistoPath",   m_histPth = "RICH/RECOQC/" );
-  declareProperty( "MinBeta",     m_minBeta = 0.999 );
-
+  // min beta
+  declareProperty( "MinBeta",     m_minBeta   = 0.999 );
   // track selector
   declareProperty( "TrackSelection", m_trSelector.selectedTrackTypes() );
   declareProperty( "TrackMomentumCuts", m_trSelector.setMomentumCuts() );
-
 }
 
 // Destructor
@@ -51,68 +46,41 @@ RichRecoQC::~RichRecoQC() {};
 StatusCode RichRecoQC::initialize()
 {
   // Sets up various tools and services
-  const StatusCode sc = RichRecMoniAlgBase::initialize();
+  const StatusCode sc = RichRecHistoAlgBase::initialize();
   if ( sc.isFailure() ) { return sc; }
 
   // acquire tools
   acquireTool( "RichParticleProperties", m_richPartProp );
-  acquireTool( "RichCherenkovAngle",      m_ckAngle   );
+  acquireTool( "RichCherenkovAngle",      m_ckAngle     );
   acquireTool( "RichRecMCTruthTool",   m_richRecMCTruth );
+  acquireTool( "RichCherenkovResolution", m_ckRes       );
 
   // Configure track selector
   if ( !m_trSelector.configureTrackTypes() ) return StatusCode::FAILURE;
   m_trSelector.printTrackSelection( info() );
 
-  // Book histograms
-  if ( !bookHistograms() || !bookMCHistograms() ) return StatusCode::FAILURE;
-
   return sc;
 }
 
-StatusCode RichRecoQC::bookHistograms() 
-{
-  return StatusCode::SUCCESS;
-}
-
-StatusCode RichRecoQC::bookMCHistograms() 
-{
-
-  std::string title;
-  int id;
-
-  const double ckRange[] = { 0.015, 0.01, 0.005 };
-
-  // Defines for various parameters
-  RAD_HISTO_OFFSET;
-  RADIATOR_NAMES;
-
-  for ( int iRad = 0; iRad < Rich::NRadiatorTypes; ++iRad ) {
-
-    title = "Rec-Exp Cktheta : beta=1 : " + radiator[iRad];
-    id = radOffset*(iRad+1) + 1;
-    m_ckTrueDTheta[iRad] = histoSvc()->book(m_mcHistPth,id,title,100,
-                                            -ckRange[iRad],ckRange[iRad]);
-
-    title = "True # p.e.s : beta=1 : " + radiator[iRad];
-    id = radOffset*(iRad+1) + 2;
-    m_trueSignalPhots[iRad] = histoSvc()->book(m_mcHistPth,id,title,51,-0.5,50.5);
-
-  } // end rad loop
-
-  return StatusCode::SUCCESS;
-}
-
 // Main execution
-StatusCode RichRecoQC::execute() 
+StatusCode RichRecoQC::execute()
 {
   debug() << "Execute" << endreq;
 
   // Event status
   if ( !richStatus()->eventOK() ) return StatusCode::SUCCESS;
 
+  // Rich Histo ID
+  const RichHistoID hid;
+
+  // Histo ranges               Aero   C4F10  CF4
+  const double ckResRange[] = { 0.015, 0.01,  0.005 };
+  MAX_CKTHETA_RAD;
+  MIN_CKTHETA_RAD;
+
   // Iterate over segments
   for ( RichRecSegments::const_iterator iSeg = richSegments()->begin();
-        iSeg != richSegments()->end(); ++iSeg ) 
+        iSeg != richSegments()->end(); ++iSeg )
   {
     RichRecSegment * segment = *iSeg;
 
@@ -126,18 +94,23 @@ StatusCode RichRecoQC::execute()
     const Rich::ParticleIDType mcType = m_richRecMCTruth->mcParticleType( segment );
     if ( Rich::Unknown == mcType ) continue; // skip tracks with unknown MC type
 
+    // segment momentum
+    const double pTot = segment->trackSegment().bestMomentum().mag();
+
     // beta for true type
-    const double beta = m_richPartProp->beta( segment->trackSegment().bestMomentum().mag(), mcType );
+    const double beta = m_richPartProp->beta( pTot, mcType );
     if ( beta < m_minBeta ) continue; // skip non-saturated tracks
 
     // Expected Cherenkov theta angle for true particle type
-    const double thetaExpTrue = ( mcType != Rich::Unknown ?
-                                  m_ckAngle->avgCherenkovTheta( segment, mcType ) : 0 );
+    const double thetaExpTrue = m_ckAngle->avgCherenkovTheta( segment, mcType );
+
+    // Cherenkov angle resolution for true type
+    const double resExpTrue = m_ckRes->ckThetaResolution( segment, mcType );
 
     // loop over photons for this segment
-    int truePhotons = 0;
+    unsigned int truePhotons = 0;
     for ( RichRecSegment::Photons::iterator iPhot = segment->richRecPhotons().begin();
-          iPhot != segment->richRecPhotons().end(); ++iPhot ) 
+          iPhot != segment->richRecPhotons().end(); ++iPhot )
     {
       RichRecPhoton * photon = *iPhot;
 
@@ -146,18 +119,30 @@ StatusCode RichRecoQC::execute()
 
       // Is this a true photon ?
       const MCParticle * photonParent = m_richRecMCTruth->trueCherenkovPhoton( photon );
-      if ( photonParent ) 
+      if ( photonParent )
       {
         ++truePhotons;
-        m_ckTrueDTheta[rad]->fill( thetaRec-thetaExpTrue );
+        // resolution plot
+        plot1D( thetaRec-thetaExpTrue,
+                hid(rad,"ckRes"), "Rec-Exp Cktheta : beta=1", -ckResRange[rad], ckResRange[rad] );
+        if ( resExpTrue>0 )
+        {
+          // pull plot
+          const double ckPull = (thetaRec-thetaExpTrue)/resExpTrue;
+          plot1D( ckPull, hid(rad,"ckPull"), "(Rec-Exp)/Res Cktheta : beta=1", -5, 5 );     
+          // profile plot of pull versus theta
+          profile1D( thetaRec, ckPull, hid(rad,"ckPullVt"),
+                     "(Rec-Exp)/Res Cktheta V theta : beta=1", minCkTheta[rad], maxCkTheta[rad], 50 );
+        }
+
       }
 
     } // photon loop
 
     // number of true photons
-    if ( truePhotons > 0 ) 
+    if ( truePhotons > 0 )
     {
-      m_trueSignalPhots[rad]->fill( truePhotons );
+      plot1D( truePhotons, hid(rad,"nCKphots"), "True # p.e.s : beta=1", -0.5, 50, 51 );
       m_truePhotCount[rad] += truePhotons;
       ++m_nSegs[rad];
     }
@@ -172,16 +157,34 @@ StatusCode RichRecoQC::finalize()
 {
 
   // statistical tool
-  RichStatDivFunctor occ("%10.2f +-%7.2f");
+  const RichStatDivFunctor occ("%10.2f +-%7.2f");
+
+  info() << "=============================================================================="
+         << endreq;
+
+  // track selection
+  info() << "Track Selection : " << m_trSelector.selectedTracksAsString() << endreq;
 
   // print out of photon counts
-  info() << "Aerogel  Av. # CK photons = " 
-         << occ(m_truePhotCount[Rich::Aerogel],m_nSegs[Rich::Aerogel]) << " photons/segment" << endreq
-         << "C4F10    Av. # CK photons = " 
-         << occ(m_truePhotCount[Rich::C4F10],m_nSegs[Rich::C4F10]) << " photons/segment" << endreq
-         << "CF4      Av. # CK photons = " 
-         << occ(m_truePhotCount[Rich::CF4],m_nSegs[Rich::CF4]) << " photons/segment" << endreq;
+  if ( m_truePhotCount[Rich::Aerogel]>0 )
+  {
+    info() << "Aerogel  Av. # CK photons = "
+           << occ(m_truePhotCount[Rich::Aerogel],m_nSegs[Rich::Aerogel]) << " photons/segment" << endreq;
+  }
+  if ( m_truePhotCount[Rich::C4F10]>0 )
+  {
+    info() << "C4F10    Av. # CK photons = "
+           << occ(m_truePhotCount[Rich::C4F10],m_nSegs[Rich::C4F10]) << " photons/segment" << endreq;
+  }
+  if ( m_truePhotCount[Rich::CF4]>0 )
+  {
+    info() << "CF4      Av. # CK photons = "
+           << occ(m_truePhotCount[Rich::CF4],m_nSegs[Rich::CF4]) << " photons/segment" << endreq;
+  }
+
+  info() << "=============================================================================="
+         << endreq;
 
   // Execute base class method
-  return RichRecMoniAlgBase::finalize();
+  return RichRecHistoAlgBase::finalize();
 }

@@ -5,7 +5,7 @@
  *  Header file for RICH reconstruction monitoring algorithm : RichRecoQC
  *
  *  CVS Log :-
- *  $Id: RichRecoQC.h,v 1.9 2005-10-18 12:49:06 jonrob Exp $
+ *  $Id: RichRecoQC.h,v 1.10 2005-10-31 13:31:39 jonrob Exp $
  *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   2002-07-02
@@ -16,14 +16,10 @@
 #define RICHRECQC_RICHRECOQC_H 1
 
 // base class
-#include "RichRecBase/RichRecMoniAlgBase.h"
+#include "RichRecBase/RichRecHistoAlgBase.h"
 
 // from Gaudi
 #include "GaudiKernel/AlgFactory.h"
-
-// Relations
-#include "Relations/IAssociatorWeighted.h"
-#include "Relations/IRelationWeighted.h"
 
 // Interfaces
 #include "RichRecBase/IRichRecMCTruthTool.h"
@@ -34,16 +30,10 @@
 // rec helpers
 #include "RichRecBase/RichTrackSelector.h"
 
-// Event
-#include "Event/RichRecStatus.h"
-
-// Histogramming
-#include "AIDA/IHistogram1D.h"
-#include "AIDA/IHistogram2D.h"
-
 // interfaces
 #include "RichKernel/IRichParticleProperties.h"
 #include "RichRecBase/IRichCherenkovAngle.h"
+#include "RichRecBase/IRichCherenkovResolution.h"
 
 // RichKernel
 #include "RichKernel/RichStatDivFunctor.h"
@@ -58,7 +48,7 @@
  */
 //---------------------------------------------------------------------------------
 
-class RichRecoQC : public RichRecMoniAlgBase 
+class RichRecoQC : public RichRecHistoAlgBase 
 {
 
 public:
@@ -72,34 +62,21 @@ public:
   virtual StatusCode execute   ();    // Algorithm execution
   virtual StatusCode finalize  ();    // Algorithm finalization
 
-private: // methods
-
-  /// Book histograms
-  StatusCode bookHistograms();
-
-  /// Book histograms that require MC truth
-  StatusCode bookMCHistograms();
-
 private: // data
 
   // Pointers to tool instances
   const IRichParticleProperties * m_richPartProp; ///< Rich Particle properties
   const IRichCherenkovAngle * m_ckAngle;  ///< Pointer to RichCherenkovAngle tool
+  const IRichCherenkovResolution * m_ckRes; ///< Cherenkov angle resolution tool
 
   /// Pointer to RichRecMCTruthTool interface
   const IRichRecMCTruthTool* m_richRecMCTruth;
 
   // job options
-  std::string m_mcHistPth; ///< Output MC truth histogram path
-  std::string m_histPth;   ///< Output histogram path
   double m_minBeta;        ///< minimum beta value for 'saturated' tracks
 
-  // Histograms
-  IHistogram1D* m_ckTrueDTheta[Rich::NRadiatorTypes];       ///< Cherenkov angle resolution for beta=1 tracks
-  IHistogram1D* m_trueSignalPhots[Rich::NRadiatorTypes];    ///< Number of observed p.e.s for beta=1 tracks 
-
-  std::vector<unsigned int> m_truePhotCount;
-  std::vector<unsigned int> m_nSegs;
+  std::vector<unsigned int> m_truePhotCount; ///< Total number of true cherenkov photons per radiator
+  std::vector<unsigned int> m_nSegs;         ///< Total number of track segments per radiator
 
   /// Track selector
   RichTrackSelector m_trSelector;
