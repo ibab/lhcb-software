@@ -5,7 +5,7 @@
  *  Implementation file for algorithm class : RichCherenkovResMoni
  *
  *  CVS Log :-
- *  $Id: RichCherenkovResMoni.cpp,v 1.3 2005-10-31 15:25:49 jonrob Exp $
+ *  $Id: RichCherenkovResMoni.cpp,v 1.4 2005-11-01 11:53:23 jonrob Exp $
  *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   05/04/2002
@@ -154,8 +154,8 @@ StatusCode RichCherenkovResMoni::execute()
         const double ckTruePull = ( trueCKres>0 ? (thetaRec-thetaMC)/trueCKres   : -999 );
         const double ckExpPull  = ( trueCKres>0 ? (thetaRec-trueCKang)/trueCKres : -999 );
 
-        plot1D( ckTruePull, hid(rad,mcType,"ckPullMC"),  "(Rec-MC)/Rex Cktheta",  -5, 5 );
-        plot1D( ckExpPull,  hid(rad,mcType,"ckPullExp"), "(Rec-Exp)/Rex Cktheta", -5, 5 );
+        plot1D( ckTruePull, hid(rad,mcType,"ckPullMC"),  "(Rec-MC)/Res Cktheta",  -5, 5 );
+        plot1D( ckExpPull,  hid(rad,mcType,"ckPullExp"), "(Rec-Exp)/Res Cktheta", -5, 5 );
 
         profile1D( thetaRec, ckTruePull, hid(rad,mcType,"ckPullMCVt"),
                    "(Rec-MC)/Res Cktheta V theta",  minCkTheta[rad], maxCkTheta[rad], 50 );
