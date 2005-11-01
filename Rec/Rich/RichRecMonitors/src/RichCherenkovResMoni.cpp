@@ -5,7 +5,7 @@
  *  Implementation file for algorithm class : RichCherenkovResMoni
  *
  *  CVS Log :-
- *  $Id: RichCherenkovResMoni.cpp,v 1.4 2005-11-01 11:53:23 jonrob Exp $
+ *  $Id: RichCherenkovResMoni.cpp,v 1.5 2005-11-01 12:14:55 jonrob Exp $
  *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   05/04/2002
@@ -150,17 +150,20 @@ StatusCode RichCherenkovResMoni::execute()
         profile1D( trueCKang, delCK, hid(rad,mcType,"trueCKresVangP"), "True CKres V true CK angle",
                    0, ckMax[rad] );
 
-        // pulls
-        const double ckTruePull = ( trueCKres>0 ? (thetaRec-thetaMC)/trueCKres   : -999 );
-        const double ckExpPull  = ( trueCKres>0 ? (thetaRec-trueCKang)/trueCKres : -999 );
+        if ( trueCKres>0 )
+        {
+          // pulls
+          const double ckTruePull = (thetaRec-thetaMC)/trueCKres;
+          const double ckExpPull  = (thetaRec-trueCKang)/trueCKres;
 
-        plot1D( ckTruePull, hid(rad,mcType,"ckPullMC"),  "(Rec-MC)/Res Cktheta",  -5, 5 );
-        plot1D( ckExpPull,  hid(rad,mcType,"ckPullExp"), "(Rec-Exp)/Res Cktheta", -5, 5 );
+          plot1D( ckTruePull, hid(rad,mcType,"ckPullMC"),  "(Rec-MC)/Res Cktheta",  -5, 5 );
+          plot1D( ckExpPull,  hid(rad,mcType,"ckPullExp"), "(Rec-Exp)/Res Cktheta", -5, 5 );
 
-        profile1D( thetaRec, ckTruePull, hid(rad,mcType,"ckPullMCVt"),
-                   "(Rec-MC)/Res Cktheta V theta",  minCkTheta[rad], maxCkTheta[rad], 50 );
-        profile1D( thetaRec, ckExpPull, hid(rad,mcType,"ckPullExpVt"),
-                   "(Rec-Exp)/Res Cktheta V theta", minCkTheta[rad], maxCkTheta[rad], 50 );
+          profile1D( thetaRec, ckTruePull, hid(rad,mcType,"ckPullMCVt"),
+                     "(Rec-MC)/Res Cktheta V theta",  minCkTheta[rad], maxCkTheta[rad], 50 );
+          profile1D( thetaRec, ckExpPull, hid(rad,mcType,"ckPullExpVt"),
+                     "(Rec-Exp)/Res Cktheta V theta", minCkTheta[rad], maxCkTheta[rad], 50 );
+        }
 
       }
 
