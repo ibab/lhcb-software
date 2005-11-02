@@ -4,9 +4,12 @@
 ! Purpose     : Package for tracking tools not accessing MC information
 !-----------------------------------------------------------------------------
 
+! 2005-11-02 - Eduardo Rodrigues
+ - MeasurementProvider tool sets Status flag for tracks with Measurements
+
 !======================== TrackTools v1r2 2005-09-20 =========================
 ! 2005-09-20 - Jose A. Hernando
-	- MeasurementProvider returns ownership of Measurement
+ - MeasurementProvider returns ownership of Measurement
 
 ! 2005-09-08 - Eduardo Rodrigues
  - TrackChi2Calculator tool added, copied from TrMatching, for the new

@@ -1,4 +1,4 @@
-// $Id: MeasurementProvider.cpp,v 1.5 2005-09-20 13:59:29 hernando Exp $
+// $Id: MeasurementProvider.cpp,v 1.6 2005-11-02 15:09:48 erodrigu Exp $
 // Include files 
 // -------------
 // from Gaudi
@@ -92,6 +92,8 @@ StatusCode MeasurementProvider::load( Track& track )
     track.addToMeasurements(*meas);
     delete meas;
   }
+  track.setStatus( Track::PatRecMeas );
+
   return StatusCode::SUCCESS;
 }
 
