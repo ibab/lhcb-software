@@ -31,7 +31,6 @@
 // Run HLT generic and HLT selections
 #include "$HLTSELECTIONSROOT/options/HLTSelections.opts"
 
-//#include "$TRGSYSROOT/options/TrgChecking.opts"
 //--------------------------------------------------------------
 ApplicationMgr.TopAlg += { "GaudiSequencer/TriggerSeq" };
 TriggerSeq.Members = { "TrgL0Filter", "PrintHeader/PassedL0" };
@@ -45,7 +44,7 @@ PassedHlt.OutputLevel = 2 ;
 // CHECKING
 //--------------------------------------------------------------
 // Checking of L0
-//#include "$DAVINCIROOT/options/L0Checking.opts" 
+// #include "$L0CHECKERROOT/options/L0Checker.opts"
 //--------------------------------------------------------------
 // Checking of L1 and/or HLT reconstruction:
 //#include "$HLTSELCHECKERROOT/options/TrgChecking.opts"  
