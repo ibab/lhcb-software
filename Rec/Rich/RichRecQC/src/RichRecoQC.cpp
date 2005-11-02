@@ -5,7 +5,7 @@
  *  Implementation file for RICH reconstruction monitoring algorithm : RichRecoQC
  *
  *  CVS Log :-
- *  $Id: RichRecoQC.cpp,v 1.17 2005-10-31 15:25:33 jonrob Exp $
+ *  $Id: RichRecoQC.cpp,v 1.18 2005-11-02 09:47:15 jonrob Exp $
  *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   2002-07-02
@@ -90,7 +90,8 @@ StatusCode RichRecoQC::execute()
 
     // True particle type
     const Rich::ParticleIDType mcType = m_richRecMCTruth->mcParticleType( segment );
-    if ( Rich::Unknown == mcType ) continue; // skip tracks with unknown MC type
+    if ( Rich::Unknown  == mcType ) continue; // skip tracks with unknown MC type
+    if ( Rich::Electron == mcType ) continue; // skip electrons which are reconstructed badly..
 
     // segment momentum
     const double pTot = segment->trackSegment().bestMomentum().mag();
@@ -122,12 +123,12 @@ StatusCode RichRecoQC::execute()
         ++truePhotons;
         // resolution plot
         plot1D( thetaRec-thetaExpTrue,
-                hid(rad,mcType,"ckRes"), "Rec-Exp Cktheta : beta=1", -ckResRange[rad], ckResRange[rad] );
+                hid(rad,"ckRes"), "Rec-Exp Cktheta : beta=1", -ckResRange[rad], ckResRange[rad] );
         if ( resExpTrue>0 )
         {
           // pull plot
           const double ckPull = (thetaRec-thetaExpTrue)/resExpTrue;
-          plot1D( ckPull, hid(rad,mcType,"ckPull"), "(Rec-Exp)/Res Cktheta : beta=1", -5, 5 );     
+          plot1D( ckPull, hid(rad,"ckPull"), "(Rec-Exp)/Res Cktheta : beta=1", -5, 5 );     
         }
 
       }
@@ -137,7 +138,7 @@ StatusCode RichRecoQC::execute()
     // number of true photons
     if ( truePhotons > 0 )
     {
-      plot1D( truePhotons, hid(rad,mcType,"nCKphots"), "True # p.e.s : beta=1", -0.5, 50, 51 );
+      plot1D( truePhotons, hid(rad,"nCKphots"), "True # p.e.s : beta=1", -0.5, 50, 51 );
       m_truePhotCount[rad] += truePhotons;
       ++m_nSegs[rad];
     }
