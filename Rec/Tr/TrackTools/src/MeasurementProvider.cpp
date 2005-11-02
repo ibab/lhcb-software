@@ -1,4 +1,4 @@
-// $Id: MeasurementProvider.cpp,v 1.6 2005-11-02 15:09:48 erodrigu Exp $
+// $Id: MeasurementProvider.cpp,v 1.7 2005-11-02 18:42:22 erodrigu Exp $
 // Include files 
 // -------------
 // from Gaudi
@@ -89,6 +89,7 @@ StatusCode MeasurementProvider::load( Track& track )
        it != ids.end(); it++) {
     const LHCbID& id = *it;
     Measurement* meas = measurement(id);
+    if ( meas == NULL ) return StatusCode::FAILURE;
     track.addToMeasurements(*meas);
     delete meas;
   }
@@ -109,6 +110,7 @@ Measurement* MeasurementProvider::measurement ( const LHCbID& id,
   if ( id.isVelo() ) {
     VeloChannelID vid = id.veloID();
     VeloCluster* clus = m_veloClusters->object( vid );
+    debug() << " VeloChannelID of type " << vid.type() << endreq;
     if (clus != NULL) {
       if (vid.isRType()) {
         meas = new VeloRMeasurement(*clus,*m_veloDet, par0);
@@ -138,14 +140,19 @@ Measurement* MeasurementProvider::measurement ( const LHCbID& id,
     else {
       debug() << "OTTime is NULL!" << endreq;
     }    
+  } else {
+    info() << "LHCbID is not of type OT, ST, Velo"
+           << " (type is " << id.detectorType() << ")" << endreq
+           << " -> do not know how to create a Measurement!" << endreq;
   }
+  
 
-  if (meas == NULL)
+  if ( meas == NULL )
     error() << "Unable to create measurement!" << endreq;
-
-  debug() << "Creating measurement of type " << meas -> type()
-          << " channel " << id.channelID() 
-          << " pars : " << par0 << ","<< par1 << endreq;
+  else
+    debug() << "Creating measurement of type " << meas -> type()
+            << " channel " << id.channelID() 
+            << " pars : " << par0 << ","<< par1 << endreq;
 
   return meas;  
 }
