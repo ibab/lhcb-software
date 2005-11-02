@@ -16,9 +16,9 @@ MessageSvc.setFatal += { "LinkedTo::MC/Rich/MCPartsToMCRichTracks",
 
 // Reco QC
 // All tracks
-CheckRICHSeq.Members += { "RichRecoQC/RiCKResAll" };
-RiCKResAll.HistoPrint       = false;
-RiCKResAll.HistoProduce     = true;
+//CheckRICHSeq.Members += { "RichRecoQC/RiCKResAll" };
+//RiCKResAll.HistoPrint       = false;
+//RiCKResAll.HistoProduce     = true;
 // forward tracks
 CheckRICHSeq.Members += { "RichRecoQC/RiCKResFrwd" };
 RiCKResFrwd.TrackSelection  = { "unique","positive","negative","forward" };
