@@ -1,8 +1,10 @@
 
-// Analytical resolution as a function of momentum
-
-ToolSvc.Offline.RichToolRegistry.Tools += {
-  "RichFunctionalCKResVpForTrStoredTracks/RichCherenkovResolution"
+// Analytical cherenkov theta resolution as a function of momentum
+ToolSvc.Offline.RichToolRegistry.Tools += 
+{
+  "RichFunctionalCKResVpForRecoTracks/RichCherenkovResolution"
 };
 
-
+// histogramming options
+ToolSvc.Offline.RichCherenkovResolution.HistoDir     = "CKRes";
+ToolSvc.Offline.RichCherenkovResolution.HistoProduce = false;

@@ -116,16 +116,18 @@ ToolSvc.Offline.RichToolRegistry.Tools += { "RichExpectedTrackSignal/RichExpecte
 ToolSvc.Offline.RichToolRegistry.Tools += { "RichPhotonSignal/RichPhotonSignal" };
 
 // Cherenkov resolution - fixed binned implementation as a function of cherenkov angle
-#include "$RICHRECSYSOPTS/tools/BinnedCherenkovResVtheta.opts"
-
-// Interpolated cherenkov resolution function of the cherenkov angle
-//#include "$RICHRECSYSOPTS/tools/InterpCherenkovResVtheta.opts"
-
-// Interpolated cherenkov resolution function of momentum
-//#include "$RICHRECSYSOPTS/tools/InterpCherenkovResVmomentum.opts"
+//#include "$RICHRECSYSOPTS/tools/BinnedCherenkovResVtheta.opts"
 
 // analytical cherenkov resolution calculation
-//#include "$RICHRECSYSOPTS/tools/FunctionalCherenkovResVmomentum.opts"
+#include "$RICHRECSYSOPTS/tools/FunctionalCherenkovResVmomentum.opts"
+
+// ------------------------------
+// obsoleted ....
+// Interpolated cherenkov resolution function of the cherenkov angle
+//#include "$RICHRECSYSOPTS/tools/InterpCherenkovResVtheta.opts"
+// Interpolated cherenkov resolution function of momentum
+//#include "$RICHRECSYSOPTS/tools/InterpCherenkovResVmomentum.opts"
+// ------------------------------
 
 // Expected Cherenkov angles
 ToolSvc.Offline.RichToolRegistry.Tools += { "RichCherenkovAngle/RichCherenkovAngle" };
@@ -166,8 +168,8 @@ ToolSvc.Offline.RichDetParameters.MaxPhotonEnergy = { 3.75,    7.00,   7.00 };
 ToolSvc.Offline.RichToolRegistry.Tools += { "RichSmartIDTool/RichSmartIDTool" };
 
 // Detector ray-tracing
-//ToolSvc.Offline.RichToolRegistry.Tools += { "RichRayTracing/RichRayTracing" };
 ToolSvc.Offline.RichToolRegistry.Tools += { "RichRayTracingAllSph/RichRayTracing" };
+ToolSvc.Offline.RichRayTracing.HistoProduce = false;
 
 // mirror segment finder
 ToolSvc.Offline.RichToolRegistry.Tools += { "RichMirrorSegFinder/RichMirrorSegFinder" };
