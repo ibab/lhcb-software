@@ -34,7 +34,7 @@ RiRecKsTkCKResMoni.TrackSelection = { "unique","KsTrack" };
 
 // Track resolution monitors
 // all tracks combined
-CheckRICHSeq.Members += { "RichTrackResolutionMoni/RiRecAllTkResMoni" };
+//CheckRICHSeq.Members += { "RichTrackResolutionMoni/RiRecAllTkResMoni" };
 // forward tracks - positive
 CheckRICHSeq.Members += { "RichTrackResolutionMoni/RiRecFrwdTkPosResMoni" };
 RiRecFrwdTkPosResMoni.TrackSelection = { "unique","positive","forward" };

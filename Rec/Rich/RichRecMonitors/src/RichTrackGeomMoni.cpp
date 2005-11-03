@@ -4,7 +4,7 @@
  *
  *  Implementation file for algorithm class : RichTrackGeomMoni
  *
- *  $Id: RichTrackGeomMoni.cpp,v 1.4 2005-10-31 13:30:58 jonrob Exp $
+ *  $Id: RichTrackGeomMoni.cpp,v 1.5 2005-11-03 14:36:06 jonrob Exp $
  *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   05/04/2002
@@ -51,7 +51,9 @@ StatusCode RichTrackGeomMoni::initialize()
   acquireTool( "RichMCTrackInfoTool",  m_mcTkInfo       );
 
   // Configure track selector
-  if ( !m_trSelector.configureTrackTypes() ) return StatusCode::FAILURE;
+  if ( !m_trSelector.configureTrackTypes() ) 
+    return Error( "Problem configuring track selection" );
+  m_trSelector.printTrackSelection( info() );
 
   // Configure the ray-tracing mode
   m_traceMode.setDetPrecision      ( RichTraceMode::circle );

@@ -5,7 +5,7 @@
  *  Implementation file for algorithm class : RichCherenkovResMoni
  *
  *  CVS Log :-
- *  $Id: RichCherenkovResMoni.cpp,v 1.5 2005-11-01 12:14:55 jonrob Exp $
+ *  $Id: RichCherenkovResMoni.cpp,v 1.6 2005-11-03 14:36:06 jonrob Exp $
  *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   05/04/2002
@@ -49,7 +49,8 @@ StatusCode RichCherenkovResMoni::initialize()
   acquireTool( "RichCherenkovResolution", m_ckAngleRes  );
 
   // Configure track selector
-  if ( !m_trSelector.configureTrackTypes() ) return StatusCode::FAILURE;
+  if ( !m_trSelector.configureTrackTypes() )
+    return Error( "Problem configuring track selection" );
   m_trSelector.printTrackSelection( info() );
 
   return sc;
@@ -67,7 +68,6 @@ StatusCode RichCherenkovResMoni::execute()
 
   // Histo ranges               Aero   C4F10  CF4
   //const double ckResRange[] = { 0.015, 0.01,  0.005 };
-  const double ckMax[]    =   { 0.3,   0.06,  0.04  };
   const double ckResMax[] =   { 0.011, 0.011, 0.003 };
   MAX_CKTHETA_RAD;
   MIN_CKTHETA_RAD;
@@ -111,15 +111,14 @@ StatusCode RichCherenkovResMoni::execute()
       if ( ckang > 0 )
       {
         // histograms
+        plot1D( ckang, hid(rad,hypo,"expCKang"), "Expected CK angle",
+                minCkTheta[rad], maxCkTheta[rad] );
         plot1D( ckres, hid(rad,hypo,"ckres"), "Calculated CKres", 0, ckResMax[rad] );
-        plot2D( ckang, ckres, hid(rad,hypo,"ckresVcktheta"), "Calculated CKres V CKangle",
-                0, ckMax[rad], 0, ckResMax[rad] );
-        plot2D( ptot, ckres, hid(rad,hypo,"ckresVptot"), "Calculated CKres V ptot",
-                0, 100, 0, ckResMax[rad] );
-        profile1D( ckang, ckres, hid(rad,hypo,"ckresVckangP"), "Calculated CKres V CKangle", 0, ckMax[rad] );
+        profile1D( ckang, ckres, hid(rad,hypo,"ckresVcktheta"), "Calculated CKres V CKangle",
+                   minCkTheta[rad], maxCkTheta[rad] );
         profile1D( ptot, ckres, hid(rad,hypo,"ckresVptotp"), "Calculated CKres V ptot", 0, 100 );
         profile2D( ptot, ckang, ckres, hid(rad,hypo,"ckresVptotVckang"),
-                   "Calculated CKres V ptot+ckang", 0, 100, 0, ckMax[rad] );
+                   "Calculated CKres V ptot+ckang", 0, 100, minCkTheta[rad], maxCkTheta[rad] );
       }
 
     } // particle ID codes
@@ -136,19 +135,30 @@ StatusCode RichCherenkovResMoni::execute()
       const MCRichOpticalPhoton * mcPhot = m_richRecMCTruth->trueOpticalPhoton(photon);
       if ( mcPhot )
       {
-        // Cherenkov angles
+        // Cherenkov angles  
         const double thetaRec = photon->geomPhoton().CherenkovTheta();
         const double thetaMC  = mcPhot->cherenkovTheta();
         const double delCK    = thetaRec-thetaMC;
 
-        plot2D( delCK, trueCKres, hid(rad,mcType,"trueVcalCKres"), "True V calculated CKres",
-                0, ckResMax[rad], 0, ckResMax[rad] );
-        plot2D( trueCKang, delCK, hid(rad,mcType,"trueCKresVang"), "True CKres V true CK angle",
-                0, ckMax[rad], 0, ckResMax[rad] );
-        profile1D( delCK, trueCKres, hid(rad,mcType,"trueVcalCKresP"), "True V calculated CKres",
+        const double trueCKerr  = fabs(thetaMC-trueCKang);
+        const double recoCKerr  = fabs(thetaRec-trueCKang);
+
+        plot1D( thetaRec, hid(rad,mcType,"recoCKang"), "Reconstructed CK angle (true photons)", 
+                minCkTheta[rad], maxCkTheta[rad] );
+        plot1D( thetaMC, hid(rad,mcType,"mcCKang"), "MC CK angle", minCkTheta[rad], maxCkTheta[rad] );
+        profile1D( delCK, trueCKres, hid(rad,mcType,"trueVcalCKres"), "True V calculated CKres",
                    0, ckResMax[rad] );
-        profile1D( trueCKang, delCK, hid(rad,mcType,"trueCKresVangP"), "True CKres V true CK angle",
-                   0, ckMax[rad] );
+        profile1D( trueCKang, delCK, hid(rad,mcType,"trueCKresVang"), "True CKres V true CK angle",
+                   minCkTheta[rad], maxCkTheta[rad] );
+
+        plot1D( trueCKerr, hid(rad,mcType,"mcckres"), "True MC CKres", 0, ckResMax[rad] );
+        profile1D( trueCKres, trueCKerr, hid(rad,mcType,"ckresVmcres"), "True MC V Calculated CKres", 
+                   0, ckResMax[rad] );
+
+        profile1D( trueCKang, recoCKerr, hid(rad,mcType,"diffckVckangP"), "fabs(Rec-Exp) Cktheta V CKangle",
+                   minCkTheta[rad], maxCkTheta[rad] );
+        profile1D( ptot, recoCKerr, hid(rad,mcType,"diffckVckangP"), "fabs(Rec-Exp) Cktheta V ptot",
+                   0, 100 );
 
         if ( trueCKres>0 )
         {

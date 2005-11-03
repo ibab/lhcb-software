@@ -5,7 +5,7 @@
  *  Implementation file for RICH reconstruction monitoring algorithm : RichPIDQC
  *
  *  CVS Log :-
- *  $Id: RichPIDQC.cpp,v 1.43 2005-10-18 12:49:06 jonrob Exp $
+ *  $Id: RichPIDQC.cpp,v 1.44 2005-11-03 14:37:34 jonrob Exp $
  *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   2002-06-13
@@ -79,7 +79,8 @@ StatusCode RichPIDQC::initialize()
   m_nTracks[1] = 0;
 
   // Configure track selector
-  if ( !m_trSelector.configureTrackTypes() ) return StatusCode::FAILURE;
+  if ( !m_trSelector.configureTrackTypes() )
+    return Error( "Problem configuring track selection" );
   m_trSelector.printTrackSelection( debug() );
 
   // Warn if extra histos are enabled

@@ -5,7 +5,7 @@
  *  Implementation file for algorithm class : RichPhotonMonitor
  *
  *  CVS Log :-
- *  $Id: RichPhotonMonitor.cpp,v 1.3 2005-10-13 15:45:45 jonrob Exp $
+ *  $Id: RichPhotonMonitor.cpp,v 1.4 2005-11-03 14:36:06 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   2002-07-02
@@ -84,7 +84,8 @@ StatusCode RichPhotonMonitor::initialize()
   if ( m_truth ) { if ( !bookMCHistograms() ) return StatusCode::FAILURE; }
 
   // Configure track selector
-  if ( !m_trSelector.configureTrackTypes() ) return StatusCode::FAILURE;
+  if ( !m_trSelector.configureTrackTypes() )
+    return Error( "Problem configuring track selection" );
   m_trSelector.printTrackSelection( info() );
 
   // Initialise variables

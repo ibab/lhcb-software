@@ -5,7 +5,7 @@
  *  Implementation file for RICH reconstruction monitoring algorithm : RichRecoQC
  *
  *  CVS Log :-
- *  $Id: RichRecoQC.cpp,v 1.18 2005-11-02 09:47:15 jonrob Exp $
+ *  $Id: RichRecoQC.cpp,v 1.19 2005-11-03 14:37:34 jonrob Exp $
  *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   2002-07-02
@@ -56,7 +56,8 @@ StatusCode RichRecoQC::initialize()
   acquireTool( "RichCherenkovResolution", m_ckRes       );
 
   // Configure track selector
-  if ( !m_trSelector.configureTrackTypes() ) return StatusCode::FAILURE;
+  if ( !m_trSelector.configureTrackTypes() ) 
+    return Error( "Problem configuring track selection" );
   m_trSelector.printTrackSelection( info() );
 
   return sc;
@@ -75,6 +76,10 @@ StatusCode RichRecoQC::execute()
 
   // Histo ranges               Aero   C4F10  CF4
   const double ckResRange[] = { 0.015, 0.01,  0.005 };
+
+  // Make sure all tracks and segments have been formed
+  if ( !trackCreator()->newTracks() ) 
+    return Error( "Problem creating RichRecTracks" );
 
   // Iterate over segments
   for ( RichRecSegments::const_iterator iSeg = richSegments()->begin();

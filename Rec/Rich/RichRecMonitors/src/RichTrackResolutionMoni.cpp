@@ -5,7 +5,7 @@
  *  Implementation file for algorithm class : RichTrackResolutionMoni
  *
  *  CVS Log :-
- *  $Id: RichTrackResolutionMoni.cpp,v 1.3 2005-10-31 13:30:58 jonrob Exp $
+ *  $Id: RichTrackResolutionMoni.cpp,v 1.4 2005-11-03 14:36:06 jonrob Exp $
  *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   05/04/2002
@@ -47,31 +47,34 @@ StatusCode RichTrackResolutionMoni::initialize()
   acquireTool( "RichMCTrackInfoTool",  m_mcTkInfo       );
 
   // Configure track selector
-  if ( !m_trSelector.configureTrackTypes() ) return StatusCode::FAILURE;
+  if ( !m_trSelector.configureTrackTypes() ) 
+    return Error( "Problem configuring track selection" );
   m_trSelector.printTrackSelection( info() );
 
   return sc;
 }
 
 // Main execution
-StatusCode RichTrackResolutionMoni::execute() {
-
+StatusCode RichTrackResolutionMoni::execute() 
+{
   debug() << "Execute" << endreq;
 
   // Check event status
   if ( !richStatus()->eventOK() ) return StatusCode::SUCCESS;
 
   // Make sure all tracks and segments have been formed
-  if ( richTracks()->empty() ) {
-    if ( !trackCreator()->newTracks() ) return StatusCode::FAILURE;
+  if ( richTracks()->empty() ) 
+  {
+    if ( !trackCreator()->newTracks() ) 
+      return Error( "Problem creating RichRecTracks" );
     debug() << "No tracks found : Created " << richTracks()->size()
             << " RichRecTracks " << richSegments()->size()
             << " RichRecSegments" << endreq;
   }
 
   // Number of tracks
-  plot2D( trackCreator()->nInputTracks(), richTracks()->size(),
-          "nTks", "# RICH tracks V total # tracks", 0,1000,0,300 );
+  //plot2D( trackCreator()->nInputTracks(), richTracks()->size(),
+  //        "nTks", "# RICH tracks V total # tracks", 0,1000,0,300 );
 
   // Tally number of segments
   unsigned int nSegs[Rich::NRadiatorTypes]   = { 0, 0, 0 };
@@ -93,84 +96,92 @@ StatusCode RichTrackResolutionMoni::execute() {
     const Rich::ParticleIDType mcType = m_richRecMCTruth->mcParticleType( segment );
     if ( Rich::Electron == mcType || Rich::Unknown == mcType ) continue;
 
+    // shortcuts
     // track segment
     const RichTrackSegment & tkSeg = segment->trackSegment();
     // entry/exit points
-    const HepPoint3D & entP = tkSeg.entryPoint();
-    const HepPoint3D & extP = tkSeg.exitPoint();
+    const HepPoint3D & entP  = tkSeg.entryPoint();
+    const HepPoint3D & extP  = tkSeg.exitPoint();
+    // entry exit momentum vectors
+    const HepVector3D & entV = tkSeg.entryMomentum();
+    const HepVector3D & extV = tkSeg.exitMomentum();
 
     //const Rich::DetectorType iRich = tkSeg.rich();    // which rich detector
-    const Rich::RadiatorType iRad = tkSeg.radiator();   // which radiator
-    ++nSegs[iRad]; // count segments per radiator
+    const Rich::RadiatorType rad = tkSeg.radiator();   // which radiator
+    ++nSegs[rad]; // count segments per radiator
 
     verbose() << "Selected " << segment->richRecTrack()->trackID().trackType()
-              << " RichRecSegment in " << iRad << endreq;
+              << " RichRecSegment in " << rad << endreq;
 
     // Ray traced hit point on PDPanel
     const HepPoint3D & pdPoint = segment->pdPanelHitPoint();
 
     // Angle between entry and exit vectors
-    const double recoInOutAng = tkSeg.entryMomentum().angle(tkSeg.exitMomentum());
-    plot1D( recoInOutAng, hid(iRad,"recoInOutAng"), "Reco. entry/exit angle",0,0.01);
+    const double recoInOutAng = entV.angle(extV);
+    plot1D( recoInOutAng, hid(rad,"recoInOutAng"), "Reco. entry/exit angle",0,0.01);
 
     // Get associated RichMCSegment
     const MCRichSegment * mcSeg = m_richRecMCTruth->mcRichSegment(segment);
     if ( mcSeg ) 
     {
-      ++nMCSegs[iRad]; // count MC segments per radiator
+      ++nMCSegs[rad]; // count MC segments per radiator
 
+      // shortcuts
       // MC entry and exit points
       const HepPoint3D & mcEntP = mcSeg->entryPoint();
       const HepPoint3D & mcExtP = mcSeg->exitPoint();
+      // MC entry/exit momentum vectors
+      const HepVector3D & mcEntV = mcSeg->entryMomentum();
+      const HepVector3D & mcExtV = mcSeg->exitMomentum();
 
       // number of G4 segments
       plot1D( mcSeg->trajectoryPoints().size(), 
-              hid(iRad,"nMCTrajPtns"), "# G4 segments", -0.5,100.5,101 );
+              hid(rad,"nMCTrajPtns"), "# G4 segments", -0.5,100.5,101 );
 
       // position resolution plots
-      plot1D( entP.x()-mcEntP.x(), hid(iRad,"dTrEntX"), "Rec-MC rad entry X", -5,5 );
-      plot1D( entP.y()-mcEntP.y(), hid(iRad,"dTrEntY"), "Rec-MC rad entry Y", -5,5 );
-      plot1D( entP.z()-mcEntP.z(), hid(iRad,"dTrEntZ"), "Rec-MC rad entry Z", -5,5 );
-      plot1D( extP.x()-mcExtP.x(), hid(iRad,"dTrExtX"), "Rec-MC rad exit X",  -5,5 );
-      plot1D( extP.y()-mcExtP.y(), hid(iRad,"dTrExtY"), "Rec-MC rad exit Y",  -5,5 );
-      plot1D( extP.z()-mcExtP.z(), hid(iRad,"dTrExtZ"), "Rec-MC rad exit Z",  -5,5 );
+      plot1D( entP.x()-mcEntP.x(), hid(rad,"dTrEntX"), "Rec-MC rad entry X", -5,5 );
+      plot1D( entP.y()-mcEntP.y(), hid(rad,"dTrEntY"), "Rec-MC rad entry Y", -5,5 );
+      plot1D( entP.z()-mcEntP.z(), hid(rad,"dTrEntZ"), "Rec-MC rad entry Z", -5,5 );
+      plot1D( extP.x()-mcExtP.x(), hid(rad,"dTrExtX"), "Rec-MC rad exit X",  -5,5 );
+      plot1D( extP.y()-mcExtP.y(), hid(rad,"dTrExtY"), "Rec-MC rad exit Y",  -5,5 );
+      plot1D( extP.z()-mcExtP.z(), hid(rad,"dTrExtZ"), "Rec-MC rad exit Z",  -5,5 );
       plot1D( tkSeg.pathLength() - mcSeg->pathLength(),
-              hid(iRad,"dTrPathL"), "Rec-MC rad pathLength", -5,5 );
+              hid(rad,"dTrPathL"), "Rec-MC rad pathLength", -5,5 );
 
       // Panel ray-traced point
       HepPoint3D mcGlobal;
       if ( m_mcTkInfo->panelIntersectGlobal( mcSeg, mcGlobal ) ) 
       {
-        plot1D( pdPoint.x()-mcGlobal.x(), hid(iRad,"dTrPanX"), "Rec-MC panel X", -5,5 );
-        plot1D( pdPoint.y()-mcGlobal.y(), hid(iRad,"dTrPanY"), "Rec-MC panel Y", -5,5 );
-        plot1D( pdPoint.z()-mcGlobal.z(), hid(iRad,"dTrPanZ"), "Rec-MC panel Z", -5,5 );
+        plot1D( pdPoint.x()-mcGlobal.x(), hid(rad,"dTrPanX"), "Rec-MC panel X", -5,5 );
+        plot1D( pdPoint.y()-mcGlobal.y(), hid(rad,"dTrPanY"), "Rec-MC panel Y", -5,5 );
+        plot1D( pdPoint.z()-mcGlobal.z(), hid(rad,"dTrPanZ"), "Rec-MC panel Z", -5,5 );
       }
 
       // angle between mc and reco vectors
-      plot1D( tkSeg.entryMomentum().angle( mcSeg->entryMomentum() ),
-              hid(iRad,"dTrAngEnt"), "Angle between Rec/MC dir at entry", 0,0.01 );
+      plot1D( entV.angle( mcEntV ),
+              hid(rad,"dTrAngEnt"), "Angle between Rec/MC dir at entry", 0,0.01 );
       plot1D( tkSeg.bestMomentum().angle( mcSeg->bestMomentum(0.5) ),
-              hid(iRad,"dTrAngExt"), "Angle between Rec/MC dir at exit", 0,0.01 );
-      plot1D( tkSeg.exitMomentum().angle( mcSeg->exitMomentum() ),
-              hid(iRad,"dTrAngMid"), "Angle between Rec/MC dir at mid point", 0,0.01 );
+              hid(rad,"dTrAngExt"), "Angle between Rec/MC dir at exit", 0,0.01 );
+      plot1D( extV.angle( mcExtV ),
+              hid(rad,"dTrAngMid"), "Angle between Rec/MC dir at mid point", 0,0.01 );
 
       // direction resolutions
-      const double zrecoEnt  = tkSeg.entryMomentum().z();
-      const double txrecoEnt = ( fabs(zrecoEnt)>0 ? tkSeg.entryMomentum().x()/zrecoEnt : 0 );
-      const double tyrecoEnt = ( fabs(zrecoEnt)>0 ? tkSeg.entryMomentum().y()/zrecoEnt : 0 );
-      const double zmcEnt    = mcSeg->entryMomentum().z();
-      const double txmcEnt   = ( fabs(zmcEnt)>0 ? mcSeg->entryMomentum().x()/zmcEnt : 0 );
-      const double tymcEnt   = ( fabs(zmcEnt)>0 ? mcSeg->entryMomentum().y()/zmcEnt : 0 );
-      plot1D( txrecoEnt-txmcEnt, hid(iRad,"txRexEnt"), "Rec-MC tx entry", -0.01,0.01 );
-      plot1D( tyrecoEnt-tymcEnt, hid(iRad,"tyRexEnt"), "Rec-MC ty entry", -0.01,0.01 );
-      const double zrecoEx  = tkSeg.exitMomentum().z();
-      const double txrecoEx = ( fabs(zrecoEx)>0 ? tkSeg.exitMomentum().x()/zrecoEx : 0 );
-      const double tyrecoEx = ( fabs(zrecoEx)>0 ? tkSeg.exitMomentum().y()/zrecoEx : 0 );
-      const double zmcEx    = mcSeg->exitMomentum().z();
-      const double txmcEx   = ( fabs(zmcEx)>0 ? mcSeg->exitMomentum().x()/zmcEx : 0 );
-      const double tymcEx   = ( fabs(zmcEx)>0 ? mcSeg->exitMomentum().y()/zmcEx : 0 );
-      plot1D( txrecoEx-txmcEx, hid(iRad,"txRexExt"), "Rec-MC tx exit", -0.01,0.01 );
-      plot1D( tyrecoEx-tymcEx, hid(iRad,"tyRexExt"), "Rec-MC ty exit", -0.01,0.01 );
+      const double zrecoEnt  = entV.z();
+      const double txrecoEnt = ( fabs(zrecoEnt)>0 ? entV.x()/zrecoEnt : 0 );
+      const double tyrecoEnt = ( fabs(zrecoEnt)>0 ? entV.y()/zrecoEnt : 0 );
+      const double zmcEnt    = mcEntV.z();
+      const double txmcEnt   = ( fabs(zmcEnt)>0 ? mcEntV.x()/zmcEnt : 0 );
+      const double tymcEnt   = ( fabs(zmcEnt)>0 ? mcEntV.y()/zmcEnt : 0 );
+      plot1D( txrecoEnt-txmcEnt, hid(rad,"txRexEnt"), "Rec-MC tx entry", -0.01,0.01 );
+      plot1D( tyrecoEnt-tymcEnt, hid(rad,"tyRexEnt"), "Rec-MC ty entry", -0.01,0.01 );
+      const double zrecoEx  = extV.z();
+      const double txrecoEx = ( fabs(zrecoEx)>0 ? extV.x()/zrecoEx : 0 );
+      const double tyrecoEx = ( fabs(zrecoEx)>0 ? extV.y()/zrecoEx : 0 );
+      const double zmcEx    = mcExtV.z();
+      const double txmcEx   = ( fabs(zmcEx)>0 ? mcExtV.x()/zmcEx : 0 );
+      const double tymcEx   = ( fabs(zmcEx)>0 ? mcExtV.y()/zmcEx : 0 );
+      plot1D( txrecoEx-txmcEx, hid(rad,"txRexExt"), "Rec-MC tx exit", -0.01,0.01 );
+      plot1D( tyrecoEx-tymcEx, hid(rad,"tyRexExt"), "Rec-MC ty exit", -0.01,0.01 );
 
       // x and y pull distributions
       const double pullXEnt = ( tkSeg.entryErrors().errX()>0 ?
@@ -181,44 +192,58 @@ StatusCode RichTrackResolutionMoni::execute() {
                                 (extP.x()-mcExtP.x())/tkSeg.exitErrors().errX() : -999 );
       const double pullYExt = ( tkSeg.exitErrors().errY()>0 ?
                                 (extP.y()-mcExtP.y())/tkSeg.exitErrors().errY() : -999 );
-      plot1D( pullXEnt, hid(iRad,"pullXEnt"), "Entry x pull", -5,5 );
-      plot1D( pullYEnt, hid(iRad,"pullYEnt"), "Entry y pull", -5,5 );
-      plot1D( pullXExt, hid(iRad,"pullXExt"), "Exit x pull",  -5,5 );
-      plot1D( pullYExt, hid(iRad,"pullYExt"), "Exit y pull",  -5,5 );
+      plot1D   ( pullXEnt, hid(rad,"pullXEnt"), "Entry x pull", -5,5 );
+      profile1D( entV.mag(), pullXEnt, hid(rad,"pullXEntVP"), "Entry x pull versus momentum", 0, 100*GeV, 50 );
+      plot1D   ( pullYEnt, hid(rad,"pullYEnt"), "Entry y pull", -5,5 );
+      profile1D( entV.mag(), pullYEnt, hid(rad,"pullYEntVP"), "Entry y pull versus momentum", 0, 100*GeV, 50 );
+      plot1D   ( pullXExt, hid(rad,"pullXExt"), "Exit x pull",  -5,5 );
+      profile1D( extV.mag(), pullXExt, hid(rad,"pullXExtVP"), "Exit x pull versus momentum", 0, 100*GeV, 50 );
+      plot1D   ( pullYExt, hid(rad,"pullYExt"), "Exit y pull",  -5,5 );
+      profile1D( extV.mag(), pullYExt, hid(rad,"pullYExtVP"), "Exit y pull versus momentum", 0, 100*GeV, 50 );
 
       // tx and ty pull distributions
-      const double pullTXEnt = ( tkSeg.entryErrors().errTX()>0 ? (txrecoEnt-txmcEnt)/tkSeg.entryErrors().errTX() : -999 );
-      const double pullTYEnt = ( tkSeg.entryErrors().errTY()>0 ? (tyrecoEnt-tymcEnt)/tkSeg.entryErrors().errTY() : -999 );
-      const double pullTXExt = ( tkSeg.exitErrors().errTX()>0 ? (txrecoEx-txmcEx)/tkSeg.exitErrors().errTX() : -999 );
-      const double pullTYExt = ( tkSeg.exitErrors().errTY()>0 ? (tyrecoEx-tymcEx)/tkSeg.exitErrors().errTY() : -999 );
-      plot1D( pullTXEnt, hid(iRad,"pullTXEnt"), "Entry tx pull", -5,5 );
-      plot1D( pullTYEnt, hid(iRad,"pullTYEnt"), "Entry ty pull", -5,5 );
-      plot1D( pullTXExt, hid(iRad,"pullTXExt"), "Exit tx pull", -5,5 );
-      plot1D( pullTYExt, hid(iRad,"pullTYExt"), "Exit ty pull", -5,5 );
+      const double pullTXEnt = 
+        ( tkSeg.entryErrors().errTX()>0 ? (txrecoEnt-txmcEnt)/tkSeg.entryErrors().errTX() : -999 );
+      const double pullTYEnt = 
+        ( tkSeg.entryErrors().errTY()>0 ? (tyrecoEnt-tymcEnt)/tkSeg.entryErrors().errTY() : -999 );
+      const double pullTXExt = 
+        ( tkSeg.exitErrors().errTX()>0 ? (txrecoEx-txmcEx)/tkSeg.exitErrors().errTX() : -999 );
+      const double pullTYExt = 
+        ( tkSeg.exitErrors().errTY()>0 ? (tyrecoEx-tymcEx)/tkSeg.exitErrors().errTY() : -999 );
+      plot1D   ( pullTXEnt, hid(rad,"pullTXEnt"), "Entry tx pull", -5,5 );
+      profile1D( entV.mag(), pullTXEnt, hid(rad,"pullTXEntVP"), "Entry tx pull versus momentum", 0, 100*GeV, 50 );
+      plot1D   ( pullTYEnt, hid(rad,"pullTYEnt"), "Entry ty pull", -5,5 );
+      profile1D( entV.mag(), pullTYEnt, hid(rad,"pullTYEntVP"), "Entry ty pull versus momentum", 0, 100*GeV, 50 );
+      plot1D   ( pullTXExt, hid(rad,"pullTXExt"), "Exit tx pull", -5,5 );
+      profile1D( extV.mag(), pullTXExt, hid(rad,"pullTXExtVP"), "Exit tx pull versus momentum", 0, 100*GeV, 50 );
+      plot1D   ( pullTYExt, hid(rad,"pullTYExt"), "Exit ty pull", -5,5 );
+      profile1D( extV.mag(), pullTYExt, hid(rad,"pullTYExtVP"), "Exit ty pull versus momentum", 0, 100*GeV, 50 );
 
       // momentum pulls
       const double pullPEnt = ( tkSeg.entryErrors().errP()>0 ?
-                                (tkSeg.entryMomentum().mag()-mcSeg->entryMomentum().mag())/tkSeg.entryErrors().errP() : -999 );
+                                (entV.mag()-mcEntV.mag())/tkSeg.entryErrors().errP() : -999 );
       const double pullPExt = ( tkSeg.exitErrors().errP()>0 ?
-                                (tkSeg.exitMomentum().mag()-mcSeg->exitMomentum().mag())/tkSeg.exitErrors().errP() : -999 );
-      plot1D( pullPEnt, hid(iRad,"pullPEnt"), "Entry P pull", -5,5 );
-      plot1D( pullPExt, hid(iRad,"pullPExt"), "Exit P pull", -5,5 );
+                                (extV.mag()-mcExtV.mag())/tkSeg.exitErrors().errP() : -999 );
+      plot1D   ( pullPEnt, hid(rad,"pullPEnt"), "Entry P pull", -5,5 );
+      profile1D( entV.mag(), pullPEnt, hid(rad,"pullPEntVP"), "Entry P pull versus P", 0, 100*GeV, 50 );
+      plot1D( pullPExt, hid(rad,"pullPExt"), "Exit P pull",  -5,5 );
+      profile1D( extV.mag(), pullPExt, hid(rad,"pullPExtVP"), "Exit P pull versus P", 0, 100*GeV, 50 );
 
       // Angle between entry and exit directions
-      const double mcInOutAng = mcSeg->entryMomentum().angle( mcSeg->exitMomentum() );
-      plot1D( mcInOutAng, hid(iRad,"mcInOutAng"), "MC entry/exit angle", 0,0.01 );
-      plot1D( recoInOutAng-mcInOutAng, hid(iRad,"InOutAngRes"), "Reco-MC entry/exit angle", -0.01,0.01);
+      const double mcInOutAng = mcEntV.angle( mcExtV );
+      plot1D( mcInOutAng, hid(rad,"mcInOutAng"), "MC entry/exit angle", 0,0.01 );
+      plot1D( recoInOutAng-mcInOutAng, hid(rad,"InOutAngRes"), "Reco-MC entry/exit angle", -0.01,0.01);
 
     }
 
   } // end segment loop
 
   // Fill final plots
-  for ( int iRad = 0; iRad < Rich::NRadiatorTypes; ++iRad ) 
+  for ( int irad = 0; irad < Rich::NRadiatorTypes; ++irad ) 
   {
-    const Rich::RadiatorType rad = (Rich::RadiatorType)iRad;
-    plot1D( nSegs[iRad], hid(rad,"nSegs"), "# segments per event", -0.5,100.5,101 );
-    plot1D( 0 == nSegs[iRad] ? 0 : static_cast<float>(nMCSegs[iRad])/static_cast<float>(nSegs[iRad]),
+    const Rich::RadiatorType rad = (Rich::RadiatorType)irad;
+    plot1D( nSegs[rad], hid(rad,"nSegs"), "# segments per event", -0.5,100.5,101 );
+    plot1D( 0 == nSegs[rad] ? 0 : static_cast<float>(nMCSegs[rad])/static_cast<float>(nSegs[rad]),
             hid(rad,"segFrMC"), "Fraction of segments with MC info", 0,1 );
   }
 
