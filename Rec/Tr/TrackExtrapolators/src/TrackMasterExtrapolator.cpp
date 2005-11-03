@@ -199,7 +199,8 @@ StatusCode TrackMasterExtrapolator::propagate( State& state,
       ILVolume::Interval inter(start.z() + zStep, start.z() + zStep);
       const Material* dummyMat = 0;
       intersept.push_back(std::make_pair(inter,dummyMat));
-       
+      nWall = intersept.size();
+ 
       // loop over the walls - last wall is `virtual one at target z'
       for (int iStep=0; iStep<nWall; ++iStep)
 	{
