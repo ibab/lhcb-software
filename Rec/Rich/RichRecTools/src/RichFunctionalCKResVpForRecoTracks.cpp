@@ -4,7 +4,7 @@
  *
  *  Implementation file for tool : RichFunctionalCKResVpForRecoTracks
  *
- *  $Id: RichFunctionalCKResVpForRecoTracks.cpp,v 1.2 2005-10-31 13:32:12 jonrob Exp $
+ *  $Id: RichFunctionalCKResVpForRecoTracks.cpp,v 1.3 2005-11-03 14:33:59 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   17/10/2004
@@ -28,7 +28,7 @@ RichFunctionalCKResVpForRecoTracks::
 RichFunctionalCKResVpForRecoTracks ( const std::string& type,
                                      const std::string& name,
                                      const IInterface* parent )
-  : RichRecToolBase ( type, name, parent      ),
+  : RichRecHistoToolBase ( type, name, parent      ),
     m_ckAngle       ( 0                       ),
     m_refIndex      ( 0                       ),
     m_chromFact     ( Rich::NRadiatorTypes, 0 ),
@@ -42,24 +42,24 @@ RichFunctionalCKResVpForRecoTracks ( const std::string& type,
 
   // job options
 
-  m_asmpt[Rich::Aerogel] = std::vector<double>( Rich::Track::NTrTypes, 0.00249  );
-  (m_asmpt[Rich::Aerogel])[Rich::Track::Forward] = 0.0026;
-  (m_asmpt[Rich::Aerogel])[Rich::Track::Match]   = 0.00249;
-  (m_asmpt[Rich::Aerogel])[Rich::Track::VeloTT]  = 0.00267;
-  (m_asmpt[Rich::Aerogel])[Rich::Track::KsTrack] = 0.00264;
+  m_asmpt[Rich::Aerogel] = std::vector<double>( Rich::Track::NTrTypes, 0.00249 );
+  (m_asmpt[Rich::Aerogel])[Rich::Track::Forward] = 0.00177;
+  (m_asmpt[Rich::Aerogel])[Rich::Track::Match]   = 0.00174;
+  (m_asmpt[Rich::Aerogel])[Rich::Track::VeloTT]  = 0.00218;
+  (m_asmpt[Rich::Aerogel])[Rich::Track::KsTrack] = 0.00189;
   declareProperty( "AerogelAsymptopicErr", m_asmpt[Rich::Aerogel] );
 
-  m_asmpt[Rich::C4F10]   = std::vector<double>( Rich::Track::NTrTypes, 0.00150  );
-  (m_asmpt[Rich::C4F10])[Rich::Track::Forward] = 0.00150;
-  (m_asmpt[Rich::C4F10])[Rich::Track::Match]   = 0.00167;
-  (m_asmpt[Rich::C4F10])[Rich::Track::VeloTT]  = 0.00220;
-  (m_asmpt[Rich::C4F10])[Rich::Track::KsTrack] = 0.00177;
+  m_asmpt[Rich::C4F10]   = std::vector<double>( Rich::Track::NTrTypes, 0.00150 );
+  (m_asmpt[Rich::C4F10])[Rich::Track::Forward] = 0.00118;
+  (m_asmpt[Rich::C4F10])[Rich::Track::Match]   = 0.00130;
+  (m_asmpt[Rich::C4F10])[Rich::Track::VeloTT]  = 0.00178;
+  (m_asmpt[Rich::C4F10])[Rich::Track::KsTrack] = 0.00132;
   declareProperty( "C4F10AsymptopicErr", m_asmpt[Rich::C4F10] );
 
   m_asmpt[Rich::CF4]     = std::vector<double>( Rich::Track::NTrTypes, 0.000329 );
-  (m_asmpt[Rich::CF4])[Rich::Track::Forward] = 0.000300;
-  (m_asmpt[Rich::CF4])[Rich::Track::Match]   = 0.000450;
-  (m_asmpt[Rich::CF4])[Rich::Track::Seed]    = 0.000766;
+  (m_asmpt[Rich::CF4])[Rich::Track::Forward] = 0.000319;
+  (m_asmpt[Rich::CF4])[Rich::Track::Match]   = 0.000457;
+  (m_asmpt[Rich::CF4])[Rich::Track::Seed]    = 0.000636;
   (m_asmpt[Rich::CF4])[Rich::Track::KsTrack] = 0.000400;
   declareProperty( "CF4AsymptopicErr", m_asmpt[Rich::CF4] );
 
@@ -68,7 +68,7 @@ RichFunctionalCKResVpForRecoTracks ( const std::string& type,
 StatusCode RichFunctionalCKResVpForRecoTracks::initialize()
 {
   // Sets up various tools and services
-  const StatusCode sc = RichRecToolBase::initialize();
+  const StatusCode sc = RichRecHistoToolBase::initialize();
   if ( sc.isFailure() ) { return sc; }
 
   // Acquire instances of tools
@@ -128,7 +128,7 @@ StatusCode RichFunctionalCKResVpForRecoTracks::initialize()
 StatusCode RichFunctionalCKResVpForRecoTracks::finalize()
 {
   // Execute base class method
-  return RichRecToolBase::finalize();
+  return RichRecHistoToolBase::finalize();
 }
 
 double
@@ -155,6 +155,11 @@ ckThetaResolution( RichRecSegment * segment,
     const double ckExp = m_ckAngle->avgCherenkovTheta( segment, id );
     if ( ckExp > 1e-6 )
     {
+
+      // Histo stuff
+      const RichHistoID hid;
+      MAX_CKTHETA_RAD;
+      MIN_CKTHETA_RAD;
 
       // track type
       const Rich::Track::Type tkType = tkID.trackType();
@@ -199,9 +204,52 @@ ckThetaResolution( RichRecSegment * segment,
       // momentum error
       const double mass2 = m_richPartProp->massSq(id)/(GeV*GeV);
       const double massFactor = mass2 / ( mass2 + ptot*ptot );
-      const double momErr = ( tkSeg.entryErrors().errP2()/(GeV*GeV) * 
+      const double momErr = ( tkSeg.entryErrors().errP2()/(GeV*GeV) *
                               gsl_pow_2( massFactor / ptot / tanCkExp ) );
       res2 += momErr;
+
+      // Histos
+      if ( produceHistos() )
+      {
+        // Versus CK theta
+        profile1D( ckExp, sqrt(asymptotErr), Rich::text(tkType)+"/"+hid(rad,id,"asymErrVc"),
+                   "Asymptotic CK theta error V CK theta",
+                   minCkTheta[rad], maxCkTheta[rad] );
+        profile1D( ckExp, sqrt(chromatErr), Rich::text(tkType)+"/"+hid(rad,id,"chroErrVc"),
+                   "Chromatic CK theta error V CK theta",
+                   minCkTheta[rad], maxCkTheta[rad] );
+        profile1D( ckExp, sqrt(scattErr), Rich::text(tkType)+"/"+hid(rad,id,"scatErrVc"),
+                   "Scattering CK theta error V CK theta",
+                   minCkTheta[rad], maxCkTheta[rad] );
+        profile1D( ckExp, sqrt(curvErr), Rich::text(tkType)+"/"+hid(rad,id,"curvErrVc"),
+                   "Curvature CK theta error V CK theta",
+                   minCkTheta[rad], maxCkTheta[rad] );
+        profile1D( ckExp, sqrt(dirErr), Rich::text(tkType)+"/"+hid(rad,id,"dirErrVc"),
+                   "Track direction CK theta error V CK theta",
+                   minCkTheta[rad], maxCkTheta[rad] );
+        profile1D( ckExp, sqrt(momErr), Rich::text(tkType)+"/"+hid(rad,id,"momErrVc"),
+                   "Track momentum CK theta error V CK theta",
+                   minCkTheta[rad], maxCkTheta[rad] );
+        // Versus momentum
+        profile1D( ptot, sqrt(asymptotErr), Rich::text(tkType)+"/"+hid(rad,id,"asymErrVp"),
+                   "Asymptotic CK theta error V momentum",
+                   0, 100 );
+        profile1D( ptot, sqrt(chromatErr), Rich::text(tkType)+"/"+hid(rad,id,"chroErrVp"),
+                   "Chromatic CK theta error V momentum",
+                   0, 100 );
+        profile1D( ptot, sqrt(scattErr), Rich::text(tkType)+"/"+hid(rad,id,"scatErrVp"),
+                   "Scattering CK theta error V momentum",
+                   0, 100 );
+        profile1D( ptot, sqrt(curvErr), Rich::text(tkType)+"/"+hid(rad,id,"curvErrVp"),
+                   "Curvature CK theta error V momentum",
+                   0, 100 );
+        profile1D( ptot, sqrt(dirErr), Rich::text(tkType)+"/"+hid(rad,id,"dirErrVp"),
+                   "Track direction CK theta error V momentum",
+                   0, 100 );
+        profile1D( ptot, sqrt(momErr), Rich::text(tkType)+"/"+hid(rad,id,"momErrVp"),
+                   "Track momentum CK theta error V momentum",
+                   0, 100 );
+      }
 
       if ( msgLevel(MSG::DEBUG) )
       {

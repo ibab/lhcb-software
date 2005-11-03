@@ -5,7 +5,7 @@
  *  Header file for tool : RichFunctionalCKResVpForRecoTracks
  *
  *  CVS Log :-
- *  $Id: RichFunctionalCKResVpForRecoTracks.h,v 1.1 2005-10-13 16:01:55 jonrob Exp $
+ *  $Id: RichFunctionalCKResVpForRecoTracks.h,v 1.2 2005-11-03 14:33:59 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   17/10/2004
@@ -16,7 +16,7 @@
 #define RICHRECTOOLS_RICHFUNCTIONALCKRESVPFORRECOTRACKS_H 1
 
 // base class
-#include "RichRecBase/RichRecToolBase.h"
+#include "RichRecBase/RichRecHistoToolBase.h"
 
 // interfaces
 #include "RichRecBase/IRichCherenkovResolution.h"
@@ -26,6 +26,9 @@
 
 // GSL
 #include "gsl/gsl_math.h"
+
+// temporary histogramming numbers
+#include "RichRecBase/RichDetParams.h"
 
 //----------------------------------------------------------------------------------------
 /** @class RichFunctionalCKResVpForRecoTracks RichFunctionalCKResVpForRecoTracks.h
@@ -40,7 +43,7 @@
  */
 //----------------------------------------------------------------------------------------
 
-class RichFunctionalCKResVpForRecoTracks : public RichRecToolBase,
+class RichFunctionalCKResVpForRecoTracks : public RichRecHistoToolBase,
                                            virtual public IRichCherenkovResolution
 {
 
