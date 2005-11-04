@@ -61,13 +61,13 @@ use PatChecker          v1r2    Pat   # Olivier Callot
 use PatFitParams        v1r1    Pat   # Olivier Callot
 
 # L1 reconstruction and decision
-use L1Reco		v7r1    Trg   # Mariusz Witek
+use L1Reco              v7r2    Trg   # Mariusz Witek
 use L1Decision          v5r2    Trg   # Thomas Schietinger
 
 # Muon
 use MuonUtils		v1r0	Muon  # N.N.
-use MuonRec             v2r4p1	Muon  # N.N.
-use MuonID              v3r7p2	Muon  # N.N.
+use MuonRec             v2r4p1	Muon  # Danilo Domenici
+use MuonID              v3r7p2	Muon  # Erica Polycarpo
 use MuonMoniDst         v1r0    Muon  # Alessio Sarti
 
 # Rich
