@@ -1,4 +1,4 @@
-// $Id: Generation.cpp,v 1.1 2005-10-03 10:28:25 robbep Exp $
+// $Id: Generation.cpp,v 1.2 2005-11-04 10:57:06 robbep Exp $
 // Include files 
 
 // local
@@ -97,8 +97,8 @@ StatusCode Generation::initialize() {
   
   // Retrieve generation method tool
   m_vertexSmearingTool = 
-    tool< IVertexSmearingTool >( m_vertexSmearingToolName , this ) ;
-  
+    tool< IVertexSmearingTool >( m_vertexSmearingToolName , this ) ;  
+
   // Retrieve decay tool
   if ( "" != m_decayToolName ) m_decayTool = 
     tool< IDecayTool >( m_decayToolName ) ;
@@ -210,9 +210,12 @@ StatusCode Generation::decayEvent( HepMCEvent * theEvent ) {
   GenParticles::iterator itp ;
   for ( itp = theHepMCVector.begin() ; itp != theHepMCVector.end() ; ++itp ) {
     HepMC::GenParticle * thePart = (*itp) ;
-    if ( 1 == thePart -> status() ) {
+    unsigned int status = thePart -> status() ;
+    if ( ( 1 ==status ) || ( ( 888 == status ) && 
+                             ( 0 == thePart -> end_vertex() ) ) ) {
       if ( m_decayTool -> isKnownToDecayTool( thePart -> pdg_id() ) ) {
-        thePart -> set_status( 888 ) ;
+        if ( 1 == status ) thePart -> set_status( 888 ) ;
+        else thePart -> set_status( 777 ) ;
         sc = m_decayTool -> generateDecay( pEvt , thePart ) ;
       }
     } 
