@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.43 2005-10-21 16:34:07 cattanem Exp $
+# $Id: requirements,v 1.44 2005-11-04 13:09:30 cattanem Exp $
 # =============================================================================
 package       DetCond
 version       v7r7
@@ -13,7 +13,6 @@ include_dirs  $(DETCONDROOT)
 use           GaudiKernel       v*
 use           GaudiSvc          v*
 use           COOL              v*      LCG_Interfaces
-macro COOL_native_version "COOL_1_2_4"
 use           DetDesc           v*      Det
 # Needed to resolve references to CoolApplication
 apply_tag   NEEDS_COOL_FACTORY
