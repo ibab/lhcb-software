@@ -6,12 +6,12 @@
 !             : Contains packages shared by Boole and other applications   
 !-----------------------------------------------------------------------------
 
-</PRE><H1><A NAME=v3r0>2005-10-21 LbcomSys v3r0</A></H1><PRE>
+</PRE><H1><A NAME=v3r0>2005-11-04 LbcomSys v3r0</A></H1><PRE>
 This version is built against LHCb v19r0 and Gaudi v17r1.
 
-- Packages modified: L0Checker v3r2, ITAlgorithms v15r1
+- Packages modified: L0Checker v3r2p1, ITAlgorithms v15r1
 
-- In L0Checker v3r2
+- In L0Checker v3r2p1
   . Move to GaudiTupleAlg
 
 - In ITAlgorithms v15r1
