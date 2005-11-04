@@ -1,4 +1,4 @@
-// $Id: Track.cpp,v 1.17 2005-10-13 13:19:36 erodrigu Exp $ // Include files
+// $Id: Track.cpp,v 1.18 2005-11-04 13:06:25 erodrigu Exp $ // Include files
 
 // local
 #include "Event/Track.h"
@@ -196,11 +196,11 @@ void Track::reset()
   m_flags      = 0;
   m_lhcbIDs.clear();
   for (std::vector<State*>::iterator it = m_states.begin();
-       it != m_states.end(); it++) delete *it;
+       it != m_states.end(); ++it) delete *it;
   for (std::vector<Measurement*>::iterator it2 = m_measurements.begin();
-       it2 != m_measurements.end(); it2++) delete *it2;
+       it2 != m_measurements.end(); ++it2) delete *it2;
   for (std::vector<Node*>::iterator it3 = m_nodes.begin();
-       it3 != m_nodes.end(); it3++) delete *it3;
+       it3 != m_nodes.end(); ++it3) delete *it3;
   m_states.clear();
   m_measurements.clear();
   m_nodes.clear();
@@ -219,14 +219,14 @@ Track* Track::cloneWithKey( ) const
   tr->setFlags( flags() );
   tr->setLhcbIDs( lhcbIDs() );
   for (std::vector<State*>::const_iterator it = m_states.begin();
-       it != m_states.end(); it++) tr->addToStates( *(*it));
+       it != m_states.end(); ++it) tr->addToStates( *(*it));
   for (std::vector<Measurement*>::const_iterator it2 = m_measurements.begin();
-       it2 != m_measurements.end(); it2++) 
+       it2 != m_measurements.end(); ++it2) 
     tr->addToMeasurements( *(*it2) );
   for (std::vector<Node*>::const_iterator it3 = m_nodes.begin();
-       it3 != m_nodes.end(); it3++) tr->addToNodes( (*it3)->clone() );
+       it3 != m_nodes.end(); ++it3) tr->addToNodes( (*it3)->clone() );
   for (SmartRefVector<Track>::const_iterator it4 = m_ancestors.begin();
-       it4 != m_ancestors.end();  it4++) tr->addToAncestors(*(*it4));
+       it4 != m_ancestors.end();  ++it4) tr->addToAncestors(*(*it4));
   
   return tr;
 };
@@ -242,20 +242,20 @@ Track* Track::clone() const
   tr->setFlags( flags() );
   tr->setLhcbIDs( lhcbIDs() );
   for (std::vector<State*>::const_iterator it = m_states.begin();
-       it != m_states.end(); it++) tr->addToStates( *(*it));
+       it != m_states.end(); ++it) tr->addToStates( *(*it));
   for (std::vector<Measurement*>::const_iterator it2 = m_measurements.begin();
-       it2 != m_measurements.end(); it2++) 
+       it2 != m_measurements.end(); ++it2) 
     tr->addToMeasurements( *(*it2) );
   for (std::vector<Node*>::const_iterator it3 = m_nodes.begin();
-       it3 != m_nodes.end(); it3++) tr->addToNodes( (*it3)->clone() );
+       it3 != m_nodes.end(); ++it3) tr->addToNodes( (*it3)->clone() );
   for (SmartRefVector<Track>::const_iterator it4 = m_ancestors.begin();
-       it4 != m_ancestors.end();  it4++) tr->addToAncestors(*(*it4));
+       it4 != m_ancestors.end();  ++it4) tr->addToAncestors(*(*it4));
   
   return tr;
 };
 
 //=============================================================================
-// 
+// Add a State to the list of States associated to the Track
 //=============================================================================
 void Track::addToStates(const State& state) 
 {
@@ -270,7 +270,7 @@ void Track::addToStates(const State& state)
 }
 
 //=============================================================================
-// 
+// Add a Measurement to the list associated to the Track
 //=============================================================================
 void Track::addToMeasurements(const Measurement& meas) 
 {
@@ -288,7 +288,7 @@ void Track::addToMeasurements(const Measurement& meas)
 }
 
 //=============================================================================
-// 
+// Remove a Measurement from the list of Measurements associated to the Track
 //=============================================================================
 void Track::removeFromMeasurements(Measurement* meas) 
 {
@@ -298,7 +298,7 @@ void Track::removeFromMeasurements(Measurement* meas)
 }
 
 //=============================================================================
-// 
+// Remove a Node from the list of Nodes associated to the Track
 //=============================================================================
 void Track::removeFromNodes(Node* node) 
 {
@@ -306,11 +306,29 @@ void Track::removeFromNodes(Node* node)
 }
 
 //=============================================================================
-// 
+// Remove a State from the list of States associated to the Track
 //=============================================================================
 void Track::removeFromStates(State* state) 
 {
   TrackFunctor::deleteFromList<State>(m_states,state);
+}
+
+//=============================================================================
+// Check whether the given LHCbID is on the Track
+//=============================================================================
+bool Track::isOnTrack( const LHCbID& value ) 
+{
+  std::vector<LHCbID>::const_iterator it =
+    std::find( m_lhcbIDs.begin(), m_lhcbIDs.end(), value );
+  return ( it != m_lhcbIDs.end() );
+}
+
+//=============================================================================
+// Check whether the given Measurement is on the Track
+//=============================================================================
+bool Track::isOnTrack( const Measurement& value ) 
+{
+  return isOnTrack( value.lhcbID() );
 }
 
 //=============================================================================

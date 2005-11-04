@@ -35,7 +35,7 @@
 <!--
   /** Track history enumerations:
    *  each entry corresponds to the name of the pattern recognition
-   *  algorithm that produced the track
+   *  algorithm that produced the Track
    *
    *   HistoryUnknown   : unkown history (i.e. history not set)
    *   TrackIdealPR     : track produced with the ideal pattern recognition
@@ -181,60 +181,60 @@
       <attribute
         type   = 'double'
         name   = 'chi2PerDoF'
-        desc   = 'chi^2 per degree of freedom of the track'
+        desc   = 'chi^2 per degree of freedom of the Track'
         access = 'PROTECTED' />
 
       <attribute
         type   = 'int'
         name   = 'nDoF'
-        desc   = 'number of degrees of freedom of the track'
+        desc   = 'number of degrees of freedom of the Track'
         access = 'PROTECTED' />
 
      <attribute
        type    = 'bitfield'
        name    = 'flags'
-       desc    = 'the variety of track flags'
+       desc    = 'the variety of Track flags'
        init    = '0'
        access  = 'PROTECTED'>
        <bitfield
          name      = 'type'
          length    = '5'
-         desc      = 'track type'
+         desc      = 'Track type'
          setMeth   = 'TRUE'
          getMeth   = 'TRUE'
          checkMeth = 'FALSE' />
        <bitfield
          name      = 'history'
          length    = '7'
-         desc      = 'specifies the pattern recogn algorithm that created the track'
+         desc      = 'specifies the pattern recogn algorithm that created the Track'
          setMeth   = 'TRUE'
          getMeth   = 'TRUE'
          checkMeth = 'FALSE' />
        <bitfield
          name      = 'historyFit'
          length    = '3'
-         desc      = 'specifies the fitting algorithm the fitted the track)'
+         desc      = 'specifies the fitting algorithm the fitted the Track)'
          setMeth   = 'TRUE'
          getMeth   = 'TRUE'
          checkMeth = 'FALSE' />
        <bitfield
          name      = 'status'
          length    = '3'
-         desc      = 'status of the track'
+         desc      = 'status of the Track'
 	 setMeth   = 'TRUE'
          getMeth   = 'TRUE'
          checkMeth = 'FALSE' />
        <bitfield
          name      = 'flag'
          length    = '10'
-         desc      = 'track flags'
+         desc      = 'Track flags'
          setMeth   = 'FALSE'
          getMeth   = 'TRUE'
          checkMeth = 'FALSE' />
        <bitfield
          name      = 'specific'
          length    = '4'
-         desc      = 'track specific bits'
+         desc      = 'Track specific bits'
          setMeth   = 'TRUE'
          getMeth   = 'TRUE'
          checkMeth = 'FALSE' />
@@ -276,7 +276,7 @@
         name      = "ancestors"
         access    = 'PROTECTED'
         setMeth   = 'FALSE'
-        desc      = "ancestor tracks that created this one" 
+        desc      = "ancestor Tracks that created this one" 
         multiplicity = "N" 
         serialize = 'FALSE' />
 
@@ -379,7 +379,7 @@
       <method
         type    = 'State &amp;'
         name    = 'firstState'
-        desc    = 'Retrieve the first state on the track'
+        desc    = 'Retrieve the first state on the Track'
         const   = 'TRUE'>
         <code>
   // check at least the &quot;first state&quot; exists
@@ -395,7 +395,7 @@
         type    = 'int'
         name    = 'charge'
         const   = 'TRUE'
-        desc    = 'Retrieve the charge assigned to the track'>
+        desc    = 'Retrieve the charge assigned to the Track'>
         <code>
   double qP = firstState().qOverP();
   return ( qP != 0. ? int(fabs(qP)/qP) : 0 );
@@ -406,7 +406,7 @@
         type    = 'double'
         name    = 'chi2'
         const   = 'TRUE'
-        desc    = 'Retrieve the Chi^2 of the track (fit)'>
+        desc    = 'Retrieve the Chi^2 of the Track (fit)'>
         <code>
   return ( m_chi2PerDoF * double(m_nDoF) );
         </code>
@@ -416,7 +416,7 @@
         type    = 'unsigned int'
         name    = 'nStates'
         const   = 'TRUE'
-        desc    = 'Retrieve the number of states on the track'>
+        desc    = 'Retrieve the number of states on the Track'>
         <code>
   return m_states.size();
         </code>
@@ -424,13 +424,13 @@
       
     <method
         name    = 'addToStates'
-       desc    = 'Add a State to the list of states associated to the track'>
+       desc    = 'Add a State to the list of States associated to the Track'>
         <arg type = 'const State' name=' state' />
       </method>
 
      <method
         name    = 'removeFromStates'
-        desc    = 'Remove a State from the list of states associated to the track'
+        desc    = 'Remove a State from the list of states associated to the Track'
         argList = 'State* value'>
       </method>
 
@@ -466,26 +466,26 @@
         type    = 'bool'
         name    = 'hasStateAt'
         argList = 'unsigned int location'
-        desc    = 'Check the existence of a state at a certain predefined location (see the Location enum in StateKeys.h)'
+        desc    = 'Check the existence of a state at a certain predefined location (see the Location enum in State.h)'
         const   = 'TRUE' />
 
       <method
         type    = 'State &amp;'
         name    = 'stateAt'
         argList = 'unsigned int location'
-        desc    = 'Retrieve the state at a certain predefined location (see the Location enum in StateKeys.h)' />
+        desc    = 'Retrieve the state at a certain predefined location (see the Location enum in State.h)' />
 
       <method
         type    = 'const State &amp;'
         name    = 'stateAt'
         argList = 'unsigned int location'
-        desc    = 'Retrieve the const state at a certain predefined location (see the Location enum in StateKeys.h)'
+        desc    = 'Retrieve the const state at a certain predefined location (see the Location enum in State.h)'
         const   = 'TRUE' />
 
       <method
         type    = 'unsigned int'
         name    = 'nMeasurements'
-        desc    = 'Retrieve the number of measurements on the track'
+        desc    = 'Retrieve the number of measurements on the Track'
         const   = 'TRUE'>
         <code>
   unsigned int n = m_measurements.size();
@@ -511,19 +511,19 @@
 
       <method
         name    = 'addToMeasurements'
-        desc    = 'Add a measurement to the list associated to the track'>
+        desc    = 'Add a Measurement to the list associated to the Track'>
         <arg type = 'const Measurement' name='meas' />
       </method>
 
      <method
         name    = 'removeFromMeasurements'
-        desc    = 'Remove a measurement from the list of measurements associated to the track'
+        desc    = 'Remove a Measurement from the list of Measurements associated to the Track'
         argList = 'Measurement* value'>
       </method>
 
       <method
         name    = 'addToNodes'
-        desc    = 'Add a Node to the list of nodes (note: Track will take the ownership of this pointer!!)'>
+        desc    = 'Add a Node to the list of Nodes (note: Track will take the ownership of this pointer!!)'>
         <arg type = 'Node*' name='node' />
         <code>
   m_nodes.push_back( node );
@@ -532,13 +532,13 @@
 
      <method
         name    = 'removeFromNodes'
-        desc    = 'Remove a Node from the list of nodes associated to the track'
+        desc    = 'Remove a Node from the list of Nodes associated to the Track'
         argList = 'Node* value'>
       </method>
 
      <method
         name    = 'addToLhcbIDs'
-        desc    = 'Add an LHCbID to the list of LHCbIDs associated to the track'
+        desc    = 'Add an LHCbID to the list of LHCbIDs associated to the Track'
         argList = 'LHCbID value'>
         <code>
   m_lhcbIDs.push_back( value );
@@ -547,7 +547,7 @@
 
      <method
         name    = 'removeFromLhcbIDs'
-        desc    = 'Remove an LHCbID from the list of LHCbIDs associated to the track'
+        desc    = 'Remove an LHCbID from the list of LHCbIDs associated to the Track'
         argList = 'LHCbID value'>
         <code>
   std::vector&lt;LHCbID&gt;::iterator iter =
@@ -558,44 +558,31 @@
 
       <method
         name    = 'addToAncestors'
-        desc    = 'Add a track to the list of ancestors of this track'>
+        desc    = 'Add a Track to the list of ancestors of this Track'>
         <arg type = 'const Track ' name='ancestor' />
         <code>
   m_ancestors.push_back( (Track*) &amp;ancestor );
         </code>
       </method>
 
-<!--
-    <method
-        name    = 'removeFromAncestors'
-        desc    = 'Remove an ancestor track from the list of ancestors associated to the track'
-        argList = 'Track&amp; value'>
-        <code>
-  SmartRefVector&lt;Track&gt;::iterator iter =
-    std::remove( m_ancestors.begin(), m_ancestors.end(), &amp;value );
-  m_ancestors.erase( iter, m_ancestors.end() );
-        </code>
-      </method>
--->
-
       <method
         type    = 'void'
         name    = 'reset'
 	virtual = 'TRUE'
-        desc    = 'Clear the track before re-use'>
+        desc    = 'Clear the Track before re-use'>
       </method>
 
       <method
         type    = 'Track*'
         name    = 'cloneWithKey'
-        desc    = 'Clone the track keeping the key (you take ownership of the pointer)'
+        desc    = 'Clone the Track keeping the key (you take ownership of the pointer)'
 	virtual = 'TRUE'
         const   = 'TRUE' />
 
       <method
         type    = 'Track*'
         name    = 'clone'
-        desc    = 'Clone the track (you take ownership of the pointer)'
+        desc    = 'Clone the Track (you take ownership of the pointer)'
 	virtual = 'TRUE'
         const   = 'TRUE' />
 
@@ -603,7 +590,7 @@
         type    = 'bool'
         name    = 'checkType'
         argList = 'unsigned int value'
-        desc    = 'Check the type of the track (see the Types enum in TrackKeys.h)'
+        desc    = 'Check the type of the Track (see the Types enum)'
         const   = 'TRUE'>
         <code>
   return type() == value;
@@ -614,7 +601,7 @@
         type    = 'bool'
         name    = 'checkHistory'
         argList = 'unsigned int value'
-        desc    = 'Check the history of the track (see the History enum in TrackKeys.h)'
+        desc    = 'Check the history of the Track (see the History enum)'
         const   = 'TRUE'>
         <code>
   return history() == value;
@@ -625,7 +612,7 @@
         type    = 'bool'
         name    = 'checkHistoryFit'
         argList = 'unsigned int value'
-        desc    = 'Check the fit history of the track (see the HistoryFit enum in TrackKeys.h)'
+        desc    = 'Check the fit history of the Track (see the HistoryFit enum)'
         const   = 'TRUE'>
         <code>
   return historyFit() == value;
@@ -635,7 +622,7 @@
       <method
         name    = 'setFlag'
         argList = 'unsigned int flag, bool ok'
-        desc    = 'Update the flag (see the Flags enum in TrackKeys.h)'>
+        desc    = 'Update the flag (see the Flags enum)'>
         <code>
   unsigned int val = (((unsigned int) flag) &lt;&lt; flagBits) &amp; flagMask;
   if (ok) m_flags |= val;
@@ -647,7 +634,7 @@
         type    = 'bool'
         name    = 'checkFlag'
         argList = 'unsigned int flag'
-        desc    = 'Check the status of the flag (see the Flags enum in TrackKeys.h)'
+        desc    = 'Check the status of the flag (see the Flags enum)'
         const   = 'TRUE'>
         <code>
   unsigned int val = ((unsigned int) flag &lt;&lt; flagBits);  
@@ -655,6 +642,20 @@
   return ok;
         </code>
       </method> 
+
+      <method
+        type    = 'bool'
+        name    = 'isOnTrack'
+        argList = 'const LHCbID value'
+        desc    = 'Check whether the given LHCbID is on the Track'>
+      </method>
+
+      <method
+        type    = 'bool'
+        name    = 'isOnTrack'
+        argList = 'const Measurement value'
+        desc    = 'Check whether the given Measurement is on the Track'>
+      </method>
 
     </class>
 

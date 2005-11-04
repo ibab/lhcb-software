@@ -26,7 +26,7 @@ std::ostream& str::states(const std::vector<State*>& states,
 			  std::ostream& os) {
   os << "-- track states -- " << std::endl;
   for (std::vector<State*>::const_iterator it = states.begin(); 
-       it != states.end(); it++) {
+       it != states.end(); ++it) {
     const State& state = *(*it);
     str::state(state,os); os << std::endl;
   }
@@ -47,7 +47,7 @@ std::ostream& str::state(const State& state, std::ostream& os) {
 std::ostream& str::lhcbIDs(const std::vector<LHCbID>& ids, std::ostream& os) {
   os << "-- LHCbIDs -- " << std::endl;
   for (std::vector<LHCbID>::const_iterator it = ids.begin();
-       it != ids.end(); it++) 
+       it != ids.end(); ++it) 
     str::lhcbID(*it,os); os << std::endl;
   return os;
 }

@@ -1,4 +1,4 @@
-// $Id: State.cpp,v 1.7 2005-10-13 13:19:35 erodrigu Exp $
+// $Id: State.cpp,v 1.8 2005-11-04 13:06:25 erodrigu Exp $
 
 #include <math.h>
 #include <gsl/gsl_math.h>
@@ -70,8 +70,8 @@ HepSymMatrix State::posMomCovariance() const
   index.push_back( 4 );
   index.push_back( 5 );
 
-  for ( int jj=0 ; jj<5 ; jj++ ) {
-    for ( int i=jj ; i<5 ; i++ ) {
+  for ( int jj=0 ; jj<5 ; ++jj ) {
+    for ( int i=jj ; i<5 ; ++i ) {
       cov6Dtmp.fast(index[i]+1,index[jj]+1) = cov5D.fast(i+1,jj+1);
     }
   }
