@@ -1,4 +1,4 @@
-C $Id: phocin.F,v 1.2 2005-08-22 16:21:09 ranjard Exp $
+C $Id: phocin.F,v 1.3 2005-11-04 10:55:41 robbep Exp $
       SUBROUTINE PHOCIN
 C.----------------------------------------------------------------------
 C.
@@ -12,7 +12,7 @@ C.    Output Parameters:  Commons /PHOLUN/, /PHOPHO/, /PHOCOP/, /PHPICO/
 C.                                and /PHSEED/.
 C.
 C.    Author(s):  B. van Eijk                     Created at:  26/11/89
-C.                Z. Was                          Last Update: 26/06/04
+C.                Z. Was                          Last Update: 29/01/05
 C.
 C.----------------------------------------------------------------------
       IMPLICIT NONE
@@ -55,7 +55,8 @@ C--   Logical output unit for printing of PHOTOS error messages
       IF ( PHLUN .NE. 73 ) PHLUN=6
 C--
 C--   Set cut parameter for photon radiation
-      XPHCUT=0.01 ! 0.00001D0
+      XPHCUT=0.01 D0 ! 0.0001D0! to go to low valuex (IEXP excepted) 
+C--                            ! switch to - VARIANT B
 C--
 C--   Define some constants
       ALPHA=0.00729735039D0
@@ -68,22 +69,22 @@ C--   Default seeds Marsaglia and Zaman random number generator
 C--
 C--   Iitialization for extra options
 C--   (1)
-C--   Interference weight for two body symmetric channels only. 
+C--   Interference weight now universal. 
       INTERF=.TRUE.
 C--   (2)
 C--   Second order - double photon switch
       ISEC=.TRUE.
-C--   Third/fourth order - triple (or quatric) photon switch, see dipswitch ifour
-      ISEC=.TRUE.
+C--   Third/fourth order - triple (or quatric) photon switch, 
+C--                        see dipswitch ifour
       ITRE=.FALSE.
 C--   Exponentiation on:
-      IEXP=.FALSE.
+      IEXP=.FALSE. !.TRUE.
       IF (IEXP) THEN
       ISEC=.FALSE.
       ITRE=.FALSE.
-      CALL PHCORK(5)  ! in case of exponentiation correction of phase space 
+      CALL PHCORK(5)  ! in case of exponentiation correction of ph space
                       ! is a default mandatory
-      XPHCUT=0.000 000 1
+      XPHCUT=0.000 000 1 
       EXPEPS=1D-4
       ENDIF
 C--   (3)
@@ -92,18 +93,34 @@ C--                                 t          --> W b
       IFTOP=.TRUE.
 C--
 C--   further initialization done automatically
+C--   see places with - VARIANT A - VARIANT B - all over
+C--   to switch between options.     
+C ----------- SLOWER VARIANT A, but stable ------------------
+C --- it is limiting choice for small XPHCUT in fixed orer
+C --- modes of operation
       IF (INTERF) THEN
 C--   best choice is if FINT=2**N where N+1 is maximal number 
 C--   of charged daughters
 C--   see report on overweihted events
-        FINT=1.9D0
+        FINT=2.0D0
       ELSE
-        FINT=0.0D0
+        FINT=1.0D0
       ENDIF
+C ----------- FASTER VARIANT B  ------------------
+C -- it is good for tests of fixed order and small XPHCUT
+C -- but is less promising for more complex cases of interference
+C -- sometimes fails because of that
+C 
+C      IF (INTERF) THEN
+C       FINT=1.80D0
+C      ELSE
+C        FINT=0.0D0
+C      ENDIF
+C----------END VARIANTS A B -----------------------	
+
 C--   Effects of initial state charge (in leptonic W decays)
 C--   
       IFW=.TRUE.
-
 C--   Initialise status counter for warning messages
       DO 20 I=1,PHOMES
    20 STATUS(I)=0
