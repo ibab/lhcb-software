@@ -1,9 +1,21 @@
-! $Id: release.notes,v 1.44 2005-10-31 15:27:28 asarti Exp $
+! $Id: release.notes,v 1.45 2005-11-04 16:05:29 asarti Exp $
 !
 ! Package     : MuonDet
 ! Responsible : Alessia Satta
 
 !========================= MuonDet v4r8 2005-07-01 =========================
+! 2005-11-04 - Alessio Sarti
+   - src/Lib/MuonChamberGrid.cpp (.h accordingly)
+	Added relative distance from boundaries.
+	Remember that all distances ARE not absolute distances
+	but relative to the chamber dimensions!
+   - src/Lib/DeMuonDetector.cpp (.h accordingly)
+	Fixed a bug in the call to a chamber pointer.
+	Added the method for the list of physical 
+	channels retrieval. It only needs hit_entry and 
+	hit_exit and returns:
+	std::vector< std::pair< MuonFrontEndID,std::vector<float> > >
+
 ! 2005-10-31 - Alessio Sarti
  - Some cleanup and bugfixes after first feedback from users
    - src/component/DeMuonGasGap.cpp, MuonDet/DeMuonGasGap.h

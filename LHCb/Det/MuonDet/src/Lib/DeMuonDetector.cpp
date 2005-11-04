@@ -1,12 +1,14 @@
-// $Id: DeMuonDetector.cpp,v 1.3 2005-10-31 15:27:28 asarti Exp $
+// $Id: DeMuonDetector.cpp,v 1.4 2005-11-04 16:05:29 asarti Exp $
 
 // Include files
 #include "MuonDet/DeMuonDetector.h"
 #include "MuonDet/DeMuonGasGap.h"
+#include "MuonDet/MuonChamberGrid.h"
 #include "MuonDet/MuonChamberLayout.h"
 
 //Detector description
 #include "DetDesc/IGeometryInfo.h"
+#include "DetDesc/SolidBox.h"
 
 //Muon Kernel
 #include "MuonKernel/MuonTileID.h"
@@ -126,7 +128,7 @@ StatusCode DeMuonDetector::Hit2ChamberNumber(HepPoint3D myPoint,
   bool isIn = false; bool debug = false;
   
   MsgStream msg( msgSvc(), name() );
-  double x = myPoint.x();  double y = myPoint.y(); const double z = myPoint.z();
+  double x = myPoint.x();  double y = myPoint.y(); double z = myPoint.z();
   //Returning the most likely chamber
   m_chamberLayout.chamberMostLikely(x,y,station,chamberNumber,regNum);
   
@@ -139,54 +141,56 @@ StatusCode DeMuonDetector::Hit2ChamberNumber(HepPoint3D myPoint,
   //Is the chamber returned containing the hit?
   isIn = geoChm->isInside(myPoint);
 
-
   if(isIn) {
     msg << MSG::DEBUG << "Hit found" <<endreq;
     sc = StatusCode::SUCCESS;
   } else {
 
-    std::cout<<"Starting point::  "<<station<<" "<<chamberNumber<<" "<<regNum<<std::endl;
+    msg << MSG::DEBUG <<"Starting point::  "<<station<<" "<<chamberNumber<<" "<<regNum<<endreq;
 
     //Find the vector of chambers near the one under investigation
     double x_ref(0),y_ref(0); std::vector<DeMuonChamber*> myChams;
     x_ref = geoChm->toGlobal(HepPoint3D(0,0,0)).x();
     y_ref = geoChm->toGlobal(HepPoint3D(0,0,0)).y();
 
-    std::cout<<"Hit not Found  "<<x<<" "<<y<<" "<<z<<" "<<" "<<x_ref<<" "<<y_ref<<" "<<std::endl;
-  
     int x_sgn(0),y_sgn(0);
     //Avoid unnecessary checks for resolution problems
     if(fabs(x-x_ref)>0.01) {x_sgn = (x-x_ref)/fabs(x-x_ref);}
     if(fabs(y-y_ref)>0.01) {y_sgn = (y-y_ref)/fabs(y-y_ref);}
 
-    msg << MSG::DEBUG << "Hit found Try to look in corner "<<x_ref<< " "<<x<<" "<<x_sgn<<" "<<y_ref<<" "<<y<<" "<<y_sgn<<endreq;    
+    msg << MSG::DEBUG << "Hit not found Try to look in corner "<<x_ref<< " "<<x<<" "<<x_sgn<<" "<<y_ref<<" "<<y<<" "<<y_sgn<<endreq;    
 
 
     myChams = m_chamberLayout.neighborChambers(chamberNumber,station,regNum,x_sgn,y_sgn);
 
-    std::cout<<"OK corner  "<<std::endl;
     std::vector<DeMuonChamber*>::iterator aChamber;
     //Loops on found chambers
     for(aChamber = myChams.begin(); aChamber<myChams.end(); aChamber++){
 
-      std::cout<<"Try corner inside Loop:  "<<z<<std::endl;
-      IGeometryInfo* geoOthChm = (*aChamber)->geometry();
+      int tmpChn(0), tmpRen(0), tmpStn(0);
+      tmpChn = (*aChamber)->chamberNumber();
+      tmpRen = (*aChamber)->regionNumber();
+      tmpStn = (*aChamber)->stationNumber();
 
-      //For calls not providing hit z take the z of chamber center
-      if(!z) {myPoint.setZ(geoOthChm->toGlobal(HepPoint3D(0,0,0)).z());}
+      //Accessing Geometry Info
+      IGeometryInfo* geoOthChm = (getChmbPtr(tmpStn,tmpRen,tmpChn))->geometry();  
+      if(geoOthChm) {
+	//For calls not providing hit z take the z of chamber center
+	if(!z) {myPoint.setZ(geoOthChm->toGlobal(HepPoint3D(0,0,0)).z());}
+	
+	isIn = geoOthChm->isInside(myPoint);
 
-      isIn = geoOthChm->isInside(myPoint);
-      if(isIn) {
-	sc = StatusCode::SUCCESS;
-	//Returns the correct region and chamber number
-	chamberNumber = (*aChamber)->chamberNumber();
-	regNum = (*aChamber)->regionNumber();
-	break;
+	if(isIn) {
+	  sc = StatusCode::SUCCESS;
+	  //Returns the correct region and chamber number
+	  chamberNumber = (*aChamber)->chamberNumber();
+	  regNum = (*aChamber)->regionNumber();
+	  break;
+	}
+      } else {
+	msg << MSG::WARNING << "Could not find Geometry info of a given chamber!"<<endreq;    
       }
     }
-
-    std::cout<<"Finished  "<<station<<std::endl;
-
 
     //Debug the chambers returned
     if(debug) {
@@ -200,7 +204,7 @@ StatusCode DeMuonDetector::Hit2ChamberNumber(HepPoint3D myPoint,
   }
 
   if(!isIn) {
-    msg << MSG::WARNING << "Smart chamber seeking didn't work. Go on and perform full loop on all chambers :( !!! " <<endreq;
+    msg << MSG::WARNING << "Smart seek didn't work. Perform loop on all chambers :( !!! " <<endreq;
     int msta(0),mreg(0),mchm(0); 
     //Getting stations
     IDetectorElement::IDEContainer::iterator itSt=this->childBegin();
@@ -224,7 +228,7 @@ StatusCode DeMuonDetector::Hit2ChamberNumber(HepPoint3D myPoint,
 	      sc = StatusCode::SUCCESS;
 	      //Returns the correct region and chamber number
 	      chamberNumber = mchm;  regNum = mreg;
-	      msg << MSG::WARNING << "Hit found in  chamber: " <<chamberNumber<<" , R: "<<regNum<<endreq;
+	      msg << MSG::DEBUG << "Hit found in chamber C: " <<chamberNumber<<" , R: "<<regNum<<" ,S: "<<station<<endreq;
 	      return sc;
 	    }
 	    mchm++;
@@ -468,3 +472,49 @@ void DeMuonDetector::fillChmbPtr() {
   if(debug)  std::cout<<" Filled the chamber pointer "<<std::endl;
   return;
 }
+
+std::vector< std::pair<MuonFrontEndID, std::vector<float> > > DeMuonDetector::listOfPhysChannels(HepPoint3D my_entry, HepPoint3D my_exit) {
+  
+  int regNum(0),chamberNumber(0);
+  int station = getStation(my_entry.z());
+
+  MsgStream msg( msgSvc(), name() );
+
+  //Hit entry
+  Hit2ChamberNumber(my_entry,station,chamberNumber,regNum);
+
+  //Hit exit
+  int regNum1(0),chamberNumber1(0);
+  int station1 = getStation(my_exit.z());
+  Hit2ChamberNumber(my_exit,station1,chamberNumber1,regNum1);
+  
+  if(station != station1 || chamberNumber != chamberNumber1 || regNum != regNum1) { msg << MSG::ERROR <<"Could not return LoC for entry & exit in !=  chambers "<<endreq; }
+  
+  //Getting the chamber pointer.
+  DeMuonChamber*  myChPtr =  getChmbPtr(station,regNum,chamberNumber) ;
+
+  //Chamber Geometry info  
+  IGeometryInfo*  geoCh=myChPtr->geometry();
+  
+  const SolidBox *box = dynamic_cast<const SolidBox *>(geoCh->lvolume()->solid());
+  float dx = box->xHalfLength();  float dy = box->yHalfLength();
+  float mygX = geoCh->toGlobal(HepPoint3D(0,0,0)).x();
+  float mygY = geoCh->toGlobal(HepPoint3D(0,0,0)).y();
+
+  //Getting the grid pointer
+  std::string gName = "/dd/Structure/Grid/"+myChPtr->getGridName();
+  SmartDataPtr<MuonChamberGrid> theGrid (m_detSvc,gName.data());
+
+  //Define relative dimensions
+  float mod_xen = (my_entry.x()-(mygX-dx))/(2*dx);
+  float mod_yen = (my_entry.y()-(mygY-dy))/(2*dy);
+  float mod_xex = (my_exit.x()-(mygX-dx))/(2*dx);
+  float mod_yex = (my_exit.y()-(mygY-dy))/(2*dy);
+
+  //Gets list of channels
+  std::vector< std::pair<MuonFrontEndID, std::vector<float> > > myPair;
+  myPair = theGrid->listOfPhysChannels(mod_xen,mod_yen,mod_xex,mod_yex);
+
+  return myPair;
+}
+  

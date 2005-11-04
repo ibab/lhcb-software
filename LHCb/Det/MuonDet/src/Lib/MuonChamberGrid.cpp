@@ -1,4 +1,4 @@
-// $Id: MuonChamberGrid.cpp,v 1.1 2005-10-25 06:54:28 asarti Exp $
+// $Id: MuonChamberGrid.cpp,v 1.2 2005-11-04 16:05:29 asarti Exp $
 // Include files 
 
 // local
@@ -52,17 +52,19 @@ StatusCode MuonChamberGrid::initialize(){
   m_y_pad_rdout1     = param< std::vector<double> >("yrd1");
   m_x_pad_rdout2     = param< std::vector<double> >("xrd2");
   m_y_pad_rdout2     = param< std::vector<double> >("yrd2");
-  m_readoutType      = param< std::vector<double> >("grrd");
+  m_readoutType      = param< std::vector<int> >("grrd");
 
 
   return StatusCode::SUCCESS;
 }
 
-std::vector<MuonFrontEndID> MuonChamberGrid::listOfPhysChannels(double x_enter,double y_enter,double x_exit,double y_exit) {
+std::vector< std::pair< MuonFrontEndID,std::vector<float> > > MuonChamberGrid::listOfPhysChannels(double x_enter,double y_enter,double x_exit,double y_exit) {
 
-  std::vector<MuonFrontEndID> keepTemporary;
+  std::vector< std::pair< MuonFrontEndID,std::vector<float> > > keepTemporary;
+  std::pair< MuonFrontEndID,std::vector<float> > tmpPair;
   std::vector<double> x_rdout;  
   std::vector<double> y_rdout;
+  std::vector<float> myBoundary; myBoundary.resize(4);
 
   bool parallelFlag = false; 
   double slopeY(0),intercept(0);
@@ -197,7 +199,7 @@ std::vector<MuonFrontEndID> MuonChamberGrid::listOfPhysChannels(double x_enter,d
 			 <<intercept<<" slope: "
 			 <<slopeY<<std::endl;
 
-
+      double xinit,yinit,xend,yend;
       int tmpYBegin(0),tmpYEnd(0);
       double tmpYLenght(0);
       
@@ -230,12 +232,20 @@ std::vector<MuonFrontEndID> MuonChamberGrid::listOfPhysChannels(double x_enter,d
 	if( tmpYEnd>=(int)PhNy)tmpYEnd=(int)PhNy-1 ;	
 
 	nyBegin=tmpYBegin; nyEnd=tmpYEnd;	
+
+	xinit=xBegin;	yinit=yBegin;
+	xend=xEnd;	yend=yEnd;
+	
       } else {
 
 	if( tmpYEnd<0)tmpYEnd=0;
 	if( tmpYBegin>=(int)PhNy)tmpYBegin=(int)PhNy-1 ;
 
 	nyBegin=tmpYEnd; nyEnd=tmpYBegin;
+
+	xinit=xEnd;	yinit=yEnd;
+	xend=xBegin;	yend=yBegin;
+
       }
 
       if(debug) std::cout<< "Debugging Y_beg: "
@@ -243,8 +253,29 @@ std::vector<MuonFrontEndID> MuonChamberGrid::listOfPhysChannels(double x_enter,d
 			 <<nyEnd<<std::endl;
 
       for (unsigned int Yloop=nyBegin;Yloop<=nyEnd;Yloop++){
+	// Compute distance from the boundaries
+	// of the physical channel
+	double myX(0),myY(0);
+	if(nyBegin==nyEnd){
+	  myX = (xinit+xend)/2;
+	  myY = (yinit+yend)/2;
+	} else if(Yloop==nyBegin&&Yloop!=nyEnd){
+	  myX = (xinit + (retLenght(Yloop+1,y_rdout)-intercept)/slopeY)/2;
+	  myY = (yinit + retLenght(Yloop+1,y_rdout))/2;
+	} else if(Yloop!=nyBegin&&Yloop==nyEnd){
+	  myX = (((retLenght(Yloop,y_rdout)-intercept)/slopeY)+xend)/2;
+	  myY = (retLenght(Yloop,y_rdout)+yend)/2;
+	} else {
+	  myX = ((retLenght(Yloop,y_rdout)-intercept)/slopeY + (retLenght(Yloop+1,y_rdout)-intercept)/slopeY)/2;
+	  myY = (retLenght(Yloop,y_rdout) + retLenght(Yloop+1,y_rdout))/2;
+	}
+	
+	myBoundary.at(0) = myX - retLenght(Xloop,x_rdout);
+	myBoundary.at(1) = myY - retLenght(Yloop,y_rdout);		
+	myBoundary.at(2) = retLenght(Xloop+1,x_rdout) - myX;
+	myBoundary.at(3) = retLenght(Yloop+1,y_rdout) - myY;
 
-	MuonFrontEndID* inputPointer = new  MuonFrontEndID  ;				
+	MuonFrontEndID* inputPointer = new  MuonFrontEndID;
 
 	inputPointer->setFEGridX(PhNx);
 	inputPointer->setFEGridY(PhNy);
@@ -254,10 +285,15 @@ std::vector<MuonFrontEndID> MuonChamberGrid::listOfPhysChannels(double x_enter,d
 
 	if(debug) std::cout<< "Hit processing.  RT:: "
 			   <<m_readoutType[iRd]<<" ; Xl = "
-			   <<" "<<Xloop<<" ; Yl = "
+			   <<" "<<Xloop<<" ; Bd = "
+			   <<" "<<myBoundary.at(0)<<" ; Bd2 = "
+			   <<" "<<myBoundary.at(1)<<" ; Bd3 = "
+			   <<" "<<myBoundary.at(2)<<" ; Bd4 = "
+			   <<" "<<myBoundary.at(3)<<" ; Yl = "
 			   <<Yloop<<" "<<std::endl;
 	
-	keepTemporary.push_back(*inputPointer);
+	tmpPair = std::pair< MuonFrontEndID,std::vector<float> >(*inputPointer,myBoundary);
+	keepTemporary.push_back(tmpPair);
 	delete inputPointer;
       }
     }
@@ -268,6 +304,11 @@ std::vector<MuonFrontEndID> MuonChamberGrid::listOfPhysChannels(double x_enter,d
 
 double MuonChamberGrid::retLenght(int nLx,  std::vector<double> my_list){
   double lenght(0);
+  int VctSize = my_list.size();
+  if(nLx > VctSize) {
+    nLx = VctSize;
+    std::cout<<"MuonChamberGrid:: Vector index Out Of Range."<<std::endl;
+  }
   for(int inxLo = 0; inxLo < nLx; inxLo++) {
     lenght += my_list[inxLo];
   }

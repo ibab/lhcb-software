@@ -1,4 +1,4 @@
-// $Id: MuonChamberGrid.h,v 1.1 2005-10-25 06:54:28 asarti Exp $
+// $Id: MuonChamberGrid.h,v 1.2 2005-11-04 16:05:29 asarti Exp $
 #ifndef MUONDET_MUONCHAMBERGRID_H 
 #define MUONDET_MUONCHAMBERGRID_H 1
 
@@ -26,9 +26,8 @@ public:
 
   StatusCode initialize();
   
-
-  std::vector<MuonFrontEndID> listOfPhysChannels(double x_enter,double y_enter,
-						 double x_exit,double y_exit);
+  std::vector< std::pair<MuonFrontEndID, std::vector<float> > > listOfPhysChannels(double x_enter,double y_enter,
+										   double x_exit,double y_exit);
   
   double retLenght(int nLx,  std::vector<double> my_list);
 
@@ -41,7 +40,7 @@ public:
     return m_number_of_grid;
   }
 
-  inline std::vector<double> MuonChamberGrid::getReadoutGrid(){
+  inline std::vector<int> MuonChamberGrid::getReadoutGrid(){
     return m_readoutType;
   }
 
@@ -50,7 +49,7 @@ protected:
 private:
 
   int m_number_of_grid;
-  std::vector<double> m_readoutType;
+  std::vector<int> m_readoutType;
   std::vector<double> m_x_pad_rdout1;
   std::vector<double> m_y_pad_rdout1;
   std::vector<double> m_x_pad_rdout2;

@@ -1,4 +1,4 @@
-// $Id: DeMuonDetector.h,v 1.3 2005-10-31 15:27:28 asarti Exp $
+// $Id: DeMuonDetector.h,v 1.4 2005-11-04 16:05:29 asarti Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
@@ -8,13 +8,15 @@
 //Det Desc
 #include "DetDesc/DetectorElement.h"
 
-#include "MuonKernel/MuonTileID.h"
-
 //Gaudi
 #include "GaudiKernel/IDataProviderSvc.h"
 
+//Muon Kernel
+#include "MuonKernel/MuonTileID.h"
+
 //Muon Detector
 #include "MuonDet/MuonChamberLayout.h"
+#include "MuonDet/MuonFrontEndID.h"
 
 /** @class DeMuonDetector DeMuonDetector.h MuonDet/DeMuonDetector.h
  *  
@@ -88,7 +90,9 @@ public:
                                 const double y,
                                 const double z,
                                 DeMuonChamber* & chamberPointer);
-  
+
+  //Returns the list of physical channels for a given chamber  
+  std::vector< std::pair<MuonFrontEndID, std::vector<float> > > listOfPhysChannels(HepPoint3D my_entry, HepPoint3D my_exit);
   
   //Returns the station index starting from the z position
   int getStation(const double z);
