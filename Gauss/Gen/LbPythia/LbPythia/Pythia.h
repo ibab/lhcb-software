@@ -1,4 +1,4 @@
-// $Id: Pythia.h,v 1.1 2005-10-03 10:33:00 robbep Exp $
+// $Id: Pythia.h,v 1.2 2005-11-04 11:00:09 robbep Exp $
 #ifndef LBPYTHIA_PYTHIA_H 
 #define LBPYTHIA_PYTHIA_H 1
 
@@ -44,6 +44,8 @@ public:
   static int PyComp( int val ) ;
   static void PdfLib_End( ) ;
   static void PyStat( int val ) ;
+  static void PyEdit( int val ) ;
+  static void PyExec( ) ;
 
 protected:
 

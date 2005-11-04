@@ -1,4 +1,4 @@
-// $Id: Pythia.cpp,v 1.1 2005-10-03 10:33:00 robbep Exp $
+// $Id: Pythia.cpp,v 1.2 2005-11-04 11:00:09 robbep Exp $
 // Include files
 
 // local
@@ -217,3 +217,36 @@ void Pythia::PyStat( int val ) {
 #endif
 }
 
+// PYEDIT Fortran function
+extern "C" {
+#ifdef WIN32
+  void __stdcall PYEDIT( int * ) ;
+#else
+  void pyedit_ ( int * ) ;
+#endif
+} 
+
+void Pythia::PyEdit( int val ) {
+#ifdef WIN32
+  PYEDIT( &val ) ;
+#else
+  pyedit_ ( &val ) ;
+#endif
+}
+
+// PYEDIT Fortran function
+extern "C" {
+#ifdef WIN32
+  void __stdcall PYEXEC( ) ;
+#else
+  void pyexec_ ( ) ;
+#endif
+} 
+
+void Pythia::PyExec( ) {
+#ifdef WIN32
+  PYEXEC( ) ;
+#else
+  pyexec_ ( ) ;
+#endif
+}
