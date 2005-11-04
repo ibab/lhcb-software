@@ -1,48 +1,22 @@
-C $Id: pykfdi.F,v 1.1.1.1 2005-06-21 12:40:51 robbep Exp $
+C $Id: pykfdi.F,v 1.2 2005-11-04 11:01:12 robbep Exp $ 
 C********************************************************************
-
-C...  PYKFDI
-C...  Generates a new flavour pair and combines off a hadron
-
-      SUBROUTINE PYKFDI(KFL1,KFL2,KFL3,KF)
-
-      IMPLICIT NONE
-C...  The following declarations are needed in order to
-C...  use the implicit none statement (PB)
-
-C
-C  Internal PYTHIA common blocks are not mentioned here
-C  A.Tsaregorodtsev, 16/06/98
-C
-
-
-C-----------------------------------------------------------------
-      DOUBLE PRECISION P,V,PARU,PARJ,PMAS,PARF,VCKM
-      INTEGER          K,MSTU,N,NPAD,MSTJ,KCHG
  
+C...PYKFDI
+C...Generates a new flavour pair and combines off a hadron
+ 
+      SUBROUTINE PYKFDI(KFL1,KFL2,KFL3,KF)
+ 
+C...Double precision and integer declarations.
+      IMPLICIT DOUBLE PRECISION(A-H, O-Z)
+      IMPLICIT INTEGER(I-N)
+      INTEGER PYK,PYCHGE,PYCOMP
 C...Commonblocks.
-C...The event record.
-      COMMON/PYJETS/N,NPAD,K(4000,5),P(4000,5),V(4000,5)
-C...Parameters.
       COMMON/PYDAT1/MSTU(200),PARU(200),MSTJ(200),PARJ(200)
-C...Particle properties + some flavour parameters.
       COMMON/PYDAT2/KCHG(500,4),PMAS(500,4),PARF(2000),VCKM(4,4)
-
-      INTEGER KFL1,KFL2,KFL3,KF, KFIN,
-     &     KFL3A, KFL1A, KFL1B, KFL2A, KFL2B, KFL1S, KFL2S, KFL3B, 
-     &     KFLA, KFLB, KFLC, KFLD, KFLDS, KFLE, KFLF, KFLG, KFLS,
-     &     KBARY, MBARY, KDMAX, KMUL, KSIG, 
-     &     KC, KFJ, KFS, KFQOLD, KFQPOP, KFQVER, KFDIQ, KF1A, KF2A,  
-     &     I, IDIAG, IDW, IMES, IMIX, IPOS, IRANK, 
-     &     KTAB1, KTAB2, KTAB3, KTABS, KT3, KT3L, KT3U, KTS 
-      DOUBLE PRECISION SU6DEC, SU6MAX, SU6S, SU6WT, SU6OCT, 
-     &     QAWT, RMES, RMUL, RMIX, RFL, SQWT, SWT, PD
-      DOUBLE PRECISION PYR, PYCOMP
-      EXTERNAL PYR, PYCOMP
-      
       SAVE /PYDAT1/,/PYDAT2/
+C...Local arrays.
       DIMENSION PD(7)
-      
+ 
 C(PB)
 
       IF(MSTU(150).NE.0) THEN
@@ -89,13 +63,12 @@ c     &        ' with string fragment ', MSTJ(34)
  99   CONTINUE
 
       IF(MSTU(123).EQ.0.AND.MSTJ(12).GE.0)  CALL PYKFIN
-
-
+ 
 C...Default flavour values. Input consistency checks.
-      KF1A = IABS(KFL1)
-      KF2A = IABS(KFL2)
-      KFL3 = 0
-      KF   = 0
+      KF1A=IABS(KFL1)
+      KF2A=IABS(KFL2)
+      KFL3=0
+      KF=0
       IF(KF1A.EQ.0) RETURN
       IF(KF2A.NE.0)THEN
         IF(KF1A.LE.10.AND.KF2A.LE.10.AND.KFL1*KFL2.GT.0) RETURN
@@ -273,7 +246,7 @@ C..x->H+qq: form outgoing diquark with KFQPOP flag at 10000-pos
       ENDIF
       KFDIQ=900*MAX(KFQVER,KFQPOP)+100*(KFQVER+KFQPOP)+KFLDS
      &      +10000*KFQPOP
-       KFL3=ISIGN(KFDIQ,KFIN)
+      KFL3=ISIGN(KFDIQ,KFIN)
  
 C..x->M+y: flavour for meson.
   130 IF(MBARY.LE.0)THEN

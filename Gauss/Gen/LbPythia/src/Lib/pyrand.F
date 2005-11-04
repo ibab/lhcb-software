@@ -1,4 +1,4 @@
-C  $Id: pyrand.F,v 1.1.1.1 2005-06-21 12:40:51 robbep Exp $ 
+C $Id: pyrand.F,v 1.2 2005-11-04 11:01:12 robbep Exp $ 
 C*********************************************************************
  
 C...PYRAND
@@ -60,7 +60,6 @@ C...Initial values, specifically for (first) semihard interaction.
       MINT(10)=0
       MINT(17)=0
       MINT(18)=0
-      VINT(97)=1D0
       VINT(143)=1D0
       VINT(144)=1D0
       VINT(157)=0D0
@@ -73,6 +72,7 @@ C...Initial values, specifically for (first) semihard interaction.
   100 LOOP=LOOP+1
       MINT(51)=0
       MINT(143)=1
+      VINT(97)=1D0
  
 C...Start by assuming incoming photon is entering subprocess.
       IF(MINT(11).EQ.22) THEN
@@ -113,10 +113,10 @@ C...For real gamma + gamma with different nature, flip at random.
  
 C...Pick process type, possibly by user process machinery.
 C...(If the latter, also event will be picked here.)
-        IF(MINT(111).EQ.11.AND.IABS(IDWTUP).EQ.2.AND.LOOP.GE.2) THEN
+        IF(MINT(111).GE.11.AND.IABS(IDWTUP).EQ.2.AND.LOOP.GE.2) THEN
           CALL UPEVNT
           CALL PYUPRE
-        ELSEIF(MINT(111).EQ.11.AND.IABS(IDWTUP).GE.3) THEN
+        ELSEIF(MINT(111).GE.11.AND.IABS(IDWTUP).GE.3) THEN
           CALL UPEVNT
           CALL PYUPRE
           ISUB=0
@@ -126,7 +126,7 @@ C...(If the latter, also event will be picked here.)
         ELSE
           RSUB=XSEC(0,1)*PYR(0)
           DO 120 I=1,500
-            IF(MSUB(I).NE.1) GOTO 120
+            IF(MSUB(I).NE.1.OR.I.EQ.96) GOTO 120
             ISUB=I
             RSUB=RSUB-XSEC(I,1)
             IF(RSUB.LE.0D0) GOTO 130
@@ -177,7 +177,10 @@ C...to avoid doublecounting  with DIS.
       ENDIF
  
 C...Set up for multiple interactions.
-      IF(INMULT.EQ.1) CALL PYMULT(2)
+      IF(INMULT.EQ.1) THEN
+        IF(MINT(35).LE.1) CALL PYMULT(2)
+        IF(MINT(35).GE.2) CALL PYMIGN(2)
+      ENDIF
  
 C...Loopback point for minimum bias in photon physics.
       LOOP2=0
@@ -750,7 +753,8 @@ C...DIS as f + gamma* -> f process: set dummy values.
  
 C...Low-pT or multiple interactions (first semihard interaction).
       ELSEIF(ISTSB.EQ.9) THEN
-        CALL PYMULT(3)
+        IF(MINT(35).LE.1) CALL PYMULT(3)
+        IF(MINT(35).GE.2) CALL PYMIGN(3)
         ISUB=MINT(1)
  
 C...Study user-defined process: kinematics plus weight.
@@ -901,7 +905,8 @@ C...Calculations for Monte Carlo estimate of all cross-sections.
 C...Multiple interactions: store results of cross-section calculation.
       IF(MINT(50).EQ.1.AND.MSTP(82).GE.3) THEN
         VINT(153)=SIGSOR
-        CALL PYMULT(4)
+        IF(MINT(35).LE.1) CALL PYMULT(4)
+        IF(MINT(35).GE.2) CALL PYMIGN(4)
       ENDIF
  
 C...Ratio of actual to maximum cross section.
@@ -1031,7 +1036,8 @@ C...Multiple interactions: choose impact parameter.
       VINT(148)=1D0
       IF(MINT(50).EQ.1.AND.(ISUB.LE.90.OR.ISUB.GE.96).AND.
      &MSTP(82).GE.3) THEN
-        CALL PYMULT(5)
+        IF(MINT(35).LE.1) CALL PYMULT(5)
+        IF(MINT(35).GE.2) CALL PYMIGN(5)
         IF(VINT(150).LT.PYR(0)) THEN
           IF(MINT(121).GT.1) CALL PYSAVE(2,IGA)
           IF(MFAIL.EQ.1) THEN
@@ -1165,7 +1171,7 @@ C...Pick scale where photon is resolved.
           VINT(283)=(Q0S+PS)*(Q1S+PS)/
      &    (Q0S+PYR(0)*(Q1S-Q0S)+PS)-PS
         ENDIF
-      ENDIF 
+      ENDIF
       VINT(284)=0D0
       IF(MINT(108).EQ.3) THEN
         IF(MSTP(66).EQ.1) THEN
@@ -1195,7 +1201,7 @@ C...Format statements for differential cross-section maximum violations.
      &'in event',1X,I7)
  5300 FORMAT(/1X,'Error: maximum violated by',1P,D11.3,1X,
      &'in event',1X,I7,'D0'/1X,'Execution stopped!')
- 5400 FORMAT(/1X,'Advisory warning: maximum violated by',1P,D15.7,1X,
+ 5400 FORMAT(/1X,'Advisory warning: maximum violated by',1P,D11.3,1X,
      &'in event',1X,I7)
  5500 FORMAT(1X,'XSEC(',I1,',1) increased to',1P,D11.3)
  5600 FORMAT(1X,'XSEC(',I2,',1) increased to',1P,D11.3)

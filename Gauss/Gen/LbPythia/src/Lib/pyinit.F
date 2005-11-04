@@ -1,4 +1,4 @@
-C $Id: pyinit.F,v 1.2 2005-06-27 15:22:32 robbep Exp $ 
+C $Id: pyinit.F,v 1.3 2005-11-04 11:01:12 robbep Exp $ 
 C*********************************************************************
  
 C...PYINIT
@@ -28,11 +28,12 @@ C...Local arrays and character variables.
       DIMENSION ALAMIN(20),NFIN(20)
       CHARACTER*(*) FRAME,BEAM,TARGET
       CHARACTER CHFRAM*12,CHBEAM*12,CHTARG*12,CHLH(2)*6
- 
+  
 C...Interface to PDFLIB.
+      COMMON/W50511/NPTYPE,NGROUP,NSET,MODE,NFL,LO,TMAS
       COMMON/W50512/QCDL4,QCDL5
-      SAVE /W50512/
-      DOUBLE PRECISION VALUE(20),QCDL4,QCDL5
+      SAVE /W50511/,/W50512/
+      DOUBLE PRECISION VALUE(20),TMAS,QCDL4,QCDL5
       CHARACTER*20 PARM(20)
       DATA VALUE/20*0D0/,PARM/20*' '/
  
@@ -41,6 +42,9 @@ C...Data:Lambda and n_f values for parton distributions..
      &0.192D0,0.326D0,2*0.2D0,0.2D0,0.2D0,0.29D0,0.2D0,0.4D0,5*0.2D0/,
      &NFIN/20*4/
       DATA CHLH/'lepton','hadron'/
+
+C...Check that BLOCK DATA PYDATA has been loaded.
+      CALL PYCKBD
  
 C...Reset MINT and VINT arrays. Write headers.
       MSTI(53)=0
@@ -48,9 +52,14 @@ C...Reset MINT and VINT arrays. Write headers.
         MINT(J)=0
         VINT(J)=0D0
   100 CONTINUE
-      IF(MSTU(12).GE.1) CALL PYLIST(0)
+      IF(MSTU(12).NE.12345) CALL PYLIST(0)
       IF(MSTP(122).GE.1) WRITE(MSTU(11),5100)
-
+ 
+C...Reset error counters.
+      MSTU(23)=0
+      MSTU(27)=0
+      MSTU(30)=0
+ 
 C...Reset processes that should not be on.
       MSUB(96)=0
       MSUB(97)=0
@@ -110,6 +119,9 @@ C...Choose Lambda value to use in alpha-strong.
         IF(MSTP(52).EQ.1.AND.MSTP(51).GE.1.AND.MSTP(51).LE.20) THEN
           ALAM=ALAMIN(MSTP(51))
           NF=NFIN(MSTP(51))
+        ELSEIF(MSTP(52).EQ.2.AND.NFL.EQ.5) THEN
+          ALAM=QCDL5
+          NF=5
         ELSEIF(MSTP(52).EQ.2) THEN
           ALAM=QCDL4
           NF=4
@@ -187,7 +199,7 @@ C...Set up kinematics for photons inside leptons.
  
 C...Precalculate flavour selection weights.
       CALL PYKFIN
-
+ 
 CC MODIFICATION FOR ACERMC
 CC        CALL UPINIT
 C...   ReCall user process initialization routine.
@@ -268,9 +280,12 @@ C...Initialize possibility of pileup events.
 C...Initialize multiple interactions with variable impact parameter.
         IF(MINT(50).EQ.1) THEN
           PTMN=PARP(82)*(VINT(1)/PARP(89))**PARP(90)
-          IF(MSTP(81).EQ.0.AND.CKIN(3).GT.PTMN) MSTP(82)=MIN(1,MSTP(82))
-          IF((MINT(49).NE.0.OR.MSTP(131).NE.0).AND.MSTP(82).GE.2)
-     &    CALL PYMULT(1)
+          IF(MOD(MSTP(81),10).EQ.0.AND.(CKIN(3).GT.PTMN.OR.
+     &    ((MSEL.NE.1.AND.MSEL.NE.2)))) MSTP(82)=MIN(1,MSTP(82))
+          IF((MINT(49).NE.0.OR.MSTP(131).NE.0).AND.MSTP(82).GE.2) THEN
+            CALL PYMULT(1)
+            CALL PYMIGN(1)
+          ENDIF
         ENDIF
  
 C...Save results for gamma-p and gamma-gamma alternatives.
