@@ -1,4 +1,4 @@
-// $Id: HepMCUtils.h,v 1.2 2005-10-03 09:39:18 robbep Exp $
+// $Id: HepMCUtils.h,v 1.3 2005-11-04 10:50:41 robbep Exp $
 #ifndef GENERATORS_HEPMCUTILS_H 
 #define GENERATORS_HEPMCUTILS_H 1
 
@@ -18,6 +18,8 @@ class HepMCUtils {
                          const ITTYPE &pBegin, const ITTYPE &pEnd ) ; 
 
   static bool IsBAtProduction( const HepMC::GenParticle * thePart ) ;
+
+  static void Clear( HepMC::GenEvent * theEvent ) ;
 };
 
 // Implementation of templated function
