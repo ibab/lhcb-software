@@ -1,4 +1,4 @@
-// $Id: HepMCUtils.cpp,v 1.2 2005-10-03 09:39:18 robbep Exp $
+// $Id: HepMCUtils.cpp,v 1.3 2005-11-04 10:54:21 robbep Exp $
 // Include files
 
 // local
@@ -19,5 +19,16 @@ bool HepMCUtils::IsBAtProduction( const HepMC::GenParticle * thePart ) {
     (* theVertex -> particles_in_const_begin() ) ;
   if ( theMother -> pdg_id() == - thePart -> pdg_id() ) return false ;
   return true ;
+}
+
+void HepMCUtils::Clear( HepMC::GenEvent * theEvent ) {
+  if ( ! theEvent -> vertices_empty() ) {
+    HepMC::GenEvent::vertex_iterator iter ;
+    for ( iter = theEvent -> vertices_begin() ; 
+          iter != theEvent -> vertices_end()  ; ++iter ) {
+      theEvent -> remove_vertex( *iter ) ;
+      delete (*iter) ;
+    }
+  }
 }
 
