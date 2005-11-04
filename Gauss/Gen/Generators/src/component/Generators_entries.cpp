@@ -1,4 +1,4 @@
-//  $Id: Generators_entries.cpp,v 1.2 2005-10-03 10:31:30 robbep Exp $
+//  $Id: Generators_entries.cpp,v 1.3 2005-11-04 10:57:42 robbep Exp $
 //====================================================================
 //  Generators_entries.cxx
 //--------------------------------------------------------------------
@@ -28,5 +28,8 @@ DECLARE_FACTORY_ENTRIES(Generators) {
   DECLARE_TOOL( FixedTarget ) ;
   DECLARE_TOOL( EvtGenDecay ) ;
   DECLARE_TOOL( LHCbAcceptance ) ;
+  DECLARE_TOOL( Inclusive ) ;
+  DECLARE_TOOL( SignalPlain ) ;
+  DECLARE_TOOL( SignalRepeatedHadronization ) ;
 }
   
