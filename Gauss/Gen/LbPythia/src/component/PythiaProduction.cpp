@@ -1,4 +1,4 @@
-// $Id: PythiaProduction.cpp,v 1.1 2005-10-03 10:33:40 robbep Exp $
+// $Id: PythiaProduction.cpp,v 1.2 2005-11-04 11:02:50 robbep Exp $
 // Include files 
 
 // local
@@ -69,15 +69,16 @@ StatusCode PythiaProduction::initialize( ) {
 
   // Obtain beam tool
   m_beamTool = tool< IBeamTool >( m_beamToolName , this ) ;
-
+  
   // Initialize output
   if ( msgLevel( MSG::DEBUG ) ) {
-    Pythia::pydat1().mstu( 12 ) = 1 ;
+    if ( 12345 != Pythia::pydat1().mstu( 12 ) ) 
+      Pythia::pydat1().mstu( 12 ) = 1 ;
     Pythia::pydat1().mstu( 13 ) = 1 ;
     Pythia::pydat1().mstu( 25 ) = 1 ;
     Pythia::pypars().mstp( 122 ) = 1 ;
   } else {
-    Pythia::pydat1().mstu( 12 ) = 0 ;
+    Pythia::pydat1().mstu( 12 ) = 12345 ;
     Pythia::pydat1().mstu( 13 ) = 0 ;
     Pythia::pydat1().mstu( 25 ) = 0 ;
     Pythia::pypars().mstp( 122 ) = 0 ;
@@ -125,10 +126,11 @@ StatusCode PythiaProduction::initialize( ) {
   // if file already exist, delete it
   std::remove( m_pythiaListingFileName.c_str() ) ;
   Pythia::InitPyBlock( m_pythiaListingUnit , m_pythiaListingFileName ) ;
-  
+
   Pythia::PyInit( m_frame, m_beam, m_target, m_win ) ;
-  if ( m_initializationListingLevel != 1 ) 
-    Pythia::PyList( m_initializationListingLevel ) ;  
+
+  if ( m_initializationListingLevel != -1 ) 
+    Pythia::PyList( m_initializationListingLevel ) ;
 
   // Set size of common blocks in HEPEVT: note these correspond to stdhep
   HepMC::HEPEVT_Wrapper::set_sizeof_int( 4 ) ;
@@ -177,7 +179,7 @@ StatusCode PythiaProduction::generateEvent( HepMC::GenEvent * theEvent ,
 
   theEvent -> set_signal_process_id( Pythia::pypars().msti( 1 ) ) ;
   
-  // Retrieve hadr process information
+  // Retrieve hard process information
   hardProcessInfo( theInfo ) ;
 
   return StatusCode::SUCCESS ;
@@ -408,3 +410,58 @@ void PythiaProduction::printPythiaParameter( ) {
   debug() << "**                                                  " << endmsg ;
   debug() << "****************************************************" << endmsg ;
 }
+
+//=============================================================================
+// Turn on fragmentation in Pythia
+//=============================================================================
+void PythiaProduction::turnOnFragmentation( ){
+  Pythia::pydat1().mstj( 1 ) = 1 ;
+}
+
+//=============================================================================
+// Turn off fragmentation in Pythia
+//=============================================================================
+void PythiaProduction::turnOffFragmentation( ){
+  Pythia::pydat1().mstj( 1 ) = 0 ;
+}
+
+//=============================================================================
+// Save parton event
+//=============================================================================
+void PythiaProduction::savePartonEvent( HepMC::GenEvent * /* theEvent */ ) {
+  Pythia::PyEdit( 21 ) ;
+}
+
+//=============================================================================
+// Load parton event
+//=============================================================================
+void PythiaProduction::retrievePartonEvent( HepMC::GenEvent * /* theEvent */ ) {
+  Pythia::PyEdit( 22 ) ;
+}
+
+//=============================================================================
+// Hadronize Pythia event
+//=============================================================================
+StatusCode PythiaProduction::hadronize( HepMC::GenEvent * theEvent , 
+                                  HardInfo * theInfo) {
+  Pythia::PyExec( ) ;
+
+  // Debugging output: print each event if required
+  if ( m_eventListingLevel >= 0 ) Pythia::PyList( m_eventListingLevel ) ;
+  
+  // Convert to HepEvt format
+  Pythia::LunHep( 1 ) ;
+  
+  // Convert to HepMC format
+  HepMC::IO_HEPEVT theHepIO ;
+  if ( ! theHepIO.fill_next_event( theEvent ) ) 
+    return Error( "Could not fill HepMC event" ) ;
+  
+  theEvent -> set_signal_process_id( Pythia::pypars().msti( 1 ) ) ;
+  
+  // Retrieve hard process information
+  hardProcessInfo( theInfo ) ;
+  
+  return StatusCode::SUCCESS ;
+}
+

@@ -1,4 +1,4 @@
-// $Id: PythiaProduction.h,v 1.1 2005-10-03 10:33:40 robbep Exp $
+// $Id: PythiaProduction.h,v 1.2 2005-11-04 11:02:50 robbep Exp $
 #ifndef LBPYTHIA_PYTHIAPRODUCTION_H 
 #define LBPYTHIA_PYTHIAPRODUCTION_H 1
 
@@ -35,6 +35,17 @@ public:
                                     HardInfo * theInfo ) ;
 
   virtual void setStable( const ParticleProperty * thePP ) ;
+
+  virtual void turnOnFragmentation( ) ;
+  
+  virtual void turnOffFragmentation( ) ;
+
+  virtual StatusCode hadronize( HepMC::GenEvent * theEvent , 
+                                HardInfo * theInfo ) ;
+  
+  virtual void savePartonEvent( HepMC::GenEvent * theEvent ) ;
+
+  virtual void retrievePartonEvent( HepMC::GenEvent * theEvent ) ;
 
 protected:
   /// Parse Pythia commands from a string vector
