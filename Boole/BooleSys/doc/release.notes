@@ -3,12 +3,9 @@ Package: Digi/Boole
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb Digitization program
 
-</PRE><H1><A NAME=v10r0>2005-10-21 Boole v10r0</A></H1><PRE>
+</PRE><H1><A NAME=v10r0>2005-11-04 Boole v10r0</A></H1><PRE>
 This version uses Gaudi v17r1, LHCb v19r0, Lbcom v3r0, XmlDDDB v26r2
 Requires input from Gauss v19r3 or greater. Output needs Brunel v28r0 or greater
-
->>>> Not yet ready for release
->>>> Currently crashes due to problem reading MCHits with Gaudi v17r1
 
 - New features:
   . Added Muon digitization monitoring (MuonMoniDigi v1r0)
@@ -17,7 +14,7 @@ Requires input from Gauss v19r3 or greater. Output needs Brunel v28r0 or greater
   . ST clustering by Beetle instead of by port (STDAQ v1r6, ITAlgorithms v15r1)
 
 - Persistency changes:
-  . Uses SEAL Reflex persistency
+  . Uses SEAL Reflex persistency. Backwards compatible for input data
 
 </PRE><H1><A NAME=v9r5>2005-09-21 Boole v9r5</A></H1><PRE>
 This version uses Gaudi v16r5, LHCb v18r9, Lbcom v2r5, XmlDDDB v26r2
