@@ -19,7 +19,8 @@ It is backwards compatible for RTTC data
 >>>>>>>> NB This is not yet a fully functional clean release <<<<<<<<
 >>>>>>>>      Following need to be fixed before release      <<<<<<<<
  - In LHCbKernel v5r14
-   . Add hack to pick up SEAL_1_7_5 (for Cintex fix, binary compatible with 1_7_4)
+   . Add hacks to pick up SEAL_1_7_5 (for Cintex fix, binary compatible with 
+     1_7_4) and POOL_2_2_3 (for RootStorageSvc fix, binary compatible with 2_2_2)
    . IOMin read example core dumps when opening some of the files written by 
      write example. Indication of memory corruption when setting up persistency 
 >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>><<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
