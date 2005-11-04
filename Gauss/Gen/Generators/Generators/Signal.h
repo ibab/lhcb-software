@@ -1,4 +1,4 @@
-// $Id: Signal.h,v 1.1 2005-10-03 10:26:10 robbep Exp $
+// $Id: Signal.h,v 1.2 2005-11-04 10:52:59 robbep Exp $
 #ifndef GENERATORS_SIGNAL_H 
 #define GENERATORS_SIGNAL_H 1
 
@@ -52,6 +52,13 @@ protected:
                              HepMC::GenParticle * theNewParticle ,
                              const HepMC::GenParticle * theOldParticle ) 
     const ;
+
+  /// Choose particle in acceptance if several
+  HepMC::GenParticle * chooseAndRevert( const ParticleVector & particleList ,
+                                        HepMC::GenEvent * theEvent ) ;
+
+  /// choose correct multiplicity
+  bool ensureMultiplicity( const unsigned int nSignal ) ;
   
 private:
   std::vector< int > m_pidVector   ;

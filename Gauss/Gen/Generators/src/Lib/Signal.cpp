@@ -1,4 +1,4 @@
-// $Id: Signal.cpp,v 1.1 2005-10-03 10:26:10 robbep Exp $
+// $Id: Signal.cpp,v 1.2 2005-11-04 10:54:38 robbep Exp $
 // Include files 
 
 // local
@@ -199,4 +199,38 @@ StatusCode Signal::fillHepMCEvent( HepMC::GenEvent    * theEvent ,
     }
   }
   return sc ;
+}
+
+//=============================================================================
+// Choose one particle in acceptance and revert if necessary
+//=============================================================================
+HepMC::GenParticle * Signal::chooseAndRevert( const ParticleVector & 
+                                              theParticleList , 
+                                              HepMC::GenEvent * theGenEvent ) {
+  HepMC::GenParticle * theSignal ;
+  
+  unsigned int nPart = theParticleList.size() ;
+  if ( nPart > 1 ) {
+    unsigned int iPart = 
+      (unsigned int) floor( nPart * m_flatGenerator() ) ;
+    theSignal = theParticleList[ iPart ] ;
+  } else if ( 1 == nPart ) theSignal = theParticleList.front() ;
+  else return 0 ;
+  
+  if ( theSignal -> momentum().pz() < 0 ) {
+    revertEvent( theGenEvent ) ;
+    m_nInvertedEvents++ ;
+  }
+  
+  return theSignal ;
+}
+
+//=============================================================================
+// Establish correct multiplicity of signal
+//=============================================================================
+bool Signal::ensureMultiplicity( const unsigned int nSignal ) {
+  if ( ! m_cpMixture ) return true ;
+  if ( nSignal > 1 ) return true ;
+  return (m_flatGenerator() >= ( ( 1. - m_signalBr ) / 
+                                 ( 2. - m_signalBr ) ) ) ;
 }
