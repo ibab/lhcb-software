@@ -12,7 +12,7 @@ use GaudiPolicy v5r21
 #-- External libraries now taken from LCG, version defined by GaudiEnv
 
 #-- Gaudi libraries (from GAUDI_v17r1)
-use GaudiKernel		v20r0
+use GaudiKernel		v20r1
 use GaudiSvc 		v14r2        -no_auto_imports
 use GaudiAlg 		v9r1         -no_auto_imports
 use GaudiPoolDb		v2r1         -no_auto_imports
