@@ -1,5 +1,5 @@
 package GENSER
-version v1r110p0
+version v1r120p0
 
 branches doc cmt
 
@@ -7,19 +7,19 @@ use LCG_Settings v*
 
 include_path none
 
-macro GENSER_native_version "GENSER_1_1_0"
+macro GENSER_native_version "GENSER_1_2_0"
 macro GENSER_home "$(LCG_releases)/GENSER/$(GENSER_native_version)/$(LCG_system)/lib"
 
 # use archive libraries
 #path_remove LD_LIBRARY_PATH "/GENSER/"
 #path_append LD_LIBRARY_PATH "$(GENSER_home)"
 
-macro pythia_native_version "6_226.2"
+macro pythia_native_version "6_324.2"
 
 macro pythia_linkopts "$(GENSER_home)/libpythia$(pythia_native_version).a ${GENSER_home}/libdummy_pythia$(pythia_native_version).a"\
         WIN32         "/libpath:$(GENSER_home) pythia$(PYTHIA_native_version).lib dummy_pythia$(pythia_native_version)"
 
-macro photos_native_version "209.2"
+macro photos_native_version "215.2"
 macro photos_linkopts " $(GENSER_home)/libphotos$(photos_native_version).a" \
              WIN32    " /libpath:$(GENSER_home) photos$(photos_native_version).lib"
 

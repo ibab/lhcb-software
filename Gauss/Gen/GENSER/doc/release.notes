@@ -4,6 +4,9 @@
 ! Purpose     : interface package to GENSER
 !-----------------------------------------------------------------------------
 
+! 2005-11-04 - Gloria CORTI
+ - requirements - use GENSER_1_2_0 to use Pythia 6_324.2 and Photos 215.2
+
 !======================== GENSER v1r110p1 ================================
 ! 2005-08-22 - Florence RANJARD
  - requirements - remove setting of include_dirs nolonger necessary
