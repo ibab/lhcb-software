@@ -2,10 +2,12 @@ Package LHCbKernel
 Package manager: M.Cattaneo
 Purpose: LHCb specific Kernel classes
 
-!===================== LHCbKernel v5r14 2005-10-21 ========================
-! 2005-10-21 - Marco Cattaneo
- - Add HACK to requirements to pick up SEAL_1_7_5 (binary compatible with 1_7_4).
-   To be removed when Gaudi moves to SEAL_1_7_5 or greater
+!===================== LHCbKernel v5r14 2005-11-04 ========================
+! 2005-11-04 - Marco Cattaneo
+ - Add HACKs to requirements to pick up:
+     SEAL_1_7_5 (binary compatible with 1_7_4).
+     SEAL_2_2_3 (binary compatible with 2_2_2).
+   To be removed when Gaudi moves to SEAL_1_7_5, POOL_2_2_3 or greater
 
 ! 2005-10-17 - Chris Jones
  - Clean up some of the RICH enums

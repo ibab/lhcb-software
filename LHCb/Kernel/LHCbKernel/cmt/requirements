@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.82 2005-10-21 17:23:15 cattanem Exp $
+# $Id: requirements,v 1.83 2005-11-04 17:50:22 cattanem Exp $
 # =============================================================================
 package LHCbKernel
 author  M.Frank    CERN/LHCb
@@ -14,6 +14,7 @@ use GaudiKernel  v*
 use CLHEP        v*    LCG_Interfaces
 
 macro SEAL_native_version "SEAL_1_7_5"
+macro POOL_native_version "SEAL_2_2_3"
 
 # Produce Header-Files from XML description, overriding default destination
 #============================================================================
