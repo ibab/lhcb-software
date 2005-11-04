@@ -1,6 +1,20 @@
-! $Id: release.notes,v 1.10 2005-10-19 14:42:43 gcorti Exp $
+! $Id: release.notes,v 1.11 2005-11-04 10:58:09 robbep Exp $
 ! Package     : Gen/Generators
 ! Responsible : 
+
+! 2005-11-04 - Patrick Robbe
+ - src/component/SignalRepeatedHadronization.h/cpp: tool to generate
+   signal events with repeated hadronization.
+ - ExternalGenerator: add utility function to deal with event model
+   classes and prepare them before each generation of interactions.
+ - HepMCUtils: add function to clear HepMC events
+ - IProductionTool: add virtual functions for repeated hadronization 
+   method.
+ - Signal: add utility functions (choose one B amongst several and
+   function to choose correct signal multiplicity).
+ - phocin.F: adapt for PHOTOS 2.15
+ - pythiaoutput_utils.F : adapt for PYTHIA 6.3
+ - Generation: correct status of particles to decay with EvtGen.
 
 !========================= Generators v2r0 ===========================
 ! 2005-10-17 - Patrick Robbe
