@@ -5,7 +5,7 @@
 ! Purpose     : LHCb OO kernel packages
 !-----------------------------------------------------------------------------
 
-</PRE><H1><A NAME=v19r0>2005-10-12 LHCbSys v19r0</A></H1><PRE>
+</PRE><H1><A NAME=v19r0>2005-11-04 LHCbSys v19r0</A></H1><PRE>
 This version uses Gaudi v17r1 and produces reflex dictionaries
 It is backwards compatible for RTTC data
 
@@ -18,12 +18,10 @@ It is backwards compatible for RTTC data
 
 >>>>>>>> NB This is not yet a fully functional clean release <<<<<<<<
 >>>>>>>>      Following need to be fixed before release      <<<<<<<<
- - In LHCbKernel v5r14, DetCond v7r7
-   . Add hacks to pick up SEAL_1_7_5 (for Cintex fix, binary compatible with
-     1_7_4) and COOL_1_2_4 (because 1_2_5 from LCGCMT not yet existing)
- - SmartRefs, at last in MCHits, are not read back correctly from POOL files
- - AssociatorSys DLLs need to be loaded ahead of POOL dictionaries, not yet
-   understood why
+ - In LHCbKernel v5r14
+   . Add hack to pick up SEAL_1_7_5 (for Cintex fix, binary compatible with 1_7_4)
+   . IOMin read example core dumps when opening some of the files written by 
+     write example. Indication of memory corruption when setting up persistency 
 >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>><<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
 
  - In LHCb v19r0
