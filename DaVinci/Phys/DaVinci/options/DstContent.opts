@@ -37,6 +37,7 @@ DstWriter.ItemList =
 // and hence not written out (usecase: L0xL1 stripping)
 , "/Event/Raw#2"
 , "/Event/Raw/Velo#1"
+, "/Event/Raw/Ecal#1"
 , "/Event/Rec#1"
 , "/Event/Rec/Status#1"
 , "/Event/Rec/IT#1"

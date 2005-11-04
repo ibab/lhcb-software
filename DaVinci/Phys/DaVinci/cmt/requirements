@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.274 2005-10-20 10:45:55 pkoppenb Exp $
+# $Id: requirements,v 1.275 2005-11-04 06:54:46 pkoppenb Exp $
 # Created    : 07/02/2002
 # Maintainer : P. Koppenburg
 #
@@ -6,7 +6,7 @@
 # Allows reading of OO-DST data
 #============================================================================
 package           DaVinci
-version           v12r14
+version           v12r15
 
 # Structure, i.e. directories to process. 
 #============================================================================
@@ -47,15 +47,16 @@ use LHCb                        v*
 #=======================================================                                                                                                                                                                            
 use  CommonParticles    	v1r5p3   Phys
 use  DaVinciFilter      	v3r2     Phys
-use  DaVinciKernel      	v3r8     Phys
-use  DaVinciTools       	v12r2    Phys
+use  DaVinciKernel      	v3r9     Phys
+use  DaVinciTools       	v12r3    Phys
 use  FlavourTagging     	v6r3     Phys
 use  Ks2PiPiSel         	v1r7     Phys
 use  ParticleMaker      	v1r6     Phys
 use  PhysSelections		v6r12    Phys
 use  DaVinciTransporter 	v2r1     Phys
 use  VertexFit			v1r8     Phys
-use  Tampering                  v1r3     Phys
+use  Tampering                  v1r4     Phys
+use  TriggerSource              v1r0     Phys
 # Generic tools 
 use  Utilities          	v2r1p1   Tools
 use  RecoTools          	v1r1     Rec
@@ -122,7 +123,7 @@ use  L0MuonTrigger 		v2r3p1   L0
 use  L0mConf            	v2r2p3   L0
 
 #-- L1 Trigger libraries 
-use TrgSys                      v1r10    Trg
+use TrgSys                      v1r11    Trg
 
 use GaudiPython v*
 
