@@ -1,4 +1,4 @@
-// $Id: ExternalGenerator.h,v 1.1 2005-10-03 10:25:00 robbep Exp $
+// $Id: ExternalGenerator.h,v 1.2 2005-11-04 10:49:48 robbep Exp $
 #ifndef GENERATORS_EXTERNALGENERATOR_H 
 #define GENERATORS_EXTERNALGENERATOR_H 1
 
@@ -57,6 +57,11 @@ protected:
 
   /// count the number of particles with pz > 0
   unsigned int nPositivePz( const ParticleVector & particleList ) ;
+
+  void prepareInteraction( EventVector & theEventVector , 
+                           HardVector & theHardVector , 
+                           HepMC::GenEvent * & theGenEvent ,
+                           HardInfo * & theHardInfo ) const ;
 
   IProductionTool * m_productionTool ;
   IDecayTool      * m_decayTool      ;
