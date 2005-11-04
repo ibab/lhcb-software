@@ -1,4 +1,4 @@
-// $Id: ExternalGenerator.cpp,v 1.1 2005-10-03 10:25:00 robbep Exp $
+// $Id: ExternalGenerator.cpp,v 1.2 2005-11-04 10:53:50 robbep Exp $
 // Include files 
 
 // local
@@ -7,6 +7,10 @@
 // Gaudi
 #include "GaudiKernel/IParticlePropertySvc.h" 
 #include "GaudiKernel/ParticleProperty.h"
+
+// Event 
+#include "Event/HepMCEvent.h"
+#include "Event/HardInfo.h"
 
 // from Generators
 #include "Generators/IProductionTool.h"
@@ -119,6 +123,7 @@ bool ExternalGenerator::checkPresence( const PIDs & pidList ,
                                        const HepMC::GenEvent * theEvent ,
                                        ParticleVector & particleList )
 {
+  particleList.clear( ) ;
   HepMC::GenEvent::particle_const_iterator it ;
   for ( it = theEvent -> particles_begin() ; 
         it != theEvent -> particles_end() ; ++it ) 
@@ -170,5 +175,21 @@ unsigned int ExternalGenerator::nPositivePz( const ParticleVector
 }
 
 
+//=============================================================================
+// Set up event
+//=============================================================================
+void ExternalGenerator::prepareInteraction( EventVector & theEventVector , 
+                                            HardVector & theHardVector , 
+                                            HepMC::GenEvent * & theGenEvent ,
+                                            HardInfo * & theHardInfo ) const {
+  HepMCEvent * theHepMCEvent = new HepMCEvent( m_productionTool -> name() ,
+                                               1 , 1 ) ;
+  theHardInfo = new HardInfo() ;
+  
+  theGenEvent = theHepMCEvent -> pGenEvt() ;
+  theHardInfo -> setEvent( theHepMCEvent ) ;
 
+  theEventVector.push_back( theHepMCEvent ) ;
+  theHardVector.push_back( theHardInfo ) ;
+}
 
