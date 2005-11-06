@@ -5,7 +5,7 @@
  *  Implementation file for tool base class : RichTrackCreatorBase
  *
  *  CVS Log :-
- *  $Id: RichTrackCreatorBase.cpp,v 1.3 2005-10-13 15:38:41 jonrob Exp $
+ *  $Id: RichTrackCreatorBase.cpp,v 1.4 2005-11-06 12:31:09 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   20/05/2005
@@ -61,7 +61,8 @@ StatusCode RichTrackCreatorBase::initialize()
   }
 
   // Configure track selector
-  if ( !m_trSelector.configureTrackTypes() ) return StatusCode::FAILURE;
+  if ( !m_trSelector.configureTrackTypes() )
+    return Error( "Problem configuring track selection" );
   m_trSelector.printTrackSelection( info() );
 
   // Setup incident services
