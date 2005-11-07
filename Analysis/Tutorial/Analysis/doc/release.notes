@@ -8,6 +8,10 @@
 !
 !-----------------------------------------------------------------------------
 
+! 2005-11-07 - P. Koppenburg 
+  - cmt/requirements
+    . Revisited fro v12r14.
+  
 ! 2005-10-21 - P. Koppenburg 
   - cmt/requirements
     . Use DaVinci v12r14

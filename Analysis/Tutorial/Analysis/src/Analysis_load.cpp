@@ -11,7 +11,7 @@
 
 DECLARE_FACTORY_ENTRIES(Analysis) {
 
-  DECLARE_ALGORITHM( TutorialAlgorithm );
-  DECLARE_ALGORITHM( TutorialTuple );
+//  DECLARE_ALGORITHM( TutorialAlgorithm );
+//  DECLARE_ALGORITHM( TutorialTuple );
 
 }
