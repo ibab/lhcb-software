@@ -4,35 +4,22 @@
 ! Purpose     : Analysis tutorial
 !-----------------------------------------------------------------------------
  
-  The exercises are to be found in the same directory.
+The exercises are to be found in the same directory.
   
-  - exercise 1 asks you to write a basic DVAlgorithm doing 
-    J/psi -> mu mu
-  - exercsise 2...
-    
+  - exercise 1 asks you to write a basic DVAlgorithm doing J/psi -> mu mu
+  - exercise 2 extends this algorithm to Phi->KK
+  - exercise 3 completes the Bs->J/psiPhi chain using generic code
+  - exercise 4 is about efficiencies and correlations
+  - exercise 5 lets you look for tagging and trigger
+  - exercise 6 is about MC truth
 
-
-
-  1) You are welcome to write the code yourself, following the tutorial
-  
-  2) To get it to work quickly, go through the following:
+For those who want to cheat:
      
     > DaVinciEnv v12r14   (or more if available)
     > cd cmt/
     > cmt config
     > source setup.csh
-    > cp ../solution/TutorialAlgorithm.* ../src/
+    > cp ../solution1/TutorialAlgorithm.* ../src/
     > make
-    > DaVinci ../options/DVTutorial_1.opts
+    > DaVinci ../solution1/DVTutorial_1.opts
   
-  3) To also have the Phi, the Bs and the efficiency:   
-
-    > DaVinci ../options/DVTutorial_2.opts
-
-  4) A solution of the "exercise" that extends the
-     TutorialAlgorithm to also accept phi's can be used with
-
-    > cp ../solution2/TutorialAlgorithm.* ../src/
-    > make
-    > DaVinci ../options/DVTutorial_3.opts
-

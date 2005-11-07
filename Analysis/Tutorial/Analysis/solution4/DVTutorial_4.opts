@@ -76,9 +76,15 @@ ApplicationMgr.TopAlg += { "SelResultCorrelations" };
 SelResultCorrelations.Algorithms = { "Jpsi2MuMu", "Phi2KK", "Bs2JpsiPhi"  } ;
 //
 // Run the efficiency algorithm
+// Needs to be run outside of the sequence!
 //
-#include "$ANALYSISROOT/options/Efficiency.opts"
+ApplicationMgr.TopAlg += { "MCEffBuilder/EffMcTruth" };
+EffMcTruth.MCDecay =  "[B_s0 -> (phi(1020) -> ^K+ ^K-) (J/psi(1S) -> ^mu+ ^mu- {, gamma})]cc";
 
+ApplicationMgr.TopAlg += { "EffSelCheck/EffBs2JpsiPhi" };
+EffBs2JpsiPhi.Histograms = true;
+EffBs2JpsiPhi.MCDecay = "[B_s0 -> (phi(1020) -> ^K+ ^K-) (J/psi(1S) -> ^mu+ ^mu- {, gamma})]cc";
+EffBs2JpsiPhi.SelDecay = "[B_s0 -> (phi(1020) -> K+ K-) (J/psi(1S) -> mu+ mu-)]cc";
 
 // Print decay tree
 Tutorial.Members += { "PrintTree/PrintFoundBs" };
