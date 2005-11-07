@@ -49,7 +49,7 @@ Generation.EventType                  = 30000000;
 Generation.SampleGenerationTool       = "MinimumBias";
 Generation.MinimumBias.ProductionTool = "PythiaProduction";
 ToolSvc.EvtGenDecay.UserDecayFile     = "$DECFILESROOT/dkfiles/minbias.dec";
-Generation.MinimumBias.PythiaProduction.PythiaBaseCommand = {@PythiaAlg.BasePythiaCommand};
+Generation.MinimumBias.PythiaProduction.BasePythiaCommand = {@PythiaAlg.BasePythiaCommand};
 
 // Example options for inclusive b
 // Generation.EventType                  = 10000000;
