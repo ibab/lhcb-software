@@ -1,4 +1,4 @@
-// $Id: CaloTrackMatchPhoton.h,v 1.5 2005-03-07 15:37:15 cattanem Exp $
+// $Id: CaloTrackMatchPhoton.h,v 1.6 2005-11-07 12:12:43 odescham Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
@@ -50,20 +50,9 @@ public:
    */
   StatusCode match 
   ( const CaloPosition  *caloObj ,
-    const TrStoredTrack *trObj   ,
+    const Track *trObj   ,
     double&              chi2    ) ;
   
-  /** the main matching method  
-   *
-   *  @param caloObj  pointer to "calorimeter" object (position)
-   *  @param trObj    pointer to tracking object (track)
-   *  @param chi2     returned value of chi2 of the matching
-   *  @return status code for matching procedure 
-   */
-  StatusCode match 
-  ( const CaloPosition* caloObj , 
-    const TrgTrack*     trObj   ,
-    double&             chi2    ) ;
   
 protected:
 
@@ -127,17 +116,16 @@ private:
    * with Track data.
    * Returned format is the same as for Cluster.
    * Input format of Track is quite different:
-   *   TrStateP: (x, y, tx, ty, q/p);
-   *   TrStateL: (x, y, tx, ty),
+   *   TrState 6D (x, y, z,px,py,pz)
    * so the function performs vector and matrix remake.
-   * @param  trState Track data object
+   * @param  State Track data object
    * @return internal type struct with data
    */
   inline const MatchType1& 
-  prepareTrack ( TrState *trState )
+  prepareTrack ( State *state )
   { 
-    const HepVector&    params = trState->stateVector  () ;
-    const HepSymMatrix& cov    = trState->stateCov     () ;
+    const HepVector&    params = state->stateVector() ;
+    const HepSymMatrix& cov    = state->covariance() ;
     
     m_matchTrk1.params  (1)    = params(1);
     m_matchTrk1.params  (2)    = params(2);
@@ -155,23 +143,24 @@ private:
    * with Track data.
    * Returned format is the same as for Cluster.
    * Input format of Track is quite different:
-   *   TrStateP: (x, y, tx, ty, q/p);
-   *   TrStateL: (x, y, tx, ty),
+   *   TrState 6D (x, y, z,px,py,pz)
    * so the function performs vector and matrix remake.
    * @param  trgState Track data object
    * @return internal type struct with data
    */
   inline const MatchType2& 
-  prepareTrack ( const TrgState& trgState ,
+  prepareTrack ( const State& state ,
                  const double    z        )
   { 
-    m_matchTrk2.params (1)    = trgState . x     (z) ;
-    m_matchTrk2.params (2)    = trgState . y     (z) ;
+
+    // OD NEED TO EXTRAPOLATE TO z 
+    m_matchTrk2.params (1)    = state.x() ; //was x(z)
+    m_matchTrk2.params (2)    = state.y() ; //was y(z)
     
     
-    const double dz = z - trgState.z() ;
+    const double dz = z - state.z() ;
     
-    const HepSymMatrix& cov = trgState.covariance() ;
+    const HepSymMatrix& cov = state.covariance() ;
     m_matchTrk2.cov.fast(1,1) = 
       cov.fast(1,1) + 2.0 * dz * cov.fast(3,1) + dz * dz * cov.fast(3,3) ;
     m_matchTrk2.cov.fast(2,2) = 

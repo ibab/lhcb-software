@@ -1,8 +1,11 @@
-// $Id: CaloNewSCorrection.cpp,v 1.5 2004-02-17 12:08:09 ibelyaev Exp $
+// $Id: CaloNewSCorrection.cpp,v 1.6 2005-11-07 12:12:43 odescham Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.5  2004/02/17 12:08:09  ibelyaev
+//  update for new CaloKernel and CaloInterfaces
+//
 // Revision 1.4  2003/12/11 16:33:40  cattanem
 // Fixes for Gaudi v13
 //

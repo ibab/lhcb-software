@@ -1,8 +1,11 @@
-// $Id: CellularAutomaton.cpp,v 1.6 2004-10-22 19:08:03 ibelyaev Exp $
+// $Id: CellularAutomaton.cpp,v 1.7 2005-11-07 12:12:43 odescham Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.6  2004/10/22 19:08:03  ibelyaev
+//  small technical improvements in matching tool base
+//
 // Revision 1.5  2004/10/22 16:33:53  ibelyaev
 //  update CellularAutomaton and remove obsolete algs
 //

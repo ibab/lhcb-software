@@ -1,4 +1,4 @@
-// $Id: SubClusterSelectorMax2x2.h,v 1.2 2005-03-07 15:37:15 cattanem Exp $
+// $Id: SubClusterSelectorMax2x2.h,v 1.3 2005-11-07 12:12:44 odescham Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================

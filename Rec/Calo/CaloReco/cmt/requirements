@@ -1,18 +1,19 @@
-# $Id: requirements,v 1.38 2005-06-02 12:37:03 cattanem Exp $
+# $Id: requirements,v 1.39 2005-11-07 12:12:40 odescham Exp $
 # =============================================================================
-# CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.38 $
+# CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.39 $
 # =============================================================================
 package            CaloReco
-version            v2r9
+version            v3r0
 
 # ================ structure ==================================================
 branches           cmt doc src options 
 
 # ================ dependencies ===============================================
-use CaloInterfaces v4r*	  Calo 
-use CaloUtils      v4r*   Calo 
+use TrackEvent     v*     Event 
+use CaloInterfaces v*	  Calo 
+use CaloUtils      v*     Calo 
 use Relations      v*     Kernel 
-use TrgEvent       v*     Event 
+use TrackInterfaces v*    Tr
 
 # ================ environment ================================================
 set CALORECOOPTS   $(CALORECOROOT)/options
@@ -25,6 +26,12 @@ apply_pattern      component_library library=CaloReco
 
 # =============================================================================
 # $Log: not supported by cvs2svn $
+# Revision 1.38  2005/14/10 12:37:03  odescham
+# adapt to new track model (CaloInterfaces/Utils v5r*)
+#
+# Revision 1.38  2005/06/02 12:37:03  cattanem
+# adapt to new Brunel phase names
+#
 # Revision 1.37  2005/05/25 12:23:11  pkoppenb
 # Added CaloReCorrections.opts
 #

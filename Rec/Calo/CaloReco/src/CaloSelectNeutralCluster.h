@@ -1,8 +1,11 @@
-// $Id: CaloSelectNeutralCluster.h,v 1.2 2004-12-10 17:12:29 ibelyaev Exp $
+// $Id: CaloSelectNeutralCluster.h,v 1.3 2005-11-07 12:12:43 odescham Exp $
 // ===================================================q=========================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.2  2004/12/10 17:12:29  ibelyaev
+//  steps towards 'Fast' Calo recontruction
+//
 // ============================================================================
 #ifndef CALOREC_CALOSELECTNeutralCLUSTER_H 
 #define CALOREC_CALOSELECTNeutralCLUSTER_H 1
@@ -33,7 +36,7 @@
 // ============================================================================
 // Event/TrEvent 
 // ============================================================================
-#include "Event/TrStoredTrack.h"
+#include "Event/Track.h"
 // ============================================================================
 
 /** @class CaloSelectNeutralCluster CaloSelectNeutralCluster.h
@@ -59,7 +62,7 @@ class CaloSelectNeutralCluster :
 public:
   
   /// associator used to extract the relations from transient store 
-  typedef IRelationWeighted<CaloCluster,TrStoredTrack,float> ITable;
+  typedef IRelationWeighted<CaloCluster,Track,float> ITable;
   
 public:
   

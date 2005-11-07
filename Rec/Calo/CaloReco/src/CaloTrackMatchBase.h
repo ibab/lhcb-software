@@ -1,4 +1,4 @@
-// $Id: CaloTrackMatchBase.h,v 1.9 2005-03-07 15:37:15 cattanem Exp $
+// $Id: CaloTrackMatchBase.h,v 1.10 2005-11-07 12:12:43 odescham Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
@@ -30,20 +30,17 @@
 // ============================================================================
 #include "CaloKernel/CaloTool.h"
 // ============================================================================
-// TrgEvent 
 // ============================================================================
-#include "Event/TrgState.h"
+#include "Event/State.h"
 // ============================================================================
 template <class TOOL>
 class ToolFactory     ; ///< from GaudiKernel
 class IIncidentSvc    ; ///< from GaudiKernel  
-class ITrExtrapolator ; ///< from TrKernel
+class ITrackExtrapolator ; ///< from TrackInterfaces
 // ============================================================================
 class CaloPosition  ;
-class TrStoredTrack ;
-class TrStateP      ;
-class TrgTrack      ;
-class TrgState      ;
+class Track ;
+class State       ;
 // ============================================================================
 /** @class CaloTrackMatchBase CaloTrackMatchBase.h
  *  
@@ -100,32 +97,18 @@ public:
    */
   virtual MatchingPair    operator() 
     ( const CaloPosition*  caloObj  ,
-      const TrStoredTrack* trObj    )
+      const Track* trObj    )
   {
     double     c2 = m_bad ;
     StatusCode sc = match ( caloObj , trObj , c2 ) ;
     return MatchingPair( sc , c2 ) ;
   };
   
-  /** The main matching method (Stl interface) 
-   *  @param caloObj  pointer to "calorimeter" object (position)
-   *  @param trObj    pointer to tracking object (track)
-   *  @return pair of status code/chi2  for matching procedure 
-   */
-  virtual MatchingPair    operator() 
-    ( const CaloPosition*   caloObj  , 
-      const TrgTrack*       trObj    )
-  {
-    double     c2 = m_bad ;
-    StatusCode sc = match ( caloObj , trObj , c2 ) ;
-    return MatchingPair( sc , c2 ) ;
-  };
-
   /** access to the last used state 
    *  @see ICaloTrackMatch 
    *  @return the last used state 
    */
-  virtual const TrState* state() const { return m_state; }
+  virtual const State* state() const { return m_state; }
   
   /** handle the incident
    *  @see IIncidentListener 
@@ -135,27 +118,27 @@ public:
   
 protected: 
   
-  /** Find TrState on specified Z.
+  /** Find State on specified Z.
    *  @param trObj Object with Track data
-   *  @param Z     Z of the TrState
+   *  @param Z     Z of the State
    *  @param zExtr Z for extrapolation 
    *  @return standard status code
    */
   StatusCode findState
-  ( const TrStoredTrack* trObj , 
+  ( const Track* trObj , 
     const double         Z     , 
     const double         zExtr ) const ;
 
-  /** Find TrState on specified Z.
+  /** Find State on specified Z.
    *  @param trObj Object with Track data
-   *  @param Z     Z of the TrState
+   *  @param Z     Z of the State
    *  @param zExtr Z for extrapolation 
    *  @param  covX allowed X-precision  (sigma**2)
    *  @param  covY allowed Y-precision  (sigma**2)
    *  @return standard status code
    */
   StatusCode findState
-  ( const TrStoredTrack* trObj , 
+  ( const Track* trObj , 
     const double         Z     , 
     const double         zExtr , 
     const double         covX  ,
@@ -410,14 +393,14 @@ protected:
    *  @param track track objects 
    *  @return track bits pattern 
    */
-  std::string bits ( const TrStoredTrack* track ) const ;
+  std::string bits ( const Track* track ) const ;
   
 protected:
   
   /** accessor to extrapolator 
    *  @return pointer to track extrapolator
    */
-  ITrExtrapolator* extrapolator() const { return m_extrapolator; }
+  ITrackExtrapolator* extrapolator() const { return m_extrapolator; }
   
   /** standard constructor 
    *  @param type tool type   (useless) 
@@ -453,10 +436,10 @@ private:
 protected:
   
   // track state used for matching
-  mutable TrState*             m_state     ;
+  mutable State*             m_state     ;
   
   // the previous stored track   
-  mutable const TrStoredTrack* m_prevTrack ;  
+  mutable const Track* m_prevTrack ;  
   
   // default 'bad' value 
   double                       m_bad           ;
@@ -476,7 +459,7 @@ private:
   
   // interface to track extrapolator
   
-  ITrExtrapolator*             m_extrapolator      ;    
+  ITrackExtrapolator*             m_extrapolator      ;    
   
   // and the extrapolator name
   std::string                  m_extrapolatorName  ;

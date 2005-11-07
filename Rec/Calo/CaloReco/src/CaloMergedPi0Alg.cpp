@@ -1,8 +1,11 @@
-// $Id: CaloMergedPi0Alg.cpp,v 1.11 2004-10-27 12:40:08 ibelyaev Exp $
+// $Id: CaloMergedPi0Alg.cpp,v 1.12 2005-11-07 12:12:42 odescham Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
-// $Log: not supported by cvs2svn $ 
+// $Log: not supported by cvs2svn $
+// Revision 1.11  2004/10/27 12:40:08  ibelyaev
+//  update for new Calo/CaloUtils + MergedPi0 'optimization'
+// 
 // ============================================================================
 // Include files
 // ============================================================================

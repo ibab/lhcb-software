@@ -1,8 +1,11 @@
-// $Id: CaloTrackMatchBase.cpp,v 1.9 2004-10-26 20:35:58 ibelyaev Exp $
+// $Id: CaloTrackMatchBase.cpp,v 1.10 2005-11-07 12:12:43 odescham Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
-// $Log: not supported by cvs2svn $ 
+// $Log: not supported by cvs2svn $
+// Revision 1.9  2004/10/26 20:35:58  ibelyaev
+//  improve properties of all Track-related algorithms
+// 
 // ============================================================================
 // Include files
 // ============================================================================
@@ -15,9 +18,9 @@
 // ============================================================================
 // Track
 // ============================================================================
-#include "Event/TrStoredTrack.h"
-#include "Event/TrStateP.h"
-#include "TrKernel/ITrExtrapolator.h"
+#include "Event/Track.h"
+#include "Event/State.h"
+#include "TrackInterfaces/ITrackExtrapolator.h"
 // ============================================================================
 // Calo 
 // ============================================================================
@@ -63,7 +66,7 @@ CaloTrackMatchBase::CaloTrackMatchBase
   , m_pdgID        ( 211        )
   , m_pid          ( 211        )
   , m_extrapolator ( 0          )
-  , m_extrapolatorName("TrFirstCleverExtrapolator")
+    , m_extrapolatorName("TrFirstCleverExtrapolator")//Default to be modified
   //
   , m_precision    ( 0.1        ) 
   , m_tolerance    ( 10 * mm    ) 
@@ -105,7 +108,7 @@ StatusCode CaloTrackMatchBase::initialize()
   { Warning ( " Probalems with 'Precision' property (>1/2) " ) ; }
   
   // locate the extrapolator 
-  m_extrapolator = tool<ITrExtrapolator>( m_extrapolatorName ) ;
+  m_extrapolator = tool<ITrackExtrapolator>( m_extrapolatorName ) ;
   if ( 0 == m_extrapolator ) { return StatusCode::FAILURE ; }
   
   // subscribe to incidents 
@@ -156,9 +159,9 @@ CaloTrackMatchBase::~CaloTrackMatchBase(){};
 // ============================================================================
 
 // ============================================================================
-/** Find TrState on specified Z.
+/** Find State on specified Z.
  *  @param Object with Track data
- *  @param Z    of the TrState
+ *  @param Z    of the State
  *  @param Zext z for extrapolation 
  *  param  covX allowed X-precision  (sigma**2)
  *  param  covY allowed Y-precision  (sigma**2)
@@ -166,14 +169,14 @@ CaloTrackMatchBase::~CaloTrackMatchBase(){};
  */
 // ============================================================================
 StatusCode CaloTrackMatchBase::findState
-( const TrStoredTrack* trObj , 
+( const Track* trObj , 
   const double         Z     , 
   const double         Zext  , 
   const double         covX  ,
   const double         covY  ) const 
 {
   // check the arguments 
-  if ( 0 == trObj ) { return Error ( "TrStoredTrack* points to NULL" ) ; }
+  if ( 0 == trObj ) { return Error ( "Track* points to NULL" ) ; }
   
   // use the previous state ? 
   // the same track as "previous" and state is valid 
@@ -182,23 +185,23 @@ StatusCode CaloTrackMatchBase::findState
     // get new state 
     if ( 0 != m_state ) { delete m_state ; m_state = 0 ; }
     
-    const TrState* st = trObj -> closestState( Z ) ;
-    if ( 0 == st ) 
-    { return Error ( "Error from 'closestState', track=" + bits ( trObj ) ) ; }
+    const State st = trObj -> closestState( Z ) ;
+    //OD if ( 0 == st ) 
+    //{ return Error ( "Error from 'closestState', track=" + bits ( trObj ) ) ; }
     
     // check the state
-    if ( st->z() < m_zmin || st->z() > m_zmax ) 
+    if ( st.z() < m_zmin || st.z() > m_zmax ) 
     { 
       if ( msgLevel( MSG::DEBUG ) ) 
       {
         debug() << " Problems: " << " Allowed : "  << m_zmin << "/" << m_zmax 
-                << " Closest : " << Z << " Found : " << st->z() 
+                << " Closest : " << Z << " Found : " << st.z() 
                 << " Track "     << bits ( trObj ) << endreq ;
       }
       return Error ( "Closest z is outside of allowed region, track=" + bits ( trObj ) ) ;
     }    
     // clone the state!
-    m_state = st -> clone() ;
+    m_state = st .clone() ;
     // Warning ( " Clone2       " + name() ) ;
   }
   
@@ -206,15 +209,18 @@ StatusCode CaloTrackMatchBase::findState
   const double dX = fabs (   dZ * m_state->stateVector()(3) ) ;
   const double dY = fabs (   dZ * m_state->stateVector()(4) ) ;
   
-  const double sX = covX + m_state->stateCov().fast(1,1)  ;
-  const double sY = covY + m_state->stateCov().fast(2,2)  ;
+  const double sX = covX + m_state->covariance().fast(1,1)  ;
+  const double sY = covY + m_state->covariance().fast(2,2)  ;
   
   if (  ( dX * dX > m_precision * sX   || 
           dY * dY > m_precision * sY ) && 
         ( dZ      > m_tolerance      ) ) 
   {
     // extrapolate the state  
-    StatusCode sc = m_state -> extrapolate( m_extrapolator , Zext , m_pid );
+    //OD    StatusCode sc = m_state -> extrapolate( m_extrapolator , Zext , m_pid );
+    // Propagation not implemented so far ...
+    StatusCode sc = m_extrapolator->propagate(*m_state , Zext , m_pid );
+
     // Warning ( " Extrapolate2 " + name() ) ;
     if ( sc.isFailure() ) 
     { return Error ( "Error from extrapolator! track=" + bits ( trObj ) , sc ) ; }
@@ -228,19 +234,19 @@ StatusCode CaloTrackMatchBase::findState
 // ============================================================================
 
 // ============================================================================
-/** Find TrState on specified Z.
+/** Find State on specified Z.
  *  @param Object with Track data
- *  @param Z of the TrState
+ *  @param Z of the State
  *  @return standard status code
  */
 // ============================================================================
 StatusCode CaloTrackMatchBase::findState
-( const TrStoredTrack* trObj ,
+( const Track* trObj ,
   const double         Z     , 
   const double         Zext  ) const 
 {
   // check the arguments 
-  if ( 0 == trObj ) { return Error ( "TrStoredTrack* points to NULL" ) ; }
+  if ( 0 == trObj ) { return Error ( "Track* points to NULL" ) ; }
   
   // use the previous state ? 
   // the same track as "previous" and state is valid 
@@ -249,31 +255,33 @@ StatusCode CaloTrackMatchBase::findState
     // get new state 
     if ( 0 != m_state ) { delete m_state ; m_state = 0 ; }
     
-    const TrState* st = trObj -> closestState( Z ) ;
-    if ( 0 == st ) 
-    { return Error ( "Error from 'closestState', tarck=" + bits ( trObj ) ); }
+    const State st = trObj -> closestState( Z ) ;
+    //OD if ( 0 == st ) 
+    //{ return Error ( "Error from 'closestState', tarck=" + bits ( trObj ) ); }
     
     // check the state
-    if ( st->z() < m_zmin || st->z() > m_zmax ) 
+    if ( st.z() < m_zmin || st.z() > m_zmax ) 
     { 
       if ( msgLevel( MSG::DEBUG ) ) 
       {
         debug() << " Problems: "  << " Allowed : "  << m_zmin << "/" << m_zmax 
-                << " Closest : "  << Z << " Found : "    << st->z() 
+                << " Closest : "  << Z << " Found : "    << st.z() 
                 << " Track "      << bits ( trObj ) << endreq ;
       }
       return Error ( "Closest z is outside of allowed region, track="  
                      + bits( trObj )  ) ;
     }    
     // clone the state!
-    m_state = st -> clone() ;
+    m_state = st.clone() ;
     // Warning ( " Clone        " + name() ) ;
   }
   
   if ( fabs( Zext -  m_state->z() ) > m_tolerance ) 
   {
     // extrapolate the state  
-    StatusCode sc = m_state -> extrapolate( m_extrapolator , Zext , m_pid );
+    //*StatusCode sc = m_state -> extrapolate( m_extrapolator , Zext , m_pid );
+    // Propagation not implemented so far ...
+    StatusCode sc = m_extrapolator->propagate(*m_state , Zext , m_pid );
     // Warning ( " Extrapolate  " + name() ) ;
     if ( sc.isFailure() ) 
     { return Error ( "Error from extrapolator! tarck=" + bits ( trObj ) , sc ) ; }
@@ -293,31 +301,29 @@ StatusCode CaloTrackMatchBase::findState
  */
 // ============================================================================
 std::string CaloTrackMatchBase::bits 
-( const TrStoredTrack* trObj ) const 
+( const Track* trObj ) const 
 { 
   if ( 0 == trObj ) { return std::string("<invalid>") ; }
   
   CaloPrint print;  
   std::string msg( "bits: ") ;
-  msg +=  "E:" + print ( (int) trObj -> errorFlag     () ) ;
-  msg += "/U:" + print ( (int) trObj -> unique        () ) ;
+  msg +=  "E:" + print ( (int) trObj -> checkFlag(Track::Invalid) ) ;
+  msg += "/U:" + print ( (int) trObj -> checkFlag(Track::Unique) ) ;
   msg += "/H:" + print ( (int) trObj -> history       () ) ;
-  //
-  msg += "/L:" + print ( (int) trObj -> isLong        () ) ;
-  msg += "/U:" + print ( (int) trObj -> isUpstream    () ) ;
-  msg += "/D:" + print ( (int) trObj -> isDownstream  () ) ;
-  msg += "/V:" + print ( (int) trObj -> isVelotrack   () ) ;
-  msg += "/B:" + print ( (int) trObj -> isBackward    () ) ;
-  msg += "/T:" + print ( (int) trObj -> isTtrack      () ) ;
-  //
-  msg += "/v:" + print ( (int) trObj -> velo          () ) ;
-  msg += "/s:" + print ( (int) trObj -> seed          () ) ;
-  msg += "/m:" + print ( (int) trObj -> match         () ) ;
-  msg += "/f:" + print ( (int) trObj -> forward       () ) ;
-  msg += "/f:" + print ( (int) trObj -> follow        () ) ;
-  msg += "/v:" + print ( (int) trObj -> veloTT        () ) ;
-  msg += "/b:" + print ( (int) trObj -> veloBack      () ) ;
-  msg += "/k:" + print ( (int) trObj -> ksTrack       () ) ;
+  msg += "/L:" + print ( (int) trObj -> checkType (Track::Long) ) ;
+  msg += "/U:" + print ( (int) trObj -> checkType (Track::Upstream) ) ;
+  msg += "/D:" + print ( (int) trObj -> checkType (Track::Downstream) ) ;
+  msg += "/V:" + print ( (int) trObj -> checkType (Track::Velo) ) ;
+  msg += "/B:" + print ( (int) trObj -> checkFlag(Track::Backward) ) ;
+  msg += "/T:" + print ( (int) trObj -> checkType (Track::Ttrack ) ) ;
+  msg += "/v:" + print ( (int) trObj -> checkHistory(Track::PatVelo) ) ;
+  msg += "/s:" + print ( (int) trObj -> checkHistory(Track::TrackSeeding) ) ;
+  msg += "/m:" + print ( (int) trObj -> checkHistory(Track::TrackMatching) ) ;
+  msg += "/f:" + print ( (int) trObj -> checkHistory(Track::TrgForward) ) ;
+  //OD? msg += "/f:" + print ( (int) trObj -> follow        () ) ;
+  msg += "/v:" + print ( (int) trObj -> checkHistory(Track::TrackVeloTT) ) ;
+  msg += "/b:" + print ( (int) trObj -> checkType (Track::Velo) && trObj ->checkFlag(Track::Backward) ) ;
+  msg += "/k:" + print ( (int) trObj -> checkHistory(Track::TrackKShort) ) ;
   //  
   return msg ;
 };

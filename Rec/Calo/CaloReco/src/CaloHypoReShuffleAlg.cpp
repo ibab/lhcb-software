@@ -1,8 +1,11 @@
-// $Id: CaloHypoReShuffleAlg.cpp,v 1.2 2004-02-17 12:08:08 ibelyaev Exp $
+// $Id: CaloHypoReShuffleAlg.cpp,v 1.3 2005-11-07 12:12:42 odescham Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.2  2004/02/17 12:08:08  ibelyaev
+//  update for new CaloKernel and CaloInterfaces
+//
 // Revision 1.1  2003/03/13 18:47:50  ibelyaev
 //  see ../doc/release.notes file
 // 

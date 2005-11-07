@@ -1,8 +1,11 @@
-// $Id: CaloSinglePhotonAlg.cpp,v 1.5 2004-12-10 17:12:29 ibelyaev Exp $
+// $Id: CaloSinglePhotonAlg.cpp,v 1.6 2005-11-07 12:12:43 odescham Exp $
 // ============================================================================
 // CVS atg $Name: not supported by cvs2svn $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.5  2004/12/10 17:12:29  ibelyaev
+//  steps towards 'Fast' Calo recontruction
+//
 // ============================================================================
 // Include files
 // ============================================================================

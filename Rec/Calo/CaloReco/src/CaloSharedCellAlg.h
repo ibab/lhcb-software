@@ -1,8 +1,11 @@
-// $Id: CaloSharedCellAlg.h,v 1.3 2004-02-17 12:08:10 ibelyaev Exp $
+// $Id: CaloSharedCellAlg.h,v 1.4 2005-11-07 12:12:43 odescham Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.3  2004/02/17 12:08:10  ibelyaev
+//  update for new CaloKernel and CaloInterfaces
+//
 // Revision 1.2  2003/06/23 13:11:54  ibelyaev
 //  fix for gcc3.2
 //

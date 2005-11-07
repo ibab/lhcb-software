@@ -1,8 +1,11 @@
-// $Id: Calo04ECorrection.cpp,v 1.4 2004-07-21 12:10:27 ibelyaev Exp $
+// $Id: Calo04ECorrection.cpp,v 1.5 2005-11-07 12:12:41 odescham Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.4  2004/07/21 12:10:27  ibelyaev
+//  minor modifications to improve the electron corrections
+//
 // ============================================================================
 // Include files
 // from Gaudi

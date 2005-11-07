@@ -1,8 +1,11 @@
-// $Id: ClusterSpreadTool.h,v 1.1.1.1 2002-11-13 20:46:43 ibelyaev Exp $
+// $Id: ClusterSpreadTool.h,v 1.2 2005-11-07 12:12:43 odescham Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.1.1.1  2002/11/13 20:46:43  ibelyaev
+// new package 
+//
 // Revision 1.4  2002/04/07 18:15:02  ibelyaev
 //  preliminary version ('omega'-release)
 //

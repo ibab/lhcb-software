@@ -1,4 +1,4 @@
-// $Id: CaloTrackMatchBremm.h,v 1.6 2005-03-07 15:37:15 cattanem Exp $
+// $Id: CaloTrackMatchBremm.h,v 1.7 2005-11-07 12:12:43 odescham Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
@@ -53,20 +53,9 @@ public:
    */
   StatusCode match 
   ( const CaloPosition*  caloObj ,
-    const TrStoredTrack* trObj   ,
+    const Track* trObj   ,
     double&              chi2    );
   
-  /** the main matching method  
-   *
-   *  @param caloObj  pointer to "calorimeter" object (position)
-   *  @param trObj    pointer to tracking object (track)
-   *  @param chi2     returned value of chi2 of the matching
-   *  @return status code for matching procedure 
-   */
-  StatusCode match 
-  ( const CaloPosition*   caloObj  , 
-    const TrgTrack*       trObj    ,
-    double&               chi2     ) ;
   
 protected:
 
@@ -134,11 +123,11 @@ private:
    * @return internal type struct with data
    */
   inline const MatchType1& 
-  prepareTrack ( TrState *trState )
+  prepareTrack ( State *state )
   { 
-    const HepSymMatrix &stCov = trState->stateCov();
-    m_matchTrk1.params  (1)   = trState->stateVector()[0];
-    m_matchTrk1.params  (2)   = trState->stateVector()[1];
+    const HepSymMatrix &stCov = state->covariance();
+    m_matchTrk1.params  (1)   = state->stateVector()[0];
+    m_matchTrk1.params  (2)   = state->stateVector()[1];
     m_matchTrk1.cov.fast(1,1) = stCov.fast(1, 1);
     m_matchTrk1.cov.fast(2,1) = stCov.fast(2, 1);
     m_matchTrk1.cov.fast(2,2) = stCov.fast(2, 2); 
@@ -161,13 +150,13 @@ private:
    * @return internal type struct with data
    */
   inline const MatchType2& 
-  prepareTrack ( const TrgState* trgState ,
+  prepareTrack ( const State* state ,
                  const double    z        )
   { 
-    m_matchTrk2.params  (1)   = trgState -> x     (z) ;
-    m_matchTrk2.params  (2)   = trgState -> y     (z) ;
-    m_matchTrk2.cov.fast(1,1) = trgState -> errX2 ( ) ;
-    m_matchTrk2.cov.fast(2,2) = trgState -> errY2 ( ) ; 
+    m_matchTrk2.params  (1)   = state -> x     () ;//OD was x(z)
+    m_matchTrk2.params  (2)   = state -> y     () ;//OD was x(z)
+    m_matchTrk2.cov.fast(1,1) = state -> errX2 ( ) ;
+    m_matchTrk2.cov.fast(2,2) = state -> errY2 ( ) ; 
 
     m_matchTrk2.error    =   0   ;
     m_matchTrk2.inverted = false ;

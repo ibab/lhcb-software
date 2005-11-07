@@ -1,8 +1,12 @@
-// $Id: CaloCluster2TrackAlg.cpp,v 1.6 2005-05-08 09:45:56 ibelyaev Exp $
+// $Id: CaloCluster2TrackAlg.cpp,v 1.7 2005-11-07 12:12:41 odescham Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.6 $
+// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.7 $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.6  2005/05/08 09:45:56  ibelyaev
+//  remove all *associators*
+// revision 1.7 2005/14/10 odescham
+//  adapt to new track model
 // ============================================================================
 // Include files
 // ============================================================================
@@ -16,7 +20,7 @@
 // Event 
 // ============================================================================
 #include "Event/CaloCluster.h"
-#include "Event/TrStoredTrack.h"
+#include "Event/Track.h"
 // ============================================================================
 // CaloInterfaces 
 // ============================================================================
@@ -44,8 +48,8 @@
  *
  *  - "Output"
  *   The default value is    "Rec/Calo/PhotonMatch"     
- *   Location of output relation table CaloCluster -> TrStoredTrack
- *   relation table of type RelationWeighted2D<CaloCluster,TrStoredTrack,float>
+ *   Location of output relation table CaloCluster -> Track
+ *   relation table of type RelationWeighted2D<CaloCluster,Track,float>
  *   
  *  @see CaloAlgorithm
  *  @see     Algorithm
@@ -76,7 +80,7 @@ protected:
   ( const std::string& name   , 
     ISvcLocator*       svcloc )
     : CaloTrackAlg  ( name , svcloc ) 
-    , m_tracks      ( TrStoredTrackLocation::Default )
+    , m_tracks      ( TrackLocation::Default )
     , m_cut         ( 100        )
     //
     , m_matchType   ( "CaloTrackMatchPhoton" ) 
@@ -167,11 +171,9 @@ StatusCode CaloCluster2TrackAlg::initialize()
 StatusCode CaloCluster2TrackAlg::execute() 
 {
   // avoid long names 
-  typedef const TrStoredTracks                                 Tracks   ;
-  typedef const TrStoredTrack                                  Track    ; 
   typedef const CaloCluster                                    Cluster  ;
   typedef const CaloClusters                                   Clusters ;
-  typedef RelationWeighted2D<CaloCluster,TrStoredTrack,float>  Table    ;
+  typedef RelationWeighted2D<CaloCluster,Track,float>  Table    ;
 
   const StatusCode OK = StatusCode::SUCCESS ;
   
@@ -187,7 +189,7 @@ StatusCode CaloCluster2TrackAlg::execute()
   Table*    table    = new Table( clusters->size() * 10 ) ;
   StatusCode sc      = put( table , outputData() );
   if ( sc.isFailure()           )     { return StatusCode::FAILURE ; }
-  
+
   if ( 0 == tracks   -> size () )
   { return Warning ( "Empty container of Tracks   " , OK ) ; }
   if ( 0 == clusters -> size () )
@@ -214,6 +216,7 @@ StatusCode CaloCluster2TrackAlg::execute()
       double chi2 = 0 ;
       StatusCode sc = m_match -> 
         match( &((*cluster)->position()) , *track , chi2 );
+      
       
       if ( sc.isFailure() )
       {

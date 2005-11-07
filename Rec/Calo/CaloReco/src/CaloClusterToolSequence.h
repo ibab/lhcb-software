@@ -1,8 +1,11 @@
-// $Id: CaloClusterToolSequence.h,v 1.1.1.1 2002-11-13 20:46:41 ibelyaev Exp $
+// $Id: CaloClusterToolSequence.h,v 1.2 2005-11-07 12:12:41 odescham Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.1.1.1  2002/11/13 20:46:41  ibelyaev
+// new package 
+//
 // Revision 1.2  2002/04/30 20:37:56  ibelyaev
 //  new option files and bettwer doxygen documentation
 //

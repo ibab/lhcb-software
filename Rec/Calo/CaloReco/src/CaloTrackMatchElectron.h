@@ -1,8 +1,11 @@
-// $Id: CaloTrackMatchElectron.h,v 1.4 2005-03-07 15:37:15 cattanem Exp $
+// $Id: CaloTrackMatchElectron.h,v 1.5 2005-11-07 12:12:43 odescham Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.4  2005/03/07 15:37:15  cattanem
+// fix doxygen warnings
+//
 // Revision 1.3  2004/10/26 17:51:42  ibelyaev
 //  add 'photon' matching for Trg Tracks
 //
@@ -56,20 +59,9 @@ public:
    */
   StatusCode match 
   ( const CaloPosition  *caloObj,
-    const TrStoredTrack *trObj,
+    const Track *trObj,
     double              &chi2 );
   
-  /** the main matching method  
-   *
-   *  @param caloObj  pointer to "calorimeter" object (position)
-   *  @param trObj    pointer to tracking object (track)
-   *  @param chi2     returned value of chi2 of the matching
-   *  @return status code for matching procedure 
-   */
-  StatusCode match 
-  ( const CaloPosition*   caloObj  , 
-    const TrgTrack*       trObj    ,
-    double&               chi2     ) ;
 
 protected:
   /** standard Tool constructor
@@ -130,19 +122,19 @@ private:
    * @return internal type struct with data
    */
   inline const MatchType1&
-  prepareTrack( const TrStateP *trState )  
+  prepareTrack( const State *state )  
   { 
-    const HepSymMatrix& stCov = trState -> stateCov();
+    const HepSymMatrix& stCov = state -> covariance();
 
     /// Make the vector of the format needed
-    m_matchTrk1.params (1) = trState->x() ;
-    m_matchTrk1.params (2) = trState->y() ;
+    m_matchTrk1.params (1) = state->x() ;
+    m_matchTrk1.params (2) = state->y() ;
 
-    const double p = trState->p() ;
+    const double p = state->p() ;
     
     m_matchTrk1.params (3) = p ;
     
-    const double q = trState->qDivP() < 0 ? -1. : 1. ; // Q sign
+    const double q = state->qOverP() < 0 ? -1. : 1. ; // Q sign
     
     // to convert sigma(Q/P)->sigma(P)
     const double coeff = q * p * p ;
@@ -173,28 +165,28 @@ private:
    * @return internal type struct with data
    */
   inline const MatchType2&
-  prepareTrack( const TrgState *trgState , 
+  prepareTrack( const State *state , 
                 const double    z        )  
   { 
     
     /// Make the vector of the format needed
-    m_matchTrk2.params (1) =       trgState->x() ;
-    m_matchTrk2.params (2) =       trgState->y() ;
+    m_matchTrk2.params (1) =       state->x() ;
+    m_matchTrk2.params (2) =       state->y() ;
     
-    const double p = trgState->momentum() ;
+    const double p = state->p() ;
     
     m_matchTrk2.params (3) = fabs( p ) ;
     
-    const double sign = trgState->qOverP() < 0 ? -1 : 1 ; // Q sign
+    const double sign = state->qOverP() < 0 ? -1 : 1 ; // Q sign
     
     // to convert sigma(Q/P)->sigma(P)
     const double coeff = sign * p * p ;
     
     // make the matrix. Recalculate elements concerned with momentum
     // since we need P and the original matrix contains Q/P
-    m_matchTrk2.cov.fast(1, 1) = trgState->errX2() ;
-    m_matchTrk2.cov.fast(2, 2) = trgState->errY2() ;    
-    m_matchTrk2.cov.fast(3, 3) = trgState->errQOverP2() * coeff * coeff ;
+    m_matchTrk2.cov.fast(1, 1) = state->errX2() ;
+    m_matchTrk2.cov.fast(2, 2) = state->errY2() ;    
+    m_matchTrk2.cov.fast(3, 3) = state->errQOverP2() * coeff * coeff ;
 
     m_matchTrk2.error    =   0   ;
     m_matchTrk2.inverted = false ;

@@ -1,8 +1,11 @@
-// $Id: CaloElectronAlg.h,v 1.3 2003-06-23 13:11:54 ibelyaev Exp $
+// $Id: CaloElectronAlg.h,v 1.4 2005-11-07 12:12:42 odescham Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.3  2003/06/23 13:11:54  ibelyaev
+//  fix for gcc3.2
+//
 // Revision 1.2  2002/12/09 17:43:09  cattanem
 // bug fixes
 //

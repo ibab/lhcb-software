@@ -1,8 +1,11 @@
-// $Id: CaloSelectorAND.h,v 1.1.1.1 2002-11-13 20:46:42 ibelyaev Exp $
+// $Id: CaloSelectorAND.h,v 1.2 2005-11-07 12:12:43 odescham Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.1.1.1  2002/11/13 20:46:42  ibelyaev
+// new package 
+//
 // Revision 1.1  2002/04/27 19:21:30  ibelyaev
 //  several 'technical' tools are added
 //

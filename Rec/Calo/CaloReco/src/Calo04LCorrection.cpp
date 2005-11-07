@@ -1,8 +1,11 @@
-// $Id: Calo04LCorrection.cpp,v 1.3 2004-12-13 16:32:37 cattanem Exp $
+// $Id: Calo04LCorrection.cpp,v 1.4 2005-11-07 12:12:41 odescham Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.3  2004/12/13 16:32:37  cattanem
+// fix some doxygen warnings
+//
 // Revision 1.2  2004/07/21 12:10:27  ibelyaev
 //  minor modifications to improve the electron corrections
 //

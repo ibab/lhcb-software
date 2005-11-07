@@ -1,6 +1,6 @@
-// $Id: Brunel.opts,v 1.9 2005-06-02 12:37:03 cattanem Exp $ 
+// $Id: Brunel.opts,v 1.10 2005-11-07 12:12:40 odescham Exp $ 
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.9 $ 
+// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.10 $ 
 // ============================================================================
 
 /** @file
@@ -37,6 +37,10 @@ RecoCALOSeq.Members +=
     "CaloHypo2TrackAlg/BremMatch"        , /// 'Brem' track-hypo match (e+/e- ID)
     "CaloHyposMerge/CaloMerge"             /// Merge CaloHypos to CaloParticle
   };
+
+PhotonMatch.OutputLevel=2;
+ElectronMatch.OutputLevel=2;
+CaloHypo2TrackAlg.OutputLevel=2;
 
 
 // ============================================================================

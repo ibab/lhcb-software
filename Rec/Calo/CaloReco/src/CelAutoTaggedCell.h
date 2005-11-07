@@ -3,6 +3,9 @@
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.3  2004/09/05 20:23:48  ibelyaev
+//  trivial modification to obtain 20-25% CPU gain
+//
 // ============================================================================
 #ifndef CALOCA_CELAUTOTAGGEDCEL_H
 #define CALOCA_CELAUTOTAGGEDCEL_H 1 

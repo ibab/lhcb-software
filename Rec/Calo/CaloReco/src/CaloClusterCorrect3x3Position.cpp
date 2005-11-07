@@ -1,4 +1,4 @@
-// $Id: CaloClusterCorrect3x3Position.cpp,v 1.2 2004-07-21 12:10:27 ibelyaev Exp $
+// $Id: CaloClusterCorrect3x3Position.cpp,v 1.3 2005-11-07 12:12:41 odescham Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================

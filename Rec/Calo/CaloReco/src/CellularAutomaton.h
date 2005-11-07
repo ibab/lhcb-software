@@ -3,6 +3,9 @@
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.5  2004/10/22 16:33:53  ibelyaev
+//  update CellularAutomaton and remove obsolete algs
+//
 // ============================================================================
 #ifndef CALOCA_CELLULARAUTOMATON_H
 #define CALOCA_CELLULARAUTOMATON_H 1

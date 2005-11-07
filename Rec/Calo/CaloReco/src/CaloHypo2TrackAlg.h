@@ -1,8 +1,14 @@
-// $Id: CaloHypo2TrackAlg.h,v 1.6 2005-05-08 09:45:56 ibelyaev Exp $
+// $Id: CaloHypo2TrackAlg.h,v 1.7 2005-11-07 12:12:42 odescham Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.7  2005/17/10 09:45:56  odescham
+// adapt to new track model
+//
+// Revision 1.6  2005/05/08 09:45:56  ibelyaev
+//  remove all *associators*
+//
 // Revision 1.5  2004/10/26 20:35:58  ibelyaev
 //  improve properties of all Track-related algorithms
 // 

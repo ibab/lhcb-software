@@ -1,8 +1,11 @@
-// $Id: CaloSinglePhotonAlg.h,v 1.4 2004-12-10 17:12:29 ibelyaev Exp $
+// $Id: CaloSinglePhotonAlg.h,v 1.5 2005-11-07 12:12:43 odescham Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.4  2004/12/10 17:12:29  ibelyaev
+//  steps towards 'Fast' Calo recontruction
+//
 // ============================================================================
 #ifndef CALOALGS_CALOSINGLEPHOTONALG_H 
 #define CALOALGS_CALOSINGLEPHOTONALG_H 1

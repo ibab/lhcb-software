@@ -1,8 +1,11 @@
-// $Id: CaloCorrASINH.h,v 1.2 2003-06-23 13:11:54 ibelyaev Exp $
+// $Id: CaloCorrASINH.h,v 1.3 2005-11-07 12:12:42 odescham Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.2  2003/06/23 13:11:54  ibelyaev
+//  fix for gcc3.2
+//
 // Revision 1.1.1.1  2002/11/13 20:46:41  ibelyaev
 // new package 
 //

@@ -1,8 +1,15 @@
-// $Id: CaloHypo2TrackAlg.cpp,v 1.4 2004-10-26 20:35:58 ibelyaev Exp $
+// $Id: CaloHypo2TrackAlg.cpp,v 1.5 2005-11-07 12:12:42 odescham Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
-// $Log: not supported by cvs2svn $:
+// $Log: not supported by cvs2svn $
+//
+// Revision 1.5  2005/17/10 09:45:56  odescham
+// adapt to new track model
+//
+// Revision 1.4  2004/10/26 20:35:58  ibelyaev
+//  improve properties of all Track-related algorithms
+//:
 // ============================================================================
 // Include files
 // ============================================================================
@@ -18,7 +25,7 @@
 // Event 
 // ============================================================================
 #include "Event/CaloHypo.h"
-#include "Event/TrStoredTrack.h"
+#include "Event/Track.h"
 // ============================================================================
 // CaloInterfaces 
 // ============================================================================
@@ -58,7 +65,7 @@ CaloHypo2TrackAlg::CaloHypo2TrackAlg
 ( const std::string& name   ,
   ISvcLocator*       svcloc )
   : CaloTrackAlg  ( name , svcloc ) 
-  , m_tracks      ( TrStoredTrackLocation::Default )
+  , m_tracks      ( TrackLocation::Default )
   , m_cut         ( 1.e+30     )
   //
   , m_matchType   ( "SomeType" ) 
@@ -124,11 +131,9 @@ StatusCode CaloHypo2TrackAlg::initialize()
 StatusCode CaloHypo2TrackAlg::execute() 
 {
   // avoid long names 
-  typedef const TrStoredTracks                              Tracks   ;
-  typedef const TrStoredTrack                               Track    ; 
   typedef const CaloHypos                                   Hypos    ;
   typedef const CaloHypo                                    Hypo     ;
-  typedef RelationWeighted2D<CaloHypo,TrStoredTrack,float>  Table    ;
+  typedef RelationWeighted2D<CaloHypo,Track,float>  Table    ;
   
   // get Hypos from Transient Store  
   Hypos*    hypos    = get<Hypos>    ( inputData() ) ;
@@ -159,7 +164,7 @@ StatusCode CaloHypo2TrackAlg::execute()
     if ( 0 == *track            ) { continue ; }             // CONTINUE
     
     // use track ?
-    if ( ! use ( *track )       ) { continue ; }             // CONTINUE 
+    if ( ! use( *track )       ) { continue ; }             // CONTINUE 
     
     // loop over hypos 
     for ( Hypos::const_iterator hypo = hypos->begin() ; 

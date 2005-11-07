@@ -1,8 +1,11 @@
-// $Id: CaloReco_load.cpp,v 1.17 2004-12-10 17:12:29 ibelyaev Exp $
+// $Id: CaloReco_load.cpp,v 1.18 2005-11-07 12:12:43 odescham Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.17  2004/12/10 17:12:29  ibelyaev
+//  steps towards 'Fast' Calo recontruction
+//
 // ============================================================================
 // Include files
 // ============================================================================
@@ -40,11 +43,11 @@ DECLARE_FACTORY_ENTRIES(CaloReco)
   DECLARE_ALGORITHM   ( CaloCluster2TrackAlg                ) ;
   DECLARE_ALGORITHM   ( CaloHypo2TrackAlg                   ) ;
   
-  DECLARE_ALGORITHM   ( CaloCluster2TrgTrackAlg             ) ;
-  DECLARE_ALGORITHM   ( CaloHypo2TrgTrackAlg                ) ;
+  //DECLARE_ALGORITHM   ( CaloCluster2TrgTrackAlg             ) ;
+  //DECLARE_ALGORITHM   ( CaloHypo2TrgTrackAlg                ) ;
   
   DECLARE_TOOL        ( CaloSelectNeutralCluster            ) ;
-  DECLARE_TOOL        ( CaloTrgSelectNeutralCluster         ) ;
+  //DECLARE_TOOL        ( CaloTrgSelectNeutralCluster         ) ;
 
   // from CaloTools package 
   DECLARE_TOOL        ( CaloClusterResetFractions           ) ;

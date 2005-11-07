@@ -1,8 +1,11 @@
-// $Id: PrsCorrG.opts,v 1.3 2003-02-04 14:37:04 ibelyaev Exp $
+// $Id: PrsCorrG.opts,v 1.4 2005-11-07 12:12:41 odescham Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.3  2003/02/04 14:37:04  ibelyaev
+//  fix a problem with floating point numbers
+//
 // Revision 1.2  2003/02/04 14:24:39  ibelyaev
 //  new Ecal/Prs calibration constants and improved PhotonID tool
 //

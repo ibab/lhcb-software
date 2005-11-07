@@ -1,8 +1,11 @@
-// $Id: CaloPrsCorrection.cpp,v 1.3 2003-02-04 14:24:39 ibelyaev Exp $
+// $Id: CaloPrsCorrection.cpp,v 1.4 2005-11-07 12:12:43 odescham Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.3  2003/02/04 14:24:39  ibelyaev
+//  new Ecal/Prs calibration constants and improved PhotonID tool
+//
 // Revision 1.2  2002/11/14 14:28:38  ibelyaev
 //  bug fix for Win2K
 //

@@ -1,9 +1,12 @@
-// $Id: CaloCorrection.cpp,v 1.1.1.1 2002-11-13 20:46:41 ibelyaev Exp $
+// $Id: CaloCorrection.cpp,v 1.2 2005-11-07 12:12:42 odescham Exp $
 // Include files 
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.1.1.1  2002/11/13 20:46:41  ibelyaev
+// new package 
+//
 // Revision 1.2  2002/06/13 12:32:38  ibelyaev
 //  version update
 //

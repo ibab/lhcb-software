@@ -1,8 +1,11 @@
-// $Id: CaloTrackMatchElectron.cpp,v 1.6 2004-10-26 17:51:42 ibelyaev Exp $
+// $Id: CaloTrackMatchElectron.cpp,v 1.7 2005-11-07 12:12:43 odescham Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.6  2004/10/26 17:51:42  ibelyaev
+//  add 'photon' matching for Trg Tracks
+//
 // ============================================================================
 // Include files
 // ============================================================================
@@ -23,9 +26,9 @@
 // ============================================================================
 // track related
 // ============================================================================
-#include "Event/TrStoredTrack.h"
-#include "Event/TrStateP.h"
-#include "TrKernel/ITrExtrapolator.h"
+#include "Event/Track.h"
+#include "Event/State.h"
+#include "TrackInterfaces/ITrackExtrapolator.h"
 // ============================================================================
 // local
 // ============================================================================
@@ -66,7 +69,7 @@ CaloTrackMatchElectron::CaloTrackMatchElectron( const std::string &type,
   , m_matchTrk1 ( HepVector ( 3 , 0 ) , HepSymMatrix  ( 3 , 0 ) ) 
   , m_matchTrk2 ( HepVector ( 3 , 0 ) , HepDiagMatrix ( 3 , 0 ) ) 
 {
-  setProperty ( "Extrapolator" ,  "TrLinearExtrapolator" ) ;
+  setProperty ( "Extrapolator" ,  "TrackLinearExtrapolator" ) ;
   setProperty ( "ZMin"         ,  "7000"                 ) ; //  7 * meter
   setProperty ( "ZMax"         ,  "30000"                ) ; // 30 * meter
   setProperty ( "PID"          ,  "211"                  ) ; // pion  
@@ -90,7 +93,7 @@ CaloTrackMatchElectron::~CaloTrackMatchElectron() {}
 // ============================================================================
 StatusCode CaloTrackMatchElectron::match 
 ( const CaloPosition*  caloObj     ,
-  const TrStoredTrack* trObj       ,
+  const Track* trObj       ,
   double&              chi2_result )
 {
   // set 'bad' value 
@@ -118,12 +121,12 @@ StatusCode CaloTrackMatchElectron::match
   }
   if ( sc.isFailure() ) { return Error("Correct state is not found" , sc ) ; }
   
-  // TrStateP ?
-  const TrStateP *state = dynamic_cast<TrStateP*>( m_state );
-  if ( 0 == state ) { return Error( "Closest state is not 'TrStateP'"); }
+  // State ?
+  const State *state = dynamic_cast<State*>( m_state );
+  if ( 0 == state ) { return Error( "Closest state is not 'State'"); }
   
   { // some trivial checks 
-    const HepSymMatrix& cov = state->stateCov() ;
+    const HepSymMatrix& cov = state->covariance() ;
     if ( 0 >= cov.fast( 1 , 1 ) || 
          0 >= cov.fast( 2 , 2 ) || 
          0 >= cov.fast( 5 , 5 ) ) 
@@ -153,21 +156,6 @@ StatusCode CaloTrackMatchElectron::match
 };
 // ============================================================================
 
-// ============================================================================
-/** the main matching method  
- *
- *  @param caloObj  pointer to "calorimeter" object (position)
- *  @param trObj    pointer to tracking object (track)
- *  @param chi2     returned value of chi2 of the matching
- *  @return status code for matching procedure 
- */
-// ============================================================================
-StatusCode CaloTrackMatchElectron::match 
-( const CaloPosition*   /* caloObj */  , 
-  const TrgTrack*       /* trObj   */  ,
-  double&               /* chi2    */  ) 
-{ return Error ( "match(TrgTrack*): not implemented(yet)!" ) ; } ;
-// ============================================================================
 
 // ============================================================================
 // The End

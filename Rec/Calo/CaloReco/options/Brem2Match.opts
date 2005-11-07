@@ -1,8 +1,11 @@
-// $Id: Brem2Match.opts,v 1.2 2004-10-26 20:35:58 ibelyaev Exp $ 
+// $Id: Brem2Match.opts,v 1.3 2005-11-07 12:12:40 odescham Exp $ 
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.2  2004/10/26 20:35:58  ibelyaev
+//  improve properties of all Track-related algorithms
+//
 // Revision 1.1  2004/10/25 12:10:13  ibelyaev
 //  add new tool
 //

@@ -1,8 +1,11 @@
-// $Id: CaloNewSCorrection.h,v 1.2 2005-03-07 15:37:15 cattanem Exp $
+// $Id: CaloNewSCorrection.h,v 1.3 2005-11-07 12:12:43 odescham Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.2  2005/03/07 15:37:15  cattanem
+// fix doxygen warnings
+//
 // Revision 1.1  2003/04/11 09:33:42  ibelyaev
 //  add new E-,S- and L-corrections from Olivier Deschamps
 //

@@ -1,8 +1,11 @@
-// $Id: CaloTrackMatchBrem2.cpp,v 1.2 2004-10-26 17:51:42 ibelyaev Exp $
+// $Id: CaloTrackMatchBrem2.cpp,v 1.3 2005-11-07 12:12:43 odescham Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.2  2004/10/26 17:51:42  ibelyaev
+//  add 'photon' matching for Trg Tracks
+//
 // ============================================================================
 // Include files
 // ============================================================================
@@ -23,8 +26,9 @@
 // ============================================================================
 // track related
 // ============================================================================
-#include "Event/TrStoredTrack.h"
-#include "Event/TrStateP.h"
+#include "Event/Track.h"
+#include "Event/State.h"
+#include "TrackInterfaces/ITrackExtrapolator.h"
 // ============================================================================
 // local
 // ============================================================================
@@ -72,7 +76,7 @@ CaloTrackMatchBrem2::CaloTrackMatchBrem2
 {
   declareProperty ( "BremZ"       , m_bremZ  ) ;
   
-  setProperty ( "Extrapolator" ,  "TrLinearExtrapolator" ) ;
+  setProperty ( "Extrapolator" ,  "TrackLinearExtrapolator" ) ;
   setProperty ( "ZMin"         ,  "500"                  ) ; //  0.5 * meter
   setProperty ( "ZMax"         ,  "4500"                 ) ; //  4.5 * meter
   setProperty ( "PID"          ,  "22"                   ) ; // photon 
@@ -99,7 +103,7 @@ CaloTrackMatchBrem2::~CaloTrackMatchBrem2() {};
 // ============================================================================
 StatusCode CaloTrackMatchBrem2::match
 ( const CaloPosition  *caloObj,
-  const TrStoredTrack *trObj,
+  const Track *trObj,
   double              &chi2_result )
 {
   // set 'bad' value 
@@ -141,21 +145,6 @@ StatusCode CaloTrackMatchBrem2::match
 };
 // ============================================================================
 
-// ============================================================================
-/** the main matching method  
- *
- *  @param caloObj  pointer to "calorimeter" object (position)
- *  @param trObj    pointer to tracking object (track)
- *  @param chi2     returned value of chi2 of the matching
- *  @return status code for matching procedure 
- */
-// ============================================================================
-StatusCode CaloTrackMatchBrem2::match 
-( const CaloPosition*   /* caloObj */  , 
-  const TrgTrack*       /* trObj   */  ,
-  double&               /* chi2    */  ) 
-{ return Error ( "match(TrgTrack*): not implemented(yet)!" ) ; } ;
-// ============================================================================
 
 
 // ============================================================================

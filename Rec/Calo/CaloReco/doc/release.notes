@@ -1,12 +1,29 @@
-! $Id: release.notes,v 1.73 2005-06-02 12:37:03 cattanem Exp $
+! $Id: release.notes,v 1.74 2005-11-07 12:12:40 odescham Exp $
 ! -----------------------------------------------------------------------------
-! CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.73 $
+! CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.74 $
 ! -----------------------------------------------------------------------------
 ! Package     : Calo/CaloReco
-! Responsible : Vanya BELYAEV  belyaev@lapp.in2p3.fr 
+! Responsible : Olivier Deschamps odescham@in2p3.fr 
 ! Purpose     : Main Package for Calorimeter Reconstruction Software 
 ! -----------------------------------------------------------------------------
+!========================== CaloReco v3r0 2005-11-04 ===================
+! 2005-11-04 - Olivier Deschamps
+ - Adapt to new Track Event Model (TrackEvent v1r4)
 
+
+  modified file :  
+   src/CaloTrackMatchPhoton.h
+   src/CaloTrackMatchElectron.h
+   src/CaloTrackMatchBremm.h
+   src/CaloTrackMatchBrem2.h
+   src/CaloTrackMatchBase.cpp
+   src/CaloSelectNeutralCluster.h
+   src/CaloCluster2TrackAlg.cpp
+   src/CaloHypo2TrackAlg.cpp
+
+
+ - cmt/requirements 
+   version increment to v3r0
 !============================ CaloReco v2r9 2005-06-02 ========================
 ! 2005-06-02 - Marco Cattaneo
  - Adapt Brunel.opts to new phase name Reco instead of BrunelReco
