@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.275 2005-11-04 06:54:46 pkoppenb Exp $
+# $Id: requirements,v 1.276 2005-11-07 10:26:57 pkoppenb Exp $
 # Created    : 07/02/2002
 # Maintainer : P. Koppenburg
 #
@@ -84,7 +84,7 @@ use  KtJet	             	v1r0     External
 #=======================================================
 # packages included in HltSys
 #=======================================================
-use HltGeneric                  v2r7     Hlt
+use HltGeneric                  v2r8     Hlt
 use HltSelections               v3r9     Hlt
 use HltSelChecker               v3r8     Hlt
 
@@ -124,6 +124,11 @@ use  L0mConf            	v2r2p3   L0
 
 #-- L1 Trigger libraries 
 use TrgSys                      v1r11    Trg
+
+
+#-- LHCbAgs
+use LHCbAlgs                    v1r3p2    Kernel
+
 
 use GaudiPython v*
 

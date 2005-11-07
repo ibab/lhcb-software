@@ -89,8 +89,10 @@ EventDataSvc.EnableFaultHandler  = true ;
 ApplicationMgr.DLLs += { "DAQEvent" };
 DataOnDemandSvc.Algorithms +=
   {
-     "DATA='/Event/DAQ/RawEvent'       TYPE='CreateRawEvent'",
-     "DATA='/Event/Header'             TYPE='EventHeaderFromRaw'"
+     "DATA='/Event/DAQ/RawEvent'       TYPE='CreateRawEvent'"
+  ,   "DATA='/Event/Header'             TYPE='EventHeaderFromRaw'"
+  ,   "DATA='Event/Rec/Relations/NeutralPP2MC' TYPE='NeutralPP2MC'"
+  ,   "DATA='Event/Rec/Relations/ChargedPP2MC' TYPE='ChargedPP2MC'"
    };
 
 // Profiling
