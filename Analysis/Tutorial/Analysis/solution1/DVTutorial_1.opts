@@ -1,6 +1,6 @@
 /** @file 
  * 
- *  Example from the tutorial 
+ *  Options for exercise 1 
  *
  *  @author P. Koppenburg
  *  @date 2004-11-04
@@ -31,28 +31,21 @@ PreLoadParticles.PhysDesktop.CombinedParticleMaker.KaonSelection = { "det='RICH'
 PreLoadParticles.PhysDesktop.CombinedParticleMaker.MuonSelection = { "det='MUON' mu-pi='-10.0'" }; 
 PreLoadParticles.PhysDesktop.CombinedParticleMaker.ExclusiveSelection  = false ; 
 //
+// J/spi->mumu selection
+//
 Tutorial.Members += { "TutorialAlgorithm/Jpsi2MuMu" };
 Jpsi2MuMu.PhysDesktop.InputLocations = { "Phys/PreLoadParticles" } ;
+// Particle filter options
 Jpsi2MuMu.ParticleFilter.CriteriaNames = { "PIDFilterCriterion/Muons" } ;
 Jpsi2MuMu.ParticleFilter.Muons.ParticleNames = {"mu+", "mu-"} ;
+Jpsi2MuMu.Particle = "J/psi(1S)" ;
 Jpsi2MuMu.MassWindow = 50*MeV ;
 Jpsi2MuMu.MaxChi2 = 100 ;
-Jpsi2MuMu.OutputLevel = 3 ;
+Jpsi2MuMu.OutputLevel = 2 ;
 Jpsi2MuMu.HistoProduce = true ;
-Jpsi2MuMu.Particle = "J/psi(1S)" ;
-//
-Tutorial.Members += { "TutorialAlgorithm/Phi2KK" };
-Phi2KK.PhysDesktop.InputLocations = { "Phys/PreLoadParticles" } ;
-Phi2KK.ParticleFilter.CriteriaNames = { "PIDFilterCriterion/Kaons" } ;
-Phi2KK.ParticleFilter.Kaons.ParticleNames = {"K+", "K-"} ;
-Phi2KK.MassWindow = 50*MeV ;
-Phi2KK.MaxChi2 = 100 ;
-Phi2KK.OutputLevel = 3 ;
-Phi2KK.Particle = "phi(1020)" ;
-Phi2KK.HistoProduce = true ;
 
-ApplicationMgr.HistogramPersistency = "HBOOK";
-HistogramPersistencySvc.OutputFile = "DVHistos3.hbook";
+ApplicationMgr.HistogramPersistency = "ROOT";
+HistogramPersistencySvc.OutputFile = "DVHistos1.root";
 
 ApplicationMgr.EvtMax = 500 ;
 
@@ -69,11 +62,11 @@ ApplicationMgr.EvtMax = 500 ;
 //-- 200 dataset(s) - NbEvents = 100000
 //-- 
 EventSelector.Input   = {
-"DATAFILE='PFN:rfio:/castor/cern.ch/lhcb/DC04/00000543_00000017_5.dst' TYP='POOL_ROOTTREE' OPT='READ'",
-"DATAFILE='PFN:rfio:/castor/cern.ch/lhcb/DC04/00000543_00000018_5.dst' TYP='POOL_ROOTTREE' OPT='READ'",
-"DATAFILE='PFN:rfio:/castor/cern.ch/lhcb/DC04/00000543_00000016_5.dst' TYP='POOL_ROOTTREE' OPT='READ'",
-"DATAFILE='PFN:rfio:/castor/cern.ch/lhcb/DC04/00000543_00000020_5.dst' TYP='POOL_ROOTTREE' OPT='READ'",
-"DATAFILE='PFN:rfio:/castor/cern.ch/lhcb/DC04/00000543_00000024_5.dst' TYP='POOL_ROOTTREE' OPT='READ'",
-"DATAFILE='PFN:rfio:/castor/cern.ch/lhcb/DC04/00000543_00000019_5.dst' TYP='POOL_ROOTTREE' OPT='READ'",
+"DATAFILE='PFN:castor:/castor/cern.ch/lhcb/DC04/00000543_00000017_5.dst' TYP='POOL_ROOTTREE' OPT='READ'",
+"DATAFILE='PFN:castor:/castor/cern.ch/lhcb/DC04/00000543_00000018_5.dst' TYP='POOL_ROOTTREE' OPT='READ'",
+"DATAFILE='PFN:castor:/castor/cern.ch/lhcb/DC04/00000543_00000016_5.dst' TYP='POOL_ROOTTREE' OPT='READ'",
+"DATAFILE='PFN:castor:/castor/cern.ch/lhcb/DC04/00000543_00000020_5.dst' TYP='POOL_ROOTTREE' OPT='READ'",
+"DATAFILE='PFN:castor:/castor/cern.ch/lhcb/DC04/00000543_00000024_5.dst' TYP='POOL_ROOTTREE' OPT='READ'",
+"DATAFILE='PFN:castor:/castor/cern.ch/lhcb/DC04/00000543_00000019_5.dst' TYP='POOL_ROOTTREE' OPT='READ'",
 };
 

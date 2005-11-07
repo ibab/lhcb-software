@@ -1,4 +1,4 @@
-// $Id: TutorialAlgorithm.h,v 1.2 2004-11-09 14:59:01 pkoppenb Exp $
+// $Id: TutorialAlgorithm.h,v 1.3 2005-11-07 11:54:42 pkoppenb Exp $
 #ifndef TutorialAlgorithm_H 
 #define TutorialAlgorithm_H 1
 
@@ -8,7 +8,8 @@
 
 
 /** @class TutorialAlgorithm TutorialAlgorithm.h
- *  
+ *
+ *  Solution for exercise 2 
  *
  *  @author Patrick KOPPENBURG
  *  @date   2004-11-04

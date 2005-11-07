@@ -4,11 +4,20 @@
 ! Purpose     : Analysis tutorial
 !-----------------------------------------------------------------------------
  
+  The exercises are to be found in the same directory.
+  
+  - exercise 1 asks you to write a basic DVAlgorithm doing 
+    J/psi -> mu mu
+  - exercsise 2...
+    
+
+
+
   1) You are welcome to write the code yourself, following the tutorial
   
   2) To get it to work quickly, go through the following:
      
-    > DaVinciEnv v12r3   (or more if available)
+    > DaVinciEnv v12r14   (or more if available)
     > cd cmt/
     > cmt config
     > source setup.csh

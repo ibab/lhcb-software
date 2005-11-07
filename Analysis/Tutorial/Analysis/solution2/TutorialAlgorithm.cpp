@@ -1,4 +1,4 @@
-// $Id: TutorialAlgorithm.cpp,v 1.3 2005-10-21 08:50:29 pkoppenb Exp $
+// $Id: TutorialAlgorithm.cpp,v 1.4 2005-11-07 11:54:42 pkoppenb Exp $
 // Include files 
 
 // from Gaudi
@@ -68,8 +68,12 @@ StatusCode TutorialAlgorithm::execute() {
   setFilterPassed(false);   // Mandatory. Set to true if event is accepted.
   ++m_nEvents;
   
-  // get particles. Filter particles.
+  // get particles from the desktop. This will get all particles that are found
+  // in the InputLocations of the PhysDesktop.
   const ParticleVector& parts = desktop()->particles();
+
+  // Now filter out the ones that are real muons. 
+  // This requires the ParticleFilter to be properly configured
   ParticleVector PartPlus, PartMinus;
   StatusCode sc = particleFilter()->filterNegative(parts,PartMinus);
   if (sc) sc = particleFilter()->filterPositive(parts,PartPlus);
@@ -77,17 +81,17 @@ StatusCode TutorialAlgorithm::execute() {
     err() << "Error while filtering" << endreq ;
     return sc ;
   } 
-  verbose() << "Filtered " << PartMinus.size() << " positive and " 
-            << PartPlus.size() << " negative particles" << endreq ;
+  debug() << "Filtered " << PartMinus.size() << " positive and " 
+          << PartPlus.size() << " negative particles" << endreq ;
 
   // combine mu+ and mu-
   ParticleVector::const_iterator ipp, ipm;
   for ( ipm = PartMinus.begin() ; ipm !=  PartMinus.end() ; ++ipm ){
-    plot((*ipm)->momentum().perp(),"Pt",0.*GeV,10.*GeV);
+    plot((*ipm)->momentum().perp(),"Pt",0.*GeV,10.*GeV);// Plot Pt
     for ( ipp = PartPlus.begin() ; ipp !=  PartPlus.end() ; ++ipp ){
-      if (ipm == PartMinus.begin()) plot((*ipp)->momentum().perp(),"Pt",0.*GeV,10.*GeV);
+      if (ipm == PartMinus.begin()) plot((*ipp)->momentum().perp(),"Pt",0.*GeV,10.*GeV);// Plot Pt but only once
       HepLorentzVector twoP = (*ipp)->momentum() + (*ipm)->momentum() ;
-      verbose() << "Two muon mass is " << twoP.m()/MeV << endreq ;
+      verbose() << "Two prong mass is " << twoP.m()/MeV << endreq ;
       // mass cut
       plot(twoP.m(),"Mass",0.5*m_Mass,1.5*m_Mass); // +.- 50% mass window
       if ( fabs ( twoP.m() - m_Mass ) > m_MassWin ) continue ;
@@ -121,7 +125,7 @@ StatusCode TutorialAlgorithm::execute() {
       ++m_nFound ;
     } // ipp
   } // ipm
-  // save desktop
+  // save desktop. This will save all particles to /Event/Phys/TutorialAlgorithm/Particles.
   sc = desktop()->saveDesktop();
   return sc;
 };

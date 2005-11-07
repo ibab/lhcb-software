@@ -11,7 +11,6 @@
 //
 // Don't forget the DLL
 ApplicationMgr.DLLs   += { "Analysis" };
-ApplicationMgr.DLLs   += { "PhysSelections", "LoKi" };
 
 // 2. Charged
 // VERY IMPORTANT:
@@ -22,9 +21,6 @@ ApplicationMgr.DLLs   += { "PhysSelections", "LoKi" };
 // Let's make it a sequence
 //
 ApplicationMgr.TopAlg += { "GaudiSequencer/Tutorial" };
-//
-// Preload particles
-//
 //
 // Preload particles
 //
@@ -59,28 +55,27 @@ Phi2KK.PhiFilter.AndList = { "MassFilterCriterion", "VtxFilterCriterion" };
 Phi2KK.PhiFilter.MassFilterCriterion.Window = 20*MeV ;
 Phi2KK.PhiFilter.VtxFilterCriterion.MaxChi2 = 100 ;
 //
-// Bs
+// Bs : Use Standard algorithm
 //
-Tutorial.Members += { "CombineParticles/Bs2JpsiPhi" };
+Tutorial.Members += { "MakeResonances/Bs2JpsiPhi" };
 Bs2JpsiPhi.PhysDesktop.InputLocations = { "Phys/Phi2KK", "Phys/Jpsi2MuMu" } ;
-Bs2JpsiPhi.DecayDescriptor = "B_s0 -> phi(1020) J/psi(1S)";
-Bs2JpsiPhi.Selections = {"B_s0 : BooleanFilterCriterion/BFilter",
-                          "J/psi(1S) : BooleanFilterCriterion",
-		          "phi(1020) : BooleanFilterCriterion"};
-Bs2JpsiPhi.BFilter.AndList = { "MassFilterCriterion"
-                             , "VtxFilterCriterion"
-			     , "PVIPFilterCriterion" };
-Bs2JpsiPhi.BFilter.MassFilterCriterion.Window = 50*MeV ;
-Bs2JpsiPhi.BFilter.VtxFilterCriterion.MaxChi2 = 100 ;
-Bs2JpsiPhi.BFilter.PVIPFilterCriterion.MaxIPsignif = 5 ;
-Bs2JpsiPhi.BFilter.PVIPFilterCriterion.CutBestPV = true ;
+Bs2JpsiPhi.DecayDescriptor = "B_s0 -> phi(1020) J/psi(1S)"; // mandatory
+Bs2JpsiPhi.DaughterFilter.Selections = { " K+ : PVIPFilterCriterion"  }; // Refine Kaons
+Bs2JpsiPhi.DaughterFilter.PVIPFilterCriterion.MinIPsignif = 2 ;
+Bs2JpsiPhi.BFilter.Window =  100 * MeV; // MeV
+Bs2JpsiPhi.MotherFilter.Selections = { "B_s0  : PVIPFilterCriterion, 
+                                                VtxFilterCriterion, 
+						FlightDistanceFilterCriterion"  }; 
+Bs2JpsiPhi.MotherFilter.VtxFilterCriterion.MaxChi2 = 30 ;  // Require 30 maximal B vertex Chi2
+Bs2JpsiPhi.MotherFilter.PVIPFilterCriterion.MaxIPsignif = 4 ; // Require 4 maximal B IP/IPE on best PV
+Bs2JpsiPhi.MotherFilter.FlightDistanceFilterCriterion.MinFSPV = 5 ; // Require 5 minimal B flight distance significance
 //
-// Correlations
+// Print a correlations table
 //
 ApplicationMgr.TopAlg += { "SelResultCorrelations" };
 SelResultCorrelations.Algorithms = { "Jpsi2MuMu", "Phi2KK", "Bs2JpsiPhi"  } ;
 //
-// Efficiency
+// Run the efficiency algorithm
 //
 #include "$ANALYSISROOT/options/Efficiency.opts"
 
@@ -116,11 +111,11 @@ ApplicationMgr.EvtMax = 500 ;
 //-- 200 dataset(s) - NbEvents = 100000
 //-- 
 EventSelector.Input   = {
-"DATAFILE='PFN:rfio:/castor/cern.ch/lhcb/DC04/00000543_00000017_5.dst' TYP='POOL_ROOTTREE' OPT='READ'",
-"DATAFILE='PFN:rfio:/castor/cern.ch/lhcb/DC04/00000543_00000018_5.dst' TYP='POOL_ROOTTREE' OPT='READ'",
-"DATAFILE='PFN:rfio:/castor/cern.ch/lhcb/DC04/00000543_00000016_5.dst' TYP='POOL_ROOTTREE' OPT='READ'",
-"DATAFILE='PFN:rfio:/castor/cern.ch/lhcb/DC04/00000543_00000020_5.dst' TYP='POOL_ROOTTREE' OPT='READ'",
-"DATAFILE='PFN:rfio:/castor/cern.ch/lhcb/DC04/00000543_00000024_5.dst' TYP='POOL_ROOTTREE' OPT='READ'",
-"DATAFILE='PFN:rfio:/castor/cern.ch/lhcb/DC04/00000543_00000019_5.dst' TYP='POOL_ROOTTREE' OPT='READ'",
+"DATAFILE='PFN:castor:/castor/cern.ch/lhcb/DC04/00000543_00000017_5.dst' TYP='POOL_ROOTTREE' OPT='READ'",
+"DATAFILE='PFN:castor:/castor/cern.ch/lhcb/DC04/00000543_00000018_5.dst' TYP='POOL_ROOTTREE' OPT='READ'",
+"DATAFILE='PFN:castor:/castor/cern.ch/lhcb/DC04/00000543_00000016_5.dst' TYP='POOL_ROOTTREE' OPT='READ'",
+"DATAFILE='PFN:castor:/castor/cern.ch/lhcb/DC04/00000543_00000020_5.dst' TYP='POOL_ROOTTREE' OPT='READ'",
+"DATAFILE='PFN:castor:/castor/cern.ch/lhcb/DC04/00000543_00000024_5.dst' TYP='POOL_ROOTTREE' OPT='READ'",
+"DATAFILE='PFN:castor:/castor/cern.ch/lhcb/DC04/00000543_00000019_5.dst' TYP='POOL_ROOTTREE' OPT='READ'",
 };
 
