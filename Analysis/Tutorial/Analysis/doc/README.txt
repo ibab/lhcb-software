@@ -11,7 +11,7 @@ The exercises are to be found in the same directory.
   - exercise 3 completes the Bs->J/PsiPhi chain using generic code
   - exercise 4 shows some more nice utility algorithms
   - exercise 5 lets you look for tagging and trigger
-  - exercise 6 is about MC truth
+  - exercise 6 is about association to MC truth
 
 For those who want to cheat:
      

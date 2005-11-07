@@ -7,3 +7,10 @@
 Let's add MC truth to our Ntuple. We start again from the algorithm
 created in exercise 5, but one could as well start a new algorithm.
 
+  - It's a good idea to have a global boolean flag that controls
+    the access to MC truth. You don't want to wast time looking for
+    association of Bs in minimum bias...
+  - get a Particle2MCLink* with Particle2MCMethod::Composite
+  - Associate your B to a MCParticle.
+  
+  
