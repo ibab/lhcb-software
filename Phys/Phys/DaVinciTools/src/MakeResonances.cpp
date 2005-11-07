@@ -1,4 +1,4 @@
-// $Id: MakeResonances.cpp,v 1.13 2005-11-07 13:46:23 pkoppenb Exp $
+// $Id: MakeResonances.cpp,v 1.14 2005-11-07 13:53:51 pkoppenb Exp $
 // Include files 
 
 #include <algorithm>
@@ -429,7 +429,7 @@ StatusCode MakeResonances::makePlots(const ParticleVector& PV,IPlotTool* PT) {
 StatusCode MakeResonances::finalize() {
 
   debug() << "==> Finalize" << endmsg;
-  info() << "Found " << m_nCandidates << " in " << m_nAccepted << " accepted events among " 
+  info() << "Found " << m_nCandidates << " candidates in " << m_nAccepted << " accepted events among " 
          << m_nEvents << " events" << endmsg ;
 
   return  StatusCode::SUCCESS;
