@@ -1,17 +1,20 @@
 // Rich Reconstruction timing monitors
 
+CheckRICHSeq.Members += { "GaudiSequencer/RichTiming" };
+RichTiming.MeasureTime = true;
+
 // Note : requires the ChronoSvc to be activated - Use
 ApplicationMgr.DLLs += { "GaudiAud" };
 AuditorSvc.Auditors  = { "ChronoAuditor" };
 ChronoAuditor.Enable = true;
 
 // overall rich reconstruction
-CheckRICHSeq.Members += { "RichRecTimeMonitor/RichRecTime" };
+RichTiming.Members += { "RichRecTimeMonitor/RichRecTime" };
 RichRecTime.TimingName = "RecoRICHSeq";
 RichRecTime.Algorithms = { "RecoRICHSeq" };
 
 // overall tracking
-CheckRICHSeq.Members += { "RichRecTimeMonitor/TrTime" };
+RichTiming.Members += { "RichRecTimeMonitor/TrTime" };
 TrTime.HistoProduce = false;
 TrTime.TimingName = "RecoTrSeq";
 TrTime.Algorithms = { "RecoTrSeq" };

@@ -4,6 +4,10 @@
 ! Purpose     : 
 !-----------------------------------------------------------------------------
 
+! 2005-11-07 - Chris Jones
+ - Rewrite algorithms using new GaudiAlg histogramming base classes.
+ - Split up RichPhotonMonitor into smaller dedicated monitors.
+
 ! 2005-10-31 - Chris Jones
  - Update to new base classes
 

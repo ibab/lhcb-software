@@ -1,14 +1,16 @@
 
+//--------------------------------------------------------------------------
 /** @file RichMCMassHypoRingsAlg.cpp
  *
  *  Implementation file for algorithm class : RichMCMassHypoRingsAlg
  *
  *  CVS Log :-
- *  $Id: RichMCMassHypoRingsAlg.cpp,v 1.2 2005-06-23 15:14:55 jonrob Exp $
+ *  $Id: RichMCMassHypoRingsAlg.cpp,v 1.3 2005-11-07 09:37:19 jonrob Exp $
  *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   05/04/2002
  */
+//--------------------------------------------------------------------------
 
 // local
 #include "RichMCMassHypoRingsAlg.h"
@@ -79,7 +81,8 @@ StatusCode RichMCMassHypoRingsAlg::execute()
 
   // loop over data locations
   for ( EventList::const_iterator iEvt = m_evtLocs.begin();
-        iEvt != m_evtLocs.end(); ++iEvt ) {
+        iEvt != m_evtLocs.end(); ++iEvt ) 
+  {
     const StatusCode sc = buildRings( *iEvt );
     if ( sc.isFailure() ) { return sc; }
   }
@@ -105,7 +108,8 @@ RichMCMassHypoRingsAlg::buildRings( const std::string & evtLoc ) const
   
   // iterate over segments
   for ( MCRichSegments::const_iterator iSeg = mcSegs->begin();
-        iSeg != mcSegs->end(); ++iSeg ) {
+        iSeg != mcSegs->end(); ++iSeg ) 
+  {
     const MCRichSegment * segment = *iSeg;
     if ( !segment ) continue;
 
