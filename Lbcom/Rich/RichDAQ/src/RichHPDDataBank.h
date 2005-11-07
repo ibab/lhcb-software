@@ -5,7 +5,7 @@
  *  Header file for RICH DAQ utility class : RichHPDDataBank
  *
  *  CVS Log :-
- *  $Id: RichHPDDataBank.h,v 1.5 2005-05-13 14:22:12 jonrob Exp $
+ *  $Id: RichHPDDataBank.h,v 1.6 2005-11-07 11:48:35 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   2004-12-17
@@ -36,7 +36,8 @@
  */
 //-----------------------------------------------------------------------------
 
-class RichHPDDataBank {
+class RichHPDDataBank 
+{
 
 public:
 

@@ -5,7 +5,7 @@
  *  Header file for RICH DAQ utility class : RichZeroSuppData
  *
  *  CVS Log :-
- *  $Id: RichZeroSuppData.h,v 1.3 2005-05-13 14:22:12 jonrob Exp $
+ *  $Id: RichZeroSuppData.h,v 1.4 2005-11-07 11:48:35 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   2004-12-17
@@ -23,6 +23,9 @@
 #include "RichDAQHeaderPD.h"
 #include "RichZSHitTriplet.h"
 
+// RichKernel
+#include "RichKernel/BoostMemPoolAlloc.h"
+
 /** @namespace RichZeroSuppDataV0
  *
  *  Namespace for version 0 of the RichZeroSuppData object.
@@ -30,7 +33,8 @@
  *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
  *  @date   2004-12-17
  */
-namespace RichZeroSuppDataV0 {
+namespace RichZeroSuppDataV0 
+{
 
   /** @class RichZeroSuppData RichZeroSuppData.h
    *
@@ -40,7 +44,9 @@ namespace RichZeroSuppDataV0 {
    *  @author Chris Jones    Christopher.Rob.Jones@cern.ch
    *  @date   2003-11-07
    */
-  class RichZeroSuppData : public RichHPDDataBank {
+  class RichZeroSuppData : public RichHPDDataBank,
+                           public Rich::BoostMemPoolAlloc<RichZeroSuppDataV0::RichZeroSuppData>
+  {
 
   public: // Definitions
 
@@ -104,7 +110,8 @@ namespace RichZeroSuppDataV0 {
  *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
  *  @date   2004-12-17
  */
-namespace RichZeroSuppDataV1 {
+namespace RichZeroSuppDataV1 
+{
 
   /** @class RichZeroSuppData RichZeroSuppData.h
    *
@@ -115,7 +122,9 @@ namespace RichZeroSuppDataV1 {
    *  @author Chris Jones    Christopher.Rob.Jones@cern.ch
    *  @date   2003-11-07
    */
-  class RichZeroSuppData : public RichHPDDataBank {
+  class RichZeroSuppData : public RichHPDDataBank,
+                           public Rich::BoostMemPoolAlloc<RichZeroSuppDataV1::RichZeroSuppData>
+  {
 
   public: // Definitions
 
@@ -178,7 +187,8 @@ namespace RichZeroSuppDataV1 {
  *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
  *  @date   2004-12-17
  */
-namespace RichZeroSuppDataV2 {
+namespace RichZeroSuppDataV2 
+{
 
   /** @class RichZeroSuppData RichZeroSuppData.h
    *
@@ -188,7 +198,9 @@ namespace RichZeroSuppDataV2 {
    *  @author Chris Jones    Christopher.Rob.Jones@cern.ch
    *  @date   2003-11-07
    */
-  class RichZeroSuppData : public RichHPDDataBank {
+  class RichZeroSuppData : public RichHPDDataBank,
+                           public Rich::BoostMemPoolAlloc<RichZeroSuppDataV2::RichZeroSuppData>
+{
 
   public: // Definitions
 

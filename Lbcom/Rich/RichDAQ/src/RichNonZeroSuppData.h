@@ -5,7 +5,7 @@
  *  Header file for RICH DAQ utility class : RichNonZeroSuppData
  *
  *  CVS Log :-
- *  $Id: RichNonZeroSuppData.h,v 1.14 2005-05-13 14:22:12 jonrob Exp $
+ *  $Id: RichNonZeroSuppData.h,v 1.15 2005-11-07 11:48:35 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   2003-11-07
@@ -26,6 +26,9 @@
 #include "RichDAQHPDIdentifier.h"
 #include "RichDAQHeaderPD.h"
 
+// RichKernel
+#include "RichKernel/BoostMemPoolAlloc.h"
+
 /** @namespace RichNonZeroSuppDataV0
  *
  *  Namespace for version 0 of the RichNonZeroSuppData object.
@@ -33,7 +36,8 @@
  *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
  *  @date   2004-12-17
  */
-namespace RichNonZeroSuppDataV0 {
+namespace RichNonZeroSuppDataV0 
+{
 
   /** @class RichNonZeroSuppData RichNonZeroSuppData.h
    *
@@ -43,7 +47,9 @@ namespace RichNonZeroSuppDataV0 {
    *  @author Chris Jones    Christopher.Rob.Jones@cern.ch
    *  @date   2003-11-07
    */
-  class RichNonZeroSuppData : public RichHPDDataBank {
+  class RichNonZeroSuppData : public RichHPDDataBank,
+                              public Rich::BoostMemPoolAlloc<RichNonZeroSuppDataV0::RichNonZeroSuppData>
+  {
 
   public: // Definitions
 
@@ -121,7 +127,8 @@ namespace RichNonZeroSuppDataV0 {
  *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
  *  @date   2004-12-17
  */
-namespace RichNonZeroSuppDataV1 {
+namespace RichNonZeroSuppDataV1
+{
 
   /** @class RichNonZeroSuppData RichNonZeroSuppData.h
    *
@@ -132,8 +139,10 @@ namespace RichNonZeroSuppDataV1 {
    *  @author Chris Jones    Christopher.Rob.Jones@cern.ch
    *  @date   2003-11-07
    */
-  class RichNonZeroSuppData : public RichHPDDataBank {
-
+  class RichNonZeroSuppData : public RichHPDDataBank,
+                              public Rich::BoostMemPoolAlloc<RichNonZeroSuppDataV1::RichNonZeroSuppData>
+  {
+    
   public: // Definitions
 
     /// Typedef for the header type for this data bank implementation

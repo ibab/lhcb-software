@@ -4,6 +4,9 @@
 ! Purpose     : Package simulating the RICH DAQ system and data format
 !-----------------------------------------------------------------------------
 
+! 2005-11-07 - Chris Jones
+ - use memory management (test, to see if this improves HLT time)
+
 ! 2005-09-25 - Chris Jones
  - Turn on sorting of RichSmartIDs from RawBuffer by default
 
