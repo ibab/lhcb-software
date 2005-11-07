@@ -5,7 +5,7 @@
  *  Implementation file for algorithm class : RichPhotonRecoEffMonitor
  *
  *  CVS Log :-
- *  $Id: RichPhotonRecoEffMonitor.cpp,v 1.1 2005-11-07 09:37:20 jonrob Exp $
+ *  $Id: RichPhotonRecoEffMonitor.cpp,v 1.2 2005-11-07 13:29:28 jonrob Exp $
  *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   05/04/2002
@@ -109,7 +109,7 @@ StatusCode RichPhotonRecoEffMonitor::execute()
         if ( !recPhot )
         {
           // This is a true CK photon that was not reconstructed. Why ?
-          //++counter("Found non-reconstructed true "+Rich::text(rad)+" cherenkov photon");
+          ++counter("Found non-reconstructed true "+Rich::text(rad)+" cherenkov photon");
 
           // compute hit seperation : global
           const double sep = sqrt( m_geomTool->trackPixelHitSep2(segment, pixel) );
@@ -145,7 +145,7 @@ StatusCode RichPhotonRecoEffMonitor::execute()
           recPhot = m_forcedPhotCreator->reconstructPhoton(segment,pixel);
           if ( !recPhot )
           {
-            //++counter( "Failed to force creation of "+Rich::text(rad)+" cherenkov photon" );
+            ++counter( "Failed to force creation of "+Rich::text(rad)+" cherenkov photon" );
           }
           else
           {
