@@ -3,7 +3,7 @@
 <gdd>
 
 <!-- **************************************************************************
-  * $Id: RichSmartID.xml,v 1.18 2005-04-15 13:57:51 jonrob Exp $
+  * $Id: RichSmartID.xml,v 1.19 2005-11-07 17:36:03 jonrob Exp $
   *****************************************************************************
   * XML-description of RichSmartID class                                      *
   * author: Chris Jones   Christopher.Rob.Jones@cern.ch                       *
@@ -39,8 +39,8 @@
             <bitfield desc="The pixel column number"             length="5"  name="pixelCol"      setMeth="FALSE" />
             <bitfield desc="The photon detector row number"      length="5"  name="PDRow"         setMeth="FALSE" />
             <bitfield desc="The photon detector column number"   length="5"  name="PDCol"         setMeth="FALSE" />
-            <bitfield desc="The RICH panel"                      length="1"  name="panel"         setMeth="FALSE" getMeth="FALSE" />
-            <bitfield desc="The RICH Detector"                   length="1"  name="rich"          setMeth="FALSE" getMeth="FALSE" />
+            <bitfield desc="The RICH panel"                      length="1"  name="panel"         setMeth="FALSE" type="Rich::Side"         />
+            <bitfield desc="The RICH Detector"                   length="1"  name="rich"          setMeth="FALSE" type="Rich::DetectorType" />
             <bitfield desc="Sub-pixel field is set"              length="1"  name="subPixelIsSet" setMeth="FALSE" />
             <bitfield desc="Pixel row field is set"              length="1"  name="pixelRowIsSet" setMeth="FALSE" />
             <bitfield desc="Pixel column field is set"           length="1"  name="pixelColIsSet" setMeth="FALSE" />
@@ -422,26 +422,6 @@
             type  = "RichSmartID">
             <code>
                return RichSmartID( m_key &amp; (richMask+panelMask+PDRowMask+PDColMask+pixelRowMask+pixelColMask+subPixelMask) );
-            </code>
-        </method>
-
-        <method 
-            name  = "rich"
-            const = "TRUE" 
-            desc  = "Get the RICH detector identifier. NB: Using custom method until G.O.D. supports specific automatically generated return values."  
-            type  = "Rich::DetectorType">
-            <code>
-               return static_cast&lt;Rich::DetectorType&gt;( (m_key &amp; richMask) &gt;&gt; richBits );
-            </code>
-        </method>
-
-        <method 
-            name  = "panel" 
-            const = "TRUE" 
-            desc  = "Get the RICH panel identifier. NB: Using custom method until G.O.D. supports specific automatically generated return values." 
-            type  = "Rich::Side" >
-            <code>
-               return static_cast&lt;Rich::Side&gt;( (m_key &amp; panelMask) &gt;&gt; panelBits );
             </code>
         </method>
 

@@ -2,6 +2,10 @@ Package LHCbKernel
 Package manager: M.Cattaneo
 Purpose: LHCb specific Kernel classes
 
+! 2005-11-07 - Chris Jones
+ - Remove custom accessors from RichSmartID in favour of new GOD generator 
+   methods with specified return types.
+
 !===================== LHCbKernel v5r14 2005-11-04 ========================
 ! 2005-11-04 - Marco Cattaneo
  - Add HACKs to requirements to pick up:
