@@ -5,7 +5,7 @@
  *  Implementation file for tool base class : RichPhotonCreatorBase
  *
  *  CVS Log :-
- *  $Id: RichPhotonCreatorBase.cpp,v 1.5 2005-10-13 15:38:41 jonrob Exp $
+ *  $Id: RichPhotonCreatorBase.cpp,v 1.6 2005-11-07 09:32:45 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   20/05/2005
@@ -194,12 +194,6 @@ void RichPhotonCreatorBase::reconstructPhotons() const
 
         if ( !segment->allPhotonsDone() )
         {
-
-          // iterate over all pixels
-          //for ( RichRecPixels::const_iterator iPixel =
-          //      pixelCreator()->richPixels()->begin();
-          //    iPixel != pixelCreator()->richPixels()->end();
-          //    ++iPixel )
           // Iterate over pixels in same RICH as this segment
           const Rich::DetectorType rich = segment->trackSegment().rich();
           RichRecPixels::const_iterator iPixel( pixelCreator()->begin(rich) );
