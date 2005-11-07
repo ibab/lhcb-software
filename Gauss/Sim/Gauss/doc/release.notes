@@ -4,6 +4,10 @@
 ! Purpose     : LHCb Simulation Application with Geant4
 !-----------------------------------------------------------------------------
 
+! 2005-11-07 - Gloria CORTI
+ - Put example on how to pass pythia commands taking those of old setup
+   . Generator.opts
+
 ! 2005-10-31 - Gloria CORTI
  - Introduce possibility to store G4 history in HepMC structure (optional),
    algorithm to pass Generator info to G4 primary, algorithm to fill MCHits
