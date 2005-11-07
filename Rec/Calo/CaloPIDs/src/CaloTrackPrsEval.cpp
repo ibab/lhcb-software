@@ -1,8 +1,11 @@
-// $Id: CaloTrackPrsEval.cpp,v 1.5 2005-05-23 15:47:36 cattanem Exp $
+// $Id: CaloTrackPrsEval.cpp,v 1.6 2005-11-07 12:16:10 odescham Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.5  2005/05/23 15:47:36  cattanem
+// v2r5p1
+//
 // Revision 1.4  2005/03/08 15:46:27  cattanem
 // cosmetic fixes
 //
@@ -70,7 +73,7 @@ CaloTrackPrsEval::CaloTrackPrsEval
   // associator to charged clusters 
   , m_input            ( CaloDigitLocation::Prs )
   // extrapolator 
-  , m_extrapolatorType ( "TrLinearExtrapolator" )
+  , m_extrapolatorType ( "TrackLinearExtrapolator" )
   , m_extrapolatorName (            )
   , m_extrapolator     ( 0          )
   // particle ID for extrapolator 
@@ -133,7 +136,7 @@ StatusCode    CaloTrackPrsEval::initialize ()
   
   // locate the extrapoaltor
   m_extrapolator = 
-    tool<ITrExtrapolator>  ( m_extrapolatorType , m_extrapolatorName  ) ;
+    tool<ITrackExtrapolator>  ( m_extrapolatorType , m_extrapolatorName  ) ;
   
   // set pid 
   m_pid = ParticleID( m_pidPDG );
@@ -207,7 +210,7 @@ void CaloTrackPrsEval::handle( const Incident& /* inc */  ) { m_digits = 0 ; };
  */  
 // ============================================================================
 double CaloTrackPrsEval::operator() 
-  ( const TrStoredTrack* track ) const 
+  ( const Track* track ) const 
 {
   double value  = 0.0                      ;
   StatusCode sc = process( track , value ) ;
@@ -229,7 +232,7 @@ double CaloTrackPrsEval::operator()
  */
 // ============================================================================
 StatusCode CaloTrackPrsEval::process    
-( const TrStoredTrack* track , 
+( const Track* track , 
   double&              value ) const 
 {
   // avoid long names 
@@ -302,7 +305,7 @@ StatusCode CaloTrackPrsEval::process
  */
 // ============================================================================
 StatusCode CaloTrackPrsEval::findTrackProjection
-( const TrStoredTrack* track , 
+( const Track* track , 
   const double         z     ) const 
 {
   // 
@@ -310,45 +313,29 @@ StatusCode CaloTrackPrsEval::findTrackProjection
   if( 0 == track ){ return Error("findTrackPosition: Invalid Track" ) ; }
   
   // get the state 
-  const TrState* state0 = track->closestState( z );
-  if( 0 == state0 ){ return Error("findTrackPosition: Invalid State" ) ; }
+  const State state0 = track->closestState( z );
+  //OD if( 0 == state0 ){ return Error("findTrackPosition: Invalid State" ) ; }
   
   // clone && extrapolate  
-  TrState* state = state0->clone() ;                                 // "NEW"
-  StatusCode sc  = state->extrapolate( m_extrapolator , z , m_pid );
+  State* state = state0.clone() ;                                 // "NEW"
+  //StatusCode sc  = state->extrapolate( m_extrapolator , z , m_pid );
+  StatusCode sc = m_extrapolator->propagate(*state , z , m_pid );
+
   if( sc.isFailure() ) 
     {
       delete state ; state = 0 ;                                    // DELETE 
       return Error("Error from Extrapolator",sc);                  
     }
   
-  // find position "P" 
-  const TrStateP* stateP = dynamic_cast<TrStateP*> ( state ) ;
-  if( 0 != stateP ) 
-    {
-      m_trX  =       stateP ->  x  () ;
-      m_trY  =       stateP ->  y  () ;
-      m_trXe = sqrt( stateP -> eX2 () ) ;
-      m_trYe = sqrt( stateP -> eY2 () ) ;
-      m_tr   = true             ;                          // ATTENTION !!!
-      /// 
-      m_trXe = m_trXe < m_safe ? m_safe : m_trXe ;
-      m_trYe = m_trYe < m_safe ? m_safe : m_trYe ;      
-    }
-  else
-    { // find position "L"
-      const TrStateL* stateL = dynamic_cast<TrStateL*> ( state ) ;
-      if( 0 != stateL ) 
-        {
-          m_trX  =       stateL ->  x  () ;
-          m_trY  =       stateL ->  y  () ;
-          m_trXe = sqrt( stateL -> eX2 () ) ;
-          m_trYe = sqrt( stateL -> eY2 () ) ;
-          m_tr   = true             ;                      // ATTENTION !!!
-          m_trXe = m_trXe < m_safe ? m_safe : m_trXe ;
-          m_trYe = m_trYe < m_safe ? m_safe : m_trYe ;      
-        }
-    }
+  //OD : remove StateP/StateL 
+  m_trX  =       state ->  x  () ;
+  m_trY  =       state ->  y  () ;
+  m_trXe = sqrt( state -> errX2 () ) ;
+  m_trYe = sqrt( state -> errY2 () ) ;
+  m_tr   = true             ;                          // ATTENTION !!!
+  /// 
+  m_trXe = m_trXe < m_safe ? m_safe : m_trXe ;
+  m_trYe = m_trYe < m_safe ? m_safe : m_trYe ;      
   
   // delete state 
   if( 0 != state ) { delete state ; state = 0 ; }
@@ -359,37 +346,6 @@ StatusCode CaloTrackPrsEval::findTrackProjection
 };
 // ============================================================================
 
-// ============================================================================
-/** The main processing method 
- *  @see ICaloTrackIdEval 
- *  It evaluated the Track ID estimators using the calorimeter information  
- *  @param  track  pointer to the object to be processed
- *  @param  value  (return) the value of the estimator
- *  @return status code 
- */  
-// ============================================================================
-StatusCode CaloTrackPrsEval::process    
-( const TrgTrack* /* track */ , 
-  double&         /* value */ ) const 
-{ return Error(" process( TrgTrack* ): method is not implementer yet" ) ; } ;
-// ============================================================================
-
-// ============================================================================
-/** The main processing method (functor interface)
- *  @see ICaloTrackIdEval 
- *  It evaluated the Track ID estimators using the calorimeter information  
- *  @param  track  pointer to the object to be processed
- *  @param  the value of the estimator
- */  
-// ============================================================================
-double CaloTrackPrsEval::operator() 
-  ( const TrgTrack*      track ) const 
-{ 
-  double value = 0 ;
-  process ( track , value ) ;
-  return value ;
-};
-// ============================================================================
 
 // ============================================================================
 // The END

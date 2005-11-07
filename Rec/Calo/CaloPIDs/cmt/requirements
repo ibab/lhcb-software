@@ -1,18 +1,21 @@
-# $Id: requirements,v 1.15 2005-06-02 12:36:39 cattanem Exp $ 
+# $Id: requirements,v 1.16 2005-11-07 12:16:09 odescham Exp $ 
 # =============================================================================
-# CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.15 $
+# CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.16 $
 # =============================================================================
 package            CaloPIDs
-version            v2r6
+version            v3r0
 
 # ================ structure ==================================================
 branches           cmt doc src options 
 
 # ================ dependencies ===============================================
-use CaloInterfaces v4r*  Calo 
-use CaloUtils      v4r*  Calo 
-use Relations      v*    Kernel 
  
+use CaloInterfaces v5r*	  Calo 
+use CaloUtils      v5r*   Calo 
+use Relations      v*     Kernel 
+use TrackEvent     v*     Event 
+use TrackInterfaces v*    Tr
+
 # ================ environment ================================================
 set CALOPIDSOPTS   $(CALOPIDSROOT)/options
 
@@ -24,6 +27,12 @@ apply_pattern      component_library library=CaloPIDs
 
 # =============================================================================
 # $Log: not supported by cvs2svn $
+# Revision 1.16  2005/17/10 12:36:39  odescham
+# adapt to new track event model
+#
+# Revision 1.15  2005/06/02 12:36:39  cattanem
+# adapt to new Brunel phase names
+#
 # Revision 1.14  2005/05/23 15:47:36  cattanem
 # v2r5p1
 #

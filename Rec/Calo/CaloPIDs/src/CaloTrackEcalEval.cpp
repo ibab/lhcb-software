@@ -1,8 +1,11 @@
-// $Id: CaloTrackEcalEval.cpp,v 1.4 2005-05-08 09:34:06 ibelyaev Exp $
+// $Id: CaloTrackEcalEval.cpp,v 1.5 2005-11-07 12:16:10 odescham Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.4 $
+// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.5 $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.4  2005/05/08 09:34:06  ibelyaev
+//  eliminate all *associators*
+//
 // ============================================================================
 // Include files
 // ============================================================================
@@ -124,7 +127,7 @@ void CaloTrackEcalEval::handle
  */  
 // ============================================================================
 double CaloTrackEcalEval::operator() 
-  ( const TrStoredTrack* track ) const 
+  ( const Track* track ) const 
 {
   double value  = m_bad ;
   StatusCode sc = process( track , value );
@@ -145,7 +148,7 @@ double CaloTrackEcalEval::operator()
  */
 // ============================================================================
 StatusCode CaloTrackEcalEval::process    
-( const TrStoredTrack* track , 
+( const Track* track , 
   double&              value ) const 
 {
   if ( 0 == track   ) 
@@ -169,37 +172,6 @@ StatusCode CaloTrackEcalEval::process
 };
 // ============================================================================
 
-// ============================================================================
-/** The main processing method 
- *  @see ICaloTrackIdEval 
- *  It evaluated the Track ID estimators using the calorimeter information  
- *  @param  track  pointer to the object to be processed
- *  @param  value  (return) the value of the estimator
- *  @return status code 
- */  
-// ============================================================================
-StatusCode CaloTrackEcalEval::process    
-( const TrgTrack* /* track */ , 
-  double&         /* value */ ) const 
-{ return Error(" process( TrgTrack* ): method is not implementer yet" ) ; } ;
-// ============================================================================
-
-// ============================================================================
-/** The main processing method (functor interface)
- *  @see ICaloTrackIdEval 
- *  It evaluated the Track ID estimators using the calorimeter information  
- *  @param  track  pointer to the object to be processed
- *  @param  the value of the estimator
- */  
-// ============================================================================
-double CaloTrackEcalEval::operator() 
-  ( const TrgTrack*      track ) const 
-{ 
-  double value = 0 ;
-  process ( track , value ) ;
-  return value ;
-};
-// ============================================================================
 
 // ============================================================================
 // The END

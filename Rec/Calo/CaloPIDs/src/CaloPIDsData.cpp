@@ -1,8 +1,11 @@
-// $Id: CaloPIDsData.cpp,v 1.3 2005-05-10 11:29:21 ibelyaev Exp $
+// $Id: CaloPIDsData.cpp,v 1.4 2005-11-07 12:16:09 odescham Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.3 $
+// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.4 $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.3  2005/05/10 11:29:21  ibelyaev
+//  update for CaloPIDsData(test) algorithm
+//
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -17,7 +20,7 @@
 // ============================================================================
 // Event 
 // ============================================================================
-#include "Event/TrStoredTrack.h"
+#include "Event/Track.h"
 #include "Event/CaloCluster.h"
 #include "Event/MCParticle.h"
 // ============================================================================
@@ -58,7 +61,7 @@ protected:
     ISvcLocator*        isvc  ) 
     : CaloTupleAlg       ( name  , isvc ) 
     //
-    , m_name_Tr2MC       ( "Rec/Relations/Tr2MCP" )
+    , m_name_Tr2MC       ( "Rec/Relations/Track2MCP" )
     //
     , m_name_PhotonMatch ( "Rec/Calo/PhotonMatch" )
     , m_name_PrsE        ( "Rec/Calo/PrsE"        )
@@ -78,13 +81,13 @@ protected:
     declareProperty ( "EcalE"     , m_name_EcalE    ) ;
     declareProperty ( "HcalE"     , m_name_HcalE    ) ;
     // define the appropriate default for input data  
-    setInputData    ( TrStoredTrackLocation::Default ) ;  
+    setInputData    ( TrackLocation::Default ) ;  
   };
   /// virtual destructor 
   virtual ~CaloPIDsData( ){};
 protected:
   /// get the momentum of the track
-  double momentum ( const TrStoredTrack* track ) const ;
+  double momentum ( const Track* track ) const ;
 private:
   // default constructor is disabled 
   CaloPIDsData();
@@ -121,36 +124,36 @@ const   IAlgFactory&CaloPIDsDataFactory = s_Factory ;
 // ============================================================================
 
 // ============================================================================
-/** extract the momentum from TrStoredTrack
+/** extract the momentum from Track
  *  @param  track pointer to the track
  *  @return the momentum of the track 
  */
 // ============================================================================
 double CaloPIDsData::momentum
-( const TrStoredTrack* track ) const 
+( const Track* track ) const 
 {
   if( 0 == track ) 
   { 
-    Error ( "momentum(): TrStoredTrack* points to NULL, return -100*GeV" ) ;
+    Error ( "momentum(): Track* points to NULL, return -100*GeV" ) ;
     return -100 * GeV ;
   };
   
   // get the momentum from the state nearest to 0,0,0
-  const TrState* state   = track->closestState( 0.0 ) ;
-  if( 0 == state ) 
-  { 
-    Error ( "momentum(): Track has no state closest to z=0, return -100*GeV");  
-    return -100 * GeV ;
-  }
+  const State state   = track->closestState( 0.0 ) ;
+  //OD if( 0 == state ) 
+  //{ 
+  //  Error ( "momentum(): Track has no state closest to z=0, return -100*GeV");  
+  //  return -100 * GeV ;
+  //}
   
-  const TrStateP* stateP = dynamic_cast<const TrStateP*>( state );
-  if( 0 == stateP ) 
-  { 
-    Error ( "momentum(): TrState is not TrStateP! ,return -100*GeV");  
-    return -100 * GeV ;
-  }
+  //const TrStateP* stateP = dynamic_cast<const TrStateP*>( state );
+  //if( 0 == stateP ) 
+  //{ 
+  //  Error ( "momentum(): TrState is not TrStateP! ,return -100*GeV");  
+  //  return -100 * GeV ;
+  //}
   
-  return stateP -> p  () ;
+  return state.p  () ;
 }
 // ============================================================================
 
@@ -161,21 +164,19 @@ StatusCode CaloPIDsData::execute()
 {
   using namespace Tuples ;
   
-  typedef TrStoredTrack  Track  ;
-  typedef TrStoredTracks Tracks ;
   
   /// the actual type of Track -> Eval relation table 
-  typedef const IRelation<TrStoredTrack,float>                      Table    ;
+  typedef const IRelation<Track,float>                      Table    ;
   /// the actual type of Track -> Eval range  
   typedef Table::Range                                              Range    ;
   
-  /// the actual type for TrStoredTrack -> MCParticle  relation table
-  typedef const IRelationWeighted<TrStoredTrack,MCParticle,double>  TrTable  ;
+  /// the actual type for Track -> MCParticle  relation table
+  typedef const IRelationWeighted<Track,MCParticle,double>  TrTable  ;
   typedef TrTable::Range                                            TrRange  ;
   
   // "Photon match table"
-  typedef const IRelationWeighted2D<CaloCluster,TrStoredTrack,float> CTable  ;
-  typedef const IRelationWeighted<TrStoredTrack,CaloCluster,float>   CITable ;
+  typedef const IRelationWeighted2D<CaloCluster,Track,float> CTable  ;
+  typedef const IRelationWeighted<Track,CaloCluster,float>   CITable ;
   typedef CITable::Range                                             CIRange ;
   
   // locate input data 
@@ -261,22 +262,21 @@ StatusCode CaloPIDsData::execute()
     
     tuple -> column ( "id" , pid  , -25000 , 25000 ) ;
     
-    tuple -> column ( "IsLong"   , track->isLong       () ) ;
-    tuple -> column ( "IsUp"     , track->isUpstream   () ) ;
-    tuple -> column ( "IsDown"   , track->isDownstream () ) ;
-    tuple -> column ( "IsVelo"   , track->isVelotrack  () ) ;
-    tuple -> column ( "IsBack"   , track->isBackward   () ) ;
-    tuple -> column ( "IsT"      , track->isTtrack     () ) ;
-    
-    tuple -> column ( "unique"   , track -> unique     () ) ;
-    tuple -> column ( "velo"     , track -> velo       () ) ;
-    tuple -> column ( "seed"     , track -> seed       () ) ;
-    tuple -> column ( "mat"      , track -> match      () ) ;
-    tuple -> column ( "forward"  , track -> forward    () ) ;
-    tuple -> column ( "follow"   , track -> follow     () ) ;
-    tuple -> column ( "veloTT"   , track -> veloTT     () ) ;
-    tuple -> column ( "veloBack" , track -> veloBack   () ) ;
-    tuple -> column ( "ksTrack"  , track -> ksTrack    () ) ;
+    tuple -> column ( "IsLong"   , track->checkType (Track::Long) ) ;
+    tuple -> column ( "IsUp"     , track->checkType (Track::Upstream) ) ;
+    tuple -> column ( "IsDown"   , track->checkType (Track::Downstream) ) ;
+    tuple -> column ( "IsVelo"   , track->checkType (Track::Velo) ) ;
+    tuple -> column ( "IsBack"   , track-> checkFlag(Track::Backward) ) ;
+    tuple -> column ( "IsT"      , track->checkType (Track::Ttrack ) ) ;
+    tuple -> column ( "unique"   , track -> checkFlag(Track::Unique) ) ;
+    tuple -> column ( "velo"     , track -> checkHistory(Track::PatVelo) ) ;
+    tuple -> column ( "seed"     , track -> checkHistory(Track::TrackSeeding) ) ;
+    tuple -> column ( "mat"      , track -> checkHistory(Track::TrackMatching) ) ;
+    tuple -> column ( "forward"  , track -> checkHistory(Track::TrgForward) ) ;
+    //    tuple -> column ( "follow"   , track -> follow     () ) ;
+    tuple -> column ( "veloTT"   , track->checkHistory(Track::TrackVeloTT) ) ;
+    tuple -> column ( "veloBack" ,track->checkType (Track::Velo) && track ->checkFlag(Track::Backward) ) ;
+    tuple -> column ( "ksTrack"  , track -> checkHistory(Track::TrackKShort) ) ;
 
     tuple -> write () ;
     

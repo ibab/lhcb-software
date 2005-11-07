@@ -1,8 +1,11 @@
-// $Id: CaloTrack2IdAlg.cpp,v 1.6 2005-05-08 09:34:06 ibelyaev Exp $
+// $Id: CaloTrack2IdAlg.cpp,v 1.7 2005-11-07 12:16:09 odescham Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.6 $
+// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.7 $
 // ============================================================================
-// $Log: not supported by cvs2svn $ 
+// $Log: not supported by cvs2svn $
+// Revision 1.6  2005/05/08 09:34:06  ibelyaev
+//  eliminate all *associators*
+// 
 // ============================================================================
 // Include files
 // ============================================================================
@@ -23,7 +26,7 @@
 // ============================================================================
 /// Event 
 // ============================================================================
-#include "Event/TrStoredTrack.h"
+#include "Event/Track.h"
 // ============================================================================
 // CaloUtils 
 // ============================================================================
@@ -52,10 +55,10 @@
  *  The major properties of teh algorithm
  * 
  *    - "Input"
- *    The location in TES the relation table TrStoredTrack -> CaloEstimator
+ *    The location in TES the relation table Track -> CaloEstimator
  *
  *    - "Output"
- *    The location in TES the relation table TrStoredTrack -> DLL 
+ *    The location in TES the relation table Track -> DLL 
  *
  *    - "ValueNorm"
  *    The normalization for "estimator"
@@ -265,10 +268,9 @@ StatusCode CaloTrack2IdAlg::execute()
 {
   
   /// avoid long names 
-  typedef const TrStoredTrack                  Track  ;
-  typedef const IRelation<TrStoredTrack,float> Table  ;
+  typedef const IRelation<Track,float> Table  ;
   typedef Table::Range                         Range  ;
-  typedef Relation1D<TrStoredTrack,float>      Output ;
+  typedef Relation1D<Track,float>      Output ;
   
   // get the table from TES
   const Table* input = get<Table> ( inputData() ) ;
@@ -286,23 +288,21 @@ StatusCode CaloTrack2IdAlg::execute()
   for ( Range::const_iterator rel = range.begin() ; 
         range.end() != rel ; ++rel ) 
   {
-    const Track* track = rel->from() ; 
+    Track* track = rel->from() ; 
     // skip the invalid tracks 
     if (  0   == track   ) { continue ; }
     //
     if ( !use  ( track ) ) { continue ; }
     
     // get the momentum from the state nearest to 0,0,0
-    const TrState* state   = track->closestState( 0.0 ) ;
-    if ( 0 == state ) 
-    { Warning("Track has no state closest to z=0"    ); continue ; } 
-    
-    const TrStateP* stateP = dynamic_cast<const TrStateP*>( state );
-    if ( 0 == stateP ) 
-    { Warning("Momentum information is not available"); continue ; } 
+    const State state   = track->closestState( 0.0 ) ;
+    //OD if ( 0 == state ){ Warning("Track has no state closest to z=0"    ); continue ; } 
+    //const TrStateP* stateP = dynamic_cast<const TrStateP*>( state );
+    //if ( 0 == stateP ) 
+    //{ Warning("Momentum information is not available"); continue ; } 
     
     // get the momentum and transform it 
-    const double p       = pFunc ( stateP -> p  () ) ;
+    const double p       = pFunc ( state.p  () ) ; //OD
     // get the estimator and transform it 
     const double v       = vFunc ( rel    -> to () ) ;
     

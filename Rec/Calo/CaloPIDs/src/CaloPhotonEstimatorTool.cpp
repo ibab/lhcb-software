@@ -64,7 +64,7 @@ CaloPhotonEstimatorTool::CaloPhotonEstimatorTool(const std::string& type,
 
 //  , m_histoSvc  ( 0        )
 
-  , m_matchType   ("AssociatorWeighted<CaloCluster,TrStoredTrack,float>")
+  , m_matchType   ("AssociatorWeighted<CaloCluster,Track,float>")
   , m_matchName   ("PhotonMatch")
   , m_match       ( 0           )
 

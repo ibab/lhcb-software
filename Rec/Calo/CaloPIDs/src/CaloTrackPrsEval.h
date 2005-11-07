@@ -1,8 +1,11 @@
-// $Id: CaloTrackPrsEval.h,v 1.5 2005-05-08 09:34:06 ibelyaev Exp $
+// $Id: CaloTrackPrsEval.h,v 1.6 2005-11-07 12:16:10 odescham Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.5 $
+// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.6 $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.5  2005/05/08 09:34:06  ibelyaev
+//  eliminate all *associators*
+//
 // ============================================================================
 #ifndef CALOTRACKPrsEval_H 
 #define CALOTRACKPrsEval_H 1
@@ -24,12 +27,12 @@
 // ============================================================================
 // TrKernel
 // ============================================================================
-#include "TrKernel/ITrExtrapolator.h" 
+#include "TrackInterfaces/ITrackExtrapolator.h"
 // ============================================================================
 // Event
 // ============================================================================
 #include "Event/CaloDigit.h"
-#include "Event/TrStoredTrack.h"
+#include "Event/Track.h"
 #include "Event/CaloDataFunctor.h"
 // ============================================================================
 
@@ -58,7 +61,7 @@ public:
    *  @return status code 
    */  
   virtual StatusCode process    
-  ( const TrStoredTrack* track , 
+  ( const Track* track , 
     double&              value ) const ;
   
   /** The main processing method (functor interface)
@@ -67,27 +70,8 @@ public:
    *  @param  track  pointer to thobject to be processed
    */  
   virtual double     operator() 
-    ( const TrStoredTrack* track ) const ;
+    ( const Track* track ) const ;
 
-  /** The main processing method 
-   *  @see ICaloTrackIdEval 
-   *  It evaluated the Track ID estimators using the calorimeter information  
-   *  @param  track  pointer to the object to be processed
-   *  @param  value  (return) the value of the estimator
-   *  @return status code 
-   */  
-  virtual StatusCode process    
-  ( const TrgTrack*      track , 
-    double&              value ) const ;
-  
-  /** The main processing method (functor interface)
-   *  @see ICaloTrackIdEval 
-   *  It evaluated the Track ID estimators using the calorimeter information  
-   *  @param  track  pointer to the object to be processed
-   *  @return the value of the estimator
-   */  
-  virtual double     operator() 
-    ( const TrgTrack*      track ) const ;
 
   /** standard initialization method 
    *  @see CaloTool 
@@ -137,7 +121,7 @@ private:
    *  @param  z     z-position of projection
    *  @return status code 
    */
-  StatusCode findTrackProjection( const TrStoredTrack* track , 
+  StatusCode findTrackProjection( const Track* track , 
                                   const double         z     ) const ;
   
 private:
@@ -160,7 +144,7 @@ private:
   // extrapolator 
   std::string                      m_extrapolatorType ;
   std::string                      m_extrapolatorName ;
-  ITrExtrapolator*                 m_extrapolator     ;
+  ITrackExtrapolator*                 m_extrapolator     ;
   // particle ID (needed for some extrapolators) 
   // it is mutable due to *strange* extrapolator interface 
   mutable ParticleID               m_pid              ;

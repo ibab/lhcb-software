@@ -1,8 +1,11 @@
-// $Id: CaloTrackEval.cpp,v 1.4 2004-09-02 18:55:36 ibelyaev Exp $
+// $Id: CaloTrackEval.cpp,v 1.5 2005-11-07 12:16:10 odescham Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.4  2004/09/02 18:55:36  ibelyaev
+//  prepare for HLT/Trigger development
+//
 // Revision 1.3  2004/02/17 12:06:15  ibelyaev
 //  update for rrading of histograms from the file
 //
@@ -72,7 +75,7 @@ CaloTrackEval::CaloTrackEval
   // Calorimeter digits 
   , m_input            ( CaloDigitLocation::Hcal )
   // extrapolator 
-  , m_extrapolatorType ( "TrLinearExtrapolator" )
+  , m_extrapolatorType ( "TrackLinearExtrapolator" )
   , m_extrapolatorName (            )
   , m_extrapolator     ( 0          )
   // particle ID for extrapolator 
@@ -142,7 +145,7 @@ StatusCode    CaloTrackEval::initialize ()
   
   // locate the extrapoaltor
   m_extrapolator = 
-    tool<ITrExtrapolator>  ( m_extrapolatorType , m_extrapolatorName ) ;
+    tool<ITrackExtrapolator>  ( m_extrapolatorType , m_extrapolatorName ) ;
   
   // set pid 
   m_pid = ParticleID( m_pidPDG );
@@ -183,7 +186,7 @@ void CaloTrackEval::handle( const Incident& /* inc */  )
  */  
 // ============================================================================
 double CaloTrackEval::operator() 
-  ( const TrStoredTrack* track ) const 
+  ( const Track* track ) const 
 {
   double value  = 0.0                      ;
   StatusCode sc = process( track , value ) ;
@@ -205,7 +208,7 @@ double CaloTrackEval::operator()
  */
 // ============================================================================
 StatusCode CaloTrackEval::process    
-( const TrStoredTrack* track , 
+( const Track* track , 
   double&              value ) const 
 {
   // avoid long names 
@@ -226,9 +229,9 @@ StatusCode CaloTrackEval::process
   
   if( 0 == track    ) { return Error("findTrackPosition: Invalid Track" ) ; }
   
-  const TrState* state0 = track->closestState( m_z - m_numst * m_st ) ;
-  if( 0 == state0 ){ return Error("findTrackPosition: Invalid State" ) ; }
-  m_state = state0->clone() ;
+  const State state0 = track->closestState( m_z - m_numst * m_st ) ;
+  //OD if( 0 == state0 ){ return Error("findTrackPosition: Invalid State" ) ; }
+  m_state = state0.clone() ;
   
   DigVec digused;
   
@@ -309,77 +312,28 @@ StatusCode CaloTrackEval::process
 StatusCode CaloTrackEval::findTrackProjection
 (  const double         z     ) const 
 {
-  // 
-  m_tr = false ;
-  StatusCode sc  = m_state->extrapolate( m_extrapolator , z , m_pid );
+  //OD StatusCode sc  = m_state->extrapolate( m_extrapolator , z , m_pid );
+  StatusCode sc = m_extrapolator->propagate(*m_state , z , m_pid );
   if( sc.isFailure() ) 
   {
     return Error("Error from Extrapolator",sc);                  
   }
   
   // find position "P" 
-  const TrStateP* stateP = dynamic_cast<TrStateP*> ( m_state ) ;
-  if( 0 != stateP ) 
-  {
-    m_trX  =       stateP ->  x  () ;
-    m_trY  =       stateP ->  y  () ;
-    m_trXe = sqrt( stateP -> eX2 () ) ;
-    m_trYe = sqrt( stateP -> eY2 () ) ;
-    m_tr   = true             ;                          // ATTENTION !!!
-      /// 
-    m_trXe = m_trXe < m_safe ? m_safe : m_trXe ;
-    m_trYe = m_trYe < m_safe ? m_safe : m_trYe ;      
-  }
-  else
-  { // find position "L"
-    const TrStateL* stateL = dynamic_cast<TrStateL*> ( m_state ) ;
-    if( 0 != stateL ) 
-    {
-      m_trX  =       stateL ->  x  () ;
-      m_trY  =       stateL ->  y  () ;
-      m_trXe = sqrt( stateL -> eX2 () ) ;
-      m_trYe = sqrt( stateL -> eY2 () ) ;
-      m_tr   = true             ;                      // ATTENTION !!!
-      m_trXe = m_trXe < m_safe ? m_safe : m_trXe ;
-      m_trYe = m_trYe < m_safe ? m_safe : m_trYe ;      
-    }
-  }
-  
-  if( !m_tr ) { return Error("findTrackPosition: Absolutely invalid state!"); }
+  //const TrStateP* stateP = dynamic_cast<TrStateP*> ( m_state ) ;
+  //if( 0 != stateP ) 
+  m_trX  =       m_state ->  x  () ;
+  m_trY  =       m_state ->  y  () ;
+  m_trXe = sqrt( m_state -> errX2 () ) ;
+  m_trYe = sqrt( m_state -> errY2 () ) ;
+  m_tr   = true             ;                          // ATTENTION !!!
+  /// 
+  m_trXe = m_trXe < m_safe ? m_safe : m_trXe ;
+  m_trYe = m_trYe < m_safe ? m_safe : m_trYe ;      
+    
+    if( !m_tr ) { return Error("findTrackPosition: Absolutely invalid state!"); }
   
   return StatusCode::SUCCESS ;
-};
-// ============================================================================
-
-// ============================================================================
-/** The main processing method 
- *  @see ICaloTrackIdEval 
- *  It evaluated the Track ID estimators using the calorimeter information  
- *  @param  track  pointer to the object to be processed
- *  @param  value  (return) the value of the estimator
- *  @return status code 
- */  
-// ============================================================================
-StatusCode CaloTrackEval::process    
-( const TrgTrack* /* track */ , 
-  double&         /* value */ ) const 
-{ return Error(" process( TrgTrack* ): method is not implementer yet" ) ; } ;
-// ============================================================================
-
-// ============================================================================
-/** The main processing method (functor interface)
- *  @see ICaloTrackIdEval 
- *  It evaluated the Track ID estimators using the calorimeter information  
- *  @param  track  pointer to the object to be processed
- *  @param  the value of the estimator
- */  
-// ============================================================================
-double CaloTrackEval::operator() 
-  ( const TrgTrack*      track ) const 
-{ 
-  double value = 0 ;
-  process ( track , value ) ;
-  return value ;
 };
 // ============================================================================
 

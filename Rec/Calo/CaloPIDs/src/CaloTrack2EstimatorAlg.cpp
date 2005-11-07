@@ -1,8 +1,11 @@
-// $Id: CaloTrack2EstimatorAlg.cpp,v 1.5 2005-05-08 09:34:06 ibelyaev Exp $
+// $Id: CaloTrack2EstimatorAlg.cpp,v 1.6 2005-11-07 12:16:09 odescham Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.5 $
+// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.6 $
 // ============================================================================
-// $Log: not supported by cvs2svn $ 
+// $Log: not supported by cvs2svn $
+// Revision 1.5  2005/05/08 09:34:06  ibelyaev
+//  eliminate all *associators*
+// 
 // ============================================================================
 // Include files
 // ============================================================================
@@ -24,7 +27,7 @@
 // ============================================================================
 // Event 
 // ============================================================================
-#include "Event/TrStoredTrack.h"
+#include "Event/Track.h"
 // ============================================================================
 
 /** @class CaloTrack2EstimatorAlg CaloTrack2EstimatorAlg.cpp
@@ -122,7 +125,7 @@ CaloTrack2EstimatorAlg::CaloTrack2EstimatorAlg
   declareProperty ( "LowLimit"      , m_low         ) ;
   declareProperty ( "HighLimit"     , m_high        ) ;
   // define the default appropriate input data
-  setInputData    ( TrStoredTrackLocation:: Default ) ;
+  setInputData    ( TrackLocation:: Default ) ;
 };
 // ============================================================================
 
@@ -179,9 +182,7 @@ StatusCode CaloTrack2EstimatorAlg::finalize()
 StatusCode CaloTrack2EstimatorAlg::execute() 
 {
   // avoid long names 
-  typedef const TrStoredTrack              Track   ;
-  typedef const TrStoredTracks             Tracks  ;
-  typedef Relation1D<TrStoredTrack,float>  Table   ;
+  typedef Relation1D<Track,float>  Table   ;
   
   // get the tracks from the store 
   const Tracks* tracks = get<Tracks>( inputData() );
@@ -196,7 +197,7 @@ StatusCode CaloTrack2EstimatorAlg::execute()
   for ( Tracks::const_iterator itrack = tracks->begin() ; 
         tracks->end() != itrack ; ++itrack ) 
   {
-    const Track* track = *itrack ;
+    Track* track = *itrack ;
     // skip NULLs 
     if ( 0 ==   track   ) { continue ; }
     // should we use this track ? 

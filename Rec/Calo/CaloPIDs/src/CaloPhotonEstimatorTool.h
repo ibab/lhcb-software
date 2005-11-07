@@ -14,7 +14,7 @@
 // CaloKernel
 #include "CaloKernel/CaloTool.h"
 // Event
-#include "Event/TrStoredTrack.h"
+#include "Event/Track.h"
 #include "Event/CaloCluster.h"
 // Associator
 #include "Relations/IAssociatorWeighted.h"
@@ -77,7 +77,7 @@ protected:
 
  private:
 
-  typedef IAssociatorWeighted<CaloCluster,TrStoredTrack,float> IMatch ;
+  typedef IAssociatorWeighted<CaloCluster,Track,float> IMatch ;
   typedef IMatch::DirectType                                   Table  ;
   typedef Table::Range                                         Range  ;
 

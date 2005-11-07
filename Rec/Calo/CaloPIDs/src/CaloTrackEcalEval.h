@@ -1,8 +1,11 @@
-// $Id: CaloTrackEcalEval.h,v 1.6 2005-05-08 09:34:06 ibelyaev Exp $
+// $Id: CaloTrackEcalEval.h,v 1.7 2005-11-07 12:16:10 odescham Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.6 $
+// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.7 $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.6  2005/05/08 09:34:06  ibelyaev
+//  eliminate all *associators*
+//
 // ============================================================================
 #ifndef CALOTRACKEcalEval_H 
 #define CALOTRACKEcalEval_H 1
@@ -29,7 +32,7 @@
 // Event
 // ============================================================================
 #include "Event/CaloHypo.h"
-#include "Event/TrStoredTrack.h"
+#include "Event/Track.h"
 // ============================================================================
 
 /** @class CaloTrackEcalEval CaloTrackEcalEval.h
@@ -56,7 +59,7 @@ public:
    *  @return status code 
    */  
   virtual StatusCode process    
-  ( const TrStoredTrack* track , 
+  ( const Track* track , 
     double&              value ) const ;
   /** The main processing method (functor interface)
    *  @see ICaloTrackIdEval
@@ -64,31 +67,8 @@ public:
    *  @param  track  pointer to thobject to be processed
    */  
   virtual double     operator() 
-    ( const TrStoredTrack* track ) const ;
-  /** The main processing method 
-   *  @see ICaloTrackIdEval 
-   *  It evaluated the Track ID estimators using the calorimeter information  
-   *  @param  track  pointer to the object to be processed
-   *  @param  value  (return) the value of the estimator
-   *  @return status code 
-   */  
-  virtual StatusCode process    
-  ( const TrgTrack*      track , 
-    double&              value ) const ;
-  /** The main processing method (functor interface)
-   *  @see ICaloTrackIdEval 
-   *  It evaluated the Track ID estimators using the calorimeter information  
-   *  @param  track  pointer to the object to be processed
-   *  @return the value of the estimator
-   */  
-  virtual double     operator() 
-    ( const TrgTrack*      track ) const ;
-  /** standard initialization method 
-   *  @see CaloTool 
-   *  @see  AlgTool 
-   *  @see IAlgTool
-   *  @return status code 
-   */
+    ( const Track* track ) const ;
+
   virtual StatusCode    initialize ();
   /** standard finalization method 
    *  @see CaloTool 
@@ -130,7 +110,7 @@ private:
   // bad value 
   double          m_bad   ;
   // table form TES 
-  typedef RelationWeighted2D<CaloHypo,TrStoredTrack,float>  ITable ;
+  typedef RelationWeighted2D<CaloHypo,Track,float>  ITable ;
   std::string     m_itable ;
   // inverse type 
   typedef const ITable::InverseType                         Table  ;
