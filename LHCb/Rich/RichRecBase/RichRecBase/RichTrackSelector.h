@@ -5,7 +5,7 @@
  * Header file for utility class : RichTrackSelector
  *
  * CVS Log :-
- * $Id: RichTrackSelector.h,v 1.12 2005-10-18 12:45:10 jonrob Exp $
+ * $Id: RichTrackSelector.h,v 1.13 2005-11-07 09:33:45 jonrob Exp $
  *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @date   2003-06-20
@@ -213,7 +213,9 @@ inline bool RichTrackSelector::trackSelected( const TrStoredTrack * track ) cons
 {
   const TrStateP * trackPState = trStateP( track );
   const Rich::Track::Type type = Rich::Track::type(track);
-  return ( track && trackPState &&                  // Track info OK
+  return ( type != Rich::Track::Unknown &&          // track type is known
+           type != Rich::Track::Unusable &&         // track type is usable
+           track && trackPState &&                  // Track info OK
            (!m_uniqueTrOnly || track->unique()) &&  // Unique tracks
            m_tkTypeSel[type] &&                     // tracking algorithm type
            ( m_chargeSel*track->charge() >= 0 ) &&  // track charge
@@ -225,7 +227,9 @@ inline bool RichTrackSelector::trackSelected( const TrStoredTrack * track ) cons
 inline bool RichTrackSelector::trackSelected( const ::Track * track ) const
 {
   const Rich::Track::Type type = Rich::Track::type(track);
-  return ( track &&                  // Track info OK
+  return ( type != Rich::Track::Unknown &&          // track type is known
+           type != Rich::Track::Unusable &&         // track type is usable
+           track &&                                 // Track info OK
            (!m_uniqueTrOnly || track->checkFlag(::Track::Unique)) &&  // Unique tracks
            m_tkTypeSel[type] &&                     // tracking algorithm type
            ( m_chargeSel*track->charge() >= 0 ) &&  // track charge
@@ -237,7 +241,9 @@ inline bool RichTrackSelector::trackSelected( const ::Track * track ) const
 inline bool RichTrackSelector::trackSelected( const TrgTrack * track ) const
 {
   const Rich::Track::Type type = Rich::Track::type(track);
-  return ( track &&                                           // Track pointer OK
+  return ( type != Rich::Track::Unknown &&          // track type is known
+           type != Rich::Track::Unusable &&         // track type is usable
+           track &&                                           // Track pointer OK
            m_tkTypeSel[type] &&                               // tracking algorithm type
            ( m_chargeSel*track->firstState().momentum() >= 0 )  &&       // track charge
            ( fabs(track->firstState().momentum())/GeV > minMomentum(type) ) && // Momentum cut
@@ -247,12 +253,15 @@ inline bool RichTrackSelector::trackSelected( const TrgTrack * track ) const
 
 inline bool RichTrackSelector::trackSelected( const RichRecTrack * track ) const
 {
-  return ( track &&                                           // Track pointer OK
+  const Rich::Track::Type type = track->trackID().trackType();
+  return ( type != Rich::Track::Unknown &&          // track type is known
+           type != Rich::Track::Unusable &&         // track type is usable
+           track &&                                           // Track pointer OK
            (!m_uniqueTrOnly || track->trackID().unique()) &&  // Unique tracks
-           m_tkTypeSel[track->trackID().trackType()] &&       // tracking algorithm type
+           m_tkTypeSel[type] &&       // tracking algorithm type
            ( m_chargeSel*track->charge() >= 0 )  &&           // track charge
-           ( track->vertexMomentum()/GeV > minMomentum(track->trackID().trackType()) ) &&  // Momentum cut
-           ( track->vertexMomentum()/GeV < maxMomentum(track->trackID().trackType()) )     // Momentum cut
+           ( track->vertexMomentum()/GeV > minMomentum(type) ) &&  // Momentum cut
+           ( track->vertexMomentum()/GeV < maxMomentum(type) )     // Momentum cut
            );
 }
 
