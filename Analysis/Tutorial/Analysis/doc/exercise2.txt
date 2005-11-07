@@ -1,0 +1,31 @@
+################################################################################
+#                                                                              #
+#                                   Exercise 2                                 #
+#                                                                              #
+################################################################################
+
+Add the Phi->KK channel to your selection from Exercise 1
+  - Rather than writing another DVAlgorithm that would be very similar to the
+    previous one, let's adapt the existing code so that it can
+    do both J/psi->mumu and Phi->KK
+    - Add an option "Particle" that allows you to choose the mother 
+    - The choice of the daughters is done by the ParticleFilter...
+    
+  - This time you need to give an instance name to either (or both) 
+    of your algorithms
+    - We suggest "TutorialAlgorithm/Jpsi2MuMu" and "TutorialAlgorithm/Phi2KK".
+    - You can run them in any order, but J/psi's being more rae than 
+      Phi's it's faster if you run Phi2KK only if Jpsi2MuMu has found something.
+      This is automatic in a GaudiSequencer.
+
+  - Add a "PrintHeader algorithm at the end of the sequence and set its 
+    OutputLevel to DEBUG - this will print a message each time something 
+    is found. 
+
+General tips:
+    - Make sure all your global variables are initialised in the constructor
+    - Avoid hard-coding as much as possible
+    - Avoid duplication of code. Make methods when necessary.
+
+The Tutorial package already provides a complete requirements file and the 
+"TutorialAlgorithm" is declared to Analysis_load.cpp

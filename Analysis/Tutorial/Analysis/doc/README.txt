@@ -8,8 +8,8 @@ The exercises are to be found in the same directory.
   
   - exercise 1 asks you to write a basic DVAlgorithm doing J/psi -> mu mu
   - exercise 2 extends this algorithm to Phi->KK
-  - exercise 3 completes the Bs->J/psiPhi chain using generic code
-  - exercise 4 is about efficiencies and correlations
+  - exercise 3 completes the Bs->J/PsiPhi chain using generic code
+  - exercise 4 shows some more nice utility algorithms
   - exercise 5 lets you look for tagging and trigger
   - exercise 6 is about MC truth
 

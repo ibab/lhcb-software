@@ -1,4 +1,4 @@
-// $Id: TutorialAlgorithm.cpp,v 1.4 2005-11-07 11:54:42 pkoppenb Exp $
+// $Id: TutorialAlgorithm.cpp,v 1.5 2005-11-07 15:30:45 pkoppenb Exp $
 // Include files 
 
 // from Gaudi
@@ -24,14 +24,14 @@ const        IAlgFactory& TutorialAlgorithmFactory = s_factory ;
 TutorialAlgorithm::TutorialAlgorithm( const std::string& name,
                             ISvcLocator* pSvcLocator)
   : DVAlgorithm ( name , pSvcLocator )
-    , m_ID(0)
-    , m_Mass(0.)
+    , m_iD(0)
+    , m_mass(0.)
     , m_nFound(0)
     , m_nEvents(0)
 {
-  declareProperty("MassWindow", m_MassWin = 10.*GeV); 
-  declareProperty("MaxChi2",    m_Chi2 = 1000.);
-  declareProperty("Particle",   m_Name = "J/psi(1S)");
+  declareProperty("MassWindow", m_massWin = 10.*GeV); 
+  declareProperty("MaxChi2",    m_chi2 = 1000.);
+  declareProperty("Particle",   m_name = "J/psi(1S)");
 }
 //=============================================================================
 // Destructor
@@ -45,17 +45,17 @@ StatusCode TutorialAlgorithm::initialize() {
 
   debug() << "==> Initialize" << endmsg;
   // particle property service
-  ParticleProperty* m_pp = ppSvc()->find( m_Name );
+  ParticleProperty* m_pp = ppSvc()->find( m_name );
   if ( !m_pp ) { // Check the pointer or you'll core dump on a typo in the name
-    err() << "Cannot find particle property for " << m_Name << endreq ; 
+    err() << "Cannot find particle property for " << m_name << endreq ; 
     return StatusCode::FAILURE;
   }
-  m_ID = m_pp->pdgID();
-  m_Mass = m_pp->mass();
-  info() << "Will reconstruct " << m_pp->particle() << " (ID=" << m_ID
-         << ") with mass " << m_Mass << endreq ;
-  info() << "Mass window is " << m_MassWin << " MeV" << endreq ;
-  info() << "Max chi^2 is " << m_Chi2 << endreq ;
+  m_iD = m_pp->pdgID();
+  m_mass = m_pp->mass();
+  info() << "Will reconstruct " << m_pp->particle() << " (ID=" << m_iD
+         << ") with mass " << m_mass << endreq ;
+  info() << "Mass window is " << m_massWin << " MeV" << endreq ;
+  info() << "Max chi^2 is " << m_chi2 << endreq ;
 
   return StatusCode::SUCCESS;
 };
@@ -93,8 +93,8 @@ StatusCode TutorialAlgorithm::execute() {
       HepLorentzVector twoP = (*ipp)->momentum() + (*ipm)->momentum() ;
       verbose() << "Two prong mass is " << twoP.m()/MeV << endreq ;
       // mass cut
-      plot(twoP.m(),"Mass",0.5*m_Mass,1.5*m_Mass); // +.- 50% mass window
-      if ( fabs ( twoP.m() - m_Mass ) > m_MassWin ) continue ;
+      plot(twoP.m(),"Mass",0.5*m_mass,1.5*m_mass); // +.- 50% mass window
+      if ( fabs ( twoP.m() - m_mass ) > m_massWin ) continue ;
       // vertex fit
       Vertex PPVertex;
       sc = vertexFitter()->fitVertex(*(*ipp),*(*ipm),PPVertex);
@@ -106,17 +106,17 @@ StatusCode TutorialAlgorithm::execute() {
               << " with chi2 " << PPVertex.chi2() << endreq;
       // chi2 cut
       plot(PPVertex.chi2(),"Chi^2",0.,200.);
-      if ( PPVertex.chi2() > m_Chi2 ) continue ;
+      if ( PPVertex.chi2() > m_chi2 ) continue ;
       // make particle
       Particle Mother ;
-      sc = particleStuffer()->fillParticle(PPVertex,Mother,ParticleID(m_ID));
+      sc = particleStuffer()->fillParticle(PPVertex,Mother,ParticleID(m_iD));
       Particle* pMother = desktop()->createParticle(&Mother);
-      info() << "Created " << m_Name << " candidate with m=" 
+      info() << "Created " << m_name << " candidate with m=" 
              << Mother.mass() << " and " 
              << "chi^2=" << PPVertex.chi2() << endreq ;      
       plot((*ipm)->momentum().perp(),"Selected Pt",0.*GeV,10.*GeV);
       plot((*ipp)->momentum().perp(),"Selected Pt",0.*GeV,10.*GeV);
-      plot(twoP.m(),"Selected mass",m_Mass-m_MassWin,m_Mass+m_MassWin);
+      plot(twoP.m(),"Selected mass",m_mass-m_massWin,m_mass+m_massWin);
       if (!pMother){
         err() << "Cannot save particle to desktop" << endreq ;
         return StatusCode::FAILURE;
@@ -136,7 +136,7 @@ StatusCode TutorialAlgorithm::execute() {
 StatusCode TutorialAlgorithm::finalize() {
 
   debug() << "==> Finalize" << endmsg;
-  info() << "Found " << m_nFound << " " << m_Name << " in " 
+  info() << "Found " << m_nFound << " " << m_name << " in " 
          << m_nEvents << " events" << endreq;
 
   return  StatusCode::SUCCESS;

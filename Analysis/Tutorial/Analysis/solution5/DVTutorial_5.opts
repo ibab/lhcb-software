@@ -9,6 +9,12 @@
 #include "$DAVINCIROOT/options/DaVinciCommon.opts"
 #pragma print on
 //
+// Run the trigger
+//
+#include "$DAVINCIROOT/options/L0.opts"
+#include "$TRGSYSROOT/options/L1.opts"
+
+//
 // Don't forget the DLL
 ApplicationMgr.DLLs   += { "Analysis" };
 
@@ -73,9 +79,50 @@ Bs2JpsiPhi.MotherFilter.FlightDistanceFilterCriterion.MinFSPV = 5 ; // Require 5
 // Print a nice message when something was found
 TutorialSeq.Members += { "PrintHeader/Found" };
 Found.OutputLevel = 2 ;
+//
+// Print the found decay
+//
+TutorialSeq.Members += { "PrintTree/PrintFoundBs" };
+PrintFoundBs.DebugTool.Informations = "Name E M P Px Py Pz Pt phi Vz" ;
+PrintFoundBs.PhysDesktop.InputLocations = { "Phys/Bs2JpsiPhi" } ;
+PrintFoundBs.OutputLevel = 3 ;
+//
+// Print the MC decay tree for all B_s
+//
+TutorialSeq.Members += { "PrintMCTree/PrintTrueBs" };
+PrintTrueBs.DebugTool.Informations = "Name E M P Px Py Pz Pt phi Vz" ;
+PrintTrueBs.ParticleNames = {  "B_s0", "B_s~0" } ;
+PrintTrueBs.OutputLevel = 3 ;
+PrintTrueBs.Depth = 2;  // down to the K and mu
+//
+// The tuple goes here
+//
+TutorialSeq.Members += { "TutorialTuple" };
+TutorialTuple.PhysDesktop.InputLocations = { "Phys/Bs2JpsiPhi" } ;
+#include "$FLAVOURTAGGINGROOT/options/BTaggingTool.opts"
+//
+// Calculate efficiencies
+// Needs to be run as TopAlg after the sequence
+//
+ApplicationMgr.TopAlg += { "MCEffBuilder/EffMcTruth" };
+EffMcTruth.MCDecay =  "[B_s0 -> (phi(1020) -> ^K+ ^K-) (J/psi(1S) -> ^mu+ ^mu- {, gamma})]cc";
+ApplicationMgr.TopAlg += { "EffSelCheck/EffBs2JpsiPhi" };
+EffBs2JpsiPhi.Histograms = true;
+EffBs2JpsiPhi.MCDecay = "[B_s0 -> (phi(1020) -> ^K+ ^K-) (J/psi(1S) -> ^mu+ ^mu- {, gamma})]cc";
+//
+// Print a correlations table
+// Also better run outside of the sequence
+//
+ApplicationMgr.TopAlg += { "SelResultCorrelations" };
+SelResultCorrelations.Algorithms = { "Jpsi2MuMu", "Phi2KK", "Bs2JpsiPhi"  } ;
+
 
 ApplicationMgr.HistogramPersistency = "ROOT";
 HistogramPersistencySvc.OutputFile = "DVHistos.root";
+
+// Ntuple
+ApplicationMgr.ExtSvc += { "NTupleSvc" };
+NTupleSvc.Output={"FILE1 DATAFILE='DVTuple.root' TYP='ROOT' OPT='NEW'"};
 
 ApplicationMgr.EvtMax = 500 ;
 

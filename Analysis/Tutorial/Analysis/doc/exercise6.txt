@@ -1,0 +1,9 @@
+################################################################################
+#                                                                              #
+#                                   Exercise 6                                 #
+#                                                                              #
+################################################################################
+
+Let's add MC truth to our Ntuple. We start again from the algorithm
+created in exercise 5, but one could as well start a new algorithm.
+
