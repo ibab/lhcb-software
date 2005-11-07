@@ -24,7 +24,7 @@ ApplicationMgr.TopAlg += { "GaudiSequencer/TutorialSeq" };
 //
 // Preload particles
 //
-TutorialSeq.Members += { "PreLoadParticles" };
+TutorialSeq.Members += { "PreLoadParticles/Combined" };
 PreLoadParticles.PhysDesktop.ParticleMakerType = "CombinedParticleMaker";
 PreLoadParticles.PhysDesktop.CombinedParticleMaker.Particles = { "muon", "kaon" } ;
 PreLoadParticles.PhysDesktop.CombinedParticleMaker.KaonSelection = { "det='RICH' k-pi='2.0' k-p='-2.0'" };
@@ -34,7 +34,7 @@ PreLoadParticles.PhysDesktop.CombinedParticleMaker.ExclusiveSelection  = false ;
 // J/spi->mumu selection
 //
 TutorialSeq.Members += { "TutorialAlgorithm/Jpsi2MuMu" };
-Jpsi2MuMu.PhysDesktop.InputLocations = { "Phys/PreLoadParticles" } ;
+Jpsi2MuMu.PhysDesktop.InputLocations = { "Phys/Combined" } ;
 // Particle filter options
 Jpsi2MuMu.ParticleFilter.CriteriaNames = { "PIDFilterCriterion/Muons" } ;
 Jpsi2MuMu.ParticleFilter.Muons.ParticleNames = {"mu+", "mu-"} ;

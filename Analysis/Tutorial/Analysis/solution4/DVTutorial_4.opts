@@ -25,7 +25,7 @@ TutorialSeq.MeasureTime = true ;
 //
 // Preload particles
 //
-TutorialSeq.Members += { "PreLoadParticles" };
+TutorialSeq.Members += { "PreLoadParticles/Combined" };
 PreLoadParticles.PhysDesktop.ParticleMakerType = "CombinedParticleMaker";
 PreLoadParticles.PhysDesktop.CombinedParticleMaker.Particles = { "muon", "kaon" } ;
 PreLoadParticles.PhysDesktop.CombinedParticleMaker.KaonSelection = { "det='RICH' k-pi='2.0' k-p='-2.0'" };
@@ -35,7 +35,7 @@ PreLoadParticles.PhysDesktop.CombinedParticleMaker.ExclusiveSelection  = false ;
 // J/psi
 //
 TutorialSeq.Members += { "TutorialAlgorithm/Jpsi2MuMu" };
-Jpsi2MuMu.PhysDesktop.InputLocations = { "Phys/PreLoadParticles" } ;
+Jpsi2MuMu.PhysDesktop.InputLocations = { "Phys/Combined" } ;
 Jpsi2MuMu.ParticleFilter.CriteriaNames = { "PIDFilterCriterion/Muons" } ;
 Jpsi2MuMu.ParticleFilter.Muons.ParticleNames = {"mu+", "mu-"} ;
 Jpsi2MuMu.MassWindow = 50*MeV ;
@@ -46,7 +46,7 @@ Jpsi2MuMu.HistoProduce = true ;
 // Phi->KK selection
 //
 TutorialSeq.Members += { "TutorialAlgorithm/Phi2KK" };
-Phi2KK.PhysDesktop.InputLocations = { "Phys/PreLoadParticles" } ;
+Phi2KK.PhysDesktop.InputLocations = { "Phys/Combined" } ;
 Phi2KK.ParticleFilter.CriteriaNames = { "PIDFilterCriterion/Kaons" } ;
 Phi2KK.ParticleFilter.Kaons.ParticleNames = {"K+", "K-"} ;
 Phi2KK.MassWindow = 50*MeV ;
