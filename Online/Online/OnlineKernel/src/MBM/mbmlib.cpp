@@ -177,7 +177,7 @@ BMDESCRIPT *mbm_include (const char* bm_name, const char* name, int partid) {
   std::auto_ptr<BMDESCRIPT> bm(mbm_map_memory(bm_name));
   if ( !bm.get() )  {
     lib_rtl_signal_message(LIB_RTL_OS,"Cannot map memory sections for %s.",
-			   bm_name);
+            bm_name);
     _mbm_unmap_sections(bm.get());
     return (BMDESCRIPT*)-1;
   }
@@ -188,8 +188,8 @@ BMDESCRIPT *mbm_include (const char* bm_name, const char* name, int partid) {
     status = lib_rtl_create_lock(bm->mutexName, &bm->lockid);
     if (!lib_rtl_is_success(status))    {
       lib_rtl_signal_message(LIB_RTL_OS,
-			     "Failed to create lock %s for %s.",
-			     bm->mutexName,bm_name);
+              "Failed to create lock %s for %s.",
+              bm->mutexName,bm_name);
       _mbm_unmap_sections(bm.get());
       return (BMDESCRIPT*)-1;
     }
@@ -565,7 +565,7 @@ int mbm_map_global_buffer_info(lib_rtl_gbl_t* handle)  {
   int status = lib_rtl_map_section("bm_buffers", len, &h);
   if( !lib_rtl_is_success(status))  {
     status = lib_rtl_create_section("bm_buffers", len, &h);
-    if(!lib_rtl_is_success(status))   {	
+    if(!lib_rtl_is_success(status))   {   
       lib_rtl_signal_message(LIB_RTL_OS,"Cannot access section bm_buffers.");
       return MBM_ERROR;
     }
@@ -590,7 +590,7 @@ int mbm_unmap_global_buffer_info(lib_rtl_gbl_t handle)  {
     else {
       status = lib_rtl_unmap_section(handle);
     }
-    if( lib_rtl_is_success(status) )   {	
+    if( lib_rtl_is_success(status) )   {   
       return MBM_NORMAL;
     }
   }
@@ -690,7 +690,7 @@ int _mbm_del_wev (BMDESCRIPT* /* bm */, USER* u) {
   static int calls = 0;
   if ( u->c_state != S_wevent )  {
     lib_rtl_signal_message(0,"INCONSISTENCY: Delete user from WEV queue "
-			   "without state S_wevent");
+                            "without state S_wevent");
   }
   _mbm_printf("WEV DEL> %d",calls++);
   u->c_state = S_wevent_ast_queued;
@@ -1016,12 +1016,12 @@ int _mbm_shutdown (void* /* param */) {
     if ( bm->lockid )  {
       int status = lib_rtl_cancel_lock(bm->lockid);
       if (!lib_rtl_is_success(status))    { 
-	lib_rtl_signal_message(LIB_RTL_OS,"Error cancelling lock %s. Status %d",
-			       bm->mutexName,status);
+        lib_rtl_signal_message(LIB_RTL_OS,"Error cancelling lock %s. Status %d",
+                               bm->mutexName,status);
       }
     }
     else  {
-	lib_rtl_signal_message(0,"Error cancelling lock %s [Invalid Mutex].", bm->mutexName);
+      lib_rtl_signal_message(0,"Error cancelling lock %s [Invalid Mutex].", bm->mutexName);
     }
     if (disable_rundown == 1)    {
       continue;
@@ -1571,7 +1571,7 @@ int _mbm_map_sections(BMDESCRIPT* bm)  {
   int status  = lib_rtl_map_section(text, sizeof(CONTROL), &bm->ctrl_add);
   if (!lib_rtl_is_success(status))    {
     lib_rtl_signal_message(LIB_RTL_OS,"Error mapping control section for %s.Status=%d",
-			   bm_name,status);
+                           bm_name,status);
     return MBM_ERROR;
   }
   bm->ctrl = (CONTROL*)bm->ctrl_add->address;
@@ -1579,7 +1579,7 @@ int _mbm_map_sections(BMDESCRIPT* bm)  {
   status  = lib_rtl_map_section(text, bm->ctrl->p_emax*sizeof(EVENT), &bm->event_add);
   if (!lib_rtl_is_success(status))  {
     lib_rtl_signal_message(LIB_RTL_OS,"Error mapping event section for %s. Status=%d",
-			   bm_name,status);
+                           bm_name,status);
     _mbm_unmap_sections(bm);
     return MBM_ERROR;
   }
@@ -1588,7 +1588,7 @@ int _mbm_map_sections(BMDESCRIPT* bm)  {
   status  = lib_rtl_map_section(text, bm->ctrl->p_umax*sizeof(USER), &bm->user_add);
   if (!lib_rtl_is_success(status))  {
     lib_rtl_signal_message(LIB_RTL_OS,"Error mapping user section for %s. Status=%d",
-			   bm_name,status);
+                           bm_name,status);
     _mbm_unmap_sections(bm);
     return MBM_ERROR;
   }
@@ -1597,7 +1597,7 @@ int _mbm_map_sections(BMDESCRIPT* bm)  {
   status  = lib_rtl_map_section(text, bm->ctrl->bm_size, &bm->bitm_add);
   if (!lib_rtl_is_success(status))  {
     lib_rtl_signal_message(LIB_RTL_OS,"Error mapping bit-map section for %s. Status=%d",
-			   bm_name,status);
+                           bm_name,status);
     _mbm_unmap_sections(bm);
     return MBM_ERROR;
   }
@@ -1606,7 +1606,7 @@ int _mbm_map_sections(BMDESCRIPT* bm)  {
   status  = lib_rtl_map_section(text, bm->ctrl->buff_size, &bm->buff_add);
   if (!lib_rtl_is_success(status))  {
     lib_rtl_signal_message(LIB_RTL_OS,"Error mapping buffer section for %s. Status=%d",
-			   bm_name,status);
+                           bm_name,status);
     _mbm_unmap_sections(bm);
     return MBM_ERROR;
   }

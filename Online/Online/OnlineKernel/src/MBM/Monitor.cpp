@@ -148,7 +148,7 @@ int MBM::Monitor::monitor() {
   //signal (SIGINT,handler);
   //signal (SIGABRT,handler);
   int status = mbm_map_global_buffer_info(&m_bm_all);
-  if(!lib_rtl_is_success(status))   {	
+  if(!lib_rtl_is_success(status))   {   
     printf("Cannot map global buffer information....\n");
     exit(status);
   }
@@ -163,12 +163,12 @@ int MBM::Monitor::monitor() {
     while( end )    {
       get_bm_list();    
       try {
-	begin_update();
-	put_inf();
-	end_update();
+        begin_update();
+        put_inf();
+        end_update();
       }
       catch(...) {
-	draw_line(NORMAL," Exception during buffer monitoring.");
+        draw_line(NORMAL," Exception during buffer monitoring.");
       }
       lib_rtl_sleep(1000);
     }      

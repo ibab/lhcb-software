@@ -37,7 +37,7 @@ int MBM::Consumer::eventAst() {
     if ( !m_blocking ) {
       sc = ::wtc_insert(m_facility, this);
       if( sc == WT_SUCCESS ) {
-	return MBM_NORMAL;
+        return MBM_NORMAL;
       }
       throw std::runtime_error("Failed to wtc_insert on get event AST:"+m_buffName+" [Internal Error]");
       return MBM_ERROR;

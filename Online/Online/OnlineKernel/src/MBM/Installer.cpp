@@ -11,40 +11,39 @@
 namespace MBM {
   struct Installer : public Manager  {
     Installer(int argc, char **argv)  {
-      p_moni   = 0;           /* Start monitor               */
-      p_emax   = 32;			    /* maximum events allowed	     */
-      p_umax   = 5;			      /* maximun users		           */
-      p_loc    = 0;	      		/* local flag			             */
-      p_across = 0;		    	  /* Across memory flag		       */
-      p_size   = 10;			    /* buffer size			           */
-      p_base   = 0x1000000;		/* Event Buffer base address   */
-      spy_base = 0;			      /* Spy Memory base address	   */
-      p_force  = 0;			      /* force deinstall		         */
+      p_moni   = 0;               /* Start monitor               */
+      p_emax   = 32;              /* maximum events allowed      */
+      p_umax   = 5;               /* maximun users               */
+      p_loc    = 0;               /* local flag                  */
+      p_across = 0;               /* Across memory flag          */
+      p_size   = 10;              /* buffer size                 */
+      p_base   = 0x1000000;       /* Event Buffer base address   */
+      spy_base = 0;               /* Spy Memory base address     */
+      p_force  = 0;               /* force deinstall             */
       getOptions(argc, argv);
       m_bm = new BMDESCRIPT;
       ::memset(m_bm,0,sizeof(BMDESCRIPT));
       ::strcpy(m_bm->bm_name,bm_id);
     }
-    int p_moni;     /* Start monitor */
-    int	p_emax;			/* maximum events allowed	      */
-    int	p_umax;			/* maximun users		      */
-    int	p_loc;			/* local flag			      */
-    int	p_across;			/* Across memory flag		      */
-    int	p_size;			/* buffer size			      */
-    int	p_base;		/* Event Buffer base address	      */
-    int	spy_base;			/* Spy Memory base address	      */
-    int	p_force;			/* force deinstall		      */
+    int p_moni;           /* Start monitor                       */
+    int   p_emax;         /* maximum events allowed              */
+    int   p_umax;         /* maximun users                       */
+    int   p_loc;          /* local flag                          */
+    int   p_across;       /* Across memory flag                  */
+    int   p_size;         /* buffer size                         */
+    int   p_base;         /* Event Buffer base address           */
+    int   spy_base;       /* Spy Memory base address             */
+    int   p_force;        /* force deinstall                     */
 
     /* global variables          */
-
-    char	*buff_ptr;
-    char	*spy_ptr;
-    char	*data_ptr;
-    char	buff_id[16];
-    int 	*spy_register;
-    int 	*spy_on;
-    int 	*spy_off;
-    int	spy_set;
+    char   *buff_ptr;
+    char   *spy_ptr;
+    char   *data_ptr;
+    char   buff_id[16];
+    int    *spy_register;
+    int    *spy_on;
+    int    *spy_off;
+    int   spy_set;
 
     bool startMonitor() const { return p_moni > 0; }
     virtual int  optparse (const char* c);
@@ -71,36 +70,36 @@ static void help()  {
 int MBM::Installer::optparse (const char* c)  {
   register int iret;
   switch (*c | 0x20)    {
-  case 's':				/*      size of buffer        */	
+  case 's':            /*      size of buffer        */   
     iret = sscanf(c+1,"=%d",&p_size);
-    if( iret != 1 ) 	   {
+    if( iret != 1 )       {
       writeln(2,"Error reading buffer size parameter\n",80);
       exit(0);
     }
     p_size = ((p_size+1)>>1)<<1;
     break;
-  case 'b':				/*      base address       */	
+  case 'b':            /*      base address       */   
     iret = sscanf(c+1,"=%x",&p_base);
-    if( iret != 1 ) 	   {
+    if( iret != 1 )       {
       writeln(2,"Error reading base address parameter\n",80);
       exit(0);
     }
     break;
-  case 'y':				/*     spy base address       */	
+  case 'y':            /*     spy base address       */   
     iret = sscanf(c+1,"=%x",&spy_base);
-    if( iret != 1 ) 	   {
+    if( iret != 1 )       {
       writeln(2,"Error reading spy base address parameter\n",80);
       exit(0);
     }
     break;
-  case 'e':				/*      maximum events        */	
+  case 'e':            /*      maximum events        */   
     iret = sscanf(c+1,"=%d",&p_emax);
-    if( iret != 1 ) 	   {
+    if( iret != 1 )       {
       writeln(2,"Error reading maximum events parameter\n",80);
       exit(0);
     }
     break;
-  case 'u':				/*      maximum users        */	
+  case 'u':            /*      maximum users        */   
     iret = sscanf(c+1,"=%d",&p_umax);
     if( iret != 1 )  {
       writeln(2,"Error reading maximum users parameter\n",80);
@@ -111,25 +110,25 @@ int MBM::Installer::optparse (const char* c)  {
       exit(0);
     }
     break;
-  case 'i':				/*      maximum users        */	
+  case 'i':            /*      maximum users        */   
     iret = sscanf(c+1,"=%s",buff_id);
-    if( iret != 1 ) 	   {
+    if( iret != 1 )       {
       writeln(2,"Error reading Buffer identifier parameter\n",80);
       exit(0);
     }
     bm_id = buff_id;
     ::strcpy(m_bm->bm_name,bm_id);
     break;
-  case 'l':				/*      local flag            */	
+  case 'l':            /*      local flag            */   
     p_loc = 1;
     break;
-  case 'x':				/*      local flag            */	
+  case 'x':            /*      local flag            */   
     p_across = 1;
     break;
-  case 'f':				/*      local flag            */	
+  case 'f':            /*      local flag            */   
     p_force = 1;
     break;
-  case 'm':				/*      local flag            */	
+  case 'm':            /*      local flag            */   
     p_moni = 1;
     break;
   case '?':
@@ -146,20 +145,20 @@ int MBM::Installer::install()  {
   if(icode == -1) exit(0);
   printf("++bm_init++ Commencing BM installation \n");
   int status = lib_rtl_create_section(ctrl_mod,sizeof(CONTROL),&m_bm->ctrl_add);
-  if(!lib_rtl_is_success(status))   {	
+  if(!lib_rtl_is_success(status))   {   
     printf("Cannot create section %s. Exiting....",ctrl_mod);
     exit(status);
   }
   m_bm->ctrl = (CONTROL*)m_bm->ctrl_add->address;
   status = lib_rtl_create_section(user_mod,sizeof(USER)*p_umax ,&m_bm->user_add);
-  if(!lib_rtl_is_success(status))   {	
+  if(!lib_rtl_is_success(status))   {   
     lib_rtl_delete_section(m_bm->ctrl_add);
     printf("Cannot create section %s. Exiting....",user_mod);
     exit(status);
   }
   m_bm->user = (USER*)m_bm->user_add->address;
   status = lib_rtl_create_section(event_mod,sizeof(EVENT)*p_emax ,&m_bm->event_add);
-  if(!lib_rtl_is_success(status))   {	
+  if(!lib_rtl_is_success(status))   {   
     lib_rtl_delete_section(m_bm->ctrl_add);
     lib_rtl_delete_section(m_bm->user_add);
     printf("Cannot create section %s. Exiting....",event_mod);
@@ -167,7 +166,7 @@ int MBM::Installer::install()  {
   }
   m_bm->event = (EVENT*)m_bm->event_add->address;
   status = lib_rtl_create_section(bitmap_mod,(p_size<<(Bits_p_kByte-1))>>3,&m_bm->bitm_add);
-  if(!lib_rtl_is_success(status))   {	
+  if(!lib_rtl_is_success(status))   {   
     lib_rtl_delete_section(m_bm->ctrl_add);
     lib_rtl_delete_section(m_bm->user_add);
     lib_rtl_delete_section(m_bm->event_add);
@@ -176,7 +175,7 @@ int MBM::Installer::install()  {
   }
   m_bm->bitmap = (char*)m_bm->bitm_add->address;
   status = lib_rtl_create_section(buff_mod,p_size<<10,&m_bm->buff_add);
-  if(!lib_rtl_is_success(status))   {	
+  if(!lib_rtl_is_success(status))   {   
     lib_rtl_delete_section(m_bm->ctrl_add);
     lib_rtl_delete_section(m_bm->user_add);
     lib_rtl_delete_section(m_bm->event_add);
@@ -205,15 +204,15 @@ int MBM::Installer::install()  {
   ::memset(event,0,sizeof(EVENT)*p_emax );
   ::memset(m_bm->bitmap,0,(p_size<<Bits_p_kByte)>>3);
   for (int i=0;i<p_umax;i++)  {
-    user[i].block_id	= BID_USER;
-    user[i].uid		= i;
+    user[i].block_id   = BID_USER;
+    user[i].uid      = i;
   }
   for (int j=0;j<p_emax;j++)  {
-    event[j].block_id	= BID_EVENT;
-    event[j].eid	= j;
+    event[j].block_id   = BID_EVENT;
+    event[j].eid   = j;
   }
   status = mbm_map_global_buffer_info(&bm_all);
-  if(!lib_rtl_is_success(status))   {	
+  if(!lib_rtl_is_success(status))   {   
     lib_rtl_delete_section(m_bm->ctrl_add);
     lib_rtl_delete_section(m_bm->user_add);
     lib_rtl_delete_section(m_bm->event_add);

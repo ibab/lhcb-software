@@ -10,7 +10,7 @@
 namespace MBM {
   struct Dumper : public Manager {
     int All;
-    char	buff_id[16];
+    char   buff_id[16];
     template <class T> void print_item(const char* format,T item)  {
       printf(format,item,item);
     }
@@ -49,10 +49,10 @@ int mbm_dump(int argc , char** argv) {
 int MBM::Dumper::optparse (const char* c)   {
   register int iret;
   switch (*c | 0x20)  {
-  case 'a':		/*      size of buffer        */	
+  case 'a':      /*      size of buffer        */   
     All = 1;
     break;
-  case 'i':		/*      buffer_id        */	
+  case 'i':      /*      buffer_id        */   
     iret = sscanf(c+1,"=%s",buff_id);
     if( iret != 1 )      {
       writeln(2,"Error reading Buffer identifier parameter\n",80);

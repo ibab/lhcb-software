@@ -36,13 +36,13 @@ int lib_rtl_create_lock(const char* mutex_name, lib_rtl_lock_t* handle)   {
   }
 #elif defined(_WIN32)
   // Create a mutex with no initial owner.
-  h->handle = ::CreateMutex(NULL,FALSE,mutex_name ? h->name : 0);
+  h->handle = ::CreateMutex(0,FALSE,mutex_name ? h->name : 0);
   if ( h->handle != 0 && ::GetLastError() == ERROR_ALREADY_EXISTS )   {
     ::CloseHandle(h->handle);
     h->handle = ::OpenMutex(MUTEX_ALL_ACCESS,FALSE,mutex_name ? h->name : 0);
   }
 #endif
-  if ( h->handle == NULL )   {
+  if ( h->handle == 0 )   {
     return lib_rtl_signal_message(LIB_RTL_OS,"error in creating lock %s %08X.",h->name,h->handle);
     return 0;
   }
@@ -102,7 +102,7 @@ int lib_rtl_lock(lib_rtl_lock_t h) {
       int val;
       lib_rtl_lock_value(h, &val);
       if ( val != 0 ) {
-	printf("Lock: Bad lock count [%s]:%d Held:%d\n",h->name,val,h->held);
+        printf("Lock: Bad lock count [%s]:%d Held:%d\n",h->name,val,h->held);
       }
     }
     if ( sc != 0 )
@@ -136,11 +136,11 @@ int lib_rtl_unlock(lib_rtl_lock_t h) {
     lib_rtl_lock_value(h, &val);
     if ( val == 0 ) {
       if ( ::sem_post(h->handle) == 0 )   {
-	h->held = 0;
-	return 1;
+        h->held = 0;
+        return 1;
       }
       return lib_rtl_signal_message(LIB_RTL_OS,"Error in unlocking semaphore [%s] %08X Held:%d",
-				    h->name,h->handle,h->held);
+        h->name,h->handle,h->held);
     }
     else {
       printf("Unlock: Bad lock count [%s]:%d\n",h->name,val);

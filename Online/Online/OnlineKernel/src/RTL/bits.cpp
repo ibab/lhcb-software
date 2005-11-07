@@ -8,19 +8,19 @@
 #define Min(a,b) (a>b)?b:a;
 
 int mask_and2 (const unsigned int* mask1,const unsigned int* mask2,unsigned int* mask3,int mask_size)   {
-  int	    result=0;
+  int result=0;
   for (int i=0; i<mask_size; i++)  {
     mask3[i] = mask1[i] & mask2[i];
-    result	|= mask3[i];
+    result  |= mask3[i];
   }
   return result;
 }
 
 int mask_and3 (const unsigned int* mask1,const unsigned int* mask2,const unsigned int* mask3,unsigned int* mask4,int mask_size)   {
-  int	    result=0;
+  int result=0;
   for (int i=0; i<mask_size; i++)  {
     mask4[i] = ((mask1[i] & mask2[i]) & mask3[i]);
-    result	|= mask3[i];
+    result  |= mask3[i];
   }
   return result;
 }
@@ -29,7 +29,7 @@ int mask_or2 (const unsigned int* mask1, const unsigned int* mask2,unsigned int*
   int result = 0;
   for (int i=0;i<mask_size;i++)  {
     mask3[i] = mask1[i] | mask2[i];
-    result	|= mask3[i];
+    result   |= mask3[i];
   }
   return result;
 }
@@ -38,23 +38,23 @@ int mask_or3 (const unsigned int* mask1, const unsigned int* mask2,const unsigne
   int result = 0;
   for (int i=0;i<mask_size;i++)  {
     mask4[i] = mask1[i] | mask2[i] | mask3[i];
-    result	|= mask3[i];
+    result  |= mask3[i];
   }
   return result;
 }
 
 int mask_and_ro2 (const unsigned int* mask1,const unsigned int* mask2,const int mask_size)   {
-  int	    result=0;
+  int result=0;
   for (int i=0;i<mask_size;i++)  {
-    result	|= (mask1[i] & mask2[i]);
+    result |= (mask1[i] & mask2[i]);
   }
   return result;
 }
 
 int mask_and_ro3 (const unsigned int* mask1,const unsigned int* mask2, const unsigned int* mask3,const int mask_size)   {
-  int	    result=0;
+  int result=0;
   for (int i=0;i<mask_size;i++)  {
-    result	|= ((mask1[i] & mask2[i]) & mask3[i]);
+    result |= ((mask1[i] & mask2[i]) & mask3[i]);
   }
   return result;
 }
@@ -62,7 +62,7 @@ int mask_and_ro3 (const unsigned int* mask1,const unsigned int* mask2, const uns
 int mask_or_ro2 (const unsigned int* mask1,const unsigned int* mask2, const int mask_size) {
   int result = 0;
   for (int i=0;i<mask_size;i++)  {
-    result	|= (mask1[i] | mask2[i]);
+    result |= (mask1[i] | mask2[i]);
   }
   return result;
 }
@@ -70,7 +70,7 @@ int mask_or_ro2 (const unsigned int* mask1,const unsigned int* mask2, const int 
 int mask_or_ro3 (const unsigned int* mask1,const unsigned int* mask2, const unsigned int* mask3, const int mask_size) {
   int result = 0;
   for (int i=0;i<mask_size;i++)  {
-    result	|= (mask1[i] | mask2[i] | mask3[i]);
+    result |= (mask1[i] | mask2[i] | mask3[i]);
   }
   return result;
 }
@@ -78,7 +78,7 @@ int mask_or_ro3 (const unsigned int* mask1,const unsigned int* mask2, const unsi
 int mask_summ(const unsigned int* mask, int mask_size)   {
   int result = 0;
   for (int i=0;i<mask_size;i++)  {
-    result	|= mask[i] ;
+    result |= mask[i] ;
   }
   return result;
 }
@@ -191,57 +191,57 @@ int BF_free(char* base,int pos, int len) {
 }
 
 static inline int generic_ffs(int x)  {
-	int r = 1;
-	if (!x)
+  int r = 1;
+  if (!x)
     return 0;
-	if (!(x & 0xffff)) {
-		x >>= 16;
-		r += 16;
-	}
-	if (!(x & 0xff)) {
-		x >>= 8;
-		r += 8;
-	}
-	if (!(x & 0xf)) {
-		x >>= 4;
-		r += 4;
-	}
-	if (!(x & 3)) {
-		x >>= 2;
-		r += 2;
-	}
-	if (!(x & 1)) {
-		x >>= 1;
-		r += 1;
-	}
-	return r;
+  if (!(x & 0xffff)) {
+    x >>= 16;
+    r += 16;
+  }
+  if (!(x & 0xff)) {
+    x >>= 8;
+    r += 8;
+  }
+  if (!(x & 0xf)) {
+    x >>= 4;
+    r += 4;
+  }
+  if (!(x & 3)) {
+    x >>= 2;
+    r += 2;
+  }
+  if (!(x & 1)) {
+    x >>= 1;
+    r += 1;
+  }
+  return r;
 }
 
 static inline int generic_ffc(int x)  {
-	int r = 1;
-	if (!x)
+  int r = 1;
+  if (!x)
     return 0;
-	if (!(x & 0xffff)) {
-		x >>= 16;
-		r += 16;
-	}
-	if (!(x & 0xff)) {
-		x >>= 8;
-		r += 8;
-	}
-	if (!(x & 0xf)) {
-		x >>= 4;
-		r += 4;
-	}
-	if (!(x & 3)) {
-		x >>= 2;
-		r += 2;
-	}
-	if (!(x & 1)) {
-		x >>= 1;
-		r += 1;
-	}
-	return r;
+  if (!(x & 0xffff)) {
+    x >>= 16;
+    r += 16;
+  }
+  if (!(x & 0xff)) {
+    x >>= 8;
+    r += 8;
+  }
+  if (!(x & 0xf)) {
+    x >>= 4;
+    r += 4;
+  }
+  if (!(x & 3)) {
+    x >>= 2;
+    r += 2;
+  }
+  if (!(x & 1)) {
+    x >>= 1;
+    r += 1;
+  }
+  return r;
 }
 #ifdef _WIN32
 #define ffs generic_ffs
@@ -249,13 +249,13 @@ static inline int generic_ffc(int x)  {
 #endif
 static unsigned int mask[] = {
   0x00000001, 0x00000002, 0x00000004, 0x00000008,
-  0x00000010, 0x00000020, 0x00000040, 0x00000080,
-  0x00000100, 0x00000200, 0x00000400, 0x00000800, 
-  0x00001000, 0x00002000, 0x00004000, 0x00008000, 
-  0x00010000, 0x00020000, 0x00040000, 0x00080000, 
-  0x00100000, 0x00200000, 0x00400000, 0x00800000, 
-  0x01000000, 0x02000000, 0x04000000, 0x08000000, 
-  0x10000000, 0x20000000, 0x40000000, 0x80000000
+    0x00000010, 0x00000020, 0x00000040, 0x00000080,
+    0x00000100, 0x00000200, 0x00000400, 0x00000800, 
+    0x00001000, 0x00002000, 0x00004000, 0x00008000, 
+    0x00010000, 0x00020000, 0x00040000, 0x00080000, 
+    0x00100000, 0x00200000, 0x00400000, 0x00800000, 
+    0x01000000, 0x02000000, 0x04000000, 0x08000000, 
+    0x10000000, 0x20000000, 0x40000000, 0x80000000
 };
 
 int lib_rtl_ffc (int* start, int* len, const void* base, int* position)  {

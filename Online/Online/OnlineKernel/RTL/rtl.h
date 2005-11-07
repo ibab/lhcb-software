@@ -12,7 +12,7 @@ namespace RTL {}
 extern "C" {
 #endif
 #ifdef _WIN32
-  typedef __int64       int64_t;
+  struct _IOSB {    unsigned short condition;    unsigned short count;    unsigned int   information;  };  typedef __int64       int64_t;
 #else
   typedef long long int int64_t;
 #endif
@@ -38,11 +38,21 @@ extern "C" {
     LIB_RTL_INFINITE = 0
   };
 
-
+  /// Access to error code
+  int lib_rtl_get_error();
   /// Access to process ID
   int lib_rtl_pid();
   /// Invoke debugger
   int lib_rtl_start_debugger();
+  /// Get process name
+  int lib_rtl_get_process_name(char* process, size_t len);
+  /// Get system node name
+  int lib_rtl_get_node_name(char* node, size_t len);
+
+  /// Disable intercepts
+  int lib_rtl_disable_intercept();
+  /// Enable intercpets
+  int lib_rtl_enable_intercept();
 
   /// Declare exit handler
   int lib_rtl_declare_exit(int (*hdlr)(void*) ,void* param);
@@ -65,7 +75,7 @@ extern "C" {
   /// Suspend executing thread from execution
   int lib_rtl_suspend_thread(lib_rtl_thread_t handle);
 
-  /// Create named lock. if the lock_name is NULL the lock is priovate to the currect process.
+  /// Create named lock. if the lock_name is 0 the lock is priovate to the currect process.
   int lib_rtl_create_lock (const char* lock_name, lib_rtl_lock_t* lock_handle);
   /// Delete lock
   int lib_rtl_delete_lock (lib_rtl_lock_t lock_handle);
@@ -125,6 +135,9 @@ extern "C" {
   /// Declare exit handler
   int lib_rtl_sleep(int millisecs);
   const char* lib_rtl_error_message(int status);
+  /// Small helper function to properly retrun from main program.
+  int lib_rtl_default_return();
+
 #ifdef __cplusplus
 }
 

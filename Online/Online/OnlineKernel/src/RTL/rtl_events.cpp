@@ -7,10 +7,10 @@
 #include <fcntl.h>
 
 inline int rtl_printf(const char* , ...)  {
-//inline int rtl_printf(const char* fmt, ...)  {
-//  va_list args;
-//  va_start(args, fmt);
-//  return vprintf(fmt, args);
+  //inline int rtl_printf(const char* fmt, ...)  {
+  //  va_list args;
+  //  va_start(args, fmt);
+  //  return vprintf(fmt, args);
   return 1;
 }
 
@@ -36,7 +36,7 @@ int lib_rtl_create_event (const char* name, lib_rtl_event_t* event_flag)    {
     h->handle = 0;
   }
 #elif defined(_WIN32)
-  h->handle = ::CreateEvent(NULL,TRUE,FALSE,name ? h->name : 0);
+  h->handle = ::CreateEvent(0,TRUE,FALSE,name ? h->name : 0);
   if ( h->handle != 0 && ::GetLastError() == ERROR_ALREADY_EXISTS )   {
     ::CloseHandle(h->handle);
     h->handle = ::OpenEvent(EVENT_ALL_ACCESS,FALSE,name ? h->name : 0);
@@ -44,7 +44,7 @@ int lib_rtl_create_event (const char* name, lib_rtl_event_t* event_flag)    {
 #endif
   if ( h->handle == 0 )  {
     lib_rtl_signal_message(LIB_RTL_OS,"Failed to create %s event flag [%s]", 
-          name ? name : "<unnamed>");
+      name ? name : "<unnamed>");
     *event_flag = 0;
     return 0;
   }
@@ -160,9 +160,9 @@ int lib_rtl_wait_event_a_call(void* param)  {
       lib_rtl_wait_for_event(pars->flag);
       lib_rtl_clear_event(pars->flag);
       if ( pars->action )  {
-	rtl_printf("action...\n");
-	(*pars->action)(pars->param);
-	rtl_printf("action...done.\n");
+        rtl_printf("action...\n");
+        (*pars->action)(pars->param);
+        rtl_printf("action...done.\n");
       }
     }
     catch(...) {

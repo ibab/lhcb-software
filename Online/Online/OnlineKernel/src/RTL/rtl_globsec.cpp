@@ -45,10 +45,10 @@ int lib_rtl_create_section(const char* sec_name, int size, lib_rtl_gbl_t* addres
 #elif defined(_WIN32)
   void** add = (void**)address;
   // Setup inherited security attributes (FIXME: merge somewhere else)
-  SECURITY_ATTRIBUTES	sa = {sizeof(SECURITY_ATTRIBUTES), NULL, true};
+  SECURITY_ATTRIBUTES   sa = {sizeof(SECURITY_ATTRIBUTES), 0, true};
   DWORD  siz  = (size/4096)*4096 + (((size%4096)==0) ? 0 : 4096);  //  multiple of page size
   h->addaux = ::CreateFileMapping(INVALID_HANDLE_VALUE,&sa,PAGE_READWRITE,0,siz,h->name);
-  if (h->addaux != NULL && ::GetLastError() == ERROR_ALREADY_EXISTS)   { 
+  if (h->addaux != 0 && ::GetLastError() == ERROR_ALREADY_EXISTS)   { 
     ::CloseHandle(h->addaux); 
     h->addaux = ::OpenFileMapping(FILE_MAP_ALL_ACCESS,FALSE,h->name);
   }
@@ -61,7 +61,7 @@ int lib_rtl_create_section(const char* sec_name, int size, lib_rtl_gbl_t* addres
     }
   }
 #endif
-  int err = getError();
+  int err = lib_rtl_get_error();
   ::printf("error mapping section [%s]. Status %d [%s]\n",h->name,err,errorString(err));
   return 0;
 }
@@ -107,7 +107,7 @@ int lib_rtl_map_section(const char* sec_name, int size, lib_rtl_gbl_t* address) 
     *address = h.release();
     return 1;
   }
-  int err = getError();
+  int err = lib_rtl_get_error();
   ::shm_unlink(h->name);
   ::printf("error mapping section [%s]. Status %d [%s]\n",h->name,err,errorString(err));
   return 0;
@@ -120,7 +120,7 @@ int lib_rtl_map_section(const char* sec_name, int size, lib_rtl_gbl_t* address) 
       *address = h.release();
       return 1;
     }
-    int err = getError();
+    int err = lib_rtl_get_error();
     ::printf("error mapping section [%s]. Status %d [%s]\n",h->name,err,errorString(err));
   }
   return 0;

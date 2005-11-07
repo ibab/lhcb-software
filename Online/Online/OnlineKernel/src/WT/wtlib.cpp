@@ -36,7 +36,6 @@ struct wt_enabled_fac_header : public qentry  {
 void wtc_print_space();
 wt_fac_entry* _wtc_find_facility(unsigned int facility,qentry* fac_head);
 static int _wtc_add_fired(wt_queue_entry* entry,wt_enabled_fac_header* mask_ptr,wt_fac_entry* fac);
-int _wtc_restore_stack(void);
 void _wtc_print_entry(wt_queue_entry *e);
 
 /*----------------------------STATIC STORAGE----------------------------*/
@@ -58,7 +57,7 @@ static inline qentry *q_remove_head(qentry *head )   {
 }
 /*----------------------------------------------------------------------*/
 static inline qentry *q_remove( qentry *entry )  {
-  qentry* head    = (qentry*)((int)entry+(int)entry->prev);
+  qentry* head = (qentry*)((int)entry+(int)entry->prev);
   return q_remove_head(head);
 }
 /*----------------------------------------------------------------------*/
@@ -243,7 +242,7 @@ int wtc_wait_with_mask (unsigned int* facility, void** userpar1, int* sub_status
               *sub_status = status;
             }
             if (mask_ok ==1)   {
-              _wtc_restore_stack();
+              wtc_restore_stack();
             }
             _wtc_add_fired(entry,mask_ptr,fac);
             return WT_BADACTIONSTAT;
@@ -252,7 +251,7 @@ int wtc_wait_with_mask (unsigned int* facility, void** userpar1, int* sub_status
         }
         else   {
           if (mask_ok ==1)  {
-            _wtc_restore_stack();
+            wtc_restore_stack();
           }
           _wtc_add_fired(entry,mask_ptr,fac);
           return(WT_NOACTION);
@@ -260,7 +259,7 @@ int wtc_wait_with_mask (unsigned int* facility, void** userpar1, int* sub_status
       }
       else    {
         if (mask_ok ==1)   {
-          _wtc_restore_stack();
+          wtc_restore_stack();
         }
         _wtc_add_fired(entry,mask_ptr,0);
         return(WT_NOSUBSCRIBED);
@@ -394,7 +393,8 @@ int wtc_error(int status)  {
   return WT_SUCCESS;
 }
 /*----------------------------------------------------------------------*/
-int _wtc_restore_stack() {
+int wtc_add_stack(unsigned int fac,void* param)   {  if ( !inited ) return (WT_NOTINIT);  wt_queue_entry *e = new wt_queue_entry(fac, param);  insqhi(e, wt_stack);  return WT_SUCCESS;}/*----------------------------------------------------------------------*/
+int wtc_restore_stack() {
   qentry  *entry;
   while ( 0 != (entry = q_remove_head(wt_stack)) )  {
     insqhi(entry,wt_queue);

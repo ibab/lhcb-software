@@ -117,3 +117,9 @@ qentry_t* remqent(qentry_t* e)  {
   }
   return 0;
 }
+
+qentry_t *remqhead( qentry_t* head )   {
+  qentry_t *entry;
+  int status  = remqhi (head,&entry);
+  return (status & 1) ? entry : 0;
+}

@@ -42,12 +42,12 @@ const char* errorString(int status)  {
   void* lpMessageBuffer;
   ::FormatMessage( 
     FORMAT_MESSAGE_ALLOCATE_BUFFER |  FORMAT_MESSAGE_FROM_SYSTEM,
-    NULL,
+    0,
     status,
     MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT), //The user default language
     (LPTSTR) &lpMessageBuffer,
     0,
-    NULL );
+    0 );
   strncpy(s, (const char*)lpMessageBuffer, len);
   s[len] = 0;
   int l = strlen(s);
@@ -58,7 +58,7 @@ const char* errorString(int status)  {
 
 #endif
 
-int getError()   {
+int lib_rtl_get_error()   {
 #ifdef USE_PTHREADS
   return errno;
 #elif _WIN32
@@ -67,7 +67,7 @@ int getError()   {
 }
 
 const char* errorString()  {
-  return errorString(getError());
+  return errorString(lib_rtl_get_error());
 }
 
 RTL::ExitHandler::ExitHandler() {
@@ -173,7 +173,7 @@ int lib_rtl_signal_message(int action, const char* fmt, ...)  {
       break;
     case LIB_RTL_OS:
     default:
-      err = getError();
+      err = lib_rtl_get_error();
       if ( err != ERROR_SUCCESS )   {
         ::printf("RTL: %8d : %s\n",err, errorString(err));
         ::printf("                ");
@@ -209,4 +209,66 @@ int lib_rtl_sleep(int millisecs)    {
 
 const char* lib_rtl_error_message(int status)  {
   return errorString(status);
+}
+
+int lib_rtl_default_return()  {
+#if defined(_VMS) || defined(_WIN32)
+  return 1;
+#elif defined(linux) || defined(_OSK}
+  return 0;
+#else
+#endif
+}
+
+/// Disable intercepts
+int lib_rtl_disable_intercept() {
+  return lib_rtl_default_return();
+}
+
+/// Enable intercpets
+int lib_rtl_enable_intercept()    {
+  return lib_rtl_default_return();
+}
+
+int lib_rtl_get_process_name(char* process, size_t len)  {
+#ifdef __VMS
+  int status;
+  short len;
+  int id = 0;
+  acpp_iosb theiosb;
+  item it[2] = { { 22, JPI$_PRCNAM, process , &len } , {0,0,0,0} };
+  status = sys$getjpiw(0, id, 0, it, &theiosb, 0, 0, 0) ;
+  if ( !SUCCESS(status) )   {
+    return status;
+  }
+  process[len]='\0';
+#else
+  char *tmp = (char*)getenv("$PROCESS");
+  ::strcpy(process, tmp != 0 ? tmp : "UNKNOWN");
+#endif
+  return 1;
+}
+
+int lib_rtl_get_node_name(char* node, size_t len)  {
+#ifdef __VMS
+  short len;
+  int id=0;
+  acpp_iosb theiosb;
+  item it[2] = { { 22, JPI$_NODENAME, node , &len } , {0,0,0,0} };
+  int status = sys$getjpiw(0, id, 0, it, &theiosb, 0, 0, 0) ;
+  if ( !SUCCESS(status) )   {
+    return status;
+  }
+  node[len]='\0';
+#else
+#if defined(_WIN32)
+  char *tmp = (char*)getenv("COMPUTERNAME");
+#elif defined(_OSK)
+  char *tmp = (char*)getenv("NODE");
+#elif defined(linux)
+  char *tmp = (char*)getenv("NODE");
+#endif
+  ::strcpy(node,tmp != 0 ? tmp : "UNKNOWN");
+#endif
+  return 1;
 }
