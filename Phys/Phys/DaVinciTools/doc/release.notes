@@ -1,7 +1,10 @@
-! $Id: release.notes,v 1.180 2005-10-21 14:48:07 pkoppenb Exp $
+! $Id: release.notes,v 1.181 2005-11-07 13:46:23 pkoppenb Exp $
 ! Package     : DaVinciTools
 ! Responsible : P. Koppenburg
 
+! 2005-11-07 - P. Koppenburg
+  - src/MakeResonances.{h,cpp}
+    . Some statistics to be printed at finalization.
 ! 2005-10-21 - P. Koppenburg
   - src/ParticleDescendants.{h,cpp}
     . New utility tool that returns the daughters of a Particle

@@ -1,4 +1,4 @@
-// $Id: MakeResonances.cpp,v 1.12 2005-10-17 12:28:42 pkoppenb Exp $
+// $Id: MakeResonances.cpp,v 1.13 2005-11-07 13:46:23 pkoppenb Exp $
 // Include files 
 
 #include <algorithm>
@@ -38,6 +38,9 @@ MakeResonances::MakeResonances( const std::string& name,
   ,  m_motherPlots()
   ,  m_checkOverlap()
   ,  m_decayDescriptors()
+  ,  m_nEvents(0)
+  ,  m_nAccepted(0)
+  ,  m_nCandidates(0)
   ,  m_decays()
 {
   declareProperty( "DaughterFilterName" , m_daughterFilterName = "DaughterFilter" );
@@ -230,6 +233,7 @@ StatusCode MakeResonances::createDecay(const std::string& mother,
 StatusCode MakeResonances::execute() {
 
   debug() << "==> Execute" << endmsg;
+  ++m_nEvents ;
 
   setFilterPassed(false);   // Mandatory. Set to true if event is accepted.
   ParticleVector Daughters, Resonances ;
@@ -271,7 +275,12 @@ StatusCode MakeResonances::execute() {
     err() << "Unable to save mothers" << endmsg;
     return StatusCode::FAILURE ;  
   }  
-  setFilterPassed(!Final.empty());   // Mandatory. Set to true if event is accepted.
+  if ( !Final.empty()){
+    setFilterPassed(true);   // Mandatory. Set to true if event is accepted.
+    ++m_nAccepted;
+    m_nCandidates+=Final.size();
+  }
+  
   return StatusCode::SUCCESS;
 };
 //=============================================================================
@@ -420,6 +429,8 @@ StatusCode MakeResonances::makePlots(const ParticleVector& PV,IPlotTool* PT) {
 StatusCode MakeResonances::finalize() {
 
   debug() << "==> Finalize" << endmsg;
+  info() << "Found " << m_nCandidates << " in " << m_nAccepted << " accepted events among " 
+         << m_nEvents << " events" << endmsg ;
 
   return  StatusCode::SUCCESS;
 }

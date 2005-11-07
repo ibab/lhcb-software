@@ -1,4 +1,4 @@
-// $Id: MakeResonances.h,v 1.6 2005-07-13 12:57:13 pkoppenb Exp $
+// $Id: MakeResonances.h,v 1.7 2005-11-07 13:46:23 pkoppenb Exp $
 #ifndef MAKERESONANCES_H 
 #define MAKERESONANCES_H 1
 
@@ -76,6 +76,9 @@ private:
   bool       m_killOverlap ;        ///< Kill candidates based on twice the same track
   //  bool       m_makePlots;           ///< Produce Histos. Overrides GaudiHistoAlg variable 
   bool       m_motherToNGammas;     ///< make mother to n gammas
+  int        m_nEvents ;            ///< Number of events
+  int        m_nAccepted ;          ///< Number of events accepted
+  int        m_nCandidates ;        ///< Number of candidates
   
 
   typedef std::vector<Decay> Decays;
