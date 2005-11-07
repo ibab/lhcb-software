@@ -1,9 +1,9 @@
-# $Id: requirements,v 1.21 2005-01-25 14:12:18 cattanem Exp $
+# $Id: requirements,v 1.22 2005-11-07 12:08:25 odescham Exp $
 # =============================================================================
 # CVS tag $Name: not supported by cvs2svn $ 
 # =============================================================================
 package           CaloInterfaces
-version           v4r3
+version           v5r0
 
 # =============== structure ===================================================
 branches          cmt doc src CaloInterfaces
@@ -20,11 +20,15 @@ apply_pattern     linker_library library=CaloInterfaces
 
 # =============================================================================
 # $Log: not supported by cvs2svn $
+# Revision 1.21  2005/01/25 14:12:18  cattanem
+# updates for CLHEP 1.9
+#
 # Revision 1.20  2004/09/06 09:43:53  cattanem
 # v4r2
 #
 # Revision 1.19  2004/09/02 18:52:52  ibelyaev
 #  make preparation for HLT/Trigger
+# 
 # 
 # =============================================================================
 # The END 

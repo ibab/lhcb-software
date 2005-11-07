@@ -1,8 +1,11 @@
-// $Id: IIDICaloPosition2MomentumTool.h,v 1.1 2004-02-17 11:51:57 ibelyaev Exp $
+// $Id: IIDICaloPosition2MomentumTool.h,v 1.2 2005-11-07 12:08:25 odescham Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.1  2004/02/17 11:51:57  ibelyaev
+//  move IID* from CaloInterfaces to src directory
+//
 // Revision 1.1  2002/04/02 11:08:13  ibelyaev
 //  new interfaces
 // 

@@ -1,8 +1,11 @@
-// $Id: IIDICaloTrackIdEval.h,v 1.3 2005-01-25 14:12:18 cattanem Exp $
+// $Id: IIDICaloTrackIdEval.h,v 1.4 2005-11-07 12:08:25 odescham Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.3  2005/01/25 14:12:18  cattanem
+// updates for CLHEP 1.9
+//
 // Revision 1.2  2004/09/02 18:52:52  ibelyaev
 //  make preparation for HLT/Trigger
 //

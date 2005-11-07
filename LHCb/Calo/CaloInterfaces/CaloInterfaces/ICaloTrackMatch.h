@@ -1,8 +1,11 @@
-// $Id: ICaloTrackMatch.h,v 1.8 2004-09-02 18:52:52 ibelyaev Exp $
+// $Id: ICaloTrackMatch.h,v 1.9 2005-11-07 12:08:25 odescham Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $  
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.8  2004/09/02 18:52:52  ibelyaev
+//  make preparation for HLT/Trigger
+//
 // Revision 1.7  2004/02/17 11:51:55  ibelyaev
 //  move IID* from CaloInterfaces to src directory
 //
@@ -23,9 +26,8 @@
 #include "GaudiKernel/IAlgTool.h"
 
 class CaloPosition  ; // from CaloEvent package 
-class TrStoredTrack ; // from TrEvent   package
-class TrState       ; // from TrEvent   package
-class TrgTrack      ; // from TrgEvent  package 
+class Track         ; // from TrackEvent   package
+class State         ; // from TrackEvent   package
 
 /** @class ICaloTrackMatch ICaloTrackMatch.h CaloInterfaces/ICaloTrackMatch.h
  *  
@@ -53,7 +55,7 @@ class TrgTrack      ; // from TrgEvent  package
 
 class ICaloTrackMatch: 
   public  virtual IAlgTool ,
-  public  std::binary_function<const CaloPosition*,const TrStoredTrack*,
+  public  std::binary_function<const CaloPosition*,const Track*,
   std::pair<StatusCode,double> >
 {
  public:
@@ -77,7 +79,7 @@ class ICaloTrackMatch:
    */
   virtual StatusCode match 
   ( const CaloPosition*   caloObj  , 
-    const TrStoredTrack*  trObj    ,
+    const Track*  trObj    ,
     double&               chi2     ) = 0 ;
   
   /** The main matching method (Stl interface) 
@@ -87,7 +89,7 @@ class ICaloTrackMatch:
    */
   virtual MatchingPair    operator() 
     ( const CaloPosition*   caloObj  , 
-      const TrStoredTrack*  trObj    ) = 0 ;
+      const Track*  trObj    ) = 0 ;
   
   /** extract the TrState which was actually used for last matching
    *  @attention TrState is owned by the tool itself 
@@ -95,28 +97,8 @@ class ICaloTrackMatch:
    *  to TrStateP 
    *  @return pointer to the state actually used for last matching
    */
-  virtual const TrState* state   () const = 0 ;
+  virtual const State* state   () const = 0 ;
   
-  /** the main matching method  
-   *
-   *  @param caloObj  pointer to "calorimeter" object (position)
-   *  @param trObj    pointer to tracking object (track)
-   *  @param chi2     returned value of chi2 of the matching
-   *  @return status code for matching procedure 
-   */
-  virtual StatusCode match 
-  ( const CaloPosition*   caloObj  , 
-    const TrgTrack*       trObj    ,
-    double&               chi2     ) = 0 ;
-
-  /** The main matching method (Stl interface) 
-   *  @param caloObj  pointer to "calorimeter" object (position)
-   *  @param trObj    pointer to tracking object (track)
-   *  @return pair of status code/chi2  for matching procedure 
-   */
-  virtual MatchingPair    operator() 
-    ( const CaloPosition*   caloObj  , 
-      const TrgTrack*       trObj    ) = 0 ;
 
  protected:
   

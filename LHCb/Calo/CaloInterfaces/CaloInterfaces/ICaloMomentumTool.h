@@ -1,8 +1,11 @@
-// $Id: ICaloMomentumTool.h,v 1.3 2004-02-17 11:51:54 ibelyaev Exp $
+// $Id: ICaloMomentumTool.h,v 1.4 2005-11-07 12:08:25 odescham Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
-// $Log: not supported by cvs2svn $ 
+// $Log: not supported by cvs2svn $
+// Revision 1.3  2004/02/17 11:51:54  ibelyaev
+//  move IID* from CaloInterfaces to src directory
+// 
 // ============================================================================
 #ifndef CALOINTERFACES_ICALOMOMENTUMTOOL_H 
 #define CALOINTERFACES_ICALOMOMENTUMTOOL_H 1
