@@ -1,4 +1,4 @@
-// $Id: Digit2ClustersConnector.cpp,v 1.2 2004-05-27 13:40:03 cattanem Exp $ 
+// $Id: Digit2ClustersConnector.cpp,v 1.3 2005-11-07 11:57:13 odescham Exp $ 
 // ===========================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ===========================================================================

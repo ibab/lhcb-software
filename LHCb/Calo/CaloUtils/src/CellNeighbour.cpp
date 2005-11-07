@@ -1,8 +1,11 @@
-// $Id: CellNeighbour.cpp,v 1.2 2004-10-22 09:29:08 ibelyaev Exp $
+// $Id: CellNeighbour.cpp,v 1.3 2005-11-07 11:57:13 odescham Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.2  2004/10/22 09:29:08  ibelyaev
+//  bug fix in the evaluation of energy sharing fractions
+//
 // Revision 1.1  2001/11/25 15:26:21  ibelyaev
 //  update for newer CaloKernel package
 // 

@@ -1,8 +1,11 @@
-// $Id: CaloPhotonMomentum.cpp,v 1.2 2002-06-13 12:33:52 ibelyaev Exp $
+// $Id: CaloPhotonMomentum.cpp,v 1.3 2005-11-07 11:57:13 odescham Exp $
 // =============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // =============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.2  2002/06/13 12:33:52  ibelyaev
+//  bug fixes
+//
 // Revision 1.1  2002/04/02 10:59:31  ibelyaev
 //  update for new event model
 // 

@@ -1,12 +1,12 @@
-# $Id: requirements,v 1.23 2005-05-06 17:48:33 ibelyaev Exp $
+# $Id: requirements,v 1.24 2005-11-07 11:57:13 odescham Exp $
 # =============================================================================
-# CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.23 $
+# CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.24 $
 # =============================================================================
 # Created    : 02/11/2001
 # Maintainer : Vanya BELYAEV belyaev@lapp.in2p3.fr 
 # =============================================================================
 package             CaloUtils
-version             v4r9
+version             v5r0
 
 # ================= structure =================================================
 branches            cmt doc src CaloUtils
@@ -17,7 +17,7 @@ include_dirs        $(CALOUTILSROOT)
 # ================= dependencies ==============================================
 use CaloDet         v6r*    Det 
 use CaloEvent       v13r*   Event
-use TrEvent         v*      Event 
+use TrackEvent      v*      Event 
 
 # ================= constituents: linker library ==============================
 library             CaloUtils    *.cpp
@@ -26,7 +26,10 @@ library             CaloUtils    *.cpp
 apply_pattern       linker_library library=CaloUtils 
 
 # =============================================================================
-# $Log: not supported by cvs2svn $ 
+# $Log: not supported by cvs2svn $
+# Revision 1.23  2005/05/06 17:48:33  ibelyaev
+#  add new base classes: Calo(Histo)TrackAlg
+# 
 # =============================================================================
 # The END 
 # =============================================================================

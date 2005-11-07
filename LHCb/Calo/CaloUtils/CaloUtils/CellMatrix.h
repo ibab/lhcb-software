@@ -1,8 +1,11 @@
-// $Id: CellMatrix.h,v 1.5 2004-05-27 01:42:11 ibelyaev Exp $
+// $Id: CellMatrix.h,v 1.6 2005-11-07 11:57:13 odescham Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.5  2004/05/27 01:42:11  ibelyaev
+//  fix a bug in CellMatrix::area method
+//
 // Revision 1.4  2001/11/25 15:26:20  ibelyaev
 //  update for newer CaloKernel package
 //

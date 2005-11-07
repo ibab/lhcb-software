@@ -1,8 +1,11 @@
-// $Id: CovarianceEstimator.cpp,v 1.11 2002-11-13 20:43:37 ibelyaev Exp $ 
+// $Id: CovarianceEstimator.cpp,v 1.12 2005-11-07 11:57:13 odescham Exp $ 
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.11  2002/11/13 20:43:37  ibelyaev
+//  few bugs are fixed
+//
 // ============================================================================
 #define CALOUTILS_COVARIANCEESTIMATOR_CPP 1 
 // ============================================================================

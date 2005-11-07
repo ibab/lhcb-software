@@ -1,8 +1,11 @@
-// $Id: Digit2ClustersConnector.h,v 1.1 2002-04-02 10:59:30 ibelyaev Exp $ 
+// $Id: Digit2ClustersConnector.h,v 1.2 2005-11-07 11:57:13 odescham Exp $ 
 // ===========================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ===========================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.1  2002/04/02 10:59:30  ibelyaev
+//  update for new event model
+//
 // Revision 1.2  2002/03/13 15:05:18  ibelyaev
 //  fix the problems with std::map on Win2K platform
 //

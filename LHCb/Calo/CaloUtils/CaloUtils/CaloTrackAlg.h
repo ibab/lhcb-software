@@ -1,8 +1,12 @@
-// $Id: CaloTrackAlg.h,v 1.1 2005-05-06 17:48:33 ibelyaev Exp $
+// $Id: CaloTrackAlg.h,v 1.2 2005-11-07 11:57:13 odescham Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ , version $Revison:$
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.1  2005/05/06 17:48:33  ibelyaev
+//  add new base classes: Calo(Histo)TrackAlg
+// Revision 1.2 2005/10/14 odescham
+// adapt to new track model
 // ============================================================================
 #ifndef CALOUTILS_CALOTrackAlg_H 
 #define CALOUTILS_CALOTrackAlg_H 1
@@ -17,7 +21,8 @@
 // ============================================================================
 #include "CaloKernel/CaloAlgorithm.h"
 // ============================================================================
-#include "CaloUtils/TrTrackUse.h"
+#include "CaloUtils/TrackUse.h"
+#include "Event/Track.h"
 // ============================================================================
 
 // ============================================================================
@@ -45,6 +50,9 @@
  *  @date   2004-10-26
  */
 // ============================================================================
+class TrackUse;
+class Track;
+
 class CaloTrackAlg : public CaloAlgorithm 
 {
 public:  
@@ -86,17 +94,20 @@ protected:
    *  @param track track object 
    *  @return decision
    */
-  bool        use  ( const TrStoredTrack* track ) const 
-  { return m_use.use ( track ) ; }
+  bool        use  ( Track* track ) const
+    { return m_use.use( track) ; }
+    //  { return false ; }
+  //  bool        use  (  ) const 
+  //{ return false  ; }
   /** make 'bit' representation of track categories/types/algorithms
    *  @param trObj the track object
    *  @return 'bit'-representation of the track (useful for debugging)
    */
-  std::string bits ( const TrStoredTrack* trObj ) const 
+  std::string bits ( Track* trObj ) const 
   { return m_use.bits ( trObj ) ; }
 protected :
   // the actual object 
-  TrTrackUse m_use ;
+  TrackUse m_use ;
 };
 // ============================================================================
 

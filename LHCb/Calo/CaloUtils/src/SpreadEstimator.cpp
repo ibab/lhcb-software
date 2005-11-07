@@ -1,8 +1,11 @@
-// $Id: SpreadEstimator.cpp,v 1.6 2002-11-13 20:43:37 ibelyaev Exp $
+// $Id: SpreadEstimator.cpp,v 1.7 2005-11-07 11:57:13 odescham Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.6  2002/11/13 20:43:37  ibelyaev
+//  few bugs are fixed
+//
 // Revision 1.5  2002/06/14 09:49:03  ibelyaev
 //  bug fix and version change
 //

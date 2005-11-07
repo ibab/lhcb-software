@@ -1,8 +1,11 @@
-// $Id: CellMatrix3x3.cpp,v 1.3 2004-10-22 09:29:08 ibelyaev Exp $
+// $Id: CellMatrix3x3.cpp,v 1.4 2005-11-07 11:57:13 odescham Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.3  2004/10/22 09:29:08  ibelyaev
+//  bug fix in the evaluation of energy sharing fractions
+//
 // ============================================================================
 // Include files
 // CaloDet 

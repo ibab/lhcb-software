@@ -1,8 +1,11 @@
-// $Id: CaloData.h,v 1.5 2002-04-02 12:30:20 ocallot Exp $ 
+// $Id: CaloData.h,v 1.6 2005-11-07 11:57:13 odescham Exp $ 
 // ===========================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ===========================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.5  2002/04/02 12:30:20  ocallot
+// Fix CaloData.h reference to CaloEvent/CaloDigit.h
+//
 // Revision 1.4  2001/11/25 16:18:50  ibelyaev
 //  bug fix
 //

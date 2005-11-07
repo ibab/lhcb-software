@@ -1,8 +1,12 @@
-// $Id: CaloHistoTrackAlg.h,v 1.1 2005-05-06 17:48:32 ibelyaev Exp $
+// $Id: CaloHistoTrackAlg.h,v 1.2 2005-11-07 11:57:13 odescham Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ , version $Revison:$
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.1  2005/05/06 17:48:32  ibelyaev
+//  add new base classes: Calo(Histo)TrackAlg
+// Revision 1.2 2005/10/14 odescham
+// adapt to new track model
 // ============================================================================
 #ifndef CALOUTILS_CALOHistoTrackAlg_H 
 #define CALOUTILS_CALOHistoTrackAlg_H 1
@@ -17,7 +21,7 @@
 // ============================================================================
 #include "CaloKernel/CaloHistoAlg.h"
 // ============================================================================
-#include "CaloUtils/TrTrackUse.h"
+#include "CaloUtils/TrackUse.h"
 // ============================================================================
 
 // ============================================================================
@@ -87,17 +91,17 @@ protected:
    *  @param track track object 
    *  @return decision
    */
-  bool        use  ( const TrStoredTrack* track ) const 
+  bool        use  ( Track* track ) const
   { return m_use.use ( track ) ; }
   /** make 'bit' representation of track categories/types/algorithms
    *  @param trObj the track object
    *  @return 'bit'-representation of the track (useful for debugging)
    */
-  std::string bits ( const TrStoredTrack* trObj ) const 
+  std::string bits ( Track* trObj ) const 
   { return m_use.bits ( trObj ) ; }
 protected :
   // the actual object 
-  TrTrackUse m_use ;
+  TrackUse m_use ;
 };
 // ============================================================================
 

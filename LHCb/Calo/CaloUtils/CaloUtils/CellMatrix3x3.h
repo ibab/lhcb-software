@@ -1,8 +1,11 @@
-// $Id: CellMatrix3x3.h,v 1.5 2005-05-09 13:48:46 cattanem Exp $
+// $Id: CellMatrix3x3.h,v 1.6 2005-11-07 11:57:13 odescham Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.5  2005/05/09 13:48:46  cattanem
+// fix some doxygen warnings
+//
 // Revision 1.4  2004/05/27 13:40:03  cattanem
 // v4r7
 //
