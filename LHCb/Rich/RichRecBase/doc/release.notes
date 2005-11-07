@@ -5,7 +5,7 @@
 !-----------------------------------------------------------------------------
 
 ! 2005-11-07 - Christopher Rob Jones
- - Bug fix to TeackSelector for TrStoredTracks that caused a boost array
+ - Bug fix to RichTrackSelector for TrStoredTracks that caused a boost array
    to go out of range for "Unknown" or "UnUsable" tracks. 
    Problem picked up when switching to Boost 1.32.0 since this version seems 
    to have introduced some range checking.
