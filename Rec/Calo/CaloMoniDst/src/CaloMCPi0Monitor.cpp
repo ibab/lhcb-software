@@ -1,8 +1,11 @@
-// $Id: CaloMCPi0Monitor.cpp,v 1.2 2005-05-08 09:58:25 ibelyaev Exp $
+// $Id: CaloMCPi0Monitor.cpp,v 1.3 2005-11-07 12:16:38 odescham Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.2 $
+// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.3 $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.2  2005/05/08 09:58:25  ibelyaev
+//  remove associators, update options
+//
 // ============================================================================
 // Include files
 // ============================================================================

@@ -1,8 +1,11 @@
-// $Id: CaloPIDsMonitor.cpp,v 1.2 2005-05-08 09:58:25 ibelyaev Exp $
+// $Id: CaloPIDsMonitor.cpp,v 1.3 2005-11-07 12:16:38 odescham Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.2 $
+// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.3 $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.2  2005/05/08 09:58:25  ibelyaev
+//  remove associators, update options
+//
 // ============================================================================
 // Include files
 // ============================================================================
@@ -18,7 +21,7 @@
 // ============================================================================
 // Event 
 // ============================================================================
-#include "Event/TrStoredTrack.h"
+#include "Event/Track.h"
 #include "Event/MCParticle.h"
 // ============================================================================
 // Relations 
@@ -44,16 +47,16 @@
  *  - "Input" 
  *   The default value is                      ""
  *   The PID-quantity to be monitored, relation table of 
- *   type IRelation<TrStoredTrack,float>
+ *   type IRelation<Track,float>
  *   
  *  - "Inputs"
- *   The default value is :         TrStoredTrackLocation::Default
- *   The list of TrStoredTrack containers to be monitored 
+ *   The default value is :         TrackLocation::Default
+ *   The list of Track containers to be monitored 
  *  
  *   - "Tr2MCP"
  *   The default value is :          "Rec/Relations/Tr2MCP" 
  *   The location in TES the relation table of type 
- *   IRelationWeighted<TrStoredTrack,MCParticle,double>
+ *   IRelationWeighted<Track,MCParticle,double>
  *   
  *    - "Particle"
  *    The default value is :         11 
@@ -75,8 +78,8 @@ class CaloPIDsMonitor : public CaloMoniAlg
   /// friend factory for instantiation 
   friend class AlgFactory<CaloPIDsMonitor>;
 protected:
-  typedef const IRelation<TrStoredTrack,float>                      PIDTable ;
-  typedef const IRelationWeighted<TrStoredTrack,MCParticle,double>  MCTable  ;
+  typedef const IRelation<Track,float>                      PIDTable ;
+  typedef const IRelationWeighted<Track,MCParticle,double>  MCTable  ;
 public:
   /// standard algorithm initialization 
   virtual StatusCode initialize () ;
@@ -94,7 +97,7 @@ protected:
     ISvcLocator*       isvc ) 
     : CaloMoniAlg ( name , isvc )
     //
-    , m_tr2mc ("Rec/Relations/Tr2MCP")
+    , m_tr2mc ("Rec/Relations/Track2MCP")
     //
     , m_pid         ( 11       )
     , m_cut         ( 0        )
@@ -108,7 +111,7 @@ protected:
     //
     declareProperty ( "Normalization" , m_pNorm       ) ;
     // 
-    addToInputs     ( TrStoredTrackLocation::Default  ) ;
+    addToInputs     ( TrackLocation::Default  ) ;
   };  
   /// virtual destructor 
   virtual ~CaloPIDsMonitor(){} ;
@@ -123,11 +126,11 @@ protected:
   /// transformation function for momentum 
   inline double pFunc( const double value ) const 
   { return tanh( value / m_pNorm ); };
-  /** extract the momentum from TrStoredTrack
+  /** extract the momentum from Track
    *  @param  track pointer to the track
    *  @return the momentum of the track 
    */
-  double momentum  ( const TrStoredTrack* track  ) const ;
+  double momentum  ( const Track* track  ) const ;
   /// print stat infomration about the histogram 
   StatusCode stats ( const AIDA::IHistogram1D* h ) const ;
   /// h3=h1/h2 
@@ -225,8 +228,6 @@ StatusCode CaloPIDsMonitor::initialize ()
 // ============================================================================
 StatusCode CaloPIDsMonitor::execute    ()  
 {  
-  typedef const TrStoredTrack   Track  ;
-  typedef const TrStoredTracks  Tracks ;
   
   // get Tr -> MC relation table 
   const MCTable* mcTable   = get<MCTable> ( m_tr2mc ) ;
@@ -252,9 +253,10 @@ StatusCode CaloPIDsMonitor::execute    ()
       const Track* track = *itrack ;
       if ( 0 == track         ) { continue ; }                     // CONTINUE 
       
-      if ( !track->unique  () ) { continue ; }                     // CONTINUE
-      if ( !track->match   () &&
-           !track->forward () ) { continue ; }                     // CONTINUE
+      //OD (2005/11/01) criteria to be revised ...
+      if ( !track->checkFlag(Track::Unique)) { continue ; }      // CONTINUE
+      if ( !track->checkHistory(Track::PatForward) &&
+           !track -> checkHistory(Track::TrackMatching)) { continue ; }     // CONTINUE
       
       // get MC truth    
       MCTable::Range mc  = mcTable -> relations( track ) ;
@@ -304,36 +306,35 @@ StatusCode CaloPIDsMonitor::execute    ()
 // ============================================================================
 
 // ============================================================================
-/** extract the momentum from TrStoredTrack
+/** extract the momentum from Track
  *  @param  track pointer to the track
  *  @return the momentum of the track 
  */
 // ============================================================================
 double CaloPIDsMonitor::momentum 
-( const TrStoredTrack* track ) const 
+( const Track* track ) const 
 {
   if( 0 == track ) 
   { 
-    Error ( "momentum(): TrStoredTrack* points to NULL, return -100*GeV" ) ;
+    Error ( "momentum(): Track* points to NULL, return -100*GeV" ) ;
     return -100 * GeV ;
   };
   
   // get the momentum from the state nearest to 0,0,0
-  const TrState* state   = track->closestState( 0.0 ) ;
-  if( 0 == state ) 
-  { 
-    Error ( "momentum(): Track has no state closest to z=0, return -100*GeV");  
-    return -100 * GeV ;
-  }
+  const State state   = track->closestState( 0.0 ) ;
+  //OD if( 0 == state ) 
+  //  { 
+  //  Error ( "momentum(): Track has no state closest to z=0, return -100*GeV");  
+  //  return -100 * GeV ;
+  //}
+  //const TrStateP* stateP = dynamic_cast<const TrStateP*>( state );
+  //if( 0 == stateP ) 
+  //{ 
+  //  Error ( "momentum(): TrState is not TrStateP! ,return -100*GeV");  
+  //  return -100 * GeV ;
+  // }
   
-  const TrStateP* stateP = dynamic_cast<const TrStateP*>( state );
-  if( 0 == stateP ) 
-  { 
-    Error ( "momentum(): TrState is not TrStateP! ,return -100*GeV");  
-    return -100 * GeV ;
-  }
-  
-  return stateP -> p  () ;
+  return state.p  () ;
 }
 // ============================================================================
 

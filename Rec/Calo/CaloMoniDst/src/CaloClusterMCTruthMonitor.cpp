@@ -1,8 +1,11 @@
-// $Id: CaloClusterMCTruthMonitor.cpp,v 1.4 2005-05-13 12:58:35 cattanem Exp $
+// $Id: CaloClusterMCTruthMonitor.cpp,v 1.5 2005-11-07 12:16:38 odescham Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.4 $
+// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.5 $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.4  2005/05/13 12:58:35  cattanem
+// fixes for windows
+//
 // Revision 1.3  2005/05/08 09:58:24  ibelyaev
 //  remove associators, update options
 //
@@ -48,7 +51,7 @@
 /** @class CaloClusterMCTruthMonitor CaloClusterMCTruthMonitor.cpp
  *  
  *  The algorithm for trivial monitoring of MCTruthing of 
- *  "CaloClusters" with TrStored Tracks.
+ *  "CaloClusters" with Tracks.
  *  It produces 5 histograms:
  *
  *  <ol> 

@@ -9,7 +9,7 @@
 // from Calo
 #include "CaloKernel/CaloAlgorithm.h"
 // Event
-#include "Event/TrStoredTrack.h"
+#include "Event/Track.h"
 #include "Event/MCParticle.h"
 // Associator
 #include "Relations/IAssociatorWeighted.h"
@@ -125,7 +125,7 @@ private:
   IHistogramSvc*                   m_histoSvc  ;
 
   // Associator
-  typedef IAssociatorWeighted<CaloCluster,TrStoredTrack,float> IMatch ;
+  typedef IAssociatorWeighted<CaloCluster,Track,float> IMatch ;
   typedef IMatch::DirectType                                   Table  ;
   typedef Table::Range                                         Range  ;
 

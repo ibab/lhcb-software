@@ -1,8 +1,11 @@
-// $Id: CaloClusterMatchMonitor.cpp,v 1.4 2005-05-13 12:58:35 cattanem Exp $
+// $Id: CaloClusterMatchMonitor.cpp,v 1.5 2005-11-07 12:16:38 odescham Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.4  2005/05/13 12:58:35  cattanem
+// fixes for windows
+//
 // Revision 1.3  2005/05/08 09:58:25  ibelyaev
 //  remove associators, update options
 //
@@ -33,7 +36,7 @@
 // Event 
 // ============================================================================
 #include   "Event/CaloHypo.h"
-#include   "Event/TrStoredTrack.h"
+#include   "Event/Track.h"
 // ============================================================================
 // local
 // ============================================================================
@@ -43,7 +46,7 @@
 /** @class CaloClusterMatchMonitor CaloClusterMatchMonitor.cpp
  *  
  *  The algorithm for trivial monitoring of matching of 
- *  "CaloClusters" with TrStored Tracks.
+ *  "CaloClusters" with Tracks.
  *  It produces 5 histograms:
  *
  *  <ol> 
@@ -132,7 +135,7 @@ StatusCode CaloClusterMatchMonitor::execute()
 {
   // avoid long names 
   typedef const   CaloClusters                                     Clusters ;
-  typedef const IRelationWeighted<CaloCluster,TrStoredTrack,float> Table    ;
+  typedef const IRelationWeighted<CaloCluster,Track,float> Table    ;
   typedef Table::Range                                             Range    ;
   typedef Table::iterator                                          iterator ;
   

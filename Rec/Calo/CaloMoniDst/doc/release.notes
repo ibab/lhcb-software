@@ -1,12 +1,25 @@
-! $Id: release.notes,v 1.6 2005-06-02 12:36:18 cattanem Exp $ 
+! $Id: release.notes,v 1.7 2005-11-07 12:16:38 odescham Exp $ 
 ! -----------------------------------------------------------------------------
-! CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.6 $
+! CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.7 $
 ! -----------------------------------------------------------------------------
 ! Package     : Calo/CaloMoniDst
-! Responsible : Vanya BELYAEV belyaev@lapp.in2p3.fr
+! Responsible : Olivier Deschamps odescham@in2p3.fr
 ! Purpose     : Calo monitoring of Dst tape 
 ! -----------------------------------------------------------------------------
 
+!========================== CaloMoniDst v2r0 2005-11-04 ===================
+! 2005-11-04 - Olivier Deschamps
+ - Adapt to new Track Event Model (TrackEvent v1r4)
+
+
+  modified file :  
+   src/CaloPIDsMonitor.cpp
+   src/CaloPhotonMonitor.h/cpp
+   src/CaloHypoMatchMonitor.cpp
+   src/CaloClusterMatchMonitor.cpp
+
+ - cmt/requirements 
+   version increment to v2r0
 ========================= CaloMoniDst v1r2 2005-06-02 =========================
 ! 2005-06-02 - Marco Cattaneo
  - Adapt job options to change in phase name from BrunelMoni to Moni (for 
