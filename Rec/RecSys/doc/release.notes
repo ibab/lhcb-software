@@ -14,7 +14,8 @@ This version uses Gaudi v17r1, LHCb v19r0. Backwards compatible for RTTC data
     PatPV v1r0p1, PatForward v1r1, PatChecker v1r2, PatFitParams v1r1,
     TrackFitEvent v1r3, TrConverters v1r4, TrackProjectors v1r2p1,
     TrackMatching v1r1, TrackMCTools v1r3, TrackIdealPR v1r3, TrgSys v2r11,
-    TrgMuon v1r3, TrgConverter v1r0p1, L1Reco v7r2, RichRecSys v1r18p1
+    TrgMuon v1r3, TrgConverter v1r0p1, L1Reco v7r2, RichRecSys v1r18p1,
+    richHLTSys v1r1p2
 
 - In PatTools v1r2
   . Add projection number to PatTTCoord and sort according to it
