@@ -31,6 +31,7 @@
       <import name='Event/Node' />
       <import name='Kernel/LHCbID' />
       <import name='CLHEP/Geometry/Plane3D' />
+      <import name='Event/TrackFunctor' />
 
 <!--
   /** Track history enumerations:
@@ -197,27 +198,31 @@
        init    = '0'
        access  = 'PROTECTED'>
        <bitfield
+         type      = 'Track::Types'
          name      = 'type'
          length    = '5'
          desc      = 'Track type'
          setMeth   = 'TRUE'
          getMeth   = 'TRUE'
-         checkMeth = 'FALSE' />
+         checkMeth = 'TRUE' />
        <bitfield
+         type      = 'Track::History'
          name      = 'history'
          length    = '7'
          desc      = 'specifies the pattern recogn algorithm that created the Track'
          setMeth   = 'TRUE'
          getMeth   = 'TRUE'
-         checkMeth = 'FALSE' />
+         checkMeth = 'TRUE' />
        <bitfield
+         type      = 'Track::HistoryFit'
          name      = 'historyFit'
          length    = '3'
          desc      = 'specifies the fitting algorithm the fitted the Track)'
          setMeth   = 'TRUE'
          getMeth   = 'TRUE'
-         checkMeth = 'FALSE' />
+         checkMeth = 'TRUE' />
        <bitfield
+         type      = 'Track::Status'
          name      = 'status'
          length    = '3'
          desc      = 'status of the Track'
@@ -225,12 +230,13 @@
          getMeth   = 'TRUE'
          checkMeth = 'FALSE' />
        <bitfield
+         type      = 'Track::Flags'
          name      = 'flag'
          length    = '10'
          desc      = 'Track flags'
          setMeth   = 'FALSE'
          getMeth   = 'TRUE'
-         checkMeth = 'FALSE' />
+         checkMeth = 'TRUE' />
        <bitfield
          name      = 'specific'
          length    = '4'
@@ -422,13 +428,13 @@
         </code>
       </method>
       
-    <method
+      <method
         name    = 'addToStates'
-       desc    = 'Add a State to the list of States associated to the Track'>
+        desc    = 'Add a State to the list of States associated to the Track'>
         <arg type = 'const State' name=' state' />
       </method>
 
-     <method
+      <method
         name    = 'removeFromStates'
         desc    = 'Remove a State from the list of states associated to the Track'
         argList = 'State* value'>
@@ -438,20 +444,31 @@
         type    = 'State &amp;'
         name    = 'closestState'
         argList = 'double z'
-        desc    = 'Retrieve the reference to the state closest to the given z-position' />
+        desc    = 'Retrieve the reference to the state closest to the given z-position'>
+        <code>
+  return closestState( TrackFunctor::distanceAlongZ&lt;State&gt;(z) );
+        </code>
+        </method>
 
       <method
         type    = 'const State &amp;'
         name    = 'closestState'
         argList = 'double z'
         desc    = 'Retrieve the reference to the state closest to the given z-position'
-        const   = 'TRUE' />
+        const   = 'TRUE'>
+        <code>
+  return closestState( TrackFunctor::distanceAlongZ&lt;State&gt;(z) );
+        </code>
+        </method>
 
       <method
         type    = 'State &amp;'
         name    = 'closestState'
         argList = 'const HepPlane3D plane'
         desc    = 'Retrieve the reference to the state closest to the given plane'>
+        <code>
+  return closestState( TrackFunctor::distanceToPlane&lt;State&gt;(plane) );
+        </code>
       </method>
 
       <method
@@ -460,7 +477,25 @@
         argList = 'const HepPlane3D plane'
         desc    = 'Retrieve the reference to the state closest to the given plane'
         const   = 'TRUE'>
+        <code>
+  return closestState( TrackFunctor::distanceToPlane&lt;State&gt;(plane) );
+        </code>
       </method>
+
+      <method
+        type    = 'template &lt;typename T&gt; State &amp;'
+        name    = 'closestState'
+        argList = 'T t'
+        desc    = 'Templated helper function to retrieve the const reference to the state closest to a given object'
+        access = 'PROTECTED' />
+
+      <method
+        type    = 'template &lt;typename T&gt; const State &amp;'
+        name    = 'closestState'
+        argList = 'T t'
+        desc    = 'Templated helper function to retrieve the reference to the state closest to a given object'
+        const  = 'TRUE'
+        access = 'PROTECTED' />
 
       <method
         type    = 'bool'
@@ -484,30 +519,35 @@
 
       <method
         type    = 'unsigned int'
-        name    = 'nMeasurements'
-        desc    = 'Retrieve the number of measurements on the Track'
+        name    = 'nLHCbIDs'
+        desc    = 'Retrieve the number of LHCbIDs on the Track'
         const   = 'TRUE'>
         <code>
-  unsigned int n = m_measurements.size();
-  if (n == 0) n = m_lhcbIDs.size();
-  return n;
+  return m_lhcbIDs.size();
         </code>
       </method>
 
-<!--
+      <method
+        type    = 'unsigned int'
+        name    = 'nMeasurements'
+        desc    = 'Retrieve the number of Measurements on the Track'
+        const   = 'TRUE'>
+        <code>
+  return m_measurements.size();
+        </code>
+      </method>
 
-   <method template="class Pred" 
-      type="unsigned int"  
-      name="nMeasurements" 
-      const="TRUE" 
-      desc="return the number of measurements fulfilling a condition/predicate on LHCbIDs">
-      <arg type="Pred" name="pred"/>
-      <code>  
-   return std::count_if(m_meas.begin(),m_meas.end(),pred); 
-      </code>
-    </method>
+      <method
+        type    = 'template &lt;typename T&gt; unsigned int'
+        name    = 'nLHCbIDs'
+        argList = 'T predicate'
+        desc    = 'Retrieve the number of LHCbIDs that fulfill a predicate (using e.g. the HasKey template in TrackKeys.h)' />
 
--->
+      <method
+        type    = 'template &lt;typename T&gt; unsigned int'
+        name    = 'nMeasurements'
+        argList = 'T predicate'
+        desc    = 'Retrieve the number of Measurements that fulfill a predicate (using e.g. the HasKey template in TrackKeys.h)' />
 
       <method
         name    = 'addToMeasurements'
@@ -586,7 +626,7 @@
 	virtual = 'TRUE'
         const   = 'TRUE' />
 
-      <method
+<!--      <method
         type    = 'bool'
         name    = 'checkType'
         argList = 'unsigned int value'
@@ -595,9 +635,9 @@
         <code>
   return type() == value;
         </code>
-      </method>
+      </method>-->
 
-      <method
+<!--      <method
         type    = 'bool'
         name    = 'checkHistory'
         argList = 'unsigned int value'
@@ -606,9 +646,9 @@
         <code>
   return history() == value;
         </code>
-      </method>
+      </method>-->
 
-      <method
+<!--      <method
         type    = 'bool'
         name    = 'checkHistoryFit'
         argList = 'unsigned int value'
@@ -617,7 +657,7 @@
         <code>
   return historyFit() == value;
         </code>
-      </method>
+      </method>-->
 
       <method
         name    = 'setFlag'
@@ -630,7 +670,7 @@
         </code>
       </method>
 
-      <method
+<!--      <method
         type    = 'bool'
         name    = 'checkFlag'
         argList = 'unsigned int flag'
@@ -641,7 +681,7 @@
   bool ok = (0 != ( m_flags &amp; flagMask &amp; val ));
   return ok;
         </code>
-      </method> 
+      </method>-->
 
       <method
         type    = 'bool'

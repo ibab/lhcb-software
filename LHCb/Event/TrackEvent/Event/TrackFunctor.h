@@ -5,7 +5,9 @@
 // -------------
 #include <stdio.h>
 #include <functional>
-#include "Event/Track.h"
+
+// from CLHEP
+#include "CLHEP/Geometry/Plane3D.h"
 
 /** @namespace TrackFunctor
  *
@@ -54,16 +56,16 @@ namespace TrackFunctor
       return t -> z() > m_z;
     }
   };
-  
+
 //=============================================================================
-// select T object close to z position
+// Compare the distance along z of 2 objects
 //=============================================================================
   template <class T>
-  class closestToZ {
+  class distanceAlongZ {
   private:
     double m_z0;
   public:
-    explicit closestToZ( double z0 = 0.):m_z0(z0) {}
+    explicit distanceAlongZ( double z0 = 0.):m_z0(z0) {}
     bool operator()( const T* t1,
                      const T* t2 ) const
     {
@@ -72,14 +74,14 @@ namespace TrackFunctor
   };
 
 //=============================================================================
-// select T object close to plane position
+// Compare the distance of 2 objects to a plane
 //=============================================================================
   template <class T>
-  class closestToPlane {
+  class distanceToPlane {
   private:
     HepPlane3D m_plane;
   public:
-    explicit closestToPlane(const HepPlane3D& plane):m_plane(plane) {}
+    explicit distanceToPlane(const HepPlane3D& plane):m_plane(plane) {}
     bool operator()( const T* t1,
                      const T* t2 ) const
     {
@@ -165,28 +167,6 @@ namespace TrackFunctor
     it = std::find(List.begin(), List.end(), value );
     delete *it;
     List.erase( it );
-  }
-
-//=============================================================================
-// Class to count how many Measurements fulfill the predicate
-// tip: make a predicate e.g. using the HasKey template
-//=============================================================================
-  template <class T>
-  unsigned int nMeasurements(const Track& track, T pred) 
-  {
-    const std::vector<Measurement*>& meas = track.measurements();
-    return std::count_if(meas.begin(),meas.end(),pred);
-  }
-
-//=============================================================================
-// Class to count how many LHCbIDs fulfill the predicate
-// tip: make a predicate e.g. using the HasKey template
-//=============================================================================
-  template <class T>
-  unsigned int nLHCbIDs(const Track& track, T pred) 
-    {
-    const std::vector<LHCbID>& ids = track.lhcbIDs();
-    return std::count_if(ids.begin(),ids.end(),pred);
   }
   
 }

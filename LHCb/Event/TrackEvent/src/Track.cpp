@@ -1,8 +1,7 @@
-// $Id: Track.cpp,v 1.18 2005-11-04 13:06:25 erodrigu Exp $ // Include files
+// $Id: Track.cpp,v 1.19 2005-11-08 18:15:21 erodrigu Exp $ // Include files
 
 // local
 #include "Event/Track.h"
-#include "Event/TrackFunctor.h"
 #include <functional>
 
 //-----------------------------------------------------------------------------
@@ -87,57 +86,29 @@ void Track::posMomCovariance( HepSymMatrix &cov6D ) const
 };
 
 //=============================================================================
-// Retrieve the reference to the state closest to the given z-position
+// Retrieve the reference to the state closest to the given object
 //=============================================================================
-State & Track::closestState( double z )
+template <typename T>
+State& Track::closestState( const T& t )
 {
   std::vector<State*>::iterator iter = 
-    std::min_element(m_states.begin(),m_states.end(),
-                     TrackFunctor::closestToZ<State>(z));
-  if (iter == m_states.end())
+    std::min_element( m_states.begin(), m_states.end(), t );
+  if ( iter == m_states.end() )
     throw GaudiException( "No state closest to z","Track.cpp",
                           StatusCode::FAILURE );
   return *(*iter);
 };
 
 //=============================================================================
-// Retrieve the (const) reference to the state closest to the given z-position
+// Retrieve the const reference to the state closest to the given object
 //=============================================================================
-const State & Track::closestState( double z ) const
+template <typename T>
+const State& Track::closestState( const T& t ) const
 {
   std::vector<State*>::const_iterator iter = 
-    std::min_element(m_states.begin(),m_states.end(),
-                     TrackFunctor::closestToZ<State>(z));
-  if (iter == m_states.end())
+    std::min_element( m_states.begin(), m_states.end(), t );
+  if ( iter == m_states.end() )
     throw GaudiException( "No state closest to z","Track.cpp",
-                          StatusCode::FAILURE );
-  return *(*iter);
-};
-
-//=============================================================================
-// Retrieve the reference to the state closest to the given plane
-//=============================================================================
-State & Track::closestState( const HepPlane3D &plane )
-{
-  std::vector<State*>::iterator iter = 
-    std::min_element(m_states.begin(),m_states.end(),
-                     TrackFunctor::closestToPlane<State>(plane));
-  if (iter == m_states.end())
-    throw GaudiException( "No state closest to plane","Track.cpp",
-                          StatusCode::FAILURE );
-  return *(*iter);
-};
-
-//=============================================================================
-// Retrieve the (const) reference to the state closest to the given plane
-//=============================================================================
-const State & Track::closestState( const HepPlane3D &plane ) const
-{
-  std::vector<State*>::const_iterator iter = 
-    std::min_element(m_states.begin(),m_states.end(),
-                     TrackFunctor::closestToPlane<State>(plane));
-  if (iter == m_states.end())
-    throw GaudiException( "No state closest to plane","Track.cpp",
                           StatusCode::FAILURE );
   return *(*iter);
 };
@@ -311,6 +282,27 @@ void Track::removeFromNodes(Node* node)
 void Track::removeFromStates(State* state) 
 {
   TrackFunctor::deleteFromList<State>(m_states,state);
+}
+
+//=============================================================================
+// Retrieve the number of LHCbIDs that fulfill a predicate
+// (using e.g. the HasKey template in TrackKeys.h)
+//=============================================================================
+template <typename T>
+unsigned int nLHCbIDs( T predicate ) 
+{
+  const std::vector<LHCbID>& ids = track.lhcbIDs();
+  return std::count_if( ids.begin(), ids.end(), predicate );
+}
+//=============================================================================
+// Retrieve the number of Measurements that fulfill a predicate
+// (using e.g. the HasKey template in TrackKeys.h)
+//=============================================================================
+template <typename T>
+unsigned int nMeasurements( T predicate ) 
+{
+  const std::vector<Measurement*>& meas = track.measurements();
+  return std::count_if( meas.begin(), meas.end(), predicate );
 }
 
 //=============================================================================

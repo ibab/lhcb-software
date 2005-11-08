@@ -4,6 +4,18 @@
 ! Purpose     : Package for the tracking event model classes
 !-----------------------------------------------------------------------------
 
+! 2005-11-08 - Eduardo Rodrigues
+ - use enums types in methods interfaces instead of unsigned int
+
+! 2005-11-07 - Eduardo Rodrigues
+ - templated nMeasurements(predicate) method moved from TrackFunctor.h
+   to Track class
+ - templated nLHCbIDs(predicate) method added to Track class
+ - use functors in closestState methods (suggestion from G. Raven)
+   Note that the templated method is protected for the moment - need
+   next version of Gaudi for public templated methods.
+ - methods names modifications in TrackFunctor.h
+
 ! 2005-10-27 - Eduardo Rodrigues
  - new methods introduced in Track class
  - it++ replaced by ++it
