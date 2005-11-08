@@ -98,8 +98,8 @@ private:
   ITrackReconstructible* m_mcParticleJudge; ///< Pointer to MCParticle judge
 
   // Store previously calculated values
-  unsigned int m_previousTrackType;   ///< Previous track type identifier
-  MCParticle*  m_previousMCParticle; ///< Previously requested MCParticle
+  int         m_previousTrackType;   ///< Previous track type identifier
+  MCParticle* m_previousMCParticle; ///< Previously requested MCParticle
 
   // Job options
   bool m_uniqueFlag;                ///< To monitor unique tracks only  

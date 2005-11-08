@@ -117,7 +117,7 @@ bool TrackCriteriaSelector::selectByTrackType( Track* track ) const
     selected = false;
 
   // Check if the track is of the requested type
-  int tracktype = track -> type();
+  const Track::Types& tracktype = track -> type();
   if ( tracktype == Track::TypeUnknown ||
        ( !m_tracktypes.empty() &&  
          std::find( m_tracktypes.begin(), m_tracktypes.end(), 
@@ -134,7 +134,7 @@ bool TrackCriteriaSelector::selectByTrackType( MCParticle* mcParticle )
   bool selected = true;
 
   // Check if the MCParticle is of the requested type
-  int tracktype = trackType( mcParticle );
+  unsigned int tracktype = trackType( mcParticle );
   if ( tracktype == Track::TypeUnknown ||
        ( !m_tracktypes.empty() &&
          std::find( m_tracktypes.begin(), m_tracktypes.end(),  
@@ -154,7 +154,7 @@ unsigned int TrackCriteriaSelector::trackType( MCParticle* mcPart )
 
   const HepLorentzVector fourMom = mcPart->momentum();
 
-  unsigned int tracktype = Track::TypeUnknown;
+  int tracktype = Track::TypeUnknown;
 
   if ( hasVelo && hasSeed ) {            // long track
     tracktype = Track::Long;
@@ -180,8 +180,8 @@ unsigned int TrackCriteriaSelector::trackType( MCParticle* mcPart )
 StatusCode TrackCriteriaSelector::setTrackType( MCParticle* mcPart,
                                                 Track*& track )
 {
-  unsigned int tracktype = Track::TypeUnknown;
-  
+  int tracktype = Track::TypeUnknown;
+
   if ( mcPart == m_previousMCParticle ) {
     tracktype = m_previousTrackType;
   }
@@ -189,7 +189,7 @@ StatusCode TrackCriteriaSelector::setTrackType( MCParticle* mcPart,
     tracktype = trackType( mcPart );
   }
 
-  track -> setType ( tracktype );
+  track -> setType ( (Track::Types&) tracktype );
   if ( Track::TypeUnknown == tracktype ) return StatusCode::FAILURE;
   else                                   return StatusCode::SUCCESS;
 }
