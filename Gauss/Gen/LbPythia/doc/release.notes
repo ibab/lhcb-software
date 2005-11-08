@@ -1,6 +1,10 @@
-! $Id: release.notes,v 1.12 2005-11-04 11:03:31 robbep Exp $
+! $Id: release.notes,v 1.13 2005-11-08 00:08:42 robbep Exp $
 ! Package     : Gen/LbPythia
 ! Responsible : 
+
+! 2005-11-07 - Patrick Robbe
+ - PythiaProduction: set particle properties of Pythia from 
+   ParticlePropertySvc.
 
 ! 2005-11-04 - Patrick Robbe
  - Pythia: add calls to PYEDIT and PYEXEC

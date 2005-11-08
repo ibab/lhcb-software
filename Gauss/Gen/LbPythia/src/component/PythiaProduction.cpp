@@ -1,4 +1,4 @@
-// $Id: PythiaProduction.cpp,v 1.2 2005-11-04 11:02:50 robbep Exp $
+// $Id: PythiaProduction.cpp,v 1.3 2005-11-08 00:08:42 robbep Exp $
 // Include files 
 
 // local
@@ -20,6 +20,8 @@
 #include "Generators/StringParse.h"
 #include "Generators/IBeamTool.h"
 #include "LbPythia/Pythia.h"
+
+#include "EvtGenBase/EvtConst.hh"
 
 //-----------------------------------------------------------------------------
 // Implementation file for class : PythiaProduction
@@ -129,9 +131,6 @@ StatusCode PythiaProduction::initialize( ) {
 
   Pythia::PyInit( m_frame, m_beam, m_target, m_win ) ;
 
-  if ( m_initializationListingLevel != -1 ) 
-    Pythia::PyList( m_initializationListingLevel ) ;
-
   // Set size of common blocks in HEPEVT: note these correspond to stdhep
   HepMC::HEPEVT_Wrapper::set_sizeof_int( 4 ) ;
   HepMC::HEPEVT_Wrapper::set_sizeof_real( 8 ) ;
@@ -139,9 +138,6 @@ StatusCode PythiaProduction::initialize( ) {
 
   // Reset forced fragmentation flag
   Pythia::pydat1().mstu( 150 ) = 0 ;
-
-  // print out Pythia settings
-  printPythiaParameter() ;
 
   return sc ;
 }
@@ -192,9 +188,47 @@ void PythiaProduction::setStable( const ParticleProperty * thePP ) {
   int pythiaId = thePP -> pythiaID() ;
   if ( 0 != pythiaId ) {
     int kc = Pythia::PyComp( pythiaId ) ;
-    Pythia::pydat3().mdcy( kc , 1 ) = 0 ;
+    if ( kc > 0 ) Pythia::pydat3().mdcy( kc , 1 ) = 0 ;
   }
 }
+
+//=============================================================================
+// Update particle properties
+//=============================================================================
+void PythiaProduction::updateParticleProperties( const ParticleProperty * 
+                                                 thePP ) {
+  int pythiaId = thePP -> pythiaID() ;
+  double pwidth , lifetime ;
+  if ( 0 != pythiaId ) {
+    int kc = Pythia::PyComp( pythiaId ) ;
+    if ( kc > 0 ) {
+      if ( 0 == thePP -> lifetime() ) pwidth = 0. ;
+      else pwidth = ( hbarc / ( thePP -> lifetime() * c_light ) ) / GeV ;
+      if ( pwidth < ( 1.5e-6 * GeV ) ) pwidth = 0. ;
+
+      lifetime =  thePP -> lifetime() * c_light / mm ;
+      if ( ( lifetime <= 1.e-4 * mm ) || ( lifetime >= 1.e16 * mm ) ) 
+        lifetime = 0. ;
+      
+      verbose() << "Change particle property of KC = " << kc 
+                << " (" << pythiaId << ")" << endmsg ;
+      verbose() << "Mass (GeV) from " << Pythia::pydat2().pmas( kc , 1 ) 
+                << " to " << thePP -> mass() / GeV << endmsg ;
+      verbose() << "Width (GeV) from " << Pythia::pydat2().pmas( kc , 2 ) 
+                << " to " << pwidth << endmsg ;
+      verbose() << "MaxWidth (GeV) from " << Pythia::pydat2().pmas( kc , 3 ) 
+                << " to " << thePP -> maxWidth() / GeV << endmsg ;
+      verbose() << "Lifetime from " << Pythia::pydat2().pmas( kc , 4 ) 
+                << " to " << lifetime << endmsg ;
+      
+      Pythia::pydat2().pmas( kc , 1 ) = thePP -> mass() / GeV ;
+      Pythia::pydat2().pmas( kc , 2 ) = pwidth ;
+      Pythia::pydat2().pmas( kc , 3 ) = thePP -> maxWidth() / GeV ;
+      Pythia::pydat2().pmas( kc , 4 ) = lifetime ;
+    }
+  }
+}
+
 
 //=============================================================================
 // Retrieve the Hard scatter information
@@ -464,4 +498,107 @@ StatusCode PythiaProduction::hadronize( HepMC::GenEvent * theEvent ,
   
   return StatusCode::SUCCESS ;
 }
+//=============================================================================
+// Debug print out to be printed after all initializations
+//=============================================================================
+void PythiaProduction::printRunningConditions( ) {
+  // PYLIST call is managed by Pythia job options
+  if ( m_initializationListingLevel != -1 ) 
+    Pythia::PyList( m_initializationListingLevel ) ;
 
+  // print out Pythia settings
+  printPythiaParameter() ;
+}
+//=============================================================================
+// TRUE if the particle is a special particle which must not be modify
+//=============================================================================
+bool PythiaProduction::isSpecialParticle( const ParticleProperty * thePP ) {
+  switch ( abs( thePP -> pdgID() ) ) {
+  case 1:
+  case 2:
+  case 3:
+  case 4:
+  case 5:
+  case 6:
+  case 7:
+  case 8:
+  case 17:
+  case 18:
+  case 21:
+  case 110:
+  case 990:
+  case 32:
+  case 33:
+  case 34:
+  case 35:
+  case 36:
+  case 37:
+  case 39:
+  case 41:
+  case 42:
+  case 43:
+  case 44:
+  case 81:
+  case 82:
+  case 83:
+  case 84:
+  case 85:
+  case 88:
+  case 89:
+  case 90:
+  case 91:
+  case 92:
+  case 93:
+  case 94:
+  case 95:
+  case 96:
+  case 97:
+  case 98:
+  case 99:
+  case 9900110:
+  case 9900210:
+  case 9900220:
+  case 9900330:
+  case 9900440:
+  case 9902110:
+  case 9902210:
+  case 1101:
+  case 1103:
+  case 2101:
+  case 2103:
+  case 2201:
+  case 2203:
+  case 3101:
+  case 3103:
+  case 3201:
+  case 3203:
+  case 3301:
+  case 3303:
+  case 4101:
+  case 4103:
+  case 4201:
+  case 4203:
+  case 4301:
+  case 4303:
+  case 4401:
+  case 4403:
+  case 5101:
+  case 5103:
+  case 5201:
+  case 5203:
+  case 5301:
+  case 5303:
+  case 5401:
+  case 5403:
+  case 5501:
+  case 5503:
+    return true ;
+    break ;
+  default:
+    return false ;
+    break ;
+    return false ;  
+  }
+}
+
+  
