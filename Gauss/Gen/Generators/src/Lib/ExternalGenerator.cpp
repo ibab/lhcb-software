@@ -1,4 +1,4 @@
-// $Id: ExternalGenerator.cpp,v 1.2 2005-11-04 10:53:50 robbep Exp $
+// $Id: ExternalGenerator.cpp,v 1.3 2005-11-08 00:07:33 robbep Exp $
 // Include files 
 
 // local
@@ -62,21 +62,28 @@ StatusCode ExternalGenerator::initialize( ) {
   // obtain the Decay Tool
   if ( "" != m_decayToolName ) 
     m_decayTool = tool< IDecayTool >( m_decayToolName ) ;
-  
-  if ( 0 != m_decayTool ) {
+
+  // update the particle properties of the production tool
+  IParticlePropertySvc::const_iterator iter ;
+  for ( iter = ppSvc -> begin() ; iter != ppSvc -> end() ; ++iter ) {
+    if ( ! m_productionTool -> isSpecialParticle( *iter ) ) 
+      m_productionTool -> updateParticleProperties( *iter ) ;
     // set stable in the Production generator all particles known to the
     // decay tool
-    IParticlePropertySvc::const_iterator iter ;
-    for ( iter = ppSvc -> begin() ; iter != ppSvc -> end() ; ++iter ) 
+    if ( 0 != m_decayTool )
       if ( m_decayTool -> isKnownToDecayTool( (*iter)->pdgID() ) ) 
-        m_productionTool -> setStable( *iter ) ;
-    
-    release( ppSvc ) ;
+        m_productionTool -> setStable( *iter ) ;    
   }
+
+  release( ppSvc ) ;
 
   // obtain the cut tool
   if ( "" != m_cutToolName ) 
     m_cutTool = tool< IGenCutTool >( m_cutToolName , this ) ;
+
+  // now debug printout of Production Tool 
+  // has to be after all initializations to be sure correct values are printed
+  m_productionTool -> printRunningConditions( ) ;
   
   return StatusCode::SUCCESS ;
 }

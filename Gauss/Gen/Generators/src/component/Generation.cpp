@@ -1,4 +1,4 @@
-// $Id: Generation.cpp,v 1.2 2005-11-04 10:57:06 robbep Exp $
+// $Id: Generation.cpp,v 1.3 2005-11-08 00:07:34 robbep Exp $
 // Include files 
 
 // local
@@ -21,7 +21,7 @@
 #include "Generators/IVertexSmearingTool.h"
 
 // Gaudi Common Flat Random Number generator
-Rndm::Numbers randgaudi ;
+extern Rndm::Numbers randgaudi ;
 
 //-----------------------------------------------------------------------------
 // Implementation file for class : Generation

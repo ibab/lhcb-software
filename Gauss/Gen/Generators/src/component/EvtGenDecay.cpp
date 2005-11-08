@@ -1,4 +1,4 @@
-// $Id: EvtGenDecay.cpp,v 1.1 2005-10-03 10:26:45 robbep Exp $
+// $Id: EvtGenDecay.cpp,v 1.2 2005-11-08 00:07:34 robbep Exp $
 // Header file
 #include "EvtGenDecay.h"
 
@@ -45,7 +45,7 @@ extern "C" {
 static const  ToolFactory<EvtGenDecay>          s_factory ;
 const        IToolFactory& EvtGenDecayFactory = s_factory ;
 
-MsgStream * evtgenStream ;
+extern MsgStream * evtgenStream ;
 
 //=============================================================================
 // Standard constructor, initializes variables
@@ -723,29 +723,3 @@ EvtGenGaudiRandomEngine::EvtGenGaudiRandomEngine( IRndmGenSvc* i ,
 //=============================================================================
 EvtGenGaudiRandomEngine::~EvtGenGaudiRandomEngine( ) { }
 
-//=============================================================================
-// Reimplementation of print facility of EvtGen
-//=============================================================================
-std::ostream & report( Severity severity , const char * facility ) 
-{
-  if ( severity < WARNING ) {
-    (*evtgenStream) << endreq ;
-    if ( 0 != facility[0] ) { 
-      std::cerr << facility << ":" ;
-      (*evtgenStream) << MSG::ERROR << facility << " Error from EvtGen" 
-                      << endreq ;
-    }
-    else (*evtgenStream) << MSG::ERROR << "Error from EvtGen" 
-                         << endreq ;
-    return ( std::cerr ) ;
-  }
-  
-  if ( severity < INFO ) {
-    if ( 0 != facility[0] ) (*evtgenStream) << MSG::INFO << facility << ":" ;
-    else (*evtgenStream) << MSG::INFO ;
-  } else {
-    if ( 0 != facility[0] ) (*evtgenStream) << MSG::DEBUG << facility << ":" ;
-    else (*evtgenStream) << MSG::DEBUG ;
-  }
-  return evtgenStream -> stream() ;
-}

@@ -1,4 +1,4 @@
-// $Id: GenBaseAlg.cpp,v 1.2 2005-06-24 16:32:47 gcorti Exp $
+// $Id: GenBaseAlg.cpp,v 1.3 2005-11-08 00:07:33 robbep Exp $
 // -------------------------------------------------------------
 //
 // initial version by M. Shapiro
@@ -16,7 +16,7 @@
 #include "HepMC/GenEvent.h"
 
 // Gaudi RandomNumberSvc
-Rndm::Numbers randgaudi;
+extern Rndm::Numbers randgaudi;
 
 //===========================================================================
 // Constructor

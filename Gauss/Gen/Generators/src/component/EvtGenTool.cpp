@@ -1,4 +1,4 @@
-// $Id: EvtGenTool.cpp,v 1.6 2005-10-16 22:38:52 robbep Exp $
+// $Id: EvtGenTool.cpp,v 1.7 2005-11-08 00:07:34 robbep Exp $
 // Header file
 #include "EvtGenTool.h"
 
@@ -47,7 +47,7 @@ extern "C" {
 static const  ToolFactory<EvtGenTool>          s_factory ;
 const        IToolFactory& EvtGenToolFactory = s_factory ;
 
-extern MsgStream * evtgenStream ;
+// extern MsgStream * evtgenStream ;
 
 //=============================================================================
 // Standard constructor, initializes variables
@@ -119,7 +119,7 @@ EvtGenTool::~EvtGenTool( ) { }
 //=============================================================================
 StatusCode EvtGenTool::initialize( ) {
   MsgStream msg ( msgSvc() , name() ) ;
-  evtgenStream = new MsgStream( msg ) ;
+  //  evtgenStream = new MsgStream( msg ) ;
   StatusCode sc = GaudiTool::initialize( ) ;
   if ( sc.isFailure() )
     return Error( "Base class is not initalized" , sc ) ;
@@ -181,7 +181,7 @@ StatusCode EvtGenTool::initialize( ) {
   m_gen = new EvtGen ( m_decayFile.c_str() ,
                        tempEvtPdlFile.c_str() ,
                        m_randomEngine ) ;
-  (*evtgenStream) << endreq ;
+  //  (*evtgenStream) << endreq ;
 
   // Remove temporary file if not asked to keep it
   if ( ! m_keepTempEvtFile ) {
@@ -370,7 +370,7 @@ StatusCode EvtGenTool::initialize( ) {
   // Read the optional signal decay file
   if ( ! m_userDecay.empty() && "empty" != m_userDecay )
     m_gen -> readUDecay( m_userDecay.c_str() ) ;
-  (*evtgenStream) << endreq ;
+  //  (*evtgenStream) << endreq ;
 
 
   int arg ;
@@ -394,7 +394,7 @@ StatusCode EvtGenTool::initialize( ) {
   
   // Initialize Pythia
   EvtPythia::pythiaInit( 0 ) ;
-  (*evtgenStream) << endreq ;
+  //  (*evtgenStream) << endreq ;
 
   debug() << "EvtGenTool initialized" << endreq ;
   
@@ -406,7 +406,7 @@ StatusCode EvtGenTool::initialize( ) {
 //=============================================================================
 StatusCode EvtGenTool::finalize() {
   delete m_gen ;
-  (*evtgenStream) << endreq ;
+  //  (*evtgenStream) << endreq ;
   delete m_randomEngine ;
   
   debug() << "EvtGenTool finalized" << endreq ;
@@ -425,7 +425,7 @@ StatusCode EvtGenTool::finalize() {
 	system( delcmd.c_str() ) ;
 #endif
 	
-  delete evtgenStream ;
+  //  delete evtgenStream ;
 
   return GaudiTool::finalize( ) ;
 }
@@ -918,9 +918,9 @@ const {
 
   // Generate decay tree of part with EvtGen  
   m_gen -> generateDecay( thePart ) ;
-  (*evtgenStream) << endreq ;
+  //  (*evtgenStream) << endreq ;
   thePart -> printTree() ;
-  (*evtgenStream) << endreq ;
+  //  (*evtgenStream) << endreq ;
 
   return StatusCode::SUCCESS ;
 }

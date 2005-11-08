@@ -1,4 +1,4 @@
-// $Id: cpyr.cpp,v 1.1.1.1 2005-06-20 21:42:17 robbep Exp $
+// $Id: cpyr.cpp,v 1.2 2005-11-08 00:07:34 robbep Exp $
 //-----------------------------------------------------------------------------
 // 06/05/2002 : Witold Pokorski
 //-----------------------------------------------------------------------------
@@ -11,7 +11,7 @@
 #include "GaudiKernel/IRndmGenSvc.h"
 #include "GaudiKernel/IRndmGen.h"
 
-extern Rndm::Numbers randgaudi;
+Rndm::Numbers randgaudi;
 
 #ifdef WIN32
 extern "C"  double __stdcall CPYR(int*)

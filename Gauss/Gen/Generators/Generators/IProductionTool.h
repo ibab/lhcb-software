@@ -1,4 +1,4 @@
-// $Id: IProductionTool.h,v 1.2 2005-11-04 10:51:48 robbep Exp $
+// $Id: IProductionTool.h,v 1.3 2005-11-08 00:07:33 robbep Exp $
 #ifndef GENERATORS_IPRODUCTIONTOOL_H 
 #define GENERATORS_IPRODUCTIONTOOL_H 1
 
@@ -30,6 +30,8 @@ public:
 
   virtual void setStable( const ParticleProperty * thePP ) = 0 ;
 
+  virtual void updateParticleProperties( const ParticleProperty * thePP ) = 0 ;
+
   virtual void turnOffFragmentation( ) = 0 ;
   virtual void turnOnFragmentation( )  = 0 ;
 
@@ -38,5 +40,9 @@ public:
 
   virtual void savePartonEvent( HepMC::GenEvent * theEvent ) = 0 ;
   virtual void retrievePartonEvent( HepMC::GenEvent * theEvent ) = 0 ;
+
+  virtual void printRunningConditions( ) = 0 ;
+
+  virtual bool isSpecialParticle( const ParticleProperty * thePP ) = 0 ;
 };
 #endif // GENERATORS_IPRODUCTIONTOOL_H
