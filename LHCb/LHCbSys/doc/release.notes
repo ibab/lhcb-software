@@ -5,7 +5,7 @@
 ! Purpose     : LHCb OO kernel packages
 !-----------------------------------------------------------------------------
 
-</PRE><H1><A NAME=v19r0>2005-11-04 LHCbSys v19r0</A></H1><PRE>
+</PRE><H1><A NAME=v19r0>2005-11-08 LHCbSys v19r0</A></H1><PRE>
 This version uses Gaudi v17r1 and produces reflex dictionaries
 It is backwards compatible for RTTC data
 
@@ -14,15 +14,16 @@ It is backwards compatible for RTTC data
      EventSys v20r10, TrackEvent v1r4, DAQEvent v5r3, GenEvent v3r4,
      PackedEvent v1r2, LinkerInstances v2r1, EventAssoc v2r0, STTools v1r2, 
      DetSys v7r5, DetCond v7r7, DetCondExample v7r6, DAQSys v1r7, STDAQ v1r6,
-     IOExample v1r5
+     RichRecBase v1r16p2, IOExample v1r5
 
 >>>>>>>> NB This is not yet a fully functional clean release <<<<<<<<
 >>>>>>>>      Following need to be fixed before release      <<<<<<<<
  - In LHCbKernel v5r14
    . Add hacks to pick up SEAL_1_7_5 (for Cintex fix, binary compatible with 
      1_7_4) and POOL_2_2_3 (for RootStorageSvc fix, binary compatible with 2_2_2)
-   . IOMin read example core dumps when opening some of the files written by 
-     write example. Indication of memory corruption when setting up persistency 
+   . A second Cintex fix, needed when running IOMin example, will be released
+     with SEAL_1_7_6. Workaround is to make a soft link in $CMTCONFIG directory 
+     of applications to SEAL_1_7_6 version of liblcg_Cintex.so 
 >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>><<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
 
  - In LHCb v19r0
@@ -62,6 +63,10 @@ It is backwards compatible for RTTC data
  - In STTools v1r2
    . Add tool to give cluster properties (position and error), with interface
      ISTClusterPosition
+
+ - In RichRecBase v1r16p2
+   . Bug fix to TrackSelector for TrStoredTracks that caused a boost array
+     to go out of range for "Unknown" or "UnUsable" tracks.
 
  - In IOExample v1r5
    . Various cleanups for Reflex persistency
