@@ -1,4 +1,4 @@
-// $Id: VeloRMeasurement.cpp,v 1.3 2005-06-15 15:24:10 erodrigu Exp $
+// $Id: VeloRMeasurement.cpp,v 1.4 2005-11-08 18:16:42 erodrigu Exp $
 // Include files
 
 // local
@@ -35,7 +35,7 @@ VeloRMeasurement::VeloRMeasurement( VeloCluster& cluster,
   double radius = det.rOfStrip( channelOne );
   double pitch =   det.rPitch( channelOne );
 
-  for ( strIt = sign.begin() ; sign.end() != strIt ; strIt++ ) {
+  for ( strIt = sign.begin() ; sign.end() != strIt ; ++strIt ) {
     VeloChannelID channel(sensor,(*strIt).first);
     radius= det.rOfStrip( channel );
     sum   += (*strIt).second;

@@ -1,4 +1,4 @@
-// $Id: VeloPhiMeasurement.cpp,v 1.3 2005-06-15 15:24:10 erodrigu Exp $
+// $Id: VeloPhiMeasurement.cpp,v 1.4 2005-11-08 18:16:42 erodrigu Exp $
 // Include files 
 
 
@@ -39,7 +39,7 @@ VeloPhiMeasurement::VeloPhiMeasurement( VeloCluster& cluster,
   int strip    = (*sign.begin()).first;
   VeloChannelID channel(sensor,strip);
   double pitch  = det.phiPitch( channel );
-  for ( strIt = sign.begin() ; sign.end() != strIt ; strIt++ ) {
+  for ( strIt = sign.begin() ; sign.end() != strIt ; ++strIt ) {
     strip      = (*strIt).first;
     m_measure = det.distToOrigin( channel );
     // fix sign convention of d0 of strip

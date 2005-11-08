@@ -4,6 +4,9 @@
 ! Purpose     : Package for the tracking fitting-related classes
 !-----------------------------------------------------------------------------
 
+! 2005-11-03 - Eduardo Rodrigues
+ - it++ replaced by ++it
+
 ! 2005-10-19 - Eduardo Rodrigues
  - method name change in FitNode
 
