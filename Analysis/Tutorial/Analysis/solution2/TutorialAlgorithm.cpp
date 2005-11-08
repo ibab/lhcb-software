@@ -1,4 +1,4 @@
-// $Id: TutorialAlgorithm.cpp,v 1.5 2005-11-07 15:30:45 pkoppenb Exp $
+// $Id: TutorialAlgorithm.cpp,v 1.6 2005-11-08 09:47:36 pkoppenb Exp $
 // Include files 
 
 // from Gaudi
@@ -47,15 +47,15 @@ StatusCode TutorialAlgorithm::initialize() {
   // particle property service
   ParticleProperty* m_pp = ppSvc()->find( m_name );
   if ( !m_pp ) { // Check the pointer or you'll core dump on a typo in the name
-    err() << "Cannot find particle property for " << m_name << endreq ; 
+    err() << "Cannot find particle property for " << m_name << endmsg ; 
     return StatusCode::FAILURE;
   }
   m_iD = m_pp->pdgID();
   m_mass = m_pp->mass();
   info() << "Will reconstruct " << m_pp->particle() << " (ID=" << m_iD
-         << ") with mass " << m_mass << endreq ;
-  info() << "Mass window is " << m_massWin << " MeV" << endreq ;
-  info() << "Max chi^2 is " << m_chi2 << endreq ;
+         << ") with mass " << m_mass << endmsg ;
+  info() << "Mass window is " << m_massWin << " MeV" << endmsg ;
+  info() << "Max chi^2 is " << m_chi2 << endmsg ;
 
   return StatusCode::SUCCESS;
 };
@@ -78,11 +78,11 @@ StatusCode TutorialAlgorithm::execute() {
   StatusCode sc = particleFilter()->filterNegative(parts,PartMinus);
   if (sc) sc = particleFilter()->filterPositive(parts,PartPlus);
   if (!sc) {
-    err() << "Error while filtering" << endreq ;
+    err() << "Error while filtering" << endmsg ;
     return sc ;
   } 
   debug() << "Filtered " << PartMinus.size() << " positive and " 
-          << PartPlus.size() << " negative particles" << endreq ;
+          << PartPlus.size() << " negative particles" << endmsg ;
 
   // combine mu+ and mu-
   ParticleVector::const_iterator ipp, ipm;
@@ -91,7 +91,7 @@ StatusCode TutorialAlgorithm::execute() {
     for ( ipp = PartPlus.begin() ; ipp !=  PartPlus.end() ; ++ipp ){
       if (ipm == PartMinus.begin()) plot((*ipp)->momentum().perp(),"Pt",0.*GeV,10.*GeV);// Plot Pt but only once
       HepLorentzVector twoP = (*ipp)->momentum() + (*ipm)->momentum() ;
-      verbose() << "Two prong mass is " << twoP.m()/MeV << endreq ;
+      verbose() << "Two prong mass is " << twoP.m()/MeV << endmsg ;
       // mass cut
       plot(twoP.m(),"Mass",0.5*m_mass,1.5*m_mass); // +.- 50% mass window
       if ( fabs ( twoP.m() - m_mass ) > m_massWin ) continue ;
@@ -99,11 +99,11 @@ StatusCode TutorialAlgorithm::execute() {
       Vertex PPVertex;
       sc = vertexFitter()->fitVertex(*(*ipp),*(*ipm),PPVertex);
       if (!sc){
-        info() << "Failed to fit vertex" << endreq ; // no bid deal
+        info() << "Failed to fit vertex" << endmsg ; // no bid deal
         continue ;
       }  
       debug() << "Vertex fit at " << PPVertex.position()/cm 
-              << " with chi2 " << PPVertex.chi2() << endreq;
+              << " with chi2 " << PPVertex.chi2() << endmsg;
       // chi2 cut
       plot(PPVertex.chi2(),"Chi^2",0.,200.);
       if ( PPVertex.chi2() > m_chi2 ) continue ;
@@ -113,12 +113,12 @@ StatusCode TutorialAlgorithm::execute() {
       Particle* pMother = desktop()->createParticle(&Mother);
       info() << "Created " << m_name << " candidate with m=" 
              << Mother.mass() << " and " 
-             << "chi^2=" << PPVertex.chi2() << endreq ;      
+             << "chi^2=" << PPVertex.chi2() << endmsg ;      
       plot((*ipm)->momentum().perp(),"Selected Pt",0.*GeV,10.*GeV);
       plot((*ipp)->momentum().perp(),"Selected Pt",0.*GeV,10.*GeV);
       plot(twoP.m(),"Selected mass",m_mass-m_massWin,m_mass+m_massWin);
       if (!pMother){
-        err() << "Cannot save particle to desktop" << endreq ;
+        err() << "Cannot save particle to desktop" << endmsg ;
         return StatusCode::FAILURE;
       } 
       setFilterPassed(true);
@@ -137,7 +137,7 @@ StatusCode TutorialAlgorithm::finalize() {
 
   debug() << "==> Finalize" << endmsg;
   info() << "Found " << m_nFound << " " << m_name << " in " 
-         << m_nEvents << " events" << endreq;
+         << m_nEvents << " events" << endmsg;
 
   return  StatusCode::SUCCESS;
 }
