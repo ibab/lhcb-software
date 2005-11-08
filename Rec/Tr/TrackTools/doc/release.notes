@@ -4,6 +4,10 @@
 ! Purpose     : Package for tracking tools not accessing MC information
 !-----------------------------------------------------------------------------
 
+! 2005-11-08 - Eduardo Rodrigues
+ - it++ replaced by ++it
+ - possible memory leak corrected
+
 ! 2005-11-02 - Eduardo Rodrigues
  - MeasurementProvider tool sets Status flag for tracks with Measurements.
    Added protection against failure in making Measurements

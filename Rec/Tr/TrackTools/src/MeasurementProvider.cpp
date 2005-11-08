@@ -1,4 +1,4 @@
-// $Id: MeasurementProvider.cpp,v 1.7 2005-11-02 18:42:22 erodrigu Exp $
+// $Id: MeasurementProvider.cpp,v 1.8 2005-11-08 18:30:38 erodrigu Exp $
 // Include files 
 // -------------
 // from Gaudi
@@ -85,11 +85,14 @@ void MeasurementProvider::load() {
 StatusCode MeasurementProvider::load( Track& track ) 
 {
   const std::vector<LHCbID>& ids = track.lhcbIDs();
-  for (std::vector<LHCbID>::const_iterator it = ids.begin();
-       it != ids.end(); it++) {
+  for ( std::vector<LHCbID>::const_iterator it = ids.begin();
+        it != ids.end(); ++it ) {
     const LHCbID& id = *it;
     Measurement* meas = measurement(id);
-    if ( meas == NULL ) return StatusCode::FAILURE;
+    if ( meas == NULL ) {
+      delete meas;
+      return StatusCode::FAILURE;
+    }
     track.addToMeasurements(*meas);
     delete meas;
   }
@@ -103,14 +106,13 @@ StatusCode MeasurementProvider::load( Track& track )
 //=============================================================================
 Measurement* MeasurementProvider::measurement ( const LHCbID& id,
                                                 double par0,
-                                                double par1 ) {
-
+                                                double par1 )
+{
   // TODO first look if it is in the list already :)
   Measurement* meas = NULL;
   if ( id.isVelo() ) {
     VeloChannelID vid = id.veloID();
     VeloCluster* clus = m_veloClusters->object( vid );
-    debug() << " VeloChannelID of type " << vid.type() << endreq;
     if (clus != NULL) {
       if (vid.isRType()) {
         meas = new VeloRMeasurement(*clus,*m_veloDet, par0);
@@ -132,7 +134,6 @@ Measurement* MeasurementProvider::measurement ( const LHCbID& id,
   } else if ( id.isOT() ) {
     OTChannelID oid = id.otID();
     OTTime* clus = m_otTimes->object(oid);
-    debug() << "Looking for OTTime of key = " << oid << endreq;
     if (clus != NULL) {
       if (par0 == 999.) par0 = 0.;
       meas = new OTMeasurement(*clus,*m_otDet, (int) par0, par1);
