@@ -3,7 +3,6 @@
 
 <gdd>
   <package name='OTDAQ'> 
-  <import name="Event/RawBuffer"/>
   <import name="Event/RawBank"/>
   <import name="Event/RawEvent"/>
 
@@ -35,11 +34,13 @@
         <code></code>
       </constructor>   
 
-      <method type='' name='operator raw_int' const='TRUE' 
-              desc='operator overload, for use of raw_int words'> 
-        <code> return m_golHeader; </code>
+      <method type = 'unsigned int'
+        argList='GolHeader gol'
+        name = 'returnInt' 
+        desc = 'Return an unsigned int from a GolHeader '>
+        <code> return gol.m_golHeader  &gt;&gt; 0; </code>      
       </method>
-
+      
       <attribute type='bitfield' name='golHeader' desc='Gol Header ID'>
         <bitfield name='size' length='9' desc='Size' setMeth='FALSE'/>
 	<bitfield name='otisErFlag' length='12' desc='OtisErFlag' setMeth='FALSE'/>
@@ -83,12 +84,14 @@
         <code></code>
       </constructor>
 
-      <method type='' name='operator raw_int' const='TRUE' 
-              desc='operator overload, for use of raw_int words'> 
-        <code> return m_dataWord; </code>
+      <method type = 'unsigned int'
+        argList='DataWord dataWord'
+        name = 'returnInt' 
+        desc = 'Return an unsigned int from a DataWord '>
+        <code> return dataWord.m_dataWord  &gt;&gt; 0; </code>      
       </method>
 
-      <attribute type='bitfield' name='dataWord' desc='Gol Header ID'>  
+      <attribute type='bitfield' name='dataWord' desc='Data Word ID'>  
         <bitfield name='nextTime' length='8' desc='nextTdcTime' setMeth='FALSE'/>  
         <bitfield name='nextChannel' length='5' desc='nextChannelID' setMeth='FALSE'/>  
         <bitfield name='nextOtis' length='2' desc='nextOtisID' setMeth='FALSE'/>  

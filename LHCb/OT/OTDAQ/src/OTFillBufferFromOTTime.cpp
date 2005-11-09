@@ -1,9 +1,14 @@
-// $Id: OTFillBufferFromOTTime.cpp,v 1.6 2004-12-10 08:10:25 jnardull Exp $
+// $Id: OTFillBufferFromOTTime.cpp,v 1.7 2005-11-09 16:55:39 jnardull Exp $
 // Include files
 
 // local
 #include "OTFillBufferFromOTTime.h"
 #include "Event/OTBankVersion.h"
+
+// From event model
+#include "Event/RawEvent.h"
+#include "Event/RawBank.h"
+
 
 //-----------------------------------------------------------------------------
 // Implementation file for class : OTFillBufferFromOTTime
@@ -24,8 +29,8 @@ OTFillBufferFromOTTime::OTFillBufferFromOTTime( const std::string& name,
   : GaudiAlgorithm ( name , pSvcLocator )
 {
   this->declareProperty( "NumberOfBanks", numberOfBanks );
-  this->declareProperty( "RawBufferLocation",   
-                         m_RawBuffLoc = RawBufferLocation::Default );
+  this->declareProperty( "RawEventLocation",   
+                         m_EventLoc = "DAQ/RawEvent" );
   this->declareProperty( "OTTimeLocation", 
                          m_OTTimeLoc = OTTimeLocation::Default );
   this->declareProperty( "OTGeometryName", 
@@ -67,10 +72,9 @@ StatusCode OTFillBufferFromOTTime::initialize() {
 //=============================================================================
 StatusCode OTFillBufferFromOTTime::execute() 
 {
-  // Retrieve the RawBuffer
-  RawBuffer* rawBuffer = get<RawBuffer>( RawBufferLocation::Default );
-  m_rawBuffer = rawBuffer;
-
+  // Retrieve the RawEvent
+  LHCb::RawEvent* rawEvent = new LHCb::RawEvent();
+ 
   // Retrieve OTTime
   OTTimes* Time = get<OTTimes>( OTTimeLocation::Default );  
   m_Time = Time;
@@ -104,7 +108,7 @@ StatusCode OTFillBufferFromOTTime::execute()
 
     int bankID = (*iBank).first;
     dataBank& bBank = (*aBank);
-    m_rawBuffer->addBank( bankID , RawBuffer::OT, bBank, OTBankVersion::v1 );  
+    rawEvent->addBank( bankID , LHCb::RawBank::OT, 1, bBank);
     aBank->erase( aBank->begin(),aBank->end() );
   }
   
@@ -113,6 +117,8 @@ StatusCode OTFillBufferFromOTTime::execute()
   goldatacontainer->erase( goldatacontainer->begin(), goldatacontainer->end() );
   finalBuf->erase( finalBuf->begin(), finalBuf->end() );
   
+  put( rawEvent, "DAQ/RawEvent"  );
+
   return StatusCode::SUCCESS;
 }
 
@@ -188,11 +194,11 @@ StatusCode OTFillBufferFromOTTime::convertToRAWEmptyBank(dataBank* aBank)
 {
   // Creating the Tell1 Headers - 3 words of 32 bits - I do not fill them...
   for(int i = 0; i < 3; i++){
-    raw_int tell1Header = 0;
+    unsigned int tell1Header = 0;
     aBank->push_back(tell1Header);
   }
   for(int j = 0; j < 19; j++){
-    GolHeader golHeader(0, 0, 0, 0, 0, 0, 0);
+    unsigned int golHeader = 0;
     aBank->push_back(golHeader);
   }
  
@@ -204,8 +210,8 @@ StatusCode OTFillBufferFromOTTime::convertToRAWDataBank(vOTime* vToConvert,
 {
   // Creating the Tell1 Headers - 3 words of 32 bits - I do not fill them...
   for(int i = 0; i < 3; i++){
-    raw_int tell1Header = 0;
-    aBank->push_back(tell1Header);
+    unsigned int tell1Header = 0;
+    aBank->push_back(tell1Header); 
   }
 
   //Useful definitions 
@@ -276,8 +282,8 @@ StatusCode OTFillBufferFromOTTime::convertToRAWDataBank(vOTime* vToConvert,
     } 
     // GolHeader
     GolHeader golHeader(0, nStation, nLayer, nQuarter, nModule, 0 , size);
-    // pushing the Gol Header
-    aBank->push_back(golHeader);  
+    unsigned int gol = golHeader.returnInt(golHeader);
+    aBank->push_back(gol);
     
     // The Hits -- Some useful definitions
     vOTime* pCurrent = 0;    
@@ -337,14 +343,16 @@ StatusCode OTFillBufferFromOTTime::convertToRAWDataBank(vOTime* vToConvert,
       
       DataWord dataWord (1, firstOtisID, firstStrawID, firstTdcTime, 
                          0, nextOtisID, nextStrawID, nextTdcTime);
-      aBank->push_back(dataWord);
+      unsigned int data = dataWord.returnInt(dataWord);
+      aBank->push_back(data);
+      
       
       if(iTimeNext != iHitGolEnd) iTimeCurrent++;     
     } //while loop over OTTimes
     
     // Erase Gol Vector of Time
     aGolTime->erase( aGolTime->begin(),aGolTime->end() );
-
+    
   } // GOL Loop
 
   return StatusCode::SUCCESS;

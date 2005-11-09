@@ -1,4 +1,4 @@
-// $Id: OTTimeCreator.cpp,v 1.7 2005-07-12 09:35:06 jnardull Exp $
+// $Id: OTTimeCreator.cpp,v 1.8 2005-11-09 16:55:39 jnardull Exp $
 // Include files
 
 // local
@@ -30,7 +30,7 @@ OTTimeCreator::OTTimeCreator( const std::string& name,
                          m_timeLocation = OTTimeLocation::Default );
   declareProperty("ToFCorrection", m_tofCorrection = true);
   declareProperty("countsPerBX", m_countsPerBX = 64);
-  declareProperty("numberOfBX", m_numberOfBX = 2);
+  declareProperty("numberOfBX", m_numberOfBX = 3);
   declareProperty("timePerBX", m_timePerBX = 25*ns);
 
    
@@ -67,23 +67,10 @@ StatusCode OTTimeCreator::initialize() {
 StatusCode OTTimeCreator::execute() {
 
   // Retrieve the RawEvent:
-  RawEvent* event;
+  LHCb::RawEvent* event = get<LHCb::RawEvent>("DAQ/RawEvent" );
   
-  if( exist<RawEvent>(  RawEventLocation::Default )) {
-    event = get<RawEvent>( RawEventLocation::Default );
-  } else {
-    debug() << "Raw Event does not exist at " 
-            << RawEventLocation::Default << endmsg;
-    debug() << "Accessing RawBuffer for decoding" << endmsg;
-    RawBuffer* rawBuffer = get<RawBuffer>( RawBufferLocation::Default );
-    event = new RawEvent(*rawBuffer);
-    StatusCode sc = put( event, RawEventLocation::Default );
-    if( sc.isFailure() ) 
-      return Error( "Unable to register RawEvent to TES", sc );
-  } 
-
   // Get the buffers associated with OT
-  const std::vector<RawBank>& OTBanks = event->banks( RawBuffer::OT );
+  const std::vector<LHCb::RawBank*>& OTBanks = event->banks(LHCb::RawBank::OT );
   
   // make OTTime container 
   OTTimes* outputTimes = new OTTimes();
@@ -91,25 +78,25 @@ StatusCode OTTimeCreator::execute() {
   put(outputTimes, m_timeLocation);
 
   // Loop over vector of banks (The Buffer)
-  std::vector<RawBank>::const_iterator ibank;
+  std::vector<LHCb::RawBank*>::const_iterator ibank;
   long j = 0;
   for ( ibank = OTBanks.begin(); ibank != OTBanks.end(); ++ibank) {
     // Check the bank version
-    if( (*ibank).version() == OTBankVersion::v1 ) {
+    if( (*ibank)->version() == OTBankVersion::v1 ) {
       //set up decoding with one header word
       j = 3;
     }
-    else if( (*ibank).version() == OTBankVersion::v2 ) {
+    else if( (*ibank)->version() == OTBankVersion::v2 ) {
       //set up decoding with one header word
       j = 1;
     }
     else {
       error() << "Cannot decode OT raw buffer bank version "
-              << (*ibank).version() << " with this version of OTDAQ" << endmsg;
+              << (*ibank)->version() << " with this version of OTDAQ" << endmsg;
       return StatusCode::FAILURE;
     }
     //Getting the values of the number of bank and of the Bank size 
-    long bankSize = (*ibank).dataSize();
+    int bankSize = (*ibank)->size();
 
     // Some Useful Initilisation
     GolHeader golHeader;
@@ -121,16 +108,15 @@ StatusCode OTTimeCreator::execute() {
     unsigned nSize = 0;
     long k = 0;
         
-    // The bank are vec. of raw_int: Loop over the data words inside the bank 
-    const raw_int * data = (*ibank).data();  
-    for ( long i = 0; i < bankSize; ++i ) {
+    //The bank are vec of unsigned int: Loop over the data words inside the bank
+    unsigned int* data = (*ibank)->data();  
+    for ( long i = 0; i < bankSize/4.; ++i ) {
     
-      raw_int aDataWord = data[i];
       // Gol Header or DataWord     
       if(i < j ){
       } else if(i > j-1) {
         if((i == j) || (i == 1 + nSize + k)){
-          golHeader = aDataWord;
+          golHeader = data[i];
           nSize = golHeader.size();      
           // Given Gol Header we Get Station, Layer, Quarter, Module Nr.
           nStation = golHeader.station();
@@ -146,7 +132,7 @@ StatusCode OTTimeCreator::execute() {
           k = i;
         } 
         else {
-          dataWord = aDataWord;
+          dataWord =  data[i];
           
           // Given Station, Layer, Quarter, Module Nr. and  Data Word, 
           // get the OT Time and put it in the output container

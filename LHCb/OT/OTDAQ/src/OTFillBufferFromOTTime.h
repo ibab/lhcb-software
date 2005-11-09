@@ -1,4 +1,4 @@
-// $Id: OTFillBufferFromOTTime.h,v 1.2 2004-11-10 13:02:08 jnardull Exp $
+// $Id: OTFillBufferFromOTTime.h,v 1.3 2005-11-09 16:55:39 jnardull Exp $
 #ifndef OTDAQ_OTFILLBUFFERFROMOTTIME_H 
 #define OTDAQ_OTFILLBUFFERFROMOTTIME_H 1
 
@@ -22,10 +22,7 @@
 // Event
 #include "Kernel/OTChannelID.h"
 #include "Event/OTTime.h"
-#include "Event/RawBuffer.h"
-#include "Event/RawBank.h"
 #include "Event/RawEvent.h"
-#include "Event/DAQTypes.h"
 
 /** @class OTFillBufferFromOTTime OTFillBufferFromOTTime.h 
  * OTDAQ/OTFillBufferFromOTTime.h
@@ -55,20 +52,19 @@ protected:
 
 private:  
   
-  std::string m_RawBuffLoc;
+  std::string m_EventLoc;
   std::string m_OTTimeLoc;
   std::string m_otTrackerPath;
 
   typedef std::vector<OTTime*> vOTime;
   typedef std::map<int,vOTime*> mBank;// contains the bank vectors*
   typedef std::map<int,vOTime*> mGol;// contains the Gol vectors*
-  typedef std::vector<raw_int> dataBank;
+  typedef std::vector<unsigned int> dataBank;
   typedef std::vector<dataBank*> dataBuffer;
 
   // detector geometry
   DeOTDetector* m_otTracker;
-  RawBuffer* m_rawBuffer;
-  
+    
   // global pointer to vectors container
   OTTimes* m_Time;
   mBank* dataContainer;

@@ -1,6 +1,9 @@
 Package         : OTDAQ
 Package manager : J. Nardulli
 
+! 2005-10-11 Jacopo Nardulli
+- Change from RawBuffer-> RawEvent
+
 !====================== OTDAQ v3r3 2005-07-13 ======================
 ! 2005-06-29 Jacopo Nardulli
  - Fixing bug in OTTimeCreator  
