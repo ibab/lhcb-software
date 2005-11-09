@@ -1,8 +1,9 @@
-! $Id: release.notes,v 1.107 2005-10-25 17:22:45 gcorti Exp $
+! $Id: release.notes,v 1.108 2005-11-09 16:48:47 gcorti Exp $
 ! =============================================================================
 Package:          GiGa
 Package manager : Vanya Belyaev
 
+!======================= GiGa v17r3 =====================================
 ! 2005-10-25 - Gloria CORTI
  - GiGaFieldMgrBase.cpp
    . introduce two new properties to control tracking in magnetic field
