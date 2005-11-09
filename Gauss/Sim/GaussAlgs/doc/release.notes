@@ -4,6 +4,7 @@
 ! Responsible : G.Corti
 ! -----------------------------------------------------------------------------
 
+!============================ GaussAlgs v1r7 ==============================
 ! 2005-10-30 - Gloria CORTI
  - src/G4HepMCToMCTruth.{h,cpp}
    . new algorithm to fill MCParticles/MCVertices from HepMC as filled 
