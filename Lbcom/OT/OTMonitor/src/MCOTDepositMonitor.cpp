@@ -1,4 +1,4 @@
-// $Id: MCOTDepositMonitor.cpp,v 1.4 2004-12-10 08:10:56 jnardull Exp $
+// $Id: MCOTDepositMonitor.cpp,v 1.5 2005-11-09 16:41:52 jnardull Exp $
 
 // Gaudi
 #include "GaudiKernel/AlgFactory.h"
@@ -64,13 +64,15 @@ StatusCode MCOTDepositMonitor::execute()
   m_nCrossTalkHits = 0;
 
   // retrieve MCOTDeposits
-  MCOTDeposits* depCont = get<MCOTDeposits>( MCOTDepositLocation::Default );
+  MCOTDepositVector* depCont = 
+    get<MCOTDepositVector>(MCOTDepositLocation::Default);
+
 
   // number of deposits
   m_nDepositsHisto->fill((double)depCont->size(),1.0);
 
   // histos per deposit
-  MCOTDeposits::iterator iterDep;
+  MCOTDepositVector::iterator iterDep;
   for(iterDep = depCont->begin(); 
       iterDep != depCont->end(); iterDep++){
     this->fillHistograms(*iterDep);

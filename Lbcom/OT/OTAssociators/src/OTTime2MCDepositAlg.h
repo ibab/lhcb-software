@@ -1,4 +1,4 @@
-// $Id: OTTime2MCDepositAlg.h,v 1.3 2004-11-23 14:21:17 cattanem Exp $
+// $Id: OTTime2MCDepositAlg.h,v 1.4 2005-11-09 16:43:52 jnardull Exp $
 #ifndef OTASSOCIATORS_OTTIME2MCDEPOSITALG_H
 #define OTASSOCIATORS_OTTIME2MCDEPOSITALG_H 1
 
@@ -62,7 +62,7 @@ private:
   double m_acceptTime;      ///< Time window for deposits killed by dead time
 
   /// MCOTDeposits container used to find deposits killed by dead time
-  MCOTDeposits* m_deposits;
+  MCOTDepositVector* m_deposits;
 
 };
 

@@ -1,6 +1,9 @@
-! $Id: release.notes,v 1.29 2005-04-21 09:55:09 cattanem Exp $
+! $Id: release.notes,v 1.30 2005-11-09 16:43:52 jnardull Exp $
 ! Package     : OTAssociators
 ! Responsible : J. van Tilburg & Jacopo Nardulli
+
+! 2005-11-09 - Jacopo Nardulli
+ - OTTime2MCDepositAlg correted for modifications related to MCOTDeposit.h
 
 !===================== OTAssociators v3r2p1 2005-04-21 =====================
 ! 2005-04-21 - Marco Cattaneo
