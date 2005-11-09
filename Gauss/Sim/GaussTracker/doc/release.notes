@@ -5,6 +5,7 @@
 !                    tracker like detectors (Velo, OT, IT, Muon)
 !-----------------------------------------------------------------------------
 
+!=========================== GaussTracker v4r2 ================================
 ! 2005-10-30 - Gloria CORTI
  - src/GetTrackerHitsAlg.cpp
    . replace getOrCreate method with put(), since the first cannot be
