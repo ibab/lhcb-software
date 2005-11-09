@@ -4,6 +4,9 @@
 ! Purpose     : Package for the tracking event model classes
 !-----------------------------------------------------------------------------
 
+! 2005-11-09 - Eduardo Rodrigues
+ - Flag enum item "AlreadyUsed" introduced in Track.h
+
 ! 2005-11-08 - Eduardo Rodrigues
  - use enums types in methods interfaces instead of unsigned int
 
