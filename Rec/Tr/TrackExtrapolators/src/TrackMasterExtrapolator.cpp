@@ -1,16 +1,20 @@
-
-// Gaudi
+// Include files
+// -------------
+// from Gaudi
 #include "GaudiKernel/ToolFactory.h"
 
-// DetDesc
+// from DetDesc
 #include "DetDesc/ITransportSvc.h"
 #include "DetDesc/Material.h"
 
+// from TrackEvent
 #include "Event/TrackParameters.h"
+
+// from TrackInterfaces
+#include "TrackInterfaces/ITrackExtraSelector.h"
 
 // Local 
 #include "TrackMasterExtrapolator.h"
-#include "ITrackExtraSelector.h"
 
 // chrono
 #include "GaudiKernel/IChronoStatSvc.h"
@@ -80,7 +84,7 @@ StatusCode TrackMasterExtrapolator::initialize()
   m_longFieldExtrapolator = tool<ITrackExtrapolator>( m_longFieldExtrapolatorName );
 
   // selector
-  m_extraSelector =t ool<ITrackExtraSelector>( m_extraSelectorName ); // ,"selector", this);
+  m_extraSelector = tool<ITrackExtraSelector>( m_extraSelectorName ); // ,"selector", this);
 
   // initialize transport service
   m_transportSvc = svc<ITransportSvc>( "TransportSvc",true );

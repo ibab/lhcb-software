@@ -1,4 +1,4 @@
-// $Id: TrackDistanceExtraSelector.h,v 1.1 2005-11-09 14:43:46 erodrigu Exp $
+// $Id: TrackDistanceExtraSelector.h,v 1.2 2005-11-09 14:54:11 erodrigu Exp $
 #ifndef TrackDistanceExtraSelector_H
 #define TrackDistanceExtraSelector_H 1
 
@@ -7,7 +7,8 @@
 // from Gaudi
 #include "GaudiAlg/GaudiTool.h"
 
-#include "ITrackExtraSelector.h"
+// from TrackInterfaces
+#include "TrackInterfaces/ITrackExtraSelector.h"
 
 #include <string>
 
