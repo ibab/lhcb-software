@@ -5,12 +5,12 @@
 
 // local
 #include "TrackExtrapolator.h"
-#include "TrackTransportStep.h"
 #include "DetDesc/ILVolume.h"
 
 // Forward declarations
 class ITransportSvc;
 class Material;
+class ITrackExtraSelector;
 
 /** @class TrackMasterExtrapolator TrackMasterExtrapolator.h \
  *         "TrackMasterExtrapolator.h"
@@ -38,7 +38,7 @@ class TrackMasterExtrapolator: public TrackExtrapolator
   /// Constructor
   TrackMasterExtrapolator( const std::string& type, 
                            const std::string& name, 
-                           const IInterface* parent);
+                           const IInterface* parent );
 
   /// destructor
   virtual ~TrackMasterExtrapolator();
@@ -58,12 +58,7 @@ class TrackMasterExtrapolator: public TrackExtrapolator
                         ParticleID pid = ParticleID(211) );
 
  private:
- 
-  /// make transport steps 
-  StatusCode createTransportSteps( double zStart, 
-                                   double zTarget, 
-                                   std::list<TrackTransportStep>& transList );
-  
+   
   /// apply thick scatter state
   StatusCode thinScatter( State& state ,
                           double radLength );
@@ -82,10 +77,6 @@ class TrackMasterExtrapolator: public TrackExtrapolator
   StatusCode electronEnergyLoss( State& state, 
                                  double radLength );
 
-  /// choose Extrapolator to use in field free region
-  ITrackExtrapolator* chooseMagFieldExtrapolator( const double zStart,
-                                                  const double zTarget );
-
   bool m_upStream;
   int  m_particleType;
   double m_tMax ;     ///< max radiation length - avoid underflow on NT
@@ -96,8 +87,8 @@ class TrackMasterExtrapolator: public TrackExtrapolator
   double m_zFieldStop;         ///< end of field
   double m_shortDist;          ///< min distance to use RungaKutta
 
-  /// extrapolator to use in field free region
-  std::string m_freeFieldExtrapolatorName;  
+  /// extra selector
+  std::string m_extraSelectorName;
   /// extrapolator to use for short transport in mag field   
   std::string m_shortFieldExtrapolatorName;
   /// extrapolator to use for long transport in mag field 
@@ -117,10 +108,12 @@ class TrackMasterExtrapolator: public TrackExtrapolator
   double m_stopElectronCorr;    ///< z start for electron energy loss
 
   /// extrapolators
-  ITrackExtrapolator* m_freeFieldExtrapolator;
   ITrackExtrapolator* m_shortFieldExtrapolator;
   ITrackExtrapolator* m_longFieldExtrapolator;
  
+  /// extra selector
+  ITrackExtraSelector* m_extraSelector;
+
   ITransportSvc* m_transportSvc;  ///< Pointer to the transport service
 
   /// update transport matrix
@@ -131,30 +124,21 @@ class TrackMasterExtrapolator: public TrackExtrapolator
 		  const double z2 ) const;
 
 
-  void transformToGlobal(const double zStep, const double zStart,
-                         ILVolume::Intersections& intersept);
-
+  void transformToGlobal( const double zStep, const double zStart,
+                         ILVolume::Intersections& intersept );
 
 };
 
-inline ITrackExtrapolator* 
-TrackMasterExtrapolator::chooseMagFieldExtrapolator( const double zStart,
-                                                     const double zTarget )
-{
-  //choose which extrapolator to use in magnetic field - simplifies the code
-  return (fabs(zTarget-zStart)< m_shortDist ? m_shortFieldExtrapolator : m_longFieldExtrapolator);
-}
-
 inline void TrackMasterExtrapolator::updateTransportMatrix
-(const HepMatrix& newStepF)
+( const HepMatrix& newStepF )
 {
   //update F - after transport step
-  m_F = newStepF* m_F;
+  m_F = newStepF * m_F;
 }
 
 inline void TrackMasterExtrapolator::transformToGlobal( const double zStep,
                                                         const double zStart,
-                                                        ILVolume::Intersections& intersept) {
+                                                        ILVolume::Intersections& intersept ) {
 
   // convert from transport service ticks to mm in the LHCb frame
   for (unsigned int iW = 0 ;  intersept.size() > iW ; ++iW ) {

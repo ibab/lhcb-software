@@ -1,5 +1,3 @@
-// GSL : for macros
-#include "gsl/gsl_math.h"
 
 // Gaudi
 #include "GaudiKernel/ToolFactory.h"
@@ -12,8 +10,10 @@
 
 // Local 
 #include "TrackMasterExtrapolator.h"
-#include "GaudiKernel/IChronoStatSvc.h"
+#include "ITrackExtraSelector.h"
 
+// chrono
+#include "GaudiKernel/IChronoStatSvc.h"
 
 // GSL
 #include "gsl/gsl_math.h"
@@ -22,68 +22,66 @@
 static const ToolFactory<TrackMasterExtrapolator> s_factory;
 const IToolFactory& TrackMasterExtrapolatorFactory = s_factory;
 
-// Constructor
-TrackMasterExtrapolator::TrackMasterExtrapolator
-( const std::string& type,
-  const std::string& name,
-  const IInterface* parent )
+//=============================================================================
+// Standard constructor, initializes variables
+//=============================================================================
+TrackMasterExtrapolator::TrackMasterExtrapolator( const std::string& type,
+                                                  const std::string& name,
+                                                  const IInterface* parent )
   : TrackExtrapolator(type, name, parent),
     m_tMax(10.),
     m_eMax(100.0*MeV),
-    m_freeFieldExtrapolator(0),
     m_shortFieldExtrapolator(0),
     m_longFieldExtrapolator(0)
 {
   //job options
-  declareProperty("fieldStart"    , m_zFieldStart = -500.*mm);
-  declareProperty("fieldStop"     , m_zFieldStop= 21000.*mm);
-  declareProperty("shortDist"     , m_shortDist = 100.*mm);
-  declareProperty("freeFieldExtrapolatorName",
-                  m_freeFieldExtrapolatorName = "TrackLinearExtrapolator");
-  declareProperty("shortFieldExtrapolatorName",
-                  m_shortFieldExtrapolatorName ="TrackParabolicExtrapolator");
-  declareProperty("longFieldExtrapolatorName",
-                  m_longFieldExtrapolatorName = "TrackHerabExtrapolator");
-  declareProperty("applyMultScattCorr"  , m_applyMultScattCorr  = true);
-  declareProperty("fms2"                , m_fms2                = 1.0);
-  declareProperty("thickWall"           , m_thickWall           = 0.*mm);
-  declareProperty("applyEnergyLossCorr" , m_applyEnergyLossCorr = true);
-  declareProperty("energyLoss"          , 
-                  m_energyLoss = 354.1 * MeV*mm2/mole );
-  declareProperty("maxStepSize"         , m_maxStepSize         = 1000.*mm);
-  declareProperty("minRadThreshold"     , m_minRadThreshold     = 1.0e-4 );
-
+ 
+  declareProperty( "ShortDist"     , m_shortDist = 100.*mm);
+  declareProperty( "ShortFieldExtrapolatorName",
+                   m_shortFieldExtrapolatorName = "TrackParabolicExtrapolator" );
+  declareProperty( "LongFieldExtrapolatorName",
+                   m_longFieldExtrapolatorName = "TrackHerabExtrapolator" );
+  declareProperty( "ExtraSelectorName",
+                   m_extraSelectorName = "TrackDistanceExtraSelector" );
+  declareProperty( "ApplyMultScattCorr"  , m_applyMultScattCorr  = true );
+  declareProperty( "Fms2"                , m_fms2                = 1.0 );
+  declareProperty( "ThickWall"           , m_thickWall           = 0.*mm );
+  declareProperty( "ApplyEnergyLossCorr" , m_applyEnergyLossCorr = true );
+  declareProperty( "EnergyLoss"          , 
+                   m_energyLoss = 354.1 * MeV*mm2/mole );
+  declareProperty( "MaxStepSize"         , m_maxStepSize         = 1000.*mm );
+  declareProperty( "MinRadThreshold"     , m_minRadThreshold     = 1.0e-4 );
   //for electrons
-  declareProperty("applyElectronEnergyLossCorr",
-                  m_applyElectronEnergyLossCorr = true);
-  declareProperty("startElectronCorr",
-                  m_startElectronCorr = 2500.*mm);
-  declareProperty("stopElectronCorr",
-                  m_stopElectronCorr = 9000.*mm);
-
-  // TODO print here the parameters giving if debug mode!!
+  declareProperty( "ApplyElectronEnergyLossCorr",
+                   m_applyElectronEnergyLossCorr = true );
+  declareProperty( "StartElectronCorr",
+                   m_startElectronCorr = 2500.*mm );
+  declareProperty( "StopElectronCorr",
+                   m_stopElectronCorr = 9000.*mm );
 }
 
-// TrackMasterExtrapolator destructor.
+//=============================================================================
+// Destructor
+//=============================================================================
 TrackMasterExtrapolator::~TrackMasterExtrapolator() {}
 
-// Initializes TrackMasterExtrapolator at the begin of program execution
+//=============================================================================
+// Initialize
+//=============================================================================
 StatusCode TrackMasterExtrapolator::initialize()
 {
-
-  // initialize
   StatusCode sc = GaudiTool::initialize();
-  if (sc.isFailure()) { return Error("Failed to initialize", sc); }
-
-  // request field free region extrapolator
-  m_freeFieldExtrapolator=tool<ITrackExtrapolator>(m_freeFieldExtrapolatorName);
+  if ( sc.isFailure() ) return Error( "Failed to initialize", sc );
  
   // request a short distance magnetic field extrapolator
-  m_shortFieldExtrapolator=tool<ITrackExtrapolator>(m_shortFieldExtrapolatorName);
+  m_shortFieldExtrapolator = tool<ITrackExtrapolator>( m_shortFieldExtrapolatorName );
 
   // request extrapolator for going short distances in magnetic field
-  m_longFieldExtrapolator=tool<ITrackExtrapolator>(m_longFieldExtrapolatorName);
-  
+  m_longFieldExtrapolator = tool<ITrackExtrapolator>( m_longFieldExtrapolatorName );
+
+  // selector
+  m_extraSelector =t ool<ITrackExtraSelector>( m_extraSelectorName ); // ,"selector", this);
+
   // initialize transport service
   m_transportSvc = svc<ITransportSvc>( "TransportSvc",true );
 
@@ -187,7 +185,7 @@ StatusCode TrackMasterExtrapolator::propagate( State& state,
 	{
 	chronoSvc()->chronoStart("TransportSvcT");
 	nWall = m_transportSvc->intersections( start, vect, 0., 1., 
-         					 intersept, m_minRadThreshold );
+                                         intersept, m_minRadThreshold );
 	chronoSvc()->chronoStop("TransportSvcT");
 	  
       }
@@ -199,103 +197,74 @@ StatusCode TrackMasterExtrapolator::propagate( State& state,
       ILVolume::Interval inter(start.z() + zStep, start.z() + zStep);
       const Material* dummyMat = 0;
       intersept.push_back(std::make_pair(inter,dummyMat));
-      nWall = intersept.size();
+      nWall = intersept.size();      
  
       // loop over the walls - last wall is `virtual one at target z'
-      for (int iStep=0; iStep<nWall; ++iStep)
-	{
-	  //break transport into steps using different extrapolators
-	  std::list<TrackTransportStep> transStepList;
-          double zWall = zScatter(intersept[iStep].first.first,intersept[iStep].first.second);
-	  sc = createTransportSteps( state.z(), zWall, transStepList );
-      
-	  if (transStepList.empty())
-	    {
-	      return Error( "no transport steps !!!!", StatusCode::FAILURE);
-	    }
-      
-	  // loop over the tracking steps
-	  std::list<TrackTransportStep>::iterator iTransStep = transStepList.begin();
-	  bool stopTransport = false;
+      for (int iStep=0; iStep<nWall; ++iStep){
 
-	  while ((iTransStep!=transStepList.end())&&(stopTransport == false))
-	    {
-	      //extrapolate
-	      ITrackExtrapolator* thisExtrapolator = (*iTransStep).extrapolator();      
-	      sc = thisExtrapolator->propagate( state, (*iTransStep).z() );
+        double zWall = zScatter(intersept[iStep].first.first,intersept[iStep].first.second);
+        ITrackExtrapolator* thisExtrapolator = m_extraSelector->select(state.z(), zWall);      
+	sc = thisExtrapolator->propagate( state, zWall );
+     
+        // check for success
+	if (sc.isFailure()){
+	  warning() << "Transport to " << zWall
+		     << "using "+thisExtrapolator->name() << " FAILED" << endreq;
+	}
+	 
+	//update f
+	updateTransportMatrix( thisExtrapolator->transportMatrix() );
         
-	      //update f
-	      updateTransportMatrix( thisExtrapolator->transportMatrix() );
-        
-	      // check for success
-	      if (sc.isFailure())
-		{
-		  stopTransport = true;
-		  warning() << "Transport to " << (*iTransStep).z()
-			    << "using "+thisExtrapolator->name() << " FAILED" << endreq;
-		}
-	      ++iTransStep;
-	    }
       
-	  if (stopTransport == true) return sc;
+	// protect against vertical or looping tracks
+	if (fabs(state.tx()) > maxSlope){
+	  double slopeX = GSL_SIGN(  state.tx() )*maxSlope;
+	  warning() << "Protect against looping tracks: Tx " 
+		    << state.tx() << " set to " << slopeX << ", abort. " << endreq;
+	  state.setTx(slopeX);
+	  return StatusCode::FAILURE;
+	}
       
-	  // protect against vertical or looping tracks
-	  if (fabs(state.tx()) > maxSlope)
-	    {
-	      double slopeX = GSL_SIGN(  state.tx() )*maxSlope;
-	      warning() << "Protect against looping tracks: Tx " 
-			<< state.tx() << " set to " << slopeX << ", abort. " << endreq;
-	      state.setTx(slopeX);
-	      return StatusCode::FAILURE;
-	    }
+	if (fabs(state.ty()) > maxSlope){
+	   double slopeY = GSL_SIGN(state.ty())*maxSlope;
+	   warning() << "Protect against looping tracks: Ty " 
+		     << state.ty() << " set to " << slopeY << ", abort. " << endreq;
+	    state.setTy(slopeY);
+	    return StatusCode::FAILURE;
+	}
       
-	  if (fabs(state.ty()) > maxSlope)
-	    {
-	      double slopeY = GSL_SIGN(state.ty())*maxSlope;
-	      warning() << "Protect against looping tracks: Ty " 
-			<< state.ty() << " set to " << slopeY << ", abort. " << endreq;
-	      state.setTy(slopeY);
-	      return StatusCode::FAILURE;
-	    }
-      
-	  // number we need
-          double tWall = fabs(intersept[iStep].first.first - intersept[iStep].first.second);
-          const Material* theMaterial = intersept[iStep].second;
+        // number we need
+        double tWall = fabs(intersept[iStep].first.first - intersept[iStep].first.second);
+        const Material* theMaterial = intersept[iStep].second;
 
-	  // multiple scattering
-	  if ((m_applyMultScattCorr == true)&& (0 !=  theMaterial ))
-	    {
-	      if (tWall < m_thickWall)
-		{
-		  sc = thinScatter( state, tWall/theMaterial->radiationLength() );
-		}
-	      else
-		{
-		  sc = thickScatter( state, tWall, tWall/theMaterial->radiationLength()  );
-		}
+	// multiple scattering
+	if ((m_applyMultScattCorr == true)&& (0 !=  theMaterial )){
+	   if (tWall < m_thickWall){
+	     sc = thinScatter( state, tWall/theMaterial->radiationLength() );
 	    }
+	   else{
+	     sc = thickScatter( state, tWall, tWall/theMaterial->radiationLength()  );
+	   }
+	 }
       
-	  // dE_dx energy loss
-	  if (( m_applyEnergyLossCorr == true)&&(theMaterial != 0))
-	    {
-	      sc = energyLoss( state, tWall, theMaterial );
-	    }
+	 // dE_dx energy loss
+	 if (( m_applyEnergyLossCorr == true)&&(theMaterial != 0)){
+	   sc = energyLoss( state, tWall, theMaterial );
+	 }
       
-	  // electron energy loss
-	  if ((m_applyElectronEnergyLossCorr == true) 
+	 // electron energy loss
+	 if ((m_applyElectronEnergyLossCorr == true) 
             && (11 == partId.abspid())
-            && (theMaterial != 0) )
-	    {
-	      if ((state.z() > m_startElectronCorr) &&
-		  (state.z() < m_stopElectronCorr))
-		{
-		  sc = electronEnergyLoss( state, theMaterial->radiationLength() );
-		}
-	    }
+            && (theMaterial != 0) ){
+	   if ((state.z() > m_startElectronCorr) &&
+	     (state.z() < m_stopElectronCorr)){
+	     sc = electronEnergyLoss( state, theMaterial->radiationLength() );
+	 }
+       }
       
-	} // loop over walls
+    } // loop over walls
     } // loop over steps
-  
+
   verbose() << "State extrapolated succesfully" << endreq;
 
   return StatusCode::SUCCESS;
@@ -346,197 +315,6 @@ StatusCode TrackMasterExtrapolator::propagate( State& state,
           << " of particle pid " << pid.pid() << endreq;
   
   return sc;
-}
-
-//============================================================================
-// Create the transportsteps
-//============================================================================
-StatusCode TrackMasterExtrapolator::createTransportSteps
-( double zStart,
-  double zTarget,
-  std::list<TrackTransportStep>& transStepList )
-{
-  //extrapolate the state to the target z
-  // cases:  1.  Transport entirely outside of magnetic field
-  //         2.  entirely inside magnetic field
-  //         3.  from outside magnet field to in passing start of field
-  //         4.  from inside to out passing end of field
-  //         5.  traverse the whole magnetic field
-
- 
-  // case 1 transport entirely outside field
-  if ((GSL_MAX(zTarget,zStart) <= m_zFieldStart) ||
-      (GSL_MIN(zTarget,zStart) >= m_zFieldStop))
-    {
-      verbose() << "Field free Transport from "  << zStart  << " to "
-		<< zTarget << endreq;
-      TrackTransportStep tStep = TrackTransportStep(m_freeFieldExtrapolator,zTarget);
-      transStepList.push_back(tStep);
-    }
-
-  //case 2 transport entirely inside field
-  else if ((GSL_MIN(zTarget,zStart) >= m_zFieldStart) &&
-           (GSL_MAX(zTarget,zStart) <= m_zFieldStop))
-    {
-
-      ITrackExtrapolator* magExtrapolator= chooseMagFieldExtrapolator( zStart,
-								       zTarget);
-
-      if (msgLevel(MSG::VERBOSE))
-	{
-	  verbose() << "Magnet region Transport from "
-		    << zStart  << " to "  << zTarget
-		    << " using " <<magExtrapolator->name() << endreq;
-	}
-
-      TrackTransportStep tStep = TrackTransportStep( magExtrapolator, zTarget );
-      transStepList.push_back(tStep);
-    }
-
-  // case 3 - inside to out or vice versa passing m_ZFieldStart
-  else if ((GSL_MIN(zTarget,zStart) < m_zFieldStart) &&
-           (GSL_MAX(zTarget,zStart) <= m_zFieldStop))
-    {
-      verbose()
-        << "Transporting from inside to outside - crossing m_zFieldStart" 
-        << endreq;
-
-      if ( zTarget < m_zFieldStart )
-	{
-	  ITrackExtrapolator* magExtrapolator =
-	    chooseMagFieldExtrapolator(zStart,m_zFieldStart);
-
-	  verbose()
-	    << "Magnet region Transport from "  << zStart  << " to "  
-	    << m_zFieldStart
-	    << " using " << magExtrapolator->name() << endreq;
-	  TrackTransportStep tStep1 = TrackTransportStep( magExtrapolator,
-							  m_zFieldStart );
-	  transStepList.push_back(tStep1);
-
-	  verbose() << "Field free Transport from "  << m_zFieldStart  
-		    << " to " << zTarget << endreq;
-	  TrackTransportStep tStep2 = TrackTransportStep( m_freeFieldExtrapolator,
-							  zTarget );
-	  transStepList.push_back(tStep2);
-	}
-      else
-	{
-	  verbose() << "Field free Transport from "  << zStart  << " to "
-		    << m_zFieldStart << endreq;
-	  TrackTransportStep tStep1 = TrackTransportStep( m_freeFieldExtrapolator, 
-							  m_zFieldStart );
-	  transStepList.push_back(tStep1);
-
-	  ITrackExtrapolator* magExtrapolator = chooseMagFieldExtrapolator(
-									   m_zFieldStart,
-									   zTarget);
-
-	  verbose() << "Magnet region Transport from "  << m_zFieldStart
-		    <<  " to "  << zTarget
-		    << " using " <<magExtrapolator->name() << endreq;
-	  TrackTransportStep tStep2 = TrackTransportStep(magExtrapolator,zTarget);
-	  transStepList.push_back(tStep2);
-	}
-    }
-
-
-  // case 4 - inside to out or vice versa passing m_zFieldStop
-  else if ((GSL_MIN(zTarget,zStart) >= m_zFieldStart) &&
-           (GSL_MAX(zTarget,zStart) > m_zFieldStop))
-    {
-      verbose()
-	<<  "Transporting from inside to outside - crossing m_zFieldStop" 
-	<< endreq;
-
-      if (zTarget>m_zFieldStop)
-	{
-	  ITrackExtrapolator* magExtrapolator = chooseMagFieldExtrapolator(zStart,
-									   m_zFieldStop);
-
-	  if (msgLevel(MSG::VERBOSE))
-	    {
-	      verbose() 
-		<< "Magnet region Transport from "  << zStart << " to "  << m_zFieldStop
-		<< " using " << magExtrapolator->name() << endreq;
-	    }
-
-	  TrackTransportStep tStep1 = TrackTransportStep(magExtrapolator,m_zFieldStop);
-	  transStepList.push_back(tStep1);
-
-	  verbose() << "Field free Transport from "  << zStart  << " to "
-		    << zTarget << endreq;
-	  TrackTransportStep tStep2 = TrackTransportStep(m_freeFieldExtrapolator,zTarget);
-	  transStepList.push_back(tStep2);
-
-	}
-      else
-	{
-	  verbose() << "Field free Transport from "  << zStart  << " to "
-		    << m_zFieldStop << endreq;
-	  TrackTransportStep tStep1 = TrackTransportStep(m_freeFieldExtrapolator,
-							 m_zFieldStop);
-	  transStepList.push_back(tStep1);
-
-	  ITrackExtrapolator* magExtrapolator = chooseMagFieldExtrapolator(
-									   m_zFieldStop,
-									   zTarget );
-
-	  if (msgLevel(MSG::VERBOSE))
-	    {
-	      verbose() 
-		<< "Magnet region Transport from " << zStart <<  " to "  << zTarget
-		<< " using "<< magExtrapolator->name() << endreq;
-	    }
-	  TrackTransportStep tStep2 = TrackTransportStep(magExtrapolator,zTarget);
-	  transStepList.push_back(tStep2);
-	}
-    }
-
-
-  // case 5 - whole magnet in-between
-  else if ((GSL_MAX(zTarget,zStart) > m_zFieldStop) &&
-           (GSL_MIN(zTarget,zStart) < m_zFieldStart))
-    {
-      verbose() << "Transport from outside magnet to outside magnet" 
-		<< endreq;
-
-      //determine whether up or downstream case
-      double z1 =0.;
-      double z2 =0.;
-      if ( zTarget < zStart )
-	{
-	  // upstream
-	  z1 = m_zFieldStop;
-	  z2 = m_zFieldStart;
-	}
-      else
-	{
-	  // down stream
-	  z1 = m_zFieldStart;
-	  z2 = m_zFieldStop;
-	}
-
-      verbose() << "Field free Transport from "  << zStart  << " to "
-		<< z1 << endreq;
-      TrackTransportStep tStep1 = TrackTransportStep( m_freeFieldExtrapolator, z1);
-      transStepList.push_back(tStep1);
-
-      // seems reasonable to use long field extrapolator for whole field !!!
-      verbose() << "Long Magnet region Transport from "  << zStart
-		<< " to "  << z2 << endreq;
-      TrackTransportStep tStep2 = TrackTransportStep( m_longFieldExtrapolator, z2);
-      transStepList.push_back(tStep2);
-
-      // step out of magnetic field
-      verbose() << "Field free Transport from "  << zStart  << " to "
-		<< zTarget << endreq;
-      TrackTransportStep tStep3 = TrackTransportStep(m_freeFieldExtrapolator, zTarget);
-      transStepList.push_back(tStep3);
-    }
-
-  // end
-  return StatusCode::SUCCESS;
 }
 
 //============================================================================
@@ -598,7 +376,7 @@ StatusCode TrackMasterExtrapolator::thickScatter( State& state,
 
   // protect zero momentum
   double p = GSL_MAX( state.p(), 1.0 * MeV );
-  double cnoise = m_fms2 * scatLength / gsl_pow_2(p);
+  double cnoise = m_fms2 * scatLength / (p*p);
 
   // slope covariances
   double covTxTx = norm2 * (1. + gsl_pow_2(state.tx())) * cnoise;
@@ -610,12 +388,14 @@ StatusCode TrackMasterExtrapolator::thickScatter( State& state,
 
   HepSymMatrix Q(5,0);
 
-  Q.fast(1,1) = covTxTx * gsl_pow_2(tWall) / 3.;
-  Q.fast(2,1) = covTxTy * gsl_pow_2(tWall) / 3.;
+  double tWall2 = gsl_pow_2(tWall);
+
+  Q.fast(1,1) = covTxTx * tWall2 / 3.;
+  Q.fast(2,1) = covTxTy * tWall2 / 3.;
   Q.fast(3,1) = 0.5*covTxTx * D * tWall;
   Q.fast(4,1) = 0.5*covTxTy * D * tWall;
 
-  Q.fast(2,2) = covTyTy * gsl_pow_2(tWall) / 3.;
+  Q.fast(2,2) = covTyTy * tWall2 / 3.;
   Q.fast(3,2) = 0.5*covTxTy * D * tWall;
   Q.fast(4,2) = 0.5*covTyTy * D * tWall;
 

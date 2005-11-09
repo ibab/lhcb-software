@@ -4,6 +4,16 @@
 ! Purpose     : Package for tracking extrapolators
 !-----------------------------------------------------------------------------
 
+! 2005-11-09 - Eduardo Rodrigues
+ - TrackTransportStep.h helper class removed - no more needed
+ - added extrapolators selectors (from M. Needham):
+   The TrackMasterExtrapolator chooses the extrapolator to use via a set of
+   tools that work as follows:
+    - TrackSimpleExtraSelector:   just has one extrapolator
+    - TrackDistanceExtraSelector: chooses between 2 based on stepsize
+    - TrackLongExtraSelector:     chooses between two except in the T stations
+                                  where it takes the short distance always
+
 ! 2005-11-03 M. Needham
   - bug fix in master extrapolator
 
