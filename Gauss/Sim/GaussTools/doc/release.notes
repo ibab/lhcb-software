@@ -4,6 +4,7 @@
 ! Purpose       : G4 actions and some miscellaneous algs for Gauss
 !-----------------------------------------------------------------------------
 
+!=========================== GaussTools v11r0 ===============================
 ! 2005-10-31 - Gloria CORTI
  - New classes originally from Witek Pokorski to store history of Geant4
    tracking (processes and particles produced) in HepMC tree structure
