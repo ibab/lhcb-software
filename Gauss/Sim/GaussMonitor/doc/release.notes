@@ -4,6 +4,7 @@
 ! Purpose     : Hold monitoring algorithms for Gauss
 !-----------------------------------------------------------------------------
 
+!===================== GaussMonitor v2r3 ===================================
 ! 2005-10-30 - Gloria Corti
  - cmt/requirements
    . add necessary use of AIDA 
