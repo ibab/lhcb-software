@@ -1,11 +1,12 @@
-// $Id: OTFillRawBuffer.cpp,v 1.9 2005-07-12 09:31:19 jnardull Exp $
+// $Id: OTFillRawBuffer.cpp,v 1.10 2005-11-09 16:52:25 jnardull Exp $
 // Include files
 
 // From Gaudi
 #include "GaudiKernel/AlgFactory.h"
 
 // From event model
-#include "Event/RawBuffer.h"
+#include "Event/RawEvent.h"
+#include "Event/RawBank.h"
 
 // local
 #include "OTFillRawBuffer.h"
@@ -33,9 +34,7 @@ OTFillRawBuffer::OTFillRawBuffer( const std::string& name,
 {
   this->declareProperty( "NumberOfBanks", m_numberOfBanks = 24 );
   this->declareProperty( "NumberOfGols",  m_numberOfGols  = 18 );
-  this->declareProperty( "RawBufferLocation",   
-                         m_RawBuffLoc = RawBufferLocation::Default );
-  this->declareProperty( "MCOTTimeLocation", 
+   this->declareProperty( "MCOTTimeLocation", 
                          m_MCOTTimeLoc = MCOTTimeLocation::Default );
 }
 
@@ -73,8 +72,8 @@ StatusCode OTFillRawBuffer::initialize() {
 //=============================================================================
 StatusCode OTFillRawBuffer::execute() 
 {
-  // Retrieve the RawBuffer
-  RawBuffer* rawBuffer = get<RawBuffer>( RawBufferLocation::Default );
+  // A new RawEvent
+  LHCb::RawEvent* rawEvent =  new LHCb::RawEvent();
 
   // Sorting MCTimes into Banks
   this->sortMcTimesIntoBanks();
@@ -104,7 +103,7 @@ StatusCode OTFillRawBuffer::execute()
 
     int bankID = (*iBank).first;
     dataBank& bBank = aBank;
-    rawBuffer->addBank( bankID , RawBuffer::OT, bBank, OTBankVersion::v2 );  
+    rawEvent->addBank(bankID, LHCb::RawBank::OT, 2, bBank);  
     aBank.erase( aBank.begin(),aBank.end() );
   }
 
@@ -115,6 +114,8 @@ StatusCode OTFillRawBuffer::execute()
     vmcOTime* amcTime = (*iBank).second;
     amcTime->erase( amcTime->begin(), amcTime->end() );
   }
+
+  put( rawEvent, "DAQ/RawEvent"  );
   
   return StatusCode::SUCCESS;
 }
@@ -187,11 +188,11 @@ StatusCode OTFillRawBuffer::convertToRAWEmptyBank(dataBank* aBank)
 {
   // Creating the Tell1 Headers - 3 words of 32 bits - I do not fill them...
   for(int i = 0; i < 1; i++){
-    raw_int tell1Header = 0;
+    unsigned int tell1Header = 0;
     aBank->push_back(tell1Header);
   }
   for(int j = 0; j < 19; j++){
-    GolHeader golHeader(0, 0, 0, 0, 0, 0, 0);
+    unsigned int golHeader = 0;
     aBank->push_back(golHeader);
   }
   
@@ -203,7 +204,7 @@ StatusCode OTFillRawBuffer::convertToRAWDataBank(vmcOTime* vToConvert,
 {
   // Creating the Tell1 Headers - 3 words of 32 bits - I do not fill them...
   for(int i = 0; i < 1; i++){
-    raw_int tell1Header = 0;
+    unsigned int tell1Header = 0;
     aBank->push_back(tell1Header);
   }
 
@@ -249,7 +250,7 @@ StatusCode OTFillRawBuffer::convertToRAWDataBank(vmcOTime* vToConvert,
       nStraw = ((*iTime)->channel()).straw();
       channel = ((*iTime)->channel());
     }
-
+    
     /*
      * Creating the Gol Headers, given Station, Layer, Quarter, Module, Size
      * Numbers; Using Magic Shift operators
@@ -291,10 +292,10 @@ StatusCode OTFillRawBuffer::convertToRAWDataBank(vmcOTime* vToConvert,
       
       // GolHeader
       GolHeader golHeader(0, nStation, nLayer, nQuarter, nModule, 0 , size);
-      // pushing the Gol Header
-      aBank->push_back(golHeader);  
+      unsigned int gol = golHeader.returnInt(golHeader);
+      aBank->push_back(gol);
     }
-
+    
     if(NoValidHeader != 1){
       // The Hits -- Some useful definitions
       vmcOTime* pCurrent = 0;    
@@ -360,7 +361,8 @@ StatusCode OTFillRawBuffer::convertToRAWDataBank(vmcOTime* vToConvert,
         
         DataWord dataWord (1, firstOtisID, firstStrawID, firstTdcTime, 
                            0, nextOtisID, nextStrawID, nextTdcTime);
-        aBank->push_back(dataWord);
+        unsigned int data = dataWord.returnInt(dataWord);
+        aBank->push_back(data);
         
         if(iTimeNext != iHitGolEnd) iTimeCurrent++;
         

@@ -1,8 +1,12 @@
-// $Id: MCOTDepositCreator.cpp,v 1.7 2004-12-10 14:06:45 cattanem Exp $
+// $Id: MCOTDepositCreator.cpp,v 1.8 2005-11-09 16:52:25 jnardull Exp $
 
 // Gaudi
 #include "GaudiKernel/xtoa.h" // needed for toolName()
 #include "GaudiKernel/AlgFactory.h"
+#include "GaudiKernel/IRndmGenSvc.h"
+#include "GaudiKernel/RndmGenerators.h"
+#include "GaudiKernel/IService.h"
+
 
 // Event
 #include "Event/MCHit.h"
@@ -48,22 +52,29 @@ MCOTDepositCreator::MCOTDepositCreator(const std::string& name,
   m_spillVector.push_back("/Prev/");
   m_spillVector.push_back("/");
   m_spillVector.push_back("/Next/");
+//  m_spillVector.push_back("/NextNext/");
 
   m_spillTimes.push_back(-50.0*ns);
   m_spillTimes.push_back(-25.0*ns);
   m_spillTimes.push_back(0.0*ns);
   m_spillTimes.push_back(25.0*ns);
-  
+//  m_spillTimes.push_back(50.0*ns);
+
   declareProperty("spillVector", m_spillVector);
   declareProperty("spillTimes", m_spillTimes);
 
   declareProperty("addCrosstalk", m_addCrossTalk = true);
   declareProperty("crossTalkLevel", m_crossTalkLevel = 0.025);
   declareProperty("addNoise", m_addNoise = true);
+
+  declareProperty("addPulse", m_addPulse = true);
+  declareProperty("PulseTime", m_PulseTime = 30);
+  declareProperty("PulseProbability", m_PulseProbability = 0.3);
+
   declareProperty("noiseToolName",m_noiseToolName = "OTRandomDepositCreator" );
 
   // container for temporary digit storage 
-  m_tempDeposits = new MCOTDepositVector();
+  m_tempDeposits = new MCOTDepositVec();
 
   // reserve some space
   m_tempDeposits->reserve(8000);
@@ -139,6 +150,19 @@ StatusCode MCOTDepositCreator::initialize()
   m_startReadOutGate  = aReadOutWindow->startReadOutGate();
   release( aReadOutWindow );
 
+  // retrieve pointer to random number service
+  IRndmGenSvc* randSvc = 0;
+  sc = serviceLocator()->service( "RndmGenSvc", randSvc, true ); 
+  if( sc.isFailure() ) {
+    return Error ("Failed to retrieve random number service",sc);
+  }  
+  // get interface to generator
+  sc = randSvc->generator(Rndm::Flat(0.,1.0),m_genDist.pRef()); 
+  if( sc.isFailure() ) {
+    return Error ("Failed to generate random number distribution",sc);
+  }
+  randSvc->release();
+
   // construct container names once
   std::vector<std::string>::const_iterator iSpillName 
     = m_spillVector.begin();
@@ -199,7 +223,7 @@ StatusCode MCOTDepositCreator::execute(){
     debug() << "deposits size after XTalk = " 
             << m_tempDeposits->size() << endmsg;
   }
-
+  
   // add random noise
   if (m_addNoise) {
     debug() << "deposits size before adding noise = "
@@ -212,13 +236,24 @@ StatusCode MCOTDepositCreator::execute(){
             << m_tempDeposits->size() << endmsg;
   }
 
+  // add Double Pulse Reflection
+  if (m_addPulse){
+    debug() << "deposits size before adding Double Pulse Reflection = "
+            << m_tempDeposits->size() << endmsg;
+    
+    this->addPulseReflect();
+    
+    debug() << "deposits size after adding  Double Pulse Reflection = "
+            << m_tempDeposits->size() << endmsg;    
+  }
+          
   // sort - first by channel
   std::stable_sort(m_tempDeposits->begin(),m_tempDeposits->end(),
                    OTDataFunctor::Less_by_ChannelAndTime<const MCOTDeposit*>());
 
-  MCOTDeposits* deposits = new MCOTDeposits();
+  MCOTDepositVector* deposits = new MCOTDepositVector();
   deposits->reserve(m_tempDeposits->size());
-  MCOTDepositVector::iterator iterDep;
+  MCOTDepositVec::iterator iterDep;
   for ( iterDep = m_tempDeposits->begin(); iterDep != m_tempDeposits->end();
         ++iterDep ) {
     deposits->add(*iterDep);
@@ -239,7 +274,7 @@ StatusCode MCOTDepositCreator::makeDigitizations()
       monteCarloTrackerHits(eventSvc(),m_spillNames[iSpill]);
     if ( !monteCarloTrackerHits ) {
       // failed to find hits
-      debug() <<"Unable to retrieve " +m_spillNames[iSpill] << endmsg;
+      debug() <<"Spillover missing in the loop " +m_spillNames[iSpill] <<endmsg;
     }
     else {
       // found spill - create some digitizations and add them to deposits
@@ -270,8 +305,10 @@ StatusCode MCOTDepositCreator::makeDigitizations()
                                                  tTimeOffset,
                                                  absDist,
                                                  ambiguity);
+          
           ++iterDist;
           m_tempDeposits->push_back(deposit);
+          
         } // channels
       } // iterHit
     }  
@@ -288,7 +325,7 @@ StatusCode MCOTDepositCreator::singleCellEff()
   // initialize
   StatusCode sc = StatusCode::SUCCESS;
 
-  MCOTDepositVector::iterator iterDeposit = m_tempDeposits->begin();
+  MCOTDepositVec::iterator iterDeposit = m_tempDeposits->begin();
   while (iterDeposit != m_tempDeposits->end() ) {
     
     // number of tool - maybe there is no outer tracker station 1
@@ -318,7 +355,7 @@ StatusCode MCOTDepositCreator::applySmear()
   // initialize
   StatusCode sc = StatusCode::SUCCESS;
 
-  MCOTDepositVector::iterator iterDeposit = m_tempDeposits->begin();
+  MCOTDepositVec::iterator iterDeposit = m_tempDeposits->begin();
   while (iterDeposit != m_tempDeposits->end()){
     
     // number of tool - there is no outer tracker station 1
@@ -349,7 +386,7 @@ StatusCode MCOTDepositCreator::applyRTrelation()
    // intialize
   StatusCode sc = StatusCode::SUCCESS;
 
-  MCOTDepositVector::iterator iterDeposit = m_tempDeposits->begin();
+  MCOTDepositVec::iterator iterDeposit = m_tempDeposits->begin();
   while (iterDeposit != m_tempDeposits->end()){
     
     // number of tool - there is no outer tracker station 1
@@ -370,7 +407,7 @@ StatusCode MCOTDepositCreator::addCrossTalk()
   // Add cross talk to deposits
   std::list<MCOTDeposit*> crossTalkList;
   
-  MCOTDepositVector::const_iterator iterDeposit = m_tempDeposits->begin();
+  MCOTDepositVec::const_iterator iterDeposit = m_tempDeposits->begin();
   while (iterDeposit != m_tempDeposits->end()){
  
     // channel
@@ -423,6 +460,36 @@ StatusCode MCOTDepositCreator::addNoise()
 {
   m_noiseTool->createDeposits(m_tempDeposits);
 
+  return StatusCode::SUCCESS;
+}
+
+// Add Pulse Reflection
+StatusCode MCOTDepositCreator::addPulseReflect()
+{
+  std::list<MCOTDeposit*> DoublePulseList;
+  MCOTDepositVec::const_iterator iterDeposit = m_tempDeposits->begin();
+  while (iterDeposit != m_tempDeposits->end()){
+  
+    double randomNr = m_genDist->shoot();
+    if(randomNr <  m_PulseProbability){
+
+      // Time - OTChannelID
+      OTChannelID aChan = (*iterDeposit)->channel();
+      double time = (*iterDeposit)->time() + m_PulseTime;     
+
+      // New Deposit
+      MCOTDeposit* deposit = new MCOTDeposit(0, aChan, time, 0, 0);
+      DoublePulseList.push_back(deposit);
+    }
+    ++iterDeposit;
+  }
+  // move hits from double pulse list to deposit vector
+  std::list<MCOTDeposit*>::iterator iterDouble = DoublePulseList.begin();
+  while (iterDouble != DoublePulseList.end()){
+    m_tempDeposits->push_back(*iterDouble);
+    ++iterDouble;
+  } // iterDouble
+  
   return StatusCode::SUCCESS;
 }
 

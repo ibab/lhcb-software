@@ -1,4 +1,4 @@
-// $Id: MCOTTimeCreator.cpp,v 1.5 2004-12-10 10:21:16 cattanem Exp $
+// $Id: MCOTTimeCreator.cpp,v 1.6 2005-11-09 16:52:25 jnardull Exp $
 
 // Gaudi
 #include "GaudiKernel/AlgFactory.h"
@@ -27,10 +27,11 @@ MCOTTimeCreator::MCOTTimeCreator(const std::string& name,
 {
   // constructor 
   // jobOptions - defaults
-  declareProperty("deadTime", m_deadTime = 50.0*ns);
+  declareProperty("DeadTime", m_deadTime = 25.0*ns);
   declareProperty("countsPerBX", m_countsPerBX = 64);
-  declareProperty("numberOfBX", m_numberOfBX = 2);
+  declareProperty("numberOfBX", m_numberOfBX = 3);
   declareProperty("timePerBX", m_timePerBX = 25*ns);
+  declareProperty("singleHitMode", m_singleHitMode = true);
 
   // container for temporary time storage 
   m_tempTimeCont = new MCOTTimeVector();
@@ -82,78 +83,84 @@ StatusCode MCOTTimeCreator::execute()
 StatusCode MCOTTimeCreator::createTimes( MCOTTimes* times )
 {
   // retrieve deposits
-  MCOTDeposits* depositCont = 
-    get<MCOTDeposits>(MCOTDepositLocation::Default);
+  MCOTDepositVector* depositCont = 
+    get<MCOTDepositVector>(MCOTDepositLocation::Default);
 
-  MCOTDeposits::const_iterator iterDep = depositCont->begin();
-  MCOTDeposits::const_iterator jterDep = iterDep;
+  MCOTDepositVector::const_iterator iterDep = depositCont->begin();
+  MCOTDepositVector::const_iterator jterDep = iterDep;
 
-  // Multiple Hit Useful Definitions
-  OTChannelID newChannel;
-  bool multipleHit = false;
-  int newTdc = 999999;
-
-  // apply dead time
+  // apply dead time - Analog deadtime
   while (iterDep != depositCont->end()){
     SmartRefVector<MCOTDeposit> depositVector;
-    
     do {
       depositVector.push_back(*jterDep);
       jterDep++;
     } while ( (jterDep != depositCont->end()) && 
-              ( keepAdding(*iterDep, *jterDep) == true) );
-
+              ( AnalogDeadTime(*iterDep, *jterDep) == true) );
+    
     // Calculate TDC-time
     int tdcTime = this->calculateTDCTime( *iterDep );
-
+    
     // Apply read out window
-    if ( insideReadOutWindow( tdcTime ) ) {
+    if ( insideReadOutWindow( tdcTime ) ) {    
 
-      // Get OTChannelID  
-      OTChannelID channel = (*iterDep)->channel();
-      
-      // Multiple Hit Check, before adding the tdcTime
-      if(newChannel == channel) multipleHit = true;
-      newChannel = channel;
-
-      // Multiple Hit Checks !
-      if(multipleHit == true ){ 
-        if(tdcTime == newTdc){
-          tdcTime ++;   // We add 1 to the value of the TdcTime
+      // Kill deposits in single hit mode (digital deadtime)
+      if ( m_singleHitMode == true ) {
+        while ( jterDep != depositCont->end()  && 
+                DigitalDeadTime(*iterDep, *jterDep) == true ) {
+          depositVector.push_back( *jterDep );
+          jterDep++;
         }
       }
+      
+      // Get OTChannelID  
+      OTChannelID channel = (*iterDep)->channel();
+          
       // Add time to OTChannelID  
       channel.setTdcTime( tdcTime );
-
-      //Copy of the Tdc Time Value
-      newTdc = tdcTime;
-
+      
       // make a new MCOTTime and add it to the vector !!!!
       MCOTTime* newTime = new MCOTTime( channel, depositVector);
       times->insert(newTime);
     }
 
-    multipleHit = false; 
     iterDep = jterDep;
+    
   } // iterDep
 
   return StatusCode::SUCCESS;
 }
 
 
-bool MCOTTimeCreator::keepAdding( const MCOTDeposit* firstDep,
-                                  const MCOTDeposit* secondDep) const 
+bool MCOTTimeCreator::AnalogDeadTime( const MCOTDeposit* firstDep,
+                                      const MCOTDeposit* secondDep) const 
 { 
   // check whether to continue adding deposits
-  if ( firstDep->channel() == secondDep->channel() && 
-       secondDep->time() - firstDep->time() <= m_deadTime ) {
+  return ( firstDep->channel() == secondDep->channel() && 
+           this->calculateTDCTime( secondDep ) - 
+           this->calculateTDCTime( firstDep ) <= fabs( m_deadTime ) );
+}
+
+bool MCOTTimeCreator::DigitalDeadTime( const MCOTDeposit* firstDep,
+                                       const MCOTDeposit* secondDep) const 
+{ 
+  // check whether to continue killing deposits
+  if( firstDep->channel() == secondDep->channel()  && 
+      this->calculateTDCTime( secondDep )<(m_countsPerBX * m_numberOfBX))
+  {
+
+    debug() << " Time 1 " << this->calculateTDCTime( firstDep ) 
+            << " Time 2 " << this->calculateTDCTime( secondDep ) << endmsg;    
+    
     return true;
+  } else{ 
+    return false;
   }
-  return false;
+  
 }
 
 
-int MCOTTimeCreator::calculateTDCTime( MCOTDeposit* firstDeposit )
+int MCOTTimeCreator::calculateTDCTime( const MCOTDeposit* firstDeposit ) const
 {
   // center around zero
   unsigned stationNum = ( (firstDeposit)->channel() ).station();
@@ -165,11 +172,8 @@ int MCOTTimeCreator::calculateTDCTime( MCOTDeposit* firstDeposit )
   return (int) tdcTime;
 }
 
-bool MCOTTimeCreator::insideReadOutWindow( int tdcTime )
+inline bool MCOTTimeCreator::insideReadOutWindow( int tdcTime ) const
 {
-  if ( tdcTime < (m_countsPerBX * m_numberOfBX) && tdcTime >= 0 ) {
-    return true;
-  }
-  return false;
+  return ( tdcTime < (m_countsPerBX * m_numberOfBX) && tdcTime >= 0 ) ;
 }
 

@@ -1,11 +1,11 @@
-// $Id: MCOTDepositCreator.h,v 1.5 2004-12-10 14:06:45 cattanem Exp $
+// $Id: MCOTDepositCreator.h,v 1.6 2005-11-09 16:52:25 jnardull Exp $
 #ifndef OTSIMULATION_MCOTDEPOSITCREATOR_H
 #define OTSIMULATION_MCOTDEPOSITCREATOR_H 1
 
 // Gaudi
 #include "GaudiKernel/RndmGenerators.h"
 #include "GaudiAlg/GaudiAlgorithm.h"
-
+#include "GaudiKernel/SmartIF.h"
 
 // Event
 #include "Event/MCOTDeposit.h"
@@ -37,7 +37,7 @@ class IOTRandomDepositCreator;
  *  @date   21/10/2000
  */
 
-typedef std::vector<MCOTDeposit*> MCOTDepositVector;
+typedef std::vector<MCOTDeposit*> MCOTDepositVec;
 
 class MCOTDepositCreator : public GaudiAlgorithm {
 
@@ -79,6 +79,9 @@ private:
   /// apply random noise
   StatusCode addNoise();
 
+  /// apply pulse reflections
+  StatusCode addPulseReflect();
+
   /// make unique name
   std::string toolName(const std::string& aName, 
                        const int id) const;
@@ -95,7 +98,7 @@ private:
   IOTRandomDepositCreator* m_noiseTool;
  
   /// temporary deposits vector
-  MCOTDepositVector* m_tempDeposits;
+  MCOTDepositVec* m_tempDeposits;
 
   unsigned int m_numStations;              ///< number of stations
   unsigned int m_firstOTStation;           ///< first OT station
@@ -106,6 +109,12 @@ private:
   bool m_addCrossTalk;                     ///< flag to add Xtalk
   double m_crossTalkLevel;                 ///< level of crosstalk
   bool m_addNoise;                         ///< flag to add random noise
+  
+  bool m_addPulse;                         ///< flag to add Pulse Reflection
+  double m_PulseTime;                      ///< PulseTime Reflection Time
+  double m_PulseProbability;               ///< PulseTime Reflection Prob. 
+  SmartIF<IRndmGen> m_genDist;             ///< random number generator
+
   double m_noiseLevel;                     ///< level of random noise
   Rndm::Numbers m_flatDist;                ///< flat dist for crosstalk
 

@@ -1,4 +1,4 @@
-// $Id: OTFillRawBuffer.h,v 1.4 2005-04-15 06:37:33 cattanem Exp $
+// $Id: OTFillRawBuffer.h,v 1.5 2005-11-09 16:52:25 jnardull Exp $
 #ifndef OTSIMULATION_OTFILLRAWBUFFER_H 
 #define OTSIMULATION_OTFILLRAWBUFFER_H 1
 
@@ -14,7 +14,7 @@
 // Event
 #include "Kernel/OTChannelID.h"
 #include "Event/MCOTTime.h"
-#include "Event/DAQTypes.h"
+#include "Event/RawEvent.h"
 
 /** @class OTFillRawBuffer OTFillRawBuffer.h OTSimulation/OTFillRawBuffer.h
  *  
@@ -46,7 +46,7 @@ private:
   typedef std::vector<MCOTTime*> vmcOTime;
   typedef std::map<int,vmcOTime*> mBank;// contains the bank vectors*
   typedef std::map<int,vmcOTime*> mGol;// contains the Gol vectors*
-  typedef std::vector<raw_int> dataBank;
+  typedef std::vector<unsigned int> dataBank;
   typedef std::vector<dataBank*> dataBuffer;
 
   // global vectors containers
@@ -54,7 +54,7 @@ private:
   mGol  m_goldatacontainer;
 
   // Properties
-  std::string m_RawBuffLoc;
+  std::string m_EventLoc;
   std::string m_MCOTTimeLoc;
   std::string m_otTrackerPath;
   int m_numberOfBanks;
