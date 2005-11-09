@@ -24,10 +24,14 @@ ApplicationMgr.TopAlg += { "PreselB2hh" };
 PreselB2hh.PhysDesktop.InputLocations = {"/Event/Phys/Combined"};
 
 //--------------------------------------------------------------
-ApplicationMgr.HistogramPersistency = "HBOOK";
-HistogramPersistencySvc.OutputFile = "DVHistos.hbook";
+//ApplicationMgr.DLLs += { "RootHistCnv" };
+// ApplicationMgr.HistogramPersistency = "HBOOK";
+// HistogramPersistencySvc.OutputFile = "DVHistos.hbook";
+// or if you prefer ROOT:
+ApplicationMgr.HistogramPersistency = "ROOT";
+HistogramPersistencySvc.OutputFile = "DVHistos.root";
 ApplicationMgr.ExtSvc += { "NTupleSvc" };
-NTupleSvc.Output={"FILE1 DATAFILE='DVNtuples.hbook' TYP='HBOOK' OPT='NEW'"};
+NTupleSvc.Output={"FILE1 DATAFILE='DVNtuples.root' TYP='ROOT' OPT='NEW'"};
 
 //--------------------------------------------------------------
 // Set output level thresholds (2=DEBUG, 3=INFO, 4=WARNING, 5=ERROR, 6=FATAL )

@@ -90,6 +90,10 @@ ApplicationMgr.Dlls += { "GaudiSiteSvc" } ; // library containing the StagerSvc
 StagerSvc.BlockSize = 50 ; // n: the number of files in each block
 StagerSvc.InitialStage = 3 ; // m: the number of blocks staged at the beginning of the job
 
-ApplicationMgr.HistogramPersistency = "HBOOK";
-HistogramPersistencySvc.OutputFile = "DVTrigger.hbook";
+//ApplicationMgr.DLLs += { "RootHistCnv" };
+// ApplicationMgr.HistogramPersistency = "HBOOK";
+// HistogramPersistencySvc.OutputFile = "DVHistos.hbook";
+// or if you prefer ROOT:
+ApplicationMgr.HistogramPersistency = "ROOT";
+HistogramPersistencySvc.OutputFile = "DVHistos.root";
 

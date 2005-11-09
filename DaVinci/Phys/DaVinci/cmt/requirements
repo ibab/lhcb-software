@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.276 2005-11-07 10:26:57 pkoppenb Exp $
+# $Id: requirements,v 1.277 2005-11-09 16:48:40 pkoppenb Exp $
 # Created    : 07/02/2002
 # Maintainer : P. Koppenburg
 #
@@ -39,6 +39,7 @@ use FieldMap            v*
 use ParamFiles          v*    -no_auto_imports
 
 # TMP:
+use TrgEvent                    v5r3p2  Event
 
 use LHCb                        v*  
 
