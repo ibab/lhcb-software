@@ -4,9 +4,10 @@ version v3r2
 # =============== package structure ===========================================
 branches          cmt src doc
 
-# =============== explicit dependencies =======================================  
+# =============== explicit dependencies =======================================
 use GaussTools    v*	Sim
-use G4hadlists    v*	Geant4 
+#use G4hadlists    v*	Geant4  
+use G4LHCblists   v*	Geant4
 
 # ============== component library ============================================
 library          GaussPhysics      *.cpp  

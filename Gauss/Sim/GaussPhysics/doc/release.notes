@@ -4,6 +4,13 @@
 ! Purpose          : collection of physics constructors for Gauss
 !-----------------------------------------------------------------------------
 
+!====================== GaussPhysics v3r2 ===============================
+! 2005-11-09 - Gloria CORTI
+ - Introduce factories for additional Physics lists private to LHCb
+   (HadronPhysicsQGSP_BERT_HP)
+   . GaussPhysics_load.cpp
+   . requirements - use of package G4LHCblists (requires Geant4 v71r0p11)
+
 ! 2005-10-02 - Gloria CORTI
  - Introduce factories for additional Physics lists for low energy studies:
    HadronPhysicsLHEP_HP, HadronPhysicsLHEP_BERT_HP, HadronPhysicsQGSP_HP

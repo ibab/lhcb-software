@@ -1,8 +1,11 @@
-// $Id: GaussPhysics_load.cpp,v 1.5 2005-10-25 18:59:47 gcorti Exp $ 
+// $Id: GaussPhysics_load.cpp,v 1.6 2005-11-09 18:10:26 gcorti Exp $ 
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.5  2005/10/25 18:59:47  gcorti
+// new physics lists
+//
 // Revision 1.4  2004/02/18 13:52:54  ibelyaev
 //  new version with usage of 'external' physics lists
 // 
@@ -56,6 +59,9 @@ IMPLEMENT_ExtPhysics( HadronPhysicsQGSP    ) ;
 #include "G4hadlists/HadronPhysicsQGSP_HP.hh"
 IMPLEMENT_ExtPhysics( HadronPhysicsQGSP_HP ) ;
 
+#include "G4LHCblists/HadronPhysicsQGSP_BERT_HP.hh"
+IMPLEMENT_ExtPhysics( HadronPhysicsQGSP_BERT_HP ) ;
+
 void GaussPhysics_load() 
 { 
   /// Physics Lists 
@@ -70,6 +76,7 @@ void GaussPhysics_load()
   DECLARE_GiGaFactory     (    HadronPhysicsLHEP_BERT_HP  ) ;
   DECLARE_GiGaFactory     (    HadronPhysicsQGSP       ) ;
   DECLARE_GiGaFactory     (    HadronPhysicsQGSP_HP    ) ;
+  DECLARE_GiGaFactory     (    HadronPhysicsQGSP_BERT_HP  ) ;
 
 };
 // ============================================================================
