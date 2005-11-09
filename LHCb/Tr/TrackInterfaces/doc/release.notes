@@ -4,6 +4,10 @@
 ! Purpose     : package for tracking tools interfaces
 !-----------------------------------------------------------------------------
 
+! 2005-11-09 - Eduardo Rodrigues
+ - ITrackExtraSelector interface introduced:
+   selects which extrapolator to use (from M. Needham)
+
 ! 2005-10-24 - Eduardo Rodrigues
  - ITrackFitter interface modified to provide both upstream and
    downstream fitting
