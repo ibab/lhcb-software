@@ -1,7 +1,8 @@
-! $Id: release.notes,v 1.13 2005-11-08 00:08:42 robbep Exp $
+! $Id: release.notes,v 1.14 2005-11-09 16:22:47 gcorti Exp $
 ! Package     : Gen/LbPythia
 ! Responsible : 
 
+! ========================= LbPythia v2r1 ============================
 ! 2005-11-07 - Patrick Robbe
  - PythiaProduction: set particle properties of Pythia from 
    ParticlePropertySvc.
