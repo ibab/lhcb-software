@@ -1,4 +1,4 @@
-// $Id: MuonChamberGrid.cpp,v 1.2 2005-11-04 16:05:29 asarti Exp $
+// $Id: MuonChamberGrid.cpp,v 1.3 2005-11-09 17:27:55 asarti Exp $
 // Include files 
 
 // local
@@ -46,7 +46,7 @@ StatusCode MuonChamberGrid::initialize(){
   m_number_of_grid = Ngrid;
   
   //  std::cout<< "Gn: "<< m_number_of_grid<<" "
-  //	   <<(this->name()).data()<<std::endl;
+  //     <<(this->name()).data()<<std::endl;
 
   m_x_pad_rdout1     = param< std::vector<double> >("xrd1");
   m_y_pad_rdout1     = param< std::vector<double> >("yrd1");

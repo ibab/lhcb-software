@@ -1,4 +1,4 @@
-// $Id: MuonChamberGrid.h,v 1.2 2005-11-04 16:05:29 asarti Exp $
+// $Id: MuonChamberGrid.h,v 1.3 2005-11-09 17:27:55 asarti Exp $
 #ifndef MUONDET_MUONCHAMBERGRID_H 
 #define MUONDET_MUONCHAMBERGRID_H 1
 
@@ -26,9 +26,10 @@ public:
 
   StatusCode initialize();
   
+  //Returns distances relative to chamber dimension
   std::vector< std::pair<MuonFrontEndID, std::vector<float> > > listOfPhysChannels(double x_enter,double y_enter,
 										   double x_exit,double y_exit);
-  
+
   double retLenght(int nLx,  std::vector<double> my_list);
 
   // Class ID of this class

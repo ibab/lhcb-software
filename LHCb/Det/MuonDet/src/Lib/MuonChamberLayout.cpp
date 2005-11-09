@@ -1,9 +1,8 @@
-// $Id: MuonChamberLayout.cpp,v 1.3 2005-10-31 15:27:28 asarti Exp $
+// $Id: MuonChamberLayout.cpp,v 1.4 2005-11-09 17:27:55 asarti Exp $
 // Include files 
 
 //Muon
 #include "MuonDet/MuonChamberLayout.h"
-#include "MuonDet/MuonChamberGrid.h"
 #include "MuonDet/DeMuonDetector.h"
 
 //Detector description
@@ -302,7 +301,7 @@ void MuonChamberLayout::chamberMostLikely(float x,float y, int station, int& chm
   
   int myReg(-1);
   int fx(-1),fy(-1);
-
+  //  std::cout << "Chamber dimensions "<<m_xS.at(station)<<" "<< m_yS.at(station)<< std::endl;
   if(m_xS.at(station) && m_yS.at(station)) {    
     gridPosition(x,y,station,fx,fy,myReg);
   } else {

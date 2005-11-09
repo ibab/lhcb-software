@@ -1,4 +1,4 @@
-// $Id: DeMuonDetector.cpp,v 1.4 2005-11-04 16:05:29 asarti Exp $
+// $Id: DeMuonDetector.cpp,v 1.5 2005-11-09 17:27:55 asarti Exp $
 
 // Include files
 #include "MuonDet/DeMuonDetector.h"
@@ -85,6 +85,7 @@ StatusCode DeMuonDetector::Hit2GapNumber(HepPoint3D myPoint,
   bool isIn = false; bool debug = false;
 
   MsgStream msg( msgSvc(), name() );
+  if(debug)   std::cout<<"My station: "<<station<<std::endl;
   sc = Hit2ChamberNumber(myPoint,station,chamberNumber,regNum);
   DeMuonChamber * theChmb = getChmbPtr(station,regNum,chamberNumber);
 
@@ -128,10 +129,13 @@ StatusCode DeMuonDetector::Hit2ChamberNumber(HepPoint3D myPoint,
   bool isIn = false; bool debug = false;
   
   MsgStream msg( msgSvc(), name() );
+
   double x = myPoint.x();  double y = myPoint.y(); double z = myPoint.z();
+
+  if(debug) std::cout<< "Hit 2 chamber problems " <<x<<" "<<y<<" "<<station<<" "<<std::endl;
   //Returning the most likely chamber
   m_chamberLayout.chamberMostLikely(x,y,station,chamberNumber,regNum);
-  
+
   //Providing all 3 numbers identifies a chamber
   IGeometryInfo* geoChm = (getChmbPtr(station,regNum,chamberNumber))->geometry();  
 
@@ -162,6 +166,8 @@ StatusCode DeMuonDetector::Hit2ChamberNumber(HepPoint3D myPoint,
 
 
     myChams = m_chamberLayout.neighborChambers(chamberNumber,station,regNum,x_sgn,y_sgn);
+
+    if(debug) std::cout<< "Neighborh chamber problems" <<std::endl;
 
     std::vector<DeMuonChamber*>::iterator aChamber;
     //Loops on found chambers
@@ -243,10 +249,10 @@ StatusCode DeMuonDetector::Hit2ChamberNumber(HepPoint3D myPoint,
 }
 
 
-StatusCode DeMuonDetector::Pos2ChamberNumber(const double x,
-					     const double y,
-					     int station,
-					     int & chamberNumber, int& regNum){
+StatusCode DeMuonDetector::Pos2StChamberNumber(const double x,
+					       const double y,
+					       int station,
+					       int & chamberNumber, int& regNum){
   StatusCode sc = StatusCode::FAILURE;
   //Hit Z is not know (giving only the station).
   //Take the chamber Z to update the hit later on.
@@ -257,10 +263,10 @@ StatusCode DeMuonDetector::Pos2ChamberNumber(const double x,
   return sc;
 }
 
-StatusCode DeMuonDetector::Pos2GapNumber(const double x,
-					 const double y,
-					 int station, int & gapNumber,
-					 int & chamberNumber, int& regNum){
+StatusCode DeMuonDetector::Pos2StGapNumber(const double x,
+					   const double y,
+					   int station, int & gapNumber,
+					   int & chamberNumber, int& regNum){
   StatusCode sc = StatusCode::FAILURE;
   //Hit Z is not know (giving only the station).
   //Take the chamber Z to update the hit later on.
@@ -272,7 +278,7 @@ StatusCode DeMuonDetector::Pos2GapNumber(const double x,
 }
 
 
-StatusCode DeMuonDetector::Pos2ChamberPointer(const double x,
+StatusCode DeMuonDetector::Pos2StChamberPointer(const double x,
 					      const double y,
 					      int station,
 					      DeMuonChamber* & chamberPointer){
@@ -296,7 +302,7 @@ StatusCode DeMuonDetector::Pos2ChamberPointer(const double x,
 					      const double z,
 					      DeMuonChamber* & chamberPointer){
   //Dummy conversion z <-> station  
-  StatusCode sc = Pos2ChamberPointer(x,y,getStation(z),chamberPointer);
+  StatusCode sc = Pos2StChamberPointer(x,y,getStation(z),chamberPointer);
   return sc;
 }
 
@@ -317,9 +323,9 @@ StatusCode DeMuonDetector::Pos2ChamberNumber(const double x,
 
 
 StatusCode DeMuonDetector::Pos2GapNumber(const double x,
-					     const double y,
-					     const double z, int & gapNumber,
-					     int & chamberNumber, int& regNum){
+					 const double y,
+					 const double z, int & gapNumber,
+					 int & chamberNumber, int& regNum){
   StatusCode sc = StatusCode::FAILURE;
   //Z is know/provided.
   HepPoint3D hitPoint(x,y,z);   int sta = getStation(z);
@@ -386,52 +392,6 @@ IDetectorElement* DeMuonDetector::ReturnADetElement(int lsta, int lreg, int lchm
   
 }
 
-
-StatusCode DeMuonDetector::getPadSize(const int station, const int region,
-				      double &sizeX, double &sizeY){
-
-  StatusCode sc = StatusCode::SUCCESS;
-
-  std::string myMothPt = "/dd/Structure/Grid";
-  std::string myGridPt = "/dd/Structure/Grid";
-  
-  DeMuonChamber* myPtr;
-  //Gets a chamber in the requested region/station
-  for(int ich = 0; ich<MaxRegions[region]; ich++) {
-    //Gets the chamber
-    myPtr = getChmbPtr(station,region,ich);
-    if(myPtr) break;
-  }
-
-  //Getting LHCb
-  IDetectorElement* lhcb = this->parentIDetectorElement();
-  
-  //Getting the structure
-  IDetectorElement* struc = lhcb->parentIDetectorElement();
-
-  //  std::cout<<"Seek! "<<std::endl;
-  /*
-  //Diving to the grids
-  IDetectorElement::IDEContainer::iterator itGmoth=struc->childBegin();
-  for(itGmoth=struc->childBegin(); itGmoth<struc->childEnd(); itGmoth++){
-    //Gets the mother layer (Grid)
-    if(!strcmp(((*itGmoth)->name()).data(),myMothPt.data())) {
-      //Now the various grids
-      IDetectorElement::IDEContainer::iterator itGrds=(*itGmoth)->childBegin();
-      for(itGrds=(*itGmoth)->childBegin(); itGrds<(*itGmoth)->childEnd(); itGrds++){
-	myGridPt = myMothPt + "/" + myPtr->getGridName();
-	if(!strcmp(((*itGrds)->name()).data(),myGridPt.data())) {
-	  
-	  std::cout<<"Found my grid! "<<myPtr->getGridName()<<std::endl;
-	  
-	}
-      }
-    }
-  }
-  */
-  return sc;
-}
-
 DeMuonChamber* DeMuonDetector::getChmbPtr(const int station, const int region,
 			    const int chmb) {
   DeMuonChamber* myPtr;
@@ -473,48 +433,85 @@ void DeMuonDetector::fillChmbPtr() {
   return;
 }
 
-std::vector< std::pair<MuonFrontEndID, std::vector<float> > > DeMuonDetector::listOfPhysChannels(HepPoint3D my_entry, HepPoint3D my_exit) {
-  
+std::vector< std::pair<MuonFrontEndID, std::vector<float> > > DeMuonDetector::listOfPhysChannels(HepPoint3D my_entry, HepPoint3D my_exit, int region, int chamber) {
+
+  //Pair vector;  
+  std::vector< std::pair<MuonFrontEndID, std::vector<float> > > tmpPair;
+
   int regNum(0),chamberNumber(0);
   int station = getStation(my_entry.z());
+  int regNum1(0),chamberNumber1(0);
+  int station1 = getStation(my_exit.z());
 
   MsgStream msg( msgSvc(), name() );
 
-  //Hit entry
-  Hit2ChamberNumber(my_entry,station,chamberNumber,regNum);
+  if((region == -1) || (chamber == -1)) {
+    //Hit entry
+    Hit2ChamberNumber(my_entry,station,chamberNumber,regNum);
+    
+    //Hit exit
+    Hit2ChamberNumber(my_exit,station1,chamberNumber1,regNum1);
 
-  //Hit exit
-  int regNum1(0),chamberNumber1(0);
-  int station1 = getStation(my_exit.z());
-  Hit2ChamberNumber(my_exit,station1,chamberNumber1,regNum1);
-  
-  if(station != station1 || chamberNumber != chamberNumber1 || regNum != regNum1) { msg << MSG::ERROR <<"Could not return LoC for entry & exit in !=  chambers "<<endreq; }
-  
+    if(chamberNumber != chamberNumber1 || regNum != regNum1) { 
+      msg << MSG::ERROR <<"Hit entry and exit are in different chambers! Returning a void list."<<endreq; 
+      return tmpPair;
+    }
+  } else {
+    //If given.. assign region and chamber number
+    regNum = region; chamberNumber = chamber;
+  }
+
   //Getting the chamber pointer.
   DeMuonChamber*  myChPtr =  getChmbPtr(station,regNum,chamberNumber) ;
 
   //Chamber Geometry info  
   IGeometryInfo*  geoCh=myChPtr->geometry();
-  
+
+  //Retrieve the chamber box dimensions  
   const SolidBox *box = dynamic_cast<const SolidBox *>(geoCh->lvolume()->solid());
   float dx = box->xHalfLength();  float dy = box->yHalfLength();
-  float mygX = geoCh->toGlobal(HepPoint3D(0,0,0)).x();
-  float mygY = geoCh->toGlobal(HepPoint3D(0,0,0)).y();
 
-  //Getting the grid pointer
-  std::string gName = "/dd/Structure/Grid/"+myChPtr->getGridName();
-  SmartDataPtr<MuonChamberGrid> theGrid (m_detSvc,gName.data());
+  //Refer the distances to Local system
+  HepPoint3D new_entry = geoCh->toLocal(my_entry);
+  HepPoint3D new_exit  = geoCh->toLocal(my_exit);
 
   //Define relative dimensions
-  float mod_xen = (my_entry.x()-(mygX-dx))/(2*dx);
-  float mod_yen = (my_entry.y()-(mygY-dy))/(2*dy);
-  float mod_xex = (my_exit.x()-(mygX-dx))/(2*dx);
-  float mod_yex = (my_exit.y()-(mygY-dy))/(2*dy);
+  float mod_xen, mod_yen, mod_xex, mod_yex;
+  if( dx && dy ) {
+    mod_xen = (new_entry.x()+dx)/(2*dx);
+    mod_yen = (new_entry.y()+dy)/(2*dy);
+    mod_xex = (new_exit.x()+dx)/(2*dx);
+    mod_yex = (new_exit.y()+dy)/(2*dy);
+  } else {
+    msg << MSG::ERROR <<"Null chamber dimensions. Returning a void list."<<endreq; 
+    return tmpPair;
+  }
 
-  //Gets list of channels
+  //Getting the grid pointer
+  Condition* aGrid = myChPtr->condition((myChPtr->getGridName()).data());
+  MuonChamberGrid* theGrid = dynamic_cast<MuonChamberGrid*>(aGrid);
+
+  //Convert relative distances into absolute ones
   std::vector< std::pair<MuonFrontEndID, std::vector<float> > > myPair;
-  myPair = theGrid->listOfPhysChannels(mod_xen,mod_yen,mod_xex,mod_yex);
-
+  std::vector< std::pair< MuonFrontEndID,std::vector<float> > >::iterator tmpPair_it;
+  std::vector<float> myVec; MuonFrontEndID myFE;
+  if(theGrid) {
+    //Gets list of channels
+    tmpPair = theGrid->listOfPhysChannels(mod_xen,mod_yen,mod_xex,mod_yex);
+    
+    tmpPair_it = tmpPair.begin();
+    for(tmpPair_it = tmpPair.begin();tmpPair_it<tmpPair.end(); tmpPair_it++){
+      myFE  = tmpPair_it->first;
+      myVec = tmpPair_it->second;
+      for(int iDm = 0; iDm<4; iDm++){  
+	myVec.at(iDm) = iDm%2 ? myVec.at(iDm)*2*dy : myVec.at(iDm)*2*dx;
+      }
+      myPair.push_back(std::pair< MuonFrontEndID,std::vector<float> >(myFE,myVec));
+    }
+  } else {
+    msg << MSG::ERROR <<"No grid found. Returning a void list."<<endreq; 
+    return tmpPair;
+  }
   return myPair;
 }
-  
+

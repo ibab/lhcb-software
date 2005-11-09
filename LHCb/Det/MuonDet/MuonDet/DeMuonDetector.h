@@ -1,4 +1,4 @@
-// $Id: DeMuonDetector.h,v 1.4 2005-11-04 16:05:29 asarti Exp $
+// $Id: DeMuonDetector.h,v 1.5 2005-11-09 17:27:55 asarti Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
@@ -66,22 +66,22 @@ public:
 			   const double z, int & gapNumber,
 			   int & chamberNumber, int& regNum);
 
-  StatusCode Pos2ChamberNumber(const double x,
-                               const double y,
-                               int station ,
-                               int & chamberNumber, int& regNum);
+  StatusCode Pos2StChamberNumber(const double x,
+				 const double y,
+				 int station ,
+				 int & chamberNumber, int& regNum);
 
-  StatusCode Pos2GapNumber(const double x,
-			   const double y,
-			   int station , int & gapNumber,
-			   int & chamberNumber, int& regNum);
+  StatusCode Pos2StGapNumber(const double x,
+			     const double y,
+			     int station , int & gapNumber,
+			     int & chamberNumber, int& regNum);
   
   StatusCode Pos2ChamberTile(const double x,
                              const double y,
                              const double z,
                              MuonTileID& tile);
 
-  StatusCode Pos2ChamberPointer(const double x,
+  StatusCode Pos2StChamberPointer(const double x,
                                 const double y,
                                 int station ,
                                 DeMuonChamber* & chamberPointer);
@@ -92,17 +92,13 @@ public:
                                 DeMuonChamber* & chamberPointer);
 
   //Returns the list of physical channels for a given chamber  
-  std::vector< std::pair<MuonFrontEndID, std::vector<float> > > listOfPhysChannels(HepPoint3D my_entry, HepPoint3D my_exit);
-  
+  std::vector< std::pair<MuonFrontEndID, std::vector<float> > > listOfPhysChannels(HepPoint3D my_entry, HepPoint3D my_exit, int region, int chamber);
+
   //Returns the station index starting from the z position
   int getStation(const double z);
   
   //Returns a detector element identified by chmb, reg, num
   IDetectorElement* ReturnADetElement(int lsta, int lreg, int lchm);
-  
-  // Return pad size in a region
-  StatusCode getPadSize(const int station, const int region,
-			double &sizeX, double &sizeY);
   
   // Return the chamber pointer from m_ChmbPtr
   DeMuonChamber* getChmbPtr(const int station, const int region,
@@ -172,7 +168,7 @@ private:
 inline int DeMuonDetector::getStation(const double z)
 {
   //station index starting from z position (in mm)
-  int idX = 0; double s_size(200.);
+  int idX = 0; double s_size(400.);
   double s_off[5] = {12100,15200,16400,17600,18800};
   for(idX = 0; idX<5; idX++) {
     if(fabs(z-s_off[idX])<s_size) break;

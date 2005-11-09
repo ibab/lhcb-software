@@ -1,4 +1,4 @@
-// $Id: DeMuonChamber.cpp,v 1.6 2005-10-31 15:27:28 asarti Exp $
+// $Id: DeMuonChamber.cpp,v 1.7 2005-11-09 17:27:55 asarti Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
@@ -9,6 +9,10 @@
 
 // Include files
 #include "MuonDet/DeMuonChamber.h"
+
+//Detector descriptions
+#include "DetDesc/Condition.h"
+#include "DetDesc/IUpdateManagerSvc.h"
 
 /** @file DeMuonChamber.cpp
  * 
@@ -66,11 +70,11 @@ StatusCode DeMuonChamber::initialize()
   this->setRegionNumber(reg-1);
   this->setChamberNumber(chm-1);
 
-  //  msg << MSG::INFO << "Chamber name? " << sta <<" "<< reg<<" "<< chm<<endreq;
   // get resolution parameters
   m_chmbGrid     = param<std::string>("Grid");
 
   // for now with MWPCs and RPCs this is a good formula
   setGridName(m_chmbGrid);
+
   return sc;
 }
