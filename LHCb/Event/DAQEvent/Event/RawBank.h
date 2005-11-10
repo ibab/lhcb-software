@@ -51,7 +51,10 @@ namespace LHCb
                    HLT,
                    VeloFull,
                    TTFull,
-                   ITFull
+                   ITFull,
+                   EcalPacked,
+                   HcalPacked,
+                   PrsPacked
     };
 
     /// Magic pattern for Raw bank headers
