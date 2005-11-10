@@ -1,4 +1,4 @@
-// $Id: CaloZSupAlg.cpp,v 1.11 2005-01-18 12:41:58 ocallot Exp $
+// $Id: CaloZSupAlg.cpp,v 1.12 2005-11-10 16:44:02 ocallot Exp $
 
 // CLHEP
 #include "CLHEP/Units/SystemOfUnits.h"
@@ -6,14 +6,10 @@
 #include "GaudiKernel/AlgFactory.h"
 #include "GaudiKernel/RndmGenerators.h"
 
-// Event 
-#include "Event/MCTruth.h"
-
 // CaloEvent
-#include "Event/MCCaloDigit.h"
 #include "Event/CaloDigit.h"
-#include "Event/L0CaloAdc.h"
-#include "Event/L0PrsSpdHit.h"
+
+#include "Event/RawEvent.h"
 
 // local
 #include "CaloZSupAlg.h"
@@ -38,68 +34,30 @@ const       IAlgFactory& CaloZSupAlgFactory = Factory ;
 //=============================================================================
 CaloZSupAlg::CaloZSupAlg( const std::string& name, ISvcLocator* pSvcLocator)
   : GaudiAlgorithm       ( name , pSvcLocator            )
-  , m_zsupMethod        ( "1D"  )
-  , m_zsup2D            ( false )
-  , m_zsupThreshold     ( 6     )
-  , m_triggerEtScale    ( 20 * MeV )
-  , m_triggerThreshold  ( 0. )
 {
   //** Declare the algorithm's properties which can be set at run time and
   //** their default values
   declareProperty("DetectorName"    , m_detectorName    ) ;
-  declareProperty("InputData"       , m_inputData       ) ;
   declareProperty("OutputData"      , m_outputData      ) ;
-  declareProperty("InputMCData"     , m_inputMCData     ) ;
   declareProperty("ZsupMethod"      , m_zsupMethod      ) ;
   declareProperty("ZsupThreshold"   , m_zsupThreshold   ) ;
-  declareProperty("TriggerThreshold", m_triggerThreshold) ;  
-  declareProperty("TriggerEtScale"  , m_triggerEtScale  ) ;
+  declareProperty("BankType"        , m_bankType        ) ;
 
   //=== Default values according to the name of the algorithm !
-  if ( "SpdZSup" == name ) {
-    m_detectorName   = "/dd/Structure/LHCb/Spd";
-    m_inputData      =  CaloDigitLocation::FullSpd;
-    m_outputData     = CaloDigitLocation::Spd;
-    m_inputMCData    = MCCaloDigitLocation::Spd;
-    m_zsupThreshold  = 1;
-    m_triggerName    = L0PrsSpdHitLocation::Spd;
-    m_triggerThreshold = 0.1 * MeV;
-    m_triggerIsBit     = true;
-  } else if ( "PrsZSup" == name ) {
-    m_detectorName     = "/dd/Structure/LHCb/Prs";
-    m_inputData        = CaloDigitLocation::FullPrs;
-    m_outputData       = CaloDigitLocation::Prs;
-    m_inputMCData      = MCCaloDigitLocation::Prs;
-    m_zsupThreshold    = 15;
-    m_triggerName      = L0PrsSpdHitLocation::Prs;
-    m_triggerThreshold = 10. * MeV;
-    m_triggerIsBit     = true;
-  } else if ( "EcalZSup" == name ) {
+  if ( "EcalZSup" == name ) {
     m_detectorName     = "/dd/Structure/LHCb/Ecal";
-    m_inputData        = CaloDigitLocation::FullEcal;
-    m_outputData       = CaloDigitLocation::Ecal;
-    m_inputMCData      = MCCaloDigitLocation::Ecal;
+    m_outputData       = CaloAdcLocation::Ecal;
     m_zsupMethod       = "2D";
     m_zsupThreshold    = 20;
-    m_triggerName      = L0CaloAdcLocation::Ecal;
-    m_triggerIsBit     = false;
-
-    m_corrArea.push_back( 1.00 );
-    m_corrArea.push_back( 1.04 );
-    m_corrArea.push_back( 1.08 );
-    
+    m_bankType         = RawBuffer::EcalE;
+    m_inputToolName    = "CaloEnergyFromRaw/EcalEnergyFromRaw";
   } else if ( "HcalZSup" == name ) {
     m_detectorName     = "/dd/Structure/LHCb/Hcal";
-    m_inputData        = CaloDigitLocation::FullHcal;
-    m_outputData       = CaloDigitLocation::Hcal;
-    m_inputMCData      = MCCaloDigitLocation::Hcal;
+    m_outputData       = CaloAdcLocation::Hcal;
+    m_zsupMethod       = "1D";
     m_zsupThreshold    = 4;
-    m_triggerName      = L0CaloAdcLocation::Hcal;
-    m_triggerIsBit     = false;
-
-    m_corrArea.push_back( 1.00 );
-    m_corrArea.push_back( 1.05 );
-    
+    m_bankType         = RawBuffer::HcalE;
+    m_inputToolName    = "CaloEnergyFromRaw/HcalEnergyFromRaw";
   }
 };
 
@@ -141,15 +99,9 @@ StatusCode CaloZSupAlg::initialize() {
 
   info() << "Calorimeter has " <<  m_numberOfCells
          << " cells. Zsup method "  << m_zsupMethod 
-         << " Threshold " << m_zsupThreshold
-         << " threshold " << m_triggerThreshold;
-  if ( 0 < m_corrArea.size() ) {
-    info() << " Correction factor: ";
-    for ( unsigned int kk = 0 ; m_corrArea.size() > kk ; kk++ ) {
-      info() << m_corrArea[kk] << " ";
-    }
-  }
-  info() << endreq;
+         << " Threshold " << m_zsupThreshold << endreq;
+
+  m_adcTool = tool<ICaloEnergyFromRaw>( m_inputToolName );
 
   return StatusCode::SUCCESS;
 };
@@ -164,42 +116,19 @@ StatusCode CaloZSupAlg::execute() {
   
   //*** some trivial printout
 
-  if ( isDebug ) debug() << "Perform digitization from "
-                         << m_inputData << " to " << m_outputData << endreq;
+  if ( isDebug ) debug() << "Perform zero suppression to "
+                         << m_outputData << endreq;
 
   //*** get the input data
 
-  CaloDigits* allDigits = get<CaloDigits>( m_inputData );
-  
+  std::vector<CaloAdc>& adcs = m_adcTool->adcs( );
+
   //***  prepare the output container
 
-  CaloDigits* digits = new CaloDigits();
-  StatusCode sc = put( digits, m_outputData );
-  if( sc.isFailure() ) { return sc ; } 
-  L0CaloAdcs* trigBank = NULL;
-  L0PrsSpdHits* bitsBank = NULL;
-  if ( "" != m_triggerName ) {
-    if ( m_triggerIsBit ) {
-      bitsBank = new L0PrsSpdHits();
-      sc = put( bitsBank, m_triggerName );
-      if( sc.isFailure() ) { return sc ; } 
-    } else {
-      trigBank = new L0CaloAdcs();
-      sc = put( trigBank, m_triggerName );
-      if( sc.isFailure() ) { return sc ; } 
-    }
-  }
-
-  /// set MCtruth for the container!
-
-  MCCaloDigits* mcd = get<MCCaloDigits>( m_inputMCData );
-  sc = setMCTruth( digits , mcd );
-  if( sc.isFailure() )  {
-    error() << "Could not set MCTruth information!" << endreq ;
-    return sc ;
-  }
-
-  if ( isDebug ) debug() << "Processing " << allDigits->size() 
+  CaloAdcs* newAdcs = new CaloAdcs();
+  put( newAdcs, m_outputData );
+  
+  if ( isDebug ) debug() << "Processing " << adcs.size() 
                          << " Digits." << endreq;
 
   enum {
@@ -207,59 +136,34 @@ StatusCode CaloZSupAlg::execute() {
     NeighborFlag  ,
     SeedFlag       };
 
-  CaloDigits::const_iterator aDig;
+  std::vector<CaloAdc>::const_iterator anAdc;
   std::vector<int> caloFlags    ( m_numberOfCells, DefaultFlag ) ;
 
   int index;
   
   // == Apply the threshold. If 2DZsup, tag also the neighbours
 
-  for( aDig = allDigits->begin(); allDigits->end() != aDig ; ++aDig ) {
-    if( 0 != *aDig ) {
-      CaloCellID id = (*aDig)->cellID();
-      index         = m_calo->cellIndex( id );
-      double gain   = m_calo->cellGain( id ) ;
-      double energy = (*aDig)->e();
-      int    digAdc = int ( floor( energy/gain + .9) );
-      int trigVal   = 0;
-      if ( m_triggerIsBit ) {
-        if ( m_triggerThreshold < energy ) {
-          L0PrsSpdHit* myHit = new L0PrsSpdHit( id );
-          bitsBank->add( myHit );
-        }
-      } else {
-        energy = energy * m_corrArea[ id.area() ] * m_calo->cellSine( id );
-        trigVal = (int)floor( energy / m_triggerEtScale + .5 );
-        if ( 255 < trigVal ) trigVal = 255;
-        if ( 0   > trigVal ) trigVal = 0;
-        if ( 0 < trigVal ) {
-          L0CaloAdc* trigAdc = new L0CaloAdc( id, trigVal );
-          trigBank->insert( trigAdc );
-        }
-      }
-      
+  for( anAdc = adcs.begin(); adcs.end() != anAdc ; ++anAdc ) {
+    CaloCellID id = (*anAdc).cellID();
+    index         = m_calo->cellIndex( id );
+    int    digAdc = (*anAdc).adc();
+    if( m_zsupThreshold <= digAdc ) {
       if( isDebug ) {
-        if( m_zsupThreshold <= digAdc || 0 !=  trigVal) {
-          debug() << id 
-                  << format( " Energy %10.2f MeV gain %6.2f adc %4d Trig %3d",
-                             (*aDig)->e()/MeV, gain, digAdc, trigVal );
-          if (  m_zsupThreshold <= digAdc ) debug() << " seed";
-          debug() << endreq;
-        }
+        debug() << id 
+                << format( " Energy adc %4d", digAdc );
+        if (  m_zsupThreshold <= digAdc ) debug() << " seed";
+        debug() << endreq;
       }
       
-      if( m_zsupThreshold <= digAdc ) {
-        caloFlags[index] = SeedFlag ;
-        if( m_zsup2D ) {
-          CaloNeighbors::const_iterator neighbor =
-            m_calo->zsupNeighborCells( id ).begin() ;
-          while ( neighbor != m_calo->zsupNeighborCells( id ).end() ) {
-            int neigh = m_calo->cellIndex(*neighbor);
-            if( SeedFlag != caloFlags[neigh] ) {
-              caloFlags[neigh] = NeighborFlag ;
-            }
-            neighbor++;
+      caloFlags[index] = SeedFlag ;
+      if( m_zsup2D ) {
+        CaloNeighbors::const_iterator neighbor =  m_calo->zsupNeighborCells( id ).begin() ;
+        while ( neighbor != m_calo->zsupNeighborCells( id ).end() ) {
+          int neigh = m_calo->cellIndex(*neighbor);
+          if( SeedFlag != caloFlags[neigh] ) {
+            caloFlags[neigh] = NeighborFlag ;
           }
+          neighbor++;
         }
       }
     }
@@ -267,25 +171,24 @@ StatusCode CaloZSupAlg::execute() {
 
   //** write tagged data as CaloDigit
   
-  for( aDig = allDigits->begin(); allDigits->end() != aDig ; ++aDig ) {
-    CaloCellID id = (*aDig)->cellID();
+  for( anAdc = adcs.begin(); adcs.end() != anAdc ; ++anAdc ) {
+    CaloCellID id = (*anAdc).cellID();
     index         = m_calo->cellIndex( id );
     if( DefaultFlag == caloFlags[index] ) { continue; }
 
-    CaloDigit* digit = new CaloDigit( id, (*aDig)->e() );
-    digits->add( digit ) ;
+    CaloAdc* adc = new CaloAdc( id, (*anAdc).adc() );
+    newAdcs->insert( adc ) ;
     
     if( isVerbose ) {
       if ( NeighborFlag == caloFlags[index] ) {
-        verbose() << id << " added as Neighbor.";
+        verbose() << id << " added as Neighbor." << endreq;
       } else {
-        verbose() << id << " added as Seed.    ";
+        verbose() << id << " added as Seed.    " << endreq;
       }
-      verbose() << format( " Energy %9.2f MeV", (*aDig)->e()/MeV ) << endreq;
     }    
   }
 
-  debug() << format( "Have stored %5d digits.", digits->size() ) 
+  debug() << format( "Have stored %5d CaloAdcs.", newAdcs->size() ) 
           << endreq;
 
   return StatusCode::SUCCESS;

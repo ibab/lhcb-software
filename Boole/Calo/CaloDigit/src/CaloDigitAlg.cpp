@@ -1,4 +1,4 @@
-// $Id: CaloDigitAlg.cpp,v 1.8 2005-01-14 15:45:51 cattanem Exp $
+// $Id: CaloDigitAlg.cpp,v 1.9 2005-11-10 16:44:02 ocallot Exp $
 
 // CLHEP
 #include "CLHEP/Units/SystemOfUnits.h"
@@ -11,7 +11,9 @@
 
 // CaloEvent
 #include "Event/MCCaloDigit.h"
-#include "Event/CaloDigit.h"
+#include "Event/CaloAdc.h"
+#include "Event/L0CaloAdc.h"
+#include "Event/L0PrsSpdHit.h"
 
 // local
 #include "CaloDigitAlg.h"
@@ -37,15 +39,18 @@ const       IAlgFactory& CaloDigitAlgFactory = Factory ;
 CaloDigitAlg::CaloDigitAlg( const std::string& name,
                             ISvcLocator* pSvcLocator)
   : GaudiAlgorithm ( name , pSvcLocator            )
-    , m_inputPrevData     ( ""    )
-    , m_rndmSvc           (  0    )
-    , m_coherentNoise     ( 0.3   )
-    , m_incoherentNoise   ( 1.2   )
-    , m_gainError         ( 0.01  )
-    , m_fracPrev          ( 0.20  )
-    , m_pedShift          ( 0.00  )
-    , m_pePerMeV          ( 0.    )
-    , m_deadCellFraction  ( 0.00  )
+  , m_inputPrevData     ( ""    )
+  , m_rndmSvc           (  0    )
+  , m_coherentNoise     ( 0.3   )
+  , m_incoherentNoise   ( 1.2   )
+  , m_gainError         ( 0.01  )
+  , m_fracPrev          ( 0.20  )
+  , m_pedShift          ( 0.00  )
+  , m_pePerMeV          ( 0.    )
+  , m_deadCellFraction  ( 0.00  )
+  , m_triggerEtScale    ( 20 * MeV )
+  , m_triggerThreshold  ( 0. )
+  , m_zSupThreshold     ( -100000 )
 {
   //** Declare the algorithm's properties which can be set at run time and
   //** their default values
@@ -60,34 +65,58 @@ CaloDigitAlg::CaloDigitAlg( const std::string& name,
   declareProperty("PedestalShift"      , m_pedShift         ) ;
   declareProperty("PhotoElectronPerMeV", m_pePerMeV         ) ;
   declareProperty("DeadCellFraction"   , m_deadCellFraction ) ;
+  declareProperty("TriggerThreshold"   , m_triggerThreshold ) ;  
+  declareProperty("TriggerEtScale"     , m_triggerEtScale   ) ;
+  declareProperty("ZSupThreshold"      , m_zSupThreshold    ) ;
+  
   
   if ( "SpdDigit" == name ) {
-    m_detectorName    = "/dd/Structure/LHCb/Spd";
-    m_inputData       = MCCaloDigitLocation::Spd;
-    m_outputData      = CaloDigitLocation::FullSpd;
-    m_inputPrevData   = "Prev/"+MCCaloDigitLocation::Spd;
-    m_pePerMeV        = 10.;
-    m_coherentNoise   = 0.0;
-    m_incoherentNoise = 0.0;
-    m_gainError       = 0.0;
+    m_detectorName     = "/dd/Structure/LHCb/Spd";
+    m_inputData        = MCCaloDigitLocation::Spd;
+    m_outputData       = CaloAdcLocation::Spd;
+    m_inputPrevData    = "Prev/"+MCCaloDigitLocation::Spd;
+    m_pePerMeV         = 10.;
+    m_coherentNoise    = 0.0;
+    m_incoherentNoise  = 0.0;
+    m_gainError        = 0.0;
+    m_triggerName      = L0PrsSpdHitLocation::Spd;
+    m_triggerThreshold = 0.1 * MeV;
+    m_triggerIsBit     = true;
+    m_zSupThreshold    = 10;  //== No ADC for SPD, only trigger bit...
   } else if ( "PrsDigit" == name ) {
-    m_detectorName    = "/dd/Structure/LHCb/Prs";
-    m_inputData       = MCCaloDigitLocation::Prs;
-    m_outputData      = CaloDigitLocation::FullPrs;
-    m_inputPrevData   = "Prev/"+MCCaloDigitLocation::Prs;
-    m_pePerMeV        = 10.;
-    m_coherentNoise   = 0.0;
-    m_incoherentNoise = 1.0;
+    m_detectorName     = "/dd/Structure/LHCb/Prs";
+    m_inputData        = MCCaloDigitLocation::Prs;
+    m_outputData       = CaloAdcLocation::Prs;
+    m_inputPrevData    = "Prev/"+MCCaloDigitLocation::Prs;
+    m_pePerMeV         = 10.;
+    m_coherentNoise    = 0.0;
+    m_incoherentNoise  = 1.0;
+    m_triggerName      = L0PrsSpdHitLocation::Prs;
+    m_triggerThreshold = 10. * MeV;
+    m_triggerIsBit     = true;
+    m_zSupThreshold    = 15;
   } else if ( "EcalDigit" == name ) {
-    m_detectorName    = "/dd/Structure/LHCb/Ecal";
-    m_inputData       = MCCaloDigitLocation::Ecal;
-    m_outputData      = CaloDigitLocation::FullEcal;
-    m_pedShift        = 0.40;
-} else if ( "HcalDigit" == name ) {
-    m_detectorName    = "/dd/Structure/LHCb/Hcal";
-    m_inputData       = MCCaloDigitLocation::Hcal;
-    m_outputData      = CaloDigitLocation::FullHcal;
-    m_pedShift        = 0.40;
+    m_detectorName     = "/dd/Structure/LHCb/Ecal";
+    m_inputData        = MCCaloDigitLocation::Ecal;
+    m_outputData       = CaloAdcLocation::FullEcal;
+    m_pedShift         = 0.40;
+    m_triggerName      = L0CaloAdcLocation::Ecal;
+    m_triggerIsBit     = false;
+ 
+    m_corrArea.push_back( 1.00 );
+    m_corrArea.push_back( 1.04 );
+    m_corrArea.push_back( 1.08 );
+    
+ } else if ( "HcalDigit" == name ) {
+    m_detectorName     = "/dd/Structure/LHCb/Hcal";
+    m_inputData        = MCCaloDigitLocation::Hcal;
+    m_outputData       = CaloAdcLocation::FullHcal;
+    m_pedShift         = 0.40;
+    m_triggerName      = L0CaloAdcLocation::Hcal;
+    m_triggerIsBit     = false;
+
+    m_corrArea.push_back( 1.00 );
+    m_corrArea.push_back( 1.05 );
   }
 
 };
@@ -122,17 +151,22 @@ StatusCode CaloDigitAlg::initialize() {
 
   m_pedestalShift = m_pedShift * (m_incoherentNoise + m_coherentNoise);
 
-  info() << format( "Noise:%5.1f +%5.1f (coherent) counts.",
-                    m_incoherentNoise, m_coherentNoise );
-  info() << format( " Gain error:%4.1f%%, pedestal shift:%5.2f",
-                    m_gainError * 100., m_pedestalShift );
-  if ( "" != m_inputPrevData ) {
-    info() << " Subtract " << m_fracPrev << " of previous BX.";
+  if ( 0 != m_incoherentNoise + m_coherentNoise ) {
+    info() << format( "Noise:%5.1f +%5.1f (coherent) counts.",
+                      m_incoherentNoise, m_coherentNoise ) << endreq;
   }
-  if ( 0 != m_deadCellFraction ) {
-    info() << ", " << m_deadCellFraction << " of the cells as dead (gain=0).";
+  if ( 0 != m_deadCellFraction ) info() << m_deadCellFraction << " of the cells as dead (gain=0)." << endreq;
+  if ( 0 != m_gainError        ) info() << format( "Gain error %4.1f%%", m_gainError*100. ) << endreq;
+  if ( 0 != m_pedestalShift    ) info() << format( "Pedestal shift %5.2f", m_pedestalShift ) << endreq;
+  if ( "" != m_inputPrevData   ) info() << format( "Subtract %6.4f of previous BX ", m_fracPrev) << endreq;
+  if ( -100 < m_zSupThreshold )  info() << "ZSupThreshold " << m_zSupThreshold << endreq;
+  if ( 0 < m_corrArea.size() ) {
+    info() << "Trigger correction factor per area : ";
+    for ( unsigned int kk = 0 ; m_corrArea.size() > kk ; kk++ ) {
+      info() << m_corrArea[kk] << " ";
+    }
+    info() << endreq;
   }
-  info() << endreq;
   
   return StatusCode::SUCCESS;
 };
@@ -154,8 +188,20 @@ StatusCode CaloDigitAlg::execute() {
 
   //***  prepare and register the output container it into the Transient Store!
 
-  CaloDigits* digits = new CaloDigits();
-  put( digits, m_outputData );
+  CaloAdcs* adcs = new CaloAdcs();
+  put( adcs, m_outputData );
+  L0CaloAdcs* trigBank = NULL;
+  L0PrsSpdHits* bitsBank = NULL;
+  if ( "" != m_triggerName ) {
+    if ( m_triggerIsBit ) {
+      bitsBank = new L0PrsSpdHits();
+      put( bitsBank, m_triggerName );
+    } else {
+      trigBank = new L0CaloAdcs();
+      put( trigBank, m_triggerName );
+    }
+  }
+
 
   debug() << "Processing " << mcDigits->size() << " mcDigits." 
           << endreq;
@@ -222,9 +268,8 @@ StatusCode CaloDigitAlg::execute() {
       energy = nPe() / m_pePerMeV;
     }
 
-    double gain   = m_calo->cellGain( id ) ;
-    double adc    = gainErrors[index] * energy / gain ;
-    adc          += incoherentNoise[index] + offset;
+    double gain     = m_calo->cellGain( id ) ;
+    double adcValue = gainErrors[index] * energy / gain +  incoherentNoise[index] + offset;
     if ( 0 != prevDigits ) {
 
       // Correct for spill-over in Prs/Spd by a fixed fraction.
@@ -243,19 +288,46 @@ StatusCode CaloDigitAlg::execute() {
         double cor = m_fracPrev * prevEnergy / gain;
         if ( isDebug && .5 < cor ) {
           debug() << id << format( " adc%7.1f correct%7.1f => %7.1f",
-                                   adc, cor, adc-cor ) 
+                                   adcValue, cor, adcValue-cor ) 
                   << endreq;
         }
-        adc = adc - cor;
+        adcValue -= cor;
       }
     }
-    energy =  gain * ( adcCount(adc) - m_pedestalShift ) ;
-    CaloDigit* digit = new CaloDigit( id, energy );
-    digits->insert( digit ) ;
+  
+    int  intAdc  = (int) floor( adcValue + 0.5 );
+    if ( intAdc > m_maxAdcValue) { intAdc = m_saturatedAdc ; } 
+    if ( m_zSupThreshold <= intAdc ) {
+      CaloAdc* adc = new CaloAdc( id, intAdc );
+      adcs->insert( adc ) ;
+    }
+    
+    int trigVal   = 0;
+    if ( m_triggerIsBit ) {
+      if ( m_triggerThreshold < intAdc * gain ) {
+        L0PrsSpdHit* myHit = new L0PrsSpdHit( id );
+        bitsBank->insert( myHit );
+      }
+    } else {
+      double et = intAdc * gain * m_corrArea[ id.area() ] * m_calo->cellSine( id );
+      trigVal = (int)floor( et / m_triggerEtScale + .5 );
+      if ( 255 < trigVal ) trigVal = 255;
+      if ( 0   > trigVal ) trigVal = 0;
+      if ( 0 < trigVal ) {
+        L0CaloAdc* trigAdc = new L0CaloAdc( id, trigVal );
+        trigBank->insert( trigAdc );
+      }
+    }
+  }
+  int trigSize = 0;
+  if ( m_triggerIsBit ) {
+    trigSize = bitsBank->size();
+  } else {
+    trigSize = trigBank->size();
   }
 
-  debug() << format( "Have digitized and stored %5d digits from %5d MCDigits.",
-                     digits->size(), mcDigits->size() )
+  debug() << format( "Have digitized and stored %5d adcs and %5d trigger from %5d MCDigits.",
+                     adcs->size(), trigSize, mcDigits->size() )
           << endreq;
 
   return StatusCode::SUCCESS;

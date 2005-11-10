@@ -19,10 +19,10 @@ branches         cmt doc src
 # Used packages. Specify the version, * at the end specifies 'any revision'
 #    Put as many lines as needed, with all packages, without the '#'
 #============================================================================
-use CaloEvent    v13r* Event
-use CaloDet      v6r*  Det
-use L0Event      v14r*  Event
-
+use CaloEvent   v*      Event
+use CaloDet     v*      Det
+use L0Event     v*      Event
+use CaloDAQ     v*      Calo
 #============================================================================
 # Component library building rule
 #============================================================================
