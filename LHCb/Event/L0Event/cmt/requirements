@@ -1,28 +1,42 @@
-# $Id: requirements,v 1.39 2005-07-21 11:19:07 cattanem Exp $
-package L0Event
-version v14r3p1
+#============================================================================
+# Created    : 2005-11-10
+# Maintainer : Olivier Callot
+#
+# Documentation on the requirement file can be found at
+# http://cern.ch/lhcb-comp/Support/html/new_structure.pdf
+#============================================================================
+package           L0Event
+version           v14r4
+#============================================================================
+# This template is an example for a standard Algorithm package
+#
+# Structure, i.e. directories to process. 
+#============================================================================
+branches          cmt doc dict Event xml src
+include_dirs      $(L0EVENTROOT)
+#============================================================================
+# Used packages. Specify the version, * at the end specifies 'any revision'
+#    Put as many lines as needed, with all packages, without the '#'
+#============================================================================
+use	MuonKernel	v*	Muon
+use	CaloEvent	v*	Event
 
-branches Event cmt doc xml src
-
-include_dirs $(L0EVENTROOT)
-
-use MuonKernel v* Muon
-
-#---- Produce Header-Files and from XML description
+#============================================================================
+#---- Produce Header-Files from XML description
 private
 document obj2doth L0EventObj2Doth ../xml/*.xml
-document obj2dict L0EventObj2Dict ../xml/*.xml    
+document obj2dict L0EventObj2Dict ../xml/*.xml
 
-# ================ build library (including dictionary) ==================
 public
-library           L0Event         ../src/*.cpp
-library           L0EventDict     ../dict/*.cpp
+library          L0Event         ../src/*.cpp
+library          L0EventDict     ../dict/*.cpp
 
-# Standard patterns (order is important!)
-#===============================================================
+#============================================================================
+# define library link options
+#============================================================================
 apply_pattern component_library library=L0EventDict
-apply_pattern linker_library    library=L0Event
-macro_append L0Event_linkopts "" WIN32 "/include:_L0Event_loadRef"
+apply_pattern linker_library	library=L0Event
+macro_append L0Event_linkopts  "" WIN32 "/include:_L0Event_loadRef" 
 
 private
 use GaudiObjDesc v*
