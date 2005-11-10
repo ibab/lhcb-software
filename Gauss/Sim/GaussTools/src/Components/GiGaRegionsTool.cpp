@@ -1,4 +1,4 @@
-// $Id: GiGaRegionsTool.cpp,v 1.1 2003-06-04 16:56:10 ibelyaev Exp $
+// $Id: GiGaRegionsTool.cpp,v 1.2 2005-11-10 18:23:15 gcorti Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
@@ -123,68 +123,71 @@ StatusCode GiGaRegionsTool::process ( const std::string& region ) const
     { return Error(" process('"+region+"'): Regions* poitns to NULL " ) ; }
 
   // loop over all regions 
+  debug() << " Number of G4 regions =  " << (int) regions->size() << endmsg;
   for( Regions::const_iterator ireg = regions->begin() ; 
        regions->end() != ireg ; ++ireg )
     {
       // all regions? or only selected region?
       if( !region.empty() && ireg->region() != region ) { continue ; }
-      Print ( " Process the region '" + ireg->region() + "'" ) ;
+      info() << " Process the region '" << ireg->region() << "'" << endmsg;
       //
       G4Region* reg = new G4Region( ireg->region() ) ;
-      // add volumes to the region 
+      // add volumes to the region
       const Volumes& volumes = ireg->volumes() ;
+      debug() << " Number of volumes in this region =  " << (int)volumes.size() 
+              << endmsg;
       for( Volumes::const_iterator ivolume = volumes.begin() ; 
-           volumes.end() != ivolume ; ++ivolume ) 
-        {
-          G4LogicalVolume* volume = GiGaVolumeUtils::findLVolume( *ivolume ) ; 
-          if( 0 == volume ) 
-            { 
-              Error ( " process('" + ( ireg->region() ) + 
-                      "'): G4LogicalVolume* '"          + (*ivolume) + 
-                      "' points to NULL, skip it  "                  ) ; 
-              continue ;
-            }
+           volumes.end() != ivolume ; ++ivolume ) {
+        
+        G4LogicalVolume* volume = GiGaVolumeUtils::findLVolume( *ivolume ) ; 
+        if( 0 == volume ) { 
+          Error ( " process('" + ( ireg->region() ) + 
+                  "'): G4LogicalVolume* '"          + (*ivolume) + 
+                  "' points to NULL, skip it  "                  ) ; 
+          continue;
+        }
           
-          if      ( 0 != volume->GetRegion() && !m_overwrite )
-            {
-              Warning ( " G4LogicalVolume '" + (*ivolume) + 
-                        "' already belongs to region '"   + 
-                        volume->GetRegion()->GetName()    + "' , skip "    );
-              continue ;
-            } 
-          else if ( 0 != volume->GetRegion() &&  m_overwrite )
-            {
-              Warning ( " G4LogicalVolume '" + (*ivolume) + 
-                        "' already belongs to region '"   + 
-                        volume->GetRegion()->GetName()    +"', overwrite " );
-            }
-          // set region 
-          volume -> SetRegion            ( reg    ) ;
-          reg    -> AddRootLogicalVolume ( volume ) ;
+        if( 0 != volume->GetRegion() && !m_overwrite ) {
+          Warning ( " G4LogicalVolume '" + (*ivolume) + 
+                    "' already belongs to region '"   + 
+                    volume->GetRegion()->GetName()    + "' , skip "    );
+          continue;
         } 
+        else if ( 0 != volume->GetRegion() &&  m_overwrite ) {
+          if( (volume->GetRegion()->GetName()) == "DefaultRegionForTheWorld" ) {
+            info() << "G4Region Change for  "<<" G4LogicalVolume '"
+                   << (*ivolume) <<" ' to "<< reg->GetName()  << endmsg;
+          } else {      
+            Warning ( " G4LogicalVolume '" + (*ivolume) + 
+                      "' already belongs to region '"   + 
+                      volume->GetRegion()->GetName()    +"', overwrite " );
+          }
+              
+        }
+        // set region 
+        volume -> SetRegion            ( reg    ) ;
+        reg    -> AddRootLogicalVolume ( volume ) ;
+      } 
       
       
       // create production cuts 
       G4ProductionCuts* cuts = new G4ProductionCuts() ;
 
-      if( 0 <= ireg -> gammaCut    () )
-        {
-          cuts -> SetProductionCut ( ireg -> gammaCut    () ,  
-                                     G4ProductionCuts::GetIndex ( "gamma" ) ) ;
-        }
-      if( 0 <= ireg -> electronCut  () )
-        {
-          cuts -> SetProductionCut ( ireg -> electronCut () ,  
-                                     G4ProductionCuts::GetIndex ( "e-"    ) ) ;
-        }
-      if( 0 <= ireg -> positronCut  () )
-        {
-          cuts -> SetProductionCut ( ireg -> positronCut () ,  
-                                     G4ProductionCuts::GetIndex ( "e+"    ) ) ;
-        }
+      if( 0 <= ireg -> gammaCut    () ) {
+        cuts -> SetProductionCut ( ireg -> gammaCut    () ,  
+                                   G4ProductionCuts::GetIndex ( "gamma" ) ) ;
+      }
+      if( 0 <= ireg -> electronCut  () ) {
+        cuts -> SetProductionCut ( ireg -> electronCut () ,  
+                                   G4ProductionCuts::GetIndex ( "e-"    ) ) ;
+      }
+      if( 0 <= ireg -> positronCut  () ) {
+        cuts -> SetProductionCut ( ireg -> positronCut () ,  
+                                   G4ProductionCuts::GetIndex ( "e+"    ) ) ;
+      }
       
       // set production cuts for region      
-      reg -> SetProductionCuts ( cuts ) ;
+      reg -> SetProductionCuts ( cuts );
     }
   
   return StatusCode::SUCCESS ;
