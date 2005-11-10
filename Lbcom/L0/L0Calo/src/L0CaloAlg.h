@@ -1,6 +1,6 @@
 #ifndef   L0CALO_L0CALOALG_H
 #define   L0CALO_L0CALOALG_H  1
-// $Id: L0CaloAlg.h,v 1.12 2005-01-12 09:19:38 ocallot Exp $
+// $Id: L0CaloAlg.h,v 1.13 2005-11-10 16:45:38 ocallot Exp $
 
 // from Gaudi 
 #include "GaudiAlg/GaudiAlgorithm.h"
@@ -8,11 +8,12 @@
 // from Calo
 #include "CaloDet/DeCalorimeter.h"
 
-#include "CaloDAQ/ICaloTriggerFromRaw.h"
+// from CaloDAQ
+#include "CaloDAQ/ICaloTriggerAdcsFromRaw.h"
+#include "CaloDAQ/ICaloTriggerBitsFromRaw.h"
 
 // from DAQEvent
 #include "Event/RawEvent.h"
-#include "Event/L1Event.h"
 
 // Local classes
 #include "TriggerCard.h"
@@ -47,11 +48,20 @@ public:
 
   /** Save the candidate in the output container as L0CaloCandidate
    *  @param type : Type of candidate, from L0::L0Type
-   *  @param L0Calo : Vector of candidates, to which the current object
+   *  @param L0Calo : Container of candidates, to which the current object
    *                  is added after being properly formatted.
    */
-  void        saveCandidate( int type, L0CaloCandidates* L0Calo ) ;
-  
+  void  saveCandidate( int type, L0CaloCandidates* L0Calo ) {
+    if ( 0 < m_et ) {
+      L0CaloCandidate* temp = new L0CaloCandidate ( type,
+                                                    m_ID,
+                                                    m_et,
+                                                    m_et * m_etScale,
+                                                    m_center,
+                                                    m_tol );
+      L0Calo->add( temp );
+    }
+  }
   int         et( )        const { return m_et     ; };
   HepPoint3D  center( )    const { return m_center ; };
   double      tolerance( ) const { return m_tol    ; };
@@ -97,7 +107,7 @@ protected:
   void addPrsData(  );  ///< process the Prs information
   void addSpdData(  );  ///< Produce the Spd data
 
-  void saveCandidate( int, L0Candidate&, int ); ///< Save in L1 and RAW buffers
+  void saveInRawBuffer( int, L0Candidate& ); ///< Save in RAW buffers
   
 private:
 
@@ -125,9 +135,9 @@ private:
 
   int         m_spdMult            ; ///< Multiplicity of Spd
 
-  ICaloTriggerFromRaw* m_triggerFromRaw; ///< Tool to decode trigger adcs.
-  ICaloTriggerFromRaw* m_prsFromRaw; ///< Tool to decode trigger adcs.
-  ICaloTriggerFromRaw* m_spdFromRaw; ///< Tool to decode trigger adcs.
+  ICaloTriggerAdcsFromRaw* m_adcsEcal; ///< Tool to decode trigger adcs.
+  ICaloTriggerAdcsFromRaw* m_adcsHcal; ///< Tool to decode trigger adcs.
+  ICaloTriggerBitsFromRaw* m_bitsFromRaw; ///< Tool to decode trigger bits.
   
 // Trigger cards
 
@@ -137,22 +147,11 @@ private:
   // Validation
   int         m_nbValidation;
 
-  std::vector<l1_int> m_l1Output;   ///< L1 output bank
   std::vector<raw_int> m_rawOutput; ///< RAW output bank
-
-  int m_l1ElectronThr;
-  int m_l1PhotonThr;
-  int m_l1HadronThr;
-  int m_l1Pi0LocalThr;
-  int m_l1Pi0GlobalThr;
 
   bool m_storeFlag;
 
-  double m_totL1Size;
   double m_totRawSize;
-  int m_nbEvents;
-  
+  int m_nbEvents;  
 };
-
-
 #endif //   L0CALO_L0CALOALG_H

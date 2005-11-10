@@ -1,4 +1,4 @@
-// $Id: L0CaloAlg.cpp,v 1.27 2005-05-10 14:02:51 cattanem Exp $
+// $Id: L0CaloAlg.cpp,v 1.28 2005-11-10 16:45:38 ocallot Exp $
 
 /// Gaudi
 #include "GaudiKernel/AlgFactory.h"
@@ -13,7 +13,6 @@
 /// local
 #include "L0CaloAlg.h"
 
-#include "Event/L1Event.h"
 //
 //  Level-0 calorimeter trigger
 //
@@ -47,12 +46,6 @@ L0CaloAlg::L0CaloAlg( const std::string& name, ISvcLocator* pSvcLocator)
   declareProperty("MinEtGammaGlobal", m_minEtGammaGlobal         ) ;
   declareProperty("MinPi0Mass"      , m_minPi0Mass               ) ;
   declareProperty("MaxPi0Mass"      , m_maxPi0Mass               ) ;
-
-  declareProperty("L1ElectronThr"   , m_l1ElectronThr  = 50 );
-  declareProperty("L1PhotonThr"     , m_l1PhotonThr    = 50 );
-  declareProperty("L1HadronThr"     , m_l1HadronThr    = 100 );
-  declareProperty("L1Pi0LocalThr"   , m_l1Pi0LocalThr  = 75 );
-  declareProperty("L1Pi0GlobalThr"  , m_l1Pi0GlobalThr = 75 );
 
   declareProperty("StoreInBuffer"   , m_storeFlag      = true );
 };
@@ -224,21 +217,12 @@ StatusCode L0CaloAlg::initialize() {
 
   m_etScale = 20. * MeV;
 
-  m_totL1Size  = 0.;
   m_totRawSize = 0.;
   m_nbEvents   = 0 ;
 
-  info() << "L1 thresholds: "
-         << " electron " << m_l1ElectronThr
-         << " photon "   << m_l1PhotonThr
-         << " hadron "   << m_l1HadronThr
-         << " pi0L "     << m_l1Pi0LocalThr
-         << " pi0G "     << m_l1Pi0GlobalThr
-         << endreq;
-
-  m_triggerFromRaw = tool<ICaloTriggerFromRaw>( "CaloTriggerFromRaw" );
-  m_prsFromRaw     = tool<ICaloTriggerFromRaw>( "CaloPrsBitFromRaw"  );
-  m_spdFromRaw     = tool<ICaloTriggerFromRaw>( "CaloSpdBitFromRaw"  );
+  m_adcsEcal = tool<ICaloTriggerAdcsFromRaw>( "CaloTriggerAdcsFromRaw/EcalTriggerAdcTool" );
+  m_adcsHcal = tool<ICaloTriggerAdcsFromRaw>( "CaloTriggerAdcsFromRaw/HcalTriggerAdcTool" );
+  m_bitsFromRaw = tool<ICaloTriggerBitsFromRaw>( "CaloTriggerBitsFromRaw" );
 
   return StatusCode::SUCCESS;
 };
@@ -248,14 +232,14 @@ StatusCode L0CaloAlg::initialize() {
 //=============================================================================
 StatusCode L0CaloAlg::execute() {
 
-  // Get the ECAL data, store them in the Front-End card
+    // Get the ECAL data, store them in the Front-End card
 
   sumEcalData( );
 
   // Get the Prs information. Adds it to the ecalFe[] objects
 
   addPrsData( );
-
+  
   // Get the Spd information. Adds it to the ecalFe[] objects
 
   addSpdData( );
@@ -492,7 +476,6 @@ StatusCode L0CaloAlg::execute() {
   //===========================================================================
 
   m_rawOutput.clear();
-  m_l1Output.clear();
     
   L0CaloCandidates* L0Calo = new L0CaloCandidates();
   put( L0Calo, m_nameOfOutputDataContainer );
@@ -514,10 +497,6 @@ StatusCode L0CaloAlg::execute() {
                                                   dummy,
                                                   0. );
     L0Calo->add( hsum );
-    int word = ( L0Calo::SumEt << 24 ) + sumEt;
-    m_l1Output.push_back( (word >> 16) & 0xFFFF );
-    m_l1Output.push_back( word & 0xFFFF );
-
   }
 
   // Spd multiplicity counter
@@ -528,21 +507,20 @@ StatusCode L0CaloAlg::execute() {
                                                    dummy,
                                                    0. );
   L0Calo->add( spdMult);
-  int word = ( L0Calo::SpdMult << 24 ) + m_spdMult;
-  m_l1Output.push_back( (word >> 16) & 0xFFFF );
-  m_l1Output.push_back( word & 0xFFFF );
 
   // Debug now the L0 candidates
 
   L0CaloCandidates::const_iterator item;
 
-  debug() << "== L0CaloCandidate Summary: "
-          << L0Calo->size() << " entries." << endreq;
-  for( item = L0Calo->begin() ; L0Calo->end() != item ; ++item ) {
-    L0CaloCandidate* cand = (*item);
-    debug() << *cand << endreq;
+  if ( msgLevel( MSG::DEBUG ) ) {
+    debug() << "== L0CaloCandidate Summary: "
+            << L0Calo->size() << " entries." << endreq;
+    for( item = L0Calo->begin() ; L0Calo->end() != item ; ++item ) {
+      L0CaloCandidate* cand = (*item);
+      debug() << *cand << endreq;
+    }
   }
-
+  
   //=== Store the perValidation candidates
 
   L0CaloCandidates* L0FullCalo = new L0CaloCandidates();
@@ -551,54 +529,50 @@ StatusCode L0CaloAlg::execute() {
 
   for ( kk=0 ; m_nbValidation > kk ; kk++ ) {
     allElectrons[kk].saveCandidate( L0Calo::Electron,  L0FullCalo );
-    saveCandidate(  L0Calo::Electron, allElectrons[kk], m_l1ElectronThr );
+    saveInRawBuffer(  L0Calo::Electron, allElectrons[kk] );
   }
   for ( kk=0 ; m_nbValidation > kk ; kk++ ) {
     allPhotons[kk].saveCandidate(   L0Calo::Photon,    L0FullCalo );
-    saveCandidate(  L0Calo::Photon, allPhotons[kk], m_l1PhotonThr );
+    saveInRawBuffer(  L0Calo::Photon, allPhotons[kk] );
   }
   for ( hCard = 0; hCard < m_hcal->nCards(); ++hCard ) {
     hadron.setCandidate( hcalFe[hCard].etMax(), hcalFe[hCard].cellIdMax() );
     hadron.saveCandidate( L0Calo::Hadron, L0FullCalo );
-    saveCandidate(  L0Calo::Hadron, hadron, m_l1HadronThr );
+    saveInRawBuffer(  L0Calo::Hadron, hadron );
   }
   for ( kk=0 ; m_nbValidation > kk ; kk++ ) {
     allPi0Local[kk].saveCandidate(  L0Calo::Pi0Local,  L0FullCalo );
-    saveCandidate(  L0Calo::Pi0Local, allPi0Local[kk], m_l1Pi0LocalThr );
+    saveInRawBuffer(  L0Calo::Pi0Local, allPi0Local[kk] );
   }
   for ( kk=0 ; m_nbValidation > kk ; kk++ ) {
     allPi0Global[kk].saveCandidate( L0Calo::Pi0Global, L0FullCalo );
-    saveCandidate(  L0Calo::Pi0Global, allPi0Global[kk], m_l1Pi0GlobalThr );
+    saveInRawBuffer(  L0Calo::Pi0Global, allPi0Global[kk] );
   }
 
   if ( 0 < sumEt ) {
     int word = ( L0Calo::SumEt << 24 ) + sumEt;
     m_rawOutput.push_back( word );
   }
-  word = ( L0Calo::SpdMult << 24 ) + m_spdMult;
+  int word = ( L0Calo::SpdMult << 24 ) + m_spdMult;
   m_rawOutput.push_back( word );
 
-  debug() <<"== L0CaloFullCandidate Summary: "
-          << L0FullCalo->size() << " entries." << endreq;
+  if ( msgLevel( MSG::DEBUG ) ) {
+    debug() <<"== L0CaloFullCandidate Summary: "
+            << L0FullCalo->size() << " entries." << endreq;
 
-  for( item = L0FullCalo->begin() ; L0FullCalo->end() != item ; ++item ) {
-    L0CaloCandidate* cand = (*item);
-    debug() << *cand << endreq;
-  }
+    for( item = L0FullCalo->begin() ; L0FullCalo->end() != item ; ++item ) {
+      L0CaloCandidate* cand = (*item);
+      debug() << *cand << endreq;
+    }
+    debug() << " Raw Output size = " << m_rawOutput.size()
+            << endreq;
+  }  
 
-  debug() << "L1 output size = " << m_l1Output.size()
-          << " Raw Output size = " << m_rawOutput.size()
-          << endreq;
-
-
-  //== Store in the L1 and RAW buffer if required.
+  //== Store in the  RAW buffer if required.
 
   if ( m_storeFlag ) {
     m_nbEvents++;
-    m_totL1Size  += m_l1Output.size();
     m_totRawSize += m_rawOutput.size();
-    L1Buffer* l1Buf = get<L1Buffer>( L1BufferLocation::Default );
-    l1Buf->addBank( L1Buffer::L0CaloID, L1Buffer::L0, m_l1Output );
     RawBuffer* rawBuf = get<RawBuffer>( RawBufferLocation::Default );
     rawBuf->addBank( 0, RawBuffer::L0Calo, m_rawOutput );
     //== Invalidate RawEvent if it exists. Needed in Boole
@@ -618,8 +592,7 @@ StatusCode L0CaloAlg::execute() {
 StatusCode L0CaloAlg::finalize() {
 
   if ( 0 != m_nbEvents ) {
-    info() << format( "Average bank size : %7.1f words L1, %7.1f words RAW.",
-                      m_totL1Size/m_nbEvents,
+    info() << format( "Average bank size : %7.1f words RAW.",
                       m_totRawSize/m_nbEvents )
            << endreq;
   }
@@ -637,12 +610,14 @@ void L0CaloAlg::sumEcalData(  ) {
     ecalFe[eCard].reset( );
   }
 
-  m_triggerFromRaw->prepare( RawBuffer::EcalTrig );
+  std::vector<L0CaloAdc>& adcs = m_adcsEcal->adcs( );
 
-  CaloCellID id;
-  int adc;
+  debug() << "Found " << adcs.size() << " ECAL adcs" << endreq;
 
-  while ( StatusCode::SUCCESS == m_triggerFromRaw->nextCell( id, adc ) ) {
+  for ( std::vector<L0CaloAdc>::const_iterator itAdc = adcs.begin();
+        adcs.end() != itAdc; ++itAdc ) {
+    CaloCellID id = (*itAdc).cellID();
+    int adc = (*itAdc).adc();
 
     // Get digits. Sum in front-end cards.
     // Adds to the (possible) neighboring cards if at the border (row/col = 0)
@@ -679,11 +654,14 @@ void L0CaloAlg::sumHcalData( ) {
     hcalFe[hCard].reset( );
   }
 
-  m_triggerFromRaw->prepare( RawBuffer::HcalTrig );
-  CaloCellID id;
-  int adc;
+  std::vector<L0CaloAdc>& adcs = m_adcsHcal->adcs( );
 
-  while ( StatusCode::SUCCESS == m_triggerFromRaw->nextCell( id, adc ) ) {
+  debug() << "Found " << adcs.size() << " HCAL adcs" << endreq;
+
+  for ( std::vector<L0CaloAdc>::const_iterator itAdc = adcs.begin();
+        adcs.end() != itAdc; ++itAdc ) {
+    CaloCellID id = (*itAdc).cellID();
+    int adc = (*itAdc).adc();
 
     // Get digits. Sum in front-end cards.
     // Adds to the (possible) neighboring cards if at the border (row/col = 0)
@@ -691,12 +669,14 @@ void L0CaloAlg::sumHcalData( ) {
     int card, row,  col  ;
     int down, left, corner  ;
 
-    if ( MSG::VERBOSE >= msgLevel() ) {
-      verbose() << id << format( " adc %3d", adc ) << endreq;
-    }
-    
     m_hcal->cardAddress( id, card, row, col ); 
     m_hcal->cardNeighbors( card, down, left, corner );
+
+    if ( MSG::VERBOSE >= msgLevel() ) {
+      verbose() << id << format( " adc %3d card%3d row%3d col%3d, down%3d left%3d corner%3d", 
+                                 adc, card, row, col, down, left, corner ) << endreq;
+    }
+    
     
     hcalFe[card].addEt( col, row, adc);
     if ( (0 == row) && (0 <= down) ) {
@@ -716,18 +696,22 @@ void L0CaloAlg::sumHcalData( ) {
 //=============================================================================
 void L0CaloAlg::addPrsData( ) {
 
-  m_prsFromRaw->prepare( RawBuffer::PrsTrig );
   CaloCellID id;
-  int adc;
 
   // Get digits. Sum in front-end cards.
   // Adds to the (possible) neighboring cards if at the border (row/col = 0)
   // and if the card has neighboring cards
   int card, row,  col  ;
   int down, left, corner  ;
-  
-  while ( StatusCode::SUCCESS == m_prsFromRaw->nextCell( id, adc ) ) {
 
+  std::vector<CaloCellID>& ids = m_bitsFromRaw->firedCells( true );
+
+  debug() << "Found " << ids.size() << " PRS bits" << endreq;
+
+  for ( std::vector<CaloCellID>::const_iterator itID = ids.begin();
+        ids.end() != itID; ++itID ) {
+    id = *itID;
+    
     if ( MSG::VERBOSE >= msgLevel() ) verbose() << id << endreq;
     
     m_ecal->cardAddress(id, card, row, col );
@@ -752,9 +736,7 @@ void L0CaloAlg::addSpdData( ) {
 
   m_spdMult = 0;
 
-  m_spdFromRaw->prepare( RawBuffer::PrsTrig );
   CaloCellID id;
-  int adc;
 
   // Get digits. Sum in front-end cards.
   // Adds to the (possible) neighboring cards if at the border (row/col = 0)
@@ -762,7 +744,13 @@ void L0CaloAlg::addSpdData( ) {
   int card, row,  col  ;
   int down, left, corner  ;
 
-  while ( StatusCode::SUCCESS == m_spdFromRaw->nextCell( id, adc ) ) {
+  std::vector<CaloCellID>& ids = m_bitsFromRaw->firedCells( false );
+
+  debug() << "Found " << ids.size() << " SPD bits" << endreq;
+
+  for ( std::vector<CaloCellID>::const_iterator itID = ids.begin();
+        ids.end() != itID; ++itID ) {
+    id = *itID;
 
     if ( MSG::VERBOSE >= msgLevel() ) verbose() << id << endreq;
     
@@ -785,19 +773,15 @@ void L0CaloAlg::addSpdData( ) {
 }
 
 //=========================================================================
-//  Save a candidate in the L1 buffer
+//  Save a candidate in the Raw buffer
 //=========================================================================
-void L0CaloAlg::saveCandidate ( int type, L0Candidate& cand, int thr ) {
+void L0CaloAlg::saveInRawBuffer ( int type, L0Candidate& cand ) {
 
-  //== Coding for L1-RAW. 
+  //== Coding for Raw: type (upper 8 bits), id (next 16) and et (low 8 bits). 
   if ( 0 == cand.et() ) return;
 
   int word = ( type << 24 ) + (cand.ID().raw() << 8 ) + cand.et();
   m_rawOutput.push_back( word );
-  if ( thr < cand.et() && 122 > m_l1Output.size() ) {
-    m_l1Output.push_back( (word >> 16) & 0xFFFF );
-    m_l1Output.push_back( word & 0xFFFF );
-  }
 }
 
 //=============================================================================
@@ -824,18 +808,4 @@ void  L0Candidate::setCandidate( int et, CaloCellID ID ) {
   }
 };
 
-//=========================================================================
-//  Add a candidate in the biffer
-//=========================================================================
-void  L0Candidate::saveCandidate( int type, L0CaloCandidates* L0Calo ) {
-  if ( 0 < m_et ) {
-    L0CaloCandidate* temp = new L0CaloCandidate ( type,
-                                                  m_ID,
-                                                  m_et,
-                                                  m_et * m_etScale,
-                                                  m_center,
-                                                  m_tol );
-    L0Calo->add( temp );
-  }
-};
 //=========================================================================

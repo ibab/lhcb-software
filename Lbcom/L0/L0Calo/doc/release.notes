@@ -1,6 +1,10 @@
 Package		: L0/L0Calo
 Package Manager : Olivier Callot
 
+! 2005-11-10 - Olivier Callot
+ - Remove coding of L1 buffer
+ - Adapt to new interfaces for Raw buffer, not yet final.
+
 !========================= L0Calo v8r2 2005-05-10 =========================
 ! 2005-05-10 - Olivier Callot
  - Delete RawEvent invalidated by changes to RawBuffer in L0CaloAlg
