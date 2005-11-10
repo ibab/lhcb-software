@@ -1,4 +1,4 @@
-// $Id: CaloFillRawBuffer.h,v 1.2 2005-09-06 14:50:01 ocallot Exp $
+// $Id: CaloFillRawBuffer.h,v 1.3 2005-11-10 16:43:22 ocallot Exp $
 #ifndef CALOFILLRAWBUFFER_H 
 #define CALOFILLRAWBUFFER_H 1
 
@@ -29,27 +29,6 @@ public:
 
 protected:
 
-  int bufferNumber( const CaloCellID& ID )  {
-    int det  = ID.calo();
-    int area = ID.area();
-    int row  = ID.row();
-    int col  = ID.col();
-    int bNum = 0;
-
-    if ( 2 == det ) {  // ECAL
-      bNum = 2*area;
-      if ( 0 == area && 33 < row ) bNum += 1; //== Two L1 boards
-      if ( 1 == area && 31 < row ) bNum += 1; //== Two L1 boards
-      if ( 31 < col ) bNum += 5;
-    } else if ( 3 == det ) {  // HCAL
-      bNum = area;
-      if ( 15 < col ) bNum += 2;
-    }
-    return bNum;
-  }
-
-  void fillDataBank ( );
-
   void fillDataBankShort ( );
 
   void fillPackedBank ( );
@@ -63,7 +42,6 @@ private:
   int    m_bankType;
   int    m_triggerBankType;
   int    m_numberOfBanks;
-  double m_energyScale;
   int    m_dataCodingType;
 
   DeCalorimeter* m_calo;

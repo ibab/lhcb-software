@@ -1,4 +1,4 @@
-// $Id: CaloReadoutTool.h,v 1.1 2005-09-06 14:50:01 ocallot Exp $
+// $Id: CaloReadoutTool.h,v 1.2 2005-11-10 16:43:22 ocallot Exp $
 #ifndef CALODAQ_CALOREADOUTTOOL_H 
 #define CALODAQ_CALOREADOUTTOOL_H 1
 
@@ -19,7 +19,7 @@ public:
   CaloFECard( int num, int crate, int slot ) {
     m_number = num;
     m_crate  = crate;
-    m_slot   = slot-1;  //== Slot from 1 to 16, but want 0-15
+    m_slot   = slot; 
     m_code   = m_crate * 16 + m_slot;
     m_ids.reserve( 64 );
   }

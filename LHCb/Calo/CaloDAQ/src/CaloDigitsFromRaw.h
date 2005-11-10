@@ -1,4 +1,4 @@
-// $Id: CaloDigitsFromRaw.h,v 1.1.1.1 2005-01-11 07:51:47 ocallot Exp $
+// $Id: CaloDigitsFromRaw.h,v 1.2 2005-11-10 16:43:22 ocallot Exp $
 #ifndef CALOEVENT_CALODIGITSFROMRAW_H 
 #define CALOEVENT_CALODIGITSFROMRAW_H 1
 
@@ -9,9 +9,10 @@
 // from CaloEvent
 #include "Event/CaloDigit.h"
 
-#include "CaloDAQ/ICaloTriggerFromRaw.h"
+#include "CaloDAQ/ICaloTriggerBitsFromRaw.h"
 #include "CaloDAQ/ICaloEnergyFromRaw.h"
 
+#include "GaudiAlg/ISequencerTimerTool.h"
 // from DAQEvent
 #include "Event/RawEvent.h"
 
@@ -45,11 +46,9 @@ public:
 
 protected:
   
-  void convertSpd( int bankType, 
-                   std::string containerName, double energyScale );
+  void convertSpd( std::string containerName, double energyScale );
   
-  void convertCaloEnergies( int bankType, 
-                            std::string containerName );
+  void convertCaloEnergies( std::string containerName );
 
 private: 
   
@@ -57,7 +56,7 @@ private:
   std::string m_extension ; ///< Added to the default container name, for tests
   int         m_calo      ;
 
-  ICaloTriggerFromRaw* m_spdTool;
+  ICaloTriggerBitsFromRaw* m_spdTool;
   ICaloEnergyFromRaw*  m_energyTool;
 };
 #endif // CALOEVENT_CALODIGITSFROMRAW_H

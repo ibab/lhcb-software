@@ -1,4 +1,4 @@
-// $Id: CaloDigitsFromRaw.cpp,v 1.2 2005-09-06 14:50:01 ocallot Exp $
+// $Id: CaloDigitsFromRaw.cpp,v 1.3 2005-11-10 16:43:22 ocallot Exp $
 // Include files 
 
 // CLHEP
@@ -51,14 +51,9 @@ StatusCode CaloDigitsFromRaw::initialize ( ) {
   debug() << "==> Initialize" << endmsg;
 
   if ( 0 == m_calo ) {
-    m_spdTool = tool<ICaloTriggerFromRaw>( "CaloSpdBitFromRaw" );
+    m_spdTool = tool<ICaloTriggerBitsFromRaw>( "CaloTriggerBitsFromRaw" );
   } else {
     m_energyTool = tool<ICaloEnergyFromRaw>( "CaloEnergyFromRaw/" + name() + "Tool" );
-    if ( 1 == m_calo ) {
-      m_energyTool->setScaleAndShift( 0.1 * MeV, 0. );
-    } else {
-      m_energyTool->setScaleAndShift( 1.0 * MeV, 0.6 );
-    }  
   }
   return StatusCode::SUCCESS;
 }
@@ -70,17 +65,13 @@ StatusCode CaloDigitsFromRaw::execute() {
   debug() << "==> Execute" << endreq;
 
   if       ( 0 == m_calo ) {
-    convertSpd ( RawBuffer::PrsTrig, 
-                 CaloDigitLocation::Spd + m_extension, 3.2 * MeV );
+    convertSpd ( CaloDigitLocation::Spd + m_extension, 3.2 * MeV );
   } else if  ( 1 == m_calo ) {
-    convertCaloEnergies ( RawBuffer::PrsE, 
-                          CaloDigitLocation::Prs + m_extension );
+    convertCaloEnergies ( CaloDigitLocation::Prs + m_extension );
   } else if  ( 2 == m_calo ) {
-    convertCaloEnergies ( RawBuffer::EcalE, 
-                          CaloDigitLocation::Ecal + m_extension );
+    convertCaloEnergies ( CaloDigitLocation::Ecal + m_extension );
   } else if  ( 3 == m_calo ) {
-    convertCaloEnergies ( RawBuffer::HcalE, 
-                          CaloDigitLocation::Hcal + m_extension );
+    convertCaloEnergies ( CaloDigitLocation::Hcal + m_extension );
   }
   return StatusCode::SUCCESS;
 };
@@ -88,44 +79,47 @@ StatusCode CaloDigitsFromRaw::execute() {
 //=========================================================================
 //  Convert the SPD trigger bits to CaloDigits
 //=========================================================================
-void CaloDigitsFromRaw::convertSpd ( int bankType, 
-                                     std::string containerName,
+void CaloDigitsFromRaw::convertSpd ( std::string containerName,
                                      double energyScale ) {
 
   CaloDigits* digits = new CaloDigits();
   put( digits, containerName );
 
-  m_spdTool->prepare( bankType );
+  std::vector<CaloCellID>& spdCells = m_spdTool->firedCells( false );
+
   CaloCellID id;
-  int dum;
-  while ( m_spdTool->nextCell( id, dum ) ) {
-    CaloDigit* dig = new CaloDigit( id, energyScale );
+  for ( std::vector<CaloCellID>::const_iterator itD = spdCells.begin();
+        spdCells.end() != itD; ++itD ) {
+    CaloDigit* dig = new CaloDigit( *itD, energyScale );
     digits->insert( dig );
   }
   
   std::stable_sort ( digits->begin(), digits->end(), 
                      CaloDigitsFromRaw::IncreasingByCellID() );
+
+  debug() << "SPD size : " << digits->size() << endreq;
 }
 
 //=========================================================================
 //  Converts the standard calorimeter adc-energy
 //=========================================================================
-void CaloDigitsFromRaw::convertCaloEnergies ( int bankType, 
-                                              std::string containerName ) {
+void CaloDigitsFromRaw::convertCaloEnergies ( std::string containerName ) {
 
   CaloDigits* digits = new CaloDigits();
   put( digits, containerName );
 
-  m_energyTool->prepare( bankType );
-  CaloCellID id;
-  double energy;
-  while ( m_energyTool->nextCell( id, energy ) ) {
-    CaloDigit* dig = new CaloDigit( id, energy );
-    debug() << "ID " << id << " energy " << energy << endreq;
+  std::vector<CaloDigit>& allDigits = m_energyTool->digits( );
+
+  for ( std::vector<CaloDigit>::const_iterator itD = allDigits.begin();
+        allDigits.end() != itD; ++itD ) {
+    CaloDigit* dig = (*itD).clone();
+    debug() << "ID " << dig->cellID() << " energy " << dig->e() << endreq;
     digits->insert( dig );
   }
   
   std::stable_sort ( digits->begin(), digits->end(), 
                      CaloDigitsFromRaw::IncreasingByCellID() );
+
+  debug() << containerName << " ADC size " << digits->size() << endreq;
 }
 //=============================================================================

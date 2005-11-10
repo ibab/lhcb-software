@@ -4,6 +4,17 @@
 ! Purpose     : Convert Calo Digit and Trigger information to RawBuffer banks.
 !-----------------------------------------------------------------------------
 
+! 2005-11-10 - Olivier Callot
+ - Use a new RawBuffer::BankType for the packed (TELL1) information. The
+   bank type is set according to detector name, option with default from
+   the name of the  instance.
+
+! 2005-11-08 - Olivier Callot
+ - Change the interface to get a more efficient decoding:
+   o ICaloEnergyFromRaw returns a vector of CaloDigit or of CaloAdc (new object)
+   o ICaloTriggerAdcsFromRaw returns a vector of L0CaloAdc
+   o ICaloTriggerBitsFromRaw returns a vector of CaloCellID.
+
 ! 2005-09-06 - Olivier Callot
  - New tool CaloReadoutTool for a description of the cards and readout, 1 MHz version
  - Implementation of the proposed 1 MHz coding, with packing instead of
@@ -13,7 +24,7 @@
     EcalFillRawBuffer.DataCodingType = 2;
     HcalFillRawBuffer.DataCodingType = 2;
     CaloFillPrsSpdRawBuffer.DataCodingType = 3;
- - Process thenew format in the decoding algorithms CaloEnergyFromRaw, CaloTriggerFromRaw, 
+ - Process the new format in the decoding algorithms CaloEnergyFromRaw, CaloTriggerFromRaw, 
    CaloPrsBitFromRaw and CaloSpdBitFromRaw,
 
  - Adjust the comparison algorithm. New option 'packedRawBuffer' to be set to

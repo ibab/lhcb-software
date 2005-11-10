@@ -1,4 +1,4 @@
-// $Id: CaloFillPrsSpdRawBuffer.h,v 1.2 2005-09-06 14:50:01 ocallot Exp $
+// $Id: CaloFillPrsSpdRawBuffer.h,v 1.3 2005-11-10 16:43:22 ocallot Exp $
 #ifndef CALOFILLPRSSPDRAWBUFFER_H 
 #define CALOFILLPRSSPDRAWBUFFER_H 1
 
@@ -29,23 +29,13 @@ public:
 
 protected:
 
-  int bufferNumber( const CaloCellID& ID )  {
-    int area = ID.area();
-    int row  = ID.row();
-    int col  = ID.col();
-    int bNum = 0;
-
-    bNum = 1 + area;
-    if ( 0 == area && 34 > row ) bNum = 0; //== Two L1 boards
-    if ( 31 < col ) bNum += 4;
-    return bNum;
-  }
-
   void fillDataBank ( );
 
   void fillDataBankShort ( );
 
   void fillTriggerBank ( );
+
+  void fillTriggerBankShort ( );
 
   void fillPackedBank ( );
 
@@ -56,7 +46,6 @@ private:
   int    m_bankType;
   int    m_triggerBankType;
   int    m_numberOfBanks;
-  double m_energyScale;
   int    m_dataCodingType;
 
   DeCalorimeter* m_calo;

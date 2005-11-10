@@ -1,4 +1,4 @@
-// $Id: CaloFillRawBuffer.cpp,v 1.3 2005-09-06 14:50:01 ocallot Exp $
+// $Id: CaloFillRawBuffer.cpp,v 1.4 2005-11-10 16:43:22 ocallot Exp $
 // Include files 
 // CLHEP
 #include "CLHEP/Units/SystemOfUnits.h"
@@ -6,8 +6,9 @@
 // from Gaudi
 #include "GaudiKernel/AlgFactory.h" 
 
-#include "Event/CaloDigit.h"
+#include "Event/CaloAdc.h"
 #include "Event/L0CaloAdc.h"
+#include "Event/RawEvent.h"
 
 // local
 #include "CaloFillRawBuffer.h"
@@ -33,22 +34,23 @@ CaloFillRawBuffer::CaloFillRawBuffer( const std::string& name,
   //=== Default values according to the name of the algorithm !
   if ( "Ecal" == name.substr( 0, 4 ) ) {
     m_detectorName     = "Ecal";
-    m_inputBank        = CaloDigitLocation::Ecal;
+    m_inputBank        = CaloAdcLocation::Ecal;
     m_triggerBank      = L0CaloAdcLocation::Ecal;
     m_bankType         = RawBuffer::EcalE;
     m_triggerBankType  = RawBuffer::EcalTrig;
-    m_numberOfBanks    = 10;
+    m_numberOfBanks    = 1;
   } else if ("Hcal" == name.substr( 0, 4 ) ) {
     m_detectorName     = "Hcal";
-    m_inputBank        = CaloDigitLocation::Hcal;
+    m_inputBank        = CaloAdcLocation::Hcal;
     m_triggerBank      = L0CaloAdcLocation::Hcal;
     m_bankType         = RawBuffer::HcalE;
     m_triggerBankType  = RawBuffer::HcalTrig;
-    m_numberOfBanks    = 4;
+    m_numberOfBanks    = 1;
   }
 
   declareProperty( "DataCodingType",   m_dataCodingType = 1 );
-  declareProperty( "EnergyScale",      m_energyScale    = 1. * MeV );
+  declareProperty( "InputBank",        m_inputBank          );
+  declareProperty( "BankType",         m_bankType          );
 }
 //=============================================================================
 // Destructor
@@ -71,15 +73,15 @@ StatusCode CaloFillRawBuffer::initialize() {
 
   if ( 2 == m_dataCodingType ) {
     m_numberOfBanks =  m_roTool->nbTell1();
+    if ( "Ecal" == m_detectorName ) {
+      m_bankType = RawBuffer::EcalPacked;
+    } else {
+      m_bankType = RawBuffer::HcalPacked;
+    }
     info() << "Processing " << m_roTool->nbFECards() 
            << " FE Cards and " << m_roTool->nbTell1() << " TELL1"
            << endreq;
 
-    if ( "Ecal" == m_detectorName ) {
-      m_inputBank = CaloDigitLocation::FullEcal;
-    } else if ( "Hcal" == m_detectorName ) {
-      m_inputBank = CaloDigitLocation::FullHcal;
-    }
   }
   
   m_nbEvents    = 0;
@@ -94,11 +96,9 @@ StatusCode CaloFillRawBuffer::initialize() {
     m_dataSize.push_back( 0. );
   }
 
-  info() << "Data coding type " << m_dataCodingType 
-         << " energy scale " << m_energyScale/MeV << " MeV"
-         << endreq;
+  info() << "Data coding type " << m_dataCodingType << endreq;
 
-  if ( 2 < m_dataCodingType || 0 > m_dataCodingType ) {
+  if ( 2 < m_dataCodingType || 0 >= m_dataCodingType ) {
     Error( "Invalid Data coding type", StatusCode::FAILURE );
   }
 
@@ -119,9 +119,7 @@ StatusCode CaloFillRawBuffer::execute() {
 
   //== Build the data banks
 
-  if ( 0 == m_dataCodingType ) {
-    fillDataBank( );
-  } else if ( 1 == m_dataCodingType ) {
+  if ( 1 == m_dataCodingType ) {
     fillDataBankShort( );
   } else if ( 2 == m_dataCodingType ) {
     fillPackedBank( );
@@ -129,22 +127,20 @@ StatusCode CaloFillRawBuffer::execute() {
   
   //== Build the trigger banks
 
-  if ( 2 > m_dataCodingType ) fillTriggerBank( );
+  if ( 1 == m_dataCodingType ) fillTriggerBank( );
   
   int totDataSize = 0;
   int totTrigSize = 0;
 
   RawBuffer* rawBuffer = get<RawBuffer>( RawBufferLocation::Default );
-  raw_int board = 0;
   for ( unsigned int kk = 0; m_banks.size() > kk; kk++ ) {
-    rawBuffer->addBank( board, m_bankType, m_banks[kk], m_dataCodingType );
+    rawBuffer->addBank( kk, m_bankType, m_banks[kk], m_dataCodingType );
     totDataSize += m_banks[kk].size();
     m_dataSize[kk] += m_banks[kk].size();
-    if ( 2 >m_dataCodingType ) {
-      rawBuffer->addBank( board, m_triggerBankType, m_trigBanks[kk] );
+    if ( 1 == m_dataCodingType ) {
+      rawBuffer->addBank( kk, m_triggerBankType, m_trigBanks[kk] );
       totTrigSize += m_trigBanks[kk].size();
     }
-    board++;
   }
 
   m_totDataSize += totDataSize;
@@ -152,21 +148,18 @@ StatusCode CaloFillRawBuffer::execute() {
   m_nbEvents++;
 
   if ( msgLevel( MSG::DEBUG ) ) {
-    board = 0;
     debug() << "Bank sizes: ";
     for ( unsigned int kk = 0; m_banks.size() > kk; kk++ ) {
-      debug() << format( "%2d:%4d+%4d ", board, m_banks[kk].size(),
+      debug() << format( "%2d:%4d+%4d ", kk, m_banks[kk].size(),
                          m_trigBanks[kk].size() );
-      board++;
     }
     debug() << endreq << "Total Data bank size " << totDataSize
             << " + trigger " << totTrigSize << endreq;
   }
 
   if ( MSG::VERBOSE >= msgLevel() ) {
-    board = 0;
     for ( unsigned int kk = 0; m_banks.size() > kk; kk++ ) {
-      verbose() << "DATA bank : " << board << endreq;
+      verbose() << "DATA bank : " << kk << endreq;
       int kl = 0;
       std::vector<raw_int>::const_iterator itW;
       
@@ -185,9 +178,15 @@ StatusCode CaloFillRawBuffer::execute() {
         if ( 0 == kl%8 ) verbose() << endreq;
       }
       verbose() << endreq;
-      board++;
     }
   }
+
+  if ( exist<RawEvent>( RawEventLocation::Default ) ) {
+    RawEvent* dum = get<RawEvent>( RawEventLocation::Default );
+    evtSvc()->unregisterObject( dum );
+    delete dum;
+  }
+  
  
   return StatusCode::SUCCESS;
 };
@@ -216,63 +215,18 @@ StatusCode CaloFillRawBuffer::finalize() {
 
   return GaudiAlgorithm::finalize();  // must be called after all other actions
 }
-
-//=========================================================================
-//  Fill the calorimeter data bank, cluster structure
-//=========================================================================
-void CaloFillRawBuffer::fillDataBank ( ) {
-  int prevIndx   = -1;
-  int nextIndex  = -1;
-
-  //== Store the ADC data. Format type  clusters, 32 bits per adc value.
-
-  int headIndex  = -1;
-  int clusLength = 0;
-  int bufIndx    = -1;
-  CaloDigits* digs = get<CaloDigits>( m_inputBank );
-  CaloDigits::const_iterator itD;
-  for ( itD = digs->begin(); digs->end() != itD; ++itD ){
-    CaloCellID id = (*itD)->cellID();
-    int adc = int( floor( (*itD)->e() / m_energyScale + .5 ) ); 
-    int cellIndex = id.raw();
-    
-    bufIndx = bufferNumber( id );
-      
-    if ( bufIndx != prevIndx ) { nextIndex = -1; }
-      
-    if ( cellIndex != nextIndex ) {
-      if ( 0 <= headIndex ) {
-        m_banks[prevIndx][headIndex] += clusLength;
-      }
-      clusLength = 0;
-      headIndex  = m_banks[bufIndx].size();
-      m_banks[bufIndx].push_back( cellIndex << 16 );
-    }
-    m_banks[bufIndx].push_back( adc );
-    nextIndex = cellIndex+1;
-    prevIndx = bufIndx;
-    clusLength++;
-  }
-  if ( 0 <= headIndex ) {
-    m_banks[bufIndx][headIndex] += clusLength;
-  }
-}
-
 //=========================================================================
 //  Fill the calorimeter data bank, simple structure: ID (upper 16 bits) + ADC
 //=========================================================================
 void CaloFillRawBuffer::fillDataBankShort ( ) {
-  CaloDigits* digs = get<CaloDigits>( m_inputBank );
-  CaloDigits::const_iterator itD;
+  CaloAdcs* digs = get<CaloAdcs>( m_inputBank );
+  CaloAdcs::const_iterator itD;
   for ( itD = digs->begin(); digs->end() != itD; ++itD ){
     CaloCellID id = (*itD)->cellID();
-    //== find back the ADC content, is on 12 bits by construction
-    //== As there is a pedestal shift, add one before int rounding.
-    int adc = int( floor( (*itD)->e() / m_calo->cellGain(id) + 1. ) );
+    int adc       = (*itD)->adc();
     int cellIndex = id.raw();
-    raw_int word = (cellIndex << 16) + (adc & 0xFFFF );
-    int bufIndx = bufferNumber( id );
-    m_banks[bufIndx].push_back( word );
+    raw_int word  = (cellIndex << 16) + (adc & 0xFFFF );
+    m_banks[0].push_back( word );
   }
 }
 
@@ -280,7 +234,7 @@ void CaloFillRawBuffer::fillDataBankShort ( ) {
 //  Packed data format, trigger and data in the same bank. Process ALL digits
 //=========================================================================
 void CaloFillRawBuffer::fillPackedBank ( ) {
-  CaloDigits* digs = get<CaloDigits>( m_inputBank );
+  CaloAdcs* digs = get<CaloAdcs>( m_inputBank );
   L0CaloAdcs* trigAdcs = get<L0CaloAdcs>( m_triggerBank );
   
   for ( int kTell1 = 0 ; m_numberOfBanks > kTell1 ; kTell1++ ) {
@@ -288,54 +242,16 @@ void CaloFillRawBuffer::fillPackedBank ( ) {
     for ( std::vector<int>::iterator iFe = feCards.begin(); feCards.end() != iFe; ++iFe ) {
       int cardNum = *iFe;
       int sizeIndex  = m_banks[kTell1].size();
-      m_banks[kTell1].push_back( m_roTool->cardCode( cardNum ) << 8 );
-      int patternIndex = m_banks[kTell1].size();
-      int pattern      = 0;
-      m_banks[kTell1].push_back( pattern );
-      int word = 0;
-      int offset = 0;
-
+      m_banks[kTell1].push_back( m_roTool->cardCode( cardNum ) << 14 );
       std::vector<CaloCellID> ids = m_roTool->cellInFECard( cardNum );
-      int bNum = 0;
-      for ( std::vector<CaloCellID>::const_iterator itId = ids.begin();
-            ids.end() != itId; ++itId ) {
-        CaloCellID id = *itId;
-        CaloDigit* dig = digs->object( id );
-        int adc = 8;        //== Default if non existing cell.
-        if ( 0 != dig ) {
-          //== find back the ADC content, is on 12 bits by construction
-          //== As there is a pedestal shift, add one before int rounding.
-          adc = int( floor( dig->e() / m_calo->cellGain( id ) + 1. ) ) + 8;
-          if (    0 > adc ) adc = 0;
-          if ( 4095 < adc ) adc = 4095;
-        }
 
-        word |= adc<<offset;
-        if ( 16   > adc ) {  //... store short
-          offset  += 4;
-        } else {             //... store long.
-          pattern += (1<<bNum);
-          offset  +=12;
-        }
-        if ( 32 <= offset ) {        //== Have we a full word or more ? Store it
-          m_banks[kTell1].push_back( word );
-          offset -= 32;
-          word    = adc >> (12-offset);  //== upper bits if needed
-        }
-        bNum++;
-      }
-      if ( 0 != offset )  m_banks[kTell1].push_back( word );
-      
-      int sizeAdc = m_banks[kTell1].size() - patternIndex;
-      m_banks[kTell1][patternIndex] = pattern;
-
-      //=== Now the trigger part
-      patternIndex = m_banks[kTell1].size();
+      //=== The trigger part is first
+      int patternIndex = m_banks[kTell1].size();
       int patTrig = 0;
       m_banks[kTell1].push_back( patTrig );
-      word = 0;
-      offset = 0;
-      bNum = 0;
+      int word = 0;
+      int offset = 0;
+      int bNum = 0;
       for ( std::vector<CaloCellID>::const_iterator itId = ids.begin();
             ids.end() != itId; ++itId ) {
         CaloCellID id = *itId;
@@ -356,15 +272,55 @@ void CaloFillRawBuffer::fillPackedBank ( ) {
       if ( 0 != offset ) {
         m_banks[kTell1].push_back( word );
       }
-      int sizeTrig = m_banks[kTell1].size() - patternIndex;
+      int sizeTrig = 4 * ( m_banks[kTell1].size() - patternIndex ); // in byte
       //== If no trigger at all, remove even the pattern...
-      if ( 1 == sizeTrig ) {
+      if ( 4 == sizeTrig ) {
         m_banks[kTell1].pop_back();
         sizeTrig = 0;
       } else {
         m_banks[kTell1][patternIndex] = patTrig;
       }
-      m_banks[kTell1][sizeIndex] |= (sizeAdc << 4) + sizeTrig;
+
+      //=== Now the ADCs
+      patternIndex = m_banks[kTell1].size();
+      int pattern      = 0;
+      m_banks[kTell1].push_back( pattern );
+      word = 0;
+      offset = 0;
+      bNum = 0;
+
+      for ( std::vector<CaloCellID>::const_iterator itId = ids.begin();
+            ids.end() != itId; ++itId ) {
+        CaloCellID id = *itId;
+        CaloAdc* dig = digs->object( id );
+        int adc = 256;        //== Default if non existing cell.
+        if ( 0 != dig ) {
+          adc = dig->adc() + 256;
+          if (    0 > adc ) adc = 0;
+          if ( 4095 < adc ) adc = 4095;
+        }
+        if ( 248 <= adc && 264 > adc ) { //... store short
+          adc -= 248;
+          word |= adc<<offset;
+          offset += 4;
+        } else {                         //... store long
+          word |= adc<<offset;
+          pattern += (1<<bNum);
+          offset  +=12;
+        }
+        if ( 32 <= offset ) {        //== Have we a full word or more ? Store it
+          m_banks[kTell1].push_back( word );
+          offset -= 32;
+          word    = adc >> (12-offset);  //== upper bits if needed
+        }
+        bNum++;
+      }
+      if ( 0 != offset )  m_banks[kTell1].push_back( word );
+      
+      int sizeAdc = 4 * ( m_banks[kTell1].size() - patternIndex );
+      m_banks[kTell1][patternIndex] = pattern;
+
+      m_banks[kTell1][sizeIndex] |= (sizeAdc << 7) + sizeTrig;
       m_totTrigSize += sizeTrig;
       
       if ( msgLevel( MSG::DEBUG ) ) {
@@ -390,10 +346,6 @@ void CaloFillRawBuffer::fillTriggerBank ( ) {
   L0CaloAdcs::const_iterator itT;
   for ( itT = trigAdcs->begin(); trigAdcs->end() != itT; ++itT ) {
     CaloCellID id = (*itT)->cellID();
-    int bufIndx = bufferNumber( id );
-    
-    if ( bufIndx != prevIndx ) { nextIndex = -1; }
-    
     int cellIndex = id.raw();
     if ( cellIndex != nextIndex ) {
       if ( 0 <= prevIndx ) m_trigBanks[prevIndx].push_back( word );
@@ -406,8 +358,7 @@ void CaloFillRawBuffer::fillTriggerBank ( ) {
     if ( MSG::VERBOSE >= msgLevel() ) {
       verbose() << id << format( "trigValue %3d word %8x ", (*itT)->adc(), word) << endreq;
     }
-    
-    prevIndx = bufIndx;
+    prevIndx = 0;
   }
   if ( 0 <= prevIndx ) m_trigBanks[prevIndx].push_back( word );
 
