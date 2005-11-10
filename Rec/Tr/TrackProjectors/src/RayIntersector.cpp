@@ -1,4 +1,4 @@
-// $Id: RayIntersector.cpp,v 1.1 2005-10-28 16:02:30 hernando Exp $
+// $Id: RayIntersector.cpp,v 1.2 2005-11-10 14:38:57 hernando Exp $
 // Include files
 
 // local
@@ -13,6 +13,7 @@
 const EVector& RayIntersector::distance(const EVector& x1, 
                                         const EVector& v1) 
 {
+  // return the vector distance between this ray and a reference ray
   m_x1 = x1;
   m_v1 = v1;
   
@@ -42,6 +43,11 @@ const EVector& RayIntersector::distance(const EVector& x1,
 double RayIntersector::ddistance(const EVector& dx, const EVector& dv1, 
                                  const EVector& dv2)
 {
+  /** It computes the derivation of the residual in module as a function
+      of the derivation of the position and direction of the first ray and
+      the derivation of the vector that goes in the direction of the residuals
+      as a function of the reference ray.
+   **/
   double n1 = -m_v11*(dx.dot(m_v2)+m_x.dot(dv2))-m_v20*2.*dv1.dot(m_v1);
   double n2 =  m_v12*(dx.dot(m_v1)+m_x.dot(dv1)) 
     + m_v10*(dv1.dot(m_v2)+m_v1.dot(dv2));
@@ -59,6 +65,11 @@ double RayIntersector::ddistance(const EVector& dx, const EVector& dv1,
 double RayIntersector::ddistance(const EVector& dx1, const EVector& dv1,
                                  const EVector& dx2, const EVector& dw) 
 {
+  /** It computes the derivation of the residual in module as a function
+      of the derivation of the position and direction of the 2 rays
+      note that if the reference ray it is static, they should be null vectors!
+   **/
+  
   EVector dx  = dx1-dx2;
   EVector dv2 = dw.cross(m_v1)+m_w.cross(dv1);
   return ddistance(dx,dv1,dv2);

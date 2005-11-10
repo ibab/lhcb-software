@@ -14,7 +14,7 @@
  *  
  *  @author Jose Hernando
  *  @author Eduardo Rodrigues
- *  @date   2005-04-08
+ *  @date   2005-11-10
  */
 class TrackOTRayProjector : public TrackProjector {
 public:

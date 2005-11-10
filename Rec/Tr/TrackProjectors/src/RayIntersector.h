@@ -1,4 +1,4 @@
-// $Id: RayIntersector.h,v 1.1 2005-10-28 16:02:30 hernando Exp $
+// $Id: RayIntersector.h,v 1.2 2005-11-10 14:38:57 hernando Exp $
 #ifndef RAYINTERSECTOR_H 
 #define RAYINTERSECTOR_H 1
 
@@ -31,13 +31,15 @@ public:
   {setReferenceRay(x,w);}
   
   //! destructor
-  virtual ~RayIntersector( );
+  virtual ~RayIntersector( ) {};
 
   //! set rhe refenrence ray
+  // thi should be the static ray: i.e the wire
   void setReferenceRay(const EVector& x, const EVector& w)
   {m_x2 = x;m_w = w;}  
 
   //! return the distance between 2 rays
+  // the second ray it is the static one (i.e the wire position and direction)
   const EVector& distance(const EVector& x1, const EVector& v1,
                           const EVector& x, const EVector& w) {
     setReferenceRay(x,w);
@@ -46,6 +48,7 @@ public:
   
 
   //! return the distance of this ray to respect the reference one
+  // for example: x1,v1 are the ray crated from the state
   const EVector& distance(const EVector& x1, const EVector& v1);
   
   //! return the derivative of the distance with respect the derivation
