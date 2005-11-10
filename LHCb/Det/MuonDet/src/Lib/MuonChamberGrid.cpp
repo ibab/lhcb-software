@@ -1,4 +1,4 @@
-// $Id: MuonChamberGrid.cpp,v 1.3 2005-11-09 17:27:55 asarti Exp $
+// $Id: MuonChamberGrid.cpp,v 1.4 2005-11-10 11:02:03 asarti Exp $
 // Include files 
 
 // local
@@ -66,7 +66,9 @@ std::vector< std::pair< MuonFrontEndID,std::vector<float> > > MuonChamberGrid::l
   std::vector<double> y_rdout;
   std::vector<float> myBoundary; myBoundary.resize(4);
 
+  bool debug = false;
   bool parallelFlag = false; 
+
   double slopeY(0),intercept(0);
   if(fabs(x_exit-x_enter)>0.001){
     slopeY =(y_exit - y_enter)/(x_exit - x_enter);
@@ -81,8 +83,6 @@ std::vector< std::pair< MuonFrontEndID,std::vector<float> > > MuonChamberGrid::l
   int RdN = 1;
   if(TstRead > 1) RdN = 2;
 
-  bool debug = false;
-  
   if(debug) std::cout<< "Returning List of Phys Channels for grid G"
 		     << m_number_of_grid<<" . A Details. Vectors rd1x: "
 		     << m_x_pad_rdout1<<" rd1y: "
@@ -121,7 +121,7 @@ std::vector< std::pair< MuonFrontEndID,std::vector<float> > > MuonChamberGrid::l
   
     double tmpXLenght(0);
     for(inxLo = 0; inxLo < PhNx; inxLo++) {
-      if(x_enter > tmpXLenght) {
+      if(x_enter - tmpXLenght > 0.0001) {
 	tmpXLenght += x_rdout[inxLo];
 	tmpNxChaEntry =  inxLo;
 	//	tmpNxChaEntry =  inxLo+1;
@@ -131,7 +131,7 @@ std::vector< std::pair< MuonFrontEndID,std::vector<float> > > MuonChamberGrid::l
     }
     tmpXLenght = 0;
     for(inxLo = 0; inxLo < PhNx; inxLo++) {
-      if(x_exit > tmpXLenght) {
+      if(x_exit - tmpXLenght > 0.0001) {
 	tmpXLenght += x_rdout[inxLo];
 	tmpNxChaExit =  inxLo;
 	//	tmpNxChaExit =  inxLo+1;
@@ -166,7 +166,7 @@ std::vector< std::pair< MuonFrontEndID,std::vector<float> > > MuonChamberGrid::l
     }   
 
     unsigned int nyBegin ;    unsigned int nyEnd ;					
-    double xBegin,xEnd;       double yBegin, yEnd; 
+    double xBegin(0.),xEnd(0.);       double yBegin(0.), yEnd(0.); 
 
     if(debug) std::cout<< "Returning List of Phys Channels. Cha_entry: "
 		       << nxChaEntry<<" Cha_exit: "
@@ -183,6 +183,15 @@ std::vector< std::pair< MuonFrontEndID,std::vector<float> > > MuonChamberGrid::l
       }else{
 	xEnd = retLenght(Xloop+1,x_rdout);
       }	
+
+      if(debug) std::cout<< "Linear Parameters bef p flag. Xbeg "
+			 <<xBegin<<"; xEnd: "
+			 <<xEnd<<" Ybeg "
+			 <<yBegin<<"; yEnd: "
+			 <<yEnd<<" int: "
+			 <<intercept<<" slope: "
+			 <<slopeY<<std::endl;
+
 
       if(parallelFlag){	
 	yBegin=y_enter;	yEnd= y_exit;
@@ -204,7 +213,7 @@ std::vector< std::pair< MuonFrontEndID,std::vector<float> > > MuonChamberGrid::l
       double tmpYLenght(0);
       
       for(inyLo = 0; inyLo < PhNy; inyLo++) {
-	if(yBegin > tmpYLenght) {
+	if(yBegin - tmpYLenght > 0.0001) {
 	  tmpYLenght += y_rdout[inyLo];
 	  //	  tmpYBegin =  inyLo+1;
 	  tmpYBegin =  inyLo;
@@ -214,7 +223,7 @@ std::vector< std::pair< MuonFrontEndID,std::vector<float> > > MuonChamberGrid::l
       }
       tmpYLenght = 0;
       for(inyLo = 0; inyLo < PhNy; inyLo++) {
-	if(yEnd > tmpYLenght) {
+	if(yEnd - tmpYLenght > 0.0001) {
 	  tmpYLenght += y_rdout[inyLo];
 	  //	  tmpYEnd =  inyLo+1;
 	  tmpYEnd =  inyLo;

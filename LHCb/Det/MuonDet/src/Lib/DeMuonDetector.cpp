@@ -1,4 +1,4 @@
-// $Id: DeMuonDetector.cpp,v 1.5 2005-11-09 17:27:55 asarti Exp $
+// $Id: DeMuonDetector.cpp,v 1.6 2005-11-10 11:02:03 asarti Exp $
 
 // Include files
 #include "MuonDet/DeMuonDetector.h"
@@ -505,6 +505,8 @@ std::vector< std::pair<MuonFrontEndID, std::vector<float> > > DeMuonDetector::li
       myVec = tmpPair_it->second;
       for(int iDm = 0; iDm<4; iDm++){  
 	myVec.at(iDm) = iDm%2 ? myVec.at(iDm)*2*dy : myVec.at(iDm)*2*dx;
+	//Added resolution effect
+	if(fabs(myVec.at(iDm)) < 0.0001) myVec.at(iDm) = 0;
       }
       myPair.push_back(std::pair< MuonFrontEndID,std::vector<float> >(myFE,myVec));
     }

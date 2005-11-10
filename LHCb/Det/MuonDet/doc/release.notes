@@ -1,9 +1,15 @@
-! $Id: release.notes,v 1.46 2005-11-09 17:27:55 asarti Exp $
+! $Id: release.notes,v 1.47 2005-11-10 11:02:10 asarti Exp $
 !
 ! Package     : MuonDet
 ! Responsible : Alessia Satta
 
 !========================= MuonDet v4r8 2005-07-01 =========================
+! 2005-11-05 - Alessio Sarti
+   - src/Lib/MuonChamberGrid.cpp 
+   - src/Lib/DeMuonDetector.cpp
+	Introduced resolution effects [removes fake channels
+	returned for rounding problems]
+
 ! 2005-11-05 - Alessio Sarti
    - src/Lib/DeMuonDetector.cpp (.h accordingly)
 	Now returns the list of PhCh with distances in mm instead of
