@@ -92,7 +92,7 @@ void SimulationSvc::clear () {
 // reload
 // ------------------------------------------------------------------------
 void SimulationSvc::reload () {
-  MsgStream log (msgSvc(), "SimulationSvc");
+  MsgStream msg (msgSvc(), "SimulationSvc");
 
   // erases the old set of attributes
   clear();
@@ -101,19 +101,19 @@ void SimulationSvc::reload () {
   IXmlSvc* xmlSvc;
   StatusCode status = serviceLocator()->service("XmlCnvSvc", xmlSvc, true);
   if (status.isFailure()) {
-    log << MSG::ERROR << "Unable to get XmlCnvSvc. The simulation "
-        << "attributes will not be loaded." << endreq;
+    msg << MSG::ERROR << "Unable to get XmlCnvSvc. The simulation "
+        << "attributes will not be loaded." << endmsg;
     return;
   }
 
-  log << MSG::INFO << "Loading simulation attributes file \""
-      << m_simDbLocation << "\" ..." <<endreq;
+  msg << MSG::INFO << "Loading simulation attributes file \""
+      << m_simDbLocation << "\" ..." << endmsg;
 
   // parses the file containing the simatt definitions
   xercesc::DOMDocument* document = xmlSvc->parse (m_simDbLocation.c_str());
   if (0 == document) {
-    log << MSG::ERROR << "Unable to parse file " << m_simDbLocation
-        << ". The simulation attributes will not be loaded." << endreq;
+    msg << MSG::ERROR << "Unable to parse file " << m_simDbLocation
+        << ". The simulation attributes will not be loaded." << endmsg;
     return;
   }
 
@@ -296,15 +296,27 @@ void SimulationSvc::reload () {
   xercesc::XMLString::release((XMLCh**) &ProdCutStr);
   
   // go through the tree of elements 
-  const XMLCh* RegStr = xercesc::XMLString::transcode("Regions");
+  // the following few lines fixed  by SE 3-11-2005.
+  // the fix is to avoid the mixing the terms Region and Regions.
+  //
+  const XMLCh* RegnsStr = xercesc::XMLString::transcode("Regions");
+  const XMLCh* RegStr = xercesc::XMLString::transcode("Region");
   const XMLCh* VolStr = xercesc::XMLString::transcode("Volume");
   const XMLCh* ProdStr = xercesc::XMLString::transcode("prodcut");
  
-  xercesc::DOMNodeList* domRegionsList = document->getElementsByTagName(RegStr);
+  xercesc::DOMNodeList* domRegionsList = document->getElementsByTagName(RegnsStr);
+
+  msg << MSG::DEBUG << "SimSvc Production  regions  list length \""
+      << (int) domRegionsList ->getLength() << "\" ..." << endmsg;
+  // only 1 regions element is allowed in the following. A regions can have
+  // many many region elements. Each region element may have different volumes.
+  // end of fixes by SE.
   if (domRegionsList->getLength() > 0) {
     xercesc::DOMNode* regionsNode = domRegionsList->item(0);
     xercesc::DOMElement* regionsElement = (xercesc::DOMElement*) regionsNode;
     xercesc::DOMNodeList* domRegionList = regionsElement->getElementsByTagName(RegStr);
+    msg << MSG::DEBUG << "SimSvc Production  region  list length \""
+        << (int) domRegionList ->getLength() << "\" ..." << endmsg;
     
     unsigned int i;
     for (i = 0; i < domRegionList->getLength(); i++) {
@@ -312,7 +324,10 @@ void SimulationSvc::reload () {
       xercesc::DOMElement* region = (xercesc::DOMElement*) regionNode;
       std::string regname = dom2Std (region->getAttribute (nameStr));
       std::string prcut = dom2Std (region->getAttribute (ProdStr));
-      
+
+      msg << MSG::DEBUG << "SimSvc region name prcut  \""
+          << regname<<"  "<<prcut << "\" ..." << endmsg;
+
       xercesc::DOMNodeList* domRegionNode = region->getElementsByTagName(VolStr);
       unsigned int j;
       std::vector<std::string> volvect;
@@ -323,6 +338,9 @@ void SimulationSvc::reload () {
         xercesc::DOMElement* vol = (xercesc::DOMElement*) volNode;
 
         std::string volname = dom2Std (vol->getAttribute (nameStr));
+        msg << MSG::DEBUG << "SimSvc vol name    \""
+            << volname <<"  "<< "\" ..." << endmsg;
+  
         volvect.push_back(volname);        
         }
       
@@ -390,9 +408,9 @@ SimulationSvc::simAttribute (const ILVolume* vol) const {
       } 
     else 
       {
-        MsgStream log(msgSvc(), name());
-  log << MSG::WARNING << "No SimAttribute for " 
-      << vol->name() << endreq;
+        MsgStream msg (msgSvc(), name());
+        msg << MSG::WARNING << "No SimAttribute for " 
+            << vol->name() << endmsg;
       } 
   }
   return part;
@@ -413,9 +431,9 @@ SimulationSvc::simAttribute (std::string volname) const {
     } 
   else 
     {
-      MsgStream log(msgSvc(), name());
-      log << MSG::WARNING << "No SimAttribute for " 
-          << volname << endreq;
+      MsgStream msg (msgSvc(), name());
+      msg << MSG::WARNING << "No SimAttribute for " 
+          << volname << endmsg;
     }
   return part;
 }

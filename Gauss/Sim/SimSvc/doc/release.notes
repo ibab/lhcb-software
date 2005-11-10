@@ -5,6 +5,13 @@
 !               volumes
 !-----------------------------------------------------------------------------
 
+!======================== SimSvc v4r2 ==================================
+! 2005-11-10 - Gloria CORTI
+ - src/SimulationSvc.cpp
+   . From Sajan EASO - Fix usage of terms "Regions" and "Region" where 
+     there was a mismatch between the value and what found in the XML 
+   . Use msg instead of log (and endmsg)
+
 !======================== SimSvc v4r1 ==================================
 ! 2004-08-27 - Florence RANJARD
  - SimulationSvc.cpp - fix for WIN32
