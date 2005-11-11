@@ -27,6 +27,7 @@ apply_pattern     lcg_dictionary                                       \
 # =============== patterns ====================================================
 apply_pattern     component_library    library=DetDict
 
-# ==== DetCond needed to compile DetDict
+# ==== DetCond needed to compile DetDict but do not link with DetCondLib
 private
 use DetCond v* Det
+macro_remove use_linkopts $(DetCond_linkopts) $(COOL_linkopts)
