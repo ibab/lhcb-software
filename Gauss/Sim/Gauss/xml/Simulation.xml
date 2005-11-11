@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE Simulation SYSTEM "Simulation.dtd">
+  <Simulation>
+  <SimAtts>
+    
+    <!-- ******************************************************************* -->
+    <!-- This part of the file contains definitions of simulation attributes -->
+    <!-- ******************************************************************* -->
+    
+    <SimAtt name="SimAttrGlobal"
+      minEkine="1.0*MeV"/>
+
+    <SimAtt name="SimAttrMuFilt"
+      minEkine="500.0*MeV"/>
+
+    <SimAtt name="SimAttrMuon"
+      minEkine="10.0*MeV"/>
+    
+    <SimAtt name="SimAttrElectr"
+      minEkine="0.001*MeV"/>
+    <!-- the following is to avoid tracking in the shielding. SE July24 2003
+         set it to default -->
+    <SimAtt name="SimAttrShielding"
+        minEkine="1.0*GeV" /> 
+ 
+    <!-- Note that you may skip some of the attributes ! -->
+    
+  </SimAtts>
+  <LogVols>
+    
+    <!-- ************************************************************** -->
+    <!-- This part is where simulation attributes are mapped to volumes -->
+    <!-- ************************************************************** -->
+
+    <Item name="/dd/Geometry/Rich1/lvRich1MgsOuterH0">
+      <Cut particle="0" attr="SimAttrShielding"/>    
+    </Item>
+    <Item name="/dd/Geometry/Rich1/lvRich1MgsOuterH1">
+      <Cut particle="0" attr="SimAttrShielding"/>    
+    </Item>
+    <Item name="/dd/Geometry/Rich1/lvRich1MgsUpstrH0">
+      <Cut particle="0" attr="SimAttrShielding"/>    
+    </Item>
+    <Item name="/dd/Geometry/Rich1/lvRich1MgsUpstrH1">
+      <Cut particle="0" attr="SimAttrShielding"/>    
+    </Item>
+    <Item name="/dd/Geometry/Rich1/lvRich1MgsDnstrH0">
+      <Cut particle="0" attr="SimAttrShielding"/>    
+    </Item>
+    <Item name="/dd/Geometry/Rich1/lvRich1MgsDnstrH1">
+      <Cut particle="0" attr="SimAttrShielding"/>    
+    </Item>
+    <Item name="/dd/Geometry/Rich1/lvRich1MgsSide">
+      <Cut particle="0" attr="SimAttrShielding"/>    
+    </Item>
+    <Item name="/dd/Geometry/Rich1/lvRich1MgsMidH0">
+      <Cut particle="0" attr="SimAttrShielding"/>    
+    </Item>
+    <Item name="/dd/Geometry/Rich1/lvRich1MgsMidH1">
+      <Cut particle="0" attr="SimAttrShielding"/>    
+    </Item>
+    <Item name="/dd/Geometry/Rich1/lvRichHPDMaster">
+      <Cut particle="0" attr="SimAttrGlobal"/>
+      <Cut particle="11" attr="SimAttrElectr"/>
+    </Item>
+
+    <Item name="/dd/Geometry/Muon/lvMuFilter1">
+      <Cut particle="0" attr="SimAttrMuFilt"/>
+      <Cut particle="13" attr="SimAttrMuon"/>
+      <Cut particle="-13" attr="SimAttrMuon"/>
+    </Item>
+
+   <Item name="/dd/Geometry/Muon/lvMuFilter2">
+      <Cut particle="0" attr="SimAttrMuFilt"/>
+      <Cut particle="13" attr="SimAttrMuon"/>
+      <Cut particle="-13" attr="SimAttrMuon"/>
+    </Item>
+
+   <Item name="/dd/Geometry/Muon/lvMuFilter3">
+      <Cut particle="0" attr="SimAttrMuFilt"/>
+      <Cut particle="13" attr="SimAttrMuon"/>
+      <Cut particle="-13" attr="SimAttrMuon"/>
+    </Item>
+
+   <Item name="/dd/Geometry/Muon/lvMuFilter4">
+      <Cut particle="0" attr="SimAttrMuFilt"/>
+      <Cut particle="13" attr="SimAttrMuon"/>
+      <Cut particle="-13" attr="SimAttrMuon"/>
+    </Item>
+    
+  </LogVols>
+
+  <!-- Define cuts to be applied later in regions -->
+  <ProductionCuts>
+    <ProductionCut name="calocut"
+      gammaCut="10*MeV"/>
+  </ProductionCuts>
+
+  <!-- Example of definition of cuts for a set of logical volume -->
+  <Regions>
+    <Region name="calos" prodcut="calocut"> 
+      <Volume name="/dd/Geometry/HCal..."/>
+    </Region> 
+  </Regions>   
+  
+  </Simulation>

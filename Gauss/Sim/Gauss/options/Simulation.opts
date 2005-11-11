@@ -1,4 +1,4 @@
-// $Id: Simulation.opts,v 1.65 2005-10-31 11:24:12 gcorti Exp $ 
+// $Id: Simulation.opts,v 1.66 2005-11-11 10:23:35 gcorti Exp $ 
 #pragma print off
 
 /** @file 
@@ -110,6 +110,7 @@ GiGa.RunSeq.RunCommand.BeginOfRunCommands     =
   "/tracking/storeTrajectory  1",
   "/process/eLoss/verbose -1",
 } ;
+//GiGa.RunSeq.RunCommand.BeginOfRunCommands    += { "/process/list" };
 
 // Mandatory event action  
 GiGa.EventAction           =   "GiGaEventActionSequence/EventSeq"      ;
@@ -164,8 +165,13 @@ GiGa.SteppingAction               =   "GiGaStepActionSequence/StepSeq"  ;
 GiGa.StepSeq.Members             += { "GaussStepAction/GaussStep" } ;
 
 // setting simulation attributes
+SimulationSvc.SimulationDbLocation = "$GAUSSROOT/xml/Simulation.xml";
 GiGa.GiGaMgr.RunTools += { "GiGaSetSimAttributes" };
 GiGa.GiGaMgr.GiGaSetSimAttributes.OutputLevel = 4;
 
 // uncomment the following to save geometry in GDML format
 //#include "$GDMLG4WRITEROPTS/GDMLWriter.opts"
+
+// uncomment the following to do low energy simulation in the Muon system
+// with special physics list
+//#include "$GAUSSOPTS/MuonLowEnergy.opts"

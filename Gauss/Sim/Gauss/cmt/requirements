@@ -1,5 +1,5 @@
 package Gauss
-version v20r3
+version v21r0
 
 #=========================================================================
 #-- Structure
@@ -9,9 +9,9 @@ branches src doc options cmt job
 
 #=========================================================================
 #-- Databases
-use XmlDDDB             v26r1   Det   -no_auto_imports
+use XmlDDDB             v26r2p1 Det   -no_auto_imports
 use FieldMap            v4r6          -no_auto_imports
-use DecFiles            v9r1    Gen   -no_auto_imports
+use DecFiles            v10r0   Gen   -no_auto_imports
 use ParamFiles          v3r13         -no_auto_imports
 use Geant4Files		v71r0	      -no_auto_imports
 
@@ -27,7 +27,7 @@ use $(LbAcerMC_use)
 
 #-- Simulation
 use GiGaCnv             v15r11  Sim
-use GaussTools          v10r11 	Sim
+use GaussTools          v11r0 	Sim
 use GaussTracker        v4r2    Sim
 use GaussRICH           v5r0    Sim
 use GaussCalo           v7r3    Sim
@@ -76,16 +76,6 @@ set AlwaysKillLeadingHadron 1
 
 #-- Set NeutronCrossSections file for low-energy Neutron background
 set NeutronHPCrossSections $(GEANT4FILESROOT)/data/G4NDL
-
-#-- Set visualization environment
-set  G4DAWNFILE_DEST_DIR       "../job/"
-set  G4DAWNFILE_PS_VIEWER      "gv"
-set  G4DAWN_MULTI_WINDOW       "1"
-set  G4DAWNFILE_MULTI_WINDOW   "1"
-set  G4DAWNFILE_VIEWER         dawn
-set  G4VRMLFILE_VIEWER         vrweb \
-                WIN32          netscape
-set  G4VRML_PV_PICKABLE        "1"
 
 #========================================================================
 

@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!-- Main node
+     It contains 3 subnodes : the definition of the Simulation attributes,
+     The association of these attributes to materials and the association of
+     these attributes to volumes -->
+<!ELEMENT Simulation (SimAtts, LogVols, ProductionCuts, Regions)>
+<!ATTLIST Simulation DTD_Version CDATA #FIXED "v1">
+
+<!-- The definitions of Simulation attributes -->
+<!ELEMENT SimAtts (SimAtt*)>
+
+<!-- Simulation attribute definition. This has a name and
+     defines the way a volume should be simulated. The possible
+     customization are :
+        - the maximum number of steps
+        - the maximum track length
+        - the maximum time
+        - the minimal kinetic energy
+        - the minimal remaining range -->
+<!ELEMENT SimAtt EMPTY>
+<!ATTLIST SimAtt
+         name ID #REQUIRED
+         maxAllowedStep CDATA #IMPLIED
+         maxTrackLength CDATA #IMPLIED
+         maxTime        CDATA #IMPLIED
+         minEkine       CDATA #IMPLIED
+         minRange       CDATA #IMPLIED>
+
+<!-- Association of sets and logical volumes -->
+<!ELEMENT LogVols (Item*)>
+
+<!ELEMENT Item (Cut*)>
+<!ATTLIST Item
+        name CDATA #REQUIRED>
+
+<!ELEMENT Cut EMPTY>
+<!ATTLIST Cut
+        particle CDATA #REQUIRED
+        attr CDATA #REQUIRED>
+
+<!-- The part below deals with production cuts per region (WP) -->
+
+<!ELEMENT ProductionCuts (ProductionCut*)>
+
+<!ELEMENT ProductionCut EMPTY>
+<!ATTLIST ProductionCut
+         name           ID #REQUIRED
+         gammaCut       CDATA #IMPLIED
+         electronCut    CDATA #IMPLIED
+         positronCut    CDATA #IMPLIED
+         protonCut      CDATA #IMPLIED
+         antiProtonCut  CDATA #IMPLIED
+         neutronCut     CDATA #IMPLIED
+         antiNeutronCut CDATA #IMPLIED>
+
+<!ELEMENT Regions (Region*)>
+
+<!ELEMENT Region (Volume*)>
+<!ATTLIST Region
+         name           ID #REQUIRED
+         prodcut        CDATA #REQUIRED>
+
+<!ELEMENT Volume EMPTY>
+<!ATTLIST Volume
+          name           CDATA #REQUIRED>
