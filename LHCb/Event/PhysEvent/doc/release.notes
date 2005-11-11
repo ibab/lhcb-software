@@ -1,9 +1,10 @@
-! $Id: release.notes,v 1.63 2005-11-11 19:44:24 cattanem Exp $
+! $Id: release.notes,v 1.64 2005-11-11 20:19:14 cattanem Exp $
 ! Package     : PhysEvent 
 ! Responsible : P. Koppenburg
 
 !======================= PhysEvent v8r11 2005-11-11 ==========================
 ! 2005-11-11 - Marco Cattaneo
+ - Add a copy constructor to FlavourTag to fix obscure Windows complaint
  - Fix for platform dependent dictionaries with GaudiObjDesc v8r3
 
 !======================= PhysEvent v8r10 2005-07-25 ==========================
