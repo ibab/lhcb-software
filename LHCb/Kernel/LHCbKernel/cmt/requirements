@@ -1,12 +1,12 @@
-# $Id: requirements,v 1.84 2005-11-04 17:55:19 cattanem Exp $
+# $Id: requirements,v 1.85 2005-11-11 16:35:22 cattanem Exp $
 # =============================================================================
 package LHCbKernel
 author  M.Frank    CERN/LHCb
 manager M.Cattaneo CERN/LHCb
 
-version v5r14
+version v5r15
 
-branches cmt dict doc Event Kernel src xml
+branches cmt doc Event Kernel src xml
 
 include_dirs $(LHCBKERNELROOT)
 
@@ -22,6 +22,16 @@ macro LHCbKernelObj2Doth_GODflags " -s ../Kernel/ " \
       WIN32                       " -s ..\Kernel\ "
 document obj2doth LHCbKernelObj2Doth ../xml/*.xml
 
+# Declare fragment for adding custom dictionary to GOD generated ones
+#============================================================================
+make_fragment customdict -header=customdict_header -trailer=customdict_trailer
+
+# Make custom dictionary. Must be before GOD generation
+#============================================================================
+document customdict LHCbKernelCustomDict ../Kernel/lcgStl.h
+
+# Generate remaining dictionaries with lcgdict via GOD
+#============================================================================
 macro LHCbKernelObj2Dict_GODflags " -s ../Kernel/ " \
       WIN32                       " -s ..\Kernel\ "
 document obj2dict LHCbKernelObj2Dict ../xml/*.xml
@@ -29,8 +39,7 @@ document obj2dict LHCbKernelObj2Dict ../xml/*.xml
 # Build libraries (including dictionary)
 #============================================================================
 library LHCbKernel     *.cpp
-library LHCbKernelDict ../dict/*.cpp 
-#../$(tag)/dict/LHCbKernel/*.cpp
+library LHCbKernelDict ../$(tag)/dict/LHCbKernel/*.cpp
 
 # Debug flag for RichSmartID
 macro_append LHCbKernel_cppflags "" \
@@ -44,12 +53,3 @@ apply_pattern linker_library    library=LHCbKernel
 private
 #============================================================================
 use GaudiObjDesc v*
-
-# Additional dictionaries not generated automatically by GaudiObjDesc
-#============================================================================
-action LHCbKernel_custom_dict \
-  "if !(test -r ../dict/LHCbKernel_selection.xml) then \
-     cp ../Kernel/lcgStl.h ../dict/LHCbKernel_dictionary.h;  \
-     cp ../xml/lcgdict/lcg_selection.xml ../dict/LHCbKernel_selection.xml; fi" \
-  WIN32 ""
-macro LHCbKernelObj2Dict_dependencies LHCbKernel_custom_dict

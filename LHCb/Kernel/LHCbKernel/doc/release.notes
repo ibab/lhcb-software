@@ -2,6 +2,11 @@ Package LHCbKernel
 Package manager: M.Cattaneo
 Purpose: LHCb specific Kernel classes
 
+!===================== LHCbKernel v5r15 2005-11-11 ========================
+! 2005-11-11 - Marco Cattaneo
+ - Add fragments to add custom dictionaries to the lcg generated ones
+ - Modify requirements to use fragments, plus platform dependent dictionaries
+
 ! 2005-11-07 - Chris Jones
  - Remove custom accessors from RichSmartID in favour of new GOD generator 
    methods with specified return types.
