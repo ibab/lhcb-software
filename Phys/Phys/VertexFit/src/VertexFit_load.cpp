@@ -20,4 +20,5 @@ DECLARE_FACTORY_ENTRIES( VertexFit ) {
 
   DECLARE_TOOL( LifetimeFitter );
   DECLARE_TOOL( NewDirectionFitter );
+  DECLARE_TOOL( LagrangeGlobalFitter );
 }

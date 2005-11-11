@@ -1,6 +1,10 @@
-! $Id: release.notes,v 1.37 2005-10-19 07:53:56 pkoppenb Exp $
+! $Id: release.notes,v 1.38 2005-11-11 16:16:47 pkoppenb Exp $
 ! Package     : VertexFit
 ! Responsible : P. Koppenburg
+
+! 2005-11-11 - P. Koppenburg for G. Balbi
+  - src/LagrangeGlobalFitter.{cpp,h}
+    . New global fitter
 
 !========================== VertexFit v1r8 2005-10-19 ===================
 ! 2005-10-17 - P. Koppenburg for F. Legger
