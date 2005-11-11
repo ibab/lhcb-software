@@ -1,6 +1,10 @@
-! $Id: release.notes,v 1.62 2005-07-25 06:41:52 pkoppenb Exp $
+! $Id: release.notes,v 1.63 2005-11-11 19:44:24 cattanem Exp $
 ! Package     : PhysEvent 
 ! Responsible : P. Koppenburg
+
+!======================= PhysEvent v8r11 2005-11-11 ==========================
+! 2005-11-11 - Marco Cattaneo
+ - Fix for platform dependent dictionaries with GaudiObjDesc v8r3
 
 !======================= PhysEvent v8r10 2005-07-25 ==========================
 ! 2005-07-25 - P. Koppenburg

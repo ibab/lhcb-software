@@ -1,13 +1,13 @@
-# $Id: requirements,v 1.51 2005-07-06 05:45:27 pkoppenb Exp $
+# $Id: requirements,v 1.52 2005-11-11 19:44:24 cattanem Exp $
 # Created      : 20/06/2001
 # Maintainer   : P. Koppenburg
 #
 package           PhysEvent
-version           v8r10
+version           v8r11
 
 # Structure, i.e. directories to process. 
 #============================================================================
-branches          cmt doc dict src xml Event
+branches          cmt doc src xml Event
 
 # Include directories
 #============================================================================
@@ -26,7 +26,7 @@ document obj2dict PhysEventObj2Dict ../xml/*.xml
 # Build libraries (including dictionary)
 #============================================================================
 library     PhysEvent     *.cpp
-library     PhysEventDict ../dict/*.cpp
+library     PhysEventDict ../$(tag)/dict/PhysEvent/*.cpp
 
 # Define link options
 #============================================================================
