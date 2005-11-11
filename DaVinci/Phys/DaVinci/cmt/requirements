@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.278 2005-11-09 17:13:19 pkoppenb Exp $
+# $Id: requirements,v 1.279 2005-11-11 17:28:08 pkoppenb Exp $
 # Created    : 07/02/2002
 # Maintainer : P. Koppenburg
 #
@@ -52,10 +52,10 @@ use  DaVinciKernel      	v3r9     Phys
 use  DaVinciTools       	v12r3    Phys
 use  FlavourTagging     	v6r3     Phys
 use  Ks2PiPiSel         	v1r7     Phys
-use  ParticleMaker      	v1r6     Phys
+use  ParticleMaker      	v1r6p1   Phys
 use  PhysSelections		v6r12    Phys
 use  DaVinciTransporter 	v2r1     Phys
-use  VertexFit			v1r8     Phys
+use  VertexFit			v1r9     Phys
 use  Tampering                  v1r4     Phys
 use  TriggerSource              v1r0     Phys
 # Generic tools 
@@ -67,11 +67,12 @@ use  RecoTools          	v1r1     Rec
 #=======================================================
 use  DaVinciAssociators 	v5r5     Phys
 use  DaVinciEff         	v3r4     Phys
-use  DaVinciMCTools     	v5r16    Phys
+use  DaVinciMCTools     	v5r17    Phys
 use  DaVinciTest        	v5r6     Phys
 use  DaVinciUser        	v5r2     Phys
 use  FlavourTaggingChecker      v1r0     Phys
 use  PVEff	                v1r0     Phys
+use  VertexFitChecker		v1r0     Phys
 
 #=======================================================
 # packages included in LoKiSys
