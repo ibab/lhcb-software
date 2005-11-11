@@ -6,6 +6,7 @@ Purpose: LHCb specific Kernel classes
 ! 2005-11-11 - Marco Cattaneo
  - Add fragments to add custom dictionaries to the lcg generated ones
  - Modify requirements to use fragments, plus platform dependent dictionaries
+ - Remove SEAL_1_7_5, POOL_2_2_3 hacks
 
 ! 2005-11-07 - Chris Jones
  - Remove custom accessors from RichSmartID in favour of new GOD generator 

@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.85 2005-11-11 16:35:22 cattanem Exp $
+# $Id: requirements,v 1.86 2005-11-11 16:37:37 cattanem Exp $
 # =============================================================================
 package LHCbKernel
 author  M.Frank    CERN/LHCb
@@ -12,9 +12,6 @@ include_dirs $(LHCBKERNELROOT)
 
 use GaudiKernel  v*
 use CLHEP        v*    LCG_Interfaces
-
-macro SEAL_native_version "SEAL_1_7_5"
-macro POOL_native_version "POOL_2_2_3"
 
 # Produce Header-Files from XML description, overriding default destination
 #============================================================================
