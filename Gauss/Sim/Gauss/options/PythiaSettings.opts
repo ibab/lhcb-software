@@ -1,4 +1,8 @@
 //that is the LHCb Pythia setting, should not be changed by the user
+// New structure: NOTE that they have to be set for Tool
+// Generation.MinimumBias.PythiaProduction.BasePythiaCommand = {
+// or how it is now done in Generator.opts
+// OLD structure:
 PythiaAlg.BasePythiaCommand = { 
   "pysubs msel 0" ,     // Custom processes, switch them on 1-by-1
   "pysubs msub 11 1" ,  // f + f' -> f + f' (QCD)
