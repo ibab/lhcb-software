@@ -5,6 +5,22 @@
 ! Purpose     : LHCb OO kernel packages
 !-----------------------------------------------------------------------------
 
+</PRE><H1><A NAME=v19r1>2005-11-11 LHCbSys v19r0</A></H1><PRE>
+This version uses Gaudi v17r1 and produces reflex dictionaries
+It is backwards compatible for RTTC data
+
+ - Modified packages: KernelSys v4r16, LHCbKernel v5r15, MuonKernel v2r7p1,
+       CaloEvent v3r10, DAQEvent v5r3p1, Event v4r8, GenEvent v3r5,
+       ITEvent v13r3, L0Event v14r3p2, LinkerEvent v1r9, MuonEvent v4r1,
+       OTEvent v14r0p2, PhysEvent v8r11, RichEvent v8r4p1, TrackEvent v1r4p1,
+       TrgEvent v5r6, VeloEvent v13r2p2
+
+ - In KernelSys v4r16, EventSys v20r11
+   . Changes to have platform dependent dicts with GaudObjDesc v8r3
+ 
+ - In CaloEvent v3r10
+   . New class CaloAdc to store the result of the digitisation
+
 </PRE><H1><A NAME=v19r0>2005-11-08 LHCbSys v19r0</A></H1><PRE>
 This version uses Gaudi v17r1 and produces reflex dictionaries
 It is backwards compatible for RTTC data

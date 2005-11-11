@@ -1,5 +1,5 @@
 package LHCbSys
-version v19r0
+version v19r1
 
 branches doc cmt
 
@@ -7,7 +7,7 @@ branches doc cmt
 # LHCb packages visible to all applications
 #===============================================================
 
-use LHCb		v19r0
+use LHCb		v19r1
 use GaudiConf		v9r2
 
 #                                         Maintainer
@@ -15,11 +15,11 @@ use GaudiConf		v9r2
 use HepMC	v4r126p0	Sim     # Gloria Corti, Matt Dobbs
 
 # Kernel packages
-use KernelSys           v4r15   Kernel  # Marco Cattaneo
-use LHCbKernel          v5r14   Kernel  # Marco Cattaneo
+use KernelSys           v4r16   Kernel  # Marco Cattaneo
+use LHCbKernel          v5r15   Kernel  # Marco Cattaneo
 use Relations		v2r6    Kernel  # Ivan Belyaev
 use CaloKernel          v3r2    Calo    # Olivier Deschamps
-use MuonKernel  	v2r7	Muon    # Andrei Tsaregorodtsev
+use MuonKernel  	v2r7p1  Muon    # Andrei Tsaregorodtsev
 use TrKernel    	v11r4	Tr      # N.N.
 use RichKernel  	v5r5    Rich    # Chris Jones
 use VeloKernel  	v1r5p1  Velo    # Chris Parkes
@@ -43,24 +43,24 @@ use RichDet		v8r4	Det     # Chris Jones
 use STDet               v1r5    Det     # Matt Needham
 
 # Event data model
-use EventSys	        v20r10  Event   # Marco Cattaneo
-use Event        	v4r7	Event   # Marco Cattaneo
-use VeloEvent    	v13r2p1 Event   # Chris Parkes
-use ITEvent      	v13r2p1	Event   # Matt Needham
-use OTEvent      	v14r0p1 Event   # Jacopo Nardulli
-use TrEvent      	v14r3	Event   # N.N.
-use RichEvent    	v8r4    Event   # Chris Jones
-use CaloEvent           v13r9   Event   # Olivier Deschamps
-use MuonEvent    	v4r0	Event   # Alessia Satta
-use L0Event      	v14r3p1 Event   # O.Callot, O.Deschamps, A.Tsaregorodtsev
-use PhysEvent    	v8r10   Event   # Patrick Koppenburg
-use DAQEvent		v5r3    Event   # Marco Cattaneo
-use GenEvent    	v3r4    Event   # Gloria Corti
+use EventSys	        v20r11  Event   # Marco Cattaneo
+use Event        	v4r8	Event   # Marco Cattaneo
+use VeloEvent    	v13r2p2 Event   # Chris Parkes
+use ITEvent      	v13r3	Event   # Matt Needham
+use OTEvent      	v14r0p2 Event   # Jacopo Nardulli
+use TrEvent      	v14r4	Event   # N.N.
+use RichEvent    	v8r4p1  Event   # Chris Jones
+use CaloEvent           v13r10  Event   # Olivier Deschamps
+use MuonEvent    	v4r1	Event   # Alessia Satta
+use L0Event      	v14r3p2 Event   # O.Callot, O.Deschamps, A.Tsaregorodtsev
+use PhysEvent    	v8r11   Event   # Patrick Koppenburg
+use DAQEvent		v5r3p1  Event   # Marco Cattaneo
+use GenEvent    	v3r5    Event   # Gloria Corti
 use EventAssoc          v2r0    Event   # Ivan Belyaev
-use LinkerEvent         v1r8p1  Event   # Olivier Callot
-use TrgEvent            v5r6    Event   # Olivier Callot
+use LinkerEvent         v1r9    Event   # Olivier Callot
+use TrgEvent            v5r7    Event   # Olivier Callot
 use PackedEvent         v1r2    Event   # Marco Cattaneo, Olivier Callot
-use TrackEvent          v1r4    Event   # Eduardo Rodrigues, Jose Hernando
+use TrackEvent          v1r4p1  Event   # Eduardo Rodrigues, Jose Hernando
 use EventUtils		v1r0	Event   # Marco Cattaneo
 use LinkerInstances     v2r1    Event   # Thomas Ruf
 use DC04Hacks		v1r0    Event   # Marco Cattaneo
