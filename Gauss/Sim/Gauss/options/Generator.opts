@@ -10,25 +10,25 @@
  */
 
 // 2005-10-26 OLD WAY: STILL VALID, BUT OVERWRITTEN BELOW WITH NEW WAY
-// Generate signal B at rest
-Generator.Members = { "SignalDecayAlg" };
+// // Generate signal B at rest
+// Generator.Members = { "SignalDecayAlg" };
 
-// If you want signal B hadrons produced at rest, comment the lines below.
-// In this case, the output of EvtGen is contained in "/Event/Gen/SignalDecay"
-// and other containers are not created. 
-// If the lines are uncommented the signal B hadrons have the correct
-// momentum distribution given by Pythia
-Generator.Members += {
-  "PythiaAlg", 
-  "SetDecayAlg", 
-  "EvtDecayAlg"
-};
+// // If you want signal B hadrons produced at rest, comment the lines below.
+// // In this case, the output of EvtGen is contained in "/Event/Gen/SignalDecay"
+// // and other containers are not created. 
+// // If the lines are uncommented the signal B hadrons have the correct
+// // momentum distribution given by Pythia
+// Generator.Members += {
+//   "PythiaAlg", 
+//   "SetDecayAlg", 
+//   "EvtDecayAlg"
+// };
 
-// Smearing of the primary vertices
-Generator.Members += {"SmearVertexAlg"};
+// // Smearing of the primary vertices
+// Generator.Members += {"SmearVertexAlg"};
 
-// Print out generator statistic
-Generator.Members += {"GenMonitorAlg"};
+// // Print out generator statistic
+// Generator.Members += {"GenMonitorAlg"};
 
 // Any Pythia commands (flags) can be overwritten with user commands: THIS
 // will add/overwrite the default.
@@ -43,6 +43,7 @@ Generator.Members += {"GenMonitorAlg"};
 // NEW WAY: COMMENT IF YOU STILL WANT THE OLD WAY - MIN BIAS ONLY
 Generator.Members  = { "Generation" };
 Generator.Members += { "GenMonitorAlg" };
+ToolSvc.EvtGenDecay.DecayFile         = "$DECFILESROOT/dkfiles/DECAY-DC06.DEC";
 
 // Example options for Minimum bias
 Generation.EventType                  = 30000000;
@@ -63,3 +64,19 @@ Generation.MinimumBias.PythiaProduction.BasePythiaCommand = {@PythiaAlg.BasePyth
 // ToolSvc.EvtGenDecay.UserDecayFile     = "$DECFILESROOT/dkfiles/incl_b.dec";
 // Generation.Inclusive.PythiaProduction.PythiaBaseCommand = {@PythiaAlg.BasePythiaCommand};
 
+// Example options for signal (ex. Bd->J/Psi Kshort)
+// Generation.EventType                  = 11104100;
+// Generation.SampleGenerationTool       = "SignalRepeatedHadronization";
+// Generation.SignalRepeatedHadronization.ProductionTool   = "PythiaProduction";
+// Generation.SignalRepeatedHadronization.SignalPIDList = { 511, -511 };
+// ToolSvc.EvtGenDecay.UserDecayFile     = "$DECFILESROOT/dkfiles/Bd_phiKS.dec";
+// Generation.SignalRepeatedHadronization.PythiaProduction.BasePythiaCommand = {@PythiaAlg.BasePythiaCommand};
+
+// Example options for signal (ex. J/Psi inclusive)
+// Generation.EventType                  = 24142000;
+// Generation.SampleGenerationTool       = "SignalPlain";
+// Generation.SignalPlain.ProductionTool = "PythiaProduction";
+// Generation.SignalPlain.SignalPIDList  = { 443 };
+// ToolSvc.EvtGenDecay.UserDecayFile     = "$DECFILESROOT/dkfiles/incl_Jpsi,ee.dec";
+// Generation.SignalPlain.PythiaProduction.BasePythiaCommand = {@PythiaAlg.BasePythiaCommand};
+ 
