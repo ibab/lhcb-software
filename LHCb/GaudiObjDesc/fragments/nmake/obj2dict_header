@@ -1,7 +1,7 @@
 
 pythonexe     = $(Python_home)\python.exe
 parsetool     = $(GAUDIOBJDESCROOT)\scripts\godII.py
-dest          = ..\dict\ 
+dest          = ..\$(tag)\dict\$(package)\ 
 dtdfile       = ..\$(xmlsrc)\gdd.dtd 
 
 ${CONSTITUENT}_output = $(dest)

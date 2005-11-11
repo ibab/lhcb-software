@@ -2,6 +2,12 @@ Package: GaudiObjDesc
 Desccription: This package contains a set of tools used to generate code from the XML description of the data object classes.
 Package manager : Stefan Roiser
 
+! 2005-11-11 - Stefan Roiser (merged from the branch)
+- changed fragments for dictionary generation to generate dictionary headers, 
+  selection files and sources in $(tag)/dict
+  User requirements files should be adapted to compile all .cpp files in this
+  directory instead of ../dict for compilation of the dictionary library
+
 ! 2005-10-26 Stefan
 - The length of bitfields can be changed by the "type" attribute of the <attribute> element.
   For the time being  type='bitfield' generated a bitfield of 32 bit (unsigned int). In addition the following types are possible
