@@ -1,8 +1,11 @@
-// $Id: PhotonFromMergedParticleMaker.cpp,v 1.4 2005-04-14 11:23:45 pkoppenb Exp $
+// $Id: PhotonFromMergedParticleMaker.cpp,v 1.5 2005-11-11 16:26:40 pkoppenb Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.4  2005/04/14 11:23:45  pkoppenb
+// Removed CLHEPStreams.h
+//
 // Revision 1.3  2005/02/09 18:01:34  pkoppenb
 // CLHEP
 //

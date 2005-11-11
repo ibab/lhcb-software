@@ -1,8 +1,11 @@
-// $Id: PhotonFromMergedParameters.h,v 1.4 2005-02-09 18:01:34 pkoppenb Exp $
+// $Id: PhotonFromMergedParameters.h,v 1.5 2005-11-11 16:26:40 pkoppenb Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.4  2005/02/09 18:01:34  pkoppenb
+// CLHEP
+//
 // Revision 1.3  2005/02/09 18:00:48  pkoppenb
 // CLHEP
 //

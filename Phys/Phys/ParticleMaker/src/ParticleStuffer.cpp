@@ -1,4 +1,4 @@
-// $Id: ParticleStuffer.cpp,v 1.1.1.1 2004-08-24 06:47:48 pkoppenb Exp $
+// $Id: ParticleStuffer.cpp,v 1.2 2005-11-11 16:26:40 pkoppenb Exp $
 // Include files 
 
 // 
@@ -13,8 +13,6 @@
 
 // from Gaudi
 #include "GaudiKernel/ToolFactory.h"
-#include "GaudiKernel/MsgStream.h" 
-#include "GaudiKernel/IToolSvc.h"
 #include "GaudiKernel/IParticlePropertySvc.h"
 #include "GaudiKernel/ParticleProperty.h"
 
@@ -38,7 +36,7 @@ const        IToolFactory& ParticleStufferFactory = s_factory ;
 ParticleStuffer::ParticleStuffer( const std::string& type,
                                   const std::string& name,
                                   const IInterface* parent )
-  : AlgTool ( type, name , parent )
+  : GaudiTool ( type, name , parent )
   , m_ppSvc(0)
   , m_pTransporter(0) 
   , m_transporterType("CombinedTransporter"){
@@ -51,22 +49,13 @@ ParticleStuffer::ParticleStuffer( const std::string& type,
 //=============================================================================
 
 StatusCode ParticleStuffer::initialize() {
-  MsgStream log( msgSvc(), name() );
+  StatusCode sc = GaudiTool::initialize();
+  if (!sc) return sc;
   
   // This tool needs to use internally the ParticlePropertySvc to retrieve the
   // mass to be used
-  StatusCode sc = StatusCode::FAILURE;
-  sc = service( "ParticlePropertySvc", m_ppSvc );
-  if( sc.isFailure ()) {
-    log << MSG::FATAL << "ParticlePropertySvc Not Found" << endreq;
-    return StatusCode::FAILURE;
-  }
-  sc = toolSvc()->retrieveTool(m_transporterType, m_pTransporter, this);
-  if(sc.isFailure()) {
-    log << MSG::FATAL << "Unable to retrieve " << m_transporterType
-        << "tool" << endreq;
-    return sc;
-  }
+  m_ppSvc = svc<IParticlePropertySvc>("ParticlePropertySvc");
+  m_pTransporter = tool<IParticleTransporter>(m_transporterType, this);
 
   return StatusCode::SUCCESS;
   
@@ -79,14 +68,14 @@ StatusCode ParticleStuffer::initialize() {
 StatusCode ParticleStuffer::fillParticle( const Vertex& vtx, Particle& part, 
                                           const ParticleID& pid ){
 
-  MsgStream log( msgSvc(), name() );
   int stdHepID = pid.pid();
   
   ParticleProperty*  partProp = m_ppSvc->findByStdHepID(stdHepID  );
-  if((*partProp).lifetime()*pow(10,-9) < pow(10,-15)) {
-    part.setIsResonance(true);
-  }
-  
+
+  if (partProp){
+    if( (*partProp).lifetime()*pow(10,-9) < pow(10,-15)) part.setIsResonance(true);
+  } else warning() << "No particle property" << endmsg;
+ 
   
   // Set the ParticleID.
   part.setParticleID( pid ); 
@@ -98,12 +87,11 @@ StatusCode ParticleStuffer::fillParticle( const Vertex& vtx, Particle& part,
   SmartRefVector<Particle>::const_iterator it;  
   HepSymMatrix meMat( 4, 0 ); 
   HepSymMatrix MothermeMat( 4, 0 ); 
-  
+
   Particle transParticle;
   for (it = vtx.products().begin(); it != vtx.products().end(); it++ ) {
     if ( (*it)->pointOnTrack().z() > 950.) {
-      log << MSG::DEBUG << "Position > 950 " 
-          << (*it)->pointOnTrack().z() << endreq;
+      debug() << "Position > 950 " << (*it)->pointOnTrack().z() << endmsg;
     }
 
     // Transport Particle parameters to the vertex position	 
@@ -111,9 +99,10 @@ StatusCode ParticleStuffer::fillParticle( const Vertex& vtx, Particle& part,
                                                    zVtxPos,
                                                    transParticle);
     if ( !sctrans.isSuccess() ) {
-      log << MSG::DEBUG << "Track extrapolation failed" << endreq;
+      debug() << "Track extrapolation failed" << endmsg;
       return sctrans;
     }
+
     lorVec += (*it)->momentum(); 
     MotherlorVec += transParticle.momentum(); 
     // Set the four-momentum error matrix.
@@ -150,7 +139,6 @@ StatusCode ParticleStuffer::fillParticle( const Vertex& vtx, Particle& part,
   // Set the point - four-momentum error matrix.
   HepMatrix pmeMat( 4, 3, 0 );  
   part.setPosMomCorr( pmeMat );
-
   // Set the end vertex reference.
   part.setEndVertex( &vtx ); 
 

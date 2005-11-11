@@ -1,4 +1,4 @@
-// $Id: ParticleStuffer.h,v 1.2 2005-01-06 10:46:54 pkoppenb Exp $
+// $Id: ParticleStuffer.h,v 1.3 2005-11-11 16:26:40 pkoppenb Exp $
 #ifndef PARTICLESTUFFER_H 
 #define PARTICLESTUFFER_H 1
 
@@ -7,7 +7,7 @@
 #include <string>
 
 // from Gaudi
-#include "GaudiKernel/AlgTool.h"
+#include "GaudiAlg/GaudiTool.h"
 
 // from DaVinciTools
 #include "Kernel/IParticleStuffer.h"
@@ -22,7 +22,7 @@ class IParticlePropertySvc;
  *  @date   14/03/2002
  *  Modified by S. Amato to transport parameters to the vertex position 11/10/2002 
  */
-class ParticleStuffer : public AlgTool, 
+class ParticleStuffer : public GaudiTool, 
                         virtual public IParticleStuffer {
 
 public:
