@@ -1,19 +1,16 @@
-// $Id: MCParticleMaker.cpp,v 1.6 2005-02-10 08:13:11 pkoppenb Exp $
+// $Id: MCParticleMaker.cpp,v 1.7 2005-11-11 17:03:51 pkoppenb Exp $
 // Include files 
 
 #include <memory>
+#include <iostream>
 
 // from Gaudi
 #include "GaudiKernel/ToolFactory.h"
-#include "GaudiKernel/MsgStream.h"
-#include "GaudiKernel/SmartDataPtr.h"
-#include "GaudiKernel/IDataProviderSvc.h"
 #include "GaudiKernel/IParticlePropertySvc.h"
 #include "GaudiKernel/IRndmGenSvc.h"
 #include "GaudiKernel/IRndmEngine.h"
 #include "GaudiKernel/RndmGenerators.h"
 #include "GaudiKernel/ParticleProperty.h"
-#include "GaudiKernel/GaudiException.h"
 #include "Event/Particle.h"
 
 #include "MCTools/IMCDecayFinder.h"
@@ -33,10 +30,18 @@
 // MCParticles and places it in the Transient Event Store
 // 03/10/2002 : Gerhard Raven
 //-----------------------------------------------------------------------------
+struct IsUnstable : std::unary_function<MCParticle*,bool> {
+  bool operator()(const MCParticle *p) const
+  { int pid = p->particleID().abspid();
+  return (pid!=11&&pid!=13&&pid!=211&&pid!=321&&pid!=2212&&pid!=1);
+  }
+};
+
 
 // Declaration of the Tool Factory
 static const  ToolFactory<MCParticleMaker>          s_factory ;
 const        IToolFactory& MCParticleMakerFactory = s_factory ; 
+
 
 
 //=============================================================================
@@ -49,25 +54,56 @@ MCParticleMaker::MCParticleMaker( const std::string& type,
     m_ppSvc(0), 
     m_pMCDecFinder(0)
   {
-  // Declaring implemented interfaces
+  // Declaring implemented interface  
   declareInterface<IParticleMaker>(this);
   
   // Declare properties
   declareProperty( "InputLocation", m_input = MCParticleLocation::Default);
   declareProperty( "ParticleNames", m_particleNames );
   declareProperty( "OnlyDecayProducts", m_onlyDecayProducts = false);
+ // if true also m_onlyDecayProducts HAS to be true
+  declareProperty( "OnlyStableDecayProducts", m_onlyStableDecayProducts = false);
   declareProperty( "OnlyReconstructable", m_onlyReconstructable = false );
   declareProperty( "OnlyReconstructed",   m_onlyReconstructed   = false );
-  declareProperty( "UseReconstructedCovariance", 
-                   m_useReconstructedCovariance = false );
+  declareProperty( "UseReconstructedCovariance", m_useReconstructedCovariance = false );
   declareProperty( "SmearParticle",   m_smearParticle = true );
-  declareProperty( "IpErrorC0",   m_ipErrorC0 = 0.0173*mm );
+  declareProperty( "IpErrorC0",   m_ipErrorC0 = 0.0173*mm );  
   declareProperty( "IpErrorC1",   m_ipErrorC1 = 0.0265*mm );
-  declareProperty( "SlopeError",  m_slopeError = 0.4*mrad );
-  declareProperty( "MomError",    m_momError = 0.004 );
+  declareProperty( "SlopeError",  m_slopeError = 0.4*mrad ); //K*K* 0.20-0.35 mrad
+  declareProperty( "MomError",    m_momError = 0.004 );  // K*K* 0.0025-0.003
 
-  
+  // if true smears the MC truth information at PointOnTrack 
+  // (minimum distance from beam line) else smears  at origin vertex 
+  declareProperty( "SmearATPoT", m_smearATPoT = false);  
+  declareProperty( "rhoxy",   m_rhoxy = 0.0 ); 
+  declareProperty( "rhoxz",   m_rhoxz = 0.0 );  
+  declareProperty( "rhoyz",   m_rhoyz = 0.0 );  
+  declareProperty( "rhoxtx",   m_rhoxtx = -0.95 );   
+  declareProperty( "rhoxty",   m_rhoxty = 0.0 );   
+  declareProperty( "rhoxp",   m_rhoxp = 0.0 );
+  declareProperty( "rhoytx",   m_rhoytx = 0.0 );   
+  declareProperty( "rhoyty",   m_rhoyty = -0.95 );   
+  declareProperty( "rhoyp",   m_rhoyp = 0.0 );
+  declareProperty( "rhoztx",   m_rhoztx = 0.0 );   
+  declareProperty( "rhozty",   m_rhozty = 0.0 );   
+  declareProperty( "rhozp",   m_rhozp = 0.0 );
+  declareProperty( "rhotxty",   m_rhotxty = 0.0 );   
+  declareProperty( "rhotxp",   m_rhotxp = 0.0 );   
+  declareProperty( "rhotyp",   m_rhotyp = 0.0 );   
+  declareProperty( "dualGaussSF",    m_dualGaussSF);   //SF second Gaussian's sigma
+  declareProperty( "dualGaussW", m_dualGaussWeight ); //relative weight second Gaussian
+
+  declareProperty( "ScaleFactorCovarianceC0", m_covSFsC0 );   //recaling factor of covariance matrix 
+  declareProperty( "ScaleFactorCovarianceC1", m_covSFsC1 ); //recaling factor of covariance matrix momentum dependent (GeV)
+  declareProperty( "MeasurementBiasC0",       m_BIASsC0 );//biases in cov units
+  declareProperty( "MeasurementBiasC1",       m_BIASsC1 );//biases in cov units momentum dependent (GeV)
 }
+/*
+ for (std::vector< double >::iterator icl = m_confLevels.begin();
+                                       icl != m_confLevels.end(); icl++ ) {
+    if ( part->particleID().pid() == m_partCodes[i] &&
+         part->confLevel() >= m_confLevels[i] ) passed = true;
+*/
 //=============================================================================
 // Destructor
 //=============================================================================
@@ -79,22 +115,27 @@ MCParticleMaker::~MCParticleMaker( ) { };
 StatusCode MCParticleMaker::initialize() {
   
   debug() << "==> MCParticleMaker:Initialising" << endreq;
-  
+
   // Access the ParticlePropertySvc to retrieve pID for wanted particles
   debug() << "Looking for Particle Property Service." << endreq;
   
   m_ppSvc = svc<IParticlePropertySvc>("ParticlePropertySvc",true);
   if( !m_ppSvc ) {
-    fatal() << "Unable to locate Particle Property Service"
-        << endreq;
+    fatal() << "Unable to locate Particle Property Service"<< endreq;
     return StatusCode::FAILURE ;
   }  
-
+   
   IRndmGenSvc* r = svc<IRndmGenSvc>("RndmGenSvc",true);
   if( !r || m_ranGauss.initialize(r,Rndm::Gauss(0,1)).isFailure()){
-    fatal() << "Unable to locate RndmGenSvc " << endreq;
+    fatal() << "Unable to locate RndmGenSvc Gauss distribution" << endreq;
     return StatusCode::FAILURE;
   }  
+  IRndmGenSvc* rr = svc<IRndmGenSvc>("RndmGenSvc",true);
+  if( !rr || m_ranFlat.initialize(rr,Rndm::Flat(0,1)).isFailure()){
+    fatal() << "Unable to locate RndmGenSvc Flat distribution" << endreq;
+    return StatusCode::FAILURE;
+  }  
+
 
   m_pMCDecFinder = tool<IMCDecayFinder>("MCDecayFinder", this);
   if(!m_pMCDecFinder){
@@ -147,30 +188,46 @@ StatusCode MCParticleMaker::makeParticles( ParticleVector & parts ) {
   
   MCParticles* candidates = get<MCParticles>( m_input);
   if ( !candidates || (0 == candidates->size()) ) { 
-    debug() << "    No MCParticles retrieved from"  
-        << m_input << endreq;
+    debug() << "    No MCParticles retrieved from" << m_input << endreq;
     return StatusCode::SUCCESS;
   }
   
   // Log number of MCPartCandidates retrieved
-  debug() << "    Number of MCParticles retrieved   = "
-      << candidates->size() << endreq;
+  debug() << "    Number of MCParticles retrieved   = " << candidates->size() << endreq;
 
   std::vector<const MCParticle*> list;
+  
   if( m_onlyDecayProducts) {
     const MCParticle* imc = 0;
-    while( m_pMCDecFinder -> findDecay (*candidates, imc) ) list.push_back(imc);
+    //    while( m_pMCDecFinder -> findDecay (*candidates, imc) ) list.push_back(imc);
+    while( m_pMCDecFinder -> findDecay (*candidates, imc) )  list = getFinalState(*imc);  // Change introduced by Stefania Vecchi
+     
+  } else {
+    MCParticles::const_iterator icand;
+    for(icand = candidates->begin(); icand != candidates->end(); icand++){
+      list.push_back(*icand);
+    }
+  }
+
+/*
+  if( m_onlyDecayProducts) {
+    const MCParticle* imc = 0;
+    if( m_onlyStableDecayProducts) {
+      while( m_pMCDecFinder -> findDecay (*candidates, imc) )  list = getFinalState(*imc);  
+    } else {
+      while( m_pMCDecFinder -> findDecay (*candidates, imc) ) list.push_back(imc);
+    }
   } else {
     MCParticles::const_iterator icand;
     for(icand = candidates->begin(); icand != candidates->end(); icand++){
       list.push_back(*icand);    
     }
   }
+*/
       
   std::vector<const MCParticle*>::const_iterator icand;
   for(icand = list.begin(); icand != list.end(); icand++){
-    if ( std::find(m_ids.begin(),m_ids.end(),(*icand)->particleID().pid() ) 
-         == m_ids.end()) continue;
+    if ( std::find(m_ids.begin(),m_ids.end(),(*icand)->particleID().pid() ) == m_ids.end()) continue;
     if ( m_onlyReconstructable && !reconstructable(**icand) )  continue;
     // covariance is in (x,y,z,sx,sy,p)
     std::auto_ptr<HepSymMatrix> covariance(0);
@@ -195,9 +252,8 @@ StatusCode MCParticleMaker::makeParticles( ParticleVector & parts ) {
     StatusCode sc = fillParticle( **icand, *particle, *covariance);
     if(sc.isFailure()) continue;
     parts.push_back(particle.release());
-    debug() << "==> MCParticleMaker::added a particle" 
-        << endmsg;
   }
+  debug() << " ==> MCParticleMaker created " << parts.size() << " particle in the desktop " << endreq;
   return StatusCode::SUCCESS;
     
 }
@@ -218,24 +274,100 @@ MCParticleMaker::fillParticle( const MCParticle& mc,
   
   // Set pointOnTrackErr: take typical errors at vertex...
   HepLorentzVector mom = mc.momentum();
+  int sign=mc.particleID().pid()/mc.particleID().abspid();
+
+  double  BIAS[6], SFCov[6];   // Vector of Biases and SF (momentum and charge dependent)
+
+  for (int i=0;i<5;i++) {
+    // chosen parametrization bias=  q*(C0 + C1 * p)  x,y,tx,ty
+    BIAS[i]  = sign*(m_BIASsC0[i]  +  m_BIASsC1[i]*mom.vect().mag()/GeV);  
+    SFCov[i] = 1./(m_covSFsC0[i]   + m_covSFsC1[i]*mom.vect().mag()/GeV);  // chosen parametrization SF= 1./(C0 + C1 * p)
+  }
+  BIAS[5]  = (m_BIASsC0[5]     +  m_BIASsC1[5]*mom.vect().mag()/GeV); // chosen parametrization bias=  (C0 + C1 * p) momenta
+  SFCov[5] = 1./(m_covSFsC0[5] + m_covSFsC1[5]*mom.vect().mag()/GeV);
+
+
   const MCVertex* vtx = mc.originVertex();
   HepPoint3D pos = vtx->position();
+  
+  if(m_smearATPoT){          debug()<<"Smear @ PoT "<<endreq;   // defined as minimum distance to the beam line
+    double sx = mom.px()/mom.pz();
+    double sy = mom.py()/mom.pz();
+
+    double zPoT = pos.z() - (pos.x()*sx + pos.y()*sy)/(pow(sx,2)+pow(sy,2));
+    double xPoT = pos.x() + sx * (zPoT - pos.z());
+    double yPoT = pos.y() + sy * (zPoT - pos.z());
+
+    pos.setX(  xPoT );
+    pos.setY(  yPoT );
+    pos.setZ(  zPoT );
+  }
+
+  HepSymMatrix covSF(cov);  
   if (m_smearParticle) {
-    HepSymMatrix D(cov);
+    HepSymMatrix D(cov);    
     HepMatrix U = diagonalize(&D);
     HepVector deviates(6,0); //  x,y,z,sx,sy,p
-    for (int i=1;i<=6;++i) deviates(i) = m_ranGauss.shoot()*sqrt(D(i,i));
+
+    for (int i=0;i<cov.num_row();++i) {
+      for (int j=0;j<cov.num_col();++j) {
+        covSF(1+i,1+j) = cov(1+i,1+j)*SFCov[i]*SFCov[j];
+      }
+    }
+    debug()<<"covSF "<< covSF  <<endreq;
+    
+    for (int i=1;i<7;i++) {
+      if (D(i,i)<0)  {
+        error() << "Smearing Failed" << endreq;
+        return StatusCode::FAILURE;
+      }
+    }
+
+
+// Shuffling indexes//////////////////////////////////////////// needed to recall the original order of ScalingFactors
+
+    HepMatrix quadra(6,6,0);
+    for (int i=1;i<=6;++i)  quadra(i,i)=i;	
+    
+    int ck=0;
+    HepMatrix invU=U.inverse(ck);
+    if(ck!=0) return StatusCode::FAILURE;
+    
+    HepMatrix pip =U*(quadra*invU);	
+    int newindex[6];	
+    
+    for (int i=1;i<=6;++i) {		
+      newindex[i-1]=(int)(rint(pip(i,i))); 
+      debug() << newindex[i-1] <<" ";
+    }
+    debug() << endreq;
+
+///////////////////////////////////////////////////////
+    for (int i=1;i<=6;++i) {      
+      int ii=newindex[i-1];
+      double ranGauss= m_ranGauss.shoot();
+      if(m_dualGaussWeight[ii-1]!=0) {
+        double ranFlat = m_ranFlat.shoot();
+        if(ranFlat<m_dualGaussWeight[ii-1]) deviates(i) = m_dualGaussSF[ii-1]*ranGauss*sqrt(D(i,i));   // double Gaussian smearing
+      } else { 
+        deviates(i) = ranGauss*sqrt(D(i,i)); // single Gaussian smearing
+      }
+    }
+    
     deviates = U*deviates;
-    pos.setX(  pos.x()  + deviates(1) );
-    pos.setY(  pos.y()  + deviates(2) );
-    pos.setZ(  pos.z()  + deviates(3) );
-    double sx = mom.px()/mom.pz() + deviates(4);
-    double sy = mom.py()/mom.pz() + deviates(5);
-    double  p = mom.vect().mag()  + deviates(6);
+
+    pos.setX(  pos.x()  + deviates(1) + BIAS[0]*sqrt(covSF(1,1)));  //smears and add the BIAS
+    pos.setY(  pos.y()  + deviates(2) + BIAS[1]*sqrt(covSF(2,2)));
+//  pos.setZ(  pos.z()  + deviates(3) + BIAS[2]*sqrt(covSF(3,3)));
+    pos.setZ(  pos.z() );
+    double sx = mom.px()/mom.pz() + deviates(4) + BIAS[3]*sqrt(covSF(4,4));
+    double sy = mom.py()/mom.pz() + deviates(5) + BIAS[4]*sqrt(covSF(5,5));
+    double  p = mom.vect().mag()  + deviates(6) + BIAS[5]*sqrt(covSF(6,6));
     double  m = mom.m();
     double pz = p / sqrt(1+sx*sx+sy*sy);
     mom = HepLorentzVector( sx*pz,sy*pz,pz,sqrt(m*m+p*p) );
   }
+    
   // NOTE: must set position and momentum before covariance matrix
   //       as otherwise the conversions on the covariance cannot be done
   particle.setPointOnTrack( pos );
@@ -243,18 +375,15 @@ MCParticleMaker::fillParticle( const MCParticle& mc,
   particle.setMass(mom.m());
   particle.setMassErr(0.0); // For the moment but already in constructor
 
-  particle.setPointOnTrackErr(cov.sub(1,3));
-  particle.setSlopesMomErr(cov.sub(4,6));
+  particle.setPointOnTrackErr(covSF.sub(1,3));
+  particle.setSlopesMomErr(covSF.sub(4,6));
   HepMatrix c(3,3);
   for (int i=0;i<c.num_row();++i) {
     for (int j=0;j<c.num_col();++j) {
-      c(1+i,1+j) = cov(1+i,4+j);
+      c(1+i,1+j) = covSF(1+i,4+j);
     }
   }
   particle.setPosSlopesCorr(c);
-
-  // Print out informations 
-  // particle.fillStream(cout) << endl;
     
   return StatusCode::SUCCESS;
 }
@@ -307,10 +436,57 @@ MCParticleMaker::generateCovariance(const HepLorentzVector& p) const
   double sip = m_ipErrorC0 + m_ipErrorC1/(p.perp()/GeV); 
   (*c)(1,1) = sip*sip/2;
   (*c)(2,2) = (*c)(1,1);
-  (*c)(3,3) = 0;
+  (*c)(3,3) = (*c)(1,1); 
   
   (*c)(4,4) = m_slopeError*m_slopeError;
   (*c)(5,5) = (*c)(4,4);
-  (*c)(6,6) = m_momError*m_momError*p*p;
+  (*c)(6,6) = m_momError*m_momError*p.vect().mag2();  // BUG fixed
+  
+  (*c)(1,2) =m_rhoxy*sqrt((*c)(1,1)*(*c)(2,2));
+  (*c)(1,3) =m_rhoxz*sqrt((*c)(1,1)*(*c)(3,3));
+  (*c)(4,1)=m_rhoxtx*sqrt((*c)(1,1)*(*c)(4,4));
+  (*c)(5,1)=m_rhoxty*sqrt((*c)(1,1)*(*c)(5,5));
+  (*c)(6,1)=m_rhoxp*sqrt((*c)(1,1)*(*c)(6,6));
+
+  (*c)(3,2)=m_rhoyz*sqrt((*c)(3,3)*(*c)(2,2));
+  (*c)(4,2)=m_rhoytx*sqrt((*c)(2,2)*(*c)(4,4));
+  (*c)(5,2)=m_rhoyty*sqrt((*c)(2,2)*(*c)(5,5));
+  (*c)(6,2)=m_rhoyp*sqrt((*c)(2,2)*(*c)(6,6));
+
+  (*c)(4,3)=m_rhoztx*sqrt((*c)(3,3)*(*c)(4,4));
+  (*c)(5,3)=m_rhozty*sqrt((*c)(3,3)*(*c)(5,5));
+  (*c)(6,3)=m_rhozp*sqrt((*c)(3,3)*(*c)(6,6));
+
+  (*c)(5,4)=m_rhotxty*sqrt((*c)(4,4)*(*c)(5,5));
+  (*c)(6,4)=m_rhotxp*sqrt((*c)(4,4)*(*c)(6,6));
+
+  (*c)(6,5)=m_rhotyp*sqrt((*c)(5,5)*(*c)(6,6));
+  debug()<< " Covariance Matrix generated" << endreq;
+  
   return c;
+}
+
+//=====================================================================
+// generate list of Stable decay particles  // Added to smear only STABLE DECAY PRODUCTS
+//=====================================================================
+std::vector<const MCParticle*> MCParticleMaker::getFinalState(const MCParticle& m)
+{
+  typedef std::vector<const MCParticle*> PV;
+  PV pv;
+  pv.push_back(&m);
+  for (;;) {
+     PV::iterator i = find_if(pv.begin(),pv.end(),IsUnstable());
+     if ( i == pv.end() ) break;
+     typedef const SmartRefVector<MCVertex> SRVV;
+     SRVV& vv = (*i)->endVertices(); // non zero by construction
+     pv.erase(i);
+     for (SRVV::const_iterator j=vv.begin();j!=vv.end();++j) {
+        typedef const SmartRefVector<MCParticle> SRVP;
+        SRVP& vp = (*j)->products();
+        for (SRVP::const_iterator k=vp.begin();k!=vp.end();++k) {
+           pv.push_back(*k);
+        }
+     }
+  }
+  return pv;
 }

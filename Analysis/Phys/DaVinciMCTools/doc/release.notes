@@ -1,7 +1,11 @@
-! $Id: release.notes,v 1.72 2005-10-20 10:45:21 pkoppenb Exp $
+! $Id: release.notes,v 1.73 2005-11-11 17:03:51 pkoppenb Exp $
 ! Package     : DaVinciMCTools
 ! Responsible : P. Koppenburg
 !=============================================================================
+
+! 2005-11-11 - P. Koppenburg for G. Balbi
+ - src/MCParticleMaker.(cpp,h)
+   . Undocumented changes
 
 !========================== DaVinciMCTools v5r16 2005-10-19 ===================
 ! 2005-10-17 - P. Koppenburg
