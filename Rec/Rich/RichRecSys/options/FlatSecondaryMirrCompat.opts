@@ -8,4 +8,6 @@ ToolSvc.Rich1PresTempMonitor.DisableAllUpdates = true;
 ToolSvc.Rich2PresTempMonitor.DisableAllUpdates = true;
 
 // remove one moni alg
-CheckRICHSeq.Members -= { "RichRecoQC" };
+CheckRICHSeq.Members -= { "RichRecoQC/RiCKResFrwd","RichRecoQC/RiCKResMatch",
+                          "RichRecoQC/RiCKResKsTk","RichRecoQC/RiCKResVeloTT",
+                          "RichRecoQC/RiCKResSeed" };
