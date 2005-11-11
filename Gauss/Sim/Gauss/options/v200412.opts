@@ -16,7 +16,8 @@
 // Geometry database dependent options
 //--------------------------------------------------------------------------
 DetectorDataSvc.DetDbLocation = "$XMLDDDBROOT/DDDB/lhcb-200412.xml";
-Geo.StreamItems         += {"/dd/Structure/LHCb/Converter"}; 
+MagneticFieldSvc.FieldMapFile = "$FIELDMAPROOT/cdf/field045.cdf";
+Geo.StreamItems              += {"/dd/Structure/LHCb/Converter"}; 
 
 //--------------------------------------------------------------------------
 // Switch off monitors of detectors in production
