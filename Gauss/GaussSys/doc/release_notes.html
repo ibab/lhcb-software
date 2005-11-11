@@ -4,6 +4,297 @@ Package manager : Gloria Corti
 Purpose: LHCb Simulation program
 </PRE>
 
+<H1><A NAME="v21r0">2005-11-09 - GaussSys v21r0</A></H1><PRE>
+<H3><A NAME="Use">This version uses:
+   Pythia 6_324.2, photos 215.2 (via GENSER 1_2_0), pdflib 804 
+   DecFiles v11r0, ParamFiles v3r13 
+   Geant4 v71r0p11 (based on geant4.7.1.p01)
+   LHCb v18r9
+   XmlDDDB v26r2p1, FieldMap v4r6 </A></H3>
+
+!============================ Gauss v21r0 ================================
+! 2005-11-11 - Gloria CORTI
+ - Introduce NEW subdirectory xml to contain setting of simulation cuts,
+   with default file Simulation.xml and dtd Simulation.dtd copied from
+   XmlDDDB. Set SimulationSvc to use this in options.
+   . xml/Simulation.{xml,dtd}
+   . options/Simulation.opts
+ - Introduce NEW settings to run Muon low energy background with lower cuts
+   in all detector and muon filters. To swith it on need to include
+   appropiate options file as put in example (commented) in Simulation.opts
+   . options/Simulation.opts, MuonLowEnergy.opts
+   . xml/MuonLowEnergy.xml
+ - Remove setting of visualization environment variables now in GiGaVisUI
+   (as in Gauss v15r20)
+   . requirements
+   . use GiGaVisUI v3r1
+ - Use new version of XmlDDDB (v26r2p1) without set RadLenght
+ - Use newest version of DecFiles supporting main decfile with alias
+   definition for new generators code (DECAY-DC06.DEC), set to be used
+   in options for EvtGenDecay tool.
+   . use DecFiles v11r0
+   . Generator.opts
+ - Modifiy options for v200412.opts and v200506.opts to use old magnetic
+   field to keep compatibility. Note that the latest geometry (v200507.opts)
+   will use the new field
+ - Introduce examples for signal production with two different methods:
+   plain or repeated hadronization (commented)
+   . Generator.opts
+ - Set options for Pythia setting for new structure
+   . PythiaSettings.opts
+   . Generator.opts
+ 
+! 2005-11-07 - Gloria CORTI
+ - Use new versions of Generators v2r1 and LbPyhia v2r1
+ 
+! 2005-11-07 - Gloria CORTI
+ - Put example on how to pass pythia commands taking those of old setup
+   . Generator.opts
+ 
+! 2005-10-31 - Gloria CORTI
+ - Introduce possibility to store G4 history in HepMC structure (optional),
+   algorithm to pass Generator info to G4 primary, algorithm to fill MCHits
+   from G4 collections. Set use of these instead of converters, old way
+   available but commented
+   . GaussAlgs v1r7, GaussTools v11r0, GaussTracker v4r2
+   . Simulation.opts
+ - Introduce use of new structure for generation of min bias events with
+   example for generic b
+   . Generator v2r0, LbPythia v2r0, LbAcerMC v1r3
+   . Generator.opts
+   Note that DecFiles v9r1 still supports options for "old" algorithms
+   generator structure. Need to modify options to use it.
+ - Use latest version of Geant4Files (v71r0) compatible with Geant4 7.1
+ - Use new version of FieldMap v4r6. By default will read new field map
+   "field046.cdf". Previous field is also available and can set in options.
+ 
+! 2005-10-27 - Gloria CORTI
+ - Move checking of status of Geant4 event just after triggering the
+   simulation
+   . Simulation.opts
+ 
+! 2005-10-26 - Gloria CORTI
+ - Introduce new algorithm to fill MCParticle/MCVertex histograms in
+   SimMonitor sequence (MCTruthMonitor)
+   . Monitor.opts
+ - Introduce GaudiSequencer also for initialization
+   . Gauss.opts
+
+!======================== GENSER v1r120p0 ================================
+! 2005-11-04 - Gloria CORTI
+ - requirements - use GENSER_1_2_0 to use Pythia 6_324.2 and Photos 215.2
+ 
+!====================== HepEvt v3r126p0 ===================================
+! 2005-09-21 - Florence Ranjard
+ - split Matt Hobbs HepMC 1.26 new version between HepMC and HepEvt
+   this version contains the HERWIG necessary interface
+
+!========================= Generators v2r1 ===========================
+! 2005-11-07 - Patrick Robbe
+ - src/Lib/EvtReport.cpp: add function to overwrite EvtGen printing
+   utilities.
+ - EvtGenDecay: use this new function.
+ - ExternalGenerator and IProductionTool: set particle properties from 
+   ParticlePropertySvc.
+
+! 2005-11-04 - Patrick Robbe
+ - src/component/SignalRepeatedHadronization.h/cpp: tool to generate
+   signal events with repeated hadronization.
+ - ExternalGenerator: add utility function to deal with event model
+   classes and prepare them before each generation of interactions.
+ - HepMCUtils: add function to clear HepMC events
+ - IProductionTool: add virtual functions for repeated hadronization 
+   method.
+ - Signal: add utility functions (choose one B amongst several and
+   function to choose correct signal multiplicity).
+ - phocin.F: adapt for PHOTOS 2.15
+ - pythiaoutput_utils.F : adapt for PYTHIA 6.3
+ - Generation: correct status of particles to decay with EvtGen.
+
+!========================= Generators v2r0 ===========================
+! 2005-10-17 - Patrick Robbe
+ - EvtGenTool : add possibility to control polarization parameters
+   by job options.
+
+! 2005-10-13 - Patrick Robbe
+ - Generators/GenBaseAlg : remove forward declaration not used
+
+! 2005-10-03 - Patrick Robbe
+ - HepMCUtils : use a static class instead of a namespace and add 
+   IsBAtProduction utility function.
+ - EvtDecayAlg : use new name of sort function.
+ - EvtGenTool : declare global stream variable extern to avoid conflicts
+ - Generators/IBeamTool.h : New abstract interface to tools to obtain beam
+     parameters in generator interfaces.
+ - Generators/IDecayTool.h : New abstract interface to decay generators.
+ - Generators/IGenCutTool.h : New abstract interface to generator level cut
+     tools.
+ - Generators/IPileUpTool.h : New abstract interface to tools computing the 
+     number of pile up interactions.
+ - Generators/IProductionTool.h : New abstract interface to production 
+     generators.
+ - Generators/ISampleGenerationTool.h : New abstract interface to tools
+     producing the different samples.
+ - Generators/IVertexSmearingTool.h : New abstract interface to vertex smearing
+     tools.
+ - VariableLuminosity: pile up tool to decide the number of pile up 
+     interactions depending on the current luminosity.
+ - FixedNInteractions: pile up tool with fixed number of interactions per 
+     event.
+ - CollidingBeams: Beam tool for colliding beams and beam smearing
+ - FixedTarget: Beam tool for fixed target
+ - BeamSpotSmearVertex: vertex smearing tool for gaussian smearing.
+ - FlatZSmearVertex: vertex smearing with flat Z distribution.
+ - LHCbAcceptance: generator level cut tool with angular cut.
+ - ExternalGenerator: base class for sample generation tool using an 
+     external generator.
+ - Signal: base class for sample generation tool using an external generator
+     and generating signal samples.
+ - EvtGenDecay: Decay tool interfacing EvtGen
+ - Generation: Main algorithm steering production of event samples with an 
+     external generator.
+ - MinimumBias: Sample generation tool to generate minimum bias.
+ - Inclusive: Sample generation tool to generate inclusive events.
+ - SignalPlain: Sample generation tool to generate signal events with plain 
+     method.
+
+! ========================= LbPythia v2r1 ============================
+! 2005-11-07 - Patrick Robbe
+ - PythiaProduction: set particle properties of Pythia from
+   ParticlePropertySvc.
+ 
+! 2005-11-04 - Patrick Robbe
+ - Pythia: add calls to PYEDIT and PYEXEC
+ - pyinit.F, pykfdi.F, pyrand.F, upenvt.F, upinit.F: move to Pythia 6.3
+ - PythiaProduction: changes to be able to generate signal events with
+   repeated hadronization.
+ 
+! ========================= LbPythia v2r0 ============================
+! 2005-10-13 - Patrick Robbe
+ - PythiaAlg: set printPythiaParameters in protected section
+ 
+! 2005-10-03 - Patrick Robbe
+ - Pythia.h : new utility class to interface Pythia FORTRAN functions.
+ - PythiaProduction: Production tool interfacing Pythia.
+ - PythiaAlgorithm : use new HepMC sort function.
+ - WZPythiaAlg : add algorithms to generate W and Z events.
+ 
+!======================== LbAcerMC v1r3 ===========================
+! 2005-10-13 - Patrick Robbe
+ - AcerMCPythiaAlg: add generator level cuts   
+
+!======================= GiGa v17r3 =====================================
+! 2005-10-25 - Gloria CORTI
+ - GiGaFieldMgrBase.cpp
+   . introduce two new properties to control tracking in magnetic field
+     MinEpsilonStep and MaxEpsilonStep controlling min and max value allowed
+     for error on dl/l and dp/p.
+ - GiGa.cpp
+   . fix bug of uninitialized value for property PringG4Particles (def=false)
+
+!======================== SimSvc v4r2 ==================================
+! 2005-11-10 - Gloria CORTI
+ - src/SimulationSvc.cpp
+   . From Sajan EASO - Fix usage of terms "Regions" and "Region" where
+     there was a mismatch between the value and what found in the XML
+   . Use msg instead of log (and endmsg)
+ 
+!========================= GiGaVisUI v3r1 2005-10-07 ======================
+! 2005-10-07 - Florence Ranjard
+ - requirements - move setting of DAWN related environment variables
+                  from Gauss to GiGaVisUI
+
+!============================ GaussAlgs v1r7 ==============================
+! 2005-10-30 - Gloria CORTI
+ - src/G4HepMCToMCTruth.{h,cpp}
+   . new algorithm to fill MCParticles/MCVertices from HepMC as filled
+     during G4 tracking (initial version from Witek Pokorski, small
+     modifications to follow new GaudiAlg conventions)
+ - src/GaussAlgs_load.cpp
+   . add declaration of G4HepMCToMCTruth algorithm
+ 
+! 2005-10-25 - Gloria CORTI
+ - src/GiGaGetHitsAlg.{h,cpp}
+   . add possible additional location for MCHits printing controlled by
+     ExtraHits property (def="")
+ - src/GeneratorToG4.{h,cpp}
+   . new algorithm to fill G4Primary event with HepMC content from generator.
+     Used instead of combination of "GiGaInputStream/Kine" and
+     "GiGaHepMCCnv" to provide generator events to Geant4.
+     The algorithmic choice to pass particles is the same as in converter.
+ - src/GaussAlgs_load.cpp
+   . add declaration of GeneratorToG4 algorithm
+ 
+!=========================== GaussTools v11r0 ===============================
+! 2005-11-10 - Gloria CORTI
+ - src/Components/GiGaRegionsTool.cpp from Sajan EASO
+   . Avoid print of Warning when a new region is formed that "overwrite"
+     the "World Region", print as info and issue Warning only for other
+     regions
+ 
+! 2005-10-31 - Gloria CORTI
+ - New classes originally from Witek Pokorski to store history of Geant4
+   tracking (processes and particles produced) in HepMC tree structure
+ - GaussTools/MCTruthManager.h
+   src/Lib/MCTruthManager.cpp
+   . new class (singleton) to manage HepMC event used in Geant4 tracking
+ - GaussTools/GaussTrackInformation.h
+   src/Lib/GaussTrackInformation.cpp
+   . introduce flag to store a G4Track in HepMC and flag indicating if direct
+     mother has been stored, if not use a special "dummy" link
+ - src/Components/GaussPostTrackAction.cpp
+   . set flag to store a G4Track in HepMC depending on conditions chosen
+ - src/Components/GaussTrackActionHepMC.{h,cpp}
+   . new specialization of G4UserTrackingAction to store in HepMC structure
+     new particles when flag has been set, also handle cases when direct
+     mother has not been stored
+ - src/Components/GaussEventActionHepMC.{h,cpp}
+   . new specialization of G4UserEventAction to execute some commands for
+     managment and debugging of HepMC as used in G4 tracking
+ - src/Components/GaussTools_load.cpp
+   . add declaration of GaussTrackActionHepMC and GaussEventActionHepMC
+
+! 2005-06-24 - Gloria CORTI
+ - src/Components/SpecialCuts.cpp
+   . put back compatibility to geant4.7.0   
+
+!=========================== GaussTracker v4r2 ================================
+! 2005-10-30 - Gloria CORTI
+ - src/GetTrackerHitsAlg.cpp
+   . replace getOrCreate method with put(), since the first cannot be
+     used to preempt triggering of converters with identical location in TES.
+
+! 2005-10-25 - Gloria CORTI
+ - src/GetTrackerHitsAlg.{h,cpp}
+   . new algorithm to fill MCHits in a given location in TES (settable via
+     property "MCHitsLocation" starting from TrcakerHits in a G4 collection
+     (settable via property "CollectionName")
+ - src/GiGaSensDetTracker.{h,cpp}
+   . follow LHCb convention of having data members starting with m_
+
+!====================== GaussPhysics v3r2 ===============================
+! 2005-11-09 - Gloria CORTI
+ - Introduce factories for additional Physics lists private to LHCb
+   (HadronPhysicsQGSP_BERT_HP)
+   . GaussPhysics_load.cpp
+   . requirements - use of package G4LHCblists (requires Geant4 v71r0p11)
+ 
+! 2005-10-02 - Gloria CORTI
+ - Introduce factories for additional Physics lists for low energy studies:
+   HadronPhysicsLHEP_HP, HadronPhysicsLHEP_BERT_HP, HadronPhysicsQGSP_HP
+   . GaussPhysics_load.cpp
+
+!===================== GaussMonitor v2r3 ===================================
+! 2005-10-30 - Gloria Corti
+ - cmt/requirements
+   . add necessary use of AIDA
+ 
+! 2005-10-02 - Gloria CORTI
+ - src/MCTruthMonitor.{h,cpp}
+   . new algorithm to fill a few reference histograms for MC Truth
+     (MCParticles and MCVertices)
+ 
+!=============================================================================
 <H1><A NAME="v20r2">2005-08-22 - GaussSys v20r2</A></H1><PRE>
 <H3><A NAME="Use">This version uses:
    Pythia 6_226.2, photos 209.2 (via GENSER 1_1_0), pdflib 804 

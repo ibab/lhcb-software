@@ -1,5 +1,5 @@
 package GaussSys
-version v20r2
+version v21r0
 
 branches cmt doc
 
@@ -8,33 +8,33 @@ branches cmt doc
 #==================================================================
 
 # Gauss application
-use Gauss		v20r2	  Sim
+use Gauss		v21r0	  Sim
 
 # Generator stuff ...
-use GENSER              v1r110p0  Gen
-use HepEvt              v3r121p0  Gen
+use GENSER              v1r120p0  Gen
+use HepEvt              v3r126p0  Gen
 use EvtGen              v8r5      Gen
-use Generators          v1r2      Gen
-use LbPythia            v1r2      Gen
+use Generators          v2r1      Gen
+use LbPythia            v2r1      Gen
 use AcerMC              v1r23p0   Gen
-use LbAcerMC            v1r2      Gen
+use LbAcerMC            v1r3      Gen
 use ParticleGuns	v1r0      Gen
 
 # GiGa stuff...
-use GiGa        	v17r2	  Sim        
+use GiGa        	v17r3	  Sim        
 use GiGaCnv     	v15r11	  Sim
-use SimSvc              v4r1      Sim
-use GiGaVisUI		v3r0	  Sim
+use SimSvc              v4r2      Sim
+use GiGaVisUI		v3r1	  Sim
 use VisSvc              v3r3      Vis
 
 # Gauss stuff...
-use GaussAlgs		v1r6      Sim
-use GaussTools	        v10r10	  Sim
+use GaussAlgs		v1r7      Sim
+use GaussTools	        v11r0	  Sim
 use GaussRICH		v5r0	  Sim
-use GaussTracker	v4r1	  Sim
+use GaussTracker	v4r2	  Sim
 use GaussCalo		v7r3	  Sim
-use GaussPhysics	v3r1	  Sim
-use GaussMonitor	v2r2	  Sim
+use GaussPhysics	v3r2	  Sim
+use GaussMonitor	v2r3	  Sim
 use CaloMoniSim         v1r0      Calo
 use VeloAlgorithms      v3r3      Velo
 use MuonMoniSim         v1r1      Muon
