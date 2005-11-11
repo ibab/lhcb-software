@@ -1,6 +1,11 @@
 Package Event/GenEvent
 package coordinator: W.Pokorski, G.Corti
 
+!================ GenEvent v3r5 2005-11-11 ============================
+! 2005-11-11 - Marco Cattaneo
+ - Changes to use fragments for custom dictionary
+ - Changes to produce platform dependent dictionaries
+
 !================ GenEvent v3r4 2005-10-10 ============================
 ! 2005-10-10 - Marco Cattaneo
  - Modify requirements to produce reflex dictionaries

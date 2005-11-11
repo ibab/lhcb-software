@@ -1,7 +1,7 @@
 package GenEvent
-version v3r4
+version v3r5
 
-branches cmt dict doc src xml Event
+branches cmt doc src xml Event
 
 use HepMC        v*	Sim
 use Event        v*     Event
@@ -10,13 +10,18 @@ include_dirs $(GENEVENTROOT)
 
 # Produce Header-Files & dictionary from XML description
 #============================================================================
-document obj2doth GenEventObj2Doth ../xml/GenEvent.xml ../xml/HardInfo.xml \
-                                   ../xml/GenMCLink.xml ../xml/GenCollision.xml
-document obj2dict GenEventObj2Dict ../xml/GenEvent.xml ../xml/HardInfo.xml \
-                                   ../xml/GenMCLink.xml ../xml/GenCollision.xml
+document obj2doth GenEventObj2Doth ../xml/*.xml
+
+# Make custom dictionary. Must be before GOD generation
+#============================================================================
+document customdict GenEventCustomDict ../src/HepMC_dict.h
+
+# Generate remaining dictionaries with lcgdict via GOD
+#============================================================================
+document obj2dict GenEventObj2Dict ../xml/*.xml
 
 library GenEvent      *.cpp
-library GenEventDict  ../dict/*.cpp
+library GenEventDict  ../$(tag)/dict/GenEvent/*.cpp
 
 apply_pattern component_library library=GenEventDict
 apply_pattern linker_library    library=GenEvent
@@ -24,10 +29,3 @@ macro_append GenEvent_linkopts "" WIN32 "/include:_GenEvent_loadRef"
 
 private
 use GaudiObjDesc v*
-# Additional dictionaries not generated automatically by GaudiObjDesc
-action GenEvent_custom_dict \
-   "if !(test -r ../dict/GenEvent_selection.xml) then \
-     cp ../src/HepMC_dict.h ../dict/GenEvent_dictionary.h;  \
-     cp ../xml/HepMC_dict.xml ../dict/GenEvent_selection.xml; fi" \
-  WIN32 ""
-macro GenEventObj2Dict_dependencies GenEvent_custom_dict
