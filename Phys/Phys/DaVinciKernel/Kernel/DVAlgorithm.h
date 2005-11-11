@@ -18,6 +18,7 @@
 #include "Kernel/IGeomDispCalculator.h"
 #include "Kernel/IParticleStuffer.h"
 #include "Kernel/IParticleFilter.h"
+#include "Kernel/IGlobalFitter.h"
 #include "Kernel/ICheckOverlap.h"
 #include "Kernel/IAlgorithm2ID.h"
 #include "Kernel/IBTaggingTool.h"
@@ -87,6 +88,9 @@ public:
   /// get algorithm ID
   int getAlgorithmID();
  
+  /// Accessor for Global Fitter Tool
+  IGlobalFitter* globalFitter() const;
+
   /// Accessor for Algorithm2ID Tool
   IAlgorithm2ID* algorithmID() const;
 
@@ -106,6 +110,8 @@ private:
 
   /// Concrete type Name of Unconstrained vertex to use (Property)
   std::string m_typeVertexFit;
+  /// Concrete type of GlobalFitter to use (Property)
+  std::string m_typeGlobalFit;
   /// Concrete type Name of geom tool
   std::string m_typeGeomTool;
   /// Concrete type of VertexFitter to use (Property)
@@ -125,7 +131,9 @@ private:
   /// Reference to Mass Constrained Vertex Fitter
   mutable IMassVertexFitter* m_pLagFit; 
   /// Reference to unconstrained Vertex Fitter
-  mutable IVertexFitter* m_pVertexFit;    
+  mutable IVertexFitter* m_pVertexFit;
+  /// Reference to Global Fitter
+  mutable IGlobalFitter* m_pGlobalFit;   
   /// Reference to geometrical displacement Calculation.
   mutable IGeomDispCalculator* m_pGeomDispCalc;  
   /// Reference to ParticleStuffer.

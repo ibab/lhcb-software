@@ -7,6 +7,7 @@ DVAlgorithm::DVAlgorithm( const std::string& name, ISvcLocator* pSvcLocator )
   , m_pDesktop(0)
   , m_pLagFit(0)
   , m_pVertexFit(0)
+  , m_pGlobalFit(0)
   , m_pGeomDispCalc(0)
   , m_pStuffer(0)
   , m_pFilter(0)
@@ -28,6 +29,7 @@ DVAlgorithm::DVAlgorithm( const std::string& name, ISvcLocator* pSvcLocator )
   declareProperty("DecayDescriptor", m_decayDescriptor = "not specified");
   declareProperty("AvoidSelResult", m_avoidSelResult = false );
   declareProperty("PrintSelResult", m_printSelResult = false );
+  declareProperty("GlobalFitter",m_typeGlobalFit="LagrangeGlobalFitter");
 
 };
 //=============================================================================
@@ -83,6 +85,10 @@ StatusCode DVAlgorithm::loadTools() {
 
   msg << MSG::DEBUG << ">>> Retrieving PhysDesktop" << endreq;
   m_pDesktop = tool<IPhysDesktop>("PhysDesktop",this);  
+
+  msg << MSG::DEBUG << ">>> Retrieving" << m_typeGlobalFit
+      << " as IGlobalFit" << endreq;
+  m_pGlobalFit = tool<IGlobalFitter>(m_typeGlobalFit,this);
 
   msg << MSG::DEBUG << ">>> Retrieving " << m_typeLagFit 
       << " as IMassVertexFitter" << endreq;
@@ -158,6 +164,9 @@ StatusCode DVAlgorithm::sysExecute () {
 }
 //=============================================================================
 IPhysDesktop* DVAlgorithm::desktop() const {return m_pDesktop;}  
+
+//=============================================================================
+IGlobalFitter* DVAlgorithm::globalFitter() const {return m_pGlobalFit;}
 
 //=============================================================================
 IMassVertexFitter* DVAlgorithm::massVertexFitter() const {return m_pLagFit;}  
