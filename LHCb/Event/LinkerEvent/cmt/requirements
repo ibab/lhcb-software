@@ -6,7 +6,7 @@
 # http://cern.ch/lhcb-comp/Support/html/new_structure.pdf
 #============================================================================
 package           LinkerEvent
-version           v1r8p1
+version           v1r9
 
 #============================================================================
 # This template is an example for a standard Algorithm package
@@ -31,7 +31,7 @@ document obj2dict LinkerEventObj2Dict ../xml/*.xml
 
 public
 library          LinkerEvent         ../src/*.cpp
-library          LinkerEventDict     ../dict/*.cpp
+library          LinkerEventDict     ../$(tag)/dict/LinkerEvent/*.cpp
 
 #============================================================================
 # define library link options

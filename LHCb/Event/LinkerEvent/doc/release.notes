@@ -4,6 +4,10 @@
 ! Purpose     : Implementation of the Linker package, to associate objects
 !-----------------------------------------------------------------------------
 
+!====================== LinkerEvent v1r9 2005-11-11 ==========================
+! 2005-11-11 - Marco Cattaneo
+ - Fix for platform dependent dictionaries with Gaudi v17r2
+
 !====================== LinkerEvent v1r8p1 2005-07-21 ========================
 ! 2005-07-21 - Marco Cattaneo
  - Change package name to LinkerEvent in LinksByKey.xml, for GOD Reflex dict
