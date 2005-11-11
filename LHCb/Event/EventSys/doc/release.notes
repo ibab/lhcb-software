@@ -1,6 +1,14 @@
 package EventSys
 package manager: Marco Cattaneo
 
+!======================== EventSys v20r11 2005-11-11 =======================
+! 2005-11-11 - Marco Cattaneo
+ - Changes to have platform dependent dicts with GaudObjDesc v8r3
+ - Use CaloEvent v3r10, DAQEvent v5r3p1, Event v4r8, GenEvent v3r5,
+       ITEvent v13r3, L0Event v14r3p2, LinkerEvent v1r9, MuonEvent v4r1,
+       OTEvent v14r0p2, PhysEvent v8r11, RichEvent v8r4p1, TrackEvent v1r4p1,
+       TrgEvent v5r6, VeloEvent v13r2p2
+
 !======================== EventSys v20r10 2005-10-20 =======================
 ! 2005-10-20 - Marco Cattaneo
  - Use TrackEvent v1r4, DAQEvent v5r3, GenEvent v3r4, PackedEvent v1r2,
