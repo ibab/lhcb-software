@@ -5,7 +5,7 @@
  *  Header file for class Rich::BoostMemPoolAlloc
  *
  *  CVS Log :-
- *  $Id: BoostMemPoolAlloc.h,v 1.1 2005-11-07 11:47:13 jonrob Exp $
+ *  $Id: BoostMemPoolAlloc.h,v 1.2 2005-11-12 19:11:52 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   2003-07-31
@@ -15,7 +15,10 @@
 #ifndef RICHKERNEL_BOOSTPOOLALLOC_H
 #define RICHKERNEL_BOOSTPOOLALLOC_H 1
 
+#ifdef __GNUC__
+// Pool from Boost
 #include <boost/pool/pool.hpp>
+#endif
 
 namespace Rich
 {
@@ -39,8 +42,13 @@ namespace Rich
    *
    *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
    *  @date   07/11/2005
+   *
+   *  @todo Figure out why this Boost utility fails to compile on windows
    */
   //-----------------------------------------------------------------------------
+
+#ifdef __GNUC__
+  // Linux, use Boost pool
 
   template <class T>
   class BoostMemPoolAlloc
@@ -52,7 +60,7 @@ namespace Rich
     static void* operator new ( size_t size )
     {
       return ( sizeof(T) == size ? 
-               s_memPool.malloc() : ::operator new(size));
+               s_memPool.malloc() : ::operator new(size) );
     }
 
     /// operator delete
@@ -69,10 +77,20 @@ namespace Rich
 
   };
 
+#else
+  // All other platforms use null class
+  
+  template <class T>
+  class BoostMemPoolAlloc { };
+  
+#endif
+
 }
 
-/// Allocate the static memory pool
+#ifdef __GNUC__
+/// Allocate the static memory pool for the template class
 template <class T>
-boost::pool<> Rich::BoostMemPoolAlloc<T>::s_memPool(sizeof(T));
+boost::pool<> Rich::BoostMemPoolAlloc<T>::s_memPool( sizeof(T) );
+#endif
 
 #endif // RICHKERNEL_BOOSTPOOLALLOC_H
