@@ -29,12 +29,11 @@ GiGaGeo.Spd.Histograms = {
   "GaussCalo/SPDTIME/h2",
   "GaussCalo/SPDTIME/h3" 
 };
-// Input Hbook histograms
-// GiGaGeo.Spd.Histograms = { 	
-//   "GaussCalo/SPDTIME/1", 
-//   "GaussCalo/SPDTIME/2",
-//   "GaussCalo/SPDTIME/3" 
-// };
+
+// Conversion of Hits
+Simulation.Members += { "GetCaloHitsAlg/GetSpdHits" } ;
+GetSpdHits.MCHitsLocation = "/Event/MC/Spd/Hits" ;
+GetSpdHits.CollectionName = "SpdHits" ;
 
 // ============================================================================
 // The END 

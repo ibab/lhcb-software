@@ -32,6 +32,11 @@ GiGaGeo.Hcal.Histograms = {
 //   "GaussCalo/HCALTIME/2" 
 // };
 
+// Conversion of Hits
+Simulation.Members += { "GetCaloHitsAlg/GetHcalHits" } ;
+GetHcalHits.MCHitsLocation = "/Event/MC/Hcal/Hits" ;
+GetHcalHits.CollectionName = "HcalHits" ;
+
 // ============================================================================
 // The END 
 // ============================================================================

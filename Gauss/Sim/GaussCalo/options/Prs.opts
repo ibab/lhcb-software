@@ -29,12 +29,11 @@ GiGaGeo.Prs.Histograms = {
   "GaussCalo/PRSTIME/h2" , 
   "GaussCalo/PRSTIME/h3" 
 };
-// Input Hbook histograms
-// GiGaGeo.Prs.Histograms = { 
-//   "GaussCalo/PRSTIME/1" , 
-//   "GaussCalo/PRSTIME/2" , 
-//   "GaussCalo/PRSTIME/3" 
-// };
+
+// Conversion of Hits
+Simulation.Members += { "GetCaloHitsAlg/GetPrsHits" } ;
+GetPrsHits.MCHitsLocation = "/Event/MC/Prs/Hits" ;
+GetPrsHits.CollectionName = "PrsHits" ;
 
 // ============================================================================
 // The END 

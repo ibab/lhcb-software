@@ -26,11 +26,11 @@ GiGaGeo.Ecal.Histograms = {
   "GaussCalo/ECALTIME/h1" ,
   "GaussCalo/ECALTIME/h2" 
 };
-// Input Hbook histograms
-// GiGaGeo.Ecal.Histograms = { 
-//   "GaussCalo/ECALTIME/1" ,
-//   "GaussCalo/ECALTIME/2" 
-// };
+
+// Conversion of Hits
+Simulation.Members += { "GetCaloHitsAlg/GetEcalHits" } ;
+GetEcalHits.MCHitsLocation = "/Event/MC/Ecal/Hits" ;
+GetEcalHits.CollectionName = "EcalHits" ;
 
 // ============================================================================
 // The END 

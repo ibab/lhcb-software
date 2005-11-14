@@ -7,6 +7,11 @@
 !                  : G4 actions, etc for LHCb calorimeters
 !-----------------------------------------------------------------------------
 
+! 2005-11-14 - Patrick Robbe
+ - GetCaloHitsAlg.cpp: new algorithm to replace GiGaCaloHitCnv converter.
+ - options/Ecal.opts, Hcal.opts, Prs.opts, Spd.opts: use new algorithm
+   to convert to MCHits
+
 !===================== GaussCalo v7r3 ===================================
 ! 2005-08-16 - Gloria CORTI
  - options/Calo.opts, Ecal.opts, Hcal.opts, Prs.opts, Spd.opts
