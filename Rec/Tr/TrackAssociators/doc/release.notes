@@ -4,17 +4,38 @@
 ! Purpose     : Associators to MC truth for Tracks
 !----------------------------------------------------------------------------
 
-! 2005-10-7
+!===================== TrackAssociators v1r4 2005-11-14 ====================
+! Edwin Bos
+  - Changed over from Relations to Linkers
+  - Removed possibility for OTMeasurement at Z < 5 meters,
+    which was being counted as a TT hit
+  - Still uses Relations input from the subdetectors in stead of Linkers
+  - Useage for instance in $BRUNELOPTS/BrunelCheck.opts :
+
+             // Track to MCParticle Linker
+             ApplicationMgr.DLLs += { "TrackAssociators",
+                                      "TrackFitEvent" };
+             XXXYYYSeq.Members += { "TrackAssociator" };
+             // example:  XXXYYY = CheckTr 
+             TrackAssociator.TracksInContainer = "Rec/Track/ZZZ";
+             // example : ZZZ = Best
+             // automatically prefixes "Link/" for linker :
+             TrackAssociator.LinkerOutTable = "Rec/Track/ZZZ";
+
+
+!===================== TrackAssociators v1r3 2005-10-07 ====================
+! Matt Needham
   - retrieve tools in the proper way
   - add linker maker
   - make table double not float !!
   - ++ not ++
 
-! 2005-09-21 - Eduardo Rodrigues
+!===================== TrackAssociators v1r2 2005-09-21 ====================
+! Eduardo Rodrigues
  - minor improvements (latest Gaudies) and fixes
 
-! 2005-09-13 - Edwin Bos
+!===================== TrackAssociators v1r1 2005-09-13 ====================
+! Edwin Bos
  - Creation of package from Tr/TrFitAssociators and Tr/TrAssociators
    of the old track event model
  - Adapted to the new event model
-

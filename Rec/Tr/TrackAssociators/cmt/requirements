@@ -1,34 +1,23 @@
 #============================================================================
-# Created    : 2005-09-13
+# Created    : 2005-11-14
 # Maintainer : Edwin Bos
 #
 #============================================================================
-package          TrackAssociators
-version          v1r3
+package           TrackAssociators
+version           v1r4
 
 #============================================================================
-# This template is an example for a standard Algorithm package
-#
-# Structure, i.e. directories to process. 
-#============================================================================
-branches         cmt doc src
+branches          cmt doc src options
 
-#============================================================================
-# Used packages. Specify the version, * at the end specifies 'any revision'
-#    Put as many lines as needed, with all packages, without the '#'
 #============================================================================
 use	VeloAssociators	v*	Velo
 use	ITAssociators	v*	IT
 use	OTAssociators	v*	OT
 use	TrackFitEvent	v*	Tr
-use     LinkerEvent     v1r*    Event
 
 #============================================================================
 # Component library building rule
 #============================================================================
-library          TrackAssociators    ../src/*.cpp
+library TrackAssociators ../src/*.cpp
 
-#============================================================================
-# define component library link options
-#============================================================================
-apply_pattern    component_library library=TrackAssociators
+apply_pattern component_library library=TrackAssociators

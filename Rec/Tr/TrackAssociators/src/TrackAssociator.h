@@ -1,81 +1,103 @@
-// $Id: TrackAssociator.h,v 1.3 2005-10-17 16:30:21 ebos Exp $
-#ifndef TRACKASSOCIATORS_TRACKASSOCIATOR_H 
-#define TRACKASSOCIATORS_TRACKASSOCIATOR_H 1
+#ifndef TRACKASSOCIATOR_H 
+#define TRACKASSOCIATOR_H 1
 
 // Include files
-// -------------
+
 // from Gaudi
 #include "GaudiAlg/GaudiAlgorithm.h"
 
-// from XxxAssociators
+// from Velo/VeloAssociators/VeloAssociators
 #include "VeloAssociators/VeloCluster2MCParticleAsct.h"
+
+// from  IT/ITAssociators/ITAssociators
 #include "ITAssociators/ITCluster2MCParticleAsct.h"
+
+// from OT/OTAssociators/OTAssociators
 #include "OTAssociators/OTTime2MCParticleAsct.h"
 
 // Forward declarations
+
 class MCParticle;
-class ITCluster;
-class OTTime;
-class VeloCluster;
 
 /** @class TrackAssociator TrackAssociator.h
- *
- *  This algorithm computes the relation between a Track and a MCParticle.
+ *  
+ *  This algorithm computes the link between a Track and a MCParticle.
  *  The requirement is a match of both the Velo and the Seed part of the 
  *  Track. If there are not enough coordinates, the match is assumed so that
  *  a Velo only or a Seed only are matched properly.
  *  The required fraction of hits is a jobOption 'FractionOK', default 0.70
- *  Another option is 'MinimalZ' which allows to ignore IT/OT hits in TT1.
+ *  Another option is 'MinimalZ' which allows to ignore IT hits in TT1.
  *
- *  Adapted to the new track event model.
+ *  Adapted to the new Track Event Model using Linkers
  *  @author Edwin Bos
- *  @date   2005-09-12
+ *  @date   2005-11-14
  *
+ *  Based on the Tr/TrFitAssociators package by :
  *  @author Olivier Callot
  *  @date   2002-07-01
  */
 
 class TrackAssociator : public GaudiAlgorithm {
-public: 
-  /// Standard constructor
+public:
+
+  // Standard constructor
   TrackAssociator( const std::string& name, ISvcLocator* pSvcLocator );
 
-  virtual ~TrackAssociator( ); ///< Destructor
+  // Destructor
+  virtual ~TrackAssociator();
 
-  virtual StatusCode initialize();    ///< Algorithm initialization
-  virtual StatusCode execute   ();    ///< Algorithm execution
+  // Algorithm initialization
+  virtual StatusCode initialize();
 
-  typedef ITCluster2MCParticleAsct::IAsct    ITClusAsct ;
-  typedef OTTime2MCParticleAsct::IAsct       OTTimAsct ;
-  typedef VeloCluster2MCParticleAsct::IAsct  VeloClusAsct ;
+  // Algorithm execution
+  virtual StatusCode execute();
+
+  // Algorithm finalization
+  virtual StatusCode finalize();
 
 private:
 
-  void countMCPart( const MCParticle* part, 
-                    double incVelo, 
+  // For counting # and type of Measurements associated to a MCParticle
+  void countMCPart( const MCParticle* part,
+                    double incVelo,
                     double incTT1,
                     double incSeed );
-    
-  std::string m_inputContainer;   ///< Name of the track container
-  std::string m_outputTable;      ///< Name of the association table
-  double      m_minimalZ;         ///< minimal Z for IT/OT, to ignore TT1
-  double      m_fractionOK;       ///< minimal good matching fraction
-  bool        m_makeLinker;       ///< Option to construct the linker relations
 
+  // Typedefs for readability
+  typedef ITCluster2MCParticleAsct::IAsct   ITClusAsct;
+  typedef OTTime2MCParticleAsct::IAsct      OTTimAsct;
+  typedef VeloCluster2MCParticleAsct::IAsct VeloClusAsct;
+  
+  // jobOptions
+  std::string m_tracksInContainer;  //< Name of the input Tracks container
+  std::string m_linkerOutTable;     //< Name of the output Linker table
+  double      m_minimalZ;           //< minimal Z for IT, to ignore TT1
+  double      m_fractionOK;         //< minimal good matching fraction
 
-
+  // Member pointers to retrieved associator tools
   VeloClusAsct* m_veloClusToMCP;
   ITClusAsct*   m_itClusToMCP;
   OTTimAsct*    m_otTimToMCP;
 
-  std::vector<const MCParticle*> m_parts;
-  std::vector<double> m_nVelo;
-  std::vector<double> m_nTT1;
-  std::vector<double> m_nSeed;
+  // Vector containing the MCParticles which
+  // have a Measurement of any type associated to them
+  std::vector< const MCParticle* > m_parts;
 
-  double m_nTotVelo;
-  double m_nTotTT1;
-  double m_nTotSeed;
+  // Number of Velo Measurements assigned to the MCParticle which
+  // has the same vector index in m_parts
+  std::vector< double > m_nVelo;
 
+  // Number of TT Measurements assigned to the MCParticle which
+  // has the same vector index in m_parts
+  std::vector< double > m_nTT1;
+
+  // Number of IT+OT Measurements assigned to the MCParticle which
+  // has the same vector index in m_parts
+  std::vector< double > m_nSeed;
+
+  double m_nTotVelo;   // Total number of Velo hits
+  double m_nTotTT1;    // Total number of TT hits
+  double m_nTotSeed;   // Total number of IT+OT hits
+  
 };
-#endif // TRACKASSOCIATORS_TRACKASSOCIATOR_H
+#endif // TRACKASSOCIATOR_H
