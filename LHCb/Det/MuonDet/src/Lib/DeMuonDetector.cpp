@@ -1,4 +1,4 @@
-// $Id: DeMuonDetector.cpp,v 1.6 2005-11-10 11:02:03 asarti Exp $
+// $Id: DeMuonDetector.cpp,v 1.7 2005-11-14 11:00:48 asarti Exp $
 
 // Include files
 #include "MuonDet/DeMuonDetector.h"
@@ -464,14 +464,28 @@ std::vector< std::pair<MuonFrontEndID, std::vector<float> > > DeMuonDetector::li
   //Getting the chamber pointer.
   DeMuonChamber*  myChPtr =  getChmbPtr(station,regNum,chamberNumber) ;
 
-  //Chamber Geometry info  
-  IGeometryInfo*  geoCh=myChPtr->geometry();
+
+  //Getting a gap [gaps in same chamber have same dimensions]
+  DeMuonGasGap*  myGap = (DeMuonGasGap*) 0;
+  IDetectorElement::IDEContainer::iterator itGap=myChPtr->childBegin();
+  for(itGap=myChPtr->childBegin(); itGap<myChPtr->childEnd(); itGap++){
+    myGap =  dynamic_cast<DeMuonGasGap*>( *itGap ) ;
+    break;
+  }
+
+  if(!myGap) {
+    msg << MSG::ERROR <<"Could not find the gap. Returning a void list."<<endreq; 
+    return tmpPair;
+  }
+
+  //Gap Geometry info  
+  IGeometryInfo*  geoCh=myGap->geometry();
 
   //Retrieve the chamber box dimensions  
   const SolidBox *box = dynamic_cast<const SolidBox *>(geoCh->lvolume()->solid());
   float dx = box->xHalfLength();  float dy = box->yHalfLength();
 
-  //Refer the distances to Local system
+  //Refer the distances to Local system [should be the gap]
   HepPoint3D new_entry = geoCh->toLocal(my_entry);
   HepPoint3D new_exit  = geoCh->toLocal(my_exit);
 
