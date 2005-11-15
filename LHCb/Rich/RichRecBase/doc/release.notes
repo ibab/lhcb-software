@@ -4,6 +4,10 @@
 ! Purpose     : Base package for RICH Reconstruction Packages
 !-----------------------------------------------------------------------------
 
+! 2005-11-15 - Chris Jones
+ - Improvements to transient reconstruction objects
+ - Adapt to new RichDAQ package
+
 ! 2005-11-07 - Christopher Rob Jones
  - Bug fix to RichTrackSelector for TrStoredTracks that caused a boost array
    to go out of range for "Unknown" or "UnUsable" tracks. 

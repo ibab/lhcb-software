@@ -5,7 +5,7 @@
  *  Header file for tool base class : RichPixelCreatorBase
  *
  *  CVS Log :-
- *  $Id: RichPixelCreatorBase.h,v 1.4 2005-06-23 15:13:05 jonrob Exp $
+ *  $Id: RichPixelCreatorBase.h,v 1.5 2005-11-15 13:32:16 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   20/04/2005
@@ -28,7 +28,7 @@
 // interfaces
 #include "RichRecBase/IRichPixelCreator.h"
 #include "RichRecBase/IRichRecGeomTool.h"
-#include "RichKernel/IRichHPDInfoTool.h"
+#include "RichKernel/IRichDetNumberingTool.h"
 
 // RichKernel
 #include "RichKernel/RichStatDivFunctor.h"
@@ -167,8 +167,8 @@ protected: // data
 
 private: // data
 
-  /// HPD information tool
-  const IRichHPDInfoTool * m_hpdTool;
+  /// Detector numbering information tool
+  const IRichDetNumberingTool * m_hpdTool;
 
   /// Reconstruction geometry tool
   const IRichRecGeomTool * m_recGeom;
@@ -253,8 +253,6 @@ inline bool RichPixelCreatorBase::useDetector( const Rich::DetectorType rich ) c
 
 inline bool RichPixelCreatorBase::pixelIsOK( const RichSmartID id ) const
 {
-  //const bool validID = id.pixelDataAreValid();
-  //if ( !validID ) Warning("RichSmartID is invalid");
   return (
           //validID &&                 // RichSmartID is valid
           useDetector(id.rich()) &&  // This RICH is in use

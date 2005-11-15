@@ -5,8 +5,7 @@
  *  Implementation file for class : RichRecPhoton
  *
  *  CVS Log :-
- *  $Id: RichRecPhoton.cpp,v 1.4 2004-07-26 18:00:58 jonrob Exp $
- *  $Log: not supported by cvs2svn $
+ *  $Id: RichRecPhoton.cpp,v 1.5 2005-11-15 13:32:16 jonrob Exp $
  *
  *  @author Chris Jones    Christopher.Rob.Jones@cern.ch
  *  @date   2003-05-10
@@ -20,7 +19,6 @@
 void RichRecPhoton::reset()
 {
   // reset the data values
-  m_expPixelSignalPhots.resetData(0);
-  m_expPixelScattPhots.resetData(0);
-
+  expPixelSignalPhots().resetData(0);
+  expPixelScattPhots().resetData(0);
 }

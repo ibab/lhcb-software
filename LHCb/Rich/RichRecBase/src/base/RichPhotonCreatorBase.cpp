@@ -5,7 +5,7 @@
  *  Implementation file for tool base class : RichPhotonCreatorBase
  *
  *  CVS Log :-
- *  $Id: RichPhotonCreatorBase.cpp,v 1.6 2005-11-07 09:32:45 jonrob Exp $
+ *  $Id: RichPhotonCreatorBase.cpp,v 1.7 2005-11-15 13:32:16 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   20/05/2005
@@ -258,7 +258,7 @@ RichRecPhotons * RichPhotonCreatorBase::richPhotons() const
   // is this the first call this event ?
   if ( !m_photons )
   {
-
+    
     if ( !exist<RichRecPhotons>(m_richRecPhotonLocation) )
     {
 

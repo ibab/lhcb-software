@@ -5,8 +5,11 @@
  *  Header file for RICH reconstruction tool interface : IRichSegmentCreator
  *
  *  CVS Log :-
- *  $Id: IRichSegmentCreator.h,v 1.5 2004-07-26 18:00:58 jonrob Exp $
+ *  $Id: IRichSegmentCreator.h,v 1.6 2005-11-15 13:32:16 jonrob Exp $
  *  $Log: not supported by cvs2svn $
+ *  Revision 1.5  2004/07/26 18:00:58  jonrob
+ *  Various improvements to the doxygen comments
+ *
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -22,6 +25,7 @@
 /// Static Interface Identification
 static const InterfaceID IID_IRichSegmentCreator( "IRichSegmentCreator", 1, 0 );
 
+//-----------------------------------------------------------------------------
 /** @class IRichSegmentCreator IRichSegmentCreator.h
  *
  *  Interface for tool for the creation and book-keeping of RichRecSegment objects.
@@ -30,8 +34,10 @@ static const InterfaceID IID_IRichSegmentCreator( "IRichSegmentCreator", 1, 0 );
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
  */
+//-----------------------------------------------------------------------------
 
-class IRichSegmentCreator : public virtual IAlgTool {
+class IRichSegmentCreator : public virtual IAlgTool 
+{
 
 public:
 
@@ -55,7 +61,7 @@ public:
    *  @param segment The geometrical segment object to build the RichRecSegment with
    *  @param pTrk    The RichRecTrack with which to associate the new RichRecSegment
    */
-  virtual RichRecSegment * newSegment( const RichTrackSegment& segment, 
+  virtual RichRecSegment * newSegment( RichTrackSegment * segment, 
                                        RichRecTrack * pTrk ) const = 0;
 
   /** Access to the container of RichRecSegments

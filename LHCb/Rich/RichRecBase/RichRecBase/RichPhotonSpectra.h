@@ -4,7 +4,7 @@
  *
  *  Header file for utility class : RichPhotonSpectra
  *
- *  $Id: RichPhotonSpectra.h,v 1.12 2005-03-04 16:52:56 cattanem Exp $
+ *  $Id: RichPhotonSpectra.h,v 1.13 2005-11-15 13:32:16 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   2003-07-12
@@ -23,6 +23,7 @@
 // Kernel
 #include "RichKernel/RichParticleIDType.h"
 #include "RichKernel/RichHypoData.h"
+#include "RichKernel/BoostMemPoolAlloc.h"
 
 /** @class RichPhotonSpectra RichPhotonSpectra.h RichRecBase/RichPhotonSpectra.h
  *
@@ -39,7 +40,8 @@
  */
 
 template <class TYPE>
-class RichPhotonSpectra {
+class RichPhotonSpectra : public Rich::BoostMemPoolAlloc< RichPhotonSpectra<TYPE> >
+{
 
 public: // definitions
 

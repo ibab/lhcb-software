@@ -4,7 +4,7 @@
 <package name="RichRecBase">
 
 <!-- **************************************************************************
-  * $Id: RichRecPhoton.xml,v 1.5 2005-06-23 15:13:05 jonrob Exp $
+  * $Id: RichRecPhoton.xml,v 1.6 2005-11-15 13:32:16 jonrob Exp $
   *****************************************************************************
   * XML-description of RichRecTrack class                                     *
   * author: Chris Jones   Christopher.Rob.Jones@cern.ch                       *
@@ -27,6 +27,7 @@
         <import name="RichKernel/RichHypoData"/>
         <import name="RichKernel/RichParticleIDType"/>
         <import name="RichEvent/RichGeomPhoton"/>
+        <import name="RichKernel/RichObjPtn"/>
 
         <location name="Offline" place="Rec/Rich/RecoEvent/OfflinePhotons"/>
         <location name="HLT"     place="Rec/Rich/RecoEvent/HltPhotons"/>
@@ -42,8 +43,8 @@
 
         <constructor 
                 desc     = "Constructor from detailed information" 
-                initList = "m_geomPhoton(photon), m_expPixelSignalPhots(0), m_expPixelScattPhots(0), m_richRecSegment(pSeg), m_richRecTrack(pTrk), m_richRecPixel(pPix)">
-                <arg name="photon" type="RichGeomPhoton"/>
+                initList = "m_geomPhoton(photon), m_expPixelSignalPhots(), m_expPixelScattPhots(), m_richRecSegment(pSeg), m_richRecTrack(pTrk), m_richRecPixel(pPix)">
+                <arg name="photon" type="RichGeomPhoton*"/>
                 <arg inout="BYVALUE" name="pSeg" type="RichRecSegment*"/>
                 <arg inout="BYVALUE" name="pTrk" type="RichRecTrack*"/>
                 <arg inout="BYVALUE" name="pPix" type="RichRecPixel*"/>
@@ -57,7 +58,7 @@
                 <arg const="TRUE" inout="BYVALUE" name="type" type="Rich::ParticleIDType"/>
                 <arg const="TRUE" inout="BYVALUE" name="photons" type="RichRecPhoton::FloatType"/>
                 <code>
-                        m_expPixelSignalPhots.setData(type,photons);
+                        expPixelSignalPhots().setData(type,photons);
                 </code>
         </method>
             
@@ -68,7 +69,7 @@
                 <arg const="TRUE" inout="BYVALUE" name="type" type="Rich::ParticleIDType"/>
                 <arg const="TRUE" inout="BYVALUE" name="photons" type="RichRecPhoton::FloatType"/>
                 <code>
-                        m_expPixelScattPhots.setData(type,photons);
+                        expPixelScattPhots().setData(type,photons);
                 </code>
         </method>
             
@@ -79,7 +80,7 @@
                 type  = "RichRecPhoton::FloatType" >
                 <arg const="TRUE" inout="BYVALUE" name="type" type="Rich::ParticleIDType"/>
                 <code>
-                        return m_expPixelSignalPhots[type];
+                        return (expPixelSignalPhots())[type];
                 </code>
         </method>
             
@@ -90,7 +91,7 @@
                 type  = "RichRecPhoton::FloatType">
                 <arg const="TRUE" inout="BYVALUE" name="type" type="Rich::ParticleIDType"/>
                 <code>
-                        return m_expPixelScattPhots[type];
+                        return (expPixelScattPhots())[type];
                 </code>
         </method>
             
@@ -100,6 +101,29 @@
                 type = "void"
         />
             
+
+        <method 
+                desc  = "The result of the Cherenkov angles reconstruction" 
+                name  = "geomPhoton" 
+                const = "TRUE" 
+                type  = "const RichGeomPhoton &amp;" >
+                <code> return *m_geomPhoton.object(); </code>
+        </method>
+        <method 
+                desc  = "The result of the Cherenkov angles reconstruction" 
+                name  = "geomPhoton" 
+                const = "FALSE" 
+                type  = "RichGeomPhoton &amp;" >
+                <code> return *m_geomPhoton.object(); </code>
+        </method>
+        <attribute 
+                setMeth     = "FALSE"
+                getMeth     = "FALSE"
+                desc        = "The result of the Cherenkov angles reconstruction" 
+                name        = "geomPhoton" 
+                type        = "RichObjPtn&lt; RichGeomPhoton &gt;"
+        />
+<!--
         <attribute 
                 compression = "FALSE" 
                 desc        = "The result of the Cherenkov angles reconstruction" 
@@ -107,7 +131,30 @@
                 setMeth     = "TRUE" 
                 type        = "RichGeomPhoton"
         />
-            
+-->        
+
+        <method 
+                desc  = "Retrieve const The Expected number of signal photons for each particle hypothesis" 
+                name  = "expPixelSignalPhots" 
+                const = "TRUE" 
+                type  = "const RichHypoData&lt;RichRecPhoton::FloatType&gt; &amp;" >
+                <code> return *m_expPixelSignalPhots.object(); </code>
+        </method>
+        <method 
+                desc  = "Retrieve The Expected number of signal photons for each particle hypothesis" 
+                name  = "expPixelSignalPhots" 
+                const = "FALSE" 
+                type  = "RichHypoData&lt;RichRecPhoton::FloatType&gt; &amp;" >
+                <code> return *m_expPixelSignalPhots.object(); </code>
+        </method>
+        <attribute 
+                setMeth     = "FALSE"
+                getMeth     = "FALSE"
+                desc        = "The Expected number of signal photons for each particle hypothesis" 
+                name        = "expPixelSignalPhots" 
+                type        = "RichObjPtn&lt; RichHypoData&lt;RichRecPhoton::FloatType&gt; &gt;"
+        />
+<!--
         <attribute 
                 desc      = "Expected number of signal photons for each particle hypothesis" 
                 getMeth   = "TRUE" 
@@ -117,7 +164,30 @@
                 init      = "0" 
                 type      = "RichHypoData&lt;RichRecPhoton::FloatType&gt;"
         />
-            
+-->
+
+        <method 
+                desc  = "Retrieve const The Expected number of scattered photons for each particle hypothesis" 
+                name  = "expPixelScattPhots" 
+                const = "TRUE" 
+                type  = "const RichHypoData&lt;RichRecPhoton::FloatType&gt; &amp;" >
+                <code> return *m_expPixelScattPhots.object(); </code>
+        </method>
+        <method 
+                desc  = "Retrieve The Expected number of scattered photons for each particle hypothesis" 
+                name  = "expPixelScattPhots" 
+                const = "FALSE" 
+                type  = "RichHypoData&lt;RichRecPhoton::FloatType&gt; &amp;" >
+                <code> return *m_expPixelScattPhots.object(); </code>
+        </method>
+        <attribute 
+                setMeth     = "FALSE"
+                getMeth     = "FALSE"
+                desc        = "The Expected number of scattered photons for each particle hypothesis" 
+                name        = "expPixelScattPhots" 
+                type        = "RichObjPtn&lt; RichHypoData&lt;RichRecPhoton::FloatType&gt; &gt;"
+        />
+<!--
         <attribute 
                 desc      = "Expected number of scattered photons for each particle hypothesis" 
                 getMeth   = "TRUE" 
@@ -127,6 +197,7 @@
                 init      = "0" 
                 type      = "RichHypoData&lt;RichRecPhoton::FloatType&gt;"
         />
+-->
 
         <attribute 
                 compression = "FALSE" 
@@ -154,26 +225,6 @@
                 serialize   = "FALSE" 
                 type        = "RichRecPixel*"
         />
-        
-<!--    
-        <relation 
-                desc      = "Smart Reference to RichRecSegment used in the formation of the RichRecPhoton candidate"
-                name      = "richRecSegmentSmartRef" 
-                type      = "RichRecSegment"
-        />
-            
-        <relation 
-                desc      = "Smart Reference to RichRecTrack associated to the RichRecSegment used in the formation of the RichRecPhoton candidate" 
-                name      = "richRecTrackSmartRef" 
-                type      = "RichRecTrack"
-        />
-            
-        <relation 
-                desc      = "Smart Reference to RichRecPixel used in the formation of the RichRecPhoton candidate" 
-                name      = "richRecPixelSmartRef" 
-                type      = "RichRecPixel"
-        />
--->    
         
 </class>
 
