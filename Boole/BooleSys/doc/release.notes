@@ -3,8 +3,8 @@ Package: Digi/Boole
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb Digitization program
 
-</PRE><H1><A NAME=v10r0>2005-11-04 Boole v10r0</A></H1><PRE>
-This version uses Gaudi v17r1, LHCb v19r0, Lbcom v3r0, XmlDDDB v26r2
+</PRE><H1><A NAME=v10r0>2005-11-15 Boole v10r0</A></H1><PRE>
+This version uses Gaudi v17r2, LHCb v19r1, Lbcom v3r0, XmlDDDB v26r2
 Requires input from Gauss v19r3 or greater. Output needs Brunel v28r0 or greater
 
 - New features:

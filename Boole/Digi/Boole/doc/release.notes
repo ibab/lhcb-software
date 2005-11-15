@@ -3,8 +3,8 @@ Package: Digi/Boole
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb Digitization program
 
-</PRE><H1><A NAME=v10r0>2005-10-21 Boole v10r0</A></H1><PRE>
- - Adapt requirements to Lbcom v3r0, LHCb v19r0, Gaudi v17r1
+</PRE><H1><A NAME=v10r0>2005-11-15 Boole v10r0</A></H1><PRE>
+ - Adapt requirements to Lbcom v3r0, LHCb v19r1, Gaudi v17r2
  - Add MuonMoniDigi to requirements and to BooleMoni.opts
 
 </PRE><H1><A NAME=v9r5>2005-09-21 Boole v9r5</A></H1><PRE>

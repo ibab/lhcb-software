@@ -11,13 +11,13 @@ use GaudiPolicy v5r21
 
 #-- External libraries now taken from LCG, version defined by GaudiEnv
 
-#-- Gaudi libraries (from GAUDI_v17r1)
+#-- Gaudi libraries (from GAUDI_v17r2)
 use GaudiKernel		v20r1
-use GaudiSvc 		v14r2        -no_auto_imports
+use GaudiSvc 		v14r3        -no_auto_imports
 use GaudiAlg 		v9r1         -no_auto_imports
 use GaudiPoolDb		v2r1         -no_auto_imports
-use GaudiObjDesc 	v8r2         -no_auto_imports
-use RootHistCnv         v9r5         -no_auto_imports
+use GaudiObjDesc 	v8r3         -no_auto_imports
+use RootHistCnv         v9r6         -no_auto_imports
 
 #-- Databases
 use XmlDDDB            v26r2    Det  -no_auto_imports
@@ -25,8 +25,8 @@ use ParamFiles	       v3r11	     -no_auto_imports
 use FieldMap	        v4r5         -no_auto_imports
 use BooleDQ	        v1r0	DQ   -no_auto_imports
 
-#-- LHCb libraries (from LHCB_v19r0)
-use LHCb	       v19r0         -no_auto_imports
+#-- LHCb libraries (from LHCB_v19r1)
+use LHCb	       v19r1         -no_auto_imports
 
 #-- Lbcom packages (from LBCOM_v3r0)
 use LbcomSys            v3r0         -no_auto_imports
