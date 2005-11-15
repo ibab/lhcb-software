@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE gdd SYSTEM "gdd.dtd" >
+<gdd>
+  <package name='GenEvent'>
+<!-- ****************************************************************
+     * GenHeader                                                    *
+     ****************************************************************-->
+     <class 
+      author="Marco Cattaneo, revised by P. Koppenburg"
+      desc="Header for event generator information"
+      name="GenHeader"
+      location="Gen/Header"
+      id="102"
+     >
+       &DataObject;
+       <base name="ProcessHeader"/>
+       <import name="Event/ProcessHeader"/>
+        <attribute
+        desc="Instantaneous luminosity used for pileUp probability"
+        name="luminosity"
+        type="double"
+        init="0.0"
+       />
+       <attribute
+        desc="Duration of fill, needed to compute instantaneous luminosity distribution"
+        name="fillDuration"
+        type="double"
+        init="0."
+       />
+       <attribute
+        desc="Lifetime of fill, needed to compute instantaneous luminosity distribution"
+        name="fillLifetime"
+        type="double"
+        init="0."
+       />
+       <attribute
+        desc="LHCb event type"
+        name="evType"
+        type="long"
+        init="0"
+       />
+       <relation
+        desc="pointer to collisions in this event (keep this?)"
+        multiplicity="N"
+        name="collisions"
+        type="GenCollision"
+       />
+     </class>
+  </package>
+</gdd>

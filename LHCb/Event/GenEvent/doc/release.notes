@@ -14,6 +14,7 @@ package coordinator: W.Pokorski, G.Corti
 ! 2005-11-15 - Patrick KOPPENBURG
  - Merge of GenCollision, HardInfo, Collision into a single GenCollision
    class
+ - New GenHeader class inheriting from ProcessHeader
 
 !================ GenEvent v3r5 2005-11-14 ============================
 ! 2005-11-14 - Pere Mato
