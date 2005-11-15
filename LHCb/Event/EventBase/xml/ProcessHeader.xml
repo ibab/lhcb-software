@@ -5,7 +5,7 @@
 
 <!DOCTYPE gdd SYSTEM "gdd.dtd" >
 <gdd>
-  <package name='Event'>
+  <package name='EventBase'>
 <!-- ****************************************************************
      * ProcessHeader                                                *
      ****************************************************************-->
