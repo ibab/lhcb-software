@@ -5,7 +5,7 @@
  *  Header file for RICH utility class : RichObjPtn
  *
  *  CVS Log :-
- *  $Id: RichObjPtn.h,v 1.1 2005-11-15 13:01:54 jonrob Exp $
+ *  $Id: RichObjPtn.h,v 1.2 2005-11-15 14:27:50 jonrob Exp $
  *
  *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
  *  @date   13/11/2005
@@ -46,7 +46,7 @@ public:
   explicit RichObjPtn( TYPE * obj ) : m_obj(obj) {}
 
   /// Destructor
-  ~RichObjPtn() { if ( 0 != m_obj ) { delete m_obj; } }
+  ~RichObjPtn() { delete m_obj; }
 
 private:
 
