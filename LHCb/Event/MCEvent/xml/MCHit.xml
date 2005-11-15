@@ -1,59 +1,80 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE gdd SYSTEM "gdd.dtd" >
 <gdd>
-  <package name='Event'>
+  <package name='MCEvent'>
 <!-- ****************************************************************
      * MCHit                                                        *
      ****************************************************************-->
 
     <class name='MCHit' 
-           author='Marco Cattaneo' 
+           author='Marco Cattaneo, revised by G.Corti' 
            desc='GEANT tracking hit' 
            id='230' >
-      <import name="CLHEP/Geometry/Point3D"/>
-      &KeyedObject;
-      <base     name="KeyedObject&lt;int&gt;"/>
-      <location name="ITHits"   place="MC/IT/Hits"   />
-      <location name="OTHits"   place="MC/OT/Hits"   />
-
-      <constructor desc = "Default constructor"
-                   initList = "m_entry(), m_displacement(0.,0.,0.), m_energy(0.0), m_timeOfFlight(0.0)"
+      <import name="Event/LHCbTypedefs"/>
+      <import name="MathCore/Point3D"/>
+      &ContainedObject;
+      <base     name="ContainedObject"/>
+      <location name="Velo"    place="MC/Velo/Hits"  />
+      <location name="PuVeto"  place="MC/PuVeto/Hits"/>
+      <location name="ST"      place="MC/ST/Hits"    />
+      <location name="OT"      place="MC/OT/Hits"    />
+      <location name="Muon"    place="MC/Muon/Hits"  />
+      
+      <attribute
+       desc="Sensitive detector identifier, its meaning is different for each sub-detector"
+       name="sensDetID"
+       type="int"
+       init="-1"
       />
-
-      <attribute name='entry' 
-                 type='HepGeom::Point3D&lt;double&gt;' 
-                 desc='Entry point (mm)' />
-      <attribute name='displacement' 
-                 type='HepGeom::BasicVector3D&lt;double&gt;' 
-                 desc='Difference between exit and entry points (mm)' />
-      <attribute name='energy' 
-                 type='double' 
-                 desc='Energy deposited (MeV)'/>
-      <attribute name='timeOfFlight' 
-                 type='double' 
-                 desc='Time of flight (ns)'/>
-      <method name="exit"
-              const="TRUE"
-              desc="Exit point (mm)"
-              type="const HepGeom::Point3D&lt;double&gt;"
+      <attribute 
+       desc="Entry point in LHCb reference system (mm)"
+       name="entry"
+       type="LHCb::Point3D"
+       init="0.0, 0.0, 0.0"
+      /> 
+      <attribute
+       desc="Difference between exit and entry points (mm)"
+       name="displacement" 
+       type="LHCb::Vector3D" 
+       init="0.0, 0.0, 0.0"
+      />
+      <attribute
+       desc="Energy deposited in step (MeV)"
+       name="energy" 
+       type="double"
+       init="0.0" 
+      />
+      <attribute
+       desc="Time (ns)"
+       name="time" 
+       type="double" 
+       init="0.0"
+      />
+      <method
+       desc="Exit point in LHCb reference system (mm)"
+       name="exit"
+       const="TRUE"
+       type="const LHCb::Point3D"
       >
          <code>
    return( this->entry() + this->displacement() );
          </code>
       </method>
-      <method name="pathLength"
-              const="TRUE"
-              desc="Distance between exit and entry points"
-              type="double"
+      <method
+       desc="Distance between exit and entry points"
+       name="pathLength"
+       const="TRUE"
+       type="double"
       >
          <code>
-   return( this->displacement().mag() );
+   return( sqrt( this->displacement().mag2() ) );
          </code>
       </method>
-      <method name="dxdz"
-              const="TRUE"
-              desc="dxdz slope between exit and entry points"
-              type="double"
+      <method
+       name="dxdz"
+       const="TRUE"
+       desc="dxdz slope between exit and entry points"
+       type="double"
       >
          <code>
    double dxdz = 9999.;
@@ -63,10 +84,11 @@
    return dxdz;
          </code>
       </method>
-      <method name="dydz"
-              const="TRUE"
-              desc="dydz slope between exit and entry points"
-              type="double"
+      <method
+       name="dydz"
+       const="TRUE"
+       desc="dydz slope between exit and entry points"
+       type="double"
       >
          <code>
    double dydz = 9999.;
@@ -77,9 +99,11 @@
          </code>
       </method>
 
-      <relation name='MCParticle' 
-                type='MCParticle' 
-                desc='Pointer to MCParticle causing the hit'/>
+      <relation
+       desc="Pointer to MCParticle causing the hit"
+       name="MCParticle" 
+       type="MCParticle" 
+      />
     </class>
   </package>
 </gdd>

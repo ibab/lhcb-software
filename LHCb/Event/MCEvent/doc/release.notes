@@ -1,7 +1,21 @@
-! $Id: release.notes,v 1.1.1.1 2005-09-06 07:06:43 pkoppenb Exp $
+! $Id: release.notes,v 1.2 2005-11-15 13:11:05 gcorti Exp $
 ! Package     : Event/MCEvent
 ! Responsible : Marco Cattaneo, Gloria Corti
 ! Purpose     : LHCb Event model
+
+! 2005-11-15 - Gloria CORTI
+ - Change package name to MCEvent in *.xml, for GOD Reflex dict generation
+ - MCHit adapted to Event Model review reccomendations:
+   . no longer a KeyObject but a ContainedObject
+   . use of LHCb typedefs (to MathCore) for basic vector and point classes 
+   . introduce new attribute for sensitive detector identifier (sensDetID
+     with -1 as invalid number)
+   . renaming of some methods
+
+! 2005-11-15 - Patrick KOPPENBURG
+ - New MCHeader class inheriting from ProcessHeader 
+ - MCParticle and MCVertex adapted to Physics Event Model guidelines, remove
+   some methods (ex. collision() to be provided by tools) and adopt MathCore
 
 ! 2005-09-06 - P. Koppenburg
   - Split package Event/Event into Event/MCEvent and Event/EventBase because 
