@@ -1,4 +1,4 @@
-// $Id: TutorialTuple.cpp,v 1.1 2005-11-07 16:11:52 pkoppenb Exp $
+// $Id: TutorialTuple.cpp,v 1.2 2005-11-15 08:26:43 pkoppenb Exp $
 // Include files 
 
 // from Gaudi
@@ -29,6 +29,7 @@ TutorialTuple::TutorialTuple( const std::string& name,
   , m_pAsct()
 {
   declareProperty( "FillTruth", m_truth = true );
+  declareProperty( "InputContainers", m_containers = std::vector<std::string>() );
 
 }
 //=============================================================================
@@ -45,7 +46,7 @@ StatusCode TutorialTuple::initialize() {
 
   if (m_truth) {
     info() << "Will be filling MC truth information" << endmsg ;
-    m_pAsct = new Particle2MCLink(this, Particle2MCMethod::Composite, "");
+    m_pAsct = new Particle2MCLink(this, Particle2MCMethod::Composite,m_containers);
   }
 
 

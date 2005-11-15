@@ -99,6 +99,7 @@ PrintTrueBs.Depth = 2;  // down to the K and mu
 //
 TutorialSeq.Members += { "TutorialTuple" };
 TutorialTuple.PhysDesktop.InputLocations = { "Phys/Bs2JpsiPhi" } ;
+TutorialTuple.InputContainers = { "Phys/Bs2JpsiPhi/Particles" };
 #include "$FLAVOURTAGGINGROOT/options/BTaggingTool.opts"
 //
 // Calculate efficiencies

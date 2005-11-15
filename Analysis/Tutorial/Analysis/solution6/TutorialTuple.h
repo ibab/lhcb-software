@@ -1,4 +1,4 @@
-// $Id: TutorialTuple.h,v 1.1 2005-11-07 16:11:52 pkoppenb Exp $
+// $Id: TutorialTuple.h,v 1.2 2005-11-15 08:26:43 pkoppenb Exp $
 #ifndef TUTORIALTUPLE_H 
 #define TUTORIALTUPLE_H 1
 
@@ -36,6 +36,7 @@ private:
 private:
   bool m_truth ; ///< Use MC truth
   Particle2MCLink* m_pAsct;   ///<  Composite associator
-
+  std::vector<std::string> m_containers ; ///< Containers for associators
+  
 };
 #endif // TUTORIALTUPLE_H
