@@ -8,7 +8,7 @@ version           v4
 #============================================================================
 # Structure, i.e. directories to process. 
 #============================================================================
-branches          cmt doc src options solution1 solution2 solution3 solution4
+branches          cmt doc src options solution1 solution2 solution3 solution4 solution5 solution6
 
 #============================================================================
 # Used packages.
