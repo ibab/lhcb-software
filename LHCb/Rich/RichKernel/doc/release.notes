@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.84 2005-11-15 13:01:54 jonrob Exp $
+! $Id: release.notes,v 1.85 2005-11-15 13:28:19 jonrob Exp $
 ! Package     : Rich/RichKernel
 ! Responsible : Chris Jones
 ! Purpose     : General purpose RICH classes
@@ -9,6 +9,7 @@
     IRichDetNumberingTool
   + Update ID objects in RichDAQDefinitions.h
  - Add "autopointer" like class RichObjPtn
+ - Improvements to RichTrackSegment creator interface
 
 ! 2005-10-31 - Chris Jones
  - Split up "Moni" base classes into Tuple and Histo versions, to allow
