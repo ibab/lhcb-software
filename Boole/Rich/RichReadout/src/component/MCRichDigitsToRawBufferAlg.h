@@ -5,7 +5,7 @@
  *  Header file for RICH DAQ algorithm : MCRichDigitsToRawBufferAlg
  *
  *  CVS Log :-
- *  $Id: MCRichDigitsToRawBufferAlg.h,v 1.3 2005-07-14 14:12:17 jonrob Exp $
+ *  $Id: MCRichDigitsToRawBufferAlg.h,v 1.4 2005-11-15 13:29:56 jonrob Exp $
  *
  *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
  *  @date   2003-11-06
@@ -27,7 +27,7 @@
 
 // Interfaces
 #include "RichKernel/IRichRawDataFormatTool.h"
-#include "RichKernel/IRichHPDToLevel1Tool.h"
+#include "RichKernel/IRichDetNumberingTool.h"
 
 //===============================================================================
 /** @class MCRichDigitsToRawBufferAlg MCRichDigitsToRawBufferAlg.h
@@ -59,8 +59,8 @@ private: // data
   /// Pointer to RICH raw data format tool
   const IRichRawDataFormatTool * m_rawFormatT;
 
-  /// Pointer to RICH Level1 tool
-  const IRichHPDToLevel1Tool * m_level1;
+  /// Pointer to RICH detector numbering tool
+  const IRichDetNumberingTool * m_level1;
 
   /// Location of input MCRichDigits in TES
   std::string m_digitsLoc;

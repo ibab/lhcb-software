@@ -5,7 +5,7 @@
  *  Implementation file for RICH DAQ algorithm : MCRichDigitsToRawBufferAlg
  *
  *  CVS Log :-
- *  $Id: MCRichDigitsToRawBufferAlg.cpp,v 1.3 2005-10-18 12:43:06 jonrob Exp $
+ *  $Id: MCRichDigitsToRawBufferAlg.cpp,v 1.4 2005-11-15 13:29:56 jonrob Exp $
  *
  *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
  *  @date   2003-11-09
@@ -48,7 +48,7 @@ StatusCode MCRichDigitsToRawBufferAlg::initialize()
 
   // acquire tools
   acquireTool( "RichRawDataFormatTool", m_rawFormatT, 0, true );
-  acquireTool( "RichHPDToLevel1Tool",   m_level1              );
+  acquireTool( "RichDetNumberingTool",  m_level1,     0, true );
 
   // create a dummy L1data object with an emtpy vector for each L1 board
   m_dummyMap.clear();
@@ -81,7 +81,7 @@ StatusCode MCRichDigitsToRawBufferAlg::execute()
   {
 
     // Get Level 1 ID number
-    const RichDAQ::Level1ID L1ID = m_level1->levelL1ID( (*iDigit)->key() );
+    const RichDAQ::Level1ID L1ID = m_level1->level1ID( (*iDigit)->key() );
 
     // Get reference to L1 group
     RichDAQ::PDMap & PDs = L1Data[ L1ID ];
