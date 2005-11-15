@@ -5,8 +5,11 @@
  * Implementation file for class : MCPartToMCRichTrackAlg
  *
  * CVS Log :-
- * $Id: MCPartToMCRichTrackAlg.cpp,v 1.1.1.1 2005-10-13 15:13:38 jonrob Exp $
+ * $Id: MCPartToMCRichTrackAlg.cpp,v 1.2 2005-11-15 13:24:29 jonrob Exp $
  * $Log: not supported by cvs2svn $
+ * Revision 1.1.1.1  2005/10/13 15:13:38  jonrob
+ * First import of RichMCAssociators under Rich
+ *
  * Revision 1.3  2004/07/26 17:56:09  jonrob
  * Various improvements to the doxygen comments
  *
@@ -85,7 +88,8 @@ StatusCode MCPartToMCRichTrackAlg::addEvent( MCPartToRichTracks & links,
 
   // load MCRichTracks in this event
   SmartDataPtr<MCRichTracks> mcTracks( eventSvc(), evtLoc );
-  if ( !mcTracks ) {
+  if ( !mcTracks ) 
+  {
     debug() << "Cannot locate MCRichTracks at " << evtLoc << endreq;
     return StatusCode::SUCCESS;
   }

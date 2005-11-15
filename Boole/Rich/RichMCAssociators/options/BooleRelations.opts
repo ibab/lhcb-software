@@ -3,5 +3,11 @@
 RelationsRICHSeq.Members += { "MCRichDigitSummaryAlg" };
 
 // Extended relations
-//RelationsRICHSeq.Members += { "MCPartToMCRichTrackAlg/MCPToRichTrack",
-//                              "MCRichHitToMCRichOpPhotAlg/MCRichHitToPhoton" };
+RelationsRICHSeq.Members += { "MCPartToMCRichTrackAlg/MCPToRichTrack",
+                              "MCRichHitToMCRichOpPhotAlg/MCRichHitToPhoton" };
+// if uncommenting the above, add following to DigiContent.opts file in Boole
+//, "/Event/Link/MC#1"
+//, "/Event/Link/MC/Rich#1"
+//, "/Event/Link/MC/Rich/MCPartsToMCRichTracks#1"
+//, "/Event/Link/MC/Rich/MCRichHitsToOpPhotons#1"
+
