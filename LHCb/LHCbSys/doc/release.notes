@@ -5,7 +5,7 @@
 ! Purpose     : LHCb OO kernel packages
 !-----------------------------------------------------------------------------
 
-</PRE><H1><A NAME=v19r1>2005-11-15 LHCbSys v19r0</A></H1><PRE>
+</PRE><H1><A NAME=v19r1>2005-11-15 LHCbSys v19r1</A></H1><PRE>
 This version uses Gaudi v17r1 and produces reflex dictionaries
 It is backwards compatible for RTTC data
 
