@@ -5,7 +5,7 @@
  *  Header file for RICH DAQ utility class : RichZeroSuppData
  *
  *  CVS Log :-
- *  $Id: RichZeroSuppData.h,v 1.4 2005-11-07 11:48:35 jonrob Exp $
+ *  $Id: RichZeroSuppData.h,v 1.5 2005-11-15 12:57:48 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   2004-12-17
@@ -25,6 +25,7 @@
 
 // RichKernel
 #include "RichKernel/BoostMemPoolAlloc.h"
+#include "RichKernel/IRichDetNumberingTool.h"
 
 /** @namespace RichZeroSuppDataV0
  *
@@ -87,7 +88,7 @@ namespace RichZeroSuppDataV0
 
     // Fill a vector with RichSmartIDs for hit pixels
     virtual void fillRichSmartIDs( RichSmartID::Collection & ids,
-                                   const IRichHPDInfoTool * hpdTool ) const;
+                                   const IRichDetNumberingTool * hpdTool ) const;
 
     // Print data bank to message stream
     virtual void fillMsgStream( MsgStream & os ) const;
@@ -138,12 +139,12 @@ namespace RichZeroSuppDataV1
 
     /** Constructor from a RichSmartID HPD identifier and a vector of RichSmartIDs
      *
-     *  @param hpdID  Hardware identifier for the HPD
+     *  @param hpdID  Level0 board Hardware identifier
      *  @param digits Collection of RichSmartIDs listing the active channels in this HPD
      */
-    explicit RichZeroSuppData( const RichDAQ::HPDHardwareID hpdID,
+    explicit RichZeroSuppData( const RichDAQ::Level0ID l0ID,
                                const RichSmartID::Collection & digits )
-      : RichHPDDataBank ( Header( true, hpdID, digits.size() ), 0, 0 )
+      : RichHPDDataBank ( Header( true, l0ID, digits.size() ), 0, 0 )
     {
       buildData( digits );
     }
@@ -162,7 +163,7 @@ namespace RichZeroSuppDataV1
 
     // Fill a vector with RichSmartIDs for hit pixels
     virtual void fillRichSmartIDs( RichSmartID::Collection & ids,
-                                   const IRichHPDInfoTool * hpdTool ) const;
+                                   const IRichDetNumberingTool * hpdTool ) const;
 
     // Print data bank to message stream
     virtual void fillMsgStream( MsgStream & os ) const;
@@ -216,12 +217,12 @@ namespace RichZeroSuppDataV2
 
     /** Constructor from a RichSmartID HPD identifier and a vector of RichSmartIDs
      *
-     *  @param hpdID  Hardware identifier for the HPD
+     *  @param hpdID  Level0 board hardware identifier
      *  @param digits Collection of RichSmartIDs listing the active channels in this HPD
      */
-    explicit RichZeroSuppData( const RichDAQ::HPDHardwareID hpdID,
+    explicit RichZeroSuppData( const RichDAQ::Level0ID l0ID,
                                const RichSmartID::Collection & digits )
-      : RichHPDDataBank ( Header( true, hpdID, digits.size() ), 0, 0 ),
+      : RichHPDDataBank ( Header( true, l0ID, digits.size() ), 0, 0 ),
         m_tooBig        ( false   )
     {
       buildData( digits );
@@ -243,7 +244,7 @@ namespace RichZeroSuppDataV2
 
     // Fill a vector with RichSmartIDs for hit pixels
     virtual void fillRichSmartIDs( RichSmartID::Collection & ids,
-                                   const IRichHPDInfoTool * hpdTool ) const;
+                                   const IRichDetNumberingTool * hpdTool ) const;
 
     // Print data bank to message stream
     virtual void fillMsgStream( MsgStream & os ) const;

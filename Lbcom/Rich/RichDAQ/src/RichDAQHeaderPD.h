@@ -3,7 +3,7 @@
  *
  *  Header file for RICH DAQ utility class : RichDAQHeaderPD
  *
- *  $Id: RichDAQHeaderPD.h,v 1.13 2005-03-07 13:29:18 cattanem Exp $
+ *  $Id: RichDAQHeaderPD.h,v 1.14 2005-11-15 12:57:47 jonrob Exp $
  *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   2003-11-06
@@ -194,9 +194,9 @@ namespace RichDAQHeaderV0 {
 
 } // RichDAQHeaderV0 namespace
 
-/// overloaded output to MsgStream
-inline MsgStream & operator << ( MsgStream & os,
-                                 const RichDAQHeaderV0::RichDAQHeaderPD & header )
+/// overloaded output to std::ostream
+inline std::ostream & operator << ( std::ostream & os,
+                                    const RichDAQHeaderV0::RichDAQHeaderPD & header )
 {
   os << " RichDAQHeaderPD V0 : HPD = " << header.hpdID()
      << " ZS = " << header.zeroSuppressed()
@@ -216,7 +216,8 @@ inline MsgStream & operator << ( MsgStream & os,
  *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
  *  @date   2004-12-17
  */
-namespace RichDAQHeaderV1 {
+namespace RichDAQHeaderV1
+{
 
   /** @namespace RichDAQHeaderV1::RichDAQHeaderPDCode
    *
@@ -225,37 +226,39 @@ namespace RichDAQHeaderV1 {
    *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
    *  @date   2003-11-06
    */
-  namespace RichDAQHeaderPDCode {
+  namespace RichDAQHeaderPDCode
+  {
 
     // Define the number of bits for each field
     static const RichDAQ::ShortType BitsHitCount  =  10; ///< Bits for number of hits
-    static const RichDAQ::ShortType BitsHPDID     =  12; ///< Bits for HPD identifier
+    static const RichDAQ::ShortType BitsL0ID      =  12; ///< Bits for L0 identifier
     static const RichDAQ::ShortType BitsUnUsed1   =  8;  ///< Unused bits
 
     // Create the shift registers
     static const RichDAQ::ShortType ShiftHitCount = 0;
-    static const RichDAQ::ShortType ShiftHPDID    = ShiftHitCount + BitsHitCount;
+    static const RichDAQ::ShortType ShiftL0ID     = ShiftHitCount + BitsHitCount;
 
     // Create the Masks
     static const RichDAQ::LongType MaskHitCount   = ((1 << BitsHitCount)-1) << ShiftHitCount;
-    static const RichDAQ::LongType MaskHPDID      = ((1 << BitsHPDID)-1)  << ShiftHPDID;
+    static const RichDAQ::LongType MaskL0ID       = ((1 << BitsL0ID)-1)  << ShiftL0ID;
 
     // Create the max values that can be stored in each field
     static const RichDAQ::ShortType MaxHitCount   = ( 1 << BitsHitCount ) - 1; ///< Max number of hits
-    static const RichDAQ::ShortType MaxHPDID      = ( 1 << BitsHPDID  ) - 1;   ///< Max HPD ID
+    static const RichDAQ::ShortType MaxL0ID       = ( 1 << BitsL0ID  ) - 1;    ///< Max L0 ID
 
   }
 
   /** @class RichDAQHeaderPD RichDAQHeaderPD.h
    *
-   *  Utility class representing the header word for HPD data.
+   *  Utility class representing the header word for a Level0/HPD data block.
    *
-   *  Version 1 : Fixed new HPD, zero-suppression and Alice mode bit locations
+   *  Version 1 : Fixed with new HPD, zero-suppression and Alice mode bit locations
    *
    *  @author Chris Jones    Christopher.Rob.Jones@cern.ch
    *  @date   2003-11-06
    */
-  class RichDAQHeaderPD : public RichDAQHeaderPDBase {
+  class RichDAQHeaderPD : public RichDAQHeaderPDBase
+  {
 
   public: // methods
 
@@ -267,7 +270,7 @@ namespace RichDAQHeaderV1 {
 
     /// Constructor from all data
     RichDAQHeaderPD ( const bool zSupp,                    ///< Flag indicating if the block is zero suppressed
-                      const RichDAQ::HPDHardwareID hpdID,  ///< The HPD hardware identifier
+                      const RichDAQ::Level0ID  l0ID,       ///< The Level 0 hardware identifier
                       const RichDAQ::ShortType hitCount,   ///< The number of hits in this block
                       const RichDAQ::ShortType startPD = 1 ///< New HPD flag
                       )
@@ -275,26 +278,26 @@ namespace RichDAQHeaderV1 {
     {
       setStartPD        ( startPD  );
       setZeroSuppressed ( zSupp    );
-      setHPDID          ( hpdID    );
+      setL0ID           ( l0ID     );
       setHitCount       ( hitCount );
     }
 
     /// Destructor
     virtual ~RichDAQHeaderPD( ) {}
 
-    /// Set the HPD ID
-    inline bool setHPDID( const RichDAQ::ShortType hpdid )
+    /// Set the Level0 ID
+    inline bool setL0ID( const RichDAQ::Level0ID l0id )
     {
-      return ( dataInRange(hpdid,RichDAQHeaderPDCode::MaxHPDID) ?
-               set( hpdid, RichDAQHeaderPDCode::ShiftHPDID,
-                    RichDAQHeaderPDCode::MaskHPDID ) : false );
+      return ( dataInRange(l0id.dataValue(),RichDAQHeaderPDCode::MaxL0ID) ?
+               set( l0id.dataValue(), RichDAQHeaderPDCode::ShiftL0ID,
+                    RichDAQHeaderPDCode::MaskL0ID ) : false );
     }
 
-    /// Retrieve the HPD ID
-    inline RichDAQ::HPDHardwareID hpdID() const
+    /// Retrieve the Level0 ID
+    inline RichDAQ::Level0ID l0ID() const
     {
-      return RichDAQ::HPDHardwareID
-        ( (data() & RichDAQHeaderPDCode::MaskHPDID) >> RichDAQHeaderPDCode::ShiftHPDID );
+      return RichDAQ::Level0ID
+        ( (data() & RichDAQHeaderPDCode::MaskL0ID) >> RichDAQHeaderPDCode::ShiftL0ID );
     }
 
     /// Set the number of hits
@@ -316,11 +319,11 @@ namespace RichDAQHeaderV1 {
 
 } // RichDAQHeaderV1 namespace
 
-/// overloaded output to MsgStream
-inline MsgStream & operator << ( MsgStream & os,
-                                 const RichDAQHeaderV1::RichDAQHeaderPD & header )
+/// overloaded output to std::ostream
+inline std::ostream & operator << ( std::ostream & os,
+                                    const RichDAQHeaderV1::RichDAQHeaderPD & header )
 {
-  os << " RichDAQHeaderPD V1 : HPD = " << header.hpdID()
+  os << " RichDAQHeaderPD V1 : L0ID = " << header.l0ID()
      << " ZS = " << header.zeroSuppressed()
      << " HitCount = " << header.hitCount();
   return os;

@@ -5,7 +5,7 @@
  *  Implementation file for class : RichRawDataFormatTool
  *
  *  CVS Log :-
- *  $Id: RichRawDataFormatTool.cpp,v 1.16 2005-10-17 09:06:25 jonrob Exp $
+ *  $Id: RichRawDataFormatTool.cpp,v 1.17 2005-11-15 12:57:48 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date 2004-12-18
@@ -26,8 +26,7 @@ RichRawDataFormatTool::RichRawDataFormatTool( const std::string& type,
                                               const std::string& name,
                                               const IInterface* parent )
   : RichToolBase    ( type, name , parent ),
-    m_hpdID         ( 0                   ),
-    m_l1Tool        ( 0                   ),
+    m_detNumTool    ( 0                   ),
     m_rawEvent      ( 0                   ),
     m_evtCount      ( 0                   ),
     m_hasBeenCalled ( false               )
@@ -54,12 +53,11 @@ StatusCode RichRawDataFormatTool::initialize()
   if ( sc.isFailure() ) return sc;
 
   // acquire tools
-  acquireTool( "RichHPDInfoTool",     m_hpdID,  0, true );
-  acquireTool( "RichHPDToLevel1Tool", m_l1Tool, 0, true );
+  acquireTool( "RichDetNumberingTool", m_detNumTool, 0, true );
 
   // Setup incident services
   incSvc()->addListener( this, IncidentType::BeginEvent );
-  incSvc()->addListener( this, IncidentType::EndEvent );
+  incSvc()->addListener( this, IncidentType::EndEvent   );
 
   return sc;
 }
@@ -113,16 +111,16 @@ RichRawDataFormatTool::printL1Stats( const L1TypeCount & count,
     std::vector< unsigned long > totWordSize(Rich::NRiches,0), totBanks(Rich::NRiches,0), totHits(Rich::NRiches,0);
     for ( L1TypeCount::const_iterator iL1C = count.begin(); iL1C != count.end(); ++iL1C )
     {
-      const RichDAQ::HPDHardwareID L1ID   = (*iL1C).first.second;
+      const RichDAQ::Level1ID      L1ID   = (*iL1C).first.second;
       const RichDAQ::BankVersion version  = (*iL1C).first.first;
-      const Rich::DetectorType rich       = m_l1Tool->richDetector( L1ID );
+      const Rich::DetectorType rich       = m_detNumTool->richDetector( L1ID );
       const unsigned long nBanks          = (*iL1C).second.first;
       totBanks[rich]                     += nBanks;
       const unsigned long words           = (*iL1C).second.second.first;
       totWordSize[rich]                  += words;
       const unsigned long hits            = (*iL1C).second.second.second;
       totHits[rich]                      += hits;
-      debug() << "  Board " << format("%3i",L1ID) << " Ver" << version << " | L1 size ="
+      debug() << "  Board " << format("%3i",L1ID.dataValue()) << " Ver" << version << " | L1 size ="
               << occ1(nBanks,m_evtCount) << " hpds :"
               << occ2(words,m_evtCount) << " words :"
               << occ2(hits,m_evtCount) << " hits / event" << endreq;
@@ -166,17 +164,17 @@ RichRawDataFormatTool::createDataBank( const RichSmartID::Collection & smartIDs,
   {
     // Third iteration of bank format
 
-    // Hardware HPD ID
-    const RichDAQ::HPDHardwareID hID = m_hpdID->hardwareID( smartIDs.front().pdID() );
+    // Level 0 ID
+    const RichDAQ::Level0ID l0ID = m_detNumTool->level0ID( smartIDs.front().pdID() );
 
     // First try the ZS format
-    RichZeroSuppDataV2::RichZeroSuppData * zsData = new RichZeroSuppDataV2::RichZeroSuppData( hID, smartIDs );
+    RichZeroSuppDataV2::RichZeroSuppData * zsData = new RichZeroSuppDataV2::RichZeroSuppData( l0ID, smartIDs );
 
     // If too big, use non ZS instead
     if ( zsData->tooBig() )
     {
       delete zsData;
-      dataBank = (RichHPDDataBank*) new RichNonZeroSuppDataV1::RichNonZeroSuppData( hID, smartIDs );
+      dataBank = (RichHPDDataBank*) new RichNonZeroSuppDataV1::RichNonZeroSuppData( l0ID, smartIDs );
     }
     else
     {
@@ -188,20 +186,21 @@ RichRawDataFormatTool::createDataBank( const RichSmartID::Collection & smartIDs,
   {
     // Second iteration of bank format
 
-    // Hardware HPD ID
-    const RichDAQ::HPDHardwareID hID = m_hpdID->hardwareID( smartIDs.front().pdID() );
+    // Level 0 ID
+    const RichDAQ::Level0ID l0ID = m_detNumTool->level0ID( smartIDs.front().pdID() );
 
     // Decide to zero suppress or not depending on number of hits
     if ( smartIDs.size() < m_zeroSuppresCut )
     {
-      dataBank = (RichHPDDataBank*) new RichZeroSuppDataV1::RichZeroSuppData( hID, smartIDs );
+      dataBank = (RichHPDDataBank*) new RichZeroSuppDataV1::RichZeroSuppData( l0ID, smartIDs );
     }
     else
     {
-      dataBank = (RichHPDDataBank*) new RichNonZeroSuppDataV1::RichNonZeroSuppData( hID, smartIDs );
+      dataBank = (RichHPDDataBank*) new RichNonZeroSuppDataV1::RichNonZeroSuppData( l0ID, smartIDs );
     }
 
-  } else if ( RichDAQ::LHCb0 == version )
+  } 
+  else if ( RichDAQ::LHCb0 == version )
   {
     // Version 0 of data banks (DC04 compatibility)
 
@@ -275,7 +274,8 @@ RichRawDataFormatTool::createDataBank( const RichDAQ::LongType * dataStart,
       dataBank = (RichHPDDataBank*) new RichNonZeroSuppDataV1::RichNonZeroSuppData( dataStart );
     }
 
-  } else if ( RichDAQ::LHCb1 == version )
+  } 
+  else if ( RichDAQ::LHCb1 == version )
   {
     // Second iteration of bank format
 
@@ -292,7 +292,8 @@ RichRawDataFormatTool::createDataBank( const RichDAQ::LongType * dataStart,
       dataBank = (RichHPDDataBank*) new RichNonZeroSuppDataV1::RichNonZeroSuppData( dataStart );
     }
 
-  } else if ( RichDAQ::LHCb0 == version )
+  } 
+  else if ( RichDAQ::LHCb0 == version )
   {
     // Version 0 of data banks (DC04 compatibility)
 
@@ -351,7 +352,7 @@ void RichRawDataFormatTool::createDataBank( const RichDAQ::L1Map & L1Data,
         hpdData->fillRAWBank( dataBank );
         delete hpdData;
         // Add this bank to the Raw buffer
-        rawBuffer->addBank( (*iL1).first, RawBuffer::Rich, dataBank, version );
+        rawBuffer->addBank( (*iL1).first.dataValue(), RawBuffer::Rich, dataBank, version );
 
         if ( m_summary )
         {
@@ -402,6 +403,9 @@ void RichRawDataFormatTool::createDataBank( const RichDAQ::L1Map & L1Data,
         } // end photon detector loop
       }
 
+      // Add this bank to the Raw buffer
+      rawBuffer->addBank( (*iL1).first.dataValue(), RawBuffer::Rich, dataBank, version );
+
       if ( m_summary )
       {
         // Count the number of banks and size
@@ -417,12 +421,9 @@ void RichRawDataFormatTool::createDataBank( const RichDAQ::L1Map & L1Data,
       if ( msgLevel(MSG::DEBUG) )
       {
         debug() << "Encoded " << format("%2i",(*iL1).second.size()) << " HPDs into Level1 Bank "
-                << format("%2i",(*iL1).first) << " : Size " << format("%4i",2+dataBank.size())
+                << format("%2i",(*iL1).first.dataValue()) << " : Size " << format("%4i",2+dataBank.size())
                 << " words : Version " << version << endreq;
       }
-
-      // Add this bank to the Raw buffer
-      rawBuffer->addBank( (*iL1).first, RawBuffer::Rich, dataBank, version );
 
     } // Level1 loop
 
@@ -470,7 +471,7 @@ void RichRawDataFormatTool::decodeToSmartIDs( const RawBank & bank,
       const RichHPDDataBank * hpdBank ( createDataBank( &bank.data()[0],
                                                         bank.dataSize()-1,
                                                         version ) );
-      hpdBank->fillRichSmartIDs( smartIDs, m_hpdID );
+      hpdBank->fillRichSmartIDs( smartIDs, m_detNumTool );
       delete hpdBank;
       ++nHPDbanks;
 
@@ -537,7 +538,7 @@ void RichRawDataFormatTool::decodeToSmartIDs( const RawBank & bank,
           const RichHPDDataBank * hpdBank ( createDataBank( &bank.data()[lineHeader],
                                                             lineLast-lineHeader,
                                                             version ) );
-          hpdBank->fillRichSmartIDs( smartIDs, m_hpdID );
+          hpdBank->fillRichSmartIDs( smartIDs, m_detNumTool );
           ++nHPDbanks;
           delete hpdBank;
 
@@ -568,8 +569,10 @@ void RichRawDataFormatTool::decodeToSmartIDs( const RawBank & bank,
   // debug printout
   if ( msgLevel(MSG::DEBUG) )
   {
-    debug() << "Decoded " << format("%2i",nHPDbanks) << " HPDs from Level1 Bank " << format("%2i",L1ID)
-            << " : Size " << format("%4i",2+bank.dataSize()) << " words : Version " << version << endreq;
+    debug() << "Decoded " << format("%2i",nHPDbanks) << " HPDs from Level1 Bank " 
+            << format("%2i",L1ID.dataValue())
+            << " : Size " << format("%4i",2+bank.dataSize()) << " words : Version " 
+            << version << endreq;
 
     // Print out decoded smartIDs
     if ( msgLevel(MSG::VERBOSE) )
@@ -619,7 +622,8 @@ RichRawDataFormatTool::decodeToSmartIDs( RichSmartID::Collection & smartIDs ) co
 
 RawEvent * RichRawDataFormatTool::rawEvent() const
 {
-  if ( !m_rawEvent ) {
+  if ( !m_rawEvent ) 
+  {
 
     // Try and load from TES. If it exists return, overwise try to create one
     SmartDataPtr<RawEvent> rawEventTES( evtSvc(), m_rawEventLoc );
@@ -637,7 +641,8 @@ RawEvent * RichRawDataFormatTool::rawEvent() const
 
       // make new RawEvent and put into TES
       m_rawEvent = new RawEvent( rawBuffer );
-      if ( !m_rawEvent ) {
+      if ( !m_rawEvent ) 
+      {
         m_rawEvent = 0;
         Exception("Unable to allocate memory to RawEvent");
       }

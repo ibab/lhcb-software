@@ -4,7 +4,7 @@
  *
  *  Implementation file for RICH DAQ helper class : RichNonZeroSuppData
  *
- *  $Id: RichNonZeroSuppData.cpp,v 1.4 2005-05-13 14:22:12 jonrob Exp $
+ *  $Id: RichNonZeroSuppData.cpp,v 1.5 2005-11-15 12:57:48 jonrob Exp $
  *
  *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
  *  @date   2004-12-17
@@ -14,18 +14,22 @@
 // local
 #include "RichNonZeroSuppData.h"
 
-namespace RichNonZeroSuppDataV0 {
+namespace RichNonZeroSuppDataV0
+{
 
   void RichNonZeroSuppData::fillRichSmartIDs( RichSmartID::Collection & ids,
-                                              const IRichHPDInfoTool * /* hpdTool */ ) const
+                                              const IRichDetNumberingTool * /* hpdTool */ ) const
   {
     // header word object
     const Header head ( header() );
 
     // Fill with active channels
-    for ( RichDAQ::ShortType iRow = 0; iRow < dataSize(); ++iRow ) {
-      for ( RichDAQ::ShortType iCol = 0; iCol < dataSize(); ++iCol ) {
-        if ( isPixelActive(iRow,iCol) ) {
+    for ( RichDAQ::ShortType iRow = 0; iRow < dataSize(); ++iRow )
+    {
+      for ( RichDAQ::ShortType iCol = 0; iCol < dataSize(); ++iCol )
+      {
+        if ( isPixelActive(iRow,iCol) )
+        {
           ids.push_back( RichSmartID( head.hpdID().rich(),
                                       head.hpdID().panel(),
                                       head.hpdID().pdRow(),
@@ -63,18 +67,21 @@ namespace RichNonZeroSuppDataV0 {
 namespace RichNonZeroSuppDataV1 {
 
   void RichNonZeroSuppData::fillRichSmartIDs( RichSmartID::Collection & ids,
-                                              const IRichHPDInfoTool * hpdTool ) const
+                                              const IRichDetNumberingTool * hpdTool ) const
   {
     // header word object
     const Header head ( header() );
 
-    // Get HPD software ID for this HPD
-    const RichSmartID sID = hpdTool->richSmartID( head.hpdID() );
+    // Get HPD software ID for this Level 0 ID
+    const RichSmartID sID = hpdTool->richSmartID( head.l0ID() );
 
     // Fill with active channels
-    for ( RichDAQ::ShortType iRow = 0; iRow < dataSize(); ++iRow ) {
-      for ( RichDAQ::ShortType iCol = 0; iCol < dataSize(); ++iCol ) {
-        if ( isPixelActive(iRow,iCol) ) {
+    for ( RichDAQ::ShortType iRow = 0; iRow < dataSize(); ++iRow )
+    {
+      for ( RichDAQ::ShortType iCol = 0; iCol < dataSize(); ++iCol )
+      {
+        if ( isPixelActive(iRow,iCol) )
+        {
           ids.push_back( RichSmartID( sID.rich(),
                                       sID.panel(),
                                       sID.pdRow(),

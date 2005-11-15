@@ -5,7 +5,7 @@
  *  Header file for RICH DAQ utility class : RichNonZeroSuppData
  *
  *  CVS Log :-
- *  $Id: RichNonZeroSuppData.h,v 1.15 2005-11-07 11:48:35 jonrob Exp $
+ *  $Id: RichNonZeroSuppData.h,v 1.16 2005-11-15 12:57:48 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   2003-11-07
@@ -36,7 +36,7 @@
  *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
  *  @date   2004-12-17
  */
-namespace RichNonZeroSuppDataV0 
+namespace RichNonZeroSuppDataV0
 {
 
   /** @class RichNonZeroSuppData RichNonZeroSuppData.h
@@ -93,7 +93,7 @@ namespace RichNonZeroSuppDataV0
 
     // Fill a vector with RichSmartIDs for hit pixels
     virtual void fillRichSmartIDs( RichSmartID::Collection & ids,
-                                   const IRichHPDInfoTool * hpdTool ) const;
+                                   const IRichDetNumberingTool * hpdTool ) const;
 
     // Print data bank to Gaudi MsgStream
     virtual void fillMsgStream( MsgStream & os ) const;
@@ -142,7 +142,7 @@ namespace RichNonZeroSuppDataV1
   class RichNonZeroSuppData : public RichHPDDataBank,
                               public Rich::BoostMemPoolAlloc<RichNonZeroSuppDataV1::RichNonZeroSuppData>
   {
-    
+
   public: // Definitions
 
     /// Typedef for the header type for this data bank implementation
@@ -155,20 +155,21 @@ namespace RichNonZeroSuppDataV1
 
     /** Constructor from a RichSmartID HPD identifier and a vector of RichSmartIDs
      *
-     *  @param hpdID  Hardware identifier for the HPD
+     *  @param l0ID   L0 board hardware identifier
      *  @param digits Collection of RichSmartIDs listing the active channels in this HPD
      */
-    explicit RichNonZeroSuppData( const RichDAQ::HPDHardwareID hpdID,
+    explicit RichNonZeroSuppData( const RichDAQ::Level0ID l0ID,
                                   const RichSmartID::Collection & digits )
-      : RichHPDDataBank ( Header( false, hpdID, digits.size() ),
+      : RichHPDDataBank ( Header( false, l0ID, digits.size() ),
                           RichDAQ::MaxDataSize, 0 )
     {
       for ( RichSmartID::Collection::const_iterator iDig = digits.begin();
-            iDig != digits.end(); ++ iDig ) {
+            iDig != digits.end(); ++ iDig )
+      {
         setPixelActive( (*iDig).pixelRow(), (*iDig).pixelCol() );
       }
     }
-    
+
     /** Constructor from a block of raw data
      *
      *  @param data Pointer to the start of the data block
@@ -181,7 +182,7 @@ namespace RichNonZeroSuppDataV1
 
     // Fill a vector with RichSmartIDs for hit pixels
     virtual void fillRichSmartIDs( RichSmartID::Collection & ids,
-                                   const IRichHPDInfoTool * hpdTool ) const;
+                                   const IRichDetNumberingTool * hpdTool ) const;
 
     // Print data bank to messager stream
     virtual void fillMsgStream( MsgStream & os ) const;

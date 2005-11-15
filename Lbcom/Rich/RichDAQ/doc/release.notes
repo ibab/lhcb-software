@@ -4,6 +4,11 @@
 ! Purpose     : Package simulating the RICH DAQ system and data format
 !-----------------------------------------------------------------------------
 
+! 2005-11-15 - Chris Jones
+ - Update to use new numbering schemes from Conditions.
+  + Replace tools RichHPDInfoTool and RichHPDToLevel1Tool with single tool
+    RichDetNumberingTool
+
 ! 2005-11-07 - Chris Jones
  - use memory management (test, to see if this improves HLT time)
 

@@ -5,7 +5,7 @@
  *  Declaration file for objects in component library RichDAQ
  *
  *  CVS Log :-
- *  $Id: RichDAQ_load.cpp,v 1.8 2005-05-13 14:22:12 jonrob Exp $
+ *  $Id: RichDAQ_load.cpp,v 1.9 2005-11-15 12:57:47 jonrob Exp $
  *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   2003-11-09
@@ -26,10 +26,7 @@ DECLARE_FACTORY_ENTRIES ( RichDAQ )
   // Tool to create HPD bank bank objects from Raw Buffer
   DECLARE_TOOL( RichRawDataFormatTool );
 
-  // Tool to convert between HPD and L1 identifiers
-  DECLARE_TOOL( RichHPDToLevel1Tool );
-
-  // Tool giving information on the status of the HPDs
-  DECLARE_TOOL( RichHPDInfoTool );
+  // Tool giving information on the varius numbering scehemes
+  DECLARE_TOOL( RichDetNumberingTool );
 
 }

@@ -4,7 +4,7 @@
  *
  *  Implementation file for RICH DAQ helper class : RichZeroSuppData
  *
- *  $Id: RichZeroSuppData.cpp,v 1.4 2005-05-13 14:22:12 jonrob Exp $
+ *  $Id: RichZeroSuppData.cpp,v 1.5 2005-11-15 12:57:48 jonrob Exp $
  *
  *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
  *  @date   2004-12-17
@@ -44,7 +44,7 @@ namespace RichZeroSuppDataV0 {
   }
 
   void RichZeroSuppData::fillRichSmartIDs ( RichSmartID::Collection & ids,
-                                            const IRichHPDInfoTool * /* hpdTool */ ) const
+                                            const IRichDetNumberingTool * /* hpdTool */ ) const
   {
 
     // How many digits do we expect to make
@@ -134,7 +134,7 @@ namespace RichZeroSuppDataV1 {
   }
 
   void RichZeroSuppData::fillRichSmartIDs ( RichSmartID::Collection & ids,
-                                            const IRichHPDInfoTool * hpdTool ) const
+                                            const IRichDetNumberingTool * hpdTool ) const
   {
 
     // How many digits do we expect to make
@@ -142,7 +142,7 @@ namespace RichZeroSuppDataV1 {
     const RichDAQ::ShortType digitCount = head.hitCount();
 
     // Get HPD software ID for this HPD
-    const RichSmartID sID = hpdTool->richSmartID( head.hpdID() );
+    const RichSmartID sID = hpdTool->richSmartID( head.l0ID() );
 
     // Loop over data fields
     RichDAQ::ShortType nDigitsMade = 0;
@@ -248,7 +248,7 @@ namespace RichZeroSuppDataV2 {
   }
 
   void RichZeroSuppData::fillRichSmartIDs ( RichSmartID::Collection & ids,
-                                            const IRichHPDInfoTool * hpdTool ) const
+                                            const IRichDetNumberingTool * hpdTool ) const
   {
 
     // How many digits do we expect to make
@@ -256,7 +256,7 @@ namespace RichZeroSuppDataV2 {
     const RichDAQ::ShortType digitCount = head.hitCount();
 
     // Get HPD software ID for this HPD
-    const RichSmartID sID = hpdTool->richSmartID( head.hpdID() );
+    const RichSmartID sID = hpdTool->richSmartID( head.l0ID() );
 
     // Loop over data fields
     RichDAQ::ShortType nDigitsMade = 0;

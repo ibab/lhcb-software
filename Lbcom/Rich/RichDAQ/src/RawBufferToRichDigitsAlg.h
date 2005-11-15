@@ -5,7 +5,7 @@
  *  Header file for RICH DAQ algorithm : RawBufferToRichDigitsAlg
  *
  *  CVS Log :-
- *  $Id: RawBufferToRichDigitsAlg.h,v 1.8 2005-07-14 14:13:38 jonrob Exp $
+ *  $Id: RawBufferToRichDigitsAlg.h,v 1.9 2005-11-15 12:57:47 jonrob Exp $
  *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   2003-11-06
@@ -57,6 +57,9 @@ private: // data
 
   /// Raw Buffer Decoding tool 
   const IRichRawBufferToSmartIDsTool * m_decoder;
+
+  /// Flag to turn off RichDigit creation
+  bool m_decodeOnly;
 
 };
 

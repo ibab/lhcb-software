@@ -3,7 +3,7 @@
  *
  *  Header file for RICH DAQ utility class : RichDAQHPDIdentifier
  *
- *  $Id: RichDAQHPDIdentifier.h,v 1.2 2005-02-09 09:16:26 cattanem Exp $
+ *  $Id: RichDAQHPDIdentifier.h,v 1.3 2005-11-15 12:57:47 jonrob Exp $
  *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   2003-11-06
@@ -25,7 +25,8 @@
  *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
  *  @date   2004-12-17
  */
-namespace RichDAQHPDIdentifierV0 {
+namespace RichDAQHPDIdentifierV0 
+{
 
   /** @namespace RichDAQHPDIdentifierCode
    *
@@ -34,7 +35,8 @@ namespace RichDAQHPDIdentifierV0 {
    *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
    *  @date   2003-11-07
    */
-  namespace RichDAQHPDIdentifierCode {
+  namespace RichDAQHPDIdentifierCode 
+{
 
     // Define the number of bits for each field
     static const RichDAQ::ShortType  BitsRich  =  1; ///< Number of bits for RICH field

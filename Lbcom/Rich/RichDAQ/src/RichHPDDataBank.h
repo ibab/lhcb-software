@@ -5,7 +5,7 @@
  *  Header file for RICH DAQ utility class : RichHPDDataBank
  *
  *  CVS Log :-
- *  $Id: RichHPDDataBank.h,v 1.6 2005-11-07 11:48:35 jonrob Exp $
+ *  $Id: RichHPDDataBank.h,v 1.7 2005-11-15 12:57:48 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   2004-12-17
@@ -23,7 +23,7 @@
 #include "RichKernel/RichDAQDefinitions.h"
 
 // HPD Tool
-#include "RichKernel/IRichHPDInfoTool.h"
+#include "RichKernel/IRichDetNumberingTool.h"
 
 //-----------------------------------------------------------------------------
 /** @class RichHPDDataBank RichHPDDataBank.h
@@ -88,7 +88,7 @@ public:
    *  @param hpdTool Pointer to the tool to convert hardware to software HPD IDs
    */
   virtual void fillRichSmartIDs( RichSmartID::Collection & ids,
-                                 const IRichHPDInfoTool * hpdTool ) const = 0;
+                                 const IRichDetNumberingTool * hpdTool ) const = 0;
 
   /** Fill a RAWBank with the data for this bank
    *
@@ -136,9 +136,9 @@ protected: // methods
   /// Add data point
   inline void addData( const RichDAQ::LongType data )
   {
-    if ( m_dataSize > 31 )
+    if ( m_dataSize > RichDAQ::MaxDataSize-1 )
     {
-      throw GaudiException("Attempt to fill more than 32 data words",
+      throw GaudiException("Attempt to fill more than MAX data words",
                            "*RichHPDDataBank*", StatusCode::SUCCESS );
     }
     m_data[m_dataSize++] = data;
