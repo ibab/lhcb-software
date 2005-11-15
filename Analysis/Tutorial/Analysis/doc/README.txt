@@ -19,7 +19,7 @@ For those who want to cheat:
     > cd cmt/
     > cmt config
     > source setup.csh
-    > cp ../solution1/TutorialAlgorithm.* ../src/
+    > cp ../solution1/*.{cpp,h} ../src/
     > make
     > DaVinci ../solution1/DVTutorial_1.opts
   

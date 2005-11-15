@@ -26,6 +26,3 @@ General tips:
     - Make sure all your global variables are initialised in the constructor
     - Avoid hard-coding as much as possible
     - Avoid duplication of code. Make methods when necessary.
-
-The Tutorial package already provides a complete requirements file and the 
-"TutorialAlgorithm" is declared to Analysis_load.cpp
