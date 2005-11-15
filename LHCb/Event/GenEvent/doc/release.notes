@@ -1,9 +1,12 @@
 Package Event/GenEvent
 package coordinator: W.Pokorski, G.Corti
 
-!================ GenEvent v3r5 2005-11-11 ============================
+!================ GenEvent v3r5 2005-11-14 ============================
+! 2005-11-14 - Pere Mato
+ - Changes for custom dictionary
+ - Set HepMC::Flow::m_particle_owner transient in selection file
+
 ! 2005-11-11 - Marco Cattaneo
- - Changes to use fragments for custom dictionary
  - Changes to produce platform dependent dictionaries
 
 !================ GenEvent v3r4 2005-10-10 ============================
