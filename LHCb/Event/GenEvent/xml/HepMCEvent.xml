@@ -13,6 +13,12 @@
       &KeyedObject;
       <import name="HepMC" ignore="TRUE"/>
       <import name="CLHEPStreams" ignore="TRUE"/>
+       <enum
+	desc="Status code in HepMC::GenParticle"
+        name="statusType"
+        value="Unknown = 0,StableInProdGen = 1,DecayedByProdGen = 2,DocumentationParticle = 3,DecayedByDecayGen = 777,DecayedByDecayGenAndProducedByProdGen = 888,SignalInLabFrame = 889,SignalAtRest = 998,StableInDecayGen = 999"
+        access="PUBLIC"
+       />
       <constructor
         desc="Constructor">
         <arg type="std::string" name="generatorName" const="TRUE"/>

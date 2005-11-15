@@ -1,6 +1,20 @@
 Package Event/GenEvent
 package coordinator: W.Pokorski, G.Corti
 
+! 2005-11-15 - Gloria CORTI
+ - Changes for new Event Model
+ - Use EventBase package instead of Event that has been removed
+ - Renaming of GenEvent.xml into HepMCEvent.xml
+ - Remove obsolete classes: 
+   . HardInfo, merged into GenCollision
+   . GenMCLink, which functionality should be provided by a tool
+ - Change package name to GenEvent in GenCollision.xml, for GOD Reflex dict
+   generation
+
+! 2005-11-15 - Patrick KOPPENBURG
+ - Merge of GenCollision, HardInfo, Collision into a single GenCollision
+   class
+
 !================ GenEvent v3r5 2005-11-14 ============================
 ! 2005-11-14 - Pere Mato
  - Changes for custom dictionary

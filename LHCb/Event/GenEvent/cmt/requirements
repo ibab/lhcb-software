@@ -1,10 +1,10 @@
 package GenEvent
-version v3r5
+version v4r0
 
 branches cmt doc src xml Event
 
 use HepMC        v*	Sim
-use Event        v*     Event
+use EventBase    v*     Event
 
 include_dirs $(GENEVENTROOT)
 

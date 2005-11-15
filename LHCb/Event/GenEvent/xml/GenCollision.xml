@@ -6,18 +6,65 @@
    
     <class
       name   = "GenCollision"
-      author = "G.Corti"
-      desc   = "Extended generator information for collision"
+      author = "G.Corti, revised by P. Koppenburg"
+      desc   = "All generator-level information for a given collision (An event is made up of several collisions (e.g. one per PileUp))"
       location = "Gen/Collisions"
       id     = "204"
     >
-      <base name="Collision"/>
-      &KeyedObject;
-      <import name="Event/HardInfo"/> 
+       &KeyedObject;
+       <base name="KeyedObject&lt;int&gt;"/>
+       <attribute
+        desc="true for collision that contains the generated signal. false for minimum bias and pileup."
+        name="isSignal"
+        type="bool"
+        init="false"
+       />
+       <attribute
+        desc="Generator process type"
+        name="processType"
+        type="long"
+        init="0"
+       />
+      <attribute
+       desc  = "Mandelstam s hat"
+       name  = "sHat"
+       type  = "double"
+       init  = "0.0"
+      />
+      <attribute
+       desc  = "Mandelstam t hat"
+       name  = "tHat"
+       type  = "double"
+       init  = "0.0"
+      />
+      <attribute
+       desc  = "Mandelstam u hat"
+       name  = "uHat"
+       type  = "double"
+       init  = "0.0"
+      />
+      <attribute
+       desc  = "Mandelstam pt hat"
+       name  = "ptHat"
+       type  = "double"
+       init  = "0.0"
+      />
+      <attribute
+       desc  = "Bjorken x1"
+       name  = "x1Bjorken"
+       type  = "double"
+       init  = "0.0"
+      />
+      <attribute
+       desc  = "Bjorken x2"
+       name  = "x2Bjorken"
+       type  = "double"
+       init  = "0.0"
+      />
       <relation
-	desc = "Reference to class holding Hard Info"
-	name = "hardInfo"
-	type = "HardInfo"
+       desc  = "Reference to HepMC Event of this collision"
+       name  = "event"
+       type  = "HepMCEvent"
       />
     </class>    
 
