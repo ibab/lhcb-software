@@ -5,7 +5,7 @@
  * Implementation file for class : RichRayTracingAllSph
  *
  * CVS Log :-
- * $Id: RichRayTracingAllSph.cpp,v 1.4 2005-10-31 13:32:43 jonrob Exp $
+ * $Id: RichRayTracingAllSph.cpp,v 1.5 2005-11-15 13:39:28 jonrob Exp $
  *
  * @author Antonis Papanestis
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
@@ -47,10 +47,8 @@ RichRayTracingAllSph::RichRayTracingAllSph( const std::string& type,
     m_secMirrorSegCols    ( Rich::NRiches, 0    ),
     m_RichDetSeparationPointZ ( 8000.0 )
 {
+  // interface
   declareInterface<IRichRayTracing>(this);
-
-  declareProperty( "Monitor", m_moni = false );
-  declareProperty( "HistoPath", m_histPth = "RICH/TRACE_TEST/" );
 }
 
 //=============================================================================
@@ -146,8 +144,6 @@ StatusCode RichRayTracingAllSph::initialize()
   {
     return Error ( "No secondary mirrors for RICH2 found !" );
   }
-
-  if ( m_moni ) bookHistos();
 
   return sc;
 }
@@ -280,8 +276,12 @@ StatusCode RichRayTracingAllSph::reflectBothMirrors( const Rich::DetectorType ri
   if ( mode.mirrorSegBoundary() ) 
   {
     // if reflection from a mirror segment is required
-    if ( !sphSegment->intersects( position, direction ) ) {
-      if (m_moni) m_sphMirMissedGap[rich]->fill(tmpPosition.x(), tmpPosition.y());
+    if ( !sphSegment->intersects( position, direction ) ) 
+    {
+      if ( produceHistos() )
+        plot2D( tmpPosition.x(), tmpPosition.y(), 
+                "Spherical Mirror missed gap "+Rich::text(rich),
+                -18000, 18000, -1500, 15000, 100, 100 );
       return StatusCode::FAILURE;
     }
 
@@ -310,8 +310,12 @@ StatusCode RichRayTracingAllSph::reflectBothMirrors( const Rich::DetectorType ri
         if ( tmpPosition.x() > mirCentre.x() )
           fail = true;
       }
-      if (fail) {
-        if (m_moni) m_sphMirMissedOut[rich]->fill(tmpPosition.x(), tmpPosition.y());
+      if (fail) 
+      {
+        if ( produceHistos() )
+          plot2D( tmpPosition.x(), tmpPosition.y(),
+                  "Spherical Mirror missed out "+Rich::text(rich),
+                  -1800, 1800, -1500, 1500, 100, 100 );
         return StatusCode::FAILURE;
       }
     }
@@ -348,8 +352,12 @@ StatusCode RichRayTracingAllSph::reflectBothMirrors( const Rich::DetectorType ri
   // depending on the tracing flag:
   if ( mode.mirrorSegBoundary() ) {
     // if reflection from a mirror segment is required
-    if ( !secSegment->intersects( tmpPosition, tmpDirection ) ) {
-      if (m_moni) m_secMirMissedGap[rich]->fill(planeIntersection.x(), planeIntersection.y());
+    if ( !secSegment->intersects( tmpPosition, tmpDirection ) ) 
+    {
+      if ( produceHistos() )
+        plot2D( planeIntersection.x(), planeIntersection.y(),
+                "Sec Mirror missed gap "+Rich::text(rich),
+                 -3000, 3000, -1000, 1000, 100, 100 );
       return StatusCode::FAILURE;
     }
 
@@ -376,8 +384,12 @@ StatusCode RichRayTracingAllSph::reflectBothMirrors( const Rich::DetectorType ri
         if ( planeIntersection.x() > mirCentre.x() )
           fail = true;
       }
-      if (fail) {
-        if (m_moni) m_secMirMissedOut[rich]->fill(planeIntersection.x(), planeIntersection.y());
+      if (fail) 
+      {
+        if ( produceHistos() )
+          plot2D( planeIntersection.x(), planeIntersection.y(),
+                  "Sec Mirror missed out "+Rich::text(rich),
+                  -3000, 3000, -1000, 1000, 100, 100 );
         return StatusCode::FAILURE;
       }
     }
@@ -533,45 +545,6 @@ StatusCode RichRayTracingAllSph::intersectPlane ( const HepPoint3D& position,
   intersection = position + distance*direction;
 
   return StatusCode::SUCCESS;
-}
-
-//=========================================================================
-//  Book Histograms
-//=========================================================================
-
-StatusCode RichRayTracingAllSph::bookHistos() {
-
-  debug() << "Booking Histos" << endmsg;
-
-  m_sphMirMissedOut[0] = histoSvc()->
-    book(m_histPth, 101, "Spherical Mirror missed out R1", 100, -700,
-         700, 100, -800, 800);
-  m_sphMirMissedOut[1] = histoSvc()->
-    book(m_histPth, 201, "Spherical Mirror missed out R2", 100, -1800,
-         1800, 100, -1500, 1500);
-
-  m_secMirMissedOut[0] = histoSvc()->
-    book(m_histPth, 102, "Sec Mirror missed out R1", 100, -700,
-         700, 100, -1000, 1000);
-  m_secMirMissedOut[1] = histoSvc()->
-    book(m_histPth, 202, "Sec Mirror missed out R2", 100, -3000,
-         3000, 100, -1000, 1000);
-
-  m_sphMirMissedGap[0] = histoSvc()->
-    book(m_histPth, 103, "Spherical Mirror missed gap R1", 100, -700,
-         700, 100, -800, 800);
-  m_sphMirMissedGap[1] = histoSvc()->
-    book(m_histPth, 203, "Spherical Mirror missed gap R2", 100, -1800,
-         1800, 100, -1500, 1500);
-
-  m_secMirMissedGap[0] = histoSvc()->
-    book(m_histPth, 104, "Sec Mirror missed gap R1", 100, -700,
-         700, 100, -1000, 1000);
-  m_secMirMissedGap[1] = histoSvc()->
-    book(m_histPth, 204, "Sec Mirror missed gap R2", 100, -3000,
-         3000, 100, -1000, 1000);
-
-  return StatusCode::FAILURE;
 }
 
 //=========================================================================

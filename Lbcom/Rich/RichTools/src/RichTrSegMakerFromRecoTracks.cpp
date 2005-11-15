@@ -5,7 +5,7 @@
  * Implementation file for class : RichTrSegMakerFromRecoTracks
  *
  * CVS Log :-
- * $Id: RichTrSegMakerFromRecoTracks.cpp,v 1.2 2005-10-23 15:45:13 jonrob Exp $
+ * $Id: RichTrSegMakerFromRecoTracks.cpp,v 1.3 2005-11-15 13:39:28 jonrob Exp $
  *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @date 14/01/2002
@@ -136,7 +136,7 @@ StatusCode RichTrSegMakerFromRecoTracks::finalize()
 // Constructs the track segments for a given Track
 //=============================================================================
 int RichTrSegMakerFromRecoTracks::constructSegments( const ContainedObject * obj,
-                                                     std::vector<RichTrackSegment>& segments )
+                                                     std::vector<RichTrackSegment*>& segments )
   const {
 
   // Try to cast input data to required type for this implementation
@@ -305,7 +305,7 @@ int RichTrSegMakerFromRecoTracks::constructSegments( const ContainedObject * obj
     }
     else if ( entryStateOK )
     {
-      if (msgLevel(MSG::VERBOSE)) 
+      if (msgLevel(MSG::VERBOSE))
         verbose() << "  Entry state OK : Zentry=" << entryPoint1.z()
                   << " Zexit=" << exitPoint1.z() << endreq;
 
@@ -428,13 +428,13 @@ int RichTrSegMakerFromRecoTracks::constructSegments( const ContainedObject * obj
 
         // Using this information, make radiator segment
         // this version uses 3 states and thus incorporates some concept of track curvature
-        //segments.push_back( RichTrackSegment( RichTrackSegment::UseChordBetweenStates(),
-        segments.push_back( RichTrackSegment( RichTrackSegment::UseAllStateVectors(),
-                                              entryPoint,entryStateMomentum,
-                                              midPoint,  midStateMomentum,
-                                              exitPoint, exitStateMomentum,
-                                              rad, (*radiator)->rich(),
-                                              entryErrs, midErrs, exitErrs ) );
+        //segments.push_back( new RichTrackSegment( RichTrackSegment::UseChordBetweenStates(),
+        segments.push_back( new RichTrackSegment( RichTrackSegment::UseAllStateVectors(),
+                                                  entryPoint,entryStateMomentum,
+                                                  midPoint,  midStateMomentum,
+                                                  exitPoint, exitStateMomentum,
+                                                  rad, (*radiator)->rich(),
+                                                  entryErrs, midErrs, exitErrs ) );
 
       }
       else
@@ -442,12 +442,12 @@ int RichTrSegMakerFromRecoTracks::constructSegments( const ContainedObject * obj
 
         // Using this information, make radiator segment
         // this version uses 2 states and thus forces a straight line approximation
-        //segments.push_back( RichTrackSegment( RichTrackSegment::UseChordBetweenStates(),
-        segments.push_back( RichTrackSegment( RichTrackSegment::UseAllStateVectors(),
-                                              entryPoint,entryStateMomentum,
-                                              exitPoint, exitStateMomentum,
-                                              rad, (*radiator)->rich(),
-                                              entryErrs, exitErrs ) );
+        //segments.push_back( new RichTrackSegment( RichTrackSegment::UseChordBetweenStates(),
+        segments.push_back( new RichTrackSegment( RichTrackSegment::UseAllStateVectors(),
+                                                  entryPoint,entryStateMomentum,
+                                                  exitPoint, exitStateMomentum,
+                                                  rad, (*radiator)->rich(),
+                                                  entryErrs, exitErrs ) );
 
       }
 

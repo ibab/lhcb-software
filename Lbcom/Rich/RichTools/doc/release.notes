@@ -4,6 +4,9 @@
 ! Purpose     : General purpose Rich Tools
 !-----------------------------------------------------------------------------
 
+! 2005-11-15 - Chris Jones
+ - Improvements to RichTrackSegment and RichGeomPhoton creators
+
 ! 2005-10-31 - Chris Jones
  - Update to new base classes
 

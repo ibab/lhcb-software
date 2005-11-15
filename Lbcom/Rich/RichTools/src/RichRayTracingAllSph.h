@@ -5,7 +5,7 @@
  *  Header file for tool : RichDetParameters
  *
  *  CVS History :
- *  $Id: RichRayTracingAllSph.h,v 1.3 2005-10-31 13:32:43 jonrob Exp $
+ *  $Id: RichRayTracingAllSph.h,v 1.4 2005-11-15 13:39:28 jonrob Exp $
  *
  *  @author Chris Jones    Christopher.Rob.Jones@cern.ch
  *  @date   2004-03-29
@@ -129,6 +129,7 @@ public: // methods (and doxygen comments) inherited from interface
 
 private: // methods
 
+  /// Ray trace from given position in given direction of both mirrors
   StatusCode reflectBothMirrors ( const Rich::DetectorType rich,
                                   HepPoint3D& position,
                                   HepVector3D& direction,
@@ -136,11 +137,10 @@ private: // methods
                                   const RichTraceMode mode,
                                   const Rich::Side fSide ) const;
 
+  /// Ray trace from given position in given direction of flat mirrors
   StatusCode reflectFlatPlane ( HepPoint3D& position,
                                 HepVector3D& direction,
                                 const HepPlane3D& plane ) const;
-
-  StatusCode bookHistos();
 
 private: // data
 
@@ -159,19 +159,6 @@ private: // data
 
   /// Mirror segment finder tool
   const IRichMirrorSegFinder* m_mirrorSegFinder;
-
-  /// monitoring histograms (true/false)
-  bool m_moni;
-  /// directory path for the histograms
-  std::string m_histPth;
-  /// photons missed on the outer boundary of the spherical mirror
-  IHistogram2D* m_sphMirMissedOut[2];
-  /// photons missed on the outer boundary of the secondary mirror
-  IHistogram2D* m_secMirMissedOut[2];
-  /// photons missed in the gaps of the spherical mirror
-  IHistogram2D* m_sphMirMissedGap[2];
-  /// photons missed in the gaps of the secondary mirror
-  IHistogram2D* m_secMirMissedGap[2];
 
   /// a z point that separates Rich 1 from Rich2 (anything 3000-9000mm)
   double m_RichDetSeparationPointZ;

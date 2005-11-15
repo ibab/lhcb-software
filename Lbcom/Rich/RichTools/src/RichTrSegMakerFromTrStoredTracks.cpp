@@ -5,7 +5,7 @@
  * Implementation file for class : RichTrSegMakerFromTrStoredTracks
  *
  * CVS Log :-
- * $Id: RichTrSegMakerFromTrStoredTracks.cpp,v 1.14 2005-10-13 16:11:08 jonrob Exp $
+ * $Id: RichTrSegMakerFromTrStoredTracks.cpp,v 1.15 2005-11-15 13:39:28 jonrob Exp $
  *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @date 14/01/2002
@@ -123,7 +123,7 @@ StatusCode RichTrSegMakerFromTrStoredTracks::initialize()
   m_radiators[Rich::CF4]     = getDet<DeRichRadiator>( DeRichRadiatorLocation::CF4 );
   if ( !m_usedRads[Rich::Aerogel] )
   {
-    Warning("Track segments for Aerogel are disabled",StatusCode::SUCCESS);    
+    Warning("Track segments for Aerogel are disabled",StatusCode::SUCCESS);
   }
   if ( !m_usedRads[Rich::C4F10] )
   {
@@ -150,7 +150,7 @@ StatusCode RichTrSegMakerFromTrStoredTracks::finalize()
 // Constructs the track segments for a given TrStoredTrack
 //=============================================================================
 int RichTrSegMakerFromTrStoredTracks::constructSegments( const ContainedObject * obj,
-                                                         std::vector<RichTrackSegment>& segments )
+                                                         std::vector<RichTrackSegment*>& segments )
   const {
 
   // Try to cast input data to required type for this implementation
@@ -187,7 +187,7 @@ int RichTrSegMakerFromTrStoredTracks::constructSegments( const ContainedObject *
   // Loop over all radiators
   for ( Radiators::const_iterator radiator = m_radiators.begin();
         radiator != m_radiators.end();
-        ++radiator ) 
+        ++radiator )
   {
 
     // which radiator
@@ -246,30 +246,30 @@ int RichTrSegMakerFromTrStoredTracks::constructSegments( const ContainedObject *
     HepVector3D firstDir  ( entryPState->tx(), entryPState->ty(), 1 );
     if ( (*radiator)->nextIntersectionPoint( firstPoint,
                                              firstDir,
-                                             entryPoint1 ) ) 
+                                             entryPoint1 ) )
     {
 
       // extrapolate state to the correct z
-      if ( moveState( entryPState, entryPoint1.z(), entryPStateRaw ) ) 
+      if ( moveState( entryPState, entryPoint1.z(), entryPStateRaw ) )
       {
         // find radiator entry and exit points
         if ( entryPState &&
-             fabs(entryPState->z() - entryPoint1.z()) < m_zTolerance[rad] ) 
+             fabs(entryPState->z() - entryPoint1.z()) < m_zTolerance[rad] )
         {
           if ( (*radiator)->intersectionPoints( HepPoint3D(entryPState->x(),entryPState->y(),entryPState->z()),
                                                 HepVector3D(entryPState->tx(),entryPState->ty(),1),
                                                 entryPoint1,
-                                                exitPoint1) ) 
+                                                exitPoint1) )
           {
             entryStateOK = true;
             if ( msgLevel(MSG::VERBOSE) )
-              verbose() << "      Entry state rad intersection points " 
+              verbose() << "      Entry state rad intersection points "
                         << entryPoint1 << " " << exitPoint1 << endreq;
           }
         }
       }
-    } 
-    else if ( msgLevel(MSG::VERBOSE) ) 
+    }
+    else if ( msgLevel(MSG::VERBOSE) )
     {
       verbose() << "Failed to intersect entry state" << endreq;
     }
@@ -277,7 +277,7 @@ int RichTrSegMakerFromTrStoredTracks::constructSegments( const ContainedObject *
     // If gas radiator try and use exit state to get exit point more precisely
     bool exitStateOK = false;
     HepPoint3D entryPoint2, exitPoint2;
-    if ( rad != Rich::Aerogel ) 
+    if ( rad != Rich::Aerogel )
     {
       HepPoint3D lastPoint  ( exitPState->x(), exitPState->y(), exitPState->z() );
       HepVector3D lastDir   ( -exitPState->tx(), -exitPState->ty(), -1 );
@@ -286,26 +286,26 @@ int RichTrSegMakerFromTrStoredTracks::constructSegments( const ContainedObject *
                                               entryPoint2) )
       {
         // extrapolate state to the correct z
-        if ( moveState( exitPState, entryPoint2.z(), exitPStateRaw ) ) 
+        if ( moveState( exitPState, entryPoint2.z(), exitPStateRaw ) )
         {
           // find radiator entry and exit points
           if ( exitPState &&
-               fabs(exitPState->z() - entryPoint2.z()) < m_zTolerance[rad] ) 
+               fabs(exitPState->z() - entryPoint2.z()) < m_zTolerance[rad] )
           {
             if ( (*radiator)->intersectionPoints(HepPoint3D(exitPState->x(),exitPState->y(),exitPState->z()),
                                                  HepVector3D(exitPState->tx(),exitPState->ty(),1),
                                                  entryPoint2,
-                                                 exitPoint2) ) 
+                                                 exitPoint2) )
             {
               exitStateOK = true;
               if ( msgLevel(MSG::VERBOSE) )
-                verbose() << "      Exit state rad intersection points " 
+                verbose() << "      Exit state rad intersection points "
                           << entryPoint2 << " " << exitPoint2 << endreq;
             }
           }
         }
-      } 
-      else if ( msgLevel(MSG::VERBOSE) ) 
+      }
+      else if ( msgLevel(MSG::VERBOSE) )
       {
         verbose() << "Failed to intersect exit state" << endreq;
       }
@@ -313,7 +313,7 @@ int RichTrSegMakerFromTrStoredTracks::constructSegments( const ContainedObject *
 
     // transport entry and exit states to best points
     StatusCode sc;
-    if ( entryStateOK && exitStateOK ) 
+    if ( entryStateOK && exitStateOK )
     {
       if (msgLevel(MSG::VERBOSE)) verbose() << "  Both states OK : Zentry=" << entryPoint1.z()
                                             << " Zexit=" << exitPoint2.z() << endreq;
@@ -325,13 +325,13 @@ int RichTrSegMakerFromTrStoredTracks::constructSegments( const ContainedObject *
       const StatusCode sc2 = moveState( exitPState,  exitPoint2.z(), exitPStateRaw );
       sc = sc1 && sc2;
 
-    } 
-    else if ( entryStateOK ) 
+    }
+    else if ( entryStateOK )
     {
       if (msgLevel(MSG::VERBOSE)) verbose() << "  Entry state OK : Zentry=" << entryPoint1.z()
                                             << " Zexit=" << exitPoint1.z() << endreq;
 
-      if ( Rich::Aerogel != rad ) 
+      if ( Rich::Aerogel != rad )
       {
         // delete current exit state and replace with clone of raw entrance state
         delete exitPState;
@@ -346,8 +346,8 @@ int RichTrSegMakerFromTrStoredTracks::constructSegments( const ContainedObject *
       const StatusCode sc2 = moveState( exitPState, exitPoint1.z(), exitPStateRaw );
       sc = sc1 && sc2;
 
-    } 
-    else if ( exitStateOK ) 
+    }
+    else if ( exitStateOK )
     {
       if (msgLevel(MSG::VERBOSE))
         verbose() << "  Exit state OK  : Zentry=" << entryPoint2.z()
@@ -420,7 +420,7 @@ int RichTrSegMakerFromTrStoredTracks::constructSegments( const ContainedObject *
     const RichTrackSegment::StateErrors exitErrs( exitPState );
 
     // print out final points
-    if ( msgLevel(MSG::VERBOSE) ) 
+    if ( msgLevel(MSG::VERBOSE) )
     {
       verbose() << "  Found final points :-" << endreq
                 << "   Entry : Pnt=" << entryPoint << " Mom=" << entryStateMomentum
@@ -429,14 +429,14 @@ int RichTrSegMakerFromTrStoredTracks::constructSegments( const ContainedObject *
                 << " Ptot=" << exitStateMomentum.mag() << endreq;
     }
 
-    try 
+    try
     {
 
       // For gas radiators transport entry state to mid point to create middle point
       // information for three point RichTrackSegment constructor
       if ( rad != Rich::Aerogel && moveState( entryPState,
                                               (entryPoint.z()+exitPoint.z())/2,
-                                              entryPStateRaw ) ) 
+                                              entryPStateRaw ) )
       {
 
         // middle point information
@@ -449,31 +449,31 @@ int RichTrSegMakerFromTrStoredTracks::constructSegments( const ContainedObject *
 
         // Using this information, make radiator segment
         // this version uses 3 states and thus incorporates some concept of track curvature
-        //segments.push_back( RichTrackSegment( RichTrackSegment::UseChordBetweenStates(),
-        segments.push_back( RichTrackSegment( RichTrackSegment::UseAllStateVectors(),
-                                              entryPoint,entryStateMomentum,
-                                              midPoint,  midStateMomentum,
-                                              exitPoint, exitStateMomentum,
-                                              rad, (*radiator)->rich(),
-                                              entryErrs, midErrs, exitErrs ) );
+        //segments.push_back( new RichTrackSegment( RichTrackSegment::UseChordBetweenStates(),
+        segments.push_back( new RichTrackSegment( RichTrackSegment::UseAllStateVectors(),
+                                                  entryPoint,entryStateMomentum,
+                                                  midPoint,  midStateMomentum,
+                                                  exitPoint, exitStateMomentum,
+                                                  rad, (*radiator)->rich(),
+                                                  entryErrs, midErrs, exitErrs ) );
 
-      } 
-      else 
+      }
+      else
       {
 
         // Using this information, make radiator segment
         // this version uses 2 states and thus forces a straight line approximation
-        //segments.push_back( RichTrackSegment( RichTrackSegment::UseChordBetweenStates(),
-        segments.push_back( RichTrackSegment( RichTrackSegment::UseAllStateVectors(),
-                                              entryPoint,entryStateMomentum,
-                                              exitPoint, exitStateMomentum,
-                                              rad, (*radiator)->rich(),
-                                              entryErrs, exitErrs ) );
+        //segments.push_back( new RichTrackSegment( RichTrackSegment::UseChordBetweenStates(),
+        segments.push_back( new RichTrackSegment( RichTrackSegment::UseAllStateVectors(),
+                                                  entryPoint,entryStateMomentum,
+                                                  exitPoint, exitStateMomentum,
+                                                  rad, (*radiator)->rich(),
+                                                  entryErrs, exitErrs ) );
 
       }
 
     }
-    catch ( const std::exception & excpt ) 
+    catch ( const std::exception & excpt )
     {
       Warning( "Exception whilst creating RichTrackSegment '"+std::string(excpt.what())+"'" );
     }
@@ -534,12 +534,12 @@ void RichTrSegMakerFromTrStoredTracks::correctRadExitMirror( const DeRichRadiato
   }
 
   // finally, update state
-  if ( correct ) 
+  if ( correct )
   {
     if (msgLevel(MSG::VERBOSE)) verbose() << "   Correcting exit point to spherical mirror" << endreq;
     moveState( state, intersection.z(), refState );
-  } 
-  else 
+  }
+  else
   {
     if (msgLevel(MSG::VERBOSE)) verbose() << "   Failed to correct exit state to spherical mirror" << endreq;
     moveState( state, state->z() + m_mirrShift[rich], refState );

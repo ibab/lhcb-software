@@ -5,7 +5,7 @@
  *  Header file for tool : RichTrSegMakerFromTrStoredTracks
  *
  *  CVS Log :-
- *  $Id: RichTrSegMakerFromTrStoredTracks.h,v 1.11 2005-10-13 16:11:08 jonrob Exp $
+ *  $Id: RichTrSegMakerFromTrStoredTracks.h,v 1.12 2005-11-15 13:39:28 jonrob Exp $
  *
  *  @author Chris Jones         Christopher.Rob.Jones@cern.ch
  *  @author Antonis Papanestis  a.papanestis@rl.ac.uk
@@ -93,7 +93,7 @@ public: // methods (and doxygen comments) inherited from interface
 
   // Create RichTrackSegments for a given tracking object
   int constructSegments( const ContainedObject* track, 
-                         std::vector<RichTrackSegment>& segments ) const;
+                         std::vector<RichTrackSegment*>& segments ) const;
 
 private: // methods
 
