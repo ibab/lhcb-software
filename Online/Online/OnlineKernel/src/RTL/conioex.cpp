@@ -7,7 +7,7 @@
 #include <windows.h>
 #include "RTL/conioex.h"
 
-void TBK_CONIOEXAPI clrscr(void)
+extern "C" void TBK_CONIOEXAPI clrscr(void)
 {
   CONSOLE_SCREEN_BUFFER_INFO csbi;
   HANDLE                     hOutput;
@@ -29,7 +29,7 @@ void TBK_CONIOEXAPI clrscr(void)
   return;
 }
 
-void TBK_CONIOEXAPI clreol(void)
+extern "C" void TBK_CONIOEXAPI clreol(void)
 {
   CONSOLE_SCREEN_BUFFER_INFO csbi;
   HANDLE                     hOutput;
@@ -47,7 +47,7 @@ void TBK_CONIOEXAPI clreol(void)
   return;
 }
 
-void TBK_CONIOEXAPI gotoxy(int x, int y)
+extern "C" void TBK_CONIOEXAPI gotoxy(int x, int y)
 {
   COORD  coordPos;
 
@@ -62,7 +62,7 @@ void TBK_CONIOEXAPI gotoxy(int x, int y)
   return;
 }
 
-int TBK_CONIOEXAPI wherex(void)
+extern "C" int TBK_CONIOEXAPI wherex(void)
 {
   CONSOLE_SCREEN_BUFFER_INFO csbi;
 
@@ -72,7 +72,7 @@ int TBK_CONIOEXAPI wherex(void)
   return(csbi.dwCursorPosition.X + 1);
 }
 
-int TBK_CONIOEXAPI wherey(void)
+extern "C" int TBK_CONIOEXAPI wherey(void)
 {
   CONSOLE_SCREEN_BUFFER_INFO csbi;
 
@@ -82,7 +82,7 @@ int TBK_CONIOEXAPI wherey(void)
   return(csbi.dwCursorPosition.Y + 1);
 }
 
-void TBK_CONIOEXAPI insline(void)
+extern "C" void TBK_CONIOEXAPI insline(void)
 {
   CONSOLE_SCREEN_BUFFER_INFO csbi;
   SMALL_RECT                 smrcScroll;
@@ -115,7 +115,7 @@ void TBK_CONIOEXAPI insline(void)
   return;
 }
 
-void TBK_CONIOEXAPI delline(void)
+extern "C" void TBK_CONIOEXAPI delline(void)
 {
   CONSOLE_SCREEN_BUFFER_INFO csbi;
   SMALL_RECT                 smrcScroll;
@@ -148,7 +148,7 @@ void TBK_CONIOEXAPI delline(void)
   return;
 }
 
-void TBK_CONIOEXAPI textcolor(int newcolor)
+extern "C" void TBK_CONIOEXAPI textcolor(int newcolor)
 {
   CONSOLE_SCREEN_BUFFER_INFO csbi;
   HANDLE                     hOutput;
@@ -162,7 +162,7 @@ void TBK_CONIOEXAPI textcolor(int newcolor)
   return;
 }
 
-void TBK_CONIOEXAPI textbackground(int newcolor)
+extern "C" void TBK_CONIOEXAPI textbackground(int newcolor)
 {
   CONSOLE_SCREEN_BUFFER_INFO csbi;
   HANDLE                     hOutput;
@@ -176,7 +176,7 @@ void TBK_CONIOEXAPI textbackground(int newcolor)
   return;
 }
 
-void TBK_CONIOEXAPI textattr(int newattr)
+extern "C" void TBK_CONIOEXAPI textattr(int newattr)
 {
   CONSOLE_SCREEN_BUFFER_INFO csbi;
   HANDLE                     hOutput;
@@ -190,7 +190,7 @@ void TBK_CONIOEXAPI textattr(int newattr)
   return;
 }
 
-void TBK_CONIOEXAPI highvideo(void)
+extern "C" void TBK_CONIOEXAPI highvideo(void)
 {
   CONSOLE_SCREEN_BUFFER_INFO csbi;
   HANDLE                     hOutput;
@@ -204,7 +204,7 @@ void TBK_CONIOEXAPI highvideo(void)
   return;
 }
 
-void TBK_CONIOEXAPI lowvideo(void)
+extern "C" void TBK_CONIOEXAPI lowvideo(void)
 {
   CONSOLE_SCREEN_BUFFER_INFO csbi;
   HANDLE                     hOutput;
@@ -218,7 +218,7 @@ void TBK_CONIOEXAPI lowvideo(void)
   return;
 }
 
-void TBK_CONIOEXAPI _setcursortype(int cur_t)
+extern "C" void TBK_CONIOEXAPI _setcursortype(int cur_t)
 {
   CONSOLE_CURSOR_INFO cci;
 
