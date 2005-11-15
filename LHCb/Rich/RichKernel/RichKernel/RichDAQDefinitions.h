@@ -5,7 +5,7 @@
  *  Header file for RICH DAQ general definitions
  *
  *  CVS Log :-
- *  $Id: RichDAQDefinitions.h,v 1.6 2005-11-15 13:01:54 jonrob Exp $
+ *  $Id: RichDAQDefinitions.h,v 1.7 2005-11-15 14:27:39 jonrob Exp $
  *
  *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
  *  @date   2003-11-06
@@ -77,10 +77,11 @@ namespace RichDAQ
     /// Operator std::string
     inline operator std::string() const
     { return boost::lexical_cast<std::string>(dataValue()); }
-    /// Update the internal data
-    inline void setData( const TYPE id ) { m_id = id; }
     /// Retrieve the full value
     inline TYPE data() const { return m_id; }
+  protected:
+    /// Update the internal data
+    inline void setData( const TYPE id ) { m_id = id; }
   private:
     TYPE m_id; ///< The data value
   };
