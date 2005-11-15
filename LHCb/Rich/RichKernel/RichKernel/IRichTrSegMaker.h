@@ -3,7 +3,7 @@
  *
  *  Header file for tool interface : IRichTrSegMaker
  *
- *  $Id: IRichTrSegMaker.h,v 1.6 2005-01-25 14:11:46 cattanem Exp $
+ *  $Id: IRichTrSegMaker.h,v 1.7 2005-11-15 13:01:54 jonrob Exp $
  *
  *  @author Chris Jones         Christopher.Rob.Jones@cern.ch
  *  @author Antonis Papanestis  a.papanestis@rl.ac.uk
@@ -39,7 +39,8 @@ static const InterfaceID IID_IRichTrSegMaker( "IRichTrSegMaker", 1, 0 );
  *  @date   2003-10-28
  */
 
-class IRichTrSegMaker : public virtual IAlgTool {
+class IRichTrSegMaker : public virtual IAlgTool 
+{
 
 public:
 
@@ -60,7 +61,7 @@ public:
    *  @retval 1-3 Track traversed at least one radiator
    */
   virtual int constructSegments ( const ContainedObject * track,
-                                  std::vector<RichTrackSegment>& segments ) const = 0;
+                                  std::vector<RichTrackSegment*>& segments ) const = 0;
   
 };
 

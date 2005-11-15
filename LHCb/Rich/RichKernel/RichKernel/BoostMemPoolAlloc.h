@@ -1,11 +1,11 @@
 
 //================================================================
-/** @file BoostArray.h
+/** @file BoostMemPoolAlloc.h
  *
  *  Header file for class Rich::BoostMemPoolAlloc
  *
  *  CVS Log :-
- *  $Id: BoostMemPoolAlloc.h,v 1.2 2005-11-12 19:11:52 jonrob Exp $
+ *  $Id: BoostMemPoolAlloc.h,v 1.3 2005-11-15 13:01:54 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   2003-07-31
@@ -40,10 +40,14 @@ namespace Rich
    *
    *  @endcode
    *
+   *  @attention This class is still somewhat experimental
+   * 
    *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
    *  @date   07/11/2005
    *
    *  @todo Figure out why this Boost utility fails to compile on windows
+   *  @todo Compare to standard Gaudi (from Geant4) Allocator when available
+   *  @todo Figure out what to do with placement new operators..
    */
   //-----------------------------------------------------------------------------
 
@@ -63,6 +67,18 @@ namespace Rich
                s_memPool.malloc() : ::operator new(size) );
     }
 
+    /// placement operator new
+    static void* operator new ( size_t size, void*& pObj )
+    {
+      return ::operator new (size,pObj);
+    }
+
+    /// placement operator new[]
+    static void* operator new[] ( size_t size, void*& pObj )
+    {
+      return ::operator new[] (size,pObj);
+    }
+
     /// operator delete
     static void operator delete ( void* p, size_t size )
     {
@@ -78,11 +94,11 @@ namespace Rich
   };
 
 #else
-  // All other platforms use null class
-  
+  // All other platforms use a null class
+
   template <class T>
   class BoostMemPoolAlloc { };
-  
+
 #endif
 
 }

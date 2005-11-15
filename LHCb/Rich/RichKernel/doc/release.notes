@@ -1,7 +1,14 @@
-! $Id: release.notes,v 1.83 2005-10-31 13:26:11 jonrob Exp $
+! $Id: release.notes,v 1.84 2005-11-15 13:01:54 jonrob Exp $
 ! Package     : Rich/RichKernel
 ! Responsible : Chris Jones
 ! Purpose     : General purpose RICH classes
+
+! 2005-11-15 - Chris Jones
+ - Update to use new numbering schemes from Conditions.
+  + Replace tools IRichHPDInfoTool and IRichHPDToLevel1Tool with single tool
+    IRichDetNumberingTool
+  + Update ID objects in RichDAQDefinitions.h
+ - Add "autopointer" like class RichObjPtn
 
 ! 2005-10-31 - Chris Jones
  - Split up "Moni" base classes into Tuple and Histo versions, to allow

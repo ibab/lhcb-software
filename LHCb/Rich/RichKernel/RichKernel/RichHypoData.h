@@ -5,8 +5,7 @@
  *  Header file for utility class : RichHypoData
  *
  *  CVS Log :-
- *  $Id: RichHypoData.h,v 1.10 2004-07-26 17:53:17 jonrob Exp $
- *  $Log: not supported by cvs2svn $
+ *  $Id: RichHypoData.h,v 1.11 2005-11-15 13:01:54 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   2003-07-31
@@ -25,7 +24,9 @@
 
 // RichKernel
 #include "RichKernel/RichParticleIDType.h"
+#include "RichKernel/BoostMemPoolAlloc.h"
 
+//------------------------------------------------------------------------
 /** @class RichHypoData RichHypoData.h RichKernel/RichHypoData.h
  *
  *  A utility class providing an efficient fixed sized array
@@ -34,9 +35,11 @@
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   2003-07-31
  */
+//------------------------------------------------------------------------
 
 template <class TYPE>
-class RichHypoData {
+class RichHypoData : public Rich::BoostMemPoolAlloc< RichHypoData<TYPE> >
+{
 
 public: // definitions
 
@@ -48,11 +51,17 @@ public: // definitions
 
 public: // methods
 
+  /** Default Constructor
+   *  @attention The data values are un-initialised using this constructor
+   *             although the validty flags are set to false.
+   */
+  RichHypoData() { resetData(); }
+
   /** Constructor with explicit data initialisation value
    *
    *  @param value The data initialisation value for each mass hypothesis
    */
-  RichHypoData( const TYPE & value ) { resetData(value); }
+  explicit RichHypoData( const TYPE & value ) { resetData(value); }
 
   /// Destructor
   ~RichHypoData() { }
@@ -86,6 +95,22 @@ public: // methods
    */
   void resetData( const Rich::ParticleIDType type, const TYPE & value );
 
+  /** Reset the data for all mass hypotheses. Following this call all data
+   *  fields will be flagged as invalid (i.e. unset)
+   *
+   *  @attention The data values themselves are unaffected
+   */
+  void resetData();
+
+  /** Reset data for given particle hypothesis. Following this call the
+   *  data for the given mas hypothesis will be flagged as invalid (i.e. unset)
+   *
+   *  @param type  The mass hypothesis to reset
+   *
+   *  @attention The data values themselves are unaffected
+   */
+  void resetData( const Rich::ParticleIDType type );
+
   /** Const Accessor to data array
    *
    *  @return Const reference to the internal data array
@@ -101,13 +126,6 @@ public: // methods
    *  @retval false Data field has not been set. Value will be the initialisation (or reset) value
    */
   bool dataIsValid( const Rich::ParticleIDType type );
-
-private: // methods
-
-  /** Dis-allow the default constructor.
-   *  Users must specify a default initialization value.
-   */
-  RichHypoData() {}
 
 private: // data
 
@@ -150,6 +168,22 @@ inline void RichHypoData<TYPE>::resetData( const Rich::ParticleIDType type,
 }
 
 template <class TYPE>
+inline void RichHypoData<TYPE>::resetData()
+{
+  resetData( Rich::Electron );
+  resetData( Rich::Muon     );
+  resetData( Rich::Pion     );
+  resetData( Rich::Kaon     );
+  resetData( Rich::Proton   );
+}
+
+template <class TYPE>
+inline void RichHypoData<TYPE>::resetData( const Rich::ParticleIDType type )
+{
+  m_valid[type] = false;
+}
+
+template <class TYPE>
 inline const typename RichHypoData<TYPE>::DataArray & RichHypoData<TYPE>::dataArray() const
 {
   return m_data;
@@ -165,39 +199,9 @@ inline bool RichHypoData<TYPE>::dataIsValid( const Rich::ParticleIDType type )
 template <class TYPE>
 inline std::ostream& operator << ( std::ostream& s, const RichHypoData<TYPE>& data )
 {
-  for ( int i = 0; i < Rich::NParticleTypes; ++i ) {
+  for ( int i = 0; i < Rich::NParticleTypes; ++i )
+  {
     s << data[static_cast<Rich::ParticleIDType>(i)] << " ";
-  }
-  return s;
-}
-
-/// Implement textual MsgStream << method
-template <class TYPE>
-inline MsgStream& operator << ( MsgStream& s, const RichHypoData<TYPE>& data )
-{
-  for ( int i = 0; i < Rich::NParticleTypes; ++i ) {
-    s << data[static_cast<Rich::ParticleIDType>(i)] << " ";
-  }
-  return s;
-}
-
-/// Implement StreamBuffer << method
-template <class TYPE>
-inline StreamBuffer& operator << ( StreamBuffer& s, const RichHypoData<TYPE>& data )
-{
-  for ( int i = 0; i < Rich::NParticleTypes; ++i ) {
-    s << data[static_cast<Rich::ParticleIDType>(i)];
-  }
-  return s;
-}
-
-/// Implement StreamBuffer >> method
-template <class TYPE>
-inline StreamBuffer& operator >> ( StreamBuffer& s, RichHypoData<TYPE>& data )
-{
-  TYPE tmp;
-  for ( int i = 0; i < Rich::NParticleTypes; ++i ) {
-    s >> tmp; data.setData( static_cast<Rich::ParticleIDType>(i), tmp );
   }
   return s;
 }
