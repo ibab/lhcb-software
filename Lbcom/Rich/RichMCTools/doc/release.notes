@@ -4,6 +4,9 @@
 ! Purpose     : Provides basic tools for RICH MC information
 !-----------------------------------------------------------------------------
 
+! 2005-11-15 - Chris Jones
+ - Improvements to RichTrackSegment maker to avoid object copying
+
 ! 2005-10-13 - Chris Jones
  - Add support for linker based TrStoredTrack MC associations
  - Add support for MC associations for the new track event model.

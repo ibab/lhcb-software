@@ -5,7 +5,7 @@
  * Implementation file for class : RichTrSegMakerFromMCRichTracks
  *
  * CVS Log :-
- * $Id: RichTrSegMakerFromMCRichTracks.cpp,v 1.8 2005-04-08 13:18:33 jonrob Exp $
+ * $Id: RichTrSegMakerFromMCRichTracks.cpp,v 1.9 2005-11-15 13:26:30 jonrob Exp $
  *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @date 14/01/2002
@@ -74,7 +74,7 @@ StatusCode RichTrSegMakerFromMCRichTracks::finalize()
 //=============================================================================
 int
 RichTrSegMakerFromMCRichTracks::constructSegments( const ContainedObject * obj,
-                                                   std::vector<RichTrackSegment>& segments )
+                                                   std::vector<RichTrackSegment*>& segments )
   const {
 
   // get MCRichTrack
@@ -84,7 +84,8 @@ RichTrSegMakerFromMCRichTracks::constructSegments( const ContainedObject * obj,
   // loop over radiators
   for ( Radiators::const_iterator radiator = m_radiators.begin();
         radiator != m_radiators.end();
-        ++radiator ) {
+        ++radiator )
+  {
 
     // which radiator
     const Rich::RadiatorType rad = (*radiator)->radiatorID();
@@ -104,17 +105,18 @@ RichTrSegMakerFromMCRichTracks::constructSegments( const ContainedObject * obj,
     const HepPoint3D & exitPoint          = segment->exitPoint();
     const HepVector3D & exitStateMomentum = segment->exitMomentum();
 
-    if ( Rich::Aerogel == rad ) {
+    if ( Rich::Aerogel == rad )
+    {
 
       // Using this information, make radiator segment and add to vector
       // assuming straight line between entry and exit
-      segments.push_back( RichTrackSegment( RichTrackSegment::UseAllStateVectors(),
-                                            entryPoint, entryStateMomentum,
-                                            exitPoint, exitStateMomentum,
-                                            rad, (*radiator)->rich() ) );
+      segments.push_back( new RichTrackSegment( RichTrackSegment::UseAllStateVectors(),
+                                                entryPoint, entryStateMomentum,
+                                                exitPoint, exitStateMomentum,
+                                                rad, (*radiator)->rich() ) );
 
       // printout
-      if ( msgLevel(MSG::VERBOSE) ) 
+      if ( msgLevel(MSG::VERBOSE) )
       {
         verbose() << "Found MCRichSegment for " << rad << endreq
                   << " Entry Point : " << entryPoint << endreq
@@ -131,14 +133,14 @@ RichTrSegMakerFromMCRichTracks::constructSegments( const ContainedObject * obj,
 
       // Using this information, make radiator segment and add to vector
       // Use a middle state as well as entry and exit ones
-      segments.push_back( RichTrackSegment( RichTrackSegment::UseAllStateVectors(),
-                                            entryPoint, entryStateMomentum,
-                                            midPoint, midStateMomentum,
-                                            exitPoint, exitStateMomentum,
-                                            rad, (*radiator)->rich() ) );
+      segments.push_back( new RichTrackSegment( RichTrackSegment::UseAllStateVectors(),
+                                                entryPoint, entryStateMomentum,
+                                                midPoint, midStateMomentum,
+                                                exitPoint, exitStateMomentum,
+                                                rad, (*radiator)->rich() ) );
 
       // printout
-      if ( msgLevel(MSG::VERBOSE) ) 
+      if ( msgLevel(MSG::VERBOSE) )
       {
         verbose() << "Found MCRichSegment for " << rad << endreq
                   << " Entry Point : " << entryPoint << endreq
@@ -163,13 +165,13 @@ RichTrSegMakerFromMCRichTracks::mcRichTrack( const ContainedObject * obj ) const
 {
   // Work out what we have been given
   const MCRichTrack * track = dynamic_cast<const MCRichTrack *>(obj);
-  if ( track ) 
+  if ( track )
   {
     verbose() << "Input data is of type MCRichTrack" << endreq;
-  } else 
+  } else
   {
     const TrStoredTrack * trTrack = dynamic_cast<const TrStoredTrack *>(obj);
-    if ( trTrack ) 
+    if ( trTrack )
     {
       verbose() << "Input data is of type TrStoredTrack" << endreq;
       track = m_truth->mcRichTrack( trTrack );
