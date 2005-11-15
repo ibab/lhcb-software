@@ -4,6 +4,9 @@
 ! Purpose     : Convert Calo Digit and Trigger information to RawBuffer banks.
 !-----------------------------------------------------------------------------
 
+! 2005-11-15 - Olivier Callot
+ - Changed Prs/SPd coding type 2, with cell id in upper 14 bits instead of lower
+
 ! 2005-11-10 - Olivier Callot
  - Use a new RawBuffer::BankType for the packed (TELL1) information. The
    bank type is set according to detector name, option with default from

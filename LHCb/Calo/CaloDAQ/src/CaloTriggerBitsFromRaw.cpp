@@ -1,4 +1,4 @@
-// $Id: CaloTriggerBitsFromRaw.cpp,v 1.1 2005-11-10 16:43:22 ocallot Exp $
+// $Id: CaloTriggerBitsFromRaw.cpp,v 1.2 2005-11-15 16:56:39 ocallot Exp $
 // Include files
 
 // from Gaudi
@@ -112,13 +112,14 @@ std::vector<CaloCellID>& CaloTriggerBitsFromRaw::firedCells ( bool isPrs ) {
           while ( 0 != word ) {
             int item = word & 0xFFFF;
             word = ( word >> 16 ) & 0xFFFF;
-            if ( 0 != item & 0x8000 ) {
-              CaloCellID id ( item&0x3FFF );   // SPD
+            int spdId =  (item&0xFFFC) >> 2;
+            if ( 0 != item & 2 ) {
+              CaloCellID id ( spdId );   // SPD
               m_spdCells.push_back( id );
             }
-            if ( 0 != item & 04000 ) {
-             CaloCellID id ( item&0x3FFF + 0x4000 );   // Prs
-             m_prsCells.push_back( id );
+            if ( 0 != item & 1 ) {
+              CaloCellID id ( spdId + 0x4000 );   // Prs
+              m_prsCells.push_back( id );
             }
           }
           ++data;

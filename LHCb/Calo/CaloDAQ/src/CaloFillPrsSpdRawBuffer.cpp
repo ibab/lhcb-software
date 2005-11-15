@@ -1,4 +1,4 @@
-// $Id: CaloFillPrsSpdRawBuffer.cpp,v 1.4 2005-11-10 16:43:22 ocallot Exp $
+// $Id: CaloFillPrsSpdRawBuffer.cpp,v 1.5 2005-11-15 16:56:39 ocallot Exp $
 // Include files 
 // CLHEP
 #include "CLHEP/Units/SystemOfUnits.h"
@@ -271,20 +271,20 @@ void CaloFillPrsSpdRawBuffer::fillTriggerBankShort ( ) {
   for ( itT = prs->begin(); prs->end() != itT; ++itT ) {
     CaloCellID id = (*itT)->cellID();
     int cellIndex = id.raw() & 0x3FFF;
-    tag[cellIndex] |= 0x4000;    
+    tag[cellIndex] |= 1;    
   }
 
   for ( itT = spd->begin(); spd->end() != itT; ++itT ) {
     CaloCellID id = (*itT)->cellID();
     int cellIndex = id.raw() & 0x3FFF;
-    tag[cellIndex] |= 0x8000;
+    tag[cellIndex] |= 2;
   }
 
   raw_int word = 0;
   for ( std::vector<int>::const_iterator itW = tag.begin() ; 
         tag.end() != itW ; ++itW ) {
     if ( 0 == (*itW) ) continue;
-    int temp = (itW-tag.begin()) + (*itW);
+    int temp = ( (itW-tag.begin()) << 2 ) + (*itW);
     if ( 0 == word ) {
       word = temp ;
     } else {
