@@ -5,11 +5,7 @@
  *  Implementation file for RICH algorithm : RichHierarchicalPIDMerge
  *
  *  CVS Log :-
- *  $Id: RichHierarchicalPIDMerge.cpp,v 1.2 2004-10-13 09:24:24 jonrob Exp $
- *  $Log: not supported by cvs2svn $
- *  Revision 1.1  2004/08/19 14:04:35  jonrob
- *  Updage merging algorithms
- *
+ *  $Id: RichHierarchicalPIDMerge.cpp,v 1.3 2005-11-15 13:28:57 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   2002-07-10
@@ -83,7 +79,8 @@ StatusCode RichHierarchicalPIDMerge::execute()
   bool pidsExist = false;
   unsigned int originalSize = 0;
   SmartDataPtr<RichPIDs> outPIDs( eventSvc(), m_richPIDLocation );
-  if ( outPIDs ) {
+  if ( outPIDs ) 
+  {
     // Use existing container, emptied of previous results
     pidsExist = true;
     newPIDs = outPIDs;
@@ -97,7 +94,8 @@ StatusCode RichHierarchicalPIDMerge::execute()
 
   // Locate the processing status object
   ProcStatus * procStat = get<ProcStatus>( m_procStatLocation );
-  if ( procStat->aborted() ) {
+  if ( procStat->aborted() ) 
+  {
     return Warning("Processing aborted -> Empty RichPID container",StatusCode::SUCCESS);
   }
 
