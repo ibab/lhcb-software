@@ -5,7 +5,7 @@
  *  Implementation file for tool : RichSegmentCreator
  *
  *  CVS Log :-
- *  $Id: RichSegmentCreator.cpp,v 1.20 2005-10-13 16:01:55 jonrob Exp $
+ *  $Id: RichSegmentCreator.cpp,v 1.21 2005-11-15 13:38:10 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -43,9 +43,9 @@ RichSegmentCreator::RichSegmentCreator ( const std::string& type,
   declareProperty( "EnergyBins", m_binsEn );
 
   if ( context() == "Offline" )
-  { 
+  {
     m_richRecSegmentLocation = RichRecSegmentLocation::Offline;
-  } 
+  }
   else if ( context() == "HLT" )
   {
     m_richRecSegmentLocation = RichRecSegmentLocation::HLT;
@@ -127,14 +127,15 @@ void RichSegmentCreator::handle ( const Incident& incident )
 }
 
 // Create a new RichRecSegment
-RichRecSegment * RichSegmentCreator::newSegment( const RichTrackSegment& segment,
+RichRecSegment * RichSegmentCreator::newSegment( RichTrackSegment* segment,
                                                  RichRecTrack* pTrk ) const
 {
-  return new RichRecSegment ( segment,
-                              pTrk,
-                              m_binsEn[segment.radiator()],
-                              m_minPhotEn[segment.radiator()],
-                              m_maxPhotEn[segment.radiator()] );
+  return ( !segment ? 0 :
+           new RichRecSegment ( segment,
+                                pTrk,
+                                m_binsEn[segment->radiator()],
+                                m_minPhotEn[segment->radiator()],
+                                m_maxPhotEn[segment->radiator()] ) );
 }
 
 // Forms a new RichRecSegment object

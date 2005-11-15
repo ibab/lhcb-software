@@ -5,7 +5,7 @@
  *  Header file for tool : RichGeomEffPhotonTracing
  *
  *  CVS Log :-
- *  $Id: RichGeomEffPhotonTracing.h,v 1.12 2005-06-23 15:17:41 jonrob Exp $
+ *  $Id: RichGeomEffPhotonTracing.h,v 1.13 2005-11-15 13:38:10 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -36,7 +36,7 @@
 #include "RichRecBase/IRichCherenkovAngle.h"
 #include "RichRecBase/IRichGeomEff.h"
 #include "RichKernel/IRichRayTracing.h"
-#include "RichKernel/IRichHPDInfoTool.h"
+#include "RichKernel/IRichDetNumberingTool.h"
 
 // GSL
 #include "gsl/gsl_math.h"
@@ -89,7 +89,7 @@ private: // Private data
   // Pointers to tool instances
   const IRichRayTracing * m_rayTrace;    ///< Ray tracking tool
   const IRichCherenkovAngle * m_ckAngle; ///< Cherenkov angle tool
-  const IRichHPDInfoTool * m_hpdTool;    ///< HPD information tool
+  const IRichDetNumberingTool * m_hpdTool;    ///< HPD information tool
 
   /// Number of photons to use in geometrical efficiency calculation
   int m_nGeomEff;

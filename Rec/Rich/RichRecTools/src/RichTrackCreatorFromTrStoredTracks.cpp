@@ -5,7 +5,7 @@
  *  Implementation file for tool : RichTrackCreatorFromTrStoredTracks
  *
  *  CVS Log :-
- *  $Id: RichTrackCreatorFromTrStoredTracks.cpp,v 1.31 2005-10-18 13:03:51 jonrob Exp $
+ *  $Id: RichTrackCreatorFromTrStoredTracks.cpp,v 1.32 2005-11-15 13:38:10 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -171,7 +171,7 @@ RichTrackCreatorFromTrStoredTracks::newTrack ( const ContainedObject * obj ) con
     RichRecTrack * newTrack = NULL;
 
     // Form the RichRecSegments for this track
-    std::vector<RichTrackSegment> segments;
+    std::vector<RichTrackSegment*> segments;
     const int Nsegs = m_segMaker->constructSegments( trTrack, segments );
     if ( msgLevel(MSG::VERBOSE) )
     {
@@ -198,18 +198,20 @@ RichTrackCreatorFromTrStoredTracks::newTrack ( const ContainedObject * obj ) con
         newTrack->trackID().initialiseFor( trTrack );
 
         bool keepTrack = false;
-        for ( std::vector<RichTrackSegment>::iterator iSeg = segments.begin();
+        for ( std::vector<RichTrackSegment*>::iterator iSeg = segments.begin();
               iSeg != segments.end(); ++iSeg )
         {
+          if ( !(*iSeg) ) continue;
 
           // make a new RichRecSegment from this RichTrackSegment
+          // takes ownership of RichTrackSegment* *iSeg - responsible for deletion
           RichRecSegment * newSegment = segmentCreator()->newSegment( *iSeg, newTrack );
 
           // Get PD panel impact point
           HepPoint3D & hitPoint = newSegment->pdPanelHitPoint();
-          const HepVector3D & trackDir = (*iSeg).bestMomentum();
-          if ( m_rayTrace->traceToDetectorWithoutEff( (*iSeg).rich(),
-                                                      (*iSeg).bestPoint(),
+          const HepVector3D & trackDir = (*iSeg)->bestMomentum();
+          if ( m_rayTrace->traceToDetectorWithoutEff( (*iSeg)->rich(),
+                                                      (*iSeg)->bestPoint(),
                                                       trackDir,
                                                       hitPoint,
                                                       m_traceMode ) )
@@ -225,7 +227,7 @@ RichTrackCreatorFromTrStoredTracks::newTrack ( const ContainedObject * obj ) con
             {
 
               if ( msgLevel(MSG::VERBOSE) )
-                verbose() << " TrackSegment in " << (*iSeg).radiator() << " selected" << endreq;
+                verbose() << " TrackSegment in " << (*iSeg)->radiator() << " selected" << endreq;
 
               // keep track
               keepTrack = true;
@@ -237,7 +239,7 @@ RichTrackCreatorFromTrStoredTracks::newTrack ( const ContainedObject * obj ) con
               newTrack->addToRichRecSegments( newSegment );
 
               // set radiator info
-              const Rich::RadiatorType rad = (*iSeg).radiator();
+              const Rich::RadiatorType rad = (*iSeg)->radiator();
               setDetInfo( newTrack, rad );
 
               // Set the average photon energy (for default hypothesis)
@@ -255,7 +257,7 @@ RichTrackCreatorFromTrStoredTracks::newTrack ( const ContainedObject * obj ) con
             else
             {
               if ( msgLevel(MSG::VERBOSE) )
-                verbose() << " TrackSegment in " << (*iSeg).radiator() << " rejected" << endreq;
+                verbose() << " TrackSegment in " << (*iSeg)->radiator() << " rejected" << endreq;
               delete newSegment;
               newSegment = NULL;
             }
@@ -264,7 +266,7 @@ RichTrackCreatorFromTrStoredTracks::newTrack ( const ContainedObject * obj ) con
           else
           {
             if ( msgLevel(MSG::VERBOSE) )
-              verbose() << " TrackSegment in " << (*iSeg).radiator() << " rejected" << endreq;
+              verbose() << " TrackSegment in " << (*iSeg)->radiator() << " rejected" << endreq;
             delete newSegment;
             newSegment = NULL;
           }
@@ -297,7 +299,7 @@ RichTrackCreatorFromTrStoredTracks::newTrack ( const ContainedObject * obj ) con
         }
 
       } // end track state and momentum if
- 
+
     } // end segments if
 
     // Add to reference map

@@ -5,7 +5,7 @@
  *  Implementation file for tool : RichPhotonCreator
  *
  *  CVS Log :-
- *  $Id: RichPhotonCreator.cpp,v 1.27 2005-06-17 15:08:36 jonrob Exp $
+ *  $Id: RichPhotonCreator.cpp,v 1.28 2005-11-15 13:38:10 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -50,7 +50,7 @@ StatusCode RichPhotonCreator::finalize()
   return RichPhotonCreatorBase::finalize();
 }
 
-RichRecPhoton * 
+RichRecPhoton *
 RichPhotonCreator::buildPhoton( RichRecSegment * segment,
                                 RichRecPixel * pixel,
                                 const RichRecPhotonKey key ) const
@@ -59,44 +59,42 @@ RichPhotonCreator::buildPhoton( RichRecSegment * segment,
   RichRecPhoton * newPhoton = NULL;
 
   // Reconstruct the geometrical photon
-  RichGeomPhoton geomPhoton;
-  if ( m_photonReco->reconstructPhoton( segment->trackSegment(),
-                                        pixel->globalPosition(),
-                                        geomPhoton ) != 0 )
+  RichGeomPhoton * geomPhoton = new RichGeomPhoton();
+  if ( ( m_photonReco->reconstructPhoton( segment->trackSegment(),
+                                          pixel->globalPosition(),
+                                          *geomPhoton ).isSuccess() ) &&
+       // Check photon is OK
+       ( ( geomPhoton->CherenkovTheta() > 0. ||
+           geomPhoton->CherenkovPhi()   > 0. ) &&
+         checkAngleInRange( segment, geomPhoton->CherenkovTheta() ) ) )
   {
-    
-    // Check angles are reasonable
-    if ( ( geomPhoton.CherenkovTheta() > 0. ||
-           geomPhoton.CherenkovPhi() > 0. ) &&
-         checkAngleInRange( segment, geomPhoton.CherenkovTheta() ) ) 
+
+    // give photon same smart ID as pixel
+    geomPhoton->setSmartID( pixel->smartID() );
+
+    // make new RichRecPhoton ( NB will own geomPhoton )
+    newPhoton = new RichRecPhoton( geomPhoton, segment,
+                                   segment->richRecTrack(), pixel );
+
+    // check photon signal probability
+    if ( checkPhotonProb( newPhoton ) )
     {
+      // save this photons to TES
+      savePhoton( newPhoton, key );
 
-      // give photon same smart ID as pixel
-      geomPhoton.setSmartID( pixel->smartID() );
-
-      // make new RichRecPhoton
-      newPhoton = new RichRecPhoton( geomPhoton, segment,
-                                     segment->richRecTrack(), pixel );
-
-      // check photon signal probability
-      if ( checkPhotonProb( newPhoton ) )
-      {
-
-        // save this photons to TES
-        savePhoton( newPhoton, key );
-
-        // Build cross-references between objects
-        buildCrossReferences( newPhoton );
-
-      } 
-      else
-      {
-        delete newPhoton;
-        newPhoton = NULL;
-      }
-
+      // Build cross-references between objects
+      buildCrossReferences( newPhoton );
+    }
+    else
+    {
+      delete newPhoton; // also deletes geomPhoton
+      newPhoton = NULL;
     }
 
+  }
+  else
+  {
+    delete geomPhoton;
   }
 
   // Add to reference map

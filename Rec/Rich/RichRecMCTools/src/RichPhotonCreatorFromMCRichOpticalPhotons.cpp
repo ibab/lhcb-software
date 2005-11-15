@@ -5,7 +5,7 @@
  *  Implementation file for RICH reconstruction tool : RichPhotonCreatorFromMCRichOpticalPhotons
  *
  *  CVS Log :-
- *  $Id: RichPhotonCreatorFromMCRichOpticalPhotons.cpp,v 1.8 2005-06-17 15:28:34 jonrob Exp $
+ *  $Id: RichPhotonCreatorFromMCRichOpticalPhotons.cpp,v 1.9 2005-11-15 13:34:03 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   08/07/2004
@@ -67,14 +67,15 @@ RichPhotonCreatorFromMCRichOpticalPhotons::buildPhoton( RichRecSegment * segment
     {
 
       // make a photon object from MC info
-      RichGeomPhoton geomPhot( mcPhoton->cherenkovTheta(),
-                               mcPhoton->cherenkovPhi(),
-                               mcPhoton->emissionPoint(),
-                               mcPhoton->pdIncidencePoint(),
-                               mcPhoton->sphericalMirrorReflectPoint(),
-                               mcPhoton->flatMirrorReflectPoint(),
-                               pixel->smartID(),
-                               1 );
+      RichGeomPhoton * geomPhot =
+        new RichGeomPhoton( mcPhoton->cherenkovTheta(),
+                            mcPhoton->cherenkovPhi(),
+                            mcPhoton->emissionPoint(),
+                            mcPhoton->pdIncidencePoint(),
+                            mcPhoton->sphericalMirrorReflectPoint(),
+                            mcPhoton->flatMirrorReflectPoint(),
+                            pixel->smartID(),
+                            1 );
 
       // make new RichRecPhoton from the MC information
       newPhoton = new RichRecPhoton( geomPhot,
@@ -92,8 +93,8 @@ RichPhotonCreatorFromMCRichOpticalPhotons::buildPhoton( RichRecSegment * segment
         // Build cross-references between objects
         buildCrossReferences( newPhoton );
 
-      } 
-      else 
+      }
+      else
       {
         delete newPhoton;
         newPhoton = NULL;

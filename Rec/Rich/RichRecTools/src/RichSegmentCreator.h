@@ -5,7 +5,7 @@
  *  Header file for tool : RichSegmentCreator
  *
  *  CVS Log :-
- *  $Id: RichSegmentCreator.h,v 1.16 2005-05-13 15:20:38 jonrob Exp $
+ *  $Id: RichSegmentCreator.h,v 1.17 2005-11-15 13:38:10 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -77,7 +77,7 @@ public: // methods (and doxygen comments) inherited from public interface
   void saveSegment( RichRecSegment * segment ) const;
 
   // Create a new RichRecSegment
-  RichRecSegment * newSegment( const RichTrackSegment& segment, 
+  RichRecSegment * newSegment( RichTrackSegment* segment, 
                                RichRecTrack* pTrk ) const;
 
   // Return a pointer to RichRecSegments

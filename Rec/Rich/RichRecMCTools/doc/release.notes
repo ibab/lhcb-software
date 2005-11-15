@@ -4,6 +4,9 @@
 ! Purpose     : Monte Carlo Utility tools for RICH reconstruction algorithms
 !------------------------------------------------------------------------------
 
+! 2005-11-15 - Chris Jones
+ - Improvements to photon reconstruction interface to avoid data copying
+
 ! 2005-10-18 - Chris Jones
  - Improvements to MC truth tool. Delegate more to the lower level tool.
 

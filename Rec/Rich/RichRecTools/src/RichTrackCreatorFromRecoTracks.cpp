@@ -5,7 +5,7 @@
  *  Implementation file for tool : RichTrackCreatorFromRecoTracks
  *
  *  CVS Log :-
- *  $Id: RichTrackCreatorFromRecoTracks.cpp,v 1.2 2005-10-18 13:03:51 jonrob Exp $
+ *  $Id: RichTrackCreatorFromRecoTracks.cpp,v 1.3 2005-11-15 13:38:10 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -182,7 +182,7 @@ RichTrackCreatorFromRecoTracks::newTrack ( const ContainedObject * obj ) const
     RichRecTrack * newTrack = NULL;
 
     // Form the RichRecSegments for this track
-    std::vector<RichTrackSegment> segments;
+    std::vector<RichTrackSegment*> segments;
     const int Nsegs = m_segMaker->constructSegments( trTrack, segments );
     if ( msgLevel(MSG::VERBOSE) )
     {
@@ -202,18 +202,20 @@ RichTrackCreatorFromRecoTracks::newTrack ( const ContainedObject * obj ) const
       newTrack->trackID().initialiseFor( trTrack );
 
       bool keepTrack = false;
-      for ( std::vector<RichTrackSegment>::iterator iSeg = segments.begin();
+      for ( std::vector<RichTrackSegment*>::iterator iSeg = segments.begin();
             iSeg != segments.end(); ++iSeg )
       {
+        if ( !(*iSeg) ) continue;
 
         // make a new RichRecSegment from this RichTrackSegment
+        // takes ownership of RichTrackSegment* *iSeg - responsible for deletion
         RichRecSegment * newSegment = segmentCreator()->newSegment( *iSeg, newTrack );
 
         // Get PD panel impact point
         HepPoint3D & hitPoint = newSegment->pdPanelHitPoint();
-        const HepVector3D & trackDir = (*iSeg).bestMomentum();
-        if ( m_rayTrace->traceToDetectorWithoutEff( (*iSeg).rich(),
-                                                    (*iSeg).bestPoint(),
+        const HepVector3D & trackDir = (*iSeg)->bestMomentum();
+        if ( m_rayTrace->traceToDetectorWithoutEff( (*iSeg)->rich(),
+                                                    (*iSeg)->bestPoint(),
                                                     trackDir,
                                                     hitPoint,
                                                     m_traceMode ) )
@@ -229,7 +231,7 @@ RichTrackCreatorFromRecoTracks::newTrack ( const ContainedObject * obj ) const
           {
 
             if ( msgLevel(MSG::VERBOSE) )
-              verbose() << " TrackSegment in " << (*iSeg).radiator() << " selected" << endreq;
+              verbose() << " TrackSegment in " << (*iSeg)->radiator() << " selected" << endreq;
 
             // keep track
             keepTrack = true;
@@ -241,7 +243,7 @@ RichTrackCreatorFromRecoTracks::newTrack ( const ContainedObject * obj ) const
             newTrack->addToRichRecSegments( newSegment );
 
             // set radiator info
-            setDetInfo( newTrack, (*iSeg).radiator() );
+            setDetInfo( newTrack, (*iSeg)->radiator() );
 
             // Set the average photon energy (for default hypothesis)
             newSegment->trackSegment()
@@ -252,13 +254,13 @@ RichTrackCreatorFromRecoTracks::newTrack ( const ContainedObject * obj ) const
             if ( m_buildHypoRings ) m_massHypoRings->newMassHypoRings( newSegment );
 
             // Count radiator segments
-            tkCount.countRadiator( (*iSeg).radiator() );
+            tkCount.countRadiator( (*iSeg)->radiator() );
 
           }
           else
           {
             if ( msgLevel(MSG::VERBOSE) )
-              verbose() << " TrackSegment in " << (*iSeg).radiator() << " rejected" << endreq;
+              verbose() << " TrackSegment in " << (*iSeg)->radiator() << " rejected" << endreq;
             delete newSegment;
             newSegment = NULL;
           }
@@ -267,7 +269,7 @@ RichTrackCreatorFromRecoTracks::newTrack ( const ContainedObject * obj ) const
         else
         {
           if ( msgLevel(MSG::VERBOSE) )
-            verbose() << " TrackSegment in " << (*iSeg).radiator() << " rejected" << endreq;
+            verbose() << " TrackSegment in " << (*iSeg)->radiator() << " rejected" << endreq;
           delete newSegment;
           newSegment = NULL;
         }
