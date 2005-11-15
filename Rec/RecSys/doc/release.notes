@@ -5,8 +5,8 @@ Purpose: LHCb reconstruction packages.
          This project groups together all the reconstruction packages needed
          by one or more LHCb applications. 
 
-</PRE><H1><A NAME=v2r0>2005-11-08 RecSys v2r0</A></H1><PRE>
-This version uses Gaudi v17r1, LHCb v19r0. Backwards compatible for RTTC data
+</PRE><H1><A NAME=v2r0>2005-11-15 RecSys v2r0</A></H1><PRE>
+This version uses Gaudi v17r2, LHCb v19r1. Backwards compatible for RTTC data
 
 - Packages added:    MuonMoniDst v1r0 - Monitoring algorithms for Muon from DST
 
