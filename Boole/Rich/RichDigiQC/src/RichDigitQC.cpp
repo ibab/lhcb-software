@@ -5,7 +5,7 @@
  *  Implementation file for RICH Digitisation Quality Control algorithm : RichDigitQC
  *
  *  CVS Log :-
- *  $Id: RichDigitQC.cpp,v 1.22 2005-10-31 13:27:35 jonrob Exp $
+ *  $Id: RichDigitQC.cpp,v 1.23 2005-11-15 12:58:38 jonrob Exp $
  *
  *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
  *  @date   2003-09-08
@@ -25,8 +25,7 @@ const        IAlgFactory& RichDigitQCFactory = s_factory ;
 RichDigitQC::RichDigitQC( const std::string& name,
                           ISvcLocator* pSvcLocator)
   : RichHistoAlgBase ( name, pSvcLocator ),
-    m_level1         ( 0                 ),
-    m_hpdID          ( 0                 ),
+    m_detNumTool     ( 0                 ),
     m_smartIDs       ( 0                 ),
     m_mcTool         ( 0                 ),
     m_evtC           ( 0                 ),
@@ -52,10 +51,9 @@ StatusCode RichDigitQC::initialize()
   if ( sc.isFailure() ) { return sc; }
 
   // acquire tools
-  acquireTool( "RichHPDToLevel1Tool", m_level1,   0, true );
-  acquireTool( "RichHPDInfoTool",     m_hpdID,    0, true );
-  acquireTool( "RichSmartIDTool" ,    m_smartIDs, 0, true );
-  acquireTool( "RichMCTruthTool",     m_mcTool,   0, true );
+  acquireTool( "RichDetNumberingTool", m_detNumTool, 0, true );
+  acquireTool( "RichSmartIDTool" ,     m_smartIDs,   0, true );
+  acquireTool( "RichMCTruthTool",      m_mcTool,     0, true );
 
   // Initialise variables
   m_evtC = 0;
@@ -141,13 +139,13 @@ StatusCode RichDigitQC::execute()
       plot1D( (*iHPD).second, RICH+" : Average HPD occupancy (nHits>0)", 0, 150, 75 );
       if ( m_extraHists )
       {
-        const RichDAQ::HPDHardwareID hID = m_hpdID->hardwareID( (*iHPD).first );
+        const RichDAQ::HPDHardwareID hID ( m_detNumTool->hardwareID( (*iHPD).first ) );
         std::ostringstream title;
         title << RICH << " : HPD " << (*iHPD).first << " " << hID << " occupancy (nHits>0)";
-        plot1D( (*iHPD).second, hID, title.str(), 0, 150, 75 );
+        plot1D( (*iHPD).second, hID.dataValue(), title.str(), 0, 150, 75 );
       }
       (m_nHPD[rich])[(*iHPD).first] += (*iHPD).second;
-      const RichDAQ::Level1ID l1ID = m_level1->levelL1ID( (*iHPD).first );
+      const RichDAQ::Level1ID l1ID = m_detNumTool->level1ID( (*iHPD).first );
       totL1[l1ID] += (*iHPD).second;
       totDet      += (*iHPD).second;
     }
@@ -215,23 +213,23 @@ StatusCode RichDigitQC::finalize()
     for ( HPDCounter::const_iterator iHPD = m_nHPD[rich].begin();
           iHPD != m_nHPD[rich].end(); ++iHPD )
     {
-      const RichDAQ::HPDHardwareID hID = m_hpdID->hardwareID( (*iHPD).first );
-      const RichDAQ::Level1ID l1ID     = m_level1->levelL1ID( (*iHPD).first );
-      const HepPoint3D hpdGlo = m_smartIDs->hpdPosition( (*iHPD).first );
-      const HepPoint3D hpdLoc = m_smartIDs->globalToPDPanel( hpdGlo );
+      const RichDAQ::HPDHardwareID hID ( m_detNumTool->hardwareID( (*iHPD).first ) );
+      const RichDAQ::Level1ID l1ID     ( m_detNumTool->level1ID( (*iHPD).first ) );
+      const HepPoint3D hpdGlo          ( m_smartIDs->hpdPosition( (*iHPD).first ) );
+      const HepPoint3D hpdLoc          ( m_smartIDs->globalToPDPanel( hpdGlo ) );
       totL1[l1ID] += (*iHPD).second;
       totDet      += (*iHPD).second;
       if ( (*iHPD).second > maxOcc ) { maxOcc = (*iHPD).second; maxHPD = hID; }
       if ( (*iHPD).second < minOcc ) { minOcc = (*iHPD).second; minHPD = hID; }
       if ( m_extraHists )
       {
-        plot2D( hpdLoc.x(), hpdLoc.y(), RICH+" : HPD hardware ID layout", -800, 800, -600, 600, 100, 100, hID );
-        plot2D( hpdLoc.x(), hpdLoc.y(), RICH+" : Level1 ID layout", -800, 800, -600, 600, 100, 100, l1ID );
+        plot2D( hpdLoc.x(), hpdLoc.y(), RICH+" : HPD hardware ID layout", -800, 800, -600, 600, 100, 100, hID.dataValue() );
+        plot2D( hpdLoc.x(), hpdLoc.y(), RICH+" : Level1 ID layout", -800, 800, -600, 600, 100, 100, l1ID.dataValue() );
         plot2D( hpdLoc.x(), hpdLoc.y(), RICH+" : SmartID Row layout", -800, 800, -600, 600, 100, 100, (*iHPD).first.pdRow() );
         plot2D( hpdLoc.x(), hpdLoc.y(), RICH+" : SmartID Col layout", -800, 800, -600, 600, 100, 100, (*iHPD).first.pdCol() );
       }
       debug() << "    HPD " << (*iHPD).first << " hardID "
-              << format("%3i",hID) << " : L1 board" << format("%3i",l1ID) << endreq
+              << format("%3i",hID.dataValue()) << " : L1 board" << format("%3i",l1ID.dataValue()) << endreq
               << "      Global position : " << hpdGlo << endreq
               << "      Local position  : " << hpdLoc << endreq
               << "      Hit occupancy   : " << occ((*iHPD).second,m_evtC) << " hits/event" << endreq;
@@ -253,13 +251,13 @@ StatusCode RichDigitQC::finalize()
     int iC = 0;
     for ( L1Counter::const_iterator iL1 = totL1.begin(); iL1 != totL1.end(); ++iL1, ++iC )
     {
-      debug() << "       : Av. L1 board" << format("%3i",(*iL1).first)
+      debug() << "       : Av. L1 board" << format("%3i",(*iL1).first.dataValue())
               << " hit occupancy   = " << occ((*iL1).second,m_evtC) << endreq;
     }
 
-    info() << "       : Min Av. HPD occupancy hID=" << format("%3i",minHPD) 
+    info() << "       : Min Av. HPD occupancy hID=" << format("%3i",minHPD.dataValue()) 
            << occ(minOcc,m_evtC) << " hits/event" << endreq
-           << "       : Max Av. HPD occupancy hID=" << format("%3i",maxHPD) 
+           << "       : Max Av. HPD occupancy hID=" << format("%3i",maxHPD.dataValue()) 
            << occ(maxOcc,m_evtC) << " hits/event" << endreq;
 
   }

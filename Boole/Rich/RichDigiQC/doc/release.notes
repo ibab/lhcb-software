@@ -4,6 +4,9 @@
 ! Purpose     : Quality Control monitoring algorithms for RICH digitisation
 !-----------------------------------------------------------------------------
 
+! 2005-11-15 - Chris Jones
+ - Adapt to new RichDAQ package and numbering schemes
+
 ! 2005-10-31 - Chris Jones
  - Update to new base class names
 
