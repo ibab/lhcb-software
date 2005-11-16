@@ -4,6 +4,10 @@
 ! Purpose     : Package for the tracking fitting-related classes
 !-----------------------------------------------------------------------------
 
+!========================== TrackFitEvent v1r4 2005-11-16 ====================
+! 2005-11-16 - Marco Cattaneo
+ - Fix for Reflex dictionaries with GaudiObjDesc v8r3
+
 ! 2005-11-03 - Eduardo Rodrigues
  - it++ replaced by ++it
 

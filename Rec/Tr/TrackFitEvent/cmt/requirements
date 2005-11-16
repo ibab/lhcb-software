@@ -38,7 +38,7 @@ document obj2dict TrackFitEventObj2Dict ../xml/*.xml
 
 public
 library          TrackFitEvent         ../src/*.cpp
-library          TrackFitEventDict     ../dict/*.cpp
+library          TrackFitEventDict     ../$(tag)/dict/TrackFitEvent/*.cpp
 
 #============================================================================
 # define library link options
