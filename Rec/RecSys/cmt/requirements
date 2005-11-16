@@ -14,7 +14,7 @@ use CaloReco            v2r9    Calo  # Ivan Belyaev
 
 # Tracking
 use TrExtrapolator      v2r14   Tr    # N.N.
-use TrFitEvent		v4r9	Tr    # N.N.
+use TrFitEvent          v4r10   Tr    # N.N.
 use TrFitAssociators	v1r3	Tr    # N.N.
 use TrCheck             v2r8	Tr    # N.N.
 use LongTrack           v1r15	Tr    # Olivier Callot
@@ -31,7 +31,7 @@ use TrackExtrapolators  v1r2    Tr    # Eduardo Rodrigues, Jose Hernando
 use TrackTools          v1r2    Tr    # Eduardo Rodrigues, Jose Hernando
 use TrackMCTools        v1r3    Tr    # Eduardo Rodrigues, Jose Hernando
 use TrackProjectors     v1r3    Tr    # Eduardo Rodrigues, Jose Hernando
-use TrackFitEvent       v1r3    Tr    # Eduardo Rodrigues, Jose Hernando
+use TrackFitEvent       v1r4    Tr    # Eduardo Rodrigues, Jose Hernando
 use TrackIdealPR        v1r3    Tr    # Eduardo Rodrigues, Jose Hernando
 use TrackMatching       v1r1    Tr    # Eduardo Rodrigues
 use TrConverters        v1r4    Tr    # Eduardo Rodrigues, Jose Hernando
