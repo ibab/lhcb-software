@@ -1,4 +1,4 @@
-// $Id: IGenCutTool.h,v 1.1 2005-10-03 09:49:06 robbep Exp $
+// $Id: IGenCutTool.h,v 1.2 2005-11-17 15:54:02 robbep Exp $
 #ifndef GENERATORS_IGENCUTTOOL_H 
 #define GENERATORS_IGENCUTTOOL_H 1
 
@@ -6,7 +6,11 @@
 // from Gaudi
 #include "GaudiKernel/IAlgTool.h"
 
-namespace HepMC { class GenParticle ; }  
+namespace HepMC {
+  class GenParticle ; 
+  class GenEvent ;
+}  
+class HardInfo ;
 
 /** @class IGenCutTool IGenCutTool.h Generators/IGenCutTool.h
  *  
@@ -23,6 +27,8 @@ public:
   typedef std::vector< HepMC::GenParticle * > ParticleVector ;
   static const InterfaceID& interfaceID() { return IID_IGenCutTool ; }
   
-  virtual bool applyCut( ParticleVector & theParticleVector ) const = 0 ;
+  virtual bool applyCut( ParticleVector & theParticleVector , 
+                         const HepMC::GenEvent * theGenEvent ,
+                         const HardInfo * theHardInfo ) const = 0 ;
 };
 #endif // GENERATORS_ICUTTOOL_H
