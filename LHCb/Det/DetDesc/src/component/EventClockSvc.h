@@ -1,4 +1,4 @@
-// $Id: EventClockSvc.h,v 1.2 2005-10-05 15:46:12 marcocle Exp $
+// $Id: EventClockSvc.h,v 1.3 2005-11-17 16:16:25 marcocle Exp $
 #ifndef EVENTCLOCKSVC_H 
 #define EVENTCLOCKSVC_H 1
 
@@ -62,10 +62,10 @@ private:
   // --- misc ---
   /// First event time (when simluating them).
   /// Set by the option StartTime (default = 0)
-  longlong m_startTime;
+  long long m_startTime;
   /// Event time increment (when simluating event times).
   /// Set by the option TimeStep (default = 0, which means no simulation)
-  longlong m_timeStep;
+  long long m_timeStep;
 
 };
 #endif // EVENTCLOCKSVC_H
