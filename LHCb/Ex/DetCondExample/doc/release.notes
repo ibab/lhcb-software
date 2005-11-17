@@ -1,5 +1,5 @@
 ! =============================================================================
-! $Id: release.notes,v 1.59 2005-11-17 16:53:30 marcocle Exp $
+! $Id: release.notes,v 1.60 2005-11-17 16:55:53 marcocle Exp $
 ! =============================================================================
 ! package Ex/DetCondExample
 ! package manager : Marco Clemencic
@@ -11,6 +11,7 @@
 	 (LoadDDDB.h, LoadDDDB.cpp and loadDDDB.opts)
  - Added a Python script that copies a filesystem tree to a COOL database
    (using PyCool)
+ - Use also XmlConditions, Python (for PyCool) and Tools/CondDBEntityResolver
 
 ! 2005-10-18 - Marco Clemencic
  - Changed CLID_DummyDetectorElement, conflicting with another DetectorElement
