@@ -1,4 +1,4 @@
-// $Id: LHCbAcceptance.h,v 1.1 2005-10-03 10:22:35 robbep Exp $
+// $Id: LHCbAcceptance.h,v 1.2 2005-11-17 15:56:46 robbep Exp $
 #ifndef GENERATORS_LHCBACCEPTANCE_H 
 #define GENERATORS_LHCBACCEPTANCE_H 1
 
@@ -24,7 +24,9 @@ public:
   
   virtual ~LHCbAcceptance( ); ///< Destructor
 
-  virtual bool applyCut( ParticleVector & theParticleVector ) const ;
+  virtual bool applyCut( ParticleVector & theParticleVector , 
+                         const HepMC::GenEvent * theEvent , 
+                         const HardInfo * theHardInfo ) const ;
 
 protected:
 
