@@ -1,4 +1,4 @@
-// $Id: IUpdateManagerSvc.h,v 1.5 2005-07-14 14:59:21 marcocle Exp $
+// $Id: IUpdateManagerSvc.h,v 1.6 2005-11-17 16:31:04 marcocle Exp $
 #ifndef DETCOND_IUPDATEMANAGERSVC_H 
 #define DETCOND_IUPDATEMANAGERSVC_H 1
 
@@ -30,6 +30,9 @@ static const InterfaceID IID_IUpdateManagerSvc ( "IUpdateManagerSvc", 1, 0 );
  */
 class BaseObjectMemberFunction {
 public:
+  /// Virtual destructor.
+  virtual ~BaseObjectMemberFunction() {};
+
   virtual StatusCode operator() () const = 0;
 	
   virtual BaseObjectMemberFunction *makeCopy() const = 0;
@@ -55,6 +58,9 @@ class ObjectMemberFunction: public BaseObjectMemberFunction {
 public:
   /// MemberFunctionType is the type for a pointer to a member function of class CallerClass.
   typedef	StatusCode (CallerClass::*MemberFunctionType)();
+
+  /// Virtual destructor.
+  virtual ~ObjectMemberFunction() {};
 
   /// Calls the member function of the object and returns the StatusCode.
   /// If the pointer to the member function is NULL, do nothing and return success.
