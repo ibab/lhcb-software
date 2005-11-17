@@ -1,0 +1,35 @@
+#include "$DETCONDEXAMPLEROOT/options/common.opts"
+#include "$DETCONDEXAMPLEROOT/options/cool.opts"
+
+// Detector Persistency service setup: 
+DetectorDataSvc.UsePersistency = true;
+DetectorDataSvc.DetDbLocation  = "$XMLDDDBROOT/DDDB/lhcb-200511.xml";
+DetectorDataSvc.DetDbRootName  = "dd";
+DetectorDataSvc.DetStorageType = 7;
+XmlCnvSvc.AllowGenericConversion = true;
+XmlCnvSvc.DtdLocation = "";
+
+//--------------------------------------------------------------
+// Sequence of algorithms to be applied
+//--------------------------------------------------------------
+ApplicationMgr.TopAlg  = { "GaudiSequencer" };
+GaudiSequencer.Members   = { };
+GaudiSequencer.Members  += { "LoadDDDB" };
+GaudiSequencer.Members  += { "DumpDetectorStore" };
+
+//--------------------------------------------------------------
+// Input events
+//--------------------------------------------------------------
+
+// Input file
+ApplicationMgr.EvtSel = "NONE";
+
+// Number of events to be processed (default is 10)
+ApplicationMgr.EvtMax = 1;
+
+// Event clock attributes
+EventClockSvc.StartTime = 0;
+EventClockSvc.TimeStep  = 8;
+
+// Levels: 1=VERBOSE, 2=DEBUG, 3=INFO, 4=WARNING, 5=ERROR, 6=FATAL
+MessageSvc.OutputLevel = 3;
