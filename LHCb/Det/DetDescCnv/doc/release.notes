@@ -4,6 +4,7 @@
 ! Purpose     : standard converters for the LHCb Detector Description
 !-----------------------------------------------------------------------------
 
+!================ DetDescCnv v2r10 2005-11-17 ==========================
 ! 2005-10-17 - Marco Clemencic
  - Fixed handling of absolute paths in hrefs in XmlGenericCnv
  - Fixed a problem in XmlGenericCnv when handling URLs with a ':' in the
@@ -17,6 +18,7 @@
         it contains href="../new/folder2#Obj2" it is mapped to
         "conddb:/path/new/folder2#Obj2"
    (by Nicolas Gilardi)
+   PS: it needs Tools/XmlTools >= v3r8
 
 !================ DetDescCnv v2r9 2005-09-19 ===========================
 ! 2005-09-19 M. Needham
