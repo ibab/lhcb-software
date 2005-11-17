@@ -1,4 +1,4 @@
-// $Id: SignalPlain.cpp,v 1.1 2005-10-03 10:30:25 robbep Exp $
+// $Id: SignalPlain.cpp,v 1.2 2005-11-17 15:57:31 robbep Exp $
 // Include files 
 
 // local
@@ -49,20 +49,15 @@ bool SignalPlain::generate( const unsigned int nPileUp ,
                             HardVector  & theHardVector ) {
   StatusCode sc ;
   bool result = false ;
+  HardInfo * theHardInfo( 0 ) ;
+  HepMC::GenEvent * theGenEvent( 0 ) ;
   
   for ( unsigned int i = 0 ; i < nPileUp ; ++i ) {
-    HepMCEvent * theHepMCEvent = new HepMCEvent( m_productionTool -> name() ,
-                                                 1 , 1 ) ;
-    HardInfo * theHardInfo = new HardInfo( ) ;
-
-    HepMC::GenEvent * theGenEvent = theHepMCEvent -> pGenEvt() ;
-    theHardInfo -> setEvent( theHepMCEvent ) ;
+    prepareInteraction( theEventVector, theHardVector, theGenEvent, 
+                        theHardInfo ) ;
 
     sc = m_productionTool -> generateEvent( theGenEvent , theHardInfo ) ;
     if ( sc.isFailure() ) Exception( "Could not generate event" ) ;
-
-    theEventVector.push_back( theHepMCEvent ) ;
-    theHardVector .push_back( theHardInfo   ) ;
 
     if ( ! result ) {
       // Decay particles heavier than the particles to look at
@@ -72,36 +67,33 @@ bool SignalPlain::generate( const unsigned int nPileUp ,
       ParticleVector theParticleList ;
       if ( checkPresence( m_pids , theGenEvent , theParticleList ) ) {
 
-        if ( ( m_cpMixture ) && ( 1 == theParticleList.size() ) ) 
-          if ( m_flatGenerator() < ( ( 1. - m_signalBr ) / 
-                                     ( 2. - m_signalBr ) ) ) continue ;
-        
-        m_nEventsBeforeCut++ ;
-        if ( 0 != m_cutTool ) m_cutTool -> applyCut( theParticleList ) ;
-        
-        if ( ! theParticleList.empty() ) {
-          m_nEventsAfterCut++ ;
+        // establish correct multiplicity of signal
+        if ( ensureMultiplicity( theParticleList.size() ) ) {
+          
+          m_nEventsBeforeCut++ ;
+          bool passCut = true ;
+          if ( 0 != m_cutTool ) 
+            passCut = m_cutTool -> applyCut( theParticleList , theGenEvent ,
+                                             theHardInfo ) ;
+          
+          if ( passCut && ( ! theParticleList.empty() ) ) {
+            m_nEventsAfterCut++ ;
 
-          HepMC::GenParticle * theSignal = 0 ;
-          unsigned int nPart = theParticleList.size() ;
-          if ( nPart > 1 ) {
-            unsigned iPart = 
-              (unsigned int) floor( nPart * m_flatGenerator() ) ;
-            theSignal = theParticleList[ iPart ] ;
+            HepMC::GenParticle * theSignal = 
+              chooseAndRevert( theParticleList , theGenEvent ) ;
+            
+            bool flip ;
+            if ( m_cpMixture ) m_decayTool -> enableFlip( ) ;
+            m_decayTool -> generateSignalDecay( theGenEvent , theSignal , 
+                                                flip ) ;
+            if ( flip ) continue ;
+            if ( m_cleanEvents ) {
+              sc = isolateSignal( theSignal ) ;
+              if ( ! sc.isSuccess() ) Exception( "Cannot isolate signal" ) ;
+            }
+            
+            result = true ;
           }
-          else theSignal = theParticleList.front() ;
-
-          if ( theSignal -> momentum() . pz() < 0 ) {
-            revertEvent( theGenEvent ) ;
-            m_nInvertedEvents++ ;
-          }
-
-          bool flip ;
-          if ( m_cpMixture ) m_decayTool -> enableFlip( ) ;
-          m_decayTool -> generateSignalDecay( theGenEvent , theSignal , 
-                                              flip ) ;
-          if ( flip ) continue ;
-          result = true ;
         }
       }
     }

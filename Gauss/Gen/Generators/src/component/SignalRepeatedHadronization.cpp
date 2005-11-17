@@ -1,4 +1,4 @@
-// $Id: SignalRepeatedHadronization.cpp,v 1.1 2005-11-04 10:48:24 robbep Exp $
+// $Id: SignalRepeatedHadronization.cpp,v 1.2 2005-11-17 15:57:31 robbep Exp $
 // Include files 
 
 // local
@@ -114,9 +114,12 @@ bool SignalRepeatedHadronization::generate( const unsigned int nPileUp ,
           if ( ensureMultiplicity( theParticleList.size() ) ) {
 
             m_nEventsBeforeCut++ ;
-            if ( 0 != m_cutTool ) m_cutTool -> applyCut( theParticleList ) ;
+            bool passCut = true ;
+            if ( 0 != m_cutTool ) 
+              passCut = m_cutTool -> applyCut( theParticleList , theGenEvent ,
+                                               theHardInfo ) ;
             
-            if ( ! theParticleList.empty() ) {
+            if ( passCut && ( ! theParticleList.empty() ) ) {
               m_nEventsAfterCut++ ;
               
               theSignal = chooseAndRevert( theParticleList , theGenEvent ) ;
@@ -125,7 +128,14 @@ bool SignalRepeatedHadronization::generate( const unsigned int nPileUp ,
               if ( m_cpMixture ) m_decayTool -> enableFlip( ) ;
               m_decayTool -> generateSignalDecay( theGenEvent , theSignal , 
                                                   flip ) ;
-              if ( ! flip ) gotSignalInteraction = true ;
+              if ( ! flip ) {
+                gotSignalInteraction = true ;
+                if ( m_cleanEvents ) {
+                  sc = isolateSignal( theSignal ) ;
+                  if ( ! sc.isSuccess() ) 
+                    Exception( "Cannot isolate signal" ) ;
+                }
+              }
             }
             // if the interaction is not kept, we must re-hadronize it
             // once to have a fresh unbiased event

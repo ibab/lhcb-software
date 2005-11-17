@@ -1,11 +1,8 @@
-// $Id: SignalRepeatedHadronization.h,v 1.1 2005-11-04 10:48:25 robbep Exp $
+// $Id: SignalRepeatedHadronization.h,v 1.2 2005-11-17 15:57:31 robbep Exp $
 #ifndef GENERATORS_SIGNALREPEATEDHADRONIZATION_H 
 #define GENERATORS_SIGNALREPEATEDHADRONIZATION_H 1
 
 // Include files
-// from Gaudi
-#include "GaudiAlg/GaudiTool.h"
-
 #include "Generators/Signal.h" 
 
 /** @class SignalRepeatedHadronization SignalRepeatedHadronization.h 

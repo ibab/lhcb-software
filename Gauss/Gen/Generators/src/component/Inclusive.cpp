@@ -1,4 +1,4 @@
-// $Id: Inclusive.cpp,v 1.1 2005-10-03 10:29:42 robbep Exp $
+// $Id: Inclusive.cpp,v 1.2 2005-11-17 15:56:20 robbep Exp $
 // Include files 
 
 // local
@@ -93,20 +93,16 @@ bool Inclusive::generate( const unsigned int nPileUp ,
                           HardVector  & theHardVector ) {
   StatusCode sc ;
   bool result = false ;
+
+  HardInfo * theHardInfo( 0 ) ;
+  HepMC::GenEvent * theGenEvent( 0 ) ;
   
   for ( unsigned int i = 0 ; i < nPileUp ; ++i ) {
-    HepMCEvent * theHepMCEvent = new HepMCEvent( m_productionTool -> name() ,
-                                                 1 , 1 ) ;
-    HardInfo * theHardInfo = new HardInfo( ) ;
-
-    HepMC::GenEvent * theGenEvent = theHepMCEvent -> pGenEvt() ;
-    theHardInfo -> setEvent( theHepMCEvent ) ;
+    prepareInteraction( theEventVector, theHardVector, theGenEvent, 
+                        theHardInfo ) ;
 
     sc = m_productionTool -> generateEvent( theGenEvent , theHardInfo ) ;
     if ( sc.isFailure() ) Exception( "Could not generate event" ) ;
-
-    theEventVector.push_back( theHepMCEvent ) ;
-    theHardVector .push_back( theHardInfo   ) ;
 
     if ( ! result ) {
       // Decay particles heavier than the particles to look at
@@ -117,9 +113,12 @@ bool Inclusive::generate( const unsigned int nPileUp ,
       if ( checkPresence( m_pids , theGenEvent , theParticleList ) ) {
         
         m_nEventsBeforeCut++ ;
-        if ( 0 != m_cutTool ) m_cutTool -> applyCut( theParticleList ) ;
+        bool passCut = true ;
+        if ( 0 != m_cutTool ) 
+          passCut = m_cutTool -> applyCut( theParticleList , theGenEvent , 
+                                           theHardInfo ) ;
         
-        if ( ! theParticleList.empty() ) {
+        if ( passCut && ( ! theParticleList.empty() ) ) {
           m_nEventsAfterCut++ ;
           result = true ;
 

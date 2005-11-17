@@ -1,4 +1,4 @@
-// $Id: Signal.cpp,v 1.2 2005-11-04 10:54:38 robbep Exp $
+// $Id: Signal.cpp,v 1.3 2005-11-17 15:55:28 robbep Exp $
 // Include files 
 
 // local
@@ -36,7 +36,7 @@ Signal::Signal( const std::string& type,
     m_signalPID       ( 0 ) ,
     m_cpMixture       ( true ) { 
   declareProperty( "SignalPIDList" , m_pidVector ) ;
-  declareProperty( "IsolateSignal" , m_isolateSignal ) ;
+  declareProperty( "Clean" , m_cleanEvents ) ;
 }
 
 //=============================================================================
@@ -142,16 +142,16 @@ StatusCode Signal::isolateSignal( const HepMC::GenParticle * theSignal )
     return Error( "Could not fill HepMC event for signal tree" , sc ) ;
                             
   // Check if container already exists
-  if ( exist< HepMCEvents >( "/Event/Gen/SignalTree" ) ) 
-    return Error( "SignalTree container already exists !" ) ;
+  if ( exist< HepMCEvents >( "/Event/Gen/SignalDecayTree" ) ) 
+    return Error( "SignalDecayTree container already exists !" ) ;
   
   HepMCEvents * hepVect = new HepMCEvents ;
   hepVect -> insert( mcevt ) ;
   
   // Register new location and store HepMC event
-  sc = put( hepVect , "/Event/Gen/SignalTree" ) ;
+  sc = put( hepVect , "/Event/Gen/SignalDecayTree" ) ;
   if ( ! sc.isSuccess() ) 
-    return Error( "Could not register SignalTree" ) ;
+    return Error( "Could not register SignalDecayTree" ) ;
   
   return sc ;
 }
@@ -167,10 +167,10 @@ StatusCode Signal::fillHepMCEvent( HepMC::GenEvent    * theEvent ,
   //
   // Copy theOldParticle to theNewParticle in theEvent
   // theNewParticle already exist and is created outside this function
-  HepMC::GenVertex * oVertex = theOldParticle->end_vertex() ;
+  HepMC::GenVertex * oVertex = theOldParticle -> end_vertex() ;
   if ( 0 != oVertex ) {
     // Create decay vertex and associate it to theNewParticle
-    HepMC::GenVertex * newVertex = 
+    HepMC::GenVertex * newVertex =  
       new HepMC::GenVertex( oVertex -> position() ) ;
     theEvent -> add_vertex( newVertex ) ;
     newVertex -> add_particle_in( theNewParticle ) ;
