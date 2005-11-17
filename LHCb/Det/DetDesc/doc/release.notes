@@ -1,9 +1,16 @@
 ! =============================================================================
-! $Id: release.notes,v 1.224 2005-10-05 15:46:12 marcocle Exp $ 
+! $Id: release.notes,v 1.225 2005-11-17 16:35:33 marcocle Exp $ 
 ! =============================================================================
 ! package DetDesc
 ! package manager : Marco Clemencic, Juan Palacios
 ! =============================================================================
+
+! 2005-11-17 - Marco Clemencic
+ - Use "long long" instead of "longlong" in EventClockSvc properties.
+ - Cache UpdateManagerSvc pointer in DetDesc::Services instead of in each
+   DetectorElement instance.
+ - Minor clean-up in the ParamValidDataObject-related classes.
+ - Added 2 missing virtual destructors in IUpdateManagerSvc.h
 
 ! 2005-10-05 - Marco Clemencic
  - Moved EventClockSvc properties from "long" to "longlong".
