@@ -1,4 +1,4 @@
-// $Id: MinimumBias.cpp,v 1.1 2005-10-03 10:29:04 robbep Exp $
+// $Id: MinimumBias.cpp,v 1.2 2005-11-17 15:57:08 robbep Exp $
 // Include files 
 
 // local
@@ -51,19 +51,15 @@ bool MinimumBias::generate( const unsigned int nPileUp ,
                             EventVector & theEventVector , 
                             HardVector  & theHardVector ) {
   StatusCode sc ;
+  HardInfo * theHardInfo( 0 ) ;
+  HepMC::GenEvent * theGenEvent( 0 ) ;
+  
   for ( unsigned int i = 0 ; i < nPileUp ; ++i ) {
-    HepMCEvent * theHepMCEvent = new HepMCEvent( m_productionTool -> name() ,
-                                                 1 , 1 ) ;
-    HardInfo * theHardInfo = new HardInfo( ) ;
-
-    HepMC::GenEvent * theGenEvent = theHepMCEvent -> pGenEvt() ;
-    theHardInfo -> setEvent( theHepMCEvent ) ;
+    prepareInteraction( theEventVector, theHardVector, theGenEvent, 
+                        theHardInfo ) ;
 
     sc = m_productionTool -> generateEvent( theGenEvent , theHardInfo ) ;
     if ( sc.isFailure() ) Exception( "Could not generate event" ) ;
-
-    theEventVector.push_back( theHepMCEvent ) ;
-    theHardVector .push_back( theHardInfo   ) ;
   } 
   return true ;
 }
