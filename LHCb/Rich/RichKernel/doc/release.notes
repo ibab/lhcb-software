@@ -1,8 +1,9 @@
-! $Id: release.notes,v 1.85 2005-11-15 13:28:19 jonrob Exp $
+! $Id: release.notes,v 1.86 2005-11-17 17:46:57 cattanem Exp $
 ! Package     : Rich/RichKernel
 ! Responsible : Chris Jones
 ! Purpose     : General purpose RICH classes
 
+!======================= RichKernel v5r6 2005-11-17 =======================
 ! 2005-11-15 - Chris Jones
  - Update to use new numbering schemes from Conditions.
   + Replace tools IRichHPDInfoTool and IRichHPDToLevel1Tool with single tool
