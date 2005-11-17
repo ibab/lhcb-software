@@ -1,4 +1,4 @@
-//$Id: DetDataAgent.h,v 1.3 2001-12-16 16:27:24 andreav Exp $
+//$Id: DetDataAgent.h,v 1.4 2005-11-17 16:53:05 marcocle Exp $
 #ifndef DETCONDEXAMPLE_DETDATAAGENT_H
 #define DETCONDEXAMPLE_DETDATAAGENT_H
 
@@ -35,11 +35,13 @@ class DetDataAgent : virtual public IDataStoreAgent {
 
 //---------------------------------------------------------------------------
 
-inline bool DetDataAgent::analyse(IRegistry* dir, int /*level*/ ){
+bool DetDataAgent::analyse(IRegistry* dir, int /*level*/ ){
   MsgStream log( m_msgSvc, "detDataAgent" );
-  log << MSG::INFO << dir->identifier()
-      << ( dir->object() ? " [loaded] " : " " )
-      << endreq; 
+  log << MSG::INFO << dir->identifier();
+  if ( dir->object() ) {
+    log << " [loaded] (clId = " << dir->object()->clID() << ")";
+  }
+  log << endreq;
   return true;
 }
 
