@@ -1,20 +1,13 @@
 package GaudiObjDesc
 
-version v8r1
+version v9r0
 
 include_path none
 macro xmlsrc "xml"
 
-# Old GOD fragments (retained for backward compatibility)
-# for header file production
+# GOD fragments header file and dictionary production
 make_fragment obj2doth -header=obj2doth_header -trailer=obj2doth_trailer
-# and dictionary production
 make_fragment obj2dict -header=obj2dict_header -trailer=obj2dict_trailer
-
-# New GOD fragment 
-make_fragment godify -header=godify_header -trailer=godify_trailer
-
-#private
 
 use Python v* LCG_Interfaces
 

@@ -17,20 +17,16 @@
 >
 <!-- ELEMENT class ((class?, ..... -->
 <!ELEMENT class ((desc?, base?, import?, location?, enum?, typedef?, constructor?, destructor?, method?, attribute?, relation?, template?)*)>
-<!-- candidates 4 deprication: filename, templateVector, templateList, serializers -->
 <!ATTLIST class
         name              CDATA                            #REQUIRED
         author            CDATA                            #REQUIRED
         desc              CDATA                            #REQUIRED
-        filename          CDATA                            #IMPLIED  
         id                CDATA                            #IMPLIED
         version           CDATA                            #IMPLIED
         location          CDATA                            #IMPLIED
         stdVectorTypeDef  (TRUE | FALSE)                   "FALSE"  
         keyedContTypeDef  (TRUE | FALSE)                   "FALSE"  
 	contObjectTypeDef (TRUE | FALSE)                   "FALSE"
-        templateVector    (TRUE | FALSE)                   "TRUE"    
-        templateList      (TRUE | FALSE)                   "TRUE"    
         serializers       (TRUE | FALSE)                   "TRUE"    
 >       
 <!ELEMENT desc (#PCDATA)>
@@ -70,24 +66,19 @@
         access           (PUBLIC | PROTECTED | PRIVATE)    "PRIVATE"
 >
 <!ELEMENT constructor (arg*, code?, arg*)>
-<!-- candidates 4 deprication: argInOut -->
 <!ATTLIST constructor
         desc             CDATA                             #REQUIRED
         argList          CDATA                             #IMPLIED
-        argInOut         CDATA                             #IMPLIED   
         initList         CDATA                             #IMPLIED
         explicit         (TRUE | FALSE)                    "FALSE"
 >
 <!ELEMENT destructor (arg*, code?, arg*)>
-<!-- candidates 4 deprication: argInOut -->
 <!ATTLIST destructor
         desc             CDATA                             #REQUIRED
         argList          CDATA                             #IMPLIED
-        argInOut         CDATA                             #IMPLIED  
         virtual          (TRUE | FALSE)                    "FALSE"
 >
 <!ELEMENT method ((arg*, return?, arg*, code?, arg*) | (arg*, code?, arg*, return?, arg*))>
-<!-- candidates 4 deprication: argInOut -->
 <!ATTLIST method
         name             CDATA                             #REQUIRED
         desc             CDATA                             #REQUIRED
@@ -100,7 +91,6 @@
         friend           (TRUE | FALSE)                    "FALSE"
         type             CDATA                             "void"
         argList          CDATA                             #IMPLIED
-        argInOut         CDATA                             #IMPLIED  
 >
 <!ELEMENT arg EMPTY>
 <!ATTLIST arg
@@ -119,17 +109,14 @@
         xml:space        (default | preserve)              #FIXED "preserve"
 >
 <!ELEMENT attribute (bitfield*)>
-<!-- candidates 4 deprication: array, serialize -->
 <!ATTLIST attribute
         type             CDATA                             #REQUIRED
         name             CDATA                             #REQUIRED
         desc             CDATA                             #REQUIRED
         init             CDATA                             #IMPLIED
         dictalias        CDATA                             #IMPLIED
-        array            CDATA                             "FALSE"    
         access           (PUBLIC | PROTECTED | PRIVATE)    "PRIVATE"
         compression      (TRUE | FALSE)                    "TRUE"
-        serialize        (TRUE | FALSE)                    "TRUE"     
         setMeth          (TRUE | FALSE)                    "TRUE"
         getMeth          (TRUE | FALSE)                    "TRUE"
         transient        (TRUE | FALSE)                    "FALSE"    

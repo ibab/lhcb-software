@@ -6,6 +6,7 @@ class genSrcUtils(importUtils.importUtils):
 #--------------------------------------------------------------------------------
   def __init__(self,cdb):
     importUtils.importUtils.__init__(self,cdb)
+    self.namespace = 'LHCb::'
     self.generatedTypedefs = []
     self.generatedEnums = []
     self.generatedTypes = []
@@ -70,25 +71,26 @@ class genSrcUtils(importUtils.importUtils):
           s += ' };\n'
     return s
 #--------------------------------------------------------------------------------
-  def genEnum2MsgStream(self, godClass):
+  def genEnum2MsgStream(self, godClass, className=''):
     s = ''
     if godClass.has_key('enum'):
+      self.addInclude('MsgStream')
       for enum in godClass['enum']:
 	enumAtt = enum['attrs']
-	values = enumAtt['value'].split(',')
-	clname = godClass['attrs']['name']
-	enumType = clname+'::'+enumAtt['name']
-	s += 'inline MsgStream & operator << (MsgStream & s, %s e) {\n' % (enumType)
-	s += '  switch (e) {\n'
-	maxLen = 0
-	for v in values :
-	  maxLen = max(len(v.split('=')[0].strip()),maxLen)
-	for v in values :
-	  v1 = v.split('=')[0].strip()
-	  s += '    case %s::%s : return s << "%s";\n' % ( clname, v1.ljust(maxLen), v1 )
-	s += '    default : return s << "ERROR wrong value for enum %s";\n' % enumType
-	s += '  }\n'
-	s += '}\n\n'
+	if enumAtt['access'] == 'PUBLIC':
+	  values = enumAtt['value'].split(',')
+	  enumType = className+'::'+enumAtt['name']
+	  s += 'inline MsgStream & operator << (MsgStream & s, %s e) {\n' % (enumType)
+	  s += '  switch (e) {\n'
+	  maxLen = 0
+	  for v in values :
+	    maxLen = max(len(v.split('=')[0].strip()),maxLen)
+	  for v in values :
+	    v1 = v.split('=')[0].strip()
+	    s += '    case %s::%s : return s << "%s";\n' % ( className, v1.ljust(maxLen), v1 )
+	  s += '    default : return s << "ERROR wrong value for enum %s";\n' % enumType
+	  s += '  }\n'
+	  s += '}\n\n'
     return s
 #--------------------------------------------------------------------------------
   def genAttributes(self,modifier,godClass,namespace=0):
@@ -179,7 +181,9 @@ class genSrcUtils(importUtils.importUtils):
     metRet = ''
     if metAtt['type'].strip() :  metRet = self.tools.genReturnFromStrg(metAtt['type'],self.generatedTypes,scopeName) + ' '
     if met.has_key('return') :   metRet = self.tools.genReturnFromElem(met['return'],self.generatedTypes,scopeName) + ' '
-    self.addForwardDecl(metRet)
+    if not scopeName and metRet[:len(self.namespace)] == self.namespace :
+      metRet = metRet[len(self.namespace):]
+      self.addForwardDecl(metRet)
     indent += len(metRet) + len(metAtt['name'])
     s += metRet + scopeName + metAtt['name'] + '('
     if len(pList):

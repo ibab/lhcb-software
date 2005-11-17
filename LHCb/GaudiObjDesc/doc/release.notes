@@ -2,6 +2,22 @@ Package: GaudiObjDesc
 Desccription: This package contains a set of tools used to generate code from the XML description of the data object classes.
 Package manager : Stefan Roiser
 
+! 2005-11-17 Stefan Roiser
+- merged in some more changes from the branch - better handling of enums for bitfields (offset not an int)
+- new features
+  - MsgStream overloading for public enum types (by default)
+  - namespace LHCb - all event classes and namespaces live in the namespace LHCb
+    - if the return value of a self defined method lives in the namespace LHCb this has to be added in the xml description
+  - Renamed container typedefs for classes inheriting from ContainedObject
+    - now there is only one typedef (from vector), the name has changed from <Class>Vector to <Class>es (plural)
+    - the typedef for lists has been removed
+- xml attributes have been removed
+  - element class : templateVector, templateList, filename
+  - element constructor : argInOut
+  - element destructor : argInOut, argList
+  - element method : argInOut
+  - element attribute : array, serialize
+
 ! 2005-11-11 - Stefan Roiser (merged from the branch)
 - changed fragments for dictionary generation to generate dictionary headers, 
   selection files and sources in $(tag)/dict

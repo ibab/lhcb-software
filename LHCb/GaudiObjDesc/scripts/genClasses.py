@@ -379,21 +379,17 @@ class genClasses(genSrcUtils.genSrcUtils):
     if att.has_key('bitfield'):
       maxLenName = 0
       for bf in att['bitfield'] : maxLenName = max(maxLenName,len(bf['attrs']['name']))
-      bfNum = 0
-      comma = ','
-      numBfs = len(att['bitfield'])
+      bf0Att = att['bitfield'][0]['attrs']
       indent = (len(attName) + 11) * ' '
-      offset = 0
       s += '  /// Offsets of bitfield %s\n' % attName
-      s += '  enum %sBits{' % attName
-      for bf in att['bitfield']:
-	bfAtt = bf['attrs']
-	bfNum += 1
-	if bfNum == numBfs : comma = ''
-	if bfNum != 1 : s += '\n%s ' % indent
-	s += '%s = %s ///< %s' % ((bfAtt['name']+'Bits').ljust(maxLenName+4), (str(offset)+comma).ljust(3), bfAtt['desc'])
-	offset += string.atoi(bfAtt['length'])
-      s += '\n%s};\n\n' % indent    
+      s += '  enum %sBits{%s = 0' % (attName, (bf0Att['name']+'Bits').ljust(maxLenName+4))
+      offset = string.atoi(bf0Att['length'])
+      for bf in att['bitfield'][1:]:
+        bfAtt = bf['attrs']
+        if bfAtt['length'].isdigit():
+          s += ',\n%s %s = %d' % (indent, (bfAtt['name']+'Bits').ljust(maxLenName+4), offset)
+          offset += string.atoi(bfAtt['length'])
+      s += '};\n\n'
       s += '  /// Bitmasks for bitfield %s\n' % attName
       offset = 0
       indent += '  '
@@ -441,15 +437,12 @@ class genClasses(genSrcUtils.genSrcUtils):
       self.addInclude('ObjectVector')
       s += '// Definition of vector container type for %s\n' % classname
       s += 'template <class TYPE> class ObjectVector;\n'
-      s += 'typedef ObjectVector<%s> %sVector;\n\n' % (classname, classname)
-      self.addInclude('ObjectList')
-      s += '// Definition of list container type for %s\n' % classname
-      s += 'template <class TYPE> class ObjectList;\n'
-      s += 'typedef ObjectList<%s> %sList;' % (classname, classname)
+      s += 'typedef ObjectVector<%s> %s;\n\n' % (classname, self.genClassnamePlurial(classname))
     if godClass['attrs']['stdVectorTypeDef'] == 'TRUE' and not self.gContainedObjectTypedef:
       self.addInclude('std::vector')
       s += '// typedef for std::vector of %s\n' % classname
-      s += 'typedef std::vector<%s*> %sVector;\n\n' % ( classname, classname )
+      s += 'typedef std::vector<%s*> Vector;\n' % ( classname )
+      s += 'typedef std::vector<const %s*> ConstVector;\n\n' % ( classname ) 
     return s
 #--------------------------------------------------------------------------------
   def genStreamer(self, godClass, className=''):
@@ -529,8 +522,7 @@ class genClasses(genSrcUtils.genSrcUtils):
 
       classDict = package.dict
       classname = godClass['attrs']['name']
-      ##scoped_classname = 'LHCb::'+classname
-      scoped_classname = classname
+      scoped_classname = 'LHCb::'+classname
 
       fileName = '%s.h' % classname
 
@@ -555,7 +547,7 @@ class genClasses(genSrcUtils.genSrcUtils):
         classDict[modifier+'Enums']             = self.genEnums(modifier,godClass)
         classDict[modifier+'MethodDecls']       = self.genMethods(modifier,godClass)
         classDict[modifier+'MethodDefs']        = self.genMethods(modifier,godClass,scoped_classname)
-      classDict['enum2MsgStream']               = self.genEnum2MsgStream(godClass)
+      classDict['enum2MsgStreamDef']            = self.genEnum2MsgStream(godClass, scoped_classname)
       classDict['streamerDecl']                 = self.genStreamer(godClass)
       classDict['streamerDef']                  = self.genStreamer(godClass,scoped_classname)
       classDict['getSetMethodDecls']            = self.genGetSetMethods(godClass)

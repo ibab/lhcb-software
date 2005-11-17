@@ -27,8 +27,8 @@
  * 
  */
 
-//namespace LHCb 
-//{
+namespace LHCb 
+{
   namespace @@@namespacename@@@
   {
   @@@typedefs@@@
@@ -37,13 +37,10 @@
   @@@attributes@@@
   @@@methods@@@
   } // namespace @@@namespacename@@@
-//} // namespace LHCb
-
-// using statement for namespace LHCb 
-//using namespace LHCb;
+} // namespace LHCb
 
 // -----------------------------------------------------------------------------
-//   end of namespace
+// end of namespace
 // -----------------------------------------------------------------------------
 
 // Including forward declarations

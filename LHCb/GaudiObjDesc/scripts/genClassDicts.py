@@ -33,8 +33,8 @@ class genClassDicts:
   def genPackageDict(self,godPackage):    
     if godPackage.has_key('class'):
       for cl in godPackage['class']:
-        ##clname = 'LHCb::'+cl['attrs']['name']
-        clname = cl['attrs']['name']
+        clname = 'LHCb::'+cl['attrs']['name']
+        ##clname = cl['attrs']['name']
         # add include file line
         self.sIncludes = self.conc(self.sIncludes, '#include "%s%s.h"' % (self.srcOutputDir, cl['attrs']['name']))
         # get the class id

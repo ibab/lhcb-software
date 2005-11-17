@@ -18,8 +18,8 @@
 // Include files
 @@@includes@@@
 
-//namespace LHCb 
-//{
+namespace LHCb 
+{
 
   // Forward declarations
   @@@forwardDecls@@@
@@ -65,19 +65,16 @@
   @@@privateBitfieldEnums@@@
   @@@privateAttributes@@@
   }; // class @@@classname@@@
-//} // namespace LHCb
-
-// using statement for namespace LHCb 
-//using namespace LHCb;
+} // namespace LHCb;
 
 // -----------------------------------------------------------------------------
-//   end of class
+// end of class
 // -----------------------------------------------------------------------------
 
 // Including forward declarations
 @@@forwardIncludes@@@
 
-@@@enum2MsgStream@@@
+@@@enum2MsgStreamDef@@@
 @@@constructorDefs@@@
 @@@destructorDef@@@
 @@@classIDDef@@@
