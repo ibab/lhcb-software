@@ -1,4 +1,4 @@
-// $Id: PythiaProduction.cpp,v 1.3 2005-11-08 00:08:42 robbep Exp $
+// $Id: PythiaProduction.cpp,v 1.4 2005-11-17 16:00:08 robbep Exp $
 // Include files 
 
 // local
@@ -52,8 +52,7 @@ PythiaProduction::PythiaProduction( const std::string& type,
     m_pythiaListingUnit( 0 ) ,
     m_variableEnergy( false ) {
     declareInterface< IProductionTool >( this ) ;
-    declareProperty( "BasePythiaCommand" , m_basePythiaCommandVector ) ;
-    declareProperty( "UserPythiaCommand" , m_userPythiaCommandVector ) ;
+    declareProperty( "Commands" , m_commandVector ) ;
     declareProperty( "BeamToolName" , m_beamToolName = "CollidingBeams" ) ;
 }
 
@@ -114,15 +113,10 @@ StatusCode PythiaProduction::initialize( ) {
   
   Pythia::pydat3().mdme( 4178 , 1 ) = -1 ; // like in egpyinit  
 
-  // read base Pythia command vector from job options
-  sc = parsePythiaCommands( m_basePythiaCommandVector ) ;
+  // read Pythia command vector from job options
+  sc = parsePythiaCommands( m_commandVector ) ;
   if ( ! sc.isSuccess( ) ) 
-    return Error( "Unable to read base Pythia commands" , sc ) ;
-
-  // Read user pythia command vector from option file
-  sc = parsePythiaCommands( m_userPythiaCommandVector ) ;
-  if ( ! sc.isSuccess() ) 
-    return Error( "Unable to read User Pythia Commands" , sc ) ;
+    return Error( "Unable to read Pythia commands" , sc ) ;
 
   // Now call pyinit and set listing
   // if file already exist, delete it
@@ -420,18 +414,6 @@ void PythiaProduction::printPythiaParameter( ) {
   debug() << "** PARJ(17) ( prob. for spin=1 meson to be produced " << endmsg ;
   debug() << "**            with ang. mom= 1 if total spin=2 )  : "
           << Pythia::pydat1().parj( 17 )  << endmsg ;
-  debug() << "** MSTU(150) ( Forced fragmentation flag )        : "
-          << Pythia::pydat1().mstu( 150 ) << endmsg ;
-  debug() << "** MSTJ(30) ( Forced fragmentation flag )         : "
-          << Pythia::pydat1().mstj( 30 )  << endmsg ;
-  debug() << "** MSTJ(31) ( Forced fragmentation flag )         : "
-          << Pythia::pydat1().mstj( 31 )  << endmsg ;
-  debug() << "** MSTJ(32) ( Forced fragmentation flag )         : "
-          << Pythia::pydat1().mstj( 32 )  << endmsg ;
-  debug() << "** MSTJ(33) ( Forced fragmentation flag )         : "
-          << Pythia::pydat1().mstj( 33 )  << endmsg ;
-  debug() << "** MSTJ(34) ( Forced fragmentation flag )         : "
-          << Pythia::pydat1().mstj( 34 )  << endmsg ;
   debug() << "** MSTJ(26) ( B0 mixing in Pythia, must be 0 )    : "
           << Pythia::pydat1().mstj( 26 )  << endmsg ;
   debug() << "** PARJ(33) ( cut off for fragmentation )         : "
@@ -477,7 +459,7 @@ void PythiaProduction::retrievePartonEvent( HepMC::GenEvent * /* theEvent */ ) {
 // Hadronize Pythia event
 //=============================================================================
 StatusCode PythiaProduction::hadronize( HepMC::GenEvent * theEvent , 
-                                  HardInfo * theInfo) {
+                                        HardInfo * theInfo) {
   Pythia::PyExec( ) ;
 
   // Debugging output: print each event if required
@@ -512,7 +494,8 @@ void PythiaProduction::printRunningConditions( ) {
 //=============================================================================
 // TRUE if the particle is a special particle which must not be modify
 //=============================================================================
-bool PythiaProduction::isSpecialParticle( const ParticleProperty * thePP ) {
+bool PythiaProduction::isSpecialParticle( const ParticleProperty * thePP ) 
+  const {
   switch ( abs( thePP -> pdgID() ) ) {
   case 1:
   case 2:
@@ -597,8 +580,45 @@ bool PythiaProduction::isSpecialParticle( const ParticleProperty * thePP ) {
   default:
     return false ;
     break ;
-    return false ;  
   }
+  return false ;    
+}
+//=============================================================================
+// Setup for forced fragmentation 
+//=============================================================================
+StatusCode PythiaProduction::setupForcedFragmentation( const int thePdgId ) {
+  Pythia::pydat1().mstj( 31 ) = 100 ;
+  Pythia::pydat1().mstj( 33 ) = thePdgId ;
+  Pythia::pydat1().mstu( 150 ) = 1 ;
+  Pythia::pydat1().mstu( 151 ) = 0 ;
+  Pythia::pydat1().mstu( 152 ) = 0 ;
+
+  switch( thePdgId ) {
+  case 511:
+  case -511:
+  case 521:
+  case -521:
+  case 531:
+  case -531:
+  case 541:
+  case -541:
+  case 551:
+    Pythia::pydat1().mstj( 32 ) = - thePdgId / 100 ;
+    Pythia::pydat1().mstj( 34 ) = thePdgId / 10 ;
+    break ;
+  case 5122:
+  case -5122:
+    Pythia::pydat1().mstj( 32 ) = thePdgId / 1000 ;
+    Pythia::pydat1().mstj( 34 ) = thePdgId / abs( thePdgId ) * 2101 ;
+    break ;
+  default:
+    error() << 
+      format( "It is not possible to force fragmentation for particleID %d" ,
+              thePdgId ) << endmsg ;
+    return StatusCode::FAILURE ;
+    break ;
+  }
+  return StatusCode::SUCCESS ;  
 }
 
   

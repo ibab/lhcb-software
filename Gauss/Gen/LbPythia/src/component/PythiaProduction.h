@@ -1,4 +1,4 @@
-// $Id: PythiaProduction.h,v 1.3 2005-11-08 00:08:42 robbep Exp $
+// $Id: PythiaProduction.h,v 1.4 2005-11-17 16:00:08 robbep Exp $
 #ifndef LBPYTHIA_PYTHIAPRODUCTION_H 
 #define LBPYTHIA_PYTHIAPRODUCTION_H 1
 
@@ -51,7 +51,9 @@ public:
 
   virtual void printRunningConditions( ) ;
 
-  virtual bool isSpecialParticle( const ParticleProperty * thePP ) ;
+  virtual bool isSpecialParticle( const ParticleProperty * thePP ) const ;
+
+  virtual StatusCode setupForcedFragmentation( const int thePdgId ) ;
 
 protected:
   /// Parse Pythia commands from a string vector
@@ -69,8 +71,7 @@ private:
   std::string m_target  ;  ///< TARGET string
   double m_win          ;  ///< WIN
 
-	CommandVector m_userPythiaCommandVector ; ///< User Commands to setup pythia
-  CommandVector m_basePythiaCommandVector ; ///< Basic commands to setup Pythia
+	CommandVector m_commandVector ; ///< Commands to setup pythia
 
   int m_eventListingLevel ;
   int m_initializationListingLevel ;
