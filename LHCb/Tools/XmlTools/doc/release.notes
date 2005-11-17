@@ -4,6 +4,7 @@
 ! Purpose     : Interface to XML Xerces Parser plus some extra services
 !-----------------------------------------------------------------------------
 
+!================= XmlTools v3r8 2005-11-17 ==========================
 ! 2005-10-13 - Marco Clemencic
  - Added the new interface IXmlEntityResolverSvc. The implementor of this
    interface must return a valid xerces::EntityResolver pointer that will
