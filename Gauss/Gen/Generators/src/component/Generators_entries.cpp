@@ -1,4 +1,4 @@
-//  $Id: Generators_entries.cpp,v 1.3 2005-11-04 10:57:42 robbep Exp $
+//  $Id: Generators_entries.cpp,v 1.4 2005-11-17 15:56:02 robbep Exp $
 //====================================================================
 //  Generators_entries.cxx
 //--------------------------------------------------------------------
@@ -31,5 +31,7 @@ DECLARE_FACTORY_ENTRIES(Generators) {
   DECLARE_TOOL( Inclusive ) ;
   DECLARE_TOOL( SignalPlain ) ;
   DECLARE_TOOL( SignalRepeatedHadronization ) ;
+  DECLARE_TOOL( SignalForcedFragmentation ) ;
+  DECLARE_TOOL( Special ) ;
 }
   
