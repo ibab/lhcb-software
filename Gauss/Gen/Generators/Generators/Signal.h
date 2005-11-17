@@ -1,4 +1,4 @@
-// $Id: Signal.h,v 1.2 2005-11-04 10:52:59 robbep Exp $
+// $Id: Signal.h,v 1.3 2005-11-17 15:54:49 robbep Exp $
 #ifndef GENERATORS_SIGNAL_H 
 #define GENERATORS_SIGNAL_H 1
 
@@ -25,8 +25,7 @@ public:
   typedef std::vector< HepMC::GenParticle * > GenParticles ;
 
   /// Standard constructor
-  Signal( const std::string& type, 
-          const std::string& name,
+  Signal( const std::string& type, const std::string& name, 
           const IInterface* parent);
   
   virtual ~Signal( ); ///< Destructor
@@ -37,7 +36,7 @@ public:
 
 protected:
   PIDs          m_pids             ;
-  bool          m_isolateSignal    ;
+  bool          m_cleanEvents      ;
   int           m_nEventsBeforeCut ;
   int           m_nEventsAfterCut  ;
   int           m_nInvertedEvents  ;
@@ -48,10 +47,6 @@ protected:
   Rndm::Numbers m_flatGenerator    ;
 
   StatusCode isolateSignal( const HepMC::GenParticle * theSignal ) const ;
-  StatusCode fillHepMCEvent( HepMC::GenEvent * theEvent , 
-                             HepMC::GenParticle * theNewParticle ,
-                             const HepMC::GenParticle * theOldParticle ) 
-    const ;
 
   /// Choose particle in acceptance if several
   HepMC::GenParticle * chooseAndRevert( const ParticleVector & particleList ,
@@ -61,6 +56,11 @@ protected:
   bool ensureMultiplicity( const unsigned int nSignal ) ;
   
 private:
+  StatusCode fillHepMCEvent( HepMC::GenEvent * theEvent , 
+                             HepMC::GenParticle * theNewParticle ,
+                             const HepMC::GenParticle * theOldParticle ) 
+    const ;
+
   std::vector< int > m_pidVector   ;
 };
 #endif // GENERATORS_SIGNAL_H
