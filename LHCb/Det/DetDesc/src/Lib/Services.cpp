@@ -1,4 +1,4 @@
-// $Id: Services.cpp,v 1.2 2002-12-13 14:18:20 ibelyaev Exp $ 
+// $Id: Services.cpp,v 1.3 2005-11-17 16:22:22 marcocle Exp $ 
 
 // Include files
 #include "DetDesc/Services.h"
@@ -8,12 +8,15 @@
 #include "GaudiKernel/IMessageSvc.h"
 #include "GaudiKernel/Bootstrap.h" 
 
+#include "DetDesc/IUpdateManagerSvc.h"
+
 /**
  * Default constructor
  */
 DetDesc::Services::Services() : m_svcLocator(0),
                                 m_detSvc(0),
                                 m_msgSvc(0),
+                                m_updMgrSvc(0),
                                 m_refCount(0) {
 };
 
@@ -32,6 +35,7 @@ DetDesc::Services::~Services() {
   if (0 != m_svcLocator) m_svcLocator->release();
   if (0 != m_detSvc) m_detSvc->release();
   if (0 != m_msgSvc) m_msgSvc->release();
+  if (0 != m_updMgrSvc) m_updMgrSvc->release();
 };
 
 /**
@@ -91,6 +95,24 @@ IMessageSvc* DetDesc::Services::msgSvc() {
     return m_msgSvc;
   }
   return m_msgSvc ;
+};
+
+/**
+ * the accessor to Update Manager Service
+ * @exception GaudiException the service could not be located 
+ * @return pointer to UpdateManagerSvc instance
+ */
+IUpdateManagerSvc* DetDesc::Services::updMgrSvc() {
+  // locate the service if necessary
+  if (0 == m_updMgrSvc) {
+    StatusCode sc = svcLocator()->service("UpdateManagerSvc" , m_updMgrSvc);
+    if (!sc.isSuccess()) {
+      throw GaudiException
+        ("DetDesc::Could not locate IIUpdateManagerSvc='UpdateManagerSvc'",
+         "*DetDescException*" , StatusCode::FAILURE);
+    }
+  }
+  return m_updMgrSvc ;
 };
 
 /**

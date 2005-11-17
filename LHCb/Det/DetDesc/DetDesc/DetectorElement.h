@@ -1,4 +1,4 @@
-// $Id: DetectorElement.h,v 1.27 2005-08-25 12:26:23 marcocle Exp $
+// $Id: DetectorElement.h,v 1.28 2005-11-17 16:22:22 marcocle Exp $
 #ifndef  DETDESC_DETECTORELEMENT_H
 #define  DETDESC_DETECTORELEMENT_H 1
 
@@ -353,9 +353,6 @@ private:
 
   /// reference to services
   DetDesc::Services* m_services;
-
-  /// reference to update manager service
-  mutable IUpdateManagerSvc *m_updMgrSvc;
 
 };
 

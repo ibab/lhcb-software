@@ -1,4 +1,4 @@
-// $Id: Services.h,v 1.3 2003-11-24 14:43:44 cattanem Exp $
+// $Id: Services.h,v 1.4 2005-11-17 16:22:22 marcocle Exp $
 #ifndef DETDESC_SERVICES_H 
 #define DETDESC_SERVICES_H 1
 
@@ -7,7 +7,7 @@
 class ISvcLocator;
 class IDataProviderSvc;
 class IMessageSvc;
-
+class IUpdateManagerSvc;
 
 /** @file Services.h
  *   This namespace is already documented in the file DetDesc.h
@@ -55,6 +55,13 @@ namespace DetDesc {
      */
     IMessageSvc* msgSvc();
     
+    /**
+     * the accessor to Update Manager Service
+     * @exception GaudiException the service could not be located 
+     * @return pointer to UpdateManagerSvc instance
+     */
+    IUpdateManagerSvc* updMgrSvc();
+    
     /// reset the static pointer 
     static void setServices ( DetDesc::Services* val );
 
@@ -81,6 +88,9 @@ namespace DetDesc {
     IDataProviderSvc* m_detSvc;
     /// The Message service
     IMessageSvc* m_msgSvc;
+    /// The Update Manager Service
+    IUpdateManagerSvc* m_updMgrSvc;
+    
     /// Reference count
     int m_refCount;
     

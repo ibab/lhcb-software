@@ -1,4 +1,4 @@
-// $Id: DetectorElement.cpp,v 1.27 2005-08-25 12:26:23 marcocle Exp $
+// $Id: DetectorElement.cpp,v 1.28 2005-11-17 16:22:22 marcocle Exp $
 #include "GaudiKernel/Kernel.h"
 #include "GaudiKernel/ISvcLocator.h"
 #include "GaudiKernel/IDataManagerSvc.h"
@@ -14,7 +14,6 @@
 #include "DetDesc/IGeometryInfo.h"
 #include "DetDesc/DetectorElement.h"
 #include "DetDesc/DetDesc.h"
-#include "DetDesc/IUpdateManagerSvc.h"
 
 #include "DetDesc/Condition.h"
 
@@ -47,7 +46,6 @@ DetectorElement::DetectorElement( const std::string&   /*name*/    ,
   , m_de_childrensLoaded (  false  )
   , m_de_childrens       (         ) 
   , m_services           (    0    )
-  , m_updMgrSvc(NULL)
 {
   m_services = DetDesc::services();
 };
@@ -63,7 +61,6 @@ DetectorElement::DetectorElement( const std::string&   /* name */ )
   , m_de_childrensLoaded (  false  )
   , m_de_childrens       (         )
   , m_services           (    0    )
-  , m_updMgrSvc(NULL)
 {
   m_services = DetDesc::services();
 };
@@ -91,8 +88,6 @@ DetectorElement::~DetectorElement()
 
   // release services
   m_services->release();
-  
-  if ( m_updMgrSvc != NULL ) m_updMgrSvc->release();
 };
 
 IDataProviderSvc* DetectorElement::dataSvc() const {
@@ -104,11 +99,7 @@ IMessageSvc* DetectorElement::msgSvc() const {
 } 
 
 IUpdateManagerSvc* DetectorElement::updMgrSvc() const {
-  if ( m_updMgrSvc == NULL ) {
-    StatusCode sc = m_services->svcLocator()->service("UpdateManagerSvc",m_updMgrSvc,true);
-    Assert(sc.isSuccess(),"Cannot get a pointer to UpdateManagerSvc");
-  }
-  return m_updMgrSvc;
+  return m_services->updMgrSvc();
 }
 
 IDetectorElement*  DetectorElement::parentIDetectorElement() const {
