@@ -1,9 +1,16 @@
 ! =============================================================================
-! $Id: release.notes,v 1.58 2005-10-18 16:33:31 marcocle Exp $
+! $Id: release.notes,v 1.59 2005-11-17 16:53:30 marcocle Exp $
 ! =============================================================================
 ! package Ex/DetCondExample
 ! package manager : Marco Clemencic
 ! =============================================================================
+
+! 2005-11-17 - Marco Clemencic
+ - Made DetDataAgent print the ClassID of loaded objects.
+ - Added a small example that load all the detector description
+	 (LoadDDDB.h, LoadDDDB.cpp and loadDDDB.opts)
+ - Added a Python script that copies a filesystem tree to a COOL database
+   (using PyCool)
 
 ! 2005-10-18 - Marco Clemencic
  - Changed CLID_DummyDetectorElement, conflicting with another DetectorElement
