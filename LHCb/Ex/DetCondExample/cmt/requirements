@@ -1,8 +1,8 @@
-# $Id: requirements,v 1.39 2005-10-07 15:39:40 marcocle Exp $
+# $Id: requirements,v 1.40 2005-11-17 16:55:40 marcocle Exp $
 package DetCondExample
 version v7r6
 
-branches doc src job options cmt XMLDDDB sql
+branches doc src job options cmt XMLDDDB python
 ignore_pattern package_stamps 
 
 # Main program and standard job options
@@ -17,13 +17,17 @@ use GaudiAlg v*
 use DetDesc v* Det
 use DetDescCnv v* Det
 use XmlDDDB v* Det
+use XmlConditions v* Det
 
 # Xml Parsing services (XmlCnvSvc)
 use XmlTools v* Tools
+use CondDBEntityResolver v* Tools
 
 # Detector Conditions
 use DetCond v* Det
 apply_tag NEEDS_COOL_FACTORY
+use Python v* LCG_Interfaces
+apply_tag NEEDS_PYCOOL
 
 # library path needed for mysql backend
 use myodbc   v* LCG_Interfaces
