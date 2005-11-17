@@ -1,4 +1,4 @@
-// $Id: ParamList.h,v 1.2 2005-05-27 11:57:42 marcocle Exp $
+// $Id: ParamList.h,v 1.3 2005-11-17 16:30:17 marcocle Exp $
 #ifndef DETDESC_PARAMLIST_H 
 #define DETDESC_PARAMLIST_H 1
 
@@ -7,7 +7,6 @@
 #include <DetDesc/Param.h>
 
 #include <map>
-
 
 /** @class ParamList ParamList.h DetDesc/ParamList.h
  *  
@@ -19,7 +18,7 @@
  */
 class ParamList: public std::map<std::string,BasicParam *> {
 private:
-  typedef std::map<std::string,BasicParam *> map_type;
+  typedef std::map<std::string,BasicParam *> base_type;
 
 public: 
   /// Standard constructor
@@ -33,7 +32,7 @@ public:
 
   /// Add a new parameter to the list (or replace if already there)
   template <class T>
-  void add(const std::string &key, const T &val) {
+  inline void add(const std::string &key, const T &val) {
     iterator i = find(key);
     if ( i != end() ) { // key already used
       i->second->set(val);

@@ -1,4 +1,4 @@
-//$Id: ParamValidDataObject.h,v 1.4 2005-08-15 13:19:43 marcocle Exp $
+//$Id: ParamValidDataObject.h,v 1.5 2005-11-17 16:30:17 marcocle Exp $
 #ifndef DETDESC_PARAMVALIDDATAOBJECT_H
 #define DETDESC_PARAMVALIDDATAOBJECT_H 1
 
@@ -47,10 +47,10 @@ class ParamValidDataObject : public ValidDataObject {
   // Re-implemented from ValidDataObject
 
   /// Class ID of this instance
-  inline virtual const CLID& clID() const { return classID(); } 
+  virtual const CLID& clID() const { return classID(); } 
 
   /// Class ID of this class
-  inline static const CLID& classID() { return CLID_ParamValidDataObject; };
+  static const CLID& classID() { return CLID_ParamValidDataObject; };
 
   /// Do the deep copy
   virtual void update ( ValidDataObject& obj );
@@ -65,7 +65,7 @@ class ParamValidDataObject : public ValidDataObject {
 
   /// Check the type of a parameter (commodity function).
   template <class T>
-  bool is(const std::string &name) const {
+  inline bool is(const std::string &name) const {
     return type(name) == typeid(T);
   }
   
@@ -80,7 +80,7 @@ class ParamValidDataObject : public ValidDataObject {
   
   /// Give a read-only accessor to a parameter.
   template <class T>
-  const T &param(const std::string &name) const {
+  inline const T &param(const std::string &name) const {
     ParamList::const_iterator i = m_paramList.find(name);
     if ( i == m_paramList.end() ) throw ParamException(name);
     return i->second-> template get<T>();
@@ -88,10 +88,22 @@ class ParamValidDataObject : public ValidDataObject {
   
   /// Give a read/write accessor to a parameter.
   template <class T>
-  T &param(const std::string &name) {
+  inline T &param(const std::string &name) {
     ParamList::iterator i = m_paramList.find(name);
     if ( i == m_paramList.end() ) throw ParamException(name);
     return i->second-> template get<T>();
+  }
+  
+  /// Give a read-only accessor to a parameter vector.
+  template <class T>
+  inline const std::vector<T> &paramVect(const std::string &name) const {
+    return param<std::vector<T> >(name);
+  }
+  
+  /// Give a read/write accessor to a parameter vector.
+  template <class T>
+  inline std::vector<T> &paramVect(const std::string &name) {
+    return param<std::vector<T> >(name);
   }
   
   /// Get the value of a parameter, as a string.
@@ -136,7 +148,7 @@ class ParamValidDataObject : public ValidDataObject {
 public:
 
   template <class T>
-  void addParam(const std::string &name, const T &value, const std::string &comment=std::string()){
+  inline void addParam(const std::string &name, const T &value, const std::string &comment=std::string()){
   	m_paramList.add(name,value);
   	if (!comment.empty()) {
   	  m_comments[name] = comment;
@@ -145,11 +157,8 @@ public:
 
 private:  
   
-  /// Delegation of the IParamSet interface and parameter definition
-  //  ParamSet* m_paramSet;
-
   typedef std::map<std::string,std::string> CommentMap;
-
+  
   ParamList m_paramList;
   CommentMap m_comments;
   

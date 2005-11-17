@@ -1,4 +1,4 @@
-// $Id: ParamList.cpp,v 1.1 2005-05-13 16:01:10 marcocle Exp $
+// $Id: ParamList.cpp,v 1.2 2005-11-17 16:30:17 marcocle Exp $
 // Include files 
 
 
@@ -15,12 +15,12 @@
 //=============================================================================
 // Standard constructor, initializes variables
 //=============================================================================
-ParamList::ParamList(){}
+ParamList::ParamList():base_type(){}
 
 //=============================================================================
 // Copy constructor
 //=============================================================================
-ParamList::ParamList(const  ParamList&pl):map_type(){*this = pl;}
+ParamList::ParamList(const  ParamList&pl):base_type(){*this = pl;}
 
 //=============================================================================
 // Destructor
@@ -59,7 +59,7 @@ ParamList& ParamList::operator+= (const ParamList &pl){
 //=============================================================================
 void ParamList::clear(){
   deleteItems();
-  map_type::clear();
+  base_type::clear();
 }
 
 //=============================================================================

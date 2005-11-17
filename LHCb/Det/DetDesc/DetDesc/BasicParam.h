@@ -1,4 +1,4 @@
-// $Id: BasicParam.h,v 1.1 2005-05-13 16:01:09 marcocle Exp $
+// $Id: BasicParam.h,v 1.2 2005-11-17 16:30:17 marcocle Exp $
 #ifndef DETDESC_BASICPARAM_H 
 #define DETDESC_BASICPARAM_H 1
 
@@ -13,37 +13,31 @@
  *  @date   2005-02-22
  */
 class BasicParam {
-public: 
+public:
+
+  /// Virtual destructor, just to be safe.
+  virtual ~BasicParam() {};
   
   /// Generic getter. When accessing the datum of a parameter through the base class
   /// you should specify the exact type (no automatic conversion implemented).
   template <class T>
-  T &get() {
+  inline T &get() {
     if (type() != typeid(T)) { throw std::bad_cast(); }
     return *(T*)_get_ptr();
   }
   /// Generic getter (const version). see above
   template <class T>
-  const T &get() const {
+  inline const T &get() const {
     if (type() != typeid(T)) { throw std::bad_cast(); }
     return *(T*)_get_ptr();
   }
   
   /// Generic setter. Same cosideration as for the getters.
   template <class T>
-  void set(const T &val) {
+  inline void set(const T &val) {
     if (type() != typeid(T)) { throw std::bad_cast(); }
     *(T*)_get_ptr() = val;
   }
-
-/*
-  /// Setter using BasicParam. Copy the value (faster than using new).
-  void set(const BasicParam &other) {
-    if (type() != other.type()) { throw std::bad_cast(); }
-    	// oops... I need a mem copy!
-    *_get_ptr() = ;
-  }
-*/
 
   ///  String representation for printout
   virtual std::string toStr() = 0;

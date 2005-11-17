@@ -1,4 +1,4 @@
-// $Id: Param.h,v 1.3 2005-08-15 14:00:22 marcocle Exp $
+// $Id: Param.h,v 1.4 2005-11-17 16:30:17 marcocle Exp $
 #ifndef DETDESC_PARAM_H 
 #define DETDESC_PARAM_H 1
 
@@ -9,7 +9,7 @@
 #include <DetDesc/BasicParam.h>
 
 #include <vector>
-/// Needed to write to a string vectors
+/// Needed to write vectors to a string
 template <class _CharT, class _Traits, class T>
 std::basic_ostream<_CharT, _Traits>&
 operator<<(std::basic_ostream<_CharT, _Traits>&os,
@@ -39,24 +39,6 @@ operator<<(std::basic_ostream<_CharT, _Traits>&os,
   return os;
 }
 
-/*
-template <class _CharT, class _Traits, class T>
-std::basic_ostream<_CharT, _Traits>&
-operator<<(
-           std::basic_ostream<_CharT, _Traits>&os,
-           const std::vector<T> &v){
-  typename std::vector<T>::const_iterator i;
-  // the first element does not have a comma before, but the brace
-  i = v.begin();
-  os << "{ " << *i;
-  ++i;
-  for ( ; i != v.end() ; ++i )
-    os << ", " << *i;
-  // close the brace and return the ostream
-  return os << " }";
-}
-*/
-
 /** @class Param Param.h DetDesc/Param.h
  *  
  *  Class implementing a polimorfic parameter using templates
@@ -77,13 +59,13 @@ public:
 
   /// Setter (with automatic conversion)
   template <class T1>
-  void set(const T1 &val) { m_val = val; }
+  inline void set(const T1 &val) { m_val = val; }
 
   /// Getter
-  T &get() { return m_val; }
+  inline T &get() { return m_val; }
 
   /// Getter (const version)
-  const T &get() const { return m_val; }
+  inline const T &get() const { return m_val; }
 
   /// String representation for printout
   virtual std::string toStr() {
