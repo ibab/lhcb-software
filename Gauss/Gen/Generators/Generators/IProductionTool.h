@@ -1,4 +1,4 @@
-// $Id: IProductionTool.h,v 1.3 2005-11-08 00:07:33 robbep Exp $
+// $Id: IProductionTool.h,v 1.4 2005-11-17 15:54:26 robbep Exp $
 #ifndef GENERATORS_IPRODUCTIONTOOL_H 
 #define GENERATORS_IPRODUCTIONTOOL_H 1
 
@@ -43,6 +43,8 @@ public:
 
   virtual void printRunningConditions( ) = 0 ;
 
-  virtual bool isSpecialParticle( const ParticleProperty * thePP ) = 0 ;
+  virtual bool isSpecialParticle( const ParticleProperty * thePP ) const = 0 ;
+
+  virtual StatusCode setupForcedFragmentation( const int thePdgId ) = 0 ;
 };
 #endif // GENERATORS_IPRODUCTIONTOOL_H
