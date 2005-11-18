@@ -4,6 +4,7 @@
 ! Purpose     : interface to the xml description
 !-----------------------------------------------------------------------------
 
+!========================= RichDet v8r5 2005-11-18 =========================
 ! 2005-10-14 - Chris Jones
  - Additions to radiator detector elements to load up RichCondition tools.
    Needed to ensure these tools are initialised before the detector elememts.
