@@ -2,7 +2,7 @@
 // Main RichDigit Monitor
 MoniRICHSeq.Members += { "RichDigitQC/RiDigitQC" };
 //RiDigitQC.HistoProduce   = false; // turn off histograms
-RiDigitQC.HistoDir = "RICH/DIGI/DIGITQC"; // set histo directory
+RiDigitQC.HistoDir = "DIGI/DIGITQC"; // set histo directory
 RiDigitQC.HistoOffSet = 10000;
 
 // MC tools
