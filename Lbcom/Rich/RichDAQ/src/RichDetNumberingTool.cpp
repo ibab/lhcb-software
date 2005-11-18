@@ -5,7 +5,7 @@
  *  Implementation file for class : RichDetNumberingTool
  *
  *  CVS Log :-
- *  $Id: RichDetNumberingTool.cpp,v 1.1 2005-11-15 12:57:47 jonrob Exp $
+ *  $Id: RichDetNumberingTool.cpp,v 1.2 2005-11-18 14:09:46 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date 2004-12-18
@@ -33,6 +33,7 @@ RichDetNumberingTool::RichDetNumberingTool( const std::string& type,
   // initialise
   m_condBDLocs[Rich::Rich1] = "/dd/Conditions/ReadoutConf/Rich1/DetectorNumbers";
   m_condBDLocs[Rich::Rich2] = "/dd/Conditions/ReadoutConf/Rich2/DetectorNumbers";
+  declareProperty( "DetectorNumLocs", m_condBDLocs );
 }
 
 // Destructor
