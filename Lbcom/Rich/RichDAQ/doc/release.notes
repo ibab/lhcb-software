@@ -4,6 +4,7 @@
 ! Purpose     : Package simulating the RICH DAQ system and data format
 !-----------------------------------------------------------------------------
 
+!========================== RichDAQ v2r3 2005-11-18 =========================
 ! 2005-11-15 - Chris Jones
  - Update to use new numbering schemes from Conditions.
   + Replace tools RichHPDInfoTool and RichHPDToLevel1Tool with single tool

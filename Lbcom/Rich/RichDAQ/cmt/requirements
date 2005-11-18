@@ -2,7 +2,7 @@
 # Created    : 2003-11-06
 # Maintainer : Chris Jones
 #============================================================================
-# $Id: requirements,v 1.18 2005-10-13 14:42:31 jonrob Exp $
+# $Id: requirements,v 1.19 2005-11-18 08:41:09 cattanem Exp $
 #============================================================================
 
 package           RichDAQ
@@ -17,7 +17,7 @@ include_path none
 # Used packages. Specify the version, * at the end specifies 'any revision'
 #    Put as many lines as needed, with all packages, without the '#'
 #============================================================================
-use   RichEvent      v8r*    Event
+use   RichEvent      v*      Event
 use   DAQEvent       v*      Event
 
 #============================================================================
