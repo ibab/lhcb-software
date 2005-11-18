@@ -5,7 +5,7 @@
  *  Implementation file for RICH Digitisation Quality Control algorithm : RichDigitQC
  *
  *  CVS Log :-
- *  $Id: RichDigitQC.cpp,v 1.23 2005-11-15 12:58:38 jonrob Exp $
+ *  $Id: RichDigitQC.cpp,v 1.24 2005-11-18 16:49:18 jonrob Exp $
  *
  *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
  *  @date   2003-09-08
@@ -195,7 +195,7 @@ StatusCode RichDigitQC::finalize()
   RichPoissonEffFunctor eff("%6.2f +-%5.2f");
 
   info() << "===============================================================================================" << endreq
-         << "                            RICH Digitisation Simuation Summary" << endreq;
+         << "                            RICH Digitisation Simulation Summary" << endreq;
 
   for ( int iRich = 0; iRich<Rich::NRiches; ++iRich )
   {
