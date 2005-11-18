@@ -2,7 +2,7 @@
 # Created    : 11/05/2003
 # Maintainer : Christopher Rob Jones
 #============================================================================
-# $Id: requirements,v 1.28 2005-10-13 15:28:02 jonrob Exp $
+# $Id: requirements,v 1.29 2005-11-18 10:29:53 cattanem Exp $
 #============================================================================
 
 package RichReadout
@@ -10,7 +10,7 @@ version v1r14
 
 # ================ structure =================================================
 branches cmt doc src Event xml
-#include_path none
+include_path none
 
 # ================ environment ===============================================
 set RICHREADOUTOPTS $(RICHREADOUTROOT)/options
