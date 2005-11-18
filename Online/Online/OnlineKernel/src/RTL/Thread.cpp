@@ -20,9 +20,10 @@ RTL::Thread::~Thread()  {
 
 /// Create now named Thread
 int RTL::Thread::create(const char* name, lib_rtl_thread_t& id)  {
-  int status = 0;//lib_rtl_create_thread(name, &id);
+  int status = 0; //lib_rtl_start_thread(name, &id);
   if (!lib_rtl_is_success(status))    {
-    ::lib_rtl_signal_message(LIB_RTL_OS,"Error in creating  Thread. Status=%d", status);
+    id = 0;
+    ::lib_rtl_signal_message(LIB_RTL_OS,"Error in creating Thread %s. Status=%d", name, status);
   }
   return status;
 }

@@ -27,7 +27,7 @@ typedef int (*MBM_ast_t)(void*);
 #ifdef MBM_IMPLEMENTATION
 typedef BMDESCRIPT* BMID;
 #else
-typedef long BMID;
+typedef void* BMID;
 #endif
 
 extern "C"  {

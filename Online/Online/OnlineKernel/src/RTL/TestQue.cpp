@@ -6,7 +6,7 @@
 
 struct QENTRY : public qentry_t  {
   QENTRY() : qentry_t(), serial(0) {}
-  int serial;
+  size_t serial;
 };
 
 int rtl_testqhi() {
@@ -43,7 +43,7 @@ int rtl_testqhi() {
 }
 
 int rtl_testqti() {
-  int QUE_next_off = 0;
+  int64_t QUE_next_off = 0;
   QENTRY   entries[16];
   qentry_t head(0,0);
   qentry_t p_queue(0,0);
@@ -75,7 +75,7 @@ int rtl_testqti() {
 }
 
 extern "C" int rtl_testque2(int,char **) {
-  int QUE_next_off = 0;
+  int64_t QUE_next_off = 0;
   QENTRY   entries[128];
   qentry_t head(0,0);
   qentry_t p_queue(0,0);

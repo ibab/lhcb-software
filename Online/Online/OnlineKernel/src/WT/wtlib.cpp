@@ -57,7 +57,7 @@ static inline qentry *q_remove_head(qentry *head )   {
 }
 /*----------------------------------------------------------------------*/
 static inline qentry *q_remove( qentry *entry )  {
-  qentry* head = (qentry*)((int)entry+(int)entry->prev);
+  qentry* head = (qentry*)((char*)entry+(int64_t)entry->prev);
   return q_remove_head(head);
 }
 /*----------------------------------------------------------------------*/
@@ -195,7 +195,7 @@ int wtc_wait_with_mask (unsigned int* facility, void** userpar1, int* sub_status
   }
   WTLock lock(wt_mutex_id);
   if ( lock )  {
-    while(TRUE)  {
+    for(;;)  {
       if (mask_ok != 1)   {
         while ( 0 != (entry=(wt_queue_entry*)q_remove_head(wt_fired)) ) {
           wt_fac_entry* fac = _wtc_find_facility(entry->facility,fac_list);
@@ -210,9 +210,11 @@ int wtc_wait_with_mask (unsigned int* facility, void** userpar1, int* sub_status
         }
       }
       do    {
-        if( !(entry = (wt_queue_entry*)q_remove_head( wt_queue )))  {
+        entry = (wt_queue_entry*)q_remove_head( wt_queue );
+        if( !entry )  {
           lib_rtl_clear_event (wt_EventFlag);
-          if( !(entry = (wt_queue_entry*)q_remove_head( wt_queue )))   {
+          entry = (wt_queue_entry*)q_remove_head( wt_queue );
+          if( !entry )   {
             lib_rtl_unlock(wt_mutex_id);
             lib_rtl_wait_for_event (wt_EventFlag);
             lib_rtl_lock(wt_mutex_id);
@@ -369,8 +371,8 @@ int wtc_wait(unsigned int* facility,void** userpar1,int* sub_status)   {
 }
 /*----------------------------------------------------------------------*/
 void wtc_print_space()   {
-  for (wt_queue_entry *fac = (wt_queue_entry*)((int)wt_queue->next+(int)wt_queue);
-    fac != (void*)wt_queue ; fac = (wt_queue_entry*)((int)fac->next+(int)fac))
+  for (wt_queue_entry *fac = (wt_queue_entry*)((char*)wt_queue->next+(int64_t)wt_queue);
+    fac != (void*)wt_queue ; fac = (wt_queue_entry*)((char*)fac->next+(int64_t)fac))
     _wtc_print_entry(fac);
 }
 /*----------------------------------------------------------------------*/
@@ -404,8 +406,8 @@ int wtc_restore_stack() {
 /*----------------------------------------------------------------------*/
 wt_fac_entry* _wtc_find_facility(unsigned int facility,qentry* fac_head)  {
   wt_fac_entry *fac = 0;
-  for(fac = (wt_fac_entry*)((int)fac_head->next+(int)fac_head);
-    fac != (wt_fac_entry*)fac_head ; fac = (wt_fac_entry*)((int)fac->next+(int)fac))
+  for(fac = (wt_fac_entry*)((char*)fac_head->next+(int64_t)fac_head);
+    fac != (wt_fac_entry*)fac_head ; fac = (wt_fac_entry*)((char*)fac->next+(int64_t)fac))
     if( fac->facility == facility ) break;
   return fac;
 }

@@ -1250,18 +1250,16 @@ wait:
     }
   }
   goto wait;
-  _mbm_return_err (MBM_ILL_CONS);
 }
 
 int _mbm_wait_space_a(void* param)  {
   BMDESCRIPT* bm = (BMDESCRIPT*)param;
-  while(1)  {
+  for(;;)  {
     lib_rtl_clear_event(bm->WSPA_event_flag);
     if ( mbm_wait_space(bm) != MBM_NORMAL )  {   
     }
     lib_rtl_wait_for_event(bm->WSPA_event_flag);
   }
-  return 1;
 }
 
 int  mbm_wait_space_a(BMDESCRIPT* bm)    {

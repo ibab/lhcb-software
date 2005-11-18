@@ -120,23 +120,19 @@ extern "C" int wtc_test(int /* argc */, char** /* argv */)   {
   print_at(4,6,"Timer 3 (%5d msecs):",INTERVAL3);
   print_at(4,7,"Timer 4 (%5d msecs):",INTERVAL4);
 
-  /*---TIMER 1----*/
+  //---TIMER 1----
   status = wtc_subscribe( WT_FACILITY_TIMER1, rearm1, action1);
   if( status != WT_SUCCESS ) exit(status);
-
-  /*---TIMER 2----*/
+  //---TIMER 2----
   status = wtc_subscribe( WT_FACILITY_TIMER2, rearm2, action2);
   if( status != WT_SUCCESS ) exit(status);
-
-  /*---TIMER 3----*/
+  //---TIMER 3----
   status = wtc_subscribe( WT_FACILITY_TIMER3, rearm3, action3);
   if( status != WT_SUCCESS ) exit(status);
-
-  /*---TIMER 4----*/
+  //---TIMER 4----
   status = wtc_subscribe( WT_FACILITY_TIMER4, rearm4, action4);
   if( status != WT_SUCCESS ) exit(status);
-
-  while(1)  {
+  for(;;)  {
     unsigned int facility;
     int sub_status;
     void* userpar;
@@ -144,5 +140,4 @@ extern "C" int wtc_test(int /* argc */, char** /* argv */)   {
     printf("Exited WAIT>>>> Facility = %d Status=%d Sub-Status = %d\n", 
       facility, status, sub_status);
   }
-  return 1;
 }

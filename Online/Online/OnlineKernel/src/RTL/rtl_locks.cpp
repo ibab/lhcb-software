@@ -8,7 +8,7 @@ extern "C" int lib_rtl_lock_value(lib_rtl_lock_t handle, int* value)   {
     int sc = ::sem_getvalue(handle->handle, value);
     return sc==0 ? 1 : 0;
 #elif defined(_WIN32)
-    return 0;
+    return *value=0;
 #endif
   }
   return 0;
@@ -44,7 +44,6 @@ int lib_rtl_create_lock(const char* mutex_name, lib_rtl_lock_t* handle)   {
 #endif
   if ( h->handle == 0 )   {
     return lib_rtl_signal_message(LIB_RTL_OS,"error in creating lock %s %08X.",h->name,h->handle);
-    return 0;
   }
   *handle = h.release();
   return 1;

@@ -14,7 +14,7 @@ void* lib_rtl_thread_id()  {
 #ifdef USE_PTHREADS
   pthread_t id = ::pthread_self();
 #elif defined(_WIN32)
-  DWORD id = ::GetCurrentThreadId();
+  int64_t id = ::GetCurrentThreadId();
 #endif
   return (void*)id;
 }

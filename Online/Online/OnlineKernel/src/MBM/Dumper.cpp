@@ -85,7 +85,7 @@ int MBM::Dumper::print()  {
 }
 
 void MBM::Dumper::print_control_table(const CONTROL* ctrl)  {
-  printf("Control table starts at %p(hex) %ld(dec)\n",ctrl,long(ctrl));
+  printf("Control table starts at %p(hex)\n",ctrl);
 
   print_queue("ctrl->u_head\t%8x %d\t-----> user at address %x\n",   (long*)&ctrl->u_head,0);
   print_queue("ctrl->u_tail\t%8x %d\t-----> user at address %x\n",   (long*)&ctrl->u_head.prev,1);
@@ -122,7 +122,7 @@ void MBM::Dumper::print_user_table(const USER* user)  {
       return;
     }
   }
-  printf("User table starts at %p(hex) %ld(dec)\n",user,long(user));
+  printf("User table starts at %p(hex)\n",user);
   print_queue("user->next\t%x %d\t-----> user at address %x\n",&user->next,0);
   print_queue("user->prev\t%x %d\t-----> user at address %x\n",&user->prev,1);
   print_queue("user->wsnext\t%x %d\t-----> user at address %x\n",(long*)&user->wsnext,0);
@@ -183,7 +183,7 @@ void MBM::Dumper::print_event_table(const EVENT* event)  {
       return;
     }
   }
-  printf("Event table starts at %p(hex) %ld(dec)\n",event,long(event));
+  printf("Event table starts at %p(hex)\n",event);
   print_queue("event->next\t%x %d\t-----> Event at address %x\n",(long*)&event->next,0);
   print_queue("event->prev\t%x %d\t-----> Event at address %x\n",(long*)&event->prev,1);
   print_item("event->block_id\t%x %d\n",event->block_id);

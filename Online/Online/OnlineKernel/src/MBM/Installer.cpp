@@ -204,7 +204,7 @@ int MBM::Installer::install()  {
   ::memset(event,0,sizeof(EVENT)*p_emax );
   ::memset(m_bm->bitmap,0,(p_size<<Bits_p_kByte)>>3);
   for (int i=0;i<p_umax;i++)  {
-    user[i].block_id   = BID_USER;
+    user[i].block_id = BID_USER;
     user[i].uid      = i;
   }
   for (int j=0;j<p_emax;j++)  {
@@ -296,7 +296,7 @@ int mbm_install(int argc , char** argv) {
       mbm_mon(0, argv); 
     }
     else  {
-      while(1) lib_rtl_sleep(10000);
+      for(;;) lib_rtl_sleep(10000);
     }
   }
   return sc;

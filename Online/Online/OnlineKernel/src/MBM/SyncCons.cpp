@@ -22,8 +22,7 @@ extern "C" int mbm_cons(int argc,char **argv) {
   MBM::Consumer c(buffer,name,0x103);
   ::printf("Consumer \"%s\" (pid:%d) including buffer:\"%s\"\n",name.c_str(),c.pid(),buffer.c_str());
   c.addRequest(1,trmask,vetomask,BM_MASK_ANY,BM_REQ_VIP,BM_FREQ_PERC,100.);
-  while(1)  {
-    c.getEvent();
+  while( c.getEvent() )  {
     const MBM::EventDesc& e = c.event();
     if ( -1 == trnumber )  {
       trnumber = *e.data;
@@ -36,4 +35,5 @@ extern "C" int mbm_cons(int argc,char **argv) {
     trnumber++;
     c.freeEvent();
   }
+  return 1;
 }

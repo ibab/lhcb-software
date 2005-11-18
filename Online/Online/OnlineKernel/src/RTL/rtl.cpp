@@ -50,7 +50,7 @@ const char* errorString(int status)  {
     0 );
   strncpy(s, (const char*)lpMessageBuffer, len);
   s[len] = 0;
-  int l = strlen(s);
+  size_t l = strlen(s);
   if ( l > 0 ) s[l-1] = 0;
   ::LocalFree( lpMessageBuffer ); 
   return s;
@@ -133,8 +133,9 @@ int lib_rtl_remove_exit(int (*hdlr)(void*), void* param) {
     }
   }
   return 0;
-#endif
+#else
   return 1;
+#endif
 }
 
 int lib_rtl_run_ast (RTL_ast_t astadd, void* param, int)    {
@@ -244,7 +245,7 @@ int lib_rtl_get_process_name(char* process, size_t len)  {
   process[len]='\0';
 #else
   char *tmp = (char*)getenv("$PROCESS");
-  ::strcpy(process, tmp != 0 ? tmp : "UNKNOWN");
+  ::strncpy(process, tmp != 0 ? tmp : "UNKNOWN", len);
 #endif
   return 1;
 }
@@ -268,7 +269,7 @@ int lib_rtl_get_node_name(char* node, size_t len)  {
 #elif defined(linux)
   char *tmp = (char*)getenv("NODE");
 #endif
-  ::strcpy(node,tmp != 0 ? tmp : "UNKNOWN");
+  ::strncpy(node,tmp != 0 ? tmp : "UNKNOWN", len);
 #endif
   return 1;
 }

@@ -43,7 +43,6 @@ int lib_rtl_create_section(const char* sec_name, int size, lib_rtl_gbl_t* addres
   }
   ::shm_unlink(h->name);
 #elif defined(_WIN32)
-  void** add = (void**)address;
   // Setup inherited security attributes (FIXME: merge somewhere else)
   SECURITY_ATTRIBUTES   sa = {sizeof(SECURITY_ATTRIBUTES), 0, true};
   DWORD  siz  = (size/4096)*4096 + (((size%4096)==0) ? 0 : 4096);  //  multiple of page size
@@ -146,6 +145,9 @@ int lib_rtl_flush_section(lib_rtl_gbl_t h)   {
   if ( h )  {
 #if defined(_WIN32)
     DWORD sc = ::FlushViewOfFile(h->addaux,h->size);
+    if ( sc == 0 )  {
+      return 0;
+    }
 #elif defined(linux)
     ::msync(h->address, h->size, MS_INVALIDATE|MS_SYNC);
 #endif

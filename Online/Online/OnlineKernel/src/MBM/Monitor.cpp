@@ -51,7 +51,7 @@ namespace MBM {
     };
     DISP_BMDES* m_bms;
     int  m_numBM;
-    size_t m_currLine;
+    int  m_currLine;
     char m_buffID[32];
     char* m_bmid;
     lib_rtl_gbl_t m_bm_all;
@@ -66,29 +66,29 @@ namespace MBM {
       textcolor(col);
     }
 
-    int draw_line()  {
+    size_t draw_line()  {
       print_char(1, m_currLine, TEE_LEFT);
-      for(size_t i=1; i < term_width()-1; ++i)
+      for(int i=1; i < term_width()-1; ++i)
         print_char(i+1, m_currLine, HORZ_BAR);
       print_char(term_width(), m_currLine, TEE_RIGHT);
       return ++m_currLine;
     }
-    int draw_bar()  {
+    size_t draw_bar()  {
       print_char(1, m_currLine, VERT_BAR);
-      for(size_t i=1; i < term_width()-1; ++i)
+      for(int i=1; i < term_width()-1; ++i)
         print_char(i+1, m_currLine, FAT_VERT_BAR);
       print_char(term_width(), m_currLine, VERT_BAR);      
       return ++m_currLine;
     }
-    int draw_line(int flags, const char* format,...)  {
+    size_t draw_line(int flags, const char* format,...)  {
       va_list args;
       char buffer[1024];
       va_start( args, format );
-      size_t len = ::vsprintf(buffer, format, args);
+      int len = (int)::vsprintf(buffer, format, args);
       print_char(1, m_currLine, VERT_BAR);
-      for(size_t j=0; j<len && j<term_width()-1; ++j)
+      for(int j=0; j<len && j<term_width()-1; ++j)
         print_char(j+2, m_currLine, flags|buffer[j]);
-      for(size_t i=len; i < term_width()-1; ++i)
+      for(int i=len; i < term_width()-1; ++i)
         print_char(i+2, m_currLine, ' '|flags);
       print_char(term_width(), m_currLine, VERT_BAR);
       return ++m_currLine;
@@ -97,26 +97,26 @@ namespace MBM {
       ::textcolor(YELLOW);
       m_currLine = 1;
       print_char(1,m_currLine,LEFT_UP_EDGE);
-      for(size_t i=1; i < term_width()-1; ++i)
+      for(int i=1; i < term_width()-1; ++i)
         print_char(i+1,m_currLine,HORZ_BAR);
       print_char(term_width(),m_currLine,RIGHT_UP_EDGE);      
       m_currLine = 2;
     }
     void end_update() {
       print_char(1,m_currLine,LEFT_LOW_EDGE);
-      for(size_t i=1; i < term_width()-1; ++i)
+      for(int i=1; i < term_width()-1; ++i)
         print_char(i+1,m_currLine,HORZ_BAR);
       print_char(term_width(),m_currLine,RIGHT_LOW_EDGE);      
       m_currLine++;
       refresh();
     }
 
-    int draw_buffer(const char* name, CONTROL* ctrl);
+    size_t draw_buffer(const char* name, CONTROL* ctrl);
 
     void getOptions(int argc, char** argv);
     virtual int optparse (const char* c);
-    int MBM::Monitor::get_bm_list();
-    int draw_bar(float ratio,int full_scale);
+    int get_bm_list();
+    size_t draw_bar(float ratio,int full_scale);
     Monitor(int argc , char** argv) : m_window(0)  {
       m_bmid = 0;
       getOptions(argc, argv);
@@ -132,7 +132,7 @@ void MBM::Monitor::getOptions(int argc, char** argv)    {
       optparse (cptr+1);
   }
 }
-int MBM::Monitor::draw_bar(float ratio,int full_scale)    {
+size_t MBM::Monitor::draw_bar(float ratio,int full_scale)    {
   int barlen  =  int(0.5+ratio*float(full_scale));
   graphics();
   printf("\164");
@@ -180,8 +180,8 @@ int MBM::Monitor::monitor() {
   return 1;
 }
 
-int MBM::Monitor::draw_buffer(const char* name, CONTROL* ctr)  {
-  size_t i, m;
+size_t MBM::Monitor::draw_buffer(const char* name, CONTROL* ctr)  {
+  int i, m;
   char txt[256];
   sprintf(txt," Buffer \"%s\"",name);
   draw_line(NORMAL,"%-26s  Events: Produced:%d Actual:%d Seen:%d Pending:%d Max:%d",
@@ -281,7 +281,7 @@ int MBM::Monitor::optparse (const char* c)  {
 
 int MBM::Monitor::get_bm_list()   {
   m_numBM = 0;
-  for (int i = 0, j=0; i < m_buffers->p_bmax; ++i)  {
+  for (int i = 0; i < m_buffers->p_bmax; ++i)  {
     if ( m_buffers->buffers[i].used == 1 )  {
       if ( m_bmid != 0 && strcmp(m_bmid,m_buffers->buffers[i].name) != 0 )  {
         continue;

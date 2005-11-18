@@ -30,7 +30,7 @@ int MBM::Producer::spaceAst(void* param) {
 
 // Ast to be called on event receival (may be overloaded by clients)
 int MBM::Producer::spaceAst() {
-  int sc = mbm_get_space_ast((void*)m_bmid);
+  int sc = mbm_get_space_ast(m_bmid);
   if ( sc == MBM_NORMAL ) {
     if ( !m_blocking ) {
       sc = ::wtc_insert(m_facility, this);
@@ -38,12 +38,10 @@ int MBM::Producer::spaceAst() {
         return MBM_NORMAL;
       }
       throw std::runtime_error("Failed to wtc_insert on get space AST:"+m_buffName+" [Internal Error]");
-      return MBM_ERROR;
     }
     return MBM_NORMAL;
   }
   throw std::runtime_error("Failed mbm_get_space_ast MBM buffer:"+m_buffName+" [Internal Error]");
-  return MBM_ERROR;
 }
 
 // Static action to be called on space receival
@@ -57,7 +55,7 @@ int MBM::Producer::spaceAction(unsigned int facility, void* param) {
 
 // Action to be called on space receival
 int MBM::Producer::spaceAction() {
-  if ( int(m_bmid) != -1 ) {
+  if ( m_bmid != (BMID)-1 ) {
     int flen;
     void *fadd;
     EventDesc& e = m_event;
@@ -72,7 +70,6 @@ int MBM::Producer::spaceAction() {
     throw std::runtime_error("Failed to declare event for MBM buffer:"+m_buffName+" [Internal Error]");
   }
   throw std::runtime_error("Failed to declare event for MBM buffer:"+m_buffName+" [Buffer not connected]");
-  return MBM_ERROR;
 }
 
 // Rearm action to be called on space receival
@@ -86,7 +83,7 @@ int MBM::Producer::spaceRearm(unsigned int facility, void* param) {
 
 // Space receival rearm
 int MBM::Producer::spaceRearm(int new_length) {
-  if ( int(m_bmid) != -1 ) {
+  if ( m_bmid != (BMID)-1 ) {
     EventDesc& e = m_event;
     e.len = new_length;
     int status = ::mbm_get_space_a(m_bmid, e.len, &e.data, spaceAst, this);
@@ -100,7 +97,6 @@ int MBM::Producer::spaceRearm(int new_length) {
     throw std::runtime_error("Failed to get event for MBM buffer:"+m_buffName+" [Internal Error]");
   }
   throw std::runtime_error("Failed to declare event for MBM buffer:"+m_buffName+" [Buffer not connected]");
-  return MBM_ERROR;
 }
 
 // Get space call to fill event data

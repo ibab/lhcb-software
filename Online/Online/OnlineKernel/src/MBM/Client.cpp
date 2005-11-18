@@ -13,15 +13,14 @@ MBM::Client::Client(const std::string& buffer_name, const std::string& client_na
     ::wtc_init();
   }
   m_bmid = ::mbm_include(m_buffName.c_str(),m_name.c_str(),m_partID);
-  if ( int(m_bmid) == -1 )  {
+  if ( m_bmid != (BMID)-1 ) {
     throw std::runtime_error("Failed to include into MBM buffer:"+m_buffName);
   }
 }
 
 // Standard destructor
-MBM::Client::~Client()
-{
-  if ( int(m_bmid) != -1 ) {
+MBM::Client::~Client()  {
+  if ( m_bmid != (BMID)-1 ) {
     int status = ::mbm_exclude(m_bmid);
     if ( status != MBM_NORMAL )  {
       throw std::runtime_error("Failed to exclude from MBM buffer:"+m_buffName);
@@ -52,7 +51,7 @@ void MBM::Client::setBlocking() {
 
 // Run the application with WT
 int MBM::Client::run() {
-  while(1)  {
+  for(;;)  {
     int sub_status;
     void* userpar;
     unsigned int facility;
@@ -60,5 +59,4 @@ int MBM::Client::run() {
     ::printf("Exited WAIT>>>> Facility = %d Status=%d Sub-Status = %d\n", 
       facility, status, sub_status);
   }
-  return 1;
 }

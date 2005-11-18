@@ -4,7 +4,7 @@
 #define byte_offset(a,b,c) {a *ptr=0; c = (int)&(ptr->b);}
 
 template <class T, class Q> static inline T* add_ptr(T* a, Q b)  {
-  return (T*)((void*)((int)(a)+(int)(b)));
+  return (T*)((void*)((char*)(a)+(int64_t)(b)));
 }
 
 #ifdef __cplusplus

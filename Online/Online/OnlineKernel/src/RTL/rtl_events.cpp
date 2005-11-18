@@ -154,7 +154,7 @@ int lib_rtl_set_global_event(const char* name)   {
 
 int lib_rtl_wait_event_a_call(void* param)  {
   lib_rtl_action* pars = (lib_rtl_action*)param;
-  while(1)  {
+  while(pars->flag)  {
     try {
       rtl_printf("wait...\n");
       lib_rtl_wait_for_event(pars->flag);

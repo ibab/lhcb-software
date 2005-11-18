@@ -67,7 +67,7 @@ struct USER : public qentry_t  {
   qentry wsnext;
   qentry_t wenext;
   qentry_t wesnext;
-  unsigned int  block_id;  
+  int  block_id;  
   int  busy;                     // slot busy flag       
   int  uid;                      // BM user id       
   int  c_state;                  // consumer state (Active,Pause)   
@@ -117,7 +117,7 @@ struct USER : public qentry_t  {
 };
 
 struct EVENT : public qentry_t {
-  unsigned int block_id;  // Block identifier
+  int   block_id;         // Block identifier
   int   busy;             // event busy flag
   int   eid;              // event ID
   UserMask umask0;        // Mask of privilidged consumers
