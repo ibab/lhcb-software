@@ -4,6 +4,7 @@
 ! Purpose     : 
 !-----------------------------------------------------------------------------
 
+!======================= RichMCAssociators v1r0 2005-11-18 ===================
 ! 2005-10-04 - Chris Jones
  - First version
  - Import algorithms BuildMCRichDigitLinks, MCPartToMCRichTrackAlg and 

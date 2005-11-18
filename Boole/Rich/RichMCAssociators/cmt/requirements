@@ -14,8 +14,8 @@ include_path      none
 #============================================================================
 # Used packages
 #============================================================================
-use  RichEvent    v8r*    Event
-use  LinkerEvent  v1r*    Event
+use  RichEvent    v*    Event
+use  LinkerEvent  v*    Event
 
 #============================================================================
 # Component library building rule
