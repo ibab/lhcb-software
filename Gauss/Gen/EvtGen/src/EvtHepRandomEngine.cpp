@@ -50,3 +50,7 @@ void EvtHepRandomEngine::flatArray(const HepInt s, HepDouble* vect)
   for (int i=0;i<s;i++)
     vect[i] = flat();
 }
+
+std::string EvtHepRandomEngine::name( ) const {
+  return std::string( "EvtHepRandomEngine" ) ;
+}

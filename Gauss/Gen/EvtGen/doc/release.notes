@@ -1,6 +1,9 @@
 Package :EvtGen 
 Package manager : Patrick Robbe
 
+! 2005-11-20 - Patrick Robbe
+ - EvtHepRandomEngine: adapt to use CLHEP 1.9.2.1
+
 !========================== EvtGen v8r5 ====================================
 ! 2005-07-20 - Patrick Robbe
  - src/EvtBTo3pi.F

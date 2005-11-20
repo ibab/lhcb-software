@@ -46,7 +46,8 @@ public:
   void setSeeds(const long* a, int b);
   void setSeed(long a, int b);
   void flatArray(const HepInt s, HepDouble* vect);
-
+  
+  virtual std::string name() const ;
 };
 
 #endif
