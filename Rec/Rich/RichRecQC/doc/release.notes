@@ -4,6 +4,7 @@
 ! Purpose     : Quality Control monitoring algorithms for RICH reconstruction
 !-----------------------------------------------------------------------------
 
+!======================= RichRecQC v1r12 2005-11-21 ========================
 ! 2005-10-31 - Chris Jones
  - Update to new base classes
 
