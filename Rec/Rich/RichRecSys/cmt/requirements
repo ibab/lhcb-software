@@ -2,7 +2,7 @@
 # Created    : 2003-07-01
 # Maintainer : Chris Jones   Christopher.Rob.Jones@cern.ch
 #============================================================================
-# $Id: requirements,v 1.47 2005-10-18 12:54:17 jonrob Exp $
+# $Id: requirements,v 1.48 2005-11-21 09:10:08 cattanem Exp $
 #============================================================================
 
 package           RichRecSys
@@ -22,7 +22,7 @@ set RICHRECSYSOPTS $(RICHRECSYSROOT)/options
 
 # Common RICH reconstruction packages
 use RichRecBase         v1r17   Rich
-use RichRecTools        v2r15   Rich
+use RichRecTools        v2r16   Rich
 use RichRecAlgorithms   v1r1    Rich
 
 # "Offline" PID packages
@@ -34,7 +34,7 @@ use RichRingRefit       v1r11   Rich
 use RichPIDMerge        v1r5    Rich
 
 # Expert common monitor algorithms
-use RichRecMonitors     v1r0    Rich
+use RichRecMonitors     v1r1    Rich
 
 # MC packages
 use RichRecMCTools      v1r10   Rich

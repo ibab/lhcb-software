@@ -4,6 +4,7 @@
 ! Purpose     : Co-ordinates the RICH reconstruction packages
 !-----------------------------------------------------------------------------
 
+!====================== RichRecSys v1r19 2005-11-21 ======================
 ! 2005-10-18 - Chris Jones
  - Updates due to
   + Support for new track event model
