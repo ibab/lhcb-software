@@ -21,15 +21,18 @@
       <constructor 
 	desc     = "Constructor from a State and a Measurement" 
 	argList  = "State* state, Measurement* meas"
-	initList = "m_state(state), m_measurement(meas), m_residual(0.0), m_errResidual(0.0), m_projectionMatrix()">
+	initList = "m_measurement(meas), m_residual(0.0), m_errResidual(0.0), m_projectionMatrix()">
+        <code>
+          m_state = state->clone();
+        </code>
       </constructor>
-
+ 
       <attribute
         type    = 'State*'
         name    = 'state'
         setMeth = 'FALSE'
         getMeth = 'FALSE'
-        desc    = 'pointer to the state'
+        desc    = 'pointer to the state (owner)'
         access  = 'PROTECTED' />
 
       <attribute
@@ -37,7 +40,7 @@
         name    = 'measurement'
         setMeth = 'FALSE'
         getMeth = 'FALSE'
-        desc    = 'pointer to the measurement'
+        desc    = 'pointer to the measurement (not owner)'
         access  = 'PROTECTED' />
 
       <attribute
@@ -64,9 +67,9 @@
 	virtual = 'TRUE'
         desc    = 'Clear the node before re-use'>
         <code>
-  if (m_state != NULL) delete m_state;
-//  m_measurement = NULL;
-  m_state = NULL;
+  if (m_state != 0 ) delete m_state;
+//  m_measurement = 0;
+  m_state = 0;
   m_residual = 0.;
   m_errResidual = 0.;
         </code>
@@ -78,7 +81,7 @@
         const   = 'TRUE'
         desc    = 'Retrieve the local chi^2 '>
         <code>
-  if (    (m_residual > TrackParameters::lowTolerance)
+  if (    ( fabs(m_residual) > TrackParameters::lowTolerance)
        &amp;&amp; (m_errResidual > TrackParameters::lowTolerance)
      ) {
     return gsl_pow_2( m_residual/m_errResidual );
@@ -146,18 +149,46 @@
         argList = 'State state'
         desc    = 'Update the state'>
         <code>
-  if (m_state != NULL) delete m_state;
+  delete m_state;
   m_state = state.clone();
         </code>
       </method>
 
       <method
-	type = 'double'
+	type    = 'double'
         name    = 'errResidual2'
 	const   = 'TRUE'
         desc    = 'Return the error on the residual squared'>
         <code>
   return m_errResidual * m_errResidual;
+        </code>
+      </method>
+
+      <method
+	type    = 'bool'
+        name    = 'hasMeasurement'
+	const   = 'TRUE'
+        desc    = 'Return true if this Node has a valid pointer to measurement'>
+        <code>
+          return ( m_measurement != 0 ) ;
+        </code>
+      </method>
+
+      <method
+        name    = 'removeMeasurement'
+        desc    = 'Remove measurement from the node'>
+        <code>
+          m_measurement = 0 ;
+        </code>
+      </method>
+
+      <method
+        type    = 'double'
+        name    = 'z'
+        const   = 'TRUE'
+        desc    = 'z position of Node'>
+        <code>
+          return m_state ? m_state->z() : 0.0 ;
         </code>
       </method>
 

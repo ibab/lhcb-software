@@ -63,7 +63,29 @@
         desc    = 'Retrieve const  the measurement error squared'
         const   = 'TRUE'>
         <code>
-  return m_errMeasure * m_errMeasure;
+          return m_errMeasure * m_errMeasure;
+        </code>
+      </method>
+
+      <method
+        type    = 'double'
+        name    = 'resolution'
+        desc    = 'Retrieve the measurement error (Added temporarily to distinguish between the phi-error and Carthesian error in VeloPhiMeasurements)'
+        const   = 'TRUE'
+        virtual = 'TRUE'>
+        <code>
+          return m_errMeasure;
+        </code>
+      </method>
+
+      <method
+        type    = 'double'
+        name    = 'resolution2'
+        desc    = 'Retrieve the measurement error squared (Added temporarily to distinguish between the phi-error and Carthesian error in VeloPhiMeasurements)'
+        const   = 'TRUE'
+        virtual = 'TRUE'>
+        <code>
+          return m_errMeasure * m_errMeasure;
         </code>
       </method>
 

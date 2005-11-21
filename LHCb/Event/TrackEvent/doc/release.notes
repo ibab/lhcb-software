@@ -4,6 +4,19 @@
 ! Purpose     : Package for the tracking event model classes
 !-----------------------------------------------------------------------------
 
+! 2005-11-21 - Jeroen van Tilburg
+ - src/State.cpp: Copy also the State::Location in the clone method.
+ - xml/Measurement.xml: Added method resolution(). This is equivalent to 
+   the method errMeasure(), except for the implementation of 
+   VeloPhiMeasurement.
+ - xml/Node.xml: 
+   - Always make a new state when constructor is called.
+   - New methods: hasMeasurement(), removeMeasurement() and z(). Reason: a 
+     node does not require a measurement (e.g. it can be seen as an 
+     outlier by the fit, or be a dummy node useful for the predefined 
+     states).
+   - Corrected bug: residual can be negative!
+
 ! 2005-11-09 - Eduardo Rodrigues
  - Flag enum item "AlreadyUsed" introduced in Track.h
 

@@ -1,4 +1,4 @@
-// $Id: State.cpp,v 1.8 2005-11-04 13:06:25 erodrigu Exp $
+// $Id: State.cpp,v 1.9 2005-11-21 10:38:02 jvantilb Exp $
 
 #include <math.h>
 #include <gsl/gsl_math.h>
@@ -205,9 +205,7 @@ double State::errQOverPperp2() const
 //=============================================================================
 State* State::clone() const
 {
-  State* state = new State(*this);
-  state->setLocation( State::LocationUnknown );
-  return state;
+  return new State(*this);
 };
 
 //=============================================================================
