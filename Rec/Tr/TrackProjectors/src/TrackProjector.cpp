@@ -1,4 +1,4 @@
-// $Id: TrackProjector.cpp,v 1.6 2005-05-26 09:34:41 cattanem Exp $
+// $Id: TrackProjector.cpp,v 1.7 2005-11-21 11:15:30 jvantilb Exp $
 // Include files 
 
 // from Gaudi
@@ -42,7 +42,8 @@ const HepVector& TrackProjector::projectionMatrix() const
 //=============================================================================
 double TrackProjector::chi2() const
 {
-  return m_errResidual != 0 ? (m_residual/m_errResidual)*(m_residual/m_errResidual) : 0.;
+  return m_errResidual > 0.0 ? (m_residual/m_errResidual) * 
+    (m_residual/m_errResidual) : 0.0 ;
 }
 
 //=============================================================================
@@ -98,8 +99,7 @@ void TrackProjector::computeResidual(const State& state,
 void TrackProjector::computeErrorResidual( const State& state,
                                            const Measurement& meas )
 {
-  double error = meas.errMeasure();
   const HepSymMatrix& C = state.covariance();
-  double resError  = error * error + C.similarity( m_H );
-  m_errResidual = sqrt( resError );
+  double resError2  = meas.resolution2() + C.similarity( m_H );
+  m_errResidual = sqrt( resError2 );
 }

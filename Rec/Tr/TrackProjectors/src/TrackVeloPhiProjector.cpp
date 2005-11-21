@@ -27,7 +27,12 @@ StatusCode TrackVeloPhiProjector::project( const State& state,
   double x  = state.x();
   double y  = state.y();
 
-  VeloPhiMeasurement& veloPhiMeas = *( dynamic_cast<VeloPhiMeasurement*>(&meas) );
+  VeloPhiMeasurement& veloPhiMeas = *(dynamic_cast<VeloPhiMeasurement*>(&meas));
+
+  // Set r in case it was not set before (= unphysical value)
+  if ( veloPhiMeas.r() <= 0.0 ) {
+    veloPhiMeas.setR( sqrt( x*x + y*y ) );
+  }  
 
   int sensor = veloPhiMeas.cluster() -> sensor();
 
@@ -39,7 +44,8 @@ StatusCode TrackVeloPhiProjector::project( const State& state,
   double cosPhi = 0.;
   double sinPhi = 0.;
 
-  std::vector< std::pair<long,double> > sign = veloPhiMeas.cluster()->stripSignals();
+  std::vector< std::pair<long,double> > sign = 
+    veloPhiMeas.cluster()->stripSignals();
   std::vector< std::pair<long,double> >::const_iterator strIt;
   int strip    = (*sign.begin()).first;
   VeloChannelID channel(sensor,strip);
