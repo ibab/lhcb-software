@@ -4,6 +4,7 @@
 ! Purpose     : Monte Carlo Utility tools for RICH reconstruction algorithms
 !------------------------------------------------------------------------------
 
+!====================== RichRecMCTools v1r10 2005-11-21 ====================
 ! 2005-11-15 - Chris Jones
  - Improvements to photon reconstruction interface to avoid data copying
 

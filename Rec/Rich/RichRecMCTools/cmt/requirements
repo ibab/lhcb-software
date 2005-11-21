@@ -2,7 +2,7 @@
 # Created    : 15/09/2003
 # Maintainer : Christopher Rob Jones
 #============================================================================
-# $Id: requirements,v 1.16 2005-10-13 15:41:39 jonrob Exp $
+# $Id: requirements,v 1.17 2005-11-21 08:56:21 cattanem Exp $
 #============================================================================
 
 package RichRecMCTools
@@ -13,7 +13,7 @@ branches src cmt doc
 include_path none
 
 # ================ dependencies =============================================
-use RichRecBase        v1r*   Rich
+use RichRecBase        v*     Rich
 use Relations          v*     Kernel
 
 # ================ component library=========================================
