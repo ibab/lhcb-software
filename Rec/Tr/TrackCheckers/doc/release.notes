@@ -1,0 +1,24 @@
+!-----------------------------------------------------------------------------
+! Package     : Tr/TrackCheckers
+! Responsible : Edwin Bos
+! Purpose     : Package for track checking algorithms
+!-----------------------------------------------------------------------------
+
+!===================== TrackAssociators v0r0 2005-11-14 ====================
+! Edwin Bos
+  - Creation of package, based on Tr/TrCheck
+  - Useage for instance in $BRUNELOPTS/BrunelCheck.opts :
+
+             // Track checker
+             ApplicationMgr.DLLs += { "TrackCheckers",
+                                      "TrackExtrapolators",
+                                      "TrackMCTools" };
+             XXXYYYSeq.Members += { "TrackChecker" };
+             // example:  XXXYYY = CheckTr
+             TrackChecker.TracksInContainer = "Rec/Track/ZZZ";
+             // example : ZZZ = Best
+             // automatically prefixes "Link/" for linker :
+             TrackChecker.LinkerInTable = "Rec/Track/ZZZ";
+             // Select only long type tracks
+             TrackChecker.TrackSelector.TrackTypes = { 3 };
+
