@@ -4,6 +4,10 @@
 ! Purpose     : package for tracking tools interfaces
 !-----------------------------------------------------------------------------
 
+! 2005-11-21 - Jeroen van Tilburg
+ - ITrackFitter: removed the fitUpstream and fitDownstream methods and
+   added one single method: fit( Track& track );
+
 ! 2005-11-09 - Eduardo Rodrigues
  - ITrackExtraSelector interface introduced:
    selects which extrapolator to use (from M. Needham)

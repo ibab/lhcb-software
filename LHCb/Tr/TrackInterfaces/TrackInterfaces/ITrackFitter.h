@@ -1,4 +1,4 @@
-// $Id: ITrackFitter.h,v 1.4 2005-10-25 12:59:30 erodrigu Exp $
+// $Id: ITrackFitter.h,v 1.5 2005-11-21 11:10:50 jvantilb Exp $
 #ifndef TRACKINTERFACES_ITRACKFITTER_H 
 #define TRACKINTERFACES_ITRACKFITTER_H 1
 
@@ -11,8 +11,6 @@
 #include "GaudiKernel/IAlgTool.h"
 
 class Track;
-class State;
-class Measurement;
 
 static const InterfaceID IID_ITrackFitter ( "ITrackFitter", 1, 0 );
 
@@ -32,23 +30,8 @@ public:
   // Return the interface ID
   static const InterfaceID& interfaceID() { return IID_ITrackFitter; }
 
-  //! fit a track upstream without a seed state (filter and smooth)
-  virtual StatusCode fitUpstream( Track& track ) = 0;
-
-  //! fit a track downstream without a seed state (filter and smooth)
-  virtual StatusCode fitDownstream( Track& track ) = 0;
-
-  //! fit the track upstream with a seed state (filter and smooth)
-  virtual StatusCode fitUpstream( Track& track, State& seed ) = 0;
-
-  //! fit the track downstream with a seed state (filter and smooth)
-  virtual StatusCode fitDownstream( Track& track, State& seed ) = 0;
-
-  //! filter the track (only filter) with a seed state
-  virtual StatusCode filter( Track& track, State& seed ) = 0;
-
-  //! filter/update state with this measurement
-  virtual StatusCode filter( State& state, Measurement& meas ) = 0;
+  //! fit a track 
+  virtual StatusCode fit( Track& track ) = 0;
 
 };
 #endif // TRACKINTERFACES_ITRACKFITTER_H
