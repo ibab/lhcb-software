@@ -32,8 +32,14 @@ public:
   /// Default constructor
   FitNode();
 
+  /// Constructor from a z position
+  FitNode( double zPos );
+
   /// Constructor from a Measurement
   FitNode(Measurement& meas );
+
+  /// Copy constructor
+  FitNode( const FitNode& rhs );
 
   /// Destructor
   virtual ~FitNode();
@@ -46,6 +52,9 @@ public:
 
   /// retrieve noise matrix
   const HepSymMatrix& noiseMatrix() const { return m_noiseMatrix; }
+
+  /// retrieve delta z transport
+  double transportDeltaZ() const { return m_transportDeltaZ; }
 
   /// set transport matrix
   void setTransportMatrix( const HepMatrix& transportMatrix ) {
@@ -62,41 +71,38 @@ public:
     m_noiseMatrix = noiseMatrix;
   }  
 
+  /// set the transport delta z
+  void setTransportDeltaZ( double transportDeltaZ ) {
+    m_transportDeltaZ = transportDeltaZ;
+  }  
+
+  /// Check if the transport information is set correctly
+  bool transportIsSet( double deltaZ )
+  {  
+    return fabs(m_transportDeltaZ - deltaZ) < TrackParameters::lowTolerance ;
+  }
+
   /// retrieve state predicted by the kalman filter step
   State& predictedState()
-  { return *m_predictedState; }
+  { return m_predictedState; }
 
   /// retrieve state predicted by the kalman filter step
   const State& predictedState() const             
-  { return *m_predictedState; }
+  { return m_predictedState; }
 
   /// set state predicted by the kalman filter
   void setPredictedState( const State& predictedState );
 
-  /// retrieve filtered state from the kalman filter step
-  State& filteredState()
-  {return *m_filteredState; }
-
-  /// retrieve filtered state from the kalman filter step
-  const State& filteredState() const 
-  {return *m_filteredState; }
-
-  /// set filtered state from the kalman filter step
-  void setFilteredState( const State& filteredState );
-
   /// add the transport transformation of prevNode to this node
   void updateTransport( const FitNode& node );
-
-  /// z position of Node
-  double z() const   { return m_measurement->z(); };
 
 private:
 
   HepMatrix      m_transportMatrix;  ///< transport matrix
   HepVector      m_transportVector;  ///< transport vector
   HepSymMatrix   m_noiseMatrix;      ///< noise matrix
-  State*         m_predictedState;   ///< predicted state from filter step
-  State*         m_filteredState;    ///< filtered State at this Node
+  double         m_transportDeltaZ;  ///< transport delta z
+  State          m_predictedState;   ///< predicted state from filter step
 };
 
 

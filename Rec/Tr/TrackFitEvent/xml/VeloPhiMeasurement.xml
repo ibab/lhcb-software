@@ -22,12 +22,48 @@
         desc = 'Constructor from an VeloPhiCluster'>
         <arg type = 'VeloCluster' name = 'cluster'/>
         <arg type = 'DeVelo' name = 'det'/>
+        <arg type = 'double' name = 'r = -999.0'/>
       </constructor>
+
+     <attribute
+        type = 'double'
+        name = 'r'
+        desc = 'the r of the Velo Phi measurement'/>
 
       <attribute
         type = 'VeloCluster*'
         name = 'cluster'
         desc = 'Pointer to the VeloPhiCluster'/>
+
+      <method
+        type    = 'double'
+        name    = 'resolution'
+        desc    = 'Retrieve the measurement error (TODO: method can be removed when measure is in cilindrical coordinates)'
+        const   = 'TRUE'>
+        <code>
+          return m_r * m_errMeasure;
+        </code>
+      </method>
+
+      <method
+        type    = 'double'
+        name    = 'resolution2'
+        desc    = 'Retrieve the measurement error squared (TODO: method can be removed when measure is in cilindrical coordinates)'
+        const   = 'TRUE'>
+        <code>
+          return m_r * m_r * m_errMeasure * m_errMeasure;
+        </code>
+      </method>
+
+      <method
+        name    = 'update'
+        desc    = 'Update the Measurement parameters'
+        argList = 'const HepVector refVector'>
+        <code>
+          if ( refVector.num_row() &gt;= 2 )
+          m_r = sqrt( refVector[0]*refVector[0] + refVector[1]*refVector[1] );
+        </code>
+      </method>
 
       <method
         type    = 'VeloPhiMeasurement*'

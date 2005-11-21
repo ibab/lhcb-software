@@ -25,37 +25,71 @@
 //=============================================================================
 // Standard constructor, initializes variables
 //=============================================================================
-FitNode::FitNode():
-  m_predictedState(0),
-  m_filteredState(0)
+FitNode::FitNode()
 {
   // FitNode default constructer
   m_transportMatrix = HepMatrix(5, 5, 1);
   m_transportVector = HepVector(5, 0);
   m_noiseMatrix     = HepSymMatrix(5, 0);
+  m_transportDeltaZ = 0.0;
 }
 
 //=============================================================================
-// Constructor from a Measurement
+// Constructor from a z position
 //=============================================================================
-FitNode::FitNode(Measurement& aMeas):
-  m_predictedState(0),
-  m_filteredState(0)
+FitNode::FitNode( double zPos )
 {
   //FitNode constructer
   m_transportMatrix = HepMatrix(5, 5, 1);
   m_transportVector = HepVector(5, 0);
   m_noiseMatrix     = HepSymMatrix(5, 0);
-  m_measurement     = &aMeas;
+  m_transportDeltaZ = 0.0;
+  State tempState = State();
+  tempState.setZ( zPos );
+  m_state = tempState.clone();
 }
+
+//=============================================================================
+// Constructor from a Measurement
+//=============================================================================
+FitNode::FitNode(Measurement& aMeas)
+{
+  //FitNode constructer
+  m_transportMatrix = HepMatrix(5, 5, 1);
+  m_transportVector = HepVector(5, 0);
+  m_noiseMatrix     = HepSymMatrix(5, 0);
+  m_transportDeltaZ = 0.0;
+  m_measurement     = &aMeas;
+  State tempState = State();
+  tempState.setZ( aMeas.z() );
+  m_state = tempState.clone();
+}
+
+FitNode::FitNode( const FitNode& rhs ) : Node()
+{
+  //FitNode copy constructer
+  m_transportMatrix = rhs.m_transportMatrix;
+  m_transportVector = rhs.m_transportVector;
+  m_noiseMatrix     = rhs.m_noiseMatrix;
+  m_transportDeltaZ = rhs.m_transportDeltaZ ;
+  m_measurement     = rhs.m_measurement;
+  m_predictedState  = rhs.m_predictedState;
+  m_residual        = rhs.m_residual;         
+  m_errResidual     = rhs.m_errResidual;      
+  m_projectionMatrix= rhs.m_projectionMatrix;
+  // Clone the state !
+  m_state = rhs.state().clone();
+}
+
+
+
 
 //=============================================================================
 // Destructor
 //=============================================================================
 FitNode::~FitNode()
 {
-  if (m_predictedState) delete m_predictedState;
-  if (m_filteredState) delete m_filteredState;
+  if (m_state != 0 ) delete m_state;
 }
 
 //=============================================================================
@@ -63,22 +97,7 @@ FitNode::~FitNode()
 //=============================================================================
 void FitNode::setPredictedState( const State& predictedState )
 {  
-  //if pointer not set clone state - else copy (not great)
-  if (m_predictedState) delete m_predictedState;
-  m_predictedState = predictedState.clone();
-}
-
-//=============================================================================
-// Update the filtered state from the Kalman filter step
-//=============================================================================
-void FitNode::setFilteredState( const State& filteredState )
-{  
-  //if pointer not set clone state - else copy (not great)
-  if ( m_filteredState ) delete m_filteredState;
-  m_filteredState = filteredState.clone();
-  
-  //setState(filteredState);
-  m_state = filteredState.clone();
+  m_predictedState = predictedState ;
 }
 
 //=============================================================================
@@ -90,6 +109,7 @@ void FitNode::updateTransport( const FitNode& prevNode )
   m_transportVector += m_transportMatrix * prevNode.transportVector() ;
   m_noiseMatrix += (prevNode.noiseMatrix()).similarity( m_transportMatrix );
   m_transportMatrix = m_transportMatrix * prevNode.transportMatrix();  
+  m_transportDeltaZ += prevNode.transportDeltaZ();
 }
 
 //=============================================================================

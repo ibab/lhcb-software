@@ -4,6 +4,16 @@
 ! Purpose     : Package for the tracking fitting-related classes
 !-----------------------------------------------------------------------------
 
+! 2005-11-21 - Jeroen van Tilburg
+ - VeloPhiMeasurement: Added data member m_r, which is an estimate or
+   r needed to determine the error in Carthesian coordinates. This error is
+   returned by the new method resolution(). The old method errMeasure()
+   returns the error in terms of the phi angle.
+ - FitNode: Add data member m_transportDeltaZ in order to be able to
+   cross check whether the transport data is still correct. Removed obsolete
+   data member filtered state. Data member m_predictedState is not a pointer
+   anymore.
+
 !========================== TrackFitEvent v1r4 2005-11-16 ====================
 ! 2005-11-16 - Marco Cattaneo
  - Fix for Reflex dictionaries with GaudiObjDesc v8r3
