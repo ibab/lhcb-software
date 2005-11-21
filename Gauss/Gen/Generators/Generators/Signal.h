@@ -1,4 +1,4 @@
-// $Id: Signal.h,v 1.3 2005-11-17 15:54:49 robbep Exp $
+// $Id: Signal.h,v 1.4 2005-11-21 16:11:50 robbep Exp $
 #ifndef GENERATORS_SIGNAL_H 
 #define GENERATORS_SIGNAL_H 1
 
@@ -37,9 +37,13 @@ public:
 protected:
   PIDs          m_pids             ;
   bool          m_cleanEvents      ;
-  int           m_nEventsBeforeCut ;
-  int           m_nEventsAfterCut  ;
-  int           m_nInvertedEvents  ;
+  unsigned int  m_nEventsBeforeCut ;
+  unsigned int  m_nEventsAfterCut  ;
+  unsigned int  m_nParticlesBeforeCut ;
+  unsigned int  m_nAntiParticlesBeforeCut ;
+  unsigned int  m_nParticlesAfterCut ;
+  unsigned int  m_nAntiParticlesAfterCut ;
+  unsigned int  m_nInvertedEvents  ;
   double        m_signalMass       ;
   unsigned int  m_signalPID        ;
   bool          m_cpMixture        ;
@@ -54,6 +58,12 @@ protected:
 
   /// choose correct multiplicity
   bool ensureMultiplicity( const unsigned int nSignal ) ;
+
+  /// update counters for efficiency calculations
+  void updateCounters( const ParticleVector & particleList , 
+                       unsigned int & particleCounter , 
+                       unsigned int & antiparticleCounter ,
+                       bool onlyForwardParticles ) const ;
   
 private:
   StatusCode fillHepMCEvent( HepMC::GenEvent * theEvent , 
