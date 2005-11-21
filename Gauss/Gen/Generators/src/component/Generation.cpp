@@ -1,4 +1,4 @@
-// $Id: Generation.cpp,v 1.3 2005-11-08 00:07:34 robbep Exp $
+// $Id: Generation.cpp,v 1.4 2005-11-21 16:15:31 robbep Exp $
 // Include files 
 
 // local
@@ -19,6 +19,7 @@
 #include "Generators/IPileUpTool.h"
 #include "Generators/IDecayTool.h" 
 #include "Generators/IVertexSmearingTool.h"
+#include "Generators/IFullGenEventCutTool.h"
 
 // Gaudi Common Flat Random Number generator
 extern Rndm::Numbers randgaudi ;
@@ -31,8 +32,7 @@ extern Rndm::Numbers randgaudi ;
 
 // Declaration of the Algorithm Factory
 static const  AlgFactory<Generation>          s_factory ;
-const        IAlgFactory& GenerationFactory = s_factory ; 
-
+const        IAlgFactory& GenerationFactory = s_factory ;
 
 //=============================================================================
 // Standard constructor, initializes variables
@@ -41,6 +41,7 @@ Generation::Generation( const std::string& name,
                         ISvcLocator* pSvcLocator)
   : GaudiAlgorithm ( name , pSvcLocator ) ,
     m_decayTool            ( 0 ) ,
+    m_fullGenEventCutTool  ( 0 ) ,
     m_nEvents              ( 0 ) , 
     m_nAcceptedEvents      ( 0 ) ,
     m_nInteractions        ( 0 ) , 
@@ -65,6 +66,9 @@ Generation::Generation( const std::string& name,
     // Tool name to smear vertex
     declareProperty( "VertexSmearingTool" , 
                      m_vertexSmearingToolName = "BeamSpotSmearVertex" ) ;
+    // Tool name to cut on full event
+    declareProperty( "FullGenEventCutTool" , 
+                     m_fullGenEventCutToolName = "" ) ;
 }
 
 //=============================================================================
@@ -103,6 +107,10 @@ StatusCode Generation::initialize() {
   if ( "" != m_decayToolName ) m_decayTool = 
     tool< IDecayTool >( m_decayToolName ) ;
 
+  // Retrieve full gen event cut tool
+  if ( "" != m_fullGenEventCutToolName ) m_fullGenEventCutTool =
+    tool< IFullGenEventCutTool >( m_fullGenEventCutToolName , this ) ;
+
   return StatusCode::SUCCESS;
 }
 
@@ -138,6 +146,15 @@ StatusCode Generation::execute() {
     
     m_nEvents++ ;
     m_nInteractions += nPileUp ;
+
+    if ( m_fullGenEventCutTool ) {
+      if ( goodEvent ) {
+        m_nBeforeFullEvent++ ;
+        goodEvent = m_fullGenEventCutTool -> studyFullEvent( theHepMCs , 
+                                                             theHardInfos ) ;
+        if ( goodEvent ) m_nAfterFullEvent++ ;
+      }
+    }
   }  
 
   m_nAcceptedEvents++ ;
@@ -201,26 +218,33 @@ StatusCode Generation::finalize() {
 //=============================================================================
 StatusCode Generation::decayEvent( HepMCEvent * theEvent ) {
   m_decayTool -> disableFlip() ;
-  StatusCode sc = StatusCode::SUCCESS ;
+  StatusCode sc ;
   
-  GenParticles theHepMCVector ;
   HepMC::GenEvent * pEvt = theEvent -> pGenEvt() ;
-  HepMCUtils::SortHepMC( theHepMCVector , pEvt -> particles_size() ,
-                         pEvt -> particles_begin() , pEvt -> particles_end() );
-  GenParticles::iterator itp ;
-  for ( itp = theHepMCVector.begin() ; itp != theHepMCVector.end() ; ++itp ) {
+  HepMC::GenEvent::particle_iterator itp ;
+
+  // We must use particles_begin to obtain an ordered iterator of GenParticles
+  // according to the barcode: this allows to reproduce events !
+  for ( itp = pEvt -> particles_begin() ; itp != pEvt -> particles_end() ; 
+        ++itp ) {
+
     HepMC::GenParticle * thePart = (*itp) ;
     unsigned int status = thePart -> status() ;
+
     if ( ( 1 ==status ) || ( ( 888 == status ) && 
                              ( 0 == thePart -> end_vertex() ) ) ) {
+
       if ( m_decayTool -> isKnownToDecayTool( thePart -> pdg_id() ) ) {
+
         if ( 1 == status ) thePart -> set_status( 888 ) ;
         else thePart -> set_status( 777 ) ;
+
         sc = m_decayTool -> generateDecay( pEvt , thePart ) ;
+        if ( ! sc.isSuccess() ) return sc ;
       }
     } 
   }  
-  return sc ;
+  return StatusCode::SUCCESS ;
 }
 
 
