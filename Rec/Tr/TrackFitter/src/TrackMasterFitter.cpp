@@ -1,4 +1,4 @@
-// $Id: TrackMasterFitter.cpp,v 1.1 2005-11-21 11:20:57 jvantilb Exp $
+// $Id: TrackMasterFitter.cpp,v 1.2 2005-11-21 11:48:23 jvantilb Exp $
 // Include files 
 // -------------
 // from Gaudi
@@ -211,7 +211,7 @@ StatusCode TrackMasterFitter::determineStates( Track& track )
     // TODO: should be a method from Track
     std::vector<Node*>::iterator iNode = 
       std::min_element( nodes.begin(), nodes.end(),
-                        TrackFunctor::closestToZ<Node>( 0.0 ) );
+                        TrackFunctor::distanceAlongZ<Node>( 0.0 ) );
     State closeState = (*iNode)->state();
 
     // Get the z-position of the "intersection" with the beam line
@@ -424,7 +424,7 @@ StatusCode TrackMasterFitter::makeNodes( Track& track )
   clearNodes( nodes );
 
   // Check if it is needed to populate the track with measurements
-  if ( track.checkFlag( Track::PatRecIDs ) ) {
+  if ( track.status() == Track::PatRecIDs ) {
     m_measProvider -> load();    
     StatusCode sc = m_measProvider -> load( track );
     if ( sc.isFailure() )
