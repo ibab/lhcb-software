@@ -1,4 +1,4 @@
-// $Id: TrackEventFitter.h,v 1.2 2005-10-25 12:50:05 erodrigu Exp $
+// $Id: TrackEventFitter.h,v 1.3 2005-11-21 11:20:57 jvantilb Exp $
 #ifndef TRACKFITTER_TRACKEVENTFITTER_H 
 #define TRACKFITTER_TRACKEVENTFITTER_H 1
 
@@ -9,7 +9,6 @@
 
 // from TrackInterfaces
 #include "TrackInterfaces/ITrackFitter.h"
-#include "TrackInterfaces/IMeasurementProvider.h"
 
 /** @class TrackEventFitter TrackEventFitter.h
  *  
@@ -31,32 +30,23 @@ public:
 protected:
 
 private:
-  /// Get a seed State from the Track
-  /// (State with highest/lowest z in case of upstream/downstream fitting)
-  State& seedState( Track& track );
-
-  /// Register the tracks in the Transient event store
-  StatusCode registerTracks( Tracks* tracksCont );
 
   /// interface to tracks fitter tool
   ITrackFitter* m_tracksFitter;
-
-  /// measurement provider tool
-  IMeasurementProvider* m_measProvider;
 
   // job options
   // -----------
   /// Tracks input container path in TES
   std::string m_tracksInContainer;
 
-  /// Tracks output container path in TES
+  /// Tracks output container path in TES (can be the same as input)
   std::string m_tracksOutContainer;
 
   /// The fitter tool name
   std::string m_fitterName;
 
-  /// Perform the fit upstream/downstream?
-  bool m_fitUpstream;
+  /// Switch in case input and output container are the same or different
+  bool m_makeNewContainer;
 
   // counters
   unsigned int m_nTracks;

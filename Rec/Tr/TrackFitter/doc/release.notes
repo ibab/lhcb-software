@@ -3,6 +3,17 @@
 ! Responsible : Eduardo Rodrigues, Jose A. Hernando
 !----------------------------------------------------------------------------
 
+! 2005-11-21 - Jeroen van Tilburg
+ Many changes. Main modifications:
+ - Split the TrackKalmanFilter tool into a TrackMasterFitter tool and a
+   TrackKalmanFilter tool. The latter fits a track starting from FitNodes
+   (one iteration). The former takes care of outlier removal, refitting,
+   states at predefined z-positions.
+ - Added the FitNodes to the Track (Track still has a vector of Nodes).
+ - Added Location-enum to the predefined z positions.
+ - Cleaned up the debug statements.
+ - Corrected bug: state at beam line was not added to the track.
+
 ! 2005-10-25 - Eduardo Rodrigues
  - TrackEventFitter and TrackKalmanFilter cope with both upstream and
    downstream fitting (only downstream fitting possible before)

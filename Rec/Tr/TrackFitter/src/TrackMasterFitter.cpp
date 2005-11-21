@@ -1,0 +1,471 @@
+// $Id: TrackMasterFitter.cpp,v 1.1 2005-11-21 11:20:57 jvantilb Exp $
+// Include files 
+// -------------
+// from Gaudi
+#include "GaudiKernel/ToolFactory.h"
+
+// from CLHEP
+#include "CLHEP/Matrix/DiagMatrix.h"
+#include "CLHEP/Matrix/Matrix.h"
+#include "CLHEP/Units/PhysicalConstants.h"
+
+// from TrackEvent
+#include "Event/TrackFunctor.h"
+
+// local
+#include "TrackMasterFitter.h"
+
+//-----------------------------------------------------------------------------
+// Implementation file for class : TrackMasterFitter
+//
+//  Original Author: Rutger van der Eijk
+//  Created: 07-04-1999
+//  Adapted: 21-03-2002  Olivier Callot
+//  Adapted: 15-04-2005  Jose A. Hernando, Eduardo Rodrigues
+//-----------------------------------------------------------------------------
+
+// Declaration of the Tool Factory
+static const   ToolFactory<TrackMasterFitter>  s_factory;
+const IToolFactory& TrackMasterFitterFactory = s_factory;
+
+//=========================================================================
+// Standard Constructor, initializes variables
+//=========================================================================
+TrackMasterFitter::TrackMasterFitter( const std::string& type,
+                                      const std::string& name,
+                                      const IInterface* parent)
+  : GaudiTool( type, name, parent)
+  , m_extrapolator(0)
+  , m_trackNodeFitter(0)
+  , m_measProvider(0)
+{
+  declareInterface<ITrackFitter>( this );
+
+  // Define the default fixed z-positions
+  m_zPositions.push_back(   990.0*mm );
+  m_zPositions.push_back(  2165.0*mm );
+  m_zPositions.push_back(  9450.0*mm );
+  m_zPositions.push_back( 11900.0*mm );
+
+  declareProperty( "Extrapolator"        , m_extrapolatorName =
+                                           "TrackMasterExtrapolator" );
+  declareProperty( "TrackNodeFitterName" , m_trackNodeFitterName =
+                                           "TrackKalmanFilter" );
+  declareProperty( "upstream"            , m_upstream         =   true     );
+  declareProperty( "ZPositions"          , m_zPositions                    );
+  declareProperty( "StatesAtMeasZPos"    , m_statesAtMeasZPos =   false    );
+  declareProperty( "StateAtBeamLine"     , m_stateAtBeamLine  =   true     );
+  declareProperty( "NumberFitIterations" , m_numFitIter       =     5      );
+  declareProperty( "Chi2Outliers"        , m_chi2Outliers     =     9.0    );
+  declareProperty( "zBegRich1"           , m_zBegRich1        =   990.0*mm );
+  declareProperty( "zEndRich1"           , m_zEndRich1        =  2165.0*mm );
+  declareProperty( "zBegRich2"           , m_zBegRich2        =  9450.0*mm );
+  declareProperty( "zEndRich2"           , m_zEndRich2        = 11900.0*mm );
+
+}
+
+//=========================================================================
+// Destructor
+//=========================================================================
+TrackMasterFitter::~TrackMasterFitter() {
+}
+
+//=========================================================================
+// Initialize
+//=========================================================================
+StatusCode TrackMasterFitter::initialize() 
+{
+  m_extrapolator    = tool<ITrackExtrapolator>( m_extrapolatorName );
+  m_trackNodeFitter = tool<ITrackFitter>( m_trackNodeFitterName, 
+                                          "NodeFitter", this ) ;
+  m_measProvider    = tool<IMeasurementProvider>( "MeasurementProvider",
+                                                  "MeasProvider", this );
+  m_debugLevel   = msgLevel( MSG::DEBUG );  
+
+  info() << " " << endmsg
+         << "============ TrackMasterFitter Settings ===========" << endmsg
+         << ((m_upstream) ? " Upstream fit" : " Downstream fit")
+         << endmsg << " Max " << m_numFitIter 
+         << " iterations with outliers at chi2 > " << m_chi2Outliers << endmsg
+         << " State z positions at: " << endmsg
+         << ((m_stateAtBeamLine) ? "beam line, " : "")
+         << "first measurement, "
+         << ((m_statesAtMeasZPos) ? "every measurement, " : "" );
+  std::vector<double>::const_iterator zPos;
+  for ( zPos = m_zPositions.begin(); zPos != m_zPositions.end(); ++zPos ) {
+    info() << *zPos << ", " ;
+  }
+  info() << endmsg
+         << "==================================================" << endmsg;
+  
+  return StatusCode::SUCCESS;
+}
+
+//=========================================================================
+// Helper to print a failure comment
+//=========================================================================
+StatusCode TrackMasterFitter::failure(const std::string& comment) {
+  info() << "TrackMasterFitter failure: " << comment << endreq;
+  return StatusCode::FAILURE;
+}
+
+
+//=========================================================================
+// Fit the track
+//=========================================================================
+StatusCode TrackMasterFitter::fit( Track& track )
+{
+  StatusCode sc;
+
+  // Get the seed state
+  if ( track.nStates() == 0 )
+    return Error( "Track has no state! Can not fit.", StatusCode::FAILURE );
+  State seed = seedState( track );
+
+  // Make the nodes from the measurements
+  sc = makeNodes( track );
+  if ( sc.isFailure() )
+    return failure("Unable to make nodes from the measurements");
+
+  // Check that the number of measurements is enough
+  if ( nNodesWithMeasurement( track ) < seed.nParameters() ) {
+    error() << "Track has only " << track.nMeasurements()
+            << " measurements. Not enough to fit a "
+            << seed.nParameters() << "D-state!" << endreq;
+    return StatusCode::FAILURE;
+  }
+
+  // Extrapolate the given seedstate to the z position of the first node
+  std::vector<Node*>& nodes = track.nodes();
+  std::vector<Node*>::iterator firstNode = nodes.begin();
+  double z = (*firstNode) -> z();
+  sc = m_extrapolator -> propagate( seed, z );
+  if ( sc.isFailure() ) 
+    return failure("unable to extrapolate to measurement");
+  seed.setLocation( ((*firstNode)->state()).location() );
+  (*firstNode)->setState( seed );
+
+  // Iterations of filtering-smoothing sequence
+  bool doNextIteration = true;
+  int iter = 0;
+  do {
+    // fit iteration
+    ++iter;
+    if ( m_debugLevel ) debug() << "Iteration # " << iter << endreq;
+
+    // Call the track fit
+    sc = m_trackNodeFitter->fit( track );
+    if ( sc.isFailure() ) return failure( "unable to fit the track" );
+    
+    // Prepare for next iteration
+    if ( iter < m_numFitIter ) {
+      // Outlier removal
+      if ( nNodesWithMeasurement( track ) > seed.nParameters() ) {
+        doNextIteration = outlierRemoved( track );
+      } else {
+        doNextIteration = false;
+      }
+
+      if ( doNextIteration ) {
+        // Re-seeding for next iteration (i.e. inflate covariance matrix)
+        State& firstState = (*firstNode)->state();
+        reSeed( seed, firstState );
+        seed = firstState;
+
+        // Update the reference trajectories in the measurements
+        update( track );
+      }
+    }
+  } while ( iter < m_numFitIter && doNextIteration );
+
+  // determine the track states at user defined z positions
+  sc = determineStates( track );
+  if ( sc.isFailure() ) {
+    warning() << "Failed to determine the states at the requested z-positions"
+              << endreq;
+    // clear the node vector
+    clearNodes( nodes );
+    return sc;
+  }
+
+  // set the HistoryFit flag to "Kalman fit done"
+  track.setHistoryFit( Track::Kalman );
+
+  return sc;
+}
+
+//=============================================================================
+// 
+//=============================================================================
+StatusCode TrackMasterFitter::determineStates( Track& track )
+{
+  // clean the non-fitted states in the track!
+  const std::vector<State*> allstates = track.states();
+  for ( std::vector<State*>::const_iterator it = allstates.begin();
+        it != allstates.end(); ++it) track.removeFromStates( *it );
+
+  std::vector<Node*>& nodes = track.nodes();
+  // Add state closest to the beam line
+  if ( m_stateAtBeamLine ) {
+    // Get the state closest to z=0.0 from the nodes
+    // TODO: should be a method from Track
+    std::vector<Node*>::iterator iNode = 
+      std::min_element( nodes.begin(), nodes.end(),
+                        TrackFunctor::closestToZ<Node>( 0.0 ) );
+    State closeState = (*iNode)->state();
+
+    // Get the z-position of the "intersection" with the beam line
+    double z = closestToBeamLine( closeState );
+
+    // check if this z position is reasonable and if it is smaller than 
+    //  the z position of the state at the first measurement.
+    // TODO: remove hardcoded number
+    if ( fabs(z) < 200.0 ) {      
+      StatusCode sc = m_extrapolator -> propagate( closeState , z );
+      if ( sc.isFailure() ) {
+        warning() << "Extrapolation of state to z = " << z << " failed."
+                  << endreq;
+      } else {
+        // add the state at the position closest to the beam line
+        closeState.setLocation( State::ClosestToBeam );
+        track.addToStates( closeState );
+      }
+    }
+  }
+
+  // Add state at first measurement
+  if ( m_upstream ) {
+    std::vector<Node*>::reverse_iterator iNode = nodes.rbegin();
+    while ( !(*iNode)->hasMeasurement() ) ++iNode;
+    State& state = (*iNode) -> state();
+    state.setLocation( State::FirstMeasurement );
+  } else {
+    std::vector<Node*>::iterator iNode = nodes.begin();
+    while ( !(*iNode)->hasMeasurement() ) ++iNode;
+    State& state = (*iNode) -> state();
+    state.setLocation( State::FirstMeasurement );
+  }
+  
+  // Add the states at the predefined positions
+  // or at all nodes if requested
+  std::vector<Node*>::const_iterator it;
+  for ( it = nodes.begin(); it < nodes.end(); ++it ) {
+    State& state = (*it)->state();
+    if ( m_statesAtMeasZPos ) track.addToStates( state );
+    else {
+      std::vector<double>::const_iterator zPos;
+      for ( zPos = m_zPositions.begin(); zPos != m_zPositions.end(); ++zPos ) {
+        if ( fabs(*zPos - state.z()) < TrackParameters::lowTolerance )
+          track.addToStates( state );
+      }
+    }
+  }
+
+  // Sort the states in z
+  std::vector<State*>& states = track.states();
+  std::sort( states.begin(), states.end(),
+             TrackFunctor::increasingByZ<State>() );
+
+  if ( m_debugLevel ) {
+    debug() << "Track " << track.key() << " has " << track.nStates() 
+            << " states after fit" << endmsg << "  at z = " ;
+    const std::vector<State*>& allstates = track.states();
+    for ( unsigned int it2 = 0; it2 < allstates.size(); it2++ ) {
+      debug() << allstates[it2]->z() << ", " ;
+    }
+    debug() << endmsg << "  " << nNodesWithMeasurement( track ) 
+            << " measurements used for fit (out of " 
+            << track.nMeasurements() << ")." << endmsg;
+  }
+
+  return StatusCode::SUCCESS;
+
+}
+
+//=========================================================================
+//
+//=========================================================================
+bool TrackMasterFitter::outlierRemoved( Track& track )
+{
+  // return true if outlier chi2 cut < 0
+  if ( m_chi2Outliers < 0.0 ) return true;
+
+  // flag (true if outliers are removed)
+  bool outlierWasRemoved = false;
+
+  // loop over the nodes and find the one
+  // with the highest chi2 > m_chi2Outliers
+  std::vector<Node*>& nodes = track.nodes();
+  std::vector<Node*>::iterator iNode;
+  std::vector<Node*>::iterator iWorstNode = nodes.end();
+  double worstChi2 = m_chi2Outliers;
+  for ( iNode = nodes.begin(); iNode != nodes.end(); ++iNode ) {
+    if ( (*iNode)->hasMeasurement() ) {
+      double chi2 = (*iNode) -> chi2();
+      if ( chi2 > worstChi2 ) {
+        worstChi2 = chi2;
+        iWorstNode = iNode;
+      }
+    }
+  }
+
+  // if a node is found: remove its measurement from the track
+  if ( iWorstNode != nodes.end() ) {
+
+    if (m_debugLevel) debug() << "Measurement " << iWorstNode-nodes.begin() 
+                              << " at z=" << (*iWorstNode)->z() 
+                              << " with chi2=" << (*iWorstNode)->chi2() 
+                              << " removed." << endmsg;
+
+    // Remove measurement from node (node still exists w/o measurement)
+    (*iWorstNode)->removeMeasurement();
+
+    outlierWasRemoved = true;
+  }
+
+  return outlierWasRemoved;
+}
+
+//=========================================================================
+//
+//=========================================================================
+StatusCode TrackMasterFitter::reSeed( State& seed, State& newSeed )
+{
+  // First extrapolate the previous seed to the z position of 
+  // the current newSeed
+  StatusCode sc = m_extrapolator->propagate( seed, newSeed.z() );
+  if ( sc.isFailure() ) { 
+    warning() << "extrapolation of state to z=" << newSeed.z()
+              << " failed" << endreq;
+    return sc;
+  }
+
+  // use the large covariance matrix of the previous seed for new seed
+  HepSymMatrix& tC = newSeed.covariance();
+  tC = seed.covariance();
+  
+  return StatusCode::SUCCESS;
+}
+
+//=========================================================================
+// Update the measurements before a refit
+//=========================================================================
+void TrackMasterFitter::update( Track& track ) 
+{ 
+  std::vector<Node*>& nodes = track.nodes();
+  std::vector<Node*>::iterator iNode;
+  for ( iNode = nodes.begin(); iNode != nodes.end(); ++iNode ) {    
+    if ( (*iNode)->hasMeasurement() ) {
+      Measurement& meas = (*iNode) -> measurement();
+      meas.update( (*iNode)->state().stateVector() );
+    }
+  }
+}
+
+//=========================================================================
+// 
+//=========================================================================
+void TrackMasterFitter::clearNodes( std::vector<Node*>& nodes ) 
+{
+  if ( !nodes.empty() ) {
+    std::vector<Node*>::iterator iNode = nodes.begin();
+    while ( iNode != nodes.end() ) {
+      Node* aNode = *iNode;
+      nodes.erase( iNode );
+      delete aNode;
+    }
+  }
+}
+
+//=========================================================================
+// Determine the z-position of the closest approach to the beam line
+//  by linear extrapolation.
+//=========================================================================
+double TrackMasterFitter::closestToBeamLine( State& state ) const
+{
+  HepVector& vec = state.stateVector();
+  double z = state.z();
+  // check on division by zero (track parallel to beam line!)
+  if ( vec[2] != 0 || vec[3] != 0 ) {
+    z -= ( vec[0]*vec[2] + vec[1]*vec[3] ) / ( vec[2]*vec[2] + vec[3]*vec[3] );
+  }
+  return z;
+}
+
+//=========================================================================
+// Retrieve the number of nodes with a measurement
+//=========================================================================
+unsigned int TrackMasterFitter::nNodesWithMeasurement( const Track& track) const
+{
+  unsigned int nMeas = 0;
+  const std::vector<Node*>& nodes = track.nodes();
+  std::vector<Node*>::const_iterator iNode;
+  for ( iNode = nodes.begin(); iNode != nodes.end(); ++iNode ) {    
+    if ( (*iNode)->hasMeasurement() ) ++nMeas;
+  }
+  return nMeas;
+}
+
+//=============================================================================
+// Get a seed State from the Track
+//=============================================================================
+const State& TrackMasterFitter::seedState( Track& track )
+{
+  return (m_upstream) ? (*track.states().back()) : (track.firstState());
+}
+
+//=============================================================================
+// Create the nodes from the measurements
+//=============================================================================
+StatusCode TrackMasterFitter::makeNodes( Track& track ) 
+{
+  // Clear the nodes
+  std::vector<Node*>& nodes = track.nodes();
+  clearNodes( nodes );
+
+  // Check if it is needed to populate the track with measurements
+  if ( track.checkFlag( Track::PatRecIDs ) ) {
+    m_measProvider -> load();    
+    StatusCode sc = m_measProvider -> load( track );
+    if ( sc.isFailure() )
+      return Error( "Unable to load measurements!", StatusCode::FAILURE );
+  }
+
+  // reserve some space in node vector
+  std::vector<Measurement*>& measures = track.measurements();
+  nodes.reserve( measures.size() + m_zPositions.size() );
+
+  // Create the nodes and add them to the private copy
+  for ( std::vector<Measurement*>::reverse_iterator it = measures.rbegin(); 
+        it != measures.rend(); ++it ) {
+    Measurement& meas = *(*it);
+    FitNode* node = new FitNode( meas );
+    nodes.push_back( node );
+  }
+
+  // Loop over the predefined z positions and add them to the nodes
+  std::vector<double>::const_iterator zPos;
+  for ( zPos = m_zPositions.begin(); zPos != m_zPositions.end(); ++zPos ) {
+      FitNode* node = new FitNode( *zPos );
+      State& locState = node->state();
+      if ( fabs(*zPos - m_zBegRich1) < TrackParameters::lowTolerance )
+        locState.setLocation( State::BegRich1 );
+      else if ( fabs(*zPos - m_zEndRich1 ) < TrackParameters::lowTolerance )
+        locState.setLocation( State::EndRich1 );
+      else if ( fabs(*zPos - m_zBegRich2 ) < TrackParameters::lowTolerance )
+        locState.setLocation( State::BegRich2 );
+      else if ( fabs(*zPos - m_zEndRich2 ) < TrackParameters::lowTolerance )
+        locState.setLocation( State::EndRich2 );
+      nodes.push_back( node );
+  }
+
+  // Sort the nodes in z
+  if ( m_upstream ) {
+    std::sort( nodes.begin(), nodes.end(), TrackFunctor::decreasingByZ<Node>());
+  } else {
+    std::sort( nodes.begin(), nodes.end(), TrackFunctor::increasingByZ<Node>());
+  }
+
+  return StatusCode::SUCCESS;
+}
+

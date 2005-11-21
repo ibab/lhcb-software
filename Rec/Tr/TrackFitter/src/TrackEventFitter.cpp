@@ -1,4 +1,4 @@
-// $Id: TrackEventFitter.cpp,v 1.3 2005-10-25 12:50:05 erodrigu Exp $
+// $Id: TrackEventFitter.cpp,v 1.4 2005-11-21 11:20:57 jvantilb Exp $
 // Include files
 // -------------
 // from Gaudi
@@ -31,14 +31,13 @@ TrackEventFitter::TrackEventFitter( const std::string& name,
                                     ISvcLocator* pSvcLocator)
   : GaudiAlgorithm ( name , pSvcLocator )
   , m_tracksFitter(0)
-  , m_measProvider(0)
+  , m_makeNewContainer(true)
 {
   declareProperty( "TracksInContainer", 
                    m_tracksInContainer = "Rec/Track/Ideal" );
   declareProperty( "TracksOutContainer", 
-                   m_tracksOutContainer = "Rec/Track/FitIdeal" );
-  declareProperty( "FitterName"      , m_fitterName = "TrackKalmanFilter" );
-  declareProperty( "FitUpstream"     , m_fitUpstream   = true );
+                   m_tracksOutContainer = "Rec/Track/Ideal" );
+  declareProperty( "FitterName"      , m_fitterName = "TrackMasterFitter" );
 }
 
 //=============================================================================
@@ -57,26 +56,20 @@ StatusCode TrackEventFitter::initialize() {
 
   m_tracksFitter = tool<ITrackFitter>( m_fitterName, "Fitter", this );
 
-  m_measProvider = tool<IMeasurementProvider>( "MeasurementProvider",
-                                               "MeasProvider", this );
-
   // Print out the user-defined settings
   // -----------------------------------
-  std::string fitType;
-  if ( m_fitUpstream ) fitType = "upstream";
-  else                 fitType = "downstream";
-
   info()
-    << " " << endreq
-    << "================ TrackEventFitter Settings ================"
-    << endreq
-    << "  Tracks input container   : " << m_tracksInContainer << endreq
-    << "  Tracks output container  : " << m_tracksOutContainer << endreq
-    << "  Fitter name              : " << m_fitterName << endreq
-    << "  Fit type                 : " << fitType << endreq
-    << "==========================================================="
-    << endreq
-    << " " << endreq;
+    << " " << endmsg
+    << "=========== TrackEventFitter Settings ============"
+    << endmsg
+    << "  Tracks input container   : " << m_tracksInContainer << endmsg
+    << "  Tracks output container  : " << m_tracksOutContainer << endmsg
+    << "  Fitter name              : " << m_fitterName << endmsg
+    << "=================================================="
+    << endmsg
+    << " " << endmsg;
+
+  if ( m_tracksInContainer == m_tracksOutContainer ) m_makeNewContainer = false;
 
   // Initialize global counters
   // --------------------------
@@ -101,86 +94,49 @@ StatusCode TrackEventFitter::execute() {
 
   // Make container for tracks
   // -------------------------
-  Tracks* tracksNewCont = new Tracks();
+  Tracks* tracksNewCont = 0;
+  if ( m_makeNewContainer ) tracksNewCont = new Tracks();
 
   // Loop over the tracks and fit them
   // ---------------------------------
   unsigned int nFitFail = 0;
+  Tracks::const_iterator iTrack = tracksCont -> begin();
+  for ( ; iTrack != tracksCont->end(); ++iTrack ) {
 
-  for ( Tracks::const_iterator iTrack = tracksCont -> begin();
-        iTrack != tracksCont->end();
-        ++iTrack ) {
-
-    // Make a new track keeping the same key
-    Track& track = *( (*iTrack) -> cloneWithKey() );
-
-    // Check if it is needed to populate the track with measurements
-    if ( track.checkFlag( Track::PatRecIDs ) ) {
-      m_measProvider -> load();    
-      sc = m_measProvider -> load( track );
-      if ( sc.isFailure() )
-        return Error( "Unable to load measurements!", StatusCode::FAILURE );
-    }
-
-    // Get the seed state
-    if ( track.nStates() == 0 )
-      return Error( "Track has no state! Can not fit.", StatusCode::FAILURE );
-
-    State& seed = seedState( track );
-
-    // Check that the number of measurements is enough
-    unsigned int nMeas = track.nMeasurements();
-    if ( nMeas < seed.nParameters() ) {
-      error() << "Track has only " << nMeas
-              << " measurements. Not enough to fit a "
-              << seed.nParameters() << "D-state!" << endreq;
-      return StatusCode::FAILURE;
-    }
+    // If needed make a new track keeping the same key
+    Track& track = ( m_makeNewContainer ) ?
+      *( (*iTrack) -> cloneWithKey() ) :  *(*iTrack);
 
     if ( msgLevel( MSG::DEBUG ) ) {
-      debug() << "#### Fitting Track # " << track.key() << " ####" << endreq
-              << "  # of states before fit:" << track.nStates() << endreq
+      debug() << "#### Fitting Track # " << track.key() << " ####" << endmsg
+              << "  # of states before fit:" << track.nStates() << endmsg
               << "  States at z-positions: ";
       const std::vector<State*>& allstates = track.states();
       for ( unsigned int it = 0; it < allstates.size(); it++ ) {
         debug() << allstates[it]->z() << " ";
       }
-      debug() << endreq;
+      debug() << endmsg;
     }
 
-    if ( m_fitUpstream ) {  // fit upstream from last measurement
-      sc = m_tracksFitter -> fitUpstream( track, seed );
-    } 
-    else {                  // fit downstream from first measurement
-      sc = m_tracksFitter -> fitDownstream( track, seed );
-    }
+    sc = m_tracksFitter -> fit( track );
 
     if ( sc.isSuccess() ) {
       track.setStatus( Track::Fitted );
       // Add the track to the new Tracks container
       // -----------------------------------------
-      tracksNewCont -> add( &track );
+      if ( m_makeNewContainer ) tracksNewCont -> add( &track );
+      if ( msgLevel( MSG::DEBUG ) ) {
+        debug() << "Fitted successfully track # " << track.key() << endmsg
+                << "  # of states after fit:" << track.nStates() << endmsg;
+      }
     }
     else {
       track.setFlag( Track::Invalid, true );
       track.setStatus( Track::FitFailed );
       nFitFail++;
-      debug() << "Unable to fit the track # " << track.key() << endreq;
+      if ( msgLevel( MSG::DEBUG ) )
+        debug() << "Unable to fit the track # " << track.key() << endmsg;
     }
-
-    if ( msgLevel( MSG::DEBUG ) ) {
-      debug() << "Fitted successfully track # " << track.key() << endreq
-              << "  # of states after fit:" << track.nStates() << endreq
-              << "  States are: ";
-      const std::vector<State*>& allstates = track.states();
-      for ( unsigned int it2 = 0; it2 < allstates.size(); it2++ ) {
-        debug() << "-- at z = " << allstates[it2]->z() << endreq
-                << "state vector:" << allstates[it2]->stateVector() << endreq
-                << "covariance:" << allstates[it2]->covariance() << endreq;
-      }
-      debug() << endreq;
-    }
-
   } // loop over input Tracks
 
   // Update counters
@@ -191,15 +147,19 @@ StatusCode TrackEventFitter::execute() {
 
   if ( msgLevel( MSG::DEBUG ) ) {
     if ( nFitFail == 0 )
-      debug() << "All " << nTracks << " tracks fitted succesfully." << endreq;
+      debug() << "All " << nTracks << " tracks fitted succesfully." << endmsg;
     else
       debug() << "Fitted successfully " << (nTracks-nFitFail)
-              << " out of " << nTracks << endreq;
+              << " out of " << nTracks << endmsg;
   }
 
   // Store the Tracks in the TES
   // ---------------------------
-  return registerTracks( tracksNewCont );
+  if ( m_makeNewContainer ) {
+    return put( tracksNewCont, m_tracksOutContainer );
+  } else {
+    return StatusCode::SUCCESS;
+  }
 }
 
 //=============================================================================
@@ -214,44 +174,17 @@ StatusCode TrackEventFitter::finalize() {
     perf = float(m_nFittedTracks) / float(m_nTracks) * 100.;
 
   info()
-    << " " << endreq
+    << " " << endmsg
     << "====================== TrackEventFitter Summary ======================"
-    << endreq
+    << endmsg
     << "  Fitting performance   : "
-    << format( " %7.2f %%", perf ) << endreq
+    << format( " %7.2f %%", perf ) << endmsg
     << "                            ("
     << format( "%7d / %6d tracks )",
-               m_nFittedTracks, m_nTracks ) << endreq
+               m_nFittedTracks, m_nTracks ) << endmsg
     << "======================================================================"
-    << endreq;
+    << endmsg;
 
   return GaudiAlgorithm::finalize();  // must be called after all other actions
 }
 
-//=============================================================================
-// Get a seed State from the Track
-//=============================================================================
-State& TrackEventFitter::seedState( Track& track )
-{
-  if ( m_fitUpstream )  // fit upstream
-    //return *( *(track.states().end()-1) );
-    return *track.states().back();
-  else                  // fit downstream
-    return track.firstState();
-}
-
-//=============================================================================
-// Register the tracks container in the TES
-//=============================================================================
-StatusCode TrackEventFitter::registerTracks( Tracks* tracksCont )
-{
-  StatusCode sc = put( tracksCont, m_tracksOutContainer );
-
-  if ( sc.isFailure() )
-    error() << "Unable to register the output container at "
-            << m_tracksOutContainer << ". Status is " << sc << endreq;
-
-  return sc;
-}
-
-//=============================================================================
