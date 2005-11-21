@@ -1,4 +1,4 @@
-// $Id: SignalForcedFragmentation.cpp,v 1.1 2005-11-17 15:57:56 robbep Exp $
+// $Id: SignalForcedFragmentation.cpp,v 1.2 2005-11-21 16:18:05 robbep Exp $
 // Include files
 
 // local
@@ -117,6 +117,10 @@ bool SignalForcedFragmentation::generate( const unsigned int nPileUp ,
       ParticleVector theParticleList ;
       if ( checkPresence( signalPid , theGenEvent , theParticleList ) ) {
         m_nEventsBeforeCut++ ;
+
+        updateCounters( theParticleList , m_nParticlesBeforeCut , 
+                        m_nAntiParticlesBeforeCut , false ) ;
+
         bool passCut = true ;
         if ( 0 != m_cutTool ) 
           passCut = m_cutTool -> applyCut( theParticleList , theGenEvent ,
@@ -124,6 +128,9 @@ bool SignalForcedFragmentation::generate( const unsigned int nPileUp ,
         
         if ( passCut && ( ! theParticleList.empty() ) ) {
           m_nEventsAfterCut++ ;
+
+          updateCounters( theParticleList , m_nParticlesAfterCut , 
+                          m_nAntiParticlesAfterCut , true ) ;
 
           HepMC::GenParticle * theSignal = 
             chooseAndRevert( theParticleList , theGenEvent ) ;
@@ -142,6 +149,9 @@ bool SignalForcedFragmentation::generate( const unsigned int nPileUp ,
             sc = isolateSignal( theSignal ) ;
             if ( ! sc.isSuccess() ) Exception( "Cannot isolate signal" ) ;
           }
+
+          theGenEvent -> 
+            set_signal_process_vertex( theSignal -> production_vertex() ) ;
           
           result = true ;
         }

@@ -1,4 +1,4 @@
-// $Id: SignalPlain.cpp,v 1.2 2005-11-17 15:57:31 robbep Exp $
+// $Id: SignalPlain.cpp,v 1.3 2005-11-21 16:18:05 robbep Exp $
 // Include files 
 
 // local
@@ -71,6 +71,10 @@ bool SignalPlain::generate( const unsigned int nPileUp ,
         if ( ensureMultiplicity( theParticleList.size() ) ) {
           
           m_nEventsBeforeCut++ ;
+
+          updateCounters( theParticleList , m_nParticlesBeforeCut , 
+                          m_nAntiParticlesBeforeCut , false ) ;          
+          
           bool passCut = true ;
           if ( 0 != m_cutTool ) 
             passCut = m_cutTool -> applyCut( theParticleList , theGenEvent ,
@@ -78,7 +82,10 @@ bool SignalPlain::generate( const unsigned int nPileUp ,
           
           if ( passCut && ( ! theParticleList.empty() ) ) {
             m_nEventsAfterCut++ ;
-
+            
+            updateCounters( theParticleList , m_nParticlesAfterCut , 
+                            m_nAntiParticlesAfterCut , true ) ;
+            
             HepMC::GenParticle * theSignal = 
               chooseAndRevert( theParticleList , theGenEvent ) ;
             
@@ -91,6 +98,8 @@ bool SignalPlain::generate( const unsigned int nPileUp ,
               sc = isolateSignal( theSignal ) ;
               if ( ! sc.isSuccess() ) Exception( "Cannot isolate signal" ) ;
             }
+            theGenEvent -> 
+              set_signal_process_vertex( theSignal -> production_vertex() ) ;
             
             result = true ;
           }

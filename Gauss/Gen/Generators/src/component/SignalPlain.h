@@ -1,4 +1,4 @@
-// $Id: SignalPlain.h,v 1.1 2005-10-03 10:30:25 robbep Exp $
+// $Id: SignalPlain.h,v 1.2 2005-11-21 16:18:05 robbep Exp $
 #ifndef GENERATORS_SIGNALPLAIN_H 
 #define GENERATORS_SIGNALPLAIN_H 1
 
@@ -31,8 +31,5 @@ public:
 protected:
 
 private:
-  unsigned int  m_nEventsBeforeCut ;
-  unsigned int  m_nEventsAfterCut  ;
-  unsigned int  m_nInvertedEvents  ;
 };
 #endif // GENERATORS_SIGNALPLAIN_H
