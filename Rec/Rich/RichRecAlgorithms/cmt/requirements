@@ -4,7 +4,7 @@
 #            : Common reconstruction algorithms for the RICH
 #============================================================================
 package           RichRecAlgorithms
-version           v1r1
+version           v1r0
 
 #============================================================================
 # Structure, i.e. directories to process. 
@@ -15,7 +15,7 @@ include_path      none
 #============================================================================
 # Used packages
 #============================================================================
-use RichRecBase       v1r*  Rich
+use RichRecBase       v*  Rich
 
 #============================================================================
 # Component library building rule
