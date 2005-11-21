@@ -1,6 +1,22 @@
-! $Id: release.notes,v 1.14 2005-11-17 15:55:11 robbep Exp $
+! $Id: release.notes,v 1.15 2005-11-21 16:25:35 robbep Exp $
 ! Package     : Gen/Generators
 ! Responsible : 
+
+! 2005-11-21 - Patrick Robbe
+ - Signal.h/.cpp: add functions and counters to be able to compute
+   the generator level cut efficiencies. Each tool deriving from 
+   "Signal" has to increment at the correct place these counters. 
+ - ExternalGenerator.cpp: use HepMC::GenEvent iterators (which are
+   sorted according to barcodes) in order to remove need to call 
+   sort function (to reproduce events with HepMC) 
+ - IFullGenEventCutTool: add new tool to be able to cut on full event
+   properties.
+ - Generation.cpp: 
+       . sort GenParticles when using HepMC::GenParticle
+         iterators (which are not sorted) according to the barcode.
+       . use new Full event cut tool 
+ - SignalPlain, SignalForcedFragmentation, SignalRepeatedHadronization:
+   increment counters to compute generator level cut efficiencies.
 
 ! 2005-11-17 - Patrick Robbe
  - src/component/Signal*.cpp : add possibility to generate clean events
