@@ -1,4 +1,4 @@
-// $Id: ChargedProtoPAlg.cpp,v 1.23 2005-05-12 09:55:56 ibelyaev Exp $
+// $Id: ChargedProtoPAlg.cpp,v 1.24 2005-11-21 09:42:32 cattanem Exp $
 // Include files 
 #include <memory>
 
@@ -748,7 +748,7 @@ StatusCode ChargedProtoPAlg::addRich( SmartDataPtr<RichPIDs>& richpids,
   RichPIDs::const_iterator iRich;
   ProtoParticle::PIDInfoPair idinfo;
   for( iRich = richpids->begin(); richpids->end() != iRich; ++iRich ) {
-    const TrStoredTrack* track = (*iRich)->recTrack();
+    const TrStoredTrack* track = (*iRich)->trStoredTrack();
     if( track == proto->track() ) {
       sc = StatusCode::SUCCESS;
       proto->setRichPID( *iRich );

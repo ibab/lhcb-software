@@ -1,14 +1,6 @@
-// $Id: NeutralPPCreator.h,v 1.3 2004-03-11 10:35:46 pkoppenb Exp $
+// $Id: NeutralPPCreator.h,v 1.4 2005-11-21 09:42:32 cattanem Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
-// ============================================================================
-// $Log: not supported by cvs2svn $
-// Revision 1.2  2002/07/27 19:24:05  gcorti
-// to compile on win
-//
-// Revision 1.1  2002/07/15 19:27:09  ibelyaev
-//  add new algorithm for creation on Neutral ProtoParticles
-// 
 // ============================================================================
 #ifndef NEUTRALPPCREATOR_H 
 #define NEUTRALPPCREATOR_H 1
@@ -135,10 +127,10 @@ protected:
   };
 
   /** process of one calo hypo into the protoparticle
-   *  @param hypo CloHypo object 
+   *  @param hypo CaloHypo object 
    *  @param particle Protopareticle to be updated 
-   *  @param associator table 
-   *  @return statsu code 
+   *  @param table associator table 
+   *  @return status code 
    */
   StatusCode process
   ( const CaloHypo* hypo     , 

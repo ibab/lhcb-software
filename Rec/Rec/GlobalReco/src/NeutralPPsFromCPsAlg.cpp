@@ -1,8 +1,6 @@
-// $Id: NeutralPPsFromCPsAlg.cpp,v 1.8 2005-05-12 09:55:56 ibelyaev Exp $
+// $Id: NeutralPPsFromCPsAlg.cpp,v 1.9 2005-11-21 09:42:32 cattanem Exp $
 // ============================================================================
-// CVS Tag $Name: not supported by cvs2svn $ , version $Revision: 1.8 $
-// ============================================================================
-// $Log: not supported by cvs2svn $
+// CVS Tag $Name: not supported by cvs2svn $ , version $Revision: 1.9 $
 // ============================================================================
 // Include files
 // ============================================================================
@@ -46,28 +44,30 @@
 // ============================================================================
 
 
-/** @class NeutralPPsFromCPsAlg NeutralPPsFromCPsAlg.h
+/** @class NeutralPPsFromCPsAlg NeutralPPsFromCPsAlg.cpp
  *  
  *  Creator of the neutral ProtoParticles from CaloParticles
  *
  *  The current version fill following estimators for ProtoParticle
  *  
- *  <li>  <c>CaloTrMatch</c>     as <b>minimal</b> of this estimator for all 
- *        linked <c>CaloHypo</c> objects. The value is extracted from 
+ *  <ul>
+ *  <li>  <i>CaloTrMatch</i>     as <b>minimal</b> of this estimator for all 
+ *        linked <i>CaloHypo</i> objects. The value is extracted from 
  *        the relation table/associator as a relation weigth between 
- *        <c>CaloCluster</c> and <c>TrStoredTrack</c> objects </li>
- *  <li>  <c>CaloDepositID</c>   as <b>maximal</b> of this estimator for all 
- *        linked <c>CaloHypo</c> objects using Spd/Prs estimator tool 
+ *        <i>CaloCluster</i> and <i>TrStoredTrack</i> objects </li>
+ *  <li>  <i>CaloDepositID</i>   as <b>maximal</b> of this estimator for all 
+ *        linked <i>CaloHypo</i> objects using Spd/Prs estimator tool 
  *        written by Frederic Machefert </li>
- *  <li>  <c>CaloShowerShape</c> as <b>maximal</b> of the estimator for 
- *        all linked <c>CaloHypo</c> objects. Estimator is equal to the 
+ *  <li>  <i>CaloShowerShape</i> as <b>maximal</b> of the estimator for 
+ *        all linked <i>CaloHypo</i> objects. Estimator is equal to the 
  *        sum of diagonal elements of cluster spread matrix (2nd order 
  *        moments of the cluster) </li>
- *  <li>  <c>ClusterMass</c>     as <b>maximal</b> of the estimator of 
+ *  <li>  <i>ClusterMass</i>     as <b>maximal</b> of the estimator of 
  *        cluster mass using smart algorithm by Olivier Deschamp </li>
- *  <li>  <c>PhotonID</c>        as the estimator of PhotonID
+ *  <li>  <i>PhotonID</i>        as the estimator of PhotonID
  *        using nice identifiaction tool 
  *        CaloPhotonEstimatorTool by Frederic Machefert * 
+ *  </ul>
  *  
  *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
  *  @date   2002-11-20

@@ -4,6 +4,11 @@
 ! Purpose     : Holds final reconstruction code
 !-----------------------------------------------------------------------------
 
+!========================== GlobalReco v5r1 2005-11-21 ===================
+! 2005-11-21 - Marco Cattaneo
+ - Adapt to change in RichPID interface
+ - Fix doxygen warnings
+
 !========================== GlobalReco v5r0 2005-05-25 ===================
 ! 2005-05-24 -P. Koppenburg
   Big reshuffling of options for Panoramix
