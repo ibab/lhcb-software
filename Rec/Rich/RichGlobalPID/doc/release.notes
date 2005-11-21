@@ -4,6 +4,7 @@
 ! Purpose     : The Rich Global PID algorithm
 !-----------------------------------------------------------------------------
 
+!====================== RichGlobalPID v1r11 2005-11-21 =======================
 ! 2005-09-25 - Chris Jones
  - Improvements to HLT/Offline running
 

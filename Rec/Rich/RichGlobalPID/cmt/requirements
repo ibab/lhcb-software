@@ -2,7 +2,7 @@
 # Created    : 11/05/2003
 # Maintainer : Christopher Rob Jones
 #============================================================================
-# $Id: requirements,v 1.19 2005-10-13 14:59:31 jonrob Exp $
+# $Id: requirements,v 1.20 2005-11-21 08:35:04 cattanem Exp $
 #============================================================================
 
 package RichGlobalPID
@@ -16,7 +16,7 @@ branches src cmt doc options xml Event RichGlobalPID
 #============================================================================
 # Used packages.
 #============================================================================
-use RichRecBase       v1r*  Rich
+use RichRecBase       v*  Rich
 
 #============================================================================
 # Environment
