@@ -1,4 +1,4 @@
-// $Id: Generation.h,v 1.1 2005-10-03 10:28:25 robbep Exp $
+// $Id: Generation.h,v 1.2 2005-11-21 16:17:19 robbep Exp $
 #ifndef GENERATORS_GENERATION_H 
 #define GENERATORS_GENERATION_H 1
 
@@ -10,6 +10,7 @@ class ISampleGenerationTool ;
 class IPileUpTool ;
 class IDecayTool ;
 class IVertexSmearingTool ;
+class IFullGenEventCutTool ;
 
 namespace HepMC {
   class GenParticle ;
@@ -52,14 +53,19 @@ private:
   IPileUpTool              * m_pileUpTool             ;
   IDecayTool               * m_decayTool              ;
   IVertexSmearingTool      * m_vertexSmearingTool     ;
+  IFullGenEventCutTool     * m_fullGenEventCutTool    ;
 
-  std::string m_pileUpToolName , m_sampleGenerationToolName , m_decayToolName ,
-    m_vertexSmearingToolName ;
+  std::string m_pileUpToolName           ;
+  std::string m_sampleGenerationToolName ;
+  std::string m_decayToolName            ;
+  std::string m_vertexSmearingToolName   ;
+  std::string m_fullGenEventCutToolName  ;
 
   int m_nEvents ; ///< Number of generated events
   int m_nAcceptedEvents ; ///< Number of accepted events
   int m_nInteractions ; ///< Number of generated interactions
   int m_nAcceptedInteractions ; ///< Number of interactions in accepted events
-
+  int m_nBeforeFullEvent ;
+  int m_nAfterFullEvent ;
 };
 #endif // GENERATORS_GENERATION_H
