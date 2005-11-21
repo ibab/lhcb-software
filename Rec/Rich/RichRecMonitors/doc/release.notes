@@ -4,6 +4,7 @@
 ! Purpose     : 
 !-----------------------------------------------------------------------------
 
+!====================== RichRecMonitors v1r1 2005-11-07 ======================
 ! 2005-11-07 - Chris Jones
  - Rewrite algorithms using new GaudiAlg histogramming base classes.
  - Split up RichPhotonMonitor into smaller dedicated monitors.
