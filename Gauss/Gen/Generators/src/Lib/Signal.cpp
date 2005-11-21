@@ -1,4 +1,4 @@
-// $Id: Signal.cpp,v 1.3 2005-11-17 15:55:28 robbep Exp $
+// $Id: Signal.cpp,v 1.4 2005-11-21 16:14:25 robbep Exp $
 // Include files 
 
 // local
@@ -16,6 +16,34 @@
 #include "Generators/IDecayTool.h"
 #include "Generators/HepMCUtils.h"
 
+// Function to sort HepMC::GenParticles according to their barcode
+bool compareHepMCParticles( const HepMC::GenParticle * part1 ,
+                            const HepMC::GenParticle * part2 ) {
+  return ( part1->barcode() < part2->barcode() ) ;
+}
+
+// Function to test if a HepMC::GenParticle is Particle (or antiParticle) 
+struct isParticle : std::unary_function< const HepMC::GenParticle * , bool > {
+  bool operator() ( const HepMC::GenParticle * part ) const {
+    return ( part -> pdg_id() > 0 ) ; 
+  }
+};
+
+// Functions to test if a HepMC::GenParticle goes forward
+struct isForwardParticle : 
+  std::unary_function< const HepMC::GenParticle * , bool > {
+  bool operator() ( const HepMC::GenParticle * part ) const {
+    return ( ( part -> pdg_id() > 0 ) && ( part -> momentum().pz() > 0 ) ) ; 
+  }
+};
+
+struct isForwardAntiParticle : 
+  std::unary_function< const HepMC::GenParticle * , bool > {
+  bool operator() ( const HepMC::GenParticle * part ) const {
+    return ( ( part -> pdg_id() < 0 ) && ( part -> momentum().pz() > 0 ) ) ; 
+  }
+};
+
 //-----------------------------------------------------------------------------
 // Implementation file for class : Signal
 //
@@ -31,6 +59,10 @@ Signal::Signal( const std::string& type,
   : ExternalGenerator( type, name , parent ) ,
     m_nEventsBeforeCut( 0 ) ,
     m_nEventsAfterCut ( 0 ) ,
+    m_nParticlesBeforeCut( 0 ) ,
+    m_nAntiParticlesBeforeCut( 0 ) ,
+    m_nParticlesAfterCut( 0 ) ,
+    m_nAntiParticlesAfterCut( 0 ) ,
     m_nInvertedEvents ( 0 ) ,
     m_signalMass      ( 0.) ,
     m_signalPID       ( 0 ) ,
@@ -105,6 +137,28 @@ void Signal::printCounters( ) const {
   info() << "Number of events after the cut = "  << m_nEventsAfterCut  
          << endmsg;
   info() << "Number of z-inverted events  = " << m_nInvertedEvents << endmsg ;
+  info() << "Number of particles before generator level cut = " 
+         << m_nParticlesBeforeCut << endmsg ;
+  info() << "Number of anti-particles before generator level cut = "
+         << m_nAntiParticlesBeforeCut << endmsg ;
+  info() << "Number of forward particles after generator level cut = "
+         << m_nParticlesAfterCut << endmsg ;
+  info() << "Number of forward anti-particles after generator level cut = " 
+         << m_nAntiParticlesAfterCut << endmsg ;
+  double eff_part = ( ( double ) m_nParticlesAfterCut ) / 
+    ( (double) m_nParticlesBeforeCut ) ;
+  double eff_antipart = ( ( double ) m_nAntiParticlesAfterCut ) /
+    ( (double) m_nAntiParticlesBeforeCut ) ;
+  double erreff_part = sqrt( m_nParticlesAfterCut * ( 1. - eff_part ) ) /
+    ( (double) m_nParticlesBeforeCut ) ;
+  double erreff_antipart = 
+    sqrt( m_nAntiParticlesAfterCut * ( 1. - eff_antipart ) ) /
+    ( (double) m_nAntiParticlesBeforeCut ) ;
+  info() << format( " Efficiency of the cut for particles = %.3g +/- %.3g" , 
+                    eff_part , erreff_part ) << endmsg ;
+  info() << 
+    format( " Efficiency of the cut for antiparticles = %.3g +/- %.3g" , 
+            eff_antipart , erreff_antipart ) << endmsg ;
 }
 
 //=============================================================================
@@ -133,6 +187,7 @@ StatusCode Signal::isolateSignal( const HepMC::GenParticle * theSignal )
                             theSignal -> status() ) ;
   
   newVertex -> add_particle_out( theNewParticle ) ;
+  hepMCevt -> set_signal_process_vertex( theSignal -> production_vertex() ) ;
   
   // Associate the new particle to the HepMC event
   // and copy all tree to the new HepMC event
@@ -170,20 +225,20 @@ StatusCode Signal::fillHepMCEvent( HepMC::GenEvent    * theEvent ,
   HepMC::GenVertex * oVertex = theOldParticle -> end_vertex() ;
   if ( 0 != oVertex ) {
     // Create decay vertex and associate it to theNewParticle
-    HepMC::GenVertex * newVertex =  
+    HepMC::GenVertex * newVertex =
       new HepMC::GenVertex( oVertex -> position() ) ;
     theEvent -> add_vertex( newVertex ) ;
     newVertex -> add_particle_in( theNewParticle ) ;
 
-    // copy iterator in another iterator to sort it
-    GenParticles theHepMCVector ;
-    HepMCUtils::SortHepMC( theHepMCVector , oVertex->particles_out_size() ,
-                           oVertex->particles_begin( HepMC::children ),
-                           oVertex->particles_end  ( HepMC::children ));
-    
-    GenParticles::iterator child ;
-    for (child = theHepMCVector.begin( ) ; child != theHepMCVector.end( ) ; 
-         ++child ) {
+    // loop over child particle of this vertex after sorting them
+    std::list< const HepMC::GenParticle * > outParticles ;
+    std::copy( oVertex -> particles_out_const_begin() , 
+               oVertex -> particles_out_const_end() , outParticles.begin() ) ;
+    outParticles.sort( compareHepMCParticles ) ;
+
+    std::list< const HepMC::GenParticle * >::const_iterator child ;
+    for ( child = outParticles.begin( ) ; child != outParticles.end( ) ; 
+          ++child ) {
       // Create a new particle for each daughter of theOldParticle
       HepMC::GenParticle * newPart =
         new HepMC::GenParticle ( (*child) -> momentum () ,
@@ -191,7 +246,7 @@ StatusCode Signal::fillHepMCEvent( HepMC::GenEvent    * theEvent ,
                                  (*child) -> status ()   ) ;
       newVertex -> add_particle_out( newPart ) ;
       
-      HepMC::GenParticle * theChild = (*child) ;
+      const HepMC::GenParticle * theChild = (*child) ;
       // Recursive call : fill the event with the daughters
       sc = fillHepMCEvent( theEvent , newPart , theChild ) ;
       
@@ -234,3 +289,26 @@ bool Signal::ensureMultiplicity( const unsigned int nSignal ) {
   return (m_flatGenerator() >= ( ( 1. - m_signalBr ) / 
                                  ( 2. - m_signalBr ) ) ) ;
 }
+
+//=============================================================================
+// update counters for efficiency calculations
+//=============================================================================
+void Signal::updateCounters( const ParticleVector & particleList , 
+                             unsigned int & particleCounter , 
+                             unsigned int & antiparticleCounter ,
+                             bool onlyForwardParticles ) const {
+  int nP( 0 ) , nAntiP( 0 ) ;
+  ParticleVector::const_iterator from = particleList.begin() ;
+  ParticleVector::const_iterator to = particleList.end() ;
+  
+  if ( onlyForwardParticles ) {
+    nP = std::count_if( from , to , isForwardParticle() ) ;
+    nAntiP = std::count_if( from , to , isForwardAntiParticle() ) ;
+  } else {
+    nP = std::count_if( from , to , isParticle() ) ;
+    nAntiP = particleList.size() - nP ;
+  }
+  particleCounter += nP ;
+  antiparticleCounter += nAntiP ;
+}
+
