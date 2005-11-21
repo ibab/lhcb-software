@@ -500,25 +500,27 @@ StatusCode IdealTracksCreator::addVeloClusters( MCParticle* mcPart,
   VeloCluster2MCParticleAsct::FromIterator iClus;
   for ( iClus = range.begin(); iClus != range.end(); ++iClus) {
     VeloCluster* aCluster = iClus->to();
+
+    double z = m_velo -> zSensor( aCluster -> sensor() );
+    double phi = 999.0;
+    double r = -999.0;
+    State* tempState;
+    StatusCode sc = m_stateCreator -> createState( mcPart, z, tempState );
+    if ( sc.isSuccess() ) {
+      HepVector vec = tempState -> stateVector();
+      r = sqrt( vec[0]*vec[0] + vec[1]*vec[1]);
+      phi = atan2( vec[1], vec[0] );
+    }
+    delete tempState;
+
     // Check if velo cluster is r or phi clusters
     if ( m_velo -> isRSensor( aCluster->sensor() ) ) {
-
-      double z = m_velo -> zSensor( aCluster -> sensor() );
-      double phi = 999.0;
-      State* tempState;
-      StatusCode sc = m_stateCreator -> createState( mcPart, z, tempState );
-if ( sc.isSuccess() ) {
-        HepVector vec = tempState -> stateVector();
-        phi = atan2( vec[1], vec[0] );
-      }
-      delete tempState;
-
       VeloRMeasurement meas = VeloRMeasurement( *aCluster, *m_velo, phi );
       track -> addToMeasurements( meas );
       nVeloRMeas++;
     }
     else {
-      VeloPhiMeasurement meas = VeloPhiMeasurement( *aCluster, *m_velo );
+      VeloPhiMeasurement meas = VeloPhiMeasurement( *aCluster, *m_velo, r );
       track -> addToMeasurements( meas );
       nVeloPhiMeas++;
     }

@@ -4,6 +4,9 @@
 ! Purpose     : Perfect pattern recognition
 !-----------------------------------------------------------------------------
 
+! 2005-11-21 - Jeroen van Tilburg
+ - Added the estimate for R to the VeloPhiMeasurement.
+
 ! 2005-10-26 - Eduardo Rodrigues
  - changes to comply with MC associations as in TrackAssociators
 
