@@ -1,4 +1,4 @@
-// $Id: MCParticleMaker.cpp,v 1.7 2005-11-11 17:03:51 pkoppenb Exp $
+// $Id: MCParticleMaker.cpp,v 1.8 2005-11-21 14:30:01 pkoppenb Exp $
 // Include files 
 
 #include <memory>
@@ -52,6 +52,8 @@ MCParticleMaker::MCParticleMaker( const std::string& type,
                                   const IInterface* parent )
   : GaudiTool ( type, name , parent ), 
     m_ppSvc(0), 
+    m_onlyReconstructable(false),
+    m_onlyReconstructed(false),
     m_pMCDecFinder(0)
   {
   // Declaring implemented interface  
@@ -63,8 +65,10 @@ MCParticleMaker::MCParticleMaker( const std::string& type,
   declareProperty( "OnlyDecayProducts", m_onlyDecayProducts = false);
  // if true also m_onlyDecayProducts HAS to be true
   declareProperty( "OnlyStableDecayProducts", m_onlyStableDecayProducts = false);
-  declareProperty( "OnlyReconstructable", m_onlyReconstructable = false );
-  declareProperty( "OnlyReconstructed",   m_onlyReconstructed   = false );
+  // @ todo: restore option OnlyReconstructable when method is implemented
+  //  declareProperty( "OnlyReconstructable", m_onlyReconstructable = false );
+  // @ todo: restore option OnlyReconstructed when method is implemented
+  //  declareProperty( "OnlyReconstructed",   m_onlyReconstructed   = false );
   declareProperty( "UseReconstructedCovariance", m_useReconstructedCovariance = false );
   declareProperty( "SmearParticle",   m_smearParticle = true );
   declareProperty( "IpErrorC0",   m_ipErrorC0 = 0.0173*mm );  

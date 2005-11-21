@@ -1,8 +1,11 @@
-! $Id: release.notes,v 1.73 2005-11-11 17:03:51 pkoppenb Exp $
+! $Id: release.notes,v 1.74 2005-11-21 14:30:01 pkoppenb Exp $
 ! Package     : DaVinciMCTools
 ! Responsible : P. Koppenburg
 !=============================================================================
 
+! 2005-11-21 - P. Koppenburg for Karol Hennessy
+ - src/MCParticleMaker.(cpp,h)
+   . REmove OnlyReconstructed and OnlyReconstructible options
 ! 2005-11-11 - P. Koppenburg for G. Balbi
  - src/MCParticleMaker.(cpp,h)
    . Undocumented changes
