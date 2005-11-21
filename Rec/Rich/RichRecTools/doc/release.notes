@@ -4,6 +4,10 @@
 ! Purpose     : Utility tools for RICH reconstruction algorithms
 !------------------------------------------------------------------------------
 
+!===================== RichRecTools v2r16 2005-11-21 ======================
+! 2005-11-21 - Marco Cattaneo
+ - Clean up requirements
+
 ! 2005-11-15 - Chris Jones
  - Adapt to changes in RichDAQ
  - Adapt to changes in RichTrackSegment and RicgGeomPhoton creators, to avoid
