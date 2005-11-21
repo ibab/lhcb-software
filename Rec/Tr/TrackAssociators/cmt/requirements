@@ -7,7 +7,8 @@ package           TrackAssociators
 version           v1r4
 
 #============================================================================
-branches          cmt doc src options
+branches          cmt doc src
+include_path none
 
 #============================================================================
 use	VeloAssociators	v*	Velo
