@@ -23,24 +23,24 @@ MessageSvc.setFatal += { "LinkedTo::MC/Rich/MCPartsToMCRichTracks",
 CheckRICHSeq.Members += { "RichRecoQC/RiCKResFrwd" };
 RiCKResFrwd.TrackSelection  = { "unique","positive","negative","forward" };
 RiCKResFrwd.HistoPrint      = false;
-RiCKResFrwd.HistoProduce    = true;
+RiCKResFrwd.HistoProduce    = false;
 // match tracks
 CheckRICHSeq.Members += { "RichRecoQC/RiCKResMatch" };
 RiCKResMatch.TrackSelection = { "unique","positive","negative","match" };
 RiCKResMatch.HistoPrint     = false;
-RiCKResMatch.HistoProduce   = true;
+RiCKResMatch.HistoProduce   = false;
 // KsTracks tracks
 CheckRICHSeq.Members += { "RichRecoQC/RiCKResKsTk" };
 RiCKResKsTk.TrackSelection  = { "unique","positive","negative","KsTrack" };
 RiCKResKsTk.HistoPrint      = false;
-RiCKResKsTk.HistoProduce    = true;
+RiCKResKsTk.HistoProduce    = false;
 // VeloTT tracks
 CheckRICHSeq.Members += { "RichRecoQC/RiCKResVeloTT" };
 RiCKResVeloTT.TrackSelection = { "unique","positive","negative","veloTT" };
 RiCKResVeloTT.HistoPrint    = false;
-RiCKResVeloTT.HistoProduce  = true;
+RiCKResVeloTT.HistoProduce  = false;
 // Seed tracks
 CheckRICHSeq.Members += { "RichRecoQC/RiCKResSeed" };
 RiCKResSeed.TrackSelection  = { "unique","positive","negative","seed" };
 RiCKResSeed.HistoPrint      = false;
-RiCKResSeed.HistoProduce    = true;
+RiCKResSeed.HistoProduce    = false;
