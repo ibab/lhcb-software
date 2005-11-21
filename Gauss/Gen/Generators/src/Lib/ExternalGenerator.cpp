@@ -1,4 +1,4 @@
-// $Id: ExternalGenerator.cpp,v 1.3 2005-11-08 00:07:33 robbep Exp $
+// $Id: ExternalGenerator.cpp,v 1.4 2005-11-21 16:13:52 robbep Exp $
 // Include files 
 
 // local
@@ -95,31 +95,28 @@ StatusCode ExternalGenerator::decayHeavyParticles( HepMC::GenEvent * theEvent,
                                                    const double mass ,
                                                    const int pid ) 
   const {
-  StatusCode sc = StatusCode::SUCCESS ;
+  StatusCode sc ;
   
-  ParticleVector thePVector ;
-  HepMC::GenEvent::particle_const_iterator it ;
-  for ( it = theEvent -> particles_begin() ; 
-        it != theEvent -> particles_end() ; ++ it )
-    if ( ( (*it) -> momentum().m() * GeV > mass ) &&
-         ( 1 == (*it) -> status() ) && ( pid != abs( (*it) -> pdg_id() ) ) )
-      thePVector.push_back( *it ) ;
-  
-  if ( thePVector.empty() ) return sc ;
-  
-  // sort the vector
-  std::sort( thePVector.begin() , thePVector.end() , HepMCUtils::Compare ) ;
-
   m_decayTool -> disableFlip() ;
 
-  ParticleVector::iterator itp ;
-  for ( itp = thePVector.begin() ; itp != thePVector.end() ; ++itp ) 
-    if ( m_decayTool -> isKnownToDecayTool( (*itp) -> pdg_id() ) ) {
-      sc = m_decayTool -> generateDecayWithLimit( theEvent , *itp , pid ) ;
-      if ( ! sc.isSuccess() ) return sc ;
-    } else return Error( "Unknown undecayed excited particle !" ) ;
+  HepMC::GenEvent::particle_iterator it ;
+  for ( it = theEvent -> particles_begin() ; 
+        it != theEvent -> particles_end() ; ++ it ) {
+    
+    if ( ( (*it) -> momentum().m() * GeV > mass ) &&
+         ( 1 == (*it) -> status() ) && ( pid != abs( (*it) -> pdg_id() ) ) ) {
+      
+      if ( m_decayTool -> isKnownToDecayTool( (*it) -> pdg_id() ) ) {
+        sc = m_decayTool -> generateDecayWithLimit( theEvent , *it , pid ) ;
+        if ( ! sc.isSuccess() ) return sc ;
+        // if excited particle is unknown to EvtGen give error to oblige
+        // us to define it in EvtGen decay table
+      } else return Error( "Unknown undecayed excited particle !" ) ;
+      
+    }
+  }  
 
-  return sc ;
+  return StatusCode::SUCCESS ;
 }
 
 //=============================================================================
