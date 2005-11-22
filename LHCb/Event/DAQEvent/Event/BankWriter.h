@@ -1,4 +1,4 @@
-// $Id: BankWriter.h,v 1.1 2005-10-14 12:51:59 cattanem Exp $
+// $Id: BankWriter.h,v 1.2 2005-11-22 08:00:51 mneedham Exp $
 #ifndef EVENT_BANKWRITER_H 
 #define EVENT_BANKWRITER_H 1
 
@@ -38,6 +38,9 @@ namespace LHCb
     template<class TYPE>
     BankWriter & operator << (TYPE value);
 
+    /** size in bytes */
+    std::size_t byteSize() const;
+
   private:
 
     /** check if full 
@@ -53,6 +56,7 @@ namespace LHCb
     size_t m_byteSize;
     size_t m_pos;
   };
+
   inline BankWriter::BankWriter(size_t blockSize):
     m_pos(0){
     // constructor
@@ -91,6 +95,10 @@ namespace LHCb
     TYPE* tmp = reinterpret_cast<TYPE*>(&m_cData[startPos]);
     *tmp = value;
     return *this;
+  }
+
+  inline std::size_t BankWriter::byteSize() const{
+    return m_byteSize;
   }
 
 } // namespace LHCb

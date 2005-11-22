@@ -2,6 +2,11 @@ Package: DAQEvent
 Author:  Markus Frank (based on work by Jose' Helder Lopes)
 Purpose: Define the classes delivered to the online farm by the DAQ
 
+!2005-11-22 M. Needham
+ - Extend functionality of BankWriter - accessor for number used bytes
+ - Extend functionality of Bytestream - rewind and seek functions
+
+
 ! 2005-11-10 - Olivier Callot
  - Add new values to enum BankType in RawBank.h for the 1MHz packed
    data format for the calorimeter.

@@ -1,4 +1,4 @@
-// $Id: ByteStream.h,v 1.2 2005-10-18 06:45:49 mneedham Exp $
+// $Id: ByteStream.h,v 1.3 2005-11-22 08:00:51 mneedham Exp $
 #ifndef EVENT_BYTESTREAM_H 
 #define EVENT_BYTESTREAM_H 1
 
@@ -29,6 +29,15 @@ namespace LHCb
     template<class TYPE>
     ByteStream & operator >> (TYPE& value);
 
+    /** rewind to start **/
+    void rewind();
+
+    /** rewind n bytes */
+    void rewind(const size_t nByte);
+
+    /** fast forward n bytes */
+    void seek(const size_t nByte);
+
   private:
 
     unsigned char* m_start;
@@ -53,6 +62,19 @@ namespace LHCb
     m_pos += sizeof(TYPE)/ sizeof(char);
     return *this;
   }
+
+  inline void ByteStream::rewind(){
+    m_pos = 0;
+  }
+
+  inline void ByteStream::rewind(const unsigned int nByte){
+    m_pos -= nByte;
+  }
+
+  inline void ByteStream::seek(const unsigned int nByte){
+    m_pos += nByte;
+  }
+
 
 } // namespace LHCb
 
