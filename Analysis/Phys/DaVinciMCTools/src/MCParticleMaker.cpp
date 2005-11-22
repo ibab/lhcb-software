@@ -1,4 +1,4 @@
-// $Id: MCParticleMaker.cpp,v 1.9 2005-11-22 10:05:28 pkoppenb Exp $
+// $Id: MCParticleMaker.cpp,v 1.10 2005-11-22 10:06:52 pkoppenb Exp $
 // Include files 
 
 #include <memory>
@@ -67,7 +67,7 @@ MCParticleMaker::MCParticleMaker( const std::string& type,
   declareProperty( "ParticleNames", m_particleNames );
   declareProperty( "OnlyDecayProducts", m_onlyDecayProducts = false);
   declareProperty( "OnlyDecayProducts", m_onlyDecayProducts = false);
- // if true also m_onlyDecayProducts HAS to be true
+  // if true also m_onlyDecayProducts HAS to be true
   declareProperty( "OnlyStableDecayProducts", m_onlyStableDecayProducts = false);
   // @ todo: restore option OnlyReconstructable when method is implemented
   //  declareProperty( "OnlyReconstructable", m_onlyReconstructable = false );
