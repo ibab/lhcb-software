@@ -1,4 +1,4 @@
-// $Id: MCParticleMaker.cpp,v 1.10 2005-11-22 10:06:52 pkoppenb Exp $
+// $Id: MCParticleMaker.cpp,v 1.11 2005-11-22 10:10:58 pkoppenb Exp $
 // Include files 
 
 #include <memory>
@@ -49,9 +49,11 @@ const        IToolFactory& MCParticleMakerFactory = s_factory ;
 MCParticleMaker::MCParticleMaker( const std::string& type,
                                   const std::string& name,
                                   const IInterface* parent )
-  : GaudiTool ( type, name , parent ), 
-    m_ppSvc(0), 
-    m_pMCDecFinder(0)
+  : GaudiTool ( type, name , parent )
+    ,m_ppSvc(0) 
+    ,m_onlyReconstructable(false)
+    ,m_onlyReconstructed(false)
+    ,m_pMCDecFinder(0)
 {
   // Declaring implemented interface  
   declareInterface<IParticleMaker>(this);
