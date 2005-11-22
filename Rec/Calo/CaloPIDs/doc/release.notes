@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.24 2005-11-07 12:16:09 odescham Exp $ 
+! $Id: release.notes,v 1.25 2005-11-22 16:29:38 cattanem Exp $ 
 ! -----------------------------------------------------------------------------
 ! CVS tag   $Name: not supported by cvs2svn $
 ! -----------------------------------------------------------------------------
@@ -6,10 +6,10 @@
 ! Responsible : Olivier Deschamps odescham@in2p3.fr
 ! Purpose     : Calorimeter PIDs 
 ! -----------------------------------------------------------------------------
+
 !========================== CaloPIDs v3r0 2005-11-04 ===================
 ! 2005-11-04 - Olivier Deschamps
  - Adapt to new Track Event Model (TrackEvent v1r4)
-
 
   modified file :  
    src/CaloTrackPrsEval.h/cpp
@@ -21,9 +21,9 @@
    src/CaloPIDsData.cpp
    src/CaloPhotonEstimatorTool.h/cpp
 
-
  - cmt/requirements 
    version increment to v3r0
+
 !========================= CaloPIDs v2r6 2005-06-02 ===========================
 ! 2005-06-02 - Marco Cattaneo
  - Adapt Brunel.opts to new phase name Reco instead of BrunelReco

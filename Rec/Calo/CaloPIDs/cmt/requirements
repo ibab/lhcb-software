@@ -1,6 +1,6 @@
-# $Id: requirements,v 1.16 2005-11-07 12:16:09 odescham Exp $ 
+# $Id: requirements,v 1.17 2005-11-22 16:29:38 cattanem Exp $ 
 # =============================================================================
-# CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.16 $
+# CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.17 $
 # =============================================================================
 package            CaloPIDs
 version            v3r0
@@ -10,8 +10,8 @@ branches           cmt doc src options
 
 # ================ dependencies ===============================================
  
-use CaloInterfaces v5r*	  Calo 
-use CaloUtils      v5r*   Calo 
+use CaloInterfaces  v*    Calo 
+use CaloUtils       v*    Calo 
 use Relations      v*     Kernel 
 use TrackEvent     v*     Event 
 use TrackInterfaces v*    Tr
@@ -27,6 +27,9 @@ apply_pattern      component_library library=CaloPIDs
 
 # =============================================================================
 # $Log: not supported by cvs2svn $
+# Revision 1.16  2005/11/07 12:16:09  odescham
+# v3r0 - adapt to the new Track Event Model
+#
 # Revision 1.16  2005/17/10 12:36:39  odescham
 # adapt to new track event model
 #
