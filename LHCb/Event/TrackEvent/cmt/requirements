@@ -1,3 +1,4 @@
+
 #============================================================================
 # Created    : 2005-02-10
 # Maintainer : Jose Hernando, Eduardo Rodrigues
@@ -31,7 +32,7 @@ document obj2dict TrackEventObj2Dict ../xml/*.xml
 
 public
 library          TrackEvent         ../src/*.cpp
-library          TrackEventDict     ../dict/*.cpp
+library          TrackEventDict     ../$(tag)/dict/TrackEvent/*.cpp
 
 #============================================================================
 # define library link options

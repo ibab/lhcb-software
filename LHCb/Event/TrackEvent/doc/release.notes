@@ -4,6 +4,10 @@
 ! Purpose     : Package for the tracking event model classes
 !-----------------------------------------------------------------------------
 
+! 2005-11-22 - Eduardo Rodrigues
+ - fix from M. Cattaneo for platform dependent dictionaries with Gaudi 
+   v17r2 and above
+
 ! 2005-11-21 - Jeroen van Tilburg
  - src/State.cpp: Copy also the State::Location in the clone method.
  - xml/Measurement.xml: Added method resolution(). This is equivalent to 
