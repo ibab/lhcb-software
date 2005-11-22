@@ -1,0 +1,17 @@
+package SiDAQ
+version v1r0
+
+branches cmt doc src options SiDAQ
+
+include_dirs $(SIDAQROOT)
+
+# Use here packages needed by link library and public interface
+
+
+#---- link library
+library SiDAQLib ../src/Lib/*.cpp 
+
+
+apply_pattern linker_library    library=SiDAQLib
+
+
