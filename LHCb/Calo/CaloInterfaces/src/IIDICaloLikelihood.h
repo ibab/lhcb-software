@@ -1,17 +1,6 @@
-// $Id: IIDICaloLikelihood.h,v 1.2 2005-11-07 12:08:25 odescham Exp $
+// $Id: IIDICaloLikelihood.h,v 1.3 2005-11-22 14:12:44 cattanem Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
-// ============================================================================
-// $Log: not supported by cvs2svn $
-// Revision 1.1  2004/02/17 11:51:57  ibelyaev
-//  move IID* from CaloInterfaces to src directory
-//
-// Revision 1.1  2004/02/17 11:42:29  ibelyaev
-//  fix in Likel(i,y)hoods
-//
-// Revision 1.1  2002/04/02 11:08:13  ibelyaev
-//  new interfaces
-//
 // ============================================================================
 #ifndef CALOINTERFACES_IIDICALOLIKELIHOOD_H 
 #define CALOINTERFACES_IIDICALOLIKELIHOOD_H 1
@@ -21,7 +10,7 @@
 
 /** @file IIDICaloLikelihood.h 
  *  
- *  Definition of the uniqie identifier for abstract interface ICaloLikelyhood
+ *  Definition of the unique identifier for abstract interface ICaloLikelihood
  *  @see IInterface
  *  @see IInterfaceID
  *  @see ICaloLikelyhood 
@@ -30,9 +19,9 @@
  *  @date   31/03/2002
  */
 
-/** @var IID_ICaloLikelihood  IIDICaloLikelihood.h 
+/** @var IID_ICaloLikelihood
  *  
- *  Definition of the uniqie identifier for abstract interface ICaloLikelihood
+ *  Definition of the unique identifier for abstract interface ICaloLikelihood
  *  @see IInterface
  *  @see IInterfaceID
  *  @see ICaloLikelyhood 

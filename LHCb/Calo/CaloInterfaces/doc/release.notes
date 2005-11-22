@@ -1,8 +1,9 @@
-! $Id: release.notes,v 1.23 2005-11-07 12:08:25 odescham Exp $
+! $Id: release.notes,v 1.24 2005-11-22 14:12:44 cattanem Exp $
 ! =============================================================================
 ! Package     : CaloInterfaces
 ! Responsible : Olivier Deschamps odescham@in2p3.fr
 ! =============================================================================
+
 !========================== CaloInterfaces v5r0 2005-11-04 ===================
 ! 2005-11-04 - Olivier Deschamps
  - Adapt to new Track Event Model (TrackEvent v1r4)
