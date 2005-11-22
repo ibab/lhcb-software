@@ -1,8 +1,11 @@
-// $Id: CaloTrackMatchElectron.h,v 1.5 2005-11-07 12:12:43 odescham Exp $
+// $Id: CaloTrackMatchElectron.h,v 1.6 2005-11-22 16:15:57 cattanem Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.5  2005/11/07 12:12:43  odescham
+// v3r0 : adapt to the new Track Event Model
+//
 // Revision 1.4  2005/03/07 15:37:15  cattanem
 // fix doxygen warnings
 //
@@ -161,7 +164,8 @@ private:
    * Returned format is the same as for Cluster.
    * Input format of Track is quite different: (x, y, tx, ty, e),
    * so the function performs vector and matrix remake
-   * @param  trgState Track data object
+   * @param  state    Track data object
+   * @param  z        Not used!!
    * @return internal type struct with data
    */
   inline const MatchType2&

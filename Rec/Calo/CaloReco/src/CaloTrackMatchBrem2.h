@@ -1,4 +1,4 @@
-// $Id: CaloTrackMatchBrem2.h,v 1.4 2005-11-07 12:12:43 odescham Exp $
+// $Id: CaloTrackMatchBrem2.h,v 1.5 2005-11-22 16:15:57 cattanem Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
@@ -146,7 +146,8 @@ private:
    *   StateP: (x, y, tx, ty, q/p);
    *   StateL: (x, y, tx, ty),
    * so the function performs vector and matrix remake.
-   * @param  trgState Track data object
+   * @param  state Track data object
+   * @param  z     Not used!
    * @return internal type struct with data
    */
   inline const MatchType2& 

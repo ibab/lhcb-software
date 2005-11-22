@@ -1,4 +1,4 @@
-// $Id: CaloTrackMatchPhoton.h,v 1.6 2005-11-07 12:12:43 odescham Exp $
+// $Id: CaloTrackMatchPhoton.h,v 1.7 2005-11-22 16:15:57 cattanem Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
@@ -145,7 +145,8 @@ private:
    * Input format of Track is quite different:
    *   TrState 6D (x, y, z,px,py,pz)
    * so the function performs vector and matrix remake.
-   * @param  trgState Track data object
+   * @param  state    Track data object
+   * @param  z        Z position for returned covariance matrix
    * @return internal type struct with data
    */
   inline const MatchType2& 

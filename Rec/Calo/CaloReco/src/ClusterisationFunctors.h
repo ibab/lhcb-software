@@ -1,4 +1,4 @@
-// $Id: ClusterisationFunctors.h,v 1.5 2005-11-07 12:12:43 odescham Exp $ 
+// $Id: ClusterisationFunctors.h,v 1.6 2005-11-22 16:15:57 cattanem Exp $ 
 // ===========================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ===========================================================================
@@ -204,10 +204,6 @@ namespace ClusterisationFunctors
 
 
 // ===========================================================================
-/*  pure technical method
- * (just a copy of std::transform with
- *   a minor "improvement")
- */
 template <class InputIterator, class OutputIterator, class UnaryOperation>
 inline OutputIterator transform_ref(InputIterator   first  , 
                                     InputIterator   last   ,
