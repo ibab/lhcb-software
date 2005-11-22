@@ -1,11 +1,6 @@
-// $Id: CaloHypoMonitor.cpp,v 1.3 2005-11-07 12:16:38 odescham Exp $
+// $Id: CaloHypoMonitor.cpp,v 1.4 2005-11-22 22:43:01 cattanem Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.3 $
-// ============================================================================
-// $Log: not supported by cvs2svn $
-// Revision 1.2  2005/05/08 09:58:25  ibelyaev
-//  remove associators, update options
-//
+// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.4 $
 // ============================================================================
 // Include files
 // ============================================================================
@@ -37,7 +32,7 @@
 #include  "CaloMoniAlg.h"
 // ============================================================================
 
-/** @class CaloHypoMonitor CaloHypoMonitor.h
+/** @class CaloHypoMonitor CaloHypoMonitor.cpp
  *  
  *  The algorithm for trivial monitoring of "CaloHypo" container
  *  The algorithm produces 10 histograms: 

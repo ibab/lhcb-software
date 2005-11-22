@@ -1,6 +1,6 @@
-# $Id: requirements,v 1.3 2005-11-07 12:16:38 odescham Exp $ 
+# $Id: requirements,v 1.4 2005-11-22 22:43:01 cattanem Exp $ 
 # ============================================================================
-# CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.3 $
+# CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.4 $
 # ============================================================================
 # Created    : 2004-10-25
 # Maintainer : Vanya BELYAEV belyaev@lapp.in2p3.fr
@@ -15,8 +15,8 @@ branches          cmt doc src options
 set               CALOMONIDSTOPTS $(CALOMONIDSTROOT)/options 
 
 # =============== dependencies ===============================================
-use CaloInterfaces v5r*	  Calo 
-use CaloUtils      v5r*   Calo 
+use CaloInterfaces  v*    Calo 
+use CaloUtils       v*    Calo 
 use Relations      v*     Kernel 
 use TrackEvent     v*     Event 
 use TrackInterfaces v*    Tr
@@ -29,6 +29,9 @@ apply_pattern     component_library library=CaloMoniDst
 
 # ============================================================================
 # $Log: not supported by cvs2svn $
+# Revision 1.3  2005/11/07 12:16:38  odescham
+# v2r0 - adapt to the new Track Event Model
+#
 # Revision 1.3  2005/17/10 09:58:24  odescham
 # adapt to new track event model
 #

@@ -1,8 +1,11 @@
-// $Id: Brunel.opts,v 1.4 2005-11-07 12:16:38 odescham Exp $
+// $Id: Brunel.opts,v 1.5 2005-11-22 22:43:01 cattanem Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ , version $Revison:$
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.4  2005/11/07 12:16:38  odescham
+// v2r0 - adapt to the new Track Event Model
+//
 // Revision 1.3  2005/06/02 12:36:18  cattanem
 // adapt to new Brunel phase names
 //
@@ -53,7 +56,7 @@ CheckCALOSeq.Members +=
   };
 
 #include "$CALOMONIDSTOPTS/MoniDst.opts"
-PIDeEcalMoni.OutputLevel=2;
+//PIDeEcalMoni.OutputLevel=2;
 // ============================================================================
 // The END 
 // ============================================================================
