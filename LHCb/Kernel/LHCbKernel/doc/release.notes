@@ -2,6 +2,11 @@ Package LHCbKernel
 Package manager: M.Cattaneo
 Purpose: LHCb specific Kernel classes
 
+! 2005-11-22 M Needham
+  - Add new STChannelID class
+  - Add new STDataFunctors namespace
+  - Add new STDetSwitch function 
+
 !===================== LHCbKernel v5r15 2005-11-11 ========================
 ! 2005-11-11 - Marco Cattaneo
  - Add fragments to add custom dictionaries to the lcg generated ones

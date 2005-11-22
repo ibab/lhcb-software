@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE gdd SYSTEM "gdd.dtd">
+
+<gdd>
+  <package name='LHCbKernel'>
+    <class name='STChannelID' 
+           author='M Needham'
+           desc='Channel ID for class for ST'>
+      &StlVector;
+      <constructor argList='int iStation, int iLayer, int iDetRegion, int iSector, int iStrip' 
+                   desc='constructor with station, layer, detRegion, sector , strip,'>
+        <code>    
+          m_channelID = (iStation &lt;&lt; stationBits) + 
+                        (iLayer &lt;&lt; layerBits) + 
+                        (iDetRegion &lt;&lt; detRegionBits) + 
+                        (iSector &lt;&lt;  sectorBits) + 
+                        (iStrip &lt;&lt; stripBits);
+        </code>
+      </constructor>
+      <constructor argList='const STChannelID aChannelID' 
+                   desc='copy constructor'>
+        <code>
+          m_channelID = aChannelID.m_channelID;
+        </code>
+      </constructor>
+      <constructor argList='int id' 
+                   initList = 'm_channelID(id)'
+                   desc='constructor with int'>
+        <code></code>
+      </constructor>
+
+      <method type='' name='operator int' const='TRUE'  desc='cast'>
+        <code>return m_channelID;</code>
+      </method>
+
+      <attribute type='bitfield' name='channelID' desc='OT Channel ID'>
+        <bitfield name='strip' length='10'  desc='strip' setMeth='FALSE' />
+        <bitfield name='sector' length='5'  desc='sector' setMeth='FALSE'/>
+        <bitfield name='detRegion' length='3'  desc='detRegion' setMeth='FALSE'/>
+        <bitfield name='layer' length='3'  desc='layer' setMeth='FALSE'/>
+        <bitfield name='station' length='3' desc='station' setMeth='FALSE'/>
+        <bitfield name='uniqueLayer' length='layer, station' 
+                  desc='Unique layer' setMeth='FALSE'/>
+        <bitfield name='uniqueDetRegion' length='detRegion, layer, station' 
+                  desc='Unique detRegion' setMeth='FALSE'/>
+        <bitfield name='uniqueSector' length='sector, detRegion, layer, station' 
+                  desc='Unique layer' setMeth='FALSE'/>
+      </attribute>
+    </class>
+  </package>
+</gdd>
