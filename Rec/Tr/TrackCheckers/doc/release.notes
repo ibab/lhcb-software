@@ -4,8 +4,12 @@
 ! Purpose     : Package for track checking algorithms
 !-----------------------------------------------------------------------------
 
-!===================== TrackAssociators v0r0 2005-11-14 ====================
-! Edwin Bos
+! 2005-11-22 - Eduardo Rodrigues
+ - TrackVeloTTChecker algorithm introduced - it is the adaptation of the
+   original VeloTTStoredChecker algorithm from Y. Xie (in Tr/VeloTT)
+   to the new Track Event Model and GaudiTupleAlg class
+
+! 2005-11-14 - Edwin Bos
   - Creation of package, based on Tr/TrCheck
   - Useage for instance in $BRUNELOPTS/BrunelCheck.opts :
 
