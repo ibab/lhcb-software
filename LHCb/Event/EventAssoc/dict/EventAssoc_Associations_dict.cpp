@@ -20,7 +20,7 @@ using namespace seal::reflect;
 #include "Event/Particle.h"
 #include "Event/FlavourTag.h"
 #include "Event/Vertex.h"
-
+#include "Event/Track.h"
 
 namespace
 {
@@ -37,12 +37,15 @@ namespace
       GaudiDict::Relation1DDict<OTTime, MCHit>();
       GaudiDict::Relation1DDict<MuonCoord, MCParticle>();
       GaudiDict::Relation1DDict<TrStoredTrack, float>();
+      GaudiDict::Relation1DDict<Track, float>();
       GaudiDict::RelationWeighted1DDict<TrStoredTrack, MCParticle, double>();
       GaudiDict::RelationWeighted1DDict<L0CaloCandidate, MCParticle, double>();
       GaudiDict::RelationWeighted1DDict<CaloDigit, MCParticle, float>();
       GaudiDict::RelationWeighted1DDict<CaloCluster, MCParticle, float>();
       GaudiDict::RelationWeighted2DDict<CaloCluster, TrStoredTrack, float>();
       GaudiDict::RelationWeighted2DDict<CaloHypo, TrStoredTrack, float>();
+      GaudiDict::RelationWeighted2DDict<CaloCluster, Track, float>();
+      GaudiDict::RelationWeighted2DDict<CaloHypo, Track, float>();
       GaudiDict::RelationWeighted2DDict<VeloCluster, MCParticle, double>();
       GaudiDict::RelationWeighted2DDict<VeloCluster, MCVeloHit, double>();
       GaudiDict::RelationWeighted1DDict<ProtoParticle, MCParticle, double>();

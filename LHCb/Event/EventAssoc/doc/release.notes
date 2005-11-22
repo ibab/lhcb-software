@@ -4,6 +4,10 @@
 ! Purpose     : Define and build the POOL dictionaries for the relations
 !-----------------------------------------------------------------------------
 
+!======================= EventAssoc v2r1 2005-10-22 ==========================
+! 2005-11-22 - Marco Cattaneo
+ - Add dictionaries for Track relations (for Calo DST objects)
+
 !======================= EventAssoc v2r0 2005-10-19 ==========================
 ! 2005-10-19 - Markus Frank
  - For Reflex, do not generate dictionaries from GaudiObjDesc Xml description.
