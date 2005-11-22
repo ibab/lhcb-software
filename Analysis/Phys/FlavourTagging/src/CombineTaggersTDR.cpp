@@ -1,4 +1,4 @@
-// $Id: CombineTaggersTDR.cpp,v 1.3 2005-10-05 11:05:45 musy Exp $
+// $Id: CombineTaggersTDR.cpp,v 1.4 2005-11-22 17:55:32 musy Exp $
 #include "CombineTaggersTDR.h"
 
 //-----------------------------------------------------------------------------
@@ -25,22 +25,30 @@ StatusCode CombineTaggersTDR::finalize() { return StatusCode::SUCCESS; }
 //=======================================================================
 int CombineTaggersTDR::combineTaggers(FlavourTag& theTag, 
 				      std::vector<Tagger*>& vtg ){
+  if( vtg.empty() ) return 0;
+  debug()<<"entering TDR/PID type combination"<<endreq;
+
   int category=0;
   double tagdecision=0;
+  debug()<<"aczz1"<<endreq;
   std::vector<int> itag;
   //itag is now the individual B-flavour guess of each separate tagger:
+  for( int j=0; j!=6; j++ ) itag.push_back(0);
   for( int j=1; j!=6; j++ ) itag.at(j) = (vtg.at(j-1))->decision();
+  debug()<<"aczz2 "<<itag.size() <<endreq;
 
   int ic=0;
   if( itag.at(1) ) ic+=1000;
   if( itag.at(2) ) ic+= 100;
   if( itag.at(3) ) ic+=  10;
   if( itag.at(4) ) ic+=   1;
+  debug()<<"aczz3"<<endreq;
 
   //if pion same side fill only category nr7
   //(pion SS is only considered when no other tagger is present)
   if( (vtg.at(4-1))->type() == Tagger::SS_Pion
       && itag.at(4) && ic>1 ) ic--;
+  debug()<<"aczz4"<<endreq;
 
   if(ic==1000 || ic== 1100) {    // only muon
     category=1; tagdecision = itag.at(1);
@@ -81,6 +89,8 @@ int CombineTaggersTDR::combineTaggers(FlavourTag& theTag,
   if(tagdecision) tagdecision = tagdecision>0 ? 1 : -1;
   if(!tagdecision) category = 0;
 
+  debug()<<"czz1"<<endreq;
+
   ///fill FlavourTag object
   if(      tagdecision ==  1 ) theTag.setDecision( FlavourTag::bbar );
   else if( tagdecision == -1 ) theTag.setDecision( FlavourTag::b );
@@ -89,6 +99,8 @@ int CombineTaggersTDR::combineTaggers(FlavourTag& theTag,
   theTag.setOmega( 0.5 );
   //fill in taggers info into FlavourTag object
   for( int j=1; j!=6; j++ ) if(itag.at(j)) theTag.addTagger(*(vtg.at(j-1)));
+debug()<<"czz2"<<endreq;
+
 
   return category;
 }

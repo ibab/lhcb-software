@@ -34,7 +34,7 @@ StatusCode BTagging::execute() {
   //look in location where Selection has put the B candidates
   ParticleVector parts = desktop()->particles();
   if( parts.empty() ) return StatusCode::SUCCESS;
-  debug() << "BTagging will tag "<< parts.size() << " B hypos!" <<endreq;
+  debug() << "BTagging will tag "<< parts.size()-1 << " B hypos!" <<endreq;
 
   //-------------- loop on signal B candidates from selection
   FlavourTags*  tags = new FlavourTags;
