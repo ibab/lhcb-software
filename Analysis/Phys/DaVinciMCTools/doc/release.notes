@@ -1,14 +1,40 @@
-! $Id: release.notes,v 1.74 2005-11-21 14:30:01 pkoppenb Exp $
+! $Id: release.notes,v 1.75 2005-11-22 10:05:28 pkoppenb Exp $
 ! Package     : DaVinciMCTools
 ! Responsible : P. Koppenburg
 !=============================================================================
 
-! 2005-11-21 - P. Koppenburg for Karol Hennessy
+! 2005-11-11 - G. Balbi & S. Vecchi
  - src/MCParticleMaker.(cpp,h)
-   . REmove OnlyReconstructed and OnlyReconstructible options
-! 2005-11-11 - P. Koppenburg for G. Balbi
- - src/MCParticleMaker.(cpp,h)
-   . Undocumented changes
+   . Bug fixed in the momentum error parametrization  
+   . Added the facility to create Particles by smearing the MCtruth information of only stable products of a given decay Channel 
+     Different options are possible:
+      1) smearing according a Gaussian or Double Gaussian distribution
+      2) adding BIAS to the measurement and/or ScalingFactors covariance matrix 
+         (momentum dependent parametrization  C0+C1*p ..see below) 
+      3) generate correlated or NOT measurements
+      4) smear MCTruth information at its origin Vertex or at PointOnTrack
+   . Added new properties: 
+      OnlyStableDecayProducts (Default:false) to generate Particles only from the stable products 
+                                              of the decay channel. If true also  OnlyDecayProducts must be set true
+      SmearATPoT (Default:false) if true smears the MCParticle info at PointOnTrack
+                                 (minimum distance from beam line) otherwise it smears at origin vertex 
+      rhoVAR1VAR2(Default=0.0) set the correlation coefficient between VAR1&VAR2 (VAR== x,y,tx,ty,p) 
+                               typical correlations in reconstructed particles: xy=0., xtx=-0.95 xty=0,   xp=0.
+                                                                                                            ytx =0., yty=-0.95 yp=0.
+                                                                                                                     txty=0   txp=0.
+                                                                                                                             typ=0.
+      ***** To smear MCParticles according a Double Gaussian distribution **************
+      dualGaussW(Default=0.,0.,0.,0.,0.,0.) set !=0 in case of Double Gaussian generation: 
+                                            vector of Gauss2 contribution on (x,y,z,tx,ty,p)
+      dualGaussSF(Default=1.,1.,1.,1.,1.,1.) in case of Double Gaussian generation this is the vector of 
+                                             sigma2/sigma1 ratios (x,y,z,tx,ty,p) 
+                                      
+      ***** To add momentum dependent Scaling Factors on errors (SF=1./(C0+C1*p))  
+      ScaleFactorCovarianceC0(Default=1.,1.,1.,1.,1.,1.) 
+      ScaleFactorCovarianceC1(Default=0.,0.,0.,0.,0.,0.) Vector of scaling factors on errors (x,y,z,tx,ty,p)
+      ***** To add a momentum dependent BIAS to the measurement (BIAS=q*(C0+C1*p)) q=particle's charge
+      MeasurementBiasC0(Default=0.,0.,0.,0.,0.,0.)
+      MeasurementBiasC1(Default=0.,0.,0.,0.,0.,0.)
 
 !========================== DaVinciMCTools v5r16 2005-10-19 ===================
 ! 2005-10-17 - P. Koppenburg
