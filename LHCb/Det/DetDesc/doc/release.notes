@@ -1,10 +1,11 @@
 ! =============================================================================
-! $Id: release.notes,v 1.225 2005-11-17 16:35:33 marcocle Exp $ 
+! $Id: release.notes,v 1.226 2005-11-22 10:25:27 cattanem Exp $ 
 ! =============================================================================
 ! package DetDesc
 ! package manager : Marco Clemencic, Juan Palacios
 ! =============================================================================
 
+!======================== DetDesc v15r5 2005-11-21 ========================
 ! 2005-11-17 - Marco Clemencic
  - Use "long long" instead of "longlong" in EventClockSvc properties.
  - Cache UpdateManagerSvc pointer in DetDesc::Services instead of in each
