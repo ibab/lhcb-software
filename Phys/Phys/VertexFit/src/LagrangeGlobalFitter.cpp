@@ -6,14 +6,11 @@
 
 #include "Kernel/CLHEPStreams.h"
 
-// Include files from Event
-
 // local file
 #include "LagrangeGlobalFitter.h"
 #include "Kernel/IParticleTransporter.h"
 #include <iostream>
 #include <iomanip>
-//using namespace std;
 
 //--------------------------------------------------------------------
 //
@@ -118,7 +115,7 @@ StatusCode LagrangeGlobalFitter::finalize() {
 //
 //========================================================================
 
-StatusCode LagrangeGlobalFitter::lifeTimeCalculator(Vertex &outputVertex, HepMatrix &Minv, int& nm, 
+StatusCode LagrangeGlobalFitter::lifeTimeCalculator(Vertex &outputVertex, HepMatrix &Minv, int indexwhichParticle, int& nm, 
                                                     double &lftime, double &lftimeerr) {
 	
 	
@@ -127,9 +124,9 @@ StatusCode LagrangeGlobalFitter::lifeTimeCalculator(Vertex &outputVertex, HepMat
 	int ind_par=0;
 	int f=1;
 
-	if (findParticleinTree(outputVertex,f).isFailure())
+	if (findParticleinTree(outputVertex, indexwhichParticle, f).isFailure())
 	{
-		err() << "Failed during finding in tree "<< endmsg;
+		error() << "Failed during finding in tree "<< endmsg;
 		return StatusCode::FAILURE;
 	}
 
@@ -137,54 +134,64 @@ StatusCode LagrangeGlobalFitter::lifeTimeCalculator(Vertex &outputVertex, HepMat
 		debug() << " SelectedParticle found " << endmsg;
 	else
 	{
-		err() << " SelectedParticle not found " << endmsg;	
+		error() << " SelectedParticle not found " << endmsg;	
 		return StatusCode::FAILURE;	
 	}
 
-	if (!DecayVertex)
-	{
-		err() << " Sorry, No endvertex for the selected particle" << endmsg;
-		return StatusCode::FAILURE;
-	}
 	
-	std::map <Vertex*, int>::iterator iV=MVtxStore.find(ProductionVertex);
-	if (iV->second==0)
+	std::map <Vertex*, int>::iterator iV=MVtxStore.find(ProductionVertex[indexwhichParticle]);
+	if (iV==MVtxStore.end())
   {
-    iV=UNVtxStore.find(ProductionVertex);
+    iV=UNVtxStore.find(ProductionVertex[indexwhichParticle]);
+    if (iV==UNVtxStore.end())
+    {
+      error() << "Lifetime Computation: Production Vertex not found" << endmsg;	
+      return StatusCode::FAILURE;
+    }	
     ind_prod+=nm;
   }
 	ind_prod+=(iV->second);
 	debug() << "Production vertex starting at index:" << ind_prod<< endmsg;
 
 	
-	debug() << "I'm looking for vertex "<< DecayVertex << endmsg;
-	iV=MVtxStore.find(DecayVertex);
-	if (iV->second==0)
+	debug() << "I'm looking for vertex "<< DecayVertex[indexwhichParticle] << endmsg;
+	iV=MVtxStore.find(DecayVertex[indexwhichParticle]);
+	if (iV==MVtxStore.end())
 	{
-		iV=UNVtxStore.find(DecayVertex);
+		iV=UNVtxStore.find(DecayVertex[indexwhichParticle]);
+		if (iV==UNVtxStore.end())
+		{
+			error() << "Lifetime Computation: Decay Vertex not found" << endmsg;	
+			return StatusCode::FAILURE;
+		}
 		ind_dec+=nm;
 	}
 	ind_dec+=(iV->second);
 	debug() << "Decay vertex starting at index:" << ind_dec<< endmsg;
 
-	debug() << "I'm looking for particle "<< SelectParticle << endmsg;
-	std::map <Particle*, int>::iterator iP=MParStore.find(SelectParticle);
-	if (iP->second==0)
+	debug() << "I'm looking for particle "<< SelectParticle[indexwhichParticle] << endmsg;
+	std::map <Particle*, int>::iterator iP=MParStore.find(SelectParticle[indexwhichParticle]);
+	if (iP==MParStore.end())
 	{
-		iP=UNParStore.find(SelectParticle);
+		
+		iP=UNParStore.find(SelectParticle[indexwhichParticle]);
+		if (iP==UNParStore.end())
+		{
+			error() << "Lifetime Computation: Particle not found" << endmsg;	
+			return StatusCode::FAILURE;
+		}
 		ind_par+=nm;
 	}
 	ind_par+=(iP->second);
 	debug() <<  "Particle starting at index:" << ind_par<< endmsg;
 	
-	
-	HepPoint3D PVtx=ProductionVertex->position();	
-	HepPoint3D SVtx=DecayVertex->position();	
+	HepPoint3D PVtx=ProductionVertex[indexwhichParticle]->position();	
+	HepPoint3D SVtx=DecayVertex[indexwhichParticle]->position();	
 	double tx,ty,p_p;
 	
-	tx=SelectParticle->slopeX();
-	ty=SelectParticle->slopeY();
-	p_p=SelectParticle->p();
+	tx=SelectParticle[indexwhichParticle]->slopeX();
+	ty=SelectParticle[indexwhichParticle]->slopeY();
+	p_p=SelectParticle[indexwhichParticle]->p();
 	
 	//Some numerical tricks
 	double zz=sqrt(1+(tx*tx)+(ty*ty));
@@ -192,9 +199,9 @@ StatusCode LagrangeGlobalFitter::lifeTimeCalculator(Vertex &outputVertex, HepMat
 	double z2=1./zz;
 	double z4=1./(1+(tx*tx)+(ty*ty));
 	
-	HepPoint3D mom=(SelectParticle->momentum()).vect();
+	HepPoint3D mom=(SelectParticle[indexwhichParticle]->momentum()).vect();
 	
-	double massa=SelectParticle->mass();
+	double massa=SelectParticle[indexwhichParticle]->mass();
 	lftime=massa*(SVtx-PVtx).dot(mom)*z1*z1; 		
 	
 	debug() <<"Lifetime by GlobalFitter " << lftime <<endmsg;
@@ -259,7 +266,7 @@ StatusCode LagrangeGlobalFitter::lifeTimeCalculator(Vertex &outputVertex, HepMat
 	// Derivatives Matrix
 	J(1,1)=l_pvx;
 	J(1,2)=l_pvy;
-	J(1,3)=l_pvz;
+	J(1,3)=l_pvz;        
 	
 	J(1,4)=l_svx;
 	J(1,5)=l_svy;
@@ -270,7 +277,8 @@ StatusCode LagrangeGlobalFitter::lifeTimeCalculator(Vertex &outputVertex, HepMat
 	J(1,9)=l_p;
 	
 	HepMatrix V(9,9);
-	//sub (row_target, col_target,row_min,row_max,col_min,col_max)
+	
+	
 	V.sub(1,1,Minv.sub(ind_prod,ind_prod+2,ind_prod,ind_prod+2)); //ok PV   
 	V.sub(4,4,Minv.sub(ind_dec,ind_dec+2,ind_dec,ind_dec+2));//ok ** SV 	  
   V.sub(7,7,Minv.sub(ind_par+3,ind_par+3+2,ind_par+3,ind_par+3+2));//ok ** BS'
@@ -345,17 +353,23 @@ StatusCode LagrangeGlobalFitter::fit(Vertex &inVertex)  {
 	
 }
 
-StatusCode LagrangeGlobalFitter::fit(Vertex &inVertex, double &lifeTime, double &lifeTimeErr)  { 
-	
+StatusCode LagrangeGlobalFitter::fit(Vertex &inVertex, std::vector < double > &lifeTime, std::vector < double > &lifeTimeErr)  
+{ 
 	//Fit from Vertex and retrieve lifetime and its error
+	double lfTime, lfTimeErr;
 	HepMatrix Minv;
 	int nm;
 	Particle dummy;
 	StatusCode sc=fitFromEverything(inVertex, dummy, true, Minv, nm);
 	if (sc.isFailure()) return StatusCode::FAILURE;
 	
-	return lifeTimeCalculator(inVertex, Minv, nm, lifeTime, lifeTimeErr);
-	
+	for (unsigned int i=0; i< SelectParticle.size(); i++)
+	{
+		lifeTimeCalculator(inVertex, Minv, i, nm, lfTime, lfTimeErr);
+		lifeTime.push_back(lfTime);
+		lifeTimeErr.push_back(lfTimeErr);
+	}
+	return StatusCode::SUCCESS;
 }
 
 StatusCode LagrangeGlobalFitter::fit(Particle &inParticle)  {
@@ -368,8 +382,8 @@ StatusCode LagrangeGlobalFitter::fit(Particle &inParticle)  {
 }
 
 
-StatusCode LagrangeGlobalFitter::fitFromEverything(Vertex &inVertex, Particle &inParticle, 
-                                                   bool isFromVertex, HepMatrix &V, int& num_m) {
+StatusCode LagrangeGlobalFitter::fitFromEverything(Vertex &inVertex, Particle &inParticle, bool isFromVertex, 
+                                                   HepMatrix &V, int& num_m) {
 	
 	info() << "Starting global fit ...." << endmsg;
 	
@@ -387,7 +401,7 @@ StatusCode LagrangeGlobalFitter::fitFromEverything(Vertex &inVertex, Particle &i
 		sc = computeDoF(*workingParticle, nm, nu, nc);
 	}
 	if(sc.isFailure()) {
-		err() << "cannot compute DoF" << endmsg;
+		error() << "cannot compute DoF" << endmsg;
 		return StatusCode::FAILURE;
 	}
 	
@@ -400,10 +414,10 @@ StatusCode LagrangeGlobalFitter::fitFromEverything(Vertex &inVertex, Particle &i
 	
 	// trivial check if constraints are sufficient to close the problem (not conclusive...)
 	if(nc-nu==0) {
-		warning() << "The problem with 0 DoF can be simply a transformation from measured to unmeasured variables." << endmsg; 
-    warning() << "Is it what you want?" << endmsg;
+		warning()<<"The problem with 0DoF can be simply a transformation from measured to unmeasured variables.Is it what you want?"<<
+      endmsg;
 	} else if(nc-nu<0) {
-		err() << "No DoF to close the problem... giving up" << endmsg;
+		error() << "No DoF to close the problem... giving up" << endmsg;
 		return StatusCode::FAILURE;
 	}
 	
@@ -419,12 +433,12 @@ StatusCode LagrangeGlobalFitter::fitFromEverything(Vertex &inVertex, Particle &i
 		sc = estimateAndTransport(Ce, e, u, *workingParticle);
 	}
 	if(sc.isFailure()) {
-		err() << "cannot get initial estimates" << endmsg;
+		error() << "cannot get initial estimates" << endmsg;
 		return StatusCode::FAILURE;
 	}
 	sc = checkCovariance(Ce, nm);
 	if (sc.isFailure() ) {
-		err() << "covariance matrix after transport check failed... something fishy" << endmsg;
+		error() << "covariance matrix after transport check failed... something fishy" << endmsg;
 		return StatusCode::FAILURE;
 	}
 	
@@ -464,7 +478,7 @@ StatusCode LagrangeGlobalFitter::fitFromEverything(Vertex &inVertex, Particle &i
 		
 		if ( sc.isFailure() ) 
 		{
-			err() << "momenta out of range " << endmsg;
+			error() << "momenta out of range " << endmsg;
 			return StatusCode::FAILURE;
 		}
 		
@@ -483,7 +497,7 @@ StatusCode LagrangeGlobalFitter::fitFromEverything(Vertex &inVertex, Particle &i
 			sc = iterateWithLinearConstraint(Ce, e, u, nm, nu, nc, *workingParticle, constraint, B, C, Minv);
 		}
 		if ( sc.isFailure() ) {
-			err() << "iteration " << icount+1 << " failed" << endmsg;
+			error() << "iteration " << icount+1 << " failed" << endmsg;
 			return StatusCode::FAILURE;  
 		}
 		
@@ -521,11 +535,11 @@ StatusCode LagrangeGlobalFitter::fitFromEverything(Vertex &inVertex, Particle &i
 	
 	// if not converged, return
 	if(!final) {
-		err() << "Sorry, no convergence" << endmsg;
-		err()<< "Reached maximum number of iterations = " << icount << endmsg;
-		err() << "If you think this event should be reconstructed and if you have a huge number of constraints," << endmsg; 
-    err() <<"try to increase maxIterations in job options" << endmsg;
-		err() << "If it doesn't help, please contact experts" << endmsg;
+		error() << "Sorry, no convergence" << endmsg;
+		error()<< "Reached maximum number of iterations = " << icount << endmsg;
+		error() << "If you think this event should be reconstructed and if you have a huge number of constraints,";
+    error() << "try to increase maxIterations in job options" << endmsg;
+		error() << "If it doesn't help, please contact experts" << endmsg;
 		return StatusCode::FAILURE; 
 	} else {
 		info() << "GlobalFitter converged after " << icount << " iterations!" << endmsg;
@@ -540,7 +554,7 @@ StatusCode LagrangeGlobalFitter::fitFromEverything(Vertex &inVertex, Particle &i
 	// check the covariance matrix
 	sc = checkCovariance(Ce, Cu, nm, nu);
 	if (sc.isFailure() ) {
-		err() << "covariance matrix check failed... something fishy" << endmsg;
+		error() << "covariance matrix check failed... something fishy" << endmsg;
 		return StatusCode::FAILURE;
 	}
 	
@@ -619,22 +633,22 @@ StatusCode LagrangeGlobalFitter::doComputeDoF(Particle &inputParticle, int &nm, 
 	
 	
 	if(!inputParticle.particleID().pid()) {
-		err() << "Particle without PID in decay graph. Fishy topology. Giving up." << endmsg;
+		error() << "Particle without PID in decay graph. Fishy topology. Giving up." << endmsg;
 		return StatusCode::FAILURE;         
 	}
 	
 	if(inputParticle.mass()<0) {
-		err() << "Particle without mass in decay graph. Fishy topology. Giving up." << endmsg;
+		error() << "Particle without mass in decay graph. Fishy topology. Giving up." << endmsg;
 		return StatusCode::FAILURE;         
 	}
 	
 	if(!inputParticle.endVertex()) {
-		err() << "A starting particle must have an end vertex. Unimplemented feature or fishy topology. Giving up." << endmsg;
+		error() << "A starting particle must have an end vertex. Unimplemented feature or fishy topology. Giving up." << endmsg;
 		return StatusCode::FAILURE;
 	}  
 	
 	if(isParticleMeasured(inputParticle)) {
-		err() << "A measured particle cannot have an end vertex. Unimplemented feature or fishy topology. Giving up." << endmsg;
+		error() << "A measured particle cannot have an end vertex. Unimplemented feature or fishy topology. Giving up." << endmsg;
 		return StatusCode::FAILURE;
 	}
 	
@@ -658,19 +672,19 @@ StatusCode LagrangeGlobalFitter::doComputeDoF(Vertex &inputVertex, int &nm, int 
 	
 	if(!isVertexMeasured(inputVertex)) {
 		if(inputVertex.products().size()<2) {
-			err() << "An unmeasured vertex must have more than one particle out of it. Fishy topology. Giving up." << endmsg;
+			error() << "An unmeasured vertex must have more than one particle out of it. Fishy topology. Giving up." << endmsg;
 			return StatusCode::FAILURE;
 		}
 		nu+=3; // vertex is just created, i.e. unmeasured
 	} else {
 		if(!isStartingVertex) {
-			err() << "A measured vertex can only be the starting vertex of the graph."<< endmsg ;
-      err() << " Unimplemented feature or fishy topology. Giving up." << endmsg;
+			error() << "A measured vertex can only be the starting vertex of the graph.";
+      error() << "Unimplemented feature or fishy topology.Giving up." << endmsg;
 			return StatusCode::FAILURE;
 		}
 		nm+=3; // vertex is measured
 		if(inputVertex.parent()) {
-			err() << "You are passing a persistent Vertex instead of your own copy. Cannot overwrite. Giving up" << endmsg;
+			error() << "You are passing a persistent Vertex instead of your own copy. Cannot overwrite. Giving up" << endmsg;
 			return StatusCode::FAILURE;
 		}
 	}
@@ -681,7 +695,7 @@ StatusCode LagrangeGlobalFitter::doComputeDoF(Vertex &inputVertex, int &nm, int 
 		}
 		nc+=3; // add conservation of 3-momentum
 	} else if(hasMassConstraint(inputVertex)){
-		err() << "Cannot apply mass constraint on starting vertex. Use fitFromParticle instead. Giving up." << endmsg;
+		error() << "Cannot apply mass constraint on starting vertex. Use fitFromParticle instead. Giving up." << endmsg;
 		return StatusCode::FAILURE;    
 	}
 	
@@ -692,12 +706,12 @@ StatusCode LagrangeGlobalFitter::doComputeDoF(Vertex &inputVertex, int &nm, int 
       it++) {
 		
 		if(!(*it)->particleID().pid()) {
-			err() << "Particle without PID in decay graph. Fishy topology. Giving up." << endmsg;
+			error() << "Particle without PID in decay graph. Fishy topology. Giving up." << endmsg;
 			return StatusCode::FAILURE;         
 		}
 		
 		if((*it)->mass()<0) {
-			err() << "Particle without mass in decay graph. Fishy topology. Giving up." << endmsg;
+			error() << "Particle without mass in decay graph. Fishy topology. Giving up." << endmsg;
 			return StatusCode::FAILURE;         
 		}
 		
@@ -705,18 +719,18 @@ StatusCode LagrangeGlobalFitter::doComputeDoF(Vertex &inputVertex, int &nm, int 
 		
 		if(isParticleMeasured(*(*it))) {
 			if((*it)->endVertex()) {
-				err() << "A measured particle cannot have an end vertex. Unimplemented feature or fishy topology. Giving up." << endmsg;
+				error() << "A measured particle cannot have an end vertex. Unimplemented feature or fishy topology. Giving up." << endmsg;
 				return StatusCode::FAILURE;
 			}
 			nm+=5; // particle is measured
 			if((*it)->parent()) {
-				err() << "You are passing a persistent Particle instead of your own copy. Cannot overwrite. Giving up" << endmsg;
+				error() << "You are passing a persistent Particle instead of your own copy. Cannot overwrite. Giving up" << endmsg;
 				return StatusCode::FAILURE;
 			}
 		}
 		else {
 			if(!(*it)->endVertex()) {
-				err() << "A unmeasured particle must have an end vertex. Unimplemented feature or fishy topology. Giving up." << endmsg;
+				error() << "A unmeasured particle must have an end vertex. Unimplemented feature or fishy topology. Giving up." << endmsg;
 				return StatusCode::FAILURE;
 			}
 			nu+=5; // particle is unmeasured (just created)
@@ -726,7 +740,7 @@ StatusCode LagrangeGlobalFitter::doComputeDoF(Vertex &inputVertex, int &nm, int 
 		
 		if(isParticleResonance(**it)) { // translate knwoledge of resonance into null distance between vertices
 			if(!endVertex) {
-				err() << "Found resonance in decay graph without end vertex. Fishy topology. Giving up." << endmsg;
+				error() << "Found resonance in decay graph without end vertex. Fishy topology. Giving up." << endmsg;
 				return StatusCode::FAILURE;
 			}
 			nc+=3; // add null distance constraint
@@ -815,7 +829,7 @@ StatusCode LagrangeGlobalFitter::estimateVertex(Vertex &inputVertex, Particle &p
 		
 		if(pList.size()<2) { // less than two determinable particle at vertex
       // this can never happen in the current implementation. Check included for future development
-			err() << "Less than two determinable particles at vertex. Fishy decay topology. Giving up." << endmsg;
+			error() << "Less than two determinable particles at vertex. Fishy decay topology. Giving up." << endmsg;
 			return StatusCode::FAILURE;
 		}
 		
@@ -823,7 +837,7 @@ StatusCode LagrangeGlobalFitter::estimateVertex(Vertex &inputVertex, Particle &p
 		Vertex uncVertex;
 		StatusCode sc = m_pVertexUnconst->fitVertex(pList,uncVertex);
 		if(sc.isFailure()) {
-			err() << "Unconstrained vertex failure" << endmsg;
+			error() << "Unconstrained vertex failure" << endmsg;
 			return StatusCode::FAILURE;
 		}
 		
@@ -839,7 +853,7 @@ StatusCode LagrangeGlobalFitter::estimateVertex(Vertex &inputVertex, Particle &p
 		// fill particle at vertex
 		sc=m_pStuffer->fillParticle(uncVertex,pAtVtx,pAtVtx.particleID()); 
 		if(sc.isFailure()) {
-			err() << " particle stuffer failure " << endmsg;
+			error() << " particle stuffer failure " << endmsg;
 			return StatusCode::FAILURE;
 		}
 		
@@ -913,7 +927,7 @@ StatusCode LagrangeGlobalFitter::transport(Vertex &inputVertex) {
 			StatusCode sc = m_pTransporter->transport(**it, inputVertex.position().z(), transParticle);
 			
 			if (sc.isFailure()) {
-				err() << "Track extrapolation failed" << endmsg;
+				error() << "Track extrapolation failed" << endmsg;
 				return sc;
 			}
 			
@@ -931,8 +945,8 @@ StatusCode LagrangeGlobalFitter::transport(Vertex &inputVertex) {
 }
 
 
-void LagrangeGlobalFitter::doEmbed(Particle &inputParticle, int &e_embed, int &u_embed, 
-                                   HepSymMatrix &Ce, HepVector &e, HepVector &u) {
+void LagrangeGlobalFitter::doEmbed(Particle &inputParticle, int &e_embed, int &u_embed, HepSymMatrix &Ce, HepVector &e,
+                                   HepVector &u) {
 	
 	
 	debug() << "Entering doEmbed particle " << endmsg;
@@ -955,8 +969,7 @@ void LagrangeGlobalFitter::doEmbed(Particle &inputParticle, int &e_embed, int &u
 	
 }
 
-void LagrangeGlobalFitter::doEmbed(Vertex &inputVertex, int &e_embed, int &u_embed, 
-                                   HepSymMatrix &Ce, HepVector &e, HepVector &u) {
+void LagrangeGlobalFitter::doEmbed(Vertex &inputVertex, int &e_embed, int &u_embed, HepSymMatrix &Ce, HepVector &e, HepVector &u){
 	
     
 	
@@ -980,8 +993,8 @@ void LagrangeGlobalFitter::doEmbed(Vertex &inputVertex, int &e_embed, int &u_emb
 		
   }
 	
-  debug() << "vx,vy,vz " << inputVertex.position().x()<< " " << inputVertex.position().y()<< " " 
-          << inputVertex.position().z()<< endmsg;
+  debug() << "vx,vy,vz " << inputVertex.position().x()<< " " << inputVertex.position().y()<< " " << 
+    inputVertex.position().z()<< endmsg;
 	
   for(SmartRefVector<Particle>::iterator it=inputVertex.products().begin();
       it!=inputVertex.products().end();
@@ -1234,8 +1247,8 @@ void LagrangeGlobalFitter::doComputeConstraint(HepVector &e, HepVector &u, Verte
 			u_embed+=5;
 		}
 		
-		debug() << "particle parameters " << x << " " << y << " " << tx << " " << ty << " " << p << " ID " 
-            <<  (*it)->particleID().pid() << endmsg;
+		debug() << "particle parameters " << x << " " << y << " " << tx << " " << ty << " " << p << " ID " << 
+      (*it)->particleID().pid() << endmsg;
 		
 		struct mVect v;
 		v.tx=tx;
@@ -1274,8 +1287,8 @@ void LagrangeGlobalFitter::doComputeConstraint(HepVector &e, HepVector &u, Verte
 				ze=u(u_embed+2);
 			}
 			
-			debug() << " Decay Vertex coordinates -x->" << xe << " " << x << "-y->" << ye 
-              << " " << y <<  "-z->" << ze << " " << z << endmsg;
+			debug() << " Decay Vertex coordinates -x->" << xe << " " << x << "-y->" << ye << " " << y <<  "-z->" << ze << 
+        " " << z << endmsg;
 			
 			debug() << "Constraint Particle " << (**it).particleID().pid() << " to end Vertex; cindex (2)"  << cindex << endmsg;
 			constraint(cindex) = xe-tx*(ze-z)-x;
@@ -1372,7 +1385,7 @@ void LagrangeGlobalFitter::doComputeConstraint(HepVector &e, HepVector &u, Verte
 
 StatusCode LagrangeGlobalFitter::iterateWithLinearConstraint(HepSymMatrix &Ce, HepVector &e, HepVector &u, int &nm, int &nu, 
                                                              int &nc,Particle &workingParticle, HepVector &constraint, 
-                                                             HepMatrix &B,HepMatrix &C, HepMatrix &Minv) {
+                                                             HepMatrix &B, HepMatrix &C, HepMatrix &Minv) {
 	
 	debug() << "entering iterateWithLinearConstraint " << endmsg;
 	
@@ -1434,8 +1447,8 @@ StatusCode LagrangeGlobalFitter::iterateWithLinearConstraint(HepSymMatrix &Ce, H
 }
 
 StatusCode LagrangeGlobalFitter::iterateWithLinearConstraint(HepSymMatrix &Ce, HepVector &e, HepVector &u, int &nm, int &nu, 
-                                                             int &nc, Vertex &workingVertex, HepVector &constraint, 
-                                                             HepMatrix &B, HepMatrix &C, HepMatrix &Minv) {
+                                                             int &nc, Vertex &workingVertex, HepVector &constraint, HepMatrix &B, 
+                                                             HepMatrix &C, HepMatrix &Minv) {
 	
 	
 	debug() << "entering iterateWithLinearConstraint " << endmsg;
@@ -1467,8 +1480,8 @@ StatusCode LagrangeGlobalFitter::iterateWithLinearConstraint(HepSymMatrix &Ce, H
 
 
 StatusCode LagrangeGlobalFitter::solveSystem(HepSymMatrix &Ce, HepMatrix &B, HepMatrix &C, 
-                                             int &nm, int &nu, int &nc, HepVector &constraint, 
-                                             HepVector &de, HepVector &du, HepMatrix &Minv) {
+                                             int &nm, int &nu, int &nc, HepVector &constraint, HepVector &de, HepVector &du, 
+                                             HepMatrix &Minv) {
 	
 	debug() << "entering solveSystem" << endmsg;
 	
@@ -1477,7 +1490,7 @@ StatusCode LagrangeGlobalFitter::solveSystem(HepSymMatrix &Ce, HepMatrix &B, Hep
 	
 	HepSymMatrix G = Ce.inverse(inv);
 	if ( inv != 0 ){
-		err() << "Ce inverse failure" << endmsg;     
+		error() << "Ce inverse failure" << endmsg;     
 		return StatusCode::FAILURE;
 	}
 	
@@ -1508,7 +1521,7 @@ StatusCode LagrangeGlobalFitter::solveSystem(HepSymMatrix &Ce, HepMatrix &B, Hep
 		}		
 		*/
 		
-		err() << "M inverse failure" << endmsg;     
+		error() << "M inverse failure" << endmsg;     
 		return StatusCode::FAILURE;
 	}
 	
@@ -1681,7 +1694,7 @@ void LagrangeGlobalFitter::doIteration(HepVector &e, HepVector &u, HepMatrix &B,
 					C(cindex+1,u_embed+1) = 1; // wrt ye
 					C(cindex+2,u_embed+2) = 1; // wrt ze
 				} else {   
-					err() << "Resonance endVertex measured!! ++++++++++++++++++++ CHECK your code" << endmsg;
+					error() << "Resonance endVertex measured!! ++++++++++++++++++++ CHECK your code" << endmsg;
 				}
 				if(isVertexMeasured(workingVertex)) {
 					B(cindex,indexo) = -1; // wrt xo
@@ -1868,7 +1881,7 @@ StatusCode LagrangeGlobalFitter::checkCovariance(HepSymMatrix &Ce, HepSymMatrix 
 	//   all elements in diagonal positive
 	for (int i=1;i<=nm;i++){
 		if (Ce(i,i)<0) {
-			err() << "Problem with Ce covariance matrix: " << i << ","
+			error() << "Problem with Ce covariance matrix: " << i << ","
               << i << " " << Ce (i,i) << endmsg;
 			return StatusCode::FAILURE;
 		}
@@ -1877,7 +1890,7 @@ StatusCode LagrangeGlobalFitter::checkCovariance(HepSymMatrix &Ce, HepSymMatrix 
 	for (int i=1; i<=nm; i++){
 		for (int j=i+1; j<=nm; j++){
 			if ( fabs (Ce(i,j))/sqrt(Ce(i,i)*Ce(j,j)) > 1+m_toleranceCorrelation) {
-				err() << "Problem with Ce covariance matrix: "<< i << ","
+				error() << "Problem with Ce covariance matrix: "<< i << ","
                 << j << " "<< Ce(i,j)/sqrt(Ce(i,i)*Ce(j,j)) << endmsg;
 				return StatusCode::FAILURE;
 			}
@@ -1887,7 +1900,7 @@ StatusCode LagrangeGlobalFitter::checkCovariance(HepSymMatrix &Ce, HepSymMatrix 
 	//   all elements in diagonal positive
 	for (int i=1;i<=nu;i++){
 		if (Cu(i,i)<0) {
-			err() << "Problem with Cu covariance matrix: " << i << ","
+			error() << "Problem with Cu covariance matrix: " << i << ","
               << i << " " << Cu (i,i) << endmsg;
 			return StatusCode::FAILURE;
 		}
@@ -1896,7 +1909,7 @@ StatusCode LagrangeGlobalFitter::checkCovariance(HepSymMatrix &Ce, HepSymMatrix 
 	for (int i=1; i<=nu; i++){
 		for (int j=i+1; j<=nu; j++){
 			if ( fabs (Cu(i,j))/sqrt(Cu(i,i)*Cu(j,j)) > 1+m_toleranceCorrelation) {
-				err() << "Problem with Cu covariance matrix: "<< i << ","
+				error() << "Problem with Cu covariance matrix: "<< i << ","
                 << j << " "<< Cu(i,j)/sqrt(Cu(i,i)*Cu(j,j)) << endmsg;
 				return StatusCode::FAILURE;
 			}
@@ -1910,8 +1923,8 @@ StatusCode LagrangeGlobalFitter::checkCovariance(HepSymMatrix &Ce, HepSymMatrix 
 }
 
 
-StatusCode LagrangeGlobalFitter::fillDecayGraph(HepSymMatrix &Ce0, HepVector &e0, HepSymMatrix &Ce, HepVector &e, 
-                                                HepSymMatrix &Cu,HepVector &u, Particle &workingParticle, int ndof) {
+StatusCode LagrangeGlobalFitter::fillDecayGraph(HepSymMatrix &Ce0, HepVector &e0, HepSymMatrix &Ce, HepVector &e, HepSymMatrix &Cu
+                                                ,HepVector &u, Particle &workingParticle, int ndof) {
 	
 	
 	
@@ -2131,14 +2144,14 @@ StatusCode LagrangeGlobalFitter::getChiSquare(HepVector &e0, HepVector &e, HepSy
 		chis = dot(ed, (Ge*ed));
 	}
 	else {
-		err() << " matrix inversion problem " << endmsg;
+		error() << " matrix inversion problem " << endmsg;
 		return StatusCode::FAILURE;
 	}
 	debug() << "chi =  " << chis << endmsg;
 	
 	// check sign of chi2
 	if(chis<0) {
-		err() << "negative chi2. Failure." << endmsg;
+		error() << "negative chi2. Failure." << endmsg;
 		return StatusCode::FAILURE;
 	}
 	
@@ -2149,32 +2162,33 @@ StatusCode LagrangeGlobalFitter::getChiSquare(HepVector &e0, HepVector &e, HepSy
 
 void LagrangeGlobalFitter::setWhichParticleLifetime(Particle *inP){
 	debug() << "setting Which Particle " <<  inP <<endmsg;
-	SelectParticle=&(*inP);
+	SelectParticle.push_back(&(*inP));
 	debug() << "Done " <<  *inP <<endmsg;
 
 }
 
 
-StatusCode LagrangeGlobalFitter::findParticleinTree(Vertex &LastV,int& found)
+StatusCode LagrangeGlobalFitter::findParticleinTree(Vertex &LastV,int indexwhichParticle, int& found)
 {
-	debug() << " Looking for particle ptr:"<< SelectParticle << endmsg;
+	debug() << " Looking for particle ptr:"<< SelectParticle[indexwhichParticle] << endmsg;
 	debug() << " Entering vertex ptr:"<< &LastV << endmsg;
 	for ( SmartRefVector<Particle>::iterator iLast = (LastV.products()).begin(); iLast!=(LastV.products()).end();iLast++)
 	{
 		debug()  << " Particle ptr" << &(*(*iLast))<<endmsg;
-		if (&(**iLast)==SelectParticle) {
+		if (&(**iLast)==(SelectParticle[indexwhichParticle])) {
 			found=0;
-			ProductionVertex=&LastV;
-			SelectParticle=*iLast;
-			DecayVertex=(**iLast).endVertex();
+			ProductionVertex.push_back(&LastV);
+			//SelectParticle=*iLast;
+			DecayVertex.push_back((**iLast).endVertex());
 			debug() << "I've found it!" <<endmsg;
 			debug() << "Father Vertex ptr " << &LastV << endmsg;
 			debug() << "Decay Vertex ptr"<< (**iLast).endVertex() << endmsg;
 			return StatusCode::SUCCESS;
 		}
 		if ((*(*iLast)).endVertex())
-			findParticleinTree(*((*(*iLast)).endVertex()), found);
+			findParticleinTree(*((*(*iLast)).endVertex()), indexwhichParticle, found);
 	}
 
 	return StatusCode::SUCCESS;
 }
+

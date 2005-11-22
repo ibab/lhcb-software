@@ -1,7 +1,10 @@
-! $Id: release.notes,v 1.76 2005-11-11 16:02:34 pkoppenb Exp $
+! $Id: release.notes,v 1.77 2005-11-22 10:05:50 pkoppenb Exp $
 ! Package     : DaVinciKernel
 ! Responsible : P. Koppenburg
 
+! 2005-11-16 - Gabriele Balbi & Stefania Vecchi
+  - Kernel/IGlobalFitter.h
+	.added documentation
 
 ! 2005-11-11 - P. Koppenburg for Gabriele Balbi
   - Kernel/IGlobalFitter.h 
