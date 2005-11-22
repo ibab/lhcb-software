@@ -1,4 +1,4 @@
-// $Id: XmlGenericCnv.h,v 1.6 2005-08-30 10:38:52 marcocle Exp $
+// $Id: XmlGenericCnv.h,v 1.7 2005-11-22 10:40:05 cattanem Exp $
 
 #ifndef DETDESCCNV_XMLGENERICCNV_H
 #define DETDESCCNV_XMLGENERICCNV_H
@@ -208,15 +208,16 @@ protected:
                                     CLID clid) const;
 
   /**
-   * This creates a ConddbAddress using the location, entryName and clid
+   * This creates a ConddbAddress using the location, entryName, channelID and clid
    * @param path the path string for this address
    * @param entryName the entryName string for this address
+   * @param channelId the channelID for this address
    * @param clid the clidof the address to create
    * @return the new Address
    */
   IOpaqueAddress* createCondDBAddress (std::string path,
                                        std::string entryName,
-                                       unsigned long cannelId,
+                                       unsigned long channelId,
                                        CLID clid) const;
 
   /**
