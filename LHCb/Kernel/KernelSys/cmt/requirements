@@ -1,5 +1,5 @@
 package KernelSys
-version v4r16
+version v4r17
 
 branches doc cmt
 
@@ -8,7 +8,7 @@ use Relations        v2r6   Kernel
 use CaloKernel       v3r2   Calo
 use MuonKernel       v2r7p1 Muon
 use TrKernel         v11r4  Tr
-use RichKernel       v5r5   Rich
+use RichKernel       v5r6   Rich
 use VeloKernel	     v1r5p1 Velo   -no_auto_imports
 use L0mConf          v2r2p4 L0
 use L0MuonKernel     v3r0p1 L0
