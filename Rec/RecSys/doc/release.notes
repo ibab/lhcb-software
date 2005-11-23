@@ -5,6 +5,72 @@ Purpose: LHCb reconstruction packages.
          This project groups together all the reconstruction packages needed
          by one or more LHCb applications. 
 
+</PRE><H1><A NAME=v2r1>2005-11-22 RecSys v2r1</A></H1><PRE>
+This version uses Gaudi v17r2, LHCb v19r2. Backwards compatible for RTTC data
+
+- Packages added:    TrackAssociators - Associators to MC Truth for Tracks
+- Packages modified: RichHltSys v1r2, RichTrgGlobalPID v2r1, RichTrgTools v1r2,
+    RichRecSys v1r19, RichRingRefit v1r11, RichLocalPID v1r13, RichRecQC v1r12,
+    RichGlobalPID v1r11, RichRecAlgorithms v1r1, RichRecTools v2r16, 
+    RichRecMCTools v1r10, RichRecMonitors v1r1, GlobalReco v5r1, CaloReco v3r0,
+    CaloPIDs v3r0, CaloMoniDst v2r0, PatSys v1r3, PatVelo v1r4, PatVeloTT v1r3,
+    PatForward v1r2, MuonID v3r9p1
+
+- In RichRecSys v1r19
+  . Update requirements and job options for:
+    + Support for new track event model
+    + Clean up usage of context()
+    + Support for spherical secondary mirrors
+
+- In RichTrgGlobalPID, RichTrgTools, RichRingRefit, RichLocalPID, RichRecQC,
+     RichRecAlgorithms, RichRecTools, RichRecMCTools, RichRecMonitors
+  . Updates for use of context() in base classes
+
+- In RichTrgGlobalPID, RichRecQC, RichRecMonitors
+  . Update to new base classes
+
+- In RichTrgGlobalPID, RichRecQC, RichRecTools
+  . Updates for new tracking event model
+
+- In RichTrgTools
+  . Improvements to RichTrackSegment creators
+
+- In RichRecQC
+  . Reactivate RichRecoQC algorithm
+
+- In RichGlobalPID
+  . Improvements to HLT/Offline running
+
+- In RichRecTools
+  . Adapt to changes in RichDAQ
+  . Adapt to changes in RichTrackSegment and RichGeomPhoton creators
+  . Move RichParticleProperties tool to RichTools package
+
+- In RichRecMCTools
+  . Improvements to photon reconstruction interface to avoid data copying
+  . Improvements to MC truth tool. Delegate more to the lower level tool.
+  . Some improvements to Cherenkov theta smearing tool
+
+- In RichRecMonitors
+  . Split up RichPhotonMonitor into smaller dedicated monitors.
+  . Added the option to pre book histograms in RichAlignmentMonitor
+
+- In GlobalReco v5r1
+  . Adapt to change in RichPID interface
+
+- In CaloReco v3r0, CaloPIDs v3r0, CaloMoniDst v2r0
+  . Adapt to new Track model
+
+- In PatVelo v1r4, PatVeloTT v1r3, PatForward v1r2
+  . Add status to Tracks
+
+- In PatVelo v1r4
+  . Fixed bug in how code mapped sectors to zones in R sensors
+    (reduce clone rate in RZ tracking)
+
+- In MuonID v3r9p1
+  . Various improvements (c.f. DaVinci v12r14)
+
 </PRE><H1><A NAME=v2r0>2005-11-15 RecSys v2r0</A></H1><PRE>
 This version uses Gaudi v17r2, LHCb v19r1. Backwards compatible for RTTC data
 

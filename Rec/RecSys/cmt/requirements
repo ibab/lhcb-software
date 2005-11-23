@@ -1,5 +1,5 @@
 package RecSys
-version v2r0
+version v2r1
 
 branches cmt doc
  
@@ -8,9 +8,9 @@ branches cmt doc
 #=======================================================
 
 # Calorimeter                         # Maintainer
-use CaloMoniDst         v1r2	Calo  # Ivan Belyaev
-use CaloPIDs		v2r6	Calo  # Ivan Belyaev
-use CaloReco            v2r9    Calo  # Ivan Belyaev
+use CaloMoniDst         v2r0    Calo  # Olivier Deschamps
+use CaloPIDs		v3r0    Calo  # Olivier Deschamps
+use CaloReco            v3r0    Calo  # Olivier Deschamps
 
 # Tracking
 use TrExtrapolator      v2r14   Tr    # N.N.
@@ -34,6 +34,7 @@ use TrackProjectors     v1r3    Tr    # Eduardo Rodrigues, Jose Hernando
 use TrackFitEvent       v1r4    Tr    # Eduardo Rodrigues, Jose Hernando
 use TrackIdealPR        v1r3    Tr    # Eduardo Rodrigues, Jose Hernando
 use TrackMatching       v1r1    Tr    # Eduardo Rodrigues
+use TrackAssociators    v1r4    Tr    # Edwin Bos
 use TrConverters        v1r4    Tr    # Eduardo Rodrigues, Jose Hernando
 use TrgConverter        v1r0p1  Trg   # Eduardo Rodrigues, Jose Hernando
 
@@ -50,12 +51,12 @@ use TrgVelo             v7r4    Trg   # David Hutchcroft
 use TrgVeloTT		v8r1    Trg   # Luis Fernandez
 
 # New pattern recognition
-use PatSys              v1r3    Pat   # Olivier Callot
+use PatSys              v1r4    Pat   # Olivier Callot
 use PatTools            v1r2    Pat   # Olivier Callot
 use PatUtils            v1r1    Pat   # Olivier Callot
-use PatVelo             v1r3    Pat   # Olivier Callot, David Hutchcroft
-use PatVeloTT           v1r2    Pat   # Olivier Callot, Luis Fernandez
-use PatForward          v1r1    Pat   # Olivier Callot
+use PatVelo             v1r4    Pat   # Olivier Callot, David Hutchcroft
+use PatVeloTT           v1r3    Pat   # Olivier Callot, Luis Fernandez
+use PatForward          v1r2    Pat   # Olivier Callot
 use PatPV               v1r0p1  Pat   # Mariusz Witek
 use PatChecker          v1r2    Pat   # Olivier Callot
 use PatFitParams        v1r1    Pat   # Olivier Callot
@@ -67,24 +68,24 @@ use L1Decision          v5r2    Trg   # Thomas Schietinger
 # Muon
 use MuonUtils		v1r0	Muon  # N.N.
 use MuonRec             v2r4p1	Muon  # Danilo Domenici
-use MuonID              v3r7p2	Muon  # Erica Polycarpo
+use MuonID              v3r9p1  Muon  # Erica Polycarpo
 use MuonMoniDst         v1r0    Muon  # Alessio Sarti
 
 # Rich
-use RichRecSys		v1r18p1 Rich  # Chris Jones
-use RichRingRefit	v1r10   Rich  # Chris Jones
-use RichLocalPID	v1r12   Rich  # Chris Jones
-use RichGlobalPID	v1r10   Rich  # Chris Jones
+use RichRecSys          v1r19   Rich  # Chris Jones
+use RichRingRefit	v1r11   Rich  # Chris Jones
+use RichLocalPID	v1r13   Rich  # Chris Jones
+use RichGlobalPID	v1r11   Rich  # Chris Jones
 use RichPIDMerge	v1r5	Rich  # Chris Jones
-use RichRecAlgorithms   v1r0    Rich  # Chris Jones
-use RichRecTools        v2r15   Rich  # Chris Jones
-use RichRecMCTools      v1r9    Rich  # Chris Jones
-use RichRecMonitors     v1r0    Rich  # Chris Jones
-use RichRecQC           v1r11   Rich  # Chris Jones
-use RichHLTSys		v1r1p2  Rich  # Chris Jones
-use RichTrgGlobalPID	v2r0    Rich  # Chris Jones
-use RichTrgTools	v1r1    Rich  # Chris Jones
+use RichRecAlgorithms   v1r1    Rich  # Chris Jones
+use RichRecTools        v2r16   Rich  # Chris Jones
+use RichRecMCTools      v1r10   Rich  # Chris Jones
+use RichRecMonitors     v1r1    Rich  # Chris Jones
+use RichRecQC           v1r12   Rich  # Chris Jones
+use RichHLTSys		v1r2    Rich  # Chris Jones
+use RichTrgGlobalPID	v2r1    Rich  # Chris Jones
+use RichTrgTools	v1r2    Rich  # Chris Jones
 
 # Global reco
 use PrimVtx             v2r1p1  Rec   # N.N.
-use GlobalReco		v5r0    Rec   # Patrick Koppenburg
+use GlobalReco		v5r1    Rec   # Patrick Koppenburg

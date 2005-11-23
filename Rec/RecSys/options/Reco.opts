@@ -71,12 +71,15 @@ RecoTrSeq.Members += { "TrFitTrack2TrackCnv/StoreBestTrack" };
 StoreBestTrack.InputTracks  = "Rec/FitTrack/Best";
 StoreBestTrack.OutputTracks = "Rec/Track/Best";
 
-// Rich
+// Rich, using Track
+ApplicationMgr.DLLs += { "TrackExtrapolators" };
 ApplicationMgr.DLLs += { "RichTools", "RichRecTools", "RichRecAlgorithms",
                          "RichGlobalPID", "RichLocalPID", 
                          "RichRingRefit", "RichPIDMerge" };
 #include "$RICHRECSYSOPTS/RecoToolPara.opts"
 #include "$RICHRECSYSOPTS/RecoOfflineAlgs.opts"
+// Uncomment next line to go back to Rich reconstruction from old tracks
+//#include "$RICHRECSYSOPTS/tools/RichTracksFromTrStoredTracks.opts"
 
 // Calorimeter reconstruction
 ApplicationMgr.DLLs += { "CaloReco", "CaloPIDs" };
