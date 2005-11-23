@@ -1,6 +1,10 @@
 package EventSys
 package manager: Marco Cattaneo
 
+!======================== EventSys v20r12 2005-11-22 =======================
+! 2005-11-22 - Marco Cattaneo
+ - Use RichEvent v8r5, EventAssoc v2r1
+
 !======================== EventSys v20r11 2005-11-11 =======================
 ! 2005-11-11 - Marco Cattaneo
  - Changes to have platform dependent dicts with GaudObjDesc v8r3
