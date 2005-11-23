@@ -1,11 +1,11 @@
 package DAQSys
-version v1r7
+version v1r8
 
 branches doc cmt options
 
 # LHCb DAQ buffer libraries
 
-use RichDAQ     v2r2    Rich
+use RichDAQ     v2r3    Rich
 use MuonDAQ     v1r2p3  Muon
 use OTDAQ       v3r3    OT
 use STDAQ       v1r6    IT
