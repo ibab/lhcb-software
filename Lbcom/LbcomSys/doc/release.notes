@@ -6,6 +6,29 @@
 !             : Contains packages shared by Boole and other applications   
 !-----------------------------------------------------------------------------
 
+</PRE><H1><A NAME=v3r1>2005-11-18 LbcomSys v3r1</A></H1><PRE>
+This version is built against LHCb v19r2 and Gaudi v17r2.
+
+- New packages     : RichMCAssociators - Algorithms for asociation to MC truth
+
+- Packages modified: RichTools v1r8, RichMCTools v2r7
+
+- In RichTools v1r8
+  . Improvements to RichTrackSegment and RichGeomPhoton creators
+  . Add support for new Track event model. New tool RichTrSegMakerFromRecoTracks.
+  . Add beginnings of support for conditions data base.
+  . New tools for the spherical secondary mirrors
+  . Import RichParticleProperties tool from RichRecTools
+
+- In RichMCTools v2r7
+  . Improvements to RichTrackSegment maker to avoid object copying
+  . Add support for linker based TrStoredTrack MC associations
+  . Add support for MC associations for the new track event model.
+  . Add support for new DST summary objects MCRichDigitSummary which link
+    RichSmartIDs to MCParticles and history codes.
+  . Move algorithms BuildMCRichDigitLinks, MCPartToMCRichTrackAlg and
+    MCRichHitToMCRichOpPhotAlg to new RichMCAssociators package
+
 </PRE><H1><A NAME=v3r0>2005-11-15 LbcomSys v3r0</A></H1><PRE>
 This version is built against LHCb v19r1 and Gaudi v17r2.
 
