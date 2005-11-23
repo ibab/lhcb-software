@@ -1,5 +1,5 @@
 package BooleSys
-version v10r0
+version v10r1
 
 branches cmt doc
  
@@ -8,7 +8,7 @@ branches cmt doc
 #=======================================================
 
 # Boole application                   # Maintainer  
-use Boole              v10r0    Digi  # Marco Cattaneo
+use Boole              v10r1    Digi  # Marco Cattaneo
 use DigiAlg		v3r0	Digi  # Marco Cattaneo
 
 # Calorimeter
@@ -27,5 +27,5 @@ use MuonBackground	v1r10p1	Muon  # Alessia Satta
 use MuonMoniDigi        v1r0    Muon  # Alessio Sarti
 
 # Rich
-use RichDigiQC	        v2r2    Rich  # Chris Jones
-use RichReadout	        v1r13   Rich  # Chris Jones
+use RichDigiQC	        v2r3    Rich  # Chris Jones
+use RichReadout	        v1r14   Rich  # Chris Jones

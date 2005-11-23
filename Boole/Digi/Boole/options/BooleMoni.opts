@@ -36,7 +36,7 @@ MoniOTSeq.Members += { "OTTimeMonitor" };
 MoniOTSeq.Members += { "OTTimeChecker" };
 
 // Rich
-ApplicationMgr.DLLs += { "RichDigiQC", "RichMCTools" };
+ApplicationMgr.DLLs += { "RichDigiQC" };
 #include "$RICHDIGIQCOPTS/DigiQC_Boole.opts"    // standard monitoring
 
 // Calorimeters

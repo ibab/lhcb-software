@@ -29,7 +29,7 @@ ApplicationMgr.TopAlg += { "ProcessPhase/Init",
 Init.DetectorList += { "Boole", "Data" };
 Digi.DetectorList += { "VELO" , "IT", "OT" , "RICH" , "CALO", "MUON" };
 Trigger.DetectorList = { "L0" };
-Relations.DetectorList = { "Velo", "IT", "OT", "L0", "Links" };
+Relations.DetectorList = { "Velo", "IT", "OT", "RICH", "L0", "Links" };
 
 // Initialization
 ApplicationMgr.DLLs += { "DAQEvent" };
@@ -74,7 +74,7 @@ DigiCALOSeq.Members = {
 };
 
 // Rich digitisation
-ApplicationMgr.DLLs += { "RichTools", "RichReadout", "RichDAQ"};
+ApplicationMgr.DLLs += { "RichTools", "RichReadout", "RichDAQ", "RichMCTools" };
 #include "$RICHREADOUTOPTS/BooleDigi.opts"
 #include "$RICHDAQROOT/options/Boole_FillRawBuffer.opts"
 
@@ -133,11 +133,13 @@ DataOnDemandSvc.Nodes += { "DATA='/Event/Rec'           TYPE='DataObject'",
 #include "$OTASSOCIATORSROOT/options/OTAssociators.opts"
 #include "$VELOASSOCIATORSROOT/options/VeloAssociators.opts"
 #include "$CALOASSOCIATORSROOT/options/CaloAssociators.opts"
+#include "$RICHMCASSOCIATORSROOT/options/BooleRelations.opts"
 
 RelationsVeloSeq.Members += { "VeloTruthFromCluster" };
 ApplicationMgr.DLLs += { "MCTools" };
 RelationsITSeq.Members += { "ITTruthFromDigit" };
 RelationsOTSeq.Members += { "OTTimeCreator", "OTTruthFromOTTime" };
+ApplicationMgr.DLLs += { "RichMCAssociators" };
 
 RelationsL0Seq.Members += { "L0CaloToMCParticleAsct" };
 RelationsL0Seq.Members += { "L0CaloToMCParticleAsct/L0CaloFullTruth"};

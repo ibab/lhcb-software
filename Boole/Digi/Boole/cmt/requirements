@@ -1,5 +1,5 @@
 package Boole
-version v10r0
+version v10r1
 
 branches doc cmt job options
 
@@ -20,16 +20,17 @@ use GaudiObjDesc 	v8r3         -no_auto_imports
 use RootHistCnv         v9r6         -no_auto_imports
 
 #-- Databases
-use XmlDDDB            v26r2    Det  -no_auto_imports
-use ParamFiles	       v3r11	     -no_auto_imports
-use FieldMap	        v4r5         -no_auto_imports
+use XmlDDDB            v27r0    Det  -no_auto_imports
+use XmlConditions       v1r3    Det  -no_auto_imports
+use ParamFiles	       v3r13	     -no_auto_imports
+use FieldMap	        v4r6         -no_auto_imports
 use BooleDQ	        v1r0	DQ   -no_auto_imports
 
-#-- LHCb libraries (from LHCB_v19r1)
-use LHCb	       v19r1         -no_auto_imports
+#-- LHCb libraries (from LHCB_v19r2)
+use LHCb	       v19r2         -no_auto_imports
 
-#-- Lbcom packages (from LBCOM_v3r0)
-use LbcomSys            v3r0         -no_auto_imports
+#-- Lbcom packages (from LBCOM_v3r1)
+use LbcomSys            v3r1         -no_auto_imports
 
 #-- BooleSys v10r0 packages
 
@@ -51,8 +52,8 @@ use MuonBackground	v1r10p1	Muon -no_auto_imports
 use MuonMoniDigi        v1r0    Muon -no_auto_imports
 
 # Rich
-use RichDigiQC	        v2r2  	Rich -no_auto_imports
-use RichReadout		v1r13	Rich -no_auto_imports
+use RichDigiQC	        v2r3  	Rich -no_auto_imports
+use RichReadout		v1r14	Rich -no_auto_imports
 
 #===== build Boole =========================
 application Boole $(GAUDICONFROOT)/src/GaudiMain.cpp

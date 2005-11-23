@@ -3,9 +3,36 @@ Package: Digi/Boole
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb Digitization program
 
+</PRE><H1><A NAME=v10r1>2005-11-18 Boole v10r1</A></H1><PRE>
+This version uses Gaudi v17r2, LHCb v19r2, Lbcom v3r1, XmlDDDB v27r0
+Requires input from Gauss v19r3 or greater. Output needs Brunel v28r1 or greater
+
+Introduces support for Conditions data, taken from DBASE/Det/XmlConditions/v1r3
+
+- New features
+  . Rich readout mapping taken from Conditions (RichKernel v5r6, RichDet v8r5, 
+           RichDAQ v2r3, RichReadout v1r14, XmlDDDB v27r0, XmlConditions v1r3)
+
+- New tuning
+  . OT readout window now 75ns (XmlDDDB v27r0)
+
+- Geometry changes
+  . Prepare support for v200511 geometry (RichDet v8r5, RichTools v1r8)
+    (Options not yet released, need Gauss data for testing)
+
+- Persistency changes
+  . Add more history information to MCRichDigits (RichReadout v1r14)
+  . Add new Rich MC relations MC/Rich/DigitSummaries
+    (RichEvent v8r5, RichMCTools v2r7, RichMCAssociators v1r0)
+
+- Bug fixes
+  . Make sure a bank always exists for all Rich level1 boards. Previously, no
+    bank was saved if its board had no hits in all HPDs 
+    (RichReadout v1r14, RichDAQ v2r3)
+
 </PRE><H1><A NAME=v10r0>2005-11-15 Boole v10r0</A></H1><PRE>
 This version uses Gaudi v17r2, LHCb v19r1, Lbcom v3r0, XmlDDDB v26r2
-Requires input from Gauss v19r3 or greater. Output needs Brunel v28r0 or greater
+Requires input from Gauss v19r3 or greater. Output needs Brunel v28r0
 
 - New features:
   . Added Muon digitization monitoring (MuonMoniDigi v1r0)
@@ -25,7 +52,7 @@ This version uses Gaudi v16r5, LHCb v18r9, Lbcom v2r5, XmlDDDB v26r2
 
 </PRE><H1><A NAME=v9r4>2005-07-18 Boole v9r4</A></H1><PRE>
 This version uses Gaudi v16r5, LHCb v18r8, Lbcom v2r4, XmlDDDB v26r1
-Requires input from Gauss v19r3 or greater. Output needs Brunel v27r4 or greater
+Requires input from Gauss v19r3 or greater. Output needs Brunel v27r4 to v28r0
 
 - New features:
   . Added FromDigi.opts:    example options for re-running Boole on .digi file
@@ -64,7 +91,7 @@ Requires input from Gauss v19r3 or greater. Output needs Brunel v27r4 or greater
 
 </PRE><H1><A NAME=v9r3>2005-06-27 Boole v9r3</A></H1><PRE>
 This version uses Gaudi v16r4, LHCb v18r7, Lbcom v2r3
-Requires input from Gauss v19r3 or greater. Output needs Brunel v27r2 or greater
+Requires input from Gauss v19r3 or greater. Output needs Brunel v27r2 to v28r0
 
 - Packages modified: RichDigiQC v2r2, RichReadout v1r13
 
@@ -89,7 +116,7 @@ Requires input from Gauss v19r3 or greater. Output needs Brunel v27r2 or greater
 
 </PRE><H1><A NAME=v9r2>2005-06-13 Boole v9r2</A></H1><PRE>
 This version uses Gaudi v16r4, LHCb v18r6, Lbcom v2r2
-Requires input from Gauss v19r3 or greater. Output needs Brunel v27r2 or greater
+Requires input from Gauss v19r3 or greater. Output needs Brunel v27r2 to v28r0
 
 - Geometry changes
   . Add support for v200506 geometry (tilted Calo+Muon) (XmlDDDB v25r1)

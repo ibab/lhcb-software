@@ -33,6 +33,7 @@ DigiWriter.ItemList =
 , "/Event/MC/OT/Hits#1"
 , "/Event/MC/Rich#1"
 , "/Event/MC/Rich/Hits#1"
+, "/Event/MC/Rich/DigitSummaries#1"
 , "/Event/MC/Prs#1"
 , "/Event/MC/Prs/Hits#1"
 , "/Event/MC/Spd#1"
