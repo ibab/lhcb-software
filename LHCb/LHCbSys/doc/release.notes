@@ -5,8 +5,85 @@
 ! Purpose     : LHCb OO kernel packages
 !-----------------------------------------------------------------------------
 
+</PRE><H1><A NAME=v19r2>2005-11-22 LHCbSys v19r2</A></H1><PRE>
+This version uses Gaudi v17r2. It is backwards compatible for RTTC data
+
+ - New packages     : RichCondition - to handle Rich conditions from condDB
+               CondDBEntityResolver - implements IXmlEntityResolver interface
+ - Modified packages: KernelSys v4r17, RichKernel v5r6, RichRecBase v1r17,
+     EventSys v20r12, RichEvent v8r5, DAQSys v1r8, RichDAQ v2r3, DetSys v7r6,
+     RichDet v8r5, DetDesc v15r5, DetDescCnv v2r10, XmlTools v3r8,
+     DetCondExample v7r7, CaloInterfaces v5r0, CaloUtils v5r0, EventAssoc v2r1
+     
+ - In RichKernel v5r6
+   . Update to use new numbering schemes from Conditions.
+   . Replace tools IRichHPDInfoTool and IRichHPDToLevel1Tool with single tool
+     IRichDetNumberingTool
+   . Add classes RichObjPtn, RichHistoID
+   . Reorganization and updates of tool and algorithm base classes
+   . New interfaces for RichConditions tools
+   . Additions and improvements to IRichMCTruthTool, Rich1DTabFunc, 
+     IRichMirrorSegFinder, RichTrackSegment creator, ID objects in
+     RichDAQDefinitions.h
+   . Updates to Level1 ID tool to give access to all valid Level1 IDs
+
+ - In RichRecBase v1r17
+   . Adapt to changes in algorithm and tool base classes, and in RichDAQ
+   . Add support for new Track event model
+   . Improvements to transient reconstruction objects
+
+ - In RichEvent v8r5
+   . Updates for new Track event model
+   . Add new MCRichDigitSummary object for MC associations on the DST files
+
+ - In RichDAQ v2r3
+   . Update to use new numbering schemes from Conditions.
+   . use memory management (test, to see if this improves HLT time)
+   . Turn on sorting of RichSmartIDs from RawBuffer by default
+   . Add protections for empty Level1 board banks
+
+ - In RichDet v8r5
+   . Additions to radiator detector elements to load up RichCondition tools.
+   . Modifications in DeRichSphMirror for the secondary spherical mirrors
+   . MultiSolid radiator for the new aerogel
+   . Allow for different reflectivity for every mirror segment.
+
+ - In DetDesc v15r5
+   . Use "long long" instead of "longlong" in EventClockSvc properties.
+   . Cache UpdateManagerSvc pointer in DetDesc::Services instead of in each
+     DetectorElement instance.
+   . Minor clean-up in the ParamValidDataObject-related classes.
+   . Added 2 missing virtual destructors in IUpdateManagerSvc.h
+
+ - In DetDescCnv v2r10
+   . Fixed handling of absolute paths in hrefs in XmlGenericCnv
+   . Fixed a problem in XmlGenericCnv when handling URLs with a ':' in the
+     object name (it was conflicting with the ChannelId syntax)
+   . Fixed handling of nested objects (in case of XML strings) in
+     XmlBaseDetElemCnv (it was already fixed for XmlGenericCnv)
+   . Allow usage of relative paths in XML strings (mainly for CondDB)
+
+ - In XmlTools v3r8
+   . Added the new interface IXmlEntityResolverSvc.
+   . XmlParserSvc uses intialize() and finalize() instead of constructor
+     and destructor
+
+ - In DetCondExample v7r7
+   . Made DetDataAgent print the ClassID of loaded objects.
+   . Added a small example that load all the detector description
+   . Added a Python script that copies a filesystem tree to a COOL database
+   . Use also XmlConditions, Python (for PyCool) and Tools/CondDBEntityResolver
+   . Changed CLID_DummyDetectorElement, conflicting with another DetectorElement
+     in XmlDDDB.
+
+ - In CaloInterfaces v5r0, CaloUtils v5r0
+   . Adapt to new track model
+
+ - In EventAssoc v2r1
+   . Add dictionaries for Track Relations (for Calo DST objects)
+
 </PRE><H1><A NAME=v19r1>2005-11-15 LHCbSys v19r1</A></H1><PRE>
-This version uses Gaudi v17r1 and produces reflex dictionaries
+This version uses Gaudi v17r2 and produces reflex dictionaries
 It is backwards compatible for RTTC data
 
  - Modified packages: KernelSys v4r16, LHCbKernel v5r15, MuonKernel v2r7p1,
