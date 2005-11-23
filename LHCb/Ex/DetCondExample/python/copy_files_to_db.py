@@ -51,7 +51,7 @@ def main():
     parser.add_option("-c", "--connect-string",
                       dest="connectString", type="string",
                       help="cool::DatabaseId to use for the connection",
-                      default="sqlite://none;schema=XmlConditions_20051118.sqlite;user=none;password=none;dbname=DDDB")
+                      default="sqlite://none;schema=sqlite.db;user=none;password=none;dbname=DDDB")
     parser.add_option("-s", "--source",
                       dest="source", type="string",
                       help="directory where the files to copy to the DB are",
@@ -116,7 +116,8 @@ def main():
             continue
     
         if dbroot != "/": # it means it is not "/"
-            db.createFolderSet(dbroot)
+            if not db.existsFolderSet(dbroot):
+                db.createFolderSet(dbroot)
         #else:
         #    dbroot = "/"
         
@@ -127,9 +128,13 @@ def main():
         for f in files:
             n+=1
             print ("%" + str(num_len) + "d %" + str(num_len) + "d  %s")%(n,sum-n,f)
-            folder = db.createFolderExtended(os.path.join(dbroot,f),
-                                             folderspec,folderdesc,
-                                             cool.FolderVersioning.MULTI_VERSION)
+            folder_path = os.path.join(dbroot,f)
+            if db.existsFolder(folder_path):
+                folder = db.getFolder(folder_path)
+            else:
+                folder = db.createFolderExtended(folder_path,
+                                                 folderspec,folderdesc,
+                                                 cool.FolderVersioning.MULTI_VERSION)
             xml_data = open(os.path.join(root,f)).read()
             fixed_data = fix_system_ids(xml_data,"conddb:"+dbroot)
             fixed_data = fix_env_vars(fixed_data)
