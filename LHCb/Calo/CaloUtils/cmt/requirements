@@ -1,6 +1,6 @@
-# $Id: requirements,v 1.24 2005-11-07 11:57:13 odescham Exp $
+# $Id: requirements,v 1.25 2005-11-23 07:29:07 cattanem Exp $
 # =============================================================================
-# CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.24 $
+# CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.25 $
 # =============================================================================
 # Created    : 02/11/2001
 # Maintainer : Vanya BELYAEV belyaev@lapp.in2p3.fr 
@@ -15,8 +15,8 @@ branches            cmt doc src CaloUtils
 include_dirs        $(CALOUTILSROOT)
 
 # ================= dependencies ==============================================
-use CaloDet         v6r*    Det 
-use CaloEvent       v13r*   Event
+use CaloDet         v*      Det 
+use CaloEvent       v*      Event
 use TrackEvent      v*      Event 
 
 # ================= constituents: linker library ==============================
@@ -27,6 +27,9 @@ apply_pattern       linker_library library=CaloUtils
 
 # =============================================================================
 # $Log: not supported by cvs2svn $
+# Revision 1.24  2005/11/07 11:57:13  odescham
+# v5r0 - Adapt to the new Track Event Model
+#
 # Revision 1.23  2005/05/06 17:48:33  ibelyaev
 #  add new base classes: Calo(Histo)TrackAlg
 # 
