@@ -3,6 +3,10 @@ Author:  Markus Frank (based on work by Jose' Helder Lopes)
 Purpose: Define the classes delivered to the online farm by the DAQ
 
 !2005-11-22 M. Needham
+ - Extend functionality of Bytestream - access number of bytes
+ - Bug fixes in BankWriter
+
+!2005-11-22 M. Needham
  - Extend functionality of BankWriter - accessor for number used bytes
  - Extend functionality of Bytestream - rewind and seek functions
 

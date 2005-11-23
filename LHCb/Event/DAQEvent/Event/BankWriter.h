@@ -1,4 +1,4 @@
-// $Id: BankWriter.h,v 1.2 2005-11-22 08:00:51 mneedham Exp $
+// $Id: BankWriter.h,v 1.3 2005-11-23 13:28:21 mneedham Exp $
 #ifndef EVENT_BANKWRITER_H 
 #define EVENT_BANKWRITER_H 1
 
@@ -73,7 +73,7 @@ namespace LHCb
   }
 
   bool BankWriter::isFull() const{
-    return ( m_pos > m_byteSize ? true : false );
+    return ( m_pos >= m_byteSize ? true : false );
   }
 
   void BankWriter::extend(){
@@ -98,7 +98,7 @@ namespace LHCb
   }
 
   inline std::size_t BankWriter::byteSize() const{
-    return m_byteSize;
+    return m_pos;
   }
 
 } // namespace LHCb

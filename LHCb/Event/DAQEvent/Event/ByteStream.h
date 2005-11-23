@@ -1,4 +1,4 @@
-// $Id: ByteStream.h,v 1.3 2005-11-22 08:00:51 mneedham Exp $
+// $Id: ByteStream.h,v 1.4 2005-11-23 13:28:21 mneedham Exp $
 #ifndef EVENT_BYTESTREAM_H 
 #define EVENT_BYTESTREAM_H 1
 
@@ -38,6 +38,11 @@ namespace LHCb
     /** fast forward n bytes */
     void seek(const size_t nByte);
 
+    /** number of bytes read 
+    @return nBytes read 
+    */
+    unsigned int nRead() const;
+
   private:
 
     unsigned char* m_start;
@@ -75,6 +80,9 @@ namespace LHCb
     m_pos += nByte;
   }
 
+  inline unsigned int ByteStream::nRead() const{
+    return m_pos;    
+  }
 
 } // namespace LHCb
 
