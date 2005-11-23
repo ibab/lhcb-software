@@ -18,6 +18,7 @@
 //----------------------------------------------------------------------
 
 // Unpack MCParticles etc
+ApplicationMgr.DLLs -= { "PackedEvent" }; // Usually added by DstContent.opts
 #include "$PACKEDEVENTROOT/options/UnpackSim.opts"
 
 // Create Relations needed for MC truth DST

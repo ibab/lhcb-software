@@ -9,6 +9,8 @@ DstWriter.OptItemList +=
 , "/Event/Next#1"
 , "/Event/Next/Header#1"
 , "/Event/MC/Signal#1"
+  // Rich DigitSummaries should be mandatory. Here for compatibility with RTTC
+, "/Event/MC/Rich/DigitSummaries#1"
 }; 
 DstWriter.ItemList += 
 { "/Event/Gen#1"

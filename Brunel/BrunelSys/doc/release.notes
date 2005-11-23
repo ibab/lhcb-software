@@ -3,6 +3,36 @@ Package: Rec/Brunel
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb reconstruction program
 
+</PRE><H1><A NAME=v28r1>2005-11-23 Brunel v28r1</A></H1><PRE>
+This version uses Gaudi v17r2, LHCb v19r2, Lbcom v3r1, Rec v2r1, XmlDDDB v27r0
+Requires input data from Boole v9r2 or greater. Incompatible with DC04 versions
+
+Introduces support for Conditions data, taken from DBASE/Det/XmlConditions/v1r3
+
+- New features
+  . Rich readout mapping taken from Conditions (RichKernel v5r6, RichDet v8r5, 
+           RichDAQ v2r3, XmlDDDB v27r0, XmlConditions v1r3)
+  . Rich reconstruction now uses Tracks from new track model (RichRecSys v1r19)
+  . Rich monitoring now uses MC truth associations to new Track
+    (TrackAssociators v1r4, RichMCTools v2r7, RichRecQC v1r12)
+  . Calo reconstruction now uses Tracks from new track model (CaloReco v3r0,
+    CaloPIDs v3r0, CaloUtils v5r0, CaloInterfaces v5r0, CaloMoniDst v2r0)
+
+- New tuning
+  . OT readout window now 75ns (XmlDDDB v27r0)
+
+- Geometry changes
+  . Prepare support for v200511 geometry (spherical secondary Rich mirrors,
+    new aerogel description) (RichDet v8r5, RichTools v1r8, RichRecSys v1r19, 
+                              XmlDDDB v27r0, XmlConditions v1r3)
+  . Prepare support for Field046 magnetic field map (FieldMap v4r6)
+    (For both the above, options not yet released, need Gauss data for testing)
+
+- Persistency changes
+  . Copy new Rich MC relations MC/Rich/DigitSummaries from .digi input file
+    (Only for data produced with Boole v10r1 or later) (RichEvent v8r5)
+  . CaloPID objects are now Relations to Track, not TrStoredTrack
+
 </PRE><H1><A NAME=v28r0>2005-11-15 Brunel v28r0</A></H1><PRE>
 This version uses Gaudi v17r2, LHCb v19r1, Lbcom v3r0, Rec v2r0, XmlDDDB v26r2
 Requires input data from Boole v9r2 or greater. Incompatible with DC04 versions

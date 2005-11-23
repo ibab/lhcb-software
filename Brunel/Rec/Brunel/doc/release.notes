@@ -3,6 +3,13 @@ Package: Rec/Brunel
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb reconstruction program
 
+</PRE><H1><A NAME=v28r1>2005-11-21 Brunel v28r1</A></H1><PRE>
+ - Adapt requirements to Rec v2r1, Lbcom v3r1, LHCb v19r2
+ - Use XmlDDDB v27r0, XmlConditions v1r3, FieldMap v4r6, ParamFiles v3r13
+ - Add TrackAssociator to CheckTrSeq, for use by Rich monitoring
+ - Adapt options for Rich backwards compatibility
+ - Add /Event/MC/Rich/DigitSummaries to MCDstContent
+
 </PRE><H1><A NAME=v28r0>2005-11-15 Brunel v28r0</A></H1><PRE>
  - Adapt requirements to Rec v2r0, Lbcom v3r0, LHCb v19r1, Gaudi v17r2
  - Add MUON sequence to Moni phase, executes MuonRecChecker from MuonMoniDst DLL
