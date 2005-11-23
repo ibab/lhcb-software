@@ -17,8 +17,11 @@ Introduces support for Conditions data, taken from DBASE/Det/XmlConditions/v1r3
   . OT readout window now 75ns (XmlDDDB v27r0)
 
 - Geometry changes
-  . Prepare support for v200511 geometry (RichDet v8r5, RichTools v1r8)
-    (Options not yet released, need Gauss data for testing)
+  . Prepare support for v200511 geometry (spherical secondary Rich mirrors,
+    new aerogel description) (RichDet v8r5, RichTools v1r8, 
+                              XmlDDDB v27r0, XmlConditions v1r3)
+  . Prepare support for Field046 magnetic field map (FieldMap v4r6)
+    (For both the above, options not yet released, need Gauss data for testing)
 
 - Persistency changes
   . Add more history information to MCRichDigits (RichReadout v1r14)
