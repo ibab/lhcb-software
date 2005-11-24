@@ -29,13 +29,13 @@
 //#include "$L1DECISIONROOT/options/L1-lumi5e32.opts"
 //--------------------------------------------------------------
 // Run HLT generic and HLT selections
-#include "$HLTSELECTIONSROOT/options/HLTSelections.opts"
+//#include "$HLTSELECTIONSROOT/options/HLTSelections.opts"
 
 //--------------------------------------------------------------
 ApplicationMgr.TopAlg += { "GaudiSequencer/TriggerSeq" };
 TriggerSeq.Members = { "TrgL0Filter", "PrintHeader/PassedL0" };
 TriggerSeq.Members += { "TrgL1Filter", "PrintHeader/PassedL1" };
-TriggerSeq.Members += { "HltFilter", "PrintHeader/PassedHlt" }; // comment to ignore HLT
+//TriggerSeq.Members += { "HltFilter", "PrintHeader/PassedHlt" }; // comment to ignore HLT
 PassedL0.OutputLevel = 3 ;
 PassedL1.OutputLevel = 2 ;
 PassedHlt.OutputLevel = 2 ;
@@ -60,7 +60,7 @@ HltDecision.MakeCorrelations = true ;
 //==============================================================
 // OUTPUT: Uncomment following line to write out DST
 //==============================================================
-//ApplicationMgr.OutStream += { "DstWriter" } ;
+ApplicationMgr.OutStream += { "DstWriter" } ;
 #include "$DAVINCIROOT/options/DstContent.opts"
 DstWriter.RequireAlgs  = { "TriggerSeq" } ;
 DstWriter.Preload  = false ;
@@ -97,3 +97,4 @@ StagerSvc.InitialStage = 3 ; // m: the number of blocks staged at the beginning 
 ApplicationMgr.HistogramPersistency = "ROOT";
 HistogramPersistencySvc.OutputFile = "DVHistos.root";
 
+StagerSvc.OutputLevel = 2 ;

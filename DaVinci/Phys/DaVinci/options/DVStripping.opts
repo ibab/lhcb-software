@@ -25,3 +25,7 @@ ApplicationMgr.OutStream = { } ; // uncomment to write out nothing
 // or if you prefer ROOT:
 ApplicationMgr.HistogramPersistency = "ROOT";
 HistogramPersistencySvc.OutputFile = "DVHistos.root";
+
+EventSelector.Input   = {
+"DATAFILE='PFN:castor:/castor/cern.ch/grid/lhcb/production/DC04/v1/00001119/DST/Presel_00001119_00000001.dst' TYP='POOL_ROOTTREE' OPT='READ'",
+"DATAFILE='PFN:castor:/castor/cern.ch/grid/lhcb/production/DC04/v1/00001119/DST/Presel_00001119_00000003.dst' TYP='POOL_ROOTTREE' OPT='READ'" };
