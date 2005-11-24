@@ -1,9 +1,14 @@
 ! =============================================================================
-! $Id: release.notes,v 1.226 2005-11-22 10:25:27 cattanem Exp $ 
+! $Id: release.notes,v 1.227 2005-11-24 17:18:16 jpalac Exp $ 
 ! =============================================================================
 ! package DetDesc
 ! package manager : Marco Clemencic, Juan Palacios
 ! =============================================================================
+
+! 2005-11-24 - Juan Palacios
+ - Add method const int sensitiveVolumeID(const HepPoint3D& globalPos ) const
+   to IDetectorElement interface. Provide default implementation in 
+   DetectorElement base class. At the moment it returns invalid number (-1).
 
 !======================== DetDesc v15r5 2005-11-21 ========================
 ! 2005-11-17 - Marco Clemencic

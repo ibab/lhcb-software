@@ -1,4 +1,4 @@
-// $Id: DetectorElement.icpp,v 1.10 2003-04-25 08:52:23 sponce Exp $
+// $Id: DetectorElement.icpp,v 1.11 2005-11-24 17:18:16 jpalac Exp $
 
 #ifndef       DETDESC_DETECTORELEMENT_ICPP 
 #define       DETDESC_DETECTORELEMENT_ICPP  1 
@@ -186,5 +186,5 @@ inline void DetectorElement::Assert (bool assertion,
     throw DetectorElementException (assertionName, this);
   }
 };
-
+///////////////////////////////////////////////////////////////////////////////
 #endif  //    DETDESC_DETECTORELEMENT_ICPP 

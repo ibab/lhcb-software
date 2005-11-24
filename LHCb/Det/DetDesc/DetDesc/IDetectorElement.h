@@ -1,4 +1,4 @@
-// $Id: IDetectorElement.h,v 1.16 2005-05-13 16:01:10 marcocle Exp $
+// $Id: IDetectorElement.h,v 1.17 2005-11-24 17:18:16 jpalac Exp $
 // $ID:  $
 #ifndef  DETDESC_IDETECTORELEMENT_H 
 #define  DETDESC_IDETECTORELEMENT_H 1
@@ -11,6 +11,8 @@
 #include "GaudiKernel/IInterface.h"
 #include "GaudiKernel/ISerialize.h"
 #include "GaudiKernel/SmartRef.h"
+
+#include "CLHEP/Geometry/Point3D.h"
 
 // Forward declarations
 class IGeometryInfo;
@@ -164,6 +166,13 @@ class IDetectorElement : virtual public IInterface,
    * interface.
    */
   virtual const ParamValidDataObject *params() const = 0;
+
+  /**
+   * Return a sensitive volume identifier for a given point in the 
+   * global reference frame.
+   */
+
+  virtual const int sensitiveVolumeID(const HepPoint3D& globalPos ) const=0;
 
   /**
    * This method initializes the detector element. It should be overridden

@@ -1,4 +1,4 @@
-// $Id: DetectorElement.cpp,v 1.28 2005-11-17 16:22:22 marcocle Exp $
+// $Id: DetectorElement.cpp,v 1.29 2005-11-24 17:18:16 jpalac Exp $
 #include "GaudiKernel/Kernel.h"
 #include "GaudiKernel/ISvcLocator.h"
 #include "GaudiKernel/IDataManagerSvc.h"
@@ -396,6 +396,11 @@ DetectorElement::childIDetectorElements() const {
 const ParamValidDataObject *DetectorElement::params() const {
   return this;
 }
+/// sensitive volume identifier ///////////////////////////////////////////////
+const int DetectorElement::sensitiveVolumeID(const HepPoint3D&) const 
+{
+  return -1;
+};
   
 // ============================================================================
 // End 

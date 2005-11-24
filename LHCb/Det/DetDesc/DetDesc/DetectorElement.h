@@ -1,4 +1,4 @@
-// $Id: DetectorElement.h,v 1.28 2005-11-17 16:22:22 marcocle Exp $
+// $Id: DetectorElement.h,v 1.29 2005-11-24 17:18:16 jpalac Exp $
 #ifndef  DETDESC_DETECTORELEMENT_H
 #define  DETDESC_DETECTORELEMENT_H 1
 
@@ -250,6 +250,13 @@ public:
    * interface.
    */
   virtual const ParamValidDataObject *params() const;
+
+  /**
+   * Return a sensitive volume identifier for a given point in the 
+   * global reference frame.
+   */
+
+  virtual const int sensitiveVolumeID(const HepPoint3D& globalPos) const;
 
   /// IInspectable interface:
 //   virtual bool acceptInspector( IInspector* )       ; 
