@@ -4,6 +4,10 @@
 ! Purpose     : Perfect pattern recognition
 !-----------------------------------------------------------------------------
 
+! 2005-11-24 - Eduardo Rodrigues
+ - code clean-up
+ - it++ replaced by ++it
+
 ! 2005-11-21 - Jeroen van Tilburg
  - Added the estimate for R to the VeloPhiMeasurement.
 

@@ -9,9 +9,6 @@
 // from TrackEvent
 #include "Event/Track.h"
 
-// from TrackFitEvent
-#include "Event/TrackFunctor.h"
-
 // from XxxAssociators
 #include "OTAssociators/OTTime2MCHitAsct.h"
 #include "ITAssociators/ITCluster2MCParticleAsct.h"
@@ -20,7 +17,6 @@
 // from TrackInterfaces
 #include "TrackInterfaces/IIdealStateCreator.h"
 #include "TrackInterfaces/ITrackCriteriaSelector.h"
-//#include "Event/ITrackFitter.h"
 
 // Forward declarations
 class DeOTDetector;
@@ -46,10 +42,6 @@ class DeVelo;
  *  criteria for the MCParticles (e.g. select only tracks reconstrucible as 
  *  long tracks).
  *
- *  In addition, the tracks can be fitted. Several fitter tools are used for
- *  each type of track. The direction of the fit can be set with a job-option.
- *
- *  Instead of fitting the track, the states can be filled with true states.
  *  The true-state creator tool creates states from MCParticles and their 
  *  MCHits.
  *
@@ -110,24 +102,18 @@ private:
   DeSTDetector* m_itTracker;       ///< Pointer to ST detector element
   DeVelo*       m_velo;            ///< Pointer to VELO detector element
   std::string   m_otTrackerPath;   ///< Name of the OT XML geom path
-  std::string   m_itTrackerPath;   ///< Name of the IT XML geom path
+  std::string   m_itTrackerPatIh;   ///< Name of the IT XML geom path
   std::string   m_veloPath;        ///< Name of the Velo XML geom path
 
   // Interfaces
-  ITrackCriteriaSelector* m_trackSelector;  ///< Track selection tool
-  IIdealStateCreator*     m_stateCreator;   ///< Create 'seed' state at last measurement
-//  ITrackFitter*  m_tracksFitter;       ///< General fitter tool
-//  ITrackFitter*  m_veloTracksFitter;   ///< Fitter tool for velo and veloBack
-//  ITrackFitter*  m_veloTTTracksFitter; ///< Fitter tool for veloTT
-//  ITrackFitter*  m_seedTracksFitter;   ///< Fitter tool for seeds
+  ITrackCriteriaSelector* m_trackSelector;      ///< Track selection tool
+  IIdealStateCreator*     m_stateCreator;       ///< Create 'seed' state at last measurement
 
   // job options
   bool m_addOTTimes;      ///< true if OT clusters should be put on track
   bool m_addITClusters;   ///< true if IT clusters should be put on track
   bool m_addVeloClusters; ///< true if Velo R clusters should be put on track
   bool m_initState;       ///< initialize seed state
-  bool m_fitTracks;       ///< if true then the tracks are fitted
-  bool m_upstream;        ///< upstream or downstream fit
   bool m_trueStatesAtMeas;///< Store true states at each measurement position
   std::string m_tracksTESPath;      ///< TrTracks container path in EvDS
   std::string m_relationTablePath;  ///< Location of the associator table

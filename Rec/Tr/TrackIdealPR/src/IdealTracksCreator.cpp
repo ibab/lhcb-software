@@ -1,6 +1,6 @@
 // Include files
 // -------------
-// LHCbKernel
+// from LHCbKernel
 #include "Relations/RelationWeighted2D.h"
 
 // from LHCbEvent
@@ -43,17 +43,12 @@ IdealTracksCreator::IdealTracksCreator( const std::string& name,
   , m_velo(0)
   , m_trackSelector(0)
   , m_stateCreator(0)
-//  , m_tracksFitter(0)
-//  , m_veloTracksFitter(0)
-//  , m_seedTracksFitter(0)
 {
   /// default job Options
   declareProperty( "AddOTTimes",      m_addOTTimes = true );
   declareProperty( "AddITClusters",   m_addITClusters = true );
   declareProperty( "AddVeloClusters", m_addVeloClusters = true );
   declareProperty( "InitState",       m_initState = true );
-  declareProperty( "FitTracks",       m_fitTracks = true );
-  declareProperty( "FitUpstream",     m_upstream = true );
   declareProperty( "TrueStatesAtMeasZPos", m_trueStatesAtMeas = false );
   declareProperty( "TracksTESPath",
                    m_tracksTESPath = "Rec/Track/Ideal" );
@@ -84,15 +79,16 @@ IdealTracksCreator::~IdealTracksCreator() {}
 StatusCode IdealTracksCreator::initialize()
 {
   StatusCode sc = GaudiAlgorithm::initialize(); // must be executed first
+  if ( sc.isFailure() ) return sc;  // error printed already by GaudiAlgorithm
 
   // Retrieve the MC associators
   // ---------------------------
-  sc = toolSvc() -> retrieveTool( "OTTime2MCHitAsct", m_otTim2MCHit );
-  if ( !sc ) { return sc; }
-  sc = toolSvc() -> retrieveTool( "ITCluster2MCParticleAsct", m_itClus2MCP );
-  if ( !sc ) { return sc; }
-  sc = toolSvc() -> retrieveTool( "VeloCluster2MCParticleAsct", m_veloClus2MCP );
-  if ( !sc ) { return sc; }
+  typedef OTTime2MCHitAsct::IAsct           OTTimAsct ;
+  typedef ITCluster2MCParticleAsct::IAsct   ITClusAsct ;
+  typedef VeloCluster2MCParticleAsct::IAsct VeloClusAsct ;
+  m_otTim2MCHit  = tool<OTTimAsct>(    "OTTime2MCHitAsct"      );
+  m_itClus2MCP   = tool<ITClusAsct>(   "ITCluster2MCParticleAsct"   );
+  m_veloClus2MCP = tool<VeloClusAsct>( "VeloCluster2MCParticleAsct" );
   debug() << "Associators retrieved." << endreq;
 
   // Load Geometry from XmlDDDB
@@ -110,22 +106,6 @@ StatusCode IdealTracksCreator::initialize()
 
   // Retrieve the IdealStateCreator tool
   m_stateCreator = tool<IIdealStateCreator>( "IdealStateCreator" );
-
-  if ( m_fitTracks ) {
-    always() << "Fitting part of algorithm not yet done!" << endreq;
-//    sc = toolSvc()->retrieveTool( "TrFitAtAllPoints", "Fitter", 
-//                                  m_tracksFitter, this );
-//    if ( !sc ) { return sc; }
-//    sc = toolSvc()->retrieveTool( "TrFitAtAllPoints", "SeedFitter", 
-//                                  m_seedTracksFitter, this );
-//    if ( !sc ) { return sc; }
-//    sc = toolSvc()->retrieveTool( "TrFitAtAllPoints", "VeloFitter", 
-//                                  m_veloTracksFitter, this );
-//    if ( !sc ) { return sc; }
-//    sc = toolSvc()->retrieveTool( "TrFitAtAllPoints", "VeloTTFitter", 
-//                                  m_veloTTTracksFitter, this );
-//    if ( !sc ) { return sc; }
-  }
 
   info() << "initialized succesfully" << endreq;
 
@@ -280,28 +260,6 @@ StatusCode IdealTracksCreator::execute()
       track -> setStatus( Track::PatRecMeas );
       track -> setFlag( Track::Unique, true );
       track -> setHistory( Track::TrackIdealPR );
-      // Fit the track
-      //if ( m_initState && m_fitTracks ) {
-        // select appropriate track fitter
-        //ITrackFitter* fitter = m_tracksFitter;
-        //if( track -> type() == Track::Velo
-            //|| track -> checkFlag( Track::Backward ) )
-          //fitter = m_veloTracksFitter;
-        //if ( track->velo() || track->veloBack() ) fitter = m_veloTracksFitter;
-        //if ( track -> type() == Track::Upstream ) fitter = m_veloTTTracksFitter;
-        //if ( track->veloTT() ) fitter = m_veloTTTracksFitter;
-        //if ( track -> type() == Track::Ttrack ) fitter = m_seedTracksFitter;
-        //if ( track->seed() ) fitter = m_seedTracksFitter;
-        // Fit the track 
-        //if ( m_upstream ) { // do upstream fit
-//          sc = fitter->fitUpstream(track, track->rbeginM(), track->rendM() );
-        //} else { // do downstream fit
-//          sc = fitter->fitDownstream(track, track->beginM(), track->endM() );
-        //}
-        // Set error flag if fit failed
-        //if ( sc.isFailure() ) track -> setStatus( Track::Failed );
-        //if ( sc.isFailure() ) track -> setErrorFlag(1);
-      //}
 
       // Add true states at each measurement 
       // ===================================
@@ -312,7 +270,6 @@ StatusCode IdealTracksCreator::execute()
           track -> measurements().begin();
         std::vector<Measurement*>::const_iterator endM =
           track -> measurements().end();
-        //Track::const_measure_iterator iMeas = track->beginM();
         while ( sc.isSuccess() && iMeas != endM ) {
           State* tempState;
           sc = m_stateCreator -> createState( mcParticle,
@@ -330,11 +287,11 @@ StatusCode IdealTracksCreator::execute()
 
       debug() << "At the end: states at z-positions: ";
       const std::vector<State*>& allstates = track->states();
-      for ( unsigned int it = 0; it < allstates.size(); it++ ) {
+      for ( unsigned int it = 0; it < allstates.size(); ++it ) {
         debug() << allstates[it] -> z() << " ";
       }
       debug() << endreq;
-      for ( unsigned int it2 = 0; it2 < allstates.size(); it2++ ) {
+      for ( unsigned int it2 = 0; it2 < allstates.size(); ++it2 ) {
         debug() << "state vectors:" << endreq
                 << allstates[it2] -> stateVector() << endreq;
       }
@@ -359,7 +316,7 @@ StatusCode IdealTracksCreator::execute()
       // print the measurements
       const std::vector<Measurement*>& meas = track -> measurements();
       for ( std::vector<Measurement*>::const_iterator itMeas = meas.begin();
-            itMeas != meas.end(); itMeas++ ) {
+            itMeas != meas.end(); ++itMeas ) {
         debug() << "  - measurement of type " << (*itMeas) -> type() << endreq
                 << "  - z        = " << (*itMeas) -> z() << " mm" << endreq
                 << "  - LHCbID   = " << (*itMeas) -> lhcbID()  << endreq;
@@ -378,14 +335,11 @@ StatusCode IdealTracksCreator::execute()
     } // is selected
   } // looping over MCParticles
 
-  // Store the Tracks in the TES
-  // ===========================
-  sc = registerTracks( tracksCont );
-  if( sc.isFailure() ) return sc;
-
   debug() << "Created " << tracksCont -> size() << " tracks." << endreq;
 
-  return StatusCode::SUCCESS;
+  // Store the Tracks in the TES
+  // ===========================
+  return put( tracksCont, m_tracksTESPath );
 }
 
 //=============================================================================
@@ -394,16 +348,6 @@ StatusCode IdealTracksCreator::execute()
 StatusCode IdealTracksCreator::finalize()
 {
   debug() << "==> Finalize" << endreq;
-
-  // Release all tools and services
-  // ------------------------------
-  if ( m_veloClus2MCP )     toolSvc()->releaseTool( m_veloClus2MCP );
-  if ( m_itClus2MCP )       toolSvc()->releaseTool( m_itClus2MCP );
-  if ( m_otTim2MCHit  )     toolSvc()->releaseTool( m_otTim2MCHit );
-
-  //if ( m_tracksFitter )     toolSvc()->releaseTool( m_tracksFitter );
-  //if ( m_veloTracksFitter ) toolSvc()->releaseTool( m_veloTracksFitter );
-  //if ( m_seedTracksFitter ) toolSvc()->releaseTool( m_seedTracksFitter );
 
   return GaudiAlgorithm::finalize();  // must be called after all other actions
 }
@@ -449,7 +393,7 @@ StatusCode IdealTracksCreator::addOTTimes( OTTimes* times,
         OTMeasurement otTim = OTMeasurement( *aTime, *m_otTracker,
                                              ambiguity, tu );
         track -> addToMeasurements( otTim );
-        nOTMeas++;
+        ++nOTMeas;
         debug() << " - added OTMeasurement, ambiguity = "
                 << ambiguity << endreq;
       }
@@ -478,7 +422,7 @@ StatusCode IdealTracksCreator::addITClusters( MCParticle* mcPart,
     ITCluster* aCluster = iClus->to();
     ITMeasurement meas = ITMeasurement( *aCluster, *m_itTracker );
     track -> addToMeasurements( meas );
-    nITMeas++;
+    ++nITMeas;
   }
 
   debug() << "- " << nITMeas << " ITMeasurements added" << endreq;
@@ -517,12 +461,12 @@ StatusCode IdealTracksCreator::addVeloClusters( MCParticle* mcPart,
     if ( m_velo -> isRSensor( aCluster->sensor() ) ) {
       VeloRMeasurement meas = VeloRMeasurement( *aCluster, *m_velo, phi );
       track -> addToMeasurements( meas );
-      nVeloRMeas++;
+      ++nVeloRMeas;
     }
     else {
       VeloPhiMeasurement meas = VeloPhiMeasurement( *aCluster, *m_velo, r );
       track -> addToMeasurements( meas );
-      nVeloPhiMeas++;
+      ++nVeloPhiMeas;
     }
   }
 
@@ -588,8 +532,8 @@ StatusCode IdealTracksCreator::initializeState( double z,
 StatusCode IdealTracksCreator::deleteStates( Track* track )
 {
   std::vector<State*> tmpStates = track -> states();
-  for ( std::vector<State*>::const_iterator it  = tmpStates.begin();
-        it != tmpStates.end(); it++) {
+  for ( std::vector<State*>::iterator it  = tmpStates.begin();
+        it != tmpStates.end(); ++it ) {
     track -> removeFromStates( (*it) );
   }
   
