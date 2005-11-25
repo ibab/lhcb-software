@@ -49,7 +49,6 @@
         desc="Equality operator"
         name="operator=="
         type="bool"
-        argInOut="aValue"
        >
          <arg name="other" type="ParticleID const" const="FALSE"/>
          <code>return ( m_pid == other.pid() );</code>

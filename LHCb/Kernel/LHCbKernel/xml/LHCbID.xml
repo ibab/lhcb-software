@@ -9,7 +9,7 @@
        author = "Marco Cattaneo" >
 
        <import name="Kernel/VeloChannelID"/>
-       <import name="Kernel/ITChannelID"/>
+       <import name="Kernel/STChannelID"/>
        <import name="Kernel/OTChannelID"/>
        <import name="Kernel/RichSmartID"/>
        <import name="Kernel/CaloCellID"/>
@@ -24,13 +24,13 @@
 
       <enum
         name = 'SpecificMask'
-        value = 'veloMask= 0x1FFFFFL,stMask=0x3FFFFFFL,otMask=0x3FFFFFFL'
+        value = 'veloMask= 0x1FFFFFL,stMask=0xFFFFFFL,otMask=0x3FFFFFFL'
         desc = 'enumeration of the specific mask'
         access = 'PROTECTED' />
 
       <enum
         name = 'SpecificBits'
-        value = 'veloBits=21,stBits=26,otBits=26'
+        value = 'veloBits=21,stBits=24,otBits=26'
         desc = 'enumeration of the specific bits'
         access = 'PROTECTED' />
 
@@ -75,7 +75,7 @@ m_lhcbID = (veloType &lt;&lt; detectorTypeBits) +
        </method>
 
        <method
-         type  = "VeloChannelID"
+         type  = "LHCb::VeloChannelID"
          name  = "veloID"
          const = 'TRUE'
          desc  = "return the VeloChannelID">
@@ -86,14 +86,13 @@ return ( m_lhcbID &amp; veloMask );
        </method>
 
        <constructor
-         desc     = "Constructor from ITChannelID and optional size" >
-          <arg const="TRUE" name="chanID" type="ITChannelID" />
+         desc     = "Constructor from STChannelID and optional size" >
+          <arg const="TRUE" name="chanID" type="STChannelID" />
           <arg const="TRUE" name="size=0" type="unsigned int" />
           <code>
 m_lhcbID = (stType &lt;&lt; detectorTypeBits) +
-          (size   &lt;&lt; stBits ) +
-          ((chanID.uniqueWafer()-1) &gt;&gt;6) +
-          (chanID.strip()-1) ;
+           (size   &lt;&lt; stBits ) +
+           chanID;
         </code>
       </constructor>
 
@@ -108,13 +107,13 @@ m_lhcbID = (stType &lt;&lt; detectorTypeBits) +
        </method>
 
        <method
-         type  = "ITChannelID"
+         type  = "LHCb::STChannelID"
          name  = "stID"
          const = 'TRUE'
-         desc  = "return the ITChannelID">
+         desc  = "return the STChannelID">
 	 <code>
 if ( !isST() ) return 0xF0000000;
-return ( ( (m_lhcbID &amp; 0x3FFFC00 ) &lt;&lt; 6) + ( m_lhcbID &amp; 0x3FF));
+return ( (m_lhcbID &amp; stMask ));
          </code>
        </method>
 
@@ -137,7 +136,7 @@ return (otType == detectorType());
        </method>
 
        <method
-         type  = "OTChannelID"
+         type  = "LHCb::OTChannelID"
          name  = "otID"
          const = 'TRUE'
          desc="return the OTChannelID">
@@ -170,7 +169,7 @@ return m_lhcbID &amp; otMask;
        </method>
 
        <method
-         type  = "RichSmartID"
+         type  = "LHCb::RichSmartID"
          name  = "richID"
          const = 'TRUE'
          desc  = "return the richSmartID">
@@ -203,7 +202,7 @@ return id;
        </method>
 
        <method
-         type  = "CaloCellID"
+         type  = "LHCb::CaloCellID"
          name  = "caloID"
          const = 'TRUE'
          desc  = "return the CaloCellID">

@@ -1,8 +1,6 @@
-// $Id: CaloCellIDOp.cpp,v 1.1 2003-11-24 22:51:51 ibelyaev Exp $
+// $Id: CaloCellIDOp.cpp,v 1.2 2005-11-25 16:15:48 cattanem Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
-// ============================================================================
-// $Log: not supported by cvs2svn $ 
 // ============================================================================
 // Include file
 // ============================================================================
@@ -13,7 +11,7 @@
 #include "GaudiKernel/MsgStream.h"
 // ============================================================================
 
-MsgStream&    operator<<( MsgStream&    log , const CaloCellID& ID )
+MsgStream&    operator<<( MsgStream&    log , const LHCb::CaloCellID& ID )
 { return ID.fillStream( log ) ;}
 
 // ============================================================================

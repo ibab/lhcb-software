@@ -69,7 +69,7 @@ m_channelID = ( sensor &lt;&lt; sensorBits ) | ( type &lt;&lt; typeBits ) | stri
         </code>
       </method>
 
-     <method type='VeloChannelID::sensorType' name='type' 
+     <method type='LHCb::VeloChannelID::sensorType' name='type' 
        desc="Get sensor type" const='TRUE'> 
         <code>
           return sensorType((m_channelID &amp; typeMask) &gt;&gt; typeBits);

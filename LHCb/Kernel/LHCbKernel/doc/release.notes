@@ -2,7 +2,20 @@ Package LHCbKernel
 Package manager: M.Cattaneo
 Purpose: LHCb specific Kernel classes
 
+!===================== LHCbKernel v6r0 2005-11-25 =========================
+! 2005-11-25 - Marco Cattaneo
+ - Adapt xxID.xml to GaudiObjDesc v9r0 (LHCb:: namespace)
+ - Remove CaloPrint (for printing CLHEP vectors and matrices)
+ - Remove CaloMap, CaloHash, CaloHashMap (use equivalent classes in GaudiKernel)
+ - Remove CaloHypothes.h, CaloHypoPrint (should be defined in CaloHypo.xml)
+ - Remove Sicb related constructor and method from CaloCellID
+ - Remove ITChannelID.xml
+ - Remove LHCbMath.h and LHCbConstants.h, moved to LHCbDefinitions package
+ - Remove explicit dependency on CLHEP
+   (implicit dependency remains for now, via LHCbDefinitions)
+
 ! 2005-11-22 M Needham
+  - Modify LHCbID to use STChannelID instead of ITChannelID
   - Add new STChannelID class
   - Add new STDataFunctors namespace
   - Add new STDetSwitch function 

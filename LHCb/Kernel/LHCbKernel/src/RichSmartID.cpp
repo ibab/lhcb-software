@@ -4,7 +4,7 @@
  *
  *  Implementation file for RICH Channel ID class : RichSmartID
  *
- *  $Id: RichSmartID.cpp,v 1.5 2005-02-22 13:48:04 jonrob Exp $
+ *  $Id: RichSmartID.cpp,v 1.6 2005-11-25 16:15:48 cattanem Exp $
  *
  *  @author  Chris Jones  Christopher.Rob.Jones@cern.ch
  *  @date    2005-01-06
@@ -20,7 +20,7 @@
 // local
 #include "Kernel/RichSmartID.h"
 
-std::ostream& RichSmartID::fillStream(std::ostream& s) const
+std::ostream& LHCb::RichSmartID::fillStream(std::ostream& s) const
 {
 
   // Is this smart ID valid
@@ -47,9 +47,9 @@ std::ostream& RichSmartID::fillStream(std::ostream& s) const
   return s;
 }
 
-void RichSmartID::rangeError(const int value,
-                             const int max,
-                             const std::string& message) const
+void LHCb::RichSmartID::rangeError(const int value,
+                                   const int max,
+                                   const std::string& message) const
 {
   throw GaudiException ( message+" value "+boost::lexical_cast<std::string>(value)
                          +" exceeds field maximum "+boost::lexical_cast<std::string>(max),

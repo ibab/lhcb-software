@@ -3,7 +3,7 @@
 <gdd>
 
 <!-- **************************************************************************
-  * $Id: CaloCellID.xml,v 1.6 2005-06-24 06:40:31 cattanem Exp $
+  * $Id: CaloCellID.xml,v 1.7 2005-11-25 16:15:48 cattanem Exp $
   *****************************************************************************
   * XML-description of CaloCellIDclass                                        *
   * author: Vanya BELYAEV Ivan.Belyaev@itep.ru                                *
@@ -60,16 +60,6 @@
       setArea ( Area   ) ;
       setRow  ( Row    ) ;
       setCol  ( Column ) ;
-    </code> 
-  </constructor>
-  
-  <constructor
-    desc     = "Constructor from Sicb and Calo identifier"
-    argList  = "unsigned int Calo, unsigned int Sicb"
-    initList = "m_ccid( 0 )" > 
-    <code>
-      setCalo ( Calo          ) ;
-      setSicb ( Calo , Sicb   ) ;
     </code> 
   </constructor>
   
@@ -302,7 +292,7 @@
   <method
     desc      = "Update Calorimeter identifier"
     name      = "setCalo"
-    type      = "CaloCellID&amp;"
+    type      = "LHCb::CaloCellID&amp;"
     const     = "FALSE"
     access    = "PRIVATE" >
     <arg name = "Calo" type = "unsigned int" inout = "INPUT" />
@@ -314,7 +304,7 @@
   <method
     desc      = "Update Calorimeter Area identifier"
     name      = "setArea"
-    type      = "CaloCellID&amp;"
+    type      = "LHCb::CaloCellID&amp;"
     const     = "FALSE"
     access    = "PRIVATE" >
     <arg name = "Area" type = "unsigned int" inout = "INPUT" />
@@ -326,7 +316,7 @@
   <method
     desc      = "Update Calorimeter Row identifier"
     name      = "setRow"
-    type      = "CaloCellID&amp;"
+    type      = "LHCb::CaloCellID&amp;"
     const     = "FALSE"
     access    = "PRIVATE" >
     <arg name = "Row" type = "unsigned int" inout = "INPUT" />
@@ -338,7 +328,7 @@
   <method
     desc      = "Update Calorimeter Column identifier"
     name      = "setCol"
-    type      = "CaloCellID&amp;"
+    type      = "LHCb::CaloCellID&amp;"
     const     = "FALSE"
     access    = "PRIVATE" >
     <arg name = "Col" type = "unsigned int" inout = "INPUT" />
@@ -351,7 +341,7 @@
   <method
     desc      = "Update Index field"
     name      = "setIndex"
-    type      = "CaloCellID&amp;"
+    type      = "LHCb::CaloCellID&amp;"
     const     = "FALSE"
     access    = "PRIVATE" >
     <arg name = "Index" type = "unsigned int" inout = "INPUT" />
@@ -361,51 +351,9 @@
   </method>
   
   <method
-    desc      = "Update Sicb field"
-    name      = "setSicb"
-    type      = "CaloCellID&amp;"
-    const     = "FALSE"
-    access    = "PRIVATE" >
-    <arg name = "Calo" type = "unsigned int" inout = "INPUT" />
-    <arg name = "Sicb" type = "unsigned int" inout = "INPUT" />
-    <code>
-      ///
-      unsigned int Col  =   Sicb % 1000            ;
-      unsigned int Row  = ( Sicb / 1000   ) % 1000 ;
-      unsigned int Area = ( Sicb / 1000000) -    1 ;
-      ///
-      if ( 3 == Calo ) {    ///&lt; HCAL
-      if ( 0 == Area ) {
-      Col = Col - 1 ;       ///&lt; 1:32 -&gt;  0:31
-      Row = Row + 2 ;       ///&lt; 1:26 -&gt;  3:28
-      } else {
-      Col = Col - 1 ;       ///&lt; 1:32 -&gt;  0:31
-      Row = Row + 1 ;       ///&lt; 1:28 -&gt;  2:29
-      }
-      } else {
-      if ( 0 == Area ) { 
-      Col = Col - 1 ;       ///&lt; 1:64 -&gt;  0:63
-      Row = Row + 5 ;       ///&lt; 1:52 -&gt;  6:57
-      } else if ( 1 == Area ) { 
-      Col = Col - 1 ;       ///&lt; 1:64 -&gt;  0:63
-      Row = Row + 11 ;      ///&lt; 1:40 -&gt; 12:51
-      } else { 
-      Col = Col + 7 ;       ///&lt; 1:48 -&gt;  8:55
-      Row = Row + 13 ;      ///&lt; 1:36 -&gt; 14:49
-      }
-      }
-      setArea ( Area ) ; 
-      setRow  ( Row  ) ; 
-      setCol  ( Col  ) ; 
-      ///
-      return *this; 
-    </code>
-  </method>
-
-  <method
     desc      = "set the active field"
     name      = "set"
-    type      = "CaloCellID&amp;"
+    type      = "LHCb::CaloCellID&amp;"
     const     = "FALSE"
     access    = "PRIVATE" >
     <arg name = "Value" type = "ContentType"  inout = "INPUT" />

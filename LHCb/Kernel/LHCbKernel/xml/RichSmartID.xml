@@ -3,7 +3,7 @@
 <gdd>
 
 <!-- **************************************************************************
-  * $Id: RichSmartID.xml,v 1.19 2005-11-07 17:36:03 jonrob Exp $
+  * $Id: RichSmartID.xml,v 1.20 2005-11-25 16:15:48 cattanem Exp $
   *****************************************************************************
   * XML-description of RichSmartID class                                      *
   * author: Chris Jones   Christopher.Rob.Jones@cern.ch                       *
@@ -378,7 +378,7 @@
             name  = "pixelID"
             const = "TRUE" 
             desc  = "Decoding function to strip the sub-pixel information and return a pixel RichSmartID" 
-            type  = "RichSmartID">
+            type  = "LHCb::RichSmartID">
             <code>
                return RichSmartID( m_key &amp; ~(subPixelMask+subPixelIsSetMask) );
             </code>
@@ -388,7 +388,7 @@
             name  = "pdID"
             const = "TRUE" 
             desc  = "Decoding function to strip all the pixel information and return a photon detector RichSmartID"  
-            type = "RichSmartID">
+            type = "LHCb::RichSmartID">
             <code>
                return RichSmartID( m_key &amp; (richMask+panelMask+PDRowMask+PDColMask+
                                    richIsSetMask+panelIsSetMask+PDRowIsSetMask+PDColIsSetMask) );
@@ -399,7 +399,7 @@
             name  = "panelID"
             const = "TRUE" 
             desc  = "Decoding function to strip the photon-detector information and return a panel RichSmartID"  
-            type  = "RichSmartID">
+            type  = "LHCb::RichSmartID">
             <code>
                return RichSmartID( m_key &amp; (richMask+panelMask+richIsSetMask+panelIsSetMask) );
             </code>
@@ -409,7 +409,7 @@
             name  = "richID"
             const = "TRUE" 
             desc  = "Decoding function to strip all but the RICH information and return a RICH RichSmartID"  
-            type  = "RichSmartID">
+            type  = "LHCb::RichSmartID">
             <code>
                return RichSmartID( m_key &amp; (richMask+richIsSetMask) );
             </code>
@@ -419,7 +419,7 @@
             name  = "dataBitsOnly"
             const = "TRUE" 
             desc  = "Returns only the data fields, with the validity bits stripped"  
-            type  = "RichSmartID">
+            type  = "LHCb::RichSmartID">
             <code>
                return RichSmartID( m_key &amp; (richMask+panelMask+PDRowMask+PDColMask+pixelRowMask+pixelColMask+subPixelMask) );
             </code>

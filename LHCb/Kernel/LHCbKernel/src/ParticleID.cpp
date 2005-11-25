@@ -1,4 +1,4 @@
-// $Id: ParticleID.cpp,v 1.1 2003-12-18 15:32:59 cattanem Exp $
+// $Id: ParticleID.cpp,v 1.2 2005-11-25 16:15:48 cattanem Exp $
 // Include files 
 
 #include "Kernel/ParticleID.h"
@@ -13,7 +13,7 @@
 //=============================================================================
 // Is a valid number according to LHCb scheme
 //=============================================================================
-bool ParticleID::isValid( ) const {
+bool LHCb::ParticleID::isValid( ) const {
 
   // Reserved GEANT3 particles
   if( extraBits() > 0 ) {
@@ -37,7 +37,7 @@ bool ParticleID::isValid( ) const {
 //=============================================================================
 // Mesons
 //=============================================================================
-bool ParticleID::isMeson( ) const {
+bool LHCb::ParticleID::isMeson( ) const {
   if( hasQuarks() ) {
     int aid = abspid();
     if( aid == 130 || aid == 310 ) {
@@ -59,7 +59,7 @@ bool ParticleID::isMeson( ) const {
 //=============================================================================
 // Baryon
 //=============================================================================
-bool ParticleID::isBaryon( ) const {
+bool LHCb::ParticleID::isBaryon( ) const {
   if( hasQuarks() ) {
     if( digit(nj) > 0 && digit(nq3) > 0 && digit(nq2) > 0 && digit(nq1) > 0 ) {
       return true;
@@ -71,7 +71,7 @@ bool ParticleID::isBaryon( ) const {
 //=============================================================================
 // DiQuark
 //=============================================================================
-bool ParticleID::isDiQuark( ) const {
+bool LHCb::ParticleID::isDiQuark( ) const {
   if( hasQuarks() ) {
     // diquark signature
     if( digit(nj) > 0 && digit(nq3) == 0 && digit(nq2) > 0 && digit(nq1) > 0 ){
@@ -91,7 +91,7 @@ bool ParticleID::isDiQuark( ) const {
 //=============================================================================
 // Hadron
 //=============================================================================
-bool ParticleID::isHadron( ) const {
+bool LHCb::ParticleID::isHadron( ) const {
   if( extraBits() > 0 ) { 
     return false;
   }
@@ -104,7 +104,7 @@ bool ParticleID::isHadron( ) const {
 //=============================================================================
 // Leptons
 //=============================================================================
-bool ParticleID::isLepton( ) const {
+bool LHCb::ParticleID::isLepton( ) const {
   if( extraBits() > 0 ) { 
     return false; 
   }
@@ -117,7 +117,7 @@ bool ParticleID::isLepton( ) const {
 //=============================================================================
 // Nucleus
 //=============================================================================
-bool ParticleID::isNucleus() const {
+bool LHCb::ParticleID::isNucleus() const {
   if( extraBits() <= 0 ) {
     return false;
   }
@@ -131,49 +131,49 @@ bool ParticleID::isNucleus() const {
 //=============================================================================
 // up
 //=============================================================================
-bool ParticleID::hasUp(  ) const {
+bool LHCb::ParticleID::hasUp(  ) const {
   return hasQuark(up);
 }
 
 //=============================================================================
 // down
 //=============================================================================
-bool ParticleID::hasDown( ) const {
+bool LHCb::ParticleID::hasDown( ) const {
   return hasQuark(down);
 }
 
 //=============================================================================
 // strange
 //=============================================================================
-bool ParticleID::hasStrange( ) const {
+bool LHCb::ParticleID::hasStrange( ) const {
   return hasQuark(strange);
 }
 
 //=============================================================================
 // charm
 //=============================================================================
-bool ParticleID::hasCharm( ) const {
+bool LHCb::ParticleID::hasCharm( ) const {
   return hasQuark(charm);
 }
 
 //=============================================================================
 // bottom
 //=============================================================================
-bool ParticleID::hasBottom( ) const {
+bool LHCb::ParticleID::hasBottom( ) const {
   return hasQuark(bottom);
 }
 
 //=============================================================================
 // top
 //=============================================================================
-bool ParticleID::hasTop( ) const {
+bool LHCb::ParticleID::hasTop( ) const {
   return hasQuark(top);
 }
 
 //=============================================================================
 // Composed by quarks and not a nucleus
 //=============================================================================
-bool ParticleID::hasQuarks() const {
+bool LHCb::ParticleID::hasQuarks() const {
   if( extraBits() > 0 ) { 
     return false; 
   }
@@ -189,7 +189,7 @@ bool ParticleID::hasQuarks() const {
 //=============================================================================
 // Quark content
 //=============================================================================
-bool ParticleID::hasQuark( const Quark& q ) const {
+bool LHCb::ParticleID::hasQuark( const Quark& q ) const {
   if( hasQuarks() ) {
     if( digit(nq3) == q || digit(nq2) == q || digit(nq1) == q ) {
       return true;
@@ -202,7 +202,7 @@ bool ParticleID::hasQuark( const Quark& q ) const {
 // Will return digits for quarks, leptons, higgs, etc. but 0 for mesons,
 // baryons,...
 //=============================================================================
-int ParticleID::fundamentalID( ) const {
+int LHCb::ParticleID::fundamentalID( ) const {
   if( digit(nq2) == 0 && digit(nq1) == 0) {
     return abspid()%10000;
   } else {
@@ -213,7 +213,7 @@ int ParticleID::fundamentalID( ) const {
 //=============================================================================
 // Return value of digit in specified location
 //=============================================================================
-unsigned short ParticleID::digit(const Location& loc ) const {
+unsigned short LHCb::ParticleID::digit(const Location& loc ) const {
   //  PID digits (base 10) are: n nr nl nq1 nq2 nq3 nj
   //  the location enum provides a convenient index into the PID
   int numerator = (int) pow(10.0,(loc-1));
@@ -223,14 +223,14 @@ unsigned short ParticleID::digit(const Location& loc ) const {
 //=============================================================================
 // Everything beyond the 7th digit (e.g. outside the PDG numbering scheme)
 //=============================================================================
-int ParticleID::extraBits( ) const {
+int LHCb::ParticleID::extraBits( ) const {
   return abspid()/10000000;
 }
 
 //=============================================================================
 // Three times the charge in e+ units
 //=============================================================================
-int ParticleID::threeCharge( ) const {
+int LHCb::ParticleID::threeCharge( ) const {
 
   int charge = 0;
   
@@ -307,7 +307,7 @@ int ParticleID::threeCharge( ) const {
 //=============================================================================
 // Returns 2J+1, where J is the total spin
 //=============================================================================
-int ParticleID::jSpin( ) const {
+int LHCb::ParticleID::jSpin( ) const {
 
   if( fundamentalID() > 0 && fundamentalID() <= 100 ) { 
     return 0; 
@@ -321,7 +321,7 @@ int ParticleID::jSpin( ) const {
 //=============================================================================
 // Returns 2S+1, where S is the spin
 //=============================================================================
-int ParticleID::sSpin( ) const {
+int LHCb::ParticleID::sSpin( ) const {
 
   if( !isMeson() ) {
     return 0;
@@ -361,7 +361,7 @@ int ParticleID::sSpin( ) const {
 //=============================================================================
 // Returns 2L+1, where L is the orbital angular momentum"
 //=============================================================================
-int ParticleID::lSpin( ) const {
+int LHCb::ParticleID::lSpin( ) const {
   
   if( !isMeson() ) {
     return 0;

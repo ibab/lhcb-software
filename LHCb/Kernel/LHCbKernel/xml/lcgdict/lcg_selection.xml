@@ -8,14 +8,14 @@
   <class name="std::pair<int,double>"/>
   <class name="std::pair<int,int>"/>
   <class name="std::pair<double,double>"/>
-  <class name="std::vector<std::pair<VeloChannelID,int> >"/>
-  <class name="std::pair<VeloChannelID,int>"/>
-  <class name="std::vector<std::pair<ITChannelID,int> >"/>
-  <class name="std::pair<ITChannelID,int>"/>
-  <class name="std::vector<std::pair<OTChannelID,int> >"/>
-  <class name="std::pair<OTChannelID,int>"/>
-  <class name="std::pair<double,CaloCellID>"/>
-  <class name="std::vector<std::pair<double,CaloCellID> >"/>
+  <class name="std::vector<std::pair<LHCb::VeloChannelID,int> >"/>
+  <class name="std::pair<LHCb::VeloChannelID,int>"/>
+  <class name="std::vector<std::pair<LHCb::STChannelID,int> >"/>
+  <class name="std::pair<LHCb::STChannelID,int>"/>
+  <class name="std::vector<std::pair<LHCb::OTChannelID,int> >"/>
+  <class name="std::pair<LHCb::OTChannelID,int>"/>
+  <class name="std::pair<double,LHCb::CaloCellID>"/>
+  <class name="std::vector<std::pair<double,LHCb::CaloCellID> >"/>
   <class name="std::vector<HepGeom::Vector3D<double> >"/>
   <class name="std::vector<HepGeom::Point3D<double> >"/>
 </lcgdict>
