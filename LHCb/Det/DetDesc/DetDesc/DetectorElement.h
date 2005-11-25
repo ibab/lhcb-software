@@ -1,4 +1,4 @@
-// $Id: DetectorElement.h,v 1.29 2005-11-24 17:18:16 jpalac Exp $
+// $Id: DetectorElement.h,v 1.30 2005-11-25 15:31:58 jpalac Exp $
 #ifndef  DETDESC_DETECTORELEMENT_H
 #define  DETDESC_DETECTORELEMENT_H 1
 
@@ -103,6 +103,11 @@ public:
 
   /// delegation for geometry  (const version) 
   inline  const IGeometryInfo* geometry() const; 
+
+  /// helper member using IGeometryInfo::isInside
+  bool isInside(const HepPoint3D& globalPoint) const;
+
+  const IDetectorElement* childDEWithPoint(const HepPoint3D& globalPoint) const;
 
   /// delegation for alignnment                
   inline        IAlignment*    alignment(); 

@@ -1,4 +1,4 @@
-// $Id: DetectorElement.cpp,v 1.29 2005-11-24 17:18:16 jpalac Exp $
+// $Id: DetectorElement.cpp,v 1.30 2005-11-25 15:31:58 jpalac Exp $
 #include "GaudiKernel/Kernel.h"
 #include "GaudiKernel/ISvcLocator.h"
 #include "GaudiKernel/IDataManagerSvc.h"
@@ -397,11 +397,27 @@ const ParamValidDataObject *DetectorElement::params() const {
   return this;
 }
 /// sensitive volume identifier ///////////////////////////////////////////////
-const int DetectorElement::sensitiveVolumeID(const HepPoint3D&) const 
+const int DetectorElement::sensitiveVolumeID(const HepPoint3D& globalPoint) const 
 {
-  return -1;
+  if (!isInside(globalPoint)) return -1;
+  const IDetectorElement* child = childDEWithPoint(globalPoint);
+  return (child) ? child->sensitiveVolumeID(globalPoint) :-1;
 };
-  
+
+bool DetectorElement::isInside(const HepPoint3D& globalPoint) const {
+  return (geometry()) ? geometry()->isInside(globalPoint) : false;
+};
+
+const IDetectorElement* DetectorElement::childDEWithPoint(const HepPoint3D& globalPoint) const 
+{
+  IDetectorElement::IDEContainer::const_iterator iDE = childBegin();
+  for (; iDE!=childEnd(); ++iDE) {
+    DetectorElement* pDE = dynamic_cast<DetectorElement*>((*iDE));
+    if ( pDE && pDE->isInside(globalPoint)) return *iDE;
+  }
+  return 0;
+};
+
 // ============================================================================
 // End 
 // ============================================================================

@@ -1,9 +1,15 @@
 ! =============================================================================
-! $Id: release.notes,v 1.227 2005-11-24 17:18:16 jpalac Exp $ 
+! $Id: release.notes,v 1.228 2005-11-25 15:31:58 jpalac Exp $ 
 ! =============================================================================
 ! package DetDesc
 ! package manager : Marco Clemencic, Juan Palacios
 ! =============================================================================
+
+! 2005-11-25 - Juan Palacios
+ - method sensitiveVolumeID(const HepPoint3D& globalPos ) const now looks 
+   recursively for the last daughter detector element in the hierarchy to
+   contain the point. Along the way a specialised DetectorElement should
+   overload the method to take control and end the recursion.
 
 ! 2005-11-24 - Juan Palacios
  - Add method const int sensitiveVolumeID(const HepPoint3D& globalPos ) const

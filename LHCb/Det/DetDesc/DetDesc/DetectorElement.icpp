@@ -1,4 +1,4 @@
-// $Id: DetectorElement.icpp,v 1.11 2005-11-24 17:18:16 jpalac Exp $
+// $Id: DetectorElement.icpp,v 1.12 2005-11-25 15:31:58 jpalac Exp $
 
 #ifndef       DETDESC_DETECTORELEMENT_ICPP 
 #define       DETDESC_DETECTORELEMENT_ICPP  1 
@@ -69,6 +69,7 @@ inline DetectorElement::operator const IGeometryInfo*() const {
 inline DetectorElement::operator IGeometryInfo*() {
   return m_de_iGeometry    ;
 };
+
 inline DetectorElement::operator const IAlignment* () const {
   return m_de_iAlignment   ;
 };
