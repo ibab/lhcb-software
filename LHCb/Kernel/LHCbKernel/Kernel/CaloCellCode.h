@@ -1,4 +1,4 @@
-// $Id: CaloCellCode.h,v 1.2 2003-11-24 15:09:27 cattanem Exp $ 
+// $Id: CaloCellCode.h,v 1.3 2005-11-26 14:51:06 cattanem Exp $ 
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
@@ -23,10 +23,8 @@
 namespace CaloCellCode
 {
   //
-  /// 32 bits in the transient  representation
+  /// 32 bits representation
   typedef unsigned int   ContentType     ;  
-  /// 16 bits in the persistent representation
-  typedef unsigned short WriteType       ; 
   //
   static const unsigned int BitsCol     = 6 ; 
   static const unsigned int BitsRow     = 6 ; 

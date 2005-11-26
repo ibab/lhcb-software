@@ -187,7 +187,7 @@ return id;
           <arg const="TRUE" name="chanID" type="CaloCellID" />
          <code>
   setDetectorType( caloType );
-  setID( chanID.ccid() );
+  setID( chanID.all() );
          </code>
        </constructor>
 
@@ -207,7 +207,7 @@ return id;
          const = 'TRUE'
          desc  = "return the CaloCellID">
          <code>
-  return isCalo() ? (m_lhcbID &amp; IDMask) : 0xF0000000;
+  return isCalo() ? CaloCellID(m_lhcbID &amp; IDMask) : CaloCellID(0xF0000000);
          </code>
        </method>
 

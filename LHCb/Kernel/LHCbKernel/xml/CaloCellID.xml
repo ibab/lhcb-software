@@ -3,7 +3,7 @@
 <gdd>
 
 <!-- **************************************************************************
-  * $Id: CaloCellID.xml,v 1.7 2005-11-25 16:15:48 cattanem Exp $
+  * $Id: CaloCellID.xml,v 1.8 2005-11-26 14:51:06 cattanem Exp $
   *****************************************************************************
   * XML-description of CaloCellIDclass                                        *
   * author: Vanya BELYAEV Ivan.Belyaev@itep.ru                                *
@@ -31,30 +31,26 @@
   <typedef
     def    = "ContentType"
     type   = "CaloCellCode::ContentType"
-    desc   = "transient representation (presumably 32bits)"
-    access = "PUBLIC" />
-  <typedef
-    def    = "WriteType"
-    type   = "CaloCellCode::WriteType"
-    desc   = "persistent representation (presumably 16bits)"
+    desc   = "Representation type (presumably 32bits)"
     access = "PUBLIC" />
   
-  <attribute
-    name      = "ccid"
-    desc      = "Representation of CellID (32bits)"
+   <attribute
+    name      = "all"
+    desc      = "all significant bits representation of CellID (32bits)"
     dictalias = "unsigned int"
     type      = "ContentType" />
   
   <constructor
     desc     = "Default/empty constructor"
-    initList = "m_ccid( 0 )" > 
+    initList = "m_all( 0 )" > 
     <code/> 
   </constructor>
   
+
   <constructor
     desc     = "Explicit constructor from Calo, Area, Row and Column"
     argList  = "unsigned int Calo, unsigned int Area, unsigned int Row, unsigned int Column "
-    initList = "m_ccid( 0 )" > 
+    initList = "m_all( 0 )" > 
     <code>
       setCalo ( Calo   ) ;
       setArea ( Area   ) ;
@@ -64,18 +60,19 @@
   </constructor>
   
   <constructor
-    desc     = "Constructor from Short/Raw representation (16bit)"
-    argList  = "WriteType Raw"
-    initList = "m_ccid( 0 )" > 
+    desc     = "Explicit constructor from 32 bit representation"
+    argList  = "ContentType all"
+    initList = "m_all( 0 )"
+    explicit = "TRUE">
     <code>
-      m_ccid = (ContentType) Raw ;
+      m_all = all ;
     </code> 
   </constructor>
   
   <constructor 
     desc = "Copy constructor"
     argList = "CaloCellID o"
-    initList = "m_ccid(o.m_ccid)">
+    initList = "m_all(o.m_all)">
     <code/>
   </constructor>
 
@@ -135,27 +132,6 @@
     </code>
   </method>
   
-  <method
-    desc   = "Decoding function to extract raw-data representatio"
-    name   = "raw"
-    type   = "WriteType"
-    const  = "TRUE"
-    access = "PUBLIC" >
-    <code>
-      return (WriteType) all() ; 
-    </code>
-  </method>
-  
-  <method
-    desc   = "Decoding function to extract all significant bits representatio"
-    name   = "all"
-    type   = "ContentType"
-    const  = "TRUE"
-    access = "PUBLIC" >
-    <code>
-      return ( contents() &amp; CaloCellCode::MaskAll  ) &gt;&gt; CaloCellCode::ShiftAll  ; 
-    </code>
-  </method>
   
   <method
     desc    = "Comparison operator using 'index()' representation"
@@ -189,10 +165,13 @@
     const   = "TRUE" >
     <arg name = "buffer" type = "StreamBuffer"    inout = "BOTH"/>
     <code>
-      return buffer &lt;&lt; raw() ; 
+      return buffer &lt;&lt; all() ; 
     </code>  
   </method>
   
+
+
+
   <method
     name    = "serialize"
     desc    = "Serialization of the object (reading from StreamBuffer)"
@@ -201,9 +180,9 @@
     const   = "FALSE" >
     <arg name = "buffer" type = "StreamBuffer" inout = "BOTH" />
     <code>
-      WriteType tmp ;
+      ContentType tmp ;
       buffer &gt;&gt; tmp ; 
-      m_ccid = (ContentType) tmp;
+      m_all = (ContentType) tmp;
       return buffer;  
     </code>
   </method>
@@ -320,7 +299,7 @@
     const     = "FALSE"
     access    = "PRIVATE" >
     <arg name = "Row" type = "unsigned int" inout = "INPUT" />
-    <code>
+    <code> 
       return set( Row  , CaloCellCode::ShiftRow , CaloCellCode::MaskRow ) ;
     </code>
   </method>
@@ -363,7 +342,7 @@
       ContentType tmp1 , tmp2 ;
       tmp1   = ( Value &lt;&lt; Shift ) &amp;  Mask ; 
       tmp2   =  contents()              &amp; ~Mask ; 
-      m_ccid = ( tmp1 | tmp2 ) ;
+      m_all = ( tmp1 | tmp2 ) ;
       return *this;
     </code>
   </method>
@@ -386,7 +365,7 @@
     const  = "TRUE"
     access = "PRIVATE" >
     <code>
-      return m_ccid ; 
+      return m_all ; 
     </code>
   </method>
   
