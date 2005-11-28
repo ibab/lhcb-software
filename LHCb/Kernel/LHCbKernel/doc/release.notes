@@ -2,7 +2,11 @@ Package LHCbKernel
 Package manager: M.Cattaneo
 Purpose: LHCb specific Kernel classes
 
-!===================== LHCbKernel v6r0 2005-11-26 =========================
+!===================== LHCbKernel v6r0 2005-11-28 =========================
+! 2005-11-28 - Marco Cattaneo
+ - Output serializers for std containers (SerializeStl.h) are now in LHCb 
+   namespace, this is needed for the new event model classes.
+
 ! 2005-11-26 - Olivier Deschamps
  - Changes to CaloCellID:
     . Removed unneccessary 16 bit representation, obsolete SICB method and
