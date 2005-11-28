@@ -110,30 +110,32 @@
 >
 <!ELEMENT attribute (bitfield*)>
 <!ATTLIST attribute
-        type             CDATA                             #REQUIRED
-        name             CDATA                             #REQUIRED
-        desc             CDATA                             #REQUIRED
-        init             CDATA                             #IMPLIED
-        dictalias        CDATA                             #IMPLIED
-        access           (PUBLIC | PROTECTED | PRIVATE)    "PRIVATE"
-        compression      (TRUE | FALSE)                    "TRUE"
-        setMeth          (TRUE | FALSE)                    "TRUE"
-        getMeth          (TRUE | FALSE)                    "TRUE"
-        transient        (TRUE | FALSE)                    "FALSE"    
+        type             CDATA                            #REQUIRED
+        name             CDATA                            #REQUIRED
+        desc             CDATA                            #REQUIRED
+        init             CDATA                            #IMPLIED
+        dictalias        CDATA                            #IMPLIED
+        access           (PUBLIC | PROTECTED | PRIVATE)   "PRIVATE"
+        compression      (TRUE | FALSE)                   "TRUE"
+        setMeth          (TRUE | FALSE)                   "TRUE"
+        getMeth          (TRUE | FALSE)                   "TRUE"
+        transient        (TRUE | FALSE)                   "FALSE"    
+        nonconstaccessor (TRUE | FALSE)                   "TRUE"
 >
 <!ELEMENT relation EMPTY>
 <!ATTLIST relation
-        type             CDATA                             #REQUIRED
-        name             CDATA                             #REQUIRED
-        desc             CDATA                             #REQUIRED
-        access           (PUBLIC | PROTECTED | PRIVATE)    "PRIVATE"
-        multiplicity     (1 | N | n | M | m)               "1"
-        serialize        (TRUE | FALSE)                    "TRUE"
-        setMeth          (TRUE | FALSE)                    "TRUE"
-        getMeth          (TRUE | FALSE)                    "TRUE"
-        addMeth          (TRUE | FALSE)                    "TRUE"
-        remMeth          (TRUE | FALSE)                    "TRUE"
-        clrMeth          (TRUE | FALSE)                    "TRUE"
+        type             CDATA                            #REQUIRED
+        name             CDATA                            #REQUIRED
+        desc             CDATA                            #REQUIRED
+        access           (PUBLIC | PROTECTED | PRIVATE)   "PRIVATE"
+        multiplicity     (1 | N | n | M | m)              "1"
+        serialize        (TRUE | FALSE)                   "TRUE"
+        setMeth          (TRUE | FALSE)                   "TRUE"
+        getMeth          (TRUE | FALSE)                   "TRUE"
+        addMeth          (TRUE | FALSE)                   "TRUE"
+        remMeth          (TRUE | FALSE)                   "TRUE"
+        clrMeth          (TRUE | FALSE)                   "TRUE"
+        nonconstaccessor (TRUE | FALSE)                   "TRUE"
 >
 <!ELEMENT bitfield EMPTY>
 <!ATTLIST bitfield

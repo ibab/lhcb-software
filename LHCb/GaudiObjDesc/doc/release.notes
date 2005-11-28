@@ -3,6 +3,13 @@ Desccription: This package contains a set of tools used to generate code from th
 Package manager : Stefan Roiser
 
 ===============================GaudiObjDesc v9r0============================
+! 2005-11-28 Stefan Roiser
+- fix typedefs: used scoped class name
+- new attribute for <relation> and <attribute>
+	- nonconstaccessor [ TRUE | FALSE ] defaults to 'TRUE'
+          when set to 'FALSE' will turn of the generation of non-const accessor methods
+
+===============================GaudiObjDesc v9r0============================
 ! 2005-11-17 Stefan Roiser
 - merged in some more changes from the branch - better handling of enums for bitfields (offset not an int)
 - new features

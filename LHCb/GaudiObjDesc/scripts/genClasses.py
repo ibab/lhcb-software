@@ -339,7 +339,8 @@ class genClasses(genSrcUtils.genSrcUtils):
         attAtt = att['attrs']
         if attAtt['getMeth'] == 'TRUE': 
           s += self.genGetSetAttMethod(attAtt,'get_c',clname)
-          s += self.genGetSetAttMethod(attAtt,'get',clname)
+	  if attAtt['nonconstaccessor'] == 'TRUE' :
+	    s += self.genGetSetAttMethod(attAtt,'get',clname)
         if attAtt['setMeth'] == 'TRUE':
           s += self.genGetSetAttMethod(attAtt,'set',clname)
         if att.has_key('bitfield'):
@@ -356,7 +357,8 @@ class genClasses(genSrcUtils.genSrcUtils):
         relAtt = rel['attrs']
         if relAtt['getMeth'] == 'TRUE': 
           s += self.genGetSetRelMethod(relAtt,'get_c',clname)
-          s += self.genGetSetRelMethod(relAtt,'get',clname)
+	  if relAtt['nonconstaccessor'] == 'TRUE' :
+	    s += self.genGetSetRelMethod(relAtt,'get',clname)
         if relAtt['setMeth'] == 'TRUE':
           s += self.genGetSetRelMethod(relAtt,'set',clname)
         if relAtt['multiplicity'] != '1':
@@ -427,7 +429,7 @@ class genClasses(genSrcUtils.genSrcUtils):
 #--------------------------------------------------------------------------------
   def genClassTypedefs(self, godClass):
     s = ''
-    classname =  godClass['attrs']['name']
+    classname =  'LHCb::' + godClass['attrs']['name']
     if self.gKeyedContainerTypedef or godClass['attrs']['keyedContTypeDef'] == 'TRUE':
       self.addInclude('KeyedContainer')
       s += '// Definition of Keyed Container for %s\n' % classname
