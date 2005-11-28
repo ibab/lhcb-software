@@ -6,8 +6,8 @@ Package manager : Stefan Roiser
 ! 2005-11-28 Stefan Roiser
 - fix typedefs: used scoped class name
 - new attribute for <relation> and <attribute>
-	- nonconstaccessor [ TRUE | FALSE ] defaults to 'TRUE'
-          when set to 'FALSE' will turn of the generation of non-const accessor methods
+	- nonconstaccessor [ TRUE | FALSE ] defaults to 'FALSE'
+          when set to 'TRUE' will turn on the generation of non-const accessor methods
 
 ===============================GaudiObjDesc v9r0============================
 ! 2005-11-17 Stefan Roiser

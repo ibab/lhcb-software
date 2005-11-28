@@ -120,7 +120,7 @@
         setMeth          (TRUE | FALSE)                   "TRUE"
         getMeth          (TRUE | FALSE)                   "TRUE"
         transient        (TRUE | FALSE)                   "FALSE"    
-        nonconstaccessor (TRUE | FALSE)                   "TRUE"
+        nonconstaccessor (TRUE | FALSE)                   "FALSE"
 >
 <!ELEMENT relation EMPTY>
 <!ATTLIST relation
@@ -135,7 +135,7 @@
         addMeth          (TRUE | FALSE)                   "TRUE"
         remMeth          (TRUE | FALSE)                   "TRUE"
         clrMeth          (TRUE | FALSE)                   "TRUE"
-        nonconstaccessor (TRUE | FALSE)                   "TRUE"
+        nonconstaccessor (TRUE | FALSE)                   "FALSE"
 >
 <!ELEMENT bitfield EMPTY>
 <!ATTLIST bitfield
