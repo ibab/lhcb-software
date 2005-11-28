@@ -1,7 +1,10 @@
-! $Id: release.notes,v 1.86 2005-11-17 17:46:57 cattanem Exp $
+! $Id: release.notes,v 1.87 2005-11-28 16:20:02 jonrob Exp $
 ! Package     : Rich/RichKernel
 ! Responsible : Chris Jones
 ! Purpose     : General purpose RICH classes
+
+! 2005-11-28 - Chris Jones
+ - Update sorting algorithm for RichSmartIDs
 
 !======================= RichKernel v5r6 2005-11-17 =======================
 ! 2005-11-15 - Chris Jones

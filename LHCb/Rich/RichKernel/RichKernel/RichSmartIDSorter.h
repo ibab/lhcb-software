@@ -4,7 +4,7 @@
  *
  *  Header file for RichSmartID utility class : RichSmartIDSorter
  *
- *  $Id: RichSmartIDSorter.h,v 1.7 2005-06-20 16:09:31 jonrob Exp $
+ *  $Id: RichSmartIDSorter.h,v 1.8 2005-11-28 16:20:02 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   2005-01-10
@@ -27,12 +27,11 @@
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   2005-01-10
- *
- *  @todo Remove RTTC hack for sorting
  */
 //-----------------------------------------------------------------------------
 
-class RichSmartIDSorter {
+class RichSmartIDSorter 
+{
 
 private: // utility classes
 
@@ -55,16 +54,16 @@ private: // utility classes
     inline bool operator() ( const RichSmartID p1, const RichSmartID p2 ) const
     {
       // Use internal bit packing to sort
-      //return ( p1.dataBitsOnly().key() < p2.dataBitsOnly().key() );
+      return ( p1.dataBitsOnly().key() < p2.dataBitsOnly().key() );
       // Use explicit field comparision. Slower but assumes nothing about bit packing
       // Fixed so that PD col is lesser to PD Row, for compatibility with RTTC data
       // This is opposite to that with the above fast sorting
-      return ( 100000000*p1.rich() + 10000000*p1.panel() +
-               1000000*p1.pdRow() + 10000*p1.pdCol() +
-               100*p1.pixelCol() + p1.pixelRow()  <
-               100000000*p2.rich() + 10000000*p2.panel() +
-               1000000*p2.pdRow() + 10000*p2.pdCol() +
-               100*p2.pixelCol() + p2.pixelRow() );
+      //return ( 100000000*p1.rich() + 10000000*p1.panel() +
+      //         1000000*p1.pdRow() + 10000*p1.pdCol() +
+      //         100*p1.pixelCol() + p1.pixelRow()  <
+      //         100000000*p2.rich() + 10000000*p2.panel() +
+      //         1000000*p2.pdRow() + 10000*p2.pdCol() +
+      //         100*p2.pixelCol() + p2.pixelRow() );
     }
 
   };
