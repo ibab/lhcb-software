@@ -11,10 +11,10 @@
      ****************************************************************-->
      <class 
       author="P. Koppenburg"
-      desc="Common base class for all process headers: GenHeader, MCHeader... @todo ASK MARCO FOR ID"
+      desc="Common base class for all process headers: GenHeader, MCHeader..."
       name="ProcessHeader"
       location="Gen/Header"
-      id="199"
+      id="103"
      >
        &DataObject;
        <base name="DataObject"/>

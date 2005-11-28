@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.3 2005-11-15 12:32:38 gcorti Exp $
+# $Id: requirements,v 1.4 2005-11-28 17:24:46 cattanem Exp $
 # Created    : 17/08/2005
 # Maintainer : Marco Cattaneo
 #
@@ -7,7 +7,7 @@ version           v1r0
 
 # Structure, i.e. directories to process. 
 #============================================================================
-branches          cmt dict doc src xml Event
+branches          cmt doc xml Event
 
 # Include directories
 #============================================================================
@@ -15,23 +15,20 @@ include_dirs $(EVENTBASEROOT)
 
 # Used packages. 
 #============================================================================
-use LHCbKernel   v5r*    Kernel
+use LHCbKernel   v*    Kernel
 
 # Produce Header-Files & dictionary from XML description
 #============================================================================
 document obj2doth EventBaseObj2Doth ../xml/*.xml
 document obj2dict EventBaseObj2Dict ../xml/*.xml 
 
-# Build libraries (including dictionary)
+# Build dictionary library
 #============================================================================
-library          EventBase      *.cpp
-library          EventBaseDict  ../dict/*.cpp
+library          EventBaseDict  ../$(tag)/dict/EventBase/*.cpp
 
 # Define link options
 #============================================================================
 apply_pattern component_library library=EventBaseDict
-apply_pattern linker_library    library=EventBase
-macro_append EventBase_linkopts "" WIN32 "/include:_EventBase_loadRef"
 
 private
 use GaudiObjDesc v*
