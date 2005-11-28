@@ -1,4 +1,4 @@
-// $Id: UpdateManagerSvc_Item.icpp,v 1.4 2005-08-30 11:42:37 cattanem Exp $
+// $Id: UpdateManagerSvc_Item.icpp,v 1.5 2005-11-28 17:56:54 marcocle Exp $
 #ifndef UPDATEMANAGERSVC_ITEM_ICPP
 #define UPDATEMANAGERSVC_ITEM_ICPP 1
 
@@ -189,10 +189,10 @@ struct Item {
         //std::cout << "UMS:    call mf " << mfIt - memFuncs.begin() << std::endl;
         sc = (*(mfIt->mf))();
         if (!sc.isSuccess()) return sc;
-        // m.f. called, update items's IOV
-        if (since < mfIt->since) since = mfIt->since;
-        if (until > mfIt->until) until = mfIt->until;
       }
+      // update the overall validity even if the M.F. was not called
+      if (since < mfIt->since) since = mfIt->since;
+      if (until > mfIt->until) until = mfIt->until;
     }
     updateLock = false;
     //std::cout << "UMS:      final validity: " << since.absoluteTime() << " -> " << until.absoluteTime() << std::endl;
