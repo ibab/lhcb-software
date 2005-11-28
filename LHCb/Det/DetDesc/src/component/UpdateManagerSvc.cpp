@@ -1,4 +1,4 @@
-// $Id: UpdateManagerSvc.cpp,v 1.10 2005-09-12 13:46:06 marcocle Exp $
+// $Id: UpdateManagerSvc.cpp,v 1.11 2005-11-28 17:52:53 marcocle Exp $
 // Include files 
 #include "GaudiKernel/SvcFactory.h"
 #include "GaudiKernel/MsgStream.h"
@@ -244,9 +244,9 @@ StatusCode UpdateManagerSvc::newEvent(const ITime &evtTime){
       MsgStream log(msgSvc(),name());
       log << MSG::DEBUG << "newEvent(evtTime): loop over head items" << endmsg;
     }
-    // firt I make a copy of the current head
+    // first I make a copy of the current head
     Item::ItemList head_copy(m_head_items);
-    // Start from a clean IOV (I cannot use m_head_X because the head is not stableand they may change)
+    // Start from a clean IOV (I cannot use m_head_X because the head is not stable and they may change)
     TimePoint head_copy_since(time_absolutepast);
     TimePoint head_copy_until(time_absolutefuture);
     for (it = head_copy.begin(); it != head_copy.end() && sc.isSuccess(); ++it){
