@@ -49,6 +49,7 @@ IdealTracksCreator::IdealTracksCreator( const std::string& name,
   declareProperty( "AddITClusters",   m_addITClusters = true );
   declareProperty( "AddVeloClusters", m_addVeloClusters = true );
   declareProperty( "InitState",       m_initState = true );
+  declareProperty( "InitStateUpstream",    m_initStateUpstream = true );
   declareProperty( "TrueStatesAtMeasZPos", m_trueStatesAtMeas = false );
   declareProperty( "TracksTESPath",
                    m_tracksTESPath = "Rec/Track/Ideal" );
@@ -230,14 +231,10 @@ StatusCode IdealTracksCreator::execute()
         continue; // go to next track
       }
 
-      // Sort the measurements in z
-      // --------------------------
-      //sortMeasurements( track );  // no more needed!
-
       // Initialize a seed state
       // -----------------------
       if ( m_initState ) {
-        if ( m_upstream ) {
+        if ( m_initStateUpstream ) {
           std::vector<Measurement*>::const_reverse_iterator rbeginM =
             track -> measurements().rbegin();
           sc = this -> initializeState( (*rbeginM)->z(),
@@ -472,20 +469,6 @@ StatusCode IdealTracksCreator::addVeloClusters( MCParticle* mcPart,
 
   debug() << "- " << nVeloRMeas << " / " << nVeloPhiMeas
           << " Velo R/Phi Measurements added" << endreq;
-
-  return StatusCode::SUCCESS;
-}
-
-//=============================================================================
-// Register the tracks container in the TES. TES becomes owner of the cont.
-//=============================================================================
-StatusCode IdealTracksCreator::registerTracks( Tracks* tracksCont )
-{
-  StatusCode sc = put( tracksCont, m_tracksTESPath );
-  if ( sc.isFailure() )
-    error() << "Unable to register the output container at "
-            << m_tracksTESPath << ". Status is " << sc << endreq;
-  verbose() << "Tracks container stored in the TES" << endreq;
 
   return StatusCode::SUCCESS;
 }

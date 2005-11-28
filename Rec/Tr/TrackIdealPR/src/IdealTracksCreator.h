@@ -72,9 +72,6 @@ public:
   };
 
 private:
-  /// Register the tracks in the Transient event store
-  StatusCode registerTracks( Tracks* tracksCont );
-
   /// Add outer tracker clusters
   StatusCode addOTTimes( OTTimes* times,
                          MCParticle* mcPart,
@@ -102,7 +99,7 @@ private:
   DeSTDetector* m_itTracker;       ///< Pointer to ST detector element
   DeVelo*       m_velo;            ///< Pointer to VELO detector element
   std::string   m_otTrackerPath;   ///< Name of the OT XML geom path
-  std::string   m_itTrackerPatIh;   ///< Name of the IT XML geom path
+  std::string   m_itTrackerPath;   ///< Name of the IT XML geom path
   std::string   m_veloPath;        ///< Name of the Velo XML geom path
 
   // Interfaces
@@ -110,13 +107,14 @@ private:
   IIdealStateCreator*     m_stateCreator;       ///< Create 'seed' state at last measurement
 
   // job options
-  bool m_addOTTimes;      ///< true if OT clusters should be put on track
-  bool m_addITClusters;   ///< true if IT clusters should be put on track
-  bool m_addVeloClusters; ///< true if Velo R clusters should be put on track
-  bool m_initState;       ///< initialize seed state
-  bool m_trueStatesAtMeas;///< Store true states at each measurement position
-  std::string m_tracksTESPath;      ///< TrTracks container path in EvDS
-  std::string m_relationTablePath;  ///< Location of the associator table
+  bool m_addOTTimes;               ///< true if OT clusters should be put on track
+  bool m_addITClusters;            ///< true if IT clusters should be put on track
+  bool m_addVeloClusters;          ///< true if Velo R clusters should be put on track
+  bool m_initState;                ///< initialize seed state
+  bool m_initStateUpstream;        ///< seed state created upstream/downstream
+  bool m_trueStatesAtMeas;         ///< Store true states at each measurement position
+  std::string m_tracksTESPath;     ///< TrTracks container path in EvDS
+  std::string m_relationTablePath; ///< Location of the associator table
   int m_minNHits;         ///< Minimum number of hits on the track
   double m_errorX2;       ///< Error^2 on x
   double m_errorY2;       ///< Error^2 on y
