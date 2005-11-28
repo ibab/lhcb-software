@@ -3,6 +3,9 @@
 ! Responsible : Eduardo Rodrigues, Jose A. Hernando
 !----------------------------------------------------------------------------
 
+! 2005-11-28 - Eduardo Rodrigues
+ - minor cosmetics
+
 ! 2005-11-21 - Jeroen van Tilburg
  Many changes. Main modifications:
  - Split the TrackKalmanFilter tool into a TrackMasterFitter tool and a

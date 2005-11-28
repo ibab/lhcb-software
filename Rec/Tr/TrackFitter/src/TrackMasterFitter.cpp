@@ -1,4 +1,4 @@
-// $Id: TrackMasterFitter.cpp,v 1.2 2005-11-21 11:48:23 jvantilb Exp $
+// $Id: TrackMasterFitter.cpp,v 1.3 2005-11-28 15:18:24 erodrigu Exp $
 // Include files 
 // -------------
 // from Gaudi
@@ -51,16 +51,16 @@ TrackMasterFitter::TrackMasterFitter( const std::string& type,
                                            "TrackMasterExtrapolator" );
   declareProperty( "TrackNodeFitterName" , m_trackNodeFitterName =
                                            "TrackKalmanFilter" );
-  declareProperty( "upstream"            , m_upstream         =   true     );
-  declareProperty( "ZPositions"          , m_zPositions                    );
-  declareProperty( "StatesAtMeasZPos"    , m_statesAtMeasZPos =   false    );
-  declareProperty( "StateAtBeamLine"     , m_stateAtBeamLine  =   true     );
+  declareProperty( "FitUpstream"         , m_upstream         =   true     );
   declareProperty( "NumberFitIterations" , m_numFitIter       =     5      );
   declareProperty( "Chi2Outliers"        , m_chi2Outliers     =     9.0    );
-  declareProperty( "zBegRich1"           , m_zBegRich1        =   990.0*mm );
-  declareProperty( "zEndRich1"           , m_zEndRich1        =  2165.0*mm );
-  declareProperty( "zBegRich2"           , m_zBegRich2        =  9450.0*mm );
-  declareProperty( "zEndRich2"           , m_zEndRich2        = 11900.0*mm );
+  declareProperty( "StatesAtMeasZPos"    , m_statesAtMeasZPos =   false    );
+  declareProperty( "StateAtBeamLine"     , m_stateAtBeamLine  =   true     );
+  declareProperty( "ZPositions"          , m_zPositions                    );
+  declareProperty( "ZBegRich1"           , m_zBegRich1        =   990.0*mm );
+  declareProperty( "ZEndRich1"           , m_zEndRich1        =  2165.0*mm );
+  declareProperty( "ZBegRich2"           , m_zBegRich2        =  9450.0*mm );
+  declareProperty( "ZEndRich2"           , m_zEndRich2        = 11900.0*mm );
 
 }
 

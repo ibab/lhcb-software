@@ -1,4 +1,4 @@
-// $Id: TrackEventFitter.cpp,v 1.4 2005-11-21 11:20:57 jvantilb Exp $
+// $Id: TrackEventFitter.cpp,v 1.5 2005-11-28 15:18:24 erodrigu Exp $
 // Include files
 // -------------
 // from Gaudi
@@ -34,10 +34,11 @@ TrackEventFitter::TrackEventFitter( const std::string& name,
   , m_makeNewContainer(true)
 {
   declareProperty( "TracksInContainer", 
-                   m_tracksInContainer = "Rec/Track/Ideal" );
+                   m_tracksInContainer  = "Rec/Track/Ideal" );
   declareProperty( "TracksOutContainer", 
                    m_tracksOutContainer = "Rec/Track/Ideal" );
-  declareProperty( "FitterName"      , m_fitterName = "TrackMasterFitter" );
+  declareProperty( "FitterName"      ,
+                   m_fitterName         = "TrackMasterFitter" );
 }
 
 //=============================================================================
