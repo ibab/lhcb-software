@@ -1,6 +1,12 @@
-! $Id: release.notes,v 1.15 2005-11-17 16:00:08 robbep Exp $
+! $Id: release.notes,v 1.16 2005-11-29 16:05:25 robbep Exp $
 ! Package     : Gen/LbPythia
 ! Responsible : 
+
+! 2005-11-29 - Patrick Robbe
+ - PythiaHiggs: add specific tool to cut at generator level on Higgs 
+   events (two b quarks in 400 mrad).
+ - PythiaProduction: do not change Higgs, top, W, Z widths in Pythia
+   which are computed at init, and add default Pythia settings in software
 
 ! 2005-11-17 - Patrick Robbe
  - PythiaProduction: add force fragmentation interface
