@@ -1,6 +1,13 @@
-! $Id: release.notes,v 1.15 2005-11-21 16:25:35 robbep Exp $
+! $Id: release.notes,v 1.16 2005-11-29 15:59:41 robbep Exp $
 ! Package     : Gen/Generators
 ! Responsible : 
+
+! 2005-11-29 - Patrick Robbe
+ - LeptonInAcceptance: add full event cut tool to keep events with one
+   lepton with pT > 4 GeV
+ - ExternalGenerator: add computation of efficiencies and counters
+ - Signal, Generation, Inclusive, Special, VariableLuminosity: add print out 
+   and computation of various counters
 
 ! 2005-11-21 - Patrick Robbe
  - Signal.h/.cpp: add functions and counters to be able to compute
