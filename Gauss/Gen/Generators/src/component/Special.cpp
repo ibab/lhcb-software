@@ -1,4 +1,4 @@
-// $Id: Special.cpp,v 1.1 2005-11-17 15:58:17 robbep Exp $
+// $Id: Special.cpp,v 1.2 2005-11-29 15:58:24 robbep Exp $
 // Include files 
 
 // local
@@ -43,14 +43,14 @@ Special::~Special( ) { ; }
 // Initialize method
 //=============================================================================
 StatusCode Special::initialize( ) {
-  info() << "Generating Minimum Bias events." << endmsg ;
+  info() << "Generating Special events." << endmsg ;
   return ExternalGenerator::initialize( ) ;
 }
 
 //=============================================================================
 // Generate Set of Event for Minimum Bias event type
 //=============================================================================
-bool Special::generate( const unsigned int nPileUp , 
+bool Special::generate( const unsigned int /* nPileUp */ , 
                         EventVector & theEventVector , 
                         HardVector  & theHardVector ) {
   StatusCode sc ;
@@ -80,4 +80,23 @@ bool Special::generate( const unsigned int nPileUp ,
     }
   } 
   return result ;
+}
+
+//=============================================================================
+// Print the counters
+//=============================================================================
+void Special::printCounters( ) const {
+  if ( 0 != m_nEventsAfterCut ) {
+    info() << "Number of events before the cut = " << m_nEventsBeforeCut 
+           << endmsg;
+    info() << "Number of events after the cut = "  << m_nEventsAfterCut  
+           << endmsg;
+    double eff = ( (double) m_nEventsAfterCut ) / 
+      ( (double) m_nEventsBeforeCut ) ;
+    double err_eff = sqrt( m_nEventsAfterCut * ( 1. - eff ) ) /
+      ( (double) m_nEventsBeforeCut ) ;
+    info() << 
+      format( " Efficiency of the generator level cut = %.5g +/- %.5g" , eff ,
+              err_eff ) << endmsg ;
+  }
 }

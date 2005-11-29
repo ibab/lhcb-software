@@ -1,4 +1,4 @@
-// $Id: Special.h,v 1.1 2005-11-17 15:58:17 robbep Exp $
+// $Id: Special.h,v 1.2 2005-11-29 15:58:24 robbep Exp $
 #ifndef GENERATORS_SPECIAL_H 
 #define GENERATORS_SPECIAL_H 1
 
@@ -28,7 +28,7 @@ public:
                          EventVector & theEventVector ,
                          HardVector  & theHardVector ) ;
 
-  virtual void printCounters( ) const { ; }
+  virtual void printCounters( ) const ;
 
 protected:
 
