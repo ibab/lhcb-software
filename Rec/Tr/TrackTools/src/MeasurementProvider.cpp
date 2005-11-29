@@ -1,4 +1,4 @@
-// $Id: MeasurementProvider.cpp,v 1.8 2005-11-08 18:30:38 erodrigu Exp $
+// $Id: MeasurementProvider.cpp,v 1.9 2005-11-29 10:24:52 erodrigu Exp $
 // Include files 
 // -------------
 // from Gaudi
@@ -84,10 +84,20 @@ void MeasurementProvider::load() {
 //=============================================================================
 StatusCode MeasurementProvider::load( Track& track ) 
 {
+  debug() << "# LHCbIDs = " << track.lhcbIDs().size() << endreq;
+  const std::vector<LHCbID>& allids = track.lhcbIDs();
+  for ( unsigned int it2 = 0; it2 < allids.size(); ++it2 ) {
+    debug() << "LHCbID channelID " << allids[it2].channelID();
+    debug() << " detectorType " <<  allids[it2].detectorType() << endreq;
+  }
+  debug() << endreq;
+
   const std::vector<LHCbID>& ids = track.lhcbIDs();
   for ( std::vector<LHCbID>::const_iterator it = ids.begin();
         it != ids.end(); ++it ) {
     const LHCbID& id = *it;
+    debug() << "Bef: LHCbID channelID " << id.channelID();
+    debug() << " detectorType " << id.detectorType() << endreq;
     Measurement* meas = measurement(id);
     if ( meas == NULL ) {
       delete meas;
@@ -106,8 +116,11 @@ StatusCode MeasurementProvider::load( Track& track )
 //=============================================================================
 Measurement* MeasurementProvider::measurement ( const LHCbID& id,
                                                 double par0,
-                                                double par1 )
-{
+                                                double par1 ) {
+
+    debug() << "In : LHCbID channelID " << id.channelID();
+    debug() << " detectorType " << id.detectorType() << endreq;
+
   // TODO first look if it is in the list already :)
   Measurement* meas = NULL;
   if ( id.isVelo() ) {
@@ -134,6 +147,7 @@ Measurement* MeasurementProvider::measurement ( const LHCbID& id,
   } else if ( id.isOT() ) {
     OTChannelID oid = id.otID();
     OTTime* clus = m_otTimes->object(oid);
+    debug() << "Looking for OTTime of key = " << oid << endreq;
     if (clus != NULL) {
       if (par0 == 999.) par0 = 0.;
       meas = new OTMeasurement(*clus,*m_otDet, (int) par0, par1);
