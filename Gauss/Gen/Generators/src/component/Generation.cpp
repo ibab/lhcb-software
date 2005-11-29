@@ -1,4 +1,4 @@
-// $Id: Generation.cpp,v 1.4 2005-11-21 16:15:31 robbep Exp $
+// $Id: Generation.cpp,v 1.5 2005-11-29 15:55:02 robbep Exp $
 // Include files 
 
 // local
@@ -11,6 +11,7 @@
 #include "Event/HepMCEvent.h"
 #include "Event/GenHeader.h"
 #include "Event/HardInfo.h"
+#include "Kernel/ParticleID.h"
 
 #include "HepMC/GenEvent.h"
 
@@ -45,7 +46,23 @@ Generation::Generation( const std::string& name,
     m_nEvents              ( 0 ) , 
     m_nAcceptedEvents      ( 0 ) ,
     m_nInteractions        ( 0 ) , 
-    m_nAcceptedInteractions( 0 ) {
+    m_nAcceptedInteractions( 0 ) ,
+    m_n1b                  ( 0 ) ,
+    m_n3b                  ( 0 ) ,
+    m_nPromptB             ( 0 ) ,
+    m_n1c                  ( 0 ) ,
+    m_n3c                  ( 0 ) ,
+    m_nPromptC             ( 0 ) ,
+    m_nbc                  ( 0 ) ,
+    m_n1bAccepted          ( 0 ) ,
+    m_n3bAccepted          ( 0 ) ,
+    m_nPromptBAccepted     ( 0 ) ,
+    m_n1cAccepted          ( 0 ) ,
+    m_n3cAccepted          ( 0 ) ,
+    m_nPromptCAccepted     ( 0 ) ,
+    m_nbcAccepted          ( 0 ) ,
+    m_nBeforeFullEvent     ( 0 ) ,
+    m_nAfterFullEvent      ( 0 ) {
     // Generation Method
     declareProperty ( "SampleGenerationTool" , 
                       m_sampleGenerationToolName = "MinimumBias" ) ;
@@ -95,17 +112,17 @@ StatusCode Generation::initialize() {
   // Retrieve pile up tool
   m_pileUpTool = tool< IPileUpTool >( m_pileUpToolName , this ) ;
 
+  // Retrieve decay tool
+  if ( "" != m_decayToolName ) m_decayTool = 
+    tool< IDecayTool >( m_decayToolName ) ;
+
   // Retrieve generation method tool
   m_sampleGenerationTool = 
     tool< ISampleGenerationTool >( m_sampleGenerationToolName , this ) ;
   
   // Retrieve generation method tool
   m_vertexSmearingTool = 
-    tool< IVertexSmearingTool >( m_vertexSmearingToolName , this ) ;  
-
-  // Retrieve decay tool
-  if ( "" != m_decayToolName ) m_decayTool = 
-    tool< IDecayTool >( m_decayToolName ) ;
+    tool< IVertexSmearingTool >( m_vertexSmearingToolName , this ) ;
 
   // Retrieve full gen event cut tool
   if ( "" != m_fullGenEventCutToolName ) m_fullGenEventCutTool =
@@ -125,6 +142,10 @@ StatusCode Generation::execute() {
   double       currentLuminosity ;
   EventVector  theHepMCs    ; EventVector::iterator itEvent ;
   HardVector   theHardInfos ; HardVector::iterator  itHard  ;
+
+  unsigned int n1b( 0 ) , n3b( 0 ) , nPromptB( 0 ) ;
+  unsigned int n1c( 0 ) , n3c( 0 ) , nPromptC( 0 ) ;
+  unsigned int nbc( 0 ) ;
 
   // Generate a set of interaction until a good one is found
   bool goodEvent = false ;
@@ -147,6 +168,30 @@ StatusCode Generation::execute() {
     m_nEvents++ ;
     m_nInteractions += nPileUp ;
 
+    // Update interaction counters
+    n1b = 0 ; n3b = 0 ; nPromptB = 0 ;
+    n1c = 0 ; n3c = 0 ; nPromptC = 0 ;
+    nbc = 0 ;
+    for ( itEvent = theHepMCs.begin() ; itEvent != theHepMCs.end() ; 
+          ++itEvent ) updateInteractionCounters( n1b, n3b, nPromptB, n1c, n3c, 
+                                                 nPromptC, nbc , *itEvent ) ;
+    
+    m_n1b += n1b ; m_n3b += n3b ; m_nPromptB += nPromptB ;
+    m_n1c += n1c ; m_n3c += n3c ; m_nPromptC += nPromptC ;
+    m_nbc += nbc ;
+
+    // Decay the event if it is a good event
+    if ( ( goodEvent ) && ( 0 != m_decayTool ) ) {
+      for ( itEvent = theHepMCs.begin() ; itEvent != theHepMCs.end() ;
+            ++itEvent ) {
+        sc = decayEvent( *itEvent ) ;
+        if ( ! sc.isSuccess() ) return sc ;
+        sc = m_vertexSmearingTool -> smearVertex( *itEvent ) ;
+        if ( ! sc.isSuccess() ) return sc ;
+      }
+    }
+
+    // Apply generator level cut on full event
     if ( m_fullGenEventCutTool ) {
       if ( goodEvent ) {
         m_nBeforeFullEvent++ ;
@@ -160,6 +205,12 @@ StatusCode Generation::execute() {
   m_nAcceptedEvents++ ;
   m_nAcceptedInteractions += nPileUp ;
 
+  m_n1bAccepted += n1b ; m_n3bAccepted += n3b ; 
+  m_nPromptBAccepted += nPromptB ;
+  m_n1cAccepted += n1c ; m_n3cAccepted += n3c ; 
+  m_nPromptCAccepted += nPromptC ;
+  m_nbcAccepted += nbc ;
+
   // Now store the event in Gaudi event store
   GenHeader * theGenHeader = new GenHeader() ;
   theGenHeader -> setLuminosity( currentLuminosity ) ;
@@ -170,24 +221,13 @@ StatusCode Generation::execute() {
 
   HepMCEvents * eventVector = new HepMCEvents() ;
   for ( itEvent = theHepMCs.begin() ; theHepMCs.end() != itEvent ; 
-        ++itEvent ) {
-    // Decay the particles in the event which have been left stable by 
-    // the production generator
-    if ( 0 != m_decayTool ) sc = decayEvent( *itEvent ) ;    
-    // Smear vertex
-    sc = m_vertexSmearingTool -> smearVertex( *itEvent ) ;
-    eventVector -> insert( *itEvent ) ;
-  }
-
-
+        ++itEvent ) eventVector -> insert( *itEvent ) ;
   sc = put( eventVector , m_hepMCEventLocation ) ;
   if ( ! sc.isSuccess() ) return Error( "Cannot store HepMC object" ) ;
 
   HardInfos * hardVector = new HardInfos() ;
   for ( itHard = theHardInfos.begin() ; theHardInfos.end() != itHard ;
-        ++itHard ) {
-    hardVector -> insert( *itHard ) ;
-  }  
+        ++itHard ) hardVector -> insert( *itHard ) ;
   sc = put( hardVector , m_hardInfoLocation ) ;
   if ( ! sc.isSuccess() ) return Error( "Cannot store HardInfo object" ) ;
 
@@ -200,13 +240,58 @@ StatusCode Generation::execute() {
 StatusCode Generation::finalize() {
   debug( ) << "==> Finalize" << endmsg ;
   // Print the various counters
+  info() << "**************************************************" << endmsg ;
   m_pileUpTool -> printPileUpCounters( ) ; 
-  info( ) << "Number of generated events: " << m_nEvents << endmsg ;
-  info( ) << "Number of accepted events: " << m_nAcceptedEvents << endmsg ;
-  info( ) << "Number of generated interactions: " << m_nInteractions 
-          << endmsg ;
-  info( ) << "Number of interactions in accepted events: " 
-          << m_nAcceptedInteractions << endmsg ;
+  info() << "***********   Generation counters   **************" << std::endl ;
+  info() << "Number of generated events                       : " 
+         << m_nEvents << std::endl ;
+  info() << "Number of generated interactions                 : " 
+         << m_nInteractions << std::endl ;
+  info() << "Number of generated interactions with >= 1 b     : "
+         << m_n1b << std::endl ;
+  info() << "Number of generated interactions with >= 3 b     : "
+         << m_n3b << std::endl ;
+  info() << "Number of generated interactions with 1 prompt B : "
+         << m_nPromptB << std::endl ;
+  info() << "Number of generated interactions with >= 1 c     : "
+         << m_n1c << std::endl ;
+  info() << "Number of generated interactions with >= 3 c     : "
+         << m_n3c << std::endl ;
+  info() << "Number of accepted interactions with b and c     : "
+         << m_nbc << std::endl ;
+  info() << "Number of generated interactions with 1 prompt C : "
+         << m_nPromptC << std::endl ;  
+  info() << "Number of accepted events                        : " 
+         << m_nAcceptedEvents << std::endl ;
+  info() << "Number of interactions in accepted events        : "
+         << m_nAcceptedInteractions << std::endl ;
+  info() << "Number of accepted interactions with >= 1 b      : "
+         << m_n1bAccepted << std::endl ;
+  info() << "Number of accepted interactions with >= 3 b      : "
+         << m_n3bAccepted << std::endl ;
+  info() << "Number of accepted interactions with 1 prompt B  : "
+         << m_nPromptBAccepted << std::endl ;
+  info() << "Number of accepted interactions with >= 1 c      : "
+         << m_n1cAccepted << std::endl ;
+  info() << "Number of accepted interactions with >= 3 c      : "
+         << m_n3cAccepted << std::endl ;
+  info() << "Number of accepted interactions with 1 prompt C  : "
+         << m_nPromptCAccepted << std::endl ;
+  info() << "Number of accepted interactions with b and c     : "
+         << m_nbcAccepted << std::endl ;
+
+  if ( 0 != m_nAfterFullEvent ) {
+    info() << "Number of events before full event cut           : " 
+           << m_nBeforeFullEvent << std::endl ;
+    info() << "Number of events after full event cut            : " 
+           << m_nAfterFullEvent << std::endl ;
+    info() << "Efficiency of the full event cut                 : "
+           << format( "%.5g +/- %.5g" , 
+                      fraction( m_nAfterFullEvent , m_nBeforeFullEvent ) , 
+                      err_fraction( m_nAfterFullEvent , m_nBeforeFullEvent ) )
+           << std::endl ;
+  }                  
+  info() << endmsg ;
   m_sampleGenerationTool -> printCounters() ;
 
   return GaudiAlgorithm::finalize( ) ; // Finalize base class
@@ -247,4 +332,38 @@ StatusCode Generation::decayEvent( HepMCEvent * theEvent ) {
   return StatusCode::SUCCESS ;
 }
 
+//=============================================================================
+// Interaction counters
+//=============================================================================
+void Generation::updateInteractionCounters( unsigned int & n1b , 
+                                            unsigned int & n3b ,
+                                            unsigned int & nPromptB ,
+                                            unsigned int & n1c ,
+                                            unsigned int & n3c ,
+                                            unsigned int & nPromptC ,
+                                            unsigned int & nbc ,
+                                            const HepMCEvent * evt ) 
+{
+  const HepMC::GenEvent * theEvent = evt -> pGenEvt() ;
+  unsigned int bQuark( 0 ) , bHadron( 0 ) , cQuark( 0 ) , cHadron( 0 ) ;
+  int pdgId ;
+  HepMC::GenEvent::particle_const_iterator iter ;
+  for ( iter = theEvent -> particles_begin() ; 
+        theEvent -> particles_end() != iter ; ++iter ) {
+    if ( (*iter) -> status() >= 3 ) continue ;
+    pdgId = abs( (*iter) -> pdg_id() ) ;
+    ParticleID thePid( pdgId ) ;
+    if ( 5 == pdgId ) bQuark++ ;
+    if ( 4 == pdgId ) cQuark++ ;
+    if ( thePid.hasBottom() ) bHadron++ ;
+    if ( thePid.hasCharm() ) cHadron++ ;
+  }
+  if ( bQuark >= 1 ) n1b++ ;
+  if ( bQuark >= 3 ) n3b++ ;
+  if ( cQuark >= 1 ) n1c++ ;
+  if ( cQuark >= 3 ) n3c++ ;
+  if ( ( bQuark >= 1 ) && ( cQuark >= 1 ) ) nbc++ ;
+  if ( ( 0 == bQuark ) && ( bHadron > 0 ) ) nPromptB++ ;
+  if ( ( 0 == cQuark ) && ( 0 == bHadron ) && ( cHadron > 0 ) ) nPromptC++ ;
+}
 

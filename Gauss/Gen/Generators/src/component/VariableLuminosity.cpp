@@ -1,4 +1,4 @@
-// $Id: VariableLuminosity.cpp,v 1.1 2005-10-03 10:17:36 robbep Exp $
+// $Id: VariableLuminosity.cpp,v 1.2 2005-11-29 15:59:21 robbep Exp $
 // Include files 
 
 // local
@@ -101,10 +101,12 @@ unsigned int VariableLuminosity::numberOfPileUp( double & currentLuminosity ) {
 // Print the specific pile up counters
 //=============================================================================
 void VariableLuminosity::printPileUpCounters( ) {
-  info() << " Total number of events (including empty events): " 
-         << m_nEvents << endmsg ;
-  info() << " Number of events with 0 interactions: "
-         << m_numberOfZeroInteraction << endmsg ;
+  info() << "***********   Luminosity counters   **************" << std::endl ;
+  info() << "Total number of events (including empty events)  : " 
+         << m_nEvents << std::endl ;
+  info() << "Number of events with 0 interactions             : "
+         << m_numberOfZeroInteraction << std::endl ;
+  info() << endmsg ;
 }
 
 //=============================================================================

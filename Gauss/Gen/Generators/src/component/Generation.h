@@ -1,4 +1,4 @@
-// $Id: Generation.h,v 1.2 2005-11-21 16:17:19 robbep Exp $
+// $Id: Generation.h,v 1.3 2005-11-29 15:55:02 robbep Exp $
 #ifndef GENERATORS_GENERATION_H 
 #define GENERATORS_GENERATION_H 1
 
@@ -61,11 +61,43 @@ private:
   std::string m_vertexSmearingToolName   ;
   std::string m_fullGenEventCutToolName  ;
 
-  int m_nEvents ; ///< Number of generated events
-  int m_nAcceptedEvents ; ///< Number of accepted events
-  int m_nInteractions ; ///< Number of generated interactions
-  int m_nAcceptedInteractions ; ///< Number of interactions in accepted events
-  int m_nBeforeFullEvent ;
-  int m_nAfterFullEvent ;
+  unsigned int m_nEvents ; ///< Number of generated events
+  unsigned int m_nAcceptedEvents ; ///< Number of accepted events
+  unsigned int m_nInteractions ; ///< Number of generated interactions
+  unsigned int m_nAcceptedInteractions ; 
+  ///< Number of interactions in accepted events
+  unsigned int m_n1b ;
+  unsigned int m_n3b ;
+  unsigned int m_nPromptB ;
+  unsigned int m_n1c ;
+  unsigned int m_n3c ;
+  unsigned int m_nPromptC ;
+  unsigned int m_nbc ;
+
+  unsigned int m_n1bAccepted ;
+  unsigned int m_n3bAccepted ;
+  unsigned int m_nPromptBAccepted ;
+  unsigned int m_n1cAccepted ;
+  unsigned int m_n3cAccepted ;
+  unsigned int m_nPromptCAccepted ;
+  unsigned int m_nbcAccepted ;
+  
+  unsigned int m_nBeforeFullEvent ;
+  unsigned int m_nAfterFullEvent ;
+
+
+  void updateInteractionCounters( unsigned int & n1b , unsigned int & n3b ,
+                                  unsigned int & nPromptB , 
+                                  unsigned int & n1c , unsigned int & n3c , 
+                                  unsigned int & nPromptC , 
+                                  unsigned int & nbc , 
+                                  const HepMCEvent * theEvent ) ;
+
+  inline double fraction( const unsigned int A , const unsigned int B ) const
+  { return ( (double) A / (double) B ) ; }
+  inline double err_fraction( const unsigned int A , const unsigned int B ) 
+    const 
+  { return sqrt( A * ( 1. - ( (double) A / (double) B ) ) ) / 
+      ( (double) B ) ; }
 };
 #endif // GENERATORS_GENERATION_H
