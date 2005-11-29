@@ -21,7 +21,6 @@ CheckHLTB2HH.Members ={ "TrgL0Filter", "PrintHeader/PassedL0",
                         "CheckSelResult/MergeOffB2HH", "PrintHeader/PassedOffB2HH",
                         "DecayChainNTuple/OffB2HHTree", "PrintHeader/PassedOffB2HHTree",
                         "CheckSelResult/MergeHLTB2HH", "PrintHeader/PassedHLTB2HH",
-                        "ResetOnOffline/HLTB2HHTreeSetOnline",
                         "DecayChainNTuple/HLTB2HHTree", "PrintHeader/PassedHLTB2HHTree"};
  
 PassedL0.OutputLevel = 3;
@@ -43,9 +42,6 @@ MergeHLTB2HH.Algorithms = { "HLTFilterB2HH"};
 MergeOffB2HH.OutputLevel = 4;
 MergeHLTB2HH.OutputLevel = 4;
 
-// Important !!!
-HLTB2HHTreeSetOnline.ResetToOnline = true;
-
 //------------------------------------------------------------------------------
 // Write Tree for Off selection
 OffB2HHTree.PhysDesktop.InputLocations = {"Phys/TDRselBd2PiPi", "Phys/TDRselBd2KPi", "Phys/TDRselBs2KK", "Phys/TDRselBs2PiK"};
@@ -62,7 +58,7 @@ Particle2MCLinksOffB2HH.InputData  = {"Phys/Combined/Particles"};
 Particle2MCLinksOffB2HH.OutputLevel = 3;
 
 // WARNING: The offline does not create B~0 (B_s~0) but always B0 (B_s0)
-OffB2HHTree.Decay = "{B0 -> ^pi+ ^pi-, B0 -> ^K+ ^pi-, B~0 -> ^K- ^pi+, B_s0 -> ^K+ ^K-, B_s0 -> ^pi+ ^K-, B_s0 -> ^pi- ^K+}";
+OffB2HHTree.Decay = "{B0 -> ^pi+ ^pi-, B0 -> ^K+ ^pi-, B0 -> ^K- ^pi+, B_s0 -> ^K+ ^K-, B_s0 -> ^pi+ ^K-, B_s0 -> ^pi- ^K+}";
 OffB2HHTree.MCDecay = "{B0 -> ^pi+ ^pi-, B~0 -> ^pi+ ^pi-, B0 -> ^K+ ^pi-, B0 -> ^K- ^pi+, B~0 -> ^K- ^pi+, B~0 -> ^K+ ^pi-
 , B_s0 -> ^K+ ^K-, B_s~0 -> ^K+ ^K-, B_s0 -> ^pi+ ^K-, B_s0 -> ^pi- ^K+, B_s~0 -> ^pi- ^K+, B_s~0 -> ^pi+ ^K-}";
 OffB2HHTree.NtupleName = "FILE1/OffB2HH";
@@ -79,7 +75,7 @@ HLTB2HHTree.PhysDesktop.InputLocations = {"Phys/HLTFilterB2HH"};
 
 HLTB2HHTree.CompositeParticle2MCLinks.skipResonances = true;
 // HLTB2HHTree.InputComposite = {"Phys/HLTFilterB2HH/Particles"};
-HLTB2HHTree.CompositeParticle2MCLinks.IgnorePID = true; // since we always select B0 -> pi+ pi-
+// HLTB2HHTree.CompositeParticle2MCLinks.IgnorePID = true; // since we always select B0 -> pi+ pi-
 
 HLTB2HHTree.LinkAsct.Location      = "Phys/Relations/Particle2MCLinksHLTB2HH";
 HLTB2HHTree.LinkAsct.AlgorithmType = "Particle2MCLinks";
@@ -99,3 +95,4 @@ HLTB2HHTree.RequireTrigger = true;
 HLTB2HHTree.UseRichOnlinePID = false;
 HLTB2HHTree.OutputLevel = 3;
 //------------------------------------------------------------------------------
+HLTB2HHTree.Context = "HLT" ;

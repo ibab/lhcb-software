@@ -4,6 +4,10 @@
 ! Purpose     : High-Level Trigger Exclusive Selections - Checking 
 !-----------------------------------------------------------------------------
 
+! 2005-11-29 - Luis Fernandez
+ - options/
+   . Add missing "Context" in options, correct typos and few features added
+
 !========================== HltSelChecker v3r8 2005-10-19 ===================
 ! 2005-10-17 - P. Koppenburg
  - options/

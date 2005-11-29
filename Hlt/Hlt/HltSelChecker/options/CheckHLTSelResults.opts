@@ -1,0 +1,103 @@
+//==============================================================================
+// Print some counters
+//==============================================================================
+
+ApplicationMgr.TopAlg += {"GaudiSequencer/CheckHLTSelResults"};
+
+CheckHLTSelResults.IgnoreFilterPassed = false ; // Act as Sequencer
+CheckHLTSelResults.MeasureTime = false;
+
+CheckHLTSelResults.Members = { "TrgL0Filter/L0TriggerFilter", "PrintHeader/PassedL0Trigger",
+                               "TrgL1Filter/L1TriggerFilter", "PrintHeader/PassedL1Trigger",
+                               "HltFilter/HltGenericTriggerFilter", "PrintHeader/PassedHltGenericTrigger",
+                               "HltFilter/HltTriggerFilter", "PrintHeader/PassedHltTrigger",
+                               "GaudiSequencer/HltStreams",
+                               "GaudiSequencer/HltStreamsSelections"};
+//-------
+PassedL0Trigger.OutputLevel = 3;
+PassedL1Trigger.OutputLevel = 3;
+
+PassedHltGenericTrigger.OutputLevel = 3;
+HltGenericFilterTrigger.RequireHLT = false;
+HltGenericFilterTrigger.RequireGeneric = true;  
+
+HltTriggerFilter.RequireHLT = true;
+PassedHltTrigger.OutputLevel = 3;
+//-------
+
+//-------
+HltStreams.IgnoreFilterPassed = true;
+HltStreams.Members = {"GaudiSequencer/CheckHltInclusiveBFilter",
+                      "GaudiSequencer/CheckHltExclusiveBFilter",
+                      "GaudiSequencer/CheckHltDimuonFilter",
+                      "GaudiSequencer/CheckHltDstarFilter"};
+
+CheckHltInclusiveBFilter.Members = { "HltFilter/HltInclusiveBTriggerFilter", "PrintHeader/PassedHltInclusiveBTrigger"};
+HltInclusiveBTriggerFilter.RequireInclusiveB = true;
+PassedHltInclusiveBTrigger.OutputLevel = 3;
+
+CheckHltExclusiveBFilter.Members = { "HltFilter/HltExclusiveBTriggerFilter", "PrintHeader/PassedHltExclusiveBTrigger"};
+HltExclusiveBTriggerFilter.RequireExclusiveB = true;
+PassedHltExclusiveBTrigger.OutputLevel = 3;
+
+CheckHltDimuonFilter.Members = {"HltFilter/HltDimuonTriggerFilter", "PrintHeader/PassedHltDimuonTrigger"};
+HltDimuonTriggerFilter.RequireDimuon = true;
+PassedHltDimuonTrigger.OutputLevel = 3;
+
+CheckHltDstarFilter.Members = {"HltFilter/HltDstarTriggerFilter", "PrintHeader/PassedDstarHltTrigger"};
+HltDstarTriggerFilter.RequireDstar = true;
+PassedDstarHltTrigger.OutputLevel = 3;
+//-------
+
+//-------
+HltStreamsSelections.IgnoreFilterPassed = true;
+HltStreamsSelections.Members = {"GaudiSequencer/HltB2JpsiXSel",
+                                "GaudiSequencer/HltDstarSel",
+                                "GaudiSequencer/HltBs2PhiPhiSel",
+                                "GaudiSequencer/HltBs2PhiGammaSel", 
+                                "GaudiSequencer/HltBs2DsHSel",
+                                "GaudiSequencer/HltBd2MuMuKstarSel",
+                                "GaudiSequencer/HltBd2DstarPiSel",
+                                "GaudiSequencer/HltBd2D0KstarSel",
+                                "GaudiSequencer/HltB2MuMuSel",
+                                "GaudiSequencer/HltB2HHSel"};
+
+HltB2JpsiXSel.Members = {"CheckSelResult/CheckHltB2JpsiXSel", "PrintHeader/PassedHltB2JpsiXSel"};
+CheckHltB2JpsiXSel.Algorithms = {"HLTFilterB2JpsiX"};
+PassedHltB2JpsiXSel.OutputLevel = 3;
+
+HltDstarSel.Members = {"CheckSelResult/CheckHltDstarSel", "PrintHeader/PassedHltDstarSel"};
+CheckHltDstarSel.Algorithms = {"HLTFilterDstar"};
+PassedHltDstarSel.OutputLevel = 3;
+
+HltBs2PhiPhiSel.Members = {"CheckSelResult/CheckHltBs2PhiPhiSel", "PrintHeader/PassedHltBs2PhiPhiSel"};
+CheckHltBs2PhiPhiSel.Algorithms = {"HLTFilterBs2PhiPhi"};
+PassedHltBs2PhiPhiSel.OutputLevel = 3;
+
+HltBs2PhiGammaSel.Members = {"CheckSelResult/CheckHltBs2PhiGammaSel", "PrintHeader/PassedHltBs2PhiGammaSel"};
+CheckHltBs2PhiGammaSel.Algorithms = {"HLTFilterBs2PhiGamma"};
+PassedHltBs2PhiGammaSel.OutputLevel = 3;
+
+HltBs2DsHSel.Members = {"CheckSelResult/CheckHltBs2DsHSel", "PrintHeader/PassedHltBs2DsHSel"};
+CheckHltBs2DsHSel.Algorithms = {"HLTFilterBs2DsH"};
+PassedHltBs2DsHSel.OutputLevel = 3;
+
+HltBd2MuMuKstarSel.Members = {"CheckSelResult/CheckHltBd2MuMuKstarSel", "PrintHeader/PassedHltBd2MuMuKstarSel"};
+CheckHltBd2MuMuKstarSel.Algorithms = {"HLTFilterBd2MuMuKstar"};
+PassedHltBd2MuMuKstarSel.OutputLevel = 3;
+
+HltBd2DstarPiSel.Members = {"CheckSelResult/CheckHltBd2DstarPiSel", "PrintHeader/PassedHltBd2DstarPiSel"};
+CheckHltBd2DstarPiSel.Algorithms = {"HLTFilterBd2DstarPi"};
+PassedHltBd2DstarPiSel.OutputLevel = 3;
+
+HltBd2D0KstarSel.Members = {"CheckSelResult/CheckHltBd2D0KstarSel", "PrintHeader/PassedHltBd2D0KstarSel"};
+CheckHltBd2D0KstarSel.Algorithms = {"HLTFilterBd2D0Kstar"};
+PassedHltBd2D0KstarSel.OutputLevel = 3;
+
+HltB2MuMuSel.Members = {"CheckSelResult/CheckHltB2MuMuSel", "PrintHeader/PassedHltB2MuMuSel"};
+CheckHltB2MuMuSel.Algorithms = {"HLTFilterB2MuMu"};
+PassedHltB2MuMuSel.OutputLevel = 3;
+
+HltB2HHSel.Members = {"CheckSelResult/CheckHltB2HHSel", "PrintHeader/PassedHltB2HHSel"};
+CheckHltB2HHSel.Algorithms = {"HLTFilterB2HH"};
+PassedHltB2HHSel.OutputLevel = 3;

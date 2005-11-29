@@ -37,7 +37,7 @@ MergeOffBd2MuMuKstar.AvoidSelResult = false;
 MergeHLTBd2MuMuKstar.Algorithms = {"HLTFilterBd2MuMuKstar"};
 
 MergeOffBd2MuMuKstar.OutputLevel = 4;
-MergeHLTBd2MuMuKstar.OutputLevel = 3;
+MergeHLTBd2MuMuKstar.OutputLevel = 4;
 
 //------------------------------------------------------------------------------
 // Write Tree for Off selection

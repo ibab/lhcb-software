@@ -73,7 +73,7 @@ HLTBs2DsHTree.PhysDesktop.InputLocations = {"Phys/HLTFilterBs2DsH"};
 
 HLTBs2DsHTree.CompositeParticle2MCLinks.skipResonances = true;
 // HLTBs2DsHTree.InputComposite = {"Phys/HLTFilterBs2DsH/Particles"};
-HLTBs2DsHTree.CompositeParticle2MCLinks.IgnorePID = true; // since we always select B_s0 -> D_s- pi+, the bachelor is always a K
+// HLTBs2DsHTree.CompositeParticle2MCLinks.IgnorePID = true; // since we always select B_s0 -> D_s- pi+, the bachelor is always a pi
 
 HLTBs2DsHTree.LinkAsct.Location      = "Phys/Relations/Particle2MCLinksHLTBs2DsH";
 HLTBs2DsHTree.LinkAsct.AlgorithmType = "Particle2MCLinks";

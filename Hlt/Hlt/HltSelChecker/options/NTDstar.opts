@@ -5,20 +5,21 @@
 
 // The offline selection
 #include "$BD2DSTARPIROOT/options/DoTDRselBd2DstarPi.opts"
+PrintTDRselBd2DstarPi.OutputLevel = 3;
 TDRselBd2DstarPi.BdMassWindowTight = 50.*MeV;// 200 MeV
 
-ApplicationMgr.TopAlg += {"GaudiSequencer/CheckHLTDstar"};
+ApplicationMgr.TopAlg += {"GaudiSequencer/CheckHLTIncDstar"};
 
-CheckHLTDstar.IgnoreFilterPassed = false ; // Act as Sequencer
-CheckHLTDstar.MeasureTime = false;
+CheckHLTIncDstar.IgnoreFilterPassed = false ; // Act as Sequencer
+CheckHLTIncDstar.MeasureTime = false;
 
-CheckHLTDstar.Members ={ "TrgL0Filter", "PrintHeader/PassedL0",
-                         "TrgL1Filter", "PrintHeader/PassedL1",
-                         "HltFilter/HltGenericFilter", "PrintHeader/PassedHltGeneric",
-                         "CheckSelResult/MergeOffBd2DstarPi", "PrintHeader/PassedOffBd2DstarPi",
-                         "DecayChainNTuple/OffBd2DstarPiTree", "PrintHeader/PassedOffBd2DstarPiTree",
-                         "CheckSelResult/MergeHLTDstar", "PrintHeader/PassedHLTDstar",
-                         "DecayChainNTuple/HLTDstarTree", "PrintHeader/PassedHLTDstarTree"};
+CheckHLTIncDstar.Members ={ "TrgL0Filter", "PrintHeader/PassedL0",
+                            "TrgL1Filter", "PrintHeader/PassedL1",
+                            "HltFilter/HltGenericFilter", "PrintHeader/PassedHltGeneric",
+                            "CheckSelResult/MergeOffBd2DstarPi", "PrintHeader/PassedOffBd2DstarPi",
+                            "DecayChainNTuple/OffBd2DstarPiTree", "PrintHeader/PassedOffBd2DstarPiTree",
+                            "CheckSelResult/MergeHLTDstar", "PrintHeader/PassedHLTDstar",
+                            "DecayChainNTuple/HLTDstarTree", "PrintHeader/PassedHLTDstarTree"};
  
 PassedL0.OutputLevel = 3;
 PassedL1.OutputLevel = 3;
@@ -70,13 +71,12 @@ HLTDstarTree.PhysDesktop.InputLocations = {"Phys/HLTFilterDstar"};
 
 HLTDstarTree.CompositeParticle2MCLinks.skipResonances = true;
 // HLTDstarTree.InputComposite = {"Phys/HLTFilterDstar/Particles"};
-HLTDstarTree.CompositeParticle2MCLinks.IgnorePID = true; // since allways D0, thus e.g. no D*(2010)- -> D~0 pi-
+// HLTDstarTree.CompositeParticle2MCLinks.IgnorePID = true; // since allways D0, thus e.g. no D*(2010)- -> D~0 pi-
 
 HLTDstarTree.LinkAsct.Location      = "Phys/Relations/Particle2MCLinksHLTDstar";
 HLTDstarTree.LinkAsct.AlgorithmType = "Particle2MCLinks";
 HLTDstarTree.LinkAsct.AlgorithmName = "Particle2MCLinksHLTDstar";
 HLTDstarTree.LinkAsct.OutputLevel = 3;
-HLTDstarTree.Context = "HLT" ;
 
 Particle2MCLinksHLTDstar.InputData  = {"Phys/HLTPions/Particles", "Phys/HLTKaons/Particles", 
                                        "Phys/HLTPreselPions/Particles", "Phys/HLTPreselKaons/Particles", 
@@ -108,3 +108,4 @@ HLTDstarTree.RequireTrigger = true;
 HLTDstarTree.UseRichOnlinePID = false;
 HLTDstarTree.OutputLevel = 3;
 //------------------------------------------------------------------------------
+HLTDstarTree.Context = "HLT" ;

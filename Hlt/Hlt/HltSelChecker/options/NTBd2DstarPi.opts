@@ -5,6 +5,7 @@
 
 // The offline selection
 #include "$BD2DSTARPIROOT/options/DoTDRselBd2DstarPi.opts"
+PrintTDRselBd2DstarPi.OutputLevel = 3;
 TDRselBd2DstarPi.BdMassWindowTight = 50.*MeV;// 200 MeV
 
 ApplicationMgr.TopAlg += {"GaudiSequencer/CheckHLTBd2DstarPi"};

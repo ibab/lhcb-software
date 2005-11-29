@@ -9,19 +9,21 @@ ApplicationMgr.DLLs += {"HltSelChecker"};
 // For the association on 'Trg' particles
 // Do not include this line if running DVHLTCorr.opts at the same time
 // Do not include this line if Truth.opts is included after
-// TrueSignals.Members += {"TrgL1Filter/TrueTrgL1Filter","TrgTrackToContainer","TrgTrack2MCParticle"};
+TrueSignals.Members += {"TrgL1Filter/TrueTrgL1Filter","TrgTrackToContainer","TrgTrack2MCParticle"};
 //
 // ---------------------------------- B ----------------------------------------
 // Include this to overwrite input to take *only* MC truth particles into account
-#include "$HLTSELCHECKERROOT/options/Truth.opts"
+// #include "$HLTSELCHECKERROOT/options/Truth.opts"
 // Include this to overwrite input to take *only* MC truth particles into account
-#include "$HLTSELCHECKERROOT/options/TruthInput.opts" // !!! ONLY MCTRUTH
+// #include "$HLTSELCHECKERROOT/options/TruthInput.opts" // !!! ONLY MCTRUTH
 //==============================================================================
 
 // Include this if you also need to run on offline particles and if 
 // OfflineTracks.opts not included
 #include "$DAVINCIROOT/options/DaVinciReco.opts"
 #include "$DAVINCIROOT/options/DaVinciNeutrals.opts"
+// Uncomment for some L0TDR*.dst ... such as L0TDR-Bd2PiPi.opts, L0TDR-Bs2JpsiPhi.opts
+// Neutrals.Members  = { "CaloDigitsFromRaw" };
 
 // Several selection have the same instance of PreLoadParticles ... comment in some DoTDRsel*
 // and add it here ... 
@@ -56,6 +58,12 @@ EventSelector.Input   = {};
 
 // #include "$HLTSELCHECKERROOT/options/NTB2HH.opts"
 
+// Only MC truth (when including Truth.opts):
+// HLTDetachedPions.PhysDesktop.InputLocations = { "Phys/SelectB2HH"} ;
+// HLTPreselKaons.PhysDesktop.InputLocations = { "Phys/SelectB2HH" };
+// No VtxIsolationFilterCriterion:
+// HLTFilterB2HH.MotherFilter.VtxIsolationFilterCriterion.NTracks = -1; // inactive for preselection
+
 //==============================================================================
 // Checking B_s0 -> phi(1020) phi(1020)
 //==============================================================================
@@ -63,6 +71,13 @@ EventSelector.Input   = {};
 #include "$HLTSELECTIONSROOT/options/L0TDR-Bs2PhiPhi.opts"
 
 #include "$HLTSELCHECKERROOT/options/NTBs2PhiPhi.opts"
+
+// Only MC truth (when including Truth.opts):
+// HLTDetachedPions.PhysDesktop.InputLocations = { "Phys/SelectBs2PhiPhi"} ;
+// HLTPreselKaons.PhysDesktop.InputLocations = { "Phys/SelectBs2PhiPhi" };
+
+// No VtxIsolationFilterCriterion:
+// HLTFilterBs2PhiPhi.MotherFilter.VtxIsolationFilterCriterion.NTracks = -1; // inactive for preselection
 
 //==============================================================================
 // Checking B0 -> (D~0 -> K+ pi-) (K*(892)0 -> K+ pi-) and cc
@@ -72,6 +87,13 @@ EventSelector.Input   = {};
 
 // #include "$HLTSELCHECKERROOT/options/NTBd2D0Kstar.opts"
 
+// Only MC truth (when including Truth.opts):
+// HLTDetachedPions.PhysDesktop.InputLocations = { "Phys/SelectBd2D0Kstar" };
+// HLTPreselKaons.PhysDesktop.InputLocations = { "Phys/SelectBd2D0Kstar" };
+
+// No VtxIsolationFilterCriterion:
+// HLTFilterBd2D0Kstar.MotherFilter.VtxIsolationFilterCriterion.NTracks = -1; // inactive for preselection
+
 //==============================================================================
 // Checking B0 -> (D*(2010)- -> (D~0 -> K+ pi-)  pi-) pi+ and cc
 //==============================================================================
@@ -79,6 +101,13 @@ EventSelector.Input   = {};
 // #include "$HLTSELECTIONSROOT/options/L0TDR-Bd2DstarPi.opts"
 
 // #include "$HLTSELCHECKERROOT/options/NTBd2DstarPi.opts"
+
+// Only MC truth (when including Truth.opts):
+// HLTDetachedPions.PhysDesktop.InputLocations = {"Phys/SelectBd2DstarPi"};
+// HLTPreselKaons.PhysDesktop.InputLocations = { "Phys/SelectBd2DstarPi"};
+
+// No VtxIsolationFilterCriterion:
+// HLTFilterBd2DstarPi.MotherFilter.VtxIsolationFilterCriterion.NTracks = -1; // inactive for preselection
 
 //==============================================================================
 // Checking B_s0 -> (D_s- -> K+ K- pi-) h+ and cc
@@ -90,6 +119,13 @@ EventSelector.Input   = {};
 
 // #include "$HLTSELCHECKERROOT/options/NTBs2DsH.opts"
 
+// Only MC truth (when including Truth.opts):
+// HLTDetachedPions.PhysDesktop.InputLocations = { "Phys/SelectBs2DsH"} ;
+// HLTPreselKaons.PhysDesktop.InputLocations = { "Phys/SelectBs2DsH" };
+
+// No VtxIsolationFilterCriterion:
+// HLTFilterBs2DsH.MotherFilter.VtxIsolationFilterCriterion.NTracks = -1; // inactive for preselection
+
 //==============================================================================
 // Checking B_s0 -> phi(1020) gamma
 //==============================================================================
@@ -97,6 +133,14 @@ EventSelector.Input   = {};
 // #include "$HLTSELECTIONSROOT/options/L0TDR-Bs2PhiGamma.opts"
 
 // #include "$HLTSELCHECKERROOT/options/NTBs2PhiGamma.opts"
+
+// Only MC truth (when including Truth.opts):
+// HLTDetachedPions.PhysDesktop.InputLocations = { "Phys/SelectBs2PhiGamma" } ;
+// HLTPreselKaons.PhysDesktop.InputLocations = { "Phys/SelectBs2PhiGamma" };
+// HLTPreselPhotons.PhysDesktop.InputLocations = { "Phys/SelectBs2PhiGamma" };
+
+// No VtxIsolationFilterCriterion:
+// HLTFilterBs2PhiGamma.MotherFilter.VtxIsolationFilterCriterion.NTracks = -1; // inactive for preselection
 
 //==============================================================================
 // Checking Hot J/Psi
@@ -108,6 +152,10 @@ EventSelector.Input   = {};
 
 // #include "$HLTSELCHECKERROOT/options/NTB2JpsiX.opts"
 
+// Only muons:
+// HLTDetachedPions.PhysDesktop.InputLocations = {};
+// HLTPreselKaons.PhysDesktop.InputLocations = { };
+
 //==============================================================================
 // Checking 
 //==============================================================================
@@ -115,6 +163,10 @@ EventSelector.Input   = {};
 // #include "$HLTSELECTIONSROOT/options/L0TDR-Bs2MuMu.opts"
 
 // #include "$HLTSELCHECKERROOT/options/NTB2MuMu.opts"
+
+// Only muons:
+// HLTDetachedPions.PhysDesktop.InputLocations = {};
+// HLTPreselKaons.PhysDesktop.InputLocations = { };
 
 //==============================================================================
 // Checking 
@@ -124,6 +176,10 @@ EventSelector.Input   = {};
 
 // #include "$HLTSELCHECKERROOT/options/NTBd2MuMuKstar.opts"
 
+// Only MC truth (when including Truth.opts, and all muons):
+// HLTDetachedPions.PhysDesktop.InputLocations = {"Phys/SelectBd2MuMuKstar"};
+// HLTPreselKaons.PhysDesktop.InputLocations = { "Phys/SelectBd2MuMuKstar"};
+
 //==============================================================================
 // Checking 
 //==============================================================================
@@ -132,6 +188,10 @@ EventSelector.Input   = {};
 
 // #include "$HLTSELCHECKERROOT/options/NTDstar.opts"
 
+// Only MC truth (when including Truth.opts, any D* to D0(hh) pi):
+// HLTDetachedPions.PhysDesktop.InputLocations = {"Phys/SelectDstar2Dpi"};
+// HLTPreselKaons.PhysDesktop.InputLocations = { "Phys/SelectDstar2Dpi"};
+
 //------------------------------------------------------------------------------
 ApplicationMgr.ExtSvc += { "NTupleSvc" };
 NTupleSvc.Output={"FILE1 DATAFILE='DVNtuples.root' TYP='ROOT' OPT='NEW'"};
@@ -139,9 +199,22 @@ NTupleSvc.OutputLevel = 3;
 //------------------------------------------------------------------------------ 
 
 MessageSvc.Format = "% F%60W%S%7W%R%T %0W%M";
-ApplicationMgr.EvtMax    = 1;
+ApplicationMgr.EvtMax    = 100;
 // ApplicationMgr.EvtMax    = -1;
 EventSelector.FirstEvent = 1; 
 EventSelector.PrintFreq  = 1;
 
-// #include "$HLTSELCHECKERROOT/options/NoCuts.opts"
+// #include "$HLTSELCHECKERROOT/options/NoCuts.opts" // when running only with MCTRUTH
+
+// For MB: do not run offline selections!!!
+                                                                                                                                                                                   
+#include "$HLTSELCHECKERROOT/options/Correlations.opts"
+CorrTrgHltGen.RequireGeneric = true; // set to true to get correlations only on Hlt generic triggered events
+                                                                                                                                                                                   
+// Check timing
+#include "$HLTSELCHECKERROOT/options/MeasureTimes.opts"
+MessageSvc.Format = "% F%50W%S%7W%R%T %0W%M";
+ToolSvc.SequencerTimerTool.OutputLevel = 3;// for timing statistics
+                                                                                                                                                                                   
+// Counters
+#include "$HLTSELCHECKERROOT/options/CheckHLTSelResults.opts"

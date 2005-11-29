@@ -18,7 +18,6 @@ CheckHLTBd2D0Kstar.Members ={ "TrgL0Filter", "PrintHeader/PassedL0",
                               "CheckSelResult/MergeOffBd2D02KpiKstar", "PrintHeader/PassedOffBd2D02KpiKstar",
                               "DecayChainNTuple/OffBd2D02KpiKstarTree", "PrintHeader/PassedOffBd2D02KpiKstarTree",
                               "CheckSelResult/MergeHLTBd2D0Kstar", "PrintHeader/PassedHLTBd2D0Kstar",
-                              "ResetOnOffline/HLTBd2D0KstarTreeSetOnline",
                               "DecayChainNTuple/HLTBd2D0KstarTree", "PrintHeader/PassedHLTBd2D0KstarTree"};
  
 PassedL0.OutputLevel = 3;
@@ -37,9 +36,6 @@ MergeHLTBd2D0Kstar.Algorithms = {"HLTFilterBd2D0Kstar"};
 
 MergeOffBd2D02KpiKstar.OutputLevel = 4;
 MergeHLTBd2D0Kstar.OutputLevel = 4;
-
-// Important !!!
-HLTBd2D0KstarTreeSetOnline.ResetToOnline = true;
 
 //------------------------------------------------------------------------------
 // Write Tree for Off selection
@@ -103,3 +99,4 @@ HLTBd2D0KstarTree.RequireTrigger = true;
 HLTBd2D0KstarTree.UseRichOnlinePID = false;
 HLTBd2D0KstarTree.OutputLevel = 3;
 //------------------------------------------------------------------------------
+HLTBd2D0KstarTree.Context = "HLT" ;
