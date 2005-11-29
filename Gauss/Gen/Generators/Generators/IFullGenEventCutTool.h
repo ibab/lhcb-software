@@ -1,4 +1,4 @@
-// $Id: IFullGenEventCutTool.h,v 1.1 2005-11-21 16:16:50 robbep Exp $
+// $Id: IFullGenEventCutTool.h,v 1.2 2005-11-29 15:45:01 robbep Exp $
 #ifndef GENERATORS_IFULLGENEVENTCUTTOOL_H 
 #define GENERATORS_IFULLGENEVENTCUTTOOL_H 1
 
@@ -6,9 +6,7 @@
 // from Gaudi
 #include "GaudiKernel/IAlgTool.h"
 
-namespace HepMC {
-  class GenEvent ;
-}  
+class HepMCEvent ;
 class HardInfo ;
 
 /** @class IFullGenEventCutTool IFullGenEventCutTool.h 
