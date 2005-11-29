@@ -1,4 +1,4 @@
-// $Id: Signal.cpp,v 1.4 2005-11-21 16:14:25 robbep Exp $
+// $Id: Signal.cpp,v 1.5 2005-11-29 15:53:42 robbep Exp $
 // Include files 
 
 // local
@@ -127,38 +127,53 @@ StatusCode Signal::initialize( ) {
   return sc ;
 }
 
-
 //=============================================================================
 // Print the counters
 //=============================================================================
 void Signal::printCounters( ) const {
-  info() << "Number of events before the cut = " << m_nEventsBeforeCut 
-         << endmsg;
-  info() << "Number of events after the cut = "  << m_nEventsAfterCut  
-         << endmsg;
-  info() << "Number of z-inverted events  = " << m_nInvertedEvents << endmsg ;
-  info() << "Number of particles before generator level cut = " 
-         << m_nParticlesBeforeCut << endmsg ;
-  info() << "Number of anti-particles before generator level cut = "
-         << m_nAntiParticlesBeforeCut << endmsg ;
-  info() << "Number of forward particles after generator level cut = "
-         << m_nParticlesAfterCut << endmsg ;
-  info() << "Number of forward anti-particles after generator level cut = " 
-         << m_nAntiParticlesAfterCut << endmsg ;
-  double eff_part = ( ( double ) m_nParticlesAfterCut ) / 
-    ( (double) m_nParticlesBeforeCut ) ;
-  double eff_antipart = ( ( double ) m_nAntiParticlesAfterCut ) /
-    ( (double) m_nAntiParticlesBeforeCut ) ;
-  double erreff_part = sqrt( m_nParticlesAfterCut * ( 1. - eff_part ) ) /
-    ( (double) m_nParticlesBeforeCut ) ;
-  double erreff_antipart = 
-    sqrt( m_nAntiParticlesAfterCut * ( 1. - eff_antipart ) ) /
-    ( (double) m_nAntiParticlesBeforeCut ) ;
-  info() << format( " Efficiency of the cut for particles = %.3g +/- %.3g" , 
-                    eff_part , erreff_part ) << endmsg ;
-  info() << 
-    format( " Efficiency of the cut for antiparticles = %.3g +/- %.3g" , 
-            eff_antipart , erreff_antipart ) << endmsg ;
+  info() << "*************   Signal counters   ****************" << std::endl ;
+
+  if ( 0 != m_nEventsAfterCut ) {
+    info() << "Number of events before the cut                  : " 
+           << m_nEventsBeforeCut << std::endl ;
+    info() << "Number of events after the cut                   : "  
+           << m_nEventsAfterCut << std::endl ;
+    info() << "Efficiency of the generator level cut            : "
+           << format("%.5g +/- %.5g" , 
+                     fraction( m_nEventsAfterCut , m_nEventsBeforeCut ) , 
+                     err_fraction( m_nEventsAfterCut , m_nEventsBeforeCut ) ) 
+           << std::endl ;
+  }
+
+  info() << "Number of z-inverted events                      : " 
+         << m_nInvertedEvents << std::endl ;
+
+  if ( 0 != m_nParticlesAfterCut ) {  
+    info() << "Number of particles before generator level cut   : " 
+           << m_nParticlesBeforeCut << std::endl ;
+    info() << "N. of forward particles after generator lvl cut  : "
+           << m_nParticlesAfterCut << std::endl ;
+    info() << "Efficiency of the cut for particles              : "
+           << format( "%.5g +/- %.5g" , 
+                      fraction( m_nParticlesAfterCut , m_nParticlesBeforeCut),
+                      err_fraction( m_nParticlesAfterCut , 
+                                    m_nParticlesBeforeCut ) ) << std::endl ;
+  }
+
+  if ( 0 != m_nAntiParticlesAfterCut ) {
+    info() << "Number of anti-part. before generator level cut  : "
+           << m_nAntiParticlesBeforeCut << std::endl ;
+    info() << "N. of forward anti-part. after generator lvl cut : " 
+           << m_nAntiParticlesAfterCut << std::endl ;
+    info() << "Efficiency of the cut for antiparticles          : "
+           << format( "%.5g +/- %.5g" , 
+                      fraction( m_nAntiParticlesAfterCut , 
+                                m_nAntiParticlesBeforeCut ) , 
+                      err_fraction( m_nAntiParticlesAfterCut , 
+                                    m_nAntiParticlesBeforeCut ) ) 
+           << std::endl ;
+  }
+  info() << endmsg ;
 }
 
 //=============================================================================
