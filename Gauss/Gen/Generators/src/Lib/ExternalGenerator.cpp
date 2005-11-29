@@ -1,4 +1,4 @@
-// $Id: ExternalGenerator.cpp,v 1.4 2005-11-21 16:13:52 robbep Exp $
+// $Id: ExternalGenerator.cpp,v 1.5 2005-11-29 15:44:11 robbep Exp $
 // Include files 
 
 // local
@@ -54,14 +54,15 @@ StatusCode ExternalGenerator::initialize( ) {
 
   // retrieve the particle property service
   IParticlePropertySvc * ppSvc = 
-    svc< IParticlePropertySvc >( "ParticlePropertySvc" ) ;
-  
-  // obtain the Production Tool
-  m_productionTool = tool< IProductionTool >( m_productionToolName , this ) ;
+    svc< IParticlePropertySvc >( "ParticlePropertySvc" ) ;  
 
-  // obtain the Decay Tool
+  // obtain the Decay Tool 
+  // (ATTENTION: it has to be initialized before the production tool)
   if ( "" != m_decayToolName ) 
     m_decayTool = tool< IDecayTool >( m_decayToolName ) ;
+
+  // obtain the Production Tool
+  m_productionTool = tool< IProductionTool >( m_productionToolName , this ) ;
 
   // update the particle properties of the production tool
   IParticlePropertySvc::const_iterator iter ;
