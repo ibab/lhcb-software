@@ -1,4 +1,4 @@
-// $Id: UpdateManagerSvc_Item.icpp,v 1.5 2005-11-28 17:56:54 marcocle Exp $
+// $Id: UpdateManagerSvc_Item.icpp,v 1.6 2005-11-29 08:52:48 marcocle Exp $
 #ifndef UPDATEMANAGERSVC_ITEM_ICPP
 #define UPDATEMANAGERSVC_ITEM_ICPP 1
 
@@ -11,7 +11,8 @@ struct Item {
   // ------ Item Cons & Dest
   
   /// Constructor for an item representing an object in the data store.
-  Item(const std::string &objPath):since(1),until(-1),path(objPath),db_path(),vdo(NULL),ptr(NULL),updateLock(false) {}
+  Item(const std::string &objPath):since(1),until(-1),path(objPath),db_path(),
+                                   vdo(NULL),ptr(NULL),updateLock(false) {}
 
   /// Constructor for an item representing a generic object.
   Item(BaseObjectMemberFunction *mf): since(1),until(-1),vdo(mf->castToValidDataObject()),
@@ -118,7 +119,7 @@ struct Item {
   std::string      path;
   /// Path of the persistent version of the object inside the Conditions DataBase.
   std::string      db_path;
-  /// Pointer to the ValidDataObject interface of the represented object..
+  /// Pointer to the ValidDataObject interface of the represented object.
   ValidDataObject  *vdo;
   /// Void pointer to the represented object, obtained via dynamic_cast (used to unically identify the item)
   void             *ptr;
@@ -148,13 +149,12 @@ struct Item {
     resetIOV();
     StatusCode sc;
     // start real update
-    if (vdo == NULL && !path.empty()) { // I do not have a VDO ptr but a path: load it
+    if (ptr == NULL && vdo == NULL && !path.empty()) { // I do not have a VDO ptr (or a void*) but a path: load it
       //std::cout << "UMS:    retrieve from data provider" << std::endl;
       DataObject  *pObj;
       sc = dp->retrieveObject(path,pObj);
       if (!sc.isSuccess()) return sc;
       vdo = dynamic_cast<ValidDataObject*>(pObj);
-      if (!vdo) return StatusCode::FAILURE;
       ptr = dynamic_cast<void*>(pObj);
       // try to get the path to CondDB folder
       IOpaqueAddress *pAddr = pObj->registry()->address();
