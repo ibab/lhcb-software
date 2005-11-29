@@ -1,4 +1,4 @@
-// $Id: ISampleGenerationTool.h,v 1.1 2005-10-03 09:52:12 robbep Exp $
+// $Id: ISampleGenerationTool.h,v 1.2 2005-11-29 15:45:56 robbep Exp $
 #ifndef GENERATORS_ISAMPLEGENERATIONTOOL_H 
 #define GENERATORS_ISAMPLEGENERATIONTOOL_H 1
 
@@ -22,7 +22,7 @@ static const InterfaceID IID_ISampleGenerationTool( "ISampleGenerationTool" ,
                                                     1 , 0 ) ;
 
 class ISampleGenerationTool : virtual public IAlgTool {
-public:
+ public:
   typedef std::vector< HepMCEvent * > EventVector ;
   typedef std::vector< HardInfo * >   HardVector  ;
 
