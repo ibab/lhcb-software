@@ -1,4 +1,4 @@
-// $Id: PythiaProduction.h,v 1.4 2005-11-17 16:00:08 robbep Exp $
+// $Id: PythiaProduction.h,v 1.5 2005-11-29 16:04:31 robbep Exp $
 #ifndef LBPYTHIA_PYTHIAPRODUCTION_H 
 #define LBPYTHIA_PYTHIAPRODUCTION_H 1
 
@@ -71,6 +71,7 @@ private:
   std::string m_target  ;  ///< TARGET string
   double m_win          ;  ///< WIN
 
+  CommandVector m_defaultSettings ;
 	CommandVector m_commandVector ; ///< Commands to setup pythia
 
   int m_eventListingLevel ;

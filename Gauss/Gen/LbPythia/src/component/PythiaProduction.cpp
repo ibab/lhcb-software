@@ -1,4 +1,4 @@
-// $Id: PythiaProduction.cpp,v 1.4 2005-11-17 16:00:08 robbep Exp $
+// $Id: PythiaProduction.cpp,v 1.5 2005-11-29 16:04:31 robbep Exp $
 // Include files 
 
 // local
@@ -54,6 +54,46 @@ PythiaProduction::PythiaProduction( const std::string& type,
     declareInterface< IProductionTool >( this ) ;
     declareProperty( "Commands" , m_commandVector ) ;
     declareProperty( "BeamToolName" , m_beamToolName = "CollidingBeams" ) ;
+    // Set the default settings for Pythia here:
+    m_defaultSettings.clear() ;
+    m_defaultSettings.push_back( "pysubs msel 0" ) ;
+    m_defaultSettings.push_back( "pysubs msub 11 1" ) ;
+    m_defaultSettings.push_back( "pysubs msub 12 1" ) ;
+    m_defaultSettings.push_back( "pysubs msub 13 1" ) ;
+    m_defaultSettings.push_back( "pysubs msub 28 1" ) ;
+    m_defaultSettings.push_back( "pysubs msub 53 1" ) ;
+    m_defaultSettings.push_back( "pysubs msub 68 1" ) ;
+    m_defaultSettings.push_back( "pysubs msub 91 1" ) ;
+    m_defaultSettings.push_back( "pysubs msub 92 1" ) ;
+    m_defaultSettings.push_back( "pysubs msub 93 1" ) ;
+    m_defaultSettings.push_back( "pysubs msub 94 1" ) ;
+    m_defaultSettings.push_back( "pysubs msub 95 1" ) ;
+    m_defaultSettings.push_back( "pysubs msub 86 1" ) ;
+    m_defaultSettings.push_back( "pysubs msub 87 1" ) ;
+    m_defaultSettings.push_back( "pysubs msub 88 1" ) ;
+    m_defaultSettings.push_back( "pysubs msub 89 1" ) ;
+    m_defaultSettings.push_back( "pysubs msub 106 1" ) ;
+    m_defaultSettings.push_back( "pypars mstp 2 2" ) ;
+    m_defaultSettings.push_back( "pypars mstp 33 3" ) ;
+    m_defaultSettings.push_back( "pypars mstp 128 2" ) ;
+    m_defaultSettings.push_back( "pypars mstp 82 3" ) ;
+    m_defaultSettings.push_back( "pypars mstp 52 2" ) ;
+    m_defaultSettings.push_back( "pypars mstp 51 4032" ) ;
+    m_defaultSettings.push_back( "pypars parp 67 1.0" ) ;
+    m_defaultSettings.push_back( "pypars parp 82 3.41" ) ;
+    m_defaultSettings.push_back( "pypars parp 89 14000" ) ;
+    m_defaultSettings.push_back( "pypars parp 90 0.162" ) ;
+    m_defaultSettings.push_back( "pypars parp 85 0.33" ) ;
+    m_defaultSettings.push_back( "pypars parp 86 0.66" ) ;
+    m_defaultSettings.push_back( "pypars parp 91 1.0" ) ;
+    m_defaultSettings.push_back( "pydat1 parj 13 0.750" ) ;
+    m_defaultSettings.push_back( "pydat1 parj 14 0.162" ) ;
+    m_defaultSettings.push_back( "pydat1 parj 15 0.018" ) ;
+    m_defaultSettings.push_back( "pydat1 parj 16 0.054" ) ;
+    m_defaultSettings.push_back( "pydat1 parj 17 0.090" ) ;
+    m_defaultSettings.push_back( "pydat1 parj 13 0.750" ) ;
+    m_defaultSettings.push_back( "pydat1 mstj 26 0" ) ;
+    m_defaultSettings.push_back( "pydat1 parj 33 0.4" ) ;
 }
 
 //=============================================================================
@@ -113,6 +153,8 @@ StatusCode PythiaProduction::initialize( ) {
   
   Pythia::pydat3().mdme( 4178 , 1 ) = -1 ; // like in egpyinit  
 
+  // Set default Pythia settings
+  sc = parsePythiaCommands( m_defaultSettings ) ;
   // read Pythia command vector from job options
   sc = parsePythiaCommands( m_commandVector ) ;
   if ( ! sc.isSuccess( ) ) 
@@ -197,10 +239,10 @@ void PythiaProduction::updateParticleProperties( const ParticleProperty *
     int kc = Pythia::PyComp( pythiaId ) ;
     if ( kc > 0 ) {
       if ( 0 == thePP -> lifetime() ) pwidth = 0. ;
-      else pwidth = ( hbarc / ( thePP -> lifetime() * c_light ) ) / GeV ;
+      else pwidth = ( hbarc / ( thePP -> lifetime() * c_light ) ) ;
       if ( pwidth < ( 1.5e-6 * GeV ) ) pwidth = 0. ;
 
-      lifetime =  thePP -> lifetime() * c_light / mm ;
+      lifetime =  thePP -> lifetime() * c_light ;
       if ( ( lifetime <= 1.e-4 * mm ) || ( lifetime >= 1.e16 * mm ) ) 
         lifetime = 0. ;
       
@@ -209,16 +251,20 @@ void PythiaProduction::updateParticleProperties( const ParticleProperty *
       verbose() << "Mass (GeV) from " << Pythia::pydat2().pmas( kc , 1 ) 
                 << " to " << thePP -> mass() / GeV << endmsg ;
       verbose() << "Width (GeV) from " << Pythia::pydat2().pmas( kc , 2 ) 
-                << " to " << pwidth << endmsg ;
+                << " to " << pwidth / GeV << endmsg ;
       verbose() << "MaxWidth (GeV) from " << Pythia::pydat2().pmas( kc , 3 ) 
                 << " to " << thePP -> maxWidth() / GeV << endmsg ;
       verbose() << "Lifetime from " << Pythia::pydat2().pmas( kc , 4 ) 
-                << " to " << lifetime << endmsg ;
+                << " to " << lifetime / mm << endmsg ;
       
       Pythia::pydat2().pmas( kc , 1 ) = thePP -> mass() / GeV ;
-      Pythia::pydat2().pmas( kc , 2 ) = pwidth ;
-      Pythia::pydat2().pmas( kc , 3 ) = thePP -> maxWidth() / GeV ;
-      Pythia::pydat2().pmas( kc , 4 ) = lifetime ;
+      // For Higgs, top, Z and W: update only masses
+      if ( ( 6 != pythiaId ) && ( 23 != pythiaId ) && ( 24 != pythiaId ) 
+           && ( 25 != pythiaId ) ) {
+        Pythia::pydat2().pmas( kc , 2 ) = pwidth / GeV ;
+        Pythia::pydat2().pmas( kc , 3 ) = thePP -> maxWidth() / GeV ;
+        Pythia::pydat2().pmas( kc , 4 ) = lifetime / mm ;
+      }
     }
   }
 }
