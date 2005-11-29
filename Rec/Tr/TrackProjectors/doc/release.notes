@@ -4,17 +4,18 @@
 ! Purpose     : Package for tracking projectors
 !-----------------------------------------------------------------------------
 
+!====================== TrackProjectors v1r4 2005-11-29 ======================
 ! 2005-11-21 - Jeroen van Tilburg
  - Required changes due to changes in VeloPhiMeasurement. Now using method
    resolution().
 
 ! 2005-10-28 - Jose A. Hernando
  - RayIntersector
-  A class that computes the distance between two straight lines (rays)  
-and the derivation of that distance.
+   A class that computes the distance between two straight lines (rays)  
+   and the derivation of that distance.
  - TrackOTRayProjector
- Computing the OT projection using the Ray Intersector
-  (first version)
+   Computing the OT projection using the Ray Intersector
+   (first version)
 
 !====================== TrackProjectors v1r3 2005-10-07 ======================
 ! 2005-09-29 - Eduardo Rodrigues
