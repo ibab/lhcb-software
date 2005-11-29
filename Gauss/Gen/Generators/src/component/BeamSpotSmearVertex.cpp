@@ -1,4 +1,4 @@
-// $Id: BeamSpotSmearVertex.cpp,v 1.1 2005-10-03 10:21:04 robbep Exp $
+// $Id: BeamSpotSmearVertex.cpp,v 1.2 2005-11-29 15:54:19 robbep Exp $
 // Include files 
 
 // local
@@ -78,7 +78,6 @@ StatusCode BeamSpotSmearVertex::initialize( ) {
 // Smearing function
 //=============================================================================
 StatusCode BeamSpotSmearVertex::smearVertex( HepMCEvent * theEvent ) {
-  HepMCEvents::iterator it ;
   double dx , dy , dz ;
   
   do { dx = m_gaussDist( ) ; } while ( fabs( dx ) > m_xcut ) ;
