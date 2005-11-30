@@ -1,11 +1,14 @@
 ! =============================================================================
-! $Id: release.notes,v 1.229 2005-11-25 16:20:23 jpalac Exp $ 
+! $Id: release.notes,v 1.230 2005-11-30 07:15:51 cattanem Exp $ 
 ! =============================================================================
 ! package DetDesc
 ! package manager : Marco Clemencic, Juan Palacios
 ! =============================================================================
 
-!======================== DetDesc v15r6 2005-11-25 ========================
+!======================== DetDesc v15r6 2005-11-30 ========================
+! 2005-11-29 - Marco Clemencic
+ - Bug fix in UpdateManagerSvc
+
 ! 2005-11-25 - Juan Palacios
  - method sensitiveVolumeID(const HepPoint3D& globalPos ) const now looks 
    recursively for the last daughter detector element in the hierarchy to
