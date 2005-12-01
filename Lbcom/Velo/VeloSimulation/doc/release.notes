@@ -1,0 +1,12 @@
+!-----------------------------------------------------------------------------
+! Package     : Velo/VeloSimulation
+! Responsible : Tomasz Szumlak
+! Purpose     : 
+!-----------------------------------------------------------------------------
+
+!===================== VeloSimulation v1r0 2005-02-10 =====================
+! 2005-02-10 - Tomasz Szumlak & Chris Parkes
+ - Newly released package containing VeloSim algorithm previously
+   in VeloAlgorithms
+
+

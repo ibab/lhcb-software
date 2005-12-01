@@ -1,0 +1,39 @@
+#============================================================================
+# Created    : 2005-10-17
+# Maintainer : Chris Parkes & Tomasz Szumlak
+#
+# Documentation on the requirement file can be found at
+# http://cern.ch/lhcb-comp/Support/html/new_structure.pdf
+#============================================================================
+package           VeloSimulation
+version           v1r0
+
+#============================================================================
+# This template is an example for a standard Algorithm package
+#
+# Structure, i.e. directories to process. 
+#============================================================================
+branches          cmt doc src options
+include_path      none
+
+#============================================================================
+# Used packages. Specify the version, * at the end specifies 'any revision'
+#    Put as many lines as needed, with all packages, without the '#'
+#============================================================================
+# use   Package      v1r*    Hat
+use  VeloEvent     v13r* Event
+use  DAQEvent      v*    Event
+use  VeloDet       v9r*  Det
+use  VeloKernel    v1r*  Velo -no_auto_imports
+use  Relations     v*    Kernel
+use  GSL 	   v*    LCG_Interfaces
+use VeloAlgorithms v4r*  Velo -no_auto_imports
+
+#============================================================================
+# Component library building rule
+#============================================================================
+library          VeloSimulation    ../src/*.cpp -import=AIDA -import=VeloKernel -import=VeloAlgorithms
+#============================================================================
+# define component library link options
+#============================================================================
+apply_pattern    component_library library=VeloSimulation
