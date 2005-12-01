@@ -6,7 +6,7 @@
 # http://cern.ch/lhcb-comp/Support/html/new_structure.pdf
 #============================================================================
 package           TrackIdealPR
-version           v1r4
+version           v1r5
 
 #============================================================================
 # This template is an example for a standard Algorithm package
@@ -28,6 +28,8 @@ use   TrackFitEvent   v* Tr
 use   OTAssociators   v* OT
 use   ITAssociators   v* IT
 use   VeloAssociators v* Velo
+
+use   STTools         v* IT
 
 use   TrackInterfaces v* Tr
 use   TrackMCTools    v* Tr

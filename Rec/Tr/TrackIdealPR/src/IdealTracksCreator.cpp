@@ -101,6 +101,9 @@ StatusCode IdealTracksCreator::initialize()
    m_velo      = getDet<DeVelo>( m_veloPath );
    debug() << "Geometry read in." << endreq;
 
+   // Retrieve the STClusterPosition tool
+   m_stPositionTool = tool<ISTClusterPosition>( "STClusterPosition" );
+
   // Retrieve the TrackCriteriaSelector tool
    m_trackSelector = tool<ITrackCriteriaSelector>( "TrackCriteriaSelector",
                                                    "select", this );
@@ -417,7 +420,8 @@ StatusCode IdealTracksCreator::addITClusters( MCParticle* mcPart,
   ITCluster2MCParticleAsct::FromIterator iClus;
   for ( iClus = range.begin(); iClus != range.end(); ++iClus) {
     ITCluster* aCluster = iClus->to();
-    ITMeasurement meas = ITMeasurement( *aCluster, *m_itTracker );
+    ITMeasurement meas =
+      ITMeasurement( *aCluster, *m_itTracker, *m_stPositionTool );
     track -> addToMeasurements( meas );
     ++nITMeas;
   }

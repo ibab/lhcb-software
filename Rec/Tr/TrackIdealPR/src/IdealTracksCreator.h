@@ -9,6 +9,9 @@
 // from TrackEvent
 #include "Event/Track.h"
 
+// from STTools
+#include "STTools/ISTClusterPosition.h"
+
 // from XxxAssociators
 #include "OTAssociators/OTTime2MCHitAsct.h"
 #include "ITAssociators/ITCluster2MCParticleAsct.h"
@@ -103,6 +106,7 @@ private:
   std::string   m_veloPath;        ///< Name of the Velo XML geom path
 
   // Interfaces
+  ISTClusterPosition*     m_stPositionTool;     ///< ST cluster position tool
   ITrackCriteriaSelector* m_trackSelector;      ///< Track selection tool
   IIdealStateCreator*     m_stateCreator;       ///< Create 'seed' state at last measurement
 
