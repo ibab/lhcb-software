@@ -4,6 +4,11 @@
 ! Purpose     : Package for tracking tools not accessing MC information
 !-----------------------------------------------------------------------------
 
+! 2005-12-01 - Edwin Bos, Jeroen van Tilburg, Eduardo Rodrigues
+ - First version of the TrajPoca tool:
+   a "TrajPoca" tool calculates the point of closest approach
+   between two trajectories
+
 !======================== TrackTools v1r3 2005-11-29 =========================
 ! 2005-11-08 - Eduardo Rodrigues
  - it++ replaced by ++it
