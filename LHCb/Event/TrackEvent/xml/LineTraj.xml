@@ -18,12 +18,22 @@
       <import name='Event/Trajectory' />
 
       <constructor
-        desc = 'Constructor from a point and a first derivative vector'>
+        desc = 'Constructor from a (middle) point and a first derivative vector'>
         <arg type = 'const HepPoint3D' name = 'middle' />
         <arg type = 'const HepVector3D' name = 'deriv' />
         <code>
   m_pos        = middle;
   m_unitSlopes = deriv.unit();
+        </code>
+      </constructor>
+
+      <constructor
+        desc = 'Constructor from a beginning and an end point'>
+        <arg type = 'const HepPoint3D' name = 'begPoint' />
+        <arg type = 'const HepPoint3D' name = 'endPoint' />
+        <code>
+  m_pos        = ( endPoint + begPoint ) / 2.;
+  m_unitSlopes = ( endPoint - begPoint ).unit();
         </code>
       </constructor>
 

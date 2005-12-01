@@ -4,6 +4,9 @@
 ! Purpose     : Package for the tracking event model classes
 !-----------------------------------------------------------------------------
 
+! 2005-11-30 - Eduardo Rodrigues
+ - added constructor in LineTraj class from beginning and end point
+
 ! 2005-11-30 - Edwin Bos, Jeroen van Tilburg, Eduardo Rodrigues
  - First versions of basic trajectory classes:
    - Trajectory: base class
