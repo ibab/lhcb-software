@@ -4,6 +4,9 @@
 ! Purpose     : Implementation of the Linker package, to associate objects
 !-----------------------------------------------------------------------------
 
+! 2005-11-21 - Olivier Callot
+ - Add methods front() and Back() to LinkerRange as suggested by Matt.
+
 !====================== LinkerEvent v1r9 2005-11-11 ==========================
 ! 2005-11-11 - Marco Cattaneo
  - Fix for platform dependent dictionaries with Gaudi v17r2

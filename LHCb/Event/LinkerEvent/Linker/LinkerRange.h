@@ -1,4 +1,4 @@
-// $Id: LinkerRange.h,v 1.2 2005-03-22 12:23:11 ocallot Exp $
+// $Id: LinkerRange.h,v 1.3 2005-12-01 08:35:21 ocallot Exp $
 #ifndef LINKER_LINKERRANGE_H 
 #define LINKER_LINKERRANGE_H 1
 
@@ -55,6 +55,14 @@ public:
   /** clear the range, remove all entries
    */
   void clear()           { m_entries.clear(); }
+
+  /** returns a reference to the first element
+   */
+  LinkerEntry<SOURCE,TARGET>& front() const { return m_entries.front(); }
+
+  /** returns a reference to the last element
+   */
+  LinkerEntry<SOURCE,TARGET>& back() const { return m_entries.back(); }
 
 protected:
 
