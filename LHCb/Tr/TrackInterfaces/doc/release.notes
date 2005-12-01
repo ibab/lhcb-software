@@ -4,6 +4,11 @@
 ! Purpose     : package for tracking tools interfaces
 !-----------------------------------------------------------------------------
 
+! 2005-12-01 - Edwin Bos, Jeroen van Tilburg, Eduardo Rodrigues
+ - First version of the ITrajPoca interface:
+   a "TrajPoca" tool calculates the point of closest approach
+   between two trajectories
+
 !====================== TrackInterfaces v1r4 2005-11-29 ======================
 ! 2005-11-21 - Jeroen van Tilburg
  - ITrackFitter: removed the fitUpstream and fitDownstream methods and
