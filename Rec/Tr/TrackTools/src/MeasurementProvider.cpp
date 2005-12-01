@@ -1,4 +1,4 @@
-// $Id: MeasurementProvider.cpp,v 1.9 2005-11-29 10:24:52 erodrigu Exp $
+// $Id: MeasurementProvider.cpp,v 1.10 2005-12-01 18:10:26 erodrigu Exp $
 // Include files 
 // -------------
 // from Gaudi
@@ -63,6 +63,9 @@ StatusCode MeasurementProvider::initialize() {
   m_itDet   = getDet<DeSTDetector>( m_itDetPath );
   
   m_veloDet = getDet<DeVelo>( m_veloDetPath );
+
+  // Retrieve the STClusterPosition tool
+  m_stPositionTool = tool<ISTClusterPosition>( "STClusterPosition" );
   
   return StatusCode::SUCCESS;
 }
@@ -140,7 +143,7 @@ Measurement* MeasurementProvider::measurement ( const LHCbID& id,
     ITChannelID sid = id.stID();
     ITCluster* clus = m_itClusters->object(sid);
     if (clus != NULL)
-      meas = new ITMeasurement(*clus,*m_itDet);
+      meas = new ITMeasurement( *clus, *m_itDet, *m_stPositionTool );
     else {
       debug() << "ITCluster is NULL!" << endreq;
     }

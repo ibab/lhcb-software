@@ -1,4 +1,4 @@
-// $Id: MeasurementProvider.h,v 1.3 2005-09-20 13:59:29 hernando Exp $
+// $Id: MeasurementProvider.h,v 1.4 2005-12-01 18:10:26 erodrigu Exp $
 #ifndef TRACKTOOLS_MEASUREMENTPROVIDER_H 
 #define TRACKTOOLS_MEASUREMENTPROVIDER_H 1
 
@@ -9,6 +9,9 @@
 
 // from LHCbKernel
 #include "Kernel/LHCbID.h"
+
+// from STTools
+#include "STTools/ISTClusterPosition.h"
 
 // from TrackInterfaces
 #include "TrackInterfaces/IMeasurementProvider.h"            // Interface
@@ -56,6 +59,8 @@ public:
                             double par1 = 999.);
 
 protected:
+  // Interfaces
+  ISTClusterPosition* m_stPositionTool;     ///< ST cluster position tool
 
   // Geometry information
   DeOTDetector* m_otDet;

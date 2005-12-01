@@ -4,6 +4,9 @@
 ! Purpose     : Package for tracking tools not accessing MC information
 !-----------------------------------------------------------------------------
 
+! 2005-12-01 - Eduardo Rodrigues
+ - propagation of changes in ITMeasurement class
+
 ! 2005-12-01 - Edwin Bos, Jeroen van Tilburg, Eduardo Rodrigues
  - First version of the TrajPoca tool:
    a "TrajPoca" tool calculates the point of closest approach
