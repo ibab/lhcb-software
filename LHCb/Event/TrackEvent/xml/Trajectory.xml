@@ -35,7 +35,7 @@
       <method
         type    = 'const HepMatrix'
         name    = 'derivative'
-        desc    = 'Retrieve the derivative of the parabolic approximation to the Trajectory'
+        desc    = 'Retrieve the derivative of the parabolic approximation to the Trajectory with respect to the State parameters'
         const   = 'TRUE'
         virtual = 'TRUE'>
         <arg type = 'const double' name='arclength' />

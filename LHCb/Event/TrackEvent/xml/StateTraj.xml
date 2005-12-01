@@ -73,16 +73,16 @@
         <code>
   // TODO: check, clean-up, check units!, ...
   double kappa = 0.3 * GeV / ( c_light * tesla * meter );
-  dp  = m_unitSlopes;
-  ddp = 0.3 * m_qOverP * ( m_unitSlopes.cross(m_bField) );
-  p   = m_pos + arclength * ( m_unitSlopes + 0.5 * arclength * ddp );
+  ddp = kappa * m_qOverP * ( m_unitSlopes.cross(m_bField) );
+  dp  = m_unitSlopes + arclength * ddp;
+  p   = m_pos + arclength * ( dp + 0.5 * arclength * ddp );
 	</code>
       </method>
 
       <method
         type    = 'const HepMatrix'
         name    = 'derivative'
-        desc    = 'Retrieve the derivative of the parabolic approximation to the Trajectory'
+        desc    = 'Retrieve the derivative of the parabolic approximation to the Trajectory with respect to the State parameters'
         const   = 'TRUE'
         virtual = 'TRUE'>
         <arg type = 'const double' name='arclength' />
@@ -96,7 +96,7 @@
   double vxyz  = vx * vy * vz;
   double arcvx = 1.0 - vx * vx;
   double arcvy = 1.0 - vy * vy;
-  double C     = 0.5 * arclength * arclength * 0.3 * m_qOverP;
+  double C     = 0.5 * arclength * arclength * kappa * m_qOverP;
   double cvz   = C * vz;
   HepVector3D crossB = m_unitSlopes.cross(m_bField);
 

@@ -22,7 +22,7 @@
         <arg type = 'const HepPoint3D' name = 'middle' />
         <arg type = 'const HepVector3D' name = 'deriv' />
         <code>
-  m_pos    = middle;
+  m_pos        = middle;
   m_unitSlopes = deriv.unit();
         </code>
       </constructor>
@@ -61,7 +61,7 @@
       <method
         type    = 'const HepMatrix'
         name    = 'derivative'
-        desc    = 'Retrieve the derivative of the parabolic approximation to the Trajectory'
+        desc    = 'Retrieve the derivative of the parabolic approximation to the Trajectory with respect to the State parameters'
         const   = 'TRUE'
         virtual = 'TRUE'>
         <arg type='const double' name='arclength' />
