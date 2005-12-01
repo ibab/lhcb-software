@@ -44,14 +44,14 @@ HltDecision.MakeCorrelations = true ;
 // EventSelector.Input   = {};
 #include "$HLTSELECTIONSROOT/options/L0TDR-Bs2JpsiPhi.opts"
 
-ApplicationMgr.EvtMax    = -1 ;
+ApplicationMgr.EvtMax    = 1000 ;
 EventSelector.FirstEvent = 1 ;
 
 MessageSvc.Format = "% F%50W%S%7W%R%T %0W%M";
 ChronoStatSvc.ChronoPrintLevel = 4 ; // forces printout even with 4
 
-ApplicationMgr.HistogramPersistency = "HBOOK";
-HistogramPersistencySvc.OutputFile = "test.hbook"; 
+ApplicationMgr.HistogramPersistency = "ROOT";
+HistogramPersistencySvc.OutputFile = "test.root"; 
 
 MessageSvc.OutputLevel = 3 ;
 ToolSvc.OutputLevel    = 4;
