@@ -18,8 +18,8 @@ PassedL0Trigger.OutputLevel = 3;
 PassedL1Trigger.OutputLevel = 3;
 
 PassedHltGenericTrigger.OutputLevel = 3;
-HltGenericFilterTrigger.RequireHLT = false;
-HltGenericFilterTrigger.RequireGeneric = true;  
+HltGenericTriggerFilter.RequireHLT = false;
+HltGenericTriggerFilter.RequireGeneric = true;  
 
 HltTriggerFilter.RequireHLT = true;
 PassedHltTrigger.OutputLevel = 3;

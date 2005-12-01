@@ -48,6 +48,7 @@ HLTFilterBs2PhiGamma.MinPt = 0.*MeV;
 HLTFilterDstar.MinPt = 0*MeV ;
 HLTSharedD02KH.MinPt = 0.*MeV;
 HLTLooseD02PiPi.MinPt = 0.*MeV;
+HLTSharedKstar.MinPt = 0. *MeV;
 
 // MinMomentum
 // nothing

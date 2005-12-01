@@ -198,6 +198,7 @@ NTupleSvc.Output={"FILE1 DATAFILE='DVNtuples.root' TYP='ROOT' OPT='NEW'"};
 NTupleSvc.OutputLevel = 3;
 //------------------------------------------------------------------------------ 
 
+//------------------------------------------------------------------------------ 
 MessageSvc.Format = "% F%60W%S%7W%R%T %0W%M";
 ApplicationMgr.EvtMax    = 100;
 // ApplicationMgr.EvtMax    = -1;
@@ -205,16 +206,49 @@ EventSelector.FirstEvent = 1;
 EventSelector.PrintFreq  = 1;
 
 // #include "$HLTSELCHECKERROOT/options/NoCuts.opts" // when running only with MCTRUTH
-
 // For MB: do not run offline selections!!!
-                                                                                                                                                                                   
+//------------------------------------------------------------------------------ 
+
+//------------------------------------------------------------------------------ 
 #include "$HLTSELCHECKERROOT/options/Correlations.opts"
 CorrTrgHltGen.RequireGeneric = true; // set to true to get correlations only on Hlt generic triggered events
-                                                                                                                                                                                   
+//------------------------------------------------------------------------------ 
+
+//------------------------------------------------------------------------------ 
 // Check timing
 #include "$HLTSELCHECKERROOT/options/MeasureTimes.opts"
 MessageSvc.Format = "% F%50W%S%7W%R%T %0W%M";
 ToolSvc.SequencerTimerTool.OutputLevel = 3;// for timing statistics
-                                                                                                                                                                                   
+//------------------------------------------------------------------------------ 
+
+//------------------------------------------------------------------------------ 
 // Counters
 #include "$HLTSELCHECKERROOT/options/CheckHLTSelResults.opts"
+//------------------------------------------------------------------------------ 
+
+//------------------------------------------------------------------------------ 
+// Check Hlt PV recontruction
+ApplicationMgr.TopAlg += {"GaudiSequencer/HltPVChecking"};
+HltPVChecking.Members = {"TrgL0Filter"
+                         ,"TrgL1Filter"
+                         ,"HltFilter/HltGenericFilterHltPVCheck"
+                         ,"PVCheck/HltGenericPVCheck"
+                         ,"HltFilter"
+                         ,"PVCheck/HltPVCheck"
+};
+
+HltGenericFilterHltPVCheck.RequireHLT = false;
+HltGenericFilterHltPVCheck.RequireGeneric = true;  
+
+ApplicationMgr.DLLs += {"PVEff"};
+
+HltGenericPVCheck.recbleTool = "HLTRecbleMCPV";
+HltGenericPVCheck.nTracksToBeRecble = 5;
+//HltGenericPVCheck.produceNtuple = true;
+HltGenericPVCheck.OutputLevel = 3;
+
+HltPVCheck.recbleTool = "HLTRecbleMCPV";
+HltPVCheck.nTracksToBeRecble = 5;
+//HltPVCheck.produceNtuple = true;
+HltPVCheck.OutputLevel = 3;
+//------------------------------------------------------------------------------ 

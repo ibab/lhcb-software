@@ -4,6 +4,10 @@
 ! Purpose     : High-Level Trigger Exclusive Selections - Checking 
 !-----------------------------------------------------------------------------
 
+! 2005-12-01 - Luis Fernandez
+ - options/
+   . Corrections and PVEff
+
 ! 2005-11-29 - Luis Fernandez
  - options/
    . Add missing "Context" in options, correct typos and few features added
