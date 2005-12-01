@@ -4,6 +4,12 @@
 ! Purpose     : Package for the tracking event model classes
 !-----------------------------------------------------------------------------
 
+! 2005-11-30 - Edwin Bos, Jeroen van Tilburg, Eduardo Rodrigues
+ - First versions of basic trajectory classes:
+   - Trajectory: base class
+   - LineTraj  : line trajectory
+   - StateTraj : trajectory for a State
+
 !========================= TrackEvent v1r5 2005-11-28 ========================
 ! 2005-11-22 - Eduardo Rodrigues
  - fix from M. Cattaneo for platform dependent dictionaries with Gaudi 
