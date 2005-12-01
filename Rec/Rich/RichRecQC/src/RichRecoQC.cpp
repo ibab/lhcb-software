@@ -5,7 +5,7 @@
  *  Implementation file for RICH reconstruction monitoring algorithm : RichRecoQC
  *
  *  CVS Log :-
- *  $Id: RichRecoQC.cpp,v 1.19 2005-11-03 14:37:34 jonrob Exp $
+ *  $Id: RichRecoQC.cpp,v 1.20 2005-12-01 08:05:25 jonrob Exp $
  *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   2002-07-02
@@ -56,7 +56,7 @@ StatusCode RichRecoQC::initialize()
   acquireTool( "RichCherenkovResolution", m_ckRes       );
 
   // Configure track selector
-  if ( !m_trSelector.configureTrackTypes() ) 
+  if ( !m_trSelector.configureTrackTypes() )
     return Error( "Problem configuring track selection" );
   m_trSelector.printTrackSelection( info() );
 
@@ -75,10 +75,10 @@ StatusCode RichRecoQC::execute()
   const RichHistoID hid;
 
   // Histo ranges               Aero   C4F10  CF4
-  const double ckResRange[] = { 0.015, 0.01,  0.005 };
+  const double ckResRange[] = { 0.01, 0.005,  0.0025 };
 
   // Make sure all tracks and segments have been formed
-  if ( !trackCreator()->newTracks() ) 
+  if ( !trackCreator()->newTracks() )
     return Error( "Problem creating RichRecTracks" );
 
   // Iterate over segments
@@ -128,12 +128,12 @@ StatusCode RichRecoQC::execute()
         ++truePhotons;
         // resolution plot
         plot1D( thetaRec-thetaExpTrue,
-                hid(rad,"ckRes"), "Rec-Exp Cktheta : beta=1", -ckResRange[rad], ckResRange[rad] );
+                hid(rad,"ckRes"), "Rec-Exp Cktheta : beta=1", -ckResRange[rad], ckResRange[rad], 50 );
         if ( resExpTrue>0 )
         {
           // pull plot
           const double ckPull = (thetaRec-thetaExpTrue)/resExpTrue;
-          plot1D( ckPull, hid(rad,"ckPull"), "(Rec-Exp)/Res Cktheta : beta=1", -5, 5 );     
+          plot1D( ckPull, hid(rad,"ckPull"), "(Rec-Exp)/Res Cktheta : beta=1", -4, 4, 50 );
         }
 
       }
@@ -157,6 +157,34 @@ StatusCode RichRecoQC::execute()
 StatusCode RichRecoQC::finalize()
 {
 
+  // test fitting
+
+  // Rich Histo ID
+  const RichHistoID hid;
+
+  // Fit params
+  // CK res
+  std::vector< std::vector<double> > ckResParams(Rich::NRadiatorTypes);
+  ckResParams[Rich::Aerogel]  = boost::assign::list_of(0.0)(0.002)(100.0);
+  ckResParams[Rich::Rich1Gas] = boost::assign::list_of(0.0)(0.0015)(100.0);
+  ckResParams[Rich::Rich2Gas] = boost::assign::list_of(0.0)(0.001)(100.0);
+  std::vector< std::pair<double,double> > ckResRange(Rich::NRadiatorTypes);
+  ckResRange[Rich::Aerogel]  = std::pair<double,double>( -0.004, 0.004 );
+  ckResRange[Rich::Rich1Gas] = std::pair<double,double>( -0.003, 0.003 );
+  ckResRange[Rich::Rich2Gas] = std::pair<double,double>( -0.002, 0.002 );
+  // CK pull
+  std::vector< std::vector<double> > ckPullParams(Rich::NRadiatorTypes);
+  ckPullParams[Rich::Aerogel]  = boost::assign::list_of(0.0)(1.0)(100.0);
+  ckPullParams[Rich::Rich1Gas] = boost::assign::list_of(0.0)(1.0)(100.0);
+  ckPullParams[Rich::Rich2Gas] = boost::assign::list_of(0.0)(1.0)(100.0);
+  std::vector< std::pair<double,double> > ckPullRange(Rich::NRadiatorTypes);
+  ckPullRange[Rich::Aerogel]  = std::pair<double,double>( -2.0, 2.0 );
+  ckPullRange[Rich::Rich1Gas] = std::pair<double,double>( -2.0, 2.0 );
+  ckPullRange[Rich::Rich2Gas] = std::pair<double,double>( -2.0, 2.0 );
+
+  // min number of entries for fitting
+  const int minEnts = 10;
+
   // statistical tool
   const RichStatDivFunctor occ("%10.2f +-%7.2f");
 
@@ -166,26 +194,101 @@ StatusCode RichRecoQC::finalize()
   // track selection
   info() << "Track Selection : " << m_trSelector.selectedTracksAsString() << endreq;
 
-  // print out of photon counts
-  if ( m_truePhotCount[Rich::Aerogel]>0 )
+  // loop over radiators
+  for ( Rich::Radiators::const_iterator rad = Rich::radiators().begin();
+        rad != Rich::radiators().end(); ++rad )
   {
-    info() << "Aerogel  Av. # CK photons = "
-           << occ(m_truePhotCount[Rich::Aerogel],m_nSegs[Rich::Aerogel]) << " photons/segment" << endreq;
+    // rad name
+    std::string radName = Rich::text(*rad);
+    radName.resize(8,' ');
+    // photon count
+    if ( m_truePhotCount[*rad]>0 )
+    {
+      info() << radName << " Av. # CK photons = "
+             << occ(m_truePhotCount[*rad],m_nSegs[*rad]) << " photons/segment" << endreq;
+
+      // CK resolution
+      AIDA::IHistogram1D * hRes = histo1D( HistoID(hid(*rad,"ckRes")) );
+      if ( hRes && hRes->entries() > minEnts )
+      {
+        AIDA::IFitResult * fit = fitHisto( hRes, ckResRange[*rad], ckResParams[*rad] );
+        if ( fit && fit->isValid() )
+        {
+          info() << radName << "CK res  : fit status=" << fit->fitStatus()
+                 << " quality=" << fit->quality() << " ndf=" << fit->ndf() << endreq
+                 << "                : " << fit->fittedParameterNames()[0] << " = "
+                 << 100*fit->fittedParameters()[0] << " +- " << 100*fit->errors()[0] << " mrad" << endreq;
+          info() << "                : " << fit->fittedParameterNames()[1] << " = "
+                 << 100*fit->fittedParameters()[1] << " +- " << 100*fit->errors()[1] << " mrad" << endreq;
+        }
+        else
+        {
+          info() << radName << "CK res fit FAILED" << endreq;
+        }
+      }
+      // CK pull
+      AIDA::IHistogram1D * hPull = histo1D( HistoID(hid(*rad,"ckPull")) );
+      if ( hPull && hPull->entries() > minEnts )
+      {
+        AIDA::IFitResult * fit = fitHisto( hPull, ckPullRange[*rad], ckPullParams[*rad] );
+        if ( fit && fit->isValid() )
+        {
+          info() << radName << "CK pull : fit status=" << fit->fitStatus()
+                 << " quality=" << fit->quality() << " ndf=" << fit->ndf() << endreq
+                 << "                : " << fit->fittedParameterNames()[0] << " = "
+                 << fit->fittedParameters()[0] << " +- " << fit->errors()[0] << endreq;
+          info() << "                : " << fit->fittedParameterNames()[1] << " = "
+                 << fit->fittedParameters()[1] << " +- " << fit->errors()[1] << endreq;
+        }
+        else
+        {
+          info() << radName << "CK pull fit FAILED" << endreq;
+        }
+      }
+
+    }
+
   }
-  if ( m_truePhotCount[Rich::C4F10]>0 )
-  {
-    info() << "C4F10    Av. # CK photons = "
-           << occ(m_truePhotCount[Rich::C4F10],m_nSegs[Rich::C4F10]) << " photons/segment" << endreq;
-  }
-  if ( m_truePhotCount[Rich::CF4]>0 )
-  {
-    info() << "CF4      Av. # CK photons = "
-           << occ(m_truePhotCount[Rich::CF4],m_nSegs[Rich::CF4]) << " photons/segment" << endreq;
-  }
+
 
   info() << "=============================================================================="
          << endreq;
 
   // Execute base class method
   return RichRecHistoAlgBase::finalize();
+}
+
+AIDA::IFitResult * RichRecoQC::fitHisto( AIDA::IHistogram1D * histo,
+                                         const std::pair<double,double> & range,
+                                         const std::vector<double> & params )
+{
+  if ( !histo ) return NULL;
+
+  if ( msgLevel(MSG::DEBUG) )
+  {
+    debug() << "Fitting " << histo->title() << endreq;
+  }
+
+  // Creating the function which is going to be fitted with the histogram data
+  pi_aida::Function gaussFun("G");
+
+  // set function initial parameters
+  gaussFun.setParameter("mean" , params[0]);
+  gaussFun.setParameter("sigma", params[1]);
+  gaussFun.setParameter("amp"  , params[2]);
+
+  // Creating the fitter
+  pi_aida::Fitter fitter("Chi2","lcg_minuit");
+  //pi_aida::Fitter fitter("Chi2","minuit");
+
+  // create fit data
+  pi_aida::FitData fitData;
+  fitData.create1DConnection(*histo);
+
+  // set fit range
+  AIDA::IRangeSet & rangeset = fitData.range(0);
+  rangeset.include( range.first, range.second );
+
+  // Performing the fit and return
+  return fitter.fit( fitData, gaussFun );
 }
