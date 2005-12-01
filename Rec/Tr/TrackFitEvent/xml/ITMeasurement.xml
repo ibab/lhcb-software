@@ -17,11 +17,13 @@
       <import name='Event/ITCluster' />
 
       <import name='STDet/DeSTDetector'/>
+      <import name='STTools/ISTClusterPosition' />
 
       <constructor
         desc = 'Constructor from an ITCluster'>
         <arg type='ITCluster' name='itCluster' />
-        <arg type='DeSTDetector' name='det'/>
+        <arg type='DeSTDetector' name='det' />
+        <arg type='ISTClusterPosition' name='itClusPosTool' />
       </constructor>
 
       <attribute
@@ -43,3 +45,4 @@
 
   </package>
 </gdd>
+

@@ -1,6 +1,7 @@
-// $Id: ITMeasurement.cpp,v 1.4 2005-07-01 15:45:24 erodrigu Exp $
+// $Id: ITMeasurement.cpp,v 1.5 2005-12-01 17:13:20 erodrigu Exp $
 // Include files 
 
+// from STDet
 #include "STDet/STDetectionLayer.h"
 
 // local
@@ -18,24 +19,30 @@
 // Standard constructor, initializes variables
 //=============================================================================
 ITMeasurement::ITMeasurement( ITCluster& itCluster,
-                              DeSTDetector& geom ) {
+                              DeSTDetector& geom,
+                              ISTClusterPosition& itClusPosTool) {
 
   m_mtype = Measurement::ST;
   
   m_cluster = &itCluster; //pointer to ITCluster
 
-  ITChannelID ITChan = m_cluster->channelID();
+  ITChannelID itChan = m_cluster->channelID();
 
   // set the LHCbID
-  setLhcbID ( LHCbID( ITChan ) );
+  setLhcbID ( LHCbID( itChan ) );
 
-  const STDetectionLayer* ITLay = geom.layer( ITChan );
-  m_measure      = ITLay->U( ITChan ) + m_cluster->distToStripCenter() ;
-  m_errMeasure    = m_cluster->distToStripError();
-  m_z            = ITLay->centerZ( ITChan );
-//  m_stereoAngle  = ITLay->stereoAngle();
+  const STDetectionLayer* itLay = geom.layer( itChan );
 
-//  std::cout << "- stereo angle = " << ITLay->stereoAngle() << std::endl;
+  ISTClusterPosition::Measurement measVal =
+    itClusPosTool.estimate( &itCluster );
+  m_measure    = itLay -> U( itChan )
+                 + ( measVal.first.second * itLay -> pitch() );
+  m_errMeasure = measVal.second;
+
+  m_z            = itLay->centerZ( itChan );
+//  m_stereoAngle  = itLay->stereoAngle();
+
+//  std::cout << "- stereo angle = " << itLay->stereoAngle() << std::endl;
 
 }
 

@@ -28,6 +28,8 @@ use   OTDet           v*      Det
 use   STDet           v*      Det
 use   VeloDet         v*      Det
 
+use   STTools         v*      IT
+
 use   CLHEP           v*      LCG_Interfaces
 
 #============================================================================
