@@ -1,4 +1,4 @@
-// $Id: TrackMatchVeloSeed.h,v 1.2 2005-10-07 08:26:52 cattanem Exp $
+// $Id: TrackMatchVeloSeed.h,v 1.3 2005-12-01 17:56:01 erodrigu Exp $
 #ifndef TRACKMATCHING_TRACKMATCHVELOSEED_H 
 #define TRACKMATCHING_TRACKMATCHVELOSEED_H 1
 
@@ -9,6 +9,9 @@
 
 // from STDet
 #include "STDet/DeSTDetector.h"
+
+// from STTools
+#include "STTools/ISTClusterPosition.h"
 
 // from TrackInterfaces
 #include "TrackInterfaces/ITrackExtrapolator.h"
@@ -102,6 +105,9 @@ private:
    *  of TT clusters.)
    */
   double m_spreadWeight;
+
+  /// ST cluster position tool
+  ISTClusterPosition* m_stPositionTool;    ///< ST cluster position tool
 
   /// The extrapolators
   ITrackExtrapolator* m_extrapolatorVelo;

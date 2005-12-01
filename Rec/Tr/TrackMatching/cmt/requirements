@@ -6,7 +6,7 @@
 # http://cern.ch/lhcb-comp/Support/html/new_structure.pdf
 #============================================================================
 package           TrackMatching
-version           v1r1
+version           v1r2
 
 #============================================================================
 # This template is an example for a standard Algorithm package
@@ -21,6 +21,9 @@ include_path      none
 #    Put as many lines as needed, with all packages, without the '#'
 #============================================================================
 use   GaudiAlg         v*
+
+use   STTools          v*      IT
+
 use   TrackEvent       v*      Event
 use   TrackFitEvent    v*      Tr
 use   TrackInterfaces  v*      Tr

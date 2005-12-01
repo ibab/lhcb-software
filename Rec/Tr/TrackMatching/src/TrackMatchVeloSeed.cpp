@@ -1,4 +1,4 @@
-// $Id: TrackMatchVeloSeed.cpp,v 1.4 2005-10-13 14:57:10 erodrigu Exp $
+// $Id: TrackMatchVeloSeed.cpp,v 1.5 2005-12-01 17:56:01 erodrigu Exp $
 // Include files 
 // -------------
 // from Gaudi
@@ -98,6 +98,9 @@ StatusCode TrackMatchVeloSeed::initialize()
 
   // Access the chi2 calculator tool
   m_chi2Calculator = tool<ITrackChi2Calculator>( "TrackChi2Calculator" );
+
+  // Retrieve the STClusterPosition tool
+  m_stPositionTool = tool<ISTClusterPosition>( "STClusterPosition" );
 
   // Get silicon tracker geometry
   m_itTracker = getDet<DeSTDetector>( m_itTrackerPath );
@@ -533,7 +536,8 @@ StatusCode TrackMatchVeloSeed::storeTracks( TrackMatches*& matchCont )
     std::vector<ITCluster*>::const_iterator iClus = ttClusters.begin();
     while ( iClus != ttClusters.end() ) {
       // make a new ITClusterOnTrack
-      ITMeasurement* ttMeas = new ITMeasurement( *(*iClus), *m_itTracker );
+      ITMeasurement* ttMeas =
+        new ITMeasurement( *(*iClus), *m_itTracker, *m_stPositionTool );
       aTrack -> addToMeasurements( *ttMeas);  //  addToMeasurements clones and owns
       delete ttMeas;
       ++iClus;

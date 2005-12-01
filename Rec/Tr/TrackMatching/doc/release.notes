@@ -4,6 +4,9 @@
 ! Purpose     : Package for the track matching algorithms
 !-----------------------------------------------------------------------------
 
+! 2005-12-01 - Eduardo Rodrigues
+ - propagation of changes in ITMeasurement class
+
 !======================= TrackMatching v1r1 2005-10-10 =======================
 ! 2005-10-13 - Eduardo Rodrigues
  - propagation of changes from TrackEvent
