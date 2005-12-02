@@ -1,13 +1,10 @@
-// $Id: CaloZSupAlg.cpp,v 1.12 2005-11-10 16:44:02 ocallot Exp $
+// $Id: CaloZSupAlg.cpp,v 1.13 2005-12-02 13:30:50 ocallot Exp $
 
 // CLHEP
 #include "CLHEP/Units/SystemOfUnits.h"
 // Gaudi
 #include "GaudiKernel/AlgFactory.h"
 #include "GaudiKernel/RndmGenerators.h"
-
-// CaloEvent
-#include "Event/CaloDigit.h"
 
 #include "Event/RawEvent.h"
 
@@ -169,7 +166,7 @@ StatusCode CaloZSupAlg::execute() {
     }
   }
 
-  //** write tagged data as CaloDigit
+  //** write tagged data as CaloAdc
   
   for( anAdc = adcs.begin(); adcs.end() != anAdc ; ++anAdc ) {
     CaloCellID id = (*anAdc).cellID();

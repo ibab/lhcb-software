@@ -4,6 +4,15 @@
 ! Purpose     : Digitisation and Zero-suppression of the Calorimeters
 !-----------------------------------------------------------------------------
 
+! 2005-12-02 - Olivier Callot
+ - CaloZSupAlg: Remove Prs and SPD options: This is done in 
+   CaloDigit, it writes CaloAdc for the Raw Buffer directly
+ - CaloZSupAlg starts from CaloAdc and produces CaloAdc. This is now run
+   only in HLT processing, to convert TELL1 Raw Buffer to final Raw Buffer. It
+   may eventually move to a HLT package.
+ - CaloDigitAlg: Produces CaloAdc and no longer CaloDigit. Also produces the
+   L0CaloAdc and L0PrsSpdHits for the trigger.
+
 !======================== CaloDigit v1r8 2005-01-18 ========================
 ! 2005-01-18 - Olivier Callot
  - Fix an unitialized parameter in CaloZSup, due to too strong a cleanup.
