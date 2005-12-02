@@ -1,7 +1,8 @@
-// $Id: L0CaloAlg.cpp,v 1.28 2005-11-10 16:45:38 ocallot Exp $
+// $Id: L0CaloAlg.cpp,v 1.29 2005-12-02 14:15:11 ocallot Exp $
 
 /// Gaudi
 #include "GaudiKernel/AlgFactory.h"
+#include "DetDesc/Condition.h"
 
 /// L0Event
 #include "Event/L0CaloCandidate.h"
@@ -215,8 +216,16 @@ StatusCode L0CaloAlg::initialize() {
         << m_minPi0Mass << " and " << m_maxPi0Mass << " MeV"<< endreq;
   }
 
-  m_etScale = 20. * MeV;
-
+  Condition* gain = m_ecal->condition( "Gain" );
+  if ( 0 == gain ) {
+    return Error( "Condition 'Gain' not found in Ecal" );
+  }
+  if ( gain->exists( "L0EtBin" ) ) {
+    m_etScale = gain->paramAsDouble( "L0EtBin" );
+  } else {
+    return Error( "Parameter 'L0EtBin' not found in Ecal 'Gain'" );
+  }
+       
   m_totRawSize = 0.;
   m_nbEvents   = 0 ;
 
