@@ -1,4 +1,4 @@
-// $Id: L0CaloAlg.cpp,v 1.29 2005-12-02 14:15:11 ocallot Exp $
+// $Id: L0CaloAlg.cpp,v 1.30 2005-12-02 14:58:23 ocallot Exp $
 
 /// Gaudi
 #include "GaudiKernel/AlgFactory.h"
@@ -30,11 +30,6 @@ L0CaloAlg::L0CaloAlg( const std::string& name, ISvcLocator* pSvcLocator)
   : GaudiAlgorithm              ( name , pSvcLocator            )
   , m_nameOfOutputDataContainer ( L0CaloCandidateLocation::Default  )
   , m_nameOfGeometryRoot        ( "/dd/Structure/LHCb/" )
-  , m_pi0Strategy               ( 1 )
-  , m_minEtPi0Local             ( 1.06 * GeV )
-  , m_minEtGammaGlobal          ( 0.15 * GeV )
-  , m_minPi0Mass                (  10. * MeV )
-  , m_maxPi0Mass                ( 220. * MeV )
 {
 
   // Declare the algorithm's properties which can be set at run time and their
@@ -42,11 +37,6 @@ L0CaloAlg::L0CaloAlg( const std::string& name, ISvcLocator* pSvcLocator)
 
   declareProperty("OutputData"      , m_nameOfOutputDataContainer) ;
   declareProperty("GeometryRoot"    , m_nameOfGeometryRoot       ) ;
-  declareProperty("Pi0Strategy"     , m_pi0Strategy              ) ;
-  declareProperty("MinEtPi0Local"   , m_minEtPi0Local            ) ;
-  declareProperty("MinEtGammaGlobal", m_minEtGammaGlobal         ) ;
-  declareProperty("MinPi0Mass"      , m_minPi0Mass               ) ;
-  declareProperty("MaxPi0Mass"      , m_maxPi0Mass               ) ;
 
   declareProperty("StoreInBuffer"   , m_storeFlag      = true );
 };
@@ -201,20 +191,8 @@ StatusCode L0CaloAlg::initialize() {
 
   // Initialise the cuts
 
-  m_minPi0Mass2 = m_minPi0Mass * m_minPi0Mass ;
-  m_maxPi0Mass2 = m_maxPi0Mass * m_maxPi0Mass ;
   info() << m_ecal->nCards() << " Ecal and "
          << m_hcal->nCards() << " front end cards." << endreq;
-  if ( 1 == m_pi0Strategy ) {
-    info() << "Simple Pi0 strategy. Local = Sum Et, Global= Et1+Et2"
-           << endreq;
-  } else {
-    info() << "Refined Pi0 strategy. Local = Sum Et AND Et1 over "
-        << m_minEtPi0Local/GeV << " GeV." << endreq;
-    info() << "        Global = Two cards over "
-        << m_minEtGammaGlobal/GeV << " GeV AND pi0 mass between "
-        << m_minPi0Mass << " and " << m_maxPi0Mass << " MeV"<< endreq;
-  }
 
   Condition* gain = m_ecal->condition( "Gain" );
   if ( 0 == gain ) {
@@ -309,26 +287,15 @@ StatusCode L0CaloAlg::execute() {
       }
     }
     
-    // Produces also the 'single card' pi0, with two options...
+    // Produces also the 'single card' pi0
     
-    if ( 1 == m_pi0Strategy ) {
-      if ( 0 != prsMask ) {  //== Request some preshower activity
-        if ( pi0Local.et() < etTot ) {
-          particle += " pi0L";
-          pi0Local.setCandidate( etTot, ID );
-        }
-        if ( allPi0Local[numVal].et() < etTot ) {
-          allPi0Local[numVal].setCandidate( etTot, ID );
-        }
+    if ( 0 != prsMask ) {  //== Request some preshower activity
+      if ( pi0Local.et() < etTot ) {
+        particle += " pi0L";
+        pi0Local.setCandidate( etTot, ID );
       }
-    } else {
-      if ( (m_minEtPi0Local < etMax * m_etScale ) &&
-           (0 < prsMask )     &&
-           (0 == ecalFe[eCard].spdMask() ) ) {
-        if ( pi0Local.et() < etTot ) {
-          particle += " pi0L";
-          pi0Local.setCandidate( etTot, ID );
-        }
+      if ( allPi0Local[numVal].et() < etTot ) {
+        allPi0Local[numVal].setCandidate( etTot, ID );
       }
     }
     
@@ -336,71 +303,23 @@ StatusCode L0CaloAlg::execute() {
     
     int pCard = m_ecal->previousCardNumber(eCard);
     if ( 0 <= pCard ) {
-      if ( 1 == m_pi0Strategy ) {
-        int etMaxTot  = etMax + ecalFe[pCard].etMax()  ;
-        CaloCellID ID2 = ecalFe[pCard].cellIdMax();
-        int diffRow = ID2.row() - ID.row();
-        int diffCol = ID2.col() - ID.col();
-        //== Check that the ID are at least 2 rows or 2 columns apart so
-        //== that they don't share a cell.
-        if ( ( ID2.area() != ID.area() ) ||
-             ( 1 < abs( diffRow )      ) ||
-             ( 1 < abs( diffCol )      )   ) {
-          if ( pi0Global.et() < etMaxTot ) {
-            particle += " pi0G";
-            pi0Global.setCandidate( etMaxTot, ID );
-          }
-          if ( allPi0Global[numVal].et() < etMaxTot ) {
-            allPi0Global[numVal].setCandidate( etMaxTot, ID );
-          }
-        }          
-      } else {
-        int etMaxPrev = ecalFe[pCard].etMax() ;
-        int row       = ecalFe[eCard].rowMax() ;
-        int col       = ecalFe[eCard].colMax() ;
-        int rowPrev   = ecalFe[pCard].rowMax() - nRowCaloCard ;
-        int colPrev   = ecalFe[pCard].colMax() ;
-        bool phot     = (0 <  ecalFe[eCard].prsMask() ) &&
-          (0 == ecalFe[eCard].spdMask() );
-        bool photPrev = (0 <  ecalFe[pCard].prsMask() ) &&
-          (0 == ecalFe[pCard].spdMask() );
-        if ( (m_minEtGammaGlobal <= etMax     * m_etScale)  &&
-             (m_minEtGammaGlobal <= etMaxPrev * m_etScale)  &&
-             ( (row > rowPrev+1) ||                     // No ghost test
-               (col > colPrev+1) ||
-               (col < colPrev-1)    )   &&
-             ( phot || photPrev )  ) {                  // One is photonic
-          
-          // Compute the distance and radius in half-cell units.
-          
-          CaloCellID IDprev = m_ecal->cardCellID( eCard, rowPrev, colPrev );
-          double halfSize = .5 * m_ecal->cellSize( ID );
-          int x1 = (int) floor( .5 + m_ecal->cellX( ID )     / halfSize);
-          int x2 = (int) floor( .5 + m_ecal->cellX( IDprev ) / halfSize);
-          int y1 = (int) floor( .5 + m_ecal->cellY( ID )     / halfSize);
-          int y2 = (int) floor( .5 + m_ecal->cellY( IDprev ) / halfSize);
-          int dist2   = (x1-x2) * (x1-x2) + (y1-y2) * (y1-y2);
-          int radius2 = (x1+x2) * (x1+x2) + (y1+y2) * (y1+y2);
-          int mass2   = 2 * etMax * etMaxPrev *
-            (int) (m_etScale * m_etScale) * dist2 / radius2 ;
-          int etMaxTot  = etMax + ecalFe[pCard].etMax()  ;
-          
-          verbose() << "Pi0Glo: cards " 
-                    << format( "%3d %3d etMax %3d %3d col %2d %2d row %2d %2d",
-                               eCard, pCard, etMax, etMaxPrev,
-                               col, colPrev, row, rowPrev );
-          verbose() << format( " dist2 %5d radius2 %5d mass2 %5d etSum %4d",
-                               dist2, radius2, mass2, etMaxTot ) 
-                    << endreq;
-          
-          if ( (m_minPi0Mass2 < mass2) && (m_maxPi0Mass2 > mass2) ) {
-            if ( pi0Global.et() < etMaxTot ) {
-              particle += " pi0G";
-              pi0Global.setCandidate( etMaxTot, ID );
-            }
-          }
+      int etMaxTot  = etMax + ecalFe[pCard].etMax()  ;
+      CaloCellID ID2 = ecalFe[pCard].cellIdMax();
+      int diffRow = ID2.row() - ID.row();
+      int diffCol = ID2.col() - ID.col();
+      //== Check that the ID are at least 2 rows or 2 columns apart so
+      //== that they don't share a cell.
+      if ( ( ID2.area() != ID.area() ) ||
+           ( 1 < abs( diffRow )      ) ||
+           ( 1 < abs( diffCol )      )   ) {
+        if ( pi0Global.et() < etMaxTot ) {
+          particle += " pi0G";
+          pi0Global.setCandidate( etMaxTot, ID );
         }
-      }
+        if ( allPi0Global[numVal].et() < etMaxTot ) {
+          allPi0Global[numVal].setCandidate( etMaxTot, ID );
+        }
+      }          
     }
     
     if ( !particle.empty() ) {

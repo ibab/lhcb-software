@@ -1,6 +1,6 @@
 #ifndef   L0CALO_L0CALOALG_H
 #define   L0CALO_L0CALOALG_H  1
-// $Id: L0CaloAlg.h,v 1.13 2005-11-10 16:45:38 ocallot Exp $
+// $Id: L0CaloAlg.h,v 1.14 2005-12-02 14:58:23 ocallot Exp $
 
 // from Gaudi 
 #include "GaudiAlg/GaudiAlgorithm.h"
@@ -115,24 +115,11 @@ private:
   std::string m_nameOfGeometryRoot ;          ///< Name of Detector  e.g. /dd/structure/LHCb/
   double      m_etScale;
 
-// Pi0 trigger parameters
-
-  int         m_pi0Strategy        ; ///< Defines how Pi0 are defined.
-  double      m_minEtPi0Local      ; ///< Min cluster Et for local pi0
-  double      m_minEtGammaGlobal   ; ///< Min cluster Et for gamma Global pi0
-  double      m_minPi0Mass         ; ///< Min mass for global-II method
-  double      m_minPi0Mass2        ; ///< Squared version of m_minPi0Mass
-  double      m_maxPi0Mass         ; ///< Max mass for global-II method
-  double      m_maxPi0Mass2        ; ///< Squared version of m_maxPi0Mass
-
 // Local variables
 
   DeCalorimeter* m_ecal            ; ///< Pointer to Ecal detector element
   DeCalorimeter* m_hcal            ; ///< Pointer to Hcal detector element
   int         m_validPrs[16]       ; ///< Array for PRS validation: 1 or 2 bits
-  double      m_gainCorrEcal[3]    ; ///< Gain correction in Ecal, per area
-  double      m_gainCorrHcal[2]    ; ///< Gain correction in Hcal, per area
-
   int         m_spdMult            ; ///< Multiplicity of Spd
 
   ICaloTriggerAdcsFromRaw* m_adcsEcal; ///< Tool to decode trigger adcs.

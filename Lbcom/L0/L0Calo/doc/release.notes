@@ -1,6 +1,10 @@
 Package		: L0/L0Calo
 Package Manager : Olivier Callot
 
+! 2005-12-02 - Olivier Callot
+ - Remove the obsolete second strategies for pi0, L and G
+ - Get the Et scale from conditions
+
 ! 2005-11-10 - Olivier Callot
  - Remove coding of L1 buffer
  - Adapt to new interfaces for Raw buffer, not yet final.
