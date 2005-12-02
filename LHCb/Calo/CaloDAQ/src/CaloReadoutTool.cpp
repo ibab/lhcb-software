@@ -1,4 +1,4 @@
-// $Id: CaloReadoutTool.cpp,v 1.1 2005-09-06 14:50:01 ocallot Exp $
+// $Id: CaloReadoutTool.cpp,v 1.2 2005-12-02 16:29:12 ocallot Exp $
 // Include files 
 
 // from Gaudi
@@ -55,9 +55,9 @@ StatusCode CaloReadoutTool::initialize ( ) {
   bool hasFault = false;
 
   //== First get the FE card description
-  Condition* cond = m_calo->condition( m_detectorName + "CellsToCards" );
+  Condition* cond = m_calo->condition( "CellsToCards" );
   if ( 0 == cond ) {
-    return Error( "Condition '" + m_detectorName + "CellsToCards' not found." );
+    return Error( "Condition 'CellsToCards' not found." );
   } 
 
   //== Cards

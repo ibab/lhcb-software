@@ -4,6 +4,9 @@
 ! Purpose     : Convert Calo Digit and Trigger information to RawBuffer banks.
 !-----------------------------------------------------------------------------
 
+! 2005-12-02 - Olivier Callot
+ - Remove the detector prefix in the condition CellsToCards
+
 ! 2005-11-15 - Olivier Callot
  - Changed Prs/SPd coding type 2, with cell id in upper 14 bits instead of lower
 
