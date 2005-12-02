@@ -1,4 +1,4 @@
-// $Id: lcgStl.h,v 1.13 2005-11-25 16:15:48 cattanem Exp $
+// $Id: lcgStl.h,v 1.14 2005-12-02 16:28:07 cattanem Exp $
 #ifndef KERNEL_LCGSTL_H 
 #define KERNEL_LCGSTL_H 1
 
@@ -15,8 +15,6 @@
 #include "Kernel/STChannelID.h"
 #include "Kernel/OTChannelID.h"
 #include "Kernel/CaloCellID.h"
-#include "CLHEP/Geometry/Point3D.h"
-#include "CLHEP/Geometry/Vector3D.h"
 
 // end include files
 
@@ -40,8 +38,6 @@ namespace {
     std::vector<std::pair<LHCb::STChannelID,int> >   m_std_vector_std_pair_STChannelID_int;
     std::vector<std::pair<LHCb::OTChannelID,int> >   m_std_vector_std_pair_OTChannelID_int;
     std::vector<std::pair<double,LHCb::CaloCellID> > m_std_vector_std_pair_double_CaloCellID;
-    std::vector<HepGeom::Vector3D<double> >    m_std_vector_HepGeom_Vector3D_double;
-    std::vector<HepGeom::Point3D<double> >     m_std_vector_HepGeom_Point3D_double;
     // end instantiations
   };
 }

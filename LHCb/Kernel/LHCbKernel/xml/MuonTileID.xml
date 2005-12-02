@@ -1,0 +1,242 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE gdd SYSTEM "gdd.dtd">
+<gdd>
+  <package name='LHCbKernel'>
+    <class 
+      author="Andrei Tsaregorodtsev" 
+      desc="Universal identifier for the Muon System entities" 
+      name="MuonTileID">
+      <import name="Kernel/MuonBase"/>
+      <import name="Kernel/MuonLayout"/>
+      &StlVector;
+      <constructor
+        desc="Default constructor"
+        initList="m_muonid(0)"/>
+      <constructor
+        desc="Copy constructor"
+        argList="const MuonTileID id">
+      <code>  m_muonid = id.m_muonid;</code>	  
+      </constructor>	
+      <constructor
+        desc="Constructor with all the arguments"
+        argList="int station,const IMuonLayout lay,
+	       int region,int quarter,int x,int y" initList="m_muonid(0)">
+        <code>
+           setStation(station);
+	   setRegion(region);
+	   setQuarter(quarter);
+	   setX(x);
+	   setY(y);
+	   setLayout(MuonLayout(lay.grid(*this)));
+        </code>	  
+      </constructor>
+      <constructor
+        desc="Constructor from similar MuonTileID"
+        argList="const MuonTileID id,
+	 const unsigned int region,
+	 const unsigned int quarter,
+	 const unsigned int x,
+	 const unsigned int y" initList="m_muonid(id.m_muonid)">
+        <code>
+           setQuarter(quarter);
+	   setRegion(region);
+	   setX(x);
+	   setY(y);
+        </code>	  
+      </constructor>
+      <constructor
+        desc="Constructor from relative position in the containing MuonTile MuonTileID"
+        argList="const MuonTileID id,
+                 const IMuonLayout layout,
+	         const unsigned int x,
+	         const unsigned int y" >	  
+      </constructor>
+      <constructor
+        desc="Constructor taking a long needed for the keyed container"
+        argList="const long int muonid" >
+	<code>    m_muonid = static_cast&lt;unsigned int&gt;(muonid);</code>
+      </constructor>
+      <constructor
+        desc="Constructor from a string representation of the MuonTileID"
+        argList="std::string strid" >
+	<code>
+    const char * str = strid.c_str()+1;
+    char * endptr;
+
+    long sta = strtol(str,&amp;endptr,0);
+    str = endptr+1;
+    long mlx = strtol(str,&amp;endptr,0);
+    str = endptr+1;
+    long mly = strtol(str,&amp;endptr,0);
+    str = endptr+2;
+    long quarter = strtol(str,&amp;endptr,0);
+    str = endptr+2;
+    long region = strtol(str,&amp;endptr,0);
+    str = endptr+1;
+    long nx = strtol(str,&amp;endptr,0);
+    str = endptr+1;
+    long ny = strtol(str,&amp;endptr,0);
+
+    setStation(sta);
+    setLayout(MuonLayout(mlx,mly));
+    setQuarter(quarter);
+    setRegion(region);
+    setX(nx);
+    setY(ny);
+	</code>
+      </constructor>
+      <method const="TRUE"  name="operator long int" type=" "
+        desc="convert the MuonTileID to an int for use as a key">
+        <code> return static_cast&lt;long int&gt;(m_muonid);</code>
+      </method>	 
+      <method const="TRUE"  name="station" type="const unsigned int"
+        inline="TRUE"
+        desc="Function to extract station">
+        <code> return ( m_muonid &amp; MuonBase::MaskStation ) &gt;&gt; MuonBase::ShiftStation ;</code>
+      </method> 
+      <method const="TRUE"  name="region" type="const unsigned int"
+        inline="TRUE"
+        desc="Function to extract region">
+        <code> return ( m_muonid &amp; MuonBase::MaskRegion ) &gt;&gt; MuonBase::ShiftRegion ;</code>
+      </method>
+      <method const="TRUE"  name="quarter" type="const unsigned int"
+        inline="TRUE"
+        desc="Function to extract quarter">
+        <code> return ( m_muonid &amp; MuonBase::MaskQuarter ) &gt;&gt; MuonBase::ShiftQuarter ;</code>
+      </method>
+      <method const="TRUE"  name="layout" type="MuonLayout" inline="TRUE"
+        desc="Function to extract layout">
+        <code> 
+          int xg = ( m_muonid &amp; MuonBase::MaskLayoutX ) &gt;&gt; MuonBase::ShiftLayoutX ; 
+          int yg = ( m_muonid &amp; MuonBase::MaskLayoutY ) &gt;&gt; MuonBase::ShiftLayoutY ;
+          return  MuonLayout(xg,yg) ;
+        </code>
+      </method>
+      <method const="TRUE"  name="nX" type="const unsigned int"
+        inline="TRUE"
+        desc="Function to extract index in x">
+        <code> return ( m_muonid &amp; MuonBase::MaskX ) &gt;&gt; MuonBase::ShiftX ;</code>
+      </method>
+      <method const="TRUE"  name="nY" type="const unsigned int"
+        inline="TRUE"
+        desc="Function to extract index in y">
+        <code> return ( m_muonid &amp; MuonBase::MaskY ) &gt;&gt; MuonBase::ShiftY ;</code>
+      </method>
+      <method const="TRUE"  name="index" type="const unsigned int"
+        inline="TRUE"
+        desc="Function to extract lower part of the identifier">
+        <code> return ( m_muonid &amp; MuonBase::MaskIndex ) &gt;&gt; MuonBase::ShiftIndex ;</code>
+      </method>
+      <method const="TRUE"  name="key" type="const unsigned int"
+        inline="TRUE"
+        desc="Function to extract lower part of the identifier with station information">
+        <code> return ( m_muonid &amp; MuonBase::MaskKey ) &gt;&gt; MuonBase::ShiftKey ;</code>
+      </method>
+     <method const="TRUE"  name="operator&lt;" type="bool"
+       inline="TRUE"
+       desc="comparison operator using key."
+       argList="const MuonTileID id">
+        <code> return key() &lt;  id.key() ;</code>
+      </method> 
+      <method const="TRUE"  name="operator==" type="bool"
+        inline="TRUE"
+        desc="equality operator using key."
+        argList="const MuonTileID id">
+        <code> return m_muonid ==  id.m_muonid ;</code>
+      </method> 
+      <method const="TRUE"  name="operator!=" type="bool"
+        inline="TRUE"
+        desc="non-equality operator using key."
+        argList="const MuonTileID id">
+        <code> return !(id == *this) ;</code>
+      </method> 
+      <method const="TRUE"  name="intercept" type="MuonTileID"
+        desc="Find the MuonTileID which is an interception of two MuonTileID&apos;s"
+        argList="const MuonTileID id">
+      </method>
+      <method const="TRUE"  name="containerID" type="MuonTileID"
+        desc="Find the MuonTileID of a Tile of a given layout containing this pad"
+        argList="const IMuonLayout layout">
+      </method>
+      <method const="TRUE"  name="neighbourID" type="MuonTileID"
+        desc="Find the MuonTileID of a Tile which is a neighbour of this pad"
+        argList="int dirX, int dirY">
+      </method>
+      <method const="TRUE"  name="localX" type="int"
+        desc="Get local offset X with respect to the container defined by the given IMuonLayout"
+        argList="const IMuonLayout layout">
+      </method>
+      <method const="TRUE"  name="localY" type="int"
+        desc="Get local offset y with respect to the container defined by the given IMuonLayout"
+        argList="const IMuonLayout layout">
+      </method>
+      <method const="TRUE"  name="isValid" type="bool"
+        desc="Check that the MuonTileID is consistent in terms of its layout">
+      </method>
+      <method const="TRUE"  name="isDefined" type="bool"
+        desc="Check that the MuonTileID is defined. It means that its code is not 0">
+      </method>
+      <method const="TRUE"  name="toString" type="std::string"
+        desc="presents the MuonTileID as a readable string">
+      </method>
+      <method  name="setStation" inline="TRUE"
+        desc="update station identifier"
+        argList="const unsigned int station">
+        <code>set( station, MuonBase::ShiftStation, MuonBase::MaskStation ) ;</code>  
+      </method>
+      <method  name="setRegion" inline="TRUE"
+        desc="update region identifier"
+        argList="const unsigned int region">
+        <code>  set( region, MuonBase::ShiftRegion, MuonBase::MaskRegion ) ;</code>  
+      </method>
+      <method  name="setQuarter" inline="TRUE"
+        desc="update quarter identifier"
+        argList="const unsigned int quarter">
+        <code>set( quarter, MuonBase::ShiftQuarter, MuonBase::MaskQuarter ) ;</code>  
+      </method>
+      <method  name="setX" inline="TRUE"
+        desc="update index in x"
+        argList="const unsigned int x">
+        <code>set( x, MuonBase::ShiftX, MuonBase::MaskX ) ;</code>  
+      </method>
+      <method  name="setY" inline="TRUE"
+        desc="update index in y"
+        argList="const unsigned int y">
+        <code>set( y, MuonBase::ShiftY, MuonBase::MaskY ) ;</code>  
+      </method>
+      <method  name="setLayout" inline="TRUE"
+        desc="update layout identifier"
+        argList="MuonLayout layout">
+        <code>
+  unsigned int lx, ly;
+  lx = layout.xGrid();
+  ly = layout.yGrid();
+  set( lx, MuonBase::ShiftLayoutX, MuonBase::MaskLayoutX ) ;
+  set( ly, MuonBase::ShiftLayoutY, MuonBase::MaskLayoutY ) ;
+        </code>  
+      </method>
+      <method  name="deltaX" inline="TRUE"
+        desc="modify index in x"
+        argList="int dx">
+        <code>  setX(nX() + dx);</code>  
+      </method>
+      <method  name="deltaY" inline="TRUE"
+        desc="modify index in y"
+        argList="int dy">
+        <code>  setY(nY() + dy);</code>  
+      </method>
+      <method  name="set" inline="TRUE" access="PRIVATE"
+        desc="modify index in y"
+        argList="const unsigned int Value, const unsigned int Shift, const unsigned int Mask">
+        <code>
+  unsigned int tmp1 , tmp2 ;
+  tmp1 = ( Value &lt;&lt; Shift ) &amp; Mask ; 
+  tmp2 = m_muonid &amp; ~Mask ; 
+  m_muonid = ( tmp1 | tmp2 ) ;
+        </code>  
+      </method>
+      <attribute desc="muon tile id" name="muonid" type="unsigned int" 
+       setMeth="FALSE" getMeth="FALSE"/>
+    </class>
+  </package>
+</gdd>

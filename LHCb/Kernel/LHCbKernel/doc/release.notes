@@ -2,7 +2,12 @@ Package LHCbKernel
 Package manager: M.Cattaneo
 Purpose: LHCb specific Kernel classes
 
-!===================== LHCbKernel v6r0 2005-11-28 =========================
+!===================== LHCbKernel v6r0 2005-12-02 =========================
+! 2005-12-02 - Marco Cattaneo
+ - Add MuonTileID and MuonLayout (moved from MuonKernel) and adapt to LHCb::
+ - Add MuonTileID to LHCbID
+ - Add IEvtTypeSvc.h interface, moved to Kernel from MCTools
+
 ! 2005-11-28 - Marco Cattaneo
  - Output serializers for std containers (SerializeStl.h) are now in LHCb 
    namespace, this is needed for the new event model classes.

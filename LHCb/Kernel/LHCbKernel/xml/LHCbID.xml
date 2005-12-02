@@ -13,6 +13,7 @@
        <import name="Kernel/OTChannelID"/>
        <import name="Kernel/RichSmartID"/>
        <import name="Kernel/CaloCellID"/>
+       <import name="Kernel/MuonTileID"/>
 
        &StlVector;
 
@@ -211,6 +212,36 @@ return id;
          </code>
        </method>
 
+       <constructor
+          desc     = "Constructor from MuonTileID"
+          initList = "m_lhcbID(0)" >
+          <arg const="TRUE" name="chanID" type="MuonTileID" />
+         <code>
+  setDetectorType( muonType );
+  setID( int(chanID) );
+         </code>
+       </constructor>
+
+       <method
+         type  = "bool"
+         name  = "isMuon"
+         const = 'TRUE'
+         desc  = "return true if this is a Muon identifier">
+         <code>
+  return (muonType == detectorType());
+         </code>
+       </method>
+
+       <method
+         type  = "LHCb::MuonTileID"
+         name  = "muonID"
+         const = 'TRUE'
+         desc  = "return the MuonTileID">
+         <code>
+  return isMuon() ? MuonTileID(m_lhcbID &amp; IDMask) : MuonTileID(0xF0000000);
+         </code>
+       </method>
+
       <method
         type    = "unsigned int"
         name    = "channelID"
@@ -222,6 +253,7 @@ if (isST()) return stID().channelID();
 if (isOT()) return otID().channelID();
 if (isRich()) return richID().key();
 if (isCalo()) return m_lhcbID &amp; IDMask;
+if (isMuon()) return m_lhcbID &amp; IDMask;
 return 0;
         </code>
       </method>

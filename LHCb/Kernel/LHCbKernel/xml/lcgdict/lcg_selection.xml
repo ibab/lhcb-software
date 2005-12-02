@@ -16,6 +16,4 @@
   <class name="std::pair<LHCb::OTChannelID,int>"/>
   <class name="std::pair<double,LHCb::CaloCellID>"/>
   <class name="std::vector<std::pair<double,LHCb::CaloCellID> >"/>
-  <class name="std::vector<HepGeom::Vector3D<double> >"/>
-  <class name="std::vector<HepGeom::Point3D<double> >"/>
 </lcgdict>

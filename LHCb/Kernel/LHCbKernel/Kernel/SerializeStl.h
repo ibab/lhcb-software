@@ -1,4 +1,4 @@
-// $Id: SerializeStl.h,v 1.8 2005-11-28 17:22:04 cattanem Exp $
+// $Id: SerializeStl.h,v 1.9 2005-12-02 16:28:07 cattanem Exp $
 /*
     Small header file to serialize vectors, lists, pairs, maps
     to standard Gaudi StreamBuffer objects
@@ -15,9 +15,8 @@
 
 namespace LHCb 
 {
-
 static const int NUMBERS_PER_LINE = 6;
-  
+
 // Output operator (ASCII)
 template <class T> inline
 std::ostream& operator<< ( std::ostream& s, const std::vector<T>& v ) 
