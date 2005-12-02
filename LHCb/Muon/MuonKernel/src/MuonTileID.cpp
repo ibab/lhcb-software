@@ -1,9 +1,7 @@
-// $Id: MuonTileID.cpp,v 1.8 2005-04-28 09:39:15 jucogan Exp $
+// $Id: MuonTileID.cpp,v 1.9 2005-12-02 13:47:40 atsareg Exp $
 // Include files
 
 #include "MuonKernel/MuonTileID.h"
-#include "MuonKernel/MuonStationLayout.h"
-#include "MuonKernel/MuonSystemLayout.h"
 #include <numeric>
 
 MuonTileID::MuonTileID(const MuonTileID& id,
