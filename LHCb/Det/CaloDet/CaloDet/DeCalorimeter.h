@@ -1,8 +1,11 @@
-// $Id: DeCalorimeter.h,v 1.13 2005-07-06 15:30:24 ibelyaev Exp $ 
+// $Id: DeCalorimeter.h,v 1.14 2005-12-02 14:52:46 ocallot Exp $ 
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.13  2005/07/06 15:30:24  ibelyaev
+//  minor fixes to please  LCGdict
+//
 // ============================================================================
 #ifndef       CALODET_DECALORIMETER_H
 #define       CALODET_DECALORIMETER_H 1
@@ -77,7 +80,7 @@ public:
   inline  bool  isInitialized() const  { return m_initialized ; }  
   
   ///  accessor to number of builded cells 
-  unsigned int   numberOfCells () { buildCells() ; return cells.size(); };
+  unsigned int   numberOfCells () { buildCells() ; return m_cells.size(); };
 
   ///  set function for coding 
   void setCoding        ( const unsigned int nb     );
@@ -152,14 +155,14 @@ public:
                             int &             col  ) const ;
   
   ///  number of cards 
-  int nCards          ( )                 const { return m_cards; }
-  ///  down card number 
+  int nCards ( )          const { return m_feCards.size(); }
+  ///  down card number (to which data is sent)
   inline int downCardNumber     ( const int card   )  const ;
-  ///  left card number 
+  ///  left card number (to which data is sent)
   inline int leftCardNumber     ( const int card   )  const ;
-  ///  corder card number 
+  ///  corder card number (to which data is sent) 
   inline int cornerCardNumber   ( const int card   )  const ;
-  ///  previous card number 
+  ///  previous card number (for global pi0 computation)
   inline int previousCardNumber ( const int card   )  const ;
   ///  card neighbours
   inline void cardNeighbors     ( const int card   , 
@@ -206,11 +209,11 @@ private:
   ///  Calorimeter index, to code CellIDs
   int      m_caloIndex;   
   ///  Maximum value for the Row / Column =31 or 63
-  int      maxRowCol;  
+  int      m_maxRowCol;  
   ///  First row or column over center,    16 or 64
-  int      firstRowUp;       
-  ///  Central value = maxRowCol/2,      15.5 or 31.5
-  double   centerRowCol;    
+  int      m_firstRowUp;       
+  ///  Central value = m_maxRowCol/2,      15.5 or 31.5
+  double   m_centerRowCol;    
   
   ///  Et value for the maximum ADC value at teta = 0 
  double   m_maxEtInCenter;    
@@ -226,11 +229,9 @@ private:
   ///  Z of the shower maximum in the local frame.
   double   m_zShowerMax;
   ///  Collection of cells
-  CaloVector<CellParam> cells;
+  CaloVector<CellParam> m_cells;
   ///  Parameters for the cards
-  int m_cards;
-  ///  Parameters for the cards
-  std::vector<CardParam> feCards ;
+  std::vector<CardParam> m_feCards ;
   
   /// Y to X ration, close to 1.
   double m_YToXSizeRatio;
@@ -291,76 +292,76 @@ inline MsgStream&     operator<<( MsgStream&    os , const DeCalorimeter* de )
 //  validity flag for the cell
 // ===========================================================================
 inline bool DeCalorimeter::valid    ( const CaloCellID& ID ) const 
-{ return cells[ID].size() >0;}
+{ return m_cells[ID].size() >0;}
 
 // ===========================================================================
 //  x-position of center of the cell
 // ===========================================================================
 inline double DeCalorimeter::cellX  ( const CaloCellID& ID ) const 
-{ return cells[ID].x (); }
+{ return m_cells[ID].x (); }
 //  ===========================================================================
 //  y-position of center of the cell
 //  ===========================================================================
 inline double DeCalorimeter::cellY  ( const CaloCellID& ID ) const 
-{ return cells[ID].y (); }
+{ return m_cells[ID].y (); }
 
 // ===========================================================================
 //  z-position of center of the cell
 // ===========================================================================
 inline double DeCalorimeter::cellZ  ( const CaloCellID& ID ) const 
-{ return cells[ID].z (); }
+{ return m_cells[ID].z (); }
 
 // ===========================================================================
 //  cell size
 // ===========================================================================
 inline double DeCalorimeter::cellSize ( const CaloCellID& ID ) const 
-{ return cells[ID].size (); }
+{ return m_cells[ID].size (); }
 
 // ===========================================================================
 //  sine function for given cell
 // ===========================================================================
 inline double DeCalorimeter::cellSine ( const CaloCellID& ID ) const 
-{ return cells[ID].sine (); }
+{ return m_cells[ID].sine (); }
 
 // ===========================================================================
 //  PM gain for given cell
 // ===========================================================================
 inline double DeCalorimeter::cellGain ( const CaloCellID& ID ) const 
-{ return cells[ID].gain (); }
+{ return m_cells[ID].gain (); }
 
 // ===========================================================================
 //  Timing for for given cell
 // ===========================================================================
 inline double DeCalorimeter::cellTime ( const CaloCellID& ID ) const 
-{ return cells[ID].time (); }
+{ return m_cells[ID].time (); }
 
 // ===========================================================================
 //  cell center
 // ===========================================================================
 inline const HepPoint3D& 
 DeCalorimeter::cellCenter ( const CaloCellID& ID ) const 
-{ return cells[ID].center       (); }
+{ return m_cells[ID].center       (); }
 
 // ============================================================================
 //  list of neighbour cells
 // ============================================================================
 inline const CaloNeighbors& 
 DeCalorimeter::neighborCells    ( const CaloCellID& ID ) const 
-{ return cells[ID].neighbors    (); }
+{ return m_cells[ID].neighbors    (); }
 
 // ============================================================================
 //  list of neighbour cells
 // ============================================================================
 inline const CaloNeighbors& 
 DeCalorimeter::zsupNeighborCells( const CaloCellID& ID ) const 
-{ return cells[ID].zsupNeighbors(); }
+{ return m_cells[ID].zsupNeighbors(); }
 
 // ============================================================================
 //  From ID to cell serial number and vice-versa
 // ============================================================================
 inline int    
 DeCalorimeter::cellIndex( const CaloCellID& ID ) const 
-{ return cells.index(ID); }
+{ return m_cells.index(ID); }
 
 // ============================================================================
 //  From ID to cell serial number and vice-versa
@@ -369,7 +370,7 @@ inline CaloCellID
 DeCalorimeter::cellIdByIndex( const unsigned int num )    const 
 {
   return 
-    ( (num < cells.size() ) ? (cells.begin()+num)->cellID() : CaloCellID() );
+    ( (num < m_cells.size() ) ? (m_cells.begin()+num)->cellID() : CaloCellID() );
 };
 
 // ============================================================================
@@ -377,19 +378,19 @@ DeCalorimeter::cellIdByIndex( const unsigned int num )    const
 // ============================================================================
 inline int 
 DeCalorimeter::cardNumber( const CaloCellID& ID ) const
-{return cells[ID].cardNumber(); }
+{return m_cells[ID].cardNumber(); }
 // ============================================================================
 //  card row  
 // ============================================================================
 inline int 
 DeCalorimeter::cardRow   ( const CaloCellID& ID ) const 
-{return cells[ID].cardRow();    }
+{return m_cells[ID].cardRow();    }
 // ============================================================================
 //  card column  
 // ============================================================================
 inline int 
 DeCalorimeter::cardColumn( const CaloCellID& ID ) const 
-{return cells[ID].cardColumn(); }
+{return m_cells[ID].cardColumn(); }
 // ============================================================================
 //  card address 
 // ============================================================================
@@ -399,40 +400,40 @@ DeCalorimeter::cardAddress ( const CaloCellID& ID     ,
                              int &             row    , 
                              int &             column ) const 
 {
-  card   = cells[ID].cardNumber ();
-  row    = cells[ID].cardRow() ;
-  column = cells[ID].cardColumn() ;
+  card   = m_cells[ID].cardNumber ();
+  row    = m_cells[ID].cardRow() ;
+  column = m_cells[ID].cardColumn() ;
 };
 
 // ============================================================================
 //  down card number 
 // ============================================================================
 inline int DeCalorimeter::downCardNumber  ( const int card )  const 
-{ return feCards[card].downNumber(); }
+{ return m_feCards[card].downNumber(); }
 
 // ============================================================================
 //  left card number 
 // ============================================================================
 inline int DeCalorimeter::leftCardNumber  ( const int card )  const 
-{ return feCards[card].leftNumber(); }
+{ return m_feCards[card].leftNumber(); }
 
 // ============================================================================
 //  corder card number 
 // ============================================================================
 inline int DeCalorimeter::cornerCardNumber( const int card )  const 
-{ return feCards[card].cornerNumber();}
+{ return m_feCards[card].cornerNumber();}
 
 // ============================================================================
 //  previous card number 
 // ============================================================================
 inline int DeCalorimeter::previousCardNumber(const int card ) const
-{  return feCards[card].previousNumber();}
+{  return m_feCards[card].previousNumber();}
 
 // ============================================================================
 //  validation card number 
 // ============================================================================
 inline int DeCalorimeter::validationNumber(const int card ) const
-{  return feCards[card].validationNumber();}
+{  return m_feCards[card].validationNumber();}
 
 // ============================================================================
 //  card neighbours
@@ -442,28 +443,28 @@ inline void DeCalorimeter::cardNeighbors ( const int card,
                                            int  & left, 
                                            int  & corner )const
 {
-  down   = feCards[card].downNumber();
-  left   = feCards[card].leftNumber();
-  corner = feCards[card].cornerNumber();
+  down   = m_feCards[card].downNumber();
+  left   = m_feCards[card].leftNumber();
+  corner = m_feCards[card].cornerNumber();
 };
 
 // ============================================================================
 //  card area 
 // ============================================================================
 inline int DeCalorimeter::cardArea       ( const int card ) const 
-{ return feCards[card].area(); };
+{ return m_feCards[card].area(); };
 
 // ============================================================================
 //  card first row 
 // ============================================================================
 inline int DeCalorimeter::cardFirstRow   ( const int card ) const 
-{ return feCards[card].firstRow();};
+{ return m_feCards[card].firstRow();};
 
 // ============================================================================
 //  card first column 
 // ============================================================================
 inline int DeCalorimeter::cardFirstColumn( const int card ) const 
-{ return feCards[card].firstColumn(); };
+{ return m_feCards[card].firstColumn(); };
 
 // ===========================================================================
 //  ID of the bottom left cell, of the top right cell, of the specified cell
@@ -471,9 +472,9 @@ inline int DeCalorimeter::cardFirstColumn( const int card ) const
 inline CaloCellID DeCalorimeter::firstCellID ( const int card ) const 
 {  
   return CaloCellID( m_caloIndex                 ,
-                     feCards[card].area       () , 
-                     feCards[card].firstRow   () ,
-                     feCards[card].firstColumn() ); 
+                     m_feCards[card].area       () , 
+                     m_feCards[card].firstRow   () ,
+                     m_feCards[card].firstColumn() ); 
 };
 
 // ===========================================================================
@@ -482,9 +483,9 @@ inline CaloCellID DeCalorimeter::firstCellID ( const int card ) const
 inline CaloCellID DeCalorimeter::lastCellID ( const int card ) const 
 {
   return CaloCellID( m_caloIndex                                   ,
-                     feCards[card].area       ()                   , 
-                     feCards[card].firstRow   () + nRowCaloCard -1 ,
-                     feCards[card].firstColumn() + nColCaloCard -1 ); 
+                     m_feCards[card].area       ()                   , 
+                     m_feCards[card].firstRow   () + nRowCaloCard -1 ,
+                     m_feCards[card].firstColumn() + nColCaloCard -1 ); 
 };
 
 // ===========================================================================
@@ -495,9 +496,9 @@ inline CaloCellID DeCalorimeter::cardCellID ( const int card ,
                                               const int col ) const 
 {
   return CaloCellID( m_caloIndex                       ,
-                     feCards[card].area       ()       , 
-                     feCards[card].firstRow   () + row ,
-                     feCards[card].firstColumn() + col ); 
+                     m_feCards[card].area       ()       , 
+                     m_feCards[card].firstRow   () + row ,
+                     m_feCards[card].firstColumn() + col ); 
 };
 
 

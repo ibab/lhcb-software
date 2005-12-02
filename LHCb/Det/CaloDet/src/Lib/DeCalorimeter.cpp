@@ -1,33 +1,4 @@
-// $Id: DeCalorimeter.cpp,v 1.22 2005-05-13 16:08:55 marcocle Exp $ 
-// ============================================================================
-// CVS tag $Name: not supported by cvs2svn $ 
-// ============================================================================
-// $Log: not supported by cvs2svn $
-// Revision 1.21  2003/06/16 13:39:05  sponce
-// use new version of DetDesc. Thus drop dependency on XML
-//
-// Revision 1.20  2002/12/17 15:39:53  ocallot
-// Add the Ecal Validation cards
-//
-// Revision 1.19  2002/10/03 10:21:42  cattanem
-// fix buggy usage of abs()
-//
-// Revision 1.18  2002/06/15 06:25:25  ocallot
-// new user parameters for x/y cell size and central hole
-//
-// Revision 1.17  2002/04/02 14:55:16  ibelyaev
-//  add 'const' qualifier to DeCalorimeter::Cell method
-//
-// Revision 1.16  2002/03/28 13:47:14  ibelyaev
-// new version of Kernel packages, move out all XMl-stuff
-//
-// Revision 1.15  2001/12/09 14:16:17  ibelyaev
-//  update for newer version of Gaudi
-//
-// Revision 1.14  2001/11/25 15:08:46  ibelyaev
-//  update for newer CaloKernel Package
-//
-// ============================================================================
+// $Id: DeCalorimeter.cpp,v 1.23 2005-12-02 14:52:47 ocallot Exp $ 
 #define  CALODET_DECALORIMETER_CPP 1
 // ============================================================================
 // from STL
@@ -54,12 +25,12 @@
  *  Implementation of class :  DeCalorimeter
  *
  *  @author Olivier Callot Olivier.Callot@cern.ch
- *  @author Vanya Belyaev  Ivan.Belyaev@itep.ru 
+ *  @author Vanya Belyaev  Ivan.Belyaev@itep.ru
  */
 // ============================================================================
 
 // ============================================================================
-/** constructor 
+/** constructor
  *  @name object name (useless)
  */
 DeCalorimeter::DeCalorimeter( const std::string& name )
@@ -88,111 +59,70 @@ const CLID& DeCalorimeter::clID () const { return DeCalorimeter::classID() ; }
 // ** Defines the maximum and center Row and Column in the cell number
 //----------------------------------------------------------------------------
 void DeCalorimeter::setCoding( const unsigned int nb ) {
-  
-  maxRowCol     = (1<< nb ) - 1;               // 63   (31   for HCAL)
-  firstRowUp    = maxRowCol/2 + 1 ;            // 32   (16   for HCAL)
-  centerRowCol  = .5 * (double) maxRowCol ;    // 31.5 (15.5 for HCAL)
+
+  m_maxRowCol     = (1<< nb ) - 1;               // 63   (31   for HCAL)
+  m_firstRowUp    = m_maxRowCol/2 + 1 ;            // 32   (16   for HCAL)
+  m_centerRowCol  = .5 * (double) m_maxRowCol ;    // 31.5 (15.5 for HCAL)
 };
 
 // ============================================================================
 // intialization method
 // ============================================================================
-StatusCode DeCalorimeter::initialize()
-{
+StatusCode DeCalorimeter::initialize() {
   StatusCode sc = DetectorElement::initialize();
-  ///
   if( sc.isFailure() ) { return sc ; }
-  ///
+
+  //== A few geometrical parameters from UserParameters in structure.xml
   typedef std::vector<std::string> Parameters;
   typedef Parameters::iterator     Iterator;
-  ///
+  Iterator it;
   Parameters pars( paramNames() );
-  ///
-  { /// coding bits
-    Iterator it =
-      std::find( pars.begin() , pars.end () , std::string("CodingBit") );
-    if( pars.end() != it ) {
-      setCoding( param<int>(*it) ) ;
-      pars.erase( it );
-    }
+
+  /// Y to X size ratio
+  it = std::find( pars.begin() , pars.end () , std::string("YToXSizeRatio") );
+  if( pars.end() != it ) {
+    m_YToXSizeRatio = param<double>( *it ) ;
+    pars.erase( it );
   }
-  { /// Et in Center
-    Iterator it =
-      std::find( pars.begin() , pars.end () , std::string("EtInCenter") );
-    if( pars.end() != it ) {
-      const double value = param<double>( *it ) ;
-      setEtInCenter( value ) ;
-      pars.erase( it );
-    }
+
+  //ZShowerMax
+  it = std::find( pars.begin() , pars.end () , std::string("ZShowerMax") );
+  if( pars.end() != it ) {
+    m_zShowerMax = param<double>( *it ) ;
+    pars.erase( it );
   }
-  { /// Et in slope
-    Iterator it =
-      std::find( pars.begin() , pars.end () , std::string("EtSlope") );
-    if( pars.end() != it ) {
-      const double value = param<double>( *it ) ;
-      setEtSlope( value ) ;
-      pars.erase( it );
-    }
+
+  //== Get other information from the condition database
+  Condition* gain = condition( "Gain" );
+  if ( 0 == gain ) {
+    int index =  CaloCellCode::CaloNumFromName( name() );
+    std::string myName = CaloCellCode::CaloNameFromNum( index ) + "Det";
+    MsgStream msg( msgSvc(), myName );
+    msg << MSG::ERROR << "'Gain' condition not found" << endreq;
+    return StatusCode::FAILURE;
   }
-  { /// AdcMax
-    Iterator it =
-      std::find( pars.begin() , pars.end () , std::string("AdcMax") );
-    if( pars.end() != it ) {
-      setAdcMax( param<int>(*it) ) ;
-      pars.erase( it );
-    }
+
+  setEtInCenter   ( gain->paramAsDouble( "EtInCenter"    ) ) ;
+  setEtSlope      ( gain->paramAsDouble( "EtSlope"       ) ) ;
+  setActiveToTotal( gain->paramAsDouble( "ActiveToTotal" ) ) ;
+
+  Condition* hardware = condition( "Hardware" );
+  if ( 0 == hardware ) {
+    int index =  CaloCellCode::CaloNumFromName( name() );
+    std::string myName = CaloCellCode::CaloNameFromNum( index ) + "Det";
+    MsgStream msg( msgSvc(), myName );
+    msg << MSG::ERROR << "'Hardware' condition not found" << endreq;
+    return StatusCode::FAILURE;
   }
-  { /// Total/Active ratio
-    Iterator it =
-      std::find( pars.begin() , pars.end () , std::string("ActiveToTotal") );
-    if( pars.end() != it ) {
-      const double value = param<double>( *it ) ;
-      setActiveToTotal( value ) ;
-      pars.erase( it );
-    }
-  }
-  { /// Z shower max position
-    Iterator it =
-      std::find( pars.begin() , pars.end () , std::string("ZShowerMax") );
-    if( pars.end() != it ) {
-      const double value = param<double>( *it ) ; 
-      setZShowerMax( value ) ;
-      pars.erase( it );
-    }
-  }
-  { /// Y to X size ratio 
-    Iterator it =
-      std::find( pars.begin() , pars.end () , std::string("YToXSizeRatio") );
-    if( pars.end() != it ) {
-      m_YToXSizeRatio = param<double>( *it ) ; 
-      pars.erase( it );
-    }
-  }
-  { /// central hole X size 
-    Iterator it =
-      std::find( pars.begin() , pars.end () , std::string("centralHoleX") );
-    if( pars.end() != it ) {
-      m_centralHoleX = param<int>( *it ) ; 
-      pars.erase( it );
-    }
-  }
-  { /// central hole Y size 
-    Iterator it =
-      std::find( pars.begin() , pars.end () , std::string("centralHoleY") );
-    if( pars.end() != it ) {
-      m_centralHoleY = param<int>( *it ) ; 
-      pars.erase( it );
-    }
-  }
-  ///
-  if( !pars.empty() ) {
-    // some "extra" parameters.
-    // should be an error??
-  }
-  ///
+
+  setAdcMax ( hardware->paramAsInt   ( "AdcMax"        ) ) ;
+  setCoding ( hardware->paramAsInt   ( "CodingBit"     ) );
+  m_centralHoleX = hardware->paramAsInt("centralHoleX");
+  m_centralHoleY = hardware->paramAsInt("centralHoleY");
+
   if( sc.isSuccess() ) { sc = buildCells(); }
   if( sc.isSuccess() ) { sc = buildCards(); }
-  ///
+
   return sc;
 };
 
@@ -201,13 +131,13 @@ StatusCode DeCalorimeter::initialize()
 //----------------------------------------------------------------------------
 
 StatusCode DeCalorimeter::buildCells( ) {
-	
+
   // ** do not initialize, if already initialize
 
   if( isInitialized() ) { return StatusCode::SUCCESS; }
   int nbCells = 0;
 
-  MsgStream log( msgSvc(), "buildCells"+ name () );
+  MsgStream msg( msgSvc(), "buildCells"+ name () );
 
   m_caloIndex = CaloCellCode::CaloNumFromName( name() );
 
@@ -238,36 +168,36 @@ StatusCode DeCalorimeter::buildCells( ) {
     HepPoint3D pointLocal(0,0,0), pointGlobal(0,0,0);
     pointLocal.setZ( zShowerMax() );
 
-	
+
     // ** The center of each cell is specified by step of one cell
     // ** in the local frame. One has to convert to the global frame
 
-    for( int Row = 0 ; maxRowCol >= Row    ; ++Row    ) {
-      pointLocal.setY( m_YToXSizeRatio * cellSize[Area] * (Row-centerRowCol));
+    for( int Row = 0 ; m_maxRowCol >= Row    ; ++Row    ) {
+      pointLocal.setY( m_YToXSizeRatio * cellSize[Area] * (Row-m_centerRowCol));
 
-      for( int Column = 0; maxRowCol >= Column ; ++Column )  {
-        pointLocal.setX( cellSize[ Area ] * ( Column - centerRowCol ) ) ;
- 
+      for( int Column = 0; m_maxRowCol >= Column ; ++Column )  {
+        pointLocal.setX( cellSize[ Area ] * ( Column - m_centerRowCol ) ) ;
+
         if( !lv->isInside( pointLocal ) ) {  continue ; }
 
-        // Mask the non connected calorimeter cells. 
+        // Mask the non connected calorimeter cells.
         // Should be only for central part, but is OK also for middle and
         // outer as the hole is quite small...
-        
-        if ( ( m_centralHoleX > fabs(Column - centerRowCol) ) &&
-             ( m_centralHoleY > fabs(Row    - centerRowCol) ) ) {
+
+        if ( ( m_centralHoleX > fabs(Column - m_centerRowCol) ) &&
+             ( m_centralHoleY > fabs(Row    - m_centerRowCol) ) ) {
           continue;
         }
 
         CaloCellID id( m_caloIndex, Area , Row , Column ) ;
-        cells.addEntry( CellParam(id) , id );  // store the new cell
+        m_cells.addEntry( CellParam(id) , id );  // store the new cell
 
         pointGlobal = geoData->toGlobal( pointLocal );
-        cells[id].setCenterSize( pointGlobal , cellSize[ Area ] ) ;
+        m_cells[id].setCenterSize( pointGlobal , cellSize[ Area ] ) ;
 
-        double gain = ( maxEtInCenter() / cells[id].sine() ) + maxEtSlope();
+        double gain = ( maxEtInCenter() / m_cells[id].sine() ) + maxEtSlope();
         gain        = gain / (double) adcMax() ;
-        cells[id].setGain( gain ) ;
+        m_cells[id].setGain( gain ) ;
         ++nbCells;
 
       } /// end of loop over rows
@@ -276,8 +206,8 @@ StatusCode DeCalorimeter::buildCells( ) {
 
   // ** Compute neighboring cells
 
-  for( CaloVector<CellParam>::iterator pCell = cells.begin() ;
-       cells.end() != pCell ; ++pCell ) {
+  for( CaloVector<CellParam>::iterator pCell = m_cells.begin() ;
+       m_cells.end() != pCell ; ++pCell ) {
 
     CaloCellID id       = pCell->cellID();
     int Column          = id.col  ( ) ;
@@ -285,22 +215,22 @@ StatusCode DeCalorimeter::buildCells( ) {
     unsigned int Area   = id.area ( ) ;
     int nNeigh          = 0;
 
-    // ** Defines the standard 8 neighbouring cells: 
+    // ** Defines the standard 8 neighbouring cells:
     // ** +-1 X and Y in the same area
-    // ** One may also take care (in the future) of 
+    // ** One may also take care (in the future) of
     // ** the central vertical separation
     // ** between the two calorimeter halves
 
     for( int iColumn = Column-1 ;  iColumn <= Column+1 ; ++iColumn ) {
-      if ( iColumn >= 0  && iColumn <= maxRowCol ) { // inside calorimeter
- 
+      if ( iColumn >= 0  && iColumn <= m_maxRowCol ) { // inside calorimeter
+
         for( int iRow = Row - 1 ;  iRow <= Row + 1 ; ++iRow ) {
           if( ( iRow >= 0 )         &&
-              ( iRow <= maxRowCol ) &&              // inside calorimeter
+              ( iRow <= m_maxRowCol ) &&              // inside calorimeter
               ( iRow != Row || iColumn != Column  ) ) {   // not itself...
- 
+
             CaloCellID id2( m_caloIndex, Area , iRow , iColumn );
-            if( cells[id2].valid() ) {
+            if( m_cells[id2].valid() ) {
               pCell->addZsupNeighbor( id2 ) ;
               pCell->addNeighbor( id2 ) ;
               nNeigh++;
@@ -312,22 +242,22 @@ StatusCode DeCalorimeter::buildCells( ) {
 
     if ( 8 != nNeigh ) {
 
-      // ** Find neighbours from different areas, 
+      // ** Find neighbours from different areas,
       // ** if not 8 same-area neighbors.
-      // ** For cells in different area to be neighbors, 
+      // ** For cells in different area to be neighbors,
       // ** the distance in X and Y of
-      // ** the two cells center should be less than half 
+      // ** the two cells center should be less than half
       // ** the sum of the cell sizes
       // ** To avoid rounding problems, one uses .55 instead of 1/2
 
-      double x    = cells[id].x    ();
-      double y    = cells[id].y    ();
-      double size = cells[id].size ();
+      double x    = m_cells[id].x    ();
+      double y    = m_cells[id].y    ();
+      double size = m_cells[id].size ();
 
       for( std::vector<double>::iterator pArea = cellSize.begin() ;
            cellSize.end() != pArea ; ++pArea ) {
         unsigned int iArea = pArea - cellSize.begin() ;
- 
+
         if( (iArea == Area)   ||
             (iArea == Area+2) ||
             (iArea == Area-2)    ) continue;   // Only in nearby area.
@@ -335,50 +265,41 @@ StatusCode DeCalorimeter::buildCells( ) {
         double sizeArea = *pArea;
         double margin = 0.55 * ( sizeArea + size ) ;
 
-        int cc = (int) ( x / sizeArea  + centerRowCol );
-        int rc = (int) ( y / sizeArea  + centerRowCol );
+        int cc = (int) ( x / sizeArea  + m_centerRowCol );
+        int rc = (int) ( y / sizeArea  + m_centerRowCol );
 
-        // ** To be fast, one checks only cells near 
+        // ** To be fast, one checks only cells near
         // ** the expected position (cc and rc)
         // ** We limit to +-4, i.e. the size ratio should be less than 4
 
         for( int  iRow = rc - 4 ; iRow <= rc + 4 ; ++iRow    ) {
-          if( (0 <= iRow ) && (maxRowCol >= iRow )    ) {
+          if( (0 <= iRow ) && (m_maxRowCol >= iRow )    ) {
 
             for( int  iColumn = cc - 4 ; iColumn <= cc + 4 ; ++iColumn ) {
-              if( ( 0 <= iColumn ) && ( maxRowCol >= iColumn )   ) {
+              if( ( 0 <= iColumn ) && ( m_maxRowCol >= iColumn )   ) {
 
                 CaloCellID id2( m_caloIndex, iArea , iRow , iColumn ) ;
- 
-                if( cells[id2].valid() ) {
-                  if( ( fabs( cells[id2].x() - x ) <= margin ) &&
-                      ( fabs( cells[id2].y() - y ) <= margin )    ) {
+
+                if( m_cells[id2].valid() ) {
+                  if( ( fabs( m_cells[id2].x() - x ) <= margin ) &&
+                      ( fabs( m_cells[id2].y() - y ) <= margin )    ) {
                     pCell->addNeighbor( id2 ) ;
                   }
                 }
               }
             } // Loop on columns
- 
+
           }
         } // Loop on Rows
- 
+
       } /// end of loop over all areas
     }
-
-    // Commented by V.B.
-    // log << MSG::VERBOSE << "Cell " << id << " Neighbors ";
-    // CaloNeighbors::const_iterator neighbor = neighborCells( id ).begin() ;
-    // while ( neighbor != neighborCells( id ).end() ) {
-    //  log << (*neighbor) ;
-    //  ++neighbor;
-    //  }
-    // log << endreq;
 
   } // end of loop ovel all cells
 
   m_initialized = true ;
 
-  log << MSG::DEBUG << "Initialized, index = " << m_caloIndex << ", "
+  msg << MSG::DEBUG << "Initialized, index = " << m_caloIndex << ", "
       << nbCells    << " cells." << endreq;
 
   return StatusCode::SUCCESS;
@@ -390,35 +311,35 @@ StatusCode DeCalorimeter::buildCells( ) {
 
 CaloCellID DeCalorimeter::Cell( const HepPoint3D& globalPoint ) const
 {
-  
+
   // ** if point is outside calorimeter
 
   Assert( 0 != geometry() , " Unable to extract IGeometryInfo* " );
   if( !geometry()->isInside( globalPoint ) ) { return CaloCellID( ) ; }
 
   // ** find subcalorimeter
-  
-  for( IDetectorElement::IDEContainer::const_iterator child = 
+
+  for( IDetectorElement::IDEContainer::const_iterator child =
          childBegin() ; childEnd() != child ; ++child ) {
     const DeSubCalorimeter* subCalorimeter = 0 ;
-    
-    try       { subCalorimeter = 
+
+    try       { subCalorimeter =
                   dynamic_cast<const DeSubCalorimeter*>(*child); }
     catch(...){ continue ; }
     Assert( 0 != subCalorimeter , " Unable to extract SubCalorimeter");
-    
+
     const IGeometryInfo* subCalGeo = subCalorimeter->geometry() ;
     Assert( 0 != subCalGeo , " Unable to extract Geometry Info ");
-    
+
     if( subCalGeo->isInside( globalPoint ) ) {
-      
+
       unsigned int Area     = child - childBegin()   ;
       double       CellSize = subCalorimeter->size() ;
 
       HepPoint3D localPoint( subCalGeo->toLocal( globalPoint ) );
 
-      int Column = (int) ( localPoint.x() / CellSize + firstRowUp ) ;
-      int Row    = (int) ( localPoint.y() / CellSize + firstRowUp ) ;
+      int Column = (int) ( localPoint.x() / CellSize + m_firstRowUp ) ;
+      int Row    = (int) ( localPoint.y() / CellSize + m_firstRowUp ) ;
 
       return CaloCellID( m_caloIndex, Area , Row , Column ) ;
     }
@@ -436,162 +357,102 @@ StatusCode DeCalorimeter::buildCards( )  {
 
   if( m_cardsInitialized ) { return StatusCode::SUCCESS; }
 
-  MsgStream log( msgSvc(), "buildCards"+ name () );
+  int index =  CaloCellCode::CaloNumFromName( name() );
+  std::string myName = CaloCellCode::CaloNameFromNum( index ) + "Det";
+  MsgStream msg( msgSvc(), myName + ".BuildCards" );
 
-  m_cards   = 0;
+  m_cardsInitialized = true;
+  m_feCards.clear();
 
-  // ** loop over all subparts of calorimeter
+  Condition* cond = condition( "CellsToCards" );
+  if ( 0 == cond ) {
+    msg << MSG::DEBUG << "No 'CellsToCards' condition" << endreq;  // SPD case
+    return StatusCode::SUCCESS;
+  }
+  if ( !cond->exists( "cards" ) ) {
+    msg << MSG::INFO << "No 'cards' parameters in 'CellsToCards' condition" << endreq;
+    return StatusCode::FAILURE;
+  }
 
-  for( IDetectorElement::IDEContainer::iterator child = childBegin() ;
-       childEnd() != child ; ++child ) {
+  std::vector<int> temp = cond->paramAsIntVect( "cards" );
+  msg << MSG::DEBUG << "The calorimeter has " << temp.size()/8
+      << " front end cards." << endreq;
+  int firstCrate = temp[6];
+  int prevValidation = -1;
+  for ( unsigned int kk = 0; temp.size()/8 > kk  ; ++kk ) {
+    int ll = 8*kk;
+    int cardNum = temp[ll];
+    int area    = temp[ll+1];
+    int fCol    = temp[ll+2];
+    int fRow    = temp[ll+3];
+    int lCol    = temp[ll+4];
+    int lRow    = temp[ll+5];
+    int crate   = temp[ll+6];
+    int slot    = temp[ll+7];
 
-    // ** get subpart of type DeSubCalorimeter
+    int downCard     = -1;
+    int leftCard     = -1;
+    int cornerCard   = -1;
+    int previousCard = -1;
 
-    DeSubCalorimeter* subCalorimeter = 0 ;
-    try       { subCalorimeter = dynamic_cast<DeSubCalorimeter*>(*child); }
-    catch(...){ continue ; }
-    Assert( 0 != subCalorimeter ,
-            " Unable to extract DeSubCalorimeter* object! ");
+    bool first = true;
+    for ( int row = fRow; lRow >= row; ++row ) {
+      for ( int col = fCol; lCol >= col; ++col ) {
+        CaloCellID id( m_caloIndex, area, row, col );
+        if ( valid( id ) ) {
+          m_cells[id].setFeCard( cardNum, col-fCol, row-fRow );
 
-    unsigned int iArea     = child - childBegin()           ;
+          first = false;
 
-    // ** Find the first row for this area: 
-    // ** A cards starts at the first row/column
-    // ** For the columns, this is always starting at 0 (or 8).
+          //== Find the cards TO WHICH this card sends data.
+          //== previous card in crate: only non zero row numer
+          if ( (row == fRow ) && (0 < fRow) ) {
+            CaloCellID testID( m_caloIndex, area , row-1 , col );
+            if ( cardNumber(testID) >= 0 ) {
+              downCard = cardNumber(testID);
+            }
+          }
 
-    int validationCard = 0;
-    int prevValidation = -1;
+          //== Left card:  As the two halves are independend, no 'Left' neighbors for
+          //== the central column. Test on 'm_firstRowUp' which is also the first Column Left
+          //== Find also the corner card.
 
-    int firstRow = -1;
-    for ( int iRow = 0; (maxRowCol >= iRow ) && (firstRow < 0); ++iRow ) {
-      CaloCellID anID( m_caloIndex, iArea , iRow , firstRowUp );
-      if( cells[anID].valid() )  { firstRow = iRow; }
+          if ( (col == fCol) && (0 < col) && (m_firstRowUp != col) ) {
+            CaloCellID testID( m_caloIndex, area , row , col-1 );
+            if ( cardNumber(testID) >= 0 ) {
+              leftCard = cardNumber(testID);
+            }
+            if ( (row == fRow) && (0 < row) ) {
+              CaloCellID testID( m_caloIndex, area , row-1 , col-1 );
+              if ( cardNumber(testID) >= 0 ) {
+                cornerCard = cardNumber(testID);
+              }
+            }
+          }
+        }
+      }
     }
 
-    if ( firstRow >=0 ) {
-      for ( int iCol = 0; maxRowCol >= iCol; iCol += nColCaloCard ) {
-        for ( int iRow = firstRow;
-              maxRowCol-firstRow >= iRow; iRow+=nRowCaloCard ) {
- 
-          // ** for each possible card, check if any of the 32 channels 
-          // ** of the card exist
- 
-          int nchan        =  0;
-          int downCard     = -1;
-          int leftCard     = -1;
-          int cornerCard   = -1;
-          int previousCard = -1;
-          for ( int cc = 0; nColCaloCard > cc ; ++cc ) {
-            for ( int rr = 0; nRowCaloCard > rr ; ++rr ) {
-              CaloCellID anID( m_caloIndex, iArea , iRow+rr , iCol+cc );
-              if ( cells[anID].valid() ) {
-                nchan = nchan+1;
-                cells[anID].setFeCard( m_cards, cc, rr );
-                
-                // ** One can find the Down/Left 
-                // ** (in the Calorimeter frame) cards,
-                // ** they are already built, as we do in ID order...
-  
-                if ( (0 == rr) && (0 < iRow) ) {
-                  CaloCellID testID( m_caloIndex, iArea , iRow-1 , iCol+cc );
-                  if ( cardNumber(testID) >= 0 ) {
-                    downCard = cardNumber(testID);
-                  }
-                }
-  
-                // ** As the two halves are independend, 
-                // ** no 'Left' neighbors for the central
-                // ** column. Test on 'firstRowUp' which is 
-                // ** also the first Column Left
+    int validationCard = 2 * ( crate-firstCrate);
+    if ( 7 < slot ) validationCard += 1;
+    if ( prevValidation == validationCard ) {
+      previousCard = downCard;
+    } else {
+      prevValidation = validationCard;
+    }
+    CardParam myCard(area, fRow, fCol );
+    myCard.setNeighboringCards( downCard, leftCard, cornerCard , previousCard);
+    myCard.setValidationNumber( validationCard );
+    m_feCards.push_back( myCard ); // add card
 
-                if ( (0 == cc) && (0 < iCol) && (firstRowUp != iCol) ) {
-                  CaloCellID testID( m_caloIndex, iArea , iRow+rr , iCol-1 );
-                  if ( cardNumber(testID) >= 0 ) {
-                    leftCard = cardNumber(testID);
-                  }
-                  if ( (0 == rr) && (0 < iRow) ) {
-                    CaloCellID testID( m_caloIndex, iArea , iRow-1 , iCol-1 );
-                    if ( cardNumber(testID) >= 0 ) {
-                      cornerCard = cardNumber(testID);
-                    }
-                  }
-                }
-              }  // ** valid ID
-            }  // ** Row in card
-          }  // ** Column in card
- 
-          if ( nchan > 0 ) {
+    msg << MSG::INFO 
+        << format ( "Card %3d (crate %2d slot%2d) has down %3d left %3d corner %3d previous %3d validation %2d",
+                    cardNum, crate, slot, downCard, leftCard, cornerCard, 
+                    previousCard, validationCard )
+        << endreq;
+  }
 
-            //== Hardcoded validation card number...
-            
-            if (                   6 >= m_cards ) validationCard = 0 ;
-            if (  7 <= m_cards && 12 >= m_cards ) validationCard = 1 ;
-            if ( 13 <= m_cards && 19 >= m_cards ) validationCard = 2 ;
-            if ( 20 <= m_cards && 25 >= m_cards ) validationCard = 3 ;
-            if ( 26 <= m_cards && 29 >= m_cards ) validationCard = 4 ;
-            if ( 30 <= m_cards && 33 >= m_cards ) validationCard = 5 ;
-            if ( 34 <= m_cards && 37 >= m_cards ) validationCard = 4 ;
-            if ( 38 <= m_cards && 41 >= m_cards ) validationCard = 5 ;
-            if ( 42 <= m_cards && 45 >= m_cards ) validationCard = 6 ;
-            if ( 46 <= m_cards && 49 >= m_cards ) validationCard = 7 ;
-            if ( 50 <= m_cards && 53 >= m_cards ) validationCard = 6 ;
-            if ( 54 <= m_cards && 57 >= m_cards ) validationCard = 7 ;
-            if ( 58 <= m_cards && 64 >= m_cards ) validationCard = 8 ;
-            if ( 65 <= m_cards && 70 >= m_cards ) validationCard = 9 ;
-            if ( 71 <= m_cards && 77 >= m_cards ) validationCard = 10 ;
-            if ( 78 <= m_cards && 83 >= m_cards ) validationCard = 11 ;
-
-            if ( 84 <= m_cards &&  89 >= m_cards ) validationCard = 12 ;
-            if ( 90 <= m_cards &&  93 >= m_cards ) validationCard = 13 ;
-            if ( 94 <= m_cards &&  99 >= m_cards ) validationCard = 14 ;
-            if (100 <= m_cards && 103 >= m_cards ) validationCard = 15 ;
-            if (104 <= m_cards && 105 >= m_cards ) validationCard = 13 ;
-            if (106 <= m_cards && 107 >= m_cards ) validationCard = 15 ;
-            if (108 <= m_cards && 109 >= m_cards ) validationCard = 13 ;
-            if (110 <= m_cards && 111 >= m_cards ) validationCard = 15 ;
-            if (112 <= m_cards && 113 >= m_cards ) validationCard = 16 ;
-            if (114 <= m_cards && 115 >= m_cards ) validationCard = 17 ;
-            if (116 <= m_cards && 117 >= m_cards ) validationCard = 16 ;
-            if (118 <= m_cards && 119 >= m_cards ) validationCard = 17 ;
-            if (120 <= m_cards && 123 >= m_cards ) validationCard = 16 ;
-            if (124 <= m_cards && 129 >= m_cards ) validationCard = 18 ;
-            if (130 <= m_cards && 133 >= m_cards ) validationCard = 17 ;
-            if (134 <= m_cards && 139 >= m_cards ) validationCard = 19 ;
-    
-            if (140 <= m_cards && 142 >= m_cards ) validationCard = 20 ;
-            if (143 <= m_cards && 148 >= m_cards ) validationCard = 21 ;
-            if (149 <= m_cards && 154 >= m_cards ) validationCard = 22 ;
-            if (155 <= m_cards && 157 >= m_cards ) validationCard = 23 ;
-            if (158 <= m_cards && 160 >= m_cards ) validationCard = 20 ;
-            if (161 <= m_cards && 163 >= m_cards ) validationCard = 23 ;
-            if (164 <= m_cards && 166 >= m_cards ) validationCard = 24 ;
-            if (167 <= m_cards && 169 >= m_cards ) validationCard = 25 ;
-            if (170 <= m_cards && 175 >= m_cards ) validationCard = 26 ;
-            if (176 <= m_cards && 178 >= m_cards ) validationCard = 25 ;
-            if (179 <= m_cards && 181 >= m_cards ) validationCard = 24 ;
-            if (182 <= m_cards && 187 >= m_cards ) validationCard = 27 ;
-
-            if ( prevValidation == validationCard ) {
-              previousCard = downCard;
-            }
-            else {
-              prevValidation = validationCard;
-            }
-
-            feCards.push_back( CardParam( iArea, iRow, iCol ) ); // add card
-            feCards[m_cards].setNeighboringCards( downCard,    leftCard,
-                                                  cornerCard , previousCard);
-            feCards[m_cards].setValidationNumber( validationCard );
-            m_cards = m_cards + 1;
-          } // ** Finished creating a new card with its cells.
-        } // ** Row
-      } // ** Col
-    } // ** If valid area, i.e. has a first row
-  } // ** Area
-  m_cardsInitialized = true;
-
-  log << MSG::DEBUG          << "Initialized, " << m_cards
-      << " front-end cards." << endreq;
+  msg << MSG::DEBUG << "Initialized, " << nCards() << " front-end cards." << endreq;
 
   return StatusCode::SUCCESS;
 };
@@ -599,12 +460,11 @@ StatusCode DeCalorimeter::buildCards( )  {
 // ============================================================================
 /// print to std::stream
 // ============================================================================
-std::ostream& DeCalorimeter::printOut( std::ostream& os ) const
-{
+std::ostream& DeCalorimeter::printOut( std::ostream& os ) const {
   CaloPrint print;
-  
-  os << "\tDeCalorimeter index=" << print( m_caloIndex ) 
-     << ", name from index ='"   
+
+  os << "\tDeCalorimeter index=" << print( m_caloIndex )
+     << ", name from index ='"
      << CaloCellCode::CaloNameFromNum( m_caloIndex ) << "'"
      << ", fullname ='"   << name ()  << "'"
      << "\tCellsInitialized=" ;
@@ -614,14 +474,14 @@ std::ostream& DeCalorimeter::printOut( std::ostream& os ) const
   if( m_cardsInitialized ) { os <<  "true" ; }
   else                     { os << "false" ; }
   os << std::endl;
-  
+
   os << "\t Parameters"
      << std::endl
      << "\t\tEt value for maximum ADC value at theta(0) =  "
-     << print( m_maxEtInCenter ) 
+     << print( m_maxEtInCenter )
      << std::endl
      << "\t\tIncrease in Et per radian                  =  "
-     << print( m_maxEtSlope    ) 
+     << print( m_maxEtSlope    )
      << std::endl
      << "\t\tMaximum codage in the ADC                  =  "
      << print( m_adcMax        )
@@ -633,28 +493,26 @@ std::ostream& DeCalorimeter::printOut( std::ostream& os ) const
      << print( m_zShowerMax    )
      << std::endl
      << "\t\tMaximum value for Row/Column               =  "
-     << print(   maxRowCol     )
+     << print(   m_maxRowCol     )
      << std::endl
      << "\t\tFirst Row or Column  over center           =  "
-     << print( firstRowUp      )
+     << print( m_firstRowUp      )
      << std::endl
-     << "\t\tCentral Value = maxRowCol/2                =  "
-     << print( centerRowCol    )
+     << "\t\tCentral Value = m_maxRowCol/2                =  "
+     << print( m_centerRowCol    )
      << std::endl ;
 
-  if( m_initialized )
-    {
-      CaloVector<CellParam>::const_iterator pCell = cells.begin() ;
-      while( cells.end() != pCell )
-        {
-          CaloCellID id = (pCell++)->cellID();
-          os << "Cell " << id << " Neighbors ";
-          std::copy( neighborCells( id ).begin() ,
-                     neighborCells( id ).end()   ,
-                     OS_iterator<CaloCellID,std::ostream>( os , "," ) );
-          os << std::endl;
-        }
+  if( m_initialized ) {
+    CaloVector<CellParam>::const_iterator pCell = m_cells.begin() ;
+    while( m_cells.end() != pCell ) {
+      CaloCellID id = (pCell++)->cellID();
+      os << "Cell " << id << " Neighbors ";
+      std::copy( neighborCells( id ).begin() ,
+                 neighborCells( id ).end()   ,
+                 OS_iterator<CaloCellID,std::ostream>( os , "," ) );
+      os << std::endl;
     }
+  }
 
   return os ;
 };
@@ -662,8 +520,7 @@ std::ostream& DeCalorimeter::printOut( std::ostream& os ) const
 // ============================================================================
 /// print to MsgStream
 // ============================================================================
-MsgStream&    DeCalorimeter::printOut( MsgStream&    os ) const
-{
+MsgStream&    DeCalorimeter::printOut( MsgStream&    os ) const {
   CaloPrint print;
   os << "\tDeCalorimeter index="   << std::setw(2) << m_caloIndex
      << ", name from index='"
@@ -695,46 +552,35 @@ MsgStream&    DeCalorimeter::printOut( MsgStream&    os ) const
      << print( m_zShowerMax    )
      << endreq
      << "\t\tMaximum value for Row/Column               =  "
-     << print(  maxRowCol      )
+     << print(  m_maxRowCol      )
      << endreq
      << "\t\tFirst Row or Column  over center           =  "
-     << print( firstRowUp      )
+     << print( m_firstRowUp      )
      << endreq
-     << "\t\tCentral Value = maxRowCol/2                =  "
-     << print( centerRowCol    )
+     << "\t\tCentral Value = m_maxRowCol/2                =  "
+     << print( m_centerRowCol    )
      << endreq ;
 
-  if( m_initialized )
-    {
-      const MSG::Level lev = os.currentLevel();
-      os.report( lev - 1 );
-      ///
-      CaloVector<CellParam>::const_iterator pCell = cells.begin() ;
-      while( cells.end() != pCell )
-        {
-          CaloCellID id = (pCell++)->cellID();
-          os << " Cell " << id << " Neighbors ";
-          std::copy( neighborCells( id ).begin() ,
-                     neighborCells( id ).end()   ,
-                     OS_iterator<CaloCellID,MsgStream>(os,",") );
-          os << endreq;
-        }
-      ///
-      os.report( lev );
+  if( m_initialized ) {
+    const MSG::Level lev = os.currentLevel();
+    os.report( lev - 1 );
+    ///
+    CaloVector<CellParam>::const_iterator pCell = m_cells.begin() ;
+    while( m_cells.end() != pCell ) {
+      CaloCellID id = (pCell++)->cellID();
+      os << " Cell " << id << " Neighbors ";
+      std::copy( neighborCells( id ).begin() ,
+                 neighborCells( id ).end()   ,
+                 OS_iterator<CaloCellID,MsgStream>(os,",") );
+      os << endreq;
     }
+    ///
+    os.report( lev );
+  }
 
   return os ;
 };
 
 // ============================================================================
-// The End 
+// The End
 // ============================================================================
-
-
-
-
-
-
-
-
-

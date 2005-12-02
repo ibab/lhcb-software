@@ -1,7 +1,15 @@
-! $Id: release.notes,v 1.45 2005-07-06 16:51:16 cattanem Exp $ 
+! $Id: release.notes,v 1.46 2005-12-02 14:52:47 ocallot Exp $ 
 ! =============================================================================
 Package         : CaloDet   
 Package manager : Vanya Belyaev Ivan.Belyaev@itep.ru
+
+! 2005-12-02 - Olivier Callot
+ - Get the gain parameters from the Conditions, no longer from UserParameters in
+   XmlDDDB structure file.
+ - Build the card geometry from the "CellsToCards" condition, no longer hardcoded.
+ - Add 'm_' in front of several data member names
+ - Remove data members holding the number of cells and cards: This is just the 
+   size of the corresponding vectors.
 
 !========================= CaloDet v6r9p1 2005-07-06 =========================
 ! 2005-07-06 - Vanya BELYAEV
