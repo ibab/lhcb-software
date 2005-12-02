@@ -1,8 +1,11 @@
-// $Id: SolidUnion.cpp,v 1.10 2003-09-20 13:25:42 ibelyaev Exp $ 
+// $Id: SolidUnion.cpp,v 1.11 2005-12-02 18:36:56 jpalac Exp $ 
 // ===========================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ===========================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.10  2003/09/20 13:25:42  ibelyaev
+//  few fixes to solve Gauss problems
+//
 // Revision 1.9  2003/06/16 13:42:36  sponce
 // fixes for gcc 3.2 and 3.3
 //
@@ -81,7 +84,7 @@ SolidUnion::~SolidUnion()
  *  @return true if the point is inside the solid
  */
 // ============================================================================
-bool SolidUnion::isInside     ( const HepPoint3D   & point ) const 
+bool SolidUnion::isInside     ( const Gaudi::XYZPoint   & point ) const 
 { 
   /// check bounding box 
   if ( isOutBBox( point )         ) { return false ; }
@@ -104,7 +107,7 @@ bool SolidUnion::isInside     ( const HepPoint3D   & point ) const
  */
 // ============================================================================
 StatusCode  SolidUnion::unite( ISolid*                solid    , 
-                               const HepTransform3D*  mtrx     )
+                               const Gaudi::Transform3D*  mtrx     )
 {  
   StatusCode sc = addChild( solid , mtrx ); 
   if( sc.isFailure() ) { return sc ; }
@@ -119,8 +122,8 @@ StatusCode  SolidUnion::unite( ISolid*                solid    ,
  */
 // ============================================================================
 StatusCode  SolidUnion::unite ( ISolid*               solid    , 
-                                const HepPoint3D&     position , 
-                                const HepRotation&    rotation )
+                                const Gaudi::XYZPoint&     position , 
+                                const Gaudi::Rotation3D&    rotation )
 {
   StatusCode sc = addChild( solid , position , rotation ); 
   if( sc.isFailure() ) { return sc ; }

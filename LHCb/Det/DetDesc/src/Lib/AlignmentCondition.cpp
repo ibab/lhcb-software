@@ -1,4 +1,4 @@
-// $Id: AlignmentCondition.cpp,v 1.6 2005-12-02 15:45:09 cattanem Exp $
+// $Id: AlignmentCondition.cpp,v 1.7 2005-12-02 18:36:56 jpalac Exp $
 // Include files
 #include <algorithm>
 
@@ -76,21 +76,21 @@ StatusCode AlignmentCondition::initialize() {
 }
 
 //=============================================================================
-const HepTranslate3D* AlignmentCondition::XYZTranslation(const std::vector<double>& coefficients) const
+const Gaudi::TranslationXYZ* AlignmentCondition::XYZTranslation(const std::vector<double>& coefficients) const
 {
-  return (coefficients.size()==3) ? new HepTranslate3D(coefficients[0],
+  return (coefficients.size()==3) ? new Gaudi::TranslationXYZ(coefficients[0],
                                                        coefficients[1],
                                                        coefficients[2]) :
-    new HepTranslate3D();
+    new Gaudi::TranslationXYZ();
 }
 //=============================================================================
-const HepTransform3D* AlignmentCondition::XYZRotation(const std::vector<double>& coefficients) const
+const Gaudi::Transform3D* AlignmentCondition::XYZRotation(const std::vector<double>& coefficients) const
 {
-  if (coefficients.size()!=3) return new HepTransform3D();
+  if (coefficients.size()!=3) return new Gaudi::Transform3D();
   
-  HepTransform3D* result = new HepRotateX3D(coefficients[0]);
-  *result = *result * HepRotateY3D(coefficients[1]);
-  *result = *result * HepRotateZ3D(coefficients[2]);
+  Gaudi::Transform3D* result = new Gaudi::RotationX(coefficients[0]);
+  *result = *result * Gaudi::RotationY(coefficients[1]);
+  *result = *result * Gaudi::RotationZ(coefficients[2]);
   return result;
   
 }
@@ -112,16 +112,16 @@ StatusCode AlignmentCondition::makeMatrices()
 
     m_matrixInv =  
       ( *XYZTranslation( translations ) ) *
-      ( ( *XYZTranslation( pivot )).inverse() *
+      ( ( *XYZTranslation( pivot )).Inverse() *
       ( ( *XYZRotation( rotations )       ) *
         ( *XYZTranslation( pivot )        ) ));
 
-    m_matrix = m_matrixInv.inverse();
+    m_matrix = m_matrixInv.Inverse();
     return StatusCode::SUCCESS;
   } else {
     log << MSG::ERROR << "Translations vector has funny size: "
         << translations.size() << ". Assigning identity matrices" << endmsg;
-    m_matrixInv=HepTranslate3D();
+    m_matrixInv=Gaudi::TranslationXYZ();
     m_matrix=m_matrixInv;
     return StatusCode::FAILURE;
   }

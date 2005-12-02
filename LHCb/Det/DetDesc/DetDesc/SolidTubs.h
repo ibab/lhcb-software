@@ -1,8 +1,11 @@
-// $Id: SolidTubs.h,v 1.9 2002-05-13 18:29:53 ibelyaev Exp $
+// $Id: SolidTubs.h,v 1.10 2005-12-02 18:36:55 jpalac Exp $
 // ===========================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ===========================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.9  2002/05/13 18:29:53  ibelyaev
+//  see $DETDESCROOT/doc/release.notes 13 May 2002
+//
 // Revision 1.8  2002/05/11 18:25:46  ibelyaev
 //  see $DETDESCROOT/doc/release.notes 11 May 2002
 //
@@ -13,8 +16,8 @@
 #include <cmath>
 #include <iostream>
 // CLHEP includes 
-#include "CLHEP/Geometry/Point3D.h" 
-#include "CLHEP/Geometry/Vector3D.h"
+#include "Kernel/Point3DTypes.h" 
+#include "Kernel/Vector3DTypes.h"
 #include "CLHEP/Units/PhysicalConstants.h" 
 // DetDesc 
 #include "DetDesc/SolidBase.h" 
@@ -75,7 +78,7 @@ public:
    *  @param point point (in local reference system of the solid)
    *  @return true if the point is inside the solid
    */
-  bool isInside ( const HepPoint3D& point ) const; 
+  bool isInside ( const Gaudi::XYZPoint& point ) const; 
   
   /** retrieve the pointer to "the most simplified cover" 
    *    -# for Model = 0 
@@ -132,8 +135,8 @@ public:
    */
   virtual unsigned int 
   intersectionTicks 
-  ( const HepPoint3D&  Point  ,        
-    const HepVector3D& Vector ,       
+  ( const Gaudi::XYZPoint&  Point  ,        
+    const Gaudi::XYZVector& Vector ,       
     ISolid::Ticks   &  ticks  ) const ;
   
   /** calculate the intersection points("ticks") of the solid objects 
@@ -159,8 +162,8 @@ public:
    */
   virtual unsigned int 
   intersectionTicks 
-  ( const HepPoint3D & Point   ,
-    const HepVector3D& Vector  ,
+  ( const Gaudi::XYZPoint & Point   ,
+    const Gaudi::XYZVector& Vector  ,
     const Tick       & tickMin ,
     const Tick       & tickMax ,
     Ticks            & ticks   ) const ;
@@ -216,13 +219,13 @@ protected:
    *  @param point to be checked 
    *  @return true if point is "inside rho" 
    */
-  inline const bool insideRho ( const HepPoint3D& point ) const ;
+  inline const bool insideRho ( const Gaudi::XYZPoint& point ) const ;
   
   /** check for phi 
    *  @param point to be checked 
    *  @return true if point is "inside phi" 
    */
-  inline const bool insidePhi ( const HepPoint3D& point ) const ;
+  inline const bool insidePhi ( const Gaudi::XYZPoint& point ) const ;
   
   
   /// gap in phi ?
@@ -267,7 +270,7 @@ private:
  *  @return true if point is "inside rho" 
  */
 // ===========================================================================
-inline const bool SolidTubs::insideRho ( const HepPoint3D& point ) const 
+inline const bool SolidTubs::insideRho ( const Gaudi::XYZPoint& point ) const 
 {
   const double rho2 = point.perp2();
   if( rho2 > outerRadius() * outerRadius() ) { return false ; }
@@ -285,7 +288,7 @@ inline const bool SolidTubs::insideRho ( const HepPoint3D& point ) const
  *  @return true if point is "inside phi" 
  */
 // ===========================================================================
-inline const bool SolidTubs::insidePhi ( const HepPoint3D& point ) const 
+inline const bool SolidTubs::insidePhi ( const Gaudi::XYZPoint& point ) const 
 {
   if( noPhiGap()                                    ) { return true ; }
   double phi = point.phi() ;   // [-180,180] 

@@ -1,4 +1,4 @@
-// $Id: SolidTrap.h,v 1.11 2005-01-25 14:09:19 cattanem Exp $
+// $Id: SolidTrap.h,v 1.12 2005-12-02 18:36:55 jpalac Exp $
 /// ===========================================================================
 /// CVS tag $Name: not supported by cvs2svn $ 
 /// ===========================================================================
@@ -10,9 +10,9 @@
 #include <iostream> 
 
 /** CLHEP incluides */
-#include "CLHEP/Geometry/Point3D.h" 
-#include "CLHEP/Geometry/Vector3D.h" 
-#include "CLHEP/Geometry/Plane3D.h" 
+#include "Kernel/Point3DTypes.h" 
+#include "Kernel/Vector3DTypes.h" 
+#include "Kernel/Plane3DTypes.h" 
 #include "CLHEP/Units/PhysicalConstants.h" 
 
 /** DetDesc includes */ 
@@ -41,7 +41,7 @@ class SolidTrap: public    virtual SolidBase            ,
 public:
 
   /// typedef for vertices 
-  typedef std::vector<HepPoint3D> VERTICES;
+  typedef std::vector<Gaudi::XYZPoint> VERTICES;
 
 public: 
   
@@ -188,7 +188,7 @@ protected:
    *  @param indx  index of the vertex 
    *  @return  vertex 
    */
-  inline const HepPoint3D& point( const VERTICES::size_type& indx ) const 
+  inline const Gaudi::XYZPoint& point( const VERTICES::size_type& indx ) const 
   { return m_ph_vertices[indx]; } 
   
 private: 

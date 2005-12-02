@@ -1,4 +1,4 @@
-// $Id: SolidTrap.cpp,v 1.15 2005-01-25 14:09:19 cattanem Exp $
+// $Id: SolidTrap.cpp,v 1.16 2005-12-02 18:36:56 jpalac Exp $
 // ===========================================================================
 /**  GaudiKernel package */  
 #include "GaudiKernel/IInspector.h"
@@ -139,21 +139,21 @@ void SolidTrap::makeAll()
     double fDx4        = dxAtPlusZPlusY ()      ; 
     double fTalpha2    = tan( alphaAtPlusZ() )  ; 
     ///
-    HepPoint3D p0( -fDz * fTthetaCphi - fDy1 * fTalpha1 - fDx1 , 
+    Gaudi::XYZPoint p0( -fDz * fTthetaCphi - fDy1 * fTalpha1 - fDx1 , 
                    -fDz * fTthetaSphi - fDy1 , -fDz ) ;
-    HepPoint3D p1( -fDz * fTthetaCphi - fDy1 * fTalpha1 + fDx1 , 
+    Gaudi::XYZPoint p1( -fDz * fTthetaCphi - fDy1 * fTalpha1 + fDx1 , 
                    -fDz * fTthetaSphi - fDy1 , -fDz ) ;
-    HepPoint3D p2( -fDz * fTthetaCphi + fDy1 * fTalpha1 - fDx2 , 
+    Gaudi::XYZPoint p2( -fDz * fTthetaCphi + fDy1 * fTalpha1 - fDx2 , 
                    -fDz * fTthetaSphi + fDy1 , -fDz ) ;
-    HepPoint3D p3( -fDz * fTthetaCphi + fDy1 * fTalpha1 + fDx2 ,
+    Gaudi::XYZPoint p3( -fDz * fTthetaCphi + fDy1 * fTalpha1 + fDx2 ,
                    -fDz * fTthetaSphi + fDy1 , -fDz ) ;
-    HepPoint3D p4( +fDz * fTthetaCphi - fDy2 * fTalpha2 - fDx3 ,
+    Gaudi::XYZPoint p4( +fDz * fTthetaCphi - fDy2 * fTalpha2 - fDx3 ,
                    +fDz * fTthetaSphi - fDy2 , +fDz ) ;
-    HepPoint3D p5( +fDz * fTthetaCphi - fDy2 * fTalpha2 + fDx3 , 
+    Gaudi::XYZPoint p5( +fDz * fTthetaCphi - fDy2 * fTalpha2 + fDx3 , 
                    +fDz * fTthetaSphi - fDy2 , +fDz ) ;
-    HepPoint3D p6( +fDz * fTthetaCphi + fDy2 * fTalpha2 - fDx4 ,
+    Gaudi::XYZPoint p6( +fDz * fTthetaCphi + fDy2 * fTalpha2 - fDx4 ,
                    +fDz * fTthetaSphi + fDy2 , +fDz ) ;
-    HepPoint3D p7( +fDz * fTthetaCphi + fDy2 * fTalpha2 + fDx4 , 
+    Gaudi::XYZPoint p7( +fDz * fTthetaCphi + fDy2 * fTalpha2 + fDx4 , 
                    +fDz * fTthetaSphi + fDy2 , +fDz ) ;
     ///
     m_ph_vertices.push_back( p0 ) ; 

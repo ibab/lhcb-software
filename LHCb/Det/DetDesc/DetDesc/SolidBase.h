@@ -1,4 +1,4 @@
-// $Id: SolidBase.h,v 1.10 2005-01-25 14:09:19 cattanem Exp $
+// $Id: SolidBase.h,v 1.11 2005-12-02 18:36:55 jpalac Exp $
 #ifndef DETDESC_SOLIDBASE_H 
 #define DETDESC_SOLIDBASE_H 1
 
@@ -58,8 +58,8 @@ public:
    */
   virtual unsigned int 
   intersectionTicks 
-  ( const HepPoint3D  & Point   ,         
-    const HepVector3D & Vector  ,         
+  ( const Gaudi::XYZPoint  & Point   ,         
+    const Gaudi::XYZVector & Vector  ,         
     ISolid::Ticks     & ticks   ) const ; 
   
   /** - calculate the intersection points("ticks") of the solid objects 
@@ -86,8 +86,8 @@ public:
    */
   virtual unsigned int 
   intersectionTicks 
-  ( const HepPoint3D  & Point   ,         
-    const HepVector3D & Vector  ,         
+  ( const Gaudi::XYZPoint  & Point   ,         
+    const Gaudi::XYZVector & Vector  ,         
     const ISolid::Tick& tickMin ,         
     const ISolid::Tick& tickMax ,         
     ISolid::Ticks     & ticks   ) const ; 
@@ -210,7 +210,7 @@ protected:
    *  @return true of point is outside the bounding box 
    */
   inline bool isOutBBox      
-  ( const HepPoint3D& point         , 
+  ( const Gaudi::XYZPoint& point         , 
     const double      tolerance = 0 ) const 
   {
     return 
@@ -235,7 +235,7 @@ protected:
    *  @return true of point is outside the bounding sphere 
    */
   inline bool isOutBSphere   
-  ( const HepPoint3D& point         ,
+  ( const Gaudi::XYZPoint& point         ,
     const double      tolerance = 0 ) const 
   {
     if( 0 == tolerance ) 
@@ -251,7 +251,7 @@ protected:
    *  @return true of point is outside the bounding cylinder 
    */
   inline bool isOutBCylinder 
-  ( const HepPoint3D& point         , 
+  ( const Gaudi::XYZPoint& point         , 
     const double      tolerance = 0 ) const 
   {
     if( 0 != tolerance ) 
@@ -276,8 +276,8 @@ protected:
    *  @return true if the whole segment is "outside" of the bounding box 
    */
   inline bool isOutBBox      
-  ( const HepPoint3D& p1            , 
-    const HepPoint3D& p2            , 
+  ( const Gaudi::XYZPoint& p1            , 
+    const Gaudi::XYZPoint& p2            , 
     const double      tolerance = 0 ) const 
   { 
     if( 0 == tolerance ) 
@@ -318,8 +318,8 @@ protected:
    *  @return true if the whole segment is "outside" of the bounding box 
    */
   inline bool isOutBBox      
-  ( const HepPoint3D&   p             , 
-    const HepVector3D&  v             , 
+  ( const Gaudi::XYZPoint&   p             , 
+    const Gaudi::XYZVector&  v             , 
     const ISolid::Tick& tmin          ,
     const ISolid::Tick& tmax          , 
     const double        tolerance = 0 ) const 
@@ -334,13 +334,13 @@ protected:
    *  @return true if line do not cross the bounding sphere  
    */
   inline bool crossBSphere      
-  ( const HepPoint3D&   p             , 
-    const HepVector3D&  v             , 
+  ( const Gaudi::XYZPoint&   p             , 
+    const Gaudi::XYZVector&  v             , 
     const double        tolerance = 0 ) const 
   {
     const double pp   = p.mag2 ()           ;
     const double vv   = v.mag2 ()           ;
-    const double pv   = p.dot  ( v )        ;
+    const double pv   = p.Dot  ( v )        ;
     const double rmax = rMax() + tolerance  ;
     if( rmax <= 0              ) { return false ; }
     const double dd   = rmax * rmax         ;
@@ -357,13 +357,13 @@ protected:
    *  @return true if line do not cross the surface of bounding cylinder  
    */
   inline bool crossBCylinder      
-  ( const HepPoint3D&   p             , 
-    const HepVector3D&  v             , 
+  ( const Gaudi::XYZPoint&   p             , 
+    const Gaudi::XYZVector&  v             , 
     const double        tolerance = 0 ) const 
   {
     const double pp     = p.perp2 ()                  ;
     const double vv     = v.perp2 ()                  ;
-    const double pv     = p.dot ( v ) - p.z() * v.z() ;
+    const double pv     = p.Dot ( v ) - p.z() * v.z() ;
     const double rhomax = rhoMax() + tolerance  ;
     if( rhomax <= 0            ) { return false ; }
     const double dd     = rhomax * rhomax     ;

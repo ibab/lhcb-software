@@ -1,8 +1,11 @@
-// $Id: SolidSphere.h,v 1.10 2002-10-29 13:49:36 ranjard Exp $ 
+// $Id: SolidSphere.h,v 1.11 2005-12-02 18:36:55 jpalac Exp $ 
 // ===========================================================================
 // CVS $Name: not supported by cvs2svn $ 
 // ===========================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.10  2002/10/29 13:49:36  ranjard
+// v11r2 - head revision uses new versions and contains all bug fixes and new features
+//
 // Revision 1.9.4.1  2002/10/29 13:29:34  ranjard
 // v10r5 - built on v10r3b branch - bug fix in SolidSphere.h
 //
@@ -73,7 +76,7 @@ public:
    *  @param point point (in local reference system of the solid)
    *  @return true if the point is inside the solid
    */
-  bool isInside ( const HepPoint3D& point ) const;
+  bool isInside ( const Gaudi::XYZPoint& point ) const;
   
   /** -# retrieve the pointer to "simplified" solid - "cover"
    *  -# implementation of ISolid abstract interface  
@@ -141,8 +144,8 @@ public:
    *  @return the number of intersection points
    */
   virtual unsigned int 
-  intersectionTicks ( const HepPoint3D & Point  ,         
-                      const HepVector3D& Vector ,         
+  intersectionTicks ( const Gaudi::XYZPoint & Point  ,         
+                      const Gaudi::XYZVector& Vector ,         
                       ISolid::Ticks    & ticks  ) const ;
   
   /**  return the inner radius of sphere segment
@@ -251,19 +254,19 @@ protected:
    *  @param point to be checked 
    *  @return true if point is "inside rho" 
    */
-  inline const bool insideR     ( const HepPoint3D& point ) const ;
+  inline const bool insideR     ( const Gaudi::XYZPoint& point ) const ;
   
   /** check for phi 
    *  @param point to be checked 
    *  @return true if point is "inside phi" 
    */
-  inline const bool insidePhi   ( const HepPoint3D& point ) const ;
+  inline const bool insidePhi   ( const Gaudi::XYZPoint& point ) const ;
   
   /** check for theta
    *  @param point to be checked 
    *  @return true if point is "inside theta" 
    */
-  inline const bool insideTheta ( const HepPoint3D& point ) const ;
+  inline const bool insideTheta ( const Gaudi::XYZPoint& point ) const ;
   
 protected:
 
@@ -311,7 +314,7 @@ private:
  */
 // ===========================================================================
 inline const bool SolidSphere::insideR 
-( const HepPoint3D& point ) const 
+( const Gaudi::XYZPoint& point ) const 
 {
   const double r2 = point.mag2();
   if(  r2 >  outerR2 () ) { return false ; }
@@ -328,7 +331,7 @@ inline const bool SolidSphere::insideR
  */
 // ===========================================================================
 inline const bool SolidSphere::insidePhi 
-( const HepPoint3D& point ) const 
+( const Gaudi::XYZPoint& point ) const 
 {
   if( noPhiGap()                                    ) { return true ; }
   double phi = point.phi() ;   // [-180,180] 
@@ -349,7 +352,7 @@ inline const bool SolidSphere::insidePhi
  */
 // ===========================================================================
 inline const bool SolidSphere::insideTheta 
-( const HepPoint3D& point ) const 
+( const Gaudi::XYZPoint& point ) const 
 {
   if( noThetaGap()                                        ) { return true ; }
   const double theta = point.theta() ;  

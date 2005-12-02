@@ -1,8 +1,11 @@
-// $Id: IPVolume_predicates.h,v 1.5 2001-11-18 15:32:44 ibelyaev Exp $ 
+// $Id: IPVolume_predicates.h,v 1.6 2005-12-02 18:36:55 jpalac Exp $ 
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.5  2001/11/18 15:32:44  ibelyaev
+//  update for Logical Assemblies
+//
 // Revision 1.4  2001/08/24 12:06:13  ibelyaev
 //  changes to take into account Assembly Volumes
 // 
@@ -13,8 +16,8 @@
 #include <iostream>
 #include <functional>
 // CLHEP 
-#include "CLHEP/Geometry/Point3D.h"
-#include "CLHEP/Geometry/Transform3D.h"
+#include "Kernel/Point3DTypes.h"
+#include "Kernel/Transform3DTypes.h"
 // DetDesc 
 #include "DetDesc/IPVolume.h"
 #include "DetDesc/ILVolume.h"
@@ -41,7 +44,7 @@ public:
   /** explict constructor
    *  @param PointInMotherFrame point in mother reference system 
    */
-  explicit IPVolume_isInside( const HepPoint3D& PointInMotherFrame ) 
+  explicit IPVolume_isInside( const Gaudi::XYZPoint& PointInMotherFrame ) 
     : m_point( PointInMotherFrame ){};
   /** check for the point
    *  @param pv pointer to Physical volume 
@@ -51,7 +54,7 @@ public:
   { return ( ( 0 == pv ) ? false : pv->isInside( m_point ) ) ; }
  private:
   /// point to be checked 
-  const HepPoint3D m_point;
+  const Gaudi::XYZPoint m_point;
 };
 
 
@@ -92,12 +95,12 @@ private:
  *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
  */
 class IPVolume_accumulateMatrix: 
-  public std::unary_function<const IPVolume*,HepTransform3D&>
+  public std::unary_function<const IPVolume*,Gaudi::Transform3D&>
 {
 public: 
   //
-  inline HepTransform3D& operator() 
-    ( HepTransform3D&  mtrx , const  IPVolume* pv   ) 
+  inline Gaudi::Transform3D& operator() 
+    ( Gaudi::Transform3D&  mtrx , const  IPVolume* pv   ) 
   { mtrx = pv->matrix()*mtrx; return mtrx; }
   //
 }; 

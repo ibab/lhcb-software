@@ -1,4 +1,4 @@
-// $Id: LogVolBase.cpp,v 1.13 2005-04-22 13:10:41 marcocle Exp $
+// $Id: LogVolBase.cpp,v 1.14 2005-12-02 18:36:56 jpalac Exp $
 
 // GaudiKernel
 #include "GaudiKernel/System.h"
@@ -410,8 +410,8 @@ IPVolume* LogVolBase::createPVolume()
 // ===========================================================================
 IPVolume* LogVolBase::createPVolume ( const std::string&    PVname         , 
                                       const std::string&    LVnameForPV    ,
-                                      const HepPoint3D&     Position       ,
-                                      const HepRotation&    Rotation       ) 
+                                      const Gaudi::XYZPoint&     Position       ,
+                                      const Gaudi::Rotation3D&   Rotation       ) 
 {
   //  const size_t copy_number = copyNumber( PVname ) ;
   //Assert( !copyExist( copy_number ) ,
@@ -449,7 +449,7 @@ IPVolume*
 LogVolBase::createPVolume
 ( const std::string&    PVname      , 
   const std::string&    LVnameForPV ,
-  const HepTransform3D& Transform   )
+  const Gaudi::Transform3D& Transform   )
 {
   //
   //  const size_t copy_number = copyNumber( PVname ) ;
@@ -489,8 +489,8 @@ LogVolBase::createPVolume
 // ============================================================================
 unsigned int  
 LogVolBase::intersectDaughters
-( const HepPoint3D&        Point              , 
-  const HepVector3D&       Vector             , 
+( const Gaudi::XYZPoint&        Point              , 
+  const Gaudi::XYZVector&       Vector             , 
   ILVolume::Intersections& childIntersections , 
   const ISolid::Tick     & tickMin            , 
   const ISolid::Tick     & tickMax            , 
@@ -543,8 +543,8 @@ LogVolBase::intersectDaughters
 // ============================================================================
 unsigned int  
 LogVolBase::intersectDaughters
-( const HepPoint3D&        Point              , 
-  const HepVector3D&       Vector             , 
+( const Gaudi::XYZPoint&        Point              , 
+  const Gaudi::XYZVector&       Vector             , 
   ILVolume::Intersections& childIntersections , 
   const double             Threshold          ) const
 {

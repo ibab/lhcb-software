@@ -1,4 +1,4 @@
-// $Id: Solid.h,v 1.3 2004-07-09 14:19:41 cattanem Exp $
+// $Id: Solid.h,v 1.4 2005-12-02 18:36:55 jpalac Exp $
 /// ===========================================================================
 /// CVS tag $Name: not supported by cvs2svn $ 
 /// ===========================================================================
@@ -8,7 +8,7 @@
 #include <string>
 #include <functional>
 /// CLHEP 
-#include "CLHEP/Geometry/Point3D.h"
+#include "Kernel/Point3DTypes.h"
 /// DetDesc 
 #include "DetDesc/ISolid.h"
 
@@ -54,7 +54,7 @@ namespace Solid
     /** (explicit) constructor
      *   @param LocalPoint  point (in local reference system of solid)
      */
-    explicit IsInside( const HepPoint3D& LocalPoint  ) 
+    explicit IsInside( const Gaudi::XYZPoint& LocalPoint  ) 
       : m_point( LocalPoint ){};
     
     /** check if the point is inside of solid 
@@ -66,7 +66,7 @@ namespace Solid
     
   private:
     
-    HepPoint3D m_point; ///< point in the Local Reference System of Solid 
+    Gaudi::XYZPoint m_point; ///< point in the Local Reference System of Solid 
     
   };
 

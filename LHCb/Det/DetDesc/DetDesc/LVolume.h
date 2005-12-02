@@ -1,4 +1,4 @@
-// $Id: LVolume.h,v 1.20 2005-01-25 14:40:21 cattanem Exp $ 
+// $Id: LVolume.h,v 1.21 2005-12-02 18:36:55 jpalac Exp $ 
 #ifndef     DETDESC_VOLUMES_LVOLUME_H
 #define     DETDESC_VOLUMES_LVOLUME_H
 
@@ -132,7 +132,7 @@ public:
    *  @return true if the point is inside the solid
    */
   inline virtual bool isInside 
-  ( const HepPoint3D& LocalPoint ) const
+  ( const Gaudi::XYZPoint& LocalPoint ) const
   { return m_solid->isInside( LocalPoint ) ; };
   
   /** calculate the daughter path containing the Point in Local frame , 
@@ -145,7 +145,7 @@ public:
    *  @return status code 
    */
   virtual StatusCode belongsTo
-  ( const HepPoint3D&        LocalPoint  ,
+  ( const Gaudi::XYZPoint&        LocalPoint  ,
     const int                Level       , 
     ILVolume::PVolumePath&   pVolumePath ) const ;
   
@@ -159,7 +159,7 @@ public:
    *  @return status code 
    */
   virtual StatusCode belongsTo
-  ( const HepPoint3D&        LocalPoint  ,
+  ( const Gaudi::XYZPoint&        LocalPoint  ,
     const int                Level       , 
     ILVolume::ReplicaPath&   replicaPath ) const  ;
   
@@ -184,8 +184,8 @@ public:
    *  @return number of intersections  
    */
   virtual unsigned int intersectLine
-  ( const HepPoint3D        & Point         , 
-    const HepVector3D       & Vector        , 
+  ( const Gaudi::XYZPoint        & Point         , 
+    const Gaudi::XYZVector       & Vector        , 
     ILVolume::Intersections & intersections , 
     const double              threshold     ) const ;
   
@@ -212,8 +212,8 @@ public:
    *  @return number of intersections  
    */
   virtual unsigned int intersectLine
-  ( const HepPoint3D         & Point         , 
-    const HepVector3D        & Vector        , 
+  ( const Gaudi::XYZPoint         & Point         , 
+    const Gaudi::XYZVector        & Vector        , 
     ILVolume::Intersections  & intersections , 
     const ISolid::Tick         tickMin       , 
     const ISolid::Tick         tickMax       , 
@@ -307,8 +307,8 @@ private:
    *  @return number of intersections  
    */
   unsigned int intersectBody
-  ( const HepPoint3D        & Point         , 
-    const HepVector3D       & Vector        , 
+  ( const Gaudi::XYZPoint        & Point         , 
+    const Gaudi::XYZVector       & Vector        , 
     ILVolume::Intersections & intersections , 
     ISolid::Tick            & tickMin       , 
     ISolid::Tick            & tickMax       , 
@@ -323,8 +323,8 @@ private:
    *  @return number of intersections  
    */
   unsigned int intersectBody
-  ( const HepPoint3D&        Point         , 
-    const HepVector3D&       Vector        , 
+  ( const Gaudi::XYZPoint&        Point         , 
+    const Gaudi::XYZVector&       Vector        , 
     ILVolume::Intersections& intersections , 
     const double             Threshold     ) const ;
   

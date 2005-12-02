@@ -1,4 +1,4 @@
-// $Id: SolidPolycone.h,v 1.4 2004-12-08 15:45:21 cattanem Exp $ 
+// $Id: SolidPolycone.h,v 1.5 2005-12-02 18:36:55 jpalac Exp $ 
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
@@ -12,8 +12,8 @@
 #include <algorithm>
 #include <vector>
 /// CLHEP 
-#include "CLHEP/Geometry/Point3D.h"
-#include "CLHEP/Geometry/Vector3D.h"
+#include "Kernel/Point3DTypes.h"
+#include "Kernel/Vector3DTypes.h"
 #include "CLHEP/Units/PhysicalConstants.h"
 /// DetDesc 
 #include "DetDesc/SolidBase.h" 
@@ -73,7 +73,7 @@ public:
    *  @param point point (in local reference system of the solid)
    *  @return true if the point is inside the solid
    */
-  bool isInside (  const HepPoint3D& point ) const ;
+  bool isInside (  const Gaudi::XYZPoint& point ) const ;
   
   /** -# retrieve the pointer to "simplified" solid - "cover"
    *  -# implementation of ISolid abstract interface 
@@ -121,8 +121,8 @@ public:
    *  @return the number of intersection points
    */
   virtual unsigned int 
-  intersectionTicks ( const HepPoint3D & Point  ,  
-                      const HepVector3D& Vector ,  
+  intersectionTicks ( const Gaudi::XYZPoint & Point  ,  
+                      const Gaudi::XYZVector& Vector ,  
                       ISolid::Ticks    & ticks  ) const ;
   
   /** - serialization for reading

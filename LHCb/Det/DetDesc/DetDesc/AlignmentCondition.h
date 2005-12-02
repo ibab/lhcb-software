@@ -1,4 +1,4 @@
-// $Id: AlignmentCondition.h,v 1.4 2005-08-26 09:34:19 jpalac Exp $
+// $Id: AlignmentCondition.h,v 1.5 2005-12-02 18:36:55 jpalac Exp $
 #ifndef DETDESC_ALIGNMENTCONDITION_H 
 #define DETDESC_ALIGNMENTCONDITION_H 1
 
@@ -6,8 +6,8 @@
 #include "DetDesc/Condition.h"
 #include "DetDesc/DetDesc.h"
 #include "DetDesc/CLIDAlignmentCondition.h"
-#include "CLHEP/Geometry/Point3D.h"
-#include "CLHEP/Geometry/Transform3D.h"
+#include "Kernel/Point3DTypes.h"
+#include "Kernel/Transform3DTypes.h"
 /** @class AlignmentCondition AlignmentCondition.h DetDesc/AlignmentCondition.h
  *  
  *
@@ -43,20 +43,20 @@ public:
   /// Class ID of this class
   inline static  const CLID& classID() { return CLID_AlignmentCondition; };
   
-  inline const HepTransform3D& matrix() const
+  inline const Gaudi::Transform3D& matrix() const
   {
     return m_matrix;
   }
 
-  inline const HepTransform3D& matrixInv() const
+  inline const Gaudi::Transform3D& matrixInv() const
   {
     return m_matrixInv;
   }
 
-  inline void matrix(const HepTransform3D& newMatrix) 
+  inline void matrix(const Gaudi::Transform3D& newMatrix) 
   {
     m_matrix=newMatrix;
-    m_matrixInv=m_matrix.inverse();
+    m_matrixInv=m_matrix.Inverse();
   }
 
   inline StatusCode setTransformation( const std::vector<double>& translation,
@@ -86,15 +86,15 @@ private:
 
   StatusCode makeMatrices();
   
-  const HepTransform3D* XYZRotation(const std::vector<double>& coefficients) const;
-  const HepTranslate3D* XYZTranslation(const std::vector<double>& coefficients) const;
+  const Gaudi::Transform3D* XYZRotation(const std::vector<double>& coefficients) const;
+  const Gaudi::TranslationXYZ* XYZTranslation(const std::vector<double>& coefficients) const;
 private:
 
   DetDesc::Services* m_services;
-  HepTransform3D m_transMatrix;
-  HepTransform3D m_rotMatrix;
-  HepTransform3D m_matrix;
-  HepTransform3D m_matrixInv;
+  Gaudi::Transform3D m_transMatrix;
+  Gaudi::Transform3D m_rotMatrix;
+  Gaudi::Transform3D m_matrix;
+  Gaudi::Transform3D m_matrixInv;
 
   const std::string m_translationString;
   const std::string m_rotationString;

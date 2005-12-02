@@ -1,4 +1,4 @@
-// $Id: SolidPolycone.cpp,v 1.7 2003-05-16 13:59:14 ibelyaev Exp $
+// $Id: SolidPolycone.cpp,v 1.8 2005-12-02 18:36:56 jpalac Exp $
 // ============================================================================
 #include "DetDesc/SolidPolycone.h"
 // CLHEP
@@ -212,7 +212,7 @@ SolidPolycone::SolidPolycone( const std::string& Name )
  *  @return true ifpoint is inside the solid
  */
 // ============================================================================
-bool SolidPolycone::isInside (  const HepPoint3D& point ) const
+bool SolidPolycone::isInside (  const Gaudi::XYZPoint& point ) const
 {
   /// look for concrete z-segment
   if( point.z() > triplets().back().first ) { return false; }
@@ -450,8 +450,8 @@ MsgStream&  SolidPolycone::printOut ( MsgStream& os ) const
  */
 // ============================================================================
 unsigned int 
-SolidPolycone::intersectionTicks ( const HepPoint3D & Point  ,  
-                                   const HepVector3D& Vector ,  
+SolidPolycone::intersectionTicks ( const Gaudi::XYZPoint & Point  ,  
+                                   const Gaudi::XYZVector& Vector ,  
                                    ISolid::Ticks    & ticks  ) const 
 {
   /// line with null direction vector is not able to intersect any solid!

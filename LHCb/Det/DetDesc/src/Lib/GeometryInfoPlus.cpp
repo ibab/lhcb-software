@@ -1,4 +1,4 @@
-// $Id: GeometryInfoPlus.cpp,v 1.11 2005-08-26 09:34:19 jpalac Exp $
+// $Id: GeometryInfoPlus.cpp,v 1.12 2005-12-02 18:36:56 jpalac Exp $
 // Include files 
 
 // GaudiKernel
@@ -295,18 +295,18 @@ StatusCode GeometryInfoPlus::calculateFullMatrices(matrix_iterator deltaFirst,
                                                    matrix_iterator pvFirst) 
 {
 
-  HepTransform3D init;
+  Gaudi::Transform3D init;
   m_matrix = 
-    new HepTransform3D( std::inner_product(deltaFirst,
+    new Gaudi::Transform3D( std::inner_product(deltaFirst,
                                            deltaEnd,
                                            pvFirst,
                                            init,
-                                           std::multiplies<HepTransform3D>(),
-                                           std::multiplies<HepTransform3D>()
+                                           std::multiplies<Gaudi::Transform3D>(),
+                                           std::multiplies<Gaudi::Transform3D>()
                                            )                 
                         );
 
-  m_matrixInv=new HepTransform3D( matrix().inverse() );
+  m_matrixInv=new Gaudi::Transform3D( matrix().Inverse() );
 
   log() << MSG::VERBOSE << "calculated full matrices" << endmsg;
   
@@ -317,18 +317,18 @@ StatusCode GeometryInfoPlus::calculateFullMatrices(matrix_iterator deltaFirst,
 void GeometryInfoPlus::calculateIdealMatrix(matrix_iterator pvFirst,
                                             matrix_iterator pvEnd) 
 {
-  HepTransform3D init;
+  Gaudi::Transform3D init;
 
   m_idealMatrix = 
-    new HepTransform3D( std::accumulate(pvFirst,
+    new Gaudi::Transform3D( std::accumulate(pvFirst,
                                         pvEnd,
                                         init,
-                                        std::multiplies<HepTransform3D>()));
-  m_idealMatrixInv = new HepTransform3D( m_idealMatrix->inverse());
+                                        std::multiplies<Gaudi::Transform3D>()));
+  m_idealMatrixInv = new Gaudi::Transform3D( m_idealMatrix->Inverse());
   
 }
 //=============================================================================
-StatusCode GeometryInfoPlus::localDeltaMatrix(const HepTransform3D& newDelta) 
+StatusCode GeometryInfoPlus::localDeltaMatrix(const Gaudi::Transform3D& newDelta) 
 {
   // Need to do this depending on whether there is an 
   // AlignmentCondition present. So check for that, and if there is,
@@ -356,7 +356,7 @@ StatusCode GeometryInfoPlus::localDeltaParams(const std::vector<double>& trans,
 }
 
 //=============================================================================
-StatusCode GeometryInfoPlus::setLocalDeltaMatrix(const HepTransform3D& 
+StatusCode GeometryInfoPlus::setLocalDeltaMatrix(const Gaudi::Transform3D& 
                                                  newDelta)
 {
 
@@ -374,7 +374,7 @@ StatusCode GeometryInfoPlus::setLocalDeltaMatrix(const HepTransform3D&
   }
 
   log() << MSG::VERBOSE << "updating local delta matrix" << endmsg;
-  m_localDeltaMatrix = new HepTransform3D(newDelta);
+  m_localDeltaMatrix = new Gaudi::Transform3D(newDelta);
   m_deltaMatrices[0] = *m_localDeltaMatrix;
 
   if (!calculateFullMatrices(deltaBegin(), 
@@ -496,7 +496,7 @@ StatusCode GeometryInfoPlus::registerSupportGI()
   
 }
 //=============================================================================
-const HepTransform3D& GeometryInfoPlus::localIdealMatrix() const
+const Gaudi::Transform3D& GeometryInfoPlus::localIdealMatrix() const
 {
 
   if (0!=m_localIdealMatrix) {
@@ -511,7 +511,7 @@ const HepTransform3D& GeometryInfoPlus::localIdealMatrix() const
       ( this == ( const IGeometryInfo*) gi ) ) {
     log() << MSG::VERBOSE << "localIdealMatrix: assigning identity matrix "
           << endmsg;
-    m_localIdealMatrix = new HepTransform3D();
+    m_localIdealMatrix = new Gaudi::Transform3D();
   } else {
     
     const ILVolume* lv = gi->lvolume();
@@ -531,13 +531,13 @@ const HepTransform3D& GeometryInfoPlus::localIdealMatrix() const
 
 }
 //=============================================================================
-const HepTransform3D& GeometryInfoPlus::localDeltaMatrix() const 
+const Gaudi::Transform3D& GeometryInfoPlus::localDeltaMatrix() const 
 {
   if (0!=m_localDeltaMatrix) return *m_localDeltaMatrix;
 
   m_localDeltaMatrix = (this->hasAlignmentCondition())      ?
-    new HepTransform3D(myAlignmentCondition()->matrix()) :
-    m_localDeltaMatrix = new HepTransform3D();        
+    new Gaudi::Transform3D(myAlignmentCondition()->matrix()) :
+    m_localDeltaMatrix = new Gaudi::Transform3D();        
 
   return *m_localDeltaMatrix;
   
@@ -573,14 +573,14 @@ IGeometryInfo* const GeometryInfoPlus::supportIGeometryInfo() const
 
 }
 //=============================================================================
-HepTransform3D* GeometryInfoPlus::accumulateMatrices(const ILVolume::PVolumePath& volumePath) const
+Gaudi::Transform3D* GeometryInfoPlus::accumulateMatrices(const ILVolume::PVolumePath& volumePath) const
 {
-  HepTransform3D init, return_value;
+  Gaudi::Transform3D init, return_value;
   return_value=std::accumulate( volumePath.begin() , 
                                 volumePath.end  () , 
                                 init               , 
                                 IPVolume_accumulateMatrix() );
-  return new HepTransform3D(return_value);
+  return new Gaudi::Transform3D(return_value);
   
 }
 
@@ -645,7 +645,7 @@ IGeometryInfo* GeometryInfoPlus::geoByName( const std::string& name ) const
 }
 //=============================================================================
 inline StatusCode GeometryInfoPlus::fullGeoInfoForPoint
-( const HepPoint3D&        point      , 
+( const Gaudi::XYZPoint&        point      , 
   const int                level      , 
   IGeometryInfo*&          start      , 
   ILVolume::PVolumePath&   volumePath )
@@ -665,7 +665,7 @@ inline StatusCode GeometryInfoPlus::fullGeoInfoForPoint
 };
 //=============================================================================
 StatusCode GeometryInfoPlus::fullGeoInfoForPoint
-( const HepPoint3D&        point      , 
+( const Gaudi::XYZPoint&        point      , 
   const int                level      , 
   std::string&             start      , 
   ILVolume::PVolumePath&   volumePath )
@@ -686,7 +686,7 @@ StatusCode GeometryInfoPlus::fullGeoInfoForPoint
 };
 //=============================================================================
 StatusCode GeometryInfoPlus::fullGeoInfoForPoint
-( const HepPoint3D&        point      , 
+( const Gaudi::XYZPoint&        point      , 
   const int                level      , 
   IGeometryInfo*&          start      , 
   ILVolume::ReplicaPath&   replicaPath )
@@ -706,7 +706,7 @@ StatusCode GeometryInfoPlus::fullGeoInfoForPoint
 };
 //=============================================================================
 StatusCode GeometryInfoPlus::fullGeoInfoForPoint
-( const HepPoint3D&        point      , 
+( const Gaudi::XYZPoint&        point      , 
   const int                level      , 
   std::string&             start      , 
   ILVolume::ReplicaPath&   replicaPath )
@@ -725,7 +725,7 @@ StatusCode GeometryInfoPlus::fullGeoInfoForPoint
                               level , replicaPath ); 
 };
 //=============================================================================
-std::string GeometryInfoPlus::belongsToPath( const HepPoint3D& globalPoint )
+std::string GeometryInfoPlus::belongsToPath( const Gaudi::XYZPoint& globalPoint )
 {
   if( !isInside( globalPoint )                     )
     { return std::string(""); } 
@@ -741,7 +741,7 @@ std::string GeometryInfoPlus::belongsToPath( const HepPoint3D& globalPoint )
     *(m_gi_childrensNames.begin()+(it-childBegin())); 
 };
 //=============================================================================
-std::string GeometryInfoPlus::belongsToPath( const HepPoint3D& globalPoint,
+std::string GeometryInfoPlus::belongsToPath( const Gaudi::XYZPoint& globalPoint,
                                              const int         level       )
 {
   if( 0 == level ){  return detElem()->name() ; } 
@@ -752,7 +752,7 @@ std::string GeometryInfoPlus::belongsToPath( const HepPoint3D& globalPoint,
   //
 };
 //=============================================================================
-IGeometryInfo* GeometryInfoPlus::belongsTo( const HepPoint3D& globalPoint )
+IGeometryInfo* GeometryInfoPlus::belongsTo( const Gaudi::XYZPoint& globalPoint )
 {
   if( !isInside( globalPoint )                     ) { return 0; } 
   if( !childLoaded() && loadChildren().isFailure() ) { return 0; }   
@@ -764,7 +764,7 @@ IGeometryInfo* GeometryInfoPlus::belongsTo( const HepPoint3D& globalPoint )
   return ( childEnd() == it ? 0 : *it );   
 };
 //=============================================================================
-IGeometryInfo* GeometryInfoPlus::belongsTo( const HepPoint3D& globalPoint , 
+IGeometryInfo* GeometryInfoPlus::belongsTo( const Gaudi::XYZPoint& globalPoint , 
                                             const int         level       )
 {
   if( level == 0 ) { return this;  } // do not look throug  daughters!

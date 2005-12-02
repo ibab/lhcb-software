@@ -1,4 +1,4 @@
-// $Id: GeometryInfoPlus.h,v 1.8 2005-08-26 09:34:19 jpalac Exp $
+// $Id: GeometryInfoPlus.h,v 1.9 2005-12-02 18:36:56 jpalac Exp $
 #ifndef LIB_GEOMETRYINFOPLUS_H 
 #define LIB_GEOMETRYINFOPLUS_H 1
 
@@ -53,7 +53,7 @@ public:
   /// type of vector of children's names 
   typedef std::vector<std::string>     ChildName;
 
-  typedef std::vector<HepTransform3D>::const_iterator matrix_iterator;
+  typedef std::vector<Gaudi::Transform3D>::const_iterator matrix_iterator;
 
   typedef std::vector<IGeometryInfo*> IGIChildren;
   typedef IGeometryInfo::IGIChildrens::iterator iGInfo_iterator;
@@ -118,7 +118,7 @@ public:
 
   /// transformation matrix from global reference
   /// system to the local one
-  inline const HepTransform3D&  matrix() const 
+  inline const Gaudi::Transform3D&  matrix() const 
   {
     return  *m_matrix;
   }
@@ -126,7 +126,7 @@ public:
   /// transformation matrix from local  reference
   /// system to the global one.
   /// Full transformation including misalignments.
-  const HepTransform3D&  matrixInv() const 
+  const Gaudi::Transform3D&  matrixInv() const 
   {
     return *m_matrixInv;  
   }
@@ -134,7 +134,7 @@ public:
   /// transformation matrix from global reference
   /// system to the local one.
   /// Ideal transformation with no misalignments.
-  const HepTransform3D& idealMatrix() const 
+  const Gaudi::Transform3D& idealMatrix() const 
   {
     return *m_idealMatrix;
   }
@@ -142,7 +142,7 @@ public:
   /// transformation matrix from local reference
   /// system to the global one.
   /// Ideal geometry with no misalignments.
-  inline const HepTransform3D&  idealMatrixInv() const 
+  inline const Gaudi::Transform3D&  idealMatrixInv() const 
   {
     return *m_idealMatrixInv;
   }
@@ -151,14 +151,14 @@ public:
   /// Transformation matrix for the volume corresponding
   /// to this IGeometryInfo. Uses the transformations of parent 
   /// volumes that are on this detector element level.
-  const HepTransform3D& localIdealMatrix() const;
+  const Gaudi::Transform3D& localIdealMatrix() const;
 
-  const HepTransform3D& localDeltaMatrix() const;
+  const Gaudi::Transform3D& localDeltaMatrix() const;
   
   /// Upate the DELTA transformation matrix of this IGeometryInfo.
   /// Will re-do calculation of all matrices.
   /// Works even if this GeometryInfo has no AlignmentCondition.
-  StatusCode localDeltaMatrix(const HepTransform3D&);
+  StatusCode localDeltaMatrix(const Gaudi::Transform3D&);
 
   /// Update the transformation parametrs in this GeometryInfo's
   /// AlignmentCondifion and re-do calculation of all matrices.
@@ -169,21 +169,21 @@ public:
 
   /// tranform the point from the global reference systemn 
   /// to the local reference system  
-  inline HepPoint3D toLocal( const HepPoint3D& globalPoint ) const {
+  inline Gaudi::XYZPoint toLocal( const Gaudi::XYZPoint& globalPoint ) const {
     return ( matrix() * globalPoint );
   }
   
   
   /// tranform the point from the local reference system 
   ///  to the global reference system  
-  inline HepPoint3D toGlobal( const HepPoint3D& localPoint  ) const 
+  inline Gaudi::XYZPoint toGlobal( const Gaudi::XYZPoint& localPoint  ) const 
   {
     return ( matrixInv() * localPoint  );
   }
 
   /// is the given point in the global reference system
   /// inside this detector element?
-  inline bool isInside( const HepPoint3D& globalPoint ) const 
+  inline bool isInside( const Gaudi::XYZPoint& globalPoint ) const 
   {
     return ( hasLVolume() && 0 != lvolume() ) ?
       lvolume()->isInside( toLocal( globalPoint ) ) :
@@ -193,29 +193,29 @@ public:
 
   ///  return the name of the daughter element to which
   /// the given point belongs to
-  std::string belongsToPath( const HepPoint3D& globalPoint );      
+  std::string belongsToPath( const Gaudi::XYZPoint& globalPoint );      
   
   /** return the C++ pointer to the daughter element to 
    *  which the given point belongs to
    */    
-  IGeometryInfo* belongsTo( const HepPoint3D& globalPoint );    
+  IGeometryInfo* belongsTo( const Gaudi::XYZPoint& globalPoint );    
   
   /** return the name of the daughter element to which 
    *  the given point belongs to (taking into account the level)
    */
-  std::string belongsToPath( const HepPoint3D& globalPoint ,       
+  std::string belongsToPath( const Gaudi::XYZPoint& globalPoint ,       
                              const int         level       );       
 
   /** return the C++ pointer to the daughter element to 
    *  which the given point belongs to  (taking into account the level)   
    */
-  IGeometryInfo* belongsTo( const HepPoint3D& globalPoint ,        
+  IGeometryInfo* belongsTo( const Gaudi::XYZPoint& globalPoint ,        
                             const int         level       );      
 
   /** return the full geometry info for a given point in the 
    * global reference system 
    */
-  StatusCode fullGeoInfoForPoint( const HepPoint3D&        point      , 
+  StatusCode fullGeoInfoForPoint( const Gaudi::XYZPoint&        point      , 
                                   const int                level      , 
                                   IGeometryInfo*&          start      , 
                                   ILVolume::PVolumePath&   volumePath );
@@ -223,7 +223,7 @@ public:
   /**  return the full geometry info for a given point in the
    *   global reference system 
    */
-  StatusCode fullGeoInfoForPoint( const HepPoint3D&        point      , 
+  StatusCode fullGeoInfoForPoint( const Gaudi::XYZPoint&        point      , 
                                   const int                level      , 
                                   IGeometryInfo*&          start      , 
                                   ILVolume::ReplicaPath&   volumePath );
@@ -231,7 +231,7 @@ public:
   /** return the full geometry info for a given point in the 
    *  global reference system 
    */
-  StatusCode fullGeoInfoForPoint( const HepPoint3D&        point      , 
+  StatusCode fullGeoInfoForPoint( const Gaudi::XYZPoint&        point      , 
                                   const int                level      , 
                                   std::string&             start      , 
                                   ILVolume::PVolumePath&   volumePath );
@@ -239,7 +239,7 @@ public:
   /** return the full geometry info for a given point in the
    *  global reference system 
    */
-  StatusCode fullGeoInfoForPoint( const HepPoint3D&        point      , 
+  StatusCode fullGeoInfoForPoint( const Gaudi::XYZPoint&        point      , 
                                   const int                level      , 
                                   std::string&             start      , 
                                   ILVolume::ReplicaPath&   volumePath );
@@ -385,7 +385,7 @@ private:
 
   inline MsgStream log() const  { return *m_log; }
 
-  inline bool isInsideDaughter( const HepPoint3D& globalPoint ) const 
+  inline bool isInsideDaughter( const Gaudi::XYZPoint& globalPoint ) const 
   {
     if( !childLoaded() || loadChildren().isFailure() )  return false;
     IGeometryInfo::IGIChildrens::const_iterator it = 
@@ -422,7 +422,7 @@ private:
 
   /// Force the local delta matrix to be newDelta and re-do all
   /// necessary matrix calculations
-  StatusCode setLocalDeltaMatrix(const HepTransform3D& 
+  StatusCode setLocalDeltaMatrix(const Gaudi::Transform3D& 
                                  newDelta);
   
 
@@ -484,7 +484,7 @@ private:
     if( !assertion ) { throw GeometryInfoException( name , ge , this ); }
   };
 
-  HepTransform3D* accumulateMatrices(const ILVolume::PVolumePath& volumePath) const;
+  Gaudi::Transform3D* accumulateMatrices(const ILVolume::PVolumePath& volumePath) const;
   
 
 
@@ -514,26 +514,26 @@ private:
   /// Transformation from the  global reference system
   /// to the local reference system.
   /// Total matrix, including ideal alignment plus deltas.
-  mutable HepTransform3D*              m_matrix;
+  mutable Gaudi::Transform3D*              m_matrix;
 
   /// Transformation from the  global reference system
   /// to the local reference system.
   /// Ideal geometry with no misalignments.
-  mutable HepTransform3D*              m_idealMatrix;
+  mutable Gaudi::Transform3D*              m_idealMatrix;
 
-  mutable HepTransform3D*              m_localIdealMatrix;
-  mutable HepTransform3D*              m_localDeltaMatrix;
-
-  /** transformation FROM local reference system  to the global 
-   *  reference system
-   */
+  mutable Gaudi::Transform3D*              m_localIdealMatrix;
+  mutable Gaudi::Transform3D*              m_localDeltaMatrix;
 
   /** transformation FROM local reference system  to the global 
    *  reference system
    */
 
-  mutable HepTransform3D*              m_matrixInv;
-  mutable HepTransform3D*              m_idealMatrixInv;
+  /** transformation FROM local reference system  to the global 
+   *  reference system
+   */
+
+  mutable Gaudi::Transform3D*              m_matrixInv;
+  mutable Gaudi::Transform3D*              m_idealMatrixInv;
 
   /// flag for support association 
   bool                                 m_gi_has_support     ; 
@@ -576,8 +576,8 @@ private:
   /// transformation matrices. 
   /// The code is written such that these could become automatic, 
   /// temporary objects in one algorithm. Juan.
-  std::vector<HepTransform3D> m_pvMatrices;
-  std::vector<HepTransform3D> m_deltaMatrices;
+  std::vector<Gaudi::Transform3D> m_pvMatrices;
+  std::vector<Gaudi::Transform3D> m_deltaMatrices;
 
   
   /// flag for alignment condition

@@ -1,4 +1,4 @@
-// $Id: SolidBase.cpp,v 1.10 2003-05-16 13:59:13 ibelyaev Exp $
+// $Id: SolidBase.cpp,v 1.11 2005-12-02 18:36:56 jpalac Exp $
 
 // CLHEP
 #include "CLHEP/Units/SystemOfUnits.h"
@@ -239,8 +239,8 @@ bool SolidBase::acceptInspector( IInspector* pI ) const
 // ============================================================================
 unsigned int 
 SolidBase::intersectionTicks 
-( const HepPoint3D  & Point   ,         
-  const HepVector3D & Vector  ,         
+( const Gaudi::XYZPoint  & Point   ,         
+  const Gaudi::XYZVector & Vector  ,         
   const ISolid::Tick& tickMin ,         
   const ISolid::Tick& tickMax ,         
   ISolid::Ticks     & ticks   ) const 
@@ -282,8 +282,8 @@ SolidBase::intersectionTicks
 // ============================================================================
 unsigned int 
 SolidBase::intersectionTicks 
-( const HepPoint3D  & /* Point */  ,         
-  const HepVector3D & /* Vector */ ,         
+( const Gaudi::XYZPoint  & /* Point */  ,         
+  const Gaudi::XYZVector & /* Vector */ ,         
   ISolid::Ticks     &    ticks     ) const 
 {
   ///  reset the output container 

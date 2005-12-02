@@ -1,4 +1,4 @@
-// $Id: LAssembly.cpp,v 1.6 2005-06-09 11:04:37 cattanem Exp $
+// $Id: LAssembly.cpp,v 1.7 2005-12-02 18:36:56 jpalac Exp $
 
 // Include files
 // from Gaudi
@@ -120,7 +120,7 @@ const CLID& LAssembly::clID    ()     const { return LAssembly::classID()  ; }
  */
 // ============================================================================
 StatusCode LAssembly::belongsTo
-( const HepPoint3D&        LocalPoint  ,
+( const Gaudi::XYZPoint&        LocalPoint  ,
   const int                Level       , 
   ILVolume::PVolumePath&   pVolumePath ) const 
 {    
@@ -154,7 +154,7 @@ StatusCode LAssembly::belongsTo
  */
 // ============================================================================
 StatusCode LAssembly::belongsTo
-( const HepPoint3D&        LocalPoint  ,
+( const Gaudi::XYZPoint&        LocalPoint  ,
   const int                Level       , 
   ILVolume::ReplicaPath&   replicaPath ) const  
 {    
@@ -201,8 +201,8 @@ StatusCode LAssembly::belongsTo
  */
 // ============================================================================
 unsigned int LAssembly::intersectLine
-( const HepPoint3D        & Point         , 
-  const HepVector3D       & Vector        , 
+( const Gaudi::XYZPoint        & Point         , 
+  const Gaudi::XYZVector       & Vector        , 
   ILVolume::Intersections & intersections , 
   const double              threshold     ) const 
 {
@@ -242,8 +242,8 @@ unsigned int LAssembly::intersectLine
  */
 // ============================================================================
 unsigned int LAssembly::intersectLine
-( const HepPoint3D         & Point         , 
-  const HepVector3D        & Vector        , 
+( const Gaudi::XYZPoint         & Point         , 
+  const Gaudi::XYZVector        & Vector        , 
   ILVolume::Intersections  & intersections , 
   const ISolid::Tick         tickMin       , 
   const ISolid::Tick         tickMax       , 
@@ -264,8 +264,8 @@ unsigned int LAssembly::intersectLine
     LAssembly* myAss = const_cast<LAssembly*>( this );
     myAss->computeCover();  
   }
-  HepPoint3D p1 = Point + tickMin * Vector;
-  HepPoint3D p2 = Point + tickMax * Vector;
+  Gaudi::XYZPoint p1 = Point + tickMin * Vector;
+  Gaudi::XYZPoint p2 = Point + tickMax * Vector;
   if ( (m_zMin > p1.z()) && (m_zMin > p2.z()) ) return 0 ;
   if ( (m_zMax < p1.z()) && (m_zMax < p2.z()) ) return 0 ;
   if ( (m_xMin > p1.x()) && (m_xMin > p2.x()) ) return 0 ;
@@ -344,8 +344,8 @@ void LAssembly::computeCover() {
   m_yMax = -1000000.;
   m_zMax = -1000000.;
 
-  HepPoint3D point( 0., 0., 0. );
-  HepPoint3D motherPt( 0., 0., 0. );
+  double pointX, pointY, pointZ = 0.;
+  Gaudi::XYZPoint motherPt( 0., 0., 0. );
   int i, j, k;
   
   for ( ILVolume::PVolumes::const_iterator ipv = pvBegin(); 
@@ -359,24 +359,25 @@ void LAssembly::computeCover() {
         if ( 0 != cover ) {
           //== Compute the 8 corners, transform to mother frame and build the 
           //== envelop as a box (x,y,z Min/Max)
-          point.setX( cover->xMin() );
+          pointX=cover->xMin();
           for ( i = 0 ; 2 > i ; i++ ) {
-            point.setY( cover->yMin() );
+            pointY=cover->yMin();
             for ( j = 0 ; 2 > j ; j++ ) {
-              point.setZ( cover->zMin() );
+              pointZ=cover->zMin();
               for ( k = 0 ; 2 > k ; k++ ) {
-                motherPt = pv->toMother( point );
+                motherPt = 
+                  pv->toMother( Gaudi::XYZPoint(pointX,pointY,pointZ ) );
                 if ( m_xMin > motherPt.x() ) m_xMin = motherPt.x();
                 if ( m_xMax < motherPt.x() ) m_xMax = motherPt.x();
                 if ( m_yMin > motherPt.y() ) m_yMin = motherPt.y();
                 if ( m_yMax < motherPt.y() ) m_yMax = motherPt.y();
                 if ( m_zMin > motherPt.z() ) m_zMin = motherPt.z();
                 if ( m_zMax < motherPt.z() ) m_zMax = motherPt.z();
-                point.setZ( cover->zMax() );
+                pointZ=cover->zMax();
               }
-              point.setY( cover->yMax() );
+              pointY = cover->yMax();
             }
-            point.setX( cover->xMax() );
+            pointX = cover->xMax();
           }
         } else {
           log << MSG::ERROR << " === No cover for assembly " << name() 
@@ -393,24 +394,25 @@ void LAssembly::computeCover() {
           myAss->computeCover();
           //== Compute the 8 corners, transform to mother frame and build the 
           //== envelop as a box (x,y,z Min/Max)
-          point.setX( assem->xMin() );
+          pointX = assem->xMin();
           for ( i = 0 ; 2 > i ; i++ ) {
-            point.setY( assem->yMin() );
+            pointY = assem->yMin();
             for ( j = 0 ; 2 > j ; j++ ) {
-              point.setZ( assem->zMin() );
+              pointZ = assem->zMin();
               for ( k = 0 ; 2 > k ; k++ ) {
-                motherPt = pv->toMother( point );
+                motherPt = 
+                  pv->toMother( Gaudi::XYZPoint(pointX,pointY,pointZ ) );
                 if ( m_xMin > motherPt.x() ) m_xMin = motherPt.x();
                 if ( m_xMax < motherPt.x() ) m_xMax = motherPt.x();
                 if ( m_yMin > motherPt.y() ) m_yMin = motherPt.y();
                 if ( m_yMax < motherPt.y() ) m_yMax = motherPt.y();
                 if ( m_zMin > motherPt.z() ) m_zMin = motherPt.z();
                 if ( m_zMax < motherPt.z() ) m_zMax = motherPt.z();
-                point.setZ( assem->zMax() );
+                pointZ =  assem->zMax();
               }
-              point.setY( assem->yMax() );
+              pointY = assem->yMax();
             }
-            point.setX( assem->xMax() );
+            pointX = assem->xMax();
           }
         }
       }  

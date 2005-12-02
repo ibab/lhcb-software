@@ -1,8 +1,11 @@
-// $Id: TransportSvcFindLocalGI.h,v 1.10 2003-01-17 14:03:40 sponce Exp $
+// $Id: TransportSvcFindLocalGI.h,v 1.11 2005-12-02 18:36:56 jpalac Exp $
 // ===========================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ===========================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.10  2003/01/17 14:03:40  sponce
+// support for gcc 3.2
+//
 // Revision 1.9  2002/07/11 07:15:05  ibelyaev
 //  fix the problems with virtual calls inside constructors
 // 
@@ -28,8 +31,8 @@
  *  @author: Vanya Belyaev
  */
 
-IGeometryInfo*  TransportSvc::findLocalGI ( const HepPoint3D& point1 , 
-                                            const HepPoint3D& point2 , 
+IGeometryInfo*  TransportSvc::findLocalGI ( const Gaudi::XYZPoint& point1 , 
+                                            const Gaudi::XYZPoint& point2 , 
                                             IGeometryInfo*    gi     ,
                                             IGeometryInfo*    topGi  ) const  {
   if( 0 == gi ) { return 0 ; } 

@@ -1,4 +1,4 @@
-// $Id: SolidTrd.cpp,v 1.13 2003-09-20 13:25:42 ibelyaev Exp $ 
+// $Id: SolidTrd.cpp,v 1.14 2005-12-02 18:36:56 jpalac Exp $ 
 // ===========================================================================
 // CVS $Name: not supported by cvs2svn $ 
 // ===========================================================================
@@ -219,14 +219,14 @@ void SolidTrd::makeAll()
   m_ph_vertices.clear();
   {
     /// construct points (vertices)
-    HepPoint3D p0( - xHalfLength1() , - yHalfLength1() , -zHalfLength() ) ;
-    HepPoint3D p1( - xHalfLength1() ,   yHalfLength1() , -zHalfLength() ) ; 
-    HepPoint3D p2(   xHalfLength1() ,   yHalfLength1() , -zHalfLength() ) ;
-    HepPoint3D p3(   xHalfLength1() , - yHalfLength1() , -zHalfLength() ) ; 
-    HepPoint3D p4( - xHalfLength2() , - yHalfLength2() ,  zHalfLength() ) ; 
-    HepPoint3D p5( - xHalfLength2() ,   yHalfLength2() ,  zHalfLength() ) ; 
-    HepPoint3D p6(   xHalfLength2() ,   yHalfLength2() ,  zHalfLength() ) ;
-    HepPoint3D p7(   xHalfLength2() , - yHalfLength2() ,  zHalfLength() ) ;
+    Gaudi::XYZPoint p0( - xHalfLength1() , - yHalfLength1() , -zHalfLength() ) ;
+    Gaudi::XYZPoint p1( - xHalfLength1() ,   yHalfLength1() , -zHalfLength() ) ; 
+    Gaudi::XYZPoint p2(   xHalfLength1() ,   yHalfLength1() , -zHalfLength() ) ;
+    Gaudi::XYZPoint p3(   xHalfLength1() , - yHalfLength1() , -zHalfLength() ) ; 
+    Gaudi::XYZPoint p4( - xHalfLength2() , - yHalfLength2() ,  zHalfLength() ) ; 
+    Gaudi::XYZPoint p5( - xHalfLength2() ,   yHalfLength2() ,  zHalfLength() ) ; 
+    Gaudi::XYZPoint p6(   xHalfLength2() ,   yHalfLength2() ,  zHalfLength() ) ;
+    Gaudi::XYZPoint p7(   xHalfLength2() , - yHalfLength2() ,  zHalfLength() ) ;
     ///
     m_ph_vertices.push_back( p0 ) ; 
     m_ph_vertices.push_back( p1 ) ; 

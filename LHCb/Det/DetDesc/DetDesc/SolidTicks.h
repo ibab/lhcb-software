@@ -1,8 +1,11 @@
-// $Id: SolidTicks.h,v 1.9 2002-05-15 14:25:25 ibelyaev Exp $ 
+// $Id: SolidTicks.h,v 1.10 2005-12-02 18:36:55 jpalac Exp $ 
 // ===========================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ===========================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.9  2002/05/15 14:25:25  ibelyaev
+//  bug fix
+//
 // Revision 1.8  2002/05/11 18:25:46  ibelyaev
 //  see $DETDESCROOT/doc/release.notes 11 May 2002
 //
@@ -14,9 +17,9 @@
 #include <functional>
 #include <algorithm>
 // CLHEP includes 
-#include "CLHEP/Geometry/Point3D.h"
-#include "CLHEP/Geometry/Vector3D.h"
-#include "CLHEP/Geometry/Plane3D.h"
+#include "Kernel/Point3DTypes.h"
+#include "Kernel/Vector3DTypes.h"
+#include "Kernel/Plane3DTypes.h"
 // DetDesc includes 
 #include "DetDesc/ISolid.h" 
 #include "DetDesc/SolidMath.h" 
@@ -57,8 +60,8 @@ namespace SolidTicks
   inline unsigned int  
   RemoveAdjancent
   ( ISolid::Ticks     & ticks , 
-    const HepPoint3D  & point , 
-    const HepVector3D & vect  , 
+    const Gaudi::XYZPoint  & point , 
+    const Gaudi::XYZVector & vect  , 
     const SOLID       & solid )
   {
     // local typedefs 
@@ -129,8 +132,8 @@ namespace SolidTicks
   inline unsigned int  
   RemoveAdjancentTicks
   ( ISolid::Ticks     & ticks , 
-    const HepPoint3D  & point , 
-    const HepVector3D & vect  , 
+    const Gaudi::XYZPoint  & point , 
+    const Gaudi::XYZVector & vect  , 
     const SOLID       & solid )
   {
     //     useful local typedefs 
@@ -162,8 +165,8 @@ namespace SolidTicks
   inline unsigned int  
   RemoveAdjancentTicks
   ( ISolid::Ticks      & ticks   ,
-    const HepPoint3D   & point   , 
-    const HepVector3D  & vect    , 
+    const Gaudi::XYZPoint   & point   , 
+    const Gaudi::XYZVector  & vect    , 
     const ISolid::Tick & tickMin , 
     const ISolid::Tick & tickMax , 
     const SOLID        & solid   )

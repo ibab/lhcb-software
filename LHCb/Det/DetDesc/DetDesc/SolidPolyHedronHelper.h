@@ -1,4 +1,4 @@
-// $Id: SolidPolyHedronHelper.h,v 1.7 2005-03-18 15:37:08 cattanem Exp $ 
+// $Id: SolidPolyHedronHelper.h,v 1.8 2005-12-02 18:36:55 jpalac Exp $ 
 // ===========================================================================
 // CVS Tag $Name: not supported by cvs2svn $ 
 // ===========================================================================
@@ -7,8 +7,8 @@
 /// STD & STL 
 #include <vector>
 /// CLHEP 
-#include "CLHEP/Geometry/Point3D.h"
-#include "CLHEP/Geometry/Plane3D.h"
+#include "Kernel/Point3DTypes.h"
+#include "Kernel/Plane3DTypes.h"
 /// DetDesc 
 #include "DetDesc/SolidBase.h"
 #include "DetDesc/SolidException.h" 
@@ -30,8 +30,8 @@ class SolidPolyHedronHelper: virtual public SolidBase
 public:
   
   /// useful type for vector of planes 
-  typedef std::vector<HepPlane3D>   PLANES   ;
-  typedef std::vector<HepPoint3D>   VERTICES ;
+  typedef std::vector<Gaudi::Plane3D>   PLANES   ;
+  typedef std::vector<Gaudi::XYZPoint>   VERTICES ;
   
 public: 
   
@@ -43,7 +43,7 @@ public:
    *  @param point point (in local reference system of the solid)
    *  @return true if the point is inside the solid
    */
-  virtual bool isInside ( const HepPoint3D& point ) const ;
+  virtual bool isInside ( const Gaudi::XYZPoint& point ) const ;
   
   /** - Calculate the intersection points("ticks") of the solid objects 
    *    with given line. 
@@ -65,8 +65,8 @@ public:
    */
   virtual unsigned int  
   intersectionTicks 
-  ( const HepPoint3D & Point  ,        
-    const HepVector3D& Vector ,        
+  ( const Gaudi::XYZPoint & Point  ,        
+    const Gaudi::XYZVector& Vector ,        
     ISolid::Ticks    & ticks  ) const ;
   
 protected:
@@ -80,21 +80,21 @@ protected:
   virtual ~SolidPolyHedronHelper ();
   
   /**  add a face/plane given with 3 points
-   *  @see addFace( const HepPoint3D& , const HepPoint3D& ,
-   *                const HepPoint3D& , const HepPoint3D& )
+   *  @see addFace( const Gaudi::XYZPoint& , const Gaudi::XYZPoint& ,
+   *                const Gaudi::XYZPoint& , const Gaudi::XYZPoint& )
    *  @param Point1  the first  3D-point of the plane
    *  @param Point2  the second 3D-point of the plane 
    *  @param Point3  the third  3D-point of the plane 
    *  @return "false" if 3 points belongs to one line 
    */
   bool addFace
-  ( const HepPoint3D& Point1 , 
-    const HepPoint3D& Point2 , 
-    const HepPoint3D& Point3 );
+  ( const Gaudi::XYZPoint& Point1 , 
+    const Gaudi::XYZPoint& Point2 , 
+    const Gaudi::XYZPoint& Point3 );
   
   /**  add a face/plane given with 4 points
-   *  @see addFace( const HepPoint3D& , const HepPoint3D& ,
-   *                const HepPoint3D& )
+   *  @see addFace( const Gaudi::XYZPoint& , const Gaudi::XYZPoint& ,
+   *                const Gaudi::XYZPoint& )
    *  @param Point1  the first  3D-point of the plane
    *  @param Point2  the second 3D-point of the plane 
    *  @param Point3  the third  3D-point of the plane 
@@ -103,10 +103,10 @@ protected:
    *  @return "false" if 3 points belongs to one line 
    */
   bool addFace
-  ( const HepPoint3D& Point1 , 
-    const HepPoint3D& Point2 , 
-    const HepPoint3D& Point3 , 
-    const HepPoint3D& Point4 );  
+  ( const Gaudi::XYZPoint& Point1 , 
+    const Gaudi::XYZPoint& Point2 , 
+    const Gaudi::XYZPoint& Point3 , 
+    const Gaudi::XYZPoint& Point4 );  
   
   /**  return vector of faces/planes 
    *  @return vector of faces/planes 
@@ -118,8 +118,8 @@ protected:
    *  @return "true" if point is "inside" 
    */
   inline bool inside 
-  (  const HepPoint3D& Point , 
-     const HepPlane3D& Plane ) const 
+  (  const Gaudi::XYZPoint& Point , 
+     const Gaudi::Plane3D& Plane ) const 
   { return 0 >= Plane.distance( Point ) ; };
 
   /** set bounding parameters 

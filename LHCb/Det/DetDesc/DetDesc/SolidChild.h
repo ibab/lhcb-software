@@ -1,4 +1,4 @@
-// $Id: SolidChild.h,v 1.14 2005-01-25 14:09:19 cattanem Exp $ 
+// $Id: SolidChild.h,v 1.15 2005-12-02 18:36:55 jpalac Exp $ 
 // ===========================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ===========================================================================
@@ -7,8 +7,8 @@
 /// STD and STL 
 #include <functional>
 // CLHEP
-#include "CLHEP/Geometry/Transform3D.h"
-#include "CLHEP/Vector/Rotation.h"
+#include "Kernel/Transform3DTypes.h"
+#include "Kernel/Transform3DTypes.h"
 /// Detdesc 
 #include "DetDesc/SolidException.h" 
 #include "DetDesc/SolidBase.h" 
@@ -50,7 +50,7 @@ protected:
    *  @param Name name of this solid 
    */ 
   SolidChild( ISolid*               solid      , 
-              const HepTransform3D* mtrx  = 0  ,
+              const Gaudi::Transform3D* mtrx  = 0  ,
               const std::string&    Name  = "" );
   
   /** constructor 
@@ -60,8 +60,8 @@ protected:
    *  @param Name name of this solid 
    */
   SolidChild( ISolid*               solid                 ,
-              const HepPoint3D&     pos                   , 
-              const HepRotation&    rot   = HepRotation() ,
+              const Gaudi::XYZPoint&     pos                   , 
+              const Gaudi::Rotation3D&    rot   = Gaudi::Rotation3D() ,
               const std::string&    Name  = ""            ); 
   
 public:
@@ -108,7 +108,7 @@ public:
    *  @param point point (in local reference system of the solid)
    *  @return true if the point is inside the solid
    */
-  virtual bool isInside ( const HepPoint3D& point) const;
+  virtual bool isInside ( const Gaudi::XYZPoint& point) const;
   
   /** reset to the initial ("after constructor") state
    */
@@ -133,8 +133,8 @@ public:
    *  @return the number of intersection points
    */
   virtual unsigned int 
-  intersectionTicks ( const HepPoint3D&  Point  ,
-                      const HepVector3D& Vector ,
+  intersectionTicks ( const Gaudi::XYZPoint&  Point  ,
+                      const Gaudi::XYZVector& Vector ,
                       ISolid::Ticks&     ticks  ) const;
   
   /** serialization for reading
@@ -156,9 +156,9 @@ public:
   // is solid transformed?  
   inline       bool    simple() const { return m_sc_simple; };  
   // transfromation
-  inline const HepTransform3D& matrix () const  
+  inline const Gaudi::Transform3D& matrix () const  
   {
-    if( 0 == m_sc_matrix ) { m_sc_matrix = new  HepTransform3D; }
+    if( 0 == m_sc_matrix ) { m_sc_matrix = new  Gaudi::Transform3D; }
     return *m_sc_matrix;
   };
 
@@ -185,7 +185,7 @@ private:
 private:
   ///
   ISolid*                  m_sc_solid   ; ///< own solid  
-  mutable HepTransform3D*  m_sc_matrix  ; ///< position/rotation  
+  mutable Gaudi::Transform3D*  m_sc_matrix  ; ///< position/rotation  
   bool                     m_sc_simple  ; ///< flag if "simple"
   ///
 };

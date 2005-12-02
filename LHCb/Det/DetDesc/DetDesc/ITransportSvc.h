@@ -1,4 +1,4 @@
-// $Id: ITransportSvc.h,v 1.6 2005-01-25 14:09:19 cattanem Exp $ 
+// $Id: ITransportSvc.h,v 1.7 2005-12-02 18:36:55 jpalac Exp $ 
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
@@ -40,8 +40,8 @@ class ITransportSvc : virtual public IService
    */
   virtual double 
   distanceInRadUnits
-  ( const HepPoint3D& point1                         ,
-    const HepPoint3D& point2                         ,
+  ( const Gaudi::XYZPoint& point1                         ,
+    const Gaudi::XYZPoint& point2                         ,
     double            threshold                 = 0  ,
     IGeometryInfo*    alternativeGeometry       = 0  ,
     IGeometryInfo*    geometryGuess             = 0  )  = 0 ;
@@ -65,8 +65,8 @@ class ITransportSvc : virtual public IService
    */
   virtual unsigned long 
   intersections
-  ( const HepPoint3D& point                          ,
-    const HepVector3D&       vector                  ,
+  ( const Gaudi::XYZPoint& point                          ,
+    const Gaudi::XYZVector&       vector                  ,
     const ISolid::Tick&      tickMin                 ,
     const ISolid::Tick&      tickMax                 ,
     ILVolume::Intersections& intersept               ,

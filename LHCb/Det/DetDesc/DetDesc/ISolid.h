@@ -1,8 +1,11 @@
-// $Id: ISolid.h,v 1.8 2005-01-25 14:09:19 cattanem Exp $ 
+// $Id: ISolid.h,v 1.9 2005-12-02 18:36:55 jpalac Exp $ 
 // ===========================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ===========================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.8  2005/01/25 14:09:19  cattanem
+// updates for CLHEP 1.9
+//
 // Revision 1.7  2003/09/20 13:25:40  ibelyaev
 //  few fixes to solve Gauss problems
 //
@@ -28,8 +31,8 @@
 #include "GaudiKernel/IInspector.h"
 #include "GaudiKernel/MsgStream.h"
 /// CLHEP
-#include "CLHEP/Geometry/Vector3D.h"
-#include "CLHEP/Geometry/Point3D.h"
+#include "Kernel/Vector3DTypes.h"
+#include "Kernel/Point3DTypes.h"
 
 // Forward declarations
 class StreamBuffer;      ///< GaudiKernel
@@ -84,7 +87,7 @@ public:
    *  @param point point (in local reference system of the solid)
    *  @return true if the point is inside the solid
    */
-  virtual bool isInside ( const HepPoint3D   & point ) const = 0;
+  virtual bool isInside ( const Gaudi::XYZPoint   & point ) const = 0;
   
   /** retrieve the pointer to "simplified" solid.
    *  @see ISolid::coverTop()
@@ -137,8 +140,8 @@ public:
    */
   virtual unsigned int
   intersectionTicks 
-  ( const HepPoint3D & Point  ,
-    const HepVector3D& Vector ,
+  ( const Gaudi::XYZPoint & Point  ,
+    const Gaudi::XYZVector& Vector ,
     Ticks            & ticks  ) const = 0 ;
   
   /** calculate the intersection points("ticks") of the solid objects 
@@ -164,8 +167,8 @@ public:
    */
   virtual unsigned int
   intersectionTicks 
-  ( const HepPoint3D & Point   ,
-    const HepVector3D& Vector  ,
+  ( const Gaudi::XYZPoint & Point   ,
+    const Gaudi::XYZVector& Vector  ,
     const Tick       & tickMin ,
     const Tick       & tickMax ,
     Ticks            & ticks   ) const = 0 ;

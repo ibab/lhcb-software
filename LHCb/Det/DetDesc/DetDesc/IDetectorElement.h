@@ -1,4 +1,4 @@
-// $Id: IDetectorElement.h,v 1.17 2005-11-24 17:18:16 jpalac Exp $
+// $Id: IDetectorElement.h,v 1.18 2005-12-02 18:36:55 jpalac Exp $
 // $ID:  $
 #ifndef  DETDESC_IDETECTORELEMENT_H 
 #define  DETDESC_IDETECTORELEMENT_H 1
@@ -12,7 +12,7 @@
 #include "GaudiKernel/ISerialize.h"
 #include "GaudiKernel/SmartRef.h"
 
-#include "CLHEP/Geometry/Point3D.h"
+#include "Kernel/Point3DTypes.h"
 
 // Forward declarations
 class IGeometryInfo;
@@ -172,7 +172,7 @@ class IDetectorElement : virtual public IInterface,
    * global reference frame.
    */
 
-  virtual const int sensitiveVolumeID(const HepPoint3D& globalPos ) const=0;
+  virtual const int sensitiveVolumeID(const Gaudi::XYZPoint& globalPos ) const=0;
 
   /**
    * This method initializes the detector element. It should be overridden

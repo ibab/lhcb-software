@@ -1,4 +1,4 @@
-// $Id: SolidBox.h,v 1.11 2002-10-29 13:49:36 ranjard Exp $
+// $Id: SolidBox.h,v 1.12 2005-12-02 18:36:55 jpalac Exp $
 // ===========================================================================
 #ifndef     DETDESC_SOLIDBOX_H
 #define     DETDESC_SOLIDBOX_H
@@ -6,8 +6,8 @@
 #include <cmath> 
 #include <iostream> 
 /// CLHEP 
-#include "CLHEP/Geometry/Point3D.h"
-#include "CLHEP/Geometry/Vector3D.h"
+#include "Kernel/Point3DTypes.h"
+#include "Kernel/Vector3DTypes.h"
 #include "CLHEP/Units/SystemOfUnits.h"
 /// GAUDI Kernel 
 #include "GaudiKernel/StreamBuffer.h" 
@@ -63,7 +63,7 @@ public:
    *  @param point point (in local reference system of the solid)
    *  @return true if the point is inside the solid
    */
-  virtual inline bool isInside  ( const HepPoint3D& point ) const;
+  virtual inline bool isInside  ( const Gaudi::XYZPoint& point ) const;
   
   /** - retrieve the pointer to "simplified" solid - "cover"
    *  - implementation of ISolid abstract interface 
@@ -123,8 +123,8 @@ public:
    */
   virtual inline  unsigned int 
   intersectionTicks 
-  ( const HepPoint3D&  Point  ,
-    const HepVector3D& Vector ,
+  ( const Gaudi::XYZPoint&  Point  ,
+    const Gaudi::XYZVector& Vector ,
     ISolid::Ticks   &  ticks  ) const ; 
 
   /** calculate the intersection points("ticks") of the solid objects 
@@ -150,8 +150,8 @@ public:
    */
   virtual unsigned int
   intersectionTicks 
-  ( const HepPoint3D & Point   ,
-    const HepVector3D& Vector  ,
+  ( const Gaudi::XYZPoint & Point   ,
+    const Gaudi::XYZVector& Vector  ,
     const Tick       & tickMin ,
     const Tick       & tickMax ,
     Ticks            & ticks   ) const ;
@@ -249,7 +249,7 @@ private:
  *  @return true if the point is inside the solid
  */
 /// ===========================================================================
-inline bool SolidBox::isInside( const HepPoint3D& point ) const
+inline bool SolidBox::isInside( const Gaudi::XYZPoint& point ) const
 { 
   if ( fabs( point.z() ) > zHalfLength() || 
        fabs( point.x() ) > xHalfLength() ||

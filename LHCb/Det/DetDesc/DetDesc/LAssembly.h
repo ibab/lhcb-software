@@ -1,4 +1,4 @@
-// $Id: LAssembly.h,v 1.3 2004-07-09 14:19:41 cattanem Exp $
+// $Id: LAssembly.h,v 1.4 2005-12-02 18:36:55 jpalac Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
@@ -118,7 +118,7 @@ public:
    *  @return true if the point is inside the solid
    */
   inline virtual bool isInside 
-  ( const HepPoint3D& LocalPoint ) const
+  ( const Gaudi::XYZPoint& LocalPoint ) const
   { return isInsideDaughter( LocalPoint ) ; };
 
   /** calculate the daughter path containing the Point in Local frame , 
@@ -131,7 +131,7 @@ public:
    *  @return status code 
    */
   virtual StatusCode belongsTo
-  ( const HepPoint3D&        LocalPoint  ,
+  ( const Gaudi::XYZPoint&        LocalPoint  ,
     const int                Level       , 
     ILVolume::PVolumePath&   pVolumePath ) const ;
   
@@ -145,7 +145,7 @@ public:
    *  @return status code 
    */
   virtual StatusCode belongsTo
-  ( const HepPoint3D&        LocalPoint  ,
+  ( const Gaudi::XYZPoint&        LocalPoint  ,
     const int                Level       , 
     ILVolume::ReplicaPath&   replicaPath ) const  ;
   
@@ -170,8 +170,8 @@ public:
    *  @return number of intersections  
    */
   virtual unsigned int intersectLine
-  ( const HepPoint3D        & Point         , 
-    const HepVector3D       & Vector        , 
+  ( const Gaudi::XYZPoint        & Point         , 
+    const Gaudi::XYZVector       & Vector        , 
     ILVolume::Intersections & intersections , 
     const double              threshold     ) const ;
   
@@ -198,8 +198,8 @@ public:
    *  @return number of intersections  
    */
   virtual unsigned int intersectLine
-  ( const HepPoint3D         & Point         , 
-    const HepVector3D        & Vector        , 
+  ( const Gaudi::XYZPoint         & Point         , 
+    const Gaudi::XYZVector        & Vector        , 
     ILVolume::Intersections  & intersections , 
     const ISolid::Tick         tickMin       , 
     const ISolid::Tick         tickMax       , 

@@ -1,4 +1,4 @@
-// $Id: TransportSvcIntersections.h,v 1.8 2003-11-24 14:43:44 cattanem Exp $ 
+// $Id: TransportSvcIntersections.h,v 1.9 2005-12-02 18:36:56 jpalac Exp $ 
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
@@ -39,8 +39,8 @@
  */
 // ============================================================================
 unsigned long TransportSvc::intersections
-( const HepPoint3D&        point               , 
-  const HepVector3D&       vect                , 
+( const Gaudi::XYZPoint&        point               , 
+  const Gaudi::XYZVector&       vect                , 
   const ISolid::Tick&      tickMin             , 
   const ISolid::Tick&      tickMax             , 
   ILVolume::Intersections& intersept           , 
@@ -56,8 +56,8 @@ unsigned long TransportSvc::intersections
     /// check the input parameters of the line 
     if( tickMin >= tickMax && vect.mag2() <= 0 ) { return 0;}
     ///
-    HepPoint3D point1( point + vect * tickMin ) ; 
-    HepPoint3D point2( point + vect * tickMax ) ; 
+    Gaudi::XYZPoint point1( point + vect * tickMin ) ; 
+    Gaudi::XYZPoint point2( point + vect * tickMax ) ; 
     /// check - if the previous paramaters are the same
     if( point1              == m_prevPoint1          && 
         point2              == m_prevPoint2          &&
@@ -147,8 +147,8 @@ unsigned long TransportSvc::intersections
   catch ( const GaudiException& Exception ) 
     {
       /// 1) reset cache: 
-      m_prevPoint1           = HepPoint3D() ;
-      m_prevPoint2           = HepPoint3D() ; 
+      m_prevPoint1           = Gaudi::XYZPoint() ;
+      m_prevPoint2           = Gaudi::XYZPoint() ; 
       m_previousThreshold    = -1000.0      ; 
       m_previousGuess        = 0            ; 
       m_previousAlternative  = 0            ;
@@ -178,8 +178,8 @@ unsigned long TransportSvc::intersections
   catch( ... ) 
     {
       /// 1) reset cache: 
-      m_prevPoint1           = HepPoint3D() ;
-      m_prevPoint2           = HepPoint3D() ; 
+      m_prevPoint1           = Gaudi::XYZPoint() ;
+      m_prevPoint2           = Gaudi::XYZPoint() ; 
       m_previousThreshold    = -1000.0      ; 
       m_previousGuess        = 0            ; 
       m_previousAlternative  = 0            ;

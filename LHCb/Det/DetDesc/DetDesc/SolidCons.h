@@ -1,4 +1,4 @@
-// $Id: SolidCons.h,v 1.11 2005-01-25 14:09:19 cattanem Exp $ 
+// $Id: SolidCons.h,v 1.12 2005-12-02 18:36:55 jpalac Exp $ 
 // ===========================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ===========================================================================
@@ -8,8 +8,8 @@
 #include <cmath> 
 #include <iostream>
 /// CLHEP 
-#include "CLHEP/Geometry/Point3D.h"
-#include "CLHEP/Geometry/Vector3D.h"
+#include "Kernel/Point3DTypes.h"
+#include "Kernel/Vector3DTypes.h"
 #include "CLHEP/Units/PhysicalConstants.h"
 /// DetDesc 
 #include "DetDesc/SolidBase.h" 
@@ -73,7 +73,7 @@ public:
    *  @param point point (in local reference system of the solid)
    *  @return true if the point is inside the solid
    */
-  bool isInside (  const HepPoint3D& point ) const ;
+  bool isInside (  const Gaudi::XYZPoint& point ) const ;
   
   /** -# retrieve the pointer to "simplified" solid - "cover"
    *    - for Model = 0 
@@ -130,8 +130,8 @@ public:
    *  @return the number of intersection points
    */
   virtual unsigned int 
-  intersectionTicks ( const HepPoint3D & Point  ,  
-                      const HepVector3D& Vector ,  
+  intersectionTicks ( const Gaudi::XYZPoint & Point  ,  
+                      const Gaudi::XYZVector& Vector ,  
                       ISolid::Ticks    & ticks  ) const ;
   
   /** calculate the intersection points("ticks") of the solid objects 
@@ -157,8 +157,8 @@ public:
    */
   unsigned int
   intersectionTicks 
-  ( const HepPoint3D & Point   ,
-    const HepVector3D& Vector  ,
+  ( const Gaudi::XYZPoint & Point   ,
+    const Gaudi::XYZVector& Vector  ,
     const Tick       & tickMin ,
     const Tick       & tickMax ,
     Ticks            & ticks   ) const;
@@ -286,7 +286,7 @@ protected:
    *  @param point to be checked 
    *  @return true if point is "inside phi" 
    */
-  inline const bool insidePhi ( const HepPoint3D& point ) const ;
+  inline const bool insidePhi ( const Gaudi::XYZPoint& point ) const ;
     
 protected:
   
@@ -359,7 +359,7 @@ inline double SolidCons::oR_z( const double z ) const
  *  @return true if point is "inside phi" 
  */
 // ===========================================================================
-inline const bool SolidCons::insidePhi ( const HepPoint3D& point ) const 
+inline const bool SolidCons::insidePhi ( const Gaudi::XYZPoint& point ) const 
 {
   if( noPhiGap()                                    ) { return true ; }
   double phi = point.phi() ;   // [-180,180] 

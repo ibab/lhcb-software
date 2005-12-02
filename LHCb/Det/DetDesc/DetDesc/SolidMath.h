@@ -1,8 +1,11 @@
-// $Id: SolidMath.h,v 1.4 2003-11-24 14:43:44 cattanem Exp $
+// $Id: SolidMath.h,v 1.5 2005-12-02 18:36:55 jpalac Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.4  2003/11/24 14:43:44  cattanem
+// fix doxygen comments
+//
 // Revision 1.3  2002/10/30 15:02:44  ibelyaev
 //  fix a bug in DetDesc/SolidMath.h
 //
@@ -78,8 +81,8 @@ namespace SolidTicks
   template < class OUTPUTTYPE > 
   inline unsigned int  
   LineIntersectsTheSphere
-  ( const HepPoint3D  & point  , 
-    const HepVector3D & vect   , 
+  ( const Gaudi::XYZPoint  & point  , 
+    const Gaudi::XYZVector & vect   , 
     const double        radius ,
     OUTPUTTYPE          out    )
   {
@@ -114,8 +117,8 @@ namespace SolidTicks
   template < class OUTPUTTYPE > 
   inline unsigned int  
   LineIntersectsTheSphere2
-  ( const HepPoint3D  & point  , 
-    const HepVector3D & vect   , 
+  ( const Gaudi::XYZPoint  & point  , 
+    const Gaudi::XYZVector & vect   , 
     const double        r2     ,
     OUTPUTTYPE          out    )
   {
@@ -150,8 +153,8 @@ namespace SolidTicks
   template < class OUTPUTTYPE > 
   inline unsigned int  
   LineIntersectsTheCylinder
-  ( const HepPoint3D  & point  , 
-    const HepVector3D & vect   , 
+  ( const Gaudi::XYZPoint  & point  , 
+    const Gaudi::XYZVector & vect   , 
     const double        radius ,
     OUTPUTTYPE          out    )
     
@@ -188,8 +191,8 @@ namespace SolidTicks
   template < class OUTPUTTYPE > 
   inline unsigned int  
   LineIntersectsTheX
-  ( const HepPoint3D  & point  , 
-    const HepVector3D & vect   , 
+  ( const Gaudi::XYZPoint  & point  , 
+    const Gaudi::XYZVector & vect   , 
     const double        X      ,
     OUTPUTTYPE          out   )
     
@@ -215,8 +218,8 @@ namespace SolidTicks
   template < class OUTPUTTYPE > 
   inline unsigned int  
   LineIntersectsTheY
-  ( const HepPoint3D  & point  , 
-    const HepVector3D & vect   , 
+  ( const Gaudi::XYZPoint  & point  , 
+    const Gaudi::XYZVector & vect   , 
     const double        Y      ,
     OUTPUTTYPE          out    )
     
@@ -242,8 +245,8 @@ namespace SolidTicks
   template < class OUTPUTTYPE > 
   inline unsigned int  
   LineIntersectsTheZ
-  ( const HepPoint3D & point  , 
-    const HepVector3D& vect   , 
+  ( const Gaudi::XYZPoint & point  , 
+    const Gaudi::XYZVector& vect   , 
     const double       Z      ,
     OUTPUTTYPE         out    )
     
@@ -269,8 +272,8 @@ namespace SolidTicks
   template < class OUTPUTTYPE > 
   inline unsigned int  
   LineIntersectsThePhi
-  ( const HepPoint3D  & point  , 
-    const HepVector3D & vect   , 
+  ( const Gaudi::XYZPoint  & point  , 
+    const Gaudi::XYZVector & vect   , 
     const double        Phi    ,
     OUTPUTTYPE          out    )
     
@@ -296,8 +299,8 @@ namespace SolidTicks
   template < class OUTPUTTYPE > 
   inline unsigned int  
   LineIntersectsTheTheta
-  ( const HepPoint3D & point  , 
-    const HepPoint3D & vect   , 
+  ( const Gaudi::XYZPoint & point  , 
+    const Gaudi::XYZPoint & vect   , 
     const double       Theta  ,
     OUTPUTTYPE         out    )
     
@@ -349,8 +352,8 @@ namespace SolidTicks
   template < class OUTPUTTYPE > 
   inline unsigned int  
   LineIntersectsTheCone
-  ( const HepPoint3D  & point  , 
-    const HepVector3D & vect   , 
+  ( const Gaudi::XYZPoint  & point  , 
+    const Gaudi::XYZVector & vect   , 
     const double        r1     ,
     const double        r2     ,
     const double        z1     ,

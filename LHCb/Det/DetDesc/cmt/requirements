@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.71 2005-11-25 16:20:23 jpalac Exp $ 
+# $Id: requirements,v 1.72 2005-12-02 18:36:56 jpalac Exp $ 
 # =============================================================================
 package       DetDesc
 version       v15r6
@@ -11,7 +11,8 @@ include_dirs  $(DETDESCROOT)
 
 # =========== dependencies ====================================================
 use           GaudiKernel       v*
-use           CLHEP             v*	LCG_Interfaces
+use           CLHEP             v* LCG_Interfaces
+use           LHCbDefinitions   v1r2  Kernel
 
 # =========== constituents ====================================================
 library       DetDescLib        Lib/*.cpp

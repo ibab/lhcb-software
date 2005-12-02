@@ -1,8 +1,11 @@
-// $Id: SolidIntersection.cpp,v 1.9 2003-09-20 13:25:42 ibelyaev Exp $
+// $Id: SolidIntersection.cpp,v 1.10 2005-12-02 18:36:56 jpalac Exp $
 // ===========================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ===========================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.9  2003/09/20 13:25:42  ibelyaev
+//  few fixes to solve Gauss problems
+//
 // Revision 1.8  2003/06/16 13:42:36  sponce
 // fixes for gcc 3.2 and 3.3
 //
@@ -60,7 +63,7 @@ SolidIntersection::~SolidIntersection(){}
 
 // ============================================================================
 // ============================================================================
-bool SolidIntersection::isInside( const HepPoint3D   & point ) const 
+bool SolidIntersection::isInside( const Gaudi::XYZPoint   & point ) const 
 { 
   ///  is point inside the "main" volume?  
   if ( !first()->isInside( point ) ) { return false; }
@@ -80,7 +83,7 @@ bool SolidIntersection::isInside( const HepPoint3D   & point ) const
  */
 // ============================================================================
 StatusCode  SolidIntersection::intersect( ISolid*               solid     , 
-                                          const HepTransform3D* mtrx      )
+                                          const Gaudi::Transform3D* mtrx      )
 {  return addChild( solid , mtrx ); };
 
 // ============================================================================
@@ -93,8 +96,8 @@ StatusCode  SolidIntersection::intersect( ISolid*               solid     ,
 // ============================================================================
 StatusCode  SolidIntersection::intersect 
 ( ISolid*               solid    , 
-  const HepPoint3D&     position , 
-  const HepRotation&    rotation )
+  const Gaudi::XYZPoint&     position , 
+  const Gaudi::Rotation&    rotation )
 { return addChild( solid , position , rotation ) ; }; 
 
 // ============================================================================

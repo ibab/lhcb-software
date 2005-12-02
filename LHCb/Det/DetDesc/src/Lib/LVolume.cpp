@@ -1,11 +1,11 @@
-// $Id: LVolume.cpp,v 1.29 2005-03-18 15:37:09 cattanem Exp $ 
+// $Id: LVolume.cpp,v 1.30 2005-12-02 18:36:56 jpalac Exp $ 
 
 /// STD & STL includes 
 #include <stdio.h> 
 #include <functional> 
 #include <algorithm> 
 /// CLHEP includes 
-#include "CLHEP/Geometry/Transform3D.h"
+#include "Kernel/Transform3DTypes.h"
 /// Gaudi Kernel includes
 #include "GaudiKernel/StatusCode.h"
 #include "GaudiKernel/DataObject.h"
@@ -165,7 +165,7 @@ const CLID& LVolume::classID()       { return CLID_LVolume ; };
  */
 // ============================================================================
 StatusCode LVolume::belongsTo
-( const HepPoint3D&        LocalPoint  ,
+( const Gaudi::XYZPoint&        LocalPoint  ,
   const int                Level       , 
   ILVolume::PVolumePath&   pVolumePath ) const 
 {    
@@ -201,7 +201,7 @@ StatusCode LVolume::belongsTo
  */
 // ============================================================================
 StatusCode LVolume::belongsTo
-( const HepPoint3D&        LocalPoint ,
+( const Gaudi::XYZPoint&        LocalPoint ,
   const int                Level      , 
   ILVolume::ReplicaPath&   replicaPath ) const 
 {
@@ -348,8 +348,8 @@ MsgStream&    LVolume::printOut
  */
 // ============================================================================
 unsigned int LVolume::intersectBody
-( const HepPoint3D         & Point         , 
-  const HepVector3D        & Vector        , 
+( const Gaudi::XYZPoint         & Point         , 
+  const Gaudi::XYZVector        & Vector        , 
   ILVolume::Intersections  & intersections , 
   const double               Threshold     ) const 
 {
@@ -359,7 +359,7 @@ unsigned int LVolume::intersectBody
   /// (1) clear the output container 
   intersections.clear();
   /// length of tick "unit"
-  const ISolid::Tick TickLength = Vector.mag() ;  
+  const ISolid::Tick TickLength = std::sqrt(Vector.mag2()) ;  
   /// assertion for material and solid 
   if( 0 == material() || 0 == m_solid ) 
     { Assert( false , "LVolume::intersectBody(1): FATAL for" + name() ); }
@@ -455,8 +455,8 @@ unsigned int LVolume::intersectBody
  */
 // ============================================================================
 unsigned int LVolume::intersectBody
-( const HepPoint3D         & Point         ,
-  const HepVector3D        & Vector        ,
+( const Gaudi::XYZPoint         & Point         ,
+  const Gaudi::XYZVector        & Vector        ,
   ILVolume::Intersections  & intersections ,
   ISolid::Tick             & tickMin       ,
   ISolid::Tick             & tickMax       ,
@@ -474,7 +474,7 @@ unsigned int LVolume::intersectBody
    */ 
   if( Vector.mag2() <= 0 ) { return 0 ; }       // RETURN !!! 
   // length of tick unit 
-  const ISolid::Tick TickLength = Vector.mag(); 
+  const ISolid::Tick TickLength = std::sqrt(Vector.mag2()); 
   // assertion for material and solid 
   if( 0 == material() || 0 == m_solid ) 
     { Assert( false , "LVolume::intersectBody(1): FATAL for" + name() ); }
@@ -611,8 +611,8 @@ unsigned int LVolume::intersectBody
  */
 // ============================================================================
 unsigned int LVolume::intersectLine
-( const HepPoint3D        & Point         , 
-  const HepVector3D       & Vector        , 
+( const Gaudi::XYZPoint        & Point         , 
+  const Gaudi::XYZVector       & Vector        , 
   ILVolume::Intersections & intersections , 
   const double              Threshold     ) const 
 {
@@ -699,7 +699,7 @@ unsigned int LVolume::intersectLine
             double temy= Point.y() + (s+t)*Vector.y()/2;
             double temz= Point.z() + (s+t)*Vector.z()/2;
 
-            belongsTo(HepPoint3D(temx,temy,temz),level,volpath);
+            belongsTo(Gaudi::XYZPoint(temx,temy,temz),level,volpath);
 
             for(ILVolume::PVolumePath::iterator it=volpath.begin();
                 it!=volpath.end();it++) {
@@ -747,8 +747,8 @@ unsigned int LVolume::intersectLine
  */
 // ============================================================================
 unsigned int LVolume::intersectLine
-( const HepPoint3D         & Point         , 
-  const HepVector3D        & Vector        , 
+( const Gaudi::XYZPoint         & Point         , 
+  const Gaudi::XYZVector        & Vector        , 
   ILVolume::Intersections  & intersections , 
   const ISolid::Tick         tickMin       , 
   const ISolid::Tick         tickMax       , 

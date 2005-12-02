@@ -1,9 +1,18 @@
 ! =============================================================================
-! $Id: release.notes,v 1.231 2005-12-02 15:45:09 cattanem Exp $ 
+! $Id: release.notes,v 1.232 2005-12-02 18:36:56 jpalac Exp $ 
 ! =============================================================================
 ! package DetDesc
 ! package manager : Marco Clemencic, Juan Palacios
 ! =============================================================================
+
+! 2005-02-12 - Juan Palacios
+ - Add Kernel/LHCbDefinitions to requirements
+ - Change CLHEP geometry classes to LHCbDefinitions typedefs:
+            * These typedefs point to MathCore classes with the
+              exception of Gaudi::Plane3D, which pointe to HepPoint3D.
+              Awaiting implementation of MathCore Plane3D class.
+ - Make changes to all code to adapt to MathCore syntax
+ - TO-DO: Not compiling due to Plane3D operaitons with MathCore classes
 
 !======================== DetDesc v15r6 2005-12-02 ========================
 ! 2005-12-02 - Marco Cattaneo

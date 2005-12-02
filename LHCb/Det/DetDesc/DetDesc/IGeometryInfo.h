@@ -1,4 +1,4 @@
-// $Id: IGeometryInfo.h,v 1.17 2005-08-30 11:42:36 cattanem Exp $ 
+// $Id: IGeometryInfo.h,v 1.18 2005-12-02 18:36:55 jpalac Exp $ 
 // ===========================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ===========================================================================
@@ -11,8 +11,8 @@
 /** STD & STL includes */
 #include <functional>
 /// CLHEP includes 
-#include "CLHEP/Geometry/Point3D.h"
-#include "CLHEP/Geometry/Transform3D.h"
+#include "Kernel/Point3DTypes.h"
+#include "Kernel/Transform3DTypes.h"
 /// DetDesc include 
 #include "DetDesc/ILVolume.h"
 #include "DetDesc/AlignmentCondition.h"
@@ -103,16 +103,16 @@ public:
    *  @see matrixInv()
    *  @return the transformation matrix  from "Global" system
    */
-  virtual const HepTransform3D&  matrix() const = 0;
+  virtual const Gaudi::Transform3D&  matrix() const = 0;
 
-  virtual const HepTransform3D&  idealMatrix() const = 0;  
+  virtual const Gaudi::Transform3D&  idealMatrix() const = 0;  
 
-  virtual const HepTransform3D&  localIdealMatrix() const = 0;  
+  virtual const Gaudi::Transform3D&  localIdealMatrix() const = 0;  
 
-  virtual const HepTransform3D&  localDeltaMatrix() const = 0;
+  virtual const Gaudi::Transform3D&  localDeltaMatrix() const = 0;
 
   /// Upate the DELTA transformation matrix of this IGeometryInfo.
-  virtual StatusCode  localDeltaMatrix(const HepTransform3D&) = 0;
+  virtual StatusCode  localDeltaMatrix(const Gaudi::Transform3D&) = 0;
 
   /// Update the transformation parametrs in this GeometryInfo's
   /// AlignmentCondifion.
@@ -128,27 +128,27 @@ public:
    *    it is just an Identity transformation
    *  @return the transformation matrix  from "Global" system
    */
-  virtual const HepTransform3D&  matrixInv() const = 0;
+  virtual const Gaudi::Transform3D&  matrixInv() const = 0;
 
   /** perform transformation of point from the Global Reference System
    *  to Local Reference System of Geometry Info object
    *  @see matrix()
    *  @see matrixInv()
-   *  @see toGlobal( const HepPoint3D&)
+   *  @see toGlobal( const Gaudi::XYZPoint&)
    *  @param  globalPoint point in Global Reference System
    *  @return point in Local reference system
    */
-  virtual HepPoint3D toLocal ( const HepPoint3D& globalPoint ) const = 0;
+  virtual Gaudi::XYZPoint toLocal ( const Gaudi::XYZPoint& globalPoint ) const = 0;
 
   /** perform transformation of point from the LocalReference System
    *  to Global  Reference System
    *  @see matrix()
    *  @see matrixInv()
-   *  @see toLocal( const HepPoint3D&)
+   *  @see toLocal( const Gaudi::XYZPoint&)
    *  @param  localPoint point in Local Reference System
    *  @return point in Global reference system
    */
-  virtual HepPoint3D toGlobal ( const HepPoint3D& localPoint  ) const = 0;
+  virtual Gaudi::XYZPoint toGlobal ( const Gaudi::XYZPoint& localPoint  ) const = 0;
 
   /** Check for given 3D-point - "Is inside the volume?"
    *  -  For regular case the defnition "is inside" is trivial
@@ -163,14 +163,14 @@ public:
    *     recursive calls. What to do if the ghost element has no
    *     any descendants? The best way is just to return "false" -
    *     "something" can not be *inside* of "nothing".  :-))
-   *  @see toLocal( const HepPoint3D& )
-   *  @see toGlobal( const HepPoint3D& )
+   *  @see toLocal( const Gaudi::XYZPoint& )
+   *  @see toGlobal( const Gaudi::XYZPoint& )
    *  @see matrix()
    *  @see matrixInv()
    *  @param GlobalPoint point in Global Referency System
    *  @return true if point "is inside" of the Geometry Info element
    */
-  virtual bool isInside( const HepPoint3D& GlobalPoint ) const = 0;
+  virtual bool isInside( const Gaudi::XYZPoint& GlobalPoint ) const = 0;
   /** @} */ // end of group PureGeometricalInfo
 
   /** @defgroup BelongsTo  IGeometryInfo "Find daughter by point" family
@@ -190,13 +190,13 @@ public:
    *  -# look recursively through certain amount of levels  only.
    *    - The dephth is to be controlled.
    *
-   * @see isInside(const HepPoint3D&)
-   * @see belongsTo( const HepPoint3D& )
+   * @see isInside(const Gaudi::XYZPoint&)
+   * @see belongsTo( const Gaudi::XYZPoint& )
    * @param globalPoint the point in global Reference System
    * @return the name of daughter to which point belongs to.
    */
   virtual std::string belongsToPath
-  ( const HepPoint3D& globalPoint ) = 0;
+  ( const Gaudi::XYZPoint& globalPoint ) = 0;
   
   /** To which daughter the given global point belongs to? @n
    *  "Find daughter by point" family @n
@@ -210,13 +210,13 @@ public:
    *  -# look recursively through certain amount of levels  only.
    *    - The dephth is to be controlled.
    *
-   * @see isInside(const HepPoint3D&)
-   * @see belongsToPath( const HepPoint3D& )
+   * @see isInside(const Gaudi::XYZPoint&)
+   * @see belongsToPath( const Gaudi::XYZPoint& )
    * @param globalPoint the point in global Reference System
    * @return pointer to daughter geometry info element
    */
   virtual IGeometryInfo* belongsTo 
-  ( const HepPoint3D& globalPoint ) = 0;
+  ( const Gaudi::XYZPoint& globalPoint ) = 0;
   
   /** To which daughter the given global point belongs to? @n
    *  "Find daughter by point" family @n
@@ -230,10 +230,10 @@ public:
    *  -# look recursively through certain amount of levels  only.
    *    - The dephth is to be controlled.
    *
-   * @see isInside(const HepPoint3D&)
-   * @see belongsTo( const HepPoint3D& )
-   * @see belongsToPath( const HepPoint3D& )
-   * @see belongsToPath( const HepPoint3D& , const int )
+   * @see isInside(const Gaudi::XYZPoint&)
+   * @see belongsTo( const Gaudi::XYZPoint& )
+   * @see belongsToPath( const Gaudi::XYZPoint& )
+   * @see belongsToPath( const Gaudi::XYZPoint& , const int )
    *
    * - if level = 0 - no search, return the name of current level
    * - if level < 0 - perform search up to the most deepest level
@@ -244,7 +244,7 @@ public:
    * @return the name of daughter to which point belongs to.
    */
   virtual std::string belongsToPath
-  ( const HepPoint3D& globalPoint , const int         level ) = 0;
+  ( const Gaudi::XYZPoint& globalPoint , const int         level ) = 0;
   
   /** To which daughter the given global point belongs to? @n
    *  "Find daughter by point" family @n
@@ -257,10 +257,10 @@ public:
    *  -# look recursively through all levels
    *  -# look recursively through certain amount of levels  only.
    *    - The dephth is to be controlled.
-   * @see isInside(const HepPoint3D&)
-   * @see belongsTo( const HepPoint3D& )
-   * @see belongsToPath( const HepPoint3D& )
-   * @see belongsToPath( const HepPoint3D& , const int )
+   * @see isInside(const Gaudi::XYZPoint&)
+   * @see belongsTo( const Gaudi::XYZPoint& )
+   * @see belongsToPath( const Gaudi::XYZPoint& )
+   * @see belongsToPath( const Gaudi::XYZPoint& , const int )
    *
    * /li if level = 0 - no search, return the name of current level
    * /li if level < 0 - perform search up to the most deepest level
@@ -271,7 +271,7 @@ public:
    * @return pointer to daughter geometry info element
    */
   virtual IGeometryInfo* belongsTo 
-  ( const HepPoint3D& globalPoint , const int         level ) = 0;
+  ( const Gaudi::XYZPoint& globalPoint , const int         level ) = 0;
   /** @} */ // end of group BelongsTo
 
   /** @defgroup FullGeometryInfo IGeometryInfo Full geometry information
@@ -283,11 +283,11 @@ public:
    *  return an additinal information with it
    *  The depth can be controlled explicitly via "level" parameter.
    *
-   *  @see isInside( const HepPoint3D* )
-   *  @see belongsTo( const HepPoint3D&                 )
-   *  @see belongsTo( const HepPoint3D&     , const int )
-   *  @see belongsToPath( const HepPoint3D&             )
-   *  @see belongsToPath( const HepPoint3D& , const int )
+   *  @see isInside( const Gaudi::XYZPoint* )
+   *  @see belongsTo( const Gaudi::XYZPoint&                 )
+   *  @see belongsTo( const Gaudi::XYZPoint&     , const int )
+   *  @see belongsToPath( const Gaudi::XYZPoint&             )
+   *  @see belongsToPath( const Gaudi::XYZPoint& , const int )
    *
    *  @{
    *  @author Vanya Belyaev Ivan.Belyaev@itep.ru 
@@ -302,7 +302,7 @@ public:
    * @param volumePath retuned information
    */
   virtual StatusCode fullGeoInfoForPoint
-  ( const HepPoint3D&        point       ,
+  ( const Gaudi::XYZPoint&        point       ,
     const int                level       ,
     IGeometryInfo*&          start       ,
     ILVolume::PVolumePath&   volumePath  ) = 0;
@@ -316,7 +316,7 @@ public:
    * @param replicaPath retuned information
    */
   virtual StatusCode fullGeoInfoForPoint
-  ( const HepPoint3D&        point       ,
+  ( const Gaudi::XYZPoint&        point       ,
     const int                level       ,
     IGeometryInfo*&          start       ,
     ILVolume::ReplicaPath&   replicaPath ) = 0;
@@ -330,7 +330,7 @@ public:
    * @param volumePath retuned information
    */
   virtual StatusCode fullGeoInfoForPoint
-  ( const HepPoint3D&        point       ,
+  ( const Gaudi::XYZPoint&        point       ,
     const int                level       ,
     std::string&             start       ,
     ILVolume::PVolumePath&   volumePath  ) = 0;
@@ -344,7 +344,7 @@ public:
    * @param replicaPath retuned information
    */
   virtual StatusCode fullGeoInfoForPoint
-  ( const HepPoint3D&        point       ,
+  ( const Gaudi::XYZPoint&        point       ,
     const int                level       ,
     std::string&             start       ,
     ILVolume::ReplicaPath&   replicaPath ) = 0;
@@ -622,12 +622,12 @@ public:
    *  @author Vanya Belyaev Ivan.Belyaev@itep.ru 
    *  @param Point point in the Global Referency System 
    */ 
-  explicit IGeometryInfo_isInside( const HepPoint3D& Point )
+  explicit IGeometryInfo_isInside( const Gaudi::XYZPoint& Point )
     : m_point( Point ) {};
   
   /** check for 3D-point
    *  @author Vanya Belyaev Ivan.Belyaev@itep.ru 
-   *  @see IGeometryInfo::isInside( const HepPoint3D&)
+   *  @see IGeometryInfo::isInside( const Gaudi::XYZPoint&)
    *  @param gi poiner to IGeometryInfo object
    *  @return true if the point is inside the Geoemtry Info element
    */
@@ -636,7 +636,7 @@ public:
   
 private:
   
-  HepPoint3D  m_point; ///< point in Global Reference System 
+  Gaudi::XYZPoint  m_point; ///< point in Global Reference System 
   
 };
 // ============================================================================

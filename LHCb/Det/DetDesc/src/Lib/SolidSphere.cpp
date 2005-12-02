@@ -1,8 +1,11 @@
-// $Id: SolidSphere.cpp,v 1.13 2003-05-16 13:59:14 ibelyaev Exp $ 
+// $Id: SolidSphere.cpp,v 1.14 2005-12-02 18:36:56 jpalac Exp $ 
 // ===========================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ===========================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.13  2003/05/16 13:59:14  ibelyaev
+//  fix of ancient saga with 'double deletion of solids'
+//
 // Revision 1.12  2003/04/04 15:54:08  ibelyaev
 //  remove bugs from 'setBP' method
 //
@@ -14,8 +17,8 @@
 #include <algorithm>
 // CLHEP 
 #include "CLHEP/Units/PhysicalConstants.h" 
-#include "CLHEP/Geometry/Point3D.h" 
-#include "CLHEP/Geometry/Vector3D.h" 
+#include "Kernel/Point3DTypes.h" 
+#include "Kernel/Vector3DTypes.h" 
 /// GaudiKernel
 #include "GaudiKernel/IInspector.h" 
 /// DetDesc 
@@ -266,7 +269,7 @@ SolidSphere::SolidSphere( const std::string& name )
  *  @return true if the point is inside the solid
  */
 // ===========================================================================
-bool  SolidSphere::isInside( const HepPoint3D & point) const
+bool  SolidSphere::isInside( const Gaudi::XYZPoint & point) const
 {
   // check bounding box 
   if(  isOutBBox    ( point )  ) { return false ; }
@@ -517,8 +520,8 @@ const ISolid* SolidSphere::cover () const
 // ============================================================================
 unsigned int 
 SolidSphere::intersectionTicks 
-( const HepPoint3D&  point  ,       
-  const HepVector3D& vect   ,      
+( const Gaudi::XYZPoint&  point  ,       
+  const Gaudi::XYZVector& vect   ,      
   ISolid::Ticks&     ticks  ) const 
 {
   ticks.clear();

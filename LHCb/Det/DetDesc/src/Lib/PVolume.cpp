@@ -1,4 +1,4 @@
-// $Id: PVolume.cpp,v 1.18 2005-01-25 14:09:19 cattanem Exp $ 
+// $Id: PVolume.cpp,v 1.19 2005-12-02 18:36:56 jpalac Exp $ 
 
 /// GaudiKernel includes 
 #include "GaudiKernel/IInspector.h"
@@ -12,7 +12,7 @@
 #include <vector>
 #include <algorithm>
 /// CLHEP includes 
-#include "CLHEP/Geometry/Transform3D.h"
+#include "Kernel/Transform3DTypes.h"
 /// DetDesc 
 #include "DetDesc/DetDesc.h"
 /// local includes 
@@ -53,8 +53,8 @@ PVolume::PVolume
 ( const std::string& PhysVol_name  ,
   const std::string& LogVol_name   ,
   //  const size_t       copy_number   ,
-  const HepPoint3D&  Position      ,
-  const HepRotation& Rotation      )
+  const Gaudi::XYZPoint&   Position      ,
+  const Gaudi::Rotation3D& Rotation      )
   : m_name      ( PhysVol_name   ) 
   , m_lvname    ( LogVol_name    ) 
   , m_nominal   (                )
@@ -65,7 +65,9 @@ PVolume::PVolume
   //, m_copy      ( copy_number    ) 
 {
   // NB!!! transformaion is given by Translation and then Rotation!!!
-  m_nominal = HepRotate3D(Rotation)*HepTranslate3D(Position) ;
+  m_nominal = Gaudi::Transform3D(Rotation, Gaudi::XYZPoint() ) *
+    Gaudi::Transform3D(Gaudi::Rotation3D(), Position) ; // MathCore syntax
+  //  m_nominal = Rotation*Gaudi::TranslationXYZ(Position) ; // CLHEP syntax
   m_matrix  = m_nominal ;
   /// 
   //  { /// ensure the agreement between name and copy number
@@ -90,7 +92,7 @@ PVolume::PVolume
 ( const std::string&    PhysVol_name ,
   const std::string&    LogVol_name  ,
   //  const size_t          copy_number  ,
-  const HepTransform3D& Transform    )
+  const Gaudi::Transform3D& Transform    )
   : m_name      ( PhysVol_name   ) 
   , m_lvname    ( LogVol_name    ) 
   , m_nominal   ( Transform      )
@@ -161,10 +163,10 @@ ILVolume* PVolume::findLogical() const
  *  @return pointer to inverse matrix 
  */
 // ============================================================================
-HepTransform3D* PVolume::findMatrix() const 
+Gaudi::Transform3D* PVolume::findMatrix() const 
 {
   if( 0 != m_imatrix ) { delete m_imatrix ; m_imatrix = 0 ; }
-  return m_imatrix = new HepTransform3D( matrix().inverse() ) ;
+  return m_imatrix = new Gaudi::Transform3D( matrix().Inverse() ) ;
 };
 
 // ============================================================================
@@ -244,69 +246,6 @@ MsgStream& PVolume::printOut( MsgStream& os ) const
        << " logvol='"        << lvolumeName()   << "'" << "]";
 };
 
-// ===========================================================================
-/** serialization for reading 
- *  - implementation of DataObject method
- *  - implementation of ISerialize interface
- *  @see DataObject
- *  @see IPVolume 
- *  @see ISerialize 
- *  @param s reference to stream buffer 
- *  @return reference to stream buffer 
- */ 
-// ===========================================================================
-StreamBuffer& PVolume::serialize(StreamBuffer& s )
-{
-  reset();
-  s >> m_name  
-    >> m_lvname ;
-  double     angle ;
-  Hep3Vector axis  ; 
-  s >> angle 
-    >> axis[0] 
-    >> axis[1] 
-    >> axis[2] ;
-  HepRotation rot( HepRotation().rotate( angle , axis ) );
-  Hep3Vector pos ;
-  s >> pos[0] 
-    >> pos[1] 
-    >> pos[2] ;
-  m_matrix = HepTransform3D( rot , pos ) ;
-  if( 0 != m_imatrix ) { delete m_imatrix ; m_imatrix = 0 ; }
-  return s;
-};
-
-// ===========================================================================
-/** serialization for writing 
- *  - implementation of DataObject method
- *  - implementation of ISerialize interface
- *  @see DataObject
- *  @see ILVolume 
- *  @see ISerialize 
- *  @param s reference to stream buffer 
- *  @return reference to stream buffer 
- */ 
-// ===========================================================================
-StreamBuffer& PVolume::serialize(StreamBuffer& s )  const
-{
-  s << m_name  
-    << m_lvname ;
-  HepRotation rot = matrix().getRotation    () ;
-  double angle   = 0 ;
-  Hep3Vector axis;
-  rot.getAngleAxis( angle , axis ) ;
-  s << angle 
-    << axis.x()
-    << axis.y()
-    << axis.z() ;
-  Hep3Vector pos = matrix().getTranslation () ;
-  s << pos.x()
-    << pos.y() 
-    << pos.z() ;
-  ///
-  return s;
-};
-
 // ============================================================================
 /** Assertion 
  *  @exception PVolumeException for wrong condition 
@@ -351,7 +290,7 @@ const ILVolume* PVolume::lvolume () const
  *  @return reference to inverse transformationmatrix 
  */
 // ============================================================================
-const HepTransform3D&  PVolume::matrixInv  () const 
+const Gaudi::Transform3D&  PVolume::matrixInv  () const 
 {
   if( 0 == m_imatrix ) { m_imatrix = findMatrix() ; }
   return *m_imatrix ;
@@ -364,8 +303,8 @@ const HepTransform3D&  PVolume::matrixInv  () const
  *  @return point in local reference system 
  */ 
 // ============================================================================
-HepPoint3D PVolume::toLocal 
-( const HepPoint3D& PointInMother ) const 
+Gaudi::XYZPoint PVolume::toLocal 
+( const Gaudi::XYZPoint& PointInMother ) const 
 { return m_matrix * PointInMother ; }
 // ============================================================================
 
@@ -375,7 +314,7 @@ HepPoint3D PVolume::toLocal
  *  @return point in mother reference system 
  */
 // ============================================================================
-HepPoint3D PVolume::toMother ( const HepPoint3D& PointInLocal  ) const 
+Gaudi::XYZPoint PVolume::toMother ( const Gaudi::XYZPoint& PointInLocal  ) const 
 {
   if( 0 == m_imatrix ) { m_imatrix = findMatrix() ; }  
   return (*m_imatrix) * PointInLocal ;
@@ -389,7 +328,7 @@ HepPoint3D PVolume::toMother ( const HepPoint3D& PointInLocal  ) const
  */
 // ============================================================================
 bool PVolume::isInside   
-( const HepPoint3D& PointInMother ) const 
+( const Gaudi::XYZPoint& PointInMother ) const 
 {
   if( 0 == m_lvolume ) { m_lvolume = findLogical() ; }
   return m_lvolume->isInside( toLocal( PointInMother ) ) ;
@@ -434,8 +373,8 @@ IPVolume* PVolume::reset ()
  */
 // ============================================================================
 unsigned int PVolume::intersectLine
-( const HepPoint3D        & Point         ,
-  const HepVector3D       & Vector        , 
+( const Gaudi::XYZPoint        & Point         ,
+  const Gaudi::XYZVector       & Vector        , 
   ILVolume::Intersections & intersections ,
   const double              threshold     ) const 
 {
@@ -472,8 +411,8 @@ unsigned int PVolume::intersectLine
  */
 // ============================================================================
 unsigned int PVolume::intersectLine
-( const HepPoint3D        & Point ,
-  const HepVector3D       & Vector        ,       
+( const Gaudi::XYZPoint        & Point ,
+  const Gaudi::XYZVector       & Vector        ,       
   ILVolume::Intersections & intersections ,      
   const ISolid::Tick        tickMin       ,
   const ISolid::Tick        tickMax       ,
@@ -497,8 +436,8 @@ unsigned int PVolume::intersectLine
  *  @return the resulting transformation matrix
  */
 // ============================================================================
-const HepTransform3D& 
-PVolume::applyMisAlignment ( const HepTransform3D& ma ) 
+const Gaudi::Transform3D& 
+PVolume::applyMisAlignment ( const Gaudi::Transform3D& ma ) 
 {
   // apply the MisAlingment atop of existing matrix 
   m_matrix = ma * m_matrix ;
@@ -514,7 +453,7 @@ PVolume::applyMisAlignment ( const HepTransform3D& ma )
  *  @return the "nominal" transformation matrix
  */
 // ============================================================================
-const HepTransform3D& 
+const Gaudi::Transform3D& 
 PVolume::resetMisAlignment (                          ) 
 {
   // reset *ALL* misalignements 

@@ -1,4 +1,4 @@
-// $Id: LogVolBase.h,v 1.12 2005-04-22 13:10:41 marcocle Exp $ 
+// $Id: LogVolBase.h,v 1.13 2005-12-02 18:36:55 jpalac Exp $ 
 #ifndef     DETDESC_LOGVOLBASE_H
 #define     DETDESC_LOGVOLBASE_H
 /// STD and STL includes
@@ -17,8 +17,8 @@
 #include "DetDesc/Surface.h"
 #include "DetDesc/ValidDataObject.h"
 /// CLHEP includes 
-#include "CLHEP/Geometry/Transform3D.h"
-#include "CLHEP/Vector/Rotation.h"
+#include "Kernel/Transform3DTypes.h"
+#include "Kernel/Transform3DTypes.h"
 
 /// forward declarations 
 class IDataProviderSvc;
@@ -324,8 +324,8 @@ public:
   IPVolume* createPVolume
   ( const std::string&    PVname                    , 
     const std::string&    LVnameForPV               ,
-    const HepPoint3D&     position = HepPoint3D  () ,  
-    const HepRotation&    rotation = HepRotation () ); 
+    const Gaudi::XYZPoint&     position = Gaudi::XYZPoint  () ,  
+    const Gaudi::Rotation3D&    rotation = Gaudi::Rotation3D () ); 
   
   /** create daughter physical volume 
    *  @param PVname      name of daughter volume 
@@ -336,7 +336,7 @@ public:
   IPVolume* createPVolume
   ( const std::string&    PVname                    , 
     const std::string&    LVnameForPV               ,
-    const HepTransform3D& Transform                 );
+    const Gaudi::Transform3D& Transform                 );
   
 protected: 
   
@@ -383,8 +383,8 @@ protected:
    *  @return number of intersections  
    */
   unsigned int intersectDaughters
-  ( const HepPoint3D&        Point              , 
-    const HepVector3D&       Vector             , 
+  ( const Gaudi::XYZPoint&        Point              , 
+    const Gaudi::XYZVector&       Vector             , 
     ILVolume::Intersections& childIntersections , 
     const ISolid::Tick     & tickMin            , 
     const ISolid::Tick     & tickMax            , 
@@ -399,8 +399,8 @@ protected:
    *  @return number of intersections  
    */
   unsigned int  intersectDaughters
-  ( const HepPoint3D&        Point              , 
-    const HepVector3D&       Vector             , 
+  ( const Gaudi::XYZPoint&        Point              , 
+    const Gaudi::XYZVector&       Vector             , 
     ILVolume::Intersections& childIntersections , 
     const double             Threshold          ) const ;
   
@@ -411,7 +411,7 @@ protected:
    *  @return true if the point is inside the daughter volume
    */
   inline bool isInsideDaughter
-  ( const HepPoint3D& LocalPoint ) const
+  ( const Gaudi::XYZPoint& LocalPoint ) const
   { 
     return  
       m_pvolumes.end() != insideDaughter( LocalPoint );
@@ -424,7 +424,7 @@ protected:
    *  @return iterator to the daughter volume 
    */
   inline ILVolume::PVolumes::const_iterator insideDaughter
-  ( const HepPoint3D& LocalPoint ) const
+  ( const Gaudi::XYZPoint& LocalPoint ) const
   { 
     return  
       std::find_if( m_pvolumes.begin () , 

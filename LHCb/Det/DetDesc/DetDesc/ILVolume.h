@@ -1,4 +1,4 @@
-// $Id: ILVolume.h,v 1.9 2005-01-25 14:09:19 cattanem Exp $ 
+// $Id: ILVolume.h,v 1.10 2005-12-02 18:36:55 jpalac Exp $ 
 // ===========================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ===========================================================================
@@ -14,8 +14,8 @@
 /// DetDesc includes
 #include "DetDesc/ISolid.h"
 /// CLHEP includes 
-#include "CLHEP/Geometry/Point3D.h"
-#include "CLHEP/Geometry/Vector3D.h"
+#include "Kernel/Point3DTypes.h"
+#include "Kernel/Vector3DTypes.h"
 
 /// Forward declarations 
 class StatusCode;
@@ -198,7 +198,7 @@ public:
    *  @param LocalPoint point (in local reference system of the volume)
    *  @return true if the point is inside the logical volume 
    */
-  virtual bool isInside ( const HepPoint3D& LocalPoint ) const = 0; 
+  virtual bool isInside ( const Gaudi::XYZPoint& LocalPoint ) const = 0; 
   
   /** calculate the daughter path containing the Point in Local frame , 
    *  can be VERY slow for complex geometry, 
@@ -210,7 +210,7 @@ public:
    */
   virtual StatusCode 
 belongsTo
-  ( const HepPoint3D&        localPoint ,
+  ( const Gaudi::XYZPoint&        localPoint ,
     const int                level      , 
     ILVolume::PVolumePath&   volumePath ) const = 0;
   
@@ -223,7 +223,7 @@ belongsTo
    *  @return status code 
    */
   virtual StatusCode belongsTo
-  ( const HepPoint3D&        localPoint ,
+  ( const Gaudi::XYZPoint&        localPoint ,
     const int                level      , 
     ILVolume::ReplicaPath&   replicaPath ) const = 0;      
   
@@ -247,8 +247,8 @@ belongsTo
    *  @return number of intersections  
    */
   virtual unsigned int intersectLine
-  ( const HepPoint3D        & Point         ,  
-    const HepVector3D       & Vector        ,  
+  ( const Gaudi::XYZPoint        & Point         ,  
+    const Gaudi::XYZVector       & Vector        ,  
     ILVolume::Intersections & intersections ,
     const double              threshold     ) const = 0 ; 
   
@@ -274,8 +274,8 @@ belongsTo
    *  @return number of intersections  
    */
   virtual unsigned int intersectLine
-  ( const HepPoint3D        & Point         ,
-    const HepVector3D       & Vector        ,
+  ( const Gaudi::XYZPoint        & Point         ,
+    const Gaudi::XYZVector       & Vector        ,
     ILVolume::Intersections & intersections , 
     const ISolid::Tick        tickMin       ,
     const ISolid::Tick        tickMax       , 

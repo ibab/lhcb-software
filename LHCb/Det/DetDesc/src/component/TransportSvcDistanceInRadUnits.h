@@ -1,8 +1,11 @@
-// $Id: TransportSvcDistanceInRadUnits.h,v 1.5 2002-07-11 07:15:05 ibelyaev Exp $
+// $Id: TransportSvcDistanceInRadUnits.h,v 1.6 2005-12-02 18:36:56 jpalac Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.5  2002/07/11 07:15:05  ibelyaev
+//  fix the problems with virtual calls inside constructors
+//
 // ============================================================================
 #ifndef    __DETDESC_TRANSPORTSVC_TRASNPORTSVCDISTANCEINRADUNITS_H__
 #define    __DETDESC_TRANSPORTSVC_TRASNPORTSVCDISTANCEINRADUNITS_H__ 1
@@ -34,8 +37,8 @@
  */
 // ============================================================================
 inline double TransportSvc::distanceInRadUnits
-( const HepPoint3D& point1              ,  
-  const HepPoint3D& point2              ,  
+( const Gaudi::XYZPoint& point1              ,  
+  const Gaudi::XYZPoint& point2              ,  
   double            threshold           ,  
   IGeometryInfo*    alternativeGeometry ,  
   IGeometryInfo*    geometryGuess       )  
@@ -44,7 +47,7 @@ inline double TransportSvc::distanceInRadUnits
   if( point1 == point2 ) { return 0 ;} 
 
   // retrieve the history 
-  HepVector3D Vector( point2 - point1 ) ;
+  Gaudi::XYZVector Vector( point2 - point1 ) ;
   // initial point on the line 
   // direction vector of the line 
   // minimal value of the parameter of the line  

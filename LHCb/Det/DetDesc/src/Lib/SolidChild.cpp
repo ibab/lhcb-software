@@ -1,16 +1,15 @@
-// $Id: SolidChild.cpp,v 1.13 2005-03-18 15:37:09 cattanem Exp $ 
+// $Id: SolidChild.cpp,v 1.14 2005-12-02 18:36:56 jpalac Exp $ 
 // ===========================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ===========================================================================
 /// CLHEP
-#include "CLHEP/Geometry/Transform3D.h" 
-#include "CLHEP/Geometry/Point3D.h" 
+#include "Kernel/Transform3DTypes.h" 
+#include "Kernel/Point3DTypes.h" 
 /// GaudiKernel
 #include "GaudiKernel/IInspector.h" 
 #include "GaudiKernel/StreamBuffer.h"
 /// DetDesc 
 #include "DetDesc/SolidChild.h" 
-#include "DetDesc/ClhepToStream.h" 
 #include "DetDesc/Solid.h"
 
 // ============================================================================
@@ -43,7 +42,7 @@ SolidChild::SolidChild( const std::string& Name )
  */ 
 // ============================================================================
 SolidChild::SolidChild( ISolid*               solid , 
-                        const HepTransform3D* mtrx  ,
+                        const Gaudi::Transform3D* mtrx  ,
                         const std::string&    Name  )
   : SolidBase      ( Name  ) 
   , m_sc_solid     ( solid )
@@ -53,8 +52,8 @@ SolidChild::SolidChild( ISolid*               solid ,
   if( 0 == solid ) 
     { throw SolidException("SolidChild(), ISolid* points to NULL!");}
   ///
-  if( 0 != mtrx && !(HepTransform3D::Identity == *mtrx) )
-    { m_sc_matrix    = new HepTransform3D( *mtrx ); 
+  if( 0 != mtrx && !(Gaudi::Transform3D() == *mtrx) )
+    { m_sc_matrix    = new Gaudi::Transform3D( *mtrx ); 
     if( 0 != m_sc_matrix) { m_sc_simple = false ; } }
   else
     { m_sc_simple = true  ; }
@@ -87,11 +86,11 @@ StatusCode SolidChild::setBP()
   else
     {
       /// position of center of solid child in the mother reference frame 
-      const HepPoint3D center = (*m_sc_matrix).inverse() * HepPoint3D();
-      if( ! m_sc_matrix->getRotation().isIdentity() )
+      const Gaudi::XYZPoint center = (*m_sc_matrix).Inverse() * Gaudi::XYZPoint();
+      if( ! (*m_sc_matrix == Gaudi::Transform3D() ) )
         { // rotation 
           setRMax  ( center.r    () + base->rMax   () ) ;
-          setRhoMax( center.perp () + base->rMax   () ) ;
+          setRhoMax( std::sqrt(center.perp2()) + base->rMax   () ) ;
           setZMax  ( center.z    () + base->rMax   () ) ;
           setZMin  ( center.z    () - base->rMax   () ) ;
           setXMax  ( center.x    () + base->rMax   () ) ;
@@ -102,7 +101,7 @@ StatusCode SolidChild::setBP()
       else 
         { // no rotation 
           setRMax  ( center.r    () + base->rMax   () ) ;
-          setRhoMax( center.perp () + base->rhoMax () ) ;          
+          setRhoMax( std::sqrt(center.perp2()) + base->rhoMax () ) ;          
           setZMax  ( center.z    () + base->zMax   () ) ;
           setZMin  ( center.z    () + base->zMin   () ) ;
           setXMax  ( center.x    () + base->xMax   () ) ;
@@ -126,8 +125,8 @@ StatusCode SolidChild::setBP()
 // ============================================================================
 SolidChild::SolidChild
 ( ISolid*               solid ,
-  const HepPoint3D&     pos   , 
-  const HepRotation&    rot   ,
+  const Gaudi::XYZPoint&     pos   , 
+  const Gaudi::Rotation3D&    rot   ,
   const std::string&    Name  ) 
   : SolidBase      ( Name  ) 
   , m_sc_solid     ( solid )
@@ -138,15 +137,20 @@ SolidChild::SolidChild
   if( 0 == solid ) 
     { throw SolidException("SolidChild(), ISolid* points to NULL!");}
   ///
-  const HepPoint3D NullPoint(0,0,0);
+  const Gaudi::XYZPoint NullPoint(0,0,0);
   ///
-  if( NullPoint == pos && rot.isIdentity() ) 
+  if( NullPoint == pos && Gaudi::Rotation3D()==rot ) 
     { m_sc_simple = true  ; }         
   else 
     {
       m_sc_matrix    = 
-        new HepTransform3D( HepRotate3D( rot ) * 
-                            HepTranslate3D(-1.*pos.x(),-1.*pos.y(),-1.*pos.z()) );
+        new Gaudi::Transform3D(
+                               Gaudi::Transform3D( rot, 
+                                                   Gaudi::XYZPoint() ) *
+                               Gaudi::Transform3D(Gaudi::Rotation3D(),
+                                                  Gaudi::XYZPoint(-1.*pos.x(),
+                                                                  -1.*pos.y(),
+                                                                  -1.*pos.z()) ));
       if( 0 != m_sc_matrix ) { m_sc_simple = false ; } 
     }
   /// set bounding parameters 
@@ -161,57 +165,6 @@ SolidChild::~SolidChild()
 { 
   if( 0 != m_sc_solid  ){ delete m_sc_solid ; m_sc_solid  = 0; } 
   if( 0 != m_sc_matrix ){ delete m_sc_matrix; m_sc_matrix = 0; } 
-};
-
-// ============================================================================
-/** serialization for reading
- *  @param sb reference to stream buffer
- *  @return reference to stream buffer
- */
-// ============================================================================
-StreamBuffer& SolidChild::serialize( StreamBuffer& sb ) 
-{
-  ///
-  reset();
-  /// serialise the base class 
-  SolidBase::serialize( sb );
-  /// serialize the solid
-  std::string type;
-  sb >> type;
-  if( 0 != m_sc_solid ){ delete m_sc_solid ; m_sc_solid = 0; }
-  m_sc_solid = Solid::createSolid( type );
-  m_sc_solid->serialize( sb );
-  char c;
-  sb >> c;
-  m_sc_simple = c ? true : false ;
-  if( 0 != m_sc_matrix ) { delete m_sc_matrix ; m_sc_matrix = 0 ; }
-  if( !m_sc_simple ) 
-    { m_sc_matrix = new HepTransform3D() ; sb >> (*m_sc_matrix); }
-  ///
-  /// set bounding parameters 
-  setBP();  
-  ///
-  return sb;
-};
-
-// ============================================================================
-/** serialization for writing
- *  @param sb reference to stream buffer
- *  @return reference to stream buffer
- */
-// ============================================================================
-StreamBuffer& SolidChild::serialize( StreamBuffer& sb ) const
-{  
-  /// serialise the base class 
-  SolidBase::serialize( sb );
-  /// serialise the solid 
-  sb << m_sc_solid->typeName() ;
-  solid()->serialize( sb );
-  /// serialize the matrix
-  sb << (char) m_sc_simple;
-  if( !m_sc_simple ) { sb <<  *m_sc_matrix ; }
-  ///
-  return sb;
 };
 
 // ============================================================================
@@ -260,8 +213,8 @@ MsgStream&    SolidChild::printOut     ( MsgStream&    os ) const
 // ============================================================================
 unsigned int 
 SolidChild::intersectionTicks 
-( const HepPoint3D&  Point  ,
-  const HepVector3D& Vector ,
+( const Gaudi::XYZPoint&  Point  ,
+  const Gaudi::XYZVector& Vector ,
   ISolid::Ticks&     ticks  ) const
 {
   return solid()->
@@ -291,7 +244,7 @@ ISolid*  SolidChild::reset()
  *  @return true if the point is inside the solid
  */
 // ============================================================================
-bool SolidChild::isInside ( const HepPoint3D& point) const 
+bool SolidChild::isInside ( const Gaudi::XYZPoint& point) const 
 { 
   if( isOutBBox( point ) ) { return false ; }
   return  

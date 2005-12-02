@@ -1,10 +1,10 @@
-// $Id: PVolume.h,v 1.14 2005-01-25 14:09:19 cattanem Exp $ 
+// $Id: PVolume.h,v 1.15 2005-12-02 18:36:56 jpalac Exp $ 
 #ifndef    DETDESC_PVOLUME_H
 #define    DETDESC_PVOLUME_H 1 
 
 /// CLHEP includes
-#include "CLHEP/Geometry/Transform3D.h"
-#include "CLHEP/Vector/Rotation.h"
+#include "Kernel/Transform3DTypes.h"
+#include "Kernel/Transform3DTypes.h"
 ///  GaudiKernel includes   
 #include "GaudiKernel/DataObject.h" 
 /// DetDesc includes 
@@ -44,8 +44,8 @@ protected:
   ( const std::string& PhysVol_name                  ,
     const std::string& LogVol_name                   ,
     //    const size_t       copynumber                    ,
-    const HepPoint3D&  Position     = HepPoint3D  () ,
-    const HepRotation& Rotation     = HepRotation () );
+    const Gaudi::XYZPoint&   Position     = Gaudi::XYZPoint  () ,
+    const Gaudi::Rotation3D& Rotation     = Gaudi::Rotation3D () );
   
   /** constructor    
    *  @param PhysVol_name name of phys volume 
@@ -56,7 +56,7 @@ protected:
   ( const std::string&     PhysVol_name ,
     const std::string&     LogVol_name  ,
     //    const size_t           copynumber   ,
-    const HepTransform3D&  Transform    );
+    const Gaudi::Transform3D&  Transform    );
   
   /// destructor 
   virtual ~PVolume();
@@ -83,30 +83,30 @@ public:
   /** get the tranformation matrix   
    *  @return reference to transformation matrix 
    */ 
-  virtual const HepTransform3D&  matrix      () const { return m_matrix ; }
+  virtual const Gaudi::Transform3D&  matrix      () const { return m_matrix ; }
   
   /** get the inverse transformation matrix
    *  @return reference to inverse transformationmatrix 
    */
-  virtual const HepTransform3D&  matrixInv  () const ;
+  virtual const Gaudi::Transform3D&  matrixInv  () const ;
   
   /** transform point from  Mother Reference System  to the Local one
    *  @param PointInMother point in Mother Reference System 
    *  @return point in local reference system 
    */ 
-  virtual HepPoint3D toLocal  ( const HepPoint3D& PointInMother ) const ;
+  virtual Gaudi::XYZPoint toLocal  ( const Gaudi::XYZPoint& PointInMother ) const ;
   
   /** transform point in Local Reference System to the Mother Reference System
    *  @param PointInLocal point in Local Referency System
    *  @return point in mother reference system 
    */
-  virtual HepPoint3D toMother ( const HepPoint3D& PointInLocal  ) const ;
+  virtual Gaudi::XYZPoint toMother ( const Gaudi::XYZPoint& PointInLocal  ) const ;
   
   /** check for 3D-point
    *  @param PointInMother pointin Mother Referency System 
    *  @return true if point is inside physical volume 
    */
-  virtual bool isInside       ( const HepPoint3D& PointInMother ) const ;
+  virtual bool isInside       ( const Gaudi::XYZPoint& PointInMother ) const ;
   
   /** printout to STD/STL stream 
    *  @param os reference to STD/STL stream 
@@ -149,8 +149,8 @@ public:
    *  @param threshold threshold value 
    */
   virtual unsigned int intersectLine
-  ( const HepPoint3D        & Point         ,
-    const HepVector3D       & Vector        , 
+  ( const Gaudi::XYZPoint        & Point         ,
+    const Gaudi::XYZVector       & Vector        , 
     ILVolume::Intersections & intersections ,
     const double              threshold     ) const ;
   
@@ -178,8 +178,8 @@ public:
    *  @param threshold threshold value 
    */
   virtual unsigned int intersectLine
-  ( const HepPoint3D        & Point ,
-    const HepVector3D       & Vector        ,       
+  ( const Gaudi::XYZPoint        & Point ,
+    const Gaudi::XYZVector       & Vector        ,       
     ILVolume::Intersections & intersections ,      
     const ISolid::Tick        tickMin       ,
     const ISolid::Tick        tickMax       ,
@@ -197,13 +197,13 @@ public:
    *  @param ma misalignment matrix (assumed to be small!!!)
    *  @return the resulting transformation matrix
    */
-  virtual const HepTransform3D& 
-  applyMisAlignment ( const HepTransform3D& ma ) ;
+  virtual const Gaudi::Transform3D& 
+  applyMisAlignment ( const Gaudi::Transform3D& ma ) ;
   
   /** reset the  misalignemnt 
    *  @return the "nominal" transformation matrix
    */
-  virtual const HepTransform3D& 
+  virtual const Gaudi::Transform3D& 
   resetMisAlignment (                          ) ;
   
   /** query the interface
@@ -257,7 +257,7 @@ protected:
   /** inverse the matrix
    *  @return pointer to inverse matrix 
    */
-  HepTransform3D* findMatrix  () const ;
+  Gaudi::Transform3D* findMatrix  () const ;
   
   /** Assertion 
    *  @exception PVolumeException for wrong condition 
@@ -306,11 +306,11 @@ private:
   // name of logical volume 
   std::string             m_lvname        ;
   // nominal transformationmatrix 
-  HepTransform3D          m_nominal       ;
+  Gaudi::Transform3D          m_nominal       ;
   // transformation matrix 
-  HepTransform3D          m_matrix        ;
+  Gaudi::Transform3D          m_matrix        ;
   // pointer to inverse transformation matrix 
-  mutable HepTransform3D* m_imatrix       ;
+  mutable Gaudi::Transform3D* m_imatrix       ;
   // pointer to logical volume 
   mutable ILVolume*       m_lvolume       ;
   // reference/object counter 

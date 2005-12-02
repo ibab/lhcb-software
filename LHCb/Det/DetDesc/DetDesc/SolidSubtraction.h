@@ -1,4 +1,4 @@
-// $Id: SolidSubtraction.h,v 1.11 2005-01-25 14:09:19 cattanem Exp $
+// $Id: SolidSubtraction.h,v 1.12 2005-12-02 18:36:55 jpalac Exp $
 /// ===========================================================================
 /// CVS tag $Name: not supported by cvs2svn $ 
 /// ===========================================================================
@@ -58,7 +58,7 @@ public:
    *  @param point point (in local reference system of the solid)
    *  @return true if the point is inside the solid
    */
-  bool isInside ( const HepPoint3D& point ) const ;
+  bool isInside ( const Gaudi::XYZPoint& point ) const ;
   
   /** subtract child solid to the solid
    *  @param solid pointer to child solid 
@@ -67,7 +67,7 @@ public:
    */
   StatusCode subtract 
   ( ISolid*               solid , 
-    const HepTransform3D* mtrx  );
+    const Gaudi::Transform3D* mtrx  );
   
   /** subtract child solid from  the solid 
    *  @param child    pointer to child solid 
@@ -77,8 +77,8 @@ public:
    */
   StatusCode subtract 
   ( ISolid*               child                    , 
-    const HepPoint3D&     position                 , 
-    const HepRotation&    rotation = HepRotation() );
+    const Gaudi::XYZPoint&     position                 , 
+    const Gaudi::Rotation&    rotation = Gaudi::Rotation() );
   
 protected:
   

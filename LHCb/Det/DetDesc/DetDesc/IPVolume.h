@@ -1,4 +1,4 @@
-// $Id: IPVolume.h,v 1.9 2005-01-25 14:09:19 cattanem Exp $ 
+// $Id: IPVolume.h,v 1.10 2005-12-02 18:36:55 jpalac Exp $ 
 // ===========================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ===========================================================================
@@ -14,9 +14,9 @@
 #include "DetDesc/ILVolume.h"
 #include "DetDesc/ISolid.h"
 /// CLHEP includes 
-#include "CLHEP/Geometry/Point3D.h"
-#include "CLHEP/Geometry/Vector3D.h"
-
+#include "Kernel/Point3DTypes.h"
+#include "Kernel/Vector3DTypes.h"
+#include "Kernel/Transform3DTypes.h"
 
 /** Declaration of the interface ID 
  * ( unique interface identifier , major & minor versions)
@@ -65,33 +65,33 @@ public:
   /** get the tranformation matrix   
    *  @return reference to transformation matrix 
    */ 
-  virtual const HepTransform3D&  matrix     () const = 0;
+  virtual const Gaudi::Transform3D&  matrix     () const = 0;
   
   /** get the inverse transformation matrix
    *  @return reference to inverse transformationmatrix 
    */
-  virtual const HepTransform3D&  matrixInv  () const = 0; 
+  virtual const Gaudi::Transform3D&  matrixInv  () const = 0; 
   
   /** transform point from  Mother Reference System  to the Local one
    *  @param PointInMother point in Mother Reference System 
    *  @return point in local reference system 
    */ 
-  virtual HepPoint3D toLocal 
-  ( const HepPoint3D& PointInMother  ) const = 0;
+  virtual Gaudi::XYZPoint toLocal 
+  ( const Gaudi::XYZPoint& PointInMother  ) const = 0;
   
   /** transform point in Local Reference System to the Mother Reference System
    *  @param PointInLocal point in Local Referency System
    *  @return point in mother reference system 
    */
-  virtual HepPoint3D toMother 
-  ( const HepPoint3D& PointInLocal   ) const = 0;
+  virtual Gaudi::XYZPoint toMother 
+  ( const Gaudi::XYZPoint& PointInLocal   ) const = 0;
   
   /** check for 3D-point
    *  @param PointInMother pointin Mother Referency System 
    *  @return true if point is inside physical volume 
    */
   virtual bool isInside   
-  ( const HepPoint3D& PointInMother  ) const = 0;
+  ( const Gaudi::XYZPoint& PointInMother  ) const = 0;
   
   /** Intersection of the physical volume with with line.
    *  The line is parametrized in the local reference system of the mother
@@ -115,8 +115,8 @@ public:
    *  @param threshold threshold value 
    */
   virtual unsigned int intersectLine
-  ( const HepPoint3D        & Point         ,
-    const HepVector3D       & Vector        , 
+  ( const Gaudi::XYZPoint        & Point         ,
+    const Gaudi::XYZVector       & Vector        , 
     ILVolume::Intersections & intersections ,
     const double              threshold     ) const = 0 ;
   
@@ -144,8 +144,8 @@ public:
    *  @param Threshold threshold value 
    */
   virtual unsigned int intersectLine
-  ( const HepPoint3D        & Point         ,
-    const HepVector3D       & Vector        ,       
+  ( const Gaudi::XYZPoint        & Point         ,
+    const Gaudi::XYZVector       & Vector        ,       
     ILVolume::Intersections & intersections ,      
     const ISolid::Tick        tickMin       ,
     const ISolid::Tick        tickMax       ,
@@ -182,13 +182,13 @@ public:
    *  @param ma misalignment matrix (assumed to be small!!!)
    *  @return the resulting transformation matrix
    */
-  virtual const HepTransform3D& 
-  applyMisAlignment ( const HepTransform3D& ma ) = 0 ;
+  virtual const Gaudi::Transform3D& 
+  applyMisAlignment ( const Gaudi::Transform3D& ma ) = 0 ;
   
   /** reset the  misalignemnt 
    *  @return the "nominal" transformation matrix
    */
-  virtual const HepTransform3D& 
+  virtual const Gaudi::Transform3D& 
   resetMisAlignment (                          ) = 0 ;
   
   /// virtual destructor

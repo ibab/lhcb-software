@@ -1,4 +1,4 @@
-// $Id: SolidIntersection.h,v 1.9 2005-01-25 14:09:19 cattanem Exp $
+// $Id: SolidIntersection.h,v 1.10 2005-12-02 18:36:55 jpalac Exp $
 /// ==========================================================================
 /// CVS tag $Name: not supported by cvs2svn $ 
 /// ==========================================================================
@@ -57,7 +57,7 @@ public:
    *  @param "" point (in local reference system of the solid)
    *  @return true if the point is inside the solid
    */
-  bool isInside ( const HepPoint3D   & ) const ;
+  bool isInside ( const Gaudi::XYZPoint   & ) const ;
   
   /** add intersections 
    *  @param solid pointer         to new solid 
@@ -65,7 +65,7 @@ public:
    *  @return status code
    */
   StatusCode    intersect( ISolid*               solid                    , 
-                           const HepTransform3D* mtrx                     );
+                           const Gaudi::Transform3D* mtrx                     );
   
   /** add intersections 
    *  @param child    pointer to new solid 
@@ -74,8 +74,8 @@ public:
    *  @return status code
    */
   StatusCode    intersect( ISolid*               child                    , 
-                           const HepPoint3D&     position                 , 
-                           const HepRotation&    rotation = HepRotation() );
+                           const Gaudi::XYZPoint&     position                 , 
+                           const Gaudi::Rotation&    rotation = Gaudi::Rotation() );
 protected:
 
   /** constructor 

@@ -1,8 +1,11 @@
-// $Id: SolidBox.cpp,v 1.10 2003-05-16 13:59:13 ibelyaev Exp $ 
+// $Id: SolidBox.cpp,v 1.11 2005-12-02 18:36:56 jpalac Exp $ 
 // ===========================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ===========================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.10  2003/05/16 13:59:13  ibelyaev
+//  fix of ancient saga with 'double deletion of solids'
+//
 // Revision 1.9  2002/05/13 18:29:54  ibelyaev
 //  see $DETDESCROOT/doc/release.notes 13 May 2002
 //
@@ -171,8 +174,8 @@ StreamBuffer& SolidBox::serialize( StreamBuffer& s ) const
 // ============================================================================
 inline unsigned int 
 SolidBox::intersectionTicks
-( const HepPoint3D & point  ,
-  const HepVector3D& vect   ,
+( const Gaudi::XYZPoint & point  ,
+  const Gaudi::XYZVector& vect   ,
   ISolid::Ticks    & ticks  ) const
 {  ///
   ticks.clear(); 
@@ -223,8 +226,8 @@ SolidBox::intersectionTicks
 // ============================================================================
 unsigned int
 SolidBox::intersectionTicks 
-( const HepPoint3D & Point   ,
-  const HepVector3D& Vector  ,
+( const Gaudi::XYZPoint & Point   ,
+  const Gaudi::XYZVector& Vector  ,
   const Tick       & tickMin ,
   const Tick       & tickMax ,
   Ticks            & ticks   ) const  

@@ -1,4 +1,4 @@
-// $Id: SolidBoolean.h,v 1.16 2005-01-25 14:09:19 cattanem Exp $ 
+// $Id: SolidBoolean.h,v 1.17 2005-12-02 18:36:55 jpalac Exp $ 
 // ===========================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ===========================================================================
@@ -76,8 +76,8 @@ class SolidBoolean: public virtual SolidBase
    */
   virtual unsigned int 
   intersectionTicks 
-  ( const HepPoint3D & Point  ,
-    const HepVector3D& Vector ,
+  ( const Gaudi::XYZPoint & Point  ,
+    const Gaudi::XYZVector& Vector ,
     ISolid::Ticks    & ticks  ) const ;
   
   /** calculate the intersection points("ticks") with a given line.
@@ -93,8 +93,8 @@ class SolidBoolean: public virtual SolidBase
    */
   virtual unsigned int 
   intersectionTicks 
-  ( const HepPoint3D  & Point   ,
-    const HepVector3D & Vector  ,
+  ( const Gaudi::XYZPoint  & Point   ,
+    const Gaudi::XYZVector & Vector  ,
     const ISolid::Tick& tickMin ,
     const ISolid::Tick& tickMax ,
     ISolid::Ticks   &   ticks   ) const ; 
@@ -166,7 +166,7 @@ protected:
    */
   StatusCode addChild   
   ( ISolid*               child , 
-    const HepTransform3D* mtrx  );
+    const Gaudi::Transform3D* mtrx  );
   
   /** add child to daughter container 
    *  @param child    pointer to solid 
@@ -175,8 +175,8 @@ protected:
    */
   StatusCode addChild   
   ( ISolid*               child    , 
-    const HepPoint3D&     position , 
-    const HepRotation&    rotation );
+    const Gaudi::XYZPoint&     position , 
+    const Gaudi::Rotation3D&    rotation );
 
   /** acess to iterator
    *  @return "begin" iterator

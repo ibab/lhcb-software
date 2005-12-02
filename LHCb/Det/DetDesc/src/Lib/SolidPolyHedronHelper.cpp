@@ -1,8 +1,11 @@
-// $Id: SolidPolyHedronHelper.cpp,v 1.6 2003-05-16 13:59:14 ibelyaev Exp $ 
+// $Id: SolidPolyHedronHelper.cpp,v 1.7 2005-12-02 18:36:56 jpalac Exp $ 
 // ===========================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ===========================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.6  2003/05/16 13:59:14  ibelyaev
+//  fix of ancient saga with 'double deletion of solids'
+//
 // Revision 1.5  2002/05/13 18:29:54  ibelyaev
 //  see $DETDESCROOT/doc/release.notes 13 May 2002
 //
@@ -53,7 +56,7 @@ StatusCode SolidPolyHedronHelper::setBP()
     { throw SolidException("SolidPHH::setBP(): no vertices are available!");}
   
   /// loop over all points
-  const HepPoint3D& point  = m_ph_vertices.front();
+  const Gaudi::XYZPoint& point  = m_ph_vertices.front();
   setXMin   ( point.x    () ) ;
   setXMax   ( point.x    () ) ;
   setYMin   ( point.y    () ) ;
@@ -90,7 +93,7 @@ StatusCode SolidPolyHedronHelper::setBP()
  *  @return true if the point is inside the solid
  */
 // ============================================================================
-bool SolidPolyHedronHelper::isInside ( const HepPoint3D& point ) const 
+bool SolidPolyHedronHelper::isInside ( const Gaudi::XYZPoint& point ) const 
 {
   if( planes().empty()   ) { return false ; } 
   /// ckeck for bounding box 
@@ -124,8 +127,8 @@ bool SolidPolyHedronHelper::isInside ( const HepPoint3D& point ) const
  */
 unsigned int 
 SolidPolyHedronHelper::intersectionTicks 
-( const HepPoint3D&  Point  ,       
-  const HepVector3D& Vector ,       
+( const Gaudi::XYZPoint&  Point  ,       
+  const Gaudi::XYZVector& Vector ,       
   ISolid::Ticks   &   ticks  ) const
 {
   // clear the output container 
@@ -138,7 +141,7 @@ SolidPolyHedronHelper::intersectionTicks
   for( PLANES::const_iterator iPlane = planes().begin();  
        planes().end() != iPlane ; ++iPlane )
     {
-      const HepPlane3D& Plane = *iPlane ; 
+      const Gaudi::Plane3D& Plane = *iPlane ; 
       double vn =  Vector*Plane.normal() ; 
       if(  0 == vn ) { continue ; } 
       ISolid::Tick tick = -1. * ( Plane.distance( Point ) / vn ) ; 
@@ -154,8 +157,8 @@ SolidPolyHedronHelper::intersectionTicks
 
 // ============================================================================
 /**  add a face/plane given with 3 points
- *  @see addFace( const HepPoint3D& , const HepPoint3D& ,
- *                const HepPoint3D& , const HepPoint3D& )
+ *  @see addFace( const Gaudi::XYZPoint& , const Gaudi::XYZPoint& ,
+ *                const Gaudi::XYZPoint& , const Gaudi::XYZPoint& )
  *  @param Point1  the first  3D-point of the plane
  *  @param Point2  the second 3D-point of the plane 
  *  @param Point3  the third  3D-point of the plane 
@@ -163,20 +166,20 @@ SolidPolyHedronHelper::intersectionTicks
  */
 // ============================================================================
 bool SolidPolyHedronHelper::addFace
-( const HepPoint3D& Point1 , 
-  const HepPoint3D& Point2 , 
-  const HepPoint3D& Point3 ) 
+( const Gaudi::XYZPoint& Point1 , 
+  const Gaudi::XYZPoint& Point2 , 
+  const Gaudi::XYZPoint& Point3 ) 
 {
   /// check for 3 points on the same line  
-  HepVector3D v1( Point1 ) , v2( Point2 - Point1 ) , v3( Point3 - Point1); 
+  Gaudi::XYZVector v1( Point1 ) , v2( Point2 - Point1 ) , v3( Point3 - Point1); 
   if( 0 == v1.cross( v2 ).mag2() || 
       0 == v1.cross( v3 ).mag2() || 
       0 == v2.cross( v3 ).mag2()   ) { return false; } 
   ///
-  HepPlane3D Plane( Point1 , Point2 , Point3 ); 
+  Gaudi::Plane3D Plane( Point1 , Point2 , Point3 ); 
   /// invert face orientation if needed 
-  if( !inside( HepPoint3D( 0 , 0 , 0 ) , Plane ) ) 
-    { Plane = HepPlane3D(  -Plane.normal() , Point1 ) ; }
+  if( !inside( Gaudi::XYZPoint( 0 , 0 , 0 ) , Plane ) ) 
+    { Plane = Gaudi::Plane3D(  -Plane.normal() , Point1 ) ; }
   ///
   Plane.normalize();
   ///
@@ -189,8 +192,8 @@ bool SolidPolyHedronHelper::addFace
 
 // ============================================================================
 /**  add a face/plane given with 4 points
- *  @see addFace( const HepPoint3D& , const HepPoint3D& ,
- *                const HepPoint3D& )
+ *  @see addFace( const Gaudi::XYZPoint& , const Gaudi::XYZPoint& ,
+ *                const Gaudi::XYZPoint& )
  *  @param Point1  the first  3D-point of the plane
  *  @param Point2  the second 3D-point of the plane 
  *  @param Point3  the third  3D-point of the plane 
@@ -200,18 +203,18 @@ bool SolidPolyHedronHelper::addFace
  */
 // ============================================================================
 bool SolidPolyHedronHelper::addFace
-( const HepPoint3D& Point1 , 
-  const HepPoint3D& Point2 , 
-  const HepPoint3D& Point3 , 
-  const HepPoint3D& Point4 ) 
+( const Gaudi::XYZPoint& Point1 , 
+  const Gaudi::XYZPoint& Point2 , 
+  const Gaudi::XYZPoint& Point3 , 
+  const Gaudi::XYZPoint& Point4 ) 
 {
   ///
-  const HepPoint3D cPoint( ( Point1 + Point2 + Point3 + Point4 ) * 0.25 ) ; 
+  const Gaudi::XYZPoint cPoint( ( Point1 + Point2 + Point3 + Point4 ) * 0.25 ) ; 
   /// 
-  const HepVector3D v1( Point1 - cPoint ) ;
-  const HepVector3D v2( Point2 - cPoint ) ;
-  const HepVector3D v3( Point3 - cPoint ) ; 
-  const HepVector3D v4( Point4 - cPoint ) ;
+  const Gaudi::XYZVector v1( Point1 - cPoint ) ;
+  const Gaudi::XYZVector v2( Point2 - cPoint ) ;
+  const Gaudi::XYZVector v3( Point3 - cPoint ) ; 
+  const Gaudi::XYZVector v4( Point4 - cPoint ) ;
   ///
   const double t1   = v2.cross(  v3 ). dot( v4 )     ;
   const double v234 = v2.mag() * v3.mag() * v4.mag() ;

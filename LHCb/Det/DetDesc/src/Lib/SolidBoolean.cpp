@@ -1,4 +1,4 @@
-// $Id: SolidBoolean.cpp,v 1.13 2005-03-18 15:37:09 cattanem Exp $
+// $Id: SolidBoolean.cpp,v 1.14 2005-12-02 18:36:56 jpalac Exp $
 // ===========================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ===========================================================================
@@ -114,7 +114,7 @@ ISolid* SolidBoolean::reset()
  */
 // ============================================================================
 StatusCode SolidBoolean::addChild( ISolid*                  child , 
-                                   const HepTransform3D*    mtrx  ) 
+                                   const Gaudi::Transform3D*    mtrx  ) 
 {
   if( 0 == child  ) { return StatusCode::FAILURE; } 
   SolidChild* pChild = 
@@ -132,8 +132,8 @@ StatusCode SolidBoolean::addChild( ISolid*                  child ,
  */
 // ============================================================================
 StatusCode SolidBoolean::addChild   ( ISolid*               child    , 
-                                      const HepPoint3D&     position , 
-                                      const HepRotation&    rotation )
+                                      const Gaudi::XYZPoint&     position , 
+                                      const Gaudi::Rotation3D&    rotation )
 { 
   if( 0 == child  ) { return StatusCode::FAILURE; } 
   SolidChild* pChild =
@@ -222,8 +222,8 @@ StreamBuffer& SolidBoolean::serialize( StreamBuffer& s ) const
 // ============================================================================
 unsigned int 
 SolidBoolean::intersectionTicks 
-( const HepPoint3D & point  ,      
-  const HepVector3D& vect   ,      
+( const Gaudi::XYZPoint & point  ,      
+  const Gaudi::XYZVector& vect   ,      
   ISolid::Ticks    & ticks  ) const
 {
   ///
@@ -263,8 +263,8 @@ SolidBoolean::intersectionTicks
 // ============================================================================
 unsigned int 
 SolidBoolean::intersectionTicks 
-( const HepPoint3D  & point   ,
-  const HepVector3D & vect    ,
+( const Gaudi::XYZPoint  & point   ,
+  const Gaudi::XYZVector & vect    ,
   const ISolid::Tick& tickMin , 
   const ISolid::Tick& tickMax , 
   ISolid::Ticks     & ticks   ) const 
