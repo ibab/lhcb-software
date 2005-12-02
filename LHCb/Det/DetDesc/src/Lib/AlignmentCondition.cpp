@@ -1,4 +1,4 @@
-// $Id: AlignmentCondition.cpp,v 1.5 2005-09-22 07:52:19 cattanem Exp $
+// $Id: AlignmentCondition.cpp,v 1.6 2005-12-02 15:45:09 cattanem Exp $
 // Include files
 #include <algorithm>
 
@@ -24,11 +24,6 @@ AlignmentCondition::AlignmentCondition(  ) :
   m_rotationString("dRotXYZ"),
   m_pivotString("pivotXYZ")
 {
-  MsgStream log(msgSvc(), "AlignmentCondition");
-  log << MSG::VERBOSE << "Constructing default AlignmentCondition, classID " 
-      << classID()
-      << endmsg;
-
 }
 //=============================================================================
 AlignmentCondition::AlignmentCondition(const std::vector<double>& translation,

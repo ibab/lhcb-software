@@ -1,11 +1,14 @@
 ! =============================================================================
-! $Id: release.notes,v 1.230 2005-11-30 07:15:51 cattanem Exp $ 
+! $Id: release.notes,v 1.231 2005-12-02 15:45:09 cattanem Exp $ 
 ! =============================================================================
 ! package DetDesc
 ! package manager : Marco Clemencic, Juan Palacios
 ! =============================================================================
 
-!======================== DetDesc v15r6 2005-11-30 ========================
+!======================== DetDesc v15r6 2005-12-02 ========================
+! 2005-12-02 - Marco Cattaneo
+ - Remove MsgStream from AlignmentCondition default constructor, breaks Reflex
+
 ! 2005-11-29 - Marco Clemencic
  - Bug fix in UpdateManagerSvc
 
