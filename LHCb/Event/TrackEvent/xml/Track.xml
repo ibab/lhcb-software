@@ -31,7 +31,6 @@
       <import name='Event/Node' />
       <import name='Kernel/LHCbID' />
       <import name='CLHEP/Geometry/Plane3D' />
-      <import name='Event/TrackFunctor' />
 
 <!--
   /** Track history enumerations:
@@ -445,58 +444,27 @@
         type    = 'State &amp;'
         name    = 'closestState'
         argList = 'double z'
-        desc    = 'Retrieve the reference to the state closest to the given z-position'>
-        <code>
-  return closestState( TrackFunctor::distanceAlongZ&lt;State&gt;(z) );
-        </code>
-        </method>
+        desc    = 'Retrieve the reference to the state closest to the given z-position' />
 
       <method
         type    = 'const State &amp;'
         name    = 'closestState'
         argList = 'double z'
         desc    = 'Retrieve the reference to the state closest to the given z-position'
-        const   = 'TRUE'>
-        <code>
-  return closestState( TrackFunctor::distanceAlongZ&lt;State&gt;(z) );
-        </code>
-        </method>
+        const   = 'TRUE' />
 
       <method
         type    = 'State &amp;'
         name    = 'closestState'
         argList = 'const HepPlane3D plane'
-        desc    = 'Retrieve the reference to the state closest to the given plane'>
-        <code>
-  return closestState( TrackFunctor::distanceToPlane&lt;State&gt;(plane) );
-        </code>
-      </method>
+        desc    = 'Retrieve the reference to the state closest to the given plane' />
 
       <method
         type    = 'const State &amp;'
         name    = 'closestState'
         argList = 'const HepPlane3D plane'
         desc    = 'Retrieve the reference to the state closest to the given plane'
-        const   = 'TRUE'>
-        <code>
-  return closestState( TrackFunctor::distanceToPlane&lt;State&gt;(plane) );
-        </code>
-      </method>
-
-      <method
-        type    = 'template &lt;typename T&gt; State &amp;'
-        name    = 'closestState'
-        argList = 'T t'
-        desc    = 'Templated helper function to retrieve the const reference to the state closest to a given object'
-        access = 'PROTECTED' />
-
-      <method
-        type    = 'template &lt;typename T&gt; const State &amp;'
-        name    = 'closestState'
-        argList = 'T t'
-        desc    = 'Templated helper function to retrieve the reference to the state closest to a given object'
-        const  = 'TRUE'
-        access = 'PROTECTED' />
+        const   = 'TRUE' />
 
       <method
         type    = 'bool'
@@ -537,18 +505,6 @@
   return m_measurements.size();
         </code>
       </method>
-
-      <method
-        type    = 'template &lt;typename T&gt; unsigned int'
-        name    = 'nLHCbIDs'
-        argList = 'T predicate'
-        desc    = 'Retrieve the number of LHCbIDs that fulfill a predicate (using e.g. the HasKey template in TrackKeys.h)' />
-
-      <method
-        type    = 'template &lt;typename T&gt; unsigned int'
-        name    = 'nMeasurements'
-        argList = 'T predicate'
-        desc    = 'Retrieve the number of Measurements that fulfill a predicate (using e.g. the HasKey template in TrackKeys.h)' />
 
       <method
         name    = 'addToMeasurements'

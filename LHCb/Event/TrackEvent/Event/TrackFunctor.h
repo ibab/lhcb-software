@@ -9,6 +9,9 @@
 // from CLHEP
 #include "CLHEP/Geometry/Plane3D.h"
 
+// from TrackEvent
+#include "Event/Track.h"
+
 /** @namespace TrackFunctor
  *
  *  This namespace:
@@ -167,8 +170,60 @@ namespace TrackFunctor
     it = std::find(List.begin(), List.end(), value );
     delete *it;
     List.erase( it );
+  };
+
+//=============================================================================
+// Retrieve the reference to the state closest to the given object
+// e.g.: closestState( aTrack, TrackFunctor::distanceAlongZ<State>(z) )
+//       closestState( aTrack, TrackFunctor::distanceToPlane<State>(aPlane) )
+//=============================================================================
+  template <class T>
+  State& closestState( Track& track, const T& t )
+  {
+    std::vector<State*>::iterator iter = 
+      std::min_element( track.states().begin(), track.states().end(), t );
+    if ( iter == m_states.end() )
+      throw GaudiException( "No state closest to z","TrackFunctor.h",
+                            StatusCode::FAILURE );
+    return *(*iter);
+  };
+
+//=============================================================================
+// Retrieve the const reference to the state closest to the given object
+//=============================================================================
+  template <class T>
+  const State& closestState( const Track& track, const T& t )
+  {
+    std::vector<State*>::const_iterator iter = 
+      std::min_element( track.states().begin(), track.states().end(), t );
+    if ( iter == m_states.end() )
+      throw GaudiException( "No state closest to z","TrackFunctor.h",
+                            StatusCode::FAILURE );
+    return *(*iter);
+  };
+
+//=============================================================================
+// Retrieve the number of LHCbIDs that fulfill a predicate
+// (using e.g. the HasKey template in TrackKeys.h)
+//=============================================================================
+  template <class T>
+  unsigned int nLHCbIDs( const Track& track, const T& pred )
+  {
+    const std::vector<LHCbID>& ids = track.lhcbIDs();
+    return std::count_if( ids.begin(), ids.end(), pred );
+  };
+
+//=============================================================================
+// Retrieve the number of Measurements that fulfill a predicate
+// (using e.g. the HasKey template in TrackKeys.h)
+//=============================================================================
+  template <class T>
+  unsigned int nMeasurements( const Track& track, const T& pred )
+  {
+    const std::vector<Measurement*>& meas = track.measurements();
+    return std::count_if( meas.begin(), meas.end(), pred );
   }
-  
-}
+
+};
 
 #endif   /// TrackEvent_TrackFunctor_H
