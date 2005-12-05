@@ -2,6 +2,10 @@ Package: GaudiObjDesc
 Desccription: This package contains a set of tools used to generate code from the XML description of the data object classes.
 Package manager : Stefan Roiser
 
+!2005-12-05 Marco Cattaneo, Stefan Roiser
+- update GODsClassDB.xml removed all information except GaudiKernel, SealBase, SealKernel
+- removed warning when imported type was not found
+
 ===============================GaudiObjDesc v9r1============================
 ! 2005-11-28 Stefan Roiser
 - fix typedefs: used scoped class name

@@ -64,7 +64,7 @@ class importUtils:
       if type.strip()[:5] == 'std::' : return ''
       if self.cdb.has_key(type) : return self.cdb[type]
       if type.find('::') != -1 : return ''
-      if type : print ': WARNING: Could not find type %s' % type
+#      if type : print ': WARNING: Could not find type %s' % type
     return ''  
 #--------------------------------------------------------------------------------
   def addInclude(self, impStr):
