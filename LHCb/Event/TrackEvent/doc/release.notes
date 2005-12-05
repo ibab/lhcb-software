@@ -5,6 +5,10 @@
 !-----------------------------------------------------------------------------
 
 !========================= TrackEvent v1r6 2005-12-05 ========================
+! 2005-12-05 - Marco Cattaneo
+ - Remove the trajectory classes because they break the POOL dictionary
+   (dictionary cannot be loaded)
+
 ! 2005-12-02 - Eduardo Rodrigues
  - all templated methods removed from Track class (to follow GOD rules)
    and put in TrackFunctor.h

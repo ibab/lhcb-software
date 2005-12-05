@@ -14,7 +14,7 @@ version           v1r6
 #
 # Structure, i.e. directories to process. 
 #============================================================================
-branches          cmt doc dict Event xml
+branches          cmt doc Event xml
 include_dirs      $(TRACKEVENTROOT)
 #============================================================================
 # Used packages. Specify the version, * at the end specifies 'any revision'
