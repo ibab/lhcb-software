@@ -4,7 +4,7 @@
 ! Purpose     : standard converters for the LHCb Detector Description
 !-----------------------------------------------------------------------------
 
-!================ DetDescCnv v2r11 2005-12-05 ==========================
+!================ DetDescCnv v3r0 2005-12-05 ==========================
 
 ! 2005-12-05 - Juan PALACIOS
  - Changes to XmlLVomumeCnv for migration from CLHEP HepGeom to 
