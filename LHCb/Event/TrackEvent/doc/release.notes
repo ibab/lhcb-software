@@ -4,6 +4,7 @@
 ! Purpose     : Package for the tracking event model classes
 !-----------------------------------------------------------------------------
 
+!========================= TrackEvent v1r6 2005-12-05 ========================
 ! 2005-12-02 - Eduardo Rodrigues
  - all templated methods removed from Track class (to follow GOD rules)
    and put in TrackFunctor.h
