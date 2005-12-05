@@ -13,7 +13,7 @@
       author="P. Koppenburg"
       desc="Common base class for all process headers: GenHeader, MCHeader..."
       name="ProcessHeader"
-      location="Gen/Header"
+      location="Dummy"
       id="103"
      >
        &DataObject;
