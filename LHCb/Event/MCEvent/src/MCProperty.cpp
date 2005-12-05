@@ -1,4 +1,4 @@
-// $Id: MCProperty.cpp,v 1.1.1.1 2005-09-06 07:06:43 pkoppenb Exp $
+// $Id: MCProperty.cpp,v 1.2 2005-12-05 16:50:59 cattanem Exp $
 // Include files
 
 // local
@@ -14,7 +14,7 @@
 //=========================================================================
 //  Returns the second member of the pair with the specified key, or zero
 //=========================================================================
-int MCProperty::property ( const MCParticle* part) {
+int LHCb::MCProperty::property ( const LHCb::MCParticle* part) {
   if ( NULL == part ) return 0;
   int key = part->key();
   int indx;
@@ -25,7 +25,7 @@ int MCProperty::property ( const MCParticle* part) {
 //=========================================================================
 //  
 //=========================================================================
-bool MCProperty::findIndex ( int key, int& index) {
+bool LHCb::MCProperty::findIndex ( int key, int& index) {
 
   // binary search
   int iF = 0;
@@ -51,7 +51,7 @@ bool MCProperty::findIndex ( int key, int& index) {
 //  Insert the pair (MCParticle->key,value) at the appropriate place.
 //  l Replace if key exists
 //=========================================================================
-void MCProperty::setProperty ( const MCParticle* part, int value ) {
+void LHCb::MCProperty::setProperty ( const LHCb::MCParticle* part, int value ) {
   if ( NULL == part ) return;
   int key = part->key();
   int iF;

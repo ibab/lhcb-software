@@ -14,22 +14,21 @@
       location="MC/Particles"
      >
        &KeyedObject;
-       <import name="Event/LHCbTypedefs"/>
-       <import name="CLHEP/Units/PhysicalConstants"/>
+       <import name="Kernel/PhysicalConstants"/>
        <import name="Kernel/ParticleID"/>
-       <import name="MathCore/LorentzVectorfwd"/>
-       <import name="MathCore/LorentzVector"/>
+       <import name="Kernel/Vector4DTypes"/>
+       <import name="MCVertex" soft="TRUE"/>
        <base name="KeyedObject&lt;int&gt;"/>
        <attribute
         desc="4-momentum-vector"
         name="momentum"
-        type="LHCb::Lorentz"
+        type="Gaudi::LorentzVector"
         init="0.0, 0.0, 0.0, -1*GeV" 
        />
        <attribute
         desc="Particle ID"
         name="particleID"
-        type="ParticleID"
+        type="LHCb::ParticleID"
         init="0"
        />
        <method
@@ -39,9 +38,9 @@
         type="bool"
        >
          <code>  ; 
-  for ( SmartRefVector &lt; MCVertex &gt;::const_iterator v = this->endVertices().begin() ;
+  for ( SmartRefVector &lt; LHCb::MCVertex &gt;::const_iterator v = this->endVertices().begin() ;
          v != this->endVertices().end() ; ++v){
-    if ( (*v)->type() == MCVertex::OscillatedAndDecay ) return true ;
+    if ( (*v)->type() == LHCb::MCVertex::OscillatedAndDecay ) return true ;
   }
   return false ;
          </code>
@@ -52,7 +51,7 @@
         name="virtualMass"
         type="double"
        >
-         <code>  return m_momentum.M(); </code>
+         <code> return m_momentum.M(); </code>
        </method>
        <method
         const="TRUE"
@@ -74,7 +73,7 @@
         const="TRUE"
         desc="Pointer to parent particle"
         name="mother"
-        type="const MCParticle*"
+        type="const LHCb::MCParticle*"
        >
          <code>
   return ( originVertex() ? originVertex()->mother() :0 ) ;
@@ -113,19 +112,19 @@
        <relation
         desc="Pointer to origin vertex"
         name="originVertex"
-        type="MCVertex"
+        type="LHCb::MCVertex"
        />
        <relation
         desc="Vector of pointers to decay vertices"
         multiplicity="M"
         name="endVertices"
-        type="MCVertex"
+        type="LHCb::MCVertex"
        />
        <method
         const="TRUE"
         desc="Get primary vertex up the decay tree"
         name="primaryVertex"
-        type="const MCVertex*"
+        type="const LHCb::MCVertex*"
        >
          <code> 
   return ( originVertex() ? originVertex()->primaryVertex() : 0 ) ;

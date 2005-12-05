@@ -1,4 +1,4 @@
-// $Id: MCEffTree.cpp,v 1.1.1.1 2005-09-06 07:06:43 pkoppenb Exp $
+// $Id: MCEffTree.cpp,v 1.2 2005-12-05 16:50:59 cattanem Exp $
 // Include files 
 
 
@@ -27,8 +27,8 @@
 //   }
 
 
-void MCEffTree::addMCEffParticle( int recble, int rected, 
-                                  MCParticle* mcParticle ) {
+void LHCb::MCEffTree::addMCEffParticle( int recble, int rected, 
+                                        LHCb::MCParticle* mcParticle ) {
 
   MCEffParticle effPart;
   

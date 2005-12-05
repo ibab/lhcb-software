@@ -3,23 +3,24 @@
 <gdd>
   <package name='MCEvent'>
 <!-- ****************************************************************
-     * GenHeader                                                    *
+     * MCHeader                                                     *
      ****************************************************************-->
      <class 
       author="P. Koppenburg"
-      desc="Header for simulation information @todo Ask Marco for ID"
+      desc="Header for simulation information"
       name="MCHeader"
-      location="Sim/MCHeader"
-      id="118"
+      location="MC/Header"
+      id="104"
      >
        &DataObject;
        <base name="ProcessHeader"/>
        <import name="Event/ProcessHeader"/>
+       <import name="MCVertex" soft="TRUE"/>
        <relation
         desc="pointer to primary vertices @todo remove the non-const getter"
         multiplicity="N"
         name="primaryVertices"
-        type="MCVertex"
+        type="LHCb::MCVertex"
        />
      </class>
   </package>

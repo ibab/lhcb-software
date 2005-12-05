@@ -10,8 +10,6 @@
        author="Christian Jacoby"
        desc="Access to MC decay tree information for efficiency algorithms" 
        stdVectorTypeDef="TRUE"
-       templateList   = "FALSE"
-       templateVector = "TRUE" 
        serializers = "FALSE"
        id="250"
      >
@@ -47,7 +45,7 @@
 
      <relation
             name="mcHead"
-            type="MCParticle"
+            type="LHCb::MCParticle"
             desc="The head of a MC decay tree"
      />
 
@@ -55,13 +53,13 @@
             name="allStables"
             desc="vector of stable MCEffParticles"
             setMeth="FALSE"
-            type = "std::vector&lt;MCEffParticle&gt;" 
+            type = "std::vector&lt;LHCb::MCEffParticle&gt;" 
        />
 
      <method
             name="addMCEffParticle"
             desc="add MCEffParticle to allStables"
-            argList="int recble, int rected, MCParticle* mcParticle"
+            argList="int recble, int rected, LHCb::MCParticle* mcParticle"
      />
     
      <attribute

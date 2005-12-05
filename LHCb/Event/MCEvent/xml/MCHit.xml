@@ -10,8 +10,9 @@
            author='Marco Cattaneo, revised by G.Corti' 
            desc='GEANT tracking hit' 
            id='230' >
-      <import name="Event/LHCbTypedefs"/>
-      <import name="MathCore/Point3D"/>
+      <import name="Kernel/Point3DTypes.h"/>
+      <import name="Kernel/Vector3DTypes.h"/>
+      <import name="MCParticle" soft="TRUE"/>
       &ContainedObject;
       <base     name="ContainedObject"/>
       <location name="Velo"    place="MC/Velo/Hits"  />
@@ -29,13 +30,13 @@
       <attribute 
        desc="Entry point in LHCb reference system (mm)"
        name="entry"
-       type="LHCb::Point3D"
+       type="Gaudi::XYZPoint"
        init="0.0, 0.0, 0.0"
       /> 
       <attribute
        desc="Difference between exit and entry points (mm)"
        name="displacement" 
-       type="LHCb::Vector3D" 
+       type="Gaudi::XYZVector" 
        init="0.0, 0.0, 0.0"
       />
       <attribute
@@ -54,7 +55,7 @@
        desc="Exit point in LHCb reference system (mm)"
        name="exit"
        const="TRUE"
-       type="const LHCb::Point3D"
+       type="const Gaudi::XYZPoint"
       >
          <code>
    return( this->entry() + this->displacement() );
@@ -102,7 +103,7 @@
       <relation
        desc="Pointer to MCParticle causing the hit"
        name="MCParticle" 
-       type="MCParticle" 
+       type="LHCb::MCParticle" 
       />
     </class>
   </package>

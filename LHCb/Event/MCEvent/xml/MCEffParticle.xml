@@ -9,8 +9,6 @@
        name="MCEffParticle"
        author="Christian Jacoby"
        desc="Access to MC particle information for efficiency algorithms"
-       templateList   = "FALSE"
-       templateVector = "FALSE"
        serializers = "FALSE"
       >
       &StlVector;
@@ -19,7 +17,7 @@
      
       <relation
             name="mcStable"
-            type="MCParticle"
+            type="LHCb::MCParticle"
             desc="stable MC particle"
       />
 
