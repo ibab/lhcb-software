@@ -1,9 +1,9 @@
 package DetSys
-version v7r6
+version v7r7
 
 branches cmt doc dict
 
-use DetDesc             v15r5   Det
+use DetDesc             v15r6   Det
 use DetDescCnv		v2r10   Det
 use XmlTools		v3r8    Tools
 use VeloDet        	v9r8    Det
@@ -30,4 +30,5 @@ apply_pattern     component_library    library=DetDict
 # ==== DetCond needed to compile DetDict but do not link with DetCondLib
 private
 use DetCond v* Det
-macro_remove use_linkopts $(DetCond_linkopts) $(COOL_linkopts)
+macro_remove use_linkopts $(DetCond_linkopts)
+macro_remove use_linkopts $(COOL_linkopts)
