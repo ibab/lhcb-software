@@ -5,6 +5,74 @@ Purpose: LHCb reconstruction packages.
          This project groups together all the reconstruction packages needed
          by one or more LHCb applications. 
 
+</PRE><H1><A NAME=v2r2>2005-12-01 RecSys v2r2</A></H1><PRE>
+This version uses Gaudi v17r2, LHCb v19r3. Backwards compatible for RTTC data
+
+- Packages added:    PatKShort     - Reconstruct downstream tracks from seeds
+                     TrackCheckers - Algorithms for checking tracks
+                     TrackFitter   - Tools for fitting tracks
+                     TrackPython   - Exposes track interfaces etc. to Python
+                     TrackVeloTT   - Velo-TT pattern recognition algorithms
+- Packages modified: PatSys v1r5, PatTools v1r3, PatChecker v1r3,
+    PatFitParams v1r2, TrackExtrapolators v1r3, TrackFitEvent v1r5,
+    TrackIdealPR v1r4p1, TrackMCTools v1r4, TrackProjectors v1r4,
+    TrackTools v1r3, TrConverters v1r5
+
+- In PatTools v1r3:
+  . Add class IncreaseingByZ in PatTTCoord
+
+- In PatChecker v1r3:
+  . Adapt the truth associator for Seed, Match and KsTrack: List of containers
+    in PatTrack2MCParticle.
+  . LHCbID linker to MCParticle: the SpareBits field of the LHCbID is cleared so
+    that it works with LHCbIDs created by the Measurements
+  . PatChecker has adapted counters for Match, Seed and KsTrack.
+  . Add new algorithm PatKShortChecker, adapted from Tr/TrKShort KShortMonitor.
+
+- In PatFitParams v1r2:
+  . Add new algorithm to fit the KShort parameters, adapted from Tr/TrKShort
+ 
+- In TrackExtrapolators v1r3:
+  . TrackTransportStep.h helper class removed
+  . Added extrapolators selectors:
+    The TrackMasterExtrapolator chooses the extrapolator to use via a set of
+    tools that work as follows:
+    + TrackSimpleExtraSelector:   just has one extrapolator
+    + TrackDistanceExtraSelector: chooses between 2 based on stepsize
+    + TrackLongExtraSelector:     chooses between two except in the T stations
+                                  where it takes the short distance always
+  . Bug fix in master extrapolator
+
+- In TrackFitEvent v1r5:
+  . VeloPhiMeasurement: 
+    Added resolution(), needed to determine the error in Carthesian coordinates.
+    Old method errMeasure() returns the error in terms of the phi angle.
+  . FitNode: 
+    Added member m_transportDeltaZ to cross check transport data correctness.
+    Removed obsolete data member filtered state. 
+    Data member m_predictedState is not a pointer anymore.
+
+- In TrackIdealPR v1r4p1:
+  . Code clean-ups
+  . Added the estimate for R to the VeloPhiMeasurement.
+  . Changes to comply with MC associations as in TrackAssociators
+
+- In TrackMCTools v1r4:
+  . Propagation of changes in enum methods interfaces from TrackEvent
+
+- In TrackProjectors v1r4:
+  . Adapt to changes in VeloPhiMeasurement. Now using method resolution().
+  . New tool RayIntersector, computes the distance between two straight lines
+   (rays) and the derivative of that distance.
+  . TrackOTRayProjector computes the OT projection using the RayIntersector
+ 
+- In TrackTools v1r3:
+  . Minor code cleanups, possible memory leak corrected
+  . MeasurementProvider tool sets Status flag for tracks with Measurements.
+
+- In TrConverters v1r5
+  . TrStoredTrack2TrackCnv fills the Tracks with measurements and LHCbIDs
+
 </PRE><H1><A NAME=v2r1>2005-11-22 RecSys v2r1</A></H1><PRE>
 This version uses Gaudi v17r2, LHCb v19r2. Backwards compatible for RTTC data
 

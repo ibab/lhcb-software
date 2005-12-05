@@ -27,15 +27,19 @@ use VeloTT              v1r13	Tr    # Yuehong Xie
 use TrKShort		v1r6	Tr    # Olivier Callot
 
 # New tracking
-use TrackExtrapolators  v1r2    Tr    # Eduardo Rodrigues, Jose Hernando
-use TrackTools          v1r2    Tr    # Eduardo Rodrigues, Jose Hernando
-use TrackMCTools        v1r3    Tr    # Eduardo Rodrigues, Jose Hernando
-use TrackProjectors     v1r3    Tr    # Eduardo Rodrigues, Jose Hernando
-use TrackFitEvent       v1r4    Tr    # Eduardo Rodrigues, Jose Hernando
-use TrackIdealPR        v1r3    Tr    # Eduardo Rodrigues, Jose Hernando
+use TrackExtrapolators  v1r3    Tr    # Eduardo Rodrigues, Jose Hernando
+use TrackTools          v1r3    Tr    # Eduardo Rodrigues, Jose Hernando
+use TrackMCTools        v1r4    Tr    # Eduardo Rodrigues, Jose Hernando
+use TrackProjectors     v1r4    Tr    # Eduardo Rodrigues, Jose Hernando
+use TrackFitEvent       v1r5    Tr    # Eduardo Rodrigues, Jose Hernando
+use TrackIdealPR        v1r4p1  Tr    # Eduardo Rodrigues, Jose Hernando
 use TrackMatching       v1r1    Tr    # Eduardo Rodrigues
+use TrackVeloTT         v1r0    Tr    # Eduardo Rodrigues
 use TrackAssociators    v1r4    Tr    # Edwin Bos
-use TrConverters        v1r4    Tr    # Eduardo Rodrigues, Jose Hernando
+use TrackCheckers       v1r0    Tr    # Eduardo Rodrigues
+use TrackFitter         v1r0    Tr    # Eduardo Rodrigues
+use TrackPython         v1r2    Tr    # Eduardo Rodrigues
+use TrConverters        v1r5    Tr    # Eduardo Rodrigues, Jose Hernando
 use TrgConverter        v1r0p1  Trg   # Eduardo Rodrigues, Jose Hernando
 
 # Trg reconstruction
@@ -51,15 +55,16 @@ use TrgVelo             v7r4    Trg   # David Hutchcroft
 use TrgVeloTT		v8r1    Trg   # Luis Fernandez
 
 # New pattern recognition
-use PatSys              v1r4    Pat   # Olivier Callot
-use PatTools            v1r2    Pat   # Olivier Callot
+use PatSys              v1r5    Pat   # Olivier Callot
+use PatTools            v1r3    Pat   # Olivier Callot
 use PatUtils            v1r1    Pat   # Olivier Callot
 use PatVelo             v1r4    Pat   # Olivier Callot, David Hutchcroft
 use PatVeloTT           v1r3    Pat   # Olivier Callot, Luis Fernandez
 use PatForward          v1r2    Pat   # Olivier Callot
 use PatPV               v1r0p1  Pat   # Mariusz Witek
-use PatChecker          v1r2    Pat   # Olivier Callot
-use PatFitParams        v1r1    Pat   # Olivier Callot
+use PatChecker          v1r3    Pat   # Olivier Callot
+use PatFitParams        v1r2    Pat   # Olivier Callot
+use PatKShort           v1r0    Pat   # Olivier Callot
 
 # L1 reconstruction and decision
 use L1Reco              v7r2    Trg   # Mariusz Witek
