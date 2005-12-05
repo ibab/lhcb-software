@@ -1,12 +1,12 @@
-// $Id: Material.h,v 1.8 2005-06-13 11:34:29 cattanem Exp $
-/// $Id: Material.h,v 1.8 2005-06-13 11:34:29 cattanem Exp $
+// $Id: Material.h,v 1.9 2005-12-05 17:11:19 cattanem Exp $
+/// $Id: Material.h,v 1.9 2005-12-05 17:11:19 cattanem Exp $
 #ifndef DETDESC_MATERIAL_H
 #define DETDESC_MATERIAL_H
 /// STL
 #include <string>
 #include <vector>
-/// CLHEP
-#include "CLHEP/Units/PhysicalConstants.h"
+/// CLHEP Units
+#include "Kernel/PhysicalConstants.h"
 /// GaudiKernel
 #include "GaudiKernel/DataObject.h"
 #include "GaudiKernel/SmartRefVector.h"

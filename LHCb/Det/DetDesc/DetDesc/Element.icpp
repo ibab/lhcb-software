@@ -1,10 +1,10 @@
-// $Id: Element.icpp,v 1.4 2005-06-13 11:34:29 cattanem Exp $
+// $Id: Element.icpp,v 1.5 2005-12-05 17:11:19 cattanem Exp $
 #ifndef      DETDESC_ELEMENT_ICPP
 #define      DETDESC_ELEMENT_ICPP 1 
 /// DetDesc
 #include "DetDesc/Element.h"
 #include "DetDesc/Isotope.h"
-#include "CLHEP/Units/PhysicalConstants.h"
+#include "Kernel/PhysicalConstants.h"
 
 /////////////////////////////////////////////////////////////////////////////////
 inline const int    Element::nOfIsotopes() const { return isotopes().size(); }

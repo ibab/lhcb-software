@@ -1,7 +1,7 @@
-# $Id: requirements,v 1.72 2005-12-02 18:36:56 jpalac Exp $ 
+# $Id: requirements,v 1.73 2005-12-05 17:11:19 cattanem Exp $ 
 # =============================================================================
 package       DetDesc
-version       v15r6
+version       v16r0
 
 # =========== structure =======================================================
 branches      DetDesc doc cmt src
@@ -11,8 +11,8 @@ include_dirs  $(DETDESCROOT)
 
 # =========== dependencies ====================================================
 use           GaudiKernel       v*
-use           CLHEP             v* LCG_Interfaces
-use           LHCbDefinitions   v1r2  Kernel
+use           CLHEP             v* LCG_Interfaces # Needed for Plane3D
+use           LHCbDefinitions   v* Kernel
 
 # =========== constituents ====================================================
 library       DetDescLib        Lib/*.cpp
