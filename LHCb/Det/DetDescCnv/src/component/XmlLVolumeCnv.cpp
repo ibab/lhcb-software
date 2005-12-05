@@ -1,4 +1,4 @@
-// $Id: XmlLVolumeCnv.cpp,v 1.5 2003-11-24 15:31:39 cattanem Exp $ 
+// $Id: XmlLVolumeCnv.cpp,v 1.6 2005-12-05 18:06:48 jpalac Exp $ 
 // Include files
 #include "GaudiKernel/CnvFactory.h"
 #include "GaudiKernel/GenericAddress.h"
@@ -24,9 +24,6 @@
 
 #include "XmlTools/IXmlSvc.h"
 #include "DetDescCnv/XmlCnvException.h"
-
-// This is for the definition of M_PI
-#include <CLHEP/config/CLHEP.h>
 
 #if defined (__GNUC__) && ( __GNUC__ <= 2 )
 #include <strstream> 
@@ -407,7 +404,7 @@ StatusCode XmlLVolumeCnv::internalCreateObj (xercesc::DOMElement* element,
       const XMLCh* childTagName = childElement->getNodeName();
       if (isTransformation(childTagName)) {
         // deal with the transformation itself
-        HepTransform3D* transformation = dealWithTransformation (element, &i);
+        Gaudi::Transform3D* transformation = dealWithTransformation (element, &i);
         // modifies the solid in consequence
         // TO BE IMPLEMENTED --- TODO
         MsgStream log(msgSvc(), "XmlLVolumeCnv" );
@@ -474,11 +471,11 @@ StatusCode XmlLVolumeCnv::internalCreateObj (xercesc::DOMElement* element,
       if (0 == volume->transformation) {
         dataObj->createPVolume (createPvName (volume),
                                 volume->logvolName,
-                                HepTransform3D::Identity);
+                                Gaudi::Transform3D() );
       } else {
         dataObj->createPVolume (createPvName (volume),
                                 volume->logvolName,
-                                volume->transformation->inverse());
+                                volume->transformation->Inverse());
       }
       if (volume->transformation != 0) {
         delete (volume->transformation);
@@ -496,11 +493,11 @@ StatusCode XmlLVolumeCnv::internalCreateObj (xercesc::DOMElement* element,
         if (0 == (*it)->transformation) {
           dataObj->createPVolume (createPvName (*it),
                                   (*it)->logvolName,
-                                  HepTransform3D::Identity);
+                                  Gaudi::Transform3D() );
         } else {
           dataObj->createPVolume (createPvName (*it),
                                   (*it)->logvolName,
-                                  (*it)->transformation->inverse());
+                                  (*it)->transformation->Inverse());
         }
       }
       while (volumes->size() > 0) {
@@ -559,12 +556,12 @@ XmlLVolumeCnv::dealWithPhysvol (xercesc::DOMElement* element) {
   xercesc::DOMNodeList* childNodes = element->getChildNodes();
 
   // deal with a possible transformation inside element
-  HepTransform3D* transformation = 0;
+  Gaudi::Transform3D* transformation = 0;
   // while there are children, and no transformation found, try
   // to find one
   unsigned int i = 0;
   while ((transformation == 0 ||
-          *transformation == HepTransform3D::Identity)
+          *transformation == Gaudi::Transform3D())
          && i < childNodes->getLength()) {    
     while (i < childNodes->getLength() && 
            childNodes->item(i)->getNodeType() !=
@@ -760,7 +757,7 @@ XmlLVolumeCnv::dealWithParamphysvol (xercesc::DOMElement* element,
     }
 
     // now looks subsequent child, they will define the transformations
-    std::vector<HepTransform3D*> transformations(nD);
+    std::vector<Gaudi::Transform3D*> transformations(nD);
 
     // while there are still children, and not enough transformations found, try
     // to find more transformations
@@ -833,7 +830,7 @@ XmlLVolumeCnv::PVolumes*
 XmlLVolumeCnv::expandParamPhysVol
 (PVolumes* volumes,
  std::vector<int> numbers,
- std::vector<HepTransform3D*> transformations) {
+ std::vector<Gaudi::Transform3D*> transformations) {
   // gets the number of dimensions, check the arguments are ok
   unsigned int nD = numbers.size();
   if (transformations.size() != nD) {
@@ -858,21 +855,21 @@ XmlLVolumeCnv::expandParamPhysVol
   }
     
   // get the translations and rotations to apply
-  std::vector<Hep3Vector> stepTranslations(nD);
-  std::vector<HepRotation> stepRotations(nD);
+  std::vector<Gaudi::XYZVector> stepTranslations(nD);
+  std::vector<Gaudi::Rotation3D> stepRotations(nD);
   {
     unsigned int i = 0;
     for (i = 0; i < nD; i++) {
-      stepTranslations[i] = transformations[i]->getTranslation();
-      stepRotations[i] = transformations[i]->getRotation();
+      transformations[i]->GetDecomposition(stepRotations[i],
+                                           stepTranslations[i]);
     }
   }
   
   // creates the result
   PVolumes* result = new PVolumes();
   // creates the set of translations and rotations that the volumes will use
-  std::vector<Hep3Vector> translations(nV);
-  std::vector<HepRotation> rotations(nV);
+  std::vector<Gaudi::XYZVector> translations(nV);
+  std::vector<Gaudi::Rotation3D> rotations(nV);
   {
     unsigned int numberOfItems = 1;
     unsigned int dimension, item;
@@ -892,6 +889,9 @@ XmlLVolumeCnv::expandParamPhysVol
     }
   }
   
+  Gaudi::XYZVector tmpTrans;
+  Gaudi::Rotation3D tmpRot;
+
   // for each volume
   for (PVolumes::iterator it = volumes->begin();
        volumes->end() != it;
@@ -910,16 +910,18 @@ XmlLVolumeCnv::expandParamPhysVol
       newPvi->indexed = true;
       newPvi->logvolName = (*it)->logvolName;
       if (0 == (*it)->transformation) {
-        HepTransform3D *transformation =
-          new HepTranslate3D (translations[step]);
-        *transformation = *transformation * HepRotate3D (rotations[step]);
+        Gaudi::Transform3D* transformation =
+          new Gaudi::Transform3D(Gaudi::Rotation3D(), translations[step]);
+        *transformation = *transformation * 
+          Gaudi::Transform3D(rotations[step], Gaudi::XYZVector() );
         newPvi->transformation = transformation;
       } else {
-        HepTransform3D *transformation =
-          new HepTranslate3D (translations[step] +
-                              (*it)->transformation->getTranslation());
-        *transformation = *transformation * HepRotate3D
-          (rotations[step] * (*it)->transformation->getRotation());
+        (*it)->transformation->GetDecomposition(tmpRot, tmpTrans);
+        Gaudi::Transform3D *transformation =
+          new Gaudi::Transform3D (Gaudi::Rotation3D(), 
+                                  translations[step] + tmpTrans );
+        *transformation = *transformation * 
+          Gaudi::Transform3D( rotations[step]*tmpRot, Gaudi::XYZVector() );
         newPvi->transformation = transformation;
       }
       result->push_back (newPvi);
@@ -1128,7 +1130,7 @@ XmlLVolumeCnv::dealWithBooleanChildren (xercesc::DOMElement* element) {
         // get the C++ object from it
         ISolid* solid = dealWithSolid(childElement);
         // see if there is a transformation afterwards
-        HepTransform3D* transformation = 0;
+        Gaudi::Transform3D* transformation = 0;
         i += 1;
         while (i < childNodes->getLength() && 
                childNodes->item(i)->getNodeType() !=
@@ -1141,7 +1143,7 @@ XmlLVolumeCnv::dealWithBooleanChildren (xercesc::DOMElement* element) {
           tagName = childElement->getNodeName();
           if (isTransformation (tagName)) {
             transformation = dealWithTransformation (element, &i);
-            *transformation = transformation->inverse();
+            *transformation = transformation->Inverse();
           }
         }
         PlacedSolid newPs = { solid, transformation };
@@ -1671,7 +1673,7 @@ SolidSphere* XmlLVolumeCnv::dealWithSphere (xercesc::DOMElement* element) {
 // -----------------------------------------------------------------------
 // Deal with transformation
 // -----------------------------------------------------------------------
-HepTransform3D*
+Gaudi::Transform3D*
 XmlLVolumeCnv::dealWithTransformation(xercesc::DOMElement* element,
                                       unsigned int* index) {
   // gets children of element
@@ -1690,7 +1692,7 @@ XmlLVolumeCnv::dealWithTransformation(xercesc::DOMElement* element,
   }
 
   // the result
-  HepTransform3D* result = 0;
+  Gaudi::Transform3D* result = 0;
 
   // gets the tag name for childElement
   const XMLCh* tagName = childElement->getNodeName();
@@ -1702,14 +1704,14 @@ XmlLVolumeCnv::dealWithTransformation(xercesc::DOMElement* element,
     try {
       result = dealWithPosRPhiZ(childElement);
     } catch (XmlCnvException e) {
-      result = new HepTransform3D();
+      result = new Gaudi::Transform3D();
     }
   } else if (0 == xercesc::XMLString::compareString(posRThPhiString, tagName)) {
     // catches an exception in case the r attribute is negative
     try {
       result = dealWithPosRThPhi(childElement);
     } catch (XmlCnvException e) {
-      result = new HepTransform3D();
+      result = new Gaudi::Transform3D();
     }
   } else if (0 == xercesc::XMLString::compareString
              (transformationString, tagName)) {
@@ -1721,7 +1723,7 @@ XmlLVolumeCnv::dealWithTransformation(xercesc::DOMElement* element,
         << " : this should be a rotation or a translation but is a : "
         << tagNameString << ". It will be ignored." << endreq;
     xercesc::XMLString::release(&tagNameString);
-    return new HepTransform3D();
+    return new Gaudi::Transform3D();
   }
 
   // We are here because we found a translation. Try now to see if
@@ -1734,7 +1736,7 @@ XmlLVolumeCnv::dealWithTransformation(xercesc::DOMElement* element,
     // gets the tag name for the new childElement
     tagName = childElement->getNodeName();
     if (0 == xercesc::XMLString::compareString(rotXYZString, tagName)) {
-      HepTransform3D* rotation = dealWithRotXYZ(childElement);
+      Gaudi::Transform3D* rotation = dealWithRotXYZ(childElement);
       *result = *result * *rotation;
       delete (rotation);
       rotation = 0;
@@ -1742,7 +1744,7 @@ XmlLVolumeCnv::dealWithTransformation(xercesc::DOMElement* element,
     } else if (0 == xercesc::XMLString::compareString(rotAxisString, tagName)) {
       // catches an exception in case the theta or phi value is out of range
       try {
-        HepTransform3D* rotation = dealWithRotAxis(childElement);
+        Gaudi::Transform3D* rotation = dealWithRotAxis(childElement);
         *result = *result * *rotation;
         delete (rotation);
         rotation = 0;
@@ -1770,7 +1772,7 @@ XmlLVolumeCnv::dealWithTransformation(xercesc::DOMElement* element,
 // -----------------------------------------------------------------------
 // Deal with transformation
 // -----------------------------------------------------------------------
-HepTransform3D*
+Gaudi::Transform3D*
 XmlLVolumeCnv::dealWithTransformation(xercesc::DOMElement* element) {
   // gets the children
   xercesc::DOMNodeList* childNodes = element->getChildNodes();
@@ -1779,11 +1781,11 @@ XmlLVolumeCnv::dealWithTransformation(xercesc::DOMElement* element) {
   unsigned int i = 0;
 
   // list of the transformation already found
-  std::deque<HepTransform3D*> tList;
+  std::deque<Gaudi::Transform3D*> tList;
 
   // scans the children and builds the transformations
   while (i < childNodes->getLength()) {
-    HepTransform3D* transformation = dealWithTransformation (element, &i);
+    Gaudi::Transform3D* transformation = dealWithTransformation (element, &i);
     if (transformation != 0) {
       tList.push_back (transformation);
     }
@@ -1797,19 +1799,19 @@ XmlLVolumeCnv::dealWithTransformation(xercesc::DOMElement* element) {
   }
 
   // computes the result
-  HepTransform3D* result = 0;
+  Gaudi::Transform3D* result = 0;
   if (!tList.empty()) {
     result = tList.front();
     tList.pop_front();
     while (!tList.empty()) {
-      HepTransform3D* transformation = tList.front();
+      Gaudi::Transform3D* transformation = tList.front();
       tList.pop_front();
       *result = *transformation * *result;
       delete transformation;
       transformation = 0;
     }
   } else {
-    result = new HepTransform3D();
+    result = new Gaudi::Transform3D();
   }
   // returns
   return result;
@@ -1819,7 +1821,7 @@ XmlLVolumeCnv::dealWithTransformation(xercesc::DOMElement* element) {
 // -----------------------------------------------------------------------
 // Deal with posXYZ
 // -----------------------------------------------------------------------
-HepTranslate3D* XmlLVolumeCnv::dealWithPosXYZ (xercesc::DOMElement* element) {
+Gaudi::Transform3D* XmlLVolumeCnv::dealWithPosXYZ (xercesc::DOMElement* element) {
   // gets attributes
   std::string xAttribute = dom2Std (element->getAttribute (xString));
   std::string yAttribute = dom2Std (element->getAttribute (yString));
@@ -1840,14 +1842,15 @@ HepTranslate3D* XmlLVolumeCnv::dealWithPosXYZ (xercesc::DOMElement* element) {
   }
 
   // builds the translation.
-  return new HepTranslate3D(x, y, z);
+  return new Gaudi::Transform3D(Gaudi::Rotation3D(), 
+                                Gaudi::XYZVector(x, y, z) );
 } // end dealWithPosXYZ
 
 
 // -----------------------------------------------------------------------
 // Deal with posRPhiZ
 // -----------------------------------------------------------------------
-HepTranslate3D* XmlLVolumeCnv::dealWithPosRPhiZ (xercesc::DOMElement* element) {
+Gaudi::Transform3D* XmlLVolumeCnv::dealWithPosRPhiZ (xercesc::DOMElement* element) {
   // gets attributes
   std::string rAttribute = dom2Std (element->getAttribute (rString));
   std::string phiAttribute = dom2Std (element->getAttribute (phiString));
@@ -1873,19 +1876,18 @@ HepTranslate3D* XmlLVolumeCnv::dealWithPosRPhiZ (xercesc::DOMElement* element) {
   }
   
   // builds the translation.
-  Hep3Vector vect (1,1,1);
-  vect.setPerp (r);
-  vect.setPhi (phi);
-  vect.setZ (z);
-  return new HepTranslate3D (vect);
+
+  return new Gaudi::Transform3D(Gaudi::Rotation3D(),
+                                Gaudi::XYZVector( r*std::cos(phi),
+                                                  r*std::sin(phi),
+                                                  z)                );
 } // end dealWithPosRPhiZ
 
 
 // -----------------------------------------------------------------------
 // Deal with posRThPhi
 // -----------------------------------------------------------------------
-HepTranslate3D*
-XmlLVolumeCnv::dealWithPosRThPhi (xercesc::DOMElement* element) {
+Gaudi::Transform3D* XmlLVolumeCnv::dealWithPosRThPhi (xercesc::DOMElement* element) {
   // gets attributes
   std::string rAttribute = dom2Std (element->getAttribute (rString));
   std::string thetaAttribute = dom2Std (element->getAttribute (thetaString));
@@ -1911,18 +1913,16 @@ XmlLVolumeCnv::dealWithPosRThPhi (xercesc::DOMElement* element) {
   }
   
   // builds the translation.
-  Hep3Vector vect (1,1,1);
-  vect.setMag (r);
-  vect.setTheta (theta);
-  vect.setPhi (phi);
-  return new HepTranslate3D (vect);
+
+  return new Gaudi::Transform3D(Gaudi::Rotation3D(),
+                                Gaudi::Polar3DVector(r, theta, phi) );
 } // end dealWithPosRThPhi
 
 
 // -----------------------------------------------------------------------
 // Deal with rotXYZ
 // -----------------------------------------------------------------------
-HepTransform3D* XmlLVolumeCnv::dealWithRotXYZ (xercesc::DOMElement* element) {
+Gaudi::Transform3D* XmlLVolumeCnv::dealWithRotXYZ (xercesc::DOMElement* element) {
   // get attributes
   std::string rotXAttribute = dom2Std (element->getAttribute (rotXString));
   std::string rotYAttribute = dom2Std (element->getAttribute (rotYString));
@@ -1943,17 +1943,18 @@ HepTransform3D* XmlLVolumeCnv::dealWithRotXYZ (xercesc::DOMElement* element) {
   }
 
   // computes the rotation
-  HepTransform3D* result = new HepRotateX3D(rx);
-  *result = *result * HepRotateY3D(ry);
-  *result = *result * HepRotateZ3D(rz);
-  return result;
+  Gaudi::Rotation3D result = Gaudi::Rotation3D( Gaudi::RotationX(rx) ) *
+    Gaudi::Rotation3D( Gaudi::RotationY(ry) ) *
+    Gaudi::Rotation3D( Gaudi::RotationZ(rz) );
+
+  return new Gaudi::Transform3D(result, Gaudi::XYZVector());
 } // end dealWithRotXYZ
 
 
 // -----------------------------------------------------------------------
 // Deal with rotAxis
 // -----------------------------------------------------------------------
-HepTransform3D* XmlLVolumeCnv::dealWithRotAxis (xercesc::DOMElement* element) {
+Gaudi::Transform3D* XmlLVolumeCnv::dealWithRotAxis (xercesc::DOMElement* element) {
   // get attributes
   std::string axThetaAttribute =
     dom2Std (element->getAttribute (axThetaString));
@@ -1988,11 +1989,14 @@ HepTransform3D* XmlLVolumeCnv::dealWithRotAxis (xercesc::DOMElement* element) {
        " and 360*degree ! ", CORRUPTED_DATA);
   }
   // Construction of vector with input of theta and phi
-  HepTransform3D* result = new HepRotate3D
-    (angle, Hep3Vector (sin(axTheta)*cos(axPhi),
-                        sin(axTheta)*sin(axPhi),
-                        cos(axTheta)));
-  return result;
+  Gaudi::XYZVector axis( sin(axTheta)*cos(axPhi),
+                         sin(axTheta)*sin(axPhi),
+                         cos(axTheta)             );
+  
+  return new Gaudi::Transform3D(Gaudi::AxisAngle(axis, angle), 
+                                Gaudi::XYZVector());
+
+
 } // end dealWithRotAxis
 
 // ============================================================================

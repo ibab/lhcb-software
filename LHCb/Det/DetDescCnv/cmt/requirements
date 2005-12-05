@@ -1,7 +1,7 @@
-# $Id: requirements,v 1.20 2005-11-17 17:05:04 marcocle Exp $ 
+# $Id: requirements,v 1.21 2005-12-05 18:06:48 jpalac Exp $ 
 # =============================================================================
 package       DetDescCnv
-version       v2r10
+version       v2r11
 
 # =========== structure =======================================================
 branches      DetDescCnv doc cmt src

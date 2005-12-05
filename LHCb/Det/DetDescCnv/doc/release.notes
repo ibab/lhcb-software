@@ -4,6 +4,12 @@
 ! Purpose     : standard converters for the LHCb Detector Description
 !-----------------------------------------------------------------------------
 
+!================ DetDescCnv v2r11 2005-12-05 ==========================
+
+! 2005-12-05 - Juan PALACIOS
+ - Changes to XmlLVomumeCnv for migration from CLHEP HepGeom to 
+   MathCore classes. CLHEP dependencies dropped.
+
 !================ DetDescCnv v2r10 2005-11-17 ==========================
 ! 2005-10-17 - Marco Clemencic
  - Fixed handling of absolute paths in hrefs in XmlGenericCnv

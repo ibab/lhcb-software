@@ -1,4 +1,4 @@
-// $Id: XmlLVolumeCnv.h,v 1.4 2005-03-24 16:21:18 cattanem Exp $
+// $Id: XmlLVolumeCnv.h,v 1.5 2005-12-05 18:06:48 jpalac Exp $
 
 #ifndef DETDESCCNV_XMLCNVSVC_XMLLVOLUMECNV_H
 #define DETDESCCNV_XMLCNVSVC_XMLLVOLUMECNV_H
@@ -8,7 +8,7 @@
 #include <deque>
 #include <vector>
 
-#include "CLHEP/Geometry/Transform3D.h"
+#include "Kernel/Transform3DTypes.h"
 
 #include "DetDescCnv/XmlGenericCnv.h"
 #include "DetDesc/CLIDLVolume.h"
@@ -87,7 +87,7 @@ class XmlLVolumeCnv : public XmlGenericCnv {
     /// the name of the logical volume
     std::string logvolName;
     /// the transformation to place the volume
-    HepTransform3D* transformation;
+    Gaudi::Transform3D* transformation;
   } PVolumeItem;
 
   /**
@@ -104,7 +104,7 @@ class XmlLVolumeCnv : public XmlGenericCnv {
     /// the solid
     ISolid* solid;
     /// the transformation
-    HepTransform3D* transformation;
+    Gaudi::Transform3D* transformation;
   } PlacedSolid;
 
   /**
@@ -225,7 +225,7 @@ class XmlLVolumeCnv : public XmlGenericCnv {
    */
   PVolumes* expandParamPhysVol (PVolumes* volumes,
 	                            std::vector<int> numbers,
-								std::vector<HepTransform3D*> transformations);
+								std::vector<Gaudi::Transform3D*> transformations);
 
   /**
    * deals with the xml tag /<surf/>. Returns a string giving the address of
@@ -349,37 +349,37 @@ class XmlLVolumeCnv : public XmlGenericCnv {
    * deals with a transformation beginning at child number *index of the element
    * element. After processing, the index value is changed and points to
    * the next child of element.
-   * The return value is either HepTransform3D::Identity in case there is no
-   * transformation or the HepTransform3D corresponding to the DOM tree.
+   * The return value is either Gaudi::Transform3D::Identity in case there is no
+   * transformation or the Gaudi::Transform3D corresponding to the DOM tree.
    * This method allocates memory. The deallocation is the responsability
    * of the caller. This method should never raise an exception.
    * @param element the parent element of the transformation
    * @param index of the first element of the transformation in the parent
    * @return the Hep transformation or 0 if an error occured
    */
-  HepTransform3D* dealWithTransformation (xercesc::DOMElement* element,
+  Gaudi::Transform3D* dealWithTransformation (xercesc::DOMElement* element,
                                           unsigned int* index);
 
   /**
    * deals with the xml tag transformation. Creates the corresponding
-   * HepTranslate3D and allocates the corresponding memory. The deallocation
+   * Gaudi::TranslationXYZ and allocates the corresponding memory. The deallocation
    * is the responsability of the caller
    * @param element the parent element of the transformation
    * @return the Hep transformation or 0 if an error occured
    */
-  HepTransform3D* dealWithTransformation (xercesc::DOMElement* element);
+  Gaudi::Transform3D* dealWithTransformation (xercesc::DOMElement* element);
 
   /**
-   * deals with the xml tag /<posXYZ/>. Creates the corresponding HepTranslate3D
+   * deals with the xml tag /<posXYZ/>. Creates the corresponding Gaudi::TranslationXYZ
    * and allocates the corresponding memory. The deallocation is the
    * responsability of the caller
    * @param element the DOM element representing the tag
    * @return the corresponding Hep transformation or 0 if an error occured
    */
-  HepTranslate3D* dealWithPosXYZ (xercesc::DOMElement* element);
+  Gaudi::Transform3D* dealWithPosXYZ (xercesc::DOMElement* element);
 
   /**
-   * deals with the xml tag /<posRPhiZ/>. Creates the corresponding HepTranslate3D
+   * deals with the xml tag /<posRPhiZ/>. Creates the corresponding Gaudi::TranslationXYZ
    * and allocates the corresponding memory. The deallocation is the
    * responsability of the caller.
    * An XmlCnvException will be launched if the tag attribute r has a negative
@@ -387,30 +387,30 @@ class XmlLVolumeCnv : public XmlGenericCnv {
    * @param element the DOM element representing the tag
    * @return the corresponding Hep transformation or 0 if an error occured
    */
-  HepTranslate3D* dealWithPosRPhiZ (xercesc::DOMElement* element);
+  Gaudi::Transform3D* dealWithPosRPhiZ (xercesc::DOMElement* element);
 
   /**
    * deals with the xml tag /<posRThPhi/>. Creates the corresponding
-   * HepTranslate3D and allocates the corresponding memory. The deallocation
+   * Gaudi::TranslationXYZ and allocates the corresponding memory. The deallocation
    * is the responsability of the caller
    * An XmlCnvException will be launched if the tag attribute r has a negative
    * value
    * @param element the DOM element representing the tag
    * @return the corresponding Hep transformation or 0 if an error occured
    */
-  HepTranslate3D* dealWithPosRThPhi (xercesc::DOMElement* element);
+  Gaudi::Transform3D* dealWithPosRThPhi (xercesc::DOMElement* element);
 
   /**
-   * deals with the xml tag /<rotXYZ/>. Creates the corresponding HepRotation
+   * deals with the xml tag /<rotXYZ/>. Creates the corresponding Gaudi::Rotation
    * and allocates the corresponding memory. The deallocation is the
    * responsability of the caller
    * @param element the DOM element representing the tag
    * @return the corresponding Hep transformation or 0 if an error occured
    */
-  HepTransform3D* dealWithRotXYZ (xercesc::DOMElement* element);
+  Gaudi::Transform3D* dealWithRotXYZ (xercesc::DOMElement* element);
 
   /**
-   * deals with the xml tag /<rotAxis/>. Creates the corresponding HepRotation
+   * deals with the xml tag /<rotAxis/>. Creates the corresponding Gaudi::Rotation
    * and allocates the corresponding memory. The deallocation is the
    * responsability of the caller
    * An XmlCnvException will be launched if the tag attribute theta has a
@@ -419,7 +419,7 @@ class XmlLVolumeCnv : public XmlGenericCnv {
    * @param element the DOM element representing the tag
    * @return the corresponding Hep transformation or 0 if an error occured
    */
-  HepTransform3D* dealWithRotAxis (xercesc::DOMElement* element);
+  Gaudi::Transform3D* dealWithRotAxis (xercesc::DOMElement* element);
 
 private:
 
