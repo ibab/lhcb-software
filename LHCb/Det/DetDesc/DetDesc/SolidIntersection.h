@@ -1,4 +1,4 @@
-// $Id: SolidIntersection.h,v 1.10 2005-12-02 18:36:55 jpalac Exp $
+// $Id: SolidIntersection.h,v 1.11 2005-12-05 16:18:43 jpalac Exp $
 /// ==========================================================================
 /// CVS tag $Name: not supported by cvs2svn $ 
 /// ==========================================================================
@@ -73,9 +73,9 @@ public:
    *  @param rotation rotation 
    *  @return status code
    */
-  StatusCode    intersect( ISolid*               child                    , 
-                           const Gaudi::XYZPoint&     position                 , 
-                           const Gaudi::Rotation&    rotation = Gaudi::Rotation() );
+  StatusCode intersect( ISolid*                  child                    , 
+                        const Gaudi::XYZPoint&   position                 , 
+                        const Gaudi::Rotation3D& rotation = Gaudi::Rotation3D() );
 protected:
 
   /** constructor 

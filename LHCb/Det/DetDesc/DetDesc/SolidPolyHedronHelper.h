@@ -1,4 +1,4 @@
-// $Id: SolidPolyHedronHelper.h,v 1.8 2005-12-02 18:36:55 jpalac Exp $ 
+// $Id: SolidPolyHedronHelper.h,v 1.9 2005-12-05 16:18:43 jpalac Exp $ 
 // ===========================================================================
 // CVS Tag $Name: not supported by cvs2svn $ 
 // ===========================================================================
@@ -10,6 +10,7 @@
 #include "Kernel/Point3DTypes.h"
 #include "Kernel/Plane3DTypes.h"
 /// DetDesc 
+#include "DetDesc/LHCbPlane3D.h"
 #include "DetDesc/SolidBase.h"
 #include "DetDesc/SolidException.h" 
 #include "DetDesc/SolidTicks.h"

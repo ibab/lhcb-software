@@ -1,4 +1,4 @@
-// $Id: AlignmentCondition.cpp,v 1.7 2005-12-02 18:36:56 jpalac Exp $
+// $Id: AlignmentCondition.cpp,v 1.8 2005-12-05 16:18:43 jpalac Exp $
 // Include files
 #include <algorithm>
 
@@ -76,22 +76,29 @@ StatusCode AlignmentCondition::initialize() {
 }
 
 //=============================================================================
-const Gaudi::TranslationXYZ* AlignmentCondition::XYZTranslation(const std::vector<double>& coefficients) const
+const Gaudi::Transform3D* AlignmentCondition::XYZTranslation(const std::vector<double>& coefficients) const
 {
-  return (coefficients.size()==3) ? new Gaudi::TranslationXYZ(coefficients[0],
-                                                       coefficients[1],
-                                                       coefficients[2]) :
-    new Gaudi::TranslationXYZ();
+  Gaudi::TranslationXYZ trans = (coefficients.size()==3) ? 
+    Gaudi::TranslationXYZ(coefficients[0], coefficients[1], coefficients[2]) :
+    Gaudi::TranslationXYZ();
+  
+    return new Gaudi::Transform3D( Gaudi::Rotation3D(),
+                                   trans );
 }
 //=============================================================================
 const Gaudi::Transform3D* AlignmentCondition::XYZRotation(const std::vector<double>& coefficients) const
 {
   if (coefficients.size()!=3) return new Gaudi::Transform3D();
+
+  Gaudi::Rotation3D rot = Gaudi::Rotation3D(Gaudi::RotationX(coefficients[0]))*
+    Gaudi::Rotation3D(Gaudi::RotationY(coefficients[1])) *
+    Gaudi::Rotation3D(Gaudi::RotationZ(coefficients[2]));
+  return new Gaudi::Transform3D(rot, Gaudi::XYZVector());
   
-  Gaudi::Transform3D* result = new Gaudi::RotationX(coefficients[0]);
-  *result = *result * Gaudi::RotationY(coefficients[1]);
-  *result = *result * Gaudi::RotationZ(coefficients[2]);
-  return result;
+//   Gaudi::Transform3D* result = new Gaudi::RotationX(coefficients[0]);
+//   *result = *result * Gaudi::RotationY(coefficients[1]);
+//   *result = *result * Gaudi::RotationZ(coefficients[2]);
+//   return result;
   
 }
 //=============================================================================
@@ -110,18 +117,21 @@ StatusCode AlignmentCondition::makeMatrices()
   
   if (translations.size()==3  && rotations.size()==3 && pivot.size()==3) {
 
-    m_matrixInv =  
-      ( *XYZTranslation( translations ) ) *
-      ( ( *XYZTranslation( pivot )).Inverse() *
-      ( ( *XYZRotation( rotations )       ) *
-        ( *XYZTranslation( pivot )        ) ));
+//     m_matrixInv =  
+//       ( *XYZTranslation( translations ) ) *
+//       ( ( *XYZTranslation( pivot )).Inverse() *
+//       ( ( *XYZRotation( rotations )       ) *
+//         ( *XYZTranslation( pivot )        ) ));
+
+    m_matrixInv = Gaudi::Transform3D();
+    
 
     m_matrix = m_matrixInv.Inverse();
     return StatusCode::SUCCESS;
   } else {
     log << MSG::ERROR << "Translations vector has funny size: "
         << translations.size() << ". Assigning identity matrices" << endmsg;
-    m_matrixInv=Gaudi::TranslationXYZ();
+    m_matrixInv=Gaudi::Transform3D();
     m_matrix=m_matrixInv;
     return StatusCode::FAILURE;
   }

@@ -1,8 +1,19 @@
-// $Id: SolidPolyHedronHelper.cpp,v 1.7 2005-12-02 18:36:56 jpalac Exp $ 
+// $Id: SolidPolyHedronHelper.cpp,v 1.8 2005-12-05 16:18:43 jpalac Exp $ 
 // ===========================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ===========================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.7  2005/12/02 18:36:56  jpalac
+//
+// ! 2005-02-12 - Juan Palacios
+//  - Add Kernel/LHCbDefinitions to requirements
+//  - Change CLHEP geometry classes to LHCbDefinitions typedefs:
+//             * These typedefs point to MathCore classes with the
+//               exception of Gaudi::Plane3D, which pointe to HepPoint3D.
+//               Awaiting implementation of MathCore Plane3D class.
+//  - Make changes to all code to adapt to MathCore syntax
+//  - TO-DO: Not compiling due to Plane3D operaitons with MathCore classes
+//
 // Revision 1.6  2003/05/16 13:59:14  ibelyaev
 //  fix of ancient saga with 'double deletion of solids'
 //
@@ -64,7 +75,7 @@ StatusCode SolidPolyHedronHelper::setBP()
   setZMin   ( point.z    () ) ;
   setZMax   ( point.z    () ) ;
   setRMax   ( point.r    () ) ;
-  setRhoMax ( point.perp () ) ;
+  setRhoMax ( std::sqrt(point.perp2() ) ) ;
   
   for( VERTICES::const_iterator vertex = m_ph_vertices.begin() ;
        m_ph_vertices.end() != vertex ; ++vertex )
@@ -76,7 +87,8 @@ StatusCode SolidPolyHedronHelper::setBP()
       setYMax   ( vertex->y    () > yMax   () ? vertex->y    () : yMax   () );
       setZMax   ( vertex->z    () > zMax   () ? vertex->z    () : zMax   () );
       setRMax   ( vertex->r    () > rMax   () ? vertex->r    () : rMax   () );
-      setRhoMax ( vertex->perp () > rhoMax () ? vertex->perp () : rhoMax () ); 
+      setRhoMax ( std::sqrt(vertex->perp2() ) > rhoMax () ? 
+                  std::sqrt(vertex->perp2() ) : rhoMax () ); 
     }
   ///
   return checkBP();
@@ -142,7 +154,7 @@ SolidPolyHedronHelper::intersectionTicks
        planes().end() != iPlane ; ++iPlane )
     {
       const Gaudi::Plane3D& Plane = *iPlane ; 
-      double vn =  Vector*Plane.normal() ; 
+      double vn =  Vector.Dot( Plane.normal() ) ; 
       if(  0 == vn ) { continue ; } 
       ISolid::Tick tick = -1. * ( Plane.distance( Point ) / vn ) ; 
       ticks.push_back( tick );   
@@ -172,9 +184,9 @@ bool SolidPolyHedronHelper::addFace
 {
   /// check for 3 points on the same line  
   Gaudi::XYZVector v1( Point1 ) , v2( Point2 - Point1 ) , v3( Point3 - Point1); 
-  if( 0 == v1.cross( v2 ).mag2() || 
-      0 == v1.cross( v3 ).mag2() || 
-      0 == v2.cross( v3 ).mag2()   ) { return false; } 
+  if( 0 == v1.Cross( v2 ).mag2() || 
+      0 == v1.Cross( v3 ).mag2() || 
+      0 == v2.Cross( v3 ).mag2()   ) { return false; } 
   ///
   Gaudi::Plane3D Plane( Point1 , Point2 , Point3 ); 
   /// invert face orientation if needed 
@@ -209,21 +221,24 @@ bool SolidPolyHedronHelper::addFace
   const Gaudi::XYZPoint& Point4 ) 
 {
   ///
-  const Gaudi::XYZPoint cPoint( ( Point1 + Point2 + Point3 + Point4 ) * 0.25 ) ; 
+  const Gaudi::XYZPoint cPoint( 0.25*(Point1.x()+Point2.x()+Point3.x()+Point4.x()),
+                                0.25*(Point1.y()+Point2.y()+Point3.y()+Point4.y()),
+                                0.25*(Point1.z()+Point2.z()+Point3.z()+Point4.z()) );
+
   /// 
   const Gaudi::XYZVector v1( Point1 - cPoint ) ;
   const Gaudi::XYZVector v2( Point2 - cPoint ) ;
   const Gaudi::XYZVector v3( Point3 - cPoint ) ; 
   const Gaudi::XYZVector v4( Point4 - cPoint ) ;
   ///
-  const double t1   = v2.cross(  v3 ). dot( v4 )     ;
-  const double v234 = v2.mag() * v3.mag() * v4.mag() ;
-  const double t2   = v3.cross(  v4 ). dot( v1 )     ;
-  const double v341 = v3.mag() * v4.mag() * v1.mag() ;
-  const double t3   = v4.cross(  v1 ). dot( v2 )     ;
-  const double v412 = v4.mag() * v1.mag() * v2.mag() ;
-  const double t4   = v1.cross(  v2 ). dot( v3 )     ;
-  const double v123 = v1.mag() * v2.mag() * v3.mag() ;
+  const double t1   = v2.Cross(  v3 ).Dot( v4 )     ;
+  const double v234 = std::sqrt(v2.mag2() * v3.mag2() * v4.mag2() );
+  const double t2   = v3.Cross(  v4 ).Dot( v1 )     ;
+  const double v341 = std::sqrt(v3.mag2() * v4.mag2() * v1.mag2() );
+  const double t3   = v4.Cross(  v1 ).Dot( v2 )     ;
+  const double v412 = std::sqrt(v4.mag2() * v1.mag2() * v2.mag2() );
+  const double t4   = v1.Cross(  v2 ).Dot( v3 )     ;
+  const double v123 = std::sqrt(v1.mag2() * v2.mag2() * v3.mag2() );
   
   if      ( 0 != v234 && 1.e-6 < fabs( t1 / v234 ) )
     { throw SolidException("SolidPolyHedronHelper 'plane' is not planar 1 ") ; }

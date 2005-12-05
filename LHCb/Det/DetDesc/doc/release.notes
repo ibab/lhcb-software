@@ -1,11 +1,16 @@
 ! =============================================================================
-! $Id: release.notes,v 1.232 2005-12-02 18:36:56 jpalac Exp $ 
+! $Id: release.notes,v 1.233 2005-12-05 16:18:43 jpalac Exp $ 
 ! =============================================================================
 ! package DetDesc
 ! package manager : Marco Clemencic, Juan Palacios
 ! =============================================================================
 
-! 2005-02-12 - Juan Palacios
+! 2005-12-05 - Juan Palacios
+ - Add class Gaudi::Plane3D as stop-gap while MathCore equivalent is implemented.
+   Supports only double precision cartesian representation.
+ - Fix remaining MathCore-related compilation problems.
+
+! 2005-12-02 - Juan Palacios
  - Add Kernel/LHCbDefinitions to requirements
  - Change CLHEP geometry classes to LHCbDefinitions typedefs:
             * These typedefs point to MathCore classes with the

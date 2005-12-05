@@ -1,4 +1,4 @@
-// $Id: SolidPolycone.cpp,v 1.8 2005-12-02 18:36:56 jpalac Exp $
+// $Id: SolidPolycone.cpp,v 1.9 2005-12-05 16:18:43 jpalac Exp $
 // ============================================================================
 #include "DetDesc/SolidPolycone.h"
 // CLHEP
@@ -235,7 +235,7 @@ bool SolidPolycone::isInside (  const Gaudi::XYZPoint& point ) const
     }
   if( !phiok ) { return false ; }
   /// check for radius
-  const double       rho  = point.perp();
+  const double       rho  = std::sqrt( point.perp2() );
   const unsigned int i2   = it - begin();
   const unsigned int i1   = i2 - 1 ;
   ///

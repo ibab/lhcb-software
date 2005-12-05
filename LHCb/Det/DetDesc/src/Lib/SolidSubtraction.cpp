@@ -1,8 +1,19 @@
-// $Id: SolidSubtraction.cpp,v 1.12 2005-12-02 18:36:56 jpalac Exp $
+// $Id: SolidSubtraction.cpp,v 1.13 2005-12-05 16:18:43 jpalac Exp $
 // ===========================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ===========================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.12  2005/12/02 18:36:56  jpalac
+//
+// ! 2005-02-12 - Juan Palacios
+//  - Add Kernel/LHCbDefinitions to requirements
+//  - Change CLHEP geometry classes to LHCbDefinitions typedefs:
+//             * These typedefs point to MathCore classes with the
+//               exception of Gaudi::Plane3D, which pointe to HepPoint3D.
+//               Awaiting implementation of MathCore Plane3D class.
+//  - Make changes to all code to adapt to MathCore syntax
+//  - TO-DO: Not compiling due to Plane3D operaitons with MathCore classes
+//
 // Revision 1.11  2003/09/20 13:25:42  ibelyaev
 //  few fixes to solve Gauss problems
 //
@@ -110,9 +121,9 @@ StatusCode  SolidSubtraction::subtract( ISolid*                solid    ,
  *  @return status code 
  */
 // ============================================================================
-StatusCode  SolidSubtraction::subtract ( ISolid*               solid    , 
-                                         const Gaudi::XYZPoint&     position , 
-                                         const Gaudi::Rotation&    rotation )
+StatusCode  SolidSubtraction::subtract ( ISolid*                  solid    , 
+                                         const Gaudi::XYZPoint&   position , 
+                                         const Gaudi::Rotation3D& rotation )
 { return addChild( solid , position , rotation ) ; };
 // ============================================================================
 

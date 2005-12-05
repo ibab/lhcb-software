@@ -1,4 +1,4 @@
-// $Id: AlignmentCondition.h,v 1.5 2005-12-02 18:36:55 jpalac Exp $
+// $Id: AlignmentCondition.h,v 1.6 2005-12-05 16:18:43 jpalac Exp $
 #ifndef DETDESC_ALIGNMENTCONDITION_H 
 #define DETDESC_ALIGNMENTCONDITION_H 1
 
@@ -7,6 +7,7 @@
 #include "DetDesc/DetDesc.h"
 #include "DetDesc/CLIDAlignmentCondition.h"
 #include "Kernel/Point3DTypes.h"
+#include "Kernel/Vector3DTypes.h"
 #include "Kernel/Transform3DTypes.h"
 /** @class AlignmentCondition AlignmentCondition.h DetDesc/AlignmentCondition.h
  *  
@@ -87,7 +88,7 @@ private:
   StatusCode makeMatrices();
   
   const Gaudi::Transform3D* XYZRotation(const std::vector<double>& coefficients) const;
-  const Gaudi::TranslationXYZ* XYZTranslation(const std::vector<double>& coefficients) const;
+  const Gaudi::Transform3D* XYZTranslation(const std::vector<double>& coefficients) const;
 private:
 
   DetDesc::Services* m_services;

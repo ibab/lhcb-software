@@ -1,4 +1,4 @@
-// $Id: SolidSubtraction.h,v 1.12 2005-12-02 18:36:55 jpalac Exp $
+// $Id: SolidSubtraction.h,v 1.13 2005-12-05 16:18:43 jpalac Exp $
 /// ===========================================================================
 /// CVS tag $Name: not supported by cvs2svn $ 
 /// ===========================================================================
@@ -78,7 +78,7 @@ public:
   StatusCode subtract 
   ( ISolid*               child                    , 
     const Gaudi::XYZPoint&     position                 , 
-    const Gaudi::Rotation&    rotation = Gaudi::Rotation() );
+    const Gaudi::Rotation3D&    rotation = Gaudi::Rotation3D() );
   
 protected:
   
