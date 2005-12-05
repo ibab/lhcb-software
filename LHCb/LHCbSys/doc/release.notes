@@ -5,6 +5,39 @@
 ! Purpose     : LHCb OO kernel packages
 !-----------------------------------------------------------------------------
 
+</PRE><H1><A NAME=v19r3>2005-12-05 LHCbSys v19r3</A></H1><PRE>
+This version uses Gaudi v17r2. It is backwards compatible for RTTC data
+
+ - Modified packages: DetSys v7r7, DetDesc v15r6, TrackInterfaces v1r4,
+                      EventSys v20r13, TrackEvent v1r6
+
+ - In DetSys v7r7
+   . Fix requirements to correctly remove COOL_linkopts
+
+ - In DetDesc v15r6
+   . Bug fix to UpdateManageSvc
+   . Add method const int sensitiveVolumeID(const HepPoint3D& globalPos ) const
+     to IDetectorElement interface. Provide default implementation in 
+     DetectorElement base class.
+
+ - In TrackInterfaces v1r4
+   . ITrackFitter: added method fit(Track& track). State no longer const
+   . ITrackExtraSelector interface introduced: selects which extrapolator to use
+
+ - In TrackEvent v1r6
+   . src/State.cpp: Copy also the State::Location in the clone method.
+   . Measurement: Added method resolution()
+   . Node: 
+     - Always make a new state when constructor is called.
+     - New methods: hasMeasurement(), removeMeasurement() and z().
+     - Corrected bug: residual can be negative!
+   . Track:
+     - Flag enum item "AlreadyUsed" introduced
+     - use enums types in methods interfaces instead of unsigned int
+     - use functors in closestState methods
+     - new methods introduced
+   . TrackFunctor.h: templated methods moved here from Track.h, methods renamed.
+
 </PRE><H1><A NAME=v19r2>2005-11-22 LHCbSys v19r2</A></H1><PRE>
 This version uses Gaudi v17r2. It is backwards compatible for RTTC data
 

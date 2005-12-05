@@ -1,5 +1,5 @@
 package LHCbSys
-version v19r2
+version v19r3
 
 branches doc cmt
 
@@ -7,7 +7,7 @@ branches doc cmt
 # LHCb packages visible to all applications
 #===============================================================
 
-use LHCb                v19r2
+use LHCb                v19r3
 use GaudiConf		v9r2
 
 #                                         Maintainer
@@ -28,9 +28,9 @@ use L0MuonKernel	v3r0p1	L0      # Andrei Tsaregorodtsev
 use ProcessorKernel	v1r0p1  L0      # Andrei Tsaregorodtsev
 
 # Detector description
-use DetSys              v7r6    Det     # Marco Cattaneo
+use DetSys              v7r7    Det     # Marco Cattaneo
 use VeloDet        	v9r8    Det     # Mark Tobin
-use DetDesc             v15r5   Det     # Marco Clemencic, Juan Palacios
+use DetDesc             v15r6   Det     # Marco Clemencic, Juan Palacios
 use DetDescCnv          v2r10   Det     # Marco Clemencic, Juan Palacios
 use XmlTools            v3r8    Tools   # Marco Clemencic
 use OTDet               v5r6    Det     # Jacopo Nardulli
@@ -44,7 +44,7 @@ use RichCondition       v1r0    Rich    # Sajan Easo
 use STDet               v1r5    Det     # Matt Needham
 
 # Event data model
-use EventSys            v20r12  Event   # Marco Cattaneo
+use EventSys            v20r13  Event   # Marco Cattaneo
 use Event        	v4r8	Event   # Marco Cattaneo
 use VeloEvent    	v13r2p2 Event   # Chris Parkes
 use ITEvent      	v13r3	Event   # Matt Needham
@@ -61,7 +61,7 @@ use EventAssoc          v2r1    Event   # Ivan Belyaev
 use LinkerEvent         v1r9    Event   # Olivier Callot
 use TrgEvent            v5r7    Event   # Olivier Callot
 use PackedEvent         v1r2    Event   # Marco Cattaneo, Olivier Callot
-use TrackEvent          v1r4p1  Event   # Eduardo Rodrigues, Jose Hernando
+use TrackEvent          v1r6    Event   # Eduardo Rodrigues, Jose Hernando
 use EventUtils		v1r0	Event   # Marco Cattaneo
 use LinkerInstances     v2r1    Event   # Thomas Ruf
 use DC04Hacks		v1r0    Event   # Marco Cattaneo
@@ -94,7 +94,7 @@ use CaloInterfaces      v5r0    Calo    # Olivier Deschamps
 use CaloUtils           v5r0    Calo    # Olivier Deschamps
 use RichRecBase	        v1r17   Rich    # Chris Jones
 use STTools		v1r2	IT      # Matt Needham
-use TrackInterfaces 	v1r3    Tr      # Eduardo Rodrigues, Jose Hernando
+use TrackInterfaces 	v1r4    Tr      # Eduardo Rodrigues, Jose Hernando
 use TrackPython         v1r1    Tr      # Eduardo Rodrigues, Jose Hernando
 use DetCond             v7r7    Det     # Marco Clemencic
 use CondDBEntityResolver v1r0   Tools   # Marco Clemencic
