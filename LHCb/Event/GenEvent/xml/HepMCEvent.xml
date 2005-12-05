@@ -52,55 +52,6 @@
         name="operator="
         type="HepMCEvent&amp;"
         argList="const HepMCEvent evt" />
-      <method
-        desc="Serialize the object for reading"
-        name="serialize"
-        type="StreamBuffer&amp;"
-        >
-        <arg name="s" type="StreamBuffer"/>
-      </method>
-      <method
-        desc="Serialize the object for writing"
-        name="serialize"
-        type="StreamBuffer&amp;"
-        const="TRUE"
-        >
-        <arg name="s" type="StreamBuffer"/>
-      </method>
-      <method
-        desc="Write vertex"
-        name="write_vertex"
-        type="void"
-        const="TRUE"
-        >
-        <arg name="v" type="const HepMC::GenVertex*"/>
-        <arg name="s" type="StreamBuffer"/>
-      </method>
-      <method
-        desc="Write particle"
-        name="write_particle"
-        type="void"
-        const="TRUE"
-        >
-        <arg name="p" type="const HepMC::GenParticle*"/>
-        <arg name="s" type="StreamBuffer"/>
-      </method>
-      <method
-        desc="Read vertex"
-        name="read_vertex"
-        type="HepMC::GenVertex*"
-        >
-        <arg name="s" type="StreamBuffer"/>
-      </method>
-      <method
-        desc="Read particle"
-        name="read_particle"
-        type="HepMC::GenParticle*"
-        >
-        <arg name="bar_end" type="int*"/>
-        <arg name="bar_prod" type="int*"/>
-        <arg name="s" type="StreamBuffer"/>
-      </method>
      </class>
   </package>
 </gdd>

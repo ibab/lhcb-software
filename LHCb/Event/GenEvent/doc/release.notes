@@ -1,6 +1,11 @@
 Package Event/GenEvent
 package coordinator: W.Pokorski, G.Corti
 
+!================ GenEvent v4r0 2005-11-30 ============================
+! 2005-11-30 - Marco Cattaneo
+ - Remove obsolete serialization methods from HepMCEvent
+ - Remove obsolete object factories from link library
+
 ! 2005-11-15 - Gloria CORTI
  - Changes for new Event Model
  - Use EventBase package instead of Event that has been removed

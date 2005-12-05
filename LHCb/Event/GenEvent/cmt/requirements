@@ -27,7 +27,6 @@ library GenEventDict  ../$(tag)/dict/GenEvent/*.cpp
 
 apply_pattern component_library library=GenEventDict
 apply_pattern linker_library    library=GenEvent
-macro_append GenEvent_linkopts "" WIN32 "/include:_GenEvent_loadRef"
 
 private
 use GaudiObjDesc v*

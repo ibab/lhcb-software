@@ -64,7 +64,7 @@
       <relation
        desc  = "Reference to HepMC Event of this collision"
        name  = "event"
-       type  = "HepMCEvent"
+       type  = "LHCb::HepMCEvent"
       />
     </class>    
 

@@ -15,6 +15,7 @@
        &DataObject;
        <base name="ProcessHeader"/>
        <import name="Event/ProcessHeader"/>
+       <import name="GenCollision" soft="TRUE"/>
         <attribute
         desc="Instantaneous luminosity used for pileUp probability"
         name="luminosity"
@@ -43,7 +44,7 @@
         desc="pointer to collisions in this event (keep this?)"
         multiplicity="N"
         name="collisions"
-        type="GenCollision"
+        type="LHCb::GenCollision"
        />
      </class>
   </package>
