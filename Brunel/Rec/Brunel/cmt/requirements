@@ -1,5 +1,5 @@
 package Brunel
-version v28r1
+version v28r2
 
 branches doc cmt job options
 
@@ -24,14 +24,14 @@ use FieldMap		v4r6         -no_auto_imports
 use ParamFiles          v3r13        -no_auto_imports
 use BrunelDQ		v1r0	DQ   -no_auto_imports
 
-#-- LHCb libraries (from LHCB_v19r2)
-use LHCb	v19r2                -no_auto_imports
+#-- LHCb libraries (from LHCB_v19r3)
+use LHCb	v19r3                -no_auto_imports
 
-#-- Lbcom packages (from LBCOM_v3r1)
-use LbcomSys    v3r1                 -no_auto_imports
+#-- Lbcom packages (from LBCOM_v3r2)
+use LbcomSys    v3r2                 -no_auto_imports
 
-#-- Rec packages (from REC_v2r1)
-use RecSys      v2r1                 -no_auto_imports
+#-- Rec packages (from REC_v2r2)
+use RecSys      v2r2                 -no_auto_imports
 
 #
 #===== build Brunel =========================
