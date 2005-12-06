@@ -40,6 +40,7 @@ namespace LHCb
   {
   public:
 
+  @@@classVectorTypedefs@@@
   @@@publicTypedefs@@@
   @@@publicEnums@@@
   @@@constructorDecls@@@
