@@ -8,6 +8,7 @@
 
 // from TrackEvent
 #include "Event/Track.h"
+#include "Event/TrackFunctor.h"
 
 // from STTools
 #include "STTools/ISTClusterPosition.h"

@@ -4,6 +4,9 @@
 ! Purpose     : Perfect pattern recognition
 !-----------------------------------------------------------------------------
 
+! 2005-12-06 - Eduardo Rodrigues
+ - added necessary TrackFunctor include in .h file
+
 ! 2005-12-01 - Eduardo Rodrigues
  - propagation of changes in ITMeasurement class
 
