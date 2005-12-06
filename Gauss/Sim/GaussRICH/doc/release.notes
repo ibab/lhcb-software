@@ -5,6 +5,7 @@
 ! Purpose          : collection of sensitive detectors, G4 actions, etc for RICH
 !-----------------------------------------------------------------------------
 
+!======================== GaussRICH v5r1 ==================================
 ! 2005-11-07 - Chris Jones
  - Remove unneccessary "use" statement for RichCondition. Technically, 
    GaussRICH only requires the interfaces from RichCondition to compile so
