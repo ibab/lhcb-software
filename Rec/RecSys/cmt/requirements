@@ -58,7 +58,7 @@ use TrgVeloTT		v8r1    Trg   # Luis Fernandez
 use PatSys              v1r5    Pat   # Olivier Callot
 use PatTools            v1r3    Pat   # Olivier Callot
 use PatUtils            v1r1    Pat   # Olivier Callot
-use PatVelo             v1r4    Pat   # Olivier Callot, David Hutchcroft
+use PatVelo             v1r5    Pat   # David Hutchcroft
 use PatVeloTT           v1r3    Pat   # Olivier Callot, Luis Fernandez
 use PatForward          v1r2    Pat   # Olivier Callot
 use PatPV               v1r0p1  Pat   # Mariusz Witek

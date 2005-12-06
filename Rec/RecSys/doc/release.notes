@@ -5,7 +5,7 @@ Purpose: LHCb reconstruction packages.
          This project groups together all the reconstruction packages needed
          by one or more LHCb applications. 
 
-</PRE><H1><A NAME=v2r2>2005-12-01 RecSys v2r2</A></H1><PRE>
+</PRE><H1><A NAME=v2r2>2005-12-06 RecSys v2r2</A></H1><PRE>
 This version uses Gaudi v17r2, LHCb v19r3. Backwards compatible for RTTC data
 
 - Packages added:    PatKShort     - Reconstruct downstream tracks from seeds
@@ -13,7 +13,7 @@ This version uses Gaudi v17r2, LHCb v19r3. Backwards compatible for RTTC data
                      TrackFitter   - Tools for fitting tracks
                      TrackPython   - Exposes track interfaces etc. to Python
                      TrackVeloTT   - Velo-TT pattern recognition algorithms
-- Packages modified: PatSys v1r5, PatTools v1r3, PatChecker v1r3,
+- Packages modified: PatSys v1r5, PatTools v1r3, PatChecker v1r3, PatVelo v1r5,
     PatFitParams v1r2, TrackExtrapolators v1r3, TrackFitEvent v1r5,
     TrackIdealPR v1r4p1, TrackMCTools v1r4, TrackProjectors v1r4,
     TrackTools v1r3, TrConverters v1r5
@@ -28,6 +28,10 @@ This version uses Gaudi v17r2, LHCb v19r3. Backwards compatible for RTTC data
     that it works with LHCbIDs created by the Measurements
   . PatChecker has adapted counters for Match, Seed and KsTrack.
   . Add new algorithm PatKShortChecker, adapted from Tr/TrKShort KShortMonitor.
+
+- In PatVelo v1r5:
+  . Added the PatVeloAlignTool code to make the pattern recognition 
+    (partially) independent of the known mis-alignments
 
 - In PatFitParams v1r2:
   . Add new algorithm to fit the KShort parameters, adapted from Tr/TrKShort
