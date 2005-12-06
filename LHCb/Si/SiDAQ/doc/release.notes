@@ -1,8 +1,7 @@
 Package         : SiDAQ
 Package manager : Matt Needham
+Purpose         : DAQ encoding/decoding classes common to Velo and ST
  
-! ======================================================================
-! 2005-11-21 - v1r0
-  M.Needham
+!========================== SiDAQ v1r0 2005-12-06 ======================
+! 2005-11-21 - M.Needham
   First official release of code
-! ======================================================================
