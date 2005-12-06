@@ -1,14 +1,14 @@
-! $Id: release.notes,v 1.4 2005-12-06 13:53:34 jonrob Exp $
+! $Id: release.notes,v 1.5 2005-12-06 14:04:12 cattanem Exp $
 ! Package     : Event/MCEvent
 ! Responsible : Marco Cattaneo, Gloria Corti
 ! Purpose     : LHCb Event model. MC truth classes (Gauss output) 
 
+!========================== MCEvent v1r0 2005-12-06 ==========================
 ! 2005-12-06 - Chris Jones
  - Import MCRichSegment, MCRichTrack, MCRichOpticalPhoton and MCRichHit from 
    RichEvent. Allows Gauss to be independant of RichEvent.
  - Port RICH classes from CLHEP to ROOT geometry classes
 
-!========================== MCEvent v1r0 2005-11-30 ==========================
 ! 2005-11-30 - Marco Cattaneo
  - Migrate to GaudiObjDesc v9r1 (LHCb namespace)
  - Remove obsolete object factories from library
