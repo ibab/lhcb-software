@@ -16,4 +16,6 @@
   <class name="std::pair<LHCb::OTChannelID,int>"/>
   <class name="std::pair<double,LHCb::CaloCellID>"/>
   <class name="std::vector<std::pair<double,LHCb::CaloCellID> >"/>
+  <class name="std::pair<LHCb::MuonTileID,int>"/>
+  <class name="std::vector<std::pair<LHCb::MuonTileID,int> >"/>
 </lcgdict>

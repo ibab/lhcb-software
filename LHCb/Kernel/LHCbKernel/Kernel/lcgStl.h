@@ -1,4 +1,4 @@
-// $Id: lcgStl.h,v 1.14 2005-12-02 16:28:07 cattanem Exp $
+// $Id: lcgStl.h,v 1.15 2005-12-06 10:00:07 cattanem Exp $
 #ifndef KERNEL_LCGSTL_H 
 #define KERNEL_LCGSTL_H 1
 
@@ -15,6 +15,7 @@
 #include "Kernel/STChannelID.h"
 #include "Kernel/OTChannelID.h"
 #include "Kernel/CaloCellID.h"
+#include "Kernel/MuonTileID.h"
 
 // end include files
 
@@ -34,10 +35,12 @@ namespace {
     std::pair<LHCb::STChannelID,int>           m_std_pair_STChannelID_int;
     std::pair<LHCb::OTChannelID,int>           m_std_pair_OTChannelID_int;
     std::pair<double,LHCb::CaloCellID>               m_std_pair_double_CaloCellID;
+    std::pair<LHCb::MuonTileID,int>           m_std_pair_MuonTileID_int;
     std::vector<std::pair<LHCb::VeloChannelID,int> > m_std_vector_std_pair_VeloChannelID_int;
     std::vector<std::pair<LHCb::STChannelID,int> >   m_std_vector_std_pair_STChannelID_int;
     std::vector<std::pair<LHCb::OTChannelID,int> >   m_std_vector_std_pair_OTChannelID_int;
     std::vector<std::pair<double,LHCb::CaloCellID> > m_std_vector_std_pair_double_CaloCellID;
+    std::vector<std::pair<LHCb::MuonTileID,int> >    m_std_vector_std_pair_MuonTileID_int;
     // end instantiations
   };
 }
