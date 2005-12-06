@@ -1,20 +1,22 @@
 package GENSER
-version v1r120p0
+version v1r121p0
 
-branches doc cmt
+branches doc cmt src
+
 
 use LCG_Settings v*
 
 include_path none
 
-macro GENSER_native_version "GENSER_1_2_0"
-macro GENSER_home "$(LCG_releases)/GENSER/$(GENSER_native_version)/$(LCG_system)/lib"
+macro GENSER_native_version "GENSER_1_2_1"
+macro GENSER_path "$(LCG_releases)/GENSER/$(GENSER_native_version)"
+macro GENSER_home "$(GENSER_path)/$(LCG_system)/lib"
 
 # use archive libraries
 #path_remove LD_LIBRARY_PATH "/GENSER/"
 #path_append LD_LIBRARY_PATH "$(GENSER_home)"
 
-macro pythia_native_version "6_324.2"
+macro pythia_native_version "6_325.2"
 
 macro pythia_linkopts "$(GENSER_home)/libpythia$(pythia_native_version).a ${GENSER_home}/libdummy_pythia$(pythia_native_version).a"\
         WIN32         "/libpath:$(GENSER_home) pythia$(PYTHIA_native_version).lib dummy_pythia$(pythia_native_version)"
@@ -23,11 +25,13 @@ macro photos_native_version "215.2"
 macro photos_linkopts " $(GENSER_home)/libphotos$(photos_native_version).a" \
              WIN32    " /libpath:$(GENSER_home) photos$(photos_native_version).lib"
 
-use cernlib v* LCG_Interfaces
 
-macro pdflib_native_version "804"
-macro pdflib_linkopts  " -Wl,-u,pdfset_,-u,structm_,-u,structp_ -L$(cernlib_home)/lib -lpdflib$(pdflib_native_version) " \
-      WIN32   "/include:_PDFSET /include:_STRUCTM /include:_STRUCTP /libpath:$(cernlib_home)\lib pdflib$(pdflib_native_version).lib"
+macro lhapdf_native_version "4_2"
+set LHAPDFPATH "$(GENSER_path)/src/lhapdf/$(lhapdf_native_version)/data/PDFsets"
+macro lhapdf_linkopts "$(GENSER_home)/liblhapdf$(lhapdf_native_version).a "
+
+library lhapdfdummy -no_share ../src/*.f
+macro_prepend lhapdf_linkopts " $(GENSERROOT)/$(BINDIR)/lhaglue.o "
 
 
-macro GENSER_linkopts "$(pythia_linkopts) $(pdflib_linkopts) $(photos_linkopts)"
+macro GENSER_linkopts "$(pythia_linkopts) $(lhapdf_linkopts) $(photos_linkopts)  -lnsl -lcrypt -ldl -lg2c"
