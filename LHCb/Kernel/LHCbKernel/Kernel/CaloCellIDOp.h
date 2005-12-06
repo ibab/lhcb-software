@@ -1,8 +1,11 @@
-// $Id: CaloCellIDOp.h,v 1.1 2003-11-24 22:51:41 ibelyaev Exp $
+// $Id: CaloCellIDOp.h,v 1.2 2005-12-06 07:58:31 cattanem Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
-// $Log: not supported by cvs2svn $ 
+// $Log: not supported by cvs2svn $
+// Revision 1.1  2003/11/24 22:51:41  ibelyaev
+//  resole problems with << operator for CaloCellID class
+// 
 // ============================================================================
 #ifndef KERNEL_CALOCELLIDOP_H 
 #define KERNEL_CALOCELLIDOP_H 1
@@ -12,6 +15,9 @@
 #include "Kernel/CaloCellID.h"
 #include "GaudiKernel/MsgStream.h"
 // ============================================================================
+namespace LHCb
+{
+  
 class CaloCellID;
 
 // ============================================================================
@@ -23,7 +29,9 @@ class CaloCellID;
  */
 // ============================================================================
 
-MsgStream& operator<<( MsgStream& , const CaloCellID& ) ;
+ ::MsgStream& operator<<( ::MsgStream& , const LHCb::CaloCellID& ) ;
+  
+};
 
 // ============================================================================
 // The END 
