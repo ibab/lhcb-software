@@ -55,7 +55,11 @@ namespace LHCb
                    EcalPacked,
                    HcalPacked,
                    PrsPacked,
-                   L0Muon
+                   L0Muon,
+                   ITError,
+                   TTError,
+                   ITPedestal,
+                   TTPedestal
     };
 
     /// Magic pattern for Raw bank headers
