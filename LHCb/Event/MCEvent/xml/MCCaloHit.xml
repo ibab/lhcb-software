@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!DOCTYPE gdd SYSTEM "gdd.dtd"[
+<!ENTITY CLID_MCCaloHit                "2000"                   >
+]>
+<gdd>
+  <package name="MCEvent">
+<!-- **************************************************************************
+  * $Id: MCCaloHit.xml,v 1.1 2005-12-06 14:34:44 cattanem Exp $
+  *****************************************************************************
+  * XML-description of MCCaloHit class                                        *
+  * author: Vanya Belyaev Ivan.Belyaev@itep.ru                                *
+  * date:   05.02.02                                                          *
+  ************************************************************************* -->
+
+<class
+ name   = "MCCaloHit"
+ desc   = "@brief Monte Carlo energy deposition from one particle in the cell"
+ id     = "&CLID_MCCaloHit;"
+ author = 
+"Olivier Callot (Olivier.Callot@cern.ch) &amp; Vanya Belyaev(Ivan.Belyaev@itep.ru)"
+>
+<desc> *
+ *
+ *  The class represents the Monte Carlo energy deposition (GEANT)
+ *  in the active material ("active energy") of
+ *  calorimetry cell from the given Monte Carlo particle
+ *  at given "time" slot (whatever it means)
+ *
+ *</desc>
+<import name = "Event/MCParticle" /> 
+<import name = "Kernel/CaloCellID" /> 
+<base name = "ContainedObject" />
+&ContainedObject;
+
+<location name = "Spd"  place = "MC/Spd/Hits"  />
+<location name = "Prs"  place = "MC/Prs/Hits"  />
+<location name = "Ecal" place = "MC/Ecal/Hits" />
+<location name = "Hcal" place = "MC/Hcal/Hits" />
+
+
+<typedef
+ def    = "MCCaloHits"
+ type   = "ObjectVector&lt;LHCb::MCCaloHit&gt;"
+ desc   = "MCCaloHits -> MCCaloHitVector equivalence"
+ access = "PUBLIC"
+/>
+
+<typedef
+ def    = "Particle"
+ type   = "SmartRef&lt;LHCb::MCParticle&gt;"
+ desc   = "Shortcut for particle class"
+ access = "PUBLIC"
+/>
+
+<typedef
+ def    = "Time"
+ type   = "char"
+ desc   = "The type of 'Time' variable (#of 25ns timeslot)"
+ access = "PUBLIC"
+/>
+
+<constructor
+ desc     = "Non-default constructor"
+ argList  = "int id , double e, Time t , Particle p "
+ initList = "m_activeE( e ) , m_sensDetID( id ) , m_time ( t ) , m_particle ( p ) "
+/>
+
+<constructor
+ desc     = "Non-default constructor"
+ argList  = "LHCb::CaloCellID cellID , double e, Time t , Particle p "
+ initList = "m_activeE( e ) , m_sensDetID( int( cellID.all() ) ) , m_time ( t ) , m_particle ( p ) "
+/>
+
+<constructor 
+ desc     = "Copy Constructor" 
+ argList  = "LHCb::MCCaloHit right"
+ initList = "ContainedObject(), m_activeE( right.activeE() ) , m_sensDetID ( right.sensDetID() ) , m_time ( right.time() ) , m_particle( right.particle() ) " 
+/>
+
+<attribute
+ name = "activeE"
+ desc = "Monte Carlo energy deposition in the active media of given cell"
+ type = "double"
+ init = "0"
+/>
+
+<attribute
+  name = "sensDetID"
+  desc = "Sensitive detector identifier - the identifier of calorimeter cell"
+  type = "int"
+  init="-1"
+/>
+
+<attribute
+ name = "time"
+ desc = "Time slot# for energy deposition(in 25ns units, 0 means 'current BX')"
+ type = "Time"
+ init = "0"
+ dictalias = "char"
+/>
+
+<relation
+ name = "particle"
+ desc = "reference to the Monte Carlo particle"
+ type = "LHCb::MCParticle"
+ multiplicity = "1"
+/>
+
+<method
+ desc    = "Cloning of the object ('virtual constructor') "
+ name    = "clone"
+ type    = "LHCb::MCCaloHit*"
+ const   = "TRUE"
+ virtual = "TRUE"
+ access  = "PUBLIC" >
+<code> return new LHCb::MCCaloHit( *this );</code>
+</method>
+
+<method
+ desc    = "CaloCellID from sensDetID"
+ name    = "cellID"
+ type    = "LHCb::CaloCellID"
+ const     = "TRUE" >
+<code> return CaloCellID(m_sensDetID);</code>
+</method>
+
+<method
+ desc    = "sensDetID from CaloCellID"
+ name    = "setCellID"
+ argList  = "LHCb::CaloCellID id"
+ type    = "void">
+<code> m_sensDetID = int( id.all() );</code>
+</method>
+
+</class>
+</package>
+
+</gdd>
