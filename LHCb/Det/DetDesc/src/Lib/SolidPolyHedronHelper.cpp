@@ -1,8 +1,15 @@
-// $Id: SolidPolyHedronHelper.cpp,v 1.8 2005-12-05 16:18:43 jpalac Exp $ 
+// $Id: SolidPolyHedronHelper.cpp,v 1.9 2005-12-06 18:51:27 jpalac Exp $ 
 // ===========================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ===========================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.8  2005/12/05 16:18:43  jpalac
+//
+// ! 2005-12-05 - Juan Palacios
+//  - Add class Gaudi::Plane3D as stop-gap while MathCore equivalent is implemented.
+//    Supports only double precision cartesian representation.
+//  - Fix remaining MathCore-related compilation problems.
+//
 // Revision 1.7  2005/12/02 18:36:56  jpalac
 //
 // ! 2005-02-12 - Juan Palacios
@@ -154,9 +161,9 @@ SolidPolyHedronHelper::intersectionTicks
        planes().end() != iPlane ; ++iPlane )
     {
       const Gaudi::Plane3D& Plane = *iPlane ; 
-      double vn =  Vector.Dot( Plane.normal() ) ; 
+      double vn =  Vector.Dot( Plane.Normal() ) ; 
       if(  0 == vn ) { continue ; } 
-      ISolid::Tick tick = -1. * ( Plane.distance( Point ) / vn ) ; 
+      ISolid::Tick tick = -1. * ( Plane.Distance( Point ) / vn ) ; 
       ticks.push_back( tick );   
     };  
   /// 
@@ -191,9 +198,9 @@ bool SolidPolyHedronHelper::addFace
   Gaudi::Plane3D Plane( Point1 , Point2 , Point3 ); 
   /// invert face orientation if needed 
   if( !inside( Gaudi::XYZPoint( 0 , 0 , 0 ) , Plane ) ) 
-    { Plane = Gaudi::Plane3D(  -Plane.normal() , Point1 ) ; }
+    { Plane = Gaudi::Plane3D(  -Plane.Normal() , Point1 ) ; }
   ///
-  Plane.normalize();
+  //  Plane.Normalize(); // MathCore Plane3D is already normalised.
   ///
   m_ph_planes.push_back( Plane );
   ///

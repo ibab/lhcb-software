@@ -1,11 +1,19 @@
 ! =============================================================================
-! $Id: release.notes,v 1.234 2005-12-05 17:11:19 cattanem Exp $ 
+! $Id: release.notes,v 1.235 2005-12-06 18:51:27 jpalac Exp $ 
 ! =============================================================================
 ! package DetDesc
 ! package manager : Marco Clemencic, Juan Palacios
 ! =============================================================================
 
-!======================== DetDesc v16r0 2005-12-05 ========================
+!======================== DetDesc v16r0 2005-12-06 ========================
+! *********** Requires MathCore-5_06_02 or higher.************************
+
+! 2005-12-06 - Juan PALACIOS
+
+ - Use ROOT::Math::Plane3D class. 
+               (move temporary LHCb one to DetDesc namespace)
+ - Changes to adapt to improved Transform3D interface.
+
 ! 2005-12-05 - Marco Cattaneo
  - Use SystemOfUnits.h from LHCbDefinitions
 

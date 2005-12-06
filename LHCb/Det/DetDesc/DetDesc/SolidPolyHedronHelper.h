@@ -1,4 +1,4 @@
-// $Id: SolidPolyHedronHelper.h,v 1.9 2005-12-05 16:18:43 jpalac Exp $ 
+// $Id: SolidPolyHedronHelper.h,v 1.10 2005-12-06 18:51:27 jpalac Exp $ 
 // ===========================================================================
 // CVS Tag $Name: not supported by cvs2svn $ 
 // ===========================================================================
@@ -10,7 +10,7 @@
 #include "Kernel/Point3DTypes.h"
 #include "Kernel/Plane3DTypes.h"
 /// DetDesc 
-#include "DetDesc/LHCbPlane3D.h"
+//#include "DetDesc/LHCbPlane3D.h"
 #include "DetDesc/SolidBase.h"
 #include "DetDesc/SolidException.h" 
 #include "DetDesc/SolidTicks.h"
@@ -121,7 +121,7 @@ protected:
   inline bool inside 
   (  const Gaudi::XYZPoint& Point , 
      const Gaudi::Plane3D& Plane ) const 
-  { return 0 >= Plane.distance( Point ) ; };
+  { return 0 >= Plane.Distance( Point ) ; };
 
   /** set bounding parameters 
    *  @return status code 

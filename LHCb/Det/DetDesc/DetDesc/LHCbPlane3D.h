@@ -1,5 +1,5 @@
 // -*- C++ -*-
-// $Id: LHCbPlane3D.h,v 1.1 2005-12-05 16:18:43 jpalac Exp $
+// $Id: LHCbPlane3D.h,v 1.2 2005-12-06 18:51:27 jpalac Exp $
 // ---------------------------------------------------------------------------
 //
 /** @class Plane3D LHCbPlane3D.h DetDesc/LHCbPlane3D.h
@@ -30,7 +30,7 @@
 #include "Kernel/Vector3DTypes.h"
 #include "Kernel/Transform3DTypes.h"
 
-namespace Gaudi {
+namespace DetDesc {
 
   /**
    * Template class for geometrical plane in 3D.
