@@ -1,0 +1,159 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!DOCTYPE gdd SYSTEM "gdd.dtd">
+<gdd>
+<package name="RichEvent">
+
+<!-- **************************************************************************
+  * $Id: MCRichSegment.xml,v 1.1 2005-12-06 13:53:35 jonrob Exp $
+  *****************************************************************************
+  * XML-description of MCRichSegment class                                    *
+  * author: Chris Jones   Christopher.Rob.Jones@cern.ch                       *
+  * date:   2004-06-23                                                        *
+  ************************************************************************* -->
+        
+<class 
+        name             = "MCRichSegment"
+        author           = "Christopher Jones    Christopher.Rob.Jones@cern.ch" 
+        desc             = "The MC trajectory through a given radiator medium" 
+        id               = "12414" 
+        location         = "MC/Rich/Segments"
+        keyedContTypeDef = "TRUE" >
+
+<!-- stdVectorTypeDef = "TRUE" -->
+
+        <base name="KeyedObject&lt;int&gt;"/>
+        &KeyedContainer;
+
+        <template name="VectorDict" t1="Gaudi::XYZVector"/>
+        <template name="VectorDict" t1="Gaudi::XYZPoint"/>
+        
+        <import name="Event/MCParticle"/>
+        <import name="Event/MCRichTrack" soft="TRUE"/>
+        <import name="Event/MCRichOpticalPhoton"/>
+        <import name="Kernel/Point3DTypes.h"/>
+        <import name="Kernel/Vector3DTypes.h"/>
+        <import name="Kernel/RichDetectorType"/>
+        <import name="Kernel/RichRadiatorType"/>
+
+        <import ignore="TRUE" name="Rich"/>
+        <import ignore="TRUE" name="DetectorType"/>
+        <import ignore="TRUE" name="RadiatorType"/>
+        
+        <method 
+                name  = "entryPoint" 
+                const = "TRUE" 
+                desc  = "Returns the entry point to the radiator medium" 
+                type  = "const Gaudi::XYZPoint&amp;">
+                <code>
+                   return m_trajectoryPoints.front();
+                </code>
+        </method>
+        
+        <method 
+                name  = "exitPoint"
+                const = "TRUE" 
+                desc  = "Returns the exit point from the radiator medium"  
+                type  = "const Gaudi::XYZPoint&amp;">
+                <code>
+                   return m_trajectoryPoints.back();
+                </code>
+        </method>
+        
+        <method 
+                name  = "bestPoint"
+                const = "TRUE" 
+                desc  = "Returns the best position estimate for a given fractional position along the trajectory through the radiator medium"       
+                type  = "Gaudi::XYZPoint">
+                <arg const="TRUE" inout="BYVALUE" name="fraction" type="double"/>
+        </method>
+
+        <method 
+                name  = "bestMomentum"
+                const = "TRUE" 
+                desc  = "Returns the best momentum estimate for a given fractional position along the trajectory through the radiator medium" 
+                type  = "Gaudi::XYZVector">
+                <arg const="TRUE" inout="BYVALUE" name="fraction" type="double"/>
+        </method>
+        
+        <method 
+                name  = "entryMomentum"
+                const = "TRUE" 
+                desc  = "Returns the momentum vector at the entry point to the radiator medium" 
+                type  = "const Gaudi::XYZVector&amp;">
+                <code>
+                   return m_trajectoryMomenta.front();
+                </code>
+        </method>
+        
+        <method 
+                name  = "exitMomentum"
+                const = "TRUE" 
+                desc  = "Returns the momentum vector at the exit point to the radiator medium" 
+                type  = "const Gaudi::XYZVector&amp;">
+                <code>
+                   return m_trajectoryMomenta.back();
+                </code>
+        </method>
+        
+        <method 
+                const = "TRUE" 
+                desc  = "Returns the average segment momentum vector based on the given number of samples equally spread along the trajectory" 
+                name  = "averageMomentum" 
+                type  = "Gaudi::XYZVector">
+                <arg const="TRUE" inout="BYVALUE" name="nsamples" type="unsigned int"/>
+        </method>
+            
+        <method 
+                name  = "pathLength" 
+                const = "TRUE" 
+                desc  = " Returns the path length of the trajectory through the radiator" 
+                type  = "double">
+                <code>
+                   return sqrt((exitPoint()-entryPoint()).mag2());
+                </code>
+        </method>
+        
+        <attribute 
+                desc = "Bit packed field containing detector information" 
+                name = "historyCode" 
+                init = "0" 
+                type = "bitfield">
+                <bitfield desc="The Rich detector. Either Rich::Rich1 or Rich::Rich2"                length="1" name="rich"     type="Rich::DetectorType" />
+                <bitfield desc="The radiator medium. Either Rich::Aerogel, Rich::C4F10 or Rich::CF4" length="2" name="radiator" type="Rich::RadiatorType" />
+        </attribute>
+        
+        <attribute 
+                name = "trajectoryPoints"
+                desc = "Vector of trajectory points through the radiator for this segment"  
+                type = "std::vector&lt;Gaudi::XYZPoint&gt;"
+        />
+        
+        <attribute 
+                name = "trajectoryMomenta"
+                desc = "The momentum vector of the particle for each trajectory step" 
+                type = "std::vector&lt;Gaudi::XYZVector&gt;"
+        />
+         
+        <relation 
+                name = "mcParticle"
+                desc = "Associated MCParticle"  
+                type = "LHCb::MCParticle"
+        />
+        
+        <relation 
+                name = "MCRichTrack"
+                desc = "Associated MCRichTrack"  
+                type = "LHCb::MCRichTrack"
+        />
+         
+        <relation 
+                desc         = "Associated MCRichOpticalPhotons" 
+                multiplicity = "N" 
+                name         = "MCRichOpticalPhotons" 
+                type         = "LHCb::MCRichOpticalPhoton"
+        />
+        
+</class>
+
+</package>
+</gdd>

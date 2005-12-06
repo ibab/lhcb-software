@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!DOCTYPE gdd SYSTEM "gdd.dtd">
+<gdd>
+<package name="RichEvent">
+
+<!-- **************************************************************************
+  * $Id: MCRichHit.xml,v 1.1 2005-12-06 13:53:35 jonrob Exp $
+  *****************************************************************************
+  * XML-description of RichSmartID class                                      *
+  * author: Chris Jones   Christopher.Rob.Jones@cern.ch                       *
+  * date:   2004-06-23                                                        *
+  ************************************************************************* -->
+
+<class 
+        name              = "MCRichHit"
+        author            = "Chris Jones    Christopher.Rob.Jones@cern.ch" 
+        desc              = "MC Rich HPD detector hit" 
+        id                = "12413" 
+        location          = "MC/Rich/Hits"
+        contObjectTypeDef = "TRUE" >
+
+<!-- stdVectorTypeDef = "TRUE" -->
+
+        <base name="ContainedObject"/>
+        &ContainedObject;
+
+        <import name="Kernel/Point3DTypes.h"/>
+        <import name="Kernel/RichDetectorType"/>
+        <import name="Kernel/RichRadiatorType"/>
+        <import ignore="TRUE" name="Rich"/>
+        <import ignore="TRUE" name="DetectorType"/>
+        <import ignore="TRUE" name="RadiatorType"/>
+
+        <relation name = 'MCParticle' 
+                  type = 'LHCb::MCParticle' 
+                  desc = 'Pointer to the MCParticle causing the hit (Normally the MCParticle from which the Cherenkov photon was radiated, but also can be an MCParticle that directly hits the HPD entrance window' />
+
+        <attribute name = 'entry' 
+                   type = 'Gaudi::XYZPoint' 
+                   desc = 'Entry point to the HPD silicon wafer (mm)' />
+
+        <attribute name = 'energy' 
+                   type = 'double' 
+                   desc = 'Energy deposited in the HPD silicon wafer (MeV)' />
+
+        <attribute name = 'timeOfFlight' 
+                   type = 'double' 
+                   desc = 'Time of flight (ns)'/>
+
+        <attribute name = 'sensDetID'
+                   type = 'int'
+                   desc = 'Sensitive detector ID number. Uniquely identifies the HPD the hit is within' />
+
+        <attribute 
+                desc = "Bit packed field containing RICH specific information" 
+                name = "historyCode" 
+                init = "0" 
+                type = "bitfield">
+                <bitfield desc="The Rich detector. Either Rich::Rich1 or Rich::Rich2"                          length="1"  name="rich"     type="Rich::DetectorType" />
+                <bitfield desc="The radiator medium. Either Rich::Aerogel (0), Rich::C4F10(1) or Rich::CF4(2)" length="2"  name="radiator" type="Rich::RadiatorType" />
+                <bitfield desc="Did the photon undergo Rayleigh scattering"                                    length="1"  name="scatteredPhoton"   />
+                <bitfield desc="Hit from a charged track hitting the HPD entracne window"                      length="1"  name="chargedTrack"      />
+                <bitfield desc="Is the photon a background (non-Cherenkov) hit"                                length="1"  name="backgroundHit"     />
+                <bitfield desc="Flag to verify if the RICH detector information have been set"                 length="1"  name="richInfoValid"     />
+                <bitfield desc="Flag to verify if the radiator information have been set"                      length="1"  name="radiatorInfoValid" />
+        </attribute>
+        
+</class>
+
+</package>
+</gdd>

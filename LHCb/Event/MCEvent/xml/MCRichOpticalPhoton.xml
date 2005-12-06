@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!DOCTYPE gdd SYSTEM "gdd.dtd">
+<gdd>
+<package name="RichEvent">
+
+<!-- **************************************************************************
+  * $Id: MCRichOpticalPhoton.xml,v 1.1 2005-12-06 13:53:35 jonrob Exp $
+  *****************************************************************************
+  * XML-description of MCRichOpticalPhoton class                              *
+  * author: Chris Jones   Christopher.Rob.Jones@cern.ch                       *
+  * date:   2004-06-23                                                        *
+  ************************************************************************* -->
+
+<class 
+        name             = "MCRichOpticalPhoton" 
+        author           = "Chris Jones   (Christopher.Rob.Jones@cern.ch)" 
+        desc             = "Auxially MC class containing specialist Rich data complimentary to the MCRichHit class" 
+        id               = "12412"
+        location         = "MC/Rich/OpticalPhotons" 
+        keyedContTypeDef = "TRUE" >
+
+<!-- stdVectorTypeDef = "TRUE" -->
+
+        <base name="KeyedObject&lt;int&gt;"/>
+        &KeyedObject;
+
+        <location name="LinksFromMCRichHits" place="MC/Rich/MCRichHitsToOpPhotons"/>
+            
+        <import name="Event/MCRichHit"/>   
+        <import name="Kernel/Point3DTypes.h"/>
+        <import name="Kernel/Vector3DTypes.h"/>
+        <import name="Kernel/RichDetectorType"/>
+        <import name="Kernel/RichRadiatorType"/>
+        <import ignore="TRUE" name="Rich"/>
+        <import ignore="TRUE" name="DetectorType"/>
+        <import ignore="TRUE" name="RadiatorType"/>
+
+        <attribute 
+                name = "energyDeposited" 
+                type = "float" 
+                desc = "Energy deposited in HPD silicon detector"
+                init = "0"
+        />
+            
+        <attribute 
+                name = "pdIncidencePoint" 
+                type = "Gaudi::XYZPoint"
+                desc = "Point of incidence of the photon on the HPD window" 
+        />
+            
+        <attribute 
+                name = "pdIncidenceMomentum"
+                type = "Gaudi::XYZVector"
+                desc = "Photon momentum at point of incidence to PD"
+        />
+            
+        <attribute 
+                name = "sphericalMirrorReflectPoint"
+                type = "Gaudi::XYZPoint"  
+                desc = "Spherical mirror reflection point" 
+        />
+            
+        <attribute 
+                name = "flatMirrorReflectPoint"
+                desc = "Flat mirror reflection point"  
+                type = "Gaudi::XYZPoint"
+        />
+
+        <attribute 
+                name = "cherenkovTheta"
+                desc = "Cherenkov angle theta at production"  
+                type = "float"
+                init = "0"
+        />
+         
+        <attribute 
+                name = "cherenkovPhi"
+                desc = "Cherenkov angle phi at production"  
+                type = "float"
+                init = "0"
+        />
+
+        <attribute 
+                name = "emissionPoint"
+                desc = "Photon emission point"  
+                type = "Gaudi::XYZPoint"
+        />
+            
+        <attribute 
+                name = "energyAtProduction"
+                desc = "Photon energy at production" 
+                type = "float"
+                init = "0"
+        />
+            
+        <attribute 
+                name = "parentMomentum"
+                desc = "The momentum of the photon parent at production"  
+                type = "Gaudi::XYZVector"
+        />
+            
+        <attribute 
+                name = "historyCode"
+                desc = "Bit-packed RICH specific information" 
+                init = "0" 
+                type = "bitfield">
+                <bitfield desc="The Rich detector. Either Rich::Rich1 or Rich::Rich2"                          length="1"  name="rich"     type="Rich::DetectorType" />
+                <bitfield desc="The radiator medium. Either Rich::Aerogel (0), Rich::C4F10(1) or Rich::CF4(2)" length="2"  name="radiator" type="Rich::RadiatorType" />
+                <bitfield desc="Did the photon undergo Rayleigh scattering"                                    length="1"  name="scatteredPhoton"   />
+                <bitfield desc="Hit from a charged track"                                                      length="1"  name="chargedTrack"      />
+                <bitfield desc="Is the photon a background (non-Cherekov) hit"                                 length="1"  name="backgroundHit"     />
+                <bitfield desc="Flag to verify if the RICH detector information have been set"                 length="1"  name="richInfoValid"     />
+                <bitfield desc="Flag to verify if the radiator information have been set"                      length="1"  name="radiatorInfoValid" />
+        </attribute>
+            
+        <relation 
+                name = "mcRichHit"
+                desc = "Associated MCRichHit"  
+                type = "LHCb::MCRichHit"
+        />
+        
+</class>
+
+</package>
+</gdd>

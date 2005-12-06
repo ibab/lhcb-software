@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!DOCTYPE gdd SYSTEM "gdd.dtd">
+<gdd>
+<package name="RichEvent">
+
+<!-- **************************************************************************
+  * $Id: MCRichTrack.xml,v 1.1 2005-12-06 13:53:35 jonrob Exp $
+  *****************************************************************************
+  * XML-description of MCRichTrack class                                      *
+  * author: Chris Jones   Christopher.Rob.Jones@cern.ch                       *
+  * date:   2004-06-23                                                        *
+  ************************************************************************* -->
+
+<class 
+        name             = "MCRichTrack"
+        author           = "Christopher Jones   Christopher.Rob.Jones@cern.ch" 
+        desc             = "Complimentary object to a single MCParticle with addition RICH information" 
+        id               = "12415" 
+        location         = "MC/Rich/Tracks"
+        keyedContTypeDef = "TRUE" >
+
+<!-- stdVectorTypeDef = "TRUE" -->
+
+        <base name="KeyedObject&lt;int&gt;"/>
+        &KeyedContainer;
+
+        <import name="Kernel/RichRadiatorType"/>
+        <import name="Event/MCRichSegment"/>
+        <import ignore="TRUE" name="Rich"/>
+        <import ignore="TRUE" name="RadiatorType"/>
+
+        <location name="LinksFromMCParticles" place="MC/Rich/MCPartsToMCRichTracks"/>
+            
+        <method 
+                name  = "segmentInRad" 
+                const = "TRUE" 
+                desc  = "Returns the MCRichSegment associated with a given radiator (null if not available)" 
+                type  = "const LHCb::MCRichSegment*">
+                <arg const="TRUE" inout="BYVALUE" name="rad" type="Rich::RadiatorType"/>
+        </method>
+        
+        <relation 
+                name         = "mcSegments"
+                desc         = "Associatted radiator segments" 
+                multiplicity = "N"  
+                type         = "LHCb::MCRichSegment"
+        />
+         
+        <relation 
+                name = "mcParticle" 
+                desc = "Associated MCParticle" 
+                type = "LHCb::MCParticle"
+        />
+        
+</class>
+
+</package>
+</gdd>
