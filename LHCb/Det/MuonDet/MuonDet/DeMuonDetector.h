@@ -1,4 +1,4 @@
-// $Id: DeMuonDetector.h,v 1.5 2005-11-09 17:27:55 asarti Exp $
+// $Id: DeMuonDetector.h,v 1.6 2005-12-07 08:46:46 asarti Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
@@ -107,12 +107,18 @@ public:
   //Fills the vector of chamber pointers  
   void fillChmbPtr();
   
-  /*
-    
+  StatusCode Tile2XYZ(MuonTileID tile, double & x,
+		      double & y, double & z);
+  
+  void CountDetEls();
+
   int stations();
   int regions();
   int regions(int stations);
   
+
+  /*
+    
   StatusCode TileID2Pos(const MuonTileID tile,
                         double& x, double& deltax,
                         double& y, double& deltay,
@@ -159,6 +165,12 @@ private:
   //Maximum number of chambers allowed per region
   int MaxRegions[4];
 
+  //How many stations and regions
+  int m_stations;
+  int m_regions;
+  int m_regsperSta[5];
+
+
 };
 
 // -----------------------------------------------------------------------------
@@ -174,6 +186,24 @@ inline int DeMuonDetector::getStation(const double z)
     if(fabs(z-s_off[idX])<s_size) break;
   }
   return idX;
+}
+
+inline int DeMuonDetector::stations()
+{
+  //Number of stations 
+  return m_stations;
+}
+
+inline int DeMuonDetector::regions() 
+{
+  //Number of all regions
+  return m_regions;
+}
+
+inline int DeMuonDetector::regions(int stations)
+{
+  //Number of regions in each station
+  return m_regsperSta[stations];
 }
 
 #endif    // MUONDET_DEMUONDETECTOR_H

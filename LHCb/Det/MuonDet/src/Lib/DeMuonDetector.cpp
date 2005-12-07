@@ -1,4 +1,4 @@
-// $Id: DeMuonDetector.cpp,v 1.7 2005-11-14 11:00:48 asarti Exp $
+// $Id: DeMuonDetector.cpp,v 1.8 2005-12-07 08:46:46 asarti Exp $
 
 // Include files
 #include "MuonDet/DeMuonDetector.h"
@@ -34,6 +34,8 @@ DeMuonDetector::DeMuonDetector() {
   bool debug = false;
   if(debug) std::cout<< "Building the Detector !!!" <<std::endl;
   m_detSvc = this->dataSvc();
+  m_stations = 0;
+  m_regions = 0;
 }
 
 /// Standard Destructor
@@ -70,6 +72,9 @@ StatusCode DeMuonDetector::initialize()
   //Fills the chambers pointer
   m_ChmbPtr.resize(1380);
   fillChmbPtr();
+
+  //Initialize vectors containing Detector informations
+  CountDetEls();
 
   return sc;
 }
@@ -392,6 +397,42 @@ IDetectorElement* DeMuonDetector::ReturnADetElement(int lsta, int lreg, int lchm
   
 }
 
+void DeMuonDetector::CountDetEls() {
+  
+  IDetectorElement* myDet = (IDetectorElement*)0;
+  int msta(0),mreg(0),mallreg(0); 
+
+  //Getting stations
+  IDetectorElement::IDEContainer::iterator itSt=this->childBegin();
+  for(itSt=this->childBegin(); itSt<this->childEnd(); itSt++){
+
+    myDet = *itSt;
+    if(myDet) msta++;
+
+    //Getting regions
+    mreg = 0;
+    IDetectorElement::IDEContainer::iterator itRg=(*itSt)->childBegin();
+    for(itRg=(*itSt)->childBegin(); itRg<(*itSt)->childEnd(); itRg++){
+      
+      myDet = *itRg;
+      if(myDet) {
+	mreg++;
+	mallreg++;
+      }
+
+    }//Region Loop
+
+    m_regsperSta[msta-1] = mreg;
+
+  }//Stations Loop
+
+  m_stations = msta;
+  m_regions = mallreg;
+
+  return;
+  
+}
+
 DeMuonChamber* DeMuonDetector::getChmbPtr(const int station, const int region,
 			    const int chmb) {
   DeMuonChamber* myPtr;
@@ -529,5 +570,17 @@ std::vector< std::pair<MuonFrontEndID, std::vector<float> > > DeMuonDetector::li
     return tmpPair;
   }
   return myPair;
+}
+
+StatusCode DeMuonDetector::Tile2XYZ(MuonTileID tile, double & x,
+				    double & y, double & z){
+  
+  StatusCode sc = StatusCode::FAILURE;
+  double dx(0.),dy(0.),dz(0.);
+
+  //Ask the chamber Layout about the tile.
+  sc = m_chamberLayout.Tile2XYZpos(tile,x,dx,y,dy,z,dz);
+
+  return sc;
 }
 

@@ -1,4 +1,4 @@
-// $Id: MuonChamberGrid.h,v 1.3 2005-11-09 17:27:55 asarti Exp $
+// $Id: MuonChamberGrid.h,v 1.4 2005-12-07 08:46:46 asarti Exp $
 #ifndef MUONDET_MUONCHAMBERGRID_H 
 #define MUONDET_MUONCHAMBERGRID_H 1
 
@@ -45,12 +45,33 @@ public:
     return m_readoutType;
   }
 
+  inline std::vector<int> MuonChamberGrid::getMapGrid(){
+    return m_mapType;
+  }
+
+  inline int MuonChamberGrid::getGrid1SizeX(){
+    return m_x_pad_rdout1.size();
+  }
+
+  inline int MuonChamberGrid::getGrid1SizeY(){
+    return m_y_pad_rdout1.size();
+  }
+
+  inline int MuonChamberGrid::getGrid2SizeX(){
+    return m_x_pad_rdout2.size();
+  }
+
+  inline int MuonChamberGrid::getGrid2SizeY(){
+    return m_y_pad_rdout2.size();
+  }
+
 protected:
 
 private:
 
   int m_number_of_grid;
   std::vector<int> m_readoutType;
+  std::vector<int> m_mapType;
   std::vector<double> m_x_pad_rdout1;
   std::vector<double> m_y_pad_rdout1;
   std::vector<double> m_x_pad_rdout2;

@@ -1,8 +1,9 @@
-// $Id: MuonChamberLayout.cpp,v 1.4 2005-11-09 17:27:55 asarti Exp $
+// $Id: MuonChamberLayout.cpp,v 1.5 2005-12-07 08:46:46 asarti Exp $
 // Include files 
 
 //Muon
 #include "MuonDet/MuonChamberLayout.h"
+#include "MuonDet/MuonChamberGrid.h"
 #include "MuonDet/DeMuonDetector.h"
 
 //Detector description
@@ -78,8 +79,6 @@ StatusCode MuonChamberLayout::initialize() {
   m_chamberGrid.resize(368);
   for(int iD = 0; iD<368; iD++) { m_chamberGrid.at(iD) = -1; }
 
-  //Fills the chambers vector
-  //  fillChambersVector();
   return sc;
 }
 
@@ -443,34 +442,66 @@ void MuonChamberLayout::fillChambersVector(IDataProviderSvc* detSvc) {
   
   int idx(-1),idy(-1),reg(-1);
   bool debug = false;
+
+  StatusCode sc = StatusCode::SUCCESS;
+
   SmartDataPtr<DetectorElement> muonSys (detSvc,
 					 "/dd/Structure/LHCb/Muon"); 
 
   //Getting stations
   IDetectorElement::IDEContainer::iterator itSt=muonSys->childBegin();
-  int iS = 0;
+
+  //Reset the cache information
+  m_logHorizGridX.resize(20);  m_logHorizGridY.resize(20);
+  m_logVertGridX.resize(20);   m_logVertGridY.resize(20);
+  m_padGridX.resize(20);       m_padGridY.resize(20);
+  for(int ir = 0; ir<20; ir++) {
+    m_logHorizGridX.at(ir) =   m_logHorizGridY.at(ir) =  
+      m_logVertGridX.at(ir) =  m_logVertGridY.at(ir) =  
+      m_padGridX.at(ir) =      m_padGridY.at(ir) = 0;
+  }
+
   //Set the grid steps for the various stations
   setGridStep();
-  
+  int vIdx(-1),myvIdx(-1);
+  int iS = 0;
   for(itSt=muonSys->childBegin(); itSt<muonSys->childEnd(); itSt++){
     
     //Getting regions
     IDetectorElement::IDEContainer::iterator itRg=(*itSt)->childBegin();
+    int iR = 0;
     for(itRg=(*itSt)->childBegin(); itRg<(*itSt)->childEnd(); itRg++){
-      
+
+      //Index needed to fill the cache information
+      //There are 4 regions per station: this is not going to change!
+      vIdx = iR+iS*4;
+
       //Getting chambers
       IDetectorElement::IDEContainer::iterator itCh=(*itRg)->childBegin();
       for(itCh=(*itRg)->childBegin(); itCh<(*itRg)->childEnd(); itCh++){
 
-	SmartDataPtr<DeMuonChamber> deChmb(detSvc,(*itCh)->name());
+	DeMuonChamber*  deChmb =  dynamic_cast<DeMuonChamber*>( *itCh ) ;
+
+	//	SmartDataPtr<DeMuonChamber> deChmb(detSvc,(*itCh)->name());
 	float myX = (deChmb->geometry())->toGlobal(HepPoint3D(0,0,0)).x();
 	float myY = (deChmb->geometry())->toGlobal(HepPoint3D(0,0,0)).y();
 	gridPosition(myX,myY,iS,idx,idy,reg);
 	
 	int enc = idx+4*m_cgX.at(reg)*idy+m_offSet.at(reg);
 	m_chamberGrid.at(enc) = deChmb->chamberNumber();
-	if(debug)  std::cout<<"Grid initialization: "<<enc<<" "<<deChmb->chamberNumber()<<std::endl;
+
+	if(debug)  std::cout<<"Chamber initialization: "<<enc<<" "<<deChmb->chamberNumber()<<std::endl;
+
+	//Try to fill also the other relevant quantities
+	//Only when the region changes
+	if(vIdx != myvIdx) {
+	  myvIdx = vIdx;
+	  sc = fillSystemGrids(deChmb,vIdx,reg);
+	  if(sc.isFailure()) {std::cout<<"Failed to fill the system grid for chamber "<<deChmb->chamberNumber()<<" in region "<<reg<<std::endl;}
+	}
       }
+      //next region
+      iR++;
     }
     //next station
     iS++;
@@ -485,4 +516,246 @@ bool MuonChamberLayout::shouldLowReg(int idX, int idY, int reg){
   bool iYnz = (((idY <  m_cgY.at(reg))&&(idY>0)) || ((idY>=4*m_cgY.at(reg))&&(idX<4*m_cgY.at(reg))));
   if(iXnz && iYnz) {lower = false;}
   return lower;
+}
+
+
+StatusCode MuonChamberLayout::Tile2XYZpos(const MuonTileID& tile, 
+                                      double& x, double& deltax,
+                                      double& y, double& deltay,
+                                      double& z, double& deltaz){
+
+  bool m_debug = true;
+
+  if( 0 == m_logVertGridX.size() ){
+    std::cout<<" The channel / pad grids have not been initialized!!!! Why? "<<std::endl;
+    fillChambersVector(this->dataSvc());
+    std::cout<<" Called initialization "<<std::endl;
+    if( 0 == m_logVertGridX.size() ){
+      std::cout<<" Initialization failed!"<<std::endl;
+      return StatusCode::FAILURE;
+    }
+  }
+
+  // OK how to make this work.....
+  // first locate the station and region from the tile
+  unsigned int station = tile.station();
+  unsigned int region  = tile.region();
+  MsgStream msg(msgSvc(), name());
+  msg << MSG::DEBUG << "Tile details:: st " <<station<<"; reg "<<region<<
+    "; xGrid "<<tile.layout().xGrid()<<"; yGrid "<<tile.layout().yGrid()<<
+    endreq;
+  std::cout << "Tile details:: st " <<station<<"; reg "<<region<<
+    "; xGrid "<<tile.layout().xGrid()<<"; yGrid "<<tile.layout().yGrid()<<
+    std::endl;
+
+  // now compare the layout parameter to possible "levels"
+  // currently chamber, logical channel, pad
+  if( m_cgX.at(region) ==  tile.layout().xGrid() && 
+      m_cgY.at(region) ==  tile.layout().yGrid() ){
+    // chambers
+    
+    if ( m_debug ) {
+      MsgStream msg(msgSvc(), name());
+      msg << MSG::DEBUG << "Found a tile laying out chambers" << endreq;
+    }
+    StatusCode sc = StatusCode::SUCCESS;
+    //    StatusCode sc = getXYZChamberTile(tile,x,deltax,y,deltay,z,deltaz);
+    if(!sc.isSuccess()){
+      MsgStream msg(msgSvc(), name());
+      msg << MSG::ERROR << "Failed to get xyz from chamber" << endreq;
+      return sc;
+    }
+  }
+  else if( m_padGridX[station*4 + region] == 
+	   tile.layout().xGrid() && 
+	   m_padGridY[station*4 + region] == 
+	   tile.layout().yGrid() ){
+    
+    // muon pads and logical channels with a 1:1 mapping to pads
+    
+    if ( m_debug ) {
+      MsgStream msg(msgSvc(), name());
+      msg << MSG::DEBUG 
+          << "Found a tile laying out pads" 
+          << endreq;
+    }
+    StatusCode sc = StatusCode::SUCCESS;
+    //    StatusCode sc = getXYZPad(tile,x,deltax,y,deltay,z,deltaz);
+    if(!sc.isSuccess()){
+      MsgStream msg(msgSvc(), name());
+      msg << MSG::ERROR << "Failed to get xyz from chamber" << endreq;
+      return sc;
+    }
+  }else if( m_logHorizGridX[station*4 + region] == 
+            tile.layout().xGrid() && 
+            m_logHorizGridY[station*4 + region] == 
+            tile.layout().yGrid() ){
+
+    // horizontal logical channels            
+
+    if ( m_debug ) {
+      MsgStream msg(msgSvc(), name());
+      msg << MSG::DEBUG 
+          << "Found a tile laying out horizontal logical channels" 
+          << endreq;
+    }
+    StatusCode sc = StatusCode::SUCCESS;
+    //    StatusCode sc = getXYZLogical(tile,x,deltax,y,deltay,z,deltaz);
+    if(!sc.isSuccess()){
+      MsgStream msg(msgSvc(), name());
+      msg << MSG::ERROR << "Failed to get xyz from chamber" << endreq;
+      return sc;
+    }
+  }else if( m_logVertGridX[station*4 + region] == 
+            tile.layout().xGrid() && 
+            m_logVertGridY[station*4 + region] == 
+            tile.layout().yGrid() ){
+
+    // vertical logical channels            
+
+    if ( m_debug ) {
+      MsgStream msg(msgSvc(), name());
+      msg << MSG::DEBUG 
+          << "Found a tile laying out vertical logical channels" 
+          << endreq;
+    }
+    StatusCode sc = StatusCode::SUCCESS;
+    //    StatusCode sc = getXYZLogical(tile,x,deltax,y,deltay,z,deltaz);
+    if(!sc.isSuccess()){
+      MsgStream msg(msgSvc(), name());
+      msg << MSG::ERROR << "Failed to get xyz from chamber" << endreq;
+      return sc;
+    }
+  } else if( 1 == tile.layout().xGrid() && 1 == tile.layout().yGrid() ) {
+
+    if ( m_debug ) {
+      MsgStream msg(msgSvc(), name());
+      msg << MSG::DEBUG 
+          << "Found a tile laying out Twelfths" << endreq;
+    }
+    StatusCode sc = StatusCode::SUCCESS;
+    //    StatusCode sc = getXYZTwelfth(tile,x,deltax,y,deltay,z,deltaz);
+    if(!sc.isSuccess()){
+      MsgStream msg(msgSvc(), name());
+      msg << MSG::ERROR << "Failed to get xyz from twelfth" << endreq;
+      return sc;
+    }
+
+  } else {
+    MsgStream msg(msgSvc(), name());
+    msg << MSG::ERROR 
+        << "Did not understand the MuonTileID encoding" 
+        << " xGrid=" << tile.layout().xGrid() 
+        << " yGrid=" << tile.layout().yGrid() 
+        <<endreq;
+    return StatusCode::FAILURE;
+  }
+
+  return StatusCode::SUCCESS;
+
+}
+
+
+StatusCode MuonChamberLayout::fillSystemGrids(DeMuonChamber *deChmb, 
+					      int vIdx, int reg){
+
+  //Getting the grid pointer
+  Condition* aGrid = deChmb->condition((deChmb->getGridName()).data());
+  MuonChamberGrid* theGrid = dynamic_cast<MuonChamberGrid*>(aGrid);
+
+  if(!theGrid) {return StatusCode::FAILURE;}
+
+  std::vector<int> readoutType = theGrid->getReadoutGrid();
+  std::vector<int> mapType = theGrid->getMapGrid();
+
+  //Phys Channels Vectors
+  int grX  =  m_cgX.at(reg)*theGrid->getGrid1SizeX(); 
+  int grY  =  m_cgY.at(reg)*theGrid->getGrid1SizeY();
+  int SgrX =  m_cgX.at(reg)*theGrid->getGrid2SizeX(); 
+  int SgrY =  m_cgY.at(reg)*theGrid->getGrid2SizeY();
+
+  //Log channels multipl
+  int xm0(0),xm1(0),ym0(0),ym1(0);
+  xm0 = mapType.at(0);	  ym0 = mapType.at(1);
+  if(mapType.size()==4) {
+    xm1 = mapType.at(2);	  ym1 = mapType.at(3);
+  }
+  std::cout<<grX<<" "<<xm0<<" "<<grY<<" "<<ym0<<" "<<SgrX<<" "<<xm1<<" "<<SgrY<<" "<<ym1<<std::endl;
+
+  //Service variables
+  int axm0(0),axm1(0),aym0(0),aym1(0);
+  int agrX(0),agrY(0),aSgrX(0),aSgrY(0);
+
+  //Only one readout
+  if(readoutType.size() == 1) {
+    // and only one map
+    if( mapType.size() == 2 ){
+      // so horiz, vert and pad all same
+      m_logHorizGridX.at(vIdx) = grX / xm0;
+      m_logHorizGridY.at(vIdx) = grY / ym0;
+      m_logVertGridX.at(vIdx) = grX / xm0;
+      m_logVertGridY.at(vIdx) = grY / ym0;
+      m_padGridX.at(vIdx) = grX / xm0;
+      m_padGridY.at(vIdx) = grY / ym0;
+    } else {
+      //If two maps to be crossed
+      if(xm0 < xm1){
+	// xm0 is the vertical map, xm1 is the horizontal map
+	m_logVertGridX.at(vIdx) = grX / xm0;
+	m_logVertGridY.at(vIdx) = grY / ym0;
+		
+	m_logHorizGridX.at(vIdx) = grX / xm1;
+	m_logHorizGridY.at(vIdx) = grY / ym1;
+		
+	m_padGridX.at(vIdx) = grX / xm0;
+	m_padGridY.at(vIdx) = grY / ym1;
+      } else {
+	// xm1 is the vertical map, xm0 is the horizontal map
+	m_logVertGridX.at(vIdx) = grX / xm1;
+	m_logVertGridY.at(vIdx) = grY / ym1;
+		
+	m_logHorizGridX.at(vIdx) = grX / xm0;
+	m_logHorizGridY.at(vIdx) = grY / ym0;
+		
+	m_padGridX.at(vIdx) = grX / xm1;
+	m_padGridY.at(vIdx) = grY / ym0;
+      }
+    }
+  } else if(readoutType.size() == 2) {
+    //There are 2 different readouts
+    if( !readoutType.at(0) ){
+      //First readout is anode readout xm0
+      // must be two maps for Andode and cathode seperatly
+      if ( grX / xm0 > SgrX / xm1 ){
+	axm0 = xm0; axm1 = xm1; aym0 = ym0; aym1 = ym1;
+	agrX = grX; agrY = grY; aSgrX = SgrX; aSgrY = SgrY;
+      } else {
+	axm0 = xm1; axm1 = xm0; aym0 = ym1; aym1 = ym0;
+	agrX = SgrX; agrY = SgrY; aSgrX = grX; aSgrY = grY;
+      }
+    } else {
+      //map over was reversed, otherwise the same
+      if ( grX / xm1 > xm1 / xm0 ){
+	axm0 = xm1; axm1 = xm0; aym0 = ym1; aym1 = ym0;
+	agrX = grX; agrY = grY; aSgrX = SgrX; aSgrY = SgrY;
+      } else {
+	axm0 = xm0; axm1 = xm1; aym0 = ym0; aym1 = ym1;
+	agrX = SgrX; agrY = SgrY; aSgrX = grX; aSgrY = grY;
+      }
+    }
+
+    m_logVertGridX.at(vIdx) = agrX / axm0;
+    m_logVertGridY.at(vIdx) = agrY / aym0;
+	    
+    m_logHorizGridX.at(vIdx) = aSgrX / axm1;
+    m_logHorizGridY.at(vIdx) = aSgrY / aym1;
+	    
+    m_padGridX.at(vIdx) =  agrX / axm0;
+    m_padGridY.at(vIdx) = aSgrY / aym1;
+	    
+  } else {
+    std::cout<<"ERROR::Wrong size readout vector:: "<<readoutType.size()<<" != from 1 or 2!!!!"<<std::endl;
+  }
+  //End of FE work
+  return StatusCode::SUCCESS;
 }

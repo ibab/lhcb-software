@@ -1,4 +1,4 @@
-// $Id: MuonChamberLayout.h,v 1.2 2005-10-28 09:59:40 asarti Exp $
+// $Id: MuonChamberLayout.h,v 1.3 2005-12-07 08:46:46 asarti Exp $
 #ifndef PUBLIC_MUONCHAMBERLAYOUT_H 
 #define PUBLIC_MUONCHAMBERLAYOUT_H 1
 
@@ -64,6 +64,16 @@ public:
   //Returns the Tile for a given chamber number
   MuonTileID tileChamberNumber(int sta, int reg, int chmbNum);
 
+
+  StatusCode Tile2XYZpos(const MuonTileID& tile, 
+			 double& x, double& deltax,
+			 double& y, double& deltay,
+			 double& z, double& deltaz);
+
+  //Fill the system grids for a chamber in a given region
+  StatusCode fillSystemGrids(DeMuonChamber *deChmb, 
+			     int vIdx, int reg);
+
   //Returns the region for a given chamber with numbering scheme 
   //defined in the MuonGeometry.h file
   int findRegion(int chamber);
@@ -121,6 +131,15 @@ private:
   IDataProviderSvc* m_detSvc;
 
   unsigned int offset[4];
+
+  // size of logical channels
+  std::vector<unsigned int> m_logVertGridX;
+  std::vector<unsigned int> m_logVertGridY;
+  std::vector<unsigned int> m_logHorizGridX;
+  std::vector<unsigned int> m_logHorizGridY;
+  // size of pads
+  std::vector<unsigned int> m_padGridX;
+  std::vector<unsigned int> m_padGridY;
 
 };
 

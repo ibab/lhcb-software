@@ -1,9 +1,19 @@
-! $Id: release.notes,v 1.47 2005-11-10 11:02:10 asarti Exp $
+! $Id: release.notes,v 1.48 2005-12-07 08:46:46 asarti Exp $
 !
 ! Package     : MuonDet
 ! Responsible : Alessia Satta
 
 !========================= MuonDet v4r8 2005-07-01 =========================
+! 2005-12-07 - Alessio Sarti
+   - src/Lib/MuonChamberGrid.cpp (.h)
+   - src/Lib/DeMuonRegion.cpp (.h)
+	Removed unnecessaryvariables from Chamber Region constructor
+	and moved them to the Chamber Grid
+   - src/Lib/DeMuonDetector.cpp
+   - src/Lib/MuonChamberLayout.cpp
+	Introduced the methods needed for convertion
+	from tile to XYZ needed for muonId. Still needs to be finished.
+
 ! 2005-11-05 - Alessio Sarti
    - src/Lib/MuonChamberGrid.cpp 
    - src/Lib/DeMuonDetector.cpp

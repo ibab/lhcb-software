@@ -1,4 +1,4 @@
-// $Id: MuonChamberGrid.cpp,v 1.4 2005-11-10 11:02:03 asarti Exp $
+// $Id: MuonChamberGrid.cpp,v 1.5 2005-12-07 08:46:46 asarti Exp $
 // Include files 
 
 // local
@@ -31,6 +31,7 @@ MuonChamberGrid::MuonChamberGrid() {
   m_x_pad_rdout2.clear();
   m_y_pad_rdout2.clear();
   m_readoutType.clear();
+  m_mapType.clear();
 }
 //=============================================================================
 // Destructor
@@ -53,6 +54,7 @@ StatusCode MuonChamberGrid::initialize(){
   m_x_pad_rdout2     = param< std::vector<double> >("xrd2");
   m_y_pad_rdout2     = param< std::vector<double> >("yrd2");
   m_readoutType      = param< std::vector<int> >("grrd");
+  m_mapType          = param< std::vector<int> >("mapT");
 
 
   return StatusCode::SUCCESS;
