@@ -46,7 +46,7 @@
        init="0.0" 
       />
       <attribute
-       desc="Time (ns)"
+       desc="Time (ns) relative to the origin collision"
        name="time" 
        type="double" 
        init="0.0"
