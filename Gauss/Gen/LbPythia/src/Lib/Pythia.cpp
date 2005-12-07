@@ -1,4 +1,4 @@
-// $Id: Pythia.cpp,v 1.2 2005-11-04 11:00:09 robbep Exp $
+// $Id: Pythia.cpp,v 1.3 2005-12-07 23:06:40 robbep Exp $
 // Include files
 
 // local
@@ -18,23 +18,6 @@ Pydat3 Pythia::s_pydat3 ;
 Pydatr Pythia::s_pydatr ; 
 Pyint2 Pythia::s_pyint2 ;
 Pymssm Pythia::s_pymssm ;
-
-// PDFLIB_INIT Fortran function
-extern "C" {
-#ifdef WIN32
-  void __stdcall PDFLIB_INIT( ) ;
-#else
-  void pdflib_init_( ) ;
-#endif
-}
-
-void Pythia::PdfLib_Init() {
-#ifdef WIN32
-  PDFLIB_INIT( ) ;
-#else
-  pdflib_init_ ( ) ;
-#endif
-}
 
 // SETUSERPROCESS Fortran function
 extern "C" {
@@ -180,23 +163,6 @@ int Pythia::PyComp( int val ) {
   return PYCOMP( &val ) ;
 #else
   return pycomp_ ( &val ) ;
-#endif
-}
-
-// PDFLIB_END Fortran function
-extern "C" {
-#ifdef WIN32
-  void __stdcall PDFLIB_END( ) ;
-#else
-  void pdflib_end_ ( ) ;
-#endif
-}
-
-void Pythia::PdfLib_End( ) {
-#ifdef WIN32
-  PDFLIB_END( ) ;
-#else
-  pdflib_end_ ( ) ;
 #endif
 }
 

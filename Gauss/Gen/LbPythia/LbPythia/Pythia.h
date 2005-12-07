@@ -1,4 +1,4 @@
-// $Id: Pythia.h,v 1.2 2005-11-04 11:00:09 robbep Exp $
+// $Id: Pythia.h,v 1.3 2005-12-07 23:06:40 robbep Exp $
 #ifndef LBPYTHIA_PYTHIA_H 
 #define LBPYTHIA_PYTHIA_H 1
 
@@ -31,7 +31,6 @@ public:
   static Pyint2 & pyint2() { return s_pyint2 ; }
   static Pymssm & pymssm() { return s_pymssm ; }
 
-  static void PdfLib_Init( ) ;
   static void SetUserProcess( int val ) ;
   static void SetBeam( double p1x, double p1y, double p1z ,
                        double p2x, double p2y, double p2z ) ;
@@ -42,7 +41,6 @@ public:
   static void PyEvnt( ) ;
   static int LunHep( int val ) ;
   static int PyComp( int val ) ;
-  static void PdfLib_End( ) ;
   static void PyStat( int val ) ;
   static void PyEdit( int val ) ;
   static void PyExec( ) ;
