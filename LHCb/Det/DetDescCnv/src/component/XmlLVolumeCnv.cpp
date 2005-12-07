@@ -1,4 +1,4 @@
-// $Id: XmlLVolumeCnv.cpp,v 1.6 2005-12-05 18:06:48 jpalac Exp $ 
+// $Id: XmlLVolumeCnv.cpp,v 1.7 2005-12-07 08:38:57 jpalac Exp $ 
 // Include files
 #include "GaudiKernel/CnvFactory.h"
 #include "GaudiKernel/GenericAddress.h"
@@ -911,17 +911,16 @@ XmlLVolumeCnv::expandParamPhysVol
       newPvi->logvolName = (*it)->logvolName;
       if (0 == (*it)->transformation) {
         Gaudi::Transform3D* transformation =
-          new Gaudi::Transform3D(Gaudi::Rotation3D(), translations[step]);
+          new Gaudi::Transform3D(translations[step]);
         *transformation = *transformation * 
-          Gaudi::Transform3D(rotations[step], Gaudi::XYZVector() );
+          Gaudi::Transform3D(rotations[step] );
         newPvi->transformation = transformation;
       } else {
         (*it)->transformation->GetDecomposition(tmpRot, tmpTrans);
         Gaudi::Transform3D *transformation =
-          new Gaudi::Transform3D (Gaudi::Rotation3D(), 
-                                  translations[step] + tmpTrans );
+          new Gaudi::Transform3D (translations[step] + tmpTrans );
         *transformation = *transformation * 
-          Gaudi::Transform3D( rotations[step]*tmpRot, Gaudi::XYZVector() );
+          Gaudi::Transform3D( rotations[step]*tmpRot );
         newPvi->transformation = transformation;
       }
       result->push_back (newPvi);
@@ -1842,8 +1841,7 @@ Gaudi::Transform3D* XmlLVolumeCnv::dealWithPosXYZ (xercesc::DOMElement* element)
   }
 
   // builds the translation.
-  return new Gaudi::Transform3D(Gaudi::Rotation3D(), 
-                                Gaudi::XYZVector(x, y, z) );
+  return new Gaudi::Transform3D(Gaudi::XYZVector(x, y, z) );
 } // end dealWithPosXYZ
 
 
@@ -1857,11 +1855,12 @@ Gaudi::Transform3D* XmlLVolumeCnv::dealWithPosRPhiZ (xercesc::DOMElement* elemen
   std::string zAttribute = dom2Std (element->getAttribute (zString));
 
   // computes the values
-  double r = 0.0;
-  double phi = 0.0;
+  double rho = 0.0;
   double z = 0.0;
+  double phi = 0.0;
+
   if (!rAttribute.empty()) {
-    r = xmlSvc()->eval(rAttribute);
+    rho = xmlSvc()->eval(rAttribute);
   }
   if (!phiAttribute.empty()) {
     phi = xmlSvc()->eval(phiAttribute, false);
@@ -1870,7 +1869,7 @@ Gaudi::Transform3D* XmlLVolumeCnv::dealWithPosRPhiZ (xercesc::DOMElement* elemen
     z = xmlSvc()->eval(zAttribute);
   }
   // checks the validity of the value of r
-  if (0.0 > r) {
+  if (0.0 > rho) {
     throw XmlCnvException
       (" RPhiZTranslation : r must be non-negative value !", CORRUPTED_DATA);
   }
@@ -1878,9 +1877,7 @@ Gaudi::Transform3D* XmlLVolumeCnv::dealWithPosRPhiZ (xercesc::DOMElement* elemen
   // builds the translation.
 
   return new Gaudi::Transform3D(Gaudi::Rotation3D(),
-                                Gaudi::XYZVector( r*std::cos(phi),
-                                                  r*std::sin(phi),
-                                                  z)                );
+                                Gaudi::RhoZPhiVector( rho, z, phi ) );
 } // end dealWithPosRPhiZ
 
 
@@ -1943,11 +1940,11 @@ Gaudi::Transform3D* XmlLVolumeCnv::dealWithRotXYZ (xercesc::DOMElement* element)
   }
 
   // computes the rotation
-  Gaudi::Rotation3D result = Gaudi::Rotation3D( Gaudi::RotationX(rx) ) *
-    Gaudi::Rotation3D( Gaudi::RotationY(ry) ) *
-    Gaudi::Rotation3D( Gaudi::RotationZ(rz) );
+  Gaudi::Rotation3D result = Gaudi::RotationX(rx) * 
+    Gaudi::RotationY(ry) *
+    Gaudi::RotationZ(rz);
 
-  return new Gaudi::Transform3D(result, Gaudi::XYZVector());
+  return new Gaudi::Transform3D(result);
 } // end dealWithRotXYZ
 
 
