@@ -3,7 +3,7 @@
 <gdd>
 
 <!-- **************************************************************************
-  * $Id: RichSmartID.xml,v 1.22 2005-12-07 13:27:50 jonrob Exp $
+  * $Id: RichSmartID.xml,v 1.23 2005-12-07 13:51:38 jonrob Exp $
   *****************************************************************************
   * XML-description of RichSmartID class                                      *
   * author: Chris Jones   Christopher.Rob.Jones@cern.ch                       *
@@ -27,7 +27,7 @@
         <template name = "VectorDict" t1="THIS"/>
 
         <typedef access="PUBLIC" def="KeyType"    desc="Type for internal key"     type="unsigned long"/>
-        <typedef access="PUBLIC" def="Collection" desc="Container of RichSmartIDs" type="std::vector&lt;RichSmartID&gt;"/>
+        <typedef access="PUBLIC" def="Vector"     desc="Vector of RichSmartIDs" type="std::vector&lt;RichSmartID&gt;"/>
 
         <attribute 
             desc = "The bit-packed internal data word" 
