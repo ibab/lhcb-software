@@ -1,4 +1,4 @@
-// $Id: XmlCnvSvc.h,v 1.7 2005-07-07 13:01:10 marcocle Exp $
+// $Id: XmlCnvSvc.h,v 1.8 2005-12-07 15:08:51 jpalac Exp $
 
 #ifndef DETDESCCNV_XMLCNVSVC_H
 #define DETDESCCNV_XMLCNVSVC_H
@@ -6,11 +6,12 @@
 // Include files
 #include "XmlTools/IXmlSvc.h"
 #include "XmlTools/IXmlParserSvc.h"
+#include "XmlTools/Evaluator.h"
 #include "GaudiKernel/IOpaqueAddress.h"
 #include "GaudiKernel/ConversionSvc.h"
 #include "GaudiKernel/ICnvManager.h"
 #include "GaudiKernel/System.h"
-#include "CLHEP/Evaluator/Evaluator.h"
+
 
 // Forward and external declarations
 template <class TYPE> class SvcFactory;
@@ -267,7 +268,7 @@ private:
   IXmlParserSvc* m_parserSvc;
 
   /// Numerical expressions parser
-  HepTool::Evaluator m_xp;
+  XmlTools::Evaluator m_xp;
 
   /**
    * Property triggering generic conversion of user defined detector

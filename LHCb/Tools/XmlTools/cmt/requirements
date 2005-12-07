@@ -1,7 +1,7 @@
-# $Id: requirements,v 1.14 2005-11-17 17:01:49 marcocle Exp $ 
+# $Id: requirements,v 1.15 2005-12-07 15:08:51 jpalac Exp $ 
 # =============================================================================
 package       XmlTools
-version       v3r8
+version       v3r9
 
 # =========== structure =======================================================
 branches      XmlTools doc cmt src
@@ -12,10 +12,11 @@ include_dirs  $(XMLTOOLSROOT)
 # =========== dependencies ====================================================
 use           GaudiKernel       v*
 use           XercesC           v*	LCG_Interfaces 
-use           CLHEP             v*	LCG_Interfaces 
 
 # =========== constituents =====================================================
+library       XmlToolsLib        Lib/*.cpp
 library       XmlTools           component/*.cpp
 
 # =========== standard patterns (the order is essential!) ====================== 
 apply_pattern component_library library=XmlTools 
+apply_pattern linker_library    library=XmlToolsLib 

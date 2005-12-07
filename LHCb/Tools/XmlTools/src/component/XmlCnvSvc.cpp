@@ -1,4 +1,4 @@
-// $Id: XmlCnvSvc.cpp,v 1.8 2005-09-19 13:40:46 marcocle Exp $
+// $Id: XmlCnvSvc.cpp,v 1.9 2005-12-07 15:08:51 jpalac Exp $
 
 // Include Files
 #include <xercesc/util/PlatformUtils.hpp>
@@ -305,30 +305,30 @@ double XmlCnvSvc::eval (const char* expr, bool check) {
   double value = m_xp.evaluate( expr );
   std::string errtxt;
   switch (m_xp.status()) {
-  case HepTool::Evaluator::OK :
+  case XmlTools::Evaluator::OK :
     return value;
-  case HepTool::Evaluator::ERROR_NOT_A_NAME :
+  case XmlTools::Evaluator::ERROR_NOT_A_NAME :
     errtxt = "NOT_A_NAME";
     break;
-  case HepTool::Evaluator::ERROR_SYNTAX_ERROR :
+  case XmlTools::Evaluator::ERROR_SYNTAX_ERROR :
     errtxt = "SYNTAX_ERROR";
     break;
-  case HepTool::Evaluator::ERROR_UNPAIRED_PARENTHESIS :
+  case XmlTools::Evaluator::ERROR_UNPAIRED_PARENTHESIS :
     errtxt = "UNPAIRED_PARENTHESIS";
     break;
-  case HepTool::Evaluator::ERROR_UNEXPECTED_SYMBOL :
+  case XmlTools::Evaluator::ERROR_UNEXPECTED_SYMBOL :
     errtxt = "UNEXPECTED_SYMBOL";
     break;
-  case HepTool::Evaluator::ERROR_UNKNOWN_VARIABLE :
+  case XmlTools::Evaluator::ERROR_UNKNOWN_VARIABLE :
     errtxt = "UNKNOWN_VARIABLE";
     break;
-  case HepTool::Evaluator::ERROR_UNKNOWN_FUNCTION :
+  case XmlTools::Evaluator::ERROR_UNKNOWN_FUNCTION :
     errtxt = "UNKNOWN_FUNCTION";
     break;
-  case HepTool::Evaluator::ERROR_EMPTY_PARAMETER :
+  case XmlTools::Evaluator::ERROR_EMPTY_PARAMETER :
     errtxt = "EMPTY_PARAMETER";
     break;
-  case HepTool::Evaluator::ERROR_CALCULATION_ERROR :
+  case XmlTools::Evaluator::ERROR_CALCULATION_ERROR :
     errtxt = "CALCULATION_ERROR";
     break;
   default :
@@ -359,7 +359,7 @@ bool XmlCnvSvc::addParameter (const std::string& name,
 // -----------------------------------------------------------------------
 bool XmlCnvSvc::addParameter (const char* name, const char* expr) {
   m_xp.setVariable (name, expr);
-  if (m_xp.status() == HepTool::Evaluator::OK) return true;
+  if (m_xp.status() == XmlTools::Evaluator::OK) return true;
   else return false;
 }
 
@@ -369,7 +369,7 @@ bool XmlCnvSvc::addParameter (const char* name, const char* expr) {
 // -----------------------------------------------------------------------
 bool XmlCnvSvc::addParameter (const char* name, double value) {
   m_xp.setVariable (name, value);
-  if (m_xp.status() == HepTool::Evaluator::OK) {
+  if (m_xp.status() == XmlTools::Evaluator::OK) {
     return true;
   } else {
     return false;
@@ -390,7 +390,7 @@ bool XmlCnvSvc::removeParameter (const std::string& name) {
 // -----------------------------------------------------------------------
 bool XmlCnvSvc::removeParameter (const char* name) {
   m_xp.removeVariable (name);
-  if (m_xp.status() == HepTool::Evaluator::OK) {
+  if (m_xp.status() == XmlTools::Evaluator::OK) {
     return true;
   } else {
     return false;
