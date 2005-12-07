@@ -1,9 +1,16 @@
 ! =============================================================================
-! $Id: release.notes,v 1.240 2005-12-07 14:10:16 cattanem Exp $ 
+! $Id: release.notes,v 1.241 2005-12-07 17:30:33 cattanem Exp $ 
 ! =============================================================================
 ! package DetDesc
 ! package manager : Marco Clemencic, Juan Palacios
 ! =============================================================================
+
+!======================== DetDesc v16r1 2005-12-07 ========================
+! 2005-12-07 - Marco Cattaneo
+ - Remove component library:
+   . Object factories are now in link library
+   . Services moved to new DetDescSvc package
+   . Job option ApplicationMgr.DLLs += { "DetDesc" } is obsolete
 
 !======================== DetDesc v16r0 2005-12-07 ========================
 ! *********** Requires MathCore-5_06_02 or higher.************************

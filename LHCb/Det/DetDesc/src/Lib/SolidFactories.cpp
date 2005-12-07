@@ -1,8 +1,11 @@
-// $Id: SolidFactories.cpp,v 1.4 2002-05-04 13:13:25 ibelyaev Exp $
+// $Id: SolidFactories.cpp,v 1.1 2005-12-07 17:30:33 cattanem Exp $
 // ===========================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ===========================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.4  2002/05/04 13:13:25  ibelyaev
+//  see $DETDESCROOT/doc/release.notes ( 4 May 2002 )
+//
 // ===========================================================================
 // DetDesc includes
 #include "DetDesc/SolidFactory.h"

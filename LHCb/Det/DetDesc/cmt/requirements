@@ -1,7 +1,7 @@
-# $Id: requirements,v 1.74 2005-12-07 07:33:50 cattanem Exp $ 
+# $Id: requirements,v 1.75 2005-12-07 17:30:32 cattanem Exp $ 
 # =============================================================================
 package       DetDesc
-version       v16r0
+version       v16r1
 
 # =========== structure =======================================================
 branches      DetDesc doc cmt src
@@ -11,13 +11,12 @@ include_dirs  $(DETDESCROOT)
 
 # =========== dependencies ====================================================
 use           GaudiKernel       v*
-#use           CLHEP             v* LCG_Interfaces # Needed for Plane3D
 use           LHCbDefinitions   v* Kernel
 
 # =========== constituents ====================================================
 library       DetDescLib        Lib/*.cpp
-library       DetDesc           component/*.cpp
 
 # =========== standard patterns (the order is essential!) =====================
-apply_pattern component_library library=DetDesc 
 apply_pattern linker_library    library=DetDescLib 
+macro_append DetDesc_linkopts "" \
+                        WIN32 "/include:_DetDesc_loadRef"
