@@ -1,4 +1,4 @@
-// $Id: SolidPolycone.h,v 1.5 2005-12-02 18:36:55 jpalac Exp $ 
+// $Id: SolidPolycone.h,v 1.6 2005-12-07 07:33:49 cattanem Exp $ 
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
@@ -11,10 +11,10 @@
 #include <functional>
 #include <algorithm>
 #include <vector>
-/// CLHEP 
+/// LHCbDefinitions
 #include "Kernel/Point3DTypes.h"
 #include "Kernel/Vector3DTypes.h"
-#include "CLHEP/Units/PhysicalConstants.h"
+#include "Kernel/PhysicalConstants.h"
 /// DetDesc 
 #include "DetDesc/SolidBase.h" 
 /// forward declarations 

@@ -1,9 +1,11 @@
-// $Id: SolidTrd.cpp,v 1.14 2005-12-02 18:36:56 jpalac Exp $ 
+// $Id: SolidTrd.cpp,v 1.15 2005-12-07 07:33:50 cattanem Exp $ 
 // ===========================================================================
 // CVS $Name: not supported by cvs2svn $ 
 // ===========================================================================
-// $Log:
-// ===========================================================================
+
+// LHCbDefinitions
+#include "Kernel/PhysicalConstants.h" 
+
 // DetDesc
 #include "DetDesc/DetDesc.h" 
 #include "DetDesc/SolidTrd.h" 

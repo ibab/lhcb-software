@@ -1,8 +1,8 @@
-// $Id: SolidPolycone.cpp,v 1.9 2005-12-05 16:18:43 jpalac Exp $
+// $Id: SolidPolycone.cpp,v 1.10 2005-12-07 07:33:50 cattanem Exp $
 // ============================================================================
 #include "DetDesc/SolidPolycone.h"
-// CLHEP
-#include "CLHEP/Units/PhysicalConstants.h"
+// LHCbDefintions
+#include "Kernel/PhysicalConstants.h"
 // GaudiKernel
 #include "GaudiKernel/StreamBuffer.h"
 #include "GaudiKernel/MsgStream.h"

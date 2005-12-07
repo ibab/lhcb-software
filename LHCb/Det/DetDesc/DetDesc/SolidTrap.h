@@ -1,4 +1,4 @@
-// $Id: SolidTrap.h,v 1.12 2005-12-02 18:36:55 jpalac Exp $
+// $Id: SolidTrap.h,v 1.13 2005-12-07 07:33:49 cattanem Exp $
 /// ===========================================================================
 /// CVS tag $Name: not supported by cvs2svn $ 
 /// ===========================================================================
@@ -9,11 +9,10 @@
 #include <cmath>
 #include <iostream> 
 
-/** CLHEP incluides */
+/** LHCbDefinitions */
 #include "Kernel/Point3DTypes.h" 
 #include "Kernel/Vector3DTypes.h" 
 #include "Kernel/Plane3DTypes.h" 
-#include "CLHEP/Units/PhysicalConstants.h" 
 
 /** DetDesc includes */ 
 #include "DetDesc/SolidBase.h" 
@@ -219,23 +218,3 @@ private:
 /// ===========================================================================
 #endif ///< DETDESC_SOLIDTRAP_H
 /// ===========================================================================
- 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

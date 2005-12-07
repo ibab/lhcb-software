@@ -1,24 +1,16 @@
-// $Id: SolidTubs.h,v 1.10 2005-12-02 18:36:55 jpalac Exp $
+// $Id: SolidTubs.h,v 1.11 2005-12-07 07:33:50 cattanem Exp $
 // ===========================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
-// ===========================================================================
-// $Log: not supported by cvs2svn $
-// Revision 1.9  2002/05/13 18:29:53  ibelyaev
-//  see $DETDESCROOT/doc/release.notes 13 May 2002
-//
-// Revision 1.8  2002/05/11 18:25:46  ibelyaev
-//  see $DETDESCROOT/doc/release.notes 11 May 2002
-//
 // ===========================================================================
 #ifndef     DETDESC_SOLIDTUBS_H
 #define     DETDESC_SOLIDTUBS_H 1  
 // STD and STL includes 
 #include <cmath>
 #include <iostream>
-// CLHEP includes 
+// LHCbDefinitions includes 
 #include "Kernel/Point3DTypes.h" 
 #include "Kernel/Vector3DTypes.h"
-#include "CLHEP/Units/PhysicalConstants.h" 
+#include "Kernel/PhysicalConstants.h" 
 // DetDesc 
 #include "DetDesc/SolidBase.h" 
 // forward declarations

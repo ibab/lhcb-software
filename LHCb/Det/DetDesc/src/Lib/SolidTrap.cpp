@@ -1,8 +1,11 @@
-// $Id: SolidTrap.cpp,v 1.16 2005-12-02 18:36:56 jpalac Exp $
+// $Id: SolidTrap.cpp,v 1.17 2005-12-07 07:33:50 cattanem Exp $
 // ===========================================================================
 /**  GaudiKernel package */  
 #include "GaudiKernel/IInspector.h"
 #include "GaudiKernel/StreamBuffer.h" 
+
+// LHCbDefinitions
+#include "Kernel/PhysicalConstants.h" 
 
 /**  DetDesc package */ 
 #include "DetDesc/SolidTrd.h" 

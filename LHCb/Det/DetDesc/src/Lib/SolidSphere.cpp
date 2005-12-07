@@ -1,22 +1,11 @@
-// $Id: SolidSphere.cpp,v 1.14 2005-12-02 18:36:56 jpalac Exp $ 
+// $Id: SolidSphere.cpp,v 1.15 2005-12-07 07:33:50 cattanem Exp $ 
 // ===========================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ===========================================================================
-// $Log: not supported by cvs2svn $
-// Revision 1.13  2003/05/16 13:59:14  ibelyaev
-//  fix of ancient saga with 'double deletion of solids'
-//
-// Revision 1.12  2003/04/04 15:54:08  ibelyaev
-//  remove bugs from 'setBP' method
-//
-// Revision 1.11  2003/04/03 10:56:36  ibelyaev
-//  fix the problems with  evaluation of xmin/xmax/ymin/ymax
-//
-// ===========================================================================
 // STD & STL 
 #include <algorithm>
-// CLHEP 
-#include "CLHEP/Units/PhysicalConstants.h" 
+// LHCbDefinitions 
+#include "Kernel/PhysicalConstants.h" 
 #include "Kernel/Point3DTypes.h" 
 #include "Kernel/Vector3DTypes.h" 
 /// GaudiKernel

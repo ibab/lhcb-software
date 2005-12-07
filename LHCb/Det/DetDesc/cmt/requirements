@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.73 2005-12-05 17:11:19 cattanem Exp $ 
+# $Id: requirements,v 1.74 2005-12-07 07:33:50 cattanem Exp $ 
 # =============================================================================
 package       DetDesc
 version       v16r0
@@ -11,7 +11,7 @@ include_dirs  $(DETDESCROOT)
 
 # =========== dependencies ====================================================
 use           GaudiKernel       v*
-use           CLHEP             v* LCG_Interfaces # Needed for Plane3D
+#use           CLHEP             v* LCG_Interfaces # Needed for Plane3D
 use           LHCbDefinitions   v* Kernel
 
 # =========== constituents ====================================================

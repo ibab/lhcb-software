@@ -1,29 +1,9 @@
-// $Id: SolidCons.cpp,v 1.14 2005-12-02 18:36:56 jpalac Exp $ 
+// $Id: SolidCons.cpp,v 1.15 2005-12-07 07:33:50 cattanem Exp $ 
 // ===========================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ===========================================================================
-// $Log: not supported by cvs2svn $
-// Revision 1.13  2003/05/16 13:59:14  ibelyaev
-//  fix of ancient saga with 'double deletion of solids'
-//
-// Revision 1.12  2003/04/04 15:54:07  ibelyaev
-//  remove bugs from 'setBP' method
-//
-// Revision 1.11  2003/04/03 10:56:36  ibelyaev
-//  fix the problems with  evaluation of xmin/xmax/ymin/ymax
-//
-// Revision 1.10  2002/05/14 09:00:15  ibelyaev
-//  minor change
-//
-// Revision 1.9  2002/05/13 18:29:54  ibelyaev
-//  see $DETDESCROOT/doc/release.notes 13 May 2002
-//
-// Revision 1.8  2002/05/11 18:25:47  ibelyaev
-//  see $DETDESCROOT/doc/release.notes 11 May 2002
-//
-// ===========================================================================
-// CLHEP
-#include "CLHEP/Units/PhysicalConstants.h"
+// Units
+#include "Kernel/PhysicalConstants.h"
 // GaudiKernel
 #include "GaudiKernel/StreamBuffer.h"
 #include "GaudiKernel/MsgStream.h"

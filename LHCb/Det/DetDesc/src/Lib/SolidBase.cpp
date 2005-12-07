@@ -1,7 +1,7 @@
-// $Id: SolidBase.cpp,v 1.11 2005-12-02 18:36:56 jpalac Exp $
+// $Id: SolidBase.cpp,v 1.12 2005-12-07 07:33:50 cattanem Exp $
 
-// CLHEP
-#include "CLHEP/Units/SystemOfUnits.h"
+// Units
+#include "Kernel/SystemOfUnits.h"
 // GaudiKernel
 #include "GaudiKernel/StreamBuffer.h"
 /// DetDesc 

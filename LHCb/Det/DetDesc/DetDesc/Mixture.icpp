@@ -1,9 +1,9 @@
-// $Id: Mixture.icpp,v 1.3 2005-06-13 11:34:29 cattanem Exp $
+// $Id: Mixture.icpp,v 1.4 2005-12-07 07:33:49 cattanem Exp $
 #ifndef    DETDESC_MIXTURE_ICPP 
 #define    DETDESC_MIXTURE_ICPP 1 
 
 #include "DetDesc/Mixture.h"
-#include "CLHEP/Units/PhysicalConstants.h"
+#include "Kernel/PhysicalConstants.h"
 
 /////////////////////////////////////////////////////////////////////////////////
 inline const int    Mixture::nOfItems() const { return m_elements.size(); }

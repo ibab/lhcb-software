@@ -1,26 +1,14 @@
-// $Id: SolidSphere.h,v 1.11 2005-12-02 18:36:55 jpalac Exp $ 
+// $Id: SolidSphere.h,v 1.12 2005-12-07 07:33:49 cattanem Exp $ 
 // ===========================================================================
 // CVS $Name: not supported by cvs2svn $ 
-// ===========================================================================
-// $Log: not supported by cvs2svn $
-// Revision 1.10  2002/10/29 13:49:36  ranjard
-// v11r2 - head revision uses new versions and contains all bug fixes and new features
-//
-// Revision 1.9.4.1  2002/10/29 13:29:34  ranjard
-// v10r5 - built on v10r3b branch - bug fix in SolidSphere.h
-//
-// Revision 1.9  2002/05/21 17:02:57  ibelyaev
-//  bug fix for SolidSphere
-//
-// Revision 1.8  2002/05/11 18:25:46  ibelyaev
-//  see $DETDESCROOT/doc/release.notes 11 May 2002
-//
 // ===========================================================================
 #ifndef     DETDESC_SOLIDSPHERE_H
 #define     DETDESC_SOLIDSPHERE_H 1 
 /// DetDesc 
 #include "DetDesc/SolidBase.h" 
-/// DetDesc 
+/// LHCbDefinitions
+#include "Kernel/PhysicalConstants.h" 
+
 template <class TYPE>
 class SolidFactory;
 
