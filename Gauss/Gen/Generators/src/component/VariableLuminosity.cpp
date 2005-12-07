@@ -1,4 +1,4 @@
-// $Id: VariableLuminosity.cpp,v 1.2 2005-11-29 15:59:21 robbep Exp $
+// $Id: VariableLuminosity.cpp,v 1.3 2005-12-07 22:51:01 robbep Exp $
 // Include files 
 
 // local
@@ -10,6 +10,9 @@
 
 // From CLHEP
 #include "CLHEP/Units/SystemOfUnits.h"
+
+// From Generators
+#include "Generators/GenCounters.h"
 
 //-----------------------------------------------------------------------------
 // Implementation file for class : VariableLuminosity
@@ -101,11 +104,10 @@ unsigned int VariableLuminosity::numberOfPileUp( double & currentLuminosity ) {
 // Print the specific pile up counters
 //=============================================================================
 void VariableLuminosity::printPileUpCounters( ) {
+  using namespace GenCounters ;
   info() << "***********   Luminosity counters   **************" << std::endl ;
-  info() << "Total number of events (including empty events)  : " 
-         << m_nEvents << std::endl ;
-  info() << "Number of events with 0 interactions             : "
-         << m_numberOfZeroInteraction << std::endl ;
+  printCounter( info() , "all events (including empty events)" , m_nEvents ) ;
+  printCounter( info() , "with 0 interaction" , m_numberOfZeroInteraction ) ;
   info() << endmsg ;
 }
 
