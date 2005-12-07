@@ -24,7 +24,7 @@ namespace {
         trnumber = *e.data;
       }
       else if( trnumber != *e.data ) {
-        ::printf("======= Mismatch [%d] found %d %d [0x%p]\n",++nbad, trnumber, *e.data, e.data);
+        ::printf("======= Mismatch [%d] found %d %d [0x%p]\n",++nbad, trnumber, *e.data, (void*)e.data);
         trnumber = *e.data;
       }
       trnumber++;

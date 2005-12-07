@@ -215,7 +215,7 @@ const char* lib_rtl_error_message(int status)  {
 int lib_rtl_default_return()  {
 #if defined(_VMS) || defined(_WIN32)
   return 1;
-#elif defined(linux) || defined(_OSK}
+#elif defined(linux) || defined(_OSK)
   return 0;
 #else
 #endif

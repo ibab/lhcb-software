@@ -1,26 +1,13 @@
-/*-----------------------------------------------------------------------*/
-/*
-*   OS-9 BUFFER MANAGER
-*   TRAP MODULE  (C ROUTINES)
-*
-* Edition History
-*
-*  #   Date     Comments                                              By
-* -- -------- ------------------------------------------------------ ---
-*  0  28/09/88  Initial version                                       PM
-*  1  11/11/88  Released version 1.0                                  PM
-*  2  29/11/88  Multibuffer and spy introduced                        PM
-*  3  15/12/88  Released version 2.0                                  PM
-*  4  14/03/89  Minor corrections                                     PM
-*  5  24/09/91  Allow waiting space and event at the same time        PM
-*  6  06/10/92  Add update request for reformatting tasks          PM/BJ
-* ---
-*  7  ??/12/92  Multi-Buffer Manager calls                            BJ
-*  8  25/03/93  Basic clean-up                                      AMi8
-*  9  10/10/06  Major cleanup, move to C++ and implementation
-*               on linux and WIN32                                   MSF
-*/
-/*-----------------------------------------------------------------------*/
+/*-----------------------------------------------------------------------
+ *
+ *   OS-9 BUFFER MANAGER
+ *
+ * Edition History
+ *
+ *  #   Date     Comments                                              By
+ * -- -------- ------------------------------------------------------ ---
+ *  0  28/09/88  Initial version                                       MF
+ *-----------------------------------------------------------------------*/
 #define MBM_IMPLEMENTATION
 
 #include <cstdlib>
@@ -35,7 +22,7 @@ struct MEPDESC : public _MEPID  {
   int             owner;
   lib_rtl_lock_t  lockid;
   char            mutexName[64];
-  MEPDESC() : lockid(0), owner(0)  {
+  MEPDESC() : owner(0), lockid(0) {
     resBuffer = MBM_INV_DESC;
     evtBuffer = MBM_INV_DESC;
     mepBuffer = MBM_INV_DESC; 
@@ -49,9 +36,9 @@ static int _mep_change_refcount(MEPDESC* dsc,MEP_SINGLE_EVT* evt, int change)  {
       MEPEVENT* e = (MEPEVENT*)(int*)(dsc->mepStart + evt->begin);
       e->refCount += change;
       if ( e->refCount < 1 )  {
-        printf("MEP RefCount ERROR %s [%d] Event at address %p MEP:%p [%d] [Release MEP]\n",
+        printf("MEP RefCount ERROR %s [%d] Event at address %08X MEP:%p [%d] [Release MEP]\n",
           change > 0 ? "AddRef" : "DelRef", e->refCount, 
-          (int)(dsc->mepStart+evt->event), e, e->mepBufferID);
+          dsc->mepStart+evt->event, (void*)e, e->mepBufferID);
       }
       return MBM_NORMAL;
     }
@@ -68,8 +55,8 @@ static int mep_free_mep(void* param)   {
   MEPDESC* dsc = (MEPDESC*)pars[1];
   int slp = 0;
   if ( e->refCount < 1 )  {
-    printf("MEP RefCount ERROR(2) [%d] Event at address %p MEP:%p [%d] [Release MEP]\n",
-      e->refCount, (int)(dsc->mepStart+e->begin), e, e->mepBufferID);
+    printf("MEP RefCount ERROR(2) [%d] Event at address %08X MEP:%p [%d] [Release MEP]\n",
+      e->refCount, dsc->mepStart+e->begin, (void*)e, e->mepBufferID);
   }
   while ( e->refCount > 1 )  {
     //printf("Sleep...");

@@ -6,7 +6,6 @@
 #ifdef __cplusplus
 extern "C" {
 #endif
-  typedef __int64       IOSB_t;
   typedef int (*lib_rtl_qio_ast_t)(void*);
   enum IOAction {
     LIB_RTL_IO_ACCEPT,
@@ -19,7 +18,9 @@ extern "C" {
     LIB_RTL_IO_RECEIVE_WAIT
   };
   int lib_rtl_cancel_io(int channel);
-  int lib_rtl_qio(int channel, const IOAction action, IOSB_t*,lib_rtl_qio_ast_t ast,void* ast_param,      int64_t p1=0, int64_t p2=0, int64_t p3=0, int64_t p4=0);
+  int lib_rtl_qio(int channel, const IOAction action, IOSB_t* iosb,
+		  lib_rtl_qio_ast_t ast, void* ast_param,
+		  int64_t p1=0, int64_t p2=0, int64_t p3=0, int64_t p4=0);
 #ifdef __cplusplus
 }
 #endif

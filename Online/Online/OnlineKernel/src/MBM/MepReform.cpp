@@ -3,6 +3,7 @@
 #include "RTL/rtl.h"
 #include "WT/wtdef.h"
 #include "WT/wt_facilities.h"
+#include <ctype.h>
 
 namespace {
   static void help()  {
@@ -72,9 +73,9 @@ namespace {
       int trmask[4]   = {-1,-1,-1,-1};
       addRequest(1,trmask,vetomask,BM_MASK_ANY,BM_REQ_ONE,BM_FREQ_PERC,100.);
       setNonBlocking(WT_FACILITY_DAQ_EVENT, true);
-      ::printf(" MEP    buffer start: %p\n",m_mepID->mepStart);
-      ::printf(" EVENT  buffer start: %p\n",m_mepID->evtStart);
-      ::printf(" RESULT buffer start: %p\n",m_mepID->resStart);
+      ::printf(" MEP    buffer start: %08X\n",m_mepID->mepStart);
+      ::printf(" EVENT  buffer start: %08X\n",m_mepID->evtStart);
+      ::printf(" RESULT buffer start: %08X\n",m_mepID->resStart);
     }
     ~Cons()  {
       if ( m_evtProd ) delete m_evtProd;

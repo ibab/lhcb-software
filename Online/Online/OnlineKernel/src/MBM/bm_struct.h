@@ -108,7 +108,7 @@ struct USER : public qentry_t  {
   char wev_flag[32];
   char wsp_flag[32];
   inline bool isValid()   const  {
-    if ( block_id == MBM::BID_USER )   {
+    if ( block_id == int(MBM::BID_USER) )   {
       return true;
     }
     lib_rtl_signal_message(0, "mbmlib: bad USER pointer");
@@ -131,7 +131,7 @@ struct EVENT : public qentry_t {
   int ev_size;            // Event size
   int count;
   inline bool isValid()   const  {
-    if ( block_id == MBM::BID_EVENT )   {
+    if ( block_id == int(MBM::BID_EVENT) )   {
       return true;
     }
     lib_rtl_signal_message(0, "mbmlib: bad EVENT pointer");

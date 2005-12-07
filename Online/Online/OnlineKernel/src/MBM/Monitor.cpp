@@ -30,8 +30,7 @@
 #define _CHECK( x )  { int sc = x ; if ( !(sc&1) ) { printf ( "Error in:%s, status=%d\n", #x , sc ); return sc; } }
 
 static int USER_next_off;
-static char    *sstat[13] = {" nl", "   ", "*SL","*EV","*SP","WSL","WEV","WSP","wsl","wev","wsp"," ps"," ac"};
-// static char    *spy[2]  = {" ","s"};
+static const char *sstat[13] = {" nl", "   ", "*SL","*EV","*SP","WSL","WEV","WSP","wsl","wev","wsp"," ps"," ac"};
 
 int cont = 1;
 int end  = 1;
@@ -52,7 +51,7 @@ namespace MBM {
     };
     DISP_BMDES* m_bms;
     int  m_numBM;
-    int  m_currLine;
+    size_t m_currLine;
     char m_buffID[32];
     char* m_bmid;
     lib_rtl_gbl_t m_bm_all;
@@ -69,14 +68,14 @@ namespace MBM {
 
     size_t draw_line()  {
       print_char(1, m_currLine, TEE_LEFT);
-      for(int i=1; i < term_width()-1; ++i)
+      for(size_t i=1; i < term_width()-1; ++i)
         print_char(i+1, m_currLine, HORZ_BAR);
       print_char(term_width(), m_currLine, TEE_RIGHT);
       return ++m_currLine;
     }
     size_t draw_bar()  {
       print_char(1, m_currLine, VERT_BAR);
-      for(int i=1; i < term_width()-1; ++i)
+      for(size_t i=1; i < term_width()-1; ++i)
         print_char(i+1, m_currLine, FAT_VERT_BAR);
       print_char(term_width(), m_currLine, VERT_BAR);      
       return ++m_currLine;
@@ -85,11 +84,11 @@ namespace MBM {
       va_list args;
       char buffer[1024];
       va_start( args, format );
-      int len = (int)::vsprintf(buffer, format, args);
+      size_t len = ::vsprintf(buffer, format, args);
       print_char(1, m_currLine, VERT_BAR);
-      for(int j=0; j<len && j<term_width()-1; ++j)
+      for(size_t j=0; j<len && j<term_width()-1; ++j)
         print_char(j+2, m_currLine, flags|buffer[j]);
-      for(int i=len; i < term_width()-1; ++i)
+      for(size_t i=len; i < term_width()-1; ++i)
         print_char(i+2, m_currLine, ' '|flags);
       print_char(term_width(), m_currLine, VERT_BAR);
       return ++m_currLine;
@@ -98,14 +97,14 @@ namespace MBM {
       ::textcolor(YELLOW);
       m_currLine = 1;
       print_char(1,m_currLine,LEFT_UP_EDGE);
-      for(int i=1; i < term_width()-1; ++i)
+      for(size_t i=1; i < term_width()-1; ++i)
         print_char(i+1,m_currLine,HORZ_BAR);
       print_char(term_width(),m_currLine,RIGHT_UP_EDGE);      
       m_currLine = 2;
     }
     void end_update() {
       print_char(1,m_currLine,LEFT_LOW_EDGE);
-      for(int i=1; i < term_width()-1; ++i)
+      for(size_t i=1; i < term_width()-1; ++i)
         print_char(i+1,m_currLine,HORZ_BAR);
       print_char(term_width(),m_currLine,RIGHT_LOW_EDGE);      
       m_currLine++;

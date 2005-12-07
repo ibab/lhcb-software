@@ -31,8 +31,8 @@ namespace MBM {
     int   p_loc;          /* local flag                          */
     int   p_across;       /* Across memory flag                  */
     int   p_size;         /* buffer size                         */
-    int   p_base;         /* Event Buffer base address           */
-    int   spy_base;       /* Spy Memory base address             */
+    unsigned int p_base;  /* Event Buffer base address           */
+    unsigned int spy_base;/* Spy Memory base address             */
     int   p_force;        /* force deinstall                     */
 
     /* global variables          */

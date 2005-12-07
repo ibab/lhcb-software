@@ -19,9 +19,9 @@ namespace {
       include();
       m_bmid = m_mepID->mepBuffer;
       m_evtProd = new MBM::Producer(m_mepID->evtBuffer, nam, partitionID());
-      ::printf(" MEP    buffer start: %p\n",m_mepID->mepStart);
-      ::printf(" EVENT  buffer start: %p\n",m_mepID->evtStart);
-      ::printf(" RESULT buffer start: %p\n",m_mepID->resStart);
+      ::printf(" MEP    buffer start: %08X\n",m_mepID->mepStart);
+      ::printf(" EVENT  buffer start: %08X\n",m_mepID->evtStart);
+      ::printf(" RESULT buffer start: %08X\n",m_mepID->resStart);
       setNonBlocking(WT_FACILITY_DAQ_SPACE, true);
     }
     ~Prod()  {
@@ -33,7 +33,6 @@ namespace {
     int spaceAction() {
       MEPEVENT* ev = (MEPEVENT*)event().data;
       MEP_SINGLE_EVT* sub_events = ev->events;
-      int b_addr = (int)&sub_events[0];
       size_t sub_evt_len = sizeof(MEP_SINGLE_EVT);
       mep_identifier++;
       //printf("MEP address: %p\n",m_event.data);

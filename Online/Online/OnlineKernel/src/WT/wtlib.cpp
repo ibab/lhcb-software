@@ -57,7 +57,7 @@ static inline qentry *q_remove_head(qentry *head )   {
 }
 /*----------------------------------------------------------------------*/
 static inline qentry *q_remove( qentry *entry )  {
-  qentry* head = (qentry*)((char*)entry+(int64_t)entry->prev);
+  qentry* head = (qentry*)((char*)entry+(long)entry->prev);
   return q_remove_head(head);
 }
 /*----------------------------------------------------------------------*/
@@ -371,8 +371,8 @@ int wtc_wait(unsigned int* facility,void** userpar1,int* sub_status)   {
 }
 /*----------------------------------------------------------------------*/
 void wtc_print_space()   {
-  for (wt_queue_entry *fac = (wt_queue_entry*)((char*)wt_queue->next+(int64_t)wt_queue);
-    fac != (void*)wt_queue ; fac = (wt_queue_entry*)((char*)fac->next+(int64_t)fac))
+  for (wt_queue_entry *fac = (wt_queue_entry*)((char*)wt_queue->next+(long)wt_queue);
+    fac != (void*)wt_queue ; fac = (wt_queue_entry*)((char*)fac->next+(long)fac))
     _wtc_print_entry(fac);
 }
 /*----------------------------------------------------------------------*/
@@ -395,7 +395,13 @@ int wtc_error(int status)  {
   return WT_SUCCESS;
 }
 /*----------------------------------------------------------------------*/
-int wtc_add_stack(unsigned int fac,void* param)   {  if ( !inited ) return (WT_NOTINIT);  wt_queue_entry *e = new wt_queue_entry(fac, param);  insqhi(e, wt_stack);  return WT_SUCCESS;}/*----------------------------------------------------------------------*/
+int wtc_add_stack(unsigned int fac,void* param)   {
+  if ( !inited ) return (WT_NOTINIT);
+  wt_queue_entry *e = new wt_queue_entry(fac, param);
+  insqhi(e, wt_stack);
+  return WT_SUCCESS;
+}
+/*----------------------------------------------------------------------*/
 int wtc_restore_stack() {
   qentry  *entry;
   while ( 0 != (entry = q_remove_head(wt_stack)) )  {
@@ -406,8 +412,8 @@ int wtc_restore_stack() {
 /*----------------------------------------------------------------------*/
 wt_fac_entry* _wtc_find_facility(unsigned int facility,qentry* fac_head)  {
   wt_fac_entry *fac = 0;
-  for(fac = (wt_fac_entry*)((char*)fac_head->next+(int64_t)fac_head);
-    fac != (wt_fac_entry*)fac_head ; fac = (wt_fac_entry*)((char*)fac->next+(int64_t)fac))
+  for(fac = (wt_fac_entry*)((char*)fac_head->next+(long)fac_head);
+    fac != (wt_fac_entry*)fac_head ; fac = (wt_fac_entry*)((char*)fac->next+(long)fac))
     if( fac->facility == facility ) break;
   return fac;
 }

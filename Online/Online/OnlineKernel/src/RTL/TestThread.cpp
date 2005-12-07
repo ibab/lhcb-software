@@ -10,10 +10,9 @@ static int thread_routine(void* param)    {
   return 1;
 }
 
-
-extern "C" int rtl_test_thread(int,char **) {
+extern "C" int rtl_test_thread(int /* argc */, char ** /* argv */) {
   lib_rtl_thread_t handle;
-  void* param = reinterpret_cast<void*>(0xFEEDBABELL);
+  void* param = reinterpret_cast<void*>(0xFEEDBABE);
   int sc = ::lib_rtl_start_thread(thread_routine,param, &handle);
   if ( lib_rtl_is_success(sc) )  {
     ::printf("Starting new thread self=%p with param:%p\n",lib_rtl_thread_id(), param);

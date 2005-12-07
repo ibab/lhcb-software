@@ -4,15 +4,24 @@
 #define byte_offset(a,b,c) {a *ptr=0; c = (int)&(ptr->b);}
 
 template <class T, class Q> static inline T* add_ptr(T* a, Q b)  {
-  return (T*)((void*)((char*)(a)+(int64_t)(b)));
+  return (T*)((void*)((char*)(a)+(long)(b)));
 }
 
 #ifdef __cplusplus
+#include <cstdlib>
 namespace RTL {}
 extern "C" {
+#else
+#include <stdio.h>
 #endif
+  struct _IOSB {
+    unsigned short condition;
+    unsigned short count;
+    unsigned int   information;
+  };
+  typedef _IOSB IOSB_t;
 #ifdef _WIN32
-  struct _IOSB {    unsigned short condition;    unsigned short count;    unsigned int   information;  };  typedef __int64       int64_t;
+  typedef __int64       int64_t;
 #else
   typedef long long int int64_t;
 #endif

@@ -13,8 +13,8 @@ static inline void refresh()        {  }
 static inline WINDOW* initscreen()  { clrscr(); return 0; }
 static inline void printxy(int x, int y, const char* buff) {  ::gotoxy(x,y);  ::printf(buff); }
 static inline void print_char(int x, int y, int c) {  ::gotoxy(x,y); ::putchar(c); }
-static inline int  term_height() {  return   24; }
-static inline int  term_width()  {   return 132; }
+static inline size_t term_height() {  return   24; }
+static inline size_t term_width()  {   return 132; }
 
 #define NORMAL          0
 #define BOLD            0
