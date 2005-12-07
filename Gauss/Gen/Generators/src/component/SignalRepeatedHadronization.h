@@ -1,4 +1,4 @@
-// $Id: SignalRepeatedHadronization.h,v 1.3 2005-11-29 15:57:24 robbep Exp $
+// $Id: SignalRepeatedHadronization.h,v 1.4 2005-12-07 22:53:50 robbep Exp $
 #ifndef GENERATORS_SIGNALREPEATEDHADRONIZATION_H 
 #define GENERATORS_SIGNALREPEATEDHADRONIZATION_H 1
 
@@ -28,7 +28,8 @@ public:
                          HardVector  & theHardVector ) ;
 
 protected:
-
+  void Clear( HepMC::GenEvent * theEvent ) const ;
+  
 private:
   unsigned int  m_maxNumberOfRepetitions ;
   PIDs          m_pidQuarks        ;

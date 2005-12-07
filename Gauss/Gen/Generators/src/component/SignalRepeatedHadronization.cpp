@@ -1,4 +1,4 @@
-// $Id: SignalRepeatedHadronization.cpp,v 1.3 2005-11-21 16:18:05 robbep Exp $
+// $Id: SignalRepeatedHadronization.cpp,v 1.4 2005-12-07 22:53:50 robbep Exp $
 // Include files 
 
 // local
@@ -10,11 +10,14 @@
 // from Kernel
 #include "Kernel/ParticleID.h"
 
+// From HepMC
+#include "HepMC/GenParticle.h"
+#include "HepMC/GenEvent.h"
+
 // from Generators
 #include "Generators/IProductionTool.h"
 #include "Generators/IGenCutTool.h"
 #include "Generators/IDecayTool.h"
-#include "Generators/HepMCUtils.h"
 
 //-----------------------------------------------------------------------------
 // Implementation file for class : SignalRepeatedHadronization
@@ -96,7 +99,7 @@ bool SignalRepeatedHadronization::generate( const unsigned int nPileUp ,
       
       m_productionTool -> turnOnFragmentation( ) ;
       // Clear theGenEvent
-      HepMCUtils::Clear( theGenEvent ) ;
+      Clear( theGenEvent ) ;
       m_productionTool -> hadronize( theGenEvent , theHardInfo ) ;
       
       // Check if one particle of the requested list is present in event
@@ -154,7 +157,7 @@ bool SignalRepeatedHadronization::generate( const unsigned int nPileUp ,
               m_productionTool -> retrievePartonEvent( theGenEvent ) ;
               m_productionTool -> turnOnFragmentation( ) ;
               m_productionTool -> savePartonEvent( theGenEvent ) ;
-              HepMCUtils::Clear( theGenEvent ) ;
+              Clear( theGenEvent ) ;
               m_productionTool -> hadronize( theGenEvent , theHardInfo ) ;
             }
             // Then we exit and do not re-hadronize this event
@@ -170,7 +173,7 @@ bool SignalRepeatedHadronization::generate( const unsigned int nPileUp ,
         m_productionTool -> turnOnFragmentation( ) ;
         m_productionTool -> savePartonEvent( theGenEvent ) ;
         // Clear HepMC event
-        HepMCUtils::Clear( theGenEvent ) ;
+        Clear( theGenEvent ) ;
         m_productionTool -> hadronize( theGenEvent , theHardInfo ) ;
       }
 
@@ -181,4 +184,18 @@ bool SignalRepeatedHadronization::generate( const unsigned int nPileUp ,
   }
 
   return gotSignalInteraction ;
+}
+
+//=============================================================================
+// Clear a complete HepMC event
+//=============================================================================
+void SignalRepeatedHadronization::Clear( HepMC::GenEvent * theEvent ) const {
+  if ( ! theEvent -> vertices_empty() ) {
+    HepMC::GenEvent::vertex_iterator iter ;
+    for ( iter = theEvent -> vertices_begin() ; 
+          iter != theEvent -> vertices_end()  ; ++iter ) {
+      theEvent -> remove_vertex( *iter ) ;
+      delete (*iter) ;
+    }
+  }
 }
