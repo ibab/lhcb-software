@@ -1,6 +1,19 @@
-! $Id: release.notes,v 1.16 2005-11-29 15:59:41 robbep Exp $
+! $Id: release.notes,v 1.17 2005-12-07 23:05:18 robbep Exp $
 ! Package     : Gen/Generators
 ! Responsible : 
+
+! 2005-12-07 - Patrick Robbe
+ - GenCounters.h: common functions to print counters and compute efficiencies
+ - VariableLuminosity, Special, Generation, SignalPlain: use common function 
+   to print counters.
+ - SignalRepeatedHadronization: remove HepMCUtils dependency  and add
+   Clear function to clear content of HepMC Event
+ - Inclusive: fix counters
+ - ExternalGenerator: manage LHAPDF output and remove HepMC dependency
+ - LHAPDFCommonBlocks.{h,cpp}: wrapper for LHAPDF common blocks
+ - LhaPdf.{h,cpp}: static class to access LHAPDF functions from C++
+ - LHAPDFUtils.F: Fortran functions to access LHAPDF common blocks
+ - FixedLuminosity: new luminosity tool for fixed luminosity
 
 ! 2005-11-29 - Patrick Robbe
  - LeptonInAcceptance: add full event cut tool to keep events with one
