@@ -1,9 +1,12 @@
 ! =============================================================================
-! $Id: release.notes,v 1.239 2005-12-07 14:00:36 jpalac Exp $ 
+! $Id: release.notes,v 1.240 2005-12-07 14:10:16 cattanem Exp $ 
 ! =============================================================================
 ! package DetDesc
 ! package manager : Marco Clemencic, Juan Palacios
 ! =============================================================================
+
+!======================== DetDesc v16r0 2005-12-07 ========================
+! *********** Requires MathCore-5_06_02 or higher.************************
 
 ! 2005-12-07 - Juan PALACIOS
  - Move implementation of DetectorElement::name() method to .cpp file. 
@@ -11,8 +14,6 @@
    of class IRegistry.
  - Small changes using new Transform3D constructors and Point3D multiplication
    by scalar.
-!======================== DetDesc v16r0 2005-12-07 ========================
-! *********** Requires MathCore-5_06_02 or higher.************************
 
 ! 2005-12-07 - Marco Cattaneo
  - Remove remaining CLHEP dependencies (SystemOfUnits.h, requirements)
