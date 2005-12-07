@@ -1,4 +1,4 @@
-// $Id: DetectorElement.cpp,v 1.32 2005-12-07 13:19:07 cattanem Exp $
+// $Id: DetectorElement.cpp,v 1.33 2005-12-07 14:00:36 jpalac Exp $
 #include "GaudiKernel/Kernel.h"
 #include "GaudiKernel/IDataManagerSvc.h"
 #include "GaudiKernel/IDataProviderSvc.h"
@@ -380,7 +380,12 @@ const IDetectorElement* DetectorElement::childDEWithPoint(const Gaudi::XYZPoint&
   }
   return 0;
 };
-
+// ============================================================================
+const std::string& DetectorElement::name () const {
+  static std::string s_empty = "";
+  IRegistry* pReg = registry();
+  return (0!=pReg) ? pReg->identifier() : s_empty;;
+};
 // ============================================================================
 // End 
 // ============================================================================

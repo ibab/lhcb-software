@@ -1,4 +1,4 @@
-// $Id: DetectorElement.h,v 1.32 2005-12-07 13:19:07 cattanem Exp $
+// $Id: DetectorElement.h,v 1.33 2005-12-07 14:00:36 jpalac Exp $
 #ifndef  DETDESC_DETECTORELEMENT_H
 #define  DETDESC_DETECTORELEMENT_H 1
 
@@ -78,11 +78,7 @@ public:
   virtual const  CLID& clID()   const  { return classID(); }
   static const   CLID& classID()       { return CLID_DetectorElement; }
   
-  virtual const std::string& name () const {
-    static std::string s_empty = "";
-    IRegistry* pReg = registry();
-    return (0!=pReg) ? pReg->identifier() : s_empty;;
-  } 
+  virtual const std::string& name () const;
 
   /// Return the SmartRef for the condition called 'name'.
   virtual SmartRef<Condition> condition(const std::string &name) const;

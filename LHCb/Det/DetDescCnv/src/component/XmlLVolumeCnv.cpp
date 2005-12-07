@@ -1,4 +1,4 @@
-// $Id: XmlLVolumeCnv.cpp,v 1.7 2005-12-07 08:38:57 jpalac Exp $ 
+// $Id: XmlLVolumeCnv.cpp,v 1.8 2005-12-07 14:02:16 jpalac Exp $ 
 // Include files
 #include "GaudiKernel/CnvFactory.h"
 #include "GaudiKernel/GenericAddress.h"
@@ -1876,8 +1876,7 @@ Gaudi::Transform3D* XmlLVolumeCnv::dealWithPosRPhiZ (xercesc::DOMElement* elemen
   
   // builds the translation.
 
-  return new Gaudi::Transform3D(Gaudi::Rotation3D(),
-                                Gaudi::RhoZPhiVector( rho, z, phi ) );
+  return new Gaudi::Transform3D(Gaudi::RhoZPhiVector( rho, z, phi ) );
 } // end dealWithPosRPhiZ
 
 
@@ -1911,8 +1910,7 @@ Gaudi::Transform3D* XmlLVolumeCnv::dealWithPosRThPhi (xercesc::DOMElement* eleme
   
   // builds the translation.
 
-  return new Gaudi::Transform3D(Gaudi::Rotation3D(),
-                                Gaudi::Polar3DVector(r, theta, phi) );
+  return new Gaudi::Transform3D(Gaudi::Polar3DVector(r, theta, phi) );
 } // end dealWithPosRThPhi
 
 
