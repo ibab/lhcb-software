@@ -1,0 +1,14 @@
+! =============================================================================
+! $Id: release.notes,v 1.1.1.1 2005-12-07 16:01:45 mneedham Exp $ 
+! =============================================================================
+! package DetDescSvc
+! package manager : Marco Clemencic, Juan Palacios ?
+! =============================================================================
+   
+! >>>>>>>>>>>>>>>>>>>>>>> DetDescSvc v1 <<<<<<<<<<<<<<<<<<<<<<<<<
+
+! 2005-12-07 - M. Needham 
+ - This is a new package for the LHCb detector description services.
+ - Moved transportSvc from DetDesc
+   - Removed calls to MsgStream in event loop
+   - Changed std::copy to vector insert
