@@ -1,4 +1,4 @@
-// $Id: Special.cpp,v 1.2 2005-11-29 15:58:24 robbep Exp $
+// $Id: Special.cpp,v 1.3 2005-12-07 22:52:05 robbep Exp $
 // Include files 
 
 // local
@@ -8,6 +8,7 @@
 
 #include "Generators/IProductionTool.h"
 #include "Generators/IGenCutTool.h"
+#include "Generators/GenCounters.h"
 
 // Event 
 #include "Event/HepMCEvent.h"
@@ -86,17 +87,7 @@ bool Special::generate( const unsigned int /* nPileUp */ ,
 // Print the counters
 //=============================================================================
 void Special::printCounters( ) const {
-  if ( 0 != m_nEventsAfterCut ) {
-    info() << "Number of events before the cut = " << m_nEventsBeforeCut 
-           << endmsg;
-    info() << "Number of events after the cut = "  << m_nEventsAfterCut  
-           << endmsg;
-    double eff = ( (double) m_nEventsAfterCut ) / 
-      ( (double) m_nEventsBeforeCut ) ;
-    double err_eff = sqrt( m_nEventsAfterCut * ( 1. - eff ) ) /
-      ( (double) m_nEventsBeforeCut ) ;
-    info() << 
-      format( " Efficiency of the generator level cut = %.5g +/- %.5g" , eff ,
-              err_eff ) << endmsg ;
-  }
+  using namespace GenCounters ;
+  printEfficiency( info() , "generator level cut" , m_nEventsAfterCut , 
+                   m_nEventsBeforeCut ) ;
 }

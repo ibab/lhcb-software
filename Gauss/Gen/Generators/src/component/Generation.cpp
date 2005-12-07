@@ -1,4 +1,4 @@
-// $Id: Generation.cpp,v 1.5 2005-11-29 15:55:02 robbep Exp $
+// $Id: Generation.cpp,v 1.6 2005-12-07 22:56:14 robbep Exp $
 // Include files 
 
 // local
@@ -15,12 +15,12 @@
 
 #include "HepMC/GenEvent.h"
 
-#include "Generators/HepMCUtils.h"
 #include "Generators/ISampleGenerationTool.h"
 #include "Generators/IPileUpTool.h"
 #include "Generators/IDecayTool.h" 
 #include "Generators/IVertexSmearingTool.h"
 #include "Generators/IFullGenEventCutTool.h"
+#include "Generators/GenCounters.h"
 
 // Gaudi Common Flat Random Number generator
 extern Rndm::Numbers randgaudi ;
@@ -77,7 +77,7 @@ Generation::Generation( const std::string& name,
                       m_hardInfoLocation = HardInfoLocation::Default ) ;
     
     // Tool name to generate the event
-    declareProperty( "PileUpTool" , m_pileUpToolName = "VariableLuminosity" ) ;
+    declareProperty( "PileUpTool" , m_pileUpToolName = "FixedLuminosity" ) ;
     // Tool name to decay particles in the event
     declareProperty( "DecayTool"  , m_decayToolName = "EvtGenDecay" ) ;
     // Tool name to smear vertex
@@ -238,59 +238,39 @@ StatusCode Generation::execute() {
 //  Finalize
 //=============================================================================
 StatusCode Generation::finalize() {
+  using namespace GenCounters ;
   debug( ) << "==> Finalize" << endmsg ;
   // Print the various counters
   info() << "**************************************************" << endmsg ;
   m_pileUpTool -> printPileUpCounters( ) ; 
   info() << "***********   Generation counters   **************" << std::endl ;
-  info() << "Number of generated events                       : " 
-         << m_nEvents << std::endl ;
-  info() << "Number of generated interactions                 : " 
-         << m_nInteractions << std::endl ;
-  info() << "Number of generated interactions with >= 1 b     : "
-         << m_n1b << std::endl ;
-  info() << "Number of generated interactions with >= 3 b     : "
-         << m_n3b << std::endl ;
-  info() << "Number of generated interactions with 1 prompt B : "
-         << m_nPromptB << std::endl ;
-  info() << "Number of generated interactions with >= 1 c     : "
-         << m_n1c << std::endl ;
-  info() << "Number of generated interactions with >= 3 c     : "
-         << m_n3c << std::endl ;
-  info() << "Number of accepted interactions with b and c     : "
-         << m_nbc << std::endl ;
-  info() << "Number of generated interactions with 1 prompt C : "
-         << m_nPromptC << std::endl ;  
-  info() << "Number of accepted events                        : " 
-         << m_nAcceptedEvents << std::endl ;
-  info() << "Number of interactions in accepted events        : "
-         << m_nAcceptedInteractions << std::endl ;
-  info() << "Number of accepted interactions with >= 1 b      : "
-         << m_n1bAccepted << std::endl ;
-  info() << "Number of accepted interactions with >= 3 b      : "
-         << m_n3bAccepted << std::endl ;
-  info() << "Number of accepted interactions with 1 prompt B  : "
-         << m_nPromptBAccepted << std::endl ;
-  info() << "Number of accepted interactions with >= 1 c      : "
-         << m_n1cAccepted << std::endl ;
-  info() << "Number of accepted interactions with >= 3 c      : "
-         << m_n3cAccepted << std::endl ;
-  info() << "Number of accepted interactions with 1 prompt C  : "
-         << m_nPromptCAccepted << std::endl ;
-  info() << "Number of accepted interactions with b and c     : "
-         << m_nbcAccepted << std::endl ;
+  printCounter( info() , "generated events" , m_nEvents ) ;
+  printCounter( info() , "generated interactions" , m_nInteractions ) ;
+  printCounter( info() , "generated interactions with >= 1 b" , m_n1b ) ;
+  printCounter( info() , "generated interactions with >= 3 b" , m_n3b ) ;
+  printCounter( info() , "generated interactions with 1 prompt B" , 
+                m_nPromptB ) ;
+  printCounter( info() , "generated interactions with >= 1 c" , m_n1c ) ;
+  printCounter( info() , "generated interactions with >= 3 c" , m_n3c ) ;
+  printCounter( info() , "accepted interactions with b and c" , m_nbc ) ;
+  printCounter( info() , "generated interactions with 1 prompt C" , 
+                m_nPromptC ) ;
+  
+  printCounter( info() , "accepted events" , m_nAcceptedEvents ) ;
+  printCounter( info() , "interactions in accepted events" , 
+                m_nAcceptedInteractions ) ;
+  printCounter( info() , "accepted interactions with >= 1 b", m_n1bAccepted ) ;
+  printCounter( info() , "accepted interactions with >= 3 b", m_n3bAccepted ) ;
+  printCounter( info() , "accepted interactions with 1 prompt B" , 
+                m_nPromptBAccepted ) ;
+  printCounter( info() , "accepted interactions with >= 1 c", m_n1cAccepted ) ;
+  printCounter( info() , "accepted interactions with >= 3 c", m_n3cAccepted ) ;
+  printCounter( info() , "accepted interactions with 1 prompt C" , 
+                m_nPromptCAccepted ) ; 
+  printCounter( info() , "accepted interactions with b and c", m_nbcAccepted );
 
-  if ( 0 != m_nAfterFullEvent ) {
-    info() << "Number of events before full event cut           : " 
-           << m_nBeforeFullEvent << std::endl ;
-    info() << "Number of events after full event cut            : " 
-           << m_nAfterFullEvent << std::endl ;
-    info() << "Efficiency of the full event cut                 : "
-           << format( "%.5g +/- %.5g" , 
-                      fraction( m_nAfterFullEvent , m_nBeforeFullEvent ) , 
-                      err_fraction( m_nAfterFullEvent , m_nBeforeFullEvent ) )
-           << std::endl ;
-  }                  
+  printEfficiency( info() , "full event cut" , m_nAfterFullEvent , 
+                   m_nBeforeFullEvent ) ;
   info() << endmsg ;
   m_sampleGenerationTool -> printCounters() ;
 

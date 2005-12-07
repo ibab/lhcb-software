@@ -1,4 +1,4 @@
-// $Id: Generation.h,v 1.3 2005-11-29 15:55:02 robbep Exp $
+// $Id: Generation.h,v 1.4 2005-12-07 22:56:14 robbep Exp $
 #ifndef GENERATORS_GENERATION_H 
 #define GENERATORS_GENERATION_H 1
 
@@ -92,12 +92,5 @@ private:
                                   unsigned int & nPromptC , 
                                   unsigned int & nbc , 
                                   const HepMCEvent * theEvent ) ;
-
-  inline double fraction( const unsigned int A , const unsigned int B ) const
-  { return ( (double) A / (double) B ) ; }
-  inline double err_fraction( const unsigned int A , const unsigned int B ) 
-    const 
-  { return sqrt( A * ( 1. - ( (double) A / (double) B ) ) ) / 
-      ( (double) B ) ; }
 };
 #endif // GENERATORS_GENERATION_H

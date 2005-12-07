@@ -1,4 +1,4 @@
-// $Id: Signal.cpp,v 1.5 2005-11-29 15:53:42 robbep Exp $
+// $Id: Signal.cpp,v 1.6 2005-12-07 22:57:39 robbep Exp $
 // Include files 
 
 // local
@@ -14,7 +14,7 @@
 
 // from Generators
 #include "Generators/IDecayTool.h"
-#include "Generators/HepMCUtils.h"
+#include "Generators/GenCounters.h"
 
 // Function to sort HepMC::GenParticles according to their barcode
 bool compareHepMCParticles( const HepMC::GenParticle * part1 ,
@@ -57,12 +57,9 @@ Signal::Signal( const std::string& type,
                 const std::string& name,
                 const IInterface* parent )
   : ExternalGenerator( type, name , parent ) ,
-    m_nEventsBeforeCut( 0 ) ,
-    m_nEventsAfterCut ( 0 ) ,
-    m_nParticlesBeforeCut( 0 ) ,
-    m_nAntiParticlesBeforeCut( 0 ) ,
-    m_nParticlesAfterCut( 0 ) ,
-    m_nAntiParticlesAfterCut( 0 ) ,
+    m_nEventsBeforeCut   ( 0 ) , m_nEventsAfterCut        ( 0 ) ,
+    m_nParticlesBeforeCut( 0 ) , m_nAntiParticlesBeforeCut( 0 ) ,
+    m_nParticlesAfterCut ( 0 ) , m_nAntiParticlesAfterCut ( 0 ) ,
     m_nInvertedEvents ( 0 ) ,
     m_signalMass      ( 0.) ,
     m_signalPID       ( 0 ) ,
@@ -131,48 +128,16 @@ StatusCode Signal::initialize( ) {
 // Print the counters
 //=============================================================================
 void Signal::printCounters( ) const {
+  using namespace GenCounters ;
   info() << "*************   Signal counters   ****************" << std::endl ;
+  printEfficiency( info() , "generator level cut" , m_nEventsAfterCut , 
+                   m_nEventsBeforeCut ) ;
+  printCounter( info() , "z-inverted events" , m_nInvertedEvents ) ;
 
-  if ( 0 != m_nEventsAfterCut ) {
-    info() << "Number of events before the cut                  : " 
-           << m_nEventsBeforeCut << std::endl ;
-    info() << "Number of events after the cut                   : "  
-           << m_nEventsAfterCut << std::endl ;
-    info() << "Efficiency of the generator level cut            : "
-           << format("%.5g +/- %.5g" , 
-                     fraction( m_nEventsAfterCut , m_nEventsBeforeCut ) , 
-                     err_fraction( m_nEventsAfterCut , m_nEventsBeforeCut ) ) 
-           << std::endl ;
-  }
-
-  info() << "Number of z-inverted events                      : " 
-         << m_nInvertedEvents << std::endl ;
-
-  if ( 0 != m_nParticlesAfterCut ) {  
-    info() << "Number of particles before generator level cut   : " 
-           << m_nParticlesBeforeCut << std::endl ;
-    info() << "N. of forward particles after generator lvl cut  : "
-           << m_nParticlesAfterCut << std::endl ;
-    info() << "Efficiency of the cut for particles              : "
-           << format( "%.5g +/- %.5g" , 
-                      fraction( m_nParticlesAfterCut , m_nParticlesBeforeCut),
-                      err_fraction( m_nParticlesAfterCut , 
-                                    m_nParticlesBeforeCut ) ) << std::endl ;
-  }
-
-  if ( 0 != m_nAntiParticlesAfterCut ) {
-    info() << "Number of anti-part. before generator level cut  : "
-           << m_nAntiParticlesBeforeCut << std::endl ;
-    info() << "N. of forward anti-part. after generator lvl cut : " 
-           << m_nAntiParticlesAfterCut << std::endl ;
-    info() << "Efficiency of the cut for antiparticles          : "
-           << format( "%.5g +/- %.5g" , 
-                      fraction( m_nAntiParticlesAfterCut , 
-                                m_nAntiParticlesBeforeCut ) , 
-                      err_fraction( m_nAntiParticlesAfterCut , 
-                                    m_nAntiParticlesBeforeCut ) ) 
-           << std::endl ;
-  }
+  printEfficiency( info() , "particle generator level cut" , 
+                   m_nParticlesAfterCut ,  m_nParticlesBeforeCut ) ;
+  printEfficiency( info() , "anti-particle generator level cut" , 
+                   m_nAntiParticlesAfterCut , m_nAntiParticlesBeforeCut ) ;
   info() << endmsg ;
 }
 
