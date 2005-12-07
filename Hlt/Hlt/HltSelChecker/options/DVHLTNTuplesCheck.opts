@@ -103,6 +103,8 @@ EventSelector.Input   = {};
 // #include "$HLTSELCHECKERROOT/options/NTBd2DstarPi.opts"
 
 // Only MC truth (when including Truth.opts):
+// Special case of Bd2DstarPi: because of no cut on slow pion
+// HLTDstarForBd2DstarPi.PhysDesktop.InputLocations = {"Phys/FilterD0ForHLTBd2DstarPi", "Phys/SelectBd2DstarPi"}; // slow pions without any cut (including VTT)
 // HLTDetachedPions.PhysDesktop.InputLocations = {"Phys/SelectBd2DstarPi"};
 // HLTPreselKaons.PhysDesktop.InputLocations = { "Phys/SelectBd2DstarPi"};
 

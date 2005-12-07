@@ -23,3 +23,6 @@ HLTPreselKaons.PhysDesktop.InputLocations = { "Phys/SelectB2HH"
 };
  
 HLTPreselPhotons.PhysDesktop.InputLocations = {"Phys/SelectBs2PhiGamma"};
+
+// Special case of Bd2DstarPi: because of no cut on slow pion
+HLTDstarForBd2DstarPi.PhysDesktop.InputLocations = {"Phys/FilterD0ForHLTBd2DstarPi", "Phys/SelectBd2DstarPi"}; // slow pions without any cut (including VTT)
