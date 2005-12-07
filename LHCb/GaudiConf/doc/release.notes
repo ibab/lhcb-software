@@ -1,6 +1,10 @@
 package GaudiConf
 package manager: M.Cattaneo
 
+!======================== GaudiConf v9r3 2005-12-07 ========================
+! 2005-12-07 - Marco Cattaneo
+ - Remove DetDesc DLL from DetDesc.opts
+
 !======================== GaudiConf v9r2 2005-09-21 ========================
 ! 2005-09-21 - Marco Cattaneo
  - New file options/addrcheck.supp, contains suppressions for addrcheck tool

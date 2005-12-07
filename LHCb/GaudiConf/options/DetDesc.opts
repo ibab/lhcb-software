@@ -2,7 +2,7 @@
 // Standard Options to use the Detector Geometry
 //--------------------------------------------------------------
 ApplicationMgr.ExtSvc += { "XmlCnvSvc" , "XmlParserSvc" };
-ApplicationMgr.DLLs   += { "DetDesc", "XmlTools", "DetDescCnv" };
+ApplicationMgr.DLLs   += { "XmlTools", "DetDescCnv" };
 
 //--------------------------------------------------------------
 // Location of detector description XML database is a URL
