@@ -1,4 +1,4 @@
-// $Id: ExternalGenerator.cpp,v 1.5 2005-11-29 15:44:11 robbep Exp $
+// $Id: ExternalGenerator.cpp,v 1.6 2005-12-07 22:58:59 robbep Exp $
 // Include files 
 
 // local
@@ -16,7 +16,7 @@
 #include "Generators/IProductionTool.h"
 #include "Generators/IDecayTool.h"
 #include "Generators/IGenCutTool.h"
-#include "Generators/HepMCUtils.h"
+#include "Generators/LhaPdf.h"
 
 //-----------------------------------------------------------------------------
 // Implementation file for class : ExternalGenerator
@@ -51,6 +51,11 @@ ExternalGenerator::~ExternalGenerator( ) { ; }
 StatusCode ExternalGenerator::initialize( ) {
   StatusCode sc = GaudiTool::initialize( ) ;
   if ( sc.isFailure() ) return sc ;
+
+  // Handle LHAPDF output
+  if ( msgLevel( MSG::DEBUG ) ) 
+    LhaPdf::lhacontrol().setlhaparm( 19 , "DEBUG" ) ;
+  else LhaPdf::lhacontrol().setlhaparm( 19 , "SILENT" ) ;
 
   // retrieve the particle property service
   IParticlePropertySvc * ppSvc = 
@@ -134,7 +139,7 @@ bool ExternalGenerator::checkPresence( const PIDs & pidList ,
         it != theEvent -> particles_end() ; ++it ) 
     if ( std::binary_search( pidList.begin() , pidList.end() ,
                              (*it) -> pdg_id() ) ) 
-      if ( HepMCUtils::IsBAtProduction( *it ) ) particleList.push_back( *it ) ;
+      if ( IsBAtProduction( *it ) ) particleList.push_back( *it ) ;
 
   return ( ! particleList.empty() ) ;
 }
@@ -198,3 +203,18 @@ void ExternalGenerator::prepareInteraction( EventVector & theEventVector ,
   theHardVector.push_back( theHardInfo ) ;
 }
 
+//=============================================================================
+// Returns true if B is first B (removing oscillation B)
+//=============================================================================
+bool ExternalGenerator::IsBAtProduction( const HepMC::GenParticle * thePart ) 
+  const {
+  if ( ( abs( thePart -> pdg_id() ) != 511 ) && 
+       ( abs( thePart -> pdg_id() ) != 531 ) ) return true ;
+  if ( 0 == thePart -> production_vertex() ) return true ;
+  HepMC::GenVertex * theVertex = thePart -> production_vertex() ;
+  if ( 1 != theVertex -> particles_in_size() ) return true ;
+  HepMC::GenParticle * theMother = 
+    (* theVertex -> particles_in_const_begin() ) ;
+  if ( theMother -> pdg_id() == - thePart -> pdg_id() ) return false ;
+  return true ;
+}
