@@ -5,11 +5,11 @@
 ! Purpose     : LHCb OO kernel packages
 !-----------------------------------------------------------------------------
 
-</PRE><H1><A NAME=v19r3>2005-12-05 LHCbSys v19r3</A></H1><PRE>
+</PRE><H1><A NAME=v19r3>2005-12-07 LHCbSys v19r3</A></H1><PRE>
 This version uses Gaudi v17r2. It is backwards compatible for RTTC data
 
- - Modified packages: DetSys v7r7, DetDesc v15r6, TrackInterfaces v1r4,
-                      EventSys v20r13, TrackEvent v1r6
+ - Modified packages: DetSys v7r7, DetDesc v15r6, DetDescChecks v2r4,
+     TrackInterfaces v1r4, EventSys v20r13, TrackEvent v1r6
 
  - In DetSys v7r7
    . Fix requirements to correctly remove COOL_linkopts
@@ -19,6 +19,9 @@ This version uses Gaudi v17r2. It is backwards compatible for RTTC data
    . Add method const int sensitiveVolumeID(const HepPoint3D& globalPos ) const
      to IDetectorElement interface. Provide default implementation in 
      DetectorElement base class.
+
+ - In DetDescChecks v2r4
+   . Add XmlConditions to requirements for use with XmlDDDB v27r*
 
  - In TrackInterfaces v1r4
    . ITrackFitter: added method fit(Track& track). State no longer const

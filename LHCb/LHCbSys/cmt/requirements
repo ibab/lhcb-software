@@ -103,7 +103,7 @@ use CondDBEntityResolver v1r0   Tools   # Marco Clemencic
 use TrgTools		v7r6    Trg     # Olivier Callot
 
 # LHCb  Examples
-use DetDescChecks	v2r3	Det     # Ivan Belyaev
+use DetDescChecks	v2r4	Det     # Ivan Belyaev
 use DetDescExample      v6r4	Ex      # Marco Clemencic
 use IOExample           v1r5    Ex      # Marco Cattaneo
 use DetCondExample      v7r7    Ex      # Marco Clemencic
