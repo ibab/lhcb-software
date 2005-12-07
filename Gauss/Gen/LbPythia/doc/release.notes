@@ -1,6 +1,9 @@
-! $Id: release.notes,v 1.16 2005-11-29 16:05:25 robbep Exp $
+! $Id: release.notes,v 1.17 2005-12-07 23:08:07 robbep Exp $
 ! Package     : Gen/LbPythia
 ! Responsible : 
+
+! 2005-12-08 - Patrick Robbe
+ - Pythia.{h,cpp}: remove PDFLIB
 
 ! 2005-11-29 - Patrick Robbe
  - PythiaHiggs: add specific tool to cut at generator level on Higgs 

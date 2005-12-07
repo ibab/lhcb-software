@@ -1,4 +1,4 @@
-// $Id: PythiaProduction.cpp,v 1.5 2005-11-29 16:04:31 robbep Exp $
+// $Id: PythiaProduction.cpp,v 1.6 2005-12-07 23:07:29 robbep Exp $
 // Include files 
 
 // local
@@ -20,8 +20,6 @@
 #include "Generators/StringParse.h"
 #include "Generators/IBeamTool.h"
 #include "LbPythia/Pythia.h"
-
-#include "EvtGenBase/EvtConst.hh"
 
 //-----------------------------------------------------------------------------
 // Implementation file for class : PythiaProduction
@@ -78,7 +76,7 @@ PythiaProduction::PythiaProduction( const std::string& type,
     m_defaultSettings.push_back( "pypars mstp 128 2" ) ;
     m_defaultSettings.push_back( "pypars mstp 82 3" ) ;
     m_defaultSettings.push_back( "pypars mstp 52 2" ) ;
-    m_defaultSettings.push_back( "pypars mstp 51 4032" ) ;
+    m_defaultSettings.push_back( "pypars mstp 51 10052" ) ;
     m_defaultSettings.push_back( "pypars parp 67 1.0" ) ;
     m_defaultSettings.push_back( "pypars parp 82 3.41" ) ;
     m_defaultSettings.push_back( "pypars parp 89 14000" ) ;
@@ -113,8 +111,7 @@ StatusCode PythiaProduction::initialize( ) {
   
   // Initialize output
   if ( msgLevel( MSG::DEBUG ) ) {
-    if ( 12345 != Pythia::pydat1().mstu( 12 ) ) 
-      Pythia::pydat1().mstu( 12 ) = 1 ;
+    Pythia::pydat1().mstu( 12 ) = 1 ;
     Pythia::pydat1().mstu( 13 ) = 1 ;
     Pythia::pydat1().mstu( 25 ) = 1 ;
     Pythia::pypars().mstp( 122 ) = 1 ;
@@ -125,9 +122,6 @@ StatusCode PythiaProduction::initialize( ) {
     Pythia::pypars().mstp( 122 ) = 0 ;
     m_initializationListingLevel = -1 ;
   }
-
-  // Suppress pdflib output
-  if ( ! msgLevel( MSG::DEBUG ) ) Pythia::PdfLib_Init() ;
 
   // Set User process to 0 for normal Pythia to be overriden for
   // specific generation
@@ -296,15 +290,7 @@ void PythiaProduction::hardProcessInfo(HardInfo * hardInfo) {
 // Finalize method
 //=============================================================================
 StatusCode PythiaProduction::finalize( ) {
-  Pythia::PyStat( m_finalizationListingLevel ) ;
-  
-  if ( ! msgLevel( MSG::DEBUG ) ) Pythia::PdfLib_End( ) ;
-  
-  std::string delcmd( "rm -f " ) ;
-  delcmd += "pdflib_init.tmp" ;
-#ifndef WIN32
-  system( delcmd.c_str( ) ) ;
-#endif
+  Pythia::PyStat( m_finalizationListingLevel ) ;  
   
   return GaudiTool::finalize( ) ;
 }  
