@@ -68,6 +68,17 @@ inline int _mbm_printf(const char* fmt, ...)  {
 }
 #endif
 
+#include <sys/time.h>
+#include <sys/resource.h>
+#include <unistd.h>
+void _mbm_update_rusage(USER* us) {
+  rusage ru;
+    getrusage(RUSAGE_SELF, &ru);
+    us->utime = float(ru.ru_utime.tv_sec)*1e6 + float(ru.ru_utime.tv_usec);
+    us->stime = float(ru.ru_stime.tv_sec)*1e6 + float(ru.ru_stime.tv_usec);
+}
+
+
 template <class T> void print_queue(const char* format,const T* ptr, int type)  {
   switch (type)  {
   case 0:
@@ -88,27 +99,27 @@ public:
     if ( !(m_status&1) ) {
       lib_rtl_signal_message(LIB_RTL_OS,"%5d: LOCK: System Lock error on BM tables.",lib_rtl_pid());
     }
-#ifdef linux
+#ifdef _____linux
     int val;
     lib_rtl_lock_value(m_bm->lockid,&val);
     if ( val != 0 ) {
       ::printf("%5d LOCK: Seamphore value:%d\n",lib_rtl_pid(), val);
     }
-#endif
     if ( m_bm->_control()->spare1 != 0 )  {
       lib_rtl_signal_message(LIB_RTL_OS,"%5d: LOCK: Lock error on BM tables:%d",lib_rtl_pid(),
            m_bm->_control()->spare1);
     }
     m_bm->_control()->spare1 = lib_rtl_pid();
+#endif
   }
   virtual ~Lock() {
+#ifdef ______linux
     if ( m_bm->_control()->spare1 != lib_rtl_pid() )  {
       lib_rtl_signal_message(LIB_RTL_OS,"%5d: UNLOCK: Lock error on BM tables:%d",lib_rtl_pid(),
            m_bm->_control()->spare1);
     }
     m_bm->_control()->spare1 = 0;
     //  _mbm_flush_sections(m_bm);
-#ifdef linux
     int val;
     lib_rtl_lock_value(m_bm->lockid,&val);
     if ( val != 0 ) {
@@ -374,6 +385,7 @@ int mbm_get_event_a (BMID bm, int** ptr, int* size, int* evtype, int trmask[4],
     if (us->c_state == S_pause)    {
       us->c_state = S_active;
     }
+    _mbm_update_rusage(us);
     us->get_ev_calls++;
     int status = _mbm_get_ev (bm, us);
     if (status == MBM_NORMAL)    {
@@ -463,6 +475,7 @@ int mbm_get_space_a (BMID bm, int buffsize, int** ptr, RTL_ast_t astadd, void* a
       us->space_add = 0;
       us->space_size = 0;
     }
+    _mbm_update_rusage(us);
     us->get_sp_calls++;
     int status = _mbm_get_sp (bm, us, size, ptr);
     if (status == MBM_NO_ROOM)  {
@@ -474,9 +487,9 @@ int mbm_get_space_a (BMID bm, int buffsize, int** ptr, RTL_ast_t astadd, void* a
       }
       else  {
         us->reason      = BM_K_INT_SPACE;
-        us->p_state     = S_wspace_ast_queued;
         us->ws_size     = size;
         us->ws_ptr_add  = ptr;
+        us->p_state     = S_wspace_ast_queued;
         us->p_astadd    = astadd;
         us->p_astpar    = astpar;
         lib_rtl_set_event (bm->WSP_event_flag);

@@ -102,6 +102,8 @@ struct USER : public qentry_t  {
   int get_sp_calls;            
   int get_wakeups;             
   int get_asts_run;            
+  float  utime;
+  float stime;
   int spare1;
   REQ req[8];                    // 8 requirement maximum     
   char wes_flag[32];
@@ -111,7 +113,7 @@ struct USER : public qentry_t  {
     if ( block_id == int(MBM::BID_USER) )   {
       return true;
     }
-    lib_rtl_signal_message(0, "mbmlib: bad USER pointer");
+    lib_rtl_signal_message(0, "mbmlib: bad USER pointer:%p",this);
     return false;
   }
 };
@@ -134,7 +136,7 @@ struct EVENT : public qentry_t {
     if ( block_id == int(MBM::BID_EVENT) )   {
       return true;
     }
-    lib_rtl_signal_message(0, "mbmlib: bad EVENT pointer");
+    lib_rtl_signal_message(0, "mbmlib: bad EVENT pointer:%p",this);
     return false;
   }
 };

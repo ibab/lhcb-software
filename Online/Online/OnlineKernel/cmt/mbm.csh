@@ -1,7 +1,11 @@
-rm shm/*
+#/bin/csh
+rm /dev/shm/bm_*
+rm /dev/shm/sem.BM*
+rm /dev/shm/sem.bm*
+rm /dev/shm/sem.MEP*
 xterm -ls -132 -e "../slc3_ia32_gcc323_dbg/test.exe mbm_install -s=8096 -e=64 -u=64" &
 sleep 1
-xterm -ls -132 -e "../slc3_ia32_gcc323_dbg/test.exe mbm_mon" &
+xterm -ls -132 -geometry 132x45 -e "../slc3_ia32_gcc323_dbg/test.exe mbm_mon" &
 xterm -e "../slc3_ia32_gcc323_dbg/test.exe mbm_cons     -n=cons_s_0" &
 xterm -e "../slc3_ia32_gcc323_dbg/test.exe mbm_cons     -n=cons_s_1" &
 xterm -e "../slc3_ia32_gcc323_dbg/test.exe mbm_cons     -n=cons_s_2" &

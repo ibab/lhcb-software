@@ -19,10 +19,12 @@ namespace {
       include();
       m_bmid = m_mepID->mepBuffer;
       m_evtProd = new MBM::Producer(m_mepID->evtBuffer, nam, partitionID());
+      mbm_register_free_event(m_mepID->evtBuffer,  0, 0);
+      mbm_register_alloc_event(m_mepID->evtBuffer, 0, 0);
       ::printf(" MEP    buffer start: %08X\n",m_mepID->mepStart);
       ::printf(" EVENT  buffer start: %08X\n",m_mepID->evtStart);
       ::printf(" RESULT buffer start: %08X\n",m_mepID->resStart);
-      setNonBlocking(WT_FACILITY_DAQ_SPACE, true);
+      // setNonBlocking(WT_FACILITY_DAQ_SPACE, true);
     }
     ~Prod()  {
       delete m_evtProd;
@@ -35,12 +37,14 @@ namespace {
       MEP_SINGLE_EVT* sub_events = ev->events;
       size_t sub_evt_len = sizeof(MEP_SINGLE_EVT);
       mep_identifier++;
-      //printf("MEP address: %p\n",m_event.data);
+      //printf("MEP[%d]: %p\n",mep_identifier,m_event.data);
 
       ev->refCount    = 1;
+      ev->refCount   += PACKING_FACTOR; // saves mbm_register_alloc_event
       ev->mepBufferID = mep_identifier;
       ev->begin       = int(int(ev)-m_mepID->mepStart);
       ev->packing     = PACKING_FACTOR;
+      ev->valid       = 1;
       for (int j = 0; j < PACKING_FACTOR; ++j )   {
         ev->events[j].event = int(-m_mepID->mepStart+(int)&sub_events[j]);
         ev->events[j].begin = ev->begin;
@@ -50,8 +54,11 @@ namespace {
       m_event.mask[2] = 0;
       m_event.mask[3] = 0;
       m_event.type    = 1;
+      //printf(" send evts:[");
       for (int i = 0; i < PACKING_FACTOR; ++i )   {
+        //printf("%d",i);
         if ( m_evtProd->getSpace(sub_evt_len) == MBM_NORMAL ) {
+	  //printf(".");
           MBM::EventDesc& e = m_evtProd->event();
           ::memcpy(e.data, &ev->events[i], sizeof(ev->events[i]));
           e.type    = 1;
@@ -60,13 +67,20 @@ namespace {
           e.mask[2] = 0;
           e.mask[3] = 0;
           e.len     = sub_evt_len;
+	  //printf(".");
           m_evtProd->sendEvent();
+	  //printf(".");
         }
         else  {
           printf("Space error !\n");
         }
       }
-      return Producer::spaceAction();
+      //printf("] declare\n");
+      declareEvent();
+      //printf("..Send space\n");
+      sendSpace();
+      //printf("..Done\n");
+      return MBM_NORMAL;
     }
   };
 }
@@ -76,5 +90,11 @@ extern "C" int mep_prod_a(int argc,char **argv) {
   std::string name = "producer";
   cli.getopt("name",1,name);
   ::printf("Asynchronous Producer \"%s\" (pid:%d) included in buffers.\n",name.c_str(),Prod::pid());
-  return Prod(name).run();
+  Prod p(name);
+  while(1) {
+    p.spaceRearm(0);
+    p.spaceAction();
+  }
+  //.run();
+  return 1;
 }

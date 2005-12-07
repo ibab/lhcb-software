@@ -31,19 +31,25 @@ struct MEPDESC : public _MEPID  {
 
 static int _mep_change_refcount(MEPDESC* dsc,MEP_SINGLE_EVT* evt, int change)  {
   if ( evt )   {
-    RTL::Lock lock(dsc->lockid);
-    if ( lock )  {
-      MEPEVENT* e = (MEPEVENT*)(int*)(dsc->mepStart + evt->begin);
-      e->refCount += change;
-      if ( e->refCount < 1 )  {
-        printf("MEP RefCount ERROR %s [%d] Event at address %08X MEP:%p [%d] [Release MEP]\n",
-          change > 0 ? "AddRef" : "DelRef", e->refCount, 
-          dsc->mepStart+evt->event, (void*)e, e->mepBufferID);
+    MEPEVENT* e = (MEPEVENT*)(int*)(dsc->mepStart + evt->begin);
+    int cnt = 1;
+    {
+      //RTL::Lock lock(dsc->lockid);
+      switch(change) {
+      case 1:
+	cnt = ++e->refCount;
+	break;
+      case -1:
+	cnt = --e->refCount;
+	break;
       }
-      return MBM_NORMAL;
     }
-    // Error
-    return MBM_ERROR;
+    if ( cnt < 1 )  {
+      printf("MEP RefCount ERROR %s [%d] Event at address %08X MEP:%p [%d] [Release MEP]\n",
+	     change > 0 ? "AddRef" : "DelRef", cnt, 
+	     dsc->mepStart+evt->event, (void*)e, e->mepBufferID);
+    }
+    return MBM_NORMAL;
   }
   // Error
   return MBM_ERROR;
@@ -54,17 +60,24 @@ static int mep_free_mep(void* param)   {
   MEPEVENT* e = (MEPEVENT*)pars[2];
   MEPDESC* dsc = (MEPDESC*)pars[1];
   int slp = 0;
-  if ( e->refCount < 1 )  {
-    printf("MEP RefCount ERROR(2) [%d] Event at address %08X MEP:%p [%d] [Release MEP]\n",
-      e->refCount, dsc->mepStart+e->begin, (void*)e, e->mepBufferID);
+  {
+    // RTL::Lock lock(dsc->lockid);
+    if ( e->refCount < 1 )  {
+      printf("MEP RefCount ERROR(2) [%d] Event at address %08X MEP:%p [%d] [Release MEP]\n",
+	     e->refCount, dsc->mepStart+e->begin, (void*)e, e->mepBufferID);
+    }
   }
   while ( e->refCount > 1 )  {
     //printf("Sleep...");
     slp++;
-    lib_rtl_sleep(1);
+    lib_rtl_usleep(100);
   }
   // if ( slp )  printf("\n");
-  e->refCount--;
+  {
+    //RTL::Lock lock(dsc->lockid);
+    e->refCount--;
+    e->valid = 0;
+  }
   return MBM_NORMAL;
 }
 

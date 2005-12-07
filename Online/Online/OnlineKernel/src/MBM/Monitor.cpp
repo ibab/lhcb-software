@@ -189,7 +189,7 @@ size_t MBM::Monitor::draw_buffer(const char* name, CONTROL* ctr)  {
   draw_line(NORMAL,"%-26s  Events: Produced:%d Actual:%d Seen:%d Pending:%d Max:%d",
     txt, ctr->tot_produced, ctr->tot_actual, ctr->tot_seen, ctr->i_events, ctr->p_emax);
   draw_line(NORMAL,"%-26s  Space(kB):[Tot:%d Free:%d] Users:[Tot:%d Max:%d]",
-    "",ctr->bm_size, ctr->i_space, ctr->i_users, ctr->p_umax);
+    "",ctr->bm_size/2, ctr->i_space/2, ctr->i_users, ctr->p_umax);
 
   draw_line(NORMAL,"  Occupancy [Events]:");
   float f1=float(ctr->i_events)/float(ctr->p_emax);
@@ -207,7 +207,7 @@ size_t MBM::Monitor::draw_buffer(const char* name, CONTROL* ctr)  {
 int MBM::Monitor::put_inf()   {
   int i, j, k;
   time_t nowt;
-  const char* head=" Name      Partition     Pid Type State   Produced %%prod     #seen     #freed %%seen Reqs Buffer";
+  const char* head=" Name      Partition     Pid Type State   Produced %%prod     #seen     #freed %%seen Reqs Buffer    UTime  STime";
   char line[256], tim[64];
   ::time(&nowt);
   struct tm *now = ::localtime(&nowt);
@@ -229,11 +229,13 @@ int MBM::Monitor::put_inf()   {
 
   for (i=0;i<m_buffers->p_bmax;i++)  {
     if ( m_bms[i].m_buff != 0 )  {
-      USER *us;
+      USER *us, *utst=(USER*)~0x0;
       BMDESCRIPT* dsc = m_bms[i].m_mgr.m_bm;
       CONTROL*    ctr = dsc->ctrl;
       for (j=0,us=dsc->user;j<ctr->p_umax;j++,us++)    {
-        if (us->busy == 0) continue;
+        if ( us == utst || us == 0         ) break;
+        if ( us->block_id != int(BID_USER) ) continue;
+        if ( us->busy     == 0             ) continue;
         char spy_val[5] = {' ',' ',' ',' ',0};
         for (k=0; k<us->n_req; ++k )  {
           if      ( us->req[k].user_type == BM_REQ_ONE  ) spy_val[1] = '1';
@@ -243,15 +245,15 @@ int MBM::Monitor::put_inf()   {
         }
         if ( us->ev_produced>0 || us->get_sp_calls>0 )   {
           float perc = ((float)us->ev_produced/(float)ctr->tot_produced)*100;
-          sprintf(line," %-15s%4x%8d%5s%6s%11d   %3.0f%32s%7s",
+          sprintf(line," %-15s%4x%8d%5s%6s%11d   %3.0f%32s%7s  %7.1e %7.1e",
             us->name,us->partid,us->pid,"P",sstat[us->p_state+1],us->ev_produced,
-            perc+0.1, spy_val, dsc->bm_name);    
+            perc+0.1, spy_val, dsc->bm_name, us->utime, us->stime);    
         }
         else if ( us->ev_actual>0 || us->get_ev_calls>0 || us->n_req>0 ) {
           float perc = ((float)us->ev_seen/(float)us->ev_actual)*100;
-          sprintf(line," %-15s%4x%8d%5s%6s               %12d%11d   %3.0f%5s%7s",
+          sprintf(line," %-15s%4x%8d%5s%6s               %12d%11d   %3.0f%5s%7s  %7.1e %7.1e",
             us->name,us->partid,us->pid,"C",sstat[us->c_state+1],
-            us->ev_seen, us->ev_freed, perc+0.1, spy_val, dsc->bm_name);
+            us->ev_seen, us->ev_freed, perc+0.1, spy_val, dsc->bm_name, us->utime, us->stime);
         }
         else        {
           sprintf(line," %-15s%4x%8d%5s          %40s%5s%7s",us->name,us->partid,us->pid,"?","",
@@ -299,10 +301,12 @@ int MBM::Monitor::get_bm_list()   {
       if ( m_bmid != 0 && strcmp(m_bmid,m_buffers->buffers[i].name) != 0 )  {
         continue;
       }
-      m_bms[i].m_mgr.setup(m_buffers->buffers[i].name);
-      int sc = m_bms[i].m_mgr.mapSections();
-      if ( !lib_rtl_is_success(sc) ) exit(sc);
-      m_bms[i].m_buff = &m_buffers->buffers[i];
+      if ( m_bms[i].m_buff == 0 )  {
+	m_bms[i].m_mgr.setup(m_buffers->buffers[i].name);
+	int sc = m_bms[i].m_mgr.mapSections();
+	if ( !lib_rtl_is_success(sc) ) exit(sc);
+	m_bms[i].m_buff = &m_buffers->buffers[i];
+      }
       m_numBM++;
     }
     else if ( m_bms[i].m_buff != 0 )  {
@@ -316,7 +320,7 @@ int MBM::Monitor::get_bm_list()   {
 int MBM::Monitor::drop_bm_list()   {
   m_numBM = 0;
   for (int i = 0; i < m_buffers->p_bmax; ++i)  {
-    if ( m_bms[i].m_buff )  {
+    if ( m_buffers->buffers[i].used != 1 && m_bms[i].m_buff != 0 )  {
       m_bms[i].m_mgr.unmapSections();
       m_bms[i].m_buff = 0;
     }

@@ -29,6 +29,7 @@ struct MEPEVENT   {
   int packing;
   int refCount;
   int begin;
+  int valid;
   MEP_SINGLE_EVT events[1];
   static size_t length(int num_evt)   {
     return 3*sizeof(int)+num_evt*sizeof(MEP_SINGLE_EVT);

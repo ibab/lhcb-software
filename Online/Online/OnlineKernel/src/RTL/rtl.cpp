@@ -5,7 +5,12 @@
 #include <cerrno>
 #include <cstdarg>
 #include <fcntl.h>
-
+#ifdef _WIN32
+#include <winsock.h>
+#else
+#include <cstdlib>
+#include <unistd.h>
+#endif
 namespace RTL  {
   struct EXHDEF   {
     int   flink;
@@ -205,6 +210,14 @@ int lib_rtl_sleep(int millisecs)    {
 #elif linux
   ::usleep(1000*millisecs);
 #endif
+  return 1;
+}
+
+int lib_rtl_usleep(int microsecs)    {
+  timeval tv;
+  tv.tv_sec = microsecs/1000000;
+  tv.tv_usec = microsecs%1000000;
+  ::select(0,0,0,0,&tv);
   return 1;
 }
 

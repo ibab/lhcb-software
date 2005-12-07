@@ -53,7 +53,7 @@ namespace MBM {
 }
 
 static void help()  {
-  writeln(2,"Syntax: bm_init [<-opt>]\n",80);
+  writeln(2,"Syntax: mbm_install/mbm_deinstall [<-opt>]\n",80);
   writeln(2,"Function: Buffer Manager Installation\n",80);
   writeln(2,"Options:\n",80);
   writeln(2,"    -s=<size> [10]      Buffer size (kbytes)\n",80);
@@ -74,7 +74,7 @@ int MBM::Installer::optparse (const char* c)  {
     iret = sscanf(c+1,"=%d",&p_size);
     if( iret != 1 )       {
       writeln(2,"Error reading buffer size parameter\n",80);
-      exit(0);
+      ::exit(0);
     }
     p_size = ((p_size+1)>>1)<<1;
     break;
@@ -82,39 +82,39 @@ int MBM::Installer::optparse (const char* c)  {
     iret = sscanf(c+1,"=%x",&p_base);
     if( iret != 1 )       {
       writeln(2,"Error reading base address parameter\n",80);
-      exit(0);
+      ::exit(0);
     }
     break;
   case 'y':            /*     spy base address       */   
     iret = sscanf(c+1,"=%x",&spy_base);
     if( iret != 1 )       {
       writeln(2,"Error reading spy base address parameter\n",80);
-      exit(0);
+      ::exit(0);
     }
     break;
   case 'e':            /*      maximum events        */   
     iret = sscanf(c+1,"=%d",&p_emax);
     if( iret != 1 )       {
       writeln(2,"Error reading maximum events parameter\n",80);
-      exit(0);
+      ::exit(0);
     }
     break;
   case 'u':            /*      maximum users        */   
     iret = sscanf(c+1,"=%d",&p_umax);
     if( iret != 1 )  {
       writeln(2,"Error reading maximum users parameter\n",80);
-      exit(0);
+      ::exit(0);
     }
     if( p_umax > 128 )    {
       writeln(2,"Maximum users exeeded maximum (128)\n",80);
-      exit(0);
+      ::exit(0);
     }
     break;
   case 'i':            /*      maximum users        */   
     iret = sscanf(c+1,"=%s",buff_id);
     if( iret != 1 )       {
       writeln(2,"Error reading Buffer identifier parameter\n",80);
-      exit(0);
+      ::exit(0);
     }
     bm_id = buff_id;
     ::strcpy(m_bm->bm_name,bm_id);
@@ -135,59 +135,59 @@ int MBM::Installer::optparse (const char* c)  {
   case 'h':
   default:
     help();
-    exit(0);
+    ::exit(0);
   }
   return 0;
 }
 
 int MBM::Installer::install()  {
   int icode = deinstall();
-  if(icode == -1) exit(0);
-  printf("++bm_init++ Commencing BM installation \n");
-  int status = lib_rtl_create_section(ctrl_mod,sizeof(CONTROL),&m_bm->ctrl_add);
-  if(!lib_rtl_is_success(status))   {   
-    printf("Cannot create section %s. Exiting....",ctrl_mod);
-    exit(status);
+  if(icode == -1) ::exit(0);
+  ::printf("++bm_init++ Commencing BM installation \n");
+  int status = ::lib_rtl_create_section(ctrl_mod,sizeof(CONTROL),&m_bm->ctrl_add);
+  if(!::lib_rtl_is_success(status))   {   
+    ::printf("Cannot create section %s. Exiting....",ctrl_mod);
+    ::exit(status);
   }
   m_bm->ctrl = (CONTROL*)m_bm->ctrl_add->address;
-  status = lib_rtl_create_section(user_mod,sizeof(USER)*p_umax ,&m_bm->user_add);
-  if(!lib_rtl_is_success(status))   {   
-    lib_rtl_delete_section(m_bm->ctrl_add);
-    printf("Cannot create section %s. Exiting....",user_mod);
-    exit(status);
+  status = ::lib_rtl_create_section(user_mod,sizeof(USER)*p_umax ,&m_bm->user_add);
+  if(!::lib_rtl_is_success(status))   {   
+    ::lib_rtl_delete_section(m_bm->ctrl_add);
+    ::printf("Cannot create section %s. Exiting....",user_mod);
+    ::exit(status);
   }
   m_bm->user = (USER*)m_bm->user_add->address;
-  status = lib_rtl_create_section(event_mod,sizeof(EVENT)*p_emax ,&m_bm->event_add);
-  if(!lib_rtl_is_success(status))   {   
-    lib_rtl_delete_section(m_bm->ctrl_add);
-    lib_rtl_delete_section(m_bm->user_add);
-    printf("Cannot create section %s. Exiting....",event_mod);
-    exit(status);
+  status = ::lib_rtl_create_section(event_mod,sizeof(EVENT)*p_emax ,&m_bm->event_add);
+  if(!::lib_rtl_is_success(status))   {   
+    ::lib_rtl_delete_section(m_bm->ctrl_add);
+    ::lib_rtl_delete_section(m_bm->user_add);
+    ::printf("Cannot create section %s. Exiting....",event_mod);
+    ::exit(status);
   }
   m_bm->event = (EVENT*)m_bm->event_add->address;
-  status = lib_rtl_create_section(bitmap_mod,(p_size<<(Bits_p_kByte-1))>>3,&m_bm->bitm_add);
-  if(!lib_rtl_is_success(status))   {   
-    lib_rtl_delete_section(m_bm->ctrl_add);
-    lib_rtl_delete_section(m_bm->user_add);
-    lib_rtl_delete_section(m_bm->event_add);
-    printf("Cannot create section %s. Exiting....",bitmap_mod);
-    exit(status);
+  status = ::lib_rtl_create_section(bitmap_mod,(p_size<<(Bits_p_kByte-1))>>3,&m_bm->bitm_add);
+  if(!::lib_rtl_is_success(status))   {   
+    ::lib_rtl_delete_section(m_bm->ctrl_add);
+    ::lib_rtl_delete_section(m_bm->user_add);
+    ::lib_rtl_delete_section(m_bm->event_add);
+    ::printf("Cannot create section %s. Exiting....",bitmap_mod);
+    ::exit(status);
   }
   m_bm->bitmap = (char*)m_bm->bitm_add->address;
-  status = lib_rtl_create_section(buff_mod,p_size<<10,&m_bm->buff_add);
-  if(!lib_rtl_is_success(status))   {   
-    lib_rtl_delete_section(m_bm->ctrl_add);
-    lib_rtl_delete_section(m_bm->user_add);
-    lib_rtl_delete_section(m_bm->event_add);
-    lib_rtl_delete_section(m_bm->buff_add);
-    printf("Cannot create section %s. Exiting....",buff_mod);
-    exit(status);
+  status = ::lib_rtl_create_section(buff_mod,p_size<<10,&m_bm->buff_add);
+  if(!::lib_rtl_is_success(status))   {   
+    ::lib_rtl_delete_section(m_bm->ctrl_add);
+    ::lib_rtl_delete_section(m_bm->user_add);
+    ::lib_rtl_delete_section(m_bm->event_add);
+    ::lib_rtl_delete_section(m_bm->buff_add);
+    ::printf("Cannot create section %s. Exiting....",buff_mod);
+    ::exit(status);
   }
   m_bm->buffer_add = (char*)m_bm->buff_add->address;
   CONTROL* ctrl  = m_bm->ctrl;
   USER*    user  = m_bm->user;
   EVENT*   event = m_bm->event;
-  memset(ctrl,0,sizeof(CONTROL));
+  ::memset(ctrl,0,sizeof(CONTROL));
   ctrl->p_umax       = p_umax;
   ctrl->p_emax       = p_emax;
   ctrl->buff_size    = p_size<<10; /* in bytes*/
@@ -212,11 +212,11 @@ int MBM::Installer::install()  {
     event[j].eid   = j;
   }
   status = mbm_map_global_buffer_info(&bm_all);
-  if(!lib_rtl_is_success(status))   {   
-    lib_rtl_delete_section(m_bm->ctrl_add);
-    lib_rtl_delete_section(m_bm->user_add);
-    lib_rtl_delete_section(m_bm->event_add);
-    lib_rtl_delete_section(m_bm->buff_add);
+  if(!::lib_rtl_is_success(status))   {   
+    ::lib_rtl_delete_section(m_bm->ctrl_add);
+    ::lib_rtl_delete_section(m_bm->user_add);
+    ::lib_rtl_delete_section(m_bm->event_add);
+    ::lib_rtl_delete_section(m_bm->buff_add);
     ::printf("Cannot map global buffer information....\n");
     ::exit(status);
   }
@@ -235,44 +235,44 @@ int MBM::Installer::install()  {
 }
 
 int MBM::Installer::deinstall()  {
-  lib_rtl_gbl_t handle;
-  printf("++bm_init++ Commencing BM deinstallation \n");
-  int status = lib_rtl_map_section(ctrl_mod, sizeof(CONTROL), &handle);
-  if( !lib_rtl_is_success(status)) 
+  ::lib_rtl_gbl_t handle;
+  ::printf("++bm_init++ Commencing BM deinstallation \n");
+  int status = ::lib_rtl_map_section(ctrl_mod, sizeof(CONTROL), &handle);
+  if( !::lib_rtl_is_success(status)) 
     return 1;
   if (p_force != 1)  {
     m_bm->ctrl = (CONTROL*)handle->address;
     if( m_bm->ctrl->i_users > 0 )    {
-      printf("++bm_init++ Unable to de-install BM (%d users still active)\n", m_bm->ctrl->i_users);
+      ::printf("++bm_init++ Unable to de-install BM (%d users still active)\n", m_bm->ctrl->i_users);
       return(-1);
     }
   }
-  status = lib_rtl_delete_section(handle);
-  if (!lib_rtl_is_success(status))  {
-    printf("problem deleting section %s status %d\n",ctrl_mod,status);
+  status = ::lib_rtl_delete_section(handle);
+  if (!::lib_rtl_is_success(status))  {
+    ::printf("problem deleting section %s status %d\n",ctrl_mod,status);
   }
-  status = lib_rtl_map_section(user_mod, sizeof(USER), &handle);
-  status = lib_rtl_delete_section(handle);
-  if (!lib_rtl_is_success(status))  {
-    printf("problem deleting section %s status %d\n",user_mod,status);
+  status = ::lib_rtl_map_section(user_mod, sizeof(USER), &handle);
+  status = ::lib_rtl_delete_section(handle);
+  if (!::lib_rtl_is_success(status))  {
+    ::printf("problem deleting section %s status %d\n",user_mod,status);
   }
-  status = lib_rtl_map_section(buff_mod, 1, &handle);
-  status = lib_rtl_delete_section(handle);
-  if (!lib_rtl_is_success(status))  {
-    printf("problem deleting section %s status %d\n",buff_mod,status);
+  status = ::lib_rtl_map_section(buff_mod, 1, &handle);
+  status = ::lib_rtl_delete_section(handle);
+  if (!::lib_rtl_is_success(status))  {
+    ::printf("problem deleting section %s status %d\n",buff_mod,status);
   }
-  status = lib_rtl_map_section(event_mod, 1, &handle);
-  status = lib_rtl_delete_section(handle);
-  if (!lib_rtl_is_success(status))  {
-    printf("problem deleting section %s status %d\n",event_mod,status);
+  status = ::lib_rtl_map_section(event_mod, 1, &handle);
+  status = ::lib_rtl_delete_section(handle);
+  if (!::lib_rtl_is_success(status))  {
+    ::printf("problem deleting section %s status %d\n",event_mod,status);
   }
-  status = lib_rtl_map_section(bitmap_mod, 1, &handle);
-  status = lib_rtl_delete_section(handle);
-  if (!lib_rtl_is_success(status))  {
-    printf("problem deleting section %s status %d\n",bitmap_mod,status);
+  status = ::lib_rtl_map_section(bitmap_mod, 1, &handle);
+  status = ::lib_rtl_delete_section(handle);
+  if (!::lib_rtl_is_success(status))  {
+    ::printf("problem deleting section %s status %d\n",bitmap_mod,status);
   }
   status = mbm_map_global_buffer_info(&bm_all);
-  if(!lib_rtl_is_success(status))
+  if(!::lib_rtl_is_success(status))
     return 1;
   BUFFERS* buffs = (BUFFERS*)bm_all->address;
   for(int i=0; i<buffs->p_bmax; ++i)  {
@@ -284,7 +284,7 @@ int MBM::Installer::deinstall()  {
     }
   }
   mbm_unmap_global_buffer_info(bm_all);
-  printf("++bm_init++ Old BM [%s] de-installed successfully\n",m_bm->bm_name);
+  ::printf("++bm_init++ Old BM [%s] de-installed successfully\n",m_bm->bm_name);
   return(0);
 }
 
@@ -296,9 +296,10 @@ int mbm_install(int argc , char** argv) {
       mbm_mon(0, argv); 
     }
     else  {
-      for(;;) lib_rtl_sleep(10000);
+      for(;;) ::lib_rtl_sleep(10000);
     }
   }
+  ::printf("All done.\n");
   return sc;
 }
 

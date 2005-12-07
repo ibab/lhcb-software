@@ -46,13 +46,18 @@ namespace {
       int vetomask[4] = {0,0,0,0};
       int trmask[4]   = {-1,-1,-1,-1};
       addRequest(1,trmask,vetomask,BM_MASK_ANY,BM_REQ_ALL,BM_FREQ_PERC,100.);
-      setNonBlocking(WT_FACILITY_DAQ_EVENT, true);
+      //setNonBlocking(WT_FACILITY_DAQ_EVENT, true);
       ::printf(" MEP    buffer start: %08X\n",m_mepID->mepStart);
       ::printf(" EVENT  buffer start: %08X\n",m_mepID->evtStart);
       ::printf(" RESULT buffer start: %08X\n",m_mepID->resStart);
     }
     int eventAction() {
-      // const MBM::EventDesc& evt = event();
+      const MBM::EventDesc& evt = event();
+      MEP_SINGLE_EVT* ev = (MEP_SINGLE_EVT*)evt.data;
+      MEPEVENT*       e  = (MEPEVENT*)(int*)(m_mepID->mepStart + ev->begin);
+      if ( e->valid == 0 ) {
+	::printf("Found invalid MEP: %p [%d]\n",(void*)e,e->mepBufferID);
+      }
       return Consumer::eventAction();
     }
   };
@@ -64,5 +69,10 @@ extern "C" int mep_cons_a(int argc,char **argv) {
   cli.getopt("name",1,name);
   cli.getopt("input",1,input);
   ::printf("Asynchronous MEP Holder \"%s\" (pid:%d) included in buffers.\n",name.c_str(),Holder::pid());
-  return Holder(name,input).run();
+  Holder h(name,input);
+  while(1) {
+    h.eventRearm();
+    h.eventAction();
+  }
+  return 1;
 }

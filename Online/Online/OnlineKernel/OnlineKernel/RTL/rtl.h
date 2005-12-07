@@ -141,8 +141,11 @@ extern "C" {
 
   /// Issue system error message
   int lib_rtl_signal_message(int, const char* fmt, ...);
-  /// Declare exit handler
+  /// Sleep specified time
   int lib_rtl_sleep(int millisecs);
+  /// Sleep specified time (sub-millisecond range)
+  int lib_rtl_usleep(int microsecs);
+
   const char* lib_rtl_error_message(int status);
   /// Small helper function to properly retrun from main program.
   int lib_rtl_default_return();
