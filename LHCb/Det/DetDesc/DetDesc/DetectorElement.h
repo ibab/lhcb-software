@@ -1,4 +1,4 @@
-// $Id: DetectorElement.h,v 1.31 2005-12-02 18:36:55 jpalac Exp $
+// $Id: DetectorElement.h,v 1.32 2005-12-07 13:19:07 cattanem Exp $
 #ifndef  DETDESC_DETECTORELEMENT_H
 #define  DETDESC_DETECTORELEMENT_H 1
 
@@ -15,12 +15,8 @@
 #include <vector>
 #include <map>
 
-#include "GaudiKernel/IDataProviderSvc.h"
 #include "GaudiKernel/ITime.h"
-#include "GaudiKernel/IRegistry.h"
-#include "GaudiKernel/ISvcLocator.h"
 #include "GaudiKernel/MsgStream.h"
-#include "GaudiKernel/SmartDataPtr.h"
 
 #include "DetDesc/Services.h"
 #include "DetDesc/ILVolume.h"
@@ -35,6 +31,7 @@ class IDataProviderSvc;
 class IMessageSvc;
 template <class T> class DataObjectFactory;
 class IUpdateManagerSvc;
+class IRegistry;
 
 /** @class DetectorElement DetectorElement.h DetDesc/DetectorElement.h
  *
@@ -262,16 +259,6 @@ public:
    */
 
   virtual const int sensitiveVolumeID(const Gaudi::XYZPoint& globalPos) const;
-
-  /// IInspectable interface:
-//   virtual bool acceptInspector( IInspector* )       ; 
-//   virtual bool acceptInspector( IInspector* ) const ; 
-
-  /// serialization for reading 
-  virtual StreamBuffer& serialize( StreamBuffer& )       ; 
-
-  /// serialization for writing 
-  virtual StreamBuffer& serialize( StreamBuffer& ) const ; 
 
   /// Used to create a link with a given name to the condition at 'path' in the detector data store.
   void createCondition(std::string &name, std::string &path);

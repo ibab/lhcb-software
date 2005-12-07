@@ -1,12 +1,10 @@
-// $Id: SolidPolycone.cpp,v 1.10 2005-12-07 07:33:50 cattanem Exp $
+// $Id: SolidPolycone.cpp,v 1.11 2005-12-07 13:19:07 cattanem Exp $
 // ============================================================================
 #include "DetDesc/SolidPolycone.h"
 // LHCbDefintions
 #include "Kernel/PhysicalConstants.h"
 // GaudiKernel
-#include "GaudiKernel/StreamBuffer.h"
 #include "GaudiKernel/MsgStream.h"
-#include "GaudiKernel/IInspector.h"
 // DetDesc
 #include "DetDesc/SolidFactory.h"
 #include "DetDesc/SolidCons.h"
@@ -253,75 +251,6 @@ bool SolidPolycone::isInside (  const Gaudi::XYZPoint& point ) const
     }
   ///
   return true;
-};
-
-/// ============================================================================
-/** serialization for writing
- *  @param sb reference to stream buffer
- *  @return reference to stream buffer
- */
-// ============================================================================
-StreamBuffer& SolidPolycone::serialize( StreamBuffer& sb ) const 
-{
-  /// serialize the base class 
-  SolidBase::serialize( sb ) ;
-  /// serialze the triplets 
-  sb << number() ;
-  for( unsigned int  i = 0 ; i < number()  ; ++i ) 
-    { sb << z( i ) << RMax( i ) << RMin( i ) ; }
-  ///
-  return sb << startPhiAngle() << deltaPhiAngle() ;
-};
-
-
-/// ============================================================================
-/** serialization for reading
- *  @param sb reference to stream buffer
- *  @return reference to stream buffer
- */
-// ============================================================================
-StreamBuffer& SolidPolycone::serialize( StreamBuffer& sb ) 
-{
-  /// reset
-  reset();
-  m_triplets.clear();
-  /// serialize the base class 
-  SolidBase::serialize( sb ) ;
-  Triplets::size_type num;
-  sb >> num ;
-  if( num < 2 ) 
-    { throw SolidException("SolidPolycone:: serialize wrong number!");}
-  while( num-- > 0 )
-    {
-      double zz , rmx , rmn;
-      sb >> zz >> rmx >> rmn ;
-      m_triplets.push_back( Triplet( zz , Pair( rmx , rmn ) ) );
-    }
-  ///
-  sb >> m_startPhiAngle >> m_deltaPhiAngle ;
-  ///
-  /// check for Phi
-  if(    0.0 * degree > startPhiAngle()                 ) 
-    { throw SolidException("SolidPolycone ::StartPhiAngle < 0 degree!"    );}
-  if(    0.0 * degree > deltaPhiAngle()                 ) 
-    { throw SolidException("SolidPolycone ::DeltaPhiAngle < 0 degree!"    );}
-  if(  360.0 * degree < startPhiAngle()+deltaPhiAngle() ) 
-    { throw SolidException("SolidPolycone ::StartPhiAngle+DeltaPhiAngle>2pi");}
-  /// sort the triplets
-  std::sort( m_triplets.begin() , m_triplets.end() );
-  ///
-  for( unsigned int i = 0 ; i < number() ; ++i )
-    {
-      if( RMin( i ) < 0 ) 
-        { throw SolidException("SolidPolycone ::rMin < 0 !");}
-      if( !( RMin(i) < RMax( i ) ) )        
-        { throw SolidException("SolidPolycone :: !(rMin < rMax) !");}      
-    }
-  ///
-  // set bounding parameters 
-  setBP();
-  //
-  return sb;
 };
 
 // ============================================================================/

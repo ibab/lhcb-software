@@ -1,4 +1,4 @@
-// $Id: SolidSphere.h,v 1.12 2005-12-07 07:33:49 cattanem Exp $ 
+// $Id: SolidSphere.h,v 1.13 2005-12-07 13:19:07 cattanem Exp $ 
 // ===========================================================================
 // CVS $Name: not supported by cvs2svn $ 
 // ===========================================================================
@@ -207,29 +207,6 @@ public:
    */
   inline       double  endThetaAngle  () const 
   { return m_sphere_startThetaAngle + m_sphere_deltaThetaAngle ; };
-  
-  /** - serialization for reading
-   *  - implementation of ISerialize abstract interface 
-   *  - reimplementation of SolidBase::serialize 
-   *  @see ISerialize 
-   *  @see ISolid  
-   *  @see SolidBase   
-   *  @param s reference to stream buffer
-   *  @return reference to stream buffer
-   */
-  StreamBuffer& serialize( StreamBuffer& s ) ; 
-  
-  /** - serialization for writing
-   *  - implementation of ISerialize abstract interface 
-   *  - reimplementation of SolidBase::serialize 
-   *  @see ISerialize 
-   *  @see ISolid  
-   *  @see SolidBase   
-   *  @param s reference to stream buffer
-   *  @return reference to stream buffer
-   */
-  StreamBuffer& serialize( StreamBuffer& s ) const ; 
-  ///
   
 protected:
   

@@ -1,4 +1,4 @@
-// $Id: SolidPolycone.h,v 1.6 2005-12-07 07:33:49 cattanem Exp $ 
+// $Id: SolidPolycone.h,v 1.7 2005-12-07 13:19:07 cattanem Exp $ 
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
@@ -124,29 +124,6 @@ public:
   intersectionTicks ( const Gaudi::XYZPoint & Point  ,  
                       const Gaudi::XYZVector& Vector ,  
                       ISolid::Ticks    & ticks  ) const ;
-  
-  /** - serialization for reading
-   *  - implementation of ISerialize abstract interface 
-   *  - reimplementation of SolidBase::serialize 
-   *  @see ISerialize 
-   *  @see ISolid  
-   *  @see SolidBase   
-   *  @param      sb              reference to stream buffer
-   *  @exception  SolidException  wrong parameters range 
-   *  @return reference to stream buffer
-   */
-  StreamBuffer& serialize( StreamBuffer& sb )       ; 
-  
-  /** - serialization for writing
-   *  - implementation of ISerialize abstract interface 
-   *  - reimplementation of SolidBase::serialize 
-   *  @see ISerialize 
-   *  @see ISolid  
-   *  @see SolidBase   
-   *  @param sb reference to stream buffer
-   *  @return reference to stream buffer
-   */
-  StreamBuffer& serialize( StreamBuffer& sb ) const ;
   
   /** specific for polycone
    */

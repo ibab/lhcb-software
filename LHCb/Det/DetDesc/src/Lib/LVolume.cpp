@@ -1,20 +1,14 @@
-// $Id: LVolume.cpp,v 1.30 2005-12-02 18:36:56 jpalac Exp $ 
+// $Id: LVolume.cpp,v 1.31 2005-12-07 13:19:07 cattanem Exp $ 
 
 /// STD & STL includes 
 #include <stdio.h> 
 #include <functional> 
 #include <algorithm> 
-/// CLHEP includes 
+/// LHCbDefinitions includes 
 #include "Kernel/Transform3DTypes.h"
 /// Gaudi Kernel includes
 #include "GaudiKernel/StatusCode.h"
-#include "GaudiKernel/DataObject.h"
-#include "GaudiKernel/TimePoint.h" 
 #include "GaudiKernel/SmartDataPtr.h" 
-#include "GaudiKernel/IDataProviderSvc.h" 
-#include "GaudiKernel/ISvcLocator.h" 
-#include "GaudiKernel/StreamBuffer.h" 
-#include "GaudiKernel/SmartRefVector.h" 
 /// DetDesc includes 
 #include "DetDesc/ISolid.h"
 #include "DetDesc/ILVolume.h"
@@ -243,60 +237,6 @@ const Material* LVolume::findMaterial() const
   Assert( 0 != mat , "Could not locate material=" + materialName() ); 
   m_material = mat;
   return m_material; 
-};
-
-// ============================================================================
-/** serialization for reading 
- *  - implementation of DataObject method
- *  - implementation of ISerialize interface
- *  @see DataObject
- *  @see ILVolume 
- *  @see ISerialize 
- *  @param s reference to stream buffer 
- *  @return reference to stream buffer 
- */ 
-// ============================================================================
-StreamBuffer& LVolume::serialize(StreamBuffer& s )
-{
-  /// reset the logical volume  
-  reset();
-  /// Serialize the base class  
-  LogVolBase::serialize( s ) ;
-  /// solid 
-  if( 0 != m_solid ) { delete m_solid ; m_solid = 0 ; }
-  std::string solidType;
-  s >> solidType ;
-  m_solid = Solid::createSolid( solidType );
-  if( 0 == solid() )
-    { throw LogVolumeException( "Could not instantiate SolidType='"
-                                + solidType + "'" ); }
-  /// serialize the solid 
-  m_solid->serialize( s ) ;
-  /// material 
-  return s >> m_materialName ;
-};
-
-// ============================================================================
-/** serialization for writing 
- *  - implementation of DataObject method
- *  - implementation of ISerialize interface
- *  @see DataObject
- *  @see ILVolume 
- *  @see ISerialize 
- *  @param s reference to stream buffer 
- *  @return reference to stream buffer 
- */ 
-// ============================================================================
-StreamBuffer& LVolume::serialize( StreamBuffer& s )  const
-{
-  /// Serialize the base class  
-  LogVolBase::serialize( s ) ;
-  /// Serialize the members 
-  /// solid 
-  s << m_solid->typeName() ;
-  m_solid->serialize( s ) ;
-  /// material 
-  return s << m_materialName ;
 };
 
 // ============================================================================

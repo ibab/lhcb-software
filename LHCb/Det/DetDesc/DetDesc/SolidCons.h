@@ -1,4 +1,4 @@
-// $Id: SolidCons.h,v 1.13 2005-12-07 07:33:49 cattanem Exp $ 
+// $Id: SolidCons.h,v 1.14 2005-12-07 13:19:07 cattanem Exp $ 
 // ===========================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ===========================================================================
@@ -162,29 +162,6 @@ public:
     const Tick       & tickMin ,
     const Tick       & tickMax ,
     Ticks            & ticks   ) const;
-
-  /** - serialization for reading
-   *  - implementation of ISerialize abstract interface 
-   *  - reimplementation of SolidBase::serialize 
-   *  @see ISerialize 
-   *  @see ISolid  
-   *  @see SolidBase   
-   *  @param      sb              reference to stream buffer
-   *  @exception  SolidException  wrong parameters range 
-   *  @return reference to stream buffer
-   */
-  StreamBuffer& serialize( StreamBuffer& sb )       ; 
-  
-  /** - serialization for writing
-   *  - implementation of ISerialize abstract interface 
-   *  - reimplementation of SolidBase::serialize 
-   *  @see ISerialize 
-   *  @see ISolid  
-   *  @see SolidBase   
-   *  @param sb reference to stream buffer
-   *  @return reference to stream buffer
-   */
-  StreamBuffer& serialize( StreamBuffer& sb ) const ; 
 
   /** inner radius at minus Z  
    *  @return inner radius at minus Z  

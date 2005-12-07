@@ -1,4 +1,4 @@
-// $Id: LogVolBase.h,v 1.13 2005-12-02 18:36:55 jpalac Exp $ 
+// $Id: LogVolBase.h,v 1.14 2005-12-07 13:19:07 cattanem Exp $ 
 #ifndef     DETDESC_LOGVOLBASE_H
 #define     DETDESC_LOGVOLBASE_H
 /// STD and STL includes
@@ -6,7 +6,6 @@
 #include <algorithm> 
 /// GaudiKernel includes 
 #include "GaudiKernel/IValidity.h"
-#include "GaudiKernel/SmartRefVector.h" 
 #include "GaudiKernel/IRegistry.h"
 /// DetDesc  includes
 #include "DetDesc/ISolid.h" 
@@ -270,28 +269,6 @@ public:
     /// return self-reference
     return this;
   };
-  
-  /** serialization for reading 
-   *  - implementation of DataObject method
-   *  - implementation of ISerialize interface
-   *  @see DataObject
-   *  @see ILVolume 
-   *  @see ISerialize 
-   *  @param s reference to stream buffer 
-   *  @return reference to stream buffer 
-   */ 
-  virtual StreamBuffer& serialize( StreamBuffer& s );
-  
-  /** serialization for writing 
-   *  - implementation of DataObject method
-   *  - implementation of ISerialize interface
-   *  @see DataObject
-   *  @see ILVolume 
-   *  @see ISerialize 
-   *  @param s reference to stream buffer 
-   *  @return reference to stream buffer 
-   */ 
-  virtual StreamBuffer& serialize( StreamBuffer& s )  const;
   
   /** query the interface
    *  @see IInterface 

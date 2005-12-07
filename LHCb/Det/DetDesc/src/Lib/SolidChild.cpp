@@ -1,13 +1,10 @@
-// $Id: SolidChild.cpp,v 1.15 2005-12-06 18:51:27 jpalac Exp $ 
+// $Id: SolidChild.cpp,v 1.16 2005-12-07 13:19:07 cattanem Exp $ 
 // ===========================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ===========================================================================
 /// CLHEP
 #include "Kernel/Transform3DTypes.h" 
 #include "Kernel/Point3DTypes.h" 
-/// GaudiKernel
-#include "GaudiKernel/IInspector.h" 
-#include "GaudiKernel/StreamBuffer.h"
 /// DetDesc 
 #include "DetDesc/SolidChild.h" 
 #include "DetDesc/Solid.h"

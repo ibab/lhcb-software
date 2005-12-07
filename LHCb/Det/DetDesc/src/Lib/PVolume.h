@@ -1,4 +1,4 @@
-// $Id: PVolume.h,v 1.15 2005-12-02 18:36:56 jpalac Exp $ 
+// $Id: PVolume.h,v 1.16 2005-12-07 13:19:07 cattanem Exp $ 
 #ifndef    DETDESC_PVOLUME_H
 #define    DETDESC_PVOLUME_H 1 
 
@@ -223,29 +223,6 @@ public:
    *  @return reference counter 
    */
   virtual unsigned long release ();
-
-  /** serialization for reading 
-   *  - implementation of DataObject method
-   *  - implementation of ISerialize interface
-   *  @see DataObject
-   *  @see ILVolume 
-   *  @see ISerialize 
-   *  @param s reference to stream buffer 
-   *  @return reference to stream buffer 
-   */ 
-  virtual StreamBuffer& serialize(StreamBuffer& s );
-
-  /** serialization for writing 
-   *  - implementation of DataObject method
-   *  - implementation of ISerialize interface
-   *  @see DataObject
-   *  @see ILVolume 
-   *  @see ISerialize 
-   *  @param s reference to stream buffer 
-   *  @return reference to stream buffer 
-   */ 
-  virtual StreamBuffer& serialize(StreamBuffer& s )  const;
-
 
 protected:
   

@@ -1,4 +1,4 @@
-// $Id: LAssembly.h,v 1.4 2005-12-02 18:36:55 jpalac Exp $
+// $Id: LAssembly.h,v 1.5 2005-12-07 13:19:07 cattanem Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
@@ -215,18 +215,6 @@ public:
    *  @return unique class identifier 
    */      
   virtual const CLID& clID    ()     const ;
-  
-  /** object serialization for writing
-   *  @param   sb reference to the stream
-   *  @return     reference to the stream 
-   */
-  virtual StreamBuffer& serialize ( StreamBuffer& sb ) const ;
-  
-  /** object serialization for reading
-   *  @param   sb reference to the stream
-   *  @return     reference to the stream 
-   */
-  virtual StreamBuffer& serialize ( StreamBuffer& sb )       ;
   
   /** printout to STD/STL stream
    *  @see ILVolume 

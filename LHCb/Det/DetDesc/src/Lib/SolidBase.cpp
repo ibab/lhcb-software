@@ -1,9 +1,7 @@
-// $Id: SolidBase.cpp,v 1.12 2005-12-07 07:33:50 cattanem Exp $
+// $Id: SolidBase.cpp,v 1.13 2005-12-07 13:19:07 cattanem Exp $
 
 // Units
 #include "Kernel/SystemOfUnits.h"
-// GaudiKernel
-#include "GaudiKernel/StreamBuffer.h"
 /// DetDesc 
 #include "DetDesc/DetDesc.h"
 #include "DetDesc/SolidBase.h"
@@ -81,8 +79,6 @@ StatusCode SolidBase::queryInterface( const InterfaceID& ID , void** ppI )
   *ppI = 0 ;
   if      ( ISolid::     interfaceID() == ID ) 
     { *ppI = static_cast<ISolid*>     ( this ) ; } 
-  else if ( ISerialize:: interfaceID() == ID )
-    { *ppI = static_cast<ISerialize*> ( this ) ; } 
   else if ( IInterface:: interfaceID() == ID ) 
     { *ppI = static_cast<IInterface*> ( this ) ; } 
   else                                                  
@@ -162,33 +158,6 @@ MsgStream&    SolidBase::printOut ( MsgStream&    st ) const
        << DetDesc::print(   zMax () / mm )  << "," 
        << DetDesc::print(   rMax () / mm )  << "," 
        << DetDesc::print( rhoMax () / mm )  << ") " << endreq ;
-};
-// ============================================================================
-
-// ============================================================================
-/** serialization for reading
- *  @param sb reference to stream buffer
- *  @return reference to stream buffer
- */
-// ============================================================================
-StreamBuffer& SolidBase::serialize( StreamBuffer& sb )
-{
-  /// reset the current status before reading
-  reset();
-  /// read 
-  return sb >> m_name ;
-};
-
-
-// ============================================================================
-/** serialization for writing
- *  @param sb reference to stream buffer
- *  @return reference to stream buffer
- */
-// ============================================================================
-StreamBuffer& SolidBase::serialize( StreamBuffer& sb ) const
-{
-  return sb << typeName() <<  name()  ;
 };
 
 // ============================================================================

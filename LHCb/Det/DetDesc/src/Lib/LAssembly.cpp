@@ -1,8 +1,6 @@
-// $Id: LAssembly.cpp,v 1.7 2005-12-02 18:36:56 jpalac Exp $
+// $Id: LAssembly.cpp,v 1.8 2005-12-07 13:19:07 cattanem Exp $
 
 // Include files
-// from Gaudi
-#include "GaudiKernel/StreamBuffer.h"
 // DetDesc
 #include "DetDesc/LAssembly.h"
 #include "DetDesc/SolidBase.h"
@@ -282,26 +280,6 @@ unsigned int LAssembly::intersectLine
 
   return intersections.size();    ///< RETURN!!!
 };
-
-
-// ============================================================================
-/** object serialization for writing
- *  @param   sb reference to the stream
- *  @return     reference to the stream 
- */
-// ============================================================================
-StreamBuffer& LAssembly::serialize ( StreamBuffer& sb ) const 
-{ return LogVolBase::serialize( sb ); }
-
-  
-// ============================================================================
-/** object serialization for reading
- *  @param   sb reference to the stream
- *  @return     reference to the stream 
- */
-// ============================================================================
-StreamBuffer& LAssembly::serialize ( StreamBuffer& sb )       
-{ return LogVolBase::serialize( sb ); }
 
 // ============================================================================
 /** printout to STD/STL stream

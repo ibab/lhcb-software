@@ -1,4 +1,4 @@
-// $Id: SolidTrap.h,v 1.13 2005-12-07 07:33:49 cattanem Exp $
+// $Id: SolidTrap.h,v 1.14 2005-12-07 13:19:07 cattanem Exp $
 /// ===========================================================================
 /// CVS tag $Name: not supported by cvs2svn $ 
 /// ===========================================================================
@@ -21,7 +21,6 @@
 /** forward declarations */
 template <class TYPE>
 class SolidFactory;
-class StreamBuffer; 
 
 /** @class SolidTrap SolidTrap.h "DetDesc/SolidTrap.h"
  *
@@ -110,29 +109,6 @@ public:
    */
   virtual MsgStream&    printOut ( MsgStream&   os             ) const;
   
-  /** - serialization for reading
-   *  - implementation of ISerialize abstract interface 
-   *  - reimplementation of SolidBase::serialize 
-   *  @see ISerialize 
-   *  @see ISolid  
-   *  @see SolidBase   
-   *  @param      ""              reference to stream buffer
-   *  @exception  SolidException  wrong parameters range 
-   *  @return reference to stream buffer
-   */
-  StreamBuffer& serialize( StreamBuffer& )       ; 
-  
-  /** - serialization for writing
-   *  - implementation of ISerialize abstract interface 
-   *  - reimplementation of SolidBase::serialize 
-   *  @see ISerialize 
-   *  @see ISolid  
-   *  @see SolidBase   
-   *  @param "" reference to stream buffer
-   *  @return reference to stream buffer
-   */
-  StreamBuffer& serialize( StreamBuffer& ) const ; 
-
   /** half size in z  
    *  @return half size in z 
    */ 

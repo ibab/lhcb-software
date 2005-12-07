@@ -1,4 +1,4 @@
-// $Id: DetectorElement.icpp,v 1.12 2005-11-25 15:31:58 jpalac Exp $
+// $Id: DetectorElement.icpp,v 1.13 2005-12-07 13:19:07 cattanem Exp $
 
 #ifndef       DETDESC_DETECTORELEMENT_ICPP 
 #define       DETDESC_DETECTORELEMENT_ICPP  1 
@@ -6,7 +6,6 @@
 
 // Include Files
 #include "GaudiKernel/MsgStream.h"
-#include "GaudiKernel/StreamBuffer.h"
 
 #include "DetDesc/DetectorElement.h"
 #include "DetDesc/DetectorElementException.h"

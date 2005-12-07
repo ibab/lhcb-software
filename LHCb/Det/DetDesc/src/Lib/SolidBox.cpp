@@ -1,9 +1,7 @@
-// $Id: SolidBox.cpp,v 1.12 2005-12-07 07:33:50 cattanem Exp $ 
+// $Id: SolidBox.cpp,v 1.13 2005-12-07 13:19:07 cattanem Exp $ 
 // ===========================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ===========================================================================
-// GaudiKernel
-#include "GaudiKernel/IInspector.h"
 // DetDesc 
 #include "DetDesc/DetDesc.h" 
 #include "DetDesc/SolidBox.h" 
@@ -89,62 +87,6 @@ SolidBox::SolidBox()
 /// destructor 
 // ============================================================================
 SolidBox::~SolidBox(){ if ( this == m_cover ) { m_cover = 0 ; } ; };
-// ============================================================================
-/** - serialization for reading
- *  - implementation of ISerialize abstract interface 
- *  - reimplementation of SolidBase::serialize 
- *  @see ISerialize 
- *  @see ISolid  
- *  @see SolidBase   
- *  @param      s               reference to stream buffer
- *  @exception  SolidException  wrong parameters range 
- *  @return reference to stream buffer
- */
-// ============================================================================
-StreamBuffer& SolidBox::serialize( StreamBuffer& s )       
-{
-  /// 
-  reset();
-  // serialize the base class 
-  SolidBase::serialize( s ) ;  
-  // serialize own data 
-  s >> m_box_xHalfLength 
-    >> m_box_yHalfLength 
-    >> m_box_zHalfLength ;
-  ///
-  if( 0 >= xHalfLength() )
-    { throw SolidException("SolidBox: XHalfLength is non positive!"); }
-  if( 0 >= yHalfLength() )
-    { throw SolidException("SolidBox: YHalfLength is non positive!"); }
-  if( 0 >= zHalfLength() )
-    { throw SolidException("SolidBox: ZHalfLength is non positive!"); }
-  // set bounding paramters od SolidBase class
-  setBP () ;
-  //
-  return s ;
-};
-// ============================================================================
-
-// ============================================================================
-/** - serialization for writing
- *  - implementation of ISerialize abstract interface 
- *  - reimplementation of SolidBase::serialize 
- *  @see ISerialize 
- *  @see ISolid  
- *  @see SolidBase   
- *  @param s reference to stream buffer
- *  @return reference to stream buffer
- */
-// ============================================================================
-StreamBuffer& SolidBox::serialize( StreamBuffer& s ) const 
-{
-  /// serialize the base class 
-  SolidBase::serialize( s ) ;
-  /// serialize own data 
-  return s << xHalfLength() 
-           << yHalfLength() 
-           << zHalfLength() ; 
-};
 // ============================================================================
 
 // ============================================================================

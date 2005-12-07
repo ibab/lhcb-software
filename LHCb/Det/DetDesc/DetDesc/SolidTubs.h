@@ -1,4 +1,4 @@
-// $Id: SolidTubs.h,v 1.11 2005-12-07 07:33:50 cattanem Exp $
+// $Id: SolidTubs.h,v 1.12 2005-12-07 13:19:07 cattanem Exp $
 // ===========================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ===========================================================================
@@ -16,7 +16,6 @@
 // forward declarations
 template <class TYPE>
 class SolidFactory;
-class StreamBuffer;
 class MsgStream;
 //
 
@@ -160,29 +159,6 @@ public:
     const Tick       & tickMax ,
     Ticks            & ticks   ) const ;
     
-  /** - serialization for reading
-   *  - implementation of ISerialize abstract interface 
-   *  - reimplementation of SolidBase::serialize 
-   *  @see ISerialize 
-   *  @see ISolid  
-   *  @see SolidBase   
-   *  @param      s               reference to stream buffer
-   *  @exception  SolidException  wrong parameters range 
-   *  @return reference to stream buffer
-   */
-  StreamBuffer& serialize( StreamBuffer& s )       ; 
-  
-  /** - serialization for writing
-   *  - implementation of ISerialize abstract interface 
-   *  - reimplementation of SolidBase::serialize 
-   *  @see ISerialize 
-   *  @see ISolid  
-   *  @see SolidBase   
-   *  @param s reference to stream buffer
-   *  @return reference to stream buffer
-   */
-  StreamBuffer& serialize( StreamBuffer& s ) const ; 
-
   ///@{ 
   /** accessors to the tube segment parameters */
   inline double innerRadius     () const 

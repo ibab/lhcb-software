@@ -1,4 +1,4 @@
-// $Id: Surface.h,v 1.2 2003-04-25 08:52:23 sponce Exp $
+// $Id: Surface.h,v 1.3 2005-12-07 13:19:07 cattanem Exp $
 #ifndef     DETDESC_SURFACE_H 
 #define     DETDESC_SURFACE_H  1
 /// STL
@@ -41,11 +41,7 @@ public:
   /// 
   virtual const CLID& clID    () const { return Surface::classID() ; }
   static  const CLID& classID ()       { return CLID_Surface       ; }
-  ///
-  /// Serialize the object for writing
-  virtual StreamBuffer& serialize  ( StreamBuffer& s ) const ;
-  /// Serialize the object for reading
-  virtual StreamBuffer& serialize  ( StreamBuffer& s )       ;
+
   /// Fill the output stream (ASCII)
   virtual std::ostream& fillStream ( std::ostream& s ) const ;
   /// Fill the output stream (ASCII)

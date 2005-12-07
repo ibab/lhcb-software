@@ -1,4 +1,4 @@
-// $Id: SolidBoolean.h,v 1.17 2005-12-02 18:36:55 jpalac Exp $ 
+// $Id: SolidBoolean.h,v 1.18 2005-12-07 13:19:07 cattanem Exp $ 
 // ===========================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ===========================================================================
@@ -13,7 +13,6 @@
 
 // Forward declarations
 class StatusCode;
-class StreamBuffer;
 class MsgStream;
 
 
@@ -116,18 +115,6 @@ class SolidBoolean: public virtual SolidBase
   const ISolid* operator[]  ( unsigned int index ) const 
   {  return  ( ( index < noChildrens() )  ? *(childBegin()+index) : 0 ) ; } ;
   
-  /** serialization for reading
-   *  @param "" reference to stream buffer
-   *  @return reference to stream buffer
-   */
-  StreamBuffer& serialize( StreamBuffer& )       ; 
-  
-  /** serialization for writing
-   *  @param  "" reference to stream buffer
-   *  @return reference to stream buffer
-   */
-  StreamBuffer& serialize( StreamBuffer& ) const ; 
-
   /** acess to constant iterator
    *  @return "begin" iterator
    */  

@@ -1,4 +1,4 @@
-// $Id: Mixture.h,v 1.10 2005-06-13 11:34:29 cattanem Exp $ 
+// $Id: Mixture.h,v 1.11 2005-12-07 13:19:07 cattanem Exp $ 
 // ============================================================================ 
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================ 
@@ -93,10 +93,7 @@ public:
   ///
   virtual inline const CLID& clID    () const { return Mixture::classID(); }
   static         const CLID& classID ()       { return CLID_Mixture      ; } 
-  ///
-  /// serialization for read and write 
-  virtual StreamBuffer& serialize( StreamBuffer& s )       ; 
-  virtual StreamBuffer& serialize( StreamBuffer& s ) const ;   
+
   /// Fill the output stream (ASCII)
   virtual std::ostream& fillStream ( std::ostream& s ) const ;
   /// Fill the output stream (ASCII)

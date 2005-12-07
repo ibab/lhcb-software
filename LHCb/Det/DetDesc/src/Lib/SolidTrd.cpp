@@ -1,4 +1,4 @@
-// $Id: SolidTrd.cpp,v 1.15 2005-12-07 07:33:50 cattanem Exp $ 
+// $Id: SolidTrd.cpp,v 1.16 2005-12-07 13:19:07 cattanem Exp $ 
 // ===========================================================================
 // CVS $Name: not supported by cvs2svn $ 
 // ===========================================================================
@@ -94,76 +94,6 @@ SolidTrd::SolidTrd( const std::string& name )
 /// destructor 
 // ============================================================================
 SolidTrd::~SolidTrd() {};
-
-// ============================================================================
-/** - serialization for reading
- *  - implementation of ISerialize abstract interface 
- *  - reimplementation of SolidBase::serialize 
- *  @see ISerialize 
- *  @see ISolid  
- *  @see SolidBase   
- *  @param      s               reference to stream buffer
- *  @exception  SolidException  wrong parameters range 
- *  @return reference to stream buffer
- */
-// ============================================================================
-StreamBuffer& SolidTrd::serialize( StreamBuffer& s ) 
-{
-  /// reset  
-  reset();
-  /// serialize the base class
-  SolidBase::serialize( s ) ;
-  /// serialize memebers 
-  s >> m_trd_zHalfLength  
-    >> m_trd_xHalfLength1 
-    >> m_trd_xHalfLength2 
-    >> m_trd_yHalfLength1 
-    >> m_trd_yHalfLength2 ;  
-  ///
-  if( 0 >= zHalfLength () )
-    { throw SolidException("SolidTrd::ZHalfLength is not positive!"); } 
-  if( 0 >  xHalfLength1() )
-    { throw SolidException("SolidTrd::XHalfLength1 is negative!"); } 
-  if( 0 >  xHalfLength2() )
-    { throw SolidException("SolidTrd::XHalfLength2 is negative!"); } 
-  if( 0 >  yHalfLength1() )
-    { throw SolidException("SolidTrd::YHalfLength1 is negative!"); } 
-  if( 0 >  yHalfLength2() )
-    { throw SolidException("SolidTrd::YHalfLengt2 is negative!"); } 
-  if( 0 >=  xHalfLength1() + xHalfLength2() )
-    { throw SolidException("SolidTrd::XSUM is not positive "); } 
-  if( 0 >=  yHalfLength1() + yHalfLength2() )
-    { throw SolidException("SolidTrd::YSUM is not positive "); } 
-  ///
-  makeAll();
-  /// set bounding parameters
-  setBP();
-  ///
-  return s;
-  ///
-};
-
-// ============================================================================
-/** - serialization for writing
- *  - implementation of ISerialize abstract interface 
- *  - reimplementation of SolidBase::serialize 
- *  @see ISerialize 
- *  @see ISolid  
- *  @see SolidBase   
- *  @param s reference to stream buffer
- *  @return reference to stream buffer
- */
-// ============================================================================
-StreamBuffer& SolidTrd::serialize( StreamBuffer& s ) const
-{
-  /// serialize the base class 
-  SolidBase::serialize( s );
-  return s << m_trd_zHalfLength  
-           << m_trd_xHalfLength1 
-           << m_trd_xHalfLength2 
-           << m_trd_yHalfLength1 
-           << m_trd_yHalfLength2 ;  
-};
 
 // ============================================================================
 /** - retrieve the pointer to "simplified" solid - "cover"

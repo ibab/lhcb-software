@@ -1,5 +1,5 @@
-// $Id: Element.h,v 1.12 2005-09-19 14:26:01 mneedham Exp $
-/// $Id: Element.h,v 1.12 2005-09-19 14:26:01 mneedham Exp $
+// $Id: Element.h,v 1.13 2005-12-07 13:19:07 cattanem Exp $
+/// $Id: Element.h,v 1.13 2005-12-07 13:19:07 cattanem Exp $
 #ifndef DETDESC_ELEMENT_H
 #define DETDESC_ELEMENT_H 1 
 /// STL
@@ -101,10 +101,6 @@ public:
   /// compute radiation length
   void ComputeRadiationLength();
 
-  /// serialization for read and write 
-  virtual StreamBuffer& serialize( StreamBuffer& s )       ; 
-  virtual StreamBuffer& serialize( StreamBuffer& s ) const ; 
-  
   /// Fill the output stream (ASCII)
   virtual std::ostream& fillStream ( std::ostream& s ) const ;
   /// Fill the output stream (ASCII)

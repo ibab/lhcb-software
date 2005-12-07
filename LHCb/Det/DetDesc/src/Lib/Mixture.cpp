@@ -1,4 +1,4 @@
-// $Id: Mixture.cpp,v 1.9 2005-06-13 11:34:29 cattanem Exp $ 
+// $Id: Mixture.cpp,v 1.10 2005-12-07 13:19:07 cattanem Exp $ 
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
@@ -204,45 +204,6 @@ StatusCode Mixture::computeByFraction()
     density() <= 0 ? StatusCode::FAILURE : 
     lambdainv <= 0 ? StatusCode::FAILURE : StatusCode::SUCCESS ;
   ///
-};
-///
-StreamBuffer&    Mixture::serialize ( StreamBuffer& s ) const 
-{
-  Material::serialize( s );
-  s << A() << Z();
-  s << ( ( 0 == m_own ) ? m_elements.size() : m_elements.size() - 1 ) ; 
-  for( Elements::const_iterator i1 = m_elements.begin() ; 
-       m_elements.end() != i1 ; ++i1 )
-    { if( m_own != i1->second ) { s << i1->first << i1->second(this) ; } }
-  s << m_atoms.size() ;  
-  for( Atoms::const_iterator i2 = m_atoms.begin() ; m_atoms.end() != i2 ; ++i2 )
-    { s << *i2 ; }
-  return s ;
-};
-///
-StreamBuffer&     Mixture::serialize ( StreamBuffer& s )       
-{
-  Material::serialize( s );
-  s >> m_A >> m_Z; 
-  Elements::size_type size1;
-  s >> size1 ; 
-  m_elements.clear();
-  m_elements = Elements( size1 );
-  for( Elements::iterator i1 = m_elements.begin() ; 
-       m_elements.end() != i1 ; ++i1 )
-    { s >> i1->first >> i1->second(this) ; }
-  m_own = 0 ;
-  ///
- Atoms::size_type size2;
-  s >> size2;
-  m_atoms.clear();
-  m_atoms = Atoms( size2 );
-  for( Atoms::iterator i2 = m_atoms.begin() ; m_atoms.end() != i2 ; ++i2 )
-    { s >> *i2 ; }
-  //
-  compute();
-  ///
-  return s ;
 };
 ///
 MsgStream&        Mixture::fillStream ( MsgStream&   s ) const 

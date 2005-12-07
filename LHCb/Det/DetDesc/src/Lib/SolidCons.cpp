@@ -1,13 +1,11 @@
-// $Id: SolidCons.cpp,v 1.15 2005-12-07 07:33:50 cattanem Exp $ 
+// $Id: SolidCons.cpp,v 1.16 2005-12-07 13:19:07 cattanem Exp $ 
 // ===========================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ===========================================================================
 // Units
 #include "Kernel/PhysicalConstants.h"
 // GaudiKernel
-#include "GaudiKernel/StreamBuffer.h"
 #include "GaudiKernel/MsgStream.h"
-#include "GaudiKernel/IInspector.h"
 // DetDesc
 #include "DetDesc/DetDesc.h"
 #include "DetDesc/SolidCons.h"
@@ -237,80 +235,6 @@ bool SolidCons::isInside (  const Gaudi::XYZPoint& point ) const
   return true ;
 };
 // ============================================================================
-
-// ============================================================================
-/** serialization for reading
- *  @param sb reference to stream buffer
- *  @return reference to stream buffer
- */
-// ============================================================================
-StreamBuffer& SolidCons::serialize( StreamBuffer& sb ) 
-{
-  /// reset 
-  reset();
-  /// serialize the base class
-  SolidBase::serialize( sb );
-  /// serialize own members 
-  sb >>  m_cons_zHalfLength       
-     >>  m_cons_outerRadiusMinusZ 
-     >>  m_cons_outerRadiusPlusZ  
-     >>  m_cons_innerRadiusMinusZ 
-     >>  m_cons_innerRadiusPlusZ  
-     >>  m_cons_startPhiAngle    
-     >>  m_cons_deltaPhiAngle    
-     >>  m_cons_coverModel ;   
-  ///
-  if( 0 >= zHalfLength()                                ) 
-    { throw SolidException("SolidCons::ZHalfLength is not positive!");}
-  if( 0 >= outerRadiusAtMinusZ()                        ) 
-    { throw SolidException("SolidCons::OuterRadiusMinusZ is not positive!");}
-  if( 0 >= outerRadiusAtPlusZ()                         ) 
-    { throw SolidException("SolidCons::OuterRadiusPlusZ  is not positive!");}
-  if( 0 >  innerRadiusAtMinusZ()                        ) 
-    { throw SolidException("SolidCons::InnerRadiusMinusZ is negative !  ");}
-  if( innerRadiusAtMinusZ() >= outerRadiusAtMinusZ()    ) 
-    { throw SolidException("SolidCons::InnerRadiusMinusZ>=OuterRadiusMinusZ!");}
-  if( 0 >  innerRadiusAtPlusZ()                         ) 
-    { throw SolidException("SolidCons ::InnerRadiusPlusZ  is negative !   ");}
-  if( innerRadiusAtPlusZ() >= outerRadiusAtPlusZ()      ) 
-    { throw SolidException("SolidCons ::InnerRadiusPlusZ>=OuterRadiusPlusZ!");}
-  if( -180.0 * degree > startPhiAngle()                 ) 
-    { throw SolidException("SolidCons ::StartPhiAngle  is <-pi");}
-  if(  360.0 * degree < startPhiAngle()                 ) 
-    { throw SolidException("SolidCons ::StartPhiAngle>2pi");}
-  if(    0.0 * degree > deltaPhiAngle()                 ) 
-    { throw SolidException("SolidCons ::DeltaPhiAngle <0 "   );}
-  if(  360.0 * degree < startPhiAngle()+deltaPhiAngle() ) 
-    { throw SolidException("SolidCons ::StartPhiAngle+DeltaPhiAngle>2pi");}
-  //
-  m_noPhiGap = true ;
-  if(   0 * degree != startPhiAngle () ) { m_noPhiGap = false ; }
-  if( 360 * degree != deltaPhiAngle () ) { m_noPhiGap = false ; }
-  // set bounding parameters
-  setBP();
-  //
-  return sb; 
-};
-
-// ============================================================================
-/** serialization for writing
- *  @param sb reference to stream buffer
- *  @return reference to stream buffer
- */
-// ============================================================================
-StreamBuffer& SolidCons::serialize( StreamBuffer& sb ) const 
-{
-  /// serialize the base class 
-  SolidBase::serialize( sb ) ;
-  return   sb <<  m_cons_zHalfLength       
-              <<  m_cons_outerRadiusMinusZ 
-              <<  m_cons_outerRadiusPlusZ  
-              <<  m_cons_innerRadiusMinusZ 
-              <<  m_cons_innerRadiusPlusZ  
-              <<  m_cons_startPhiAngle    
-              <<  m_cons_deltaPhiAngle    
-              <<  m_cons_coverModel ;   
-};
 
 // ============================================================================/
 /** -# retrieve the pointer to "simplified" solid - "cover"

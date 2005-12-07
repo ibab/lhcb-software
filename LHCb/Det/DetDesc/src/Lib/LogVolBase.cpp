@@ -1,11 +1,10 @@
-// $Id: LogVolBase.cpp,v 1.14 2005-12-02 18:36:56 jpalac Exp $
+// $Id: LogVolBase.cpp,v 1.15 2005-12-07 13:19:07 cattanem Exp $
 
 // GaudiKernel
 #include "GaudiKernel/System.h"
 #include "GaudiKernel/IDataProviderSvc.h"
-#include "GaudiKernel/ISvcLocator.h"
-#include "GaudiKernel/IJobOptionsSvc.h"
-#include "GaudiKernel/PropertyMgr.h"
+//#include "GaudiKernel/IJobOptionsSvc.h"
+//#include "GaudiKernel/PropertyMgr.h"
 // DetDesc 
 #include "DetDesc/DetDesc.h"
 #include "DetDesc/LogVolBase.h"
@@ -171,8 +170,6 @@ LogVolBase::queryInterface
   *ppI = 0 ;
   if      ( ID == ILVolume::   interfaceID() ) 
     { *ppI = static_cast<ILVolume*>   ( this ) ; }
-  else if ( ID == ISerialize:: interfaceID() )
-    { *ppI = static_cast<ISerialize*> ( this ) ; }
   else if ( ID == IInterface:: interfaceID() )
     { *ppI = static_cast<IInterface*> ( this ) ; }
   else { return StatusCode::FAILURE ; }               ///< RETURN !
@@ -268,67 +265,6 @@ MsgStream& LogVolBase::printOut( MsgStream & os ) const
     }
   ///
   return os << endreq ;
-};
-
-// ============================================================================
-/** serialization for reading 
- *  - implementation of DataObject method
- *  - implementation of ISerialize interface
- *  @see DataObject
- *  @see ILVolume 
- *  @see ISerialize 
- *  @param s reference to stream buffer 
- *  @return reference to stream buffer 
- */ 
-// ============================================================================
-StreamBuffer& LogVolBase::serialize( StreamBuffer& s )
-{
-  /// reset the logical volume  
-  reset();
-  /// delete volumes 
-  while( !pvolumes().empty() ) 
-    { delete m_pvolumes.back() ; m_pvolumes.pop_back(); }
-  /// Serialize the base class  
-  DataObject::serialize( s ) ;
-  /// Serialize the members 
-  unsigned int npv ;
-  s >> npv ;
-  while( 0 < npv-- ) 
-    { 
-      IPVolume* ipv = createPVolume(); 
-      s >> *ipv ;
-    }
-  ///
-  return s >> m_surfaces ( this ) 
-           >> m_sdName           
-           >> m_mfName            ;
-};
-
-// ============================================================================
-/** serialization for writing 
- *  - implementation of DataObject method
- *  - implementation of ISerialize interface
- *  @see DataObject
- *  @see ILVolume 
- *  @see ISerialize 
- *  @param s reference to stream buffer 
- *  @return reference to stream buffer 
- */ 
-// ============================================================================
-StreamBuffer& LogVolBase::serialize( StreamBuffer& s )  const
-{
-  /// serialize the base 
-  DataObject::serialize( s ) ;
-  /// serialze the members
-  s << m_pvolumes.size() ;
-  /// serialize pvolumes 
-  for( ILVolume::PVolumes::const_iterator it = m_pvolumes.begin() ;
-       m_pvolumes.end() != it ; ++it )
-    { s << **it ; }
-  /// serialise other members 
-  return s << m_surfaces ( this ) 
-           << m_sdName           
-           << m_mfName            ;
 };
 
 // ===========================================================================

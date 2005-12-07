@@ -1,4 +1,4 @@
-// $Id: GeometryInfoPlus.cpp,v 1.12 2005-12-02 18:36:56 jpalac Exp $
+// $Id: GeometryInfoPlus.cpp,v 1.13 2005-12-07 13:19:07 cattanem Exp $
 // Include files 
 
 // GaudiKernel
@@ -10,7 +10,6 @@
 #include "GaudiKernel/IRegistry.h"
 #include "GaudiKernel/DataObject.h"
 #include "GaudiKernel/SmartDataPtr.h" 
-#include "GaudiKernel/StreamBuffer.h" 
 #include "GaudiKernel/MsgStream.h"
 // DetDesc 
 #include "DetDesc/IPVolume_predicates.h"
@@ -1001,50 +1000,7 @@ std::string GeometryInfoPlus::lvolumePath( const std::string& start,
 //   return StatusCode::SUCCESS;
 // }
 //=============================================================================
-//
-StreamBuffer& GeometryInfoPlus::serialize( StreamBuffer& sb ) 
-{
-  ///
-  reset() ; 
-  ///
-  unsigned long tmp1, tmp2 ; 
-  ///
-  sb >> tmp1 ;   m_gi_has_logical = tmp1 ? true : false ;
-  sb >> m_gi_lvolumeName ; 
-  sb >> tmp2 ;   m_gi_has_support = tmp2 ? true : false ;
-  if( m_gi_has_support ) 
-    { 
-      sb >> m_gi_supportName     ;
-      sb >> m_gi_supportNamePath ; 
-      {
-        unsigned long n ;
-        unsigned long i ;
-        sb >> n ; m_gi_supportPath.clear()   ; 
-        while( n-- > 0 ) { sb >> i ; m_gi_supportPath.push_back( i ) ; }
-      }
-    } 
-  ///
-  return sb;
-};
-//=============================================================================
-StreamBuffer& GeometryInfoPlus::serialize( StreamBuffer& sb ) const 
-{
-  ///
-  sb << (unsigned long) m_gi_has_logical 
-     <<                 m_gi_lvolumeName 
-     << (unsigned long) m_gi_has_support ;
-  if( m_gi_has_support ) 
-    { 
-      sb << m_gi_supportName  ;
-      sb << m_gi_supportNamePath ; 
-      ///
-      sb << m_gi_supportPath.size() ; 
-      for( unsigned i = 0 ; i < m_gi_supportPath.size() ; ++i ) 
-        { sb << m_gi_supportPath[i] ; }
-      ///
-    }
-  return sb;
-};
+
 //=============================================================================
 bool GeometryInfoPlus::acceptInspector( IInspector* pInspector ) 
 {
@@ -1140,8 +1096,6 @@ StatusCode GeometryInfoPlus::queryInterface( const InterfaceID& ID,
   *ppI = 0 ;
   if      ( IGeometryInfo::interfaceID()  == ID ) 
     { *ppI = static_cast<IGeometryInfo*> ( this ) ; } 
-  else if ( ISerialize:: interfaceID()    == ID )
-    { *ppI = static_cast<ISerialize*>    ( this ) ; } 
   else if ( IInterface:: interfaceID()    == ID ) 
     { *ppI = static_cast<IInterface*>    ( this ) ; } 
   else                                                  

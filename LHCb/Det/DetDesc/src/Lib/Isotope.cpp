@@ -1,4 +1,4 @@
-// $Id: Isotope.cpp,v 1.5 2003-04-25 08:52:24 sponce Exp $
+// $Id: Isotope.cpp,v 1.6 2005-12-07 13:19:07 cattanem Exp $
 /// DetDesc 
 #include "DetDesc/Isotope.h"
 ///
@@ -21,16 +21,3 @@ Isotope::Isotope( const std::string name    ,
 {};
 ////////////////////////////////////////////////////////////////////////////////////
 Isotope::~Isotope(){};
-////////////////////////////////////////////////////////////////////////////////////
-StreamBuffer& Isotope::serialize( StreamBuffer& os )
-{
-  Material::serialize( os );
-  return os >> m_A >> m_Z >> m_N ;   
-};
-////////////////////////////////////////////////////////////////////////////////////
-StreamBuffer& Isotope::serialize( StreamBuffer& os ) const  
-{
-  Material::serialize( os );
-  return os << m_A << m_Z << m_N ;   
-};
-////////////////////////////////////////////////////////////////////////////////////

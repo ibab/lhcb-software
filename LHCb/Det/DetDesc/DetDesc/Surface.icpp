@@ -1,9 +1,8 @@
-// $Id: Surface.icpp,v 1.2 2003-04-25 08:52:23 sponce Exp $
+// $Id: Surface.icpp,v 1.3 2005-12-07 13:19:07 cattanem Exp $
 #ifndef      DETDESC_SURFACE_ICPP
 #define      DETDESC_SURFACE_ICPP 1 
 ///  Gaudi 
 #include "GaudiKernel/MsgStream.h"
-#include "GaudiKernel/StreamBuffer.h"
 ///  DetDesc
 #include "DetDesc/Surface.h"
 ///

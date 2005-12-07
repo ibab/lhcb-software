@@ -1,4 +1,4 @@
-// $Id: TabulatedProperty.h,v 1.5 2005-08-16 09:04:59 marcocle Exp $
+// $Id: TabulatedProperty.h,v 1.6 2005-12-07 13:19:07 cattanem Exp $
 #ifndef     DETDESC_TABULATEDPROPERTY_H
 #define     DETDESC_TABULATEDPROPERTY_H 1 
 /// STL
@@ -9,7 +9,6 @@
 #include "DetDesc/CLIDTabulatedProperty.h"
 ///
 class MsgStream    ;
-class StreamBuffer ;
 ///
 
 /** @class TabulatedProperty TabulatedProperty.h DetDesc/TabulatedProperty.h
@@ -41,11 +40,7 @@ public:
   /// 
   virtual const CLID& clID    () const { return TabulatedProperty::classID() ; }
   static  const CLID& classID ()       { return CLID_TabulatedProperty       ; }
-  ///
-  /// Serialize the object for writing
-  virtual StreamBuffer& serialize  ( StreamBuffer& s ) const ;
-  /// Serialize the object for reading
-  virtual StreamBuffer& serialize  ( StreamBuffer& s )       ;
+
   /// Fill the output stream (ASCII)
   virtual std::ostream& fillStream ( std::ostream& s ) const ;
   /// Fill the output stream (ASCII)

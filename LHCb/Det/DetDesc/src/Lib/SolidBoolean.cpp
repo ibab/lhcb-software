@@ -1,4 +1,4 @@
-// $Id: SolidBoolean.cpp,v 1.14 2005-12-02 18:36:56 jpalac Exp $
+// $Id: SolidBoolean.cpp,v 1.15 2005-12-07 13:19:07 cattanem Exp $
 // ===========================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ===========================================================================
@@ -8,8 +8,6 @@
 
 /** GaudiKernel package */
 #include   "GaudiKernel/StatusCode.h"
-#include   "GaudiKernel/StreamBuffer.h" 
-#include   "GaudiKernel/IInspector.h"
 
 /** DetDesc package */  
 #include   "DetDesc/SolidBoolean.h" 
@@ -141,73 +139,6 @@ StatusCode SolidBoolean::addChild   ( ISolid*               child    ,
   if( 0 == pChild ) { return StatusCode::FAILURE; }
   m_sb_childrens.push_back(pChild); 
   return StatusCode::SUCCESS; 
-};
-
-// ============================================================================
-/** serialization for reading
- *  @param sb reference to stream buffer
- *  @return reference to stream buffer
- */
-// ============================================================================
-StreamBuffer& SolidBoolean::serialize( StreamBuffer& s ) 
-{
-  reset();
-  /// serialize the base class
-  SolidBase::serialize( s ) ;
-  /// first solid 
-  if( 0 != m_sb_first ) { delete m_sb_first ; m_sb_first = 0 ; }
-  std::string type;
-  s >> type ;
-  m_sb_first = Solid::createSolid( type );
-  m_sb_first->serialize( s );
-  /// childrens 
-  for( SolidBoolean::SolidChildrens::iterator it = childBegin();
-       childEnd() != it ; ++it ) 
-    { if( 0 != *it ) { delete *it ; } }
-  m_sb_childrens.clear(); 
-  int n;
-  s >> n ;
-  while( --n >0 )
-    {
-      s >> type ;
-      ISolid* sol = Solid::createSolid( type );
-      sol->serialize( s );
-      SolidChild* child =
-        dynamic_cast<SolidChild*> (sol);
-      if( 0 == child ) 
-        { throw SolidException("SolidBoolean: wroing chidl type!"); }
-      m_sb_childrens.push_back( child );
-    }
-  ///
-  /// set bounding parameters 
-  setBP();
-  //
-  return s;
-};
-
-// ============================================================================
-/** serialization for writing
- *  @param sb reference to stream buffer
- *  @return reference to stream buffer
- */
-// ============================================================================
-StreamBuffer& SolidBoolean::serialize( StreamBuffer& s ) const 
-{
-  /// serialize the base class
-  SolidBase::serialize( s ) ;
-  ///
-  s << m_sb_first->typeName() ;
-  m_sb_first->serialize( s );
-  ///
-  s << (int) m_sb_childrens.size() ;
-  for( SolidBoolean::SolidChildrens::const_iterator 
-         it = m_sb_childrens.begin() ; m_sb_childrens.end() != it ; ++it ) 
-    {
-      s << (*it)->typeName() ;
-      (*it)->serialize( s ) ;
-    }
-  ///
-  return s;
 };
 
 // ============================================================================

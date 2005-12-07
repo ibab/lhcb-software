@@ -1,4 +1,4 @@
-// $Id: SolidBase.h,v 1.11 2005-12-02 18:36:55 jpalac Exp $
+// $Id: SolidBase.h,v 1.12 2005-12-07 13:19:07 cattanem Exp $
 #ifndef DETDESC_SOLIDBASE_H 
 #define DETDESC_SOLIDBASE_H 1
 
@@ -141,24 +141,6 @@ public:
    */
   virtual MsgStream&    printOut ( MsgStream&    st ) const ;
  
-  /** - serialization for reading
-   *  - implementation of ISerialize abstract interface 
-   *  @see ISerialize 
-   *  @see ISolid  
-   *  @param sb reference to stream buffer
-   *  @return reference to stream buffer
-   */
-  virtual StreamBuffer& serialize( StreamBuffer& sb )       ;
-  
-  /** - serialization for writing
-   *  - implementation of ISerialize abstract interface 
-   *  @see ISerialize 
-   *  @see ISolid  
-   *  @param sb reference to stream buffer
-   *  @return reference to stream buffer
-   */
-  virtual StreamBuffer& serialize( StreamBuffer& sb ) const ;
-  
   /** - accept the inspector 
    *  - implementation of IInspectable abstract interface   
    *  @see IInspectable

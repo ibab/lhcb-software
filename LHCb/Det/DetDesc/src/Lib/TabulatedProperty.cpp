@@ -1,4 +1,4 @@
-// $Id: TabulatedProperty.cpp,v 1.9 2005-08-16 09:04:59 marcocle Exp $
+// $Id: TabulatedProperty.cpp,v 1.10 2005-12-07 13:19:07 cattanem Exp $
 
 // DetDesc 
 #include "DetDesc/TabulatedProperty.h"
@@ -21,30 +21,6 @@ TabulatedProperty::TabulatedProperty( const std::string& /*Name*/ )
 {};
 ////////////////////////////////////////////////////////////////////////////////
 TabulatedProperty::~TabulatedProperty(){ table().clear(); }
-////////////////////////////////////////////////////////////////////////////////
-StreamBuffer& TabulatedProperty::serialize  ( StreamBuffer& s ) const 
-{ 
-  ValidDataObject::serialize( s );
-  s << type ()  <<  xAxis()  << yAxis() ;
-  s << table().size() ; 
-  for( Table::const_iterator it = table().begin() ; table().end() !=it ; ++it )
-    { s << it->first << it->second ; }
-  return s;
-};
-////////////////////////////////////////////////////////////////////////////////
-StreamBuffer& TabulatedProperty::serialize  ( StreamBuffer& s )       
-{
-  ValidDataObject::serialize( s ) ;
-  s >> m_type >> m_xAxis >> m_yAxis ;
-  ///
-  Table::size_type  size     ; 
-  s >> size                  ;
-  table() = Table( size , Entry() ) ;
-  for( Table::iterator it = table().begin() ; table().end() != it ; ++it )
-    { s >> it->first >> it->second ; } 
-  ///
-  return s;
-}
 ////////////////////////////////////////////////////////////////////////////////
 std::ostream& TabulatedProperty::fillStream ( std::ostream& s ) const 
 {

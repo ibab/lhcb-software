@@ -1,4 +1,4 @@
-// $Id: SolidTrd.h,v 1.9 2004-07-09 14:19:42 cattanem Exp $ 
+// $Id: SolidTrd.h,v 1.10 2005-12-07 13:19:07 cattanem Exp $ 
 // ===========================================================================
 // CVS $Name: not supported by cvs2svn $ 
 // ===========================================================================
@@ -86,29 +86,6 @@ class SolidTrd: public    virtual SolidBase             ,
    */
   virtual MsgStream&    printOut   ( MsgStream&  os             ) const;
   
-  /** - serialization for reading
-   *  - implementation of ISerialize abstract interface 
-   *  - reimplementation of SolidBase::serialize 
-   *  @see ISerialize 
-   *  @see ISolid  
-   *  @see SolidBase   
-   *  @param      ""              reference to stream buffer
-   *  @exception  SolidException  wrong parameters range 
-   *  @return reference to stream buffer
-   */
-  virtual StreamBuffer& serialize( StreamBuffer& )       ; 
-
-  /** - serialization for writing
-   *  - implementation of ISerialize abstract interface 
-   *  - reimplementation of SolidBase::serialize 
-   *  @see ISerialize 
-   *  @see ISolid  
-   *  @see SolidBase   
-   *  @param "" reference to stream buffer
-   *  @return reference to stream buffer
-   */
-  virtual StreamBuffer& serialize( StreamBuffer& ) const ; 
-
   /**  half size in x at point 1 
    *  @return half size in x at point 1 
    */

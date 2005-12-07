@@ -1,5 +1,5 @@
 ! =============================================================================
-! $Id: release.notes,v 1.236 2005-12-07 07:33:50 cattanem Exp $ 
+! $Id: release.notes,v 1.237 2005-12-07 13:19:07 cattanem Exp $ 
 ! =============================================================================
 ! package DetDesc
 ! package manager : Marco Clemencic, Juan Palacios
@@ -10,7 +10,9 @@
 
 ! 2005-12-07 - Marco Cattaneo
  - Remove remaining CLHEP dependencies (SystemOfUnits.h, requirements)
- - Remove LHCbPlane3D.h, now obsolete
+ - Remove LHCbPlane3D.h, ClhepToStream.h, now obsolete
+ - Remove all StreamBuffer serialize() methods and ISerialize interfaces
+ - Remove unneccessary include statements
 
 ! 2005-12-06 - Juan PALACIOS
  - Use ROOT::Math::Plane3D class, instead of temporary/obsolete LHCbPlane3D

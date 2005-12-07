@@ -1,4 +1,4 @@
-// $Id: SolidBox.h,v 1.13 2005-12-07 07:33:49 cattanem Exp $
+// $Id: SolidBox.h,v 1.14 2005-12-07 13:19:07 cattanem Exp $
 // ===========================================================================
 #ifndef     DETDESC_SOLIDBOX_H
 #define     DETDESC_SOLIDBOX_H
@@ -8,8 +8,6 @@
 /// LHCbDefinitions 
 #include "Kernel/Point3DTypes.h"
 #include "Kernel/Vector3DTypes.h"
-/// GAUDI Kernel 
-#include "GaudiKernel/StreamBuffer.h" 
 /// DetDesc 
 #include "DetDesc/SolidBase.h" 
 /// forward declarations
@@ -155,29 +153,6 @@ public:
     const Tick       & tickMax ,
     Ticks            & ticks   ) const ;
 
-  /** - serialization for reading
-   *  - implementation of ISerialize abstract interface 
-   *  - reimplementation of SolidBase::serialize 
-   *  @see ISerialize 
-   *  @see ISolid  
-   *  @see SolidBase   
-   *  @param      s               reference to stream buffer
-   *  @exception  SolidException  wrong parameters range 
-   *  @return reference to stream buffer
-   */
-  virtual StreamBuffer& serialize( StreamBuffer& s )       ;
-  
-  /** - serialization for writing
-   *  - implementation of ISerialize abstract interface 
-   *  - reimplementation of SolidBase::serialize 
-   *  @see ISerialize 
-   *  @see ISolid  
-   *  @see SolidBase   
-   *  @param s reference to stream buffer
-   *  @return reference to stream buffer
-   */
-  virtual StreamBuffer& serialize( StreamBuffer& s ) const ; 
-  
   /**  return the full x-size of the box 
    *  @return the full x-size of the box 
    */

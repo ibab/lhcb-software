@@ -1,14 +1,11 @@
-// $Id: DetectorElement.cpp,v 1.31 2005-12-02 18:36:56 jpalac Exp $
+// $Id: DetectorElement.cpp,v 1.32 2005-12-07 13:19:07 cattanem Exp $
 #include "GaudiKernel/Kernel.h"
-#include "GaudiKernel/ISvcLocator.h"
 #include "GaudiKernel/IDataManagerSvc.h"
 #include "GaudiKernel/IDataProviderSvc.h"
 #include "GaudiKernel/IMessageSvc.h"
-#include "GaudiKernel/TimePoint.h" 
-#include "GaudiKernel/ObjectFactory.h"
-#include "GaudiKernel/StreamBuffer.h"
-#include "GaudiKernel/Bootstrap.h"
+#include "GaudiKernel/IRegistry.h"
 #include "GaudiKernel/LinkManager.h"
+#include "GaudiKernel/SmartDataPtr.h"
 
 ///
 #include "DetDesc/IGeometryInfo.h"
@@ -135,8 +132,6 @@ DetectorElement::queryInterface( const InterfaceID& ID , void** ppI )
     *ppI = static_cast<IDetectorElement*> (this);
   } else if (IInterface::interfaceID() == ID) {
     *ppI = static_cast<IInterface*> (this);
-  } else if (ISerialize::interfaceID() == ID) {
-    *ppI = static_cast<ISerialize*> (this);
   } else {
     return StatusCode::FAILURE;
   }
@@ -146,38 +141,6 @@ DetectorElement::queryInterface( const InterfaceID& ID , void** ppI )
   return StatusCode::SUCCESS;
 };
 
-///
-// bool DetectorElement::acceptInspector( IInspector* pInspector ) 
-// {
-//   if( 0 == pInspector ) { return false; } 
-//   pInspector->inspectByRef( m_de_iGeometry , this , "GeometryInfo" ); 
-//   return DataObject::acceptInspector( pInspector ) ;
-// };  
-// //
-// bool DetectorElement::acceptInspector( IInspector* pInspector ) const  
-// {
-//   if( 0 == pInspector ) { return false; } 
-//   pInspector->inspectByRef( m_de_iGeometry , this , "GeometryInfo" ); 
-//   return DataObject::acceptInspector( pInspector ) ;
-// };  
-//
-StreamBuffer& DetectorElement::serialize( StreamBuffer& sb ) const 
-{
-  DataObject::serialize( sb ) ; 
-  sb << *m_de_iGeometry ;
-  return sb;
-};
-//
-StreamBuffer& DetectorElement::serialize( StreamBuffer& sb ) 
-{
-  reset() ; 
-  DataObject::serialize( sb ) ; 
-  if (0 == m_de_iGeometry) 
-    { m_de_iGeometry = GeoInfo::createGeometryInfo( this ) ; } 
-  sb >> *m_de_iGeometry ;
-  return sb;
-};
-//
 std::ostream& DetectorElement::printOut( std::ostream& os ) const
 { 
   os << "DetectorElement::"  << name(); 

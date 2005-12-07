@@ -1,4 +1,4 @@
-// $Id: IGeometryInfo.h,v 1.18 2005-12-02 18:36:55 jpalac Exp $ 
+// $Id: IGeometryInfo.h,v 1.19 2005-12-07 13:19:07 cattanem Exp $ 
 // ===========================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ===========================================================================
@@ -6,7 +6,6 @@
 #define  DETDESC_IGEOMETRYINFO_H 1
 /** GaudiKernel includes */
 #include "GaudiKernel/IInterface.h"
-#include "GaudiKernel/ISerialize.h"
 #include "GaudiKernel/IInspectable.h"
 /** STD & STL includes */
 #include <functional>
@@ -36,7 +35,6 @@ static const InterfaceID IID_IGeometryInfo( 155 , 2 , 1 );
  */
 
 class IGeometryInfo : virtual public IInterface   ,
-                      virtual public ISerialize   ,
                       virtual public IInspectable
 {
 public:
@@ -576,27 +574,6 @@ inline MsgStream&    operator<<( MsgStream&    os        ,
                                  const IGeometryInfo* gi )
 { return ( 0 == gi ? (os<<"IGeometryInfo* points to NULL") : os<<*gi ); };
 
-// ============================================================================
-/** output operator to StreamBuffer output stream 
- *  @param os reference to StreamBuffer ouput stream
- *  @param gi reference to IGeometryInfo object
- *  @return reference to StreamBuffer ouput stream
- */
-// ============================================================================
-inline StreamBuffer& operator<<( StreamBuffer&        os ,
-                                 const IGeometryInfo& gi )
-{ return gi.serialize( os ); };
-
-// ============================================================================
-/** input operator from StreamBuffer output stream  
- *  @param os reference to StreamBuffer input stream
- *  @param gi reference to IGeometryInfo object
- *  @return reference to StreamBuffer input  stream
- */
-// ============================================================================
-inline StreamBuffer& operator>>( StreamBuffer&   os ,
-                                 IGeometryInfo&  gi )
-{ return gi.serialize( os ); };
 // ============================================================================
 /** @} */ // end of group IGeometryInfoOperators
 // ============================================================================

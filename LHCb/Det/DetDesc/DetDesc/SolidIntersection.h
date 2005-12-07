@@ -1,4 +1,4 @@
-// $Id: SolidIntersection.h,v 1.11 2005-12-05 16:18:43 jpalac Exp $
+// $Id: SolidIntersection.h,v 1.12 2005-12-07 13:19:07 cattanem Exp $
 /// ==========================================================================
 /// CVS tag $Name: not supported by cvs2svn $ 
 /// ==========================================================================
@@ -12,7 +12,6 @@
 #include "DetDesc/SolidBoolean.h" 
 #include "DetDesc/SolidChild.h"
 /// Forward declarations
-class StreamBuffer;
 template <class TYPE> 
 class SolidFactory;
 

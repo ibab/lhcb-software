@@ -1,23 +1,6 @@
-// $Id: ISolid.h,v 1.9 2005-12-02 18:36:55 jpalac Exp $ 
+// $Id: ISolid.h,v 1.10 2005-12-07 13:19:07 cattanem Exp $ 
 // ===========================================================================
 // CVS tag $Name: not supported by cvs2svn $
-// ===========================================================================
-// $Log: not supported by cvs2svn $
-// Revision 1.8  2005/01/25 14:09:19  cattanem
-// updates for CLHEP 1.9
-//
-// Revision 1.7  2003/09/20 13:25:40  ibelyaev
-//  few fixes to solve Gauss problems
-//
-// Revision 1.6  2002/04/24 10:52:08  ibelyaev
-//  fix problems with TransportSvc ('LHCb Geane')
-//
-// Revision 1.5  2001/08/13 09:51:35  ibelyaev
-// bug fix in 'reset' method
-//
-// Revision 1.4  2001/08/09 16:47:57  ibelyaev
-// update in interfaces and redesign of solids
-//
 // ===========================================================================
 #ifndef DETDESC_ISOLID_H
 #define DETDESC_ISOLID_H 1
@@ -26,16 +9,12 @@
 #include  <string>
 #include  <vector>
 /// Gaudi Kernel
-#include "GaudiKernel/ISerialize.h"
 #include "GaudiKernel/IInspectable.h"
 #include "GaudiKernel/IInspector.h"
 #include "GaudiKernel/MsgStream.h"
 /// CLHEP
 #include "Kernel/Vector3DTypes.h"
 #include "Kernel/Point3DTypes.h"
-
-// Forward declarations
-class StreamBuffer;      ///< GaudiKernel
 
 /// Declaration of the interface ID ( interface id, major & minor versions)
 static const InterfaceID IID_ISolid( "ISolid" , 4 , 1 );
@@ -50,7 +29,6 @@ static const InterfaceID IID_ISolid( "ISolid" , 4 , 1 );
  */
 
 class ISolid : public virtual IInterface   ,
-               public virtual ISerialize   ,
                public virtual IInspectable
 {
 public:

@@ -1,4 +1,4 @@
-// $Id: SolidSphere.cpp,v 1.15 2005-12-07 07:33:50 cattanem Exp $ 
+// $Id: SolidSphere.cpp,v 1.16 2005-12-07 13:19:07 cattanem Exp $ 
 // ===========================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ===========================================================================
@@ -8,8 +8,6 @@
 #include "Kernel/PhysicalConstants.h" 
 #include "Kernel/Point3DTypes.h" 
 #include "Kernel/Vector3DTypes.h" 
-/// GaudiKernel
-#include "GaudiKernel/IInspector.h" 
 /// DetDesc 
 #include "DetDesc/DetDesc.h" 
 #include "DetDesc/SolidSphere.h" 
@@ -270,90 +268,6 @@ bool  SolidSphere::isInside( const Gaudi::XYZPoint & point) const
   if( !insidePhi    ( point )  ) { return false ; }
   //
   return true ;
-};
-
-// ===========================================================================
-/** - serialization for reading
- *  - implementation of ISerialize abstract interface 
- *  - reimplementation of SolidBase::serialize 
- *  @see ISerialize 
- *  @see ISolid  
- *  @see SolidBase   
- *  @param s reference to stream buffer
- *  @return reference to stream buffer
- */
-// ===========================================================================
-StreamBuffer& SolidSphere::serialize( StreamBuffer& s ) 
-{
-  /// reset the sphere segment
-  reset();
-  /// serialialize the base class
-  SolidBase::serialize( s );  
-  s >>  m_sphere_outerR2    
-    >>  m_sphere_insideR2     
-    >>  m_sphere_startPhiAngle  
-    >>  m_sphere_deltaPhiAngle   
-    >>  m_sphere_startThetaAngle 
-    >>  m_sphere_deltaThetaAngle 
-    >>  m_sphere_coverModel  ;    
-  ///
-  if( 0 >= outerR2() ) 
-    { throw SolidException("SolidSphere::OuterRadius2  is not positive!"); } 
-  if( 0 >  insideR2() ) 
-    { throw SolidException("SolidSphere::InsideRadius2 is negative!    "); }
-  if( insideRadius() >= outerRadius() ) 
-    { throw SolidException("SolidSphere::InsideRadius>=OuterRadius    "); }
-  if( -180.0 * degree > startPhiAngle() )
-    { throw SolidException("SolidSphere::StartPhiAngle < -180 degree !"); }
-  if(  360.0 * degree < startPhiAngle() )
-    { throw SolidException("SolidSphere::StartPhiAngle >  360 degree !"); }
-  if(    0.0 * degree > deltaPhiAngle() )
-    { throw SolidException("SolidSphere::DeltaPhiAngle <    0 degree !"); }
-  if(  360.0 * degree < startPhiAngle()+deltaPhiAngle() )
-    { throw SolidException("SolidSphere::StartPhiAngle+DeltaPhiAngle>2pi"); }
-  if(    0.0 * degree > startThetaAngle() )
-    { throw SolidException("SolidSphere::StartThetaAngle < 0 degree !"); }
-  if(  180.0 * degree < startThetaAngle() )
-    { throw SolidException("SolidSphere::StartThetaAngle >  180 degree !"); }
-  if(    0.0 * degree > deltaThetaAngle() )
-    { throw SolidException("SolidSphere::DeltaThetaAngle <    0 degree !"); }
-  if(  180.0 * degree < startThetaAngle()+deltaThetaAngle() )
-    { throw SolidException("SolidSphere::StartThetaAngle+DeltaThetaAngle>pi");}
-  ///
-  m_noPhiGap   = true ;
-  if(   0 * degree != startPhiAngle   () ) { m_noPhiGap   = false ; }
-  if( 360 * degree != deltaPhiAngle   () ) { m_noPhiGap   = false ; }
-  m_noThetaGap = true ;
-  if(   0 * degree != startThetaAngle () ) { m_noThetaGap = false ; }
-  if( 180 * degree != deltaThetaAngle () ) { m_noThetaGap = false ; }  
-  /// set bounding parameters 
-  setBP();
-  ///
-  return s;
-};
-
-// ===========================================================================
-/** - serialization for writing
- *  - implementation of ISerialize abstract interface 
- *  - reimplementation of SolidBase::serialize 
- *  @see ISerialize 
- *  @see ISolid  
- *  @see SolidBase   
- *  @param s reference to stream buffer
- *  @return reference to stream buffer
- */
-// ===========================================================================
-StreamBuffer& SolidSphere::serialize( StreamBuffer& s ) const
-{
-  /// serialialize the base class
-  SolidBase::serialize( s );   
-  return s <<  m_sphere_outerR2    
-           <<  m_sphere_insideR2    
-           <<  m_sphere_startPhiAngle  
-           <<  m_sphere_deltaPhiAngle   
-           <<  m_sphere_startThetaAngle 
-           <<  m_sphere_deltaThetaAngle 
-           <<  m_sphere_coverModel    ;
 };
 
 // ===========================================================================

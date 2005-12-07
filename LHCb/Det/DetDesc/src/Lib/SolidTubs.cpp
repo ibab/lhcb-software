@@ -1,4 +1,4 @@
-// $Id: SolidTubs.cpp,v 1.13 2005-12-07 07:33:50 cattanem Exp $ 
+// $Id: SolidTubs.cpp,v 1.14 2005-12-07 13:19:07 cattanem Exp $ 
 // ============================================================================
 // CVStag $Name: not supported by cvs2svn $ 
 // ============================================================================
@@ -215,83 +215,6 @@ bool  SolidTubs::isInside( const Gaudi::XYZPoint & point ) const
   if( !insidePhi ( point )  ) { return false ; }
   //
   return true ;
-};
-
-// ============================================================================
-/** - serialization for reading
- *  - implementation of ISerialize abstract interface 
- *  - reimplementation of SolidBase::serialize 
- *  @see ISerialize 
- *  @see ISolid  
- *  @see SolidBase   
- *  @param      s               reference to stream buffer
- *  @exception  SolidException  wrong parameters range 
- *  @return reference to stream buffer
- */
-// ============================================================================
-StreamBuffer& SolidTubs::serialize( StreamBuffer& s ) 
-{
-  /// reset
-  reset();
-  /// serialise teh baze class 
-  SolidBase::serialize( s );
-  /// serialize the members 
-  s >> m_tubs_zHalfLength    
-    >> m_tubs_outerRadius    
-    >> m_tubs_innerRadius    
-    >> m_tubs_startPhiAngle  
-    >> m_tubs_deltaPhiAngle  
-    >> m_tubs_coverModel    ;
-  ///
-  if( 0 >= zHalfLength() )
-    { throw SolidException("SolidTubs::ZHalfLength is not positive!"); } 
-  if( 0 >= outerRadius() )
-    { throw SolidException("SolidTubs::OuterRadius is not positive!"); } 
-  if( 0 >  innerRadius() ) 
-    { throw SolidException("SolidTubs::InnerRadius is negative    !"); } 
-  if( innerRadius() >= outerRadius() ) 
-    { throw SolidException("SolidTubs::InnerRadius >= OuterRadius !"); } 
-  if( -180.0 * degree > startPhiAngle() ) 
-    { throw SolidException("SolidTubs::StartPhiAngle is < -180 degree! "); } 
-  if(  360.0 * degree < startPhiAngle() ) 
-    { throw SolidException("SolidTubs::StartPhiAngle is >  360 degree! "); } 
-  if(    0.0 * degree > deltaPhiAngle() ) 
-    { throw SolidException("SolidTubs::DeltaPhiAngle is <    0 degree! "); } 
-  if(  360.0 * degree < startPhiAngle() + deltaPhiAngle() ) 
-    { throw SolidException("SolidTubs::StartPhiAngle+DeltaPhiAngle>2pi"); } 
-  ///
-  m_noPhiGap = true ;
-  if(   0 * degree != startPhiAngle() ) { m_noPhiGap = false ; }
-  if( 360 * degree != deltaPhiAngle() ) { m_noPhiGap = false ; }
-  
-  // set bounding parameters 
-  setBP();
-  //
-  return s;
-};
-
-// ============================================================================
-/** - serialization for writing
- *  - implementation of ISerialize abstract interface 
- *  - reimplementation of SolidBase::serialize 
- *  @see ISerialize 
- *  @see ISolid  
- *  @see SolidBase   
- *  @param s reference to stream buffer
- *  @return reference to stream buffer
- */
-// ============================================================================
-StreamBuffer& SolidTubs::serialize( StreamBuffer& s ) const
-{
-  /// serialize the base class
-  SolidBase::serialize( s ) ;
-  return 
-    s << m_tubs_zHalfLength    
-      << m_tubs_outerRadius    
-      << m_tubs_innerRadius    
-      << m_tubs_startPhiAngle  
-      << m_tubs_deltaPhiAngle  
-      << m_tubs_coverModel    ;
 };
 
 // ============================================================================

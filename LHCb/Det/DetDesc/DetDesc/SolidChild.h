@@ -1,4 +1,4 @@
-// $Id: SolidChild.h,v 1.15 2005-12-02 18:36:55 jpalac Exp $ 
+// $Id: SolidChild.h,v 1.16 2005-12-07 13:19:07 cattanem Exp $ 
 // ===========================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ===========================================================================
@@ -14,7 +14,6 @@
 #include "DetDesc/SolidBase.h" 
 /// forward declarations 
 class MsgStream;        ///< GaudiKernel
-class StreamBuffer;     ///< GaudiKernel
 class SolidBoolean;     ///< DetDesc 
 template <class TYPE>
 class SolidFactory;     ///< DetDesc 
@@ -136,18 +135,6 @@ public:
   intersectionTicks ( const Gaudi::XYZPoint&  Point  ,
                       const Gaudi::XYZVector& Vector ,
                       ISolid::Ticks&     ticks  ) const;
-  
-  /** serialization for reading
-   *  @param s reference to stream buffer
-   *  @return reference to stream buffer
-   */
-  virtual StreamBuffer& serialize( StreamBuffer& s )       ;   
-  
-  /** serialization for writing
-   *  @param s reference to stream buffer
-   *  @return reference to stream buffer
-   */
-  virtual StreamBuffer& serialize( StreamBuffer& s ) const ;
   
 public:
 

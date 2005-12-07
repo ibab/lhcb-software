@@ -1,12 +1,10 @@
-// $Id: Material.cpp,v 1.4 2002-01-18 18:23:09 ibelyaev Exp $ 
+// $Id: Material.cpp,v 1.5 2005-12-07 13:19:07 cattanem Exp $ 
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
-// $Log: not supported by cvs2svn $
-// ============================================================================
 /// GaudiKernel
 #include "GaudiKernel/System.h"
-/// DetDecs 
+/// DetDesc 
 #include "DetDesc/Material.h"
 #include "DetDesc/TabulatedProperty.h"
 
@@ -30,34 +28,7 @@ Material::Material( const std::string& /* name */  ,
 {};
 //////////////////////
 Material::~Material() { m_props.clear() ;}
-//////////////////////
-StreamBuffer&     Material::serialize( StreamBuffer& s ) const 
-{
-  DataObject::serialize( s ) ;
-  return s << m_name
-           << m_density          
-           << m_radiationLength 
-           << m_absorptionLength
-           << m_temperature      
-           << m_pressure         
-           <<( unsigned int ) m_state            
-           << m_props (this );
-};
-//////////////////////
-StreamBuffer&     Material::serialize( StreamBuffer& s )       
-{
-  DataObject::serialize( s ) ;
-  s >> m_name
-    >> m_density          
-    >> m_radiationLength 
-    >> m_absorptionLength
-    >> m_temperature      
-    >> m_pressure     ;
-  unsigned int i ;
-  s >> i ;
-  m_state = (eState) i ;
-  return s >>  m_props (this );
-};
+
 //////////////////////
 MsgStream&        Material::fillStream ( MsgStream&   s ) const 
 {

@@ -1,4 +1,4 @@
-// $Id: Surface.cpp,v 1.7 2003-04-25 08:52:24 sponce Exp $
+// $Id: Surface.cpp,v 1.8 2005-12-07 13:19:07 cattanem Exp $
 
 // GaudiKernel
 #include "GaudiKernel/System.h"
@@ -20,30 +20,6 @@ Surface::Surface ( const std::string& /*name*/ )
 {}; 
 ////////////////////////////////////////////////////////////////////////////////
 Surface::~Surface() { m_props.clear() ;}
-////////////////////////////////////////////////////////////////////////////////
-StreamBuffer&     Surface::serialize( StreamBuffer& s ) const 
-{
-  DataObject::serialize( s ) ;
-  return s << model     () 
-           << finish    ()
-           << type      () 
-           << value     () 
-           << firstVol  () 
-           << secondVol () 
-           << m_props( this ) ;
-};
-////////////////////////////////////////////////////////////////////////////////
-StreamBuffer&     Surface::serialize( StreamBuffer& s )       
-{
-  DataObject::serialize( s ) ;
-  return s >> m_model      
-           >> m_finish    
-           >> m_type       
-           >> m_value      
-           >> m_firstVol   
-           >> m_secondVol  
-           >> m_props( this ) ;
-};
 ////////////////////////////////////////////////////////////////////////////////
 std::ostream&     Surface::fillStream ( std::ostream& s ) const 
 {

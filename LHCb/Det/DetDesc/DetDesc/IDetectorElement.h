@@ -1,4 +1,4 @@
-// $Id: IDetectorElement.h,v 1.18 2005-12-02 18:36:55 jpalac Exp $
+// $Id: IDetectorElement.h,v 1.19 2005-12-07 13:19:07 cattanem Exp $
 // $ID:  $
 #ifndef  DETDESC_IDETECTORELEMENT_H 
 #define  DETDESC_IDETECTORELEMENT_H 1
@@ -9,7 +9,6 @@
 
 // Framework include files
 #include "GaudiKernel/IInterface.h"
-#include "GaudiKernel/ISerialize.h"
 #include "GaudiKernel/SmartRef.h"
 
 #include "Kernel/Point3DTypes.h"
@@ -41,8 +40,7 @@ static const InterfaceID IID_IDetectorElement( 156 , 2 , 1 );
  *  @author Marco Clemencic <marco.clemencic@cern.ch>
  */
 
-class IDetectorElement : virtual public IInterface,
-                         virtual public ISerialize
+class IDetectorElement : virtual public IInterface
 {
   ///
  public: 

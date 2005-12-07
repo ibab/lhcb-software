@@ -1,4 +1,4 @@
-// $Id: Isotope.h,v 1.8 2003-04-25 08:52:23 sponce Exp $
+// $Id: Isotope.h,v 1.9 2005-12-07 13:19:07 cattanem Exp $
 #ifndef DETDESC_ISOTOPE_H
 #define DETDESC_ISOTOPE_H
 
@@ -49,10 +49,6 @@ public:
   inline const CLID& clID    () const { return Isotope::classID(); } 
   static const CLID& classID ()       { return CLID_Isotope; } 
   
-  /// serialization for read and write 
-  virtual StreamBuffer& serialize( StreamBuffer& s )       ; 
-  virtual StreamBuffer& serialize( StreamBuffer& s ) const ; 
-
 protected:
   
   //        Atomic mass [g/mole]

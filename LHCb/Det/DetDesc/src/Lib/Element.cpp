@@ -1,8 +1,6 @@
-// $Id: Element.cpp,v 1.8 2005-09-19 14:25:29 mneedham Exp $
+// $Id: Element.cpp,v 1.9 2005-12-07 13:19:07 cattanem Exp $
 /// STL and STD 
 #include <math.h>
-/// GaudiKernel
-#include "GaudiKernel/StatusCode.h"
 /// DetDesc 
 #include "DetDesc/MaterialException.h"
 #include "DetDesc/Element.h"
@@ -137,38 +135,6 @@ void Element::ComputeLradTsaiFactor()
   
   m_tsai = 4*alpha_rcl2*m_Zeff*(m_Zeff*(Lrad-m_coulomb) + Lprad); 
 }
-/////////////////////////////////////////////////////////////////
-StreamBuffer&     Element::serialize ( StreamBuffer& s ) const 
-{
-  Material::serialize( s );
-  s << symbol() 
-    << A() 
-    << Z() 
-    << coulombFactor () 
-    << tsaiFactor    () 
-    << isotopes().size();
-  for( Isotopes::const_iterator it = isotopes().begin() ; isotopes().end() != it ; ++it )
-    { s << it->first << it->second(this) ; }
-  return s ;
-};
-/////////////////////////////////////////////////////////////////////////////////
-StreamBuffer&     Element::serialize ( StreamBuffer& s )       
-{
-  Material::serialize( s );
-  s >> m_symb 
-    >> m_Aeff 
-    >> m_Zeff
-    >> m_coulomb 
-    >> m_tsai  ;
-  Isotopes::size_type size;
-  s >> size ;
-  m_isotopes.clear();
-  m_isotopes = Isotopes(size);
-  for( Isotopes::iterator it = m_isotopes.begin() ; m_isotopes.end() != it ; ++it )
-    { s >> it->first >> it->second(this) ; }
-  compute();
-  return s ;
-};
 /////////////////////////////////////////////////////////////////////////////////
 MsgStream&        Element::fillStream ( MsgStream&   s ) const 
 {

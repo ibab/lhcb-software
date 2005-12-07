@@ -1,12 +1,9 @@
-// $Id: PVolume.cpp,v 1.20 2005-12-06 18:51:27 jpalac Exp $ 
+// $Id: PVolume.cpp,v 1.21 2005-12-07 13:19:07 cattanem Exp $ 
 
 /// GaudiKernel includes 
-#include "GaudiKernel/IInspector.h"
-#include "GaudiKernel/ISvcLocator.h"
 #include "GaudiKernel/IDataProviderSvc.h"
 #include "GaudiKernel/MsgStream.h" 
 #include "GaudiKernel/SmartDataPtr.h" 
-#include "GaudiKernel/StreamBuffer.h"
 /// STD & STL includes 
 #include <cassert>
 #include <vector>
@@ -191,8 +188,6 @@ PVolume::queryInterface( const InterfaceID& ID , void** ppI )
   *ppI = 0 ;
   if      ( IPVolume::   interfaceID() == ID ) 
     { *ppI = static_cast<IPVolume*>     ( this ) ; } 
-  else if ( ISerialize:: interfaceID() == ID )
-    { *ppI = static_cast<ISerialize*> ( this ) ; } 
   else if ( IInterface:: interfaceID() == ID ) 
     { *ppI = static_cast<IInterface*> ( this ) ; } 
   else                                                  

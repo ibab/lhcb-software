@@ -1,8 +1,5 @@
-// $Id: SolidTrap.cpp,v 1.17 2005-12-07 07:33:50 cattanem Exp $
+// $Id: SolidTrap.cpp,v 1.18 2005-12-07 13:19:07 cattanem Exp $
 // ===========================================================================
-/**  GaudiKernel package */  
-#include "GaudiKernel/IInspector.h"
-#include "GaudiKernel/StreamBuffer.h" 
 
 // LHCbDefinitions
 #include "Kernel/PhysicalConstants.h" 
@@ -182,90 +179,6 @@ void SolidTrap::makeAll()
   if( 6 != planes().size() ) 
     { throw SolidException("SolidTrap::wrong face # "); } 
   ///
-};
-
-// ============================================================================
-/** - serialization for reading
- *  - implementation of ISerialize abstract interface 
- *  - reimplementation of SolidBase::serialize 
- *  @see ISerialize 
- *  @see ISolid  
- *  @see SolidBase   
- *  @param      s               reference to stream buffer
- *  @exception  SolidException  wrong parameters range 
- *  @return reference to stream buffer
- */
-// ============================================================================
-StreamBuffer& SolidTrap::serialize( StreamBuffer& s ) 
-{
-  /// 
-  reset();
-  m_ph_planes.clear();
-  /// serialize the base class 
-  SolidBase::serialize( s ) ;
-  /// serialize memebrs 
-  s >> m_trap_zHalfLength    
-    >> m_trap_theta           
-    >> m_trap_phi              
-    >> m_trap_dyAtMinusZ       
-    >> m_trap_dxAtMinusZMinusY 
-    >> m_trap_dxAtMinusZPlusY  
-    >> m_trap_alphaAtMinusZ    
-    >> m_trap_dyAtPlusZ        
-    >> m_trap_dxAtPlusZMinusY  
-    >> m_trap_dxAtPlusZPlusY   
-    >> m_trap_alphaAtPlusZ ;    
-  ///
-  if( 0 >= zHalfLength()      ) 
-    { throw SolidException("SolidTrap::ZHalfLength is not positive!");} 
-  if( 0 >= dyAtMinusZ ()      ) 
-    { throw SolidException("SolidTrap::dyAtMinusZ is not positive!"); } 
-  if( 0 >= dxAtMinusZMinusY() )
-    { throw SolidException("SolidTrap::dxAtMinusZMinusY is not positive!");} 
-  if( 0 >= dxAtMinusZPlusY () ) 
-    { throw SolidException("SolidTrap::dxAtMinusZPlusY is not positive!");} 
-  if( 0 >= dyAtPlusZ       () ) 
-    { throw SolidException("SolidTrap::dyAtMinusZ is not positive!");} 
-  if( 0 >= dxAtPlusZMinusY () )
-    { throw SolidException("SolidTrap::dxAtMinusZMinusY is not positive!");} 
-  if( 0 >= dxAtPlusZPlusY  () ) 
-    { throw SolidException("SolidTrap::dxAtMinusZPlusY is not positive!");} 
-  ///
-  makeAll();
-  /// set bounding parameters
-  setBP();
-  return s;
-  ///
-};
-
-// ============================================================================
-/** - serialization for writing
- *  - implementation of ISerialize abstract interface 
- *  - reimplementation of SolidBase::serialize 
- *  @see ISerialize 
- *  @see ISolid  
- *  @see SolidBase   
- *  @param s reference to stream buffer
- *  @return reference to stream buffer
- */
-// ============================================================================
-StreamBuffer& SolidTrap::serialize( StreamBuffer& s ) const 
-{
-  /// serialize base class 
-  SolidBase::serialize( s );
-  ///
-  return 
-    s << m_trap_zHalfLength    
-      << m_trap_theta           
-      << m_trap_phi              
-      << m_trap_dyAtMinusZ       
-      << m_trap_dxAtMinusZMinusY 
-      << m_trap_dxAtMinusZPlusY  
-      << m_trap_alphaAtMinusZ    
-      << m_trap_dyAtPlusZ        
-      << m_trap_dxAtPlusZMinusY  
-      << m_trap_dxAtPlusZPlusY   
-      << m_trap_alphaAtPlusZ  ; 
 };
 
 // ============================================================================

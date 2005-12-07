@@ -1,4 +1,4 @@
-// $Id: GeometryInfoPlus.h,v 1.9 2005-12-02 18:36:56 jpalac Exp $
+// $Id: GeometryInfoPlus.h,v 1.10 2005-12-07 13:19:07 cattanem Exp $
 #ifndef LIB_GEOMETRYINFOPLUS_H 
 #define LIB_GEOMETRYINFOPLUS_H 1
 
@@ -338,10 +338,6 @@ public:
   /// IInspectable interface
   bool acceptInspector( IInspector* );
   bool acceptInspector( IInspector* ) const ; 
-  /// serialization  for reading 
-  StreamBuffer& serialize( StreamBuffer& ); 
-  /// serialization  for writing 
-  StreamBuffer& serialize( StreamBuffer& ) const ;
   /// overloades printout to  std::ostream 
   std::ostream& printOut   ( std::ostream& ) const;
   /// overloaded printout to the MsgStream

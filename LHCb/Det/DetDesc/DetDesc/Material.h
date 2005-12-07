@@ -1,18 +1,16 @@
-// $Id: Material.h,v 1.9 2005-12-05 17:11:19 cattanem Exp $
-/// $Id: Material.h,v 1.9 2005-12-05 17:11:19 cattanem Exp $
+// $Id: Material.h,v 1.10 2005-12-07 13:19:07 cattanem Exp $
 #ifndef DETDESC_MATERIAL_H
 #define DETDESC_MATERIAL_H
 /// STL
 #include <string>
 #include <vector>
-/// CLHEP Units
+/// Units
 #include "Kernel/PhysicalConstants.h"
 /// GaudiKernel
 #include "GaudiKernel/DataObject.h"
 #include "GaudiKernel/SmartRefVector.h"
 ///
 class TabulatedProperty;
-class StreamBuffer;
 class MsgStream;
 
 // Material states, by default is stateUndefined
@@ -40,10 +38,6 @@ public:
   typedef SmartRefVector<TabulatedProperty>   Tables;
   ///
 public:
-  
-  /// serialization for read and write 
-  virtual StreamBuffer& serialize  ( StreamBuffer& s )       ; 
-  virtual StreamBuffer& serialize  ( StreamBuffer& s ) const ; 
   
   /// Fill the output stream (ASCII)
   virtual std::ostream& fillStream ( std::ostream& s ) const ;

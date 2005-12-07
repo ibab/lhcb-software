@@ -1,4 +1,4 @@
-// $Id: ILVolume.h,v 1.10 2005-12-02 18:36:55 jpalac Exp $ 
+// $Id: ILVolume.h,v 1.11 2005-12-07 13:19:07 cattanem Exp $ 
 // ===========================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ===========================================================================
@@ -9,7 +9,6 @@
 #include <string> 
 #include <vector> 
 /// GaudiKernel includes 
-#include "GaudiKernel/ISerialize.h"
 #include "GaudiKernel/MsgStream.h"
 /// DetDesc includes
 #include "DetDesc/ISolid.h"
@@ -37,8 +36,7 @@ static const InterfaceID IID_ILVolume( 153 , 3 , 1 );
  *  @date xx/xx/xxxx 
  */
 
-class ILVolume : virtual public IInterface   ,
-                 virtual public ISerialize   
+class ILVolume : virtual public IInterface
 {
   ///
 public:

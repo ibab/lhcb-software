@@ -1,4 +1,4 @@
-// $Id: IPVolume.h,v 1.10 2005-12-02 18:36:55 jpalac Exp $ 
+// $Id: IPVolume.h,v 1.11 2005-12-07 13:19:07 cattanem Exp $ 
 // ===========================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ===========================================================================
@@ -9,7 +9,6 @@
 #include <string> 
 /// GaudiKernel includes 
 #include "GaudiKernel/IInterface.h"
-#include "GaudiKernel/ISerialize.h"
 /// DetDesc includes
 #include "DetDesc/ILVolume.h"
 #include "DetDesc/ISolid.h"
@@ -34,8 +33,7 @@ static const InterfaceID IID_IPVolume( 154 , 5 , 0 );
  *  @date xx/xx/xxxx 
  */      
 
-class IPVolume : virtual public IInterface   , 
-                 virtual public ISerialize   
+class IPVolume : virtual public IInterface
 {
 public:
   
@@ -239,28 +237,6 @@ inline MsgStream& operator<<
 inline MsgStream& operator<<
 ( MsgStream& os , const IPVolume*  pv )
 { return ((0==pv)?( os<<" IPVolume* points to NULL "):(os<<(*pv)));};
-
-// ============================================================================
-/** output operator to Streambuffer 
- *  @param  s       reference to output   stream
- *  @param  pv      reference to IPVolume object
- *  @return reference to the stream
- */
-// ============================================================================
-inline StreamBuffer& operator<< 
-( StreamBuffer& s , const IPVolume& pv ) 
-{ return pv.serialize( s ) ; }
-
-// ============================================================================
-/** input  operator from StreamBuffer          
- *  @param   s      reference to output   stream
- *  @param  pv      reference to IPVolume object
- *  @return reference to the stream
- */
-// ============================================================================
-inline StreamBuffer& operator>>
-( StreamBuffer& s ,       IPVolume& pv ) 
-{ return pv.serialize( s ) ; }
 
 // ============================================================================
 // The End 

@@ -1,4 +1,4 @@
-// $Id: LVolume.h,v 1.21 2005-12-02 18:36:55 jpalac Exp $ 
+// $Id: LVolume.h,v 1.22 2005-12-07 13:19:07 cattanem Exp $ 
 #ifndef     DETDESC_VOLUMES_LVOLUME_H
 #define     DETDESC_VOLUMES_LVOLUME_H
 
@@ -250,30 +250,6 @@ public:
     return LogVolBase::reset() ;
   };
   
-  /** serialization for reading 
-   *  - implementation of DataObject method
-   *  - implementation of ISerialize interface
-   *  @see DataObject
-   *  @see ILVolume 
-   *  @see ISerialize 
-   *  @param s reference to stream buffer 
-   *  @return reference to stream buffer 
-   */ 
-  virtual StreamBuffer& serialize 
-  ( StreamBuffer& s );
-
-  /** serialization for writing 
-   *  - implementation of DataObject method
-   *  - implementation of ISerialize interface
-   *  @see DataObject
-   *  @see ILVolume 
-   *  @see ISerialize 
-   *  @param s reference to stream buffer 
-   *  @return reference to stream buffer 
-   */ 
-  virtual StreamBuffer& serialize
-  ( StreamBuffer& s )  const;
-
 protected:
   
   /** default constructor
