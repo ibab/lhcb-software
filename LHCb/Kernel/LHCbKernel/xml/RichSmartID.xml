@@ -3,7 +3,7 @@
 <gdd>
 
 <!-- **************************************************************************
-  * $Id: RichSmartID.xml,v 1.21 2005-12-07 12:00:04 jonrob Exp $
+  * $Id: RichSmartID.xml,v 1.22 2005-12-07 13:27:50 jonrob Exp $
   *****************************************************************************
   * XML-description of RichSmartID class                                      *
   * author: Chris Jones   Christopher.Rob.Jones@cern.ch                       *
@@ -34,20 +34,20 @@
             name = "key" 
             init = "0" 
             type = "bitfield">
-            <bitfield desc="The sub-pixel number"                length="3"  name="subPixel"      setMeth="FALSE" />
-            <bitfield desc="The pixel number in column"          length="5"  name="pixelNumInCol" setMeth="FALSE" />
-            <bitfield desc="The pixel column number"             length="5"  name="pixelCol"      setMeth="FALSE" />
-            <bitfield desc="The HPD number in column"            length="5"  name="HPDNumInCol"   setMeth="FALSE" />
-            <bitfield desc="The HPD column number"               length="5"  name="HPDCol"        setMeth="FALSE" />
-            <bitfield desc="The RICH panel"                      length="1"  name="panel"         setMeth="FALSE" type="Rich::Side"         />
-            <bitfield desc="The RICH Detector"                   length="1"  name="rich"          setMeth="FALSE" type="Rich::DetectorType" />
-            <bitfield desc="Sub-pixel field is set"              length="1"  name="subPixelIsSet"      setMeth="FALSE" />
-            <bitfield desc="Pixel row field is set"              length="1"  name="pixelNumInColIsSet" setMeth="FALSE" />
-            <bitfield desc="Pixel column field is set"           length="1"  name="pixelColIsSet"      setMeth="FALSE" />
-            <bitfield desc="Photon detector row field is set"    length="1"  name="HPDNumInColIsSet"   setMeth="FALSE" />
-            <bitfield desc="Photon detector column field is set" length="1"  name="HPDColIsSet"        setMeth="FALSE" />
-            <bitfield desc="RICH panel field is set"             length="1"  name="panelIsSet"         setMeth="FALSE" />
-            <bitfield desc="RICH detector field is set"          length="1"  name="richIsSet"          setMeth="FALSE" />
+            <bitfield desc="The pixel sub-row (Alice mode) number" length="3"  name="pixelSubRow"   setMeth="FALSE" />
+            <bitfield desc="The pixel row number"                  length="5"  name="pixelRow"      setMeth="FALSE" />
+            <bitfield desc="The pixel column number"               length="5"  name="pixelCol"      setMeth="FALSE" />
+            <bitfield desc="The HPD number in column"              length="5"  name="HPDNumInCol"   setMeth="FALSE" />
+            <bitfield desc="The HPD column number"                 length="5"  name="HPDCol"        setMeth="FALSE" />
+            <bitfield desc="The RICH panel"                        length="1"  name="panel"         setMeth="FALSE" type="Rich::Side"         />
+            <bitfield desc="The RICH Detector"                     length="1"  name="rich"          setMeth="FALSE" type="Rich::DetectorType" />
+            <bitfield desc="Pixel sub-row field is set"            length="1"  name="pixelSubRowIsSet"   setMeth="FALSE" />
+            <bitfield desc="Pixel row field is set"                length="1"  name="pixelRowIsSet"      setMeth="FALSE" />
+            <bitfield desc="Pixel column field is set"             length="1"  name="pixelColIsSet"      setMeth="FALSE" />
+            <bitfield desc="HPD number in column field is set"     length="1"  name="HPDNumInColIsSet"   setMeth="FALSE" />
+            <bitfield desc="HPD column field is set"               length="1"  name="HPDColIsSet"        setMeth="FALSE" />
+            <bitfield desc="RICH panel field is set"               length="1"  name="panelIsSet"         setMeth="FALSE" />
+            <bitfield desc="RICH detector field is set"            length="1"  name="richIsSet"          setMeth="FALSE" />
         </attribute>
 
         <constructor 
@@ -79,17 +79,17 @@
             <arg  const="TRUE"  name="panel"         type="int"  />
             <arg  const="TRUE"  name="hpdNumInCol"   type="int"  />
             <arg  const="TRUE"  name="hpdCol"        type="int"  />
-            <arg  const="TRUE"  name="pixelNumInCol" type="int"  />
+            <arg  const="TRUE"  name="pixelRow"      type="int"  />
             <arg  const="TRUE"  name="pixelCol"      type="int"  />
-            <arg  const="TRUE"  name="subPixel"      type="int"  />
+            <arg  const="TRUE"  name="pixelSubRow"   type="int"  />
             <code>
                setRich          ( rich          );
                setPanel         ( panel         );
                setHPDNumInCol   ( hpdNumInCol   );
                setHPDCol        ( hpdCol        );
-               setPixelNumInCol ( pixelNumInCol );
+               setPixelRow      ( pixelRow      );
                setPixelCol      ( pixelCol      );
-               setSubPixel      ( subPixel      );
+               setPixelSubRow   ( pixelSubRow   );
             </code>
         </constructor>
 
@@ -100,14 +100,14 @@
             <arg  const="TRUE"  name="panel"         type="int"  />
             <arg  const="TRUE"  name="hpdNumInCol"   type="int"  />
             <arg  const="TRUE"  name="hpdCol"        type="int"  />
-            <arg  const="TRUE"  name="pixelNumInCol" type="int"  />
+            <arg  const="TRUE"  name="pixelRow"      type="int"  />
             <arg  const="TRUE"  name="pixelCol"      type="int"  />
             <code>
                setRich          ( rich          );
                setPanel         ( panel         );
                setHPDNumInCol   ( hpdNumInCol   );
                setHPDCol        ( hpdCol        );
-               setPixelNumInCol ( pixelNumInCol );
+               setPixelRow      ( pixelRow      );
                setPixelCol      ( pixelCol      );
             </code>
         </constructor>
@@ -182,7 +182,7 @@
             name   = "rangeError" 
             access = "PRIVATE" 
             const  = "TRUE" 
-            desc   = "Issue an exception in the case of a range error (not inlined to prevent blow up)" 
+            desc   = "Issue an exception in the case of a range error" 
             type   = "void" >
             <arg 
                 const = "TRUE" 
@@ -231,7 +231,7 @@
                 type  = "int"  />
             <code>
 #ifdef RICHDEBUG
-              checkRange(rich,subPixelIsSetBits-richBits,"RICH");
+              checkRange(rich,pixelSubRowIsSetBits-richBits,"RICH");
 #endif
               setData( rich, richBits, richMask, richIsSetMask );
             </code>
@@ -302,34 +302,34 @@
         </method>
 
         <method 
-            name = "setPixelNumInCol"
-            desc = "Set the RICH HPD pixel number in column identifier"  
+            name = "setPixelRow"
+            desc = "Set the RICH HPD pixel row identifier"  
             type = "void">
             <arg 
                 const = "TRUE" 
-                name  = "nInCol" 
+                name  = "row" 
                 type  = "int"  />
             <code>
 #ifdef RICHDEBUG
-               checkRange(nInCol,pixelColBits-pixelNumInColBits,"PixelNumInCol");
+               checkRange(row,pixelColBits-pixelRowBits,"PixelRow");
 #endif
-               setData( nInCol, pixelNumInColBits, pixelNumInColMask, pixelNumInColIsSetMask );
+               setData( row, pixelRowBits, pixelRowMask, pixelRowIsSetMask );
             </code>
         </method>
 
         <method 
-            name = "setSubPixel"
-            desc = "Set the RICH photon detector sub-pixel identifier"  
+            name = "setPixelSubRow"
+            desc = "Set the RICH photon detector pixel sub-row identifier (Alice mode only)"  
             type = "void">
             <arg 
                 const = "TRUE" 
-                name  = "subpixel" 
+                name  = "pixelSubRow" 
                 type  = "int"  />
             <code>
 #ifdef RICHDEBUG
-               checkRange(subpixel,pixelNumInColBits-subPixelBits,"SubPixel");
+               checkRange(pixelSubRow,pixelRowBits-pixelSubRowBits,"PixelSubRow");
 #endif
-               setData( subpixel, subPixelBits, subPixelMask, subPixelIsSetMask );
+               setData( pixelSubRow, pixelSubRowBits, pixelSubRowMask, pixelSubRowIsSetMask );
             </code>
         </method>
 
@@ -359,7 +359,17 @@
             desc  = "Returns true if the RichSmartID contains valid pixel data"  
             type  = "bool">
             <code>
-               return ( pixelColIsSet() &amp;&amp; pixelNumInColIsSet() &amp;&amp; hpdDataAreValid() );
+               return ( pixelColIsSet() &amp;&amp; pixelRowIsSet() &amp;&amp; hpdDataAreValid() );
+            </code>
+        </method>
+
+        <method 
+            name  = "pixelSubRowDataIsValid"
+            const = "TRUE" 
+            desc  = "Returns true if the RichSmartID contains valid pixel sub-row (Alice mode) data"  
+            type  = "bool">
+            <code>
+               return ( pixelSubRowIsSet() &amp;&amp; pixelDataAreValid() );
             </code>
         </method>
 
@@ -370,7 +380,7 @@
             type  = "bool">
             <code>
                return ( richIsSet() || panelIsSet() || hpdNumInColIsSet() || hpdColIsSet() ||
-                        pixelNumInColIsSet() || pixelColIsSet() || subPixelIsSet() );
+                        pixelRowIsSet() || pixelColIsSet() || pixelSubRowIsSet() );
             </code>
         </method>
 
@@ -380,7 +390,7 @@
             desc  = "Decoding function to strip the sub-pixel information and return a pixel RichSmartID" 
             type  = "LHCb::RichSmartID">
             <code>
-               return RichSmartID( m_key &amp; ~(subPixelMask+subPixelIsSetMask) );
+               return RichSmartID( m_key &amp; ~(pixelSubRowMask+pixelSubRowIsSetMask) );
             </code>
         </method>
 
@@ -421,7 +431,7 @@
             desc  = "Returns only the data fields, with the validity bits stripped"  
             type  = "LHCb::RichSmartID">
             <code>
-               return RichSmartID( m_key &amp; (richMask+panelMask+HPDNumInColMask+HPDColMask+pixelNumInColMask+pixelColMask+subPixelMask) );
+               return RichSmartID( m_key &amp; (richMask+panelMask+HPDNumInColMask+HPDColMask+pixelRowMask+pixelColMask+pixelSubRowMask) );
             </code>
         </method>
 

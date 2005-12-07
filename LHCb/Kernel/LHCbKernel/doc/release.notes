@@ -4,7 +4,8 @@ Purpose: LHCb specific Kernel classes
 
 ! 2005-12-07 - Chris Jones
  - Update naming scheme in RichSmartID
-  + "Row" is now called "NumInRow" to better reflect the actual detector
+  + HPD "Row" is now called "NumInRow" to better reflect the actual detector
+  + subPixel is renamed pixelSubRow, for more clarity
   + "PD" becomes "HPD"
 
 !===================== LHCbKernel v6r0 2005-12-06 =========================

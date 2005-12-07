@@ -4,7 +4,7 @@
  *
  *  Implementation file for RICH Channel ID class : RichSmartID
  *
- *  $Id: RichSmartID.cpp,v 1.7 2005-12-07 12:00:04 jonrob Exp $
+ *  $Id: RichSmartID.cpp,v 1.8 2005-12-07 13:27:50 jonrob Exp $
  *
  *  @author  Chris Jones  Christopher.Rob.Jones@cern.ch
  *  @date    2005-01-06
@@ -33,8 +33,8 @@ std::ostream& LHCb::RichSmartID::fillStream(std::ostream& s) const
     if ( hpdColIsSet()        ) s << " HPDCol"      << format("%3i",hpdCol());
     if ( hpdNumInColIsSet()   ) s << " HPDNumInCol" << format("%3i",hpdNumInCol());
     if ( pixelColIsSet()      ) s << " pixCol"      << format("%3i",pixelCol());
-    if ( pixelNumInColIsSet() ) s << " pixNumInCol" << format("%3i",pixelNumInCol());
-    if ( subPixelIsSet()      ) s << " subPix"      << format("%2i",subPixel());
+    if ( pixelRowIsSet()      ) s << " pixRow"      << format("%3i",pixelRow());
+    if ( pixelSubRowIsSet()   ) s << " pixSubRow"   << format("%2i",pixelSubRow());
     s << " }";
   } 
   else 
