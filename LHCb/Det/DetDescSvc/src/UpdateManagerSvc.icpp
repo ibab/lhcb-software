@@ -1,0 +1,37 @@
+#ifndef UPDATEMANAGERSVC_ICPP 
+#define UPDATEMANAGERSVC_ICPP 1
+
+// inline methods for UpdateManagerSvc
+
+inline void UpdateManagerSvc::link(Item* parent, BaseObjectMemberFunction *mf, Item *child) {
+  mf = parent->addChild(mf,child);
+  child->addParent(parent,mf);
+}
+inline UpdateManagerSvc::Item *UpdateManagerSvc::findItem(const std::string &path, bool is_path_to_db) const {
+  for (Item::ItemList::const_iterator i = m_all_items.begin(); i != m_all_items.end(); ++i){
+    if ((*i)->match(path,is_path_to_db)) return *i;
+  }
+  return NULL;
+}
+inline UpdateManagerSvc::Item *UpdateManagerSvc::findItem(void *p) const {
+  for (Item::ItemList::const_iterator i = m_all_items.begin(); i != m_all_items.end(); ++i){
+    if ((*i)->match(p)) return *i;
+  }
+  return NULL;
+}
+inline UpdateManagerSvc::Item *UpdateManagerSvc::findItem(BaseObjectMemberFunction *mf) const {
+  Item *item = NULL;
+  ValidDataObject *vdo = mf->castToValidDataObject();
+  if (vdo && vdo->registry()){
+    item = findItem(vdo->registry()->identifier());
+    }
+  if (!item) {
+    item = findItem(mf->castToVoid());
+  }
+  return item;
+}
+inline void UpdateManagerSvc::removeFromHead(Item *item) {
+  m_head_items.erase(std::find(m_head_items.begin(),m_head_items.end(),item));
+}
+
+#endif // UPDATEMANAGERSVC_ICPP

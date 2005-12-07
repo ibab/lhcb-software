@@ -1,12 +1,17 @@
 ! =============================================================================
-! $Id: release.notes,v 1.1.1.1 2005-12-07 16:01:45 mneedham Exp $ 
+! $Id: release.notes,v 1.2 2005-12-07 17:15:50 cattanem Exp $ 
 ! =============================================================================
 ! package DetDescSvc
 ! package manager : Marco Clemencic, Juan Palacios ?
+! purpose:          Component library for Detector Description Services
 ! =============================================================================
-   
-! >>>>>>>>>>>>>>>>>>>>>>> DetDescSvc v1 <<<<<<<<<<<<<<<<<<<<<<<<<
 
+!========================= DetDescSvc v1r1 2005-12-07 =========================
+! 2005-12-07 - Marco Cattaneo
+ - Migrate TransportSvc to MathCore
+ - Add UpdateMgrSvc, EventClockSvc (moved from DetDesc)
+
+!========================= DetDescSvc v1r0 2005-12-07 =========================
 ! 2005-12-07 - M. Needham 
  - This is a new package for the LHCb detector description services.
  - Moved transportSvc from DetDesc

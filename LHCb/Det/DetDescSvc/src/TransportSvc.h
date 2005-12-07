@@ -1,23 +1,9 @@
-// $Id: TransportSvc.h,v 1.1.1.1 2005-12-07 16:01:45 mneedham Exp $ 
+// $Id: TransportSvc.h,v 1.2 2005-12-07 17:15:50 cattanem Exp $ 
 // ============================================================================
-// CVS atg $Name: not supported by cvs2svn $
+// CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
-// $Log: not supported by cvs2svn $
-// Revision 1.4  2004/07/21 08:01:54  cattanem
-// Updates for Gaudi v15
-//
-// Revision 1.3  2002/07/11 07:15:05  ibelyaev
-//  fix the problems with virtual calls inside constructors
-//
-// Revision 1.2  2002/06/21 13:43:44  ocallot
-// Fix findLocalGI for the transport service.
-//
-// Revision 1.1  2002/04/03 11:01:45  ibelyaev
-//  fix the problems with Assemblies for TransportSvc
-//
-// ============================================================================
-#ifndef     _DETDESC_TRANSPORTSVC_H
-#define     _DETDESC_TRANSPORTSVC_H
+#ifndef     _DETDESCSVC_TRANSPORTSVC_H
+#define     _DETDESCSVC_TRANSPORTSVC_H
 
 // Include Files
 #include "GaudiKernel/Kernel.h" 
@@ -38,7 +24,7 @@ class IDetectorElement;
 class ISvcLocator;
 class GaudiException; 
 
-/** @class TransportSvc TransportSvc.h DetDesc/TransportSvc.h
+/** @class TransportSvc TransportSvc.h DetDescSvc/TransportSvc.h
  *
  *  Implementation of abstract interface ITransportSvc 
  *
@@ -81,8 +67,8 @@ class TransportSvc: public         Service        ,
    *  @return distance in rad length units 
    */
   virtual double distanceInRadUnits
-  ( const HepPoint3D& Point1                         , 
-    const HepPoint3D& Point2                         , 
+  ( const Gaudi::XYZPoint& Point1                    , 
+    const Gaudi::XYZPoint& Point2                    , 
     double            Threshold                 = 0  , 
     IGeometryInfo*    AlternativeGeometry       = 0  , 
     IGeometryInfo*    GeometryGuess             = 0  ) ;
@@ -103,8 +89,8 @@ class TransportSvc: public         Service        ,
    *  @param GeometryGuess       a guess for navigation 
    */
   virtual unsigned long intersections
-  ( const HepPoint3D&        Point                   ,   
-    const HepVector3D&       Vector                  ,    
+  ( const Gaudi::XYZPoint&   Point                   ,   
+    const Gaudi::XYZVector&  Vector                  ,    
     const ISolid::Tick&      TickMin                 ,    
     const ISolid::Tick&      TickMax                 ,    
     ILVolume::Intersections& Intersept               ,    
@@ -143,13 +129,13 @@ private:
   IGeometryInfo* findGeometry( const std::string& address ) const ; 
   /// check for "good" geometry info 
   bool           goodLocalGI
-  ( const HepPoint3D& point1 , 
-    const HepPoint3D& point2 , 
+  ( const Gaudi::XYZPoint& point1, 
+    const Gaudi::XYZPoint& point2, 
     IGeometryInfo*    gi     ) const; 
   ///  find good local geometry element 
   IGeometryInfo* findLocalGI
-  ( const HepPoint3D& point1 ,
-    const HepPoint3D& point2 , 
+  ( const Gaudi::XYZPoint& point1,
+    const Gaudi::XYZPoint& point2, 
     IGeometryInfo*    gi     ,
     IGeometryInfo*    topGi  ) const;   
 private:
@@ -172,8 +158,8 @@ private:
   /// 
   mutable IGeometryInfo*         m_previousGeometry ;
   /// previous parameters 
-  mutable HepPoint3D               m_prevPoint1          ; 
-  mutable HepPoint3D               m_prevPoint2          ; 
+  mutable Gaudi::XYZPoint          m_prevPoint1          ; 
+  mutable Gaudi::XYZPoint          m_prevPoint2          ; 
   mutable double                   m_previousThreshold   ;
   mutable IGeometryInfo*           m_previousGuess       ; 
   mutable IGeometryInfo*           m_previousAlternative ; 
@@ -242,11 +228,5 @@ inline void TransportSvc::Assert
 // ============================================================================
 // The End 
 // ============================================================================
-#endif  //   DETDESC__TRANSPORTSVC_H 
+#endif  //   DETDESCSVC__TRANSPORTSVC_H 
 // ============================================================================
-
-
-
-
-
-

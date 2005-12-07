@@ -5,10 +5,9 @@
 package           DetDescSvc
 version           v1r1
 
-branches          cmt doc src DetDescSvc
-include_dirs      $(DETDESCROOT)
+branches          cmt doc src
 
-use DetDesc     v*   Det
+use DetDesc       v*   Det
 
 #============================================================================
 # Component library building rule

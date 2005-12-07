@@ -1,4 +1,4 @@
-// $Id: TransportSvcGoodLocalGI.h,v 1.1.1.1 2005-12-07 16:01:45 mneedham Exp $
+// $Id: TransportSvcGoodLocalGI.h,v 1.2 2005-12-07 17:15:50 cattanem Exp $
 // ============================================================================
 // CVS Tag $Name: not supported by cvs2svn $ 
 // ============================================================================
@@ -14,8 +14,8 @@
  * @attention mandatory that at least one point is INSIDE volume! 
  */
 inline bool  TransportSvc::goodLocalGI
-( const HepPoint3D& point1 , 
-  const HepPoint3D& point2 , 
+( const Gaudi::XYZPoint& point1 , 
+  const Gaudi::XYZPoint& point2 , 
   IGeometryInfo*    gi     ) const  
 {
   bool debug = false;
@@ -44,7 +44,7 @@ inline bool  TransportSvc::goodLocalGI
   unsigned int nInt = 
     lv->solid()->intersectionTicks
     ( gi->matrix() * point1                         , 
-      gi->matrix() * HepVector3D( point2 - point1 ) , 
+      gi->matrix() * Gaudi::XYZVector( point2 - point1 ) , 
       tickMin   ,     tickMax  ,  m_local_ticks     ) ; 
   /// 
   if ( debug ) std::cout << " goodLocalGI : nInt " << nInt << std::endl;

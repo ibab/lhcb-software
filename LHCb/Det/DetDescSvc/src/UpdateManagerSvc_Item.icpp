@@ -1,0 +1,254 @@
+// $Id: UpdateManagerSvc_Item.icpp,v 1.1 2005-12-07 17:15:50 cattanem Exp $
+#ifndef UPDATEMANAGERSVC_ITEM_ICPP
+#define UPDATEMANAGERSVC_ITEM_ICPP 1
+
+/// \class Item 
+/// Used internally by UpdateManagerSvc to handle the dependency network.
+/// @author Marco Clemencic
+/// @date   2005-04-26
+struct Item {
+  
+  // ------ Item Cons & Dest
+  
+  /// Constructor for an item representing an object in the data store.
+  Item(const std::string &objPath):since(1),until(-1),path(objPath),db_path(),
+                                   vdo(NULL),ptr(NULL),updateLock(false) {}
+
+  /// Constructor for an item representing a generic object.
+  Item(BaseObjectMemberFunction *mf): since(1),until(-1),vdo(mf->castToValidDataObject()),
+                                      ptr(mf->castToVoid()),updateLock(false) {
+    if (vdo && vdo->registry()) path = vdo->registry()->identifier();
+    memFuncs.push_back(MembFunc(mf));
+  }
+    
+  /// Destructor
+  ~Item(){
+    for (MembFuncList::const_iterator mi = memFuncs.begin();
+         mi != memFuncs.end(); ++mi) {
+      delete mi->mf;
+      delete mi->items;
+    }
+  }
+
+  // ------ Item types
+
+  /// Type used for the collections of items.
+  typedef std::vector<Item*> ItemList;
+  /// Type used as pointer to an item that is using this one, a \e parent.
+  typedef std::pair<Item*,BaseObjectMemberFunction*> ParentItem;
+  /// Type for the list of \e parents.
+  typedef std::vector<ParentItem> ParentList;
+  /// Used inside Item to identify a registered member function.
+  struct MembFunc {
+    /// Simple constructor.
+    MembFunc(BaseObjectMemberFunction *mf_p): mf(mf_p),since(1),until(-1) { items = new ItemList; }
+    /// Simple destructor. The pointers are not deleted because \e owned by the item.
+    ~MembFunc() { }
+    /// Pointer to the registered member function.
+    BaseObjectMemberFunction *mf;
+    /// List of the items used by this member function
+    ItemList                 *items;
+    /// Time points delimiting the interval of validity of the member function
+    /// (intersection of the intervals of validity of the used items).
+    TimePoint                since,until;
+    /// Tells if the member function is valid or not at the given time (if not it has to be called).
+    inline bool isValid(const TimePoint &when) {return since <= when && until > when;}
+    /// Used to reset the interval of validity to (-inf;+inf)
+    inline void resetIOV() { since = time_absolutepast; until = time_absolutefuture; }
+    /// Set the interval of validity to an empty range (so it is invalid regardless of the time used)
+    inline void invalidate() { since = 1; until = -1; }
+    /// Restrict the current validity range
+    inline void changeValidity(const TimePoint &new_since, const TimePoint &new_until) {
+      if ( new_since > since ) {
+        since = new_since;
+      }
+      if ( new_until < until ) {
+        until = new_until;
+      }
+    }
+  };
+  /// Type for the list of the registered member functions.
+  typedef std::vector<MembFunc> MembFuncList;
+
+  inline bool isValid(const TimePoint &when) {
+    return since <= when && until > when;
+  }
+  inline void resetIOV() { since = time_absolutepast; until = time_absolutefuture; }
+
+  inline void invalidate() {
+    since = 1; until = -1;
+    for (ParentList::iterator p = parents.begin(); p != parents.end(); ++p) {
+      p->first->find(p->second)->invalidate(); // invalidate m.f. (I'm not checking... let's trust the consitency)
+      p->first->invalidate();
+    }
+  }
+
+  inline void changeValidity(const TimePoint &new_since, const TimePoint &new_until) {
+    // set the new limits only if within the current IOV
+    bool changed = false;
+    if ( new_since > since ) {
+      since = new_since;
+      changed = true;
+    }
+    if ( new_until < until ) {
+      until = new_until;
+      changed = true;
+    }
+    if (changed) { // propagate to parents only if changed
+      for (ParentList::iterator p = parents.begin(); p != parents.end(); ++p) {
+        p->first->find(p->second)->changeValidity(new_since,new_until);
+                                // change m.f. (I'm not checking... let's trust the consitency)
+        p->first->changeValidity(new_since,new_until);
+      }
+    }
+  }
+
+  // ------ Item data members
+
+  /// Time points delimiting the interval of validity of the item
+  /// (intersection of the intervals of validity of the member functions).
+  TimePoint since,until;
+    
+  /// Item parents: the (item,member_function) pairs that depend on this item
+  ParentList parents;
+    
+  /// List of all the children: the items on which this item depend (used for fast accessing).
+  ItemList children;
+
+  /// Path to the object, inside the data store, represented by the item.
+  std::string      path;
+  /// Path of the persistent version of the object inside the Conditions DataBase.
+  std::string      db_path;
+  /// Pointer to the ValidDataObject interface of the represented object.
+  ValidDataObject  *vdo;
+  /// Void pointer to the represented object, obtained via dynamic_cast (used to unically identify the item)
+  void             *ptr;
+  /// List of the registered member functions.
+  MembFuncList     memFuncs;
+
+  /// Flag used to prevent infinite loops when updating.
+  bool updateLock;
+
+  /// Main method. Used to update the object and all the used ones.
+  StatusCode update(IDataProviderSvc *dp,const TimePoint &when){
+    //std::cout << "UMS: Updating (Item* " << this << ") " << ptr << " ---BEGIN---";
+    //if (!path.empty()) std::cout << " " << path;
+    //std::cout << std::endl;
+    //std::cout << "UMS:    initial validity: " << since.absoluteTime() << " -> " << until.absoluteTime() << std::endl;
+    if (updateLock) {
+      //std::cout << "UMS: break loop" << std::endl;
+      return StatusCode::SUCCESS;
+    }
+    // check validity
+    if (isValid(when)) {
+      //std::cout << "UMS: item valid, not update!" << std::endl;
+      return StatusCode::SUCCESS;
+    }
+    // prepare for update
+    updateLock = true;
+    resetIOV();
+    StatusCode sc;
+    // start real update
+    if (ptr == NULL && vdo == NULL && !path.empty()) { // I do not have a VDO ptr (or a void*) but a path: load it
+      //std::cout << "UMS:    retrieve from data provider" << std::endl;
+      DataObject  *pObj;
+      sc = dp->retrieveObject(path,pObj);
+      if (!sc.isSuccess()) return sc;
+      vdo = dynamic_cast<ValidDataObject*>(pObj);
+      ptr = dynamic_cast<void*>(pObj);
+      // try to get the path to CondDB folder
+      IOpaqueAddress *pAddr = pObj->registry()->address();
+      if (pAddr != NULL) {
+        if (pAddr->svcType() == CONDDB_StorageType) {
+          // it comes from the cond db, so I can find its path
+          db_path = pAddr->par()[0];
+        }
+      }
+    } else {
+      if (vdo != NULL && !vdo->isValid(when)){ // I have a VDO ptr and the object is not valid
+        //std::cout << "UMS:    update from data provider" <<std::endl;
+        vdo->update(); // only if I didn't load it
+      }
+    }
+    if (vdo != NULL) { // it is a valid data object and should be up-to-date: align validity
+      // no check because it shouldn't be necessary
+      since = vdo->validSince();
+      until = vdo->validTill();
+    }
+    // object internal data are up-to-date, now check what it depends on
+    for (MembFuncList::iterator mfIt = memFuncs.begin(); mfIt != memFuncs.end(); ++mfIt){
+      if (!mfIt->isValid(when)) { // only if one the children of the member function need an update
+        mfIt->resetIOV();
+        for (ItemList::iterator itemIt = mfIt->items->begin(); itemIt != mfIt->items->end(); ++itemIt){
+          sc = (*itemIt)->update(dp,when);
+          if (!sc.isSuccess()) return sc;
+          // child item updated, update mf's IOV
+          if (mfIt->since < (*itemIt)->since) mfIt->since = (*itemIt)->since;
+          if (mfIt->until > (*itemIt)->until) mfIt->until = (*itemIt)->until;
+        }
+        //std::cout << "UMS:    call mf " << mfIt - memFuncs.begin() << std::endl;
+        sc = (*(mfIt->mf))();
+        if (!sc.isSuccess()) return sc;
+      }
+      // update the overall validity even if the M.F. was not called
+      if (since < mfIt->since) since = mfIt->since;
+      if (until > mfIt->until) until = mfIt->until;
+    }
+    updateLock = false;
+    //std::cout << "UMS:      final validity: " << since.absoluteTime() << " -> " << until.absoluteTime() << std::endl;
+    //std::cout << "UMS: Updating (Item* " << this << ") " << ptr << " ---END---" << std::endl;
+    return StatusCode::SUCCESS;
+  }
+    
+  /// Tells if this item represents the given pointer.
+  inline bool match(void *p) const {return p == ptr;}
+    
+  /// Tells if this item represents object identified by the given pointer.
+  inline bool match(const std::string &p, bool is_path_to_db=false) const {
+    return is_path_to_db ? (p == db_path) : (p == path);
+  }
+
+  /// Tells if the item does not have parents.
+  inline bool isHead() const { return parents.empty(); }
+  /// Tells if the item does not have parents.
+  inline bool isTail() const { return children.empty(); }
+  /// Finds the MembFunc object containing the given member function.
+  MembFuncList::iterator find(BaseObjectMemberFunction *mf) {
+    for (MembFuncList::iterator mi = memFuncs.begin(); mi != memFuncs.end(); ++mi){
+      if ( mi->mf->match(mf) ) return mi;
+    }
+    return memFuncs.end();
+  }
+    
+  /// Adds a (item,member_function) pair to the list of parents.
+  void addParent(Item* parent, BaseObjectMemberFunction *parentMF) {
+    parents.push_back(std::make_pair(parent,parentMF));
+  }
+    
+  /// Adds a child item to the given member function.
+  /// Return a pointer to the actual member function if an equivalent one was already registered.
+  BaseObjectMemberFunction * addChild(BaseObjectMemberFunction *thisMF, Item *child) {
+    MembFuncList::iterator mfIt = find(thisMF);
+    if (mfIt == memFuncs.end()) {
+      mfIt = memFuncs.insert(mfIt,MembFunc(thisMF));
+    } else {
+      if (mfIt->mf != thisMF)
+        delete thisMF;
+    }
+    if (std::find(mfIt->items->begin(),mfIt->items->end(),child) == mfIt->items->end()){
+      // it is a new child (not in current m.f. list)
+      mfIt->items->push_back(child);
+      if (mfIt->since < child->since) mfIt->since = child->since;
+      if (mfIt->until > child->until) mfIt->until = child->until;
+
+      if (std::find(children.begin(),children.end(),child) == children.end()){
+        children.push_back(child);
+        if (since < child->since) since = child->since;
+        if (until > child->until) until = child->until;
+      }
+    }
+    // return the real pointer since thisMF can be deleted
+    return mfIt->mf;
+  }
+};
+#endif // UPDATEMANAGERSVC_ITEM_ICPP
