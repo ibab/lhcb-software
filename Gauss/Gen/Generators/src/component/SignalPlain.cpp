@@ -1,4 +1,4 @@
-// $Id: SignalPlain.cpp,v 1.3 2005-11-21 16:18:05 robbep Exp $
+// $Id: SignalPlain.cpp,v 1.4 2005-12-07 22:57:03 robbep Exp $
 // Include files 
 
 // local
@@ -15,7 +15,6 @@
 #include "Generators/IProductionTool.h"
 #include "Generators/IGenCutTool.h"
 #include "Generators/IDecayTool.h"
-#include "Generators/HepMCUtils.h"
 
 //-----------------------------------------------------------------------------
 // Implementation file for class : SignalPlain
