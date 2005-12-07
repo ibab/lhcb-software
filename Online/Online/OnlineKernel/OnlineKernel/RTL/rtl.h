@@ -106,9 +106,9 @@ extern "C" {
   int lib_rtl_wait_for_event_a(lib_rtl_event_t flag, lib_rtl_thread_routine_t action, void* param);
 
   /// Create named global section
-  int lib_rtl_create_section(const char* sec_name, int size, lib_rtl_gbl_t* handle);
+  int lib_rtl_create_section(const char* sec_name, size_t size, lib_rtl_gbl_t* handle);
   /// Map global section a a specific address
-  int lib_rtl_map_section(const char* sec_name, int size, lib_rtl_gbl_t* address);
+  int lib_rtl_map_section(const char* sec_name, size_t size, lib_rtl_gbl_t* address);
   /// Delete named global section
   int lib_rtl_delete_section(lib_rtl_gbl_t handle);
   /// Unmap global section: address is quadword: void*[2]

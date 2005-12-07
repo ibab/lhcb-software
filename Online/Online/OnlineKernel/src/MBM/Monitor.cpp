@@ -48,6 +48,7 @@ namespace MBM {
     struct DISP_BMDES   {
       ManagerImp      m_mgr;
       BUFFERS::BUFF*  m_buff;
+      DISP_BMDES() : m_buff(0) {}
     };
     DISP_BMDES* m_bms;
     int  m_numBM;
@@ -116,6 +117,7 @@ namespace MBM {
     void getOptions(int argc, char** argv);
     virtual int optparse (const char* c);
     int get_bm_list();
+    int drop_bm_list();
     size_t draw_bar(float ratio,int full_scale);
     Monitor(int argc , char** argv) : m_window(0)  {
       m_bmid = 0;
@@ -161,11 +163,12 @@ int MBM::Monitor::monitor() {
   textbackground(BLUE);           // change backgroundcolor to BLUE
   if( cont )    {
     while( end )    {
-      get_bm_list();    
       try {
+        get_bm_list();    
         begin_update();
         put_inf();
         end_update();
+        drop_bm_list();
       }
       catch(...) {
         draw_line(NORMAL," Exception during buffer monitoring.");
@@ -203,15 +206,15 @@ size_t MBM::Monitor::draw_buffer(const char* name, CONTROL* ctr)  {
 }
 
 int MBM::Monitor::put_inf()   {
-  int i, j;
+  int i, j, k;
   time_t nowt;
-  const char* head=" Name    Partition  Pid Type State Produced    #seen seen Buffer";
+  const char* head=" Name      Partition     Pid Type State   Produced %%prod     #seen     #freed %%seen Reqs Buffer";
   char line[256], tim[64];
   ::time(&nowt);
   struct tm *now = ::localtime(&nowt);
   ::strftime(tim,sizeof(tim),"%a %d %b %Y  %H:%M:%S",now);
   draw_line();
-  draw_line(REVERSE,  "                               Buffer Manager Monitor [%s]",tim);
+  draw_line(REVERSE,  "                               Buffer Manager Monitor [%s]  pid:%d", tim, lib_rtl_pid());
   draw_line();
   draw_line(NORMAL,"");
   for (i=0;i<m_buffers->p_bmax;i++)  {
@@ -229,20 +232,31 @@ int MBM::Monitor::put_inf()   {
     if ( m_bms[i].m_buff != 0 )  {
       USER *us;
       BMDESCRIPT* dsc = m_bms[i].m_mgr.m_bm;
-      for (j=0,us = dsc->user;j<dsc->ctrl->p_umax;j++,us++)    {
+      CONTROL*    ctr = dsc->ctrl;
+      for (j=0,us=dsc->user;j<ctr->p_umax;j++,us++)    {
         if (us->busy == 0) continue;
-        if (us->ev_produced>0)      {
-          sprintf(line," %-13s%4x%5X%5s%6s%9d%21s",
-            us->name,us->partid,us->pid,"P",sstat[us->p_state+1],us->ev_produced,dsc->bm_name);    
+        char spy_val[5] = {' ',' ',' ',' ',0};
+        for (k=0; k<us->n_req; ++k )  {
+          if      ( us->req[k].user_type == BM_REQ_ONE  ) spy_val[1] = '1';
+          else if ( us->req[k].user_type == BM_REQ_USER ) spy_val[2] = 'U';
+          else if ( us->req[k].user_type == BM_REQ_ALL  ) spy_val[3] = 'A';
+          else if ( us->req[k].freq < 100.0             ) spy_val[0] = 'S';
         }
-        else if (us->ev_actual>0)        {
+        if ( us->ev_produced>0 || us->get_sp_calls>0 )   {
+          float perc = ((float)us->ev_produced/(float)ctr->tot_produced)*100;
+          sprintf(line," %-15s%4x%8d%5s%6s%11d   %3.0f%32s%7s",
+            us->name,us->partid,us->pid,"P",sstat[us->p_state+1],us->ev_produced,
+            perc+0.1, spy_val, dsc->bm_name);    
+        }
+        else if ( us->ev_actual>0 || us->get_ev_calls>0 || us->n_req>0 ) {
           float perc = ((float)us->ev_seen/(float)us->ev_actual)*100;
-          sprintf(line," %-13s%4x%5X%5s%6s         %9d  %3.0f%7s",
+          sprintf(line," %-15s%4x%8d%5s%6s               %12d%11d   %3.0f%5s%7s",
             us->name,us->partid,us->pid,"C",sstat[us->c_state+1],
-            us->ev_seen,perc+0.1,dsc->bm_name);    
+            us->ev_seen, us->ev_freed, perc+0.1, spy_val, dsc->bm_name);
         }
         else        {
-          sprintf(line," %-13s%4x%5X%5s    %32s",us->name,us->partid,us->pid,"?",dsc->bm_name);    
+          sprintf(line," %-15s%4x%8d%5s          %40s%5s%7s",us->name,us->partid,us->pid,"?","",
+            spy_val, dsc->bm_name);    
         }
         draw_line(NORMAL,line);
       }
@@ -293,6 +307,17 @@ int MBM::Monitor::get_bm_list()   {
       m_numBM++;
     }
     else if ( m_bms[i].m_buff != 0 )  {
+      m_bms[i].m_mgr.unmapSections();
+      m_bms[i].m_buff = 0;
+    }
+  }
+  return 1;
+}
+
+int MBM::Monitor::drop_bm_list()   {
+  m_numBM = 0;
+  for (int i = 0; i < m_buffers->p_bmax; ++i)  {
+    if ( m_bms[i].m_buff )  {
       m_bms[i].m_mgr.unmapSections();
       m_bms[i].m_buff = 0;
     }

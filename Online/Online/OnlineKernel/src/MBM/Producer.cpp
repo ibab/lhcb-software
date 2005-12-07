@@ -7,9 +7,13 @@ MBM::Producer::Producer(const std::string& buffer_name, const std::string& clien
 : Client(buffer_name, client_name, partition_id)  {
 }
 
+// Initializing constructor
+MBM::Producer::Producer(BMID bmid, const std::string& client_name, int partition_id)
+: Client(bmid, client_name, partition_id)  {
+}
+
 // Standard destructor
-MBM::Producer::~Producer()
-{
+MBM::Producer::~Producer()    {
 }
 
 // Switch to non-blocking execution mode
@@ -55,7 +59,7 @@ int MBM::Producer::spaceAction(unsigned int facility, void* param) {
 
 // Action to be called on space receival
 int MBM::Producer::spaceAction() {
-  if ( m_bmid != (BMID)-1 ) {
+  if ( m_bmid != MBM_INV_DESC ) {
     int flen;
     void *fadd;
     EventDesc& e = m_event;
@@ -72,6 +76,32 @@ int MBM::Producer::spaceAction() {
   throw std::runtime_error("Failed to declare event for MBM buffer:"+m_buffName+" [Buffer not connected]");
 }
 
+// Action to be called on space receival
+int MBM::Producer::declareEvent() {
+  if ( m_bmid != MBM_INV_DESC ) {
+    int flen;
+    void *fadd;
+    EventDesc& e = m_event;
+    int status = ::mbm_declare_event(m_bmid, e.len, e.type, e.mask, 0, &fadd, &flen, m_partID);
+    if ( status == MBM_NORMAL )  {
+      return MBM_NORMAL;
+    }
+    throw std::runtime_error("Failed to declare event for MBM buffer:"+m_buffName+" [Internal Error]");
+  }
+  throw std::runtime_error("Failed to declare event for MBM buffer:"+m_buffName+" [Buffer not connected]");
+}
+
+// Action to be called on space receival
+int MBM::Producer::sendSpace() {
+  if ( m_bmid != MBM_INV_DESC ) {
+    if ( ::mbm_send_space(m_bmid) == MBM_NORMAL )  {
+      return MBM_NORMAL;
+    }
+    throw std::runtime_error("Failed to send space for MBM buffer:"+m_buffName+" [Internal Error]");
+  }
+  throw std::runtime_error("Failed to declare event for MBM buffer:"+m_buffName+" [Buffer not connected]");
+}
+
 // Rearm action to be called on space receival
 int MBM::Producer::spaceRearm(unsigned int facility, void* param) {
   Producer* prod = (Producer*)param;
@@ -83,7 +113,7 @@ int MBM::Producer::spaceRearm(unsigned int facility, void* param) {
 
 // Space receival rearm
 int MBM::Producer::spaceRearm(int new_length) {
-  if ( m_bmid != (BMID)-1 ) {
+  if ( m_bmid != MBM_INV_DESC ) {
     EventDesc& e = m_event;
     e.len = new_length;
     int status = ::mbm_get_space_a(m_bmid, e.len, &e.data, spaceAst, this);

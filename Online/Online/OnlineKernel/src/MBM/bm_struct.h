@@ -39,12 +39,10 @@ namespace MBM  {
   };
 };
 #define TOPTYP    1
-#define NAME_LENGTH 8
+#define NAME_LENGTH 11
 #define Bits_p_kByte  2
 #define Shift_p_Bit  (10-Bits_p_kByte+1)    // = 9
 #define Bytes_p_Bit  ((1<<Shift_p_Bit)-1)   // = 511
-
-typedef int (*_MBM_ast_t)(void*);
 
 struct REQ  {                //requirements structures xx bytes each   
   int           ev_type;     // event type         
@@ -75,8 +73,8 @@ struct USER : public qentry_t  {
   int  partid;                   // user partition ID       
   char name[16];                 // user name         
   int pid;                       // process id         
-  _MBM_ast_t c_astadd;           // consumer signal to be send     
-  _MBM_ast_t p_astadd;           // producer signal to be send     
+  RTL_ast_t c_astadd;            // consumer signal to be send     
+  RTL_ast_t p_astadd;            // producer signal to be send     
   int ws_size;                   // size of waiting space     
   int ws_ptr;                    // pointer of waiting space     
   int we_ptr;                    // pointer of waiting exent     
@@ -93,13 +91,15 @@ struct USER : public qentry_t  {
   int held_eid;                  // held event index       
   int ev_produced;               // events produced counter     
   int ev_actual;                 // events matching req        
-  int ev_seen;                   // events seen         
+  int ev_seen;                   // # of events seen         
+  int ev_freed;                  // # of events freed         
   int n_req;                     // number of requierements     
   int c_partid;                
   void* c_astpar;              
   void* p_astpar;              
   int reason;                  
   int get_ev_calls;            
+  int get_sp_calls;            
   int get_wakeups;             
   int get_asts_run;            
   int spare1;
@@ -187,6 +187,10 @@ struct BMDESCRIPT : public qentry_t  {
   void*            lockid;
   char             bm_name[32];
   char             mutexName[32];
+  RTL_ast_t        free_event;
+  void*            free_event_param;
+  RTL_ast_t        alloc_event;
+  void*            alloc_event_param;
   lib_rtl_gbl_t    ctrl_add;
   lib_rtl_gbl_t    event_add;
   lib_rtl_gbl_t    user_add;

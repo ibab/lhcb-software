@@ -24,7 +24,7 @@ namespace {
 
 
 /// Create named global section
-int lib_rtl_create_section(const char* sec_name, int size, lib_rtl_gbl_t* address) {
+int lib_rtl_create_section(const char* sec_name, size_t size, lib_rtl_gbl_t* address) {
   std::auto_ptr<lib_rtl_gbl> h(new lib_rtl_gbl);
   sprintf(h->name,"/%s",sec_name);
   h->addaux = h.get();
@@ -82,7 +82,7 @@ int lib_rtl_delete_section(lib_rtl_gbl_t h)    {
 }
 
 /// Map global section a a specific address
-int lib_rtl_map_section(const char* sec_name, int size, lib_rtl_gbl_t* address)   {
+int lib_rtl_map_section(const char* sec_name, size_t size, lib_rtl_gbl_t* address)   {
   std::auto_ptr<lib_rtl_gbl> h(new lib_rtl_gbl);
   sprintf(h->name,"/%s",sec_name);
   h->addaux = h.get();
@@ -133,7 +133,7 @@ int lib_rtl_unmap_section(lib_rtl_gbl_t h)   {
     int sc = ::munmap(h->address,h->size)==0 ? 1 : 0;
 #elif defined(_WIN32)
     int sc = (::UnmapViewOfFile(h->address) == 0) ? 0 : 1;
-    ::CloseHandle(h->address);
+    if ( 0 != sc ) ::CloseHandle(h->addaux);
 #endif
     return sc;
   }

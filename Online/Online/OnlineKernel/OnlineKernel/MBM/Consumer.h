@@ -27,6 +27,9 @@ namespace MBM {
     /// Initializing constructor
     Consumer(const std::string& buffer_name, const std::string& client_name, int partition_id);
 
+    /// Initializing constructor
+    Consumer(BMID bmid, const std::string& client_name, int partition_id);
+
     /// Standard destructor
     virtual ~Consumer();
 

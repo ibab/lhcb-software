@@ -22,13 +22,14 @@ enum MBM_FrequencyTypes  {
   BM_FREQ_PERC = 1
 };
 
-typedef int (*MBM_ast_t)(void*);
+typedef int (*RTL_ast_t)(void*);
 
 #ifdef MBM_IMPLEMENTATION
 typedef BMDESCRIPT* BMID;
 #else
 typedef void* BMID;
 #endif
+#define MBM_INV_DESC   ((BMID)-1)
 
 extern "C"  {
   struct BUFFERS;
@@ -38,17 +39,25 @@ extern "C"  {
   int  mbm_mon(int argc , char** argv);
   BMID mbm_include (const char* bm_name, const char* name, int partid);
   int  mbm_exclude (BMID bm);
+  int  mbm_buffer_address(BMID);
+  /// Register optional callback on _mbm_efree
+  int  mbm_register_free_event(BMID bm, RTL_ast_t astadd, void* astparam);
+  /// Register optional callback on _mbm_ealloc
+  int  mbm_register_alloc_event(BMID bm, RTL_ast_t astadd, void* astparam);
   int  mbm_add_req (BMID bm, int evtype, int* trmask, int* veto, int masktype, 
                     int usertype, int freqmode, float freq);
-  int  mbm_get_event_a(BMID bm, int** ptr, int* size, int* evtype, int* trmask, int part_id, MBM_ast_t astadd, void* ast_par);
+  int  mbm_del_req    (BMID bm, int evtype, int* trmask, int* veto, int masktype, int usertype);
+  int  mbm_get_event_a(BMID bm, int** ptr, int* size, int* evtype, int* trmask, int part_id, RTL_ast_t astadd, void* ast_par);
   int  mbm_get_event  (BMID bm, int** ptr, int* size, int* evtype, int* trmask, int part_id);
   int  mbm_free_event (BMID bm);
   int  mbm_pause      (BMID bm);
 
   int  mbm_get_space  (BMID bm, int size, int** ptr);
-  int  mbm_get_space_a(BMID bm, int size, int** ptr, MBM_ast_t astadd, void* ast_par);
+  int  mbm_get_space_a(BMID bm, int size, int** ptr, RTL_ast_t astadd, void* ast_par);
   int  mbm_declare_event(BMID bm, int len, int evtype, int* trmask, const char* dest,
     void** free_add, int* free_size, int part_id);
+  int mbm_declare_event_and_send (BMID bm, int len, int evtype, int* trmask,
+                        const char* dest, void** free_add, int* free_size, int part_id);
   int  mbm_free_space (BMID bm);
   int  mbm_send_space (BMID bm);
   int  mbm_wait_space (BMID bm);

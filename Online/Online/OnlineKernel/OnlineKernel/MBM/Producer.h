@@ -1,5 +1,5 @@
-#ifndef _MBM_CONSUMER_H
-#define _MBM_CONSUMER_H
+#ifndef _MBM_PRODUCER_H
+#define _MBM_PRODUCER_H
 
 #include "MBM/Client.h"
 
@@ -27,6 +27,9 @@ namespace MBM {
     /// Initializing constructor
     Producer(const std::string& buffer_name, const std::string& client_name, int partition_id);
 
+    /// Initializing constructor
+    Producer(BMID bmid, const std::string& client_name, int partition_id);
+
     /// Standard destructor
     virtual ~Producer();
 
@@ -46,6 +49,12 @@ namespace MBM {
 
     /// Event receival rearm
     virtual int spaceRearm(int new_length);
+
+    /// Declare event (without send space)
+    virtual int declareEvent();
+
+    /// Send event space to consumers
+    virtual int sendSpace();
 
     /// Get space call to fill event data
     int getSpace(int len);

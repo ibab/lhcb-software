@@ -8,6 +8,12 @@ MBM::Consumer::Consumer(const std::string& buffer_name, const std::string& clien
 {
 }
 
+// Initializing constructor
+MBM::Consumer::Consumer(BMID bmid, const std::string& client_name, int partition_id)
+: Client(bmid, client_name, partition_id)
+{
+}
+
 // Standard destructor
 MBM::Consumer::~Consumer()
 {

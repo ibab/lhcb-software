@@ -30,9 +30,13 @@ namespace MBM {
     unsigned int m_facility;
     /// Flag to run in blocking mode
     bool         m_blocking;
+
   public:
     /// Initializing constructor
     Client(const std::string& buffer_name, const std::string& client_name, int partition_id);
+
+    /// Initializing constructor
+    Client(BMID bmid, const std::string& client_name, int partition_id);
 
     /// Standard destructor
     virtual ~Client();
@@ -59,6 +63,12 @@ namespace MBM {
     int partitionID() const {
       return m_partID;
     }
+
+    /// Include MBM client into buffer
+    virtual int include();
+
+    /// Exclude MBM client into buffer
+    virtual int exclude();
 
     /// Switch to non-blocking asynchronous execution mode using WT
     virtual void setNonBlocking(int facility, bool subscribe);
