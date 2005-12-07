@@ -1,5 +1,5 @@
 package MuonID
-version v3r10
+version v3r11
 
 branches src cmt doc options
 

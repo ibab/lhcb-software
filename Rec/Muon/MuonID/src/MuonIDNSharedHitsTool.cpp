@@ -1,9 +1,10 @@
-// $Id: MuonIDNSharedHitsTool.cpp,v 1.3 2005-10-26 06:18:00 pkoppenb Exp $
+// $Id: MuonIDNSharedHitsTool.cpp,v 1.4 2005-12-07 07:01:55 pkoppenb Exp $
 
 // Include files
 // from Gaudi
 #include "GaudiKernel/ToolFactory.h"
 #include "GaudiKernel/GaudiException.h"
+#include "GaudiKernel/IToolSvc.h"
 #include "GaudiKernel/MsgStream.h"
 #include "GaudiKernel/SmartDataPtr.h"
 

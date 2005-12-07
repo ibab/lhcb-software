@@ -1,4 +1,4 @@
-// $Id: MuonIDDLLTool.h,v 1.4 2005-10-17 08:16:34 pkoppenb Exp $
+// $Id: MuonIDDLLTool.h,v 1.5 2005-12-07 07:01:55 pkoppenb Exp $
 #ifndef MUONIDDLLTOOL_H
 #define MUONIDDLLTOOL_H 1
 
@@ -15,18 +15,16 @@ class IMuonTileXYZTool;
  *
  * @author Joao R. Torres de Mello Neto, Miriam Gandelman
  * @date 24/04/2003 
- * @author Erica Polycarpo, Miriam Gandelman
- * @date 28/09/2005 new message service sintaxe: change to GaudiTool 
-*/
+ */
 
 class MuonIDDLLTool : public GaudiTool,
-                   virtual public IMuonIDDLLTool {
+                      virtual public IMuonIDDLLTool {
 
 public:
 
   /// Standard Constructor
   MuonIDDLLTool( const std::string& type, const std::string& name, 
-              const IInterface* parent);
+                 const IInterface* parent);
 
   /// Standard Destructor
   virtual ~MuonIDDLLTool() { }
@@ -35,7 +33,17 @@ public:
 
   /// Calculates the Likelihood given a MuonID
   /// Inputs: a MuonID object
-  StatusCode calcMuonDLL( const MuonID* muonid, double& dll );
+  StatusCode calcMuonDLL( const MuonID* muonid, double& dll);
+
+protected:
+  /// Extract the momentum and extrapolate the track to each station
+  StatusCode trackExtrapolate(const TrStoredTrack *pTrack);
+  /// clear track based local variables
+  void resetTrackLocals();
+
+  double landau_root(double x, double mpv, double sigma);		   
+
+private:
 
   double m_trackSlopeX;
   std::vector<double> m_trackX; // position of track in x(mm) in each station
@@ -43,16 +51,18 @@ public:
   double m_Momentum;
   IMuonTileXYZTool *m_iTileTool;
   IMuonGeometryTool *m_iGeomTool;
+
   int m_NStation;
   std::vector<double> m_stationZ; // station position
-  /// Extract the momentum and extrapolate the track to each station
-  StatusCode trackExtrapolate(const TrStoredTrack *pTrack);
-  /// clear track based local variables
-  void resetTrackLocals();
+
   std::vector<double> m_distPion;
   std::vector<double> m_distMuon;
-//double m_distPion;
-//double m_distMuon;
+
+  //double m_distPion;
+  //double m_distMuon;
+
+
+
 };
 
 #endif // MUONIDDLLTOOL_H

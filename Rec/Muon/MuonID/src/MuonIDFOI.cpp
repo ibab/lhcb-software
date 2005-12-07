@@ -1,4 +1,4 @@
-// $Id: MuonIDFOI.cpp,v 1.13 2005-12-07 06:57:19 pkoppenb Exp $
+// $Id: MuonIDFOI.cpp,v 1.14 2005-12-07 07:01:55 pkoppenb Exp $
 // Include files
 #include <cstdio>
 
@@ -82,7 +82,7 @@ MuonIDFOI::~MuonIDFOI() {};
 //=============================================================================
 StatusCode MuonIDFOI::initialize() {
 
-  info()  << " MuonID v3r10" << endreq;
+  info()  << " MuonID v3r11" << endreq;
   debug()  << "==> Initialise" << endreq;
   debug()  << "Input tracks in : " << m_TrStoredTracksPath << endreq;
   debug()  << "Output MuonID in : " << m_MuonIDsPath<< endreq;
