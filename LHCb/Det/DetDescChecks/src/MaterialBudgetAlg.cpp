@@ -1,10 +1,6 @@
-// $Id: MaterialBudgetAlg.cpp,v 1.8 2005-05-03 10:12:38 ibelyaev Exp $
+// $Id: MaterialBudgetAlg.cpp,v 1.9 2005-12-07 15:22:59 cattanem Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
-// ============================================================================
-// $Log: not supported by cvs2svn $
-// Revision 1.7  2004/03/01 15:03:44  ibelyaev
-//  update of the package
 // ============================================================================
 // Include files
 // ============================================================================
@@ -13,11 +9,11 @@
 #include <functional>
 #include <algorithm>
 // ============================================================================
-// CLHEP
+// LHCbDefinitions
 // ============================================================================
-#include "CLHEP/Units/SystemOfUnits.h"
-#include "CLHEP/Geometry/Vector3D.h"
-#include "CLHEP/Units/PhysicalConstants.h"
+#include "Kernel/SystemOfUnits.h"
+#include "Kernel/PhysicalConstants.h"
+#include "Kernel/Point3DTypes.h"
 // ============================================================================
 // AIDA 
 // ============================================================================
@@ -146,9 +142,7 @@ StatusCode MaterialBudgetAlg::initialize()
   { while( 3 != m_vrtx.size() ) { m_vrtx.push_back( 0.0 ); } }
   else 
   { warning() << " Ignore extra fields in 'ShootingPoint' "<< endreq ; }
-  m_vertex.setX( m_vrtx[0] ) ;
-  m_vertex.setY( m_vrtx[1] ) ;
-  m_vertex.setZ( m_vrtx[2] ) ;
+  m_vertex.SetXYZ( m_vrtx[0], m_vrtx[1], m_vrtx[2] ) ;
   
   // transform parameters 
   if ( m_xMin >  m_xMax ) {  std::swap( m_xMin , m_xMax )  ; }
@@ -215,7 +209,7 @@ StatusCode MaterialBudgetAlg::makeRandomShots()
   for ( int shot = 0 ; shot < m_shots ; ++shot , ++progress ) 
   {
     // point at reference plane  
-    const HepPoint3D point( x() , y() , m_z );      
+    const Gaudi::XYZPoint point( x() , y() , m_z );      
     // evaluate the distance 
     const double dist = 
       m_trSvc -> distanceInRadUnits ( m_vertex , point );
@@ -262,7 +256,7 @@ StatusCode MaterialBudgetAlg::makeGridShots()
     for ( double x = m_yMin + dxgrid/2 ; x <= m_xMax ; x += dxgrid )
     {
       // "shooting" point at the reference plane
-      const HepPoint3D point ( x, y, m_z);       
+      const Gaudi::XYZPoint point ( x, y, m_z);       
       
       // evaluate the distance 
       const double dist = 
@@ -316,7 +310,7 @@ StatusCode MaterialBudgetAlg::makePsrapShots()
       const double y = sin(theta)*sin(phi)*m_z/cos(theta);
       
       // "shooting" point at the reference plane
-      const HepPoint3D point( x, y, m_z);       
+      const Gaudi::XYZPoint point( x, y, m_z);       
       
       // evaluate the distance 
       const double dist = 

@@ -1,4 +1,4 @@
-// $Id: MaterialBudgetAlg.h,v 1.8 2005-05-03 10:12:38 ibelyaev Exp $
+// $Id: MaterialBudgetAlg.h,v 1.9 2005-12-07 15:22:59 cattanem Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
@@ -7,8 +7,8 @@
 // Include files
 // from STL
 #include <string>
-// CLHEP
-#include "CLHEP/Geometry/Point3D.h"
+// LHCb Definitions
+#include "Kernel/Point3DTypes.h"
 // GaudiAlg
 #include "GaudiAlg/GaudiHistoAlg.h"
 
@@ -131,7 +131,7 @@ private:
   ITransportSvc*      m_trSvc         ;
   // point of shooting 
   std::vector<double> m_vrtx          ;
-  HepPoint3D          m_vertex        ;
+  Gaudi::XYZPoint     m_vertex        ;
   // number of shots per event
   int                 m_shots        ;
   // z-position of reference plane 

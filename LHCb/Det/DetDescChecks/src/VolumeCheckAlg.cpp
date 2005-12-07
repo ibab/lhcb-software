@@ -1,8 +1,11 @@
-// $Id: VolumeCheckAlg.cpp,v 1.4 2005-05-03 10:12:38 ibelyaev Exp $
+// $Id: VolumeCheckAlg.cpp,v 1.5 2005-12-07 15:22:59 cattanem Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.4  2005/05/03 10:12:38  ibelyaev
+//  progress bar + use of 'plot2D'
+//
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -11,10 +14,10 @@
 #include <functional>
 #include <algorithm>
 // ============================================================================
-// CLHEP
+// LHCb definitions
 // ============================================================================
-#include "CLHEP/Units/SystemOfUnits.h"
-#include "CLHEP/Geometry/Vector3D.h"
+#include "Kernel/SystemOfUnits.h"
+#include "Kernel/Vector3DTypes.h"
 // ============================================================================
 // AIDA 
 // ============================================================================
@@ -166,9 +169,7 @@ StatusCode VolumeCheckAlg::initialize()
   {
     warning()  << " Ignore extra fields in 'ShootingPoint' "<< endreq ;
   }
-  m_vertex.setX ( m_vrtx[0] ) ;
-  m_vertex.setY ( m_vrtx[1] ) ;
-  m_vertex.setZ ( m_vrtx[2] ) ;
+  m_vertex.SetXYZ( m_vrtx[0], m_vrtx[1], m_vrtx[2] ) ;
   
   if ( !m_volume->isAssembly() && 0 != m_volume->solid() ) 
   {
@@ -209,22 +210,22 @@ StatusCode VolumeCheckAlg::execute()
     boost::progress_display progress ( m_shotsSphere ) ;
     for ( int shot = 0 ; shot < m_shotsSphere ; ++shot )
     {
-      HepVector3D vect;
+      Gaudi::XYZVector vect;
       
       double s = 0 ;
       do
       {
-        vect.setX( flat.shoot() ) ;
-        vect.setY( flat.shoot() ) ;
+        vect.SetX( flat.shoot() ) ;
+        vect.SetY( flat.shoot() ) ;
         s = vect.mag2()           ;
       }
       while ( s > 1.0 || s == 0.0 );
       
-      vect.setZ( -1 + 2 * s );
+      vect.SetZ( -1 + 2 * s );
       const double a = 2. * sqrt( 1 - s ) ;
       
-      vect.setX( vect.x() * a ) ;
-      vect.setY( vect.y() * a ) ;
+      vect.SetX( vect.x() * a ) ;
+      vect.SetY( vect.y() * a ) ;
       
       ILVolume::Intersections intersections;
       m_volume->intersectLine ( m_vertex , vect , intersections , 0 );
@@ -268,8 +269,8 @@ StatusCode VolumeCheckAlg::execute()
       const double x = m_minx + flat.shoot() * ( m_maxx - m_minx ) ;
       const double y = m_miny + flat.shoot() * ( m_maxy - m_miny ) ;
       const double z = m_minz + flat.shoot() * ( m_maxz - m_minz ) ;
-      HepPoint3D  point( x , y , z ) ;
-      HepVector3D vect ( 0 , 0 , 1 ) ;
+      Gaudi::XYZPoint  point( x , y , z ) ;
+      Gaudi::XYZVector vect ( 0 , 0 , 1 ) ;
       
       ILVolume::Intersections intersections;
       m_volume->intersectLine ( point , vect , intersections , 0 );
@@ -311,8 +312,8 @@ StatusCode VolumeCheckAlg::execute()
       const double x = m_minx + flat.shoot() * ( m_maxx - m_minx ) ;
       const double y = m_miny + flat.shoot() * ( m_maxy - m_miny ) ;
       const double z = m_minz + flat.shoot() * ( m_maxz - m_minz ) ;
-      HepPoint3D  point( x , y , z ) ;
-      HepVector3D vect ( 1 , 0 , 0 ) ;
+      Gaudi::XYZPoint  point( x , y , z ) ;
+      Gaudi::XYZVector vect ( 1 , 0 , 0 ) ;
       
       ILVolume::Intersections intersections;
       m_volume->intersectLine ( point , vect , intersections , 0 );
@@ -357,8 +358,8 @@ StatusCode VolumeCheckAlg::execute()
       const double x = m_minx + flat.shoot() * ( m_maxx - m_minx ) ;
       const double y = m_miny + flat.shoot() * ( m_maxy - m_miny ) ;
       const double z = m_minz + flat.shoot() * ( m_maxz - m_minz ) ;
-      HepPoint3D  point( x , y , z ) ;
-      HepVector3D vect ( 0 , 1 , 0 ) ;
+      Gaudi::XYZPoint  point( x , y , z ) ;
+      Gaudi::XYZVector vect ( 0 , 1 , 0 ) ;
       
       ILVolume::Intersections intersections;
       m_volume->intersectLine ( point , vect , intersections , 0 );
