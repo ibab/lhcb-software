@@ -1,4 +1,4 @@
-// $Id: MuonChamberLayout.cpp,v 1.5 2005-12-07 08:46:46 asarti Exp $
+// $Id: MuonChamberLayout.cpp,v 1.6 2005-12-07 15:15:55 asarti Exp $
 // Include files 
 
 //Muon
@@ -659,6 +659,8 @@ StatusCode MuonChamberLayout::Tile2XYZpos(const MuonTileID& tile,
 StatusCode MuonChamberLayout::fillSystemGrids(DeMuonChamber *deChmb, 
 					      int vIdx, int reg){
 
+  bool debug = false;
+
   //Getting the grid pointer
   Condition* aGrid = deChmb->condition((deChmb->getGridName()).data());
   MuonChamberGrid* theGrid = dynamic_cast<MuonChamberGrid*>(aGrid);
@@ -680,7 +682,11 @@ StatusCode MuonChamberLayout::fillSystemGrids(DeMuonChamber *deChmb,
   if(mapType.size()==4) {
     xm1 = mapType.at(2);	  ym1 = mapType.at(3);
   }
-  std::cout<<grX<<" "<<xm0<<" "<<grY<<" "<<ym0<<" "<<SgrX<<" "<<xm1<<" "<<SgrY<<" "<<ym1<<std::endl;
+
+  if(debug) {
+    std::cout<<"Grid "<<(deChmb->getGridName()).data()<<"  data:: "<<grX/m_cgX.at(reg)<<" "<<grY/m_cgY.at(reg)<<" "<<SgrX/m_cgX.at(reg)<<" "<<SgrY/m_cgY.at(reg);
+    std::cout<<" ; Map:: "<<xm0<<" "<<ym0<<" "<<xm1<<" "<<ym1<<std::endl;
+  }
 
   //Service variables
   int axm0(0),axm1(0),aym0(0),aym1(0);

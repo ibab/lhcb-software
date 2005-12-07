@@ -1,4 +1,4 @@
-// $Id: DeMuonDetector.cpp,v 1.8 2005-12-07 08:46:46 asarti Exp $
+// $Id: DeMuonDetector.cpp,v 1.9 2005-12-07 15:15:55 asarti Exp $
 
 // Include files
 #include "MuonDet/DeMuonDetector.h"
@@ -505,13 +505,21 @@ std::vector< std::pair<MuonFrontEndID, std::vector<float> > > DeMuonDetector::li
   //Getting the chamber pointer.
   DeMuonChamber*  myChPtr =  getChmbPtr(station,regNum,chamberNumber) ;
 
-
+  bool isIn = false;
   //Getting a gap [gaps in same chamber have same dimensions]
-  DeMuonGasGap*  myGap = (DeMuonGasGap*) 0;
+  DeMuonGasGap*  myGap = (DeMuonGasGap*) 0; int gapCnt(0);
   IDetectorElement::IDEContainer::iterator itGap=myChPtr->childBegin();
   for(itGap=myChPtr->childBegin(); itGap<myChPtr->childEnd(); itGap++){
     myGap =  dynamic_cast<DeMuonGasGap*>( *itGap ) ;
-    break;
+
+    //Providing all 3 numbers identifies a chamber
+    IGeometryInfo* geoGap = (*itGap)->geometry();  
+    
+    //Is the gap containing the hit?
+    isIn = geoGap->isInside(my_entry);
+    if(isIn) break;
+
+    gapCnt++;
   }
 
   if(!myGap) {
@@ -558,6 +566,8 @@ std::vector< std::pair<MuonFrontEndID, std::vector<float> > > DeMuonDetector::li
     for(tmpPair_it = tmpPair.begin();tmpPair_it<tmpPair.end(); tmpPair_it++){
       myFE  = tmpPair_it->first;
       myVec = tmpPair_it->second;
+      myFE.setLayer(gapCnt/2);
+
       for(int iDm = 0; iDm<4; iDm++){  
 	myVec.at(iDm) = iDm%2 ? myVec.at(iDm)*2*dy : myVec.at(iDm)*2*dx;
 	//Added resolution effect
