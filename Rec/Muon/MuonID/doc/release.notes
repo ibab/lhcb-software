@@ -1,7 +1,13 @@
-! $Id: release.notes,v 1.37 2005-10-26 06:18:00 pkoppenb Exp $
+! $Id: release.notes,v 1.38 2005-12-07 06:57:19 pkoppenb Exp $
 ! Package     : MuonID
 ! Responsible : Erica Polycarpo
 
+!========================== MuonID v3r10 2005-12-07 ====================
+! 2005-12-07 - P. Koppenburg for Erica Polycarpo
+  - options/MuonIDFOI.opts
+  - src/MuonIDFOI.cpp
+  - src/MuonIDFOI.h
+    . New paramterization
 !========================== MuonID v3r9p1 2005-10-26 ===================
 ! 2005-10-26 - P. Koppenburg
   - src/MuonIDDLLTool.cpp

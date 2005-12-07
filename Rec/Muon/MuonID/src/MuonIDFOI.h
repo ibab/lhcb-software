@@ -1,4 +1,4 @@
-// $Id: MuonIDFOI.h,v 1.8 2005-10-17 08:16:34 pkoppenb Exp $
+// $Id: MuonIDFOI.h,v 1.9 2005-12-07 06:57:19 pkoppenb Exp $
 #ifndef MUONIDFOI_H 
 #define MUONIDFOI_H 1
 
@@ -86,13 +86,15 @@ private:
 
 
   // function that defines the field of interest size
-  // formula is p(1) + p(2)*exp(-p(3)*momentum)
+  // formula is p(1) + p(2)*momentum+p(3)*exp(-p(4)*momentum)
   std::vector< double >     m_xfoiParam1;
   std::vector< double >     m_xfoiParam2;
   std::vector< double >     m_xfoiParam3;
+  std::vector< double >     m_xfoiParam4;
   std::vector< double >     m_yfoiParam1;
   std::vector< double >     m_yfoiParam2;
   std::vector< double >     m_yfoiParam3;
+  std::vector< double >     m_yfoiParam4;
 
   // Number of stations
   int m_NStation;

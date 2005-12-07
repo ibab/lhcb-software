@@ -1,4 +1,4 @@
-// $Id: MuonIDFOI.cpp,v 1.12 2005-10-17 08:16:34 pkoppenb Exp $
+// $Id: MuonIDFOI.cpp,v 1.13 2005-12-07 06:57:19 pkoppenb Exp $
 // Include files
 #include <cstdio>
 
@@ -65,9 +65,11 @@ MuonIDFOI::MuonIDFOI( const std::string& name,
   declareProperty( "XFOIParameter1", m_xfoiParam1 );
   declareProperty( "XFOIParameter2", m_xfoiParam2 );
   declareProperty( "XFOIParameter3", m_xfoiParam3 );
+  declareProperty( "XFOIParameter4", m_xfoiParam4 );
   declareProperty( "YFOIParameter1", m_yfoiParam1 );
   declareProperty( "YFOIParameter2", m_yfoiParam2 );
   declareProperty( "YFOIParameter3", m_yfoiParam3 );
+  declareProperty( "YFOIParameter4", m_yfoiParam4 );
 }
 
 //=============================================================================
@@ -80,25 +82,13 @@ MuonIDFOI::~MuonIDFOI() {};
 //=============================================================================
 StatusCode MuonIDFOI::initialize() {
 
+  info()  << " MuonID v3r10" << endreq;
   debug()  << "==> Initialise" << endreq;
-
   debug()  << "Input tracks in : " << m_TrStoredTracksPath << endreq;
   debug()  << "Output MuonID in : " << m_MuonIDsPath<< endreq;
 
-  // get geometry tool
-  StatusCode sc =
-    toolSvc()->retrieveTool("MuonTileIDXYZ", m_iTileTool);
-  if( sc.isFailure() ) {
-    fatal() << "    Unable to create MuonTileIDToXYZ tool" << endreq;
-    return sc;
-  }
-
-  sc = toolSvc()->retrieveTool("MuonGeometryTool", m_iGeomTool);
-  if( sc.isFailure() ) {
-    fatal() << "    Unable to create MuonGeometry tool" << endreq;
-    return sc;
-  }
-
+  m_iTileTool = tool<IMuonTileXYZTool>("MuonTileIDXYZ");
+  m_iGeomTool = tool<IMuonGeometryTool>("MuonGeometryTool");
  
   m_NStation = 0;
   m_NRegion = 0;
@@ -126,7 +116,7 @@ StatusCode MuonIDFOI::initialize() {
   int station,region;
   for(station = 0 ; station < m_NStation ; station++ ){
     for(region = 0 ; region < m_NRegion ; region++ ){
-      sc = m_iGeomTool->getPadSize(station,region,
+      StatusCode sc = m_iGeomTool->getPadSize(station,region,
                                    m_padSizeX[station * m_NRegion + region],
                                    m_padSizeY[station * m_NRegion + region]);
       if(!sc){
@@ -160,9 +150,11 @@ StatusCode MuonIDFOI::initialize() {
       m_xfoiParam1.size() != (unsigned)m_NStation*m_NRegion || 
       m_xfoiParam2.size() != (unsigned)m_NStation*m_NRegion ||
       m_xfoiParam3.size() != (unsigned)m_NStation*m_NRegion || 
+      m_xfoiParam4.size() != (unsigned)m_NStation*m_NRegion || 
       m_yfoiParam1.size() != (unsigned)m_NStation*m_NRegion || 
       m_yfoiParam2.size() != (unsigned)m_NStation*m_NRegion ||
-      m_yfoiParam3.size() != (unsigned)m_NStation*m_NRegion  
+      m_yfoiParam3.size() != (unsigned)m_NStation*m_NRegion ||
+      m_yfoiParam4.size() != (unsigned)m_NStation*m_NRegion  
       ){
     err() << "OPTIONS initialising MuonIDFOI are missing"
         << " or wrong size for " << m_NStation << " stations and " 
@@ -448,19 +440,19 @@ StatusCode MuonIDFOI::preSelection(MuonID * pMuid, bool &passed){
   }
 
   // >>>>>>  the inner values are coming with bad values - hardwire them by now
-  // if(   (fabs(m_trackX[0]) <  m_regionInnerX[0] && 
-  //          fabs(m_trackY[0]) <  m_regionInnerY[0] )  ||  
-  //        (fabs(m_trackX[m_NStation-1]) < 
-  //          m_regionInnerX[(m_NStation-1)*m_NRegion] &&
-  //          fabs(m_trackY[m_NStation-1]) <  
-  //          m_regionInnerY[(m_NStation-1)*m_NRegion] ) 
-  //       ) {
-
- if(   (fabs(m_trackX[0]) <  240.0 && 
+/*  if(   (fabs(m_trackX[0]) <  m_regionInnerX[0] && 
+            fabs(m_trackY[0]) <  m_regionInnerY[0] )  ||  
+          (fabs(m_trackX[m_NStation-1]) < 
+            m_regionInnerX[(m_NStation-1)*m_NRegion] &&
+            fabs(m_trackY[m_NStation-1]) <  
+            m_regionInnerY[(m_NStation-1)*m_NRegion] ) 
+         ) {
+*/
+  if(   (fabs(m_trackX[0]) <  240.0 && 
           fabs(m_trackY[0]) < 200.0 )  ||  
         (fabs(m_trackX[m_NStation-1]) < 376.0 &&
           fabs(m_trackY[m_NStation-1]) < 313.0 ) 
-       ) {
+       ) { 
     // inside M1 - M5 chamber hole
     pMuid->setInAcceptance(0);
     passed = false;
@@ -564,8 +556,9 @@ StatusCode MuonIDFOI::trackExtrapolate(TrStoredTrack *pTrack){
 double MuonIDFOI::foiX(const int &station, const int &region, const double &p,
                        const double &dx){
   return ( m_xfoiParam1[ station * m_NRegion + region ] +
-           m_xfoiParam2[ station * m_NRegion + region ]*
-      exp(-m_xfoiParam3[ station * m_NRegion + region ]*p/1000. ) )*dx;
+           m_xfoiParam2[ station * m_NRegion + region ]*p/GeV +
+           m_xfoiParam3[ station * m_NRegion + region ]*
+      exp(-m_xfoiParam4[ station * m_NRegion + region ]*p/GeV ) )*dx;
 
   //in the future optimize this checking that 2*dx =m_padSizeX[station * m_NRegion + region]
   //then eliminates dx from function
@@ -575,8 +568,9 @@ double MuonIDFOI::foiX(const int &station, const int &region, const double &p,
 double MuonIDFOI::foiY(const int &station, const int &region, const double &p, 
                        const double &dy){
   return ( m_yfoiParam1[ station * m_NRegion + region ] +
-           m_yfoiParam2[ station * m_NRegion + region ]*
-      exp(-m_yfoiParam3[ station * m_NRegion + region ]*p/1000. ) )*dy;
+           m_yfoiParam2[ station * m_NRegion + region ]*p/GeV +
+           m_yfoiParam3[ station * m_NRegion + region ]*
+      exp(-m_yfoiParam4[ station * m_NRegion + region ]*p/GeV ) )*dy;
 }
 
 void MuonIDFOI::resetTrackLocals(){
