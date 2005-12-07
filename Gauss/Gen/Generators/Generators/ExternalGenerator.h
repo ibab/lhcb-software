@@ -1,4 +1,4 @@
-// $Id: ExternalGenerator.h,v 1.3 2005-11-29 15:44:11 robbep Exp $
+// $Id: ExternalGenerator.h,v 1.4 2005-12-07 23:04:50 robbep Exp $
 #ifndef GENERATORS_EXTERNALGENERATOR_H 
 #define GENERATORS_EXTERNALGENERATOR_H 1
 
@@ -67,14 +67,9 @@ protected:
   IDecayTool      * m_decayTool      ;
   IGenCutTool     * m_cutTool        ;
 
-  inline double fraction( const unsigned int A , const unsigned int B ) const
-  { return ( (double) A / (double) B ) ; }
-  inline double err_fraction( const unsigned int A , const unsigned int B ) 
-    const 
-  { return sqrt( A * ( 1. - ( (double) A / (double) B ) ) ) / 
-      ( (double) B ) ; }
-
 private:
+  bool IsBAtProduction( const HepMC::GenParticle * thePart ) const ;
+
   std::string m_productionToolName , m_decayToolName , m_cutToolName ;
 
 };
