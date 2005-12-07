@@ -1,10 +1,13 @@
 ! =============================================================================
-! $Id: release.notes,v 1.237 2005-12-07 13:19:07 cattanem Exp $ 
+! $Id: release.notes,v 1.238 2005-12-07 13:43:10 jpalac Exp $ 
 ! =============================================================================
 ! package DetDesc
 ! package manager : Marco Clemencic, Juan Palacios
 ! =============================================================================
 
+! 2005-12-07 - Juan PALACIOS
+ - Small changes using new Transform3D constructors and Point3D multiplication
+   by scalar.
 !======================== DetDesc v16r0 2005-12-07 ========================
 ! *********** Requires MathCore-5_06_02 or higher.************************
 

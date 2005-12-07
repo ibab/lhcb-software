@@ -1,4 +1,4 @@
-// $Id: SolidChild.cpp,v 1.16 2005-12-07 13:19:07 cattanem Exp $ 
+// $Id: SolidChild.cpp,v 1.17 2005-12-07 13:43:10 jpalac Exp $ 
 // ===========================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ===========================================================================
@@ -141,11 +141,7 @@ SolidChild::SolidChild
   else 
     {
       m_sc_matrix    = 
-        new Gaudi::Transform3D(
-                               Gaudi::Transform3D( rot ) *
-                               Gaudi::Transform3D(Gaudi::XYZVector(-1.*pos.x(),
-                                                                   -1.*pos.y(),
-                                                                   -1.*pos.z()) ));
+        new Gaudi::Transform3D(Gaudi::XYZVector(-1.*pos), rot );
       if( 0 != m_sc_matrix ) { m_sc_simple = false ; } 
     }
   /// set bounding parameters 
