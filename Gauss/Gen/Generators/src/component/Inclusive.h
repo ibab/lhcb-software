@@ -1,4 +1,4 @@
-// $Id: Inclusive.h,v 1.2 2005-11-29 15:56:19 robbep Exp $
+// $Id: Inclusive.h,v 1.3 2005-12-07 22:54:49 robbep Exp $
 #ifndef GENERATORS_INCLUSIVE_H 
 #define GENERATORS_INCLUSIVE_H 1
 
@@ -22,15 +22,14 @@ namespace HepMC {
 class Inclusive : public ExternalGenerator {
 public:
   /// Standard constructor
-  Inclusive( const std::string& type, 
-             const std::string& name,
+  Inclusive( const std::string& type, const std::string& name,
              const IInterface* parent);
   
   virtual ~Inclusive( ); ///< Destructor
   
   virtual StatusCode initialize( ) ;
   
-  virtual bool generate( const unsigned int nPileUp , 
+  virtual bool generate( const unsigned int nPileUp ,
                          EventVector & theEventVector ,
                          HardVector  & theHardVector ) ;
 
@@ -64,7 +63,7 @@ private:
   unsigned int  m_ncBaryon , m_nanticBaryon ;
   unsigned int  m_ncc ;
 
-  unsigned int  m_n0B , m_n1B , m_n2B ;
-  unsigned int  m_n0C , m_n1C , m_n2C ;
+  unsigned int  m_n0starB , m_n1starB , m_n2starB ;
+  unsigned int  m_n0starC , m_n1starC , m_n2starC ;
 };
 #endif // GENERATORS_INCLUSIVE_H

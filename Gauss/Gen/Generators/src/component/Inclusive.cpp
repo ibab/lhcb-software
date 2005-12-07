@@ -1,4 +1,4 @@
-// $Id: Inclusive.cpp,v 1.3 2005-11-29 15:56:19 robbep Exp $
+// $Id: Inclusive.cpp,v 1.4 2005-12-07 22:54:49 robbep Exp $
 // Include files 
 
 // local
@@ -20,7 +20,89 @@
 // from Generators
 #include "Generators/IProductionTool.h"
 #include "Generators/IGenCutTool.h"
-#include "Generators/HepMCUtils.h"
+#include "Generators/GenCounters.h"
+
+//=============================================================================
+// Function to test if a HepMC::GenParticle is a B hadron at root of decay
+//=============================================================================
+struct isRootB : std::unary_function< const HepMC::GenParticle * , bool > {
+  bool operator() ( const HepMC::GenParticle * part ) const {
+    if ( part -> status() == 3 ) return false ;
+    ParticleID thePid( part -> pdg_id() ) ;
+    if ( ! thePid.hasBottom() ) return false ;
+    if ( 0 == part -> production_vertex() ) return true ;
+    HepMC::GenVertex::particles_in_const_iterator parent ;
+    const HepMC::GenVertex * thePV = part -> production_vertex() ;
+    for ( parent = thePV -> particles_in_const_begin() ;
+          parent != thePV -> particles_in_const_end() ; ++parent ) {
+      ParticleID parentID( (*parent) -> pdg_id() ) ;
+      if ( parentID.hasBottom() ) return false ;
+    }
+    return true ;
+  }
+};
+
+//=============================================================================
+// Function to test if a HepMC::GenParticle is a D hadron at root of decay
+//=============================================================================
+struct isRootD : std::unary_function< const HepMC::GenParticle * , bool > {
+  bool operator() ( const HepMC::GenParticle * part ) const {
+    if ( part -> status() == 3 ) return false ;
+    ParticleID thePid( part -> pdg_id() ) ;
+    if ( ! thePid.hasCharm() ) return false ;
+    if ( 0 == part -> production_vertex() ) return true ;
+
+    HepMC::GenVertex::particles_in_const_iterator parent ;
+    const HepMC::GenVertex * thePV = part -> production_vertex() ;
+    for ( parent = thePV -> particles_in_const_begin() ;
+          parent != thePV -> particles_in_const_end() ; ++parent ) {
+      ParticleID parentID( (*parent) -> pdg_id() ) ;
+      if ( parentID.hasCharm() ) return false ;
+    }
+    return true ;
+  }
+};
+
+//=============================================================================
+// Function to test if a HepMC::GenParticle is a B hadron at end of decay tree
+//=============================================================================
+struct isEndB : std::unary_function< const HepMC::GenParticle * , bool > {
+  bool operator() ( const HepMC::GenParticle * part ) const {
+    if ( part -> status() == 3 ) return false ;
+    ParticleID thePid( part -> pdg_id() ) ;
+    if ( ! thePid.hasBottom() ) return false ;
+    if ( 0 == part -> end_vertex() ) return true ;
+    HepMC::GenVertex::particles_out_const_iterator children ;
+    const HepMC::GenVertex * theEV = part -> end_vertex() ;
+    for ( children = theEV -> particles_out_const_begin() ;
+          children != theEV -> particles_out_const_end() ; ++children ) {
+      ParticleID childID( (*children) -> pdg_id() ) ;
+      if ( childID.hasBottom() ) return false ;
+    }
+    return true ;
+  }
+};
+
+//=============================================================================
+// Function to test if a HepMC::GenParticle is a D hadron at end of decay tree
+//=============================================================================
+struct isEndD : std::unary_function< const HepMC::GenParticle * , bool > {
+  bool operator() ( const HepMC::GenParticle * part ) const {
+    if ( part -> status() == 3 ) return false ;
+    ParticleID thePid( part -> pdg_id() ) ;
+    if ( ! thePid.hasCharm() ) return false ;
+    if ( 0 == part -> end_vertex() ) return true ;
+
+    HepMC::GenVertex::particles_out_const_iterator children ;
+    const HepMC::GenVertex * theEV = part -> end_vertex() ;
+    for ( children = theEV -> particles_out_const_begin() ;
+          children != theEV -> particles_out_const_end() ; ++children ) {
+      ParticleID childID( (*children) -> pdg_id() ) ;
+      if ( childID.hasCharm() ) return false ;
+    }
+    return true ;
+  }
+};
 
 //-----------------------------------------------------------------------------
 // Implementation file for class : Inclusive
@@ -42,35 +124,21 @@ Inclusive::Inclusive( const std::string& type,
   : ExternalGenerator ( type, name , parent ) ,
     m_lightestMass    ( DBL_MAX ) ,
     m_lightestPID     ( 0 ) ,
-    m_nEventsBeforeCut( 0 ) ,
-    m_nEventsAfterCut ( 0 ) ,
+    m_nEventsBeforeCut( 0 ) , m_nEventsAfterCut ( 0 ) ,
     m_nInvertedEvents ( 0 ) ,
-    m_nB0             ( 0 ) ,
-    m_nB0bar          ( 0 ) ,
-    m_nBp             ( 0 ) ,
-    m_nBm             ( 0 ) ,
-    m_nBs0            ( 0 ) ,
-    m_nBs0bar         ( 0 ) ,
-    m_nbBaryon        ( 0 ) ,
-    m_nantibBaryon    ( 0 ) ,
-    m_nBcp            ( 0 ) ,
-    m_nBcm            ( 0 ) ,
+    m_nB0             ( 0 ) , m_nB0bar          ( 0 ) ,
+    m_nBp             ( 0 ) , m_nBm             ( 0 ) ,
+    m_nBs0            ( 0 ) , m_nBs0bar         ( 0 ) ,
+    m_nbBaryon        ( 0 ) , m_nantibBaryon    ( 0 ) ,
+    m_nBcp            ( 0 ) , m_nBcm            ( 0 ) ,
     m_nbb             ( 0 ) ,
-    m_nD0             ( 0 ) ,
-    m_nD0bar          ( 0 ) ,
-    m_nDp             ( 0 ) ,
-    m_nDm             ( 0 ) ,
-    m_nDsp            ( 0 ) ,
-    m_nDsm            ( 0 ) ,
-    m_ncBaryon        ( 0 ) ,
-    m_nanticBaryon    ( 0 ) ,
+    m_nD0             ( 0 ) , m_nD0bar          ( 0 ) ,
+    m_nDp             ( 0 ) , m_nDm             ( 0 ) ,
+    m_nDsp            ( 0 ) , m_nDsm            ( 0 ) ,
+    m_ncBaryon        ( 0 ) , m_nanticBaryon    ( 0 ) ,
     m_ncc             ( 0 ) ,
-    m_n0B             ( 0 ) ,
-    m_n1B             ( 0 ) ,
-    m_n2B             ( 0 ) ,
-    m_n0C             ( 0 ) ,
-    m_n1C             ( 0 ) ,
-    m_n2C             ( 0 ) { 
+    m_n0starB         ( 0 ) , m_n1starB( 0 ) , m_n2starB( 0 ) ,
+    m_n0starC         ( 0 ) , m_n1starC( 0 ) , m_n2starC( 0 ) { 
     declareProperty( "InclusivePIDList" , m_pidVector ) ;
   }
 
@@ -169,177 +237,64 @@ bool Inclusive::generate( const unsigned int nPileUp ,
 // Print the counters
 //=============================================================================
 void Inclusive::printCounters( ) const {
+  using namespace GenCounters ;
+  
   info() << "************   Inclusive counters   **************" << std::endl ;
   
-  info() << "Number of events before the cut                  : " 
-         << m_nEventsBeforeCut << std::endl ;
-  info() << "Number of events after the cut                   : "  
-         << m_nEventsAfterCut << std::endl ;
-  info() << "Number of z-inverted events                      : "
-         << m_nInvertedEvents << std::endl ;
-  unsigned int nAfter = m_nEventsAfterCut - m_nInvertedEvents ;
-  info() << format( "Efficiency of the generator level cut            : " )
-         << format( "%.5g +/- %.5g" , fraction( nAfter , m_nEventsBeforeCut ) ,
-                    err_fraction( nAfter , m_nEventsBeforeCut ) ) 
-         << std::endl << std::endl ;
+  printEfficiency( info() , "generator level cut" , 
+                   m_nEventsAfterCut - m_nInvertedEvents , 
+                   m_nEventsBeforeCut ) ;
+  printCounter( info() , "z-inverted events" , m_nInvertedEvents ) ;
+  info() << std::endl ;
 
-  info() << "Number of B0                                     : " 
-         << m_nB0 << std::endl ;
   unsigned int totalB = m_nB0 + m_nBp + m_nBs0 + m_nbBaryon + m_nBcp ;
   unsigned int totalBbar = m_nB0bar + m_nBm + m_nBs0bar + m_nantibBaryon + 
     m_nBcm ;
-  info() << format( "Fraction of B0                                   : " )
-         << format( "%.5g +/- %.5g" , fraction( m_nB0 , totalB ) , 
-                    err_fraction( m_nB0 , totalB ) ) << std::endl ;  
 
-  info() << "Number of B0bar                                  : " 
-         << m_nB0bar << std::endl ;
-  info() << format( "Fraction of B0bar                                : " )
-         << format( "%.5g +/- %.5g" , fraction( m_nB0bar , totalBbar ) , 
-                    err_fraction( m_nB0bar , totalBbar ) ) << std::endl ;  
-
-  info() << "Number of B+                                     : "
-         << m_nBp << std::endl ;
-  info() << format( "Fraction of B+                                   : " )
-         << format( "%.5g +/- %.5g" , fraction( m_nBp , totalB ) , 
-                    err_fraction( m_nBp , totalB ) ) << std::endl ;  
-
-  info() << "Number of B-                                     : "
-         << m_nBm << std::endl ;
-  info() << format( "Fraction of B-                                   : " )
-         << format( "%.5g +/- %.5g" , fraction( m_nBm , totalBbar ) , 
-                    err_fraction( m_nBm , totalBbar ) ) << std::endl ;  
-
-  info() << "Number of Bs0                                    : " 
-         << m_nBs0 << std::endl ;
-  info() << format( "Fraction of Bs0                                  : " )
-         << format( "%.5g +/- %.5g" , fraction( m_nBs0 , totalB ) , 
-                    err_fraction( m_nBs0 , totalB ) ) << std::endl ;
-
-  info() << "Number of Bs0bar                                 : "
-         << m_nBs0bar << std::endl ;
-  info() << format( "Fraction of Bs0bar                               : " )
-         << format( "%.5g +/- %.5g" , fraction( m_nBs0bar , totalBbar ) , 
-                    err_fraction( m_nBs0bar , totalBbar ) ) << std::endl ;  
-
-  info() << "Number of b-baryons                              : "
-         << m_nbBaryon << std::endl ;
-  info() << format( "Fraction of b-baryons                            : " )
-         << format( "%.5g +/- %.5g" , fraction( m_nbBaryon , totalB ) , 
-                    err_fraction( m_nbBaryon , totalB ) ) << std::endl ;
+  printFraction( info() , "B0" , m_nB0 , totalB ) ;
+  printFraction( info() , "B0bar" , m_nB0bar , totalBbar ) ;
   
-  info() << "Number of anti-b-baryons                         : "
-         << m_nantibBaryon << std::endl ;
-  info() << format( "Fraction of anti-b-baryons                       : " )
-         << format( "%.5g +/- %.5g" , fraction( m_nantibBaryon , totalBbar ) , 
-                    err_fraction( m_nantibBaryon , totalBbar ) )
-         << std::endl ;  
+  printFraction( info() , "B+" , m_nBp , totalB ) ;
+  printFraction( info() , "B-" , m_nBm , totalB ) ;
+ 
+  printFraction( info() , "Bs0" , m_nBs0 , totalB ) ;
+  printFraction( info() , "Bs0bar" , m_nBs0bar , totalBbar ) ;
 
-  info() << "Number of Bc+                                    : "
-         << m_nBcp << std::endl ;
-  info() << format( "Fraction of Bc+                                  : " )
-         << format( "%.5g +/- %.5g" , fraction( m_nBcp , totalB ) , 
-                    err_fraction( m_nBcp , totalB ) ) << std::endl ;
+  printFraction( info() , "b-baryons" , m_nbBaryon , totalB ) ;
+  printFraction( info() , "anti-b-baryons" , m_nantibBaryon , totalBbar ) ;
 
-  info() << "Number of Bc-                                    : "
-         << m_nBcm << std::endl ;
-  info() << format( "Fraction of Bc-                                  : " )
-         << format( "%.5g +/- %.5g" , fraction( m_nBcm , totalBbar ) , 
-                    err_fraction( m_nBcm , totalBbar ) ) << std::endl ;
+  printFraction( info() , "Bc+" , m_nBcp , totalB ) ;
+  printFraction( info() , "Bc-" , m_nBcm , totalBbar ) ;
 
-  info() << "Number of (bb)                                   : "
-         << m_nbb << std::endl << std::endl ;
+  printCounter( info() , "(bb)" , m_nbb ) ;
+  info() << std::endl ;
 
-  info() << "Number of D0                                     : " 
-         << m_nD0 << std::endl ;
   unsigned int totalC = m_nD0 + m_nDp + m_nDsp + m_ncBaryon ;
   unsigned int totalCbar = m_nD0bar + m_nDm + m_nDsm + m_nanticBaryon ;
-  info() << format( "Fraction of D0                                   : " )
-         << format( "%.5g +/- %.5g" , fraction( m_nD0 , totalC ) , 
-                    err_fraction( m_nD0 , totalC ) ) << std::endl ;  
+  printFraction( info() , "D0" , m_nD0 , totalC ) ;
+  printFraction( info() , "D0bar" , m_nD0bar , totalCbar ) ;
 
-  info() << "Number of D0bar                                  : " 
-         << m_nD0bar << std::endl ;
-  info() << format( "Fraction of D0bar                                : " )
-         << format( "%.5g +/- %.5g" , fraction( m_nD0bar , totalCbar ) , 
-                    err_fraction( m_nD0bar , totalCbar ) ) << std::endl ;  
+  printFraction( info() , "D+" , m_nDp , totalC ) ;
+  printFraction( info() , "D-" , m_nDm , totalCbar ) ;
 
-  info() << "Number of D+                                     : " 
-         << m_nDp << std::endl ;
-  info() << format( "Fraction of D+                                   : " )
-         << format( "%.5g +/- %.5g" , fraction( m_nDp , totalC ) , 
-                    err_fraction( m_nDp , totalC ) ) << std::endl ;  
+  printFraction( info() , "Ds+" , m_nDsp , totalC ) ;
+  printFraction( info() , "Ds-" , m_nDsm , totalCbar ) ;
 
-  info() << "Number of D-                                     : " 
-         << m_nDm << std::endl ;
-  info() << format( "Fraction of D-                                   : " )
-         << format( "%.5g +/- %.5g" , fraction( m_nDm , totalCbar ) , 
-                    err_fraction( m_nDm , totalCbar ) ) << std::endl ;  
+  printFraction( info() , "c-baryons" , m_ncBaryon , totalC ) ;
+  printFraction( info() , "anti-c-baryons" , m_nanticBaryon , totalCbar ) ;
+  printCounter( info() , "(cc)" , m_ncc ) ;
+  info() << std::endl ;
 
-  info() << "Number of Ds+                                    : " 
-         << m_nDsp << std::endl ;
-  info() << format( "Fraction of Ds+                                  : " )
-         << format( "%.5g +/- %.5g" , fraction( m_nDsp , totalC ) , 
-                    err_fraction( m_nDsp , totalC ) ) << std::endl ;  
+  unsigned int total = m_n0starB + m_n1starB + m_n2starB ;
+  printFraction( info() , "B" , m_n0starB , total ) ;
+  printFraction( info() , "B*" , m_n1starB , total ) ;
+  printFraction( info() , "B**" , m_n2starB , total ) ;
+  info() << std::endl ;
 
-  info() << "Number of Ds-                                    : " 
-         << m_nDsm << std::endl ;
-  info() << format( "Fraction of Ds-                                  : " )
-         << format( "%.5g +/- %.5g" , fraction( m_nDsm , totalCbar ) , 
-                    err_fraction( m_nDsm , totalCbar ) ) << std::endl ;  
-
-  info() << "Number of c-baryons                              : " 
-         << m_ncBaryon << std::endl ;
-  info() << format( "Fraction of c-baryons                            : " )
-         << format( "%.5g +/- %.5g" , fraction( m_ncBaryon , totalC ) , 
-                    err_fraction( m_ncBaryon , totalC ) ) << std::endl ;  
-
-  info() << "Number of anti-c-baryons                         : " 
-         << m_nanticBaryon << std::endl ;
-  info() << format( "Fraction of anti-c-baryons                       : " )
-         << format( "%.5g +/- %.5g" , fraction( m_nanticBaryon , totalCbar ) , 
-                    err_fraction( m_nanticBaryon , totalCbar ) ) << std::endl ;
-  
-  info() << "Number of (cc)                                   : " 
-         << m_ncc << std::endl << std::endl ;
-
-  info() << "Number of B                                      : "
-         << m_n0B << std::endl ;
-  unsigned int total = m_n0B + m_n1B + m_n2B ;
-  info() << format( "Fraction of B                                    : " )
-         << format( "%.5g +/- %.5g" , fraction( m_n0B , total ) , 
-                    err_fraction( m_n0B , total ) ) << std::endl ;
-
-  info() << "Number of B*                                     : "
-         << m_n1B << std::endl ;
-  info() << format( "Fraction of B*                                   : " )
-         << format( "%.5g +/- %.5g" , fraction( m_n1B , total ) , 
-                    err_fraction( m_n1B , total ) ) << std::endl ;
-
-  info() << "Number of B**                                    : "
-         << m_n2B << std::endl ;
-  info() << format( "Fraction of B**                                  : " )
-         << format( "%.5g +/- %.5g" , fraction( m_n2B , total ) , 
-                    err_fraction( m_n2B , total ) ) << std::endl << std::endl ;
-
-  info() << "Number of D                                      : "
-         << m_n0C << std::endl ;
-  total = m_n0C + m_n1C + m_n2C ;
-  info() << format( "Fraction of D                                    : " )
-         << format( "%.5g +/- %.5g" , fraction( m_n0C , total ) , 
-                    err_fraction( m_n0C , total ) ) << std::endl ;
-
-  info() << "Number of D*                                     : "
-         << m_n1C << std::endl ;
-  info() << format( "Fraction of D*                                   : " )
-         << format( "%.5g +/- %.5g" , fraction( m_n1C , total ) , 
-                    err_fraction( m_n1C , total ) ) << std::endl ;
-
-  info() << "Number of D**                                    : "
-         << m_n2C << std::endl ;
-  info() << format( "Fraction of D**                                  : " )
-         << format( "%.5g +/- %.5g" , fraction( m_n2C , total )  , 
-                    err_fraction( m_n2C , total ) ) << std::endl << std::endl ;
+  total = m_n0starC + m_n1starC + m_n2starC ;
+  printFraction( info() , "D" , m_n0starC , total ) ;
+  printFraction( info() , "D*" , m_n1starC , total ) ;
+  printFraction( info() , "D**" , m_n2starC , total ) ;
 
   info() << endmsg ;
 }
@@ -348,109 +303,96 @@ void Inclusive::printCounters( ) const {
 // Update the counters of number of different hadrons in selected events
 //=============================================================================
 void Inclusive::updateHadronCounters( const HepMC::GenEvent * theEvent ) {
-  HepMC::GenEvent::particle_const_iterator iter ;
-  for ( iter = theEvent -> particles_begin() ; 
-        iter != theEvent -> particles_end() ; ++iter ) {
-    if ( 3 == (*iter) -> status() ) continue ;
+  // Count B:
+  std::vector< HepMC::GenParticle * > endB ;
+  HepMC::copy_if( theEvent -> particles_begin() , theEvent -> particles_end() ,
+                  std::back_inserter( endB ) , isEndB() ) ;
+  std::vector< HepMC::GenParticle * >::const_iterator iter ;
+  
+  for ( iter = endB.begin() ; iter != endB.end() ; ++iter ) {
     ParticleID thePid( (*iter) -> pdg_id() ) ;
-    if ( thePid.hasBottom() ) {
-      if ( 0 != (*iter) -> end_vertex() ) {
-        HepMC::GenVertex::particles_out_const_iterator child ;
-        const HepMC::GenVertex * theEV = (*iter) -> end_vertex() ;
-        for ( child = theEV -> particles_out_const_begin( ) ;
-              child != theEV -> particles_out_const_end( ) ; ++child ) {
-          ParticleID childID( (*child) -> pdg_id() ) ;
-          if ( childID.hasBottom() ) continue ;
-        }
+    
+    if ( thePid.isMeson() ) {
+      if ( thePid.pid() > 0 ) {
+        if ( thePid.hasUp() ) m_nBp++ ;
+        else if ( thePid.hasDown() ) m_nB0++ ;
+        else if ( thePid.hasStrange() ) m_nBs0++ ;
+        else if ( thePid.hasCharm() ) m_nBcp++ ;
+        else m_nbb++ ;
+      } else {
+        if ( thePid.hasUp() ) m_nBm++ ;
+        else if ( thePid.hasDown() ) m_nB0bar++ ;
+        else if ( thePid.hasStrange() ) m_nBs0bar++ ;
+        else if ( thePid.hasCharm() ) m_nBcm++ ;
+        else m_nbb++ ;
       }
-      if ( thePid.isMeson() ) {
-        if ( thePid.pid() > 0 ) {
-          if ( thePid.hasUp() ) m_nBp++ ;
-          else if ( thePid.hasDown() ) m_nB0++ ;
-          else if ( thePid.hasStrange() ) m_nBs0++ ;
-          else if ( thePid.hasCharm() ) m_nBcp++ ;
-          else m_nbb++ ;
-        } else {
-          if ( thePid.hasUp() ) m_nBm++ ;
-          else if ( thePid.hasDown() ) m_nB0bar++ ;
-          else if ( thePid.hasStrange() ) m_nBs0bar++ ;
-          else if ( thePid.hasCharm() ) m_nBcm++ ;
-          else m_nbb++ ;
-        }
-      } else if ( thePid.isBaryon() ) {
-        if ( thePid.pid() > 0 ) m_nbBaryon++ ;
-        else m_nantibBaryon++ ;
-      }
-    } else if ( thePid.hasCharm() ) {
-      if ( 0 != (*iter) -> end_vertex() ) {
-        HepMC::GenVertex::particles_out_const_iterator child ;
-        const HepMC::GenVertex * theEV = (*iter) -> end_vertex() ;
-        for ( child = theEV -> particles_out_const_begin( ) ;
-              child != theEV -> particles_out_const_end( ) ; ++child ) {
-          ParticleID childID( (*child) -> pdg_id() ) ;
-          if ( childID.hasCharm() ) continue ;
-        }
-      }
-      if ( thePid.isMeson() ) {
-        if ( thePid.pid() > 0 ) {
-          if ( thePid.hasUp() ) m_nD0++ ;
-          else if ( thePid.hasDown() ) m_nDp++ ;
-          else if ( thePid.hasStrange() ) m_nDsp++ ;
-          else m_ncc++ ;
-        } else {
-          if ( thePid.hasUp() ) m_nD0bar++ ;
-          else if ( thePid.hasDown() ) m_nDm++ ;
-          else if ( thePid.hasStrange() ) m_nDsm++ ;
-          else m_ncc++ ;
-        }
-      } else if ( thePid.isBaryon() ) {
-        if ( thePid.pid() > 0 ) m_ncBaryon++ ;
-        else m_nanticBaryon++ ;
-      }      
+    } else if ( thePid.isBaryon() ) {
+      if ( thePid.pid() > 0 ) m_nbBaryon++ ;
+      else m_nantibBaryon++ ;
     }
   }
+  
+  std::vector< HepMC::GenParticle * > endD ;
+  HepMC::copy_if( theEvent -> particles_begin() , theEvent -> particles_end() ,
+                  std::back_inserter( endD ) , isEndD() ) ;
+  
+  for ( iter = endD.begin() ; iter != endD.end() ; ++iter ) {
+    ParticleID thePid( (*iter) -> pdg_id() ) ;
+    
+    if ( thePid.isMeson() ) {
+      if ( thePid.pid() > 0 ) {
+        if ( thePid.hasUp() ) m_nD0++ ;
+        else if ( thePid.hasDown() ) m_nDp++ ;
+        else if ( thePid.hasStrange() ) m_nDsp++ ;
+        else m_ncc++ ;
+      } else {
+        if ( thePid.hasUp() ) m_nD0bar++ ;
+        else if ( thePid.hasDown() ) m_nDm++ ;
+        else if ( thePid.hasStrange() ) m_nDsm++ ;
+        else m_ncc++ ;
+      }
+    } else if ( thePid.isBaryon() ) {
+      if ( thePid.pid() > 0 ) m_ncBaryon++ ;
+      else m_nanticBaryon++ ;
+    }
+  } 
 }
+
 //=============================================================================
 // Count excited states counters
 //=============================================================================
 void Inclusive::updateExcitedStatesCounters( const HepMC::GenEvent * 
                                              theEvent ) {
-  HepMC::GenEvent::particle_const_iterator iter ;
-  for ( iter = theEvent -> particles_begin() ; 
-        iter != theEvent -> particles_end() ; ++iter ) {
-    if ( 3 == (*iter) -> status() ) continue ;
+  // Count B :
+  std::vector< HepMC::GenParticle * > rootB ;
+  HepMC::copy_if( theEvent -> particles_begin() , theEvent -> particles_end() ,
+                  std::back_inserter( rootB ) , isRootB() ) ;
+
+  std::vector< HepMC::GenParticle * >::const_iterator iter ;
+
+  for ( iter = rootB.begin() ; iter != rootB.end() ; ++iter ) {
     ParticleID thePid( (*iter) -> pdg_id() ) ;
-    if ( thePid.hasBottom() ) {
-      if ( 0 != (*iter) -> production_vertex() ) {
-        HepMC::GenVertex::particles_in_const_iterator parent ;
-        const HepMC::GenVertex * thePV = (*iter) -> production_vertex() ;
-        for ( parent = thePV -> particles_in_const_begin() ;
-              parent != thePV -> particles_in_const_end() ; ++parent ) {
-          ParticleID parentID( (*parent) -> pdg_id() ) ;
-          if ( parentID.hasBottom() ) continue ;
-        }
-      }
-      if ( thePid.isMeson() ) {
-        if ( 1 == thePid.jSpin() ) m_n0B++ ;
-        else if ( ( 3 == thePid.jSpin() ) && ( 1 == thePid.lSpin()) ) m_n1B++ ;
-        else m_n2B++ ;
-      }
+
+    if ( thePid.isMeson() ) {
+      if ( 0 == thePid.lSpin() ) {
+        if ( 1 == thePid.jSpin() ) ++m_n0starB ;
+        else ++m_n1starB ;
+      } else ++m_n2starB ;
     }
-    if ( thePid.hasCharm() ) {
-      if ( 0 != (*iter) -> production_vertex() ) {
-        HepMC::GenVertex::particles_in_const_iterator parent ;
-        const HepMC::GenVertex * thePV = (*iter) -> production_vertex() ;
-        for ( parent = thePV -> particles_in_const_begin() ;
-              parent != thePV -> particles_in_const_end() ; ++parent ) {
-          ParticleID parentID( (*parent) -> pdg_id() ) ;
-          if ( parentID.hasCharm() ) continue ;
-        }
-      }
-      if ( thePid.isMeson() ) {
-        if ( 1 == thePid.jSpin() ) m_n0C++ ;
-        else if ( ( 3 == thePid.jSpin() ) && ( 1 == thePid.lSpin()) ) m_n1C++ ;
-        else m_n2C++ ;
-      }
+  }
+
+  // Count D :
+  std::vector< HepMC::GenParticle * > rootD ;
+  HepMC::copy_if( theEvent -> particles_begin() , theEvent -> particles_end() ,
+                  std::back_inserter( rootD ) , isRootD() ) ;
+
+  for ( iter = rootD.begin() ; iter != rootD.end() ; ++iter ) {
+    ParticleID thePid( (*iter) -> pdg_id() ) ;
+    if ( thePid.isMeson() ) {
+      if ( 0 == thePid.lSpin() ) {
+        if ( 1 == thePid.jSpin() ) ++m_n0starC ;
+        else ++m_n1starC ;
+      } else ++m_n2starC ;
     }
   }       
 }
