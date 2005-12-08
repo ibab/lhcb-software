@@ -8,7 +8,7 @@ branches cmt doc
 #=======================================================
 
 # Calorimeter                         # Maintainer
-use CaloMoniDst         v2r0    Calo  # Olivier Deschamps
+use CaloMoniDst         v2r1    Calo  # Olivier Deschamps
 use CaloPIDs		v3r0    Calo  # Olivier Deschamps
 use CaloReco            v3r0    Calo  # Olivier Deschamps
 

@@ -5,7 +5,7 @@ Purpose: LHCb reconstruction packages.
          This project groups together all the reconstruction packages needed
          by one or more LHCb applications. 
 
-</PRE><H1><A NAME=v2r2>2005-12-06 RecSys v2r2</A></H1><PRE>
+</PRE><H1><A NAME=v2r2>2005-12-08 RecSys v2r2</A></H1><PRE>
 This version uses Gaudi v17r2, LHCb v19r3. Backwards compatible for RTTC data
 
 - Packages added:    PatKShort     - Reconstruct downstream tracks from seeds
@@ -16,7 +16,7 @@ This version uses Gaudi v17r2, LHCb v19r3. Backwards compatible for RTTC data
 - Packages modified: PatSys v1r5, PatTools v1r3, PatChecker v1r3, PatVelo v1r5,
     PatFitParams v1r2, TrackExtrapolators v1r3, TrackFitEvent v1r5,
     TrackIdealPR v1r4p1, TrackMCTools v1r4, TrackProjectors v1r4,
-    TrackTools v1r3, TrConverters v1r5
+    TrackTools v1r3, TrConverters v1r5, CaloMoniDst v2r1
 
 - In PatTools v1r3:
   . Add class IncreaseingByZ in PatTTCoord
@@ -76,6 +76,9 @@ This version uses Gaudi v17r2, LHCb v19r3. Backwards compatible for RTTC data
 
 - In TrConverters v1r5
   . TrStoredTrack2TrackCnv fills the Tracks with measurements and LHCbIDs
+
+- In CaloMoniDst v2r1
+  . Use only Cnv tracks in monitoring
 
 </PRE><H1><A NAME=v2r1>2005-11-22 RecSys v2r1</A></H1><PRE>
 This version uses Gaudi v17r2, LHCb v19r2. Backwards compatible for RTTC data
