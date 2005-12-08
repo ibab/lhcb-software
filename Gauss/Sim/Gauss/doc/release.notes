@@ -4,6 +4,29 @@
 ! Purpose     : LHCb Simulation Application with Geant4
 !-----------------------------------------------------------------------------
 
+! 2005-12-08 - Gloria CORTI
+ - Introduce new geometry lhcb-v200511.xml from XmlDDDB v27r0 and introduce
+   use of RichCondition (from LHCb). It also requires the use of 
+   XmlConditions v1r3 and GaussRICH v5r1 to get refractive index for gases.
+   This is the default Gauss configuration available also as v200511.opts
+   . xml/Rich1AerogelRegionDefinition.xml, RichOverallRegionDefinition.xml,
+         RichSimulationAttributes.xml
+     define simulation attributes and regions to swhitch on delta rays in 
+     Aerogel or whole of RICHes.
+   . xml/Simulation.xml, MuonLowEnergy.xml, set attributes for latest RICH
+     description
+   . xml/Simulation-v200412.xml, simulation attributes for older geometries
+   . options/Common.opts, use lhcb-200511.xml as default geometry
+   . options/v200412.opts, v200506.opts, v200507.opts, set options to be
+     backward compatible when using old geometry
+   . options/v200511.opts, general options for new geometry
+   . options/Simulation.opts, by default activate cuts per region
+ - Introduce execution of algorithm to fill MCCaloHits instead of converters,
+   requires GaussCalo v7r4
+   . options/Simulation.opts
+ - Adapt to new dictionary from new version of Gauss
+   . options/GaussPoolIO.opts
+
 !============================ Gauss v21r0 ================================
 ! 2005-11-11 - Gloria CORTI
  - Introduce NEW subdirectory xml to contain setting of simulation cuts,

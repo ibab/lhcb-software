@@ -1,5 +1,5 @@
 package Gauss
-version v21r0
+version v22r0
 
 #=========================================================================
 #-- Structure
@@ -9,7 +9,8 @@ branches src doc options cmt job
 
 #=========================================================================
 #-- Databases
-use XmlDDDB             v26r2p1 Det   -no_auto_imports
+use XmlDDDB             v27r0   Det   -no_auto_imports
+use XmlConditions       v1r3    Det   -no_auto_imports
 use FieldMap            v4r6          -no_auto_imports
 use DecFiles            v11r0   Gen   -no_auto_imports
 use ParamFiles          v3r13         -no_auto_imports
@@ -29,7 +30,7 @@ use $(LbAcerMC_use)
 use GiGaCnv             v15r11  Sim
 use GaussTools          v11r0 	Sim
 use GaussTracker        v4r2    Sim
-use GaussRICH           v5r0    Sim
+use GaussRICH           v5r1    Sim
 use GaussCalo           v7r3    Sim
 use GaussPhysics        v3r2    Sim
 use GaussAlgs		v1r7    Sim
@@ -65,6 +66,7 @@ use RootHistCnv         v*
 use GaudiConf           v*     
 use LHCbAlgs            v*    Kernel
 use Magnet              v*    Det
+use RichCondition       v*    Rich
 
 #========================================================================
 #== Necessary enviroment variables
