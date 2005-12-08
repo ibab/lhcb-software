@@ -37,30 +37,6 @@ m_channelID = ( sensor &lt;&lt; sensorBits ) | ( type &lt;&lt; typeBits ) | stri
         <code/>
       </constructor>
       
-      <method type='unsigned int' name='sensor' const='TRUE' 
-        desc='get sensor number'>
-        <code>return ((m_channelID &amp; sensorMask) &gt;&gt; sensorBits);</code>
-      </method>
-      <method type='unsigned int' name='strip' const='TRUE' 
-        desc='get strip number'>
-        <code>return ((m_channelID &amp; stripMask) &gt;&gt; stripBits);</code>
-      </method>
-
-      <method name='setStrip' argList='unsigned int strip' 
-        desc='set strip number'>
-        <code>
-          m_channelID &amp;= ~stripMask;
-        m_channelID |= ((unsigned long)(strip) &lt;&lt; stripBits) &amp; stripMask;
- 
-</code>
-      </method>
-
-      <method name='setSensor' argList='unsigned int sensor' 
-        desc='set sensor number'>
-        <code>m_channelID &amp;= ~sensorMask;
-          m_channelID |= ((unsigned long)(sensor) &lt;&lt; sensorBits) &amp; sensorMask;</code>
-      </method>
-
       <method name='setType' argList='VeloChannelID::sensorType type'
         desc='Set sensor type bits'>
         <code>
@@ -110,15 +86,12 @@ m_channelID = ( sensor &lt;&lt; sensorBits ) | ( type &lt;&lt; typeBits ) | stri
         name='sensorType'
         value=' Null = 0, RType = 1, PhiType = 2, PileUpType = 3 ' />
       
-      <enum access='PRIVATE' 
-        desc='Enumeration to store the bit packing offsets' name='bits' 
-        value=' typeBits = 19, sensorBits=11, stripBits = 0, '/>
-      <enum access='PRIVATE' desc='Enumeration to store the bit packing
-        masks' 
-        name='masks' 
-        value=' typeMask = 0x180000, sensorMask = 0x7F800 , stripMask = 0x7FF '/>
+      <attribute type='bitfield' name='channelID' desc='VELO Channel ID'>
+        <bitfield name='strip' length='11' desc='Strip number'/>
+        <bitfield name='sensor' length='8' desc='Sensor number'/>
+        <bitfield name='type' length='2' desc='Sensor type' setMeth="FALSE" getMeth="FALSE"/>
+      </attribute>
 
-      <attribute type='unsigned int' name='channelID' desc='VELO Channel ID'/>
     </class>
   </package>
 </gdd>
