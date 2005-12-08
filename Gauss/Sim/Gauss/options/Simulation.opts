@@ -1,4 +1,4 @@
-// $Id: Simulation.opts,v 1.66 2005-11-11 10:23:35 gcorti Exp $ 
+// $Id: Simulation.opts,v 1.67 2005-12-08 17:07:38 gcorti Exp $ 
 #pragma print off
 
 /** @file 
@@ -72,6 +72,11 @@ GetSTHits.CollectionName = "ITSDet/Hits";
 GetSTHits.MCHitsLocation = "/Event/MC/IT/Hits";
 GetOTHits.CollectionName = "OTSDet/Hits";
 GetOTHits.MCHitsLocation = "/Event/MC/OT/Hits";
+// and for the Calorimeters
+Simulation.Members += { "GetCaloHitsAlg/GetSpdHits" };
+Simulation.Members += { "GetCaloHitsAlg/GetPrsHits" };
+Simulation.Members += { "GetCaloHitsAlg/GetEcalHits" };
+Simulation.Members += { "GetCaloHitsAlg/GetHcalHits" };
 // All other detectors
 Simulation.Members += { "GiGaGetHitsAlg" };
 // ---> NEW WAY: END
@@ -167,6 +172,7 @@ GiGa.StepSeq.Members             += { "GaussStepAction/GaussStep" } ;
 // setting simulation attributes
 SimulationSvc.SimulationDbLocation = "$GAUSSROOT/xml/Simulation.xml";
 GiGa.GiGaMgr.RunTools += { "GiGaSetSimAttributes" };
+GiGa.GiGaMgr.RunTools += { "GiGaRegionsTool"      }; // Cuts per region
 GiGa.GiGaMgr.GiGaSetSimAttributes.OutputLevel = 4;
 
 // uncomment the following to save geometry in GDML format

@@ -22,7 +22,7 @@ use Geant4Files		v71r0	      -no_auto_imports
 use ParticleGuns        v1r0    Gen
 use Generators          v2r1    Gen
 use LbPythia            v2r1    Gen
-#   Optional AcerMC
+#   Optional AcerMC 
 macro LbAcerMC_use "" Linux&AcerMC "LbAcerMC v1r3 Gen"
 use $(LbAcerMC_use)
 
@@ -31,7 +31,7 @@ use GiGaCnv             v15r11  Sim
 use GaussTools          v11r0 	Sim
 use GaussTracker        v4r2    Sim
 use GaussRICH           v5r1    Sim
-use GaussCalo           v7r3    Sim
+use GaussCalo           v7r4    Sim
 use GaussPhysics        v3r2    Sim
 use GaussAlgs		v1r7    Sim
 
