@@ -1,9 +1,8 @@
-// $Id: CondDBTestAlgorithm.cpp,v 1.14 2005-10-07 15:40:20 marcocle Exp $
+// $Id: CondDBTestAlgorithm.cpp,v 1.15 2005-12-08 11:28:17 marcocle Exp $
 // Include files 
 
 // from Gaudi
 #include "GaudiKernel/AlgFactory.h" 
-#include "GaudiKernel/SmartDataPtr.h"
 #include "GaudiKernel/IDetDataSvc.h"
 
 #include "DetDesc/Condition.h"
@@ -57,10 +56,6 @@ StatusCode CondDBTestAlgorithm::initialize() {
 
   debug() << "==> Initialize" << endmsg;
   
-  info() << "Retrieve the LHCb detector /dd/Structure/LHCb" << endmsg;
-  SmartDataPtr<DetectorElement> lhcb( detSvc(), "/dd/Structure/LHCb" );
-
-  
   info() << "*** register conditions ***" << endmsg;
   try {
     m_ums = svc<IUpdateManagerSvc>("UpdateManagerSvc",true);
@@ -106,7 +101,7 @@ StatusCode CondDBTestAlgorithm::execute() {
   
   // Retrieve the LHCb detector element
   info() << "Retrieve the LHCb detector /dd/Structure/LHCb" << endmsg;
-  SmartDataPtr<DetectorElement> lhcb( detSvc(), "/dd/Structure/LHCb" );
+  DetectorElement *lhcb = getDet<DetectorElement>( "/dd/Structure/LHCb" );
   sc = i_analyse( lhcb );
   if( !sc.isSuccess() ) return sc;
 
@@ -144,7 +139,7 @@ StatusCode CondDBTestAlgorithm::execute() {
 
   // Retrieve the Hcal detector element
   info() << "Retrieve the Hcal detector /dd/Structure/LHCb/Hcal" << endmsg;
-  SmartDataPtr<DetectorElement> hcal( detSvc(), "/dd/Structure/LHCb/Hcal" );
+  DetectorElement *hcal = getDet<DetectorElement>( "/dd/Structure/LHCb/Hcal" );
   sc = i_analyse( hcal );
   if( !sc.isSuccess() ) return StatusCode::FAILURE;
 
@@ -156,7 +151,7 @@ StatusCode CondDBTestAlgorithm::execute() {
 
   // Retrieve the Dummy detector element
   info() << "Test DummyDE detector /dd/Structure/LHCb/Dummy" << endmsg;
-  SmartDataPtr<DetectorElement> dummy( detSvc(), "/dd/Structure/LHCb/Dummy" );
+  DetectorElement *dummy = getDet<DetectorElement>( "/dd/Structure/LHCb/Dummy" );
   sc = i_analyse( dummy );
   if( !sc.isSuccess() ) return StatusCode::FAILURE;
 
@@ -170,19 +165,23 @@ StatusCode CondDBTestAlgorithm::execute() {
   info() << m01->name() << ":\n"
          << m01->printParams()
          << "\n transformation =  \n"
+         << m01->matrix()
+    /*
          << m01->matrix()[0][0] << " " << m01->matrix()[0][1] << " " << m01->matrix()[0][2] << " " << m01->matrix()[0][3] << "\n"
          << m01->matrix()[1][0] << " " << m01->matrix()[1][1] << " " << m01->matrix()[1][2] << " " << m01->matrix()[1][3] << "\n"
          << m01->matrix()[2][0] << " " << m01->matrix()[2][1] << " " << m01->matrix()[2][2] << " " << m01->matrix()[2][3] << "\n"
-         << m01->matrix()[3][0] << " " << m01->matrix()[3][1] << " " << m01->matrix()[3][2] << " " << m01->matrix()[3][3] << "\n"
+    */
          << endmsg;
 
   info() << m12->name() << ":\n"
          << m12->printParams()
          << "\n transformation =  \n"
+         << m12->matrix()
+    /*
          << m12->matrix()[0][0] << " " << m12->matrix()[0][1] << " " << m12->matrix()[0][2] << " " << m12->matrix()[0][3] << "\n"
          << m12->matrix()[1][0] << " " << m12->matrix()[1][1] << " " << m12->matrix()[1][2] << " " << m12->matrix()[1][3] << "\n"
          << m12->matrix()[2][0] << " " << m12->matrix()[2][1] << " " << m12->matrix()[2][2] << " " << m12->matrix()[2][3] << "\n"
-         << m12->matrix()[3][0] << " " << m12->matrix()[3][1] << " " << m12->matrix()[3][2] << " " << m12->matrix()[3][3] << "\n"
+    */
          << endmsg;
 
   info() << "Test COOL FolderSets mapping to catalogs (get /dd/CondDBRoot/OnLine/Cave)" << endmsg;

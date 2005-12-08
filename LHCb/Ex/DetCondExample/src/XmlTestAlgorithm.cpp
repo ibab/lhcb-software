@@ -1,11 +1,10 @@
-//$Id: XmlTestAlgorithm.cpp,v 1.5 2005-08-16 09:28:52 marcocle Exp $
+//$Id: XmlTestAlgorithm.cpp,v 1.6 2005-12-08 11:28:17 marcocle Exp $
 
 #include "XmlTestAlgorithm.h"
 #include "DetDesc/Condition.h"
 #include "DetDesc/TabulatedProperty.h"
 #include "DetDesc/DetectorElement.h"
 #include "GaudiKernel/AlgFactory.h"
-#include "GaudiKernel/SmartDataPtr.h"
 
 /// Instantiation of a static factory to create instances of this algorithm
 static const AlgFactory<XmlTestAlgorithm> Factory;
@@ -29,7 +28,7 @@ StatusCode XmlTestAlgorithm::execute() {
 
   // Retrieve the LHCb detector element
   log << MSG::INFO << "Retrieve the LHCb detector" << endmsg;
-  SmartDataPtr<DetectorElement> lhcb ( detSvc(), "/dd/Structure/LHCb" );
+  DetectorElement *lhcb = getDet<DetectorElement>( "/dd/Structure/LHCb" );
   if( 0 != lhcb ) {
     log << MSG::INFO << "Successfully retrieved the LHCb detector" << endmsg;
   } else {
@@ -49,7 +48,7 @@ StatusCode XmlTestAlgorithm::execute() {
 
   // Retrieve the Ecal detector element
   log << MSG::INFO << "Retrieve the Ecal detector" << endmsg;
-  SmartDataPtr<DetectorElement> ecal ( detSvc(), "/dd/Structure/LHCb/Ecal" );
+  DetectorElement *ecal = getDet<DetectorElement>( "/dd/Structure/LHCb/Ecal" );
   if( 0 != ecal ) {
     log << MSG::INFO << "Successfully retrieved the Ecal detector" << endmsg;
   } else {

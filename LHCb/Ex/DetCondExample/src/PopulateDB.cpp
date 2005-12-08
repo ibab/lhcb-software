@@ -1,4 +1,4 @@
-// $Id: PopulateDB.cpp,v 1.25 2005-10-05 15:48:03 marcocle Exp $
+// $Id: PopulateDB.cpp,v 1.26 2005-12-08 11:28:17 marcocle Exp $
 // Include files
 #include <iostream>
 #include <fstream>
@@ -10,6 +10,8 @@
 #include "GaudiKernel/AlgFactory.h" 
 #include "GaudiKernel/MsgStream.h"
 #include "GaudiKernel/TimePoint.h"
+
+#include "Kernel/SystemOfUnits.h"
 
 #include "DetDesc/Condition.h"
 #include "DetDesc/AlignmentCondition.h"

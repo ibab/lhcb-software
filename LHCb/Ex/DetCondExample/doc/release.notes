@@ -1,9 +1,13 @@
 ! =============================================================================
-! $Id: release.notes,v 1.62 2005-11-22 17:14:58 marcocle Exp $
+! $Id: release.notes,v 1.63 2005-12-08 11:28:17 marcocle Exp $
 ! =============================================================================
 ! package Ex/DetCondExample
 ! package manager : Marco Clemencic
 ! =============================================================================
+
+! 2005-12-08 - Marco Clemencic
+ - Removed all 'SmartDataPtr's.
+ - Included "Kernel/SystemOfUnits.h" in PopulateDB.cpp.
 
 ! 2005-11-22 - Marco Clemencic
  - Improved copy_files_to_db.py

@@ -1,4 +1,4 @@
-// $Id: TestCacheInjection.cpp,v 1.5 2005-09-20 11:44:28 cattanem Exp $
+// $Id: TestCacheInjection.cpp,v 1.6 2005-12-08 11:28:17 marcocle Exp $
 // Include files 
 
 // from Gaudi
@@ -113,10 +113,10 @@ StatusCode TestCacheInjection::execute() {
     }
   }
 
-  SmartDataPtr<Condition> cond1( detSvc(), "/dd/CacheTest/Object1" );
-  SmartDataPtr<Condition> cond2( detSvc(), "/dd/CacheTest/Object2" );
-  SmartDataPtr<Condition> cond3( detSvc(), "/dd/CacheTest/Object3" );
-  SmartDataPtr<Condition> cond4( detSvc(), "/dd/CacheTest/Object4" );
+  Condition *cond1 = getDet<Condition>( "/dd/CacheTest/Object1" );
+  Condition *cond2 = getDet<Condition>( "/dd/CacheTest/Object2" );
+  Condition *cond3 = getDet<Condition>( "/dd/CacheTest/Object3" );
+  Condition *cond4 = getDet<Condition>( "/dd/CacheTest/Object4" );
 
   info() << "Object1: " << cond1->validSince() << " -> " << cond1->validTill() << endmsg;
   info() << "         data = " << cond1->paramAsString("data") << endmsg;

@@ -1,9 +1,8 @@
-// $Id: MultiDBTest.cpp,v 1.5 2005-09-20 11:44:28 cattanem Exp $
+// $Id: MultiDBTest.cpp,v 1.6 2005-12-08 11:28:17 marcocle Exp $
 // Include files 
 
 // from Gaudi
 #include "GaudiKernel/AlgFactory.h" 
-#include "GaudiKernel/SmartDataPtr.h"
 
 #include "DetDesc/Condition.h"
 #include "DetDesc/IUpdateManagerSvc.h"
@@ -92,8 +91,8 @@ StatusCode MultiDBTest::execute() {
 
   info() << "*************** execute(): process new event ***************" << endmsg;
 
-  SmartDataPtr<Condition> cond1( detSvc(), "/dd/multiDBTest/Cond1" );
-  SmartDataPtr<Condition> cond2( detSvc(), "/dd/multiDBTest/Cond2" );
+  Condition *cond1 = getDet<Condition>( "/dd/multiDBTest/Cond1" );
+  Condition *cond2 = getDet<Condition>( "/dd/multiDBTest/Cond2" );
   
   info() << "Cond1: " << cond1->validSince() << " -> " << cond1->validTill() << endmsg;
   info() << "       DB = " << cond1->paramAsString("Database") << endmsg;
