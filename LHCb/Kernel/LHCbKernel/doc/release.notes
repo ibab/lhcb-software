@@ -3,6 +3,9 @@ Package manager: M.Cattaneo
 Purpose: LHCb specific Kernel classes
 
 !===================== LHCbKernel v6r0 2005-12-08 =========================
+! 2005-12-08 - Mark Tobin
+ - Use GaudiObjDesc to set bitfields in VeloChannelID.xml
+
 ! 2005-12-08 - Marco Cattaneo
  - Remove CLHEP from IBIntegrator interface
  - Add IMagneticFieldSvc interface (from GaudiKernel, adapted to MathCore)
