@@ -1,4 +1,4 @@
-// $Id: SolidBoolean.h,v 1.18 2005-12-07 13:19:07 cattanem Exp $ 
+// $Id: SolidBoolean.h,v 1.19 2005-12-08 19:20:01 jpalac Exp $ 
 // ===========================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ===========================================================================
@@ -73,12 +73,18 @@ class SolidBoolean: public virtual SolidBase
    *  @param ticks output container of "Ticks"
    *  @return the number of intersection points (=size of Ticks container)
    */
-  virtual unsigned int 
-  intersectionTicks 
-  ( const Gaudi::XYZPoint & Point  ,
-    const Gaudi::XYZVector& Vector ,
-    ISolid::Ticks    & ticks  ) const ;
-  
+  virtual unsigned int intersectionTicks( const Gaudi::XYZPoint & Point,
+                                          const Gaudi::XYZVector& Vector,
+                                          ISolid::Ticks& ticks  ) const ;
+
+  virtual unsigned int intersectionTicks( const Gaudi::Polar3DPoint  & Point,
+                                          const Gaudi::Polar3DVector & Vector,
+                                          ISolid::Ticks     & ticks) const ; 
+
+  virtual unsigned int intersectionTicks( const Gaudi::RhoZPhiPoint  & Point,
+                                          const Gaudi::RhoZPhiVector & Vector,
+                                          ISolid::Ticks     & ticks) const ; 
+
   /** calculate the intersection points("ticks") with a given line.
    *  Input - line, paramterised by  x_vect = Point + Vector * T
    *  "tick" is just a value of T, at which the intersection occurs
@@ -90,14 +96,25 @@ class SolidBoolean: public virtual SolidBase
    *  @return the number of intersection points (=size of Ticks container)
    *  between tickMin and tickMax
    */
-  virtual unsigned int 
-  intersectionTicks 
-  ( const Gaudi::XYZPoint  & Point   ,
-    const Gaudi::XYZVector & Vector  ,
-    const ISolid::Tick& tickMin ,
-    const ISolid::Tick& tickMax ,
-    ISolid::Ticks   &   ticks   ) const ; 
-  
+
+  virtual unsigned int intersectionTicks( const Gaudi::XYZPoint& Point,
+                                          const Gaudi::XYZVector & Vector,
+                                          const ISolid::Tick& tickMin,
+                                          const ISolid::Tick& tickMax,
+                                          ISolid::Ticks& ticks   ) const ; 
+
+  virtual unsigned int intersectionTicks( const Gaudi::Polar3DPoint& Point,
+                                          const Gaudi::Polar3DVector & Vector,
+                                          const ISolid::Tick& tickMin,
+                                          const ISolid::Tick& tickMax,
+                                          ISolid::Ticks& ticks   ) const ; 
+
+  virtual unsigned int intersectionTicks( const Gaudi::RhoZPhiPoint& Point,
+                                          const Gaudi::RhoZPhiVector & Vector,
+                                          const ISolid::Tick& tickMin,
+                                          const ISolid::Tick& tickMax,
+                                          ISolid::Ticks& ticks   ) const ; 
+
   /** poiter to the "main"/"first" boolean 
    *  @return poiter to the "main"/"first" boolean 
    */
@@ -183,6 +200,18 @@ private:
   // SolidBoolean() ;
   // assignement operator is disabled 
   SolidBoolean& operator=(SolidBoolean & ) ;
+
+  template<class aPoint, class aVector>
+  unsigned int intersectionTicksImpl( const aPoint  & Point,
+                                      const aVector & Vector,
+                                      const ISolid::Tick& tickMin,
+                                      const ISolid::Tick& tickMax,
+                                      ISolid::Ticks&  ticks) const;
+
+  template<class aPoint, class aVector>
+  unsigned int intersectionTicksImpl( const aPoint  & Point,
+                                      const aVector & Vector,
+                                      ISolid::Ticks& ticks ) const;
   
 protected:
   

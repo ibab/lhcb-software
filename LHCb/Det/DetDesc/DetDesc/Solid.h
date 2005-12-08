@@ -1,4 +1,4 @@
-// $Id: Solid.h,v 1.4 2005-12-02 18:36:55 jpalac Exp $
+// $Id: Solid.h,v 1.5 2005-12-08 19:20:01 jpalac Exp $
 /// ===========================================================================
 /// CVS tag $Name: not supported by cvs2svn $ 
 /// ===========================================================================
@@ -46,6 +46,7 @@ namespace Solid
    *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
    *  @date 03/08/2001 
    */
+  template<class aPoint>
   class IsInside: 
     public std::unary_function<const ISolid*,bool>
   {
@@ -54,7 +55,7 @@ namespace Solid
     /** (explicit) constructor
      *   @param LocalPoint  point (in local reference system of solid)
      */
-    explicit IsInside( const Gaudi::XYZPoint& LocalPoint  ) 
+    explicit IsInside( const aPoint& LocalPoint  ) 
       : m_point( LocalPoint ){};
     
     /** check if the point is inside of solid 
@@ -66,7 +67,7 @@ namespace Solid
     
   private:
     
-    Gaudi::XYZPoint m_point; ///< point in the Local Reference System of Solid 
+    aPoint m_point; ///< point in the Local Reference System of Solid 
     
   };
 

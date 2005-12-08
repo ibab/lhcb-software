@@ -1,4 +1,4 @@
-// $Id: SolidBoolean.cpp,v 1.15 2005-12-07 13:19:07 cattanem Exp $
+// $Id: SolidBoolean.cpp,v 1.16 2005-12-08 19:20:02 jpalac Exp $
 // ===========================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ===========================================================================
@@ -151,11 +151,31 @@ StatusCode SolidBoolean::addChild   ( ISolid*               child    ,
  *  @return the number of intersection points (=size of Ticks container)
  */
 // ============================================================================
-unsigned int 
-SolidBoolean::intersectionTicks 
-( const Gaudi::XYZPoint & point  ,      
-  const Gaudi::XYZVector& vect   ,      
-  ISolid::Ticks    & ticks  ) const
+unsigned int SolidBoolean::intersectionTicks( const Gaudi::XYZPoint& point,
+                                           const Gaudi::XYZVector& vect,
+                                           ISolid::Ticks&    ticks ) const 
+{
+  return intersectionTicksImpl(point, vect, ticks);
+};
+// ============================================================================
+unsigned int SolidBoolean::intersectionTicks( const Gaudi::Polar3DPoint& point,
+                                           const Gaudi::Polar3DVector& vect,
+                                           ISolid::Ticks&    ticks ) const 
+{
+  return intersectionTicksImpl(point, vect, ticks);
+};
+// ============================================================================
+unsigned int SolidBoolean::intersectionTicks( const Gaudi::RhoZPhiPoint& point,
+                                           const Gaudi::RhoZPhiVector& vect, 
+                                           ISolid::Ticks&    ticks ) const 
+{
+  return intersectionTicksImpl(point, vect, ticks);
+};
+// ============================================================================
+template<class aPoint, class aVector>
+unsigned int SolidBoolean::intersectionTicksImpl( const aPoint & point,
+                                                  const aVector& vect,
+                                                  ISolid::Ticks& ticks) const
 {
   ///
   ticks.clear();
@@ -192,13 +212,39 @@ SolidBoolean::intersectionTicks
  *  between tickMin and tickMax
  */
 // ============================================================================
-unsigned int 
-SolidBoolean::intersectionTicks 
-( const Gaudi::XYZPoint  & point   ,
-  const Gaudi::XYZVector & vect    ,
-  const ISolid::Tick& tickMin , 
-  const ISolid::Tick& tickMax , 
-  ISolid::Ticks     & ticks   ) const 
+unsigned int SolidBoolean::intersectionTicks( const Gaudi::XYZPoint  & Point,
+                                           const Gaudi::XYZVector & Vector,
+                                           const ISolid::Tick& tickMin,
+                                           const ISolid::Tick& tickMax,
+                                           ISolid::Ticks     & ticks) const 
+{
+  return intersectionTicksImpl(Point, Vector, tickMin, tickMax, ticks);
+}
+// ============================================================================
+unsigned int SolidBoolean::intersectionTicks( const Gaudi::Polar3DPoint  & Point,
+                                           const Gaudi::Polar3DVector & Vector,
+                                           const ISolid::Tick& tickMin,
+                                           const ISolid::Tick& tickMax,
+                                           ISolid::Ticks     & ticks) const 
+{
+  return intersectionTicksImpl(Point, Vector, tickMin, tickMax, ticks);
+}
+// ============================================================================
+unsigned int SolidBoolean::intersectionTicks( const Gaudi::RhoZPhiPoint  & Point,
+                                           const Gaudi::RhoZPhiVector & Vector,
+                                           const ISolid::Tick& tickMin,
+                                           const ISolid::Tick& tickMax,
+                                           ISolid::Ticks     & ticks) const 
+{
+  return intersectionTicksImpl(Point, Vector, tickMin, tickMax, ticks);
+}
+// ============================================================================
+template<class aPoint, class aVector>
+unsigned int SolidBoolean::intersectionTicksImpl( const aPoint  & point,
+                                                  const aVector & vect,
+                                                  const ISolid::Tick& tickMin,
+                                                  const ISolid::Tick& tickMax,
+                                                  ISolid::Ticks& ticks) const 
 {
   // check for bounding box 
   if( isOutBBox( point , vect , tickMin , tickMax ) ) { return 0; }

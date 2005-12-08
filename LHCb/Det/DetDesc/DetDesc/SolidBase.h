@@ -1,4 +1,4 @@
-// $Id: SolidBase.h,v 1.12 2005-12-07 13:19:07 cattanem Exp $
+// $Id: SolidBase.h,v 1.13 2005-12-08 19:20:01 jpalac Exp $
 #ifndef DETDESC_SOLIDBASE_H 
 #define DETDESC_SOLIDBASE_H 1
 
@@ -56,11 +56,15 @@ public:
    *  @param ticks output container of "Ticks"
    *  @return the number of intersection points
    */
-  virtual unsigned int 
-  intersectionTicks 
-  ( const Gaudi::XYZPoint  & Point   ,         
-    const Gaudi::XYZVector & Vector  ,         
-    ISolid::Ticks     & ticks   ) const ; 
+  virtual unsigned int  intersectionTicks( const Gaudi::XYZPoint  & Point,
+                                           const Gaudi::XYZVector & Vector,
+                                           ISolid::Ticks     & ticks) const ; 
+  virtual unsigned int  intersectionTicks( const Gaudi::Polar3DPoint  & Point,
+                                           const Gaudi::Polar3DVector & Vector,
+                                           ISolid::Ticks     & ticks) const ; 
+  virtual unsigned int  intersectionTicks( const Gaudi::RhoZPhiPoint  & Point,
+                                           const Gaudi::RhoZPhiVector & Vector,
+                                           ISolid::Ticks     & ticks) const ; 
   
   /** - calculate the intersection points("ticks") of the solid objects 
    *    with given line. 
@@ -84,13 +88,23 @@ public:
    *  @param ticks output container of "Ticks"
    *  @return the number of intersection points
    */
-  virtual unsigned int 
-  intersectionTicks 
-  ( const Gaudi::XYZPoint  & Point   ,         
-    const Gaudi::XYZVector & Vector  ,         
-    const ISolid::Tick& tickMin ,         
-    const ISolid::Tick& tickMax ,         
-    ISolid::Ticks     & ticks   ) const ; 
+  virtual unsigned int intersectionTicks( const Gaudi::XYZPoint& Point,
+                                          const Gaudi::XYZVector & Vector,
+                                          const ISolid::Tick& tickMin,
+                                          const ISolid::Tick& tickMax,
+                                          ISolid::Ticks& ticks   ) const ; 
+
+  virtual unsigned int intersectionTicks( const Gaudi::Polar3DPoint& Point,
+                                          const Gaudi::Polar3DVector & Vector,
+                                          const ISolid::Tick& tickMin,
+                                          const ISolid::Tick& tickMax,
+                                          ISolid::Ticks& ticks   ) const ; 
+
+  virtual unsigned int intersectionTicks( const Gaudi::RhoZPhiPoint& Point,
+                                          const Gaudi::RhoZPhiVector & Vector,
+                                          const ISolid::Tick& tickMin,
+                                          const ISolid::Tick& tickMax,
+                                          ISolid::Ticks& ticks   ) const ; 
   
   /** - query the interface 
    *  - implementation of IInterface abstract interface 
@@ -191,8 +205,9 @@ protected:
    *  @param tolerance tolerance parameter  
    *  @return true of point is outside the bounding box 
    */
+  template <class aPoint>
   inline bool isOutBBox      
-  ( const Gaudi::XYZPoint& point         , 
+  ( const aPoint& point         , 
     const double      tolerance = 0 ) const 
   {
     return 
@@ -216,8 +231,9 @@ protected:
    *  @param tolerance tolerance parameter  
    *  @return true of point is outside the bounding sphere 
    */
+  template <class aPoint>
   inline bool isOutBSphere   
-  ( const Gaudi::XYZPoint& point         ,
+  ( const aPoint& point         ,
     const double      tolerance = 0 ) const 
   {
     if( 0 == tolerance ) 
@@ -232,8 +248,9 @@ protected:
    *  @param tolerance tolerance parameter  
    *  @return true of point is outside the bounding cylinder 
    */
+  template <class aPoint>
   inline bool isOutBCylinder 
-  ( const Gaudi::XYZPoint& point         , 
+  ( const aPoint& point         , 
     const double      tolerance = 0 ) const 
   {
     if( 0 != tolerance ) 
@@ -257,9 +274,10 @@ protected:
    *  @param tolerance  tolerance parameter  
    *  @return true if the whole segment is "outside" of the bounding box 
    */
+  template<class aPointA, class aPointB>
   inline bool isOutBBox      
-  ( const Gaudi::XYZPoint& p1            , 
-    const Gaudi::XYZPoint& p2            , 
+  ( const aPointA& p1            , 
+    const aPointB& p2            , 
     const double      tolerance = 0 ) const 
   { 
     if( 0 == tolerance ) 
@@ -299,9 +317,10 @@ protected:
    *  @param tolerance  tolerance parameter  
    *  @return true if the whole segment is "outside" of the bounding box 
    */
+  template <class aPoint, class aVector>
   inline bool isOutBBox      
-  ( const Gaudi::XYZPoint&   p             , 
-    const Gaudi::XYZVector&  v             , 
+  ( const aPoint&   p             , 
+    const aVector&  v             , 
     const ISolid::Tick& tmin          ,
     const ISolid::Tick& tmax          , 
     const double        tolerance = 0 ) const 
@@ -315,9 +334,10 @@ protected:
    *  @param tolerance  tolerance parameter  
    *  @return true if line do not cross the bounding sphere  
    */
+  template <class aPoint, class aVector>
   inline bool crossBSphere      
-  ( const Gaudi::XYZPoint&   p             , 
-    const Gaudi::XYZVector&  v             , 
+  ( const aPoint&   p             , 
+    const aVector&  v             , 
     const double        tolerance = 0 ) const 
   {
     const double pp   = p.mag2 ()           ;
@@ -338,9 +358,10 @@ protected:
    *  @param tolerance  tolerance parameter  
    *  @return true if line do not cross the surface of bounding cylinder  
    */
+  template <class aPoint, class aVector>
   inline bool crossBCylinder      
-  ( const Gaudi::XYZPoint&   p             , 
-    const Gaudi::XYZVector&  v             , 
+  ( const aPoint&   p             , 
+    const aVector&  v             , 
     const double        tolerance = 0 ) const 
   {
     const double pp     = p.perp2 ()                  ;
@@ -406,6 +427,15 @@ private:
 
   // assignement operator is disabled 
   SolidBase& operator=( const SolidBase& ) ;
+
+template<class aPoint, class aVector>
+unsigned int intersectionTicksImpl( const aPoint  & Point,
+                                    const aVector & Vector,
+                                    const ISolid::Tick& tickMin,
+                                    const ISolid::Tick& tickMax,
+                                    ISolid::Ticks&  ticks) const;
+
+unsigned int intersectionTicksImpl( ISolid::Ticks& ticks ) const;
   
 protected:
   

@@ -1,8 +1,15 @@
-// $Id: SolidIntersection.cpp,v 1.11 2005-12-05 16:18:43 jpalac Exp $
+// $Id: SolidIntersection.cpp,v 1.12 2005-12-08 19:20:02 jpalac Exp $
 // ===========================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ===========================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.11  2005/12/05 16:18:43  jpalac
+//
+// ! 2005-12-05 - Juan Palacios
+//  - Add class Gaudi::Plane3D as stop-gap while MathCore equivalent is implemented.
+//    Supports only double precision cartesian representation.
+//  - Fix remaining MathCore-related compilation problems.
+//
 // Revision 1.10  2005/12/02 18:36:56  jpalac
 //
 // ! 2005-02-12 - Juan Palacios
@@ -73,15 +80,30 @@ SolidIntersection::SolidIntersection( const std::string& name )
 SolidIntersection::~SolidIntersection(){}
 
 // ============================================================================
-// ============================================================================
 bool SolidIntersection::isInside( const Gaudi::XYZPoint   & point ) const 
+{
+  return isInsideImpl(point);
+}
+// ============================================================================
+bool SolidIntersection::isInside( const Gaudi::Polar3DPoint& point ) const 
+{
+  return isInsideImpl(point);
+}
+// ============================================================================
+bool SolidIntersection::isInside( const Gaudi::RhoZPhiPoint   & point ) const 
+{
+  return isInsideImpl(point);
+}
+// ============================================================================
+template <class aPoint>
+bool SolidIntersection::isInsideImpl( const aPoint   & point ) const 
 { 
   ///  is point inside the "main" volume?  
   if ( !first()->isInside( point ) ) { return false; }
   /// find the first daughter in which the given point is NOT placed   
   SolidBoolean::SolidChildrens::const_iterator ci = 
     std::find_if( childBegin() , childEnd() , 
-                  std::not1(Solid::IsInside( point ) ) );
+                  std::not1(Solid::IsInside<aPoint>( point ) ) );
   /// 
   return ( childEnd() == ci ? true : false );   
 };

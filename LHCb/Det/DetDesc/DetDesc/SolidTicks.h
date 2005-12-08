@@ -1,8 +1,19 @@
-// $Id: SolidTicks.h,v 1.10 2005-12-02 18:36:55 jpalac Exp $ 
+// $Id: SolidTicks.h,v 1.11 2005-12-08 19:20:01 jpalac Exp $ 
 // ===========================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ===========================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.10  2005/12/02 18:36:55  jpalac
+//
+// ! 2005-02-12 - Juan Palacios
+//  - Add Kernel/LHCbDefinitions to requirements
+//  - Change CLHEP geometry classes to LHCbDefinitions typedefs:
+//             * These typedefs point to MathCore classes with the
+//               exception of Gaudi::Plane3D, which pointe to HepPoint3D.
+//               Awaiting implementation of MathCore Plane3D class.
+//  - Make changes to all code to adapt to MathCore syntax
+//  - TO-DO: Not compiling due to Plane3D operaitons with MathCore classes
+//
 // Revision 1.9  2002/05/15 14:25:25  ibelyaev
 //  bug fix
 //
@@ -56,12 +67,12 @@ namespace SolidTicks
    *  @param solid   reference to SOLID 
    *  @return number of ticks 
    */
-  template <class SOLID>
+  template <class SOLID, class aPoint, class aVector>
   inline unsigned int  
   RemoveAdjancent
   ( ISolid::Ticks     & ticks , 
-    const Gaudi::XYZPoint  & point , 
-    const Gaudi::XYZVector & vect  , 
+    const aPoint      & point , 
+    const aVector     & vect  , 
     const SOLID       & solid )
   {
     // local typedefs 
@@ -128,12 +139,12 @@ namespace SolidTicks
    *  @param solid   reference to SOLID 
    *  @return number of ticks 
    */
-  template <class SOLID>
+  template <class SOLID, class aPoint, class aVector>
   inline unsigned int  
   RemoveAdjancentTicks
   ( ISolid::Ticks     & ticks , 
-    const Gaudi::XYZPoint  & point , 
-    const Gaudi::XYZVector & vect  , 
+    const aPoint  & point , 
+    const aVector & vect  , 
     const SOLID       & solid )
   {
     //     useful local typedefs 
@@ -161,12 +172,12 @@ namespace SolidTicks
    *  @param solid   reference to SOLID 
    *  @return number of ticks 
    */
-  template <class SOLID>
+  template <class SOLID, class aPoint, class aVector>
   inline unsigned int  
   RemoveAdjancentTicks
   ( ISolid::Ticks      & ticks   ,
-    const Gaudi::XYZPoint   & point   , 
-    const Gaudi::XYZVector  & vect    , 
+    const aPoint   & point   , 
+    const aVector  & vect    , 
     const ISolid::Tick & tickMin , 
     const ISolid::Tick & tickMax , 
     const SOLID        & solid   )

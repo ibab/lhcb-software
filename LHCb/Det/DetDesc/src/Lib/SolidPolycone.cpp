@@ -1,4 +1,4 @@
-// $Id: SolidPolycone.cpp,v 1.11 2005-12-07 13:19:07 cattanem Exp $
+// $Id: SolidPolycone.cpp,v 1.12 2005-12-08 19:20:02 jpalac Exp $
 // ============================================================================
 #include "DetDesc/SolidPolycone.h"
 // LHCbDefintions
@@ -210,7 +210,23 @@ SolidPolycone::SolidPolycone( const std::string& Name )
  *  @return true ifpoint is inside the solid
  */
 // ============================================================================
-bool SolidPolycone::isInside (  const Gaudi::XYZPoint& point ) const
+bool SolidPolycone::isInside( const Gaudi::XYZPoint   & point ) const 
+{
+  return isInsideImpl(point);
+}
+// ============================================================================
+bool SolidPolycone::isInside( const Gaudi::Polar3DPoint& point ) const 
+{
+  return isInsideImpl(point);
+}
+// ============================================================================
+bool SolidPolycone::isInside( const Gaudi::RhoZPhiPoint   & point ) const 
+{
+  return isInsideImpl(point);
+}
+// ============================================================================
+template <class aPoint>
+bool SolidPolycone::isInsideImpl (  const aPoint& point ) const
 {
   /// look for concrete z-segment
   if( point.z() > triplets().back().first ) { return false; }
@@ -378,10 +394,34 @@ MsgStream&  SolidPolycone::printOut ( MsgStream& os ) const
  *  @return the number of intersection points
  */
 // ============================================================================
+unsigned int SolidPolycone::intersectionTicks( const Gaudi::XYZPoint& point,
+                                               const Gaudi::XYZVector& vect,
+                                               ISolid::Ticks&    ticks ) const 
+{
+  return intersectionTicksImpl(point, vect, ticks);
+};
+// ============================================================================
 unsigned int 
-SolidPolycone::intersectionTicks ( const Gaudi::XYZPoint & Point  ,  
-                                   const Gaudi::XYZVector& Vector ,  
-                                   ISolid::Ticks    & ticks  ) const 
+SolidPolycone::intersectionTicks( const Gaudi::Polar3DPoint& point,
+                                  const Gaudi::Polar3DVector& vect,
+                                  ISolid::Ticks&    ticks ) const 
+{
+  return intersectionTicksImpl(point, vect, ticks);
+};
+// ============================================================================
+unsigned int 
+SolidPolycone::intersectionTicks( const Gaudi::RhoZPhiPoint& point,
+                                  const Gaudi::RhoZPhiVector& vect, 
+                                  ISolid::Ticks&    ticks ) const 
+{
+  return intersectionTicksImpl(point, vect, ticks);
+};
+// ============================================================================
+template <class aPoint, class aVector>
+unsigned int SolidPolycone::intersectionTicksImpl ( const aPoint & Point,
+                                                    const aVector& Vector,
+                                                    ISolid::Ticks& ticks  
+                                                    ) const 
 {
   /// line with null direction vector is not able to intersect any solid!
   if( Vector.mag2() <= 0 ) { return 0 ; }

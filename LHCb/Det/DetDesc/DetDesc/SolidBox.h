@@ -1,4 +1,4 @@
-// $Id: SolidBox.h,v 1.14 2005-12-07 13:19:07 cattanem Exp $
+// $Id: SolidBox.h,v 1.15 2005-12-08 19:20:01 jpalac Exp $
 // ===========================================================================
 #ifndef     DETDESC_SOLIDBOX_H
 #define     DETDESC_SOLIDBOX_H
@@ -60,8 +60,9 @@ public:
    *  @param point point (in local reference system of the solid)
    *  @return true if the point is inside the solid
    */
-  virtual inline bool isInside  ( const Gaudi::XYZPoint& point ) const;
-  
+  virtual bool isInside  ( const Gaudi::XYZPoint& point ) const;
+  virtual bool isInside ( const Gaudi::Polar3DPoint& point ) const ;
+  virtual bool isInside ( const Gaudi::RhoZPhiPoint& point ) const ;
   /** - retrieve the pointer to "simplified" solid - "cover"
    *  - implementation of ISolid abstract interface 
    *  The Box is the most simple shape
@@ -118,12 +119,15 @@ public:
    *  @param ticks output container of "Ticks"
    *  @return the number of intersection points
    */
-  virtual inline  unsigned int 
-  intersectionTicks 
-  ( const Gaudi::XYZPoint&  Point  ,
-    const Gaudi::XYZVector& Vector ,
-    ISolid::Ticks   &  ticks  ) const ; 
-
+  virtual unsigned int intersectionTicks( const Gaudi::XYZPoint&  Point  ,
+                                          const Gaudi::XYZVector& Vector ,
+                                          ISolid::Ticks   &  ticks  ) const ; 
+  virtual unsigned int intersectionTicks( const Gaudi::Polar3DPoint  & Point,
+                                          const Gaudi::Polar3DVector & Vector,
+                                          ISolid::Ticks     & ticks) const ; 
+  virtual unsigned int intersectionTicks( const Gaudi::RhoZPhiPoint  & Point,
+                                          const Gaudi::RhoZPhiVector & Vector,
+                                          ISolid::Ticks     & ticks) const ;
   /** calculate the intersection points("ticks") of the solid objects 
    *  with given line. 
    *  - Line is parametrized with parameter \a t : 
@@ -145,13 +149,24 @@ public:
    *  @param ticks output container of "Ticks"
    *  @return the number of intersection points
    */
-  virtual unsigned int
-  intersectionTicks 
-  ( const Gaudi::XYZPoint & Point   ,
-    const Gaudi::XYZVector& Vector  ,
-    const Tick       & tickMin ,
-    const Tick       & tickMax ,
-    Ticks            & ticks   ) const ;
+  virtual unsigned int intersectionTicks( const Gaudi::XYZPoint & Point,
+                                          const Gaudi::XYZVector& Vector,
+                                          const ISolid::Tick&     tickMin,
+                                          const ISolid::Tick&     tickMax ,
+                                          ISolid::Ticks&  ticks   ) const ;
+
+  virtual unsigned int intersectionTicks( const Gaudi::Polar3DPoint& Point,
+                                          const Gaudi::Polar3DVector & Vector,
+                                          const ISolid::Tick& tickMin,
+                                          const ISolid::Tick& tickMax,
+                                          ISolid::Ticks& ticks   ) const ; 
+
+  virtual unsigned int intersectionTicks( const Gaudi::RhoZPhiPoint& Point,
+                                          const Gaudi::RhoZPhiVector & Vector,
+                                          const ISolid::Tick& tickMin,
+                                          const ISolid::Tick& tickMax,
+                                          ISolid::Ticks& ticks   ) const ; 
+
 
   /**  return the full x-size of the box 
    *  @return the full x-size of the box 
@@ -204,6 +219,26 @@ private:
   
   SolidBox           ( const SolidBox & );  ///< no copy-constructor 
   SolidBox& operator=( const SolidBox & );  ///< no assignment 
+
+  /**
+   * implementation of isInside
+   * @param reference to any kind of point with x(), y(), z()
+   * @return bool
+   */
+  template <class aPoint>
+  bool isInsideImpl(const aPoint& point) const;
+  template<class aPoint, class aVector>
+
+  unsigned int intersectionTicksImpl( const aPoint  & Point,
+                                      const aVector & Vector,
+                                      const ISolid::Tick& tickMin,
+                                      const ISolid::Tick& tickMax,
+                                      ISolid::Ticks&  ticks) const;
+
+  template<class aPoint, class aVector>
+  unsigned int intersectionTicksImpl( const aPoint  & Point,
+                                      const aVector & Vector,
+                                      ISolid::Ticks& ticks ) const;
   
 private:
   
@@ -213,23 +248,6 @@ private:
 
 };
 
-/// ===========================================================================
-/** - check for the given 3D-point. 
- *    Point coordinated are in the local reference 
- *    frame of the solid.   
- *  - implementation of ISolid absstract interface  
- *  @see ISolid 
- *  @param point point (in local reference system of the solid)
- *  @return true if the point is inside the solid
- */
-/// ===========================================================================
-inline bool SolidBox::isInside( const Gaudi::XYZPoint& point ) const
-{ 
-  if ( fabs( point.z() ) > zHalfLength() || 
-       fabs( point.x() ) > xHalfLength() ||
-       fabs( point.y() ) > yHalfLength() ) { return false; }
-  return true; 
-};
 
 /// ===========================================================================
 #endif ///<  DETDESC_SOLIDBOX_H

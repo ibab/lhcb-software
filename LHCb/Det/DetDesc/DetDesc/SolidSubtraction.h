@@ -1,4 +1,4 @@
-// $Id: SolidSubtraction.h,v 1.13 2005-12-05 16:18:43 jpalac Exp $
+// $Id: SolidSubtraction.h,v 1.14 2005-12-08 19:20:01 jpalac Exp $
 /// ===========================================================================
 /// CVS tag $Name: not supported by cvs2svn $ 
 /// ===========================================================================
@@ -58,7 +58,10 @@ public:
    *  @param point point (in local reference system of the solid)
    *  @return true if the point is inside the solid
    */
+
   bool isInside ( const Gaudi::XYZPoint& point ) const ;
+  bool isInside ( const Gaudi::Polar3DPoint& point ) const ;
+  bool isInside ( const Gaudi::RhoZPhiPoint& point ) const ;
   
   /** subtract child solid to the solid
    *  @param solid pointer to child solid 
@@ -91,6 +94,14 @@ private:
 
   SolidSubtraction           ( const SolidSubtraction& ) ; ///< no copy 
   SolidSubtraction& operator=( const SolidSubtraction& ) ; ///<no = 
+
+  /**
+   * implementation of isInside
+   * @param reference to any kind of point with x(), y(), z()
+   * @return bool
+   */
+  template <class aPoint>
+  bool isInsideImpl(const aPoint& point) const;
 
 };
 

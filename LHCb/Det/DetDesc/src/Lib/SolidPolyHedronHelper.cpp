@@ -1,8 +1,15 @@
-// $Id: SolidPolyHedronHelper.cpp,v 1.9 2005-12-06 18:51:27 jpalac Exp $ 
+// $Id: SolidPolyHedronHelper.cpp,v 1.10 2005-12-08 19:20:02 jpalac Exp $ 
 // ===========================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ===========================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.9  2005/12/06 18:51:27  jpalac
+// ! 2005-12-06 - Juan PALACIOS
+//  - Requires MathCore-5_06_02 or higher.
+//  - Use ROOT::Math::Plane3D class.
+//                (move temporary LHCb one to DetDesc namespace)
+//  - Changes to adapt to improved Transform3D interface.
+//
 // Revision 1.8  2005/12/05 16:18:43  jpalac
 //
 // ! 2005-12-05 - Juan Palacios
@@ -112,7 +119,24 @@ StatusCode SolidPolyHedronHelper::setBP()
  *  @return true if the point is inside the solid
  */
 // ============================================================================
-bool SolidPolyHedronHelper::isInside ( const Gaudi::XYZPoint& point ) const 
+// ============================================================================
+bool SolidPolyHedronHelper::isInside (  const Gaudi::XYZPoint& point ) const
+{  
+  return isInsideImpl(point) ;
+};
+// ============================================================================
+bool SolidPolyHedronHelper::isInside ( const Gaudi::Polar3DPoint& point) const 
+{ 
+  return isInsideImpl(point);
+};
+// ============================================================================
+bool SolidPolyHedronHelper::isInside ( const Gaudi::RhoZPhiPoint& point) const 
+{ 
+  return isInsideImpl(point);
+};
+// ============================================================================
+template <class aPoint>
+bool SolidPolyHedronHelper::isInsideImpl( const aPoint& point ) const 
 {
   if( planes().empty()   ) { return false ; } 
   /// ckeck for bounding box 
@@ -144,11 +168,36 @@ bool SolidPolyHedronHelper::isInside ( const Gaudi::XYZPoint& point ) const
  *  @param ticks output container of "Ticks"
  *  @return the number of intersection points
  */
+// ============================================================================
 unsigned int 
-SolidPolyHedronHelper::intersectionTicks 
-( const Gaudi::XYZPoint&  Point  ,       
-  const Gaudi::XYZVector& Vector ,       
-  ISolid::Ticks   &   ticks  ) const
+SolidPolyHedronHelper::intersectionTicks( const Gaudi::XYZPoint& point,
+                                          const Gaudi::XYZVector& vect,
+                                          ISolid::Ticks&    ticks ) const 
+{
+  return intersectionTicksImpl(point, vect, ticks);
+};
+// ============================================================================
+unsigned int 
+SolidPolyHedronHelper::intersectionTicks( const Gaudi::Polar3DPoint& point,
+                                          const Gaudi::Polar3DVector& vect,
+                                          ISolid::Ticks&    ticks ) const 
+{
+  return intersectionTicksImpl(point, vect, ticks);
+};
+// ============================================================================
+unsigned int 
+SolidPolyHedronHelper::intersectionTicks( const Gaudi::RhoZPhiPoint& point,
+                                          const Gaudi::RhoZPhiVector& vect, 
+                                          ISolid::Ticks&    ticks ) const 
+{
+  return intersectionTicksImpl(point, vect, ticks);
+};
+// ============================================================================
+template <class aPoint, class aVector>
+unsigned int 
+SolidPolyHedronHelper::intersectionTicksImpl(const aPoint& Point,
+                                             const aVector& Vector,
+                                             ISolid::Ticks& ticks  ) const
 {
   // clear the output container 
   ticks.clear(); 

@@ -1,4 +1,4 @@
-// $Id: SolidTubs.cpp,v 1.14 2005-12-07 13:19:07 cattanem Exp $ 
+// $Id: SolidTubs.cpp,v 1.15 2005-12-08 19:20:02 jpalac Exp $ 
 // ============================================================================
 // CVStag $Name: not supported by cvs2svn $ 
 // ============================================================================
@@ -205,7 +205,23 @@ SolidTubs::~SolidTubs() {};
  *  @return true if the point is inside the solid
  */
 // ============================================================================
-bool  SolidTubs::isInside( const Gaudi::XYZPoint & point ) const
+bool SolidTubs::isInside( const Gaudi::XYZPoint   & point ) const 
+{
+  return isInsideImpl(point);
+}
+// ============================================================================
+bool SolidTubs::isInside( const Gaudi::Polar3DPoint& point ) const 
+{
+  return isInsideImpl(point);
+}
+// ============================================================================
+bool SolidTubs::isInside( const Gaudi::RhoZPhiPoint   & point ) const 
+{
+  return isInsideImpl(point);
+}
+// ============================================================================
+template <class aPoint>
+bool  SolidTubs::isInsideImpl( const aPoint & point ) const
 {
   // check Z 
   if( isOutBBox  ( point )  ) { return false ; }
@@ -312,11 +328,31 @@ const ISolid* SolidTubs::cover () const
  *  @return the number of intersection points
  */
 // ============================================================================
-unsigned int 
-SolidTubs::intersectionTicks 
-( const Gaudi::XYZPoint &  point  ,        
-  const Gaudi::XYZVector&  vect   ,       
-  ISolid::Ticks    &  ticks  ) const 
+unsigned int SolidTubs::intersectionTicks( const Gaudi::XYZPoint& point,
+                                           const Gaudi::XYZVector& vect,
+                                           ISolid::Ticks&    ticks ) const 
+{
+  return intersectionTicksImpl(point, vect, ticks);
+};
+// ============================================================================
+unsigned int SolidTubs::intersectionTicks( const Gaudi::Polar3DPoint& point,
+                                           const Gaudi::Polar3DVector& vect,
+                                           ISolid::Ticks&    ticks ) const 
+{
+  return intersectionTicksImpl(point, vect, ticks);
+};
+// ============================================================================
+unsigned int SolidTubs::intersectionTicks( const Gaudi::RhoZPhiPoint& point,
+                                           const Gaudi::RhoZPhiVector& vect, 
+                                           ISolid::Ticks&    ticks ) const 
+{
+  return intersectionTicksImpl(point, vect, ticks);
+};
+// ============================================================================
+template <class aPoint, class aVector>
+unsigned int SolidTubs::intersectionTicksImpl( const aPoint &  point,
+                                               const aVector&  vect,
+                                               ISolid::Ticks&  ticks  ) const 
 {
   /// clear the container 
   ticks.clear(); 
@@ -443,13 +479,39 @@ MsgStream&     SolidTubs::printOut      ( MsgStream&     os ) const
  *  @return the number of intersection points
  */
 // ============================================================================
-unsigned int
-SolidTubs::intersectionTicks 
-( const Gaudi::XYZPoint & Point   ,
-  const Gaudi::XYZVector& Vector  ,
-  const Tick       & tickMin ,
-  const Tick       & tickMax ,
-  Ticks            & ticks   ) const  
+unsigned int SolidTubs::intersectionTicks( const Gaudi::XYZPoint  & Point,
+                                           const Gaudi::XYZVector & Vector,
+                                           const ISolid::Tick& tickMin,
+                                           const ISolid::Tick& tickMax,
+                                           ISolid::Ticks     & ticks) const 
+{
+  return intersectionTicksImpl(Point, Vector, tickMin, tickMax, ticks);
+}
+// ============================================================================
+unsigned int SolidTubs::intersectionTicks( const Gaudi::Polar3DPoint  & Point,
+                                           const Gaudi::Polar3DVector & Vector,
+                                           const ISolid::Tick& tickMin,
+                                           const ISolid::Tick& tickMax,
+                                           ISolid::Ticks     & ticks) const 
+{
+  return intersectionTicksImpl(Point, Vector, tickMin, tickMax, ticks);
+}
+// ============================================================================
+unsigned int SolidTubs::intersectionTicks( const Gaudi::RhoZPhiPoint  & Point,
+                                           const Gaudi::RhoZPhiVector & Vector,
+                                           const ISolid::Tick& tickMin,
+                                           const ISolid::Tick& tickMax,
+                                           ISolid::Ticks     & ticks) const 
+{
+  return intersectionTicksImpl(Point, Vector, tickMin, tickMax, ticks);
+}
+// ============================================================================
+template <class aPoint, class aVector>
+unsigned int SolidTubs::intersectionTicksImpl( const aPoint & Point,
+                                               const aVector& Vector,
+                                               const ISolid::Tick& tickMin,
+                                               const ISolid::Tick& tickMax,
+                                               ISolid::Ticks& ticks) const  
 {
   
   if( isOutBBox( Point , Vector , tickMin , tickMax  )  ) { return 0 ; }

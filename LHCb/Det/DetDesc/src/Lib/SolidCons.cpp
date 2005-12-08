@@ -1,4 +1,4 @@
-// $Id: SolidCons.cpp,v 1.16 2005-12-07 13:19:07 cattanem Exp $ 
+// $Id: SolidCons.cpp,v 1.17 2005-12-08 19:20:02 jpalac Exp $ 
 // ===========================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ===========================================================================
@@ -222,6 +222,22 @@ SolidCons::SolidCons( const std::string& Name )
 // ============================================================================
 bool SolidCons::isInside (  const Gaudi::XYZPoint& point ) const
 {  
+  return isInsideImpl(point) ;
+};
+// ============================================================================
+bool SolidCons::isInside ( const Gaudi::Polar3DPoint& point) const 
+{ 
+  return isInsideImpl(point);
+};
+// ============================================================================
+bool SolidCons::isInside ( const Gaudi::RhoZPhiPoint& point) const 
+{ 
+  return isInsideImpl(point);
+};
+// ============================================================================
+template<class aPoint>
+bool SolidCons::isInsideImpl(  const aPoint& point ) const
+{  
   if(  isOutBBox ( point )  ) { return false ; }
   // check for phi 
   if( !insidePhi ( point )  ) { return false ; }
@@ -342,11 +358,31 @@ const ISolid* SolidCons::cover () const
  *  @return the number of intersection points (=size of Ticks container)
  */
 // ============================================================================
-unsigned int 
-SolidCons::intersectionTicks 
-( const Gaudi::XYZPoint & point  ,      
-  const Gaudi::XYZVector& vect   ,      
-  ISolid::Ticks    & ticks  ) const
+unsigned int SolidCons::intersectionTicks( const Gaudi::XYZPoint& point,
+                                           const Gaudi::XYZVector& vect,
+                                           ISolid::Ticks&    ticks ) const 
+{
+  return intersectionTicksImpl(point, vect, ticks);
+};
+// ============================================================================
+unsigned int SolidCons::intersectionTicks( const Gaudi::Polar3DPoint& point,
+                                           const Gaudi::Polar3DVector& vect,
+                                           ISolid::Ticks&    ticks ) const 
+{
+  return intersectionTicksImpl(point, vect, ticks);
+};
+// ============================================================================
+unsigned int SolidCons::intersectionTicks( const Gaudi::RhoZPhiPoint& point,
+                                           const Gaudi::RhoZPhiVector& vect, 
+                                           ISolid::Ticks&    ticks ) const 
+{
+  return intersectionTicksImpl(point, vect, ticks);
+};
+// ============================================================================
+template<class aPoint, class aVector>
+unsigned int SolidCons::intersectionTicksImpl( const aPoint & point,
+                                               const aVector& vect,
+                                               ISolid::Ticks& ticks  ) const
 {
   // line with null direction vector is not able to intersect any solid 
   if( vect.mag2() <= 0 )  { return 0 ;}  ///< RETURN!!!
@@ -492,13 +528,39 @@ MsgStream&     SolidCons::printOut      ( MsgStream&     os ) const
  *  @return the number of intersection points
  */
 // ============================================================================
-unsigned int
-SolidCons::intersectionTicks 
-( const Gaudi::XYZPoint & Point   ,
-  const Gaudi::XYZVector& Vector  ,
-  const Tick       & tickMin ,
-  const Tick       & tickMax ,
-  Ticks            & ticks   ) const  
+unsigned int SolidCons::intersectionTicks( const Gaudi::XYZPoint  & Point,
+                                           const Gaudi::XYZVector & Vector,
+                                           const ISolid::Tick& tickMin,
+                                           const ISolid::Tick& tickMax,
+                                           ISolid::Ticks     & ticks) const 
+{
+  return intersectionTicksImpl(Point, Vector, tickMin, tickMax, ticks);
+}
+// ============================================================================
+unsigned int SolidCons::intersectionTicks( const Gaudi::Polar3DPoint  & Point,
+                                           const Gaudi::Polar3DVector & Vector,
+                                           const ISolid::Tick& tickMin,
+                                           const ISolid::Tick& tickMax,
+                                           ISolid::Ticks     & ticks) const 
+{
+  return intersectionTicksImpl(Point, Vector, tickMin, tickMax, ticks);
+}
+// ============================================================================
+unsigned int SolidCons::intersectionTicks( const Gaudi::RhoZPhiPoint  & Point,
+                                           const Gaudi::RhoZPhiVector & Vector,
+                                           const ISolid::Tick& tickMin,
+                                           const ISolid::Tick& tickMax,
+                                           ISolid::Ticks     & ticks) const 
+{
+  return intersectionTicksImpl(Point, Vector, tickMin, tickMax, ticks);
+}
+// ============================================================================
+template<class aPoint, class aVector>
+unsigned int SolidCons::intersectionTicksImpl( const aPoint & Point,
+                                               const aVector& Vector,
+                                               const Tick&    tickMin,
+                                               const Tick&    tickMax ,
+                                               Ticks&         ticks) const  
 {
   
   if( !crossBCylinder( Point , Vector                )  ) { return 0 ; }

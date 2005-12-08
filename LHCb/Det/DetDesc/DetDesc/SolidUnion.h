@@ -1,4 +1,4 @@
-// $Id: SolidUnion.h,v 1.10 2005-12-02 18:36:56 jpalac Exp $ 
+// $Id: SolidUnion.h,v 1.11 2005-12-08 19:20:01 jpalac Exp $ 
 // ===========================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ===========================================================================
@@ -62,6 +62,8 @@ public:
    *  @return true if the point is inside the solid
    */
   bool isInside ( const Gaudi::XYZPoint   & point ) const ;
+  bool isInside ( const Gaudi::Polar3DPoint& point ) const ;
+  bool isInside ( const Gaudi::RhoZPhiPoint& point ) const ;
 
   /** retrieve the pointer to "the most simplified cover", 
    *  ideally to something like "the bounding box"
@@ -108,6 +110,9 @@ public:
 private:
   
   mutable ISolid* m_coverTop ;
+
+  template <class aPoint>
+  bool isInsideImpl(const aPoint& point) const;
   
 };
 

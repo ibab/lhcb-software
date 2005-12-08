@@ -1,4 +1,4 @@
-// $Id: SolidChild.cpp,v 1.17 2005-12-07 13:43:10 jpalac Exp $ 
+// $Id: SolidChild.cpp,v 1.18 2005-12-08 19:20:02 jpalac Exp $ 
 // ===========================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ===========================================================================
@@ -202,18 +202,39 @@ MsgStream&    SolidChild::printOut     ( MsgStream&    os ) const
  *  @return the number of intersection points
  */
 // ============================================================================
-unsigned int 
-SolidChild::intersectionTicks 
-( const Gaudi::XYZPoint&  Point  ,
-  const Gaudi::XYZVector& Vector ,
-  ISolid::Ticks&     ticks  ) const
+unsigned int SolidChild::intersectionTicks( const Gaudi::XYZPoint&  Point  ,
+                                            const Gaudi::XYZVector& Vector ,
+                                            ISolid::Ticks&     ticks  ) const
+{
+  return intersectionTicksImpl(Point, Vector, ticks);
+};
+// ============================================================================
+unsigned int SolidChild::intersectionTicks( const Gaudi::Polar3DPoint& Point,
+                                            const Gaudi::Polar3DVector& Vector,
+                                            ISolid::Ticks&              ticks
+                                            ) const
+{
+  return intersectionTicksImpl(Point, Vector, ticks);
+};
+// ============================================================================
+unsigned int SolidChild::intersectionTicks( const Gaudi::RhoZPhiPoint& Point,
+                                            const Gaudi::RhoZPhiVector& Vector,
+                                            ISolid::Ticks&              ticks
+                                            ) const
+{
+  return intersectionTicksImpl(Point, Vector, ticks);
+};
+// ============================================================================
+template<class aPoint, class aVector>
+unsigned int SolidChild::intersectionTicksImpl ( const aPoint&  Point  ,
+                                                 const aVector& Vector ,
+                                                 ISolid::Ticks& ticks  ) const
 {
   return solid()->
     intersectionTicks(  simple() ? Point  : matrix() * Point  , 
                         simple() ? Vector : matrix() * Vector , 
                         ticks                                 ) ;
 };
-
 // ============================================================================
 /** reset to the initial ("after constructor") state
  */
@@ -236,6 +257,22 @@ ISolid*  SolidChild::reset()
  */
 // ============================================================================
 bool SolidChild::isInside ( const Gaudi::XYZPoint& point) const 
+{ 
+  return isInsideImpl(point);
+};
+// ============================================================================
+bool SolidChild::isInside ( const Gaudi::Polar3DPoint& point) const 
+{ 
+  return isInsideImpl(point);
+};
+// ============================================================================
+bool SolidChild::isInside ( const Gaudi::RhoZPhiPoint& point) const 
+{ 
+  return isInsideImpl(point);
+};
+// ============================================================================
+template<class aPoint>
+bool SolidChild::isInsideImpl ( const aPoint& point) const 
 { 
   if( isOutBBox( point ) ) { return false ; }
   return  

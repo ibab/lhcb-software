@@ -1,4 +1,4 @@
-// $Id: SolidBox.cpp,v 1.13 2005-12-07 13:19:07 cattanem Exp $ 
+// $Id: SolidBox.cpp,v 1.14 2005-12-08 19:20:02 jpalac Exp $ 
 // ===========================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ===========================================================================
@@ -99,11 +99,31 @@ SolidBox::~SolidBox(){ if ( this == m_cover ) { m_cover = 0 ; } ; };
  *  @return the number of intersection points (=size of Ticks container)
  */
 // ============================================================================
-inline unsigned int 
-SolidBox::intersectionTicks
-( const Gaudi::XYZPoint & point  ,
-  const Gaudi::XYZVector& vect   ,
-  ISolid::Ticks    & ticks  ) const
+unsigned int SolidBox::intersectionTicks( const Gaudi::XYZPoint& point,
+                                           const Gaudi::XYZVector& vect,
+                                           ISolid::Ticks&    ticks ) const 
+{
+  return intersectionTicksImpl(point, vect, ticks);
+};
+// ============================================================================
+unsigned int SolidBox::intersectionTicks( const Gaudi::Polar3DPoint& point,
+                                           const Gaudi::Polar3DVector& vect,
+                                           ISolid::Ticks&    ticks ) const 
+{
+  return intersectionTicksImpl(point, vect, ticks);
+};
+// ============================================================================
+unsigned int SolidBox::intersectionTicks( const Gaudi::RhoZPhiPoint& point,
+                                           const Gaudi::RhoZPhiVector& vect, 
+                                           ISolid::Ticks&    ticks ) const 
+{
+  return intersectionTicksImpl(point, vect, ticks);
+};
+// ============================================================================
+template<class aPoint, class aVector>
+unsigned int SolidBox::intersectionTicksImpl( const aPoint & point  ,
+                                              const aVector& vect   ,
+                                              ISolid::Ticks& ticks  ) const
 {  ///
   ticks.clear(); 
   ///
@@ -125,9 +145,39 @@ SolidBox::intersectionTicks
   // sort and remove adjancent and some EXTRA ticks and return 
   return SolidTicks::RemoveAdjancentTicks( ticks , point , vect , *this );  
 };
+/// ===========================================================================
+/** - check for the given 3D-point. 
+ *    Point coordinated are in the local reference 
+ *    frame of the solid.   
+ *  - implementation of ISolid absstract interface  
+ *  @see ISolid 
+ *  @param point point (in local reference system of the solid)
+ *  @return true if the point is inside the solid
+ */
+/// ===========================================================================
+bool SolidBox::isInside( const Gaudi::XYZPoint   & point ) const 
+{
+  return isInsideImpl(point);
+}
 // ============================================================================
-
-
+bool SolidBox::isInside( const Gaudi::Polar3DPoint& point ) const 
+{
+  return isInsideImpl(point);
+}
+// ============================================================================
+bool SolidBox::isInside( const Gaudi::RhoZPhiPoint   & point ) const 
+{
+  return isInsideImpl(point);
+}
+// ============================================================================
+template <class aPoint>
+bool SolidBox::isInsideImpl( const aPoint& point ) const
+{ 
+  if ( fabs( point.z() ) > zHalfLength() || 
+       fabs( point.x() ) > xHalfLength() ||
+       fabs( point.y() ) > yHalfLength() ) { return false; }
+  return true; 
+};
 // ============================================================================
  /** calculate the intersection points("ticks") of the solid objects 
    *  with given line. 
@@ -151,13 +201,39 @@ SolidBox::intersectionTicks
    *  @return the number of intersection points
    */
 // ============================================================================
-unsigned int
-SolidBox::intersectionTicks 
-( const Gaudi::XYZPoint & Point   ,
-  const Gaudi::XYZVector& Vector  ,
-  const Tick       & tickMin ,
-  const Tick       & tickMax ,
-  Ticks            & ticks   ) const  
+unsigned int SolidBox::intersectionTicks( const Gaudi::XYZPoint  & Point,
+                                          const Gaudi::XYZVector & Vector,
+                                          const ISolid::Tick& tickMin,
+                                          const ISolid::Tick& tickMax,
+                                          ISolid::Ticks     & ticks) const 
+{
+  return intersectionTicksImpl(Point, Vector, tickMin, tickMax, ticks);
+}
+// ============================================================================
+unsigned int SolidBox::intersectionTicks( const Gaudi::Polar3DPoint  & Point,
+                                          const Gaudi::Polar3DVector & Vector,
+                                          const ISolid::Tick& tickMin,
+                                          const ISolid::Tick& tickMax,
+                                          ISolid::Ticks     & ticks) const 
+{
+  return intersectionTicksImpl(Point, Vector, tickMin, tickMax, ticks);
+}
+// ============================================================================
+unsigned int SolidBox::intersectionTicks( const Gaudi::RhoZPhiPoint  & Point,
+                                          const Gaudi::RhoZPhiVector & Vector,
+                                          const ISolid::Tick& tickMin,
+                                          const ISolid::Tick& tickMax,
+                                          ISolid::Ticks     & ticks) const 
+{
+  return intersectionTicksImpl(Point, Vector, tickMin, tickMax, ticks);
+}
+// ============================================================================
+template<class aPoint, class aVector>
+unsigned int SolidBox::intersectionTicksImpl( const aPoint & Point,
+                                              const aVector& Vector,
+                                              const Tick&    tickMin ,
+                                              const Tick&    tickMax ,
+                                              Ticks&         ticks   ) const  
 {
   if( isOutBBox( Point , Vector  , tickMin , tickMax  ) ) { return 0 ; }
   if( !crossBSphere( Point , Vector )                   ) { return 0 ; }

@@ -1,4 +1,4 @@
-// $Id: SolidPolycone.h,v 1.7 2005-12-07 13:19:07 cattanem Exp $ 
+// $Id: SolidPolycone.h,v 1.8 2005-12-08 19:20:01 jpalac Exp $ 
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
@@ -74,7 +74,8 @@ public:
    *  @return true if the point is inside the solid
    */
   bool isInside (  const Gaudi::XYZPoint& point ) const ;
-  
+  bool isInside ( const Gaudi::Polar3DPoint& point ) const ;
+  bool isInside ( const Gaudi::RhoZPhiPoint& point ) const ;
   /** -# retrieve the pointer to "simplified" solid - "cover"
    *  -# implementation of ISolid abstract interface 
    *  @see ISolid 
@@ -120,10 +121,17 @@ public:
    *  @param ticks output container of "Ticks"
    *  @return the number of intersection points
    */
-  virtual unsigned int 
-  intersectionTicks ( const Gaudi::XYZPoint & Point  ,  
-                      const Gaudi::XYZVector& Vector ,  
-                      ISolid::Ticks    & ticks  ) const ;
+  virtual unsigned int intersectionTicks( const Gaudi::XYZPoint & Point,
+                                          const Gaudi::XYZVector& Vector,
+                                          ISolid::Ticks& ticks  ) const ;
+
+  virtual unsigned int intersectionTicks( const Gaudi::Polar3DPoint  & Point,
+                                          const Gaudi::Polar3DVector & Vector,
+                                          ISolid::Ticks     & ticks) const ; 
+
+  virtual unsigned int intersectionTicks( const Gaudi::RhoZPhiPoint  & Point,
+                                          const Gaudi::RhoZPhiVector & Vector,
+                                          ISolid::Ticks     & ticks) const ;
   
   /** specific for polycone
    */
@@ -214,7 +222,20 @@ private:
   
   SolidPolycone           ( const SolidPolycone & );  ///< no copy-constructor 
   SolidPolycone& operator=( const SolidPolycone & );  ///< no assignment 
+
+  /**
+   * implementation of isInside
+   * @param reference to any kind of point with x(), y(), z()
+   * @return bool
+   */
+  template <class aPoint>
+  bool isInsideImpl(const aPoint& point) const;
   
+  template<class aPoint, class aVector>
+  unsigned int intersectionTicksImpl( const aPoint  & Point,
+                                      const aVector & Vector,
+                                      ISolid::Ticks& ticks ) const;
+
 private:
   
   Triplets       m_triplets      ; ///< vector of parameters 

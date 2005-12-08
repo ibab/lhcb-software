@@ -1,8 +1,15 @@
-// $Id: SolidMath.h,v 1.6 2005-12-05 16:18:43 jpalac Exp $
+// $Id: SolidMath.h,v 1.7 2005-12-08 19:20:01 jpalac Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.6  2005/12/05 16:18:43  jpalac
+//
+// ! 2005-12-05 - Juan Palacios
+//  - Add class Gaudi::Plane3D as stop-gap while MathCore equivalent is implemented.
+//    Supports only double precision cartesian representation.
+//  - Fix remaining MathCore-related compilation problems.
+//
 // Revision 1.5  2005/12/02 18:36:55  jpalac
 //
 // ! 2005-02-12 - Juan Palacios
@@ -89,11 +96,11 @@ namespace SolidTicks
    *  @param out     output iterator 
    *  @return number of intersections 
    */
-  template < class OUTPUTTYPE > 
+  template < class OUTPUTTYPE, class aPoint, class aVector > 
   inline unsigned int  
   LineIntersectsTheSphere
-  ( const Gaudi::XYZPoint  & point  , 
-    const Gaudi::XYZVector & vect   , 
+  ( const aPoint  & point  , 
+    const aVector & vect   , 
     const double        radius ,
     OUTPUTTYPE          out    )
   {
@@ -125,11 +132,11 @@ namespace SolidTicks
    *  @param out     output iterator 
    *  @return number of intersections 
    */
-  template < class OUTPUTTYPE > 
+  template < class OUTPUTTYPE, class aPoint, class aVector > 
   inline unsigned int  
   LineIntersectsTheSphere2
-  ( const Gaudi::XYZPoint  & point  , 
-    const Gaudi::XYZVector & vect   , 
+  ( const aPoint  & point  , 
+    const aVector & vect   , 
     const double        r2     ,
     OUTPUTTYPE          out    )
   {
@@ -161,11 +168,11 @@ namespace SolidTicks
    *  @param out     output iterator 
    *  @return number of intersections 
    */
-  template < class OUTPUTTYPE > 
+  template < class OUTPUTTYPE, class aPoint, class aVector > 
   inline unsigned int  
   LineIntersectsTheCylinder
-  ( const Gaudi::XYZPoint  & point  , 
-    const Gaudi::XYZVector & vect   , 
+  ( const aPoint  & point  , 
+    const aVector & vect   , 
     const double        radius ,
     OUTPUTTYPE          out    )
     
@@ -199,11 +206,11 @@ namespace SolidTicks
    *  @param out     output iterator 
    *  @return number of intersections 
    */
-  template < class OUTPUTTYPE > 
+  template < class OUTPUTTYPE, class aPoint, class aVector > 
   inline unsigned int  
   LineIntersectsTheX
-  ( const Gaudi::XYZPoint  & point  , 
-    const Gaudi::XYZVector & vect   , 
+  ( const aPoint  & point  , 
+    const aVector & vect   , 
     const double        X      ,
     OUTPUTTYPE          out   )
     
@@ -226,11 +233,11 @@ namespace SolidTicks
    *  @param  out     output iterator 
    *  @return number  of intersections 
    */
-  template < class OUTPUTTYPE > 
+  template < class OUTPUTTYPE, class aPoint, class aVector > 
   inline unsigned int  
   LineIntersectsTheY
-  ( const Gaudi::XYZPoint  & point  , 
-    const Gaudi::XYZVector & vect   , 
+  ( const aPoint  & point  , 
+    const aVector & vect   , 
     const double        Y      ,
     OUTPUTTYPE          out    )
     
@@ -253,11 +260,11 @@ namespace SolidTicks
    *  @param  out     output iterator 
    *  @return number  of intersections 
    */
-  template < class OUTPUTTYPE > 
+  template < class OUTPUTTYPE, class aPoint, class aVector > 
   inline unsigned int  
   LineIntersectsTheZ
-  ( const Gaudi::XYZPoint & point  , 
-    const Gaudi::XYZVector& vect   , 
+  ( const aPoint & point  , 
+    const aVector& vect   , 
     const double       Z      ,
     OUTPUTTYPE         out    )
     
@@ -280,11 +287,11 @@ namespace SolidTicks
    *  @param  out     output iterator 
    *  @return number  of intersections    
    */
-  template < class OUTPUTTYPE > 
+  template < class OUTPUTTYPE, class aPoint, class aVector > 
   inline unsigned int  
   LineIntersectsThePhi
-  ( const Gaudi::XYZPoint  & point  , 
-    const Gaudi::XYZVector & vect   , 
+  ( const aPoint  & point  , 
+    const aVector & vect   , 
     const double        Phi    ,
     OUTPUTTYPE          out    )
     
@@ -307,11 +314,11 @@ namespace SolidTicks
    *  @param  out     output iterator 
    *  @return number  of intersections    
    */
-  template < class OUTPUTTYPE > 
+  template < class OUTPUTTYPE, class aPoint, class aVector > 
   inline unsigned int  
   LineIntersectsTheTheta
-  ( const Gaudi::XYZPoint & point  , 
-    const Gaudi::XYZVector & vect   , 
+  ( const aPoint & point  , 
+    const aVector & vect   , 
     const double       Theta  ,
     OUTPUTTYPE         out    )
     
@@ -360,11 +367,11 @@ namespace SolidTicks
    *  @param  out     output iterator 
    *  @return number  of intersections    
    */ 
-  template < class OUTPUTTYPE > 
+  template < class OUTPUTTYPE, class aPoint, class aVector > 
   inline unsigned int  
   LineIntersectsTheCone
-  ( const Gaudi::XYZPoint  & point  , 
-    const Gaudi::XYZVector & vect   , 
+  ( const aPoint  & point  , 
+    const aVector & vect   , 
     const double        r1     ,
     const double        r2     ,
     const double        z1     ,

@@ -1,4 +1,4 @@
-// $Id: SolidSphere.cpp,v 1.16 2005-12-07 13:19:07 cattanem Exp $ 
+// $Id: SolidSphere.cpp,v 1.17 2005-12-08 19:20:02 jpalac Exp $ 
 // ===========================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ===========================================================================
@@ -256,7 +256,23 @@ SolidSphere::SolidSphere( const std::string& name )
  *  @return true if the point is inside the solid
  */
 // ===========================================================================
-bool  SolidSphere::isInside( const Gaudi::XYZPoint & point) const
+bool SolidSphere::isInside( const Gaudi::XYZPoint   & point ) const 
+{
+  return isInsideImpl(point);
+}
+// ============================================================================
+bool SolidSphere::isInside( const Gaudi::Polar3DPoint& point ) const 
+{
+  return isInsideImpl(point);
+}
+// ============================================================================
+bool SolidSphere::isInside( const Gaudi::RhoZPhiPoint   & point ) const 
+{
+  return isInsideImpl(point);
+}
+// ============================================================================
+template <class aPoint>
+bool  SolidSphere::isInsideImpl( const aPoint & point) const
 {
   // check bounding box 
   if(  isOutBBox    ( point )  ) { return false ; }
@@ -421,11 +437,31 @@ const ISolid* SolidSphere::cover () const
  *  @return the number of intersection points
  */
 // ============================================================================
-unsigned int 
-SolidSphere::intersectionTicks 
-( const Gaudi::XYZPoint&  point  ,       
-  const Gaudi::XYZVector& vect   ,      
-  ISolid::Ticks&     ticks  ) const 
+unsigned int SolidSphere::intersectionTicks( const Gaudi::XYZPoint& point,
+                                             const Gaudi::XYZVector& vect,
+                                             ISolid::Ticks&    ticks ) const 
+{
+  return intersectionTicksImpl(point, vect, ticks);
+};
+// ============================================================================
+unsigned int SolidSphere::intersectionTicks( const Gaudi::Polar3DPoint& point,
+                                             const Gaudi::Polar3DVector& vect,
+                                             ISolid::Ticks&    ticks ) const 
+{
+  return intersectionTicksImpl(point, vect, ticks);
+};
+// ============================================================================
+unsigned int SolidSphere::intersectionTicks( const Gaudi::RhoZPhiPoint& point,
+                                             const Gaudi::RhoZPhiVector& vect, 
+                                             ISolid::Ticks&    ticks ) const 
+{
+  return intersectionTicksImpl(point, vect, ticks);
+};
+// ============================================================================
+template<class aPoint, class aVector>
+unsigned int SolidSphere::intersectionTicksImpl( const aPoint&  point,
+                                                 const aVector& vect,
+                                                 ISolid::Ticks& ticks  ) const 
 {
   ticks.clear();
   /// line with null direction vector in not able to intersect something

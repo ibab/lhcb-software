@@ -1,4 +1,4 @@
-// $Id: SolidPolyHedronHelper.h,v 1.11 2005-12-07 07:33:49 cattanem Exp $ 
+// $Id: SolidPolyHedronHelper.h,v 1.12 2005-12-08 19:20:01 jpalac Exp $ 
 // ===========================================================================
 // CVS Tag $Name: not supported by cvs2svn $ 
 // ===========================================================================
@@ -44,7 +44,8 @@ public:
    *  @return true if the point is inside the solid
    */
   virtual bool isInside ( const Gaudi::XYZPoint& point ) const ;
-  
+  virtual bool isInside ( const Gaudi::Polar3DPoint   & point ) const;
+  virtual bool isInside ( const Gaudi::RhoZPhiPoint   & point ) const; 
   /** - Calculate the intersection points("ticks") of the solid objects 
    *    with given line. 
    *  -# Line is parametrized with parameter \a t :
@@ -63,12 +64,18 @@ public:
    *  @param ticks output container of "Ticks"
    *  @return the number of intersection points
    */
-  virtual unsigned int  
-  intersectionTicks 
-  ( const Gaudi::XYZPoint & Point  ,        
-    const Gaudi::XYZVector& Vector ,        
-    ISolid::Ticks    & ticks  ) const ;
-  
+
+  virtual unsigned int intersectionTicks( const Gaudi::XYZPoint & Point,
+                                          const Gaudi::XYZVector& Vector,
+                                          ISolid::Ticks& ticks  ) const ;
+
+  virtual unsigned int intersectionTicks( const Gaudi::Polar3DPoint  & Point,
+                                          const Gaudi::Polar3DVector & Vector,
+                                          ISolid::Ticks     & ticks) const ; 
+
+  virtual unsigned int intersectionTicks( const Gaudi::RhoZPhiPoint  & Point,
+                                          const Gaudi::RhoZPhiVector & Vector,
+                                          ISolid::Ticks     & ticks) const ;
 protected:
   
   /** standard constructor
@@ -117,8 +124,9 @@ protected:
    *  Assume that normal direction is EXTERNAL!!!
    *  @return "true" if point is "inside" 
    */
+  template<class aPoint>
   inline bool inside 
-  (  const Gaudi::XYZPoint& Point , 
+  (  const aPoint& Point , 
      const Gaudi::Plane3D& Plane ) const 
   { return 0 >= Plane.Distance( Point ) ; };
 
@@ -126,6 +134,20 @@ protected:
    *  @return status code 
    */
   StatusCode setBP();
+
+private:
+  /**
+   * implementation of isInside
+   * @param reference to any kind of point with x(), y(), z()
+   * @return bool
+   */
+  template<class aPoint>
+  bool isInsideImpl(const aPoint& point) const;
+
+  template<class aPoint, class aVector>
+  unsigned int intersectionTicksImpl( const aPoint  & Point,
+                                      const aVector & Vector,
+                                      ISolid::Ticks& ticks ) const;
   
 protected: 
   

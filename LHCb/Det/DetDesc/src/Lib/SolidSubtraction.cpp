@@ -1,8 +1,15 @@
-// $Id: SolidSubtraction.cpp,v 1.13 2005-12-05 16:18:43 jpalac Exp $
+// $Id: SolidSubtraction.cpp,v 1.14 2005-12-08 19:20:02 jpalac Exp $
 // ===========================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ===========================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.13  2005/12/05 16:18:43  jpalac
+//
+// ! 2005-12-05 - Juan Palacios
+//  - Add class Gaudi::Plane3D as stop-gap while MathCore equivalent is implemented.
+//    Supports only double precision cartesian representation.
+//  - Fix remaining MathCore-related compilation problems.
+//
 // Revision 1.12  2005/12/02 18:36:56  jpalac
 //
 // ! 2005-02-12 - Juan Palacios
@@ -90,7 +97,23 @@ SolidSubtraction::~SolidSubtraction(){}
  *  @return true if the point is inside the solid
  */
 // ============================================================================
-bool SolidSubtraction::isInside     ( const Gaudi::XYZPoint   & point ) const 
+bool SolidSubtraction::isInside( const Gaudi::XYZPoint   & point ) const 
+{
+  return isInsideImpl(point);
+}
+// ============================================================================
+bool SolidSubtraction::isInside( const Gaudi::Polar3DPoint& point ) const 
+{
+  return isInsideImpl(point);
+}
+// ============================================================================
+bool SolidSubtraction::isInside( const Gaudi::RhoZPhiPoint   & point ) const 
+{
+  return isInsideImpl(point);
+}
+// ============================================================================
+template <class aPoint>
+bool SolidSubtraction::isInsideImpl( const aPoint& point ) const 
 { 
   /// check bounding box 
   if ( isOutBBox( point )          ) { return false ; }
@@ -98,7 +121,9 @@ bool SolidSubtraction::isInside     ( const Gaudi::XYZPoint   & point ) const
   if ( !first()->isInside( point ) ) { return false; }
   /// find the first daughter in which the given point is placed   
   SolidSubtraction::SolidChildrens::const_iterator ci = 
-    std::find_if( childBegin() , childEnd() , Solid::IsInside( point ) );
+    std::find_if( childBegin() , 
+                  childEnd() , 
+                  Solid::IsInside<aPoint>( point ) );
   ///
   return ( childEnd() == ci ? true : false );   
 };

@@ -1,4 +1,4 @@
-// $Id: SolidCons.h,v 1.14 2005-12-07 13:19:07 cattanem Exp $ 
+// $Id: SolidCons.h,v 1.15 2005-12-08 19:20:01 jpalac Exp $ 
 // ===========================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ===========================================================================
@@ -74,7 +74,8 @@ public:
    *  @return true if the point is inside the solid
    */
   bool isInside (  const Gaudi::XYZPoint& point ) const ;
-  
+  bool isInside ( const Gaudi::Polar3DPoint   & point ) const;
+  bool isInside ( const Gaudi::RhoZPhiPoint   & point ) const; 
   /** -# retrieve the pointer to "simplified" solid - "cover"
    *    - for Model = 0 
    *        -# the cover for the general conical tube segment is 
@@ -129,10 +130,18 @@ public:
    *  @param ticks output container of "Ticks"
    *  @return the number of intersection points
    */
-  virtual unsigned int 
-  intersectionTicks ( const Gaudi::XYZPoint & Point  ,  
-                      const Gaudi::XYZVector& Vector ,  
-                      ISolid::Ticks    & ticks  ) const ;
+
+  virtual unsigned int intersectionTicks( const Gaudi::XYZPoint & Point,
+                                          const Gaudi::XYZVector& Vector,
+                                          ISolid::Ticks& ticks  ) const ;
+
+  virtual unsigned int intersectionTicks( const Gaudi::Polar3DPoint  & Point,
+                                          const Gaudi::Polar3DVector & Vector,
+                                          ISolid::Ticks     & ticks) const ; 
+
+  virtual unsigned int intersectionTicks( const Gaudi::RhoZPhiPoint  & Point,
+                                          const Gaudi::RhoZPhiVector & Vector,
+                                          ISolid::Ticks     & ticks) const ;
   
   /** calculate the intersection points("ticks") of the solid objects 
    *  with given line. 
@@ -155,13 +164,24 @@ public:
    *  @param ticks output container of "Ticks"
    *  @return the number of intersection points
    */
-  unsigned int
-  intersectionTicks 
-  ( const Gaudi::XYZPoint & Point   ,
-    const Gaudi::XYZVector& Vector  ,
-    const Tick       & tickMin ,
-    const Tick       & tickMax ,
-    Ticks            & ticks   ) const;
+
+  unsigned int intersectionTicks( const Gaudi::XYZPoint& Point,
+                                  const Gaudi::XYZVector & Vector,
+                                  const ISolid::Tick& tickMin,
+                                  const ISolid::Tick& tickMax,
+                                  ISolid::Ticks& ticks   ) const ; 
+
+  unsigned int intersectionTicks( const Gaudi::Polar3DPoint& Point,
+                                  const Gaudi::Polar3DVector & Vector,
+                                  const ISolid::Tick& tickMin,
+                                  const ISolid::Tick& tickMax,
+                                  ISolid::Ticks& ticks   ) const ; 
+
+  unsigned int intersectionTicks( const Gaudi::RhoZPhiPoint& Point,
+                                  const Gaudi::RhoZPhiVector & Vector,
+                                  const ISolid::Tick& tickMin,
+                                  const ISolid::Tick& tickMax,
+                                  ISolid::Ticks& ticks   ) const ; 
 
   /** inner radius at minus Z  
    *  @return inner radius at minus Z  
@@ -263,7 +283,8 @@ protected:
    *  @param point to be checked 
    *  @return true if point is "inside phi" 
    */
-  inline const bool insidePhi ( const Gaudi::XYZPoint& point ) const ;
+  template <class aPoint>
+  inline const bool insidePhi ( const aPoint& point ) const ;
     
 protected:
   
@@ -281,6 +302,26 @@ private:
 
   SolidCons           ( const SolidCons & );  ///< no copy-constructor 
   SolidCons& operator=( const SolidCons & );  ///< no assignment 
+
+  /**
+   * implementation of isInside
+   * @param reference to any kind of point with x(), y(), z()
+   * @return bool
+   */
+  template<class aPoint>
+  bool isInsideImpl(const aPoint& point) const;
+
+  template<class aPoint, class aVector>
+  unsigned int intersectionTicksImpl( const aPoint  & Point,
+                                      const aVector & Vector,
+                                      const ISolid::Tick& tickMin,
+                                      const ISolid::Tick& tickMax,
+                                      ISolid::Ticks&  ticks) const;
+
+  template<class aPoint, class aVector>
+  unsigned int intersectionTicksImpl( const aPoint  & Point,
+                                      const aVector & Vector,
+                                      ISolid::Ticks& ticks ) const;
 
 private:
 
@@ -336,7 +377,8 @@ inline double SolidCons::oR_z( const double z ) const
  *  @return true if point is "inside phi" 
  */
 // ===========================================================================
-inline const bool SolidCons::insidePhi ( const Gaudi::XYZPoint& point ) const 
+template <class aPoint>
+inline const bool SolidCons::insidePhi ( const aPoint& point ) const 
 {
   if( noPhiGap()                                    ) { return true ; }
   double phi = point.phi() ;   // [-180,180] 

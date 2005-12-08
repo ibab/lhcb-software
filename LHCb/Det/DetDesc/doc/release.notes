@@ -1,9 +1,14 @@
 ! =============================================================================
-! $Id: release.notes,v 1.243 2005-12-08 12:20:54 marcocle Exp $ 
+! $Id: release.notes,v 1.244 2005-12-08 19:20:01 jpalac Exp $ 
 ! =============================================================================
 ! package DetDesc
 ! package manager : Marco Clemencic, Juan Palacios
 ! =============================================================================
+
+! 2005-12-08 - Juan Palacios
+ - Provide inInside and intersectionTicks methods to solids that accept
+   points and vectors in coordinates other than cartesian. New methods pass
+   call to templated implementations.
 
 ! 2005-12-08 - Marco Clemencic
  - Use GaudiUtils::Map instead of std::map as base class for ParamList.

@@ -1,4 +1,4 @@
-// $Id: SolidSphere.h,v 1.13 2005-12-07 13:19:07 cattanem Exp $ 
+// $Id: SolidSphere.h,v 1.14 2005-12-08 19:20:01 jpalac Exp $ 
 // ===========================================================================
 // CVS $Name: not supported by cvs2svn $ 
 // ===========================================================================
@@ -65,7 +65,9 @@ public:
    *  @return true if the point is inside the solid
    */
   bool isInside ( const Gaudi::XYZPoint& point ) const;
-  
+  bool isInside ( const Gaudi::Polar3DPoint& point ) const ;
+  bool isInside ( const Gaudi::RhoZPhiPoint& point ) const ;
+
   /** -# retrieve the pointer to "simplified" solid - "cover"
    *  -# implementation of ISolid abstract interface  
    *    The simplification scheme: 
@@ -131,10 +133,18 @@ public:
    *  @param ticks output container of "Ticks"
    *  @return the number of intersection points
    */
-  virtual unsigned int 
-  intersectionTicks ( const Gaudi::XYZPoint & Point  ,         
-                      const Gaudi::XYZVector& Vector ,         
-                      ISolid::Ticks    & ticks  ) const ;
+
+  virtual unsigned int intersectionTicks( const Gaudi::XYZPoint & Point,
+                                          const Gaudi::XYZVector& Vector,
+                                          ISolid::Ticks& ticks  ) const ;
+
+  virtual unsigned int intersectionTicks( const Gaudi::Polar3DPoint  & Point,
+                                          const Gaudi::Polar3DVector & Vector,
+                                          ISolid::Ticks     & ticks) const ; 
+
+  virtual unsigned int intersectionTicks( const Gaudi::RhoZPhiPoint  & Point,
+                                          const Gaudi::RhoZPhiVector & Vector,
+                                          ISolid::Ticks     & ticks) const ;
   
   /**  return the inner radius of sphere segment
    *  @return the inner radius of sphere segment 
@@ -219,19 +229,22 @@ protected:
    *  @param point to be checked 
    *  @return true if point is "inside rho" 
    */
-  inline const bool insideR     ( const Gaudi::XYZPoint& point ) const ;
+  template<class aPoint>
+  inline const bool insideR     ( const aPoint& point ) const ;
   
   /** check for phi 
    *  @param point to be checked 
    *  @return true if point is "inside phi" 
    */
-  inline const bool insidePhi   ( const Gaudi::XYZPoint& point ) const ;
+  template<class aPoint>
+  inline const bool insidePhi   ( const aPoint& point ) const ;
   
   /** check for theta
    *  @param point to be checked 
    *  @return true if point is "inside theta" 
    */
-  inline const bool insideTheta ( const Gaudi::XYZPoint& point ) const ;
+  template<class aPoint>
+  inline const bool insideTheta ( const aPoint& point ) const ;
   
 protected:
 
@@ -249,6 +262,20 @@ private:
   //
   SolidSphere           ( const SolidSphere& );  // no copy-constructor 
   SolidSphere& operator=( const SolidSphere& );  // no assignment 
+
+  /**
+   * implementation of isInside
+   * @param reference to any kind of point with x(), y(), z()
+   * @return bool
+   */
+  template <class aPoint>
+  bool isInsideImpl(const aPoint& point) const;
+
+  template<class aPoint, class aVector>
+  unsigned int intersectionTicksImpl( const aPoint  & Point,
+                                      const aVector & Vector,
+                                      ISolid::Ticks& ticks ) const;
+
   //
 private:
 
@@ -278,8 +305,8 @@ private:
  *  @return true if point is "inside rho" 
  */
 // ===========================================================================
-inline const bool SolidSphere::insideR 
-( const Gaudi::XYZPoint& point ) const 
+template <class aPoint>
+inline const bool SolidSphere::insideR( const aPoint& point ) const 
 {
   const double r2 = point.mag2();
   if(  r2 >  outerR2 () ) { return false ; }
@@ -295,8 +322,8 @@ inline const bool SolidSphere::insideR
  *  @return true if point is "inside phi" 
  */
 // ===========================================================================
-inline const bool SolidSphere::insidePhi 
-( const Gaudi::XYZPoint& point ) const 
+template <class aPoint>
+inline const bool SolidSphere::insidePhi( const aPoint& point ) const 
 {
   if( noPhiGap()                                    ) { return true ; }
   double phi = point.phi() ;   // [-180,180] 
@@ -316,8 +343,8 @@ inline const bool SolidSphere::insidePhi
  *  @return true if point is "inside theta" 
  */
 // ===========================================================================
-inline const bool SolidSphere::insideTheta 
-( const Gaudi::XYZPoint& point ) const 
+template <class aPoint>
+inline const bool SolidSphere::insideTheta( const aPoint& point ) const 
 {
   if( noThetaGap()                                        ) { return true ; }
   const double theta = point.theta() ;  

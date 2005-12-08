@@ -1,4 +1,4 @@
-// $Id: SolidIntersection.h,v 1.12 2005-12-07 13:19:07 cattanem Exp $
+// $Id: SolidIntersection.h,v 1.13 2005-12-08 19:20:01 jpalac Exp $
 /// ==========================================================================
 /// CVS tag $Name: not supported by cvs2svn $ 
 /// ==========================================================================
@@ -57,7 +57,8 @@ public:
    *  @return true if the point is inside the solid
    */
   bool isInside ( const Gaudi::XYZPoint   & ) const ;
-  
+  bool isInside ( const Gaudi::Polar3DPoint& point ) const ;
+  bool isInside ( const Gaudi::RhoZPhiPoint& point ) const ;
   /** add intersections 
    *  @param solid pointer         to new solid 
    *  @param mtrx  pointer transformation
@@ -86,6 +87,14 @@ private:
   
   SolidIntersection ( const SolidIntersection& ); ///< no copy 
   SolidIntersection& operator=( const SolidIntersection& ); ///< no =
+
+  /**
+   * implementation of isInside
+   * @param reference to any kind of point with x(), y(), z()
+   * @return bool
+   */
+  template <class aPoint>
+  bool isInsideImpl(const aPoint& point) const;
   
 };
 

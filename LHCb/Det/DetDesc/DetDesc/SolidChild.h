@@ -1,4 +1,4 @@
-// $Id: SolidChild.h,v 1.16 2005-12-07 13:19:07 cattanem Exp $ 
+// $Id: SolidChild.h,v 1.17 2005-12-08 19:20:01 jpalac Exp $ 
 // ===========================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ===========================================================================
@@ -108,7 +108,8 @@ public:
    *  @return true if the point is inside the solid
    */
   virtual bool isInside ( const Gaudi::XYZPoint& point) const;
-  
+  virtual bool isInside ( const Gaudi::Polar3DPoint   & point ) const;
+  virtual bool isInside ( const Gaudi::RhoZPhiPoint   & point ) const; 
   /** reset to the initial ("after constructor") state
    */
   virtual ISolid*  reset();
@@ -134,8 +135,17 @@ public:
   virtual unsigned int 
   intersectionTicks ( const Gaudi::XYZPoint&  Point  ,
                       const Gaudi::XYZVector& Vector ,
-                      ISolid::Ticks&     ticks  ) const;
-  
+                      ISolid::Ticks&          ticks  ) const;
+  virtual unsigned int
+  intersectionTicks  ( const Gaudi::Polar3DPoint&  Point  ,
+                       const Gaudi::Polar3DVector& Vector ,
+                       ISolid::Ticks&              ticks  ) const;
+
+  virtual unsigned int
+  intersectionTicks  ( const Gaudi::RhoZPhiPoint  & Point  ,
+                       const Gaudi::RhoZPhiVector & Vector ,
+                       ISolid::Ticks              & ticks  ) const;
+
 public:
 
   /// "new" method - return solid itself 
@@ -168,7 +178,20 @@ private:
    *  @return self reference 
    */ 
   SolidChild& operator=( const SolidChild& solid );
-  
+
+  /**
+   * implementation of isInside
+   * @param reference to any kind of point with x(), y(), z()
+   * @return bool
+   */
+  template<class aPoint>
+  bool isInsideImpl(const aPoint& point) const;
+
+  template<class aPoint, class aVector>
+  unsigned int intersectionTicksImpl ( const aPoint&  Point  ,
+                                       const aVector& Vector ,
+                                       ISolid::Ticks& ticks  ) const;
+
 private:
   ///
   ISolid*                  m_sc_solid   ; ///< own solid  

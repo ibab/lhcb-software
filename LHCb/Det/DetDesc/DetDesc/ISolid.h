@@ -1,4 +1,4 @@
-// $Id: ISolid.h,v 1.10 2005-12-07 13:19:07 cattanem Exp $ 
+// $Id: ISolid.h,v 1.11 2005-12-08 19:20:01 jpalac Exp $ 
 // ===========================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ===========================================================================
@@ -65,8 +65,10 @@ public:
    *  @param point point (in local reference system of the solid)
    *  @return true if the point is inside the solid
    */
-  virtual bool isInside ( const Gaudi::XYZPoint   & point ) const = 0;
-  
+  virtual bool isInside ( const Gaudi::XYZPoint       & point ) const = 0;
+  virtual bool isInside ( const Gaudi::Polar3DPoint   & point ) const = 0;
+  virtual bool isInside ( const Gaudi::RhoZPhiPoint   & point ) const = 0;  
+
   /** retrieve the pointer to "simplified" solid.
    *  @see ISolid::coverTop()
    *  @return pointer to "simplified" solid - "cover"
@@ -121,6 +123,18 @@ public:
   ( const Gaudi::XYZPoint & Point  ,
     const Gaudi::XYZVector& Vector ,
     Ticks            & ticks  ) const = 0 ;
+
+  virtual unsigned int
+  intersectionTicks 
+  ( const Gaudi::Polar3DPoint & Point  ,
+    const Gaudi::Polar3DVector& Vector ,
+    Ticks            & ticks  ) const = 0 ;
+
+  virtual unsigned int
+  intersectionTicks 
+  ( const Gaudi::RhoZPhiPoint & Point  ,
+    const Gaudi::RhoZPhiVector& Vector ,
+    Ticks            & ticks  ) const = 0 ;
   
   /** calculate the intersection points("ticks") of the solid objects 
    *  with given line. 
@@ -150,6 +164,23 @@ public:
     const Tick       & tickMin ,
     const Tick       & tickMax ,
     Ticks            & ticks   ) const = 0 ;
+
+  virtual unsigned int
+  intersectionTicks 
+  ( const Gaudi::Polar3DPoint & Point   ,
+    const Gaudi::Polar3DVector& Vector  ,
+    const Tick       & tickMin ,
+    const Tick       & tickMax ,
+    Ticks            & ticks   ) const = 0 ;
+
+  virtual unsigned int
+  intersectionTicks 
+  ( const Gaudi::RhoZPhiPoint & Point   ,
+    const Gaudi::RhoZPhiVector& Vector  ,
+    const Tick       & tickMin ,
+    const Tick       & tickMax ,
+    Ticks            & ticks   ) const = 0 ;
+
   
   /** virtual destructor
    *  @see ISolid::reset()
