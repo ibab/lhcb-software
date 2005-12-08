@@ -204,7 +204,7 @@
          desc      = 'Track type'
          setMeth   = 'TRUE'
          getMeth   = 'TRUE'
-         checkMeth = 'TRUE' />
+         checkMeth = 'FALSE' />
        <bitfield
          type      = 'Track::History'
          name      = 'history'
@@ -212,7 +212,7 @@
          desc      = 'specifies the pattern recogn algorithm that created the Track'
          setMeth   = 'TRUE'
          getMeth   = 'TRUE'
-         checkMeth = 'TRUE' />
+         checkMeth = 'FALSE' />
        <bitfield
          type      = 'Track::HistoryFit'
          name      = 'historyFit'
@@ -220,7 +220,7 @@
          desc      = 'specifies the fitting algorithm the fitted the Track)'
          setMeth   = 'TRUE'
          getMeth   = 'TRUE'
-         checkMeth = 'TRUE' />
+         checkMeth = 'FALSE' />
        <bitfield
          type      = 'Track::Status'
          name      = 'status'
@@ -236,7 +236,7 @@
          desc      = 'Track flags'
          setMeth   = 'FALSE'
          getMeth   = 'TRUE'
-         checkMeth = 'TRUE' />
+         checkMeth = 'FALSE' />
        <bitfield
          name      = 'specific'
          length    = '4'
@@ -583,38 +583,38 @@
 	virtual = 'TRUE'
         const   = 'TRUE' />
 
-<!--      <method
+      <method
         type    = 'bool'
         name    = 'checkType'
-        argList = 'unsigned int value'
+        argList = 'const Track::Types&amp; value'
         desc    = 'Check the type of the Track (see the Types enum)'
         const   = 'TRUE'>
         <code>
   return type() == value;
         </code>
-      </method>-->
+      </method>
 
-<!--      <method
+      <method
         type    = 'bool'
         name    = 'checkHistory'
-        argList = 'unsigned int value'
+        argList = 'const Track::History&amp; value'
         desc    = 'Check the history of the Track (see the History enum)'
         const   = 'TRUE'>
         <code>
   return history() == value;
         </code>
-      </method>-->
+      </method>
 
-<!--      <method
+      <method
         type    = 'bool'
         name    = 'checkHistoryFit'
-        argList = 'unsigned int value'
+        argList = 'const Track::HistoryFit&amp; value'
         desc    = 'Check the fit history of the Track (see the HistoryFit enum)'
         const   = 'TRUE'>
         <code>
   return historyFit() == value;
         </code>
-      </method>-->
+      </method>
 
       <method
         name    = 'setFlag'
@@ -627,10 +627,10 @@
         </code>
       </method>
 
-<!--      <method
+      <method
         type    = 'bool'
         name    = 'checkFlag'
-        argList = 'unsigned int flag'
+        argList = 'const Track::Flags&amp; flag'
         desc    = 'Check the status of the flag (see the Flags enum)'
         const   = 'TRUE'>
         <code>
@@ -638,7 +638,7 @@
   bool ok = (0 != ( m_flags &amp; flagMask &amp; val ));
   return ok;
         </code>
-      </method>-->
+      </method>
 
       <method
         type    = 'bool'
