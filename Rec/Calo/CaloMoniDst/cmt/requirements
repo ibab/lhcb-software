@@ -1,12 +1,12 @@
-# $Id: requirements,v 1.4 2005-11-22 22:43:01 cattanem Exp $ 
+# $Id: requirements,v 1.5 2005-12-08 13:14:40 odescham Exp $ 
 # ============================================================================
-# CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.4 $
+# CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.5 $
 # ============================================================================
 # Created    : 2004-10-25
 # Maintainer : Vanya BELYAEV belyaev@lapp.in2p3.fr
 # ============================================================================
 package           CaloMoniDst
-version           v2r0
+version           v2r1
 
 # =============== structure ==================================================
 branches          cmt doc src options 
@@ -29,6 +29,9 @@ apply_pattern     component_library library=CaloMoniDst
 
 # ============================================================================
 # $Log: not supported by cvs2svn $
+# Revision 1.4  2005/11/22 22:43:01  cattanem
+# switch off debug printout, fix doxygen comments
+#
 # Revision 1.3  2005/11/07 12:16:38  odescham
 # v2r0 - adapt to the new Track Event Model
 #

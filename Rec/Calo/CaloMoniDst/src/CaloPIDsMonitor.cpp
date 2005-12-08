@@ -1,8 +1,11 @@
-// $Id: CaloPIDsMonitor.cpp,v 1.3 2005-11-07 12:16:38 odescham Exp $
+// $Id: CaloPIDsMonitor.cpp,v 1.4 2005-12-08 13:14:40 odescham Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.3 $
+// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.4 $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.3  2005/11/07 12:16:38  odescham
+// v2r0 - adapt to the new Track Event Model
+//
 // Revision 1.2  2005/05/08 09:58:25  ibelyaev
 //  remove associators, update options
 //
@@ -255,8 +258,8 @@ StatusCode CaloPIDsMonitor::execute    ()
       
       //OD (2005/11/01) criteria to be revised ...
       if ( !track->checkFlag(Track::Unique)) { continue ; }      // CONTINUE
-      if ( !track->checkHistory(Track::PatForward) &&
-           !track -> checkHistory(Track::TrackMatching)) { continue ; }     // CONTINUE
+      if ( !track->checkHistory(Track::CnvForward) &&
+           !track -> checkHistory(Track::CnvMatch)) { continue ; }     // CONTINUE
       
       // get MC truth    
       MCTable::Range mc  = mcTable -> relations( track ) ;
