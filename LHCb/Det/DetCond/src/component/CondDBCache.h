@@ -1,14 +1,15 @@
-// $Id: CondDBCache.h,v 1.3 2005-09-18 16:08:39 marcocle Exp $
+// $Id: CondDBCache.h,v 1.4 2005-12-08 12:05:42 marcocle Exp $
 #ifndef COMPONENT_CONDDBCACHE_H 
 #define COMPONENT_CONDDBCACHE_H 1
 
 // Include files
 #include <string>
-#include <map>
 #include <vector>
 #include <list>
 
 #include "GaudiKernel/MsgStream.h"
+
+#include "GaudiKernel/HashMap.h"
 
 #include "CoolKernel/types.h"
 #include "CoolKernel/ValidityKey.h"
@@ -102,7 +103,7 @@ private:
   //typedef std::vector<CondItem> ItemListType;
   typedef std::list<CondItem> ItemListType;
   //  typedef std::map<FolderIdType,CondFolder> FolderListType;
-  typedef std::map<FolderIdType,CondFolder> StorageType;  
+  typedef GaudiUtils::HashMap<FolderIdType,CondFolder> StorageType;  
 
   /// Internal class used to record IOV+data pairs
   struct CondItem {
@@ -137,7 +138,7 @@ private:
   /// Internal class used to keep the items common to a given path.
   struct CondFolder {
 
-    typedef std::map<cool::ChannelId,ItemListType> StorageType;
+    typedef GaudiUtils::HashMap<cool::ChannelId,ItemListType> StorageType;
     
     CondFolder(const cool::IFolderPtr &fld):
       description(fld->description()),spec(new pool::AttributeListSpecification),sticky(false) {
