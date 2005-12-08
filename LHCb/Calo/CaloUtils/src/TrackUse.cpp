@@ -1,4 +1,4 @@
-// $Id: TrackUse.cpp,v 1.1 2005-11-07 11:57:13 odescham Exp $
+// $Id: TrackUse.cpp,v 1.2 2005-12-08 13:00:22 odescham Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
@@ -185,27 +185,25 @@ StatusCode TrackUse::declareProperties ( AlgTool*  tool )
 bool TrackUse::use  (  Track* track ) const 
 {
   if ( 0 == track ) { return false ; }
-  // unique ?
+  // Flag ?
   if ( uniqueOnly    () && !track -> checkFlag(Track::Unique) ) { return false ; }
-    // use error tracks ? 
   if ( !error        () && track -> checkFlag(Track::Invalid) ) { return false ; }
-  // categories ?
+  if ( !isBackward   () && track -> checkFlag(Track::Backward) ) { return false ; }
+  // Type ?
   if ( !isLong       () && track -> checkType (Track::Long) ) { return false ; }
   if ( !isUpstream   () && track -> checkType (Track::Upstream) ) { return false ; }
   if ( !isDownstream () && track -> checkType (Track::Downstream) ) { return false ; }
   if ( !isVelotrack  () && track -> checkType (Track::Velo) ) { return false ; }
-  if ( !isBackward   () && track -> checkFlag(Track::Backward) ) { return false ; }
   if ( !isTtrack     () && track -> checkType (Track::Ttrack ) ) { return false ; }
-  // algorihtms?
-  if ( !velo         () && track -> checkHistory(Track::PatVelo) ) { return false ; }
-  if ( !seed         () && track -> checkHistory(Track::TrackSeeding) ) { return false ; }
-  if ( !match        () && track -> checkHistory(Track::TrackMatching) ) { return false ; }
-  if ( !forward      () && track -> checkHistory(Track::TrgForward) ) { return false ; }
-  //if ( !follow       () && track -> follow         () ) { return false ; }
-  if ( !veloTT       () && track -> checkHistory(Track::TrackVeloTT) ) { return false ; }
-  if ( !veloBack     () && track -> checkType (Track::Velo) && track ->checkFlag(Track::Backward)) { return false ; }
-  if ( !ksTrack      () && track -> checkHistory(Track::TrackKShort) ) { return false ; }
-  return true ;  
+  // History : use Cnv track for the time being ...
+  if ( !veloBack     () && track -> heckHistory(Track::CnvVeloBack)  { return false ; }
+  if ( !velo         () && track -> checkHistory(Track::CnvVelo) ) { return false ; }
+  if ( !seed         () && track -> checkHistory(Track::CnvSeed) ) { return false ; }
+  if ( !match        () && track -> checkHistory(Track::CnvMatch) ) { return false ; }
+  if ( !forward      () && track -> checkHistory(Track::CnvForward) ) { return false ; }
+  if ( !veloTT       () && track -> checkHistory(Track::CnvVeloTT) ) { return false ; }
+  if ( !ksTrack      () && track -> checkHistory(Track::CnvKsTrack) ) { return false ; }
+   return true ;  
 };
 // ============================================================================
 
@@ -240,15 +238,14 @@ std::string TrackUse::bits (Track* track ) const
   msg += "/V:" + prnt ( track -> checkType (Track::Velo) ) ;
   msg += "/B:" + prnt ( track -> checkFlag(Track::Backward) ) ;
   msg += "/T:" + prnt ( track -> checkType (Track::Ttrack ) ) ;
-  //
-  msg += "/v:" + prnt ( track -> checkHistory(Track::PatVelo) ) ;
-  msg += "/s:" + prnt ( track -> checkHistory(Track::TrackSeeding) ) ;
-  msg += "/m:" + prnt ( track -> checkHistory(Track::TrackMatching) ) ;
-  msg += "/f:" + prnt ( track -> checkHistory(Track::TrgForward) ) ;
-  //OD msg += "/f:" + prnt ( track -> follow        () ) ;
-  msg += "/v:" + prnt ( track -> checkHistory(Track::TrackVeloTT) ) ;
-  msg += "/b:" + prnt ( track -> checkType (Track::Velo) && track ->checkFlag(Track::Backward) ) ;
-  msg += "/k:" + prnt ( track ->  checkHistory(Track::TrackKShort) ) ;
+  // History : use Cnv track for the time being ...
+  msg += "/b:" + prnt ( track -> checkHistory(Track::CnvVeloBack) ;
+  msg += "/v:" + prnt ( track -> checkHistory(Track::CnvVelo) ) ;
+  msg += "/s:" + prnt ( track -> checkHistory(Track::CnvSeed) ) ;
+  msg += "/m:" + prnt ( track -> checkHistory(Track::CnvMatch) ) ;
+  msg += "/f:" + prnt ( track -> checkHistory(Track::CnvForward) ) ;
+  msg += "/v:" + prnt ( track -> checkHistory(Track::CnvVeloTT) ) ;
+  msg += "/k:" + prnt ( track ->  checkHistory(Track::CnvKsTrack) ) ;
   //
   return msg ;
 };

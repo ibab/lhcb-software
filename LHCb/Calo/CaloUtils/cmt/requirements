@@ -1,12 +1,13 @@
-# $Id: requirements,v 1.25 2005-11-23 07:29:07 cattanem Exp $
+# $Id: requirements,v 1.26 2005-12-08 13:00:22 odescham Exp $
 # =============================================================================
-# CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.25 $
+# CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.26 $
 # =============================================================================
 # Created    : 02/11/2001
-# Maintainer : Vanya BELYAEV belyaev@lapp.in2p3.fr 
+# Author     : Vanya BELYAEV belyaev@lapp.in2p3.fr 
+# Maintainer : Olivier Deschamps odescham@in2p3.fr
 # =============================================================================
 package             CaloUtils
-version             v5r0
+version             v5r1
 
 # ================= structure =================================================
 branches            cmt doc src CaloUtils
@@ -27,6 +28,9 @@ apply_pattern       linker_library library=CaloUtils
 
 # =============================================================================
 # $Log: not supported by cvs2svn $
+# Revision 1.25  2005/11/23 07:29:07  cattanem
+# cleanup requirements
+#
 # Revision 1.24  2005/11/07 11:57:13  odescham
 # v5r0 - Adapt to the new Track Event Model
 #
