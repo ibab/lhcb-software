@@ -1,5 +1,6 @@
 #include "$STDOPTS/DetDesc.opts"
 
+ApplicationMgr.DLLs   -= { "DetDescSvc" };
 ApplicationMgr.DLLs   += { "DetDescChecks" };
 ApplicationMgr.DLLs   += { "RootHistCnv"};
 
