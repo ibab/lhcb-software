@@ -1,4 +1,4 @@
-// $Id: ExternalGenerator.cpp,v 1.6 2005-12-07 22:58:59 robbep Exp $
+// $Id: ExternalGenerator.cpp,v 1.7 2005-12-08 16:23:27 robbep Exp $
 // Include files 
 
 // local
@@ -17,6 +17,7 @@
 #include "Generators/IDecayTool.h"
 #include "Generators/IGenCutTool.h"
 #include "Generators/LhaPdf.h"
+#include "Generators/StringParse.h"
 
 //-----------------------------------------------------------------------------
 // Implementation file for class : ExternalGenerator
@@ -33,12 +34,16 @@ ExternalGenerator::ExternalGenerator( const std::string& type,
   : GaudiTool ( type, name , parent ) , 
     m_decayTool( 0 ) , 
     m_cutTool  ( 0 ) { 
+    m_defaultLhaPdfSettings.clear() ;
     declareInterface< ISampleGenerationTool >( this ) ;
     declareProperty( "ProductionTool" , 
                      m_productionToolName = "PythiaProduction" ) ; 
     declareProperty( "DecayTool" , m_decayToolName = "EvtGenDecay" ) ;
     declareProperty( "CutTool" , m_cutToolName = "LHCbAcceptance" ) ;
-}
+    declareProperty( "LhaPdfCommands" , m_userLhaPdfSettings ) ;
+    m_defaultLhaPdfSettings.push_back( "lhacontrol lhaparm 17 LHAPDF" ) ;
+    m_defaultLhaPdfSettings.push_back( "lhacontrol lhaparm 16 NOSTAT" ) ;
+  }
 
 //=============================================================================
 // Destructor
@@ -56,6 +61,13 @@ StatusCode ExternalGenerator::initialize( ) {
   if ( msgLevel( MSG::DEBUG ) ) 
     LhaPdf::lhacontrol().setlhaparm( 19 , "DEBUG" ) ;
   else LhaPdf::lhacontrol().setlhaparm( 19 , "SILENT" ) ;
+
+  // Set default LHAPDF parameters:
+  sc = parseLhaPdfCommands( m_defaultLhaPdfSettings ) ;
+  // Set user LHAPDF parameters:
+  sc = parseLhaPdfCommands( m_userLhaPdfSettings ) ;
+  if ( ! sc.isSuccess() ) 
+    return Error( "Unable to read LHAPDF commands" , sc ) ;
 
   // retrieve the particle property service
   IParticlePropertySvc * ppSvc = 
@@ -217,4 +229,42 @@ bool ExternalGenerator::IsBAtProduction( const HepMC::GenParticle * thePart )
     (* theVertex -> particles_in_const_begin() ) ;
   if ( theMother -> pdg_id() == - thePart -> pdg_id() ) return false ;
   return true ;
+}
+
+//=============================================================================
+// Parse LHAPDF commands stored in a vector
+//=============================================================================
+StatusCode ExternalGenerator::parseLhaPdfCommands( const CommandVector & 
+                                                   theCommandVector ) {
+  //
+  // Parse Commands and Set Values from Properties Service...
+  //
+  CommandVector::const_iterator iter ;
+  for ( iter = theCommandVector.begin() ; theCommandVector.end() != iter ; 
+        ++iter ) {
+    debug() << " Command is: " << (*iter) << endmsg ;
+    StringParse mystring( *iter ) ;
+    std::string block = mystring.piece(1);
+    std::string entry = mystring.piece(2);
+    std::string str   = mystring.piece(4);
+    int    int1  = mystring.intpiece(3);
+    double fl1   = mystring.numpiece(3);
+    
+    // Note that Pythia needs doubles hence the convert here
+    debug() << block << " block  " << entry << " item  " << int1 
+            << "  value " << fl1 << " str " << str << endmsg ;
+    if ( "lhacontrol" == block )  
+      if      ( "lhaparm" == entry ) 
+        LhaPdf::lhacontrol().setlhaparm( int1 , str ) ;
+      else if ( "lhavalue" == entry ) 
+        LhaPdf::lhacontrol().setlhavalue( int1 , fl1 ) ;
+      else return Error( std::string( "LHAPDF ERROR, block LHACONTROL has " ) +
+                         std::string( "LHAPARM and LHAVALUE: YOU HAVE " ) + 
+                         std::string( "SPECIFIED " ) + std::string( entry ) ) ;
+    else return Error( std::string( " ERROR in LHAPDF PARAMETERS   " ) +
+                       std::string( block ) +
+                       std::string( " is and invalid common block name !" ) ) ;
+  }
+  
+  return StatusCode::SUCCESS ;
 }

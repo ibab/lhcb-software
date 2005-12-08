@@ -1,4 +1,4 @@
-// $Id: ExternalGenerator.h,v 1.4 2005-12-07 23:04:50 robbep Exp $
+// $Id: ExternalGenerator.h,v 1.5 2005-12-08 16:23:27 robbep Exp $
 #ifndef GENERATORS_EXTERNALGENERATOR_H 
 #define GENERATORS_EXTERNALGENERATOR_H 1
 
@@ -30,6 +30,7 @@ class ExternalGenerator : public GaudiTool ,
 public:
   typedef std::vector< HepMC::GenParticle * > ParticleVector ;
   typedef std::set< int >                     PIDs           ;
+  typedef std::vector< std::string >          CommandVector  ;
 
   /// Standard constructor
   ExternalGenerator( const std::string & type , 
@@ -70,7 +71,11 @@ protected:
 private:
   bool IsBAtProduction( const HepMC::GenParticle * thePart ) const ;
 
+  StatusCode parseLhaPdfCommands( const CommandVector & theCommandVector ) ;
+
   std::string m_productionToolName , m_decayToolName , m_cutToolName ;
+
+  CommandVector m_defaultLhaPdfSettings , m_userLhaPdfSettings ;
 
 };
 #endif // GENERATORS_EXTERNALGENERATOR_H
