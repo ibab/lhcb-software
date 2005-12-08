@@ -1,28 +1,19 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Ex/DetDescExample/src/SimpleAlgorithm.h,v 1.2 2002-04-29 17:05:54 sponce Exp $
+// $Id: SimpleAlgorithm.h,v 1.3 2005-12-08 10:02:43 cattanem Exp $
 #ifndef DDEXAMPLE_SIMPLEALGORITHM_H
 #define DDEXAMPLE_SIMPLEALGORITHM_H 1
 
+// from Gaudi
+#include "GaudiAlg/GaudiAlgorithm.h"
 
-// Include files
-#include <vector>
-#include "GaudiKernel/Algorithm.h"
+/** @class SimpleAlgorithm SimpleAlgorithm.h
+ *  Example of an algorithm using the detector data service 
+ *  and the declaration of specific detertor element converter
+ *
+ *  @author Sebastien Ponce
+ *  @date   2002-04-29
+ */
 
-
-// Forward declarations
-class DeMuonStation;
-
-
-//------------------------------------------------------------------------------
-//
-// ClassName:   SimpleAlgorithm
-//  
-// Description: Example of an algorithm using the detector data service and 
-//              the declaration of a especific detertor element converter
-//
-//------------------------------------------------------------------------------
-
-
-class SimpleAlgorithm : public Algorithm {
+class SimpleAlgorithm : public GaudiAlgorithm {
 public:
   /**
    * Constructor: A constructor of this form must be provided.
@@ -48,6 +39,11 @@ public:
    */
   StatusCode finalize();
 
+  /**
+   * Displays the list of existing physical volumes in lv
+   * @param lv the logical volume concerned
+   * @param de the name of the detector element associated to lv
+   */
+  void dumpPVs (const ILVolume* lv, std::string de);
 };
-
 #endif    // DDEXAMPLE_SIMPLEALGORITHM_H

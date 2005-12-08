@@ -1,20 +1,22 @@
-# $Id: requirements,v 1.26 2005-06-13 11:26:09 cattanem Exp $
+# $Id: requirements,v 1.27 2005-12-08 10:02:43 cattanem Exp $
 package DetDescExample
-version v6r4
+version v6r5
 
 branches doc src options cmt
 
-# Main program and standard job options
-use GaudiConf     v*     
-
 # GAUDI framework
-use GaudiSys      v*
+use GaudiAlg      v*
 
-# Detector Description package and database
+# Detector Description and services
 use DetDescCnv    v* Det
-use XmlDDDB       v* Det
 
-#==> DetDesc example
-application DetDescExample *.cpp \
-            "$(GAUDICONFROOT)/src/GaudiMain.cpp"
-apply_pattern  application_path
+# Build the application
+# =============================================================================
+application       DetDescExample $(GAUDICONFROOT)/src/GaudiMain.cpp *.cpp
+
+private
+use               XmlDDDB       v* Det -no_auto_imports
+use               XmlConditions v* Det -no_auto_imports
+use               GaudiConf     v*     -no_auto_imports
+use               GaudiSvc    v*       -no_auto_imports
+apply_pattern     application_path

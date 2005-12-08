@@ -1,15 +1,10 @@
-// $Id: DeCalorimeter.h,v 1.4 2002-04-29 17:05:54 sponce Exp $
+// $Id: DeCalorimeter.h,v 1.5 2005-12-08 10:02:43 cattanem Exp $
 #ifndef DDEXAMPLE_DECALORIMETER_H
 #define DDEXAMPLE_DECALORIMETER_H 1
 
 
 // Include files
 #include "DetDesc/DetectorElement.h"
-
-
-// External declarations
-extern const CLID& CLID_DECalorimeter;
-
 
 /** @class DeCalorimeter DeCalorimeter.h
  *

@@ -1,15 +1,9 @@
-// $Id: DeMuonRegion.h,v 1.1 2002-04-29 17:05:54 sponce Exp $
+// $Id: DeMuonRegion.h,v 1.2 2005-12-08 10:02:43 cattanem Exp $
 #ifndef MUONDET_DEMUONREGION_H
 #define MUONDET_DEMUONREGION_H 1
 
-
 // Include files
 #include "DetDesc/DetectorElement.h"
-
-
-// External declarations
-extern const CLID& CLID_DEMuonRegion;
-
 
 /** @class DeMuonGasGap DeMuonGasGap.h MuonDet/DeMuonGasGap.h
  *  

@@ -1,9 +1,5 @@
-// $Id: job.opts,v 1.6 2005-06-13 11:26:10 cattanem Exp $
+// $Id: job.opts,v 1.7 2005-12-08 10:02:43 cattanem Exp $
 // Do not use standard options, as we do not need event input
-
-// Define the other standard DLLs and services
-ApplicationMgr.DLLs   = { "GaudiAud" };
-AuditorSvc.Auditors   = { "ChronoAuditor" };
 
 // Set up the detector description service
 #include "$STDOPTS/DetDesc.opts"
