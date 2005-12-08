@@ -1,9 +1,13 @@
 ! =============================================================================
-! $Id: release.notes,v 1.242 2005-12-08 10:36:14 jpalac Exp $ 
+! $Id: release.notes,v 1.243 2005-12-08 12:20:54 marcocle Exp $ 
 ! =============================================================================
 ! package DetDesc
 ! package manager : Marco Clemencic, Juan Palacios
 ! =============================================================================
+
+! 2005-12-08 - Marco Clemencic
+ - Use GaudiUtils::Map instead of std::map as base class for ParamList.
+   (part of ParamValidDataObject)
 
 !======================== DetDesc v16r1 2005-12-08 ========================
 

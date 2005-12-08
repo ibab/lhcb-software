@@ -1,4 +1,4 @@
-// $Id: ParamList.h,v 1.3 2005-11-17 16:30:17 marcocle Exp $
+// $Id: ParamList.h,v 1.4 2005-12-08 12:20:54 marcocle Exp $
 #ifndef DETDESC_PARAMLIST_H 
 #define DETDESC_PARAMLIST_H 1
 
@@ -6,7 +6,7 @@
 
 #include <DetDesc/Param.h>
 
-#include <map>
+#include "GaudiKernel/Map.h"
 
 /** @class ParamList ParamList.h DetDesc/ParamList.h
  *  
@@ -16,9 +16,9 @@
  *  @author Marco CLEMENCIC
  *  @date   2005-02-22
  */
-class ParamList: public std::map<std::string,BasicParam *> {
+class ParamList: public GaudiUtils::Map<std::string,BasicParam *> {
 private:
-  typedef std::map<std::string,BasicParam *> base_type;
+  typedef GaudiUtils::Map<std::string,BasicParam *> base_type;
 
 public: 
   /// Standard constructor
