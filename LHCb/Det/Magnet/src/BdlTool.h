@@ -1,9 +1,8 @@
-// $Id: BdlTool.h,v 1.1 2005-09-07 12:20:25 cattanem Exp $
+// $Id: BdlTool.h,v 1.2 2005-12-08 15:16:44 cattanem Exp $
 #ifndef MAGNET_BDLTOOL_H
 #define MAGNET_BDLTOOL_H 1
 
 // Include files
-#include "CLHEP/Geometry/Point3D.h"
 #include "GaudiAlg/GaudiTool.h"
 
 // From LHCbKernel

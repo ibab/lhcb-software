@@ -1,4 +1,4 @@
-// $Id: MagneticFieldSvc.cpp,v 1.14 2005-08-29 11:18:17 mneedham Exp $
+// $Id: MagneticFieldSvc.cpp,v 1.15 2005-12-08 15:16:44 cattanem Exp $
 
 // Include files
 #include "GaudiKernel/AlgFactory.h"
@@ -8,7 +8,9 @@
 
 #include "MagneticFieldSvc.h"
 
-#include "CLHEP/Units/PhysicalConstants.h"
+#include "Kernel/PhysicalConstants.h"
+#include "Kernel/Vector3DTypes.h"
+#include "Kernel/Point3DTypes.h"
 
 #include <cstdlib>
 #include <fstream>
@@ -223,8 +225,8 @@ StatusCode MagneticFieldSvc::parseFile() {
 //=============================================================================
 // FieldVector: find the magnetic field value at a given point in space
 //=============================================================================
-StatusCode MagneticFieldSvc::fieldVector(const HepPoint3D& r, 
-                                         HepVector3D& b) const
+StatusCode MagneticFieldSvc::fieldVector(const Gaudi::XYZPoint&  r,
+                                               Gaudi::XYZVector& b ) const
 {
   // This routine is now dummy. Was previously converting to/from CLHEP units
 
@@ -236,12 +238,10 @@ StatusCode MagneticFieldSvc::fieldVector(const HepPoint3D& r,
 //=============================================================================
 // routine to fill the field vector
 //=============================================================================
-void MagneticFieldSvc::fieldGrid (const HepPoint3D& r, 
-                                   HepVector3D& bf ) const {
+void MagneticFieldSvc::fieldGrid (const Gaudi::XYZPoint&  r, 
+                                        Gaudi::XYZVector& bf ) const {
     
-  bf[0] = 0.0;
-  bf[1] = 0.0;
-  bf[2] = 0.0;
+  bf.SetXYZ( 0.0, 0.0, 0.0 );
 
   ///  Linear interpolated field
   double z = r.z() - m_zOffSet;
@@ -329,22 +329,22 @@ void MagneticFieldSvc::fieldGrid (const HepPoint3D& r,
   if( fabs(h111) > 0.0 && 
       cx111 > 9.0e5 && cy111 > 9.0e5 && cz111 > 9.0e5) return;
 
-  bf[0] = ( cx000*h000 + cx001*h001 + cx010*h010 + cx011*h011 +
+  bf.SetX ( cx000*h000 + cx001*h001 + cx010*h010 + cx011*h011 +
             cx100*h100 + cx101*h101 + cx110*h110 + cx111*h111);
-  bf[1] = ( cy000*h000 + cy001*h001 + cy010*h010 + cy011*h011 +
+  bf.SetY ( cy000*h000 + cy001*h001 + cy010*h010 + cy011*h011 +
             cy100*h100 + cy101*h101 + cy110*h110 + cy111*h111 );
-  bf[2] = ( cz000*h000 + cz001*h001 + cz010*h010 + cz011*h011 +
+  bf.SetZ ( cz000*h000 + cz001*h001 + cz010*h010 + cz011*h011 +
             cz100*h100 + cz101*h101 + cz110*h110 + cz111*h111 );
 
   if( r.x() < 0. && r.y() >= 0. ){
-    bf[0] = -bf[0];
+    bf.SetX( -bf.x() );
   }
   else if(  r.x() < 0. &&  r.y()  < 0. ){
-    bf[2] = -bf[2];
+    bf.SetZ( -bf.z() );
   }
   else if( r.x() >= 0. && r.y() < 0. ){    
-    bf[0] = -bf[0];
-    bf[2] = -bf[2];
+    bf.SetX( -bf.x() );
+    bf.SetZ( -bf.z() );
   } 
   return;      
 }

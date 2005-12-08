@@ -1,12 +1,17 @@
-// $Id: BIntegrator.cpp,v 1.1 2005-09-07 12:20:25 cattanem Exp $
+// $Id: BIntegrator.cpp,v 1.2 2005-12-08 15:16:43 cattanem Exp $
 // Include files 
 // -------------
 
 // from Gaudi
 #include "GaudiKernel/ToolFactory.h" 
 
-// from CLHEP
-#include "CLHEP/Units/PhysicalConstants.h"
+// from LHCbKernel
+#include "Kernel/IMagneticFieldSvc.h"
+
+// from LHCbDefinitions
+#include "Kernel/Point3DTypes.h"
+#include "Kernel/Vector3DTypes.h"
+#include "Kernel/PhysicalConstants.h"
 
 // local
 #include "BIntegrator.h"
@@ -63,19 +68,17 @@ StatusCode BIntegrator::initialize()
 //=============================================================================
 // Get the z of center and the total Bdl
 //=============================================================================
-StatusCode BIntegrator::calculateBdlAndCenter( const HepPoint3D& beginPoint, 
-                                               const HepPoint3D& endPoint,
+StatusCode BIntegrator::calculateBdlAndCenter(const Gaudi::XYZPoint& beginPoint, 
+                                               const Gaudi::XYZPoint& endPoint,
                                                const double tX,
                                                const double tY, 
                                                double& zCenter, 
-                                               HepVector3D& Bdl ) const
+                                               Gaudi::XYZVector& Bdl ) const
 {
   // Point where field should be calculated
-  HepPoint3D  point(0.001,0.001,0.0001);
-  HepVector3D bField;      // returned field
-  Bdl.setX(0.);
-  Bdl.setY(0.);
-  Bdl.setZ(0.);
+  Gaudi::XYZPoint  point(0.001,0.001,0.0001);
+  Gaudi::XYZVector bField;      // returned field
+  Bdl.SetXYZ(0.,0.,0.);
 
   //First get the Center by walking in two rays..
   double zCen = m_centerZ.x();  // the Bdlx is the important component
@@ -107,15 +110,15 @@ StatusCode BIntegrator::calculateBdlAndCenter( const HepPoint3D& beginPoint,
     double dX = angleX*stepSize;
     double dY = angleY*stepSize;
     double dZ = stepSize;
-    point.setX( point.x()+ dX);
-    point.setY( point.y()+ dY);
-    point.setZ( point.z()+ dZ);
+    point.SetX( point.x()+ dX);
+    point.SetY( point.y()+ dY);
+    point.SetZ( point.z()+ dZ);
     m_pIMF->fieldVector(point,bField);
 
     //Cacluate the Bdl 
-    Bdl.setX( Bdl.x() + dY* bField.z()- dZ*bField.y() );
-    Bdl.setY( Bdl.y() + dZ*bField.x() -dX*bField.z());
-    Bdl.setZ( Bdl.z() + dX*bField.y() -dY*bField.x());
+    Bdl.SetX( Bdl.x() + dY* bField.z()- dZ*bField.y() );
+    Bdl.SetY( Bdl.y() + dZ*bField.x() -dX*bField.z());
+    Bdl.SetZ( Bdl.z() + dX*bField.y() -dY*bField.x());
     
   } // iStep
 
@@ -125,20 +128,16 @@ StatusCode BIntegrator::calculateBdlAndCenter( const HepPoint3D& beginPoint,
   double Bdly_half =0.5*Bdl.y();
   double Bdlz_half =0.5*Bdl.z();
   
-  Bdl.setX( 0.);
-  Bdl.setY( 0.);
-  Bdl.setZ( 0.);
+  Bdl.SetXYZ( 0., 0., 0. );
   
   double min_Bdlx =10000.;
   double min_Bdly =10000.;
   double min_Bdlz =10000.;
-  HepPoint3D centerZ(0.,0.,0.);
+  Gaudi::XYZPoint centerZ(0.,0.,0.);
   //reset al the variables used
   angleX = xCen/zCen;
   angleY = yCen/zCen;
-  point.setX(0.);
-  point.setY(0.);
-  point.setZ(0.);
+  point.SetXYZ( 0., 0., 0. );
   for(iStep=0;iStep<m_nSteps;iStep++)    {
 
     if(point.z()>zCen)      {
@@ -148,27 +147,27 @@ StatusCode BIntegrator::calculateBdlAndCenter( const HepPoint3D& beginPoint,
     double dX = angleX*stepSize;
     double dY = angleY*stepSize;
     double dZ = stepSize;
-    point.setX( point.x()+ dX);
-    point.setY( point.y()+ dY);
-    point.setZ( point.z()+ dZ);
+    point.SetX( point.x()+ dX);
+    point.SetY( point.y()+ dY);
+    point.SetZ( point.z()+ dZ);
     m_pIMF->fieldVector(point,bField);
 
     //Cacluate the Bdl 
-    Bdl.setX( Bdl.x() + dY* bField.z()- dZ*bField.y() );
-    Bdl.setY( Bdl.y() + dZ*bField.x() -dX*bField.z());
-    Bdl.setZ( Bdl.z() + dX*bField.y() -dY*bField.x());
+    Bdl.SetX( Bdl.x() + dY* bField.z()- dZ*bField.y() );
+    Bdl.SetY( Bdl.y() + dZ*bField.x() -dX*bField.z());
+    Bdl.SetZ( Bdl.z() + dX*bField.y() -dY*bField.x());
 
     if(fabs(Bdl.x()-Bdlx_half)< min_Bdlx){
       min_Bdlx=fabs(Bdl.x()-Bdlx_half);
-      centerZ.setX(point.z());
+      centerZ.SetX(point.z());
     }
     if(fabs(Bdl.y()-Bdly_half)< min_Bdly){
       min_Bdly=fabs(Bdl.y()-Bdly_half);
-      centerZ.setY(point.z());
+      centerZ.SetY(point.z());
     }
     if(fabs(Bdl.z()-Bdlz_half)< min_Bdlz){
       min_Bdlz=fabs(Bdl.z()-Bdlz_half);
-      centerZ.setZ(point.z());
+      centerZ.SetZ(point.z());
     }
 
   }
@@ -185,34 +184,30 @@ StatusCode BIntegrator::calculateBdlAndCenter( const HepPoint3D& beginPoint,
 StatusCode BIntegrator::calculateBdlCenter()
 {
   // Centre of the field
-  HepVector3D bField;
+  Gaudi::XYZVector bField;
 
-  HepVector3D BdlTotal(0.,0.,0.);
-  HepPoint3D  position = HepPoint3D(0.0,0.0,0.);
+  Gaudi::XYZVector BdlTotal(0.,0.,0.);
+  Gaudi::XYZPoint  position = Gaudi::XYZPoint(0.0,0.0,0.);
 
   double stepSize = (m_lastZ-m_firstZ) / (double)m_nSteps;
 
   // Get the integral field
   int iStep;
   for( iStep=0;iStep < m_nSteps;iStep++) {
-    position.setX(0.1);
-    position.setY(0.1);
-    position.setZ( m_firstZ+((double)iStep+0.5)*stepSize );
+    position.SetXYZ( 0.1, 0.1, m_firstZ+((double)iStep+0.5)*stepSize );
     m_pIMF -> fieldVector( position,bField );
 
     //Calculate the Bdl 
-    BdlTotal.setX( BdlTotal.x() - stepSize*bField.y() );
-    BdlTotal.setY( BdlTotal.y() + stepSize*bField.x() );
-    BdlTotal.setZ( BdlTotal.z() + 0.);
+    BdlTotal.SetX( BdlTotal.x() - stepSize*bField.y() );
+    BdlTotal.SetY( BdlTotal.y() + stepSize*bField.x() );
+    BdlTotal.SetZ( BdlTotal.z() + 0.);
   } // iStep
 
   double Bdlx_half = 0.5*BdlTotal.x();
   double Bdly_half = 0.5*BdlTotal.y();
   double Bdlz_half = 0.5*BdlTotal.z();
   
-  BdlTotal.setX( 0.);
-  BdlTotal.setY( 0.);
-  BdlTotal.setZ( 0.);
+  BdlTotal.SetXYZ( 0., 0., 0. );
   
   double min_Bdlx = 10000.;
   double min_Bdly = 10000.;
@@ -221,25 +216,23 @@ StatusCode BIntegrator::calculateBdlCenter()
   //Loop again and find the middle of each of the components
   for ( iStep=0; iStep < m_nSteps; iStep++ ) {
     double z = m_firstZ+ (iStep+0.5)*stepSize;
-    position.setX(0.1);
-    position.setY(0.1);
-    position.setZ(z);
+    position.SetXYZ( 0.1, 0.1, z );
     m_pIMF -> fieldVector( position,bField );
     //Cacluate the Bdl 
-    BdlTotal.setX( BdlTotal.x() - stepSize*bField.y() );
-    BdlTotal.setY( BdlTotal.y() + stepSize*bField.x() );
-    BdlTotal.setZ( BdlTotal.z() + 0.);
+    BdlTotal.SetX( BdlTotal.x() - stepSize*bField.y() );
+    BdlTotal.SetY( BdlTotal.y() + stepSize*bField.x() );
+    BdlTotal.SetZ( BdlTotal.z() + 0.);
     if ( fabs(BdlTotal.x()-Bdlx_half) < min_Bdlx ) {
       min_Bdlx = fabs( BdlTotal.x()-Bdlx_half );
-      m_centerZ.setX(z);
+      m_centerZ.SetX(z);
     }
     if ( fabs(BdlTotal.y()-Bdly_half)< min_Bdly ) {
       min_Bdly = fabs( BdlTotal.y()-Bdly_half );
-      m_centerZ.setY(z);
+      m_centerZ.SetY(z);
     }
     if ( fabs(BdlTotal.z()-Bdlz_half)< min_Bdlz ) {
       min_Bdlz = fabs( BdlTotal.z()-Bdlz_half );
-      m_centerZ.setZ(z);
+      m_centerZ.SetZ(z);
     }
   }
   

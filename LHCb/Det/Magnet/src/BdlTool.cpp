@@ -1,14 +1,13 @@
-// $Id: BdlTool.cpp,v 1.1 2005-09-07 12:20:25 cattanem Exp $
+// $Id: BdlTool.cpp,v 1.2 2005-12-08 15:16:44 cattanem Exp $
 
 // Include files
 #include "GaudiKernel/ToolFactory.h"
-#include "GaudiKernel/IMagneticFieldSvc.h"
-#include "GaudiKernel/IService.h"
+#include "Kernel/IMagneticFieldSvc.h"
 
-// CLHEP
-#include "CLHEP/Geometry/Point3D.h"
-#include "CLHEP/Geometry/Vector3D.h"
-#include "CLHEP/Units/PhysicalConstants.h"
+// Mathlib
+#include "Kernel/Point3DTypes.h"
+#include "Kernel/Vector3DTypes.h"
+#include "Kernel/PhysicalConstants.h"
 
 // local
 #include "BdlTool.h"
@@ -123,14 +122,14 @@ void BdlTool::f_bdl( double slopeY, double zOrigin,
     m_zTmp.clear(); 
 
     // prepare m_zBdlHalf;
-    HepPoint3D aPoint(0.,0.,0.);
-    HepVector3D bField;
+    Gaudi::XYZPoint  aPoint(0.,0.,0.);
+    Gaudi::XYZVector bField;
 
     int np    = 500;
     double dz = (zStop - zStart)/np;
     double dy = dz*slopeY;
 
-    aPoint[0] = 0.0;
+    aPoint.SetX( 0.0 );
 
     double z = zStart+dz/2.;
     double y = slopeY*(zStart-zOrigin);
@@ -139,8 +138,8 @@ void BdlTool::f_bdl( double slopeY, double zOrigin,
 
     while( z<zStop ) {
       
-      aPoint[1] = y;
-      aPoint[2] = z;
+      aPoint.SetY( y );
+      aPoint.SetZ( z );
 
       m_magFieldSvc->fieldVector( aPoint, bField );
       bdl += dy*bField.z() - dz*bField.y();

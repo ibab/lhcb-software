@@ -4,6 +4,12 @@
 ! Purpose     : Provides magnetic field map and Bdl tools
 !-----------------------------------------------------------------------------
 
+!====================== Magnet v3r0 2005-12-08 ===============================
+! 2005-12-08 - Marco Cattaneo
+ - Migrate to GaudiAlgorithm
+ - Migrate to MathCore
+ - Migrate to Root for test Ntuple
+
 !====================== Magnet v2r9 2005-09-06 ===============================
 ! 2005-09-06 - Marco Cattaneo
  - Add BdlTool and BIntegrator tools, moved from duplicate implementations in

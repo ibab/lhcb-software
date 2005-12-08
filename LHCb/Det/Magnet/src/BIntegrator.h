@@ -1,4 +1,4 @@
-// $Id: BIntegrator.h,v 1.1 2005-09-07 12:20:25 cattanem Exp $
+// $Id: BIntegrator.h,v 1.2 2005-12-08 15:16:43 cattanem Exp $
 #ifndef MAGNET_BINTEGRATOR_H 
 #define MAGNET_BINTEGRATOR_H 1
 
@@ -6,10 +6,16 @@
 // -------------
 // from Gaudi
 #include "GaudiAlg/GaudiTool.h"
-#include "GaudiKernel/IMagneticFieldSvc.h"
 
 // from LHCbKernel
 #include "Kernel/IBIntegrator.h"            // Interface
+
+// from LHCbDefinitions
+#include "Kernel/Point3DTypes.h"
+#include "Kernel/Vector3DTypes.h"
+
+// Forward declarations
+class IMagneticFieldSvc;
 
 /** @class BIntegrator BIntegrator.h Magnet/BIntegrator.h
  *
@@ -29,12 +35,12 @@ public:
   StatusCode initialize(); ///< Initialization
 
  /// Get the z of center and the total Bdl
- StatusCode calculateBdlAndCenter( const HepPoint3D& beginPoint,
-                                   const HepPoint3D& endPoint,
+ StatusCode calculateBdlAndCenter( const Gaudi::XYZPoint& beginPoint,
+                                   const Gaudi::XYZPoint& endPoint,
                                    const double tX,
                                    const double tY,
                                    double& zCenter,
-                                   HepVector3D& Bdl ) const;
+                                   Gaudi::XYZVector& Bdl ) const;
 
 protected:
 
@@ -43,10 +49,10 @@ private:
 
   IMagneticFieldSvc* m_pIMF;   // Pointer to the magnetic field service
 
-  int        m_nSteps;
-  HepPoint3D m_centerZ;
-  double     m_firstZ;
-  double     m_lastZ;
+  int             m_nSteps;
+  Gaudi::XYZPoint m_centerZ;
+  double          m_firstZ;
+  double          m_lastZ;
 
 };
 #endif // MAGNET_BINTEGRATOR_H

@@ -1,15 +1,14 @@
-# $Id: requirements,v 1.16 2005-09-07 12:20:25 cattanem Exp $
+# $Id: requirements,v 1.17 2005-12-08 15:16:43 cattanem Exp $
 #============================================================================
 package           Magnet
-version           v2r9
+version           v3r0
 
 branches          cmt doc src 
 
 use LHCbKernel  v*      Kernel
-use GaudiAlg    v*
-use CLHEP	v*	LCG_Interfaces
+use GaudiAlg    v*      -no_auto_imports
 
-library          Magnet    ../src/*.cpp
+library          Magnet    ../src/*.cpp -import=GaudiAlg
 
 apply_pattern component_library library=Magnet
 
@@ -20,12 +19,13 @@ application TestMagnet $(GAUDICONFROOT)/src/GaudiMain.cpp
 
 # To run application, source setup.csh -tag=check
 macro useGaudiSvc  "" check " GaudiSvc  v* -no_auto_imports"
-macro useHbookCnv  "" check " HbookCnv  v* -no_auto_imports"
+macro useRootHist  "" check " RootHistCnv  v* -no_auto_imports"
 macro useFieldMap  "" check " FieldMap  v* -no_auto_imports"
 
 use ${useGaudiSvc}
-use ${useHbookCnv}
+use ${useRootHist}
 use ${useFieldMap}
 
 # Hack to get the right LD_LIBRARY_PATH when using tag=check
 set BINDIR "$(CMTCONFIG)"
+apply_pattern ld_library_path

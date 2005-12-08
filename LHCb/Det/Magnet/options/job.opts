@@ -11,10 +11,8 @@ ApplicationMgr.TopAlg  = { "MagFieldReader" };
 //--------------------------------------------------------------
 // Ntuples 
 //--------------------------------------------------------------
-#include "$STDOPTS/Hbook.opts"
-ApplicationMgr.ExtSvc += { "NTupleSvc" };
-NTupleSvc.Output={"FILE1 DATAFILE='Ntuples.hbook' TYP='HBOOK' OPT='NEW'"};
-// NTupleSvc.Output={"FILE1 DATAFILE='Ntuples.rt' TYP='ROOT' OPT='NEW'"};
+#include "$STDOPTS/RootHist.opts"
+NTupleSvc.Output={"FILE1 DATAFILE='Ntuples.root' OPT='NEW'"};
 
 //--------------------------------------------------------------
 // Set output level threshold (2=DEBUG, 3=INFO, 4=WARNING, 5=ERROR, 6=FATAL )

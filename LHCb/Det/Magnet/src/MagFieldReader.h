@@ -1,4 +1,4 @@
-// $Id: MagFieldReader.h,v 1.1 2004-04-07 15:24:34 cattanem Exp $
+// $Id: MagFieldReader.h,v 1.2 2005-12-08 15:16:44 cattanem Exp $
 #ifndef MAGFIELDREADER_H 
 #define MAGFIELDREADER_H 1
 
@@ -7,8 +7,7 @@
 #include <string>
 
 // from Gaudi
-#include "GaudiKernel/Algorithm.h"
-#include "GaudiKernel/NTuple.h"
+#include "GaudiAlg/GaudiTupleAlg.h"
 
 // Forward references
 class IMagneticFieldSvc;
@@ -22,7 +21,7 @@ class IMagneticFieldSvc;
  *  @date   08/05/2002
  */
 
-class MagFieldReader : public Algorithm {
+class MagFieldReader : public GaudiTupleAlg {
 public:
   /// Standard constructor
   MagFieldReader( const std::string& name, ISvcLocator* pSvcLocator );
@@ -31,13 +30,10 @@ public:
 
   virtual StatusCode initialize();    ///< Algorithm initialization
   virtual StatusCode execute   ();    ///< Algorithm execution
-  virtual StatusCode finalize  ();    ///< Algorithm finalization
 
 protected:
 
 private:
-
-  StatusCode readField();
   
   // Pointer to the magnetic field service
   IMagneticFieldSvc* m_pIMF;
@@ -47,9 +43,6 @@ private:
 
   // range in x and y
   double m_xMin, m_xMax, m_yMin, m_yMax;
-
-  NTuple::Tuple*        m_ntuple;
-  NTuple::Item<float>   m_x, m_y, m_z, m_Bx, m_By, m_Bz;  
 
 };
 #endif // MAGFIELDREADER_H

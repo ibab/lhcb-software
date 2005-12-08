@@ -1,15 +1,16 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Det/Magnet/src/MagneticFieldSvc.h,v 1.8 2005-01-25 14:09:49 cattanem Exp $
+// $Id: MagneticFieldSvc.h,v 1.9 2005-12-08 15:16:44 cattanem Exp $
 #ifndef MAGNETICFIELDSVC_H
 #define MAGNETICFIELDSVC_H 1
 
 // Include files
 #include "GaudiKernel/Service.h"
-#include "GaudiKernel/IMagneticFieldSvc.h"
-#include "CLHEP/Geometry/Vector3D.h"
-#include "CLHEP/Geometry/Point3D.h"
+#include "Kernel/IMagneticFieldSvc.h"
+#include "Kernel/Vector3DTypes.h"
+#include "Kernel/Point3DTypes.h"
 
 // Forward declarations
 template <class TYPE> class SvcFactory;
+
 
 /** @class MagneticFieldSvc MagneticFieldSvc.h
  *  A service for finding the magnetic field vector at a given
@@ -57,8 +58,8 @@ public:
    * @param[out] fvec Magnectic field vector.
    * @return StatusCode SUCCESS if calculation was performed.
    */
-  virtual StatusCode fieldVector( const HepPoint3D& xyz, 
-                                  HepVector3D& fvec ) const;
+  virtual StatusCode fieldVector( const Gaudi::XYZPoint&  xyz, 
+                                        Gaudi::XYZVector& fvec ) const;
 
 private:
 
@@ -66,7 +67,7 @@ private:
   friend class SvcFactory<MagneticFieldSvc>;
 
   /// Fills Q, the field vector
-  void fieldGrid( const HepPoint3D& xyz, HepVector3D& fvec ) const;
+  void fieldGrid( const Gaudi::XYZPoint& xyz, Gaudi::XYZVector& fvec ) const;
 
   StatusCode parseFile( );       ///< Reads the field map from file 
   
