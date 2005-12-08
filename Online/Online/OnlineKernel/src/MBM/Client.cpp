@@ -7,11 +7,6 @@
 MBM::Client::Client(const std::string& buffer_name, const std::string& client_name, int partition_id)
   : m_bmid(MBM_INV_DESC), m_buffName(buffer_name), m_name(client_name), m_partID(partition_id), m_facility(0), m_blocking(true)
 {
-  static bool first = true;
-  if ( first )  {
-    first = false;
-    ::wtc_init();
-  }
   include();
 }
 
@@ -19,11 +14,6 @@ MBM::Client::Client(const std::string& buffer_name, const std::string& client_na
 MBM::Client::Client(BMID bmid, const std::string& client_name, int partition_id)
   : m_bmid(bmid), m_name(client_name), m_partID(partition_id), m_facility(0), m_blocking(true)
 {
-  static bool first = true;
-  if ( first )  {
-    first = false;
-    ::wtc_init();
-  }
 }
 
 // Standard destructor
@@ -61,6 +51,11 @@ int MBM::Client::pid()  {
 
 // Switch to non-blocking execution mode
 void MBM::Client::setNonBlocking(int facility, bool /* subscribe */) {
+  static bool first = true;
+  if ( first )  {
+    first = false;
+    ::wtc_init();
+  }
   m_blocking = false;
   m_facility = facility;
 }
@@ -94,6 +89,7 @@ int MBM::Client::runAsynchronous() {
   int status = ::wtc_wait(&facility, &userpar, &sub_status);
   ::printf("Exited WAIT>>>> Facility = %d Status=%d Sub-Status = %d\n", 
 	   facility, status, sub_status);
+  return status;
 }
 
 // Run the application in synchonous mode
