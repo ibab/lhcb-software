@@ -1,10 +1,11 @@
-! $Id: release.notes,v 1.38 2005-12-08 13:00:22 odescham Exp $
+! $Id: release.notes,v 1.39 2005-12-08 15:51:46 cattanem Exp $
 ! Package     : CaloUtils
 ! Responsible : Olivier Deschamps odescham@in2p3.fr
 ! =============================================================================
 !========================== CaloUtils v5r1 2005-12-08 ===================
 ! 2005-12-08 - Olivier Deschamps
  - TrackUse.cpp based on Track::History == 'Cnv' Tracks only 
+
 !========================== CaloUtils v5r0 2005-11-04 ===================
 ! 2005-11-04 - Olivier Deschamps
  - Adapt to new Track Event Model (TrackEvent v1r4)
