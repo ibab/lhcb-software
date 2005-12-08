@@ -1,4 +1,4 @@
-// $Id: IBIntegrator.h,v 1.1 2005-09-07 12:16:20 cattanem Exp $
+// $Id: IBIntegrator.h,v 1.2 2005-12-08 15:19:23 cattanem Exp $
 #ifndef KERNEL_IBINTEGRATOR_H 
 #define KERNEL_IBINTEGRATOR_H 1
 
@@ -7,11 +7,12 @@
 // from Gaudi
 #include "GaudiKernel/IAlgTool.h"
 
-// from CLHEP
-#include "CLHEP/Geometry/Point3D.h"
-#include "CLHEP/Geometry/Vector3D.h"
+// from LHCbDefinitions
+#include "Kernel/Point3DTypes.h"
+#include "Kernel/Vector3DTypes.h"
 
-static const InterfaceID IID_IBIntegrator ( "IBIntegrator", 1, 0 );
+
+static const InterfaceID IID_IBIntegrator ( "IBIntegrator", 2, 0 );
 
 /** @class IBIntegrator IBIntegrator.h Kernel/IBIntegrator.h
  *  Interface class for field integral tool.
@@ -26,12 +27,12 @@ public:
   static const InterfaceID& interfaceID() { return IID_IBIntegrator; }
 
   /// Get the z of center and the total Bdl
-  virtual StatusCode calculateBdlAndCenter( const HepPoint3D& beginPoint,
-                                            const HepPoint3D& endPoint,
+  virtual StatusCode calculateBdlAndCenter( const Gaudi::XYZPoint& beginPoint,
+                                            const Gaudi::XYZPoint& endPoint,
                                             const double tX,
                                             const double tY,
                                             double& zCenter,
-                                            HepVector3D& Bdl ) const = 0;
+                                            Gaudi::XYZVector& Bdl ) const = 0;
 
 protected:
 

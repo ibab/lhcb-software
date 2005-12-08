@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.87 2005-11-25 16:15:48 cattanem Exp $
+# $Id: requirements,v 1.88 2005-12-08 15:19:23 cattanem Exp $
 # =============================================================================
 package LHCbKernel
 author  M.Frank    CERN/LHCb
@@ -49,4 +49,4 @@ apply_pattern linker_library    library=LHCbKernel
 
 private
 #============================================================================
-use GaudiObjDesc v*
+use GaudiObjDesc v* -no_auto_imports
