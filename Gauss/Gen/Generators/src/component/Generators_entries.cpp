@@ -1,4 +1,4 @@
-//  $Id: Generators_entries.cpp,v 1.5 2005-11-29 15:55:34 robbep Exp $
+//  $Id: Generators_entries.cpp,v 1.6 2005-12-08 14:54:20 robbep Exp $
 //====================================================================
 //  Generators_entries.cxx
 //--------------------------------------------------------------------
@@ -13,14 +13,8 @@
 #include "GaudiKernel/DeclareFactoryEntries.h"
 
 DECLARE_FACTORY_ENTRIES(Generators) {
-  // Old structure
-  DECLARE_TOOL( EvtGenTool ) ;
   DECLARE_ALGORITHM( DumpMC );
   DECLARE_ALGORITHM( DumpMCDecay );
-  DECLARE_ALGORITHM( EvtDecayAlg );
-  DECLARE_ALGORITHM( SetDecayAlg );
-  DECLARE_ALGORITHM( SmearVertexAlg);
-  DECLARE_ALGORITHM( SignalDecayAlg ) ;
   // New structure:
 
   // Main algorithm
@@ -28,6 +22,7 @@ DECLARE_FACTORY_ENTRIES(Generators) {
 
   // Luminosity Tools
   DECLARE_TOOL( VariableLuminosity ) ;
+  DECLARE_TOOL( FixedLuminosity ) ;
   DECLARE_TOOL( FixedNInteractions ) ;
 
   // Sample Generation tools

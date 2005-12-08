@@ -1,6 +1,9 @@
-! $Id: release.notes,v 1.17 2005-12-07 23:05:18 robbep Exp $
+! $Id: release.notes,v 1.18 2005-12-08 14:55:20 robbep Exp $
 ! Package     : Gen/Generators
 ! Responsible : 
+
+! 2005-12-08 - Patrick Robbe
+ - Remove old structure
 
 ! 2005-12-07 - Patrick Robbe
  - GenCounters.h: common functions to print counters and compute efficiencies
