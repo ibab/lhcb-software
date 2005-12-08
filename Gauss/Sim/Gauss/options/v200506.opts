@@ -19,6 +19,13 @@
 DetectorDataSvc.DetDbLocation = "$XMLDDDBROOT/DDDB/lhcb-200506.xml";
 MagneticFieldSvc.FieldMapFile = "$FIELDMAPROOT/cdf/field045.cdf";
 
+// No Rich conditions available for this geometry
+GiGa.RunSeq.RichG4RunCond.ActivateRichSimCondition = false;
+// Delta rays as cuts per region not available for this geometry, use
+// older simulation setup
+GiGa.GiGaMgr.RunTools -= { "GiGaRegionsTool" };
+SimulationSvc.SimulationDbLocation = "$GAUSSROOT/xml/Simulation-v200412.xml";
+
 //--------------------------------------------------------------------------
 // Switch off monitors of detectors in production
 //--------------------------------------------------------------------------

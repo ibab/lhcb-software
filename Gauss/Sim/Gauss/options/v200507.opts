@@ -3,8 +3,8 @@
 /** @file 
  * 
  *  Job options for Gauss to produce events with geometry version
- *  lhcb-200507.opts (Rich1 EDR, Rotated Rich2, TT KLM layout, new Velo,
- *  Tilted Calorimeters, Tilted Muons)
+ *  lhcb-200511.opts (Rich1 EDR, Rotated Rich2, TT KLM layout, new Velo,
+ *  Tilted Calorimeters, Tilted Muons, XmlConditions)
  *
  */
 
@@ -17,6 +17,13 @@
 // Geometry database dependent options
 //--------------------------------------------------------------------------
 DetectorDataSvc.DetDbLocation = "$XMLDDDBROOT/DDDB/lhcb-200507.xml";
+
+// No Rich conditions available for this geometry
+GiGa.RunSeq.RichG4RunCond.ActivateRichSimCondition = false;
+// Delta rays as cuts per region not available for this geometry, use
+// older simulation setup
+GiGa.GiGaMgr.RunTools -= { "GiGaRegionsTool" };
+SimulationSvc.SimulationDbLocation = "$GAUSSROOT/xml/Simulation-v200412.xml";
 
 //--------------------------------------------------------------------------
 // Switch off monitors of detectors in production
