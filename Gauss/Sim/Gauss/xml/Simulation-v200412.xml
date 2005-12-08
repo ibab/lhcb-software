@@ -1,9 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE Simulation SYSTEM "Simulation.dtd"[
-<!ENTITY SimAttrRich SYSTEM "RichSimulationAttributes.xml">
-<!ENTITY RegionDefRich1Aerogel SYSTEM "Rich1AerogelRegionDefinition.xml">
-<!ENTITY RegionDefRichOverall SYSTEM "RichOverallRegionDefinition.xml">
-]>
+<!DOCTYPE Simulation SYSTEM "Simulation.dtd">
   <Simulation>
   <SimAtts>
     
@@ -15,16 +11,15 @@
       minEkine="1.0*MeV"/>
 
     <SimAtt name="SimAttrMuFilt"
-      minEkine="0.03*MeV"/>
+      minEkine="500.0*MeV"/>
 
     <SimAtt name="SimAttrMuon"
       minEkine="10.0*MeV"/>
     
     <SimAtt name="SimAttrElectr"
       minEkine="0.001*MeV"/>
-    <!-- the following not used. This is so that the default 
-         thresholds for the  magnet iron is used also for the
-         RichShielding -->
+    <!-- the following is to avoid tracking in the shielding. SE July24 2003
+         set it to default -->
     <SimAtt name="SimAttrShielding"
         minEkine="1.0*MeV" /> 
  
@@ -37,7 +32,37 @@
     <!-- This part is where simulation attributes are mapped to volumes -->
     <!-- ************************************************************** -->
 
-    &SimAttrRich;
+    <Item name="/dd/Geometry/Rich1/lvRich1MgsOuterH0">
+      <Cut particle="0" attr="SimAttrShielding"/>    
+    </Item>
+    <Item name="/dd/Geometry/Rich1/lvRich1MgsOuterH1">
+      <Cut particle="0" attr="SimAttrShielding"/>    
+    </Item>
+    <Item name="/dd/Geometry/Rich1/lvRich1MgsUpstrH0">
+      <Cut particle="0" attr="SimAttrShielding"/>    
+    </Item>
+    <Item name="/dd/Geometry/Rich1/lvRich1MgsUpstrH1">
+      <Cut particle="0" attr="SimAttrShielding"/>    
+    </Item>
+    <Item name="/dd/Geometry/Rich1/lvRich1MgsDnstrH0">
+      <Cut particle="0" attr="SimAttrShielding"/>    
+    </Item>
+    <Item name="/dd/Geometry/Rich1/lvRich1MgsDnstrH1">
+      <Cut particle="0" attr="SimAttrShielding"/>    
+    </Item>
+    <Item name="/dd/Geometry/Rich1/lvRich1MgsSide">
+      <Cut particle="0" attr="SimAttrShielding"/>    
+    </Item>
+    <Item name="/dd/Geometry/Rich1/lvRich1MgsMidH0">
+      <Cut particle="0" attr="SimAttrShielding"/>    
+    </Item>
+    <Item name="/dd/Geometry/Rich1/lvRich1MgsMidH1">
+      <Cut particle="0" attr="SimAttrShielding"/>    
+    </Item>
+    <Item name="/dd/Geometry/Rich1/lvRichHPDMaster">
+      <Cut particle="0" attr="SimAttrGlobal"/>
+      <Cut particle="11" attr="SimAttrElectr"/>
+    </Item>
 
     <Item name="/dd/Geometry/Muon/lvMuFilter1">
       <Cut particle="0" attr="SimAttrMuFilt"/>
@@ -69,35 +94,13 @@
   <ProductionCuts>
     <ProductionCut name="calocut"
       gammaCut="10*MeV"/>
-
-
-  <!-- Produce delta electrons in RICH above the 
-       Cherenkov Threshold for electrons in the medium .
-       Three regions considered : (a) aerogel , (b) rich1 submaster
-       (c) rich2 master
-       The Rich1Overall region contains the aerogel region 
-       and hence if OverallRich region is activated there is no need to
-       activate the aerogel region separately in this file.
-
-       For now, only the aerogel region is activated until
-       the effect on the cpu time is verified SE 2-11-2005 
-    <ProductionCut name="Rich1OverallDeltaElectronCut"
-      electronCut="1.5*MeV"/>
-    <ProductionCut name="Rich2OverallDeltaElectronCut"
-      electronCut="1.5*MeV"/>
--->
-
-   <ProductionCut name="RichAerogelDeltaElectronCut"
-      electronCut="1.5*MeV"/>
-
   </ProductionCuts>
 
+  <!-- Example of definition of cuts for a set of logical volume -->
   <Regions>
-
-    &RegionDefRich1Aerogel;
-
-    <!-- @RegionDefRichOverall; -->
-
-  </Regions>  
+    <Region name="calos" prodcut="calocut"> 
+      <Volume name="/dd/Geometry/HCal..."/>
+    </Region> 
+  </Regions>   
   
   </Simulation>
