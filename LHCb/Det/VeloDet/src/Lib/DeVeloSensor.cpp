@@ -1,4 +1,4 @@
-// $Id: DeVeloSensor.cpp,v 1.11 2005-10-02 14:31:21 mtobin Exp $
+// $Id: DeVeloSensor.cpp,v 1.12 2005-12-08 15:13:24 mtobin Exp $
 //==============================================================================
 #define VELODET_DEVELOSENSOR_CPP 1
 //==============================================================================
@@ -141,6 +141,8 @@ StatusCode DeVeloSensor::channelDistance(const VeloChannelID& start,
 void DeVeloSensor::initSensor()
 {
   // Set the sensor type from name in XML
+  m_sensorNumber=this->param<int>("SensorNumber");
+
   m_innerRadius = this->param<double>("InnerRadius");
   m_outerRadius = this->param<double>("OuterRadius");
   m_siliconThickness = this->param<double>("SiThick");

@@ -1,4 +1,4 @@
-// $Id: DeVelo.h,v 1.29 2005-10-02 14:31:21 mtobin Exp $
+// $Id: DeVelo.h,v 1.30 2005-12-08 15:13:24 mtobin Exp $
 #ifndef       VELODET_DEVELO_H
 #define       VELODET_DEVELO_H 1
 // ============================================================================
@@ -38,6 +38,11 @@ public:
   
   /// initialization method 
   virtual StatusCode initialize(); 
+
+  /** Implementation of sensitive volume identifier for a given point in the 
+      global reference frame.  This is the sensor number defined in the xml.
+  */
+  virtual const int sensitiveVolumeID(const HepPoint3D& globalPos) const;
 
   /// return the number of sensors
   inline unsigned int numberSensors()  const { 

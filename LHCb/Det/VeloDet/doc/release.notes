@@ -1,8 +1,13 @@
-! $Id: release.notes,v 1.85 2005-10-02 14:31:21 mtobin Exp $
+! $Id: release.notes,v 1.86 2005-12-08 15:13:24 mtobin Exp $
 package VeloDet
 package manager : Velo Group
 
 !========================= VeloDet v9r8 2005-07-11 =========================
+! 2005-12-08 - Mark Tobin
+ - Added method to assign sensorID from a 3d point.  This is implements the 
+   sensitiveVolumeID in DetectorElement.  
+ - Removed hard-coding of sensor numbers.  These are now read from XmlDDDB
+   
 ! 2005-10-02 - Mark Tobin
  - Added methods to convert strip number to routing line to chip channel
    and back.  

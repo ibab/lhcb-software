@@ -1,4 +1,4 @@
-// $Id: DeVeloPhiType.cpp,v 1.15 2005-10-02 14:31:21 mtobin Exp $
+// $Id: DeVeloPhiType.cpp,v 1.16 2005-12-08 15:13:24 mtobin Exp $
 //==============================================================================
 #define VELODET_DEVELOPHITYPE_CPP 1
 //==============================================================================
@@ -491,8 +491,8 @@ void DeVeloPhiType::BuildRoutingLineMap(){
 
   unsigned int count=0;
   MsgStream msg( msgSvc(), "DeVeloPhiType" );
-  msg << MSG::DEBUG << "Building routing line map for sensor " 
-      << (this->sensorNumber()) << endreq;
+  /*msg << MSG::DEBUG << "Building routing line map for sensor " 
+    << (this->sensorNumber()) << endreq;*/
   for(unsigned int routLine=m_minRoutingLine;routLine<=m_maxRoutingLine;routLine++){
     if(0 == count%6){
       msg << MSG::DEBUG << "Pattern of six ---------------------------------------\n";

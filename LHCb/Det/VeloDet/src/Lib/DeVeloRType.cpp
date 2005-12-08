@@ -1,4 +1,4 @@
-// $Id: DeVeloRType.cpp,v 1.16 2005-10-02 14:31:21 mtobin Exp $
+// $Id: DeVeloRType.cpp,v 1.17 2005-12-08 15:13:24 mtobin Exp $
 //==============================================================================
 #define VELODET_DEVELORTYPE_CPP 1
 //==============================================================================
@@ -390,8 +390,8 @@ double DeVeloRType::stripCapacitance(unsigned int /*strip*/) const
 //==============================================================================
 void DeVeloRType::BuildRoutingLineMap(){
   MsgStream msg( msgSvc(), "DeVeloRType" );
-  msg << MSG::DEBUG << "Building routing line map for sensor " 
-      << (this->sensorNumber()) << endreq;
+  /*  msg << MSG::DEBUG << "Building routing line map for sensor " 
+      << (this->sensorNumber()) << endreq;*/
   for(unsigned int routLine=m_minRoutingLine;routLine<=m_maxRoutingLine/2;routLine++){
     unsigned int routArea=RoutingLineArea(routLine);
     unsigned int strip=RoutLineToStrip(routLine,routArea);

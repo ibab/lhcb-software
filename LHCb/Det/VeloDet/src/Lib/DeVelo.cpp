@@ -1,4 +1,4 @@
-// $Id: DeVelo.cpp,v 1.53 2005-10-02 14:31:21 mtobin Exp $
+// $Id: DeVelo.cpp,v 1.54 2005-12-08 15:13:24 mtobin Exp $
 //
 // ============================================================================
 #define  VELODET_DEVELO_CPP 1
@@ -90,6 +90,9 @@ StatusCode DeVelo::initialize() {
   m_vpRSensor.clear();
   m_vpPhiSensor.clear();
   m_vpPUSensor.clear();
+  m_RIndex.clear();
+  m_PhiIndex.clear();
+  m_PUIndex.clear();
   m_nRSensors=m_nPhiSensors=m_nPileUpSensors=0;
 
   // JPP sensors no longer pre-sorted by Z in XML so sort them before
@@ -107,19 +110,19 @@ StatusCode DeVelo::initialize() {
         << " PHI " << (*iDESensor)->isPhi()
         << " PU " << (*iDESensor)->isPileUp() << endmsg;
     if((*iDESensor)->isR()){
-      m_vpSensor[index]->sensorNumber(nextR);
+      //      m_vpSensor[index]->sensorNumber(nextR);
       m_vpRSensor.push_back(dynamic_cast<DeVeloRType*>((*iDESensor)));
       m_nRSensors++;
       m_RIndex.push_back(index);
       nextR++;
     } else if((*iDESensor)->isPhi()){
-      m_vpSensor[index]->sensorNumber(nextPhi);
+      //      m_vpSensor[index]->sensorNumber(nextPhi);
       m_vpPhiSensor.push_back(dynamic_cast<DeVeloPhiType*>((*iDESensor)));
       m_nPhiSensors++;
       m_PhiIndex.push_back(index);
       nextPhi++;
     } else if((*iDESensor)->isPileUp()){
-      m_vpSensor[index]->sensorNumber(nextPileUp);
+      //      m_vpSensor[index]->sensorNumber(nextPileUp);
       m_vpPUSensor.push_back(dynamic_cast<DeVeloRType*>((*iDESensor)));
       m_nPileUpSensors++;
       m_PUIndex.push_back(index);
@@ -203,7 +206,25 @@ unsigned int DeVelo::sensorNumber(const HepPoint3D& point) const {
       return this->sensorNumber(index);
     }
   }
-  return 0;
+  MsgStream msg(msgSvc(), "DeVelo");
+  msg << MSG::ERROR << "sensorNumber: no sensor at z = " 
+      << z << endmsg;
+  return 999;
+}
+
+// return the sensitive volume if for a point in the global frame
+const int DeVelo::sensitiveVolumeID(const HepPoint3D& point) const {
+  double z = point.z();
+  std::vector<DeVeloSensor*>::const_iterator iDeVeloSensor;
+  for(iDeVeloSensor=m_vpSensor.begin(); iDeVeloSensor!=m_vpSensor.end(); ++iDeVeloSensor){
+    if(0.250*mm > fabs(z - (*iDeVeloSensor)->z())) {
+      return ((*iDeVeloSensor)->sensorNumber());
+    }
+  }
+  MsgStream msg(msgSvc(), "DeVelo");
+  msg << MSG::ERROR << "sensitiveVolumeID: no sensitive volume at z = " 
+      << z << endmsg;
+  return -999;
 }
 
 // Return the index of a sensor in the vector of pointers to the sensors 
@@ -958,9 +979,11 @@ void DeVelo::recalculateZs()
   std::vector<DeVeloSensor*>::iterator iDeVeloSensor;
   for(iDeVeloSensor=m_vpSensor.begin(); iDeVeloSensor!=m_vpSensor.end(); ++iDeVeloSensor){
     (*iDeVeloSensor)->cacheGeometry();
-    m_sensorZ.push_back((*iDeVeloSensor)->z());
+    double z = (*iDeVeloSensor)->z();
+    m_sensorZ.push_back(z);
     msg << MSG::DEBUG << "Sensor number " << (*iDeVeloSensor)->sensorNumber() 
-        << " is at z = " << (*iDeVeloSensor)->z() << "mm"
+        << " is at z = " << z << "mm"
+        << " sensVolID " << (this->sensitiveVolumeID(HepPoint3D(0,0,z)))
         << " vector size is " << m_sensorZ.size()
         << " with last entry " << m_sensorZ.back()
         << endmsg;
