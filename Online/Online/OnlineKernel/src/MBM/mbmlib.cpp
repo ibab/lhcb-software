@@ -74,8 +74,8 @@ inline int _mbm_printf(const char* fmt, ...)  {
 void _mbm_update_rusage(USER* us) {
   rusage ru;
     getrusage(RUSAGE_SELF, &ru);
-    us->utime = float(ru.ru_utime.tv_sec)*1e6 + float(ru.ru_utime.tv_usec);
-    us->stime = float(ru.ru_stime.tv_sec)*1e6 + float(ru.ru_stime.tv_usec);
+    us->utime = float(ru.ru_utime.tv_sec) + float(ru.ru_utime.tv_usec)/1e6;
+    us->stime = float(ru.ru_stime.tv_sec) + float(ru.ru_stime.tv_usec)/1e6;
 }
 
 
@@ -489,20 +489,20 @@ int mbm_get_space_a (BMID bm, int buffsize, int** ptr, RTL_ast_t astadd, void* a
         us->reason      = BM_K_INT_SPACE;
         us->ws_size     = size;
         us->ws_ptr_add  = ptr;
-        us->p_state     = S_wspace_ast_queued;
+        us->p_state     = S_wspace_ast_ready;
         us->p_astadd    = astadd;
         us->p_astpar    = astpar;
-        lib_rtl_set_event (bm->WSP_event_flag);
+        //lib_rtl_set_event (bm->WSP_event_flag);
       }
     }
     else    {
       us->reason      = BM_K_INT_SPACE;
       us->ws_size     = size;
       us->ws_ptr_add  = ptr;
-      us->p_state     = S_wspace_ast_queued;
+      us->p_state     = S_wspace_ast_ready;
       us->p_astadd    = astadd;
       us->p_astpar    = astpar;
-      lib_rtl_set_event (bm->WSP_event_flag);
+      //lib_rtl_set_event (bm->WSP_event_flag);
     }
   }
   return user.status();
@@ -1301,17 +1301,22 @@ wait:
     lib_rtl_clear_event(bm->WES_event_flag);
     lib_rtl_run_ast(us->p_astadd, us->p_astpar, 3);
   }
+  else if ( us->p_state == S_wspace_ast_ready )    {
+    us->p_state = S_wspace_ast_queued;
+    Lock lock(bm);
+    _mbm_printf("Got space");
+    lib_rtl_run_ast(us->p_astadd, us->p_astpar, 3);
+    return MBM_NORMAL;
+  }
   else if ( us->p_state == S_wspace_ast_queued )    {
     _mbm_printf("Wait...lib_rtl_wait_for_event");
     int sc = lib_rtl_wait_for_event(bm->WSP_event_flag);
     if ( lib_rtl_is_success(sc) )  {
       lib_rtl_clear_event(bm->WSP_event_flag);
-      if ( us->p_state == S_wspace_ast_queued )  {
-        Lock lock(bm);
-        _mbm_printf("Got space");
-        lib_rtl_run_ast(us->p_astadd, us->p_astpar, 3);
-        return MBM_NORMAL;
-      }
+      Lock lock(bm);
+      _mbm_printf("Got space");
+      lib_rtl_run_ast(us->p_astadd, us->p_astpar, 3);
+      return MBM_NORMAL;
     }
   }
   goto wait;
@@ -1482,8 +1487,7 @@ int _mbm_declare_event (BMID bm, int len, int evtype, TriggerMask& trmask,
     if ( ev == 0 )    {
       if (_mbm_check_freqmode (bm) == 0)  {
         ev = _mbm_ealloc (bm, us);
-        if ( ev == 0 )   {
-          /* add on the wait event slot queue */
+        if ( ev == 0 )   {    // add on the wait event slot queue
           _mbm_add_wes (bm, us, _mbm_wes_ast_add);
           lib_rtl_clear_event (  bm->WES_event_flag);
           int sp = ctrl->spare1;

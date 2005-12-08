@@ -61,6 +61,9 @@ namespace MBM {
 
     /// Event receival rearm
     virtual int eventRearm();
+
+    /// Run the application with synchronously 
+    virtual int runSynchronous();
   };
 }
 #endif  // _MBM_CONSUMER_H

@@ -138,3 +138,16 @@ int MBM::Consumer::freeEvent() {
   }
   throw std::runtime_error("Failed to free event from MBM buffer:"+m_buffName+" [Buffer not connected]");
 }
+
+// Run the application in synchonous mode
+int MBM::Consumer::runSynchronous() {
+  int sc = eventRearm();
+  if ( sc != MBM_NORMAL ) {
+    return sc;
+  }
+  sc = eventAction();
+  if ( sc != MBM_NORMAL ) {
+    return sc;
+  }
+  return MBM_NORMAL;
+}

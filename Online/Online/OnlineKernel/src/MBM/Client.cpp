@@ -75,14 +75,29 @@ void MBM::Client::setBlocking() {
 }
 
 
-// Run the application with WT
+// Run the application
 int MBM::Client::run() {
   for(;;)  {
-    int sub_status;
-    void* userpar;
-    unsigned int facility;
-    int status = ::wtc_wait(&facility, &userpar, &sub_status);
-    ::printf("Exited WAIT>>>> Facility = %d Status=%d Sub-Status = %d\n", 
-      facility, status, sub_status);
+    int sc = (m_blocking) ? runSynchronous() : runAsynchronous();
+    if ( sc != MBM_NORMAL ) {
+      printf("Error executing MBM client sc=%d\n",sc);
+    }
   }
+  return MBM_NORMAL;
+}
+
+// Run the application in synchonous mode with WT
+int MBM::Client::runAsynchronous() {
+  int sub_status;
+  void* userpar;
+  unsigned int facility;
+  int status = ::wtc_wait(&facility, &userpar, &sub_status);
+  ::printf("Exited WAIT>>>> Facility = %d Status=%d Sub-Status = %d\n", 
+	   facility, status, sub_status);
+}
+
+// Run the application in synchonous mode
+int MBM::Client::runSynchronous() {
+  ::printf("MBM::Client::runSynchronous> This implementation MUST be overriden.\n");
+  return MBM_ERROR;
 }

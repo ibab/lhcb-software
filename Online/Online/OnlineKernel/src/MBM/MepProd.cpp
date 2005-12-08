@@ -9,6 +9,7 @@ namespace {
   static void help()  {
     ::printf("mep_prod_a -opt [-opt]\n");
     ::printf("    -n=<name>      buffer member name\n");
+    ::printf("    -a             Asynchonous mode (default is synchronous)\n");
   }
   struct Prod  : public MEP::Producer  {
     int mep_identifier;
@@ -24,7 +25,6 @@ namespace {
       ::printf(" MEP    buffer start: %08X\n",m_mepID->mepStart);
       ::printf(" EVENT  buffer start: %08X\n",m_mepID->evtStart);
       ::printf(" RESULT buffer start: %08X\n",m_mepID->resStart);
-      // setNonBlocking(WT_FACILITY_DAQ_SPACE, true);
     }
     ~Prod()  {
       delete m_evtProd;
@@ -82,19 +82,22 @@ namespace {
       //printf("..Done\n");
       return MBM_NORMAL;
     }
+    // Run the application in synchonous mode
+    int runSynchronous() {
+      spaceRearm(0);
+      return spaceAction();
+    }
   };
 }
 
 extern "C" int mep_prod_a(int argc,char **argv) {
   RTL::CLI cli(argc, argv, help);
   std::string name = "producer";
+  bool async = cli.getopt("asynchronous",1) != 0;
   cli.getopt("name",1,name);
-  ::printf("Asynchronous Producer \"%s\" (pid:%d) included in buffers.\n",name.c_str(),Prod::pid());
+  ::printf("%synchronous MEP Producer \"%s\" (pid:%d) included in buffers.\n",
+	   async ? "As" : "S", name.c_str(),Prod::pid());
   Prod p(name);
-  while(1) {
-    p.spaceRearm(0);
-    p.spaceAction();
-  }
-  //.run();
-  return 1;
+  if ( async ) p.setNonBlocking(WT_FACILITY_DAQ_SPACE, true);
+  return p.run();
 }

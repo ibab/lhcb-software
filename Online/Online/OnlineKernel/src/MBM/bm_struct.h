@@ -19,6 +19,7 @@ namespace MBM  {
     S_wspace =  9,
     S_wevent =  8,
     S_weslot =  7,
+    S_wspace_ast_ready   =12,
     S_wspace_ast_queued  = 6,
     S_wevent_ast_queued  = 5,
     S_weslot_ast_queued  = 4,

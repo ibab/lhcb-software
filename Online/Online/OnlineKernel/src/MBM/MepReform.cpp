@@ -11,6 +11,7 @@ namespace {
     ::printf("    -n=<name>      buffer member name\n");
     ::printf("    -i=<name>      input buffer name\n");
     ::printf("    -o=<name>      output buffer name\n");
+    ::printf("    -a             Asynchonous mode (default is synchronous)\n");
   }
   struct Cons  : public MEP::Consumer  {
     MBM::Producer* m_evtProd;
@@ -98,6 +99,7 @@ namespace {
           printf("Space error !\n");
         }
       }
+      //lib_rtl_sleep(1);
       return Consumer::eventAction();
     }
   };
@@ -106,15 +108,13 @@ namespace {
 extern "C" int mep_reform_a(int argc,char **argv) {
   RTL::CLI cli(argc, argv, help);
   std::string name = "reformatter", input="EVT", output="RES";
+  bool async = cli.getopt("asynchronous",1) != 0;
   cli.getopt("name",1,name);
   cli.getopt("input",1,input);
   cli.getopt("output",1,output);
-  ::printf("Asynchronous Reformatter \"%s\" (pid:%d) included in buffers.\n",name.c_str(),Cons::pid());
-  //return Cons(name,input,output).run();
+  ::printf("%synchronous Reformatter \"%s\" (pid:%d) included in buffers.\n",
+	   async ? "As" : "S", name.c_str(),Cons::pid());
   Cons c(name,input,output);
-  while(1) {
-    c.eventRearm();
-    c.eventAction();
-  }
-  return 1;
+  if ( async ) c.setNonBlocking(WT_FACILITY_DAQ_EVENT, true);
+  return c.run();
 }

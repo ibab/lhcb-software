@@ -73,12 +73,17 @@ namespace MBM {
     /// Switch to non-blocking asynchronous execution mode using WT
     virtual void setNonBlocking(int facility, bool subscribe);
 
+    /// Run the application with WT asynchronously 
+    virtual int run();
+
+    /// Run the application with WT asynchronously 
+    virtual int runAsynchronous();
+
+    /// Run the application with synchronously 
+    virtual int runSynchronous();
+
     /// Switch to blocking synchronous execution mode
-    void setBlocking();
-
-    /// Run the application with WT
-    static int run();
-
+    virtual void setBlocking();
   };
 }
 #endif  // _MBM_CLIENT_H

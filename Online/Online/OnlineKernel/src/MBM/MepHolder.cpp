@@ -8,6 +8,7 @@ namespace {
   static void help()  {
     ::printf("mep_holder_a -opt [-opt]\n");
     ::printf("    -n=<name>      buffer member name\n");
+    ::printf("    -a             Asynchonous mode (default is synchronous)\n");
   }
   struct Holder  : public MEP::Consumer  {
     Holder(const std::string& nam) : MEP::Consumer(nam, 0x103)  {
@@ -29,13 +30,11 @@ namespace {
 extern "C" int mep_holder_a(int argc,char **argv) {
   RTL::CLI cli(argc, argv, help);
   std::string name = "holder";
+  bool async = cli.getopt("asynchronous",1) != 0;
   cli.getopt("name",1,name);
-  ::printf("Asynchronous MEP Holder \"%s\" (pid:%d) included in buffers.\n",name.c_str(),Holder::pid());
-  //return Holder(name).run();
+  ::printf("%ssynchronous MEP Holder \"%s\" (pid:%d) included in buffers.\n",
+	   async ? "As" : "S", name.c_str(),Holder::pid());
   Holder c(name);
-  while(1) {
-    c.eventRearm();
-    c.eventAction();
-  }
-  return 1;
+  if ( async ) c.setNonBlocking(WT_FACILITY_DAQ_EVENT, true);
+  return c.run();
 }

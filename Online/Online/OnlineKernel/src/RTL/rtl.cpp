@@ -214,10 +214,14 @@ int lib_rtl_sleep(int millisecs)    {
 }
 
 int lib_rtl_usleep(int microsecs)    {
+#ifdef _WIN32
   timeval tv;
   tv.tv_sec = microsecs/1000000;
   tv.tv_usec = microsecs%1000000;
   ::select(0,0,0,0,&tv);
+#elif linux
+  ::usleep(microsecs);
+#endif
   return 1;
 }
 

@@ -59,25 +59,15 @@ static int mep_free_mep(void* param)   {
   void** pars = (void**)param;
   MEPEVENT* e = (MEPEVENT*)pars[2];
   MEPDESC* dsc = (MEPDESC*)pars[1];
-  int slp = 0;
-  {
-    // RTL::Lock lock(dsc->lockid);
-    if ( e->refCount < 1 )  {
-      printf("MEP RefCount ERROR(2) [%d] Event at address %08X MEP:%p [%d] [Release MEP]\n",
-	     e->refCount, dsc->mepStart+e->begin, (void*)e, e->mepBufferID);
-    }
+  if ( e->refCount < 1 )  {
+    printf("MEP RefCount ERROR(2) [%d] Event at address %08X MEP:%p [%d] [Release MEP]\n",
+	   e->refCount, dsc->mepStart+e->begin, (void*)e, e->mepBufferID);
   }
   while ( e->refCount > 1 )  {
-    //printf("Sleep...");
-    slp++;
     lib_rtl_usleep(100);
   }
-  // if ( slp )  printf("\n");
-  {
-    //RTL::Lock lock(dsc->lockid);
-    e->refCount--;
-    e->valid = 0;
-  }
+  e->refCount--;
+  e->valid = 0;
   return MBM_NORMAL;
 }
 
