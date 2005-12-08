@@ -1,4 +1,4 @@
-// $Id: TrackUse.cpp,v 1.2 2005-12-08 13:00:22 odescham Exp $
+// $Id: TrackUse.cpp,v 1.3 2005-12-08 13:05:24 odescham Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
@@ -196,7 +196,7 @@ bool TrackUse::use  (  Track* track ) const
   if ( !isVelotrack  () && track -> checkType (Track::Velo) ) { return false ; }
   if ( !isTtrack     () && track -> checkType (Track::Ttrack ) ) { return false ; }
   // History : use Cnv track for the time being ...
-  if ( !veloBack     () && track -> heckHistory(Track::CnvVeloBack)  { return false ; }
+  if ( !veloBack     () && track -> checkHistory(Track::CnvVeloBack) ) { return false ; }
   if ( !velo         () && track -> checkHistory(Track::CnvVelo) ) { return false ; }
   if ( !seed         () && track -> checkHistory(Track::CnvSeed) ) { return false ; }
   if ( !match        () && track -> checkHistory(Track::CnvMatch) ) { return false ; }
@@ -239,7 +239,7 @@ std::string TrackUse::bits (Track* track ) const
   msg += "/B:" + prnt ( track -> checkFlag(Track::Backward) ) ;
   msg += "/T:" + prnt ( track -> checkType (Track::Ttrack ) ) ;
   // History : use Cnv track for the time being ...
-  msg += "/b:" + prnt ( track -> checkHistory(Track::CnvVeloBack) ;
+  msg += "/b:" + prnt ( track -> checkHistory(Track::CnvVeloBack) ) ;
   msg += "/v:" + prnt ( track -> checkHistory(Track::CnvVelo) ) ;
   msg += "/s:" + prnt ( track -> checkHistory(Track::CnvSeed) ) ;
   msg += "/m:" + prnt ( track -> checkHistory(Track::CnvMatch) ) ;
