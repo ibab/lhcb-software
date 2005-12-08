@@ -1,10 +1,11 @@
 ! =============================================================================
-! $Id: release.notes,v 1.64 2005-12-08 11:41:08 marcocle Exp $
+! $Id: release.notes,v 1.65 2005-12-08 12:07:55 cattanem Exp $
 ! =============================================================================
 ! package Ex/DetCondExample
 ! package manager : Marco Clemencic
 ! =============================================================================
 
+!=========== Ex/DetCondExample v7r8 2005-12-08 ===============================
 ! 2005-12-08 - Marco Clemencic
  - Removed all 'SmartDataPtr's.
  - Included "Kernel/SystemOfUnits.h" in PopulateDB.cpp.
