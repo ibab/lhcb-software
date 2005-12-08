@@ -1,11 +1,17 @@
 ! =============================================================================
-! $Id: release.notes,v 1.241 2005-12-07 17:30:33 cattanem Exp $ 
+! $Id: release.notes,v 1.242 2005-12-08 10:36:14 jpalac Exp $ 
 ! =============================================================================
 ! package DetDesc
 ! package manager : Marco Clemencic, Juan Palacios
 ! =============================================================================
 
-!======================== DetDesc v16r1 2005-12-07 ========================
+!======================== DetDesc v16r1 2005-12-08 ========================
+
+! 2005-12-08 - Juan Palacios
+ - Make GeometryInfoPlus::initialize() throw exception instead of bombing out
+   if UpdateManagerSvc is not found.
+
+
 ! 2005-12-07 - Marco Cattaneo
  - Remove component library:
    . Object factories are now in link library

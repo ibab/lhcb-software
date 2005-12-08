@@ -1,4 +1,4 @@
-// $Id: GeometryInfoPlus.cpp,v 1.13 2005-12-07 13:19:07 cattanem Exp $
+// $Id: GeometryInfoPlus.cpp,v 1.14 2005-12-08 10:36:14 jpalac Exp $
 // Include files 
 
 // GaudiKernel
@@ -197,7 +197,8 @@ StatusCode GeometryInfoPlus::initialize()
 {
 
   m_services = DetDesc::services();
-  svcLocator()->service("UpdateManagerSvc",m_ums,true);
+  if ( (svcLocator()->service("UpdateManagerSvc",m_ums,true) ).isFailure() )
+  { throw GeometryInfoException("Could not load UpdateManagerSvc");  }
   
   m_hasAlignmentPath=!m_alignmentPath.empty();
 
