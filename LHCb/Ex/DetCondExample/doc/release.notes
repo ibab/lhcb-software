@@ -1,5 +1,5 @@
 ! =============================================================================
-! $Id: release.notes,v 1.63 2005-12-08 11:28:17 marcocle Exp $
+! $Id: release.notes,v 1.64 2005-12-08 11:41:08 marcocle Exp $
 ! =============================================================================
 ! package Ex/DetCondExample
 ! package manager : Marco Clemencic
@@ -8,6 +8,8 @@
 ! 2005-12-08 - Marco Clemencic
  - Removed all 'SmartDataPtr's.
  - Included "Kernel/SystemOfUnits.h" in PopulateDB.cpp.
+ - Use DetDescSvc for the UpdateManagerSvc.
+ - Set environment variables to use an SQLite database for tests.
 
 ! 2005-11-22 - Marco Clemencic
  - Improved copy_files_to_db.py
