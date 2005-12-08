@@ -9,7 +9,8 @@
 This version uses Gaudi v17r2. It is backwards compatible for RTTC data
 
  - Modified packages: DetSys v7r7, DetDesc v15r6, DetDescChecks v2r4,
-     DetDescExample v6r5, TrackInterfaces v1r4, EventSys v20r13, TrackEvent v1r6
+     DetDescExample v6r5, TrackInterfaces v1r4, EventSys v20r13, TrackEvent v1r6,
+     CaloUtils v5r1
 
  - In DetSys v7r7
    . Fix requirements to correctly remove COOL_linkopts
@@ -40,6 +41,9 @@ This version uses Gaudi v17r2. It is backwards compatible for RTTC data
      - use functors in closestState methods
      - new methods introduced
    . TrackFunctor.h: templated methods moved here from Track.h, methods renamed.
+
+ - In CaloUtils v5r1
+   . Select to use only Cnv tracks in reconstruction
 
 </PRE><H1><A NAME=v19r2>2005-11-22 LHCbSys v19r2</A></H1><PRE>
 This version uses Gaudi v17r2. It is backwards compatible for RTTC data
