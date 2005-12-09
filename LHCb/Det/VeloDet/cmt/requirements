@@ -1,8 +1,8 @@
-# $Id: requirements,v 1.41 2005-07-07 14:55:22 cattanem Exp $
+# $Id: requirements,v 1.42 2005-12-09 07:12:27 cattanem Exp $
 # =========================================================================
 
 package  VeloDet 
-version  v9r8
+version  v10r0
 
 # =============== structure ===============================================	
 branches         src cmt doc VeloDet

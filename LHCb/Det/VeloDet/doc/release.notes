@@ -1,17 +1,19 @@
-! $Id: release.notes,v 1.86 2005-12-08 15:13:24 mtobin Exp $
+! $Id: release.notes,v 1.87 2005-12-09 07:12:27 cattanem Exp $
 package VeloDet
 package manager : Velo Group
 
-!========================= VeloDet v9r8 2005-07-11 =========================
+!========================= VeloDet v10r0 2005-12-08 ========================
 ! 2005-12-08 - Mark Tobin
  - Added method to assign sensorID from a 3d point.  This is implements the 
    sensitiveVolumeID in DetectorElement.  
- - Removed hard-coding of sensor numbers.  These are now read from XmlDDDB
+ - Removed hard-coding of sensor numbers.  These are now read from XmlDDDB.
+   Backwards incompatible, requires XmlDDDB >= v27r1 and geometry >= v200507
    
 ! 2005-10-02 - Mark Tobin
  - Added methods to convert strip number to routing line to chip channel
    and back.  
 
+!========================= VeloDet v9r8 2005-07-13 =========================
 ! 2005-07-13 - David Hutchcroft
  - Removed Reversed phi ranges of R sectors: was not correct
 
