@@ -34,6 +34,11 @@ GiGaGetHitsAlg.RichTracks         = "";
 GiGa.TrackSeq.Members      += { "RichG4TrackActionPhotOpt/RichG4PhotOpt" } ;
 GiGa.TrackSeq.Members      += { "Rich1G4TrackActionUpstrPhoton/Rich1UpstrPhotonTrack" } ;
 
+// Trigger use of Conditions for refractive index of Gases in RICHes
+ApplicationMgr.DLLs += { "RichCondition" };
+GiGa.RunSeq.Members += { "RichG4RunConditionAction/RichG4RunCond" };
+GiGa.RunSeq.RichG4RunCond.ActivateRichSimCondition=true;
+
 // To print RICH hits on the screen, uncomment the line with RichG4EventAction/RichG4Event
 // and the line with RichEventActionVerbose=3
 //GiGa.EventSeq.Members     += { "RichG4EventAction/RichG4Event" } ;

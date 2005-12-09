@@ -6,6 +6,10 @@
 !-----------------------------------------------------------------------------
 
 !======================== GaussRICH v5r1 ==================================
+! 2005-12-09 - Gloria CORTI
+ - Introduce options (defaultin Rich.opts) to use RichConditions for setting
+   the refractive index of the gases. 
+
 ! 2005-11-07 - Chris Jones
  - Remove unneccessary "use" statement for RichCondition. Technically, 
    GaussRICH only requires the interfaces from RichCondition to compile so
