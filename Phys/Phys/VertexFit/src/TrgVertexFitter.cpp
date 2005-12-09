@@ -1,4 +1,4 @@
-// $Id: TrgVertexFitter.cpp,v 1.9 2005-10-17 08:57:51 pkoppenb Exp $
+// $Id: TrgVertexFitter.cpp,v 1.10 2005-12-09 12:23:44 pkoppenb Exp $
 // Include files 
 
 // from Gaudi
@@ -221,7 +221,7 @@ StatusCode TrgVertexFitter::fitVertex( const  ParticleVector& parts,  Vertex& V)
   // Vector of input photons
   ParticleVector inputPhotons;
   int nLongLived = 0;
-  bool noFit = false;
+  //  bool noFit = false;
   
   // Main loop on input particles
   for ( ParticleVector::const_iterator iPart=parts.begin(); iPart!=parts.end(); ++iPart ) {

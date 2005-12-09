@@ -186,7 +186,8 @@ StatusCode KFFitTool::fitDecay( Particle& mother,
     int daupid = dau->particleID().pid();
     bool isDauRes=dau->isResonance();
     bool isPhoton=(daupid==22);
-    bool isPhotonPair = (daupid==111 || daupid==221);
+    //    bool isPhotonPair = (daupid==111 || daupid==221);
+    bool isPhotonPair = isPurePhotonDecay(*dau);
     if(isPhoton) vPhoton.push_back(dau);
     else if(isPhotonPair) vPhotonPair.push_back(dau);
     else if(isDauRes) vRes.push_back(dau);
@@ -289,8 +290,8 @@ StatusCode KFFitTool::massConstrain( Particle& part) {
   HepVector Ve(7,0), Vm(7,0);
   HepSymMatrix Ce(7,0), Cm(7,0);
   StatusCode sc=getMParameter(part, Vm, Cm);
-  double alpha=Vm[6]-nominalMass;
-  double olderrm2=Cm(7,7);                    
+  //  double alpha=Vm[6]-nominalMass;
+  //  double olderrm2=Cm(7,7);                    
                                    
   // mass constraint
   verbose() << " mass before constraint "<< Vm[6] << endmsg;
