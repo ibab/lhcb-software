@@ -1,10 +1,11 @@
 ! =============================================================================
-! $Id: release.notes,v 1.244 2005-12-08 19:20:01 jpalac Exp $ 
+! $Id: release.notes,v 1.245 2005-12-09 09:31:40 cattanem Exp $ 
 ! =============================================================================
 ! package DetDesc
 ! package manager : Marco Clemencic, Juan Palacios
 ! =============================================================================
 
+!======================== DetDesc v16r1 2005-12-09 ========================
 ! 2005-12-08 - Juan Palacios
  - Provide inInside and intersectionTicks methods to solids that accept
    points and vectors in coordinates other than cartesian. New methods pass
@@ -14,12 +15,9 @@
  - Use GaudiUtils::Map instead of std::map as base class for ParamList.
    (part of ParamValidDataObject)
 
-!======================== DetDesc v16r1 2005-12-08 ========================
-
 ! 2005-12-08 - Juan Palacios
  - Make GeometryInfoPlus::initialize() throw exception instead of bombing out
    if UpdateManagerSvc is not found.
-
 
 ! 2005-12-07 - Marco Cattaneo
  - Remove component library:
