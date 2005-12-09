@@ -1,7 +1,7 @@
-# $Id: requirements,v 1.5 2005-11-07 17:07:11 gcorti Exp $ 
+# $Id: requirements,v 1.6 2005-12-09 18:12:08 gcorti Exp $ 
 # =============================================================================
 package       Generators
-version       v2r1
+version       v3r0
 
 # =========== structure =======================================================
 branches      Generators doc cmt src

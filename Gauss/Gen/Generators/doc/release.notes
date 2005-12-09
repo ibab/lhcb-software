@@ -1,7 +1,8 @@
-! $Id: release.notes,v 1.19 2005-12-08 16:24:29 robbep Exp $
+! $Id: release.notes,v 1.20 2005-12-09 18:12:08 gcorti Exp $
 ! Package     : Gen/Generators
 ! Responsible : 
 
+!========================= Generators v3r0 ===========================
 ! 2005-12-08 - Patrick Robbe
  - Remove old structure
  - ExternalGenerators: allow possibility to change LHAPDF settings by job 
