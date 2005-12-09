@@ -1,4 +1,4 @@
-// $Id: TestHltScore.cpp,v 1.3 2005-12-09 07:00:20 pkoppenb Exp $
+// $Id: TestHltScore.cpp,v 1.4 2005-12-09 13:25:54 pkoppenb Exp $
 // Include files 
 
 #include <boost/format.hpp>
@@ -194,15 +194,27 @@ StatusCode TestHltScore::printScore(const HltScore* score) {
   if ( score->decision() ){
     always() << line % "   Inclusive B Decision" << " : " << score->decisionInclusiveB() << "\n" ;
     always() << line % "   Dimuon Decision" << " : " << score->decisionDimuon() << "\n" ;
-    always() << line % "   D* Decision" << " : " << score->decisionDstar() << "\n" ;
+    always() << line % "   Inclusives Decision" << " : " << score->decisionInclusive() << "\n" ;
+    always() << line % "     D* Decision" << " : " << score->decisionDstar() << "\n" ;
     always() << line % "   Exclusive Decision" << " : " << score->decisionExclusive() << "\n" ;
   }
   always() << line % "   Generic Decision" << " : " << score->decisionGen() << "\n" ;
-  const std::vector<HltAlgorithmScore> algoScores = score->candidates() ;
+  std::vector<HltAlgorithmScore> algoScores = score->candidates() ;
   if ( !algoScores.empty() ){
-    always() << "==================== Candidates ====================\n" ;
+    always() << "============= Exclusive Candidates ================\n" ;
     always() << " Algorithm                 (ID)     Mass      Chi2 \n" ;
-    always() << "----------------------------------------------------\n" ;
+    always() << "---------------------------------------------------\n" ;
+    for ( std::vector<HltAlgorithmScore>::const_iterator ias = algoScores.begin() ;
+          ias != algoScores.end() ; ++ias ){
+      StatusCode sc = printAlgorithm(&(*ias));
+      if (!sc) return sc;
+    }
+  }
+  algoScores = score->inclusiveCandidates() ;
+  if ( !algoScores.empty() ){
+    always() << "============= Inclusive Candidates ================\n" ;
+    always() << " Algorithm                 (ID)     Mass      Chi2 \n" ;
+    always() << "---------------------------------------------------\n" ;
     for ( std::vector<HltAlgorithmScore>::const_iterator ias = algoScores.begin() ;
           ias != algoScores.end() ; ++ias ){
       StatusCode sc = printAlgorithm(&(*ias));
@@ -215,6 +227,8 @@ StatusCode TestHltScore::printScore(const HltScore* score) {
       always()   << line % "   Number of D* candidates" << " : " << score->nbDstar() << "\n" ;
     if (score->decisionExclusive()) 
       always()   << line % "   Number of B candidates" << " : " << score->nbB() << "\n" ;
+    if (score->decisionInclusive()) 
+      always()   << line % "   Number of inclusive candidates" << " : " << score->inclusiveCandidates().size() << "\n" ;
     always()   << line % "   Number of reconstructed PV" << " : " << score->nbPV() << "\n" ;
     always()   << line % "   Number of tracks" << " : " << score->nbTrack() << "\n" ;
     always()   << line % "   Number of photons" << " : " << score->nbPhoton() << "\n" ;

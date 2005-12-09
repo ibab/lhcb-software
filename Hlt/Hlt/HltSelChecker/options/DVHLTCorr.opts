@@ -2,6 +2,17 @@ ApplicationMgr.DLLs += {"HltSelChecker"};
 #include "$HLTSELECTIONSROOT/options/DVHLTExSelections.opts"
 HltDecision.MakeCorrelations = true ;
 //==============================================================================
+// The optinal streams
+//==============================================================================
+// P. Koppenburg's inclusive dilepton selection
+#include "$HLTINCLUSIVEROOT/options/HLTselB2DiLepton.opts"
+// M. Patel's inclusive Phi selection
+// WARNING will include RICH!
+#include "$HLTINCLUSIVEROOT/options/HLTselPhiIncl.opts"
+// Uncomment following line to get looser cuts
+// #include "$HLTINCLUSIVEROOT/options/HLTselPhiInclLoose.opts"
+
+//==============================================================================
 // The offline selections
 //==============================================================================
 // #include "$HLTSELCHECKERROOT/options/AllTDRselections.opts"
@@ -31,6 +42,11 @@ HltDecision.MakeCorrelations = true ;
 #include "$HLTSELCHECKERROOT/options/MeasureTimes.opts"
 
 //==============================================================================
+// Checks
+//==============================================================================
+#include "$HLTSELCHECKERROOT/options/TestHltScore.opts"
+
+//==============================================================================
 // PK's stripping of MB passing L0 and L1:
 //#include "$HLTSELECTIONSROOT/options/L0L1-MB.opts"
 //==============================================================================
@@ -42,9 +58,9 @@ HltDecision.MakeCorrelations = true ;
 // in these options
 // Hence: re-initalize event selector
 // EventSelector.Input   = {};
-#include "$HLTSELECTIONSROOT/options/L0TDR-Bs2JpsiPhi.opts"
+#include "$HLTSELECTIONSROOT/options/L0TDR-Bs2PhiPhi.opts"
 
-ApplicationMgr.EvtMax    = 1000 ;
+ApplicationMgr.EvtMax    = 100 ;
 EventSelector.FirstEvent = 1 ;
 
 MessageSvc.Format = "% F%50W%S%7W%R%T %0W%M";
