@@ -1,7 +1,15 @@
-! $Id: release.notes,v 1.108 2005-11-09 16:48:47 gcorti Exp $
+! $Id: release.notes,v 1.109 2005-12-09 17:20:22 gcorti Exp $
 ! =============================================================================
 Package:          GiGa
 Package manager : Vanya Belyaev
+
+!======================= GiGa v17r4 =====================================
+! 2005-12-09 - Gloria CORTI
+ - GiGaBase.cpp
+   . if name of GiGaSvc and GiGaSetupSvc is the same do nor reqeust the 
+     service again but cast to second interface. This removes very long
+     list of Warning message from GaudiTool new implementation (from Gaudi
+     v17r2) when the same service is requested twice by the same instance.
 
 !======================= GiGa v17r3 =====================================
 ! 2005-10-25 - Gloria CORTI

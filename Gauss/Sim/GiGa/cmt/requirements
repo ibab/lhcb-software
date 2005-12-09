@@ -1,27 +1,33 @@
-# $Id: requirements,v 1.69 2005-10-25 17:22:00 gcorti Exp $ 
-# =============================================================================
-# CVS tag $Name: not supported by cvs2svn $ 
-# =============================================================================
+# $Id: requirements,v 1.70 2005-12-09 17:20:22 gcorti Exp $ 
+#============================================================================
+# Created    : 2001-01-22
+# Maintainer : Gloria CORTI
+#
+# Documentation on the requirement file can be found at
+# http://cern.ch/lhcb-comp/Support/html/new_structure.pdf
+#============================================================================
 package          GiGa
-version          v17r3
+version          v17r4
 
-# ============== package structure ============================================ 
+#============================================================================
 branches         cmt src doc GiGa
+include_dirs     $(GIGAROOT)
 
-# ============== explicit dependencies ========================================
+#============================================================================
+# Used packages. Specify the version, * at the end specifies 'any revision'
+#============================================================================
 use              GaudiAlg     v* 
 use              G4readout    v* Geant4
 
-# ============== standard includes ============================================
-include_dirs     $(GIGAROOT)
-
-# ============== linker library ===============================================
+#============================================================================
+# Linker and Component libraries 
+#============================================================================
 library          GiGaLib           Lib/*.cpp
-
-# ============== component library ============================================
 library          GiGa              component/*.cpp
 
-# ============== some additional cpp flags ====================================
+#============================================================================
+# Additional cpp flags
+#============================================================================
 macro_append     GiGa_pp_cppflags  "   -DGIGA_FASTCAST   " \
                  Win32             '  /D"GIGA_FASTCAST"  '    
 macro_append     GiGa_pp_cppflags  ""                      \   
@@ -31,10 +37,9 @@ macro_remove     GiGa_pp_cppflags  ""                      \
                  Win32Debug        ' /D"GIGA_FASTCAST" '   \
                  debug             "  -DGIGA_FASTCAST  " 
 
-# ============== standard patterns ============================================
+#============================================================================
+# define linker and component library link options
+#============================================================================
 apply_pattern    component_library library=GiGa 
 apply_pattern    linker_library    library=GiGaLib 
 
-# =============================================================================
-# The END 
-# =============================================================================

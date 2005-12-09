@@ -1,8 +1,11 @@
-// $Id: GiGaBase.cpp,v 1.22 2004-02-20 18:13:35 ibelyaev Exp $
+// $Id: GiGaBase.cpp,v 1.23 2005-12-09 17:20:22 gcorti Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.22  2004/02/20 18:13:35  ibelyaev
+//  major update in GiGaBase and GiGaTrajectory
+//
 // Revision 1.21  2003/09/22 13:57:10  ibelyaev
 //  polishing of addRef/release/releaseTools/finalize
 //
@@ -88,21 +91,37 @@ StatusCode GiGaBase::initialize()
 {
   // initialize the base class 
   StatusCode sc = GaudiTool::initialize();
-  if( sc.isFailure() )
-  { return Error("Could not initialize the base class AlgTool",sc);};
-  // 
-  if( 0 == svcLoc()     ) 
-  { throw GiGaException("GiGaBase::ini ISvcLocator* points to NULL!");}
-  //
-  if( !m_gigaName.empty() )
-  { m_gigaSvc = svc<IGiGaSvc>( m_gigaName , true ) ; }
-  else 
-  { Warning("GiGa Service is not requested to be located"); }
-  ///
-  if( !m_setupName.empty() )
-  { m_setupSvc = svc<IGiGaSetUpSvc> ( m_setupName , true ) ; }
-  else 
-  { Warning("GiGaSetUp Service is not requested to be located"); }
+  if( sc.isFailure() ) { 
+    return Error("Could not initialize the base class AlgTool",sc);
+  }
+
+  // Check that can locate Services
+  if( 0 == svcLoc()     ) {
+    throw GiGaException("GiGaBase::ini ISvcLocator* points to NULL!");
+  }
+
+  // Load GiGa
+  if( !m_gigaName.empty() ) { 
+    m_gigaSvc = svc<IGiGaSvc>( m_gigaName , true );
+  }
+  else { 
+    Warning("GiGa Service is not requested to be located"); 
+  }
+
+  // If the setup service is the same, just get the interface
+  if( !m_setupName.empty() ) { 
+    if( m_setupName == m_gigaName ) {
+      m_setupSvc = dynamic_cast<IGiGaSetUpSvc*>( m_gigaSvc );
+      
+      // cast to correct type
+    }
+    else {
+      m_setupSvc = svc<IGiGaSetUpSvc> ( m_setupName , true );
+    }
+  }
+  else { 
+    Warning("GiGaSetUp Service is not requested to be located");
+  }
   ///
   return StatusCode::SUCCESS ;
 };
