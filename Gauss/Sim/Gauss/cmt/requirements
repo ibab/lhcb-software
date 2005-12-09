@@ -12,7 +12,7 @@ branches src doc options cmt job
 use XmlDDDB             v27r0   Det   -no_auto_imports
 use XmlConditions       v1r3    Det   -no_auto_imports
 use FieldMap            v4r6          -no_auto_imports
-use DecFiles            v11r0   Gen   -no_auto_imports
+use DecFiles            v11r1   Gen   -no_auto_imports
 use ParamFiles          v3r13         -no_auto_imports
 use Geant4Files		v71r0	      -no_auto_imports
 
@@ -20,11 +20,11 @@ use Geant4Files		v71r0	      -no_auto_imports
 #========================================================================
 #-- Generator
 use ParticleGuns        v1r0    Gen
-use Generators          v2r1    Gen
-use LbPythia            v2r1    Gen
-#   Optional AcerMC 
-macro LbAcerMC_use "" Linux&AcerMC "LbAcerMC v1r3 Gen"
-use $(LbAcerMC_use)
+use Generators          v3r0    Gen
+use LbPythia            v3r0    Gen
+#-- Optional AcerMC -- Temporarly removed
+#macro LbAcerMC_use "" Linux&AcerMC "LbAcerMC v1r3 Gen"
+#use $(LbAcerMC_use)
 
 #-- Simulation
 use GiGaCnv             v15r11  Sim

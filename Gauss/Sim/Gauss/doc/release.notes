@@ -4,6 +4,11 @@
 ! Purpose     : LHCb Simulation Application with Geant4
 !-----------------------------------------------------------------------------
 
+! 2005-12-09 - Gloria CORTI
+ - Use new version of generator packages where old structure has been
+   removed (Generators v3r0, LbPythia v3r0). Temporarly remove use of 
+   LbAcerMC not yet migrated to new structure.
+
 ! 2005-12-08 - Gloria CORTI
  - Introduce new geometry lhcb-v200511.xml from XmlDDDB v27r0 and introduce
    use of RichCondition (from LHCb). It also requires the use of 
