@@ -1,14 +1,14 @@
-! $Id: release.notes,v 1.85 2005-11-22 17:55:32 musy Exp $
+! $Id: release.notes,v 1.86 2005-12-09 14:36:39 pkoppenb Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Phys/FlavourTagging
 ! Responsible : Marco Musy (marco.musy@cern.ch)
 ! Purpose     : Provide tools and algorithm for tagging B
 !-----------------------------------------------------------------------------
 
-!========================== FlavourTagging v6r3 2005-11-22 ===================
 ! 2005-11-22 - Marco Musy
   - small bug fix on CombineTaggersTDR
 
+!========================== FlavourTagging v6r3 2005-10-21 ===================
 ! 2005-10-21 - Marco Cattaneo
   - Fix usage of pow() in TaggerVertexChargeTool.cpp, to compile on Windows
   - Remove unused packages from requirements (L0Event, GenEvent, Tampering)
