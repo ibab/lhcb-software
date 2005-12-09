@@ -52,7 +52,9 @@ OffBd2D02KpiKstarTree.LinkAsct.OutputLevel = 3;
 Particle2MCLinksOffBd2D02KpiKstar.InputData  = { "Phys/TDRselD02Kpi/Particles", "Phys/TDRselKstar2KpiForBd2D02Kpi/Particles"};
 Particle2MCLinksOffBd2D02KpiKstar.OutputLevel = 3;
 
-OffBd2D02KpiKstarTree.Decay = "{B0 -> (^D~0 -> ^K+ ^pi-) (^K*(892)0 -> ^K+ ^pi-), B~0 -> (^D0 -> ^K- ^pi+) (^K*(892)~0 -> ^K- ^pi+)}";
+// Warning: found some B0 -> (D0 -> K- pi+) (K*(892)0 -> K+ pi-) in offline selection (?). Not considered here ...
+OffBd2D02KpiKstarTree.Decay = "{B0 -> (^D~0 -> ^K+ ^pi-) (^K*(892)0 -> ^K+ ^pi-), B0 -> (^D0 -> ^K- ^pi+) (^K*(892)~0 -> ^K- ^pi+)
+, B~0 -> (^D0 -> ^K- ^pi+) (^K*(892)~0 -> ^K- ^pi+), B~0 -> (^D~0 -> ^K+ ^pi-) (^K*(892)0 -> ^K+ ^pi-)}";
 OffBd2D02KpiKstarTree.MCDecay = "{B0 -> (^D~0 -> ^K+ ^pi-) (^K*(892)0 -> ^K+ ^pi-), B0 -> (^D0 -> ^K- ^pi+) (^K*(892)~0 -> ^K- ^pi+)
 , B~0 -> (^D0 -> ^K- ^pi+) (^K*(892)~0 -> ^K- ^pi+), B~0 -> (^D~0 -> ^K+ ^pi-) (^K*(892)0 -> ^K+ ^pi-)}";
 OffBd2D02KpiKstarTree.NtupleName = "FILE1/OffBd2D02KpiKstar";
