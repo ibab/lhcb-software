@@ -4,6 +4,7 @@
 ! Purpose     : LHCb Simulation Application with Geant4
 !-----------------------------------------------------------------------------
 
+!============================ Gauss v22r0 ================================
 ! 2005-12-09 - Gloria CORTI
  - Use new version of generator packages where old structure has been
    removed (Generators v3r0, LbPythia v3r0). Temporarly remove use of 
