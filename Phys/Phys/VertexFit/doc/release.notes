@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.40 2005-12-09 12:23:44 pkoppenb Exp $
+! $Id: release.notes,v 1.41 2005-12-09 14:39:57 pkoppenb Exp $
 ! Package     : VertexFit
 ! Responsible : P. Koppenburg
 
@@ -8,7 +8,7 @@
     bool isPhotonPair = (daupid==111 || daupid==221);
       by
     bool isPhotonPair = isPurePhotonDecay(*dau);
-      to alloow reFit of eta->pipipi0
+      to allow proper treatment of eta->pipipi0
     . Remove unused variables.
   - src/TrgVertexFitter.cpp
     . Remove unused variables.
