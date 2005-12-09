@@ -3,6 +3,13 @@
 ! Responsible : P. Koppenburg
 ! Purpose     : High-Level Trigger Exclusive Selections - Checking 
 !-----------------------------------------------------------------------------
+%% WARNING: FROM REVISION v3r9 THIS PACKAGE IS INCOMPATIBLE WITH NON DC04-SOFTWARE %% 
+
+! 2005-12-09 - P. Koppenburg
+ - src/TestHltScore.*
+ - src/PlotTrackDeviation.*
+   . Restoring algorithms moved to HltMonitor package.
+   %% WARNING: FROM THIS REVISION THIS PACKAGE IS INCOMPATIBLE WITH NON DC04-SOFTWARE %% 
 
 ! 2005-12-07 - Luis Fernandez
  - options/
