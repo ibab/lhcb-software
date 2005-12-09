@@ -4,6 +4,169 @@ Package manager : Gloria Corti
 Purpose: LHCb Simulation program
 </PRE>
 
+<H1><A NAME="v22r0">2005-12-09 - GaussSys v22r0</A></H1><PRE>
+<H3><A NAME="Use">This version uses:
+   Pythia 6_325.2, photos 215.2 (via GENSER 1_2_1), lhapdf 4.2  
+   DecFiles v11r1, ParamFiles v3r13 
+   Geant4 v71r0p12 (based on geant4.7.1.p01)
+   LHCb v19r3 (and Gaudi v17r2)
+   XmlDDDB v27r0, XmlConditions v1r3, FieldMap v4r6 </A></H3>
+
+!============================ Gauss v22r0 ================================
+! 2005-12-09 - Gloria CORTI
+ - Use new version of generator packages where old structure has been
+   removed (Generators v3r0, LbPythia v3r0). Temporarly remove use of 
+   LbAcerMC not yet migrated to new structure.
+ - Modify PythiaSettings.opts to use LHAPDF (requires GENSER v1r121p0)
+ - Modify Generators.opts to follow change in property name for Pythia
+   commands: BasePythiaCommand -> Commands
+
+! 2005-12-08 - Gloria CORTI
+ - Introduce new geometry lhcb-v200511.xml from XmlDDDB v27r0 and introduce
+   use of RichCondition (from LHCb). It also requires the use of 
+   XmlConditions v1r3 and GaussRICH v5r1 to get refractive index for gases.
+   This is the default Gauss configuration available also as v200511.opts
+   . xml/Rich1AerogelRegionDefinition.xml, RichOverallRegionDefinition.xml,
+         RichSimulationAttributes.xml
+     define simulation attributes and regions to swhitch on delta rays in 
+     Aerogel or whole of RICHes.
+   . xml/Simulation.xml, MuonLowEnergy.xml, set attributes for latest RICH
+     description
+   . xml/Simulation-v200412.xml, simulation attributes for older geometries
+   . options/Common.opts, use lhcb-200511.xml as default geometry
+   . options/v200412.opts, v200506.opts, v200507.opts, set options to be
+     backward compatible when using old geometry
+   . options/v200511.opts, general options for new geometry
+   . options/Simulation.opts, by default activate cuts per region
+ - Introduce execution of algorithm to fill MCCaloHits instead of converters,
+   requires GaussCalo v7r4
+   . options/Simulation.opts
+ - Adapt to new dictionary from new version of Gauss
+   . options/GaussPoolIO.opts
+
+! ========================= LbPythia v3r0 ============================
+ 2005-12-08 - Patrick Robbe
+ - Pythia.{h,cpp}: remove PDFLIB
+ - Remove old structure
+ 
+! 2005-11-29 - Patrick Robbe
+ - PythiaHiggs: add specific tool to cut at generator level on Higgs
+   events (two b quarks in 400 mrad).
+ - PythiaProduction: do not change Higgs, top, W, Z widths in Pythia
+   which are computed at init, and add default Pythia settings in software
+ 
+! 2005-11-17 - Patrick Robbe
+ - PythiaProduction: add force fragmentation interface
+ 
+!========================= Generators v3r0 ===========================
+! 2005-12-08 - Patrick Robbe
+ - Remove old structure
+ - ExternalGenerators: allow possibility to change LHAPDF settings by job
+   option.
+ 
+! 2005-12-07 - Patrick Robbe
+ - GenCounters.h: common functions to print counters and compute efficiencies
+ - VariableLuminosity, Special, Generation, SignalPlain: use common function
+   to print counters.
+ - SignalRepeatedHadronization: remove HepMCUtils dependency  and add
+   Clear function to clear content of HepMC Event
+ - Inclusive: fix counters
+ - ExternalGenerator: manage LHAPDF output and remove HepMC dependency
+ - LHAPDFCommonBlocks.{h,cpp}: wrapper for LHAPDF common blocks
+ - LhaPdf.{h,cpp}: static class to access LHAPDF functions from C++
+ - LHAPDFUtils.F: Fortran functions to access LHAPDF common blocks
+ - FixedLuminosity: new luminosity tool for fixed luminosity
+ 
+! 2005-11-29 - Patrick Robbe
+ - LeptonInAcceptance: add full event cut tool to keep events with one
+   lepton with pT > 4 GeV
+ - ExternalGenerator: add computation of efficiencies and counters
+ - Signal, Generation, Inclusive, Special, VariableLuminosity: add print out
+   and computation of various counters
+ 
+! 2005-11-21 - Patrick Robbe
+ - Signal.h/.cpp: add functions and counters to be able to compute
+   the generator level cut efficiencies. Each tool deriving from
+   "Signal" has to increment at the correct place these counters.
+ - ExternalGenerator.cpp: use HepMC::GenEvent iterators (which are
+   sorted according to barcodes) in order to remove need to call
+   sort function (to reproduce events with HepMC)
+ - IFullGenEventCutTool: add new tool to be able to cut on full event
+   properties.
+ - Generation.cpp:
+       . sort GenParticles when using HepMC::GenParticle
+         iterators (which are not sorted) according to the barcode.
+       . use new Full event cut tool
+ - SignalPlain, SignalForcedFragmentation, SignalRepeatedHadronization:
+   increment counters to compute generator level cut efficiencies.
+ 
+! 2005-11-17 - Patrick Robbe
+ - src/component/Signal*.cpp : add possibility to generate clean events
+ - src/component/SignalForcedFragmentation: add forced fragmentation
+   method
+ - src/component/Special.cpp : add special generation method.
+ 
+!========================== EvtGen v8r6 ====================================
+! 2005-11-20 - Patrick Robbe
+ - EvtHepRandomEngine: adapt to use CLHEP 1.9.2.1
+ 
+!======================= GENSER v1r121p0 ================================
+! 2005-12-06 - Florence RANJARD
+ - requirements - use GENSER_1_2_1 to use Pythia 6_325.2, Photos 215.2
+                  and lhapdf 4_2
+                  set LHAPDFPATH environment variable
+                  compile lhaglue.f
+                  set lhapdf_linkopts
+                  remove cernlib
+                  modify GENSER_linkopts accordingly
+ 
+ - src/lhaglue.f - a copy of the lhapdf routine with the following 
+                   modifications:
+                   > get the PDFsets path from the LHAPDFPATH environment
+                     variable
+                   > set LHAPARM(17) = 'LHAPDF'
+ 
+!!======================= GiGa v17r4 =====================================
+! 2005-12-09 - Gloria CORTI
+ - GiGaBase.cpp
+   . if name of GiGaSvc and GiGaSetupSvc is the same do nor reqeust the
+     service again but cast to second interface. This removes very long
+     list of Warning message from GaudiTool new implementation (from Gaudi
+     v17r2) when the same service is requested twice by the same instance.
+ 
+!===================== GaussCalo v7r4 ===================================
+! 2005-12-08 - Gloria CORTI
+ - options/Ecal.opts, Hcal.opts, Prs.opts, Spd.opts
+   modify to remove execution of algorithms set instead in
+   $GAUSSOPTS/Simulation.opts
+ 
+! 2005-11-14 - Patrick Robbe
+ - GetCaloHitsAlg.cpp: new algorithm to replace GiGaCaloHitCnv converter.
+ - options/Ecal.opts, Hcal.opts, Prs.opts, Spd.opts: use new algorithm
+   to convert to MCHits
+ 
+!======================== GaussRICH v5r1 ==================================
+! 2005-12-09 - Gloria CORTI
+ - Introduce options (defaultin Rich.opts) to use RichConditions for setting
+   the refractive index of the gases.
+ 
+! 2005-11-07 - Chris Jones
+ - Remove unneccessary "use" statement for RichCondition. Technically,
+   GaussRICH only requires the interfaces from RichCondition to compile so
+   the use state for RichCondition is redundant.
+ 
+! 2005-09-30  - Sajan easo
+ - Added RichG4RunConditionAction.h and RichG4RunConditionAction.h which
+   are to activate the RichCondition tool. The RichCondition tool
+   interface is in Rich/RichKernel. Hence this version needs both the
+   RichCondition and RichKernel packages. The requirements file is
+   modified accordingly.
+ 
+! 2005-09-02 - Chris Jones
+ - Add some more counters to GiGa converter for MCRichHits to monitor for
+   various problems
+
+!=============================================================================
 <H1><A NAME="v21r0">2005-11-09 - GaussSys v21r0</A></H1><PRE>
 <H3><A NAME="Use">This version uses:
    Pythia 6_324.2, photos 215.2 (via GENSER 1_2_0), pdflib 804 
