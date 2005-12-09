@@ -23,6 +23,7 @@ HLTExclusive.MeasureTime = true ;
 TrgRICHReco.MeasureTime = true;
 HLTFilterParticles.MeasureTime = true;
 HLTInclusive.MeasureTime = true;
+HLTselPhiIncl.MeasureTime = true;
 
 //Also, if you wish to get the RichPID tables (useful to see if things are 
 //working...) then you can add
