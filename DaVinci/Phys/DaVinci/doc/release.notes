@@ -4,9 +4,15 @@
 ! Purpose     : Analysis program for LHCb
 !-----------------------------------------------------------------------------
 
+! 2005-12-09 - P. Koppenburg
+  - options/DaVinciReco.opts
+    . Add MuonIDRetuning by default. This will get the better tuning for the
+      MuonID, but will change all muon efficiencies. See Erica's talk at
+      http://agenda.cern.ch/fullAgenda.php?ida=a055058#2005-12-08
+    
 ! 2005-11-09 - P. Koppenburg
   - options/*.opts
-    . Use ROOT everywhere
+    . Use ROOT everywhere for histogram/Ntuples persistency
     
 ! 2005-11-04 - P. Koppenburg
   - options/DstContents.opts

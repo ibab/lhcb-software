@@ -29,15 +29,21 @@
 //#include "$L1DECISIONROOT/options/L1-lumi5e32.opts"
 //--------------------------------------------------------------
 // Run HLT generic and HLT selections
-//#include "$HLTSELECTIONSROOT/options/HLTSelections.opts"
+#include "$HLTSELECTIONSROOT/options/HLTSelections.opts"
+// Uncomment to add Inclusive high-IP dilepton
+//#include "$HLTINCLUSIVEROOT/options/HLTselB2DiLepton.opts"
+// Uncomment to add Inclusive Phi and RICH
+//#include "$HLTINCLUSIVEROOT/options/HLTselPhiIncl.opts"
+// Uncomment following line to get looser cuts for Phi
+// #include "$HLTINCLUSIVEROOT/options/HLTselPhiInclLoose.opts"
 
 //--------------------------------------------------------------
 ApplicationMgr.TopAlg += { "GaudiSequencer/TriggerSeq" };
 TriggerSeq.Members = { "TrgL0Filter", "PrintHeader/PassedL0" };
 TriggerSeq.Members += { "TrgL1Filter", "PrintHeader/PassedL1" };
-//TriggerSeq.Members += { "HltFilter", "PrintHeader/PassedHlt" }; // comment to ignore HLT
+TriggerSeq.Members += { "HltFilter", "PrintHeader/PassedHlt" }; // comment to ignore HLT
 PassedL0.OutputLevel = 3 ;
-PassedL1.OutputLevel = 2 ;
+PassedL1.OutputLevel = 3 ;
 PassedHlt.OutputLevel = 2 ;
 
 //==============================================================
@@ -60,7 +66,7 @@ HltDecision.MakeCorrelations = true ;
 //==============================================================
 // OUTPUT: Uncomment following line to write out DST
 //==============================================================
-ApplicationMgr.OutStream += { "DstWriter" } ;
+//ApplicationMgr.OutStream += { "DstWriter" } ;
 #include "$DAVINCIROOT/options/DstContent.opts"
 DstWriter.RequireAlgs  = { "TriggerSeq" } ;
 DstWriter.Preload  = false ;
@@ -79,7 +85,8 @@ MessageSvc.Format = "% F%40W%S%7W%R%T %0W%M";
 EventSelector.FirstEvent = 1;
 
 #include "$DAVINCIROOT/options/OneMillionMB.opts"
-ApplicationMgr.EvtMax    = 1000000 ;
+//#include "$HLTSELECTIONSROOT/options/L0L1-MB-DC04v2.opts"
+ApplicationMgr.EvtMax    = -1 ;
 EventSelector.PrintFreq  = 1000;
 
 //---------------------------------------------------------------
@@ -94,7 +101,5 @@ StagerSvc.InitialStage = 3 ; // m: the number of blocks staged at the beginning 
 // ApplicationMgr.HistogramPersistency = "HBOOK";
 // HistogramPersistencySvc.OutputFile = "DVHistos.hbook";
 // or if you prefer ROOT:
-ApplicationMgr.HistogramPersistency = "ROOT";
-HistogramPersistencySvc.OutputFile = "DVHistos.root";
 
 StagerSvc.OutputLevel = 2 ;

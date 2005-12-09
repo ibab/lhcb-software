@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.280 2005-11-24 15:38:59 pkoppenb Exp $
+# $Id: requirements,v 1.281 2005-12-09 12:44:48 pkoppenb Exp $
 # Created    : 07/02/2002
 # Maintainer : P. Koppenburg
 #
@@ -103,7 +103,7 @@ use  PhysSelSys			v8r9     PhysSel
 use  CaloPIDs           	v2r4     Calo 
 use  CaloReco           	v2r7     Calo
 # Muon PID
-use  MuonID             	v3r9     Muon
+use  MuonID             	v3r11   Muon
 
 #-- RICH Trigger libraries 
 use RichHLTSys                  v1r0p1   Rich
