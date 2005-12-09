@@ -3,14 +3,20 @@ Package: Rec/Brunel
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb reconstruction program
 
-</PRE><H1><A NAME=v28r2>2005-12-05 Brunel v28r2</A></H1><PRE>
-This version uses Gaudi v17r2, LHCb v19r3, Lbcom v3r2, Rec v2r2, XmlDDDB v27r0
+</PRE><H1><A NAME=v28r2>2005-12-09 Brunel v28r2</A></H1><PRE>
+This version uses Gaudi v17r2, LHCb v19r3, Lbcom v3r2, Rec v2r2, XmlDDDB v27r1
 Requires input data from Boole v9r2 or greater. Incompatible with DC04 versions
 
 - New features
   . Minor updates and fixes to new Track model classes
     (TrackEvent v1r6, TrConverters v1r5, TrackTools v1r3,TrackExtrapolators v1r3)
-  N.B. This breaks the calorimeter electron reconstruction. To be fixed...
+
+- New tuning
+  . Updated materials for TT (XmlDDDB v27r1)
+
+- Bug fix
+  . Calo reconstruction only uses Cnv tracks for now
+    (CaloUtils v5r1, CaloMoniDst v2r1)
 
 - New packaging
   . All the pattern recognition and track fit packages using the new Tracks are
