@@ -28,7 +28,6 @@ GiGaGeo.Ecal.Histograms = {
 };
 
 // Conversion of Hits
-Simulation.Members += { "GetCaloHitsAlg/GetEcalHits" } ;
 GetEcalHits.MCHitsLocation = "/Event/MC/Ecal/Hits" ;
 GetEcalHits.CollectionName = "EcalHits" ;
 

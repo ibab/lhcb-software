@@ -1,41 +1,37 @@
-# $Id: requirements,v 1.19 2005-08-16 17:49:42 gcorti Exp $ 
-# =============================================================================
-# CVS tag $Name: not supported by cvs2svn $ 
-# =============================================================================
+# $Id: requirements,v 1.20 2005-12-09 17:08:13 gcorti Exp $ 
+#============================================================================
+# Created    : 2005-12-08
+# Maintainer : Patrick ROBBE
+#
+# Documentation on the requirement file can be found at
+# http://cern.ch/lhcb-comp/Support/html/new_structure.pdf
+#============================================================================
 package           GaussCalo
-version           v7r3
+version           v7r4
 
-# =============== package structure ===========================================
+#============================================================================
+# Structure, i.e. directories to process. 
+#============================================================================
 branches          cmt src doc
+include_dirs      $(GAUSSCALOROOT)
+set GAUSSCALOOPTS ${GAUSSCALOROOT}/options 
 
-# =============== explicit dependencies =======================================  
+#============================================================================
+# Used packages. Specify the version, * at the end specifies 'any revision'
+#============================================================================
 use AIDA          v*     LCG_Interfaces
 use GaussTools    v*     Sim
-
-# =============== options =====================================================
-set GAUSSCALOOPTS ${GAUSSCALOROOT}/options 
- 
-# =============== Event =======================================================
 use CaloEvent     v*     Event 
+use CaloDet       v*     Det 
+use CaloDetXmlCnv v*     Det 
 
-# =============== Det =========================================================
-use CaloDet       v*      Det 
-use CaloDetXmlCnv v*      Det 
-
-# ============== component library ============================================
+#============================================================================
+# Component library building rule
+#============================================================================
 library          GaussCalo   *.cpp                  
 
-# ============== standard includes ============================================
-include_dirs     $(GAUSSCALOROOT)
-        
-# ============== standard patterns ===========================================
+#============================================================================
+# define component library link options
+#============================================================================
 apply_pattern    component_library library=GaussCalo
-        
-# ============================================================================
-# $Log: not supported by cvs2svn $
-# Revision 1.18  2004/10/08 15:06:54  ibelyaev
-#  fix a 'feature'
-#
-# ============================================================================
-# The END 
-# ============================================================================
+

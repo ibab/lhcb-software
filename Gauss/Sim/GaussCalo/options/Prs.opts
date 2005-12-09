@@ -31,7 +31,6 @@ GiGaGeo.Prs.Histograms = {
 };
 
 // Conversion of Hits
-Simulation.Members += { "GetCaloHitsAlg/GetPrsHits" } ;
 GetPrsHits.MCHitsLocation = "/Event/MC/Prs/Hits" ;
 GetPrsHits.CollectionName = "PrsHits" ;
 

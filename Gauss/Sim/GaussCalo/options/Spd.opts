@@ -31,7 +31,6 @@ GiGaGeo.Spd.Histograms = {
 };
 
 // Conversion of Hits
-Simulation.Members += { "GetCaloHitsAlg/GetSpdHits" } ;
 GetSpdHits.MCHitsLocation = "/Event/MC/Spd/Hits" ;
 GetSpdHits.CollectionName = "SpdHits" ;
 
