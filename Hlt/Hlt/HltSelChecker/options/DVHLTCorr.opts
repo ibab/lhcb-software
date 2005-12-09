@@ -5,10 +5,9 @@ HltDecision.MakeCorrelations = true ;
 // The optinal streams
 //==============================================================================
 // P. Koppenburg's inclusive dilepton selection
-#include "$HLTINCLUSIVEROOT/options/HLTselB2DiLepton.opts"
-// M. Patel's inclusive Phi selection
-// WARNING will include RICH!
-#include "$HLTINCLUSIVEROOT/options/HLTselPhiIncl.opts"
+//#include "$HLTINCLUSIVEROOT/options/HLTselB2DiLepton.opts"
+// M. Patel's inclusive Phi selection - WARNING will include RICH!
+//#include "$HLTINCLUSIVEROOT/options/HLTselPhiIncl.opts"
 // Uncomment following line to get looser cuts
 // #include "$HLTINCLUSIVEROOT/options/HLTselPhiInclLoose.opts"
 
@@ -44,7 +43,7 @@ HltDecision.MakeCorrelations = true ;
 //==============================================================================
 // Checks
 //==============================================================================
-#include "$HLTSELCHECKERROOT/options/TestHltScore.opts"
+//#include "$HLTSELCHECKERROOT/options/TestHltScore.opts"
 
 //==============================================================================
 // PK's stripping of MB passing L0 and L1:
