@@ -59,7 +59,7 @@ use DAQEvent		v5r3p1  Event   # Marco Cattaneo
 use GenEvent    	v3r5    Event   # Gloria Corti
 use EventAssoc          v2r1    Event   # Ivan Belyaev
 use LinkerEvent         v1r9    Event   # Olivier Callot
-use TrgEvent            v5r7    Event   # Olivier Callot
+use TrgEvent            v5r8    Event   # Olivier Callot
 use PackedEvent         v1r2    Event   # Marco Cattaneo, Olivier Callot
 use TrackEvent          v1r6    Event   # Eduardo Rodrigues, Jose Hernando
 use EventUtils		v1r0	Event   # Marco Cattaneo
