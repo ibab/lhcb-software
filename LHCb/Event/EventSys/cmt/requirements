@@ -19,7 +19,7 @@ use DAQEvent    v5r3p1  Event
 use GenEvent    v3r5    Event
 use EventAssoc  v2r1    Event
 use LinkerEvent v1r9    Event
-use TrgEvent    v5r7    Event
+use TrgEvent    v5r8    Event
 use TrackEvent  v1r6    Event
 use PackedEvent v1r2    Event
 use EventUtils  v1r0    Event

@@ -1,9 +1,9 @@
 package EventSys
 package manager: Marco Cattaneo
 
-!======================== EventSys v20r13 2005-12-05 =======================
-! 2005-12-05 - Marco Cattaneo
- - Use TrackEvent v1r6
+!======================== EventSys v20r13 2005-12-09 =======================
+! 2005-12-09 - Marco Cattaneo
+ - Use TrackEvent v1r6, TrgEvent v5r8
 
 !======================== EventSys v20r12 2005-11-22 =======================
 ! 2005-11-22 - Marco Cattaneo
