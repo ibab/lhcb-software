@@ -9,6 +9,9 @@
  - Use new version of generator packages where old structure has been
    removed (Generators v3r0, LbPythia v3r0). Temporarly remove use of 
    LbAcerMC not yet migrated to new structure.
+ - Modify PythiaSettings.opts to use LHAPDF (requires GENSER v1r121p0)
+ - Modify Generators.opts to follw change in property name for Pythia
+   commands: BasePythiaCommand -> Commands
 
 ! 2005-12-08 - Gloria CORTI
  - Introduce new geometry lhcb-v200511.xml from XmlDDDB v27r0 and introduce

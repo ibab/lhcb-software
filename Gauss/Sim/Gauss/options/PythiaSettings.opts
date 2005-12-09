@@ -25,8 +25,8 @@ PythiaAlg.BasePythiaCommand = {
   "pypars mstp 33 3" ,  // K factor by a shift in the alpha_s Q2 argument
   "pypars mstp 128 2" , // products are not stored in documentation section
   "pypars mstp 82 3" ,  // single gaussian matter distribution in proton for multiple parton-parton scattering
-  "pypars mstp 52 2" ,  // use PDFLIB for structure functions
-  "pypars mstp 51 4032" , // use CTEQ4L from PDFLIB
+  "pypars mstp 52 2" ,  // use LHAPDF for structure functions
+  "pypars mstp 51 10042" , // use CTEQ4L from LHAPDF
   "pypars parp 67 1.0" , // for compatibility with default Pythia 6.224, maximum parton virtuality for space-like showers
   "pypars parp 82 3.41" , // pTmin at 14 TeV for multiple parton-parton scattering
   "pypars parp 89 14000" , // energy reference for pTmin

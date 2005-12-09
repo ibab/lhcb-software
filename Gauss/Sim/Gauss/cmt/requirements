@@ -84,8 +84,8 @@ set NeutronHPCrossSections $(GEANT4FILESROOT)/data/G4NDL
 #-- Build Main Program 
 
 application Gauss "GaussMain.cpp"
-application GaussAcerMC "GaussMain.cpp"
-macro_remove constituents "GaussAcerMC" Linux&AcerMC "Gauss"
+#application GaussAcerMC "GaussMain.cpp"
+#macro_remove constituents "GaussAcerMC" Linux&AcerMC "Gauss"
 
 #========================================================================
 #-- Set macros
@@ -106,4 +106,4 @@ path_append    PATH  "${GAUSSROOT}/${BINDIR}"
 #-- Set usefull alias
 alias gauss " ${GAUSSROOT}/${BINDIR}/Gauss.exe ${GAUSSOPTS}/Gauss.opts "
 alias gaussvis " ${GAUSSROOT}/${BINDIR}/Gauss.exe ${GAUSSOPTS}/GaussVis.opts "
-alias gaussacer " ${GAUSSROOT}/${BINDIR}/GaussAcerMC.exe ${GAUSSOPTS}/Gauss.opts "
+#alias gaussacer " ${GAUSSROOT}/${BINDIR}/GaussAcerMC.exe ${GAUSSOPTS}/Gauss.opts "
