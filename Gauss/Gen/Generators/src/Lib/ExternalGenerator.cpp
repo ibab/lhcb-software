@@ -1,4 +1,4 @@
-// $Id: ExternalGenerator.cpp,v 1.7 2005-12-08 16:23:27 robbep Exp $
+// $Id: ExternalGenerator.cpp,v 1.8 2005-12-11 23:22:30 robbep Exp $
 // Include files 
 
 // local
@@ -111,8 +111,7 @@ StatusCode ExternalGenerator::initialize( ) {
 //=============================================================================
 StatusCode ExternalGenerator::decayHeavyParticles( HepMC::GenEvent * theEvent, 
                                                    const double mass ,
-                                                   const int pid ) 
-  const {
+                                                   const int pid ) const {
   StatusCode sc ;
   
   m_decayTool -> disableFlip() ;
@@ -125,7 +124,7 @@ StatusCode ExternalGenerator::decayHeavyParticles( HepMC::GenEvent * theEvent,
          ( 1 == (*it) -> status() ) && ( pid != abs( (*it) -> pdg_id() ) ) ) {
       
       if ( m_decayTool -> isKnownToDecayTool( (*it) -> pdg_id() ) ) {
-        sc = m_decayTool -> generateDecayWithLimit( theEvent , *it , pid ) ;
+        sc = m_decayTool -> generateDecayWithLimit( *it , pid ) ;
         if ( ! sc.isSuccess() ) return sc ;
         // if excited particle is unknown to EvtGen give error to oblige
         // us to define it in EvtGen decay table
@@ -143,8 +142,7 @@ StatusCode ExternalGenerator::decayHeavyParticles( HepMC::GenEvent * theEvent,
 //=============================================================================
 bool ExternalGenerator::checkPresence( const PIDs & pidList ,
                                        const HepMC::GenEvent * theEvent ,
-                                       ParticleVector & particleList )
-{
+                                       ParticleVector & particleList ) const {
   particleList.clear( ) ;
   HepMC::GenEvent::particle_const_iterator it ;
   for ( it = theEvent -> particles_begin() ; 
@@ -159,7 +157,7 @@ bool ExternalGenerator::checkPresence( const PIDs & pidList ,
 //=============================================================================
 // invert the event
 //=============================================================================
-void ExternalGenerator::revertEvent( HepMC::GenEvent * theEvent ) {
+void ExternalGenerator::revertEvent( HepMC::GenEvent * theEvent ) const {
   HepMC::GenEvent::vertex_iterator itv ;
   double x, y, z, t ;
   for ( itv = theEvent -> vertices_begin() ;
@@ -187,7 +185,7 @@ void ExternalGenerator::revertEvent( HepMC::GenEvent * theEvent ) {
 // count the number of particles with pz > 0
 //=============================================================================
 unsigned int ExternalGenerator::nPositivePz( const ParticleVector 
-                                             & particleList ) {
+                                             & particleList ) const {
   ParticleVector::const_iterator iter ;
   unsigned int nP = 0 ;
   for ( iter = particleList.begin() ; iter != particleList.end() ; ++iter ) 
@@ -235,7 +233,7 @@ bool ExternalGenerator::IsBAtProduction( const HepMC::GenParticle * thePart )
 // Parse LHAPDF commands stored in a vector
 //=============================================================================
 StatusCode ExternalGenerator::parseLhaPdfCommands( const CommandVector & 
-                                                   theCommandVector ) {
+                                                   theCommandVector ) const {
   //
   // Parse Commands and Set Values from Properties Service...
   //

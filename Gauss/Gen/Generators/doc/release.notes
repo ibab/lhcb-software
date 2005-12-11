@@ -1,6 +1,9 @@
-! $Id: release.notes,v 1.20 2005-12-09 18:12:08 gcorti Exp $
+! $Id: release.notes,v 1.21 2005-12-11 23:21:47 robbep Exp $
 ! Package     : Gen/Generators
 ! Responsible : 
+
+! 2005-12-10 - Patrick Robbe
+ - Add comments for doxygen
 
 !========================= Generators v3r0 ===========================
 ! 2005-12-08 - Patrick Robbe

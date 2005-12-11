@@ -1,39 +1,50 @@
-// $Id: StringParse.h,v 1.1.1.1 2005-06-20 21:42:17 robbep Exp $
-
-// --------------------------------------------------
-// 
-// File:  GeneratorModules/StringParse.h
-// Description:
-//    This code is used to parse a string.
-//    It breaks it into components which are seperated by spaces  
-//    in the original.
-//    Three methods can then be called to 
-//    Return the nth component as a string (piece method)
-//    Return the nth component as an integer (intpiece method) 
-// if conversion is possible, returns -1 if it is off the end and 0 
-// if it cannot be converted
-//    Return the nth component as a double (numpiece method)  if conversion 
-// is possible, returns -1.1 if it is off the end and 0 if it cannot be 
-// converted
-// AuthorList:
-//         Ian Hinchliffe April 2000
+// $Id: StringParse.h,v 1.2 2005-12-11 23:21:47 robbep Exp $
 
 #ifndef GENERATORS_STRINGPARSE_H
 #define GENERATORS_STRINGPARSE_H
+
+// Include files
 #include <string>
 #include <vector>
+
+/** @class StringParse StringParse.h "Generators/StringParse.h"
+ * 
+ *   Utility class to parse a string.
+ *   It breaks it into components which are seperated by spaces  
+ *   in the original.
+ * 
+ *  @author Ian Hinchliffe
+ *  @date   200-04-01
+ */
+
 class StringParse {
-public:
-  StringParse( const std::string & input); //constructor
-  StringParse(); //constructor
-  ~StringParse(); //constructor
-  std::string piece(const int & num);
-  int intpiece(const int & num); 
+ public:
+  StringParse( const std::string & input); ///< Constructor with string
+  
+  StringParse(); ///< Default constructor
+  
+  ~StringParse(); ///< Destructor
+  
+  /// Returns the num-th component of the input string as a string.
+  std::string piece( const int & num ) ;
+  
+  /// Returns the num-th component of the input string as an integer.
+  int intpiece( const int & num ) ; 
+  
+  /// Returns the num-th component of the input string as a float.
   float numpiece(const int & num); 
-private:
+
+ private:
+  /// Input string
   std::string m_lstring;
+
+  /// Vector of substrings in input string
   std::vector<std::string> m_lsubstring;
+
+  /// Number of words in input string.
   int m_nword;
+
+  /// String to return if past end.
   std::string m_past_end;
 };
 #endif  //GENERATORS_STRINGPARSE_H

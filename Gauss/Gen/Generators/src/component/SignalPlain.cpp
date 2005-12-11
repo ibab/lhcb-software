@@ -1,4 +1,4 @@
-// $Id: SignalPlain.cpp,v 1.4 2005-12-07 22:57:03 robbep Exp $
+// $Id: SignalPlain.cpp,v 1.5 2005-12-11 23:22:30 robbep Exp $
 // Include files 
 
 // local
@@ -85,13 +85,12 @@ bool SignalPlain::generate( const unsigned int nPileUp ,
             updateCounters( theParticleList , m_nParticlesAfterCut , 
                             m_nAntiParticlesAfterCut , true ) ;
             
-            HepMC::GenParticle * theSignal = 
-              chooseAndRevert( theParticleList , theGenEvent ) ;
+            HepMC::GenParticle * theSignal = chooseAndRevert( theParticleList ) ;
             
             bool flip ;
             if ( m_cpMixture ) m_decayTool -> enableFlip( ) ;
-            m_decayTool -> generateSignalDecay( theGenEvent , theSignal , 
-                                                flip ) ;
+            m_decayTool -> generateSignalDecay( theSignal , flip ) ;
+
             if ( flip ) continue ;
             if ( m_cleanEvents ) {
               sc = isolateSignal( theSignal ) ;

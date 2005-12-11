@@ -1,4 +1,4 @@
-// $Id: Signal.cpp,v 1.6 2005-12-07 22:57:39 robbep Exp $
+// $Id: Signal.cpp,v 1.7 2005-12-11 23:22:30 robbep Exp $
 // Include files 
 
 // local
@@ -171,7 +171,7 @@ StatusCode Signal::isolateSignal( const HepMC::GenParticle * theSignal )
   
   // Associate the new particle to the HepMC event
   // and copy all tree to the new HepMC event
-  sc = fillHepMCEvent( hepMCevt , theNewParticle , theSignal ) ;
+  sc = fillHepMCEvent( theNewParticle , theSignal ) ;
   
   if ( ! sc.isSuccess( ) ) 
     return Error( "Could not fill HepMC event for signal tree" , sc ) ;
@@ -194,10 +194,9 @@ StatusCode Signal::isolateSignal( const HepMC::GenParticle * theSignal )
 //=============================================================================
 // Fill HepMC event from a HepMC tree
 //=============================================================================
-StatusCode Signal::fillHepMCEvent( HepMC::GenEvent    * theEvent ,
-                                   HepMC::GenParticle * theNewParticle ,
-                                   const HepMC::GenParticle * 
-                                   theOldParticle ) const {
+StatusCode Signal::fillHepMCEvent( HepMC::GenParticle * theNewParticle ,
+                                   const HepMC::GenParticle * theOldParticle ) 
+  const {
   StatusCode sc = StatusCode::SUCCESS ;
   //
   // Copy theOldParticle to theNewParticle in theEvent
@@ -207,7 +206,7 @@ StatusCode Signal::fillHepMCEvent( HepMC::GenEvent    * theEvent ,
     // Create decay vertex and associate it to theNewParticle
     HepMC::GenVertex * newVertex =
       new HepMC::GenVertex( oVertex -> position() ) ;
-    theEvent -> add_vertex( newVertex ) ;
+    theNewParticle -> parent_event() -> add_vertex( newVertex ) ;
     newVertex -> add_particle_in( theNewParticle ) ;
 
     // loop over child particle of this vertex after sorting them
@@ -228,7 +227,7 @@ StatusCode Signal::fillHepMCEvent( HepMC::GenEvent    * theEvent ,
       
       const HepMC::GenParticle * theChild = (*child) ;
       // Recursive call : fill the event with the daughters
-      sc = fillHepMCEvent( theEvent , newPart , theChild ) ;
+      sc = fillHepMCEvent( newPart , theChild ) ;
       
       if ( ! sc.isSuccess() ) return sc ;
     }
@@ -240,8 +239,7 @@ StatusCode Signal::fillHepMCEvent( HepMC::GenEvent    * theEvent ,
 // Choose one particle in acceptance and revert if necessary
 //=============================================================================
 HepMC::GenParticle * Signal::chooseAndRevert( const ParticleVector & 
-                                              theParticleList , 
-                                              HepMC::GenEvent * theGenEvent ) {
+                                              theParticleList ) {
   HepMC::GenParticle * theSignal ;
   
   unsigned int nPart = theParticleList.size() ;
@@ -253,7 +251,7 @@ HepMC::GenParticle * Signal::chooseAndRevert( const ParticleVector &
   else return 0 ;
   
   if ( theSignal -> momentum().pz() < 0 ) {
-    revertEvent( theGenEvent ) ;
+    revertEvent( theSignal -> parent_event() ) ;
     m_nInvertedEvents++ ;
   }
   

@@ -1,24 +1,23 @@
-// $Id: LhaPdf.h,v 1.1 2005-12-07 23:02:09 robbep Exp $
+// $Id: LhaPdf.h,v 1.2 2005-12-11 23:21:47 robbep Exp $
 #ifndef GENERATORS_LHAPDF_H 
 #define GENERATORS_LHAPDF_H 1
 
 // Include files
 #include "Generators/LHAPDFCommonBlocks.h"
 
-/** @class LhaPdf LhaPdf.h Generators/LhaPdf.h
+/** @class LhaPdf LhaPdf.h "Generators/LhaPdf.h"
  * 
- *  Utility class to access LHAPDF Fortran Functions 
+ *  Utility class to access LHAPDF Fortran Functions. 
  *
  *  @author Patrick Robbe
  *  @date   2005-12-06
  */
 class LhaPdf {
-public:
+ public:
+  /// Access to LHACONTROL common block
   static Lhacontrol & lhacontrol() { return s_lhacontrol ; }
-
-protected:
-
-private:
+  
+ private:
 	static Lhacontrol s_lhacontrol ; ///< LHACONTROL Common Block data
 };
 #endif // GENERATORS_LHAPDF_H

@@ -1,4 +1,4 @@
-// $Id: IGenCutTool.h,v 1.2 2005-11-17 15:54:02 robbep Exp $
+// $Id: IGenCutTool.h,v 1.3 2005-12-11 23:21:47 robbep Exp $
 #ifndef GENERATORS_IGENCUTTOOL_H 
 #define GENERATORS_IGENCUTTOOL_H 1
 
@@ -6,15 +6,18 @@
 // from Gaudi
 #include "GaudiKernel/IAlgTool.h"
 
+// Forward declarations
 namespace HepMC {
   class GenParticle ; 
   class GenEvent ;
 }  
 class HardInfo ;
 
-/** @class IGenCutTool IGenCutTool.h Generators/IGenCutTool.h
+/** @class IGenCutTool IGenCutTool.h "Generators/IGenCutTool.h"
  *  
- *  Abstract interface to generator level cut
+ *  Abstract interface to generator level cut. This type of cut is applied
+ *  to the interaction containing the signal particle. The interaction, at
+ *  this point contains undecayed particles (except excited heavy particles).
  * 
  *  @author Patrick Robbe
  *  @date   2005-08-17
@@ -24,9 +27,25 @@ static const InterfaceID IID_IGenCutTool( "IGenCutTool" , 1 , 0 ) ;
 
 class IGenCutTool : virtual public IAlgTool {
 public:
+  /// Vector of particles
   typedef std::vector< HepMC::GenParticle * > ParticleVector ;
+
   static const InterfaceID& interfaceID() { return IID_IGenCutTool ; }
-  
+
+  /** Applies the cut on the signal interaction.
+   *  @param[in,out] theParticleVector  List of signal particles. The 
+   *                                    generator level cut is applied to
+   *                                    all these particles and particles
+   *                                    which do not pass the cut are removed
+   *                                    from theParticleVector.
+   *  @param[in]     theGenEvent        Generated interaction. The generator
+   *                                    level cut can use the particles in 
+   *                                    this event to take the decision.
+   *  @param[in]     theHardInfo        Hard process information of the
+   *                                    interaction which can be used by
+   *                                    the cut to take the decision.
+   *  @return        true  if the event passes the generator level cut.
+   */
   virtual bool applyCut( ParticleVector & theParticleVector , 
                          const HepMC::GenEvent * theGenEvent ,
                          const HardInfo * theHardInfo ) const = 0 ;

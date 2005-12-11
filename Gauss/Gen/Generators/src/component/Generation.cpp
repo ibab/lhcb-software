@@ -1,4 +1,4 @@
-// $Id: Generation.cpp,v 1.6 2005-12-07 22:56:14 robbep Exp $
+// $Id: Generation.cpp,v 1.7 2005-12-11 23:22:30 robbep Exp $
 // Include files 
 
 // local
@@ -304,7 +304,7 @@ StatusCode Generation::decayEvent( HepMCEvent * theEvent ) {
         if ( 1 == status ) thePart -> set_status( 888 ) ;
         else thePart -> set_status( 777 ) ;
 
-        sc = m_decayTool -> generateDecay( pEvt , thePart ) ;
+        sc = m_decayTool -> generateDecay( thePart ) ;
         if ( ! sc.isSuccess() ) return sc ;
       }
     } 

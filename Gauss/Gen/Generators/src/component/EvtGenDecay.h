@@ -1,4 +1,4 @@
-// $Id: EvtGenDecay.h,v 1.1 2005-10-03 10:26:45 robbep Exp $
+// $Id: EvtGenDecay.h,v 1.2 2005-12-11 23:22:30 robbep Exp $
 #ifndef GENERATORS_EVTGENDECAY_H 
 #define GENERATORS_EVTGENDECAY_H 1
 
@@ -26,9 +26,10 @@
 
 #include "CLHEP/Vector/LorentzVector.h"
 
-/** @class EvtGenDecay EvtGenDecay.h Algorithms/EvtGenDecay.h
+/** @class EvtGenDecay EvtGenDecay.h "EvtGenDecay.h"
  *  
- *  Tool to contain EvtGen generator
+ *  Tool to interface to EvtGen generator. Concrete implementation of 
+ *  a IDecayTool.
  *
  *  @author Patrick Robbe
  *  @date   2003-10-15
@@ -41,72 +42,55 @@ public:
 
   virtual ~EvtGenDecay( ) ; ///< Destructor
 
-  /// Initialize method
+  /** Initialize method.
+   *  In initialization:
+   *  -# Create a temporary evt.pdl file to transfer particle properties
+   *     from the particle property service to EvtGen.
+   *  -# Read the main DECAY.DEC decay file and the user signal decay file.
+   *  -# Manages Pythia and PHOTOS print-out according to message level.
+   *  -# Initializes Pythia for EvtGen.
+   */
   virtual StatusCode initialize() ;
 
   /// Finalize method
   virtual StatusCode finalize() ;
 
-  /** Generate a decay tree from a given HepMC particle
-   *  
-   *  @return status code
-   *  @param theEvent pointer to the current HepMC event
-   *  @param theMother pointer to the MC Particle to decay with EvtGen
-   */
-  virtual StatusCode generateDecay( HepMC::GenEvent * theEvent,
-                                    HepMC::GenParticle * theMother ) const ;
+  /// Implements IDecayTool::generateDecay
+  virtual StatusCode generateDecay( HepMC::GenParticle * theMother ) const ;
 
-  virtual StatusCode generateSignalDecay( HepMC::GenEvent * theEvent ,
-                                          HepMC::GenParticle * theMother , 
+  /// Implements IDecayTool::generateSignalDecay
+  virtual StatusCode generateSignalDecay( HepMC::GenParticle * theMother , 
                                           bool & flip ) const ;
   
-
-  /** Generate a decay tree from a given HepMC particle
-   *  The decay chain will stop when it finds a particle
-   *  of type targetId (which is the limit)
-   *  
-   *  @return status code
-   *  @param theEvent pointer to the current HepMC event
-   *  @param theMother pointer to the MC Particle to decay with EvtGen
-   *  @param targetId integer type of the limit particle to generate
-   */
-  virtual StatusCode generateDecayWithLimit( HepMC::GenEvent * theEvent,
-                                             HepMC::GenParticle * theMother,
+  /// Implements IDecayTool::generateDecayWithLimit
+  virtual StatusCode generateDecayWithLimit( HepMC::GenParticle * theMother,
                                              int targetId ) const ;
 
-  /// Enable the possibility to flip the flavour for CP decay modes in EvtGen
+  /// Implements IDecayTool::enableFlip
   virtual void enableFlip() const ; 
 
-  /// Disable the possibility to flip the flavour for CP decay modes in EvtGen
+  /// Implements IDecayTool::disableFlip
   virtual void disableFlip() const ;
   
-  /** true if the particle has a decay table defined in the generic
-   *  or in the user decay file
-   *
-   *  @return boolean
-   *  @param pdgId particle Id of the particle to test
-   */
+  /// Implements IDecayTool::isKnownToDecayTool
   virtual bool isKnownToDecayTool( int pdgId ) const ;
 
-  /** get the signal branching fraction in the generic decay file 
-   *  including daughter decay branching fractions
-   */
+  /// Implements IDecayTool::getSignalBr
   virtual double getSignalBr( ) const ;
   
-  /// check if the signal decay mode is also in the generic table
+  /// Implements IDecayTool::checkSignalPresence
   virtual bool checkSignalPresence( ) const ;
 
+  /// Implements IDecayTool::setSignal
   virtual void setSignal( const int ) ;
   
-protected:
-
-private:
+ protected:
+  
+ private:
   /** Make a HepMCTree tree from an EvtGen particle stopping at the PDG
    *  Id targetId
    *
-   *  @return status code
    *  @param theParticle pointer to the EvtGen particle to put in HepMC format
-   *  @param theEvent pointer to the current HepMC event
    *  @param theMother pointer to the HepMC particle associated to theParticle
    *  @param theOrigin position of the first particle in the decay tree 
    *                (the root of the decay tree)
@@ -114,7 +98,6 @@ private:
    *         negative)
    */
   StatusCode makeHepMC( EvtParticle * theParticle ,
-                        HepMC::GenEvent * theEvent , 
                         HepMC::GenParticle * theMother ,
                         const HepLorentzVector & theOrigin ,
                         int targetId = -999 )  const ;
@@ -122,7 +105,6 @@ private:
   /** Create a temporary evt.pdl file filled with Gaudi Particle Svc
    *  properties to update EvtGen particle properties
    *
-   *  @return status code
    *  @param tempFileName name of the temporary created file
    */
   StatusCode createTemporaryEvtFile( const std::string& tempFileName ) const ;
@@ -130,13 +112,13 @@ private:
   /** Check if HepMC Particle is valid for decay by EvtGen and to fill a
    *  HepMC event (checks if it is not already decayed and ensures that
    *  it has a defined production vertex) 
-   *  @return StatusCode
    *  @param[in] thePart HepMC::GenParticle to analyze
+   *  @return StatusCode::SUCCESS if no problem
+   *  @return StatusCode::ERROR if particle has already an end vertex
    */
   void checkParticle( const HepMC::GenParticle * theParticle ) const ;
   
   /** Call EvtGen to decay a particle
-   *  @return StatusCode
    *  @param[out] thePart the EvtParticle to produce
    *  @param[in]  theHepMCParticle the HepMC::GenParticle to decay with 
    *              EvtGen
@@ -150,8 +132,8 @@ private:
   
   /** Get 2J+1 spin for particles not supported in LHCbKernel/ParticleID
    *
-   *  @return integer
    *  @param theId ParticleID of the particle for which to calculate 2J+1
+   *  @return 2J+1 of the particle
    */
   int getParticleSpin( const ParticleID& theId ) const ;
 
@@ -163,34 +145,30 @@ private:
 
   /// Return the id of the alias corresponding to the pdg code pdgId
   virtual const EvtId getSignalAlias( int pdgId ) const ;
-
-  // member variables
  
-  /// EvtGen engine
-  EvtGen * m_gen ;
+  EvtGen * m_gen ; ///< EvtGen engine
 
-  /// Random Engine
-  EvtRandomEngine * m_randomEngine ;
+  EvtRandomEngine * m_randomEngine ; ///< Random Engine to use in EvtGen
 
-  /// Generic decay file name
-  std::string m_decayFile ;
+  std::string m_decayFile ; ///< Generic decay file name (set by options)
 
-  /// User decay file name
-  std::string m_userDecay ;
+  std::string m_userDecay ; ///< User decay file name (set by options)
 
-  /// EvtId of signal ID
-  EvtId m_signalId ;
+  EvtId m_signalId ; /// EvtGen Id of signal ID
 
-  /// Do not erase temporary evt.pdl particle property file
+  /// Do not erase temporary evt.pdl particle property file (set by options)
   bool  m_keepTempEvtFile ;
 
-  /// Minimum and maximum values for ctau. Outside, ctau is set to 0.
-  double m_minctau, m_maxctau ; 
+  /// Minimum value for ctau. Below ctau is set to 0.
+  double m_minctau ;
+
+  /// Minimum value for ctau. Above ctau is set to 0.
+  double m_maxctau ; 
 
   /// Minimum value for width. Below it is set to 0.
   double m_minwidth ;
 
-  /// Flag for polarized Lambda_b production
+  /// Flag for polarized Lambda_b production (set by options)
   bool m_generatePolLambdab ;
 };
 
@@ -210,17 +188,23 @@ inline void EvtGenDecay::disableFlip() const {
 
 #include "GaudiKernel/RndmGenerators.h"
 
+// forward declaration
 class IRndmGenSvc ;
-// interface to GaudiRandomEngine
-// random engine which will be used inside EvtGen
+/** @class EvtGenGaudiRandomEngine
+ *  interface to GaudiRandomEngine random engine which will be used inside
+ *  EvtGen.
+ */
 class EvtGenGaudiRandomEngine : public EvtRandomEngine {
 public:
   /// Constructor
   EvtGenGaudiRandomEngine( IRndmGenSvc* i , StatusCode & sc ) ;
+ 
   /// Destructor
   virtual ~EvtGenGaudiRandomEngine ( ) ;
+ 
   /// return a random number from the Gaudi engine
   double random() ;
+
 private:
   /// Gaudi random engine common to all Gauss algorithms
   Rndm::Numbers m_randomgaudi ;

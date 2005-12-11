@@ -1,4 +1,4 @@
-// $Id: EvtGenDecay.cpp,v 1.2 2005-11-08 00:07:34 robbep Exp $
+// $Id: EvtGenDecay.cpp,v 1.3 2005-12-11 23:22:30 robbep Exp $
 // Header file
 #include "EvtGenDecay.h"
 
@@ -206,8 +206,7 @@ StatusCode EvtGenDecay::finalize() {
 //=============================================================================
 // Generate a Decay tree from a particle theMother in the event theEvent
 //=============================================================================
-StatusCode EvtGenDecay::generateDecay( HepMC::GenEvent * theEvent ,
-                                       HepMC::GenParticle * theMother ) const {
+StatusCode EvtGenDecay::generateDecay( HepMC::GenParticle * theMother ) const {
   // Call EvtGen for the particle to generate
   checkParticle( theMother ) ;
 
@@ -231,7 +230,7 @@ StatusCode EvtGenDecay::generateDecay( HepMC::GenEvent * theEvent ,
 
   // Fill HepMC event theEvent with EvtGen decay tree part
   // starting from theMother
-  makeHepMC( part , theEvent , theMother , theOriginPosition , -999 ) ;
+  makeHepMC( part , theMother , theOriginPosition , -999 ) ;
 
   // delete EvtGen particle and all its daughters
   part -> deleteTree ( ) ;
@@ -245,8 +244,7 @@ StatusCode EvtGenDecay::generateDecay( HepMC::GenEvent * theEvent ,
 //=============================================================================
 // Generate a Decay tree from a particle theMother in the event theEvent
 //=============================================================================
-StatusCode EvtGenDecay::generateSignalDecay( HepMC::GenEvent * theEvent ,
-                                             HepMC::GenParticle * theMother ,
+StatusCode EvtGenDecay::generateSignalDecay( HepMC::GenParticle * theMother ,
                                              bool & flip) const {
   // Call EvtGen for the particle to generate
   checkParticle( theMother ) ;
@@ -275,7 +273,7 @@ StatusCode EvtGenDecay::generateSignalDecay( HepMC::GenEvent * theEvent ,
 
   // Fill HepMC event theEvent with EvtGen decay tree part
   // starting from theMother
-  makeHepMC( part , theEvent , theMother , theOriginPosition , -999 ) ;
+  makeHepMC( part , theMother , theOriginPosition , -999 ) ;
 
   // delete EvtGen particle and all its daughters
   part -> deleteTree ( ) ;
@@ -287,20 +285,19 @@ StatusCode EvtGenDecay::generateSignalDecay( HepMC::GenEvent * theEvent ,
 }
 
 //=============================================================================
-// Generate a Decay tree from a particle theMother in the event theEvent
+// Generate a Decay tree from a particle theMother.
 // It stops when the particle to decay has a mass larger than theMassLimit
 // or is of the type targetId
 //=============================================================================
-StatusCode EvtGenDecay::generateDecayWithLimit( HepMC::GenEvent * theEvent ,
-                                               HepMC::GenParticle * theMother ,
-                                               int targetId ) const {
+StatusCode EvtGenDecay::generateDecayWithLimit( HepMC::GenParticle * theMother ,
+                                                int targetId ) const {
   checkParticle( theMother ) ;
 
   EvtParticle * part( 0 ) ;
   StatusCode sc = callEvtGen( part , theMother , EvtId( -1 , -1 ) ) ;
   if ( ! sc.isSuccess() ) return sc ;
   
-  // Update HepMCEvent theEvent and HepMCParticle theMother
+  // Update HepMCParticle theMother
 
   // sets PDG Id of theMother
   // because EvtGen might have asked to change the original one
@@ -317,7 +314,7 @@ StatusCode EvtGenDecay::generateDecayWithLimit( HepMC::GenEvent * theEvent ,
   // Fill HepMC event theEvent with EvtGen decay tree part
   // starting from theMother and stopping at particle with pdgId
   // equals to targetId
-  makeHepMC( part , theEvent , theMother , theOriginPosition , targetId ) ;
+  makeHepMC( part , theMother , theOriginPosition , targetId ) ;
   
   // delete EvtGen particle and all its daughters
   part -> deleteTree ( ) ;
@@ -329,18 +326,17 @@ StatusCode EvtGenDecay::generateDecayWithLimit( HepMC::GenEvent * theEvent ,
 }
 
 //=============================================================================
-// Update the HepMC tree ( theMother ) with a EvtGen tree ( the EvtGenPart)
-// in a given HepMC event ( theEvent ). The origin is the production 
+// Update the HepMC tree ( theMother ) with a EvtGen tree ( the EvtGenPart).
+// The origin is the production 
 // position of the root particle in the decay tree. The conversion will stop
 // when the particle is of requested type targetId (if the value is negative
 // -- which is the default value -- it will be ignored and all decay chain
 // will be converted)
 //=============================================================================
-StatusCode EvtGenDecay::makeHepMC( EvtParticle * theEvtGenPart,
-                                  HepMC::GenEvent * theEvent ,
-                                  HepMC::GenParticle * theMother ,
-                                  const HepLorentzVector & theOrigin ,
-                                  int targetId ) const {
+StatusCode EvtGenDecay::makeHepMC( EvtParticle * theEvtGenPart ,
+                                   HepMC::GenParticle * theMother ,
+                                   const HepLorentzVector & theOrigin ,
+                                   int targetId ) const {
   if ( 0 != theEvtGenPart->getNDaug() ) {
     // Find the vertex
     // In EvtGen all positions are defined with respect to the
@@ -355,7 +351,7 @@ StatusCode EvtGenDecay::makeHepMC( EvtParticle * theEvtGenPart,
     // theMother and add it to theEvent
     HepMC::GenVertex * end_vtx = 
       new HepMC::GenVertex( HepLorentzVector( x , y , z , ct ) ) ;
-    theEvent->add_vertex( end_vtx ) ;
+    theMother -> parent_event() -> add_vertex( end_vtx ) ;
     end_vtx->add_particle_in( theMother ) ;
     
     for ( int it = 0 ; it < theEvtGenPart -> getNDaug() ; ++it ) {
@@ -378,8 +374,8 @@ StatusCode EvtGenDecay::makeHepMC( EvtParticle * theEvtGenPart,
       // Fill event with the daughter (recursive procedure)
       // if the particle is not of requested type
       if ( abs( id ) != targetId )
-          makeHepMC( theEvtGenPart->getDaug(it) , theEvent , prod_part , 
-                     theOrigin , targetId ) ;
+          makeHepMC( theEvtGenPart->getDaug(it) , prod_part , theOrigin , 
+                     targetId ) ;
       // otherwise (particle has targetId pdg ID) it can be decayed further
       // by EvtGen (it is the signal particle in pratice) so give it 
       // status 888 unless it is a stable particle and then give it status 999

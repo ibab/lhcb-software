@@ -1,13 +1,11 @@
-// $Id: LHAPDFCommonBlocks.h,v 1.1 2005-12-07 23:01:32 robbep Exp $
+// $Id: LHAPDFCommonBlocks.h,v 1.2 2005-12-11 23:21:47 robbep Exp $
 
 #ifndef GENERATORS_LHAPDFCOMMONBLOCKS_H
 #define GENERATORS_LHAPDFCOMMONBLOCKS_H 1
 
 #include <string>
 
-static const int s_lenlhaparm = 20 ;
-
-/** @class Lhacontrol
+/** @class Lhacontrol LHAPDFCommonBlocks.h "Generators/LHAPDFCommonBlocks.h"
  *
  *  Class to access LHACONTROL LhaPdf Common block from C++ code.
  * 
@@ -16,19 +14,46 @@ static const int s_lenlhaparm = 20 ;
  */
 
 class Lhacontrol {
-public:
-  Lhacontrol();
-  ~Lhacontrol();
-  void setlhavalue( int n , double value) ;
-  void setlhaparm( int n , const std::string & value ) ;
+ public:
+  Lhacontrol(); ///< Constructor 
 
+  ~Lhacontrol(); ///< Destructor
+
+  /** Set value of LHAVALUE array in common LHACONTROL.
+   *  @param[in] n     Index of the array to modify.
+   *  @param[in] value Value to set to LHAVALUE(n).
+   */
+  void setlhavalue( const int n , const double value) ;
+
+  /** Set value of LHAPARM array in common LHACONTROL.
+   *  @param[in] n     Index of the array to modify.
+   *  @param[in] value Value to set to LHAPARM(n).
+   */
+  void setlhaparm( const int n , const std::string & value ) ;
+
+  /** Set value of LHAVALUE array in common LHACONTROL.
+   *  @param[in]  n     Index of the array to modify.
+   *  @param[out] value Value of LHAVALUE(n).
+   */  
   void getlhavalue( int n , double & value) ;
-  void getlhaparm( int n , std::string & value ) ;
 
+  /** Set value of LHAPARM array in common LHACONTROL.
+   *  @param[in]  n     Index of the array to modify.
+   *  @param[out] value Value of LHAPARM(n).
+   */  
+  void getlhaparm( int n , std::string & value ) ;  
+  
+ private:
+  /// Length of the LHAPARM and LHAVALUE arrays
   int lenlhaparm() const { return s_lenlhaparm ; }
 
-private:
+  /// Size of the LHAPARM and LHAVALUE arrays
+  static const int s_lenlhaparm = 20 ;
+
+  /// Dummy string value to return in case of error.
   char * m_dummystr ;
+
+  /// Dummy value double value to return in case of error.
   double m_dummy;
 };
 #endif // GENERATORS_LHAPDFCOMMONBLOCKS_H

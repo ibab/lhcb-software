@@ -1,4 +1,4 @@
-// $Id: SignalForcedFragmentation.cpp,v 1.2 2005-11-21 16:18:05 robbep Exp $
+// $Id: SignalForcedFragmentation.cpp,v 1.3 2005-12-11 23:22:30 robbep Exp $
 // Include files
 
 // local
@@ -90,8 +90,7 @@ bool SignalForcedFragmentation::generate( const unsigned int nPileUp ,
     theSignalAtRest -> set_pdg_id( theSignalPID ) ;
   }
 
-  m_decayTool -> generateSignalDecay( theSignalHepMCEvent , theSignalAtRest , 
-                                      flip ) ;
+  m_decayTool -> generateSignalDecay( theSignalAtRest , flip ) ;
 
   bool result = false ;  
 
@@ -132,8 +131,7 @@ bool SignalForcedFragmentation::generate( const unsigned int nPileUp ,
           updateCounters( theParticleList , m_nParticlesAfterCut , 
                           m_nAntiParticlesAfterCut , true ) ;
 
-          HepMC::GenParticle * theSignal = 
-            chooseAndRevert( theParticleList , theGenEvent ) ;
+          HepMC::GenParticle * theSignal = chooseAndRevert( theParticleList ) ;
 
           // Give signal status
           theSignal -> set_status( 889 ) ;

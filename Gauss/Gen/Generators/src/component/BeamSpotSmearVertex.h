@@ -1,4 +1,4 @@
-// $Id: BeamSpotSmearVertex.h,v 1.1 2005-10-03 10:21:04 robbep Exp $
+// $Id: BeamSpotSmearVertex.h,v 1.2 2005-12-11 23:22:30 robbep Exp $
 #ifndef GENERATORS_BEAMSPOTSMEARVERTEX_H 
 #define GENERATORS_BEAMSPOTSMEARVERTEX_H 1
 
@@ -9,9 +9,10 @@
 
 #include "Generators/IVertexSmearingTool.h"
 
-/** @class BeamSpotSmearVertex BeamSpotSmearVertex.h 
+/** @class BeamSpotSmearVertex BeamSpotSmearVertex.h "BeamSpotSmearVertex.h"
  *  
- *  Utility tool to keep events with particles only in LHCb acceptance
+ *  VertexSmearingTool to smear vertex according to beam spot parameters.
+ *  Concrete implementation of IVertexSmearingTool.
  * 
  *  @author Patrick Robbe
  *  @date   2005-08-24
@@ -20,22 +21,42 @@ class BeamSpotSmearVertex : public GaudiTool,
                             virtual public IVertexSmearingTool {
 public:
   /// Standard constructor
-  BeamSpotSmearVertex( const std::string& type, 
-                       const std::string& name,
+  BeamSpotSmearVertex( const std::string& type, const std::string& name,
                        const IInterface* parent);
   
   virtual ~BeamSpotSmearVertex( ); ///< Destructor
 
+  /// Initialize function
   virtual StatusCode initialize( ) ;
 
+  /** Implementation of IVertexSmearingTool::smearVertex.
+   *  Gaussian smearing of spatial position of primary event truncated
+   *  at a given number of sigma. 
+   */
   virtual StatusCode smearVertex( HepMCEvent * theEvent ) ;
 
 protected:
 
 private:
-  double m_sigmaX , m_sigmaY , m_sigmaZ ;
-  double m_xcut   , m_ycut   , m_zcut   ;
-  Rndm::Numbers m_gaussDist ;
+  /// Width of the smearing along the x-axis (set by job options).
+  double m_sigmaX ;
+
+  /// Width of the smearing along the y-axis (set by job options).
+  double m_sigmaY ;
+
+  /// Width of the smearing along the z-axis (set by job options).
+  double m_sigmaZ ;
+
+  /// Number of sigmal above which to cut for x-axis smearing (set by options)
+  double m_xcut   ;
+
+  /// Number of sigmal above which to cut for y-axis smearing (set by options)
+  double m_ycut   ;
+
+  /// Number of sigmal above which to cut for z-axis smearing (set by options)
+  double m_zcut   ;
+
+  Rndm::Numbers m_gaussDist ; ///< Gaussian random number generator
   
 };
 #endif // GENERATORS_BEAMSPOTSMEARVERTEX_H

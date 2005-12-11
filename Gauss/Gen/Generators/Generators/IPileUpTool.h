@@ -1,4 +1,4 @@
-// $Id: IPileUpTool.h,v 1.1 2005-10-03 09:50:06 robbep Exp $
+// $Id: IPileUpTool.h,v 1.2 2005-12-11 23:21:47 robbep Exp $
 #ifndef GENERATORS_IPILEUPTOOL_H 
 #define GENERATORS_IPILEUPTOOL_H 1
 
@@ -7,9 +7,10 @@
 #include "GaudiKernel/IAlgTool.h"
 
 
-/** @class IPileUpTool IPileUpTool.h Generators/IPileUpTool.h
+/** @class IPileUpTool IPileUpTool.h "Generators/IPileUpTool.h"
  *  
- *  Abstract interface to pile up tools
+ *  Abstract interface to pile up tools. Generates the number of pile-up
+ *  interactions to generate for each event.
  * 
  *  @author Patrick Robbe
  *  @date   2005-08-17
@@ -21,8 +22,13 @@ class IPileUpTool : virtual public IAlgTool {
 public:
   static const InterfaceID& interfaceID() { return IID_IPileUpTool ; }
 
+  /** Computes the number of pile-up interactions in the event.
+   *  @param[out] currentLuminosity  Luminosity of the current event.
+   *  @return Number of pile-up interactions to generate.
+   */
   virtual unsigned int numberOfPileUp( double & currentLuminosity ) = 0 ;
 
+  /// Print various counters at the end of the job
   virtual void printPileUpCounters( ) = 0 ;
 };
 #endif // GENERATORS_IPILEUPTOOL_H
