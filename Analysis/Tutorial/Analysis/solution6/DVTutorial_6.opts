@@ -13,6 +13,21 @@
 //
 #include "$DAVINCIROOT/options/L0.opts"
 #include "$TRGSYSROOT/options/L1.opts"
+//
+//HLT
+//
+#include "$HLTSELECTIONSROOT/options/HLTSelections.opts"
+HltDecision.MakeCorrelations = true ;
+HltDecision.OutputLevel = 3 ;
+#include "$HLTSELCHECKERROOT/options/Correlations.opts"
+#include "$HLTSELCHECKERROOT/options/Plots.opts"
+#include "$HLTSELCHECKERROOT/options/MeasureTimes.opts"
+//----------------------------------------------------------
+// uncomment to get Kaon-ID
+// K-ID
+// #include "$HLTSELECTIONSROOT/options/UseRich.opts"
+// TrgParticleMaker.KaonDLLCut = 15 ; // default
+//
 
 //
 // Don't forget the DLL
@@ -100,6 +115,9 @@ PrintTrueBs.Depth = 2;  // down to the K and mu
 TutorialSeq.Members += { "TutorialTuple" };
 TutorialTuple.PhysDesktop.InputLocations = { "Phys/Bs2JpsiPhi" } ;
 TutorialTuple.InputContainers = { "Phys/Bs2JpsiPhi/Particles" };
+//
+// Tagging
+//
 #include "$FLAVOURTAGGINGROOT/options/BTaggingTool.opts"
 //
 // Calculate efficiencies
@@ -111,7 +129,7 @@ ApplicationMgr.TopAlg += { "EffSelCheck/EffBs2JpsiPhi" };
 EffBs2JpsiPhi.Histograms = true;
 EffBs2JpsiPhi.MCDecay = "[B_s0 -> (phi(1020) -> ^K+ ^K-) (J/psi(1S) -> ^mu+ ^mu- {, gamma})]cc";
 //
-// Print a correlations table
+// Print a corellations table
 // Also better run outside of the sequence
 //
 ApplicationMgr.TopAlg += { "SelResultCorrelations" };

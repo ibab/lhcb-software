@@ -8,9 +8,14 @@
 !
 !-----------------------------------------------------------------------------
 
+! 2005-11-12 - P. Koppenburg and C. Lazzeroni
+  - solution{5,6}/*.*
+    . Revisited for v12r15.
+  
+!===================== Tutorial/Analysis v5 2005-11-15 ======================
 ! 2005-11-07 - P. Koppenburg 
   - cmt/requirements
-    . Revisited fro v12r14.
+    . Revisited for v12r14.
   
 ! 2005-10-21 - P. Koppenburg 
   - cmt/requirements
