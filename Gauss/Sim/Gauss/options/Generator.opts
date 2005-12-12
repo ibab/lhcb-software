@@ -46,11 +46,18 @@ Generator.Members += { "GenMonitorAlg" };
 ToolSvc.EvtGenDecay.DecayFile         = "$DECFILESROOT/dkfiles/DECAY-DC06.DEC";
 
 // Example options for Minimum bias
-Generation.EventType                  = 30000000;
-Generation.SampleGenerationTool       = "MinimumBias";
-Generation.MinimumBias.ProductionTool = "PythiaProduction";
-ToolSvc.EvtGenDecay.UserDecayFile     = "$DECFILESROOT/dkfiles/minbias.dec";
-Generation.MinimumBias.PythiaProduction.Commands = {@PythiaAlg.BasePythiaCommand};
+// Generation.EventType                  = 30000000;
+// Generation.SampleGenerationTool       = "MinimumBias";
+// Generation.MinimumBias.ProductionTool = "PythiaProduction";
+// ToolSvc.EvtGenDecay.UserDecayFile     = "$DECFILESROOT/dkfiles/minbias.dec";
+// Generation.MinimumBias.PythiaProduction.Commands = {@PythiaAlg.BasePythiaCommand};
+
+// Example options for Minimum bias with Herwig
+// ApplicationMgr.Dlls += { "LbHerwig" };
+// Generation.EventType                  = 130000000;
+// Generation.SampleGenerationTool       = "MinimumBias";
+// Generation.MinimumBias.ProductionTool = "HerwigProduction";
+// ToolSvc.EvtGenDecay.UserDecayFile     = "$DECFILESROOT/dkfiles/minbias.dec";
 
 // Example options for inclusive b
 // Generation.EventType                  = 10000000;
