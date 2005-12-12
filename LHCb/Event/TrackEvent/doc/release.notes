@@ -4,6 +4,9 @@
 ! Purpose     : Package for the tracking event model classes
 !-----------------------------------------------------------------------------
 
+! 2005-12-12 - Eduardo Rodrigues
+ - new method in Track to retrieve the number of outliers removed by the fit
+
 !========================= TrackEvent v1r6 2005-12-05 ========================
 ! 2005-12-08 - Eduardo Rodrigues
  - corrected problem with check methods in Track
