@@ -1,8 +1,12 @@
-! $Id: release.notes,v 1.3 2005-11-28 17:24:46 cattanem Exp $
+! $Id: release.notes,v 1.4 2005-12-12 16:56:24 cattanem Exp $
 ! Package     : Event/EventBase
 ! Responsible : Marco Cattaneo, Gloria Corti
 ! Purpose     : LHCb Event model
 !---------------------------------------------------------------------------
+
+! 2005-12-12 - Marco Cattaneo
+ - Remove EventHeader.xml, to be replaced by MCHeader and/or RecHeader
+ - Add run number to ProcessHeader
 
 !======================== EventBase v1r0 2005-11-28 ========================
 ! 2005-11-28 - Marco Cattaneo

@@ -35,6 +35,12 @@
         type="std::string"
         init='"Unknown"'
        />
+       <attribute
+        desc="Run number"
+        name="runNumber"
+        type="unsigned int"
+        init="0"
+       />
      </class>
   </package>
 
