@@ -1,4 +1,4 @@
-// $Id: MuonDSTPrepare.cpp,v 1.2 2005-10-17 08:16:34 pkoppenb Exp $
+// $Id: MuonDSTPrepare.cpp,v 1.3 2005-12-12 07:41:21 pkoppenb Exp $
 // Include files 
 
 // from Gaudi
@@ -61,7 +61,7 @@ StatusCode MuonDSTPrepare::execute() {
   std::vector<MuonTileID> usedTiles[5];
   
   // get the existing MuonIDs from the TES
-  SmartDataPtr<MuonIDs> muonIDs(eventSvc(),m_MuonIDsPath);
+  MuonIDs* muonIDs = get<MuonIDs>(m_MuonIDsPath);
   if(!muonIDs){
     err() << "MuonIDs were not in TES at "
         << m_MuonIDsPath << endreq;
@@ -88,7 +88,7 @@ StatusCode MuonDSTPrepare::execute() {
     char stationPath[100];
     sprintf(stationPath,stationPattern.c_str(),station+1);
     std::string TESPath = stationPath;
-    SmartDataPtr<MuonCoords> pCoords(eventSvc(),TESPath);
+    MuonCoords* pCoords = get<MuonCoords>(TESPath);
     if(!pCoords){
       err() << "Failed to read TES path "
           << TESPath << " looking for MuonCoords" << endreq;

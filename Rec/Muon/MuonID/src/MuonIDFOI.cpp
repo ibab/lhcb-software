@@ -1,4 +1,4 @@
-// $Id: MuonIDFOI.cpp,v 1.14 2005-12-07 07:01:55 pkoppenb Exp $
+// $Id: MuonIDFOI.cpp,v 1.15 2005-12-12 07:41:21 pkoppenb Exp $
 // Include files
 #include <cstdio>
 
@@ -194,12 +194,7 @@ StatusCode MuonIDFOI::execute() {
     return sc;
   }
 
-  SmartDataPtr<TrStoredTracks> trTracks(eventSvc(),m_TrStoredTracksPath);
-  if(!trTracks){
-    err() << " Failed to get TrStoredTrack container "
-        <<  m_TrStoredTracksPath << endreq;
-    return StatusCode::FAILURE;
-  }
+  TrStoredTracks* trTracks = get<TrStoredTracks>(m_TrStoredTracksPath);
   debug()  << "Number of input tracks " << trTracks->size() << endreq;
 
   MuonIDs * pMuids = new MuonIDs;
@@ -231,7 +226,7 @@ StatusCode MuonIDFOI::execute() {
 
   // Register the MuonID container to the TES
 
-  sc = eventSvc()->registerObject(m_MuonIDsPath,pMuids);
+  sc = put(pMuids,m_MuonIDsPath);
   if(sc.isFailure()){
     err() << "TES rejected the muonIDs into location "
         << m_MuonIDsPath << endreq;
@@ -250,11 +245,6 @@ StatusCode MuonIDFOI::finalize() {
 
   debug()  << "==> Finalize" << endreq;
 
-  // Release the tools
-  if( m_iTileTool ) toolSvc()->releaseTool( m_iTileTool );
-  if( m_iGeomTool ) toolSvc()->releaseTool( m_iGeomTool );
-  
-
   return StatusCode::SUCCESS;
 }
 
@@ -267,30 +257,17 @@ StatusCode MuonIDFOI::fillCoordVectors(){
   int station;
   for(station = 0 ; station < m_NStation ; station++){
     std::string stationPattern = MuonCoordLocation::MuonCoords;
-
     std::string stationNameWithoutM=m_stationNames[station].substr(1,2);
-
     std::string::size_type allsize=stationPattern.size();
-
     std::string::size_type findFirstSeparator=stationPattern.find("%");
-
     std::string::size_type findLastSeparator=stationPattern.rfind("/");
- 
     std::string firstPartOfName=stationPattern.substr(0,findFirstSeparator);
-
     std::string lastPartOfName=stationPattern.substr(findLastSeparator,allsize);
-
-    std::string TESPath = firstPartOfName+stationNameWithoutM+lastPartOfName; 
-
+    std::string TESPath = firstPartOfName+stationNameWithoutM+lastPartOfName;
 
     // get the MuonCoords for each station in turn
 
-    SmartDataPtr<MuonCoords> coords(eventSvc(),TESPath);
-    if(!coords){
-      err() << "Failed to read TES path "
-          << TESPath << " looking for MuonCoords" << endreq;
-    }
-
+    MuonCoords* coords = get<MuonCoords>(TESPath);
     // loop over the coords
     MuonCoords::const_iterator iCoord;
     for( iCoord = coords->begin() ; iCoord != coords->end() ; iCoord++ ){
