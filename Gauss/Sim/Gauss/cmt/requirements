@@ -5,7 +5,7 @@ version v22r0
 #-- Structure
 branches src doc options cmt job
 
-#-- tags: AcerMC, Vis, GDML
+#-- tags: AcerMC, Vis, GDML, Herwig
 
 #=========================================================================
 #-- Databases
@@ -22,9 +22,14 @@ use Geant4Files		v71r0	      -no_auto_imports
 use ParticleGuns        v1r0    Gen
 use Generators          v3r0    Gen
 use LbPythia            v3r0    Gen
-#-- Optional AcerMC -- Temporarly removed
-#macro LbAcerMC_use "" Linux&AcerMC "LbAcerMC v1r3 Gen"
-#use $(LbAcerMC_use)
+
+#-- Optional AcerMC 
+macro LbAcerMC_use "" Linux&AcerMC "LbAcerMC v1r3 Gen"
+use $(LbAcerMC_use)
+
+#-- Optional Herwig
+macro LbHerwig_use "" Linux&Herwig "LbHerwig v1r0 Gen"
+use $(LbHerwig_use)
 
 #-- Simulation
 use GiGaCnv             v15r11  Sim
@@ -84,15 +89,18 @@ set NeutronHPCrossSections $(GEANT4FILESROOT)/data/G4NDL
 #-- Build Main Program 
 
 application Gauss "GaussMain.cpp"
-#application GaussAcerMC "GaussMain.cpp"
-#macro_remove constituents "GaussAcerMC" Linux&AcerMC "Gauss"
+application GaussAcerMC "GaussMain.cpp"
+application GaussHerwig "GaussMain.cpp"
 
+macro_remove constituents "GaussAcerMC" Linux&AcerMC "Gauss" 
+macro_remove constituents "GaussHerwig" Linux&Herwig "Gauss"
 #========================================================================
 #-- Set macros
 apply_pattern application_path 
 macro Gauss_linkopts  "$(application_linkopts)"
 macro_append Gauss_linkopts " -Wl,-Map,Linux.map " \
              Linux&AcerMC   " -Wl,-Map,LinuxAcerMC.map "\
+             Linux&Herwig   " -Wl,-Map,LinuxHerwig.map "\
              WIN32          ""
 
 #-- Make just executable "visible" 
@@ -100,10 +108,12 @@ path_remove    PATH  "/Gauss/"
 path_append    PATH  "${GAUSSROOT}/${BINDIR}"
 
 #-- For visualization make appropriate engine visible (DAWN)
-#path_append    PATH  "${OSC_release_area}/DAWN/bin/Linux"
+path_remove	PATH  "" Linux&Vis "/DAWN/"
+path_append	PATH  "" Linux&Vis " ${OSC_release_area}/DAWN/bin/Linux "
 
 #========================================================================
 #-- Set usefull alias
 alias gauss " ${GAUSSROOT}/${BINDIR}/Gauss.exe ${GAUSSOPTS}/Gauss.opts "
 alias gaussvis " ${GAUSSROOT}/${BINDIR}/Gauss.exe ${GAUSSOPTS}/GaussVis.opts "
-#alias gaussacer " ${GAUSSROOT}/${BINDIR}/GaussAcerMC.exe ${GAUSSOPTS}/Gauss.opts "
+alias gaussacer " ${GAUSSROOT}/${BINDIR}/GaussAcerMC.exe ${GAUSSOPTS}/Gauss.opts "
+alias gaussherwig " ${GAUSSROOT}/${BINDIR}/GaussHerwig.exe ${GAUSSOPTS}/Gauss.opts "
