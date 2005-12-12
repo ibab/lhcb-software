@@ -18,9 +18,10 @@
        &StlVector;
 
        <enum
-          desc  = "types of sub-detector channel ID"
-          name  = "channelIDType"
-          value = "veloType=1, stType, otType, richType, caloType, muonType"
+          desc   = "types of sub-detector channel ID"
+          name   = "channelIDType"
+          value  = "Velo=1, ST, OT, Rich, Calo, Muon"
+          access = 'PUBLIC'
        />
 
       <enum
@@ -59,8 +60,8 @@
           <arg const="TRUE" name="chanID" type="VeloChannelID" />
           <arg const="TRUE" name="size=0" type="unsigned int" />
           <code>
-m_lhcbID = (veloType &lt;&lt; detectorTypeBits) +
-           (size     &lt;&lt; veloBits ) +
+m_lhcbID = (Velo &lt;&lt; detectorTypeBits) +
+           (size &lt;&lt; veloBits ) +
            chanID;
           </code>
        </constructor>
@@ -71,7 +72,7 @@ m_lhcbID = (veloType &lt;&lt; detectorTypeBits) +
          const = 'TRUE'
          desc  = "return true if this is a Velo identifier">
          <code>
-  return (veloType == detectorType());
+  return (Velo == detectorType());
          </code>
        </method>
 
@@ -91,8 +92,8 @@ return ( m_lhcbID &amp; veloMask );
           <arg const="TRUE" name="chanID" type="STChannelID" />
           <arg const="TRUE" name="size=0" type="unsigned int" />
           <code>
-m_lhcbID = (stType &lt;&lt; detectorTypeBits) +
-           (size   &lt;&lt; stBits ) +
+m_lhcbID = (ST   &lt;&lt; detectorTypeBits) +
+           (size &lt;&lt; stBits ) +
            chanID;
         </code>
       </constructor>
@@ -103,7 +104,7 @@ m_lhcbID = (stType &lt;&lt; detectorTypeBits) +
          const = 'TRUE'
          desc  = "return true if this is a Silicon Tracker identifier">
          <code>
-  return (stType == detectorType());
+  return (ST == detectorType());
          </code>
        </method>
 
@@ -122,7 +123,7 @@ return ( (m_lhcbID &amp; stMask ));
          desc     = "Constructor from OTChannelID" >
         <arg const="TRUE" name="chanID" type="OTChannelID" />
         <code>
-m_lhcbID = (otType &lt;&lt; detectorTypeBits) + chanID;
+m_lhcbID = (OT &lt;&lt; detectorTypeBits) + chanID;
         </code>
        </constructor>
 
@@ -132,7 +133,7 @@ m_lhcbID = (otType &lt;&lt; detectorTypeBits) + chanID;
          const = 'TRUE'
          desc  = "return true if this is a Outer Tracker identifier">
          <code>
-return (otType == detectorType());
+return (OT == detectorType());
          </code>
        </method>
 
@@ -154,7 +155,7 @@ return m_lhcbID &amp; otMask;
          <code>
   unsigned int richData = chanID.dataBitsOnly();
   if( chanID.pixelDataAreValid() ) richData += 0x8000000;
-  setDetectorType( richType );
+  setDetectorType( Rich );
   setID( richData );
          </code>
        </constructor>
@@ -165,7 +166,7 @@ return m_lhcbID &amp; otMask;
          const = 'TRUE'
          desc  = 'return true if this is a Rich identifier'>
          <code>
-  return (richType == detectorType());
+  return (Rich == detectorType());
          </code>
        </method>
 
@@ -187,7 +188,7 @@ return id;
           initList = "m_lhcbID(0)" >
           <arg const="TRUE" name="chanID" type="CaloCellID" />
          <code>
-  setDetectorType( caloType );
+  setDetectorType( Calo );
   setID( chanID.all() );
          </code>
        </constructor>
@@ -198,7 +199,7 @@ return id;
          const = 'TRUE'
          desc  = "return true if this is a Calo identifier">
          <code>
-  return (caloType == detectorType());
+  return (Calo == detectorType());
          </code>
        </method>
 
@@ -217,7 +218,7 @@ return id;
           initList = "m_lhcbID(0)" >
           <arg const="TRUE" name="chanID" type="MuonTileID" />
          <code>
-  setDetectorType( muonType );
+  setDetectorType( Muon );
   setID( int(chanID) );
          </code>
        </constructor>
@@ -228,7 +229,7 @@ return id;
          const = 'TRUE'
          desc  = "return true if this is a Muon identifier">
          <code>
-  return (muonType == detectorType());
+  return (Muon == detectorType());
          </code>
        </method>
 
@@ -239,6 +240,17 @@ return id;
          desc  = "return the MuonTileID">
          <code>
   return isMuon() ? MuonTileID(m_lhcbID &amp; IDMask) : MuonTileID(0xF0000000);
+         </code>
+       </method>
+
+       <method
+         type  = "bool"
+         name  = "checkDetectorType"
+         argList = "unsigned int channelIDType"
+         desc  = "Check the LHCbID sub-detector channel ID type identifier"
+         const = "TRUE">
+         <code>
+  return ( channelIDType == detectorType() );
          </code>
        </method>
 
