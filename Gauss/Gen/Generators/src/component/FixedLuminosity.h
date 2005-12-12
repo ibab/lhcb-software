@@ -1,4 +1,4 @@
-// $Id: FixedLuminosity.h,v 1.1 2005-12-07 23:03:55 robbep Exp $
+// $Id: FixedLuminosity.h,v 1.2 2005-12-12 16:06:20 robbep Exp $
 #ifndef GENERATORS_FIXEDLUMINOSITY_H 
 #define GENERATORS_FIXEDLUMINOSITY_H 1
 
@@ -9,11 +9,12 @@
 
 #include "Generators/IPileUpTool.h"
 
+// forward declaration
 class IRndmGenSvc ;
 
-/** @class FixedLuminosity FixedLuminosity.h 
+/** @class FixedLuminosity FixedLuminosity.h "FixedLuminosity.h"
  *  
- *  Utility tool to compute variable number of pile up events
+ *  Tool to compute variable number of pile up events
  *  depending on beam parameters
  * 
  *  @author Patrick Robbe
@@ -33,20 +34,30 @@ public:
   /// Finalize method
   virtual StatusCode finalize( ) ;
 
+  /** Implements IPileUpTool::numberOfPileUp
+   *  Returns the number of pile-up interactions in one event. It follows
+   *  a Poisson distribution with 
+   *  mean = Luminosity * cross_section / crossing_rate.
+   *  The fixed luminosity is returned as the currentLuminosity.
+   */
   virtual unsigned int numberOfPileUp( double & currentLuminosity ) ;
 
+  /// Implements IPileUpTool::printPileUpCounters
   virtual void printPileUpCounters( ) ;
 
 protected:
 
 private:
-  double m_luminosity ;
-  double m_crossingRate ;
-  double m_totalXSection ;
+  double m_luminosity ; ///< Fixed luminosity (set by options)
 
-  int    m_numberOfZeroInteraction ;
-  int    m_nEvents ;
+  double m_crossingRate ; ///< Crossing rate (set by options)
 
-  IRndmGenSvc * m_randSvc ;
+  double m_totalXSection ; ///< Cross section (set by options)
+
+  int    m_numberOfZeroInteraction ; ///< Counter of empty events
+
+  int    m_nEvents ; ///< Counter of events (including empty events)
+
+  IRndmGenSvc * m_randSvc ; ///< Pointer to random number generator service
 };
 #endif // GENERATORS_FIXEDLUMINOSITY_H

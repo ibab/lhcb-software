@@ -1,4 +1,4 @@
-// $Id: FixedNInteractions.h,v 1.1 2005-10-03 10:18:38 robbep Exp $
+// $Id: FixedNInteractions.h,v 1.2 2005-12-12 16:06:20 robbep Exp $
 #ifndef GENERATORS_FIXEDNINTERACTIONS_H 
 #define GENERATORS_FIXEDNINTERACTIONS_H 1
 
@@ -8,32 +8,37 @@
 
 #include "Generators/IPileUpTool.h"
 
-/** @class FixedNInteractions FixedNInteractions.h 
+/** @class FixedNInteractions FixedNInteractions.h "FixedNInteractions.h"
  *  
- *  Utility tool to generate fixed number of pile-up interactions
+ *  Tool to generate fixed number of pile-up interactions. Concrete
+ *  implementation of IPileUpTool. 
  * 
  *  @author Patrick Robbe
  *  @date   2005-08-17
  */
 class FixedNInteractions : public GaudiTool, virtual public IPileUpTool {
-public:
+ public:
   /// Standard constructor
   FixedNInteractions( const std::string& type, 
                       const std::string& name,
                       const IInterface* parent);
-
+  
   virtual ~FixedNInteractions( ); ///< Destructor
-
+  
   /// Initialize method
   virtual StatusCode initialize( ) ;
-
+  
+  /** Returns a constant number of pile-up interactions.
+   *  Implementation of IPileUpTool::numberOfPileUp. 
+   *  Returns a luminosity equal to 0.
+   */
   virtual unsigned int numberOfPileUp( double & currentLuminosity ) ;
-
+  
+  /// Implementation of IPileUpTool::printPileUpCounters
   virtual void printPileUpCounters( ) ;
-
-protected:
-
-private:
-  int m_nInteractions ;
+  
+ private:
+  /// Number of interactions to generate (set by job options)
+  int m_nInteractions ; 
 };
 #endif // GENERATORS_FIXEDNINTERACTIONS_H

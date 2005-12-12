@@ -1,4 +1,4 @@
-// $Id: BeamSpotSmearVertex.h,v 1.2 2005-12-11 23:22:30 robbep Exp $
+// $Id: BeamSpotSmearVertex.h,v 1.3 2005-12-12 16:06:20 robbep Exp $
 #ifndef GENERATORS_BEAMSPOTSMEARVERTEX_H 
 #define GENERATORS_BEAMSPOTSMEARVERTEX_H 1
 
@@ -34,26 +34,24 @@ public:
    *  at a given number of sigma. 
    */
   virtual StatusCode smearVertex( HepMCEvent * theEvent ) ;
-
-protected:
-
-private:
+  
+ private:
   /// Width of the smearing along the x-axis (set by job options).
   double m_sigmaX ;
-
+  
   /// Width of the smearing along the y-axis (set by job options).
   double m_sigmaY ;
 
   /// Width of the smearing along the z-axis (set by job options).
   double m_sigmaZ ;
 
-  /// Number of sigmal above which to cut for x-axis smearing (set by options)
+  /// Number of sigma above which to cut for x-axis smearing (set by options)
   double m_xcut   ;
 
-  /// Number of sigmal above which to cut for y-axis smearing (set by options)
+  /// Number of sigma above which to cut for y-axis smearing (set by options)
   double m_ycut   ;
 
-  /// Number of sigmal above which to cut for z-axis smearing (set by options)
+  /// Number of sigma above which to cut for z-axis smearing (set by options)
   double m_zcut   ;
 
   Rndm::Numbers m_gaussDist ; ///< Gaussian random number generator
