@@ -28,7 +28,7 @@ macro LbAcerMC_use "" Linux&AcerMC "LbAcerMC v1r3 Gen"
 use $(LbAcerMC_use)
 
 #-- Optional Herwig
-macro LbHerwig_use "" Linux&Herwig "LbHerwig v1r0 Gen"
+macro LbHerwig_use "" Linux&Herwig "LbHerwig v1r1 Gen"
 use $(LbHerwig_use)
 
 #-- Simulation
