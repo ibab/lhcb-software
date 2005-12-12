@@ -5,6 +5,12 @@
 !-----------------------------------------------------------------------------
 
 !============================ Gauss v22r0 ================================
+! 2005-12-12 - Florence Ranjard
+ - requirements - add Herwig tag.
+                  > setup -tag_add=Herwig
+                  > gmake CMTEXTRATAGS=Herwig
+                  > gaussherwig
+
 ! 2005-12-12 - Gloria CORTI
  - Introduce example of options to use to produce min bias events with
    Herwig. They are commented.
