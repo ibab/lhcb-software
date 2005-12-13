@@ -13,8 +13,9 @@ DVAlgorithm::DVAlgorithm( const std::string& name, ISvcLocator* pSvcLocator )
   , m_pFilter(0)
   , m_ppSvc(0)
   , m_checkOverlap(0)
-  , m_algorithm2IDTool()
-  , m_taggingTool()
+  , m_algorithm2IDTool(0)
+  , m_taggingTool(0)
+  , m_descendants(0)
   , m_setFilterCalled(false)
   , m_countFilterWrite(0)
   , m_countFilterPassed(0)
@@ -163,47 +164,11 @@ StatusCode DVAlgorithm::sysExecute () {
 
 }
 //=============================================================================
-IPhysDesktop* DVAlgorithm::desktop() const {return m_pDesktop;}  
-
-//=============================================================================
-IGlobalFitter* DVAlgorithm::globalFitter() const {return m_pGlobalFit;}
-
-//=============================================================================
-IMassVertexFitter* DVAlgorithm::massVertexFitter() const {return m_pLagFit;}  
-
-//=============================================================================
-IVertexFitter* DVAlgorithm::vertexFitter() const {return m_pVertexFit;}  
-
-//=============================================================================
-IGeomDispCalculator* DVAlgorithm::geomDispCalculator() const {return m_pGeomDispCalc;}  
-
-//=============================================================================
-IParticleStuffer* DVAlgorithm::particleStuffer() const {return m_pStuffer;} 
- 
-//=============================================================================
-IParticleFilter* DVAlgorithm::particleFilter() const {return m_pFilter;}
-
-//=============================================================================
-IParticlePropertySvc* DVAlgorithm::ppSvc() const {return m_ppSvc;}
-
-//=============================================================================
-ICheckOverlap* DVAlgorithm::checkOverlap() const {return m_checkOverlap;}
-
-//=============================================================================
-IAlgorithm2ID* DVAlgorithm::algorithmID() const {return m_algorithm2IDTool;}
-
-//=============================================================================
-IBTaggingTool* DVAlgorithm::flavourTagging() const {return m_taggingTool;}
-
-//=============================================================================
 StatusCode DVAlgorithm::setFilterPassed  (  bool    state  ) {
   
-  StatusCode sc = this->Algorithm::setFilterPassed(state);
-  
+  StatusCode sc = this->Algorithm::setFilterPassed(state); 
   m_setFilterCalled = true;
-
   return sc;
-
 }
 
 //=============================================================================
@@ -296,8 +261,7 @@ void DVAlgorithm::imposeOutputLocation(std::string outputLocationString)
     fatal() << "Desktop has not been created yet" << endreq;
   }
   m_pDesktop->imposeOutputLocation(outputLocationString);  
-  return;
-  
+  return;  
 }
 // ============================================================================
 // Algorithm ID

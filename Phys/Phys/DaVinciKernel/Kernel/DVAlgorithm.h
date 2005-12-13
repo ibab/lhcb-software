@@ -22,6 +22,7 @@
 #include "Kernel/ICheckOverlap.h"
 #include "Kernel/IAlgorithm2ID.h"
 #include "Kernel/IBTaggingTool.h"
+#include "Kernel/IParticleDescendants.h"
 
 /** @class DVAlgorithm DVAlgorithm.h Kernel/DVAlgorithm.h
  *  Base Class for DaVinci Selection Algorithms:
@@ -42,30 +43,6 @@ public:
 
   virtual ~DVAlgorithm( ){ }; ///< Destructor
   
-  /// Accessor for PhysDesktop Tool
-  IPhysDesktop* desktop() const; 
-
-  /// Accessor for Mass Constrained Vertex Fitter Tool
-  IMassVertexFitter* massVertexFitter() const; 
-
-  /// Accessor for Unconstrained Vertex Fitter Tool
-  IVertexFitter* vertexFitter() const;
-
-  /// Accessor for Geometrical Displacement Calculation Tool
-  IGeomDispCalculator* geomDispCalculator() const;
-
-  /// Accessor for Particle Stuffer Tool
-  IParticleStuffer* particleStuffer() const;
-
-  /// Accessor for Particle Filter Tool
-  IParticleFilter* particleFilter() const;
-
-  /// Accessor for ParticlePropertySvc
-  IParticlePropertySvc* ppSvc() const;
-
-  /// Accessor for CheckOverlap Tool
-  ICheckOverlap* checkOverlap() const;
-
   /// Overridden from Gaudi Algo to produce a warning if not called by user
   StatusCode setFilterPassed (bool state);  
 
@@ -88,14 +65,41 @@ public:
   /// get algorithm ID
   int getAlgorithmID();
  
+  /// Accessor for PhysDesktop Tool
+  inline IPhysDesktop* desktop() const {return m_pDesktop;}; 
+
+  /// Accessor for Mass Constrained Vertex Fitter Tool
+  inline IMassVertexFitter* massVertexFitter() const {return m_pLagFit;}; 
+
+  /// Accessor for Unconstrained Vertex Fitter Tool
+  inline IVertexFitter* vertexFitter() const {return m_pVertexFit;};
+
   /// Accessor for Global Fitter Tool
-  IGlobalFitter* globalFitter() const;
+  inline IGlobalFitter* globalFitter() const {return m_pGlobalFit;};
+
+  /// Accessor for Geometrical Displacement Calculation Tool
+  inline IGeomDispCalculator* geomDispCalculator() const {return m_pGeomDispCalc;};
+
+  /// Accessor for Particle Stuffer Tool
+  inline IParticleStuffer* particleStuffer() const {return m_pStuffer;};
+
+  /// Accessor for Particle Filter Tool
+  inline IParticleFilter* particleFilter() const {return m_pFilter;};
+
+  /// Accessor for ParticlePropertySvc
+  inline IParticlePropertySvc* ppSvc() const {return m_ppSvc;};
+
+  /// Accessor for CheckOverlap Tool
+  inline ICheckOverlap* checkOverlap() const {return m_checkOverlap;};
 
   /// Accessor for Algorithm2ID Tool
-  IAlgorithm2ID* algorithmID() const;
+  inline IAlgorithm2ID* algorithmID() const {return m_algorithm2IDTool;};
 
   /// Tagging Tool
-  IBTaggingTool* flavourTagging() const;
+  inline IBTaggingTool* flavourTagging() const {return m_taggingTool;};
+
+  /// Descnedants
+  inline IParticleDescendants* descendants() const {return m_descendants;};
 
 protected:
 
@@ -148,6 +152,8 @@ private:
   mutable IAlgorithm2ID* m_algorithm2IDTool;
   /// Reference to FlavourTagging
   mutable IBTaggingTool* m_taggingTool;
+  /// Reference to ParticleDescendants
+  mutable IParticleDescendants* m_descendants;
 
   /// Has setFilterPassed() already been called in current event?
   bool m_setFilterCalled;
