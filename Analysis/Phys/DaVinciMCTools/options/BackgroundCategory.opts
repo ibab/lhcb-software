@@ -1,0 +1,5 @@
+TDRselBd2DstarPi.BackgroundCategory.Particle2MCWithChi2.Location = "Phys/Relations/Particle2MCWithChi2";
+TDRselBd2DstarPi.BackgroundCategory.Particle2MCWithChi2.AlgorithmName = "catParticle2MCChi2";
+catParticle2MCChi2.InputData = {"/Event/Phys/CombinedInclForTDRselBd2DstarPi/Particles",
+                                "/Event/Phys/TDRselBd2DstarPi/Particles",
+                                "/Event/Phys/D02KPiForTDRselBd2DstarPi/Particles"};

@@ -1,7 +1,14 @@
-! $Id: release.notes,v 1.76 2005-12-13 13:47:05 lfernan Exp $
+! $Id: release.notes,v 1.77 2005-12-13 16:18:25 pkoppenb Exp $
 ! Package     : DaVinciMCTools
 ! Responsible : P. Koppenburg
 !=============================================================================
+
+! 2005-12-13 - P. Koppenburg for V. Gligorov
+ - DaVinciMCTools/IBackgroundCategory.h
+ - src/BackgroundCategory.*
+   . New backgroundcatgory tool
+ - options/BackgroundCategory.opts
+   . example options
 
 ! 2005-12-13 - Luis Fernandez
  - src/DecayChainNTuple.{h,cpp}

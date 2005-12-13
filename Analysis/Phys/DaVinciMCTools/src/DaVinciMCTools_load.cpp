@@ -1,4 +1,4 @@
-// $Id: DaVinciMCTools_load.cpp,v 1.10 2005-04-21 16:54:56 xieyu Exp $
+// $Id: DaVinciMCTools_load.cpp,v 1.11 2005-12-13 16:18:25 pkoppenb Exp $
 // Include files 
 
 
@@ -18,6 +18,7 @@ DECLARE_FACTORY_ENTRIES(DaVinciMCTools) {
   DECLARE_TOOL( MCParticleMaker );
   DECLARE_TOOL( TrueMCFilterCriterion );
   DECLARE_TOOL( CheatedLifetimeFitter );
+  DECLARE_TOOL( BackgroundCategory );
 
   DECLARE_ALGORITHM( MCPIDProtoPAlg );
   DECLARE_ALGORITHM( PrintMCTree );
