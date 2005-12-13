@@ -5,7 +5,7 @@
  *  Header file for tool : RichToolRegistry
  *
  *  CVS Log :-
- *  $Id: RichToolRegistry.h,v 1.9 2005-10-13 16:11:08 jonrob Exp $
+ *  $Id: RichToolRegistry.h,v 1.10 2005-12-13 18:01:11 papanest Exp $
  *
  *  @author Chris Jones    Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -86,7 +86,7 @@ private: // data
   ToolList m_names;
 
   /// typedef for the mapping between nicknames and class names
-  typedef RichHashMap< std::string, std::string > RichToolMap;
+  typedef Rich::HashMap< std::string, std::string > RichToolMap;
   /// The mapping between the tool name and type
   mutable RichToolMap m_myTools;
 

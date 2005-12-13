@@ -5,7 +5,7 @@
  *  Header file for tool : RichDetParameters
  *
  *  CVS History :
- *  $Id: RichRayTracingAllSph.h,v 1.5 2005-12-13 15:07:11 jonrob Exp $
+ *  $Id: RichRayTracingAllSph.h,v 1.6 2005-12-13 18:01:10 papanest Exp $
  *
  *  @author Chris Jones    Christopher.Rob.Jones@cern.ch
  *  @date   2004-03-29
@@ -31,7 +31,7 @@
 // RichEvent
 #include "RichEvent/RichGeomPhoton.h"
 
-//CLHEP
+//MathCore
 #include "Kernel/Point3DTypes.h"
 #include "Kernel/Vector3DTypes.h"
 
@@ -88,7 +88,8 @@ public: // methods (and doxygen comments) inherited from interface
                               const Rich::Side forcedSide = Rich::top ) const;
 
   // For a given detector, raytraces a given direction from a given point to
-  // the average photon detector plane (no HPD acceptance). Result is a Gaudi::XYZPoint
+  // the average photon detector plane (no HPD acceptance). Result is a
+  // Gaudi::XYZPoint
   StatusCode
   traceToDetectorWithoutEff( const Rich::DetectorType rich,
                              const Gaudi::XYZPoint& startPoint,
@@ -99,8 +100,8 @@ public: // methods (and doxygen comments) inherited from interface
 
 
   // Raytraces from a point in the detector panel back to the spherical mirror
-  // returning the mirror intersection point and the direction a track would have
-  // in order to hit that point in the detector panel.
+  // returning the mirror intersection point and the direction a track would
+  // have in order to hit that point in the detector panel.
 
   virtual StatusCode traceBackFromDetector ( const Gaudi::XYZPoint& startPoint,
                                              const Gaudi::XYZVector& startDir,

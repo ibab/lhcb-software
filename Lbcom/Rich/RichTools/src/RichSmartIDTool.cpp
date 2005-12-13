@@ -5,7 +5,7 @@
  * Implementation file for class : RichSmartIDTool
  *
  * CVS Log :-
- * $Id: RichSmartIDTool.cpp,v 1.16 2005-12-13 15:07:11 jonrob Exp $
+ * $Id: RichSmartIDTool.cpp,v 1.17 2005-12-13 18:01:10 papanest Exp $
  *
  * @author Antonis Papanestis
  * @date 2003-10-28
@@ -44,16 +44,28 @@ StatusCode RichSmartIDTool::initialize()
   const StatusCode sc = RichToolBase::initialize();
   if ( sc.isFailure() ) return sc;
 
-  const std::string pdPanelName[2][2] = { { DeRichHPDPanelLocation::Rich1Panel0,
+  // HPD panel names
+  const std::string pdPanelName[2][2]   ={{ DeRichHPDPanelLocation::Rich1Panel0,
                                             DeRichHPDPanelLocation::Rich1Panel1 },
                                           { DeRichHPDPanelLocation::Rich2Panel0,
                                             DeRichHPDPanelLocation::Rich2Panel1 } };
+  const std::string pdPanelNameOld[2][2]={{ DeRichHPDPanelLocation::Rich1Panel0_old,
+                                            DeRichHPDPanelLocation::Rich1Panel1_old },
+                                          { DeRichHPDPanelLocation::Rich2Panel0_old,
+                                            DeRichHPDPanelLocation::Rich2Panel1_old }};
+
   //loop over riches and photo detector panels
-  for ( unsigned int rich = 0; rich < m_photoDetPanels.size(); ++rich ) 
+  for ( unsigned int rich = 0; rich < m_photoDetPanels.size(); ++rich )
   {
-    for ( unsigned int panel = 0; panel < m_photoDetPanels[rich].size(); ++panel ) 
+    for ( unsigned int panel = 0; panel < m_photoDetPanels[rich].size(); ++panel )
     {
       m_photoDetPanels[rich][panel] = getDet<DeRichHPDPanel>( pdPanelName[rich][panel] );
+      if ( !m_photoDetPanels[rich][panel] )
+        m_photoDetPanels[rich][panel] = getDet<DeRichHPDPanel>(pdPanelNameOld[rich][panel]);
+      if ( !m_photoDetPanels[rich][panel] ) {
+        fatal() << "Cannot locate HPDPanel " << rich << " " << panel << endmsg;
+        return StatusCode::FAILURE;
+      }
       debug() << "Stored photodetector panel "
               << m_photoDetPanels[rich][panel]->name() << endreq;
       m_localOffset[rich][panel] = m_photoDetPanels[rich][panel]->localOffset();
@@ -75,7 +87,7 @@ StatusCode RichSmartIDTool::finalize()
 //=============================================================================
 // Returns the position of a RichSmartID in global coordinates
 //=============================================================================
-Gaudi::XYZPoint RichSmartIDTool::globalPosition ( const RichSmartID smartID ) const
+Gaudi::XYZPoint RichSmartIDTool::globalPosition ( const LHCb::RichSmartID smartID ) const
 {
   return m_photoDetPanels[smartID.rich()][smartID.panel()]->detectionPoint(smartID);
 }
@@ -84,8 +96,8 @@ Gaudi::XYZPoint RichSmartIDTool::globalPosition ( const RichSmartID smartID ) co
 // Returns the global position of a local corrdinate, in the given RICH panel
 //=============================================================================
 Gaudi::XYZPoint RichSmartIDTool::globalPosition ( const Gaudi::XYZPoint& localPoint,
-                                             const Rich::DetectorType rich,
-                                             const Rich::Side side ) const
+                                                  const Rich::DetectorType rich,
+                                                  const Rich::Side side ) const
 {
   return m_photoDetPanels[rich][side]->globalPosition(localPoint,side) ;
 }
@@ -93,39 +105,43 @@ Gaudi::XYZPoint RichSmartIDTool::globalPosition ( const Gaudi::XYZPoint& localPo
 //=============================================================================
 // Returns the HPD position (center of the silicon wafer)
 //=============================================================================
-Gaudi::XYZPoint RichSmartIDTool::hpdPosition ( const RichSmartID hpdid ) const
+Gaudi::XYZPoint RichSmartIDTool::hpdPosition ( const LHCb::RichSmartID hpdid ) const
 {
   // Create temporary RichSmartIDs for two corners of the HPD wafer
-  RichSmartID id1(hpdid), id0(hpdid);
+  LHCb::RichSmartID id1(hpdid), id0(hpdid);
   id0.setPixelRow(0);
   id0.setPixelCol(0);
   id1.setPixelRow(31);
   id1.setPixelCol(31);
 
+  Gaudi::XYZPoint a( globalPosition(id0) );
+  Gaudi::XYZPoint b( globalPosition(id1) );
+
   // return average position
-  return ( globalPosition(id0) + globalPosition(id1) ) / 2;
+  return ( Gaudi::XYZPoint( 0.5*(a.x()+b.x()) ,0.5*(a.y()+b.y()),
+                            0.5*(a.z()+b.z()) ) );
 }
 
 //=============================================================================
 // Returns the SmartID for a given global position
 //=============================================================================
 StatusCode RichSmartIDTool::smartID ( const Gaudi::XYZPoint& globalPoint,
-                                      RichSmartID& smartid ) const
+                                      LHCb::RichSmartID& smartid ) const
 {
 
-  try 
+  try
   {
     if (globalPoint.z() < 8000.0)
     {
       // Rich1
-      if (globalPoint.y() > 0.0) 
+      if (globalPoint.y() > 0.0)
       {
         // top side
         smartid.setRich(Rich::Rich1);
         smartid.setPanel(Rich::top);
         return ( m_photoDetPanels[Rich::Rich1][Rich::top]->smartID(globalPoint, smartid) );
       }
-      else 
+      else
       {
         // bottom side
         smartid.setRich(Rich::Rich1);
@@ -136,7 +152,7 @@ StatusCode RichSmartIDTool::smartID ( const Gaudi::XYZPoint& globalPoint,
     else
     {
       // Rich2
-      if (globalPoint.x() > 0.0) 
+      if (globalPoint.x() > 0.0)
       {
         // left side
         smartid.setRich(Rich::Rich2);
@@ -160,7 +176,7 @@ StatusCode RichSmartIDTool::smartID ( const Gaudi::XYZPoint& globalPoint,
     Error ( "Caught GaudiException " + excpt.tag() + " message '" + excpt.message() + "'" );
 
     // reset smartid to an invalid one
-    smartid = RichSmartID(0);
+    smartid = LHCb::RichSmartID(0);
 
     // return failure status
     return StatusCode::FAILURE;
@@ -180,19 +196,22 @@ Gaudi::XYZPoint RichSmartIDTool::globalToPDPanel ( const Gaudi::XYZPoint& global
     if (globalPoint.y() > 0.0) {
       // top side
       Gaudi::XYZPoint tempPoint( m_photoDetPanels[Rich::Rich1][Rich::top]->
-                            //globalToPDPanel(globalPoint) );
-                            geometry()->toLocal( globalPoint ) );
-      tempPoint.setY( tempPoint.y() + m_localOffset[Rich::Rich1][Rich::top] );
-      tempPoint.setZ( 0.0 );
+                                 geometry()->toLocal( globalPoint ) );
+
+      tempPoint.SetCoordinates( tempPoint.x(),
+                                tempPoint.y() + m_localOffset[Rich::Rich1][Rich::top],
+                                0.0 );
       return tempPoint;
     }
     else {
       // bottom side
       Gaudi::XYZPoint tempPoint( m_photoDetPanels[Rich::Rich1][Rich::bottom]->
-                            //globalToPDPanel(globalPoint) );
-                            geometry()->toLocal( globalPoint ) );
-      tempPoint.setY(tempPoint.y() - m_localOffset[Rich::Rich1][Rich::bottom]);
-      tempPoint.setZ( 0.0 );
+                                 geometry()->toLocal( globalPoint ) );
+
+      tempPoint.SetCoordinates( tempPoint.x(),
+                                tempPoint.y() - m_localOffset[Rich::Rich1][Rich::bottom],
+                                0.0 );
+
       return tempPoint;
     }
   }
@@ -201,20 +220,22 @@ Gaudi::XYZPoint RichSmartIDTool::globalToPDPanel ( const Gaudi::XYZPoint& global
     if (globalPoint.x() > 0.0) {
       // left side
       Gaudi::XYZPoint tempPoint( m_photoDetPanels[Rich::Rich2][Rich::left]->
-                            //globalToPDPanel(globalPoint) );
-                            geometry()->toLocal( globalPoint ) );
-      tempPoint.setX( tempPoint.x() + m_localOffset[Rich::Rich2][Rich::left] );
-      tempPoint.setZ( 0.0 );
+                                 geometry()->toLocal( globalPoint ) );
+
+      tempPoint.SetCoordinates( tempPoint.x() + m_localOffset[Rich::Rich2][Rich::left],
+                                tempPoint.y(),
+                                0.0 );
       return tempPoint;
 
     }
     else {
       // right side
       Gaudi::XYZPoint tempPoint( m_photoDetPanels[Rich::Rich2][Rich::right]->
-                            //globalToPDPanel(globalPoint) );
-                            geometry()->toLocal( globalPoint ) );
-      tempPoint.setX(tempPoint.x() - m_localOffset[Rich::Rich2][Rich::right]);
-      tempPoint.setZ( 0.0 );
+                                 geometry()->toLocal( globalPoint ) );
+
+      tempPoint.SetCoordinates( tempPoint.x() - m_localOffset[Rich::Rich2][Rich::right],
+                                tempPoint.y(),
+                                0.0 );
       return tempPoint;
     }
   }
@@ -224,7 +245,7 @@ Gaudi::XYZPoint RichSmartIDTool::globalToPDPanel ( const Gaudi::XYZPoint& global
 //=============================================================================
 // Returns a list with all valid smartIDs
 //=============================================================================
-const RichSmartID::Collection & RichSmartIDTool::readoutChannelList( ) const
+const LHCb::RichSmartID::Vector& RichSmartIDTool::readoutChannelList( ) const
 {
 
   // Only do if list is empty
@@ -252,7 +273,7 @@ const RichSmartID::Collection & RichSmartIDTool::readoutChannelList( ) const
 
     if ( msgLevel(MSG::VERBOSE) )
     {
-      for ( RichSmartID::Collection::const_iterator iID = m_readoutChannels.begin();
+      for ( LHCb::RichSmartID::Vector::const_iterator iID = m_readoutChannels.begin();
             iID != m_readoutChannels.end(); ++iID )
       {
         const Gaudi::XYZPoint gPos = globalPosition(*iID);

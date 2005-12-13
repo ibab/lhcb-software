@@ -5,7 +5,7 @@
  *  Header file for tool : RichSmartIDTool
  *
  *  CVS Log :-
- *  $Id: RichSmartIDTool.h,v 1.11 2005-12-13 15:07:11 jonrob Exp $
+ *  $Id: RichSmartIDTool.h,v 1.12 2005-12-13 18:01:11 papanest Exp $
  *
  *  @author Antonis Papanestis
  *  @date   2003-10-28
@@ -41,7 +41,7 @@
 //-----------------------------------------------------------------------------
 
 class RichSmartIDTool : public RichToolBase,
-                        virtual public IRichSmartIDTool 
+                        virtual public IRichSmartIDTool
 {
 
 public: // Methods for Gaudi Framework
@@ -61,27 +61,27 @@ public: // Methods for Gaudi Framework
 
 public: // methods (and doxygen comments) inherited from interface
 
-  // Converts a RichSmartID channel identification into a position in global LHCb coordinates. 
-  virtual Gaudi::XYZPoint globalPosition ( const RichSmartID smartid ) const;
+  // Converts a RichSmartID channel identification into a position in global LHCb coordinates.
+  virtual Gaudi::XYZPoint globalPosition ( const LHCb::RichSmartID smartid ) const;
 
-  // Converts an HPD RichSmartID identification into a position in global LHCb coordinates. 
-  virtual Gaudi::XYZPoint hpdPosition ( const RichSmartID hpdid ) const;
+  // Converts an HPD RichSmartID identification into a position in global LHCb coordinates.
+  virtual Gaudi::XYZPoint hpdPosition ( const LHCb::RichSmartID hpdid ) const;
 
   // Computes the global position coordinate for a given position in local
-  virtual Gaudi::XYZPoint globalPosition ( const Gaudi::XYZPoint& localPoint, 
-                                      const Rich::DetectorType rich, 
-                                      const Rich::Side side ) const;
+  virtual Gaudi::XYZPoint globalPosition ( const Gaudi::XYZPoint& localPoint,
+                                           const Rich::DetectorType rich,
+                                           const Rich::Side side ) const;
 
   // Converts a position in global coordinates to the corresponding RichSmartID
   virtual StatusCode smartID( const Gaudi::XYZPoint&  globalPoint,
-                              RichSmartID& smartid ) const;
+                              LHCb::RichSmartID& smartid ) const;
 
   // Supplies a vector of all currently active and valid channels in the RICH detectors
-  virtual const RichSmartID::Collection & readoutChannelList( ) const;
+  virtual const LHCb::RichSmartID::Vector& readoutChannelList( ) const;
 
   /** Converts a position in global coordinates to the local coordinate system.
-   *  The panel Rich::Left has positive x and panel Rich::Right has negative 
-   *  x coordinates. Only the x and y coordinates are valid. z coordinate 
+   *  The panel Rich::Left has positive x and panel Rich::Right has negative
+   *  x coordinates. Only the x and y coordinates are valid. z coordinate
    *  is set to 0.
    */
   virtual Gaudi::XYZPoint globalToPDPanel ( const Gaudi::XYZPoint& globalPoint ) const;
@@ -95,7 +95,7 @@ private:
   boost::array<offsetPerRich, 2> m_localOffset;
 
   /// List of active RichSmartIDs
-  mutable RichSmartID::Collection m_readoutChannels;
+  mutable LHCb::RichSmartID::Vector m_readoutChannels;
 
 };
 

@@ -5,7 +5,7 @@
  * Implementation file for class : RichRayTracingAllSph
  *
  * CVS Log :-
- * $Id: RichRayTracingAllSph.cpp,v 1.6 2005-12-13 15:07:11 jonrob Exp $
+ * $Id: RichRayTracingAllSph.cpp,v 1.7 2005-12-13 18:01:10 papanest Exp $
  *
  * @author Antonis Papanestis
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
@@ -20,7 +20,7 @@
 // Kernel
 #include "Kernel/RichSide.h"
 
-// CLHEP
+// MathCore
 #include "Kernel/PhysicalConstants.h"
 
 // RichDet
@@ -73,14 +73,29 @@ StatusCode RichRayTracingAllSph::initialize()
   acquireTool( "RichMirrorSegFinder", m_mirrorSegFinder );
 
   // HPD panel names
-  const std::string pdPanelName[2][2]  = { { DeRichHPDPanelLocation::Rich1Panel0,
-                                             DeRichHPDPanelLocation::Rich1Panel1 },
-                                           { DeRichHPDPanelLocation::Rich2Panel0,
-                                             DeRichHPDPanelLocation::Rich2Panel1 } };
+  const std::string pdPanelName[2][2]   ={{ DeRichHPDPanelLocation::Rich1Panel0,
+                                            DeRichHPDPanelLocation::Rich1Panel1 },
+                                          { DeRichHPDPanelLocation::Rich2Panel0,
+                                            DeRichHPDPanelLocation::Rich2Panel1 } };
+  const std::string pdPanelNameOld[2][2]={{ DeRichHPDPanelLocation::Rich1Panel0_old,
+                                            DeRichHPDPanelLocation::Rich1Panel1_old },
+                                          { DeRichHPDPanelLocation::Rich2Panel0_old,
+                                            DeRichHPDPanelLocation::Rich2Panel1_old }};
 
   // RICH detector elements
-  const DeRich * rich1 = getDet<DeRich>( DeRichLocation::Rich1 );
-  const DeRich * rich2 = getDet<DeRich>( DeRichLocation::Rich2 );
+  const DeRich* rich1 = getDet<DeRich>( DeRichLocation::Rich1 );
+  if (!rich1) rich1 = getDet<DeRich>( DeRichLocation::Rich1_old );
+  if (!rich1) {
+    fatal() << "Cannot locate DeRich1" << endmsg;
+    return StatusCode::FAILURE;
+  }
+
+  const DeRich* rich2 = getDet<DeRich>( DeRichLocation::Rich2 );
+  if (!rich2) rich2 = getDet<DeRich>( DeRichLocation::Rich2_old );
+  if (!rich2) {
+    fatal() << "Cannot locate DeRich2" << endmsg;
+    return StatusCode::FAILURE;
+  }
   m_rich[Rich::Rich1] = rich1;
   m_rich[Rich::Rich2] = rich2;
 
@@ -91,11 +106,19 @@ StatusCode RichRayTracingAllSph::initialize()
     for ( panel=0; panel<m_photoDetPanels[rich].size(); ++panel)
     {
       m_photoDetPanels[rich][panel] = getDet<DeRichHPDPanel>( pdPanelName[rich][panel] );
+      if ( !m_photoDetPanels[rich][panel] )
+        m_photoDetPanels[rich][panel] = getDet<DeRichHPDPanel>(pdPanelNameOld[rich][panel]);
+      if ( !m_photoDetPanels[rich][panel] ) {
+        fatal() << "Cannot locate HPDPanel " << rich << " " << panel << endmsg;
+        return StatusCode::FAILURE;
+      }
+
       debug() << "Stored photodetector panel "
               << m_photoDetPanels[rich][panel]->name() << endreq;
     }
   }
 
+  // Rich1 mirrors
   if ( rich1->exists("SphMirrorSegRows") )
   {
     m_sphMirrorSegRows[Rich::Rich1] = rich1->param<int>( "SphMirrorSegRows"    );
@@ -111,17 +134,12 @@ StatusCode RichRayTracingAllSph::initialize()
     m_secMirrorSegCols[Rich::Rich1] = rich1->param<int>( "SecMirrorSegColumns" );
     info() << "Found spherical secondary mirrors for RICH1" << endreq;
   }
-  else if ( rich1->exists("FlatMirrorSegRows") )
-  {
-    m_secMirrorSegRows[Rich::Rich1] = rich1->param<int>( "FlatMirrorSegRows"    );
-    m_secMirrorSegCols[Rich::Rich1] = rich1->param<int>( "FlatMirrorSegColumns" );
-    info() << "Found flat secondary mirrors for RICH1" << endreq;
-  }
   else
   {
     return Error ( "No secondary mirrors for RICH1 found !" );
   }
 
+  // Rich2 mirrors
   if ( rich2->exists("SphMirrorSegRows") )
   {
     m_sphMirrorSegRows[Rich::Rich2] = rich2->param<int>( "SphMirrorSegRows" );
@@ -136,12 +154,6 @@ StatusCode RichRayTracingAllSph::initialize()
     m_secMirrorSegRows[Rich::Rich2] = rich2->param<int>( "SecMirrorSegRows" );
     m_secMirrorSegCols[Rich::Rich2] = rich2->param<int>( "SecMirrorSegColumns" );
     info() << "Found spherical secondary mirrors for RICH2" << endreq;
-  }
-  else if ( rich2->exists("FlatMirrorSegRows") )
-  {
-    m_secMirrorSegRows[Rich::Rich2] = rich2->param<int>( "FlatMirrorSegRows" );
-    m_secMirrorSegCols[Rich::Rich2] = rich2->param<int>( "FlatMirrorSegColumns" );
-    info() << "Found flat secondary mirrors for RICH2" << endreq;
   }
   else
   {
@@ -368,7 +380,7 @@ StatusCode RichRayTracingAllSph::reflectBothMirrors( const Rich::DetectorType ri
 
     // check the outside boundaries of the (whole) mirror
     if ( !secSegment->intersects( tmpPosition, tmpDirection ) ) {
-      const RichMirrorSegPosition pos = m_rich[rich]->flatMirrorSegPos( secSegment->mirrorNumber() );
+      const RichMirrorSegPosition pos = m_rich[rich]->secMirrorSegPos( secSegment->mirrorNumber() );
       const Gaudi::XYZPoint& mirCentre = secSegment->mirrorCentre();
       bool fail( false );
       if ( pos.row() == 0 ) {                 // bottom segment
@@ -493,9 +505,9 @@ StatusCode RichRayTracingAllSph::reflectSpherical ( Gaudi::XYZPoint& position,
   // for line sphere intersection look at http://www.realtimerendering.com/int/
   const Gaudi::XYZVector delta( position - CoC );
 
-  const double a = direction.mag2();
-  const double b = 2. * direction * delta;
-  const double c = delta.mag2() - radius*radius;
+  const double a = direction.Mag2();
+  const double b = 2. * direction.Dot( delta );
+  const double c = delta.Mag2() - radius*radius;
   const double discr = b*b - 4.*a*c;
   if ( discr < 0 ) return StatusCode::FAILURE;
 
@@ -503,10 +515,10 @@ StatusCode RichRayTracingAllSph::reflectSpherical ( Gaudi::XYZPoint& position,
   // change position to the intersection point
   position += distance1 * direction;
 
-  const HepNormal3D normal( (position - CoC).unit() );
+  const Gaudi::XYZVector normal( (position - CoC).Unit() );
   // reflect the vector
   // r = u - 2(u.n)n, r=reflction, u=insident, n=normal
-  direction -= 2.0 * (normal*direction) * normal;
+  direction -= 2.0 * (normal.Dot(direction)) * normal;
 
   return StatusCode::SUCCESS;
 }
@@ -520,7 +532,7 @@ StatusCode RichRayTracingAllSph::reflectFlatPlane ( Gaudi::XYZPoint& position,
                                                     const Gaudi::Plane3D& plane ) const
 {
   Gaudi::XYZPoint intersection;
-  const Gaudi::XYZVector normal( plane.normal() );
+  const Gaudi::XYZVector normal( plane.Normal() );
 
   if ( intersectPlane( position, direction, plane, intersection ).isFailure() )
     return StatusCode::FAILURE;
@@ -528,7 +540,7 @@ StatusCode RichRayTracingAllSph::reflectFlatPlane ( Gaudi::XYZPoint& position,
   position = intersection;
   // reflect the vector
   // r = u - 2(u.n)n, r=reflction, u=insident, n=normal
-  direction -= 2.0 * (normal*direction) * normal;
+  direction -= 2.0 * (normal.Dot(direction)) * normal;
 
   return StatusCode::SUCCESS;
 }
@@ -541,10 +553,10 @@ StatusCode RichRayTracingAllSph::intersectPlane ( const Gaudi::XYZPoint& positio
                                                   const Gaudi::Plane3D& plane,
                                                   Gaudi::XYZPoint& intersection ) const
 {
-  const double scalar = direction * plane.normal();
+  const double scalar = direction.Dot( plane.Normal() );
   if ( scalar == 0.0 ) return StatusCode::FAILURE;
 
-  const double distance = -(plane.distance(position)) / scalar;
+  const double distance = -(plane.Distance(position)) / scalar;
   intersection = position + distance*direction;
 
   return StatusCode::SUCCESS;

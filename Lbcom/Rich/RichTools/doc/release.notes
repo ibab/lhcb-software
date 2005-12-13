@@ -4,6 +4,10 @@
 ! Purpose     : General purpose Rich Tools
 !-----------------------------------------------------------------------------
 
+!=========================== RichTools v2r0 2005-12-13 =======================
+! 2005-12-13 - Antonis Papanestis
+ - Changes for the move from CLHEP to MathCore
+
 ! 2005-12-13 - Chris Jones
  - Move reconstruction related tools to RichRecTools package
 
