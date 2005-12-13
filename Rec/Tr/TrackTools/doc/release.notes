@@ -4,6 +4,10 @@
 ! Purpose     : Package for tracking tools not accessing MC information
 !-----------------------------------------------------------------------------
 
+! 2005-12-13 - Eduardo Rodrigues
+ - new tool TrackCloneFinder added: it checks whether two input tracks
+   are clones of each other and makes a choice based on hit sharing criteriae
+
 ! 2005-12-01 - Eduardo Rodrigues
  - propagation of changes in ITMeasurement class
 

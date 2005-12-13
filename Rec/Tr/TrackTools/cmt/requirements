@@ -20,9 +20,11 @@ include_path      none
 # Used packages. Specify the version, * at the end specifies 'any revision'
 #    Put as many lines as needed, with all packages, without the '#'
 #============================================================================
+use     GSL           v*     LCG_Interfaces
+
 use   GaudiAlg        v*
-use   LHCbKernel      v*     Kernel
-use   TrackEvent      v*     Event
+use   LHCbKernel      v5r*   Kernel
+use   TrackEvent      v1r*   Event
 use   OTEvent         v*     Event
 use   ITEvent         v*     Event
 use   VeloEvent       v*     Event
