@@ -1,7 +1,6 @@
-// $Id: UpdateManagerSvc.cpp,v 1.1 2005-12-07 17:15:50 cattanem Exp $
+// $Id: UpdateManagerSvc.cpp,v 1.2 2005-12-13 09:03:23 marcocle Exp $
 // Include files 
 #include "GaudiKernel/SvcFactory.h"
-#include "GaudiKernel/MsgStream.h"
 #include "GaudiKernel/IDetDataSvc.h"
 #include "GaudiKernel/IDataProviderSvc.h"
 #include "GaudiKernel/IRegistry.h"
@@ -250,7 +249,12 @@ StatusCode UpdateManagerSvc::newEvent(const ITime &evtTime){
     TimePoint head_copy_since(time_absolutepast);
     TimePoint head_copy_until(time_absolutefuture);
     for (it = head_copy.begin(); it != head_copy.end() && sc.isSuccess(); ++it){
-      sc = (*it)->update(dataProvider(),evtTime);
+      if ( m_outputLevel <= MSG::DEBUG ) {
+        MsgStream item_log(msgSvc(),name()+"::Item");
+        sc = (*it)->update(dataProvider(),evtTime,&item_log);
+      } else {
+        sc = (*it)->update(dataProvider(),evtTime);       
+      }
       if (sc.isSuccess()) {
         if ( head_copy_since < (*it)->since )  head_copy_since = (*it)->since;
         if ( head_copy_until > (*it)->until )  head_copy_until = (*it)->until;
@@ -267,11 +271,21 @@ StatusCode UpdateManagerSvc::newEvent(const ITime &evtTime){
   return sc;
 }
 StatusCode UpdateManagerSvc::i_update(void *instance){
+  if ( m_outputLevel <= MSG::DEBUG ) {
+    MsgStream log(msgSvc(),name());
+    log << MSG::DEBUG << "Update specific object at " << instance << endmsg;
+  }
   if (detDataSvc() != NULL){
 		if (detDataSvc()->validEventTime()) {
       Item *item = findItem(instance);
       if (item) {
-        StatusCode sc = item->update(dataProvider(),detDataSvc()->eventTime());
+        StatusCode sc;
+        if ( m_outputLevel <= MSG::DEBUG ) {
+          MsgStream item_log(msgSvc(),name()+"::Item");
+          sc = item->update(dataProvider(),detDataSvc()->eventTime(),&item_log);
+        } else {
+          sc = item->update(dataProvider(),detDataSvc()->eventTime());
+        }
         if (sc.isSuccess()) {
           if ( m_head_since < item->since )  m_head_since = item->since;
           if ( m_head_until > item->until )  m_head_until = item->until;
@@ -285,6 +299,10 @@ StatusCode UpdateManagerSvc::i_update(void *instance){
   return StatusCode::FAILURE;
 }
 void UpdateManagerSvc::i_invalidate(void *instance){
+  if ( m_outputLevel <= MSG::DEBUG ) {
+    MsgStream log(msgSvc(),name());
+    log << MSG::DEBUG << "Invalidate object at " << instance << endmsg;
+  }
   Item *item = findItem(instance);
   if (item) {
     item->invalidate();
@@ -294,6 +312,10 @@ void UpdateManagerSvc::i_invalidate(void *instance){
 }
 
 StatusCode UpdateManagerSvc::i_unregister(void *instance){
+  if ( m_outputLevel <= MSG::DEBUG ) {
+    MsgStream log(msgSvc(),name());
+    log << MSG::DEBUG << "Unregister object at " << instance << endmsg;
+  }
   Item *item = findItem(instance);
   if (item){
     // remove from parents

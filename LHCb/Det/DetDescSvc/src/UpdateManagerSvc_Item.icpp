@@ -1,4 +1,4 @@
-// $Id: UpdateManagerSvc_Item.icpp,v 1.1 2005-12-07 17:15:50 cattanem Exp $
+// $Id: UpdateManagerSvc_Item.icpp,v 1.2 2005-12-13 09:03:23 marcocle Exp $
 #ifndef UPDATEMANAGERSVC_ITEM_ICPP
 #define UPDATEMANAGERSVC_ITEM_ICPP 1
 
@@ -130,18 +130,21 @@ struct Item {
   bool updateLock;
 
   /// Main method. Used to update the object and all the used ones.
-  StatusCode update(IDataProviderSvc *dp,const TimePoint &when){
-    //std::cout << "UMS: Updating (Item* " << this << ") " << ptr << " ---BEGIN---";
-    //if (!path.empty()) std::cout << " " << path;
-    //std::cout << std::endl;
-    //std::cout << "UMS:    initial validity: " << since.absoluteTime() << " -> " << until.absoluteTime() << std::endl;
+  StatusCode update(IDataProviderSvc *dp,const TimePoint &when, MsgStream *log = NULL){
+    if (log){
+      (*log) << MSG::DEBUG << "Updating (Item* " << this << ") " << ptr << " ---BEGIN---";
+      if (!path.empty()) (*log) << " " << path;
+      (*log) << endmsg;
+      (*log) << MSG::VERBOSE << "    initial validity: "
+             << since.absoluteTime() << " -> " << until.absoluteTime() << endmsg;
+    }
     if (updateLock) {
-      //std::cout << "UMS: break loop" << std::endl;
+      if (log) (*log) << MSG::VERBOSE << "Update lock found: break loop" << endmsg;
       return StatusCode::SUCCESS;
     }
     // check validity
     if (isValid(when)) {
-      //std::cout << "UMS: item valid, not update!" << std::endl;
+      if (log) (*log) << MSG::VERBOSE << "Item valid, not need to update" << endmsg;
       return StatusCode::SUCCESS;
     }
     // prepare for update
@@ -150,7 +153,7 @@ struct Item {
     StatusCode sc;
     // start real update
     if (ptr == NULL && vdo == NULL && !path.empty()) { // I do not have a VDO ptr (or a void*) but a path: load it
-      //std::cout << "UMS:    retrieve from data provider" << std::endl;
+      if (log) (*log) << MSG::DEBUG << "Retrieve object " << path << " from data provider" << endmsg;
       DataObject  *pObj;
       sc = dp->retrieveObject(path,pObj);
       if (!sc.isSuccess()) return sc;
@@ -166,7 +169,7 @@ struct Item {
       }
     } else {
       if (vdo != NULL && !vdo->isValid(when)){ // I have a VDO ptr and the object is not valid
-        //std::cout << "UMS:    update from data provider" <<std::endl;
+        if (log) (*log) << MSG::DEBUG << "Update object " << path << " from data provider" << endmsg;
         vdo->update(); // only if I didn't load it
       }
     }
@@ -176,19 +179,25 @@ struct Item {
       until = vdo->validTill();
     }
     // object internal data are up-to-date, now check what it depends on
+    if (log) (*log) << MSG::VERBOSE << "Enter dependencies update loop" << endmsg;
     for (MembFuncList::iterator mfIt = memFuncs.begin(); mfIt != memFuncs.end(); ++mfIt){
       if (!mfIt->isValid(when)) { // only if one the children of the member function need an update
+        size_t n = mfIt - memFuncs.begin();
+        if (log) (*log) << MSG::VERBOSE << "Loop over dependencies of m.f. " << n << endmsg;
         mfIt->resetIOV();
         for (ItemList::iterator itemIt = mfIt->items->begin(); itemIt != mfIt->items->end(); ++itemIt){
-          sc = (*itemIt)->update(dp,when);
+          sc = (*itemIt)->update(dp,when,log);
           if (!sc.isSuccess()) return sc;
           // child item updated, update mf's IOV
           if (mfIt->since < (*itemIt)->since) mfIt->since = (*itemIt)->since;
           if (mfIt->until > (*itemIt)->until) mfIt->until = (*itemIt)->until;
         }
-        //std::cout << "UMS:    call mf " << mfIt - memFuncs.begin() << std::endl;
+        if (log) (*log) << MSG::VERBOSE << "Call m.f. " << n << endmsg;
         sc = (*(mfIt->mf))();
-        if (!sc.isSuccess()) return sc;
+        if (!sc.isSuccess()){
+          if (log) (*log) << MSG::DEBUG << "m.f. " << n << " returned a failure" << endmsg;
+          return sc;
+        }
       }
       // update the overall validity even if the M.F. was not called
       if (since < mfIt->since) since = mfIt->since;
@@ -197,6 +206,13 @@ struct Item {
     updateLock = false;
     //std::cout << "UMS:      final validity: " << since.absoluteTime() << " -> " << until.absoluteTime() << std::endl;
     //std::cout << "UMS: Updating (Item* " << this << ") " << ptr << " ---END---" << std::endl;
+    if (log){
+      (*log) << MSG::VERBOSE << "    final validity: "
+             << since.absoluteTime() << " -> " << until.absoluteTime() << endmsg;
+      (*log) << MSG::DEBUG << "Updating (Item* " << this << ") " << ptr << " ---END---";
+      if (!path.empty()) (*log) << " " << path;
+      (*log) << endmsg;
+    }
     return StatusCode::SUCCESS;
   }
     

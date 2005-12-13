@@ -1,4 +1,4 @@
-// $Id: EventClockSvc.cpp,v 1.1 2005-12-07 17:15:50 cattanem Exp $
+// $Id: EventClockSvc.cpp,v 1.2 2005-12-13 09:03:23 marcocle Exp $
 // Include files 
 #include "GaudiKernel/SvcFactory.h"
 #include "GaudiKernel/MsgStream.h"
@@ -82,8 +82,8 @@ StatusCode EventClockSvc::initialize() {
   }
 
   // Set the first event time at initialization.
+  log << MSG::DEBUG << "Initialize event time to " << m_startTime << endmsg;
   m_detDataSvc->setEventTime(TimePoint(m_startTime));
-  log << MSG::DEBUG << "Event time initialized to " << m_startTime << endmsg;
 
   // register to the incident service for BeginEvent incidents
   sc = service("IncidentSvc", m_incidentSvc, false);

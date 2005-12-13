@@ -1,4 +1,4 @@
-// $Id: UpdateManagerSvc.h,v 1.1 2005-12-07 17:15:50 cattanem Exp $
+// $Id: UpdateManagerSvc.h,v 1.2 2005-12-13 09:03:23 marcocle Exp $
 #ifndef UPDATEMANAGERSVC_H 
 #define UPDATEMANAGERSVC_H 1
 
@@ -8,6 +8,7 @@
 #include "GaudiKernel/ClassID.h"
 #include "GaudiKernel/IOpaqueAddress.h"
 #include "GaudiKernel/IIncidentListener.h"
+#include "GaudiKernel/MsgStream.h"
 
 #include "DetDesc/IUpdateManagerSvc.h"
 
