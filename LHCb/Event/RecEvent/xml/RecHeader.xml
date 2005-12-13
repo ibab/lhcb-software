@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE gdd SYSTEM "gdd.dtd" >
+<gdd>
+  <package name='RecEvent'>
+<!-- ****************************************************************
+     * RecHeader                                                    *
+     ****************************************************************-->
+     <class 
+      author="M. Cattaneo"
+      desc="Header for reconstruction information"
+      name="RecHeader"
+      location="Rec/Header"
+      id="105"
+     >
+       &DataObject;
+       <base name="ProcessHeader"/>
+       <import name="Event/ProcessHeader"/>
+       <attribute
+        desc="Event number. Negative if simulated data"
+        name="evtNumber"
+        type="longlong"
+	getMeth="FALSE"
+        init="0"
+       />
+       <attribute
+        desc="Event time. GPS time for real data"
+        name="evtTime"
+        type="ulonglong"
+        init="0"
+       />
+       <method
+        const="TRUE"
+        desc="Return event number (L0 event number for real data)"
+        name="evtNumber"
+        type="ulonglong"
+       >
+         <code> return abs(m_evtNumber); </code>
+       </method>
+       <method
+        const="TRUE"
+        desc="Return true for real data, false for simulated data"
+        name="realData"
+        type="bool"
+       >
+         <code> return (m_evtNumber > 0) ? true:false; </code>
+       </method>
+     </class>
+  </package>
+</gdd>

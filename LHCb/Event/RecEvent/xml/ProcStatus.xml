@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!DOCTYPE gdd SYSTEM 'gdd.dtd' >
+
+<gdd>
+  <package name='RecEvent'>
+
+    <class 
+      name   = "ProcStatus" 
+      author = "Olivier Callot" 
+      desc   = "Record the status of the Brunel processing"
+      location = "Rec/Status" 
+      id     = "5001" >
+
+      <base name = "DataObject" />
+      &DataObject;
+      <attribute 
+	name = "aborted" 
+	type = "bool"
+	desc = "Indicate if the processing should be aborted" 
+        init = "false" />
+
+      <method
+	name = "addAlgorithmStatus"
+	type = "void"
+	desc = "Add an entry for an algorithm"
+	argList = "const std::string name, int status" >
+        <code>
+  for ( unsigned int jj=0 ; m_algs.size() > jj ; jj++ ) {
+    if ( m_algs[jj].first == name ) {
+      m_algs[jj].second = status;
+      return;
+    }
+  }
+  m_algs.push_back( std::pair&lt;std::string,int&gt;(name,status) );
+        </code>
+      </method>
+
+      <method
+	name = "algorithmStatus" 
+	type = "int"
+	desc = "Status of this algorithm" 
+	argList = "const std::string name" >
+        <code>
+  for ( unsigned int jj=0 ; m_algs.size() > jj ; jj++ ) {
+    if ( m_algs[jj].first == name ) {
+      return m_algs[jj].second;
+    }
+  }
+  return 0;
+        </code>
+      </method>
+
+      <attribute
+	name = "algs"
+	type = "std::vector&lt;std::pair&lt;std::string,int&gt; &gt;"
+	desc = "List of algorithms with status"
+	setMeth = "FALSE"
+        getMeth = "FALSE" />
+	
+    </class>
+  </package>
+</gdd>

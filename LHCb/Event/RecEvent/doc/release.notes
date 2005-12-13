@@ -1,0 +1,8 @@
+! $Id: release.notes,v 1.1.1.1 2005-12-13 09:55:49 cattanem Exp $
+! Package     : Event/RecEvent
+! Responsible : Marco Cattaneo
+! Purpose     : LHCb Event model. Reconstruction classes (Brunel output) 
+
+!========================== RecEvent v1r0 2005-12-13 =========================
+! 2005-12-13 - Marco Cattaneo
+ - First release, RecHeader and ProcStatus

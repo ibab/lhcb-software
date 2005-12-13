@@ -1,0 +1,34 @@
+# $Id: requirements,v 1.1.1.1 2005-12-13 09:55:49 cattanem Exp $
+# Created    : 13/12/2005
+# Maintainer : Marco Cattaneo
+#
+package           RecEvent
+version           v1r0
+
+# Structure, i.e. directories to process. 
+#============================================================================
+branches          cmt doc xml Event
+
+# Include directories
+#============================================================================
+include_dirs $(RECEVENTROOT)
+
+# Used packages. 
+#============================================================================
+use EventBase    v*      Event
+
+# Produce Header-Files & dictionary from XML description
+#============================================================================
+document obj2doth RecEventObj2Doth ../xml/*.xml
+document obj2dict RecEventObj2Dict ../xml/*.xml
+
+# Build libraries (including dictionary)
+#============================================================================
+library          RecEventDict  ../$(tag)/dict/RecEvent/*.cpp
+
+# Define link options
+#============================================================================
+apply_pattern component_library library=RecEventDict
+
+private
+use GaudiObjDesc v* -no_auto_imports
