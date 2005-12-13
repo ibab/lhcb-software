@@ -6,7 +6,7 @@
 # http://cern.ch/lhcb-comp/Support/html/new_structure.pdf
 #============================================================================
 package           TrackFitEvent
-version           v1r5
+version           v1r6
 
 #============================================================================
 # This template is an example for a standard Algorithm package
@@ -19,7 +19,7 @@ include_dirs      $(TRACKFITEVENTROOT)
 # Used packages. Specify the version, * at the end specifies 'any revision'
 #    Put as many lines as needed, with all packages, without the '#'
 #============================================================================
-use   TrackEvent      v*      Event
+use   TrackEvent      v1r*    Event
 use   OTEvent         v*      Event
 use   ITEvent         v*      Event
 use   VeloEvent       v*      Event

@@ -3,12 +3,12 @@
 <gdd>
   <package name='TrackFitEvent'>
 
-<!-- ================ ITMeasurement class definition ================ -->
+<!-- ================ STMeasurement class definition ================ -->
 
     <class
-      name        = 'ITMeasurement'
+      name        = 'STMeasurement'
       author      = 'Jose Hernando, Eduardo Rodrigues'
-      desc        = 'ITMeasurement is a measurement made from a IT cluster.'
+      desc        = 'STMeasurement is a measurement made from a IT cluster (of TT or IT).'
       serializers = 'FALSE'>
 
       <base name='Measurement' />
@@ -32,12 +32,12 @@
         desc = 'Pointer to the ITCluster'/>
 
       <method
-        type    = 'ITMeasurement*'
+        type    = 'STMeasurement*'
         name    = 'clone'
-        desc    = 'Clone the ITMeasurement'
+        desc    = 'Clone the STMeasurement'
         const   = 'TRUE'>
         <code>
-  ITMeasurement* me = new ITMeasurement(); *me = *this; return me;
+  STMeasurement* me = new STMeasurement(); *me = *this; return me;
         </code>
       </method>
 

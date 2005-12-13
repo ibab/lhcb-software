@@ -1,14 +1,14 @@
-// $Id: ITMeasurement.cpp,v 1.5 2005-12-01 17:13:20 erodrigu Exp $
+// $Id: STMeasurement.cpp,v 1.1 2005-12-13 19:04:52 erodrigu Exp $
 // Include files 
 
 // from STDet
 #include "STDet/STDetectionLayer.h"
 
 // local
-#include "Event/ITMeasurement.h"
+#include "Event/STMeasurement.h"
 
 //-----------------------------------------------------------------------------
-// Implementation file for class : ITMeasurement
+// Implementation file for class : STMeasurement
 //
 // 2005-04-07 : Jose Hernando, Eduardo Rodrigues
 // Author: Rutger van der Eijk
@@ -18,15 +18,15 @@
 //=============================================================================
 // Standard constructor, initializes variables
 //=============================================================================
-ITMeasurement::ITMeasurement( ITCluster& itCluster,
+STMeasurement::STMeasurement( ITCluster& itCluster,
                               DeSTDetector& geom,
                               ISTClusterPosition& itClusPosTool) {
 
-  m_mtype = Measurement::ST;
-  
   m_cluster = &itCluster; //pointer to ITCluster
 
-  ITChannelID itChan = m_cluster->channelID();
+  ITChannelID itChan = m_cluster -> channelID();
+
+  m_mtype = ( itChan.isTT() ? Measurement::TT : Measurement::IT );
 
   // set the LHCbID
   setLhcbID ( LHCbID( itChan ) );
@@ -39,7 +39,7 @@ ITMeasurement::ITMeasurement( ITCluster& itCluster,
                  + ( measVal.first.second * itLay -> pitch() );
   m_errMeasure = measVal.second;
 
-  m_z            = itLay->centerZ( itChan );
+  m_z            = itLay -> centerZ( itChan );
 //  m_stereoAngle  = itLay->stereoAngle();
 
 //  std::cout << "- stereo angle = " << itLay->stereoAngle() << std::endl;

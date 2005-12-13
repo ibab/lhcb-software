@@ -4,6 +4,9 @@
 ! Purpose     : Package for the tracking fitting-related classes
 !-----------------------------------------------------------------------------
 
+! 2005-12-13 - Eduardo Rodrigues
+ - ITMeasurement class renamed to STMeasurement. Its type can be TT or IT
+
 ! 2005-12-01 - Eduardo Rodrigues
  - IT measurement value and error calculated via the STClusterPosition tool
 
