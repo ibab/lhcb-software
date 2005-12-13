@@ -5,7 +5,7 @@
  *  Header file for tool : RichToolRegistry
  *
  *  CVS Log :-
- *  $Id: RichToolRegistry.h,v 1.10 2005-12-13 18:01:11 papanest Exp $
+ *  $Id: RichToolRegistry.h,v 1.11 2005-12-13 18:07:07 papanest Exp $
  *
  *  @author Chris Jones    Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -28,7 +28,6 @@
 
 // Kernel
 #include "RichKernel/RichHashMap.h"
-#include "RichKernel/StringHashFuncs.h"
 
 //-----------------------------------------------------------------------------
 /** @class RichToolRegistry RichToolRegistry.h
