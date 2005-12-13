@@ -1,4 +1,4 @@
-// $Id: Track.cpp,v 1.20 2005-12-02 17:55:42 erodrigu Exp $ // Include files
+// $Id: Track.cpp,v 1.21 2005-12-13 18:47:55 erodrigu Exp $ // Include files
 
 // local
 #include "Event/Track.h"
@@ -317,7 +317,7 @@ void Track::removeFromStates(State* state)
 //=============================================================================
 // Check whether the given LHCbID is on the Track
 //=============================================================================
-bool Track::isOnTrack( const LHCbID& value ) 
+bool Track::isOnTrack( const LHCbID& value ) const
 {
   std::vector<LHCbID>::const_iterator it =
     std::find( m_lhcbIDs.begin(), m_lhcbIDs.end(), value );
@@ -327,7 +327,7 @@ bool Track::isOnTrack( const LHCbID& value )
 //=============================================================================
 // Check whether the given Measurement is on the Track
 //=============================================================================
-bool Track::isOnTrack( const Measurement& value ) 
+bool Track::isOnTrack( const Measurement& value ) const
 {
   return isOnTrack( value.lhcbID() );
 }

@@ -16,9 +16,22 @@
 
       &StlPtrVector;
 
+<!--
+  /** Measurement type enumerations
+   *
+   *   Unknown  : measurement of undefined type (this should never happen!)
+   *   VeloR    : Velo-R measurement
+   *   VeloPhi  : Velo-phi measurement
+   *   TT       : TT measurement (ST measurement in the TT stations)
+   *   IT       : IT measurement (ST measurement in the IT seeding stations)
+   *   OT       : OT measurement in the seeding stations
+   *   Muon     : Muon measurement
+   *
+   */
+-->
       <enum
         name    = 'Type'
-        value   = 'Unknown,Muon,OT,ST,TT,VeloR,VeloPhi'
+        value   = 'Unknown,VeloR,VeloPhi,TT,IT,OT,Muon'
         desc    = 'enumerator for the type of Measurement'
         access  = 'PUBLIC' />
 

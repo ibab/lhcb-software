@@ -17,7 +17,6 @@
       <location name="Seed"    place="Rec/Track/Seed"/>
       <location name="Velo"    place="Rec/Track/Velo"/>
       <location name="Forward" place="Rec/Track/Forward"/>
-      <location name="Follow"  place="Rec/Track/Follow"/>
       <location name="VeloTT"  place="Rec/Track/VeloTT"/>
       <location name="Match"   place="Rec/Track/Match"/>
       <location name="KsTrack" place="Rec/Track/KsTrack"/>
@@ -70,6 +69,7 @@
                   PatForward,
                   TrgForward,
                   TrackMatching,
+                  PatKShort,
                   TrackKShort,
                   TsaTrack,
                   CnvSeed=24,
@@ -617,6 +617,17 @@
       </method>
 
       <method
+        type    = 'bool'
+        name    = 'checkStatus'
+        argList = 'const Track::Status&amp; value'
+        desc    = 'Check the status of the Track (see the Status enum)'
+        const   = 'TRUE'>
+        <code>
+  return status() == value;
+        </code>
+      </method>
+
+      <method
         name    = 'setFlag'
         argList = 'unsigned int flag, bool ok'
         desc    = 'Update the flag (see the Flags enum)'>
@@ -654,14 +665,16 @@
         type    = 'bool'
         name    = 'isOnTrack'
         argList = 'const LHCbID value'
-        desc    = 'Check whether the given LHCbID is on the Track'>
+        desc    = 'Check whether the given LHCbID is on the Track'
+        const   = 'TRUE'>
       </method>
 
       <method
         type    = 'bool'
         name    = 'isOnTrack'
         argList = 'const Measurement value'
-        desc    = 'Check whether the given Measurement is on the Track'>
+        desc    = 'Check whether the given Measurement is on the Track'
+        const   = 'TRUE'>
       </method>
 
     </class>
