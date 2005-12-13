@@ -4,6 +4,10 @@
 ! Purpose     : Implementation of the Linker package, to associate objects
 !-----------------------------------------------------------------------------
 
+!====================== LinkerEvent v2r0 2005-12-13 ==========================
+! 2005-12-13 - Marco Cattaneo
+ - Changes for migration to Gaudi v18/LHCb v20
+
 ! 2005-11-21 - Olivier Callot
  - Add methods front() and Back() to LinkerRange as suggested by Matt.
 

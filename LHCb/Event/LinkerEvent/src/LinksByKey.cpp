@@ -1,8 +1,9 @@
-// $Id: LinksByKey.cpp,v 1.8 2005-02-04 16:04:18 ocallot Exp $
+// $Id: LinksByKey.cpp,v 1.9 2005-12-13 11:01:47 cattanem Exp $
 // Include files 
 
 #include "GaudiKernel/IRegistry.h"
 #include "GaudiKernel/LinkManager.h"
+#include "GaudiKernel/SmartDataPtr.h"
 
 // local
 #include "Event/LinksByKey.h"
@@ -16,7 +17,7 @@
 //=========================================================================
 // Resolve the links, loading the containers if needed
 //=========================================================================
-void LinksByKey::resolveLinks ( IDataProviderSvc* eventSvc ) {
+void LHCb::LinksByKey::resolveLinks ( IDataProviderSvc* eventSvc ) {
   int linkID = 0;
   LinkManager::Link* link;
   while ( 0 != (link = linkMgr()->link( linkID ) ) ) {
@@ -30,14 +31,13 @@ void LinksByKey::resolveLinks ( IDataProviderSvc* eventSvc ) {
 //=========================================================================
 //  Add a reference for a given key and container link.
 //=========================================================================
-void LinksByKey::addReference ( int srcKey, int srcLinkID,
-                                int destKey, int destLinkID, 
-                                double weight ) {
+void LHCb::LinksByKey::addReference ( int srcKey, int srcLinkID, int destKey,
+                                      int destLinkID, double weight )        {
 
 
   //== Create the LinkReference, and push it in the vector
 
-  LinkReference temp( srcLinkID, destLinkID, destKey, -1, float(weight));
+  LHCb::LinkReference temp( srcLinkID, destLinkID, destKey, -1, float(weight));
   unsigned int refNum = m_linkReference.size();
 
   //== Now get the map entry for this key, if any.
@@ -128,9 +128,9 @@ void LinksByKey::addReference ( int srcKey, int srcLinkID,
 //=========================================================================
 //  Returns the first reference for the given key
 //=========================================================================
-bool LinksByKey::firstReference ( int key, 
-                                  const DataObject* container, 
-                                  LinkReference& reference ) const {
+bool LHCb::LinksByKey::firstReference ( int key, 
+                                        const DataObject* container, 
+                                        LHCb::LinkReference& reference ) const {
   int linkID = -1;           // Case with only a key
   if ( NULL != container ) {
     LinkManager::Link* link = linkMgr()->link( container ); // test with pointer
@@ -163,7 +163,7 @@ bool LinksByKey::firstReference ( int key,
 //  Returns the next reference from the specified reference. 
 //  returns false if no more
 //=========================================================================
-bool LinksByKey::nextReference ( LinkReference& reference ) const {
+bool LHCb::LinksByKey::nextReference ( LHCb::LinkReference& reference ) const {
   if ( 0 > reference.nextIndex() ) return false;
   
   int linkID = reference.srcLinkID();
@@ -184,8 +184,8 @@ bool LinksByKey::nextReference ( LinkReference& reference ) const {
 //=========================================================================
 // Returns the first key for which the specified reference exists 
 //=========================================================================
-int LinksByKey::firstSource ( LinkReference& reference,
-                              std::vector<std::pair<int,int> >::const_iterator& iter ) const {
+int LHCb::LinksByKey::firstSource ( LHCb::LinkReference& reference,
+                                    std::vector<std::pair<int,int> >::const_iterator& iter ) const {
   iter = m_keyIndex.begin();
   reference.setNextIndex( -1 );  // Indicate to restart at this iter's content
   return nextSource( reference, iter );
@@ -194,8 +194,8 @@ int LinksByKey::firstSource ( LinkReference& reference,
 //=========================================================================
 // Returns the next key for which the specified reference exists 
 //=========================================================================
-int LinksByKey::nextSource ( LinkReference& reference, 
-                             std::vector<std::pair<int,int> >::const_iterator& iter ) const {
+int LHCb::LinksByKey::nextSource ( LHCb::LinkReference& reference, 
+                                   std::vector<std::pair<int,int> >::const_iterator& iter ) const {
   const LinkReference* temp;
   int refNum = reference.nextIndex();  // next entry
   while ( iter != m_keyIndex.end() ) {
@@ -221,7 +221,7 @@ int LinksByKey::nextSource ( LinkReference& reference,
 //=========================================================================
 //  Returns the ID in the link table of the given object
 //=========================================================================
-int LinksByKey::linkID ( const DataObject* obj ) const {
+int LHCb::LinksByKey::linkID ( const DataObject* obj ) const {
   int id;
   LinkManager::Link* link = linkMgr()->link( obj );
   if ( 0 == link ) {
@@ -235,7 +235,7 @@ int LinksByKey::linkID ( const DataObject* obj ) const {
 //=========================================================================
 //  Find the index of a given key in m_keyIndex. False if not found.
 //=========================================================================
-bool LinksByKey::findIndex ( int key, int& index) const {
+bool LHCb::LinksByKey::findIndex ( int key, int& index) const {
 
   // binary search
   int iF = 0;

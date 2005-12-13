@@ -3,8 +3,6 @@
 <gdd>
   <package name="LinkerEvent">
 
-    <import name="GaudiKernel/SmartDataPtr"/>
-
     <class 
       name     = "LinkReference"
       author   = "Olivier Callot"
@@ -56,8 +54,7 @@ m_weight    = weight;
       <base   name = "DataObject"/>
       &DataObject;
       <import name = "Event/LinkReference"/>
-      <import name = "GaudiKernel/IDataProviderSvc" />
-
+     <import name = "GaudiKernel/IDataProviderSvc" />
 
       <constructor 
         desc      = "Default constructor, reserve space" >
@@ -82,7 +79,7 @@ m_increasing = false;
         desc      = "List of linked objects" />
 
       <attribute
-	type      = "std::vector&lt;LinkReference&gt;"
+	type      = "std::vector&lt;LHCb::LinkReference&gt;"
         name      = "linkReference"
 	setMeth   = "FALSE"
         desc      = "List of references" />
@@ -121,7 +118,7 @@ m_increasing = false;
 
         <arg type="int" name = "key" inout="BYVALUE"/>
         <arg type="DataObject*" name = "container" inout="BYVALUE" const="TRUE"/>
-        <arg type="LinkReference" name="reference" const="FALSE" inout="BOTH"/>
+        <arg type="LHCb::LinkReference" name="reference" const="FALSE" inout="BOTH"/>
 
       </method>
 
@@ -131,7 +128,7 @@ m_increasing = false;
         const     = "TRUE"
         desc      = "Retrieve the next LinkReference for this key" >
 
-        <arg type="LinkReference" name="reference" const="FALSE" inout="BOTH"/>
+        <arg type="LHCb::LinkReference" name="reference" const="FALSE" inout="BOTH"/>
 
       </method>
 
@@ -142,7 +139,7 @@ m_increasing = false;
         desc      = "Retrieve the first key for this LinkReference" >
 
         <arg 
-          type  = "LinkReference" 
+          type  = "LHCb::LinkReference" 
           name  = "reference" 
           const = "FALSE" 
           inout = "BOTH"/>
@@ -158,7 +155,7 @@ m_increasing = false;
         const     = "TRUE"
         desc      = "Retrieve the next key for this LinkReference" >
        <arg 
-          type  = "LinkReference" 
+          type  = "LHCb::LinkReference" 
           name  = "reference" 
           const = "FALSE" 
           inout = "BOTH"/>
