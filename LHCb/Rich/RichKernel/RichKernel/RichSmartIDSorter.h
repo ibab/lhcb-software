@@ -4,7 +4,7 @@
  *
  *  Header file for RichSmartID utility class : RichSmartIDSorter
  *
- *  $Id: RichSmartIDSorter.h,v 1.8 2005-11-28 16:20:02 jonrob Exp $
+ *  $Id: RichSmartIDSorter.h,v 1.9 2005-12-13 17:23:28 papanest Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   2005-01-10
@@ -37,7 +37,7 @@ private: // utility classes
 
   /// Functor to sort RichSmartIDs by Rich then panel numbers
   class SortByRegion
-    : std::binary_function< const RichSmartID, const RichSmartID, bool >
+    : std::binary_function< const LHCb::RichSmartID, const LHCb::RichSmartID, bool >
   {
 
   public:
@@ -51,7 +51,7 @@ private: // utility classes
      *
      *  @return bool indicating if p1 should be listed before p2
      */
-    inline bool operator() ( const RichSmartID p1, const RichSmartID p2 ) const
+    inline bool operator() ( const LHCb::RichSmartID p1, const LHCb::RichSmartID p2 ) const
     {
       // Use internal bit packing to sort
       return ( p1.dataBitsOnly().key() < p2.dataBitsOnly().key() );
@@ -77,7 +77,7 @@ public:
   ~RichSmartIDSorter() {};
 
   /// Sort the list by detector region
-  inline void sortByRegion( RichSmartID::Collection & smartIDs ) const
+  inline void sortByRegion( LHCb::RichSmartID::Vector& smartIDs ) const
   {
     std::sort( smartIDs.begin(), smartIDs.end(), RichSmartIDSorter::SortByRegion() );
   }
