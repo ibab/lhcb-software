@@ -1,0 +1,17 @@
+!-----------------------------------------------------------------------------
+! Package     : Tools/ClhepTools
+! Responsible : Juan PALACIOS
+! Purpose     : Provide static functions that take MathCore objects as 
+!               arguments and return equivalent CLHEP ones.
+!               Provide iostream << operators for CLHEP classes for which 
+!               these aren't defined.
+!-----------------------------------------------------------------------------
+
+!============================= ClhepTools v1r0 ===============================
+
+! 2005-12-13 - Juan PALACIOS
+ - First release of Tools/ClhepTools containing:
+      * Function to go from Gaudi::Transform3D to HepGeom::Transform3D.
+      * Functions to go from and point or vector supporting x(), y(), z() to
+        HepGeom::Point3D<double> and HepGeom::Vector3D<double>
+      * global std::ostream & operator<< for HepGeom::Transform3D
