@@ -1,4 +1,4 @@
-// $Id: BackgroundCategory.cpp,v 1.2 2005-12-13 16:33:46 pkoppenb Exp $
+// $Id: BackgroundCategory.cpp,v 1.3 2005-12-13 16:35:11 pkoppenb Exp $
 // Include files 
 
 // from Gaudi
@@ -254,7 +254,7 @@ bool BackgroundCategory::condition_A(MCParticleVector mc_mothers_final, Particle
     const MCParticle* tempmother = *iP;*/
   bool carryon = true;
   bool motherassignedyet = false;
-  const MCParticle* tempmother;
+  const MCParticle* tempmother = NULL;
 
   do {
 
