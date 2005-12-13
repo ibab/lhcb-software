@@ -1,4 +1,4 @@
-// $Id: MuonChamberGrid.h,v 1.4 2005-12-07 08:46:46 asarti Exp $
+// $Id: MuonChamberGrid.h,v 1.5 2005-12-13 11:06:57 asatta Exp $
 #ifndef MUONDET_MUONCHAMBERGRID_H 
 #define MUONDET_MUONCHAMBERGRID_H 1
 
@@ -64,6 +64,11 @@ public:
   inline int MuonChamberGrid::getGrid2SizeY(){
     return m_y_pad_rdout2.size();
   }
+
+
+  StatusCode getPCCenter(MuonFrontEndID fe,
+                         double& xcenter, double& ycenter);
+
 
 protected:
 

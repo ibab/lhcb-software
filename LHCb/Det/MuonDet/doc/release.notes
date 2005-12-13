@@ -1,7 +1,12 @@
-! $Id: release.notes,v 1.49 2005-12-07 15:15:55 asarti Exp $
+! $Id: release.notes,v 1.50 2005-12-13 11:06:57 asatta Exp $
 !
 ! Package     : MuonDet
 ! Responsible : Alessia Satta
+
+!========================= MuonDet v5r1 2005-12-13 =========================
+! 2005-12-13 - Alessia Satta
+   - import of the funxtionality now present in a separate tool (MuonGetInfo)
+   - fix few points ( MuonChamberLayour - MuonChamberGrid)  
 
 !========================= MuonDet v4r8 2005-07-01 =========================
 ! 2005-12-07 - Alessio Sarti

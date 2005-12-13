@@ -4,27 +4,26 @@
 
 namespace MuonFrontEndIDPack{
 
-static const unsigned int bitChamber=11;
-static const unsigned int bitReadout=1;
-static const unsigned int bitLayer=1;
-static const unsigned int bitFEGridX=6;
-static const unsigned int bitFEGridY=3;
-static const unsigned int bitFEIDX=6;
-static const unsigned int bitFEIDY=3;
+static const unsigned int bitReadout=2;
+static const unsigned int bitLayer=2;
+static const unsigned int bitFEGridX=7;
+static const unsigned int bitFEGridY=5;
+static const unsigned int bitFEIDX=7;
+static const unsigned int bitFEIDY=5;
 
 
 
-static const unsigned int shiftChamber  = 0; 
-static const unsigned int shiftReadout  = shiftChamber + bitReadout ;
-static const unsigned int shiftLayer    = shiftReadout  + bitLayer ; 
-static const unsigned int shiftFEGridX  = shiftLayer + bitFEGridX ;
-static const unsigned int shiftFEGridY  = shiftFEGridX  + bitFEGridY ;
-static const unsigned int shiftFEIDX    = shiftFEGridX  + bitFEIDX ;
-static const unsigned int shiftFEIDY    = shiftFEIDX  + bitFEIDY ;
+//static const unsigned int shiftChamber  = 0; 
+static const unsigned int shiftReadout  = 0 ;
+static const unsigned int shiftLayer    = shiftReadout  + bitReadout ; 
+static const unsigned int shiftFEGridX  = shiftLayer + bitLayer ;
+static const unsigned int shiftFEGridY  = shiftFEGridX  + bitFEGridX ;
+static const unsigned int shiftFEIDX    = shiftFEGridY  + bitFEGridY ;
+static const unsigned int shiftFEIDY    = shiftFEIDX  + bitFEIDX ;
 
 
  
-static const unsigned int maskChamber  =  ( ( ( (unsigned int) 1 ) << bitChamber  ) - 1  ) << shiftChamber ;     
+//static const unsigned int maskChamber  =  ( ( ( (unsigned int) 1 ) << bitChamber  ) - 1  ) << shiftChamber ;     
 static const unsigned int maskReadout  =  ( ( ( (unsigned int) 1 ) << bitReadout ) - 1  ) << shiftReadout ;     
 static const unsigned int maskLayer    =  ( ( ( (unsigned int) 1 ) << bitLayer  ) - 1  ) << shiftLayer ;     
 static const unsigned int maskFEGridX  =  ( ( ( (unsigned int) 1 ) << bitFEGridX  ) - 1  ) << shiftFEGridX;     

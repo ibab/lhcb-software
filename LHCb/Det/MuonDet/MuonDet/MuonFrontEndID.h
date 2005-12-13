@@ -7,7 +7,7 @@
 #include "MuonDet/MuonFrontEndIDPack.h"
 
 
-using namespace MuonFrontEndIDPack ;
+//using namespace MuonFrontEndIDPack ;
 class MuonFrontEndID{
 public:
 
@@ -50,41 +50,41 @@ return m_channelID;
 
 
 inline unsigned int MuonFrontEndID::getReadout() const{
-return getBit(m_channelID,shiftReadout,maskReadout);
+return MuonFrontEndIDPack::getBit(m_channelID,MuonFrontEndIDPack::shiftReadout,MuonFrontEndIDPack::maskReadout);
 }
 inline unsigned int MuonFrontEndID::getLayer() const{
-return getBit(m_channelID,shiftLayer,maskLayer);
+return MuonFrontEndIDPack::getBit(m_channelID,MuonFrontEndIDPack::shiftLayer,MuonFrontEndIDPack::maskLayer);
 }
 inline unsigned int MuonFrontEndID::getFEGridX() const{
-return getBit(m_channelID,shiftFEGridX,maskFEGridX);
+return MuonFrontEndIDPack::getBit(m_channelID,MuonFrontEndIDPack::shiftFEGridX,MuonFrontEndIDPack::maskFEGridX);
 }
 inline unsigned int MuonFrontEndID::getFEGridY() const{
-return getBit(m_channelID,shiftFEGridY,maskFEGridY);
+return MuonFrontEndIDPack::getBit(m_channelID,MuonFrontEndIDPack::shiftFEGridY,MuonFrontEndIDPack::maskFEGridY);
 }
 inline unsigned int MuonFrontEndID::getFEIDX() const{
-return getBit(m_channelID,shiftFEIDX,maskFEIDX);
+return MuonFrontEndIDPack::getBit(m_channelID,MuonFrontEndIDPack::shiftFEIDX,MuonFrontEndIDPack::maskFEIDX);
 }
 inline unsigned int MuonFrontEndID::getFEIDY() const{
-return getBit(m_channelID,shiftFEIDY,maskFEIDY);
+return MuonFrontEndIDPack::getBit(m_channelID,MuonFrontEndIDPack::shiftFEIDY,MuonFrontEndIDPack::maskFEIDY);
 }
 
 inline void MuonFrontEndID::setReadout(unsigned int value){
-setBit(m_channelID,shiftReadout,maskReadout,value);
+MuonFrontEndIDPack::setBit(m_channelID,MuonFrontEndIDPack::shiftReadout,MuonFrontEndIDPack::maskReadout,value);
 }
 inline void MuonFrontEndID::setLayer (unsigned int value){
-setBit(m_channelID,shiftLayer ,maskLayer ,value);
+MuonFrontEndIDPack::setBit(m_channelID,MuonFrontEndIDPack::shiftLayer ,MuonFrontEndIDPack::maskLayer ,value);
 }
 inline void MuonFrontEndID::setFEGridX(unsigned int value){
-setBit(m_channelID,shiftFEGridX,maskFEGridX,value);
+MuonFrontEndIDPack::setBit(m_channelID,MuonFrontEndIDPack::shiftFEGridX,MuonFrontEndIDPack::maskFEGridX,value);
 }
 inline void MuonFrontEndID::setFEGridY(unsigned int value){
-setBit(m_channelID,shiftFEGridY,maskFEGridY,value);
+MuonFrontEndIDPack::setBit(m_channelID,MuonFrontEndIDPack::shiftFEGridY,MuonFrontEndIDPack::maskFEGridY,value);
 }
 inline void MuonFrontEndID::setFEIDX(unsigned int value){
-setBit(m_channelID,shiftFEIDX,maskFEIDX,value);
+MuonFrontEndIDPack::setBit(m_channelID,MuonFrontEndIDPack::shiftFEIDX,MuonFrontEndIDPack::maskFEIDX,value);
 }
 inline void MuonFrontEndID::setFEIDY(unsigned int value){
-setBit(m_channelID,shiftFEIDY,maskFEIDY,value);
+MuonFrontEndIDPack::setBit(m_channelID,MuonFrontEndIDPack::shiftFEIDY,MuonFrontEndIDPack::maskFEIDY,value);
 }
 
 

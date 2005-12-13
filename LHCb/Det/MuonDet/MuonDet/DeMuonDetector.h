@@ -1,4 +1,4 @@
-// $Id: DeMuonDetector.h,v 1.6 2005-12-07 08:46:46 asarti Exp $
+// $Id: DeMuonDetector.h,v 1.7 2005-12-13 11:06:57 asatta Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
@@ -27,6 +27,12 @@
  *  @date   18/10/2005
  */
 
+#define partition 20
+#define maxReadoutType 2
+#define numberChamber 1380   
+#define numberGap 4
+#define nFE 2
+#define nLogMap 2
 static const CLID& CLID_DEMuonDetector = 11009;  
 
 class DeMuonDetector: public DetectorElement {
@@ -91,9 +97,16 @@ public:
                                 const double z,
                                 DeMuonChamber* & chamberPointer);
 
-  //Returns the list of physical channels for a given chamber  
-  std::vector< std::pair<MuonFrontEndID, std::vector<float> > > listOfPhysChannels(HepPoint3D my_entry, HepPoint3D my_exit, int region, int chamber);
+  StatusCode Chamber2Tile(int  chaNum, int station, int region, 
+                          MuonTileID& tile);
 
+  //Returns the list of physical channels for a given chamber  
+  std::vector< std::pair<MuonFrontEndID, std::vector<float> > > 
+  listOfPhysChannels(HepPoint3D my_entry, HepPoint3D my_exit, 
+                     int region, int chamber);
+  StatusCode getPCCenter(MuonFrontEndID fe,int chamber,int station, 
+                         int region,double& xcenter, 
+                         double& ycenter, double & zcenter);
   //Returns the station index starting from the z position
   int getStation(const double z);
   
@@ -106,7 +119,10 @@ public:
 
   //Fills the vector of chamber pointers  
   void fillChmbPtr();
-  
+
+  //Fills various geometry related info
+  StatusCode fillGeoInfo();
+
   StatusCode Tile2XYZ(MuonTileID tile, double & x,
 		      double & y, double & z);
   
@@ -129,28 +145,64 @@ public:
                                  double& y, double& deltay,
                                  double& z, double& deltaz);
 
-  // sotto e' preso da muongeometrytool da cui si puo' prendere l 
-  // inizializzazione
 
-  /// return the number of horizonal logical channels in X across a 
-  /// 1/4 of the region (use for MuonTileID grid)
-  int logChanHorizGridX(const int station, const int region);
-  /// return the number of horizonal logical channels in Y across a 
-  /// 1/4 of the region (use for MuonTileID grid)
-  int logChanHorizGridY(const int station, const int region);
-  /// return the number of vertical logical channels in X across a 
-  /// 1/4 of the region (use for MuonTileID grid)
-  int logChanVertGridX(const int station, const int region); 
-  /// return the number of vertical logical channels in Y across a 
-  /// 1/4 of the region (use for MuonTileID grid)
-  int logChanVertGridY(const int station, const int region);
-  /// return the number of pads in X across a 
-  /// 1/4 of the region (use for MuonTileID grid)
-  int padGridX(const int &station, const int &region);
-  /// return the number of pads in Y across a 
-  /// 1/4 of the region (use for MuonTileID grid)
-  int padGridY(const int &station, const int &region);
   */
+
+
+  int gapsInRegion(const int station, const int region){
+    return m_gapPerRegion[station*4+region];    
+  };
+  int gapsPerFE(const int station, const int region){
+    return m_gapPerFE[station*4+region];
+  };
+  int readoutInRegion(const int station, const int region){
+    return m_readoutNumber[station*4+region];
+  };
+  int mapInRegion(const int station, const int region){
+    return m_LogMapPerRegion[station*4+region];
+  };
+  double areaChamber(const int station, const int region){
+    return m_areaChamber[station*4+region];
+  };
+  unsigned int getPhChannelNX(const int readout, const int station, 
+                              const int region){
+    return  m_phChannelNX[readout][station*4+region];
+  };
+  unsigned int getPhChannelNY(const int readout,const int station, 
+                              const int region){
+    return  m_phChannelNY[readout][station*4+region];
+  };
+
+  unsigned int getReadoutType(const int ireadout,const int station, 
+                              const int region){    
+    return  m_readoutType[ireadout][station*4+region];
+  };
+  unsigned int chamberInRegion(const int station, const int region){
+    return  m_chamberPerRegion[station*4+region];
+  };
+  unsigned int getLogMapInRegion(const int station, const int region){
+    return  m_LogMapPerRegion[station*4+region];
+  };
+  unsigned int getLogMapRType(const int ireadout, const int station, 
+                              const int region){
+    return m_LogMapRType[ireadout][station*4+region];
+  };
+  unsigned int getLogMapMergex( const int ireadout,const int station, 
+                                const int region){
+    return m_LogMapMergex[ireadout][station*4+region];
+  };
+  unsigned int getLogMapMergey( const int ireadout,const int station, 
+                                const int region){ 
+    return m_LogMapMergey[ireadout][station*4+region];
+  };
+  unsigned int getLayoutX( const int ireadout,const int station, 
+                           const int region){
+    return m_layoutX[ireadout][station*4+region];
+  };
+  unsigned int getLayoutY( const int ireadout,const int station, 
+                           const int region){  
+    return m_layoutY[ireadout][station*4+region];
+  };
 private:
 
   //My data provider
@@ -170,6 +222,21 @@ private:
   int m_regions;
   int m_regsperSta[5];
 
+  //geometry info
+  int m_readoutNumber[partition];
+  unsigned int m_chamberPerRegion[partition];
+  unsigned int m_gapPerRegion[partition];
+  unsigned int m_LogMapPerRegion[partition]; 
+  unsigned int m_readoutType[maxReadoutType][partition];
+  unsigned int m_LogMapRType[maxReadoutType][partition];
+  unsigned int m_LogMapMergex[maxReadoutType][partition];
+  unsigned int m_LogMapMergey[maxReadoutType][partition];
+  unsigned int m_phChannelNX[maxReadoutType][partition];
+  unsigned int m_phChannelNY[maxReadoutType][partition];
+  int m_gapPerFE[partition];
+  int m_layoutX[maxReadoutType][partition];
+  int m_layoutY[maxReadoutType][partition];
+  double  m_areaChamber[partition]; 
 
 };
 
