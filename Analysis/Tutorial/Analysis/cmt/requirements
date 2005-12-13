@@ -3,7 +3,7 @@
 # Maintainer : P. Koppenburg
 #============================================================================
 package           Analysis
-version           v4
+version           v5
 
 #============================================================================
 # Structure, i.e. directories to process. 
