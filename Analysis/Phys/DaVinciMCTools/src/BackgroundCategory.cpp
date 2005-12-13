@@ -1,4 +1,4 @@
-// $Id: BackgroundCategory.cpp,v 1.1 2005-12-13 16:18:25 pkoppenb Exp $
+// $Id: BackgroundCategory.cpp,v 1.2 2005-12-13 16:33:46 pkoppenb Exp $
 // Include files 
 
 // from Gaudi
@@ -97,7 +97,7 @@ MCParticleVector BackgroundCategory::get_mc_mothers(MCParticleVector mc_particle
       verbose() << "finalmother = " << finalmother << endreq;
 		} else {
 			verbose() << "finalmother = 0" << endreq;
-			//mc_mothers.push_back(0); //Ghosts have no mother!;
+			mc_mothers.push_back(0); //Ghosts have no mother!;
 		}
 		//verbose() << "Getting MC-mothers - loop step 6 - loop element " << debug << endreq;
 		//verbose() << "Getting MC-mothers - loop step 7 - loop element " << debug << endreq;
@@ -163,7 +163,7 @@ IBackgroundCategory::categories BackgroundCategory::category(const Particle* rec
 	verbose() << "Categorising step 3" << endreq;
 	//First we test condition A;if it succeeds, we test conditions B->F else G->J 
 	//For a list of what the conditions are, see the respective test functions
-	if (condition_A(mc_mothers_final, mc_particles_linked_to_decay) ) {
+	if (condition_A(mc_mothers_final, particles_in_decay) ) {
 		verbose() << "Categorising step 4" << endreq;
 		// Condition A has passed, so we are in the territory of signal decays and
 		// "physics" backgrounds (meaning we have reconstructed some actual decay 
@@ -243,31 +243,46 @@ IBackgroundCategory::categories BackgroundCategory::category(const Particle* rec
 	}
 }
 //=============================================================================
-bool BackgroundCategory::condition_A(MCParticleVector mc_mothers_final, MCParticleVector mc_particles_linked_to_decay) 
+bool BackgroundCategory::condition_A(MCParticleVector mc_mothers_final, ParticleVector particles_in_decay) 
 {
-	MCParticleVector::const_iterator iP = mc_mothers_final.begin();
-	MCParticleVector::const_iterator iPP = mc_particles_linked_to_decay.begin();
-	if ((*iP) == 0) {
-		m_commonmother = 0;
-		return false;
-	} //One of the final state particles has no mother, so no need to go further
-	const MCParticle* tempmother = *iP;
-	bool carryon = true;
+  MCParticleVector::const_iterator iP = mc_mothers_final.begin();
+  ParticleVector::const_iterator iPP = particles_in_decay.begin();
+  /*if ((*iP) == 0) {
+    m_commonmother = 0;
+    return false;
+    } //One of the final state particles has no mother, so no need to go further
+    const MCParticle* tempmother = *iP;*/
+  bool carryon = true;
+  bool motherassignedyet = false;
+  const MCParticle* tempmother;
 
-	do {
+  do {
 
-		if (*iP && *iPP) {
-			SmartRefVector<MCVertex>::const_iterator iVV = (*iPP)->endVertices().begin();
-			if ( (*iVV)->products().size() == 0 || isStable( (*iPP)->particleID().abspid() ) ) //final state check
-				carryon = (tempmother != 0) && ( (*iP) == tempmother) ; 
-		}
-		++iP; ++iPP;
-		
-	} while (carryon && iP != mc_mothers_final.end() );
+    if ( (*iPP)->endVertex() == 0) { //final state particle
 
-	if (carryon) m_commonmother = tempmother; else m_commonmother = 0;
+      if ((*iP) == 0 ) carryon = false; //final state particle has no mother - no need to go further
+      else {
+        if (!motherassignedyet) {
+          tempmother = *iP ;
+          motherassignedyet = true;
+        }
+        else carryon = ( (*iP) == tempmother ) ;
+      }
 
-	return carryon;
+    }
+
+    /*if (*iP && *iPP) {
+      SmartRefVector<MCVertex>::const_iterator iVV = (*iPP)->endVertices().begin();
+      if ( (*iVV)->products().size() == 0 || isStable( (*iPP)->particleID().abspid() ) ) //final state check
+      carryon = (tempmother != 0) && ( (*iP) == tempmother) ;
+      }*/
+    ++iP; ++iPP;
+
+  } while (carryon && iP != mc_mothers_final.end() );
+
+  if (carryon) m_commonmother = tempmother; else m_commonmother = 0;
+
+  return carryon;
 }
 //=============================================================================
 bool BackgroundCategory::condition_B(MCParticleVector mc_particles_linked_to_decay)
@@ -335,7 +350,10 @@ bool BackgroundCategory::condition_C(ParticleVector particles_in_decay, MCPartic
 bool BackgroundCategory::condition_D(const Particle* reconstructed_mother){
 	bool carryon;
 
-	carryon = ( m_commonmother->particleID().pid() == reconstructed_mother->particleID().pid() );
+	if (m_ppSvc->findByPythiaID(m_commonmother->particleID().pid())->charge() == 0) 
+		carryon = ( m_commonmother->particleID().abspid() == reconstructed_mother->particleID().abspid() );
+	else
+		carryon = ( m_commonmother->particleID().pid() == reconstructed_mother->particleID().pid() );
 
 	//MCParticleVector::const_iterator iP = mc_mothers_final.begin();
 	//const MCParticle* originmatch = origin(reconstructed_mother);

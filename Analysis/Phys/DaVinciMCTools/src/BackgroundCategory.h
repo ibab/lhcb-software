@@ -1,4 +1,4 @@
-// $Id: BackgroundCategory.h,v 1.1 2005-12-13 16:18:25 pkoppenb Exp $
+// $Id: BackgroundCategory.h,v 1.2 2005-12-13 16:33:46 pkoppenb Exp $
 #ifndef BACKGROUNDCATEGORY_H 
 #define BACKGROUNDCATEGORY_H 1
 
@@ -47,7 +47,7 @@ private:
 
   bool isStable(int);
 
-  bool condition_A(MCParticleVector, MCParticleVector);
+  bool condition_A(MCParticleVector, ParticleVector);
   bool condition_B(MCParticleVector);
   bool condition_C(ParticleVector, MCParticleVector);
   //  bool condition_D(MCParticleVector, const Particle*);
