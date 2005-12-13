@@ -16,7 +16,7 @@ RichHpdSiEnergyLoss::RichHpdSiEnergyLoss(const G4String& processName,
     MipEnergyHpdSiEloss(1.0*GeV),
     finalRangeforSiDetStep(0.15*mm),
     PhElectronMaxEnergy(25.0*keV),
-    SiHitDetGlobalEff(0.9),
+    SiHitDetGlobalEff(0.85),
     PeBackScaProb(0.18)  {
 
 
@@ -24,6 +24,7 @@ RichHpdSiEnergyLoss::RichHpdSiEnergyLoss(const G4String& processName,
   const G4String EnvelopeMaterialName="/dd/Materials/RichMaterials/Kovar";
 
   //  SiHitDetGlobalEff=0.9;
+      SiHitDetGlobalEff=0.85;
 
   static const G4MaterialTable* theMaterialTable =
     G4Material::GetMaterialTable();

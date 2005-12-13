@@ -157,12 +157,15 @@ bool RichSensDet::ProcessHits( G4Step* aStep ,
     // hit coordinate in Rich2
     CurrentRichDetNumber= 1;
   }
+ // the following modif done for the new G4 version. SE Nov,2005.
+  
+  //  CurTT -> MoveUpHistory(2);
+  // G4int CurrentHpdNumber= CurTT -> GetVolume() -> GetCopyNo() ;
+  //  CurTT -> MoveUpHistory(1);
 
-  CurTT -> MoveUpHistory(2);
-  G4int CurrentHpdNumber= CurTT -> GetVolume() -> GetCopyNo() ;
 
-  CurTT -> MoveUpHistory(1);
-  G4int CurrentRichDetSector = CurTT -> GetVolume() -> GetCopyNo();
+  G4int CurrentHpdNumber= CurTT -> GetReplicaNumber(2);
+  G4int CurrentRichDetSector = CurTT ->GetReplicaNumber(3);
 
   if(CurrentRichDetSector < 0 || CurrentRichDetSector > 1 ) {
     log << MSG::ERROR <<"Inadmisible Rich Det Sector=  "<<CurrentRichDetSector

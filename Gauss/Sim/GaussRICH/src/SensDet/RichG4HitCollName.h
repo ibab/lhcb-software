@@ -30,12 +30,27 @@ public:
     return static_cast<int>( m_RichHCName.size() ); 
   }
 
+  int InitCollectListNumForOutput() 
+  {
+    return m_InitCollectListNumForOutput;
+  }
+  int FinalCollectListNumForOutput() 
+  {
+    return m_FinalCollectListNumForOutput;
+  }
+  void SetInitCollectListNumForOutput(int aInit) 
+  {m_InitCollectListNumForOutput=aInit;}
+  void SetFinalCollectListNumForOutput(int aFinal)
+  {m_FinalCollectListNumForOutput= aFinal;}  
+    
 private:
 
   int m_NumberOfHCollectionInRICH;
 
   std::vector<G4String> m_RichHCName;
- 
+  int m_InitCollectListNumForOutput;
+  int m_FinalCollectListNumForOutput;
+  
 };  
 
 #endif  // end of RichG4HitCollName

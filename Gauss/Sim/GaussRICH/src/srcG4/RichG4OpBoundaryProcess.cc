@@ -94,7 +94,8 @@ RichG4OpBoundaryProcess::RichG4OpBoundaryProcess(const G4String& processName,
         prob_sl = 0.;
         prob_ss = 0.;
         prob_bs = 0.;
-
+	theMaxPhotStepNumInBoundaryProc=5000;
+        CurPhotStepNum=0;
 }
 
 // RichG4OpBoundaryProcess::RichG4OpBoundaryProcess(const RichG4OpBoundaryProcess &right)
@@ -136,6 +137,7 @@ RichG4OpBoundaryProcess::PostStepDoIt(const G4Track& aTrack, const G4Step& aStep
 
 	Material1 = pPreStepPoint  -> GetMaterial();
 	Material2 = pPostStepPoint -> GetMaterial();
+        CurPhotStepNum=  aTrack.GetCurrentStepNumber() ;
 
         const G4DynamicParticle* aParticle = aTrack.GetDynamicParticle();
 
@@ -606,8 +608,12 @@ void RichG4OpBoundaryProcess::DielectricDielectric()
 	      else {
 
 
-       //Modifcation by SE to kill photons whcih undergo the total internal reflections
-
+       //Modifcation by SE to kill photons which undergo the total internal reflections
+       // this is to aviod infinite loops inside a rectangular block with photons
+		// always incident above the critical angle.
+		// The number of steps the photon travelled is above a large
+                // number like 5000 then the photon is
+                //  killed.
         //       G4cout<<"dielec-dielec: Total internal refl from "<<Material1->GetName()<<" to  "
         //   << Material2->GetName() <<" is  with ref index "<<Rindex1
         //      <<"   "<<Rindex2 <<"   Sint1= "<< sint1
@@ -617,10 +623,10 @@ void RichG4OpBoundaryProcess::DielectricDielectric()
             (Material1->GetName() ==  FilterD263MaterialName) ||
             (Material1->GetName() == Rich1GasQWindowMaterialName) ||
             (Material1->GetName() == Rich2GasQWindowMaterialName ) ) {
-
-          //              || (Material1->GetName() == RichHpdQWMatName ) ) {
-
-          DoAbsorption();
+	  if(CurPhotStepNum > theMaxPhotStepNumInBoundaryProc ) {
+             
+             DoAbsorption();
+          }
         }
 
         //end of modification by SE
@@ -692,7 +698,11 @@ void RichG4OpBoundaryProcess::DielectricDielectric()
       //  << Material2->GetName() <<" is   "<<TransCoeff<<G4endl;
       // }
       //
-      if(Material1->GetName() == RichHpdQWMatName   ||
+//    The QE values already contain the loss at the following two
+//    boundaries. The other boundaries below are artifical (software created ) and hence 
+//    no need to have loss there.
+
+       if(Material1->GetName() == RichHpdQWMatName   ||
          Material2->GetName() == RichHpdQWMatName   )TransCoeff=1.0;
       if(Material1->GetName() == RichHpdPhCathMatName   ||
          Material2->GetName() == RichHpdPhCathMatName   )TransCoeff=1.0;
@@ -719,20 +729,21 @@ void RichG4OpBoundaryProcess::DielectricDielectric()
          Material1->GetName() == RichHpdVacName   )TransCoeff=1.0;
 
       // Now for the modif to comapare with SICBMC for aerogel.
+      // avoided to make things more realistic in November 2005.
 
-      if(( Material1->GetName() ==    Rich1FilterD263MatName ) ||
-         ( Material2->GetName() ==     Rich1FilterD263MatName)){
-        TransCoeff=1.0;
-      }
+      //  if(( Material1->GetName() ==    Rich1FilterD263MatName ) ||
+      //   ( Material2->GetName() ==     Rich1FilterD263MatName)){
+      //  TransCoeff=1.0;
+      // }
 
-      if(( Material1->GetName() ==    Rich1FilterGenericMatName ) ||
-         ( Material2->GetName() ==     Rich1FilterGenericMatName)){
-        TransCoeff=1.0;
-      }
-      if(( Material1->GetName() ==  Rich1AerogelMatName ) &&
-         (  Material2->GetName() == Rich1C4F10MatName) ){
-        TransCoeff=1.0;
-      }
+      //  if(( Material1->GetName() ==    Rich1FilterGenericMatName ) ||
+      //   ( Material2->GetName() ==     Rich1FilterGenericMatName)){
+      //  TransCoeff=1.0;
+      // }
+      // if(( Material1->GetName() ==  Rich1AerogelMatName ) &&
+      //   (  Material2->GetName() == Rich1C4F10MatName) ){
+      //  TransCoeff=1.0;
+      // }
 
 
       // end of modif for aerogel for SICBMC

@@ -4,7 +4,7 @@
  *  Implementation file for GiGa converter : GiGaMCRichHitCnv
  *
  *  CVS History :
- *  $Id: GiGaMCRichHitCnv.cpp,v 1.13 2005-09-02 16:37:28 jonrob Exp $
+ *  $Id: GiGaMCRichHitCnv.cpp,v 1.14 2005-12-13 17:31:17 seaso Exp $
  *
  *  @author Chris Jones    Christopher.Rob.Jones@cern.ch
  *  @date   2004-03-29
@@ -318,7 +318,7 @@ StatusCode GiGaMCRichHitCnv::updateObj ( IOpaqueAddress*  address ,
           // Radiator information
           if ( g4hit->GetRadiatorNumber() < 0 ) {
             mchit->setRadiatorInfoValid( false );
-            Warning( "Found RichG4Hit with invalid radiator flag" );
+            Warning( "Found RichG4Hit with default radiator flag. Possibly direct charged track hit" );
           } else {
             mchit->setRadiatorInfoValid( true );
             mchit->setRadiator(static_cast<Rich::RadiatorType>(g4hit->GetRadiatorNumber()));
@@ -396,7 +396,7 @@ StatusCode GiGaMCRichHitCnv::updateObj ( IOpaqueAddress*  address ,
       }
 
     } else {
-      msg << MSG::INFO << "No RichG4Hits to be converted since no Collections"
+      msg << MSG::INFO << "No RichG4Hits to converted since no  Collections available"
           << endreq;
       return StatusCode::SUCCESS;
     }

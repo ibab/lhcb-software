@@ -1,4 +1,4 @@
-// $Id: RichG4RunConditionAction.cpp,v 1.1 2005-09-30 12:14:29 seaso Exp $
+// $Id: RichG4RunConditionAction.cpp,v 1.2 2005-12-13 17:29:45 seaso Exp $
 // Include files 
 /// GaudiKernel
 #include "GaudiKernel/PropertyMgr.h"
@@ -55,8 +55,10 @@ StatusCode RichG4RunConditionAction::initialize()
 
        if(m_FirstTimeOfBeginRichCondRun) {
 
-         m_RichConditionsOverall=
-          tool<IRichConditionsOverall>("RichConditionsOverall",this);      
+         //         m_RichConditionsOverall=
+         //  tool<IRichConditionsOverall>("RichConditionsOverall",this);
+          m_RichConditionsOverall=
+                   tool<IRichConditionsOverall>("RichConditionsOverall");      
         
          m_FirstTimeOfBeginRichCondRun=false;
        }

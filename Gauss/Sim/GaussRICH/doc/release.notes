@@ -4,7 +4,24 @@
 ! Responsible	     : Gloria Corti
 ! Purpose          : collection of sensitive detectors, G4 actions, etc for RICH
 !-----------------------------------------------------------------------------
-
+2005-12-09  - Sajan Easo
+  - The photons not converted at the photocathode are allowed to travel inside the HPD.
+    This is the improve the simulation of various backgrounds inside HPD.
+  - The fresnel loss at the aerogel exit boundary and  aerogel filter surfaces are activated in
+    the  RichG4OpBoundaryProcess.cpp. 
+  - To avoid infinite loops due to total internal reflections in rectangular blocks like the filter
+    and aerogel, a maximum number of steps (default 5000) is set for the photons in the  RichG4OpBoundaryProcess. 
+  - The default Hpd anode efficiency changed from 0.9 to 0.85. 
+  - The hit convertor is changed to an algorithm named GetMCRichHitsAlg which is to be activated from
+    Simulation.opts. The hit collection list labels modified to have the ability to do partial storage of hits
+    for different of the RICHs. The default is to store all the hits.
+  - The ExtendedRichInfo convertors are all put into an algorithm named GetExtendedMCRichInfoAlg
+    and the RichVerbose.opts modified accordingly. The GetMCRichHitsAlg and GetExtendedMCRichInfoAlg are
+    loaded from Simulation.opts
+  - The use of moveUpHistory replaced with GetReplicaNumber whenever G4TouchableHistory is used. This
+    is to stay compatible with recent versions of G4.These changes are in RichHpdPhotoElectricEffect.cpp
+    and  RichSensDet.cpp
+  - The demagnification law changed to linear + quadratic for the HPDs in RichHpdPhotoElectricEffect.cpp
 !======================== GaussRICH v5r1 ==================================
 ! 2005-12-09 - Gloria CORTI
  - Introduce options (defaultin Rich.opts) to use RichConditions for setting

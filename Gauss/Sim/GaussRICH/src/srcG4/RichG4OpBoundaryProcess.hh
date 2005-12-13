@@ -21,7 +21,7 @@
 // ********************************************************************
 //
 //
-// $Id: RichG4OpBoundaryProcess.hh,v 1.4 2005-04-06 12:14:52 seaso Exp $
+// $Id: RichG4OpBoundaryProcess.hh,v 1.5 2005-12-13 17:31:40 seaso Exp $
 // GEANT4 tag $Name: not supported by cvs2svn $
 //
 // 
@@ -141,6 +141,10 @@ public: // With description
 	// Set the optical surface model to be followed 
         // (glisur || unified). 
 
+       void SettheMaxPhotStepNumInBoundaryProc(int aMaxStepNum) {
+         theMaxPhotStepNumInBoundaryProc=aMaxStepNum;
+       }
+
 private:
 
 	void G4Swap(G4double* a, G4double* b) const;
@@ -182,6 +186,8 @@ private:
 
 	G4Material* Material1;
 	G4Material* Material2;
+        G4int CurPhotStepNum;
+        G4int theMaxPhotStepNumInBoundaryProc;
 
 	G4OpticalSurface* OpticalSurface;
 

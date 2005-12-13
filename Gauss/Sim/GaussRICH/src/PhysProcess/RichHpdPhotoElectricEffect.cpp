@@ -102,9 +102,11 @@ RichHpdPhotoElectricEffect::PostStepDoIt(const G4Track& aTrack,
   G4TouchableHistory* CurTT =
     (G4TouchableHistory*)(pPreStepPoint->GetTouchable());
 
-  CurTT -> MoveUpHistory(2);
+  // the following modif done for the new G4 version. SE Nov,2005.
+  //  CurTT -> MoveUpHistory(2);
+  //  G4int currentHpdNumber= CurTT -> GetVolume() -> GetCopyNo();
 
-  G4int currentHpdNumber= CurTT -> GetVolume() -> GetCopyNo();
+  G4int currentHpdNumber= CurTT->GetReplicaNumber(2);
   G4int currentRichDetNumber=0;
 
   //Current Rich Det is found by checking the global Z coordinate
@@ -133,21 +135,29 @@ RichHpdPhotoElectricEffect::PostStepDoIt(const G4Track& aTrack,
   G4String currentRichDetPhysName;
   if( currentRichDetNumber == 0 ) {
     // for rich1
+  // the following modif done for the new G4 version. SE Nov,2005.
 
-    CurTT -> MoveUpHistory(4);
-    currentRichDetPhysName = CurTT -> GetVolume() -> GetName();
+  //  CurTT -> MoveUpHistory(4);
+  //  currentRichDetPhysName = CurTT -> GetVolume() -> GetName();
+    
+    currentRichDetPhysName = CurTT -> GetVolume(6)->GetName();
 
     if(currentRichDetPhysName != m_Rich1PhysVolNameA &&
        currentRichDetPhysName != m_Rich1PhysVolNameB ){
-      G4cout << "hpd phot elec: Unknown RICH1 det Phys Name "
+      G4cout << "hpd phot elec Proc: Unknown RICH1 det Phys Name "
              << currentRichDetPhysName << G4endl;
       return G4VDiscreteProcess::PostStepDoIt(aTrack, aStep);
     }
   }
   else if (currentRichDetNumber==1 )
   {
-    CurTT -> MoveUpHistory(2);
-    currentRichDetPhysName = CurTT -> GetVolume() -> GetName();
+  // the following modif done for the new G4 version. SE Nov,2005.
+
+  //  CurTT -> MoveUpHistory(2);
+  //  currentRichDetPhysName = CurTT -> GetVolume() -> GetName();
+
+    currentRichDetPhysName = CurTT -> GetVolume(4)->GetName();
+
     if(currentRichDetPhysName !=  m_Rich2PhysVolNameA &&
        currentRichDetPhysName != m_Rich2PhysVolNameB ){
 
@@ -219,13 +229,18 @@ RichHpdPhotoElectricEffect::PostStepDoIt(const G4Track& aTrack,
     // G4cout<<" Photoelec: Current psfSigma psfX psfY "<<PSFsigma
     //      <<"    "<< PsfX<<"   "<< PsfY<<G4endl;
 
-    // for now apply only the linear factor of the demag;
-    G4ThreeVector
-      LocalElectronDirection(
-               (CurDemagFactor[0]-1.0)*LocalElectronOrigin.x()+PsfX,
-               (CurDemagFactor[0]-1.0)*LocalElectronOrigin.y()+PsfY,
-                -( m_PhCathodeToSilDetMaxDist-
-               ( m_hpdPhCathodeInnerRadius-LocalElectronOrigin.z())));
+    //  now apply only the linear and quadratic factor of the demag;
+    G4double ElectronCathodeRadius = sqrt( pow(LocalElectronOrigin.x(), 2) +
+                                             pow(LocalElectronOrigin.y(), 2) );
+    G4double scaleFact = ((CurDemagFactor[1]*ElectronCathodeRadius) +  
+                                         CurDemagFactor[0]) -1.0 ;
+    // CurDemagFactor[0] is a negative number.
+       
+     G4ThreeVector
+      LocalElectronDirection ( scaleFact * (LocalElectronOrigin.x()) + PsfX,
+                               scaleFact * (LocalElectronOrigin.y()) + PsfY,
+                               -( m_PhCathodeToSilDetMaxDist-
+                             ( m_hpdPhCathodeInnerRadius-(LocalElectronOrigin.z()))));
 
     // test printout
     // G4cout<<"Photoeleceff: Local eln origin dir "<<
@@ -318,15 +333,10 @@ RichHpdPhotoElectricEffect::PostStepDoIt(const G4Track& aTrack,
     aParticleChange.ProposeTrackStatus(fStopAndKill);
 
   } else {
-    //photon is not to be killed if it is not converted to photoelectron. This is to
-    // simulate the reflections at the Silicon surface.  For now the reflectivity of
-    // silicon is 0. This may be changed in the future.
 
-    // for now for test the incident photon is killed SE 13-3-02
-    //  G4cout<<"Now  killing photon which is not converted"<<G4endl;
-    aParticleChange.ProposeLocalEnergyDeposit(PhotonEnergy);
-    // aParticleChange.SetEnergyChange(0.);
-    aParticleChange.ProposeTrackStatus(fStopAndKill);
+    //photon is not killed if it is not converted to photoelectron                                                              
+
+                                                      
   }
   return G4VDiscreteProcess::PostStepDoIt(aTrack, aStep);
 
