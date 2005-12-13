@@ -4,6 +4,9 @@
 ! Purpose     : General purpose Rich Tools
 !-----------------------------------------------------------------------------
 
+! 2005-12-13 - Chris Jones
+ - Move reconstruction related tools to RichRecTools package
+
 !=========================== RichTools v1r8 2005-11-18 =======================
 ! 2005-11-15 - Chris Jones
  - Improvements to RichTrackSegment and RichGeomPhoton creators

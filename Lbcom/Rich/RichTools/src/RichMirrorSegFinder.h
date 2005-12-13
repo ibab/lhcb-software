@@ -5,7 +5,7 @@
  *  Header file for tool : RichMirrorSegFinder
  *
  *  CVS Log :-
- *  $Id: RichMirrorSegFinder.h,v 1.7 2005-10-13 16:11:07 jonrob Exp $
+ *  $Id: RichMirrorSegFinder.h,v 1.8 2005-12-13 15:07:11 jonrob Exp $
  *
  *  @author Antonis Papanestis
  *  @date   2003-11-04
@@ -37,7 +37,7 @@
 #include "RichDet/DeRichFlatMirror.h"
 
 // CLHEP
-#include "CLHEP/Units/PhysicalConstants.h"
+#include "Kernel/PhysicalConstants.h"
 
 //-----------------------------------------------------------------------------
 /** @class RichMirrorSegFinder RichMirrorSegFinder.h
@@ -74,19 +74,19 @@ public: // methods (and doxygen comments) inherited from public interface
   /// RICH identifier and panel
   const DeRichSphMirror* findSphMirror( const Rich::DetectorType rich,
                                         const Rich::Side side,
-                                        const HepPoint3D& reflPoint ) const;
+                                        const Gaudi::XYZPoint& reflPoint ) const;
 
   /// Locates the flat mirror Segment given a reflection point,
   /// RICH identifier and panel
   const DeRichFlatMirror* findFlatMirror( const Rich::DetectorType rich,
                                           const Rich::Side side,
-                                          const HepPoint3D& reflPoint ) const;
+                                          const Gaudi::XYZPoint& reflPoint ) const;
 
   /// Locates the secondary mirror Segment given a reflection point,
   /// RICH identifier and panel
   const DeRichSphMirror* findSecMirror( const Rich::DetectorType rich,
                                         const Rich::Side side,
-                                        const HepPoint3D& reflPoint ) const;
+                                        const Gaudi::XYZPoint& reflPoint ) const;
 
 
 private:

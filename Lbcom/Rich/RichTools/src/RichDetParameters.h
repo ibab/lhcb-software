@@ -5,14 +5,14 @@
  *  Header file for tool : RichDetParameters
  *
  *  CVS Log :-
- *  $Id: RichDetParameters.h,v 1.4 2005-02-02 10:11:17 jonrob Exp $
+ *  $Id: RichDetParameters.h,v 1.5 2005-12-13 15:07:11 jonrob Exp $
  *
  *  @author Chris Jones    Christopher.Rob.Jones@cern.ch
  *  @date   2004-03-29
  */
 //-----------------------------------------------------------------------------
 
-#ifndef RICHTOOLS_RICHDETPARAMETERS_H 
+#ifndef RICHTOOLS_RICHDETPARAMETERS_H
 #define RICHTOOLS_RICHDETPARAMETERS_H 1
 
 // from Gaudi
@@ -24,8 +24,8 @@
 // Rich Kernel
 #include "RichKernel/BoostArray.h"
 
-// CLHEP
-#include "CLHEP/Units/PhysicalConstants.h"
+// Physical constants
+#include "Kernel/PhysicalConstants.h"
 
 // Base class and interface
 #include "RichKernel/RichToolBase.h"
@@ -33,9 +33,9 @@
 
 //-----------------------------------------------------------------------------
 /** @class RichDetParameters RichDetParameters.h
- *  
+ *
  *  Tool to provide access to useful detector parameters
- * 
+ *
  *  @author Chris Jones         Christopher.Rob.Jones@cern.ch
  *  @date   2004-03-29
  *
@@ -49,7 +49,7 @@ class RichDetParameters : public RichToolBase,
 public: // Methods for Gaudi Framework
 
   /// Standard constructor
-  RichDetParameters( const std::string& type, 
+  RichDetParameters( const std::string& type,
                      const std::string& name,
                      const IInterface* parent );
 
@@ -73,7 +73,7 @@ public: // methods (and doxygen comments) inherited from interface
   // Calculates the mean observable photon energy for a given radiator medium
   double meanPhotonEnergy ( const Rich::RadiatorType rad ) const;
 
-  // Returns the average acceptance outer limits in local HPD coordinates 
+  // Returns the average acceptance outer limits in local HPD coordinates
   // for the given radiator type
   const IRichDetParameters::RadLimits & AvAcceptOuterLimitsLocal( const Rich::RadiatorType rad ) const;
 
@@ -82,7 +82,7 @@ private:
   std::vector<double> m_maxPhotEn;  ///< The maximum photon energies
   std::vector<double> m_minPhotEn;  ///< The minimum photon energies
   std::vector<double> m_meanPhotEn; ///< The mean photon energies
-  
+
   /// The radiator acceptance limits
   boost::array< IRichDetParameters::RadLimits, Rich::NRadiatorTypes > m_radOutLimLoc;
 

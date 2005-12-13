@@ -5,7 +5,7 @@
  *  Header file for tool : RichSmartIDTool
  *
  *  CVS Log :-
- *  $Id: RichSmartIDTool.h,v 1.10 2005-10-13 16:11:07 jonrob Exp $
+ *  $Id: RichSmartIDTool.h,v 1.11 2005-12-13 15:07:11 jonrob Exp $
  *
  *  @author Antonis Papanestis
  *  @date   2003-10-28
@@ -62,18 +62,18 @@ public: // Methods for Gaudi Framework
 public: // methods (and doxygen comments) inherited from interface
 
   // Converts a RichSmartID channel identification into a position in global LHCb coordinates. 
-  virtual HepPoint3D globalPosition ( const RichSmartID smartid ) const;
+  virtual Gaudi::XYZPoint globalPosition ( const RichSmartID smartid ) const;
 
   // Converts an HPD RichSmartID identification into a position in global LHCb coordinates. 
-  virtual HepPoint3D hpdPosition ( const RichSmartID hpdid ) const;
+  virtual Gaudi::XYZPoint hpdPosition ( const RichSmartID hpdid ) const;
 
   // Computes the global position coordinate for a given position in local
-  virtual HepPoint3D globalPosition ( const HepPoint3D& localPoint, 
+  virtual Gaudi::XYZPoint globalPosition ( const Gaudi::XYZPoint& localPoint, 
                                       const Rich::DetectorType rich, 
                                       const Rich::Side side ) const;
 
   // Converts a position in global coordinates to the corresponding RichSmartID
-  virtual StatusCode smartID( const HepPoint3D&  globalPoint,
+  virtual StatusCode smartID( const Gaudi::XYZPoint&  globalPoint,
                               RichSmartID& smartid ) const;
 
   // Supplies a vector of all currently active and valid channels in the RICH detectors
@@ -84,7 +84,7 @@ public: // methods (and doxygen comments) inherited from interface
    *  x coordinates. Only the x and y coordinates are valid. z coordinate 
    *  is set to 0.
    */
-  virtual HepPoint3D globalToPDPanel ( const HepPoint3D& globalPoint ) const;
+  virtual Gaudi::XYZPoint globalToPDPanel ( const Gaudi::XYZPoint& globalPoint ) const;
 
 private:
 

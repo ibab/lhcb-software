@@ -5,7 +5,7 @@
  * Implementation file for class : RichSmartIDTool
  *
  * CVS Log :-
- * $Id: RichSmartIDTool.cpp,v 1.15 2005-10-13 16:11:07 jonrob Exp $
+ * $Id: RichSmartIDTool.cpp,v 1.16 2005-12-13 15:07:11 jonrob Exp $
  *
  * @author Antonis Papanestis
  * @date 2003-10-28
@@ -75,7 +75,7 @@ StatusCode RichSmartIDTool::finalize()
 //=============================================================================
 // Returns the position of a RichSmartID in global coordinates
 //=============================================================================
-HepPoint3D RichSmartIDTool::globalPosition ( const RichSmartID smartID ) const
+Gaudi::XYZPoint RichSmartIDTool::globalPosition ( const RichSmartID smartID ) const
 {
   return m_photoDetPanels[smartID.rich()][smartID.panel()]->detectionPoint(smartID);
 }
@@ -83,7 +83,7 @@ HepPoint3D RichSmartIDTool::globalPosition ( const RichSmartID smartID ) const
 //=============================================================================
 // Returns the global position of a local corrdinate, in the given RICH panel
 //=============================================================================
-HepPoint3D RichSmartIDTool::globalPosition ( const HepPoint3D& localPoint,
+Gaudi::XYZPoint RichSmartIDTool::globalPosition ( const Gaudi::XYZPoint& localPoint,
                                              const Rich::DetectorType rich,
                                              const Rich::Side side ) const
 {
@@ -93,7 +93,7 @@ HepPoint3D RichSmartIDTool::globalPosition ( const HepPoint3D& localPoint,
 //=============================================================================
 // Returns the HPD position (center of the silicon wafer)
 //=============================================================================
-HepPoint3D RichSmartIDTool::hpdPosition ( const RichSmartID hpdid ) const
+Gaudi::XYZPoint RichSmartIDTool::hpdPosition ( const RichSmartID hpdid ) const
 {
   // Create temporary RichSmartIDs for two corners of the HPD wafer
   RichSmartID id1(hpdid), id0(hpdid);
@@ -109,7 +109,7 @@ HepPoint3D RichSmartIDTool::hpdPosition ( const RichSmartID hpdid ) const
 //=============================================================================
 // Returns the SmartID for a given global position
 //=============================================================================
-StatusCode RichSmartIDTool::smartID ( const HepPoint3D& globalPoint,
+StatusCode RichSmartIDTool::smartID ( const Gaudi::XYZPoint& globalPoint,
                                       RichSmartID& smartid ) const
 {
 
@@ -172,14 +172,14 @@ StatusCode RichSmartIDTool::smartID ( const HepPoint3D& globalPoint,
 // Returns the SmartID for a given global position
 // z coord is not valid
 //=============================================================================
-HepPoint3D RichSmartIDTool::globalToPDPanel ( const HepPoint3D& globalPoint ) const
+Gaudi::XYZPoint RichSmartIDTool::globalToPDPanel ( const Gaudi::XYZPoint& globalPoint ) const
 {
   if (globalPoint.z() < 8000.0)
   {
     // Rich1
     if (globalPoint.y() > 0.0) {
       // top side
-      HepPoint3D tempPoint( m_photoDetPanels[Rich::Rich1][Rich::top]->
+      Gaudi::XYZPoint tempPoint( m_photoDetPanels[Rich::Rich1][Rich::top]->
                             //globalToPDPanel(globalPoint) );
                             geometry()->toLocal( globalPoint ) );
       tempPoint.setY( tempPoint.y() + m_localOffset[Rich::Rich1][Rich::top] );
@@ -188,7 +188,7 @@ HepPoint3D RichSmartIDTool::globalToPDPanel ( const HepPoint3D& globalPoint ) co
     }
     else {
       // bottom side
-      HepPoint3D tempPoint( m_photoDetPanels[Rich::Rich1][Rich::bottom]->
+      Gaudi::XYZPoint tempPoint( m_photoDetPanels[Rich::Rich1][Rich::bottom]->
                             //globalToPDPanel(globalPoint) );
                             geometry()->toLocal( globalPoint ) );
       tempPoint.setY(tempPoint.y() - m_localOffset[Rich::Rich1][Rich::bottom]);
@@ -200,7 +200,7 @@ HepPoint3D RichSmartIDTool::globalToPDPanel ( const HepPoint3D& globalPoint ) co
   {
     if (globalPoint.x() > 0.0) {
       // left side
-      HepPoint3D tempPoint( m_photoDetPanels[Rich::Rich2][Rich::left]->
+      Gaudi::XYZPoint tempPoint( m_photoDetPanels[Rich::Rich2][Rich::left]->
                             //globalToPDPanel(globalPoint) );
                             geometry()->toLocal( globalPoint ) );
       tempPoint.setX( tempPoint.x() + m_localOffset[Rich::Rich2][Rich::left] );
@@ -210,7 +210,7 @@ HepPoint3D RichSmartIDTool::globalToPDPanel ( const HepPoint3D& globalPoint ) co
     }
     else {
       // right side
-      HepPoint3D tempPoint( m_photoDetPanels[Rich::Rich2][Rich::right]->
+      Gaudi::XYZPoint tempPoint( m_photoDetPanels[Rich::Rich2][Rich::right]->
                             //globalToPDPanel(globalPoint) );
                             geometry()->toLocal( globalPoint ) );
       tempPoint.setX(tempPoint.x() - m_localOffset[Rich::Rich2][Rich::right]);
@@ -255,7 +255,7 @@ const RichSmartID::Collection & RichSmartIDTool::readoutChannelList( ) const
       for ( RichSmartID::Collection::const_iterator iID = m_readoutChannels.begin();
             iID != m_readoutChannels.end(); ++iID )
       {
-        const HepPoint3D gPos = globalPosition(*iID);
+        const Gaudi::XYZPoint gPos = globalPosition(*iID);
         verbose() << " RichSmartID " << *iID << " " << (*iID).dataBitsOnly().key() << endreq
                   << "     -> global Position : " << gPos << endreq
                   << "     -> local Position  : " << globalToPDPanel(gPos) << endreq;

@@ -5,7 +5,7 @@
  *  Header file for tool : RichDetParameters
  *
  *  CVS History :
- *  $Id: RichRayTracing.h,v 1.14 2005-06-23 15:20:05 jonrob Exp $
+ *  $Id: RichRayTracing.h,v 1.15 2005-12-13 15:07:11 jonrob Exp $
  *
  *  @author Chris Jones    Christopher.Rob.Jones@cern.ch
  *  @date   2004-03-29
@@ -32,8 +32,8 @@
 #include "RichEvent/RichGeomPhoton.h"
 
 //CLHEP
-#include "CLHEP/Geometry/Point3D.h"
-#include "CLHEP/Geometry/Vector3D.h"
+#include "Kernel/Point3DTypes.h"
+#include "Kernel/Vector3DTypes.h"
 
 // LHCbKernel
 #include "Kernel/RichSmartID.h"
@@ -82,19 +82,19 @@ public: // methods (and doxygen comments) inherited from interface
   // For a given detector, raytraces a given direction from a given point to
   // the photo detectors. Returns the result in the form of a RichGeomPhoton
   StatusCode traceToDetector( const Rich::DetectorType rich,
-                              const HepPoint3D& startPoint,
-                              const HepVector3D& startDir,
+                              const Gaudi::XYZPoint& startPoint,
+                              const Gaudi::XYZVector& startDir,
                               RichGeomPhoton& photon,
                               const RichTraceMode mode = RichTraceMode(),
                               const Rich::Side forcedSide = Rich::top ) const;
 
   // For a given detector, raytraces a given direction from a given point to
-  // the average photon detector plane (no HPD acceptance). Result is a HepPoint3D
+  // the average photon detector plane (no HPD acceptance). Result is a Gaudi::XYZPoint
   StatusCode
   traceToDetectorWithoutEff( const Rich::DetectorType rich,
-                             const HepPoint3D& startPoint,
-                             const HepVector3D& startDir,
-                             HepPoint3D& hitPosition,
+                             const Gaudi::XYZPoint& startPoint,
+                             const Gaudi::XYZVector& startDir,
+                             Gaudi::XYZPoint& hitPosition,
                              const RichTraceMode mode = RichTraceMode(),
                              const Rich::Side forcedSide = Rich::top ) const;
 
@@ -103,43 +103,43 @@ public: // methods (and doxygen comments) inherited from interface
   // returning the mirror intersection point and the direction a track would have
   // in order to hit that point in the detector panel.
 
-  virtual StatusCode traceBackFromDetector ( const HepPoint3D& startPoint,
-                                             const HepVector3D& startDir,
-                                             HepPoint3D& endPoint,
-                                             HepVector3D& endDir ) const;
+  virtual StatusCode traceBackFromDetector ( const Gaudi::XYZPoint& startPoint,
+                                             const Gaudi::XYZVector& startDir,
+                                             Gaudi::XYZPoint& endPoint,
+                                             Gaudi::XYZVector& endDir ) const;
 
   // For a given detector, ray traces a given direction from a given point
   // to the average photo detector plane. Returns the result in the form
   // of a RichGeomPhoton
   StatusCode intersectPDPanel( const Rich::DetectorType rich,
-                               const HepPoint3D& point,
-                               const HepVector3D& dir,
+                               const Gaudi::XYZPoint& point,
+                               const Gaudi::XYZVector& dir,
                                RichGeomPhoton& photon ) const;
 
   // Intersection a given direction, from a given point with a given plane.
-  StatusCode intersectPlane( const HepPoint3D& position,
-                             const HepVector3D& direction,
-                             const HepPlane3D& plane,
-                             HepPoint3D& intersection ) const;
+  StatusCode intersectPlane( const Gaudi::XYZPoint& position,
+                             const Gaudi::XYZVector& direction,
+                             const Gaudi::Plane3D& plane,
+                             Gaudi::XYZPoint& intersection ) const;
 
   // Reflect a given direction off a spherical mirror. Can be used for intersection.
-  StatusCode reflectSpherical ( HepPoint3D& position,
-                                HepVector3D& direction,
-                                const HepPoint3D& CoC,
+  StatusCode reflectSpherical ( Gaudi::XYZPoint& position,
+                                Gaudi::XYZVector& direction,
+                                const Gaudi::XYZPoint& CoC,
                                 const double radius ) const;
 
 private: // methods
 
   StatusCode reflectBothMirrors ( const Rich::DetectorType rich,
-                                  HepPoint3D& position,
-                                  HepVector3D& direction,
+                                  Gaudi::XYZPoint& position,
+                                  Gaudi::XYZVector& direction,
                                   RichGeomPhoton& photon,
                                   const RichTraceMode mode,
                                   const Rich::Side fSide ) const;
 
-  StatusCode reflectFlat ( HepPoint3D& position,
-                           HepVector3D& direction,
-                           const HepPlane3D& plane ) const;
+  StatusCode reflectFlat ( Gaudi::XYZPoint& position,
+                           Gaudi::XYZVector& direction,
+                           const Gaudi::Plane3D& plane ) const;
 
   StatusCode bookHistos();
 
@@ -155,10 +155,10 @@ private: // data
   boost::array<HPDPanelsPerRich, 2> m_photoDetPanels;
 
   /// Spherical mirror nominal center of curvature
-  HepPoint3D m_nominalCoC[Rich::NRiches][2];
+  Gaudi::XYZPoint m_nominalCoC[Rich::NRiches][2];
 
   /// Flat mirror nominal planes
-  HepPlane3D m_nominalFlatMirrorPlane[Rich::NRiches][2];
+  Gaudi::Plane3D m_nominalFlatMirrorPlane[Rich::NRiches][2];
   double m_nomSphMirrorRadius[Rich::NRiches];
   int m_sphMirrorSegRows[Rich::NRiches];
   int m_sphMirrorSegCols[Rich::NRiches];

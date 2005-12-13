@@ -5,7 +5,7 @@
  * Implementation file for class : RichMirrorSegFinder
  *
  * CVS Log :-
- * $Id: RichMirrorSegFinder.cpp,v 1.11 2005-10-13 16:11:07 jonrob Exp $
+ * $Id: RichMirrorSegFinder.cpp,v 1.12 2005-12-13 15:07:11 jonrob Exp $
  *
  * @date   2003-11-05
  * @author Antonis Papanestis
@@ -27,10 +27,8 @@ RichMirrorSegFinder::RichMirrorSegFinder( const std::string& type,
                                           const IInterface* parent )
   : RichToolBase ( type, name, parent )
 {
-
   // define interface
   declareInterface<IRichMirrorSegFinder>(this);
-
 }
 
 //=============================================================================
@@ -101,19 +99,19 @@ StatusCode RichMirrorSegFinder::initialize( )
       }
     }
 
-    if ( detName.find("Mirror2") != std::string::npos ) 
+    if ( detName.find("Mirror2") != std::string::npos )
     {
       // try to get it as a spherical (secondary) mirror
-      if( existDet<DeRichSphMirror>( detName ) ) 
+      if( existDet<DeRichSphMirror>( detName ) )
       {
         const DeRichSphMirror* secm = getDet<DeRichSphMirror>( detName );
-        if ( secm->mirrorCentre().y() > 0.0 ) 
+        if ( secm->mirrorCentre().y() > 0.0 )
         {
           mirrorNum = m_maxMirror[Rich::Rich1][Rich::top][sec];
           m_secMirrors[Rich::Rich1][Rich::top][mirrorNum] = secm;
           ++m_maxMirror[Rich::Rich1][Rich::top][sec];
         }
-        else 
+        else
         {
           mirrorNum = m_maxMirror[Rich::Rich1][Rich::bottom][sec];
           m_secMirrors[Rich::Rich1][Rich::bottom][mirrorNum] = secm;
@@ -121,7 +119,7 @@ StatusCode RichMirrorSegFinder::initialize( )
         }
         foundSecMirrors = true;
       }
-      else 
+      else
       {
         // try to get it as a flat mirror
         const DeRichFlatMirror* fm = getDet<DeRichFlatMirror>( detName );
@@ -148,7 +146,7 @@ StatusCode RichMirrorSegFinder::initialize( )
   if( !foundSecMirrors && !foundFlatMirrors )
     return Error( "Found no flat or spherical seconday mirrors in Rich1" );
 
-  if( foundSecMirrors ) 
+  if( foundSecMirrors )
     debug() << "Rich1 has secondary spherical mirrors" << endmsg;
   else
     debug() << "Rich1 has flat mirrors" << endmsg;
@@ -233,7 +231,7 @@ StatusCode RichMirrorSegFinder::initialize( )
       for ( unsigned int s=0; s<2; ++s )
         for ( unsigned int num=0; num<m_maxMirror[r][s][sph]; ++num )
           verbose() << "Stored spherical mirror "
-                  << m_sphMirrors[r][s][num]->name() << endreq;
+                    << m_sphMirrors[r][s][num]->name() << endreq;
     }
     //     {for ( unsigned int r=0; r<2; ++r )
     //       for ( unsigned int s=0; s<2; ++s )
@@ -267,12 +265,12 @@ StatusCode RichMirrorSegFinder::finalize( )
 const DeRichSphMirror*
 RichMirrorSegFinder::findSphMirror( const Rich::DetectorType rich,
                                     const Rich::Side side,
-                                    const HepPoint3D& reflPoint ) const
+                                    const Gaudi::XYZPoint& reflPoint ) const
 {
 
   // Most likely mirror is the last one found... So test this one first
   unsigned int mirrorNum = m_lastFoundMirror[rich][side][sph];
-  if ( m_sphMirrors[rich][side][mirrorNum]->mirrorCentre().distance2(reflPoint)
+  if ( (m_sphMirrors[rich][side][mirrorNum]->mirrorCentre()-reflPoint).mag2()
        > m_maxDist[rich][sph] )
   {
 
@@ -281,7 +279,7 @@ RichMirrorSegFinder::findSphMirror( const Rich::DetectorType rich,
     for ( unsigned int i = 0; i < m_maxMirror[rich][side][sph]; ++i )
     {
       const double temp_d2 =
-        m_sphMirrors[rich][side][i]->mirrorCentre().distance2(reflPoint);
+        (m_sphMirrors[rich][side][i]->mirrorCentre()-reflPoint).mag2();
       if ( temp_d2 < distance2 )
       {
         // Found new closest mirror, so update number
@@ -308,12 +306,12 @@ RichMirrorSegFinder::findSphMirror( const Rich::DetectorType rich,
 const DeRichFlatMirror*
 RichMirrorSegFinder::findFlatMirror( const Rich::DetectorType rich,
                                      const Rich::Side side,
-                                     const HepPoint3D& reflPoint ) const
+                                     const Gaudi::XYZPoint& reflPoint ) const
 {
 
   // Most likely mirror is the last one found... So test this one first
   unsigned int mirrorNum = m_lastFoundMirror[rich][side][flat];
-  if ( m_flatMirrors[rich][side][mirrorNum]->mirrorCentre().distance2(reflPoint)
+  if ( (m_flatMirrors[rich][side][mirrorNum]->mirrorCentre()-reflPoint).mag2()
        > m_maxDist[rich][flat] )
   {
 
@@ -322,7 +320,7 @@ RichMirrorSegFinder::findFlatMirror( const Rich::DetectorType rich,
     for ( unsigned int i = 0; i < m_maxMirror[rich][side][flat]; ++i )
     {
       const double temp_d2 =
-        m_flatMirrors[rich][side][i]->mirrorCentre().distance2(reflPoint);
+        (m_flatMirrors[rich][side][i]->mirrorCentre()-reflPoint).mag2();
       if ( temp_d2 < distance2 )
       {
         // Found new closest mirror, so update number
@@ -349,12 +347,12 @@ RichMirrorSegFinder::findFlatMirror( const Rich::DetectorType rich,
 const DeRichSphMirror*
 RichMirrorSegFinder::findSecMirror( const Rich::DetectorType rich,
                                     const Rich::Side side,
-                                    const HepPoint3D& reflPoint ) const
+                                    const Gaudi::XYZPoint& reflPoint ) const
 {
 
   // Most likely mirror is the last one found... So test this one first
   unsigned int mirrorNum = m_lastFoundMirror[rich][side][sec];
-  if ( m_secMirrors[rich][side][mirrorNum]->mirrorCentre().distance2(reflPoint)
+  if ( (m_secMirrors[rich][side][mirrorNum]->mirrorCentre()-reflPoint).mag2()
        > m_maxDist[rich][sec] )
   {
 
@@ -363,7 +361,7 @@ RichMirrorSegFinder::findSecMirror( const Rich::DetectorType rich,
     for ( unsigned int i = 0; i < m_maxMirror[rich][side][sec]; ++i )
     {
       const double temp_d2 =
-        m_secMirrors[rich][side][i]->mirrorCentre().distance2(reflPoint);
+        (m_secMirrors[rich][side][i]->mirrorCentre()-reflPoint).mag2();
       if ( temp_d2 < distance2 )
       {
         // Found new closest mirror, so update number
