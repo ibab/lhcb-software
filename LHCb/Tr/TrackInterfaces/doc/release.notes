@@ -4,6 +4,10 @@
 ! Purpose     : package for tracking tools interfaces
 !-----------------------------------------------------------------------------
 
+! 2005-12-13 - Eduardo Rodrigues
+ - new interface ITrackCloneFinder added: it checks whether two input tracks
+   are clones of each other and makes a choice based on hit sharing criteriae
+
 ! 2005-12-01 - Edwin Bos, Jeroen van Tilburg, Eduardo Rodrigues
  - First version of the ITrajPoca interface:
    a "TrajPoca" tool calculates the point of closest approach
