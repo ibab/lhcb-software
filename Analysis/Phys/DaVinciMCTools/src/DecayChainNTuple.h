@@ -213,6 +213,7 @@ private:
   NTuple::Item<long> m_HLTDiMu;
   NTuple::Item<long> m_HLTDstar;
   NTuple::Item<long> m_HLTExB;
+  NTuple::Item<long> m_HLTInc;
 
   // The tags
   NTuple::Item<long> m_nTags;

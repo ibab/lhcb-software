@@ -1,7 +1,11 @@
-! $Id: release.notes,v 1.75 2005-11-22 10:05:28 pkoppenb Exp $
+! $Id: release.notes,v 1.76 2005-12-13 13:47:05 lfernan Exp $
 ! Package     : DaVinciMCTools
 ! Responsible : P. Koppenburg
 !=============================================================================
+
+! 2005-12-13 - Luis Fernandez
+ - src/DecayChainNTuple.{h,cpp}
+   . HltScore
 
 ! 2005-11-11 - G. Balbi & S. Vecchi
  - src/MCParticleMaker.(cpp,h)

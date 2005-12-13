@@ -1001,6 +1001,7 @@ StatusCode DecayChainNTuple::BookNTuple(std::vector<Particle*>& mothervec) {
         sc = nt->addItem("HLTDiMu", m_HLTDiMu);
         sc = nt->addItem("HLTDstar", m_HLTDstar);
         sc = nt->addItem("HLTExB", m_HLTExB);
+        sc = nt->addItem("HLTInc", m_HLTInc);
 
         // The tags
         sc = nt->addItem("nTags", m_nTags, 0, 10000);
@@ -1245,6 +1246,7 @@ StatusCode DecayChainNTuple::WriteNTuple(std::vector<Particle*>& mothervec) {
   bool HLTDiMu     = false;
   bool HLTDstar    = false;
   bool HLTExB      = false;
+  bool HLTInc      = false;
 
   if(m_requireTrigger){
 
@@ -1316,6 +1318,7 @@ StatusCode DecayChainNTuple::WriteNTuple(std::vector<Particle*>& mothervec) {
         HLTDiMu     = scoreHlt->decisionDimuon();
         HLTDstar    = scoreHlt->decisionDstar();
         HLTExB      = scoreHlt->decisionExclusive();
+        HLTInc      = scoreHlt->decisionInclusive();
 
         debug() << "Hlt trigger summary "            << endreq;
         debug() << " Generic:          " << HLTGen   << endreq;
@@ -1323,6 +1326,7 @@ StatusCode DecayChainNTuple::WriteNTuple(std::vector<Particle*>& mothervec) {
         debug() << " Inclusive Dimuon: " << HLTDiMu  << endreq;
         debug() << " Inclusive D*:     " << HLTDstar << endreq;
         debug() << " Exclusive B:      " << HLTExB   << endreq;
+        debug() << " Inclusive (any):  " << HLTInc  << endreq;
         debug() << "----------------------------" << endreq;
         debug() << "Total Hlt decision is: " << HLTDecision << endreq;
 
@@ -1484,6 +1488,7 @@ StatusCode DecayChainNTuple::WriteNTuple(std::vector<Particle*>& mothervec) {
   m_HLTDiMu = long(HLTDiMu);
   m_HLTDstar = long(HLTDstar);
   m_HLTExB = long(HLTExB);
+  m_HLTInc = long(HLTInc);
 
   //---------------------------------------------  
 
