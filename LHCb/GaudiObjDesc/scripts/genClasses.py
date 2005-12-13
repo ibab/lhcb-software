@@ -429,17 +429,17 @@ class genClasses(genSrcUtils.genSrcUtils):
 #--------------------------------------------------------------------------------
   def genClassTypedefs(self, godClass):
     s = ''
-    classname =  'LHCb::' + godClass['attrs']['name']
+    classname =  godClass['attrs']['name']
     if self.gKeyedContainerTypedef or godClass['attrs']['keyedContTypeDef'] == 'TRUE':
       self.addInclude('KeyedContainer')
       s += '// Definition of Keyed Container for %s\n' % classname
-      s += 'typedef KeyedContainer<%s, Containers::HashMap> %s;\n\n' \
+      s += 'typedef KeyedContainer<%s, Containers::HashMap> %s;\n' \
            % (classname, self.genClassnamePlurial(classname))
     if self.gContainedObjectTypedef or godClass['attrs']['contObjectTypeDef'] == 'TRUE':
       self.addInclude('ObjectVector')
       s += '// Definition of vector container type for %s\n' % classname
       s += 'template <class TYPE> class ObjectVector;\n'
-      s += 'typedef ObjectVector<%s> %s;\n\n' % (classname, self.genClassnamePlurial(classname))
+      s += 'typedef ObjectVector<%s> %s;\n' % (classname, self.genClassnamePlurial(classname))
     return s
 #--------------------------------------------------------------------------------
   def genClassVectorTypedefs(self, godClass):

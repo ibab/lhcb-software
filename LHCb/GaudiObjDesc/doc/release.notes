@@ -3,6 +3,9 @@ Desccription: This package contains a set of tools used to generate code from th
 Package manager : Stefan Roiser
 
 ===============================GaudiObjDesc v9r1============================
+!2005-12-13 Stefan Roiser
+- move typedef for container of objects (KeyedContainer, ObjectVector) inside the LHCb namspace
+
 !2005-12-05 Marco Cattaneo, Stefan Roiser
 - update GODsClassDB.xml removed all information except GaudiKernel, SealBase, SealKernel
 - removed warning when imported type was not found

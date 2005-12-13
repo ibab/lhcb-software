@@ -66,6 +66,8 @@ namespace LHCb
   @@@privateBitfieldEnums@@@
   @@@privateAttributes@@@
   }; // class @@@classname@@@
+
+  @@@classTypedefs@@@
 } // namespace LHCb;
 
 // -----------------------------------------------------------------------------
@@ -84,6 +86,5 @@ namespace LHCb
 @@@publicMethodDefs@@@
 @@@protectedMethodDefs@@@
 @@@privateMethodDefs@@@
-@@@classTypedefs@@@
 
 #endif ///@@@packagename@@@_@@@classname@@@_H
