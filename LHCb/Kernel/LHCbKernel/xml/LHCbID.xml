@@ -20,7 +20,7 @@
        <enum
           desc   = "types of sub-detector channel ID"
           name   = "channelIDType"
-          value  = "Velo=1, ST, OT, Rich, Calo, Muon"
+          value  = "Velo=1, TT, IT, OT, Rich, Calo, Muon"
           access = 'PUBLIC'
        />
 
@@ -92,7 +92,8 @@ return ( m_lhcbID &amp; veloMask );
           <arg const="TRUE" name="chanID" type="STChannelID" />
           <arg const="TRUE" name="size=0" type="unsigned int" />
           <code>
-m_lhcbID = (ST   &lt;&lt; detectorTypeBits) +
+unsigned int stType = ( chanID.isTT() ? TT : IT );
+m_lhcbID = (stType   &lt;&lt; detectorTypeBits) +
            (size &lt;&lt; stBits ) +
            chanID;
         </code>
@@ -100,11 +101,31 @@ m_lhcbID = (ST   &lt;&lt; detectorTypeBits) +
 
        <method
          type  = "bool"
+         name  = "isTT"
+         const = 'TRUE'
+         desc  = "return true if this is a TT Silicon Tracker identifier">
+         <code>
+  return (TT == detectorType());
+         </code>
+       </method>
+
+       <method
+         type  = "bool"
+         name  = "isIT"
+         const = 'TRUE'
+         desc  = "return true if this is a IT Silicon Tracker identifier">
+         <code>
+  return (IT == detectorType());
+         </code>
+       </method>
+
+       <method
+         type  = "bool"
          name  = "isST"
          const = 'TRUE'
-         desc  = "return true if this is a Silicon Tracker identifier">
+         desc  = "return true if this is a Silicon Tracker identifier (i.e. TT or IT)">
          <code>
-  return (ST == detectorType());
+  return ( isTT() || isIT() );
          </code>
        </method>
 

@@ -2,6 +2,12 @@ Package LHCbKernel
 Package manager: M.Cattaneo
 Purpose: LHCb specific Kernel classes
 
+! 2005-12-13 - Eduardo Rodrigues
+ - added isTT() method to STChannelID
+ - modifications to LHCbID class:
+   - ST type split into TT and IT
+   - isST() method supplemented with isTT() and isIT() methods
+
 !===================== LHCbKernel v6r0 2005-12-12 =========================
 ! 2005-12-12 - Eduardo Rodrigues
  - modifications to LHCbID class:

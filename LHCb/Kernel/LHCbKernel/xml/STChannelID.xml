@@ -33,6 +33,10 @@
         <code>return m_channelID;</code>
       </method>
 
+      <method type='bool' name='isTT' const='TRUE' desc='test whether TT or not'>
+        <code>return (station() &lt;= 2);</code>
+      </method>
+
       <attribute type='bitfield' name='channelID' desc='OT Channel ID'>
         <bitfield name='strip' length='10'  desc='strip' setMeth='FALSE' />
         <bitfield name='sector' length='5'  desc='sector' setMeth='FALSE'/>
