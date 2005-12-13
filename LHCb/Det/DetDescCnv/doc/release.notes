@@ -4,18 +4,16 @@
 ! Purpose     : standard converters for the LHCb Detector Description
 !-----------------------------------------------------------------------------
 
+!================ DetDescCnv v3r0 2005-12-13 ==========================
+! - *** Requires MathCore-5_06_02 or higher. ***
+
 ! 2005-12-13 - Marco Clemencic
  - Small change in the debug output of XmlBaseDetElemCnv and
    XmlBaseConditionCnv.
 
-!================ DetDescCnv v3r0 2005-12-07 ==========================
-
 ! 2005-12-07 - Juan PALACIOS
-
  - Changes to XmlLVolumeCnv: adapt to improved Transform3D interface
       and use new MathCore Rho-Z-Phi vector for RPhiZ translation.
-
- - *** Requires MathCore-5_06_02 or higher. ***
 
 ! 2005-12-05 - Juan PALACIOS
  - Changes to XmlLVomumeCnv for migration from CLHEP HepGeom to 
