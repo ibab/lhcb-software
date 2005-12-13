@@ -2,7 +2,7 @@
  *
  *  Header file for tool interface : IRichPhotonReconstruction
  *
- *  $Id: IRichPhotonReconstruction.h,v 1.5 2005-01-25 14:11:46 cattanem Exp $
+ *  $Id: IRichPhotonReconstruction.h,v 1.6 2005-12-13 09:28:46 papanest Exp $
  *
  *  @author Antonis Papanestis
  *  @date   2003-10-28
@@ -14,8 +14,8 @@
 // from Gaudi
 #include "GaudiKernel/IAlgTool.h"
 
-// from CLHEP
-#include "CLHEP/Geometry/Point3D.h"
+// from MathCore
+#include "Kernel/Point3DTypes.h"
 
 // Rich Kernel
 class RichSmartID;
@@ -75,7 +75,7 @@ public:
    */
   virtual StatusCode 
   reconstructPhoton ( const RichTrackSegment& trSeg,   
-                      const HepPoint3D& detectionPoint, 
+                      const Gaudi::XYZPoint& detectionPoint, 
                       RichGeomPhoton& gPhoton ) const = 0;
 
 };

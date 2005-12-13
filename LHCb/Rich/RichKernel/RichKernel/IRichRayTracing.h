@@ -2,7 +2,7 @@
  *
  *  Header file for tool interface : IRichRayTracing
  *
- *  $Id: IRichRayTracing.h,v 1.15 2005-01-25 14:11:46 cattanem Exp $
+ *  $Id: IRichRayTracing.h,v 1.16 2005-12-13 09:28:46 papanest Exp $
  *
  *  @author Antonis Papanestis
  *  @date   2003-10-28
@@ -21,10 +21,10 @@
 //local
 #include "RichKernel/RichTraceMode.h"
 
-// from CLHEP
-#include "CLHEP/Geometry/Point3D.h"
-#include "CLHEP/Geometry/Vector3D.h"
-#include "CLHEP/Geometry/Plane3D.h"
+// from MathCore
+#include "Kernel/Point3DTypes.h"
+#include "Kernel/Vector3DTypes.h"
+#include "Kernel/Plane3DTypes.h"
 
 // RichEvent
 class RichGeomPhoton;
@@ -67,8 +67,8 @@ public:
    */
   virtual StatusCode
   traceToDetector ( const Rich::DetectorType rich,
-                    const HepPoint3D& startPoint,
-                    const HepVector3D& startDir,
+                    const Gaudi::XYZPoint& startPoint,
+                    const Gaudi::XYZVector& startDir,
                     RichGeomPhoton& photon,
                     const RichTraceMode mode = RichTraceMode(),
                     const Rich::Side forcedSide = Rich::top ) const = 0;
@@ -89,9 +89,9 @@ public:
    */
   virtual StatusCode
   traceToDetectorWithoutEff ( const Rich::DetectorType rich,
-                              const HepPoint3D& startPoint,
-                              const HepVector3D& startDir,
-                              HepPoint3D& hitPosition,
+                              const Gaudi::XYZPoint& startPoint,
+                              const Gaudi::XYZVector& startDir,
+                              Gaudi::XYZPoint& hitPosition,
                               const RichTraceMode mode = RichTraceMode(),
                               const Rich::Side forcedSide = Rich::top ) const = 0;
 
@@ -109,10 +109,10 @@ public:
    *  @retval StatusCode::SUCCESS Ray tracing was successful
    *  @retval StatusCode::FAILURE Something went wrong
    */
-  virtual StatusCode traceBackFromDetector ( const HepPoint3D& startPoint,
-                                             const HepVector3D& startDir,
-                                             HepPoint3D& endPoint,
-                                             HepVector3D& endDir ) const = 0;
+  virtual StatusCode traceBackFromDetector ( const Gaudi::XYZPoint& startPoint,
+                                             const Gaudi::XYZVector& startDir,
+                                             Gaudi::XYZPoint& endPoint,
+                                             Gaudi::XYZVector& endDir ) const = 0;
 
 
   /** For a given detector, ray traces a given direction from a given point
@@ -130,8 +130,8 @@ public:
    */
   virtual StatusCode
   intersectPDPanel ( const Rich::DetectorType rich,
-                     const HepPoint3D& point,
-                     const HepVector3D& dir,
+                     const Gaudi::XYZPoint& point,
+                     const Gaudi::XYZVector& dir,
                      RichGeomPhoton& photon ) const = 0;
 
   /** Intersection a given direction, from a given point with a given plane.
@@ -146,10 +146,10 @@ public:
    *  @retval StatusCode::FAILURE Ray tracing fell outside acceptance, as defined by mode
    */
   virtual StatusCode
-  intersectPlane ( const HepPoint3D& position,
-                   const HepVector3D& direction,
-                   const HepPlane3D& plane,
-                   HepPoint3D& intersection ) const = 0;
+  intersectPlane ( const Gaudi::XYZPoint& position,
+                   const Gaudi::XYZVector& direction,
+                   const Gaudi::Plane3D& plane,
+                   Gaudi::XYZPoint& intersection ) const = 0;
 
   /** Reflect a given direction off a spherical mirror. Can be used for intersection.
    *
@@ -161,9 +161,9 @@ public:
    *  @return StatusCode indicating if the ray tracing was succesful
    */
   virtual StatusCode
-  reflectSpherical ( HepPoint3D& position,
-                     HepVector3D& direction,
-                     const HepPoint3D& CoC,
+  reflectSpherical ( Gaudi::XYZPoint& position,
+                     Gaudi::XYZVector& direction,
+                     const Gaudi::XYZPoint& CoC,
                      const double radius ) const = 0;
 
 };

@@ -4,7 +4,7 @@
  *
  *  Header file for tool interface : IRichMirrorSegFinder
  *
- *  $Id: IRichMirrorSegFinder.h,v 1.9 2005-09-29 13:00:17 papanest Exp $
+ *  $Id: IRichMirrorSegFinder.h,v 1.10 2005-12-13 09:28:46 papanest Exp $
  *
  *  @author Antonis Papanestis
  *  @date   2003-11-04
@@ -21,13 +21,11 @@
 #include "Kernel/RichDetectorType.h"
 #include "Kernel/RichSide.h"
 
-// from CLHEP
-#include "CLHEP/Geometry/Point3D.h"
+// from MathCore
+#include "Kernel/Point3DTypes.h"
 
 // RichDet
 class DeRichSphMirror;
-class DeRichFlatMirror;
-
 
 /// Static Interface Identification
 static const InterfaceID IID_IRichMirrorSegFinder( "IRichMirrorSegFinder", 1, 0 );
@@ -63,21 +61,8 @@ public:
   virtual const DeRichSphMirror*
   findSphMirror( const Rich::DetectorType rich,
                  const Rich::Side side,
-                 const HepPoint3D & reflPoint ) const = 0;
+                 const Gaudi::XYZPoint& reflPoint ) const = 0;
 
-  /** Locates the flat mirror Segment given a reflection point,
-   *  RICH identifier and panel
-   *
-   *  @param rich       The RICH detector
-   *  @param side       The RICH HPD panel side
-   *  @param reflPoint  The reflection point on the flat mirror
-   *
-   *  @return Const pointer to DeRichSphMirror object for the associated mirror segment
-   */
-  virtual const DeRichFlatMirror*
-  findFlatMirror( const Rich::DetectorType rich,
-                  const Rich::Side side,
-                  const HepPoint3D & reflPoint ) const = 0;
 
   /** Locates the secondary (spherical) mirror Segment given a reflection point,
    *  RICH identifier and panel
@@ -91,7 +76,7 @@ public:
   virtual const DeRichSphMirror*
   findSecMirror( const Rich::DetectorType rich,
                  const Rich::Side side,
-                 const HepPoint3D & reflPoint ) const = 0;
+                 const Gaudi::XYZPoint& reflPoint ) const = 0;
 
 };
 

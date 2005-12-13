@@ -2,7 +2,7 @@
  *
  *  Header file for tool interface : IRichSmartIDTool
  *
- *  $Id: IRichSmartIDTool.h,v 1.10 2005-01-25 14:11:46 cattanem Exp $
+ *  $Id: IRichSmartIDTool.h,v 1.11 2005-12-13 09:28:46 papanest Exp $
  * 
  *  @author Antonis Papanestis  a.papanestis@rl.ac.uk
  *  @date   2003-10-28
@@ -21,8 +21,8 @@
 // Kernel
 #include "Kernel/RichSmartID.h"
 
-// from CLHEP
-#include "CLHEP/Geometry/Point3D.h"
+// from MathCore
+#include "Kernel/Point3DTypes.h"
 
 
 /// Static Interface Identification
@@ -51,7 +51,7 @@ public:
    *
    *  @return The channel position in global LHCb coordinates
    */
-  virtual HepPoint3D globalPosition ( const RichSmartID smartid ) const = 0;
+  virtual Gaudi::XYZPoint globalPosition ( const RichSmartID smartid ) const = 0;
 
   /** Converts an HPD RichSmartID identification into a position in
    *  global LHCb coordinates. 
@@ -62,7 +62,7 @@ public:
    *
    *  @return The HPD position in global LHCb coordinates
    */
-  virtual HepPoint3D hpdPosition ( const RichSmartID hpdid ) const = 0;
+  virtual Gaudi::XYZPoint hpdPosition ( const RichSmartID hpdid ) const = 0;
 
   /** Computes the global position coordinate for a given position in local
    *  HPD panel coordinates and RICH detector and panel identifiers.
@@ -73,7 +73,7 @@ public:
    *
    *  @return The global coordinate
    */
-  virtual HepPoint3D globalPosition ( const HepPoint3D& localPoint, 
+  virtual Gaudi::XYZPoint globalPosition ( const Gaudi::XYZPoint& localPoint, 
                                       const Rich::DetectorType rich,
                                       const Rich::Side side ) const = 0;
 
@@ -87,7 +87,7 @@ public:
    *  @retval StatusCode::SUCCESS Conversion was successful (position in HPD acceptance)
    *  @retval StatusCode::FAILURE Conversion was not successful (position not in HPD acceptance)
    */
-  virtual StatusCode smartID ( const HepPoint3D& globalPoint, 
+  virtual StatusCode smartID ( const Gaudi::XYZPoint& globalPoint, 
                                RichSmartID& smartid ) const = 0;
 
   /** Supplies a vector of all currently active and valid channels in the RICH detectors
@@ -105,7 +105,7 @@ public:
    *
    *  @return The coordinate in local HPD panel coordinates
    */
-  virtual HepPoint3D globalToPDPanel ( const HepPoint3D& globalPoint ) const = 0;
+  virtual Gaudi::XYZPoint globalToPDPanel ( const Gaudi::XYZPoint& globalPoint ) const = 0;
 
 };
 

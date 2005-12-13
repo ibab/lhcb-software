@@ -3,7 +3,7 @@
  *
  *  Header file for tool interface : IRichTrSegMaker
  *
- *  $Id: IRichTrSegMaker.h,v 1.7 2005-11-15 13:01:54 jonrob Exp $
+ *  $Id: IRichTrSegMaker.h,v 1.8 2005-12-13 09:28:46 papanest Exp $
  *
  *  @author Chris Jones         Christopher.Rob.Jones@cern.ch
  *  @author Antonis Papanestis  a.papanestis@rl.ac.uk
@@ -16,9 +16,9 @@
 // from Gaudi
 #include "GaudiKernel/IAlgTool.h"
 
-// CLHEP (explicit include needed for CLHEP 1.9.*)
-#include "CLHEP/Geometry/Point3D.h"
-#include "CLHEP/Geometry/Vector3D.h"
+// MathCore
+#include "Kernel/Point3DTypes.h"
+#include "Kernel/Vector3DTypes.h"
 
 // Event model
 class ContainedObject;
@@ -39,7 +39,7 @@ static const InterfaceID IID_IRichTrSegMaker( "IRichTrSegMaker", 1, 0 );
  *  @date   2003-10-28
  */
 
-class IRichTrSegMaker : public virtual IAlgTool 
+class IRichTrSegMaker : public virtual IAlgTool
 {
 
 public:
@@ -62,7 +62,7 @@ public:
    */
   virtual int constructSegments ( const ContainedObject * track,
                                   std::vector<RichTrackSegment*>& segments ) const = 0;
-  
+
 };
 
 #endif // RICHKERNEL_IRICHTRSEGMAKER_H

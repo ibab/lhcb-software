@@ -1,7 +1,11 @@
-! $Id: release.notes,v 1.87 2005-11-28 16:20:02 jonrob Exp $
+! $Id: release.notes,v 1.88 2005-12-13 09:28:46 papanest Exp $
 ! Package     : Rich/RichKernel
 ! Responsible : Chris Jones
 ! Purpose     : General purpose RICH classes
+
+!====================== RichKernel v6r0 2005-12-13 =======================
+! 2005-12-12 - Antonis Papanestis
+ - Replace CLHEP geometry with Mathcore
 
 ! 2005-11-28 - Chris Jones
  - Update sorting algorithm for RichSmartIDs

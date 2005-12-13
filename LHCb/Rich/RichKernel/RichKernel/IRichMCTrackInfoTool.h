@@ -3,8 +3,11 @@
  *  Header file for tool interface : IRichMCTrackInfoTool
  *
  *  CVS Log :-
- *  $Id: IRichMCTrackInfoTool.h,v 1.4 2004-07-26 17:53:16 jonrob Exp $
+ *  $Id: IRichMCTrackInfoTool.h,v 1.5 2005-12-13 09:28:46 papanest Exp $
  *  $Log: not supported by cvs2svn $
+ *  Revision 1.4  2004/07/26 17:53:16  jonrob
+ *  Various improvements to the doxygen comments
+ *
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -55,7 +58,7 @@ public:
    */
   virtual const bool 
   panelIntersectGlobal ( const MCRichSegment * segment,
-                         HepPoint3D & hitPoint ) const = 0;
+                         Gaudi::XYZPoint & hitPoint ) const = 0;
 
   /** Takes the direction information from a MCRichSegment and ray traces it through the
    *  appropriate RICH optical system and computes the intersect points with the HPD 
@@ -70,7 +73,7 @@ public:
    */
   virtual const bool 
   panelIntersectLocal ( const MCRichSegment * segment, 
-                        HepPoint3D & hitPoint ) const = 0;
+                        Gaudi::XYZPoint & hitPoint ) const = 0;
 
 };
 
