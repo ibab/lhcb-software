@@ -6,15 +6,17 @@
 
 In this exercise you'll start to write an algorithm that fills an nTuple.
 
-Create a new algorithm "TutorialNtuple" and don't forget to add it to 
-the _load.cpp file. Remember that DVAlgorithm is a GaudiTupleAlg...
-In the execute method
-   - Get a Tuple (actually a pointer)
+Create a new algorithm "TutorialNtuple" and don't forget to add it to
+the _load.cpp file. Remember that DVAlgorithm is a GaudiTupleAlg.
+ 
+   - Get a Tuple (actually a pointer) in the execute method
    - Get the Bs and loop over them
    - Store the mass and momentum of the B in the Tuple
-   - Get the TrgDecision class and store the L0 and L1 decisions.
-     . Include the proper options to run the L0 and L1 before your sequence.
-   - Use the flavourTagging() method to get the Bs flavour
-     . You need to include the standard options for this tool
-       from $FLAVOURTAGGINGROOT/options/BTaggingTool.opts
-       
+ 
+   - Include the proper options to run the L0 and L1 and HLT before your sequence.
+   - Get the TrgDecision class and store the L0 and L1 and HLT decisions in the Tuple.
+   - Get the L1Score and HltScore class and store the decision bits in the Tuple.
+ 
+   - Include the standard options for the BtaggingTool from
+     $FLAVOURTAGGINGROOT/options/BTaggingTool.opts
+   - Use the flavourTagging() method to get the Bs flavour and store it in the Tuple.
