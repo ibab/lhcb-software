@@ -1,4 +1,4 @@
-// $Id: XmlBaseDetElemCnv.cpp,v 1.9 2005-10-17 16:17:50 marcocle Exp $
+// $Id: XmlBaseDetElemCnv.cpp,v 1.10 2005-12-13 09:00:23 marcocle Exp $
 
 // include files
 
@@ -121,8 +121,8 @@ XmlBaseDetElemCnv::~XmlBaseDetElemCnv () {
 StatusCode XmlBaseDetElemCnv::initialize() {
   StatusCode sc = XmlGenericCnv::initialize();
   if (sc.isSuccess()) {
-    MsgStream log (msgSvc(), "XmlDetElemCnv");
-    log << MSG::VERBOSE << "Initializing" << endreq;
+    MsgStream log (msgSvc(), "XmlBaseDetElemCnv");
+    log << MSG::VERBOSE << "Initializing converter for class ID " << classID() << endreq;
     if (0 != m_xmlSvc) {
       m_doGenericCnv = m_xmlSvc->allowGenericCnv();
       log << MSG::VERBOSE << "Generic conversion status: "
@@ -161,7 +161,7 @@ StatusCode XmlBaseDetElemCnv::fillObjRefs (IOpaqueAddress* childElement,
 // -----------------------------------------------------------------------
 StatusCode XmlBaseDetElemCnv::i_createObj (xercesc::DOMElement* element,
                                            DataObject*& refpObject) {
-  MsgStream log(msgSvc(), "XmlDetElemCnv" );
+  MsgStream log(msgSvc(), "XmlBaseDetElemCnv" );
   
   // creates an object for the node found
   log << MSG::VERBOSE << "Normal generic detector element conversion" << endreq;
@@ -179,7 +179,7 @@ StatusCode XmlBaseDetElemCnv::i_createObj (xercesc::DOMElement* element,
 StatusCode XmlBaseDetElemCnv::i_fillObj (xercesc::DOMElement* childElement,
                                          DataObject* refpObject,
                                          IOpaqueAddress* address) {
-  MsgStream log(msgSvc(), "XmlDetElemCnv" );
+  MsgStream log(msgSvc(), "XmlBaseDetElemCnv" );
 
   // gets the object
   DetectorElement* dataObj = dynamic_cast<DetectorElement*> (refpObject);

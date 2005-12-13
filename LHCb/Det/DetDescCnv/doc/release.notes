@@ -4,6 +4,9 @@
 ! Purpose     : standard converters for the LHCb Detector Description
 !-----------------------------------------------------------------------------
 
+! 2005-12-13 - Marco Clemencic
+ - Small change in the debug output of XmlBaseDetElemCnv and
+   XmlBaseConditionCnv.
 
 !================ DetDescCnv v3r0 2005-12-07 ==========================
 

@@ -1,4 +1,4 @@
-// $Id: XmlBaseConditionCnv.cpp,v 1.7 2005-08-31 15:53:49 marcocle Exp $
+// $Id: XmlBaseConditionCnv.cpp,v 1.8 2005-12-13 09:00:23 marcocle Exp $
 
 // include files
 #include "GaudiKernel/CnvFactory.h"
@@ -71,7 +71,7 @@ StatusCode XmlBaseConditionCnv::initialize() {
   StatusCode sc = XmlGenericCnv::initialize();
   if (sc.isSuccess()) {
     MsgStream log (msgSvc(), "XmlBaseConditionCnv");
-    log << MSG::VERBOSE << "Initializing" << endreq;
+    log << MSG::VERBOSE << "Initializing converter for class ID " << classID() << endreq;
     if (0 != m_xmlSvc) {
       m_doGenericCnv = m_xmlSvc->allowGenericCnv();
       log << MSG::DEBUG << "Generic conversion status: "
