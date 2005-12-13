@@ -4,10 +4,12 @@
   <class name="std::vector<std::pair<int,double> >"/>
   <class name="std::vector<std::pair<long int,double> >"/>
   <class name="std::vector<std::pair<double,double> >"/>
+  <class name="std::vector<std::pair<std::string,int> >"/>
   <class name="std::pair<long int,double>"/>
   <class name="std::pair<int,double>"/>
   <class name="std::pair<int,int>"/>
   <class name="std::pair<double,double>"/>
+  <class name="std::pair<std::string,int>"/>
   <class name="std::vector<std::pair<LHCb::VeloChannelID,int> >"/>
   <class name="std::pair<LHCb::VeloChannelID,int>"/>
   <class name="std::vector<std::pair<LHCb::STChannelID,int> >"/>

@@ -3,6 +3,9 @@ Package manager: M.Cattaneo
 Purpose: LHCb specific Kernel classes
 
 !===================== LHCbKernel v6r0 2005-12-13 =========================
+! 2005-12-13 - Marco Cattaneo
+ - Add std::vector<std::pair<std::string,int> > to lcg custom dict
+
 ! 2005-12-13 - Eduardo Rodrigues
  - added isTT() method to STChannelID
  - modifications to LHCbID class:

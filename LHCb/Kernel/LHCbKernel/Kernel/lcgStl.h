@@ -1,4 +1,4 @@
-// $Id: lcgStl.h,v 1.15 2005-12-06 10:00:07 cattanem Exp $
+// $Id: lcgStl.h,v 1.16 2005-12-13 12:38:05 cattanem Exp $
 #ifndef KERNEL_LCGSTL_H 
 #define KERNEL_LCGSTL_H 1
 
@@ -8,6 +8,7 @@
 #include "Reflex/Builder/ReflexBuilder.h"
 
 // begin include files
+#include <string>
 #include <vector>
 #include <map>
 #include <utility>
@@ -26,10 +27,12 @@ namespace {
     std::pair<long,double>                     m_std_pair_long_double;
     std::pair<int,double>                      m_std_pair_int_double;
     std::pair<double,double>                   m_std_pair_double_double;
+    std::pair<std::string,int>                 m_std_pair_string_int;
     std::vector<std::pair<int,int> >           m_std_vector_std_pair_int_int;
     std::vector<std::pair<long,double> >       m_std_vector_std_pair_long_double;
     std::vector<std::pair<int,double> >        m_std_vector_std_pair_int_double;
     std::vector<std::pair<double,double> >     m_std_vector_std_pair_double_double;
+    std::vector<std::pair<std::string,int> >   m_std_vector_std_pair_string_int;
     std::map<int,int>                          m_std_map_int_int;
     std::pair<LHCb::VeloChannelID,int>         m_std_pair_VeloChannelID_int;
     std::pair<LHCb::STChannelID,int>           m_std_pair_STChannelID_int;
