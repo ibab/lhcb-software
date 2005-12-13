@@ -5,7 +5,7 @@
  *  Header file for tool interface : IRichRawBufferToSmartIDsTool
  *
  *  CVS Log :-
- *  $Id: IRichRawBufferToSmartIDsTool.h,v 1.3 2005-05-13 14:30:09 jonrob Exp $
+ *  $Id: IRichRawBufferToSmartIDsTool.h,v 1.4 2005-12-13 17:27:25 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   2003-07-31
@@ -43,7 +43,7 @@ public:
   /** Access all RichSmartIDs for the current Event
    *  @return Reference to the container of RichSmartIDs
    */
-  virtual const RichSmartID::Collection & allRichSmartIDs() const = 0;
+  virtual const LHCb::RichSmartID::Vector & allRichSmartIDs() const = 0;
 
 };
 

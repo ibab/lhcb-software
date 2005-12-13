@@ -5,8 +5,11 @@
  *  Header file to define hash functions for RichSmartIDs
  *
  *  CVS Log :-
- *  $Id: RichSmartIDHashFuncs.h,v 1.1 2005-01-13 12:21:18 jonrob Exp $
+ *  $Id: RichSmartIDHashFuncs.h,v 1.2 2005-12-13 17:27:25 jonrob Exp $
  *  $Log: not supported by cvs2svn $
+ *  Revision 1.1  2005/01/13 12:21:18  jonrob
+ *  Add new files to CVS
+ *
  *
  *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
  *  @date   2005-01-11
@@ -17,7 +20,7 @@
 #define RICHKERNEL_RICHSMARTIDHASHFUNCS_H 1
 
 // GaudiKernel
-#include "GaudiKernel/stl_hash.h"
+#include "GaudiKernel/HashMap.h"
 
 // Kernel
 #include "Kernel/RichSmartID.h"
@@ -25,14 +28,14 @@
 #ifdef __GNUC__
 namespace __gnu_cxx
 {
-  template <> struct hash<RichSmartID>
-  { size_t operator() ( const RichSmartID& s ) const { return s.key(); } };
-  template <> struct hash<const RichSmartID>
-  { size_t operator() ( const RichSmartID& s ) const { return s.key(); } };
-  template <> struct hash<RichSmartID&>
-  { size_t operator() ( const RichSmartID& s ) const { return s.key(); } };
-  template <> struct hash<const RichSmartID&>
-  { size_t operator() ( const RichSmartID& s ) const { return s.key(); } };
+  template <> struct hash<LHCb::RichSmartID>
+  { size_t operator() ( const LHCb::RichSmartID& s ) const { return s.key(); } };
+  template <> struct hash<const LHCb::RichSmartID>
+  { size_t operator() ( const LHCb::RichSmartID& s ) const { return s.key(); } };
+  template <> struct hash<LHCb::RichSmartID&>
+  { size_t operator() ( const LHCb::RichSmartID& s ) const { return s.key(); } };
+  template <> struct hash<const LHCb::RichSmartID&>
+  { size_t operator() ( const LHCb::RichSmartID& s ) const { return s.key(); } };
 };
 #endif
 

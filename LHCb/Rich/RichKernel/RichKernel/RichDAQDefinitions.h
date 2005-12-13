@@ -5,7 +5,7 @@
  *  Header file for RICH DAQ general definitions
  *
  *  CVS Log :-
- *  $Id: RichDAQDefinitions.h,v 1.7 2005-11-15 14:27:39 jonrob Exp $
+ *  $Id: RichDAQDefinitions.h,v 1.8 2005-12-13 17:27:25 jonrob Exp $
  *
  *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
  *  @date   2003-11-06
@@ -20,10 +20,8 @@
 
 // GaudiKernel
 #include "GaudiKernel/MsgStream.h"
-#include "GaudiKernel/stl_hash.h"
 
 // Event model
-#include "Event/DAQTypes.h"
 #include "Event/RawBank.h"
 
 // Kernel
@@ -89,10 +87,10 @@ namespace RichDAQ
   //---------------------------------------------------------------------------------
 
   /// DAQ long type definition
-  typedef raw_int                                           LongType;
+  typedef unsigned int                      LongType;
 
   /// DAQ short type definition
-  typedef unsigned int                                      ShortType;
+  typedef unsigned int                      ShortType;
 
   //---------------------------------------------------------------------------------
 
@@ -200,7 +198,7 @@ namespace RichDAQ
   typedef std::vector< LongType >                           RAWBank;
 
   /// Container of Rich RawBanks
-  typedef std::vector< RawBank >                            RAWBanks;
+  typedef std::vector< LHCb::RawBank* >                     RAWBanks;
 
   /// Vector of HPD Hardware IDs
   typedef std::vector< HPDHardwareID >                      HPDHardwareIDs;
@@ -212,16 +210,16 @@ namespace RichDAQ
   typedef std::vector< Level1ID >                           Level1IDs;
 
   /// Container for RICH HPD data, sorted by HPD number
-  typedef RichHashMap< const RichSmartID, RichSmartID::Collection >       PDMap;
+  typedef Rich::HashMap< const LHCb::RichSmartID, LHCb::RichSmartID::Vector > PDMap;
 
   /// Container for RICH HPD data, sorted by Level1 board number
-  typedef RichHashMap< const Level1ID, PDMap >                            L1Map;
+  typedef Rich::HashMap< const Level1ID, PDMap >                            L1Map;
 
   /// Mapping from Level1 ID to list of HPD RichSmartIDs
-  typedef RichHashMap< const RichDAQ::Level1ID, RichSmartID::Collection > L1ToSmartIDs;
+  typedef Rich::HashMap< const RichDAQ::Level1ID, LHCb::RichSmartID::Vector > L1ToSmartIDs;
 
   /// Mapping from Level1 ID to list of HPD RichSmartIDs
-  typedef RichHashMap< const RichDAQ::Level1ID, RichDAQ::HPDHardwareIDs > L1ToHardIDs;
+  typedef Rich::HashMap< const RichDAQ::Level1ID, RichDAQ::HPDHardwareIDs > L1ToHardIDs;
 
   /// Maximum data block size
   static const RichDAQ::ShortType MaxDataSize = 32;

@@ -5,11 +5,7 @@
  *  Header file for tool interface : IRichRawDataFormatTool
  *
  *  CVS Log :-
- *  $Id: IRichRawDataFormatTool.h,v 1.2 2005-01-18 10:49:40 cattanem Exp $
- *  $Log: not supported by cvs2svn $
- *  Revision 1.1  2005/01/07 12:42:03  jonrob
- *  Add new interfaces
- *
+ *  $Id: IRichRawDataFormatTool.h,v 1.3 2005-12-13 17:27:25 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   2004-12-18
@@ -40,7 +36,8 @@ static const InterfaceID IID_IRichRawDataFormatTool ( "IRichRawDataFormatTool", 
  *  @date   2004-12-18
  */
 
-class IRichRawDataFormatTool : virtual public IAlgTool {
+class IRichRawDataFormatTool : virtual public IAlgTool 
+{
 
 public:
 
@@ -57,7 +54,7 @@ public:
    *  @param smartIDs Vector of RichSmartIDs to use to create the data bank
    *  @param version   The RICH DAQ data bank version
    */
-  virtual const RichHPDDataBank * createDataBank( const RichSmartID::Collection & smartIDs,
+  virtual const RichHPDDataBank * createDataBank( const LHCb::RichSmartID::Vector & smartIDs,
                                                   const RichDAQ::BankVersion version = RichDAQ::LHCb0 ) const = 0;
 
   /** Creates a bank data from the given raw block of data
@@ -78,7 +75,7 @@ public:
    *  NOTE : Ownership of the data object passes to the caller.
    *         It is their responsibility to delete when no longer needed.
    *
-   *  @param L1Data  Collection of level 1 sorted RichSmartIDs
+   *  @param L1Data  Vector of level 1 sorted RichSmartIDs
    *  @param version The RICH DAQ data bank version
    */
   virtual void createDataBank( const RichDAQ::L1Map & L1Data,
@@ -89,14 +86,14 @@ public:
    *  @param bank     Pointer to RawBank to decode
    *  @param smartIDs Vector of RichSmartIDs to fill
    */
-  virtual void decodeToSmartIDs( const RawBank & bank,
-                                 RichSmartID::Collection & smartIDs ) const = 0;
+  virtual void decodeToSmartIDs( const LHCb::RawBank & bank,
+                                 LHCb::RichSmartID::Vector & smartIDs ) const = 0;
 
   /** Decode all RICH RawBanks into RichSmartID identifiers
    *
    *  @param smartIDs Vector of RichSmartIDs to fill
    */
-  virtual void decodeToSmartIDs( RichSmartID::Collection & smartIDs ) const = 0;
+  virtual void decodeToSmartIDs( LHCb::RichSmartID::Vector & smartIDs ) const = 0;
 
 };
 

@@ -1,9 +1,14 @@
-! $Id: release.notes,v 1.88 2005-12-13 09:28:46 papanest Exp $
+! $Id: release.notes,v 1.89 2005-12-13 17:27:25 jonrob Exp $
 ! Package     : Rich/RichKernel
 ! Responsible : Chris Jones
 ! Purpose     : General purpose RICH classes
 
 !====================== RichKernel v6r0 2005-12-13 =======================
+
+! 2005-12-13 - Chris Jones
+ - Update DAQ related definitions
+ - Switch RichHashMap to using Gaudi provided hash map
+
 ! 2005-12-12 - Antonis Papanestis
  - Replace CLHEP geometry with Mathcore
 

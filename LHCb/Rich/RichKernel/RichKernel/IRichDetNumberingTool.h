@@ -5,7 +5,7 @@
  *  Header file for tool interface : IRichDetNumberingTool
  *
  *  CVS Log :-
- *  $Id: IRichDetNumberingTool.h,v 1.1 2005-11-15 13:01:54 jonrob Exp $
+ *  $Id: IRichDetNumberingTool.h,v 1.2 2005-12-13 17:27:25 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   2004-12-18
@@ -51,7 +51,7 @@ public:
    *
    *  @return Corresponding HPD hardware number
    */
-  virtual const RichDAQ::HPDHardwareID hardwareID( const RichSmartID smartID ) const = 0;
+  virtual const RichDAQ::HPDHardwareID hardwareID( const LHCb::RichSmartID smartID ) const = 0;
 
   /** Convert a RICH HPD hardware number into the corresponding RichSmartID
    *
@@ -59,7 +59,7 @@ public:
    *
    *  @return smartID The RichSmartID software identifier
    */
-  virtual const RichSmartID richSmartID( const RichDAQ::HPDHardwareID hID ) const = 0;
+  virtual const LHCb::RichSmartID richSmartID( const RichDAQ::HPDHardwareID hID ) const = 0;
 
   /** Convert a RICH Level0 hardware number into the corresponding RichSmartID
    *
@@ -67,13 +67,13 @@ public:
    *
    *  @return smartID The RichSmartID software identifier
    */
-  virtual const RichSmartID richSmartID( const RichDAQ::Level0ID hID ) const = 0;
+  virtual const LHCb::RichSmartID richSmartID( const RichDAQ::Level0ID hID ) const = 0;
 
   /** Access a list of all active HPDs identified by their RichSmartID
    *
    *  @return read access to a vector of all HPD RichSmartIDs
    */
-  virtual const RichSmartID::Collection & activeHPDRichSmartIDs() const = 0;
+  virtual const LHCb::RichSmartID::Vector & activeHPDRichSmartIDs() const = 0;
 
   /** Access a list of all active HPDs identified by their hardware IDs
    *
@@ -89,7 +89,7 @@ public:
    *  @retval true  HPD is active
    *  @retval false HPD is inactive
    */
-  virtual bool hpdIsActive( const RichSmartID id ) const = 0;
+  virtual bool hpdIsActive( const LHCb::RichSmartID id ) const = 0;
 
   /** Ask whether a given HPD is currently active or dead
    *
@@ -107,7 +107,7 @@ public:
    *
    *  @return The Level0 board ID
    */
-  virtual const RichDAQ::Level0ID level0ID( const RichSmartID smartID ) const = 0;
+  virtual const RichDAQ::Level0ID level0ID( const LHCb::RichSmartID smartID ) const = 0;
 
   /** Obtain the Level0 ID number for a given HPD hardware ID
    *
@@ -123,7 +123,7 @@ public:
    *
    *  @return The Level1 board ID
    */
-  virtual const RichDAQ::Level1ID level1ID( const RichSmartID smartID ) const = 0;
+  virtual const RichDAQ::Level1ID level1ID( const LHCb::RichSmartID smartID ) const = 0;
 
   /** Obtain the Level1 ID number for a given HPD hardware ID
    *
@@ -139,7 +139,7 @@ public:
    *
    *  @return RichSmartID HPD identifiers
    */
-  virtual const RichSmartID::Collection & l1HPDSmartIDs( const RichDAQ::Level1ID l1ID ) const = 0;
+  virtual const LHCb::RichSmartID::Vector & l1HPDSmartIDs( const RichDAQ::Level1ID l1ID ) const = 0;
 
   /** Obtain a list of HPD hardware identifiers for a given level 1 ID
    *
