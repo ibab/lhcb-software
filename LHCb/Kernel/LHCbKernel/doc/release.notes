@@ -2,7 +2,7 @@ Package LHCbKernel
 Package manager: M.Cattaneo
 Purpose: LHCb specific Kernel classes
 
-! 2005-12-14
+! 2005-12-14 M. Needham
  - STDatafunctors updated for new LHCb namespace
  - Add missing STDetSwitch.cpp 
 
