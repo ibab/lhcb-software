@@ -1,4 +1,4 @@
-// $Id: TrackVeloTTChecker.cpp,v 1.1 2005-11-22 16:53:28 erodrigu Exp $
+// $Id: TrackVeloTTChecker.cpp,v 1.2 2005-12-14 13:44:50 erodrigu Exp $
 // Include files 
 // -------------
 // from Gaudi
@@ -14,7 +14,7 @@
 #include "Event/EventHeader.h"
 #include "Event/MCParticle.h"
 #include "Event/Track.h"
-#include "Event/ITMeasurement.h"
+#include "Event/STMeasurement.h"
 #include "Event/VeloRMeasurement.h"
 #include "Event/VeloPhiMeasurement.h"
 
@@ -185,7 +185,7 @@ StatusCode TrackVeloTTChecker::execute() {
             itm != matchedTr->measurements().end(); ++itm ) {
         ++nMeas;
         Measurement* tmp= (*itm);
-        ITMeasurement* itClus = dynamic_cast<ITMeasurement*>( tmp );
+        STMeasurement* itClus = dynamic_cast<STMeasurement*>( tmp );
         if ( !itClus ) continue;
         ++nTTall;
         ITCluster* cluster = itClus -> cluster();

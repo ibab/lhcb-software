@@ -4,6 +4,10 @@
 ! Purpose     : Package for track checking algorithms
 !-----------------------------------------------------------------------------
 
+! 2005-12-14 - Eduardo Rodrigues
+ - propagation of changes in Measurement base class
+ - propagation of changes ITMeasurement -> STMeasurement
+
 !======================= TrackCheckers v1r0 2005-11-28 =======================
 ! 2005-11-22 - Eduardo Rodrigues
  - TrackVeloTTChecker algorithm introduced - it is the adaptation of the

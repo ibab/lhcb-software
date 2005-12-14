@@ -6,7 +6,7 @@
 # http://cern.ch/lhcb-comp/Support/html/new_structure.pdf
 #============================================================================
 package           TrackCheckers
-version           v1r0
+version           v1r1
 
 #============================================================================
 # This template is an example for a standard Algorithm package
@@ -21,7 +21,9 @@ include_path      none
 #============================================================================
 use   GaudiAlg        	v*
 
-use   TrackFitEvent   	v*	Tr
+use   TrackEvent       	v1r*    Event
+
+use   TrackFitEvent   	v1r*    Tr
 use   TrackInterfaces 	v* 	Tr
 use   TrackMCTools    	v*      Tr
 use   TrackExtrapolators v*   	Tr
@@ -30,8 +32,6 @@ use   OTAssociators    	v* 	OT
 use   ITAssociators    	v* 	IT
 use   VeloAssociators  	v* 	Velo
 use   TrackAssociators 	v* 	Tr
-
-use   TrackEvent       	v* 	Event
 
 #============================================================================
 # Component library building rule

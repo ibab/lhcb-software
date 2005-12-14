@@ -18,8 +18,8 @@
 #include "Event/MCParticle.h"
 
 // from Tr/TrackFitEvent
+#include "Event/STMeasurement.h"
 #include "Event/OTMeasurement.h"
-#include "Event/ITMeasurement.h"
 #include "Event/VeloRMeasurement.h"
 #include "Event/VeloPhiMeasurement.h"
 
@@ -384,9 +384,10 @@ StatusCode TrackChecker::purityHistos( Track* track, MCParticle* mcPart ) {
   for( itm = track->measurements().begin();
        track->measurements().end() != itm; ++itm ) {
     if( (*itm)->type() == Measurement::VeloPhi ) { ++nTotalVelo; }
-    if( (*itm)->type() == Measurement::VeloR ) { ++nTotalVelo; }
-    if( (*itm)->type() == Measurement::ST ) { ++nTotalIT; }
-    if( (*itm)->type() == Measurement::OT ) { ++nTotalOT; }
+    else if( (*itm)->type() == Measurement::VeloR ) { ++nTotalVelo; }
+    else if( (*itm)->type() == Measurement::TT ) { ++nTotalIT; }
+    else if( (*itm)->type() == Measurement::IT ) { ++nTotalIT; }
+    else if( (*itm)->type() == Measurement::OT ) { ++nTotalOT; }
   }
 
   // get VeloClusters and count correct and total number of clusters
@@ -422,8 +423,9 @@ StatusCode TrackChecker::purityHistos( Track* track, MCParticle* mcPart ) {
     bool found = false;
     std::vector<Measurement*>::const_iterator iMeas = ( track->measurements() ).begin();
     while (!found && iMeas != ( track->measurements() ).end()) {
-      if( (*iMeas)->type() == Measurement::ST ) {
-        ITMeasurement* meas = dynamic_cast<ITMeasurement*>( *iMeas );
+      if ( (*iMeas)->type() == Measurement::TT ||
+           (*iMeas)->type() == Measurement::IT ) {
+        STMeasurement* meas = dynamic_cast<STMeasurement*>( *iMeas );
         found = ( aCluster == meas->cluster() );
       }
       ++iMeas;
