@@ -1,4 +1,4 @@
-// $Id: Special.h,v 1.2 2005-11-29 15:58:24 robbep Exp $
+// $Id: Special.h,v 1.3 2005-12-14 22:16:42 robbep Exp $
 #ifndef GENERATORS_SPECIAL_H 
 #define GENERATORS_SPECIAL_H 1
 
@@ -9,7 +9,9 @@
 
 /** @class Special Special.h 
  *  
- *  Tool for special generation
+ *  Tool for special samples (Higgs, W, Z, ...) generation.
+ *  Concrete implementation of ISampleGenerationTool using
+ *  the ExternalGenerator base class.
  *
  *  @author Patrick Robbe
  *  @date   2005-11-14
@@ -22,18 +24,27 @@ public:
 
   virtual ~Special( ); ///< Destructor
 
+  /// Initialize method
   virtual StatusCode initialize( ) ;
 
+  /** Generate a single interaction (No Pile-up for the moment.
+   *  Implements ISampleGenerationTool::generate.
+   *  Accepts all events generated with the IProductionTool
+   *  (usually configured with special options) and passing
+   *  the generator level cut.
+   */
   virtual bool generate( const unsigned int nPileUp , 
                          EventVector & theEventVector ,
                          HardVector  & theHardVector ) ;
 
+  /// Implements ISampleGenerationTool::printCounters
   virtual void printCounters( ) const ;
 
-protected:
-
 private:
+  /// Counter of events before the generator level cut
   unsigned int m_nEventsBeforeCut ;
+
+  /// Counter of events after the generator level cut
   unsigned int m_nEventsAfterCut ;
 };
 #endif // GENERATORS_SPECIAL_H

@@ -1,4 +1,4 @@
-// $Id: SignalForcedFragmentation.cpp,v 1.3 2005-12-11 23:22:30 robbep Exp $
+// $Id: SignalForcedFragmentation.cpp,v 1.4 2005-12-14 22:16:42 robbep Exp $
 // Include files
 
 // local
@@ -139,8 +139,7 @@ bool SignalForcedFragmentation::generate( const unsigned int nPileUp ,
           // Now boost signal at rest to frame of signal produced by 
           // production generator
           const Hep3Vector theVector = theSignal -> momentum().boostVector() ;
-          sc = boostTree( theSignal , theSignalAtRest , theGenEvent , 
-                          theVector ) ;
+          sc = boostTree( theSignal , theSignalAtRest , theVector ) ;
           if ( ! sc.isSuccess() ) Exception( "Cannot boost signal tree" ) ;
 
           if ( m_cleanEvents ) { 
@@ -168,7 +167,6 @@ StatusCode SignalForcedFragmentation::boostTree( HepMC::GenParticle *
                                                  theSignal ,
                                                  const HepMC::GenParticle * 
                                                  theSignalAtRest ,
-                                                 HepMC::GenEvent * theEvent ,
                                                  const Hep3Vector & theVector )
   const {
   if ( 0 == theSignalAtRest -> end_vertex() ) return StatusCode::SUCCESS ;
@@ -189,7 +187,7 @@ StatusCode SignalForcedFragmentation::boostTree( HepMC::GenParticle *
   HepMC::GenVertex * newVertex = 
     new HepMC::GenVertex( newPosition + 
                           theSignal -> production_vertex() -> position() ) ;
-  theEvent  -> add_vertex( newVertex ) ;
+  theSignal -> parent_event()  -> add_vertex( newVertex ) ;
   newVertex -> add_particle_in( theSignal ) ;
 
   HepMC::GenVertex * sVertex = theSignalAtRest -> end_vertex() ;
@@ -214,8 +212,7 @@ StatusCode SignalForcedFragmentation::boostTree( HepMC::GenParticle *
     const HepMC::GenParticle * theNewSignalAtRest = (*child) ;
     
     // Recursive call to boostTree for each daughter
-    boostTree( theNewSignal , theNewSignalAtRest , theEvent , 
-               theVector ) ;
+    boostTree( theNewSignal , theNewSignalAtRest , theVector ) ;
   }
 
   return StatusCode::SUCCESS ;

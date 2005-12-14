@@ -1,4 +1,4 @@
-// $Id: SignalPlain.h,v 1.2 2005-11-21 16:18:05 robbep Exp $
+// $Id: SignalPlain.h,v 1.3 2005-12-14 22:16:42 robbep Exp $
 #ifndef GENERATORS_SIGNALPLAIN_H 
 #define GENERATORS_SIGNALPLAIN_H 1
 
@@ -10,13 +10,15 @@
 
 /** @class SignalPlain SignalPlain.h 
  *  
- *  Tool for signal with plain method samples generation
+ *  Tool for signal generation with plain method. Concrete 
+ *  implementation of ISampleGenerationTool using the Signal
+ *  base class.
  *
  *  @author Patrick Robbe
  *  @date   2005-08-18
  */
 class SignalPlain : public Signal {
-public:
+ public:
   /// Standard constructor
   SignalPlain( const std::string& type, 
                const std::string& name,
@@ -24,12 +26,13 @@ public:
   
   virtual ~SignalPlain( ); ///< Destructor
   
+  /** Generates events containing a signal particle.
+   *  Implements ISampleProductionTool::generate.
+   *  Loop over events until it contains a signal particle
+   *  without using any trick (just like Inclusive).
+   */
   virtual bool generate( const unsigned int nPileUp , 
                          EventVector & theEventVector ,
-                         HardVector  & theHardVector ) ;
-
-protected:
-
-private:
+                         HardVector  & theHardVector ) ;  
 };
 #endif // GENERATORS_SIGNALPLAIN_H
