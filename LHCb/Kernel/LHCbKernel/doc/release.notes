@@ -6,6 +6,8 @@ Purpose: LHCb specific Kernel classes
 ! 2005-12-14 - Marco Cattaneo
  - Add IGenericTool and IRndmTool interfaces
  - Add std::vector<std::pair<std::string,int> > to lcg custom dict
+ - Remove obsolete CaloCellIDOp, add CaloCellIDTraits (moved from CaloEvent)
+ - Remove obsolete serialize methods from CaloCellID
 
 ! 2005-12-13 - Eduardo Rodrigues
  - added isTT() method to STChannelID

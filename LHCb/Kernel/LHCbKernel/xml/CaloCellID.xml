@@ -3,7 +3,7 @@
 <gdd>
 
 <!-- **************************************************************************
-  * $Id: CaloCellID.xml,v 1.8 2005-11-26 14:51:06 cattanem Exp $
+  * $Id: CaloCellID.xml,v 1.9 2005-12-14 15:13:30 cattanem Exp $
   *****************************************************************************
   * XML-description of CaloCellIDclass                                        *
   * author: Vanya BELYAEV Ivan.Belyaev@itep.ru                                *
@@ -23,10 +23,8 @@
     * </desc>
   
   <import name = "GaudiKernel/Kernel"       />
-  <import name = "GaudiKernel/StreamBuffer" />
   <import name = "GaudiKernel/MsgStream"    />
   <import name = "Kernel/CaloCellCode"      />
-  <import name = "Kernel/CaloCellIDOp"      />
     
   <typedef
     def    = "ContentType"
@@ -157,36 +155,6 @@
     </code>
   </method>
 
-  <method
-    name    = "serialize"
-    desc    = "Serialization of the object (writing to StreamBuffer)"
-    type    = "StreamBuffer&amp;"
-    virtual = "TRUE"
-    const   = "TRUE" >
-    <arg name = "buffer" type = "StreamBuffer"    inout = "BOTH"/>
-    <code>
-      return buffer &lt;&lt; all() ; 
-    </code>  
-  </method>
-  
-
-
-
-  <method
-    name    = "serialize"
-    desc    = "Serialization of the object (reading from StreamBuffer)"
-    type    = "StreamBuffer&amp;"
-    virtual = "TRUE"
-    const   = "FALSE" >
-    <arg name = "buffer" type = "StreamBuffer" inout = "BOTH" />
-    <code>
-      ContentType tmp ;
-      buffer &gt;&gt; tmp ; 
-      m_all = (ContentType) tmp;
-      return buffer;  
-    </code>
-  </method>
-  
   <method
     name      = "fillStream"
     desc      = "printOut method to Gaudi message stream"
