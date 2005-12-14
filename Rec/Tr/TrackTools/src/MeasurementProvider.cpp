@@ -1,11 +1,11 @@
-// $Id: MeasurementProvider.cpp,v 1.10 2005-12-01 18:10:26 erodrigu Exp $
+// $Id: MeasurementProvider.cpp,v 1.11 2005-12-14 13:09:21 erodrigu Exp $
 // Include files 
 // -------------
 // from Gaudi
 #include "GaudiKernel/ToolFactory.h" 
 
 // from TrackFitEvent
-#include "Event/ITMeasurement.h"
+#include "Event/STMeasurement.h"
 #include "Event/OTMeasurement.h"
 #include "Event/VeloRMeasurement.h"
 #include "Event/VeloPhiMeasurement.h"
@@ -143,7 +143,7 @@ Measurement* MeasurementProvider::measurement ( const LHCbID& id,
     ITChannelID sid = id.stID();
     ITCluster* clus = m_itClusters->object(sid);
     if (clus != NULL)
-      meas = new ITMeasurement( *clus, *m_itDet, *m_stPositionTool );
+      meas = new STMeasurement( *clus, *m_itDet, *m_stPositionTool );
     else {
       debug() << "ITCluster is NULL!" << endreq;
     }
