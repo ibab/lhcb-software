@@ -1,4 +1,4 @@
-// $Id: DeMuonDetector.h,v 1.7 2005-12-13 11:06:57 asatta Exp $
+// $Id: DeMuonDetector.h,v 1.8 2005-12-14 17:31:05 asarti Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
@@ -123,9 +123,10 @@ public:
   //Fills various geometry related info
   StatusCode fillGeoInfo();
 
-  StatusCode Tile2XYZ(MuonTileID tile, double & x,
-		      double & y, double & z);
-  
+  StatusCode Tile2XYZ(MuonTileID tile, 
+		      double & x, double & dx,
+		      double & y, double & dy, 
+		      double & z, double & dz);  
   void CountDetEls();
 
   int stations();

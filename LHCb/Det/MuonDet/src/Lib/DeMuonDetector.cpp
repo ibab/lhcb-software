@@ -1,4 +1,4 @@
-// $Id: DeMuonDetector.cpp,v 1.11 2005-12-14 15:45:53 asarti Exp $
+// $Id: DeMuonDetector.cpp,v 1.12 2005-12-14 17:31:05 asarti Exp $
 
 // Include files
 #include "MuonDet/DeMuonDetector.h"
@@ -612,11 +612,12 @@ DeMuonDetector::listOfPhysChannels(HepPoint3D my_entry, HepPoint3D my_exit,
   return myPair;
 }
 
-StatusCode DeMuonDetector::Tile2XYZ(MuonTileID tile, double & x,
-				    double & y, double & z){
+StatusCode DeMuonDetector::Tile2XYZ(MuonTileID tile, 
+				    double & x, double & dx,
+				    double & y, double & dy, 
+				    double & z, double & dz){
   
   StatusCode sc = StatusCode::FAILURE;
-  double dx(0.),dy(0.),dz(0.);
 
   //Ask the chamber Layout about the tile.
   MsgStream msg( msgSvc(), name() );
@@ -626,7 +627,6 @@ StatusCode DeMuonDetector::Tile2XYZ(MuonTileID tile, double & x,
 
   return sc;
 }
-
 
 StatusCode DeMuonDetector::getPCCenter(MuonFrontEndID fe,int chamber,
                                        int station,int region,
