@@ -3,7 +3,7 @@
  *
  *  Implementation file for detector description class : DeRichMultiSolidRadiator
  *
- *  $Id: DeRichMultiSolidRadiator.cpp,v 1.10 2005-09-23 15:27:28 papanest Exp $
+ *  $Id: DeRichMultiSolidRadiator.cpp,v 1.11 2005-12-14 09:34:52 papanest Exp $
  *
  *  @author Antonis Papanestis a.papanestis@rl.ac.uk
  *  @date   2004-06-18
@@ -17,8 +17,8 @@
 // Gaudi
 #include "GaudiKernel/MsgStream.h"
 
-// CLHEP files
-#include "CLHEP/Geometry/Vector3D.h"
+// MathCore files
+#include "Kernel/Vector3DTypes.h"
 
 /// Detector description classes
 #include "DetDesc/SolidBoolean.h"
@@ -63,7 +63,7 @@ StatusCode DeRichMultiSolidRadiator::initialize()
   }
   // old geometry with aerogel quarters
   else 
-    if ( !addVolumes(topLV, "AerogelQuad", HepTransform3D() ) ) return StatusCode::FAILURE;
+    if ( !addVolumes(topLV, "AerogelQuad", Gaudi::Transform3D() ) ) return StatusCode::FAILURE;
   
   if ( m_refIndices.empty() ) 
   {
@@ -86,7 +86,7 @@ StatusCode DeRichMultiSolidRadiator::initialize()
 //=========================================================================
 StatusCode DeRichMultiSolidRadiator::addVolumes (const ILVolume* lv, 
                                                  const std::string volName,
-                                                 const HepTransform3D& toLowerLevel) {
+                                                 const Gaudi::Transform3D& toLowerLevel) {
 
   MsgStream log( msgSvc(), "DeRichMultiSolidRadiator" );
 
@@ -97,7 +97,7 @@ StatusCode DeRichMultiSolidRadiator::addVolumes (const ILVolume* lv,
     if( (*pviter)->name().find(volName) != std::string::npos ) {
       m_pVolumes.push_back( (*pviter) );
       m_toLowLevel.push_back( toLowerLevel*(*pviter)->matrix() );
-      m_toTopLevel.push_back( toLowerLevel.inverse()*(*pviter)->matrixInv() );
+      m_toTopLevel.push_back( toLowerLevel.Inverse()*(*pviter)->matrixInv() );
       m_solids.push_back( (*pviter)->lvolume()->solid() );
       log << MSG::DEBUG << "Storing pvolume " << (*pviter)->name();
 
@@ -128,28 +128,27 @@ StatusCode DeRichMultiSolidRadiator::addVolumes (const ILVolume* lv,
 //  returns the next intersection point
 //=========================================================================
 StatusCode
-DeRichMultiSolidRadiator::nextIntersectionPoint( const HepPoint3D&  pGlobal,
-                                                 const HepVector3D& vGlobal,
-                                                 HepPoint3D&  returnPoint ) const
+DeRichMultiSolidRadiator::nextIntersectionPoint( const Gaudi::XYZPoint&  pGlobal,
+                                                 const Gaudi::XYZVector& vGlobal,
+                                                 Gaudi::XYZPoint&  returnPoint ) const
 {
 
-  const HepPoint3D pLocal( geometry()->toLocal(pGlobal) );
-  HepVector3D vLocal( vGlobal );
-  vLocal.transform( geometry()->matrix() );
+  const Gaudi::XYZPoint pLocal( geometry()->toLocal(pGlobal) );
+  Gaudi::XYZVector vLocal( geometry()->matrix()*vGlobal );
 
   ISolid::Ticks ticks;
-  HepPoint3D localNextPoint(0.0, 0.0, 1e6);
-  HepPoint3D localNextTempPoint;
-  //HepVector3D solidLocalVector;
+  Gaudi::XYZPoint localNextPoint(0.0, 0.0, 1e6);
+  Gaudi::XYZPoint localNextTempPoint;
+  //Gaudi::XYZVector solidLocalVector;
   bool foundTick(false);
 
   for (unsigned int solid=0; solid<m_solids.size(); ++solid) {
-    HepVector3D solidLocalVector( m_toLowLevel[solid]*vLocal );
-    HepPoint3D solidLocalPoint( m_toLowLevel[solid]*pLocal );
+    Gaudi::XYZVector solidLocalVector( m_toLowLevel[solid]*vLocal );
+    Gaudi::XYZPoint solidLocalPoint( m_toLowLevel[solid]*pLocal );
 
     if ( m_solids[solid]->
          intersectionTicks(solidLocalPoint,solidLocalVector,ticks) ) {
-      HepPoint3D localNext( solidLocalPoint+solidLocalVector*ticks[0] );
+      Gaudi::XYZPoint localNext( solidLocalPoint+solidLocalVector*ticks[0] );
       localNextTempPoint = m_toTopLevel[solid]*localNext;
       if ( localNextTempPoint.z() < localNextPoint.z() )
         localNextPoint = localNextTempPoint;
@@ -168,33 +167,32 @@ DeRichMultiSolidRadiator::nextIntersectionPoint( const HepPoint3D&  pGlobal,
 // return the entry and exit points of radiator
 //=========================================================================
 StatusCode
-DeRichMultiSolidRadiator::intersectionPoints( const HepPoint3D&  position,
-                                              const HepVector3D& direction,
-                                              HepPoint3D& entryPoint,
-                                              HepPoint3D& exitPoint ) const 
+DeRichMultiSolidRadiator::intersectionPoints( const Gaudi::XYZPoint&  position,
+                                              const Gaudi::XYZVector& direction,
+                                              Gaudi::XYZPoint& entryPoint,
+                                              Gaudi::XYZPoint& exitPoint ) const 
 {
 
-  const HepPoint3D pLocal( geometry()->toLocal(position) );
-  HepVector3D vLocal( direction );
-  vLocal.transform( geometry()->matrix() );
+  const Gaudi::XYZPoint pLocal( geometry()->toLocal(position) );
+  Gaudi::XYZVector vLocal( geometry()->matrix()*direction );
 
   ISolid::Ticks ticks;
-  HepPoint3D localEntryPoint(0.0, 0.0, 1e6);
-  HepPoint3D localEntryTempPoint;
-  HepPoint3D localExitPoint(0.0, 0.0, -1e6);
-  HepPoint3D localExitTempPoint;
-  //HepVector3D solidLocalVector;
+  Gaudi::XYZPoint localEntryPoint(0.0, 0.0, 1e6);
+  Gaudi::XYZPoint localEntryTempPoint;
+  Gaudi::XYZPoint localExitPoint(0.0, 0.0, -1e6);
+  Gaudi::XYZPoint localExitTempPoint;
+  //Gaudi::XYZVector solidLocalVector;
   bool foundTick(false);
 
   for (unsigned int solid=0; solid<m_solids.size(); ++solid) {
-    HepVector3D solidLocalVector( m_toLowLevel[solid]*vLocal );
-    HepPoint3D solidLocalPoint( m_toLowLevel[solid]*pLocal );
+    Gaudi::XYZVector solidLocalVector( m_toLowLevel[solid]*vLocal );
+    Gaudi::XYZPoint solidLocalPoint( m_toLowLevel[solid]*pLocal );
     
     if ( m_solids[solid]->
          intersectionTicks(solidLocalPoint,solidLocalVector,ticks) ) {
-      HepPoint3D localEntryStep1( solidLocalPoint+solidLocalVector*ticks[0] );
+      Gaudi::XYZPoint localEntryStep1( solidLocalPoint+solidLocalVector*ticks[0] );
       localEntryTempPoint = m_toTopLevel[solid]*localEntryStep1;
-      HepPoint3D localExitStep1 ( solidLocalPoint+solidLocalVector*ticks[ticks.size()-1]);
+      Gaudi::XYZPoint localExitStep1 ( solidLocalPoint+solidLocalVector*ticks[ticks.size()-1]);
       localExitTempPoint = m_toTopLevel[solid]*localExitStep1;
 
       if ( localEntryTempPoint.z() < localEntryPoint.z() )
@@ -219,42 +217,33 @@ DeRichMultiSolidRadiator::intersectionPoints( const HepPoint3D&  position,
 //  return a vector with all intersection points with solid
 //=========================================================================
 unsigned int
-DeRichMultiSolidRadiator::intersectionPoints( const HepPoint3D& pGlobal,
-                                              const HepVector3D& vGlobal,
-                                              std::vector<HepPoint3D>&
+DeRichMultiSolidRadiator::intersectionPoints( const Gaudi::XYZPoint& pGlobal,
+                                              const Gaudi::XYZVector& vGlobal,
+                                              std::vector<Gaudi::XYZPoint>&
                                               points) const 
 {
 
-  const HepPoint3D pLocal = geometry()->toLocal(pGlobal);
-  HepVector3D vLocal = vGlobal;
-  vLocal.transform( geometry()->matrix() );
+  const Gaudi::XYZPoint pLocal = geometry()->toLocal(pGlobal);
+  Gaudi::XYZVector vLocal( geometry()->matrix()*vGlobal );
 
   ISolid::Ticks ticks;
-  //HepPoint3D localNextPoint(0.0, 0.0, 1e6);
-  //HepPoint3D localNextTempPoint;
-  //HepVector3D solidLocalVector;
   unsigned int noTicks;
   unsigned int totalTicks(0);
 
   for (unsigned int solid=0; solid<m_solids.size(); ++solid) {
-    HepVector3D solidLocalVector = vLocal;
-    noTicks = m_solids[solid]->
-      intersectionTicks(m_pVolumes[solid]->toLocal(pLocal),
-                        solidLocalVector.transform(m_pVolumes[solid]->matrix())
-                        ,ticks);
+    Gaudi::XYZPoint solidLocalPoint( m_toLowLevel[solid]*pLocal);
+    Gaudi::XYZVector solidLocalVector( m_toLowLevel[solid]*vLocal );
+    noTicks = m_solids[solid]->intersectionTicks(solidLocalPoint,
+                                                 solidLocalVector,
+                                                 ticks);
     if (noTicks != 0) {
       totalTicks += noTicks;
       for (ISolid::Ticks::iterator tick_it = ticks.begin();
            tick_it != ticks.end();
            ++tick_it) {
-        // the following line is a little complecated. The physical volume
-        // is used to calculate the point in the system of the solid, and then
-        // in the system of the mother, before going global.
-        points.push_back
-          (geometry()->toGlobal
-           (m_pVolumes[solid]->toMother
-            (m_pVolumes[solid]->toLocal(pLocal) + solidLocalVector.transform
-             (m_pVolumes[solid]->matrix()) * (*tick_it) )));
+        //Gaudi::XYZPoint intersect(  );
+        points.push_back( geometry()->toGlobal
+                          (m_toTopLevel[solid]*(solidLocalPoint+solidLocalVector*(*tick_it))));
       }
     }
   }

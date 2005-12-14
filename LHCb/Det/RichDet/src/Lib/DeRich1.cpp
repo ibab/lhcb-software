@@ -3,7 +3,7 @@
  *
  *  Implementation file for detector description class : DeRich1
  *
- *  $Id: DeRich1.cpp,v 1.16 2005-09-23 15:27:28 papanest Exp $
+ *  $Id: DeRich1.cpp,v 1.17 2005-12-14 09:34:52 papanest Exp $
  *
  *  @author Antonis Papanestis a.papanestis@rl.ac.uk
  *  @date   2004-06-18
@@ -13,10 +13,10 @@
 
 // Include files
 #include "RichDet/DeRich1.h"
-#include "RichDet/DeRichFlatMirror.h"
 
 // Gaudi
 #include "GaudiKernel/MsgStream.h"
+#include "GaudiKernel/SmartDataPtr.h"
 
 // DetDesc
 #include "DetDesc/Material.h"
@@ -33,7 +33,7 @@ DeRich1::DeRich1() { m_name = "DeRich1"; }
 DeRich1::~DeRich1() {}
 
 // Retrieve Pointer to class defininition structure
-const CLID& DeRich1::classID() 
+const CLID& DeRich1::classID()
 {
   return CLID_DERich1;
 }
@@ -44,7 +44,7 @@ StatusCode DeRich1::initialize()
 {
 
   MsgStream msg( msgSvc(), myName() );
-  msg << MSG::DEBUG << "Initialize" << endmsg;
+  msg << MSG::DEBUG << "Initialize " << name() << endmsg;
 
   if ( !DeRich::initialize() ) return StatusCode::FAILURE;
 
@@ -53,9 +53,9 @@ StatusCode DeRich1::initialize()
   const double nominalCoCZ = param<double>("Rich1Mirror1NominalCoCZ");
 
   m_nominalCentreOfCurvature =
-    HepPoint3D(nominalCoCX, nominalCoCY, nominalCoCZ);
+    Gaudi::XYZPoint(nominalCoCX, nominalCoCY, nominalCoCZ);
   m_nominalCentreOfCurvatureBottom =
-    HepPoint3D(nominalCoCX, -nominalCoCY, nominalCoCZ);
+    Gaudi::XYZPoint(nominalCoCX, -nominalCoCY, nominalCoCZ);
 
   msg << MSG::DEBUG << "Nominal centre of curvature"
       << m_nominalCentreOfCurvature << " ," << m_nominalCentreOfCurvatureBottom
@@ -66,23 +66,21 @@ StatusCode DeRich1::initialize()
   // get the parameters of the nominal flat mirror plane in the form
   // Ax+By+Cz+D=0
   std::vector<double> nominalFMirrorPlane;
-  if ( exists("Rich1NominalSecMirrorPlane") ) 
+  if ( exists("Rich1NominalSecMirrorPlane") )
     nominalFMirrorPlane = param<std::vector<double> >("Rich1NominalSecMirrorPlane");
   else
     nominalFMirrorPlane = param<std::vector<double> >("Rich1NominalFlatMirrorPlane");
 
-  m_nominalPlaneTop = HepPlane3D(nominalFMirrorPlane[0],nominalFMirrorPlane[1],
-                                 nominalFMirrorPlane[2],nominalFMirrorPlane[3]);
-  m_nominalPlaneBottom = HepPlane3D(nominalFMirrorPlane[0],-nominalFMirrorPlane[1],
-                                    nominalFMirrorPlane[2],nominalFMirrorPlane[3]);
+  m_nominalPlaneTop = Gaudi::Plane3D(nominalFMirrorPlane[0],nominalFMirrorPlane[1],
+                                     nominalFMirrorPlane[2],nominalFMirrorPlane[3]);
+  m_nominalPlaneBottom = Gaudi::Plane3D(nominalFMirrorPlane[0],-nominalFMirrorPlane[1],
+                                        nominalFMirrorPlane[2],nominalFMirrorPlane[3]);
 
-  m_nominalPlaneTop.normalize();
-  m_nominalPlaneBottom.normalize();
-  m_nominalNormal = m_nominalPlaneTop.normal();
-  m_nominalNormalBottom = m_nominalPlaneBottom.normal();
+  m_nominalNormal = m_nominalPlaneTop.Normal();
+  m_nominalNormalBottom = m_nominalPlaneBottom.Normal();
 
-  msg << MSG::DEBUG << "Nominal normal " << HepVector3D( m_nominalNormal )
-      << HepVector3D( m_nominalNormalBottom ) << endmsg;
+  msg << MSG::DEBUG << "Nominal normal " << Gaudi::XYZVector( m_nominalNormal )
+      << Gaudi::XYZVector( m_nominalNormalBottom ) << endmsg;
 
   const IPVolume* pvGasWindow = geometry()->lvolume()->
     pvolume("pvRich1SubMaster")->lvolume()->pvolume("pvRich1MagShH0:0")->
@@ -123,8 +121,14 @@ StatusCode DeRich1::initialize()
   }
 
   // get the nominal reflectivity of the spherical mirror
-  const std::string sphMirrorReflLoc = 
-    "/dd/Geometry/Rich1/Rich1SurfaceTabProperties/Rich1Mirror1SurfaceIdealReflectivityPT";
+  std::string surfLoc;
+  if (name().find("Magnet") == std::string::npos)
+    surfLoc = "";
+  else
+    surfLoc = "BeforeMagnetRegion/";
+
+  const std::string sphMirrorReflLoc = "/dd/Geometry/"+surfLoc+
+    "Rich1/Rich1SurfaceTabProperties/Rich1Mirror1SurfaceIdealReflectivityPT";
   SmartDataPtr<TabulatedProperty> sphMirrorRefl( dataSvc(), sphMirrorReflLoc );
   if ( !sphMirrorRefl )
     msg << MSG::ERROR << "No info on spherical mirror reflectivity" << endmsg;
@@ -135,8 +139,8 @@ StatusCode DeRich1::initialize()
   }
 
   // get the nominal reflectivity of the secondary mirror
-  const std::string secMirrorReflLoc = 
-    "/dd/Geometry/Rich1/Rich1SurfaceTabProperties/Rich1Mirror2SurfaceIdealReflectivityPT";
+  const std::string secMirrorReflLoc = "/dd/Geometry/"+surfLoc+
+    "Rich1/Rich1SurfaceTabProperties/Rich1Mirror2SurfaceIdealReflectivityPT";
   SmartDataPtr<TabulatedProperty> secMirrorRefl(dataSvc(),secMirrorReflLoc);
   if ( !secMirrorRefl )
     msg << MSG::ERROR << "No info on secondary mirror reflectivity" << endmsg;
@@ -149,23 +153,23 @@ StatusCode DeRich1::initialize()
   return StatusCode::SUCCESS;
 }
 
-const HepPoint3D & DeRich1::nominalCentreOfCurvature(const Rich::Side side) const
+const Gaudi::XYZPoint& DeRich1::nominalCentreOfCurvature(const Rich::Side side) const
 {
   return ( Rich::bottom == side ? m_nominalCentreOfCurvatureBottom :
            m_nominalCentreOfCurvature );
 }
 
-const HepNormal3D & DeRich1::nominalNormal(const Rich::Side side) const
+const Gaudi::XYZVector& DeRich1::nominalNormal(const Rich::Side side) const
 {
   return ( Rich::bottom == side ? m_nominalNormalBottom : m_nominalNormal );
 }
 
-const HepPlane3D & DeRich1::nominalPlane(const Rich::Side side) const
+const Gaudi::Plane3D& DeRich1::nominalPlane(const Rich::Side side) const
 {
   return ( Rich::top == side ? m_nominalPlaneTop : m_nominalPlaneBottom );
 }
 
-Rich::Side DeRich1::side( const HepPoint3D & point) const
+Rich::Side DeRich1::side( const Gaudi::XYZPoint & point) const
 {
   return ( point.y() >= 0.0 ? Rich::top : Rich::bottom );
 }

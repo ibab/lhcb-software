@@ -5,7 +5,7 @@
  *  Implementation file for detector description class : DeRich2HPDPanel
  *
  *  CVS Log :-
- *  $Id: DeRich2HPDPanel.cpp,v 1.21 2005-02-22 18:11:37 jonrob Exp $
+ *  $Id: DeRich2HPDPanel.cpp,v 1.22 2005-12-14 09:34:52 papanest Exp $
  *
  *  @author Antonis Papanestis a.papanestis@rl.ac.uk
  *  @date   2004-06-18
@@ -21,8 +21,8 @@
 // Gaudi
 #include "GaudiKernel/MsgStream.h"
 
-// CLHEP files
-#include "CLHEP/Units/SystemOfUnits.h"
+// MathCore files
+#include "Kernel/SystemOfUnits.h"
 
 /// Detector description classes
 #include "DetDesc/IGeometryInfo.h"
@@ -94,8 +94,8 @@ StatusCode DeRich2HPDPanel::initialize()
 
 // ===========================================================================
 
-bool DeRich2HPDPanel::findHPDRowCol(const HepPoint3D& inPanel,
-                                    RichSmartID& id) const
+bool DeRich2HPDPanel::findHPDRowCol(const Gaudi::XYZPoint& inPanel,
+                                    LHCb::RichSmartID& id) const
 {
 
   // find HPD row/column and check if the point is withing the covered area
@@ -105,7 +105,7 @@ bool DeRich2HPDPanel::findHPDRowCol(const HepPoint3D& inPanel,
                                      m_columnPitch));
 
   if (HPDColumn >=  m_HPDColumns)  return false;
-  id.setPDCol(HPDColumn);
+  id.setHPDCol(HPDColumn);
 
   unsigned int HPDRow = 0;
   if (0 == HPDColumn%2) {
@@ -118,7 +118,7 @@ bool DeRich2HPDPanel::findHPDRowCol(const HepPoint3D& inPanel,
 
   if (HPDRow >=  m_HPDRows) return false;
 
-  id.setPDRow( HPDRow );
+  id.setHPDNumInCol( HPDRow );
   return true;
 
 }
@@ -126,14 +126,14 @@ bool DeRich2HPDPanel::findHPDRowCol(const HepPoint3D& inPanel,
 //=========================================================================
 //  convert a point from the panel to the global coodinate system
 //=========================================================================
-HepPoint3D DeRich2HPDPanel::globalPosition( const HepPoint3D& localPoint,
-                                            const Rich::Side side) const
+Gaudi::XYZPoint DeRich2HPDPanel::globalPosition( const Gaudi::XYZPoint& localPoint,
+                                                 const Rich::Side side) const
 {
   const int sign = ( side == Rich::left ? -1 : 1 );
   return (geometry()->
-          toGlobal(HepPoint3D(localPoint.x()+sign*m_detPlaneHorizEdge,
-                              localPoint.y(),
-                              localPoint.z() + m_detPlaneZ )));
+          toGlobal(Gaudi::XYZPoint(localPoint.x()+sign*m_detPlaneHorizEdge,
+                                   localPoint.y(),
+                                   localPoint.z() + m_detPlaneZ )));
 }
 
 //============================================================================

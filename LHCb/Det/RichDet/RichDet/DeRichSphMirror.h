@@ -4,8 +4,11 @@
  *  Header file for detector description class : DeRichSphMirror
  *
  *  CVS Log :-
- *  $Id: DeRichSphMirror.h,v 1.11 2005-09-23 15:27:28 papanest Exp $
+ *  $Id: DeRichSphMirror.h,v 1.12 2005-12-14 09:34:52 papanest Exp $
  *  $Log: not supported by cvs2svn $
+ *  Revision 1.11  2005/09/23 15:27:28  papanest
+ *  new aerogel and sec mirrors
+ *
  *  Revision 1.10  2005/07/13 15:28:24  papanest
  *  Individual reflectivity for all mirror segments
  *
@@ -30,9 +33,9 @@
 #define  RICHDET_DERICHSPHMIRROR_H 1
 
 // Include files
-#include "CLHEP/Geometry/Point3D.h"
-#include "CLHEP/Geometry/Vector3D.h"
-#include "CLHEP/Geometry/Plane3D.h"
+#include "Kernel/Point3DTypes.h"
+#include "Kernel/Vector3DTypes.h"
+#include "Kernel/Plane3DTypes.h"
 
 #include "DetDesc/DetectorElement.h"
 #include "DetDesc/ISolid.h"
@@ -89,18 +92,18 @@ public:
 
   /**
    * Retrieves the centre of curvarute of this mirror
-   * @return The centre of curvature of this mirror as a HepPoint3D
+   * @return The centre of curvature of this mirror as a Gaudi::XYZPoint
    */
-  inline const HepPoint3D& centreOfCurvature() const
+  inline const Gaudi::XYZPoint& centreOfCurvature() const
   {
     return m_centreOfCurvature;
   }
 
   /**
    * Retrieves the centre this mirror on the reflective surface.
-   * @return The mirror centre as HepPoint3D
+   * @return The mirror centre as Gaudi::XYZPoint
    */
-  inline const HepPoint3D& mirrorCentre() const
+  inline const Gaudi::XYZPoint& mirrorCentre() const
   {
     return m_mirrorCentre;
   }
@@ -128,17 +131,17 @@ public:
    * @return Status of intersection
    * @retval StatusCode::FAILURE No intersection
    */
-  StatusCode intersects ( const HepPoint3D & globalP,
-                          const HepVector3D & globalV) const;
+  StatusCode intersects ( const Gaudi::XYZPoint & globalP,
+                          const Gaudi::XYZVector & globalV) const;
 
   /**
    * Checks if the direction intersects with the mirror and returns the
    * intersction point
    * @return Intersection point
    */
-  StatusCode intersects ( const HepPoint3D & globalP,
-                          const HepVector3D & globalV,
-                          HepPoint3D& intersectionPoint ) const;
+  StatusCode intersects ( const Gaudi::XYZPoint & globalP,
+                          const Gaudi::XYZVector & globalV,
+                          Gaudi::XYZPoint& intersectionPoint ) const;
 
   /** Returns the name of this particular mirror
    *  @return mirror name
@@ -160,7 +163,7 @@ public:
    * Retrieves the normal vector at the centre of the mirror
    * @return Normal vector at the mirror centre
    */
-  inline const HepVector3D& centreNormal() const
+  inline const Gaudi::XYZVector& centreNormal() const
   {
     return m_centreNormal;
   }
@@ -169,7 +172,7 @@ public:
    * Retrieves the normal vector at the centre of the mirror
    * @return Normal vector at the mirror centre
    */
-  inline const HepPlane3D& centreNormalPlane() const
+  inline const Gaudi::Plane3D& centreNormalPlane() const
   {
     return m_centreNormalPlane;
   }
@@ -183,8 +186,8 @@ private:
 
   const ISolid* m_solid;             ///< The mirror solid
 
-  HepPoint3D m_centreOfCurvature;    ///< The centre of curvature
-  HepPoint3D m_mirrorCentre;         ///< The mirror centre
+  Gaudi::XYZPoint m_centreOfCurvature;    ///< The centre of curvature
+  Gaudi::XYZPoint m_mirrorCentre;         ///< The mirror centre
 
   /// Alignment constant for x alignment.  Not used presently
   double m_alignmentConstantX;
@@ -198,9 +201,9 @@ private:
   std::string m_name; ///< The name of this mirror
 
   ///< The normal vector at the centre of the mirror
-  HepVector3D m_centreNormal; 
+  Gaudi::XYZVector m_centreNormal; 
   /// The normal vector at the centre of the mirror
-  HepPlane3D m_centreNormalPlane; 
+  Gaudi::Plane3D m_centreNormalPlane; 
 };
 
 #endif    //  RICHDET_DERICHSPHMIRROR_H

@@ -5,7 +5,7 @@
  *  Header file for detector description class : DeRichRadiator
  *
  *  CVS Log :-
- *  $Id: DeRichRadiator.h,v 1.15 2005-10-14 08:21:37 jonrob Exp $
+ *  $Id: DeRichRadiator.h,v 1.16 2005-12-14 09:34:52 papanest Exp $
  *
  *  @author Antonis Papanestis a.papanestis@rl.ac.uk
  *  @date   2004-06-18
@@ -16,7 +16,7 @@
 #define RICHDET_DERICHRADIATOR_H 1
 
 // Include files
-#include "CLHEP/Geometry/Point3D.h"
+#include "Kernel/Point3DTypes.h"
 
 // DetDesc
 #include "DetDesc/DetectorElement.h"
@@ -40,20 +40,17 @@ class IAlgTool;
  *  @date   2004-06-18
  */
 namespace DeRichRadiatorLocation {
-  /// Aerogel segment Q0 location
-  static const std::string& AerogelQ0 = "/dd/Structure/LHCb/Rich1/AerogelQ0";
-  /// Aerogel segment Q1 location
-  static const std::string& AerogelQ1 = "/dd/Structure/LHCb/Rich1/AerogelQ1";
-  /// Aerogel segment Q2 location
-  static const std::string& AerogelQ2 = "/dd/Structure/LHCb/Rich1/AerogelQ2";
-  /// Aerogel segment Q3 location
-  static const std::string& AerogelQ3 = "/dd/Structure/LHCb/Rich1/AerogelQ3";
   /// Multi solid aerogel location
-  static const std::string& Aerogel   = "/dd/Structure/LHCb/Rich1/Aerogel";
+  static const std::string& Aerogel_old   = "/dd/Structure/LHCb/Rich1/Aerogel";
+  static const std::string& Aerogel = "/dd/Structure/LHCb/BeforeMagnetRegion/Rich1/Aerogel";
+
   /// Rich1 gas (C4F10) location
-  static const std::string& C4F10     = "/dd/Structure/LHCb/Rich1/C4F10";
+  static const std::string& C4F10_old     = "/dd/Structure/LHCb/Rich1/C4F10";
+  static const std::string& C4F10 = "/dd/Structure/LHCb/BeforeMagnetRegion/Rich1/C4F10";
+
   /// Rich2 gas (CF4) location
-  static const std::string& CF4       = "/dd/Structure/LHCb/Rich2/CF4";
+  static const std::string& CF4_old       = "/dd/Structure/LHCb/Rich2/CF4";
+  static const std::string& CF4  = "/dd/Structure/LHCb/AfterMagnetRegion/Rich2/CF4";
 }
 
 //----------------------------------------------------------------------------
@@ -134,9 +131,9 @@ public:
    * @return Status of intersection
    * @retval StatusCode::FAILURE No intersection
    */
-  virtual StatusCode nextIntersectionPoint( const HepPoint3D& pGlobal,
-                                            const HepVector3D& vGlobal,
-                                            HepPoint3D& returnPoint ) const = 0;
+  virtual StatusCode nextIntersectionPoint( const Gaudi::XYZPoint& pGlobal,
+                                            const Gaudi::XYZVector& vGlobal,
+                                            Gaudi::XYZPoint& returnPoint ) const = 0;
 
   /**
    * Finds the entry and exit points of the radiator. For boolean solids
@@ -144,10 +141,10 @@ public:
    * @return Status of intersection
    * @retval StatusCode::FAILURE if there is no intersection
    */
-  virtual StatusCode intersectionPoints( const HepPoint3D& pGlobal,
-                                         const HepVector3D& vGlobal,
-                                         HepPoint3D& entryPoint,
-                                         HepPoint3D& exitPoint ) const = 0;
+  virtual StatusCode intersectionPoints( const Gaudi::XYZPoint& pGlobal,
+                                         const Gaudi::XYZVector& vGlobal,
+                                         Gaudi::XYZPoint& entryPoint,
+                                         Gaudi::XYZPoint& exitPoint ) const = 0;
 
   /**
    * Finds the intersection points with radiator. For boolean solids there
@@ -156,9 +153,9 @@ public:
    * @return The number of intersection points.
    * @retval Zero if there is no intersction.
    */
-  virtual unsigned int intersectionPoints( const HepPoint3D& pGlobal,
-                                           const HepVector3D& vGlobal,
-                                           std::vector<HepPoint3D>& points ) const = 0;
+  virtual unsigned int intersectionPoints( const Gaudi::XYZPoint& pGlobal,
+                                           const Gaudi::XYZVector& vGlobal,
+                                           std::vector<Gaudi::XYZPoint>& points ) const = 0;
 
 
   /** Returns the name of this particular radiator medium
@@ -181,7 +178,7 @@ private:
 
   std::string m_name; ///< The name of this radiator
 
-  /// Pointer to RichCondition tool that maintains the 
+  /// Pointer to RichCondition tool that maintains the
   /// refractive index tabulated properties
   IAlgTool * m_condTool;
 

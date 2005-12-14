@@ -3,7 +3,7 @@
  *
  *  Implementation file for detector description class : DeRichSphMirror
  *
- *  $Id: DeRichSphMirror.cpp,v 1.16 2005-09-23 15:27:28 papanest Exp $
+ *  $Id: DeRichSphMirror.cpp,v 1.17 2005-12-14 09:34:52 papanest Exp $
  *
  *  @author Antonis Papanestis a.papanestis@rl.ac.uk
  *  @date   2004-06-18
@@ -14,10 +14,11 @@
 // Include files
 #include "GaudiKernel/MsgStream.h"
 #include "GaudiKernel/RegistryEntry.h"
+#include "GaudiKernel/SmartDataPtr.h"
 
-#include "CLHEP/Geometry/Vector3D.h"
-#include "CLHEP/Geometry/Transform3D.h"
-#include "CLHEP/Units/SystemOfUnits.h"
+#include "Kernel/Vector3DTypes.h"
+#include "Kernel/Transform3DTypes.h"
+#include "Kernel/SystemOfUnits.h"
 
 /// Detector description classes
 #include "DetDesc/IGeometryInfo.h"
@@ -77,7 +78,7 @@ StatusCode DeRichSphMirror::initialize()
       }
   } else {
     m_name = "DeRichSphMirror_NO_NAME";
-    msg << MSG::FATAL << "A spherical mirror without a number!" << endmsg;
+    msg << MSG::FATAL << "Cannot identify Rich number!" << endmsg;
     return StatusCode::FAILURE;
   }
 
@@ -90,7 +91,23 @@ StatusCode DeRichSphMirror::initialize()
   m_mirrorNumber = atoi( name().substr(pos2+1).c_str() );
   const std::string mirNumString = name().substr(pos2+1);
 
-  SmartDataPtr<DeRich> deRich2(dataSvc(), DeRichLocation::Rich2);
+  std::string rich1GeomLoc( "Rich1" );
+  std::string rich2GeomLoc( "Rich2" );
+  std::string rich2Location;
+  if ( name().find("Magnet") == std::string::npos )
+    rich2Location = DeRichLocation::Rich2_old;
+  else {
+    rich2Location = DeRichLocation::Rich2;
+    rich1GeomLoc = "BeforeMagnetRegion/"+rich1GeomLoc;
+    rich2GeomLoc = "AfterMagnetRegion/"+rich2GeomLoc;
+  }
+
+  SmartDataPtr<DeRich> deRich2(dataSvc(), rich2Location);
+  if (!deRich2) {
+    msg << MSG::FATAL << "Cannot locate " << rich2Location << endmsg;
+    return StatusCode::FAILURE;
+  }
+    
   double hexRadius = 510.0*mm;
   if ( deRich2->exists("Rich2SphMirrorHexDiameter") )
     hexRadius = deRich2->param<double>("Rich2SphMirrorHexDiameter")/2.0;
@@ -130,33 +147,33 @@ StatusCode DeRichSphMirror::initialize()
   m_radius = sphereSolid->insideRadius();
 
   // and its centre
-  const HepPoint3D zero(0.0, 0.0, 0.0);
-  HepVector3D toSphCentre(0.0, 0.0, 1.0);
+  const Gaudi::XYZPoint zero(0.0, 0.0, 0.0);
+  Gaudi::Polar3DVector toSphCentre(1.0, 0.0, 0.0);
   if ( 0.0 != sphereSolid->startThetaAngle() ) {
-    toSphCentre.setTheta( sphereSolid->startThetaAngle() +
-                          sphereSolid->deltaThetaAngle()/2.0 );
-    toSphCentre.setPhi( sphereSolid->startPhiAngle() +
-                        sphereSolid->deltaPhiAngle()/2.0 );
+    toSphCentre.SetCoordinates( 1.0,
+                                sphereSolid->startThetaAngle() +
+                                sphereSolid->deltaThetaAngle()/2.0,
+                                sphereSolid->startPhiAngle() +
+                                sphereSolid->deltaPhiAngle()/2.0 );
+
   }
 
   ISolid::Ticks sphTicks;
   const unsigned int sphTicksSize = sphereSolid->
-    intersectionTicks(zero, toSphCentre, sphTicks);
+    intersectionTicks(zero, Gaudi::XYZVector( toSphCentre ), sphTicks);
   if (sphTicksSize != 2) {
     msg << MSG::FATAL << "Problem getting mirror radius, noTicks: "
         << sphTicksSize << endmsg;
     return StatusCode::FAILURE;
   }
-  const HepPoint3D localMirrorCentre(sphTicks[0]*toSphCentre);
+  const Gaudi::XYZPoint localMirrorCentre(sphTicks[0]*toSphCentre);
   m_mirrorCentre = geometry()->toGlobal(localMirrorCentre);
 
   // right and left middle points are for verification of the hex segment position
-  const HepPoint3D middleRightSide(sqrt(m_radius*m_radius-flatToCentre*flatToCentre),
-                                   0.0,
-                                   flatToCentre);
-  const HepPoint3D middleLeftSide(sqrt(m_radius*m_radius-flatToCentre*flatToCentre),
-                                  0.0,
-                                  -flatToCentre);
+  const Gaudi::XYZPoint middleRightSide
+    (sqrt(m_radius*m_radius-flatToCentre*flatToCentre),0.0,flatToCentre);
+  const Gaudi::XYZPoint middleLeftSide
+    (sqrt(m_radius*m_radius-flatToCentre*flatToCentre),0.0,-flatToCentre);
 
   // go back to the global coord system.
   // Ignore the rotation, it has been taken care of
@@ -177,30 +194,37 @@ StatusCode DeRichSphMirror::initialize()
   //}
 
   // centre normal vector
-  const HepVector3D localCentreNormal( -localMirrorCentre/localMirrorCentre.mag() );
-  m_centreNormal = localCentreNormal;
-  m_centreNormal.transform( geometry()->matrixInv() );
+  const Gaudi::XYZVector localCentreNormal
+    (Gaudi::XYZVector(-localMirrorCentre.x(),-localMirrorCentre.y(),
+                      -localMirrorCentre.z()).unit() );
+  m_centreNormal = geometry()->matrixInv()*localCentreNormal;
   msg << MSG::DEBUG << "Normal vector at the centre" << m_centreNormal << endmsg;
-  
-  m_centreNormalPlane = HepPlane3D(m_centreNormal, m_mirrorCentre);
+
+  m_centreNormalPlane = Gaudi::Plane3D(m_centreNormal, m_mirrorCentre);
   msg << MSG::DEBUG << "centreNormalPlane " << m_centreNormalPlane << endmsg;
-  
+
   // find surface properties
   std::string surfLocation, sphMirrorName, surfName;
   if ( m_rich == Rich::Rich1 ) {
-    surfLocation = "/dd/Geometry/Rich1/Rich1Surfaces";
+    surfLocation = "/dd/Geometry/"+rich1GeomLoc+"/Rich1Surfaces";
     sphMirrorName = "Mirror1";
     surfName = ":"+mirNumString;
   }
   else{
-    surfLocation = "/dd/Geometry/Rich2/Rich2Surfaces";
+    surfLocation = "/dd/Geometry/"+rich2GeomLoc+"/Rich2Surfaces";
     sphMirrorName = ( secondary  ? "SecMirror" : "SphMirror");
     surfName = "Seg"+mirNumString;
   }
+
   bool foundSurface( false );
 
   SmartDataPtr<DataObject> rich2SurfCat(dataSvc(),surfLocation);
-  DataSvcHelpers::RegistryEntry *rich2Reg = dynamic_cast<DataSvcHelpers::RegistryEntry *>
+  if (!rich2SurfCat) {
+    msg << MSG::FATAL << "Cannot locate suface for mirror " + name() << endmsg;
+    return StatusCode::FAILURE;
+  }
+
+  DataSvcHelpers::RegistryEntry* rich2Reg = dynamic_cast<DataSvcHelpers::RegistryEntry*>
     (rich2SurfCat->registry());
   IRegistry* storeReg = 0;
 
@@ -235,30 +259,30 @@ StatusCode DeRichSphMirror::initialize()
       }
     }
     if ( !foundRefl ) {
-      msg << MSG::DEBUG <<"Could not find REFLECTIVITY "<< surf->name() << endmsg;
+      msg << MSG::FATAL <<"Could not find REFLECTIVITY "<< surf->name() << endmsg;
       return StatusCode::FAILURE;
     }
   }
   else {
-    msg << MSG::DEBUG <<"Could not find surface for mirror "<< myName() << endmsg;
+    msg << MSG::FATAL <<"Could not find surface for mirror "<< myName() << endmsg;
     return StatusCode::FAILURE;
   }
 
   msg << MSG::DEBUG << "Reflectivity is from TabProp "
       << m_reflectivity->name() << endmsg;
   msg << MSG::VERBOSE <<"End initialisation for DeRichSphMirror" << endmsg;
+
   return StatusCode::SUCCESS;
 }
 
 //=============================================================================
 
-StatusCode DeRichSphMirror:: intersects(const HepPoint3D& globalP,
-                                        const HepVector3D& globalV,
-                                        HepPoint3D& intersectionPoint ) const
+StatusCode DeRichSphMirror:: intersects(const Gaudi::XYZPoint& globalP,
+                                        const Gaudi::XYZVector& globalV,
+                                        Gaudi::XYZPoint& intersectionPoint ) const
 {
-  const HepPoint3D pLocal( geometry()->toLocal(globalP) );
-  HepVector3D vLocal( globalV );
-  vLocal.transform( geometry()->matrix() );
+  const Gaudi::XYZPoint pLocal( geometry()->toLocal(globalP) );
+  Gaudi::XYZVector vLocal( geometry()->matrix()*globalV );
 
   ISolid::Ticks ticks;
   const unsigned int noTicks = m_solid->intersectionTicks(pLocal, vLocal, ticks);
@@ -267,8 +291,7 @@ StatusCode DeRichSphMirror:: intersects(const HepPoint3D& globalP,
     return StatusCode::FAILURE;
   }
   else {
-    const HepPoint3D tempPointLocal = pLocal + ticks[0] * vLocal;
-    intersectionPoint = geometry()->toGlobal(tempPointLocal);
+    intersectionPoint = geometry()->toGlobal( pLocal + ticks[0]*vLocal );
     return StatusCode::SUCCESS;
   }
 
@@ -276,14 +299,14 @@ StatusCode DeRichSphMirror:: intersects(const HepPoint3D& globalP,
 
 //=============================================================================
 
-StatusCode DeRichSphMirror::intersects( const HepPoint3D& globalP,
-                                        const HepVector3D& globalV ) const
+StatusCode DeRichSphMirror::intersects( const Gaudi::XYZPoint& globalP,
+                                        const Gaudi::XYZVector& globalV ) const
 {
-  HepVector3D vLocal( globalV );
-  vLocal.transform( geometry()->matrix() );
+  Gaudi::XYZVector vLocal( geometry()->matrix()*globalV );
 
   ISolid::Ticks ticks;
-  const unsigned int noTicks = m_solid->intersectionTicks(geometry()->toLocal(globalP), vLocal, ticks);
+  const unsigned int noTicks = m_solid->intersectionTicks(geometry()->toLocal(globalP),
+                                                          vLocal, ticks);
 
   return ( 0 == noTicks ? StatusCode::FAILURE : StatusCode::SUCCESS );
 }

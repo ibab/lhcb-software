@@ -1,10 +1,9 @@
-
 /** @file DeRich1.h
  *
  *  Header file for detector description class : DeRich1
  *
  *  CVS Log :-
- *  $Id: DeRich1.h,v 1.12 2005-10-14 08:21:37 jonrob Exp $
+ *  $Id: DeRich1.h,v 1.13 2005-12-14 09:34:52 papanest Exp $
  *
  *  @author Antonis Papanestis   a.papanestis@rl.ac.uk
  *  @date   2004-06-18
@@ -68,7 +67,7 @@ public:
    * @param side Which side: top or bottom
    * @return The nominal centre of curvature
    */
-  virtual const HepPoint3D & nominalCentreOfCurvature(const Rich::Side side) const;
+  virtual const Gaudi::XYZPoint& nominalCentreOfCurvature(const Rich::Side side) const;
 
   /**
    * Returns the nominal normal vector of the flat mirror plane for this Rich
@@ -76,7 +75,7 @@ public:
    * @param side Which side: top or bottom
    * @return The nominal normal vector
    */
-  virtual const HepNormal3D & nominalNormal(const Rich::Side side) const;
+  virtual const  Gaudi::XYZVector& nominalNormal(const Rich::Side side) const;
 
   /**
    * Returns the nominal flat mirror plane for this Rich
@@ -84,7 +83,7 @@ public:
    * @param side Which side: top or bottom
    * @return The nominal flat mirror plane
    */
-  virtual const HepPlane3D & nominalPlane(const Rich::Side side) const;
+  virtual const Gaudi::Plane3D& nominalPlane(const Rich::Side side) const;
 
   /**
    * Check on which side of this Rich lies this point
@@ -92,19 +91,19 @@ public:
    * @param point A point in the global coordinate system
    * @return The side for this point
    */
-  virtual Rich::Side side( const HepPoint3D & point) const;
+  virtual Rich::Side side( const Gaudi::XYZPoint& point) const;
 
 private:
 
-  HepPlane3D m_nominalPlaneTop;    ///< The top nominal flat mirror plane
-  HepPlane3D m_nominalPlaneBottom; ///< The bottom nominal flat mirror plane
+  Gaudi::Plane3D m_nominalPlaneTop;    ///< The top nominal flat mirror plane
+  Gaudi::Plane3D m_nominalPlaneBottom; ///< The bottom nominal flat mirror plane
 
 
   /// The nominal centre of curvature of the spherical mirror (negative side)
-  HepPoint3D  m_nominalCentreOfCurvatureBottom;
+  Gaudi::XYZPoint  m_nominalCentreOfCurvatureBottom;
 
   /// The nominal normal vector of the flat mirror plane (negative side)
-  HepNormal3D m_nominalNormalBottom;
+  Gaudi::XYZVector m_nominalNormalBottom;
 
 };
 

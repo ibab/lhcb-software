@@ -4,8 +4,11 @@
  *  Header file for detector description class : DeRich1HPDPanel
  *
  *  CVS Log :-
- *  $Id: DeRich1HPDPanel.h,v 1.16 2004-10-20 22:41:54 jonrob Exp $
+ *  $Id: DeRich1HPDPanel.h,v 1.17 2005-12-14 09:34:52 papanest Exp $
  *  $Log: not supported by cvs2svn $
+ *  Revision 1.16  2004/10/20 22:41:54  jonrob
+ *  Tidy up inline and virtual functions (whilst solving a windows problem)
+ *
  *  Revision 1.15  2004/10/20 17:02:44  jonrob
  *  Updates for windows
  *
@@ -102,7 +105,7 @@ public:
    *
    * @return Global point.
    */
-  virtual HepPoint3D globalPosition( const HepPoint3D& localPoint,
+  virtual Gaudi::XYZPoint globalPosition( const Gaudi::XYZPoint& localPoint,
                                      const Rich::Side side) const;
 
 protected:
@@ -147,7 +150,7 @@ protected:
    * @retval true   HPD is found
    * @retval false  The point is outside the coverage of the HPDs.
    */
-  virtual bool findHPDRowCol(const HepPoint3D& inPanel, RichSmartID& id) const;
+  virtual bool findHPDRowCol(const Gaudi::XYZPoint& inPanel, LHCb::RichSmartID& id) const;
 
   /**
    * Converts an HPD row and column to a number corresponding

@@ -19,8 +19,8 @@
 // Gaudi
 #include "GaudiKernel/MsgStream.h"
 
-// CLHEP files
-#include "CLHEP/Units/SystemOfUnits.h"
+// MathCore files
+#include "Kernel/SystemOfUnits.h"
 
 /// Detector description classes
 #include "DetDesc/IGeometryInfo.h"
@@ -89,8 +89,8 @@ StatusCode DeRich1HPDPanel::initialize()
 
 // ===========================================================================
 
-bool DeRich1HPDPanel::findHPDRowCol (const HepPoint3D& inPanel,
-                                     RichSmartID& id) const
+bool DeRich1HPDPanel::findHPDRowCol (const Gaudi::XYZPoint& inPanel,
+                                     LHCb::RichSmartID& id) const
 {
 
   const unsigned int HPDRow =
@@ -98,7 +98,7 @@ bool DeRich1HPDPanel::findHPDRowCol (const HepPoint3D& inPanel,
                                     m_rowPitch));
 
   if (HPDRow >= m_HPDRows) return false;
-  id.setPDRow( HPDRow );
+  id.setHPDNumInCol( HPDRow );
 
   unsigned int HPDColumn = 0;
   if (0 == HPDRow%2) {
@@ -110,7 +110,7 @@ bool DeRich1HPDPanel::findHPDRowCol (const HepPoint3D& inPanel,
   }
 
   if (HPDColumn >= m_HPDColumns) return false;
-  id.setPDCol(HPDColumn);
+  id.setHPDCol(HPDColumn);
 
   return true;
 }
@@ -119,14 +119,14 @@ bool DeRich1HPDPanel::findHPDRowCol (const HepPoint3D& inPanel,
 //=========================================================================
 //  convert a point from the panel to the global coodinate system
 //=========================================================================
-HepPoint3D DeRich1HPDPanel::globalPosition( const HepPoint3D& localPoint,
-                                            const Rich::Side side) const
+Gaudi::XYZPoint DeRich1HPDPanel::globalPosition( const Gaudi::XYZPoint& localPoint,
+                                                 const Rich::Side side) const
 {
   const int sign = ( side == Rich::top ? -1 : 1 );
   return (geometry()->
-          toGlobal(HepPoint3D(localPoint.x(),
-                              localPoint.y()+sign*m_detPlaneVertEdge,
-                              localPoint.z() + m_detPlaneZ )));
+          toGlobal(Gaudi::XYZPoint(localPoint.x(),
+                                   localPoint.y()+sign*m_detPlaneVertEdge,
+                                   localPoint.z() + m_detPlaneZ )));
 }
 
 //============================================================================
@@ -158,7 +158,7 @@ unsigned int DeRich1HPDPanel::HPDForNS() const
 
 unsigned int DeRich1HPDPanel::HPDForB() const
 {
-  return m_HPDColumns -1;
+  return (m_HPDColumns -1);
 }
 
 unsigned int DeRich1HPDPanel::HPDForC() const

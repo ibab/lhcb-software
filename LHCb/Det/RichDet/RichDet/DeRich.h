@@ -4,7 +4,7 @@
  *  Header file for detector description class : DeRich
  *
  *  CVS Log :-
- *  $Id: DeRich.h,v 1.14 2005-10-14 08:21:37 jonrob Exp $
+ *  $Id: DeRich.h,v 1.15 2005-12-14 09:34:52 papanest Exp $
  *
  *  @author Antonis Papanestis a.papanestis@rl.ac.uk
  *  @date   2004-06-18
@@ -17,10 +17,10 @@
 #include "DetDesc/DetectorElement.h"
 #include "DetDesc/TabulatedProperty.h"
 
-// CLHEP
-#include "CLHEP/Geometry/Point3D.h"
-#include "CLHEP/Geometry/Vector3D.h"
-#include "CLHEP/Geometry/Plane3D.h"
+// Mathcore
+#include "Kernel/Point3DTypes.h"
+#include "Kernel/Vector3DTypes.h"
+#include "Kernel/Plane3DTypes.h"
 
 // LHCbKernel
 #include "Kernel/RichSide.h"
@@ -37,10 +37,12 @@
 namespace DeRichLocation {
 
   /// Rich1 location in transient detector store
-  static const std::string& Rich1 = "/dd/Structure/LHCb/Rich1";
+  static const std::string& Rich1_old = "/dd/Structure/LHCb/Rich1";
+  static const std::string& Rich1 = "/dd/Structure/LHCb/BeforeMagnetRegion/Rich1";
 
   /// Rich2 location in transient detector store
-  static const std::string& Rich2 = "/dd/Structure/LHCb/Rich2";
+  static const std::string& Rich2_old = "/dd/Structure/LHCb/Rich2";
+  static const std::string& Rich2 = "/dd/Structure/LHCb/AfterMagnetRegion/Rich2";
 
 }
 
@@ -80,7 +82,7 @@ public:
    * @param side Which side: top, bottom (Rich1), left, right (Rich2)
    * @return The nominal centre of curvature
    */
-  virtual const HepPoint3D& nominalCentreOfCurvature(const Rich::Side side) const = 0;
+  virtual const Gaudi::XYZPoint& nominalCentreOfCurvature(const Rich::Side side) const = 0;
 
   /**
    * Returns the nominal normal vector of the flat mirror plane for this Rich
@@ -88,7 +90,7 @@ public:
    * @param side Which side: top, bottom (Rich1), left, right (Rich2)
    * @return The nominal normal vector
    */
-  virtual const HepNormal3D& nominalNormal(const Rich::Side side) const = 0;
+  virtual const Gaudi::XYZVector& nominalNormal(const Rich::Side side) const = 0;
 
   /**
    * Returns the nominal flat mirror plane for this Rich
@@ -96,7 +98,7 @@ public:
    * @param side Which side: top, bottom (Rich1), left, right (Rich2)
    * @return The nominal flat mirror plane
    */
-  virtual const HepPlane3D& nominalPlane(const Rich::Side side) const = 0;
+  virtual const Gaudi::Plane3D& nominalPlane(const Rich::Side side) const = 0;
 
   /**
    * Check on which side of this Rich lies this point
@@ -104,7 +106,7 @@ public:
    * @param point A point in the global coordinate system
    * @return The side for this point
    */
-  virtual Rich::Side side( const HepPoint3D & point ) const = 0;
+  virtual Rich::Side side( const Gaudi::XYZPoint& point ) const = 0;
 
 
   /**
@@ -167,7 +169,7 @@ public:
    *
    * @return Pointer to nominal flat mirror reflectivity
    */
-  inline const TabulatedProperty* nominalFlatMirrorRefl() const
+  inline const TabulatedProperty* nominalSecMirrorRefl() const
   {
     return m_nominalSecMirrorRefl;
   }
@@ -185,36 +187,12 @@ public:
    *
    * @return Position (row/column) for this flat mirror segment
    */
-  virtual RichMirrorSegPosition flatMirrorSegPos( const int mirrorNumber ) const;
-
-  /**
-   * Method to test if the user parameter vector is in the xml description
-   *
-   * @return The outcome of the test
-   * @retval true  The vector exists as a user parameter in the xml
-   * @retval false The vector is not in the xml description
-   */
-  inline bool hasParamVector( const std::string & vectorName ) const
-  {
-    return ( m_vectorNames.end() != std::find(m_vectorNames.begin(),m_vectorNames.end(),vectorName) );
-  }
-
-  /**
-   * Method to test if the user parameter is in the xml description
-   *
-   * @return The outcome of the test
-   * @retval true  The parameter exists as a user parameter in the xml
-   * @retval false The parameter is not in the xml description
-   */
-  inline bool hasParam( const std::string & paramName ) const
-  {
-    return ( m_paramNames.end() != std::find(m_paramNames.begin(),m_paramNames.end(),paramName) );
-  }
+  virtual RichMirrorSegPosition secMirrorSegPos( const int mirrorNumber ) const;
 
   /** Returns the name of this particular detector
    *  @return detector name
    */
-  inline const std::string & myName() const { return m_name; }
+  inline const std::string& myName() const { return m_name; }
 
 protected:
 
@@ -224,10 +202,10 @@ protected:
   double m_sphMirrorRadius; ///< The nominal radius of the spherical mirror
 
   /// The nominal centre of curvature of the spherical mirror (positive side)
-  HepPoint3D  m_nominalCentreOfCurvature;
+  Gaudi::XYZPoint  m_nominalCentreOfCurvature;
 
   /// The nominal normal vector of the flat mirror plane (positive side)
-  HepNormal3D m_nominalNormal;
+  Gaudi::XYZVector m_nominalNormal;
 
   typedef std::vector<std::string> strings;
   strings m_vectorNames;  ///< the names of the user parameter vectors
@@ -235,8 +213,8 @@ protected:
 
   int m_sphMirrorSegRows;  ///< number of spherical mirror rows
   int m_sphMirrorSegCols;  ///< number of spherical mirror columns
-  int m_flatMirrorSegRows; ///< number of flat mirror rows
-  int m_flatMirrorSegCols; ///< number of flat mirror columns
+  int m_secMirrorSegRows; ///< number of secondary mirror rows
+  int m_secMirrorSegCols; ///< number of secondary mirror columns
 
   /// flag to test if the xml supports mirror position info
   bool m_positionInfo;

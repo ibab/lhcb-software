@@ -4,7 +4,7 @@
  *  Header file for detector description class : DeRichMultiSolidRadiator
  *
  *  CVS Log :-
- *  $Id: DeRichMultiSolidRadiator.h,v 1.8 2005-10-14 08:21:37 jonrob Exp $
+ *  $Id: DeRichMultiSolidRadiator.h,v 1.9 2005-12-14 09:34:52 papanest Exp $
  *
  *  @author Antonis Papanestis  a.papanestis@rl.ac.uk
  *  @date   2004-06-18
@@ -15,7 +15,7 @@
 
 // Include files
 #include "RichDet/DeRichRadiator.h"
-#include "CLHEP/Geometry/Transform3D.h"
+#include "Kernel/Transform3DTypes.h"
 
 // External declarations
 extern const CLID& CLID_DeRichMultiSolidRadiator;
@@ -72,9 +72,9 @@ public:
    * @return Status of intersection
    * @retval StatusCode::FAILURE No intersection
    */
-  StatusCode nextIntersectionPoint(const HepPoint3D& pGlobal,
-                                   const HepVector3D& vGlobal,
-                                   HepPoint3D& returnPoint) const;
+  StatusCode nextIntersectionPoint(const Gaudi::XYZPoint& pGlobal,
+                                   const Gaudi::XYZVector& vGlobal,
+                                   Gaudi::XYZPoint& returnPoint) const;
 
   /**
    * Finds the entry and exit points of the radiator after looking
@@ -82,10 +82,10 @@ public:
    * @return Status of intersection
    * @retval StatusCode::FAILURE if there is no intersection
    */
-  virtual StatusCode intersectionPoints(const HepPoint3D& position,
-                                        const HepVector3D& direction,
-                                        HepPoint3D& entryPoint,
-                                        HepPoint3D& exitPoint ) const;
+  virtual StatusCode intersectionPoints(const Gaudi::XYZPoint& position,
+                                        const Gaudi::XYZVector& direction,
+                                        Gaudi::XYZPoint& entryPoint,
+                                        Gaudi::XYZPoint& exitPoint ) const;
   /**
    * Finds the intersection points with radiator after looking at all the
    * solids
@@ -93,16 +93,16 @@ public:
    * @return The number of intersection points.
    * @retval Zero if there is no intersction.
    */
-  unsigned int intersectionPoints(const HepPoint3D& pGlobal,
-                                  const HepVector3D& vGlobal,
-                                  std::vector<HepPoint3D>& points) const;
+  unsigned int intersectionPoints(const Gaudi::XYZPoint& pGlobal,
+                                  const Gaudi::XYZVector& vGlobal,
+                                  std::vector<Gaudi::XYZPoint>& points) const;
 
 
 private:
 
   StatusCode addVolumes(const ILVolume* lv, 
                         const std::string volName,
-                        const HepTransform3D& toUpperLevel);
+                        const Gaudi::Transform3D& toUpperLevel);
 
 
   /// vector of solids
@@ -110,7 +110,7 @@ private:
   /// vector of physical volumes
   typedef std::vector<const IPVolume*> PVolumes;
   /// vector of transformation matrices
-  typedef std::vector<HepTransform3D> Transforms;
+  typedef std::vector<Gaudi::Transform3D> Transforms;
    /// vector of tabulated properties
   typedef std::vector<const TabulatedProperty*> TabProps;
 

@@ -4,7 +4,7 @@
  *
  *  Header file for detector description class : DeRichHPDPanel
  *
- *  $Id: DeRichHPDPanel.h,v 1.25 2005-05-24 09:25:32 cattanem Exp $
+ *  $Id: DeRichHPDPanel.h,v 1.26 2005-12-14 09:34:52 papanest Exp $
  *
  *  @author Antonis Papanestis a.papanestis@rl.ac.uk
  *  @date   2004-06-18
@@ -15,9 +15,9 @@
 #define RICHDET_DERICHHPDPANEL_H 1
 
 // Include files
-#include "CLHEP/Geometry/Point3D.h"
-#include "CLHEP/Geometry/Vector3D.h"
-#include "CLHEP/Geometry/Plane3D.h"
+#include "Kernel/Point3DTypes.h"
+#include "Kernel/Vector3DTypes.h"
+#include "Kernel/Plane3DTypes.h"
 
 // LHCbKernel
 #include "Kernel/RichSmartID.h"
@@ -43,13 +43,24 @@
  */
 namespace DeRichHPDPanelLocation {
   /// Location of Rich1 top panel
-  static const std::string& Rich1Panel0 = "/dd/Structure/LHCb/Rich1/PDPanel0";
+  static const std::string& Rich1Panel0_old = "/dd/Structure/LHCb/Rich1/PDPanel0";
+  static const std::string& Rich1Panel0 =
+  "/dd/Structure/LHCb/BeforeMagnetRegion/Rich1/PDPanel0";
+
   /// Location of Rich1 bottom panel
-  static const std::string& Rich1Panel1 = "/dd/Structure/LHCb/Rich1/PDPanel1";
+  static const std::string& Rich1Panel1_old = "/dd/Structure/LHCb/Rich1/PDPanel1";
+  static const std::string& Rich1Panel1 =
+  "/dd/Structure/LHCb/BeforeMagnetRegion/Rich1/PDPanel1";
+
   /// Location of Rich2 left panel
-  static const std::string& Rich2Panel0 = "/dd/Structure/LHCb/Rich2/PDPanel0";
+  static const std::string& Rich2Panel0_old = "/dd/Structure/LHCb/Rich2/PDPanel0";
+  static const std::string& Rich2Panel0 =
+  "/dd/Structure/LHCb/AfterMagnetRegion/Rich2/PDPanel0";
+
   /// Location of Rich2 right panel
-  static const std::string& Rich2Panel1 = "/dd/Structure/LHCb/Rich2/PDPanel1";
+  static const std::string& Rich2Panel1_old = "/dd/Structure/LHCb/Rich2/PDPanel1";
+  static const std::string& Rich2Panel1 =
+  "/dd/Structure/LHCb/AfterMagnetRegion/Rich2/PDPanel1";
 }
 
 /** @class DeRichHPDPanel DeRichHPDPanel.h
@@ -90,7 +101,7 @@ public:
    *
    * @return The detection plane
    */
-  inline const HepPlane3D & detectionPlane() const
+  inline const Gaudi::Plane3D& detectionPlane() const
   {
     return m_detectionPlane;
   }
@@ -105,7 +116,7 @@ public:
 
 
   /**
-   * Converts a HepPoint3D in global coordinates to a RichSmartID.
+   * Converts a Gaudi::XYZPoint in global coordinates to a RichSmartID.
    * The point is assumed to be on the actual detection volume
    * (silicon pixel sensor).
    *
@@ -115,8 +126,8 @@ public:
    * @return Status of conversion
    * @retval StatusCode::FAILURE Point outside silicon pixel sensor
    */
-  virtual StatusCode smartID( const HepPoint3D& globalPoint,
-                              RichSmartID& id ) const;
+  virtual StatusCode smartID( const Gaudi::XYZPoint& globalPoint,
+                              LHCb::RichSmartID& id ) const;
 
   /**
    * Converts a RichSmartID to a point in global coordinates. The point is
@@ -124,7 +135,7 @@ public:
    *
    * @return The detection point in global coordinates
    */
-  virtual HepPoint3D detectionPoint( const RichSmartID& smartID ) const;
+  virtual Gaudi::XYZPoint detectionPoint( const LHCb::RichSmartID& smartID ) const;
 
   /**
    * Returns the intersection point with an HPD window given a vector
@@ -140,10 +151,10 @@ public:
    *
    * @return Status of intersection
    */
-  virtual StatusCode PDWindowPoint( const HepVector3D& vGlobal,
-                                    const HepPoint3D& pGlobal,
-                                    HepPoint3D& windowPointGlobal, // return
-                                    RichSmartID& smartID,          // return
+  virtual StatusCode PDWindowPoint( const Gaudi::XYZVector& vGlobal,
+                                    const Gaudi::XYZPoint& pGlobal,
+                                    Gaudi::XYZPoint& windowPointGlobal, // return
+                                    LHCb::RichSmartID& smartID,          // return
                                     const RichTraceMode mode ) const;
 
   /**
@@ -159,9 +170,9 @@ public:
    * @return Intersection status
    * @retval false Intersection fell outside acceptance, as defined by mode
    */
-  virtual bool detPlanePoint( const HepPoint3D& pGlobal,
-                              const HepVector3D& vGlobal,
-                              HepPoint3D& hitPosition,
+  virtual bool detPlanePoint( const Gaudi::XYZPoint& pGlobal,
+                              const Gaudi::XYZVector& vGlobal,
+                              Gaudi::XYZPoint& hitPosition,
                               const RichTraceMode mode ) const;
 
   /**
@@ -173,7 +184,7 @@ public:
    *
    * @return Local (panel) point
    */
-  virtual HepPoint3D globalToPDPanel( const HepPoint3D& globalPoint ) const;
+  virtual Gaudi::XYZPoint globalToPDPanel( const Gaudi::XYZPoint& globalPoint ) const;
 
 
   /**
@@ -185,8 +196,8 @@ public:
    *
    * @return Global point.
    */
-  virtual HepPoint3D globalPosition( const HepPoint3D& localPoint,
-                                     const Rich::Side side) const = 0;
+  virtual Gaudi::XYZPoint globalPosition( const Gaudi::XYZPoint& localPoint,
+                                          const Rich::Side side) const = 0;
 
 
   /**
@@ -196,7 +207,7 @@ public:
    *
    * @return Status code
    */
-  StatusCode readoutChannelList( std::vector<RichSmartID>& readoutChannels ) const;
+  StatusCode readoutChannelList( LHCb::RichSmartID::Vector& readoutChannels ) const;
 
   /// Access the RICH detector type
   inline Rich::DetectorType rich() const { return m_rich; }
@@ -253,7 +264,7 @@ protected:
    * @retval true   HPD is found
    * @retval false  The point is outside the coverage of the HPDs.
    */
-  virtual bool findHPDRowCol(const HepPoint3D& inPanel, RichSmartID& id) const = 0;
+  virtual bool findHPDRowCol(const Gaudi::XYZPoint& inPanel, LHCb::RichSmartID& id) const = 0;
 
   /** Returns the name of this particular HPD panel
    *  @return HPD panel name
@@ -304,30 +315,30 @@ protected:
 
   /// The following points are used to get the row and column pitch
   /// Centre of HPD 0
-  HepPoint3D m_HPD0Centre;
-  HepPoint3D m_HPD1Centre;   ///< Centre of HPD 1
-  HepPoint3D m_HPDNSCentre;  ///< Centre of HPD next set: either next row or next column
+  Gaudi::XYZPoint m_HPD0Centre;
+  Gaudi::XYZPoint m_HPD1Centre;   ///< Centre of HPD 1
+  Gaudi::XYZPoint m_HPDNSCentre;  ///< Centre of HPD next set: either next row or next column
 
   /// the top of the HPD window in silicon coordinates
-  HepPoint3D m_HPDTop;
+  Gaudi::XYZPoint m_HPDTop;
 
   const ISolid* m_HPDPanelSolid;   ///< The solid (box) that contains the HPDs
 
-  std::vector<HepPoint3D> m_HPDCentres; ///< The centres of all HPDs
+  std::vector<Gaudi::XYZPoint> m_HPDCentres; ///< The centres of all HPDs
 
-  HepPlane3D m_detectionPlane;    ///< detection plane in global coordinates
-  HepPlane3D m_localPlane;        ///< detection plane in PDPanel coordinates
-  HepVector3D m_localPlaneNormal; ///< The normal vector of det plane in local coordinates
+  Gaudi::Plane3D m_detectionPlane;    ///< detection plane in global coordinates
+  Gaudi::Plane3D m_localPlane;        ///< detection plane in PDPanel coordinates
+  Gaudi::XYZVector m_localPlaneNormal; ///< The normal vector of det plane in local coordinates
 
   /// Plane2 is defined ging through all HPDs at the edge of photocathode coverage on
   /// HPD window. It is used for HPD row/column purposes
-  HepPlane3D m_localPlane2;
-  HepVector3D m_localPlaneNormal2;  ///< Normal vector of plane2
+  Gaudi::Plane3D m_localPlane2;
+  Gaudi::XYZVector m_localPlaneNormal2;  ///< Normal vector of plane2
 
   double m_detPlaneHorizEdge;     ///< Horizontal (x) edge of HPD coverage in the panel
   double m_detPlaneVertEdge;      ///< Vertical (y) edge of HPD coverage in the panel
 
-  HepTransform3D m_vectorTransf;  ///< Transform from global to panel coordinates
+  Gaudi::Transform3D m_vectorTransf;  ///< Transform from global to panel coordinates
 
 private:
 
@@ -338,8 +349,8 @@ private:
   std::vector<const IPVolume*> m_pvHPDSMaster;
   std::vector<const IPVolume*> m_pvSilicon;
   std::vector<const IPVolume*> m_pvWindow;
-  std::vector<HepTransform3D> m_trans1;
-  std::vector<HepTransform3D> m_trans2;
+  std::vector<Gaudi::Transform3D> m_trans1;
+  std::vector<Gaudi::Transform3D> m_trans2;
 
 };
 

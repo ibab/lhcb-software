@@ -3,7 +3,7 @@
  *
  *  Implementation file for detector description class : DeRichSingleSolidRadiator
  *
- *  $Id: DeRichSingleSolidRadiator.cpp,v 1.12 2005-10-14 08:21:37 jonrob Exp $
+ *  $Id: DeRichSingleSolidRadiator.cpp,v 1.13 2005-12-14 09:34:52 papanest Exp $
  *
  *  @author Antonis Papanestis a.papanestis@rl.ac.uk
  *  @date   2004-06-18
@@ -17,9 +17,9 @@
 // Gaudi
 #include "GaudiKernel/MsgStream.h"
 
-// CLHEP files
-#include "CLHEP/Geometry/Transform3D.h"
-#include "CLHEP/Geometry/Vector3D.h"
+// MathCore files
+#include "Kernel/Transform3DTypes.h"
+#include "Kernel/Vector3DTypes.h"
 
 /// Detector description classes
 #include "DetDesc/SolidBoolean.h"
@@ -70,7 +70,7 @@ StatusCode DeRichSingleSolidRadiator::initialize()
     return StatusCode::FAILURE;
   }
 
-  const HepPoint3D zero(0.0, 0.0, 0.0);
+  const Gaudi::XYZPoint zero(0.0, 0.0, 0.0);
   log << MSG::DEBUG << "Found TabProp " << m_refIndex->name() << " type "
       << m_refIndex->type() << endmsg;
   if ( m_rayleigh )
@@ -82,14 +82,13 @@ StatusCode DeRichSingleSolidRadiator::initialize()
 }
 
 StatusCode
-DeRichSingleSolidRadiator::nextIntersectionPoint( const HepPoint3D&  pGlobal,
-                                                  const HepVector3D& vGlobal,
-                                                  HepPoint3D&  returnPoint ) const
+DeRichSingleSolidRadiator::nextIntersectionPoint( const Gaudi::XYZPoint&  pGlobal,
+                                                  const Gaudi::XYZVector& vGlobal,
+                                                  Gaudi::XYZPoint&  returnPoint ) const
 {
 
-  const HepPoint3D pLocal( geometry()->toLocal(pGlobal) );
-  HepVector3D vLocal( vGlobal );
-  vLocal.transform( geometry()->matrix() );
+  const Gaudi::XYZPoint pLocal( geometry()->toLocal(pGlobal) );
+  Gaudi::XYZVector vLocal( geometry()->matrix()*vGlobal );
 
   ISolid::Ticks ticks;
   const unsigned int noTicks = m_solid->intersectionTicks(pLocal, vLocal, ticks);
@@ -108,15 +107,14 @@ DeRichSingleSolidRadiator::nextIntersectionPoint( const HepPoint3D&  pGlobal,
 //
 //=========================================================================
 StatusCode
-DeRichSingleSolidRadiator::intersectionPoints( const HepPoint3D&  position,
-                                               const HepVector3D& direction,
-                                               HepPoint3D& entryPoint,
-                                               HepPoint3D& exitPoint ) const
+DeRichSingleSolidRadiator::intersectionPoints( const Gaudi::XYZPoint&  position,
+                                               const Gaudi::XYZVector& direction,
+                                               Gaudi::XYZPoint& entryPoint,
+                                               Gaudi::XYZPoint& exitPoint ) const
 {
 
-  const HepPoint3D pLocal( geometry()->toLocal(position) );
-  HepVector3D vLocal( direction );
-  vLocal.transform( geometry()->matrix() );
+  const Gaudi::XYZPoint pLocal( geometry()->toLocal(position) );
+  Gaudi::XYZVector vLocal( geometry()->matrix()*direction );
 
   ISolid::Ticks ticks;
   const unsigned int noTicks = m_solid->intersectionTicks(pLocal, vLocal, ticks);
@@ -134,15 +132,14 @@ DeRichSingleSolidRadiator::intersectionPoints( const HepPoint3D&  position,
 //
 //=========================================================================
 unsigned int
-DeRichSingleSolidRadiator::intersectionPoints( const HepPoint3D& pGlobal,
-                                               const HepVector3D& vGlobal,
-                                               std::vector<HepPoint3D>&
+DeRichSingleSolidRadiator::intersectionPoints( const Gaudi::XYZPoint& pGlobal,
+                                               const Gaudi::XYZVector& vGlobal,
+                                               std::vector<Gaudi::XYZPoint>&
                                                points) const
 {
 
-  const HepPoint3D pLocal( geometry()->toLocal(pGlobal) );
-  HepVector3D vLocal( vGlobal );
-  vLocal.transform( geometry()->matrix() );
+  const Gaudi::XYZPoint pLocal( geometry()->toLocal(pGlobal) );
+  Gaudi::XYZVector vLocal( geometry()->matrix()*vGlobal );
 
   ISolid::Ticks ticks;
   unsigned int noTicks = m_solid->intersectionTicks(pLocal, vLocal, ticks);
@@ -151,7 +148,7 @@ DeRichSingleSolidRadiator::intersectionPoints( const HepPoint3D& pGlobal,
     for (ISolid::Ticks::iterator tick_it = ticks.begin();
          tick_it != ticks.end();
          ++tick_it) {
-      points.push_back( HepPoint3D( geometry()->toGlobal( pLocal + (*tick_it) * vLocal) ) );
+      points.push_back( Gaudi::XYZPoint( geometry()->toGlobal( pLocal + (*tick_it) * vLocal) ) );
     }
   }
   return noTicks;

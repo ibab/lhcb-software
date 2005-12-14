@@ -5,7 +5,7 @@
  *  Header file for detector description class : DeRichSingleSolidRadiator
  *
  *  CVS Log :-
- *  $Id: DeRichSingleSolidRadiator.h,v 1.7 2005-10-14 08:21:37 jonrob Exp $
+ *  $Id: DeRichSingleSolidRadiator.h,v 1.8 2005-12-14 09:34:52 papanest Exp $
  *
  *  @author Antonis Papanestis a.papanestis@rl.ac.uk
  *  @date   2004-06-18
@@ -73,9 +73,9 @@ public:
    * @return Status of intersection
    * @retval StatusCode::FAILURE No intersection
    */
-  StatusCode nextIntersectionPoint(const HepPoint3D& pGlobal,
-                                   const HepVector3D& vGlobal,
-                                   HepPoint3D& returnPoint) const;
+  StatusCode nextIntersectionPoint(const Gaudi::XYZPoint& pGlobal,
+                                   const Gaudi::XYZVector& vGlobal,
+                                   Gaudi::XYZPoint& returnPoint) const;
 
   /**
    * Finds the entry and exit points of the radiator. For boolean solids
@@ -83,10 +83,10 @@ public:
    * @return Status of intersection
    * @retval StatusCode::FAILURE if there is no intersection
    */
-  virtual StatusCode intersectionPoints(const HepPoint3D& position,
-                                        const HepVector3D& direction,
-                                        HepPoint3D& entryPoint,
-                                        HepPoint3D& exitPoint ) const;
+  virtual StatusCode intersectionPoints(const Gaudi::XYZPoint& position,
+                                        const Gaudi::XYZVector& direction,
+                                        Gaudi::XYZPoint& entryPoint,
+                                        Gaudi::XYZPoint& exitPoint ) const;
   /**
    * Finds the intersection points with radiator. For boolean solids there
    * can be more than two intersection points
@@ -94,9 +94,9 @@ public:
    * @return The number of intersection points.
    * @retval Zero if there is no intersction.
    */
-  unsigned int intersectionPoints(const HepPoint3D& pGlobal,
-                                  const HepVector3D& vGlobal,
-                                  std::vector<HepPoint3D>& points) const;
+  unsigned int intersectionPoints(const Gaudi::XYZPoint& pGlobal,
+                                  const Gaudi::XYZVector& vGlobal,
+                                  std::vector<Gaudi::XYZPoint>& points) const;
 
 
 private:

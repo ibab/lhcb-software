@@ -5,7 +5,7 @@
  *  Header file for detector description class : DeRich2HPDPanel
  *
  *  CVS Log :-
- *  $Id: DeRich2HPDPanel.h,v 1.16 2005-02-22 13:53:50 jonrob Exp $
+ *  $Id: DeRich2HPDPanel.h,v 1.17 2005-12-14 09:34:52 papanest Exp $
  *
  *  @author Antonis Papanestis a.papanestis@rl.ac.uk
  *  @date   2004-06-18
@@ -87,7 +87,7 @@ public:
    *
    * @return Global point.
    */
-  virtual HepPoint3D globalPosition( const HepPoint3D& localPoint,
+  virtual Gaudi::XYZPoint globalPosition( const Gaudi::XYZPoint& localPoint,
                                      const Rich::Side side) const;
 
 protected:
@@ -139,7 +139,7 @@ protected:
    * @retval true   HPD is found
    * @retval false  The point is outside the coverage of the HPDs.
    */
-  virtual bool findHPDRowCol(const HepPoint3D& inPanel, RichSmartID& id) const;
+  virtual bool findHPDRowCol(const Gaudi::XYZPoint& inPanel, LHCb::RichSmartID& id) const;
 
 private:
 

@@ -3,7 +3,7 @@
  *
  *  Implementation file for detector description class : DeRich
  *
- *  $Id: DeRich.cpp,v 1.11 2005-09-23 15:27:28 papanest Exp $
+ *  $Id: DeRich.cpp,v 1.12 2005-12-14 09:34:52 papanest Exp $
  *
  *  @author Antonis Papanestis a.papanestis@rl.ac.uk
  *  @date   2004-06-18
@@ -56,11 +56,11 @@ StatusCode DeRich::initialize ( )
   }
 
   if ( exists( "SecMirrorSegRows" ) ) {
-    m_flatMirrorSegRows = param<int>( "SecMirrorSegRows" );
-    m_flatMirrorSegCols = param<int>( "SecMirrorSegColumns" );
+    m_secMirrorSegRows = param<int>( "SecMirrorSegRows" );
+    m_secMirrorSegCols = param<int>( "SecMirrorSegColumns" );
   } else if ( exists( "FlatMirrorSegRows" ) ){
-    m_flatMirrorSegRows = param<int>( "FlatMirrorSegRows" );
-    m_flatMirrorSegCols = param<int>( "FlatMirrorSegColumns" );
+    m_secMirrorSegRows = param<int>( "FlatMirrorSegRows" );
+    m_secMirrorSegCols = param<int>( "FlatMirrorSegColumns" );
   }
   
   
@@ -94,16 +94,16 @@ RichMirrorSegPosition DeRich::sphMirrorSegPos( const int mirrorNumber ) const
 //=========================================================================
 //
 //=========================================================================
-RichMirrorSegPosition DeRich::flatMirrorSegPos( const int mirrorNumber ) const
+RichMirrorSegPosition DeRich::secMirrorSegPos( const int mirrorNumber ) const
 {
 
   RichMirrorSegPosition mirrorPos;
 
   if ( m_positionInfo ) {
-    int row = mirrorNumber / m_flatMirrorSegCols;
-    if ( row >= m_flatMirrorSegRows ) row -= m_flatMirrorSegRows;
+    int row = mirrorNumber / m_secMirrorSegCols;
+    if ( row >= m_secMirrorSegRows ) row -= m_secMirrorSegRows;
     mirrorPos.setRow( row );
-    mirrorPos.setColumn( mirrorNumber % m_flatMirrorSegCols );
+    mirrorPos.setColumn( mirrorNumber % m_secMirrorSegCols );
   }
   else {
     MsgStream msg ( msgSvc(), myName() );
