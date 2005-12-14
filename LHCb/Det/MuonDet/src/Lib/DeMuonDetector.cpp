@@ -1,4 +1,4 @@
-// $Id: DeMuonDetector.cpp,v 1.10 2005-12-13 11:06:57 asatta Exp $
+// $Id: DeMuonDetector.cpp,v 1.11 2005-12-14 15:45:53 asarti Exp $
 
 // Include files
 #include "MuonDet/DeMuonDetector.h"
@@ -68,11 +68,7 @@ StatusCode DeMuonDetector::initialize()
   //Initializing the Layout
   m_chamberLayout.initialize();
   m_chamberLayout.setDataProvider(m_detSvc);
-  m_chamberLayout.fillChambersVector(m_detSvc);
-
-  //Fills the chambers pointer
-  m_ChmbPtr.resize(1380);
-  fillChmbPtr();
+  m_ChmbPtr =  m_chamberLayout.fillChambersVector(m_detSvc);
 
   //fill geo info
   fillGeoInfo();
@@ -499,6 +495,7 @@ void DeMuonDetector::fillChmbPtr() {
   return;
 }
 
+
 std::vector< std::pair<MuonFrontEndID, std::vector<float> > > 
 DeMuonDetector::listOfPhysChannels(HepPoint3D my_entry, HepPoint3D my_exit, 
                                    int region, int chamber) {
@@ -622,6 +619,9 @@ StatusCode DeMuonDetector::Tile2XYZ(MuonTileID tile, double & x,
   double dx(0.),dy(0.),dz(0.);
 
   //Ask the chamber Layout about the tile.
+  MsgStream msg( msgSvc(), name() );
+  msg << MSG::DEBUG <<"Calling Tile2XYZpos method!"<<endreq; 
+
   sc = m_chamberLayout.Tile2XYZpos(tile,x,dx,y,dy,z,dz);
 
   return sc;
@@ -716,7 +716,7 @@ StatusCode  DeMuonDetector::fillGeoInfo()
           m_gapPerFE[station*4+region]=gaps/2; 
           SmartRef<Condition> aGrid = (chPt)->condition(chPt->getGridName());
           Condition* bGrid = (chPt)->condition((chPt->getGridName()).data());
-          std::vector<std::string>  lista=chPt->conditionNames();
+
           std::vector<std::string>::iterator is;
           MuonChamberGrid* theGrid = dynamic_cast<MuonChamberGrid*>(bGrid);
           int nreadout=1;

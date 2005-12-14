@@ -1,4 +1,4 @@
-// $Id: MuonChamberLayout.h,v 1.3 2005-12-07 08:46:46 asarti Exp $
+// $Id: MuonChamberLayout.h,v 1.4 2005-12-14 15:45:53 asarti Exp $
 #ifndef PUBLIC_MUONCHAMBERLAYOUT_H 
 #define PUBLIC_MUONCHAMBERLAYOUT_H 1
 
@@ -6,6 +6,7 @@
 
 //From Muon
 #include "MuonDet/DeMuonChamber.h"
+#include "MuonDet/DeMuonGasGap.h"
 #include "MuonKernel/MuonLayout.h"
 #include "MuonKernel/MuonTileID.h"
 
@@ -41,7 +42,7 @@ public:
   void Copy(MuonChamberLayout &lay);
 
   //Fill the vector with all the chambers
-  void fillChambersVector(IDataProviderSvc* detSvc); 
+  std::vector<DeMuonChamber*> fillChambersVector(IDataProviderSvc* detSvc); 
 
   //Find the most likely chamber for a given x,y,station set
   void chamberMostLikely(float x,float y, int station, int& chmb, int& reg);
@@ -109,6 +110,85 @@ public:
   //Set the data Provider
   void setDataProvider(IDataProviderSvc* dataPr);
 
+  //Converts the chamber tile into a chamber number
+  int getChamberNumber(const MuonTileID& tile);
+
+  //Function for chamber x,y,z retrieval from tile info
+  StatusCode getXYZChamberTile(const MuonTileID& tile, 
+			       double& x, double& deltax,
+			       double& y, double& deltay,
+			       double& z, double& deltaz,
+			       bool toGlob);
+
+  /// get position of a "named" chamber 
+  /// NOTE: station and region are indexed from 0 (C style)
+  /// chamberNum is the real chamber number (from 0)
+  StatusCode getXYZChamber(const int& station,
+                           const int& region,
+                           const int& chamberNum,
+                           double& x, double& deltax,
+                           double& y, double& deltay,
+                           double& z, double& deltaz,
+			   bool toGlob);
+
+  /// get position of a "named" gasgap
+  /// NOTE: station, region and gapNum are indexed from 0 (C style)
+  /// chamberNum is the real chamber number (from 0)
+  StatusCode getXYZGasGap(const int& station,
+                          const int& region,
+                          const int& chamberNum,
+                          const int& gapNum,
+                          double& x, double& deltax,
+                          double& y, double& deltay,
+                          double& z, double& deltaz);
+  
+  /// get position of chamber or gas gap with caching of results and pointers
+  /// NOTE: station, region and gapNum are indexed from 0 (C style)
+  /// chamberNum is the real chamber number (from 0)
+  StatusCode getXYZ(const int& station,
+		    const int& region,
+		    const int& chamberNum,
+		    const int& gapNum,
+		    double& x, double& deltax,
+		    double& y, double& deltay,
+		    double& z, double& deltaz,
+		    bool toGlob);
+
+  /// get xyz of specific pad
+  StatusCode getXYZPad(const MuonTileID& tile, 
+		       double& x, double& deltax,
+		       double& y, double& deltay,
+		       double& z, double& deltaz);
+  
+  /// get postion of logical channel (may be multiple chambers)
+  StatusCode getXYZLogical(const MuonTileID& tile, 
+                           double& x, double& deltax,
+                           double& y, double& deltay,
+                           double& z, double& deltaz);
+
+  /// get xyz of twelfth (useful for defining regions)
+  StatusCode getXYZTwelfth(const MuonTileID& tile, 
+                           double& x, double& deltax,
+                           double& y, double& deltay,
+                           double& z, double& deltaz);
+
+  /// returns the chamber number (same for each station) on the corner of
+  /// the region
+  int getTwelfthCorner(const int& region, 
+                       const int& twelfth,
+                       const int& chamberNum);
+
+  /// get the xIndex and yIndex of the corner chamber in the twelfth
+  void getTwelfthCornerIndex(const int& region, 
+                             const int& twelfth,
+                             const int& chamberNum,
+                             int &xPos, int &yPos);
+
+  
+  void localToglobal(IGeometryInfo* gInfo,
+		     HepPoint3D cent, HepPoint3D corn,
+		     double &dx, double &dy, double &dz);
+  
 protected:
 
 private:
@@ -117,6 +197,7 @@ private:
   std::vector<int> m_offSet;
   std::vector<unsigned int> m_cgX;
   std::vector<unsigned int> m_cgY;
+  std::vector<DeMuonChamber*> m_ChVec;
 
   //Smallest chmb dimensions
   std::vector<float> m_xS;

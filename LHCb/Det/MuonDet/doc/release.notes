@@ -1,9 +1,19 @@
-! $Id: release.notes,v 1.50 2005-12-13 11:06:57 asatta Exp $
+! $Id: release.notes,v 1.51 2005-12-14 15:45:53 asarti Exp $
 !
 ! Package     : MuonDet
 ! Responsible : Alessia Satta
 
 !========================= MuonDet v5r1 2005-12-13 =========================
+! 2005-12-14 - Alessio Sarti
+   - src/Lib/MuonChamberLayout.cpp(.h)
+	Implemented the tile -> XYZ transformation.
+	The new code is a porting of d. Hutchcroft code
+	in MuonTileXYZ.cpp,h having (hopefully) taken care
+	of misalignments and tilts. No longer use
+	fixed grids in MuonGeometry class.
+   - src/Lib/DeMuonDetector.cpp 
+	Changed initialize() using MuonChamberLayout method
+
 ! 2005-12-13 - Alessia Satta
    - import of the funxtionality now present in a separate tool (MuonGetInfo)
    - fix few points ( MuonChamberLayour - MuonChamberGrid)  
