@@ -26,7 +26,7 @@
 
 // from Tr/TrackFitEvent
 #include "Event/OTMeasurement.h"
-#include "Event/ITMeasurement.h"
+#include "Event/STMeasurement.h"
 #include "Event/VeloRMeasurement.h"
 #include "Event/VeloPhiMeasurement.h"
 
@@ -171,15 +171,15 @@ StatusCode TrackAssociator::execute() {
       else {
         // True if Measurement has Z < 5 meters, so it is a TT hit
         bool inTT1 = ( m_minimalZ > (*itm)->z() );
-        // Note that both IT and TT hits are called ITMeasurement
-        ITMeasurement* itc = dynamic_cast<ITMeasurement*> ( *itm );
+        // Note that both IT and TT hits are STMeasurements!
+        STMeasurement* itc = dynamic_cast<STMeasurement*> ( *itm );
         if( 0 != itc ) {
           ITCluster* itCl = itc->cluster();
           // Count number of TT hits
           if( inTT1 ) { m_nTotTT1 += 1.; }
           // Count number of IT+OT hits
           else { m_nTotSeed += 1.; }
-          // Loop over the MCparticles associated to the ITMeasurement
+          // Loop over the MCparticles associated to the STMeasurement
           ITClusAsct::DirectType::Range itRange = itTable->relations( itCl );
           for( itr = itRange.begin(); itRange.end() != itr; ++itr ) {
             part = itr->to();

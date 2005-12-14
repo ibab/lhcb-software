@@ -4,6 +4,9 @@
 ! Purpose     : Associators to MC truth for Tracks
 !----------------------------------------------------------------------------
 
+! 2005-12-14 - Eduardo Rodrigues
+ - propagation of changes ITMeasurement -> STMeasurement
+
 !===================== TrackAssociators v1r4 2005-11-14 ====================
 ! Edwin Bos
   - Changed over from Relations to Linkers

@@ -11,10 +11,12 @@ branches          cmt doc src
 include_path none
 
 #============================================================================
+use     LHCbKernel      v5r*    Kernel  # added temporarily
+
 use	VeloAssociators	v*	Velo
 use	ITAssociators	v*	IT
 use	OTAssociators	v*	OT
-use	TrackFitEvent	v*	Tr
+use	TrackFitEvent	v1r*    Tr
 
 #============================================================================
 # Component library building rule
