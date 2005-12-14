@@ -1,4 +1,4 @@
-// $Id: TutorialTuple.cpp,v 1.4 2005-12-14 12:30:23 pkoppenb Exp $
+// $Id: TutorialTuple.cpp,v 1.5 2005-12-14 12:37:33 pkoppenb Exp $
 // Include files 
 
 // from Gaudi
@@ -50,7 +50,6 @@ StatusCode TutorialTuple::initialize() {
 
   if (m_truth) {
     info() << "Will be filling MC truth information" << endmsg ;
-    m_TMP = tool<IParticleDescendants>("ParticleDescendants",this);
     m_pAsct = new Particle2MCLink(this, Particle2MCMethod::Composite,m_containers);
     m_background = tool<IBackgroundCategory>("BackgroundCategory",this);
   }
@@ -97,7 +96,7 @@ StatusCode TutorialTuple::fillTruth(Tuple& tuple,const Particle* b) {
     info() << "No association for Bs " << endmsg ;
   }
   // tool 
-  const ParticleVector fs = m_TMP->finalStates(b);
+  const ParticleVector fs = descendants()->finalStates(b);
   for  ( ParticleVector::const_iterator p = fs.begin() ; p!=fs.end() ;++p){
     info() << "Associating " << (*p)->particleID().pid() << " " 
            << (*p)->momentum() << endmsg ;

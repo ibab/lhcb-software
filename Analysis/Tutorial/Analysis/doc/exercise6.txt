@@ -4,13 +4,17 @@
 #                                                                              #
 ################################################################################
 
-Let's add MC truth to our Ntuple. We start again from the algorithm
+Let's add MC truth to our nTuple. We start again from the algorithm
 created in exercise 5, but one could as well start a new algorithm.
 
   - It's a good idea to have a global boolean flag that controls
     the access to MC truth. You don't want to waste time looking for
     association of Bs in minimum bias...
-  - get a Particle2MCLink* with Particle2MCMethod::Composite
-  - Associate your B to a MCParticle.
-  
-  
+  - get a Particle2MCLink* associator with Particle2MCMethod::Composite
+  - Associate your B to a MCParticle and fill it's pid and momentum in the 
+    nTuple
+  - You can also associate all the daughters to MC. The IParticleDescendants
+    tool (you get from the descendants() method in DVAlgorithm) can help.
+  - Get the background category of your B (should be category 0 = signal)
+    using the IBackgroundCategory tool.
+
