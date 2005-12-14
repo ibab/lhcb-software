@@ -58,7 +58,7 @@ protected:
 private:
 
   std::string m_OTProjName;
-  std::string m_ITProjName;
+  std::string m_STProjName;
   std::string m_VeloRProjName;
   std::string m_VeloPhiProjName;
 

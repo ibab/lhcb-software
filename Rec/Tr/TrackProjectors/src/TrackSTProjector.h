@@ -1,5 +1,5 @@
-#ifndef TRACKPROJECTORS_TRACKITPROJECTOR_H 
-#define TRACKPROJECTORS_TRACKITPROJECTOR_H 1
+#ifndef TRACKPROJECTORS_TRACKSTPROJECTOR_H 
+#define TRACKPROJECTORS_TRACKSTPROJECTOR_H 1
 
 // Include files
 // from Gaudi
@@ -9,13 +9,13 @@
 // from STDet
 #include"STDet/DeSTDetector.h"
 
-/** @class TrackITProjector TrackITProjector.h TrackProjectors/TrackITProjector.h
+/** @class TrackSTProjector TrackSTProjector.h TrackProjectors/TrackSTProjector.h
  *  
  *  @author Jose Hernando
  *  @author Eduardo Rodrigues
  *  @date   2005-04-08
  */
-class TrackITProjector : public TrackProjector {
+class TrackSTProjector : public TrackProjector {
 public: 
   /// Project a state onto a measurement.
   /// It returns the chi squared of the projection
@@ -26,11 +26,11 @@ public:
   virtual StatusCode initialize();
 
   /// Standard constructor
-  TrackITProjector( const std::string& type, 
+  TrackSTProjector( const std::string& type, 
                     const std::string& name,
                     const IInterface* parent);
 
-  virtual ~TrackITProjector( ); ///< Destructor
+  virtual ~TrackSTProjector( ); ///< Destructor
 
 protected:
 
@@ -39,4 +39,4 @@ private:
 
   std::string m_itTrackerPath;   ///< Name of the IT XML geom path
 };
-#endif // TRACKPROJECTORS_TRACKITPROJECTOR_H
+#endif // TRACKPROJECTORS_TRACKSTPROJECTOR_H

@@ -4,25 +4,25 @@
 #include "GaudiKernel/ToolFactory.h" 
 
 // local
-#include "TrackITProjector.h"
+#include "TrackSTProjector.h"
 
 #include "STDet/STDetectionLayer.h"
 
 //-----------------------------------------------------------------------------
-// Implementation file for class : TrackITProjector
+// Implementation file for class : TrackSTProjector
 //
 // 2005-04-08 : Jose Hernando, Eduardo Rodrigues
 //-----------------------------------------------------------------------------
 
 // Declaration of the Tool Factory
-static const  ToolFactory<TrackITProjector>          s_factory ;
-const        IToolFactory& TrackITProjectorFactory = s_factory ; 
+static const  ToolFactory<TrackSTProjector>          s_factory ;
+const        IToolFactory& TrackSTProjectorFactory = s_factory ; 
 
 //=============================================================================
 //  Project a state onto a measurement.
 // It returns the chi squared of the projection
 //=============================================================================
-StatusCode TrackITProjector::project( const State& state,
+StatusCode TrackSTProjector::project( const State& state,
                                       Measurement& meas )
 {
   ITChannelID ITChan = meas.lhcbID().stID();
@@ -50,7 +50,7 @@ StatusCode TrackITProjector::project( const State& state,
 //=============================================================================
 // Initialize
 //=============================================================================
-StatusCode TrackITProjector::initialize()
+StatusCode TrackSTProjector::initialize()
 {
   StatusCode sc = GaudiTool::initialize();
   if ( sc.isFailure() )
@@ -64,7 +64,7 @@ StatusCode TrackITProjector::initialize()
 //=============================================================================
 // Standard constructor, initializes variables
 //=============================================================================
-TrackITProjector::TrackITProjector( const std::string& type,
+TrackSTProjector::TrackSTProjector( const std::string& type,
                                     const std::string& name,
                                     const IInterface* parent )
   : TrackProjector ( type, name , parent )
@@ -78,6 +78,6 @@ TrackITProjector::TrackITProjector( const std::string& type,
 //=============================================================================
 // Destructor
 //=============================================================================
-TrackITProjector::~TrackITProjector() {}; 
+TrackSTProjector::~TrackSTProjector() {}; 
 
 //=============================================================================

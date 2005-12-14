@@ -93,8 +93,9 @@ StatusCode TrackMasterProjector::initialize()
   if ( sc.isFailure() )
     return Error( "Failed to initialize!", sc );
 
+  m_projectors[Measurement::TT]      = tool<ITrackProjector>( m_STProjName );
+  m_projectors[Measurement::IT]      = tool<ITrackProjector>( m_STProjName );
   m_projectors[Measurement::OT]      = tool<ITrackProjector>( m_OTProjName );
-  m_projectors[Measurement::ST]      = tool<ITrackProjector>( m_ITProjName );
   m_projectors[Measurement::VeloR]   = tool<ITrackProjector>( m_VeloRProjName );
   m_projectors[Measurement::VeloPhi] = tool<ITrackProjector>( m_VeloPhiProjName );
 
@@ -112,7 +113,7 @@ TrackMasterProjector::TrackMasterProjector( const std::string& type,
   declareInterface<ITrackProjector>( this );
 
   declareProperty( "OTProjector",      m_OTProjName = "TrackOTProjector" );
-  declareProperty( "ITProjector",      m_ITProjName = "TrackITProjector" );
+  declareProperty( "STProjector",      m_STProjName = "TrackSTProjector" );
   declareProperty( "VeloRProjector",   m_VeloRProjName = "TrackVeloRProjector" );
   declareProperty( "VeloPhiProjector", m_VeloPhiProjName = "TrackVeloPhiProjector" );
 
