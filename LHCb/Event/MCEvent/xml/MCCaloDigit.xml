@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!DOCTYPE gdd SYSTEM "gdd.dtd"[
+<!ENTITY CLID_MCCaloDigit              "2001"                   >
+]>
+<gdd>
+  <package name="MCEvent">
+<!-- **************************************************************************
+  * $Id: MCCaloDigit.xml,v 1.1 2005-12-14 15:12:53 cattanem Exp $
+  *****************************************************************************
+  * XML-description of MCCaloDigit class                                      *
+  * author: Vanya Belyaev Ivan.Belyaev@itep.ru                                *
+  * date:   05.02.02                                                          *
+  ************************************************************************* -->
+
+<class
+ name   = "MCCaloDigit"
+ desc   = "Monte Carlo history for the given cell"
+ id     = "&CLID_MCCaloDigit;"
+ author = "Vanya Belyaev Ivan.Belyaev@itep.ru"
+>
+<desc> *
+ *
+ *  The class represents the Monte Carlo (Geant) energy 
+ *  deposition in the active material ("active energy") of
+ *  calorimetry cell from all Monte Carlo particles
+ *
+ *</desc>
+<import name = "Kernel/CaloCellID"             />
+<import name = "Kernel/CaloCellIDKeyTraits"     />
+<import name = "Event/MCCaloHit"     />
+<base   name = "KeyedObject&lt;LHCb::CaloCellID&gt;" />
+<template name="KeyedObjectDict" t1="LHCb::CaloCellID"/>
+&KeyedContainer;
+
+<typedef
+ def    = "Base"
+ type   = "KeyedObject&lt;LHCb::CaloCellID&gt;"
+ desc   = "Shortcut for own base class "
+ access = "PROTECTED"
+/>
+
+<typedef
+ def    = "Hits"
+ type   = "SmartRefVector&lt;LHCb::MCCaloHit&gt;"
+ desc   = "Shortcut for references to Monte Carlo Hits"
+ access = "PUBLIC"
+/>
+
+<location name = "Spd"  place = "MC/Spd/Digits"  />
+<location name = "Prs"  place = "MC/Prs/Digits"  />
+<location name = "Ecal" place = "MC/Ecal/Digits" />
+<location name = "Hcal" place = "MC/Hcal/Digits" />
+
+<constructor
+ desc     = "Non-default constructor"
+ argList  = "LHCb::CaloCellID id, double e , Hits d"
+ initList = "Base ( id ) , m_activeE ( e ) , m_hits ( d ) "
+> <code/> </constructor>
+
+<constructor
+ desc     = "Default constructor"
+ initList = "Base (    ) , m_activeE ( 0 ) , m_hits (   ) "
+> <code/> </constructor>
+
+<constructor 
+ desc     = "Copy Constructor" 
+ argList  = "LHCb::MCCaloDigit right"
+ initList = "Base( right.key() ) , m_activeE ( right.activeE() ) , m_hits ( right.hits() ) " 
+> <code/> </constructor>
+
+
+<attribute
+ name = "activeE"
+ desc = "Monte Carlo active energy deposition in the given cell"
+ type = "double"
+ init = "0"
+/>
+
+<relation
+ name = "hits"
+ desc = "References to the Monte Carlo hits"
+ type = "LHCb::MCCaloHit"
+ multiplicity = "M"
+/>
+			 
+<method
+ desc   = "Retrieve cell identifier/key @attention alias to Base::key() method!"
+ name   = "cellID"
+ type   = "const LHCb::CaloCellID&amp;"
+ const  = "TRUE"
+ access = "PUBLIC">
+ <code> return key ()     ; </code>
+</method>
+
+<method
+ desc   = "update cell identifier/key @attention alias to Base::setKey() method!"
+ name   = "setCellID"
+ access = "PUBLIC">
+ <arg name="CellID" type="LHCb::CaloCellID" const="TRUE"/>
+ <code>  setKey( CellID ) ;  </code>
+</method>
+
+<method
+ desc   = "Add the active energy "
+ name   = "addActiveE"
+ access = "PUBLIC">
+ <arg name="value" type="double" const="TRUE"/>
+ <code>  m_activeE += value ;  </code>
+</method>
+
+
+<method
+ desc    = "Cloning of the object ('virtual constructor') "
+ name    = "clone"
+ type    = "LHCb::MCCaloDigit*"
+ const   = "TRUE"
+ virtual = "TRUE"
+ access  = "PUBLIC" >
+<code> return new LHCb::MCCaloDigit( *this ); </code>
+</method>
+
+</class>
+</package>
+
+</gdd>

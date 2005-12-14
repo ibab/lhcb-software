@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.4 2005-12-06 14:34:43 cattanem Exp $
+# $Id: requirements,v 1.5 2005-12-14 15:12:39 cattanem Exp $
 # Created    : 08/03/2002
 # Maintainer : Marco Cattaneo
 #
@@ -34,4 +34,4 @@ apply_pattern component_library library=MCEventDict
 apply_pattern linker_library    library=MCEvent
 
 private
-use GaudiObjDesc v*
+use GaudiObjDesc v* -no_auto_imports
