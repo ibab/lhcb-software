@@ -7,8 +7,8 @@
 #include "Event/EventHeader.h"
 
 // from TrackFitEvent
+#include "Event/STMeasurement.h"
 #include "Event/OTMeasurement.h"
-#include "Event/ITMeasurement.h"
 #include "Event/VeloRMeasurement.h"
 #include "Event/VeloPhiMeasurement.h"
 
@@ -94,19 +94,19 @@ StatusCode IdealTracksCreator::initialize()
 
   // Load Geometry from XmlDDDB
   // --------------------------
-   m_otTracker = getDet<DeOTDetector>( m_otTrackerPath );
+  m_otTracker = getDet<DeOTDetector>( m_otTrackerPath );
 
-   m_itTracker = getDet<DeSTDetector>( m_itTrackerPath );
+  m_itTracker = getDet<DeSTDetector>( m_itTrackerPath );
 
-   m_velo      = getDet<DeVelo>( m_veloPath );
-   debug() << "Geometry read in." << endreq;
+  m_velo      = getDet<DeVelo>( m_veloPath );
+  debug() << "Geometry read in." << endreq;
 
-   // Retrieve the STClusterPosition tool
-   m_stPositionTool = tool<ISTClusterPosition>( "STClusterPosition" );
+  // Retrieve the STClusterPosition tool
+  m_stPositionTool = tool<ISTClusterPosition>( "STClusterPosition" );
 
   // Retrieve the TrackCriteriaSelector tool
-   m_trackSelector = tool<ITrackCriteriaSelector>( "TrackCriteriaSelector",
-                                                   "select", this );
+  m_trackSelector = tool<ITrackCriteriaSelector>( "TrackCriteriaSelector",
+                                                  "select", this );
 
   // Retrieve the IdealStateCreator tool
   m_stateCreator = tool<IIdealStateCreator>( "IdealStateCreator" );
@@ -420,13 +420,13 @@ StatusCode IdealTracksCreator::addITClusters( MCParticle* mcPart,
   ITCluster2MCParticleAsct::FromIterator iClus;
   for ( iClus = range.begin(); iClus != range.end(); ++iClus) {
     ITCluster* aCluster = iClus->to();
-    ITMeasurement meas =
-      ITMeasurement( *aCluster, *m_itTracker, *m_stPositionTool );
+    STMeasurement meas =
+      STMeasurement( *aCluster, *m_itTracker, *m_stPositionTool );
     track -> addToMeasurements( meas );
     ++nITMeas;
   }
 
-  debug() << "- " << nITMeas << " ITMeasurements added" << endreq;
+  debug() << "- " << nITMeas << " STMeasurements added" << endreq;
 
   return StatusCode::SUCCESS;
 }

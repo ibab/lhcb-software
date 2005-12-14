@@ -21,9 +21,9 @@ include_path      none
 #============================================================================
 use   GaudiAlg        v*
 
-use   Event           v* Event
-use   TrackEvent      v* Event
-use   TrackFitEvent   v* Tr
+use   TrackEvent      v1r* Event
+use   TrackFitEvent   v1r* Tr
+use   Event           v*   Event
 
 use   OTAssociators   v* OT
 use   ITAssociators   v* IT
