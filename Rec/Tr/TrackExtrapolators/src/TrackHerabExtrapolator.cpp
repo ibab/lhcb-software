@@ -1,15 +1,10 @@
-// $Id: TrackHerabExtrapolator.cpp,v 1.2 2005-05-24 12:01:48 erodrigu Exp $
+// $Id: TrackHerabExtrapolator.cpp,v 1.3 2005-12-14 14:16:48 erodrigu Exp $
 
-// Gaudi
+// from Gaudi
 #include "GaudiKernel/IMagneticFieldSvc.h"
 #include "GaudiKernel/ToolFactory.h"
 
-// CLHEP
-// #include "CLHEP/Geometry/Vector3D.h"
-// #include "CLHEP/Geometry/Point3D.h"
-// #include "CLHEP/Units/PhysicalConstants.h"
-
-// TrEvent
+// from TrackEvent
 #include "Event/TrackParameters.h"
 
 // Local
@@ -21,10 +16,9 @@ const IToolFactory& TrackHerabExtrapolatorFactory = s_factory;
 
 /** @file TrackHerabExtrapolator.cpp
  *
- *  A TrackHerabExtrapolator is a ITrExtrapolator which does a 'HerabRK5'
- *  extrapolation of a TrState. It doesn't take into account 
- *  Multiple Scattering.
- *  Note that it can only extrapolate a TrStateP.
+ *  A TrackHerabExtrapolator is a ITrackExtrapolator which does a
+ *  'HerabRK5' extrapolation of a State.
+ *  It doesn't take into account Multiple Scattering.
  *
  *  @author Matt Needham
  *  @author Updated 29-03-2002 Olivier Callot: Include Hera-B Runge-Kutta in.

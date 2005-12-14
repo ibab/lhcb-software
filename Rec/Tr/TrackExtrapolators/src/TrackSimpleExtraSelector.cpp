@@ -1,4 +1,4 @@
-// $Id: TrackSimpleExtraSelector.cpp,v 1.1 2005-11-09 14:43:46 erodrigu Exp $
+// $Id: TrackSimpleExtraSelector.cpp,v 1.2 2005-12-14 14:16:48 erodrigu Exp $
 
 #include "TrackSimpleExtraSelector.h"
 
@@ -23,7 +23,7 @@ TrackSimpleExtraSelector::TrackSimpleExtraSelector(const std::string& type,
   declareInterface<ITrackExtraSelector>( this );
 
   declareProperty( "ExtrapolatorName",
-                   m_extraName = "TrFastParabolicExtrapolator" );
+                   m_extraName = "TrackFastParabolicExtrapolator" );
 }
 
 //=============================================================================

@@ -1,4 +1,4 @@
-// $Id: TrackDistanceExtraSelector.h,v 1.2 2005-11-09 14:54:11 erodrigu Exp $
+// $Id: TrackDistanceExtraSelector.h,v 1.3 2005-12-14 14:16:47 erodrigu Exp $
 #ifndef TrackDistanceExtraSelector_H
 #define TrackDistanceExtraSelector_H 1
 
@@ -12,7 +12,7 @@
 
 #include <string>
 
-/** @class TrExtraSelector TrExtraSelector.h "TrExtrapolator/TrExtraSelector.h"
+/** @class TrackDistanceExtraSelector "TrackDistanceExtraSelector.h"
 *
 *  Distance selection of one extrapolator
 *

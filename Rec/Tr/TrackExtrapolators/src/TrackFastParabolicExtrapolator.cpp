@@ -1,4 +1,4 @@
-// $Id: TrackFastParabolicExtrapolator.cpp,v 1.1 2005-03-16 14:10:05 hernando Exp $
+// $Id: TrackFastParabolicExtrapolator.cpp,v 1.2 2005-12-14 14:16:47 erodrigu Exp $
 
 // CLHEP
 #include "CLHEP/Units/PhysicalConstants.h"
@@ -14,7 +14,7 @@ const IToolFactory& TrackFastParabolicExtrapolatorFactory = s_factory;
 
 /** @file TrackFastParabolicExtrapolator.cpp
  *
- *  A TrackFastParabolicExtrapolator is a TrExtrapolator which does a 
+ *  A TrackFastParabolicExtrapolator is a TrackExtrapolator which does a 
  *  'parabolic' extrapolation of a State. 
  *  Fast means the transport matrix is calculated approximately.
  *  It doesn't take into account Multiple Scattering.

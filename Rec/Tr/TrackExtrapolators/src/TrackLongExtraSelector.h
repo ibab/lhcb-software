@@ -1,4 +1,4 @@
-// $Id: TrackLongExtraSelector.h,v 1.2 2005-11-09 14:54:11 erodrigu Exp $
+// $Id: TrackLongExtraSelector.h,v 1.3 2005-12-14 14:16:48 erodrigu Exp $
 #ifndef TrackLongExtraSelector_H
 #define TrackLongExtraSelector_H 1
 
@@ -10,7 +10,7 @@
 
 #include <string>
 
-/** @class TrExtraSelector TrExtraSelector.h "TrExtrapolator/TrExtraSelector.h"
+/** @class TrackLongExtraSelector "TrackLongExtraSelector.h"
 *
 *  Simple selection of one extrapolator
 *

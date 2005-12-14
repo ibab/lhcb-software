@@ -1,4 +1,4 @@
-// $Id: TrackFastParabolicExtrapolator.h,v 1.1 2005-03-16 14:10:05 hernando Exp $
+// $Id: TrackFastParabolicExtrapolator.h,v 1.2 2005-12-14 14:16:48 erodrigu Exp $
 #ifndef TRACKFASTPARABOLICEXTRAPOLATOR_H
 #define TRACKFASTPARABOLICEXTRAPOLATOR_H 1
 
@@ -8,7 +8,7 @@
 /** @class TrackFastParabolicExtrapolator TrackFastParabolicExtrapolator.h \
  *         "TrackFastParabolicExtrapolator.h"
  *
- *  A TrackFastParabolicExtrapolator is a TrExtrapolator which does a 
+ *  A TrackFastParabolicExtrapolator is a TrackExtrapolator which does a 
  *  'parabolic' extrapolation of a State. 
  *  Fast means the transport matrix is calculated approximately.
  *  It doesn't take into account Multiple Scattering.

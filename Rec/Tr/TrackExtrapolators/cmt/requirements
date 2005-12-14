@@ -6,7 +6,7 @@
 # http://cern.ch/lhcb-comp/Support/html/new_structure.pdf
 #============================================================================
 package           TrackExtrapolators
-version           v1r3
+version           v1r4
 
 #============================================================================
 # This template is an example for a standard Algorithm package
@@ -24,7 +24,7 @@ include_path      none
 use     GaudiAlg        v*
 use     GSL             v*     LCG_Interfaces
 
-use 	TrackEvent	v*     Event
+use 	TrackEvent	v1r*   Event
 use     TrackInterfaces v*     Tr
 
 use     DetDesc         v*     Det

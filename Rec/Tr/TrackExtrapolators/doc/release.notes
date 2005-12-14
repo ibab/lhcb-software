@@ -4,6 +4,9 @@
 ! Purpose     : Package for tracking extrapolators
 !-----------------------------------------------------------------------------
 
+! 2005-12-14 - Eduardo Rodrigues
+ - corrected wrong calls to old extrapolators in selector tools
+
 !======================= TrackExtrapolators v1r3 2005-11-28 ==================
 ! 2005-11-09 - Eduardo Rodrigues
  - TrackTransportStep.h helper class removed - no more needed
