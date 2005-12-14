@@ -1,7 +1,12 @@
-! $Id: release.notes,v 1.77 2005-12-13 16:18:25 pkoppenb Exp $
+! $Id: release.notes,v 1.78 2005-12-14 14:20:49 pkoppenb Exp $
 ! Package     : DaVinciMCTools
 ! Responsible : P. Koppenburg
 !=============================================================================
+
+! 2005-12-15 - P. Koppenburg for V. Gligorov
+ - DaVinciMCTools/IBackgroundCategory.h
+ - src/BackgroundCategory.*
+   . some more comments
 
 ! 2005-12-13 - P. Koppenburg for V. Gligorov
  - DaVinciMCTools/IBackgroundCategory.h

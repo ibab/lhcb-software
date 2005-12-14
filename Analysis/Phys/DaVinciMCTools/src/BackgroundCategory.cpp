@@ -1,4 +1,4 @@
-// $Id: BackgroundCategory.cpp,v 1.4 2005-12-14 09:12:24 pkoppenb Exp $
+// $Id: BackgroundCategory.cpp,v 1.5 2005-12-14 14:20:49 pkoppenb Exp $
 // Include files 
 
 // from Gaudi
@@ -41,11 +41,13 @@ BackgroundCategory::~BackgroundCategory() {};
 //=============================================================================
 const MCParticle* BackgroundCategory::origin(const Particle* reconstructed_mother)
 {
-	const MCParticle* background_mc_mother;
+	//const MCParticle* background_mc_mother;
 
-  background_mc_mother = m_pChi2PPAsct->associatedFrom(reconstructed_mother);
+  //background_mc_mother = m_pChi2PPAsct->associatedFrom(reconstructed_mother);
 
-	return background_mc_mother;
+	int backcategory = category(reconstructed_mother);
+
+	if (backcategory < 60) return m_commonmother; else return 0;
 }
 //=============================================================================
 bool BackgroundCategory::isStable(int pid)
@@ -216,7 +218,7 @@ IBackgroundCategory::categories BackgroundCategory::category(const Particle* rec
 			return Ghost;
 		} else {
 			verbose() << "Categorising step 17" << endreq;
-			if (condition_H() ){
+			if (!condition_H(mc_particles_linked_to_decay,particles_in_decay) ){
 				verbose() << "Categorising step 18" << endreq;
 				//A pileup
 				return FromDifferentPV;
@@ -396,9 +398,32 @@ bool BackgroundCategory::condition_G(MCParticleVector mc_particles_linked_to_dec
 
 }
 //=============================================================================
-bool BackgroundCategory::condition_H()
+bool BackgroundCategory::condition_H(MCParticleVector mc_particles_linked_to_decay, ParticleVector particles_in_decay)
 {
-  return false;
+	bool carryon = true;
+  MCParticleVector::const_iterator iP = mc_particles_linked_to_decay.begin();
+  ParticleVector::const_iterator iPP = particles_in_decay.begin();
+	const Collision* tmpcollision;
+	bool gotacollision = false;
+
+  do {
+
+    if ( !(*iPP)->endVertex() ) {
+
+			if (*iP) {
+
+				if (!gotacollision) tmpcollision = (*iP)->collision();
+				else if ( (*iP)->collision() != tmpcollision ) carryon = false;
+
+			}
+
+		}
+    ++iP;
+    ++iPP;
+
+  } while (carryon && iP != mc_particles_linked_to_decay.end() && iPP != particles_in_decay.end() );
+
+	return carryon;
 }
 //=============================================================================
 bool BackgroundCategory::condition_I(MCParticleVector mc_mothers_final)

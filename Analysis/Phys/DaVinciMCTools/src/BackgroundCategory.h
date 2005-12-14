@@ -1,4 +1,4 @@
-// $Id: BackgroundCategory.h,v 1.2 2005-12-13 16:33:46 pkoppenb Exp $
+// $Id: BackgroundCategory.h,v 1.3 2005-12-14 14:20:49 pkoppenb Exp $
 #ifndef BACKGROUNDCATEGORY_H 
 #define BACKGROUNDCATEGORY_H 1
 
@@ -6,6 +6,7 @@
 // from Gaudi
 #include "GaudiAlg/GaudiTool.h"
 #include "Event/Particle.h"
+#include "Event/Collision.h"
 #include "DaVinciMCTools/IBackgroundCategory.h"          // Interface
 #include "Kernel/IParticleDescendants.h"
 #include "DaVinciAssociators/ProtoParticle2MCAsct.h"
@@ -55,7 +56,7 @@ private:
   bool condition_E();
   bool condition_F(const Particle*);
   bool condition_G(MCParticleVector,ParticleVector);
-  bool condition_H();
+  bool condition_H(MCParticleVector,ParticleVector);
   bool condition_I(MCParticleVector);
   bool condition_J(MCParticleVector);
 
