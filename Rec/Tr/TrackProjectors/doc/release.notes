@@ -4,6 +4,10 @@
 ! Purpose     : Package for tracking projectors
 !-----------------------------------------------------------------------------
 
+! 2005-11-29 - Edwin Bos, Jeroen van Tilburg, Eduardo Rodrigues
+ - First version of the TrajOTProjector tool, an OT projector
+   that uses trajectories internally instead of the standard way
+
 !====================== TrackProjectors v1r4 2005-11-29 ======================
 ! 2005-11-21 - Jeroen van Tilburg
  - Required changes due to changes in VeloPhiMeasurement. Now using method
