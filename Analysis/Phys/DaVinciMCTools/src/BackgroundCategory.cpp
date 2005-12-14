@@ -1,4 +1,4 @@
-// $Id: BackgroundCategory.cpp,v 1.3 2005-12-13 16:35:11 pkoppenb Exp $
+// $Id: BackgroundCategory.cpp,v 1.4 2005-12-14 09:12:24 pkoppenb Exp $
 // Include files 
 
 // from Gaudi
@@ -491,10 +491,10 @@ StatusCode BackgroundCategory::finalize(){
 //=============================================================================
 StatusCode BackgroundCategory::initialize(){
 
-  debug() << "Starting to initialise Background Categorisation" << endreq;
-
   StatusCode sc = GaudiTool::initialize();
   if (!sc) return sc;
+
+  debug() << "Starting to initialise Background Categorisation" << endreq;
 
   m_ppSvc = 0;
   sc = service("ParticlePropertySvc", m_ppSvc);
