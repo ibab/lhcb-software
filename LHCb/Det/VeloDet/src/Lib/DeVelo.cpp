@@ -1,4 +1,4 @@
-// $Id: DeVelo.cpp,v 1.54 2005-12-08 15:13:24 mtobin Exp $
+// $Id: DeVelo.cpp,v 1.55 2005-12-14 15:28:31 mtobin Exp $
 //
 // ============================================================================
 #define  VELODET_DEVELO_CPP 1
@@ -6,15 +6,16 @@
 // from STL (for std::sort)
 #include <algorithm>
 
-// from CLHEP
-#include "CLHEP/Units/SystemOfUnits.h"
-#include "CLHEP/Units/PhysicalConstants.h"
+// from Kernel
+#include "Kernel/SystemOfUnits.h"
+#include "Kernel/PhysicalConstants.h"
 
 // From Gaudi
 #include "GaudiKernel/Bootstrap.h"
 #include "GaudiKernel/MsgStream.h"
 #include "GaudiKernel/PropertyMgr.h"
 #include "GaudiKernel/IJobOptionsSvc.h"
+#include "GaudiKernel/ISvcLocator.h"
 
 // Local
 #include "VeloDet/DeVelo.h"
@@ -164,7 +165,7 @@ StatusCode DeVelo::initialize() {
         << " is type " << m_vpSensor[iSensor]->fullType() 
         << " at global z = " << m_vpSensor[iSensor]->z()
         << " and in VELO frame " 
-        << this->geometry()->toLocal(HepPoint3D(0,
+        << this->geometry()->toLocal(Gaudi::XYZPoint(0,
                                                 0,
                                                 m_vpSensor[iSensor]->z())).z()
         << endreq;
@@ -199,7 +200,7 @@ StatusCode DeVelo::initialize() {
 }
 
 // return the sensor number for a point (global frame)
-unsigned int DeVelo::sensorNumber(const HepPoint3D& point) const {
+unsigned int DeVelo::sensorNumber(const Gaudi::XYZPoint& point) const {
   double z = point.z();
   for(unsigned int index=0;numberSensors()>index;index++){
     if(0.250*mm > fabs(z - m_sensorZ[index])) {
@@ -213,7 +214,7 @@ unsigned int DeVelo::sensorNumber(const HepPoint3D& point) const {
 }
 
 // return the sensitive volume if for a point in the global frame
-const int DeVelo::sensitiveVolumeID(const HepPoint3D& point) const {
+const int DeVelo::sensitiveVolumeID(const Gaudi::XYZPoint& point) const {
   double z = point.z();
   std::vector<DeVeloSensor*>::const_iterator iDeVeloSensor;
   for(iDeVeloSensor=m_vpSensor.begin(); iDeVeloSensor!=m_vpSensor.end(); ++iDeVeloSensor){
@@ -240,8 +241,8 @@ unsigned int DeVelo::sensorIndex(unsigned int sensor) const
 // associated to a 3D position. with pitch width in mm
 // Sign convention is offset is +- 0.5 
 // with +ve in increasing strip number  (global frame) 
-StatusCode DeVelo::pointToChannel(const HepPoint3D &point, 
-                                  VeloChannelID &channel,
+StatusCode DeVelo::pointToChannel(const Gaudi::XYZPoint &point, 
+                                  LHCb::VeloChannelID &channel,
                                   double &localOffset,
                                   double &pitch) const {
   unsigned int sensor = this->sensorNumber(point);
@@ -249,9 +250,9 @@ StatusCode DeVelo::pointToChannel(const HepPoint3D &point,
 }
 
 // pointToChannel if sensor known (global frame)
-StatusCode DeVelo::pointToChannel(const HepPoint3D &point, 
+StatusCode DeVelo::pointToChannel(const Gaudi::XYZPoint &point, 
                                   const unsigned int &sensor,
-                                  VeloChannelID &channel,
+                                  LHCb::VeloChannelID &channel,
                                   double &localOffset,
                                   double &pitch) const {
   unsigned int index=this->sensorIndex(sensor);
@@ -260,15 +261,15 @@ StatusCode DeVelo::pointToChannel(const HepPoint3D &point,
 
 // Residual of 3D point to a VeloChannelID
 // returns offset in mm from closest point on channel 
-/*StatusCode  DeVelo::residual(const HepPoint3D &point, 
-                             const VeloChannelID &channel,
+/*StatusCode  DeVelo::residual(const Gaudi::XYZPoint &point, 
+                             const LHCb::VeloChannelID &channel,
                              double &residual,
                              double &chi2) const{
   
   return this->residual(point,channel,0.,0.5,residual,chi2);
   }*/
-StatusCode  DeVelo::residual(const HepPoint3D &point, 
-                             const VeloChannelID &channel,
+StatusCode  DeVelo::residual(const Gaudi::XYZPoint &point, 
+                             const LHCb::VeloChannelID &channel,
                              double &residual,
                              double &chi2) const {
   unsigned int index=this->sensorIndex(channel.sensor());
@@ -278,8 +279,8 @@ StatusCode  DeVelo::residual(const HepPoint3D &point,
 // Residual of 3D point to a VeloChannelID + offset in fraction of a channel
 // and width of the cluster in channel widths (for the chi2)
 // returns offset in mm, and chi^2 from position to point 
-StatusCode DeVelo::residual(const HepPoint3D &point, 
-                            const VeloChannelID &channel,
+StatusCode DeVelo::residual(const Gaudi::XYZPoint &point, 
+                            const LHCb::VeloChannelID &channel,
                             const double &localOffset,
                             const double &width,
                             double &residual,
@@ -291,29 +292,29 @@ StatusCode DeVelo::residual(const HepPoint3D &point,
 
 // Convert global 3D Point to local 3D point in frame of the sensor 
 StatusCode DeVelo::globalToLocal(const unsigned int &sensor,
-                                 const HepPoint3D &global,
-                                 HepPoint3D &local) {
+                                 const Gaudi::XYZPoint &global,
+                                 Gaudi::XYZPoint &local) {
   return m_vpSensor[sensorIndex(sensor)]->globalToLocal(global,local);
 }
 
 // Convert local 3D Point to global 3D point in frame of LHCb
 StatusCode DeVelo::localToGlobal(const unsigned int &sensor,
-                                 const HepPoint3D &local,
-                                 HepPoint3D &global) const {
+                                 const Gaudi::XYZPoint &local,
+                                 Gaudi::XYZPoint &global) const {
   return m_vpSensor[sensorIndex(sensor)]->localToGlobal(local,global);
 }
 
 // Get the nth (signed) neighbour strip to a given VeloChannelID
-StatusCode DeVelo::neighbour(const VeloChannelID &startChannel,
+StatusCode DeVelo::neighbour(const LHCb::VeloChannelID &startChannel,
                              const int &offset,
-                             VeloChannelID &channel) const {
+                             LHCb::VeloChannelID &channel) const {
   unsigned int index=sensorIndex(startChannel.sensor());
   return m_vpSensor[index]->neighbour(startChannel,offset,channel);
 }
 
 // Check the distance in strips between two channelIDs
-StatusCode DeVelo::channelDistance(const VeloChannelID &startChannel,
-                                   const VeloChannelID &endChannel,
+StatusCode DeVelo::channelDistance(const LHCb::VeloChannelID &startChannel,
+                                   const LHCb::VeloChannelID &endChannel,
                                    int &offset) const {
   unsigned int sen1= startChannel.sensor();
   unsigned int sen2= endChannel.sensor();
@@ -345,7 +346,7 @@ unsigned int DeVelo::numberOfZones( unsigned int sensor) const {
 }
 
 // returns the phi "zone" of the r strip or r zone of phi strip
-unsigned int DeVelo::zoneOfStrip( VeloChannelID channel) const{
+unsigned int DeVelo::zoneOfStrip( LHCb::VeloChannelID channel) const{
   unsigned int index=sensorIndex(channel.sensor());
   return m_vpSensor[index]->zoneOfStrip(channel.strip());
 }
@@ -363,7 +364,7 @@ unsigned int DeVelo::stripsInZone( unsigned int sensor,
 }
 
 // returns the local radius of the strip
-double DeVelo::rOfStrip( VeloChannelID channel ) const {
+double DeVelo::rOfStrip( LHCb::VeloChannelID channel ) const {
   // check whether sensor is R type using m_vpSensor[sensor]->type()
   //  write method bool DeVelo::isR(unsigned int sensor), isPhi etc.
   unsigned int sensor=channel.sensor();
@@ -379,7 +380,7 @@ double DeVelo::rOfStrip( VeloChannelID channel ) const {
   }
 }
 // returns the local radius of the strip+fractional distance to strip
-double DeVelo::rOfStrip( VeloChannelID channel, double fraction) const
+double DeVelo::rOfStrip( LHCb::VeloChannelID channel, double fraction) const
 {
   // check whether sensor is R type using m_vpSensor[sensor]->type()
   //  write method bool DeVelo::isR(unsigned int sensor), isPhi etc.
@@ -395,7 +396,7 @@ double DeVelo::rOfStrip( VeloChannelID channel, double fraction) const
 }
 
 // returns the R pitch at the given channelID
-double DeVelo::rPitch( VeloChannelID channel ) const
+double DeVelo::rPitch( LHCb::VeloChannelID channel ) const
 {
   unsigned int index=sensorIndex(channel.sensor());
   if(DeVeloRType* rPtr = dynamic_cast<DeVeloRType*>(m_vpSensor[index])){
@@ -409,7 +410,7 @@ double DeVelo::rPitch( VeloChannelID channel ) const
 }
 
 // returns the R pitch at the given channelID
-double DeVelo::rPitch( VeloChannelID channel, double fraction) const
+double DeVelo::rPitch( LHCb::VeloChannelID channel, double fraction) const
 {
   unsigned int sensor=channel.sensor();
   unsigned int index=sensorIndex(sensor);
@@ -424,7 +425,7 @@ double DeVelo::rPitch( VeloChannelID channel, double fraction) const
 }
 
 // returns the R pitch at a given radius
-double DeVelo::rPitchAtLocalR( VeloChannelID channel, double radius) const
+double DeVelo::rPitchAtLocalR( LHCb::VeloChannelID channel, double radius) const
 {
   unsigned int sensor=channel.sensor();
   unsigned int index=sensorIndex(sensor);
@@ -439,13 +440,13 @@ double DeVelo::rPitchAtLocalR( VeloChannelID channel, double radius) const
 }
 
 // returns the local phi of the strip at the specified radius for this sensor.
-double DeVelo::phiOfStrip( VeloChannelID channel, double radius) const {
+double DeVelo::phiOfStrip( LHCb::VeloChannelID channel, double radius) const {
   return this->phiOfStrip(channel,0.,radius);
 }
 
 // returns the local phi of the strip +fractional distance to strip
 // at the specified radius for this sensor.
-double DeVelo::phiOfStrip( VeloChannelID channel,
+double DeVelo::phiOfStrip( LHCb::VeloChannelID channel,
                            double fraction, double radius) const
 {
   unsigned int sensor=channel.sensor();
@@ -462,7 +463,7 @@ double DeVelo::phiOfStrip( VeloChannelID channel,
 
 // returns the angle of the strip wrt the x axis for
 // the strip+fractional distance to strip
-double DeVelo::angleOfStrip( VeloChannelID channel,double fraction) const
+double DeVelo::angleOfStrip( LHCb::VeloChannelID channel,double fraction) const
 {
   
   unsigned int sensor=channel.sensor();
@@ -479,7 +480,7 @@ double DeVelo::angleOfStrip( VeloChannelID channel,double fraction) const
 
 // The stereo angle of the phi strips in radians,
 // signed so that positive indicates phi increases with radius 
-double DeVelo::phiStereo( VeloChannelID channel, double radius) const
+double DeVelo::phiStereo( LHCb::VeloChannelID channel, double radius) const
 {
   unsigned int index=sensorIndex(channel.sensor());
   if(DeVeloPhiType * phiPtr = 
@@ -494,7 +495,7 @@ double DeVelo::phiStereo( VeloChannelID channel, double radius) const
 }
 
 // returns the Phi pitch (in mm) at the given radius (sensor local) 
-double DeVelo::phiPitch(VeloChannelID channel, double radius) const
+double DeVelo::phiPitch(LHCb::VeloChannelID channel, double radius) const
 {
   unsigned int index=sensorIndex(channel.sensor());
   DeVeloPhiType * phiPtr = 
@@ -510,7 +511,7 @@ double DeVelo::phiPitch(VeloChannelID channel, double radius) const
 }
 
 // returns the Phi pitch (in radians) for a given strip
-double DeVelo::phiPitch(VeloChannelID channel) const
+double DeVelo::phiPitch(LHCb::VeloChannelID channel) const
 {
   unsigned int index=sensorIndex(channel.sensor());  
   DeVeloPhiType * phiPtr = 
@@ -525,7 +526,7 @@ double DeVelo::phiPitch(VeloChannelID channel) const
   }
 }
 
-double DeVelo::distToOrigin( VeloChannelID channel ) const
+double DeVelo::distToOrigin( LHCb::VeloChannelID channel ) const
 {
   unsigned int index=sensorIndex(channel.sensor());
   DeVeloPhiType * phiPtr = 
@@ -633,7 +634,7 @@ unsigned int DeVelo::numberStrips(unsigned int sensor) const {
 }
     
 // returns the capacitance of the strip.
-double DeVelo::stripCapacitance(VeloChannelID channel) const {
+double DeVelo::stripCapacitance(LHCb::VeloChannelID channel) const {
   unsigned int index=sensorIndex(channel.sensor());
   return m_vpSensor[index]->stripCapacitance(channel.strip());
 }
@@ -648,7 +649,7 @@ StatusCode DeVelo::stripLimitsR( unsigned int sensor,
                                  double& phiMin, 
                                  double& phiMax )  const {
   z = zSensor(sensor);
-  VeloChannelID channel(sensor,strip);
+  LHCb::VeloChannelID channel(sensor,strip);
   if(this->isRSensor(sensor) || this->isPileUpSensor(sensor)){    
     DeVeloRType * rPtr = 
       dynamic_cast<DeVeloRType*>(m_vpSensor[sensorIndex(sensor)]);
@@ -671,8 +672,8 @@ StatusCode DeVelo::stripLimitsR( unsigned int sensor,
 // in local frame 
 StatusCode DeVelo::stripLimitsPhi( unsigned int sensor, 
                                    unsigned int strip,
-                                   HepPoint3D& begin, 
-                                   HepPoint3D& end ) const {
+                                   Gaudi::XYZPoint& begin, 
+                                   Gaudi::XYZPoint& end ) const {
   DeVeloPhiType * phiPtr = 
     dynamic_cast<DeVeloPhiType*>(m_vpSensor[sensorIndex(sensor)]);
   if(phiPtr){
@@ -690,14 +691,14 @@ StatusCode DeVelo::stripLimitsPhi( unsigned int sensor,
 // Construct 3d point in global frame from R/phi channels 
 // (rFrac is fractional distance to strip (+/-0.5))
 //=============================================================================
-StatusCode DeVelo::makeSpacePoint( VeloChannelID rChan, 
+StatusCode DeVelo::makeSpacePoint( LHCb::VeloChannelID rChan, 
                                    double rFrac,
-                                   VeloChannelID phiChan,
+                                   LHCb::VeloChannelID phiChan,
                                    double phiFrac,
-                                   HepPoint3D& point, 
+                                   Gaudi::XYZPoint& point, 
                                    double&  rPitch,
                                    double&  phiPitch ) const {
-  point.set( 0., 0., 0. );
+  point.SetCoordinates( 0., 0., 0. );
   rPitch   = 0.;
   phiPitch = 0.;
 
@@ -710,8 +711,8 @@ StatusCode DeVelo::makeSpacePoint( VeloChannelID rChan,
       << endmsg;
 
   // check that the sensor types are valid
-  if(VeloChannelID::RType != rChan.type()) return StatusCode::FAILURE;
-  if(VeloChannelID::PhiType != phiChan.type()) return StatusCode::FAILURE;
+  if(LHCb::VeloChannelID::RType != rChan.type()) return StatusCode::FAILURE;
+  if(LHCb::VeloChannelID::PhiType != phiChan.type()) return StatusCode::FAILURE;
   
   unsigned int rSensor=rChan.sensor();
   unsigned int phiSensor=phiChan.sensor();
@@ -725,7 +726,7 @@ StatusCode DeVelo::makeSpacePoint( VeloChannelID rChan,
   // check some matching in the detector region.
   double rAtPhi = localR * ( zPhi - m_zVertex ) / ( zR - m_zVertex );
 
-  double innerPitch=this->rPitch(VeloChannelID(rSensor,0));
+  double innerPitch=this->rPitch(LHCb::VeloChannelID(rSensor,0));
   double tolPhiBoundary = 5. * innerPitch;
 
   double innerRadius=rMin(rSensor);
@@ -768,7 +769,7 @@ StatusCode DeVelo::makeSpacePoint( VeloChannelID rChan,
   double y=localR*sin(phiLocal);
   //  double x=rAtPhi*cos(phiLocal);
   //  double y=rAtPhi*sin(phiLocal);
-  StatusCode sc=localToGlobal(rSensor,HepPoint3D(x,y,0),point);
+  StatusCode sc=localToGlobal(rSensor,Gaudi::XYZPoint(x,y,0),point);
   if(!sc) return StatusCode::FAILURE;
   // Compute the pitches. 
   rPitch = this->rPitch(rChan);
@@ -815,11 +816,11 @@ void DeVelo::trgPhiMatchingStrips( int sensor, double radius,
   if(rMax(sensor,0) > radius){
     isInner = true;
   }
-  offset = phiStereo(VeloChannelID(sensor,0),radius);
+  offset = phiStereo(LHCb::VeloChannelID(sensor,0),radius);
   if(isInner){
-    pitch = phiPitch(VeloChannelID(sensor,0));
+    pitch = phiPitch(LHCb::VeloChannelID(sensor,0));
   } else {
-    pitch = phiPitch(VeloChannelID(sensor,stripsInZone(sensor,0)));
+    pitch = phiPitch(LHCb::VeloChannelID(sensor,stripsInZone(sensor,0)));
   }
   if ( isDownstreamSensor(sensor) ) {
     pitch  = -pitch;
@@ -901,13 +902,13 @@ void DeVelo::trgPhiMatchingStrips( int sensor, double radius,
 }
 
 // returns the phi of the strip at the specified radius for this sensor.
-double DeVelo::trgPhiOfStrip( VeloChannelID channel,double radius ) const {
+double DeVelo::trgPhiOfStrip( LHCb::VeloChannelID channel,double radius ) const {
   return this->trgPhiOfStrip(channel,0.,radius);
 }
 
 // returns the local phi of the strip +fractional distance to strip
 // at the specified radius for this sensor.
-double DeVelo::trgPhiOfStrip( VeloChannelID channel,
+double DeVelo::trgPhiOfStrip( LHCb::VeloChannelID channel,
                                double fraction, 
                               double radius ) const {
   unsigned int sensor=channel.sensor();
@@ -924,7 +925,7 @@ double DeVelo::trgPhiOfStrip( VeloChannelID channel,
 
 // returns the angle of the strip wrt the x axis for
 // the strip+fractional distance to strip
-double DeVelo::trgPhiDirectionOfStrip( VeloChannelID channel,
+double DeVelo::trgPhiDirectionOfStrip( LHCb::VeloChannelID channel,
                                double fraction ) const {
   unsigned int sensor=channel.sensor();
   unsigned int index=sensorIndex(sensor);
@@ -983,7 +984,7 @@ void DeVelo::recalculateZs()
     m_sensorZ.push_back(z);
     msg << MSG::DEBUG << "Sensor number " << (*iDeVeloSensor)->sensorNumber() 
         << " is at z = " << z << "mm"
-        << " sensVolID " << (this->sensitiveVolumeID(HepPoint3D(0,0,z)))
+        << " sensVolID " << (this->sensitiveVolumeID(Gaudi::XYZPoint(0,0,z)))
         << " vector size is " << m_sensorZ.size()
         << " with last entry " << m_sensorZ.back()
         << endmsg;

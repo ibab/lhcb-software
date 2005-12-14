@@ -1,4 +1,4 @@
-// $Id: DeVelo.h,v 1.30 2005-12-08 15:13:24 mtobin Exp $
+// $Id: DeVelo.h,v 1.31 2005-12-14 15:28:31 mtobin Exp $
 #ifndef       VELODET_DEVELO_H
 #define       VELODET_DEVELO_H 1
 // ============================================================================
@@ -42,7 +42,7 @@ public:
   /** Implementation of sensitive volume identifier for a given point in the 
       global reference frame.  This is the sensor number defined in the xml.
   */
-  virtual const int sensitiveVolumeID(const HepPoint3D& globalPos) const;
+  virtual const int sensitiveVolumeID(const Gaudi::XYZPoint& globalPos) const;
 
   /// return the number of sensors
   inline unsigned int numberSensors()  const { 
@@ -96,7 +96,7 @@ public:
   }
 
   /// return the sensor number for a point (global frame)
-  unsigned int sensorNumber( const HepPoint3D& point ) const;
+  unsigned int sensorNumber( const Gaudi::XYZPoint& point ) const;
   
   /// return the sensor number for a given index
   unsigned int sensorNumber( const unsigned int index ) const{
@@ -131,31 +131,31 @@ public:
       associated to a 3D position. with pitch width in mm
       Sign convention is offset is +- 0.5 
       with +ve in increasing stip number  (global frame) */
-  StatusCode pointToChannel(const HepPoint3D &point, 
-                            VeloChannelID &channel,
+  StatusCode pointToChannel(const Gaudi::XYZPoint &point, 
+                            LHCb::VeloChannelID &channel,
                             double &localOffset,
                             double &pitch) const;
 
   /// pointToChannel if sensor known (global frame)
-  StatusCode pointToChannel(const HepPoint3D &point, 
+  StatusCode pointToChannel(const Gaudi::XYZPoint &point, 
                             const unsigned int &sensor,
-                            VeloChannelID &channel,
+                            LHCb::VeloChannelID &channel,
                             double &localOffset,
                             double &pitch) const;
 
 
   /** Residual of 3D point to a VeloChannelID
       returns offset in mm from closest point on channel */
-  StatusCode residual(const HepPoint3D &point, 
-                      const VeloChannelID &channel,
+  StatusCode residual(const Gaudi::XYZPoint &point, 
+                      const LHCb::VeloChannelID &channel,
                       double &residual,
                       double &chi2) const;
 
   /** Residual of 3D point to a VeloChannelID + offset in fraction of a channel
       and width of the cluster in channel widths (for the chi2)
       returns offset in mm, and chi^2 from position to point */
-  StatusCode residual(const HepPoint3D &point, 
-                      const VeloChannelID &channel,
+  StatusCode residual(const Gaudi::XYZPoint &point, 
+                      const LHCb::VeloChannelID &channel,
                       const double &localOffset,
                       const double &width,
                       double &residual,
@@ -163,22 +163,22 @@ public:
 
   /// Convert global 3D Point to local 3D point in frame of the sensor 
   StatusCode globalToLocal(const unsigned int &sensorNumber,
-                           const HepPoint3D &global,
-                           HepPoint3D &local) ;
+                           const Gaudi::XYZPoint &global,
+                           Gaudi::XYZPoint &local) ;
   
-  /// Convert local 3D Point in the sensor fram to a global 3D point 
+  /// Convert local 3D Point in the sensor frame to a global 3D point 
   StatusCode localToGlobal(const unsigned int &sensorNumber,
-                           const HepPoint3D &local,
-                           HepPoint3D &global) const;
+                           const Gaudi::XYZPoint &local,
+                           Gaudi::XYZPoint &global) const;
 
   /// Get the nth (signed) neighbour strip to a given VeloChannelID
-  StatusCode neighbour(const VeloChannelID &startChannel,
+  StatusCode neighbour(const LHCb::VeloChannelID &startChannel,
                        const int &Offset,
-                       VeloChannelID &channel) const;
+                       LHCb::VeloChannelID &channel) const;
 
   /// Check the distance in strips between two channelIDs
-  StatusCode channelDistance(const VeloChannelID &startChannel,
-                             const VeloChannelID &endChannel,
+  StatusCode channelDistance(const LHCb::VeloChannelID &startChannel,
+                             const LHCb::VeloChannelID &endChannel,
                              int &Offset) const;
 
   /** Returns the vector of sensor numbers one can match with the 
@@ -197,7 +197,7 @@ public:
   unsigned int numberOfZones( unsigned int sensor) const;
 
   /// returns the phi "zone" of the r strip or r zone of phi strip
-  unsigned int zoneOfStrip( VeloChannelID strip ) const;
+  unsigned int zoneOfStrip( LHCb::VeloChannelID strip ) const;
 
   /// returns the phi "zone" of the r strip or r zone of phi strip
   unsigned int zoneOfStrip( unsigned int strip, unsigned int sensor ) const;
@@ -206,44 +206,44 @@ public:
   unsigned int stripsInZone( unsigned int sensor, unsigned int zone ) const;
 
   /// returns the local radius of the strip
-  double rOfStrip( VeloChannelID channel ) const;
+  double rOfStrip( LHCb::VeloChannelID channel ) const;
 
   /// returns the local radius of the strip+fractional distance to strip
-  double rOfStrip(VeloChannelID channel, double fraction) const;
+  double rOfStrip(LHCb::VeloChannelID channel, double fraction) const;
 
   /// returns the R pitch at the given channelID
-  double rPitch( VeloChannelID channel) const;
+  double rPitch( LHCb::VeloChannelID channel) const;
 
   /// returns the R pitch at the given channelID +/- fraction of channel
-  double rPitch( VeloChannelID channel, double fraction) const;
+  double rPitch( LHCb::VeloChannelID channel, double fraction) const;
 
   /// returns the R pitch at a given radius
-  double rPitchAtLocalR( VeloChannelID channel, double radius) const;
+  double rPitchAtLocalR( LHCb::VeloChannelID channel, double radius) const;
 
   /// returns the phi of the strip at the specified radius 
   /// in the local frame of the sensor.
-  double phiOfStrip( VeloChannelID channel, double radius) const;
+  double phiOfStrip( LHCb::VeloChannelID channel, double radius) const;
 
   /// returns the phi of the strip+fractional distance to strip
   /// at the specified radius in the local frame of sensor.
-  double phiOfStrip( VeloChannelID channel, double fraction, double radius) const;
+  double phiOfStrip( LHCb::VeloChannelID channel, double fraction, double radius) const;
                       
   /// returns the angle of the strip wrt the x axis in the local frame for
   /// the strip+fractional distance to strip
-  double angleOfStrip( VeloChannelID channel, double fraction=0.) const;
+  double angleOfStrip( LHCb::VeloChannelID channel, double fraction=0.) const;
 
   /** The stereo angle of the phi strips in radians,
       signed so that positive indicates phi increases with radius */
-  double phiStereo( VeloChannelID channel, double radius) const;
+  double phiStereo( LHCb::VeloChannelID channel, double radius) const;
 
   /// returns the Phi pitch (in mm) at the given radius (sensor local)
-  double phiPitch( VeloChannelID channel, double radius ) const;
+  double phiPitch( LHCb::VeloChannelID channel, double radius ) const;
 
   /// returns the Phi pitch (in mm) at the given radius (sensor local)
-  double phiPitch( VeloChannelID channel ) const;
+  double phiPitch( LHCb::VeloChannelID channel ) const;
 
   /// Return the distance to the origin for a phi strip
-  double distToOrigin(VeloChannelID channel) const;
+  double distToOrigin(LHCb::VeloChannelID channel) const;
 
   /// return the minimum sensitive radius of an R wafer, local frame
   double rMin(unsigned int sensor) const;
@@ -280,7 +280,7 @@ public:
   unsigned int numberStrips(unsigned int sensor) const;
     
   /// returns the capacitance of the strip.
-  double stripCapacitance(VeloChannelID channel) const;
+  double stripCapacitance(LHCb::VeloChannelID channel) const;
 
   /** Access to a strip's geometry, for Panoramix
       from strip number and R sensor number, returns Z, R and a phi range.
@@ -296,8 +296,8 @@ public:
       in local frame */
   StatusCode stripLimitsPhi( unsigned int sensor, 
                              unsigned int strip,
-                             HepPoint3D& begin, 
-                             HepPoint3D& end ) const;
+                             Gaudi::XYZPoint& begin, 
+                             Gaudi::XYZPoint& end ) const;
 
   /// Return the side of the detector. (+1 for +ve x, -1 for -ve x.)
   inline int xSide(unsigned int sensor)  const
@@ -327,11 +327,11 @@ public:
 
   /// Construct 3d point from R/phi channels (rFrac is fractional distance 
   /// to strip (+/-0.5))
-  StatusCode makeSpacePoint( VeloChannelID rChan, 
+  StatusCode makeSpacePoint( LHCb::VeloChannelID rChan, 
                              double rFrac,
-                             VeloChannelID phiChan,
+                             LHCb::VeloChannelID phiChan,
                              double phiFrac,
-                             HepPoint3D& point, 
+                             Gaudi::XYZPoint& point, 
                              double&  rPitch,
                              double&  phiPitch ) const;
 
@@ -346,11 +346,11 @@ public:
   void recalculateZ(unsigned int sensor);
 
   /// Convert chip channel to VeloChannelID for a given sensor
-  VeloChannelID ChipChannelToVeloChannelID(unsigned int sensor, unsigned int chipChan){
-    return VeloChannelID(sensor,m_vpSensor[sensorIndex(sensor)]->ChipChannelToStrip(chipChan));
+  LHCb::VeloChannelID ChipChannelToVeloChannelID(unsigned int sensor, unsigned int chipChan){
+    return LHCb::VeloChannelID(sensor,m_vpSensor[sensorIndex(sensor)]->ChipChannelToStrip(chipChan));
   };
   /// Convert VeloChannelID to chip channel
-  unsigned int VeloChannelIDToChipChannel(VeloChannelID channel){
+  unsigned int VeloChannelIDToChipChannel(LHCb::VeloChannelID channel){
     return m_vpSensor[sensorIndex(channel.sensor())]->StripToChipChannel(channel.strip());
   };
   
@@ -366,10 +366,10 @@ public:
   
   /// Convert routing line to VeloChannelID for a given sensor
   unsigned int RoutingLineToVeloChannelID(unsigned int sensor, unsigned int routLine){
-    return VeloChannelID(sensor,m_vpSensor[sensorIndex(sensor)]->RoutingLineToStrip(routLine));
+    return LHCb::VeloChannelID(sensor,m_vpSensor[sensorIndex(sensor)]->RoutingLineToStrip(routLine));
   };
   /// Convert VeloChannelId to routing line
-  unsigned int VeloChannelIDToRoutingLine(VeloChannelID channel){
+  unsigned int VeloChannelIDToRoutingLine(LHCb::VeloChannelID channel){
     return m_vpSensor[sensorIndex(channel.sensor())]->StripToRoutingLine(channel.strip());
   };
 
@@ -382,12 +382,12 @@ public:
     return m_vpSensor[sensorIndex(sensor)]->ChipFromChipChannel(chipChan);
   };
   /// Get the chip number from the VeloChannelID
-  unsigned int ChipFromVeloChannelID(VeloChannelID channel){   
+  unsigned int ChipFromVeloChannelID(LHCb::VeloChannelID channel){   
     return m_vpSensor[sensorIndex(channel.sensor())]->ChipFromStrip(channel.strip());
   };
   
   /// Check validity of VeloChannelID
-  bool OKVeloChannelID(VeloChannelID channel){
+  bool OKVeloChannelID(LHCb::VeloChannelID channel){
     return m_vpSensor[sensorIndex(channel.sensor())]->OKStrip(channel.strip());
   }
   
@@ -415,14 +415,14 @@ public:
                              double& pitch, 
                              double& offset ) const;
   /// returns the phi of the strip at the specified radius 
-  double trgPhiOfStrip( VeloChannelID channel,
+  double trgPhiOfStrip( LHCb::VeloChannelID channel,
                         double radius ) const;
   /// returns the phi of the strip+fractional distance to strip
-  double trgPhiOfStrip( VeloChannelID channel, 
+  double trgPhiOfStrip( LHCb::VeloChannelID channel, 
                         double fraction, 
                         double radius ) const;
   /// returns the angle of the strip+frac. distance to strip wrt the x axis 
-  double trgPhiDirectionOfStrip( VeloChannelID channel, 
+  double trgPhiDirectionOfStrip( LHCb::VeloChannelID channel, 
                                  double fraction=0. ) const;
   ///========================================================================
 protected: 

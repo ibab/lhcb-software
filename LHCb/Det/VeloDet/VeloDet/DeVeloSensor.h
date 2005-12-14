@@ -1,11 +1,11 @@
-// $Id: DeVeloSensor.h,v 1.10 2005-10-02 14:31:21 mtobin Exp $
+// $Id: DeVeloSensor.h,v 1.11 2005-12-14 15:28:31 mtobin Exp $
 #ifndef VELODET_DEVELOSENSOR_H 
 #define VELODET_DEVELOSENSOR_H 1
 
 // Include files
-// from CLHEP
-#include "CLHEP/Geometry/Point3D.h"
-#include "CLHEP/Units/PhysicalConstants.h"
+// from Kernel
+#include "Kernel/Point3DTypes.h"
+#include "Kernel/PhysicalConstants.h"
 
 /// from Det/DetDesc
 #include "DetDesc/DetectorElement.h"
@@ -42,30 +42,30 @@ public:
   virtual StatusCode initialize();
 
   /// Calculate the nearest channel to a 3-d point.
-  virtual StatusCode pointToChannel(const HepPoint3D& point,
-                                    VeloChannelID& channel,
+  virtual StatusCode pointToChannel(const Gaudi::XYZPoint& point,
+                                    LHCb::VeloChannelID& channel,
                                     double& localOffset,
                                     double& pitch) const = 0;
   
   /// Get the nth nearest neighbour for a given channel
-  virtual StatusCode neighbour(const VeloChannelID& start, 
+  virtual StatusCode neighbour(const LHCb::VeloChannelID& start, 
                                const int& nOffset, 
-                               VeloChannelID& channel) const = 0;
+                               LHCb::VeloChannelID& channel) const = 0;
 
   /// Returns the number of channels between two channels
-  virtual StatusCode channelDistance(const VeloChannelID& start,
-                                     const VeloChannelID& end,
+  virtual StatusCode channelDistance(const LHCb::VeloChannelID& start,
+                                     const LHCb::VeloChannelID& end,
                                      int& nOffset) const;
   
   /// Residual of 3-d point to a VeloChannelID
-  virtual StatusCode residual(const HepPoint3D& point, 
-                              const VeloChannelID& channel,
+  virtual StatusCode residual(const Gaudi::XYZPoint& point, 
+                              const LHCb::VeloChannelID& channel,
                               double &residual,
                               double &chi2) const = 0;
 
   /// Residual [see DeVelo for explanation]
-  virtual StatusCode residual(const HepPoint3D& point,
-                              const VeloChannelID& channel,
+  virtual StatusCode residual(const Gaudi::XYZPoint& point,
+                              const LHCb::VeloChannelID& channel,
                               const double localOffset,
                               const double width,
                               double &residual,
@@ -75,7 +75,7 @@ public:
   virtual double stripCapacitance(unsigned int strip) const = 0;
   
   /// The zones number for a given strip
-  //  virtual unsigned int zoneOfStrip(const VeloChannelID& channel)=0;
+  //  virtual unsigned int zoneOfStrip(const LHCb::VeloChannelID& channel)=0;
   virtual unsigned int zoneOfStrip(const unsigned int strip) const = 0;
   
   /// The number of strips in a zone
@@ -94,19 +94,19 @@ public:
   //  virtual double phiMax(const unsigned int zone)=0;
   
   /// Determine if point is in corner cut-offs
-  virtual  StatusCode isInside(const HepPoint3D& point) const = 0;
+  virtual  StatusCode isInside(const Gaudi::XYZPoint& point) const = 0;
 
   /// Determine if local point is in corner cut-offs
   virtual bool isCutOff(double x, double y) const = 0;
 
   /// Convert local position to global position
   /// Local from is +ve x (and Upstream for phi sensors)
-  StatusCode localToGlobal(const HepPoint3D& local, 
-                           HepPoint3D& global) const;
+  StatusCode localToGlobal(const Gaudi::XYZPoint& local, 
+                           Gaudi::XYZPoint& global) const;
 
   /// Convert global position to local position 
-  StatusCode globalToLocal(const HepPoint3D& global, 
-                           HepPoint3D& local) const;
+  StatusCode globalToLocal(const Gaudi::XYZPoint& global, 
+                           Gaudi::XYZPoint& local) const;
 
   /// Convert local phi to rough global phi
   inline double localPhiToGlobal(double phiLocal) const {

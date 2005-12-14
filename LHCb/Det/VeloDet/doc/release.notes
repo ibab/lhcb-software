@@ -1,8 +1,11 @@
-! $Id: release.notes,v 1.87 2005-12-09 07:12:27 cattanem Exp $
+! $Id: release.notes,v 1.88 2005-12-14 15:28:31 mtobin Exp $
 package VeloDet
 package manager : Velo Group
 
 !========================= VeloDet v10r0 2005-12-08 ========================
+! 2005-12-14 - Mark Tobin
+ - Removed all dependencies on CLHEP.
+
 ! 2005-12-08 - Mark Tobin
  - Added method to assign sensorID from a 3d point.  This is implements the 
    sensitiveVolumeID in DetectorElement.  

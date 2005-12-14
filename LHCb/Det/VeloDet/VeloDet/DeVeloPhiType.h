@@ -1,11 +1,11 @@
-// $Id: DeVeloPhiType.h,v 1.9 2005-10-02 14:31:21 mtobin Exp $
+// $Id: DeVeloPhiType.h,v 1.10 2005-12-14 15:28:31 mtobin Exp $
 #ifndef VELODET_DEVELOPHITYPE_H 
 #define VELODET_DEVELOPHITYPE_H 1
 
 // Include files
 
-// from CLHEP
-#include "CLHEP/Geometry/Point3D.h"
+// from Kernel
+#include "Kernel/Point3DTypes.h"
 
 /// from VeloDet
 #include "VeloDet/DeVeloSensor.h"
@@ -40,27 +40,27 @@ public:
   virtual StatusCode initialize();
 
   /// Calculate the nearest channel to a 3-d point.
-  StatusCode pointToChannel(const HepPoint3D& point,
-                            VeloChannelID& channel,
+  StatusCode pointToChannel(const Gaudi::XYZPoint& point,
+                            LHCb::VeloChannelID& channel,
                             double& localOffset,
                             double& pitch) const;
   
   /// Get the nth nearest neighbour for a given channel
-  StatusCode neighbour(const VeloChannelID& start, 
+  StatusCode neighbour(const LHCb::VeloChannelID& start, 
                        const int& nOffset, 
-                       VeloChannelID& channel) const;
+                       LHCb::VeloChannelID& channel) const;
 
   /// Residual of 3-d point to a VeloChannelID
-  StatusCode residual(const HepPoint3D& point, 
-                      const VeloChannelID& channel,
+  StatusCode residual(const Gaudi::XYZPoint& point, 
+                      const LHCb::VeloChannelID& channel,
                       double &residual,
                       double &chi2) const;
 
 
 
   /// Residual [see DeVelo for explanation]
-  StatusCode residual(const HepPoint3D& point,
-                      const VeloChannelID& channel,
+  StatusCode residual(const Gaudi::XYZPoint& point,
+                      const LHCb::VeloChannelID& channel,
                       const double localOffset,
                       const double width,
                       double &residual,
@@ -101,7 +101,7 @@ public:
   //  double phiMax(const unsigned int /*zone*/) {return 0.;}
 
   /// Determines if 3-d point is inside sensor
-  StatusCode isInside(const HepPoint3D& point) const;
+  StatusCode isInside(const Gaudi::XYZPoint& point) const;
 
   /// Determine if local point is in corner cut-offs
   bool isCutOff(double x, double y) const;
@@ -178,8 +178,8 @@ public:
   }
 
   /// Return the strip geometry for panoramix
-  inline StatusCode stripLimits(unsigned int strip, HepPoint3D& begin,
-                                HepPoint3D& end){
+  inline StatusCode stripLimits(unsigned int strip, Gaudi::XYZPoint& begin,
+                                Gaudi::XYZPoint& end){
     StatusCode sc=this->localToGlobal(m_stripLimits[strip].first,begin);
     if(!sc) return sc;
     sc=this->localToGlobal(m_stripLimits[strip].second,end);
@@ -219,7 +219,7 @@ private:
   std::pair<double,double> m_resolution;
   /// Define line for cutoffs (first is gradient, second is intercept)
   std::vector<std::pair<double,double> > m_cutOffs;
-  std::vector<std::pair<HepPoint3D,HepPoint3D> > m_stripLimits;
+  std::vector<std::pair<Gaudi::XYZPoint,Gaudi::XYZPoint> > m_stripLimits;
   double m_innerCoverage;
   double m_outerCoverage;
   double m_halfCoverage;

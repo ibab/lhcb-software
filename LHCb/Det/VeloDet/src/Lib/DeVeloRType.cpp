@@ -1,16 +1,17 @@
-// $Id: DeVeloRType.cpp,v 1.17 2005-12-08 15:13:24 mtobin Exp $
+// $Id: DeVeloRType.cpp,v 1.18 2005-12-14 15:28:31 mtobin Exp $
 //==============================================================================
 #define VELODET_DEVELORTYPE_CPP 1
 //==============================================================================
 // Include files 
 
-// from CLHEP
-#include "CLHEP/Units/SystemOfUnits.h"
+// from Kernel
+#include "Kernel/SystemOfUnits.h"
 
 // From Gaudi
 #include "GaudiKernel/Bootstrap.h"
 #include "GaudiKernel/PropertyMgr.h"
 #include "GaudiKernel/IJobOptionsSvc.h"
+#include "GaudiKernel/ISvcLocator.h"
 #include "GaudiKernel/MsgStream.h"
 
 // From LHCb
@@ -91,13 +92,13 @@ StatusCode DeVeloRType::initialize()
 //==============================================================================
 /// Calculate the nearest channel to a 3-d point.
 //==============================================================================
-StatusCode DeVeloRType::pointToChannel(const HepPoint3D& point,
-                                       VeloChannelID& channel,
+StatusCode DeVeloRType::pointToChannel(const Gaudi::XYZPoint& point,
+                                       LHCb::VeloChannelID& channel,
                                        double& fraction,
                                        double& pitch) const
 {
   MsgStream msg(msgSvc(), "DeVeloRType");
-  HepPoint3D localPoint(0,0,0);
+  Gaudi::XYZPoint localPoint(0,0,0);
   StatusCode sc = this->globalToLocal(point,localPoint);
 
   if(!sc.isSuccess()) return sc;
@@ -109,7 +110,7 @@ StatusCode DeVeloRType::pointToChannel(const HepPoint3D& point,
   // work out closet channel....
   unsigned int closestStrip=0;
   double logarithm, strip;
-  double radius=localPoint.perp();
+  double radius=localPoint.Rho();
   logarithm = (m_pitchSlope*(radius - m_innerR)+m_innerPitch) / 
     m_innerPitch;
   strip = log(logarithm)/m_pitchSlope;
@@ -128,9 +129,9 @@ StatusCode DeVeloRType::pointToChannel(const HepPoint3D& point,
   channel.setSensor(sensor);
   channel.setStrip(closestStrip);
   if(this->isR()) {
-    channel.setType(VeloChannelID::RType);
+    channel.setType(LHCb::VeloChannelID::RType);
   } else if( this->isPileUp() ) {
-    channel.setType(VeloChannelID::PileUpType);
+    channel.setType(LHCb::VeloChannelID::PileUpType);
   }
   // calculate pitch....
   pitch = rPitch(channel.strip());
@@ -139,11 +140,11 @@ StatusCode DeVeloRType::pointToChannel(const HepPoint3D& point,
 //==============================================================================
 /// Checks if local point is inside sensor
 //==============================================================================
-StatusCode DeVeloRType::isInside(const HepPoint3D& point) const
+StatusCode DeVeloRType::isInside(const Gaudi::XYZPoint& point) const
 {
   MsgStream msg(msgSvc(), "DeVeloRType");
   // check boundaries....  
-  double radius=point.perp();
+  double radius=point.Rho();
   if(this->innerRadius() >= radius || this->outerRadius() <= radius) {
     msg << MSG::VERBOSE << "Outside active radii " << radius << endreq;
     return StatusCode::FAILURE;
@@ -181,9 +182,9 @@ bool DeVeloRType::isCutOff(double x, double y) const
 //==============================================================================
 /// Get the nth nearest neighbour within a sector for a given channel
 //==============================================================================
-StatusCode DeVeloRType::neighbour(const VeloChannelID& start, 
+StatusCode DeVeloRType::neighbour(const LHCb::VeloChannelID& start, 
                                   const int& nOffset, 
-                                  VeloChannelID& channel) const
+                                  LHCb::VeloChannelID& channel) const
 {
   unsigned int strip=0;
   strip = start.strip();
@@ -205,13 +206,13 @@ StatusCode DeVeloRType::neighbour(const VeloChannelID& start,
 //=============================================================================
 /// Residual of 3-d point to a VeloChannelID
 //=============================================================================
-StatusCode DeVeloRType::residual(const HepPoint3D& point, 
-                                 const VeloChannelID& channel,
+StatusCode DeVeloRType::residual(const Gaudi::XYZPoint& point, 
+                                 const LHCb::VeloChannelID& channel,
                                  double &residual,
                                  double &chi2) const
 {
   MsgStream msg(msgSvc(), "DeVeloRType");
-  HepPoint3D localPoint(0,0,0);
+  Gaudi::XYZPoint localPoint(0,0,0);
   StatusCode sc = DeVeloSensor::globalToLocal(point,localPoint);
   
   if(!sc.isSuccess()) return sc;
@@ -222,7 +223,7 @@ StatusCode DeVeloRType::residual(const HepPoint3D& point,
 
   unsigned int strip=channel.strip();
 
-  double rPoint = localPoint.perp();
+  double rPoint = localPoint.Rho();
   double rStrip = rOfStrip(strip);
   residual = rStrip - rPoint;
 
@@ -238,8 +239,8 @@ StatusCode DeVeloRType::residual(const HepPoint3D& point,
 //==============================================================================
 /// Residual [see DeVelo for explanation]
 //==============================================================================
-StatusCode DeVeloRType::residual(const HepPoint3D& /*point*/,
-                                   const VeloChannelID& /*channel*/,
+StatusCode DeVeloRType::residual(const Gaudi::XYZPoint& /*point*/,
+                                   const LHCb::VeloChannelID& /*channel*/,
                                    const double /*localOffset*/,
                                    const double /*width*/,
                                    double &/*residual*/,

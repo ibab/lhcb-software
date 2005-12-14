@@ -1,11 +1,11 @@
-// $Id: DeVeloRType.h,v 1.8 2005-10-02 14:31:21 mtobin Exp $
+// $Id: DeVeloRType.h,v 1.9 2005-12-14 15:28:31 mtobin Exp $
 #ifndef VELODET_DEVELORTYPE_H 
 #define VELODET_DEVELORTYPE_H 1
 
 // Include files
 
-// from CLHEP
-#include "CLHEP/Geometry/Point3D.h"
+// from Kernel
+#include "Kernel/Point3DTypes.h"
 
 /// from VeloDet
 #include "VeloDet/DeVeloSensor.h"
@@ -42,25 +42,25 @@ public:
   /// Calculate the nearest channel to a 3-d point.
   /// Also returns the fractional difference in the channel
   /// and the local pitch.
-  StatusCode pointToChannel(const HepPoint3D& point,
-                                    VeloChannelID& channel,
+  StatusCode pointToChannel(const Gaudi::XYZPoint& point,
+                                    LHCb::VeloChannelID& channel,
                                     double& fraction,
                                     double& pitch) const;
   
   /// Get the nth nearest neighbour for a given channel
-  StatusCode neighbour(const VeloChannelID& start, 
+  StatusCode neighbour(const LHCb::VeloChannelID& start, 
                                const int& nOffset, 
-                               VeloChannelID& channel) const;
+                               LHCb::VeloChannelID& channel) const;
 
   /// Residual of 3-d point to a VeloChannelID
-  StatusCode residual(const HepPoint3D& point, 
-                              const VeloChannelID& channel,
+  StatusCode residual(const Gaudi::XYZPoint& point, 
+                              const LHCb::VeloChannelID& channel,
                               double &residual,
                               double &chi2) const;
   
   /// Residual [see DeVelo for explanation]
-   StatusCode residual(const HepPoint3D& point,
-                      const VeloChannelID& channel,
+   StatusCode residual(const Gaudi::XYZPoint& point,
+                      const LHCb::VeloChannelID& channel,
                       const double localOffset,
                       const double width,
                       double &residual,
@@ -90,7 +90,7 @@ public:
   double rMax(const unsigned int /*zone*/) const {return this->outerRadius();}
 
   /// Determines if local 3-d point is inside sensor
-  StatusCode isInside(const HepPoint3D& point) const;
+  StatusCode isInside(const Gaudi::XYZPoint& point) const;
 
   /// Determine if local point is in corner cut-offs
   bool isCutOff(double x, double y) const;

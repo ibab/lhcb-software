@@ -1,17 +1,18 @@
-// $Id: DeVeloPhiType.cpp,v 1.16 2005-12-08 15:13:24 mtobin Exp $
+// $Id: DeVeloPhiType.cpp,v 1.17 2005-12-14 15:28:31 mtobin Exp $
 //==============================================================================
 #define VELODET_DEVELOPHITYPE_CPP 1
 //==============================================================================
 // Include files 
 
-// from CLHEP
-#include "CLHEP/Units/SystemOfUnits.h"
-#include "CLHEP/Units/PhysicalConstants.h"
+// from Kernel
+#include "Kernel/SystemOfUnits.h"
+#include "Kernel/PhysicalConstants.h"
 
 // From Gaudi
 #include "GaudiKernel/Bootstrap.h"
 #include "GaudiKernel/PropertyMgr.h"
 #include "GaudiKernel/IJobOptionsSvc.h"
+#include "GaudiKernel/ISvcLocator.h"
 #include "GaudiKernel/MsgStream.h"
 
 // From LHCb
@@ -151,13 +152,13 @@ void DeVeloPhiType::calcStripLines()
       }
       y1 = gradient*x1 + intercept;
     }
-    HepPoint3D begin(x1,y1,0);
-    HepPoint3D end(x2,y2,0);
-    //HepPoint3D begin;
-    //HepPoint3D end;
-    //StatusCode sc=this->localToGlobal(HepPoint3D(x1,y1,0),begin);
-    //sc=this->localToGlobal(HepPoint3D(x2,y2,0),end);
-    m_stripLimits.push_back(std::pair<HepPoint3D,HepPoint3D>(begin,end));
+    Gaudi::XYZPoint begin(x1,y1,0);
+    Gaudi::XYZPoint end(x2,y2,0);
+    //Gaudi::XYZPoint begin;
+    //Gaudi::XYZPoint end;
+    //StatusCode sc=this->localToGlobal(Gaudi::XYZPoint(x1,y1,0),begin);
+    //sc=this->localToGlobal(Gaudi::XYZPoint(x2,y2,0),end);
+    m_stripLimits.push_back(std::pair<Gaudi::XYZPoint,Gaudi::XYZPoint>(begin,end));
   }
 }
 //==============================================================================
@@ -188,16 +189,16 @@ void DeVeloPhiType::cornerLimits()
 //==============================================================================
 /// Calculate the nearest channel to a 3-d point.
 //==============================================================================
-StatusCode DeVeloPhiType::pointToChannel(const HepPoint3D& point,
-                          VeloChannelID& channel,
+StatusCode DeVeloPhiType::pointToChannel(const Gaudi::XYZPoint& point,
+                          LHCb::VeloChannelID& channel,
                           double& fraction,
                           double& pitch) const
 {
   MsgStream msg(msgSvc(), "DeVeloPhiType");
-  HepPoint3D localPoint(0,0,0);
+  Gaudi::XYZPoint localPoint(0,0,0);
   StatusCode sc = this->globalToLocal(point,localPoint);
   if(!sc.isSuccess()) return sc;
-  double radius=localPoint.perp();
+  double radius=localPoint.Rho();
 
   // Check boundaries...
   sc = isInside(localPoint);
@@ -228,10 +229,10 @@ StatusCode DeVeloPhiType::pointToChannel(const HepPoint3D& point,
   // set VeloChannelID....
   channel.setSensor(sensor);
   channel.setStrip(closestStrip);
-  channel.setType(VeloChannelID::PhiType);
+  channel.setType(LHCb::VeloChannelID::PhiType);
 
   msg << MSG::VERBOSE << "pointToChannel; local phi " << localPoint.phi()/degree
-      << " radius " << localPoint.perp() 
+      << " radius " << localPoint.Rho() 
       << " phiOffset " << phiOffset(radius)/degree
       << " phi corrected " << phi/degree << endreq;
   msg << MSG::VERBOSE << " strip " << strip << " closest strip " << closestStrip
@@ -241,9 +242,9 @@ StatusCode DeVeloPhiType::pointToChannel(const HepPoint3D& point,
 //==============================================================================
 /// Get the nth nearest neighbour for a given channel
 //==============================================================================
-StatusCode DeVeloPhiType::neighbour(const VeloChannelID& start, 
+StatusCode DeVeloPhiType::neighbour(const LHCb::VeloChannelID& start, 
                                     const int& nOffset, 
-                                    VeloChannelID& channel) const
+                                    LHCb::VeloChannelID& channel) const
 {
   unsigned int strip=0;
   strip = start.strip();
@@ -264,11 +265,11 @@ StatusCode DeVeloPhiType::neighbour(const VeloChannelID& start,
 //==============================================================================
 /// Checks if local point is inside sensor
 //==============================================================================
-StatusCode DeVeloPhiType::isInside(const HepPoint3D& point) const
+StatusCode DeVeloPhiType::isInside(const Gaudi::XYZPoint& point) const
 {
   MsgStream msg(msgSvc(), "DeVeloPhiType");
   // check boundaries....  
-  double radius=point.perp();
+  double radius=point.Rho();
   if(this->innerRadius() >= radius || this->outerRadius() <= radius) {
     msg << MSG::VERBOSE << "Outside active radii " << radius << endreq;
     return StatusCode::FAILURE;
@@ -393,13 +394,13 @@ bool DeVeloPhiType::isCutOff(double x, double y) const
 //==============================================================================
 /// Residual of 3-d point to a VeloChannelID
 //==============================================================================
-StatusCode DeVeloPhiType::residual(const HepPoint3D& point, 
-                                   const VeloChannelID& channel,
+StatusCode DeVeloPhiType::residual(const Gaudi::XYZPoint& point, 
+                                   const LHCb::VeloChannelID& channel,
                                    double &residual,
                                    double &chi2) const
 {
   MsgStream msg(msgSvc(), "DeVeloPhiType");
-  HepPoint3D localPoint(0,0,0);
+  Gaudi::XYZPoint localPoint(0,0,0);
   StatusCode sc=DeVeloSensor::globalToLocal(point,localPoint);
   if(!sc.isSuccess()) return sc;
   sc = isInside(localPoint);
@@ -419,7 +420,7 @@ StatusCode DeVeloPhiType::residual(const HepPoint3D& point,
   
   residual = sqrt(pow(xNear-x,2)+pow(yNear-y,2));
   if(yNear > y) residual *= -1;
-  double radius = localPoint.perp();
+  double radius = localPoint.Rho();
   double sigma = m_resolution.first*phiPitch(radius) - m_resolution.second;
   chi2 = pow(residual/sigma,2);
   
@@ -434,8 +435,8 @@ StatusCode DeVeloPhiType::residual(const HepPoint3D& point,
 //==============================================================================
 /// Residual [see DeVelo for explanation]
 //==============================================================================
-StatusCode DeVeloPhiType::residual(const HepPoint3D& /*point*/,
-                                   const VeloChannelID& /*channel*/,
+StatusCode DeVeloPhiType::residual(const Gaudi::XYZPoint& /*point*/,
+                                   const LHCb::VeloChannelID& /*channel*/,
                                    const double /*localOffset*/,
                                    const double /*width*/,
                                    double &/*residual*/,

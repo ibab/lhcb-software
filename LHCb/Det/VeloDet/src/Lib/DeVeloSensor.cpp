@@ -1,4 +1,4 @@
-// $Id: DeVeloSensor.cpp,v 1.12 2005-12-08 15:13:24 mtobin Exp $
+// $Id: DeVeloSensor.cpp,v 1.13 2005-12-14 15:28:31 mtobin Exp $
 //==============================================================================
 #define VELODET_DEVELOSENSOR_CPP 1
 //==============================================================================
@@ -8,6 +8,7 @@
 #include "GaudiKernel/Bootstrap.h"
 #include "GaudiKernel/PropertyMgr.h"
 #include "GaudiKernel/IJobOptionsSvc.h"
+#include "GaudiKernel/ISvcLocator.h"
 #include "GaudiKernel/MsgStream.h"
 
 // From Velo 
@@ -79,13 +80,13 @@ StatusCode DeVeloSensor::initialize()
 //==============================================================================
 void DeVeloSensor::cacheGeometry() 
 {
-  m_z = m_geometry->toGlobal(HepPoint3D(0,0,0)).z();
+  m_z = m_geometry->toGlobal(Gaudi::XYZPoint(0,0,0)).z();
 }
 //==============================================================================
 /// Convert local position to global position
 //==============================================================================
-StatusCode DeVeloSensor::localToGlobal(const HepPoint3D& localPos, 
-                                       HepPoint3D& globalPos) const
+StatusCode DeVeloSensor::localToGlobal(const Gaudi::XYZPoint& localPos, 
+                                       Gaudi::XYZPoint& globalPos) const
 {
   MsgStream msg(msgSvc(), "DeVeloSensor");
   globalPos = m_geometry->toGlobal(localPos);
@@ -100,8 +101,8 @@ StatusCode DeVeloSensor::localToGlobal(const HepPoint3D& localPos,
 //==============================================================================
 /// Convert global position to local position 
 //==============================================================================
-StatusCode DeVeloSensor::globalToLocal(const HepPoint3D& globalPos, 
-                         HepPoint3D& localPos) const
+StatusCode DeVeloSensor::globalToLocal(const Gaudi::XYZPoint& globalPos, 
+                         Gaudi::XYZPoint& localPos) const
 {
   MsgStream msg(msgSvc(), "DeVeloSensor");
   localPos = m_geometry->toLocal(globalPos);
@@ -117,8 +118,8 @@ StatusCode DeVeloSensor::globalToLocal(const HepPoint3D& globalPos,
 //=============================================================================
 /// Returns the number of channels between two channels
 //=============================================================================
-StatusCode DeVeloSensor::channelDistance(const VeloChannelID& start,
-                                         const VeloChannelID& end,
+StatusCode DeVeloSensor::channelDistance(const LHCb::VeloChannelID& start,
+                                         const LHCb::VeloChannelID& end,
                                          int& nOffset) const
 {
   nOffset = 0;
