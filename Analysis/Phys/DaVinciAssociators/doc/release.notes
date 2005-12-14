@@ -1,10 +1,14 @@
-! $Id: release.notes,v 1.72 2005-07-06 14:37:20 pkoppenb Exp $
-!===================================================================================
+! $Id: release.notes,v 1.73 2005-12-14 14:41:47 cattanem Exp $
+!================================================================================
 ! Package     : DaVinciAssociators
 ! Responsible : Philippe Charpentier
-!===================================================================================
+!================================================================================
 
-!========================== DaVinciAssociators v5r5 2005-07-06 ===================
+!========================== DaVinciAssociators v5r5p1 2005-12-14 ================
+! 2005-12-14 - Marco Cattaneo
+ - Remove unneccessary dependency on CaloAssociators
+
+!========================== DaVinciAssociators v5r5 2005-07-06 ==================
 ! 2005-06-29 - Luis Fernandez
  - src/CompositeParticle2MCLinks.{h,cpp}
    . New property to ignore PID (IgnorePID), e.g. running on Bs -> KK data and 
