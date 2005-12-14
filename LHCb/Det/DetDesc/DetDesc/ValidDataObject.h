@@ -1,4 +1,4 @@
-//$Id: ValidDataObject.h,v 1.4 2005-04-22 13:10:41 marcocle Exp $
+//$Id: ValidDataObject.h,v 1.5 2005-12-14 14:14:01 marcocle Exp $
 #ifndef DETDESC_VALIDDATAOBJECT_H
 #define DETDESC_VALIDDATAOBJECT_H 1
 
@@ -16,7 +16,7 @@
 class StatusCode;
 
 ///---------------------------------------------------------------------------
-/** @class ValidDataObject ValidDataObject.h Det/DetCond/ValidDataObject.h
+/** @class ValidDataObject ValidDataObject.h DetDesc/ValidDataObject.h
 
     A simple DataObject implementing the IValidity interface.
 
