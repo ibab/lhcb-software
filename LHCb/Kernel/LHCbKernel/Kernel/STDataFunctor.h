@@ -1,4 +1,4 @@
-// $Id: STDataFunctor.h,v 1.1 2005-11-22 08:04:46 mneedham Exp $
+// $Id: STDataFunctor.h,v 1.2 2005-12-14 16:34:55 mneedham Exp $
 #ifndef _STDataFunctor_H_
 #define _STDataFunctor_H_
 
@@ -105,79 +105,79 @@ public:
 
 template <class TYPE>
 class station_eq: public std::unary_function<TYPE,bool>{
-   STChannelID aChan;
+   LHCb::STChannelID aChan;
 public:
-  explicit station_eq(const STChannelID& testChan) : aChan(testChan){}
+  explicit station_eq(const LHCb::STChannelID& testChan) : aChan(testChan){}
   inline bool operator() (TYPE obj) const{
   return obj->channelID().station()==aChan.station();}
 };
 
 template <class TYPE>
 class layer_eq: public std::unary_function<TYPE,bool>{
-   STChannelID aChan;
+   LHCb::STChannelID aChan;
 public:
-  explicit layer_eq(const STChannelID& testChan) : aChan(testChan){}
+  explicit layer_eq(const LHCb::STChannelID& testChan) : aChan(testChan){}
   inline bool operator() (TYPE obj) const{
   return obj->channelID().uniqueLayer()==aChan.uniqueLayer();}
 };
 
 template <class TYPE>
 class sector_eq: public std::unary_function<TYPE,bool>{
-   STChannelID aChan;
+   LHCb::STChannelID aChan;
 public:
-  explicit sector_eq(const STChannelID& testChan) : aChan(testChan){}
+  explicit sector_eq(const LHCb::STChannelID& testChan) : aChan(testChan){}
   inline bool operator() (TYPE obj) const{
   return obj->channelID().uniqueSector()==aChan.uniqueSector();}
 };
 
 template <class TYPE>
-class compByStation_LB: public std::binary_function<const TYPE, const STChannelID, bool>{
+class compByStation_LB: public std::binary_function<const TYPE, const LHCb::STChannelID, bool>{
 public:
-  inline bool operator() (const TYPE& obj, const STChannelID& testID) const{
+  inline bool operator() (const TYPE& obj, const LHCb::STChannelID& testID) const{
     return ((!obj) ? false : testID.station() >obj->channelID().station());
   }
 };
 
 template <class TYPE>
-class compByStation_UB: public std::binary_function<const STChannelID,const TYPE ,bool>{
+class compByStation_UB: public std::binary_function<const LHCb::STChannelID,const TYPE ,bool>{
 public:
-  inline bool operator() (const STChannelID& testID, const TYPE& obj) const{
+  inline bool operator() (const LHCb::STChannelID& testID, const TYPE& obj) const{
     return ((!obj) ? false : testID.station() >obj->channelID().station());
   }
 };
 
 template <class TYPE>
-class compByLayer_LB: public std::binary_function<const TYPE, const STChannelID, bool>{
-   STChannelID testID;
+class compByLayer_LB: public std::binary_function<const TYPE, const LHCb::STChannelID, bool>{
+   LHCb::STChannelID testID;
 public:
-  inline bool operator() (const TYPE& obj,const STChannelID& testID) const{
+  inline bool operator() (const TYPE& obj,const LHCb::STChannelID& testID) const{
     return ((!obj) ? false : testID.uniqueLayer() >obj->channelID().uniqueLayer());
   }
 };
 
 template <class TYPE>
-class compByLayer_UB: public std::binary_function<const STChannelID,const TYPE ,bool>{
-   STChannelID testID;
+class compByLayer_UB: public std::binary_function<const LHCb::STChannelID,const TYPE ,bool>{
+   LHCb::STChannelID testID;
 public:
-  inline bool operator()(const STChannelID& testID, const TYPE& obj) const{
+  inline bool operator()(const LHCb::STChannelID& testID, const TYPE& obj) const{
     return ((!obj) ? false : testID.uniqueLayer() >obj->channelID().uniqueLayer());
   }
 };
 
 template <class TYPE>
-class compBySector_LB: public std::binary_function<const TYPE, const STChannelID, bool>{
-   STChannelID testID;
+class compBySector_LB: public std::binary_function<const TYPE, const LHCb::STChannelID, bool>{
+   LHCb::STChannelID testID;
 public:
-  inline bool operator() (const TYPE& obj,const STChannelID& testID) const{
+  inline bool operator() (const TYPE& obj,const LHCb::STChannelID& testID) const{
     return ((!obj) ? false : testID.uniqueSector() >obj->channelID().uniqueSector());
   }
 };
 
 template <class TYPE>
-class compByWafer_UB: public std::binary_function<const STChannelID, const TYPE ,bool>{
-   STChannelID testID;
+class compByWafer_UB: public std::binary_function<const LHCb::STChannelID, const TYPE ,bool>{
+   LHCb::STChannelID testID;
 public:
-  inline bool operator() (const STChannelID& testID, const TYPE& obj) const{
+  inline bool operator() (const LHCb::STChannelID& testID, const TYPE& obj) const{
     return ((!obj) ? false : testID.uniqueWafer() >obj->channelID().uniqueWafer());
   }
 };
