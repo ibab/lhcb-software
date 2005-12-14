@@ -2,8 +2,9 @@ Package LHCbKernel
 Package manager: M.Cattaneo
 Purpose: LHCb specific Kernel classes
 
-!===================== LHCbKernel v6r0 2005-12-13 =========================
-! 2005-12-13 - Marco Cattaneo
+!===================== LHCbKernel v6r0 2005-12-14 =========================
+! 2005-12-14 - Marco Cattaneo
+ - Add IGenericTool and IRndmTool interfaces
  - Add std::vector<std::pair<std::string,int> > to lcg custom dict
 
 ! 2005-12-13 - Eduardo Rodrigues
