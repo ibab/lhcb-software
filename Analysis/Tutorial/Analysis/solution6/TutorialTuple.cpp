@@ -1,4 +1,4 @@
-// $Id: TutorialTuple.cpp,v 1.3 2005-12-12 12:19:13 pkoppenb Exp $
+// $Id: TutorialTuple.cpp,v 1.4 2005-12-14 12:30:23 pkoppenb Exp $
 // Include files 
 
 // from Gaudi
@@ -50,9 +50,10 @@ StatusCode TutorialTuple::initialize() {
 
   if (m_truth) {
     info() << "Will be filling MC truth information" << endmsg ;
+    m_TMP = tool<IParticleDescendants>("ParticleDescendants",this);
     m_pAsct = new Particle2MCLink(this, Particle2MCMethod::Composite,m_containers);
+    m_background = tool<IBackgroundCategory>("BackgroundCategory",this);
   }
-
 
   return StatusCode::SUCCESS;
 };
@@ -88,14 +89,31 @@ StatusCode TutorialTuple::fillTruth(Tuple& tuple,const Particle* b) {
   if ( 0!=MC ){
     tuple->column( "TPid", MC->particleID().pid());
     tuple->column( "TP",   MC->momentum());
-    info() << "Bs associated with " << MC->particleID().pid() 
+    info() << "ASCT: Bs associated with " << MC->particleID().pid() 
             << " " <<  MC->momentum() << endmsg ;
   } else {
     tuple->column( "TPid", -1);
     tuple->column( "TP",   HepLorentzVector(-1.,-1.,-1.,-1.));
     info() << "No association for Bs " << endmsg ;
   }
-  
+  // tool 
+  const ParticleVector fs = m_TMP->finalStates(b);
+  for  ( ParticleVector::const_iterator p = fs.begin() ; p!=fs.end() ;++p){
+    info() << "Associating " << (*p)->particleID().pid() << " " 
+           << (*p)->momentum() << endmsg ;
+    const MCParticle* MC2 = m_pAsct->firstMCP( *p );
+    if ( MC2 ) info() << "... associated with " << MC2->particleID().pid() 
+                   << " " <<  MC2->momentum() << endmsg ;
+    else  info() << "Not associated" << endmsg ;
+  }
+  IBackgroundCategory::categories cat = m_background->category(b);
+  const MCParticle* o = m_background->origin(b);
+  info() << "Background category is " << cat ;
+  if (o) info() << " from MC particle " << o->particleID().pid() 
+                << " " <<  o->momentum() ;
+  info() << endmsg ;
+  tuple->column( "BkgCat", cat);
+
   return StatusCode::SUCCESS;
 }
 //=============================================================================
