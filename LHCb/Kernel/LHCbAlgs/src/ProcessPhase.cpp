@@ -1,11 +1,9 @@
-// $Id: ProcessPhase.cpp,v 1.1.1.1 2004-06-14 12:40:38 cattanem Exp $
+// $Id: ProcessPhase.cpp,v 1.2 2005-12-14 13:22:21 cattanem Exp $
 
 // Include files
 #include "ProcessPhase.h"
-#include "GaudiKernel/AlgFactory.h"
+#include "GaudiKernel/DeclareFactoryEntries.h" 
 #include "GaudiKernel/IJobOptionsSvc.h"
-
-typedef std::vector<Algorithm*>  AlgList;
 
 //------------------------------------------------------------------------------
 //
@@ -15,8 +13,8 @@ typedef std::vector<Algorithm*>  AlgList;
 // Created:     17th December 1999
 //------------------------------------------------------------------------------
 
-static const AlgFactory<ProcessPhase>  s_factory;
-const IAlgFactory& ProcessPhaseFactory = s_factory;
+// Declaration of the Algorithm Factory
+DECLARE_ALGORITHM_FACTORY( ProcessPhase );
 
 
 ProcessPhase::ProcessPhase( const std::string& name, ISvcLocator* pSvcLocator )

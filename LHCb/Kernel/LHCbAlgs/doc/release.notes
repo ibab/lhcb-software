@@ -4,6 +4,10 @@
 ! Purpose     : General purpose algorithms and tools for LHCb
 !-----------------------------------------------------------------------------
 
+!======================== LHCbAlgs v2r0 2005-12-14 =======================
+! 2005-12-14 - Marco Cattaneo
+ - Remove LbAppInit. Replaced by two tools: InitRndmTool, MemoryTool
+
 !======================== LHCbAlgs v1r9 2005-09-06 =======================
 ! 2005-09-06 - Marco Cattaneo
  - Remove dependency on LHCbInterfaces and pick up Kernel/INormalizeTool.h from

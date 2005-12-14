@@ -1,4 +1,4 @@
-// $Id: TESCheck.cpp,v 1.2 2005-01-28 13:18:04 cattanem Exp $
+// $Id: TESCheck.cpp,v 1.3 2005-12-14 13:22:21 cattanem Exp $
 // ============================================================================
 // Include files
 // ============================================================================
@@ -8,7 +8,7 @@
 // ============================================================================
 // GaudiKernel
 // ============================================================================
-#include "GaudiKernel/AlgFactory.h"
+#include "GaudiKernel/DeclareFactoryEntries.h" 
 #include "GaudiKernel/DataObject.h"
 // ============================================================================
 
@@ -128,21 +128,8 @@ private:
 };
 // ============================================================================
 
-// ============================================================================
-/** @var s_Factory
- *  Declaration of the instance of concrete Algorithm Factory,
- *  mandatory for dynamic loading
- */
-// ============================================================================
-static const  AlgFactory<TESCheck>          s_Factory ;
-// ============================================================================
-/** @var TESCheckFactory
- *  Declaration of the exported abstract Algorithm Factory,
- *  mandatory for dynamic loading
- */
-// ============================================================================
-const        IAlgFactory&TESCheckFactory =  s_Factory ;
-// ============================================================================
+// Declaration of the Algorithm Factory
+DECLARE_ALGORITHM_FACTORY( TESCheck );
 
 // ============================================================================
 /// execute the algorithm itself

@@ -3,7 +3,7 @@
 # Maintainer : Marco Cattaneo
 #============================================================================
 package LHCbAlgs
-version v1r9
+version v2r0
 
 #============================================================================
 # Structure, i.e. directories to process. 
@@ -15,16 +15,19 @@ include_path    none
 # Used packages. Specify the version, * at the end specifies 'any revision'
 #    Put as many lines as needed, with all packages, without the '#'
 #============================================================================
-use GaudiAlg    	v*
-use Event    	        v*      Event
-use DetDesc		v*	Det
+use GaudiAlg   v*
+use LHCbKernel v* Kernel -no_auto_imports
 
 #============================================================================
 # Component library building rule
 #============================================================================
-library         LHCbAlgs    ../src/*.cpp -import=AIDA
+library LHCbAlgs ../src/*.cpp -import=AIDA -import=LHCbKernel
 
 #============================================================================
 # define component library link options
 #============================================================================
 apply_pattern   component_library library=LHCbAlgs
+
+private
+# Remove unneccessary dependency from library
+macro_remove LHCbAlgs_shlibflags $(LHCbAlgslinkopts)

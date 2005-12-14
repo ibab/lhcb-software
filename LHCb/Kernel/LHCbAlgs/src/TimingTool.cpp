@@ -1,8 +1,8 @@
-// $Id: TimingTool.cpp,v 1.1 2004-07-14 16:17:33 cattanem Exp $
+// $Id: TimingTool.cpp,v 1.2 2005-12-14 13:22:21 cattanem Exp $
 // Include files 
 
 // from Gaudi
-#include "GaudiKernel/ToolFactory.h"
+#include "GaudiKernel/DeclareFactoryEntries.h" 
 #include "GaudiKernel/RndmGenerators.h" 
 #include "GaudiKernel/GaudiException.h" 
 
@@ -16,9 +16,7 @@
 //-----------------------------------------------------------------------------
 
 // Declaration of the Tool Factory
-static const  ToolFactory<TimingTool>          s_factory ;
-const        IToolFactory& TimingToolFactory = s_factory ; 
-
+DECLARE_TOOL_FACTORY( TimingTool );
 
 //=============================================================================
 // Standard constructor, initializes variables
