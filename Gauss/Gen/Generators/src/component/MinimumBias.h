@@ -1,4 +1,4 @@
-// $Id: MinimumBias.h,v 1.1 2005-10-03 10:29:04 robbep Exp $
+// $Id: MinimumBias.h,v 1.2 2005-12-14 21:53:15 robbep Exp $
 #ifndef GENERATORS_MINIMUMBIAS_H 
 #define GENERATORS_MINIMUMBIAS_H 1
 
@@ -7,15 +7,16 @@
 #include "GaudiAlg/GaudiTool.h"
 #include "Generators/ExternalGenerator.h" 
 
-/** @class MinimumBias MinimumBias.h 
+/** @class MinimumBias MinimumBias.h "MinimumBias.h"
  *  
- *  Tool for minimum bias generation
+ *  Tool for minimum bias generation. Concrete implementation 
+ *  of ISampleGenerationTool using the base class ExternalGenerator.
  *
  *  @author Patrick Robbe
  *  @date   2005-08-18
  */
 class MinimumBias : public ExternalGenerator {
-public:
+ public:
   /// Standard constructor
   MinimumBias( const std::string& type, 
                const std::string& name,
@@ -23,17 +24,17 @@ public:
 
   virtual ~MinimumBias( ); ///< Destructor
 
+  /// Initialize method
   virtual StatusCode initialize( ) ;
 
+  /** Generate minimum bias interactions without any cut.
+   *  Implements ISampleGeneratorTool::generate.
+   */
   virtual bool generate( const unsigned int nPileUp , 
                          EventVector & theEventVector ,
                          HardVector  & theHardVector ) ;
 
-  virtual void printCounters( ) const { ; }
-
-protected:
-
-private:
-
+  /// Implements ISampleGeneratorTool::printCounters
+  virtual void printCounters( ) const { ; } 
 };
 #endif // GENERATORS_MINIMUMBIAS_H
