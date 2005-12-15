@@ -1,9 +1,7 @@
 #include <iostream>
 
 #include "L0MuonKernel/CoreUnit.h"
-#include "L0MuonKernel/CrateUnit.h"
-#include "L0MuonKernel/L0BufferUnit.h"
-#include "L0MuonKernel/BCSUnit.h"
+#include "L0MuonKernel/MuonTriggerUnit.h"
 
 
 L0Muon::CoreUnit::CoreUnit() {
@@ -17,317 +15,275 @@ L0Muon::CoreUnit::CoreUnit(DOMNode* pNode):L0MUnit(pNode) {
     
 L0Muon::CoreUnit::~CoreUnit() {};  
 
-void L0Muon::CoreUnit::makePads() {
+bool L0Muon::CoreUnit::makePads() {
+  // Construct the logical pads list from the input tiles (OL+neighbours)
+  // Return false if the pad list is empty
+  
   m_pads.clear();
  
   std::map<std::string,Register*>::iterator ir;
 
-  
+  // Loop over input registers (OL and input neighbours) and construct logical pads
   for ( ir = m_inputs.begin(); ir != m_inputs.end(); ir++ ) {
     TileRegister* itr = dynamic_cast<TileRegister*>(ir->second);
    
+    // If the input register is not empty
     if ( ! itr->empty() ) {
-      if (m_debug) std::cout << "Core:makePads: register key  " << ir->first   << std::endl;
-      if (m_debug) std::cout << "Core:makePads: register name " << itr->name() << std::endl;
+      if (m_debug) std::cout << "*!! Core:makePads: register key  " << ir->first   << std::endl;
+      if (m_debug) std::cout << "*!! Core:makePads: register name " << itr->name() << std::endl;
       boost::dynamic_bitset<> r = itr->getBitset();
-      if (m_debug) std::cout << "Core:makePads: reg size" << " " <<r.size() << std::endl;
+      if (m_debug) std::cout << "*!! Core:makePads: reg size" << " " <<r.size() << std::endl;
       std::vector<MuonTileID> tmp = itr->firedTiles();
       std::vector<MuonTileID>::iterator itmp;
-      if (m_debug) std::cout << "Core:makePads: fired tiles (" << tmp.size() <<"):"<< std::endl;
+      if (m_debug) std::cout << "*!! Core:makePads: fired tiles (" << tmp.size() <<"):"<< std::endl;
       for (itmp = tmp.begin(); itmp!= tmp.end(); itmp++){
-	if (m_debug) std::cout << "Core:makePads:   " << (*itmp).toString()<< std::endl;
+        if (m_debug) std::cout << "*!! Core:makePads:   " << (*itmp).toString()<< std::endl;
       }
 
       itr->makePads();
-      if (m_debug) std::cout << "Core:makePads: itr->makePads() done" << std::endl;
+      if (m_debug) std::cout << "*!! Core:makePads: itr->makePads() done" << std::endl;
 
       std::vector<MuonTileID> pads = itr->Pads();
-      if (m_debug) std::cout << "Core:makePads: pads.size= "<<pads.size() << std::endl;
+      if (m_debug) std::cout << "*!! Core:makePads: pads.size= "<<pads.size() << std::endl;
       std::vector<MuonTileID>::iterator  ipads ;    
       for (ipads = pads.begin(); ipads != pads.end(); ipads++){
-	m_pads.push_back(*ipads);
-	if (m_debug) std::cout << "Core:makePads:   " << (*ipads).toString() << std::endl;
+        m_pads.push_back(*ipads);
+        if (m_debug) std::cout << "*!! Core:makePads:   " << (*ipads).toString() << std::endl;
       }
-      if (m_debug) std::cout << "Core:makePads: m_pads.size()= " << m_pads.size() << std::endl;
-    }           
-  }      
+      if (m_debug) std::cout << "*!! Core:makePads: m_pads.size()= " << m_pads.size() << std::endl;
+    } // End if the input register is not empty
+  } // End of Loop over input registers
+
+  if (m_pads.empty()) return false;
+  return true;
 }
 
 
-void L0Muon::CoreUnit::makeTower() {
+bool L0Muon::CoreUnit::makeTower() {
+  // Loop over the fired pads and set the bittable of the tower
+  // (pad in the local PU frame with the M3 granularity)
+  // and the dictionnary containing the relation between
+  // the bits and the MuonTileID
+
+  bool seedFound=false;
 
   unsigned int nreg = m_mid.region();
+
+  // Layout of pads in M3
   MuonLayout layout(48,8);
+  // Layout of PU
   MuonLayout pulayout(2,2);
 
+  // Reference of the first pad (closest to the beam)
   MuonTileID refpad = MuonTileID(m_mid,layout,0,0);
   int refX = refpad.nX();
   int refY = refpad.nY();
+  if (m_debug) std::cout << "*!! Core:makeTower " << "refpad " << refpad.toString() << std::endl;
 
   std::vector<MuonTileID>::iterator ip ;
   std::vector<MuonTileID>::iterator itmp;
 
-  
+  // Loop over fired pads
   for (ip=m_pads.begin(); ip != m_pads.end(); ip++) {
 
-    if (m_debug) std::cout << "Core:makeTower " << "pad " << (*ip).toString() << std::endl;
+    if (m_debug) std::cout << "*!! Core:makeTower " << "pad " << (*ip).toString() << std::endl;
+    // Pads'station
     int nsta = ip->station();
-    std::vector<MuonTileID> tmp;
-    
-    
+
+    // if a pad is found in M3, a seed is found: set the flag
+    if (nsta==2) seedFound=true;
+
+    // Vector of tiles with M3 granularity containing the fired pad
+    std::vector<MuonTileID> tmp;    
     if ( ip->region() == nreg ) {
-      if (m_debug) std::cout << "Core:makeTower " << "ip->region==nreg" << std::endl;
+      if (m_debug) std::cout << "*!! Core:makeTower " << "ip->region==nreg" << std::endl;
       tmp = layout.tiles(*ip);
     } else if ( ip->region() != nreg){
-      if (m_debug) std::cout << "Core:makeTower ip->region != nreg" << std::endl;
-      if (m_debug) std::cout << "Core:makeTower quarter " << (*ip).quarter() << " region " << (*ip).region() << " nreg " << nreg << std::endl;
+      if (m_debug) std::cout << "*!! Core:makeTower ip->region != nreg" << std::endl;
+      if (m_debug) std::cout << "*!! Core:makeTower quarter " << (*ip).quarter() 
+                             << " region " << (*ip).region() << " nreg " << nreg << std::endl;
       tmp = layout.tilesInRegion((*ip), nreg); 
     }
     
+    // Loop over the tiles in M3 granularity 
     for ( itmp = tmp.begin(); itmp != tmp.end(); itmp++ ) {
-
-
-      MuonTileID puid = pulayout.contains(*itmp);
       
+      // Local coordinated of the pad (PU frame)
       int nYindex= (itmp->nY())-refY+m_tower.maxYFoi(nsta);
-      int nXindex= (itmp->nX())-refX+m_tower.maxXFoi(nsta);
-      
+      int nXindex= (itmp->nX())-refX+m_tower.maxXFoi(nsta);    
       std::pair<int, int>  yx = std::make_pair(nYindex,nXindex);
       
-      
+      // Set the corresponding bit in the tower
       m_tower.setBit(nsta, nYindex, nXindex );
       
-      //      if (m_debug) std::cout << "Core:makeTower   XY" 
-      //		     << " " << nXindex  
-      //		     << " " << nYindex 
-      //		     << " " << (*itmp).toString() << std::endl;
+      // Fill the map relating the local coordinates and the MuonTileID
       m_tower.setPadIdMap(nsta, yx, *ip);
+      if (m_debug) std::cout << "*!! Core:makeTower " 
+                             << " sta= "<<nsta
+                             << " yx= "<<yx.first<<","<<yx.second
+                             << " *ip= "<<(*ip).toString()
+                             << " itmp= "<<(*itmp).toString()
+                             << std::endl;
+    } // End of Loop over the tiles in M3 granularity 
+  } // End of Loop over fired pads
+
+  return seedFound;
+}
+
+void L0Muon::CoreUnit::initializeM1TowerMap() {
+  // When ignoring M1, the extrapolated position in M1 is used instead of
+  // the hit. In that case, the IdMap in Tower does not contain the
+  // M1 pad corresponding to the extrapolation.
+  // The table of correspondance between position in tower and pad in M1
+  // is filled in this function which should be called during the initialization 
+  // phase.
+  unsigned int nreg = m_mid.region();
+
+  // Layout of pads in M3
+  MuonLayout layout(48,8);
+  // Layout of pads in M1
+  MuonLayout layoutM1(24,8);
+  // Layout of PU
+  MuonLayout pulayout(2,2);
+
+  // Reference of the first pad (closest to the beam)
+  MuonTileID refpad = MuonTileID(m_mid,layout,0,0);
+  int refX = refpad.nX();
+  int refY = refpad.nY();
+  if (m_debug) std::cout << "*!! Core:initializeM1TowerMap " << "refpad " << refpad.toString() << std::endl;
+
+  std::vector<MuonTileID>::iterator ip ;
+  std::vector<MuonTileID>::iterator itmp;
+
+
+  // Set station
+  int sta=0;
+
+  // Loop over M1 pads 
+  std::vector<MuonTileID> pads = layoutM1.tilesInArea(m_mid,m_tower.maxXFoi(1)/2,0);
+  for (ip=pads.begin(); ip != pads.end(); ip++) {
+
+    if (m_debug) std::cout << "*!! Core:initializeM1TowerMap " << "pad " << (*ip).toString() << std::endl;
+
+    // Vector of tiles with M3 granularity containing the fired pad
+    std::vector<MuonTileID> tmp;    
+    if ( ip->region() == nreg ) {
+      if (m_debug) std::cout << "*!! Core:initializeM1TowerMap " << "ip->region==nreg" << std::endl;
+      tmp = layout.tiles(*ip);
+    } else if ( ip->region() != nreg){
+      if (m_debug) std::cout << "*!! Core:initializeM1TowerMap ip->region != nreg" << std::endl;
+      if (m_debug) std::cout << "*!! Core:initializeM1TowerMap quarter " << (*ip).quarter() 
+                             << " region " << (*ip).region() << " nreg " << nreg << std::endl;
+      tmp = layout.tilesInRegion((*ip), nreg); 
+    }
+    
+    // Loop over the tiles in M3 granularity 
+    for ( itmp = tmp.begin(); itmp != tmp.end(); itmp++ ) {
       
-    }     
-  } 
+      // Local coordinated of the pad (PU frame)
+      int nYindex= (itmp->nY())-refY+m_tower.maxYFoi(sta);
+      int nXindex= (itmp->nX())-refX+m_tower.maxXFoi(sta);    
+      std::pair<int, int>  yx = std::make_pair(nYindex,nXindex);
+      
+      // Fill the map relating the local coordinates and the MuonTileID
+      m_tower.setPadIdMap(sta, yx, *ip);
+      if (m_debug) std::cout << "*!! Core:initializeM1TowerMap " 
+                             << " sta= "<<sta
+                             << " yx= "<<yx.first<<","<<yx.second
+                             << " *ip= "<<(*ip).toString()
+                             << " itmp= "<<(*itmp).toString()
+                             << std::endl;
+    } // End of Loop over the tiles in M3 granularity 
+  } // End of Loop over pads
 }
 
 void L0Muon::CoreUnit::initialize() {
-  if (m_debug) std::cout << "*!* CoreUnit::initialize" <<std::endl;
-  // Get a pointer to the parent Crate Unit
-  Unit * parent = parentByType("MuonTriggerUnit");
-  CrateUnit * pcrate = dynamic_cast<CrateUnit *>( parentByType("CrateUnit"));
-  if (m_debug) std::cout << "*!* CoreUnit::initialize pcrate="<<pcrate <<std::endl;
-  if (m_debug) std::cout << "*!* CoreUnit::initialize pcrate->xFoi(0)="<<pcrate->xFoi(0) <<std::endl;
 
-  std::string buildL0Buffer = parent->getProperty("BuildL0Buffer");
-  if (m_debug) std::cout << "*!* CoreUnit::initialize buildL0Buffer="<<buildL0Buffer <<std::endl;
-  m_buildL0Buffer = false;
-  if (buildL0Buffer== "True") m_buildL0Buffer = true;
-  if (m_debug) std::cout << "*!* CoreUnit::initialize m_buildL0Buffer="<<m_buildL0Buffer <<std::endl;
+  // Get a pointer to the parent Crate Unit
+  MuonTriggerUnit * pmuontrigger = dynamic_cast<MuonTriggerUnit *>( parentByType("MuonTriggerUnit"));
+
+  // Set the NO M1 flag
+  m_tower.setIgnoreM1(pmuontrigger->ignoreM1());
+  if (pmuontrigger->ignoreM1()==true) initializeM1TowerMap();
 
   // Set the foi
   for (int ista=0; ista<5; ista++){ 
-    if (m_debug) std::cout << "*!* CoreUnit::initialize sta M" <<ista+1<< std::endl; 
-    m_tower.setFoi(ista,pcrate->xFoi(ista),pcrate->yFoi(ista));
-    if (m_debug) std::cout << "*!* CoreUnit::initialize FOI sta M" <<ista+1<< "X: "<< pcrate->xFoi(ista)<< "Y: "<< pcrate->yFoi(ista) << std::endl; 
+    m_tower.setFoi(ista,pmuontrigger->xFoi(ista),pmuontrigger->yFoi(ista));
   }
-  // Initialize the status
-  m_status = 0;
-      
+  
   // Set the pt parameters
-  m_tower.setPtparam(pcrate->ptParameters());
+  m_tower.setPtparam(pmuontrigger->ptParameters());
 
-  // Set the NO M1 flag
-  m_tower.setIgnoreM1(pcrate->ignoreM1());
+  // Candidate Register handler for output candidates
+  char buf[4096];
+  char* format ;
+  format = "CAND_PUQ%dR%d%d%d";
+  sprintf(buf,format,m_mid.quarter()+1,m_mid.region()+1,m_mid.nX(),m_mid.nY());
+  std::map<std::string,L0Muon::Register*>::iterator itout =  m_outputs.find(buf);
+  if (itout==m_outputs.end()) {
+    std::cout <<"L0Muon::CoreUnit::initialize "<<m_mid 
+              <<" key "<<buf  <<" not found in input registers\n";
+    exit(-1);
+  }
+  
+  Register* reg =(*itout).second;
+  m_candRegHandlerOut = CandRegisterHandler(reg) ;    
   
 }
 
-void L0Muon::CoreUnit::preexecute() {
-
-  m_cand.clear();
-  m_offForCand.clear();
-  if (m_debug) m_tower.setDebugMode();
-  
-  
+void L0Muon::CoreUnit::setDebugMode(bool debug) {
+  if (debug) std::cout <<"*!* "<< type() <<"::setDebugMode" << std::endl;
+  m_tower.setDebugMode(debug);  
 }
+
 
 void L0Muon::CoreUnit::execute() {
 
-  if (m_debug) std::cout << "*!* CoreUnit::execute " << std::endl; 
-
-  // Get a pointer to the Board Unit
-  Unit * myBoard = m_parent->parent();
-  BoardUnit * bu = dynamic_cast<BoardUnit*>(myBoard);
-  if (bu == NULL) {
-    std::cout << "*** FATAL ERROR ***\n";
-    std::cout << "    L0Muon::CoreUnit::execute\n";
-    std::cout << "    board unit not found bu="<<bu<<"\n";
-  }
-  
-  // Get a pointer to the BCSU
-  BCSUnit* bcsu= dynamic_cast<BCSUnit*> (bu->subUnit("BCSUnit"));
-  if (bcsu == NULL) {
-    std::cout << "*** FATAL ERROR ***\n";
-    std::cout << "    L0Muon::CoreUnit::execute\n";
-    std::cout << "    bcsu unit not found bcsu="<<bcsu<<"\n";
-  }
-  
-  // Get a pointer to the Crate Unit
-  //  CrateUnit * cr = dynamic_cast<CrateUnit*>(myBoard->parent());
-
+  if (m_debug) std::cout << "*!* CoreUnit::execute " << std::endl;
   
   // Reset the tower
   m_tower.reset();
 
-  makePads();
+  // Construct logical pads for input registers 
+  // (fill the m_pads vector of MuonTileIDs)
+  // Return if the pad list is empty
+  if (makePads()==false) return;
   if (m_debug) std::cout << "*!* CoreUnit::execute after makePads " << std::endl; 
-  makeTower();
-  if (m_debug) std::cout << "*!* CoreUnit::execute after makeTower "<< std::endl; 
 
+  // Fill the tower with the fired pads (in M3 granularity)
+  // Return if no seed has been found
+  if (makeTower()==false) return;
+  if (m_debug) std::cout << "*!* CoreUnit::execute after makeTower "<< std::endl;
   
-  //IMuonTileXYZTool *iTileXYZTool = cr->getMuonTool();  
-  //m_tower.setMuonToolInTower(iTileXYZTool);
+  // Process the tower
+  // Return if no candidate has been found
+  std::vector<PMuonCandidate> candidates = m_tower.processTower(m_mid);
+  if (m_debug) std::cout << "*!* CoreUnit::execute after m_tower.processTower "<< std::endl;
+  std::vector<PMuonCandidate>::iterator itcand;
+  if (m_debug) std::cout << "*!* CoreUnit::execute candidates size= "<<candidates.size()<< std::endl;
+  if (candidates.empty()) return;
+
+  // Fill the candidate register with first 2 candidates
+  int icand=0; 
+  for (itcand=candidates.begin();itcand<candidates.end();itcand++) {
+    if (m_debug) std::cout << "*!* CoreUnit::execute inside loop over candidates icand= "<<icand<< std::endl;
+    m_candRegHandlerOut.setMuonCandidate(*itcand,icand);
+    if (m_debug) std::cout << "*!* CoreUnit::execute inside loop over candidates : cand set in register "<< std::endl;
+    icand++;
+    if (icand==2) break;
+  }
+
+  if (m_debug) std::cout << "*!* CoreUnit::execute candidates icand= "<<icand<< std::endl;
+  m_candRegHandlerOut.setCandStatus(icand);
+  if (m_debug) std::cout << "*!* CoreUnit::execute after m_candRegHandlerOut.setCandStatus(icand); icand="<<icand<<std::endl;
   
-  m_tower.processTower(m_mid);
-  m_cand = m_tower.puCandidates();
-
-  // Debug
-  /*if (m_debug) std::cout << "m_offForCand.size" << m_offForCand.size() << std::endl;
- 
-  std::vector< std::pair<PCandidate, std::vector<int> > >::iterator ioff;  
-  for (ioff = m_offForCand.begin(); ioff != m_offForCand.end(); ioff++){
-    
-  std::vector<int> tmp =(*ioff).second;
-    
-
-  if (m_debug) std::cout << "Pt of the candidate = " << (*ioff).first->pt()
-  << std::endl;
-    
-  if (m_debug) std::cout << "Offsets = " << tmp[0] << std::endl;
-  if (m_debug) std::cout << "Offsets = " << tmp[1] << std::endl;
-  if (m_debug) std::cout << "Offsets = " << tmp[2] << std::endl;
-  if (m_debug) std::cout << "Offsets = " << tmp[3] << std::endl;
-  if (m_debug) std::cout << "Offsets = " << tmp[4] << std::endl;
-  if (m_debug) std::cout << "Offsets = " << tmp[5] << std::endl;
-  if (m_debug) std::cout << "Offsets = " << tmp[6] << std::endl;
-  if (m_debug) std::cout << "Offsets = " << tmp[7] << std::endl;
-  if (m_debug) std::cout << "Offsets = " << tmp[8] << std::endl;
-  if (m_debug) std::cout << "Offsets = " << tmp[9] << std::endl;
-    
-    
-  }
-  */  
-  //=============================================
- 
-  if (m_cand.size()>0 && m_cand.size()<3){
-    m_status = L0MuonStatus::OK;
-  } else if (m_cand.size()>2){
-    m_status = L0MuonStatus::PU_OVERFLOW;
-  }
-  if (m_debug) std::cout << "*!* CoreUnit::execute number of Candidates" <<" " 
-			 << m_cand.size() << std::endl;
-
-  // Addresses for candidates (L0Buffers)
-
-  L0Muon::RegisterFactory* rfactory = L0Muon::RegisterFactory::instance();
-  L0BufferUnit* l0buffer= dynamic_cast<L0BufferUnit*>(m_parent->subUnit("L0BufferUnit"));
-  if ( l0buffer== NULL) {
-    std::cout << "*** FATAL ERROR ***\n";
-    std::cout << "    L0Muon::CoreUnit::execute\n";
-    std::cout << "    l0buffer unit not found l0buffer="<<l0buffer<<"\n";
-  }
      
-  for (int icand= 0; icand<2; icand++){
-    if (m_debug) std::cout << "*!* CoreUnit::execute loop over candidates   icand=" << icand << std::endl;
-    int nbits = m_tower.addr(icand).size();
-    if (m_debug) std::cout << "*!* CoreUnit::execute loop over candidates   nbits=" << nbits << std::endl;
-    
-    // Prepare registers with addresser for candidates
-    char * name = "(R%d,%d,%d)_addr_candidate%d";
-    char buf[4096];     
-    sprintf(buf,name,m_mid.region(), m_mid.nX(), m_mid.nY(),icand+1);
-    TileRegister* pReg= rfactory->createTileRegister(buf,nbits);
-    pReg->setType("Outputfield");     
-    pReg->set(m_tower.addr(icand));
-         
-    if (m_debug) std::cout << "*!* CoreUnit::execute regiser for candidates prepared and set" << std::endl;
-    //load address in l0buffer
-    if (m_buildL0Buffer){
-      char * name = "cand%d";      
-      char buf[4096];      
-      sprintf(buf,name,icand);      
-      l0buffer->addInputRegister(pReg,buf);
-      if (m_debug) std::cout << "*!* CoreUnit::execute regiser for candidates added to l0buffer" << std::endl;
-    }
- 
-    if (bcsu != NULL){
-      bcsu->addInputRegister(pReg);
-      if (m_debug) std::cout << "*!* CoreUnit::execute regiser for candidates added to bcsu" << std::endl;
-    }
-          
-  }
-
-  // Status words for candidates: Prepare register with status word
-  char * name = "(R%d,%d,%d)_status";      
-  char buf[4096];      
-  sprintf(buf,name,m_mid.region(), m_mid.nX(), m_mid.nY());      
-  unsigned long int status= m_cand.size()<3 ? m_cand.size() : 3ul;
-  boost::dynamic_bitset<> bits(4,status);
-  int nbits = bits.size();
-  TileRegister* pReg= rfactory->createTileRegister(buf,nbits);
-  pReg->setType("Outputfield");
-  pReg->set(bits);
-
-  // load register in l0buf  
-  if (m_buildL0Buffer){
-    char * name = "status";      
-    char buf[4096];      
-    sprintf(buf,name);      
-    l0buffer->addInputRegister(pReg,buf);
-  }
-  //      
-  if (bcsu != NULL){
-    bcsu->addInputRegister(pReg);
-  }
-
-  if (m_debug) std::cout << "*!* CoreUnit::execute Registers done" <<std::endl;
-        
-  // load Candidates and Offsets in BCSU (the first two candidates are transmitted to BCSU
-  if (m_cand.size()>0 && m_cand.size()<3){
-    for (std::vector<PCandidate>::iterator icand= m_cand.begin();
-	 icand < m_cand.end(); icand++){
-      bcsu->loadCandidates(*icand);           
-    }
-    if (m_cand.size()==1){   
-      if (m_buildL0Buffer){
-	PCandidate pcand(new Candidate(L0MuonStatus::PU_EMPTY)) ;        
-	bcsu->loadCandidates(pcand);	      
-      }
-    }
-    bcsu->loadStatus(L0MuonStatus::OK);
-  }
-        
-  if (m_cand.size() >2){  
-    for (std::vector<PCandidate>::iterator icand= m_cand.begin();
-	 icand < m_cand.begin()+2; icand++){
-      bcsu->loadCandidates(*icand);
-            
-    }          
-    bcsu->loadStatus(L0MuonStatus::OK);
-  }
-        
-  if (m_cand.size()==0){
-    m_status =0;
-    if (m_buildL0Buffer){
-      PCandidate pcand(new Candidate(L0MuonStatus::PU_EMPTY));
-      bcsu->loadCandidates(pcand);
-      PCandidate pcand1(new Candidate(L0MuonStatus::PU_EMPTY));
-      bcsu->loadCandidates(pcand1);
-    }
-    bcsu->loadStatus(1);	  
-  }        
 }
 
 
 void L0Muon::CoreUnit::postexecute() {
-  m_pads.clear();
-  releaseRegisters();
+  releaseInputRegisters();
+  releaseOutputRegisters();
 }
 
 

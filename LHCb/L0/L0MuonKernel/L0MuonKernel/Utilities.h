@@ -10,6 +10,7 @@
 #include "ProcessorKernel/TileRegister.h"
 
 namespace L0Muon {
+
   /// Read the external file describing the register and return the L0MTileList
   /// type is 0 for L0Buffer and 1 for optical link
   std::vector<L0MTile> tileListFromMap(const MuonTileID & pu, int type, std::string path);

@@ -38,21 +38,14 @@ namespace L0Muon {
      FormattingUnit(DOMNode* pNode);
 
      
-     void preexecute();
-   
-     void postexecute();
+     void preexecute();   
 
      /// Give a static type name to the unit
      std::string type() {
        return "FormattingUnit";
      }
 
-     // Intersect tiles of input and output data 
-     void makePads();
-
    private:
-
-     std::vector<MuonTileID> m_pads;
      
 
    };

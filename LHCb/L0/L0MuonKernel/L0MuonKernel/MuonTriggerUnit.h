@@ -3,23 +3,21 @@
 
 /* class MuonTriggerUnit L0MuonKernel/MuonTriggerUnit.h
 
-   Class representing a board 
-   of the level-o muon trigger processor 
+Class representing a board 
+of the level-o muon trigger processor 
    
-   author  Luisanna Tocco
-   date  24 September 2003
+author  Luisanna Tocco
+date  24 September 2003
 */ 
 
 
 #include <boost/dynamic_bitset.hpp>
 #include <vector>
 #include "L0MuonKernel/L0MUnit.h"
-#include "L0MuonKernel/Candidate.h"
-
 
 namespace L0Muon {
 
-   class MuonTriggerUnit : public L0MUnit {
+  class MuonTriggerUnit : public L0MUnit {
      
   public:
 
@@ -27,7 +25,10 @@ namespace L0Muon {
     MuonTriggerUnit();
 
     /// Constructor 
-    MuonTriggerUnit(std::vector< std::string >  configfile, std::vector<MuonTileID> config_pus);
+    MuonTriggerUnit(std::vector< std::string >  configfile, 
+                    std::vector<MuonTileID> config_pus,
+                    int RawBufferMode,
+                    int l0bufferMode);
 
     /// Constructor 
     MuonTriggerUnit(DOMNode* pNode);
@@ -35,22 +36,39 @@ namespace L0Muon {
     /// Destructor
     ~MuonTriggerUnit();
 
+    /// Initialize subunits
+    void initialize();
+
     /// Give a static type name to the unit
     std::string type() {
       return "MuonTriggerUnit";
     }
 
-    /// return candidates 
-    std::map<MuonTileID, std::vector<PCandidate > > candidates(){ return m_candidates; }
-    /// Get candidates from processing units.
-    void setCandidates(MuonTileID id, std::vector<PCandidate > vcand){m_candidates[id]=vcand;} 
+    /// Return x foi in station sta
+    int xFoi(int sta);
+    
+    /// Return y foi in station sta
+    int yFoi(int sta);
+    
+    /// Return the flag for searching candidates without M1 
+    bool ignoreM1(){ return m_ignoreM1;} 
 
+    /// Return parameters for calculating pT
+    std::vector<double> ptParameters(){ return m_ptparameters;}
+
+    /// Return the flag to zero supress or not the rawbuffer
+    bool zip(){return m_zip;}
+     
   private:
      
-    std::map<MuonTileID, std::vector<PCandidate > > m_candidates;
-    
+    /// Fois (one vector element per station)
+    std::vector<int> m_xfoi;
+    std::vector<int> m_yfoi;    
+    bool m_ignoreM1;
+    std::vector<double> m_ptparameters;
+    bool m_zip;
 
-    };
+  };
 
 
 };  // namespace L0Muon

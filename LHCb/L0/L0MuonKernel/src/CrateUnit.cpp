@@ -1,86 +1,240 @@
 #include <utility>  // For std::pair
 #include <algorithm> 
 #include "L0MuonKernel/CrateUnit.h"
+
 #include "L0MuonKernel/MuonTriggerUnit.h"
 #include "L0MuonKernel/BCSUnit.h"
+#include "L0MuonKernel/Tell1ProcUnit.h"
+#include "L0MuonKernel/CtrlUnit.h"
+#include "L0MuonKernel/RawBufferProcUnit.h"
+#include "L0MuonKernel/L0BufferBCSUnit.h"
+#include "L0MuonKernel/L0BufferSlaveUnit.h"
+#include "L0MuonKernel/L0BufferCtrlUnit.h"
+#include "ProcessorKernel/RegisterFactory.h"
+#include "MuonKernel/MuonTileID.h"
 
-L0Muon::CrateUnit::CrateUnit(PL0MProNet & pProNet,std::vector<MuonTileID> config_pus )
-{
-  
-  
-  if ( ! m_units.empty() ) {
-    m_units.clear();
-  }
-  
+L0Muon::CrateUnit::CrateUnit(PL0MProNet & pProNet,
+                             std::vector<MuonTileID> config_pus,
+                             int rawBufferMode,
+                             int l0BufferMode){
+
+  //=============================================
+  //=                                           =
+  //=   Set configuration dependant variables   =
+  //=                                           =
+  //=============================================
+
   MuonTileID mid(0);
   mid.setQuarter(pProNet->quarter());
 
   m_mid= mid;
+  
+  //================================================
+  //=                                              =
+  //=         Build the Units structure            =
+  //=                    &                         =
+  //=         Build the TileRegisters              =
+  //=                                              =
+  //= The Units created here are:                  =
+  //=                                              =
+  //= The units belonging to the CrateUnit:        =
+  //=   - BoardUnit (up to 12 per crate)           =
+  //=   - CtrlUnit (max 1 per crate)               =
+  //=   - Tell1ProcUnit (max 1 per crate)          =
+  //=                                              =
+  //= The sub-units of the BoardUnit:              =
+  //=   - ProcUnit (up to 4 per board)             =
+  //=   - BCSUUnit (max 1 per board)               =
+  //=                                              =
+  //= The sub-units of the BCSUnit:                =
+  //=   - L0BufferBCSUnit (max 1 per BCSU)         =
+  //=                                              =
+  //= The sub-units of the CtrlUnit:               =
+  //=   - L0BufferSlaveUnit (max 1 per Ctrl)       =
+  //=   - L0BufferCtrlUnit (max 1 per ctrl)        =
+  //=                                              =
+  //= The sub-units of the Tell1ProcUnit:          =
+  //=   - RawBufferProcUnit (max 1 per tell1       =
+  //=                                              =
+  //================================================
 
-   
-  std::vector<MuonTileID> boards = pProNet->boards();
-  std::vector<MuonTileID>::iterator ib;
-  std::vector<MuonTileID>::iterator ipusb;
+  char buf[4096];
+  char buf_alias[4096];
+  char* format ;
 
-  //    for ( int i = 0; i<5 ; i++ ) {
-  //      std::cout << "Foi X in station " << i << " " << foix[i] <<  std::endl;
-  //    }
+  // Clear the units tree
+  if ( ! m_units.empty() ) {
+    m_units.clear();
+  }
 
+  // Get a pointer to the register factory
+  L0Muon::RegisterFactory* rfactory = L0Muon::RegisterFactory::instance();
+
+  // Build the Tell1 unit
+  Tell1ProcUnit *tell1proc = new Tell1ProcUnit(m_mid);
+
+  // Build the Raw buffer unit of the Tell1 linked to the Proc boards  
+  RawBufferProcUnit *rawbufproc = new RawBufferProcUnit(m_mid);
+  tell1proc->addUnit(rawbufproc);
+
+  // Build the Crl unit and its l0buffer units
+  CtrlUnit *ctrl = new CtrlUnit(m_mid);
+  L0BufferSlaveUnit *l0bufferctrl  = new L0BufferSlaveUnit(m_mid);
+  L0BufferCtrlUnit *l0bufferslave = new L0BufferCtrlUnit(m_mid);
+  if (l0BufferMode==1) ctrl->addUnit(l0bufferctrl);
+  if (l0BufferMode==1) ctrl->addUnit(l0bufferslave);
+  
+  //
+  // Loop over the boards in the processor
+  // -------------------------------------
+  //
   bool ok;
-
+  int boardIndex=0;
+  L0MTileList boards = pProNet->boards();
+  L0MTileList::iterator ib;
   for (ib= boards.begin(); ib != boards.end(); ib++){
-    
-    ok = true;
+    boardIndex++;
+
     // Check that the board contains at least one of the requested PU's if
     // the list of PU's is given explicitely
+    ok = true;
     if (config_pus.size() > 0) {
       ok = false;
       std::vector<MuonTileID>::iterator ipu;
       for ( ipu = config_pus.begin(); ipu != config_pus.end(); ipu++ ) {
-	MuonTileID good_board = ipu->containerID(MuonLayout(1,1));
-	if ( (*ib) == good_board ) {
-	  ok = true;
-	  break;
-	}
+        MuonTileID good_board = ipu->containerID(MuonLayout(1,1));
+        if ( (*ib) == good_board ) {
+          ok = true;
+          break;
+        }
       }
     } else {
       ok = true;
     } 
-     
-    // We do not need this board  
     if ( ! ok ) continue; 
-        
-    std::vector<MuonTileID> pusb = pProNet->pusInBoard(*ib);
 
+    //
+    // Build the Board Unit and it's sub units
+    //
     BoardUnit * board = new BoardUnit(*ib);
+    addUnit(board);
 
     BCSUnit * bcsu = new BCSUnit(*ib);
-     
+    L0BufferBCSUnit * l0bufferbcsu = new L0BufferBCSUnit(*ib);
+    if (l0BufferMode==1) bcsu->addUnit(l0bufferbcsu);
+    
+    //
+    // Loop over the PUs in the board
+    // ------------------------------
+    //
+    L0MTileList pusb = pProNet->pusInBoard(*ib);
+    L0MTileList::iterator ipusb;
     for ( ipusb = pusb.begin(); ipusb != pusb.end(); ipusb++ ){
             
-      ok = true;
       // Check that this PU was requested
+      ok = true;
       if (config_pus.size() > 0) {
-	ok = false;
-	std::vector<MuonTileID>::iterator ipu = std::find(config_pus.begin(),
-							  config_pus.end(),
-							  (*ipusb));
-	if ( ipu != config_pus.end() ) {
-	  ok = true;
-	}
+        ok = false;
+        std::vector<MuonTileID>::iterator ipu = std::find(config_pus.begin(),
+                                                          config_pus.end(),
+                                                          (*ipusb));
+        if ( ipu != config_pus.end() ) {
+          ok = true;
+        }
       } else {
-	ok = true;
+        ok = true;
       }	 
-	        
+	       
+      // If we want this PU
       if ( ok ) {
-	L0MPuNodeBase m_pPuNode = pProNet->puNode(*ipusb);
-	Unit * pProcUnit = new ProcUnit(m_pPuNode);
-	board->addUnit(pProcUnit);
-      }	 
-    }
+        //
+        // Build the ProcUnit 
+        //
+        L0MPuNodeBase puNode = pProNet->puNode(*ipusb);
+        Unit * pProcUnit = new ProcUnit(puNode,rawBufferMode,l0BufferMode);
+        board->addUnit(pProcUnit);
+        
+        // Add the Candidate registers of the PU
+        // in the ouput registers list of the BCSU and Tell1
+        // (the registers have been created in ProcUnit)
+        format = "CAND_PU%s";
+        sprintf(buf,format, puNode.name().c_str());
+        Register* candreg  = rfactory->searchRegister(buf);
+        format = "PU%d";
+        sprintf(buf,format,puNode.hardID());
+        bcsu->addInputRegister(candreg,buf);
+        l0bufferbcsu->addInputRegister(candreg,buf);
+        rawbufproc->addInputRegister(candreg,buf);
+
+        // Add the input tile registers of the PU
+        // in the input registers list of the RawBufferProc
+        // (the registers have been created in ProcUnit)
+        format = "RAWDATAIN%s_%d";
+        int index=0;
+        while (1) {
+          sprintf(buf,format, puNode.name().c_str(),index);
+          TileRegister* tilereg  = rfactory->searchTileRegister(buf);
+          if (tilereg==0) break;
+          index++;
+          if (rawBufferMode>0) rawbufproc->addInputRegister(tilereg);
+         }
+        
+        if (l0BufferMode!=0 || rawBufferMode!=0) {
+          // Add the formatted input tile registers of the PU
+          // in the input registers list of the RawBufferProc
+          // (the registers have been created in ProcUnit)
+          format = "FORMATTEDDATAIN_%s";
+          sprintf(buf,format, puNode.name().c_str());
+          TileRegister* tilereg  = rfactory->searchTileRegister(buf);
+          rawbufproc->addInputRegister(tilereg);
+        }
+        
+      }	// End If we want this PU
+    } // End of Loop over the PUs in the board
+    
+    // BCSU candidates register
+    format = "CAND_BCSUQ%dR%d%d%d";
+    sprintf(buf,format, m_mid.quarter()+1,(*ib).region()+1,(*ib).nX(),(*ib).nY());
+    Register* candreg  = rfactory->createRegister(buf,L0Muon::BitsCandRegTot);
+    // Alias use for the raw buffer of the TELL1 attached to the controler cards
+    format = "CAND_BOARDQ%d_%d";               
+    sprintf(buf_alias,format,(*ib).quarter()+1,boardIndex-1);
+    rfactory->createAlias(buf,buf_alias);
+
+    candreg->setType("Candidates");
+    bcsu->addOutputRegister(candreg);
+    l0bufferbcsu->addInputRegister(candreg);
+    format = "BOARD%d";
+    sprintf(buf,format,boardIndex-1);
+    ctrl->addInputRegister(candreg,buf);
+    l0bufferctrl->addInputRegister(candreg,buf);
+    l0bufferslave->addInputRegister(candreg,buf);
+    rawbufproc->addInputRegister(candreg,buf);
+    
+    // Add sub-units to the board 
     board->addUnit(bcsu);
-    addUnit(board);
-  }  
+
+  }  // End of Loop over the boards in the processor
+
+  // Controller candidates register
+  format = "CAND_CTRLQ%d";
+  sprintf(buf,format, m_mid.quarter()+1);
+  Register* candreg  = rfactory->createRegister(buf,L0Muon::BitsCandRegTot);
+  ctrl->addOutputRegister(candreg);
+  l0bufferctrl->addInputRegister(candreg);
+  l0bufferslave->addInputRegister(candreg);
+
+  // Rawbuffer Proc output register
+  format = "RAWBUFFER_PROCQ%d";
+  sprintf(buf,format, m_mid.quarter()+1);
+  Register* rawreg  = rfactory->createRegister(buf,L0Muon::BitsRawBufProcTot);
+  rawbufproc->addOutputRegister(rawreg);
+
+  // Add sub units to the crate 
+  addUnit(ctrl);
+  addUnit(tell1proc);
+
+  
 }
 
 L0Muon::CrateUnit::CrateUnit(DOMNode* pNode):L0MUnit(pNode){
@@ -89,180 +243,33 @@ L0Muon::CrateUnit::CrateUnit(DOMNode* pNode):L0MUnit(pNode){
 L0Muon::CrateUnit::~CrateUnit(){
 }
 
-void L0Muon::CrateUnit::initialize() {
+// // void L0Muon::CrateUnit::initialize() {
   
-  MuonTriggerUnit * parent = dynamic_cast<MuonTriggerUnit *>( parentByType("MuonTriggerUnit"));
+// //   MuonTriggerUnit * parent = dynamic_cast<MuonTriggerUnit *>( parentByType("MuonTriggerUnit"));
 
-  // m_ignoreM1     =  m_properties["ignoreM1"];
-  // m_ptparameters =  m_properties["ptparameters"]; 
-  // m_xfoi         =  m_properties["foiXSize"]; 
-  // m_yfoi         =  m_properties["foiYSize"]; 
-  m_ignoreM1     =  parent->getProperty("ignoreM1");
-  m_ptparameters =  parent->getProperty("ptparameters"); 
-  m_xfoi         =  parent->getProperty("foiXSize"); 
-  m_yfoi         =  parent->getProperty("foiYSize"); 
+// //   // m_ignoreM1     =  m_properties["ignoreM1"];
+// //   // m_ptparameters =  m_properties["ptparameters"]; 
+// //   // m_xfoi         =  m_properties["foiXSize"]; 
+// //   // m_yfoi         =  m_properties["foiYSize"]; 
+// //   m_ignoreM1     =  parent->getProperty("ignoreM1");
+// //   m_ptparameters =  parent->getProperty("ptparameters"); 
+// //   m_xfoi         =  parent->getProperty("foiXSize"); 
+// //   m_yfoi         =  parent->getProperty("foiYSize"); 
  
-  L0Muon::Unit::initialize();
-}
-
-void L0Muon::CrateUnit::preexecute() {
-  L0Muon::Unit::preexecute();
-}
-
-void L0Muon::CrateUnit::execute()
-{
-  m_status = L0MuonStatus::OK ;
-  L0Muon::Unit::execute();
-  sortCandidates();  
-  MuonTriggerUnit * parent = dynamic_cast<MuonTriggerUnit *>( parentByType("MuonTriggerUnit"));
-  parent->setCandidates(m_mid, m_candidates);
-}
-
-void L0Muon::CrateUnit::postexecute(){ 
-  L0Muon::Unit::postexecute();
-  m_candidates.clear();
-  m_offsets.clear(); 
-}
+// //   L0Muon::Unit::initialize();
+// // }
 
 
-void L0Muon::CrateUnit::fillCandidates(PCandidate cand){
-  m_candidates.push_back(cand);
-}
-
-void L0Muon::CrateUnit::fillOffset(std::pair<PCandidate, 
-                                   std::vector<int> > off){
-  m_offsets.push_back(off);
-}
-
-void L0Muon::CrateUnit::sortCandidates(){
-
-  //m_debug = true;
-
-  if (m_debug) std::cout << "\nCrate: " << "# of candidates : " 
-			 << m_candidates.size() << std::endl;
-
-  std::sort(m_candidates.begin(),m_candidates.end(),ComparePt());  
-  //std::sort(m_offsets.begin(),m_offsets.end(),ComparePt());
-
-  std::vector<PCandidate >::iterator ilmc ;
-  std::vector< std::pair<PCandidate, std::vector<int> > >::iterator ioff; 
- 
- 
-  // Sort Candidates if the status is OK
-   
-  if( m_status == L0MuonStatus::OK) {
-   
-    if (m_debug) {
-      int sss = m_offsets.size();
-      std::cout << "Crate: Candidates and offsets entering into Crate: -----" 
-		<< sss << "----" << std::endl ;
-      for (ioff = m_offsets.begin(); ioff != m_offsets.end(); ioff++){
-	std::vector<int> tmp =(*ioff).second;
-
-	std::cout << "Crate: Pt of the candidate = " << (*ioff).first->pt();
-	std::cout << " Crate: Offsets = " << tmp[0] << std::endl;
-      }
-    }
-   
-    //std::cout << "CrateUnit: Sorting candidates: " << m_candidates.size() << std::endl;
-    int count=0;
-    if (m_candidates.size() > 2) {   
-      for (ilmc = m_candidates.end()-1;ilmc != m_candidates.begin()+1; 
-	   ilmc--) {
-
-	//std::cout << "Erasing candidate" << std::endl;
-	m_candidates.erase(ilmc);
-	count++;
-      }
-    } 
-    //std::cout << count << " candidates erased " << std::endl;
-    //      else if ( m_candidates.size() == 1) { 
-    //        PCandidate pcand(new Candidate(L0MuonStatus::PU_EMPTY));
-    //        m_candidates.push_back(pcand);
-    // 
-    //      } else if ( m_candidates.size() == 0){
-    //        PCandidate pcand(new Candidate(L0MuonStatus::PU_EMPTY));      
-    //        m_candidates.push_back(pcand);
-    //        m_candidates.push_back(pcand);
-    //      }
-
-    //std::cout << "CrateUnit: Done checking candidates" << std::endl;
-
-    // Sort offsets
-
-    //      if (m_offsets.size() > 2) {
-    //        for (ioff = m_offsets.end()-1;ioff != m_offsets.begin()+1; 
-    //             ioff--) {
-    // 
-    // 	 m_offsets.erase(ioff);
-    // 
-    //        }
-    // 
-    //      } 
-    //      else if(m_offsets.size() == 1) { 
-    //        std::vector<int> tmp;
-    //        for (int iv =0; iv<10; iv++){       
-    // 	 tmp.push_back(0);
-    //        }
-    // 
-    //        PCandidate pcand(new Candidate(L0MuonStatus::PU_EMPTY));              
-    //        std::pair<PCandidate , std::vector<int> > empty = 
-    // 	 std::make_pair(pcand, tmp);
-    //        m_offsets.push_back(empty);
-    // 
-    //      } 
-    //      else if(m_offsets.size() == 0){
-    //        std::vector<int> tmp;
-    //        for (int iv =0; iv<10; iv++){
-    // 
-    // 	 tmp.push_back(0);
-    //        }
-    // 
-    //        PCandidate pcand(new Candidate(L0MuonStatus::PU_EMPTY));
-    //        std::pair<PCandidate , std::vector<int> > empty = 
-    // 	 std::make_pair(pcand, tmp);
-    //        m_offsets.push_back(empty);
-    //        m_offsets.push_back(empty);
-    //      }
- 
-    //std::cout << "CrateUnit: Done Sort offsets" << std::endl; 
-   
-  }
-   
-
-  // Printout for debug   
-
-  if (m_debug) {
-    std::cout << "Crate: " << "Candidates and offsets sorting from Crate:" 
-	      << std::endl ;
-    for (ioff = m_offsets.begin();ioff != m_offsets.end();ioff++){
-      std::vector<int> tmp =(*ioff).second;
-      std::cout << "Crate: " << "Pt of the candidate = " << (*ioff).first->pt(); 
-      std::cout << " Crate: " << "Offsets = " << tmp[0] << std::endl;
-      /*if (m_debug) std::cout << "Offsets = " << tmp[0] << std::endl;
-	if (m_debug) std::cout << "Offsets = " << tmp[1] << std::endl;
-	if (m_debug) std::cout << "Offsets = " << tmp[2] << std::endl;
-	if (m_debug) std::cout << "Offsets = " << tmp[3] << std::endl;
-	if (m_debug) std::cout << "Offsets = " << tmp[4] << std::endl;
-	if (m_debug) std::cout << "Offsets = " << tmp[5] << std::endl;
-	if (m_debug) std::cout << "Offsets = " << tmp[6] << std::endl;
-	if (m_debug) std::cout << "Offsets = " << tmp[7] << std::endl;
-	if (m_debug) std::cout << "Offsets = " << tmp[8] << std::endl;
-	if (m_debug) std::cout << "Offsets = " << tmp[9] << std::endl;*/
-    } 
-  }  
-}
-
-int L0Muon::CrateUnit::xFoi(int sta)
-{
-  int xfoi= m_xfoi[sta];
-  return xfoi;
+// // int L0Muon::CrateUnit::xFoi(int sta)
+// // {
+// //   int xfoi= m_xfoi[sta];
+// //   return xfoi;
   
-}
+// // }
 
-int L0Muon::CrateUnit::yFoi(int sta)
-{
-  int yfoi= m_yfoi[sta];
-  return yfoi;
+// // int L0Muon::CrateUnit::yFoi(int sta)
+// // {
+// //   int yfoi= m_yfoi[sta];
+// //   return yfoi;
   
-}
+// // }

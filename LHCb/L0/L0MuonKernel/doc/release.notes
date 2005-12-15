@@ -5,6 +5,11 @@
 !-----------------------------------------------------------------------------
 
 !========================= L0MuonKernel v3r0p1 2005-04-15 ==================
+! 2005-12-15 - Julien Cogan
+ - Candidates are put in registers to be passed between units 
+ - Add the possibility to write L0 & RAW buffers
+ - Simplify the candidate search inside towers
+
 ! 2005-04-15 - Marco Cattaneo
  - Fix some doxygen warnings
 

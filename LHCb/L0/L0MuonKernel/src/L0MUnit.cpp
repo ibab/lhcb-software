@@ -28,10 +28,10 @@ L0Muon::L0MUnit::L0MUnit(DOMNode* pNode):Unit() {
   XMLCh* UNIT            = XMLString::transcode(XMLUnit.c_str());
   DOMNode *child = pNode->getFirstChild();
   while(child) {
-    // // //std::cout << "<L0MUnit::L0MUnit> child "
-    // // //	      <<" name is "<<XMLString::transcode(child->getNodeName()) 
-    // // //	      <<" type is "<<child->getNodeValue()
-    // // //	      <<std::endl;
+    // // //std::cout << "<L0MUnit::L0MUnit> child ";
+    // // //std::cout	<<" name is "<<XMLString::transcode(child->getNodeName()) ;
+    // // //std::cout	<<" type is "<<child->getNodeValue();
+    // // //std::cout	<<std::endl;
     if(XMLString::equals(child->getNodeName(),PROPERTY)) {
       propertyFromNode(child);
     } else if (XMLString::equals(child->getNodeName(),INPUTREGISTERS)) {
@@ -54,7 +54,7 @@ void L0Muon::L0MUnit::propertyFromNode(DOMNode* pNode)
   std::string name = getAttributeStr(di, "name");
   std::string value = getAttributeStr(di, "value");
   setProperty(name,value);
-  std::cout << "L0MUnit::propertyFromNode "<< " name: " <<name <<" value: " <<value<< std::endl;
+  // // //std::cout << "L0MUnit::propertyFromNode "<< " name: " <<name <<" value: " <<value<< std::endl;
   
 }
 
@@ -70,26 +70,30 @@ void L0Muon::L0MUnit::registersFromNode(DOMNode* pNode,int io)
   L0Muon::RegisterFactory* rfactory = L0Muon::RegisterFactory::instance();
   DOMNode *child = pNode->getFirstChild();
   while(child) {
-    // // //std::cout << "<L0MUnit::registersFromNode> child "
-    // // //	      <<" name is "<<XMLString::transcode(child->getNodeName()) 
-    // // //	      <<" type is "<<child->getNodeValue()
-    // // //	      <<std::endl;
+    // // //std::cout << "<L0MUnit::registersFromNode> child ";
+    // // //std::cout <<" name is "<<XMLString::transcode(child->getNodeName()) ;
+    // // //std::cout <<" type is "<<child->getNodeValue();
+    // // //std::cout <<std::endl;
     if (child->getNodeType()!=3) {
       DOMNamedNodeMap* di = child->getAttributes();
       std::string name = getAttributeStr(di, "name");
       std::string key = getAttributeStr(di, "key");
-      TileRegister* preg = rfactory->searchTileRegister(name);
+      Register* preg = rfactory->searchRegister(name);
+      // // //std::cout << "<L0MUnit::registersFromNode> name="<<name<<std::endl;
+      // // //std::cout << "<L0MUnit::registersFromNode> key="<<key<<std::endl;
+      // // //std::cout << "<L0MUnit::registersFromNode> preg="<<preg<<std::endl;
+      // // //std::cout << "<L0MUnit::registersFromNode> preg->size()="<<preg->size()<<std::endl;
       switch(io){
       case 0:
-	// // //std::cout << "<L0MUnit::registersFromNode> INPUT ..."<<std::endl;
-	addInputRegister(preg,key);
-	// // //std::cout << "<L0MUnit::registersFromNode> INPUT done"<<std::endl;
-	break;
+        // // //std::cout << "<L0MUnit::registersFromNode> INPUT ..."<<std::endl;
+        addInputRegister(preg,key);
+        // // //std::cout << "<L0MUnit::registersFromNode> INPUT done"<<std::endl;
+        break;
       case 1:
-	// // //std::cout << "<L0MUnit::registersFromNode> OUTPUT ..."<<std::endl;
-	addOutputRegister(preg,key);
-	// // //std::cout << "<L0MUnit::registersFromNode> OUTPUT done"<<std::endl;
-	break;
+        // // //std::cout << "<L0MUnit::registersFromNode> OUTPUT ..."<<std::endl;
+        addOutputRegister(preg,key);
+        // // //std::cout << "<L0MUnit::registersFromNode> OUTPUT done"<<std::endl;
+        break;
       }
       // // //std::cout << "<L0MUnit::registersFromNode> next child ..."<<std::endl;
     }
@@ -109,6 +113,8 @@ void L0Muon::L0MUnit::unitFromNode(DOMNode* pNode)
 
 std::string L0Muon::L0MUnit::toXML(std::string tab){
 
+  // // //std::cout << tab << "L0Muon::L0MUnit::toXML  type"<<type()<<"  IN\n";
+
   std::string xmlString=tab;
   
   char buf[8];
@@ -117,18 +123,11 @@ std::string L0Muon::L0MUnit::toXML(std::string tab){
   xmlString +=" type = \""+type()+"\" ";
   xmlString +=" id = \""+mid().toString()+"\" ";
   xmlString +=" >\n";
-
-//   // Properties
-//   std::map<std::string,L0Muon::Property>::iterator i_properties;
-//   for (i_properties=m_properties.begin();i_properties!=m_properties.end();i_properties++){
-//     xmlString +=tab+"    ";
-//     xmlString +="<"+XMLProperty+" ";
-//     xmlString +=" name  = \""+(*i_properties).first+"\" ";
-//     xmlString +=" value = \""+(*i_properties).second.value()+"\" ";
-//     xmlString +="/>\n";
-//   }
   
+  // // //std::cout << tab << "L0Muon::L0MUnit::toXML  xmlString="<<xmlString<<"\n";
+
   // Input Registers
+  // // //std::cout << tab << "L0Muon::L0MUnit::toXML  Input Registers size="<<m_inputs.size()<<"\n";
   if (m_inputs.size()>0) {
     xmlString +=tab+"    ";
     xmlString +="<"+XMLInputRegisters+" ";
@@ -137,7 +136,11 @@ std::string L0Muon::L0MUnit::toXML(std::string tab){
     xmlString +=" size = \""+str+"\" ";
     xmlString +=" >\n";
     std::map<std::string,L0Muon::Register*>::iterator i_inputs;
+    // // //std::cout << tab << "L0Muon::L0MUnit::toXML  Loop over Input Registers\n";
     for (i_inputs=m_inputs.begin();i_inputs!=m_inputs.end();i_inputs++){
+      // // //std::cout << tab << "L0Muon::L0MUnit::toXML  Registers:"<<XMLRegisterRecord<<"\n";    
+      // // //std::cout << tab << "L0Muon::L0MUnit::toXML  key: "<< (*i_inputs).first<<"\n";
+      // // //std::cout << tab << "L0Muon::L0MUnit::toXML  name:"<< (*i_inputs).second->name()<<"\n";
       xmlString +=tab+"    "+"    ";
       xmlString +="<"+XMLRegisterRecord+" ";
       xmlString +=" key  = \""+(*i_inputs).first+"\" ";
@@ -148,7 +151,10 @@ std::string L0Muon::L0MUnit::toXML(std::string tab){
     xmlString +="</"+XMLInputRegisters+">\n";
   }
 
+  // // //std::cout << tab << "L0Muon::L0MUnit::toXML  Input Registers done.\n";
+
   // Output Registers
+  // // //std::cout << tab << "L0Muon::L0MUnit::toXML Output  Registers size="<<m_outputs.size()<<"\n";
   if (m_outputs.size()>0) {
     xmlString +=tab+"    ";
     xmlString +="<"+XMLOutputRegisters+" ";
@@ -157,7 +163,11 @@ std::string L0Muon::L0MUnit::toXML(std::string tab){
     xmlString +=" size = \""+str+"\" ";
     xmlString +=" >\n";
     std::map<std::string,L0Muon::Register*>::iterator i_outputs;
+    // // //std::cout << tab << "L0Muon::L0MUnit::toXML  Loop over Output Registers\n";
     for (i_outputs=m_outputs.begin();i_outputs!=m_outputs.end();i_outputs++){
+      // // //std::cout << tab << "L0Muon::L0MUnit::toXML  Registers:"<<XMLRegisterRecord<<"\n";    
+      // // //std::cout << tab << "L0Muon::L0MUnit::toXML  key: "<< (*i_outputs).first<<"\n";
+      // // //std::cout << tab << "L0Muon::L0MUnit::toXML  name:"<< (*i_outputs).second->name()<<"\n";
       xmlString +=tab+"    "+"    ";
       xmlString +="<"+XMLRegisterRecord+" ";
       xmlString +=" key  = \""+(*i_outputs).first+"\" ";
@@ -167,6 +177,7 @@ std::string L0Muon::L0MUnit::toXML(std::string tab){
     xmlString +=tab+"    ";
     xmlString +="</"+XMLOutputRegisters+">\n";
   }
+  // // //std::cout << tab << "L0Muon::L0MUnit::toXML  Output Registers done.\n";
   // SubUnits
   if ( ! m_units.empty() ) {
     std::vector<L0Muon::Unit*>::iterator  iu;
@@ -175,6 +186,7 @@ std::string L0Muon::L0MUnit::toXML(std::string tab){
       xmlString += pu->toXML(tab+"    ");
     }
   } 
+  // // //std::cout << tab << "L0Muon::L0MUnit::toXML SubUnits  done.\n";
   
   xmlString += tab;
   xmlString +="</"+XMLUnit+">\n";

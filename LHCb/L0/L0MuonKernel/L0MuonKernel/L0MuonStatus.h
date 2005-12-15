@@ -1,4 +1,4 @@
-// $Id: L0MuonStatus.h,v 1.3 2004-12-21 15:37:30 ltocco Exp $
+// $Id: L0MuonStatus.h,v 1.4 2005-12-15 15:53:26 jucogan Exp $
 
 
 #ifndef L0MUONKERNEL_L0MUONSTATUS_H
@@ -13,7 +13,9 @@
 
 namespace L0MuonStatus {
 
-  enum Status {OK=1, EMPTY, ERROR, CRATE_EMPTY, CRATE_ERROR, PU_EMPTY, PU_ERROR, PU_OVERFLOW}; // L0Muon candidate status codes
+  //  enum Status {OK=1, EMPTY, ERROR, CRATE_EMPTY, 
+  // CRATE_ERROR, PU_EMPTY, PU_ERROR, PU_OVERFLOW}; // L0Muon candidate status codes
+  enum Status {NONE=0, ONE, TWO, PU_OVERFLOW}; // L0Muon candidate status codes
 
 };  // namespace L0Muon
 

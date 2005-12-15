@@ -43,9 +43,6 @@ namespace L0Muon {
 
   private:
      
-     int m_imax ;
-     
-     
 
   };
 

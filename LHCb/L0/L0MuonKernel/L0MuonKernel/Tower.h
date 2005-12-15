@@ -1,4 +1,4 @@
-// $Id: Tower.h,v 1.11 2005-04-15 16:14:31 cattanem Exp $
+// $Id: Tower.h,v 1.12 2005-12-15 15:53:27 jucogan Exp $
 
 #ifndef PROCESSORKERNEL_TOWER_H
 #define PROCESSORKERNEL_TOWER_H     1
@@ -14,18 +14,19 @@
 #include <vector>
 #include <utility>  // For std::pair
 #include <boost/dynamic_bitset.hpp>
-#include "L0MuonKernel/Candidate.h"
-//#include "Event/L0Muon.h"
 #include "L0MuonKernel/L0MuonStatus.h"
-#include "L0MuonKernel/CandidateTower.h"
-#include "L0MuonKernel/CandidateSearch.h"
 #include "ProcessorKernel/Register.h"
 #include "MuonKernel/MuonTileID.h"
+#include "L0MuonKernel/MuonCandidate.h"
 //#include "MuonTools/IMuonTileXYZTool.h"
 //#include "GaudiKernel/MsgStream.h"
 
 
 namespace L0Muon {
+
+
+  //  const int ExtrapolationM1[11]={0,+4,-4,+7,-7,+11,-11,+14,-14,+18,-18};
+  const int ExtrapolationM1[6]={0,+4,+7,+11,+14,+18};
 
   class Tower  {
   public:
@@ -66,15 +67,6 @@ namespace L0Muon {
      */
     MuonTileID getPadIdMap(int sta, std::pair<int,int> XY);
     
-    /** Return pads in the field of  interest for a given seed in M3
-        
-        @param sta  : station 
-        @param seed : seed position 
-        @param xfoi : foi 
-     */
-    boost::dynamic_bitset<> getBits(int sta, HitIndex seed, int xfoi);
-    boost::dynamic_bitset<> getBits(int sta, int x, int y, int xfoi);
-    
     /// Draw bits for station 
     void drawStation(int sta);
  
@@ -83,14 +75,14 @@ namespace L0Muon {
    
         @param sta  : station 
     */
-    int maxXFoi(int sta){ return m_maxXFoI[sta] ; }
+    int maxXFoi(int sta) const { return m_maxXFoI[sta] ; }
 
     /** Return foi for constructing the tower 
         (max. values in y direction)
    
         @param sta  : station 
     */
-    int maxYFoi(int sta){ return m_maxYFoI[sta] ; }
+    int maxYFoi(int sta) const { return m_maxYFoI[sta] ; }
 
     /** Set foi for searching candidates
  
@@ -109,7 +101,6 @@ namespace L0Muon {
     /// set flag for searching without M1
     void setIgnoreM1(bool ignoreM1){ 
       m_ignoreM1 = ignoreM1; 
-      m_csearch.ignoreM1(m_ignoreM1);
     }
           
     /// Draw tower
@@ -122,92 +113,36 @@ namespace L0Muon {
         
         @param puID  : MuonTileID of the PU 
      */
-    void processTower(MuonTileID & puID);
+    std::vector<PMuonCandidate> processTower(MuonTileID & puID);
 
-    /** Return address of candidates 
-        
-        @param i: number of candidate
- 
-     */
-    boost::dynamic_bitset<> addr(int i){ return m_addr[i];}
-    
-    /// Create a Candidate
-    PCandidate createCandidate(double p, double th, double phi,int flag);
-  
-    /// Return the candidates 
-    std::vector<PCandidate> puCandidates(){ return m_puCandidates;}
-    
-    /// return offsets for candidates (used for trigger studies)
-    //std::vector< std::pair<PCandidate, std::vector<int> > > 
-    //candOffset(){ return m_offForCand;}
-
-    /// Function to extract the track parameter: pT
-    double pt() { return m_pt; }
-
-    /// Function to extract the track parameter: theta
-    double theta() { return m_theta; }
- 
-    /// Function to extract the track parameter: phi
-    double phi() { return m_phi; }
-    
     /// Cleaning clusters of seeds in a tower
     void cleanSeed(StationMap & map) ; 
     
-    /// Return the number of candidates
-    int numberOfCand(){ return m_ncand ;}
-
     ///
-    void setDebugMode() {
-      m_debug = true;
-    }    
+    void setDebugMode(bool debug=true) {if (debug) std::cout << "Tower:setDebugMode\n";m_debug=debug;}    
     
   private:
 
-    void xyFromPad(MuonTileID pad, double& x, double& y) ;
     
-    CandidateTower m_ctower ;
-    CandidateSearch m_csearch ;
-    int m_maxXFoI[5];
-    int m_maxYFoI[5];
-    int m_xfoi[5];
-    int m_yfoi[5];
-    std::vector<double> m_ptparam;
-    bool m_ignoreM1;
+    int m_maxXFoI[5]; // FOI Max used to set the size of the tower (X)
+    int m_maxYFoI[5]; // FOI Max used to set the size of the tower (Y)
+
+    int m_xfoi[5]; // Foi in X
+    int m_yfoi[5]; // Foi in Y
    
-    StationMap m_bittable[5];
+    std::vector<double> m_ptparam; // Parameters used in the PT computation and encoding
     
-    unsigned long int m_ncand ;
+    bool m_ignoreM1; // Ignore M1 flag   
     
+    StationMap m_bittable[5]; // Array of bits in each stations
 
-    //Calculated track parameters
-    double m_pt;
-    double m_theta;
-    double m_phi;
+    IDMap m_idmap[5];// Map relating the local coordinates and the MuonTileID of every fired pad
     
-    boost::dynamic_bitset<> m_addr[2];
+    double ptcalc(MuonTileID padM1, MuonTileID padM2);
+    void xyFromPad(MuonTileID pad, double& x, double& y) ;
 
-    IDMap m_idmap[5];
+    bool m_debug; // Debug flag
 
-    MuonTileID pad;
-    
-    
-    double ptcalc();
-    double ptcalcIgnoreM1();
-    
-    std::vector<PCandidate> m_puCandidates;
-    
-    // for offset in ntuple
-    
-    //std::pair<PCandidate, std::vector<int> > m_offsetx;
-    //std::vector<std::pair<PCandidate, std::vector<int> > > m_offForCand;
-
-    bool m_debug;
-    bool m_seeded;
-
-    //std::vector<double> m_pts;
-    //std::vector<double> m_th;
-    //std::vector<double> m_ph;
-    //std::vector<MuonTileID> m_tid;
 };
 
   std::ostream& operator<<(std::ostream, L0Muon::Tower& r);
