@@ -1,4 +1,4 @@
-// $Id: BackgroundCategory.cpp,v 1.6 2005-12-15 08:33:42 pkoppenb Exp $
+// $Id: BackgroundCategory.cpp,v 1.7 2005-12-15 16:05:13 gligorov Exp $
 // Include files 
 
 // from Gaudi
@@ -401,27 +401,30 @@ bool BackgroundCategory::condition_G(MCParticleVector mc_particles_linked_to_dec
 bool BackgroundCategory::condition_H(MCParticleVector mc_particles_linked_to_decay, ParticleVector particles_in_decay)
 {
 	bool carryon = true;
-  MCParticleVector::const_iterator iP = mc_particles_linked_to_decay.begin();
-  ParticleVector::const_iterator iPP = particles_in_decay.begin();
-	const Collision* tmpcollision = NULL;
+        MCParticleVector::const_iterator iP = mc_particles_linked_to_decay.begin();
+        ParticleVector::const_iterator iPP = particles_in_decay.begin();
+	const Collision* tmpcollision;
 	bool gotacollision = false;
 
-  do {
+        do {
 
-    if ( !(*iPP)->endVertex() ) {
+                if ( !(*iPP)->endVertex() ) {
 
 			if (*iP) {
 
-				if (!gotacollision) tmpcollision = (*iP)->collision();
+				if (!gotacollision) {
+					tmpcollision = (*iP)->collision();
+					gotacollision = true;
+				}
 				else if ( (*iP)->collision() != tmpcollision ) carryon = false;
 
 			}
 
 		}
-    ++iP;
-    ++iPP;
+                ++iP;
+                ++iPP;
 
-  } while (carryon && iP != mc_particles_linked_to_decay.end() && iPP != particles_in_decay.end() );
+        } while (carryon && iP != mc_particles_linked_to_decay.end() && iPP != particles_in_decay.end() );
 
 	return carryon;
 }
@@ -516,10 +519,10 @@ StatusCode BackgroundCategory::finalize(){
 //=============================================================================
 StatusCode BackgroundCategory::initialize(){
 
+  debug() << "Starting to initialise Background Categorisation" << endreq;
+
   StatusCode sc = GaudiTool::initialize();
   if (!sc) return sc;
-
-  debug() << "Starting to initialise Background Categorisation" << endreq;
 
   m_ppSvc = 0;
   sc = service("ParticlePropertySvc", m_ppSvc);
