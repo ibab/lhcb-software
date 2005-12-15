@@ -3,7 +3,7 @@ Package     : Phys/DaVinci
 Package Coordinator : Patrick Koppenburg
 Purpose     : LHCb analysis program 
 
-</PRE><H1><A NAME=v12r15>2005-12-16 DaVinci v12r15 - Updated DC04 version</A></H1><PRE>
+</PRE><H1><A NAME=v12r15>2005-12-15 DaVinci v12r15 - Updated DC04 version</A></H1><PRE>
 Main modifications:
  
   - MuonID:
