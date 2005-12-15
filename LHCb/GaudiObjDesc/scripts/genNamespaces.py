@@ -50,6 +50,7 @@ class genNamespaces(genSrcUtils.genSrcUtils):
 
       namespaceDict = package.dict
       namespacename = godNamespace['attrs']['name']
+      scoped_namespacename = 'LHCb::'+namespacename
 
       fileName = '%s.h' % namespacename
 
@@ -65,7 +66,7 @@ class genNamespaces(genSrcUtils.genSrcUtils):
       namespaceDict['classes']         = self.genClasses(godNamespace)
       namespaceDict['attributes']      = self.genAttributes('all',godNamespace,1)
       namespaceDict['methods']         = self.genMethods('all',godNamespace)
-      namespaceDict['methodDefs']      = self.genMethods('all',godNamespace,namespacename)
+      namespaceDict['methodDefs']      = self.genMethods('all',godNamespace,scoped_namespacename)
 
       namespaceDict['includes']        = self.genIncludes()
       namespaceDict['forwardDecls']    = self.genForwardDecls()
