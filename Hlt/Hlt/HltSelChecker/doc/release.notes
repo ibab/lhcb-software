@@ -3,9 +3,9 @@
 ! Responsible : P. Koppenburg
 ! Purpose     : High-Level Trigger Exclusive Selections - Checking 
 !-----------------------------------------------------------------------------
-%% WARNING: FROM REVISION v3r9 THIS PACKAGE IS INCOMPATIBLE WITH NON DC04-SOFTWARE %% 
+%% WARNING: FROM REVISION v4r0 THIS PACKAGE IS INCOMPATIBLE WITH NON DC04-SOFTWARE %% 
 
-!========================== HltSelChecker v3r9 2005-12-15 ===================
+!========================== HltSelChecker v4r0 2005-12-15 ===================
 ! 2005-12-09 - P. Koppenburg
  - src/TestHltScore.*
  - src/PlotTrackDeviation.*
