@@ -4,13 +4,13 @@
 ! Purpose     : Implementation of the Linker package, to associate objects
 !-----------------------------------------------------------------------------
 
+!====================== LinkerEvent v2r0 2005-12-15 ==========================
 ! 2005-12-15 - Olivier Callot
  - Replace all references to KeyedObject by ContainedObject and similarly
-   KeyedConatiner to ObjectVector. Replace key() by index() and object( key )
+   KeyedContainer to ObjectVector. Replace key() by index() and object( key )
    by containedObject( index ). This gives unchanged behaviour for KeyedObject
    but works also for ContainedObjects.
 
-!====================== LinkerEvent v2r0 2005-12-15 ==========================
 ! 2005-12-15 - Marco Cattaneo
  - Changes for migration to Gaudi v18/LHCb v20
 
