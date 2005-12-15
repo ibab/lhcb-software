@@ -3,6 +3,476 @@ Package     : Phys/DaVinci
 Package Coordinator : Patrick Koppenburg
 Purpose     : LHCb analysis program 
 
+</PRE><H1><A NAME=v12r15>2005-12-16 DaVinci v12r15 - Updated DC04 version</A></H1><PRE>
+Main modifications:
+ 
+  - MuonID:
+    . New tuning for DC04 (E.Polycarpo). See Erica's talk at 
+      http://agenda.cern.ch/fullAgenda.php?ida=a055058#2005-12-08 
+      WARNING: This new tuning is used by default, affecting all
+      Muon identification. To switch it off edit DaVinciReco.opts.
+
+  - Background categorisation tool:
+    . First partial implementation of the Background categorisation tool
+      DaVinciMCTools/IBackgroundCategory (V.Gligorov). See Vava's talk at
+      http://agenda.cern.ch/fullAgenda.php?ida=a055152#2005-12-16
+      
+  - Global Fitter:
+    . First release of the already popular Bologna LagrangeGlobalFitter (G.Balbi).
+      
+  - MCParticleMaker: Many improvements (G.Balbi)
+
+  - IParticleDescendents: Small utility tool to return the daughters
+      of a Particle (PK).
+
+  - DVAlgorithm: New methods globalFitter() and descendants() returning 
+      pointers to IGlobalFitter (G.Balbi) and IParticleDescendants (PK).
+       Requires recompilation of all private code.
+
+  - TriggerSource
+    . New package that gets the TisTosTob information witout using the Tampering.
+        Works for L1, HltGeneric and HLT (PK). See Patrick's talk at
+	http://agenda.cern.ch/fullAgenda.php?ida=a057167#2005-12-05
+    . L1Score: Added some additional temporary fields to store all L1 triggering 
+        tracks (PK).
+    . HltGeneric: Save all triggering particles to TES (PK).
+    . Tampering: Small change of TamperingResults class. 
+    . L1Decision: Save all necessary tracks.
+    
+  - Tampering: L1 bug fix (PK).
+    
+  - HLT: MAJOR CHANGES !
+    . HltInclsuive : New package containing all inclusive selections.
+        Only D* slection is used by default.
+	New optional steams: inclusive Phi (M.Patel) and inclsuive dilepton (PK)
+    . HltScore: New vector of HltAlgorithmScore inclusiveCandidates() that 
+        behaves as the exclusive counterpart and contains all inclusive candidates. 
+        By default only contains HLTFilterDstar (PK).
+    . HltSelections : Adapt to new structure (PK).
+        New tuning of all selections (L.Fernandez).
+    . HltSelChecker : Adapted to new structure. Added TestHltScore and 
+        PlotTrackDeviation from the HltMonitor package (RTTC). With this move
+	HltSelChecker becomes RTTC-incompatible (PK).
+    . TrgPrimVertex : Redesigned PV finding (M.Witek). See Mariusz's talk
+        at http://agenda.cern.ch/fullAgenda.php?ida=a057168#2005-12-12
+    
+  - L1:
+    . Bug fix in L1Reco (PK).
+  
+  
+#######################################MM#######################################
+#                                DaVinci v12r15                                #
+################################################################################
+##################################### CALO #####################################
+##################################### EVENT ####################################
+!========================== TrgEvent v5r3p2 2005-12-15 ===================
+! 2005-12-09 - P. Koppenburg
+ - xml/HltScore.xml
+   . New member inclusiveCandidates with a list of all exclusive 
+     (non-HltGeneric) streams.  
+   . Rename method addAlgorithmScore to addExclusiveAlgorithmScore
+   . New method addInclusiveAlgorithmScore
+
+ - xml/L1Score.xml
+   Changes for TriggerSource. To be revised.
+   . New members allTrackPairs for High Pt tracks
+   . New members allTracksMu for muon stream
+   . New members allDiMuMass, allDiMuIP, allTracksDiMuPlus, 
+     allTracksDiMuMinus for dimuon streams
+
+#################################### EXTERNAL ##################################
+###################################### HLT #####################################
+!========================== HltGeneric v2r8 2005-12-15 ===================
+! 2005-12-09 - P. Koppenburg
+  - options/HltGeneric.opts
+    . Set SaveCandidates to true by default
+! 2005-11-03 - P. Koppenburg
+  - options/HltGeneric.opts
+    . When SaveCandidates = true, all candidates contributing to 
+      HltGeneric yes are save to TES for TriggerSource.
+!========================== HltInclusive v1r0 2005-12-15 ===================
+! 2005-12-09 - P. Koppenburg for Mitesh Patel
+ - options/HLTselPhiIncl.opts
+   . Set the kaon DLL cut to 10
+                                                                                                                                                               
+! 2005-12-09 - P. Koppenburg for Mitesh Patel
+ - options/HLTselPhiIncl.opts
+   . New options for Phi Inclusive stream 
+ - options/HLTselPhiInclLoose.opts
+   . Additional options for Loose Phi Inclusive stream 
+                                                                                                                                                              
+! 2005-12-01 - Luis Fernandez
+ - options/*
+   . Complete revision of the selection criteria!
+                                                                                                                                                              
+! 2005-11-23 - P. Koppenburg
+  First import containing D* and inclusive dilepton sleections
+  . The D* selection comes from HltSelections
+  . The dilepton from Bu2LLK
+
+!========================== HltSelChecker v4r0 2005-12-15 ===================
+%% WARNING: FROM REVISION v4r0 THIS PACKAGE IS INCOMPATIBLE WITH NON DC04-SOFTWARE %% 
+! 2005-12-09 - P. Koppenburg
+ - src/TestHltScore.*
+ - src/PlotTrackDeviation.*
+   . Restoring algorithms moved to HltMonitor package.
+   %% WARNING: FROM THIS REVISION THIS PACKAGE IS INCOMPATIBLE WITH NON DC04-SOFTWARE %% 
+
+! 2005-12-07 - Luis Fernandez
+ - options/
+   . Truth
+
+! 2005-12-01 - Luis Fernandez
+ - options/
+   . Corrections and PVEff
+
+! 2005-11-29 - Luis Fernandez
+ - options/
+   . Add missing "Context" in options, correct typos and few features added
+
+!========================== HltSelections v4r0 2005-12-15 ===================
+! 2005-12-09 - P. Koppenburg
+  - src/HltDecision.*
+    . Reflect change of HltScore class
+
+! 2005-12-01 - P. Koppenburg
+  - options/HLTselDstar.opts
+    . Moved to HltInclusive
+
+! 2005-12-01 - P. Koppenburg
+  - src/HltDecision.*, src/HltFilter.*
+    . Reflect change of HltScore class
+    . Add some more functionality
+
+! 2005-12-01 - Luis Fernandez
+ - options/*
+   . Complete revision of the selection criteria!
+
+##################################### KTJET ####################################
+###################################### L0 ######################################
+!========================== L0Checker v3r2p1 2005-11-05 ======================
+! 2005-11-02 - Eduardo Rodrigues
+ - options file fixed to reflect properties from GaudiTupleAlg
+
+##################################### MUON #####################################
+!========================== MuonID v3r11 2005-12-15 ===================
+! 2005-12-12 - P. Koppenburg
+  - src/MuonIDFOI.cpp
+  - src/MuonDSTPrepare.cpp
+    . Remove acess to eventSvc. Use get and put instead.
+! 2005-12-07 - P. Koppenburg for Erica Polycarpo
+  - src/MuIDDLLTool.cpp
+    . new tool MuiDDLLTool.cpp. It uses the average square distance of track 
+      extrapolation to hits in the Muon stations to build the DLL
+  - options/MuIDDLLTool.opts
+    . has the values for the distributions tuned with DC04 data, as for the FOI 
+      in v3r10
+##################################### PHYS #####################################
+!========================== DaVinciFilter v3r3 2005-12-15 ===================
+! 2005-12-14 - Luis Fernandez
+ - src/VtxIsolationFilterCriterion.{h,cpp}
+   . Add case of long-lived composite particles when using MaxDeltaChi2
+!========================== DaVinciKernel v3r9 2005-12-15 ===================
+! 2005-12-13 - P. Koppenburg
+  - Kernel/DVAlgorithm.h
+  - src/Lib/DVAlgorithm.cpp
+    . Added particleDescendants tool
+    . Reshuflle order
+
+! 2005-11-13 - Gabriele Balbi & Stefania Vecchi
+  - Kernel/IGlobalFitter.h
+	.added documentation
+
+! 2005-11-16 - Gabriele Balbi & Stefania Vecchi
+  - Kernel/IGlobalFitter.h
+	.added documentation
+
+! 2005-11-11 - P. Koppenburg for Gabriele Balbi
+  - Kernel/IGlobalFitter.h 
+    . Interface for Global Fitter
+  - Kernel/DVAlgorithm.h
+  - src/Lib/DVAlgorithm.cpp
+    . New method globalFitter() thta returns a pointer to the above.
+    
+! 2005-10-21 - P. Koppenburg
+  - Kernel/IParticleDescendants.h
+    . New utility tool that returns the daughters of a Particle
+
+!========================== DaVinciMCTools v5r17 2005-12-15 ===================
+! 2005-12-15 - P. Koppenburg for V. Gligorov
+ - DaVinciMCTools/IBackgroundCategory.h
+ - src/BackgroundCategory.*
+   . some more comments
+
+! 2005-12-13 - P. Koppenburg for V. Gligorov
+ - DaVinciMCTools/IBackgroundCategory.h
+ - src/BackgroundCategory.*
+   . New backgroundcatgory tool
+ - options/BackgroundCategory.opts
+   . example options
+
+! 2005-12-13 - Luis Fernandez
+ - src/DecayChainNTuple.{h,cpp}
+   . HltScore
+
+! 2005-11-11 - G. Balbi & S. Vecchi
+ - src/MCParticleMaker.(cpp,h)
+   . Bug fixed in the momentum error parametrization  
+   . Added the facility to create Particles by smearing the MCtruth information of only stable products of a given decay Channel 
+     Different options are possible:
+      1) smearing according a Gaussian or Double Gaussian distribution
+      2) adding BIAS to the measurement and/or ScalingFactors covariance matrix 
+         (momentum dependent parametrization  C0+C1*p ..see below) 
+      3) generate correlated or NOT measurements
+      4) smear MCTruth information at its origin Vertex or at PointOnTrack
+   . Added new properties: 
+      OnlyStableDecayProducts (Default:false) to generate Particles only from the stable products 
+                                              of the decay channel. If true also  OnlyDecayProducts must be set true
+      SmearATPoT (Default:false) if true smears the MCParticle info at PointOnTrack
+                                 (minimum distance from beam line) otherwise it smears at origin vertex 
+      rhoVAR1VAR2(Default=0.0) set the correlation coefficient between VAR1&VAR2 (VAR== x,y,tx,ty,p) 
+                               typical correlations in reconstructed particles: xy=0., xtx=-0.95 xty=0,   xp=0.
+                                                                                                            ytx =0., yty=-0.95 yp=0.
+                                                                                                                     txty=0   txp=0.
+                                                                                                                             typ=0.
+      ***** To smear MCParticles according a Double Gaussian distribution **************
+      dualGaussW(Default=0.,0.,0.,0.,0.,0.) set !=0 in case of Double Gaussian generation: 
+                                            vector of Gauss2 contribution on (x,y,z,tx,ty,p)
+      dualGaussSF(Default=1.,1.,1.,1.,1.,1.) in case of Double Gaussian generation this is the vector of 
+                                             sigma2/sigma1 ratios (x,y,z,tx,ty,p) 
+                                      
+      ***** To add momentum dependent Scaling Factors on errors (SF=1./(C0+C1*p))  
+      ScaleFactorCovarianceC0(Default=1.,1.,1.,1.,1.,1.) 
+      ScaleFactorCovarianceC1(Default=0.,0.,0.,0.,0.,0.) Vector of scaling factors on errors (x,y,z,tx,ty,p)
+      ***** To add a momentum dependent BIAS to the measurement (BIAS=q*(C0+C1*p)) q=particle's charge
+      MeasurementBiasC0(Default=0.,0.,0.,0.,0.,0.)
+      MeasurementBiasC1(Default=0.,0.,0.,0.,0.,0.)
+
+!========================== DaVinciTools v12r3 2005-12-15 ===================
+! 2005-11-07 - P. Koppenburg
+  - src/MakeResonances.{h,cpp}
+    . Some statistics to be printed at finalization.
+! 2005-10-21 - P. Koppenburg
+  - src/ParticleDescendants.{h,cpp}
+    . New utility tool that returns the daughters of a Particle
+
+!========================== DaVinci v12r15 2005-12-15 ===================
+! 2005-12-12 - P. Koppenburg
+  - options/DaVinciReco.opts
+    . Add MuonIDRetuning by default. This will get the better tuning for the
+      MuonID, but will change all muon efficiencies. See Erica's talk at
+      http://agenda.cern.ch/fullAgenda.php?ida=a055058#2005-12-08
+    
+! 2005-11-09 - P. Koppenburg
+  - options/*.opts
+    . Use ROOT everywhere for histogram/Ntuples persistency
+    
+! 2005-11-04 - P. Koppenburg
+  - options/DstContents.opts
+    . Add Raw/Ecal
+    
+! 2005-11-02 - P. Koppenburg
+  - options/L0Checking.opts
+    . Removed. Replaced by L0CHECKERROOT/options/L0Checker.opts
+      Because of a bug noticed by Krzysztof Syryczynski
+  - options/DaVinci.opts
+  - options/DVTriggerFilter.opts
+    . Corrected accordingly
+    
+!========================== FlavourTagging v6r4 2005-12-15 ===================
+! 2005-11-22 - Marco Musy
+  - small bug fix on CombineTaggersTDR
+
+!========================== ParticleMaker v1r6p1 2005-12-15 ===================
+! 2005-11-11 - P. Koppenburg for G. Balbi
+  - src/ParticleStuffer.h
+    . Issue a warning when there is not particle property found
+    . Convert to GaudiTool
+
+!========================== PVEff v1r0p1 2005-10-21 ===================
+! 2005-10-21 - P. Koppenburg
+ - use MCTools explicitly
+!========================== Tampering v1r4 2005-12-15 ===================
+! 2005-11-03 - P. Koppenburg
+  - src/TamperingL1Alg.cpp
+    . Bug fix: Do not ignore Elec and Phot triggers
+  - xml/TamperingResults_Event.xml
+    . Added HLT results
+! 2005-10-31 - P. Koppenburg
+  - options/Tampering.opts
+    . Include options from L1 rather than copying them
+!========================== TriggerSource v1r0 2005-12-15 ===================
+! 2005-12-09 - Patrick KOPPENBURG
+ - New package TriggerSource that allows to get TisTosTob for
+   for L1, HltGen and Hlt without running the Tampering.
+   It works by matching online to offline tracks.
+   See talk at 5/12/2005 T-Rec
+   http://agenda.cern.ch/askArchive.php?base=agenda&categ=a057167&id=a057167s1t3/transparencies
+
+   It contains:
+
+   - TriggerSource/ITriggerSource.h
+     . Interface that returs a TisTosTob enum for a given input (B) particle
+
+   - src/L1TriggerSource.{cpp,h}
+   - src/HltGenericTriggerSource.{cpp,h}
+   - src/HltTriggerSource.{cpp,h}
+     . Three concrete implementations for L1, HltGeneric and Hlt.
+     . Presently Photons are not matched, hence it will not get correct
+       results if the signal particle contains photons (all photons
+       are considered as non-signal)
+     . It is recommended to use these tools directly from one's monitoring
+       (ntuple filling) algorithm.
+
+   - src/TriggerSourceAlg.{cpp,h}
+     . Algorithm that allows to run the three tools on the final particles
+       in the input location. It saves the output in a TamperingResult object.
+       Only one object per event is saved, hence only the first candidates 
+       considered.
+
+   - src/TriggerSourceMonitor.{cpp,h}
+     . Algorithm that compares the Tampering and TriggerSource results for L1.
+     
+   - src/TriggerSourceBase.{cpp,h}
+     . Shared implementation class for the three tools. Do not use.
+     
+   - options/DVTriggerSource.opts
+     . Example option file to run the two abovementioned algorithms
+     
+   - options/DVMonitor.opts
+     . Run in monitor mode, i.e. without a B candidate. Reserved for experts
+      
+!========================== VertexFitChecker v1r0 2005-12-15 ===================
+! 2005-11-16 - Gabriele Balbi	
+ - Added documentation and fixed some bugs
+! 2005-11-11 - Patrick KOPPENBURG
+ - First import
+!========================== VertexFit v1r9 2005-12-15 ===================
+! 2005-12-09 - P. Koppenburg for L. Fernandez
+  - src/KFFitTool.cpp
+    . Replaced
+    bool isPhotonPair = (daupid==111 || daupid==221);
+      by
+    bool isPhotonPair = isPurePhotonDecay(*dau);
+      to allow proper treatment of eta->pipipi0
+    . Remove unused variables.
+  - src/TrgVertexFitter.cpp
+    . Remove unused variables.
+
+! 2005-11-16 - Gabriele Balbi & Stefania Vecchi
+  - src/LagrangeGlobalFitter.{cpp,h}
+    .added documentation
+    .fixed a numerical bug	
+
+! 2005-11-11 - P. Koppenburg for G. Balbi
+  - src/LagrangeGlobalFitter.{cpp,h}
+    . New global fitter
+#################################### PHYSSEL ###################################
+!========================== Bs2JpsiEta v4r3 2005-12-15 ===================
+! 2005-11-30 - Luis Fernandez for Benjamin Carron
+ - src/
+   . Adapt for KFF tool
+ - options/
+   . Add ee selection
+   . Clean-up
+!========================== Bs2JpsiPhi v2r4 2005-12-15 ===================
+! 2005-11-22 - P. Koppenburg
+  Many errors corrected. Bs2Jpsi2ee_Phi was not working at all. 
+  This selection has obviously never been tested...  
+  Only solution compliant with stripping: Have two identical but
+  differently name Phi2KK algorithms :-( 
+  - options/Phi2KKForTDRselBs2JpsiPhi.opts
+    . Removed 
+  - options/Phi2KKForTDRselBs2Jpsi2MuMuPhi.opts
+  - options/Phi2KKForTDRselBs2Jpsi2eePhi.opts
+    . Added
+  - options/DoTDRselBs2Jpsi2MuMu_Phi2KK.opts
+  - options/DoTDRselBs2Jpsi2ee_Phi2KK.opts
+  - options/TDRselBs2Jpsi2MuMu_Phi2KK.opts
+    . Reflect new algorithm names
+  - options/TDRselBs2Jpsi2ee_Phi2KK.opts
+    . Reflect new algorithm names and correct many typos.
+  - options/Bs2Jpsi2MuMu_Phi2KK.opts
+  - options/Bs2Jpsi2ee_Phi2KK.opts
+  - options/Jpsi2MuMuForBs2JpsiPhi.opts
+  - options/Jpsi2eeForBs2JpsiPhi.opts
+  - options/Phi2KKForBs2JpsiPhi.opts
+    . Removed old selection
+!========================== Bs2PhiEtac v3r7 2005-12-15 ===================
+! 2005-12-08 - Luis Fernandez
+ - options/AddHLTBs2PhiEtac.opts
+   . PVEff
+
+! 2005-11-29 - Luis Fernandez
+ - options/*.opts
+   . HLT selection    
+!========================== Bu2LLK v2r5 2005-12-15 ===================
+! 2005-10-17 - P. Koppenburg
+  - options/HLTselB2DiLepton.opts
+    . Moved to HltInclusive package
+!========================== PhysSelSys v8r10 2005-12-15 ===================
+> use  Bs2JpsiEta                 v4r3     PhysSel
+> use  Bs2JpsiPhi                 v2r4     PhysSel
+> use  Bs2PhiEtac                 v3r7     PhysSel
+> use  Bu2LLK                     v2r5     PhysSel
+> use  Stripping                  v3r2     Tools
+> use  Bu2JpsiK                   v1r0p1   PhysSel
+#####################################  REC  ####################################
+##################################### RICH #####################################
+##################################### TOOLS ####################################
+!========================== Stripping v3r2 2005-12-15 ===================
+! 2005-11-24 - P. Koppenburg
+ - python/stripping.py -> options/DVMerge.opts
+  .  Bug fix: Merging options ere containing names of kind "PreselPreselBu2LLK"
+    
+! 2005-10-31 - P. Koppenburg
+ - python/stripping.py
+  .  Bug fix: Do not look for sequencers but for the algorithms when writing 
+     out the DST. Prevented anything to be written out in the DST.
+!========================== Utilities v2r1p2 2005-12-15 ===================
+! 2005-12-13 - P. Koppenburg
+  - src/CheckSelResult.cpp
+    . Put message in debug()
+    
+###################################### TR ######################################
+###################################### TRG #####################################
+!========================== L1Decision v4r7 2005-12-15 ===================
+! 2005-11-03 - P. Koppenburg
+ - src/L1MaxPt.cpp
+ - src/L1Muon.cpp
+   . Fill additional L1Score fields for TriggerSource tests
+!========================== L1Reco v6r3 2005-12-15 ===================
+! 2005-11-03 - P. Koppenburg
+ - src/PrepareL1Tracks.cpp
+   . Bug fix: needed three tracks to enter loop. Two should be enough.
+ - src/L1Select2dIP.cpp
+   . Better indentation
+!========================== TrgPrimVertex v4r3 2005-12-15 ===================
+! 2005-12-14 - Mariusz Witek
+ - New PV seeding tool. Modified strategy to fit vertices.
+   Improved efficiency for close PVs.
+ - Added files:
+   PVSeedTool.cpp, PVSeedTool.h 
+ - Modified files
+   TrgPrimVertexFinder.cpp TrgPrimVertexFinder.h TrgPrimVertex_load.cpp
+!========================== TrgSys v1r11 2005-12-15 ===================
+! 2005-12-12 - P. Koppenburg for Thomas Ruf
+  - Restored TrgVertex2Container after TrgTrack2Container
+  
+! 2005-11-07 - P. Koppenburg for Mariusz Witek
+  - Removed TrgVertex2Container from TrgChecking sequence
+!========================== TrgTools v6r6 2005-12-15 ===================
+! 2005-11-21 - P.Koppenburg
+ - src/TrgParticleMaker.cpp
+   . Do not test on qOverP != 0
+! 2005-11-11 - P.Koppenburg
+ - src/TrgParticleMaker.cpp
+   . Remove the "Correct VeloTT" warning.
+! 2005-11-01 - P.Koppenburg for V. Gligorov
+ - src/TrgTrack2TrStoredTrack.{h,cpp}
+   . New version of matching tool
+
+
 </PRE><H1><A NAME=v12r14>2005-10-19 DaVinci v12r14 - Updated DC04 version</A></H1><PRE>
 
 Main modifications:
