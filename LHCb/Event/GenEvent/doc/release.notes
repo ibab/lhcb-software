@@ -3,8 +3,7 @@ package coordinator: W.Pokorski, G.Corti
 
 !================ GenEvent v4r0 2005-12-15 ============================
 ! 2005-12-15 - Gloria CORTI
- - Introduce runNumber and evtNumber in GenHeader since the generic Header
-   has been removed
+ - Introduce evtNumber in GenHeader since the generic Header has been removed
  - Introduce non const accessor for pointer to HepMC::GenEvent necessary
    in generation of events
 
