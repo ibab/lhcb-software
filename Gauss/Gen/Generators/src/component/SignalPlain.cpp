@@ -1,4 +1,4 @@
-// $Id: SignalPlain.cpp,v 1.5 2005-12-11 23:22:30 robbep Exp $
+// $Id: SignalPlain.cpp,v 1.6 2005-12-15 21:00:07 robbep Exp $
 // Include files 
 
 // local
@@ -30,8 +30,7 @@ const        IToolFactory& SignalPlainFactory = s_factory ;
 //=============================================================================
 // Standard constructor, initializes variables
 //=============================================================================
-SignalPlain::SignalPlain( const std::string& type,
-                          const std::string& name,
+SignalPlain::SignalPlain( const std::string& type, const std::string& name,
                           const IInterface* parent )
   : Signal( type, name , parent ) { ; }
 
@@ -43,7 +42,7 @@ SignalPlain::~SignalPlain( ) { ; }
 //=============================================================================
 // Generate Set of Event for Minimum Bias event type
 //=============================================================================
-bool SignalPlain::generate( const unsigned int nPileUp ,
+bool SignalPlain::generate( const unsigned int nPileUp , 
                             EventVector & theEventVector , 
                             HardVector  & theHardVector ) {
   StatusCode sc ;
