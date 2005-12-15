@@ -2,7 +2,11 @@ Package LHCbKernel
 Package manager: M.Cattaneo
 Purpose: LHCb specific Kernel classes
 
-!===================== LHCbKernel v6r0 2005-12-14 =========================
+!===================== LHCbKernel v6r0 2005-12-15 =========================
+! 2005-12-15 - Gloria CORTI
+ - Add Kernel/IMCParticleSelector.h, moved from Phys/MCTools, updated with
+   LHCb namespace
+
 ! 2005-12-14 M. Needham
  - STDatafunctors updated for new LHCb namespace
  - Add missing STDetSwitch.cpp 
