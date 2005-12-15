@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.284 2005-12-15 08:46:05 pkoppenb Exp $
+# $Id: requirements,v 1.285 2005-12-15 08:50:35 pkoppenb Exp $
 # Created    : 07/02/2002
 # Maintainer : P. Koppenburg
 #
@@ -89,7 +89,7 @@ use  KtJet	             	v1r0     External
 use HltGeneric                  v2r8     Hlt
 use HltSelections               v4r0     Hlt
 use HltInclusive                v1r0     Hlt
-use HltSelChecker               v3r9     Hlt
+use HltSelChecker               v4r0     Hlt
 
 #=======================================================
 use  PhysSelSys			v8r10    PhysSel
