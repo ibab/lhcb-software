@@ -1,6 +1,5 @@
-// $Id: DigiAlg_load.cpp,v 1.3 2004-06-28 13:43:50 cattanem Exp $
+// $Id: DigiAlg_load.cpp,v 1.4 2005-12-15 13:56:37 cattanem Exp $
 // Include files 
-
 
 #include "GaudiKernel/DeclareFactoryEntries.h"
 
@@ -15,4 +14,5 @@
 DECLARE_FACTORY_ENTRIES(DigiAlg) {
   DECLARE_TOOL( LumiTool );
   DECLARE_ALGORITHM( MergeEventAlg );
+  DECLARE_ALGORITHM( BooleInit );
 }

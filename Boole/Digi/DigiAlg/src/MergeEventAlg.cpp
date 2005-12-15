@@ -1,4 +1,4 @@
-// $Id: MergeEventAlg.cpp,v 1.6 2004-07-22 10:14:48 cattanem Exp $
+// $Id: MergeEventAlg.cpp,v 1.7 2005-12-15 13:56:37 cattanem Exp $
 #define MERGEEVENTALG_CPP 
 // Include files 
 
@@ -6,7 +6,7 @@
 #include <iostream>
 
 // from Gaudi
-#include "GaudiKernel/AlgFactory.h"
+#include "GaudiKernel/DeclareFactoryEntries.h"
 #include "GaudiKernel/DataObject.h"
 #include "GaudiKernel/RegistryEntry.h"
 #include "GaudiKernel/IDataProviderSvc.h"
@@ -17,11 +17,11 @@
 #include "GaudiKernel/DataStoreItem.h"
 
 // from LHCb
-#include "Event/EventHeader.h"
+#include "Event/MCHeader.h"
 
 // local
 #include "MergeEventAlg.h"
-#include "DigiAlg/ILumiTool.h"
+#include "ILumiTool.h"
 
 /** @file MergeEventAlg.cpp
  *  Implementation file for class : MergeEventAlg
@@ -30,8 +30,7 @@
  */
 
 // Declaration of the Algorithm Factory
-static const AlgFactory<MergeEventAlg>  Factory;
-const IAlgFactory& MergeEventAlgFactory = Factory;
+DECLARE_ALGORITHM_FACTORY( MergeEventAlg );
 
 
 //=============================================================================
@@ -241,10 +240,11 @@ StatusCode MergeEventAlg::readAndLoadEvent( std::string& subPath ) {
     return Error( "Error setting event root to " + eventPath, sc );
   }
 
-  // Load Event Header
-  EventHeader* evt=get<EventHeader>(eventPath+"/"+EventHeaderLocation::Default);
-  info() << "Loading " << eventPath << " event " << evt->evtNum() 
-         << ",     Run " << evt->runNum() << endmsg;
+  // Load MC Header
+  LHCb::MCHeader* evt = get<LHCb::MCHeader>(
+                            eventPath + "/" + LHCb::MCHeaderLocation::Default);
+  info() << "Loading "   << eventPath << " event " << evt->evtNumber() 
+         << ",     Run " << evt->runNumber() << endmsg;
   
   // Read and load list as in properties
   for ( Items::iterator i = m_itemList.begin(); i != m_itemList.end(); i++ ) {

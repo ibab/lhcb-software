@@ -6,8 +6,10 @@ SpilloverAlg.ItemList = {
  "Gen/Header#1",
  "Gen/Collisions#1",
  "MC#1",
+ "MC/Header#1",
  "MC/Particles#1",
  "MC/Vertices#1",
+ "MC/TT#*",
  "MC/IT#*",
  "MC/OT#*",
  "MC/Rich#1",
@@ -17,6 +19,7 @@ SpilloverAlg.ItemList = {
  "MC/Ecal#*",
  "MC/Hcal#*",
  "MC/Velo#*",
+ "MC/PuVeto#*",
  "MC/Muon#*"
 };
 

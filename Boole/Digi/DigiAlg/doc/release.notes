@@ -4,6 +4,11 @@
 ! Purpose     : Holds generic digitization algorithms
 !-----------------------------------------------------------------------------
 
+!========================== DigiAlg v4r0 2005-12-15 =========================
+! 2005-12-15 - Marco Cattaneo
+ - Adapt to LHCb:: namespace and new event model
+ - Add BooleInit algorithm for Boole initialization
+
 !========================== DigiAlg v3r0 2004-06-28 =========================
 ! 2004-06-28 - Marco Cattaneo
  - Remove BooleInit algorithm (superseded by LbAppInit in Kernel/LHCbAlgs)

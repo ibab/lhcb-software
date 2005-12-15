@@ -1,14 +1,14 @@
-// $Id: LumiTool.cpp,v 1.3 2004-06-23 12:39:12 cattanem Exp $ 
+// $Id: LumiTool.cpp,v 1.4 2005-12-15 13:56:37 cattanem Exp $ 
 
 // Include files
 #include "LumiTool.h"
-#include "GaudiKernel/ToolFactory.h"
+#include "GaudiKernel/DeclareFactoryEntries.h"
 #include "GaudiKernel/IRndmGenSvc.h"
 #include "GaudiKernel/RndmGenerators.h"
 #include "GaudiKernel/SmartIF.h"
 #include "GaudiKernel/SmartDataPtr.h"
 #include "Event/GenHeader.h"
-#include "CLHEP/Units/SystemOfUnits.h"
+#include "Kernel/SystemOfUnits.h"
 #include <fstream>
 
 //--------------------------------------------------------------------
@@ -24,13 +24,9 @@
 //  Based on SicbLumiTool
 //--------------------------------------------------------------------
 
-// Instantiation of a static factory class used by clients to create
-// instances of this service
+// Declaration of the Tool Factory
+DECLARE_TOOL_FACTORY( LumiTool );
 
-static ToolFactory<LumiTool> s_factory;
-const IToolFactory& LumiToolFactory = s_factory;
-
-//
 // Standard Constructor
 LumiTool::LumiTool( const std::string& type, 
                     const std::string& name,
@@ -70,7 +66,8 @@ StatusCode LumiTool::numInteractions( int& nEvents ) {
   nEvents = -1;
 
   // Get luminosity from generated event
-  GenHeader* pEvent = get<GenHeader>( GenHeaderLocation::Default );
+  LHCb::GenHeader* pEvent = get<LHCb::GenHeader>( 
+                                LHCb::GenHeaderLocation::Default );
   float currentLumi = pEvent->luminosity() * cm2 * s / 1.e32;
 
   if( 0. < currentLumi ) {

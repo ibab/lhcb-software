@@ -1,4 +1,4 @@
-// $Id: ILumiTool.h,v 1.1 2003-10-06 16:16:39 cattanem Exp $
+// $Id: ILumiTool.h,v 1.1 2005-12-15 13:56:37 cattanem Exp $
 #ifndef DIGIALG_ILUMITOOL_H 
 #define DIGIALG_ILUMITOOL_H 1
 

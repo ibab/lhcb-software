@@ -1,10 +1,10 @@
-// $Id: LumiTool.h,v 1.4 2004-07-22 09:00:03 cattanem Exp $ 
+// $Id: LumiTool.h,v 1.5 2005-12-15 13:56:37 cattanem Exp $ 
 #ifndef LUMITOOL_H
 #define LUMITOOL_H 1
 
 // Include files
 #include "GaudiAlg/GaudiTool.h"
-#include "DigiAlg/ILumiTool.h"
+#include "ILumiTool.h"
 
 // Forward declarations
 class IRndmGenSvc;
