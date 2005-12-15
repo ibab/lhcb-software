@@ -1,11 +1,11 @@
-// $Id: LinkerTool.h,v 1.3 2005-12-15 07:26:02 cattanem Exp $
+// $Id: LinkerTool.h,v 1.4 2005-12-15 10:00:32 ocallot Exp $
 #ifndef LINKER_LINKERTOOL_H 
 #define LINKER_LINKERTOOL_H 1
 
 // Include files
 #include "GaudiKernel/IDataProviderSvc.h"
 #include "GaudiKernel/LinkManager.h"
-#include "GaudiKernel/KeyedContainer.h"
+#include "GaudiKernel/ObjectVector.h"
 
 #include "Event/LinksByKey.h"
 
@@ -20,8 +20,8 @@
  */
 template <class SOURCE,
           class TARGET,
-          class SOURCECONTAINER = KeyedContainer<SOURCE>,
-          class TARGETCONTAINER = KeyedContainer<TARGET> >
+          class SOURCECONTAINER = ObjectVector<SOURCE>,
+          class TARGETCONTAINER = ObjectVector<TARGET> >
 class LinkerTool {
 
 public: 

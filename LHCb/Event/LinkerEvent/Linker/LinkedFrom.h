@@ -1,11 +1,11 @@
-// $Id: LinkedFrom.h,v 1.10 2005-12-15 07:26:02 cattanem Exp $
+// $Id: LinkedFrom.h,v 1.11 2005-12-15 10:00:32 ocallot Exp $
 #ifndef LINKER_LINKEDFROM_H 
 #define LINKER_LINKEDFROM_H 1
 
 // Include files
 #include "GaudiKernel/IDataProviderSvc.h"
 #include "GaudiKernel/LinkManager.h"
-#include "GaudiKernel/KeyedObject.h"
+#include "GaudiKernel/ObjectVector.h"
 #include "Event/LinksByKey.h"
 
 /** @class LinkedFrom LinkedFrom.h Linker/LinkedFrom.h
@@ -15,12 +15,9 @@
  *  @date   2004-01-06
  */
 template <class SOURCE, 
-          class TARGET=KeyedObject<int> ,
-          class SOURCECONTAINER=KeyedContainer<SOURCE> > 
+          class TARGET = ContainedObject ,
+          class SOURCECONTAINER = ObjectVector<SOURCE> > 
 class LinkedFrom {
-protected:
-  typedef typename TARGET::key_type             _tKEY ;
-  typedef typename Containers::key_traits<_tKEY> TKEY ;
 public: 
   //== Typedefs to please Matt
   typedef typename std::vector<SOURCE*>                  LRange;
@@ -55,7 +52,7 @@ public:
   SOURCE* first( const TARGET* target ) {
     if ( NULL == m_links ) return NULL;
     m_curReference.setLinkID( -1 );
-    m_wantedKey = TKEY::identifier( target->key() ) ;
+    m_wantedKey = target->index() ;
     //== check that the target's container is known.
     const DataObject* container = target->parent();
     LinkManager::Link* link = m_links->linkMgr()->link( container );
@@ -64,19 +61,19 @@ public:
       if ( 0 != link )  link->setObject( container );
     }
     if ( 0 == link ) return NULL;
-    //== Define the target's linkID and key
+    //== Define the target's linkID and Index
     m_curReference.setLinkID( link->ID() );
-    m_curReference.setObjectKey( TKEY::identifier( target->key() ) );
-    int key = m_links->firstSource( m_curReference, m_srcIterator );
+    m_curReference.setObjectKey( target->index() );
+    int index = m_links->firstSource( m_curReference, m_srcIterator );
     if ( m_wantedKey != m_curReference.objectKey() ) return NULL;
-    return currentSource( key );
+    return currentSource( index );
   };
 
   SOURCE* next( ) {
     if ( NULL == m_links ) return NULL;
-    int key = m_links->nextSource( m_curReference, m_srcIterator );
+    int index = m_links->nextSource( m_curReference, m_srcIterator );
     if ( m_wantedKey != m_curReference.objectKey() ) return NULL;
-    return currentSource( key );
+    return currentSource( index );
   };
 
   double weight()   { return m_curReference.weight(); }
@@ -98,7 +95,7 @@ public:
     m_int.clear();
     if ( NULL == m_links ) return m_int;
     m_curReference.setLinkID( -1 );
-    m_wantedKey = TKEY::identifier( target->key() ) ;
+    m_wantedKey = target->index();
     //== check that the target's container is known.
     const DataObject* container = target->parent();
     LinkManager::Link* link = m_links->linkMgr()->link( container );
@@ -107,9 +104,9 @@ public:
       if ( 0 != link )  link->setObject( container );
     }
     if ( 0 == link ) return m_int;
-    //== Define the target's linkID and key
+    //== Define the target's linkID and index
     m_curReference.setLinkID( link->ID() );
-    m_curReference.setObjectKey( target->key() );
+    m_curReference.setObjectKey( target->index() );
     int key = m_links->firstSource( m_curReference, m_srcIterator );
     while ( m_wantedKey == m_curReference.objectKey() ) {
       m_int.push_back( key );
@@ -122,7 +119,7 @@ public:
   LRangeIt endRange()     { return m_vect.end(); }
 
 protected:
-  SOURCE* currentSource( int key ) {
+  SOURCE* currentSource( int index ) {
     if ( NULL == m_links ) return NULL;
     int myLinkID = m_curReference.srcLinkID();
     LinkManager::Link* link = m_links->linkMgr()->link( myLinkID );
@@ -133,7 +130,7 @@ protected:
     }
     SOURCECONTAINER* parent = dynamic_cast< SOURCECONTAINER* >(link->object() );
     if ( 0 != parent ) {
-      return parent->object( key );
+      return (SOURCE*)parent->containedObject( key );
     }
     return NULL;
   }  

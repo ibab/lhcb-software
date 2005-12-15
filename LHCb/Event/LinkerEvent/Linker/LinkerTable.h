@@ -1,4 +1,4 @@
-// $Id: LinkerTable.h,v 1.2 2005-12-15 07:26:02 cattanem Exp $
+// $Id: LinkerTable.h,v 1.3 2005-12-15 10:00:32 ocallot Exp $
 #ifndef LINKER_LINKERTABLE_H 
 #define LINKER_LINKERTABLE_H 1
 
@@ -13,8 +13,8 @@
  */
 template <class SOURCE,
           class TARGET,
-          class SOURCECONTAINER = KeyedContainer<SOURCE>,
-          class TARGETCONTAINER = KeyedContainer<TARGET> >
+          class SOURCECONTAINER = ObjectVector<SOURCE>,
+          class TARGETCONTAINER = ObjectVector<TARGET> >
 class LinkerTable {
 public: 
 
@@ -60,7 +60,7 @@ public:
     if ( NULL == m_links ) return range;
     if ( NULL == reqSrc ) return range;
     LHCb::LinkReference curReference;
-    bool status = m_links->firstReference( reqSrc->key(), 
+    bool status = m_links->firstReference( reqSrc->index(), 
                                            reqSrc->parent(),
                                            curReference   );
     while ( status ) {
@@ -83,7 +83,7 @@ public:
     if ( NULL == m_links ) return range;
     if ( NULL == reqSrc ) return range;
     LHCb::LinkReference curReference;
-    bool status = m_links->firstReference( reqSrc->key(), 
+    bool status = m_links->firstReference( reqSrc->index(), 
                                            reqSrc->parent(),
                                            curReference   );
     while ( status ) {
@@ -116,7 +116,7 @@ protected:
     LinkManager::Link* link = m_links->linkMgr()->link( myLinkID );
     TARGETCONTAINER* parent = dynamic_cast< TARGETCONTAINER* >(link->object() );
     if ( 0 != parent ) {
-      TARGET* myObj = parent->object( curReference.objectKey() );
+      TARGET* myObj = (TARGET*)parent->containedObject( curReference.objectKey() );
       return myObj;
     }
     return NULL;
@@ -134,7 +134,7 @@ protected:
     LinkManager::Link* link = m_links->linkMgr()->link( myLinkID );
     SOURCECONTAINER* parent = dynamic_cast< SOURCECONTAINER* >(link->object() );
     if ( 0 != parent ) {
-      return parent->object( key );
+      return (SOURCE*)parent->containedObject( key );
     }
     return NULL;
   }

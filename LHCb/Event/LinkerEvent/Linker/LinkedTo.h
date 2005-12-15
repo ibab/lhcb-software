@@ -1,11 +1,11 @@
-// $Id: LinkedTo.h,v 1.7 2005-12-15 07:26:02 cattanem Exp $
+// $Id: LinkedTo.h,v 1.8 2005-12-15 10:00:32 ocallot Exp $
 #ifndef LINKER_LINKEDTO_H 
 #define LINKER_LINKEDTO_H 1
 
 // Include files
 #include "GaudiKernel/IDataProviderSvc.h"
 #include "GaudiKernel/LinkManager.h"
-#include "GaudiKernel/KeyedObject.h"
+#include "GaudiKernel/ObjectVector.h"
 #include "Event/LinksByKey.h"
 
 /** @class LinkedTo LinkedTo.h Linker/LinkedTo.h
@@ -17,12 +17,9 @@
 
 
 template < class TARGET, 
-           class SOURCE=KeyedObject<int>,
-           class TARGETCONTAINER=KeyedContainer<TARGET> > 
+           class SOURCE=ContainedObject,
+           class TARGETCONTAINER=ObjectVector<TARGET> > 
 class LinkedTo {
-protected:
-  typedef typename SOURCE::key_type             _sKEY ;
-  typedef typename Containers::key_traits<_sKEY> SKEY ;  
 public: 
   //== Typedefs to please Matt
   typedef typename std::vector<TARGET*>                  LRange;
@@ -58,10 +55,7 @@ public:
    */
   TARGET* first( const SOURCE* source ) {
     if ( NULL == m_links ) return NULL;
-    bool status = m_links->firstReference
-    ( SKEY::identifier( source->key() ) , 
-      source->parent(),
-      m_curReference   );
+    bool status = m_links->firstReference ( source->index(), source->parent(), m_curReference );
     if ( !status ) {
       m_curReference.setNextIndex( -1 );
       return NULL;
@@ -136,7 +130,7 @@ protected:
     }
     TARGETCONTAINER* parent = dynamic_cast< TARGETCONTAINER* >(link->object() );
     if ( 0 != parent ) {
-      TARGET* myObj = parent->object( m_curReference.objectKey() );
+      TARGET* myObj = (TARGET*)parent->containedObject( m_curReference.objectKey() );
       return myObj;
     }
     return NULL;
