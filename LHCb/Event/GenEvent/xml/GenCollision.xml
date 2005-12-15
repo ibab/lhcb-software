@@ -13,6 +13,7 @@
     >
        &KeyedObject;
        <base name="KeyedObject&lt;int&gt;"/>
+       <import name="Event/HepMCEvent"/>
        <attribute
         desc="true for collision that contains the generated signal. false for minimum bias and pileup."
         name="isSignal"
