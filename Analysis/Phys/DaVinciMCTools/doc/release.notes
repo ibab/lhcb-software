@@ -1,9 +1,14 @@
-! $Id: release.notes,v 1.80 2005-12-15 14:19:50 pkoppenb Exp $
+! $Id: release.notes,v 1.81 2005-12-15 15:51:31 pkoppenb Exp $
 ! Package     : DaVinciMCTools
 ! Responsible : P. Koppenburg
 !=============================================================================
 
 !========================== DaVinciMCTools v5r17 2005-12-15 ===================
+! 2005-12-15 - P. Koppenburg
+  - src/DebugTool.cpp
+  . Use Information instead of Informations. Thanks to Karl Harrison for
+    reporting the ``bug''.
+
 ! 2005-12-15 - P. Koppenburg for V. Gligorov
   - src/BackgroundCategory.cpp
   . rint(x) is not understood by windows. Replaced by floor(x+0.5)

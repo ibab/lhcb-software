@@ -1,4 +1,4 @@
-// $Id: DebugTool.cpp,v 1.9 2004-11-25 07:20:53 pkoppenb Exp $
+// $Id: DebugTool.cpp,v 1.10 2005-12-15 15:51:31 pkoppenb Exp $
 // Include files 
 
 // from Gaudi
@@ -46,7 +46,8 @@ DebugTool::DebugTool( const std::string& type,
   declareProperty( "FieldWidth", m_fWidth = 10 );
   declareProperty( "FieldPrecision", m_fPrecision = 2 );
   declareProperty( "Arrow", m_arrow = "+-->" );
-  declareProperty( "Informations", m_informations = "Name E M P Pt phi Vz" );
+  declareProperty( "Informations", m_informationsDeprecated = "" );
+  declareProperty( "Information", m_information = "Name E M P Pt phi Vz" );
   declareProperty( "EnergyUnit", m_energyUnit = MeV );
   declareProperty( "LengthUnit", m_lengthUnit = mm );
 }
@@ -54,8 +55,7 @@ DebugTool::DebugTool( const std::string& type,
 //=============================================================================
 // initialise
 //=============================================================================
-StatusCode DebugTool::initialize( void )
-{
+StatusCode DebugTool::initialize( void ){
   StatusCode sc = GaudiTool::initialize();
   if (!sc) return sc;
 
@@ -68,10 +68,17 @@ StatusCode DebugTool::initialize( void )
                           StatusCode::FAILURE );
   }
 
+  if ( m_informationsDeprecated != "" ){
+    warning() << "You are using the deprecated option ``informations''." << endmsg ;
+    warning() << "Use ``Information'' instead." << endmsg ;
+    m_information = m_informationsDeprecated ;
+  }
+  
+
   std::size_t oldpos = 0, pos;
   do {
-    pos=m_informations.find( ' ', oldpos );
-    std::string tok(m_informations, oldpos, pos-oldpos);
+    pos=m_information.find( ' ', oldpos );
+    std::string tok(m_information, oldpos, pos-oldpos);
     if( tok=="Name" )       m_keys.push_back(Name);
     else if( tok=="E" )     m_keys.push_back(E);
     else if( tok=="M" )     m_keys.push_back(M);

@@ -1,4 +1,4 @@
-// $Id: DebugTool.h,v 1.5 2004-11-24 16:13:57 pkoppenb Exp $
+// $Id: DebugTool.h,v 1.6 2005-12-15 15:51:31 pkoppenb Exp $
 #ifndef DEBUGTOOL_H 
 #define DEBUGTOOL_H 1
 
@@ -103,7 +103,8 @@ private:
   int m_fWidth;        ///< width of the data fields
   int m_fPrecision;    ///< precision of the data fields
   std::string m_arrow; ///< arrow drawing
-  std::string m_informations; ///< The specification of the values to print
+  std::string m_informationsDeprecated; ///< For backward compatibility. Will be removed
+  std::string m_information; ///< The specification of the values to print
   std::vector<InfoKeys> m_keys; ///< The list of information to print
   double m_energyUnit ; /// Unit for energies, momenta and masses
   double m_lengthUnit ; /// Unit for distances

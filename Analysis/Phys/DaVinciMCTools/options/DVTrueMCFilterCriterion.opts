@@ -46,10 +46,10 @@ PreselB2hh.PhysDesktop.InputLocations = {"/Event/Phys/SelectB2KKplus", "/Event/P
 Particle2MCLinks.InputData = {"Phys/Combined/Particles"};
 
 PrintTruth.ParticleNames = { "B_s0", "B_s~0" } ;
-PrintTruth.DebugTool.Informations = "Name E M P Px Py Pz Pt phi Vz" ;
+PrintTruth.DebugTool.Information = "Name E M P Px Py Pz Pt phi Vz" ;
 PrintTruth.Depth = 1 ;
 
-PrintFinal.DebugTool.Informations = "Name E M P Px Py Pz Pt phi Vz" ;
+PrintFinal.DebugTool.Information = "Name E M P Px Py Pz Pt phi Vz" ;
 PrintFinal.PhysDesktop.InputLocations = { "Phys/PreselB2hh" } ;
 
 // Bs -> KK 
