@@ -1,4 +1,4 @@
-// $Id: AllLinks.h,v 1.2 2005-01-27 10:53:59 ocallot Exp $
+// $Id: AllLinks.h,v 1.3 2005-12-15 07:26:02 cattanem Exp $
 #ifndef LINKER_ALLLINKS_H 
 #define LINKER_ALLLINKS_H 1
 
@@ -31,7 +31,7 @@ public:
     if ( "/Event/" == containerName.substr(0,7) ) {
       name = "Link/" + containerName.substr(7);
     }
-    SmartDataPtr<LinksByKey> links( eventSvc, name );
+    SmartDataPtr<LHCb::LinksByKey> links( eventSvc, name );
     if ( 0 == links ) {
       if ( 0 != msgSvc ) {
         MsgStream msg( msgSvc, "AllLinks::"+containerName );
@@ -110,9 +110,9 @@ protected:
   }  
 
 private:
-  IDataProviderSvc* m_eventSvc;
-  LinksByKey*      m_links;
-  LinkReference    m_curReference;
+  IDataProviderSvc*   m_eventSvc;
+  LHCb::LinksByKey*   m_links;
+  LHCb::LinkReference m_curReference;
   std::vector<std::pair<int,int> >::const_iterator m_iter;
 };
 #endif // LINKER_ALLLINKS_H

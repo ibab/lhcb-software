@@ -1,4 +1,4 @@
-// $Id: LinkerTool.h,v 1.2 2005-03-22 12:23:11 ocallot Exp $
+// $Id: LinkerTool.h,v 1.3 2005-12-15 07:26:02 cattanem Exp $
 #ifndef LINKER_LINKERTOOL_H 
 #define LINKER_LINKERTOOL_H 1
 
@@ -53,9 +53,9 @@ public:
    */
 
   DirectType* direct ( ) {
-    SmartDataPtr<LinksByKey> links( m_evtSvc, m_location );
+    SmartDataPtr<LHCb::LinksByKey> links( m_evtSvc, m_location );
     if ( 0 != links ) links->resolveLinks( m_evtSvc );
-    const LinksByKey* linkPtr = links;
+    const LHCb::LinksByKey* linkPtr = links;
     m_table.load( linkPtr );
     if ( 0 == linkPtr ) return 0;
     return &m_table;
@@ -66,8 +66,8 @@ public:
    */
 
   InverseType* inverse ( ) {
-    SmartDataPtr<LinksByKey> links( m_evtSvc, m_invLocation );
-    LinksByKey* linkPtr = links;
+    SmartDataPtr<LHCb::LinksByKey> links( m_evtSvc, m_invLocation );
+    LHCb::LinksByKey* linkPtr = links;
     if ( 0 == linkPtr ) {
       //== Invert the table...
       const DirectType* tmp = direct();
@@ -79,7 +79,7 @@ public:
         for ( iterator it = rd.begin(); rd.end() != it; ++it ) {
           makeLink.link( it->to(), it->from(), it->weight() );
         }
-        SmartDataPtr<LinksByKey> newLinks( m_evtSvc, m_invLocation );
+        SmartDataPtr<LHCb::LinksByKey> newLinks( m_evtSvc, m_invLocation );
         linkPtr = newLinks;
       }
     }

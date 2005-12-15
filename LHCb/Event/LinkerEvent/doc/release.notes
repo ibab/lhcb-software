@@ -4,8 +4,8 @@
 ! Purpose     : Implementation of the Linker package, to associate objects
 !-----------------------------------------------------------------------------
 
-!====================== LinkerEvent v2r0 2005-12-13 ==========================
-! 2005-12-13 - Marco Cattaneo
+!====================== LinkerEvent v2r0 2005-12-15 ==========================
+! 2005-12-15 - Marco Cattaneo
  - Changes for migration to Gaudi v18/LHCb v20
 
 ! 2005-11-21 - Olivier Callot

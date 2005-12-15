@@ -1,4 +1,4 @@
-// $Id: LinkerWithKey.h,v 1.6 2005-05-04 13:55:09 ibelyaev Exp $
+// $Id: LinkerWithKey.h,v 1.7 2005-12-15 07:26:02 cattanem Exp $
 #ifndef LINKER_LINKERWITHKEY_H 
 #define LINKER_LINKERWITHKEY_H 1
 
@@ -33,11 +33,11 @@ public:
 
     //== If it exists, just append to it.
 
-    SmartDataPtr<LinksByKey> links( eventSvc, name );
+    SmartDataPtr<LHCb::LinksByKey> links( eventSvc, name );
     if ( 0 != links ) {
       m_links = links;
     } else {
-      m_links = new LinksByKey();
+      m_links = new LHCb::LinksByKey();
       StatusCode sc = eventSvc->registerObject( name, m_links );
       if ( !sc ) {
         MsgStream msg( msgSvc, "LinkerWithKey::"+containerName );
@@ -80,7 +80,7 @@ public:
 protected:
 
 private:
-  LinksByKey*  m_links;
-  IMessageSvc* m_msgSvc;
+  LHCb::LinksByKey* m_links;
+  IMessageSvc*      m_msgSvc;
 };
 #endif // LINKER_LINKERWITHKEYNEW_H

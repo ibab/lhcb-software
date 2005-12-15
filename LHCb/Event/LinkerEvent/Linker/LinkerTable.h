@@ -1,4 +1,4 @@
-// $Id: LinkerTable.h,v 1.1 2005-01-27 14:52:21 cattanem Exp $
+// $Id: LinkerTable.h,v 1.2 2005-12-15 07:26:02 cattanem Exp $
 #ifndef LINKER_LINKERTABLE_H 
 #define LINKER_LINKERTABLE_H 1
 
@@ -36,7 +36,7 @@ public:
     for ( iter = m_links->keyIndex().begin();
           m_links->keyIndex().end() != iter;
           iter++ ) {
-      LinkReference curReference;
+      LHCb::LinkReference curReference;
       curReference.setNextIndex( (*iter).second );
       while ( 0 <= curReference.nextIndex()  ) {
         curReference = m_links->linkReference()[curReference.nextIndex()] ;
@@ -59,7 +59,7 @@ public:
     Range range;
     if ( NULL == m_links ) return range;
     if ( NULL == reqSrc ) return range;
-    LinkReference curReference;
+    LHCb::LinkReference curReference;
     bool status = m_links->firstReference( reqSrc->key(), 
                                            reqSrc->parent(),
                                            curReference   );
@@ -82,7 +82,7 @@ public:
     Range range;
     if ( NULL == m_links ) return range;
     if ( NULL == reqSrc ) return range;
-    LinkReference curReference;
+    LHCb::LinkReference curReference;
     bool status = m_links->firstReference( reqSrc->key(), 
                                            reqSrc->parent(),
                                            curReference   );
@@ -101,7 +101,7 @@ public:
   /** load the LinksByKeys object
    *  @param links  pointer to the LinksByKey object
    */
-  void load( const LinksByKey* links ) {
+  void load( const LHCb::LinksByKey* links ) {
     m_links = links;
   }
 
@@ -110,7 +110,7 @@ protected:
    *  @param  curReference   reference entry to the object in the LinksByKeys
    *  @return pointer to the TARGET object
    */
-  TARGET* currentTarget( LinkReference& curReference ) const {
+  TARGET* currentTarget( LHCb::LinkReference& curReference ) const {
     if ( NULL == m_links ) return NULL;
     int myLinkID = curReference.linkID();
     LinkManager::Link* link = m_links->linkMgr()->link( myLinkID );
@@ -127,7 +127,7 @@ protected:
    *  @param  curReference   reference entry to the object in the LinksByKeys
    *  @return pointer to the SOURCE object
    */
- SOURCE* currentSource( int key, LinkReference curReference ) const {
+ SOURCE* currentSource( int key, LHCb::LinkReference curReference ) const {
     if ( NULL == m_links ) return NULL;
     int myLinkID = curReference.srcLinkID();
     if ( 0 > myLinkID ) return NULL;
@@ -140,6 +140,6 @@ protected:
   }
 
 private:
-  const LinksByKey*  m_links;
+  const LHCb::LinksByKey*  m_links;
 };
 #endif // LINKER_LINKERTABLE_H
