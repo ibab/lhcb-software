@@ -4,11 +4,11 @@
 ! Purpose     : standard converters for the LHCb Detector Description
 !-----------------------------------------------------------------------------
 
+!================ DetDescCnv v3r0 2005-12-15 ==========================
+! - *** Requires MathCore-5_06_02 or higher. ***
+
 ! 2005-12-15 - Marco Clemencic
  - Fixed a but in handling of Windows' style path
-
-!================ DetDescCnv v3r0 2005-12-13 ==========================
-! - *** Requires MathCore-5_06_02 or higher. ***
 
 ! 2005-12-13 - Marco Clemencic
  - Small change in the debug output of XmlBaseDetElemCnv and
