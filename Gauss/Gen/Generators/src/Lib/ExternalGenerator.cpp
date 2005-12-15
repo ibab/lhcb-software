@@ -1,4 +1,4 @@
-// $Id: ExternalGenerator.cpp,v 1.8 2005-12-11 23:22:30 robbep Exp $
+// $Id: ExternalGenerator.cpp,v 1.9 2005-12-15 20:47:31 robbep Exp $
 // Include files 
 
 // local
@@ -149,7 +149,8 @@ bool ExternalGenerator::checkPresence( const PIDs & pidList ,
         it != theEvent -> particles_end() ; ++it ) 
     if ( std::binary_search( pidList.begin() , pidList.end() ,
                              (*it) -> pdg_id() ) ) 
-      if ( IsBAtProduction( *it ) ) particleList.push_back( *it ) ;
+      if ( ( 3 != (*it) -> status() ) && ( IsBAtProduction( *it ) ) )
+        particleList.push_back( *it ) ;
 
   return ( ! particleList.empty() ) ;
 }

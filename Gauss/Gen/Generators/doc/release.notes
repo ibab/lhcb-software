@@ -1,6 +1,10 @@
-! $Id: release.notes,v 1.21 2005-12-11 23:21:47 robbep Exp $
+! $Id: release.notes,v 1.22 2005-12-15 20:48:21 robbep Exp $
 ! Package     : Gen/Generators
 ! Responsible : 
+
+! 2005-12-15 - Patrick Robbe
+ - ExternalGenerator: Do not decay signal particle with status
+   code equal to 3.
 
 ! 2005-12-10 - Patrick Robbe
  - Add comments for doxygen
