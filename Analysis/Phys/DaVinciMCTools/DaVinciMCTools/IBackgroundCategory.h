@@ -1,4 +1,4 @@
-// $Id: IBackgroundCategory.h,v 1.2 2005-12-14 14:20:49 pkoppenb Exp $
+// $Id: IBackgroundCategory.h,v 1.3 2005-12-15 10:19:17 pkoppenb Exp $
 #ifndef DAVINCIMCTOOLS_IBACKGROUNDCATEGORY_H 
 #define DAVINCIMCTOOLS_IBACKGROUNDCATEGORY_H 1
 
@@ -20,39 +20,39 @@ static const InterfaceID IID_IBackgroundCategory ( "IBackgroundCategory", 1, 0 )
  *  Returns the background category for a reconstructed candidate Particle  
  *
  *  The categories in the enum are:
- *    Undefined : an error occured 
- *    Signal    : this is the correct signal
- *    QuasiSignal : a signal decay with some added intermediate resonance. 
+ *  - Undefined : an error occured 
+ *  - Signal    : this is the correct signal
+ *  - QuasiSignal : a signal decay with some added intermediate resonance. 
  *		    This is a gray area and not currently implemented, hence
  *		    no distinction ismade between signal and quasi-signal
- *    FullyRecoPhysBkg : A background which shares the final state particles 
+ *  - FullyRecoPhysBkg : A background which shares the final state particles 
  *			 of the signal decay, but has either a different mother
  *			 or a different topology. At present the topology check 
  *			 is not implemented.
- *      Reflection : A background in which one or more final state particles are 
+ *  - Reflection : A background in which one or more final state particles are 
  *		   mis-identified.
- *     PartRecoPhysBkg : A background in which the MC-true decay has an extra 
+ *  - PartRecoPhysBkg : A background in which the MC-true decay has an extra 
  *			particle when compared to the reconstructed background.
- *     LowMassBkg : A sub-category of PartRecoPhysBkg, which has a systematically
+ *  - LowMassBkg : A sub-category of PartRecoPhysBkg, which has a systematically
  *			low mass as compared to the average of the head of the
  *			required signal decay.
- *     Ghost : One or more final state particles has no MC-truth partner
- *      FromSameNonRecoPV : An event where the reconstructed B is in fact a primary
+ *  - Ghost : One or more final state particles has no MC-truth partner
+ *  - FromSameNonRecoPV : An event where the reconstructed B is in fact a primary
  *			  vertex which was not reconstructed by the primary
  *			  vertex fitter. Not implemented yet.
- *     FromSamePV : An event where at least one final state particle comes from 
+ *  - FromSamePV : An event where at least one final state particle comes from 
  *		   a primary vertex (if more than one, they come from the same PV).
  *		   Not yet implemented.
- *     FromDifferentNonRecoPV : A pileup where at least one final state particle 
+ *  - FromDifferentNonRecoPV : A pileup where at least one final state particle 
  *				comes from a primary vertex which was not 
  *				reconstructed by the primary vertex fitter. Not 
  *				implemented yet.
- *     FromDifferentPV : Bog standard pileup.
- *     bbar : combinatorics where at least one final state particle has a mother 
- *		which is a b-hadron.
- *     ccbar : combinatorics where at least one final state particle has a mother
- *		which is a c-hadron.
- *     light-flavour : any other combinatorics.
+ * -  FromDifferentPV : Bog standard pileup.
+ * -  bbar : combinatorics where at least one final state particle has a mother 
+ *		  which is a b-hadron.
+ * -  ccbar : combinatorics where at least one final state particle has a mother
+ *	  	which is a c-hadron.
+ * -  light-flavour : any other combinatorics.
  *   
  *
  *  @author Vladimir Gligorov
