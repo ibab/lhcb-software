@@ -6,7 +6,7 @@
      * MCHeader                                                     *
      ****************************************************************-->
      <class 
-      author="P. Koppenburg"
+      author="P. Koppenburg, revised by G.Corti"
       desc="Header for simulation information"
       name="MCHeader"
       location="MC/Header"
@@ -16,8 +16,20 @@
        <base name="ProcessHeader"/>
        <import name="Event/ProcessHeader"/>
        <import name="MCVertex" soft="TRUE"/>
+       <attribute
+        desc="Event number"
+        name="evtNumber"
+        type="longlong"
+        init="0"
+       />
+       <attribute
+        desc="Event time"
+        name="evtTime"
+        type="ulonglong"
+        init="0"
+       />
        <relation
-        desc="pointer to primary vertices @todo remove the non-const getter"
+        desc="Pointer to primary vertices"
         multiplicity="N"
         name="primaryVertices"
         type="LHCb::MCVertex"
