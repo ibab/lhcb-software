@@ -35,7 +35,6 @@ library          L0EventDict     ../$(tag)/dict/L0Event/*.cpp
 #============================================================================
 apply_pattern component_library library=L0EventDict
 apply_pattern linker_library	library=L0Event
-macro_append L0Event_linkopts  "" WIN32 "/include:_L0Event_loadRef" 
 
 private
-use GaudiObjDesc v*
+use GaudiObjDesc v* -no_auto_imports
