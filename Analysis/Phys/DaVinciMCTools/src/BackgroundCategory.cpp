@@ -1,4 +1,4 @@
-// $Id: BackgroundCategory.cpp,v 1.5 2005-12-14 14:20:49 pkoppenb Exp $
+// $Id: BackgroundCategory.cpp,v 1.6 2005-12-15 08:33:42 pkoppenb Exp $
 // Include files 
 
 // from Gaudi
@@ -403,7 +403,7 @@ bool BackgroundCategory::condition_H(MCParticleVector mc_particles_linked_to_dec
 	bool carryon = true;
   MCParticleVector::const_iterator iP = mc_particles_linked_to_decay.begin();
   ParticleVector::const_iterator iPP = particles_in_decay.begin();
-	const Collision* tmpcollision;
+	const Collision* tmpcollision = NULL;
 	bool gotacollision = false;
 
   do {
