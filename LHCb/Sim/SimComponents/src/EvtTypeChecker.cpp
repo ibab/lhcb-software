@@ -1,4 +1,4 @@
-// $Id: EvtTypeChecker.cpp,v 1.1.1.1 2005-12-15 14:29:30 gcorti Exp $
+// $Id: EvtTypeChecker.cpp,v 1.2 2005-12-15 23:23:39 gcorti Exp $
 // Include files 
 
 // from Gaudi
@@ -130,9 +130,9 @@ StatusCode EvtTypeChecker::execute() {
     }
   }
        
-//   if( m_mcFinder->hasDecay() ) {
-//     m_nMCFound++;
-//   } 
+  if( m_mcFinder->hasDecay() ) {
+    m_nMCFound++;
+  } 
   
   return StatusCode::SUCCESS;
 };

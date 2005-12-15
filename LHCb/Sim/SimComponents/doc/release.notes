@@ -6,6 +6,9 @@
 !-----------------------------------------------------------------------------
 
 !====================== SimComponents v1r0 2005-12-15 ========================
+! 2005-12-16 - Gloria CORTI
+ - Uncomment lines left inadvertently commented in EvtTypeChecker.cpp
+
 ! 2005-12-13 - Gloria CORTI
  - First version of the package importing code from Phys/MCTool:
    . CheckMCEventTool.{h,cpp}   - tool to check integrity of an MCEvent
