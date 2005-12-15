@@ -98,14 +98,14 @@ Found.OutputLevel = 2 ;
 // Print the found decay
 //
 TutorialSeq.Members += { "PrintTree/PrintFoundBs" };
-PrintFoundBs.DebugTool.Informations = "Name E M P Px Py Pz Pt phi Vz" ;
+PrintFoundBs.DebugTool.Information = "Name E M P Px Py Pz Pt phi Vz" ;
 PrintFoundBs.PhysDesktop.InputLocations = { "Phys/Bs2JpsiPhi" } ;
 PrintFoundBs.OutputLevel = 3 ;
 //
 // Print the MC decay tree for all B_s
 //
 TutorialSeq.Members += { "PrintMCTree/PrintTrueBs" };
-PrintTrueBs.DebugTool.Informations = "Name E M P Px Py Pz Pt phi Vz" ;
+PrintTrueBs.DebugTool.Information = "Name E M P Px Py Pz Pt phi Vz" ;
 PrintTrueBs.ParticleNames = {  "B_s0", "B_s~0" } ;
 PrintTrueBs.OutputLevel = 3 ;
 PrintTrueBs.Depth = 2;  // down to the K and mu

@@ -1,4 +1,4 @@
-// $Id: TutorialAlgorithm.cpp,v 1.2 2005-11-08 09:47:35 pkoppenb Exp $
+// $Id: TutorialAlgorithm.cpp,v 1.3 2005-12-15 16:06:06 pkoppenb Exp $
 // Include files 
 
 // from Gaudi
@@ -94,7 +94,7 @@ StatusCode TutorialAlgorithm::execute() {
       Vertex MuMuVertex;
       sc = vertexFitter()->fitVertex(*(*imup),*(*imum),MuMuVertex);
       if (!sc){
-        info() << "Failed to fit vertex" << endmsg ; // no bid deal
+        info() << "Failed to fit vertex" << endmsg ; // no big deal
         continue ;
       }  
       debug() << "Vertex fit at " << MuMuVertex.position()/cm 

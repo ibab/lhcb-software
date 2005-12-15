@@ -1,4 +1,4 @@
-// $Id: TutorialAlgorithm.cpp,v 1.6 2005-11-08 09:47:36 pkoppenb Exp $
+// $Id: TutorialAlgorithm.cpp,v 1.7 2005-12-15 16:06:06 pkoppenb Exp $
 // Include files 
 
 // from Gaudi
@@ -99,7 +99,7 @@ StatusCode TutorialAlgorithm::execute() {
       Vertex PPVertex;
       sc = vertexFitter()->fitVertex(*(*ipp),*(*ipm),PPVertex);
       if (!sc){
-        info() << "Failed to fit vertex" << endmsg ; // no bid deal
+        info() << "Failed to fit vertex" << endmsg ; // no big deal
         continue ;
       }  
       debug() << "Vertex fit at " << PPVertex.position()/cm 
