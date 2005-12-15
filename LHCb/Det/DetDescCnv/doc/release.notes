@@ -7,6 +7,9 @@
 !================ DetDescCnv v3r0 2005-12-15 ==========================
 ! - *** Requires MathCore-5_06_02 or higher. ***
 
+! 2005-12-15 - Marco Clemencic
+ - Fixed a but in handling of Windows' style path
+
 ! 2005-12-13 - Marco Clemencic
  - Small change in the debug output of XmlBaseDetElemCnv and
    XmlBaseConditionCnv.
@@ -18,10 +21,6 @@
 ! 2005-12-05 - Juan PALACIOS
  - Changes to XmlLVomumeCnv for migration from CLHEP HepGeom to 
    MathCore classes. CLHEP dependencies dropped.
-
-!================ DetDescCnv v2r10p1 2005-12-15 ========================
-! 2005-12-15 - Marco Clemencic
- - Fixed a but in handling of Windows' style path
 
 !================ DetDescCnv v2r10 2005-11-17 ==========================
 ! 2005-10-17 - Marco Clemencic
