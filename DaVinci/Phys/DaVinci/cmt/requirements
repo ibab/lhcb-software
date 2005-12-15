@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.283 2005-12-15 08:34:56 pkoppenb Exp $
+# $Id: requirements,v 1.284 2005-12-15 08:46:05 pkoppenb Exp $
 # Created    : 07/02/2002
 # Maintainer : P. Koppenburg
 #
@@ -92,7 +92,7 @@ use HltInclusive                v1r0     Hlt
 use HltSelChecker               v3r9     Hlt
 
 #=======================================================
-use  PhysSelSys			v8r9     PhysSel
+use  PhysSelSys			v8r10    PhysSel
 #=======================================================
 
 ########################################################
