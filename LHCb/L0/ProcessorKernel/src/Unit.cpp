@@ -1,12 +1,14 @@
 #include <iostream>
 #include "ProcessorKernel/Unit.h"
+#include "ProcessorKernel/RegisterFactory.h"
 
 
 L0Muon::Unit::Unit() {
 
   m_parent =0;
   m_debug = false;
-//   m_name = "Unknown";  
+  //   m_name = "Unknown";  
+
 }
 
     
@@ -17,15 +19,15 @@ void L0Muon::Unit::setParent(L0Muon::Unit * unit)
   m_parent = unit;
 }
 
-L0Muon::Unit * L0Muon::Unit::subUnit(std::string type)
-{
-  std::vector<L0Muon::Unit*>::iterator iu;
-  for (iu=m_units.begin();iu!=m_units.end();iu++){
-    if( (*iu)->type()==type) return (*iu);
-  }
-  return 0;
+// L0Muon::Unit * L0Muon::Unit::subUnit(std::string type)
+// {
+//   std::vector<L0Muon::Unit*>::iterator iu;
+//   for (iu=m_units.begin();iu!=m_units.end();iu++){
+//     if( (*iu)->type()==type) return (*iu);
+//   }
+//   return 0;
   
-}
+// }
 
 
 L0Muon::Property L0Muon::Unit::getProperty(std::string name) {
@@ -72,21 +74,29 @@ void L0Muon::Unit::addUnit(L0Muon::Unit* punit) {
 }
 
 void L0Muon::Unit::releaseRegisters() {
+  releaseInputRegisters();
+  releaseOutputRegisters();
+  
+}
+void L0Muon::Unit::releaseInputRegisters() {
 
-  std::map<std::string,L0Muon::Register*>::iterator ir;
-  if ( ! m_inputs.empty()){
-    
-  for ( ir = m_inputs.begin(); ir != m_inputs.end(); ir++) {
+  if ( ! m_inputs.empty()){    
+    std::map<std::string,L0Muon::Register*>::iterator ir;
+    for ( ir = m_inputs.begin(); ir != m_inputs.end(); ir++) {
+      L0Muon::Register* reg = (*ir).second;
+      reg->reset();    
+    }
+  }
+  
+}  
+void L0Muon::Unit::releaseOutputRegisters() {
 
-    L0Muon::Register* reg = (*ir).second;
-    reg->reset();    
-  }
-  }
   if ( ! m_outputs.empty()){
-  for ( ir = m_outputs.begin(); ir != m_outputs.end(); ir++) {
-  L0Muon::Register* reg = (*ir).second;
-    reg->reset();    
-  }
+    std::map<std::string,L0Muon::Register*>::iterator ir;
+    for ( ir = m_outputs.begin(); ir != m_outputs.end(); ir++) {
+      L0Muon::Register* reg = (*ir).second;
+      reg->reset();    
+    }
   }
   
 }  
@@ -224,12 +234,12 @@ void L0Muon::Unit::dump(int offset) {
   std::string blanc(offset,' ');
 
   std::cout << blanc << "+--------- Unit -----------" << std::endl;
-//   std::cout << blanc << "| Unit name '" << m_name << "' of type " << type() << std::endl;
+  //   std::cout << blanc << "| Unit name '" << m_name << "' of type " << type() << std::endl;
   std::cout << blanc << "| Unit type " << type() << std::endl;
   if (m_parent) {
-     std::cout << blanc << "| Parent type " << m_parent->type() << std::endl;
-//     std::cout << blanc << "| Parent name '" << m_parent->name() << "' of type " 
-//               << m_parent->type() << std::endl;
+    std::cout << blanc << "| Parent type " << m_parent->type() << std::endl;
+    //     std::cout << blanc << "| Parent name '" << m_parent->name() << "' of type " 
+    //               << m_parent->type() << std::endl;
   } else {
     std::cout << blanc << "| No Parent" << std::endl;
   }

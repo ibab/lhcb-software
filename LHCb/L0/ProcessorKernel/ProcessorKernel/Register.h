@@ -1,4 +1,4 @@
-// $Id: Register.h,v 1.3 2005-07-01 12:39:12 jucogan Exp $
+// $Id: Register.h,v 1.4 2005-12-15 15:08:01 jucogan Exp $
 
 #ifndef PROCESSORKERNEL_REGISTER_H
 #define PROCESSORKERNEL_REGISTER_H     1
@@ -60,10 +60,11 @@ namespace L0Muon {
     void set (const boost::dynamic_bitset<>& r) { m_bitset = r; m_set=true; }
 
     /// Set the bits pattern
-    void set (unsigned long pattern) { 
-      m_bitset = boost::dynamic_bitset<>(size(),pattern); 
-      m_set=true;
-    }
+    void set (unsigned long pattern);
+    
+    /// Set the nbits wide pattern at the position shift
+    void set (unsigned long pattern,int nbits, int shift);
+    void set (boost::dynamic_bitset<> pattern,int nbits, int shift);
 
     /// Return the number of bits
     int size() { return m_bitset.size(); }
@@ -97,6 +98,21 @@ namespace L0Muon {
 
     /// Return the bitset
     boost::dynamic_bitset<> getBitset() { return m_bitset; }
+
+    /// Return a subset of the bitset
+    boost::dynamic_bitset<> getBitset(int nbits, int shift){
+      boost::dynamic_bitset<> pattern = m_bitset>>shift;
+      pattern.resize(nbits);
+      return pattern;
+    }
+
+    /// Return an integer representation of a subset of the bitset
+    unsigned long getulong(int nbits, int shift) {
+      nbits = nbits<int(8*sizeof(unsigned long)) ? nbits : (8*sizeof(unsigned long));
+      boost::dynamic_bitset<> pattern = getBitset(nbits, shift);
+      return pattern.to_ulong(); 
+    }
+    
 
     virtual std::string toXML(std::string tab="");
     

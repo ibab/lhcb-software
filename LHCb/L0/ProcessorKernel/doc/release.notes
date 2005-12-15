@@ -4,6 +4,19 @@
 ! Purpose     : Base classes for a generic processor simulation
 !-----------------------------------------------------------------------------
 
+!======================== ProcessorKernel v1r0p1 2005-11-10 ==================
+! 2005-12-15 - Julien Cogan
+ - Add new methods to the Register to manipulate a subset of the bitset
+ - Add a new method to the RegisterFactory to return a existing register
+ - Add methods to the Unit to release input and output registers
+ - Remove the Unit method to look for a child unit 
+ - Change the setDebugMode method of Unit to be virtual
+
+! 2005-11-10 - Julien Cogan
+ - Add methods to the Register to add and retrieve bitsets of a given length 
+   and at a given position
+ - Add methods to build an XML representation for the Unit and for the Register
+
 !======================== ProcessorKernel v1r0p1 2005-04-15 ==================
 ! 2005-04-15 - Marco Cattaneo
  - Use L0mConf v2r2p*

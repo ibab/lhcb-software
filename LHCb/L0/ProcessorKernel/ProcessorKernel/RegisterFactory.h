@@ -1,4 +1,4 @@
-// $Id: RegisterFactory.h,v 1.3 2005-07-01 12:39:12 jucogan Exp $
+// $Id: RegisterFactory.h,v 1.4 2005-12-15 15:08:01 jucogan Exp $
 
 #ifndef PROCESSORKERNEL_REGISTERFACTORY_H
 #define PROCESSORKERNEL_REGISTERFACTORY_H     1
@@ -49,6 +49,7 @@ namespace L0Muon {
        @param size : number of bits
     */
     Register* createRegister(std::string name, int size);
+    Register* searchRegister(std::string name);
 
     /**
        Create a tileregister.

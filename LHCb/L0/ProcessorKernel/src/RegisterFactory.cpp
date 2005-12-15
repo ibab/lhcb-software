@@ -35,6 +35,24 @@ L0Muon::Register* L0Muon::RegisterFactory::createRegister
   }  
 }
 
+L0Muon::Register* L0Muon::RegisterFactory::searchRegister
+(std::string name) {
+  
+  std::map<std::string,L0Muon::Register*>::iterator ind;
+  ind = m_registers.find(name);
+  if (ind != m_registers.end() ) {
+
+    m_found = true;
+       
+    return (*ind).second;
+  } else {
+
+    m_found = false;
+    return 0;
+    
+  }  
+}
+
 L0Muon::TileRegister* L0Muon::RegisterFactory::createTileRegister
 (std::string name, int size) {
   
@@ -62,6 +80,7 @@ L0Muon::TileRegister* L0Muon::RegisterFactory::searchTileRegister
     
     return dynamic_cast<L0Muon::TileRegister*>((*ind).second);
   } else {
+    m_found = false;
     return 0;
     
   }  
@@ -107,7 +126,6 @@ std::string L0Muon::RegisterFactory::toXML(std::string tab){
   xmlString += " size = \""+str+"\" ";
   xmlString += " >\n";
 
-  
 
   // Write registers (skip aliases)
   std::map<std::string,Register*>::iterator i_registers;  
@@ -170,6 +188,7 @@ void L0Muon::RegisterFactory::registerFromNode(DOMNode* pNode){
   std::string type = getAttributeStr(di, "type");
   int size         = getAttributeInt(di, "size");
   Register* preg = createRegister(name,size);
+
   preg->setType(type);
 }
 
@@ -219,10 +238,10 @@ void L0Muon::RegisterFactory::tileFromNode(DOMNode* pNode,
   int itilestag   = getAttributeInt(di, "tilestag");
   int istripstag  = getAttributeInt(di, "stripstag");
 
-
   mids->push_back(MuonTileID(id));
   tilestag->push_back(itilestag);
   stripstag->push_back(istripstag);
+
 }
 
 ////////////////////////////////////////////////////////////////////////////////

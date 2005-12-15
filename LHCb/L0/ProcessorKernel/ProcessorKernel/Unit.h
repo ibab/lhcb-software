@@ -1,4 +1,4 @@
-// $Id: Unit.h,v 1.5 2005-07-01 12:39:12 jucogan Exp $
+// $Id: Unit.h,v 1.6 2005-12-15 15:08:01 jucogan Exp $
 
 #ifndef PROCESSORKERNEL_UNIT_H
 #define PROCESSORKERNEL_UNIT_H     1
@@ -30,6 +30,12 @@ namespace L0Muon {
     /// Reset input/output registers
     void releaseRegisters();
   
+    /// Reset output registers
+    void releaseOutputRegisters();
+
+    /// Reset output registers
+    void releaseInputRegisters();
+
     /// Print the registers contents
     void dumpRegisters();
 
@@ -42,8 +48,8 @@ namespace L0Muon {
     /// return the parent of the given type
     Unit * parentByType(std::string type);
   
-    /// Search for subunit 
-    Unit * subUnit(std::string type);
+//     /// Search for subunit 
+//     Unit * subUnit(std::string type);
   
     /// Add input register  
     virtual void addInputRegister(L0Muon::Register* in);
@@ -69,7 +75,7 @@ namespace L0Muon {
     void addUnit(L0Muon::Unit* unit);
  
     /// Set the DEBUG level flag
-    void setDebugMode(bool debug = true) ;
+    virtual void setDebugMode(bool debug = true) ;
   
     /// Virtual method to initialize the hierarchy of units
     virtual void initialize();
@@ -108,7 +114,7 @@ namespace L0Muon {
 
     /// Retrieve a property
     L0Muon::Property getProperty(std::string name);
-
+    
   protected:
 
     /*   std::string m_name; */

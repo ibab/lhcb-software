@@ -172,7 +172,9 @@ void L0Muon::TileRegister::print_tiles(FILE *file,int ntiles_per_line){
   int ic=0;
   for (std::vector<MuonTileID> ::iterator im = m_ids.begin();im!=m_ids.end();im++) {
     if ((ic % ntiles_per_line)==0)  fprintf(file,"\n\t");
-    fprintf(file," M%d(%2d,%2d)Q%dR%d %2d-%2d ;",im->station()+1,im->layout().xGrid(),im->layout().yGrid(),im->quarter()+1,im->region()+1,im->nX(),im->nY());
+    fprintf(file," M%d(%2d,%2d)Q%dR%d %2d-%2d ;",
+            im->station()+1,im->layout().xGrid(),im->layout().yGrid(),
+            im->quarter()+1,im->region()+1,im->nX(),im->nY());
     ic++;
   }
   fprintf(file,"\n");
@@ -192,7 +194,6 @@ std::string L0Muon::TileRegister::toXML(std::string tab){
   str = buf;
   xmlString +=" size = \""+str+"\" ";
   xmlString +=" >\n";
-
   std::vector<MuonTileID>::iterator  i_ids = m_ids.begin();
   for (int i = 0; i<size();i++) {
     xmlString +=tab+"    ";
@@ -211,7 +212,7 @@ std::string L0Muon::TileRegister::toXML(std::string tab){
   }
 
   xmlString += tab;
-  xmlString +="</"+XMLTileRegister+">\n";
+  xmlString +="</"+XMLTileRegister+">\n";  
 
   return xmlString;  
 }
