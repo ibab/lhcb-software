@@ -118,7 +118,7 @@ TutorialTuple.OutputLevel = 3 ;
 
 TutorialTuple.BackgroundCategory.Particle2MCWithChi2.Location = "Phys/Relations/Particle2MCWithChi2";
 TutorialTuple.BackgroundCategory.Particle2MCWithChi2.AlgorithmName = "catParticle2MCChi2";
-catParticle2MCChi2.InputData = {"/Event/Phys/Combined/Particles",
+catParticle2MCChi2.InputData = {"/Event/Phys/PreLoadBs2JpsiPhi/Particles",
                                 "/Event/Phys/Bs2JpsiPhi/Particles",
                                 "/Event/Phys/Jpsi2MuMu/Particles",
                                 "/Event/Phys/Phi2KK/Particles"};

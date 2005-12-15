@@ -12,7 +12,7 @@ algorithms.
      . Use the PrintMCTree algorithm to print the MC true decay tree for all B_s
    
    * Get the efficiencies:
-     . Use the MCEffBuilder algorithm to get the reconstruction effiency of 
+     . Use the MCEffBuilder algorithm to get the reconstruction efficiency of 
        your signal
      . Use theEffSelCheck algorithm to get the selection efficiency of
        your signal.
@@ -21,8 +21,3 @@ algorithms.
        it from the decay file in $LHCBRELEASES/DBASE/Gen/DecFiles/vXrX/dkfiles/
        Don't forget the ^ !
        
-   * Print correlations
-     . Print a correlation table of the efficiency of your algorithms. 
-       This is more interesting if you set the option 
-           TutorialSeq.IgnoreFilterPassed = true ;
-       This way all algorithms will always be run.
