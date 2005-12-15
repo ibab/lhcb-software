@@ -1,7 +1,8 @@
-! $Id: release.notes,v 1.78 2005-12-13 14:03:40 pkoppenb Exp $
+! $Id: release.notes,v 1.79 2005-12-15 08:33:06 pkoppenb Exp $
 ! Package     : DaVinciKernel
 ! Responsible : P. Koppenburg
 
+!========================== DaVinciKernel v3r9 2005-12-15 ===================
 ! 2005-12-13 - P. Koppenburg
   - Kernel/DVAlgorithm.h
   - src/Lib/DVAlgorithm.cpp
