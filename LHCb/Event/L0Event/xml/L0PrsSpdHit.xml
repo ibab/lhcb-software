@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!--- $Id: -->
+<!--- Author  : Olivier Callot -->
+<!--- Created : 2005-12-14 -->
+
+<!DOCTYPE gdd SYSTEM "gdd.dtd" >
+<gdd>
+  <package name="L0Event">
+    <class author="Olivier Callot" desc=" Fired cells in Prs or Spd." id="6007" name="L0PrsSpdHit">
+      <location name = "Prs" place="/Event/Trig/L0/PrsRaw"/>
+      <location name = "Spd" place="/Event/Trig/L0/SpdRaw"/>
+
+      <base     name = "KeyedObject&lt;int&gt;"/>
+      &KeyedObject;
+      <import name="Kernel/CaloCellID"/>
+      <constructor 
+	argList  = "CaloCellID id" 
+	desc     = "Usual constructor, specifies the CellID" 
+	initList = "KeyedObject&lt;int&gt; ( id.all() )">
+        <code/>
+      </constructor>
+      <method
+	desc   = "Retrieve cell identifier/key @attention alias to Base::key() method!"
+	name   = "cellID"
+	type   = "const LHCb::CaloCellID"
+	const  = "TRUE"
+	access = "PUBLIC">
+	<code> return LHCb::CaloCellID( key () ); </code>
+      </method>
+    </class>
+
+  </package>
+</gdd>

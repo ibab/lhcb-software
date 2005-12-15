@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE gdd SYSTEM "gdd.dtd">
+<gdd>
+  <package name="L0Event">
+
+    <class 
+      author = "Olivier Deschamps"
+      desc   = "This class decodes the L0ProcessorData container"
+      name   = "L0Candidate">
+
+      <import ignore='TRUE' name="L0ProcessorDatas"/>
+      <import name="Event/L0ProcessorData"/>
+
+      <base name="DataObject"/>
+      &DataObject;
+
+      <constructor 
+        desc    = "special constructor from L0ProcessorDatas location" 
+        argList = "std::string location">
+      </constructor>
+
+      <constructor 
+        desc     = "special constructor from L0ProcessorDatas KeyedContainer" 
+        argList  = "LHCb::L0ProcessorDatas* dataContainer"
+        initList = "m_dataContainer(dataContainer )">
+        <code>
+         m_convert=false;
+         if ( 0 == dataContainer ){
+           m_status = "Empty container";
+         } else {
+           m_status = "OK";
+         }
+        </code>
+      </constructor>
+
+      <attribute
+        name = "dataContainer"
+        desc = "L0ProcessorDatas container*"
+        type = "LHCb::L0ProcessorDatas*" 
+        setMeth="FALSE"
+        />
+      <attribute
+        name = "status"
+        desc = "Status message"
+        type = "std::string" 
+        setMeth="FALSE"
+        />
+      <attribute
+        name = "convert"
+        desc = "ADC to MeV conversion ?"
+        type = "bool" 
+        />
+
+      <method
+        name      = "pick"
+        desc      = "pick-up a field in word"
+        type      = "unsigned long"
+        const     = "FALSE" 
+        argList   = "unsigned long word ,int b1, int b2">
+      </method>
+      
+      <method
+        name      = "value"
+        desc      = "get Value from name"
+        type      = "unsigned long" 
+        const     = "FALSE" >
+        <arg name = "data"  type = "L0Data::Data"    const = "TRUE"/>
+        <arg name = "field" type = "L0Data::Field"   const = "TRUE"/>
+      </method>
+
+      <import name="Event/L0Data"/>
+    </class>
+
+    <namespace
+      desc   = "Enum the types and fields of L0 candidates" 
+      name   = "L0Data"
+      author = "Olivier Deschamps">
+      <enum 
+        desc="Enum the data types" 
+        name="Data" 
+        value="Electron = 0, Photon, Hadron, Pi0Local, Pi0Global, SumEt, SpdMult, Muon1, Muon2, Muon3, Muon4, Muon5, Muon6, Muon7, Muon8, PuPeak1, PuPeak2, PuHits"/>
+
+      <enum 
+        desc="Enum the data fields" 
+        name="Field" 
+        value="Value = 0, Sign, Address, Status, BCID"/>
+    </namespace>
+
+  </package>
+</gdd>

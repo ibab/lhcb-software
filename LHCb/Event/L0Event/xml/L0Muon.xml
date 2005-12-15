@@ -12,15 +12,17 @@
       <desc> *  representing the output of the L0Muon trigger processor.</desc>
       <base name='KeyedObject&lt;int&gt;'/>
       &KeyedObject;
+      <import name="Kernel/MuonTileID"/>
+
       <constructor argList="int status" desc="Constructor with just a status info"/>
       <constructor argList="double pt, double theta, double phi, 
-                            std::vector&lt;MuonTileID&gt; pads, 
+                            std::vector&lt;LHCb::MuonTileID&gt; pads, 
 			    int status" 
 			    desc="Constructor with full information"/>
       
       <method const="TRUE" type="double" name="pt" desc="Accessor to the encoded Pt"/>
-      <method const="TRUE" type="MuonTileID" name="padM1" desc="Accessor to the pad in M1"/>
-      <method const="TRUE" type="MuonTileID" name="pad" argList="unsigned int station" 
+      <method const="TRUE" type="LHCb::MuonTileID" name="padM1" desc="Accessor to the pad in M1"/>
+      <method const="TRUE" type="LHCb::MuonTileID" name="pad" argList="unsigned int station" 
                     desc="Accessor to the pad in a given station"/>
       <method const="TRUE" type="int" name="status" desc="Accessor to the encoded status"/>		    
       <method const="TRUE" type="bool" name="operator&lt;" argList="const L0MuonCandidate lmc" 
@@ -38,7 +40,7 @@
       <attribute name="bitcode" type="unsigned long" desc="Encoded candidate information"/>
       <attribute name="theta" type="double" desc="Theta at IP of the candidate" setMeth="FALSE"/>
       <attribute name="phi" type="double" desc="Phi at IP of the candidate" setMeth="FALSE"/>
-      <attribute name="pads" type="std::vector&lt;MuonTileID&gt;" desc="Pads used in the candidate"  
+      <attribute name="pads" type="std::vector&lt;LHCb::MuonTileID&gt;" desc="Pads used in the candidate"  
                  setMeth="FALSE" getMeth="FALSE"/>      
     </class>  
   </package>

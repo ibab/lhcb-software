@@ -6,21 +6,20 @@
 # http://cern.ch/lhcb-comp/Support/html/new_structure.pdf
 #============================================================================
 package           L0Event
-version           v14r4
+version           v15r0
 #============================================================================
 # This template is an example for a standard Algorithm package
 #
 # Structure, i.e. directories to process. 
 #============================================================================
-branches          cmt doc dict Event xml src
+branches          cmt doc Event xml src
 include_dirs      $(L0EVENTROOT)
 #============================================================================
 # Used packages. Specify the version, * at the end specifies 'any revision'
 #    Put as many lines as needed, with all packages, without the '#'
 #============================================================================
-use	MuonKernel	v*	Muon
-use	CaloEvent	v*	Event
-
+use     LHCbKernel      v*      Kernel
+use     LHCbDefinitions v*      Kernel
 #============================================================================
 #---- Produce Header-Files from XML description
 private
@@ -29,7 +28,7 @@ document obj2dict L0EventObj2Dict ../xml/*.xml
 
 public
 library          L0Event         ../src/*.cpp
-library          L0EventDict     ../dict/*.cpp
+library          L0EventDict     ../$(tag)/dict/L0Event/*.cpp
 
 #============================================================================
 # define library link options

@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!--- $Id: -->
+<!--- Author  : Olivier Callot -->
+<!--- Created : 2005-12-14 -->
+
+<!DOCTYPE gdd SYSTEM "gdd.dtd" >
+<gdd>
+  <package name="L0Event">
+    <class 
+      author = "Olivier Callot" 
+      desc   = "Information for L0 Calo Trigger: CellID + 8-bit Et" 
+      id     = "6006" 
+      name   = "L0CaloAdc">
+      <base     name = "KeyedObject&lt;int&gt;"/>
+      &KeyedObject;
+      <import name="Kernel/CaloCellID"/>
+      <location name="Ecal" place="/Event/Trig/L0/EcalRaw"/>
+      <location name="Hcal" place="/Event/Trig/L0/HcalRaw"/>
+      <attribute 
+	desc    = "8-bit transverse energy" 
+	name    = "adc" 
+	setMeth = "FALSE" 
+	type    = "int"/>
+ 
+      <method
+	desc   = "Retrieve cell identifier/key @attention alias to Base::key() method!"
+	name   = "cellID"
+	type   = "const LHCb::CaloCellID"
+	const  = "TRUE"
+	access = "PUBLIC">
+	<code> return LHCb::CaloCellID( key () ); </code>
+      </method>
+
+     <constructor 
+	argList  = "CaloCellID ID, int adc" 
+	desc     = "Usual constructor, specifies the cell and Et" 
+	initList = "KeyedObject&lt;int&gt;( ID.all() ), m_adc(adc)">
+        <code/>
+      </constructor>
+      <constructor 
+	desc     = "Copy Constructor" 
+	argList  = "L0CaloAdc src"
+	initList = "KeyedObject&lt;int&gt;( src.cellID().all() ), m_adc ( src.adc() ) " 
+	> <code/> </constructor>
+ 
+     </class>
+  </package>
+</gdd>
