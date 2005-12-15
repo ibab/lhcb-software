@@ -1,4 +1,4 @@
-// $Id: XmlGenericCnv.cpp,v 1.14 2005-10-17 20:03:01 marcocle Exp $
+// $Id: XmlGenericCnv.cpp,v 1.15 2005-12-15 09:22:37 marcocle Exp $
 
 // Include files
 #include "DetDescCnv/XmlGenericCnv.h"
@@ -502,14 +502,38 @@ XmlGenericCnv::createAddressForHref (std::string href,
     } else {
       // gets the directory where the xmlFile is located
       std::string locDir;
-      // I need to prepend the parent path only if the ref is not pointing to an absolute path
-      if ( location[0] != '/' ) {
+      // I need to prepend the parent path only if the ref is not pointing to an absolute pat
+      bool is_abs_path = (
+                          ( location[0] == '/' ) // unix absolute path
+                          // win absolute path (like C:\...)
+                          || (
+                              (
+                               ( location[0] >= 'a' && location[0] <= 'z' )
+                               || ( location[0] >= 'A' && location[0] <= 'Z' )
+                               ) && location[1] == ':'
+                              )
+                          );
+      if ( !is_abs_path ) {
         if ( parent->ipar()[0] == 0) {
           // The address points to a file
-          unsigned int dPos  = parent->par()[0].find_last_of('/');
+          unsigned int dPosU  = parent->par()[0].find_last_of('/'); // search Unix separator
+          unsigned int dPosW  = parent->par()[0].find_last_of('\\'); // search Win separator
+          unsigned int dPos   = parent->par()[0].npos; // "not found" marker
+          if ( dPosW == dPos ) {  // '\\' not found, assume it is a Unix path
+            dPos = dPosU;
+          } else if ( dPosU == dPos ) { // '/' not found, assume it is a Windows path
+            dPos = dPosW;
+          } else { // it seems one of those funny paths with both '\\' and '/', take the latest
+            if ( dPosU >= dPosW ) {
+              dPos = dPosU;
+            } else {
+              dPos = dPosW;
+            }
+          }
           locDir = parent->par()[0].substr( 0, dPos + 1 );
         } else {
           // The address is an xml string
+          // this can only be a conddb path, I do not need to check for '\\'
           unsigned int dPos  = parent->par()[2].find_last_of('/');
           locDir = parent->par()[2].substr( 0, dPos + 1 );
         }
