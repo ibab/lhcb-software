@@ -46,6 +46,7 @@
         desc="HepMC generator event"
         name="pGenEvt" init="0"
         type="HepMC::GenEvent*"
+        nonconstaccessor="TRUE"
       />
       <method
         desc="Assignment operator"

@@ -35,13 +35,25 @@
         init="0."
        />
        <attribute
-        desc="LHCb event type"
+        desc="LHCb event type. Code used in BookKeeping to identify samples"
         name="evType"
-        type="long"
+        type="int"
+        init="0"
+       />
+       <attribute
+        desc="Run number"
+        name="runNumber"
+        type="int"
+        init="0"
+       />
+       <attribute
+        desc="Event number"
+        name="evtNumber"
+        type="longlong"
         init="0"
        />
        <relation
-        desc="pointer to collisions in this event (keep this?)"
+        desc="Pointer to collisions in this event"
         multiplicity="N"
         name="collisions"
         type="LHCb::GenCollision"
