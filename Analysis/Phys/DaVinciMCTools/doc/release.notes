@@ -1,9 +1,13 @@
-! $Id: release.notes,v 1.79 2005-12-15 08:33:42 pkoppenb Exp $
+! $Id: release.notes,v 1.80 2005-12-15 14:19:50 pkoppenb Exp $
 ! Package     : DaVinciMCTools
 ! Responsible : P. Koppenburg
 !=============================================================================
 
 !========================== DaVinciMCTools v5r17 2005-12-15 ===================
+! 2005-12-15 - P. Koppenburg for V. Gligorov
+  - src/BackgroundCategory.cpp
+  . rint(x) is not understood by windows. Replaced by floor(x+0.5)
+
 ! 2005-12-15 - P. Koppenburg for V. Gligorov
  - DaVinciMCTools/IBackgroundCategory.h
  - src/BackgroundCategory.*

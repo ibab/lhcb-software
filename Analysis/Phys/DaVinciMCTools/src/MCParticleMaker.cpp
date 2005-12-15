@@ -1,4 +1,4 @@
-// $Id: MCParticleMaker.cpp,v 1.11 2005-11-22 10:10:58 pkoppenb Exp $
+// $Id: MCParticleMaker.cpp,v 1.12 2005-12-15 14:19:50 pkoppenb Exp $
 // Include files 
 
 #include <memory>
@@ -50,9 +50,9 @@ MCParticleMaker::MCParticleMaker( const std::string& type,
                                   const std::string& name,
                                   const IInterface* parent )
   : GaudiTool ( type, name , parent )
-    ,m_ppSvc(0) 
     ,m_onlyReconstructable(false)
     ,m_onlyReconstructed(false)
+    ,m_ppSvc(0) 
     ,m_pMCDecFinder(0)
 {
   // Declaring implemented interface  
@@ -330,7 +330,7 @@ MCParticleMaker::fillParticle( const MCParticle& mc,
     int newindex[6];	
     
     for (int i=1;i<=6;++i) {		
-      newindex[i-1]=(int)(rint(pip(i,i))); 
+      newindex[i-1]=(int)(floor(pip(i,i)+0.5)); 
       debug() << newindex[i-1] <<" ";
     }
     debug() << endmsg;

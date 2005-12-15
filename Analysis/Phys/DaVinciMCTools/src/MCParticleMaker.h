@@ -1,4 +1,4 @@
-// $Id: MCParticleMaker.h,v 1.5 2005-11-22 10:05:28 pkoppenb Exp $
+// $Id: MCParticleMaker.h,v 1.6 2005-12-15 14:19:50 pkoppenb Exp $
 #ifndef MCPARTICLEMAKER_H 
 #define MCPARTICLEMAKER_H 1
 
@@ -112,9 +112,8 @@ public:
 protected:
   /// The Particle property service.
   IParticlePropertySvc* ppSvc() const;
-  std::vector<const MCParticle*> getFinalState(const MCParticle& m);  
+  std::vector<const MCParticle*> getFinalState(const MCParticle& m);
 
- 
 private:
 
   std::vector<std::string>  m_particleNames; ///< Names of Particles to make
