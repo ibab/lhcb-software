@@ -1,4 +1,4 @@
-// $Id: LinkerWithKey.h,v 1.8 2005-12-15 10:00:32 ocallot Exp $
+// $Id: LinkerWithKey.h,v 1.9 2005-12-15 14:16:33 ocallot Exp $
 #ifndef LINKER_LINKERWITHKEY_H 
 #define LINKER_LINKERWITHKEY_H 1
 
@@ -54,7 +54,7 @@ public:
     
     int srcIndex   = source->index ();
     int srcLinkID  = m_links->linkID( source->parent() );
-    int desIndex   = dest->index();
+    int destIndex  = dest->index();
     int destLinkID = m_links->linkID( dest->parent() );
     
     m_links->addReference( srcIndex, srcLinkID, destIndex, destLinkID, weight );
