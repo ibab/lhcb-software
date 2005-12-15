@@ -1,0 +1,31 @@
+#============================================================================
+# Created    : 2005-12-13
+# Maintainer : Gloria CORTI
+#
+# Documentation on the requirement file can be found at
+# http://cern.ch/lhcb-comp/Support/html/new_structure.pdf
+#============================================================================
+package           SimComponents
+version           v1r0
+
+#============================================================================
+# Structure, i.e. directories to process. 
+#============================================================================
+branches          cmt doc src
+include_path      none
+
+#============================================================================
+# Used packages. 
+#============================================================================
+use   GaudiAlg     v*
+use   GenEvent     v4r*    Event
+use   MCEvent      v1r*    Event
+
+#============================================================================
+# Component library building rule
+#============================================================================
+library          SimComponents    ../src/*.cpp -import=AIDA
+#============================================================================
+# define component library link options
+#============================================================================
+apply_pattern    component_library library=SimComponents
