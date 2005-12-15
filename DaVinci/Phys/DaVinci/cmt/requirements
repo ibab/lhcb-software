@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.285 2005-12-15 08:50:35 pkoppenb Exp $
+# $Id: requirements,v 1.286 2005-12-15 16:13:34 pkoppenb Exp $
 # Created    : 07/02/2002
 # Maintainer : P. Koppenburg
 #
@@ -118,7 +118,7 @@ use  PrimVtx            	v2r1p1   Rec
 use  TrExtrapolator     	v2r14    Tr
 
 # L0 Trigger packages
-use  L0DU               	v6r7p6   L0
+use  L0DU               	v6r7p7   L0
 use  L0Calo             	v7r6     L0
 use  L0Checker          	v3r2p1   L0
 use  L0MuonKernel 		v2r4     L0

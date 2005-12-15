@@ -144,7 +144,7 @@ use  PrimVtx            	v2r1p1   Rec
 use  TrExtrapolator     	v2r14    Tr
 
 # L0 Trigger packages
-use  L0DU               	v6r7p6   L0
+use  L0DU               	v6r7p7   L0
 use  L0Calo             	v7r6     L0
 use  L0Checker          	v3r2p1   L0
 use  L0MuonKernel 		v2r4     L0
