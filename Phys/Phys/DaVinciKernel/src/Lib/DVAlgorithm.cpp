@@ -131,7 +131,10 @@ StatusCode DVAlgorithm::loadTools() {
   m_algorithm2IDTool = tool<IAlgorithm2ID>("Algorithm2ID");
 
   msg << MSG::DEBUG << ">>> Retrieving BTagging Tool" << endreq;
-  m_taggingTool = tool<IBTaggingTool>("BTaggingTool");
+  m_taggingTool = tool<IBTaggingTool>("BTaggingTool",this);
+
+  msg << MSG::DEBUG << ">>> Retrieving ParticleDescendants Tool" << endreq;
+  m_descendants = tool<IParticleDescendants>("ParticleDescendants");
 
   return StatusCode::SUCCESS;
 }
