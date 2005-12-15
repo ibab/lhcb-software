@@ -1,7 +1,8 @@
-! $Id: release.notes,v 1.181 2005-11-07 13:46:23 pkoppenb Exp $
+! $Id: release.notes,v 1.182 2005-12-15 08:34:10 pkoppenb Exp $
 ! Package     : DaVinciTools
 ! Responsible : P. Koppenburg
 
+!========================== DaVinciTools v12r3 2005-12-15 ===================
 ! 2005-11-07 - P. Koppenburg
   - src/MakeResonances.{h,cpp}
     . Some statistics to be printed at finalization.
