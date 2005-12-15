@@ -1,7 +1,8 @@
-! $Id: release.notes,v 1.20 2005-11-11 16:26:40 pkoppenb Exp $ 
+! $Id: release.notes,v 1.21 2005-12-15 08:35:46 pkoppenb Exp $ 
 ! Package     : ParticleMaker
 ! Responsible : P. Koppenburg
 
+!========================== ParticleMaker v1r6p1 2005-12-15 ===================
 ! 2005-11-11 - P. Koppenburg for G. Balbi
   - src/ParticleStuffer.h
     . Issue a warning when there is not particle property found
