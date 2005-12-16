@@ -1,7 +1,12 @@
-! $Id: release.notes,v 1.109 2005-12-09 17:20:22 gcorti Exp $
+! $Id: release.notes,v 1.110 2005-12-16 19:50:27 gcorti Exp $
 ! =============================================================================
 Package:          GiGa
 Package manager : Vanya Belyaev
+
+!======================= GiGa v18r0 2005-12-16 ================================
+! 2005-12-16 - Gloria CORTI
+ - Adapt to LHCb namespaces for forward declaration
+   . GiGa/GiGaTrajectory.h
 
 !======================= GiGa v17r4 =====================================
 ! 2005-12-09 - Gloria CORTI

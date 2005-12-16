@@ -1,8 +1,11 @@
-// $Id: GiGaTrajectory.h,v 1.22 2004-04-07 15:23:08 gcorti Exp $ 
+// $Id: GiGaTrajectory.h,v 1.23 2005-12-16 19:50:27 gcorti Exp $ 
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.22  2004/04/07 15:23:08  gcorti
+// transfer signal info
+//
 // Revision 1.21  2004/02/22 19:01:50  ibelyaev
 //  add new data fields to GiGaTrajectoryPoint
 //
@@ -24,7 +27,9 @@ class G4ParticleDefinition;
 class G4Track    ;
 class G4Step     ;
 class G4VProcess ;
-class HepMCEvent ;
+namespace LHCb {
+  class HepMCEvent ;
+}
 
 ///
 
@@ -92,7 +97,7 @@ public:
   { return m_isSignal      ; }
   int                                signalBarcode() const
   { return m_signalBarcode ; }
-  HepMCEvent *                       pHepMCEvent  () const
+  LHCb::HepMCEvent *                 pHepMCEvent  () const
   { return m_pHepMCEvent   ; }
   
   /// 
@@ -140,7 +145,7 @@ public:
   inline void setSignalBarcode( int code )
   {  m_signalBarcode = code ; }
   
-  inline void setHepMCEvent( HepMCEvent * event )
+  inline void setHepMCEvent( LHCb::HepMCEvent * event )
   {  m_pHepMCEvent = event ;  }
   
   // get the name of the creator process 
@@ -169,7 +174,7 @@ private:
   bool                         m_hasOscillated ;
   bool                         m_isSignal      ;
   int                          m_signalBarcode ;
-  HepMCEvent*                  m_pHepMCEvent   ;
+  LHCb::HepMCEvent*            m_pHepMCEvent   ;
   /// 
 };
 // ============================================================================
