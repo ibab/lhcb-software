@@ -6,17 +6,13 @@
 # http://cern.ch/lhcb-comp/Support/html/new_structure.pdf
 #============================================================================
 package GaussTracker
-version v4r2
+version v5r0
 
 # =============== package structure ===========================================
 branches          cmt src doc
 
 # =============== explicit dependencies =======================================
 use GaussTools    v*     Sim
-
-# =============== Event =======================================================
-use VeloEvent     v*     Event
-use MuonEvent     v*      Event
 
 # ============== component library ============================================
 library          GaussTracker   *.cpp                  

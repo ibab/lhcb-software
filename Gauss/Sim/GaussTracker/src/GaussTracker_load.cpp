@@ -16,14 +16,11 @@
 void GaussTracker_load() 
 { 
   /// Sensitive Detector 
-  DECLARE_GiGaFactory     (    GiGaSensDetTracker      );
-  DECLARE_GiGaFactory     (    GiGaSensDetVelo         );
-  DECLARE_GiGaFactory     (    GiGaSensDetMuon         );
+  DECLARE_GiGaFactory( GiGaSensDetTracker );
+ 
+  /// Algortihms to fill transient store
+  DECLARE_ALGORITHM ( GetTrackerHitsAlg );  
 
-  /// Converters 
-  DECLARE_CONVERTER       (    GiGaVeloHitCnv          );
-  DECLARE_CONVERTER       (    GiGaTrackerHitCnv          );
-  DECLARE_CONVERTER       (    GiGaMuonHitCnv          );
 };
 // ============================================================================
 

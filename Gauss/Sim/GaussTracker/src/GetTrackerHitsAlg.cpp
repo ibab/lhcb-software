@@ -1,4 +1,4 @@
-// $Id: GetTrackerHitsAlg.cpp,v 1.2 2005-10-30 21:49:15 gcorti Exp $
+// $Id: GetTrackerHitsAlg.cpp,v 1.3 2005-12-16 19:44:07 gcorti Exp $
 // Include files 
 
 // from Gaudi
@@ -87,7 +87,7 @@ StatusCode GetTrackerHitsAlg::execute() {
   // Cannot use 
   // MCHits* hits = getOrCreate<MCHits,MCHits>( m_hitsLocation );
   // because triggers convertion
-  MCHits* hits = new MCHits();
+  LHCb::MCHits* hits = new LHCb::MCHits();
   StatusCode sc = put( hits, m_hitsLocation );
   if( sc.isFailure() ) {
     return Error( " Unable to register MCHits in " + m_hitsLocation );
@@ -110,9 +110,9 @@ StatusCode GetTrackerHitsAlg::execute() {
   }
   
   // The MCParticles should have already been filled
-  if( !( exist<MCParticles>( MCParticleLocation::Default ) ) ) {
+  if( !( exist<LHCb::MCParticles>( LHCb::MCParticleLocation::Default ) ) ) {
     return Error( "MCParticles do not exist at'" 
-                  + MCParticleLocation::Default +"'" );
+                  + LHCb::MCParticleLocation::Default +"'" );
   }
   
   // MCParticles* parts = get<MCParticles>( MCParticleLocation::Default );
@@ -128,15 +128,15 @@ StatusCode GetTrackerHitsAlg::execute() {
   for( int iHit = 0; iHit < numOfHits; ++iHit ) { 
 
     // create hit
-    MCHit* mcHit = new MCHit();
+    LHCb::MCHit* mcHit = new LHCb::MCHit();
 
     // fill data members
-    HepPoint3D entry = (*hitCollection)[iHit]->GetEntryPos();
-    HepPoint3D exit  = (*hitCollection)[iHit]->GetExitPos();
+    Gaudi::XYZPoint entry( (*hitCollection)[iHit]->GetEntryPos() );
+    Gaudi::XYZPoint exit( (*hitCollection)[iHit]->GetExitPos() );
     mcHit->setEntry( entry );
     mcHit->setDisplacement( exit-entry );
     mcHit->setEnergy( (*hitCollection)[iHit]->GetEdep() );
-    mcHit->setTimeOfFlight( (*hitCollection)[iHit]->GetTimeOfFlight() );
+    mcHit->setTime( (*hitCollection)[iHit]->GetTimeOfFlight() );
 
     // fill reference to MCParticle   
     int trackID = (*hitCollection)[iHit]->GetTrackID();
@@ -148,7 +148,7 @@ StatusCode GetTrackerHitsAlg::execute() {
     }
 
     // insert it in container
-    hits->insert( mcHit );
+    hits->add( mcHit );
   }
   
   // Check that all hits have been transformed

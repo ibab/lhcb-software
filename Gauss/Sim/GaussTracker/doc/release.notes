@@ -5,6 +5,28 @@
 !                    tracker like detectors (Velo, OT, IT, Muon)
 !-----------------------------------------------------------------------------
 
+!======================= GaussTracker v5r0 2005-12-16 =========================
+! 2005-12-16 - Gloria CORTI
+ - Remove Velo specific classes since in new event model they use generic
+   MCHit:
+    . src/VeloHit.{h,cpp}
+    . src/GiGaVeloHitCnv.{h,cpp}
+    . src/GiGaSensDetVelo.{h,cpp}
+ - Remove Muon specific classes since in new event model they use generic
+   MCHit:
+    . src/MuonHit.{h,cpp}
+    . src/GiGaVeloHitCnv.{h,cpp}
+    . src/GiGaSensDetVelo.{h,cpp}
+ - Remove converters for MCHits that is obsolete and was replaced by
+   GetTrackerHitsAlg.cpp 
+   . src/GiGaTrackerHitCnv.{h,cpp}
+ - Remove declaration of classes no longer present
+   . src/GaussTracker_load.cpp
+ - Adapt to new event model
+   . src/GetTrackerHitsAlg.cpp
+ - Remove no longer necessary dependence from VeloEvent and MuonEvent
+   . cmt/requirements
+
 !=========================== GaussTracker v4r2 ================================
 ! 2005-10-30 - Gloria CORTI
  - src/GetTrackerHitsAlg.cpp
