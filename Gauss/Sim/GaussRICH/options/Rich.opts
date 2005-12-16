@@ -27,9 +27,9 @@ GiGa.ModularPL.GiGaPhysConstructorOp.RichMaxPhotonsPerCherenkovStepInRich2Gas=40
 // be reduced to a smaller value to reduce the cpu time.
 //GiGa.ModularPL.GiGaPhysConstructorOp.RichMaxPhotonStepNumInRayleigh=1000;  
 //#include "$GAUSSRICHROOT/options/RichVerbose.opts"
-GiGaGetHitsAlg.RichOpticalPhotons = "";
-GiGaGetHitsAlg.RichSegments       = "";
-GiGaGetHitsAlg.RichTracks         = "";
+//GiGaGetHitsAlg.RichOpticalPhotons = "";
+//GiGaGetHitsAlg.RichSegments       = "";
+//GiGaGetHitsAlg.RichTracks         = "";
 
 GiGa.TrackSeq.Members      += { "RichG4TrackActionPhotOpt/RichG4PhotOpt" } ;
 GiGa.TrackSeq.Members      += { "Rich1G4TrackActionUpstrPhoton/Rich1UpstrPhotonTrack" } ;

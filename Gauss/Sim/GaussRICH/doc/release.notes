@@ -4,6 +4,14 @@
 ! Responsible	     : Gloria Corti
 ! Purpose          : collection of sensitive detectors, G4 actions, etc for RICH
 !-----------------------------------------------------------------------------
+
+!======================== GaussRICH v5r2 2005-12-16 ============================
+! 2005-12-16 - Gloria CORTI
+ - New options RichExtendedInfo.opts that allow to print info about and write
+   on file additional MC classes.
+ - Rich.opts, comment options about GiGaGetHitsAlg since default in GaussAlg 
+   v1r8 
+
 2005-12-09  - Sajan Easo
   - The photons not converted at the photocathode are allowed to travel inside the HPD.
     This is the improve the simulation of various backgrounds inside HPD.
@@ -22,6 +30,7 @@
     is to stay compatible with recent versions of G4.These changes are in RichHpdPhotoElectricEffect.cpp
     and  RichSensDet.cpp
   - The demagnification law changed to linear + quadratic for the HPDs in RichHpdPhotoElectricEffect.cpp
+
 !======================== GaussRICH v5r1 ==================================
 ! 2005-12-09 - Gloria CORTI
  - Introduce options (defaultin Rich.opts) to use RichConditions for setting

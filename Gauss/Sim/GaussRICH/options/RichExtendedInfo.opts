@@ -1,0 +1,21 @@
+// $Id: RichExtendedInfo.opts,v 1.1 2005-12-16 14:55:59 gcorti Exp $
+  
+/** @file
+ *
+ *  File containing options for printing info and writing on file
+ *  extended RichInfo.
+ *
+ *  @author G.Corti
+ *  @date 2005-12-16
+ */
+GetExtendedMCRichInfoAlg.convertMCRichExtendedInfo = true;  
+GiGaGetHitsAlg.RichOpticalPhotons = "/Event/MC/Rich/OpticalPhotons";
+GiGaGetHitsAlg.RichSegments       = "/Event/MC/Rich/Segments";
+GiGaGetHitsAlg.RichTracks         = "/Event/MC/Rich/Tracks";
+
+GaussTape.OptItemList += {
+  "/Event/MC/Rich/OpticalPhotons#1"
+  ,"/Event/MC/Rich/Tracks#1"
+  ,"/Event/MC/Rich/Segments#1"
+};
+
