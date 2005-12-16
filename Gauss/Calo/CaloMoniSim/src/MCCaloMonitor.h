@@ -1,8 +1,11 @@
-// $Id: MCCaloMonitor.h,v 1.1.1.1 2004-10-25 08:53:25 ibelyaev Exp $
+// $Id: MCCaloMonitor.h,v 1.2 2005-12-16 17:53:59 odescham Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.1.1.1  2004/10/25 08:53:25  ibelyaev
+// // New Package: code imported from Calo/CaloMonitor
+//
 // ============================================================================
 #ifndef MCCALOMONITOR_H
 #define MCCALOMONITOR_H 1
@@ -19,7 +22,6 @@
 // from Calo
 #include "CaloDet/DeCalorimeter.h"
 #include "AIDA/IAnalysisFactory.h"
-#include "AIDA/IHistogramFactory.h"
 
 /** @class MCCaloMonitor MCCaloMonitor.h 
  *
@@ -31,11 +33,8 @@
  */
 
 // histograms
-class IHistogram1D  ;  
-class IHistogram2D  ;  
-class IHistogramSvc ; 
 
-class MCCaloMonitor : public Algorithm {
+class MCCaloMonitor : public GaudiHistoAlg {
 public:
   /// Standard constructor
   MCCaloMonitor( const std::string& name, ISvcLocator* pSvcLocator );
@@ -48,7 +47,7 @@ public:
 
     
 private:
-  // histogramas:
+  // histograms:
   
   std::string m_nameOfMCHits           ;
   std::string m_hName1;
@@ -97,33 +96,6 @@ private:
 
   int m_Bin;
   
-  /// histogram service
-  
-  IHistogramFactory*      hf                  ;
-  
-  IHistogramSvc*  m_histoSvc                  ;
-  IHistogram1D*   m_hSHitEnergy           ;
-  IHistogram1D*   m_hSHitEnergyInn        ;
-  IHistogram1D*   m_hSHitEnergyOut        ;
-  IHistogram1D*   m_hSHitEnergyMid        ;
-  IHistogram1D*   m_hEnergyEnergy         ;
-  IHistogram1D*   m_hEnergyEnergyInn      ;
-  IHistogram1D*   m_hEnergyEnergyOut      ;
-  IHistogram1D*   m_hEnergyEnergyMid      ;  
-  
-  
-  IHistogram1D*   m_hDistribution          ;
-  IHistogram1D*   m_hDistributionBC        ;
-  IHistogram1D*   m_hDistributionBC0       ;
-  IHistogram1D*   m_hDistributionBC1       ;
-  IHistogram1D*   m_hDistributionBC2       ;
-  IHistogram1D*   m_hDistributionBC3       ;
-  IHistogram1D*   m_hDistributionBC4       ;
-
-  IHistogram1D*   m_hEnergyTime           ;
-  IHistogram1D*   m_hEnergyTimeInn        ;
-  IHistogram1D*   m_hEnergyTimeMid        ;
-  IHistogram1D*   m_hEnergyTimeOut        ;
 
 protected:
   

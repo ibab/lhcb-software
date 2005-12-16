@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.2 2004-12-14 16:40:48 gcorti Exp $ 
+# $Id: requirements,v 1.3 2005-12-16 17:53:59 odescham Exp $ 
 # ============================================================================
 # CVS tag $Name: not supported by cvs2svn $ 
 # ============================================================================
@@ -6,7 +6,7 @@
 # Maintainer : Vanya BELYAEV  belyaev@lapp.in2p3.fr
 # ============================================================================
 package           CaloMoniSim
-version           v1r0
+version           v2r0
 
 # =============== structure ==================================================
 branches          cmt doc src options 
@@ -15,7 +15,8 @@ branches          cmt doc src options
 set               CALOMONISIMOPTS  $(CALOMONISIMROOT)/options 
 
 # =============== dependencies ===============================================
-use               CaloUtils      v* Calo
+use CaloDet        v*      Det 
+use MCEvent        v*      Event
 
 # =============== constituents ===============================================
 library           CaloMoniSim    -import=AIDA *.cpp
