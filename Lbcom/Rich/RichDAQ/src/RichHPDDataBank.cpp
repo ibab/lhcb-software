@@ -5,7 +5,7 @@
  *  Implementation file for RICH DAQ helper class : RichHPDDataBank
  *
  *  CVS Log :-
- *  $Id: RichHPDDataBank.cpp,v 1.4 2005-03-21 14:11:42 jonrob Exp $
+ *  $Id: RichHPDDataBank.cpp,v 1.5 2005-12-16 15:11:34 jonrob Exp $
  *
  *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
  *  @date   2004-12-17
@@ -14,6 +14,9 @@
 
 // local
 #include "RichHPDDataBank.h"
+
+// namespaces
+using namespace LHCb; ///< LHCb general namespace
 
 //-----------------------------------------------------------------------------
 

@@ -5,7 +5,7 @@
  * Implementation file for class : RichRawBufferToSmartIDsTool
  *
  * CVS Log :-
- * $Id: RichRawBufferToSmartIDsTool.cpp,v 1.12 2005-10-17 09:06:25 jonrob Exp $
+ * $Id: RichRawBufferToSmartIDsTool.cpp,v 1.13 2005-12-16 15:11:34 jonrob Exp $
  *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @date 14/01/2002
@@ -73,7 +73,7 @@ void RichRawBufferToSmartIDsTool::handle ( const Incident& incident )
   if ( IncidentType::BeginEvent == incident.type() ) { InitNewEvent(); }
 }
 
-const RichSmartID::Collection & RichRawBufferToSmartIDsTool::allRichSmartIDs() const
+const RichSmartID::Vector & RichRawBufferToSmartIDsTool::allRichSmartIDs() const
 {
   if ( m_newEvent )
   {
@@ -99,7 +99,8 @@ void RichRawBufferToSmartIDsTool::fillRichSmartIDs() const
   if ( msgLevel(MSG::VERBOSE) )
   {
     verbose() << "RichSmartIDs :-" << endreq;
-    for ( RichSmartID::Collection::const_iterator iID = m_smartIDs.begin(); iID != m_smartIDs.end(); ++iID )
+    for ( RichSmartID::Vector::const_iterator iID = m_smartIDs.begin(); 
+          iID != m_smartIDs.end(); ++iID )
     {
       verbose() << "   " << *iID << " " << (*iID).key() << endreq;
     }

@@ -5,7 +5,7 @@
  *  Header file for RICH DAQ utility class : RichZeroSuppData
  *
  *  CVS Log :-
- *  $Id: RichZeroSuppData.h,v 1.5 2005-11-15 12:57:48 jonrob Exp $
+ *  $Id: RichZeroSuppData.h,v 1.6 2005-12-16 15:11:34 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   2004-12-17
@@ -15,9 +15,6 @@
 #ifndef RICHDAQ_RICHZEROSUPPDATA_H
 #define RICHDAQ_RICHZEROSUPPDATA_H 1
 
-// Event Model
-#include "Event/DAQTypes.h"
-
 // local
 #include "RichHPDDataBank.h"
 #include "RichDAQHeaderPD.h"
@@ -26,81 +23,6 @@
 // RichKernel
 #include "RichKernel/BoostMemPoolAlloc.h"
 #include "RichKernel/IRichDetNumberingTool.h"
-
-/** @namespace RichZeroSuppDataV0
- *
- *  Namespace for version 0 of the RichZeroSuppData object.
- *
- *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
- *  @date   2004-12-17
- */
-namespace RichZeroSuppDataV0 
-{
-
-  /** @class RichZeroSuppData RichZeroSuppData.h
-   *
-   *  The RICH HPD zero suppressed data format.
-   *  First version, compatible with DC04 data.
-   *
-   *  @author Chris Jones    Christopher.Rob.Jones@cern.ch
-   *  @date   2003-11-07
-   */
-  class RichZeroSuppData : public RichHPDDataBank,
-                           public Rich::BoostMemPoolAlloc<RichZeroSuppDataV0::RichZeroSuppData>
-  {
-
-  public: // Definitions
-
-    /// Typedef for the header type for this data bank implementation
-    typedef RichDAQHeaderV0::RichDAQHeaderPD Header;
-
-    /// Typedef for HPD identifier for this data bank implementation
-    typedef RichDAQHPDIdentifierV0::RichDAQHPDIdentifier HPDID;
-
-  public:
-
-    /// Default constructor
-    RichZeroSuppData() : RichHPDDataBank(0,0,0) { }
-
-    /** Constructor from a RichSmartID HPD identifier and a vector of RichSmartIDs
-     *
-     *  @param hpdID  RichSmartID identifying the HPD
-     *  @param digits Collection of RichSmartIDs listing the active channels in this HPD
-     */
-    explicit RichZeroSuppData( const RichSmartID hpdID,
-                               const RichSmartID::Collection & digits )
-      : RichHPDDataBank ( Header( true, HPDID(hpdID), digits.size() ), 0, 0 )
-    {
-      buildData( digits );
-    }
-
-    /** Constructor from a block of raw data
-     *
-     *  @param data     Pointer to the start of the data block
-     *  @param dataSize The size of the data block (excluding header HPD word)
-     */
-    explicit RichZeroSuppData( const RichDAQ::LongType * data,
-                               const RichDAQ::ShortType dataSize )
-      : RichHPDDataBank ( data, dataSize ) { }
-
-    // Destructor
-    virtual ~RichZeroSuppData() { }
-
-    // Fill a vector with RichSmartIDs for hit pixels
-    virtual void fillRichSmartIDs( RichSmartID::Collection & ids,
-                                   const IRichDetNumberingTool * hpdTool ) const;
-
-    // Print data bank to message stream
-    virtual void fillMsgStream( MsgStream & os ) const;
-
-  private: // methods
-
-    /// Build data array from vector of RichSmartIDs
-    void buildData( const RichSmartID::Collection & pdHits );
-
-  };
-
-} // end V0 namespace
 
 // =================================================================================
 
@@ -140,10 +62,10 @@ namespace RichZeroSuppDataV1
     /** Constructor from a RichSmartID HPD identifier and a vector of RichSmartIDs
      *
      *  @param hpdID  Level0 board Hardware identifier
-     *  @param digits Collection of RichSmartIDs listing the active channels in this HPD
+     *  @param digits Vector of RichSmartIDs listing the active channels in this HPD
      */
     explicit RichZeroSuppData( const RichDAQ::Level0ID l0ID,
-                               const RichSmartID::Collection & digits )
+                               const LHCb::RichSmartID::Vector & digits )
       : RichHPDDataBank ( Header( true, l0ID, digits.size() ), 0, 0 )
     {
       buildData( digits );
@@ -162,7 +84,7 @@ namespace RichZeroSuppDataV1
     virtual ~RichZeroSuppData() { }
 
     // Fill a vector with RichSmartIDs for hit pixels
-    virtual void fillRichSmartIDs( RichSmartID::Collection & ids,
+    virtual void fillRichSmartIDs( LHCb::RichSmartID::Vector & ids,
                                    const IRichDetNumberingTool * hpdTool ) const;
 
     // Print data bank to message stream
@@ -171,7 +93,7 @@ namespace RichZeroSuppDataV1
   private: // methods
 
     /// Build data array from vector of RichSmartIDs
-    void buildData( const RichSmartID::Collection & pdHits );
+    void buildData( const LHCb::RichSmartID::Vector & pdHits );
 
   };
 
@@ -218,10 +140,10 @@ namespace RichZeroSuppDataV2
     /** Constructor from a RichSmartID HPD identifier and a vector of RichSmartIDs
      *
      *  @param hpdID  Level0 board hardware identifier
-     *  @param digits Collection of RichSmartIDs listing the active channels in this HPD
+     *  @param digits Vector of RichSmartIDs listing the active channels in this HPD
      */
     explicit RichZeroSuppData( const RichDAQ::Level0ID l0ID,
-                               const RichSmartID::Collection & digits )
+                               const LHCb::RichSmartID::Vector & digits )
       : RichHPDDataBank ( Header( true, l0ID, digits.size() ), 0, 0 ),
         m_tooBig        ( false   )
     {
@@ -243,7 +165,7 @@ namespace RichZeroSuppDataV2
     virtual ~RichZeroSuppData() { }
 
     // Fill a vector with RichSmartIDs for hit pixels
-    virtual void fillRichSmartIDs( RichSmartID::Collection & ids,
+    virtual void fillRichSmartIDs( LHCb::RichSmartID::Vector & ids,
                                    const IRichDetNumberingTool * hpdTool ) const;
 
     // Print data bank to message stream
@@ -258,7 +180,7 @@ namespace RichZeroSuppDataV2
   private: // methods
 
     /// Build data array from vector of RichSmartIDs
-    void buildData( const RichSmartID::Collection & pdHits );
+    void buildData( const LHCb::RichSmartID::Vector & pdHits );
 
     /// Get address from row and column information
     inline RichDAQ::ShortType addressFromRowCol( const RichDAQ::ShortType row,

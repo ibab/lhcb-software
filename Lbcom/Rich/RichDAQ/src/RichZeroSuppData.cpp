@@ -4,7 +4,7 @@
  *
  *  Implementation file for RICH DAQ helper class : RichZeroSuppData
  *
- *  $Id: RichZeroSuppData.cpp,v 1.5 2005-11-15 12:57:48 jonrob Exp $
+ *  $Id: RichZeroSuppData.cpp,v 1.6 2005-12-16 15:11:34 jonrob Exp $
  *
  *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
  *  @date   2004-12-17
@@ -14,105 +14,20 @@
 // local
 #include "RichZeroSuppData.h"
 
+// namespaces
+using namespace LHCb; ///< LHCb general namespace
+
 //-----------------------------------------------------------------------------
-
-namespace RichZeroSuppDataV0 {
-
-  void RichZeroSuppData::buildData( const RichSmartID::Collection & pdHits )
-  {
-
-    // Loop over digits and form groups of three
-    RichSmartID::Collection::const_iterator iDigit = pdHits.begin();
-    while ( iDigit != pdHits.end() ) {
-
-      const RichSmartID *one(&*iDigit), *two(NULL), *three(NULL);
-      ++iDigit;
-      if ( iDigit != pdHits.end() ) {
-        two = &(*iDigit);
-        ++iDigit;
-        if ( iDigit != pdHits.end() ) {
-          three = &(*iDigit);
-          ++iDigit;
-        }
-      }
-
-      // make a new triplet object and add to data bank
-      addData( RichZSHitTriplet( one, two, three ) );
-
-    } // end while loop
-
-  }
-
-  void RichZeroSuppData::fillRichSmartIDs ( RichSmartID::Collection & ids,
-                                            const IRichDetNumberingTool * /* hpdTool */ ) const
-  {
-
-    // How many digits do we expect to make
-    const Header head ( header() );
-    const RichDAQ::ShortType digitCount = head.hitCount();
-
-    // Loop over data fields
-    RichDAQ::ShortType nDigitsMade = 0;
-    for ( RichDAQ::ShortType iData = 0; iData < dataSize(); ++iData ) {
-
-      // Get triplet data
-      const RichZSHitTriplet triplet( data()[iData] );
-
-      // Make first smartid from triplet
-      ids.push_back( RichSmartID( head.hpdID().rich(), head.hpdID().panel(),
-                                  head.hpdID().pdRow(), head.hpdID().pdCol(),
-                                  triplet.row0(), triplet.col0() ) );
-      ++nDigitsMade;
-      if ( nDigitsMade == digitCount ) break;
-
-      // Make second smartid from triplet
-      ids.push_back( RichSmartID( head.hpdID().rich(), head.hpdID().panel(),
-                                  head.hpdID().pdRow(), head.hpdID().pdCol(),
-                                  triplet.row1(), triplet.col1() ) );
-      ++nDigitsMade;
-      if ( nDigitsMade == digitCount ) break;
-
-      // Make third smartid from triplet
-      ids.push_back( RichSmartID( head.hpdID().rich(), head.hpdID().panel(),
-                                  head.hpdID().pdRow(), head.hpdID().pdCol(),
-                                  triplet.row2(), triplet.col2() ) );
-      ++nDigitsMade;
-      if ( nDigitsMade == digitCount ) break;
-
-    }
-
-  }
-
-  void RichZeroSuppData::fillMsgStream( MsgStream & os ) const
-  {
-
-    os << "======================================================================================================"
-       << endreq;
-
-    // HPD header
-    os << Header( header() ) << endreq;
-
-    // Raw print out of data block
-    os << endreq;
-    dumpAllBits( os );
-    os << endreq;
-
-    os << "======================================================================================================"
-       << endreq;
-
-  }
-
-} // V0 namespace
 
 // ===================================================================================================
 
 namespace RichZeroSuppDataV1 {
 
-  void RichZeroSuppData::buildData( const RichSmartID::Collection & pdHits )
+  void RichZeroSuppData::buildData( const RichSmartID::Vector & pdHits )
   {
 
     // Loop over digits and form groups of three
-    RichSmartID::Collection::const_iterator iDigit = pdHits.begin();
+    RichSmartID::Vector::const_iterator iDigit = pdHits.begin();
     while ( iDigit != pdHits.end() ) {
 
       const RichSmartID *one(&*iDigit), *two(NULL), *three(NULL);
@@ -133,7 +48,7 @@ namespace RichZeroSuppDataV1 {
 
   }
 
-  void RichZeroSuppData::fillRichSmartIDs ( RichSmartID::Collection & ids,
+  void RichZeroSuppData::fillRichSmartIDs ( RichSmartID::Vector & ids,
                                             const IRichDetNumberingTool * hpdTool ) const
   {
 
@@ -153,21 +68,21 @@ namespace RichZeroSuppDataV1 {
 
       // Make first smartid from triplet
       ids.push_back( RichSmartID( sID.rich(), sID.panel(),
-                                  sID.pdRow(), sID.pdCol(),
+                                  sID.hpdNumInCol(), sID.hpdCol(),
                                   triplet.row0(), triplet.col0() ) );
       ++nDigitsMade;
       if ( nDigitsMade == digitCount ) break;
 
       // Make second smartid from triplet
       ids.push_back( RichSmartID( sID.rich(), sID.panel(),
-                                  sID.pdRow(), sID.pdCol(),
+                                  sID.hpdNumInCol(), sID.hpdCol(),
                                   triplet.row1(), triplet.col1() ) );
       ++nDigitsMade;
       if ( nDigitsMade == digitCount ) break;
 
       // Make third smartid from triplet
       ids.push_back( RichSmartID( sID.rich(), sID.panel(),
-                                  sID.pdRow(), sID.pdCol(),
+                                  sID.hpdNumInCol(), sID.hpdCol(),
                                   triplet.row2(), triplet.col2() ) );
       ++nDigitsMade;
       if ( nDigitsMade == digitCount ) break;
@@ -201,7 +116,7 @@ namespace RichZeroSuppDataV1 {
 
 namespace RichZeroSuppDataV2 {
 
-  void RichZeroSuppData::buildData( const RichSmartID::Collection & pdHits )
+  void RichZeroSuppData::buildData( const RichSmartID::Vector & pdHits )
   {
 
     // temporary data map
@@ -209,7 +124,7 @@ namespace RichZeroSuppDataV2 {
     DataMap dataM;
 
     // Loop over digits and form groups of three
-    for ( RichSmartID::Collection::const_iterator iID = pdHits.begin();
+    for ( RichSmartID::Vector::const_iterator iID = pdHits.begin();
           iID != pdHits.end(); ++iID )
     {
 
@@ -247,7 +162,7 @@ namespace RichZeroSuppDataV2 {
 
   }
 
-  void RichZeroSuppData::fillRichSmartIDs ( RichSmartID::Collection & ids,
+  void RichZeroSuppData::fillRichSmartIDs ( RichSmartID::Vector & ids,
                                             const IRichDetNumberingTool * hpdTool ) const
   {
 
@@ -274,7 +189,7 @@ namespace RichZeroSuppDataV2 {
           if ( isBitOn(bits,iB) )
           {
             ids.push_back( RichSmartID( sID.rich(), sID.panel(),
-                                        sID.pdRow(), sID.pdCol(),
+                                        sID.hpdNumInCol(), sID.hpdCol(),
                                         rowFromAddress(address),
                                         colFromAddressAndBit(address,iB) ) );
             ++nDigitsMade;
@@ -292,7 +207,7 @@ namespace RichZeroSuppDataV2 {
           if ( isBitOn(bits,iB) )
           {
             ids.push_back( RichSmartID( sID.rich(), sID.panel(),
-                                        sID.pdRow(), sID.pdCol(),
+                                        sID.hpdNumInCol(), sID.hpdCol(),
                                         rowFromAddress(address),
                                         colFromAddressAndBit(address,iB) ) );
             ++nDigitsMade;

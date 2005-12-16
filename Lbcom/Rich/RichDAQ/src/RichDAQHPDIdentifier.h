@@ -3,7 +3,7 @@
  *
  *  Header file for RICH DAQ utility class : RichDAQHPDIdentifier
  *
- *  $Id: RichDAQHPDIdentifier.h,v 1.3 2005-11-15 12:57:47 jonrob Exp $
+ *  $Id: RichDAQHPDIdentifier.h,v 1.4 2005-12-16 15:11:33 jonrob Exp $
  *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   2003-11-06
@@ -25,7 +25,7 @@
  *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
  *  @date   2004-12-17
  */
-namespace RichDAQHPDIdentifierV0 
+namespace RichDAQHPDIdentifierV0
 {
 
   /** @namespace RichDAQHPDIdentifierCode
@@ -35,8 +35,8 @@ namespace RichDAQHPDIdentifierV0
    *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
    *  @date   2003-11-07
    */
-  namespace RichDAQHPDIdentifierCode 
-{
+  namespace RichDAQHPDIdentifierCode
+  {
 
     // Define the number of bits for each field
     static const RichDAQ::ShortType  BitsRich  =  1; ///< Number of bits for RICH field
@@ -88,22 +88,22 @@ namespace RichDAQHPDIdentifierV0
     /// Constructor from full data
     RichDAQHPDIdentifier( const RichDAQ::ShortType rich,
                           const RichDAQ::ShortType panel,
-                          const RichDAQ::ShortType pdRow,
-                          const RichDAQ::ShortType pdCol ) : m_data(0)
+                          const RichDAQ::ShortType hpdNumInCol,
+                          const RichDAQ::ShortType hpdCol ) : m_data(0)
     {
-      setRich  ( rich  );
-      setPanel ( panel );
-      setPDRow ( pdRow );
-      setPDCol ( pdCol );
+      setRich        ( rich        );
+      setPanel       ( panel       );
+      setHPDNumInCol ( hpdNumInCol );
+      setHPDCol      ( hpdCol      );
     }
 
     /// Constructor from a RichSmartID
-    RichDAQHPDIdentifier( const RichSmartID smartID ) : m_data(0)
+    RichDAQHPDIdentifier( const LHCb::RichSmartID smartID ) : m_data(0)
     {
-      setRich  ( smartID.rich()  );
-      setPanel ( smartID.panel() );
-      setPDRow ( smartID.pdRow() );
-      setPDCol ( smartID.pdCol() );
+      setRich        ( smartID.rich()        );
+      setPanel       ( smartID.panel()       );
+      setHPDNumInCol ( smartID.hpdNumInCol() );
+      setHPDCol      ( smartID.hpdCol()      );
     }
 
     /// Destructor
@@ -149,14 +149,14 @@ namespace RichDAQHPDIdentifierV0
     }
 
     /// Return the photon detector row number
-    inline RichDAQ::ShortType pdRow() const
+    inline RichDAQ::ShortType hpdNumInCol() const
     {
       return ( (data() & RichDAQHPDIdentifierCode::MaskPDRow)
                >> RichDAQHPDIdentifierCode::ShiftPDRow );
     }
 
     /// Set the photon detector row number
-    inline bool setPDRow( const RichDAQ::ShortType row )
+    inline bool setHPDNumInCol( const RichDAQ::ShortType row )
     {
       return ( dataInRange(row,RichDAQHPDIdentifierCode::MaxPDRow) ?
                set( row, RichDAQHPDIdentifierCode::ShiftPDRow,
@@ -164,14 +164,14 @@ namespace RichDAQHPDIdentifierV0
     }
 
     /// Return the photon detector column number
-    inline RichDAQ::ShortType pdCol() const
+    inline RichDAQ::ShortType hpdCol() const
     {
       return ( (data() & RichDAQHPDIdentifierCode::MaskPDCol)
                >> RichDAQHPDIdentifierCode::ShiftPDCol );
     }
 
     /// Set the photon detector column number
-    inline bool setPDCol( const RichDAQ::ShortType col )
+    inline bool setHPDCol( const RichDAQ::ShortType col )
     {
       return ( dataInRange(col,RichDAQHPDIdentifierCode::MaxPDCol) ?
                set( col, RichDAQHPDIdentifierCode::ShiftPDCol,
@@ -211,8 +211,8 @@ inline MsgStream & operator << ( MsgStream & os,
 {
   os << "RICH = " << hpdid.rich()
      << " panel = " << hpdid.panel()
-     << " HPD Row = " << hpdid.pdRow()
-     << " HPD Col = " << hpdid.pdCol();
+     << " HPD Row = " << hpdid.hpdNumInCol()
+     << " HPD Col = " << hpdid.hpdCol();
   return os;
 }
 

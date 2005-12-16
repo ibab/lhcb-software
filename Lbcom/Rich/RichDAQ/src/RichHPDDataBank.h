@@ -5,7 +5,7 @@
  *  Header file for RICH DAQ utility class : RichHPDDataBank
  *
  *  CVS Log :-
- *  $Id: RichHPDDataBank.h,v 1.7 2005-11-15 12:57:48 jonrob Exp $
+ *  $Id: RichHPDDataBank.h,v 1.8 2005-12-16 15:11:34 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   2004-12-17
@@ -87,7 +87,7 @@ public:
    *  @param ids     Vector of RichSmartIDs to fill
    *  @param hpdTool Pointer to the tool to convert hardware to software HPD IDs
    */
-  virtual void fillRichSmartIDs( RichSmartID::Collection & ids,
+  virtual void fillRichSmartIDs( LHCb::RichSmartID::Vector & ids,
                                  const IRichDetNumberingTool * hpdTool ) const = 0;
 
   /** Fill a RAWBank with the data for this bank
@@ -164,14 +164,7 @@ protected: // methods
   }
 
   /// Set a given bit in a data word on
-  inline void 
-  setBit( RichDAQ::LongType & data, const RichDAQ::ShortType pos )
-  {
-    data |= 1<<pos;
-  }
-
-  /// Set a given bit in a data word on
-  inline void 
+  inline void
   setBit( RichDAQ::ShortType & data, const RichDAQ::ShortType pos )
   {
     data |= 1<<pos;

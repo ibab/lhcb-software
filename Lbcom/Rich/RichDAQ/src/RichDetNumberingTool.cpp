@@ -5,7 +5,7 @@
  *  Implementation file for class : RichDetNumberingTool
  *
  *  CVS Log :-
- *  $Id: RichDetNumberingTool.cpp,v 1.2 2005-11-18 14:09:46 jonrob Exp $
+ *  $Id: RichDetNumberingTool.cpp,v 1.3 2005-12-16 15:11:34 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date 2004-12-18
@@ -208,7 +208,7 @@ StatusCode RichDetNumberingTool::finalize()
 const RichDAQ::HPDHardwareID RichDetNumberingTool::hardwareID( const RichSmartID smartID ) const
 {
   // See if this RichSmartID is known
-  SoftToHard::const_iterator id = m_soft2hard.find( smartID.pdID() );
+  SoftToHard::const_iterator id = m_soft2hard.find( smartID.hpdID() );
   if ( m_soft2hard.end() == id )
   {
     std::ostringstream mess;
@@ -246,7 +246,7 @@ const RichSmartID RichDetNumberingTool::richSmartID( const RichDAQ::Level0ID l0I
   return (*id).second;
 }
 
-const RichSmartID::Collection & RichDetNumberingTool::activeHPDRichSmartIDs() const
+const RichSmartID::Vector & RichDetNumberingTool::activeHPDRichSmartIDs() const
 {
   return m_smartIDs;
 }
@@ -259,7 +259,7 @@ const RichDAQ::HPDHardwareIDs & RichDetNumberingTool::activeHPDHardwareIDs() con
 bool RichDetNumberingTool::hpdIsActive( const RichSmartID id ) const
 {
   // See if this RichSmartID is known
-  SoftToHard::const_iterator iHPD = m_soft2hard.find( id.pdID() );
+  SoftToHard::const_iterator iHPD = m_soft2hard.find( id.hpdID() );
   return ( m_soft2hard.end() != iHPD );
 }
 
@@ -274,7 +274,7 @@ const RichDAQ::Level0ID
 RichDetNumberingTool::level0ID( const RichSmartID smartID ) const
 {
   // See if this RichSmartID is known
-  SmartIDToL0::const_iterator id = m_smartid2L0.find( smartID.pdID() );
+  SmartIDToL0::const_iterator id = m_smartid2L0.find( smartID.hpdID() );
   if ( m_smartid2L0.end() == id )
   {
     std::ostringstream mess;
@@ -290,7 +290,7 @@ const RichDAQ::Level1ID
 RichDetNumberingTool::level1ID( const RichSmartID smartID ) const
 {
   // See if this RichSmartID is known
-  SmartIDToL1::const_iterator id = m_smartid2L1.find( smartID.pdID() );
+  SmartIDToL1::const_iterator id = m_smartid2L1.find( smartID.hpdID() );
   if ( m_smartid2L1.end() == id )
   {
     std::ostringstream mess;
@@ -330,7 +330,7 @@ RichDetNumberingTool::level1ID( const RichDAQ::HPDHardwareID hardID ) const
   return (*id).second;
 }
 
-const RichSmartID::Collection &
+const RichSmartID::Vector &
 RichDetNumberingTool::l1HPDSmartIDs( const RichDAQ::Level1ID l1ID ) const
 {
   // See if this L1 ID is known

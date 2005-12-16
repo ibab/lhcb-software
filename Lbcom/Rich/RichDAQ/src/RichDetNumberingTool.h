@@ -5,7 +5,7 @@
  *  Header file for tool : RichDetNumberingTool
  *
  *  CVS Log :-
- *  $Id: RichDetNumberingTool.h,v 1.1 2005-11-15 12:57:48 jonrob Exp $
+ *  $Id: RichDetNumberingTool.h,v 1.2 2005-12-16 15:11:34 jonrob Exp $
  *
  *  @author Chris Jones    Christopher.Rob.Jones@cern.ch
  *  @date   2004-12-18
@@ -36,6 +36,9 @@
 // Det Desc
 #include "DetDesc/Condition.h"
 #include "DetDesc/IUpdateManagerSvc.h"
+
+// namespaces
+using namespace LHCb; ///< LHCb general namespace
 
 //-----------------------------------------------------------------------------
 /** @class RichDetNumberingTool RichDetNumberingTool.h
@@ -81,7 +84,7 @@ public: // methods (and doxygen comments) inherited from interface
   const RichSmartID richSmartID( const RichDAQ::Level0ID hID ) const;
 
   // Access a list of all active HPDs identified by their RichSmartID
-  const RichSmartID::Collection & activeHPDRichSmartIDs() const;
+  const RichSmartID::Vector & activeHPDRichSmartIDs() const;
 
   // Access a list of all active HPDs identified by their hardware IDs
   const RichDAQ::HPDHardwareIDs & activeHPDHardwareIDs() const;
@@ -105,7 +108,7 @@ public: // methods (and doxygen comments) inherited from interface
   const RichDAQ::Level1ID level1ID( const RichDAQ::HPDHardwareID hardID ) const;
 
   // Obtain a list of RichSmartID HPD identifiers for a given level 1 ID
-  const RichSmartID::Collection & l1HPDSmartIDs( const RichDAQ::Level1ID l1ID ) const;
+  const RichSmartID::Vector & l1HPDSmartIDs( const RichDAQ::Level1ID l1ID ) const;
 
   // Obtain a list of HPD hardware identifiers for a given level 1 ID
   const RichDAQ::HPDHardwareIDs & l1HPDHardIDs( const RichDAQ::Level1ID l1ID ) const;
@@ -133,41 +136,41 @@ private: // methods
 private: // data
 
   /// Type for mapping from RichSmartID to RichDAQ::HPDHardwareID
-  typedef RichHashMap< const RichSmartID, RichDAQ::HPDHardwareID > SoftToHard;
+  typedef Rich::HashMap< const RichSmartID, RichDAQ::HPDHardwareID > SoftToHard;
   SoftToHard m_soft2hard; ///< Software ID to hardware ID map
 
   /// Type for mapping from RichDAQ::HPDHardwareID to RichSmartID
-  typedef RichHashMap< const RichDAQ::HPDHardwareID, RichSmartID > HardToSoft;
+  typedef Rich::HashMap< const RichDAQ::HPDHardwareID, RichSmartID > HardToSoft;
   HardToSoft m_hard2soft; ///< HPD Hardware ID to software ID map
 
   /// Type for mapping from RichDAQ::HPDHardwareID to RichSmartID
-  typedef RichHashMap< const RichDAQ::Level0ID, RichSmartID > L0HardToSoft;
+  typedef Rich::HashMap< const RichDAQ::Level0ID, RichSmartID > L0HardToSoft;
   L0HardToSoft m_l0hard2soft; ///< Level0 Hardware ID to software ID map
 
   /// List of all active HPD RichSmartIDs
-  RichSmartID::Collection m_smartIDs;
+  RichSmartID::Vector m_smartIDs;
 
   /// List of all active HPD hardware IDs
   RichDAQ::HPDHardwareIDs m_hardIDs;
 
   /// Typedef for mapping from RichSmartID to Level0 ID
-  typedef RichHashMap< const RichSmartID, RichDAQ::Level0ID > SmartIDToL0;
+  typedef Rich::HashMap< const RichSmartID, RichDAQ::Level0ID > SmartIDToL0;
   SmartIDToL0 m_smartid2L0; ///< HPD RichSmartID to L0 ID map
 
   /// Typedef for mapping from HPD Hardware ID to Level0 ID
-  typedef RichHashMap< const RichDAQ::HPDHardwareID, RichDAQ::Level0ID > HardIDToL0;
+  typedef Rich::HashMap< const RichDAQ::HPDHardwareID, RichDAQ::Level0ID > HardIDToL0;
   HardIDToL0 m_hardid2L0; ///< HPD Hardware ID to L0 ID map
 
   /// Typedef for mapping from RichSmartID to Level1 ID
-  typedef RichHashMap< const RichSmartID, RichDAQ::Level1ID > SmartIDToL1;
+  typedef Rich::HashMap< const RichSmartID, RichDAQ::Level1ID > SmartIDToL1;
   SmartIDToL1 m_smartid2L1; ///< HPD RichSmartID to L1 ID map
 
   /// Typedef for mapping from HPD Hardware ID to Level1 ID
-  typedef RichHashMap< const RichDAQ::HPDHardwareID, RichDAQ::Level1ID > HardIDToL1;
+  typedef Rich::HashMap< const RichDAQ::HPDHardwareID, RichDAQ::Level1ID > HardIDToL1;
   HardIDToL1 m_hardid2L1; ///< HPD Hardware ID to L1 ID map
 
   /// Typedef for mapping between L1 boards and RICH detector
-  typedef RichHashMap< const RichDAQ::Level1ID, Rich::DetectorType > L1ToRICH;
+  typedef Rich::HashMap< const RichDAQ::Level1ID, Rich::DetectorType > L1ToRICH;
   L1ToRICH m_l1ToRich; ///< L1 to RICH map
 
   RichDAQ::L1ToSmartIDs m_l12smartids; ///< L1 ID to RichSmartIDs map

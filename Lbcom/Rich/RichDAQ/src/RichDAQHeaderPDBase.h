@@ -1,15 +1,16 @@
 
+//=============================================================================================
 /** @file RichDAQHeaderPDBase.h
  *
  *  Header file for RICH DAQ utility class : RichDAQHeaderPDBase
  *
  *  CVS Log :-
- *  $Id: RichDAQHeaderPDBase.h,v 1.1 2005-01-07 12:35:59 jonrob Exp $
- *  $Log: not supported by cvs2svn $
+ *  $Id: RichDAQHeaderPDBase.h,v 1.2 2005-12-16 15:11:34 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   2003-11-06
  */
+//=============================================================================================
 
 #ifndef RICHDAQ_RICHDAQHEADERPDBASE_H
 #define RICHDAQ_RICHDAQHEADERPDBASE_H 1
@@ -27,7 +28,8 @@
  *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
  *  @date   2003-11-06
  */
-namespace RichDAQHeaderPDBaseCode {
+namespace RichDAQHeaderPDBaseCode 
+{
 
   // Define the number of bits for each field
   static const RichDAQ::ShortType Ignored       = 30; ///< Bits reserved for the derived classes
@@ -51,7 +53,8 @@ namespace RichDAQHeaderPDBaseCode {
  *  @author Chris Jones    Christopher.Rob.Jones@cern.ch
  *  @date   2003-11-06
  */
-class RichDAQHeaderPDBase {
+class RichDAQHeaderPDBase 
+{
 
 public:
 

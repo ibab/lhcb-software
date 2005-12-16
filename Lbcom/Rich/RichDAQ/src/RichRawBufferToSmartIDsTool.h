@@ -5,7 +5,7 @@
  *  Header file for tool : RichRawBufferToSmartIDsTool
  *
  *  CVS Log :-
- *  $Id: RichRawBufferToSmartIDsTool.h,v 1.7 2005-06-23 14:50:28 jonrob Exp $
+ *  $Id: RichRawBufferToSmartIDsTool.h,v 1.8 2005-12-16 15:11:34 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -34,6 +34,9 @@
 #include "RichKernel/IRichRawBufferToSmartIDsTool.h"
 #include "RichKernel/IRichRawDataFormatTool.h"
 
+// namespaces
+using namespace LHCb; ///< LHCb general namespace
+
 //-----------------------------------------------------------------------------
 /** @class RichRawBufferToSmartIDsTool RichRawBufferToSmartIDsTool.h
  *
@@ -50,7 +53,8 @@
 
 class RichRawBufferToSmartIDsTool : public RichToolBase,
                                     virtual public IRichRawBufferToSmartIDsTool,
-                                    virtual public IIncidentListener {
+                                    virtual public IIncidentListener 
+{
 
 public: // Methods for Gaudi Framework
 
@@ -75,7 +79,7 @@ public: // Methods for Gaudi Framework
 public: // methods (and doxygen comments) inherited from interface
 
   // Access all RichSmartIDs for the current Event
-  const RichSmartID::Collection & allRichSmartIDs() const;
+  const RichSmartID::Vector & allRichSmartIDs() const;
 
 private: // private methods
 
@@ -94,7 +98,7 @@ private: // private data
   bool m_sortIDs;
 
   /// RichSmartIDs
-  mutable RichSmartID::Collection m_smartIDs;
+  mutable RichSmartID::Vector m_smartIDs;
 
   /// New event flag
   mutable bool m_newEvent;

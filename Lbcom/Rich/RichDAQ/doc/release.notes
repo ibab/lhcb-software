@@ -4,6 +4,10 @@
 ! Purpose     : Package simulating the RICH DAQ system and data format
 !-----------------------------------------------------------------------------
 
+! 2005-12-16 - Chris Jones
+ - Update for LHCb v20r0
+ - Remove compatibility hacks for DC04
+
 !========================== RichDAQ v2r3 2005-11-18 =========================
 
 ! 2005-11-18 - Chris Jones

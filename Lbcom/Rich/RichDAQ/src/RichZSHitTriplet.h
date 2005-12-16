@@ -4,7 +4,7 @@
  *  Header file for RICH DAQ utility class : RichZSHitTriplet
  *
  *  CVS Log :-
- *  $Id: RichZSHitTriplet.h,v 1.10 2005-06-23 14:50:28 jonrob Exp $
+ *  $Id: RichZSHitTriplet.h,v 1.11 2005-12-16 15:11:34 jonrob Exp $
  *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   2003-11-06
@@ -72,9 +72,9 @@ public: // methods
   RichZSHitTriplet( const RichDAQ::LongType data = 0 ) : m_data( data ) { }
 
   /// Constructor from three MCRichDigits
-  RichZSHitTriplet( const RichSmartID * digOne   ,  ///< Pointer to first RichSmartID to store
-                    const RichSmartID * digTwo   ,  ///< Pointer to second RichSmartID to store
-                    const RichSmartID * digThree    ///< Pointer to third RichSmartID to store
+  RichZSHitTriplet( const LHCb::RichSmartID * digOne   ,  ///< Pointer to first LHCb::RichSmartID to store
+                    const LHCb::RichSmartID * digTwo   ,  ///< Pointer to second LHCb::RichSmartID to store
+                    const LHCb::RichSmartID * digThree    ///< Pointer to third LHCb::RichSmartID to store
                     )
     : m_data ( 0 )
   {

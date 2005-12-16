@@ -5,7 +5,7 @@
  *  Header file for tool : RichRawDataFormatTool
  *
  *  CVS Log :-
- *  $Id: RichRawDataFormatTool.h,v 1.9 2005-11-15 12:57:48 jonrob Exp $
+ *  $Id: RichRawDataFormatTool.h,v 1.10 2005-12-16 15:11:34 jonrob Exp $
  *
  *  @author Chris Jones    Christopher.Rob.Jones@cern.ch
  *  @date   2004-12-18
@@ -44,10 +44,13 @@
 // Event model
 #include "Event/RawEvent.h"
 
+// namespaces
+using namespace LHCb; ///< LHCb general namespace
+
 //-----------------------------------------------------------------------------
 /** @class RichRawDataFormatTool RichRawDataFormatTool.h
  *
- *  Tool to encode and decode the Raw Buffer for the RICH.
+ *  Tool to encode and decode the Raw Event information for the RICH.
  *
  *  The following versions are included :-
  *
@@ -95,7 +98,7 @@ public: // Methods for Gaudi Framework
 public: // methods (and doxygen comments) inherited from interface
 
   // Creates a bank data of a given version from the given RichSmartID vector
-  const RichHPDDataBank * createDataBank( const RichSmartID::Collection & smartIDs,
+  const RichHPDDataBank * createDataBank( const RichSmartID::Vector & smartIDs,
                                           const RichDAQ::BankVersion version = RichDAQ::LHCb0 ) const;
 
   // Creates a bank data from the given raw block of data
@@ -109,10 +112,10 @@ public: // methods (and doxygen comments) inherited from interface
 
   // Decode a RawBank into RichSmartID identifiers
   void decodeToSmartIDs( const RawBank & bank,
-                         RichSmartID::Collection & smartIDs ) const;
+                         RichSmartID::Vector & smartIDs ) const;
 
   // Decode all RICH RawBanks into RichSmartID identifiers
-  void decodeToSmartIDs( RichSmartID::Collection & smartIDs ) const;
+  void decodeToSmartIDs( RichSmartID::Vector & smartIDs ) const;
 
 private: // definitions
 
@@ -129,7 +132,7 @@ private: // methods
   /// Finalise for each event
   void FinishEvent();
 
-  /// Retrieves the raw event. If not available tries to build one from RawBuffer
+  /// Retrieves the raw event.
   RawEvent * rawEvent() const;
 
   /** Final printout of Level 1 stats
@@ -149,9 +152,6 @@ private: // data
 
   /// Input location for RawEvent in TES
   std::string m_rawEventLoc;
-
-  /// Input location of Raw buffer in TES
-  std::string m_rawBuffLoc;
 
   /// The number of hits marking the transistion between zero and non-zero suppressed data
   /// Used by version 0 of the data banks
