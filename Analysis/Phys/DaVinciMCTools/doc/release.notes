@@ -1,9 +1,13 @@
-! $Id: release.notes,v 1.82 2005-12-15 16:05:13 gligorov Exp $
+! $Id: release.notes,v 1.83 2005-12-16 16:33:03 gligorov Exp $
 ! Package     : DaVinciMCTools
 ! Responsible : P. Koppenburg
 !=============================================================================
 
 !========================== DaVinciMCTools v5r17 2005-12-15 ===================
+! 2005-12-16 - V. Gligorov
+  - src/BackgroundCategory.cpp
+  documentation added to IBackgroundCategroy.h
+
 ! 2005-12-15 - V. Gligorov
   - src/BackgroundCategory.cpp
   bug fixed for pileup category
