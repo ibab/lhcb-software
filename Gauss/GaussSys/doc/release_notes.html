@@ -7,12 +7,49 @@ Purpose: LHCb Simulation program
 <H1><A NAME="v22r0">2005-12-09 - GaussSys v22r0</A></H1><PRE>
 <H3><A NAME="Use">This version uses:
    Pythia 6_325.2, photos 215.2 (via GENSER 1_2_1), lhapdf 4.2  
-   DecFiles v11r1, ParamFiles v3r13 
+   DecFiles v11r2, ParamFiles v3r13 
    Geant4 v71r0p12 (based on geant4.7.1.p01)
    LHCb v19r3 (and Gaudi v17r2)
    XmlDDDB v27r0, XmlConditions v1r3, FieldMap v4r6 </A></H3>
 
-!============================ Gauss v22r0 ================================
+!========================= Gauss v22r0 2005-12-16 ============================
+! 2005-12-16 - Gloria CORTI
+ - Introduce examples of separate options for different channels, removing
+   them from Generator.opts
+   . options/Generator.opts, remove examples
+   . options/30000000.opts, minimum bias with Pythia
+   . options/10000000.opts, generic b events with Pythia
+   . options/13144000.opts, Bs->J/Psi(mumu) Phi
+   . options/12165100.opts, B+ -> D0bar (-> Ks pi+ pi-) K+)
+   . options/24142000.opts, J/Psi(mum) inclusive
+   . options/130000000.opts, minimum bias with Herwig
+   . options/Gauss.opts, put minimum bias form GAUSSOPTS
+ - Remove obsolete options for Pythia setting with old structure
+   . options/PythiaSettings.opts, removed
+   . options/Common.opts, removed include
+ - Remove commented way using old simulation structure. Introduce new
+   way with algorithm for RICHes. Requires GaussRICH v5r2 and GaudiAlg v1r8.
+   . options/Simulation.opts
+ - Introduce use of dedicated options from GaussRICH v5r2 for Rich extended
+         MC classes.
+   . options/Simulation.opts, commented example of how to produce extended info
+   . options/GaussTape.opts, removed extended class already in dedicated opts
+   . options/GaussRead.opts, commented example of how to monitor extended info
+ - Use in geoemtry v200507 old magnetic field map
+   . options/v200507.opts
+ - requirements - use new version of DecFiles v11r2
+ 
+! 2005-12-12 - Florence Ranjard
+ - requirements - add Herwig tag.
+                  > setup -tag_add=Herwig
+                  > gmake CMTEXTRATAGS=Herwig
+                  > gaussherwig
+ 
+! 2005-12-12 - Gloria CORTI
+ - Introduce example of options to use to produce min bias events with
+   Herwig. They are commented.
+   . options/Generator.opts
+ 
 ! 2005-12-09 - Gloria CORTI
  - Use new version of generator packages where old structure has been
    removed (Generators v3r0, LbPythia v3r0). Temporarly remove use of 
@@ -58,7 +95,14 @@ Purpose: LHCb Simulation program
 ! 2005-11-17 - Patrick Robbe
  - PythiaProduction: add force fragmentation interface
  
-!========================= Generators v3r0 ===========================
+!=================== Generators v3r0 2005-12-15 ===========================
+! 2005-12-15 - Patrick Robbe
+ - ExternalGenerator: Do not decay signal particle with status
+   code equal to 3.
+ 
+! 2005-12-10 - Patrick Robbe
+ - Add comments for doxygen
+ 
 ! 2005-12-08 - Patrick Robbe
  - Remove old structure
  - ExternalGenerators: allow possibility to change LHAPDF settings by job
@@ -130,7 +174,7 @@ Purpose: LHCb Simulation program
                      variable
                    > set LHAPARM(17) = 'LHAPDF'
  
-!!======================= GiGa v17r4 =====================================
+!======================= GiGa v17r4 =====================================
 ! 2005-12-09 - Gloria CORTI
  - GiGaBase.cpp
    . if name of GiGaSvc and GiGaSetupSvc is the same do nor reqeust the
@@ -148,6 +192,44 @@ Purpose: LHCb Simulation program
  - GetCaloHitsAlg.cpp: new algorithm to replace GiGaCaloHitCnv converter.
  - options/Ecal.opts, Hcal.opts, Prs.opts, Spd.opts: use new algorithm
    to convert to MCHits
+
+ 
+!======================== GaussRICH v5r2 2005-12-16 ============================
+! 2005-12-16 - Gloria CORTI
+ - New options RichExtendedInfo.opts that allow to print info about and write
+   on file additional MC classes.
+ - Rich.opts, comment options about GiGaGetHitsAlg since default in GaussAlg
+   v1r8
+ 
+!2005-12-09  - Sajan Easo
+  - The photons not converted at the photocathode are allowed to travel 
+    inside the HPD.
+    This is the improve the simulation of various backgrounds inside HPD.
+  - The fresnel loss at the aerogel exit boundary and  aerogel filter surfaces 
+    are activated in
+    the  RichG4OpBoundaryProcess.cpp.
+  - To avoid infinite loops due to total internal reflections in rectangular
+    blocks like the filter
+    and aerogel, a maximum number of steps (default 5000) is set for the 
+    photons in the  RichG4OpBoundaryProcess.
+  - The default Hpd anode efficiency changed from 0.9 to 0.85.
+  - The hit convertor is changed to an algorithm named GetMCRichHitsAlg 
+    which is to be activated from
+    Simulation.opts. The hit collection list labels modified to have the 
+    ability to do partial storage of hits    for different of the RICHs.
+    The default is to store all the hits.
+  - The ExtendedRichInfo convertors are all put into an algorithm named
+    GetExtendedMCRichInfoAlg
+    and the RichVerbose.opts modified accordingly. The GetMCRichHitsAlg
+    and GetExtendedMCRichInfoAlg are
+    loaded from Simulation.opts
+  - The use of moveUpHistory replaced with GetReplicaNumber whenever
+    G4TouchableHistory is used. This
+    is to stay compatible with recent versions of G4.These changes are
+    in RichHpdPhotoElectricEffect.cpp
+    and  RichSensDet.cpp
+  - The demagnification law changed to linear + quadratic for the HPDs
+    in RichHpdPhotoElectricEffect.cpp
  
 !======================== GaussRICH v5r1 ==================================
 ! 2005-12-09 - Gloria CORTI
@@ -169,7 +251,12 @@ Purpose: LHCb Simulation program
 ! 2005-09-02 - Chris Jones
  - Add some more counters to GiGa converter for MCRichHits to monitor for
    various problems
-
+!===================== GaussAlgs v1r8 2005-12-16  =========================
+! 2005-12-16 - Gloria CORTI
+ - src/GiGaGetHitsAlg.cpp
+   . set empty location as default for properties of MC Rich extra classes
+     since they are not present in normal production
+ 
 !=============================================================================
 <H1><A NAME="v21r0">2005-11-09 - GaussSys v21r0</A></H1><PRE>
 <H3><A NAME="Use">This version uses:
