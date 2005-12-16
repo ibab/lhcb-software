@@ -4,7 +4,33 @@
 ! Purpose     : LHCb Simulation Application with Geant4
 !-----------------------------------------------------------------------------
 
-!============================ Gauss v22r0 ================================
+!========================= Gauss v22r0 2005-12-16 ============================
+! 2005-12-16 - Gloria CORTI
+ - Introduce examples of separate options for different channels, removing
+   them from Generator.opts 
+   . options/Generator.opts, remove examples
+   . options/30000000.opts, minimum bias with Pythia
+   . options/10000000.opts, generic b events with Pythia
+   . options/13144000.opts, Bs->J/Psi(mumu) Phi
+   . options/12165100.opts, B+ -> D0bar (-> Ks pi+ pi-) K+) 
+   . options/24142000.opts, J/Psi(mum) inclusive  
+   . options/130000000.opts, minimum bias with Herwig
+   . options/Gauss.opts, put minimum bias form GAUSSOPTS
+ - Remove obsolete options for Pythia setting with old structure
+   . options/PythiaSettings.opts, removed
+   . options/Common.opts, removed include
+ - Remove commented way using old simulation structure. Introduce new 
+   way with algorithm for RICHes. Requires GaussRICH v5r2 and GaudiAlg v1r8.
+   . options/Simulation.opts
+ - Introduce use of dedicated options from GaussRICH v5r2 for Rich extended
+	 MC classes.
+   . options/Simulation.opts, commented example of how to produce extended info
+   . options/GaussTape.opts, removed extended class already in dedicated opts  
+   . options/GaussRead.opts, commented example of how to monitor extended info
+ - Use in geoemtry v200507 old magnetic field map
+   . options/v200507.opts
+ - requirements - use new version of DecFiles v11r2
+
 ! 2005-12-12 - Florence Ranjard
  - requirements - add Herwig tag.
                   > setup -tag_add=Herwig

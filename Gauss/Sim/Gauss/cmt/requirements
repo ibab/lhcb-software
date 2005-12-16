@@ -12,7 +12,7 @@ branches src doc options cmt job
 use XmlDDDB             v27r0   Det   -no_auto_imports
 use XmlConditions       v1r3    Det   -no_auto_imports
 use FieldMap            v4r6          -no_auto_imports
-use DecFiles            v11r1   Gen   -no_auto_imports
+use DecFiles            v11r2   Gen   -no_auto_imports
 use ParamFiles          v3r13         -no_auto_imports
 use Geant4Files		v71r0	      -no_auto_imports
 
@@ -35,10 +35,10 @@ use $(LbHerwig_use)
 use GiGaCnv             v15r11  Sim
 use GaussTools          v11r0 	Sim
 use GaussTracker        v4r2    Sim
-use GaussRICH           v5r1    Sim
+use GaussRICH           v5r2    Sim
 use GaussCalo           v7r4    Sim
 use GaussPhysics        v3r2    Sim
-use GaussAlgs		v1r7    Sim
+use GaussAlgs		v1r8    Sim
 
 #-- Optional visualisation and UI
 macro GiGaVisUI_use "" Linux&Vis "GiGaVisUI v3r1 Sim"
