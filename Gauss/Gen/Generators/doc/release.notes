@@ -1,7 +1,8 @@
-! $Id: release.notes,v 1.22 2005-12-15 20:48:21 robbep Exp $
+! $Id: release.notes,v 1.23 2005-12-16 15:57:57 gcorti Exp $
 ! Package     : Gen/Generators
 ! Responsible : 
 
+!=================== Generators v3r0 2005-12-15 ===========================
 ! 2005-12-15 - Patrick Robbe
  - ExternalGenerator: Do not decay signal particle with status
    code equal to 3.
@@ -9,7 +10,6 @@
 ! 2005-12-10 - Patrick Robbe
  - Add comments for doxygen
 
-!========================= Generators v3r0 ===========================
 ! 2005-12-08 - Patrick Robbe
  - Remove old structure
  - ExternalGenerators: allow possibility to change LHAPDF settings by job 
