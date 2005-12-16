@@ -1,9 +1,9 @@
-// $Id: MuonStationLayout.cpp,v 1.7 2003-12-18 15:33:23 cattanem Exp $
+// $Id: MuonStationLayout.cpp,v 1.8 2005-12-16 15:57:59 asatta Exp $
 // Include files
 #include <iostream>
 #include <algorithm>
 #include "MuonKernel/MuonStationLayout.h"
-#include "MuonKernel/MuonTileID.h"
+#include "Kernel/MuonTileID.h"
 
 //------------------------------------------------------------------------------
 //
@@ -36,19 +36,19 @@ MuonStationLayout::MuonStationLayout(const MuonLayout& lq) {
 
 MuonStationLayout::~MuonStationLayout() {}
 
-std::vector<MuonTileID> 
-MuonStationLayout::tiles(const MuonTileID& pad) const {
+std::vector<LHCb::MuonTileID> 
+MuonStationLayout::tiles(const LHCb::MuonTileID& pad) const {
   return tilesInArea(pad,0,0);
 }
 
-std::vector<MuonTileID> MuonStationLayout::tilesInArea(const MuonTileID& pad, 
+std::vector<LHCb::MuonTileID> MuonStationLayout::tilesInArea(const LHCb::MuonTileID& pad, 
 					int areaX, int areaY) const {
 					
   unsigned int reg = pad.region();
   
-  std::vector<MuonTileID> result;
-  std::vector<MuonTileID> vtm;
-  std::vector<MuonTileID>::iterator it;
+  std::vector<LHCb::MuonTileID> result;
+  std::vector<LHCb::MuonTileID> vtm;
+  std::vector<LHCb::MuonTileID>::iterator it;
   
   for(unsigned int i = 0; i<4; i++) {
   
@@ -69,36 +69,36 @@ std::vector<MuonTileID> MuonStationLayout::tilesInArea(const MuonTileID& pad,
   return result;
 }
 
-std::vector<MuonTileID> MuonStationLayout::tiles() const {
+std::vector<LHCb::MuonTileID> MuonStationLayout::tiles() const {
 					
-  std::vector<MuonTileID> result;
+  std::vector<LHCb::MuonTileID> result;
 
   for (int ir = 0; ir<4; ir++) {
     for (int iq = 0; iq<4; iq++) {
-      std::vector<MuonTileID> tmp=m_layouts[ir].tiles(iq,ir);
+      std::vector<LHCb::MuonTileID> tmp=m_layouts[ir].tiles(iq,ir);
       result.insert(result.end(),tmp.begin(),tmp.end());
     }    
   }
   return result;
 }
 
-std::vector<MuonTileID> MuonStationLayout::tiles(int iq) const {
+std::vector<LHCb::MuonTileID> MuonStationLayout::tiles(int iq) const {
 					
-  std::vector<MuonTileID> result;
+  std::vector<LHCb::MuonTileID> result;
 
   for (int ir = 0; ir<4; ir++) {
-    std::vector<MuonTileID> tmp=m_layouts[ir].tiles(iq,ir);
+    std::vector<LHCb::MuonTileID> tmp=m_layouts[ir].tiles(iq,ir);
     result.insert(result.end(),tmp.begin(),tmp.end());
   }
   return result;
 }
 
-std::vector<MuonTileID> MuonStationLayout::tiles(int iq, int ir) const {
+std::vector<LHCb::MuonTileID> MuonStationLayout::tiles(int iq, int ir) const {
 					
   return m_layouts[ir].tiles(iq,ir);
 }
 
-std::vector<MuonTileID> MuonStationLayout::tilesInRegion(const MuonTileID& pad, 
+std::vector<LHCb::MuonTileID> MuonStationLayout::tilesInRegion(const LHCb::MuonTileID& pad, 
                                                 int pregion) const{
     
   int reg = pad.region();
@@ -106,12 +106,12 @@ std::vector<MuonTileID> MuonStationLayout::tilesInRegion(const MuonTileID& pad,
   
 }  
 
-std::vector<MuonTileID> 
-MuonStationLayout::neighbours(const MuonTileID& pad) const {
+std::vector<LHCb::MuonTileID> 
+MuonStationLayout::neighbours(const LHCb::MuonTileID& pad) const {
 
-  std::vector<MuonTileID> result;			      
-  std::vector<MuonTileID> vreg;
-  std::vector<MuonTileID>::iterator it;
+  std::vector<LHCb::MuonTileID> result;			      
+  std::vector<LHCb::MuonTileID> vreg;
+  std::vector<LHCb::MuonTileID>::iterator it;
   			        
   for ( unsigned int ireg = 0; ireg < 4; ireg++ ) {
     vreg = m_layouts[ireg].neighbours(pad);
@@ -124,17 +124,17 @@ MuonStationLayout::neighbours(const MuonTileID& pad) const {
   return result;
 }
 
-std::vector<MuonTileID> 
-MuonStationLayout::neighbours(const MuonTileID& pad,
+std::vector<LHCb::MuonTileID> 
+MuonStationLayout::neighbours(const LHCb::MuonTileID& pad,
                               int dirX,
 			      int dirY) const {
   
-//  This function returns all the MuonTileID's which are neighbours
+//  This function returns all the LHCb::MuonTileID's which are neighbours
 //  of the given pad in the direction indicated by dirX and dirY and 
 //  defined in terms of this layout. 
 
   unsigned int nreg = pad.region();
-  std::vector<MuonTileID> vtm = neighbours(pad,dirX,dirY,1);
+  std::vector<LHCb::MuonTileID> vtm = neighbours(pad,dirX,dirY,1);
   // if no neigbours at all
   if(vtm.empty()) return vtm;
   // if the neigbours are all in the same region or larger region
@@ -148,15 +148,15 @@ MuonStationLayout::neighbours(const MuonTileID& pad,
   return m_layouts[nreg].neighbours(pad,dirX,dirY);			      
 }			      
 
-std::vector<MuonTileID> 
-MuonStationLayout::neighbours(const MuonTileID& pad,
+std::vector<LHCb::MuonTileID> 
+MuonStationLayout::neighbours(const LHCb::MuonTileID& pad,
                               int dirX,
 			      int dirY,
 			      int depth) const {
 			      
-  std::vector<MuonTileID> result;			      
-  std::vector<MuonTileID> vreg;
-  std::vector<MuonTileID>::iterator it;
+  std::vector<LHCb::MuonTileID> result;			      
+  std::vector<LHCb::MuonTileID> vreg;
+  std::vector<LHCb::MuonTileID>::iterator it;
   			        
   for ( unsigned int ireg = 0; ireg < 4; ireg++ ) {
     vreg = m_layouts[ireg].neighbours(pad,dirX,dirY,depth);
@@ -169,16 +169,16 @@ MuonStationLayout::neighbours(const MuonTileID& pad,
   return result;
 }
 
-std::vector<MuonTileID> 
-MuonStationLayout::neighboursInArea(const MuonTileID& pad,
+std::vector<LHCb::MuonTileID> 
+MuonStationLayout::neighboursInArea(const LHCb::MuonTileID& pad,
                         	    int dirX,
 				    int dirY,
 				    int depthX,
 				    int depthY) const {
 				    
-  std::vector<MuonTileID> result;			      
-  std::vector<MuonTileID> vreg;
-  std::vector<MuonTileID>::iterator it;
+  std::vector<LHCb::MuonTileID> result;			      
+  std::vector<LHCb::MuonTileID> vreg;
+  std::vector<LHCb::MuonTileID>::iterator it;
   			        
   for ( unsigned int ireg = 0; ireg < 4; ireg++ ) {
     vreg = m_layouts[ireg].neighboursInArea(pad,dirX,dirY,depthX,depthY);
@@ -191,16 +191,16 @@ MuonStationLayout::neighboursInArea(const MuonTileID& pad,
   return result;
 }				    
 
-bool MuonStationLayout::isValidID(const MuonTileID& pad) const {
+bool MuonStationLayout::isValidID(const LHCb::MuonTileID& pad) const {
 
   int reg = pad.region();
   return m_layouts[reg].isValidID(pad);
 }
 
-MuonTileID MuonStationLayout::contains(const MuonTileID& pad) const {
+LHCb::MuonTileID MuonStationLayout::contains(const LHCb::MuonTileID& pad) const {
   // It is responsibility of the user to assure that the pad
   // layout is finer than the containing layout
   int reg = pad.region();
-  MuonTileID tile = m_layouts[reg].contains(pad);
+  LHCb::MuonTileID tile = m_layouts[reg].contains(pad);
   return tile;
 } 

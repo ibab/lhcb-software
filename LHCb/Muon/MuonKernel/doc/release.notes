@@ -1,5 +1,10 @@
 Package MuonKernel
 Package manager: A.Tsaregorodtsev
+!======================= MuonKernel v4r0 2005-12-16 =======================
+! 2005-12-16 - Alessia Satta
+ - Compatible with the LHCb v20r0 and global LHCb namespace.
+   MuonTileID is now part of LHCbKernel.
+   
 !======================= MuonKernel v3r0 2005-10-25 =======================
 ! 2005-10-25 - Alessia Satta
  - Compact the MuonTileID in 28 bits to allow the use ad LHCbID. 
