@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.9 2003-11-18 16:26:42 cattanem Exp $ 
+# $Id: requirements,v 1.10 2005-12-16 17:28:06 odescham Exp $ 
 # =============================================================================
 # The package with XML-converters gfor Caloriometer Detector Model 
 # =============================================================================
@@ -12,8 +12,8 @@ branches         src cmt doc options
 include_dirs      $(CALODETXMLCNVROOT)
 
 # =============== used packages ===============================================
-use CaloDet      v6r*  Det 
-use DetDescCnv   v2r*  Det 
+use CaloDet      v*  Det 
+use DetDescCnv   v*  Det 
 
 # =============== own options =================================================
 set CALODETXMLCNVOPTS  ${CALODETXMLCNVROOT}/options
