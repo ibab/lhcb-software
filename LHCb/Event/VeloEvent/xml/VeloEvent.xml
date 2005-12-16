@@ -2,27 +2,13 @@
 <!DOCTYPE gdd SYSTEM "gdd.dtd">
 <gdd>
   <package name="VeloEvent">
-    <class name="MCVeloHit" 
-           author="Chris Parkes" 
-           desc="Raw GEANT hit information for VELO silicon sensors. 
-It is populated by a Sicb converter (SicbMCVeloHitCnv) from the VRPR (VELO) 
-and VPRW (pile-up) classes." 
-           id="4001" 
-           location="MC/Velo/Hits" 
-           keyedContTypeDef="TRUE" >
-      <location name="PuVeto" place="MC/Velo/PuHits" />
-      <base name="MCHit"/>
-      &KeyedObject;
-      <import name="Event/MCHit"/>
-      <attribute name="sensor" type="long" desc="Sensor Number"/>
-    </class>
 
     <class name="MCVeloFE" 
            id="4002"
            author="Chris Parkes" 
            desc="This class represents the output of the front-end chip and
 contains information about the simulation of the silicon and FE chip response 
-stored for a single silicon/output channel. Constructed from MCVeloHits 
+stored for a single silicon/output channel. Constructed from MCHits 
 (i.e. GEANT deposits), MCVeloFE of previous events (spill over), noise 
 (above a threshold)"
            location="MC/Velo/FE">
@@ -55,33 +41,33 @@ stored for a single silicon/output channel. Constructed from MCVeloHits
            <attribute name="addedNoise" type="double" desc="noise added in Si/FE chip simulation in units of electrons"/>
            <attribute name="addedCMNoise" type="double" desc="common mode noise added in Si/FE chip simulation in units of electrons"/>
 
-           <relation name="MCVeloHits" type="MCVeloHit" desc="References to Monte Carlo hits contributing to this channel" multiplicity="m"/>
+           <relation name="MCHits" type="MCHit" desc="References to Monte Carlo hits contributing to this channel" multiplicity="m"/>
 
-           <attribute name="MCVeloHitsCharge" type="std::vector&lt;double&gt;" desc="Charge of Monte Carlo hit contributed to this channel" />
+           <attribute name="MCHitsCharge" type="std::vector&lt;double&gt;" desc="Charge of Monte Carlo hit contributed to this channel" />
  
-           <method name="addToMCVeloHits" type="void" argList="SmartRef&lt;MCVeloHit&gt; hit, double chg" desc="add MC hit and its deposited charge">
-                 <code>m_MCVeloHits.push_back(hit);
-                       m_MCVeloHitsCharge.push_back(chg);
+           <method name="addToMCHits" type="void" argList="SmartRef&lt;MCHit&gt; hit, double chg" desc="add MC hit and its deposited charge">
+                 <code>m_MCHits.push_back(hit);
+                       m_MCHitsCharge.push_back(chg);
                        return;
                  </code>
            </method>
            
-          <method name="mcVeloHit" type="SmartRef&lt;MCVeloHit&gt;" argList="long num" desc="retrieve MCVeloHit reference" const="TRUE">
-           <code>return m_MCVeloHits[num];</code>
+          <method name="mcHit" type="SmartRef&lt;MCHit&gt;" argList="long num" desc="retrieve MCHit reference" const="TRUE">
+           <code>return m_MCHits[num];</code>
            </method>
 
-          <method name="mcVeloHitCharge" type="double" argList="long num" desc="retrieve deposited charge of MCVeloHit" const="TRUE">
-           <code>return m_MCVeloHitsCharge[num];</code>
+          <method name="mcHitCharge" type="double" argList="long num" desc="retrieve deposited charge of MCHit" const="TRUE">
+           <code>return m_MCHitsCharge[num];</code>
            </method>
 
-          <method name="setMCVeloHitCharge" type="void" argList="long num, double chg" desc="set deposited charge of MCVeloHit" >
-           <code>m_MCVeloHitsCharge[num]=chg;
+          <method name="setMCHitCharge" type="void" argList="long num, double chg" desc="set deposited charge of MCHit" >
+           <code>m_MCHitsCharge[num]=chg;
                  return;
            </code>
            </method>
 
-           <method name="NumberOfMCVeloHits" type="long" desc="number of strips in cluster" const="TRUE">
-                 <code>return mcVeloHits().size();</code>
+           <method name="NumberOfMCHits" type="long" desc="number of strips in cluster" const="TRUE">
+                 <code>return mcHits().size();</code>
            </method>
 
 
@@ -91,285 +77,6 @@ stored for a single silicon/output channel. Constructed from MCVeloHits
            </method> 
 
     </class>
-<!--   -->
-<!-- Updated VeloFullDigit at present as VeloFullFPGADigit -->
-<!-- Comments: Tomasz Szumlak -->
-<!--   -->
-  <class name="VeloFullFPGADigit" 
-   id="4003"
-   author="Chris Parkes, update Tomasz Szumlak" 
-   desc="Full information on a reconstructed single digitised velo channel. 
-   This info. is available inside the data processor but is not normally output 
-   on DAQ stream for all channels. Updated VeloFullDigit object contains 
-   info. about ADC sample througout all stages of FPGA processing"
-	   location="Raw/Velo/FullDigits">
-  <base 
-   name="KeyedObject&lt;VeloChannelID&gt;"
-  />
-   &KeyedContainer;
-
-   <constructor desc="Constructor with key" 
-    initList="KeyedObject&lt;VeloChannelID&gt;(key),
-    m_processingList(0),
-    m_rawADCValue(0),
-    m_ADCValueFIR(0.0),
-    m_ADCValuePedestalSubtracted(0.0),
-    m_ADCValueCMSubtracted(0.0),
-    m_rawNoise(0.0),
-    m_noise(0.0),
-    m_flag()"
-   >
-     <arg 
-      type="VeloChannelID" 
-      name="key" 
-      const="TRUE"
-     />              
-   </constructor> 
-  
-   <enum
-    name="processingStages"
-    value="RAW=0, FIR, PedestalSubtracted, CMSubtracted"
-    desc="processing stages performed by FPGA processor"
-    access="PUBLIC"
-   />
-  
-   <enum
-    name="processingListMasks"
-    value="mRAW=0x01, mFIR=0x02, mPedestalSubtracted=0x04, mCMSubtracted=0x08"
-    desc="masks"
-    access="PUBLIC"
-   />
-
-   <method 
-    name="channelID" 
-    type="VeloChannelID" 
-    desc="combined sensor and strip number ID" 
-    const="TRUE"
-   >          
-    <code>
-     return key();
-    </code>
-   </method>
-
-   <method 
-    name="sensor" 
-    type="long" 
-    desc="Sensor Number" 
-    const="TRUE"
-   >
-    <code>
-     return key().sensor();
-    </code>
-   </method>
-   
-   <method 
-    name="strip" 
-    type="long" 
-    desc="Strip Number" 
-    const="TRUE"
-   >
-    <code>
-     return key().strip();
-    </code>
-   </method>
-
-   <attribute
-    name="processingList" 
-    type="short int"
-    desc="processing history"
-    setMeth="FALSE"
-    getMeth="FALSE"
-   />
-    
-
-   <attribute 
-    name="rawADCValue" 
-    type="double"
-    desc=" "
-    setMeth="FALSE"
-    getMeth="FALSE"
-   />
-  
-   <attribute 
-    name="ADCValueFIR" 
-    type="double" 
-    desc=" "
-    setMeth="FALSE"
-    getMeth="FALSE"
-   />
-
-   <attribute 
-    name="ADCValuePedestalSubtracted" 
-    type="double" 
-    desc=" "
-    setMeth="FALSE"
-    getMeth="FALSE"
-   />
-
-   <attribute 
-    name="ADCValueCMSubtracted" 
-    type="double" 
-    desc=" "
-    setMeth="FALSE"
-    getMeth="FALSE"
-   />
-
-   <attribute 
-    name="rawNoise" 
-    type="double" 
-    desc=" "
-   />
-
-   <attribute 
-    name="noise" 
-    type="double" 
-    desc=" "
-   />
-
-   <attribute
-    name="flag"
-    type="processingStages"
-    desc=" "
-    getMeth="FALSE"
-    setMeth="FALSE"
-   />
-
-   <method
-    desc="Set the value of the Raw ADC and proper flag"
-    name="setRawADCValue"
-    type="void"
-   >
-    <arg type="double" name="value"/>
-     <code>
-      m_processingList=m_processingList^mRAW;
-      m_flag=RAW;
-      m_rawADCValue=value;
-     </code>
-   </method>
-
-   <method
-    desc="Set the ADC value after FIR corrections"
-    name="setADCValueFIR"
-    type="void"
-   >
-    <arg type="double" name="value"/>
-     <code>
-      m_processingList=m_processingList^mFIR;
-      m_flag=FIR;
-      m_ADCValueFIR=value;
-     </code>
-   </method>
-
-   <method
-    desc="Set the ADC value after Pedestal following/subtraction"
-    name="setADCValuePedestalSubtracted"
-    type="void"
-   >
-    <arg type="double" name="value"/>
-     <code>
-      m_processingList=m_processingList^mPedestalSubtracted;
-      m_flag=PedestalSubtracted;
-      m_ADCValuePedestalSubtracted=value;
-     </code>
-   </method>
-
-   <method
-    desc="Set the ADC value after Common Mode Subtraction"
-    name="setADCValueCMSubtracted"
-    type="void"
-   >
-    <arg type="double" name="value"/>
-     <code>
-      m_processingList=m_processingList^mCMSubtracted;
-      m_flag=CMSubtracted;
-      m_ADCValueCMSubtracted=value;
-     </code>
-   </method>
-
-   <method
-    desc="Returns processing stage flag as integer"
-    name="processingStageValue"
-    type="int"
-    const="TRUE"
-   >
-    <code>
-     return m_flag;
-    </code>
-   </method>
-
-   <method
-    desc="Returns processing stage flag as name of the processing stage"
-    name="processingStageName"
-    type="std::string"
-    const="TRUE"
-   >
-    <code>
-     switch(m_flag){
-      case RAW: return ("RAW"); break;
-      case FIR: return ("FIR"); break;
-      case PedestalSubtracted: return ("PedestalSubtracted"); break;
-      case CMSubtracted: return ("CMSubtracted"); break;
-      default: return (" " ); break;
-     }
-    </code>
-   </method>
-
-   <method
-    desc="Returns current ADC Value related with appropriate stage of processing"
-    name="adcValue"
-    type="double"
-    const="TRUE"
-   >
-    <arg type="int" name="stage"/>
-     <code>
-      switch(stage){
-       case RAW: return (m_rawADCValue); break;
-       case FIR: return (m_ADCValueFIR); break;
-       case PedestalSubtracted: return (m_ADCValuePedestalSubtracted); break;
-       case CMSubtracted: return (m_ADCValueCMSubtracted); break;
-       default: return 0.0; break;
-      }
-     </code>
-   </method> 
-
-   <method
-    desc="returns rawADCValue"
-    name="adcValue"
-    type="double"
-    const="TRUE"
-   >
-    <code>
-     return m_rawADCValue;
-    </code>
-   </method>
-
-   <method
-    desc="returns history of the processing"
-    name="getProcessingList"
-    type="int"
-    const="TRUE"
-   >
-    <code>
-     int temp=0;
-     if(m_processingList&amp;mRAW) temp+=1;
-     if(m_processingList&amp;mFIR) temp+=10;
-     if(m_processingList&amp;mPedestalSubtracted) temp+=100;
-     if(m_processingList&amp;mCMSubtracted) temp+=1000;
-     return temp;
-    </code>
-   </method>
-
-   <method 
-    name="signalToNoise" 
-    type="double" 
-    desc="signal to noise after common mode subtracted" 
-    const="TRUE"
-   >
-    <code>
-     return (noise()>0.) ? adcValue(CMSubtracted)/noise() : adcValue(CMSubtracted);
-    </code>
-   </method>
-  </class>
 
 <!-- VeloDigit -->
 <!-- Simpler version of the VeloFullFPGADigit to store the FPGA objects -->
@@ -435,6 +142,7 @@ stored for a single silicon/output channel. Constructed from MCVeloHits
    getMeth="TRUE"
   />     
  </class>
+
 
     <class name="VeloCluster" 
      id="4004"

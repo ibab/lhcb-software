@@ -1,5 +1,6 @@
-# $Id: requirements,v 1.30 2005-10-24 15:55:33 mtobin Exp $
+# $Id: requirements,v 1.31 2005-12-16 10:11:02 szumlat Exp $
 package VeloEvent
+
 version v14r0
 
 branches Event src xml cmt doc dict

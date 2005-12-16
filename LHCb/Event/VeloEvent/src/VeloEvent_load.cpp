@@ -1,4 +1,4 @@
-// $Id: VeloEvent_load.cpp,v 1.3 2005-10-24 15:55:33 mtobin Exp $
+// $Id: VeloEvent_load.cpp,v 1.4 2005-12-16 10:11:03 szumlat Exp $
 // Include files 
 #include "GaudiKernel/ContainerFactoryDefs.h"
 
@@ -9,21 +9,9 @@
 //-----------------------------------------------------------------------------
 
 /// ====================================================================
-#include "Event/MCVeloHit.h"
-_ImplementContainedObjectFactory(MCVeloHit)
-_ImplementDataObjectFactory(MCVeloHits)
-
-/// ====================================================================
 #include "Event/MCVeloFE.h"
 _ImplementContainedObjectFactory(MCVeloFE)
 _ImplementDataObjectFactory(MCVeloFEs)
-
-/// ===================================================================
-#include "Event/VeloFullFPGADigit.h"
-  //_ImplementContainedObjectFactory(VeloFullDigit)
-  //_ImplementDataObjectFactory(VeloFullDigits)
-_ImplementContainedObjectFactory(VeloFullFPGADigit)
-_ImplementDataObjectFactory(VeloFullFPGADigits)
 
 /// ==================================================================
 #include "Event/VeloDigit.h"
@@ -40,17 +28,8 @@ _ImplementDataObjectFactory(VeloClusters)
 void VeloEvent_load() {
 
   // Declaration of contained object factories
-  DLL_DECL_OBJECTFACTORY( MCVeloHit );
-  DLL_DECL_OBJECTFACTORY( MCVeloHits );  
-
   DLL_DECL_OBJECTFACTORY( MCVeloFE );
   DLL_DECL_OBJECTFACTORY( MCVeloFEs );
-  
-  //  DLL_DECL_OBJECTFACTORY( VeloFullDigit );
-  //  DLL_DECL_OBJECTFACTORY( VeloFullDigits );
-
-  DLL_DECL_OBJECTFACTORY(VeloFullFPGADigit);
-  DLL_DECL_OBJECTFACTORY(VeloFullFPGADigits);
 
   DLL_DECL_OBJECTFACTORY(VeloDigit);
   DLL_DECL_OBJECTFACTORY(VeloDigits);
