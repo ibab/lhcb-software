@@ -1,12 +1,10 @@
-// $Id: MuonChamberLayout.cpp,v 1.8 2005-12-14 15:45:53 asarti Exp $
+// $Id: MuonChamberLayout.cpp,v 1.9 2005-12-16 14:53:20 asarti Exp $
 // Include files 
 
 //Muon
 #include "MuonDet/MuonChamberLayout.h"
 #include "MuonDet/MuonChamberGrid.h"
 #include "MuonDet/DeMuonDetector.h"
-
-#include "MuonKernel/MuonStationLayout.h"
 
 //Detector description
 #include "DetDesc/IGeometryInfo.h"
@@ -113,8 +111,8 @@ neighborChambers(DeMuonChamber *Chmb, int x_direction, int y_direction) {
   if(debug) std::cout<<"My Chamber under test. "<<Chmb->chamberNumber()<<
               " "<<Chmb->regionNumber()<<" "<<Chmb->stationNumber()<<std::endl;
   
-  float myX = (Chmb->geometry())->toGlobal(HepPoint3D(0,0,0)).x();
-  float myY = (Chmb->geometry())->toGlobal(HepPoint3D(0,0,0)).y();
+  float myX = (Chmb->geometry())->toGlobal(Gaudi::XYZPoint(0,0,0)).x();
+  float myY = (Chmb->geometry())->toGlobal(Gaudi::XYZPoint(0,0,0)).y();
 
   gridPosition(myX,myY,Chmb->stationNumber(),sC_idX,sC_idY,reg);
 
@@ -350,10 +348,10 @@ int& chmb, int& reg){
 }
 
 //Returns the Tile for a given chamber
-MuonTileID MuonChamberLayout::tileChamber(DeMuonChamber* chmb){
+LHCb::MuonTileID MuonChamberLayout::tileChamber(DeMuonChamber* chmb){
 
   bool debug = false;
-  MuonTileID myTile;
+  LHCb::MuonTileID myTile;
 
   //Region and station got from chamber
   myTile.setStation(chmb->stationNumber());
@@ -413,10 +411,10 @@ MuonTileID MuonChamberLayout::tileChamber(DeMuonChamber* chmb){
 
 
 //Returns the Tile for a given chamber number
-MuonTileID MuonChamberLayout::tileChamberNumber(int sta, int reg, int chmbNum){
+LHCb::MuonTileID MuonChamberLayout::tileChamberNumber(int sta, int reg, int chmbNum){
 
 
-  char pt[200];  MuonTileID myTile;
+  char pt[200];  LHCb::MuonTileID myTile;
   sprintf(pt,"/dd/Structure/LHCb/Muon/M%d/R%d/Cham%03d",sta+1,reg+1,chmbNum+1);
 
   SmartDataPtr<DeMuonChamber> deChmb(m_detSvc,pt);
@@ -556,8 +554,8 @@ std::vector<DeMuonChamber*>  MuonChamberLayout::fillChambersVector(IDataProvider
 	}
 	encode++;
 
-	float myX = (deChmb->geometry())->toGlobal(HepPoint3D(0,0,0)).x();
-	float myY = (deChmb->geometry())->toGlobal(HepPoint3D(0,0,0)).y();
+	float myX = (deChmb->geometry())->toGlobal(Gaudi::XYZPoint(0,0,0)).x();
+	float myY = (deChmb->geometry())->toGlobal(Gaudi::XYZPoint(0,0,0)).y();
 	gridPosition(myX,myY,iS,idx,idy,reg);
 	
 	int enc = idx+4*m_cgX.at(reg)*idy+m_offSet.at(reg);
@@ -596,7 +594,7 @@ bool MuonChamberLayout::shouldLowReg(int idX, int idY, int reg){
 }
 
 
-StatusCode MuonChamberLayout::Tile2XYZpos(const MuonTileID& tile, 
+StatusCode MuonChamberLayout::Tile2XYZpos(const LHCb::MuonTileID& tile, 
                                           double& x, double& deltax,
                                           double& y, double& deltay,
 					  double& z, double& deltaz){
@@ -719,7 +717,7 @@ StatusCode MuonChamberLayout::Tile2XYZpos(const MuonTileID& tile,
   } else {
     MsgStream msg(msgSvc(), name());
     msg << MSG::ERROR 
-        << "Did not understand the MuonTileID encoding" 
+        << "Did not understand the LHCb::MuonTileID encoding" 
         << " xGrid=" << tile.layout().xGrid() 
         << " yGrid=" << tile.layout().yGrid() 
         <<endreq;
@@ -842,7 +840,7 @@ StatusCode MuonChamberLayout::fillSystemGrids(DeMuonChamber *deChmb,
 }
 
 
-StatusCode MuonChamberLayout::getXYZChamberTile(const MuonTileID& tile, 
+StatusCode MuonChamberLayout::getXYZChamberTile(const LHCb::MuonTileID& tile, 
 						double& x, double& deltax,
 						double& y, double& deltay,
 						double& z, double& deltaz,
@@ -903,9 +901,11 @@ StatusCode MuonChamberLayout::getXYZ(const int& station,
     //I'm intrested in the Chamber, not the gaps
     IGeometryInfo* cInfo = muChamber->geometry();
 
-    HepTransform3D vTransForm = cInfo->matrixInv();
-    Hep3Vector vtrans = vTransForm.getTranslation();
-    
+    Gaudi::Transform3D vTransForm = cInfo->matrixInv();
+
+    Gaudi::XYZVector vtrans;    Gaudi::Rotation3D vrota;
+    vTransForm.GetDecomposition(vrota,vtrans);
+
     x = vtrans.x();
     y = vtrans.y();
     z = vtrans.z();
@@ -926,8 +926,8 @@ StatusCode MuonChamberLayout::getXYZ(const int& station,
     Dy   = box->yHalfLength();
     Dz   = box->zHalfLength();
 
-    HepPoint3D cnt(0,0,0);
-    HepPoint3D crn(Dx,Dy,Dz);
+    Gaudi::XYZPoint cnt(0,0,0);
+    Gaudi::XYZPoint crn(Dx,Dy,Dz);
     if(toGlob) {
       localToglobal(cInfo,cnt,crn,deltax,deltay,deltaz);
     } else {
@@ -957,8 +957,11 @@ StatusCode MuonChamberLayout::getXYZ(const int& station,
 	//Found the needed gap
 	FoundGap = true;
 	IGeometryInfo *gInfo =  muGap->geometry();
-	HepTransform3D vTransForm = gInfo->matrixInv();
-	Hep3Vector vtrans = vTransForm.getTranslation();
+
+	Gaudi::Transform3D vTransForm = gInfo->matrixInv();
+
+	Gaudi::XYZVector vtrans;    Gaudi::Rotation3D vrota;
+	vTransForm.GetDecomposition(vrota,vtrans);
 	
 	x = vtrans.x();
 	y = vtrans.y();
@@ -980,8 +983,8 @@ StatusCode MuonChamberLayout::getXYZ(const int& station,
 	Dy   = box->yHalfLength();
 	Dz   = box->zHalfLength();
 
-	HepPoint3D cnt(0,0,0);
-	HepPoint3D crn(Dx,Dy,Dz);
+	Gaudi::XYZPoint cnt(0,0,0);
+	Gaudi::XYZPoint crn(Dx,Dy,Dz);
 
 	if(toGlob) {
 	  localToglobal(gInfo,cnt,crn,deltax,deltay,deltaz);
@@ -1002,7 +1005,7 @@ StatusCode MuonChamberLayout::getXYZ(const int& station,
 }
 
 
-StatusCode MuonChamberLayout::getXYZPad(const MuonTileID& tile, 
+StatusCode MuonChamberLayout::getXYZPad(const LHCb::MuonTileID& tile, 
 					double& x, double& deltax,
 					double& y, double& deltay,
 					double& z, double& deltaz){
@@ -1014,7 +1017,7 @@ StatusCode MuonChamberLayout::getXYZPad(const MuonTileID& tile,
   bool m_debug = true;  
   
   // locate the chamber
-  MuonTileID chamTile = m_layout[region].contains(tile);
+  LHCb::MuonTileID chamTile = m_layout[region].contains(tile);
 
   // chamber size in x and y (z is same as pad)
   double cx,cy,cDeltax,cDeltay;
@@ -1024,7 +1027,7 @@ StatusCode MuonChamberLayout::getXYZPad(const MuonTileID& tile,
   if(!sc.isSuccess()){
     MsgStream msg(msgSvc(), name());
     msg << MSG::ERROR << "Failed to get chamber for pad tile: " << tile
-        << endreq;
+	<< endreq;
     return sc;
   }
 
@@ -1077,8 +1080,8 @@ StatusCode MuonChamberLayout::getXYZPad(const MuonTileID& tile,
   x = x + Dx;
   y = y + Dy;
 
-  HepPoint3D cnt(x,y,z);
-  HepPoint3D crn(Dx,Dy,Dz);
+  Gaudi::XYZPoint cnt(x,y,z);
+  Gaudi::XYZPoint crn(Dx,Dy,Dz);
 
   std::vector<int> mytiles;
   mytiles.push_back(chamTile);
@@ -1093,7 +1096,7 @@ StatusCode MuonChamberLayout::getXYZPad(const MuonTileID& tile,
 }  
 
 
-StatusCode MuonChamberLayout::getXYZLogical(const MuonTileID& tile, 
+StatusCode MuonChamberLayout::getXYZLogical(const LHCb::MuonTileID& tile, 
                                         double& x, double& deltax,
                                         double& y, double& deltay,
                                         double& z, double& deltaz){
@@ -1115,7 +1118,7 @@ StatusCode MuonChamberLayout::getXYZLogical(const MuonTileID& tile,
     if(!sc.isSuccess()){
       MsgStream msg(msgSvc(), name());
       msg << MSG::ERROR << "Passed a logical channel to getXYZPad: failed"
-          << " tile ID=" << tile << endreq;
+	  << " tile ID=" << tile << endreq;
       return sc;
     }
   }else if(tile.layout().xGrid() >= m_layout[region].xGrid() &&
@@ -1126,7 +1129,7 @@ StatusCode MuonChamberLayout::getXYZLogical(const MuonTileID& tile,
     int nTile = m_layout[region].yGrid() / tile.layout().yGrid();
     if ( m_debug ) {
       MsgStream msg(msgSvc(), name());
-      msg << MSG::DEBUG << "Making " << nTile << " temporary MuonTileIDs"
+      msg << MSG::DEBUG << "Making " << nTile << " temporary LHCb::MuonTileIDs"
           << " to get all chamber locations"
           << endreq;
     }
@@ -1134,12 +1137,12 @@ StatusCode MuonChamberLayout::getXYZLogical(const MuonTileID& tile,
     // width of pad (in x) is the same, hight (yGrid) that of the chamber
     MuonLayout tempPadLayout(tile.layout().xGrid(),m_layout[region].yGrid());
     
-    std::vector<MuonTileID> tempTiles;
+    std::vector<LHCb::MuonTileID> tempTiles;
 
     int i;
     for( i=0 ; i<nTile ; i++ ){
       int yTile = ( tile.nY() * nTile ) + i ;
-      MuonTileID tTile(station,0,0,tempPadLayout,region,tile.quarter(),
+      LHCb::MuonTileID tTile(station,tempPadLayout,region,tile.quarter(),
                        tile.nX(),yTile);
       tempTiles.push_back(tTile);
     }
@@ -1152,14 +1155,14 @@ StatusCode MuonChamberLayout::getXYZLogical(const MuonTileID& tile,
     double zmin = 0.0;
     double zmax = 0.0;
     double padDx,chamDy,chamDz;   
-    std::vector<MuonTileID>::const_iterator iTile;
+    std::vector<LHCb::MuonTileID>::const_iterator iTile;
     for(iTile = tempTiles.begin() ; iTile != tempTiles.end() ; iTile++){
       double lx,ly,lz;
       StatusCode sc = getXYZPad(*iTile,lx,padDx,ly,chamDy,lz,chamDz);
       if(!sc.isSuccess()){
         MsgStream msg(msgSvc(), name());
-        msg << MSG::ERROR << "Passed a temporary channel to getXYZPad: failed"
-            << " tile ID=" << *iTile << endreq;
+	msg << MSG::ERROR << "Passed a temporary channel to getXYZPad: failed"
+	    << " tile ID=" << *iTile << endreq;
         return sc;
       }      
       if(iTile == tempTiles.begin()){
@@ -1200,7 +1203,7 @@ StatusCode MuonChamberLayout::getXYZLogical(const MuonTileID& tile,
 
 
 
-StatusCode MuonChamberLayout::getXYZTwelfth(const MuonTileID& tile, 
+StatusCode MuonChamberLayout::getXYZTwelfth(const LHCb::MuonTileID& tile, 
 					    double& x, double& deltax,
 					    double& y, double& deltay,
 					    double& z, double& deltaz){
@@ -1281,7 +1284,7 @@ StatusCode MuonChamberLayout::getXYZTwelfth(const MuonTileID& tile,
   return StatusCode::SUCCESS;
 }  
 
-int MuonChamberLayout::getChamberNumber(const MuonTileID& tile){
+int MuonChamberLayout::getChamberNumber(const LHCb::MuonTileID& tile){
 
   // look-up chamber number from tile
   // use the fact that the chamber numbering is constitent between stations
@@ -1300,7 +1303,7 @@ int MuonChamberLayout::getChamberNumber(const MuonTileID& tile){
         << " in R" << tile.region()+1
         << " xIndex " << tile.nX()
         << " yIndex " << tile.nY()
-        << " was found for tile " << tile << endreq;
+	<< " was found for tile " << tile << endreq;
   }
   
   return chamberNumber;
@@ -1392,7 +1395,7 @@ void MuonChamberLayout::getTwelfthCornerIndex(const int& region,
 
 
 void MuonChamberLayout::localToglobal(IGeometryInfo* gInfo,
-				      HepPoint3D cent, HepPoint3D corn,
+				      Gaudi::XYZPoint cent, Gaudi::XYZPoint corn,
 				      double &dx, double &dy, double &dz){
   
   double ctrX(0.),ctrY(0.),ctrZ(0.),crnX(0.),crnY(0.),crnZ(0.),GctrX(0.),GctrY(0.),GctrZ(0.),GcrnX(0.),GcrnY(0.),GcrnZ(0.);
@@ -1405,13 +1408,13 @@ void MuonChamberLayout::localToglobal(IGeometryInfo* gInfo,
   crnY = gInfo->toLocal(corn).y();
   crnZ = gInfo->toLocal(corn).z();
   
-  HepPoint3D Gctr(ctrX,ctrY,ctrZ);
+  Gaudi::XYZPoint Gctr(ctrX,ctrY,ctrZ);
   
   GctrX = gInfo->toGlobal(Gctr).x();
   GctrY = gInfo->toGlobal(Gctr).y();
   GctrZ = gInfo->toGlobal(Gctr).z();
   
-  HepPoint3D Gcrn(crnX,crnY,crnZ);
+  Gaudi::XYZPoint Gcrn(crnX,crnY,crnZ);
   
   GcrnX = gInfo->toGlobal(Gcrn).x();
   GcrnY = gInfo->toGlobal(Gcrn).y();

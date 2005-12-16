@@ -1,4 +1,4 @@
-// $Id: DeMuonDetector.cpp,v 1.12 2005-12-14 17:31:05 asarti Exp $
+// $Id: DeMuonDetector.cpp,v 1.13 2005-12-16 14:53:20 asarti Exp $
 
 // Include files
 #include "MuonDet/DeMuonDetector.h"
@@ -10,9 +10,6 @@
 //Detector description
 #include "DetDesc/IGeometryInfo.h"
 #include "DetDesc/SolidBox.h"
-
-//Muon Kernel
-#include "MuonKernel/MuonTileID.h"
 
 /** @file DeMuonDetector.cpp
  * 
@@ -81,7 +78,7 @@ StatusCode DeMuonDetector::initialize()
 
 
 
-StatusCode DeMuonDetector::Hit2GapNumber(HepPoint3D myPoint, 
+StatusCode DeMuonDetector::Hit2GapNumber(Gaudi::XYZPoint myPoint, 
 					 int station, int & gapNumber,
 					 int & chamberNumber, int& regNum){
   
@@ -99,7 +96,7 @@ StatusCode DeMuonDetector::Hit2GapNumber(HepPoint3D myPoint,
   sc = StatusCode::FAILURE;
 
   double zPoi = myPoint.z(); int Igap;
-  double zChmb = (theChmb->geometry())->toGlobal(HepPoint3D(0,0,0)).z();  
+  double zChmb = (theChmb->geometry())->toGlobal(Gaudi::XYZPoint(0,0,0)).z();  
   for (Igap = 0; Igap <4; Igap++) {
     //Use z information to catch the gap.
     if((zPoi-zChmb)<-20+Igap*16) break;
@@ -128,7 +125,7 @@ StatusCode DeMuonDetector::Hit2GapNumber(HepPoint3D myPoint,
 }
 
 
-StatusCode DeMuonDetector::Hit2ChamberNumber(HepPoint3D myPoint, 
+StatusCode DeMuonDetector::Hit2ChamberNumber(Gaudi::XYZPoint myPoint, 
 					     int station, 
 					     int & chamberNumber, int& regNum){
   
@@ -150,7 +147,7 @@ StatusCode DeMuonDetector::Hit2ChamberNumber(HepPoint3D myPoint,
       (getChmbPtr(station,regNum,chamberNumber))->geometry();  
     
     //For calls not providing hit z take the z of chamber center
-    if(!z) {myPoint.setZ(geoChm->toGlobal(HepPoint3D(0,0,0)).z());}
+    if(!z) {myPoint.SetZ(geoChm->toGlobal(Gaudi::XYZPoint(0,0,0)).z());}
     
     //Is the chamber returned containing the hit?
     isIn = geoChm->isInside(myPoint);
@@ -165,8 +162,8 @@ StatusCode DeMuonDetector::Hit2ChamberNumber(HepPoint3D myPoint,
       
       //Find the vector of chambers near the one under investigation
       double x_ref(0),y_ref(0); std::vector<DeMuonChamber*> myChams;
-      x_ref = geoChm->toGlobal(HepPoint3D(0,0,0)).x();
-      y_ref = geoChm->toGlobal(HepPoint3D(0,0,0)).y();
+      x_ref = geoChm->toGlobal(Gaudi::XYZPoint(0,0,0)).x();
+      y_ref = geoChm->toGlobal(Gaudi::XYZPoint(0,0,0)).y();
       
       int x_sgn(0),y_sgn(0);
       //Avoid unnecessary checks for resolution problems
@@ -198,7 +195,7 @@ StatusCode DeMuonDetector::Hit2ChamberNumber(HepPoint3D myPoint,
           ->geometry();  
         if(geoOthChm) {
           //For calls not providing hit z take the z of chamber center
-          if(!z) {myPoint.setZ(geoOthChm->toGlobal(HepPoint3D(0,0,0)).z());}
+          if(!z) {myPoint.SetZ(geoOthChm->toGlobal(Gaudi::XYZPoint(0,0,0)).z());}
 	
           isIn = geoOthChm->isInside(myPoint);
           
@@ -248,7 +245,7 @@ StatusCode DeMuonDetector::Hit2ChamberNumber(HepPoint3D myPoint,
             IGeometryInfo* geoAllChm = (*itCh)->geometry();  
             
             //For calls not providing hit z take the z of chamber center
-            if(!z) {myPoint.setZ(geoAllChm->toGlobal(HepPoint3D(0,0,0)).z());}
+            if(!z) {myPoint.SetZ(geoAllChm->toGlobal(Gaudi::XYZPoint(0,0,0)).z());}
             
             isIn = geoAllChm->isInside(myPoint);
             if(isIn) {
@@ -278,7 +275,7 @@ StatusCode DeMuonDetector::Pos2StChamberNumber(const double x,
   StatusCode sc = StatusCode::FAILURE;
   //Hit Z is not know (giving only the station).
   //Take the chamber Z to update the hit later on.
-  HepPoint3D hitPoint(x,y,0); 
+  Gaudi::XYZPoint hitPoint(x,y,0); 
 
   sc = Hit2ChamberNumber(hitPoint,station,chamberNumber,regNum);
 
@@ -292,7 +289,7 @@ StatusCode DeMuonDetector::Pos2StGapNumber(const double x,
   StatusCode sc = StatusCode::FAILURE;
   //Hit Z is not know (giving only the station).
   //Take the chamber Z to update the hit later on.
-  HepPoint3D hitPoint(x,y,0); 
+  Gaudi::XYZPoint hitPoint(x,y,0); 
   
   sc = Hit2GapNumber(hitPoint,station,gapNumber,chamberNumber,regNum);
 
@@ -308,7 +305,7 @@ StatusCode DeMuonDetector::Pos2StChamberPointer(const double x,
   StatusCode sc = StatusCode::FAILURE;
   //Hit Z is not know (giving only the station).
   //Take the chamber Z to update the hit later on.
-  HepPoint3D hitPoint(x,y,0); 
+  Gaudi::XYZPoint hitPoint(x,y,0); 
   int chamberNumber(-1),regNum(-1);
   sc = Hit2ChamberNumber(hitPoint,station,chamberNumber,regNum);
   if((regNum > -1) && (chamberNumber>-1)) {
@@ -336,7 +333,7 @@ StatusCode DeMuonDetector::Pos2ChamberNumber(const double x,
 					     int & chamberNumber, int& regNum){
   StatusCode sc = StatusCode::FAILURE;
   //Z is know/provided.
-  HepPoint3D hitPoint(x,y,z);   int sta = getStation(z);
+  Gaudi::XYZPoint hitPoint(x,y,z);   int sta = getStation(z);
 
   sc = Hit2ChamberNumber(hitPoint,sta,chamberNumber,regNum);
 
@@ -351,7 +348,7 @@ StatusCode DeMuonDetector::Pos2GapNumber(const double x,
 					 int & chamberNumber, int& regNum){
   StatusCode sc = StatusCode::FAILURE;
   //Z is know/provided.
-  HepPoint3D hitPoint(x,y,z);   int sta = getStation(z);
+  Gaudi::XYZPoint hitPoint(x,y,z);   int sta = getStation(z);
 
   sc = Hit2GapNumber(hitPoint,sta,gapNumber,chamberNumber,regNum);
 
@@ -362,7 +359,7 @@ StatusCode DeMuonDetector::Pos2GapNumber(const double x,
 StatusCode DeMuonDetector::Pos2ChamberTile(const double x,
 					   const double y,
 					   const double z,
-					   MuonTileID& tile){
+					   LHCb::MuonTileID& tile){
   StatusCode sc = StatusCode::SUCCESS;
   int dumChmb(-1), reg(-1);
 
@@ -497,7 +494,7 @@ void DeMuonDetector::fillChmbPtr() {
 
 
 std::vector< std::pair<MuonFrontEndID, std::vector<float> > > 
-DeMuonDetector::listOfPhysChannels(HepPoint3D my_entry, HepPoint3D my_exit, 
+DeMuonDetector::listOfPhysChannels(Gaudi::XYZPoint my_entry, Gaudi::XYZPoint my_exit, 
                                    int region, int chamber) {
   
   //Pair vector;  
@@ -562,8 +559,8 @@ DeMuonDetector::listOfPhysChannels(HepPoint3D my_entry, HepPoint3D my_exit,
   float dx = box->xHalfLength();  float dy = box->yHalfLength();
   
   //Refer the distances to Local system [should be the gap]
-  HepPoint3D new_entry = geoCh->toLocal(my_entry);
-  HepPoint3D new_exit  = geoCh->toLocal(my_exit);
+  Gaudi::XYZPoint new_entry = geoCh->toLocal(my_entry);
+  Gaudi::XYZPoint new_exit  = geoCh->toLocal(my_exit);
 
   //Define relative dimensions
   float mod_xen, mod_yen, mod_xex, mod_yex;
@@ -612,7 +609,7 @@ DeMuonDetector::listOfPhysChannels(HepPoint3D my_entry, HepPoint3D my_exit,
   return myPair;
 }
 
-StatusCode DeMuonDetector::Tile2XYZ(MuonTileID tile, 
+StatusCode DeMuonDetector::Tile2XYZ(LHCb::MuonTileID tile, 
 				    double & x, double & dx,
 				    double & y, double & dy, 
 				    double & z, double & dz){
@@ -656,8 +653,8 @@ StatusCode DeMuonDetector::getPCCenter(MuonFrontEndID fe,int chamber,
   double xcenter_gap=xcenter_norma*2*dx-dx;
   double ycenter_gap=ycenter_norma*2*dy-dy;
   unsigned int layer=fe.getLayer();
-  HepPoint3D loc(xcenter_gap,ycenter_gap,0);   
-  HepPoint3D glob= geoCh->toGlobal(loc);
+  Gaudi::XYZPoint loc(xcenter_gap,ycenter_gap,0);   
+  Gaudi::XYZPoint glob= geoCh->toGlobal(loc);
   xcenter=glob.x();
   ycenter=glob.y();
   zcenter=glob.z();
@@ -666,7 +663,7 @@ StatusCode DeMuonDetector::getPCCenter(MuonFrontEndID fe,int chamber,
 }
 
 StatusCode  DeMuonDetector::Chamber2Tile(int  chaNum, int station, int region, 
-                                         MuonTileID& tile)
+                                         LHCb::MuonTileID& tile)
 {
   StatusCode sc = StatusCode::SUCCESS; 
   //Convert chamber number into a tile

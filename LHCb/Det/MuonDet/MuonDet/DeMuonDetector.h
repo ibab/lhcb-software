@@ -1,4 +1,4 @@
-// $Id: DeMuonDetector.h,v 1.8 2005-12-14 17:31:05 asarti Exp $
+// $Id: DeMuonDetector.h,v 1.9 2005-12-16 14:53:20 asarti Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
@@ -10,9 +10,6 @@
 
 //Gaudi
 #include "GaudiKernel/IDataProviderSvc.h"
-
-//Muon Kernel
-#include "MuonKernel/MuonTileID.h"
 
 //Muon Detector
 #include "MuonDet/MuonChamberLayout.h"
@@ -54,11 +51,11 @@ public:
   virtual StatusCode initialize();
 
 
-  StatusCode Hit2ChamberNumber(HepPoint3D myPoint, 
+  StatusCode Hit2ChamberNumber(Gaudi::XYZPoint myPoint, 
 			       int station, 
 			       int & chamberNumber, int& regNum);
   
-  StatusCode Hit2GapNumber(HepPoint3D myPoint, 
+  StatusCode Hit2GapNumber(Gaudi::XYZPoint myPoint, 
 			   int station, int & gapNumber,
 			   int & chamberNumber, int& regNum);
   
@@ -85,7 +82,7 @@ public:
   StatusCode Pos2ChamberTile(const double x,
                              const double y,
                              const double z,
-                             MuonTileID& tile);
+                             LHCb::MuonTileID& tile);
 
   StatusCode Pos2StChamberPointer(const double x,
                                 const double y,
@@ -98,11 +95,11 @@ public:
                                 DeMuonChamber* & chamberPointer);
 
   StatusCode Chamber2Tile(int  chaNum, int station, int region, 
-                          MuonTileID& tile);
+                          LHCb::MuonTileID& tile);
 
   //Returns the list of physical channels for a given chamber  
   std::vector< std::pair<MuonFrontEndID, std::vector<float> > > 
-  listOfPhysChannels(HepPoint3D my_entry, HepPoint3D my_exit, 
+  listOfPhysChannels(Gaudi::XYZPoint my_entry, Gaudi::XYZPoint my_exit, 
                      int region, int chamber);
   StatusCode getPCCenter(MuonFrontEndID fe,int chamber,int station, 
                          int region,double& xcenter, 
@@ -123,7 +120,7 @@ public:
   //Fills various geometry related info
   StatusCode fillGeoInfo();
 
-  StatusCode Tile2XYZ(MuonTileID tile, 
+  StatusCode Tile2XYZ(LHCb::MuonTileID tile, 
 		      double & x, double & dx,
 		      double & y, double & dy, 
 		      double & z, double & dz);  
@@ -133,23 +130,6 @@ public:
   int regions();
   int regions(int stations);
   
-
-  /*
-    
-  StatusCode TileID2Pos(const MuonTileID tile,
-                        double& x, double& deltax,
-                        double& y, double& deltay,
-                        double& z, double& deltaz);
-  
-  StatusCode TileIDinChamber2Pos(const MuonTileID tile,
-                                 double& x, double& deltax,
-                                 double& y, double& deltay,
-                                 double& z, double& deltaz);
-
-
-  */
-
-
   int gapsInRegion(const int station, const int region){
     return m_gapPerRegion[station*4+region];    
   };

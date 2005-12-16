@@ -1,4 +1,4 @@
-// $Id: MuonChamberLayout.h,v 1.4 2005-12-14 15:45:53 asarti Exp $
+// $Id: MuonChamberLayout.h,v 1.5 2005-12-16 14:53:20 asarti Exp $
 #ifndef PUBLIC_MUONCHAMBERLAYOUT_H 
 #define PUBLIC_MUONCHAMBERLAYOUT_H 1
 
@@ -7,8 +7,7 @@
 //From Muon
 #include "MuonDet/DeMuonChamber.h"
 #include "MuonDet/DeMuonGasGap.h"
-#include "MuonKernel/MuonLayout.h"
-#include "MuonKernel/MuonTileID.h"
+#include "MuonKernel/MuonSystemLayout.h"
 
 //Gaudi
 #include "GaudiKernel/IDataProviderSvc.h"
@@ -60,13 +59,13 @@ public:
   void chamberXY(int sx, int sy, int shx, int shy, int reg, std::vector<int> &chamberNumber);
 
   //Returns the Tile for a given chamber
-  MuonTileID tileChamber(DeMuonChamber* chmb);
+  LHCb::MuonTileID tileChamber(DeMuonChamber* chmb);
 
   //Returns the Tile for a given chamber number
-  MuonTileID tileChamberNumber(int sta, int reg, int chmbNum);
+  LHCb::MuonTileID tileChamberNumber(int sta, int reg, int chmbNum);
 
 
-  StatusCode Tile2XYZpos(const MuonTileID& tile, 
+  StatusCode Tile2XYZpos(const LHCb::MuonTileID& tile, 
 			 double& x, double& deltax,
 			 double& y, double& deltay,
 			 double& z, double& deltaz);
@@ -111,10 +110,10 @@ public:
   void setDataProvider(IDataProviderSvc* dataPr);
 
   //Converts the chamber tile into a chamber number
-  int getChamberNumber(const MuonTileID& tile);
+  int getChamberNumber(const LHCb::MuonTileID& tile);
 
   //Function for chamber x,y,z retrieval from tile info
-  StatusCode getXYZChamberTile(const MuonTileID& tile, 
+  StatusCode getXYZChamberTile(const LHCb::MuonTileID& tile, 
 			       double& x, double& deltax,
 			       double& y, double& deltay,
 			       double& z, double& deltaz,
@@ -155,19 +154,19 @@ public:
 		    bool toGlob);
 
   /// get xyz of specific pad
-  StatusCode getXYZPad(const MuonTileID& tile, 
+  StatusCode getXYZPad(const LHCb::MuonTileID& tile, 
 		       double& x, double& deltax,
 		       double& y, double& deltay,
 		       double& z, double& deltaz);
   
   /// get postion of logical channel (may be multiple chambers)
-  StatusCode getXYZLogical(const MuonTileID& tile, 
+  StatusCode getXYZLogical(const LHCb::MuonTileID& tile, 
                            double& x, double& deltax,
                            double& y, double& deltay,
                            double& z, double& deltaz);
 
   /// get xyz of twelfth (useful for defining regions)
-  StatusCode getXYZTwelfth(const MuonTileID& tile, 
+  StatusCode getXYZTwelfth(const LHCb::MuonTileID& tile, 
                            double& x, double& deltax,
                            double& y, double& deltay,
                            double& z, double& deltaz);
@@ -186,7 +185,7 @@ public:
 
   
   void localToglobal(IGeometryInfo* gInfo,
-		     HepPoint3D cent, HepPoint3D corn,
+		     Gaudi::XYZPoint cent, Gaudi::XYZPoint corn,
 		     double &dx, double &dy, double &dz);
   
 protected:

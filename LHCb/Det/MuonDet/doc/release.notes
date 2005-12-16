@@ -1,9 +1,17 @@
-! $Id: release.notes,v 1.51 2005-12-14 15:45:53 asarti Exp $
+! $Id: release.notes,v 1.52 2005-12-16 14:53:20 asarti Exp $
 !
 ! Package     : MuonDet
 ! Responsible : Alessia Satta
 
 !========================= MuonDet v5r1 2005-12-13 =========================
+! 2005-12-16 - Alessio Sarti
+   - src/Lib/MuonChamberLayout.cpp(.h)
+   - src/Lib/DeMuonDetector.cpp(.h)
+   - src/Lib/MuonODEBoard.cpp(.h)
+	Migrated the code to LHCb v20r0:
+	using namespace LHCb for MuonTileID
+	removed indtances of Hep libraries
+	
 ! 2005-12-14 - Alessio Sarti
    - src/Lib/MuonChamberLayout.cpp(.h)
 	Implemented the tile -> XYZ transformation.

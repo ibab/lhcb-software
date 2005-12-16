@@ -1,4 +1,4 @@
-// $Id: MuonODEBoard.h,v 1.1 2004-02-03 11:40:27 asatta Exp $
+// $Id: MuonODEBoard.h,v 1.2 2005-12-16 14:53:20 asarti Exp $
 #ifndef MUONDET_MUONODEBOARD_H 
 #define MUONDET_MUONODEBOARD_H 1
 
@@ -9,7 +9,7 @@
 
 // Include files
 #include "MuonDet/CLID_MuonODEBoard.h"
-#include "MuonKernel/MuonTileID.h"
+#include "MuonKernel/MuonTile.h"
 
 /** @class MuonODEBoard MuonODEBoard.h MuonDet/MuonODEBoard.h
  *  
@@ -43,7 +43,7 @@ public:
   inline long region(){ return m_region;};    
   void setQuadrants();
   bool isQuadrantContained(long quadrant);
-  bool isTSContained(MuonTileID TSTile);	 
+  bool isTSContained(LHCb::MuonTileID TSTile);	 
 protected:
 
 private:

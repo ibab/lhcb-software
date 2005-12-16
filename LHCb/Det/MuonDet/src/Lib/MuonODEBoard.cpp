@@ -1,4 +1,4 @@
-// $Id: MuonODEBoard.cpp,v 1.1 2004-02-03 11:40:27 asatta Exp $
+// $Id: MuonODEBoard.cpp,v 1.2 2005-12-16 14:53:20 asarti Exp $
 // Include files 
 
 #include "MuonKernel/MuonTile.h"
@@ -76,7 +76,7 @@ bool MuonODEBoard::isQuadrantContained(long quadrant){
 };
 
 
-bool MuonODEBoard::isTSContained(MuonTileID TSTile){
+bool MuonODEBoard::isTSContained(LHCb::MuonTileID TSTile){
   long quadrant=(long)TSTile.quarter();
   long gridx=(long)TSTile.nX();
   long gridy=(long)TSTile.nY();
