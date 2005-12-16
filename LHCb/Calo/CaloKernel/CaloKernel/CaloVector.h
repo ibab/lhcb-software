@@ -1,8 +1,11 @@
-// $Id: CaloVector.h,v 1.4 2004-09-05 20:21:40 ibelyaev Exp $ 
+// $Id: CaloVector.h,v 1.5 2005-12-16 17:02:42 odescham Exp $ 
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.4  2004/09/05 20:21:40  ibelyaev
+//  tiny modifications
+//
 // ============================================================================
 #ifndef     CALOKERNEL_CALOVECTOR_H
 #define     CALOKERNEL_CALOVECTOR_H 1 
@@ -13,7 +16,7 @@
 #include "GaudiKernel/Kernel.h"     
 #include "GaudiKernel/StatusCode.h" 
 // forward declaration
-class CaloCellID;                  
+class LHCb::CaloCellID;                  
 
 /** @class CaloVector CaloVector.h CaloKernel/CaloVector.h 
  *  
@@ -28,7 +31,7 @@ class CaloCellID;
  *  @date XX/XX/XX 
  */
 
-template <class CONTENT, class INDEX   = const CaloCellID&  >
+template <class CONTENT, class INDEX   = const LHCb::CaloCellID&  >
 class CaloVector : private std::vector<CONTENT> 
 {
 public:
@@ -83,7 +86,7 @@ public:
     return ( ( m_index.size() > indx ) ? m_index[indx] : -1 ); 
   };
   
-  /** Access to the content itself using CaloCellID as index. 
+  /** Access to the content itself using LHCb::CaloCellID as index. 
    *  Check the boundaries of the index array. 
    *  @param id index 
    */                                         
@@ -93,7 +96,7 @@ public:
     return ( ( 0 > indx ) ? def() : *(begin()+indx) ) ; 
   };
   
-  /** Access to the content itself using CaloCellID as index.
+  /** Access to the content itself using LHCb::CaloCellID as index.
    *  (const version)
    *  Check the boundaries of the index array. 
    *  @param id index 
@@ -104,14 +107,14 @@ public:
     return ( ( 0 > indx ) ? def() : *(begin()+indx) ) ; 
   };
   
-  /** Access to the content itself using CaloCellID as index. 
+  /** Access to the content itself using LHCb::CaloCellID as index. 
    *  Check the boundaries of the index array. 
    *  @param id index 
    */                                         
   inline       Content& operator()  ( INDEX id )       
   { return (*this)[ id ] ; };
   
-  /** Access to the content itself using CaloCellID as index.
+  /** Access to the content itself using LHCb::CaloCellID as index.
    *  (const version)
    *  Check the boundaries of the index array. 
    *  @param id index 

@@ -1,8 +1,11 @@
-// $Id: CaloCollection.h,v 1.3 2003-12-09 10:14:42 cattanem Exp $
+// $Id: CaloCollection.h,v 1.4 2005-12-16 17:02:42 odescham Exp $
 // ============================================================================ 
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================ 
 // $Log: not supported by cvs2svn $
+// Revision 1.3  2003/12/09 10:14:42  cattanem
+// Changes for GAUDI_v13r0
+//
 // Revision 1.2  2002/03/18 18:16:21  ibelyaev
 //  small update for LHCbKernel package
 //
@@ -31,7 +34,7 @@
 /** @class CaloCollection CaloCollection.h CaloKernel/CaloCollection.h
  *
  *  a simple adaptor class for implementing the 
- *  container with direct access of the data using CaloCellID as an index.
+ *  container with direct access of the data using LHCb::CaloCellID as an index.
  *  It has 2 interfaces  
  *   - (1) from container (presumably with random-access-iterator (but 
  *  due to smart definition of operator[] even list is acceptable
@@ -40,7 +43,7 @@
  *  considered as "functor" for any STL-sequence and algorithm 
  *  (the latter it especially important for container of 
  *  pointers to functions, or using in the "std::transform"
- *  of sequence of CaloCellIDs to the sequence of "Content"
+ *  of sequence of LHCb::CaloCellIDs to the sequence of "Content"
  *  
  *  @author  Vanya Belyaev Ivan.Belyaev@itep.ru
  *  @date    26/11/1999
@@ -50,7 +53,7 @@ template <class CONTENT                          ,  /// type of content
   class         RETTYPE   = CONTENT              ,  /// return type     
   class         CONTAINER = std::vector<CONTENT> ,  /// container type  
   class         FUNCTOR   = 
-   std::unary_function<const CaloCellID&,RETTYPE&> >  /// functor
+   std::unary_function<const LHCb::CaloCellID&,RETTYPE&> >  /// functor
 class CaloCollection :  public CONTAINER ,  public FUNCTOR 
 {
   //
@@ -58,7 +61,7 @@ class CaloCollection :  public CONTAINER ,  public FUNCTOR
   //
   typedef    CONTENT                        Content    ;   
   typedef    RETTYPE                        ReturnType ; 
-  typedef    const CaloCellID&              Index      ; 
+  typedef    const LHCb::CaloCellID&              Index      ; 
   typedef    typename CONTAINER::size_type  size_type  ; 
   //
 public:
@@ -82,13 +85,13 @@ public:
   
   // CONTAINER
   // access to CONTAINER interfce:
-  /// access to the content  itself using CaloCellID as an index
+  /// access to the content  itself using LHCb::CaloCellID as an index
   inline       Content& operator[]( Index id )       
   { 
     size_type indx = id.index();
     return ( (indx < size())? *(begin()+indx) : def() ); 
   };
-  /// the "const" version of access to the content  using CaloCellID
+  /// the "const" version of access to the content  using LHCb::CaloCellID
   inline const Content& operator[]( Index id ) const 
   { 
     size_type indx = id.index();

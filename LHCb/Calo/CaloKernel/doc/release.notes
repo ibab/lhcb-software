@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.35 2004-09-06 15:02:06 cattanem Exp $
+! $Id: release.notes,v 1.36 2005-12-16 17:02:43 odescham Exp $
 ! =============================================================================
 ! Package     : CaloKernel
 ! Responsible : Vanya Belyaev Ivan.Belyaev@itep.ru
@@ -6,6 +6,22 @@
 ! The package contains the general Calo Kernel classes and utilities,
 ! which are essentially independent from Detector and Event models
 ! =============================================================================
+
+!======================= CaloKernel v4r0 2005-12-16 =======================
+! 2005-12-16 - Olivier Deschamps
+
+ - CaloKernel/
+  remove redirected headers
+  remove unecessary headers
+  Adapt CaloCollection.h and CaloVector.h to LHCb:: Namespace
+
+ - src/
+   Calo**Alg & Calo**Tool removed
+
+ - cmt/requirements
+   remove any dependancy
+   remove link
+   version increment to v4r0 
 
 !======================= CaloKernel v3r2 2004-09-06 =======================
 ! 2004-09-05 - Vanya BELYAEV

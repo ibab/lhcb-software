@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.24 2004-09-05 20:21:40 ibelyaev Exp $
+# $Id: requirements,v 1.25 2005-12-16 17:02:43 odescham Exp $
 # =============================================================================
 # CVS tag $Name: not supported by cvs2svn $ 
 # =============================================================================
@@ -7,7 +7,7 @@
 # =============================================================================
 
 package           CaloKernel
-version           v3r2
+version           v4r0
 
 # =============== structure ===================================================
 branches          src cmt doc CaloKernel
@@ -16,14 +16,10 @@ branches          src cmt doc CaloKernel
 include_dirs      $(CALOKERNELROOT)
 
 # =============== used packages ===============================================
-use LHCbKernel    v5r*  Kernel
-use GaudiAlg	  v*
         
 # =============== linker library ==============================================
-library           CaloKernel            *.cpp 
 
 # =============== mandatory patterns ==========================================
-apply_pattern     linker_library library=CaloKernel
 
 # ============================================================================= 
 # The End 
