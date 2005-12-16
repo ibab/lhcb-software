@@ -1,12 +1,14 @@
-// $Id: TutorialTuple.h,v 1.4 2005-12-14 12:37:33 pkoppenb Exp $
+// $Id: TutorialTuple.h,v 1.5 2005-12-16 15:26:39 pkoppenb Exp $
 #ifndef TUTORIALTUPLE_H 
 #define TUTORIALTUPLE_H 1
 
 // Include files
 // from DaVinci, this is a specialized GaudiAlgorithm
 #include "Kernel/DVAlgorithm.h"
+#ifdef MCCheck
 #include "DaVinciAssociators/Particle2MCLink.h"
 #include "DaVinciMCTools/IBackgroundCategory.h"
+#endif
 
 /** @class TutorialTuple TutorialTuple.h
  *  
@@ -34,11 +36,12 @@ private:
   StatusCode fillTruth(Tuple&,const Particle*);
 
 private:
+#ifdef MCCheck
   bool m_truth ; ///< Use MC truth
   Particle2MCLink* m_pAsct;   ///<  Composite associator
-
   std::vector<std::string> m_containers ; ///< Containers for associators
   IBackgroundCategory* m_background ;
+#endif
   
 };
 #endif // TUTORIALTUPLE_H

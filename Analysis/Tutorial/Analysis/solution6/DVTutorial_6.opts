@@ -123,7 +123,6 @@ catParticle2MCChi2.InputData = {"/Event/Phys/PreLoadBs2JpsiPhi/Particles",
                                 "/Event/Phys/Jpsi2MuMu/Particles",
                                 "/Event/Phys/Phi2KK/Particles"};
 
-//TutorialTuple.InputContainers = { "Phys/Bs2JpsiPhi/Particles" };
 //
 // Tagging
 //

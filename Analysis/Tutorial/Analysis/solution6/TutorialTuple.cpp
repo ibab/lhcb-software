@@ -1,4 +1,4 @@
-// $Id: TutorialTuple.cpp,v 1.5 2005-12-14 12:37:33 pkoppenb Exp $
+// $Id: TutorialTuple.cpp,v 1.6 2005-12-16 15:26:39 pkoppenb Exp $
 // Include files 
 
 // from Gaudi
@@ -7,9 +7,11 @@
 #include "Event/TrgDecision.h"
 #include "Event/HltScore.h"
 #include "Event/L1Score.h"
-
-#include "Event/MCParticle.h"
 #include "Event/TrgDecision.h"
+
+#ifdef MCCheck
+#include "Event/MCParticle.h"
+#endif
 // local
 #include "TutorialTuple.h"
 
@@ -30,11 +32,15 @@ const        IAlgFactory& TutorialTupleFactory = s_factory ;
 TutorialTuple::TutorialTuple( const std::string& name,
                               ISvcLocator* pSvcLocator)
   : DVAlgorithm ( name , pSvcLocator )
+#ifdef MCCheck
   , m_pAsct()
+  , m_background()
+#endif
 {
+#ifdef MCCheck
   declareProperty( "FillTruth", m_truth = true );
   declareProperty( "InputContainers", m_containers = std::vector<std::string>() );
-
+#endif
 }
 //=============================================================================
 // Destructor
@@ -48,11 +54,13 @@ StatusCode TutorialTuple::initialize() {
 
   debug() << "==> Initialize" << endmsg;
 
+#ifdef MCCheck
   if (m_truth) {
     info() << "Will be filling MC truth information" << endmsg ;
     m_pAsct = new Particle2MCLink(this, Particle2MCMethod::Composite,m_containers);
     m_background = tool<IBackgroundCategory>("BackgroundCategory",this);
   }
+#endif
 
   return StatusCode::SUCCESS;
 };
@@ -72,30 +80,33 @@ StatusCode TutorialTuple::execute() {
     if (!fillBs(tuple,*b)) return StatusCode::FAILURE;
     if (!fillTrigger(tuple)) return StatusCode::FAILURE;
     if (!fillTagging(tuple,*b)) return StatusCode::FAILURE;
+#ifdef MCCheck
     if (m_truth) if (!fillTruth(tuple,*b)) return StatusCode::FAILURE;
+#endif
     tuple->write();
   }
 
   setFilterPassed(true);   // Mandatory. Set to true if event is accepted.
   return StatusCode::SUCCESS;
 };
+#ifdef MCCheck
 //=============================================================================
 // Truth
 //=============================================================================
 StatusCode TutorialTuple::fillTruth(Tuple& tuple,const Particle* b) {
-  
+
   const MCParticle* MC = m_pAsct->firstMCP( b );
   if ( 0!=MC ){
     tuple->column( "TPid", MC->particleID().pid());
     tuple->column( "TP",   MC->momentum());
-    info() << "ASCT: Bs associated with " << MC->particleID().pid() 
+    info() << "Bs associated with " << MC->particleID().pid() 
             << " " <<  MC->momentum() << endmsg ;
   } else {
     tuple->column( "TPid", -1);
     tuple->column( "TP",   HepLorentzVector(-1.,-1.,-1.,-1.));
     info() << "No association for Bs " << endmsg ;
   }
-  // tool 
+
   const ParticleVector fs = descendants()->finalStates(b);
   for  ( ParticleVector::const_iterator p = fs.begin() ; p!=fs.end() ;++p){
     info() << "Associating " << (*p)->particleID().pid() << " " 
@@ -104,6 +115,7 @@ StatusCode TutorialTuple::fillTruth(Tuple& tuple,const Particle* b) {
     if ( MC2 ) info() << "... associated with " << MC2->particleID().pid() 
                    << " " <<  MC2->momentum() << endmsg ;
     else  info() << "Not associated" << endmsg ;
+
   }
   IBackgroundCategory::categories cat = m_background->category(b);
   const MCParticle* o = m_background->origin(b);
@@ -115,6 +127,7 @@ StatusCode TutorialTuple::fillTruth(Tuple& tuple,const Particle* b) {
 
   return StatusCode::SUCCESS;
 }
+#endif
 //=============================================================================
 // Tagging result
 //=============================================================================

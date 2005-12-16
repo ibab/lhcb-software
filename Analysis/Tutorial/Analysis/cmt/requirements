@@ -16,6 +16,11 @@ branches          cmt doc src options solution1 solution2 solution3 solution4 so
 use DaVinci       v12r15    Phys
 
 #============================================================================
+# Use MC
+#============================================================================
+macro_append     cppflags " -DMCCheck " \
+                 VisualC  " /DMCCheck "
+#============================================================================
 # Component library building rule
 #============================================================================
 library          Analysis    ../src/*.cpp -import=AIDA
