@@ -3,7 +3,7 @@
  *
  *  Implementation file for detector description class : DeRichSphMirror
  *
- *  $Id: DeRichSphMirror.cpp,v 1.17 2005-12-14 09:34:52 papanest Exp $
+ *  $Id: DeRichSphMirror.cpp,v 1.18 2005-12-16 15:09:17 jonrob Exp $
  *
  *  @author Antonis Papanestis a.papanestis@rl.ac.uk
  *  @date   2004-06-18
@@ -111,7 +111,7 @@ StatusCode DeRichSphMirror::initialize()
   double hexRadius = 510.0*mm;
   if ( deRich2->exists("Rich2SphMirrorHexDiameter") )
     hexRadius = deRich2->param<double>("Rich2SphMirrorHexDiameter")/2.0;
-  const double flatToCentre = hexRadius*sin(60*degree);
+  //const double flatToCentre = hexRadius*sin(60*degree);
 
   m_solid = geometry()->lvolume()->solid();
   const std::string type = m_solid->typeName();
@@ -170,10 +170,10 @@ StatusCode DeRichSphMirror::initialize()
   m_mirrorCentre = geometry()->toGlobal(localMirrorCentre);
 
   // right and left middle points are for verification of the hex segment position
-  const Gaudi::XYZPoint middleRightSide
-    (sqrt(m_radius*m_radius-flatToCentre*flatToCentre),0.0,flatToCentre);
-  const Gaudi::XYZPoint middleLeftSide
-    (sqrt(m_radius*m_radius-flatToCentre*flatToCentre),0.0,-flatToCentre);
+  //const Gaudi::XYZPoint middleRightSide
+  //  (sqrt(m_radius*m_radius-flatToCentre*flatToCentre),0.0,flatToCentre);
+  //const Gaudi::XYZPoint middleLeftSide
+  //  (sqrt(m_radius*m_radius-flatToCentre*flatToCentre),0.0,-flatToCentre);
 
   // go back to the global coord system.
   // Ignore the rotation, it has been taken care of
