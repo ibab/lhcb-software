@@ -1,6 +1,10 @@
-! $Id: release.notes,v 1.34 2005-12-16 10:11:03 szumlat Exp $
+! $Id: release.notes,v 1.35 2005-12-16 12:53:20 szumlat Exp $
 package Event/VeloEvent
 package manager: C.Parkes
+
+!====================== VeloEvent v14r1 2005-12-16 =======================
+  2005-12-16 - Tomasz Szumlak
+ - Changed package dependecny
 
 !====================== VeloEvent v14r0 2005-12-16 ========================
 ! 2005-12-16 - Tomasz Szumlak 
