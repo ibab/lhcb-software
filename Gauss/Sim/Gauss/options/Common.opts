@@ -1,4 +1,4 @@
-// $Id: Common.opts,v 1.14 2005-12-08 17:06:29 gcorti Exp $ 
+// $Id: Common.opts,v 1.15 2005-12-16 15:36:26 gcorti Exp $ 
 #pragma print off
 
 /** @file 
@@ -40,9 +40,6 @@ RootHistSvc.ForceAlphaIds = true;        // Prepend histograms with "h"
 
 // No events are read as input
 ApplicationMgr.EvtSel  = "NONE" ;
-
-// Generators settings, necessary for various generators configurations
-#include "$GAUSSOPTS/PythiaSettings.opts"
 
 // To prevent writing too much in production
 MessageSvc.OutputLevel         = 3;
