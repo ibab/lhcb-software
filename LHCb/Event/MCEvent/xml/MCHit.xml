@@ -101,6 +101,17 @@
          </code>
       </method>
 
+      <method
+       name="midPoint"
+       const="TRUE"
+       desc="point half way between exit and entry points"
+       type="Gaudi::XYZPoint"
+      >
+         <code>
+   return( this->entry() + 0.5*this->displacement() );
+         </code>
+      </method>
+
       <relation
        desc="Pointer to MCParticle causing the hit"
        name="MCParticle" 

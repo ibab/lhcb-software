@@ -12,6 +12,7 @@
     id          = "300">
     
     <base name="DataObject"/>
+    <location name="TrackInfo"    place="MC/TrackInfo"  />
     <import name="Event/MCParticle"/>
     &DataObject;
    

@@ -1,9 +1,15 @@
-! $Id: release.notes,v 1.10 2005-12-15 10:29:12 gcorti Exp $
+! $Id: release.notes,v 1.11 2005-12-16 10:11:58 cattanem Exp $
 ! Package     : Event/MCEvent
 ! Responsible : Marco Cattaneo, Gloria Corti
 ! Purpose     : LHCb Event model. MC truth classes (Gauss and Boole output) 
 
-!========================== MCEvent v1r0 2005-12-15 ==========================
+!========================== MCEvent v1r0 2005-12-16 ==========================
+! 2005-12-16 - Marco Cattaneo
+ - Add MCTrackInfo helper class (from MCTools package)
+
+! 2005-12-16 - Matt Needham
+ - Add MCHit::midPoint() method
+
 ! 2005-12-15 - Gloria CORTI
  - Introduce new data members in MCHeader: evtNumber and evtTime.
  - Add Kernel/IMCDecayFinder.h interface, moved from Phys/MCTools, the 
