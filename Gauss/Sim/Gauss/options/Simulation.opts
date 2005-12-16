@@ -1,4 +1,4 @@
-// $Id: Simulation.opts,v 1.67 2005-12-08 17:07:38 gcorti Exp $ 
+// $Id: Simulation.opts,v 1.68 2005-12-16 15:36:43 gcorti Exp $ 
 #pragma print off
 
 /** @file 
@@ -32,27 +32,6 @@ Simulation.Members += { "GiGaDataStoreAlgorithm/GiGaStore" };
 Simulation.Members += { "GiGaInputStream/Geo" };
 #include "$GAUSSOPTS/SimGeometry.opts"
 
-// // ---> OLD WAY: Uncomment if you still want it
-// // Load the initial kinematics
-// // In initialize retrieve the GiGaKine service
-// // It is executed for each event
-// Simulation.Members += { "GiGaInputStream/Kine" };
-// // configuration of kinematics event "Kine" data stream = default
-// Kine.ConversionSvcName    = "GiGaKine" ; 
-// Kine.DataProviderSvcName  = "EventDataSvc"   ; 
-// // Where in the TES the INITIAL kinematic is located
-// Kine.StreamItems         += {"/Event/Gen/HepMCEvents"};
-
-// // Perform the Geant4 simulation
-// Simulation.Members += { "GiGaFlushAlgorithm" };
-// // Check the G4Event processing status
-// Simulation.Members += { "GiGaCheckEventStatus" };
-// // Populate the MCParticles/MCVertices in the TES
-// Simulation.Members += { "GiGaGetEventAlg" };
-// // Populate sensitive hits in the TES
-// Simulation.Members += { "GiGaGetHitsAlg" };
-// // ---> OLD WAY: END
-
 // ---> NEW WAY: 
 // Pass the generator event to Geant4
 Simulation.Members += { "GeneratorToG4" };            // NEW algorithm
@@ -77,7 +56,13 @@ Simulation.Members += { "GetCaloHitsAlg/GetSpdHits" };
 Simulation.Members += { "GetCaloHitsAlg/GetPrsHits" };
 Simulation.Members += { "GetCaloHitsAlg/GetEcalHits" };
 Simulation.Members += { "GetCaloHitsAlg/GetHcalHits" };
-// All other detectors
+// and for the RICHes
+Simulation.Members += { "GetMCRichHitsAlg" };
+// Uncomment lines below for switching on RICH extended info
+// Simulation.Members += { "GetExtendedMCRichInfoAlg" };
+// #include "$GAUSSRICHROOT/options/RichExtendedInfo.opts"
+// for the Velo and Muon still old way since will be automatic with new
+// event model
 Simulation.Members += { "GiGaGetHitsAlg" };
 // ---> NEW WAY: END
 

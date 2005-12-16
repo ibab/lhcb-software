@@ -1,4 +1,4 @@
-// $Id: GaussTape.opts,v 1.19 2005-04-20 13:04:51 gcorti Exp $ 
+// $Id: GaussTape.opts,v 1.20 2005-12-16 15:37:04 gcorti Exp $ 
 #pragma print off
 
 /** @file 
@@ -40,10 +40,6 @@ GaussTape.OptItemList = {
   ,"/Event/MC/Velo/PuHits#1"
   ,"/Event/MC/Rich#1"
   ,"/Event/MC/Rich/Hits#1"
-  // Uncomment the following three lines if you want detailed RICH info 
-  //,"/Event/MC/Rich/OpticalPhotons#1"  // optional extra mc debug
-  //,"/Event/MC/Rich/Tracks#1"          // optional extra mc debug
-  //,"/Event/MC/Rich/Segments#1"        // optional extra mc debug  
   ,"/Event/MC/OT#1"
   ,"/Event/MC/OT/Hits#1"
   ,"/Event/MC/IT#1"
