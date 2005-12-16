@@ -1,0 +1,12 @@
+//  Options for minimum bias events with Herwig and EvtGen
+//  Temporarly here, Will be generated automatically from minbias.dec
+//
+// Event Type: 130000000
+//
+// ASCII Decay Descriptor: pp => ?
+
+ApplicationMgr.Dlls += { "LbHerwig" };
+Generation.EventType                  = 130000000;
+Generation.SampleGenerationTool       = "MinimumBias";
+Generation.MinimumBias.ProductionTool = "HerwigProduction";
+ToolSvc.EvtGenDecay.UserDecayFile     = "$DECFILESROOT/dkfiles/minbias.dec";

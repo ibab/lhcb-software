@@ -1,5 +1,5 @@
 #printOptions 
-// $Id: Gauss.opts,v 1.70 2005-10-31 11:25:36 gcorti Exp $ 
+// $Id: Gauss.opts,v 1.71 2005-12-16 15:35:49 gcorti Exp $ 
 
 /** @file 
  * 
@@ -57,20 +57,6 @@ Monitor.MeasureTime    = true;
 GenMonitor.MeasureTime = true;
 SimMonitor.MeasureTime = true;
 
-// Test new structure
-// Generator.Members  += { "DumpMC" };
-// SimMonitor.Members += { "GiGaDumpPrimaryAlg" };
-// SimMonitor.Members += { "PrintEventAlg/PrintOne" };
-// SimMonitor.Members += { "PrintEventAlg/PrintTwo" };
-// PrintTwo.Particles = "MC/TestParticles";
-// PrintTwo.Vertices  = "MC/TestVertices";
-// GeneratorToG4.OutputLevel  = 2;
-// GiGaGetHitsAlg.OutputLevel = 1;
-// GetSTHits.OutputLevel      = 2;
-// GetOTHits.OutputLevel      = 2;
-// G4HepMCToMCTruth.OutputLevel   = 2;
-// GiGa.EventSeq.HepMCEvent.OutputLevel = 2;
-
 //---------------------------------------------------------------------------
 // Write an output file (contents listed in GaussTape.opts)
 //---------------------------------------------------------------------------
@@ -99,12 +85,8 @@ HistogramPersistencySvc.OutputFile = "GaussHistos.root";  // Monitoring histos
 // Event type to simulate: for <evttype> put a line similar to the following
 //                         or use ParticleGun.opts
 //---------------------------------------------------------------------------
-//#include "$DECFILESROOT/options/11144100.opts"  // Bd_JpsiKS,mm
-//#include "$DECFILESROOT/options/10000000.opts"  // Generic b events
-//#include "$DECFILESROOT/options/30000000.opts"  // Min Bias
+#include "$GAUSSOPTS/30000000.opts"  // Min Bias
+//#include "$GAUSSOPTS/13144000.opts"  // Min Bias
 
 //#include "$GAUSSOPTS/ParticleGun.opts"          
-// In order to generate beam gas and min bias at the same time 
-// uncomment the following line
-//#include "$GAUSSOPTS/BeamGas-Velo.opts"
  

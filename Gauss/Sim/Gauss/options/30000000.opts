@@ -1,0 +1,11 @@
+//  Options for minimum bias events with Pythia and EvtGen
+//  Temporarly here, Will be generated automatically from minbias.dec
+//
+// Event Type:30000000
+//
+// ASCII Decay Descriptor: pp => ?
+
+Generation.EventType                  = 30000000;
+Generation.SampleGenerationTool       = "MinimumBias";
+Generation.MinimumBias.ProductionTool = "PythiaProduction";
+ToolSvc.EvtGenDecay.UserDecayFile     = "$DECFILESROOT/dkfiles/minbias.dec";

@@ -1,0 +1,15 @@
+//  Options for signal (ex. B+ -> D0bar (-> Ks pi+ pi-) K+) events with 
+//  Pythia and EvtGen
+//  Temporarly here, Will be generated automatically from Bu_D0K,KSpipi.dec
+//
+// Event Type:12165100
+//
+// ASCII Decay Descriptor: [B+ -> (D~0 -> (KS0 -> pi+ pi-) pi+ pi-) K+]cc
+
+Generation.EventType                  = 12165100;
+Generation.SampleGenerationTool       = "SignalRepeatedHadronization";
+Generation.SignalRepeatedHadronization.ProductionTool   = "PythiaProduction";
+Generation.SignalRepeatedHadronization.SignalPIDList = { 521, -521 };
+ToolSvc.EvtGenDecay.UserDecayFile     = "$DECFILESROOT/dkfiles/Bu_D0K,KSpipi.dec";
+
+
