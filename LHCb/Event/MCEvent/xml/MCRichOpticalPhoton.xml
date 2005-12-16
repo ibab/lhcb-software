@@ -4,7 +4,7 @@
 <package name="RichEvent">
 
 <!-- **************************************************************************
-  * $Id: MCRichOpticalPhoton.xml,v 1.1 2005-12-06 13:53:35 jonrob Exp $
+  * $Id: MCRichOpticalPhoton.xml,v 1.2 2005-12-16 17:47:36 jonrob Exp $
   *****************************************************************************
   * XML-description of MCRichOpticalPhoton class                              *
   * author: Chris Jones   Christopher.Rob.Jones@cern.ch                       *
@@ -107,8 +107,8 @@
                 <bitfield desc="The Rich detector. Either Rich::Rich1 or Rich::Rich2"                          length="1"  name="rich"     type="Rich::DetectorType" />
                 <bitfield desc="The radiator medium. Either Rich::Aerogel (0), Rich::C4F10(1) or Rich::CF4(2)" length="2"  name="radiator" type="Rich::RadiatorType" />
                 <bitfield desc="Did the photon undergo Rayleigh scattering"                                    length="1"  name="scatteredPhoton"   />
-                <bitfield desc="Hit from a charged track"                                                      length="1"  name="chargedTrack"      />
-                <bitfield desc="Is the photon a background (non-Cherekov) hit"                                 length="1"  name="backgroundHit"     />
+                <bitfield desc="Hit from a charged track hitting the HPD entracne window"                      length="1"  name="chargedTrack"      />
+                <bitfield desc="Is the photon a background (non-Cherenkov) hit"                                length="1"  name="backgroundHit"     />
                 <bitfield desc="Flag to verify if the RICH detector information have been set"                 length="1"  name="richInfoValid"     />
                 <bitfield desc="Flag to verify if the radiator information have been set"                      length="1"  name="radiatorInfoValid" />
         </attribute>

@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!DOCTYPE gdd SYSTEM "gdd.dtd">
+<gdd>
+<package name="RichEvent">
+
+<!-- **************************************************************************
+  * $Id: MCRichDigitHistoryCode.xml,v 1.1 2005-12-16 17:47:36 jonrob Exp $
+  *****************************************************************************
+  * XML-description of MCRichDigitHistoryCode class                           *
+  * author: Chris Jones   Christopher.Rob.Jones@cern.ch                       *
+  * date:   2004-06-23                                                        *
+  ************************************************************************* -->
+
+<class 
+        name             = "MCRichDigitHistoryCode"
+        author           = "Chris Jones   Christopher.Rob.Jones@cern.ch" 
+        desc             = "Bit-packed history code object for RICH data objects" >
+        
+        <constructor 
+                desc     = "Constructor from bit-packed integer" 
+                initList = "m_historyCode(code)" >
+                <arg const="TRUE"  inout="BYVALUE" name="code"   type="unsigned int" />
+                <code/>
+        </constructor>
+
+        <attribute 
+                name = "historyCode"
+                desc = "Bit-packed history information" 
+                init = "0" 
+                type = "bitfield">
+                <bitfield desc="Digit is associated to a signal event MCRichHit"    length="1"  name="signalEvent" />
+                <bitfield desc="Digit is associated to a Prev event MCRichHit"      length="1"  name="prevEvent" />
+                <bitfield desc="Digit is associated to a PrevPrev event MCRichHit"  length="1"  name="prevPrevEvent" />
+                <bitfield desc="Digit is associated to a Next event MCRichHit"      length="1"  name="nextEvent" />
+                <bitfield desc="Digit is associated to a NextNext event MCRichHit"  length="1"  name="nextNextEvent" />
+                <bitfield desc="One of the hits contributing to this pixel come from aerogel Cherenkov radiation" length="1"  name="aerogelHit" />
+                <bitfield desc="One of the hits contributing to this pixel come from C4F10 Cherenkov radiation"   length="1"  name="c4f10Hit" />
+                <bitfield desc="One of the hits contributing to this pixel come from CF4 Cherenkov radiation"     length="1"  name="cf4Hit" />
+                <bitfield desc="One of the hits contributing to this pixel come from a background hit"            length="1"  name="backgroundHit" />
+                <bitfield desc="One of the hits contributing to this pixel come from a charged track hitting the HPD window" length="1"  name="chargedTrack" />
+                <bitfield desc="One of the hits contributing to this pixel undergo rayleigh scattering"           length="1"  name="scatteredHit" />
+        </attribute>
+
+</class>
+
+</package>
+</gdd>

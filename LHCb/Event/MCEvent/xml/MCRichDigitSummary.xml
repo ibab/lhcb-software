@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!DOCTYPE gdd SYSTEM "gdd.dtd">
+<gdd>
+<package name="RichEvent">
+
+<!-- **************************************************************************
+  * $Id: MCRichDigitSummary.xml,v 1.1 2005-12-16 17:47:36 jonrob Exp $                 *
+  *****************************************************************************
+  * XML-description of MCRichDigitSummary class                               *
+  * author: Chris Jones   Christopher.Rob.Jones@cern.ch                       *
+  * date:   2004-06-23                                                        *
+  ************************************************************************* -->
+
+<class 
+        name              = "MCRichDigitSummary"
+        author            = "Chris Jones   Christopher.Rob.Jones@cern.ch" 
+        desc              = "Summary object for MCRichDigits (RichSmartIDs)" 
+        id                = "12409" 
+        location          = "MC/Rich/DigitSummaries" 
+        contObjectTypeDef = "TRUE"
+        stdVectorTypeDef  = "TRUE">
+
+        <base name="ContainedObject"/>
+        &ContainedObject;
+
+        <import name="Kernel/RichSmartID"/>
+        <import name="Event/MCRichDigitHistoryCode"/>
+
+        <attribute 
+                name = "history"
+                desc = "Bit-packed history information" 
+                init = "0" 
+                type = "LHCb::MCRichDigitHistoryCode">
+        </attribute>
+
+        <attribute 
+                name = "richSmartID"
+                desc = "RichSmartID channel identifier" 
+                type = "LHCb::RichSmartID">
+        </attribute>
+
+        <relation 
+                name         = "MCParticle" 
+                desc         = "MCParticle associated to this RichDigit (RichSmartID)" 
+                multiplicity = "1" 
+                type         = "LHCb::MCParticle"
+        />     
+
+</class>
+
+</package>
+</gdd>

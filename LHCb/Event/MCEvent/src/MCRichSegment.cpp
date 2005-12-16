@@ -5,7 +5,7 @@
  *  Implementation file for class : MCRichSegment
  *
  *  CVS Log :-
- *  $Id: MCRichSegment.cpp,v 1.1 2005-12-06 13:53:35 jonrob Exp $
+ *  $Id: MCRichSegment.cpp,v 1.2 2005-12-16 17:47:36 jonrob Exp $
  *
  *  @author  Chris Jones  Christopher.Rob.Jones@cern.ch
  *  @date    2004-03-23
@@ -21,7 +21,6 @@
 Gaudi::XYZPoint
 LHCb::MCRichSegment::bestPoint( const double fraction ) const
 {
-
   // Check data is OK
   if ( trajectoryPoints().size() < 2 ) 
   {
@@ -32,8 +31,8 @@ LHCb::MCRichSegment::bestPoint( const double fraction ) const
   // If only two state points, then calculation is simple
   if ( 2 == trajectoryPoints().size() ) 
   {
-    // root does not have appropriate operator at the moment, so must do by hand
-    //return exitPoint()*fraction + entryPoint()*(1-fraction);
+    // CRJ _ Need to decide which way is neatest ...
+    //return exitPoint()*fraction + Gaudi::XYZVector(entryPoint()*(1-fraction));
     return Gaudi::XYZPoint( exitPoint().x()*fraction + entryPoint().x()*(1-fraction),
                             exitPoint().y()*fraction + entryPoint().y()*(1-fraction),
                             exitPoint().z()*fraction + entryPoint().z()*(1-fraction) );
@@ -58,8 +57,8 @@ LHCb::MCRichSegment::bestPoint( const double fraction ) const
       // finally, interpolate between the two points either side of required z
       const double stepLength = (*iS).z() - (*iF).z();
       const double firstF = ( stepLength>0 ? ((*iS).z()-zPoint)/stepLength : 0 );
-      // root does not have appropriate operator at the moment, so must do by hand
-      // return firstF*(*iF) + (1-firstF)*(*iS);
+      // CRJ _ Need to decide which way is neatest ...
+      // return firstF*(*iF) + Gaudi::XYZVector((1-firstF)*(*iS));
       return Gaudi::XYZPoint ( firstF*(*iF).x() + (1-firstF)*(*iS).x(),
                                firstF*(*iF).y() + (1-firstF)*(*iS).y(),
                                firstF*(*iF).z() + (1-firstF)*(*iS).z() );

@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!DOCTYPE gdd SYSTEM "gdd.dtd">
+<gdd>
+<package name="RichEvent">
+
+<!-- **************************************************************************
+  * $Id: MCRichDigit.xml,v 1.1 2005-12-16 17:47:36 jonrob Exp $
+  *****************************************************************************
+  * XML-description of MCRichDigit class                                      *
+  * author: Chris Jones   Christopher.Rob.Jones@cern.ch                       *
+  * date:   2004-06-23                                                        *
+  ************************************************************************* -->
+
+<class 
+        name             = "MCRichDigit"
+        author           = "Chris Jones   Christopher.Rob.Jones@cern.ch" 
+        desc             = "Monte Carlo Rich Digitisation object" 
+        id               = "12408" 
+        location         = "MC/Rich/Digits"
+        keyedContTypeDef = "TRUE"   
+        stdVectorTypeDef = "TRUE">
+
+        <base name="KeyedObject&lt;LHCb::RichSmartID&gt;"/>
+        &KeyedContainer;
+        
+        <import name="GaudiKernel/ObjectVector"/>
+        <import name="Kernel/RichSmartID"/>
+        <import name="Event/MCRichHit"/>
+        <import name="Event/MCRichDigitHistoryCode"/>
+            
+        <relation 
+                name         = "hits" 
+                desc         = "MCRichHits contributing to this digitisation object" 
+                multiplicity = "N" 
+                type         = "LHCb::MCRichHit"
+        />   
+
+        <attribute 
+                name = "history"
+                desc = "Bit-packed history information" 
+                init = "0" 
+                type = "LHCb::MCRichDigitHistoryCode">
+        </attribute>
+
+        <method 
+                name  = "richSmartID" 
+                const = "TRUE" 
+                desc  = "Get the channel identifier for this digit (RichSmartID)" 
+                type  = "LHCb::RichSmartID">
+                <code>
+                    return LHCb::RichSmartID( key() );
+                </code>
+        </method>
+
+</class>
+
+</package>
+</gdd>
