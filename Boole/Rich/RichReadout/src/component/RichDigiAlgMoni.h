@@ -1,4 +1,4 @@
-// $Id: RichDigiAlgMoni.h,v 1.3 2005-10-13 15:26:47 jonrob Exp $
+// $Id: RichDigiAlgMoni.h,v 1.4 2005-12-16 15:13:33 jonrob Exp $
 #ifndef RICHMONITOR_RICHDIGIALGMONI_H
 #define RICHMONITOR_RICHDIGIALGMONI_H 1
 
@@ -28,9 +28,6 @@
 #include "AIDA/IHistogram1D.h"
 #include "AIDA/IHistogram2D.h"
 
-// CLHEP
-#include "CLHEP/Units/PhysicalConstants.h"
-
 // GSL
 #include "gsl/gsl_math.h"
 
@@ -40,6 +37,9 @@
 
 // temporary histogramming numbers
 #include "RichDetParams.h"
+
+// namespaces
+using namespace LHCb; ///< General LHCb namespace
 
 /** @class RichDigiAlgMoni RichDigiAlgMoni.h RichDigiQC/RichDigiAlgMoni.h
  *
@@ -165,7 +165,7 @@ inline double RichDigiAlgMoni::mass( const MCParticle * mcPart )
 
 inline double RichDigiAlgMoni::momentum( const MCParticle * mcPart )
 {
-  return ( mcPart ? mcPart->momentum().vect().mag() : 0 );
+  return ( mcPart ? mcPart->momentum().P() : 0 );
 }
 
 inline double RichDigiAlgMoni::mcBeta( const MCParticle * mcPart )

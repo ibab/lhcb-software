@@ -5,7 +5,7 @@
  *  Implementation file for RICH Digitisation Quality Control algorithm : RichDigitQC
  *
  *  CVS Log :-
- *  $Id: RichDigitQC.cpp,v 1.24 2005-11-18 16:49:18 jonrob Exp $
+ *  $Id: RichDigitQC.cpp,v 1.25 2005-12-16 15:12:34 jonrob Exp $
  *
  *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
  *  @date   2003-09-08
@@ -87,7 +87,7 @@ StatusCode RichDigitQC::execute()
     const Rich::DetectorType rich = mcDig->key().rich();
 
     // count in each HPD for this event
-    ++(nHPD[rich])[mcDig->key().pdID()];
+    ++(nHPD[rich])[mcDig->key().hpdID()];
 
     // Location of parent MCHit
     const std::string location = mchitLocation( mcDig );
@@ -215,8 +215,8 @@ StatusCode RichDigitQC::finalize()
     {
       const RichDAQ::HPDHardwareID hID ( m_detNumTool->hardwareID( (*iHPD).first ) );
       const RichDAQ::Level1ID l1ID     ( m_detNumTool->level1ID( (*iHPD).first ) );
-      const HepPoint3D hpdGlo          ( m_smartIDs->hpdPosition( (*iHPD).first ) );
-      const HepPoint3D hpdLoc          ( m_smartIDs->globalToPDPanel( hpdGlo ) );
+      const Gaudi::XYZPoint hpdGlo          ( m_smartIDs->hpdPosition( (*iHPD).first ) );
+      const Gaudi::XYZPoint hpdLoc          ( m_smartIDs->globalToPDPanel( hpdGlo ) );
       totL1[l1ID] += (*iHPD).second;
       totDet      += (*iHPD).second;
       if ( (*iHPD).second > maxOcc ) { maxOcc = (*iHPD).second; maxHPD = hID; }
@@ -225,8 +225,8 @@ StatusCode RichDigitQC::finalize()
       {
         plot2D( hpdLoc.x(), hpdLoc.y(), RICH+" : HPD hardware ID layout", -800, 800, -600, 600, 100, 100, hID.dataValue() );
         plot2D( hpdLoc.x(), hpdLoc.y(), RICH+" : Level1 ID layout", -800, 800, -600, 600, 100, 100, l1ID.dataValue() );
-        plot2D( hpdLoc.x(), hpdLoc.y(), RICH+" : SmartID Row layout", -800, 800, -600, 600, 100, 100, (*iHPD).first.pdRow() );
-        plot2D( hpdLoc.x(), hpdLoc.y(), RICH+" : SmartID Col layout", -800, 800, -600, 600, 100, 100, (*iHPD).first.pdCol() );
+        plot2D( hpdLoc.x(), hpdLoc.y(), RICH+" : SmartID Row layout", -800, 800, -600, 600, 100, 100, (*iHPD).first.hpdNumInCol() );
+        plot2D( hpdLoc.x(), hpdLoc.y(), RICH+" : SmartID Col layout", -800, 800, -600, 600, 100, 100, (*iHPD).first.hpdCol() );
       }
       debug() << "    HPD " << (*iHPD).first << " hardID "
               << format("%3i",hID.dataValue()) << " : L1 board" << format("%3i",l1ID.dataValue()) << endreq

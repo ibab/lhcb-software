@@ -1,4 +1,4 @@
-// $Id: RichDigiDataObjVerifier.h,v 1.7 2005-09-25 09:57:22 jonrob Exp $
+// $Id: RichDigiDataObjVerifier.h,v 1.8 2005-12-16 15:12:34 jonrob Exp $
 #ifndef RICHDIGIQC_RICHDIGIDATOBJVERIFIER_H
 #define RICHDIGIQC_RICHDIGIDATOBJVERIFIER_H 1
 
@@ -11,7 +11,7 @@
 #include "GaudiKernel/SmartDataPtr.h"
 
 // Event model
-#include "Event/RichDigit.h"
+//#include "Event/RichDigit.h"
 #include "Event/MCRichDigit.h"
 #include "Event/MCRichHit.h"
 
@@ -23,9 +23,11 @@
 #include "AIDA/IHistogram1D.h"
 #include "AIDA/IHistogram2D.h"
 
-// CLHEP
-#include "CLHEP/Units/PhysicalConstants.h"
+// Constants
+#include "Kernel/PhysicalConstants.h"
 
+// LHCb namespace
+using namespace LHCb;
 
 /** @class RichDigiDataObjVerifier RichDigiDataObjVerifier.h RichDigiQC/RichDigiDataObjVerifier.h
  *

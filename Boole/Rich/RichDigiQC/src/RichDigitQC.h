@@ -5,7 +5,7 @@
  *  Header file for RICH Digitisation Quality Control algorithm : RichDigitQC
  *
  *  CVS Log :-
- *  $Id: RichDigitQC.h,v 1.16 2005-11-15 12:58:38 jonrob Exp $
+ *  $Id: RichDigitQC.h,v 1.17 2005-12-16 15:12:34 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   2003-09-08
@@ -25,8 +25,6 @@
 #include "RichKernel/RichHistoAlgBase.h"
 
 // from Gaudi
-#include "GaudiKernel/IHistogramSvc.h"
-#include "GaudiKernel/SmartDataPtr.h"
 #include "GaudiKernel/AlgFactory.h"
 
 // Event model
@@ -38,13 +36,6 @@
 #include "RichKernel/RichStatDivFunctor.h"
 #include "RichKernel/RichPoissonEffFunctor.h"
 
-// Histogramming
-#include "AIDA/IHistogram1D.h"
-#include "AIDA/IHistogram2D.h"
-
-// CLHEP
-#include "CLHEP/Units/PhysicalConstants.h"
-
 // RichKernel
 #include "RichKernel/RichMap.h"
 #include "RichKernel/RichHashMap.h"
@@ -53,6 +44,12 @@
 #include "RichKernel/IRichDetNumberingTool.h"
 #include "RichKernel/IRichSmartIDTool.h"
 #include "RichKernel/IRichMCTruthTool.h"
+
+// Constants
+#include "Kernel/PhysicalConstants.h"
+
+// LHCb namespace
+using namespace LHCb;
 
 /** @class RichDigitQC RichDigitQC.h RichDigiQC/RichDigitQC.h
  *
@@ -99,13 +96,13 @@ private: // data
   unsigned int m_evtC; 
 
   /// L1 occupancy counter
-  typedef RichHashMap< const RichDAQ::Level1ID, unsigned int > L1Counter;
+  typedef Rich::HashMap< const RichDAQ::Level1ID, unsigned int > L1Counter;
 
   /// Counter for hits in each HPD
-  typedef RichHashMap< const RichSmartID, unsigned int > HPDCounter;
+  typedef Rich::HashMap< const RichSmartID, unsigned int > HPDCounter;
   HPDCounter m_nHPD[Rich::NRiches]; ///< Tally for HPD occupancy, in each RICH
 
-  typedef RichHashMap< std::string, unsigned int > SpillCount;
+  typedef Rich::HashMap< std::string, unsigned int > SpillCount;
   typedef std::vector< SpillCount > SpillDetCount;
 
   /// Number of digitised hits per RICH detector and event location
@@ -118,7 +115,7 @@ private: // data
   std::vector< unsigned int > m_bkgHits;
 
   /// List of event locations to look for MCRichHits in
-  typedef RichHashMap< std::string, bool > EventLocations;
+  typedef Rich::HashMap< std::string, bool > EventLocations;
   EventLocations m_evtLocs;
 
 };

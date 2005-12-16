@@ -1,4 +1,4 @@
-// $Id: RichDigiDataObjVerifier.cpp,v 1.8 2005-06-18 11:27:15 jonrob Exp $
+// $Id: RichDigiDataObjVerifier.cpp,v 1.9 2005-12-16 15:12:34 jonrob Exp $
 
 // local
 #include "RichDigiDataObjVerifier.h"
@@ -50,9 +50,10 @@ void RichDigiDataObjVerifier::printHitsAt( const std::string & location ) const
     debug() << "Successfully located " << mcHits->size()
             << " MCRichHits at " << location << endreq;
     for ( MCRichHits::const_iterator iHit = mcHits->begin();
-          iHit != mcHits->end(); ++iHit ) {
-      debug() << "MCRichHit key= " << (*iHit)->key() << endreq;
-      MCParticle * mcPart = (*iHit)->mcParticle();
+          iHit != mcHits->end(); ++iHit ) 
+    {
+      debug() << "MCRichHit " << endreq;
+      const MCParticle * mcPart = (*iHit)->mcParticle();
       if ( mcPart ) {
         debug() << "  Parent MCParticle key= " << mcPart->key() << endreq;
       } else {
@@ -135,16 +136,17 @@ StatusCode RichDigiDataObjVerifier::execute() {
             imcDigit != richMcDigits->end(); ++imcDigit ) {
         debug() << "MCRichDigit " << (*imcDigit)->key() << endreq;
         debug() << "  MCRichHits(" << (*imcDigit)->hits().size() << ") keys= ";
-        for ( SmartRefVector<MCRichHit>::const_iterator iHit = (*imcDigit)->hits().begin();
-              iHit != (*imcDigit)->hits().end(); ++iHit ) {
-          debug() << (long)(*iHit)->key() << " ";
-        }
+        //for ( SmartRefVector<MCRichHit>::const_iterator iHit = (*imcDigit)->hits().begin();
+        //      iHit != (*imcDigit)->hits().end(); ++iHit ) {
+        //  debug() << (long)(*iHit)->key() << " ";
+        //}
         debug() << endreq;
       }
     }
   } // end MCRichDigit print
 
     // RichDigits
+  /*
   if ( m_bdDigits ) {
     if ( !exist<RichDigits>(RichDigitLocation::Default) ) {
       Warning("Cannot locate RichDigits at "+RichDigitLocation::Default);
@@ -176,9 +178,10 @@ StatusCode RichDigiDataObjVerifier::execute() {
     // Compare to MCRichDigits
 
   } // end RichDigit print
+  */
 
   return StatusCode::SUCCESS;
-};
+}
 
 //  Finalize
 StatusCode RichDigiDataObjVerifier::finalize() {

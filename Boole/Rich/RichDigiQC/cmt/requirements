@@ -2,7 +2,7 @@
 # Created    : 2002-06-13
 # Maintainer : Chris Jones
 #============================================================================
-# $Id: requirements,v 1.17 2005-10-13 14:55:56 jonrob Exp $
+# $Id: requirements,v 1.18 2005-12-16 15:12:34 jonrob Exp $
 #============================================================================
 
 package           RichDigiQC
@@ -18,8 +18,9 @@ set RICHDIGIQCOPTS $(RICHDIGIQCROOT)/options
 
 # Used packages. Specify the version, * at the end specifies 'any revision'
 #============================================================================
-use RichEvent         v*    Event
+use MCEvent           v*    Event
 use DAQEvent          v*    Event
+use RichKernel        v*    Rich
 
 # Component library building rule
 #============================================================================

@@ -5,7 +5,7 @@
  *  Header file for RICH digitisation algorithm : RichSimpleFrontEndResponse
  *
  *  CVS Log :-
- *  $Id: RichSimpleFrontEndResponse.h,v 1.3 2005-10-13 15:26:47 jonrob Exp $
+ *  $Id: RichSimpleFrontEndResponse.h,v 1.4 2005-12-16 15:13:33 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @author Alex Howard   a.s.howard@ic.ac.uk
@@ -46,8 +46,11 @@
 #include "Event/MCRichSummedDeposit.h"
 #include "Event/MCRichDigit.h"
 
-// CLHEP
-#include "CLHEP/Random/Random.h"
+// Constants
+#include "Kernel/PhysicalConstants.h"
+
+// LHCb namespace
+using namespace LHCb;
 
 /** @class RichSimpleFrontEndResponse RichSimpleFrontEndResponse.h
  *  

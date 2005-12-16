@@ -5,7 +5,7 @@
  *  Implementation file for RICH digitisation algorithm : RichDetailedFrontEndResponse
  *
  *  CVS Log :-
- *  $Id: RichDetailedFrontEndResponse.cpp,v 1.4 2005-10-18 12:43:06 jonrob Exp $
+ *  $Id: RichDetailedFrontEndResponse.cpp,v 1.5 2005-12-16 15:13:33 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @author Alex Howard   a.s.howard@ic.ac.uk
@@ -55,7 +55,7 @@ StatusCode RichDetailedFrontEndResponse::initialize()
   // create a collection of all pixels
   const IRichSmartIDTool * smartIDs;
   acquireTool( "RichSmartIDTool" , smartIDs, 0, true );
-  const RichSmartID::Collection & pixels = smartIDs->readoutChannelList();
+  const RichSmartID::Vector & pixels = smartIDs->readoutChannelList();
   actual_base = theRegistry.GetNewBase( pixels );
   releaseTool( smartIDs );
 
@@ -129,7 +129,7 @@ StatusCode RichDetailedFrontEndResponse::Analog()
       RichTimeSample & ts = tscache.back().second;
 
       // Retrieve vector of SmartRefs to contributing deposits (non-const)
-      SmartRefVector<MCRichDeposit>& deposits = (*iSumDep)->deposits();
+      const SmartRefVector<MCRichDeposit> & deposits = (*iSumDep)->deposits();
 
       for ( SmartRefVector<MCRichDeposit>::const_iterator iDep
              = deposits.begin(); iDep != deposits.end(); ++iDep ) 
@@ -206,15 +206,15 @@ StatusCode RichDetailedFrontEndResponse::Digital()
         mcRichDigits->insert( newDigit, ((*tsc_it).first)->key().pixelID() );
 
         // Create MCRichHit links
-        SmartRefVector<MCRichDeposit> & deps = ((*tsc_it).first)->deposits();
-        for ( SmartRefVector<MCRichDeposit>::iterator iDep = deps.begin();
+        const SmartRefVector<MCRichDeposit> & deps = ((*tsc_it).first)->deposits();
+        for ( SmartRefVector<MCRichDeposit>::const_iterator iDep = deps.begin();
               iDep != deps.end(); ++iDep )
         {
           newDigit->addToHits( (*iDep)->parentHit() );
         }
 
         // Store history info
-        newDigit->setHistoryCode( ((*tsc_it).first)->historyCode() );
+        newDigit->setHistory( ((*tsc_it).first)->history() );
 
       }
 

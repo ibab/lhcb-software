@@ -4,6 +4,9 @@
 ! Purpose     : Rich Digitisation
 !-----------------------------------------------------------------------------
 
+! 2005-12-16 - Chris Jones
+ - Update for LHCb v20r0
+
 !======================== RichReadout v1r14 2005-11-18 =======================
 ! 2005-11-15 - Chris Jones
  - Adapt to new RichDAQ tools

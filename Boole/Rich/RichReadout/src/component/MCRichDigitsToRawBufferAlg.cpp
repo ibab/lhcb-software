@@ -5,7 +5,7 @@
  *  Implementation file for RICH DAQ algorithm : MCRichDigitsToRawBufferAlg
  *
  *  CVS Log :-
- *  $Id: MCRichDigitsToRawBufferAlg.cpp,v 1.4 2005-11-15 13:29:56 jonrob Exp $
+ *  $Id: MCRichDigitsToRawBufferAlg.cpp,v 1.5 2005-12-16 15:13:33 jonrob Exp $
  *
  *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
  *  @date   2003-11-09
@@ -14,6 +14,9 @@
 
 // local
 #include "MCRichDigitsToRawBufferAlg.h"
+
+// namespaces
+using namespace LHCb; ///< General LHCb namespace
 
 //-----------------------------------------------------------------------------
 
@@ -87,7 +90,7 @@ StatusCode MCRichDigitsToRawBufferAlg::execute()
     RichDAQ::PDMap & PDs = L1Data[ L1ID ];
 
     // Finally, insert this pixel into correct place
-    PDs[ (*iDigit)->key().pdID() ].push_back( (*iDigit)->key() );
+    PDs[ (*iDigit)->key().hpdID() ].push_back( (*iDigit)->key() );
 
   }
 

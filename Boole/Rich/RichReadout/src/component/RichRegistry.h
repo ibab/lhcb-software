@@ -9,7 +9,10 @@
 #include "RichBase.h"
 
 //#include "Kernel/RichSmartID.h"
-class RichSmartID;
+namespace LHCb
+{
+  class RichSmartID;
+}
 
 class RichRegistry {
 
@@ -19,7 +22,7 @@ public:
 
   ~RichRegistry() { cleanUp(); }
 
-  static const RichBase* GetNewBase( const std::vector<RichSmartID> & pixels );
+  static const RichBase* GetNewBase( const std::vector<LHCb::RichSmartID> & pixels );
 
   static const RichBase* GetBase();
 
@@ -36,7 +39,7 @@ private: // data
 
 };
 
-inline const RichBase * RichRegistry::GetNewBase( const std::vector<RichSmartID> & pixels )
+inline const RichBase * RichRegistry::GetNewBase( const std::vector<LHCb::RichSmartID> & pixels )
 {
   RichBase * theBase = new RichBase();
   theBase->upDate(pixels);

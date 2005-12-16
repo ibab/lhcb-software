@@ -5,7 +5,7 @@
  *  Header file for RICH digitisation algorithm : RichSignal
  *
  *  CVS Log :-
- *  $Id: RichSignal.h,v 1.4 2005-10-18 12:43:06 jonrob Exp $
+ *  $Id: RichSignal.h,v 1.5 2005-12-16 15:13:33 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @author Alex Howard   a.s.howard@ic.ac.uk
@@ -31,7 +31,7 @@
 #include "Event/MCRichSummedDeposit.h"
 
 // from CLHEP
-#include "CLHEP/Geometry/Point3D.h"
+#include "Kernel/Point3DTypes.h"
 
 // interfaces
 #include "RichKernel/IRichSmartIDTool.h"
@@ -39,6 +39,9 @@
 
 // kernel
 #include "Kernel/ParticleID.h"
+
+// LHCb namespace
+using namespace LHCb;
 
 /** @class RichSignal RichSignal.h
  *  

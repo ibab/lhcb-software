@@ -4,7 +4,7 @@
 <package name="RichEvent">
 
 <!-- **************************************************************************
-  * $Id: MCRichSummedDeposit.xml,v 1.2 2005-10-13 15:26:47 jonrob Exp $
+  * $Id: MCRichSummedDeposit.xml,v 1.3 2005-12-16 15:13:33 jonrob Exp $
   *****************************************************************************
   * XML-description of MCRichSummedDeposit class                              *
   * author: Chris Jones   Christopher.Rob.Jones@cern.ch                       *
@@ -20,12 +20,13 @@
         keyedContTypeDef = "TRUE" 
         stdVectorTypeDef = "TRUE">
 
-        <base name="KeyedObject&lt;RichSmartID&gt;"/>
+        <base name="KeyedObject&lt;LHCb::RichSmartID&gt;"/>
         &KeyedContainer;
           
         <import name="Kernel/RichSmartID"/>
         <import name="Event/MCRichDeposit"/>
-            
+        <import name="Event/MCRichDigitHistoryCode"/>
+
         <attribute 
                 name = "summedEnergy"
                 desc = "Combined energy of multiple deposits within a single pixel" 
@@ -34,28 +35,17 @@
         />
 
         <attribute 
-                name = "historyCode"
+                name = "history"
                 desc = "Bit-packed history information" 
                 init = "0" 
-                type = "bitfield">
-                <bitfield desc="SummedDeposit is associated to a signal event MCRichHit"    length="1" name="signalEvent" />
-                <bitfield desc="SummedDeposit is associated to a Prev event MCRichHit"      length="1" name="prevEvent" />
-                <bitfield desc="SummedDeposit is associated to a PrevPrev event MCRichHit"  length="1" name="prevPrevEvent" />
-                <bitfield desc="SummedDeposit is associated to a Next event MCRichHit"      length="1" name="nextEvent" />
-                <bitfield desc="SummedDeposit is associated to a NextNext event MCRichHit"  length="1" name="nextNextEvent" />
-                <bitfield desc="One of the hits contributing to this pixel come from aerogel Cherenkov radiation" length="1"  name="aerogelHit" />
-                <bitfield desc="One of the hits contributing to this pixel come from C4F10 Cherenkov radiation"   length="1"  name="c4f10Hit" />
-                <bitfield desc="One of the hits contributing to this pixel come from CF4 Cherenkov radiation"     length="1"  name="cf4Hit" />
-                <bitfield desc="One of the hits contributing to this pixel come from a background hit"         length="1"  name="backgroundHit" />
-                <bitfield desc="One of the hits contributing to this pixel come from a charged track hitting the HPD window" length="1"  name="chargedTrack" />
-                <bitfield desc="One of the hits contributing to this pixel undergo rayleigh scattering"        length="1"  name="scatteredHit" />
+                type = "LHCb::MCRichDigitHistoryCode">
         </attribute>
 
         <relation 
                 name         = "deposits"
                 desc         = "MCRichDesposits contributing to this summed energy deposit" 
                 multiplicity = "N"  
-                type         = "MCRichDeposit"
+                type         = "LHCb::MCRichDeposit"
         />
          
         <method 

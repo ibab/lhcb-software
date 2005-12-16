@@ -1,4 +1,4 @@
-// $Id: RichDigiAlgMoni.cpp,v 1.2 2005-10-18 12:43:06 jonrob Exp $
+// $Id: RichDigiAlgMoni.cpp,v 1.3 2005-12-16 15:13:33 jonrob Exp $
 
 // local
 #include "RichDigiAlgMoni.h"
@@ -306,13 +306,13 @@ StatusCode RichDigiAlgMoni::execute()
         iMcDigit != mcRichDigits->end(); ++iMcDigit ) {
 
     const RichSmartID id = (*iMcDigit)->key();
-    const HepPoint3D point = m_smartIDTool->globalPosition( id );
+    const Gaudi::XYZPoint point = m_smartIDTool->globalPosition( id );
 
     // increment digit count
     ++digMult[id.rich()];
 
     // increment PD multiplicity count
-    ++pdMult[id.pdID()];
+    ++pdMult[id.hpdID()];
 
     // Position plots
     m_pdDigsXGlobal[id.rich()]->fill( point.x() );
@@ -325,8 +325,9 @@ StatusCode RichDigiAlgMoni::execute()
     m_pdCloseUpYZ[id.rich()]->fill( point.z(), point.y() );
 
     // loop over all hits associated to the digit
-    SmartRefVector<MCRichHit>& mcHits = (*iMcDigit)->hits();
-    if ( mcHits.empty() ) {
+    const SmartRefVector<MCRichHit>& mcHits = (*iMcDigit)->hits();
+    if ( mcHits.empty() ) 
+    {
       warning() << "MCRichDigit " << (int)(*iMcDigit)->key()
                 << " has no MCRichHits..." << endreq;
     }
@@ -336,19 +337,21 @@ StatusCode RichDigiAlgMoni::execute()
 
     bool thisDigCounted = false;
     for ( SmartRefVector<MCRichHit>::const_iterator iHit = mcHits.begin();
-          iHit != mcHits.end(); ++iHit ) {
+          iHit != mcHits.end(); ++iHit ) 
+    {
 
       // Compare digit/hit
       m_digiErrX[id.rich()]->fill( point.x() - (*iHit)->entry().x() );
       m_digiErrY[id.rich()]->fill( point.y() - (*iHit)->entry().y() );
       m_digiErrZ[id.rich()]->fill( point.z() - (*iHit)->entry().z() );
-      m_digiErrR[id.rich()]->fill( point.distance( (*iHit)->entry() ) );
+      m_digiErrR[id.rich()]->fill( sqrt((point-(*iHit)->entry()).mag2()) );
 
       // Count beta=1 PEs
       countNPE( ckPhotMapDig, *iHit );
 
       // count digits from charged tracks
-      if ( !thisDigCounted && (*iHit)->chargedTrack() ) {
+      if ( !thisDigCounted && (*iHit)->chargedTrack() ) 
+      {
         thisDigCounted = true;
         ++nChargedTracks[id.rich()];
       }
@@ -445,7 +448,7 @@ StatusCode RichDigiAlgMoni::execute()
       countNPE( ckPhotMapHit, *iHit );
 
       // Plot hit positions
-      HepPoint3D & point = (*iHit)->entry();
+      const Gaudi::XYZPoint & point = (*iHit)->entry();
       m_mcHitsXGlobal[rich]->fill( point.x() );
       m_mcHitsYGlobal[rich]->fill( point.y() );
       m_mcHitsZGlobal[rich]->fill( point.z() );

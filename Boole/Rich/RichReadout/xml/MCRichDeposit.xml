@@ -4,7 +4,7 @@
 <package name="RichEvent">
 
 <!-- **************************************************************************
-  * $Id: MCRichDeposit.xml,v 1.2 2005-10-13 15:26:47 jonrob Exp $
+  * $Id: MCRichDeposit.xml,v 1.3 2005-12-16 15:13:33 jonrob Exp $
   *****************************************************************************
   * XML-description of MCRichDeposit class                                    *
   * author: Chris Jones   Christopher.Rob.Jones@cern.ch                       *
@@ -40,7 +40,7 @@
         />
 
         <attribute 
-                name = "historyCode"
+                name = "history"
                 desc = "Bit-packed history information" 
                 init = "0" 
                 type = "bitfield">
@@ -53,8 +53,8 @@
            
         <relation 
                 name = "parentHit" 
-                desc = "Reference to parent MCRichHit" 
-                type = "MCRichHit"
+                desc = "Parent MCRichHit" 
+                type = "LHCb::MCRichHit"
         />
 </class>
 

@@ -18,8 +18,6 @@
 #include "GaudiKernel/ObjectList.h"
 #include "GaudiKernel/ObjectVector.h"
 
-//#include "RichPixel.h"
-//#include "RichRegistry.h"
 class RichPixel;
 class RichRegistry;
 
@@ -80,15 +78,15 @@ public:
 
   RichBase& operator=( const RichBase& );
 
-  void upDate( const std::vector<RichSmartID> & pixelList );
+  void upDate( const std::vector<LHCb::RichSmartID> & pixelList );
 
   void cleanUp();
 
   long size() const { return m_activePixels.size(); }
 
-  RichPixelProperties* DecodeUniqueID(const RichSmartID id) const;
+  RichPixelProperties* DecodeUniqueID(const LHCb::RichSmartID id) const;
 
-  typedef RichHashMap< RichSmartID::KeyType, RichPixelProperties*> activemap;
+  typedef Rich::HashMap< LHCb::RichSmartID::KeyType, RichPixelProperties*> activemap;
 
   activemap::const_iterator begin() const;
 
@@ -123,7 +121,7 @@ inline RichBase& RichBase::operator=( const RichBase & b )
   return *this;
 }
 
-inline RichPixelProperties* RichBase::DecodeUniqueID ( const RichSmartID id ) const
+inline RichPixelProperties* RichBase::DecodeUniqueID ( const LHCb::RichSmartID id ) const
 {
   activemap::const_iterator it = m_activePixels.find( id );
   return ( it != m_activePixels.end() ? (*it).second : 0 );

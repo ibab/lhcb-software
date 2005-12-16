@@ -5,7 +5,7 @@
  *  Implementation file for RICH digitisation algorithm : RichSignal
  *
  *  CVS Log :-
- *  $Id: RichSignal.cpp,v 1.4 2005-10-18 12:43:06 jonrob Exp $
+ *  $Id: RichSignal.cpp,v 1.5 2005-12-16 15:13:33 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @author Alex Howard   a.s.howard@ic.ac.uk
@@ -183,23 +183,29 @@ StatusCode RichSignal::ProcessEvent( const std::string & hitLoc,
       // summed energy
       sumDep->setSummedEnergy( sumDep->summedEnergy() + dep->energy() );
 
+      // copy history to local object to update
+      MCRichDigitHistoryCode hist = sumDep->history();
+
       // store type event type
-      if      (  0 == eventType ) { dep->setSignalEvent(true);   sumDep->setSignalEvent(true);   }
-      else if ( -1 == eventType ) { dep->setPrevEvent(true);     sumDep->setPrevEvent(true);     }
-      else if ( -2 == eventType ) { dep->setPrevPrevEvent(true); sumDep->setPrevPrevEvent(true); }
-      else if (  1 == eventType ) { dep->setNextEvent(true);     sumDep->setNextEvent(true);     }
-      else if (  2 == eventType ) { dep->setNextNextEvent(true); sumDep->setNextNextEvent(true); }
+      if      (  0 == eventType ) { dep->setSignalEvent(true);   hist.setSignalEvent(true);   }
+      else if ( -1 == eventType ) { dep->setPrevEvent(true);     hist.setPrevEvent(true);     }
+      else if ( -2 == eventType ) { dep->setPrevPrevEvent(true); hist.setPrevPrevEvent(true); }
+      else if (  1 == eventType ) { dep->setNextEvent(true);     hist.setNextEvent(true);     }
+      else if (  2 == eventType ) { dep->setNextNextEvent(true); hist.setNextNextEvent(true); }
 
       // store history in summed deposit
       if ( !m_truth->isBackground( *iHit ) ) 
       {
-        if      ( Rich::Aerogel == (*iHit)->radiator() ) { sumDep->setAerogelHit(true); }
-        else if ( Rich::C4F10   == (*iHit)->radiator() ) { sumDep->setC4f10Hit(true);   }
-        else if ( Rich::CF4     == (*iHit)->radiator() ) { sumDep->setCf4Hit(true);     }
+        if      ( Rich::Aerogel == (*iHit)->radiator() ) { hist.setAerogelHit(true); }
+        else if ( Rich::C4F10   == (*iHit)->radiator() ) { hist.setC4f10Hit(true);   }
+        else if ( Rich::CF4     == (*iHit)->radiator() ) { hist.setCf4Hit(true);     }
       } 
-      if ( (*iHit)->scatteredPhoton() ) { sumDep->setScatteredHit(true);  }
-      if ( (*iHit)->chargedTrack()    ) { sumDep->setChargedTrack(true);  }
-      if ( (*iHit)->backgroundHit()   ) { sumDep->setBackgroundHit(true); }
+      if ( (*iHit)->scatteredPhoton() ) { hist.setScatteredHit(true);  }
+      if ( (*iHit)->chargedTrack()    ) { hist.setChargedTrack(true);  }
+      if ( (*iHit)->backgroundHit()   ) { hist.setBackgroundHit(true); }
+
+      // Set history in sum dep
+      sumDep->setHistory( hist );
 
     } // active hit if
 

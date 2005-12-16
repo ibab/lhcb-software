@@ -5,7 +5,7 @@
  *  Implementation file for RICH digitisation algorithm : RichSimpleFrontEndResponse
  *
  *  CVS Log :-
- *  $Id: RichSimpleFrontEndResponse.cpp,v 1.3 2005-10-18 12:43:06 jonrob Exp $
+ *  $Id: RichSimpleFrontEndResponse.cpp,v 1.4 2005-12-16 15:13:33 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @author Alex Howard   a.s.howard@ic.ac.uk
@@ -48,7 +48,7 @@ StatusCode RichSimpleFrontEndResponse::initialize()
   // create a collection of all pixels
   const IRichSmartIDTool * smartIDs;
   acquireTool( "RichSmartIDTool" , smartIDs, 0, true );
-  const RichSmartID::Collection & pixels = smartIDs->readoutChannelList();
+  const RichSmartID::Vector & pixels = smartIDs->readoutChannelList();
   actual_base = theRegistry.GetNewBase( pixels );
   releaseTool( smartIDs );
 
@@ -112,7 +112,7 @@ StatusCode RichSimpleFrontEndResponse::Simple() {
       (*iSumDep)->setSummedEnergy( summedEnergy );
 
       // Store history info
-      newDigit->setHistoryCode( (*iSumDep)->historyCode() );
+      newDigit->setHistory( (*iSumDep)->history() );
 
       int value = int((summedEnergy+m_Sigma*m_gaussRndm()/1000)*m_Calibration) + m_Baseline;
       if ( !newDigit->hits().empty() && value >= m_AdcCut ) {

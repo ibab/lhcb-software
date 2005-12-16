@@ -19,7 +19,7 @@ public:
   //Basic constructor, takes a base and an index
   RichPixel(const RichPixelProperties* p) : property(p){}
 
-  RichPixel( const RichSmartID sid )
+  RichPixel( const LHCb::RichSmartID sid )
     : property ( 0 )
   {
     const RichBase* MyBase = NULL;
@@ -28,7 +28,7 @@ public:
   }
 
   RichPixel( const RichBase * b,
-             const RichSmartID sid )
+             const LHCb::RichSmartID sid )
     : property ( b->DecodeUniqueID( sid ) )
   { }
   

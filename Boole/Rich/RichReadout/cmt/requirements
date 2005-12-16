@@ -2,11 +2,11 @@
 # Created    : 11/05/2003
 # Maintainer : Christopher Rob Jones
 #============================================================================
-# $Id: requirements,v 1.29 2005-11-18 10:29:53 cattanem Exp $
+# $Id: requirements,v 1.30 2005-12-16 15:13:33 jonrob Exp $
 #============================================================================
 
 package RichReadout
-version v1r14
+version v2r0
 
 # ================ structure =================================================
 branches cmt doc src Event xml
@@ -16,7 +16,8 @@ include_path none
 set RICHREADOUTOPTS $(RICHREADOUTROOT)/options
 
 # ================ dependencies ==============================================
-use RichEvent    v*      Event
+use MCEvent      v*      Event
+use RichKernel   v*      Rich
 use DAQEvent     v*      Event
 
 #============================================================================
@@ -25,7 +26,7 @@ use DAQEvent     v*      Event
 document  obj2doth  RichReadout_EventObj2Doth      ../xml/*.xml
 
 # ================ component library =========================================
-library RichReadout ../src/event/*.cpp ../src/component/*.cpp  -import=AIDA
+library RichReadout ../src/component/*.cpp  -import=AIDA
 
 apply_pattern component_library library=RichReadout
 
