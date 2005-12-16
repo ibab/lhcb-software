@@ -1,4 +1,4 @@
-// $Id: MCHitMonitor.cpp,v 1.1.1.1 2005-12-15 14:29:30 gcorti Exp $
+// $Id: MCHitMonitor.cpp,v 1.2 2005-12-16 10:11:09 cattanem Exp $
 //
 // This File contains the implementation of the TrMCHitMonitor
 // C++ code for 'LHCb Tracking package(s)'
@@ -157,8 +157,7 @@ StatusCode MCHitMonitor::fillHistograms(LHCb::MCHit* aHit){
 
 
   // average of entrance and exit...
-  //  Gaudi::XYZPoint mcHitPoint = 0.5*(aHit->entry()+aHit->exit());
-  Gaudi::XYZPoint mcHitPoint = aHit->entry()+0.5*(aHit->displacement());
+  Gaudi::XYZPoint mcHitPoint = aHit->midPoint();
 
   plot(aHit->pathLength(),"path length", 0., 200., 200);
 
