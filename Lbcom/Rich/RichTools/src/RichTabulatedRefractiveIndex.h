@@ -5,7 +5,7 @@
  *  Header file for tool : RichTabulatedRefractiveIndex
  *
  *  CVS Log :-
- *  $Id: RichTabulatedRefractiveIndex.h,v 1.8 2005-12-13 15:07:11 jonrob Exp $
+ *  $Id: RichTabulatedRefractiveIndex.h,v 1.9 2005-12-16 15:14:20 jonrob Exp $
  *
  *  @author Chris Jones    Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -24,7 +24,7 @@
 // Det Desc
 #include "DetDesc/IUpdateManagerSvc.h"
 
-// CLHEP
+// Constants
 #include "Kernel/PhysicalConstants.h"
 
 // Base class and interface
