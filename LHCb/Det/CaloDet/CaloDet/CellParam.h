@@ -1,5 +1,8 @@
 /// ===========================================================================
 /// $Log: not supported by cvs2svn $
+/// Revision 1.2  2003/01/23 18:39:42  ocallot
+/// Fix unitialized variables in CellParam constructor
+///
 /// Revision 1.1  2001/07/02 17:17:58  ibelyaev
 /// improvements in readability of DeCalorimeter.h
 ///
@@ -12,7 +15,7 @@
 
 class DeCalorimeter;
 
-typedef std::vector<CaloCellID> CaloNeighbors ;
+typedef std::vector<LHCb::CaloCellID> CaloNeighbors ;
 
 /** @class  CellParam CellParam.h CaloDet/CellParam.h
  *
@@ -32,17 +35,17 @@ class CellParam
 public:
   
   /// standard constructor 
-  CellParam( const CaloCellID& id  = CaloCellID() ) ;
+  CellParam( const LHCb::CaloCellID& id  = LHCb::CaloCellID() ) ;
   
   /// destructor 
   ~CellParam();
   
   bool                 valid         () const { return size() > 0      ; }   
-  CaloCellID           cellID        () const { return m_cellID        ; }
+  LHCb::CaloCellID           cellID        () const { return m_cellID        ; }
   double               x             () const { return m_center.x()    ; }
   double               y             () const { return m_center.y()    ; }
   double               z             () const { return m_center.z()    ; }
-  const HepPoint3D&    center        () const { return m_center        ; }
+  const Gaudi::XYZPoint&  center     () const { return m_center        ; }
   double               size          () const { return m_size          ; }
   double               sine          () const { return m_sine          ; }
   double               gain          () const { return m_gain          ; }
@@ -56,18 +59,19 @@ public:
   
   // ** To initialize the cell: Geometry, neighbours, gain
   
-  void  setCenterSize( const HepPoint3D& point, double S) {
+  void  setCenterSize( const Gaudi::XYZPoint& point, double S) {
     m_center = point; 
     m_size   = S; 
-    m_sine   = sqrt( (point.x()*point.x() + point.y()*point.y()) / 
-                     point.mag2() ); 
-    m_time   = point.mag() /c_light *ns;
+    //    m_sine   = sqrt( (point.x()*point.x() + point.y()*point.y()) / 
+    //                 point.mag2() ); 
+    m_sine   = point.Rho()/point.R();  // MathCore methods (Cartesian3D)
+    m_time   = point.R() /c_light *ns; //R=sqrt(Mag2)
   }
   
-  void addZsupNeighbor( const CaloCellID& ID) { 
+  void addZsupNeighbor( const LHCb::CaloCellID& ID) { 
     m_zsupNeighbors.push_back(ID);
   }
-  void addNeighbor    ( const CaloCellID& ID) { m_neighbors.push_back(ID); }
+  void addNeighbor    ( const LHCb::CaloCellID& ID) { m_neighbors.push_back(ID); }
   void setGain        ( const double gain   ) { m_gain = gain            ; }
   void setFeCard      ( const int num, const int relCol, const int relRow ) {
     m_cardNumber  = num;
@@ -80,9 +84,9 @@ public:
   
 private:
   
-  CaloCellID    m_cellID         ; ///< ID of the cell
+  LHCb::CaloCellID    m_cellID         ; ///< ID of the cell
   double        m_size           ; ///< Cell size
-  HepPoint3D    m_center         ; ///< Cell centre
+  Gaudi::XYZPoint m_center       ; ///< Cell centre
   double        m_sine           ; ///< To transform E to Et
   double        m_gain           ; ///< MeV per ADC count
   double        m_time           ; ///< Nominal time of flight from Vertex (ns)

@@ -1,7 +1,7 @@
-# $Id: requirements,v 1.40 2005-12-02 14:52:47 ocallot Exp $ 
+# $Id: requirements,v 1.41 2005-12-16 17:12:40 odescham Exp $ 
 # =============================================================================
 package  CaloDet 
-version  v7r0
+version  v8r0
 
 # =============== structure ===================================================
 branches         src cmt doc options CaloDet 
@@ -10,6 +10,8 @@ branches         src cmt doc options CaloDet
 include_dirs      $(CALODETROOT)
 
 # =============== used packages ===============================================
+use GaudiAlg     v*
+use LHCbKernel   v*     Kernel
 use CaloKernel   v*     Calo 
 use DetDesc      v*     Det 
 

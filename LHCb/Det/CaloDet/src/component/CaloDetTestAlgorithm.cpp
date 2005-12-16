@@ -1,8 +1,11 @@
-// $Id: CaloDetTestAlgorithm.cpp,v 1.1 2001-12-15 18:28:17 ibelyaev Exp $
+// $Id: CaloDetTestAlgorithm.cpp,v 1.2 2005-12-16 17:12:40 odescham Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.1  2001/12/15 18:28:17  ibelyaev
+//  update for new policy of versions and new test algorithm
+//
 // ============================================================================
 // Include files
 // from Gaudi
@@ -39,8 +42,11 @@ const        IAlgFactory&CaloDetTestAlgorithmFactory = s_Factory ;
 // ============================================================================
 CaloDetTestAlgorithm::CaloDetTestAlgorithm( const std::string& name   ,
                             ISvcLocator*       svcloc )
-  : CaloAlgorithm ( name , svcloc ) 
-{};
+  : GaudiAlgorithm ( name , svcloc ) 
+  , m_DetData( DeCalorimeterLocation::Ecal  )
+{
+  declareProperty("DetDataLocation" , m_DetData ) ;
+};
 
 // ============================================================================
 /** destructor
@@ -59,7 +65,7 @@ StatusCode CaloDetTestAlgorithm::initialize()
   MsgStream log(msgSvc(), name());
   log << MSG::DEBUG << "==> Initialise" << endreq;
   
-  StatusCode sc = CaloAlgorithm::initialize();
+  StatusCode sc = GaudiAlgorithm::initialize();
   if( sc.isFailure() ) 
     { return Error("Could not initialize the base class!",sc);}
   
@@ -78,7 +84,7 @@ StatusCode CaloDetTestAlgorithm::finalize()
   log << MSG::DEBUG << "==> Finalize" << endreq;
   
   /// finalize the base class 
-  return CaloAlgorithm::finalize();
+  return GaudiAlgorithm::finalize();
 };
 
 // ============================================================================
@@ -97,19 +103,14 @@ StatusCode CaloDetTestAlgorithm::execute()
   
   if( 0 != s_nExecute++ ) { return StatusCode::SUCCESS ; } ///< RETURN !!!
   
-  SmartDataPtr<DeCalorimeter> calo( detSvc() , detData() ) ;
-  if( !calo ) 
-    { return Error("Could not locate the calorimneter='"+detData()+"'");} 
-  log << MSG::DEBUG 
-      << (const DeCalorimeter*) calo 
-      << endreq;
+  const DeCalorimeter* calo = getDet<DeCalorimeter>( m_DetData ) ;
   
   /// only for Ecal
-  if( 2 != CaloNumFromName( detData() ) ) { return StatusCode::SUCCESS ; }
+  if( 2 != CaloNumFromName( m_DetData ) ){ return StatusCode::SUCCESS ; }
   
   /// some "arbitrary" cells 
   {  
-    const CaloCellID cell1( CaloNumFromName( detData() ) , 0 , 20 , 20 ) ;
+    const LHCb::CaloCellID cell1( CaloNumFromName( m_DetData) , 0 , 20 , 20 ) ;
     log << MSG::DEBUG 
         << " info for cell id "    << cell1                        << endreq ;
     log << " valid      = "           << calo->valid      ( cell1 ) << endreq ;
@@ -126,7 +127,7 @@ StatusCode CaloDetTestAlgorithm::execute()
     log << " cardColumn = "           << calo->cardColumn ( cell1 ) << endreq ;
   }
   {  
-    const CaloCellID cell1( CaloNumFromName( detData() ) , 1 , 16 , 36 ) ;
+    const LHCb::CaloCellID cell1( CaloNumFromName( m_DetData) , 1 , 16 , 36 ) ;
     log << MSG::DEBUG 
         << " info for cell id "    << cell1                        << endreq ;
     log << " valid      = "           << calo->valid      ( cell1 ) << endreq ;
@@ -143,7 +144,7 @@ StatusCode CaloDetTestAlgorithm::execute()
     log << " cardColumn = "           << calo->cardColumn ( cell1 ) << endreq ;
   }
   {  
-    const CaloCellID cell1( CaloNumFromName( detData() ) , 2 , 20 , 15 ) ;
+    const LHCb::CaloCellID cell1( CaloNumFromName( m_DetData) , 2 , 20 , 15 ) ;
     log << MSG::DEBUG 
         << " info for cell id "    << cell1                        << endreq ;
     log << " valid      = "           << calo->valid      ( cell1 ) << endreq ;

@@ -1,8 +1,11 @@
-// $Id: CaloDetTestAlgorithm.h,v 1.1 2001-12-15 18:28:17 ibelyaev Exp $
+// $Id: CaloDetTestAlgorithm.h,v 1.2 2005-12-16 17:12:40 odescham Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.1  2001/12/15 18:28:17  ibelyaev
+//  update for new policy of versions and new test algorithm
+//
 // ============================================================================
 #ifndef CALODET_CALODETTESTALGORITHM_H 
 #define CALODET_CALODETTESTALGORITHM_H 1
@@ -10,7 +13,7 @@
 // from STL
 #include <string>
 // from CaloKernel
-#include "CaloKernel/CaloAlgorithm.h"
+#include "GaudiAlg/GaudiAlgorithm.h"
 
 /** @class CaloDetTestAlgorithm CaloDetTestAlgorithm.h
  *  
@@ -20,7 +23,7 @@
  *  @date   14/12/2001
  */
 
-class CaloDetTestAlgorithm : public CaloAlgorithm 
+class CaloDetTestAlgorithm : public GaudiAlgorithm 
 {
   /// friend factory for instantiation
   friend class AlgFactory<CaloDetTestAlgorithm>;
@@ -56,7 +59,7 @@ protected:
   virtual ~CaloDetTestAlgorithm();
   
 private:
-  
+  std::string m_DetData;
 };
 
 // ============================================================================

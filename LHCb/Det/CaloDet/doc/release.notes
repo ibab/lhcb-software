@@ -1,4 +1,20 @@
-! $Id: release.notes,v 1.46 2005-12-02 14:52:47 ocallot Exp $ 
+! $Id: release.notes,v 1.47 2005-12-16 17:12:40 odescham Exp $ 
+! =============================================================================
+Package         : CaloDet   
+Package manager : Olivier Deschamps odescham@in2p3.fr
+
+! 2005-12-16 - Olivier Deschamps
+ - CaloDet/  & src/Lib : 
+  migration to LHCb v20 - MathCore 
+
+
+ - src/component/CaloDetTestAlgorithm.cpp  :
+  remove CaloAlgorithm inheritance 
+
+ - cmt/requirements :
+  add dependency to GaudiAlg
+  increment package version to v8r0
+
 ! =============================================================================
 Package         : CaloDet   
 Package manager : Vanya Belyaev Ivan.Belyaev@itep.ru

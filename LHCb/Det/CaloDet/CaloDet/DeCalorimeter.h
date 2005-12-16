@@ -1,8 +1,11 @@
-// $Id: DeCalorimeter.h,v 1.14 2005-12-02 14:52:46 ocallot Exp $ 
+// $Id: DeCalorimeter.h,v 1.15 2005-12-16 17:12:40 odescham Exp $ 
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.14  2005/12/02 14:52:46  ocallot
+// Use conditions for gain and cards
+//
 // Revision 1.13  2005/07/06 15:30:24  ibelyaev
 //  minor fixes to please  LCGdict
 //
@@ -13,10 +16,10 @@
 /// from STL
 #include <iostream>
 #include <vector>
-/// from CLHEP
-#include "CLHEP/Geometry/Point3D.h"
-#include "CLHEP/Units/SystemOfUnits.h"
-#include "CLHEP/Units/PhysicalConstants.h"
+//From Kernel/LHCbDefintions
+#include "Kernel/Point3DTypes.h"
+#include "Kernel/SystemOfUnits.h"
+#include "Kernel/PhysicalConstants.h"
 /// GaudiKernel
 #include "GaudiKernel/MsgStream.h"
 /// from Det/DetDesc
@@ -31,6 +34,7 @@
 #include "CaloDet/CellParam.h"
 #include "CaloDet/CardParam.h"
 #include "CaloDet/CLIDDeCalorimeter.h"
+
 
 /// forwad declarations
 class MsgStream;
@@ -112,44 +116,44 @@ public:
   double        zShowerMax    () const { return m_zShowerMax    ; };
   
   ///  validity flag for the cell 
-  inline bool   valid    ( const CaloCellID& ) const ;
+  inline bool   valid    ( const LHCb::CaloCellID& ) const ;
   ///  x-position of center of the cell 
-  inline double cellX    ( const CaloCellID& ) const ;
+  inline double cellX    ( const LHCb::CaloCellID& ) const ;
   ///  y-position of center of the cell 
-  inline double cellY    ( const CaloCellID& ) const ;
+  inline double cellY    ( const LHCb::CaloCellID& ) const ;
   ///  z-position of center of the cell 
-  inline double cellZ    ( const CaloCellID& ) const ;
+  inline double cellZ    ( const LHCb::CaloCellID& ) const ;
   ///  cell size  
-  inline double cellSize ( const CaloCellID& ) const ;
+  inline double cellSize ( const LHCb::CaloCellID& ) const ;
   ///  sine function for given cell 
-  inline double cellSine ( const CaloCellID& ) const ;
+  inline double cellSine ( const LHCb::CaloCellID& ) const ;
   ///  PM gain for given cell  
-  inline double cellGain ( const CaloCellID& ) const ;
+  inline double cellGain ( const LHCb::CaloCellID& ) const ;
   ///  Timing for for given cell  
-  inline double cellTime ( const CaloCellID& ) const ;
+  inline double cellTime ( const LHCb::CaloCellID& ) const ;
   ///  cell center 
-  inline const HepPoint3D&    cellCenter       ( const CaloCellID& ) const ;
+  inline const Gaudi::XYZPoint& cellCenter       ( const LHCb::CaloCellID& ) const ;
   ///  list of neighbour cells 
-  inline const CaloNeighbors& neighborCells    ( const CaloCellID& ) const ;
+  inline const CaloNeighbors& neighborCells    ( const LHCb::CaloCellID& ) const ;
   ///  list of neighbour cells 
-  inline const CaloNeighbors& zsupNeighborCells( const CaloCellID& ) const ;
+  inline const CaloNeighbors& zsupNeighborCells( const LHCb::CaloCellID& ) const ;
   
   ///  From ID to cell serial number and vice-versa
-  inline int        cellIndex    ( const CaloCellID&  ) const ;
-  inline CaloCellID cellIdByIndex( const unsigned int ) const ;
+  inline int        cellIndex    ( const LHCb::CaloCellID&  ) const ;
+  inline LHCb::CaloCellID cellIdByIndex( const unsigned int ) const ;
   
   ///  More complex functions
-  CaloCellID  Cell    ( const HepPoint3D& point ) const ;
+  LHCb::CaloCellID  Cell    ( const Gaudi::XYZPoint& point ) const ;
   
   ///  Front-end card information
   ///  card number 
-  inline int cardNumber( const CaloCellID& ) const ;
+  inline int cardNumber( const LHCb::CaloCellID& ) const ;
   ///  card row  
-  inline int cardRow   ( const CaloCellID& ) const ;
+  inline int cardRow   ( const LHCb::CaloCellID& ) const ;
   ///  card column  
-  inline int cardColumn( const CaloCellID& ) const ;
+  inline int cardColumn( const LHCb::CaloCellID& ) const ;
   ///  card address 
-  inline void cardAddress ( const CaloCellID& ID   , 
+  inline void cardAddress ( const LHCb::CaloCellID& ID   , 
                             int &             card , 
                             int &             row  , 
                             int &             col  ) const ;
@@ -178,11 +182,11 @@ public:
   ///  card first column 
   inline int cardFirstColumn    ( const int card   )  const ;
   ///  ID of the bottom left cell
-  inline CaloCellID firstCellID ( const int card   )  const ;
+  inline LHCb::CaloCellID firstCellID ( const int card   )  const ;
   ///  ID of of the top right cell
-  inline CaloCellID lastCellID  ( const int card   )  const ;
+  inline LHCb::CaloCellID lastCellID  ( const int card   )  const ;
   ///  ID of the specified cell
-  inline CaloCellID cardCellID  ( const int card   , 
+  inline LHCb::CaloCellID cardCellID  ( const int card   , 
                                   const int row    , 
                                   const int col    )  const ;
   ///
@@ -291,111 +295,111 @@ inline MsgStream&     operator<<( MsgStream&    os , const DeCalorimeter* de )
 // ===========================================================================
 //  validity flag for the cell
 // ===========================================================================
-inline bool DeCalorimeter::valid    ( const CaloCellID& ID ) const 
+inline bool DeCalorimeter::valid    ( const LHCb::CaloCellID& ID ) const 
 { return m_cells[ID].size() >0;}
 
 // ===========================================================================
 //  x-position of center of the cell
 // ===========================================================================
-inline double DeCalorimeter::cellX  ( const CaloCellID& ID ) const 
+inline double DeCalorimeter::cellX  ( const LHCb::CaloCellID& ID ) const 
 { return m_cells[ID].x (); }
 //  ===========================================================================
 //  y-position of center of the cell
 //  ===========================================================================
-inline double DeCalorimeter::cellY  ( const CaloCellID& ID ) const 
+inline double DeCalorimeter::cellY  ( const LHCb::CaloCellID& ID ) const 
 { return m_cells[ID].y (); }
 
 // ===========================================================================
 //  z-position of center of the cell
 // ===========================================================================
-inline double DeCalorimeter::cellZ  ( const CaloCellID& ID ) const 
+inline double DeCalorimeter::cellZ  ( const LHCb::CaloCellID& ID ) const 
 { return m_cells[ID].z (); }
 
 // ===========================================================================
 //  cell size
 // ===========================================================================
-inline double DeCalorimeter::cellSize ( const CaloCellID& ID ) const 
+inline double DeCalorimeter::cellSize ( const LHCb::CaloCellID& ID ) const 
 { return m_cells[ID].size (); }
 
 // ===========================================================================
 //  sine function for given cell
 // ===========================================================================
-inline double DeCalorimeter::cellSine ( const CaloCellID& ID ) const 
+inline double DeCalorimeter::cellSine ( const LHCb::CaloCellID& ID ) const 
 { return m_cells[ID].sine (); }
 
 // ===========================================================================
 //  PM gain for given cell
 // ===========================================================================
-inline double DeCalorimeter::cellGain ( const CaloCellID& ID ) const 
+inline double DeCalorimeter::cellGain ( const LHCb::CaloCellID& ID ) const 
 { return m_cells[ID].gain (); }
 
 // ===========================================================================
 //  Timing for for given cell
 // ===========================================================================
-inline double DeCalorimeter::cellTime ( const CaloCellID& ID ) const 
+inline double DeCalorimeter::cellTime ( const LHCb::CaloCellID& ID ) const 
 { return m_cells[ID].time (); }
 
 // ===========================================================================
 //  cell center
 // ===========================================================================
-inline const HepPoint3D& 
-DeCalorimeter::cellCenter ( const CaloCellID& ID ) const 
+inline const Gaudi::XYZPoint& 
+DeCalorimeter::cellCenter ( const LHCb::CaloCellID& ID ) const 
 { return m_cells[ID].center       (); }
 
 // ============================================================================
 //  list of neighbour cells
 // ============================================================================
 inline const CaloNeighbors& 
-DeCalorimeter::neighborCells    ( const CaloCellID& ID ) const 
+DeCalorimeter::neighborCells    ( const LHCb::CaloCellID& ID ) const 
 { return m_cells[ID].neighbors    (); }
 
 // ============================================================================
 //  list of neighbour cells
 // ============================================================================
 inline const CaloNeighbors& 
-DeCalorimeter::zsupNeighborCells( const CaloCellID& ID ) const 
+DeCalorimeter::zsupNeighborCells( const LHCb::CaloCellID& ID ) const 
 { return m_cells[ID].zsupNeighbors(); }
 
 // ============================================================================
 //  From ID to cell serial number and vice-versa
 // ============================================================================
 inline int    
-DeCalorimeter::cellIndex( const CaloCellID& ID ) const 
+DeCalorimeter::cellIndex( const LHCb::CaloCellID& ID ) const 
 { return m_cells.index(ID); }
 
 // ============================================================================
 //  From ID to cell serial number and vice-versa
 // ============================================================================
-inline CaloCellID 
+inline LHCb::CaloCellID 
 DeCalorimeter::cellIdByIndex( const unsigned int num )    const 
 {
   return 
-    ( (num < m_cells.size() ) ? (m_cells.begin()+num)->cellID() : CaloCellID() );
+    ( (num < m_cells.size() ) ? (m_cells.begin()+num)->cellID() : LHCb::CaloCellID() );
 };
 
 // ============================================================================
 //  card number 
 // ============================================================================
 inline int 
-DeCalorimeter::cardNumber( const CaloCellID& ID ) const
+DeCalorimeter::cardNumber( const LHCb::CaloCellID& ID ) const
 {return m_cells[ID].cardNumber(); }
 // ============================================================================
 //  card row  
 // ============================================================================
 inline int 
-DeCalorimeter::cardRow   ( const CaloCellID& ID ) const 
+DeCalorimeter::cardRow   ( const LHCb::CaloCellID& ID ) const 
 {return m_cells[ID].cardRow();    }
 // ============================================================================
 //  card column  
 // ============================================================================
 inline int 
-DeCalorimeter::cardColumn( const CaloCellID& ID ) const 
+DeCalorimeter::cardColumn( const LHCb::CaloCellID& ID ) const 
 {return m_cells[ID].cardColumn(); }
 // ============================================================================
 //  card address 
 // ============================================================================
 inline void 
-DeCalorimeter::cardAddress ( const CaloCellID& ID     ,
+DeCalorimeter::cardAddress ( const LHCb::CaloCellID& ID     ,
                              int &             card   , 
                              int &             row    , 
                              int &             column ) const 
@@ -469,9 +473,9 @@ inline int DeCalorimeter::cardFirstColumn( const int card ) const
 // ===========================================================================
 //  ID of the bottom left cell, of the top right cell, of the specified cell
 // ===========================================================================
-inline CaloCellID DeCalorimeter::firstCellID ( const int card ) const 
+inline LHCb::CaloCellID DeCalorimeter::firstCellID ( const int card ) const 
 {  
-  return CaloCellID( m_caloIndex                 ,
+  return LHCb::CaloCellID( m_caloIndex                 ,
                      m_feCards[card].area       () , 
                      m_feCards[card].firstRow   () ,
                      m_feCards[card].firstColumn() ); 
@@ -480,9 +484,9 @@ inline CaloCellID DeCalorimeter::firstCellID ( const int card ) const
 // ===========================================================================
 //  ID of the bottom left cell, of the top right cell, of the specified cell
 // ===========================================================================
-inline CaloCellID DeCalorimeter::lastCellID ( const int card ) const 
+inline LHCb::CaloCellID DeCalorimeter::lastCellID ( const int card ) const 
 {
-  return CaloCellID( m_caloIndex                                   ,
+  return LHCb::CaloCellID( m_caloIndex                                   ,
                      m_feCards[card].area       ()                   , 
                      m_feCards[card].firstRow   () + nRowCaloCard -1 ,
                      m_feCards[card].firstColumn() + nColCaloCard -1 ); 
@@ -491,11 +495,11 @@ inline CaloCellID DeCalorimeter::lastCellID ( const int card ) const
 // ===========================================================================
 //  ID of the bottom left cell, of the top right cell, of the specified cell
 // ===========================================================================
-inline CaloCellID DeCalorimeter::cardCellID ( const int card , 
+inline LHCb::CaloCellID DeCalorimeter::cardCellID ( const int card , 
                                               const int row  , 
                                               const int col ) const 
 {
-  return CaloCellID( m_caloIndex                       ,
+  return LHCb::CaloCellID( m_caloIndex                       ,
                      m_feCards[card].area       ()       , 
                      m_feCards[card].firstRow   () + row ,
                      m_feCards[card].firstColumn() + col ); 

@@ -1,19 +1,18 @@
-// $Id: DeCalorimeter.cpp,v 1.23 2005-12-02 14:52:47 ocallot Exp $ 
+// $Id: DeCalorimeter.cpp,v 1.24 2005-12-16 17:12:40 odescham Exp $ 
 #define  CALODET_DECALORIMETER_CPP 1
 // ============================================================================
 // from STL
 #include <cmath>
 #include <algorithm>
-// from CLHEP
-#include "CLHEP/Units/SystemOfUnits.h"
+// from Kernel/LHCbDefintions
+#include "Kernel/SystemOfUnits.h"
 // from Gaudi
 #include "GaudiKernel/SmartDataPtr.h"
 // DetDesc
 #include "DetDesc/IGeometryInfo.h"
 #include "DetDesc/ILVolume.h"
 // CaloKernel
-#include "CaloKernel/OSiterator.h"
-#include "CaloKernel/CaloPrint.h"
+#include "Kernel/OSiterator.h"
 //
 // from Det/CaloDet
 #include "CaloDet/DeCalorimeter.h"
@@ -165,18 +164,18 @@ StatusCode DeCalorimeter::buildCells( ) {
     const ILVolume* lv = geoData->lvolume();
     Assert( 0 != lv             , " Unable to extract ILVolume* !"       );
 
-    HepPoint3D pointLocal(0,0,0), pointGlobal(0,0,0);
-    pointLocal.setZ( zShowerMax() );
+    Gaudi::XYZPoint pointLocal(0,0,0), pointGlobal(0,0,0);
+    pointLocal.SetZ( zShowerMax() );
 
 
     // ** The center of each cell is specified by step of one cell
     // ** in the local frame. One has to convert to the global frame
 
     for( int Row = 0 ; m_maxRowCol >= Row    ; ++Row    ) {
-      pointLocal.setY( m_YToXSizeRatio * cellSize[Area] * (Row-m_centerRowCol));
+      pointLocal.SetY( m_YToXSizeRatio * cellSize[Area] * (Row-m_centerRowCol));
 
       for( int Column = 0; m_maxRowCol >= Column ; ++Column )  {
-        pointLocal.setX( cellSize[ Area ] * ( Column - m_centerRowCol ) ) ;
+        pointLocal.SetX( cellSize[ Area ] * ( Column - m_centerRowCol ) ) ;
 
         if( !lv->isInside( pointLocal ) ) {  continue ; }
 
@@ -189,7 +188,7 @@ StatusCode DeCalorimeter::buildCells( ) {
           continue;
         }
 
-        CaloCellID id( m_caloIndex, Area , Row , Column ) ;
+        LHCb::CaloCellID id( m_caloIndex, Area , Row , Column ) ;
         m_cells.addEntry( CellParam(id) , id );  // store the new cell
 
         pointGlobal = geoData->toGlobal( pointLocal );
@@ -209,7 +208,7 @@ StatusCode DeCalorimeter::buildCells( ) {
   for( CaloVector<CellParam>::iterator pCell = m_cells.begin() ;
        m_cells.end() != pCell ; ++pCell ) {
 
-    CaloCellID id       = pCell->cellID();
+    LHCb::CaloCellID id       = pCell->cellID();
     int Column          = id.col  ( ) ;
     int Row             = id.row  ( ) ;
     unsigned int Area   = id.area ( ) ;
@@ -229,7 +228,7 @@ StatusCode DeCalorimeter::buildCells( ) {
               ( iRow <= m_maxRowCol ) &&              // inside calorimeter
               ( iRow != Row || iColumn != Column  ) ) {   // not itself...
 
-            CaloCellID id2( m_caloIndex, Area , iRow , iColumn );
+            LHCb::CaloCellID id2( m_caloIndex, Area , iRow , iColumn );
             if( m_cells[id2].valid() ) {
               pCell->addZsupNeighbor( id2 ) ;
               pCell->addNeighbor( id2 ) ;
@@ -278,7 +277,7 @@ StatusCode DeCalorimeter::buildCells( ) {
             for( int  iColumn = cc - 4 ; iColumn <= cc + 4 ; ++iColumn ) {
               if( ( 0 <= iColumn ) && ( m_maxRowCol >= iColumn )   ) {
 
-                CaloCellID id2( m_caloIndex, iArea , iRow , iColumn ) ;
+                LHCb::CaloCellID id2( m_caloIndex, iArea , iRow , iColumn ) ;
 
                 if( m_cells[id2].valid() ) {
                   if( ( fabs( m_cells[id2].x() - x ) <= margin ) &&
@@ -309,13 +308,13 @@ StatusCode DeCalorimeter::buildCells( ) {
 // ** Return the cell at the specified position
 //----------------------------------------------------------------------------
 
-CaloCellID DeCalorimeter::Cell( const HepPoint3D& globalPoint ) const
+LHCb::CaloCellID DeCalorimeter::Cell( const Gaudi::XYZPoint& globalPoint ) const
 {
 
   // ** if point is outside calorimeter
 
   Assert( 0 != geometry() , " Unable to extract IGeometryInfo* " );
-  if( !geometry()->isInside( globalPoint ) ) { return CaloCellID( ) ; }
+  if( !geometry()->isInside( globalPoint ) ) { return LHCb::CaloCellID( ) ; }
 
   // ** find subcalorimeter
 
@@ -336,15 +335,15 @@ CaloCellID DeCalorimeter::Cell( const HepPoint3D& globalPoint ) const
       unsigned int Area     = child - childBegin()   ;
       double       CellSize = subCalorimeter->size() ;
 
-      HepPoint3D localPoint( subCalGeo->toLocal( globalPoint ) );
+      Gaudi::XYZPoint localPoint( subCalGeo->toLocal( globalPoint ) );
 
       int Column = (int) ( localPoint.x() / CellSize + m_firstRowUp ) ;
       int Row    = (int) ( localPoint.y() / CellSize + m_firstRowUp ) ;
 
-      return CaloCellID( m_caloIndex, Area , Row , Column ) ;
+      return LHCb::CaloCellID( m_caloIndex, Area , Row , Column ) ;
     }
   }
-  return CaloCellID( ) ;
+  return LHCb::CaloCellID( ) ;
 }
 
 //----------------------------------------------------------------------------
@@ -398,7 +397,7 @@ StatusCode DeCalorimeter::buildCards( )  {
     bool first = true;
     for ( int row = fRow; lRow >= row; ++row ) {
       for ( int col = fCol; lCol >= col; ++col ) {
-        CaloCellID id( m_caloIndex, area, row, col );
+        LHCb::CaloCellID id( m_caloIndex, area, row, col );
         if ( valid( id ) ) {
           m_cells[id].setFeCard( cardNum, col-fCol, row-fRow );
 
@@ -407,7 +406,7 @@ StatusCode DeCalorimeter::buildCards( )  {
           //== Find the cards TO WHICH this card sends data.
           //== previous card in crate: only non zero row numer
           if ( (row == fRow ) && (0 < fRow) ) {
-            CaloCellID testID( m_caloIndex, area , row-1 , col );
+            LHCb::CaloCellID testID( m_caloIndex, area , row-1 , col );
             if ( cardNumber(testID) >= 0 ) {
               downCard = cardNumber(testID);
             }
@@ -418,12 +417,12 @@ StatusCode DeCalorimeter::buildCards( )  {
           //== Find also the corner card.
 
           if ( (col == fCol) && (0 < col) && (m_firstRowUp != col) ) {
-            CaloCellID testID( m_caloIndex, area , row , col-1 );
+            LHCb::CaloCellID testID( m_caloIndex, area , row , col-1 );
             if ( cardNumber(testID) >= 0 ) {
               leftCard = cardNumber(testID);
             }
             if ( (row == fRow) && (0 < row) ) {
-              CaloCellID testID( m_caloIndex, area , row-1 , col-1 );
+              LHCb::CaloCellID testID( m_caloIndex, area , row-1 , col-1 );
               if ( cardNumber(testID) >= 0 ) {
                 cornerCard = cardNumber(testID);
               }
@@ -461,9 +460,8 @@ StatusCode DeCalorimeter::buildCards( )  {
 /// print to std::stream
 // ============================================================================
 std::ostream& DeCalorimeter::printOut( std::ostream& os ) const {
-  CaloPrint print;
 
-  os << "\tDeCalorimeter index=" << print( m_caloIndex )
+  os << "\tDeCalorimeter index=" << m_caloIndex 
      << ", name from index ='"
      << CaloCellCode::CaloNameFromNum( m_caloIndex ) << "'"
      << ", fullname ='"   << name ()  << "'"
@@ -478,38 +476,38 @@ std::ostream& DeCalorimeter::printOut( std::ostream& os ) const {
   os << "\t Parameters"
      << std::endl
      << "\t\tEt value for maximum ADC value at theta(0) =  "
-     << print( m_maxEtInCenter )
+     << m_maxEtInCenter 
      << std::endl
      << "\t\tIncrease in Et per radian                  =  "
-     << print( m_maxEtSlope    )
+     << m_maxEtSlope    
      << std::endl
      << "\t\tMaximum codage in the ADC                  =  "
-     << print( m_adcMax        )
+     << m_adcMax        
      << std::endl
      << "\t\tConversion from activeE() to energy seen   =  "
-     << print( m_activeToTotal )
+     << m_activeToTotal 
      << std::endl
      << "\t\tZ of the shower maximum in the local frame =  "
-     << print( m_zShowerMax    )
+     << m_zShowerMax    
      << std::endl
      << "\t\tMaximum value for Row/Column               =  "
-     << print(   m_maxRowCol     )
+     << m_maxRowCol     
      << std::endl
      << "\t\tFirst Row or Column  over center           =  "
-     << print( m_firstRowUp      )
+     << m_firstRowUp      
      << std::endl
      << "\t\tCentral Value = m_maxRowCol/2                =  "
-     << print( m_centerRowCol    )
+     << m_centerRowCol    
      << std::endl ;
 
   if( m_initialized ) {
     CaloVector<CellParam>::const_iterator pCell = m_cells.begin() ;
     while( m_cells.end() != pCell ) {
-      CaloCellID id = (pCell++)->cellID();
+      LHCb::CaloCellID id = (pCell++)->cellID();
       os << "Cell " << id << " Neighbors ";
       std::copy( neighborCells( id ).begin() ,
                  neighborCells( id ).end()   ,
-                 OS_iterator<CaloCellID,std::ostream>( os , "," ) );
+                 OS_iterator<LHCb::CaloCellID,std::ostream>( os , "," ) );
       os << std::endl;
     }
   }
@@ -521,7 +519,6 @@ std::ostream& DeCalorimeter::printOut( std::ostream& os ) const {
 /// print to MsgStream
 // ============================================================================
 MsgStream&    DeCalorimeter::printOut( MsgStream&    os ) const {
-  CaloPrint print;
   os << "\tDeCalorimeter index="   << std::setw(2) << m_caloIndex
      << ", name from index='"
      << CaloCellCode::CaloNameFromNum( m_caloIndex ) << "'"
@@ -537,28 +534,28 @@ MsgStream&    DeCalorimeter::printOut( MsgStream&    os ) const {
   os << "\t Parameters"
      << endreq
      << "\t\tEt value for maximum ADC value at theta(0) =  "
-     << print( m_maxEtInCenter )
+     << m_maxEtInCenter 
      << endreq
      << "\t\tIncrease in Et per radian                  =  "
-     << print( m_maxEtSlope    )
+     << ( m_maxEtSlope    )
      << endreq
      << "\t\tMaximum codage in the ADC                  =  "
-     << print( m_adcMax        )
+     << ( m_adcMax        )
      << endreq
      << "\t\tConversion from activeE() to energy seen   =  "
-     << print( m_activeToTotal )
+     << ( m_activeToTotal )
      << endreq
      << "\t\tZ of the shower maximum in the local frame =  "
-     << print( m_zShowerMax    )
+     << ( m_zShowerMax    )
      << endreq
      << "\t\tMaximum value for Row/Column               =  "
-     << print(  m_maxRowCol      )
+     << (  m_maxRowCol      )
      << endreq
      << "\t\tFirst Row or Column  over center           =  "
-     << print( m_firstRowUp      )
+     << ( m_firstRowUp      )
      << endreq
      << "\t\tCentral Value = m_maxRowCol/2                =  "
-     << print( m_centerRowCol    )
+     << ( m_centerRowCol    )
      << endreq ;
 
   if( m_initialized ) {
@@ -567,11 +564,11 @@ MsgStream&    DeCalorimeter::printOut( MsgStream&    os ) const {
     ///
     CaloVector<CellParam>::const_iterator pCell = m_cells.begin() ;
     while( m_cells.end() != pCell ) {
-      CaloCellID id = (pCell++)->cellID();
+      LHCb::CaloCellID id = (pCell++)->cellID();
       os << " Cell " << id << " Neighbors ";
       std::copy( neighborCells( id ).begin() ,
                  neighborCells( id ).end()   ,
-                 OS_iterator<CaloCellID,MsgStream>(os,",") );
+                 OS_iterator<LHCb::CaloCellID,MsgStream>(os,",") );
       os << endreq;
     }
     ///
