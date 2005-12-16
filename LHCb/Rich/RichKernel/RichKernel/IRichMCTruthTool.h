@@ -5,7 +5,7 @@
  *  Header file for tool interface : IRichMCTruthTool
  *
  *  CVS Log :-
- *  $Id: IRichMCTruthTool.h,v 1.13 2005-10-18 12:33:11 jonrob Exp $
+ *  $Id: IRichMCTruthTool.h,v 1.14 2005-12-16 15:10:24 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   2003-07-31
@@ -20,17 +20,18 @@
 #include "Kernel/RichRadiatorType.h"
 
 // Event Model
-class MCRichOpticalPhoton;
-class MCRichSegment;
-class MCRichTrack;
-class MCRichDigit;
-class MCParticle;
-class MCRichHit;
-class RichDigit;
-class TrStoredTrack;
-class Track;
-class TrgTrack;
-class MCRichDigitSummary;
+namespace LHCb
+{
+  class MCRichOpticalPhoton;
+  class MCRichSegment;
+  class MCRichTrack;
+  class MCRichDigit;
+  class MCParticle;
+  class MCRichHit;
+  class RichDigit;
+  class Track;
+  class MCRichDigitSummary;
+}
 
 /// Static Interface Identification
 static const InterfaceID IID_IRichMCTruthTool( "IRichMCTruthTool", 1, 0 );
@@ -45,7 +46,8 @@ static const InterfaceID IID_IRichMCTruthTool( "IRichMCTruthTool", 1, 0 );
  */
 //------------------------------------------------------------------------------------
 
-class IRichMCTruthTool : public virtual IAlgTool {
+class IRichMCTruthTool : public virtual IAlgTool 
+{
 
 public:
 
@@ -60,8 +62,8 @@ public:
    *
    *  @return boolean indicating if any associated MCParticles where found
    */
-  virtual bool mcParticles( const RichSmartID id,
-                            std::vector<const MCParticle*> & mcParts ) const = 0;
+  virtual bool mcParticles( const LHCb::RichSmartID id,
+                            std::vector<const LHCb::MCParticle*> & mcParts ) const = 0;
 
   /** Find best MCParticle association for a given reconstructed Track
    *
@@ -71,30 +73,8 @@ public:
    *  @retval NULL  No Monte Carlo association was possible
    *  @retval !NULL Association was successful
    */
-  virtual const MCParticle *
-  mcParticle ( const Track * track ) const = 0;
-
-  /** Find best MCParticle association for a given TrStoredTrack
-   *
-   *  @param track Pointer to a TrStoredTrack
-   *
-   *  @return Pointer to MCParticle
-   *  @retval NULL  No Monte Carlo association was possible
-   *  @retval !NULL Association was successful
-   */
-  virtual const MCParticle *
-  mcParticle ( const TrStoredTrack * track ) const = 0;
-
-  /** Find best MCParticle association for a given TrgTrack
-   *
-   *  @param track Pointer to a TrgTrack
-   *
-   *  @return Pointer to MCParticle
-   *  @retval NULL  No Monte Carlo association was possible
-   *  @retval !NULL Association was successful
-   */
-  virtual const MCParticle *
-  mcParticle ( const TrgTrack * track ) const = 0;
+  virtual const LHCb::MCParticle *
+  mcParticle ( const LHCb::Track * track ) const = 0;
 
   /** Determines the particle mass hypothesis for a given reconstructed Track
    *
@@ -103,25 +83,7 @@ public:
    *  @return The true particle type of the TrStoredTrack
    */
   virtual Rich::ParticleIDType
-  mcParticleType ( const Track * track ) const = 0;
-
-  /** Determines the particle mass hypothesis for a given TrtStoredTrack
-   *
-   *  @param track Pointer to a TrStoredTrack
-   *
-   *  @return The true particle type of the TrStoredTrack
-   */
-  virtual Rich::ParticleIDType
-  mcParticleType ( const TrStoredTrack * track ) const = 0;
-
-  /** Determines the particle mass hypothesis for a given TrgTrack
-   *
-   *  @param track Pointer to a TrgTrack
-   *
-   *  @return The true particle type of the TrStoredTrack
-   */
-  virtual Rich::ParticleIDType
-  mcParticleType ( const TrgTrack * track ) const = 0;
+  mcParticleType ( const LHCb::Track * track ) const = 0;
 
   /** Determines the particle mass hypothesis for a given MCParticle
    *
@@ -130,7 +92,7 @@ public:
    *  @return The true particle type of the MCParticle
    */
   virtual Rich::ParticleIDType
-  mcParticleType ( const MCParticle * mcPart ) const = 0;
+  mcParticleType ( const LHCb::MCParticle * mcPart ) const = 0;
 
   /** Finds the MCRichDigit association for a given RichDigit
    *
@@ -140,8 +102,8 @@ public:
    *  @retval NULL  No Monte Carlo association was possible
    *  @retval !NULL Association was successful
    */
-  virtual const MCRichDigit *
-  mcRichDigit ( const RichDigit * digit ) const = 0;
+  virtual const LHCb::MCRichDigit *
+  mcRichDigit ( const LHCb::RichDigit * digit ) const = 0;
 
   /** Finds the MCRichDigit association for a RichSmartID channel identifier
    *
@@ -151,30 +113,19 @@ public:
    *  @retval NULL  No Monte Carlo association was possible
    *  @retval !NULL Association was successful
    */
-  virtual const MCRichDigit *
-  mcRichDigit ( const RichSmartID id ) const = 0;
+  virtual const LHCb::MCRichDigit *
+  mcRichDigit ( const LHCb::RichSmartID id ) const = 0;
 
-  /** Finds the MCRichTrack associated to a given TrStoredTrack
+  /** Finds the MCRichTrack associated to a given Track
    *
-   *  @param track Pointer to a TrStoredTrack
+   *  @param track Pointer to a Track
    *
    *  @return Pointer to an MCRichTrack
    *  @retval NULL  No Monte Carlo association was possible
    *  @retval !NULL Association was successful
    */
-  virtual const MCRichTrack *
-  mcRichTrack ( const TrStoredTrack * track ) const = 0;
-
-  /** Finds the MCRichTrack associated to a given TrgTrack
-   *
-   *  @param track Pointer to a TrgTrack
-   *
-   *  @return Pointer to an MCRichTrack
-   *  @retval NULL  No Monte Carlo association was possible
-   *  @retval !NULL Association was successful
-   */
-  virtual const MCRichTrack *
-  mcRichTrack ( const TrgTrack * track ) const = 0;
+  virtual const LHCb::MCRichTrack *
+  mcRichTrack ( const LHCb::Track * track ) const = 0;
 
   /** Finds the MCRichTrack associated to a given MCParticle
    *
@@ -184,8 +135,8 @@ public:
    *  @retval NULL  No Monte Carlo association was possible
    *  @retval !NULL Association was successful
    */
-  virtual const MCRichTrack *
-  mcRichTrack ( const MCParticle * mcPart ) const = 0;
+  virtual const LHCb::MCRichTrack *
+  mcRichTrack ( const LHCb::MCParticle * mcPart ) const = 0;
 
   /** Finds the MCRichOpticalPhoton associated to a given MCRichHit
    *
@@ -195,20 +146,21 @@ public:
    *  @retval NULL  No Monte Carlo association was possible
    *  @retval !NULL Association was successful
    */
-  virtual const MCRichOpticalPhoton *
-  mcOpticalPhoton ( const MCRichHit * mcHit ) const = 0;
+  virtual const LHCb::MCRichOpticalPhoton *
+  mcOpticalPhoton ( const LHCb::MCRichHit * mcHit ) const = 0;
 
   /** Access the bit-pack history objects for the given RichSmartID
    *
    *  @param id        RichSmartID
    *  @param histories Vector of pointers to history objects
-   *  
+   *
    *  @return Boolean indicating if at least one history object was found
    *  @retval true  History objects were found
    *  @retval false No history objects were found
    */
-  virtual bool getMcHistories( const RichSmartID id,
-                               std::vector<MCRichDigitSummary*> & histories ) const = 0;
+  virtual bool 
+  getMcHistories( const LHCb::RichSmartID id,
+                  std::vector<LHCb::MCRichDigitSummary*> & histories ) const = 0;
 
   /** Checks if the given RichSmartID is the result of a background
    *  hit, i.e. not a true Cherenkov hit
@@ -216,10 +168,10 @@ public:
    *  @param id RichSmartID
    *
    *  @return Boolean indicating if the digit is background
-   *  @retval true  MCRichDigit originated from a background hit
-   *  @retval false MCRichDigit originated from Cherenkov Radiation
+   *  @retval true  RichSmartID originated from a background hit
+   *  @retval false RichSmartID originated from Cherenkov Radiation
    */
-  virtual bool isBackground ( const RichSmartID id ) const = 0;
+  virtual bool isBackground ( const LHCb::RichSmartID id ) const = 0;
 
   /** Checks if the given MCRichDigit is the result of a background
    *  hit, i.e. not a true Cherenkov hit
@@ -230,7 +182,7 @@ public:
    *  @retval true  MCRichDigit originated from a background hit
    *  @retval false MCRichDigit originated from Cherenkov Radiation
    */
-  virtual bool isBackground ( const MCRichDigit * digit ) const = 0;
+  virtual bool isBackground ( const LHCb::MCRichDigit * digit ) const = 0;
 
   /** Checks if the given MCRichHit is the result of a background
    *  hit, i.e. not a true Cherenkov hit
@@ -241,20 +193,20 @@ public:
    *  @retval true  MCRichHit originated from a background hit
    *  @retval false MCRichHit originated from Cherenkov Radiation
    */
-  virtual bool isBackground ( const MCRichHit * hit ) const = 0;
+  virtual bool isBackground ( const LHCb::MCRichHit * hit ) const = 0;
 
   /** Checks if the given RichSmartID is the result of true Cherenkov
    *  radiation from the given radiator
    *
    *  @param id  RichSmartID identifying channel
    *  @param rad Radiator medium
-   * 
-   *  @return Boolean indicating if the hit is Cherenkov radiation 
+   *
+   *  @return Boolean indicating if the hit is Cherenkov radiation
    *          in given radiator
    *  @retval true  RichSmartID did originate from Cherenkov radiation
    *  @retval false RichSmartID did not originate from Cherenkov radiation
    */
-  virtual bool isCherenkovRadiation( const RichSmartID id,
+  virtual bool isCherenkovRadiation( const LHCb::RichSmartID id,
                                      const Rich::RadiatorType rad ) const = 0;
 
 };
