@@ -1,10 +1,8 @@
-// $Id: GenMonitorAlg.cpp,v 1.6 2005-08-17 16:47:09 gcorti Exp $
+// $Id: GenMonitorAlg.cpp,v 1.7 2005-12-16 20:13:50 gcorti Exp $
 // Include files 
 
 // from Gaudi
-#include "GaudiKernel/AlgFactory.h"
-#include "GaudiKernel/MsgStream.h" 
-#include "GaudiKernel/SmartDataPtr.h"
+#include "GaudiKernel/DeclareFactoryEntries.h"
 
 // From HepMC
 #include "Event/HepMCEvent.h"
@@ -28,8 +26,7 @@
 //-----------------------------------------------------------------------------
 
 // Declaration of the Algorithm Factory
-static const  AlgFactory<GenMonitorAlg>          s_factory ;
-const        IAlgFactory& GenMonitorAlgFactory = s_factory ; 
+DECLARE_ALGORITHM_FACTORY( GenMonitorAlg );
 
 
 //=============================================================================
@@ -46,7 +43,7 @@ GenMonitorAlg::GenMonitorAlg( const std::string& name,
 
   declareProperty( "MinEta", m_minEta = 2.0);
   declareProperty( "MaxEta", m_maxEta = 4.9);
-  declareProperty( "Input",  m_dataPath = "/Event/Gen/HepMCEvents" );
+  declareProperty( "Input",  m_dataPath = LHCb::HepMCEventLocation::Default );
   declareProperty( "ApplyTo", m_generatorName = "" );
   
   // Set by default not to fill histograms for this algorithm
@@ -98,12 +95,12 @@ StatusCode GenMonitorAlg::execute() {
   int nPileUp(0);
   
   // Retrieve data from selected path
-  SmartDataPtr< HepMCEvents > hepMCptr( eventSvc() , m_dataPath );
+  SmartDataPtr< LHCb::HepMCEvents > hepMCptr( eventSvc() , m_dataPath );
 
   if( 0 == hepMCptr ) {
     info() << "No HepMCEvents at location " << m_dataPath << endmsg;
   } else {
-    HepMCEvents::iterator it ;
+    LHCb::HepMCEvents::iterator it ;
     for( it = hepMCptr->begin() ; it != hepMCptr->end(); ++it ) {
 
       // Check if monitor has to be applied to this event
@@ -153,7 +150,7 @@ StatusCode GenMonitorAlg::execute() {
             m_hProtoLTime->fill( lifetime( hepMCpart ) );
           }
           // Charged stable particles meaning really stable after EvtGen
-          ParticleID pID( hepMCpart->pdg_id() );
+          LHCb::ParticleID pID( hepMCpart->pdg_id() );
           if( 0.0 != pID.threeCharge() ) {
             // A stable particle does not have an outgoing vertex
             if( !hepMCpart->end_vertex() ) {
@@ -252,10 +249,17 @@ StatusCode GenMonitorAlg::finalize() {
 //=============================================================================
 double GenMonitorAlg::lifetime( HepMC::GenParticle* thePart ) 
 {
-  if ( thePart->end_vertex() ) {
-    HepLorentzVector thePosition = thePart->end_vertex()->position() ;
+  if ( thePart->end_vertex() ) {   
+//     LorentzVector thePosition( thePart->end_vertex()->position() );
+//     LorentzVector theMomentum( thePart->momentum() );
+//     XYZVector theBoost = theMomentum.BoostToCM();
+    
+
+//     LorentzVector thePositionBoost = thePosition.boostToCM();
+//     return thePositionBoost.t() / EvtConst::c ;
+    HepLorentzVector thePosition = thePart->end_vertex()->position();
     Hep3Vector theBoost = thePart->momentum().boostVector() ;
-    HepLorentzVector thePositionBoost = thePosition.boost( -theBoost ) ;
+    HepLorentzVector thePositionBoost = thePosition.boost( -theBoost );
     return thePositionBoost.t() / EvtConst::c ;
   } else {
     return -1.e-10 ;

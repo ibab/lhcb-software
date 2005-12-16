@@ -1,19 +1,11 @@
-// $Id: MCTruthFullMonitor.cpp,v 1.2 2004-04-29 17:19:13 gcorti Exp $
+// $Id: MCTruthFullMonitor.cpp,v 1.3 2005-12-16 20:13:50 gcorti Exp $
 // Include files 
 
 // from Gaudi
-#include "GaudiKernel/AlgFactory.h"
-#include "GaudiKernel/MsgStream.h" 
-#include "GaudiKernel/SmartDataPtr.h"
-
-// from Det/DetDesc
-#include "DetDesc/DetectorElement.h"
-#include "DetDesc/IGeometryInfo.h"
+#include "GaudiKernel/DeclareFactoryEntries.h" 
 
 // from Event/Event
-#include "Event/GenCollision.h"
 #include "Event/MCParticle.h"
-#include "Event/GenMCLink.h"
 
 // local
 #include "MCTruthFullMonitor.h"
@@ -25,8 +17,7 @@
 //-----------------------------------------------------------------------------
 
 // Declaration of the Algorithm Factory
-static const  AlgFactory<MCTruthFullMonitor>          s_factory ;
-const        IAlgFactory& MCTruthFullMonitorFactory = s_factory ; 
+DECLARE_ALGORITHM_FACTORY( MCTruthFullMonitor );
 
 
 //=============================================================================
@@ -34,7 +25,7 @@ const        IAlgFactory& MCTruthFullMonitorFactory = s_factory ;
 //=============================================================================
 MCTruthFullMonitor::MCTruthFullMonitor( const std::string& name,
                                 ISvcLocator* pSvcLocator)
-  : Algorithm ( name , pSvcLocator )
+  : GaudiAlgorithm ( name , pSvcLocator )
 {
 //   declareProperty("ZRangeMin", m_zVolMin = 11830.0*mm);
 //   declareProperty("ZRangeMAx", m_zVolMax = 11880.0*mm);
@@ -49,8 +40,10 @@ MCTruthFullMonitor::~MCTruthFullMonitor() {};
 //=============================================================================
 StatusCode MCTruthFullMonitor::initialize() {
 
-  MsgStream msg(msgSvc(), name());
-  msg << MSG::DEBUG << "==> Booking ntuple" << endreq;
+  StatusCode sc = GaudiAlgorithm::initialize(); // must be executed first
+  if ( sc.isFailure() ) return sc;  // error printed already by GaudiAlgorithm
+
+  debug() << "==> Initialize: Booking Ntuple" << endmsg;
 
   std::string ntname = "/NTUPLES/FILE1";
   NTupleFilePtr ntfile(ntupleSvc(), ntname) ;
@@ -73,12 +66,12 @@ StatusCode MCTruthFullMonitor::initialize() {
         if( status.isSuccess() ) nt1->addItem("NDaughVtx",   m_daughVtx  );
         if( status.isSuccess() ) nt1->addItem("NDaughPart",  m_daughPart );
         if( !status.isSuccess() ) {
-          msg << MSG::ERROR << "Failure booking ntuples" << endreq;
+          error() << "Failure booking ntuples" << endmsg;
           return StatusCode::FAILURE;
         } 
         m_ntuple = nt1;
       } else {  
-        msg << MSG::ERROR << "Ntuple already exist" << endreq;
+        error() << "Ntuple already exist" << endmsg;
         return StatusCode::FAILURE;
       }
     }
@@ -92,71 +85,13 @@ StatusCode MCTruthFullMonitor::initialize() {
 //=============================================================================
 StatusCode MCTruthFullMonitor::execute() {
 
-  MsgStream  msg( msgSvc(), name() );
+  debug() << "==> Execute" << endmsg;
 
-  SmartDataPtr<Collisions> colls(evtSvc(), CollisionLocation::Default);
-  if( !colls ) {
-    msg << MSG::ERROR << "Collisions not found at" 
-        << CollisionLocation::Default
-        << endreq;
-  }
-  // new way of storing info
-  for( Collisions::iterator aColl = colls->begin(); colls->end() != aColl;
-       ++aColl ) {
-    msg << MSG::DEBUG << "Collision = " 
-        << (*aColl)->processType()
-        << endreq;
-    GenCollision* genColl = dynamic_cast<GenCollision*> (*aColl);
-    if( !genColl ) {
-      msg << MSG::DEBUG << "Collision is not of type GenCollision"
-          << endreq;
-    }
-    else {
-      msg << MSG::DEBUG << "GenCollision = "
-          << genColl->hardInfo()->event()->pGenEvt()->signal_process_id() << " " 
-          << genColl->hardInfo()->sHat() << " " 
-          << genColl->hardInfo()->tHat() << " " 
-          << genColl->hardInfo()->uHat() << " " 
-          << genColl->hardInfo()->ptHat() << " " 
-          << genColl->hardInfo()->x1Bjorken() << " " 
-          << genColl->hardInfo()->x2Bjorken()
-          << endreq;
-    }
-  }
+  LHCb::MCParticles* parts =
+    get<LHCb::MCParticles>( LHCb::MCParticleLocation::Default );
 
-  SmartDataPtr<MCParticles> parts(eventSvc(),MCParticleLocation::Default);
-  if( !parts ) {
-    msg << MSG::ERROR << "MCParticles not found at" 
-        << MCParticleLocation::Default
-        << endreq;
-  }
-//   int icount = 0;
-  for( MCParticles::iterator aPart = parts->begin();
+  for( LHCb::MCParticles::iterator aPart = parts->begin();
        parts->end() != aPart; ++aPart ) {
-//     icount++;
-//     if( icount <= 20 ) {
-//       msg << MSG::INFO << "Collision from part = "
-//           << (*aPart)->collision()->processType()
-//           << endreq;
-//       Collision* thisColl = (*aPart)->collision();
-//       GenCollision* genColl = dynamic_cast<GenCollision*> (thisColl);
-//       if( !genColl ) {
-//         msg << MSG::ERROR << "Collision is not of type GenCollision"
-//             << endreq;
-//       }
-//       else {
-//         msg << MSG::INFO << "GenCollision = "
-//             << genColl->hardInfo()->event()->pGenEvt()->signal_process_id() << " " 
-//             << genColl->hardInfo()->sHat() << " " 
-//             << genColl->hardInfo()->tHat() << " " 
-//             << genColl->hardInfo()->uHat() << " " 
-//             << genColl->hardInfo()->ptHat() << " " 
-//             << genColl->hardInfo()->x1Bjorken() << " " 
-//             << genColl->hardInfo()->x2Bjorken()
-//             << endreq;
-//       }
-//     }
-        
     m_pType  = (*aPart)->particleID().pid();
     m_pxOvtx = (*aPart)->momentum().x();
     m_pyOvtx = (*aPart)->momentum().y();
@@ -177,7 +112,7 @@ StatusCode MCTruthFullMonitor::execute() {
     }
     m_daughVtx = ((*aPart)->endVertices()).size();
     int nTotDau = 0;
-    for( SmartRefVector<MCVertex>::const_iterator 
+    for( SmartRefVector<LHCb::MCVertex>::const_iterator 
            aVert = ((*aPart)->endVertices()).begin();
          ((*aPart)->endVertices()).end() != aVert; ++aVert ) {
       nTotDau += ((*aVert)->products()).size();
@@ -195,10 +130,9 @@ StatusCode MCTruthFullMonitor::execute() {
 //=============================================================================
 StatusCode MCTruthFullMonitor::finalize() {
 
-  MsgStream msg(msgSvc(), name());
-  msg << MSG::DEBUG << "==> Finalize" << endreq;
+  debug() << "==> Finalize" << endmsg;
 
-  return StatusCode::SUCCESS;
+  return GaudiAlgorithm::finalize();  // must be called after all other actions
 }
 
 //=============================================================================

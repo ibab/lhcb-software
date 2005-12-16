@@ -1,16 +1,14 @@
-// $Id: GeneratorFullMonitor.cpp,v 1.4 2005-06-24 08:36:21 gcorti Exp $
+// $Id: GeneratorFullMonitor.cpp,v 1.5 2005-12-16 20:13:50 gcorti Exp $
 // Include files 
 
 // from Gaudi
-#include "GaudiKernel/AlgFactory.h"
-#include "GaudiKernel/MsgStream.h"
+#include "GaudiKernel/DeclareFactoryEntries.h" 
 #include "GaudiKernel/IHistogramSvc.h"
 #include "GaudiKernel/NTuple.h"
-#include "GaudiKernel/SmartDataPtr.h"
 
 // from Event
 #include "Event/HepMCEvent.h"
-#include "Event/HardInfo.h"
+#include "Event/GenCollision.h"
 
 // from Kernel
 #include "Kernel/ParticleID.h"
@@ -30,8 +28,7 @@
 //-----------------------------------------------------------------------------
 
 // Declaration of the Algorithm Factory
-static const  AlgFactory<GeneratorFullMonitor>          s_factory ;
-const        IAlgFactory& GeneratorFullMonitorFactory = s_factory ; 
+DECLARE_ALGORITHM_FACTORY( GeneratorFullMonitor );
 
 
 //=============================================================================
@@ -39,7 +36,7 @@ const        IAlgFactory& GeneratorFullMonitorFactory = s_factory ;
 //=============================================================================
 GeneratorFullMonitor::GeneratorFullMonitor( const std::string& name,
                           ISvcLocator* pSvcLocator)
-  : Algorithm ( name , pSvcLocator )
+  : GaudiAlgorithm ( name , pSvcLocator )
     , m_nTuple ( 0 ) 
     , m_nPart ( ) 
     , m_e ( ) 
@@ -67,11 +64,11 @@ GeneratorFullMonitor::GeneratorFullMonitor( const std::string& name,
     , m_isBB( ) 
     , m_nPartMax( 2000 ) 
     , m_nInterMax( 20 ) 
-    , m_inputData( HepMCEventLocation::Default )
-    , m_hardInfo( HardInfoLocation::Default )
 {
-  declareProperty( "Input", m_inputData );
-  declareProperty( "HardInfo", m_hardInfo );
+  declareProperty( "HepMCEvents", 
+                   m_inputHepMC = LHCb::HepMCEventLocation::Default);
+  declareProperty( "Collisions", 
+                   m_inputColl = LHCb::GenCollisionLocation::Default);
 }
 
 //=============================================================================
@@ -84,40 +81,38 @@ GeneratorFullMonitor::~GeneratorFullMonitor() {};
 //=============================================================================
 StatusCode GeneratorFullMonitor::initialize() {
 
-  MsgStream msg(msgSvc(), name());
-  msg << MSG::DEBUG << "==> Initialise" << endreq;
+  StatusCode sc = GaudiAlgorithm::initialize(); // must be executed first
+  if ( sc.isFailure() ) return sc;  // error printed already by GaudiAlgorithm
+
+  debug() << "==> Initialize" << endmsg;
   
   // Ntuple initialization
 
   if ( 0 == ntupleSvc() ) {
-    msg << MSG::FATAL << "NtupleSvc is not available !" << endreq ;
+    fatal() << "NtupleSvc is not available !" << endmsg;
     return StatusCode::FAILURE ;
   }
 
   NTupleFilePtr file ( ntupleSvc() , "/NTUPLES/FILE1" ) ;
   
-  if ( ! file ) {
-    msg << MSG::FATAL << "Could not access /NTUPLES/FILE1" 
-        << endreq ;
+  if ( !file ) {
+    fatal() << "Could not access /NTUPLES/FILE1" << endmsg;
     return StatusCode::FAILURE ;
   }
   
   NTuplePtr nt ( ntupleSvc() , "/NTUPLES/FILE1/MCTruth/1" ) ;
-  if ( ! nt ) {
+  if ( !nt ) {
     nt = ntupleSvc() -> book ( "/NTUPLES/FILE1/MCTruth/1" ,
                                CLID_ColumnWiseTuple ,
                                "MCTruth" ) ;
   }
   if ( ! nt ) {
-    msg << MSG::FATAL << "Could not create Ntuple (1)" 
-        << endreq ;
+    fatal() << "Could not create Ntuple (1)" << endmsg;
     return StatusCode::FAILURE ;
   }
   
   m_nTuple = nt ;
   
-  StatusCode sc ;
-
   // PART block
 
   sc = nt -> addItem ( "NPart" , m_nPart , 0 , m_nPartMax ) ;
@@ -199,7 +194,7 @@ StatusCode GeneratorFullMonitor::initialize() {
     sc = nt -> addIndexedItem ( "isBB" , m_nInter , m_isBB ) ;
   }
   if ( ! sc.isSuccess() ) {
-    msg << MSG::ERROR << "Error declaring NTuple" << endreq ;
+    error() << "Error declaring NTuple" << endmsg ;
   }
 
   return sc ;
@@ -210,108 +205,84 @@ StatusCode GeneratorFullMonitor::initialize() {
 //=============================================================================
 StatusCode GeneratorFullMonitor::execute() {
 
-  MsgStream  msg( msgSvc(), name() );
-  msg << MSG::DEBUG << "==> Execute" << endreq;
-  SmartDataPtr<HardInfos> hardVect ( eventSvc(), m_hardInfo );
-  if( !hardVect ) {
-    msg << MSG::DEBUG << "This event has no Hard Process Info" 
-        << endreq ;
-  } 
-  else {
-    for( HardInfos::iterator itHard = hardVect->begin(); 
-         hardVect->end() != itHard; ++itHard ) {
-      msg << MSG::DEBUG << "Hard Info is ::: "
-          << endmsg;
-      msg << MSG::DEBUG
-          << (*itHard)->event()->pGenEvt()->signal_process_id() << " " 
-          << (*itHard)->sHat() << " " 
-          << (*itHard)->tHat() << " " 
-          << (*itHard)->uHat() << " " 
-          << (*itHard)->ptHat() << " " 
-          << (*itHard)->x1Bjorken() << " " 
-          << (*itHard)->x2Bjorken()
-          << endreq;
-    }
-  }
+  debug() << "==> Execute" << endmsg;
 
+  LHCb::GenCollisions* collisions = get<LHCb::GenCollisions>( m_inputColl );
+  for( LHCb::GenCollisions::iterator itC = collisions->begin(); 
+         collisions->end() != itC; ++itC ) {
+    debug() << "GenCollision ::: " << endmsg;
+    debug() << (*itC) << " ," 
+            << (*itC)->event()->pGenEvt()->signal_process_id() << " "
+            << endmsg;
+  }
 
   // Get HepMCEvents
-  SmartDataPtr< HepMCEvents > hepVect ( eventSvc() , m_inputData ) ;
-  
-  if ( ! hepVect ) {
-    msg << MSG::WARNING << "This event has no HepMCEvent" 
-        << endreq ;
-    return StatusCode::FAILURE;
-  } else {
-    // Loop over events
-    HepMCEvents::iterator it ;
-    // Initialize counters
-    m_nPart = 0 ;
-    m_nInter = 0 ;
-    
-    for ( it  = hepVect -> begin() ;
-          it != hepVect -> end  () ;
-          it++ ) {
-      m_isBB[ m_nInter ] = 0 ;
-      msg << MSG::DEBUG << "Generator process = " 
-          << (*it)->pGenEvt()->signal_process_id()
-          << endreq;
-      // loop over all vertices in event
-      for ( HepMC::GenEvent::vertex_const_iterator pVertex = 
-              (*it) -> pGenEvt() -> vertices_begin() ;
-            pVertex != (*it) -> pGenEvt() -> vertices_end() ;
-            pVertex++ ) {
-        // loop over outgoing particles, check it has status 
-        // 1, 888 or 889
-        for ( HepMC::GenVertex::particles_out_const_iterator pParticle =
-                ( *pVertex ) -> particles_out_const_begin ( ) ;
-              ( *pVertex ) -> particles_out_const_end ( ) != pParticle ;
-              ++pParticle ) {
-          if ( ( (*pParticle) -> status ( ) == 1 ) ||
-               ( (*pParticle) -> status ( ) == 2 ) ||
-               ( (*pParticle) -> status ( ) == 888 ) ||
-               ( (*pParticle) -> status ( ) == 889 ) ||
-               ( (*pParticle) -> status ( ) == 998 ) ) {
-            if ( ! (*pParticle) -> production_vertex() ) {
-              FillNtuple ( (*pParticle) , 0 , 0 ) ;
-            } else {              
-              if ( (*pParticle) -> production_vertex() -> particles_in_size() 
-                   == 1 ) {
-                ParticleID pidM ( (*(*pParticle)->production_vertex()
-                                  -> particles_in_const_begin())
-                                  ->pdg_id() ) ;
-                ParticleID pid ( (*pParticle) -> pdg_id ( ) ) ;
-                if ( ( ( ( ! pidM.isHadron( ) ) &&
-                         ( ! pidM.isLepton( ) ) &&
-                         ( ! pidM.isNucleus( ) ) &&
-                         ( pidM.abspid() != 22 ) ) ||
-                       ( (*(*pParticle)->production_vertex()
-                          -> particles_in_const_begin()) 
-                         -> status() == 3 ) ) && 
-                     ( ( pid.isHadron( ) ) ||
-                       ( pid.isLepton( ) ) ||
-                       ( pid.isNucleus( ) ) ||
-                       ( pid.abspid() == 22 ) ) )
-                  FillNtuple( (*pParticle) , 0 , 0 ) ;
-              }
-              else {
-                ParticleID pid ( (*pParticle) -> pdg_id ( ) ) ;
-                if ( ( pid.isHadron( ) ) ||
-                     ( pid.isLepton( ) ) ||
-                     ( pid.isNucleus( ) ) ||
-                     ( pid.abspid() == 22 ) ) 
-                  FillNtuple( (*pParticle) , 0 , 0 ) ;
-              }
-            }                
-          }
+  LHCb::HepMCEvents* hepVect = get<LHCb::HepMCEvents>( m_inputHepMC );
+
+  // Loop over events
+  LHCb::HepMCEvents::iterator it ;
+  // Initialize counters
+  m_nPart = 0 ;
+  m_nInter = 0 ;    
+  for( it  = hepVect->begin(); it != hepVect->end(); it++ ) {
+    m_isBB[ m_nInter ] = 0 ;
+    debug() << "Generator process = " 
+            << (*it)->pGenEvt()->signal_process_id()
+            << endmsg;
+    // loop over all vertices in event
+    for( HepMC::GenEvent::vertex_const_iterator pVertex = 
+           (*it)->pGenEvt()->vertices_begin();
+         pVertex != (*it)->pGenEvt()->vertices_end();
+         pVertex++ ) {
+      // loop over outgoing particles, check it has status 
+      // 1, 888 or 889
+      for( HepMC::GenVertex::particles_out_const_iterator pParticle =
+             ( *pVertex )->particles_out_const_begin( );
+           ( *pVertex )->particles_out_const_end( ) != pParticle;
+           ++pParticle ) {
+        if( ( (*pParticle)->status( ) == 1 ) ||
+            ( (*pParticle)->status( ) == 2 ) ||
+            ( (*pParticle)->status( ) == 888 ) ||
+            ( (*pParticle)->status( ) == 889 ) ||
+            ( (*pParticle)->status( ) == 998 ) ) {
+          if( ! (*pParticle)->production_vertex() ) {
+            FillNtuple( (*pParticle), 0, 0 );
+          } else {              
+            if( (*pParticle)->production_vertex()->particles_in_size() 
+                == 1 ) {
+              LHCb::ParticleID pidM ( (*(*pParticle)->production_vertex()
+                                       ->particles_in_const_begin())
+                                       ->pdg_id() );
+              LHCb::ParticleID pid ( (*pParticle)->pdg_id ( ) ) ;
+              if( ( ( ( ! pidM.isHadron( ) ) &&
+                      ( ! pidM.isLepton( ) ) &&
+                      ( ! pidM.isNucleus( ) ) &&
+                      ( pidM.abspid() != 22 ) ) ||
+                    ( (*(*pParticle)->production_vertex()
+                       ->particles_in_const_begin())->status() == 3 ) ) && 
+                  ( ( pid.isHadron( ) ) ||
+                    ( pid.isLepton( ) ) ||
+                    ( pid.isNucleus( ) ) ||
+                    ( pid.abspid() == 22 ) ) )
+                  FillNtuple( (*pParticle) , 0 , 0 );
+            }
+            else {
+              LHCb::ParticleID pid( (*pParticle)->pdg_id( ) );
+              if( ( pid.isHadron( ) ) ||
+                  ( pid.isLepton( ) ) ||
+                  ( pid.isNucleus( ) ) ||
+                  ( pid.abspid() == 22 ) ) 
+                FillNtuple( (*pParticle), 0, 0 );
+            }
+          }                
         }
       }
-      m_nInter ++ ;
-      if ( m_nInter >= m_nInterMax ) break ;
     }
+    m_nInter ++ ;
+    if( m_nInter >= m_nInterMax ) break;
   }
 
-  m_nTuple -> write ( ) ;
+  m_nTuple->write( );
   return StatusCode::SUCCESS;
 };
 
@@ -320,10 +291,9 @@ StatusCode GeneratorFullMonitor::execute() {
 //=============================================================================
 StatusCode GeneratorFullMonitor::finalize() {
 
-  MsgStream msg(msgSvc(), name());
-  msg << MSG::DEBUG << "==> Finalize" << endreq;
+  debug() << "==> Execute" << endmsg;
 
-  return StatusCode::SUCCESS;
+  return GaudiAlgorithm::finalize();  // must be called after all other actions
 }
 
 //=============================================================================

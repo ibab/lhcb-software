@@ -1,4 +1,4 @@
-// $Id: MCTruthFullMonitor.h,v 1.1.1.1 2004-04-07 15:03:35 gcorti Exp $
+// $Id: MCTruthFullMonitor.h,v 1.2 2005-12-16 20:13:50 gcorti Exp $
 #ifndef MCTRUTHMONITOR_H 
 #define MCTRUTHMONITOR_H 1
 
@@ -7,7 +7,7 @@
 #include <string>
 
 // from Gaudi
-#include "GaudiKernel/Algorithm.h"
+#include "GaudiAlg/GaudiAlgorithm.h"
 #include "GaudiKernel/NTuple.h"
 
 /** @class MCTruthFullMonitor MCTruthFullMonitor.h
@@ -17,7 +17,7 @@
  *  @author Gloria CORTI
  *  @date   2004-01-27
  */
-class MCTruthFullMonitor : public Algorithm {
+class MCTruthFullMonitor : public GaudiAlgorithm {
 public: 
   /// Standard constructor
   MCTruthFullMonitor( const std::string& name, ISvcLocator* pSvcLocator );

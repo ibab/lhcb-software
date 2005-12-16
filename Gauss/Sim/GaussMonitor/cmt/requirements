@@ -6,7 +6,7 @@
 # http://cern.ch/lhcb-comp/Support/html/new_structure.pdf
 #============================================================================
 package           GaussMonitor
-version           v2r3
+version           v3r0
 
 # Structure, i.e. directories to process. 
 #============================================================================
@@ -14,14 +14,13 @@ branches          cmt doc src options
 
 # Used packages.
 #============================================================================
-use   EvtGen       v*      Gen
-use   GenEvent     v*      Event
-use   MCTools      v*      Phys
-use   AIDA         v*      LCG_Interfaces
+use   EvtGen          v*      Gen
+use   GenEvent        v*      Event
+use   SimComponents   v*      Sim
 
 # Component library building rule
 #============================================================================
-library          GaussMonitor    ../src/*.cpp
+library          GaussMonitor    ../src/*.cpp  -import=AIDA
 
 # define component library link options
 #============================================================================

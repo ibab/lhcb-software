@@ -1,4 +1,4 @@
-// $Id: GeneratorFullMonitor.h,v 1.3 2005-06-24 08:36:21 gcorti Exp $
+// $Id: GeneratorFullMonitor.h,v 1.4 2005-12-16 20:13:50 gcorti Exp $
 #ifndef GAUSSMONITOR_GENERATORFULLMONITOR_H 
 #define GAUSSMONITOR_GENERATORFULLMONITOR_H 1
 
@@ -7,7 +7,7 @@
 #include <string>
 
 // from Gaudi
-#include "GaudiKernel/Algorithm.h"
+#include "GaudiAlg/GaudiAlgorithm.h"
 #include "GaudiKernel/INTuple.h"
 
 
@@ -17,7 +17,7 @@
  *  @author Patrick Robbe
  *  @date   2004-03-02
  */
-class GeneratorFullMonitor : public Algorithm {
+class GeneratorFullMonitor : public GaudiAlgorithm {
 public:
   /// Standard constructor
   GeneratorFullMonitor( const std::string& name, ISvcLocator* pSvcLocator );
@@ -61,9 +61,9 @@ private:
   /// Maximum size of INTER block
   int m_nInterMax ;
   /// Location where to find HepMC event
-  std::string m_inputData ;
-  /// Location where to find HardInfo
-  std::string m_hardInfo;
+  std::string m_inputHepMC;
+  /// Location where to find GenCollision
+  std::string m_inputColl;
 
 };
 #endif // GAUSSMONITOR_GENERATORFULLMONITOR_H

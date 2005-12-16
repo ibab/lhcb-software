@@ -1,14 +1,14 @@
-// $Id: MCTruthMonitor.cpp,v 1.1 2005-10-02 15:14:03 gcorti Exp $
+// $Id: MCTruthMonitor.cpp,v 1.2 2005-12-16 20:13:50 gcorti Exp $
 // Include files 
 
 // from Gaudi
-#include "GaudiKernel/AlgFactory.h" 
+#include "GaudiKernel/DeclareFactoryEntries.h"
 
 // from LHCb
 #include "Event/MCParticle.h"
 #include "Event/MCVertex.h"
 
-// local
+// local1
 #include "MCTruthMonitor.h"
 
 //-----------------------------------------------------------------------------
@@ -18,8 +18,7 @@
 //-----------------------------------------------------------------------------
 
 // Declaration of the Algorithm Factory
-static const  AlgFactory<MCTruthMonitor>          s_factory ;
-const        IAlgFactory& MCTruthMonitorFactory = s_factory ; 
+DECLARE_ALGORITHM_FACTORY( MCTruthMonitor );
 
 
 //=============================================================================
@@ -40,7 +39,7 @@ MCTruthMonitor::~MCTruthMonitor() {};
 // Initialization
 //=============================================================================
 StatusCode MCTruthMonitor::initialize() {
-  StatusCode sc = GaudiAlgorithm::initialize(); // must be executed first
+  StatusCode sc = GaudiHistoAlg::initialize(); // must be executed first
   if ( sc.isFailure() ) return sc;  // error printed already by GaudiAlgorithm
 
   debug() << "==> Initialize" << endmsg;
@@ -90,23 +89,24 @@ StatusCode MCTruthMonitor::execute() {
   unsigned int nChKaons = 0, nKs = 0, nElectrons = 0, nMuons = 0, nGammas = 0;
   unsigned int nBeauty = 0, nCharm = 0, nNuclei = 0;
 
-  const MCParticles* particles = get<MCParticles>( MCParticleLocation::Default );
+  const LHCb::MCParticles* particles = 
+    get<LHCb::MCParticles>( LHCb::MCParticleLocation::Default );
   m_hNPart->fill(particles->size());
-  MCParticles::const_iterator ip;
+  LHCb::MCParticles::const_iterator ip;
   for( ip = particles->begin(); particles->end() != ip; ++ip ) {
     m_hPOrigZ->fill((*ip)->originVertex()->position().z()/mm);
     m_hPOrigT->fill((*ip)->originVertex()->type());
-    double absP = (*ip)->momentum().vect().mag();
-    m_hPMom->fill(absP/GeV);
-    if( (*ip)->originVertex()->type() == MCVertex::ppCollision ) {
-      m_hPPrimMom->fill(absP/GeV);
+    m_hPMom->fill((*ip)->p()/GeV);
+    if( (*ip)->originVertex()->type() == LHCb::MCVertex::ppCollision ) {
+      m_hPPrimMom->fill((*ip)->p()/GeV);
     }
-    ParticleID id = (*ip)->particleID();
+    LHCb::ParticleID id = (*ip)->particleID();
     if( id.pid() == 2212 ) {
-      if( absP >= 5.0*TeV ) { 
-        absP = 10*absP/(TeV/GeV);
-      }
-      m_hPProtMom->fill(absP/GeV);
+      if( (*ip)->p() >= 5.0*TeV ) {
+        m_hPProtMom->fill(10*((*ip)->p())/(TeV/GeV));
+      } else {
+        m_hPProtMom->fill((*ip)->p()/GeV);
+      } 
     }
     if( detailedHistos() ) {
       // Find number of different particles types
@@ -139,14 +139,15 @@ StatusCode MCTruthMonitor::execute() {
     m_hNNuclei->fill(nNuclei);
   }
   
-  const MCVertices* vertices = get<MCVertices>( MCVertexLocation::Default );
+  const LHCb::MCVertices* vertices = 
+    get<LHCb::MCVertices>( LHCb::MCVertexLocation::Default );
   m_hNVert->fill(vertices->size());
-  MCVertices::const_iterator iv;
+  LHCb::MCVertices::const_iterator iv;
   for( iv = vertices->begin(); vertices->end()!= iv; ++iv ) {
     m_hVType->fill((*iv)->type());
     m_hVZpos->fill((*iv)->position().z()/mm);
     m_hVZpos2->fill((*iv)->position().z()/mm);
-    m_hVTime->fill((*iv)->timeOfFlight()/ns);
+    m_hVTime->fill((*iv)->time()/ns);
   }
   
   return StatusCode::SUCCESS;

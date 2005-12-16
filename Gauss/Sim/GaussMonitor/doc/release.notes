@@ -4,6 +4,33 @@
 ! Purpose     : Hold monitoring algorithms for Gauss
 !-----------------------------------------------------------------------------
 
+!=================== GaussMonitor v3r0 2005-12-16 ============================
+! 2005-12-16 - Gloria CORTI
+ - Adapt to new event model change of method names, LHCb namespace, replacing
+   HardInfo with GenCollision
+   . src/GeneratorFullMonitor.cpp
+   . src/GenMonitorAlg.cpp
+   . src/MCDecayCounter.cpp
+   . src/MCTruthFullMonitor.cpp
+   . src/MCTruthMonitor.cpp
+ - Make algorithm inherit from GaudiAlgorithm and adapt to it
+   . src/GeneratorFullMonitor.{h,cpp}
+   . src/MCTruthFullMonitor.{h,cpp}
+ - Remove use of obsolete GenMCLink class
+   . src/MCTruthMonitor.cpp
+ - Pick IMCDecayFinder from Kernel 
+   . src/MCTruthMonitor.h   
+ - Use new macro for algorithm factories
+   . src/GeneratorFullMonitor.cpp
+   . src/GenMonitorAlg.cpp
+   . src/MCTruthFullMonitor.cpp
+   . src/MCTruthMonitor.h   
+ - Rename input property Input->HepMCEvents for HepMCEvents TES location
+   and Collisions for GenCollisions replaces HardInfo no longer valid
+   . src/GeneratorFullMonitor.{h,cpp}  
+ - use AIDA with -import
+   . cmt/requirements
+
 !===================== GaussMonitor v2r3 ===================================
 ! 2005-10-30 - Gloria Corti
  - cmt/requirements

@@ -1,4 +1,4 @@
-// $Id: MCDecayCounter.cpp,v 1.3 2005-10-02 15:14:03 gcorti Exp $
+// $Id: MCDecayCounter.cpp,v 1.4 2005-12-16 20:13:50 gcorti Exp $
 // Include files 
 
 // from Gaudi
@@ -8,7 +8,6 @@
 
 // from Event
 #include "Event/MCParticle.h"
-#include "Event/GenMCLink.h"
 
 // local
 #include "MCDecayCounter.h"
@@ -66,65 +65,17 @@ StatusCode MCDecayCounter::execute() {
 
   // Counter of events processed
   m_nEvents++;
-
-  // Retrieve signal from summaryInfo
-  SmartDataPtr<GenMCLinks> sigLinks(evtSvc(), GenMCLinkLocation::Default);
-  if( 0 == sigLinks ) {
-    Warning("GenMCLinks not found at "+GenMCLinkLocation::Default);    
-  }
-  else {
-    if( sigLinks->size() != 1 ) {
-      Warning("More than one signal found");
-    }
-    // Full print out with connection between MCParticle and HepMC
-    if( m_debug ) {
-      for( GenMCLinks::iterator aLink = sigLinks->begin();
-           sigLinks->end() != aLink; ++aLink ) {
-
-        debug() << "Signal info from " << GenMCLinkLocation::Default
-                  << endmsg;
-        MCParticle* mcSignal = (*aLink)->signal();
-        debug() << "== Signal Process type = "
-                  << (*aLink)->hepMCEvent()->pGenEvt()->signal_process_id()
-                  << endmsg;
-
-        HepMC::GenEvent* genEvt = (*aLink)->hepMCEvent()->pGenEvt();
-        HepMC::GenParticle* genP = 
-          genEvt->barcode_to_particle((*aLink)->genBarCode() );
-        verbose() << "== HepMC id = " << genP->pdg_id() 
-                  << " , momentum = " << genP->momentum()
-                  << endmsg;
-        verbose() << "== MCParticle id = " << mcSignal->particleID().pid()
-                  << " , momentum = " << mcSignal->momentum() 
-                  << endmsg;
-      }      
-    }
-  }  
   
-  MCParticles* kmcparts =
-    get<MCParticles>( eventSvc(), MCParticleLocation::Default );
+  LHCb::MCParticles* kmcparts =
+    get<LHCb::MCParticles>( eventSvc(), LHCb::MCParticleLocation::Default );
   
   // Find decay as described in MCDecayFinder
-  const MCParticle *mcpart = NULL;
-  std::vector<MCParticle*> mcparts(kmcparts->begin(), kmcparts->end());
+  const LHCb::MCParticle *mcpart = NULL;
+  std::vector<LHCb::MCParticle*> mcparts(kmcparts->begin(), kmcparts->end());
   while( m_mcFinder->findDecay( mcparts, mcpart ) ) {
     m_nMCFound++;
-    bool sigIsTheSame = false;
-    if( 0 != sigLinks ) {
-      for( GenMCLinks::iterator aLink = sigLinks->begin();
-           sigLinks->end() != aLink; ++aLink ) {
-        if( (*aLink)->signal() == mcpart ) {
-          sigIsTheSame = true;
-          break;
-        }
-        if( !sigIsTheSame ) {
-          Warning("Pointer to signal is not the same as in "+
-                  GenMCLinkLocation::Default);
-        }
-      } 
-    }
     if( m_debug ) {
-      verbose() << "Signal info from " << MCParticleLocation::Default
+      verbose() << "Signal info from " << LHCb::MCParticleLocation::Default
                 << endmsg;
       verbose() << "== MCParticle id = " << mcpart->particleID().pid()
                 << " , momentum = " << mcpart->momentum() 
