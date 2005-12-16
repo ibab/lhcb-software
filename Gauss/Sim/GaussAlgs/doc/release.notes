@@ -4,6 +4,12 @@
 ! Responsible : G.Corti
 ! -----------------------------------------------------------------------------
 
+!===================== GaussAlgs v1r7 2005-12-16  =========================
+! 2005-12-16 - Gloria CORTI
+ - src/GiGaGetHitsAlg.cpp
+   . set empty location as default for properties of MC Rich extra classes
+     since they are not present in normal production
+
 !============================ GaussAlgs v1r7 ==============================
 ! 2005-10-30 - Gloria CORTI
  - src/G4HepMCToMCTruth.{h,cpp}

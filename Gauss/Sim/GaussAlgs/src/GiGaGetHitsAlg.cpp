@@ -1,4 +1,4 @@
-// $Id: GiGaGetHitsAlg.cpp,v 1.6 2005-10-25 17:56:33 gcorti Exp $
+// $Id: GiGaGetHitsAlg.cpp,v 1.7 2005-12-16 11:24:11 gcorti Exp $
 // Include files
 
 // from Gaudi
@@ -62,12 +62,9 @@ GiGaGetHitsAlg::GiGaGetHitsAlg( const std::string& name,
   declareProperty( "PuVeloHits", m_puvelohits = MCVeloHitLocation::PuVeto );
   declareProperty( "MuonHits"  , m_muonhits = MCMuonHitLocation::MCMuonHits );
   declareProperty( "RichHits"  , m_richhits = MCRichHitLocation::Default );
-  declareProperty( "RichOpticalPhotons", 
-                   m_richop = MCRichOpticalPhotonLocation::Default    );
-  declareProperty( "RichTracks",
-                   m_richtracks = MCRichTrackLocation::Default );
-  declareProperty( "RichSegments",  
-                   m_richsegments = MCRichSegmentLocation::Default  );
+  declareProperty( "RichOpticalPhotons", m_richop = "" );
+  declareProperty( "RichTracks", m_richtracks = "" );
+  declareProperty( "RichSegments", m_richsegments = "" );
   declareProperty( "CaloHits",           m_caloHits      );
   declareProperty( "ExtraHits",          m_extraHits = "" );
   
