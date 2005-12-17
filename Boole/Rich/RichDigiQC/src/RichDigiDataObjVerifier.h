@@ -1,4 +1,4 @@
-// $Id: RichDigiDataObjVerifier.h,v 1.8 2005-12-16 15:12:34 jonrob Exp $
+// $Id: RichDigiDataObjVerifier.h,v 1.9 2005-12-17 14:11:34 jonrob Exp $
 #ifndef RICHDIGIQC_RICHDIGIDATOBJVERIFIER_H
 #define RICHDIGIQC_RICHDIGIDATOBJVERIFIER_H 1
 
@@ -11,7 +11,7 @@
 #include "GaudiKernel/SmartDataPtr.h"
 
 // Event model
-//#include "Event/RichDigit.h"
+#include "Event/RichDigit.h"
 #include "Event/MCRichDigit.h"
 #include "Event/MCRichHit.h"
 
