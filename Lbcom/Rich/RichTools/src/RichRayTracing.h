@@ -1,19 +1,19 @@
 
 //-----------------------------------------------------------------------------
-/** @file RichRayTracingAllSph.h
+/** @file RichRayTracing.h
  *
  *  Header file for tool : RichDetParameters
  *
  *  CVS History :
- *  $Id: RichRayTracingAllSph.h,v 1.6 2005-12-13 18:01:10 papanest Exp $
+ *  $Id: RichRayTracing.h,v 1.17 2005-12-17 14:21:59 jonrob Exp $
  *
  *  @author Chris Jones    Christopher.Rob.Jones@cern.ch
  *  @date   2004-03-29
  */
 //-----------------------------------------------------------------------------
 
-#ifndef RICHTOOLS_RICHRAYTRACINGALLSPH_H
-#define RICHTOOLS_RICHRAYTRACINGALLSPH_H 1
+#ifndef RICHTOOLS_RICHRAYTRACING_H
+#define RICHTOOLS_RICHRAYTRACING_H 1
 
 // from Gaudi
 #include "GaudiKernel/ToolFactory.h"
@@ -47,28 +47,29 @@
 #include "RichDet/DeRichHPDPanel.h"
 
 //-----------------------------------------------------------------------------
-/** @class RichRayTracingAllSph RichRayTracingAllSph.h
+/** @class RichRayTracing RichRayTracing.h
  *
- *  Rich detector tool which traces photons to the photodetectors. Mirror
- *  segmentation is included.
+ *  Rich detector tool which traces photons to the photodetectors.
+ *
+ *  Mirror segmentation is takaen into account.
  *
  *  @author Antonis Papanestis
  *  @date   2003-11-04
  */
 //-----------------------------------------------------------------------------
 
-class RichRayTracingAllSph : public RichHistoToolBase,
-                             virtual public IRichRayTracing
+class RichRayTracing : public RichHistoToolBase,
+                       virtual public IRichRayTracing
 {
 
 public: // Methods for Gaudi Framework
 
   /// Standard constructor
-  RichRayTracingAllSph( const std::string& type,
-                        const std::string& name,
-                        const IInterface* parent);
+  RichRayTracing( const std::string& type,
+                  const std::string& name,
+                  const IInterface* parent);
 
-  virtual ~RichRayTracingAllSph( ); ///< Destructor
+  virtual ~RichRayTracing( ); ///< Destructor
 
   // Initialization of the tool after creation
   virtual StatusCode initialize();
@@ -83,7 +84,7 @@ public: // methods (and doxygen comments) inherited from interface
   StatusCode traceToDetector( const Rich::DetectorType rich,
                               const Gaudi::XYZPoint& startPoint,
                               const Gaudi::XYZVector& startDir,
-                              RichGeomPhoton& photon,
+                              LHCb::RichGeomPhoton& photon,
                               const RichTraceMode mode = RichTraceMode(),
                               const Rich::Side forcedSide = Rich::top ) const;
 
@@ -114,7 +115,7 @@ public: // methods (and doxygen comments) inherited from interface
   StatusCode intersectPDPanel( const Rich::DetectorType rich,
                                const Gaudi::XYZPoint& point,
                                const Gaudi::XYZVector& dir,
-                               RichGeomPhoton& photon ) const;
+                               LHCb::RichGeomPhoton& photon ) const;
 
   // Intersection a given direction, from a given point with a given plane.
   StatusCode intersectPlane( const Gaudi::XYZPoint& position,
@@ -134,7 +135,7 @@ private: // methods
   StatusCode reflectBothMirrors ( const Rich::DetectorType rich,
                                   Gaudi::XYZPoint& position,
                                   Gaudi::XYZVector& direction,
-                                  RichGeomPhoton& photon,
+                                  LHCb::RichGeomPhoton& photon,
                                   const RichTraceMode mode,
                                   const Rich::Side fSide ) const;
 
@@ -166,4 +167,4 @@ private: // data
 
 };
 
-#endif // RICHTOOLS_RICHRAYTRACINGALLSPH_H
+#endif // RICHTOOLS_RICHRAYTRACING_H

@@ -1,11 +1,11 @@
 
 //-----------------------------------------------------------------------------
-/** @file RichRayTracingAllSph.cpp
+/** @file RichRayTracing.cpp
  *
- * Implementation file for class : RichRayTracingAllSph
+ * Implementation file for class : RichRayTracing
  *
  * CVS Log :-
- * $Id: RichRayTracingAllSph.cpp,v 1.7 2005-12-13 18:01:10 papanest Exp $
+ * $Id: RichRayTracing.cpp,v 1.18 2005-12-17 14:21:59 jonrob Exp $
  *
  * @author Antonis Papanestis
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
@@ -27,21 +27,21 @@
 #include "RichDet/DeRich.h"
 
 // local
-#include "RichRayTracingAllSph.h"
+#include "RichRayTracing.h"
 
 // namespaces
 using namespace LHCb;
 
 // Declaration of the Algorithm Factory
-static const  ToolFactory<RichRayTracingAllSph>          Factory ;
-const        IToolFactory& RichRayTracingAllSphFactory = Factory ;
+static const  ToolFactory<RichRayTracing>          Factory ;
+const        IToolFactory& RichRayTracingFactory = Factory ;
 
 //=============================================================================
 // Standard constructor, initializes variables
 //=============================================================================
-RichRayTracingAllSph::RichRayTracingAllSph( const std::string& type,
-                                            const std::string& name,
-                                            const IInterface* parent)
+RichRayTracing::RichRayTracing( const std::string& type,
+                                const std::string& name,
+                                const IInterface* parent)
   : RichHistoToolBase     ( type, name, parent  ),
     m_rich                ( Rich::NRiches       ),
     m_sphMirrorSegRows    ( Rich::NRiches, 0    ),
@@ -57,12 +57,12 @@ RichRayTracingAllSph::RichRayTracingAllSph( const std::string& type,
 //=============================================================================
 // Destructor
 //=============================================================================
-RichRayTracingAllSph::~RichRayTracingAllSph() { }
+RichRayTracing::~RichRayTracing() { }
 
 //=============================================================================
 // Initialisation.
 //=============================================================================
-StatusCode RichRayTracingAllSph::initialize()
+StatusCode RichRayTracing::initialize()
 {
 
   // intialise base class
@@ -166,7 +166,7 @@ StatusCode RichRayTracingAllSph::initialize()
 //=============================================================================
 //  Finalize
 //=============================================================================
-StatusCode RichRayTracingAllSph::finalize()
+StatusCode RichRayTracing::finalize()
 {
   // finalize base class
   return RichHistoToolBase::finalize();
@@ -177,12 +177,12 @@ StatusCode RichRayTracingAllSph::finalize()
 // it hits the detector plane,
 // take into account the geometrical boundaries of mirrors and detector
 //=============================================================================
-StatusCode RichRayTracingAllSph::traceToDetector ( const Rich::DetectorType rich,
-                                                   const Gaudi::XYZPoint& startPoint,
-                                                   const Gaudi::XYZVector& startDir,
-                                                   RichGeomPhoton& photon,
-                                                   const RichTraceMode mode,
-                                                   const Rich::Side forcedSide )
+StatusCode RichRayTracing::traceToDetector ( const Rich::DetectorType rich,
+                                             const Gaudi::XYZPoint& startPoint,
+                                             const Gaudi::XYZVector& startDir,
+                                             RichGeomPhoton& photon,
+                                             const RichTraceMode mode,
+                                             const Rich::Side forcedSide )
   const {
 
   Gaudi::XYZPoint tmpPosition( startPoint );
@@ -207,10 +207,10 @@ StatusCode RichRayTracingAllSph::traceToDetector ( const Rich::DetectorType rich
 }
 
 //============================================================================
-StatusCode RichRayTracingAllSph::intersectPDPanel ( const Rich::DetectorType,
-                                                    const Gaudi::XYZPoint&,
-                                                    const Gaudi::XYZVector&,
-                                                    RichGeomPhoton& ) const
+StatusCode RichRayTracing::intersectPDPanel ( const Rich::DetectorType,
+                                              const Gaudi::XYZPoint&,
+                                              const Gaudi::XYZVector&,
+                                              RichGeomPhoton& ) const
 {
   return Warning ( "Unimplemented method", StatusCode::SUCCESS );
 }
@@ -221,12 +221,12 @@ StatusCode RichRayTracingAllSph::intersectPDPanel ( const Rich::DetectorType,
 // geometrical boundaries checking depends on the traceMode variable
 //=============================================================================
 StatusCode
-RichRayTracingAllSph::traceToDetectorWithoutEff( const Rich::DetectorType rich,
-                                                 const Gaudi::XYZPoint& position,
-                                                 const Gaudi::XYZVector& direction,
-                                                 Gaudi::XYZPoint& hitPosition,
-                                                 const RichTraceMode mode,
-                                                 const Rich::Side forcedSide ) const
+RichRayTracing::traceToDetectorWithoutEff( const Rich::DetectorType rich,
+                                           const Gaudi::XYZPoint& position,
+                                           const Gaudi::XYZVector& direction,
+                                           Gaudi::XYZPoint& hitPosition,
+                                           const RichTraceMode mode,
+                                           const Rich::Side forcedSide ) const
 {
 
   Gaudi::XYZPoint tmpPosition( position );
@@ -247,12 +247,12 @@ RichRayTracingAllSph::traceToDetectorWithoutEff( const Rich::DetectorType rich,
 //  reflect a photon on both mirrors and return the position and direction
 //  on the secondary mirror.
 //=========================================================================
-StatusCode RichRayTracingAllSph::reflectBothMirrors( const Rich::DetectorType rich,
-                                                     Gaudi::XYZPoint& position,
-                                                     Gaudi::XYZVector& direction,
-                                                     RichGeomPhoton& photon,
-                                                     const RichTraceMode mode,
-                                                     const Rich::Side forcedSide ) const
+StatusCode RichRayTracing::reflectBothMirrors( const Rich::DetectorType rich,
+                                               Gaudi::XYZPoint& position,
+                                               Gaudi::XYZVector& direction,
+                                               RichGeomPhoton& photon,
+                                               const RichTraceMode mode,
+                                               const Rich::Side forcedSide ) const
 {
 
 
@@ -434,10 +434,10 @@ StatusCode RichRayTracingAllSph::reflectBothMirrors( const Rich::DetectorType ri
 // have in order to hit that point in the detector panel.
 //=========================================================================
 StatusCode
-RichRayTracingAllSph::traceBackFromDetector ( const Gaudi::XYZPoint& startPoint,
-                                              const Gaudi::XYZVector& startDir,
-                                              Gaudi::XYZPoint& endPoint,
-                                              Gaudi::XYZVector& endDir ) const
+RichRayTracing::traceBackFromDetector ( const Gaudi::XYZPoint& startPoint,
+                                        const Gaudi::XYZVector& startDir,
+                                        Gaudi::XYZPoint& endPoint,
+                                        Gaudi::XYZVector& endDir ) const
 {
 
   Gaudi::XYZPoint tmpStartPoint( startPoint );
@@ -496,10 +496,10 @@ RichRayTracingAllSph::traceBackFromDetector ( const Gaudi::XYZPoint& startPoint,
 //=========================================================================
 //  reflect from a spherical mirror
 //=========================================================================
-StatusCode RichRayTracingAllSph::reflectSpherical ( Gaudi::XYZPoint& position,
-                                                    Gaudi::XYZVector& direction,
-                                                    const Gaudi::XYZPoint& CoC,
-                                                    const double radius ) const
+StatusCode RichRayTracing::reflectSpherical ( Gaudi::XYZPoint& position,
+                                              Gaudi::XYZVector& direction,
+                                              const Gaudi::XYZPoint& CoC,
+                                              const double radius ) const
 {
   // find intersection point
   // for line sphere intersection look at http://www.realtimerendering.com/int/
@@ -527,9 +527,9 @@ StatusCode RichRayTracingAllSph::reflectSpherical ( Gaudi::XYZPoint& position,
 //=========================================================================
 //  reflect from a flat mirror
 //=========================================================================
-StatusCode RichRayTracingAllSph::reflectFlatPlane ( Gaudi::XYZPoint& position,
-                                                    Gaudi::XYZVector& direction,
-                                                    const Gaudi::Plane3D& plane ) const
+StatusCode RichRayTracing::reflectFlatPlane ( Gaudi::XYZPoint& position,
+                                              Gaudi::XYZVector& direction,
+                                              const Gaudi::Plane3D& plane ) const
 {
   Gaudi::XYZPoint intersection;
   const Gaudi::XYZVector normal( plane.Normal() );
@@ -548,10 +548,10 @@ StatusCode RichRayTracingAllSph::reflectFlatPlane ( Gaudi::XYZPoint& position,
 //=========================================================================
 //  intersect a plane
 //=========================================================================
-StatusCode RichRayTracingAllSph::intersectPlane ( const Gaudi::XYZPoint& position,
-                                                  const Gaudi::XYZVector& direction,
-                                                  const Gaudi::Plane3D& plane,
-                                                  Gaudi::XYZPoint& intersection ) const
+StatusCode RichRayTracing::intersectPlane ( const Gaudi::XYZPoint& position,
+                                            const Gaudi::XYZVector& direction,
+                                            const Gaudi::Plane3D& plane,
+                                            Gaudi::XYZPoint& intersection ) const
 {
   const double scalar = direction.Dot( plane.Normal() );
   if ( scalar == 0.0 ) return StatusCode::FAILURE;
