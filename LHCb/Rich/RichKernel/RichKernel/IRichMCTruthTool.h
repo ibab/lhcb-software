@@ -5,7 +5,7 @@
  *  Header file for tool interface : IRichMCTruthTool
  *
  *  CVS Log :-
- *  $Id: IRichMCTruthTool.h,v 1.14 2005-12-16 15:10:24 jonrob Exp $
+ *  $Id: IRichMCTruthTool.h,v 1.15 2005-12-17 14:14:37 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   2003-07-31
@@ -28,8 +28,6 @@ namespace LHCb
   class MCRichDigit;
   class MCParticle;
   class MCRichHit;
-  class RichDigit;
-  class Track;
   class MCRichDigitSummary;
 }
 
@@ -65,26 +63,6 @@ public:
   virtual bool mcParticles( const LHCb::RichSmartID id,
                             std::vector<const LHCb::MCParticle*> & mcParts ) const = 0;
 
-  /** Find best MCParticle association for a given reconstructed Track
-   *
-   *  @param track Pointer to a Track
-   *
-   *  @return Pointer to MCParticle
-   *  @retval NULL  No Monte Carlo association was possible
-   *  @retval !NULL Association was successful
-   */
-  virtual const LHCb::MCParticle *
-  mcParticle ( const LHCb::Track * track ) const = 0;
-
-  /** Determines the particle mass hypothesis for a given reconstructed Track
-   *
-   *  @param track Pointer to a Track
-   *
-   *  @return The true particle type of the TrStoredTrack
-   */
-  virtual Rich::ParticleIDType
-  mcParticleType ( const LHCb::Track * track ) const = 0;
-
   /** Determines the particle mass hypothesis for a given MCParticle
    *
    *  @param mcPart Pointer to an MCParticle
@@ -93,17 +71,6 @@ public:
    */
   virtual Rich::ParticleIDType
   mcParticleType ( const LHCb::MCParticle * mcPart ) const = 0;
-
-  /** Finds the MCRichDigit association for a given RichDigit
-   *
-   *  @param digit Pointer to a RichDigit
-   *
-   *  @return Pointer to an MCRichDigit
-   *  @retval NULL  No Monte Carlo association was possible
-   *  @retval !NULL Association was successful
-   */
-  virtual const LHCb::MCRichDigit *
-  mcRichDigit ( const LHCb::RichDigit * digit ) const = 0;
 
   /** Finds the MCRichDigit association for a RichSmartID channel identifier
    *
@@ -115,17 +82,6 @@ public:
    */
   virtual const LHCb::MCRichDigit *
   mcRichDigit ( const LHCb::RichSmartID id ) const = 0;
-
-  /** Finds the MCRichTrack associated to a given Track
-   *
-   *  @param track Pointer to a Track
-   *
-   *  @return Pointer to an MCRichTrack
-   *  @retval NULL  No Monte Carlo association was possible
-   *  @retval !NULL Association was successful
-   */
-  virtual const LHCb::MCRichTrack *
-  mcRichTrack ( const LHCb::Track * track ) const = 0;
 
   /** Finds the MCRichTrack associated to a given MCParticle
    *

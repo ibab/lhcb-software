@@ -1,13 +1,10 @@
+
 /** @file IRichMCTrackInfoTool.h
  *
  *  Header file for tool interface : IRichMCTrackInfoTool
  *
  *  CVS Log :-
- *  $Id: IRichMCTrackInfoTool.h,v 1.5 2005-12-13 09:28:46 papanest Exp $
- *  $Log: not supported by cvs2svn $
- *  Revision 1.4  2004/07/26 17:53:16  jonrob
- *  Various improvements to the doxygen comments
- *
+ *  $Id: IRichMCTrackInfoTool.h,v 1.6 2005-12-17 14:14:37 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -17,12 +14,10 @@
 #define RICHKERNEL_IRICHMCTRACKINFOTOOL_H 1
 
 // Event Model
-class MCRichOpticalPhoton;
-class MCRichSegment;
-class MCRichTrack;
-class MCRichDigit;
-class MCParticle;
-class MCRichHit;
+namespace LHCb
+{
+  class MCRichSegment;
+}
 
 /// Static Interface Identification
 static const InterfaceID IID_IRichMCTrackInfoTool( "IRichMCTrackInfoTool", 1, 0 );
@@ -46,7 +41,7 @@ public:
   static const InterfaceID& interfaceID() { return IID_IRichMCTrackInfoTool; }
 
   /** Takes the direction information from a MCRichSegment and ray traces it through the
-   *  appropriate RICH optical system and computes the intersect points with the HPD 
+   *  appropriate RICH optical system and computes the intersect points with the HPD
    *  panel in LHCb global coordinates.
    *
    *  @param segment  Pointer to an MCRichSegment
@@ -56,12 +51,12 @@ public:
    *  @retval true   intersection was successful, returned hitPoint is valid
    *  @retval false  intersection was unsuccessful, returned hitPoint is not valid
    */
-  virtual const bool 
-  panelIntersectGlobal ( const MCRichSegment * segment,
+  virtual const bool
+  panelIntersectGlobal ( const LHCb::MCRichSegment * segment,
                          Gaudi::XYZPoint & hitPoint ) const = 0;
 
   /** Takes the direction information from a MCRichSegment and ray traces it through the
-   *  appropriate RICH optical system and computes the intersect points with the HPD 
+   *  appropriate RICH optical system and computes the intersect points with the HPD
    *  panel in local HPD panel coordinates.
    *
    *  @param segment  Pointer to an MCRichSegment
@@ -71,8 +66,8 @@ public:
    *  @retval true   intersection was successful, returned hitPoint is valid
    *  @retval false  intersection was unsuccessful, returned hitPoint is not valid
    */
-  virtual const bool 
-  panelIntersectLocal ( const MCRichSegment * segment, 
+  virtual const bool
+  panelIntersectLocal ( const LHCb::MCRichSegment * segment,
                         Gaudi::XYZPoint & hitPoint ) const = 0;
 
 };

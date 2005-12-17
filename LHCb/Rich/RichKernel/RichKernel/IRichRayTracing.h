@@ -2,7 +2,7 @@
  *
  *  Header file for tool interface : IRichRayTracing
  *
- *  $Id: IRichRayTracing.h,v 1.16 2005-12-13 09:28:46 papanest Exp $
+ *  $Id: IRichRayTracing.h,v 1.17 2005-12-17 14:14:37 jonrob Exp $
  *
  *  @author Antonis Papanestis
  *  @date   2003-10-28
@@ -26,9 +26,11 @@
 #include "Kernel/Vector3DTypes.h"
 #include "Kernel/Plane3DTypes.h"
 
-// RichEvent
-class RichGeomPhoton;
-
+// forward decs
+namespace LHCb
+{
+  class RichGeomPhoton;
+}
 
 /// Static Interface Identification
 static const InterfaceID IID_IRichRayTracing( "IRichRayTracing", 1, 0 );
@@ -69,7 +71,7 @@ public:
   traceToDetector ( const Rich::DetectorType rich,
                     const Gaudi::XYZPoint& startPoint,
                     const Gaudi::XYZVector& startDir,
-                    RichGeomPhoton& photon,
+                    LHCb::RichGeomPhoton& photon,
                     const RichTraceMode mode = RichTraceMode(),
                     const Rich::Side forcedSide = Rich::top ) const = 0;
 
@@ -132,7 +134,7 @@ public:
   intersectPDPanel ( const Rich::DetectorType rich,
                      const Gaudi::XYZPoint& point,
                      const Gaudi::XYZVector& dir,
-                     RichGeomPhoton& photon ) const = 0;
+                     LHCb::RichGeomPhoton& photon ) const = 0;
 
   /** Intersection a given direction, from a given point with a given plane.
    *

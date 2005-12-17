@@ -1,13 +1,17 @@
-! $Id: release.notes,v 1.89 2005-12-13 17:27:25 jonrob Exp $
+! $Id: release.notes,v 1.90 2005-12-17 14:14:37 jonrob Exp $
 ! Package     : Rich/RichKernel
 ! Responsible : Chris Jones
 ! Purpose     : General purpose RICH classes
 
-!====================== RichKernel v6r0 2005-12-13 =======================
+
+! 2005-12-17 - Chris Jones
+ - Move interfaces IRichPhotonReconstruction and IRichTrSegMaker to RichRecBase
+ - Update interfaces for new RichGeomPhoton and RichTrackSegment
 
 ! 2005-12-13 - Chris Jones
  - Update DAQ related definitions
- - Switch RichHashMap to using Gaudi provided hash map
+ - Switch RichHashMap to using Gaudi provided hash map and move into  
+   Rich namespace
 
 ! 2005-12-12 - Antonis Papanestis
  - Replace CLHEP geometry with Mathcore
