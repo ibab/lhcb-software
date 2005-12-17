@@ -5,7 +5,7 @@
  *  Header file for tool : RichMCTruthTool
  *
  *  CVS Log :-
- *  $Id: RichMCTruthTool.h,v 1.19 2005-10-18 12:42:26 jonrob Exp $
+ *  $Id: RichMCTruthTool.h,v 1.20 2005-12-17 14:18:15 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -32,17 +32,11 @@
 
 // RichKernel
 #include "RichKernel/RichMap.h"
-//#include "RichKernel/RichHashMap.h"
-//#include "RichKernel/RichSmartIDHashFuncs.h"
 #include "RichKernel/RichParticleIDType.h"
 
 // Event model
-#include "Event/Track.h"
-#include "Event/TrStoredTrack.h"
-#include "Event/TrgTrack.h"
 #include "Event/MCParticle.h"
 #include "Event/MCTruth.h"
-#include "Event/RichDigit.h"
 #include "Event/MCRichDigit.h"
 #include "Event/MCRichDigitSummary.h"
 #include "Event/MCRichOpticalPhoton.h"
@@ -56,8 +50,11 @@
 // Interfaces
 #include "RichKernel/IRichMCTruthTool.h"
 
-// CLHEP
-#include "CLHEP/Units/PhysicalConstants.h"
+// Constants
+#include "Kernel/PhysicalConstants.h"
+
+// namespaces
+using namespace LHCb;
 
 //-----------------------------------------------------------------------------
 /** @class RichMCTruthTool RichMCTruthTool.h
@@ -66,9 +63,6 @@
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
- *
- *  @todo Keep an eye on the method RichMCTruthTool::mcParticle( const TrgTrack * track )
- *        it is using the access by int method
  *
  *  @todo Major tidy up once only one track type and track MC association type ...
  */
@@ -104,38 +98,11 @@ public: // methods (and doxygen comments) inherited from interface
   bool mcParticles( const RichSmartID id,
                     std::vector<const MCParticle*> & mcParts ) const;
 
-  // Find best MCParticle association for a given TrStoredTrack
-  const MCParticle * mcParticle( const TrStoredTrack * track ) const;
-
-  // Find best MCParticle association for a given reconstructed Track
-  const MCParticle * mcParticle( const Track * track ) const;
-
-  // Find best MCParticle association for a given TrgTrack
-  const MCParticle * mcParticle( const TrgTrack * track ) const;
-
-  // Determines the particle mass hypothesis for a given reconstructed Track
-  Rich::ParticleIDType mcParticleType( const Track * track ) const;
-
-  // Determines the particle mass hypothesis for a given TrStoredTrack
-  Rich::ParticleIDType mcParticleType( const TrStoredTrack * track ) const;
-
-  // Determines the particle mass hypothesis for a given TrgTrack
-  Rich::ParticleIDType mcParticleType( const TrgTrack * track ) const;
-
   // Determines the particle mass hypothesis for a given MCParticle
   Rich::ParticleIDType mcParticleType( const MCParticle * mcPart ) const;
 
-  // Finds the MCRichDigit association for a given RichDigit
-  const MCRichDigit * mcRichDigit( const RichDigit * digit ) const;
-
   // Finds the MCRichDigit association for a RichSmartID channel identifier
   const MCRichDigit * mcRichDigit( const RichSmartID id ) const;
-
-  // Finds the MCRichTrack associated to a given TrStoredTrack
-  const MCRichTrack * mcRichTrack( const TrStoredTrack * track ) const;
-
-  // Finds the MCRichTrack associated to a given TrgTrack
-  const MCRichTrack * mcRichTrack( const TrgTrack * track ) const;
 
   // Finds the MCRichTrack associated to a given MCParticle
   const MCRichTrack * mcRichTrack( const MCParticle * mcPart ) const;
@@ -162,23 +129,11 @@ public: // methods (and doxygen comments) inherited from interface
 
 private: // definitions
 
-  /// (offline) tracking MC truth typedef
-  typedef IAssociatorWeighted<TrStoredTrack,MCParticle,double> TrackAsct ;
-
   /// typedef of the Linker object for MCParticles to MCRichTracks
   typedef LinkedTo<MCRichTrack,MCParticle> MCPartToRichTracks;
 
   /// typedef of the Linker object for MCRichHits to MCRichOpticalPhotons
   typedef LinkedTo<MCRichOpticalPhoton,MCRichHit> MCRichHitToPhoton;
-
-  /// typedef of the Linker object for TrgTracks to MCParticles
-  typedef LinkedTo<MCParticle,TrgTrack> TrgTrackToMCP;
-
-  /// typedef of the Linker object for TrStoredTracks to MCParticles
-  typedef LinkedTo<MCParticle,TrStoredTrack> TrStoredTrackToMCP;
-
-  /// typedef of the Linker object for Tracks to MCParticles
-  typedef LinkedTo<MCParticle,::Track> TrackToMCP;
 
   /// Typedef for vector of pointers to MCRichDigitSummaries
   typedef std::vector<MCRichDigitSummary*> MCRichDigitSummaries;
@@ -193,15 +148,6 @@ private: // private methods
 
   /// Returns the linker object for MCRichHits to MCRichOpticalPhotons
   MCRichHitToPhoton * mcPhotonLinks() const;
-
-  /// Returns the linker object for TrgTracks to MCParticles
-  TrgTrackToMCP * trgTrackToMCPLinks() const;
-
-  /// Returns the linker object for TrStoredTracks to MCParticles
-  TrStoredTrackToMCP * trStoredTrackToMCPLinks() const;
-
-  /// Returns the linker object for Tracks to MCParticles
-  TrackToMCP * trackToMCPLinks() const;
 
   /// clean up current linker objects
   void cleanUpLinkers();
@@ -218,7 +164,7 @@ private: // private methods
    * @return Pointer to the MCRichDigitSummaryVector
    * @retval NULL means no MC information is available
    */
-  const MCRichDigitSummaryVector * mcRichDigitSummaries() const;
+  const MCRichDigitSummarys * mcRichDigitSummaries() const;
 
   /** Loads the MCRichHits from the TES
    *
@@ -230,9 +176,6 @@ private: // private methods
   /// Initialise for a new event
   void InitNewEvent();
 
-  /// Load the (offline) track relations associator on demand
-  TrackAsct * trackAsct() const;
-
   /// Access the map between RichSmartIDs and MCRichDigitSummaries
   const RichSummaryMap & summaryMap() const;
 
@@ -241,7 +184,7 @@ private: // private data
   /// Flag to say MCRichDigits have been loaded for this event
   mutable bool m_mcRichDigitsDone;
 
-  /// Flag to say MCRichDigitSummaryVector has been loaded for this event
+  /// Flag to say MCRichDigitSummarys has been loaded for this event
   mutable bool m_mcRichDigitSumsDone;
 
   /// Flag to say mapping between RichSmartIDs and MCRichDigitSummary objects
@@ -254,8 +197,8 @@ private: // private data
   /// Pointer to MCRichDigits
   mutable MCRichDigits * m_mcRichDigits;
 
-  /// Pointer to MCRichDigitSummaryVector
-  mutable MCRichDigitSummaryVector * m_mcRichDigitSums;
+  /// Pointer to MCRichDigitSummarys
+  mutable MCRichDigitSummarys * m_mcRichDigitSums;
 
   /// Pointer to MCRichDigits
   mutable MCRichHits * m_mcRichHits;
@@ -266,19 +209,10 @@ private: // private data
   /// Linker for MCRichHits to MCRichOpticalPhotons
   mutable MCRichHitToPhoton * m_mcPhotonLinks;
 
-  /// Linker for TrgTracks to MCParticles
-  mutable TrgTrackToMCP * m_trgTrToMCPLinks;
-
-  /// Linker for TrStoredTracks to MCParticles
-  mutable TrStoredTrackToMCP * m_trStoredTrToMCPLinks;
-
-  /// Linker for Tracks to MCParticles
-  mutable TrackToMCP * m_trToMCPLinks;
-
   /// Location of MCRichDigits in EDS
   std::string m_mcRichDigitsLocation;
 
-  /// Location of MCRichDigitSummaryVector in EDS
+  /// Location of MCRichDigitSummarys in EDS
   std::string m_mcRichDigitSumsLocation;
 
   /// Location of MCRichHits in EDS
@@ -290,31 +224,15 @@ private: // private data
   /// Map between RichSmartIDs and MCRichDigitSummary objects
   mutable RichSummaryMap m_summaryMap;
 
-  // MC Tracking truth
-  std::string m_trAsctName; ///< Track associator name
-  std::string m_trAsctType; ///< Track associator type
-  mutable TrackAsct * m_trackToMCP; ///< Pointer to track associator
-
   /// Flag to turn of the following of the chain RichSmartID -> MCRichDigit -> MCRichHit
   bool m_followMC;
 
 };
 
-inline RichMCTruthTool::TrackAsct * 
-RichMCTruthTool::trackAsct() const
-{
-  if ( !m_trackToMCP ) 
-  { m_trackToMCP = tool<TrackAsct>( m_trAsctType, m_trAsctName ); }
-  return m_trackToMCP;
-}
-
 inline void RichMCTruthTool::cleanUpLinkers()
 {
   if ( m_mcTrackLinks         ) { delete m_mcTrackLinks;         m_mcTrackLinks         = 0; }
   if ( m_mcPhotonLinks        ) { delete m_mcPhotonLinks;        m_mcPhotonLinks        = 0; }
-  if ( m_trgTrToMCPLinks      ) { delete m_trgTrToMCPLinks;      m_trgTrToMCPLinks      = 0; }
-  if ( m_trStoredTrToMCPLinks ) { delete m_trStoredTrToMCPLinks; m_trStoredTrToMCPLinks = 0; }
-  if ( m_trToMCPLinks         ) { delete m_trToMCPLinks;         m_trToMCPLinks         = 0; }
 }
 
 inline void RichMCTruthTool::InitNewEvent()

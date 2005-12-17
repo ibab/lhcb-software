@@ -4,7 +4,7 @@
  *  Header file for tool : RichMCTrackInfoTool
  *
  *  CVS Log :-
- *  $Id: RichMCTrackInfoTool.h,v 1.7 2005-06-23 15:08:50 jonrob Exp $
+ *  $Id: RichMCTrackInfoTool.h,v 1.8 2005-12-17 14:18:15 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -23,19 +23,15 @@
 // Event model
 #include "Event/MCParticle.h"
 #include "Event/MCTruth.h"
-#include "Event/RichDigit.h"
-#include "Event/MCRichDigit.h"
-#include "Event/MCRichOpticalPhoton.h"
 #include "Event/MCRichSegment.h"
-#include "Event/MCRichTrack.h"
 
 // Interfaces
 #include "RichKernel/IRichMCTrackInfoTool.h"
 #include "RichKernel/IRichRayTracing.h"
 #include "RichKernel/IRichSmartIDTool.h"
 
-// CLHEP
-#include "CLHEP/Units/PhysicalConstants.h"
+// Constants
+#include "Kernel/PhysicalConstants.h"
 
 /** @class RichMCTrackInfoTool RichMCTrackInfoTool.h
  *
@@ -68,14 +64,14 @@ public: // methods (and doxygen comments) inherited from interface
   // Takes the direction information from a MCRichSegment and ray traces it through the
   // appropriate RICH optical system and computes the intersect points with the HPD
   // panel in LHCb global coordinates
-  const bool panelIntersectGlobal ( const MCRichSegment * segment,
-                                    HepPoint3D & hitPoint ) const;
+  const bool panelIntersectGlobal ( const LHCb::MCRichSegment * segment,
+                                    Gaudi::XYZPoint & hitPoint ) const;
 
   // Takes the direction information from a MCRichSegment and ray traces it through the
   // appropriate RICH optical system and computes the intersect points with the HPD
   // panel in local HPD panel coordinates
-  const bool panelIntersectLocal ( const MCRichSegment * segment, 
-                                   HepPoint3D & hitPoint ) const;
+  const bool panelIntersectLocal ( const LHCb::MCRichSegment * segment, 
+                                   Gaudi::XYZPoint & hitPoint ) const;
 
 private: // private data
 

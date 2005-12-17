@@ -5,10 +5,11 @@
  * Implementation file for class : RichMCTruthTool
  *
  * CVS Log :-
- * $Id: RichMCTruthTool.cpp,v 1.22 2005-10-18 12:42:26 jonrob Exp $
+ * $Id: RichMCTruthTool.cpp,v 1.23 2005-12-17 14:18:15 jonrob Exp $
  *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
- * @date 14/01/2002
+ * @date 14/01/2002//#include "RichKernel/RichHashMap.h"
+//#include "RichKernel/RichSmartIDHashFuncs.h"
  */
 //-----------------------------------------------------------------------------
 
@@ -31,11 +32,7 @@ RichMCTruthTool::RichMCTruthTool( const std::string& type,
     m_mcRichDigits         ( 0     ),
     m_mcRichHits           ( 0     ),
     m_mcTrackLinks         ( 0     ),
-    m_mcPhotonLinks        ( 0     ),
-    m_trgTrToMCPLinks      ( 0     ),
-    m_trStoredTrToMCPLinks ( 0     ),
-    m_trToMCPLinks         ( 0     ),
-    m_trackToMCP           ( 0     )
+    m_mcPhotonLinks        ( 0     )
 {
 
   // interface
@@ -48,9 +45,6 @@ RichMCTruthTool::RichMCTruthTool( const std::string& type,
                    m_mcRichDigitSumsLocation = MCRichDigitSummaryLocation::Default );
   declareProperty( "MCRichHitsLocation",
                    m_mcRichHitsLocation = MCRichHitLocation::Default );
-  declareProperty( "TrackAsctName", m_trAsctName = "TrackToMCP" );
-  declareProperty( "TrackAsctType",
-                   m_trAsctType = "AssociatorWeighted<TrStoredTrack,MCParticle,double>");
   declareProperty( "FollowMCChain", m_followMC = false );
 
 }
@@ -112,7 +106,7 @@ bool RichMCTruthTool::mcParticles( const RichSmartID id,
     for ( MCRichDigitSummaries::const_iterator iSum = (*iEn).second.begin();
           iSum != (*iEn).second.end(); ++iSum )
     {
-      MCParticle * mcP = (*iSum)->mcParticle();
+      const MCParticle * mcP = (*iSum)->mcParticle();
       // protect against null references
       if ( !mcP ) continue;
       // Add to vector, once per MCParticle
@@ -159,77 +153,6 @@ bool RichMCTruthTool::mcParticles( const RichSmartID id,
   return !mcParts.empty();
 }
 
-const MCParticle *
-RichMCTruthTool::mcParticle( const Track * track ) const
-{
-  // Try with linkers
-  if ( trackToMCPLinks() && !trackToMCPLinks()->notFound() )
-  {
-    return trackToMCPLinks()->first(track->key());
-  }
-  // If get here MC association failed
-  Warning( "No MC association available for Tracks" );
-  return NULL;
-}
-
-const MCParticle *
-RichMCTruthTool::mcParticle( const TrStoredTrack * track ) const
-{
-  if ( !track )
-  {
-    Warning ( "::mcParticle : NULL TrStoredTrack pointer" );
-    return NULL;
-  }
-
-  // First, try with linkers
-  if ( trStoredTrackToMCPLinks() && !trStoredTrackToMCPLinks()->notFound() )
-  {
-    return trStoredTrackToMCPLinks()->first(track->key());
-  }
-
-  // Otherwise try using relations
-  if ( trackAsct() )
-  {
-    return trackAsct()->associatedFrom(track);
-  }
-
-  // If get here, both failed
-  Warning( "No MC association available for TrStoredTracks" );
-  return NULL;
-}
-
-const MCParticle *
-RichMCTruthTool::mcParticle( const TrgTrack * track ) const
-{
-  if ( track ) {
-    return trgTrackToMCPLinks()->first(track->key());
-  } else {
-    Warning ( "::mcParticle : NULL TrgTrack pointer" );
-    return NULL;
-  }
-}
-
-const MCRichDigit * RichMCTruthTool::mcRichDigit( const RichDigit * digit ) const
-{
-  if ( !digit ) return NULL;
-
-  if ( msgLevel(MSG::DEBUG) )
-  {
-    debug() << "Locating MCRichDigit for RichDigit " << (int)digit->key() << endreq;
-  }
-
-  // Try fast method
-  const MCRichDigit * mcDigit = MCTruth<MCRichDigit>(digit);
-
-  // If failed, try accessing MCRichDigit container directly via key
-  if ( !mcDigit && mcRichDigits() ) mcDigit = mcRichDigit( digit->key() );
-
-  // if still failed, issue a warning
-  if ( !mcDigit ) Warning( "Failed to find MCRichDigit for RichDigit" );
-
-  return mcDigit;
-}
-
 const MCRichDigit * RichMCTruthTool::mcRichDigit( const RichSmartID id ) const
 {
   if ( msgLevel(MSG::DEBUG) )
@@ -242,39 +165,9 @@ const MCRichDigit * RichMCTruthTool::mcRichDigit( const RichSmartID id ) const
 }
 
 Rich::ParticleIDType
-RichMCTruthTool::mcParticleType( const Track * track ) const
-{
-  return mcParticleType( mcParticle(track) );
-}
-
-Rich::ParticleIDType
-RichMCTruthTool::mcParticleType( const TrStoredTrack * track ) const
-{
-  return mcParticleType( mcParticle(track) );
-}
-
-Rich::ParticleIDType
-RichMCTruthTool::mcParticleType( const TrgTrack * track ) const
-{
-  return mcParticleType( mcParticle(track) );
-}
-
-Rich::ParticleIDType
 RichMCTruthTool::mcParticleType( const MCParticle * mcPart ) const
 {
   return (mcPart ? m_localID[abs(mcPart->particleID().pid())] : Rich::Unknown);
-}
-
-const MCRichTrack *
-RichMCTruthTool::mcRichTrack( const TrStoredTrack * track ) const
-{
-  return mcRichTrack( mcParticle(track) );
-}
-
-const MCRichTrack *
-RichMCTruthTool::mcRichTrack( const TrgTrack * track ) const
-{
-  return mcRichTrack( mcParticle(track) );
 }
 
 const MCRichTrack *
@@ -291,9 +184,9 @@ RichMCTruthTool::mcOpticalPhoton( const MCRichHit * mcHit ) const
 
 bool RichMCTruthTool::isBackground( const MCRichDigit * digit ) const
 {
-  return ( digit && ( digit->scatteredHit() ||
-                      digit->chargedTrack() ||
-                      digit->backgroundHit() ) );
+  return ( digit && ( digit->history().scatteredHit() ||
+                      digit->history().chargedTrack() ||
+                      digit->history().backgroundHit() ) );
 }
 
 bool RichMCTruthTool::isBackground ( const RichSmartID id ) const
@@ -307,7 +200,7 @@ bool RichMCTruthTool::isBackground ( const RichSmartID id ) const
     for ( MCRichDigitSummaries::const_iterator iSum = (*iEn).second.begin();
           iSum != (*iEn).second.end(); ++iSum )
     {
-      const MCRichDigitHistoryCode & code = (*iSum)->historyCode();
+      const MCRichDigitHistoryCode & code = (*iSum)->history();
       if ( code.scatteredHit() ||
            code.chargedTrack() ||
            code.backgroundHit() ) return true;
@@ -347,7 +240,7 @@ RichMCTruthTool::isCherenkovRadiation( const RichSmartID id,
     for ( MCRichDigitSummaries::const_iterator iSum = (*iEn).second.begin();
           iSum != (*iEn).second.end(); ++iSum )
     {
-      const MCRichDigitHistoryCode & code = (*iSum)->historyCode();
+      const MCRichDigitHistoryCode & code = (*iSum)->history();
       if      ( Rich::Aerogel == rad && code.aerogelHit() ) { return true; }
       else if ( Rich::C4F10   == rad && code.c4f10Hit()   ) { return true; }
       else if ( Rich::CF4     == rad && code.cf4Hit()     ) { return true; }
@@ -360,9 +253,9 @@ RichMCTruthTool::isCherenkovRadiation( const RichSmartID id,
   const MCRichDigit * mcDig = mcRichDigit( id );
   if ( mcDig )
   {
-    if ( Rich::Aerogel == rad ) return mcDig->aerogelHit();
-    if ( Rich::C4F10   == rad ) return mcDig->c4f10Hit();
-    if ( Rich::CF4     == rad ) return mcDig->cf4Hit();
+    if ( Rich::Aerogel == rad ) return mcDig->history().aerogelHit();
+    if ( Rich::C4F10   == rad ) return mcDig->history().c4f10Hit();
+    if ( Rich::CF4     == rad ) return mcDig->history().cf4Hit();
   }
 
   // finally, assume not
@@ -415,17 +308,17 @@ const MCRichDigits * RichMCTruthTool::mcRichDigits() const
   return m_mcRichDigits;
 }
 
-const MCRichDigitSummaryVector *
+const MCRichDigitSummarys *
 RichMCTruthTool::mcRichDigitSummaries() const
 {
   if ( !m_mcRichDigitSumsDone )
   {
     m_mcRichDigitSumsDone = true;
 
-    // try and load MCRichDigitSummaryVector
-    if ( exist<MCRichDigitSummaryVector>(m_mcRichDigitSumsLocation) )
+    // try and load MCRichDigitSummarys
+    if ( exist<MCRichDigitSummarys>(m_mcRichDigitSumsLocation) )
     {
-      m_mcRichDigitSums = get<MCRichDigitSummaryVector>(m_mcRichDigitSumsLocation);
+      m_mcRichDigitSums = get<MCRichDigitSummarys>(m_mcRichDigitSumsLocation);
       if ( msgLevel(MSG::DEBUG) )
       {
         debug() << "Successfully located " << m_mcRichDigitSums->size()
@@ -454,7 +347,7 @@ const RichMCTruthTool::RichSummaryMap & RichMCTruthTool::summaryMap() const
     // loop over summaries
     if ( mcRichDigitSummaries() )
     {
-      for ( MCRichDigitSummaryVector::const_iterator iSum = mcRichDigitSummaries()->begin();
+      for ( MCRichDigitSummarys::const_iterator iSum = mcRichDigitSummaries()->begin();
             iSum != mcRichDigitSummaries()->end(); ++iSum )
       {
         m_summaryMap[(*iSum)->richSmartID()].push_back( *iSum );
@@ -525,51 +418,4 @@ RichMCTruthTool::MCPartToRichTracks * RichMCTruthTool::mcTrackLinks() const
     }
   }
   return m_mcTrackLinks;
-}
-
-RichMCTruthTool::TrgTrackToMCP * RichMCTruthTool::trgTrackToMCPLinks() const
-{
-  if ( !m_trgTrToMCPLinks )
-  {
-    m_trgTrToMCPLinks =
-      new TrgTrackToMCP( evtSvc(), msgSvc(), TrgTrackLocation::Long );
-    if ( m_trgTrToMCPLinks->notFound() )
-    {
-      Warning( "Linker for TrgTracks to MCParticles not found for '" +
-               TrgTrackLocation::Long + "'" );
-    }
-  }
-  return m_trgTrToMCPLinks;
-}
-
-RichMCTruthTool::TrStoredTrackToMCP *
-RichMCTruthTool::trStoredTrackToMCPLinks() const
-{
-  if ( !m_trStoredTrToMCPLinks )
-  {
-    m_trStoredTrToMCPLinks =
-      new TrStoredTrackToMCP( evtSvc(), msgSvc(), TrStoredTrackLocation::Default );
-    if ( m_trStoredTrToMCPLinks->notFound() )
-    {
-      Warning( "Linker for TrStoredTracks to MCParticles not found for '" +
-               TrStoredTrackLocation::Default + "'" );
-    }
-  }
-  return m_trStoredTrToMCPLinks;
-}
-
-RichMCTruthTool::TrackToMCP *
-RichMCTruthTool::trackToMCPLinks() const
-{
-  if ( !m_trToMCPLinks )
-  {
-    m_trToMCPLinks =
-      new TrackToMCP( evtSvc(), msgSvc(), TrackLocation::Default );
-    if ( m_trToMCPLinks->notFound() )
-    {
-      Warning( "Linker for Tracks to MCParticles not found for '" +
-               TrackLocation::Default + "'" );
-    }
-  }
-  return m_trToMCPLinks;
 }

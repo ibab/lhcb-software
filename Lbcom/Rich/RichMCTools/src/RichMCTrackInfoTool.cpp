@@ -5,7 +5,7 @@
  * Implementation file for class : RichMCTrackInfoTool
  *
  * CVS Log :-
- * $Id: RichMCTrackInfoTool.cpp,v 1.8 2005-10-18 12:42:26 jonrob Exp $
+ * $Id: RichMCTrackInfoTool.cpp,v 1.9 2005-12-17 14:18:15 jonrob Exp $
  *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @date 15/03/2002
@@ -14,6 +14,9 @@
 
 // local
 #include "RichMCTrackInfoTool.h"
+
+// namespaces
+using namespace LHCb;
 
 // Declaration of the Tool Factory
 static const  ToolFactory<RichMCTrackInfoTool>          s_factory ;
@@ -30,7 +33,7 @@ RichMCTrackInfoTool::RichMCTrackInfoTool( const std::string& type,
   declareInterface<IRichMCTrackInfoTool>(this);
 }
 
-StatusCode RichMCTrackInfoTool::initialize() 
+StatusCode RichMCTrackInfoTool::initialize()
 {
   // Sets up various tools and services
   const StatusCode sc = RichToolBase::initialize();
@@ -50,14 +53,15 @@ StatusCode RichMCTrackInfoTool::initialize()
   return sc;
 }
 
-StatusCode RichMCTrackInfoTool::finalize() 
+StatusCode RichMCTrackInfoTool::finalize()
 {
   // Execute base class method
   return RichToolBase::finalize();
 }
 
-const bool RichMCTrackInfoTool::panelIntersectGlobal( const MCRichSegment * segment,
-                                                      HepPoint3D & hitPoint ) const
+const bool
+RichMCTrackInfoTool::panelIntersectGlobal( const LHCb::MCRichSegment * segment,
+                                           Gaudi::XYZPoint & hitPoint ) const
 {
   return ( 0 != segment &&
            m_rayTrace->traceToDetectorWithoutEff( segment->rich(),
@@ -67,12 +71,13 @@ const bool RichMCTrackInfoTool::panelIntersectGlobal( const MCRichSegment * segm
                                                   m_traceMode ) );
 }
 
-const bool RichMCTrackInfoTool::panelIntersectLocal( const MCRichSegment * segment,
-                                                     HepPoint3D & hitPoint ) const
+const bool
+RichMCTrackInfoTool::panelIntersectLocal( const LHCb::MCRichSegment * segment,
+                                          Gaudi::XYZPoint & hitPoint ) const
 {
 
   // find global point
-  HepPoint3D globalPoint;
+  Gaudi::XYZPoint globalPoint;
   if ( !panelIntersectGlobal( segment, globalPoint ) ) return false;
 
   // convert global to local position

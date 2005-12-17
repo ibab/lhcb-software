@@ -2,11 +2,11 @@
 # Created    : 2004-01-28
 # Maintainer : Chris Jones
 #============================================================================
-# $Id: requirements,v 1.18 2005-10-13 15:24:06 jonrob Exp $
+# $Id: requirements,v 1.19 2005-12-17 14:18:15 jonrob Exp $
 #============================================================================
 
 package           RichMCTools
-version           v2r7
+version           v3r0
 
 #============================================================================
 # Structure
@@ -21,10 +21,12 @@ include_path none
 #============================================================================
 # Used packages.
 #============================================================================
-use  RichEvent    v*    Event
+#use  RichEvent    v*    Event
+use  RichKernel   v*    Rich
 use  RichDet      v*    Det
 use  LinkerEvent  v*    Event
-use  Relations	  v*	  Kernel
+use  MCEvent      v*    Event  
+use  Relations	  v*	Kernel
 
 #============================================================================
 # Component library building rule
