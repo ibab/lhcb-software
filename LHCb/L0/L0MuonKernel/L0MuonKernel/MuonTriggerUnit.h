@@ -11,7 +11,6 @@ date  24 September 2003
 */ 
 
 
-#include <boost/dynamic_bitset.hpp>
 #include <vector>
 #include "L0MuonKernel/L0MUnit.h"
 
@@ -23,12 +22,6 @@ namespace L0Muon {
 
     /// Constructor 
     MuonTriggerUnit();
-
-    /// Constructor 
-    MuonTriggerUnit(std::vector< std::string >  configfile, 
-                    std::vector<MuonTileID> config_pus,
-                    int RawBufferMode,
-                    int l0bufferMode);
 
     /// Constructor 
     MuonTriggerUnit(DOMNode* pNode);

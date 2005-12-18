@@ -13,7 +13,6 @@
 
 #include <boost/dynamic_bitset.hpp>
 #include <vector>
-#include "L0mConf/L0MPuNodeBase.h"
 #include "L0MuonKernel/ProcUnit.h"
 #include "L0MuonKernel/L0MUnit.h"
 

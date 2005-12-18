@@ -13,12 +13,7 @@
 */ 
 
 
-#include <boost/dynamic_bitset.hpp>
-#include <vector>
-#include "L0mConf/L0MPuNodeBase.h"
 #include "L0MuonKernel/L0MUnit.h"
-#include "ProcessorKernel/TileRegister.h"
-//#include "GaudiKernel/MsgStream.h"
 
 namespace L0Muon {
   

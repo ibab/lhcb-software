@@ -1,4 +1,4 @@
-// $Id: CoreUnit.h,v 1.4 2005-12-15 15:53:26 jucogan Exp $
+// $Id: CoreUnit.h,v 1.5 2005-12-18 11:27:36 jucogan Exp $
 #ifndef L0MUONKERNEL_COREUNIT_H
 #define L0MUONKERNEL_COREUNIT_H     1
 
@@ -21,7 +21,6 @@ It execute algorithms for searching candidates
 #include "L0MuonKernel/L0MUnit.h"
 #include "L0MuonKernel/Tower.h"
 #include "ProcessorKernel/TileRegister.h"
-#include "L0mConf/L0MPuNodeBase.h"
 #include "L0MuonKernel/CandRegisterHandler.h"
 
 namespace L0Muon {

@@ -1,5 +1,8 @@
 #include "L0MuonKernel/FormattingUnit.h"
 
+#include <vector>
+#include "ProcessorKernel/TileRegister.h"
+
 L0Muon::FormattingUnit::FormattingUnit(){
 }
 

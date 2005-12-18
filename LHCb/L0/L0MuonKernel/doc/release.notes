@@ -5,6 +5,10 @@
 !-----------------------------------------------------------------------------
 
 !========================= L0MuonKernel v3r0p1 2005-04-15 ==================
+! 2005-12-18 - Julien Cogan
+ - Decouple the building of the MuonKernel.xml (done once) and the reading
+   (done at running time); remove dependance in L0mConf; the building 
+   functionnality has been externalized in a new package: L0MuonKernelBuild  
 ! 2005-12-15 - Julien Cogan
  - Candidates are put in registers to be passed between units 
  - Add the possibility to write L0 & RAW buffers
