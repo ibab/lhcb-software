@@ -1,9 +1,12 @@
-! $Id: release.notes,v 1.91 2005-12-19 09:58:55 cattanem Exp $
+! $Id: release.notes,v 1.92 2005-12-19 17:00:01 cattanem Exp $
 ! Package     : Rich/RichKernel
 ! Responsible : Chris Jones
 ! Purpose     : General purpose RICH classes
 
 !======================= RichKernel v6r0 2005-12-19 =======================
+! 2005-12-19 - Marco Cattaneo
+ - Move RichTraceMode.h to LHCbKernel
+
 ! 2005-12-17 - Chris Jones
  - Move interfaces IRichPhotonReconstruction and IRichTrSegMaker to RichRecBase
  - Update interfaces for new RichGeomPhoton and RichTrackSegment

@@ -2,7 +2,7 @@
  *
  *  Header file for tool interface : IRichRayTracing
  *
- *  $Id: IRichRayTracing.h,v 1.17 2005-12-17 14:14:37 jonrob Exp $
+ *  $Id: IRichRayTracing.h,v 1.18 2005-12-19 17:00:00 cattanem Exp $
  *
  *  @author Antonis Papanestis
  *  @date   2003-10-28
@@ -17,9 +17,7 @@
 // from LHCbKernel
 #include "Kernel/RichDetectorType.h"
 #include "Kernel/RichSide.h"
-
-//local
-#include "RichKernel/RichTraceMode.h"
+#include "Kernel/RichTraceMode.h"
 
 // from MathCore
 #include "Kernel/Point3DTypes.h"
