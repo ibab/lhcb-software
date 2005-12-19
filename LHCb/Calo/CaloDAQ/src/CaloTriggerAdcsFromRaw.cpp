@@ -1,4 +1,4 @@
-// $Id: CaloTriggerAdcsFromRaw.cpp,v 1.1 2005-11-10 16:43:22 ocallot Exp $
+// $Id: CaloTriggerAdcsFromRaw.cpp,v 1.2 2005-12-19 19:29:14 ocallot Exp $
 // Include files
 
 // from Gaudi
@@ -47,12 +47,12 @@ StatusCode CaloTriggerAdcsFromRaw::initialize ( ) {
 
   if ( "Ecal" == m_detectorName ) {
     m_roTool  = tool<CaloReadoutTool>( "CaloReadoutTool/EcalReadoutTool" );
-    m_packedType = RawBuffer::EcalPacked;
-    m_shortType  = RawBuffer::EcalTrig;
+    m_packedType = LHCb::RawBank::EcalPacked;
+    m_shortType  = LHCb::RawBank::EcalTrig;
   } else if ( "Hcal" == m_detectorName ) {
     m_roTool  = tool<CaloReadoutTool>( "CaloReadoutTool/HcalReadoutTool" );
-    m_packedType = RawBuffer::HcalPacked;
-    m_shortType  = RawBuffer::HcalTrig;
+    m_packedType = LHCb::RawBank::HcalPacked;
+    m_shortType  = LHCb::RawBank::HcalTrig;
   } else {
     error() << "Unknown detector name '" << m_detectorName 
             << "'. Set it by option 'DetectorName', should be Ecal or Hcal" << endreq;
@@ -63,9 +63,9 @@ StatusCode CaloTriggerAdcsFromRaw::initialize ( ) {
 //=========================================================================
 //  Unpack a new event if needed, and return the vector of L0CaloAdc
 //=========================================================================
-std::vector<L0CaloAdc>& CaloTriggerAdcsFromRaw::adcs ( ) {
-  RawEvent* rawEvt = get<RawEvent>( RawEventLocation::Default );
-  const std::vector<RawBank>*  banks = &rawEvt->banks( m_packedType );
+std::vector<LHCb::L0CaloAdc>& CaloTriggerAdcsFromRaw::adcs ( ) {
+  LHCb::RawEvent* rawEvt = get<LHCb::RawEvent>( LHCb::RawEventLocation::Default );
+  const std::vector<LHCb::RawBank*>*  banks = &rawEvt->banks( m_packedType );
   if ( 0 == banks->size() ) {
     banks = &rawEvt->banks( m_shortType );
     debug() << "Found " << banks->size() << " banks of short type " << m_shortType << endreq;
@@ -73,31 +73,31 @@ std::vector<L0CaloAdc>& CaloTriggerAdcsFromRaw::adcs ( ) {
     debug() << "Found " << banks->size() << " banks of packed type " << m_packedType << endreq;
   }
   m_adcs.clear();
-  std::vector<RawBank>::const_iterator itB = banks->begin();
+  std::vector<LHCb::RawBank*>::const_iterator itB = banks->begin();
   while ( banks->end() != itB ) {
-    raw_int* data     = (*itB).data();
-    int dataSize = (*itB).dataSize();
-    int version  = (*itB).version();
-    int sourceID = (*itB).bankSourceID();
+    unsigned int* data = (*itB)->data();
+    int size           = (*itB)->size();
+    int version        = (*itB)->version();
+    int sourceID       = (*itB)->sourceID();
     int lastData = 0;
     itB++;
     //=== Offline coding
     if ( 2 > version ) {
-      debug() << "Starting new bank, version " << version << " size " << dataSize << endreq;
-      while ( 0 < dataSize ) {
+      debug() << "Starting new bank, version " << version << " size " << size << endreq;
+      while ( 0 < size ) {
         int lastID   = (*data) >> 16;
         int adc1     = (*data)>>8 & 0xFF;
         int adc2     = (*data)    & 0xFF;
         ++data;
-        --dataSize;
+        --size;
         if ( 0 != adc1 ) {
-          CaloCellID id( lastID );
-          L0CaloAdc dum( id, adc1 );
+          LHCb::CaloCellID id( lastID );
+          LHCb::L0CaloAdc dum( id, adc1 );
           m_adcs.push_back( dum );
         }
         if ( 0 != adc2 ) {
-          CaloCellID id( ++lastID );
-          L0CaloAdc dum( id, adc2 );
+          LHCb::CaloCellID id( ++lastID );
+          LHCb::L0CaloAdc dum( id, adc2 );
           m_adcs.push_back( dum );
         }
       }
@@ -106,10 +106,10 @@ std::vector<L0CaloAdc>& CaloTriggerAdcsFromRaw::adcs ( ) {
       int cardNum  = 0;
       int lenAdc   = 0;
       int lenTrig  = 0;
-      debug() << "Starting new bank, version " << version << " size " << dataSize << endreq;
-      while ( 0 < dataSize ) {
+      debug() << "Starting new bank, version " << version << " size " << size << endreq;
+      while ( 0 < size ) {
         int word = *data++;
-        dataSize--;
+        size--;
         lenTrig = word & 0x3F;
         lenAdc  = (word >> 7 ) & 0x3F;
         int code  = (word >> 14 ) & 0x1FF;
@@ -121,28 +121,28 @@ std::vector<L0CaloAdc>& CaloTriggerAdcsFromRaw::adcs ( ) {
                  << endreq;
         }
         debug() << " Starting new card code " << code << " lenAdc " << lenAdc
-                << " lenTrig " << lenTrig << " dataSize " << dataSize
+                << " lenTrig " << lenTrig << " size " << size
                 << endreq;
 
-        std::vector<CaloCellID>& chanID = m_roTool->cellInFECard( feCards[cardNum] );
+        std::vector<LHCb::CaloCellID>& chanID = m_roTool->cellInFECard( feCards[cardNum] );
         cardNum++;
         if ( 0 < lenTrig ) {
           int pattern  = *data++;
           int offset   = 0;
           debug() << format( " pattern %8x lenTrig %2d", pattern, lenTrig ) << endreq;
           lastData  = *data++;
-          dataSize -= 2;
+          size -= 2;
           for ( int bitNum = 0 ; 32 > bitNum ; bitNum++ ) {
             if ( 0 != (pattern & (1<<bitNum)) ) {
               if ( 31 < offset ) {
                 offset   = 0;
                 lastData = *data++;
-                dataSize--;
+                size--;
               }
-              CaloCellID id = chanID[ bitNum ];
+              LHCb::CaloCellID id = chanID[ bitNum ];
               if ( 0 != id.index() ) {
                 int adc = ( lastData >> offset ) & 0xFF;
-                L0CaloAdc temp( id, adc );
+                LHCb::L0CaloAdc temp( id, adc );
                 m_adcs.push_back( temp );
               }
               offset += 8;
@@ -151,7 +151,7 @@ std::vector<L0CaloAdc>& CaloTriggerAdcsFromRaw::adcs ( ) {
         }
         int nSkip = (lenAdc+3)/4;  //== length in byte, skip words
         data     += nSkip;
-        dataSize -= nSkip;
+        size -= nSkip;
       } // another card ?
     } // another bank ?
   } // 1 MHz coding ?

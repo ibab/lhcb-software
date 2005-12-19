@@ -1,4 +1,4 @@
-// $Id: CaloTriggerAdcsFromRaw.h,v 1.1 2005-11-10 16:43:22 ocallot Exp $
+// $Id: CaloTriggerAdcsFromRaw.h,v 1.2 2005-12-19 19:29:14 ocallot Exp $
 #ifndef CALOTRIGGERADCSFROMRAW_H 
 #define CALOTRIGGERADCSFROMRAW_H 1
 
@@ -26,15 +26,15 @@ public:
 
   virtual StatusCode initialize();
 
-  virtual std::vector<L0CaloAdc>& adcs( );
+  virtual std::vector<LHCb::L0CaloAdc>& adcs( );
 
 protected:
 
 private:
   std::string            m_detectorName;
   CaloReadoutTool*       m_roTool;
-  int                    m_packedType;
-  int                    m_shortType;
-  std::vector<L0CaloAdc> m_adcs;
+  LHCb::RawBank::BankType m_packedType;
+  LHCb::RawBank::BankType m_shortType;
+  std::vector<LHCb::L0CaloAdc> m_adcs;
 };
 #endif // CALOTRIGGERADCSFROMRAW_H

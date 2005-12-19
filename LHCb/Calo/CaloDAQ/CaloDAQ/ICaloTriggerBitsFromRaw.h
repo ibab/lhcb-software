@@ -1,4 +1,4 @@
-// $Id: ICaloTriggerBitsFromRaw.h,v 1.1 2005-11-10 16:43:22 ocallot Exp $
+// $Id: ICaloTriggerBitsFromRaw.h,v 1.2 2005-12-19 19:29:14 ocallot Exp $
 #ifndef CALODAQ_ICALOTRIGGERBITSFROMRAW_H 
 #define CALODAQ_ICALOTRIGGERBITSFROMRAW_H 1
 
@@ -24,7 +24,7 @@ public:
   // Return the interface ID
   static const InterfaceID& interfaceID() { return IID_ICaloTriggerBitsFromRaw; }
 
-  virtual std::vector<CaloCellID>& firedCells( bool isPrs ) = 0;
+  virtual std::vector<LHCb::CaloCellID>& firedCells( bool isPrs ) = 0;
 
 protected:
 

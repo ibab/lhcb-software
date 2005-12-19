@@ -1,4 +1,4 @@
-// $Id: CaloTriggerBitsFromRaw.cpp,v 1.2 2005-11-15 16:56:39 ocallot Exp $
+// $Id: CaloTriggerBitsFromRaw.cpp,v 1.3 2005-12-19 19:29:14 ocallot Exp $
 // Include files
 
 // from Gaudi
@@ -56,9 +56,9 @@ StatusCode CaloTriggerBitsFromRaw::initialize ( ) {
 //  Test if the event is a new one.
 //=========================================================================
 bool CaloTriggerBitsFromRaw::eventHasChanged ( ) {
-  RawEvent* rawEvt = get<RawEvent> ( RawEventLocation::Default );
-  const std::vector<RawBank>& data = rawEvt->banks( RawBuffer::DAQ );
-  raw_int* evhData = (*(data.begin())).data();
+  LHCb::RawEvent* rawEvt = get<LHCb::RawEvent> ( LHCb::RawEventLocation::Default );
+  const std::vector<LHCb::RawBank*>* data = &rawEvt->banks( LHCb::RawBank::DAQ );
+  unsigned int* evhData = (*(data->begin()))->data();
   long evtNum = (*evhData++);
   long runNum = (*evhData++);
   bool changed = (m_evtNum != evtNum || m_runNum != runNum );
@@ -70,35 +70,35 @@ bool CaloTriggerBitsFromRaw::eventHasChanged ( ) {
 //=========================================================================
 //  Unpack a new event if needed, and return the appropriate container.
 //=========================================================================
-std::vector<CaloCellID>& CaloTriggerBitsFromRaw::firedCells ( bool isPrs ) {
+std::vector<LHCb::CaloCellID>& CaloTriggerBitsFromRaw::firedCells ( bool isPrs ) {
   if ( eventHasChanged() ) {
-    RawEvent*  rawEvt = get<RawEvent>( RawEventLocation::Default );
-    const std::vector<RawBank>* banks = &rawEvt->banks( RawBuffer::PrsPacked );
+    LHCb::RawEvent*  rawEvt = get<LHCb::RawEvent>( LHCb::RawEventLocation::Default );
+    const std::vector<LHCb::RawBank*>* banks = &rawEvt->banks( LHCb::RawBank::PrsPacked );
     if ( 0 == banks->size() ) {
-      banks = &rawEvt->banks( RawBuffer::PrsE );
+      banks = &rawEvt->banks( LHCb::RawBank::PrsE );
       debug() << "  Found " << banks->size() << " Prs banks." << endreq;
     }
     m_prsCells.clear();
     m_spdCells.clear();
 
-    std::vector<RawBank>::const_iterator itB = banks->begin();
+    std::vector<LHCb::RawBank*>::const_iterator itB = banks->begin();
     while ( banks->end() != itB ) {
-      raw_int* data = (*itB).data();
-      int dataSize  = (*itB).dataSize();
-      int version   = (*itB).version();
-      int sourceID  = (*itB).bankSourceID();
-      int lastData  = 0;
+      unsigned int* data = (*itB)->data();
+      int size           = (*itB)->size();
+      int version        = (*itB)->version();
+      int sourceID       = (*itB)->sourceID();
+      int lastData       = 0;
       itB++;
       //=== Offline coding: a CellID, 8 SPD bits, 8 Prs bits
       if ( 1 == version ) {
-        while ( 0 != dataSize ) {
+        while ( 0 != size ) {
           int spdData = (*data >> 8 ) & 0xFF;
           int prsData = (*data) & 0xFF;
           int lastID  = (*data) >> 16;
           ++data;
-          --dataSize;
+          --size;
           for ( unsigned int kk = 0; 8 > kk; ++kk ) {
-            CaloCellID id( lastID+kk );
+            LHCb::CaloCellID id( lastID+kk );
             if ( spdData & 1 ) m_spdCells.push_back( id );
             if ( prsData & 1 ) m_prsCells.push_back( id );
             spdData = spdData >> 1;
@@ -107,23 +107,23 @@ std::vector<CaloCellID>& CaloTriggerBitsFromRaw::firedCells ( bool isPrs ) {
         }
       //=== Compact coding: a CellID, and its Prs/SPD bits
       } else if ( 2 == version ) {
-        while ( 0 != dataSize ) {
+        while ( 0 != size ) {
           int word = *data;
           while ( 0 != word ) {
             int item = word & 0xFFFF;
             word = ( word >> 16 ) & 0xFFFF;
             int spdId =  (item&0xFFFC) >> 2;
             if ( 0 != item & 2 ) {
-              CaloCellID id ( spdId );   // SPD
+              LHCb::CaloCellID id ( spdId );   // SPD
               m_spdCells.push_back( id );
             }
             if ( 0 != item & 1 ) {
-              CaloCellID id ( spdId + 0x4000 );   // Prs
+              LHCb::CaloCellID id ( spdId + 0x4000 );   // Prs
               m_prsCells.push_back( id );
             }
           }
           ++data;
-          --dataSize;
+          --size;
         }
         //==== Codage for 1 MHz
       } else if ( 3 == version ) {
@@ -131,14 +131,14 @@ std::vector<CaloCellID>& CaloTriggerBitsFromRaw::firedCells ( bool isPrs ) {
         int cardNum  = 0;
         int lenAdc   = 0;
         int lenTrig  = 0;
-        while( 0 != dataSize ) {
+        while( 0 != size ) {
           int word = *data++;
-          dataSize--;
+          size--;
           lenTrig = word & 0x7F;
           lenAdc  = (word >> 7 ) & 0x7F;
           if ( msgLevel( MSG::DEBUG) ) {
             debug() << format( "  Header data %8x size %4d lenAdc%3d lenTrig%3d",
-                               word, dataSize, lenAdc, lenTrig )
+                               word, size, lenAdc, lenTrig )
                     << endreq;
           }
           int code  = (word >>14 ) & 0x1FF;
@@ -154,14 +154,14 @@ std::vector<CaloCellID>& CaloTriggerBitsFromRaw::firedCells ( bool isPrs ) {
                                sourceID, cardNum, feCards[cardNum], code, lenAdc, lenTrig )
                     << endreq;
           }
-          std::vector<CaloCellID> chanID   = m_roTool->cellInFECard( feCards[cardNum] );
+          std::vector<LHCb::CaloCellID> chanID = m_roTool->cellInFECard( feCards[cardNum] );
           cardNum++;
           offset   = 32;
 
           while ( 0 < lenTrig ) {
             if ( 32 == offset ) {
               lastData = *data++;
-              dataSize--;
+              size--;
               offset = 0;
             }
             int num   = ( lastData >> offset ) & 0x3F;
@@ -174,15 +174,15 @@ std::vector<CaloCellID>& CaloTriggerBitsFromRaw::firedCells ( bool isPrs ) {
             }
             offset += 8;
             lenTrig--;
-            CaloCellID id =  chanID[ num ];
+            LHCb::CaloCellID id =  chanID[ num ];
             if ( 0 != isPrs ) m_prsCells.push_back( id );
             if ( 0 != isSpd ) {
-              CaloCellID spdId( 0, id.area(), id.row(), id.col() );
+              LHCb::CaloCellID spdId( 0, id.area(), id.row(), id.col() );
               m_spdCells.push_back( spdId );
             }
           }
           int nSkip = (lenAdc+1 ) / 2;  // Length in number of words
-          dataSize -= nSkip;
+          size     -= nSkip;
           data     += nSkip;
         } //== DataSize
       } //== versions

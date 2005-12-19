@@ -1,4 +1,4 @@
-// $Id: CaloDigitsFromRaw.h,v 1.2 2005-11-10 16:43:22 ocallot Exp $
+// $Id: CaloDigitsFromRaw.h,v 1.3 2005-12-19 19:29:14 ocallot Exp $
 #ifndef CALOEVENT_CALODIGITSFROMRAW_H 
 #define CALOEVENT_CALODIGITSFROMRAW_H 1
 
@@ -35,12 +35,12 @@ public:
   class IncreasingByCellID {
   public:
     inline bool operator ()
-      ( const CaloDigit* dig1 , 
-        const CaloDigit* dig2 ) const {
+      ( const LHCb::CaloDigit* dig1 , 
+        const LHCb::CaloDigit* dig2 ) const {
       return 
       ( 0 == dig1 ) ? true  :
       ( 0 == dig2 ) ? false : 
-      dig1->cellID().raw() < dig2->cellID().raw() ;
+      dig1->cellID().all() < dig2->cellID().all() ;
     }
   };
 

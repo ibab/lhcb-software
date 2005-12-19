@@ -1,4 +1,4 @@
-// $Id: CaloReadoutTool.h,v 1.2 2005-11-10 16:43:22 ocallot Exp $
+// $Id: CaloReadoutTool.h,v 1.3 2005-12-19 19:29:14 ocallot Exp $
 #ifndef CALODAQ_CALOREADOUTTOOL_H 
 #define CALODAQ_CALOREADOUTTOOL_H 1
 
@@ -26,8 +26,8 @@ public:
 
   ~CaloFECard() {};
   
-  void addID( CaloCellID id )    { m_ids.push_back( id ); }
-  std::vector<CaloCellID>& ids() { return m_ids; }
+  void addID( LHCb::CaloCellID id )    { m_ids.push_back( id ); }
+  std::vector<LHCb::CaloCellID>& ids() { return m_ids; }
   int  number()    const { return m_number; }
   int  crate()     const { return m_crate; }
   int  slot()      const { return m_slot; }
@@ -35,7 +35,7 @@ public:
 
 private:
   int m_number;
-  std::vector<CaloCellID> m_ids;
+  std::vector<LHCb::CaloCellID> m_ids;
   int m_crate;
   int m_slot;
   int m_code;
@@ -88,7 +88,7 @@ public:
 
   int nbFECards()    const { return m_cards.size(); }
   
-  std::vector<CaloCellID>& cellInFECard( int num ) { return m_cards[num].ids(); }
+  std::vector<LHCb::CaloCellID>& cellInFECard( int num ) { return m_cards[num].ids(); }
 
   int cardCode( int num ) { return m_cards[num].code(); }
 

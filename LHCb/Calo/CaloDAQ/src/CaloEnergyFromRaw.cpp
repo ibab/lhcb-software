@@ -1,8 +1,10 @@
-// $Id: CaloEnergyFromRaw.cpp,v 1.5 2005-11-10 16:43:22 ocallot Exp $
+// $Id: CaloEnergyFromRaw.cpp,v 1.6 2005-12-19 19:29:14 ocallot Exp $
 // Include files 
 
 // from Gaudi
 #include "GaudiKernel/ToolFactory.h" 
+
+#include "Event/RawEvent.h"
 
 // local
 #include "CaloEnergyFromRaw.h"
@@ -53,20 +55,20 @@ StatusCode CaloEnergyFromRaw::initialize ( ) {
     m_calo     = getDet<DeCalorimeter>( "/dd/Structure/LHCb/Ecal" );
     m_roTool   = tool<CaloReadoutTool>( "CaloReadoutTool/EcalReadoutTool" );
     m_pedShift = 0.6;
-    m_packedType = RawBuffer::EcalPacked;
-    m_shortType  = RawBuffer::EcalE;
+    m_packedType = LHCb::RawBank::EcalPacked;
+    m_shortType  = LHCb::RawBank::EcalE;
   } else if ( "Hcal" == m_detectorName ) {
     m_calo     = getDet<DeCalorimeter>( "/dd/Structure/LHCb/Hcal" );
     m_roTool   = tool<CaloReadoutTool>( "CaloReadoutTool/HcalReadoutTool" );
     m_pedShift = 0.6;
-    m_packedType = RawBuffer::HcalPacked;
-    m_shortType  = RawBuffer::HcalE;
+    m_packedType = LHCb::RawBank::HcalPacked;
+    m_shortType  = LHCb::RawBank::HcalE;
   } else if ( "Prs" == m_detectorName ) {
     m_calo     = getDet<DeCalorimeter>( "/dd/Structure/LHCb/Prs" );
     m_roTool   = tool<CaloReadoutTool>( "CaloReadoutTool/PrsReadoutTool" );
     m_pedShift = 0.;
-    m_packedType = RawBuffer::PrsPacked;
-    m_shortType  = RawBuffer::PrsE;
+    m_packedType = LHCb::RawBank::PrsPacked;
+    m_shortType  = LHCb::RawBank::PrsE;
   } else {
     error() << "Unknown detector name " << m_detectorName << endreq;
     return StatusCode::FAILURE;
@@ -82,15 +84,15 @@ StatusCode CaloEnergyFromRaw::initialize ( ) {
 //  Return the vector of CaloDigit for the current event. Compute it only if new event
 //  This is just a gain calibration (+ped shift) of the adc values.
 //=========================================================================
-std::vector<CaloDigit>&  CaloEnergyFromRaw::digits ( ) {
+std::vector<LHCb::CaloDigit>&  CaloEnergyFromRaw::digits ( ) {
   adcs( );
   m_digits.clear();
-  for ( std::vector<CaloAdc>::const_iterator itAdc = m_adcs.begin();
+  for ( std::vector<LHCb::CaloAdc>::const_iterator itAdc = m_adcs.begin();
         m_adcs.end() != itAdc; ++itAdc ) {
-    CaloCellID id = (*itAdc).cellID();
+    LHCb::CaloCellID id = (*itAdc).cellID();
     int adc = (*itAdc).adc();
     double e = ( double(adc) - m_pedShift ) * m_calo->cellGain( id );
-    CaloDigit dig( id, e );
+    LHCb::CaloDigit dig( id, e );
     m_digits.push_back( dig );
   }
   return m_digits;
@@ -98,10 +100,10 @@ std::vector<CaloDigit>&  CaloEnergyFromRaw::digits ( ) {
 //=========================================================================
 //  Decode the adcs of one event
 //=========================================================================
-std::vector<CaloAdc>& CaloEnergyFromRaw::adcs ( ) {
+std::vector<LHCb::CaloAdc>& CaloEnergyFromRaw::adcs ( ) {
   m_adcs.clear();
-  RawEvent* rawEvt = get<RawEvent> ( RawEventLocation::Default );
-  const std::vector<RawBank>* banks = &rawEvt->banks( m_shortType );
+  LHCb::RawEvent* rawEvt = get<LHCb::RawEvent> ( LHCb::RawEventLocation::Default );
+  const std::vector<LHCb::RawBank*>* banks = &rawEvt->banks( m_shortType );
   if ( 0 == banks->size() ) {
     banks = &rawEvt->banks( m_packedType );
     debug() << "Found " << banks->size() << " banks of packed type " << m_packedType << endreq;
@@ -109,44 +111,43 @@ std::vector<CaloAdc>& CaloEnergyFromRaw::adcs ( ) {
     debug() << "Found " << banks->size() << " banks of short type " << m_shortType << endreq;
   }
   
-  std::vector<RawBank>::const_iterator itB     = banks->begin();
+  std::vector<LHCb::RawBank*>::const_iterator itB = banks->begin();
   
   while  ( banks->end() != itB ) {
-    raw_int* data     = (*itB).data();
-    int dataSize = (*itB).dataSize();
-    int version  = (*itB).version();
-    int sourceID = (*itB).bankSourceID();
+    unsigned int* data = (*itB)->data();
+    int size           = (*itB)->size();
+    int version        = (*itB)->version();
+    int sourceID       = (*itB)->sourceID();
     itB++;
     int cardNum = 0;
     debug() << "Bank sourceID " << sourceID 
-            << " version " << version << " size " << dataSize << endreq;
+            << " version " << version << " size " << size << endreq;
     if ( 1 > version || 3 < version ) {
-      warning() << "Bank type " << (*itB).bankType() << " sourceID " << sourceID 
+      warning() << "Bank type " << (*itB)->type() << " sourceID " << sourceID 
                 << " has version " << version 
                 << " which is not supported" << endreq;
     } else if ( 1 == version ) {
       //******************************************************************
       //**** Simple coding, ID + adc in 32 bits.
       //******************************************************************
-      while( 0 != dataSize ) {
+      while( 0 != size ) {
         int id   = ((*data) >> 16) & 0xFFFF;
         int adc  =  (*data) & 0xFFFF;
         if ( 32767 < adc ) adc |= 0xFFFF0000;  //= negative value
-        CaloCellID cellId( id );
-        CaloAdc temp( id, adc);
+        LHCb::CaloCellID cellId( id );
+        LHCb::CaloAdc temp( cellId, adc);
         m_adcs.push_back( temp );
         ++data;
-        --dataSize;
+        --size;
       }
     } else if ( 2 == version ) {
       //******************************************************************
       //**** 1 MHz compression format, Ecal and Hcal
       //******************************************************************
-      while( 0 != dataSize ) {
-        int word    = *data++;
-        dataSize--;
+      while( 0 != size ) {
+        unsigned int word = *data++;
+        size--;
         int lenTrig = word & 0x7F;
-        //int lenAdc  = (word >> 7 ) & 0x7F;
         int code    = (word >> 14 ) & 0x1FF;
         std::vector<int> feCards = m_roTool->feCardsInTell1( sourceID );
         if ( code != m_roTool->cardCode( feCards[cardNum] ) ) {
@@ -155,16 +156,16 @@ std::vector<CaloAdc>& CaloEnergyFromRaw::adcs ( ) {
                             m_roTool->cardCode( feCards[cardNum] ) )
                  << endreq;
         }
-        std::vector<CaloCellID> chanID   = m_roTool->cellInFECard( feCards[cardNum] );
+        std::vector<LHCb::CaloCellID> chanID   = m_roTool->cellInFECard( feCards[cardNum] );
         //== Skip Trigger part, lenth in bytes, includes pattern if present.
         int nSkip = (lenTrig+3)/4;   //== is in bytes, with padding
         data     += nSkip;
-        dataSize -= nSkip;
+        size     -= nSkip;
 
-        int pattern  = *data++;
+        unsigned int pattern  = *data++;
         int offset   = 0;
-        int lastData = *data++;
-        dataSize -= 2;
+        unsigned int lastData = *data++;
+        size -= 2;
         
         cardNum++;
         for ( int bitNum = 0; 32 > bitNum; bitNum++ ) {
@@ -172,7 +173,7 @@ std::vector<CaloAdc>& CaloEnergyFromRaw::adcs ( ) {
           if ( 31 < offset ) {
             offset  -= 32;
             lastData =  *data++;
-            dataSize--;
+            size--;
           }
           if ( 0 == ( pattern & (1<<bitNum) ) ) {  //.. short coding
             adc = ( ( lastData >> offset ) & 0xF ) - 8;
@@ -184,17 +185,17 @@ std::vector<CaloAdc>& CaloEnergyFromRaw::adcs ( ) {
             offset += 12;
             if ( 32 < offset ) {  //.. get the extra bits on next word
               lastData = *data++;
-              dataSize--;
+              size--;
               offset -= 32;        
               int temp = (lastData << (12-offset) ) & 0xFFF;
               adc += temp;
             }
             adc -= 256;
           }
-          CaloCellID id = chanID[ bitNum ];
+          LHCb::CaloCellID id = chanID[ bitNum ];
           //== Keep only valid cells
           if ( 0 != id.index() ) {
-            CaloAdc temp( id, adc);
+            LHCb::CaloAdc temp( id, adc);
             m_adcs.push_back( temp );
           }
         }
@@ -203,14 +204,14 @@ std::vector<CaloAdc>& CaloEnergyFromRaw::adcs ( ) {
       //******************************************************************
       //**** 1 MHz compression forma, Preshower + SPD
       //******************************************************************
-      while( 0 != dataSize ) {
-        int word = *data++;
-        dataSize--;
+      while( 0 != size ) {
+        unsigned int word = *data++;
+        size--;
         int lenTrig = word & 0x7F;
         int lenAdc  = (word >> 7 ) & 0x7F;
         if ( msgLevel( MSG::DEBUG) ) {
           debug() << format( "  Header data %8x size %4d lenAdc%3d lenTrig%3d", 
-                             word, dataSize, lenAdc, lenTrig )
+                             word, size, lenAdc, lenTrig )
                   << endreq;
         }      
         int code  = (word >>14 ) & 0x1FF;
@@ -226,30 +227,30 @@ std::vector<CaloAdc>& CaloEnergyFromRaw::adcs ( ) {
                              sourceID, cardNum, feCards[cardNum], code, lenAdc, lenTrig )
                   << endreq;
         }      
-        std::vector<CaloCellID> chanID = m_roTool->cellInFECard( feCards[cardNum] );
+        std::vector<LHCb::CaloCellID> chanID = m_roTool->cellInFECard( feCards[cardNum] );
         cardNum++;
 
         int nSkip = (lenTrig+3)/4;  //== Length in byte, with padding
-        dataSize -= nSkip;
+        size -= nSkip;
         data     += nSkip;
         
         int offset   = 32;  //== force read the first word, to have also the debug for it.
-        int lastData = 0;
+        unsigned int lastData = 0;
         
         while ( 0 < lenAdc ) {
           if ( 32 == offset ) {
             lastData =  *data++;
-            dataSize--;
+            size--;
             if ( msgLevel( MSG::DEBUG) ) {
-              debug() << format( "  data %8x size %4d lenAdc%3d", lastData, dataSize, lenAdc )
+              debug() << format( "  data %8x size %4d lenAdc%3d", lastData, size, lenAdc )
                       << endreq;
             }
             offset = 0;
           }
           int adc = ( lastData >> offset ) & 0x3FF;
           int num = ( lastData >> (offset+10) ) & 0x3F;
-          CaloCellID id = chanID[ num ];
-          CaloAdc temp( id, adc );
+          LHCb::CaloCellID id = chanID[ num ];
+          LHCb::CaloAdc temp( id, adc );
           m_adcs.push_back( temp );      
           lenAdc--;
           offset += 16;

@@ -1,12 +1,10 @@
-// $Id: CompareCaloDigits.cpp,v 1.3 2005-09-06 14:50:01 ocallot Exp $
+// $Id: CompareCaloDigits.cpp,v 1.4 2005-12-19 19:29:14 ocallot Exp $
 // Include files 
 
 // STL
 #include <math.h> // for fabs() on Windows
 
-// CLHEP
-#include "CLHEP/Units/SystemOfUnits.h"
-
+#include "Kernel/SystemOfUnits.h"
 // from Gaudi
 #include "GaudiKernel/AlgFactory.h"
 #include "GaudiKernel/IRegistry.h" 
@@ -48,31 +46,31 @@ StatusCode CompareCaloDigits::execute() {
 
   debug() << "==> Execute" << endmsg;
 
-  std::string ecalName =  CaloDigitLocation::Ecal;
-  std::string hcalName =  CaloDigitLocation::Hcal;
+  std::string ecalName = LHCb::CaloDigitLocation::Ecal;
+  std::string hcalName = LHCb::CaloDigitLocation::Hcal;
   if ( m_packedRawBuffer ) {
-    ecalName =  CaloDigitLocation::FullEcal;
-    hcalName =  CaloDigitLocation::FullHcal;
+    ecalName = LHCb::CaloDigitLocation::FullEcal;
+    hcalName = LHCb::CaloDigitLocation::FullHcal;
   }  
 
   //== SPD. Digits are yes/no -> tolerance = .5
-  CaloDigits* spd1 = get<CaloDigits>( CaloDigitLocation::Spd );
-  CaloDigits* spd2 = get<CaloDigits>( CaloDigitLocation::Spd + m_extension );
+  CaloDigits* spd1 = get<CaloDigits>( LHCb::CaloDigitLocation::Spd );
+  CaloDigits* spd2 = get<CaloDigits>( LHCb::CaloDigitLocation::Spd + m_extension );
   compareContainers( spd1, spd2, 0.5 );
 
   //== PreShower. 
-  CaloDigits* prs1 = get<CaloDigits>( CaloDigitLocation::Prs );
-  CaloDigits* prs2 = get<CaloDigits>( CaloDigitLocation::Prs + m_extension );
+  CaloDigits* prs1 = get<CaloDigits>( LHCb::CaloDigitLocation::Prs );
+  CaloDigits* prs2 = get<CaloDigits>( LHCb::CaloDigitLocation::Prs + m_extension );
   compareContainers( prs1, prs2, 0.1 );
 
   //== Ecal.
   CaloDigits* ecal1 = get<CaloDigits>( ecalName );
-  CaloDigits* ecal2 = get<CaloDigits>( CaloDigitLocation::Ecal + m_extension );
+  CaloDigits* ecal2 = get<CaloDigits>( LHCb::CaloDigitLocation::Ecal + m_extension );
   compareContainers( ecal1, ecal2, 1. );
 
   //== Hcal. 
   CaloDigits* hcal1 = get<CaloDigits>( hcalName );
-  CaloDigits* hcal2 = get<CaloDigits>( CaloDigitLocation::Hcal + m_extension );
+  CaloDigits* hcal2 = get<CaloDigits>( LHCb::CaloDigitLocation::Hcal + m_extension );
   compareContainers( hcal1, hcal2, 1. );
 
   return StatusCode::SUCCESS;

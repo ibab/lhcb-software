@@ -1,4 +1,4 @@
-// $Id: CaloFillRawBuffer.h,v 1.3 2005-11-10 16:43:22 ocallot Exp $
+// $Id: CaloFillRawBuffer.h,v 1.4 2005-12-19 19:29:14 ocallot Exp $
 #ifndef CALOFILLRAWBUFFER_H 
 #define CALOFILLRAWBUFFER_H 1
 
@@ -6,7 +6,7 @@
 // from Gaudi
 #include "GaudiAlg/GaudiAlgorithm.h"
 
-#include "Event/RawBuffer.h"
+#include "Event/RawEvent.h"
 #include "CaloDet/DeCalorimeter.h"
 #include "CaloDAQ/CaloReadoutTool.h"
 
@@ -39,8 +39,8 @@ private:
   std::string m_inputBank;
   std::string m_triggerBank;
   std::string m_detectorName;
-  int    m_bankType;
-  int    m_triggerBankType;
+  LHCb::RawBank::BankType m_bankType;
+  LHCb::RawBank::BankType m_triggerBankType;
   int    m_numberOfBanks;
   int    m_dataCodingType;
 
@@ -53,7 +53,7 @@ private:
   std::vector<double> m_dataSize;
   double m_totTrigSize;
   int m_nbEvents;
-  std::vector< std::vector<raw_int> > m_banks;
-  std::vector< std::vector<raw_int> > m_trigBanks;
+  std::vector< std::vector<unsigned int> > m_banks;
+  std::vector< std::vector<unsigned int> > m_trigBanks;
 };
 #endif // CALOFILLRAWBUFFER_H

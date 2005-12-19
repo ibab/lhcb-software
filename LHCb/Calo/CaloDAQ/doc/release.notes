@@ -4,6 +4,10 @@
 ! Purpose     : Convert Calo Digit and Trigger information to RawBuffer banks.
 !-----------------------------------------------------------------------------
 
+! 2005-12-19 - Olivier Callot
+ - Adapt to the new event model, mainly LHCb:: namespace, and also the new DAQEvent.
+   Several things still to cleanup and fix.
+
 ! 2005-12-02 - Olivier Callot
  - Remove the detector prefix in the condition CellsToCards
 

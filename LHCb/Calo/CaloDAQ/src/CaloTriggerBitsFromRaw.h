@@ -1,4 +1,4 @@
-// $Id: CaloTriggerBitsFromRaw.h,v 1.1 2005-11-10 16:43:22 ocallot Exp $
+// $Id: CaloTriggerBitsFromRaw.h,v 1.2 2005-12-19 19:29:14 ocallot Exp $
 #ifndef CALOTRIGGERBITSFROMRAW_H 
 #define CALOTRIGGERBITSFROMRAW_H 1
 
@@ -27,7 +27,7 @@ public:
 
   virtual StatusCode initialize();
 
-  virtual std::vector<CaloCellID>& firedCells( bool isPrs );
+  virtual std::vector<LHCb::CaloCellID>& firedCells( bool isPrs );
   
 protected:
 
@@ -37,7 +37,7 @@ private:
   int      m_runNum;
   int      m_evtNum;
   CaloReadoutTool* m_roTool;
-  std::vector<CaloCellID> m_prsCells;
-  std::vector<CaloCellID> m_spdCells;
+  std::vector<LHCb::CaloCellID> m_prsCells;
+  std::vector<LHCb::CaloCellID> m_spdCells;
 };
 #endif // CALOTRIGGERBITSFROMRAW_H

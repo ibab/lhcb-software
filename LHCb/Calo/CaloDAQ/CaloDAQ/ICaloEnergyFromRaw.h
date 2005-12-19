@@ -1,4 +1,4 @@
-// $Id: ICaloEnergyFromRaw.h,v 1.2 2005-11-10 16:43:22 ocallot Exp $
+// $Id: ICaloEnergyFromRaw.h,v 1.3 2005-12-19 19:29:14 ocallot Exp $
 #ifndef CALODAQ_ICALOENERGYFROMRAW_H 
 #define CALODAQ_ICALOENERGYFROMRAW_H 1
 
@@ -26,9 +26,9 @@ public:
   // Return the interface ID
   static const InterfaceID& interfaceID() { return IID_ICaloEnergyFromRaw; }
 
-  virtual std::vector<CaloAdc>&   adcs( ) = 0;
+  virtual std::vector<LHCb::CaloAdc>&   adcs( ) = 0;
   
-  virtual std::vector<CaloDigit>& digits( ) = 0;
+  virtual std::vector<LHCb::CaloDigit>& digits( ) = 0;
   
 protected:
 

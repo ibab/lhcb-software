@@ -1,4 +1,4 @@
-// $Id: CaloReadoutTool.cpp,v 1.2 2005-12-02 16:29:12 ocallot Exp $
+// $Id: CaloReadoutTool.cpp,v 1.3 2005-12-19 19:29:14 ocallot Exp $
 // Include files 
 
 // from Gaudi
@@ -62,7 +62,7 @@ StatusCode CaloReadoutTool::initialize ( ) {
 
   //== Cards
   if ( cond->exists( "cards" ) ) {
-    CaloCellID dummy( 0, 0, 0, 0 );
+    LHCb::CaloCellID dummy( 0, 0, 0, 0 );
     std::vector<int> temp = cond->paramAsIntVect( "cards" );
     debug() << "The calorimeter has " << temp.size()/8 << " front end cards." << endreq;
     for ( unsigned int kk = 0; temp.size()/8 > kk  ; ++kk ) {
@@ -70,7 +70,7 @@ StatusCode CaloReadoutTool::initialize ( ) {
       CaloFECard  card( temp[ll], temp[ll+6], temp[ll+7] );
       for ( int row = temp[ll+3]; temp[ll+5] >= row; ++row ) {
         for ( int col = temp[ll+2]; temp[ll+4] >= col; ++col ) {
-          CaloCellID id( caloID, temp[ll+1], row, col );
+          LHCb::CaloCellID id( caloID, temp[ll+1], row, col );
           if ( m_calo->valid( id ) ) {
             card.addID( id );
           } else {

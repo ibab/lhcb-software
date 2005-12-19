@@ -1,4 +1,4 @@
-// $Id: ICaloTriggerAdcsFromRaw.h,v 1.1 2005-11-10 16:43:22 ocallot Exp $
+// $Id: ICaloTriggerAdcsFromRaw.h,v 1.2 2005-12-19 19:29:14 ocallot Exp $
 #ifndef CALODAQ_ICALOTRIGGERADCSFROMRAW_H 
 #define CALODAQ_ICALOTRIGGERADCSFROMRAW_H 1
 
@@ -24,7 +24,7 @@ public:
   // Return the interface ID
   static const InterfaceID& interfaceID() { return IID_ICaloTriggerAdcsFromRaw; }
 
-  virtual std::vector<L0CaloAdc>&    adcs( ) = 0;
+  virtual std::vector<LHCb::L0CaloAdc>&    adcs( ) = 0;
 
 protected:
 

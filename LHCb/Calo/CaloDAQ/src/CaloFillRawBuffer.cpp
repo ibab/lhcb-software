@@ -1,14 +1,10 @@
-// $Id: CaloFillRawBuffer.cpp,v 1.4 2005-11-10 16:43:22 ocallot Exp $
+// $Id: CaloFillRawBuffer.cpp,v 1.5 2005-12-19 19:29:14 ocallot Exp $
 // Include files 
-// CLHEP
-#include "CLHEP/Units/SystemOfUnits.h"
-
 // from Gaudi
 #include "GaudiKernel/AlgFactory.h" 
 
 #include "Event/CaloAdc.h"
 #include "Event/L0CaloAdc.h"
-#include "Event/RawEvent.h"
 
 // local
 #include "CaloFillRawBuffer.h"
@@ -34,17 +30,17 @@ CaloFillRawBuffer::CaloFillRawBuffer( const std::string& name,
   //=== Default values according to the name of the algorithm !
   if ( "Ecal" == name.substr( 0, 4 ) ) {
     m_detectorName     = "Ecal";
-    m_inputBank        = CaloAdcLocation::Ecal;
-    m_triggerBank      = L0CaloAdcLocation::Ecal;
-    m_bankType         = RawBuffer::EcalE;
-    m_triggerBankType  = RawBuffer::EcalTrig;
+    m_inputBank        = LHCb::CaloAdcLocation::Ecal;
+    m_triggerBank      = LHCb::L0CaloAdcLocation::Ecal;
+    m_bankType         = LHCb::RawBank::EcalE;
+    m_triggerBankType  = LHCb::RawBank::EcalTrig;
     m_numberOfBanks    = 1;
   } else if ("Hcal" == name.substr( 0, 4 ) ) {
     m_detectorName     = "Hcal";
-    m_inputBank        = CaloAdcLocation::Hcal;
-    m_triggerBank      = L0CaloAdcLocation::Hcal;
-    m_bankType         = RawBuffer::HcalE;
-    m_triggerBankType  = RawBuffer::HcalTrig;
+    m_inputBank        = LHCb::CaloAdcLocation::Hcal;
+    m_triggerBank      = LHCb::L0CaloAdcLocation::Hcal;
+    m_bankType         = LHCb::RawBank::HcalE;
+    m_triggerBankType  = LHCb::RawBank::HcalTrig;
     m_numberOfBanks    = 1;
   }
 
@@ -74,9 +70,9 @@ StatusCode CaloFillRawBuffer::initialize() {
   if ( 2 == m_dataCodingType ) {
     m_numberOfBanks =  m_roTool->nbTell1();
     if ( "Ecal" == m_detectorName ) {
-      m_bankType = RawBuffer::EcalPacked;
+      m_bankType = LHCb::RawBank::EcalPacked;
     } else {
-      m_bankType = RawBuffer::HcalPacked;
+      m_bankType = LHCb::RawBank::HcalPacked;
     }
     info() << "Processing " << m_roTool->nbFECards() 
            << " FE Cards and " << m_roTool->nbTell1() << " TELL1"
@@ -88,7 +84,7 @@ StatusCode CaloFillRawBuffer::initialize() {
   m_totDataSize = 0;
   m_totTrigSize = 0;
 
-  std::vector<raw_int> a;
+  std::vector<unsigned int> a;
   a.reserve(500);
   for ( int kk = 0 ; m_numberOfBanks > kk ; kk++ ) {
     m_banks.push_back( a );
@@ -132,13 +128,13 @@ StatusCode CaloFillRawBuffer::execute() {
   int totDataSize = 0;
   int totTrigSize = 0;
 
-  RawBuffer* rawBuffer = get<RawBuffer>( RawBufferLocation::Default );
+  LHCb::RawEvent* rawEvent = get<LHCb::RawEvent>( LHCb::RawEventLocation::Default );
   for ( unsigned int kk = 0; m_banks.size() > kk; kk++ ) {
-    rawBuffer->addBank( kk, m_bankType, m_banks[kk], m_dataCodingType );
+    rawEvent->addBank( kk, m_bankType, m_dataCodingType, m_banks[kk] );
     totDataSize += m_banks[kk].size();
     m_dataSize[kk] += m_banks[kk].size();
     if ( 1 == m_dataCodingType ) {
-      rawBuffer->addBank( kk, m_triggerBankType, m_trigBanks[kk] );
+      rawEvent->addBank( kk, m_triggerBankType, 0, m_trigBanks[kk] );
       totTrigSize += m_trigBanks[kk].size();
     }
   }
@@ -161,7 +157,7 @@ StatusCode CaloFillRawBuffer::execute() {
     for ( unsigned int kk = 0; m_banks.size() > kk; kk++ ) {
       verbose() << "DATA bank : " << kk << endreq;
       int kl = 0;
-      std::vector<raw_int>::const_iterator itW;
+      std::vector<unsigned int>::const_iterator itW;
       
       for ( itW = m_banks[kk].begin(); m_banks[kk].end() != itW; itW++ ){
         verbose() << format ( " %8x %11d   ", (*itW), (*itW) );
@@ -180,13 +176,6 @@ StatusCode CaloFillRawBuffer::execute() {
       verbose() << endreq;
     }
   }
-
-  if ( exist<RawEvent>( RawEventLocation::Default ) ) {
-    RawEvent* dum = get<RawEvent>( RawEventLocation::Default );
-    evtSvc()->unregisterObject( dum );
-    delete dum;
-  }
-  
  
   return StatusCode::SUCCESS;
 };
@@ -222,10 +211,10 @@ void CaloFillRawBuffer::fillDataBankShort ( ) {
   CaloAdcs* digs = get<CaloAdcs>( m_inputBank );
   CaloAdcs::const_iterator itD;
   for ( itD = digs->begin(); digs->end() != itD; ++itD ){
-    CaloCellID id = (*itD)->cellID();
+    LHCb::CaloCellID id = (*itD)->cellID();
     int adc       = (*itD)->adc();
-    int cellIndex = id.raw();
-    raw_int word  = (cellIndex << 16) + (adc & 0xFFFF );
+    int cellIndex = id.all();
+    unsigned int word  = (cellIndex << 16) + (adc & 0xFFFF );
     m_banks[0].push_back( word );
   }
 }
@@ -235,7 +224,7 @@ void CaloFillRawBuffer::fillDataBankShort ( ) {
 //=========================================================================
 void CaloFillRawBuffer::fillPackedBank ( ) {
   CaloAdcs* digs = get<CaloAdcs>( m_inputBank );
-  L0CaloAdcs* trigAdcs = get<L0CaloAdcs>( m_triggerBank );
+  LHCb::L0CaloAdcs* trigAdcs = get<LHCb::L0CaloAdcs>( m_triggerBank );
   
   for ( int kTell1 = 0 ; m_numberOfBanks > kTell1 ; kTell1++ ) {
     std::vector<int> feCards = m_roTool->feCardsInTell1( kTell1 );
@@ -243,7 +232,7 @@ void CaloFillRawBuffer::fillPackedBank ( ) {
       int cardNum = *iFe;
       int sizeIndex  = m_banks[kTell1].size();
       m_banks[kTell1].push_back( m_roTool->cardCode( cardNum ) << 14 );
-      std::vector<CaloCellID> ids = m_roTool->cellInFECard( cardNum );
+      std::vector<LHCb::CaloCellID> ids = m_roTool->cellInFECard( cardNum );
 
       //=== The trigger part is first
       int patternIndex = m_banks[kTell1].size();
@@ -252,10 +241,10 @@ void CaloFillRawBuffer::fillPackedBank ( ) {
       int word = 0;
       int offset = 0;
       int bNum = 0;
-      for ( std::vector<CaloCellID>::const_iterator itId = ids.begin();
+      for ( std::vector<LHCb::CaloCellID>::const_iterator itId = ids.begin();
             ids.end() != itId; ++itId ) {
-        CaloCellID id = *itId;
-        L0CaloAdc* trig = trigAdcs->object( id.index() );
+        LHCb::CaloCellID id = *itId;
+        LHCb::L0CaloAdc* trig = trigAdcs->object( id.index() );
         if ( 0 != trig ) {
           patTrig |= 1<<bNum;
           int adc = trig->adc();
@@ -289,10 +278,10 @@ void CaloFillRawBuffer::fillPackedBank ( ) {
       offset = 0;
       bNum = 0;
 
-      for ( std::vector<CaloCellID>::const_iterator itId = ids.begin();
+      for ( std::vector<LHCb::CaloCellID>::const_iterator itId = ids.begin();
             ids.end() != itId; ++itId ) {
-        CaloCellID id = *itId;
-        CaloAdc* dig = digs->object( id );
+        LHCb::CaloCellID id = *itId;
+        LHCb::CaloAdc* dig = digs->object( id );
         int adc = 256;        //== Default if non existing cell.
         if ( 0 != dig ) {
           adc = dig->adc() + 256;
@@ -342,11 +331,11 @@ void CaloFillRawBuffer::fillTriggerBank ( ) {
   int nextIndex = -1;
   int word      = -1;
 
-  L0CaloAdcs* trigAdcs = get<L0CaloAdcs>( m_triggerBank );
-  L0CaloAdcs::const_iterator itT;
+  LHCb::L0CaloAdcs* trigAdcs = get<LHCb::L0CaloAdcs>( m_triggerBank );
+  LHCb::L0CaloAdcs::const_iterator itT;
   for ( itT = trigAdcs->begin(); trigAdcs->end() != itT; ++itT ) {
-    CaloCellID id = (*itT)->cellID();
-    int cellIndex = id.raw();
+    LHCb::CaloCellID id = (*itT)->cellID();
+    int cellIndex = id.all();
     if ( cellIndex != nextIndex ) {
       if ( 0 <= prevIndx ) m_trigBanks[prevIndx].push_back( word );
       word = (cellIndex << 16) + ((*itT)->adc() << 8);

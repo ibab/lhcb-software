@@ -1,8 +1,11 @@
-// $Id: CaloReCreateMCLinks.cpp,v 1.3 2005-05-12 06:44:32 cattanem Exp $
+// $Id: CaloReCreateMCLinks.cpp,v 1.4 2005-12-19 19:29:14 ocallot Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.3 $
+// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.4 $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.3  2005/05/12 06:44:32  cattanem
+// downgrade Error to Warning
+//
 // Revision 1.2  2005/05/11 18:04:09  ibelyaev
 //  add new property 'IgnoreMode' for CaloReCreateMCLinks
 // 
@@ -92,14 +95,14 @@ protected:
     , m_mc     () 
     , m_ignore ( false  )
   {
-    m_raw   .push_back (    CaloDigitLocation::Spd   ) ;
-    m_mc    .push_back (  MCCaloDigitLocation::Spd   ) ;
-    m_raw   .push_back (    CaloDigitLocation::Prs   ) ;
-    m_mc    .push_back (  MCCaloDigitLocation::Prs   ) ;
-    m_raw   .push_back (    CaloDigitLocation::Ecal  ) ;
-    m_mc    .push_back (  MCCaloDigitLocation::Ecal  ) ;
-    m_raw   .push_back (    CaloDigitLocation::Hcal  ) ;
-    m_mc    .push_back (  MCCaloDigitLocation::Hcal  ) ;
+    m_raw   .push_back (    LHCb::CaloDigitLocation::Spd   ) ;
+    m_mc    .push_back (  LHCb::MCCaloDigitLocation::Spd   ) ;
+    m_raw   .push_back (    LHCb::CaloDigitLocation::Prs   ) ;
+    m_mc    .push_back (  LHCb::MCCaloDigitLocation::Prs   ) ;
+    m_raw   .push_back (    LHCb::CaloDigitLocation::Ecal  ) ;
+    m_mc    .push_back (  LHCb::MCCaloDigitLocation::Ecal  ) ;
+    m_raw   .push_back (    LHCb::CaloDigitLocation::Hcal  ) ;
+    m_mc    .push_back (  LHCb::MCCaloDigitLocation::Hcal  ) ;
     //
     declareProperty ( "Digits"     , m_raw     ) ;
     declareProperty ( "MCDigits"   , m_mc      ) ;
@@ -172,14 +175,14 @@ StatusCode CaloReCreateMCLinks::execute()
     // address for MC digits 
     const std::string& addr2 = m_mc  [index] ;
     // "ignore" mode ?
-    if ( m_ignore && !exist<MCCaloDigits> ( addr2 ) ) 
+    if ( m_ignore && !exist<LHCb::MCCaloDigits> ( addr2 ) ) 
     { 
       Warning ( "(MC)container is not found '" + addr2 + "', skip" , OK, 0 ) ; 
       continue ;                                        // CONTINUE 
     }
     //
     // get MC digits from TES 
-    MCCaloDigits*  mc  = get<MCCaloDigits>  ( addr2 ) ;
+    LHCb::MCCaloDigits*  mc  = get<LHCb::MCCaloDigits>  ( addr2 ) ;
     //
     // address of digits 
     const std::string& addr1 = m_raw [index] ;
