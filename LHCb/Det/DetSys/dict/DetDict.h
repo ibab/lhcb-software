@@ -1,4 +1,4 @@
-// $Id: DetDict.h,v 1.8 2005-09-20 11:45:50 cattanem Exp $
+// $Id: DetDict.h,v 1.9 2005-12-19 16:38:02 mneedham Exp $
 // ============================================================================
 #ifndef DETSYS_DETDICT_H 
 #define DETSYS_DETDICT_H 1
@@ -106,13 +106,23 @@
 // ============================================================================
 // STDet
 // ============================================================================
-#include "Kernel/ITChannelID.h"
+#include "Kernel/STChannelID.h"
 #include "STDet/DeSTDetector.h"
-#include "STDet/STDetectionLayer.h"
-#include "STDet/STDetectionStation.h"
-#include "STDet/ITLayer.h"
-#include "STDet/TTLayer.h"
-#include "STDet/STWafer.h"
+#include "STDet/DeTTDetector.h"
+#include "STDet/DeTTDetector.h"
+#include "STDet/DeSTStation.h"
+#include "STDet/DeTTStation.h"
+#include "STDet/DeTTStation.h"
+#include "STDet/DeSTLayer.h"
+#include "STDet/DeTTLayer.h"
+#include "STDet/DeTTLayer.h"
+#include "STDet/DeSTSector.h"
+#include "STDet/DeTTSector.h"
+#include "STDet/DeTTSector.h"
+#include "STDet/DeITBox.h"
+#include "STDet/DeTTHalfModule.h"
+
+
 // ============================================================================
 // RichDet 
 // ============================================================================

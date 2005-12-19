@@ -78,12 +78,19 @@
   <class name="DeOTQuarter"      />
 
   <class name="DeSTDetector"       />
-  <class name="STDetectionLayer"   />
-  <class name="STDetectionStation" />
-  <class name="ITLayer"            />
-  <!-- class name="TTLayer"            -->
-  <class name="STWafer"            />
-
+  <class name="DeITDetector"       />
+  <class name="DeTTDetector"       />
+  <class name="DeSTStation"       />
+  <class name="DeITStation"       />
+  <class name="DeTTStation"       />
+  <class name="DeSTLayer"       />
+  <class name="DeITLayer"       />
+  <class name="DeTTLayer"       />
+  <class name="DeSTSector"       />
+  <class name="DeITSector"       />
+  <class name="DeTTSector"       />
+  <class name="DeITBox"       />
+  <class name="DeTTHalfModule"       />
 
   <class name="DeRich"                    />
   <class name="DeRich1"                   />

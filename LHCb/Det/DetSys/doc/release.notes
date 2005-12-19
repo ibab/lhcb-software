@@ -4,6 +4,10 @@
 ! Purpose     : collect Det packages
 !-----------------------------------------------------------------------------
 
+! 2005-12-19
+
+ - Changes for new STDetector element
+
 !========================= DetSys v7r7 2005-11-30 =========================
 ! 2005-11-30 - Marco Cattaneo
  - Use DetDesc v15r6

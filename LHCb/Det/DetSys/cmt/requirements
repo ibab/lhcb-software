@@ -15,7 +15,7 @@ use Magnet        	v2r9    Det
 use MuonTools	   	v3r8	Muon
 use RichDet	   	v8r5    Det
 use RichCondition       v1r0    Rich
-use STDet          	v1r5    Det
+use STDet          	v2r0    Det
 
 # =============== LCG Dictionaries ============================================
 apply_pattern     lcg_dictionary                                       \
