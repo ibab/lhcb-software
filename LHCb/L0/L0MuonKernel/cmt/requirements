@@ -1,10 +1,10 @@
 package L0MuonKernel
 
-version v3r0p1
+version v4r0
 
 branches cmt doc src L0MuonKernel
 
-use ProcessorKernel  v1r0p*       L0
+use ProcessorKernel  v*       L0
 
 include_dirs $(L0MUONKERNELROOT)
 

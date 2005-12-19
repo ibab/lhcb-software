@@ -4,7 +4,7 @@
 ! Purpose     : 
 !-----------------------------------------------------------------------------
 
-!========================= L0MuonKernel v3r0p1 2005-04-15 ==================
+!========================= L0MuonKernel v4r0 2005-12-19 ====================
 ! 2005-12-18 - Julien Cogan
  - Decouple the building of the MuonKernel.xml (done once) and the reading
    (done at running time); remove dependance in L0mConf; the building 
@@ -14,6 +14,7 @@
  - Add the possibility to write L0 & RAW buffers
  - Simplify the candidate search inside towers
 
+!========================= L0MuonKernel v3r0p1 2005-04-15 ==================
 ! 2005-04-15 - Marco Cattaneo
  - Fix some doxygen warnings
 
