@@ -1,9 +1,10 @@
-// $Id: LinkerWithKey.h,v 1.9 2005-12-15 14:16:33 ocallot Exp $
+// $Id: LinkerWithKey.h,v 1.10 2005-12-19 17:21:37 ocallot Exp $
 #ifndef LINKER_LINKERWITHKEY_H 
 #define LINKER_LINKERWITHKEY_H 1
 
 // Include files
 #include "GaudiKernel/IDataProviderSvc.h"
+#include "GaudiKernel/SmartDataPtr.h"
 #include "Event/LinksByKey.h"
 #include "GaudiKernel/ContainedObject.h"
 
@@ -17,9 +18,9 @@ template <class TARGET, class SOURCE=ContainedObject >
 class LinkerWithKey {
 public: 
   /// Standard constructor
-  LinkerWithKey(IDataProviderSvc* eventSvc,
-                IMessageSvc* msgSvc,
-                std::string containerName ) {
+  LinkerWithKey( IDataProviderSvc* evtSvc,
+                 IMessageSvc* msgSvc,
+                 std::string containerName ) {
     m_msgSvc        = msgSvc;
     std::string name = "Link/" + containerName;
     if ( "/Event/" == containerName.substr(0,7) ) {
@@ -28,12 +29,12 @@ public:
 
     //== If it exists, just append to it.
 
-    SmartDataPtr<LHCb::LinksByKey> links( eventSvc, name );
+    SmartDataPtr<LHCb::LinksByKey> links( evtSvc, name );
     if ( 0 != links ) {
       m_links = links;
     } else {
       m_links = new LHCb::LinksByKey();
-      StatusCode sc = eventSvc->registerObject( name, m_links );
+      StatusCode sc = evtSvc->registerObject( name, m_links );
       if ( !sc ) {
         MsgStream msg( msgSvc, "LinkerWithKey::"+containerName );
         msg << MSG::ERROR << "*** Link container " << name
@@ -73,7 +74,7 @@ public:
 protected:
   
 private:
-  LHCb::LinksByKey* m_links;
-  IMessageSvc*      m_msgSvc;
+  LHCb::LinksByKey*  m_links;
+  IMessageSvc* m_msgSvc;
 };
 #endif // LINKER_LINKERWITHKEYNEW_H

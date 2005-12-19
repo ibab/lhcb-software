@@ -1,4 +1,4 @@
-// $Id: AllLinks.h,v 1.4 2005-12-15 10:00:32 ocallot Exp $
+// $Id: AllLinks.h,v 1.5 2005-12-19 17:21:37 ocallot Exp $
 #ifndef LINKER_ALLLINKS_H 
 #define LINKER_ALLLINKS_H 1
 
@@ -6,6 +6,7 @@
 #include "GaudiKernel/IDataProviderSvc.h"
 #include "GaudiKernel/LinkManager.h"
 #include "GaudiKernel/ObjectVector.h"
+#include "GaudiKernel/SmartDataPtr.h"
 #include "Event/LinksByKey.h"
 
 /** @class AllLinks AllLinks.h Linker/AllLinks.h

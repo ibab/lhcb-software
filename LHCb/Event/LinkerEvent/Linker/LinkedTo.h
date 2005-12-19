@@ -1,4 +1,4 @@
-// $Id: LinkedTo.h,v 1.8 2005-12-15 10:00:32 ocallot Exp $
+// $Id: LinkedTo.h,v 1.9 2005-12-19 17:21:37 ocallot Exp $
 #ifndef LINKER_LINKEDTO_H 
 #define LINKER_LINKEDTO_H 1
 
@@ -6,6 +6,7 @@
 #include "GaudiKernel/IDataProviderSvc.h"
 #include "GaudiKernel/LinkManager.h"
 #include "GaudiKernel/ObjectVector.h"
+#include "GaudiKernel/SmartDataPtr.h"
 #include "Event/LinksByKey.h"
 
 /** @class LinkedTo LinkedTo.h Linker/LinkedTo.h

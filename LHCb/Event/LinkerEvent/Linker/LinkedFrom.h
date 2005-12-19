@@ -1,4 +1,4 @@
-// $Id: LinkedFrom.h,v 1.11 2005-12-15 10:00:32 ocallot Exp $
+// $Id: LinkedFrom.h,v 1.12 2005-12-19 17:21:37 ocallot Exp $
 #ifndef LINKER_LINKEDFROM_H 
 #define LINKER_LINKEDFROM_H 1
 
@@ -6,6 +6,7 @@
 #include "GaudiKernel/IDataProviderSvc.h"
 #include "GaudiKernel/LinkManager.h"
 #include "GaudiKernel/ObjectVector.h"
+#include "GaudiKernel/SmartDataPtr.h"
 #include "Event/LinksByKey.h"
 
 /** @class LinkedFrom LinkedFrom.h Linker/LinkedFrom.h
