@@ -4,7 +4,7 @@
 ! Purpose     : Base classes for a generic processor simulation
 !-----------------------------------------------------------------------------
 
-!======================== ProcessorKernel v1r0p1 2005-11-10 ==================
+!======================== ProcessorKernel v2r0 2005-12-19 ====================
 ! 2005-12-15 - Julien Cogan
  - Add new methods to the Register to manipulate a subset of the bitset
  - Add a new method to the RegisterFactory to return a existing register
