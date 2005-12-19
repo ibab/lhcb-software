@@ -1,0 +1,21 @@
+#============================================================================
+# Created    : 2005-04-22
+# Maintainer : Matt Needham
+#============================================================================
+package           STTools
+version           v1r0
+
+branches          cmt doc src STTools
+include_dirs      $(STTOOLSROOT)
+
+use STEvent     v1r* Event
+use STDet	v2r* Det
+use LHCbKernel  v* Kernel
+use GaudiAlg    v*
+use GaudiKernel v*
+
+#============================================================================
+# Component library building rule
+#============================================================================
+library          STTools    ../src/*.cpp 
+apply_pattern    component_library library=STTools
