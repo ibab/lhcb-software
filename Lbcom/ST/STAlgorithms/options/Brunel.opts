@@ -1,0 +1,11 @@
+ApplicationMgr.DLLs += {"ITAlgorithms","STDet"};
+
+// Digitization phase
+BrunelDigiITSeq.Members +={"MCITDepositCreator","MCITDigitCreator","ITDigitCreator"};
+#include "$ITALGORITHMSROOT/options/itDigi.opts"
+
+// Reco phase
+BrunelRecoITSeq.Members +={"ITClusterCreator","ITSummaryCreator"};
+#include "$ITALGORITHMSROOT/options/itRec.opts"
+
+

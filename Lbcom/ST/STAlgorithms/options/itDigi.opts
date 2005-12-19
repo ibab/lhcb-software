@@ -1,0 +1,55 @@
+// time of flight vector - always check that correct number stations defined
+MCITDepositCreator.tofVector = {25.9, 28.3, 30.5};
+
+// to add machine background
+MCITDepositCreator.spillVector = {"/","/Prev/","/PrevPrev/", "/LHCBackground/"};
+MCITDepositCreator.spillTimes = {0.,-25.,-50., -3.3};
+
+
+// charge sharing function  for TT
+MCITDepositCreator.ITChargeSharingTool.sharingFunction = {
+1.0, 1.0, 0.97, 0.935, 0.90, 0.83,
+0.73, 0.57, 0.44, 0.34, 0.20, 0.11,
+0.065, 0.038, 0.016, 0.0, 0.0};
+
+
+
+MCITDepositCreator.responseTypes = {"LRsignal","LRcapCoupling" , "TBsignal", "TBcapCoupling"};
+
+// LHCb 1 signal
+MCITDepositCreator.responseTBsignal.times = { -30., -26., -18.2, -10. , -5.,     0. , 5.,    9.8,   19.8,  24.8, 29.8, 59.8, 79.8,  85., 99.82 };
+MCITDepositCreator.responseTBsignal.values = {  0.0 , 0.03,  0.32,  0.74,  0.94,   1.0, 0.94 ,  0.8,   0.43,  0.26, 0.12, -0.11, -0.10, -0.099, -0.09};
+
+MCITDepositCreator.responseTBsignal.capacitance = 18*picofarad;
+
+
+// LHCb 1 cap coupling
+MCITDepositCreator.responseTBcapCoupling.times = { -30., -26., -18.2, -10. , -5.,     0. , 5.,    9.8,   19.8,  24.8, 29.8, 59.8, 79.8,  85., 99.82 };
+MCITDepositCreator.responseTBcapCoupling.values = {  0.0 , 0.03,  0.32,  0.74,  0.94,   1.0, 0.94 ,  0.8,   0.43,  0.26, 0.12, -0.11, -0.10, -0.099, -0.09};
+
+MCITDepositCreator.responseTBcapCoupling.capacitance = 18*picofarad;
+
+
+
+// LHCb 2 Vfs 0 - fast shaping 
+MCITDepositCreator.responseLRsignal.times = {-30.,-28. ,-21.5, -9.5, -5.,    0.,   5.,   8.5,   10.5,  16.5, 25., 30.5,  40.5, 60.5, 80.5, 100. };
+MCITDepositCreator.responseLRsignal.values = {0., 0.03 ,0.15,   0.76, 0.92  ,1., 0.92,   0.83,  0.76,  0.51, 0.23, 0.1,  0., -0.06, -0.08, -0.1};
+
+MCITDepositCreator.responseLRsignal.vfs = 0;
+MCITDepositCreator.responseLRsignal.capacitance = 33*picofarad;
+
+MCITDepositCreator.responseLRcapCoupling.times = {-30.,-28. ,-21.5, -9.5, -5.,    0.,   5.,   8.5,   10.5,  16.5, 25., 30.5,  40.5, 60.5, 80.5, 100. };
+MCITDepositCreator.responseLRcapCoupling.values = {0., 0.03 ,0.15,   0.76, 0.92  ,1., 0.92,   0.83,  0.76,  0.51, 0.23, 0.1,  0., -0.06, -0.08, -0.1};
+
+MCITDepositCreator.responseLRcapCoupling.vfs = 0;
+MCITDepositCreator.responseLRcapCoupling.capacitance = 33*picofarad;
+
+
+MCITDepositCreator.type = "IT";
+MCITDigitCreator.type = "IT";
+ITDigitCreator.type = "IT";
+
+ToolSvc.STSignalToNoiseToolIT.type = "IT";
+ToolSvc.STSignalToNoiseToolIT.conversionToADC = 0.0013;
+
+

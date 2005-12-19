@@ -1,0 +1,24 @@
+package STAlgorithms
+version v1r0
+
+branches STAlgorithms cmt doc src options
+
+include_dirs $(STALGORITHMSROOT)
+
+use GSL			v*    LCG_Interfaces
+use GaudiAlg            v*
+use STDet               v*    Det
+use STEvent             v*    Event
+use STTools             v*    ST
+
+# ================= component library ====================
+library STAlgorithms ../src/*.cpp 
+apply_pattern component_library library=STAlgorithms
+
+
+
+
+
+
+
+

@@ -1,0 +1,44 @@
+// time of flight vector - always check that correct number stations defined
+MCTTDepositCreator.tofVector = {7.8, 8.8};
+
+// to add machine background
+MCTTDepositCreator.spillVector = {"/","/Prev/","/PrevPrev/", "/LHCBackground/"};
+MCTTDepositCreator.spillTimes = {0.,-25.,-50., -3.3};
+
+// charge sharing function  for TT
+MCTTDepositCreator.STChargeSharingTool.sharingFunction = {
+1.0, 1.0, 0.97, 0.935, 0.90, 0.83,
+0.73, 0.57, 0.44, 0.34, 0.20, 0.11,
+0.065, 0.038, 0.016, 0.0, 0.0
+};
+
+
+MCTTDepositCreator.responseTypes = {"12signal", "12capCoupling", "43capCoupling", "43signal"};
+
+// 2 sensor + cable and 1 sensor + cable
+MCTTDepositCreator.response12signal.times = {-30.,-28.,-24.5, -14.5, -5.,   0., 5.,   15.5, 25., 35.5, 55.5, 75.,   100.};
+MCTTDepositCreator.response12signal.values = {  0., 0.03, 0.14,  0.58, 0.93, 1.0, 0.94 ,0.67, 0.36, 0.14, -0.04, -0.1, -0.1};
+
+MCTTDepositCreator.response12signal.capacitance = 33*picofarad;
+
+
+MCTTDepositCreator.response12capCoupling.times = {-30.,-28.,-24.5, -14.5, -5.,   0., 5.,   15.5, 25., 35.5, 55.5, 75.,   100.};
+MCTTDepositCreator.response12capCoupling.values = {  0., 0.03, 0.14,  0.58, 0.93, 1.0, 0.94 ,0.67, 0.36, 0.14, -0.04, -0.1, -0.1};
+
+MCTTDepositCreator.response12capCoupling.capacitance = 33*picofarad;
+
+
+// 4 and 3 sensor sector
+MCTTDepositCreator.response43signal.times = {-35., -30., -26., -20.5, -15.5, -10.5, -5., 0., 5., 9.5, 25., 39.4, 54.5, 74.5, 95.5,119.5};
+MCTTDepositCreator.response43signal.values = { 0.,  0., 0.035 , 0.32,  0.51, 0.78, 0.94,   1., 0.94, 0.87, 0.43, 0.15, 0.04, -0.04, -0.09 ,-0.12};
+
+MCTTDepositCreator.response43signal.capacitance = 55*picofarad;
+
+MCTTDepositCreator.response43capCoupling.times = {-35., -30., -26., -20.5, -15.5, -10.5, -5., 0., 5., 9.5, 25., 39.4, 54.5, 74.5, 95.5,119.5};
+MCTTDepositCreator.response43capCoupling.values = { 0.,  0., 0.035 , 0.32,  0.51, 0.78, 0.94,   1., 0.94, 0.87, 0.43, 0.15, 0.04, -0.04, -0.09 ,-0.12};
+
+MCTTDepositCreator.response43capCoupling.capacitance = 55*picofarad;
+
+
+ToolSvc.STSignalToNoiseToolIT.conversionToADC = 0.001;
+
