@@ -1,4 +1,4 @@
-// $Id: STDigit2MCHitLinker.cpp,v 1.1.1.1 2005-12-19 15:42:42 mneedham Exp $
+// $Id: STDigit2MCHitLinker.cpp,v 1.2 2005-12-19 16:42:47 mneedham Exp $
 
 // Event
 #include "Event/STDigit.h"
@@ -36,7 +36,7 @@ STDigit2MCHitLinker::STDigit2MCHitLinker( const std::string& name,
   declareProperty("OutputDataBase", m_outputData  = "TTDigits2MCHits" );
   declareProperty("InputData", m_inputData  = LHCb::STDigitLocation::TTDigits);
   declareProperty("addSpillOverHits",m_addSpillOverHits = false); 
-  declareProperty("minfrac", m_minFrac = 0.3);
+  declareProperty("minfrac", m_minFrac = 0.05);
   declareProperty("oneRef",m_oneRef = false);
   declareProperty("selector",m_selectorName = "STSelectFromCluster");
   declareProperty("detType", m_detType = "TT");
