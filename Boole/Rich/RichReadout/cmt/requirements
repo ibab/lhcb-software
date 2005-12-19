@@ -2,7 +2,7 @@
 # Created    : 11/05/2003
 # Maintainer : Christopher Rob Jones
 #============================================================================
-# $Id: requirements,v 1.30 2005-12-16 15:13:33 jonrob Exp $
+# $Id: requirements,v 1.31 2005-12-19 13:06:58 cattanem Exp $
 #============================================================================
 
 package RichReadout
@@ -31,5 +31,5 @@ library RichReadout ../src/component/*.cpp  -import=AIDA
 apply_pattern component_library library=RichReadout
 
 private
-use GaudiObjDesc v* 
+use GaudiObjDesc v* -no_auto_imports
 include_dirs $(RICHREADOUTROOT)
