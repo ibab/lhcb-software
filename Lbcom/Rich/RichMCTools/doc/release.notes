@@ -4,6 +4,7 @@
 ! Purpose     : Provides basic tools for RICH MC information
 !-----------------------------------------------------------------------------
 
+!========================== RichMCTools v3r0 2005-12-19 ======================
 ! 2005-12-17 - Chris Jones
  - Update to LHCb v20r0
  - Move track based tools to RichRecMCTools

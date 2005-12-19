@@ -2,7 +2,7 @@
 # Created    : 2004-01-28
 # Maintainer : Chris Jones
 #============================================================================
-# $Id: requirements,v 1.19 2005-12-17 14:18:15 jonrob Exp $
+# $Id: requirements,v 1.20 2005-12-19 13:02:03 cattanem Exp $
 #============================================================================
 
 package           RichMCTools
@@ -21,7 +21,6 @@ include_path none
 #============================================================================
 # Used packages.
 #============================================================================
-#use  RichEvent    v*    Event
 use  RichKernel   v*    Rich
 use  RichDet      v*    Det
 use  LinkerEvent  v*    Event
