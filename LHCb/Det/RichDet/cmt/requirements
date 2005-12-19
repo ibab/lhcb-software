@@ -7,7 +7,7 @@ include_dirs $(RICHDETROOT)
 
 use LHCbKernel  v*   Kernel
 use DetDescCnv  v*   Det
-use RichKernel  v*   Rich
+use GSL         v*   LCG_Interfaces
 
 library  RichDetLib  Lib/*.cpp 
 library  RichDet     component/*.cpp

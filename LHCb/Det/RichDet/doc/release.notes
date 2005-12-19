@@ -5,6 +5,9 @@
 !-----------------------------------------------------------------------------
 
 !========================= RichDet v9r0 2005-12-14 =========================
+! 2005-12-19 - Marco Cattaneo
+ - Pick up RochTraceMode.h from LHCbKernel and remove RichKernel dependency
+
 ! 2005-12-14 - Antonis Papanestis
  - Move from CLHEP to MathCore
  - Drop DeRich1CdfHPDPanel and DeRichFlatMirror

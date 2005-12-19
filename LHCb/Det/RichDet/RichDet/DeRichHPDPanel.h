@@ -4,7 +4,7 @@
  *
  *  Header file for detector description class : DeRichHPDPanel
  *
- *  $Id: DeRichHPDPanel.h,v 1.26 2005-12-14 09:34:52 papanest Exp $
+ *  $Id: DeRichHPDPanel.h,v 1.27 2005-12-19 17:05:02 cattanem Exp $
  *
  *  @author Antonis Papanestis a.papanestis@rl.ac.uk
  *  @date   2004-06-18
@@ -21,14 +21,12 @@
 
 // LHCbKernel
 #include "Kernel/RichSmartID.h"
+#include "Kernel/RichTraceMode.h"
 
 // DetDesc
 #include "DetDesc/IGeometryInfo.h"
 #include "DetDesc/DetectorElement.h"
 #include "DetDesc/ISolid.h"
-
-// RichKernel
-#include "RichKernel/RichTraceMode.h"
 
 // RichDet
 #include "RichDet/DeRich1.h"
