@@ -1,28 +1,18 @@
-! $Id: release.notes,v 1.47 2005-12-16 17:12:40 odescham Exp $ 
+! $Id: release.notes,v 1.48 2005-12-19 09:21:49 cattanem Exp $ 
 ! =============================================================================
 Package         : CaloDet   
 Package manager : Olivier Deschamps odescham@in2p3.fr
 
+!========================= CaloDet v7r0 2005-12-19 ============================
 ! 2005-12-16 - Olivier Deschamps
- - CaloDet/  & src/Lib : 
-  migration to LHCb v20 - MathCore 
-
-
- - src/component/CaloDetTestAlgorithm.cpp  :
-  remove CaloAlgorithm inheritance 
-
- - cmt/requirements :
-  add dependency to GaudiAlg
-  increment package version to v8r0
-
-! =============================================================================
-Package         : CaloDet   
-Package manager : Vanya Belyaev Ivan.Belyaev@itep.ru
+ - CaloDet/  & src/Lib :   migration to LHCb v20 - MathCore 
+ - src/component/CaloDetTestAlgorithm.cpp : remove CaloAlgorithm inheritance 
+ - cmt/requirements : add dependency to GaudiAlg
 
 ! 2005-12-02 - Olivier Callot
  - Get the gain parameters from the Conditions, no longer from UserParameters in
    XmlDDDB structure file.
- - Build the card geometry from the "CellsToCards" condition, no longer hardcoded.
+ - Build the card geometry from the "CellsToCards" condition, no longer hardcoded
  - Add 'm_' in front of several data member names
  - Remove data members holding the number of cells and cards: This is just the 
    size of the corresponding vectors.
