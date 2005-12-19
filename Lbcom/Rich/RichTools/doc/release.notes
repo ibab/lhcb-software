@@ -4,6 +4,7 @@
 ! Purpose     : General purpose Rich Tools
 !-----------------------------------------------------------------------------
 
+!=========================== RichTools v2r0 2005-12-19 =======================
 ! 2005-12-17 - Chris Jones
  - Rename RichRayTracingAllSph as RichRayTracing now flat mirror support is
    dropped.
