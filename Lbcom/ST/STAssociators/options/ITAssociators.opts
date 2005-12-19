@@ -1,0 +1,18 @@
+// $Id: ITAssociators.opts,v 1.1.1.1 2005-12-19 15:42:42 mneedham Exp $ 
+ApplicationMgr.DLLs += { "ITAssociators" };
+ITDigit2MCHitAlg.minfrac    = 0.05;
+ITDigit2MCHitLinker.minfrac = 0.05;
+
+DataOnDemandSvc.Algorithms += { "DATA='/Event/Rec/Relations/ITDigits2MCHits' 
+                                 TYPE='ITDigit2MCHitAlg'"        };
+DataOnDemandSvc.Algorithms += { "DATA='/Event/Rec/Relations/ITClusters2MCHits' 
+                                 TYPE='ITCluster2MCHitAlg'"      };
+DataOnDemandSvc.Algorithms += { "DATA='/Event/Rec/Relations/ITClusters2MCParticles' 
+                                 TYPE='ITCluster2MCParticleAlg'" };
+DataOnDemandSvc.Algorithms += { "DATA='/Event/Link/ITDigits2MCHits' 
+                                 TYPE='ITDigit2MCHitLinker'"        };
+// Suppress warnings due to obslete implementation
+ToolSvc.ITDigit2MCHitAsct.OutputLevel = 5;
+ToolSvc.ITCluster2MCHitAsct.OutputLevel = 5;
+ToolSvc.ITCluster2MCParticleAsct.OutputLevel = 5;
+

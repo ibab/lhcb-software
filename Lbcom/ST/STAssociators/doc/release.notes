@@ -1,0 +1,9 @@
+Package         : S/STAssociators
+Package manager : M. Needham 
+
+! =====================================================================
+! 2005/19/12 - v1r0
+  M.Needham
+  First release of package containing  classes for associating to MC
+  Based on ITAssociators in IT hat 
+! ======================================================================
