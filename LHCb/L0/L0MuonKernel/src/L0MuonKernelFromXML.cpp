@@ -139,7 +139,7 @@ L0Muon::Unit *L0Muon::L0MuonKernelFromXML(std::string xmlFileName){
   
   // Decode the node
   Unit* top;
-  std::cout << "<L0Muon::L0MuonKernelFromXML>  child... " << std::endl;
+  //  std::cout << "<L0Muon::L0MuonKernelFromXML>  child... " << std::endl;
   child = li->item(0);
 //   std::cout << "<L0Muon::L0MuonKernelFromXML>  child = "
 //   	    <<" " <<XMLString::transcode(child->getNodeName()) 
