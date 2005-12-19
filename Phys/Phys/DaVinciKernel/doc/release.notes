@@ -1,13 +1,13 @@
-! $Id: release.notes,v 1.80 2005-12-19 12:47:31 pkoppenb Exp $
+! $Id: release.notes,v 1.81 2005-12-19 12:56:14 pkoppenb Exp $
 ! Package     : DaVinciKernel
 ! Responsible : P. Koppenburg
 
+!========================== DaVinciKernel v3r9 2005-12-19 ===================
 ! 2005-12-19 - P. Koppenburg
   - Kernel/DVAlgorithm.h
   - src/Lib/DVAlgorithm.cpp
     . Bug fix: BTaggingTool should not be private
     
-!========================== DaVinciKernel v3r9 2005-12-15 ===================
 ! 2005-12-13 - P. Koppenburg
   - Kernel/DVAlgorithm.h
   - src/Lib/DVAlgorithm.cpp
