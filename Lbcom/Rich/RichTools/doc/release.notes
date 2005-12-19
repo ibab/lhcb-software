@@ -5,6 +5,10 @@
 !-----------------------------------------------------------------------------
 
 !=========================== RichTools v2r0 2005-12-19 =======================
+! 2005-12-19 - Marco Cattaneo
+ - Add dependency on RichKernel (no longer through RichDet)
+ - Pick up RichTraceMode.h from LHCbKernel
+
 ! 2005-12-17 - Chris Jones
  - Rename RichRayTracingAllSph as RichRayTracing now flat mirror support is
    dropped.

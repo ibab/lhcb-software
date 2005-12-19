@@ -5,7 +5,7 @@
  *  Header file for tool : RichDetParameters
  *
  *  CVS History :
- *  $Id: RichRayTracing.h,v 1.17 2005-12-17 14:21:59 jonrob Exp $
+ *  $Id: RichRayTracing.h,v 1.18 2005-12-19 17:15:59 cattanem Exp $
  *
  *  @author Chris Jones    Christopher.Rob.Jones@cern.ch
  *  @date   2004-03-29
@@ -26,7 +26,6 @@
 #include "RichKernel/IRichMirrorSegFinder.h"
 #include "RichKernel/BoostArray.h"
 #include "RichKernel/Rich1DTabProperty.h"
-#include "RichKernel/RichTraceMode.h"
 
 // RichEvent
 #include "RichEvent/RichGeomPhoton.h"
@@ -37,6 +36,7 @@
 
 // LHCbKernel
 #include "Kernel/RichSmartID.h"
+#include "Kernel/RichTraceMode.h"
 
 #include "GaudiKernel/IHistogramSvc.h"
 #include "AIDA/IHistogram1D.h"
