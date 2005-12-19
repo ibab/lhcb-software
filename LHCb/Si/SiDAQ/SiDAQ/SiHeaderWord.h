@@ -1,4 +1,4 @@
-// $Id: SiHeaderWord.h,v 1.1.1.1 2005-11-22 15:20:18 mneedham Exp $
+// $Id: SiHeaderWord.h,v 1.2 2005-12-19 16:46:41 mneedham Exp $
 #ifndef _SiHeaderWord_H
 #define _SiHeaderWord_H 1
 
@@ -21,10 +21,12 @@ public:
   @param pcn
   */
   SiHeaderWord(unsigned int nClusters,
-            unsigned int pcn){
+               unsigned int pcn, 
+               unsigned int errorFlag = 0){
 
     m_value = (nClusters<<clusterBits) +
-           (pcn <<pcnBits);
+           (pcn <<pcnBits) +
+           (errorFlag << errorBits);
   }
 
   /** constructer with int 
@@ -54,6 +56,12 @@ public:
   */
   unsigned int pcn() const;
 
+
+  /** error bits set 
+  @return true if in error 
+  */
+  bool hasError() const;
+
   /** Operator overloading for stringoutput */
   friend std::ostream& operator<< (std::ostream& s, const SiHeaderWord& obj)
   {
@@ -65,8 +73,8 @@ public:
 
 private:
 
-  enum bits {clusterBits = 0, pcnBits = 16};
-  enum masks {clusterMask = 0x00ffff , pcnMask =  0xff0000}; 
+  enum bits {clusterBits = 0, pcnBits = 16, errorBits = 25};
+  enum masks {clusterMask = 0x00ffff , pcnMask =  0xff0000, errorMask = 0x1000000}; 
 
   int m_value;
 
@@ -80,6 +88,10 @@ inline  SiHeaderWord::operator int() const
 inline unsigned int SiHeaderWord::value() const
 {
   return m_value;
+}
+
+inline bool SiHeaderWord::hasError() const{
+  return ((m_value & errorMask) >> errorBits);
 }
 
 inline unsigned int SiHeaderWord::nClusters() const{
