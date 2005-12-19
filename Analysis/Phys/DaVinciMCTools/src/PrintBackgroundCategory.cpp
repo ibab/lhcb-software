@@ -26,6 +26,7 @@ PrintBackgroundCategory::PrintBackgroundCategory( const std::string& name,
                       ISvcLocator* pSvcLocator)
   : DVAlgorithm ( name , pSvcLocator )
   , m_bkgCategory(0)
+  , m_entries(0)
 {
 
 }
@@ -66,6 +67,7 @@ StatusCode PrintBackgroundCategory::execute() {
   for(iparts = parts.begin(); iparts != parts.end(); ++iparts){
     IBackgroundCategory::categories cat = m_bkgCategory->category(*iparts);
     info() << "Result of BackgroundCategory is: " << cat << endreq;
+    if (!increment_stats(cat)) return StatusCode::FAILURE ;
   }
   if(!parts.empty()) setFilterPassed(true);
   else{
@@ -76,5 +78,34 @@ StatusCode PrintBackgroundCategory::execute() {
   return StatusCode::SUCCESS;
 };
 
-
 //=============================================================================
+// stats
+//=============================================================================
+StatusCode PrintBackgroundCategory::increment_stats(IBackgroundCategory::categories cat) {
+  bkgstats::iterator it = m_stats.find(cat);
+  if (it==m_stats.end()){
+    debug() << "Category " << cat << " is new" << endmsg ;
+    m_stats[cat] = 1 ;
+  } else {
+    debug() << "Incrementing category " << cat << endmsg ;
+    (m_stats[cat])++;
+  }
+  m_entries++;
+  return StatusCode::SUCCESS;
+}
+//=============================================================================
+StatusCode PrintBackgroundCategory::finalize() {
+  return print_stats();
+}
+//=============================================================================
+// print stats
+//=============================================================================
+StatusCode PrintBackgroundCategory::print_stats() {
+  if (m_entries==0) return  StatusCode::SUCCESS;
+  for ( bkgstats::iterator it = m_stats.begin() ; it != m_stats.end(); ++it){
+    double f = 100.*it->second/m_entries;
+    info() << "Background " << it->first << " seen " << it->second << " times ("
+           << f << "%)" << endmsg ;
+  }
+  return  StatusCode::SUCCESS;
+}
