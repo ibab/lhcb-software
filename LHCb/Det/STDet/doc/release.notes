@@ -1,6 +1,9 @@
 !Package         : STDet
 !Package manager : M. Needham
 
+! 2005-12-19 M. Needham
+  - New version for LHCb v20r0. Totally backward incompatible !!!!!!
+
 !========================= STDet v1r5 2005-07-29 =======================
 ! 2005-07-27 - Luis Fernandez
  - STWafer.{h,cpp}
@@ -10,6 +13,7 @@
 !========================= STDet v1r4 2005-05-24 =======================
 ! 2005-05-13 - Marco Clemencic
  - Use new ParamValidDataObject interface (DetDesc >= v15)
+
 
 !========================= STDet v1r3 2005-04-06 =======================
 ! 2005-04-06  M. Needham
