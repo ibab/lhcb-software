@@ -18,5 +18,5 @@ AllJpsi2MuMuTracks.DaughterFilter.TrackTypeFilterCriterion.RequireLong = true ;
 
 // only here
 TrueSignals.Members += {"PrintTree/PrintJpsiTracks"};
-PrintJpsiTracks.DebugTool.Informations = "Name E M P Px Py Pz Pt phi Vz" ;
+PrintJpsiTracks.DebugTool.Information = "Name E M P Px Py Pz Pt phi Vz" ;
 PrintJpsiTracks.PhysDesktop.InputLocations = { "Phys/AllJpsi2MuMuTracks" } ;

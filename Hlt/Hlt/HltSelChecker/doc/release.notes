@@ -5,6 +5,10 @@
 !-----------------------------------------------------------------------------
 %% WARNING: FROM REVISION v4r0 THIS PACKAGE IS INCOMPATIBLE WITH NON DC04-SOFTWARE %% 
 
+! 2005-12-20 - Luis Fernandez
+ - options/
+   . DebugTool property
+
 !========================== HltSelChecker v4r0 2005-12-15 ===================
 ! 2005-12-09 - P. Koppenburg
  - src/TestHltScore.*

@@ -15,7 +15,7 @@ DstarIsFound.ANDmode = true ;
 DstarIsFound.Algorithms = { "HLTFilterDstar" } ; // , "AllDstar2DpiTracks" } ;
 DstarIsFound.AvoidSelResult = false ;
 
-PrintFoundDstar.DebugTool.Informations = "Name E M P Px Py Pz Pt phi Vz" ;
+PrintFoundDstar.DebugTool.Information = "Name E M P Px Py Pz Pt phi Vz" ;
 PrintFoundDstar.PhysDesktop.InputLocations = { "Phys/HLTFilterDstar" } ;
 PrintFoundDstar.OutputLevel = 4 ;
 

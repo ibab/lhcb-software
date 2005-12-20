@@ -19,5 +19,5 @@ AllDstar2DpiTracks.DaughterFilter.TrackTypeFilterCriterion.RequireLong = true ;
 
 // only here
 TrueSignals.Members += {"PrintTree/PrintDstarTracks"};
-PrintDstarTracks.DebugTool.Informations = "Name E M P Px Py Pz Pt phi Vz" ;
+PrintDstarTracks.DebugTool.Information = "Name E M P Px Py Pz Pt phi Vz" ;
 PrintDstarTracks.PhysDesktop.InputLocations = { "Phys/AllDstar2DpiTracks"} ;

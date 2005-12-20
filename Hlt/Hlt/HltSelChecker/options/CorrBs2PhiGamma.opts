@@ -21,6 +21,6 @@ Bs2PhiGammaIsFound.ANDmode = true ;
 Bs2PhiGammaIsFound.Algorithms = { "HLTFilterBs2PhiGamma" } ; // , "AllBs2PhiGammaTracks" } ;
 Bs2PhiGammaIsFound.AvoidSelResult = false ;
 
-PrintFoundBs2PhiGamma.DebugTool.Informations = "Name E M P Px Py Pz Pt phi Vz" ;
+PrintFoundBs2PhiGamma.DebugTool.Information = "Name E M P Px Py Pz Pt phi Vz" ;
 PrintFoundBs2PhiGamma.PhysDesktop.InputLocations = { "Phys/HLTFilterBs2PhiGamma" } ;
 PrintFoundBs2PhiGamma.OutputLevel = 4 ;

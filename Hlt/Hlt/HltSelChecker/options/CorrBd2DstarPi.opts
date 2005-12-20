@@ -24,6 +24,6 @@ Bd2DstarPiIsFound.ANDmode = true ;
 Bd2DstarPiIsFound.Algorithms = { "HLTFilterBd2DstarPi" } ; // , "AllBd2DstarPiTracks" } ;
 Bd2DstarPiIsFound.AvoidSelResult = false ;
 
-PrintFoundBd2DstarPi.DebugTool.Informations = "Name E M P Px Py Pz Pt phi Vz" ;
+PrintFoundBd2DstarPi.DebugTool.Information = "Name E M P Px Py Pz Pt phi Vz" ;
 PrintFoundBd2DstarPi.PhysDesktop.InputLocations = { "Phys/HLTFilterBd2DstarPi" } ;
 PrintFoundBd2DstarPi.OutputLevel = 4 ;

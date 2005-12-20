@@ -23,6 +23,6 @@ Bs2DsHIsFound.ANDmode = true ;
 Bs2DsHIsFound.Algorithms = { "HLTFilterBs2DsH" } ; // , "AllBs2DsHTracks" } ;
 Bs2DsHIsFound.AvoidSelResult = false ;
 
-PrintFoundBs2DsH.DebugTool.Informations = "Name E M P Px Py Pz Pt phi Vz" ;
+PrintFoundBs2DsH.DebugTool.Information = "Name E M P Px Py Pz Pt phi Vz" ;
 PrintFoundBs2DsH.PhysDesktop.InputLocations = { "Phys/HLTFilterBs2DsH" } ;
 PrintFoundBs2DsH.OutputLevel = 4 ;

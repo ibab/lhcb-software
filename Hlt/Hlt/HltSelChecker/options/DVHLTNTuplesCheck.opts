@@ -29,18 +29,15 @@ TrueSignals.Members += {"TrgL1Filter/TrueTrgL1Filter","TrgTrackToContainer","Trg
 // and add it here ... 
 ApplicationMgr.TopAlg += { "PreLoadParticles/Combined" } ;
 
-MessageSvc.OutputLevel = 4;
-ToolSvc.OutputLevel    = 4;
+MessageSvc.OutputLevel = 3;
+ToolSvc.OutputLevel    = 3;
 
 //------------------------------------------------------------------------------ 
 //  re-initalize event selector
 EventSelector.Input   = {};
 //------------------------------------------------------------------------------
-// PK's stripping of MB passing L0 and L1:
-// #include "$HLTSELECTIONSROOT/options/L0L1-MB.opts"
-//------------------------------------------------------------------------------
-// PK's stripping of signal passing L0, L1 and TDR:
-//#include "$HLTSELECTIONSROOT/options/L0TDR-AllSignals.opts"
+// L0-L1 MBv2 stripped data
+// #include "$HLTSELECTIONSROOT/options/L0L1-MB-DC04v2.opts"
 //------------------------------------------------------------------------------ 
 
 //==============================================================================

@@ -25,6 +25,6 @@ B2HHIsFound.ANDmode = false ;
 B2HHIsFound.Algorithms = { "HLTFilterB2HH" } ; // , "AllB2HHTracks" } ;
 B2HHIsFound.AvoidSelResult = false ;
 
-PrintFoundB2HH.DebugTool.Informations = "Name E M P Px Py Pz Pt phi Vz" ;
+PrintFoundB2HH.DebugTool.Information = "Name E M P Px Py Pz Pt phi Vz" ;
 PrintFoundB2HH.PhysDesktop.InputLocations = { "Phys/HLTFilterB2HH" } ;
 PrintFoundB2HH.OutputLevel = 4 ;

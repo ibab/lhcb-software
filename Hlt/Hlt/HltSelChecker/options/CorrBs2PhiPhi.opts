@@ -22,6 +22,6 @@ Bs2PhiPhiIsFound.ANDmode = true ;
 Bs2PhiPhiIsFound.Algorithms = { "HLTFilterBs2PhiPhi" } ; // , "AllBs2PhiPhiTracks" } ;
 Bs2PhiPhiIsFound.AvoidSelResult = false ;
 
-PrintFoundBs2PhiPhi.DebugTool.Informations = "Name E M P Px Py Pz Pt phi Vz" ;
+PrintFoundBs2PhiPhi.DebugTool.Information = "Name E M P Px Py Pz Pt phi Vz" ;
 PrintFoundBs2PhiPhi.PhysDesktop.InputLocations = { "Phys/HLTFilterBs2PhiPhi" } ;
 PrintFoundBs2PhiPhi.OutputLevel = 4 ;

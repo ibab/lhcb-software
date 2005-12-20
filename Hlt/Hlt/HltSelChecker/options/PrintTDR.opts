@@ -1,5 +1,5 @@
 ApplicationMgr.TopAlg += {"PrintTree/PrintTDR"};
-PrintTDR.DebugTool.Informations = "Name E M P Px Py Pz Pt phi Vz" ;
+PrintTDR.DebugTool.Information = "Name E M P Px Py Pz Pt phi Vz" ;
 PrintTDR.PhysDesktop.InputLocations = { "Phys/TightTDRselBs2PhiPhi"
                                         , "Phys/TDRselBd2PiPi"
                                         , "Phys/TDRselBd2KPi"

@@ -22,6 +22,6 @@ Bd2MuMuKstarIsFound.ANDmode = true ;
 Bd2MuMuKstarIsFound.Algorithms = { "HLTFilterBd2MuMuKstar" } ; // , "AllBd2MuMuKstarTracks" } ;
 Bd2MuMuKstarIsFound.AvoidSelResult = false ;
 
-PrintFoundBd2MuMuKstar.DebugTool.Informations = "Name E M P Px Py Pz Pt phi Vz" ;
+PrintFoundBd2MuMuKstar.DebugTool.Information = "Name E M P Px Py Pz Pt phi Vz" ;
 PrintFoundBd2MuMuKstar.PhysDesktop.InputLocations = { "Phys/HLTFilterBd2MuMuKstar" } ;
 PrintFoundBd2MuMuKstar.OutputLevel = 4 ;
