@@ -1,9 +1,11 @@
-// $Id: STSignalToNoiseTool.h,v 1.1.1.1 2005-12-19 15:58:58 mneedham Exp $
+// $Id: STSignalToNoiseTool.h,v 1.2 2005-12-20 15:29:32 cattanem Exp $
 #ifndef _STSIGNALTONOISETOOL_H
 #define _STSIGNALTONOISETOOL_H
 
 #include "GaudiAlg/GaudiTool.h"
-#include "STTools/ISTSignalToNoiseTool.h"
+
+// From STEvent
+#include "Kernel/ISTSignalToNoiseTool.h"
 
 #include <string>
 

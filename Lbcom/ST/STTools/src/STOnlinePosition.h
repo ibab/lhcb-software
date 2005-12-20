@@ -1,9 +1,11 @@
-// $Id: STOnlinePosition.h,v 1.1.1.1 2005-12-19 15:58:58 mneedham Exp $
+// $Id: STOnlinePosition.h,v 1.2 2005-12-20 15:29:32 cattanem Exp $
 #ifndef _STOnlinePosition_H
 #define _STOnlinePosition_H
 
 #include "GaudiAlg/GaudiTool.h"
-#include "STTools/ISTClusterPosition.h"
+
+// From LHCbKernel
+#include "Kernel/ISTClusterPosition.h"
 
 #include <vector>
 

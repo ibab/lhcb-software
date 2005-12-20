@@ -3,13 +3,13 @@
 # Maintainer : Matt Needham
 #============================================================================
 package           STTools
-version           v1r0
+version           v2r0
 
-branches          cmt doc src STTools
-include_dirs      $(STTOOLSROOT)
+branches          cmt doc src
+include_path      none
 
-use STEvent     v1r* Event
-use STDet	v2r* Det
+use STEvent     v* Event
+use STDet       v* Det
 use LHCbKernel  v* Kernel
 use GaudiAlg    v*
 use GaudiKernel v*

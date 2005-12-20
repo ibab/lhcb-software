@@ -1,8 +1,14 @@
 Package         : ST/STTools
 Package manager : Matt Needham
+!------------------------------------------------------------------------------
 
+!=========================== STTools v2r0 2005-12-20 ==========================
+! 2005-12-20 - Marco Cattaneo
+ - Remove STTools directory so package can be in Lbcom. ISTClusterPosition.h
+   moved to LHCbKernel, ISTSignalToNoiseTool.h moved to STEvent, both in Kernel
+   sub-directory. Include paths and requirements changed accordingly
+ - Use v2r0 as initial version (v1r* already used in IT hat)
 
-! 2005-12-19 - v1r0
-  M.Needham
+! 2005-12-19 - M.Needham
   First official release of code (replaces STTools in IT hat)
-! ======================================================================
+! =============================================================================
