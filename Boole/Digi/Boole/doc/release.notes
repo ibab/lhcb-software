@@ -3,6 +3,11 @@ Package: Digi/Boole
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb Digitization program
 
+</PRE><H1><A NAME=v10r3>2005-12-21 Boole v10r3</A></H1><PRE>
+ - Adapt requirements to Lbcom v3r3, LHCb v19r4
+ - Use XmlDDDB v27r1, ParamFiles v4r0
+ - Add TriggerL0Seq.Members += { "L0MuonCandidatesFromRaw" }; to Boole.opts
+
 </PRE><H1><A NAME=v10r1>2005-11-18 Boole v10r1</A></H1><PRE>
  - Adapt requirements to Lbcom v3r1, LHCb v19r2
  - Use RichReadout v1r14, RichDigiQC v2r3

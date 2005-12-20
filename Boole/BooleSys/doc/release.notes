@@ -3,6 +3,21 @@ Package: Digi/Boole
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb Digitization program
 
+</PRE><H1><A NAME=v10r3>2005-12-21 Boole v10r3</A></H1><PRE>
+This version uses LHCb v19r4, Lbcom v3r2, XmlDDDB v27r1, ParamFiles v4r0
+Requires input from Gauss v19r3 or greater. Output needs Brunel v28r1 or greater
+
+- New features
+  . New implementation of L0Muon simulation
+    (ProcessorKernel v2r0,L0MuonKernel v4r0,L0MuonTrigger v4r0,ParamFiles v4r0)
+
+- New tuning
+  . Adapt code to new implementation of L0MuonCandidate
+    (L0DU v6r10, L0Checker v3r2p2, Boole.opts)
+
+- Persistency changes
+  . L0Muon no longer present in L1Buffer, now added to RawBuffer 
+
 </PRE><H1><A NAME=v10r1>2005-11-18 Boole v10r1</A></H1><PRE>
 This version uses Gaudi v17r2, LHCb v19r2, Lbcom v3r1, XmlDDDB v27r0
 Requires input from Gauss v19r3 or greater. Output needs Brunel v28r1 or greater

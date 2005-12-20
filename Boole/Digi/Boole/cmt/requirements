@@ -1,5 +1,5 @@
 package Boole
-version v10r1
+version v10r3
 
 branches doc cmt job options
 
@@ -20,19 +20,19 @@ use GaudiObjDesc 	v8r3         -no_auto_imports
 use RootHistCnv         v9r6         -no_auto_imports
 
 #-- Databases
-use XmlDDDB            v27r0    Det  -no_auto_imports
+use XmlDDDB            v27r1    Det  -no_auto_imports
 use XmlConditions       v1r3    Det  -no_auto_imports
-use ParamFiles	       v3r13	     -no_auto_imports
+use ParamFiles	        v4r0         -no_auto_imports
 use FieldMap	        v4r6         -no_auto_imports
 use BooleDQ	        v1r0	DQ   -no_auto_imports
 
-#-- LHCb libraries (from LHCB_v19r2)
-use LHCb	       v19r2         -no_auto_imports
+#-- LHCb libraries (from LHCB_v19r4)
+use LHCb	       v19r4         -no_auto_imports
 
-#-- Lbcom packages (from LBCOM_v3r1)
-use LbcomSys            v3r1         -no_auto_imports
+#-- Lbcom packages (from LBCOM_v3r3)
+use LbcomSys            v3r3         -no_auto_imports
 
-#-- BooleSys v10r0 packages
+#-- BooleSys v10r3 packages
 
 use DigiAlg		v3r0	Digi -no_auto_imports
 

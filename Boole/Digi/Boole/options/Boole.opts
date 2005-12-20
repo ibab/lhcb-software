@@ -49,6 +49,7 @@ ApplicationMgr.DLLs += { "L0Calo", "L0MuonTrigger", "PuVeto", "L0DU" };
 TriggerL0Seq.Members += { "CreateRawEvent", "L0CaloAlg/L0Calo" };
 #include "$L0MUONTRIGGERROOT/options/Boole.opts"
 TriggerL0Seq.Members += { "L0mTriggerAlgorithm/L0MuonTrigger" };
+TriggerL0Seq.Members += { "L0MuonCandidatesFromRaw" };
 TriggerL0Seq.Members += { "PuVetoAlg" };
 TriggerL0Seq.Members += { "DecisionUnit" };
 TriggerL0Seq.Members += { "PrepareL0DUL1Buffer" };
