@@ -1,8 +1,11 @@
-// $Id: CaloReCreateMCLinks.cpp,v 1.4 2005-12-19 19:29:14 ocallot Exp $
+// $Id: CaloReCreateMCLinks.cpp,v 1.5 2005-12-20 13:35:28 ocallot Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.4 $
+// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.5 $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.4  2005/12/19 19:29:14  ocallot
+// First adaptation to LHCb v20
+//
 // Revision 1.3  2005/05/12 06:44:32  cattanem
 // downgrade Error to Warning
 //
@@ -188,7 +191,7 @@ StatusCode CaloReCreateMCLinks::execute()
     const std::string& addr1 = m_raw [index] ;
     //
     // get digits from TES 
-    CaloDigits*    raw = get<CaloDigits>    ( addr1 ) ;
+    LHCb::CaloDigits*    raw = get<LHCb::CaloDigits>    ( addr1 ) ;
     //
     if ( msgLevel ( MSG::DEBUG ) ) 
     { 

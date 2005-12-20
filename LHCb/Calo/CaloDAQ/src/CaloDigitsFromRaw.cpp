@@ -1,4 +1,4 @@
-// $Id: CaloDigitsFromRaw.cpp,v 1.4 2005-12-19 19:29:14 ocallot Exp $
+// $Id: CaloDigitsFromRaw.cpp,v 1.5 2005-12-20 13:35:28 ocallot Exp $
 // Include files 
 
 #include "Kernel/SystemOfUnits.h"
@@ -81,7 +81,7 @@ StatusCode CaloDigitsFromRaw::execute() {
 void CaloDigitsFromRaw::convertSpd ( std::string containerName,
                                      double energyScale ) {
 
-  CaloDigits* digits = new CaloDigits();
+  LHCb::CaloDigits* digits = new LHCb::CaloDigits();
   put( digits, containerName );
 
   std::vector<LHCb::CaloCellID>& spdCells = m_spdTool->firedCells( false );
@@ -104,7 +104,7 @@ void CaloDigitsFromRaw::convertSpd ( std::string containerName,
 //=========================================================================
 void CaloDigitsFromRaw::convertCaloEnergies ( std::string containerName ) {
 
-  CaloDigits* digits = new CaloDigits();
+  LHCb::CaloDigits* digits = new LHCb::CaloDigits();
   put( digits, containerName );
 
   std::vector<LHCb::CaloDigit>& allDigits = m_energyTool->digits( );

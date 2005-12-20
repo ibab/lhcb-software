@@ -1,4 +1,4 @@
-// $Id: CompareCaloDigits.h,v 1.2 2005-09-06 14:50:01 ocallot Exp $
+// $Id: CompareCaloDigits.h,v 1.3 2005-12-20 13:35:28 ocallot Exp $
 #ifndef COMPONENT_COMPARECALODIGITS_H 
 #define COMPONENT_COMPARECALODIGITS_H 1
 
@@ -24,8 +24,8 @@ public:
   virtual StatusCode execute   ();    ///< Algorithm execution
 
 protected:
-  void compareContainers ( CaloDigits* dig1,
-                           CaloDigits* dig2,
+  void compareContainers ( LHCb::CaloDigits* dig1,
+                           LHCb::CaloDigits* dig2,
                            double tol);
   
 private:

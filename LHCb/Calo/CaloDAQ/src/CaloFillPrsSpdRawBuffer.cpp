@@ -1,4 +1,4 @@
-// $Id: CaloFillPrsSpdRawBuffer.cpp,v 1.6 2005-12-19 19:29:14 ocallot Exp $
+// $Id: CaloFillPrsSpdRawBuffer.cpp,v 1.7 2005-12-20 13:35:28 ocallot Exp $
 // Include files 
 #include "Event/RawEvent.h"
 
@@ -199,8 +199,8 @@ StatusCode CaloFillPrsSpdRawBuffer::finalize() {
 //  Fill the calorimeter data bank, simple structure: ID (upper 16 bits) + ADC
 //=========================================================================
 void CaloFillPrsSpdRawBuffer::fillDataBankShort ( ) {
-  CaloAdcs* digs = get<CaloAdcs>( m_inputBank );
-  CaloAdcs::const_iterator itD;
+  LHCb::CaloAdcs* digs = get<LHCb::CaloAdcs>( m_inputBank );
+  LHCb::CaloAdcs::const_iterator itD;
   for ( itD = digs->begin(); digs->end() != itD; ++itD ){
     LHCb::CaloCellID id = (*itD)->cellID();
     //== find back the ADC content, is on 10 bits by construction
@@ -298,7 +298,7 @@ void CaloFillPrsSpdRawBuffer::fillTriggerBankShort ( ) {
 //  Packed data format, trigger and data in the same bank. Process ALL digits
 //=========================================================================
 void CaloFillPrsSpdRawBuffer::fillPackedBank ( ) {
-  CaloAdcs*  digs   = get<CaloAdcs>( m_inputBank );
+  LHCb::CaloAdcs*  digs   = get<LHCb::CaloAdcs>( m_inputBank );
   LHCb::L0PrsSpdHits* prs = get<LHCb::L0PrsSpdHits>( m_prsBank );
   LHCb::L0PrsSpdHits* spd = get<LHCb::L0PrsSpdHits>( m_spdBank );
   

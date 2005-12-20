@@ -4,6 +4,9 @@
 ! Purpose     : Convert Calo Digit and Trigger information to RawBuffer banks.
 !-----------------------------------------------------------------------------
 
+! 2005-12-20 - Olivier Callot
+ - Fix the namespace LHCb:: for CaloEvent classes, due to a missing recompilation.
+
 ! 2005-12-19 - Olivier Callot
  - Adapt to the new event model, mainly LHCb:: namespace, and also the new DAQEvent.
    Several things still to cleanup and fix.

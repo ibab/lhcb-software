@@ -1,4 +1,4 @@
-// $Id: CaloFillRawBuffer.cpp,v 1.5 2005-12-19 19:29:14 ocallot Exp $
+// $Id: CaloFillRawBuffer.cpp,v 1.6 2005-12-20 13:35:28 ocallot Exp $
 // Include files 
 // from Gaudi
 #include "GaudiKernel/AlgFactory.h" 
@@ -208,8 +208,8 @@ StatusCode CaloFillRawBuffer::finalize() {
 //  Fill the calorimeter data bank, simple structure: ID (upper 16 bits) + ADC
 //=========================================================================
 void CaloFillRawBuffer::fillDataBankShort ( ) {
-  CaloAdcs* digs = get<CaloAdcs>( m_inputBank );
-  CaloAdcs::const_iterator itD;
+  LHCb::CaloAdcs* digs = get<LHCb::CaloAdcs>( m_inputBank );
+  LHCb::CaloAdcs::const_iterator itD;
   for ( itD = digs->begin(); digs->end() != itD; ++itD ){
     LHCb::CaloCellID id = (*itD)->cellID();
     int adc       = (*itD)->adc();
@@ -223,7 +223,7 @@ void CaloFillRawBuffer::fillDataBankShort ( ) {
 //  Packed data format, trigger and data in the same bank. Process ALL digits
 //=========================================================================
 void CaloFillRawBuffer::fillPackedBank ( ) {
-  CaloAdcs* digs = get<CaloAdcs>( m_inputBank );
+  LHCb::CaloAdcs* digs       = get<LHCb::CaloAdcs>( m_inputBank );
   LHCb::L0CaloAdcs* trigAdcs = get<LHCb::L0CaloAdcs>( m_triggerBank );
   
   for ( int kTell1 = 0 ; m_numberOfBanks > kTell1 ; kTell1++ ) {
