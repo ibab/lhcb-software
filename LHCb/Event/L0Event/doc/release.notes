@@ -1,6 +1,9 @@
-$Id: release.notes,v 1.42 2005-12-15 08:51:22 cattanem Exp $
+$Id: release.notes,v 1.43 2005-12-20 13:47:37 ocallot Exp $
 Package : L0Event
 Package manager : Olivier Callot
+
+! 2005-12-20 - Olivier Callot
+ - New version for L0Muon from Julien Cogan.
 
 !======================== L0Event v15r0 2005-12-15 ========================
 ! 2005-12-15 - Olivier Callot
