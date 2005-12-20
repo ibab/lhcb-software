@@ -1,10 +1,8 @@
-! $Id: release.notes,v 1.85 2005-12-20 12:02:21 pkoppenb Exp $
+! $Id: release.notes,v 1.86 2005-12-20 12:07:58 pkoppenb Exp $
 ! Package     : DaVinciMCTools
 ! Responsible : P. Koppenburg
 !=============================================================================
 
-!========================= DaVinciMCTools v5r17p1 2005-12-20 ==================
-! on branch v5r17b
 ! 2005-12-20 - P. Koppenburg
   - src/MCPIDProtoPAlg.cpp
     . RichPID has methods recTrack in v12 and trSoredTrack in later code.

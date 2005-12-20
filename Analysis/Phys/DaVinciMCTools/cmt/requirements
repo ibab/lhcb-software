@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.32 2005-12-20 12:02:21 pkoppenb Exp $
+# $Id: requirements,v 1.33 2005-12-20 12:07:58 pkoppenb Exp $
 # Created    : 19/05/2002
 # Maintainer : P. Koppenburg
 #
@@ -6,7 +6,7 @@
 # http://cern.ch/lhcb-comp/Support/html/new_structure.pdf
 
 package           DaVinciMCTools
-version           v5r17p1
+version           v5r18
 
 # This template is an example for a standard Algorithm package
 #
@@ -48,8 +48,8 @@ library          DaVinciMCTools    ../src/*.cpp
 
 # =============== some additional cpp flags ===================================
 # to use with DaVinci v12* family, uncomment these lines
-# macro_append DaVinciMCTools_pp_cppflags  "  -DDAVINCIMCTOOLS_DAVINCI_V12  " \
-#             WIN32             ' /D"DAVINCIMCTOOLS_DAVINCI_V12" '
+macro_append DaVinciMCTools_pp_cppflags  "  -DDAVINCIMCTOOLS_DAVINCI_V12  " \
+            WIN32             ' /D"DAVINCIMCTOOLS_DAVINCI_V12" '
                                                                                                                                                   
 # define component library link options
 #============================================================================
