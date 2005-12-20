@@ -1,9 +1,13 @@
-! $Id: release.notes,v 1.13 2005-12-20 10:58:11 cattanem Exp $
+! $Id: release.notes,v 1.14 2005-12-20 12:36:31 jonrob Exp $
 ! Package     : Event/MCEvent
 ! Responsible : Marco Cattaneo, Gloria Corti
 ! Purpose     : LHCb Event model. MC truth classes (Gauss and Boole output) 
 
 !========================== MCEvent v1r0 2005-12-20 ==========================
+
+! 2005-12-20 - Chris Jones
+ - Fix MCRichTrack compilation.
+
 ! 2005-12-20 - Marco Cattaneo
  - Add MCSTDeposit and MCSTDigit
  - Fix package of Rich classes (was RichEvent), except for MCRichTrack, whose

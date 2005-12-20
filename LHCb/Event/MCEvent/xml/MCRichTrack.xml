@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
 <!DOCTYPE gdd SYSTEM "gdd.dtd">
 <gdd>
-<package name="RichEvent">
+<package name="MCEvent">
 
 <!-- **************************************************************************
-  * $Id: MCRichTrack.xml,v 1.1 2005-12-06 13:53:35 jonrob Exp $
+  * $Id: MCRichTrack.xml,v 1.2 2005-12-20 12:36:31 jonrob Exp $
   *****************************************************************************
   * XML-description of MCRichTrack class                                      *
   * author: Chris Jones   Christopher.Rob.Jones@cern.ch                       *
@@ -25,7 +25,8 @@
         &KeyedContainer;
 
         <import name="Kernel/RichRadiatorType"/>
-        <import name="Event/MCRichSegment"/>
+        <import name="Event/MCParticle"/>
+        <import name="Event/MCRichSegment" soft="TRUE" />
         <import ignore="TRUE" name="Rich"/>
         <import ignore="TRUE" name="RadiatorType"/>
 
