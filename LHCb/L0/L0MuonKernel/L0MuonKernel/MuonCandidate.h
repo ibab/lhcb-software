@@ -1,4 +1,4 @@
-// $Id: MuonCandidate.h,v 1.1 2005-12-15 15:53:26 jucogan Exp $
+// $Id: MuonCandidate.h,v 1.2 2005-12-20 13:30:41 cattanem Exp $
 
 #ifndef L0MUONKERNEL_MUONCANDIDATE_H
 #define L0MUONKERNEL_MUONCANDIDATE_H     1
@@ -12,6 +12,7 @@ of a Muon trigger candidate
 
 #include "MuonKernel/MuonTileID.h"
 #include "boost/shared_ptr.hpp"
+#include <math.h>
 
 namespace L0Muon {
 
