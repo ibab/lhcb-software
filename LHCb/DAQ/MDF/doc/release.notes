@@ -1,0 +1,11 @@
+!-----------------------------------------------------------------------------
+! Package     : DAQ/MDF
+! Responsible : Markus Frank
+! Purpose     : Package to handle MDF and MIF data files.
+!               Contains also the data structures to control MEPs and 
+!               MEP fragments
+!-----------------------------------------------------------------------------
+
+!========================== MDF v1r0  ===========================
+! 2005-12-20 - Markus Frank
+  - New package
