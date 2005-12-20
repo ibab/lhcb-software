@@ -2,6 +2,7 @@
 
 ApplicationMgr.DLLs   -= { "DetDescSvc" };
 ApplicationMgr.DLLs   += { "DetDescChecks" };
+ApplicationMgr.DLLs   += { "DetDescCnv" };
 ApplicationMgr.DLLs   += { "RootHistCnv"};
 
 ApplicationMgr.HistogramPersistency = "ROOT";
