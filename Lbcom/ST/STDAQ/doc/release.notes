@@ -4,6 +4,10 @@
 ! Purpose     : Encode and decode L1 and Raw buffers for ST
 !-----------------------------------------------------------------------------
 
+!=============================== STDAQ v2r0 2005-12-20 =======================
+! 2005-12-20 - Marco Cattaneo
+ - Cleanup requirements
+ - Use version v2r0 (v1r* was already used under IT hat)
 
 ! 2005-12-20 - Matt Needham
  - First release

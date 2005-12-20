@@ -1,5 +1,5 @@
 package STDAQ
-version v1r0
+version v2r0
 
 branches cmt doc src options
 
@@ -11,7 +11,7 @@ use STEvent      v*  Event
 use DAQEvent     v*  Event
 use LHCbKernel   v*  Kernel
 use GaudiKernel  v*
-use SiDAQ  v* Si
+use SiDAQ        v*  Si
 
 #---- link library
 library STDAQLib ../src/Lib/*.cpp 
@@ -19,7 +19,7 @@ library STDAQLib ../src/Lib/*.cpp
 # macro_append cppflags ' -Weffc++'
 
 #component
-library STDAQ ../src/component/*.cpp
+library STDAQ ../src/component/*.cpp -import=GSL
 
 # standard patterns (order is essential!)
 apply_pattern component_library library=STDAQ
@@ -29,5 +29,4 @@ private
 # Use here packages needed only by component library
 use DetDesc      v*  Det
 use GaudiAlg     v*
-use CLHEP        v*  LCG_Interfaces
-use GSL          v*  LCG_Interfaces
+use GSL          v*  LCG_Interfaces -no_auto_imports
