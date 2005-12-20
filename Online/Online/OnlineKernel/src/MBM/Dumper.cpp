@@ -78,29 +78,29 @@ int MBM::Dumper::print()  {
   if ( lib_rtl_is_success(status) )  {
     int i;
     print_control_table(m_bm->ctrl);
-    for (i=0;i<m_bm->ctrl->p_umax;i++) print_user_table(m_bm->user+i);
-    for (i=0;i<m_bm->ctrl->p_emax;i++) print_event_table(m_bm->event+i);
+    USERDesc* u = m_bm->usDesc;
+    EVENTDesc* e = m_bm->evDesc;
+    print_queue("USERDesc->u_head\t%8x %d\t-----> user at address %x\n",   (long*)&u->next,0);
+    print_queue("USERDesc->u_tail\t%8x %d\t-----> user at address %x\n",   (long*)&u->prev,1);
+    print_queue("USERDesc->wev_head\t%8x %d\t-----> user at address %x\n", (long*)&u->wev_head.next,0);
+    print_queue("USERDesc->wev_tail\t%8x %d\t-----> user at address %x\n", (long*)&u->wev_head.prev,1);
+    print_queue("USERDesc->wsp_head\t%8x %d\t-----> user at address %x\n", (long*)&u->wsp_head,0);
+    print_queue("USERDesc->wsp_tail\t%8x %d\t-----> user at address %x\n", (long*)&u->wsp_head.prev,1);
+    print_queue("USERDesc->wes_head\t%8x %d\t-----> user at address %x\n", (long*)&u->wes_head,0);
+    print_queue("USERDesc->wes_tail\t%8x %d\t-----> user at address %x\n", (long*)&u->wes_head.prev,1);
+    for (i=0;i<m_bm->ctrl->p_umax;i++) 
+      print_user_table(m_bm->user+i);
+    print_queue("EVENTDesc->e_head\t%8x %d\t-----> event at address %x\n",  (long*)&e->next,0);
+    print_queue("EVENTDesc->e_tail\t%8x %d\t-----> event at address %x\n",  (long*)&e->prev,1);
+    for (i=0;i<m_bm->ctrl->p_emax;i++) 
+      print_event_table(m_bm->event+i);
   }
   return status;
 }
 
 void MBM::Dumper::print_control_table(const CONTROL* ctrl)  {
   printf("Control table starts at %p(hex)\n",(void*)ctrl);
-
-  print_queue("ctrl->u_head\t%8x %d\t-----> user at address %x\n",   (long*)&ctrl->u_head,0);
-  print_queue("ctrl->u_tail\t%8x %d\t-----> user at address %x\n",   (long*)&ctrl->u_head.prev,1);
-  print_queue("ctrl->wev_head\t%8x %d\t-----> user at address %x\n", (long*)&ctrl->wev_head.next,0);
-  print_queue("ctrl->wev_tail\t%8x %d\t-----> user at address %x\n", (long*)&ctrl->wev_head.prev,1);
-  print_queue("ctrl->wsp_head\t%8x %d\t-----> user at address %x\n", (long*)&ctrl->wsp_head,0);
-  print_queue("ctrl->wsp_tail\t%8x %d\t-----> user at address %x\n", (long*)&ctrl->wsp_head.prev,1);
-  print_queue("ctrl->wes_head\t%8x %d\t-----> user at address %x\n", (long*)&ctrl->wes_head,0);
-  print_queue("ctrl->wes_tail\t%8x %d\t-----> user at address %x\n", (long*)&ctrl->wes_head.prev,1);
-  print_queue("ctrl->e_head\t%8x %d\t-----> event at address %x\n",  (long*)&ctrl->e_head,0);
-  print_queue("ctrl->e_tail\t%8x %d\t-----> event at address %x\n",  (long*)&ctrl->e_head.prev,1);
-  print_item("ctrl->buff_ptr\t%8p %d\n",ctrl->buff_ptr);
   print_item("ctrl->buff_size\t%8x %d\n",ctrl->buff_size);
-  print_item("ctrl->user\t%8p %d\t\n",ctrl->user);
-  print_item("ctrl->event\t%8p %d\n",ctrl->event);
   print_item("ctrl->p_umax\t%8x %d\n",ctrl->p_umax);
   print_item("ctrl->p_emax\t%8x %d\n",ctrl->p_emax);
   print_item("ctrl->p_base\t%8x %d\n",ctrl->p_base);

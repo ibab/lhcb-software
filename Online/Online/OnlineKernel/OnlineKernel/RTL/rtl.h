@@ -30,11 +30,11 @@ extern "C" {
   typedef void* lib_rtl_thread_t;
   typedef void* lib_rtl_lock_t;
   typedef void* lib_rtl_event_t;
+#endif
   struct lib_rtl_gbl  {
     void*             address;
-    void*             internals;
+    void*             addaux;
   };
-#endif
   typedef lib_rtl_gbl* lib_rtl_gbl_t;
   typedef int (*RTL_ast_t)(void*);
   typedef int (*lib_rtl_rundown_handler_t)(void*);

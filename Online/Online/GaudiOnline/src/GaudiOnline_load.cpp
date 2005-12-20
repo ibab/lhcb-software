@@ -1,4 +1,4 @@
-// $Id: GaudiOnline_load.cpp,v 1.3 2005-06-08 11:38:13 frankb Exp $
+// $Id: GaudiOnline_load.cpp,v 1.4 2005-12-20 16:38:18 frankb Exp $
 //====================================================================
 //  GaudiOnline_load.cpp
 //--------------------------------------------------------------------
@@ -13,13 +13,10 @@
 #include "GaudiKernel/DeclareFactoryEntries.h"
 
 DECLARE_FACTORY_ENTRIES(GaudiOnline)  {
-
-  DECLARE_OBJECT( OnlineEvtSelector  );
-  DECLARE_OBJECT( RawBufferWriter  );
-  DECLARE_OBJECT( DecisionSendAlg  );
-  DECLARE_OBJECT( DecisionSetterAlg  );
-  DECLARE_OBJECT( OnlineCnvSvc  );
-  DECLARE_OBJECT( OnlineCnv  );
-  DECLARE_OBJECT( OnlineMessageSvc  );
-
-} 
+  DECLARE_NAMESPACE_SERVICE(   LHCb,MEPCnvSvc  );
+  DECLARE_NAMESPACE_SERVICE(   LHCb,MBMCnvSvc  );
+  DECLARE_NAMESPACE_SERVICE(   LHCb,MepManager  );
+  DECLARE_ALGORITHM(           RawEventTestCreator);
+  DECLARE_ALGORITHM(           MEPReader);
+  DECLARE_OBJECT(              OnlineMessageSvc);
+}

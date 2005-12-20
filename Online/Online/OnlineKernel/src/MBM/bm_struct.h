@@ -63,7 +63,7 @@ template <class T> struct QUEUE {
 };
 
 struct USER : public qentry_t  {
-  qentry wsnext;
+  qentry_t wsnext;
   qentry_t wenext;
   qentry_t wesnext;
   int  block_id;  
@@ -72,7 +72,7 @@ struct USER : public qentry_t  {
   int  c_state;                  // consumer state (Active,Pause)   
   int  p_state;                  // producer state (Active,Wspace)  
   int  partid;                   // user partition ID       
-  char name[16];                 // user name         
+  char name[24];                 // user name         
   int pid;                       // process id         
   RTL_ast_t c_astadd;            // consumer signal to be send     
   RTL_ast_t p_astadd;            // producer signal to be send     
@@ -119,6 +119,13 @@ struct USER : public qentry_t  {
   }
 };
 
+struct USERDesc : public qentry_t  { // active consumers
+  qentry_t wev_head;      // consumers waiting events
+  qentry_t wsp_head;      // producers waiting space
+  qentry_t wes_head;      // producers waiting event slots
+  USER   users[1];
+};
+
 struct EVENT : public qentry_t {
   int   block_id;         // Block identifier
   int   busy;             // event busy flag
@@ -142,16 +149,13 @@ struct EVENT : public qentry_t {
   }
 };
 
+struct EVENTDesc : public qentry_t  {    // general event queue
+  char     _pad[8];
+  EVENT    events[1];
+};
+
 struct CONTROL  {
-  qentry_t u_head;        // active consumers
-  qentry_t wev_head;      // consumers waiting events
-  qentry_t wsp_head;      // producers waiting space
-  qentry_t wes_head;      // producers waiting event slots
-  qentry_t e_head;        // general event queue
-  char *buff_ptr;         // Event Buffer pointer
-  int buff_size;          // Event Buffer size
-  USER *user;             // user reserved space
-  EVENT *event;           // event reserved space
+  int   buff_size;        // Event Buffer size
   int p_umax;             // maximum users
   int p_emax;             // maximum events
   int p_base;             // Memory base address
@@ -181,7 +185,9 @@ struct BUFFERS  {
 struct BMDESCRIPT : public qentry_t  {
   CONTROL*         ctrl;
   USER*            user;
+  USERDesc*        usDesc;
   EVENT*           event;
+  EVENTDesc*       evDesc;
   char*            bitmap;
   unsigned int     bitmap_size;
   char*            buffer_add;

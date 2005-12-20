@@ -6,6 +6,7 @@ static void help()  {
   ::printf("    -n=<name>      buffer member name\n");
   ::printf("    -s=<number>    sleep interval between events [milli seconds]\n");
   ::printf("    -b=<name>      Buffer identifier \n");
+  ::printf("    -q             Quiet mode (do not print trigger number mismatch)\n");
 }
 
 extern "C" int mbm_cons(int argc,char **argv) {
@@ -14,7 +15,7 @@ extern "C" int mbm_cons(int argc,char **argv) {
   int  trnumber = -1, nbad = 0, sleep_msecs = 0;
   int  trmask[4] = {-1,-1,-1,-1};
   int  vetomask[4] = {0,0,0,0};
-
+  bool quiet = cli.getopt("quiet",1) != 0;
   cli.getopt("name",1,name);
   cli.getopt("sleep",1,sleep_msecs);
   cli.getopt("buffer",1,buffer);
@@ -28,8 +29,10 @@ extern "C" int mbm_cons(int argc,char **argv) {
       trnumber = *e.data;
     }
     else if( trnumber != *e.data ) {
-      ::printf("======= Mismatch [%d] found %d %d [0x%p]\n", 
-	       nbad++, trnumber, *e.data, (void*)e.data);
+      if ( !quiet )  {
+        ::printf("======= Mismatch [%d] found %d %d [0x%p]\n", 
+	         nbad++, trnumber, *e.data, (void*)e.data);
+      }
       trnumber = *e.data;
     }
     if ( sleep_msecs ) lib_rtl_sleep(sleep_msecs);

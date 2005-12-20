@@ -141,7 +141,7 @@ int MBM::Installer::optparse (const char* c)  {
 }
 
 int MBM::Installer::install()  {
-  int icode = deinstall();
+  int len, icode = deinstall();
   if(icode == -1) ::exit(0);
   ::printf("++bm_init++ Commencing BM installation \n");
   int status = ::lib_rtl_create_section(ctrl_mod,sizeof(CONTROL),&m_bm->ctrl_add);
@@ -150,22 +150,31 @@ int MBM::Installer::install()  {
     ::exit(status);
   }
   m_bm->ctrl = (CONTROL*)m_bm->ctrl_add->address;
-  status = ::lib_rtl_create_section(user_mod,sizeof(USER)*p_umax ,&m_bm->user_add);
+  ::memset(m_bm->ctrl,0,sizeof(CONTROL));
+  len = sizeof(USERDesc)+sizeof(USER)*(p_umax-1);
+  status = ::lib_rtl_create_section(user_mod, len ,&m_bm->user_add);
   if(!::lib_rtl_is_success(status))   {   
     ::lib_rtl_delete_section(m_bm->ctrl_add);
     ::printf("Cannot create section %s. Exiting....",user_mod);
     ::exit(status);
   }
-  m_bm->user = (USER*)m_bm->user_add->address;
-  status = ::lib_rtl_create_section(event_mod,sizeof(EVENT)*p_emax ,&m_bm->event_add);
+  m_bm->usDesc = (USERDesc*)m_bm->user_add->address;
+  m_bm->user   = m_bm->usDesc->users;
+  ::memset(m_bm->usDesc,0,sizeof(USERDesc));
+  ::memset(m_bm->user,0,sizeof(USER)*p_umax);
+  len = sizeof(EVENTDesc)+sizeof(EVENT)*(p_emax-1);
+  status = ::lib_rtl_create_section(event_mod, len ,&m_bm->event_add);
   if(!::lib_rtl_is_success(status))   {   
     ::lib_rtl_delete_section(m_bm->ctrl_add);
     ::lib_rtl_delete_section(m_bm->user_add);
     ::printf("Cannot create section %s. Exiting....",event_mod);
     ::exit(status);
   }
-  m_bm->event = (EVENT*)m_bm->event_add->address;
-  status = ::lib_rtl_create_section(bitmap_mod,(p_size<<(Bits_p_kByte-1))>>3,&m_bm->bitm_add);
+  m_bm->evDesc = (EVENTDesc*)m_bm->event_add->address;
+  m_bm->event = m_bm->evDesc->events;
+  ::memset(m_bm->evDesc,0,len);
+  len = (p_size<<Bits_p_kByte)>>3;
+  status = ::lib_rtl_create_section(bitmap_mod,len,&m_bm->bitm_add);
   if(!::lib_rtl_is_success(status))   {   
     ::lib_rtl_delete_section(m_bm->ctrl_add);
     ::lib_rtl_delete_section(m_bm->user_add);
@@ -174,6 +183,7 @@ int MBM::Installer::install()  {
     ::exit(status);
   }
   m_bm->bitmap = (char*)m_bm->bitm_add->address;
+  ::memset(m_bm->bitmap,0,len);
   status = ::lib_rtl_create_section(buff_mod,p_size<<10,&m_bm->buff_add);
   if(!::lib_rtl_is_success(status))   {   
     ::lib_rtl_delete_section(m_bm->ctrl_add);
@@ -184,10 +194,15 @@ int MBM::Installer::install()  {
     ::exit(status);
   }
   m_bm->buffer_add = (char*)m_bm->buff_add->address;
+
+  ::printf("Control: %p  %p\n",m_bm->ctrl,((char*)m_bm->ctrl)-((char*)m_bm->ctrl));
+  ::printf("User:    %p  %p  %p\n",m_bm->user,((char*)m_bm->user)-((char*)m_bm->ctrl),m_bm->usDesc);
+  ::printf("Event:   %p  %p  %p\n",m_bm->event,((char*)m_bm->event)-((char*)m_bm->ctrl),m_bm->evDesc);
+  ::printf("Bitmap:  %p  %p\n",m_bm->bitmap,((char*)m_bm->bitmap)-((char*)m_bm->ctrl));
+
   CONTROL* ctrl  = m_bm->ctrl;
   USER*    user  = m_bm->user;
   EVENT*   event = m_bm->event;
-  ::memset(ctrl,0,sizeof(CONTROL));
   ctrl->p_umax       = p_umax;
   ctrl->p_emax       = p_emax;
   ctrl->buff_size    = p_size<<10; /* in bytes*/
@@ -200,16 +215,13 @@ int MBM::Installer::install()  {
   ctrl->last_alloc   = 0;
   ctrl->bm_size      = p_size*Bits_p_kByte; /*in bits*/
   ctrl->spare1       = 0;
-  ::memset(user,0,sizeof(USER)*p_umax);
-  ::memset(event,0,sizeof(EVENT)*p_emax );
-  ::memset(m_bm->bitmap,0,(p_size<<Bits_p_kByte)>>3);
   for (int i=0;i<p_umax;i++)  {
     user[i].block_id = BID_USER;
     user[i].uid      = i;
   }
   for (int j=0;j<p_emax;j++)  {
-    event[j].block_id   = BID_EVENT;
-    event[j].eid   = j;
+    event[j].block_id = BID_EVENT;
+    event[j].eid      = j;
   }
   status = mbm_map_global_buffer_info(&bm_all);
   if(!::lib_rtl_is_success(status))   {   

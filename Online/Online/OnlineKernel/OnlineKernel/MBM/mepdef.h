@@ -17,6 +17,8 @@ typedef struct _MEPID {
   int     evtStart;
   int     mepStart;
   int     selection;
+  char    processName[32];
+  int     partitionID;
 } *MEPID;
 
 struct MEP_SINGLE_EVT  {

@@ -25,10 +25,12 @@ namespace {
 
 /// Create named global section
 int lib_rtl_create_section(const char* sec_name, size_t size, lib_rtl_gbl_t* address) {
-  std::auto_ptr<lib_rtl_gbl> h(new lib_rtl_gbl);
+  long siz  = (size/4096)*4096 + (((size%4096)==0) ? 0 : 4096);  //  multiple of page size
+  std::auto_ptr<lib_rtl_gbl_desc> h(new lib_rtl_gbl_desc);
   sprintf(h->name,"/%s",sec_name);
   h->addaux = h.get();
-  h->size = size;
+  h->size = siz;
+  //::printf("Create global section %s of size:%d\n",h->name, h->size);
 #if defined(linux)
   int sysprot  = PROT_READ+PROT_WRITE;
   int sysflags = MAP_SHARED;
@@ -45,14 +47,13 @@ int lib_rtl_create_section(const char* sec_name, size_t size, lib_rtl_gbl_t* add
 #elif defined(_WIN32)
   // Setup inherited security attributes (FIXME: merge somewhere else)
   SECURITY_ATTRIBUTES   sa = {sizeof(SECURITY_ATTRIBUTES), 0, true};
-  DWORD  siz  = (size/4096)*4096 + (((size%4096)==0) ? 0 : 4096);  //  multiple of page size
   h->addaux = ::CreateFileMapping(INVALID_HANDLE_VALUE,&sa,PAGE_READWRITE,0,siz,h->name);
   if (h->addaux != 0 && ::GetLastError() == ERROR_ALREADY_EXISTS)   { 
     ::CloseHandle(h->addaux); 
     h->addaux = ::OpenFileMapping(FILE_MAP_ALL_ACCESS,FALSE,h->name);
   }
   if ( h->addaux )  {
-    h->address = ::MapViewOfFile(h->addaux,FILE_MAP_ALL_ACCESS,0,0,0);
+    h->address = ::MapViewOfFile(h->addaux,FILE_MAP_ALL_ACCESS,0,0,siz);
     if ( h->address != 0 )  {
       h->fd = 0;
       *address = h.release();
@@ -83,11 +84,12 @@ int lib_rtl_delete_section(lib_rtl_gbl_t h)    {
 
 /// Map global section a a specific address
 int lib_rtl_map_section(const char* sec_name, size_t size, lib_rtl_gbl_t* address)   {
-  std::auto_ptr<lib_rtl_gbl> h(new lib_rtl_gbl);
+  long siz  = (size/4096)*4096 + (((size%4096)==0) ? 0 : 4096);  //  multiple of page size
+  std::auto_ptr<lib_rtl_gbl_desc> h(new lib_rtl_gbl_desc);
   sprintf(h->name,"/%s",sec_name);
   h->addaux = h.get();
-  h->size = size;
-
+  h->size = siz;
+  //::printf("Map global section %s of size:%d\n",h->name, h->size);
 #if defined(linux)
   int sysprot  = PROT_READ+PROT_WRITE;
   int sysflags = MAP_SHARED;
@@ -113,7 +115,7 @@ int lib_rtl_map_section(const char* sec_name, size_t size, lib_rtl_gbl_t* addres
 #elif defined(_WIN32)
   h->addaux = ::OpenFileMapping(FILE_MAP_ALL_ACCESS,FALSE,h->name);
   if ( h->addaux )  {
-    h->address = ::MapViewOfFile(h->addaux,FILE_MAP_ALL_ACCESS,0,0,0);
+    h->address = ::MapViewOfFile(h->addaux,FILE_MAP_ALL_ACCESS,0,0,siz);
     if ( h->address != 0 )  {
       h->fd = 0;
       *address = h.release();
@@ -141,8 +143,9 @@ int lib_rtl_unmap_section(lib_rtl_gbl_t h)   {
 }
 
 /// Flush global section to disk file
-int lib_rtl_flush_section(lib_rtl_gbl_t h)   {
-  if ( h )  {
+int lib_rtl_flush_section(lib_rtl_gbl_t handle)   {
+  if ( handle )  {
+    lib_rtl_gbl_desc* h = (lib_rtl_gbl_desc*)handle;
 #if defined(_WIN32)
     DWORD sc = ::FlushViewOfFile(h->addaux,h->size);
     if ( sc == 0 )  {

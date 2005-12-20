@@ -48,7 +48,7 @@ static int USER_ws_off;
 static int USER_we_off;
 static int USER_wes_off;
 static int EVENT_next_off;
-static int CONTROL_cons_off;
+static int USER_active_off;
 static int CONTROL_cwe_off;
 static int CONTROL_pws_off;
 static int CONTROL_wes_off;
@@ -67,17 +67,20 @@ inline int _mbm_printf(const char* fmt, ...)  {
   return len;
 }
 #endif
-
+#ifdef _WIN32
+void _mbm_update_rusage(USER* us) {
+}
+#else
 #include <sys/time.h>
 #include <sys/resource.h>
 #include <unistd.h>
 void _mbm_update_rusage(USER* us) {
   rusage ru;
-    getrusage(RUSAGE_SELF, &ru);
-    us->utime = float(ru.ru_utime.tv_sec) + float(ru.ru_utime.tv_usec)/1e6;
-    us->stime = float(ru.ru_stime.tv_sec) + float(ru.ru_stime.tv_usec)/1e6;
+  getrusage(RUSAGE_SELF, &ru);
+  us->utime = float(ru.ru_utime.tv_sec) + float(ru.ru_utime.tv_usec)/1e6;
+  us->stime = float(ru.ru_stime.tv_sec) + float(ru.ru_stime.tv_usec)/1e6;
 }
-
+#endif
 
 template <class T> void print_queue(const char* format,const T* ptr, int type)  {
   switch (type)  {
@@ -438,7 +441,7 @@ int mbm_pause (BMID bm)  {
       _mbm_rel_event (bm, us);
     }
     us->c_state = S_pause;
-    MBMQueue<EVENT> que(&bm->ctrl->e_head, -EVENT_next_off);
+    MBMQueue<EVENT> que(bm->evDesc, -EVENT_next_off);
     for(EVENT* e = que.get(); e; e = que.get())  {
       e->isValid();
       if (e->umask0.test(us->uid) || e->umask1.test(us->uid) || e->umask2.test(us->uid) )    {
@@ -642,7 +645,7 @@ int mbm_unmap_global_buffer_info(lib_rtl_gbl_t handle)  {
 /// clear events with freqmode = notall
 int _mbm_check_freqmode (BMID bm)  {
   int ret = -1;
-  MBMQueue<EVENT> que(&bm->ctrl->e_head, -EVENT_next_off);
+  MBMQueue<EVENT> que(bm->evDesc, -EVENT_next_off);
   for(EVENT* ev=que.get(); ev; ev = que.get() )  {
     ev->isValid();
     if (!ev->umask0.mask_summ() && ev->umask1.mask_summ() && !ev->umask2.mask_summ() && !ev->held_mask.mask_summ() )    {
@@ -681,7 +684,7 @@ int _mbm_get_sp (BMID bmid, USER* us, int size, int** ptr)  {
 
 /* try to get event ... */  
 int _mbm_get_ev(BMID bm, USER* u)  {
-  MBMQueue<EVENT> que(&bm->ctrl->e_head, -EVENT_next_off);
+  MBMQueue<EVENT> que(bm->evDesc, -EVENT_next_off);
   for(EVENT* e = que.get(); e != 0; e = que.get() )  {
     if ( e->isValid() && (e->busy !=2) && (e->busy !=0) )  {
       int req_one = e->umask2.test(u->uid);
@@ -720,7 +723,7 @@ int _mbm_add_wev(BMID bm, USER *us, int** ptr, int* size, int* evtype, TriggerMa
   us->c_astpar      = astpar;
   us->held_eid      = -1;
   _mbm_printf("WEV ADD> %d State:%d",calls++, us->c_state);
-  insqti(&us->wenext, &ctrl->wev_head);
+  insqti(&us->wenext, &bm->usDesc->wev_head);
   return MBM_NORMAL;
 }
 
@@ -739,7 +742,7 @@ int _mbm_del_wev (BMID /* bm */, USER* u) {
 
 /// check wait event queue
 int _mbm_check_wev (BMID bm, EVENT* e)  {
-  MBMQueue<USER> que(&bm->ctrl->wev_head, -USER_we_off);
+  MBMQueue<USER> que(&bm->usDesc->wev_head, -USER_we_off);
   for(USER* u = que.get(); u != 0; u = que.get() )  {
     u->isValid();
     e->held_mask.set(u->uid);
@@ -768,13 +771,12 @@ int _mbm_check_wev (BMID bm, EVENT* e)  {
 
 /// add user in the wait_space queue
 int _mbm_add_wsp (BMID bm, USER* us, int size, int** ptr, RTL_ast_t astadd, void* astpar) {
-  CONTROL *ctrl   = bm->ctrl;
   us->p_state     = S_wspace;
   us->p_astadd    = astadd;
   us->p_astpar    = astpar;
   us->ws_size     = size;
   us->ws_ptr_add  = ptr;
-  insqti (&us->wsnext, &ctrl->wsp_head);
+  insqti (&us->wsnext, &bm->usDesc->wsp_head);
   return MBM_NORMAL;
 }
 
@@ -793,7 +795,7 @@ int _mbm_check_wsp (BMID bmid, int bit, int nbit)  {
   CONTROL *ctrl   = bmid->ctrl;
   char    *bitmap = bmid->bitmap;
   int      size   = nbit << Shift_p_Bit;
-  MBMQueue<USER> que(&ctrl->wsp_head, -USER_ws_off);
+  MBMQueue<USER> que(&bmid->usDesc->wsp_head, -USER_ws_off);
   for (USER* u=que.get(); u; u = que.get() )  {
     u->isValid();
     _mbm_printf("WSP: User %s",u->name);
@@ -827,7 +829,7 @@ int _mbm_match_req (BMID bm, int partid, int evtype, TriggerMask& trmask,
                     UserMask& mask0, UserMask& mask1, UserMask& mask2)  
 {
   UserMask dummy;
-  MBMQueue<USER> que(&bm->ctrl->u_head, -USER_next_off);
+  MBMQueue<USER> que(bm->usDesc, -USER_next_off);
   for(USER* u=que.get(); u; u=que.get() )  {
     int i;
     REQ *rq;
@@ -871,7 +873,7 @@ int _mbm_match_req (BMID bm, int partid, int evtype, TriggerMask& trmask,
 
 /// check existance of name
 int _mbm_findnam (BMID bm, const char* name) {
-  MBMQueue<USER> que(&bm->ctrl->u_head,-USER_next_off);
+  MBMQueue<USER> que(bm->usDesc,-USER_next_off);
   for(USER* u=que.get(); u; u=que.get())  {
     if ( u->isValid() && ::strncmp(u->name, name, NAME_LENGTH) == 0 )  {
       return u->uid;
@@ -887,7 +889,7 @@ USER* _mbm_ualloc (BMID bm)  {
     if (u->busy == 0)    {
       u->busy = 1;
       u->uid  = i;
-      insqti(u, &bm->ctrl->u_head);
+      insqti(u, bm->usDesc);
       return u;
     }
   }
@@ -905,7 +907,7 @@ EVENT* _mbm_ealloc (BMID bm, USER* us)  {
       e->eid  = i;
       e->count = cnt++;
       ctrl->i_events++;
-      insqti(e, &bm->ctrl->e_head);
+      insqti(e, bm->evDesc);
       if ( bm->alloc_event )   {
         void* pars[4];
         int* evadd = (int*)(us->space_add+(int)bm->buffer_add);
@@ -1003,7 +1005,7 @@ int _mbm_uclean (BMID bm)  {
   if (us->held_eid != -1)    { // free the held event
     _mbm_rel_event (bm, us);   // release event
   }
-  MBMQueue<EVENT> que(&bm->ctrl->e_head,-EVENT_next_off);
+  MBMQueue<EVENT> que(bm->evDesc,-EVENT_next_off);
   for(EVENT* e=que.get(); e; e=que.get() )  {
     e->isValid();
     e->umask0.clear(uid);
@@ -1028,7 +1030,7 @@ int _mbm_sfree (BMID bm, int add, int size)  {
   ctrl->last_alloc = 0;
   ctrl->i_space += nbit;
   _mbm_printf("Free space  add=%08X  size=%d",add,size);
-  if ( ctrl->wsp_head.next )  {
+  if ( bm->usDesc->next )  {
     int s, l;
     BF_count(bm->bitmap, ctrl->bm_size, &s, &l);    // find largest block 
     _mbm_check_wsp (bm, s, l);                      // check the space wait queue 
@@ -1126,11 +1128,10 @@ int _mbm_find_buffer (const char* bm_name)  {
 
 /// add user in the wait_event_slot queue
 int _mbm_add_wes (BMID bm, USER *us, RTL_ast_t astadd)  {
-  CONTROL *ctrl = bm->ctrl;
   us->p_state   = S_weslot;
   us->p_astadd  = astadd;
   us->p_astpar  = bm;
-  insqti (&us->wesnext, &ctrl->wes_head);
+  insqti (&us->wesnext, &bm->usDesc->wes_head);
   return MBM_NORMAL;
 }
 
@@ -1143,7 +1144,7 @@ int _mbm_del_wes (BMID /* bm */, USER* us)   {
 
 /// check wait event slot
 int _mbm_check_wes (BMID bm)   {
-  MBMQueue<USER> que(&bm->ctrl->wes_head,-USER_wes_off);
+  MBMQueue<USER> que(&bm->usDesc->wes_head,-USER_wes_off);
   for(USER* u=que.get(); u; u=que.get() )  {
     if (u->isValid() && u->p_state == S_weslot)    {
       _mbm_del_wes (bm, u);
@@ -1374,18 +1375,18 @@ int _mbm_fill_offsets() {
   byte_offset(USER,wsnext,USER_ws_off);
   byte_offset(USER,wenext,USER_we_off);
   byte_offset(USER,wesnext,USER_wes_off);
+  byte_offset(USERDesc,next,USER_active_off);
+  byte_offset(USERDesc,wev_head,CONTROL_cwe_off);
+  byte_offset(USERDesc,wsp_head,CONTROL_pws_off);
+  byte_offset(USERDesc,wes_head,CONTROL_wes_off);
   byte_offset(EVENT,next,EVENT_next_off);
-  byte_offset(CONTROL,u_head,CONTROL_cons_off);
-  byte_offset(CONTROL,wev_head,CONTROL_cwe_off);
-  byte_offset(CONTROL,wsp_head,CONTROL_pws_off);
-  byte_offset(CONTROL,wes_head,CONTROL_wes_off);
-  byte_offset(CONTROL,e_head,CONTROL_ev_off);
+  byte_offset(EVENTDesc,next,CONTROL_ev_off);
   return MBM_NORMAL;
 }
 
 int mbm_get_event_ast(void* par) {
-  BMID bm = (BMID)par;
-  USER       *us = bm->user+bm->owner;
+  BMID  bm = (BMID)par;
+  USER *us = bm->user+bm->owner;
   if (us == 0)  {
     return 1;
   }
@@ -1561,7 +1562,7 @@ int _mbm_check_cons (BMID bm)  {
   if (us->uid != owner)  {
     _mbm_return_err (MBM_INTERNAL);
   }
-  MBMQueue<EVENT> que(&bm->ctrl->e_head, -EVENT_next_off);
+  MBMQueue<EVENT> que(bm->evDesc, -EVENT_next_off);
   for(EVENT* e=que.get(); e; e=que.get() )  {
     e->isValid();
     if (e->busy != 2)     {
@@ -1635,7 +1636,7 @@ int _mbm_map_sections(BMID bm)  {
   char text[128];
   const char* bm_name = bm->bm_name;
   sprintf(text, "bm_ctrl_%s", bm->bm_name);
-  int status  = lib_rtl_map_section(text, sizeof(CONTROL), &bm->ctrl_add);
+  int len, status  = lib_rtl_map_section(text, sizeof(CONTROL), &bm->ctrl_add);
   if (!lib_rtl_is_success(status))    {
     lib_rtl_signal_message(LIB_RTL_OS,"Error mapping control section for %s.Status=%d",
                            bm_name,status);
@@ -1643,25 +1644,30 @@ int _mbm_map_sections(BMID bm)  {
   }
   bm->ctrl = (CONTROL*)bm->ctrl_add->address;
   sprintf(text, "bm_event_%s",  bm_name);
-  status  = lib_rtl_map_section(text, bm->ctrl->p_emax*sizeof(EVENT), &bm->event_add);
+  len = sizeof(EVENTDesc)+(bm->ctrl->p_emax-1)*sizeof(EVENT);
+  status  = lib_rtl_map_section(text, len, &bm->event_add);
   if (!lib_rtl_is_success(status))  {
     lib_rtl_signal_message(LIB_RTL_OS,"Error mapping event section for %s. Status=%d",
                            bm_name,status);
     _mbm_unmap_sections(bm);
     return MBM_ERROR;
   }
-  bm->event = (EVENT*)bm->event_add->address;
+  bm->evDesc = (EVENTDesc*)bm->event_add->address;
+  bm->event  = &bm->evDesc->events[0];
   sprintf(text, "bm_user_%s",   bm_name);
-  status  = lib_rtl_map_section(text, bm->ctrl->p_umax*sizeof(USER), &bm->user_add);
+  len = sizeof(USERDesc)+(bm->ctrl->p_umax-1)*sizeof(USER);
+  status  = lib_rtl_map_section(text, len, &bm->user_add);
   if (!lib_rtl_is_success(status))  {
     lib_rtl_signal_message(LIB_RTL_OS,"Error mapping user section for %s. Status=%d",
                            bm_name,status);
     _mbm_unmap_sections(bm);
     return MBM_ERROR;
   }
-  bm->user = (USER*)bm->user_add->address;
+  bm->usDesc = (USERDesc*)bm->user_add->address;
+  bm->user   = &bm->usDesc->users[0];
   sprintf(text, "bm_bitmap_%s", bm_name);
-  status  = lib_rtl_map_section(text, bm->ctrl->bm_size, &bm->bitm_add);
+  len = ((bm->ctrl->bm_size/Bits_p_kByte)<<Bits_p_kByte)>>3;
+  status  = lib_rtl_map_section(text, len, &bm->bitm_add);
   if (!lib_rtl_is_success(status))  {
     lib_rtl_signal_message(LIB_RTL_OS,"Error mapping bit-map section for %s. Status=%d",
                            bm_name,status);
@@ -1677,7 +1683,11 @@ int _mbm_map_sections(BMID bm)  {
     _mbm_unmap_sections(bm);
     return MBM_ERROR;
   }
-  bm->buffer_add  = bm->ctrl->buff_ptr = (char*)bm->buff_add->address;
+  //::printf("Control: %p  %p\n",bm->ctrl,((char*)bm->ctrl)-((char*)bm->ctrl));
+  //::printf("User:    %p  %p  %p\n",bm->user,((char*)bm->user)-((char*)bm->ctrl),bm->usDesc);
+  //::printf("Event:   %p  %p  %p\n",bm->event,((char*)bm->event)-((char*)bm->ctrl),bm->evDesc);
+  //::printf("Bitmap:  %p  %p\n",bm->bitmap,((char*)bm->bitmap)-((char*)bm->ctrl));
+  bm->buffer_add  = (char*)bm->buff_add->address;
   bm->bitmap_size = bm->ctrl->bm_size;
   bm->buffer_size = bm->ctrl->buff_size;
   return MBM_NORMAL;

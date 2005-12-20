@@ -107,20 +107,30 @@ int lib_rtl_lock(lib_rtl_lock_t h) {
     if ( sc != 0 )
 #elif defined(_WIN32)
     DWORD sc = WAIT_TIMEOUT;
+    const char* opt = "";
     // while ( mutexHandle != 0 && sc != WAIT_OBJECT_0 )  {
     while ( h->handle != 0 && sc == WAIT_TIMEOUT )  {
       sc = ::WaitForSingleObject( h->handle, 1000 /*INFINITE*/ );
-      if ( sc == WAIT_TIMEOUT )  {
-        ::printf("Timeout on semaphore \"%s\"\n",h->name);
+      switch(sc)  {
+        case WAIT_FAILED:       opt="WAIT_FAILED";    break;
+        case WAIT_ABANDONED:
+          sc = ::WaitForSingleObject( h->handle, 1000 /*INFINITE*/ );
+
+          opt="WAIT_ABANDONED"; break;
+        case WAIT_TIMEOUT:      opt="WAIT_TIMEOUT";   break;
+        case WAIT_OBJECT_0:     opt=0;                break;
+        default:                                      break;
       }
-      else if ( sc != WAIT_OBJECT_0 )  {
-        lib_rtl_signal_message(LIB_RTL_OS,"Error locking semaphore [%s]: %08X",h->name,h->handle);
+      if ( opt )  {
+        lib_rtl_signal_message(LIB_RTL_OS,"Error locking semaphore [%s]: %08X [%s]",
+          h->name,h->handle,opt);
       }
     }
     if ( sc == WAIT_FAILED )    
 #endif
     {
-      return lib_rtl_signal_message(LIB_RTL_OS,"Error locking semaphore [%s]: %08X",h->name,h->handle);
+      return lib_rtl_signal_message(LIB_RTL_OS,"Error locking semaphore [%s]: %08X",
+        h->name,h->handle);
     }
     h->held = 1;
     return 1;

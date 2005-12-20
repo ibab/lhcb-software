@@ -44,13 +44,6 @@
   extern "C" __declspec(dllimport) BOOL  __stdcall SetWaitableTimer(void*, const LARGE_INTEGER*, DWORD, void*, void*, BOOL);
 #endif
 
-struct lib_rtl_gbl  {
-  void*       address;
-  void*       addaux;
-  int         size;
-  int         fd;
-  char        name[32];
-};
 typedef rtl_thread* lib_rtl_thread_t;
 typedef rtl_lock*   lib_rtl_lock_t;
 typedef rtl_event*  lib_rtl_event_t;
@@ -59,7 +52,13 @@ int getError();
 const char* errorString();
 
 #include "RTL/rtl.h"
-  struct lib_rtl_action  {
+struct lib_rtl_gbl_desc : public lib_rtl_gbl {
+  int         size;
+  int         fd;
+  char        name[32];
+};
+
+struct lib_rtl_action  {
   lib_rtl_event_t flag;
   int (*action)(void*);
   void* param;

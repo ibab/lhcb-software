@@ -1,0 +1,24 @@
+ApplicationMgr.DLLs       = { "DAQEvent", "MDF", "GaudiOnline" };
+ApplicationMgr.TopAlg     = { "RawEventTestCreator"};
+ApplicationMgr.EvtMax     = 1000;
+ApplicationMgr.EvtSel     = "NONE";
+EventDataSvc.ForceLeaves  = 1;
+
+EventPersistencySvc.CnvServices += { "LHCb::RawDataCnvSvc" };
+
+// To create a MDF file using the MDF writer:
+ApplicationMgr.OutStream += { "LHCb::MDFWriter/DataWriter" };
+DataWriter.Connection     = "file://rawBuffer.dat";
+DataWriter.Compress       = 0;
+DataWriter.CreateChecksum = 0;
+ 
+// To create a MDF file using the standard Gaudi output stream:
+ApplicationMgr.TopAlg     = { "RawEventTestCreator" };
+ApplicationMgr.OutStream  = { "MDFWriter"};
+MDFWriter.Output          = "DATAFILE='file://rawBuffer.dat' SVC='MDFCnvSvc' OPT='REC'";
+MDFWriter.ItemList        = {"/Event#1" };
+
+// To create a MEP file:
+ApplicationMgr.TopAlg     = { "RawEventTestCreator" };
+ApplicationMgr.OutStream  = { "LHCb::MEPWriter/DataWriter" };
+DataWriter.Connection     = "file://mepBuffer.dat";
