@@ -2,6 +2,10 @@ Package: GaudiObjDesc
 Desccription: This package contains a set of tools used to generate code from the XML description of the data object classes.
 Package manager : Stefan Roiser
 
+===============================GaudiObjDesc v9r2============================
+!2005-12-20 Stefan Roiser
+- fix on namespace python script.
+
 ===============================GaudiObjDesc v9r1============================
 !2005-12-13 Stefan Roiser
 - move typedef for container of objects (KeyedContainer, ObjectVector) inside the LHCb namspace
