@@ -4,7 +4,7 @@
 #include "GaudiKernel/ToolFactory.h"
 #include "GaudiKernel/IParticlePropertySvc.h"
 
-#include "Kernel/CLHEPStreams.h"
+//#include "Kernel/CLHEPStreams.h"
 
 // local file
 #include "LagrangeGlobalFitter.h"

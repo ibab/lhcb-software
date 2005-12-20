@@ -1,7 +1,10 @@
-! $Id: release.notes,v 1.42 2005-12-15 08:51:58 pkoppenb Exp $
+! $Id: release.notes,v 1.43 2005-12-20 10:03:40 pkoppenb Exp $
 ! Package     : VertexFit
 ! Responsible : P. Koppenburg
 
+! 2005-12-20 - P. Koppenburg
+  - src/LagrangeGlobalFitter.cpp
+    > no need of Kernel/CLHEPStreams.h
 !========================== VertexFit v1r9 2005-12-15 ===================
 ! 2005-12-09 - P. Koppenburg for L. Fernandez
   - src/KFFitTool.cpp
