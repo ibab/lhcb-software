@@ -1,11 +1,12 @@
 !-----------------------------------------------------------------------------
 ! Package     : Calo/CaloDAQ
 ! Responsible : Olivier Callot
-! Purpose     : Convert Calo Digit and Trigger information to RawBuffer banks.
+! Purpose     : Convert Calo Digit and Trigger information to RawEvent banks.
 !-----------------------------------------------------------------------------
 
+!========================== CaloDAQ v2r0 2005-12-20 ==========================
 ! 2005-12-20 - Olivier Callot
- - Fix the namespace LHCb:: for CaloEvent classes, due to a missing recompilation.
+ - Fix the namespace LHCb:: for CaloEvent classes, due to a missing recompilation
 
 ! 2005-12-19 - Olivier Callot
  - Adapt to the new event model, mainly LHCb:: namespace, and also the new DAQEvent.
