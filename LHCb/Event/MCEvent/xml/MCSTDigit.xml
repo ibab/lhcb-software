@@ -1,0 +1,21 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!DOCTYPE gdd SYSTEM 'gdd.dtd'>
+<gdd>
+  <package name='MCEvent'>
+
+    <class author="Matthew Needham" desc="This class turns represents total charge deposited on strip in an event" id="9002" name="MCSTDigit">
+      <base name="KeyedObject&lt;LHCb::STChannelID&gt;"/>
+      <template name="KeyedObjectDict" t1="LHCb::STChannelID"/>
+      &KeyedContainer;
+      <location name="TTDigits"   place="MC/ST/TTDigits"   />
+      <location name="ITDigits"   place="MC/ST/ITDigits"   />
+      <import name ="Kernel/STChannelID"/>
+      <import name="MCSTDeposit" soft="TRUE"/>
+      <relation name="mcDeposit" multiplicity="M" type="LHCb::MCSTDeposit" desc="vector of MCSTDeposits"/>
+      <method type='LHCb::STChannelID' name='channelID' const='TRUE'  desc='channel = key'>
+        <code>return key();</code>
+      </method> 
+  </class>
+  
+ </package>
+</gdd>

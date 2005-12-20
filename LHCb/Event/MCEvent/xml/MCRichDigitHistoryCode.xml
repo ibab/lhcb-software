@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
 <!DOCTYPE gdd SYSTEM "gdd.dtd">
 <gdd>
-<package name="RichEvent">
+<package name="MCEvent">
 
 <!-- **************************************************************************
-  * $Id: MCRichDigitHistoryCode.xml,v 1.1 2005-12-16 17:47:36 jonrob Exp $
+  * $Id: MCRichDigitHistoryCode.xml,v 1.2 2005-12-20 10:58:11 cattanem Exp $
   *****************************************************************************
   * XML-description of MCRichDigitHistoryCode class                           *
   * author: Chris Jones   Christopher.Rob.Jones@cern.ch                       *

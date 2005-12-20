@@ -1,0 +1,24 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!DOCTYPE gdd SYSTEM 'gdd.dtd'>
+<gdd>
+  <package name='MCEvent'>
+
+    <class author="Matthew Needham" desc="This class turns represents charge deposited on a strip by a single MCHit" id="9001" name="MCSTDeposit">
+      <base name="KeyedObject&lt;int&gt;"/>
+      &KeyedObject;
+      <location name="TTDeposits"   place="MC/ST/TTDeposits"   />
+      <location name="ITDeposits"   place="MC/ST/ITDeposits"   />
+
+      <import name ="Kernel/STChannelID"/>
+      <import name="Event/MCHit" /> 
+       <constructor argList="double charge, LHCb::STChannelID aChan, LHCb::MCHit* aHit" 
+                    initList="m_depositedCharge(charge), m_channelID(aChan), m_mcHit(aHit)"  desc="special constructor">
+        <code></code>
+      </constructor>
+      <attribute name="depositedCharge" type="double" setMeth = "FALSE" desc="charge deposited on strip"/>
+      <relation name="mcHit" type="LHCb::MCHit" desc="pointer to MCHit"/>
+      <attribute name="channelID" type="LHCb::STChannelID" setMeth = "FALSE" desc="channelID"/>
+    </class>
+
+ </package>
+</gdd>
