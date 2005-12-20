@@ -1,4 +1,4 @@
-// $Id: ISTDepositedCharge.h,v 1.1.1.1 2005-12-19 15:43:16 mneedham Exp $
+// $Id: ISTDepositedCharge.h,v 1.1 2005-12-20 15:50:25 cattanem Exp $
 #ifndef _ISTDepositedCharge_H
 #define _ISTDepositedCharge_H
 

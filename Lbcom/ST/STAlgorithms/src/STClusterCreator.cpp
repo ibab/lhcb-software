@@ -1,4 +1,4 @@
-// $Id: STClusterCreator.cpp,v 1.2 2005-12-20 09:35:17 mneedham Exp $
+// $Id: STClusterCreator.cpp,v 1.3 2005-12-20 15:50:25 cattanem Exp $
 //
 // This File contains the implementation of the STClusterCreator
 // C++ code for 'LHCb Tracking package(s)'
@@ -15,13 +15,13 @@
 #include "Kernel/STDataFunctor.h"
 #include "Kernel/LHCbMath.h"
 #include "Kernel/LHCbConstants.h"
+#include "Kernel/ISTClusterPosition.h"
 
 // ST includes
 #include "STClusterCreator.h"
 #include "Kernel/STDetSwitch.h"
 
-#include "STTools/ISTSignalToNoiseTool.h"
-#include "STTools/ISTClusterPosition.h"
+#include "Kernel/ISTSignalToNoiseTool.h"
 
 using namespace LHCb;
 // Needed for the creation of TrSimpleLayersCreator objects.

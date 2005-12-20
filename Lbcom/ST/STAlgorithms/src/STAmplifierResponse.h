@@ -1,13 +1,13 @@
-// $Id: STAmplifierResponse.h,v 1.1.1.1 2005-12-19 15:43:15 mneedham Exp $
+// $Id: STAmplifierResponse.h,v 1.2 2005-12-20 15:50:25 cattanem Exp $
 #ifndef _STAmplifierResponse_H
 #define _STAmplifierResponse_H
 
 #include <string>
 #include <vector>
-// $Id: STAmplifierResponse.h,v 1.1.1.1 2005-12-19 15:43:15 mneedham Exp $
+// $Id: STAmplifierResponse.h,v 1.2 2005-12-20 15:50:25 cattanem Exp $
 
 #include "GaudiAlg/GaudiTool.h"
-#include "STAlgorithms/ISTAmplifierResponse.h"
+#include "ISTAmplifierResponse.h"
 
 class GSLSpline;
 

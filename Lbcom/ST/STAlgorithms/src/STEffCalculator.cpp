@@ -1,4 +1,4 @@
-// $Id: STEffCalculator.cpp,v 1.1.1.1 2005-12-19 15:43:15 mneedham Exp $
+// $Id: STEffCalculator.cpp,v 1.2 2005-12-20 15:50:25 cattanem Exp $
 //
 // This File contains the definition of the OTEffCaculator -class
 //
@@ -8,7 +8,6 @@
 //   Created: 19-09-2000
 
 // Gaudi files
-#include "GaudiKernel/SmartIF.h"
 #include "GaudiKernel/IRndmGenSvc.h"
 #include "GaudiKernel/RndmGenerators.h"
 #include "GaudiKernel/ToolFactory.h"

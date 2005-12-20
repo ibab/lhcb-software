@@ -1,4 +1,4 @@
-// $Id: ISTChargeSharingTool.h,v 1.1.1.1 2005-12-19 15:43:16 mneedham Exp $
+// $Id: ISTChargeSharingTool.h,v 1.1 2005-12-20 15:50:25 cattanem Exp $
 #ifndef _ISTCHARGESHARINGTOOL_H
 #define _ISTCHARGESHARINGTOOL_H
 

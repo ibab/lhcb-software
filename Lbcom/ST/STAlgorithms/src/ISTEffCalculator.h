@@ -1,4 +1,4 @@
-// $Id: ISTEffCalculator.h,v 1.1.1.1 2005-12-19 15:43:16 mneedham Exp $
+// $Id: ISTEffCalculator.h,v 1.1 2005-12-20 15:50:25 cattanem Exp $
 #ifndef STALGORITHMS_IISTEFFCALCULATOR_H 
 #define STALGORITHMS_ISTEFFCALCULATOR_H 1
 

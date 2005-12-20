@@ -1,11 +1,10 @@
-// $Id: STGeantDepositedCharge.h,v 1.1.1.1 2005-12-19 15:43:16 mneedham Exp $
+// $Id: STGeantDepositedCharge.h,v 1.2 2005-12-20 15:50:25 cattanem Exp $
 #ifndef _STGeantDepositedCharge_H
 #define _STGeantDepositedCharge_H
 
 
-#include "STAlgorithms/ISTDepositedCharge.h"
+#include "ISTDepositedCharge.h"
 
-#include "GaudiKernel/SmartIF.h"
 #include "GaudiKernel/IRndmGen.h"
 #include "GaudiAlg/GaudiTool.h"
 

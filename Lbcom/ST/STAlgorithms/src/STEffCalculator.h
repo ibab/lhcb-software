@@ -1,4 +1,4 @@
-// $Id: STEffCalculator.h,v 1.1.1.1 2005-12-19 15:43:15 mneedham Exp $
+// $Id: STEffCalculator.h,v 1.2 2005-12-20 15:50:25 cattanem Exp $
 #ifndef _ITEFFCALCULATOR_H
 #define _ITEFFCALCULATOR_H
 
@@ -6,7 +6,7 @@
 #include "GaudiKernel/SmartIF.h"
 #include "GaudiKernel/IRndmGen.h"
 
-#include "STAlgorithms/ISTEffCalculator.h"
+#include "ISTEffCalculator.h"
 
 /** @class STEffCalculator STEffCalculator.h STAlgorithms/STEffCalculator.h
  *

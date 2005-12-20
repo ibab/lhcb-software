@@ -1,4 +1,4 @@
-// $Id: ISTAmplifierResponse.h,v 1.1.1.1 2005-12-19 15:43:16 mneedham Exp $
+// $Id: ISTAmplifierResponse.h,v 1.1 2005-12-20 15:50:25 cattanem Exp $
 #ifndef _ISTAMPLIFIERRESPONSE_H
 #define _ISTAMPLIFIERRESPONSE_H
 

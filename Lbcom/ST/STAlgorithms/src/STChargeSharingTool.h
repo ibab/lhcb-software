@@ -1,4 +1,4 @@
-// $Id: STChargeSharingTool.h,v 1.1.1.1 2005-12-19 15:43:15 mneedham Exp $
+// $Id: STChargeSharingTool.h,v 1.2 2005-12-20 15:50:25 cattanem Exp $
 #ifndef _STCHARGESHARINGTOOL_H
 #define _STCHARGESHARINGTOOL_H
 
@@ -6,7 +6,7 @@
 #include <vector>
 
 #include "GaudiAlg/GaudiTool.h"
-#include "STAlgorithms/ISTChargeSharingTool.h"
+#include "ISTChargeSharingTool.h"
 
 class GSLSpline;
 

@@ -1,4 +1,4 @@
-// $Id: STDigitCreator.cpp,v 1.1.1.1 2005-12-19 15:43:15 mneedham Exp $
+// $Id: STDigitCreator.cpp,v 1.2 2005-12-20 15:50:25 cattanem Exp $
 
 #include "gsl/gsl_math.h"
 
@@ -9,7 +9,6 @@
 #include "GaudiKernel/IRndmGenSvc.h"
 
 
-
 #include "Kernel/SystemOfUnits.h"
 
 #include "Event/MCTruth.h"
@@ -17,8 +16,8 @@
 
 
 // STAlgorithms
-#include "STAlgorithms/ISTEffCalculator.h"
-#include "STTools/ISTSignalToNoiseTool.h"
+#include "ISTEffCalculator.h"
+#include "Kernel/ISTSignalToNoiseTool.h"
 #include "Kernel/STDataFunctor.h"
 #include "STDigitCreator.h"
 #include "Kernel/STDetSwitch.h"

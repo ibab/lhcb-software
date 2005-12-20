@@ -21,10 +21,10 @@
 #include "MCSTDepositCreator.h"
 #include "Kernel/STDetSwitch.h"
 
-#include "STAlgorithms/ISTChargeSharingTool.h"
-#include "STAlgorithms/ISTAmplifierResponse.h"
-#include "STAlgorithms/ISTDepositedCharge.h"
-#include "STTools/ISTSignalToNoiseTool.h"
+#include "ISTChargeSharingTool.h"
+#include "ISTAmplifierResponse.h"
+#include "ISTDepositedCharge.h"
+#include "Kernel/ISTSignalToNoiseTool.h"
 
 // xml geometry
 #include "STDet/DeSTDetector.h"

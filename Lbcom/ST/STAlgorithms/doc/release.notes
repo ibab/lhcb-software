@@ -1,10 +1,16 @@
-Package         : ST/STAlgorithms
-Package manager : Matt Needham
+! Package         : ST/STAlgorithms
+! Package manager : Matt Needham
+!-------------------------------------------------------------------------------
 
-! 2005-12-20
-  - Make default STClusterCreator options Tell1-like
+!======================= STAlgorithms v1r0 2005-12-20 ==========================
+! 2005-12-20 - Marco Cattaneo
+ - Move all interfaces to src directory. If they are ever needed externally they
+   should be moved to LHCbKernel, and the corresponding tool moved to STTools
+ - Remove dependency on STTools
 
-! 2005-12-19 - v1r0
-  M.Needham
-  First official release of code (replaces STAlgorithms in IT hat)
-! ======================================================================
+! 2005-12-20 - M.Needham
+ - Make default STClusterCreator options Tell1-like
+
+! 2005-12-19 - M.Needham
+ - First official release of code (replaces ITAlgorithms in IT hat)
+!===============================================================================
