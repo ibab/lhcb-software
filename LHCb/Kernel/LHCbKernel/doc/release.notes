@@ -2,8 +2,9 @@ Package LHCbKernel
 Package manager: M.Cattaneo
 Purpose: LHCb specific Kernel classes
 
-!===================== LHCbKernel v6r0 2005-12-19 =========================
-! 2005-12-19 - Marco Cattaneo
+!===================== LHCbKernel v6r0 2005-12-20 =========================
+! 2005-12-20 - Marco Cattaneo
+ - Add Kernel/ISTClusterPosition.h, moved from STTools
  - Add Kernel/RichTraceMode.h, moved from RichKernel
 
 ! 2005-12-15 - Gloria CORTI
