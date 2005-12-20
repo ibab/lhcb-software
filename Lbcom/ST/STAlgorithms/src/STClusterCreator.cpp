@@ -1,4 +1,4 @@
-// $Id: STClusterCreator.cpp,v 1.1.1.1 2005-12-19 15:43:16 mneedham Exp $
+// $Id: STClusterCreator.cpp,v 1.2 2005-12-20 09:35:17 mneedham Exp $
 //
 // This File contains the implementation of the STClusterCreator
 // C++ code for 'LHCb Tracking package(s)'
@@ -47,7 +47,7 @@ STClusterCreator::STClusterCreator(const std::string& name,
   this->declareProperty("clusterSignal2Noise",m_clusterSig2NoiseThreshold = 3.6);
   this->declareProperty("highSignal2Noise",m_highThreshold = 6.0);
   this->declareProperty("sigNoiseTool",m_sigNoiseToolName = "STSignalToNoiseTool");
-  this->declareProperty("positionTool",m_positionToolName = "STOfflinePosition");
+  this->declareProperty("positionTool",m_positionToolName = "STOnlinePosition");
 
   this->declareProperty("inputLocation",  m_inputLocation = STDigitLocation::TTDigits);
   this->declareProperty("outputLocation",  m_outputLocation = STClusterLocation::TTClusters);
@@ -55,7 +55,7 @@ STClusterCreator::STClusterCreator(const std::string& name,
   this->declareProperty("outputVersion", m_outputVersion = 1);
   this->declareProperty("size", m_maxSize = 32);
   this->declareProperty("detType", m_detType = "TT");
-  this->declareProperty("byBeetle", m_byBeetle = false);
+  this->declareProperty("byBeetle", m_byBeetle = true);
   
 }
 

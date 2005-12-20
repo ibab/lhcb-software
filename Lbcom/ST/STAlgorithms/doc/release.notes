@@ -1,6 +1,8 @@
 Package         : ST/STAlgorithms
 Package manager : Matt Needham
 
+! 2005-12-20
+  - Make default STClusterCreator options Tell1-like
 
 ! 2005-12-19 - v1r0
   M.Needham
