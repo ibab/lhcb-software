@@ -6,6 +6,21 @@
 !             : Contains packages shared by Boole and other applications   
 !-----------------------------------------------------------------------------
 
+</PRE><H1><A NAME=v3r2>2005-12-20 LbcomSys v3r3</A></H1><PRE>
+This version is built against LHCb v19r4 and Gaudi v17r2.
+
+- Packages modified: L0MuonTrigger v4r0, L0DU v6r10, L0Checker v3r2p2
+
+- In L0MuonTrigger v4r0
+  . L0mTriggerAlgorithm now writes into the RawBuffer
+  . New algorithm L0MuonCandidatesFromRaw to write L0MuonCandidates 
+    from the raw buffer
+  . Uses latest developements in L0MuonKernel
+  . Change in the algo properties
+
+- In L0DU v6r10, L0Checker v3r2p2
+  . Fixes to use new L0MuonCandidates from L0MuonTrigger v4r0
+
 </PRE><H1><A NAME=v3r2>2005-12-05 LbcomSys v3r2</A></H1><PRE>
 This version is identical to v3r1 but built against LHCb v19r3
 

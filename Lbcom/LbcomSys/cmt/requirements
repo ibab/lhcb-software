@@ -1,5 +1,5 @@
 package LbcomSys
-version v3r2
+version v3r3
 
 branches doc cmt
 
@@ -9,10 +9,10 @@ branches doc cmt
 
 # L0 trigger simulation          # Maintainer
 use L0Calo          v8r2    L0   # Olivier Callot
-use L0DU            v6r9p1  L0   # Eduardo Rodrigues   
-use L0MuonTrigger   v3r0    L0   # Andrei Tsaregorodtsev
+use L0DU            v6r10   L0   # Eduardo Rodrigues   
+use L0MuonTrigger   v4r0    L0   # Andrei Tsaregorodtsev
 use PuVeto          v6r0p1  L0   # N.N.
-use L0Checker       v3r2p1  L0   # Eduardo Rodrigues
+use L0Checker       v3r2p2  L0   # Eduardo Rodrigues
 
 # Outer tracker
 use OTMonitor       v1r1    OT   # Jacopo Nardulli
