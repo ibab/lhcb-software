@@ -5,6 +5,36 @@
 ! Purpose     : LHCb OO kernel packages
 !-----------------------------------------------------------------------------
 
+</PRE><H1><A NAME=v19r4>2005-12-20 LHCbSys v19r4</A></H1><PRE>
+This version uses Gaudi v17r2. It is backwards compatible for RTTC data
+
+ - New packages:      DaVinciAssociators v5r5p1 - Moved from PhysSys
+ - Packages removed:  L0mConf   - now a private package for standalone simulation
+                      L0MuonDAQ - obsolete
+ - Modified packages: KernelSys v4r18, LHCbKernel v5r16, ProcessorKernel v2r0,
+     L0MuonKernel v4r0, EventSys v20r14, DAQEvent v5r3p2, L0Event v14r3p3,
+     AssociatorsSys v3r1, DetSys v7r7p1, DetDescCnv v2r10p1, DAQSys v1r9
+
+ - In LHCbKernel v5r16
+   . Add bool isTT() method to ITChannelID
+   . Add checkDetectorType() to LHCbID, rename and make public detector type enum
+   . Split LHCbID ST type into TT and IT, and add isTT() and isIT() methods
+
+ - In DAQEvent v5r3p2
+   . Add missing Bank Types for consistency with head revision
+
+ - In L0Event v14r3p3
+   . Updates to L0MuonCandidate, removing obsolete methods
+
+ - In AssociatorsSys v3r1
+   . Added DaVinciAssociators, moved from Phys, since needed by minimal Panoramix
+
+ - In DetDescCnv v2r10p1
+   . Fixed a bug in handling of Windows style path
+
+ - In ProcessorKernel v2r0, L0MuonKernel v4r0
+   . New implementation of L0Muon processor. Needs ParamFiles v4r0 or greater
+
 </PRE><H1><A NAME=v19r3>2005-12-09 LHCbSys v19r3</A></H1><PRE>
 This version uses Gaudi v17r2. It is backwards compatible for RTTC data
 
