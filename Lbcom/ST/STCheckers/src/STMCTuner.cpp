@@ -24,7 +24,7 @@
 
 #include "Kernel/STDetSwitch.h"
 
-#include "STTools/ISTSignalToNoiseTool.h"
+#include "Kernel/ISTSignalToNoiseTool.h"
 
 #include "Kernel/STDataFunctor.h"
 

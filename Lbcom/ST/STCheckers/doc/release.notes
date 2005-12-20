@@ -1,8 +1,11 @@
-Package         : ST/STCheckers
-Package manager : Matt Needham
+! Package         : ST/STCheckers
+! Package manager : Matt Needham
+!-------------------------------------------------------------------------------
 
+!============================ STCheckers v1r0 2005-12-20 =======================
+! 2005-12-20 - Marco Cattaneo
+ - Remove STTools dependency
 
-! 2005-12-19 - v1r0
-  M.Needham
+! 2005-12-19 - M.Needham
   First official release of code (replaces STCheckers in IT hat)
-! ======================================================================
+!===============================================================================

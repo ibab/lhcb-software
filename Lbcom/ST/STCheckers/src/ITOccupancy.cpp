@@ -27,7 +27,7 @@
 #include "STDet/DeSTSector.h"
 
 #include "ITOccupancy.h"
-#include "STTools/ISTSignalToNoiseTool.h"
+#include "Kernel/ISTSignalToNoiseTool.h"
 
 #include "Event/STDigit.h"
 

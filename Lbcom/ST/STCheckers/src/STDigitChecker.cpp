@@ -14,7 +14,7 @@
 #include "AIDA/IHistogram1D.h"
 
 #include "STDigitChecker.h"
-#include "STTools/ISTSignalToNoiseTool.h"
+#include "Kernel/ISTSignalToNoiseTool.h"
 
 #include "STDet/DeSTDetector.h"
 #include "STDet/DeSTSector.h"

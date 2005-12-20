@@ -16,7 +16,6 @@
 #include "boost/lexical_cast.hpp"
 
 #include "STClusterResolution.h"
-#include "STTools/ISTClusterPosition.h"
 #include "Kernel/STDetSwitch.h"
 
 //Event
@@ -27,9 +26,9 @@
 #include "STDet/DeSTDetector.h"
 #include "STDet/DeSTSector.h"
 
-
-// STTools
+// STTools interfaces from LHCbKernel
 #include "Kernel/IMCParticleSelector.h"
+#include "Kernel/ISTClusterPosition.h"
 
 using namespace LHCb;
 

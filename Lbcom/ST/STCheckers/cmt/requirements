@@ -4,15 +4,11 @@ version v1r0
 branches cmt doc src options
 include_path none
 
-
-use STAssociators 	v*    ST
-use STTools             v*    ST
-use STDAQ               v*    ST 
-#use MCTools             v*    Phys
+use STDAQ       v*   ST 
+use MCEvent     v*   Event
+use LinkerEvent v*   Event
 use Relations   v*   Kernel 
-
 
 # ================= component library ====================
 library STCheckers ../src/*.cpp -import=AIDA
 apply_pattern component_library library=STCheckers
-

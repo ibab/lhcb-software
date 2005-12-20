@@ -1,4 +1,4 @@
-// $Id: STClusterChecker.cpp,v 1.1.1.1 2005-12-19 15:44:30 mneedham Exp $
+// $Id: STClusterChecker.cpp,v 1.2 2005-12-20 16:08:11 cattanem Exp $
 //
 // This File contains the implementation of the STClusterChecker class
 //
@@ -15,7 +15,7 @@
 
 #include "STClusterChecker.h"
 
-#include "STTools/ISTSignalToNoiseTool.h"
+#include "Kernel/ISTSignalToNoiseTool.h"
 
 // Event
 #include "Event/STCluster.h"
