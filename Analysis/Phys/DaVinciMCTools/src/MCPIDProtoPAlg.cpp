@@ -1,4 +1,4 @@
-// $Id: MCPIDProtoPAlg.cpp,v 1.11 2005-01-11 12:36:08 pkoppenb Exp $
+// $Id: MCPIDProtoPAlg.cpp,v 1.12 2005-12-20 12:02:21 pkoppenb Exp $
 // Include files 
 #include <memory>
 
@@ -602,7 +602,11 @@ StatusCode MCPIDProtoPAlg::addRich( SmartDataPtr<RichPIDs>& richpids,
 
   RichPIDs::const_iterator iRich;
   for( iRich = richpids->begin(); richpids->end() != iRich; ++iRich ) {
+#ifdef DAVINCIMCTOOLS_DAVINCI_V12
     const TrStoredTrack* track = (*iRich)->recTrack();
+#else
+    const TrStoredTrack* track = (*iRich)->trStoredTrack();
+#endif
     if( track == proto->track() ) {
       sc = StatusCode::SUCCESS;
       proto->setRichPID( *iRich );

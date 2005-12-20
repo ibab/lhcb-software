@@ -1,8 +1,16 @@
-! $Id: release.notes,v 1.84 2005-12-19 10:17:08 pkoppenb Exp $
+! $Id: release.notes,v 1.85 2005-12-20 12:02:21 pkoppenb Exp $
 ! Package     : DaVinciMCTools
 ! Responsible : P. Koppenburg
 !=============================================================================
 
+!========================= DaVinciMCTools v5r17p1 2005-12-20 ==================
+! on branch v5r17b
+! 2005-12-20 - P. Koppenburg
+  - src/MCPIDProtoPAlg.cpp
+    . RichPID has methods recTrack in v12 and trSoredTrack in later code.
+  - cmt/requirements  
+    . Added a compilation flag for v12
+    
 ! 2005-12-19 - P. Koppenburg for L. Fernandez
   - src/PrintBackgroundCategory.cpp
     . New algorithm that prints BackgroundCategory for all particles
