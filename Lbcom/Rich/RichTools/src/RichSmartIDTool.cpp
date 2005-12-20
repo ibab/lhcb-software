@@ -5,7 +5,7 @@
  * Implementation file for class : RichSmartIDTool
  *
  * CVS Log :-
- * $Id: RichSmartIDTool.cpp,v 1.17 2005-12-13 18:01:10 papanest Exp $
+ * $Id: RichSmartIDTool.cpp,v 1.18 2005-12-20 09:38:55 papanest Exp $
  *
  * @author Antonis Papanestis
  * @date 2003-10-28
@@ -59,12 +59,11 @@ StatusCode RichSmartIDTool::initialize()
   {
     for ( unsigned int panel = 0; panel < m_photoDetPanels[rich].size(); ++panel )
     {
-      m_photoDetPanels[rich][panel] = getDet<DeRichHPDPanel>( pdPanelName[rich][panel] );
-      if ( !m_photoDetPanels[rich][panel] )
+      try {
+        m_photoDetPanels[rich][panel] = getDet<DeRichHPDPanel>( pdPanelName[rich][panel] );
+      }
+      catch ( GaudiException& e ) {        
         m_photoDetPanels[rich][panel] = getDet<DeRichHPDPanel>(pdPanelNameOld[rich][panel]);
-      if ( !m_photoDetPanels[rich][panel] ) {
-        fatal() << "Cannot locate HPDPanel " << rich << " " << panel << endmsg;
-        return StatusCode::FAILURE;
       }
       debug() << "Stored photodetector panel "
               << m_photoDetPanels[rich][panel]->name() << endreq;

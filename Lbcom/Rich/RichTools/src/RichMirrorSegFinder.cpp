@@ -5,7 +5,7 @@
  * Implementation file for class : RichMirrorSegFinder
  *
  * CVS Log :-
- * $Id: RichMirrorSegFinder.cpp,v 1.13 2005-12-13 18:01:10 papanest Exp $
+ * $Id: RichMirrorSegFinder.cpp,v 1.14 2005-12-20 09:38:55 papanest Exp $
  *
  * @date   2003-11-05
  * @author Antonis Papanestis
@@ -67,18 +67,20 @@ StatusCode RichMirrorSegFinder::initialize( )
   m_maxDist[Rich::Rich2][sec] = 36675;
 
   // get the RICH detectors
-  const DeRich* rich1 = getDet<DeRich>( DeRichLocation::Rich1 );
-  if (!rich1) rich1 = getDet<DeRich>( DeRichLocation::Rich1_old );
-  if (!rich1) {
-    fatal() << "Cannot locate DeRich1" << endmsg;
-    return StatusCode::FAILURE;
+  const DeRich* rich1;
+  try {
+    rich1 = getDet<DeRich>( DeRichLocation::Rich1 );
   }
-
-  const DeRich* rich2 = getDet<DeRich>( DeRichLocation::Rich2 );
-  if (!rich2) rich2 = getDet<DeRich>( DeRichLocation::Rich2_old );
-  if (!rich2) {
-    fatal() << "Cannot locate DeRich2" << endmsg;
-    return StatusCode::FAILURE;
+  catch ( GaudiException& e ) { 
+    rich1 = getDet<DeRich>( DeRichLocation::Rich1_old );
+  }
+  
+  const DeRich* rich2;
+  try {
+    rich2 = getDet<DeRich>( DeRichLocation::Rich2 );
+  }
+  catch ( GaudiException& e ) {
+    rich2 = getDet<DeRich>( DeRichLocation::Rich2_old );
   }
 
   // find all the mirrors in Rich1
@@ -93,11 +95,6 @@ StatusCode RichMirrorSegFinder::initialize( )
     if ( detName.find("Mirror1") != std::string::npos )
     {
       const DeRichSphMirror* sm = getDet<DeRichSphMirror>( detName );
-      if (!sm) {
-        fatal() << "Cannot locate " << detName << endmsg;
-        return StatusCode::FAILURE;
-      }
-
       if ( sm->mirrorCentre().y() > 0.0 )
       {
         mirrorNum = m_maxMirror[Rich::Rich1][Rich::top][sph];
@@ -115,10 +112,6 @@ StatusCode RichMirrorSegFinder::initialize( )
     if ( detName.find("Mirror2") != std::string::npos )
     {
       const DeRichSphMirror* secm = getDet<DeRichSphMirror>( detName );
-      if (!secm) {
-        fatal() << "Cannot locate " << detName << endmsg;
-        return StatusCode::FAILURE;
-      }
       if ( secm->mirrorCentre().y() > 0.0 )
       {
         mirrorNum = m_maxMirror[Rich::Rich1][Rich::top][sec];
@@ -153,10 +146,6 @@ StatusCode RichMirrorSegFinder::initialize( )
     if ( detName.find("SphMirror") != std::string::npos )
     {
       const DeRichSphMirror* sm = getDet<DeRichSphMirror>( detName );
-      if (!sm) {
-        fatal() << "Cannot locate " << detName << endmsg;
-        return StatusCode::FAILURE;
-      }
       if ( sm->centreOfCurvature().x() > 0.0 )
       {
         mirrorNum = m_maxMirror[Rich::Rich2][Rich::left][sph];
@@ -174,10 +163,6 @@ StatusCode RichMirrorSegFinder::initialize( )
     if ( detName.find("SecMirror") != std::string::npos )
     {
       const DeRichSphMirror* secm = getDet<DeRichSphMirror>( detName );
-      if (!secm) {
-        fatal() << "Cannot locate " << detName << endmsg;
-        return StatusCode::FAILURE;
-      }
       if ( secm->mirrorCentre().x() > 0.0 )
       {
         mirrorNum = m_maxMirror[Rich::Rich2][Rich::left][sec];
