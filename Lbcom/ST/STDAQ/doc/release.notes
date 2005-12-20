@@ -1,0 +1,9 @@
+!-----------------------------------------------------------------------------
+! Package     : ST/STDAQ
+! Responsible : Matt Needham
+! Purpose     : Encode and decode L1 and Raw buffers for ST
+!-----------------------------------------------------------------------------
+
+
+! 2005-12-20 - Matt Needham
+ - First release
