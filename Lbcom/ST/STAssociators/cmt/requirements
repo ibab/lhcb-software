@@ -4,11 +4,11 @@ version           v1r0
 # =============== structure =================================================== 
 branches          src cmt doc options 
 
-include_dirs $(STASSOCIATORSROOT)
+include_path      none
 
 # =============== used packages ===============================================
 use STEvent     v*     Event 
-use MCEvent    v*     Event
+use MCEvent     v*     Event
 use LinkerEvent v*     Event
 use GaudiAlg    v*
 
