@@ -1,4 +1,4 @@
-// $Id: PrepareL0DUL1Buffer.h,v 1.1 2004-01-26 14:28:45 odescham Exp $
+// $Id: PrepareL0DUL1Buffer.h,v 1.2 2005-12-20 11:57:50 cattanem Exp $
 #ifndef PREPAREL0DUL1BUFFER_H 
 #define PREPAREL0DUL1BUFFER_H 1
 
@@ -10,7 +10,6 @@
 #include "GaudiKernel/Algorithm.h"
 #include "GaudiKernel/ISvcLocator.h"
 #include "Event/L0MuonCandidate.h"
-#include "Event/L0Muon.h"
   
 
 /** @class PrepareL0DUL1Buffer PrepareL0DUL1Buffer.h

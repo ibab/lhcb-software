@@ -1,4 +1,4 @@
-// $Id: L0Monitor.cpp,v 1.5 2005-01-31 16:29:12 cattanem Exp $
+// $Id: L0Monitor.cpp,v 1.6 2005-12-20 11:57:50 cattanem Exp $
 // Include files
 #include "stdio.h"
 // from Gaudi
@@ -19,7 +19,6 @@
 #include "Event/L0CaloCandidate.h"
 #include "Event/L0MuonCandidate.h"
 #include "Event/L0PuVeto.h"
-#include "Event/L0Muon.h"
 #include "Event/L0DUReport.h"
 #include "Event/MCParticle.h"
 
@@ -268,7 +267,6 @@ StatusCode L0Monitor::execute() {
   if ( 0 != candMuon ) {
     L0MuonCandidates::const_iterator itMuon ;
     for ( itMuon = candMuon->begin() ; candMuon->end() != itMuon ; ++itMuon ) {
-      if ( L0Muon::OK == (*itMuon)->status() ) {
         double eMuon = fabs( (*itMuon)->pt() / GeV );
         if ( 0 < eMuon ) {
           if ( eMuon > emu1 ) {
@@ -290,7 +288,6 @@ StatusCode L0Monitor::execute() {
               << " emu2 " << emu2 << " emu3 " << emu3
               << " sumu " << sumu << endreq;
         }
-      }
     }
     log << MSG::DEBUG << "Muon 1/2/3 Sum E = " << emu1 << " "
         << emu2 << " " << emu3 << " " << sumu << endreq;

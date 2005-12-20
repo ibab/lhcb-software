@@ -1,6 +1,10 @@
-$Id: release.notes,v 1.37 2005-06-03 09:55:23 cattanem Exp $
+$Id: release.notes,v 1.38 2005-12-20 11:57:50 cattanem Exp $
 Package		: L0/L0DU
 Package Manager : Pascal Perret
+
+!========================== L0DU v6r10 2005-12-19 ========================
+! 2005-12-19 - Marco Cattaneo, Andrei Tsaregorodtsev
+ - Fixes to work with new L0MuonCandidates from new L0 muon trigger simulation.
 
 !========================== L0DU v6r9p1 2005-06-03 ========================
 ! 2005-06-03 - Marco Cattaneo

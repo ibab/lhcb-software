@@ -1,4 +1,4 @@
-// $Id: PrepareL0DUL1Buffer.cpp,v 1.4 2005-03-07 16:30:49 cattanem Exp $
+// $Id: PrepareL0DUL1Buffer.cpp,v 1.5 2005-12-20 11:57:50 cattanem Exp $
 // Include files 
 
 // from STL
@@ -125,24 +125,36 @@ StatusCode PrepareL0DUL1Buffer::execute() {
   l1_int MuonContWord[8]={0,0,0,0,0,0,0,0};
   for(L0MuonCandidates::const_iterator iMuon = L0Muons->begin()
       ; iMuon != L0Muons->end(); iMuon++ ) {
-    if( L0Muon::EMPTY != (*iMuon)->status() ){
-      int m_bitcode = (*iMuon)->bitcode() ;
+    // These methods no longer work with L0Event v14r3p3
+    //    if( L0Muon::EMPTY != (*iMuon)->status() ){
+    //      int m_bitcode = (*iMuon)->bitcode() ;
+    if( true ){
+      // int m_bitcode = 0;
 
       // From L0Muon trigger word :
-      int Status =(m_bitcode & L0MuonBase::MaskStatus)>>L0MuonBase::ShiftStatus;
-      int Pt     =(m_bitcode & L0MuonBase::MaskPt    )>>L0MuonBase::ShiftPt;
-      int Sign   =(m_bitcode & L0MuonBase::MaskPtSign)>>L0MuonBase::ShiftPtSign;
-      int Region =(m_bitcode & L0MuonBase::MaskRegion)>>L0MuonBase::ShiftRegion;
-      int PosX   =(m_bitcode & L0MuonBase::MaskX     )>>L0MuonBase::ShiftX;
-      int PosY   =(m_bitcode & L0MuonBase::MaskY     )>>L0MuonBase::ShiftY;
+      // Updated code from Andrei Tsaregorodtsev, for new L0MuonCandidates
+      int Status = 1;             // always OK
+      int Pt     = abs((*iMuon)->encodedPt());
+      int Sign   = (*iMuon)->encodedPt()/Pt;
+      int Region = (*iMuon)->pad(0).region();
+      int PosX   = (*iMuon)->pad(0).nX();
+      int PosY   = (*iMuon)->pad(0).nY();
+
+      // int Status =(m_bitcode & L0MuonBase::MaskStatus)>>L0MuonBase::ShiftStatus;
+      // int Pt     =(m_bitcode & L0MuonBase::MaskPt    )>>L0MuonBase::ShiftPt;
+      // int Sign   =(m_bitcode & L0MuonBase::MaskPtSign)>>L0MuonBase::ShiftPtSign;
+      // int Region =(m_bitcode & L0MuonBase::MaskRegion)>>L0MuonBase::ShiftRegion;
+      // int PosX   =(m_bitcode & L0MuonBase::MaskX     )>>L0MuonBase::ShiftX;
+      // int PosY   =(m_bitcode & L0MuonBase::MaskY     )>>L0MuonBase::ShiftY;
+
       //  Quarter will be recover in L0DU board from hard cabling :
       // Use M1 pad soft index instead :
-      int Quarter= (*iMuon)->padM1().quarter();
+      int Quarter= (*iMuon)->pad(0).quarter();
 
       msg << MSG::DEBUG << " -----------------------------------"<< endreq;
       msg << MSG::DEBUG << "Code Pt = " << (*iMuon)->pt()        << endreq;
-      msg << MSG::DEBUG << "Code nX = " << (*iMuon)->padM1().nX()<< endreq;
-      msg << MSG::DEBUG << "Code nY = " << (*iMuon)->padM1().nY()<< endreq;
+      msg << MSG::DEBUG << "Code nX = " << (*iMuon)->pad(0).nX()<< endreq;
+      msg << MSG::DEBUG << "Code nY = " << (*iMuon)->pad(0).nY()<< endreq;
       msg << MSG::DEBUG << " -----------------------------------"<< endreq;
 
       // Built L0DU Blocklet for Muon

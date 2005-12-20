@@ -1,4 +1,4 @@
-// $Id: DecisionUnit.cpp,v 1.18 2005-03-14 16:46:17 erodrigu Exp $
+// $Id: DecisionUnit.cpp,v 1.19 2005-12-20 11:57:50 cattanem Exp $
 //#define L0DU_DECISIONUNIT_CPP
 
 #include <math.h>
@@ -289,9 +289,7 @@ StatusCode DecisionUnit::execute() {
     } else {
       std::vector<double> eMuons; 
       while ( itCandMuon != candMuon->end() ) {
-        if ( L0Muon::OK == (*itCandMuon)->status() ) {
-          eMuons.push_back( fabs( (*itCandMuon)->pt() ) );
-        }
+        eMuons.push_back( fabs( (*itCandMuon)->pt() ) );
         itCandMuon++;
       }
       if ( 0 != eMuons.size() ) {
@@ -319,7 +317,6 @@ StatusCode DecisionUnit::execute() {
             << "( theta phi status = "
             << (*itCandMuon)->theta() << " "
             << (*itCandMuon)->phi() << " "
-            << (*itCandMuon)->status() 
             << " ) eCut1(Gev) = " << m_eMu1Cut1 / GeV
             << " eCut2(GeV) = " << m_eMu1Cut2 / GeV
             << " scal = " << m_scalMu1 
