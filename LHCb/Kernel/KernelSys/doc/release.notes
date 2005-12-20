@@ -4,6 +4,11 @@
 ! Purpose     : collect Kernel packages
 !-----------------------------------------------------------------------------
 
+!======================== KernelSys v4r18 2005-12-19 =======================
+! 2005-12-19 - Marco Cattaneo
+ - Use LHCbKernel v5r16, ProcessorKernel v2r0, L0MuonKernel v4r0
+ - Remove L0mConf
+
 !======================== KernelSys v4r17 2005-11-18 =======================
 ! 2005-11-18 - Marco Cattaneo
  - Use RichKernel v5r6
