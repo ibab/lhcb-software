@@ -3,7 +3,7 @@
  *
  *  Implementation file for detector description class : DeRichSphMirror
  *
- *  $Id: DeRichSphMirror.cpp,v 1.18 2005-12-16 15:09:17 jonrob Exp $
+ *  $Id: DeRichSphMirror.cpp,v 1.19 2005-12-21 11:45:39 papanest Exp $
  *
  *  @author Antonis Papanestis a.papanestis@rl.ac.uk
  *  @date   2004-06-18
@@ -55,32 +55,37 @@ StatusCode DeRichSphMirror::initialize()
   msgStart << MSG::VERBOSE << "Initializing spherical mirror" << endmsg;
   //this->printOut(msg);
 
-  // find if this is a primary or secondary mirror
-  bool secondary( true );
-  const std::string::size_type secPos = name().find("SecMirror");
-  if ( std::string::npos == secPos ) secondary = false;
-  std::string localName = ( secondary ? "DeRichSecMirror" : "DeRichSphMirror" );
-  MsgStream msg( msgSvc(), localName );
-
-  // find if this mirror is in Rich1 or Rich2
+  bool secondary( false );
+  // find if this mirror is in Rich1 or Rich2 and
+  // if this is a primary or secondary mirror
   const std::string::size_type pos = name().find("Rich");
   if ( std::string::npos != pos ) {
     m_name = name().substr(pos);
     std::string richNum = m_name.substr(4,1);
-    if ( richNum == "1" )
+    if ( richNum == "1" ) {
       m_rich = Rich::Rich1;
+      const std::string::size_type secPos = name().find("Mirror2");
+      if ( std::string::npos != secPos ) secondary = true;
+    }
     else
-      if ( richNum == "2")
+      if ( richNum == "2") {
         m_rich = Rich::Rich2;
+        const std::string::size_type secPos = name().find("SecMirror");
+        if ( std::string::npos != secPos ) secondary = true;
+      }
+    
       else {
-        msg << MSG::FATAL<<"Could not identify Rich (1/2=="<<richNum<<" )"<<endmsg;
+        msgStart << MSG::FATAL<<"Could not identify Rich (1/2=="<<richNum<<" )"<<endmsg;
         return StatusCode::FAILURE;
       }
   } else {
     m_name = "DeRichSphMirror_NO_NAME";
-    msg << MSG::FATAL << "Cannot identify Rich number!" << endmsg;
+    msgStart << MSG::FATAL << "Cannot identify Rich number!" << endmsg;
     return StatusCode::FAILURE;
   }
+
+  std::string localName = ( secondary ? "DeRichSecMirror" : "DeRichSphMirror" );
+  MsgStream msg( msgSvc(), localName );
 
   // extract mirror number from detector element name
   const std::string::size_type pos2 = name().find(':');
@@ -207,7 +212,7 @@ StatusCode DeRichSphMirror::initialize()
   std::string surfLocation, sphMirrorName, surfName;
   if ( m_rich == Rich::Rich1 ) {
     surfLocation = "/dd/Geometry/"+rich1GeomLoc+"/Rich1Surfaces";
-    sphMirrorName = "Mirror1";
+    sphMirrorName = ( secondary  ? "Mirror2" : "Mirror1");
     surfName = ":"+mirNumString;
   }
   else{
