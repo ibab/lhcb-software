@@ -1,6 +1,9 @@
-! $Id: release.notes,v 1.23 2005-12-16 15:57:57 gcorti Exp $
+! $Id: release.notes,v 1.24 2005-12-21 15:47:36 robbep Exp $
 ! Package     : Gen/Generators
 ! Responsible : 
+
+! 2005-12-21 - Patrick Robbe
+ - phocin.F: activate exponentiation in PHOTOS
 
 !=================== Generators v3r0 2005-12-15 ===========================
 ! 2005-12-15 - Patrick Robbe

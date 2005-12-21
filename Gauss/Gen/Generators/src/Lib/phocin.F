@@ -1,4 +1,4 @@
-C $Id: phocin.F,v 1.3 2005-11-04 10:55:41 robbep Exp $
+C $Id: phocin.F,v 1.4 2005-12-21 15:47:36 robbep Exp $
       SUBROUTINE PHOCIN
 C.----------------------------------------------------------------------
 C.
@@ -18,6 +18,7 @@ C.----------------------------------------------------------------------
       IMPLICIT NONE
       INTEGER d_h_NMXHEP
 
+CC  LHCb Change: remove include and set HEP sive to 10000 by hand
       PARAMETER (d_h_NMXHEP=10000)
 
       LOGICAL QEDRAD
@@ -52,6 +53,7 @@ C--   /PH_HEPEVT/, this interface is needed for KORALB and KORALZ...
    10 QEDRAD(I)=.TRUE.
 C--
 C--   Logical output unit for printing of PHOTOS error messages
+CCCC   LHCb change to be able to remove PHOTOS printout
       IF ( PHLUN .NE. 73 ) PHLUN=6
 C--
 C--   Set cut parameter for photon radiation
@@ -78,7 +80,8 @@ C--   Third/fourth order - triple (or quatric) photon switch,
 C--                        see dipswitch ifour
       ITRE=.FALSE.
 C--   Exponentiation on:
-      IEXP=.FALSE. !.TRUE.
+CCC   LHCb Change Enable exponentiation
+      IEXP=.TRUE. !.TRUE.
       IF (IEXP) THEN
       ISEC=.FALSE.
       ITRE=.FALSE.
