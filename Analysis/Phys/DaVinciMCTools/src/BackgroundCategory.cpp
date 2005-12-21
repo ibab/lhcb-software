@@ -1,4 +1,4 @@
-// $Id: BackgroundCategory.cpp,v 1.8 2005-12-20 12:02:21 pkoppenb Exp $
+// $Id: BackgroundCategory.cpp,v 1.9 2005-12-21 11:36:46 gligorov Exp $
 // Include files 
 
 // from Gaudi
@@ -156,6 +156,7 @@ IBackgroundCategory::categories BackgroundCategory::category(const Particle* rec
 	//First of all, we use Patrick's tool to get all the particles in the decay tree
 	verbose() << "About to start processing the categorisation tree" << endreq;
 	ParticleVector particles_in_decay = m_particleDescendants->descendants(reconstructed_mother);
+	if (particles_in_decay.size() == 0) return Undefined; 
 	verbose() << "Categorising step 1" << endreq;
 	//Now we have to associate each one of them to an MCParticle if possible
 	MCParticleVector mc_particles_linked_to_decay = associate_particles_in_decay(particles_in_decay);  

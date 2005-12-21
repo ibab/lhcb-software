@@ -1,7 +1,13 @@
-! $Id: release.notes,v 1.86 2005-12-20 12:07:58 pkoppenb Exp $
+! $Id: release.notes,v 1.87 2005-12-21 11:36:46 gligorov Exp $
 ! Package     : DaVinciMCTools
 ! Responsible : P. Koppenburg
 !=============================================================================
+
+! 2005-12-16 - V. Gligorov
+  - src/BackgroundCategory.cpp
+  fixed bug that caused crashing when submitted particle was
+  badly reconstructed (no daughters). The method now returns 
+  the "undefined" category in such cases.
 
 ! 2005-12-20 - P. Koppenburg
   - src/MCPIDProtoPAlg.cpp
