@@ -5,7 +5,7 @@
  * Implementation file for class : RichRayTracing
  *
  * CVS Log :-
- * $Id: RichRayTracing.cpp,v 1.18 2005-12-17 14:21:59 jonrob Exp $
+ * $Id: RichRayTracing.cpp,v 1.19 2005-12-21 15:58:06 papanest Exp $
  *
  * @author Antonis Papanestis
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
@@ -83,18 +83,20 @@ StatusCode RichRayTracing::initialize()
                                             DeRichHPDPanelLocation::Rich2Panel1_old }};
 
   // RICH detector elements
-  const DeRich* rich1 = getDet<DeRich>( DeRichLocation::Rich1 );
-  if (!rich1) rich1 = getDet<DeRich>( DeRichLocation::Rich1_old );
-  if (!rich1) {
-    fatal() << "Cannot locate DeRich1" << endmsg;
-    return StatusCode::FAILURE;
+  const DeRich* rich1;
+  try {
+    rich1 = getDet<DeRich>( DeRichLocation::Rich1 );
+  }
+  catch ( GaudiException& e ) {
+    rich1 = getDet<DeRich>( DeRichLocation::Rich1_old );
   }
 
-  const DeRich* rich2 = getDet<DeRich>( DeRichLocation::Rich2 );
-  if (!rich2) rich2 = getDet<DeRich>( DeRichLocation::Rich2_old );
-  if (!rich2) {
-    fatal() << "Cannot locate DeRich2" << endmsg;
-    return StatusCode::FAILURE;
+  const DeRich* rich2;
+  try {
+    rich2 = getDet<DeRich>( DeRichLocation::Rich2 );
+  }
+  catch ( GaudiException& e ) {
+    rich2 = getDet<DeRich>( DeRichLocation::Rich2_old );
   }
   m_rich[Rich::Rich1] = rich1;
   m_rich[Rich::Rich2] = rich2;
@@ -105,14 +107,12 @@ StatusCode RichRayTracing::initialize()
   {
     for ( panel=0; panel<m_photoDetPanels[rich].size(); ++panel)
     {
-      m_photoDetPanels[rich][panel] = getDet<DeRichHPDPanel>( pdPanelName[rich][panel] );
-      if ( !m_photoDetPanels[rich][panel] )
-        m_photoDetPanels[rich][panel] = getDet<DeRichHPDPanel>(pdPanelNameOld[rich][panel]);
-      if ( !m_photoDetPanels[rich][panel] ) {
-        fatal() << "Cannot locate HPDPanel " << rich << " " << panel << endmsg;
-        return StatusCode::FAILURE;
+      try {
+        m_photoDetPanels[rich][panel] = getDet<DeRichHPDPanel>( pdPanelName[rich][panel] );
       }
-
+      catch ( GaudiException& e ) {
+        m_photoDetPanels[rich][panel] = getDet<DeRichHPDPanel>(pdPanelNameOld[rich][panel]);
+      }
       debug() << "Stored photodetector panel "
               << m_photoDetPanels[rich][panel]->name() << endreq;
     }
