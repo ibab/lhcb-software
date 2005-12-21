@@ -45,11 +45,11 @@ MCITDepositCreator.responseLRcapCoupling.vfs = 0;
 MCITDepositCreator.responseLRcapCoupling.capacitance = 33*picofarad;
 
 
-MCITDepositCreator.type = "IT";
-MCITDigitCreator.type = "IT";
-ITDigitCreator.type = "IT";
+MCITDepositCreator.detType = "IT";
+MCITDigitCreator.detType = "IT";
+ITDigitCreator.detType = "IT";
 
-ToolSvc.STSignalToNoiseToolIT.type = "IT";
+ToolSvc.STSignalToNoiseToolIT.detType = "IT";
 ToolSvc.STSignalToNoiseToolIT.conversionToADC = 0.0013;
 
 
