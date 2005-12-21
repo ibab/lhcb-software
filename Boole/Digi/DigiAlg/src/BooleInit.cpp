@@ -1,4 +1,4 @@
-// $Id: BooleInit.cpp,v 1.9 2005-12-15 13:56:37 cattanem Exp $
+// $Id: BooleInit.cpp,v 1.10 2005-12-21 12:41:36 cattanem Exp $
 // Include files 
 
 // from Gaudi
@@ -29,10 +29,9 @@ DECLARE_ALGORITHM_FACTORY( BooleInit );
 //=============================================================================
 BooleInit::BooleInit( const std::string& name,
                       ISvcLocator* pSvcLocator)
-  : GaudiAlgorithm ( name , pSvcLocator ), 
+  : LbAppInit ( name , pSvcLocator ), 
     m_memoryTool(0), 
-    m_initRndmTool(0),
-    m_eventCounter(0)
+    m_initRndmTool(0)
 {
 
 }
@@ -45,8 +44,8 @@ BooleInit::~BooleInit() {};
 // Initialization
 //=============================================================================
 StatusCode BooleInit::initialize() {
-  StatusCode sc = GaudiAlgorithm::initialize(); // must be executed first
-  if ( sc.isFailure() ) return sc;  // error printed already by GaudiAlgorithm
+  StatusCode sc = LbAppInit::initialize(); // must be executed first
+  if ( sc.isFailure() ) return sc;  // error printed already by LbAppInit
 
   debug() << "==> Initialize" << endmsg;
 
@@ -64,17 +63,18 @@ StatusCode BooleInit::initialize() {
 //=============================================================================
 StatusCode BooleInit::execute() {
 
+  StatusCode sc = LbAppInit::execute(); // must be executed first
+  if ( sc.isFailure() ) return sc;  // error printed already by LbAppInit
+
   debug() << "==> Execute" << endmsg;
 
   // Plot the memory usage
   m_memoryTool->execute();
 
   // Get the run and event number from the MC Header
-  ++m_eventCounter;
   LHCb::MCHeader* evt = get<LHCb::MCHeader>( LHCb::MCHeaderLocation::Default );
-  info() << "Evt " << evt->evtNumber() << ",  Run " << evt->runNumber()
-         << ",  Nr. in job = " << m_eventCounter << endmsg;
-
+  this->printEventRun( evt->evtNumber(), evt->runNumber() );
+  
   // Initialize the random number
   m_initRndmTool->initRndm( evt->runNumber(), evt->evtNumber() );
   
@@ -86,18 +86,7 @@ StatusCode BooleInit::execute() {
 //=============================================================================
 StatusCode BooleInit::finalize() {
 
-  always()
-    << std::endl
-    << "=================================================================="
-    << "=================================================================="
-    << std::endl
-    << "                                                 "
-    << m_eventCounter << " events processed" << std::endl
-    << "=================================================================="
-    << "=================================================================="
-    << endmsg;
-
-  return GaudiAlgorithm::finalize();  // must be called after all other actions
+  return LbAppInit::finalize();  // must be called after all other actions
 }
 
 //=============================================================================

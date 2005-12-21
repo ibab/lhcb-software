@@ -1,10 +1,10 @@
-// $Id: BooleInit.h,v 1.7 2005-12-15 13:56:37 cattanem Exp $
+// $Id: BooleInit.h,v 1.8 2005-12-21 12:41:36 cattanem Exp $
 #ifndef BOOLEINIT_H 
 #define BOOLEINIT_H 1
 
 // Include files
-// from Gaudi
-#include "GaudiAlg/GaudiAlgorithm.h"
+// from LHCbKernel
+#include "Kernel/LbAppInit.h"
 
 class IGenericTool;
 class IRndmTool;
@@ -15,7 +15,7 @@ class IRndmTool;
  *  @author Marco Cattaneo
  *  @date   2005-12-15
  */
-class BooleInit : public GaudiAlgorithm {
+class BooleInit : public LbAppInit {
 public: 
   /// Standard constructor
   BooleInit( const std::string& name, ISvcLocator* pSvcLocator );
@@ -31,6 +31,5 @@ protected:
 private:
   IGenericTool* m_memoryTool;   ///< Pointer to (private) memory histogram tool
   IRndmTool*    m_initRndmTool; ///< Pointer to (private) rndm intialization tool
-  int           m_eventCounter; ///< Number of events processed 
 };
 #endif // BOOLEINIT_H
