@@ -1,4 +1,4 @@
-// $Id: GenCounters.h,v 1.2 2005-12-11 23:21:47 robbep Exp $
+// $Id: GenCounters.h,v 1.3 2005-12-21 16:41:44 robbep Exp $
 #ifndef GENERATORS_GENCOUNTERS_H 
 #define GENERATORS_GENCOUNTERS_H 1
 
@@ -44,9 +44,8 @@ namespace GenCounters {
                                const unsigned int after , 
                                const unsigned int before ) {
     if ( 0 == before ) return ;
-    theStream << "Number of events before " << cutName << " : " << before 
-              << std::endl ;
-    theStream << "Number of events after " << cutName << " : " << after 
+    theStream << "Number of events for " << cutName << ", before : " << before
+              << ", after : " << after 
               << std::endl ;
     theStream << "Efficiency of the " << cutName << " : " 
               << format( "%.5g +/- %.5g" , fraction( after , before ) , 
@@ -69,9 +68,9 @@ namespace GenCounters {
                              const std::string & name , 
                              const unsigned int number , 
                              const unsigned int total ) {
-    theStream << "Number of " << name << " : " << number << std::endl ;
-    theStream << "Fraction of " << name << " : " 
-              << format( "%.5g +/- %.5g" , fraction( number , total ) ,
+    theStream << "Number of " << name << " : " << number ;
+    theStream << " [fraction : " 
+              << format( "%.5g +/- %.5g]" , fraction( number , total ) ,
                          err_fraction( number , total ) ) << std::endl ;  
   }
 };
