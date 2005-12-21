@@ -1,8 +1,11 @@
-// $Id: IDirectionFit.h,v 1.2 2005-06-09 13:10:40 pkoppenb Exp $
+// $Id: IDirectionFit.h,v 1.3 2005-12-21 13:56:05 pkoppenb Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $ ; version $Revision: 1.2 $
+// CVS tag $Name: not supported by cvs2svn $ ; version $Revision: 1.3 $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.2  2005/06/09 13:10:40  pkoppenb
+// Joined with v3r3b1 branch
+//
 // Revision 1.1.2.1  2005/06/09 11:55:40  pkoppenb
 // New vertex interfaces
 // 
@@ -38,7 +41,7 @@
  *    - IParticleReFitter::reFit
  *
  *  It is assumed that IParticleReFitter::reFit method 
- *  in implemented through @c fit 
+ *  is implemented through @c fit 
  * 
  *  @code 
  *

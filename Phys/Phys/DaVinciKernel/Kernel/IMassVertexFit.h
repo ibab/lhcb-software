@@ -1,6 +1,6 @@
-// $Id: IMassVertexFit.h,v 1.2 2005-06-09 13:10:40 pkoppenb Exp $
+// $Id: IMassVertexFit.h,v 1.3 2005-12-21 13:52:38 pkoppenb Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $ ; version $Revision: 1.2 $
+// CVS tag $Name: not supported by cvs2svn $ ; version $Revision: 1.3 $
 // ============================================================================
 #ifndef DAVINCIKERNEL_IMASSVERTEXFIT_H 
 #define DAVINCIKERNEL_IMASSVERTEXFIT_H 1
@@ -17,7 +17,7 @@
  *
  *  The "concrete" mass-vertex constraint interface
  *  It inherits from "basic" abstract  interfaces 
- *  IParticleOCmbiner and IParticleReFitter
+ *  IParticleCombiner and IParticleReFitter
  *
  *  In includes 4 series of methods:
  *     - @c fit with explicit mass constrain, 
