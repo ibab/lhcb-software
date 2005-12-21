@@ -2,7 +2,12 @@ Package LHCbKernel
 Package manager: M.Cattaneo
 Purpose: LHCb specific Kernel classes
 
-!===================== LHCbKernel v6r0 2005-12-20 =========================
+!===================== LHCbKernel v6r0 2005-12-21 =========================
+! 2005-12-21 - Marco Cattaneo
+ - Add Kernel/LbAppInit.h, and implementation in src. This is an initialization
+   algorithm to produce standard printout for production applications. It can
+   be used as is, or specialized
+
 ! 2005-12-20 - Marco Cattaneo
  - Add Kernel/ISTClusterPosition.h, moved from STTools
  - Add Kernel/RichTraceMode.h, moved from RichKernel
