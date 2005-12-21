@@ -19,9 +19,9 @@ use  Ks2PiPiSel         	v1r7     Phys
 use  ParticleMaker      	v1r6p1   Phys
 use  PhysSelections		v6r12    Phys
 use  DaVinciTransporter 	v2r1     Phys
-use  VertexFit			v1r9     Phys
-use  Tampering                  v1r4     Phys
-use  TriggerSource              v1r0     Phys
+use  VertexFit			v1r9p1   Phys
+# use  Tampering                  v1r4p1   Phys
+# use  TriggerSource              v1r0     Phys
 # Generic tools 
 use  Utilities          	v2r1p2   Tools
 use  RecoTools          	v1r1     Rec
@@ -40,7 +40,7 @@ use PhysMCSys                   v1r6     Phys
 #=======================================================
 use  DaVinciAssociators 	v5r5     Phys
 use  DaVinciEff         	v3r4     Phys
-use  DaVinciMCTools     	v5r17    Phys
+use  DaVinciMCTools     	v5r17p1  Phys
 use  DaVinciTest        	v5r6     Phys
 use  DaVinciUser        	v5r2     Phys
 use  FlavourTaggingChecker      v1r0     Phys

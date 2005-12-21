@@ -3,6 +3,16 @@ Package     : PhysSys
 Package Coordinator : Patrick Koppenburg
 Purpose     : LHCb physics packages
 
+</PRE><H1><A NAME=v2r0>2005-12-21 Phys v2r0</A></H1><PRE>
+  - Built against LHCb v19r3
+  
+  WARNING: Physics analysis does not work because of problems in 
+  ProtoParticle Making. Trigger works fine.
+  
+  - Takes all modification already introduced in DaVinci v12r15.
+  Look at the doxygen pages of these version for the full details of the changes.
+  http://lhcb-release-area.web.cern.ch/LHCb-release-area/DAVINCI/DAVINCI_v12r15/doc/html/index.html
+  
 </PRE><H1><A NAME=v1r5>2005-10-21 Phys v1r5</A></H1><PRE>
   - Built against LHCb v18r9
   - Takes all modification already introduced in DaVinci v12r13 and v12r14.
