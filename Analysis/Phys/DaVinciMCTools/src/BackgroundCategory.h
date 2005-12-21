@@ -1,4 +1,4 @@
-// $Id: BackgroundCategory.h,v 1.4 2005-12-15 16:05:13 gligorov Exp $
+// $Id: BackgroundCategory.h,v 1.5 2005-12-21 13:10:40 gligorov Exp $
 #ifndef BACKGROUNDCATEGORY_H 
 #define BACKGROUNDCATEGORY_H 1
 
@@ -43,7 +43,7 @@ protected:
 private:
 
   MCParticleVector associate_particles_in_decay(ParticleVector);
-  MCParticleVector get_mc_mothers(MCParticleVector);
+  MCParticleVector get_mc_mothers(MCParticleVector, const Particle*);
   MCParticleVector create_finalstatedaughterarray_for_mcmother(const MCParticle*);
 
   bool isStable(int);

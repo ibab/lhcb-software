@@ -1,4 +1,4 @@
-// $Id: BackgroundCategory.cpp,v 1.9 2005-12-21 11:36:46 gligorov Exp $
+// $Id: BackgroundCategory.cpp,v 1.10 2005-12-21 13:10:40 gligorov Exp $
 // Include files 
 
 // from Gaudi
@@ -66,7 +66,7 @@ bool BackgroundCategory::isStable(int pid)
 
 } 
 //=============================================================================
-MCParticleVector BackgroundCategory::get_mc_mothers(MCParticleVector mc_particles_linked_to_decay)
+MCParticleVector BackgroundCategory::get_mc_mothers(MCParticleVector mc_particles_linked_to_decay, const Particle* reconstructed_mother)
 {
 	//verbose() << "About to start getting the MC-mothers" << endreq;
 	MCParticleVector mc_mothers;
@@ -94,9 +94,9 @@ MCParticleVector BackgroundCategory::get_mc_mothers(MCParticleVector mc_particle
 				tmpmother = finalmother->mother();
 				//verbose() << "Getting MC-mothers - loop step 5 - loop element " << debug << endreq;
 				//verbose() << "tmpmother = " << tmpmother << endreq;
-			} while (tmpmother != 0);
+			} while (tmpmother != 0 && finalmother->particleID().abspid() != reconstructed_mother->particleID().abspid());
 			mc_mothers.push_back(finalmother);
-      verbose() << "finalmother = " << finalmother << endreq;
+      			verbose() << "finalmother = " << finalmother << endreq;
 		} else {
 			verbose() << "finalmother = 0" << endreq;
 			mc_mothers.push_back(0); //Ghosts have no mother!;
@@ -162,7 +162,7 @@ IBackgroundCategory::categories BackgroundCategory::category(const Particle* rec
 	MCParticleVector mc_particles_linked_to_decay = associate_particles_in_decay(particles_in_decay);  
 	verbose() << "Categorising step 2" << endreq;
 	//Now to create a vector with the final mothers of all these mc particles.
-	MCParticleVector mc_mothers_final = get_mc_mothers(mc_particles_linked_to_decay);
+	MCParticleVector mc_mothers_final = get_mc_mothers(mc_particles_linked_to_decay,reconstructed_mother);
 	verbose() << "Categorising step 3" << endreq;
 	//First we test condition A;if it succeeds, we test conditions B->F else G->J 
 	//For a list of what the conditions are, see the respective test functions
