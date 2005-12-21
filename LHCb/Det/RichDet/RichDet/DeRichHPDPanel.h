@@ -4,7 +4,7 @@
  *
  *  Header file for detector description class : DeRichHPDPanel
  *
- *  $Id: DeRichHPDPanel.h,v 1.27 2005-12-19 17:05:02 cattanem Exp $
+ *  $Id: DeRichHPDPanel.h,v 1.28 2005-12-21 09:50:54 papanest Exp $
  *
  *  @author Antonis Papanestis a.papanestis@rl.ac.uk
  *  @date   2004-06-18
@@ -83,6 +83,21 @@ public:
   virtual ~DeRichHPDPanel();
 
   /**
+   * Retrieves reference to class identifier
+   * @return the class identifier for this class
+   */
+  const CLID& clID() const
+  {
+    return classID();
+  }
+
+  /**
+   * Retrieves reference to class identifier
+   * @return the class identifier for this class
+   */
+  static const CLID& classID();
+
+  /**
    * This is where most of the geometry is read and variables initialised
    *
    * @return Status of initialisation
@@ -110,8 +125,10 @@ public:
    *
    * @return The offset for the globalToPanel method
    */
-  virtual const double localOffset() const = 0;
-
+  inline const double localOffset() const
+  {
+    return m_panelColumnSideEdge;
+  }
 
   /**
    * Converts a Gaudi::XYZPoint in global coordinates to a RichSmartID.
@@ -195,7 +212,7 @@ public:
    * @return Global point.
    */
   virtual Gaudi::XYZPoint globalPosition( const Gaudi::XYZPoint& localPoint,
-                                          const Rich::Side side) const = 0;
+                                          const Rich::Side side) const;
 
 
   /**
@@ -216,45 +233,6 @@ public:
 protected:
 
   /**
-   * Returns the number of HPDs in the panel
-   */
-  virtual unsigned int PDMax() const = 0;
-
-  /**
-   * Returns the HPD row in the panel, given the HPD number
-   */
-  virtual unsigned int PDRow(const unsigned int PD) const = 0;
-
-  /**
-   * Returns the HPD column in the panel, given the HPD number
-   */
-  virtual unsigned int PDCol(const unsigned int PD) const = 0;
-
-  /**
-   * Returns the HPD at the next row/column depending on panel configurartion
-   */
-  virtual unsigned int HPDForNS() const = 0;
-
-  /**
-   * Returns an HPD number that can be used as the second point for the
-   * detection plane.
-   */
-  virtual unsigned int HPDForB() const = 0;
-
-  /**
-   * Returns an HPD number that can be used as the third point for the
-   * detection plane.
-   */
-  virtual unsigned int HPDForC() const = 0;
-
-  /**
-   * Converts an HPD row and column to a number corresponding
-   * to the position of this physical volume in the physical volumes vector
-   */
-  virtual unsigned int HPDRowColToNum(const unsigned int HPDRow,
-                                      const unsigned int HPDCol ) const = 0;
-
-  /**
    * Finds the HPD row and column that corresponds to the x,y coordinates
    * of a point in the panel. The row and column are retuned in the smartID.
    *
@@ -262,7 +240,7 @@ protected:
    * @retval true   HPD is found
    * @retval false  The point is outside the coverage of the HPDs.
    */
-  virtual bool findHPDRowCol(const Gaudi::XYZPoint& inPanel, LHCb::RichSmartID& id) const = 0;
+  virtual bool findHPDColAndPos(const Gaudi::XYZPoint& inPanel, LHCb::RichSmartID& id) const;
 
   /** Returns the name of this particular HPD panel
    *  @return HPD panel name
@@ -272,14 +250,13 @@ protected:
 
   // data
 
-  std::string m_name;              ///< The name of this HPD panel
-  unsigned int m_HPDRows;     ///< Number of HPD rows in the panel
-  unsigned int m_HPDColumns;  ///< Number of HPD columns in the panel
+  std::string m_name;           ///< The name of this HPD panel
+  unsigned int m_HPDColumns;    ///< Number of HPD columns in the panel
+  unsigned int m_HPDNumInCol;   ///< Number of HPDs in each column
+  unsigned int m_HPDMax;        ///< Total number of HPDs in this panel
 
-  /// for cdf type panels: number of HPDs in a big column
-  unsigned int m_HPDsInBigCol;
-  /// for cdf type panels: number of HPDs in two adjacent columns
-  unsigned int m_HPDsIn2Cols;
+  double m_HPDPitch;               ///< distance between HPDs
+  double m_HPDColPitch;            ///< distance between HPD columns
 
   unsigned int m_pixelRows;        /// Number of pixel rows
   unsigned int m_pixelColumns;     /// Number of pixel columns
@@ -304,9 +281,6 @@ protected:
   double m_siliconHalfLengthX;     ///< Half size (x) of silicon sensor
   double m_siliconHalfLengthY;     ///< Half size (y) of silicon sensor
 
-  double m_rowPitch;               ///< distance between HPD rows
-  double m_columnPitch;            ///< distance between HPD columns
-
   /// The demagnification factor of the HPD.  Element [0] is the linear
   /// term, and element[1] the non-linear term for small corrections.
   double m_deMagFactor[2];
@@ -314,8 +288,7 @@ protected:
   /// The following points are used to get the row and column pitch
   /// Centre of HPD 0
   Gaudi::XYZPoint m_HPD0Centre;
-  Gaudi::XYZPoint m_HPD1Centre;   ///< Centre of HPD 1
-  Gaudi::XYZPoint m_HPDNSCentre;  ///< Centre of HPD next set: either next row or next column
+  Gaudi::XYZPoint m_HPD_1_0_Centre;  ///< Centre of HPD at Col 1 position 0
 
   /// the top of the HPD window in silicon coordinates
   Gaudi::XYZPoint m_HPDTop;
@@ -333,10 +306,14 @@ protected:
   Gaudi::Plane3D m_localPlane2;
   Gaudi::XYZVector m_localPlaneNormal2;  ///< Normal vector of plane2
 
-  double m_detPlaneHorizEdge;     ///< Horizontal (x) edge of HPD coverage in the panel
-  double m_detPlaneVertEdge;      ///< Vertical (y) edge of HPD coverage in the panel
 
   Gaudi::Transform3D m_vectorTransf;  ///< Transform from global to panel coordinates
+
+  double m_panelColumnSideEdge;    ///< Edge of the panel along the columns
+  double m_panelStartColPosEven;   ///< Bottom/Start point of the even HPD columns
+  double m_panelStartColPosOdd;    ///< Bottom/Start point of the odd HPD columns
+  /// abs max of even and odd start points used as the edge across columns
+  double m_panelStartColPos;
 
 private:
 

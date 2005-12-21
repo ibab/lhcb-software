@@ -5,6 +5,9 @@
 !-----------------------------------------------------------------------------
 
 !========================= RichDet v9r0 2005-12-14 =========================
+! 2005-12-21 - Antonis Papanestis
+ - Redesign of the HPDPanel. Remove Rich1 & Rich2 HPDPanel classes
+
 ! 2005-12-19 - Marco Cattaneo
  - Pick up RochTraceMode.h from LHCbKernel and remove RichKernel dependency
 
