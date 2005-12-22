@@ -4,7 +4,7 @@
 <package name="MCEvent">
 
 <!-- **************************************************************************
-  * $Id: MCRichSegment.xml,v 1.3 2005-12-20 12:36:31 jonrob Exp $
+  * $Id: MCRichSegment.xml,v 1.4 2005-12-22 16:58:31 jonrob Exp $
   *****************************************************************************
   * XML-description of MCRichSegment class                                    *
   * author: Chris Jones   Christopher.Rob.Jones@cern.ch                       *
@@ -112,7 +112,29 @@
                    return sqrt((exitPoint()-entryPoint()).mag2());
                 </code>
         </method>
-        
+
+        <method
+                name  = "addToTrajectoryPoints"
+                const = "FALSE"
+                desc  = "Add given point to vector of trajectory points"
+                type  = "void">
+                <arg const="TRUE" name="point" type="Gaudi::XYZPoint"/>
+                <code>
+                   m_trajectoryPoints.push_back( point );
+                </code>
+        </method>
+
+        <method
+                name  = "addToTrajectoryMomenta"
+                const = "FALSE"
+                desc  = "Add given Momentum vector to vector of trajectory points"
+                type  = "void">
+                <arg const="TRUE" name="momentum" type="Gaudi::XYZVector"/>
+                <code>
+                   m_trajectoryMomenta.push_back( momentum );
+                </code>
+        </method>
+
         <attribute 
                 desc = "Bit packed field containing detector information" 
                 name = "historyCode" 
@@ -125,13 +147,13 @@
         <attribute 
                 name = "trajectoryPoints"
                 desc = "Vector of trajectory points through the radiator for this segment"  
-                type = "std::vector&lt;Gaudi::XYZPoint&gt;"
+                type = "std::vector&lt;Gaudi::XYZPoint &gt;"
         />
         
         <attribute 
                 name = "trajectoryMomenta"
                 desc = "The momentum vector of the particle for each trajectory step" 
-                type = "std::vector&lt;Gaudi::XYZVector&gt;"
+                type = "std::vector&lt;Gaudi::XYZVector &gt;"
         />
          
         <relation 
