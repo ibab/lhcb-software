@@ -1,4 +1,4 @@
-// $Id: RichExtendedInfo.opts,v 1.1 2005-12-16 14:55:59 gcorti Exp $
+// $Id: RichExtendedInfo.opts,v 1.2 2005-12-22 16:42:43 jonrob Exp $
   
 /** @file
  *
@@ -8,7 +8,8 @@
  *  @author G.Corti
  *  @date 2005-12-16
  */
-GetExtendedMCRichInfoAlg.convertMCRichExtendedInfo = true;  
+
+//GetExtendedMCRichInfoAlg.convertMCRichExtendedInfo = true;  
 GiGaGetHitsAlg.RichOpticalPhotons = "/Event/MC/Rich/OpticalPhotons";
 GiGaGetHitsAlg.RichSegments       = "/Event/MC/Rich/Segments";
 GiGaGetHitsAlg.RichTracks         = "/Event/MC/Rich/Tracks";
