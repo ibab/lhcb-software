@@ -4,7 +4,7 @@
  *
  *  Header file for detector description class : DeRichHPDPanel
  *
- *  $Id: DeRichHPDPanel.h,v 1.28 2005-12-21 09:50:54 papanest Exp $
+ *  $Id: DeRichHPDPanel.h,v 1.29 2005-12-22 14:29:06 papanest Exp $
  *
  *  @author Antonis Papanestis a.papanestis@rl.ac.uk
  *  @date   2004-06-18
@@ -288,7 +288,6 @@ protected:
   /// The following points are used to get the row and column pitch
   /// Centre of HPD 0
   Gaudi::XYZPoint m_HPD0Centre;
-  Gaudi::XYZPoint m_HPD_1_0_Centre;  ///< Centre of HPD at Col 1 position 0
 
   /// the top of the HPD window in silicon coordinates
   Gaudi::XYZPoint m_HPDTop;

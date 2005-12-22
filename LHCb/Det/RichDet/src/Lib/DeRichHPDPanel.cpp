@@ -4,7 +4,7 @@
  *
  *  Implementation file for detector description class : DeRichHPDPanel
  *
- *  $Id: DeRichHPDPanel.cpp,v 1.30 2005-12-21 09:50:54 papanest Exp $
+ *  $Id: DeRichHPDPanel.cpp,v 1.31 2005-12-22 14:29:06 papanest Exp $
  *
  *  @author Antonis Papanestis a.papanestis@rl.ac.uk
  *  @date   2004-06-18
@@ -91,6 +91,7 @@ StatusCode DeRichHPDPanel::initialize()
     msg << MSG::ERROR << "Error initializing HPD panel " << name() << endreq;
     return StatusCode::FAILURE;
   }
+  bool rich1 = (m_rich == Rich::Rich1);
 
   msg << MSG::DEBUG << "------- Initializing HPD Panel: " << rich()
       << " Panel" << (int)side() << " -------" << endmsg;
@@ -135,6 +136,44 @@ StatusCode DeRichHPDPanel::initialize()
         << endmsg;
   }
 
+  // read the position of the 1st HPD in columns 0 and 1
+  std::vector<double> startColPos = param<std::vector<double> >("StartColumnPosition");
+  // work in u,v coordinates: u is across a column, v is along
+  double HPD00u(0.0), HPD00v(0.0), HPD10u(0.0), HPD10v(0.0);
+  if ( rich1 ) {
+    HPD00u = startColPos[1];
+    HPD00v = startColPos[0];
+    HPD10u = startColPos[3];
+    HPD10v = startColPos[2];
+  }
+  else {
+    HPD00u = startColPos[0];
+    HPD00v = startColPos[1];
+    HPD10u = startColPos[2];
+    HPD10v = startColPos[3];
+  }
+
+  if ( HPD00v > 0.0 ) m_HPDPitch = -m_HPDPitch;
+  if ( HPD00u > 0.0 ) m_HPDColPitch = -m_HPDColPitch;
+  m_panelColumnSideEdge = HPD00u - 0.5*m_HPDColPitch;
+
+  msg << MSG::DEBUG << "HPDPitch:" << m_HPDPitch << " panelColumnSideEdge:"
+      << m_panelColumnSideEdge << endmsg;
+
+  m_panelStartColPosEven = HPD00v - 0.5*m_HPDPitch;
+  m_panelStartColPosOdd = HPD10v - 0.5*m_HPDPitch;
+
+  // use the abs(largest) value as an ovearll panel edge
+  m_panelStartColPos = fabs( m_panelStartColPosEven );
+  if ( fabs( m_panelStartColPosOdd ) > m_panelStartColPos )
+    m_panelStartColPos = fabs( m_panelStartColPosOdd );
+
+  msg << MSG::DEBUG << "panelStartColPosEven:" << m_panelStartColPosEven
+      << " panelStartColPosOdd:" << m_panelStartColPosOdd
+      << " m_panelStartColPos:" << m_panelStartColPos
+      << endreq;
+
+
   SmartDataPtr<TabulatedProperty>
     HPDdeMag(dataSvc(),
              "/dd/Materials/RichMaterialTabProperties/HpdDemagnification");
@@ -165,13 +204,6 @@ StatusCode DeRichHPDPanel::initialize()
 
   // HPD #0 coordinates
   m_HPD0Centre = pvHPDMaster0->toMother(zero);
-  if ( m_HPD0Centre.x() > 0.0 ) m_HPDPitch = -m_HPDPitch;
-  if ( m_HPD0Centre.y() > 0.0 ) m_HPDColPitch = -m_HPDColPitch;
-  m_panelColumnSideEdge = -0.5*m_HPDColumns * m_HPDColPitch;
-
-  msg << MSG::DEBUG << "HPDPitch:" << m_HPDPitch << " panelColumnSideEdge:"
-      << m_panelColumnSideEdge << endmsg;
-
   msg << MSG::DEBUG << "Centre of HPDPanel:" << geometry()->toGlobal(zero)
       <<endmsg;
   msg << MSG::DEBUG<< "Centre of HPD#0:" << geometry()->toGlobal(m_HPD0Centre)
@@ -186,40 +218,6 @@ StatusCode DeRichHPDPanel::initialize()
   msg << MSG::VERBOSE << "Centre of HPD#" << 2*m_HPDNumInCol-1 << geometry()->lvolume()->
     pvolume(2*m_HPDNumInCol-1)->toMother( zero ) << endmsg;
 
-
-  //get the HPD at next column
-  const IPVolume* pvHPD_1_0_Master = geometry()->lvolume()->pvolume(m_HPDNumInCol);
-  m_HPD_1_0_Centre = pvHPD_1_0_Master->toMother(zero);
-
-
-  // calculate the ideal positions of the HPDs at the start of the column
-  // This is needed in order to find the correct HPD from a position in the panel
-  // Odd and even columns differ by 1/2 HPDPitch
-  int pitchSign = ( m_HPDPitch > 0.0 ? 1 : -1 );
-  bool firstColLower;
-  if ( m_rich == Rich::Rich1 )
-    firstColLower = ( m_HPD_1_0_Centre.x() > m_HPD0Centre.x() );
-  else
-    firstColLower = ( m_HPD_1_0_Centre.y() > m_HPD0Centre.y() );
-
-  if ( firstColLower ) {
-    m_panelStartColPosEven = -(m_HPDNumInCol/2 + pitchSign*0.25)*m_HPDPitch;
-    m_panelStartColPosOdd = m_panelStartColPosEven + pitchSign*0.5*m_HPDPitch;
-  }
-  else {
-    m_panelStartColPosOdd = -(m_HPDNumInCol/2 + pitchSign*0.25)*m_HPDPitch;
-    m_panelStartColPosEven = m_panelStartColPosOdd + pitchSign*0.5*m_HPDPitch;
-  }
-
-  // use the abs(largest) value as an ovearll panel edge
-  m_panelStartColPos = fabs( m_panelStartColPosEven );
-  if ( fabs( m_panelStartColPosOdd ) > m_panelStartColPos )
-    m_panelStartColPos = fabs( m_panelStartColPosOdd );
-
-  msg << MSG::DEBUG << "panelStartColPosEven:" << m_panelStartColPosEven
-      << " panelStartColPosOdd:" << m_panelStartColPosOdd
-      << " m_panelStartColPos:" << m_panelStartColPos
-      << endreq;
 
   // get the pv and the solid for the HPD quartz window
   const IPVolume* pvWindow0 = pvHPDSMaster0->lvolume()->
