@@ -7,9 +7,9 @@
 #include "G4Allocator.hh"
 #include "G4ThreeVector.hh"
 
-// This is the Geant4 hit class for the LHCb-RICH. 
-// The coordinates of the PreStepPoint at the entrance to the 
-// SiDet sensitive detector are stored as the Rich hit coordinates 
+// This is the Geant4 hit class for the LHCb-RICH.
+// The coordinates of the PreStepPoint at the entrance to the
+// SiDet sensitive detector are stored as the Rich hit coordinates
 // in this class.
 
 class RichG4Hit : public  GaussHitBase {
@@ -32,69 +32,69 @@ public:
 
 private:
 
-  G4double m_edep;           //energy deposited in the Si Det.
-  G4ThreeVector m_GlobalPos; // Global coordinate in the LHCb system.
-  G4ThreeVector m_LocalPos;  //Local coordinate in the HPD System.
-  G4ThreeVector m_GlobalPEOriginPos; // Global coord of Photoelectron origin
-  G4ThreeVector m_LocalPEOriginPos; // Local coord of Photoelectron origin
-  G4int m_CurRichNum;        //this is 0 for RICH1 and 1 for RICH2
-  G4int m_CurSectorNum;      // this is the Quadrant or Half of a RICH.
-  G4int m_CurHpdNum;         // Global Hpd number within a RICH.
-  G4int m_CurPixelXNum;       // Pixel Column number (0-31) within an HPD.
-  G4int m_CurPixelYNum;       // Pixel Row number (0-31) within an HPD.
-  G4int m_OptPhotID;          // ID of the optical photon.
-  G4int m_ChTrackID;          // ID of the mother of the optical photon.
-  G4int m_PETrackID;          // ID of the track(normally a photoelectron)
-  G4int m_ChTrackPDG;         // PDG code of the mother of the optical photon.
-  G4int m_PETrackPDG;          // PDG code of the track
-  G4int m_RadiatorNumber;      // radiator number (0,1,2) which produced the photon.
-  G4ThreeVector m_PhotEmisPt;  //emiss pt coord of the photon.
-  G4double m_PhotEnergyAtProd;  //Photon energy in MeV at Ckv Production.
-  G4double m_ThetaCkvAtProd;    // Cherenkov Angle Theta (rad) at Ckv production.
-  G4double m_PhiCkvAtProd;      // Cherenkov Angle Phi (rad) at Ckv production.
-  G4double m_ChTrackTotMom;   //Total momentum (MeV) of the mother of Photon at Ckv Production.
-  G4ThreeVector m_ChTrackMomVect; // Three Momentum of the mother of Photon at Ckv Production.
+  G4double m_edep;           ///< energy deposited in the Si Det.
+  G4ThreeVector m_GlobalPos; ///<  Global coordinate in the LHCb system.
+  G4ThreeVector m_LocalPos;  ///< Local coordinate in the HPD System.
+  G4ThreeVector m_GlobalPEOriginPos; ///<  Global coord of Photoelectron origin
+  G4ThreeVector m_LocalPEOriginPos; ///<  Local coord of Photoelectron origin
+  G4int m_CurRichNum;        ///< this is 0 for RICH1 and 1 for RICH2
+  G4int m_CurSectorNum;      ///< this is the Quadrant or Half of a RICH.
+  G4int m_CurHpdNum;         ///< Global Hpd number within a RICH.
+  G4int m_CurPixelXNum;       ///< Pixel Column number (0-31) within an HPD.
+  G4int m_CurPixelYNum;       ///< Pixel Row number (0-31) within an HPD.
+  G4int m_OptPhotID;          ///< ID of the optical photon.
+  G4int m_ChTrackID;          ///< ID of the mother of the optical photon.
+  G4int m_PETrackID;          ///< ID of the track(normally a photoelectron)
+  G4int m_ChTrackPDG;         ///< PDG code of the mother of the optical photon.
+  G4int m_PETrackPDG;          ///< PDG code of the track
+  G4int m_RadiatorNumber;      ///< radiator number (0,1,2) which produced the photon.
+  G4ThreeVector m_PhotEmisPt;  ///< emiss pt coord of the photon.
+  G4double m_PhotEnergyAtProd;  ///< Photon energy in MeV at Ckv Production.
+  G4double m_ThetaCkvAtProd;    ///< Cherenkov Angle Theta (rad) at Ckv production.
+  G4double m_PhiCkvAtProd;      ///< Cherenkov Angle Phi (rad) at Ckv production.
+  G4double m_ChTrackTotMom;   ///< Total momentum (MeV) of the mother of Photon at Ckv Production.
+  G4ThreeVector m_ChTrackMomVect; ///< Three Momentum of the mother of Photon at Ckv Production.
   // Only with RichVerboseTag mode
-  G4double m_RichHitGlobalTime;    //Global time for RichHit.
-  G4double m_RichChTrackMass;          //PDG mass of the Mother of the optical photon.
-  // Only with RichVerboseTag mode
-
-  G4ThreeVector m_ChTrackCkvPreStepPos; // Prestep position of charged track during cherenkov  step.
+  G4double m_RichHitGlobalTime;    ///< Global time for RichHit.
+  G4double m_RichChTrackMass;          ///< PDG mass of the Mother of the optical photon.
   // Only with RichVerboseTag mode
 
-  G4ThreeVector m_ChTrackCkvPostStepPos; // Poststep position of charged track during cherenkov  step.
+  G4ThreeVector m_ChTrackCkvPreStepPos; ///< Prestep position of charged track during cherenkov  step.
   // Only with RichVerboseTag mode
 
-  G4int m_OptPhotRayleighFlag;           // number of times optical photon is Rayleigh scattered.
+  G4ThreeVector m_ChTrackCkvPostStepPos; ///< Poststep position of charged track during cherenkov  step.
+  // Only with RichVerboseTag mode
+
+  G4int m_OptPhotRayleighFlag;           ///< number of times optical photon is Rayleigh scattered.
   // Zero means not Rayleigh scattered.
   // Only with RichVerboseTag mode
 
-  G4ThreeVector m_OptPhotAgelExitPos;   // Position where photon exited from Aerogel.
+  G4ThreeVector m_OptPhotAgelExitPos;   ///< Position where photon exited from Aerogel.
   // Only with RichVerboseTag mode and RichStepAnalysis4
 
 
-  G4ThreeVector m_Mirror1PhotonReflPosition; // Photon Reflection Point on Spherical mirror which is mirror1.
+  G4ThreeVector m_Mirror1PhotonReflPosition; ///< Photon Reflection Point on Spherical mirror which is mirror1.
   // Only with RichVerboseTag mode and RichStepAnalysis5
 
-  G4ThreeVector m_Mirror2PhotonReflPosition; // Photon Reflection Point on Flat mirror which is mirror2.
+  G4ThreeVector m_Mirror2PhotonReflPosition; ///< Photon Reflection Point on Flat mirror which is mirror2.
   // Only with RichVerboseTag mode and RichStepAnalysis5
 
-  G4int m_Mirror1PhotonDetectorCopyNum;      // For the reflection point on Sperical mirror, this is 
-                                            //  1000* mirrortype + 100*richdetnum+ MirrorCopyNum
-                                            // where mirrortype =0 for spherical mirror.
-                                            // richdetnum=0 for rich1 and  1 for rich2.
-                                            // MirrorCopyNum = copy number of the spherical mirror.
-                                    // Only with RichVerboseTag mode and RichStepAnalysis5
+  G4int m_Mirror1PhotonDetectorCopyNum;      ///< For the reflection point on Sperical mirror, this is
+  //  1000* mirrortype + 100*richdetnum+ MirrorCopyNum
+  // where mirrortype =0 for spherical mirror.
+  // richdetnum=0 for rich1 and  1 for rich2.
+  // MirrorCopyNum = copy number of the spherical mirror.
+  // Only with RichVerboseTag mode and RichStepAnalysis5
 
 
-  G4int m_Mirror2PhotonDetectorCopyNum;      // For the reflection point on Flat mirror, this is
-                                            // 1000*mirrortype + 100*richdetnum+ MirrorCopyNum
-                                            // where mirrortype = 1 for flat mirror.
-                                            // richdetnum=0 for rich1 and  1 for rich2.
-                                            // MirrorCopyNum = copy number of the flat mirror.
-                                    // Only with RichVerboseTag mode and RichStepAnalysis5
+  G4int m_Mirror2PhotonDetectorCopyNum;      ///< For the reflection point on Flat mirror, this is
+  // 1000*mirrortype + 100*richdetnum+ MirrorCopyNum
+  // where mirrortype = 1 for flat mirror.
+  // richdetnum=0 for rich1 and  1 for rich2.
+  // MirrorCopyNum = copy number of the flat mirror.
+  // Only with RichVerboseTag mode and RichStepAnalysis5
 
-  G4int m_RichVerboseHitInfo;        // if 0 the variables with  RichVerboseTag are disabled and have
+  G4int m_RichVerboseHitInfo;        ///< if 0 the variables with  RichVerboseTag are disabled and have
   // no meaningful values. If not 0 they have the expected values.
 
 public:
@@ -249,23 +249,23 @@ public:
   { return m_OptPhotAgelExitPos; }
 
   inline void  setMirror1PhotonReflPosition( const G4ThreeVector & aMirror1PhotonReflPosition )
-    {m_Mirror1PhotonReflPosition= aMirror1PhotonReflPosition;}
+  {m_Mirror1PhotonReflPosition= aMirror1PhotonReflPosition;}
 
-  inline const G4ThreeVector & Mirror1PhotonReflPosition() const 
-    {return   m_Mirror1PhotonReflPosition;}
+  inline const G4ThreeVector & Mirror1PhotonReflPosition() const
+  {return   m_Mirror1PhotonReflPosition;}
 
   inline void  setMirror2PhotonReflPosition( const G4ThreeVector & aMirror2PhotonReflPosition )
-    {m_Mirror2PhotonReflPosition= aMirror2PhotonReflPosition;}
+  {m_Mirror2PhotonReflPosition= aMirror2PhotonReflPosition;}
 
-  inline const G4ThreeVector & Mirror2PhotonReflPosition() const 
-    {return   m_Mirror2PhotonReflPosition;}
+  inline const G4ThreeVector & Mirror2PhotonReflPosition() const
+  {return   m_Mirror2PhotonReflPosition;}
 
-  inline void setMirror1PhotonDetectorCopyNum(const G4int aMirror1PhotonDetectorCopyNum) 
-    {m_Mirror1PhotonDetectorCopyNum = aMirror1PhotonDetectorCopyNum;}
+  inline void setMirror1PhotonDetectorCopyNum(const G4int aMirror1PhotonDetectorCopyNum)
+  {m_Mirror1PhotonDetectorCopyNum = aMirror1PhotonDetectorCopyNum;}
   inline G4int Mirror1PhotonDetectorCopyNum() const {return m_Mirror1PhotonDetectorCopyNum;}
 
-  inline void setMirror2PhotonDetectorCopyNum(const G4int aMirror2PhotonDetectorCopyNum) 
-    {m_Mirror2PhotonDetectorCopyNum = aMirror2PhotonDetectorCopyNum;}
+  inline void setMirror2PhotonDetectorCopyNum(const G4int aMirror2PhotonDetectorCopyNum)
+  {m_Mirror2PhotonDetectorCopyNum = aMirror2PhotonDetectorCopyNum;}
   inline G4int Mirror2PhotonDetectorCopyNum() const {return m_Mirror2PhotonDetectorCopyNum;}
 
   inline void setRichVerboseHitInfo( const G4int aVerboseValue )

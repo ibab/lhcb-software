@@ -1,4 +1,4 @@
-// $Id: GetMCRichOpticalPhotonsAlg.cpp,v 1.1 2005-12-22 16:42:43 jonrob Exp $
+// $Id: GetMCRichOpticalPhotonsAlg.cpp,v 1.2 2005-12-22 17:38:47 jonrob Exp $
 
 // local
 #include "GetMCRichOpticalPhotonsAlg.h"
@@ -77,10 +77,10 @@ StatusCode GetMCRichOpticalPhotonsAlg::execute()
 
       G4SDManager * fSDM = G4SDManager::GetSDMpointer();
       if ( !fSDM ) return Error( "NULL G4SDManager pointer !!" );
-      int collectionID = fSDM->GetCollectionID(colName);
+      const int collectionID = fSDM->GetCollectionID(colName);
       if ( -1 == collectionID ) return StatusCode::SUCCESS;
 
-      RichG4HitsCollection * myCollection =
+      const RichG4HitsCollection * myCollection =
         dynamic_cast<RichG4HitsCollection*>(hitscollections->GetHC(collectionID));
       if ( 0 == myCollection ) return StatusCode::SUCCESS;
 
@@ -93,13 +93,20 @@ StatusCode GetMCRichOpticalPhotonsAlg::execute()
       {
 
         // Pointer to G4 hit
-        RichG4Hit * g4hit = (*myCollection)[ihit];
+        const RichG4Hit * g4hit = (*myCollection)[ihit];
+        if ( !g4hit ) return Error( "Null RichG4Hit pointer" );
 
         // New optical photon object
         MCRichOpticalPhoton * mcPhoton = new MCRichOpticalPhoton();
-
         // insert in container
         photons->insert( mcPhoton, globalKey );
+
+        // Find associated MCRichHit
+        const MCRichHit * mchit = (*mcHits)[globalKey];
+
+        // SmartRef to associated MCRichHit
+        mcPhoton->setMcRichHit( mchit );
+        if ( !mchit ) return Error( "Null MCRichHit pointer" );
 
         // Copy required info from RichG4Hit to RichMCOpticalPhoton
 
@@ -125,39 +132,12 @@ StatusCode GetMCRichOpticalPhotonsAlg::execute()
         // Flat mirror reflection point
         mcPhoton->setFlatMirrorReflectPoint( Gaudi::XYZPoint(g4hit->Mirror2PhotonReflPosition()) );
 
-        // Rich detector information
-        if ( g4hit->GetCurRichDetNum() < 0 ) {
-          //  mcPhoton->setRichInfoValid( false );
-        } else {
-          //  mcPhoton->setRichInfoValid( true );
-          mcPhoton->setRich(static_cast<Rich::DetectorType>(g4hit->GetCurRichDetNum()));
-        }
-
-        // Radiator information
-        if ( g4hit->GetRadiatorNumber() < 0 ) {
-          //  mcPhoton->setRadiatorInfoValid( false );
-        } else {
-          //  mcPhoton->setRadiatorInfoValid( true );
-          mcPhoton->setRadiator(static_cast<Rich::RadiatorType>(g4hit->GetRadiatorNumber()));
-        }
-
-        // charged track hitting HPD flag
-        mcPhoton->setChargedTrack( g4hit->GetChTrackID() < 0 );
-
-        // Rayleigh scattered flag
-        mcPhoton->setScatteredPhoton( g4hit->OptPhotRayleighFlag() > 0 );
-
-        // Overall background flag
-        mcPhoton->setBackgroundHit( mcPhoton->chargedTrack() ||
-                                    mcPhoton->scatteredPhoton());
-        // || !mcPhoton->richInfoValid() );
-
-        // SmartRef to associated MCRichHit
-        mcPhoton->setMcRichHit( (*mcHits)[globalKey] );
+        // copy history flags from MCRichHit
+        mcPhoton->setHistoryCode( mchit->historyCode() );
 
         // Count photons
-        if      ( Rich::Rich1 == mcPhoton->rich() ) ++m_hitTally[Rich::Rich1];
-        else if ( Rich::Rich2 == mcPhoton->rich() ) ++m_hitTally[Rich::Rich2];
+        if      ( Rich::Rich1 == mcPhoton->rich() ) { ++m_hitTally[Rich::Rich1]; }
+        else if ( Rich::Rich2 == mcPhoton->rich() ) { ++m_hitTally[Rich::Rich2]; }
 
         // finally, increment the key
         ++globalKey;

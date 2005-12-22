@@ -1,4 +1,4 @@
-// $Id: GetMCRichSegmentsAlg.cpp,v 1.1 2005-12-22 16:42:43 jonrob Exp $
+// $Id: GetMCRichSegmentsAlg.cpp,v 1.2 2005-12-22 17:38:47 jonrob Exp $
 
 // local
 #include "GetMCRichSegmentsAlg.h"
@@ -104,7 +104,7 @@ StatusCode GetMCRichSegmentsAlg::execute()
       {
 
         // Pointer to G4 hit
-        RichG4Hit * g4hit = (*myCollection)[ihit];
+        const RichG4Hit * g4hit = (*myCollection)[ihit];
 
         if ( g4hit->GetRadiatorNumber() >= 0 )
         {
@@ -112,7 +112,7 @@ StatusCode GetMCRichSegmentsAlg::execute()
             static_cast<Rich::RadiatorType>(g4hit->GetRadiatorNumber());
 
           // get MCParticle information
-          const int traid = g4hit->GetTrackID();
+          const int traid = const_cast<RichG4Hit*>(g4hit)->GetTrackID();
           const MCParticle * mcPart = table[traid].particle();
           if ( !mcPart )
           {

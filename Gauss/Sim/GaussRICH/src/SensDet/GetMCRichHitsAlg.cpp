@@ -1,4 +1,4 @@
-// $Id: GetMCRichHitsAlg.cpp,v 1.2 2005-12-22 16:42:43 jonrob Exp $
+// $Id: GetMCRichHitsAlg.cpp,v 1.3 2005-12-22 17:38:47 jonrob Exp $
 
 // local
 #include "GetMCRichHitsAlg.h"
@@ -93,7 +93,7 @@ StatusCode GetMCRichHitsAlg::execute()
 
       G4SDManager * fSDM = G4SDManager::GetSDMpointer();
       if ( !fSDM ) return Error( "NULL G4SDManager pointer !!" );
-      int collectionID = fSDM->GetCollectionID(colName);
+      const int collectionID = fSDM->GetCollectionID(colName);
       if ( -1 == collectionID )
       {
         return Warning( "RICH Collection "+colName+" : ID = -1", StatusCode::SUCCESS );
@@ -115,7 +115,8 @@ StatusCode GetMCRichHitsAlg::execute()
       {
 
         // Pointer to G4 hit
-        RichG4Hit * g4hit = (*myCollection)[ihit];
+        const RichG4Hit * g4hit = (*myCollection)[ihit];
+        if ( !g4hit ) return Error( "Null RichG4Hit pointer" );
 
         // Make new persistent hit object
         MCRichHit * mchit = new MCRichHit();
@@ -136,20 +137,22 @@ StatusCode GetMCRichHitsAlg::execute()
         // time of flight
         mchit->setTimeOfFlight( g4hit->RichHitGlobalTime() );
 
+        // Photon detector number
+        // CRJ : Note to Sajan - Need to add something meaningfull here.
+        mchit->setSensDetID( -1 );
+
+        // History flags
         // Rich detector information
         if ( g4hit->GetCurRichDetNum() < 0 )
         {
           mchit->setRichInfoValid( false );
           Warning( "Found RichG4Hit with invalid RICH flag" );
-        } else {
+        } 
+        else 
+        {
           mchit->setRichInfoValid( true );
           mchit->setRich(static_cast<Rich::DetectorType>(g4hit->GetCurRichDetNum()));
         }
-
-        // Photon detector number
-        // CRJ : Note to Sajan - Need to add something meaningfull here.
-        mchit->setSensDetID( -1 );
-
         // Radiator information
         if ( g4hit->GetRadiatorNumber() < 0 ) 
         {
@@ -161,13 +164,10 @@ StatusCode GetMCRichHitsAlg::execute()
           mchit->setRadiatorInfoValid( true );
           mchit->setRadiator(static_cast<Rich::RadiatorType>(g4hit->GetRadiatorNumber()));
         }
-
         // charged track hitting HPD flag
         mchit->setChargedTrack( g4hit->GetChTrackID() < 0 );
-
         // Rayleigh scattered flag
         mchit->setScatteredPhoton( g4hit->OptPhotRayleighFlag() > 0 );
-
         // Overall background flag
         mchit->setBackgroundHit( mchit->chargedTrack() ||
                                  mchit->scatteredPhoton() ||
@@ -190,8 +190,8 @@ StatusCode GetMCRichHitsAlg::execute()
           }
         */
 
-        // fill reference to MCParticle
-        int trackID = g4hit->GetTrackID();
+        // fill reference to MCParticle (need to const cast as method is not const !!)
+        const int trackID = const_cast<RichG4Hit*>(g4hit)->GetTrackID();
         const MCParticle * mcPart = table[trackID].particle();
         if ( mcPart )
         {
