@@ -19,6 +19,7 @@
 #include "GaudiKernel/SmartDataPtr.h" // needed for MCTrackInfo
 #include "MCTools/MCTrackInfo.h"
 #include "Event/GenMCLink.h"
+#include "DaVinciMCTools/IBackgroundCategory.h"
 #endif
 #include "Event/TrgVertex.h"
 #include "Event/TrgCaloCluster.h"
@@ -55,6 +56,7 @@ DecayChainNTuple::DecayChainNTuple( const std::string& name,
     , m_IPTool(0)
   //, m_pLifetimeFitter(0)
 #ifdef MCCheck
+    , m_bkgCategory(0)
     , m_pMCDKFinder(0)
     , m_pAsctLinks(0)
     , m_pCompositeAsct(0)
@@ -137,6 +139,13 @@ StatusCode DecayChainNTuple::initialize() {
   }
 
 #ifdef MCCheck
+
+  m_bkgCategory = tool<IBackgroundCategory>("BackgroundCategory", this);
+  if(!m_bkgCategory){
+    fatal() << "Unable to retrieve BackgroundCategory tool" << endreq;
+    return StatusCode::FAILURE;
+  }
+
   // Retrieve the MCDecayFinder
   m_pMCDKFinder = tool<IMCDecayFinder>("MCDecayFinder",this);
   if(!m_pMCDKFinder){
@@ -975,6 +984,7 @@ StatusCode DecayChainNTuple::BookNTuple(std::vector<Particle*>& mothervec) {
         // NTuple global variables
         sc = nt->addItem("Event", m_eventNumber);
         sc = nt->addItem("Run", m_runNumber);
+        sc = nt->addItem("nCand", m_nCand, 0, 10000);
         sc = nt->addItem("nRecoPV", m_nRecoPV, 0, 40);
         sc = nt->addIndexedItem("RecoPVx", m_nRecoPV, m_RecoPVx);
         sc = nt->addIndexedItem("RecoPVy", m_nRecoPV, m_RecoPVy);
@@ -986,6 +996,7 @@ StatusCode DecayChainNTuple::BookNTuple(std::vector<Particle*>& mothervec) {
         sc = nt->addIndexedItem("MCPVz", m_nMCPV, m_MCPVz);
         // Is the MCPV visible?
         sc = nt->addIndexedItem("VisMCPV", m_nMCPV, m_VisMCPV);
+        sc = nt->addIndexedItem("bkgCat", m_nCand, m_bkgCat);
 #endif
         sc = nt->addItem("L0Decision", m_L0Decision);
         sc = nt->addItem("L1Decision", m_L1Decision);
@@ -1502,7 +1513,14 @@ StatusCode DecayChainNTuple::WriteNTuple(std::vector<Particle*>& mothervec) {
       imother++){
 
     debug() << "Mother ID = " << (*imother)->particleID().pid() << endreq;
-    
+
+#ifdef MCCheck   
+    IBackgroundCategory::categories cat = m_bkgCategory->category(*imother);
+    debug() << "Result of BackgroundCategory is: " << cat << endreq;
+    m_bkgCat[m_nCand] = cat;
+    m_nCand++;
+#endif
+
     // Get all the decay members (should be flagged)
     std::vector<Particle*> Children;
     std::vector<Particle*>::iterator ichild;

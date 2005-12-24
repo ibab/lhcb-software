@@ -1,7 +1,15 @@
-! $Id: release.notes,v 1.88 2005-12-21 13:10:40 gligorov Exp $
+! $Id: release.notes,v 1.89 2005-12-24 16:55:17 lfernan Exp $
 ! Package     : DaVinciMCTools
 ! Responsible : P. Koppenburg
 !=============================================================================
+
+! 2005-12-24 - Luis Fernandez & Jeremie Borel
+ - src/PrintBackgroundCategory.{h,cpp}
+   . New features: print trees, MC dump, filtering
+ - options/DVBkgCatBs2PhiEtac.opts
+   . Adapt to above.
+ - src/DecayChainNTuple.{h,cpp}
+   . Add background category
 
 ! 2005-12-21 - V. Gligorov
   - src/BackgroundCategory.cpp

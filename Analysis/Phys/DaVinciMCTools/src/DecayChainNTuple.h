@@ -144,6 +144,8 @@ private:
   // ILifetimeFitter *m_pLifetimeFitter;
 
 #ifdef MCCheck
+  IBackgroundCategory *m_bkgCategory;
+
   IMCDecayFinder* m_pMCDKFinder;
   // Ref. to link associator
   Particle2MCLinksAsct::IAsct* m_pAsctLinks;
@@ -194,6 +196,7 @@ private:
 
   // NTuple global variables
   NTuple::Item<long> m_eventNumber,m_runNumber;
+  NTuple::Item<long> m_nCand;
   NTuple::Item<long> m_nRecoPV;
   // All reconstructed primary vertices coordinates
   NTuple::Array<float> m_RecoPVx;
@@ -249,6 +252,7 @@ private:
   NTuple::Array<float> m_MCPVz;
   // Is the MCPV visible?
   NTuple::Array<long> m_VisMCPV;
+  NTuple::Array<long> m_bkgCat;
 #endif
 
   //-----------------------------------------------------------------------------

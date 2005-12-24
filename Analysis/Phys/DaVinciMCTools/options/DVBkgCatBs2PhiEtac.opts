@@ -11,7 +11,6 @@ Bs2Phi2KK_Etac2PiPiPiPiForPreselBs2PhiEtac.MotherFilter.VtxIsolationFilterCriter
 Bs2Phi2KK_Etac2KKPiPiForPreselBs2PhiEtac.MotherFilter.VtxIsolationFilterCriterion.NTracks = -1;
 Bs2Phi2KK_Etac2KKKKForPreselBs2PhiEtac.MotherFilter.VtxIsolationFilterCriterion.NTracks = -1;
 
-// LUIS
 ApplicationMgr.TopAlg += {"PrintBackgroundCategory/BkgCatBs2PhiEtac"};
 
 BkgCatBs2PhiEtac.OutputLevel = 2;
@@ -27,10 +26,18 @@ Particle2MCWithChi2BkgCatBs2PhiEtac.InputData = {"Phys/CombinedForPreselBs2PhiEt
                                                  "Phys/FilterParticlesForPreselBs2PhiEtac/Particles", 
                                                  "Phys/TrueBs2PhiEtacTracks/Particles"};
 
+BkgCatBs2PhiEtac.DebugTool.Information = "Name E M P Px Py Pz Pt phi Vz";
+BkgCatBs2PhiEtac.PrintTree = false;
+BkgCatBs2PhiEtac.DumpMCEvent = false;
+ 
+// BkgCatBs2PhiEtac.FilterCategoryNames ={"Signal", "Reflection"};
+// BkgCatBs2PhiEtac.FilterCategoryTypes ={0};
+// BkgCatBs2PhiEtac.FlipResult = true;
+
 
 // Number of events to process and skip
-ApplicationMgr.EvtMax    = 326 ;
-EventSelector.FirstEvent = 0;
+ApplicationMgr.EvtMax    = -1;
+EventSelector.FirstEvent = 1;
 EventSelector.PrintFreq  = 1;
 
 EventSelector.Input   = {};
