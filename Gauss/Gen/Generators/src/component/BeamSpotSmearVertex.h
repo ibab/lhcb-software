@@ -1,4 +1,4 @@
-// $Id: BeamSpotSmearVertex.h,v 1.3 2005-12-12 16:06:20 robbep Exp $
+// $Id: BeamSpotSmearVertex.h,v 1.4 2005-12-31 17:31:24 robbep Exp $
 #ifndef GENERATORS_BEAMSPOTSMEARVERTEX_H 
 #define GENERATORS_BEAMSPOTSMEARVERTEX_H 1
 
@@ -33,7 +33,7 @@ public:
    *  Gaussian smearing of spatial position of primary event truncated
    *  at a given number of sigma. 
    */
-  virtual StatusCode smearVertex( HepMCEvent * theEvent ) ;
+  virtual StatusCode smearVertex( LHCb::HepMCEvent * theEvent ) ;
   
  private:
   /// Width of the smearing along the x-axis (set by job options).

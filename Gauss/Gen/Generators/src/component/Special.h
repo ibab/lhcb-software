@@ -1,4 +1,4 @@
-// $Id: Special.h,v 1.3 2005-12-14 22:16:42 robbep Exp $
+// $Id: Special.h,v 1.4 2005-12-31 17:32:01 robbep Exp $
 #ifndef GENERATORS_SPECIAL_H 
 #define GENERATORS_SPECIAL_H 1
 
@@ -17,16 +17,16 @@
  *  @date   2005-11-14
  */
 class Special : public ExternalGenerator {
-public:
+ public:
   /// Standard constructor
   Special( const std::string& type, const std::string& name,
            const IInterface* parent);
-
+  
   virtual ~Special( ); ///< Destructor
-
+  
   /// Initialize method
   virtual StatusCode initialize( ) ;
-
+  
   /** Generate a single interaction (No Pile-up for the moment.
    *  Implements ISampleGenerationTool::generate.
    *  Accepts all events generated with the IProductionTool
@@ -34,8 +34,8 @@ public:
    *  the generator level cut.
    */
   virtual bool generate( const unsigned int nPileUp , 
-                         EventVector & theEventVector ,
-                         HardVector  & theHardVector ) ;
+                         LHCb::HepMCEvents * theEvents ,
+                         LHCb::GenCollisions * theCollisions ) ;
 
   /// Implements ISampleGenerationTool::printCounters
   virtual void printCounters( ) const ;

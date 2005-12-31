@@ -1,4 +1,4 @@
-// $Id: LHCbAcceptance.h,v 1.3 2005-12-14 21:53:15 robbep Exp $
+// $Id: LHCbAcceptance.h,v 1.4 2005-12-31 17:32:39 robbep Exp $
 #ifndef GENERATORS_LHCBACCEPTANCE_H 
 #define GENERATORS_LHCBACCEPTANCE_H 1
 
@@ -19,8 +19,7 @@
 class LHCbAcceptance : public GaudiTool, virtual public IGenCutTool {
  public:
   /// Standard constructor
-  LHCbAcceptance( const std::string& type, 
-                  const std::string& name,
+  LHCbAcceptance( const std::string& type, const std::string& name,
                   const IInterface* parent);
   
   virtual ~LHCbAcceptance( ); ///< Destructor
@@ -29,9 +28,9 @@ class LHCbAcceptance : public GaudiTool, virtual public IGenCutTool {
    *  Implements IGenCutTool::applyCut.
    */
   virtual bool applyCut( ParticleVector & theParticleVector , 
-                         const HepMC::GenEvent * theEvent , 
-                         const HardInfo * theHardInfo ) const ;
-
+                         const HepMC::GenEvent * thGeneEvent , 
+                         const LHCb::GenCollision * theCollision ) const ;
+  
  private:
   /// Maximum value of angle around z-axis (set by options) 
   double m_thetaMax ;

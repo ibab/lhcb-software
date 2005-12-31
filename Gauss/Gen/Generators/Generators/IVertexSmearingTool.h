@@ -1,4 +1,4 @@
-// $Id: IVertexSmearingTool.h,v 1.2 2005-12-11 23:21:47 robbep Exp $
+// $Id: IVertexSmearingTool.h,v 1.3 2005-12-31 17:30:37 robbep Exp $
 #ifndef GENERATORS_IVERTEXSMEARINGTOOL_H 
 #define GENERATORS_IVERTEXSMEARINGTOOL_H 1
 
@@ -7,7 +7,9 @@
 #include "GaudiKernel/IAlgTool.h"
 
 // Forward declaration
-class HepMCEvent ;
+namespace LHCb {
+  class HepMCEvent ;
+}
 
 /** @class IVertexSmearingTool IVertexSmearingTool.h "Generators/IVertexSmearingTool.h"
  *  
@@ -18,14 +20,14 @@ class HepMCEvent ;
  *  @date   2005-08-17
  */
 
-static const InterfaceID IID_IVertexSmearingTool( "IVertexSmearingTool" , 1 , 
+static const InterfaceID IID_IVertexSmearingTool( "IVertexSmearingTool" , 2 , 
                                                   0 ) ;
 
 class IVertexSmearingTool : virtual public IAlgTool {
 public:
   static const InterfaceID& interfaceID() { return IID_IVertexSmearingTool ; }
   
-  /// Smear the vertex of all interactions in the event.
-  virtual StatusCode smearVertex( HepMCEvent * theEvent ) = 0 ;
+  /// Smear the vertex of the interaction (independantly of the others)
+  virtual StatusCode smearVertex( LHCb::HepMCEvent * theEvent ) = 0 ;
 };
 #endif // GENERATORS_ISMEARINGTOOL_H

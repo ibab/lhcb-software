@@ -1,4 +1,4 @@
-// $Id: FlatZSmearVertex.h,v 1.2 2005-12-12 16:06:20 robbep Exp $
+// $Id: FlatZSmearVertex.h,v 1.3 2005-12-31 17:32:01 robbep Exp $
 #ifndef GENERATORS_FLATZSMEARVERTEX_H 
 #define GENERATORS_FLATZSMEARVERTEX_H 1
 
@@ -19,11 +19,10 @@
  *  @date   2005-08-24
  */
 class FlatZSmearVertex : public GaudiTool, virtual public IVertexSmearingTool {
-public:
+ public:
   /// Standard constructor
-  FlatZSmearVertex( const std::string& type, 
-                    const std::string& name,
-                    const IInterface* parent);
+  FlatZSmearVertex( const std::string& type , const std::string& name,
+                    const IInterface* parent ) ;
   
   virtual ~FlatZSmearVertex( ); ///< Destructor
 
@@ -35,7 +34,7 @@ public:
    *  direction but generates flat distribution for the z-coordinate of
    *  the primary vertex.
    */
-  virtual StatusCode smearVertex( HepMCEvent * theEvent ) ;
+  virtual StatusCode smearVertex( LHCb::HepMCEvent * theEvent ) ;
   
  private:
   /// Width of the smearing along the x-axis (set by job options).

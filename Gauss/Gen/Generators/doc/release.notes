@@ -1,6 +1,9 @@
-! $Id: release.notes,v 1.25 2005-12-21 16:42:26 robbep Exp $
+! $Id: release.notes,v 1.26 2005-12-31 17:29:58 robbep Exp $
 ! Package     : Gen/Generators
 ! Responsible : 
+
+! 2005-12-31 - Patrick Robbe
+ - Adapt to new event model and new vector classes.
 
 ! 2005-12-21 - Patrick Robbe
  - phocin.F: activate exponentiation in PHOTOS

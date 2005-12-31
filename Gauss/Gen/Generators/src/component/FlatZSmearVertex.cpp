@@ -1,4 +1,4 @@
-// $Id: FlatZSmearVertex.cpp,v 1.1 2005-10-03 10:21:46 robbep Exp $
+// $Id: FlatZSmearVertex.cpp,v 1.2 2005-12-31 17:32:01 robbep Exp $
 // Include files 
 
 // local
@@ -8,11 +8,12 @@
 #include "GaudiKernel/ToolFactory.h"
 #include "GaudiKernel/IRndmGenSvc.h" 
 
+// from LHCb
+#include "Kernel/SystemOfUnits.h"
+#include "Kernel/Vector4DTypes.h"
+
 // from Event
 #include "Event/HepMCEvent.h"
-
-// from CLHEP
-#include "CLHEP/Units/SystemOfUnits.h"
 
 //-----------------------------------------------------------------------------
 // Implementation file for class : LHCbAcceptance
@@ -29,8 +30,8 @@ const        IToolFactory& FlatZSmearVertexFactory = s_factory ;
 // Standard constructor, initializes variables
 //=============================================================================
 FlatZSmearVertex::FlatZSmearVertex( const std::string& type,
-                                          const std::string& name,
-                                          const IInterface* parent )
+                                    const std::string& name,
+                                    const IInterface* parent )
   : GaudiTool ( type, name , parent ) {
     declareInterface< IVertexSmearingTool >( this ) ;
     declareProperty( "SigmaX" , m_sigmaX = 0.07 * mm ) ;
@@ -82,7 +83,7 @@ StatusCode FlatZSmearVertex::initialize( ) {
 //=============================================================================
 // Smearing function
 //=============================================================================
-StatusCode FlatZSmearVertex::smearVertex( HepMCEvent * theEvent ) {
+StatusCode FlatZSmearVertex::smearVertex( LHCb::HepMCEvent * theEvent ) {
   double dx , dy , dz ;
   
   do { dx = m_gaussDist( ) ; } while ( fabs( dx ) > m_xcut ) ;
@@ -91,14 +92,16 @@ StatusCode FlatZSmearVertex::smearVertex( HepMCEvent * theEvent ) {
   dy = dy * m_sigmaY ;
   dz = m_flatDist( ) ;
 
-  HepLorentzVector dpos( dx / mm , dy / mm , dz / mm , 0. ) ;
+  Gaudi::LorentzVector dpos( dx / mm , dy / mm , dz / mm , 0. ) ;
   
   HepMC::GenEvent::vertex_iterator vit ;
   HepMC::GenEvent * pEvt = theEvent -> pGenEvt() ;
   for ( vit = pEvt -> vertices_begin() ; vit != pEvt -> vertices_end() ; 
         ++vit ) {
-    HepLorentzVector pos = (*vit) -> position() ;
-    (*vit) -> set_position( pos + dpos ) ;
+    Gaudi::LorentzVector pos ( (*vit) -> position() ) ;
+    pos += dpos ;
+    (*vit) -> set_position( HepLorentzVector( pos.x() , pos.y() , pos.z() ,
+                                              pos.t() ) ) ;
   }
 
   return StatusCode::SUCCESS ;      

@@ -1,4 +1,4 @@
-// $Id: ExternalGenerator.cpp,v 1.9 2005-12-15 20:47:31 robbep Exp $
+// $Id: ExternalGenerator.cpp,v 1.10 2005-12-31 17:33:40 robbep Exp $
 // Include files 
 
 // local
@@ -7,10 +7,6 @@
 // Gaudi
 #include "GaudiKernel/IParticlePropertySvc.h" 
 #include "GaudiKernel/ParticleProperty.h"
-
-// Event 
-#include "Event/HepMCEvent.h"
-#include "Event/HardInfo.h"
 
 // from Generators
 #include "Generators/IProductionTool.h"
@@ -121,7 +117,8 @@ StatusCode ExternalGenerator::decayHeavyParticles( HepMC::GenEvent * theEvent,
         it != theEvent -> particles_end() ; ++ it ) {
     
     if ( ( (*it) -> momentum().m() * GeV > mass ) &&
-         ( 1 == (*it) -> status() ) && ( pid != abs( (*it) -> pdg_id() ) ) ) {
+         ( LHCb::HepMCEvent::StableInProdGen == (*it) -> status() ) && 
+         ( pid != abs( (*it) -> pdg_id() ) ) ) {
       
       if ( m_decayTool -> isKnownToDecayTool( (*it) -> pdg_id() ) ) {
         sc = m_decayTool -> generateDecayWithLimit( *it , pid ) ;
@@ -199,19 +196,18 @@ unsigned int ExternalGenerator::nPositivePz( const ParticleVector
 //=============================================================================
 // Set up event
 //=============================================================================
-void ExternalGenerator::prepareInteraction( EventVector & theEventVector , 
-                                            HardVector & theHardVector , 
-                                            HepMC::GenEvent * & theGenEvent ,
-                                            HardInfo * & theHardInfo ) const {
-  HepMCEvent * theHepMCEvent = new HepMCEvent( m_productionTool -> name() ,
-                                               1 , 1 ) ;
-  theHardInfo = new HardInfo() ;
+void ExternalGenerator::prepareInteraction( LHCb::HepMCEvents * theEvents ,
+    LHCb::GenCollisions * theCollisions , HepMC::GenEvent * & theGenEvent ,  
+    LHCb::GenCollision * & theGenCollision ) const {
+  LHCb::HepMCEvent * theHepMCEvent = new LHCb::HepMCEvent( ) ;
+  theHepMCEvent -> setGeneratorName( m_productionTool -> name() ) ;
+  theGenCollision = new LHCb::GenCollision() ;
   
   theGenEvent = theHepMCEvent -> pGenEvt() ;
-  theHardInfo -> setEvent( theHepMCEvent ) ;
+  theGenCollision -> setEvent( theHepMCEvent ) ;
 
-  theEventVector.push_back( theHepMCEvent ) ;
-  theHardVector.push_back( theHardInfo ) ;
+  theEvents -> insert( theHepMCEvent ) ;
+  theCollisions -> insert( theGenCollision ) ;
 }
 
 //=============================================================================

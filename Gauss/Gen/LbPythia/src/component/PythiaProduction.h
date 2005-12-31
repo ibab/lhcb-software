@@ -1,4 +1,4 @@
-// $Id: PythiaProduction.h,v 1.5 2005-11-29 16:04:31 robbep Exp $
+// $Id: PythiaProduction.h,v 1.6 2005-12-31 17:35:36 robbep Exp $
 #ifndef LBPYTHIA_PYTHIAPRODUCTION_H 
 #define LBPYTHIA_PYTHIAPRODUCTION_H 1
 
@@ -17,23 +17,22 @@ class IBeamTool ;
  *  @date   2005-08-16
  */
 class PythiaProduction : public GaudiTool, virtual public IProductionTool {
-public:
+ public:
   typedef std::vector< std::string > CommandVector ;
-
+  
   /// Standard constructor
-  PythiaProduction( const std::string& type, 
-                    const std::string& name,
-                    const IInterface* parent);
-
+  PythiaProduction( const std::string & type , const std::string & name ,
+                    const IInterface * parent ) ;
+  
   virtual ~PythiaProduction( ); ///< Destructor
-
+  
   virtual StatusCode initialize( ) ;   ///< Initialize method
   
   virtual StatusCode finalize( ) ;   ///< Finalize method
-
+  
   virtual StatusCode generateEvent( HepMC::GenEvent * theEvent , 
-                                    HardInfo * theInfo ) ;
-
+                                    LHCb::GenCollision * theCollision ) ;
+  
   virtual void setStable( const ParticleProperty * thePP ) ;
 
   virtual void updateParticleProperties( const ParticleProperty * thePP ) ;
@@ -43,7 +42,7 @@ public:
   virtual void turnOffFragmentation( ) ;
 
   virtual StatusCode hadronize( HepMC::GenEvent * theEvent , 
-                                HardInfo * theInfo ) ;
+                                LHCb::GenCollision * theCollision ) ;
   
   virtual void savePartonEvent( HepMC::GenEvent * theEvent ) ;
 
@@ -55,38 +54,38 @@ public:
 
   virtual StatusCode setupForcedFragmentation( const int thePdgId ) ;
 
-protected:
+ protected:
   /// Parse Pythia commands from a string vector
   StatusCode parsePythiaCommands( const CommandVector & theVector ) ;
-
+  
   /// Print Pythia parameters
   void printPythiaParameter( ) ;
   
   /// Retrieve hard process information
-  void hardProcessInfo(HardInfo* hardInfo) ;
-
-private:
+  void hardProcessInfo( LHCb::GenCollision * theCollision ) ;
+  
+ private:
   std::string m_frame   ;  ///< FRAME string
   std::string m_beam    ;  ///< BEAM string
   std::string m_target  ;  ///< TARGET string
   double m_win          ;  ///< WIN
-
+  
   CommandVector m_defaultSettings ;
 	CommandVector m_commandVector ; ///< Commands to setup pythia
-
+  
   int m_eventListingLevel ;
   int m_initializationListingLevel ;
   int m_finalizationListingLevel ;
-
+  
   std::string m_beamToolName ;
-
+  
   std::string m_pythiaListingFileName ;
   int m_pythiaListingUnit ;
 
   bool m_variableEnergy ;
-
+  
   int m_nEvents ; ///< Internal event counter
-
+  
   IBeamTool * m_beamTool ;
 };
 #endif // LBPYTHIA_PYTHIAPRODUCTION_H

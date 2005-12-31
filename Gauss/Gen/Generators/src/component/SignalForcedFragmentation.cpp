@@ -1,4 +1,4 @@
-// $Id: SignalForcedFragmentation.cpp,v 1.4 2005-12-14 22:16:42 robbep Exp $
+// $Id: SignalForcedFragmentation.cpp,v 1.5 2005-12-31 17:33:12 robbep Exp $
 // Include files
 
 // local
@@ -6,6 +6,9 @@
 
 // from Gaudi
 #include "GaudiKernel/ToolFactory.h"
+
+// from LHCb
+#include "Kernel/Vector4DTypes.h"
 
 // from HepMC
 #include "HepMC/GenEvent.h"
@@ -53,8 +56,9 @@ StatusCode SignalForcedFragmentation::initialize( ) {
 // Generate set of events with repeated hadronization
 //=============================================================================
 bool SignalForcedFragmentation::generate( const unsigned int nPileUp ,
-                                          EventVector & theEventVector ,
-                                          HardVector & theHardVector ) {
+                                          LHCb::HepMCEvents * theEvents ,
+                                          LHCb::GenCollisions * theCollisions )
+{
   StatusCode sc ;
 
   // first decay signal particle
@@ -64,8 +68,8 @@ bool SignalForcedFragmentation::generate( const unsigned int nPileUp ,
     set_momentum( HepLorentzVector( 0., 0., 0., m_signalMass ) ) ;
 
   // Create an origin vertex at (0,0,0,0) for the signal particle at rest
-  HepLorentzVector theOrigin( 0., 0., 0., 0. ) ;
-  HepMC::GenVertex * theVertex =  new HepMC::GenVertex( theOrigin ) ;
+  HepMC::GenVertex * theVertex =  
+    new HepMC::GenVertex( HepLorentzVector( 0., 0., 0., 0. ) ) ;
   theSignalHepMCEvent -> add_vertex( theVertex ) ;
   theVertex -> add_particle_out( theSignalAtRest ) ;
   
@@ -101,45 +105,48 @@ bool SignalForcedFragmentation::generate( const unsigned int nPileUp ,
     setupForcedFragmentation( theSignalAtRest -> pdg_id() ) ;
   if ( sc.isFailure() ) error() << "Could not force fragmentation" << endmsg ;
 
-  HardInfo * theHardInfo( 0 ) ;
+  LHCb::GenCollision * theGenCollision( 0 ) ;
   HepMC::GenEvent * theGenEvent( 0 ) ;
 
   // Then generate set of pile-up events    
   for ( unsigned int i = 0 ; i < nPileUp ; ++i ) {
-    prepareInteraction( theEventVector , theHardVector , theGenEvent ,
-                        theHardInfo ) ;
+    prepareInteraction( theEvents , theCollisions , theGenEvent ,
+                        theGenCollision ) ;
 
-    sc = m_productionTool -> generateEvent( theGenEvent , theHardInfo ) ;
+    sc = m_productionTool -> generateEvent( theGenEvent , theGenCollision ) ;
     if ( sc.isFailure() ) Exception( "Could not generate event" ) ;
 
     if ( ! result ) {
       ParticleVector theParticleList ;
       if ( checkPresence( signalPid , theGenEvent , theParticleList ) ) {
         m_nEventsBeforeCut++ ;
-
+        
         updateCounters( theParticleList , m_nParticlesBeforeCut , 
                         m_nAntiParticlesBeforeCut , false ) ;
 
         bool passCut = true ;
         if ( 0 != m_cutTool ) 
           passCut = m_cutTool -> applyCut( theParticleList , theGenEvent ,
-                                           theHardInfo ) ;
+                                           theGenCollision ) ;
         
         if ( passCut && ( ! theParticleList.empty() ) ) {
           m_nEventsAfterCut++ ;
 
           updateCounters( theParticleList , m_nParticlesAfterCut , 
                           m_nAntiParticlesAfterCut , true ) ;
-
+          
           HepMC::GenParticle * theSignal = chooseAndRevert( theParticleList ) ;
-
+          
           // Give signal status
           theSignal -> set_status( 889 ) ;
-
+          
           // Now boost signal at rest to frame of signal produced by 
           // production generator
-          const Hep3Vector theVector = theSignal -> momentum().boostVector() ;
-          sc = boostTree( theSignal , theSignalAtRest , theVector ) ;
+          Gaudi::LorentzVector mom( theSignal -> momentum() ) ;
+          ROOT::Math::Boost pureBoost ;
+          pureBoost.SetComponents( mom.BoostToCM() ) ;
+          Gaudi::LorentzRotation theBoost( pureBoost ) ;
+          sc = boostTree( theSignal , theSignalAtRest , theBoost ) ;
           if ( ! sc.isSuccess() ) Exception( "Cannot boost signal tree" ) ;
 
           if ( m_cleanEvents ) { 
@@ -167,7 +174,8 @@ StatusCode SignalForcedFragmentation::boostTree( HepMC::GenParticle *
                                                  theSignal ,
                                                  const HepMC::GenParticle * 
                                                  theSignalAtRest ,
-                                                 const Hep3Vector & theVector )
+                                                 const Gaudi::LorentzRotation& 
+                                                 theBoost )
   const {
   if ( 0 == theSignalAtRest -> end_vertex() ) return StatusCode::SUCCESS ;
     
@@ -178,16 +186,25 @@ StatusCode SignalForcedFragmentation::boostTree( HepMC::GenParticle *
     return Error( "The particle has no production vertex !" ) ;
   
   // Displacement in original frame
-  HepLorentzVector position = theSignalAtRest -> end_vertex() -> position() -
-    theSignalAtRest -> production_vertex() -> position() ;
+  Gaudi::LorentzVector
+    positionEnd( theSignalAtRest -> end_vertex() -> position() ) ;
+  Gaudi::LorentzVector
+    positionBegin( theSignalAtRest -> production_vertex() -> position() ) ;
+  Gaudi::LorentzVector position = positionEnd - positionBegin ;
+  
   // Displacement in new frame after boost.
-  HepLorentzVector newPosition = position.boost( theVector ) ;
-    
+  Gaudi::LorentzVector newPosition = theBoost( position ) ;
+  // Add original position
+  Gaudi::LorentzVector 
+    originalPosition( theSignal -> production_vertex() -> position() ) ;
+  newPosition += originalPosition ;
+
   // Create new HepMC vertex after boost and add it to the current event    
   HepMC::GenVertex * newVertex = 
-    new HepMC::GenVertex( newPosition + 
-                          theSignal -> production_vertex() -> position() ) ;
-  theSignal -> parent_event()  -> add_vertex( newVertex ) ;
+    new HepMC::GenVertex( HepLorentzVector(newPosition.X(), newPosition.Y() ,
+                                           newPosition.Z(), newPosition.T()));
+  
+  theSignal -> parent_event() -> add_vertex( newVertex ) ;
   newVertex -> add_particle_in( theSignal ) ;
 
   HepMC::GenVertex * sVertex = theSignalAtRest -> end_vertex() ;
@@ -198,13 +215,17 @@ StatusCode SignalForcedFragmentation::boostTree( HepMC::GenParticle *
         child != sVertex -> particles_out_const_end( ) ; ++child ) {
     // Boost all daughter particles and create a new HepMC particle
     // for each daughter
-    HepLorentzVector momentum    = (*child) -> momentum() ;
-    HepLorentzVector newMomentum = momentum.boost( theVector ) ;
-    int id                       = (*child) -> pdg_id() ;
-    int status                   = (*child) -> status() ;
+    Gaudi::LorentzVector momentum( (*child) -> momentum() ) ;
+    Gaudi::LorentzVector newMomentum = theBoost( momentum ) ;
+    int id                           = (*child) -> pdg_id() ;
+    int status                       = (*child) -> status() ;
     
     HepMC::GenParticle * newPart =
-      new HepMC::GenParticle( newMomentum , id , status ) ;
+      new HepMC::GenParticle( HepLorentzVector( newMomentum.Px() , 
+                                                newMomentum.Py() , 
+                                                newMomentum.Pz() , 
+                                                newMomentum.E()   ) , 
+                              id , status ) ;
     
     newVertex -> add_particle_out( newPart ) ;
     
@@ -212,7 +233,7 @@ StatusCode SignalForcedFragmentation::boostTree( HepMC::GenParticle *
     const HepMC::GenParticle * theNewSignalAtRest = (*child) ;
     
     // Recursive call to boostTree for each daughter
-    boostTree( theNewSignal , theNewSignalAtRest , theVector ) ;
+    boostTree( theNewSignal , theNewSignalAtRest , theBoost ) ;
   }
 
   return StatusCode::SUCCESS ;

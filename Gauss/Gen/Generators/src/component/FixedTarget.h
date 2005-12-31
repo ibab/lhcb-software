@@ -1,4 +1,4 @@
-// $Id: FixedTarget.h,v 1.2 2005-12-12 16:06:20 robbep Exp $
+// $Id: FixedTarget.h,v 1.3 2005-12-31 17:32:01 robbep Exp $
 #ifndef GENERATORS_COLLIDINGBEAMS_H 
 #define GENERATORS_COLLIDINGBEAMS_H 1
 
@@ -23,9 +23,8 @@ class IRndmGenSvc ;
 class FixedTarget : public GaudiTool, virtual public IBeamTool {
  public:
   /// Standard constructor
-  FixedTarget( const std::string& type, 
-               const std::string& name,
-               const IInterface* parent);
+  FixedTarget( const std::string& type , const std::string& name,
+               const IInterface* parent ) ;
   
   virtual ~FixedTarget( ); ///< Destructor
   
@@ -33,10 +32,12 @@ class FixedTarget : public GaudiTool, virtual public IBeamTool {
   virtual StatusCode initialize( ) ;  
   
   /// Implements IBeamTool::getMeanBeams. See CollidingBeams::getMeanBeams
-  virtual void getMeanBeams( Hep3Vector & pBeam1, Hep3Vector & pBeam2 ) const ;
+  virtual void getMeanBeams( Gaudi::XYZVector & pBeam1 , 
+                             Gaudi::XYZVector & pBeam2 ) const ;
   
   /// Implements IBeamTool::getBeams. See CollidingBeams::getBeams
-  virtual void getBeams( Hep3Vector & pBeam1 , Hep3Vector & pBeam2 ) ;
+  virtual void getBeams( Gaudi::XYZVector & pBeam1 , 
+                         Gaudi::XYZVector & pBeam2 ) ;
   
  private:
   /// Value of angular smearing (computed from quantities given in options)

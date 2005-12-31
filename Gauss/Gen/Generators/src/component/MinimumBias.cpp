@@ -1,4 +1,4 @@
-// $Id: MinimumBias.cpp,v 1.2 2005-11-17 15:57:08 robbep Exp $
+// $Id: MinimumBias.cpp,v 1.3 2005-12-31 17:33:12 robbep Exp $
 // Include files 
 
 // local
@@ -10,7 +10,7 @@
 
 // Event 
 #include "Event/HepMCEvent.h"
-#include "Event/HardInfo.h"
+#include "Event/GenCollision.h"
 
 //-----------------------------------------------------------------------------
 // Implementation file for class : MinimumBias
@@ -26,9 +26,8 @@ const        IToolFactory& MinimumBiasFactory = s_factory ;
 //=============================================================================
 // Standard constructor, initializes variables
 //=============================================================================
-MinimumBias::MinimumBias( const std::string& type,
-                          const std::string& name,
-                          const IInterface* parent )
+MinimumBias::MinimumBias( const std::string & type , const std::string & name,
+                          const IInterface * parent )
   : ExternalGenerator( type, name , parent ) { }
 
 //=============================================================================
@@ -48,17 +47,17 @@ StatusCode MinimumBias::initialize( ) {
 // Generate Set of Event for Minimum Bias event type
 //=============================================================================
 bool MinimumBias::generate( const unsigned int nPileUp , 
-                            EventVector & theEventVector , 
-                            HardVector  & theHardVector ) {
+                            LHCb::HepMCEvents * theEvents , 
+                            LHCb::GenCollisions * theCollisions ) {
   StatusCode sc ;
-  HardInfo * theHardInfo( 0 ) ;
+  LHCb::GenCollision * theGenCollision( 0 ) ;
   HepMC::GenEvent * theGenEvent( 0 ) ;
   
   for ( unsigned int i = 0 ; i < nPileUp ; ++i ) {
-    prepareInteraction( theEventVector, theHardVector, theGenEvent, 
-                        theHardInfo ) ;
-
-    sc = m_productionTool -> generateEvent( theGenEvent , theHardInfo ) ;
+    prepareInteraction( theEvents , theCollisions , theGenEvent , 
+                        theGenCollision ) ;
+    
+    sc = m_productionTool -> generateEvent( theGenEvent , theGenCollision ) ;
     if ( sc.isFailure() ) Exception( "Could not generate event" ) ;
   } 
   return true ;

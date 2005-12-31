@@ -1,4 +1,4 @@
-// $Id: LeptonInAcceptance.h,v 1.2 2005-12-14 21:53:15 robbep Exp $
+// $Id: LeptonInAcceptance.h,v 1.3 2005-12-31 17:33:12 robbep Exp $
 #ifndef GENERATORS_LEPTONINACCEPTANCE_H 
 #define GENERATORS_LEPTONINACCEPTANCE_H 1
 
@@ -33,8 +33,8 @@ class LeptonInAcceptance : public GaudiTool ,
    *  z axis (forward) and with a minimum pT.
    *  Implements IFullGenEventCutTool::studyFullEvent.
    */
-  virtual bool studyFullEvent( EventVector & theEventVector ,
-                               HardVector & theHardVector ) const ;
+  virtual bool studyFullEvent( LHCb::HepMCEvents * theEvents ,
+                               LHCb::GenCollisions * theCollisions ) const ;
   
  private:
   ///< Maximum value for theta angle of lepton (set by options)

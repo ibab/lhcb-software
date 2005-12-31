@@ -1,4 +1,4 @@
-// $Id: SignalPlain.h,v 1.3 2005-12-14 22:16:42 robbep Exp $
+// $Id: SignalPlain.h,v 1.4 2005-12-31 17:32:39 robbep Exp $
 #ifndef GENERATORS_SIGNALPLAIN_H 
 #define GENERATORS_SIGNALPLAIN_H 1
 
@@ -20,9 +20,8 @@
 class SignalPlain : public Signal {
  public:
   /// Standard constructor
-  SignalPlain( const std::string& type, 
-               const std::string& name,
-               const IInterface* parent);
+  SignalPlain( const std::string & type , const std::string & name ,
+               const IInterface * parent ) ;
   
   virtual ~SignalPlain( ); ///< Destructor
   
@@ -32,7 +31,7 @@ class SignalPlain : public Signal {
    *  without using any trick (just like Inclusive).
    */
   virtual bool generate( const unsigned int nPileUp , 
-                         EventVector & theEventVector ,
-                         HardVector  & theHardVector ) ;  
+                         LHCb::HepMCEvents * theEvents ,
+                         LHCb::GenCollisions * theCollisions ) ;  
 };
 #endif // GENERATORS_SIGNALPLAIN_H

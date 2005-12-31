@@ -1,4 +1,4 @@
-// $Id: LeptonInAcceptance.cpp,v 1.1 2005-11-29 15:43:17 robbep Exp $
+// $Id: LeptonInAcceptance.cpp,v 1.2 2005-12-31 17:33:12 robbep Exp $
 // Include files 
 // local
 #include "LeptonInAcceptance.h"
@@ -42,14 +42,13 @@ LeptonInAcceptance::~LeptonInAcceptance( ) { ; }
 //=============================================================================
 // Selection function
 //=============================================================================
-bool LeptonInAcceptance::studyFullEvent( EventVector & theEventVector ,
-                                         HardVector & /* theHardVector */ )
+bool LeptonInAcceptance::studyFullEvent( LHCb::HepMCEvents * theEvents ,
+                                         LHCb::GenCollisions * /* col */ )
   const {
   std::list< HepMC::GenParticle * > leptonList ;
 
-  EventVector::iterator iter ;
-  for ( iter = theEventVector.begin() ; theEventVector.end() != iter ; 
-        ++iter ) {
+  LHCb::HepMCEvents::iterator iter ;
+  for ( iter = theEvents -> begin() ; theEvents -> end() != iter ; ++iter ) {
     HepMC::GenEvent * theHepMCEvent = (*iter) -> pGenEvt() ;
     HepMC::copy_if( theHepMCEvent -> particles_begin() ,
                     theHepMCEvent -> particles_end() , 

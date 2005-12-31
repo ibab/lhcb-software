@@ -1,4 +1,4 @@
-// $Id: Inclusive.h,v 1.4 2005-12-14 21:53:15 robbep Exp $
+// $Id: Inclusive.h,v 1.5 2005-12-31 17:32:39 robbep Exp $
 #ifndef GENERATORS_INCLUSIVE_H 
 #define GENERATORS_INCLUSIVE_H 1
 
@@ -51,8 +51,8 @@ class Inclusive : public ExternalGenerator {
    *     of the inclusive list in the event have pz < 0.
    */
   virtual bool generate( const unsigned int nPileUp ,
-                         EventVector & theEventVector ,
-                         HardVector  & theHardVector ) ;
+                         LHCb::HepMCEvents * theEvents ,
+                         LHCb::GenCollisions * theCollisions ) ;
 
   /** Print generation counters.
    *  Implements ISampleGenerationTool::printCounters.

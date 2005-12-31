@@ -1,12 +1,12 @@
-// $Id: SignalForcedFragmentation.h,v 1.2 2005-12-14 21:53:15 robbep Exp $
+// $Id: SignalForcedFragmentation.h,v 1.3 2005-12-31 17:33:12 robbep Exp $
 #ifndef GENERATORS_SIGNALFORCEDFRAGMENTATION_H 
 #define GENERATORS_SIGNALFORCEDFRAGMENTATION_H 1
 
 // Include files
-#include "Generators/Signal.h" 
+#include "Generators/Signal.h"
 
-// CLHEP
-#include "CLHEP/Vector/ThreeVector.h"
+// LHCb
+#include "Kernel/Transform4DTypes.h"
 
 /** @class SignalForcedFragmentation SignalForcedFragmentation.h "SignalForcedFragmentation.h"
  *  
@@ -20,9 +20,9 @@
 class SignalForcedFragmentation : public Signal {
  public:
   /// Standard constructor
-  SignalForcedFragmentation( const std::string& type, 
-                             const std::string& name,
-                             const IInterface* parent);
+  SignalForcedFragmentation( const std::string & type , 
+                             const std::string & name ,
+                             const IInterface * parent ) ;
   
   virtual ~SignalForcedFragmentation( ); ///< Destructor
 
@@ -38,8 +38,8 @@ class SignalForcedFragmentation : public Signal {
    *     IProductionTool::setupForcedFragmentation.
    */
   virtual bool generate( const unsigned int nPileUp , 
-                         EventVector & theEventVector ,
-                         HardVector  & theHardVector ) ;
+                         LHCb::HepMCEvents * theEvents ,
+                         LHCb::GenCollisions * theCollisions ) ;
  private:
   /** Boost a particle at rest in the lab frame.
    *  @param[in,out] theSignal       Particle in the lab. frame 
@@ -49,7 +49,7 @@ class SignalForcedFragmentation : public Signal {
    */
   StatusCode boostTree( HepMC::GenParticle * theSignal , 
                         const HepMC::GenParticle * theSignalAtRest ,
-                        const Hep3Vector & theVector ) const ;
+                        const Gaudi::LorentzRotation & theBoost ) const ;
 };
 
 

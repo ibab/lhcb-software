@@ -1,4 +1,4 @@
-// $Id: ExternalGenerator.h,v 1.6 2005-12-11 23:21:47 robbep Exp $
+// $Id: ExternalGenerator.h,v 1.7 2005-12-31 17:30:37 robbep Exp $
 #ifndef GENERATORS_EXTERNALGENERATOR_H 
 #define GENERATORS_EXTERNALGENERATOR_H 1
 
@@ -115,10 +115,10 @@ class ExternalGenerator : public GaudiTool ,
    *  @param[out]    theHardInfo     Object where to store hard process
    *                                 informations of the next interaction.
    */
-  void prepareInteraction( EventVector & theEventVector ,
-                           HardVector & theHardVector , 
+  void prepareInteraction( LHCb::HepMCEvents * theEvents ,
+                           LHCb::GenCollisions * theCollisions , 
                            HepMC::GenEvent * & theGenEvent ,
-                           HardInfo * & theHardInfo ) const ;
+                           LHCb::GenCollision * & theGenCollision ) const ;
 
   /** Production tool (interface to external generator) to use to 
    *  generate interactions */

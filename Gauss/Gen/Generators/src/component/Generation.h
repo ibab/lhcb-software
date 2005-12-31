@@ -1,12 +1,10 @@
-// $Id: Generation.h,v 1.5 2005-12-12 16:06:20 robbep Exp $
+// $Id: Generation.h,v 1.6 2005-12-31 17:32:39 robbep Exp $
 #ifndef GENERATORS_GENERATION_H 
 #define GENERATORS_GENERATION_H 1
 
 #include "GaudiAlg/GaudiAlgorithm.h"
 
 // Forward declarations
-class HepMCEvent ;
-class HardInfo ;
 class ISampleGenerationTool ;
 class IPileUpTool ;
 class IDecayTool ;
@@ -15,6 +13,10 @@ class IFullGenEventCutTool ;
 
 namespace HepMC {
   class GenParticle ;
+}
+
+namespace LHCb {
+  class HepMCEvent ;
 }
 
 /** @class Generation Generation.h "Generation.h"
@@ -26,15 +28,6 @@ namespace HepMC {
  */
 class Generation : public GaudiAlgorithm {
  public:
-  /// Vector of HepMCEvent (LHCb wrapper for HepMC::GenEvent)
-  typedef std::vector< HepMCEvent * >         EventVector ;
-
-  /// Vector of HardInfo (hard process information class)
-  typedef std::vector< HardInfo * >           HardVector  ;
-
-  /// Vector of HepMC particles
-  typedef std::vector< HepMC::GenParticle * > GenParticles ;
-    
   /// Standard constructor
   Generation( const std::string& name, ISvcLocator* pSvcLocator );
 
@@ -72,7 +65,7 @@ class Generation : public GaudiAlgorithm {
 
 protected:
   /// Decay the event with the IDecayTool.
-  StatusCode decayEvent( HepMCEvent * theEvent ) ;
+  StatusCode decayEvent( LHCb::HepMCEvent * theEvent ) ;
 
 private:
   int          m_eventType ; ///< Event type (set by options)
@@ -84,7 +77,7 @@ private:
   std::string  m_genHeaderLocation ;
 
   /// Location where to store HardInfo (set by options)
-  std::string  m_hardInfoLocation ;
+  std::string  m_genCollisionLocation ;
 
   ISampleGenerationTool    * m_sampleGenerationTool   ; ///< Sample tool
 
@@ -183,6 +176,6 @@ private:
                                   unsigned int & n1c , unsigned int & n3c , 
                                   unsigned int & nPromptC , 
                                   unsigned int & nbc , 
-                                  const HepMCEvent * theEvent ) ;
+                                  const LHCb::HepMCEvent * theEvent ) ;
 };
 #endif // GENERATORS_GENERATION_H

@@ -1,4 +1,4 @@
-// $Id: SignalRepeatedHadronization.h,v 1.5 2005-12-14 22:16:42 robbep Exp $
+// $Id: SignalRepeatedHadronization.h,v 1.6 2005-12-31 17:33:12 robbep Exp $
 #ifndef GENERATORS_SIGNALREPEATEDHADRONIZATION_H 
 #define GENERATORS_SIGNALREPEATEDHADRONIZATION_H 1
 
@@ -43,8 +43,8 @@ public:
    *     again and is not kept).
    */
   virtual bool generate( const unsigned int nPileUp , 
-                         EventVector & theEventVector ,
-                         HardVector  & theHardVector ) ;
+                         LHCb::HepMCEvents * theEvents ,
+                         LHCb::GenCollisions * theCollisions ) ;
 
 protected:
   /// Delete full content of an event

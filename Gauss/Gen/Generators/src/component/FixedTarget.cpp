@@ -1,4 +1,4 @@
-// $Id: FixedTarget.cpp,v 1.1 2005-10-03 10:20:12 robbep Exp $
+// $Id: FixedTarget.cpp,v 1.2 2005-12-31 17:31:24 robbep Exp $
 // Include files 
 
 // local
@@ -8,8 +8,8 @@
 #include "GaudiKernel/ToolFactory.h"
 #include "GaudiKernel/IRndmGenSvc.h"
 
-// from CLHEP
-#include "CLHEP/Units/SystemOfUnits.h"
+// from LHCb
+#include "Kernel/SystemOfUnits.h"
 
 //-----------------------------------------------------------------------------
 // Implementation file for class : FixedTarget
@@ -83,28 +83,30 @@ StatusCode FixedTarget::initialize( ) {
 //=============================================================================
 // Mean value of the beam momentum
 //=============================================================================
-void FixedTarget::getMeanBeams( Hep3Vector & pBeam1 , Hep3Vector & pBeam2 )
+void FixedTarget::getMeanBeams( Gaudi::XYZVector & pBeam1 , 
+                                Gaudi::XYZVector & pBeam2 )
   const {
   double p1x, p1y, p1z ;
   p1x = m_beamMomentum * sin( m_horizontalXAngle ) ;
   p1y = m_beamMomentum * sin( m_verticalXAngle   ) ;
   p1z = m_beamMomentum ;
-  pBeam1.set( p1x, p1y, p1z ) ;
+  pBeam1.SetXYZ( p1x, p1y, p1z ) ;
 
-  pBeam2.set( 0., 0., 0. ) ;
+  pBeam2.SetXYZ( 0., 0., 0. ) ;
 }
 
 //=============================================================================
 // Current value of the smeared beams
 //=============================================================================
-void FixedTarget::getBeams( Hep3Vector & pBeam1 , Hep3Vector & pBeam2 ) {
+void FixedTarget::getBeams( Gaudi::XYZVector & pBeam1 , 
+                            Gaudi::XYZVector & pBeam2 ) {
   double p1x, p1y, p1z ;
   p1x = m_beamMomentum * sin( m_horizontalXAngle + 
                               m_gaussianDist() * m_angleSmear ) ;
   p1y = m_beamMomentum * sin( m_verticalXAngle + 
                               m_gaussianDist() * m_angleSmear ) ;
   p1z = m_beamMomentum ;
-  pBeam1.set( p1x, p1y, p1z ) ;
+  pBeam1.SetXYZ( p1x, p1y, p1z ) ;
 
-  pBeam2.set( 0., 0., 0. ) ;
+  pBeam2.SetXYZ( 0., 0., 0. ) ;
 }

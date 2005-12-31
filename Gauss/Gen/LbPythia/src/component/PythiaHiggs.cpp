@@ -1,4 +1,4 @@
-// $Id: PythiaHiggs.cpp,v 1.1 2005-11-29 16:02:56 robbep Exp $
+// $Id: PythiaHiggs.cpp,v 1.2 2005-12-31 17:35:36 robbep Exp $
 // Include files 
 // local
 #include "PythiaHiggs.h"
@@ -29,9 +29,8 @@ const        IToolFactory& PythiaHiggsFactory = s_factory ;
 //=============================================================================
 // Standard constructor, initializes variables
 //=============================================================================
-PythiaHiggs::PythiaHiggs( const std::string& type,
-                          const std::string& name,
-                          const IInterface* parent )
+PythiaHiggs::PythiaHiggs( const std::string & type , const std::string & name ,
+                          const IInterface * parent )
   : GaudiTool ( type, name , parent ) {
     declareInterface< IGenCutTool >( this ) ;
     declareProperty( "ThetaMax" , m_thetaMax = 400 * mrad ) ;
@@ -45,7 +44,8 @@ PythiaHiggs::~PythiaHiggs( ) { ; }
 //=============================================================================
 bool PythiaHiggs::applyCut( ParticleVector & /* theParticleVector */ ,
                             const HepMC::GenEvent * theEvent ,
-                            const HardInfo * /* theHardInfo */ ) const {
+                            const LHCb::GenCollision * /* theCollision */ ) 
+  const {
   std::list< HepMC::GenParticle * > higgsList ;
   HepMC::copy_if( theEvent -> particles_begin() , theEvent -> particles_end() ,
                   back_inserter( higgsList ) , isHiggs ) ;

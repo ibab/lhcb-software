@@ -1,4 +1,4 @@
-// $Id: SignalRepeatedHadronization.cpp,v 1.5 2005-12-11 23:22:30 robbep Exp $
+// $Id: SignalRepeatedHadronization.cpp,v 1.6 2005-12-31 17:32:39 robbep Exp $
 // Include files 
 
 // local
@@ -53,13 +53,13 @@ StatusCode SignalRepeatedHadronization::initialize( ) {
   if ( sc.isFailure() ) return sc ;
   
   // Determine quark types
-  ParticleID pid( *m_pids.begin() ) ;
+  LHCb::ParticleID pid( *m_pids.begin() ) ;
   if ( pid.hasBottom() ) {
-    m_pidQuarks.insert( -ParticleID::bottom ) ;
-    m_pidQuarks.insert( ParticleID::bottom ) ;
+    m_pidQuarks.insert( -LHCb::ParticleID::bottom ) ;
+    m_pidQuarks.insert( LHCb::ParticleID::bottom ) ;
   } else if ( pid.hasCharm() ) {
-    m_pidQuarks.insert( -ParticleID::charm ) ;
-    m_pidQuarks.insert( ParticleID::charm ) ;
+    m_pidQuarks.insert( -LHCb::ParticleID::charm ) ;
+    m_pidQuarks.insert( LHCb::ParticleID::charm ) ;
   }
 
   return sc ;
@@ -69,12 +69,13 @@ StatusCode SignalRepeatedHadronization::initialize( ) {
 // Generate Set of Event for Minimum Bias event type
 //=============================================================================
 bool SignalRepeatedHadronization::generate( const unsigned int nPileUp ,
-                                            EventVector & theEventVector , 
-                                            HardVector  & theHardVector ) {
+                                            LHCb::HepMCEvents * theEvents , 
+                                            LHCb::GenCollisions * 
+                                            theCollisions ) {
   StatusCode sc ;
   bool gotSignalInteraction = false ;
 
-  HardInfo * theHardInfo( 0 )  ;
+  LHCb::GenCollision * theGenCollision( 0 ) ;
   HepMC::GenEvent * theGenEvent( 0 ) ;
   HepMC::GenParticle * theSignal ;
   bool flip ;
@@ -83,12 +84,12 @@ bool SignalRepeatedHadronization::generate( const unsigned int nPileUp ,
     bool partonEventWithSignalQuarks = false ;
     ParticleVector theQuarkList ;
 
-    prepareInteraction( theEventVector , theHardVector , theGenEvent , 
-                        theHardInfo ) ;
+    prepareInteraction( theEvents , theCollisions , theGenEvent , 
+                        theGenCollision ) ;
 
     if ( ! gotSignalInteraction ) m_productionTool -> turnOffFragmentation( ) ;
 
-    sc = m_productionTool -> generateEvent( theGenEvent , theHardInfo ) ;
+    sc = m_productionTool -> generateEvent( theGenEvent , theGenCollision ) ;
     if ( sc.isFailure() ) Exception( "Could not generate event" ) ;
 
     if ( ! gotSignalInteraction ) {
@@ -100,7 +101,7 @@ bool SignalRepeatedHadronization::generate( const unsigned int nPileUp ,
       m_productionTool -> turnOnFragmentation( ) ;
       // Clear theGenEvent
       Clear( theGenEvent ) ;
-      m_productionTool -> hadronize( theGenEvent , theHardInfo ) ;
+      m_productionTool -> hadronize( theGenEvent , theGenCollision ) ;
       
       // Check if one particle of the requested list is present in event
       unsigned int nRepetitions = 0 ;
@@ -124,7 +125,7 @@ bool SignalRepeatedHadronization::generate( const unsigned int nPileUp ,
             bool passCut = true ;
             if ( 0 != m_cutTool ) 
               passCut = m_cutTool -> applyCut( theParticleList , theGenEvent ,
-                                               theHardInfo ) ;
+                                               theGenCollision ) ;
             
             if ( passCut && ( ! theParticleList.empty() ) ) {
               m_nEventsAfterCut++ ;
@@ -158,7 +159,7 @@ bool SignalRepeatedHadronization::generate( const unsigned int nPileUp ,
               m_productionTool -> turnOnFragmentation( ) ;
               m_productionTool -> savePartonEvent( theGenEvent ) ;
               Clear( theGenEvent ) ;
-              m_productionTool -> hadronize( theGenEvent , theHardInfo ) ;
+              m_productionTool -> hadronize( theGenEvent , theGenCollision ) ;
             }
             // Then we exit and do not re-hadronize this event
             // not to bias things
@@ -174,7 +175,7 @@ bool SignalRepeatedHadronization::generate( const unsigned int nPileUp ,
         m_productionTool -> savePartonEvent( theGenEvent ) ;
         // Clear HepMC event
         Clear( theGenEvent ) ;
-        m_productionTool -> hadronize( theGenEvent , theHardInfo ) ;
+        m_productionTool -> hadronize( theGenEvent , theGenCollision ) ;
       }
 
       if ( nRepetitions == m_maxNumberOfRepetitions ) 

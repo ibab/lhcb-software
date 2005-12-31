@@ -1,4 +1,4 @@
-// $Id: MinimumBias.h,v 1.2 2005-12-14 21:53:15 robbep Exp $
+// $Id: MinimumBias.h,v 1.3 2005-12-31 17:33:12 robbep Exp $
 #ifndef GENERATORS_MINIMUMBIAS_H 
 #define GENERATORS_MINIMUMBIAS_H 1
 
@@ -18,9 +18,8 @@
 class MinimumBias : public ExternalGenerator {
  public:
   /// Standard constructor
-  MinimumBias( const std::string& type, 
-               const std::string& name,
-               const IInterface* parent);
+  MinimumBias( const std::string & type , const std::string & name ,
+               const IInterface * parent ) ;
 
   virtual ~MinimumBias( ); ///< Destructor
 
@@ -31,8 +30,8 @@ class MinimumBias : public ExternalGenerator {
    *  Implements ISampleGeneratorTool::generate.
    */
   virtual bool generate( const unsigned int nPileUp , 
-                         EventVector & theEventVector ,
-                         HardVector  & theHardVector ) ;
+                         LHCb::HepMCEvents * theEvents ,
+                         LHCb::GenCollisions * theCollisions ) ;
 
   /// Implements ISampleGeneratorTool::printCounters
   virtual void printCounters( ) const { ; } 

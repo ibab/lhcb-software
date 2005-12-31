@@ -1,4 +1,4 @@
-// $Id: DumpMCDecay.cpp,v 1.1.1.1 2005-06-20 21:42:17 robbep Exp $
+// $Id: DumpMCDecay.cpp,v 1.2 2005-12-31 17:32:01 robbep Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
@@ -76,8 +76,8 @@ DumpMCDecay::DumpMCDecay
   , m_ppSvc     ( 0 )
 {
   //
-  m_addresses .push_back( HepMCEventLocation::Default ) ;  // default
-  m_quarks    .push_back( ParticleID::bottom          ) ;  // default 
+  m_addresses .push_back( LHCb::HepMCEventLocation::Default ) ;  // default
+  m_quarks    .push_back( LHCb::ParticleID::bottom          ) ;  // default 
   // define the property 
   declareProperty ( "Addresses" , m_addresses ) ;
   declareProperty ( "Particles" , m_particles ) ;
@@ -108,7 +108,7 @@ StatusCode DumpMCDecay::initialize ()
   for( PIDs::const_iterator iq = m_quarks.begin() ; 
        m_quarks.end() != iq ; ++iq ) 
   {
-    if( ParticleID::down > *iq || ParticleID::top  < *iq  ) 
+    if( LHCb::ParticleID::down > *iq || LHCb::ParticleID::top  < *iq  ) 
     { return Error ( " Invalid Quark ID="  + 
                      boost::lexical_cast<std::string>( *iq ) ) ; }
   };
@@ -137,14 +137,14 @@ StatusCode DumpMCDecay::execute    ()
          m_addresses.end() != ia ; ++ia ) 
     {
       //
-      HepMCEvents* events = get<HepMCEvents>( *ia ) ;
+      LHCb::HepMCEvents* events = get<LHCb::HepMCEvents>( *ia ) ;
       if( 0 == events ) { continue ; }
       //
       log << " Container '" << *ia << "' " << endreq ;
-      for ( HepMCEvents::const_iterator ie = events->begin() ; 
+      for ( LHCb::HepMCEvents::const_iterator ie = events->begin() ; 
             events->end() != ie ; ++ie ) 
       {
-        const HepMCEvent* event = *ie ;
+        const LHCb::HepMCEvent* event = *ie ;
         if ( 0 == event ) { continue ; }                     // CONTINUE 
         const HepMC::GenEvent* evt = event->pGenEvt() ;
         if ( 0 == evt   ) { continue ; }                     // CONTINUE 
@@ -166,8 +166,9 @@ StatusCode DumpMCDecay::execute    ()
                 m_quarks.end() != iq && !print ; ++iq ) 
           {
             // use LHCb flavour of ParticleID class !                  // NB
-            ParticleID        p =  ParticleID ( particle -> pdg_id () ) ;
-            ParticleID::Quark q =  ParticleID::Quark ( *iq  ) ;
+            LHCb::ParticleID        p =  
+              LHCb::ParticleID ( particle -> pdg_id () ) ;
+            LHCb::ParticleID::Quark q =  LHCb::ParticleID::Quark ( *iq  ) ;
             if( p.hasQuark( q ) ) { print = true ; }
           }
           

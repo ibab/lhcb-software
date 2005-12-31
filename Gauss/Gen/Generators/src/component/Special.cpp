@@ -1,4 +1,4 @@
-// $Id: Special.cpp,v 1.3 2005-12-07 22:52:05 robbep Exp $
+// $Id: Special.cpp,v 1.4 2005-12-31 17:32:01 robbep Exp $
 // Include files 
 
 // local
@@ -12,7 +12,7 @@
 
 // Event 
 #include "Event/HepMCEvent.h"
-#include "Event/HardInfo.h"
+#include "Event/GenCollision.h"
 
 //-----------------------------------------------------------------------------
 // Implementation file for class : Special
@@ -28,9 +28,8 @@ const        IToolFactory& SpecialFactory = s_factory ;
 //=============================================================================
 // Standard constructor, initializes variables
 //=============================================================================
-Special::Special( const std::string& type,
-                  const std::string& name,
-                  const IInterface* parent )
+Special::Special( const std::string & type , const std::string & name ,
+                  const IInterface * parent )
   : ExternalGenerator( type, name , parent ) ,
     m_nEventsBeforeCut( 0 ) ,
     m_nEventsAfterCut( 0 ) { }
@@ -52,20 +51,20 @@ StatusCode Special::initialize( ) {
 // Generate Set of Event for Minimum Bias event type
 //=============================================================================
 bool Special::generate( const unsigned int /* nPileUp */ , 
-                        EventVector & theEventVector , 
-                        HardVector  & theHardVector ) {
+                        LHCb::HepMCEvents * theEvents , 
+                        LHCb::GenCollisions * theCollisions ) {
   StatusCode sc ;
-  HardInfo * theHardInfo( 0 ) ;
+  LHCb::GenCollision * theGenCollision( 0 ) ;
   HepMC::GenEvent * theGenEvent( 0 ) ;
 
   bool result = false ;
   
   // For the moment no pile-up for this type of event
   for ( unsigned int i = 0 ; i < 1 ; ++i ) {
-    prepareInteraction( theEventVector, theHardVector, theGenEvent, 
-                        theHardInfo ) ;
+    prepareInteraction( theEvents , theCollisions , theGenEvent, 
+                        theGenCollision ) ;
     
-    sc = m_productionTool -> generateEvent( theGenEvent , theHardInfo ) ;
+    sc = m_productionTool -> generateEvent( theGenEvent , theGenCollision ) ;
     if ( sc.isFailure() ) Exception( "Could not generate event" ) ;
 
     ParticleVector theParticleList ;
@@ -73,7 +72,7 @@ bool Special::generate( const unsigned int /* nPileUp */ ,
     bool passCut = true ;
     if ( 0 != m_cutTool ) 
       passCut = m_cutTool -> applyCut( theParticleList , theGenEvent , 
-                                       theHardInfo ) ;
+                                       theGenCollision ) ;
     
     if ( passCut ) {
       m_nEventsAfterCut++ ;

@@ -1,4 +1,4 @@
-// $Id: IGenCutTool.h,v 1.3 2005-12-11 23:21:47 robbep Exp $
+// $Id: IGenCutTool.h,v 1.4 2005-12-31 17:30:37 robbep Exp $
 #ifndef GENERATORS_IGENCUTTOOL_H 
 #define GENERATORS_IGENCUTTOOL_H 1
 
@@ -6,12 +6,18 @@
 // from Gaudi
 #include "GaudiKernel/IAlgTool.h"
 
+// from Event
+#include "Event/GenCollision.h"
+
 // Forward declarations
 namespace HepMC {
   class GenParticle ; 
   class GenEvent ;
 }  
-class HardInfo ;
+
+namespace LHCb {
+  class GenCollision ;
+}
 
 /** @class IGenCutTool IGenCutTool.h "Generators/IGenCutTool.h"
  *  
@@ -23,7 +29,7 @@ class HardInfo ;
  *  @date   2005-08-17
  */
 
-static const InterfaceID IID_IGenCutTool( "IGenCutTool" , 1 , 0 ) ;
+static const InterfaceID IID_IGenCutTool( "IGenCutTool" , 2 , 0 ) ;
 
 class IGenCutTool : virtual public IAlgTool {
 public:
@@ -41,13 +47,13 @@ public:
    *  @param[in]     theGenEvent        Generated interaction. The generator
    *                                    level cut can use the particles in 
    *                                    this event to take the decision.
-   *  @param[in]     theHardInfo        Hard process information of the
+   *  @param[in]     theCollision       Hard process information of the
    *                                    interaction which can be used by
    *                                    the cut to take the decision.
    *  @return        true  if the event passes the generator level cut.
    */
   virtual bool applyCut( ParticleVector & theParticleVector , 
                          const HepMC::GenEvent * theGenEvent ,
-                         const HardInfo * theHardInfo ) const = 0 ;
+                         const LHCb::GenCollision * theCollision ) const = 0 ;
 };
 #endif // GENERATORS_ICUTTOOL_H

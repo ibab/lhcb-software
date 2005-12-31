@@ -1,4 +1,4 @@
-// $Id: LHCbAcceptance.cpp,v 1.3 2005-11-29 15:56:50 robbep Exp $
+// $Id: LHCbAcceptance.cpp,v 1.4 2005-12-31 17:32:39 robbep Exp $
 // Include files 
 
 // local
@@ -9,9 +9,6 @@
 
 // from HepMC
 #include "HepMC/GenParticle.h"
-
-// from CLHEP
-#include "CLHEP/Units/SystemOfUnits.h"
 
 //-----------------------------------------------------------------------------
 // Implementation file for class : LHCbAcceptance
@@ -44,8 +41,8 @@ LHCbAcceptance::~LHCbAcceptance( ) { ; }
 // Acceptance function
 //=============================================================================
 bool LHCbAcceptance::applyCut( ParticleVector & theParticleVector ,
-                               const HepMC::GenEvent * /* theEvent */ ,
-                               const HardInfo * /* theHardInfo */ ) const {
+                               const HepMC::GenEvent * /* theGenEvent */ ,
+                               const LHCb::GenCollision * /* col */ ) const {
   ParticleVector::iterator it ;
   for ( it = theParticleVector.begin() ; it != theParticleVector.end() ; ) 
     if ( fabs( sin ( (*it) -> momentum().theta() ) ) > 

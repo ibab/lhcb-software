@@ -1,9 +1,12 @@
-! $Id: release.notes,v 1.19 2005-12-09 18:16:05 gcorti Exp $
+! $Id: release.notes,v 1.20 2005-12-31 17:35:36 robbep Exp $
 ! Package     : Gen/LbPythia
 ! Responsible : 
 
-!! ========================= LbPythia v3r0 ============================
- 2005-12-08 - Patrick Robbe
+! 2005-31-12 - Patrick Robbe
+ - Adapt to new event model.
+
+! ========================= LbPythia v3r0 ============================
+! 2005-12-08 - Patrick Robbe
  - Pythia.{h,cpp}: remove PDFLIB
  - Remove old structure
 

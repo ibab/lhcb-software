@@ -1,4 +1,4 @@
-// $Id: EvtGenDecay.h,v 1.2 2005-12-11 23:22:30 robbep Exp $
+// $Id: EvtGenDecay.h,v 1.3 2005-12-31 17:32:01 robbep Exp $
 #ifndef GENERATORS_EVTGENDECAY_H 
 #define GENERATORS_EVTGENDECAY_H 1
 
@@ -13,18 +13,19 @@
 #include "Generators/IDecayTool.h"
 
 // from EvtGen
-#include "EvtGenBase/EvtRandomEngine.hh"
 #include "EvtGenBase/EvtId.hh"
-#include "EvtGenBase/EvtIncoherentMixing.hh"
 
-#include "HepMC/GenEvent.h"
-#include "HepMC/GenParticle.h"
+// from Kernel
+#include "Kernel/Vector4DTypes.h"
 
-#include "EvtGenBase/EvtParticle.hh"
-#include "EvtGen/EvtGen.hh"
-#include "Kernel/ParticleID.h"
+// forward declarations
+namespace LHCb {
+  class ParticleID ;
+}
 
-#include "CLHEP/Vector/LorentzVector.h"
+class EvtGen ;
+class EvtParticle ;
+class EvtRandomEngine ;
 
 /** @class EvtGenDecay EvtGenDecay.h "EvtGenDecay.h"
  *  
@@ -99,7 +100,7 @@ public:
    */
   StatusCode makeHepMC( EvtParticle * theParticle ,
                         HepMC::GenParticle * theMother ,
-                        const HepLorentzVector & theOrigin ,
+                        const Gaudi::LorentzVector & theOrigin ,
                         int targetId = -999 )  const ;
 
   /** Create a temporary evt.pdl file filled with Gaudi Particle Svc
@@ -135,13 +136,13 @@ public:
    *  @param theId ParticleID of the particle for which to calculate 2J+1
    *  @return 2J+1 of the particle
    */
-  int getParticleSpin( const ParticleID& theId ) const ;
+  int getParticleSpin( const LHCb::ParticleID & theId ) const ;
 
   /// returns branching fraction of the given Id
-  double branching( const EvtId& id ) const ;
+  double branching( const EvtId & id ) const ;
 
   /// check if id exists in generic decay table
-  bool checkGeneric( const EvtId& id ) const ;
+  bool checkGeneric( const EvtId & id ) const ;
 
   /// Return the id of the alias corresponding to the pdg code pdgId
   virtual const EvtId getSignalAlias( int pdgId ) const ;
@@ -172,6 +173,8 @@ public:
   bool m_generatePolLambdab ;
 };
 
+#include "EvtGenBase/EvtIncoherentMixing.hh"
+
 //=============================================================================
 // Enable the possibility to flip the flavour for CP decay modes in EvtGen
 //=============================================================================
@@ -187,6 +190,9 @@ inline void EvtGenDecay::disableFlip() const {
 }
 
 #include "GaudiKernel/RndmGenerators.h"
+
+// from EvtGen
+#include "EvtGenBase/EvtRandomEngine.hh"
 
 // forward declaration
 class IRndmGenSvc ;

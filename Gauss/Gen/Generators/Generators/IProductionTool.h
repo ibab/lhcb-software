@@ -1,4 +1,4 @@
-// $Id: IProductionTool.h,v 1.5 2005-12-11 23:21:47 robbep Exp $
+// $Id: IProductionTool.h,v 1.6 2005-12-31 17:30:37 robbep Exp $
 #ifndef GENERATORS_IPRODUCTIONTOOL_H 
 #define GENERATORS_IPRODUCTIONTOOL_H 1
 
@@ -7,8 +7,8 @@
 #include "GaudiKernel/IAlgTool.h"
 
 // Forward declarations
-class HardInfo ;
 namespace HepMC { class GenEvent ; }
+namespace LHCb { class GenCollision ; }
 class ParticleProperty ;
 
 
@@ -21,7 +21,7 @@ class ParticleProperty ;
  *  @date   2005-08-16
  */
 
-static const InterfaceID IID_IProductionTool( "IProductionTool" , 1 , 1 ) ;
+static const InterfaceID IID_IProductionTool( "IProductionTool" , 2 , 0 ) ;
 
 class IProductionTool : virtual public IAlgTool {
 public:
@@ -37,7 +37,7 @@ public:
    *                        generated interaction.
    */
   virtual StatusCode generateEvent( HepMC::GenEvent * theEvent , 
-                                    HardInfo * theInfo ) = 0 ;
+                                    LHCb::GenCollision * theInfo ) = 0 ;
 
   /// Declare a particle stable to the production generator.
   virtual void setStable( const ParticleProperty * thePP ) = 0 ;
@@ -59,7 +59,7 @@ public:
    *                           generated interaction.
    */
   virtual StatusCode hadronize( HepMC::GenEvent * theEvent , 
-                                HardInfo * theInfo ) = 0 ;
+                                LHCb::GenCollision * theInfo ) = 0 ;
 
   /// Save the parton level event (when the fragmentation is turned off)
   virtual void savePartonEvent( HepMC::GenEvent * theEvent ) = 0 ;

@@ -1,4 +1,4 @@
-// $Id: Inclusive.cpp,v 1.4 2005-12-07 22:54:49 robbep Exp $
+// $Id: Inclusive.cpp,v 1.5 2005-12-31 17:32:39 robbep Exp $
 // Include files 
 
 // local
@@ -12,9 +12,7 @@
 #include "GaudiKernel/IParticlePropertySvc.h"
 #include "GaudiKernel/ParticleProperty.h"
 
-// Event 
-#include "Event/HepMCEvent.h"
-#include "Event/HardInfo.h"
+// From LHCb
 #include "Kernel/ParticleID.h"
 
 // from Generators
@@ -26,18 +24,30 @@
 // Function to test if a HepMC::GenParticle is a B hadron at root of decay
 //=============================================================================
 struct isRootB : std::unary_function< const HepMC::GenParticle * , bool > {
+
+  /// test operator, returns true if it is a root B
   bool operator() ( const HepMC::GenParticle * part ) const {
+
+    // Do not consider documentation and special particles
     if ( part -> status() == 3 ) return false ;
-    ParticleID thePid( part -> pdg_id() ) ;
+    
+    // Check if particle has a b quark
+    LHCb::ParticleID thePid( part -> pdg_id() ) ;
     if ( ! thePid.hasBottom() ) return false ;
+
+    // Check if particle has a mother
     if ( 0 == part -> production_vertex() ) return true ;
+
+    // Check all parents of the B 
     HepMC::GenVertex::particles_in_const_iterator parent ;
     const HepMC::GenVertex * thePV = part -> production_vertex() ;
     for ( parent = thePV -> particles_in_const_begin() ;
           parent != thePV -> particles_in_const_end() ; ++parent ) {
-      ParticleID parentID( (*parent) -> pdg_id() ) ;
+      LHCb::ParticleID parentID( (*parent) -> pdg_id() ) ;
       if ( parentID.hasBottom() ) return false ;
     }
+
+    // If no parent is a B, then it is a root B
     return true ;
   }
 };
@@ -46,19 +56,30 @@ struct isRootB : std::unary_function< const HepMC::GenParticle * , bool > {
 // Function to test if a HepMC::GenParticle is a D hadron at root of decay
 //=============================================================================
 struct isRootD : std::unary_function< const HepMC::GenParticle * , bool > {
+
+  /// test operator, returns true if it is a root D
   bool operator() ( const HepMC::GenParticle * part ) const {
+
+    // Do not consider documentation and special particles
     if ( part -> status() == 3 ) return false ;
-    ParticleID thePid( part -> pdg_id() ) ;
+
+    // Check if particle has a c quark
+    LHCb::ParticleID thePid( part -> pdg_id() ) ;
     if ( ! thePid.hasCharm() ) return false ;
+
+    // Check if particle has a mother
     if ( 0 == part -> production_vertex() ) return true ;
 
+    // Check all parents of the D
     HepMC::GenVertex::particles_in_const_iterator parent ;
     const HepMC::GenVertex * thePV = part -> production_vertex() ;
     for ( parent = thePV -> particles_in_const_begin() ;
           parent != thePV -> particles_in_const_end() ; ++parent ) {
-      ParticleID parentID( (*parent) -> pdg_id() ) ;
+      LHCb::ParticleID parentID( (*parent) -> pdg_id() ) ;
       if ( parentID.hasCharm() ) return false ;
     }
+
+    // If no parent is a D, then it is a root D
     return true ;
   }
 };
@@ -67,18 +88,30 @@ struct isRootD : std::unary_function< const HepMC::GenParticle * , bool > {
 // Function to test if a HepMC::GenParticle is a B hadron at end of decay tree
 //=============================================================================
 struct isEndB : std::unary_function< const HepMC::GenParticle * , bool > {
+
+  /// Test operator. Returns true if particle is the last B
   bool operator() ( const HepMC::GenParticle * part ) const {
+
+    // Do not look at special particles
     if ( part -> status() == 3 ) return false ;
-    ParticleID thePid( part -> pdg_id() ) ;
+
+    // Test if particle has a b quark
+    LHCb::ParticleID thePid( part -> pdg_id() ) ;
     if ( ! thePid.hasBottom() ) return false ;
+
+    // Test if the B has daughters
     if ( 0 == part -> end_vertex() ) return true ;
+
+    // Loop over daughters to check if they are B hadrons
     HepMC::GenVertex::particles_out_const_iterator children ;
     const HepMC::GenVertex * theEV = part -> end_vertex() ;
     for ( children = theEV -> particles_out_const_begin() ;
           children != theEV -> particles_out_const_end() ; ++children ) {
-      ParticleID childID( (*children) -> pdg_id() ) ;
+      LHCb::ParticleID childID( (*children) -> pdg_id() ) ;
       if ( childID.hasBottom() ) return false ;
     }
+
+    // If not, then it is a end B
     return true ;
   }
 };
@@ -87,19 +120,30 @@ struct isEndB : std::unary_function< const HepMC::GenParticle * , bool > {
 // Function to test if a HepMC::GenParticle is a D hadron at end of decay tree
 //=============================================================================
 struct isEndD : std::unary_function< const HepMC::GenParticle * , bool > {
+
+  /// Test operator. Returns true if it is the last D
   bool operator() ( const HepMC::GenParticle * part ) const {
+
+    // Do not look at special particles
     if ( part -> status() == 3 ) return false ;
-    ParticleID thePid( part -> pdg_id() ) ;
+
+    // Check if it has a c quark
+    LHCb::ParticleID thePid( part -> pdg_id() ) ;
     if ( ! thePid.hasCharm() ) return false ;
+
+    // Check if it has daughters
     if ( 0 == part -> end_vertex() ) return true ;
 
+    // Loop over the daughters to find a D hadron
     HepMC::GenVertex::particles_out_const_iterator children ;
     const HepMC::GenVertex * theEV = part -> end_vertex() ;
     for ( children = theEV -> particles_out_const_begin() ;
           children != theEV -> particles_out_const_end() ; ++children ) {
-      ParticleID childID( (*children) -> pdg_id() ) ;
+      LHCb::ParticleID childID( (*children) -> pdg_id() ) ;
       if ( childID.hasCharm() ) return false ;
     }
+
+    // If not, then it is a End D
     return true ;
   }
 };
@@ -118,8 +162,7 @@ const        IToolFactory& InclusiveFactory = s_factory ;
 //=============================================================================
 // Standard constructor, initializes variables
 //=============================================================================
-Inclusive::Inclusive( const std::string& type,
-                      const std::string& name,
+Inclusive::Inclusive( const std::string& type, const std::string& name,
                       const IInterface* parent )
   : ExternalGenerator ( type, name , parent ) ,
     m_lightestMass    ( DBL_MAX ) ,
@@ -183,20 +226,20 @@ StatusCode Inclusive::initialize( ) {
 //=============================================================================
 // Generate Set of Event for Minimum Bias event type
 //=============================================================================
-bool Inclusive::generate( const unsigned int nPileUp ,
-                          EventVector & theEventVector , 
-                          HardVector  & theHardVector ) {
+bool Inclusive::generate( const unsigned int nPileUp , 
+                          LHCb::HepMCEvents * theEvents , 
+                          LHCb::GenCollisions * theCollisions ) {
   StatusCode sc ;
   bool result = false ;
 
-  HardInfo * theHardInfo( 0 ) ;
+  LHCb::GenCollision * theGenCollision( 0 ) ;
   HepMC::GenEvent * theGenEvent( 0 ) ;
   
   for ( unsigned int i = 0 ; i < nPileUp ; ++i ) {
-    prepareInteraction( theEventVector, theHardVector, theGenEvent, 
-                        theHardInfo ) ;
+    prepareInteraction( theEvents , theCollisions , theGenEvent, 
+                        theGenCollision ) ;
 
-    sc = m_productionTool -> generateEvent( theGenEvent , theHardInfo ) ;
+    sc = m_productionTool -> generateEvent( theGenEvent , theGenCollision ) ;
     if ( sc.isFailure() ) Exception( "Could not generate event" ) ;
 
     if ( ! result ) {
@@ -211,7 +254,7 @@ bool Inclusive::generate( const unsigned int nPileUp ,
         bool passCut = true ;
         if ( 0 != m_cutTool ) 
           passCut = m_cutTool -> applyCut( theParticleList , theGenEvent , 
-                                           theHardInfo ) ;
+                                           theGenCollision ) ;
         
         if ( passCut && ( ! theParticleList.empty() ) ) {
           m_nEventsAfterCut++ ;
@@ -310,7 +353,7 @@ void Inclusive::updateHadronCounters( const HepMC::GenEvent * theEvent ) {
   std::vector< HepMC::GenParticle * >::const_iterator iter ;
   
   for ( iter = endB.begin() ; iter != endB.end() ; ++iter ) {
-    ParticleID thePid( (*iter) -> pdg_id() ) ;
+    LHCb::ParticleID thePid( (*iter) -> pdg_id() ) ;
     
     if ( thePid.isMeson() ) {
       if ( thePid.pid() > 0 ) {
@@ -337,7 +380,7 @@ void Inclusive::updateHadronCounters( const HepMC::GenEvent * theEvent ) {
                   std::back_inserter( endD ) , isEndD() ) ;
   
   for ( iter = endD.begin() ; iter != endD.end() ; ++iter ) {
-    ParticleID thePid( (*iter) -> pdg_id() ) ;
+    LHCb::ParticleID thePid( (*iter) -> pdg_id() ) ;
     
     if ( thePid.isMeson() ) {
       if ( thePid.pid() > 0 ) {
@@ -371,7 +414,7 @@ void Inclusive::updateExcitedStatesCounters( const HepMC::GenEvent *
   std::vector< HepMC::GenParticle * >::const_iterator iter ;
 
   for ( iter = rootB.begin() ; iter != rootB.end() ; ++iter ) {
-    ParticleID thePid( (*iter) -> pdg_id() ) ;
+    LHCb::ParticleID thePid( (*iter) -> pdg_id() ) ;
 
     if ( thePid.isMeson() ) {
       if ( 0 == thePid.lSpin() ) {
@@ -387,7 +430,7 @@ void Inclusive::updateExcitedStatesCounters( const HepMC::GenEvent *
                   std::back_inserter( rootD ) , isRootD() ) ;
 
   for ( iter = rootD.begin() ; iter != rootD.end() ; ++iter ) {
-    ParticleID thePid( (*iter) -> pdg_id() ) ;
+    LHCb::ParticleID thePid( (*iter) -> pdg_id() ) ;
     if ( thePid.isMeson() ) {
       if ( 0 == thePid.lSpin() ) {
         if ( 1 == thePid.jSpin() ) ++m_n0starC ;

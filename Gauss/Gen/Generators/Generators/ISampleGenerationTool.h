@@ -1,4 +1,4 @@
-// $Id: ISampleGenerationTool.h,v 1.3 2005-12-11 23:21:47 robbep Exp $
+// $Id: ISampleGenerationTool.h,v 1.4 2005-12-31 17:30:37 robbep Exp $
 #ifndef GENERATORS_ISAMPLEGENERATIONTOOL_H 
 #define GENERATORS_ISAMPLEGENERATIONTOOL_H 1
 
@@ -6,10 +6,9 @@
 // from Gaudi
 #include "GaudiKernel/IAlgTool.h"
 
-
-// Forward declarations
-class HepMCEvent ;
-class HardInfo ;
+// From Event
+#include "Event/HepMCEvent.h"
+#include "Event/GenCollision.h"
 
 /** @class ISampleGenerationTool ISampleGenerationTool.h "Generators/ISampleGenerationTool.h"
  *  
@@ -22,29 +21,23 @@ class HardInfo ;
  */
 
 static const InterfaceID IID_ISampleGenerationTool( "ISampleGenerationTool" , 
-                                                    1 , 0 ) ;
+                                                    2 , 0 ) ;
 
 class ISampleGenerationTool : virtual public IAlgTool {
  public:
-  /// Vector of HepMCEvent (LHCb wrapper around HepMC::GenEvent)
-  typedef std::vector< HepMCEvent * > EventVector ;
-
-  /// Vector of HardInfo (hard process informations)
-  typedef std::vector< HardInfo * >   HardVector  ;
-
   static const InterfaceID& interfaceID() { return IID_ISampleGenerationTool; }
 
   /** Generate a set of pile-up interactions to form an event
-   *  @param[in]  nPileUp         Number of pile-up event to generate for 
-   *                              this event.
-   *  @param[out] theEventVector  Vector containing the generated pile-up 
-   *                              interactions.
-   *  @param[out] theHardVector   Vector containing hard process information
-   *                              for each pile-up interaction.
+   *  @param[in]  nPileUp        Number of pile-up event to generate for 
+   *                             this event.
+   *  @param[out] theEvents      Container of the generated pile-up 
+   *                             interactions.
+   *  @param[out] theCollisions  Container of the hard process information
+   *                             for each pile-up interaction.
    */
-  virtual bool generate( const unsigned int nPileUp , 
-                         EventVector & theEventVector ,
-                         HardVector  & theHardVector ) = 0 ;
+  virtual bool generate( const unsigned int nPileUp ,
+                         LHCb::HepMCEvents * theEvents ,
+                         LHCb::GenCollisions * theCollisions ) = 0 ;
 
   /// Print counters and efficiencies at the end of the job.
   virtual void printCounters( ) const = 0 ;

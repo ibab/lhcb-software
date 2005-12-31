@@ -1,4 +1,4 @@
-// $Id: CollidingBeams.cpp,v 1.1 2005-10-03 10:19:32 robbep Exp $
+// $Id: CollidingBeams.cpp,v 1.2 2005-12-31 17:32:01 robbep Exp $
 // Include files 
 
 // local
@@ -84,36 +84,38 @@ StatusCode CollidingBeams::initialize( ) {
 //=============================================================================
 // Mean value of the beam momentum
 //=============================================================================
-void CollidingBeams::getMeanBeams( Hep3Vector & pBeam1 , Hep3Vector & pBeam2 )
+void CollidingBeams::getMeanBeams( Gaudi::XYZVector & pBeam1 , 
+                                   Gaudi::XYZVector & pBeam2 )
   const {
   double p1x, p1y, p1z, p2x, p2y, p2z ;
   p1x = m_beamMomentum * sin( m_horizontalXAngle ) ;
   p1y = m_beamMomentum * sin( m_verticalXAngle   ) ;
   p1z = m_beamMomentum ;
-  pBeam1.set( p1x, p1y, p1z ) ;
+  pBeam1.SetXYZ( p1x, p1y, p1z ) ;
 
   p2x = m_beamMomentum * sin( m_horizontalXAngle ) ;
   p2y = m_beamMomentum * sin( m_verticalXAngle   ) ;
   p2z = -m_beamMomentum ;
-  pBeam2.set( p2x, p2y, p2z ) ;
+  pBeam2.SetXYZ( p2x, p2y, p2z ) ;
 }
 
 //=============================================================================
 // Current value of the smeared beams
 //=============================================================================
-void CollidingBeams::getBeams( Hep3Vector & pBeam1 , Hep3Vector & pBeam2 ) {
+void CollidingBeams::getBeams( Gaudi::XYZVector & pBeam1 , 
+                               Gaudi::XYZVector & pBeam2 ) {
   double p1x, p1y, p1z, p2x, p2y, p2z ;
   p1x = m_beamMomentum * sin( m_horizontalXAngle + 
                               m_gaussianDist() * m_angleSmear ) ;
   p1y = m_beamMomentum * sin( m_verticalXAngle + 
                               m_gaussianDist() * m_angleSmear ) ;
   p1z = m_beamMomentum ;
-  pBeam1.set( p1x, p1y, p1z ) ;
+  pBeam1.SetXYZ( p1x, p1y, p1z ) ;
 
   p2x = m_beamMomentum * sin( m_horizontalXAngle + 
                               m_gaussianDist() * m_angleSmear ) ;
   p2y = m_beamMomentum * sin( m_verticalXAngle + 
                               m_gaussianDist() * m_angleSmear ) ;
   p2z = -m_beamMomentum ;
-  pBeam2.set( p2x, p2y, p2z ) ;
+  pBeam2.SetXYZ( p2x, p2y, p2z ) ;
 }

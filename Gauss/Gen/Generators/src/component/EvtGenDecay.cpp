@@ -1,4 +1,4 @@
-// $Id: EvtGenDecay.cpp,v 1.3 2005-12-11 23:22:30 robbep Exp $
+// $Id: EvtGenDecay.cpp,v 1.4 2005-12-31 17:31:24 robbep Exp $
 // Header file
 #include "EvtGenDecay.h"
 
@@ -14,8 +14,17 @@
 #include "GaudiKernel/ParticleProperty.h"
 #include "GaudiKernel/GaudiException.h"
 
-// from CLHEP
-#include "CLHEP/Units/SystemOfUnits.h"
+// from LHCb
+#include "Kernel/ParticleID.h"
+#include "Kernel/SystemOfUnits.h"
+
+// from HepMC
+#include "HepMC/GenParticle.h"
+#include "HepMC/GenVertex.h"
+#include "HepMC/GenEvent.h"
+
+// from EvtGen
+#include "EvtGen/EvtGen.hh"
 #include "EvtGenModels/EvtPythia.hh"
 #include "EvtGenBase/EvtParticleFactory.hh"
 #include "EvtGenBase/EvtDecayTable.hh"
@@ -225,8 +234,8 @@ StatusCode EvtGenDecay::generateDecay( HepMC::GenParticle * theMother ) const {
   // correct vertex for daughter particles of theMother
   // because EvtGen gives position with respect to the "root" particle
   // This reference position is production vertex of theMother
-  HepLorentzVector theOriginPosition = 
-    theMother -> production_vertex() -> position() ;
+  HepMC::GenVertex * V = theMother -> production_vertex() ;
+  Gaudi::LorentzVector theOriginPosition( V -> position() ) ;
 
   // Fill HepMC event theEvent with EvtGen decay tree part
   // starting from theMother
@@ -268,9 +277,9 @@ StatusCode EvtGenDecay::generateSignalDecay( HepMC::GenParticle * theMother ,
   // correct vertex for daughter particles of theMother
   // because EvtGen gives position with respect to the "root" particle
   // This reference position is production vertex of theMother
-  HepLorentzVector theOriginPosition = 
-    theMother -> production_vertex() -> position() ;
-
+  HepMC::GenVertex * PV = theMother -> production_vertex() ;
+  Gaudi::LorentzVector theOriginPosition( PV -> position() ) ;
+  
   // Fill HepMC event theEvent with EvtGen decay tree part
   // starting from theMother
   makeHepMC( part , theMother , theOriginPosition , -999 ) ;
@@ -308,9 +317,9 @@ StatusCode EvtGenDecay::generateDecayWithLimit( HepMC::GenParticle * theMother ,
   // correct vertex for daughter particles of theMother
   // because EvtGen gives position with respect to the "root" particle
   // This reference position is production vertex of theMother  
-  HepLorentzVector theOriginPosition = 
-    theMother -> production_vertex() -> position() ;
-
+  HepMC::GenVertex * PV = theMother -> production_vertex() ;
+  Gaudi::LorentzVector theOriginPosition( PV -> position() ) ;
+  
   // Fill HepMC event theEvent with EvtGen decay tree part
   // starting from theMother and stopping at particle with pdgId
   // equals to targetId
@@ -335,7 +344,7 @@ StatusCode EvtGenDecay::generateDecayWithLimit( HepMC::GenParticle * theMother ,
 //=============================================================================
 StatusCode EvtGenDecay::makeHepMC( EvtParticle * theEvtGenPart ,
                                    HepMC::GenParticle * theMother ,
-                                   const HepLorentzVector & theOrigin ,
+                                   const Gaudi::LorentzVector & theOrigin ,
                                    int targetId ) const {
   if ( 0 != theEvtGenPart->getNDaug() ) {
     // Find the vertex
@@ -479,7 +488,7 @@ const {
     charge = (int) floor( 3 * (*i) -> charge( ) + 0.5 ) ;
     g << std::setw( 5 ) << charge << " " ;
     // 2 times particle spin
-    ParticleID pid ( (*i)->jetsetID() ) ;
+    LHCb::ParticleID pid ( (*i)->jetsetID() ) ;
     if ( pid.jSpin() > 0 ) spin2 = pid.jSpin() - 1 ;
     else spin2 = getParticleSpin( pid ) - 1 ;
     g << std::setw( 5 ) << spin2 << " " ;
@@ -518,7 +527,7 @@ const EvtId EvtGenDecay::getSignalAlias( int pdgId ) const {
 //============================================================================
 // Return 2J+1 for particles which are not supported by ParticleID
 //============================================================================
-int EvtGenDecay::getParticleSpin( const ParticleID & pid ) const {
+int EvtGenDecay::getParticleSpin( const LHCb::ParticleID & pid ) const {
   // leptons
   if ( pid.isLepton() ) return 2 ;
   // quarks
@@ -650,7 +659,7 @@ const {
   // Get parameters of particle to generate ( theHepMCPart )
   // Type of particle and 4-momentum
   // The mother is created outside EvtGenDecay
-  HepLorentzVector lVect = theHepMCPart -> momentum() ;
+  Gaudi::LorentzVector lVect( theHepMCPart -> momentum() ) ;
   
   EvtVector4R p_init ( lVect.e() , lVect.px() , lVect.py() , lVect.pz() ) ;
   

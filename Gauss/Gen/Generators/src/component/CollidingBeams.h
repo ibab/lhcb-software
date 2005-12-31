@@ -1,4 +1,4 @@
-// $Id: CollidingBeams.h,v 1.2 2005-12-11 23:22:30 robbep Exp $
+// $Id: CollidingBeams.h,v 1.3 2005-12-31 17:32:01 robbep Exp $
 #ifndef GENERATORS_COLLIDINGBEAMS_H 
 #define GENERATORS_COLLIDINGBEAMS_H 1
 
@@ -21,7 +21,7 @@ class IRndmGenSvc ;
  *  @date   2005-08-18
  */
 class CollidingBeams : public GaudiTool, virtual public IBeamTool {
-public:
+ public:
   /// Standard constructor
   CollidingBeams( const std::string& type, const std::string& name,
                   const IInterface* parent ) ;
@@ -33,21 +33,21 @@ public:
   
   /** Implements IBeamTool::getMeanBeams
    */
-  virtual void getMeanBeams( Hep3Vector & pBeam1, Hep3Vector & pBeam2 ) const ;
+  virtual void getMeanBeams( Gaudi::XYZVector & pBeam1 , 
+                             Gaudi::XYZVector & pBeam2 ) const ;
   
   /** Implements IBeamTool::getBeams
    *  Compute beam 3-momentum taking into account the horizontal and vertical
    *  beam angles (given by job options). These angles are Gaussian-smeared
    *  with an angular smearing equal to (emittance/beta*)^1/2.
    */
-  virtual void getBeams( Hep3Vector & pBeam1 , Hep3Vector & pBeam2 ) ;
+  virtual void getBeams( Gaudi::XYZVector & pBeam1 , 
+                         Gaudi::XYZVector & pBeam2 ) ;
 
-protected:
-
-private:
+ private:
   /// Value of angular smearing (computed from quantities given in options)
   double m_angleSmear ;
-
+  
   double m_beamMomentum ; ///< Incident proton energy (set by job options)
 
   /// Vertical crossing angle (set by job options)

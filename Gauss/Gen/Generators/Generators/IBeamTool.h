@@ -1,11 +1,11 @@
-// $Id: IBeamTool.h,v 1.2 2005-12-11 23:21:47 robbep Exp $
+// $Id: IBeamTool.h,v 1.3 2005-12-31 17:30:37 robbep Exp $
 #ifndef GENERATORS_IBEAMTOOL_H 
 #define GENERATORS_IBEAMTOOL_H 1
 
 // Include files
 // from Gaudi
 #include "GaudiKernel/IAlgTool.h"
-#include "CLHEP/Vector/ThreeVector.h"
+#include "Kernel/Vector3DTypes.h"
 
 /** @class IBeamTool IBeamTool.h "Generators/IBeamTool.h"
  *  
@@ -16,7 +16,7 @@
  *  @date   2005-08-17
  */
 
-static const InterfaceID IID_IBeamTool( "IBeamTool" , 1 , 0 ) ;
+static const InterfaceID IID_IBeamTool( "IBeamTool" , 2 , 0 ) ;
 
 class IBeamTool : virtual public IAlgTool {
  public:
@@ -27,13 +27,14 @@ class IBeamTool : virtual public IAlgTool {
    *  @param[out] pBeam1  Mean 3-momentum of beam 1 (pz > 0)
    *  @param[out] pBeam2  Mean 3-momentum of beam 2 (pz < 0)
    */
-  virtual void getMeanBeams( Hep3Vector & pBeam1, Hep3Vector & pBeam2 ) 
-    const = 0 ;
+  virtual void getMeanBeams( Gaudi::XYZVector & pBeam1, 
+                             Gaudi::XYZVector & pBeam2 ) const = 0 ;
   
   /** Generate beam parameters.
    *  @param[out] pBeam1  3-momentum of beam 1 (pz > 0)
    *  @param[out] pBeam2  3-momentum of beam 2 (pz > 0)
    */
-  virtual void getBeams( Hep3Vector & pBeam1, Hep3Vector & pBeam2 ) = 0 ;
+  virtual void getBeams( Gaudi::XYZVector & pBeam1, 
+                         Gaudi::XYZVector & pBeam2 ) = 0 ;
 };
 #endif // GENERATORS_IBEAMTOOL_H

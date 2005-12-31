@@ -1,4 +1,4 @@
-// $Id: SignalPlain.cpp,v 1.6 2005-12-15 21:00:07 robbep Exp $
+// $Id: SignalPlain.cpp,v 1.7 2005-12-31 17:31:24 robbep Exp $
 // Include files 
 
 // local
@@ -9,7 +9,7 @@
 
 // Event 
 #include "Event/HepMCEvent.h"
-#include "Event/HardInfo.h"
+#include "Event/GenCollision.h"
 
 // from Generators
 #include "Generators/IProductionTool.h"
@@ -43,18 +43,18 @@ SignalPlain::~SignalPlain( ) { ; }
 // Generate Set of Event for Minimum Bias event type
 //=============================================================================
 bool SignalPlain::generate( const unsigned int nPileUp , 
-                            EventVector & theEventVector , 
-                            HardVector  & theHardVector ) {
+                            LHCb::HepMCEvents * theEvents , 
+                            LHCb::GenCollisions * theCollisions ) {
   StatusCode sc ;
   bool result = false ;
-  HardInfo * theHardInfo( 0 ) ;
+  LHCb::GenCollision * theGenCollision( 0 ) ;
   HepMC::GenEvent * theGenEvent( 0 ) ;
   
   for ( unsigned int i = 0 ; i < nPileUp ; ++i ) {
-    prepareInteraction( theEventVector, theHardVector, theGenEvent, 
-                        theHardInfo ) ;
-
-    sc = m_productionTool -> generateEvent( theGenEvent , theHardInfo ) ;
+    prepareInteraction( theEvents , theCollisions , theGenEvent, 
+                        theGenCollision ) ;
+    
+    sc = m_productionTool -> generateEvent( theGenEvent , theGenCollision ) ;
     if ( sc.isFailure() ) Exception( "Could not generate event" ) ;
 
     if ( ! result ) {
@@ -76,7 +76,7 @@ bool SignalPlain::generate( const unsigned int nPileUp ,
           bool passCut = true ;
           if ( 0 != m_cutTool ) 
             passCut = m_cutTool -> applyCut( theParticleList , theGenEvent ,
-                                             theHardInfo ) ;
+                                             theGenCollision ) ;
           
           if ( passCut && ( ! theParticleList.empty() ) ) {
             m_nEventsAfterCut++ ;
@@ -84,7 +84,8 @@ bool SignalPlain::generate( const unsigned int nPileUp ,
             updateCounters( theParticleList , m_nParticlesAfterCut , 
                             m_nAntiParticlesAfterCut , true ) ;
             
-            HepMC::GenParticle * theSignal = chooseAndRevert( theParticleList ) ;
+            HepMC::GenParticle * theSignal = 
+              chooseAndRevert( theParticleList ) ;
             
             bool flip ;
             if ( m_cpMixture ) m_decayTool -> enableFlip( ) ;

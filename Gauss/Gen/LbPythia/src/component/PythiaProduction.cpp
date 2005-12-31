@@ -1,4 +1,4 @@
-// $Id: PythiaProduction.cpp,v 1.7 2005-12-08 15:45:38 robbep Exp $
+// $Id: PythiaProduction.cpp,v 1.8 2005-12-31 17:35:36 robbep Exp $
 // Include files 
 
 // local
@@ -9,7 +9,7 @@
 #include "GaudiKernel/ParticleProperty.h"
 
 // from Event
-#include "Event/HardInfo.h"
+#include "Event/GenCollision.h"
 
 // HepMC
 #include "HepMC/IO_HEPEVT.h"
@@ -134,11 +134,11 @@ StatusCode PythiaProduction::initialize( ) {
     return Error( "This FRAME is not yet implemented" ) ;
   
   if ( "3mom" == m_frame ) {
-    Hep3Vector pBeam1 , pBeam2 ;
+    Gaudi::XYZVector pBeam1 , pBeam2 ;
     m_beamTool -> getMeanBeams( pBeam1 , pBeam2 ) ;
     // Pythia Units are GeV
-    Pythia::SetBeam( pBeam1.x() / GeV , pBeam1.y() / GeV , pBeam1.z() /GeV ,
-                     pBeam2.x() / GeV , pBeam2.y() / GeV , pBeam2.z() /GeV ) ;
+    Pythia::SetBeam( pBeam1.X() / GeV , pBeam1.Y() / GeV , pBeam1.Z() /GeV ,
+                     pBeam2.X() / GeV , pBeam2.Y() / GeV , pBeam2.Z() /GeV ) ;
 
     Pythia::pypars().mstp( 171 ) = 1 ;  // new energy given for each event 
     Pythia::pypars().mstp( 172 ) = 1 ;  // event generated at requested energy
@@ -176,14 +176,15 @@ StatusCode PythiaProduction::initialize( ) {
 //   Function called to generate one event with Pythia
 //=============================================================================
 StatusCode PythiaProduction::generateEvent( HepMC::GenEvent * theEvent , 
-                                            HardInfo * theInfo ) {
+                                            LHCb::GenCollision * theCollision )
+{
   // Set beam parameters if variable energy
   if ( m_variableEnergy ) {
-    Hep3Vector pBeam1 , pBeam2 ;
+    Gaudi::XYZVector pBeam1 , pBeam2 ;
     m_beamTool -> getBeams( pBeam1 , pBeam2 ) ;
     // PYTHIA Units are GeV
-    Pythia::SetBeam( pBeam1.x() / GeV , pBeam1.y() / GeV , pBeam1.z() / GeV ,
-                     pBeam2.x() / GeV , pBeam2.y() / GeV , pBeam2.z() / GeV ) ;
+    Pythia::SetBeam( pBeam1.X() / GeV , pBeam1.Y() / GeV , pBeam1.Z() / GeV ,
+                     pBeam2.X() / GeV , pBeam2.Y() / GeV , pBeam2.Z() / GeV ) ;
   }
   
   // Generate Event
@@ -206,7 +207,7 @@ StatusCode PythiaProduction::generateEvent( HepMC::GenEvent * theEvent ,
   theEvent -> set_signal_process_id( Pythia::pypars().msti( 1 ) ) ;
   
   // Retrieve hard process information
-  hardProcessInfo( theInfo ) ;
+  hardProcessInfo( theCollision ) ;
 
   return StatusCode::SUCCESS ;
 }
@@ -267,13 +268,13 @@ void PythiaProduction::updateParticleProperties( const ParticleProperty *
 //=============================================================================
 // Retrieve the Hard scatter information
 //=============================================================================
-void PythiaProduction::hardProcessInfo(HardInfo * hardInfo) {
-  hardInfo->setSHat( Pythia::pypars().pari(14) );
-  hardInfo->setTHat( Pythia::pypars().pari(15) );
-  hardInfo->setUHat( Pythia::pypars().pari(16) );
-  hardInfo->setPtHat( Pythia::pypars().pari(17) );
-  hardInfo->setX1Bjorken( Pythia::pypars().pari(33) );
-  hardInfo->setX2Bjorken( Pythia::pypars().pari(34) );
+void PythiaProduction::hardProcessInfo( LHCb::GenCollision * theCollision ) {
+  theCollision -> setSHat( Pythia::pypars().pari(14) );
+  theCollision -> setTHat( Pythia::pypars().pari(15) );
+  theCollision -> setUHat( Pythia::pypars().pari(16) );
+  theCollision -> setPtHat( Pythia::pypars().pari(17) );
+  theCollision -> setX1Bjorken( Pythia::pypars().pari(33) );
+  theCollision -> setX2Bjorken( Pythia::pypars().pari(34) );
 
   debug() << "Hard process = " 
           << Pythia::pypars().msti(1)  << " "
@@ -491,7 +492,7 @@ void PythiaProduction::retrievePartonEvent( HepMC::GenEvent * /* theEvent */ ) {
 // Hadronize Pythia event
 //=============================================================================
 StatusCode PythiaProduction::hadronize( HepMC::GenEvent * theEvent , 
-                                        HardInfo * theInfo) {
+                                        LHCb::GenCollision * theCollision ) {
   Pythia::PyExec( ) ;
 
   // Debugging output: print each event if required
@@ -508,7 +509,7 @@ StatusCode PythiaProduction::hadronize( HepMC::GenEvent * theEvent ,
   theEvent -> set_signal_process_id( Pythia::pypars().msti( 1 ) ) ;
   
   // Retrieve hard process information
-  hardProcessInfo( theInfo ) ;
+  hardProcessInfo( theCollision ) ;
   
   return StatusCode::SUCCESS ;
 }

@@ -1,4 +1,4 @@
-// $Id: Signal.cpp,v 1.7 2005-12-11 23:22:30 robbep Exp $
+// $Id: Signal.cpp,v 1.8 2005-12-31 17:33:40 robbep Exp $
 // Include files 
 
 // local
@@ -7,10 +7,7 @@
 // from Gaudi
 #include "GaudiKernel/IParticlePropertySvc.h"
 #include "GaudiKernel/ParticleProperty.h"
-#include "GaudiKernel/IRndmGenSvc.h" 
-
-// from Event
-#include "Event/HepMCEvent.h"
+#include "GaudiKernel/IRndmGenSvc.h"
 
 // from Generators
 #include "Generators/IDecayTool.h"
@@ -148,7 +145,8 @@ StatusCode Signal::isolateSignal( const HepMC::GenParticle * theSignal )
   const {
   StatusCode sc = StatusCode::SUCCESS ;
   // Create a new event to contain isolated signal decay tree
-  HepMCEvent * mcevt = new HepMCEvent( name() , 1 , 1 ) ;
+  LHCb::HepMCEvent * mcevt = new LHCb::HepMCEvent( ) ;
+  mcevt -> setGeneratorName( name() ) ;
   HepMC::GenEvent * hepMCevt = mcevt -> pGenEvt() ;
   
   if ( 0 == theSignal -> production_vertex() ) 
@@ -177,10 +175,10 @@ StatusCode Signal::isolateSignal( const HepMC::GenParticle * theSignal )
     return Error( "Could not fill HepMC event for signal tree" , sc ) ;
                             
   // Check if container already exists
-  if ( exist< HepMCEvents >( "/Event/Gen/SignalDecayTree" ) ) 
+  if ( exist< LHCb::HepMCEvents >( "/Event/Gen/SignalDecayTree" ) ) 
     return Error( "SignalDecayTree container already exists !" ) ;
   
-  HepMCEvents * hepVect = new HepMCEvents ;
+  LHCb::HepMCEvents * hepVect = new LHCb::HepMCEvents ;
   hepVect -> insert( mcevt ) ;
   
   // Register new location and store HepMC event

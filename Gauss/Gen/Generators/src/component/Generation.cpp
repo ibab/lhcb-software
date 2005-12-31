@@ -1,4 +1,4 @@
-// $Id: Generation.cpp,v 1.7 2005-12-11 23:22:30 robbep Exp $
+// $Id: Generation.cpp,v 1.8 2005-12-31 17:32:39 robbep Exp $
 // Include files 
 
 // local
@@ -8,13 +8,17 @@
 #include "GaudiKernel/AlgFactory.h"
 #include "GaudiKernel/RndmGenerators.h"
 
-#include "Event/HepMCEvent.h"
+// from Event
 #include "Event/GenHeader.h"
-#include "Event/HardInfo.h"
+#include "Event/GenCollision.h"
+
+// from LHCb
 #include "Kernel/ParticleID.h"
 
+// from HepMC
 #include "HepMC/GenEvent.h"
 
+// from Generators
 #include "Generators/ISampleGenerationTool.h"
 #include "Generators/IPileUpTool.h"
 #include "Generators/IDecayTool.h" 
@@ -69,12 +73,15 @@ Generation::Generation( const std::string& name,
     declareProperty ( "EventType"          , m_eventType = 30000000 ) ;
 
     // Location of the output of the generation
-    declareProperty ( "HepMCEventLocation" , 
-                      m_hepMCEventLocation = HepMCEventLocation::Default ) ;
+    declareProperty ( "HepMCEventLocation" ,
+                      m_hepMCEventLocation = 
+                      LHCb::HepMCEventLocation::Default ) ;
     declareProperty ( "GenHeaderLocation"  ,
-                      m_genHeaderLocation = GenHeaderLocation::Default ) ;
-    declareProperty ( "HardInfoLocation" ,
-                      m_hardInfoLocation = HardInfoLocation::Default ) ;
+                      m_genHeaderLocation = 
+                      LHCb::GenHeaderLocation::Default ) ;
+    declareProperty ( "GenCollisionLocation" ,
+                      m_genCollisionLocation = 
+                      LHCb::GenCollisionLocation::Default ) ;
     
     // Tool name to generate the event
     declareProperty( "PileUpTool" , m_pileUpToolName = "FixedLuminosity" ) ;
@@ -138,32 +145,38 @@ StatusCode Generation::execute() {
   debug() << "Processing event type " << m_eventType << endmsg ;
   StatusCode sc = StatusCode::SUCCESS ;
 
-  unsigned int nPileUp ;
-  double       currentLuminosity ;
-  EventVector  theHepMCs    ; EventVector::iterator itEvent ;
-  HardVector   theHardInfos ; HardVector::iterator  itHard  ;
+  unsigned int  nPileUp ;
+  double        currentLuminosity ;
+  LHCb::HepMCEvents   * theEvents     ; LHCb::HepMCEvents::iterator itEvents ;
+  LHCb::GenCollisions * theCollisions ; 
+  LHCb::GenCollisions::iterator  itCollisions ;
 
   unsigned int n1b( 0 ) , n3b( 0 ) , nPromptB( 0 ) ;
   unsigned int n1c( 0 ) , n3c( 0 ) , nPromptC( 0 ) ;
   unsigned int nbc( 0 ) ;
 
+  // Create containers for this event
+  theEvents = new LHCb::HepMCEvents( ) ;
+  theCollisions = new LHCb::GenCollisions( ) ;
+
   // Generate a set of interaction until a good one is found
   bool goodEvent = false ;
   while ( ! goodEvent ) {
-    // Clear the vectors which will contain the HepMC events and Hard infos
-    for ( itEvent = theHepMCs.begin() ; theHepMCs.end() != itEvent ;
-          ++itEvent ) delete (*itEvent) ;
-    for ( itHard  = theHardInfos.begin() ; theHardInfos.end() != itHard ;
-          ++itHard ) delete (*itHard) ;
-    theHepMCs.clear() ; theHardInfos.clear() ;
+    // Clear the vectors which will contain the HepMC events and collisions
+    for ( itEvents = theEvents -> begin() ; theEvents -> end() != itEvents ;
+          ++itEvents ) delete (*itEvents) ;
+    for ( itCollisions  = theCollisions -> begin() ; 
+          theCollisions -> end() != itCollisions ; ++itCollisions ) 
+      delete (*itCollisions) ;
+    theEvents -> clear() ; theCollisions -> clear() ;
     
     // Compute the number of pile-up interactions to generate 
     nPileUp = m_pileUpTool -> numberOfPileUp( currentLuminosity ) ;
     
     // generate a set of Pile up interactions according to the requested type
     // of event
-    goodEvent = m_sampleGenerationTool -> generate( nPileUp , theHepMCs , 
-                                                    theHardInfos ) ;
+    goodEvent = m_sampleGenerationTool -> generate( nPileUp , theEvents , 
+                                                    theCollisions ) ;
     
     m_nEvents++ ;
     m_nInteractions += nPileUp ;
@@ -172,9 +185,10 @@ StatusCode Generation::execute() {
     n1b = 0 ; n3b = 0 ; nPromptB = 0 ;
     n1c = 0 ; n3c = 0 ; nPromptC = 0 ;
     nbc = 0 ;
-    for ( itEvent = theHepMCs.begin() ; itEvent != theHepMCs.end() ; 
-          ++itEvent ) updateInteractionCounters( n1b, n3b, nPromptB, n1c, n3c, 
-                                                 nPromptC, nbc , *itEvent ) ;
+    for ( itEvents = theEvents -> begin() ; itEvents != theEvents -> end() ; 
+          ++itEvents ) updateInteractionCounters( n1b, n3b, nPromptB, n1c, 
+                                                  n3c, nPromptC, nbc , 
+                                                  *itEvents ) ;
     
     m_n1b += n1b ; m_n3b += n3b ; m_nPromptB += nPromptB ;
     m_n1c += n1c ; m_n3c += n3c ; m_nPromptC += nPromptC ;
@@ -182,11 +196,11 @@ StatusCode Generation::execute() {
 
     // Decay the event if it is a good event
     if ( ( goodEvent ) && ( 0 != m_decayTool ) ) {
-      for ( itEvent = theHepMCs.begin() ; itEvent != theHepMCs.end() ;
-            ++itEvent ) {
-        sc = decayEvent( *itEvent ) ;
+      for ( itEvents = theEvents -> begin() ; itEvents != theEvents -> end() ;
+            ++itEvents ) {
+        sc = decayEvent( *itEvents ) ;
         if ( ! sc.isSuccess() ) return sc ;
-        sc = m_vertexSmearingTool -> smearVertex( *itEvent ) ;
+        sc = m_vertexSmearingTool -> smearVertex( *itEvents ) ;
         if ( ! sc.isSuccess() ) return sc ;
       }
     }
@@ -195,8 +209,8 @@ StatusCode Generation::execute() {
     if ( m_fullGenEventCutTool ) {
       if ( goodEvent ) {
         m_nBeforeFullEvent++ ;
-        goodEvent = m_fullGenEventCutTool -> studyFullEvent( theHepMCs , 
-                                                             theHardInfos ) ;
+        goodEvent = m_fullGenEventCutTool -> studyFullEvent( theEvents , 
+                                                             theCollisions ) ;
         if ( goodEvent ) m_nAfterFullEvent++ ;
       }
     }
@@ -212,24 +226,21 @@ StatusCode Generation::execute() {
   m_nbcAccepted += nbc ;
 
   // Now store the event in Gaudi event store
-  GenHeader * theGenHeader = new GenHeader() ;
+  LHCb::GenHeader * theGenHeader = new LHCb::GenHeader() ;
   theGenHeader -> setLuminosity( currentLuminosity ) ;
   theGenHeader -> setEvType( m_eventType ) ;
-  
+  LHCb::GenCollisions::const_iterator it ;
+  for ( it = theCollisions -> begin() ; theCollisions -> end() != it ; ++it ) 
+    theGenHeader -> addToCollisions( *it ) ;
+
   sc = put( theGenHeader , m_genHeaderLocation ) ;
   if ( ! sc.isSuccess() ) return Error( "Cannot store GenHeader object" ) ;
 
-  HepMCEvents * eventVector = new HepMCEvents() ;
-  for ( itEvent = theHepMCs.begin() ; theHepMCs.end() != itEvent ; 
-        ++itEvent ) eventVector -> insert( *itEvent ) ;
-  sc = put( eventVector , m_hepMCEventLocation ) ;
+  sc = put( theEvents , m_hepMCEventLocation ) ;
   if ( ! sc.isSuccess() ) return Error( "Cannot store HepMC object" ) ;
 
-  HardInfos * hardVector = new HardInfos() ;
-  for ( itHard = theHardInfos.begin() ; theHardInfos.end() != itHard ;
-        ++itHard ) hardVector -> insert( *itHard ) ;
-  sc = put( hardVector , m_hardInfoLocation ) ;
-  if ( ! sc.isSuccess() ) return Error( "Cannot store HardInfo object" ) ;
+  sc = put( theCollisions , m_genCollisionLocation ) ;
+  if ( ! sc.isSuccess() ) return Error( "Cannot store GenCollision object" ) ;
 
   return sc ;
 }
@@ -281,7 +292,7 @@ StatusCode Generation::finalize() {
 // Decay in the event all particles which have been left stable by the
 // production generator
 //=============================================================================
-StatusCode Generation::decayEvent( HepMCEvent * theEvent ) {
+StatusCode Generation::decayEvent( LHCb::HepMCEvent * theEvent ) {
   m_decayTool -> disableFlip() ;
   StatusCode sc ;
   
@@ -322,7 +333,7 @@ void Generation::updateInteractionCounters( unsigned int & n1b ,
                                             unsigned int & n3c ,
                                             unsigned int & nPromptC ,
                                             unsigned int & nbc ,
-                                            const HepMCEvent * evt ) 
+                                            const LHCb::HepMCEvent * evt ) 
 {
   const HepMC::GenEvent * theEvent = evt -> pGenEvt() ;
   unsigned int bQuark( 0 ) , bHadron( 0 ) , cQuark( 0 ) , cHadron( 0 ) ;
@@ -332,7 +343,7 @@ void Generation::updateInteractionCounters( unsigned int & n1b ,
         theEvent -> particles_end() != iter ; ++iter ) {
     if ( (*iter) -> status() >= 3 ) continue ;
     pdgId = abs( (*iter) -> pdg_id() ) ;
-    ParticleID thePid( pdgId ) ;
+    LHCb::ParticleID thePid( pdgId ) ;
     if ( 5 == pdgId ) bQuark++ ;
     if ( 4 == pdgId ) cQuark++ ;
     if ( thePid.hasBottom() ) bHadron++ ;
