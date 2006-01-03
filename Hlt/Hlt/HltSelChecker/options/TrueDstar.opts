@@ -9,13 +9,34 @@ SelectDstar2Dpi.Filter.TrueMCFilterCriterion.Particle2MCLinksAsct.AlgorithmName 
 // LF: rename each associator
 Particle2MCLinksSelectDstar2Dpi.InputData = { "Phys/HLTPions/Particles", "Phys/HLTKaons/Particles"};
 
-// check that all 3 tracks are there
+
+// // Only long tracks
+// // check that all 3 tracks are there
+// TrueSignals.Members += {"MakeResonances/AllDstar2DpiTracks"};
+// AllDstar2DpiTracks.PhysDesktop.InputLocations = {"Phys/SelectDstar2Dpi"};
+// AllDstar2DpiTracks.DecayDescriptors = {"[D*(2010)- -> K+ pi- pi-]cc", "[D*(2010)- -> pi- pi+ pi-]cc", "[D*(2010)- -> pi- K+ K-]cc"};
+// AllDstar2DpiTracks.DaughterFilter.Selections = {"pi+ : TrackTypeFilterCriterion",
+//                                                 "K+ : TrackTypeFilterCriterion"};
+// AllDstar2DpiTracks.DaughterFilter.TrackTypeFilterCriterion.RequireLong = true ;
+
+
+// Only long except for slow pion
+// check that all 4 tracks are there
 TrueSignals.Members += {"MakeResonances/AllDstar2DpiTracks"};
 AllDstar2DpiTracks.PhysDesktop.InputLocations = {"Phys/SelectDstar2Dpi"};
 AllDstar2DpiTracks.DecayDescriptors = {"[D*(2010)- -> K+ pi- pi-]cc", "[D*(2010)- -> pi- pi+ pi-]cc", "[D*(2010)- -> pi- K+ K-]cc"};
-AllDstar2DpiTracks.DaughterFilter.Selections = {"pi+ : TrackTypeFilterCriterion",
-                                             "K+ : TrackTypeFilterCriterion"};
-AllDstar2DpiTracks.DaughterFilter.TrackTypeFilterCriterion.RequireLong = true ;
+AllDstar2DpiTracks.DaughterFilter.Selections = {"pi+ : BooleanFilterCriterion/Tracks", "K+ : BooleanFilterCriterion/Tracks"};
+
+AllDstar2DpiTracks.DaughterFilter.Tracks.OrList = {"TrackTypeFilterCriterion/Long", "TrueMCFilterCriterion/SlowPiIncDstar"};
+AllDstar2DpiTracks.DaughterFilter.Tracks.Long.RequireLong = true;
+AllDstar2DpiTracks.DaughterFilter.Tracks.SlowPiIncDstar.MCDecayFinder.Decay 
+= "[D*(2010)- -> ^pi- (D~0 -> K+ pi-)]cc, [D*(2010)- -> ^pi- (D~0 -> pi+ pi-)]cc, [D*(2010)- -> ^pi- (D~0 -> K+ K-)]cc" ;
+
+AllDstar2DpiTracks.DaughterFilter.Tracks.SlowPiIncDstar.Particle2MCLinksAsct.Location = "Phys/Relations/Particle2MCLinksSlowPiIncDstar";
+AllDstar2DpiTracks.DaughterFilter.Tracks.SlowPiIncDstar.Particle2MCLinksAsct.AlgorithmType = "Particle2MCLinks";
+AllDstar2DpiTracks.DaughterFilter.Tracks.SlowPiIncDstar.Particle2MCLinksAsct.AlgorithmName = "Particle2MCLinksSlowPiIncDstar";
+
+Particle2MCLinksSlowPiIncDstar.InputData = { "Phys/SelectDstar2Dpi/Particles"};
 
 // only here
 TrueSignals.Members += {"PrintTree/PrintDstarTracks"};

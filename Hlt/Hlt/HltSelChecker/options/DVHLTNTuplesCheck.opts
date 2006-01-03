@@ -251,3 +251,11 @@ HltPVCheck.nTracksToBeRecble = 5;
 //HltPVCheck.produceNtuple = true;
 HltPVCheck.OutputLevel = 3;
 //------------------------------------------------------------------------------ 
+
+//------------------------------------------------------------------------------ 
+PrintTrueB.OutputLevel = 4;
+PrintTrueD.OutputLevel = 4;
+PrintBTracks.OutputLevel = 4;
+PrintDstarTracks.OutputLevel = 3;
+//------------------------------------------------------------------------------ 
+
