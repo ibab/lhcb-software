@@ -1,5 +1,5 @@
 #printOptions 
-// $Id: Gauss.opts,v 1.71 2005-12-16 15:35:49 gcorti Exp $ 
+// $Id: Gauss.opts,v 1.72 2006-01-04 15:26:47 gcorti Exp $ 
 
 /** @file 
  * 
@@ -86,7 +86,7 @@ HistogramPersistencySvc.OutputFile = "GaussHistos.root";  // Monitoring histos
 //                         or use ParticleGun.opts
 //---------------------------------------------------------------------------
 #include "$GAUSSOPTS/30000000.opts"  // Min Bias
-//#include "$GAUSSOPTS/13144000.opts"  // Min Bias
+//#include "$GAUSSOPTS/10000000.opts"  // Generic b-b~ events
 
 //#include "$GAUSSOPTS/ParticleGun.opts"          
  
