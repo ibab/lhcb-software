@@ -7,6 +7,7 @@
 !======================== Gauss v23r0 2006-01-05 ============================
 ! 2006-01-05 - Florence RANJARD
  - Gauss v23r0 is the v22r0 version built on Geant4 v80r0
+   it does not use G4LHCblists but G4hadlists v3r3
 
 !========================= Gauss v22r0 2005-12-16 ============================
 ! 2005-12-16 - Gloria CORTI
