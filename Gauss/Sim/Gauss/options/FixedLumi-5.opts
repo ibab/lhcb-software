@@ -1,15 +1,16 @@
 /** @file
  *
  *  Options to generate events at a given fixed luminosity.
- *  In this case 5 x 10^32 cm-2 s-1
+ *  In this case 5 x 10^32 cm-2 s-1 (note that the internal unit
+ *  are mm and ns)
  *  Refer to Gauss User Guide for details.
- *  This file need to be included in Gauss.opts after the event type
+ *  This file need to be included in Gauss.opts.
  *
  *  @author G.Corti
- *  @date   2005-05-31
+ *  @date   2006-01-04.
  *
  */
  
-PythiaAlg.FillDuration  =    0.01;    // in hours
-PythiaAlg.BeamDecayTime = 1000.0;     // in hours
-PythiaAlg.Luminosity    =    5.0;     // in units of 10^32 cm-2 s-1 
+Generation.PileUpTool                 = "FixedLuminosity";
+Generation.FixedLuminosity.Luminosity =  5.e21;
+
