@@ -1,4 +1,4 @@
-// $Id: MuonLowEnergy.opts,v 1.1 2005-11-11 10:23:35 gcorti Exp $
+// $Id: MuonLowEnergy.opts,v 1.2 2006-01-05 12:28:35 gcorti Exp $
  
 /** @file
  *
@@ -32,5 +32,6 @@ GiGa.ModularPL.PhysicsConstructors += {
   "GiGaExtPhysics<HadronPhysicsQGSP_BERT_HP>/QGSP_BERT_HPPhysics"
 };
 
-// Reset muon threshold as set in XMLDDDB
+// Reset muon threshold as set in XMLDDDB: when using vYYYYMM.opts as
+// Gauss options edit it to use the line below instead of what there
 SimulationSvc.SimulationDbLocation = "$GAUSSROOT/xml/MuonLowEnergy.xml";
