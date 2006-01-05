@@ -4,6 +4,10 @@
 ! Purpose          : collection of physics constructors for Gauss
 !-----------------------------------------------------------------------------
 
+!===================== GaussPhysics v3r3 =================================
+! 2006-01-05 - Florence Ranjard
+ - requirements - do not use G4LHCblists which is included in G4hadlists
+
 !====================== GaussPhysics v3r2 ===============================
 ! 2005-11-09 - Gloria CORTI
  - Introduce factories for additional Physics lists private to LHCb
