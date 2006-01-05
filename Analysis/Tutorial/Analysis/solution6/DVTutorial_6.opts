@@ -137,6 +137,7 @@ ApplicationMgr.TopAlg += { "EffSelCheck/EffBs2JpsiPhi" };
 EffBs2JpsiPhi.Histograms = true;
 EffBs2JpsiPhi.MCDecay = "[B_s0 -> (phi(1020) -> ^K+ ^K-) (J/psi(1S) -> ^mu+ ^mu- {, gamma})]cc";
 //
+
 // Print a corellations table
 // Also better run outside of the sequence
 //
@@ -174,3 +175,4 @@ EventSelector.Input   = {
 "DATAFILE='PFN:castor:/castor/cern.ch/lhcb/DC04/00000543_00000019_5.dst' TYP='POOL_ROOTTREE' OPT='READ'",
 };
 
+TutorialTuple.BTaggingTool.OutputLevel = 2 ;

@@ -8,6 +8,11 @@
 !
 !-----------------------------------------------------------------------------
 
+!===================== Tutorial/Analysis v6 2006-01-05 ======================
+! 2006-11-05 - P. Koppenburg
+  - src/Analysis_load.cpp
+    . Comment all algorithms
+    
 ! 2005-11-14 - P. Koppenburg
   - solution6/*.*
     . Added background category tool
