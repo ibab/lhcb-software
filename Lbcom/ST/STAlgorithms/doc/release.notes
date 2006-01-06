@@ -2,6 +2,9 @@
 ! Package manager : Matt Needham
 !-------------------------------------------------------------------------------
 
+! 2006-1-06 M Needham
+  - tune capacitive coupling splines
+
 !======================= STAlgorithms v1r0 2005-12-20 ==========================
 ! 2005-12-20 - Marco Cattaneo
  - Move all interfaces to src directory. If they are ever needed externally they
