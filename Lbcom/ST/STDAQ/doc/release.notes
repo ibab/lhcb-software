@@ -4,6 +4,9 @@
 ! Purpose     : Encode and decode L1 and Raw buffers for ST
 !-----------------------------------------------------------------------------
 
+! 2006-1-06 M Needham
+  - Change from smart numbering STDAQChannelID to flat numbering (how it will be)
+
 !=============================== STDAQ v2r0 2005-12-20 =======================
 ! 2005-12-20 - Marco Cattaneo
  - Cleanup requirements

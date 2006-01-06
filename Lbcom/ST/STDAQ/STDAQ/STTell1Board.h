@@ -1,4 +1,4 @@
-// $Id: STTell1Board.h,v 1.1.1.1 2005-12-20 12:47:27 mneedham Exp $
+// $Id: STTell1Board.h,v 1.2 2006-01-06 08:13:18 mneedham Exp $
 #ifndef _STTell1Board_H
 #define _STTell1Board_H 1
 
@@ -9,20 +9,19 @@
 
 /** @class STTell1Board STTell1Board.h "STDAQ/STTell1Board.h"
  *
- *  Class for converting from STChannelID to STDAQChannelID/STTell1ID
+ *  Class for converting from STChannelID to daq channel/STTell1ID
  *
  *  @author M.Needham
  *  @date   5/01/2004
  */
 
-class STDAQChannelID;
 
 class STTell1Board{
 
 public:
 
   /// constructer
-  STTell1Board(const STTell1ID aBoard);
+  STTell1Board(const STTell1ID aBoard, const unsigned int stripsPerHybrid);
 
   /// destructer
   virtual ~STTell1Board();
@@ -37,12 +36,12 @@ public:
   bool isInside(const LHCb::STChannelID aOfflineChan,
                 unsigned int& sectorIndex) const;
 
-  /// construct LHCb::STChannelID from STDAQChannelID
-  LHCb::STChannelID DAQToOffline(const STDAQChannelID aDAQChan) const;
+  /// construct LHCb::STChannelID from DAQ Channel
+  LHCb::STChannelID DAQToOffline(const unsigned int aDAQChan) const;
 
-  /// construct STDAQChannelID from LHCb::STChannelID
-  STDAQChannelID offlineToDAQ(const LHCb::STChannelID aOfflineChan,
-                              const unsigned int sectorIndex) const;
+  /// construct DAQChannel from LHCb::STChannelID
+  unsigned int offlineToDAQ(const LHCb::STChannelID aOfflineChan,
+                            const unsigned int sectorIndex) const;
 
 
   /// Operator overloading for stringoutput
@@ -61,6 +60,7 @@ public:
 private:
 
   STTell1ID m_boardID;
+  unsigned int m_nStripsPerHybrid;
   std::vector<LHCb::STChannelID> m_sectorsVector;
 
 };

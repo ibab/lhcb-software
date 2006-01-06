@@ -1,4 +1,4 @@
-// $Id: RawBankToSTClusterAlg.cpp,v 1.1.1.1 2005-12-20 12:47:27 mneedham Exp $
+// $Id: RawBankToSTClusterAlg.cpp,v 1.2 2006-01-06 08:13:18 mneedham Exp $
 
 #include <algorithm>
 
@@ -22,7 +22,6 @@
 
 #include "SiDAQ/SiADCWord.h"
 #include "STDAQ/STDAQGeneral.h"
-#include "STDAQ/STDAQChannelID.h"
 #include "SiDAQ/SiHeaderWord.h"
 
 #include "Kernel/STDetSwitch.h"
@@ -193,7 +192,7 @@ StatusCode RawBankToSTClusterAlg::createCluster(const STClusterWord& aWord,
   unsigned int offset = mean(adcValues); 
 
   // decode the channel
-  STChannelID nearestChan = aBoard->DAQToOffline(STDAQChannelID(aWord.channelID()));
+  STChannelID nearestChan = aBoard->DAQToOffline(aWord.channelID());
   if (!m_tracker->isValid(nearestChan)){
     warning() << "invalid channel " << endmsg;
     return StatusCode::FAILURE;

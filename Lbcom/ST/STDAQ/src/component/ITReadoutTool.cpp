@@ -1,4 +1,4 @@
-// $Id: ITReadoutTool.cpp,v 1.2 2005-12-20 14:52:27 cattanem Exp $
+// $Id: ITReadoutTool.cpp,v 1.3 2006-01-06 08:13:18 mneedham Exp $
 
 // Gaudi
 #include "GaudiKernel/ToolFactory.h"
@@ -82,6 +82,7 @@ StatusCode ITReadoutTool::createBoards() {
   const std::vector<std::string>& stations = rInfo->paramAsStringVect("stations");
   m_hybridsPerBoard = rInfo->param<int>("hybridsPerBoard");
   unsigned int nBoardPerStation = rInfo->param<int>("nBoard");
+  unsigned int nStripsPerHybrid =  STDAQ::nStripsPerBoard/m_hybridsPerBoard;
   m_nBoard = nBoardPerStation*stations.size();
 
   std::vector<std::string>::const_iterator iterS = stations.begin();
@@ -96,12 +97,12 @@ StatusCode ITReadoutTool::createBoards() {
      STChannelID firstChan = STChannelID(tMap[0]);
      m_firstStation = firstChan.station() ;
    }
-
+  
    for (unsigned int iBoard = 0; iBoard < nBoardPerStation; ++iBoard){
    
      // make new board
      STTell1ID anID = STTell1ID(iReg,iBoard);
-     STTell1Board* aBoard = new STTell1Board(anID);
+     STTell1Board* aBoard = new STTell1Board(anID,nStripsPerHybrid );
 
      for (unsigned iH = 0 ; iH < m_hybridsPerBoard; ++iH, ++vecLoc){
        STChannelID sectorID((unsigned int)tMap[vecLoc]);

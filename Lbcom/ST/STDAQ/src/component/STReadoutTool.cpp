@@ -1,4 +1,4 @@
-// $Id: STReadoutTool.cpp,v 1.2 2005-12-20 14:52:27 cattanem Exp $
+// $Id: STReadoutTool.cpp,v 1.3 2006-01-06 08:13:18 mneedham Exp $
 
 // Gaudi
 #include "GaudiKernel/ToolFactory.h"
@@ -7,7 +7,6 @@
 // STDAQ
 #include "STReadoutTool.h"
 
-#include "STDAQ/STDAQChannelID.h"
 #include "STDAQ/STTell1Board.h"
 #include "STDAQ/STTell1ID.h"
 #include "STDAQ/STDAQDefinitions.h"
@@ -83,7 +82,7 @@ STDAQ::chanPair STReadoutTool::offlineChanToDAQ(const STChannelID aOfflineChan) 
   } // iBoard
 
   if (isFound == false){
-    return(std::make_pair(STTell1ID(STTell1ID::nullBoard),STDAQChannelID(0)));
+    return(std::make_pair(STTell1ID(STTell1ID::nullBoard),0));
   }
   else {
     return (std::make_pair(m_boards[iBoard]->boardID(),m_boards[iBoard]->offlineToDAQ(aOfflineChan,waferIndex))); 

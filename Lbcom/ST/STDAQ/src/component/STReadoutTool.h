@@ -1,4 +1,4 @@
-// $Id: STReadoutTool.h,v 1.1.1.1 2005-12-20 12:47:27 mneedham Exp $
+// $Id: STReadoutTool.h,v 1.2 2006-01-06 08:13:18 mneedham Exp $
 #ifndef _STReadoutTool_H
 #define _STReadoutTool_H
 
@@ -10,7 +10,6 @@
 
 // STDAQ
 #include "STDAQ/ISTReadoutTool.h"
-#include "STDAQ/STDAQChannelID.h"
 #include "STDAQ/STTell1ID.h"
 #include "STDAQ/STDAQDefinitions.h"
 
@@ -44,7 +43,7 @@ public:
   /// nBoard
   virtual unsigned int nBoard() const;
 
-  /// convert ITChannelID to STDAQChannelID
+  /// convert ITChannelID to DAQ ChannelID
   virtual STDAQ::chanPair offlineChanToDAQ(const LHCb::STChannelID aOfflineChan) const;
  
   /// find the Tell1 board given a board ID

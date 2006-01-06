@@ -1,4 +1,4 @@
-// $Id: STDAQDefinitions.h,v 1.1.1.1 2005-12-20 12:47:27 mneedham Exp $
+// $Id: STDAQDefinitions.h,v 1.2 2006-01-06 08:13:18 mneedham Exp $
 #ifndef _STDAQDefinitions_H
 #define _STDAQDefinitions_H
 
@@ -7,10 +7,7 @@
 
 #include "Event/RawBank.h"
 
-//#include "STDAQChannelID.h"
-//#include "STTell1ID.h"
 
-class STDAQChannelID;
 class STTell1ID;
 class ITCluster;
 
@@ -25,7 +22,7 @@ class ITCluster;
 
 namespace STDAQ{
 
-  typedef std::pair<STTell1ID,STDAQChannelID> chanPair; 
+  typedef std::pair<STTell1ID,unsigned int> chanPair; 
 
   typedef unsigned int rawInt;
 
@@ -39,6 +36,9 @@ namespace STDAQ{
 
   // n strips per ppx
   const unsigned int nStripPerPPx = 768;
+
+  // n strips per Tell1 boar
+  const unsigned int nStripsPerBoard = 3072;
 
 };
 

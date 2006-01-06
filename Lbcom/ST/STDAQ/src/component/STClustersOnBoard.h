@@ -13,8 +13,8 @@
 #include <utility>
 #include <algorithm>
 #include <boost/array.hpp>
-#include "STDAQ/STDAQChannelID.h"
 
+#include "STDAQ/STDAQDefinitions.h"
 
 class STClustersOnBoard {
 
@@ -22,12 +22,12 @@ public:
 
  STClustersOnBoard(unsigned int nMax);
 
- typedef std::pair<LHCb::STCluster*, STDAQChannelID> boardPair; 
+ typedef std::pair<LHCb::STCluster*, unsigned int> boardPair; 
  typedef std::vector<boardPair> ClusterVector;
 
  ~STClustersOnBoard();
 
- void addCluster(LHCb::STCluster* aCluster, const STDAQChannelID daqChan);  
+ void addCluster(LHCb::STCluster* aCluster, const unsigned int daqChan);  
 
  ClusterVector clusters() const;
 
@@ -56,7 +56,7 @@ private:
      */
     inline bool operator() (boardPair obj1 , boardPair obj2 ) const
     {
-      return obj1.second.channelID() < obj2.second.channelID() ;
+      return obj1.second < obj2.second ;
     }
   };
 
@@ -78,9 +78,9 @@ inline STClustersOnBoard::ClusterVector STClustersOnBoard::clusters() const{
   return m_clusCont;
 }
 
-inline void STClustersOnBoard::addCluster(LHCb::STCluster* aCluster, const STDAQChannelID daqChan){
+inline void STClustersOnBoard::addCluster(LHCb::STCluster* aCluster, const unsigned int daqChan){
 
-  unsigned int ppx = daqChan.ppx();
+  unsigned int ppx = daqChan/STDAQ::nStripPerPPx;
   if (inOverflow(ppx) == false){
     m_clusCont.push_back(std::make_pair(aCluster, daqChan));
     ++m_ppxCount[ppx];

@@ -1,4 +1,4 @@
-// $Id: STClustersToRawBankAlg.cpp,v 1.1.1.1 2005-12-20 12:47:27 mneedham Exp $
+// $Id: STClustersToRawBankAlg.cpp,v 1.2 2006-01-06 08:13:18 mneedham Exp $
 
 // from Gaudi
 #include "GaudiKernel/AlgFactory.h"
@@ -9,7 +9,6 @@
 #include "STDAQ/STDAQGeneral.h"
 #include "STDAQ/ISTReadoutTool.h"
 #include "STDAQ/STTell1ID.h"
-#include "STDAQ/STDAQChannelID.h"
 
 #include "STDAQ/STTell1Board.h"
 #include "STDAQ/STDAQDefinitions.h"
@@ -246,7 +245,7 @@ StatusCode STClustersToRawBankAlg::writeBank(STClustersOnBoard::ClusterVector& c
   for (unsigned int iCluster = 0; iCluster < nClus; ++iCluster){
     STCluster* aCluster = clusCont[iCluster].first;
     STChannelID aChan = aCluster->channelID();
-    STClusterWord  aWord = STClusterWord(clusCont[iCluster].second.channelID(),aCluster-> onlineDistToStrip(),aCluster->digits().size(),aCluster->secondThreshold());
+    STClusterWord  aWord = STClusterWord(clusCont[iCluster].second,aCluster-> onlineDistToStrip(),aCluster->digits().size(),aCluster->secondThreshold());
     bWriter << aWord;
   } // iCluster
 

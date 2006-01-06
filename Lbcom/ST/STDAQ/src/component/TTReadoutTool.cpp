@@ -1,4 +1,4 @@
-// $Id: TTReadoutTool.cpp,v 1.1.1.1 2005-12-20 12:47:27 mneedham Exp $
+// $Id: TTReadoutTool.cpp,v 1.2 2006-01-06 08:13:18 mneedham Exp $
 
 // Gaudi
 #include "GaudiKernel/ToolFactory.h"
@@ -87,6 +87,7 @@ StatusCode TTReadoutTool::createBoards() {
   const std::vector<int>& nBoards = rInfo->paramAsIntVect("nBoardsPerLayer");
   m_hybridsPerBoard = rInfo->param<int>("hybridsPerBoard");
   m_nRegionA = rInfo->param<int>("nRegionsInTTa");
+  unsigned int nStripsPerHybrid =  STDAQ::nStripsPerBoard/m_hybridsPerBoard;
 
   for (unsigned int iReg = 0; iReg < layers.size(); ++iReg){
 
@@ -104,7 +105,7 @@ StatusCode TTReadoutTool::createBoards() {
    
      // make new board
      STTell1ID anID = STTell1ID(iReg,iBoard);
-     STTell1Board* aBoard = new STTell1Board(anID);
+     STTell1Board* aBoard = new STTell1Board(anID, nStripsPerHybrid);
 
      for (unsigned iH = 0 ; iH < m_hybridsPerBoard; ++iH, ++vecLoc){
        STChannelID sectorID((unsigned int)tMap[vecLoc]);
