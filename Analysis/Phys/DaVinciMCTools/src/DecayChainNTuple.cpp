@@ -1517,8 +1517,10 @@ StatusCode DecayChainNTuple::WriteNTuple(std::vector<Particle*>& mothervec) {
 #ifdef MCCheck   
     IBackgroundCategory::categories cat = m_bkgCategory->category(*imother);
     debug() << "Result of BackgroundCategory is: " << cat << endreq;
-    m_bkgCat[m_nCand] = cat;
-    m_nCand++;
+    if(m_nCand < 10000){
+      m_bkgCat[m_nCand] = cat;
+      m_nCand++;
+    }
 #endif
 
     // Get all the decay members (should be flagged)
