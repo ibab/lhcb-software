@@ -1,40 +1,28 @@
-// $Id: G4BcMesonMinus.h,v 1.1 2004-04-29 14:57:46 gcorti Exp $
+// $Id: G4BcMesonMinus.h,v 1.2 2006-01-09 20:52:22 robbep Exp $
 
 #ifndef G4BcMesonMinus_h
 #define G4BcMesonMinus_h 1
 
 #include "globals.hh"
 #include "G4ios.hh"
-#include "G4VMeson.hh"
+#include "G4ParticleDefinition.hh"
 
 // ######################################################################
-// ###                         BcMesonMinus                           ###
+// ###                         BcMesonMinus                        ###
 // ######################################################################
 
-class G4BcMesonMinus : public G4VMeson
+class G4BcMesonMinus : public G4ParticleDefinition
 {
  private:
-   static G4BcMesonMinus theBcMesonMinus;
+  static G4BcMesonMinus * theInstance ;
+  G4BcMesonMinus( ) { }
+  ~G4BcMesonMinus( ) { }
 
- private: // constructors are hide as private  
-   G4BcMesonMinus(
-       const G4String&     aName,        G4double            mass,
-       G4double            width,        G4double            charge,   
-       G4int               iSpin,        G4int               iParity,    
-       G4int               iConjugation, G4int               iIsospin,   
-       G4int               iIsospin3,    G4int               gParity,
-       const G4String&     pType,        G4int               lepton,      
-       G4int               baryon,       G4int               encoding,
-       G4bool              stable,       G4double            lifetime,
-       G4DecayTable        *decaytable
-   );
 
  public:
-   virtual ~G4BcMesonMinus(){} 
-
-   static G4BcMesonMinus* BcMesonMinusDefinition();
-   static G4BcMesonMinus* BcMesonMinus();
-
+  static G4BcMesonMinus * Definition() ;
+  static G4BcMesonMinus * BcMesonMinusDefinition() ;
+  static G4BcMesonMinus * BcMesonMinus() ;
 };
 
 

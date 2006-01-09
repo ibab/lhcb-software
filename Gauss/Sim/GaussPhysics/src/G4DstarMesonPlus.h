@@ -1,39 +1,29 @@
-// $Id: G4DstarMesonPlus.h,v 1.1 2004-04-29 14:57:46 gcorti Exp $
+// $Id: G4DstarMesonPlus.h,v 1.2 2006-01-09 20:52:22 robbep Exp $
 
 #ifndef G4DstarMesonPlus_h
 #define G4DstarMesonPlus_h 1
 
 #include "globals.hh"
 #include "G4ios.hh"
-#include "G4VMeson.hh"
+#include "G4ParticleDefinition.hh"
 
 // ######################################################################
-// ###                         DstarMesonPLUS                         ###
+// ###                         DstarMesonPlus                        ###
 // ######################################################################
 
-class G4DstarMesonPlus : public G4VMeson
+class G4DstarMesonPlus : public G4ParticleDefinition
 {
  private:
-   static G4DstarMesonPlus theDstarMesonPlus;
+  static G4DstarMesonPlus * theInstance ;
+  G4DstarMesonPlus( ) { }
+  ~G4DstarMesonPlus( ) { }
 
- private: // constructors are hide as private  
-   G4DstarMesonPlus(
-       const G4String&     aName,        G4double            mass,
-       G4double            width,        G4double            charge,   
-       G4int               iSpin,        G4int               iParity,    
-       G4int               iConjugation, G4int               iIsospin,   
-       G4int               iIsospin3,    G4int               gParity,
-       const G4String&     pType,        G4int               lepton,      
-       G4int               baryon,       G4int               encoding,
-       G4bool              stable,       G4double            lifetime,
-       G4DecayTable        *decaytable
-   );
 
  public:
-  virtual ~G4DstarMesonPlus(){}
-
-   static G4DstarMesonPlus* DstarMesonPlusDefinition();
-   static G4DstarMesonPlus* DstarMesonPlus();
+  static G4DstarMesonPlus * Definition() ;
+  static G4DstarMesonPlus * DstarMesonPlusDefinition() ;
+  static G4DstarMesonPlus * DstarMesonPlus() ;
 };
+
 
 #endif
