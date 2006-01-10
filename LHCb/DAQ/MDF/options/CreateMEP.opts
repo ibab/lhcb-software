@@ -1,12 +1,17 @@
-ApplicationMgr.DLLs       = { "DAQEvent", "MDF", "GaudiOnline" };
-ApplicationMgr.TopAlg     = { "RawEventTestCreator"};
+ApplicationMgr.DLLs       = { "DAQEvent", "MDF" };
+ApplicationMgr.TopAlg     = { "LHCb::RawEventTestCreator/RawEventGen", "StoreExplorerAlg" };
 ApplicationMgr.EvtMax     = 1000;
 ApplicationMgr.EvtSel     = "NONE";
+StoreExplorerAlg.Load     = 1;
+StoreExplorerAlg.PrintFreq= 0.01;
 EventDataSvc.ForceLeaves  = 1;
 EventPersistencySvc.CnvServices += { "LHCb::RawDataCnvSvc" };
 
 // To create a MEP file:
-ApplicationMgr.OutStream  = { "LHCb::MEPWriter/DataWriter" };
-DataWriter.Compress       = 0;
-DataWriter.CreateChecksum = 0;
-DataWriter.Connection     = "file://mepBuffer.dat";
+ApplicationMgr.OutStream  = { "LHCb::MEPWriter/Writer_0", "LHCb::MEPWriter/Writer_1" };
+Writer_0.Compress       = 0;
+Writer_0.CreateChecksum = 0;
+Writer_0.Connection     = "file://mepData_0.dat";
+Writer_1.Compress       = 0;
+Writer_1.CreateChecksum = 0;
+Writer_1.Connection     = "file://mepData_1.dat";

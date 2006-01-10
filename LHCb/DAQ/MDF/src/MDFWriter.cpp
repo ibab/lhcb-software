@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/DAQ/MDF/src/MDFWriter.cpp,v 1.2 2006-01-10 09:43:16 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/DAQ/MDF/src/MDFWriter.cpp,v 1.3 2006-01-10 12:56:03 frankb Exp $
 //	====================================================================
 //  MDFWriter.cpp
 //	--------------------------------------------------------------------
@@ -54,26 +54,25 @@ StatusCode LHCb::MDFWriter::execute()    {
   int trNumber = 0;
   SmartDataPtr<RawEvent> raw(eventSvc(),RawEventLocation::Default);
   if ( raw )  {
-    static const size_t hdrSize = sizeof(MDFHeader);
     unsigned int trMask[4] = { -1,-1,-1,-1 };
     size_t len = rawEventLength(raw), newlen=len;
-    m_data.reserve(len+hdrSize);
-    encodeRawBanks(raw, m_data.data(),len);
+    m_data.reserve(len+sizeof(MDFHeader));
+    encodeRawBanks(raw, m_data.data()+sizeof(MDFHeader),len);
     if ( m_compress )   {
-      m_tmp.reserve(len+hdrSize);
+      m_tmp.reserve(len+sizeof(MDFHeader));
       if ( compressBuffer(m_compress,
-                          m_tmp.data()+hdrSize,len,
-                          m_data.data()+hdrSize,len,newlen).isSuccess() )  {
-        int chk = m_genChecksum ? xorChecksum(m_tmp.data()+hdrSize,newlen) : 0;
+                          m_tmp.data()+sizeof(MDFHeader),len,
+                          m_data.data()+sizeof(MDFHeader),len,newlen).isSuccess() )  {
+        int chk = m_genChecksum ? xorChecksum(m_tmp.data()+sizeof(MDFHeader),newlen) : 0;
         makeMDFHeader(m_tmp.data(), newlen, evType, hdrType, trNumber, trMask, m_compress, chk);
-        return Descriptor::write(m_connection,m_tmp.data(),newlen+hdrSize) 
+        return Descriptor::write(m_connection,m_tmp.data(),newlen+sizeof(MDFHeader)) 
           ? StatusCode::SUCCESS : StatusCode::FAILURE;
       }
       // Bad compression; file uncompressed buffer
     }
-    int chk = m_genChecksum ? xorChecksum(m_data.data(),len) : 0;
-    makeMDFHeader(m_data.data(), len, evType, hdrType, trNumber, trMask, m_compress, chk);
-    return Descriptor::write(m_connection, m_data.data(), len+hdrSize) 
+    int chk = m_genChecksum ? xorChecksum(m_data.data()+sizeof(MDFHeader),len) : 0;
+    makeMDFHeader(m_data.data(), len, evType, hdrType, trNumber, trMask, 0, chk);
+    return Descriptor::write(m_connection, m_data.data(),len+sizeof(MDFHeader)) 
       ? StatusCode::SUCCESS : StatusCode::FAILURE;
   }
   MsgStream log(msgSvc(), name());

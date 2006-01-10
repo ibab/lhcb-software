@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/DAQ/MDF/src/RawDataCnvSvc.cpp,v 1.2 2006-01-10 09:43:16 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/DAQ/MDF/src/RawDataCnvSvc.cpp,v 1.3 2006-01-10 12:56:03 frankb Exp $
 //	====================================================================
 //  RawDataCnvSvc.cpp
 //	--------------------------------------------------------------------
@@ -272,12 +272,12 @@ char* const LHCb::RawDataCnvSvc::getDataSpace(void* /* ioDesc */, size_t len)  {
 StatusCode LHCb::RawDataCnvSvc::streamWrite(void* iodesc, void* ptr, size_t len)   {
   MDFMapEntry* ent = (MDFMapEntry*)iodesc;
   if ( ent && ent->con.ioDesc > 0 )  {
-    if ( StreamDescriptor::write(ent->con, ptr, len+sizeof(MDFHeader)) )  {
+    if ( StreamDescriptor::write(ent->con, ptr, len) )  {
       return StatusCode::SUCCESS;
     }
-    return error("Cannot write MDF record: [Invalid I/O operation]");
+    return error("Cannot write data record: [Invalid I/O operation]");
   }
-  return error("Cannot write MDF record: [Invalid I/O descriptor]");
+  return error("Cannot write data record: [Invalid I/O descriptor]");
 }
 
 StatusCode LHCb::RawDataCnvSvc::writeDataSpace(void* ioDesc,
@@ -300,7 +300,7 @@ StatusCode LHCb::RawDataCnvSvc::writeDataSpace(void* ioDesc,
     // Bad compression; file uncompressed buffer
   }
   int chk = m_genChecksum ? xorChecksum(m_data.data()+sizeof(MDFHeader),len) : 0;
-  makeMDFHeader(m_data.data(),len,evType,hdrType,trNumber,trMask,m_compress,chk);
+  makeMDFHeader(m_data.data(),len,evType,hdrType,trNumber,trMask,0,chk);
   return streamWrite(ioDesc,m_data.data(),len+sizeof(MDFHeader));
 }
 

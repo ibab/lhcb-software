@@ -6,7 +6,7 @@
 //
 //	Author     : M.Frank
 //====================================================================
-// $Id: StreamDescriptor.cpp,v 1.1 2005-12-20 16:33:39 frankb Exp $
+// $Id: StreamDescriptor.cpp,v 1.2 2006-01-10 12:56:03 frankb Exp $
 
 // Include files
 #include "MDF/StreamDescriptor.h"
@@ -82,6 +82,7 @@ namespace {
     int tmp = len;
     while ( tmp>0 )  {
       int sc = FileIO::write(con.ioDesc,p+len-tmp,tmp);
+      // std::cout << "Write:" << con.ioDesc << "  " << sc << " bytes." << std::endl;
       if ( sc > 0 ) tmp -= sc;
       else          return false;
     }

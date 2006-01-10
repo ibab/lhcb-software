@@ -1,4 +1,4 @@
-// $Id: RawDataSelector.cpp,v 1.1 2006-01-10 09:43:16 frankb Exp $
+// $Id: RawDataSelector.cpp,v 1.2 2006-01-10 12:56:03 frankb Exp $
 //====================================================================
 //	OnlineMDFEvtSelector.cpp
 //--------------------------------------------------------------------
@@ -76,7 +76,8 @@ LHCb::RawDataSelector::RawDataSelector(const std::string& nam, ISvcLocator* svcl
 }
 
 // IInterface::queryInterface
-StatusCode LHCb::RawDataSelector::queryInterface(const InterfaceID& riid, void** ppvIf) {
+StatusCode LHCb::RawDataSelector::queryInterface(const InterfaceID& riid, void** ppvIf)
+{
   if ( riid == IID_IEvtSelector )  {
     *ppvIf = (IEvtSelector*)this;
     addRef();
@@ -86,7 +87,8 @@ StatusCode LHCb::RawDataSelector::queryInterface(const InterfaceID& riid, void**
 }
 
 /// IService implementation: Db event selector override
-StatusCode LHCb::RawDataSelector::initialize()    {
+StatusCode LHCb::RawDataSelector::initialize()
+{
   // Initialize base class
   StatusCode status = Service::initialize();
   MsgStream log(messageService(), name());
@@ -107,7 +109,8 @@ StatusCode LHCb::RawDataSelector::initialize()    {
   return status;
 }
 
-StatusCode LHCb::RawDataSelector::next(Context& ctxt) const   {
+StatusCode LHCb::RawDataSelector::next(Context& ctxt) const
+{
   LoopContext* pCtxt = dynamic_cast<LoopContext*>(&ctxt);
   if ( pCtxt != 0 )   {
     StatusCode sc = pCtxt->receiveData();
@@ -120,7 +123,8 @@ StatusCode LHCb::RawDataSelector::next(Context& ctxt) const   {
   return StatusCode::FAILURE;
 }
 
-StatusCode LHCb::RawDataSelector::next(Context& ctxt, int jump) const   {
+StatusCode LHCb::RawDataSelector::next(Context& ctxt, int jump) const
+{
   if ( jump > 0 ) {
     for ( int i = 0; i < jump; ++i ) {
       StatusCode status = next(ctxt);
@@ -133,13 +137,15 @@ StatusCode LHCb::RawDataSelector::next(Context& ctxt, int jump) const   {
   return StatusCode::FAILURE;
 }
 
-StatusCode LHCb::RawDataSelector::previous(Context& /* ctxt */) const  {
+StatusCode LHCb::RawDataSelector::previous(Context& /* ctxt */) const
+{
   MsgStream log(msgSvc(), name());
   log << MSG::FATAL << " EventSelector Iterator, operator -- not supported " << endmsg;
   return StatusCode::FAILURE;
 }
 
-StatusCode LHCb::RawDataSelector::previous(Context& ctxt, int jump) const   {
+StatusCode LHCb::RawDataSelector::previous(Context& ctxt, int jump) const
+{
   if ( jump > 0 ) {
     for ( int i = 0; i < jump; ++i ) {
       StatusCode status = previous(ctxt);
@@ -152,7 +158,8 @@ StatusCode LHCb::RawDataSelector::previous(Context& ctxt, int jump) const   {
   return StatusCode::FAILURE;
 }
 
-StatusCode LHCb::RawDataSelector::releaseContext(Context*& ctxt) const  {
+StatusCode LHCb::RawDataSelector::releaseContext(Context*& ctxt) const
+{
   LoopContext* pCtxt = dynamic_cast<LoopContext*>(ctxt);
   if ( pCtxt ) {
     pCtxt->close();
@@ -180,8 +187,7 @@ LHCb::RawDataSelector::createAddress(const Context& ctxt, IOpaqueAddress*& pAddr
 }
 
 StatusCode 
-LHCb::RawDataSelector::resetCriteria(const std::string& criteria,
-                                     Context& context)  const
+LHCb::RawDataSelector::resetCriteria(const std::string& criteria,Context& context) const
 {
   MsgStream log(messageService(), name());
   std::string crit = criteria;
