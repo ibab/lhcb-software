@@ -4,6 +4,7 @@
 ! Purpose          : collection of physics constructors for Gauss
 !-----------------------------------------------------------------------------
 
+!===================== GaussPhysics v4r0 ================================
 ! 2006-01-09 - Patrick Robbe
  - Adapt particle definitions to Geant4.8
  - Use new physics lists in G4hadlists of Geant4.8 (has to be checked !)

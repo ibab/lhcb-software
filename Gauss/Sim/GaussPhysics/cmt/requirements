@@ -1,5 +1,5 @@
 package GaussPhysics
-version v3r3
+version v4r0
 
 # =============== package structure ===========================================
 branches          cmt src doc
@@ -7,7 +7,6 @@ branches          cmt src doc
 # =============== explicit dependencies =======================================
 use GaussTools    v*	Sim
 use G4hadlists    v*	Geant4  
-#use G4LHCblists   v*	Geant4
 
 # ============== component library ============================================
 library          GaussPhysics      *.cpp  
