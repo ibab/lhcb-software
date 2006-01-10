@@ -712,7 +712,6 @@ int _mbm_get_ev(BMID bm, USER* u)  {
 int _mbm_add_wev(BMID bm, USER *us, int** ptr, int* size, int* evtype, TriggerMask* trmask, 
      int part_id, RTL_ast_t astadd, void* astpar)  {
   static int calls = 0;
-  CONTROL *ctrl     = bm->ctrl;
   us->c_state       = S_wevent;
   us->c_partid      = part_id;
   us->we_ptr_add    = ptr;

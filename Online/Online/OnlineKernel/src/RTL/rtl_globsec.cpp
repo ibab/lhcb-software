@@ -68,15 +68,16 @@ int lib_rtl_create_section(const char* sec_name, size_t size, lib_rtl_gbl_t* add
 
 /// Delete named global section
 int lib_rtl_delete_section(lib_rtl_gbl_t h)    {
+  lib_rtl_gbl_desc* dsc = (lib_rtl_gbl_desc*)h;
   int sc = 0;
-  if ( h )  {
+  if ( dsc )  {
 #ifdef linux
-    sc = ::shm_unlink(h->name)==0 ? 1 : 0;
-    delete h;
+    sc = ::shm_unlink(dsc->name)==0 ? 1 : 0;
+    delete dsc;
     if ( sc == 0 ) sc = 1;
 #else
     sc = lib_rtl_unmap_section(h);
-    delete h;
+    delete dsc;
 #endif
   }
   return sc;
@@ -129,8 +130,9 @@ int lib_rtl_map_section(const char* sec_name, size_t size, lib_rtl_gbl_t* addres
 }
 
 /// Unmap global section: address is quadword: void*[2]
-int lib_rtl_unmap_section(lib_rtl_gbl_t h)   {
-  if ( h )  {
+int lib_rtl_unmap_section(lib_rtl_gbl_t handle)   {
+  if ( handle )  {
+    lib_rtl_gbl_desc* h = (lib_rtl_gbl_desc*)handle;
 #if defined(linux)
     int sc = ::munmap(h->address,h->size)==0 ? 1 : 0;
 #elif defined(_WIN32)

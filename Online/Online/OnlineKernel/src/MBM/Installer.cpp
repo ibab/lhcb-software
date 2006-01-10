@@ -195,10 +195,14 @@ int MBM::Installer::install()  {
   }
   m_bm->buffer_add = (char*)m_bm->buff_add->address;
 
-  ::printf("Control: %p  %p\n",m_bm->ctrl,((char*)m_bm->ctrl)-((char*)m_bm->ctrl));
-  ::printf("User:    %p  %p  %p\n",m_bm->user,((char*)m_bm->user)-((char*)m_bm->ctrl),m_bm->usDesc);
-  ::printf("Event:   %p  %p  %p\n",m_bm->event,((char*)m_bm->event)-((char*)m_bm->ctrl),m_bm->evDesc);
-  ::printf("Bitmap:  %p  %p\n",m_bm->bitmap,((char*)m_bm->bitmap)-((char*)m_bm->ctrl));
+  ::printf("Control: %p  %08X\n",(void*)m_bm->ctrl,
+           ((char*)m_bm->ctrl)-((char*)m_bm->ctrl));
+  ::printf("User:    %p  %08X  %p\n",(void*)m_bm->user,
+           ((char*)m_bm->user)-((char*)m_bm->ctrl),(void*)m_bm->usDesc);
+  ::printf("Event:   %p  %08X  %p\n",(void*)m_bm->event,
+           ((char*)m_bm->event)-((char*)m_bm->ctrl),(void*)m_bm->evDesc);
+  ::printf("Bitmap:  %p  %08X\n",(void*)m_bm->bitmap,
+           ((char*)m_bm->bitmap)-((char*)m_bm->ctrl));
 
   CONTROL* ctrl  = m_bm->ctrl;
   USER*    user  = m_bm->user;
