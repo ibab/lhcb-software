@@ -4,12 +4,12 @@
 ! Purpose     : interface to the xml description
 !-----------------------------------------------------------------------------
 
-!========================= RichDet v9r0 2005-12-14 =========================
+!========================= RichDet v9r0 2005-12-21 =========================
 ! 2005-12-21 - Antonis Papanestis
  - Redesign of the HPDPanel. Remove Rich1 & Rich2 HPDPanel classes
 
 ! 2005-12-19 - Marco Cattaneo
- - Pick up RochTraceMode.h from LHCbKernel and remove RichKernel dependency
+ - Pick up RichTraceMode.h from LHCbKernel and remove RichKernel dependency
 
 ! 2005-12-14 - Antonis Papanestis
  - Move from CLHEP to MathCore
