@@ -1,4 +1,4 @@
-// $Id: MEPSelector.cpp,v 1.2 2006-01-10 09:43:16 frankb Exp $
+// $Id: MEPSelector.cpp,v 1.3 2006-01-10 14:00:44 frankb Exp $
 //====================================================================
 //	MEPSelector.cpp
 //--------------------------------------------------------------------
@@ -9,10 +9,9 @@
 //====================================================================
 
 // Include files
-#include "MDF/MEPEvent.h"
-#include "MDF/RawDataSelector.h"
 #include "MDF/RawEventHelpers.h"
-#include <map>
+#include "MDF/RawDataSelector.h"
+#include "MDF/MEPEvent.h"
 
 namespace LHCb  {
   /** @class MEPContext

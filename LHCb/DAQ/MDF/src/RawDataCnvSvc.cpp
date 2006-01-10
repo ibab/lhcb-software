@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/DAQ/MDF/src/RawDataCnvSvc.cpp,v 1.3 2006-01-10 12:56:03 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/DAQ/MDF/src/RawDataCnvSvc.cpp,v 1.4 2006-01-10 14:00:44 frankb Exp $
 //	====================================================================
 //  RawDataCnvSvc.cpp
 //	--------------------------------------------------------------------
@@ -119,7 +119,6 @@ StatusCode LHCb::RawDataCnvSvc::fillObjRefs(IOpaqueAddress* pAddr, DataObject* /
       if ( dataProvider()->registerObject("/Event/DAQ", obj.get()).isSuccess() )  {
         typedef std::vector<RawBank*> _B;
         obj.release();
-        long typ = repSvcType();
         const _B* banks = (const _B*)pAddr->ipar()[0];
         for(_B::const_iterator i=banks->begin(); i!=banks->end(); ++i)  {
           raw->adoptBank(*i, false);
@@ -207,7 +206,8 @@ StatusCode LHCb::RawDataCnvSvc::createRep(DataObject* pObject, IOpaqueAddress*& 
 }
 
 /// Resolve the references of the converted object. 
-StatusCode LHCb::RawDataCnvSvc::fillRepRefs(IOpaqueAddress* pAddress,DataObject* pObject) 
+StatusCode 
+LHCb::RawDataCnvSvc::fillRepRefs(IOpaqueAddress* /* pAddr */, DataObject* /* pObj */) 
 {
   if ( m_current != m_fileMap.end() )   {
     m_wrFlag = true;

@@ -1,4 +1,4 @@
-// $Id: RawDataSelector.h,v 1.1 2006-01-10 09:43:16 frankb Exp $
+// $Id: RawDataSelector.h,v 1.2 2006-01-10 14:00:44 frankb Exp $
 //====================================================================
 //	RawDataSelector.h
 //--------------------------------------------------------------------
@@ -10,7 +10,7 @@
 //  Created    : 12/12/2005
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/DAQ/MDF/MDF/RawDataSelector.h,v 1.1 2006-01-10 09:43:16 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/DAQ/MDF/MDF/RawDataSelector.h,v 1.2 2006-01-10 14:00:44 frankb Exp $
 
 #ifndef MDF_RAWDATASELECTOR_H
 #define MDF_RAWDATASELECTOR_H 1
@@ -93,7 +93,7 @@ namespace LHCb  {
     /** Access last item in the iteration
       * @param refContext [IN/OUT] Reference to the Context object.
       */
-    virtual StatusCode last(Context& refContext) const    {
+    virtual StatusCode last(Context& /* refContext */ ) const    {
       return StatusCode::FAILURE;
     }
 
@@ -132,7 +132,7 @@ namespace LHCb  {
       * 
       * @return StatusCode indicating success or failure
       */
-    virtual StatusCode rewind(Context& refCtxt) const   {
+    virtual StatusCode rewind(Context& /* refCtxt */ ) const   {
       return StatusCode::FAILURE;
     }
 

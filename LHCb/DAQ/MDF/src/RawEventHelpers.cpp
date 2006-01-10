@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/DAQ/MDF/src/RawEventHelpers.cpp,v 1.2 2006-01-10 09:43:16 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/DAQ/MDF/src/RawEventHelpers.cpp,v 1.3 2006-01-10 14:00:44 frankb Exp $
 //	====================================================================
 //  RawEventHelpers.cpp
 //	--------------------------------------------------------------------
@@ -6,8 +6,8 @@
 //	Author    : Markus Frank
 //
 //	====================================================================
-#include "MDF/RawEventDescriptor.h"
 #include "MDF/RawEventHelpers.h"
+#include "MDF/RawEventDescriptor.h"
 #include "MDF/MDFHeader.h"
 #include "MDF/MEPEvent.h"
 #include "Event/RawEvent.h"
@@ -42,14 +42,26 @@ unsigned int LHCb::xorChecksum(const void* ptr, size_t len)  {
 }
 
 /// Compress opaque data buffer
-StatusCode LHCb::compressBuffer(int algtype, char* tar, size_t tar_len, const char* src, size_t src_len, size_t& new_len)  {
+StatusCode LHCb::compressBuffer(int        /* algtype */, 
+                                char*         tar, 
+                                size_t     /* tar_len */, 
+                                const char*   src, 
+                                size_t        src_len, 
+                                size_t&       new_len)  
+{
   new_len = src_len;
   ::memcpy(tar, src, src_len);
   return StatusCode::SUCCESS;
 }
 
 /// Decompress opaque data buffer
-StatusCode LHCb::decompressBuffer(int algtype, char* tar, size_t tar_len, const char* src, size_t src_len, size_t& new_len)  {
+StatusCode LHCb::decompressBuffer(int        /* algtype */, 
+                                  char*         tar, 
+                                  size_t     /* tar_len */, 
+                                  const char*   src, 
+                                  size_t        src_len, 
+                                  size_t&       new_len)  
+{
   new_len = src_len;
   ::memcpy(tar, src, src_len);
   return StatusCode::SUCCESS;
@@ -172,7 +184,7 @@ LHCb::encodeMEP(const std::map<unsigned int, RawEvent*>& events,
   for(Events::const_iterator i=events.begin(); i != events.end(); ++i)  {
     unsigned int eid = (*i).first;
     RawEvent*    evt = const_cast<RawEvent*>((*i).second);
-    for(size_t len=0, t=RawBank::L0Calo; t<RawBank::LastType; ++t)  {
+    for(size_t t=RawBank::L0Calo; t<RawBank::LastType; ++t)  {
       const BankV& banks = evt->banks(RawBank::BankType(t));
       for(BankV::const_iterator j=banks.begin(); j != banks.end(); ++j)  {
         m[(*j)->sourceID()][eid].push_back((*j));
@@ -189,7 +201,6 @@ LHCb::encodeMEP(const std::map<unsigned int, RawEvent*>& events,
   MEPEvent* me = new(memory) MEPEvent(0);
   MEPMultiFragment* mf = me->first();
   for(BankMap2::iterator j=m.begin(); j != m.end(); ++j, mf = me->next(mf)) {
-    unsigned int srcID = (*j).first;
     BankMap& bm = (*j).second;
     mf->setSize(0);
     mf->setPacking(packing);
@@ -225,8 +236,8 @@ StatusCode LHCb::decodeMEP( const MEPEvent* me,
       evID = (eid_h&0xFFFF0000) + (eid_l&0xFFFF);
       RawEvent* evt = events[evID];
       if ( 0 == evt ) events[evID] = evt = new RawEvent();
-      const RawBank* last = f->last();
-      for (RawBank* b = f->first(); b<f->last(); b=f->next(b)) {
+      const RawBank* l = f->last();
+      for(RawBank* b=f->first(); b<l; b=f->next(b)) {
         if ( b->magic() != RawBank::MagicPattern )  {
           throw std::runtime_error("Bad magic word in RawBank!");
         }
@@ -272,8 +283,8 @@ LHCb::decodeMEP2EventBanks( const MEPEvent* me,
       eid_l = f->eventID();
       evID = (eid_h&0xFFFF0000) + (eid_l&0xFFFF);
       std::vector<LHCb::RawBank*>& banks = events[evID];
-      const RawBank* last = f->last();
-      for (RawBank* b = f->first(); b<f->last(); b=f->next(b)) {
+      const RawBank* l = f->last();
+      for(RawBank* b=f->first(); b<l; b=f->next(b)) {
         if ( b->magic() != RawBank::MagicPattern )  {
           throw std::runtime_error("Bad magic word in RawBank!");
         }

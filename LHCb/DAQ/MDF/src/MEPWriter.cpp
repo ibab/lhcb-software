@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/DAQ/MDF/src/MEPWriter.cpp,v 1.2 2006-01-10 09:43:16 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/DAQ/MDF/src/MEPWriter.cpp,v 1.3 2006-01-10 14:00:44 frankb Exp $
 //	====================================================================
 //  MEPWriter.cpp
 //	--------------------------------------------------------------------
@@ -43,7 +43,7 @@ StatusCode LHCb::MEPWriter::execute()    {
     StatusCode sc = StatusCode::SUCCESS;
     raw->addRef();
     m_events.insert(std::pair<unsigned int, RawEvent*>(m_evID++, raw.ptr()));
-    if ( m_events.size() == m_packingFactor )  {
+    if ( int(m_events.size()) == m_packingFactor )  {
       MEPEvent* me = 0;
       encodeMEP(m_events, 0x103, &m_data, extendBuffer, &me);
       int res = Descriptor::write(m_connection,m_data.data(),me->size()+me->sizeOf());

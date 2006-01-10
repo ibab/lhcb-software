@@ -1,4 +1,4 @@
-// $Id: MDFSelector.cpp,v 1.2 2006-01-10 09:43:16 frankb Exp $
+// $Id: MDFSelector.cpp,v 1.3 2006-01-10 14:00:44 frankb Exp $
 //====================================================================
 //	MDFSelector.cpp
 //--------------------------------------------------------------------
@@ -36,7 +36,6 @@ namespace LHCb  {
       m_banks.clear();
       if ( m_accessDsc.ioDesc > 0 )  {
         MDFHeader h;
-        int len = 0;
         if ( StreamDescriptor::read(m_accessDsc,&h,sizeof(MDFHeader)) )  {
           if ( h.size()+sizeof(MDFHeader) > size_t(m_descriptor.max_length()) )  {
             m_descriptor.allocate(sizeof(MDFHeader) + size_t(h.size()*1.5));

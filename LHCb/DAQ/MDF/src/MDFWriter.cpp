@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/DAQ/MDF/src/MDFWriter.cpp,v 1.3 2006-01-10 12:56:03 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/DAQ/MDF/src/MDFWriter.cpp,v 1.4 2006-01-10 14:00:44 frankb Exp $
 //	====================================================================
 //  MDFWriter.cpp
 //	--------------------------------------------------------------------
@@ -54,7 +54,7 @@ StatusCode LHCb::MDFWriter::execute()    {
   int trNumber = 0;
   SmartDataPtr<RawEvent> raw(eventSvc(),RawEventLocation::Default);
   if ( raw )  {
-    unsigned int trMask[4] = { -1,-1,-1,-1 };
+    unsigned int trMask[4] = { ~0x0,~0x0,~0x0,~0x0 };
     size_t len = rawEventLength(raw), newlen=len;
     m_data.reserve(len+sizeof(MDFHeader));
     encodeRawBanks(raw, m_data.data()+sizeof(MDFHeader),len);
