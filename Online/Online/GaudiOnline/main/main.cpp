@@ -40,7 +40,9 @@ int main (int argc, char** argv)  {
     }
     std::cout << "Failed to access test procedure!" << std::endl;
   }
-  std::cout << "Failed to load GaudiOnline library!" << std::endl;
+  std::cout << "Failed to load library:";
+  if ( argc>1 ) std::cout << argv[1] << std::endl;
+  else          std::cout << "<Unknown: No argument given>" << std::endl;
   std::cout << "Error: " << DLERROR << std::endl;
   return 0;
 }
