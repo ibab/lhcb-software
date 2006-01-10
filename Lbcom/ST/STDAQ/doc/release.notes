@@ -1,13 +1,13 @@
 !-----------------------------------------------------------------------------
 ! Package     : ST/STDAQ
 ! Responsible : Matt Needham
-! Purpose     : Encode and decode L1 and Raw buffers for ST
+! Purpose     : Encode and decode Raw banks for ST
 !-----------------------------------------------------------------------------
 
-! 2006-1-06 M Needham
-  - Change from smart numbering STDAQChannelID to flat numbering (how it will be)
+!=============================== STDAQ v2r0 2006-01-06 =======================
+! 2006-01-06 M Needham
+ - Change from smart numbering STDAQChannelID to flat numbering (how it will be)
 
-!=============================== STDAQ v2r0 2005-12-20 =======================
 ! 2005-12-20 - Marco Cattaneo
  - Cleanup requirements
  - Use version v2r0 (v1r* was already used under IT hat)
