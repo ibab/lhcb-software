@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/GaudiOnline/src/MEPCnvSvc.cpp,v 1.2 2006-01-10 13:45:03 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/GaudiOnline/src/MEPCnvSvc.cpp,v 1.3 2006-01-10 13:56:32 frankb Exp $
 //	====================================================================
 //  MEPCnvSvc.cpp
 //	--------------------------------------------------------------------
@@ -99,7 +99,7 @@ StatusCode LHCb::MEPCnvSvc::finalize()  {
 }
 
 /// Commit output to buffer manager
-StatusCode LHCb::MEPCnvSvc::commitDescriptors(void* ioDesc)  {
+StatusCode LHCb::MEPCnvSvc::commitDescriptors(void* /* ioDesc */)  {
   SmartDataPtr<DataObject> evt(dataProvider(),"/Event");
   if ( evt )  {
     IOpaqueAddress* pA = evt->registry()->address();
@@ -130,7 +130,6 @@ void* LHCb::MEPCnvSvc::openIO(const std::string& fname, const std::string&  mode
     // Writing: requires producer
     if ( fname.find("mep://") == 0 )  {
       size_t id1 = fname.find(".",6);
-      size_t id2 = fname.find(".0x",id1+1);
       std::string buff = fname.substr(6, id1-6);
       MEPID mepID = m_mepMgr->mepID();
       BMID  bmID = MBM_INV_DESC;
@@ -173,7 +172,6 @@ StatusCode LHCb::MEPCnvSvc::writeDataSpace(void* ioDesc,
     Producer* prod = (Producer*)ioDesc;
     if ( prod )  {
       MBM::EventDesc& e = prod->event();
-      MDFHeader* h = (MDFHeader*)e.data;
       makeMDFHeader(e.data, len, evType, hdrType, trNumber, trMask, 0, 0);
       e.type    = evType;
       e.mask[0] = trMask[0];

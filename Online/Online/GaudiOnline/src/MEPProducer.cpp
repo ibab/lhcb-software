@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/GaudiOnline/src/MEPProducer.cpp,v 1.1 2006-01-10 13:45:03 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/GaudiOnline/src/MEPProducer.cpp,v 1.2 2006-01-10 13:56:32 frankb Exp $
 //	====================================================================
 //  RawBufferCreator.cpp
 //	--------------------------------------------------------------------
@@ -6,17 +6,23 @@
 //	Author    : Markus Frank
 //
 //	====================================================================
+#include "MDF/RawEventHelpers.h"
 #include "MDF/MEPEvent.h"
 #include "MBM/MepProducer.h"
 #include "WT/wt_facilities.h"
 
-#include <io.h>
 #include <fcntl.h>
+#ifdef _WIN32
+#include <io.h>
+#define O_RDONLY (_O_RDONLY|_O_BINARY)
+#else
+#include <unistd.h>
+#endif
 
 namespace {
   int __dummyReadEvent(void* data, size_t bufLen, size_t& evtLen)  {
     static int nrewind = 0;
-    static int file = open("./mepBuffer.dat", _O_RDONLY|_O_BINARY);
+    static int file = open("./mepBuffer.dat", O_RDONLY);
     LHCb::MEPEvent* me = (LHCb::MEPEvent*)data;
 again:
     int status1 = ::read(file, me, me->sizeOf());

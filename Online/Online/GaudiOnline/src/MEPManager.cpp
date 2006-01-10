@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/GaudiOnline/src/MEPManager.cpp,v 1.1 2006-01-10 13:45:03 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/GaudiOnline/src/MEPManager.cpp,v 1.2 2006-01-10 13:56:32 frankb Exp $
 //	====================================================================
 //  MEPManager.cpp
 //	--------------------------------------------------------------------
@@ -54,7 +54,6 @@ StatusCode LHCb::MEPManager::initialize()  {
     return error("Failed to initialize base class RawDataCnvSvc.");
   }
   for(_V::const_iterator i=m_buffers.begin(); i != m_buffers.end(); ++i )  {
-    const std::string& b = *i;
     switch(::toupper((*i)[0]))  {
       case 'E':
         flags |= USE_EVT_BUFFER;

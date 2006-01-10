@@ -1,4 +1,4 @@
-// $Id: MEPReader.cpp,v 1.2 2006-01-10 13:45:03 frankb Exp $
+// $Id: MEPReader.cpp,v 1.3 2006-01-10 13:56:32 frankb Exp $
 // Include files 
 
 // from Gaudi
@@ -11,8 +11,14 @@
 #include "Event/RawEvent.h"
 #include "MDF/MEPEvent.h"
 #include "MDF/RawEventHelpers.h"
+
+#include <fcntl.h>
+#ifdef _WIN32
 #include <io.h>
-#include <fcntl.h>      /* Needed only for _O_RDWR definition */
+#define O_RDONLY (_O_RDONLY|_O_BINARY)
+#else
+#include <unistd.h>
+#endif
 
 using namespace LHCb;
 
@@ -29,7 +35,7 @@ public:
   /// Standard constructor
   MEPReader( const std::string& name, ISvcLocator* pSvcLocator )
   : Algorithm(name, pSvcLocator), m_evt(0)   {
-    m_file = open("./mepBuffer.dat", _O_RDONLY|_O_BINARY);
+    m_file = open("./mepBuffer.dat", O_RDONLY);
   }
 
   /// Destructor
@@ -37,7 +43,7 @@ public:
 
   void read(void* p, size_t len)  {
     int sc = ::read(m_file,p,len);
-    if ( sc != len )  {
+    if ( sc != int(len) )  {
       MsgStream log(msgSvc(),name());
       log << MSG::ERROR << "Read Error: End-Of-File !" << endmsg;
       throw std::runtime_error("Read Error: End-Of-File !");
