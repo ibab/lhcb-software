@@ -8,8 +8,11 @@
 !
 !-----------------------------------------------------------------------------
 
-!===================== Tutorial/Analysis v6 2006-01-05 ======================
-! 2006-11-05 - P. Koppenburg
+!===================== Tutorial/Analysis v6 2006-01-05 ======================#
+! 2006-01-10 P. Koppenburg
+  corrected solution to exercise 3. 
+
+! 2006-01-05 P. Koppenburg
   - src/Analysis_load.cpp
     . Comment all algorithms
     

@@ -69,7 +69,12 @@ Bs2JpsiPhi.MotherFilter.Selections = { "B_s0  : PVIPFilterCriterion,
 Bs2JpsiPhi.MotherFilter.VtxFilterCriterion.MaxChi2 = 30 ;  // Require 30 maximal B vertex Chi2
 Bs2JpsiPhi.MotherFilter.PVIPFilterCriterion.MaxIPsignif = 4 ; // Require 4 maximal B IP/IPE on best PV
 Bs2JpsiPhi.MotherFilter.FlightDistanceFilterCriterion.MinFSPV = 5 ; // Require 5 minimal B flight distance significance
-
+//Bs2JpsiPhi.MakePlots=true;
+Bs2JpsiPhi.HistoProduce=true;
+Bs2JpsiPhi.DaughterPlots.Variables={"M","P","Pt","IP"};
+Bs2JpsiPhi.MotherPlots.Variables={"M", "P","Pt", "IP"};
+Bs2JpsiPhi.DaughterPlotsPath={"Bin"};
+Bs2JpsiPhi.MotherPlotsPath={"Bout"};
 // Print a nice message when something was found
 TutorialSeq.Members += { "PrintHeader/Found" };
 Found.OutputLevel = 2 ;
