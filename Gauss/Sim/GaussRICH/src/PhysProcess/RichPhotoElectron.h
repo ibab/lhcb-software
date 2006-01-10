@@ -21,7 +21,7 @@
 // ********************************************************************
 //
 //
-// $Id: RichPhotoElectron.h,v 1.1 2003-04-29 15:04:49 seaso Exp $
+// $Id: RichPhotoElectron.h,v 1.2 2006-01-10 14:58:23 seaso Exp $
 // GEANT4 tag $Name: not supported by cvs2svn $
 //
 // 
@@ -40,39 +40,30 @@
 // corresponds to a particle type; one and only one
 // instance for each class is guaranteed.
 // RichPhotoElectron created by SE 10-3-2003.
+// Modifed as per new G4.8 SE 9-1-2006
 #ifndef RichPhotoElectron_h
 #define RichPhotoElectron_h 1
 
+
 #include "globals.hh"
 #include "G4ios.hh"
-#include "G4VLepton.hh"
-class G4Positron;
+#include "G4ParticleDefinition.hh"
+
 // ######################################################################
 // ###                         RICHPHOTOELECTRON                      ###
 // ######################################################################
 
-class RichPhotoElectron : public G4VLepton
+class RichPhotoElectron : public G4ParticleDefinition
 {
- friend class G4Positron;
- private:
-   static RichPhotoElectron theRichPhotoElectron;
 
- private: //hide constructor as private
-   RichPhotoElectron(
-       const G4String&     aName,        G4double            mass,
-       G4double            width,        G4double            charge,   
-       G4int               iSpin,        G4int               iParity,    
-       G4int               iConjugation, G4int               iIsospin,   
-       G4int               iIsospin3,    G4int               gParity,
-       const G4String&     pType,        G4int               lepton,      
-       G4int               baryon,       G4int               encoding,
-       G4bool              stable,       G4double            lifetime,
-       G4DecayTable        *decaytable
-   );
+ private:
+  static RichPhotoElectron* theInstance;
+  RichPhotoElectron(){}
+  ~RichPhotoElectron(){}
 
  public:
-   virtual ~RichPhotoElectron(){}
 
+   static RichPhotoElectron* Definition();
    static RichPhotoElectron* PhotoElectronDefinition();
    static RichPhotoElectron* PhotoElectron();
 

@@ -21,7 +21,7 @@
 // ********************************************************************
 //
 //
-// $Id: RichPhotoElectron.cpp,v 1.4 2004-02-04 13:53:53 seaso Exp $
+// $Id: RichPhotoElectron.cpp,v 1.5 2006-01-10 14:58:23 seaso Exp $
 // GEANT4 tag $Name: not supported by cvs2svn $
 // 
 // 
@@ -38,59 +38,58 @@
 //  Add ElectronDefinition() H.Kurashige 4 July 1996
 // ----------------------------------------------------------------------
 // RichPhotoelectron created by SE 10-3-2003.
+// Modifed according to G4.8   SE 9-1-2006
 //
 //#include "g4std/fstream"
 //#include "g4std/iomanip"
     
-#include "G4Electron.hh"
+// #include "G4Electron.hh"
 #include "RichPhotoElectron.h"
+#include "G4ParticleTable.hh"
+
+ 
+
 // ######################################################################
 // ###                         RICHPHOTOELECTRON                      ###
 // ######################################################################
+RichPhotoElectron* RichPhotoElectron::theInstance=0;
 
-RichPhotoElectron::RichPhotoElectron(
-       const G4String&     aName,        G4double            mass,
-       G4double            width,        G4double            charge,   
-       G4int               iSpin,        G4int               iParity,    
-       G4int               iConjugation, G4int               iIsospin,   
-       G4int               iIsospin3,    G4int               gParity,
-       const G4String&     pType,        G4int               lepton,      
-       G4int               baryon,       G4int               encoding,
-       G4bool              stable,       G4double            lifetime,
-       G4DecayTable        *decaytable )
- : G4VLepton( aName,mass,width,charge,iSpin,iParity,
-	      iConjugation,iIsospin,iIsospin3,gParity,pType,
-              lepton,baryon,encoding,stable,lifetime,decaytable )
+RichPhotoElectron* RichPhotoElectron::Definition() 
 {
-  SetParticleSubType("pe");
+  if (theInstance !=0) return theInstance;
+  const G4String name = "pe-";
+  // search in particle table]
+  G4ParticleTable* pTable = G4ParticleTable::GetParticleTable();
+  G4ParticleDefinition* anInstance = pTable->FindParticle(name);
+  if (anInstance ==0)
+  {
+  // create particle
+  //
+  //    Arguments for constructor are as follows
+  //               name             mass          width         charge
+  //             2*spin           parity  C-conjugation
+  //          2*Isospin       2*Isospin3       G-parity
+  //               type    lepton number  baryon number   PDG encoding
+  //             stable         lifetime    decay table
+  //             shortlived      subType    anti_encoding
+   anInstance = new G4ParticleDefinition(
+                 name,  0.51099906*MeV,       0.0*MeV,    -1.*eplus,
+                    1,               0,             0,
+                    0,               0,             0,
+             "lepton",               1,             0,          9000011,
+                 true,            -1.0,          NULL,
+             false,           "e"
+              );
+  }
+  theInstance = reinterpret_cast<RichPhotoElectron*>(anInstance);
+  return theInstance;
 }
-
-// ......................................................................
-// ...                 static member definitions                      ...
-// ......................................................................
-//     
-//    Arguments for constructor are as follows
-//               name             mass          width         charge
-//             2*spin           parity  C-conjugation
-//          2*Isospin       2*Isospin3       G-parity
-//               type    lepton number  baryon number   PDG encoding
-//             stable         lifetime    decay table 
-
-RichPhotoElectron RichPhotoElectron::theRichPhotoElectron(
-		 "pe-",  0.51099906*MeV,       0.0*MeV,    -1.*eplus, 
-		    1,               0,             0,          
-		    0,               0,             0,             
-	     "lepton",               1,             0,        9000011,
-		 true,              -1,          NULL
-);
 
 RichPhotoElectron* RichPhotoElectron::PhotoElectronDefinition()
-                       {return &theRichPhotoElectron;}
+                       {return Definition();}
 
 RichPhotoElectron* RichPhotoElectron::PhotoElectron()
-{  
-  return &theRichPhotoElectron; 
-}
+                      {  return Definition();}
  
 
 
