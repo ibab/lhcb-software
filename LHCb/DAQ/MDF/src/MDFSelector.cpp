@@ -1,4 +1,4 @@
-// $Id: MDFSelector.cpp,v 1.3 2006-01-10 14:00:44 frankb Exp $
+// $Id: MDFSelector.cpp,v 1.4 2006-01-10 18:14:29 frankb Exp $
 //====================================================================
 //	MDFSelector.cpp
 //--------------------------------------------------------------------
@@ -32,22 +32,11 @@ namespace LHCb  {
     virtual ~MDFContext()          {                      }
     /// Receive event and update communication structure
     virtual StatusCode receiveData()  {
-      m_descriptor.setLength(0);
       m_banks.clear();
-      if ( m_accessDsc.ioDesc > 0 )  {
-        MDFHeader h;
-        if ( StreamDescriptor::read(m_accessDsc,&h,sizeof(MDFHeader)) )  {
-          if ( h.size()+sizeof(MDFHeader) > size_t(m_descriptor.max_length()) )  {
-            m_descriptor.allocate(sizeof(MDFHeader) + size_t(h.size()*1.5));
-          }
-          char* ptr = m_descriptor.data()+sizeof(MDFHeader);
-          MDFHeader* hdr = (MDFHeader*)m_descriptor.data();
-          *hdr = h;
-          if ( StreamDescriptor::read(m_accessDsc,ptr,h.size()) )  {
-            m_descriptor.setLength(h.size()+sizeof(MDFHeader));
-            return decodeRawBanks(ptr,ptr+h.size(),m_banks);
-          }
-        }
+      if ( readMDFrecord(m_descriptor, m_accessDsc).isSuccess() )  {
+        MDFHeader* h = (MDFHeader*)m_descriptor.data();
+        char* ptr = m_descriptor.data()+sizeof(MDFHeader);
+        return decodeRawBanks(ptr,ptr+h->size(),m_banks);
       }
       return StatusCode::FAILURE;
     }

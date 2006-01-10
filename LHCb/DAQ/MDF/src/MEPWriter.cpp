@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/DAQ/MDF/src/MEPWriter.cpp,v 1.3 2006-01-10 14:00:44 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/DAQ/MDF/src/MEPWriter.cpp,v 1.4 2006-01-10 18:14:29 frankb Exp $
 //	====================================================================
 //  MEPWriter.cpp
 //	--------------------------------------------------------------------
@@ -10,7 +10,6 @@
 #include "GaudiKernel/MsgStream.h"
 #include "GaudiKernel/SmartDataPtr.h"
 #include "MDF/RawEventHelpers.h"
-#include "MDF/StorageTypes.h"
 #include "MDF/MEPWriter.h"
 #include "MDF/MEPEvent.h"
 #include "Event/RawEvent.h"

@@ -1,4 +1,4 @@
-// $Id: MEPSelector.cpp,v 1.3 2006-01-10 14:00:44 frankb Exp $
+// $Id: MEPSelector.cpp,v 1.4 2006-01-10 18:14:29 frankb Exp $
 //====================================================================
 //	MEPSelector.cpp
 //--------------------------------------------------------------------
@@ -33,31 +33,19 @@ namespace LHCb  {
     StatusCode receiveData()  {
       m_banks.clear();
       if ( m_events.empty() )  {
-        readNextRecord();
+        unsigned int partitionID;
+        StatusCode sc = readMEPrecord(m_descriptor, m_accessDsc);
+        if ( !sc.isSuccess() )  {
+          return sc;
+        }
+        MEPEvent* me = (MEPEvent*)m_descriptor.data();
+        decodeMEP2EventBanks(me,partitionID,m_events);
       }
       if ( !m_events.empty() )  {
         Events::iterator i = m_events.begin();
         m_banks = (*i).second;
         m_events.erase(i);
         return StatusCode::SUCCESS; 
-      }
-      return StatusCode::FAILURE;
-    }
-    StatusCode readNextRecord()  {
-      m_descriptor.setLength(0);
-      if ( m_accessDsc.ioDesc > 0 )  {
-        unsigned int partitionID, len = 0;
-        if ( StreamDescriptor::read(m_accessDsc,&len,sizeof(len)) )  {
-          if ( len+sizeof(len) > size_t(m_descriptor.max_length()) )  {
-            m_descriptor.allocate(sizeof(len) + size_t(len*1.5));
-          }
-          MEPEvent* me = (MEPEvent*)m_descriptor.data();
-          me->setSize(len);
-          if ( StreamDescriptor::read(m_accessDsc,me->first(),len) )  {
-            m_descriptor.setLength(len+sizeof(len));
-            return decodeMEP2EventBanks(me,partitionID,m_events);
-          }
-        }
       }
       return StatusCode::FAILURE;
     }

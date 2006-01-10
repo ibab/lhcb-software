@@ -1,0 +1,8 @@
+ApplicationMgr.HistogramPersistency  = "NONE";
+ApplicationMgr.EvtMax                = 100000;
+ApplicationMgr.EvtSel                = "NONE";
+ApplicationMgr.DLLs                  = { "DAQEvent", "MDF" };
+ApplicationMgr.TopAlg                = { "LHCb::MEPDump/MEPDump" };
+MEPDump.Connection                   = "file://mepData_0.dat";
+EventDataSvc.RootCLID                = 1;
+EventDataSvc.EnableFaultHandler      = true ;

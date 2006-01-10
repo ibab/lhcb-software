@@ -1,4 +1,4 @@
-// $Id: MDFTest.cpp,v 1.1 2006-01-10 09:43:16 frankb Exp $
+// $Id: MDFTest.cpp,v 1.2 2006-01-10 18:14:29 frankb Exp $
 //------------------------------------------------------------------------------
 //
 //  Description: Main Program for Gaudi applications
@@ -26,4 +26,8 @@ extern "C" int MDFTest(int argc,char **argv) {
   iface->release();
   // All done - exit
   return 0;
+}
+
+extern "C" int GaudiTask(int argc,char **argv) {
+  return MDFTest(argc, argv);
 }

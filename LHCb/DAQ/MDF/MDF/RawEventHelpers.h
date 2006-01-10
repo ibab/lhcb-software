@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/DAQ/MDF/MDF/RawEventHelpers.h,v 1.2 2006-01-10 09:43:16 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/DAQ/MDF/MDF/RawEventHelpers.h,v 1.3 2006-01-10 18:14:29 frankb Exp $
 //	====================================================================
 //  MDFWriter.h
 //	--------------------------------------------------------------------
@@ -9,8 +9,11 @@
 #ifndef MDF_RAWEVENTHELPERS_H
 #define MDF_RAWEVENTHELPERS_H
 
+// Framework include files
 #include "GaudiKernel/Kernel.h"
 #include "GaudiKernel/StatusCode.h"
+#include "MDF/StreamDescriptor.h"
+// C++ includes
 #include <vector>
 #include <map>
 
@@ -32,6 +35,10 @@ namespace LHCb  {
                      int compression, int checksum);
   /// Determine length of the sequential buffer from RawEvent object
   size_t rawEventLength(const RawEvent* evt);
+  /// Determine number of banks from rawEvent object
+  size_t numberOfBanks(const RawEvent* evt);
+  /// Determine number of bank types from rawEvent object
+  size_t numberOfBankTypes(const RawEvent* evt);
   /// Generate XOR Checksum
   unsigned int xorChecksum(const void* ptr, size_t len);
   /// Compress opaque data buffer
@@ -49,11 +56,11 @@ namespace LHCb  {
   StatusCode decodeRawBanks(const char* start, const char* end, std::vector<RawBank*>& banks);
 
   /// Copy MEP fragment into opaque sequential data buffer
-  StatusCode encodeFragment(const LHCb::MEPFragment* f, char* const data, size_t len);
+  StatusCode encodeFragment(const MEPFragment* f, char* const data, size_t len);
   /// Copy array of bank pointers into opaque data buffer
-  StatusCode encodeFragment(const std::vector<LHCb::RawBank*>& b, LHCb::MEPFragment* f);
+  StatusCode encodeFragment(const std::vector<RawBank*>& b, MEPFragment* f);
   /// Decoding of MEP event fragment and append content to raw event object
-  StatusCode decodeFragment(const LHCb::MEPFragment* f, RawEvent* raw);
+  StatusCode decodeFragment(const MEPFragment* f, RawEvent* raw);
 
   /// Encode entire mep from map of events
   StatusCode encodeMEP( const std::map<unsigned int, RawEvent*>& events, 
@@ -76,8 +83,12 @@ namespace LHCb  {
                               std::map<unsigned int, std::vector<RawBank*> >& events);
 
   /// Decoding of MEP event descriptor and append content to raw event object
-  StatusCode decodeDescriptors(const LHCb::RawEventDescriptor* pAddr, RawEvent* raw);
+  StatusCode decodeDescriptors(const RawEventDescriptor* pAddr, RawEvent* raw);
 
+  /// read MEP record from input stream 
+  StatusCode readMEPrecord(StreamDescriptor& dsc, const StreamDescriptor::Access& con);
+  /// read MDF record from input stream 
+  StatusCode readMDFrecord(StreamDescriptor& dsc, const StreamDescriptor::Access& con);
 
 }
 #endif // MDF_RAWEVENTHELPERS_H

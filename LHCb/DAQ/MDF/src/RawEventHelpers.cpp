@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/DAQ/MDF/src/RawEventHelpers.cpp,v 1.3 2006-01-10 14:00:44 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/DAQ/MDF/src/RawEventHelpers.cpp,v 1.4 2006-01-10 18:14:29 frankb Exp $
 //	====================================================================
 //  RawEventHelpers.cpp
 //	--------------------------------------------------------------------
@@ -29,6 +29,26 @@ size_t LHCb::rawEventLength(const RawEvent* evt)    {
     }
   }
   return len;
+}
+
+/// Determine number of banks from rawEvent object
+size_t LHCb::numberOfBanks(const RawEvent* evt)   {
+  size_t count = 0;
+  RawEvent* raw = const_cast<RawEvent*>(evt);
+  for(size_t i=RawBank::L0Calo; i<RawBank::LastType; ++i)  {
+    count += raw->banks(RawBank::BankType(i)).size();
+  }
+  return count;
+}
+
+/// Determine number of bank types from rawEvent object
+size_t LHCb::numberOfBankTypes(const RawEvent* evt) {
+  size_t count = 0;
+  RawEvent* raw = const_cast<RawEvent*>(evt);
+  for(size_t i=RawBank::L0Calo; i<RawBank::LastType; ++i)  {
+    if ( !raw->banks(RawBank::BankType(i)).empty() ) count++;
+  }
+  return count;
 }
 
 /// Generate XOR Checksum
@@ -315,4 +335,45 @@ void LHCb::makeMDFHeader(void* const data, int len, int evtype, int hdrType,
   header->setTriggerMask(trMask);
   header->setSize(len);
   header->setChecksum(checksum);
+}
+
+/// read MDF record from input stream 
+StatusCode LHCb::readMDFrecord(StreamDescriptor& dsc, const StreamDescriptor::Access& con)  {
+  dsc.setLength(0);
+  if ( con.ioDesc > 0 )  {
+    MDFHeader h;
+    if ( StreamDescriptor::read(con,&h,sizeof(MDFHeader)) )  {
+      if ( h.size()+sizeof(MDFHeader) > size_t(dsc.max_length()) )  {
+        dsc.allocate(sizeof(MDFHeader) + size_t(h.size()*1.5));
+      }
+      char* ptr = dsc.data()+sizeof(MDFHeader);
+      MDFHeader* hdr = (MDFHeader*)dsc.data();
+      *hdr = h;
+      if ( StreamDescriptor::read(con,ptr,h.size()) )  {
+        dsc.setLength(h.size()+sizeof(MDFHeader));
+        return StatusCode::SUCCESS;
+      }
+    }
+  }
+  return StatusCode::FAILURE;
+}
+
+/// read MEP record from input stream 
+StatusCode LHCb::readMEPrecord(StreamDescriptor& dsc, const StreamDescriptor::Access& con)  {
+  unsigned int len = 0;
+  dsc.setLength(0);
+  if ( con.ioDesc > 0 )  {
+    if ( StreamDescriptor::read(con,&len,sizeof(len)) )  {
+      if ( len+sizeof(len) > size_t(dsc.max_length()) )  {
+        dsc.allocate(sizeof(len) + size_t(len*1.5));
+      }
+      MEPEvent* me = (MEPEvent*)dsc.data();
+      me->setSize(len);
+      if ( StreamDescriptor::read(con,me->first(),len) )  {
+        dsc.setLength(len+sizeof(len));
+        return StatusCode::SUCCESS;
+      }
+    }
+  }
+  return StatusCode::FAILURE;
 }
