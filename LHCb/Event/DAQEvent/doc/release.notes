@@ -2,6 +2,11 @@ Package: DAQEvent
 Author:  Markus Frank (based on work by Jose' Helder Lopes)
 Purpose: Define the classes delivered to the online farm by the DAQ
 
+! 2006-01-10 - Markus Frank
+ - Add End marker to bank types
+ - Add static function to retrieve integer aligned padded bank size from 
+   raw byte aligned bank size
+
 !================ DAQEvent v6r1 2005-12-06 ============================
 ! 2005-12-06 - Marco Cattaneo
  - Add ITError, TTError, ITPedestal, TTPedestal bank types

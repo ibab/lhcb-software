@@ -1,4 +1,4 @@
-// $Id: RawEvent.cpp,v 1.7 2005-10-18 11:41:25 cattanem Exp $
+// $Id: RawEvent.cpp,v 1.8 2006-01-10 09:33:39 frankb Exp $
 #include "Event/RawEvent.h"
 
 namespace {
@@ -34,6 +34,10 @@ LHCb::RawEvent::~RawEvent() {
     }
   }
   m_banks.clear();
+}
+
+size_t LHCb::RawEvent::paddedBankLength(size_t len)   {
+  return memLength(len);
 }
 
 const std::vector<LHCb::RawBank*>& LHCb::RawEvent::mapBanks(RawBank::BankType bankType)  {

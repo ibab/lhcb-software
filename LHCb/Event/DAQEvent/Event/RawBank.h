@@ -59,7 +59,8 @@ namespace LHCb
                    ITError,
                    TTError,
                    ITPedestal,
-                   TTPedestal
+                   TTPedestal,
+                   LastType    // LOOP Marker; add new bank types ONLY before!
     };
 
     /// Magic pattern for Raw bank headers

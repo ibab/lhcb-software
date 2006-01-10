@@ -112,6 +112,14 @@ namespace LHCb
                                 size_t len, 
                                 const void* data=0);
 
+    /// Access the full length 32 bit aligned length of a bank in bytes
+    /** Access full bank length 
+      * @param  len           [IN]     Raw unaligned bank length
+      *
+      * @return padded bank size in bytes
+      */
+    static size_t   paddedBankLength(size_t len);
+
   private:
     /// Map banks on first request
     /** @param bankType        [IN]     type of banks to be returned (from RawBank::BankType enum)
