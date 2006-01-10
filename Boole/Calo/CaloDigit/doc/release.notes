@@ -4,6 +4,7 @@
 ! Purpose     : Digitisation and Zero-suppression of the Calorimeters
 !-----------------------------------------------------------------------------
 
+!======================== CaloDigit v2r0 2006-01-10 ========================
 ! 2006-01-10 - Olivier Callot
  - Adapt to LHCb v20, i.e. add LHCb:: namespace and convert from CLHEP
 
