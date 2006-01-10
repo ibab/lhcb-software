@@ -45,9 +45,9 @@ static int _mep_change_refcount(MEPDESC* dsc,MEP_SINGLE_EVT* evt, int change)  {
       }
     }
     if ( cnt < 1 )  {
-      printf("MEP RefCount ERROR %s [%d] Event at address %08X MEP:%p [%d] [Release MEP]\n",
+      printf("MEP RefCount ERROR %s [%d] Event at address %p MEP:%p [%d] [Release MEP]\n",
         change > 0 ? "AddRef" : "DelRef", cnt, 
-        evt, (void*)e, e->mepBufferID);
+        (void*)evt, (void*)e, e->mepBufferID);
     }
     return MBM_NORMAL;
   }
