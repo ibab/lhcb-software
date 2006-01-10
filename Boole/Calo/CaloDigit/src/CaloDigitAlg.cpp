@@ -1,7 +1,7 @@
-// $Id: CaloDigitAlg.cpp,v 1.9 2005-11-10 16:44:02 ocallot Exp $
+// $Id: CaloDigitAlg.cpp,v 1.10 2006-01-10 07:44:29 ocallot Exp $
 
 // CLHEP
-#include "CLHEP/Units/SystemOfUnits.h"
+#include "Kernel/SystemOfUnits.h"
 // Gaudi
 #include "GaudiKernel/AlgFactory.h"
 #include "GaudiKernel/RndmGenerators.h"
@@ -72,35 +72,35 @@ CaloDigitAlg::CaloDigitAlg( const std::string& name,
   
   if ( "SpdDigit" == name ) {
     m_detectorName     = "/dd/Structure/LHCb/Spd";
-    m_inputData        = MCCaloDigitLocation::Spd;
-    m_outputData       = CaloAdcLocation::Spd;
-    m_inputPrevData    = "Prev/"+MCCaloDigitLocation::Spd;
+    m_inputData        = LHCb::MCCaloDigitLocation::Spd;
+    m_outputData       = LHCb::CaloAdcLocation::Spd;
+    m_inputPrevData    = "Prev/"+LHCb::MCCaloDigitLocation::Spd;
     m_pePerMeV         = 10.;
     m_coherentNoise    = 0.0;
     m_incoherentNoise  = 0.0;
     m_gainError        = 0.0;
-    m_triggerName      = L0PrsSpdHitLocation::Spd;
+    m_triggerName      = LHCb::L0PrsSpdHitLocation::Spd;
     m_triggerThreshold = 0.1 * MeV;
     m_triggerIsBit     = true;
     m_zSupThreshold    = 10;  //== No ADC for SPD, only trigger bit...
   } else if ( "PrsDigit" == name ) {
     m_detectorName     = "/dd/Structure/LHCb/Prs";
-    m_inputData        = MCCaloDigitLocation::Prs;
-    m_outputData       = CaloAdcLocation::Prs;
-    m_inputPrevData    = "Prev/"+MCCaloDigitLocation::Prs;
+    m_inputData        = LHCb::MCCaloDigitLocation::Prs;
+    m_outputData       = LHCb::CaloAdcLocation::Prs;
+    m_inputPrevData    = "Prev/"+LHCb::MCCaloDigitLocation::Prs;
     m_pePerMeV         = 10.;
     m_coherentNoise    = 0.0;
     m_incoherentNoise  = 1.0;
-    m_triggerName      = L0PrsSpdHitLocation::Prs;
+    m_triggerName      = LHCb::L0PrsSpdHitLocation::Prs;
     m_triggerThreshold = 10. * MeV;
     m_triggerIsBit     = true;
     m_zSupThreshold    = 15;
   } else if ( "EcalDigit" == name ) {
     m_detectorName     = "/dd/Structure/LHCb/Ecal";
-    m_inputData        = MCCaloDigitLocation::Ecal;
-    m_outputData       = CaloAdcLocation::FullEcal;
+    m_inputData        = LHCb::MCCaloDigitLocation::Ecal;
+    m_outputData       = LHCb::CaloAdcLocation::FullEcal;
     m_pedShift         = 0.40;
-    m_triggerName      = L0CaloAdcLocation::Ecal;
+    m_triggerName      = LHCb::L0CaloAdcLocation::Ecal;
     m_triggerIsBit     = false;
  
     m_corrArea.push_back( 1.00 );
@@ -109,10 +109,10 @@ CaloDigitAlg::CaloDigitAlg( const std::string& name,
     
  } else if ( "HcalDigit" == name ) {
     m_detectorName     = "/dd/Structure/LHCb/Hcal";
-    m_inputData        = MCCaloDigitLocation::Hcal;
-    m_outputData       = CaloAdcLocation::FullHcal;
+    m_inputData        = LHCb::MCCaloDigitLocation::Hcal;
+    m_outputData       = LHCb::CaloAdcLocation::FullHcal;
     m_pedShift         = 0.40;
-    m_triggerName      = L0CaloAdcLocation::Hcal;
+    m_triggerName      = LHCb::L0CaloAdcLocation::Hcal;
     m_triggerIsBit     = false;
 
     m_corrArea.push_back( 1.00 );
@@ -180,24 +180,24 @@ StatusCode CaloDigitAlg::execute() {
 
   //*** get the input data
   
-  MCCaloDigits* mcDigits = get<MCCaloDigits>( m_inputData );
+  LHCb::MCCaloDigits* mcDigits = get<LHCb::MCCaloDigits>( m_inputData );
   
   //=== Get the previous BX's data if needed
-  MCCaloDigits* prevDigits = 0;
-  if ( "" != m_inputPrevData )  prevDigits = get<MCCaloDigits>( m_inputPrevData );
+  LHCb::MCCaloDigits* prevDigits = 0;
+  if ( "" != m_inputPrevData )  prevDigits = get<LHCb::MCCaloDigits>( m_inputPrevData );
 
   //***  prepare and register the output container it into the Transient Store!
 
-  CaloAdcs* adcs = new CaloAdcs();
+  LHCb::CaloAdcs* adcs = new LHCb::CaloAdcs();
   put( adcs, m_outputData );
-  L0CaloAdcs* trigBank = NULL;
-  L0PrsSpdHits* bitsBank = NULL;
+  LHCb::L0CaloAdcs* trigBank = NULL;
+  LHCb::L0PrsSpdHits* bitsBank = NULL;
   if ( "" != m_triggerName ) {
     if ( m_triggerIsBit ) {
-      bitsBank = new L0PrsSpdHits();
+      bitsBank = new LHCb::L0PrsSpdHits();
       put( bitsBank, m_triggerName );
     } else {
-      trigBank = new L0CaloAdcs();
+      trigBank = new LHCb::L0CaloAdcs();
       put( trigBank, m_triggerName );
     }
   }
@@ -210,7 +210,7 @@ StatusCode CaloDigitAlg::execute() {
   // == fill with MCCaloDigit, using the calibration activeToTotal
 
   std::vector<double> caloEnergies ( m_numberOfCells, 0.0 ) ;
-  for( MCCaloDigits::const_iterator mcDig = mcDigits->begin() ;
+  for( LHCb::MCCaloDigits::const_iterator mcDig = mcDigits->begin() ;
        mcDigits->end() != mcDig ; ++mcDig ) {
     if( 0 != *mcDig ) {
       int index = m_calo->cellIndex( (*mcDig)->cellID() );
@@ -254,7 +254,7 @@ StatusCode CaloDigitAlg::execute() {
        cell != caloEnergies.end() ; ++cell ) {
 
     const unsigned int index = cell - caloEnergies.begin() ;
-    const CaloCellID   id    = m_calo->cellIdByIndex( index );
+    const LHCb::CaloCellID   id    = m_calo->cellIdByIndex( index );
 
     //== extract the PMT gain for the given channel , translate the energy to
     //   ADC scale, take into account coherent and incoherent noise and
@@ -275,7 +275,7 @@ StatusCode CaloDigitAlg::execute() {
       // Correct for spill-over in Prs/Spd by a fixed fraction.
       // Do it on signal, as Spd has a single bit adc...
  
-      MCCaloDigit* prevMc = prevDigits->object( id );
+      LHCb::MCCaloDigit* prevMc = prevDigits->object( id );
       if ( 0 != prevMc ) {
         double prevEnergy = prevMc->activeE() * m_activeToTotal;
 
@@ -298,14 +298,14 @@ StatusCode CaloDigitAlg::execute() {
     int  intAdc  = (int) floor( adcValue + 0.5 );
     if ( intAdc > m_maxAdcValue) { intAdc = m_saturatedAdc ; } 
     if ( m_zSupThreshold <= intAdc ) {
-      CaloAdc* adc = new CaloAdc( id, intAdc );
+      LHCb::CaloAdc* adc = new LHCb::CaloAdc( id, intAdc );
       adcs->insert( adc ) ;
     }
     
     int trigVal   = 0;
     if ( m_triggerIsBit ) {
       if ( m_triggerThreshold < intAdc * gain ) {
-        L0PrsSpdHit* myHit = new L0PrsSpdHit( id );
+        LHCb::L0PrsSpdHit* myHit = new LHCb::L0PrsSpdHit( id );
         bitsBank->insert( myHit );
       }
     } else {
@@ -314,7 +314,7 @@ StatusCode CaloDigitAlg::execute() {
       if ( 255 < trigVal ) trigVal = 255;
       if ( 0   > trigVal ) trigVal = 0;
       if ( 0 < trigVal ) {
-        L0CaloAdc* trigAdc = new L0CaloAdc( id, trigVal );
+        LHCb::L0CaloAdc* trigAdc = new LHCb::L0CaloAdc( id, trigVal );
         trigBank->insert( trigAdc );
       }
     }

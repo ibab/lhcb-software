@@ -1,12 +1,10 @@
-// $Id: CaloZSupAlg.cpp,v 1.13 2005-12-02 13:30:50 ocallot Exp $
+// $Id: CaloZSupAlg.cpp,v 1.14 2006-01-10 07:44:29 ocallot Exp $
 
-// CLHEP
-#include "CLHEP/Units/SystemOfUnits.h"
+// LHCbDefinitions
+#include "Kernel/SystemOfUnits.h"
 // Gaudi
 #include "GaudiKernel/AlgFactory.h"
 #include "GaudiKernel/RndmGenerators.h"
-
-#include "Event/RawEvent.h"
 
 // local
 #include "CaloZSupAlg.h"
@@ -38,22 +36,19 @@ CaloZSupAlg::CaloZSupAlg( const std::string& name, ISvcLocator* pSvcLocator)
   declareProperty("OutputData"      , m_outputData      ) ;
   declareProperty("ZsupMethod"      , m_zsupMethod      ) ;
   declareProperty("ZsupThreshold"   , m_zsupThreshold   ) ;
-  declareProperty("BankType"        , m_bankType        ) ;
 
   //=== Default values according to the name of the algorithm !
   if ( "EcalZSup" == name ) {
     m_detectorName     = "/dd/Structure/LHCb/Ecal";
-    m_outputData       = CaloAdcLocation::Ecal;
+    m_outputData       = LHCb::CaloAdcLocation::Ecal;
     m_zsupMethod       = "2D";
     m_zsupThreshold    = 20;
-    m_bankType         = RawBuffer::EcalE;
     m_inputToolName    = "CaloEnergyFromRaw/EcalEnergyFromRaw";
   } else if ( "HcalZSup" == name ) {
     m_detectorName     = "/dd/Structure/LHCb/Hcal";
-    m_outputData       = CaloAdcLocation::Hcal;
+    m_outputData       = LHCb::CaloAdcLocation::Hcal;
     m_zsupMethod       = "1D";
     m_zsupThreshold    = 4;
-    m_bankType         = RawBuffer::HcalE;
     m_inputToolName    = "CaloEnergyFromRaw/HcalEnergyFromRaw";
   }
 };
@@ -118,11 +113,11 @@ StatusCode CaloZSupAlg::execute() {
 
   //*** get the input data
 
-  std::vector<CaloAdc>& adcs = m_adcTool->adcs( );
+  std::vector<LHCb::CaloAdc>& adcs = m_adcTool->adcs( );
 
   //***  prepare the output container
 
-  CaloAdcs* newAdcs = new CaloAdcs();
+  LHCb::CaloAdcs* newAdcs = new LHCb::CaloAdcs();
   put( newAdcs, m_outputData );
   
   if ( isDebug ) debug() << "Processing " << adcs.size() 
@@ -133,7 +128,7 @@ StatusCode CaloZSupAlg::execute() {
     NeighborFlag  ,
     SeedFlag       };
 
-  std::vector<CaloAdc>::const_iterator anAdc;
+  std::vector<LHCb::CaloAdc>::const_iterator anAdc;
   std::vector<int> caloFlags    ( m_numberOfCells, DefaultFlag ) ;
 
   int index;
@@ -141,7 +136,7 @@ StatusCode CaloZSupAlg::execute() {
   // == Apply the threshold. If 2DZsup, tag also the neighbours
 
   for( anAdc = adcs.begin(); adcs.end() != anAdc ; ++anAdc ) {
-    CaloCellID id = (*anAdc).cellID();
+    LHCb::CaloCellID id = (*anAdc).cellID();
     index         = m_calo->cellIndex( id );
     int    digAdc = (*anAdc).adc();
     if( m_zsupThreshold <= digAdc ) {
@@ -169,11 +164,11 @@ StatusCode CaloZSupAlg::execute() {
   //** write tagged data as CaloAdc
   
   for( anAdc = adcs.begin(); adcs.end() != anAdc ; ++anAdc ) {
-    CaloCellID id = (*anAdc).cellID();
+    LHCb::CaloCellID id = (*anAdc).cellID();
     index         = m_calo->cellIndex( id );
     if( DefaultFlag == caloFlags[index] ) { continue; }
 
-    CaloAdc* adc = new CaloAdc( id, (*anAdc).adc() );
+    LHCb::CaloAdc* adc = new LHCb::CaloAdc( id, (*anAdc).adc() );
     newAdcs->insert( adc ) ;
     
     if( isVerbose ) {

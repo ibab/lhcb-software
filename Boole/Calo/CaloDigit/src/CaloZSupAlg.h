@@ -1,4 +1,4 @@
-// $Id: CaloZSupAlg.h,v 1.7 2005-11-10 16:44:02 ocallot Exp $ 
+// $Id: CaloZSupAlg.h,v 1.8 2006-01-10 07:44:29 ocallot Exp $ 
 #ifndef   CALODIGIT_CALOZSUPALG_H
 #define   CALODIGIT_CALOZSUPALG_H 1
 
@@ -7,6 +7,7 @@
 #include "GaudiAlg/GaudiAlgorithm.h"
 
 // from CaloKernel
+#include "Kernel/CaloCellID.h"
 #include "CaloKernel/CaloVector.h"
 
 // CaloDet
@@ -47,7 +48,6 @@ private:
 
   DeCalorimeter*         m_calo;    ///< Detector element pointer
   ICaloEnergyFromRaw*    m_adcTool; ///< acces to adcs in Raw buffer
-  int         m_bankType;
   int         m_numberOfCells     ; ///< Number of cells of this detector.
 };
 

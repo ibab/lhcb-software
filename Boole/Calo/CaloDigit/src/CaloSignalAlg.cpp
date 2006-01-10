@@ -1,7 +1,8 @@
-// $Id: CaloSignalAlg.cpp,v 1.5 2005-01-12 09:14:33 ocallot Exp $
+// $Id: CaloSignalAlg.cpp,v 1.6 2006-01-10 07:44:29 ocallot Exp $
 
-/// CLHEP
-#include "CLHEP/Units/SystemOfUnits.h"
+/// Kernel
+#include "Kernel/SystemOfUnits.h"
+#include "Kernel/Point3DTypes.h"
 /// Gaudi
 #include "GaudiKernel/AlgFactory.h"
 #include "GaudiKernel/RndmGenerators.h"
@@ -9,6 +10,7 @@
 #include "Event/MCParticle.h"
 
 // Calo/CaloGen
+#include "Kernel/CaloCellID.h"
 #include "CaloKernel/CaloVector.h"
 
 /// Event/CaloEvent
@@ -51,23 +53,23 @@ CaloSignalAlg::CaloSignalAlg( const std::string& name,
 
   if ( "SpdSignal" == name ) {
     m_detectorName   = "/dd/Structure/LHCb/Spd" ;
-    m_inputData      = MCCaloHitLocation::Spd ;
-    m_outputData     = MCCaloDigitLocation::Spd ;
-    m_previousDigits = "Prev/" + MCCaloDigitLocation::Spd;
+    m_inputData      = LHCb::MCCaloHitLocation::Spd ;
+    m_outputData     = LHCb::MCCaloDigitLocation::Spd ;
+    m_previousDigits = "Prev/" + LHCb::MCCaloDigitLocation::Spd;
     m_minimalDeposit = 0.0;   //== Full history
   } else if ( "PrsSignal" == name ) {
     m_detectorName   = "/dd/Structure/LHCb/Prs" ;
-    m_inputData      = MCCaloHitLocation::Prs ;
-    m_outputData     = MCCaloDigitLocation::Prs ;
-    m_previousDigits = "Prev/" + MCCaloDigitLocation::Prs;
+    m_inputData      = LHCb::MCCaloHitLocation::Prs ;
+    m_outputData     = LHCb::MCCaloDigitLocation::Prs ;
+    m_previousDigits = "Prev/" + LHCb::MCCaloDigitLocation::Prs;
   } else if ( "EcalSignal" == name ) {
     m_detectorName   = "/dd/Structure/LHCb/Ecal" ;
-    m_inputData      = MCCaloHitLocation::Ecal ;
-    m_outputData     = MCCaloDigitLocation::Ecal ;
+    m_inputData      = LHCb::MCCaloHitLocation::Ecal ;
+    m_outputData     = LHCb::MCCaloDigitLocation::Ecal ;
   } else if ( "HcalSignal" == name ) {
     m_detectorName   = "/dd/Structure/LHCb/Hcal" ;
-    m_inputData      = MCCaloHitLocation::Hcal ;
-    m_outputData     = MCCaloDigitLocation::Hcal ;
+    m_inputData      = LHCb::MCCaloHitLocation::Hcal ;
+    m_outputData     = LHCb::MCCaloDigitLocation::Hcal ;
   }
   m_previousData   = "Prev/" + m_inputData;
  };
@@ -116,27 +118,27 @@ StatusCode CaloSignalAlg::execute() {
           << m_inputData << " to " << m_outputData << endreq;
   
   // prepare the output container
-  MCCaloDigits* mcDigits = new MCCaloDigits();
+  LHCb::MCCaloDigits* mcDigits = new LHCb::MCCaloDigits();
   StatusCode sc = put( mcDigits , m_outputData );
   if( sc.isFailure() ) { return sc ; }
 
-  MCCaloDigits* mcPrevDigits = 0;
+  LHCb::MCCaloDigits* mcPrevDigits = 0;
   if ( m_storePrevious ) {
-    mcPrevDigits  = new MCCaloDigits();
+    mcPrevDigits  = new LHCb::MCCaloDigits();
     StatusCode sc = put( mcPrevDigits , m_previousDigits );
     if( sc.isFailure() ) { return sc ; }
   }
   
   // get the input data
-  MCCaloHits* hits = get<MCCaloHits>( m_inputData );
+  LHCb::MCCaloHits* hits = get<LHCb::MCCaloHits>( m_inputData );
 
   // initialize the background random number
   Rndm::Numbers BackgroundFraction ( m_rndmSvc , Rndm::Flat( 0.0 , 1. ) );
   
   //== Vector with direct access via CellId.
-  CaloVector<MCCaloDigit*> mcDigitPtr( 0 );
-  CaloVector<MCCaloDigit*> mcPrevDigitPtr( 0 );
-  CaloVector<MCCaloDigit*>::iterator vi;
+  CaloVector<LHCb::MCCaloDigit*> mcDigitPtr( 0 );
+  CaloVector<LHCb::MCCaloDigit*> mcPrevDigitPtr( 0 );
+  CaloVector<LHCb::MCCaloDigit*>::iterator vi;
 
   //== Vector to decide if an old BX can contribute.
   std::vector<bool> validBX;
@@ -152,16 +154,16 @@ StatusCode CaloSignalAlg::execute() {
   // Process the input container.
   //--------------------------------
 
-  MCCaloHits::const_iterator hitIt;
-  MCCaloDigit* myDig;
-  MCCaloHit* hit;
+  LHCb::MCCaloHits::const_iterator hitIt;
+  LHCb::MCCaloDigit* myDig;
+  LHCb::MCCaloHit* hit;
   int    timeBin;
   double storedE;
   int    storeType;
 
   for( hitIt = hits->begin(); hits->end() != hitIt ; ++hitIt ) {
     hit = *hitIt;
-    CaloCellID id = hit->cellID() ;
+    LHCb::CaloCellID id = hit->cellID() ;
     if ( !m_calo->valid( id ) ) continue; 
 
     // Set the timeBin (careful of bad rounding), If in time, store.
@@ -184,10 +186,9 @@ StatusCode CaloSignalAlg::execute() {
     } else if ( 2 <= timeBin ) {
       //== Keep the contribution of old BX, according to the probability.
       if ( validBX[ timeBin%validBX.size() ] ) {
-        HepPoint3D center = m_calo->cellCenter( id );
-        center.setX( -center.x() );
-        center.setY( -center.y() );
-        CaloCellID id = m_calo->Cell( center );
+        Gaudi::XYZPoint center = m_calo->cellCenter( id );
+        Gaudi::XYZPoint newCenter( -center.x(), -center.y(), center.z() );
+        LHCb::CaloCellID id = m_calo->Cell( newCenter );
         storeType = 3;
       }
     }
@@ -195,7 +196,7 @@ StatusCode CaloSignalAlg::execute() {
     if ( 0 != storeType ) {
       myDig = mcDigitPtr[id];
       if ( 0 == myDig ) {
-        myDig = new MCCaloDigit( );
+        myDig = new LHCb::MCCaloDigit( );
         myDig->setCellID( id );
         mcDigitPtr.addEntry( myDig, id );
       }
@@ -207,12 +208,12 @@ StatusCode CaloSignalAlg::execute() {
         if ( 1 == storeType ) text = " stored";
         if ( 2 == storeType ) text = "  added";
         if ( 3 == storeType ) text = "    bkg";
-        MCParticle* part = hit->particle();
-        verbose() << id << text << format( 
-    " %8.2f MeV, timeBin=%8d, MCPart %4d ID%8d (e= %9.3f GeV)",
-    storedE/MeV, timeBin, (int) part->index(), part->particleID().pid(),
-    part->momentum().e()/GeV ) 
-            << endreq;
+        const LHCb::MCParticle* part = hit->particle();
+        verbose() << id << text 
+                  << format( " %8.2f MeV, timeBin=%8d, MCPart %4d ID%8d (e= %9.3f GeV)",
+                             storedE/MeV, timeBin, (int) part->index(), part->particleID().pid(),
+                             part->momentum().e()/GeV ) 
+                  << endreq;
       }
     } // store ?
   } // hit loop
@@ -221,11 +222,11 @@ StatusCode CaloSignalAlg::execute() {
   // == Process the spill-over data, but only if container specified
   //--------------------------------
   if( !m_previousData.empty() ) {
-    if ( exist<MCCaloHits>( m_previousData ) ) {
-      MCCaloHits* spillOver = get<MCCaloHits>( m_previousData );
+    if ( exist<LHCb::MCCaloHits>( m_previousData ) ) {
+      LHCb::MCCaloHits* spillOver = get<LHCb::MCCaloHits>( m_previousData );
       for( hitIt = spillOver->begin(); spillOver->end() != hitIt ; ++hitIt ) {
         hit = *hitIt;
-        const CaloCellID id = hit->cellID() ;
+        const LHCb::CaloCellID id = hit->cellID() ;
         if ( ! m_calo->valid( id ) ) { continue; }
         
         storeType = 0;
@@ -238,14 +239,14 @@ StatusCode CaloSignalAlg::execute() {
           storeType = 4;
           myDig = mcDigitPtr[id];
           if ( 0 == myDig ) {
-            myDig = new MCCaloDigit( );
+            myDig = new LHCb::MCCaloDigit( );
             myDig->setCellID( id );
             mcDigitPtr.addEntry( myDig, id );
           }
         } else if ( m_storePrevious && 0 == timeBin ) {
           myDig = mcPrevDigitPtr[id];
           if ( 0 == myDig ) {
-            myDig = new MCCaloDigit( );
+            myDig = new LHCb::MCCaloDigit( );
             myDig->setCellID( id );
             mcPrevDigitPtr.addEntry( myDig, id );
           }
@@ -259,12 +260,12 @@ StatusCode CaloSignalAlg::execute() {
             if ( 4 == storeType ) text = "  spill";
             if ( 5 == storeType ) text = " PREV  ";
             
-            MCParticle* part = hit->particle();
-            verbose() << id << text << format(
-  " %8.2f MeV, timeBin=%8d, MCPart %4d ID%8d (e= %9.3f GeV)",
-  storedE/MeV, timeBin, (int) part->index(),  part->particleID().pid(),
-  part->momentum().e()/GeV ) 
-                << endreq;
+            const LHCb::MCParticle* part = hit->particle();
+            verbose() << id << text 
+                      << format( " %8.2f MeV, timeBin=%8d, MCPart %4d ID%8d (e= %9.3f GeV)",
+                                 storedE/MeV, timeBin, (int) part->index(),  part->particleID().pid(),
+                                 part->momentum().e()/GeV ) 
+                      << endreq;
           }
         }
       }
@@ -274,7 +275,7 @@ StatusCode CaloSignalAlg::execute() {
   /// copy data into output container 
 
   for( vi = mcDigitPtr.begin(); mcDigitPtr.end() != vi; ++vi ){
-    MCCaloDigit* digit = *vi ;
+    LHCb::MCCaloDigit* digit = *vi ;
     if( 0 != digit ) mcDigits->insert( digit );
   }
 
@@ -282,7 +283,7 @@ StatusCode CaloSignalAlg::execute() {
 
   if ( m_storePrevious ) {
     for( vi = mcPrevDigitPtr.begin(); mcPrevDigitPtr.end() != vi; ++vi ){
-      MCCaloDigit* digit = *vi ;
+      LHCb::MCCaloDigit* digit = *vi ;
       if( 0 != digit )  mcPrevDigits->insert( digit );
     }
     debug() << " (plus " << mcPrevDigits->size() << " in Prev container)";

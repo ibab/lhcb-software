@@ -4,6 +4,9 @@
 ! Purpose     : Digitisation and Zero-suppression of the Calorimeters
 !-----------------------------------------------------------------------------
 
+! 2006-01-10 - Olivier Callot
+ - Adapt to LHCb v20, i.e. add LHCb:: namespace and convert from CLHEP
+
 ! 2005-12-02 - Olivier Callot
  - CaloZSupAlg: Remove Prs and SPD options: This is done in 
    CaloDigit, it writes CaloAdc for the Raw Buffer directly
