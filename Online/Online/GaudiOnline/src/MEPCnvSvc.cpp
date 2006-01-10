@@ -1,6 +1,6 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/GaudiOnline/src/MEPCnvSvc.cpp,v 1.1 2005-12-20 16:38:18 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/GaudiOnline/src/MEPCnvSvc.cpp,v 1.2 2006-01-10 13:45:03 frankb Exp $
 //	====================================================================
-//  RawBufferCreator.cpp
+//  MEPCnvSvc.cpp
 //	--------------------------------------------------------------------
 //
 //	Author    : Markus Frank
@@ -13,90 +13,21 @@
 #include "GaudiKernel/MsgStream.h"
 #include "GaudiKernel/IRegistry.h"
 #include "GaudiOnline/MBMCnvSvc.h"
-#include "MDF/RawDataCnvSvc.h"
+#include "GaudiOnline/MEPManager.h"
 #include "MDF/StorageTypes.h"
 #include "MDF/MDFHeader.h"
-#include "MDF/MEPEvent.h"
 #include "MDF/RawEventHelpers.h"
 #include "MBM/Producer.h"
 #include "MBM/mepdef.h"
-#include "Event/RawEvent.h"
 #include <stdexcept>
 
-using LHCb::RawEvent;
 using LHCb::MDFHeader;
-using LHCb::MultiEventPacket;
+using MBM::Producer;
+
 
 namespace LHCb {
-class MepManager : public Service  {
-  MEPID                     m_mepID;
-  std::vector<std::string>  m_buffers;
-  std::string               m_procName;
-  int                       m_partitionID;
-public:
-  MepManager(const std::string& nam, ISvcLocator* loc);
-  virtual ~MepManager();
-  MEPID  mepID() const  {  return m_mepID;   }
-  StatusCode initialize();
-  StatusCode error(const std::string& msg)   const;
-};
-}
 
-LHCb::MepManager* s_manager = 0;
-LHCb::MepManager* manager()  {
-  return s_manager;
-}
-
-LHCb::MepManager::MepManager(const std::string& nam, ISvcLocator* loc)    
-: Service(nam, loc), m_mepID(0), m_partitionID(0x103)
-{
-  s_manager = this;
-  declareProperty("Buffers",     m_buffers);
-  declareProperty("ProcessName", m_procName);
-  declareProperty("PartitionID", m_partitionID);
-}
-
-LHCb::MepManager::~MepManager()    {
-}
-
-StatusCode LHCb::MepManager::error(const std::string& msg)   const {
-  MsgStream err(msgSvc(), "OnlineConverter");
-  err << MSG::ERROR << msg << endmsg;
-  return StatusCode::FAILURE;
-}
-
-StatusCode LHCb::MepManager::initialize()  {
-  typedef std::vector<std::string> _V;
-  StatusCode sc = Service::initialize();
-  int flags = 0;
-  if ( !sc.isSuccess() )  {
-    return error("Failed to initialize base class RawDataCnvSvc.");
-  }
-  for(_V::const_iterator i=m_buffers.begin(); i != m_buffers.end(); ++i )  {
-    const std::string& b = *i;
-    switch(::toupper((*i)[0]))  {
-      case 'E':
-        flags |= USE_EVT_BUFFER;
-        break;
-      case 'R':
-        flags |= USE_RES_BUFFER;
-        break;
-      case 'M':
-        flags |= USE_MEP_BUFFER;
-        break;
-      default:
-        return error("Unknown buffer name:"+(*i));
-    }
-  }
-  m_mepID = mep_include(m_procName.c_str(), m_partitionID, flags);
-  if ( m_mepID == MEP_INV_DESC )  {
-    return error("Failed to include into MEP buffers!");
-  }
-  return StatusCode::SUCCESS;
-}
-
-namespace LHCb {
-  /** @class OnlineCnvSvc OnlineCnvSvc.cpp  GaudiOnline/OnlineCnvSvc.cpp
+  /** @class MEPCnvSvc MEPCnvSvc.cpp  GaudiOnline/MEPCnvSvc.cpp
     *
     * Conversion service for the online data.
     * 
@@ -105,12 +36,22 @@ namespace LHCb {
     * @date    01/01/2005
     */
   class MEPCnvSvc : public MBMCnvSvc  {
+    
+    /// Pointer to MEP manager service
+    IMEPManager*   m_mepMgr;
+
   public:
     /// Initializing constructor
     MEPCnvSvc(const std::string& nam, ISvcLocator* loc);
     
     /// Standard destructor      
     virtual ~MEPCnvSvc();
+
+    /// Initialize conversion service
+    virtual StatusCode initialize();
+
+    /// Finalize conversion service
+    virtual StatusCode finalize();
 
     /// Commit output to buffer manager
     virtual StatusCode commitDescriptors(void* ioDesc);
@@ -129,7 +70,7 @@ namespace LHCb {
 
 /// Initializing constructor
 LHCb::MEPCnvSvc::MEPCnvSvc(const std::string& nam, ISvcLocator* loc) 
-: MBMCnvSvc(nam, loc, MBMDESC_StorageType)
+: MBMCnvSvc(nam, loc, RAWDESC_StorageType), m_mepMgr(0)
 {
 }
   
@@ -137,12 +78,32 @@ LHCb::MEPCnvSvc::MEPCnvSvc(const std::string& nam, ISvcLocator* loc)
 LHCb::MEPCnvSvc::~MEPCnvSvc() {
 }
 
+/// Initialize MEP conversion service
+StatusCode LHCb::MEPCnvSvc::initialize()  {
+  StatusCode sc = MBMCnvSvc::initialize();
+  if ( sc.isSuccess() )  {
+    sc = service("MEPManager",m_mepMgr);
+    if ( !sc.isSuccess() )   {
+      error("Failed to access MEPManager.");
+    }
+  }
+  return sc;
+}
+
+StatusCode LHCb::MEPCnvSvc::finalize()  {
+  if ( m_mepMgr )  {
+    m_mepMgr->release();
+    m_mepMgr = 0;
+  }
+  return MBMCnvSvc::finalize();
+}
+
 /// Commit output to buffer manager
 StatusCode LHCb::MEPCnvSvc::commitDescriptors(void* ioDesc)  {
   SmartDataPtr<DataObject> evt(dataProvider(),"/Event");
   if ( evt )  {
     IOpaqueAddress* pA = evt->registry()->address();
-    if ( pA->svcType() == MBMDESC_StorageType )  {
+    if ( pA->svcType() == RAWDESC_StorageType )  {
 #if 0
       const MultiEventPacket* dsc = (const MultiEventPacket*)pA->ipar()[0];
       size_t len = dsc->header()->sizeOf();
@@ -168,13 +129,10 @@ void* LHCb::MEPCnvSvc::openIO(const std::string& fname, const std::string&  mode
   if ( strncasecmp(mode.c_str(),"N",1)==0 || strncasecmp(mode.c_str(),"REC",3)==0 )  {
     // Writing: requires producer
     if ( fname.find("mep://") == 0 )  {
-      int partID;
       size_t id1 = fname.find(".",6);
       size_t id2 = fname.find(".0x",id1+1);
       std::string buff = fname.substr(6, id1-6);
-      std::string proc = fname.substr(6, id2-id1);
-      ::sscanf(fname.c_str()+id2+1,"0x%X",&partID);
-      MEPID mepID = manager()->mepID();
+      MEPID mepID = m_mepMgr->mepID();
       BMID  bmID = MBM_INV_DESC;
       int offset = 0;
       switch(::toupper(buff[0]))  {
@@ -194,7 +152,7 @@ void* LHCb::MEPCnvSvc::openIO(const std::string& fname, const std::string&  mode
           error("Unknown MEP buffer name:"+buff);
           return 0;
       }
-      MBM::Producer* p = new MBM::Producer(bmID,mepID->processName,mepID->partitionID);
+      Producer* p = new Producer(bmID,mepID->processName,mepID->partitionID);
       return p;
     }
   }
@@ -212,7 +170,7 @@ StatusCode LHCb::MEPCnvSvc::writeDataSpace(void* ioDesc,
                                            int evType, 
                                            int hdrType)    {
   if ( ioDesc )   {
-    MBM::Producer* prod = (MBM::Producer*)ioDesc;
+    Producer* prod = (Producer*)ioDesc;
     if ( prod )  {
       MBM::EventDesc& e = prod->event();
       MDFHeader* h = (MDFHeader*)e.data;
@@ -232,4 +190,3 @@ StatusCode LHCb::MEPCnvSvc::writeDataSpace(void* ioDesc,
 }
 
 DECLARE_NAMESPACE_SERVICE_FACTORY(LHCb,MEPCnvSvc)
-DECLARE_NAMESPACE_SERVICE_FACTORY(LHCb,MepManager)

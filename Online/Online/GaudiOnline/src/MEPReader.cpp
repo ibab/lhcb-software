@@ -1,4 +1,4 @@
-// $Id: MEPReader.cpp,v 1.1 2005-12-20 16:38:18 frankb Exp $
+// $Id: MEPReader.cpp,v 1.2 2006-01-10 13:45:03 frankb Exp $
 // Include files 
 
 // from Gaudi
@@ -10,6 +10,7 @@
 #include "Event/RawBank.h"
 #include "Event/RawEvent.h"
 #include "MDF/MEPEvent.h"
+#include "MDF/RawEventHelpers.h"
 #include <io.h>
 #include <fcntl.h>      /* Needed only for _O_RDWR definition */
 
@@ -34,51 +35,41 @@ public:
   /// Destructor
   virtual ~MEPReader()  {} 
 
+  void read(void* p, size_t len)  {
+    int sc = ::read(m_file,p,len);
+    if ( sc != len )  {
+      MsgStream log(msgSvc(),name());
+      log << MSG::ERROR << "Read Error: End-Of-File !" << endmsg;
+      throw std::runtime_error("Read Error: End-Of-File !");
+    }
+  }
+
   /// Main execution
   virtual StatusCode execute()  {
     MsgStream log(msgSvc(),name());
-
-    int len;
-    int sc = read(m_file,&len,sizeof(len));
-    if ( sc != sizeof(int) )  {
-      log << MSG::ERROR << "End-Of-File !" << endmsg;
-      return StatusCode::FAILURE;
-    }
-    char* buff = new char[len+4];
-    sc = read(m_file,buff+4,len);
-    if ( sc != len )  {
-      log << MSG::ERROR << "End-Of-File !" << endmsg;
-      return StatusCode::FAILURE;
-    }
-    *(int*)buff = len;
-    std::map<int, RawEvent*> events;
-    MEPEvent* me = (MEPEvent*)buff;
-    int evID, eid_h = 0, eid_l = 0;
-    for (MEPMultiFragment* mf = me->first(); mf<me->last(); mf=me->next(mf)) {
-      eid_h = mf->eventID();
-      for (MEPFragment* f = mf->first(); f<mf->last(); f=mf->next(f)) {
-        eid_l = f->eventID();
-        evID = eid_h + eid_l;
-        RawEvent* evt = events[evID];
-        if ( 0 == evt ) events[evID] = evt = new RawEvent();
-        const RawBank* last = f->last();
-        for (RawBank* b = f->first(); b<f->last(); b=f->next(b)) {
-          if ( b->magic() != RawBank::MagicPattern )  {
-            log << MSG::ERROR << "Bad magic pattern!" << endmsg;
-          }
-          evt->adoptBank(b, false);
-        }
+    unsigned int len, partitionID;
+    try  {
+      typedef std::map<unsigned int, RawEvent*> Events;
+      Events events;
+      read(&len,sizeof(len));
+      char* buff = new char[len+4];
+      read(buff+4,len);
+      MEPEvent* me = (MEPEvent*)buff;
+      me->setSize(len);
+      decodeMEP(me, false, partitionID, events);
+      for(Events::const_iterator i=events.begin();i!=events.end();++i)  {
+        m_evt++;
+        log << MSG::ALWAYS << (*i).first << ".";
+        delete (*i).second;
       }
+      delete buff;
+      log << MSG::ALWAYS << "Read " << m_evt << " events." << endmsg;
+      return StatusCode::SUCCESS;
     }
-    for(std::map<int, RawEvent*>::const_iterator i=events.begin();i!=events.end();++i)  {
-      m_evt++;
-      log << MSG::ALWAYS << (*i).first << "..";
+    catch(std::exception& e)  {
+      log << MSG::ERROR << e.what() << endmsg;
     }
-    log << MSG::ALWAYS << "Read successfully " << m_evt << " events." << endmsg;
-    for(std::map<int, RawEvent*>::const_iterator i=events.begin();i!=events.end();++i)
-      delete (*i).second;
-    delete buff;
-    return StatusCode::SUCCESS;
+    return StatusCode::FAILURE;
   }
 };
 

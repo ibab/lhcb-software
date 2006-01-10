@@ -7,7 +7,7 @@ EventDataSvc.RootCLID                = 1;
 EventDataSvc.EnableFaultHandler      = true ;
 ApplicationMgr.TopAlg                = { "StoreExplorerAlg" };
 StoreExplorerAlg.Load                = 1;
-StoreExplorerAlg.PrintFreq           = 0.001;
+StoreExplorerAlg.PrintFreq           = 0.9001;
 EventSelector.PrintFreq              = 1000;
 ApplicationMgr.EvtMax                = 100000;
 ApplicationMgr.Dlls  += { "MDF", "GaudiOnline" };
@@ -24,7 +24,7 @@ EventPersistencySvc.CnvServices += { "MBMCnvSvc" };
 
 MBMWriter.Output          = "DATAFILE='mbm://EVENT.prod_0.0x103' SVC='MBMCnvSvc' OPT='REC'";
 MBMWriter.ItemList        = {"/Event#1" };
-ApplicationMgr.OutStream  = {"MBMWriter"};
+//ApplicationMgr.OutStream  = {"MBMWriter"};
 EventSelector.Input += {"DATA='file://U:/frankb/scratch0/rawbuffer_0.dat' SVC='LHCb::MDFSelector'"};
 EventSelector.Input += {"DATA='file://U:/frankb/scratch0/rawbuffer_1.dat' SVC='LHCb::MDFSelector'"};
 EventSelector.Input += {"DATA='file://U:/frankb/scratch0/rawbuffer_2.dat' SVC='LHCb::MDFSelector'"};
@@ -225,3 +225,5 @@ EventSelector.Input += {"DATA='file://U:/frankb/scratch0/rawbuffer_196.dat' SVC=
 EventSelector.Input += {"DATA='file://U:/frankb/scratch0/rawbuffer_197.dat' SVC='LHCb::MDFSelector'"};
 EventSelector.Input += {"DATA='file://U:/frankb/scratch0/rawbuffer_198.dat' SVC='LHCb::MDFSelector'"};
 EventSelector.Input += {"DATA='file://U:/frankb/scratch0/rawbuffer_199.dat' SVC='LHCb::MDFSelector'"};
+
+EventSelector.Input = {"DATA='file://mepBuffer.dat' SVC='LHCb::MEPSelector'"};

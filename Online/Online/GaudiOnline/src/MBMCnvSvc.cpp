@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/GaudiOnline/src/MBMCnvSvc.cpp,v 1.1 2005-12-20 16:38:18 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/GaudiOnline/src/MBMCnvSvc.cpp,v 1.2 2006-01-10 13:45:03 frankb Exp $
 //	====================================================================
 //  RawBufferCreator.cpp
 //	--------------------------------------------------------------------
@@ -34,7 +34,7 @@ static MBM::Producer* producerFromIODescriptor(void* ioDesc)   {
 
 /// Initializing constructor
 LHCb::MBMCnvSvc::MBMCnvSvc(const std::string& nam, ISvcLocator* loc) 
-: RawDataCnvSvc(nam, loc, MBMDATA_StorageType)
+: RawDataCnvSvc(nam, loc, RAWDATA_StorageType)
 {
 }
 
@@ -44,12 +44,13 @@ LHCb::MBMCnvSvc::MBMCnvSvc(const std::string& nam, ISvcLocator* loc, long type)
 {
 }
 
-/// Standard destructor      
+/// Standard destructor
 LHCb::MBMCnvSvc::~MBMCnvSvc() {
 }
 
 /// Allocate data space for output
-char* const LHCb::MBMCnvSvc::getDataSpace(void* ioDesc, size_t len)   {
+char* const LHCb::MBMCnvSvc::getDataSpace(void* ioDesc, size_t len)   
+{
   if ( ioDesc )   {
     MBM::Producer* prod = producerFromIODescriptor(ioDesc);
     if ( prod )  {

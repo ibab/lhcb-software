@@ -1,4 +1,4 @@
-// $Id: GaudiOnline_dll.cpp,v 1.1.1.1 2005-04-18 15:31:41 frankb Exp $
+// $Id: GaudiOnline.cpp,v 1.1 2006-01-10 13:45:02 frankb Exp $
 //====================================================================
 //  GaudiOnline_dll.cpp
 //--------------------------------------------------------------------
@@ -18,3 +18,13 @@
 #include "GaudiKernel/LoadFactoryEntries.h"
 
 LOAD_FACTORY_ENTRIES(GaudiOnline)
+
+#include "GaudiKernel/DeclareFactoryEntries.h"
+
+DECLARE_FACTORY_ENTRIES(GaudiOnline)  {
+  DECLARE_NAMESPACE_SERVICE(   LHCb,MBMCnvSvc  );
+  DECLARE_NAMESPACE_SERVICE(   LHCb,MEPCnvSvc  );
+  DECLARE_NAMESPACE_SERVICE(   LHCb,MEPManager );
+  DECLARE_ALGORITHM(           MEPReader);
+  DECLARE_OBJECT(              OnlineMessageSvc);
+}

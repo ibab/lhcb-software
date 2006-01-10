@@ -16,10 +16,11 @@ use MDF           v* DAQ
 # ==================== component libraries ==================================
 library GaudiOnline  *.cpp
 apply_pattern component_library library=GaudiOnline 
+apply_pattern ld_library_path
 macro_append GaudiOnline_shlibflags ' $(MDFlib_linkopts) '
 
 # ==================== private test application =============================
 private
 use GaudiSvc v*
-application Gaudi "../main/GaudiMain.cpp"
+application Gaudi "../main/*.cpp"
 apply_pattern application_path
