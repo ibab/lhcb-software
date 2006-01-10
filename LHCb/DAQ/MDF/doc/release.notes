@@ -6,6 +6,10 @@
 !               MEP fragments
 !-----------------------------------------------------------------------------
 
+
+! 2006-01-10 - Markus Frank
+  - Add event selector to read MEP buffers from file
+
 !========================== MDF v1r0  ===========================
 ! 2005-12-20 - Markus Frank
   - New package

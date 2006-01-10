@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/DAQ/MDF/MDF/MEPWriter.h,v 1.1 2005-12-20 16:33:38 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/DAQ/MDF/MDF/MEPWriter.h,v 1.2 2006-01-10 09:43:16 frankb Exp $
 //	====================================================================
 //  MEPWriter.h
 //	--------------------------------------------------------------------
@@ -10,7 +10,7 @@
 #define MEP_MEPWRITER_H
 
 #include "MDF/MDFWriter.h"
-
+#include <map>
 /*
  *    LHCb namespace
  */
@@ -28,9 +28,10 @@ namespace LHCb    {
   class MEPWriter : public MDFWriter   {
 
   private:
-    typedef std::vector<RawEvent*> Events;
-    int        m_packingFactor;
-    Events     m_events;
+    typedef std::map<unsigned int, RawEvent*> Events;
+    int           m_packingFactor;
+    Events        m_events;
+    unsigned int  m_evID;
   public:
 
     /// Standard algorithm constructor

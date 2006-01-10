@@ -13,6 +13,7 @@ use GaudiKernel   v*
 library MDF *.cpp -import=DAQEvent
 macro_append MDF_shlibflags '' WIN32 ' $(DAQEvent_linkopts) '
 apply_pattern component_library library=MDF
+apply_pattern ld_library_path
 
 # define macro if someone needs to explicitly use the MDF library explicitly
 macro MDFlib_linkopts  ' -L$(MDFROOT)/$(tag) -lMDF ' WIN32 ' /libpath:"$(MDFROOT)/$(tag)" MDF.lib'

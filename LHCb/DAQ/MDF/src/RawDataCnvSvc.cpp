@@ -1,6 +1,6 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/DAQ/MDF/src/RawDataCnvSvc.cpp,v 1.1 2005-12-20 16:33:39 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/DAQ/MDF/src/RawDataCnvSvc.cpp,v 1.2 2006-01-10 09:43:16 frankb Exp $
 //	====================================================================
-//  RawBufferCreator.cpp
+//  RawDataCnvSvc.cpp
 //	--------------------------------------------------------------------
 //
 //	Author    : Markus Frank
@@ -9,6 +9,8 @@
 #include "MDF/StorageTypes.h"
 #include "MDF/RawDataCnvSvc.h"
 #include "MDF/StreamDescriptor.h"
+#include "MDF/MDFHeader.h"
+#include "MDF/RawEventHelpers.h"
 
 #include "GaudiKernel/DeclareFactoryEntries.h"
 #include "GaudiKernel/IDataProviderSvc.h"
@@ -20,8 +22,6 @@
 #include "GaudiKernel/IRegistry.h"
 #include "GaudiKernel/MsgStream.h"
 #include "Event/RawEvent.h"
-#include "MDF/RawEventHelpers.h"
-#include "MDF/MDFHeader.h"
 
 #include <memory>
 
@@ -51,7 +51,7 @@ LHCb::RawDataCnvSvc::RawDataCnvSvc(const std::string& nam, ISvcLocator* loc, lon
 
 // Initializing constructor
 LHCb::RawDataCnvSvc::RawDataCnvSvc(const std::string& nam, ISvcLocator* loc) 
-: ConversionSvc(nam, loc, MDF_StorageType)
+: ConversionSvc(nam, loc, RAWDATA_StorageType)
 {
   m_data.reserve(48*1024);
   declareProperty("Compress",         m_compress=0);        // File compression
@@ -59,7 +59,8 @@ LHCb::RawDataCnvSvc::RawDataCnvSvc(const std::string& nam, ISvcLocator* loc)
 }
 
 /// Service initialization
-StatusCode LHCb::RawDataCnvSvc::initialize()    {
+StatusCode LHCb::RawDataCnvSvc::initialize()    
+{
   StatusCode sc = ConversionSvc::initialize();
   if ( sc.isSuccess() )  {
     IPersistencySvc *pSvc = 0;
@@ -76,10 +77,11 @@ StatusCode LHCb::RawDataCnvSvc::initialize()    {
 }
 
 /// Service finalization
-StatusCode LHCb::RawDataCnvSvc::finalize()    {
+StatusCode LHCb::RawDataCnvSvc::finalize()    
+{
   long typ = repSvcType();
   for(FileMap::iterator i=m_fileMap.begin(); i != m_fileMap.end(); ++i)  {
-    if ( typ == MDF_StorageType && (*i).second )  {
+    if ( typ == RAWDATA_StorageType && (*i).second )  {
       closeIO((*i).second);
     }
   }
@@ -88,7 +90,8 @@ StatusCode LHCb::RawDataCnvSvc::finalize()    {
 }
 
 // Helper to print errors and return bad status
-StatusCode LHCb::RawDataCnvSvc::error(const std::string& msg)   const {
+StatusCode LHCb::RawDataCnvSvc::error(const std::string& msg)   const 
+{
   MsgStream err(msgSvc(), name());
   err << MSG::ERROR << msg << endmsg;
   return StatusCode::FAILURE;
@@ -100,41 +103,31 @@ const CLID& LHCb::RawDataCnvSvc::objType() const  {
 }
 
 /// Object creation callback
-StatusCode LHCb::RawDataCnvSvc::createObj(IOpaqueAddress* /* pAddr */, DataObject*& refpObj)  {
+StatusCode LHCb::RawDataCnvSvc::createObj(IOpaqueAddress* /* pAddr */, DataObject*& refpObj)  
+{
   refpObj = new DataObject();
   return StatusCode::SUCCESS;
 }
 
 /// Callback for reference processing (misused to attach leaves)
-StatusCode LHCb::RawDataCnvSvc::fillObjRefs(IOpaqueAddress* pAddr, DataObject* /* pObj */ )  {
+StatusCode LHCb::RawDataCnvSvc::fillObjRefs(IOpaqueAddress* pAddr, DataObject* /* pObj */ )
+{
   if ( pAddr )  {
     try {
       std::auto_ptr<DataObject> obj(new DataObject());
       std::auto_ptr<RawEvent> raw(new RawEvent());
       if ( dataProvider()->registerObject("/Event/DAQ", obj.get()).isSuccess() )  {
-        StatusCode sc = StatusCode::FAILURE;
+        typedef std::vector<RawBank*> _B;
         obj.release();
         long typ = repSvcType();
-        if ( typ == MDF_StorageType || typ == MBMDATA_StorageType )   {
-          const char* ptr = (const char*)pAddr->ipar()[0];
-          const MDFHeader* hdr = (const MDFHeader*)ptr;
-          ptr += sizeof(MDFHeader);
-          sc = decodeRawBanks(raw.get(),ptr,ptr+hdr->size());
+        const _B* banks = (const _B*)pAddr->ipar()[0];
+        for(_B::const_iterator i=banks->begin(); i!=banks->end(); ++i)  {
+          raw->adoptBank(*i, false);
         }
-        else if ( typ == MBMDESC_StorageType )    {
-          const RawEventDescriptor* dsc = (const RawEventDescriptor*)pAddr->ipar()[0];
-          sc = decodeDescriptors(dsc, raw.get());
-        }
-        else  {
-          return error("fillObjRefs> Cannot fill RawEvent object: [Unknown decoding]");
-        }
+        StatusCode sc = dataProvider()->registerObject(Default,raw.get());
         if ( sc.isSuccess() )  {
-          StatusCode sc = dataProvider()->registerObject(Default,raw.get());
-          if ( sc.isSuccess() )  {
-            raw.release();
-            return StatusCode::SUCCESS;
-          }
-          return error("Failed to decode data buffer for "+Default);
+          raw.release();
+          return StatusCode::SUCCESS;
         }
         return error("Failed to register object "+Default);
       }
@@ -153,7 +146,8 @@ StatusCode LHCb::RawDataCnvSvc::fillObjRefs(IOpaqueAddress* pAddr, DataObject* /
 /// Connect the output file to the service with open mode.
 StatusCode 
 LHCb::RawDataCnvSvc::connectOutput(const std::string&    outputFile,
-                                   const std::string&    openMode) {
+                                   const std::string&    openMode) 
+{
   m_wrFlag = false;
   m_current = m_fileMap.find(outputFile);
   if ( m_current == m_fileMap.end() )   {
@@ -170,16 +164,17 @@ LHCb::RawDataCnvSvc::connectOutput(const std::string&    outputFile,
 }
 
 /// Commit pending output.
-StatusCode LHCb::RawDataCnvSvc::commitOutput(const std::string& , bool doCommit ) {
+StatusCode LHCb::RawDataCnvSvc::commitOutput(const std::string& , bool doCommit ) 
+{
   if ( doCommit && m_wrFlag )  {
     if ( m_current != m_fileMap.end() )   {
       long typ = repSvcType();
-      if ( typ == MDF_StorageType || MBMDATA_StorageType )  {
+      if ( typ == RAWDATA_StorageType )  {
         StatusCode sc = commitRawBanks((*m_current).second);
         m_current = m_fileMap.end();
         return sc;
       }
-      else if ( typ == MBMDESC_StorageType )    {
+      else if ( typ == RAWDESC_StorageType )    {
         StatusCode sc = commitDescriptors((*m_current).second);
         m_current = m_fileMap.end();
         return sc;
@@ -197,7 +192,8 @@ StatusCode LHCb::RawDataCnvSvc::commitDescriptors(void* /* ioDesc */)  {
 }
 
 /// Convert the transient object to the requested representation.
-StatusCode LHCb::RawDataCnvSvc::createRep(DataObject* pObject, IOpaqueAddress*& refpAddress) {
+StatusCode LHCb::RawDataCnvSvc::createRep(DataObject* pObject, IOpaqueAddress*& refpAddress) 
+{
   if ( pObject )  {
     if ( m_current != m_fileMap.end() )   {
       IRegistry* reg = pObject->registry();
@@ -211,7 +207,8 @@ StatusCode LHCb::RawDataCnvSvc::createRep(DataObject* pObject, IOpaqueAddress*& 
 }
 
 /// Resolve the references of the converted object. 
-StatusCode LHCb::RawDataCnvSvc::fillRepRefs(IOpaqueAddress* pAddress,DataObject* pObject) {
+StatusCode LHCb::RawDataCnvSvc::fillRepRefs(IOpaqueAddress* pAddress,DataObject* pObject) 
+{
   if ( m_current != m_fileMap.end() )   {
     m_wrFlag = true;
     return StatusCode::SUCCESS;
@@ -221,10 +218,11 @@ StatusCode LHCb::RawDataCnvSvc::fillRepRefs(IOpaqueAddress* pAddress,DataObject*
 
 /// Create a Generic address using explicit arguments to identify a single object.
 StatusCode LHCb::RawDataCnvSvc::createAddress(long typ, 
-                                        const CLID& clid, 
-                                        const std::string* par, 
-                                        const unsigned long* ip,
-                                        IOpaqueAddress*& refpAddress)    {
+                                              const CLID& clid, 
+                                              const std::string* par, 
+                                              const unsigned long* ip,
+                                              IOpaqueAddress*& refpAddress)    
+{
   refpAddress = new GenericAddress(typ, clid, par[0], par[1], ip[0], ip[1]);
   return StatusCode::SUCCESS;
 }
@@ -284,8 +282,10 @@ StatusCode LHCb::RawDataCnvSvc::streamWrite(void* iodesc, void* ptr, size_t len)
 
 StatusCode LHCb::RawDataCnvSvc::writeDataSpace(void* ioDesc,
                                                size_t len, 
-                                               longlong trNumber, unsigned int trMask[4],
-                                               int evType, int hdrType)
+                                               longlong trNumber, 
+                                               unsigned int trMask[4],
+                                               int evType, 
+                                               int hdrType)
 {
   if ( m_compress )   {
     size_t newlen = len;
