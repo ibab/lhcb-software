@@ -1,6 +1,7 @@
 #ifndef DAQEVENT_RAWBANK_H
 #define DAQEVENT_RAWBANK_H 1
 
+#include <stddef.h>
 
 /** @class LHCb::RawBank RawBank.h
   *

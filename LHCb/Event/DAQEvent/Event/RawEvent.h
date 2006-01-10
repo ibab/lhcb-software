@@ -4,6 +4,7 @@
 // Include files
 #include "GaudiKernel/DataObject.h"
 #include "Event/RawBank.h"
+#include <stddef.h>
 #include <vector>
 #include <map>
 
