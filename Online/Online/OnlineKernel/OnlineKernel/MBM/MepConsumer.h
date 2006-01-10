@@ -10,8 +10,10 @@
 namespace MEP {
 
   class Consumer : public MBM::Consumer  {
-    typedef MBM::EventDesc EventDesc;
   protected:
+    /// Event dexcriptor definition
+    typedef MBM::EventDesc EventDesc;
+
     /// MEP buffer include identifier
     MEPID      m_mepID;
     /// Flags to indicate include strategy
