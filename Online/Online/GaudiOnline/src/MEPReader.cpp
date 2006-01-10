@@ -1,4 +1,4 @@
-// $Id: MEPReader.cpp,v 1.3 2006-01-10 13:56:32 frankb Exp $
+// $Id: MEPReader.cpp,v 1.4 2006-01-10 14:08:17 frankb Exp $
 // Include files 
 
 // from Gaudi
@@ -15,9 +15,9 @@
 #include <fcntl.h>
 #ifdef _WIN32
 #include <io.h>
-#define O_RDONLY (_O_RDONLY|_O_BINARY)
 #else
 #include <unistd.h>
+#define O_BINARY 0
 #endif
 
 using namespace LHCb;
@@ -35,7 +35,7 @@ public:
   /// Standard constructor
   MEPReader( const std::string& name, ISvcLocator* pSvcLocator )
   : Algorithm(name, pSvcLocator), m_evt(0)   {
-    m_file = open("./mepBuffer.dat", O_RDONLY);
+    m_file = open("./mepBuffer.dat", O_RDONLY|O_BINARY);
   }
 
   /// Destructor

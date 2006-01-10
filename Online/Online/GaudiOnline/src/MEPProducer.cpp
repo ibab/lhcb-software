@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/GaudiOnline/src/MEPProducer.cpp,v 1.2 2006-01-10 13:56:32 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/GaudiOnline/src/MEPProducer.cpp,v 1.3 2006-01-10 14:08:17 frankb Exp $
 //	====================================================================
 //  RawBufferCreator.cpp
 //	--------------------------------------------------------------------
@@ -14,15 +14,15 @@
 #include <fcntl.h>
 #ifdef _WIN32
 #include <io.h>
-#define O_RDONLY (_O_RDONLY|_O_BINARY)
 #else
 #include <unistd.h>
+#define O_BINARY 0
 #endif
 
 namespace {
   int __dummyReadEvent(void* data, size_t bufLen, size_t& evtLen)  {
     static int nrewind = 0;
-    static int file = open("./mepBuffer.dat", O_RDONLY);
+    static int file = open("./mepBuffer.dat", O_RDONLY|O_BINARY);
     LHCb::MEPEvent* me = (LHCb::MEPEvent*)data;
 again:
     int status1 = ::read(file, me, me->sizeOf());
