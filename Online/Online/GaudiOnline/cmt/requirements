@@ -23,4 +23,6 @@ macro_append GaudiOnline_shlibflags ' $(MDFlib_linkopts) '
 private
 use GaudiSvc v*
 application Gaudi "../main/*.cpp"
+#macro Gaudilinkopts ""
+#macro use_linkopts  ""
 apply_pattern application_path
