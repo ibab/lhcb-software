@@ -1,0 +1,17 @@
+ApplicationMgr.DLLs       = { "DAQEvent", "MDF" };
+ApplicationMgr.TopAlg     = { "RawEventTestCreator"};
+ApplicationMgr.EvtMax     = 1000;
+ApplicationMgr.EvtSel     = "NONE";
+EventDataSvc.ForceLeaves  = 1;
+EventPersistencySvc.CnvServices += { "LHCb::RawDataCnvSvc" };
+
+// To create a MDF file using the MDF writer:
+ApplicationMgr.OutStream += { "LHCb::MDFWriter/DataWriter" };
+DataWriter.Connection     = "file://rawBuffer.dat";
+DataWriter.Compress       = 0;
+DataWriter.CreateChecksum = 0;
+ 
+// To create a MDF file using the standard Gaudi output stream:
+ApplicationMgr.OutStream  = { "MDFWriter"};
+MDFWriter.Output          = "DATAFILE='file://rawBuffer.dat' SVC='MDFCnvSvc' OPT='REC'";
+MDFWriter.ItemList        = {"/Event#1" };

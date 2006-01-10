@@ -1,0 +1,12 @@
+ApplicationMgr.DLLs       = { "DAQEvent", "MDF", "GaudiOnline" };
+ApplicationMgr.TopAlg     = { "RawEventTestCreator"};
+ApplicationMgr.EvtMax     = 1000;
+ApplicationMgr.EvtSel     = "NONE";
+EventDataSvc.ForceLeaves  = 1;
+EventPersistencySvc.CnvServices += { "LHCb::RawDataCnvSvc" };
+
+// To create a MEP file:
+ApplicationMgr.OutStream  = { "LHCb::MEPWriter/DataWriter" };
+DataWriter.Compress       = 0;
+DataWriter.CreateChecksum = 0;
+DataWriter.Connection     = "file://mepBuffer.dat";
