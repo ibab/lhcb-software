@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/GaudiOnline/src/MBMCnvSvc.cpp,v 1.2 2006-01-10 13:45:03 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/GaudiOnline/src/MBMCnvSvc.cpp,v 1.3 2006-01-10 18:06:42 frankb Exp $
 //	====================================================================
 //  RawBufferCreator.cpp
 //	--------------------------------------------------------------------
@@ -7,24 +7,12 @@
 //
 //	====================================================================
 #include "GaudiKernel/DeclareFactoryEntries.h"
-#include "GaudiKernel/IOpaqueAddress.h"
-#include "GaudiKernel/SmartDataPtr.h"
 #include "GaudiKernel/strcasecmp.h"
-#include "GaudiKernel/MsgStream.h"
 #include "GaudiOnline/MBMCnvSvc.h"
+#include "MDF/RawEventHelpers.h"
 #include "MDF/StorageTypes.h"
 #include "MDF/MDFHeader.h"
-#include "MDF/MEPEvent.h"
-#include "MDF/RawEventHelpers.h"
 #include "MBM/Producer.h"
-#include "Event/RawEvent.h"
-#include <stdexcept>
-
-using LHCb::RawEvent;
-using LHCb::RawBank;
-using LHCb::MEPFragment;
-using LHCb::MDFHeader;
-using LHCb::MultiEventPacket;
 
 DECLARE_NAMESPACE_SERVICE_FACTORY(LHCb,MBMCnvSvc)
 
@@ -54,9 +42,9 @@ char* const LHCb::MBMCnvSvc::getDataSpace(void* ioDesc, size_t len)
   if ( ioDesc )   {
     MBM::Producer* prod = producerFromIODescriptor(ioDesc);
     if ( prod )  {
-      if ( prod->getSpace(len+sizeof(MDFHeader)) == MBM_NORMAL )  {
+      if ( prod->getSpace(len+sizeof(LHCb::MDFHeader)) == MBM_NORMAL )  {
         MBM::EventDesc& e = prod->event();
-        return (char*)e.data+sizeof(MDFHeader);
+        return (char*)e.data+sizeof(LHCb::MDFHeader);
       }
     }
   }
@@ -80,7 +68,7 @@ StatusCode LHCb::MBMCnvSvc::writeDataSpace(void* ioDesc,
       e.mask[1] = trMask[1];
       e.mask[2] = trMask[2];
       e.mask[3] = trMask[3];
-      e.len     = len+sizeof(MDFHeader);
+      e.len     = len+sizeof(LHCb::MDFHeader);
       if ( prod->sendEvent() == MBM_NORMAL )  {
         return StatusCode::SUCCESS;
       }
