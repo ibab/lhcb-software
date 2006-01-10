@@ -4,7 +4,8 @@
 ! Purpose     : Package for the tracking event model classes
 !-----------------------------------------------------------------------------
 
-! 2006-1-10 M Needham
+!========================= TrackEvent v2r0 2006-01-10 ========================
+! 2006-01-10 M Needham
   - New version that is compatible with LHCb v20r0 - and nothing else !
   - Changes:
       * Move to SMatrix /Add SHack header to provide similarity functionality
