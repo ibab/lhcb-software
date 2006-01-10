@@ -7,7 +7,7 @@
 # http://cern.ch/lhcb-comp/Support/html/new_structure.pdf
 #============================================================================
 package           TrackEvent
-version           v1r7
+version           v2r0
 
 #============================================================================
 # This template is an example for a standard Algorithm package
@@ -20,8 +20,7 @@ include_dirs      $(TRACKEVENTROOT)
 # Used packages. Specify the version, * at the end specifies 'any revision'
 #    Put as many lines as needed, with all packages, without the '#'
 #============================================================================
-use   LHCbKernel    v5r*  Kernel
-use   CLHEP         v*    LCG_Interfaces
+use   LHCbKernel    v6*  Kernel
 use   GSL           v*    LCG_Interfaces
 
 #============================================================================

@@ -7,7 +7,7 @@
 #include <functional>
 
 // from CLHEP
-#include "CLHEP/Geometry/Plane3D.h"
+#include "Kernel/Plane3DTypes.h"
 
 // from TrackEvent
 #include "Event/Track.h"
@@ -82,14 +82,14 @@ namespace TrackFunctor
   template <class T>
   class distanceToPlane {
   private:
-    HepPlane3D m_plane;
+    Gaudi::Plane3D m_plane;
   public:
-    explicit distanceToPlane(const HepPlane3D& plane):m_plane(plane) {}
+    explicit distanceToPlane(const Gaudi::Plane3D& plane):m_plane(plane) {}
     bool operator()( const T* t1,
                      const T* t2 ) const
     {
-      double d1 = fabs(m_plane.distance(t1->position()));
-      double d2 = fabs(m_plane.distance(t2->position()));
+      double d1 = fabs(m_plane.Distance(t1->position()));
+      double d2 = fabs(m_plane.Distance(t2->position()));
       return (d1 < d2);
     }
   };
@@ -178,9 +178,9 @@ namespace TrackFunctor
 //       closestState( aTrack, TrackFunctor::distanceToPlane<State>(aPlane) )
 //=============================================================================
   template <class T>
-  State& closestState( Track& track, const T& t )
+  LHCb::State& closestState( LHCb::Track& track, const T& t )
   {
-    std::vector<State*>::iterator iter = 
+    std::vector<LHCb::State*>::iterator iter = 
       std::min_element( track.states().begin(), track.states().end(), t );
     if ( iter == m_states.end() )
       throw GaudiException( "No state closest to z","TrackFunctor.h",
@@ -192,9 +192,9 @@ namespace TrackFunctor
 // Retrieve the const reference to the state closest to the given object
 //=============================================================================
   template <class T>
-  const State& closestState( const Track& track, const T& t )
+  const LHCb::State& closestState( const LHCb::Track& track, const T& t )
   {
-    std::vector<State*>::const_iterator iter = 
+    std::vector<LHCb::State*>::const_iterator iter = 
       std::min_element( track.states().begin(), track.states().end(), t );
     if ( iter == m_states.end() )
       throw GaudiException( "No state closest to z","TrackFunctor.h",
@@ -207,9 +207,9 @@ namespace TrackFunctor
 // (using e.g. the HasKey template in TrackKeys.h)
 //=============================================================================
   template <class T>
-  unsigned int nLHCbIDs( const Track& track, const T& pred )
+  unsigned int nLHCbIDs( const LHCb::Track& track, const T& pred )
   {
-    const std::vector<LHCbID>& ids = track.lhcbIDs();
+    const std::vector<LHCb::LHCbID>& ids = track.lhcbIDs();
     return std::count_if( ids.begin(), ids.end(), pred );
   };
 
@@ -218,9 +218,9 @@ namespace TrackFunctor
 // (using e.g. the HasKey template in TrackKeys.h)
 //=============================================================================
   template <class T>
-  unsigned int nMeasurements( const Track& track, const T& pred )
+  unsigned int nMeasurements( const LHCb::Track& track, const T& pred )
   {
-    const std::vector<Measurement*>& meas = track.measurements();
+    const std::vector<LHCb::Measurement*>& meas = track.measurements();
     return std::count_if( meas.begin(), meas.end(), pred );
   }
 

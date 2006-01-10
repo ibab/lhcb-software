@@ -2,7 +2,7 @@
 #define TRACKEVENT_TRACKPARAMETERS_H 1
 
 // Include files
-#include "CLHEP/Units/PhysicalConstants.h"
+#include "Kernel/PhysicalConstants.h"
 
 /** @namespace TrackParameters
  *

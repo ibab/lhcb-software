@@ -29,7 +29,8 @@
       <import name='Event/Measurement' />
       <import name='Event/Node' />
       <import name='Kernel/LHCbID' />
-      <import name='CLHEP/Geometry/Plane3D' />
+      <import name='Kernel/Plane3DTypes' />
+      <import name='Kernel/GenericMatrixTypes' />
 
 <!--
   /** Track history enumerations:
@@ -198,7 +199,7 @@
        init    = '0'
        access  = 'PROTECTED'>
        <bitfield
-         type      = 'Track::Types'
+         type      = 'LHCb::Track::Types'
          name      = 'type'
          length    = '5'
          desc      = 'Track type'
@@ -206,7 +207,7 @@
          getMeth   = 'TRUE'
          checkMeth = 'FALSE' />
        <bitfield
-         type      = 'Track::History'
+         type      = 'LHCb::Track::History'
          name      = 'history'
          length    = '7'
          desc      = 'specifies the pattern recogn algorithm that created the Track'
@@ -214,7 +215,7 @@
          getMeth   = 'TRUE'
          checkMeth = 'FALSE' />
        <bitfield
-         type      = 'Track::HistoryFit'
+         type      = 'LHCb::Track::HistoryFit'
          name      = 'historyFit'
          length    = '3'
          desc      = 'specifies the fitting algorithm the fitted the Track)'
@@ -222,7 +223,7 @@
          getMeth   = 'TRUE'
          checkMeth = 'FALSE' />
        <bitfield
-         type      = 'Track::Status'
+         type      = 'LHCb::Track::Status'
          name      = 'status'
          length    = '3'
          desc      = 'status of the Track'
@@ -230,7 +231,7 @@
          getMeth   = 'TRUE'
          checkMeth = 'FALSE' />
        <bitfield
-         type      = 'Track::Flags'
+         type      = 'LHCb::Track::Flags'
          name      = 'flag'
          length    = '10'
          desc      = 'Track flags'
@@ -247,38 +248,38 @@
       </attribute>
 
       <attribute
-        type      = 'std::vector&lt;LHCbID&gt;'
+        type      = 'std::vector&lt;LHCb::LHCbID&gt;'
         name      = 'lhcbIDs'
         desc      = 'container of LHCbIDs'
         access    = 'PROTECTED'
-        serialize = 'FALSE' />
+        transient = 'TRUE' />
 
       <attribute
-        type      = 'std::vector&lt;State*&gt;'
+        type      = 'std::vector&lt;LHCb::State*&gt;'
         name      = 'states'
         desc      = 'container with pointers to all the states'
         access    = 'PROTECTED'
         setMeth   = 'FALSE'
-        serialize = 'FALSE' />
+        transient = 'TRUE' />
 
       <attribute
-        type      = 'std::vector&lt;Measurement*&gt;'
+        type      = 'std::vector&lt;LHCb::Measurement*&gt;'
         name      = 'measurements'
         desc      = 'container of Measurements'
         access    = 'PROTECTED'
         setMeth   = 'FALSE'
-        serialize = 'FALSE' />
+        transient = 'TRUE' />
 
       <attribute
-        type      = 'std::vector&lt;Node*&gt;'
+        type      = 'std::vector&lt;LHCb::Node*&gt;'
         name      = 'nodes'
         desc      = 'container of Nodes'
         access    = 'PROTECTED'
         setMeth   = 'FALSE'
-        serialize = 'FALSE' />
+        transient = 'TRUE' />
 
       <relation
-        type      = "Track"
+        type      = "LHCb::Track"
         name      = "ancestors"
         access    = 'PROTECTED'
         setMeth   = 'FALSE'
@@ -291,9 +292,9 @@
         name    = 'positionAndMomentum'
         desc    = 'Retrieve the position and momentum vectors and the corresponding 6D covariance matrix (pos:1->3,mom:4-6) at the first state'
         const   = 'TRUE'>
-        <arg type = 'HepPoint3D' name='pos' />
-        <arg type = 'HepVector3D' name='mom' />
-        <arg type = 'HepSymMatrix' name='cov6D' />
+        <arg type = 'Gaudi::XYZPoint' name='pos' />
+        <arg type = 'Gaudi::XYZVector' name='mom' />
+        <arg type = 'Gaudi::SymMatrix6x6' name='cov6D' />
       </method>
 
       <method
@@ -301,17 +302,17 @@
         name    = 'positionAndMomentum'
         desc    = 'Retrieve the position and momentum vectors at the first state'
         const   = 'TRUE'>
-        <arg type = 'HepPoint3D' name='pos' />
-        <arg type = 'HepVector3D' name='mom' />
+        <arg type = 'Gaudi::XYZPoint' name='pos' />
+        <arg type = 'Gaudi::XYZVector' name='mom' />
       </method>
 
       <method
-        type    = 'HepPoint3D'
+        type    = 'Gaudi::XYZPoint'
         name    = 'position'
         desc    = 'Retrieve the 3D-position vector at the first state'
         const   = 'TRUE'>
         <code>
-   return firstState().position();
+          return firstState().position();
         </code>
       </method>
 
@@ -320,12 +321,12 @@
         name    = 'position'
         desc    = 'Retrieve the 3D-position (+ errors) at the first state'
         const   = 'TRUE'>
-        <arg type = 'HepPoint3D' name='pos' />
-        <arg type = 'HepSymMatrix' name='errPos' />
+        <arg type = 'Gaudi::XYZPoint' name='pos' />
+        <arg type = 'Gaudi::Matrix3x3' name='errPos' />
       </method>
 
     <method
-        type    = 'HepVector3D'
+        type    = 'Gaudi::XYZVector'
         name    = 'slopes'
         const   = 'TRUE'
         desc    = 'Retrieve the slopes (Tx=dx/dz,Ty=dy/dz,1.) and errors at the first state'>
@@ -339,17 +340,17 @@
         name    = 'slopes'
         desc    = 'Retrieve the slopes (dx/dz,dy/dz,1) at the first state'
         const   = 'TRUE'>
-        <arg type = 'HepVector3D' name='slopes' />
-        <arg type = 'HepSymMatrix' name='errSlopes' />
+        <arg type = 'Gaudi::XYZVector' name='slopes' />
+        <arg type = 'Gaudi::SymMatrix3x3' name='errSlopes' />
       </method>
 
       <method
-        type    = 'HepVector3D'
+        type    = 'Gaudi::XYZVector'
         name    = 'momentum'
         const   = 'TRUE'
         desc    = 'Retrieve the momentum vector at the first state'>
         <code>
-   return firstState().momentum();
+          return firstState().momentum();
         </code>
       </method>
 
@@ -370,8 +371,8 @@
         name    = 'momentum'
         desc    = 'Retrieve the momentum vector (+ errors) at the first state'
         const   = 'TRUE'>
-        <arg type = 'HepVector3D' name='mom' />
-        <arg type = 'HepSymMatrix' name='errMom' />
+        <arg type = 'Gaudi::XYZVector' name='mom' />
+        <arg type = 'Gaudi::SymMatrix3x3' name='errMom' />
       </method>
 
       <method
@@ -379,11 +380,11 @@
         name    = 'posMomCovariance'
         desc    = 'Retrieve the 6D covariance matrix (x,y,z,px,py,pz) at the first state'
         const   = 'TRUE'>
-        <arg type='HepSymMatrix' name='cov6D' />
+        <arg type='Gaudi::SymMatrix6x6' name='cov6D' />
       </method>
 
       <method
-        type    = 'State &amp;'
+        type    = 'LHCb::State &amp;'
         name    = 'firstState'
         desc    = 'Retrieve the first state on the Track'
         const   = 'TRUE'>
@@ -431,38 +432,38 @@
       <method
         name    = 'addToStates'
         desc    = 'Add a State to the list of States associated to the Track'>
-        <arg type = 'const State' name=' state' />
+        <arg type = 'const LHCb::State' name=' state' />
       </method>
 
       <method
         name    = 'removeFromStates'
         desc    = 'Remove a State from the list of states associated to the Track'
-        argList = 'State* value'>
+        argList = 'LHCb::State* value'>
       </method>
 
       <method
-        type    = 'State &amp;'
+        type    = 'LHCb::State &amp;'
         name    = 'closestState'
         argList = 'double z'
         desc    = 'Retrieve the reference to the state closest to the given z-position' />
 
       <method
-        type    = 'const State &amp;'
+        type    = 'const LHCb::State &amp;'
         name    = 'closestState'
         argList = 'double z'
         desc    = 'Retrieve the reference to the state closest to the given z-position'
         const   = 'TRUE' />
 
       <method
-        type    = 'State &amp;'
+        type    = 'LHCb::State &amp;'
         name    = 'closestState'
-        argList = 'const HepPlane3D plane'
+        argList = 'const Gaudi::Plane3D plane'
         desc    = 'Retrieve the reference to the state closest to the given plane' />
 
       <method
-        type    = 'const State &amp;'
+        type    = 'const LHCb::State &amp;'
         name    = 'closestState'
-        argList = 'const HepPlane3D plane'
+        argList = 'const Gaudi::Plane3D plane'
         desc    = 'Retrieve the reference to the state closest to the given plane'
         const   = 'TRUE' />
 
@@ -474,13 +475,13 @@
         const   = 'TRUE' />
 
       <method
-        type    = 'State &amp;'
+        type    = 'LHCb::State &amp;'
         name    = 'stateAt'
         argList = 'unsigned int location'
         desc    = 'Retrieve the state at a certain predefined location (see the Location enum in State.h)' />
 
       <method
-        type    = 'const State &amp;'
+        type    = 'const LHCb::State &amp;'
         name    = 'stateAt'
         argList = 'unsigned int location'
         desc    = 'Retrieve the const state at a certain predefined location (see the Location enum in State.h)'
@@ -509,13 +510,13 @@
       <method
         name    = 'addToMeasurements'
         desc    = 'Add a Measurement to the list associated to the Track'>
-        <arg type = 'const Measurement' name='meas' />
+        <arg type = 'const LHCb::Measurement' name='meas' />
       </method>
 
      <method
         name    = 'removeFromMeasurements'
         desc    = 'Remove a Measurement from the list of Measurements associated to the Track'
-        argList = 'Measurement* value'>
+        argList = 'LHCb::Measurement* value'>
       </method>
 
       <method
@@ -536,7 +537,7 @@
      <method
         name    = 'addToLhcbIDs'
         desc    = 'Add an LHCbID to the list of LHCbIDs associated to the Track'
-        argList = 'LHCbID value'>
+        argList = 'LHCb::LHCbID value'>
         <code>
   m_lhcbIDs.push_back( value );
         </code>
@@ -547,7 +548,7 @@
         desc    = 'Remove an LHCbID from the list of LHCbIDs associated to the Track'
         argList = 'LHCbID value'>
         <code>
-  std::vector&lt;LHCbID&gt;::iterator iter =
+  std::vector&lt;LHCb::LHCbID&gt;::iterator iter =
     std::remove( m_lhcbIDs.begin(), m_lhcbIDs.end(), value );
   m_lhcbIDs.erase( iter, m_lhcbIDs.end() );
         </code>
@@ -556,9 +557,9 @@
       <method
         name    = 'addToAncestors'
         desc    = 'Add a Track to the list of ancestors of this Track'>
-        <arg type = 'const Track ' name='ancestor' />
+        <arg type = 'const LHCb::Track ' name='ancestor' />
         <code>
-  m_ancestors.push_back( (Track*) &amp;ancestor );
+  m_ancestors.push_back( (LHCb::Track*) &amp;ancestor );
         </code>
       </method>
 
@@ -570,14 +571,14 @@
       </method>
 
       <method
-        type    = 'Track*'
+        type    = 'LHCb::Track*'
         name    = 'cloneWithKey'
         desc    = 'Clone the Track keeping the key (you take ownership of the pointer)'
 	virtual = 'TRUE'
         const   = 'TRUE' />
 
       <method
-        type    = 'Track*'
+        type    = 'LHCb::Track*'
         name    = 'clone'
         desc    = 'Clone the Track (you take ownership of the pointer)'
 	virtual = 'TRUE'
@@ -586,7 +587,7 @@
       <method
         type    = 'bool'
         name    = 'checkType'
-        argList = 'const Track::Types&amp; value'
+        argList = 'const LHCb::Track::Types&amp; value'
         desc    = 'Check the type of the Track (see the Types enum)'
         const   = 'TRUE'>
         <code>
@@ -597,7 +598,7 @@
       <method
         type    = 'bool'
         name    = 'checkHistory'
-        argList = 'const Track::History&amp; value'
+        argList = 'const LHCb::Track::History&amp; value'
         desc    = 'Check the history of the Track (see the History enum)'
         const   = 'TRUE'>
         <code>
@@ -608,7 +609,7 @@
       <method
         type    = 'bool'
         name    = 'checkHistoryFit'
-        argList = 'const Track::HistoryFit&amp; value'
+        argList = 'const LHCb::Track::HistoryFit&amp; value'
         desc    = 'Check the fit history of the Track (see the HistoryFit enum)'
         const   = 'TRUE'>
         <code>
@@ -619,7 +620,7 @@
       <method
         type    = 'bool'
         name    = 'checkStatus'
-        argList = 'const Track::Status&amp; value'
+        argList = 'const LHCb::Track::Status&amp; value'
         desc    = 'Check the status of the Track (see the Status enum)'
         const   = 'TRUE'>
         <code>
@@ -641,7 +642,7 @@
       <method
         type    = 'bool'
         name    = 'checkFlag'
-        argList = 'const Track::Flags&amp; flag'
+        argList = 'const LHCb::Track::Flags&amp; flag'
         desc    = 'Check the status of the flag (see the Flags enum)'
         const   = 'TRUE'>
         <code>
@@ -664,7 +665,7 @@
       <method
         type    = 'bool'
         name    = 'isOnTrack'
-        argList = 'const LHCbID value'
+        argList = 'const LHCb::LHCbID value'
         desc    = 'Check whether the given LHCbID is on the Track'
         const   = 'TRUE'>
       </method>
@@ -672,7 +673,7 @@
       <method
         type    = 'bool'
         name    = 'isOnTrack'
-        argList = 'const Measurement value'
+        argList = 'const LHCb::Measurement value'
         desc    = 'Check whether the given Measurement is on the Track'
         const   = 'TRUE'>
       </method>

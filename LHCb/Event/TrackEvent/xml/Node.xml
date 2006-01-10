@@ -15,6 +15,7 @@
       <import name='Event/State' />
       <import name='Event/Measurement' />
       <import name='Event/TrackParameters' />
+      <import name='Kernel/TrackTypes' />
 
       &StlPtrVector;
 
@@ -28,7 +29,7 @@
       </constructor>
  
       <attribute
-        type    = 'State*'
+        type    = 'LHCb::State*'
         name    = 'state'
         setMeth = 'FALSE'
         getMeth = 'FALSE'
@@ -36,7 +37,7 @@
         access  = 'PROTECTED' />
 
       <attribute
-        type    = 'Measurement*'
+        type    = 'LHCb::Measurement*'
         name    = 'measurement'
         setMeth = 'FALSE'
         getMeth = 'FALSE'
@@ -56,7 +57,7 @@
         access  = 'PROTECTED' />
 
       <attribute
-        type    = 'HepMatrix'
+        type    = 'Gaudi::TrackVector'
         name    = 'projectionMatrix'
         desc    = 'the projection matrix'
         access  = 'PROTECTED' />
@@ -68,7 +69,6 @@
         desc    = 'Clear the node before re-use'>
         <code>
   if (m_state != 0 ) delete m_state;
-//  m_measurement = 0;
   m_state = 0;
   m_residual = 0.;
   m_errResidual = 0.;
@@ -93,7 +93,7 @@
       </method>
 
       <method
-        type    = 'Measurement &amp;'
+        type    = 'LHCb::Measurement &amp;'
         name    = 'measurement'
         desc    = 'Retrieve the reference to the measurement'>
         <code>
@@ -102,7 +102,7 @@
       </method>
 
       <method
-        type    = 'Measurement &amp;'
+        type    = 'LHCb::Measurement &amp;'
         name    = 'measurement'
         desc    = 'Retrieve const  the reference to the measurement'
         const   = 'TRUE'>
@@ -112,7 +112,7 @@
       </method>
 
       <method
-        type    = 'State &amp;'
+        type    = 'LHCb::State &amp;'
         name    = 'state'
         desc    = 'Retrieve the reference to the state'>
         <code>
@@ -121,7 +121,7 @@
       </method>
 
       <method
-        type    = 'State &amp;'
+        type    = 'LHCb::State &amp;'
         name    = 'state'
         desc    = 'Retrieve const  the reference to the state'
         const   = 'TRUE'>
@@ -131,13 +131,13 @@
       </method>
 
       <method
-        type    = 'Node*'
+        type    = 'LHCb::Node*'
         name    = 'clone'
         desc    = 'Clone the Node'
         const   = 'TRUE'
         virtual = 'TRUE'>
         <code>
-  Node* me = new Node(state().clone(), (Measurement*) &amp;measurement()); 
+  LHCb::Node* me = new LHCb::Node(state().clone(), (LHCb::Measurement*) &amp;measurement()); 
   me->setResidual(residual());
   me->setErrResidual(errResidual());
   return me;

@@ -1,9 +1,12 @@
-// $Id: Track.cpp,v 1.21 2005-12-13 18:47:55 erodrigu Exp $ // Include files
+// $Id: Track.cpp,v 1.22 2006-01-10 15:04:49 mneedham Exp $ // Include files
 
 // local
 #include "Event/Track.h"
 #include "Event/TrackFunctor.h"
 #include <functional>
+
+using namespace Gaudi;
+using namespace LHCb;
 
 //-----------------------------------------------------------------------------
 // Implementation file for class : Track
@@ -16,9 +19,9 @@
 // Retrieve the position and momentum vectors and the corresponding
 // 6D covariance matrix (pos:1->3,mom:4-6) at the physics state
 //=============================================================================
-void Track::positionAndMomentum( HepPoint3D &pos,
-                                 HepVector3D &mom,
-                                 HepSymMatrix &cov6D ) const
+void Track::positionAndMomentum( XYZPoint &pos,
+                                 XYZVector &mom,
+                                 SymMatrix6x6& cov6D ) const
 {
   firstState().positionAndMomentum( pos, mom, cov6D );
 };
@@ -26,8 +29,8 @@ void Track::positionAndMomentum( HepPoint3D &pos,
 //=============================================================================
 // Retrieve the position and momentum vectors at the physics state
 //=============================================================================
-void Track::positionAndMomentum( HepPoint3D &pos,
-                                       HepVector3D &mom ) const
+void Track::positionAndMomentum( XYZPoint& pos,
+                                 XYZVector& mom ) const
 {
   firstState().positionAndMomentum( pos, mom );
 };
@@ -35,8 +38,8 @@ void Track::positionAndMomentum( HepPoint3D &pos,
 //=============================================================================
 // Retrieve the 3D-position (+ errors) at the physics state
 //=============================================================================
-void Track::position( HepPoint3D &pos,
-                            HepSymMatrix &errPos ) const
+void Track::position( XYZPoint &pos,
+                      SymMatrix3x3 &errPos ) const
 {
   pos    = firstState().position();
   errPos = firstState().errPosition();
@@ -45,8 +48,8 @@ void Track::position( HepPoint3D &pos,
 //=============================================================================
 // Retrieve the slopes (dx/dz,dy/dz,1) at the physics state
 //=============================================================================
-void Track::slopes( HepVector3D &slopes,
-                          HepSymMatrix &errSlopes ) const
+void Track::slopes(XYZVector& slopes,
+                    SymMatrix3x3& errSlopes ) const
 {
   slopes    = firstState().slopes();
   errSlopes = firstState().errSlopes();
@@ -71,8 +74,8 @@ double Track::pt() const
 //=============================================================================
 // Retrieve the momentum vector (+ errors) at the physics state
 //=============================================================================
-void Track::momentum( HepVector3D &mom,
-                            HepSymMatrix &errMom ) const
+void Track::momentum( XYZVector &mom,
+                      SymMatrix3x3 &errMom ) const
 {
   mom    = firstState().momentum();
   errMom = firstState().errMomentum();
@@ -81,7 +84,7 @@ void Track::momentum( HepVector3D &mom,
 //=============================================================================
 // Retrieve the 6D covariance matrix (x,y,z,px,py,pz) at the physics state
 //=============================================================================
-void Track::posMomCovariance( HepSymMatrix &cov6D ) const
+void Track::posMomCovariance(SymMatrix6x6& cov6D ) const
 {
   cov6D = firstState().posMomCovariance();
 };
@@ -90,7 +93,7 @@ void Track::posMomCovariance( HepSymMatrix &cov6D ) const
 //=============================================================================
 // Retrieve the reference to the state closest to the given z-position
 //=============================================================================
-State & Track::closestState( double z )
+State& Track::closestState( double z )
 {
   std::vector<State*>::iterator iter = 
     std::min_element(m_states.begin(),m_states.end(),
@@ -118,7 +121,7 @@ const State & Track::closestState( double z ) const
 //=============================================================================
 // Retrieve the reference to the state closest to the given plane
 //=============================================================================
-State & Track::closestState( const HepPlane3D &plane )
+State & Track::closestState( const Plane3D& plane )
 {
   std::vector<State*>::iterator iter = 
     std::min_element(m_states.begin(),m_states.end(),
@@ -132,7 +135,7 @@ State & Track::closestState( const HepPlane3D &plane )
 //=============================================================================
 // Retrieve the (const) reference to the state closest to the given plane
 //=============================================================================
-const State & Track::closestState( const HepPlane3D &plane ) const
+const State & Track::closestState( const Plane3D& plane ) const
 {
   std::vector<State*>::const_iterator iter = 
     std::min_element(m_states.begin(),m_states.end(),

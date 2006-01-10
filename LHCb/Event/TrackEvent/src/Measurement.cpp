@@ -1,6 +1,8 @@
 // local
 #include"Event/Measurement.h"
 
+using namespace LHCb;
+
 //-----------------------------------------------------------------------------
 // Implementation file for class : Measurement
 //

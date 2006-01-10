@@ -1,5 +1,7 @@
 #include "Event/TrackStreamer.h"
 
+using namespace LHCb;
+
 std::ostream& str::track(const Track& track, std::ostream& os) {
 
   str::trackHeader(track,os) << std::endl;

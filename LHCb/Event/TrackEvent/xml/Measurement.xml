@@ -11,7 +11,7 @@
       desc        = 'Measurement is the base class for offline and online measurements.'
       serializers = 'FALSE' >
 
-      <import name='CLHEP/Matrix/Vector' />
+      <import name='Kernel/TrackTypes.h' />
       <import name='Kernel/LHCbID' />
 
       &StlPtrVector;
@@ -103,7 +103,7 @@
       </method>
 
       <attribute
-        type    = 'LHCbID'
+        type    = 'LHCb::LHCbID'
         name    = 'lhcbID'
         desc    = 'the corresponding LHCbID'
         access  = 'PROTECTED' />
@@ -126,24 +126,18 @@
         const   = 'TRUE' />
 
       <method
-        type    = 'Measurement*'
+        type    = 'LHCb::Measurement*'
         name    = 'clone'
         desc    = 'Clone the measurement'
         const   = 'TRUE'
-        virtual = 'TRUE'>
-        <code>
-  Measurement* me = new Measurement(); *me = *this; return me;
-        </code>
+        virtual = 'PURE'>
       </method>
 
       <method
         name    = 'update'
         desc    = 'Update measurement parameters'
-        argList = 'const HepVector refVector'
-        virtual = 'TRUE'>
-        <code>
-
-        </code>
+        argList = 'const Gaudi::TrackVector refVector'
+        virtual = 'PURE'>
       </method>
 
     </class>
