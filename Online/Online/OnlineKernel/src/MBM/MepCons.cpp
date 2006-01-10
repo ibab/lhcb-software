@@ -45,7 +45,7 @@ namespace {
       }
       int vetomask[4] = {0,0,0,0};
       int trmask[4]   = {-1,-1,-1,-1};
-      addRequest(1,trmask,vetomask,BM_MASK_ANY,BM_REQ_ALL,BM_FREQ_PERC,100.);
+      addRequest(EVENT_TYPE_EVENT,trmask,vetomask,BM_MASK_ANY,BM_REQ_ALL,BM_FREQ_PERC,100.);
       ::printf(" MEP    buffer start: %08X\n",m_mepID->mepStart);
       ::printf(" EVENT  buffer start: %08X\n",m_mepID->evtStart);
       ::printf(" RESULT buffer start: %08X\n",m_mepID->resStart);
@@ -55,7 +55,7 @@ namespace {
       MEP_SINGLE_EVT* ev = (MEP_SINGLE_EVT*)evt.data;
       MEPEVENT*       e  = (MEPEVENT*)(int*)(m_mepID->mepStart + ev->begin);
       if ( e->valid == 0 ) {
-	::printf("Found invalid MEP: %p [%d]\n",(void*)e,e->mepBufferID);
+	      ::printf("Found invalid MEP: %p [%d]\n",(void*)e,e->mepBufferID);
       }
       return Consumer::eventAction();
     }

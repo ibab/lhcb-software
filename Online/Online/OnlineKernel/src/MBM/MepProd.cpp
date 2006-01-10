@@ -30,14 +30,12 @@ namespace {
       delete m_evtProd;
     }
     int spaceRearm(int) {
-      return Producer::spaceRearm(MEPEVENT::length(PACKING_FACTOR));
+      return Producer::spaceRearm(sizeof(MEPEVENT)+PACKING_FACTOR*sizeof(MEP_SINGLE_EVT));
     }
     int spaceAction() {
       MEPEVENT* ev = (MEPEVENT*)event().data;
-      MEP_SINGLE_EVT* sub_events = ev->events;
       size_t sub_evt_len = sizeof(MEP_SINGLE_EVT);
       mep_identifier++;
-      //printf("MEP[%d]: %p\n",mep_identifier,m_event.data);
 
       ev->refCount    = 1;
       ev->refCount   += PACKING_FACTOR; // saves mbm_register_alloc_event
@@ -45,42 +43,30 @@ namespace {
       ev->begin       = int(int(ev)-m_mepID->mepStart);
       ev->packing     = PACKING_FACTOR;
       ev->valid       = 1;
-      for (int j = 0; j < PACKING_FACTOR; ++j )   {
-        ev->events[j].event = int(-m_mepID->mepStart+(int)&sub_events[j]);
-        ev->events[j].begin = ev->begin;
-      }
       m_event.mask[0] = 0x103;
       m_event.mask[1] = 0;
       m_event.mask[2] = 0;
       m_event.mask[3] = 0;
-      m_event.type    = 1;
-      //printf(" send evts:[");
+      m_event.type    = EVENT_TYPE_MEP;
       for (int i = 0; i < PACKING_FACTOR; ++i )   {
-        //printf("%d",i);
         if ( m_evtProd->getSpace(sub_evt_len) == MBM_NORMAL ) {
-	  //printf(".");
           MBM::EventDesc& e = m_evtProd->event();
-          ::memcpy(e.data, &ev->events[i], sizeof(ev->events[i]));
-          e.type    = 1;
+          MEP_SINGLE_EVT* sube = (MEP_SINGLE_EVT*)e.data;
+          sube->begin = ev->begin;
+          e.type    = EVENT_TYPE_EVENT;
           e.mask[0] = 0x103;
           e.mask[1] = 0;
           e.mask[2] = 0;
           e.mask[3] = 0;
           e.len     = sub_evt_len;
-	  //printf(".");
           m_evtProd->sendEvent();
-	  //printf(".");
         }
         else  {
           printf("Space error !\n");
         }
       }
-      //printf("] declare\n");
       declareEvent();
-      //printf("..Send space\n");
-      sendSpace();
-      //printf("..Done\n");
-      return MBM_NORMAL;
+      return sendSpace();
     }
     // Run the application in synchonous mode
     int runSynchronous() {

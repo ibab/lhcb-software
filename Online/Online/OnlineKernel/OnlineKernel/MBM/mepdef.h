@@ -9,6 +9,11 @@ enum MepBufferUsage  {
   USE_RES_BUFFER = (1<<2)
 };
 
+enum EvTypes  {
+  EVENT_TYPE_MEP = 1,
+  EVENT_TYPE_EVENT = 2
+};
+
 typedef struct _MEPID {
   BMID    resBuffer;
   BMID    evtBuffer;
@@ -22,7 +27,7 @@ typedef struct _MEPID {
 } *MEPID;
 
 struct MEP_SINGLE_EVT  {
-  int event;
+  //int event;
   int begin;
 };
 
@@ -32,10 +37,7 @@ struct MEPEVENT   {
   int refCount;
   int begin;
   int valid;
-  MEP_SINGLE_EVT events[1];
-  static size_t length(int num_evt)   {
-    return 3*sizeof(int)+num_evt*sizeof(MEP_SINGLE_EVT);
-  }
+  char data[4];
 };
 
 #ifdef __cplusplus

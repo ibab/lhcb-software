@@ -137,13 +137,13 @@ int lib_rtl_set_event(lib_rtl_event_t h)   {
 
 int lib_rtl_set_global_event(const char* name)   {
   typedef std::map<std::string,lib_rtl_event_t> event_map;
-  static event_map events;
-  event_map::const_iterator i = events.find(std::string(name));
+  static event_map* events = new event_map;
+  event_map::const_iterator i = events->find(std::string(name));
   lib_rtl_event_t h;
-  if ( i == events.end() ) {
+  if ( i == events->end() ) {
     int sc = lib_rtl_create_event(name, &h);
     if ( sc == 1 ) {
-      events.insert(event_map::value_type(name,h));
+      events->insert(event_map::value_type(name,h));
     }
   }
   else {

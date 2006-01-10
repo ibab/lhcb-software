@@ -72,7 +72,7 @@ namespace {
       if ( bm ) m_evtProd = new MBM::Producer(bm, nam, partitionID());
       int vetomask[4] = {0,0,0,0};
       int trmask[4]   = {-1,-1,-1,-1};
-      addRequest(1,trmask,vetomask,BM_MASK_ANY,BM_REQ_ONE,BM_FREQ_PERC,100.);
+      addRequest(EVENT_TYPE_EVENT,trmask,vetomask,BM_MASK_ANY,BM_REQ_ONE,BM_FREQ_PERC,100.);
       //setNonBlocking(WT_FACILITY_DAQ_EVENT, true);
       ::printf(" MEP    buffer start: %08X\n",m_mepID->mepStart);
       ::printf(" EVENT  buffer start: %08X\n",m_mepID->evtStart);

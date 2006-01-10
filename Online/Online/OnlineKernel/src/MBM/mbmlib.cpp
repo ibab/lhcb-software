@@ -224,7 +224,7 @@ BMID mbm_include (const char* bm_name, const char* name, int partid) {
   bm->owner = us->uid;
   us->c_state = S_active;
   us->p_state = S_active;
-  us->partid = partid;
+  us->partid  = partid;
   ::strncpy (us->name, name, NAME_LENGTH);
   us->name[NAME_LENGTH] = 0;
   us->pid = lib_rtl_pid ();
@@ -1093,12 +1093,12 @@ int _mbm_shutdown (void* /* param */) {
       continue;
     }
     _mbm_lock_tables(bm);
+    _mbm_uclean (bm);
     lib_rtl_delete_event(bm->WES_event_flag);
     lib_rtl_delete_event(bm->WEV_event_flag);
     lib_rtl_delete_event(bm->WSP_event_flag);
     lib_rtl_delete_event(bm->WSPA_event_flag);
     lib_rtl_delete_event(bm->WEVA_event_flag);
-    _mbm_uclean (bm);
     lib_rtl_unmap_section(bm->buff_add);
     lib_rtl_unmap_section(bm->bitm_add);
     lib_rtl_unmap_section(bm->user_add);

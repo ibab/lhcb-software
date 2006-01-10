@@ -1,13 +1,13 @@
 /*-----------------------------------------------------------------------
- *
- *   OS-9 BUFFER MANAGER
- *
- * Edition History
- *
- *  #   Date     Comments                                              By
- * -- -------- ------------------------------------------------------ ---
- *  0  28/09/88  Initial version                                       MF
- *-----------------------------------------------------------------------*/
+*
+*   OS-9 BUFFER MANAGER
+*
+* Edition History
+*
+*  #   Date     Comments                                              By
+* -- -------- ------------------------------------------------------ ---
+*  0  28/09/88  Initial version                                       MF
+*-----------------------------------------------------------------------*/
 #define MBM_IMPLEMENTATION
 
 #include <cstdlib>
@@ -36,18 +36,18 @@ static int _mep_change_refcount(MEPDESC* dsc,MEP_SINGLE_EVT* evt, int change)  {
     {
       //RTL::Lock lock(dsc->lockid);
       switch(change) {
-      case 1:
-	cnt = ++e->refCount;
-	break;
+        case 1:
+        cnt = ++e->refCount;
+        break;
       case -1:
-	cnt = --e->refCount;
-	break;
+        cnt = --e->refCount;
+        break;
       }
     }
     if ( cnt < 1 )  {
       printf("MEP RefCount ERROR %s [%d] Event at address %08X MEP:%p [%d] [Release MEP]\n",
-	     change > 0 ? "AddRef" : "DelRef", cnt, 
-	     dsc->mepStart+evt->event, (void*)e, e->mepBufferID);
+        change > 0 ? "AddRef" : "DelRef", cnt, 
+        evt, (void*)e, e->mepBufferID);
     }
     return MBM_NORMAL;
   }
@@ -61,10 +61,14 @@ static int mep_free_mep(void* param)   {
   MEPDESC* dsc = (MEPDESC*)pars[1];
   if ( e->refCount < 1 )  {
     printf("MEP RefCount ERROR(2) [%d] Event at address %08X MEP:%p [%d] [Release MEP]\n",
-	   e->refCount, dsc->mepStart+e->begin, (void*)e, e->mepBufferID);
+      e->refCount, dsc->mepStart+e->begin, (void*)e, e->mepBufferID);
   }
   while ( e->refCount > 1 )  {
+#ifdef _WIN32
+    lib_rtl_sleep(1);
+#else
     lib_rtl_usleep(100);
+#endif
   }
   e->refCount--;
   e->valid = 0;

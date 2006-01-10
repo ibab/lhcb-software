@@ -87,7 +87,7 @@ void RTL::ExitHandler::execute()  {
   if ( !executing )  {
     executing = true;
     const std::vector<EXHDEF>& v = exitHandlers();
-    for (std::vector<EXHDEF>::const_iterator i=v.begin(); i != v.end(); ++i)  {
+    for (std::vector<EXHDEF>::const_reverse_iterator i=v.rbegin(); i != v.rend(); ++i)  {
       const EXHDEF& hdlr = *i;
       if ( hdlr.exit_handler )  {
         (*hdlr.exit_handler)(hdlr.exit_param);
