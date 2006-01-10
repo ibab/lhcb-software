@@ -1,4 +1,4 @@
-// $Id: CaloFillRawBuffer.cpp,v 1.6 2005-12-20 13:35:28 ocallot Exp $
+// $Id: CaloFillRawBuffer.cpp,v 1.7 2006-01-10 17:19:46 cattanem Exp $
 // Include files 
 // from Gaudi
 #include "GaudiKernel/AlgFactory.h" 
@@ -46,7 +46,7 @@ CaloFillRawBuffer::CaloFillRawBuffer( const std::string& name,
 
   declareProperty( "DataCodingType",   m_dataCodingType = 1 );
   declareProperty( "InputBank",        m_inputBank          );
-  declareProperty( "BankType",         m_bankType          );
+  //  declareProperty( "BankType",         m_bankType          );
 }
 //=============================================================================
 // Destructor

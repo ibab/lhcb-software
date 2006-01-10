@@ -4,7 +4,11 @@
 ! Purpose     : Convert Calo Digit and Trigger information to RawEvent banks.
 !-----------------------------------------------------------------------------
 
-!========================== CaloDAQ v2r0 2005-12-20 ==========================
+!========================== CaloDAQ v2r0 2006-01-10 ==========================
+! 2006-01-10 - Marco Cattaneo
+ - Remove BankType property from CaloFillRawBuffer, because an enum cannot be 
+   a property
+
 ! 2005-12-20 - Olivier Callot
  - Fix the namespace LHCb:: for CaloEvent classes, due to a missing recompilation
 
