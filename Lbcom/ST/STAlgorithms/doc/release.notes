@@ -3,6 +3,9 @@
 !-------------------------------------------------------------------------------
 
 !======================= STAlgorithms v1r0 2006-01-06 ==========================
+! 2006-01-10 - Marco Cattaneo
+ - Remove obsolete Brunel.opts file
+
 ! 2006-01-06 M Needham
  - tune capacitive coupling splines
 
