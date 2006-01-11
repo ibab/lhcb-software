@@ -1,4 +1,4 @@
-// $Id: ITrackCloneFinder.h,v 1.1 2005-12-13 16:04:30 erodrigu Exp $
+// $Id: ITrackCloneFinder.h,v 1.2 2006-01-11 15:56:08 mneedham Exp $
 #ifndef TRACKINTERFACES_ITRACKCLONEFINDER_H 
 #define TRACKINTERFACES_ITRACKCLONEFINDER_H 1
 
@@ -33,8 +33,8 @@ public:
    *  @param  track1 input 1st track
    *  @param  track2 input 2nd track
    */
-  virtual bool areClones( const Track& track1,
-                          const Track& track2 ) const = 0;
+  virtual bool areClones( const LHCb::Track& track1,
+                          const LHCb::Track& track2 ) const = 0;
 
   /** Compares two input Tracks and finds whether one is a clone
    *  of the other based on some "overlap criteria".
@@ -47,13 +47,9 @@ public:
    *  @param  setFlag input parameter indicates whether the clone track
    *          is to be set as such (default = true)
    */
-  virtual bool areClones( Track& track1,
-                          Track& track2,
+  virtual bool areClones( LHCb::Track& track1,
+                          LHCb::Track& track2,
                           bool setFlag = true ) const = 0;
-
-protected:
-
-private:
 
 };
 #endif // TRACKINTERFACES_ITRACKCLONEFINDER_H

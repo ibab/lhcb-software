@@ -6,8 +6,7 @@
 // from Gaudi
 #include "GaudiKernel/IAlgTool.h"
 
-// from CLHEP
-#include "CLHEP/Geometry/Vector3D.h"
+#include "Kernel/Vector3DTypes.h"
 
 // forward declaration
 class Trajectory;
@@ -34,15 +33,15 @@ public:
   // having a distance smaller than tolerance
   virtual StatusCode minimize( const Trajectory& traj1, const Trajectory& traj2,
                                double& arclength1, double& arclength2,
-                               HepVector3D& distance ) const;
+                               Gaudi::XYZVector& distance ) const;
 
   // Retrieve the derivative with respect to the reference point
   // of the first ("1") trajectory
-  const HepVector3D derivative1() const;
+  const Gaudi::XYZVector derivative1() const;
 
   // Retrieve the derivative with respect to the reference point
   // of the second ("2") trajectory
-  const HepVector3D derivative2() const;
+  const Gaudi::XYZVector derivative2() const;
 
 };
 #endif // TRACKINTERFACES_ITRAJPOCA_H

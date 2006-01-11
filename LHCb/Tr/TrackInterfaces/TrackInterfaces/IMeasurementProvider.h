@@ -1,4 +1,4 @@
-// $Id: IMeasurementProvider.h,v 1.2 2005-09-20 14:01:32 hernando Exp $
+// $Id: IMeasurementProvider.h,v 1.3 2006-01-11 15:56:08 mneedham Exp $
 #ifndef TRACKINTERFACES_IMEASUREMENTPROVIDER_H 
 #define TRACKINTERFACES_IMEASUREMENTPROVIDER_H 1
 
@@ -7,9 +7,11 @@
 // from Gaudi
 #include "GaudiKernel/IAlgTool.h"
 
-class Track;
-class Measurement;
-class LHCbID;
+namespace LHCb{
+ class Track;
+ class Measurement;
+ class LHCbID;
+};
 
 static const InterfaceID IID_IMeasurementProvider ( "IMeasurementProvider", 1, 0 );
 
@@ -31,9 +33,9 @@ public:
 
   virtual void load() = 0;
 
-  virtual StatusCode load( Track& track ) = 0;
+  virtual StatusCode load( LHCb::Track& track ) = 0;
 
-  virtual Measurement* measurement( const LHCbID&, 
+  virtual LHCb::Measurement* measurement( const LHCb::LHCbID&, 
                                     double par0 = 999.,
                                     double par1 = 999.) = 0;
 

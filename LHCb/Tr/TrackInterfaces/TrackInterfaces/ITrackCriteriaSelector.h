@@ -4,8 +4,10 @@
 // from Gaudi
 #include "GaudiKernel/IAlgTool.h"
 
-class MCParticle;
-class Track;
+namespace{
+ class MCParticle;
+ class Track;
+};
 
 /** @class ITrackCriteriaSelector ITrackCriteriaSelector.h "TrackInterfaces/ITrackCriteriaSelector.h"
  *
@@ -23,16 +25,16 @@ public:
   /// Retrieve interface ID
   static const InterfaceID& interfaceID() { return IID_ITrackCriteriaSelector; }
 
-  virtual bool select( Track* track ) const = 0;
-  virtual bool select( MCParticle* mcParticle ) = 0;
+  virtual bool select( LHCb::Track* track ) const = 0;
+  virtual bool select( LHCb::MCParticle* mcParticle ) = 0;
 
-  virtual bool selectByTrackType( Track* track ) const = 0;
+  virtual bool selectByTrackType( LHCb::Track* track ) const = 0;
   virtual bool selectByTrackType( MCParticle* mcParticle ) = 0;
 
-  virtual unsigned int trackType( MCParticle* mcPart ) = 0;
+  virtual unsigned int trackType( LHCb::MCParticle* mcPart ) = 0;
 
-  virtual StatusCode setTrackType( MCParticle* mcPart,
-                                   Track*& track ) = 0;
+  virtual StatusCode setTrackType( LHCb::MCParticle* mcPart,
+                                   LHCb::Track*& track ) = 0;
 
 };
 

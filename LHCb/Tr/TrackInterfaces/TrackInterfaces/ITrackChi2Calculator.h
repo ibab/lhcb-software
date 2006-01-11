@@ -5,9 +5,7 @@
 // -------------
 #include "GaudiKernel/IAlgTool.h"
 
-// from CLHEP
-#include "CLHEP/Matrix/Vector.h"
-#include "CLHEP/Matrix/SymMatrix.h"
+#include "Kernel/TrackTypes.h"
 
 /** @class ITrackChi2Calculator ITrackChi2Calculator.h TrackInterfaces/ITrackChi2Calculator.h
  * 
@@ -35,10 +33,10 @@ public:
    *  @param  trackCov2 input covariance matrix corresponding to 2nd vector
    *  @param  chi2 output chi2 distance between the two vectors
    */
-  virtual StatusCode calculateChi2( const HepVector& trackVector1,
-                                    const HepSymMatrix& trackCov1,
-                                    const HepVector& trackVector2,
-                                    const HepSymMatrix& trackCov2,
+  virtual StatusCode calculateChi2( const Gaudi::TrackVector& trackVector1,
+                                    const Gaudi::TrackMatrix& trackCov1,
+                                    const Gaudi::TrackVector& trackVector2,
+                                    const Gaudi::TrackMatrix& trackCov2,
                                     double& chi2 ) const = 0;
 
 };

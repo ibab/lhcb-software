@@ -6,11 +6,12 @@
 // from Gaudi
 #include "GaudiKernel/IAlgTool.h"
 
-// from CLHEP
-#include "CLHEP/Matrix/Matrix.h"
+#include "Kernel/TrackMatrix.h"
 
-class State;
-class Measurement;
+namespace LHCb{
+  class State;
+  class Measurement;
+};
 
 static const InterfaceID IID_ITrackProjector ( "ITrackProjector", 1, 0 );
 
@@ -29,11 +30,11 @@ public:
 
   /// Project a state onto a measurement.
   /// It returns the chi squared of the projection
-  virtual StatusCode project( const State& state,
-                              Measurement& meas ) = 0;
+  virtual StatusCode project( const LHCb::State& state,
+                              LHCb::Measurement& meas ) = 0;
 
   /// Retrieve the projection matrix H of the (last) projection
-  virtual const HepVector& projectionMatrix() const = 0;
+  virtual const LHCb::TrackVector& projectionMatrix() const = 0;
 
   /// Retrieve the chi squared of the (last) projection
   virtual double chi2() const = 0;

@@ -7,7 +7,9 @@
 #include "GaudiKernel/IAlgTool.h"
 
 // forward declarations
-class State;
+namespace{
+ class State;
+}
 
 static const InterfaceID IID_ITrackPtKick ( "ITrackPtKick", 1, 0 );
 
@@ -24,7 +26,7 @@ public:
   static const InterfaceID& interfaceID() { return IID_ITrackPtKick; }
 
   // Estimate the momentum P of a State
-  virtual StatusCode calculate( State* State ) const = 0;
+  virtual StatusCode calculate( LHCb::State* State ) const = 0;
 
 protected:
 

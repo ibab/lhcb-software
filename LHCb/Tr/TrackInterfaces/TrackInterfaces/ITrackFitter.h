@@ -1,4 +1,4 @@
-// $Id: ITrackFitter.h,v 1.5 2005-11-21 11:10:50 jvantilb Exp $
+// $Id: ITrackFitter.h,v 1.6 2006-01-11 15:56:08 mneedham Exp $
 #ifndef TRACKINTERFACES_ITRACKFITTER_H 
 #define TRACKINTERFACES_ITRACKFITTER_H 1
 
@@ -10,7 +10,9 @@
 // from Gaudi
 #include "GaudiKernel/IAlgTool.h"
 
-class Track;
+namespace LHCb{
+ class Track;
+};
 
 static const InterfaceID IID_ITrackFitter ( "ITrackFitter", 1, 0 );
 
@@ -31,7 +33,7 @@ public:
   static const InterfaceID& interfaceID() { return IID_ITrackFitter; }
 
   //! fit a track 
-  virtual StatusCode fit( Track& track ) = 0;
+  virtual StatusCode fit( LHCb::Track& track ) = 0;
 
 };
 #endif // TRACKINTERFACES_ITRACKFITTER_H

@@ -4,6 +4,9 @@
 ! Purpose     : package for tracking tools interfaces
 !-----------------------------------------------------------------------------
 
+! 2006-1-11 M. Needham
+ - Move to LHCb v20r0
+
 ! 2005-12-13 - Eduardo Rodrigues
  - new interface ITrackCloneFinder added: it checks whether two input tracks
    are clones of each other and makes a choice based on hit sharing criteriae

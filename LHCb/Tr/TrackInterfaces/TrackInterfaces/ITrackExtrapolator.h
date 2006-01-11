@@ -9,14 +9,15 @@
 // from LHCB
 #include "Kernel/ParticleID.h"
 
-// from CLHEP
-#include "CLHEP/Matrix/Matrix.h"
-#include "CLHEP/Geometry/Point3D.h"
-#include "CLHEP/Geometry/Vector3D.h"
-#include "CLHEP/Geometry/Plane3D.h"
+#include "Kernel/SymmetricMatrixTypes.h"
+#include "Kernel/PointTypes.h"
+#include "Kernel/Vector3DTypes.h"
+#include "Kernel/PlaneTypes.h"
 
-class Track;
-class State;
+namespace LHCb{
+ class Track;
+ class State;
+}
 
 static const InterfaceID IID_ITrackExtrapolator( "ITrackExtrapolator" , 2, 0 );
 
@@ -40,175 +41,175 @@ public:
   static const InterfaceID& interfaceID() { return IID_ITrackExtrapolator; }
 
   /// Propagate a track to a given z-position
-  virtual StatusCode propagate( const Track& track,
+  virtual StatusCode propagate( const LHCb::Track& track,
                                 double z,
-                                State& state,
-                                ParticleID pid = ParticleID(211) ) = 0;
+                                LHCb::State& state,
+                                LHCb::ParticleID pid = LHCb::ParticleID(211) ) = 0;
 
   /// Propagate a state to a given z-position
-  virtual StatusCode propagate( State& state,
+  virtual StatusCode propagate( LHCb::State& state,
                                 double z,
-                                ParticleID pid = ParticleID(211) ) = 0;
+                                LHCb::ParticleID pid = LHCb::ParticleID(211) ) = 0;
 
   /// Propagate a track to the intersection point with a given plane
-  virtual StatusCode propagate( const Track& track,
-                                const HepPlane3D& plane,
-                                State& state,
-                                ParticleID pid = ParticleID(211) ) = 0;
+  virtual StatusCode propagate( const LHCb::Track& track,
+                                const Gaudi::Plane3D& plane,
+                                LHCb::State& state,
+                                LHCb::ParticleID pid = LHCb::ParticleID(211) ) = 0;
 
   /// Propagate a state to the intersection point with a given plane
-  virtual StatusCode propagate( State& state,
-                                const HepPlane3D& plane,
-                                ParticleID pid = ParticleID(211) ) = 0;
+  virtual StatusCode propagate( LHCb::State& state,
+                                const Gaudi::Plane3D& plane,
+                                LHCb::ParticleID pid = LHCb::ParticleID(211) ) = 0;
   
   /// Predict where the plane will be intersected
-  virtual StatusCode predict( const State& state,
-                              const HepPlane3D& plane,
+  virtual StatusCode predict( const LHCb::State& state,
+                              const Gaudi::Plane3D& plane,
                               double& dZ ) = 0;
 
   /// Propagate a state to the closest point to the specified point
-  virtual StatusCode propagate( State& state,
-                                const HepPoint3D& point,
-                                ParticleID pid = ParticleID(211) ) = 0;
+  virtual StatusCode propagate( LHCb::State& state,
+                                const Gaudi::XYZPoint3D& point,
+                                LHCb::ParticleID pid = LHCb::ParticleID(211) ) = 0;
 
   //--------- ACCESS METHOD ---------------------------------------
 
   /// Retrieve the position and momentum vectors and the corresponding
   /// 6D covariance matrix (pos:1->3,mom:4-6) of a track at a given z-position
-  virtual StatusCode positionAndMomentum( const Track& track,
+  virtual StatusCode positionAndMomentum( const LHCb::Track& track,
                                           double z,
-                                          HepPoint3D& pos,
-                                          HepVector3D& mom,
-                                          HepSymMatrix& cov6D,
-                                          ParticleID pid = ParticleID(211) ) = 0;
+                                          Gaudi::XYZPoint3D& pos,
+                                          Gaudi::XYZVector& mom,
+                                          Gaudi::SymMatrix6x& cov6D,
+                                          LHCb::ParticleID pid = LHCb::ParticleID(211) ) = 0;
 
   /// Retrieve the position and momentum vectors and the corresponding
   /// 6D covariance matrix (pos:1->3,mom:4-6) at the intersection of a track with a given plane
-  virtual StatusCode positionAndMomentum( const Track& track,
-                                          const HepPlane3D& plane,
-                                          HepPoint3D& pos,
-                                          HepVector3D& mom,
-                                          HepSymMatrix& cov6D,
-                                          ParticleID pid = ParticleID(211) ) = 0;
+  virtual StatusCode positionAndMomentum( const LHCb::Track& track,
+                                          const Gaudi::Plane3D& plane,
+                                          Gaudi::XYZPoint3D& pos,
+                                          Gaudi::XYZVector& mom,
+                                          Gaudi::SymMatrix6x& cov6D,
+                                          LHCb::ParticleID pid = LHCb::ParticleID(211) ) = 0;
 
   /// Retrieve the position and momentum vectors of a track at a given z-position
-  virtual StatusCode positionAndMomentum( const Track& track,
+  virtual StatusCode positionAndMomentum( const LHCb::Track& track,
                                           double z,
-                                          HepPoint3D& pos,
-                                          HepVector3D& mom,
-                                          ParticleID pid = ParticleID(211) ) = 0;
+                                          Gaudi::XYZPoint3D& pos,
+                                          Gaudi::XYZVector& mom,
+                                          LHCb::ParticleID pid = LHCb::ParticleID(211) ) = 0;
 
   /// Retrieve the position and momentum vectors at the intersection of a track with a given plane
-  virtual StatusCode positionAndMomentum( const Track& track,
-                                          const HepPlane3D& plane,
-                                          HepPoint3D& pos,
-                                          HepVector3D& mom,
-                                          ParticleID pid = ParticleID(211) ) = 0;
+  virtual StatusCode positionAndMomentum( const LHCb::Track& track,
+                                          const Gaudi::Plane3D& plane,
+                                          Gaudi::XYZPoint3D& pos,
+                                          Gaudi::XYZVector& mom,
+                                          LHCb::ParticleID pid = LHCb::ParticleID(211) ) = 0;
 
   /// Retrieve the 3D-position vector and error matrix of a track at a given z-position
-  virtual StatusCode position( const Track& track,
+  virtual StatusCode position( const LHCb::Track& track,
                                double z,
-                               HepPoint3D& pos,
-                               HepSymMatrix& errPos,
-                               ParticleID pid = ParticleID(211) ) = 0;
+                               Gaudi::XYZPoint3D& pos,
+                               Gaudi::SymMatrix3x3& errPos,
+                               LHCb::ParticleID pid = LHCb::ParticleID(211) ) = 0;
 
   /// Retrieve the 3D-position vector and error matrix at the intersection of a track with a given plane
-  virtual StatusCode position( const Track& track,
-                               const HepPlane3D& plane,
-                               HepPoint3D& pos,
-                               HepSymMatrix& errPos,
-                               ParticleID pid = ParticleID(211) ) = 0;
+  virtual StatusCode position( const LHCb::Track& track,
+                               const Gaudi::Plane3D& plane,
+                               Gaudi::XYZPoint3D& pos,
+                               SymMatrix3x3& errPos,
+                               LHCb::ParticleID pid = LHCb::ParticleID(211) ) = 0;
 
   /// Retrieve the 3D-position vector of a track at a given z-position
-  virtual StatusCode position( const Track& track,
+  virtual StatusCode position( const LHCb::Track& track,
                                double z,
-                               HepPoint3D& pos,
-                               ParticleID pid = ParticleID(211) ) = 0;
+                               Gaudi::XYZPoint3D& pos,
+                               LHCb::ParticleID pid = LHCb::ParticleID(211) ) = 0;
 
   /// Retrieve the 3D-position vector at the intersection of a track with a given plane
-  virtual StatusCode position( const Track& track,
-                               const HepPlane3D& plane,
-                               HepPoint3D& pos,
-                               ParticleID pid = ParticleID(211) ) = 0;
+  virtual StatusCode position( const LHCb::Track& track,
+                               const Gaudi::Plane3D& plane,
+                               Gaudi::XYZPoint3D& pos,
+                               LHCb::ParticleID pid = LHCb::ParticleID(211) ) = 0;
 
   /// Retrieve the slopes (dx/dz,dy/dz,1) and error matrix of a track at a given z-position
-  virtual StatusCode slopes( const Track& track,
+  virtual StatusCode slopes( const LHCb::Track& track,
                              double z,
-                             HepVector3D& slopes,
-                             HepSymMatrix& errSlopes,
-                             ParticleID pid = ParticleID(211) ) = 0;
+                             Gaudi::XYZVector& slopes,
+                             Gaudi::SymMatrix3x3& errSlopes,
+                             LHCb::ParticleID pid = LHCb::ParticleID(211) ) = 0;
 
   /// Retrieve the slopes (dx/dz,dy/dz,1) and error matrix at the intersection of a track with a given plane
-  virtual StatusCode slopes( const Track& track,
-                             const HepPlane3D& plane,
-                             HepVector3D& slopes,
-                             HepSymMatrix& errSlopes,
-                             ParticleID pid = ParticleID(211) ) = 0;
+  virtual StatusCode slopes( const LHCb::Track& track,
+                             const Gaudi::Plane3D& plane,
+                             Gaudi::XYZVector& slopes,
+                             GaudiMatrix::SymMatrix3x3& errSlopes,
+                             LHCb::ParticleID pid = LHCb::ParticleID(211) ) = 0;
 
   /// Retrieve the slopes (dx/dz,dy/dz,1) of a track at a given z-position
-  virtual StatusCode slopes( const Track& track,
+  virtual StatusCode slopes( const LHCb::Track& track,
                              double z,
-                             HepVector3D& slopes,
-                             ParticleID pid = ParticleID(211) ) = 0;
+                             Gaudi::XYZVector& slopes,
+                             LHCb::ParticleID pid = LHCb::ParticleID(211) ) = 0;
 
   /// Retrieve the slopes (dx/dz,dy/dz,1) at the intersection of a track with a given plane
-  virtual StatusCode slopes( const Track& track,
-                             const HepPlane3D& plane,
-                             HepVector3D& slopes,
-                             ParticleID pid = ParticleID(211) ) = 0;
+  virtual StatusCode slopes( const LHCb::Track& track,
+                             const Gaudi::Plane3D& plane,
+                             Gaudi::XYZVector& slopes,
+                             LHCb::ParticleID pid = LHCb::ParticleID(211) ) = 0;
 
   /// Retrieve the momentum of a track at a given z-position
-  virtual StatusCode p( const Track& track,
+  virtual StatusCode p( const LHCb::Track& track,
                         double z,
                         double& p,
-                        ParticleID pid = ParticleID(211) ) = 0;
+                        LHCb::ParticleID pid = LHCb::ParticleID(211) ) = 0;
 
   /// Retrieve the momentum at the intersection of a track with a given plane
-  virtual StatusCode p( const Track& track,
-                        const HepPlane3D& plane,
+  virtual StatusCode p( const LHCb::Track& track,
+                        const Gaudi::Plane3D& plane,
                         double& p,
-                        ParticleID pid = ParticleID(211) ) = 0;
+                        LHCb::ParticleID pid = LHCb::ParticleID(211) ) = 0;
 
   /// Retrieve the transverse momentum of a track at a given z-position
-  virtual StatusCode pt( const Track& track,
+  virtual StatusCode pt( const LHCb::Track& track,
                          double z,
                          double& pt,
-                         ParticleID pid = ParticleID(211) ) = 0;
+                         LHCb::ParticleID pid = LHCb::ParticleID(211) ) = 0;
 
   /// Retrieve the transverse momentum at the intersection of a track with a given plane
-  virtual StatusCode pt( const Track& track,
-                         const HepPlane3D& plane,
+  virtual StatusCode pt( const LHCb::Track& track,
+                         const Gaudi::Plane3D& plane,
                          double& pt,
-                         ParticleID pid = ParticleID(211) ) = 0;
+                         LHCb::ParticleID pid = LHCb::ParticleID(211) ) = 0;
 
   /// Retrieve the momentum vector and error matrix of a track at a given z-position
-  virtual StatusCode momentum( const Track& track,
+  virtual StatusCode momentum( const LHCb::Track& track,
                                double z,
-                               HepVector3D& mom,
-                               HepSymMatrix& errMom,
-                               ParticleID pid = ParticleID(211) ) = 0;
+                               Gaudi::XYZVector& mom,
+                               SymMatrix3x3& errMom,
+                               LHCb::ParticleID pid = LHCb::ParticleID(211) ) = 0;
 
   /// Retrieve the momentum vector and error matrix at the intersection of a track with a given plane
-  virtual StatusCode momentum( const Track& track,
-                               const HepPlane3D& plane,
-                               HepVector3D& mom,
-                               HepSymMatrix& errMom,
-                               ParticleID pid = ParticleID(211) ) = 0;
+  virtual StatusCode momentum( const LHCb::Track& track,
+                               const Gaudi::Plane3D& plane,
+                               Gaudi::XYZVector& mom,
+                               Gaudi::SymMatrix3x3& errMom,
+                               LHCb::ParticleID pid = LHCb::ParticleID(211) ) = 0;
 
   /// Retrieve the momentum vector of a track at a given z-position
-  virtual StatusCode momentum( const Track& track,
+  virtual StatusCode momentum( const LHCb::Track& track,
                                double z,
-                               HepVector3D& mom,
-                               ParticleID pid = ParticleID(211) ) = 0;
+                               Gaudi::XYZVector& mom,
+                               LHCb::ParticleID pid = LHCb::ParticleID(211) ) = 0;
 
   /// Retrieve the momentum vector at the intersection of a track with a given plane
-  virtual StatusCode momentum( const Track& track,
-                               const HepPlane3D& plane,
-                               HepVector3D& mom,
-                               ParticleID pid = ParticleID(211) ) = 0;
+  virtual StatusCode momentum( const LHCb::Track& track,
+                               const Gaudi::Plane3D& plane,
+                               Gaudi::XYZVector& mom,
+                               LHCb::ParticleID pid = ParticleID(211) ) = 0;
 
   /// Getters & setters
-  virtual const HepMatrix& transportMatrix() const = 0;
+  virtual const Gaudi::TransportMatrix& transportMatrix() const = 0;
 
 };
 

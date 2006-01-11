@@ -6,8 +6,10 @@
 #include "GaudiKernel/IAlgTool.h"
 
 // forward declarations
-class MCParticle;
-class State;
+namespace LHCb{ 
+ class MCParticle;
+ class State;
+};
 
 /** @class IIdealStateCreator IIdealStateCreator.h "TrackInterfaces/IIdealStateCreator.h"
  *
@@ -28,13 +30,13 @@ public:
   static const InterfaceID& interfaceID() { return IID_IIdealStateCreator; }
   
   /// create a state at z-position from MCParticle entry/exit points
-  virtual StatusCode createState( const MCParticle* mcPart,
+  virtual StatusCode createState( const LHCb::MCParticle* mcPart,
                                   double zrec,
-                                  State*& pState ) const = 0;
+                                  LHCb::State*& pState ) const = 0;
 
   /// create a state at MCParticle vertex
-  virtual StatusCode createStateVertex( const MCParticle* mcPart,
-                                        State*& pState ) const = 0;
+  virtual StatusCode createStateVertex( LHCb::const MCParticle* mcPart,
+                                        LHCb::State*& pState ) const = 0;
 };
 
 #endif // TRACKINTERFACES_IIDEALSTATECREATOR_H
