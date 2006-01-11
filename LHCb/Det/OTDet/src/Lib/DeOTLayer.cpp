@@ -1,4 +1,4 @@
-// $Id: DeOTLayer.cpp,v 1.4 2005-05-13 16:09:41 marcocle Exp $
+// $Id: DeOTLayer.cpp,v 1.5 2006-01-11 09:29:15 janos Exp $
 
 // DetDesc
 #include "DetDesc/IGeometryInfo.h"
@@ -58,7 +58,7 @@ DeOTQuarter* DeOTLayer::quarter(unsigned int quarterID) const
   return otQuarter;
 }
 
-DeOTQuarter* DeOTLayer::quarter(const HepPoint3D& point) const
+DeOTQuarter* DeOTLayer::quarter(const Gaudi::XYZPoint& point) const
 {
   DeOTQuarter* otQuarter = 0;
   DeOTModule* otModule = 0;
@@ -73,7 +73,7 @@ DeOTQuarter* DeOTLayer::quarter(const HepPoint3D& point) const
   return otQuarter;
 }
 
-DeOTModule* DeOTLayer::module(const HepPoint3D& point) const
+DeOTModule* DeOTLayer::module(const Gaudi::XYZPoint& point) const
 {
   DeOTModule* otModule = 0;
   bool found = false;

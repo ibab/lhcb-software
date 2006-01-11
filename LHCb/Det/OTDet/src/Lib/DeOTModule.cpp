@@ -1,7 +1,8 @@
-// $Id: DeOTModule.cpp,v 1.4 2005-05-13 16:09:41 marcocle Exp $
+// $Id: DeOTModule.cpp,v 1.5 2006-01-11 09:29:15 janos Exp $
 
-// CLHEP
-#include "CLHEP/Units/SystemOfUnits.h"
+
+// Kernel
+#include "Kernel/SystemOfUnits.h"
 
 // DetDesc
 #include "DetDesc/SolidBox.h"
@@ -15,6 +16,8 @@
  *
  *  @author Jeroen van Tilburg jtilburg@nikhef.nl
  */
+
+using namespace LHCb;
 
 DeOTModule::DeOTModule( const std::string& name ) :
   DetectorElement( name ),
@@ -44,7 +47,8 @@ const CLID& DeOTModule::clID() const {
 
 
 StatusCode DeOTModule::initialize() 
-{  
+{
+ 
   IDetectorElement* quarter = this->parentIDetectorElement();
   IDetectorElement* layer = quarter->parentIDetectorElement();
   IDetectorElement* station = layer->parentIDetectorElement();
@@ -95,22 +99,31 @@ double DeOTModule::localUOfStraw(const int straw) const
 }
 
 
-StatusCode DeOTModule::calculateHits(const HepPoint3D& entryPoint,
-                                     const HepPoint3D& exitPoint,
+StatusCode DeOTModule::calculateHits(const Gaudi::XYZPoint& entryPoint,
+                                     const Gaudi::XYZPoint& exitPoint,
                                      std::vector<OTChannelID>& channels, 
                                      std::vector<double>& driftDistances) const
 {
-  const IGeometryInfo* gi = this->geometry();
-  HepPoint3D point1 = gi->toLocal(entryPoint);
-  HepPoint3D point2 = gi->toLocal(exitPoint);
+  MsgStream msg( msgSvc(), name() );
 
-  double x1 = point1[0];
-  double y1 = point1[1];
-  double z1 = point1[2];
-  double x2 = point2[0];
-  double y2 = point2[1];
-  double z2 = point2[2];
-  double distXY=sqrt((x2-x1)*(x2-x1)+(y2-y1)*(y2-y1));
+  // Before we do anything crazy let's first check if the 
+  // entry and exit points are inside the module.
+  if ( !isInside(entryPoint) || !isInside(exitPoint) ) {
+    return StatusCode::FAILURE;
+  }
+
+  const IGeometryInfo* gi = this->geometry();
+  Gaudi::XYZPoint point1 = gi->toLocal(entryPoint);
+  Gaudi::XYZPoint point2 = gi->toLocal(exitPoint);
+
+  double x1 = point1.x();
+  double y1 = point1.y();
+  double z1 = point1.z();
+  double x2 = point2.x();
+  double y2 = point2.y();
+  double z2 = point2.z();
+  double distXY = ( point2 - point1 ).Rho();
+  //double distXY=sqrt((x2-x1)*(x2-x1)+(y2-y1)*(y2-y1));
 
   // ensure correct z ordering
   if ( z1 > z2 ) {
@@ -127,18 +140,9 @@ StatusCode DeOTModule::calculateHits(const HepPoint3D& entryPoint,
     uLow  = x2;
     uHigh = x1;
   }
-
-  // check if input is reasonable
-  if( fabs(z1-z2) < 0.5*mm && distXY < 5.*mm ) {
-    return StatusCode::FAILURE;
-  }
-  // define safety margin, due to geant stepping.
-  double geantStepping = 0.2 * mm; 
-  if( fabs( (z1+z2)/2. ) > 2.0*m_cellRadius + geantStepping ) {
-    return StatusCode::FAILURE;
-  }
-
-  if ( fabs(z1-z2) > 0.5*mm ) {
+  
+  //if ( fabs(z1-z2) > 0.5*mm ) {
+  if ( fabs(z1-z2) > .1*m_cellRadius ) { // Track in cell
     double yMiddle = (y1 + y2)/2.;
     double dUdZ = (x2 - x1)/(z2 - z1);
     double uAtMonoA = x1 +  dUdZ*(localZOfStraw(1) - z1);
@@ -154,9 +158,11 @@ StatusCode DeOTModule::calculateHits(const HepPoint3D& entryPoint,
   	bool betweenU = ( uHitStrawA > uLow-m_pitch ) && 
                     ( uHitStrawA < uHigh+m_pitch);
     if ( fabs(dist) < m_cellRadius && betweenU && isEfficientA(yMiddle)) {
-      tmpChan = OTChannelID( m_stationID, m_layerID, 
-                             m_quarterID, m_moduleID, strawA);
+      tmpChan = OTChannelID( m_stationID, m_layerID,
+			     m_quarterID, m_moduleID, strawA);
+      channels.reserve(64); // nChannels is 128 except for S3module, 64
       channels.push_back(tmpChan);
+      driftDistances.reserve(64); // nChannels is 128 except for S3module, 64
       driftDistances.push_back(dist);
 
       // check straws to the right
@@ -239,7 +245,7 @@ StatusCode DeOTModule::calculateHits(const HepPoint3D& entryPoint,
     }
   } else {  // dz < 0.5 mm 
     // treatment of curling tracks. Code should be made more readable.
-
+    msg << MSG::INFO << "We've got a curly track :-); z1 = " << z1 << ", z2 = " << z2 << ", and fabs(z1 -z2) = " << fabs(z1-z2) << endreq;
     double z3Circ,zCirc,uCirc,rCirc;
     double zfrac,zint;
 
@@ -330,13 +336,13 @@ void DeOTModule::sCircle(const double z1, const double u1, const double z2,
 
 
 double DeOTModule::distanceToWire(const unsigned int straw, 
-                                  const HepPoint3D& aPoint, 
+                                  const Gaudi::XYZPoint& aPoint, 
                                   const double tx, const double ty) const
 {
   // go to the local coordinate system
-  HepPoint3D vec(tx, ty, 1.);
-  HepPoint3D localPoint = (this->geometry())->toLocal(aPoint);
-  HepPoint3D localVec = (this->geometry())->toLocal(aPoint+vec) - localPoint;
+  Gaudi::XYZVector vec(tx, ty, 1.);
+  Gaudi::XYZPoint localPoint = (this->geometry())->toLocal(aPoint);
+  Gaudi::XYZVector localVec = (this->geometry())->toLocal(aPoint+vec) - localPoint;
 
   // calculate distance to the straw
   double z = this->localZOfStraw(straw);
@@ -351,8 +357,8 @@ double DeOTModule::distanceToWire(const unsigned int straw,
 double DeOTModule::distanceAlongWire(const double xHit, 
                                      const double yHit) const
 { 
-  HepPoint3D globalPoint(xHit, yHit, 0);
-  HepPoint3D localPoint = (this->geometry())->toLocal(globalPoint);
+  Gaudi::XYZPoint globalPoint(xHit, yHit, 0);
+  Gaudi::XYZPoint localPoint = (this->geometry())->toLocal(globalPoint);
 
   // For the upper modules of the station the readout is above.
   return ( this->topModule() ) ? 
@@ -360,27 +366,27 @@ double DeOTModule::distanceAlongWire(const double xHit,
 }
 
 
-HepPoint3D DeOTModule::centerOfStraw(const unsigned int straw) const
+Gaudi::XYZPoint DeOTModule::centerOfStraw(const unsigned int straw) const
 {
   // get the global coordinate of the middle of the channel
-  HepPoint3D localPoint(this->localUOfStraw(straw), 
+  Gaudi::XYZPoint localPoint(this->localUOfStraw(straw), 
                         0., 
                         this->localZOfStraw(straw));
   return (this->geometry())->toGlobal(localPoint);
 }
 
-HepPoint3D DeOTModule::centerOfModule() const
+Gaudi::XYZPoint DeOTModule::centerOfModule() const
 {
   // get the global coordinate of the middle of the module
-  HepPoint3D localPoint(0., 0., 0.);
+  Gaudi::XYZPoint localPoint(0., 0., 0.);
   return (this->geometry())->toGlobal(localPoint);
 }
 
 double DeOTModule::z() const
 {
   // get the global z-coordinate of the module
-  HepPoint3D localPoint(0., 0., 0.);
-  HepPoint3D centerPoint = (this->geometry())->toGlobal(localPoint);
+  Gaudi::XYZPoint localPoint(0., 0., 0.);
+  Gaudi::XYZPoint centerPoint = (this->geometry())->toGlobal(localPoint);
   return centerPoint.z();
 }
 

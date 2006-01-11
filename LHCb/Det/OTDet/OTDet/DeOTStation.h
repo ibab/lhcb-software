@@ -1,4 +1,4 @@
-// $Id: DeOTStation.h,v 1.3 2004-06-24 09:48:34 jnardull Exp $
+// $Id: DeOTStation.h,v 1.4 2006-01-11 09:29:15 janos Exp $
 #ifndef OTDET_DEOTSTATION_H
 #define OTDET_DEOTSTATION_H 1
 
@@ -46,10 +46,10 @@ public:
   DeOTLayer* layer(unsigned int layerID) const;
 
   /// return the layer for a given 3D point
-  DeOTLayer* layer(const HepPoint3D& point) const;
+  DeOTLayer* layer(const Gaudi::XYZPoint& point) const;
 
   /// check if point is inside volume
-  bool isInside(const HepPoint3D& point) const;
+  bool isInside(const Gaudi::XYZPoint& point) const;
 
   /// get the vector of all OT layers
   std::vector<DeOTLayer*>& layers() { return m_layers; }
@@ -68,7 +68,7 @@ private:
 //   end of class
 // -----------------------------------------------------------------------------
 
-inline bool DeOTStation::isInside(const HepPoint3D& point) const
+inline bool DeOTStation::isInside(const Gaudi::XYZPoint& point) const
 {
   return this->geometry()->isInside(point);
 }

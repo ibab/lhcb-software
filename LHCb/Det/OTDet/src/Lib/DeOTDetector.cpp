@@ -1,8 +1,8 @@
-// $Id: DeOTDetector.cpp,v 1.15 2005-07-11 14:27:50 jnardull Exp $
+// $Id: DeOTDetector.cpp,v 1.16 2006-01-11 09:29:15 janos Exp $
 
-// CLHEP
-#include "CLHEP/Geometry/Point3D.h"
-#include "CLHEP/Units/SystemOfUnits.h"
+// MathCore
+#include "Kernel/Point3DTypes.h"
+#include "Kernel/SystemOfUnits.h"
 
 // OTDet
 #include "OTDet/DeOTDetector.h"
@@ -14,12 +14,15 @@
  *  @author Jeroen van Tilburg jtilburg@nikhef.nl
  */
 
+using namespace LHCb;
+
 DeOTDetector::DeOTDetector( const std::string& name ) :
   DetectorElement( name ),
   m_resolution(0.0),
   m_propagationDelay(0.0),
   m_maxDriftTime(0.0),
   m_maxDriftTimeCor(0.0),
+  m_deadTime(0.0),
   m_cellRadius(0.0),
   m_numStations(0),
   m_firstOTStation(0),
@@ -29,7 +32,6 @@ DeOTDetector::DeOTDetector( const std::string& name ) :
   m_nChannels(0),
   m_nMaxChanInModule(0)
 { }
-
 
 DeOTDetector::~DeOTDetector()
 {
@@ -59,6 +61,9 @@ StatusCode DeOTDetector::initialize()
   m_maxDriftTimeCor = param<double>("maxDriftTimeCor");
   m_cellRadius = param<double>("cellRadius");
 
+  // get the channel dead time
+  m_deadTime = param<double>("deadTime");
+  
   // get station number parameters
   m_numStations = param<int>("numStations");
   m_firstOTStation = param<int>("firstOTStation");
@@ -109,53 +114,15 @@ StatusCode DeOTDetector::initialize()
   return sc;
 }
 
-
-StatusCode DeOTDetector::getAngles() const
-
-{
-  StatusCode sc = StatusCode::SUCCESS; 
-  const IGeometryInfo* geometry = this->geometry();
-  if ( 0 == geometry ) {  
-    MsgStream msg(msgSvc(), name());
-    msg << "Unable to find Geometry." << endmsg;
-  }
-
-  const HepTransform3D& matrix = geometry->matrix();
-  HepScale3D                scale     ;
-  HepRotate3D               rotate    ;
-  HepTranslate3D            translate ;
-  matrix.getDecomposition (scale, rotate, translate ) ;
-
-  const HepRotation    rotation = rotate.getRotation   () ;
-
-  //const HepEulerAngles euler    = rotation.eulerAngles () ;  
-  //const double phi   = euler.phi   () ;
-  //const double theta = euler.theta () ;
-  //const double psi   = euler.psi   () ;
-  
-  const double phi   = matrix.getRotation().phi   () ;
-  const double psi   = matrix.getRotation().psi   () ;
-  const double theta   = matrix.getRotation().theta   () ;
-
-  // Debug
-  std :: cout << "Euler Angles are  Phi : " << phi 
-                << " Theta : "  << theta 
-                <<  " Psi : " << psi;
-  
-  return sc;
-}
-
-
-
-StatusCode DeOTDetector::calculateHits(const HepPoint3D& entryPoint,
-                                       const HepPoint3D& exitPoint,
+StatusCode DeOTDetector::calculateHits(const Gaudi::XYZPoint& entryPoint,
+                                       const Gaudi::XYZPoint& exitPoint,
                                        std::vector<OTChannelID>& channels,
                                        std::vector<double>& driftDistances)
 
 {
   StatusCode sc = StatusCode::SUCCESS; 
 
-  HepPoint3D point = 0.5*(entryPoint + exitPoint);  
+  Gaudi::XYZPoint point = entryPoint + 0.5*(exitPoint - entryPoint);  
   DeOTModule* otModule = this->module(point);
   if (otModule) {
     sc = otModule->calculateHits(entryPoint, exitPoint, 
@@ -217,7 +184,7 @@ DeOTModule* DeOTDetector::module(OTChannelID aChannel) const
 }
 
 
-DeOTModule* DeOTDetector::module(const HepPoint3D& point) const
+DeOTModule* DeOTDetector::module(const Gaudi::XYZPoint& point) const
 {
   DeOTModule* otModule = 0;
   std::vector<DeOTStation*>::const_iterator iterStation = m_stations.begin();
@@ -231,6 +198,40 @@ DeOTModule* DeOTDetector::module(const HepPoint3D& point) const
   return otModule;
 }
 
+const int DeOTDetector::sensitiveVolumeID( const Gaudi::XYZPoint& globalPos ) const
+{
+  int tmpSenVolIDStation = 0;
+  int tmpSenVolIDLayer = 0;
+  int tmpSenVolIDQuarter = 0;
+  int tmpSenVolIDModule = 0;
+  int otSenVolID = 0;
+  
+  
+  std::vector<DeOTStation*>::const_iterator iterStation = m_stations.begin();
+  while ( iterStation != m_stations.end() &&
+          !( (*iterStation)->isInside( globalPos ) ) ) ++iterStation;
+
+  if ( iterStation != m_stations.end() ) {
+    tmpSenVolIDStation = ( ( (*iterStation)->stationID() ) << 30 ) & stationMask;
+    DeOTLayer* otLayer = (*iterStation)->layer( globalPos );
+    
+    if ( otLayer != 0 ) {
+      tmpSenVolIDLayer = ( ( otLayer -> layerID() ) << 28 ) & layerMask;
+      DeOTQuarter* otQuarter = otLayer->quarter( globalPos );
+      
+      if ( otQuarter != 0 ) {
+	tmpSenVolIDQuarter = ( ( otQuarter->quarterID() ) << 26 ) & quarterMask;
+	DeOTModule* otModule = otQuarter->module( globalPos );
+	
+	if ( otModule != 0 ) tmpSenVolIDModule = 
+			       ( otModule->moduleID() << 22 ) & moduleMask;
+      }
+    }
+    otSenVolID = tmpSenVolIDStation | tmpSenVolIDLayer | tmpSenVolIDQuarter | tmpSenVolIDModule;
+    return ( otSenVolID );
+  }
+  else { return -1 ; }
+}
 
 double DeOTDetector::distanceAlongWire(OTChannelID channelID,
                                        double xHit, double yHit) const 

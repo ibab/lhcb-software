@@ -1,4 +1,4 @@
-// $Id: DeOTStation.cpp,v 1.3 2005-05-13 16:09:41 marcocle Exp $
+// $Id: DeOTStation.cpp,v 1.4 2006-01-11 09:29:15 janos Exp $
 
 // DetDesc
 #include "DetDesc/IGeometryInfo.h"
@@ -57,7 +57,7 @@ DeOTLayer* DeOTStation::layer(unsigned int layerID) const
   return otLayer;
 }
 
-DeOTLayer* DeOTStation::layer(const HepPoint3D& point) const
+DeOTLayer* DeOTStation::layer(const Gaudi::XYZPoint& point) const
 {
   DeOTLayer* otLayer = 0;
   std::vector<DeOTLayer*>::const_iterator iterLayer = m_layers.begin();

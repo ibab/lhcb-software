@@ -1,9 +1,20 @@
-! $Id: release.notes,v 1.38 2005-07-14 06:21:25 cattanem Exp $
+! $Id: release.notes,v 1.39 2006-01-11 09:29:15 janos Exp $
 ! Package     : OTDet
 ! Responsible : J. van Tilburg & Jacopo Nardulli
 
+!========================== OTDet v5r7 2005-07-13 ==========================
+! 2006-01-10 Jan Amoraal
+ - Migrated to LHCb v20r0
+ - Removed method DeOTDetector::getAngles(): This method didn't do
+   anything other than to return a status code. Nor is it needed by any
+   other code. It was probably used for debugging purposes.
+ - Added DeOTDetector::sensitiveVolumeID as per Juan's request. 
+   Needs testing. 
+ - Added isInside() checks and removed redundant checks in 
+   DeOTModule::calculateHits.
+
 !========================== OTDet v5r6 2005-07-13 ==========================
-! 2005-06-29 Jacopo Nardullli
+! 2005-06-29
  - Removing ResolutionCor in DeOTDetector (Test Beam 2005)
 
 !========================== OTDet v5r5p1 2005-07-07 ========================

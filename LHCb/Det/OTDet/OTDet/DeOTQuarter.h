@@ -1,4 +1,4 @@
-// $Id: DeOTQuarter.h,v 1.2 2004-06-24 09:48:34 jnardull Exp $
+// $Id: DeOTQuarter.h,v 1.3 2006-01-11 09:29:15 janos Exp $
 #ifndef OTDET_DEOTQUARTER_H
 #define OTDET_DEOTQUARTER_H 1
 
@@ -49,10 +49,10 @@ public:
   DeOTModule* module(unsigned int moduleID) const;
 
   /// return the module for a given 3D point
-  DeOTModule* module(const HepPoint3D& point) const;
+  DeOTModule* module(const Gaudi::XYZPoint& point) const;
 
   /// check if point is inside volume
-  bool isInside(const HepPoint3D& point) const;
+  bool isInside(const Gaudi::XYZPoint& point) const;
 
   /// get the vector of all OT modules
   std::vector<DeOTModule*>& modules() { return m_modules; }
@@ -78,7 +78,7 @@ private:
 //   end of class
 // -----------------------------------------------------------------------------
 
-inline bool DeOTQuarter::isInside(const HepPoint3D& point) const
+inline bool DeOTQuarter::isInside(const Gaudi::XYZPoint& point) const
 {
   // only check x and y (z should have been checked before in layer)
   if ( point.x() > m_xMin && point.x() < m_xMax &&

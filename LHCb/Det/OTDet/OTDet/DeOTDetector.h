@@ -1,4 +1,4 @@
-// $Id: DeOTDetector.h,v 1.18 2005-07-11 14:28:09 jnardull Exp $
+// $Id: DeOTDetector.h,v 1.19 2006-01-11 09:29:15 janos Exp $
 #ifndef OTDET_DEOTDETECTOR_H
 #define OTDET_DEOTDETECTOR_H 1
 
@@ -14,8 +14,8 @@
 // Kernel
 #include "Kernel/OTChannelID.h"
 
-// CLHEP
-#include "CLHEP/Geometry/Point3D.h"
+// MathCore
+#include "Kernel/Point3DTypes.h"
 
 /** @class DeOTDetector DeOTDetector.h "OTDet/DeOTDetector.h"
  *
@@ -53,40 +53,40 @@ public:
   /// initialization method 
   virtual StatusCode initialize();
 
-  /// get the transformation matrix - Angles related to beam tilt angle
-  StatusCode getAngles() const;
-
   /// Find the channels and the distances from the MCHits
-  StatusCode calculateHits(const HepPoint3D& entryPoint, 
-                           const HepPoint3D& exitPoint,
-                           std::vector<OTChannelID>& channels,
+  StatusCode calculateHits(const Gaudi::XYZPoint& entryPoint, 
+                           const Gaudi::XYZPoint& exitPoint,
+                           std::vector<LHCb::OTChannelID>& channels,
                            std::vector<double>& driftDistances );
 
   /// return the station for a given stationID
   DeOTStation* station(unsigned int stationID) const;
   
   /// return the layer for a given channelID
-  DeOTLayer* layer(OTChannelID aChannel) const;
+  DeOTLayer* layer(LHCb::OTChannelID aChannel) const;
 
   /// return the quarter for a given channelID
-  // DeOTQuarter* quarter(OTChannelID aChannel) const;
+  // DeOTQuarter* quarter(LHCb::OTChannelID aChannel) const;
 
   /// return the module for a given channel ID
-  DeOTModule* module(OTChannelID aChannel) const;
+  DeOTModule* module(LHCb::OTChannelID aChannel) const;
 
   /// return the module for a given point
-  DeOTModule* module(const HepPoint3D& point) const;
+  DeOTModule* module(const Gaudi::XYZPoint& point) const;
 
+  /// Return sensor key /sentive volume id for a given global point
+  const int sensitiveVolumeID( const Gaudi::XYZPoint& globalPos ) const;
+  
   /// return the distance along the wire given a channel and position x,y
-  double distanceAlongWire(OTChannelID channelID,
+  double distanceAlongWire(LHCb::OTChannelID channelID,
                            double xHit,
                            double yHit) const;
 
   /// return the channel right from a given channel
-  OTChannelID nextChannelRight(OTChannelID aChannel) const;
+  LHCb::OTChannelID nextChannelRight(LHCb::OTChannelID aChannel) const;
 
   /// return the channel left from a given channel
-  OTChannelID nextChannelLeft(OTChannelID aChannel) const;
+  LHCb::OTChannelID nextChannelLeft(LHCb::OTChannelID aChannel) const;
 
   /// get the straw resolution
   double resolution() const {return m_resolution;}
@@ -98,7 +98,7 @@ public:
   double propagationDelay() const {return m_propagationDelay;} ;
 
   /// Calculate the propagation delay along the wire
-  double propagationTime(const OTChannelID aChannel, 
+  double propagationTime(const LHCb::OTChannelID aChannel, 
                          const double x, const double y ) const;
 
   /// Calculate max drift as function of By
@@ -119,6 +119,9 @@ public:
   /// inverse r-t relation with correction for the magnetic field
   double driftDistance( const double driftTime, const double by ) const;
 
+  /// returns the dead time in ns
+  double deadTime() const {return m_deadTime;}
+  
   /// get the number of tracker stations
   unsigned int numStations()  { return m_numStations; }
 
@@ -143,6 +146,7 @@ private:
   double m_propagationDelay;      ///< speed of propagation along wire
   double m_maxDriftTime;          ///< maximum drift time
   double m_maxDriftTimeCor;       ///< magn. correction on maximum drift time
+  double m_deadTime;              ///< deadtime
   double m_cellRadius;            ///< cell radius
 
   unsigned int m_numStations;     ///< number of stations
@@ -153,6 +157,12 @@ private:
   std::vector<DeOTModule*> m_modules; ///< vector of modules containing geometry
   unsigned int m_nChannels;       ///< total number of channels in OT
   unsigned int m_nMaxChanInModule;///< the maximum # channels in 1 module
+
+  /// Bitmasks for bitfield sensorkey id
+  enum sensitiveMasks {moduleMask     = 0x03C00000,
+		       quarterMask    = 0x0C000000,
+		       layerMask      = 0x30000000,
+		       stationMask    = 0xC0000000};
   
 };
 

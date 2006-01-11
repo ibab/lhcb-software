@@ -1,4 +1,4 @@
-// $Id: DeOTLayer.h,v 1.4 2004-06-24 09:48:34 jnardull Exp $
+// $Id: DeOTLayer.h,v 1.5 2006-01-11 09:29:15 janos Exp $
 #ifndef OTDET_DEOTLAYER_H
 #define OTDET_DEOTLAYER_H 1
 
@@ -49,13 +49,13 @@ public:
   DeOTQuarter* quarter(unsigned int quarterID) const;
 
   /// return the quarter for a given 3D point (depreciated !)
-  DeOTQuarter* quarter(const HepPoint3D& point) const;
+  DeOTQuarter* quarter(const Gaudi::XYZPoint& point) const;
 
   /// return the module for a given 3D point
-  DeOTModule* module(const HepPoint3D& point) const;
+  DeOTModule* module(const Gaudi::XYZPoint& point) const;
 
   /// check if point is inside volume
-  bool isInside(const HepPoint3D& point) const;
+  bool isInside(const Gaudi::XYZPoint& point) const;
 
   /// get the vector of all OT quarter
   std::vector<DeOTQuarter*>& quarters() { return m_quarters; }
@@ -75,7 +75,7 @@ private:
 //   end of class
 // -----------------------------------------------------------------------------
 
-inline bool DeOTLayer::isInside(const HepPoint3D& point) const
+inline bool DeOTLayer::isInside(const Gaudi::XYZPoint& point) const
 {
   return this->geometry()->isInside(point);
 }

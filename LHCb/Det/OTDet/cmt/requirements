@@ -1,8 +1,8 @@
-# $Id: requirements,v 1.22 2005-07-14 06:21:25 cattanem Exp $
+# $Id: requirements,v 1.23 2006-01-11 09:29:15 janos Exp $
 # =========================================================================
 
 package  OTDet 
-version  v5r6
+version  v5r7
 
 # =============== structure ===============================================	
 branches         src cmt doc OTDet 

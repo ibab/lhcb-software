@@ -1,4 +1,4 @@
-// $Id: DeOTQuarter.cpp,v 1.2 2005-05-13 16:09:41 marcocle Exp $
+// $Id: DeOTQuarter.cpp,v 1.3 2006-01-11 09:29:15 janos Exp $
 
 // DetDesc
 #include "DetDesc/IGeometryInfo.h"
@@ -7,12 +7,16 @@
 // OTDet
 #include "OTDet/DeOTQuarter.h"
 
+#include "Kernel/SystemOfUnits.h"
+
 /** @file DeOTQuarter.cpp
  *
  *  Implementation of class :  DeOTQuarter
  *
  *  @author Jeroen van Tilburg jtilburg@nikhef.nl
  */
+
+using namespace LHCb;
 
 DeOTQuarter::DeOTQuarter( const std::string& name ) :
   DetectorElement( name ),
@@ -64,8 +68,8 @@ StatusCode DeOTQuarter::initialize()
         for ( i = 0 ; i < 2 ; ++i ) {
           for ( j = 0 ; j < 2 ; ++j ) {
             for ( k = 0 ; k < 2 ; ++k ) {          
-              HepPoint3D point( pow(-1.,i)*dx, pow(-1.,j)*dy, pow(-1.,k)*dz );
-              HepPoint3D cornerPoint = gi->toGlobal( point );
+              Gaudi::XYZPoint point( pow(-1.,i)*dx, pow(-1.,j)*dy, pow(-1.,k)*dz );
+              Gaudi::XYZPoint cornerPoint = gi->toGlobal( point );
               if ( cornerPoint.x() < m_xMin ) m_xMin = cornerPoint.x();
               if ( cornerPoint.y() < m_yMin ) m_yMin = cornerPoint.y();
               if ( cornerPoint.z() < m_zMin ) m_zMin = cornerPoint.z();
@@ -92,7 +96,7 @@ DeOTModule* DeOTQuarter::module(unsigned int moduleID) const
   return otModule;
 }
 
-DeOTModule* DeOTQuarter::module(const HepPoint3D& point) const
+DeOTModule* DeOTQuarter::module(const Gaudi::XYZPoint& point) const
 {
   DeOTModule* otModule = 0;
   std::vector<DeOTModule*>::const_iterator iterModule = m_modules.begin();

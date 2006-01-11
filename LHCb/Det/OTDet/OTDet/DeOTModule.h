@@ -1,4 +1,4 @@
-// $Id: DeOTModule.h,v 1.3 2003-12-04 10:22:08 jnardull Exp $
+// $Id: DeOTModule.h,v 1.4 2006-01-11 09:29:15 janos Exp $
 #ifndef OTDET_DEOTMODULE_H
 #define OTDET_DEOTMODULE_H 1
 
@@ -9,8 +9,8 @@
 // Kernel
 #include "Kernel/OTChannelID.h"
 
-// CLHEP
-#include "CLHEP/Geometry/Point3D.h"
+// MathCore
+#include "Kernel/Point3DTypes.h"
 
 
 /** @class DeOTModule DeOTModule.h "OTDet/DeOTModule.h"
@@ -30,7 +30,7 @@
  *  The numbering scheme for the OT modules in the digitization is:
  *
  *         Quarter 3                      Quarter 2
- *   ____________________________   __________________________
+ *    __________________________     _________________________
  *   |  |  |  |  |  |  |  |  |  |   | |  |  |  |  |  |  |  |  |
  *   |  |  |  |  |  |  |  |  |  |   | |  |  |  |  |  |  |  |  |
  *   |  |  |  |  |  |  |  |  |  |   | |  |  |  |  |  |  |  |  |
@@ -40,13 +40,13 @@
  *   |  |  |  |  |  |  |  |  |__|   |_|  |  |  |  |  |  |  |  |
  *   |  |  |  |  |  |  |  |__|        |__|  |  |  |  |  |  |  |
  *   |--|--|--|--|--|--|--|__   IT     __|--|--|--|--|--|--|--|
- *   |  |  |  |  |  |  |  |  |__    __|  |  |  |  |  |  |  |  |
- *   |  |  |  |  |  |  |  |  | |   |  |  |  |  |  |  |  |  |  | 
- *   |  |  |  |  |  |  |  |  | |   |  |  |  |  |  |  |  |  |  | 
- *   |  |  |  |  |  |  |  |  | |   |  |  |  |  |  |  |  |  |  |
- *   | 1| 2| 3| 4| 5| 6| 7| 8|9|   | 9| 8| 7| 6| 5| 4| 3| 2| 1|
- *   |  |  |  |  |  |  |  |  | |   |  |  |  |  |  |  |  |  |  |
- *   |__|__|__|__|__|__|__|__|_|   |__|__|__|__|__|__|__|__|__|
+ *   |  |  |  |  |  |  |  |  |__     _|  |  |  |  |  |  |  |  |
+ *   |  |  |  |  |  |  |  |  |  |   | |  |  |  |  |  |  |  |  | 
+ *   |  |  |  |  |  |  |  |  |  |   | |  |  |  |  |  |  |  |  | 
+ *   |  |  |  |  |  |  |  |  |  |   | |  |  |  |  |  |  |  |  |
+ *   | 1| 2| 3| 4| 5| 6| 7| 8| 9|   |9| 8| 7| 6| 5| 4| 3| 2| 1|
+ *   |  |  |  |  |  |  |  |  |  |   | |  |  |  |  |  |  |  |  |
+ *   |__|__|__|__|__|__|__|__|__|   |_|__|__|__|__|__|__|__|__|
  *
  *          Quarter 1                      Quarter 0
  *
@@ -120,10 +120,10 @@ public:
   bool bottomModule() const;
 
   /// check if point is inside volume
-  bool isInside(const HepPoint3D& point) const;
+  bool isInside(const Gaudi::XYZPoint& point) const;
 
   /// checks if this modules contains the given OTChannelID
-  bool contains(OTChannelID channel) const;
+  bool contains(LHCb::OTChannelID channel) const;
 
   /// return the straw to the left
   unsigned int nextLeftStraw(const unsigned int straw) const;
@@ -135,14 +135,14 @@ public:
   unsigned int nChannels() const;
 
   /// calculate straws which are hit
-  StatusCode calculateHits(const HepPoint3D& entryPoint, 
-                           const HepPoint3D& exitPoint,
-                           std::vector<OTChannelID>& channels, 
+  StatusCode calculateHits(const Gaudi::XYZPoint& entryPoint, 
+                           const Gaudi::XYZPoint& exitPoint,
+                           std::vector<LHCb::OTChannelID>& channels, 
                            std::vector<double>& driftDistances) const;
 
   /// get the distance from a given vector in space to the straw
   double distanceToWire(const unsigned int straw, 
-                        const HepPoint3D& aPoint, 
+                        const Gaudi::XYZPoint& aPoint, 
                         const double tx, const double ty) const;
 
   /// get distance to electronics along the wire
@@ -150,10 +150,10 @@ public:
                            const double yHit) const;
 
   /// get the x,y,z of a given straw in global coordinates
-  HepPoint3D centerOfStraw(const unsigned int straw) const;
+  Gaudi::XYZPoint centerOfStraw(const unsigned int straw) const;
 
   /// get the global coordinate of the middle of the module
-  HepPoint3D centerOfModule() const;
+  Gaudi::XYZPoint centerOfModule() const;
   
   /// get the global z-coordinate of the module
   double z() const;
@@ -227,12 +227,12 @@ inline bool DeOTModule::bottomModule() const
   return m_quarterID < 2;
 }
 
-inline bool DeOTModule::isInside(const HepPoint3D& point) const
+inline bool DeOTModule::isInside(const Gaudi::XYZPoint& point) const
 {
   return this->geometry()->isInside(point);
 }
 
-inline bool DeOTModule::contains(OTChannelID channel) const
+inline bool DeOTModule::contains(LHCb::OTChannelID channel) const
 {
   return (channel.station() == m_stationID && 
           channel.layer() == m_layerID && 
