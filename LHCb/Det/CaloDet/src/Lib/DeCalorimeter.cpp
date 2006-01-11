@@ -1,4 +1,4 @@
-// $Id: DeCalorimeter.cpp,v 1.24 2005-12-16 17:12:40 odescham Exp $ 
+// $Id: DeCalorimeter.cpp,v 1.25 2006-01-11 07:57:22 ocallot Exp $ 
 #define  CALODET_DECALORIMETER_CPP 1
 // ============================================================================
 // from STL
@@ -444,7 +444,7 @@ StatusCode DeCalorimeter::buildCards( )  {
     myCard.setValidationNumber( validationCard );
     m_feCards.push_back( myCard ); // add card
 
-    msg << MSG::INFO 
+    msg << MSG::DEBUG
         << format ( "Card %3d (crate %2d slot%2d) has down %3d left %3d corner %3d previous %3d validation %2d",
                     cardNum, crate, slot, downCard, leftCard, cornerCard, 
                     previousCard, validationCard )

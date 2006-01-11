@@ -1,7 +1,10 @@
-! $Id: release.notes,v 1.48 2005-12-19 09:21:49 cattanem Exp $ 
+! $Id: release.notes,v 1.49 2006-01-11 07:57:22 ocallot Exp $ 
 ! =============================================================================
 Package         : CaloDet   
 Package manager : Olivier Deschamps odescham@in2p3.fr
+
+! 2006-01-11 - Olivier Callot
+ - Change a message form INFO to DEBUG in building FE cards in DeCalorimeter.cpp
 
 !========================= CaloDet v7r0 2005-12-19 ============================
 ! 2005-12-16 - Olivier Deschamps
