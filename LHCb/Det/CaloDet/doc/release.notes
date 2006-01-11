@@ -1,12 +1,12 @@
-! $Id: release.notes,v 1.49 2006-01-11 07:57:22 ocallot Exp $ 
+! $Id: release.notes,v 1.50 2006-01-11 08:01:32 cattanem Exp $ 
 ! =============================================================================
 Package         : CaloDet   
 Package manager : Olivier Deschamps odescham@in2p3.fr
 
+!========================= CaloDet v7r0 2005-01-11 ============================
 ! 2006-01-11 - Olivier Callot
  - Change a message form INFO to DEBUG in building FE cards in DeCalorimeter.cpp
 
-!========================= CaloDet v7r0 2005-12-19 ============================
 ! 2005-12-16 - Olivier Deschamps
  - CaloDet/  & src/Lib :   migration to LHCb v20 - MathCore 
  - src/component/CaloDetTestAlgorithm.cpp : remove CaloAlgorithm inheritance 
