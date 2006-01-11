@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/DAQ/MDF/MDF/RawEventHelpers.h,v 1.3 2006-01-10 18:14:29 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/DAQ/MDF/MDF/RawEventHelpers.h,v 1.4 2006-01-11 15:31:52 frankb Exp $
 //	====================================================================
 //  MDFWriter.h
 //	--------------------------------------------------------------------
@@ -61,6 +61,8 @@ namespace LHCb  {
   StatusCode encodeFragment(const std::vector<RawBank*>& b, MEPFragment* f);
   /// Decoding of MEP event fragment and append content to raw event object
   StatusCode decodeFragment(const MEPFragment* f, RawEvent* raw);
+  /// Conditional decoding of raw buffer from MDF to vector of bank pointers
+  StatusCode decodeFragment(const MEPFragment* f, std::vector<RawBank*>& raw);
 
   /// Encode entire mep from map of events
   StatusCode encodeMEP( const std::map<unsigned int, RawEvent*>& events, 

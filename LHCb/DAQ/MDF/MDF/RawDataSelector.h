@@ -1,4 +1,4 @@
-// $Id: RawDataSelector.h,v 1.2 2006-01-10 14:00:44 frankb Exp $
+// $Id: RawDataSelector.h,v 1.3 2006-01-11 15:31:52 frankb Exp $
 //====================================================================
 //	RawDataSelector.h
 //--------------------------------------------------------------------
@@ -10,7 +10,7 @@
 //  Created    : 12/12/2005
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/DAQ/MDF/MDF/RawDataSelector.h,v 1.2 2006-01-10 14:00:44 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/DAQ/MDF/MDF/RawDataSelector.h,v 1.3 2006-01-11 15:31:52 frankb Exp $
 
 #ifndef MDF_RAWDATASELECTOR_H
 #define MDF_RAWDATASELECTOR_H 1
@@ -60,7 +60,8 @@ namespace LHCb  {
       virtual ~LoopContext()          { close();             }
       /// IEvtSelector::Context overload; context identifier
       virtual void* identifier() const { return (void*)m_sel; }
-      void setCriteria(const std::string& crit);
+      /// Set context criteria
+      virtual void setCriteria(const std::string& crit);
       /// Receive event and update communication structure
       virtual StatusCode receiveData() = 0;
       /// Set connection
@@ -70,10 +71,13 @@ namespace LHCb  {
         DSC::close(m_accessDsc);
         DSC::close(m_bindDsc);
       }
+      /// Access descriptor (CONST)
       const DSC& descriptor() const  { return m_descriptor; }
+      /// Access descriptor
       DSC& descriptor()              { return m_descriptor; }
       /// Connection specification
       const std::string& specs() const          {      return m_conSpec;    }
+      /// Access to RawBank array
       virtual const std::vector<LHCb::RawBank*>& banks()  const = 0;
     };
 

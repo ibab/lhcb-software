@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/DAQ/MDF/src/RawEventHelpers.cpp,v 1.4 2006-01-10 18:14:29 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/DAQ/MDF/src/RawEventHelpers.cpp,v 1.5 2006-01-11 15:31:52 frankb Exp $
 //	====================================================================
 //  RawEventHelpers.cpp
 //	--------------------------------------------------------------------
@@ -157,6 +157,11 @@ StatusCode LHCb::encodeRawBanks(const RawEvent* evt, char* const data, size_t si
 
 /// Conditional decoding of raw buffer from MDF to raw event object
 StatusCode LHCb::decodeFragment(const MEPFragment* f, RawEvent* raw)  {
+  return decodeRawBanks(f->start(), f->end(), raw);
+}
+
+/// Conditional decoding of raw buffer from MDF to vector of bank pointers
+StatusCode LHCb::decodeFragment(const MEPFragment* f, std::vector<RawBank*>& raw)  {
   return decodeRawBanks(f->start(), f->end(), raw);
 }
 
