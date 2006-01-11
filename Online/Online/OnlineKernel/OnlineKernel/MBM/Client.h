@@ -14,7 +14,7 @@ namespace MBM {
     int* data;
     int  len;
     int  type;
-    int  mask[4];
+    unsigned int  mask[4];
     EventDesc() : data(0), len(0), type(0) {
       mask[0] = mask[1] = mask[2] = mask[4] = 0;
     }

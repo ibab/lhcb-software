@@ -323,8 +323,8 @@ int mbm_register_alloc_event(BMID bm, RTL_ast_t astadd, void* astparam)   {
 }
 
 /// Consumer routines
-int mbm_add_req (BMID bm, int evtype, int trg_mask[4], int veto_mask[4], int masktype, 
-                 int usertype, int freqmode, float freq)
+int mbm_add_req (BMID bm, int evtype, const int trg_mask[4], const int veto_mask[4], 
+                 int masktype, int usertype, int freqmode, float freq)
 {
   UserLock user(bm);
   USER* us = user.user();
@@ -351,7 +351,9 @@ int mbm_add_req (BMID bm, int evtype, int trg_mask[4], int veto_mask[4], int mas
   return user.status();
 }
 
-int mbm_del_req (BMID bm, int evtype, int trmask[4], int veto[4], int masktype, int usertype)  {
+int mbm_del_req (BMID bm, int evtype, const int trmask[4], const int veto[4], 
+                 int masktype, int usertype)
+{
   UserLock user(bm);
   USER* us = user.user();
   if ( us )  {
@@ -372,7 +374,7 @@ int mbm_del_req (BMID bm, int evtype, int trmask[4], int veto[4], int masktype, 
   return user.status();
 }
 
-int mbm_get_event_a (BMID bm, int** ptr, int* size, int* evtype, int trmask[4], 
+int mbm_get_event_a (BMID bm, int** ptr, int* size, int* evtype, unsigned int trmask[4], 
          int part_id, RTL_ast_t astadd, void* astpar) {
   UserLock user(bm);
   USER* us = user.user();
@@ -412,7 +414,7 @@ int mbm_get_event_a (BMID bm, int** ptr, int* size, int* evtype, int trmask[4],
   return user.status();
 }
 
-int mbm_get_event(BMID bm, int** ptr, int* size, int* evtype, int trmask[4], int part_id) {
+int mbm_get_event(BMID bm, int** ptr, int* size, int* evtype, unsigned int trmask[4], int part_id) {
   int sc = mbm_get_event_a(bm, ptr,size,evtype,trmask,part_id,mbm_get_event_ast,bm);
   if ( sc == MBM_NORMAL || sc == MBM_NO_EVENT ) {
     return mbm_wait_event(bm);
@@ -511,7 +513,7 @@ int mbm_get_space_a (BMID bm, int buffsize, int** ptr, RTL_ast_t astadd, void* a
   return user.status();
 }
 
-int mbm_declare_event (BMID bm, int len, int evtype, int* trmask, const char* dest,
+int mbm_declare_event (BMID bm, int len, int evtype, const unsigned int* trmask, const char* dest,
                        void** free_add, int* free_size, int part_id)
 {
   Lock lock(bm);
@@ -521,7 +523,7 @@ int mbm_declare_event (BMID bm, int len, int evtype, int* trmask, const char* de
   return lock.status();
 }
 
-int mbm_declare_event_and_send (BMID bm, int len, int evtype, int* trmask,
+int mbm_declare_event_and_send (BMID bm, int len, int evtype, const unsigned int* trmask,
                                 const char* dest, void** free_add, int* free_size, int part_id)
 {
   Lock lock(bm);
@@ -563,7 +565,7 @@ int mbm_send_space (BMID bm) {
 }
 
 #if 0
-int mbm_send_event (BMID bm, int* array, int len, int evtype, int* trmask, const char* dest, int partid)  {
+int mbm_send_event (BMID bm, int* array, int len, int evtype, const unsigned int* trmask, const char* dest, int partid)  {
   int *buff, dummy;
   int status = mbm_get_space (bm, len, &buff);
   if (status != MBM_NORMAL)  {

@@ -261,7 +261,10 @@ int lib_rtl_get_process_name(char* process, size_t len)  {
   }
   process[len]='\0';
 #else
-  char *tmp = (char*)getenv("$PROCESS");
+  char *tmp;
+  tmp = (char*)::getenv("UTGID");
+  if ( !tmp ) tmp = (char*)::getenv("PROCESSNAME");
+  if ( !tmp ) tmp = (char*)::getenv("$PROCESS");
   ::strncpy(process, tmp != 0 ? tmp : "UNKNOWN", len);
 #endif
   return 1;

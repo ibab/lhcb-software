@@ -8,6 +8,15 @@
  */
 namespace MBM {
 
+  // Forward declarations 
+  class Requirement;
+
+  /** @class Consumer Comsumer.h MBM/Consumer.h
+    *
+    *   @author  M.Frank
+    *   @version 1.0
+    *   @date    12/1/2006
+    */
   class Consumer : public Client  {
   protected:
 
@@ -42,10 +51,16 @@ namespace MBM {
     }
 
     /// Add request to event buffer
-    void addRequest(int evtype, int trmask[4], int vetomask[4], int masktype, int usertype, int freqmode, float freq);
+    void addRequest(const Requirement& req);
+    
+    /// Add request to event buffer
+    void addRequest(int evtype, const int trmask[4], const int vetomask[4], int masktype, int usertype, int freqmode, float freq);
     
     /// Delete request to event buffer
-    void delRequest(int evtype, int trmask[4], int vetomask[4], int masktype, int usertype);
+    void delRequest(const Requirement& req);
+
+    /// Delete request to event buffer
+    void delRequest(int evtype, const int trmask[4], const int vetomask[4], int masktype, int usertype);
 
     /// Get synchronously event
     int getEvent();

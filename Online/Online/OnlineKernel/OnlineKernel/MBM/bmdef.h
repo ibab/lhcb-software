@@ -31,7 +31,10 @@ typedef void* BMID;
 #endif
 #define MBM_INV_DESC   ((BMID)-1)
 
+#ifdef __cplusplus
+#define __MBM_CONST const
 extern "C"  {
+#endif
   struct BUFFERS;
   int  mbm_install(int argc , char** argv);
   int  mbm_deinstall(int argc , char** argv);
@@ -44,19 +47,19 @@ extern "C"  {
   int  mbm_register_free_event(BMID bm, RTL_ast_t astadd, void* astparam);
   /// Register optional callback on _mbm_ealloc
   int  mbm_register_alloc_event(BMID bm, RTL_ast_t astadd, void* astparam);
-  int  mbm_add_req (BMID bm, int evtype, int* trmask, int* veto, int masktype, 
+  int  mbm_add_req (BMID bm, int evtype, __MBM_CONST int* trmask, __MBM_CONST int* veto, int masktype, 
                     int usertype, int freqmode, float freq);
-  int  mbm_del_req    (BMID bm, int evtype, int* trmask, int* veto, int masktype, int usertype);
-  int  mbm_get_event_a(BMID bm, int** ptr, int* size, int* evtype, int* trmask, int part_id, RTL_ast_t astadd, void* ast_par);
-  int  mbm_get_event  (BMID bm, int** ptr, int* size, int* evtype, int* trmask, int part_id);
+  int  mbm_del_req    (BMID bm, int evtype, __MBM_CONST int* trmask, __MBM_CONST int* veto, int masktype, int usertype);
+  int  mbm_get_event_a(BMID bm, int** ptr, int* size, int* evtype, unsigned int* trmask, int part_id, RTL_ast_t astadd, void* ast_par);
+  int  mbm_get_event  (BMID bm, int** ptr, int* size, int* evtype, unsigned int* trmask, int part_id);
   int  mbm_free_event (BMID bm);
   int  mbm_pause      (BMID bm);
 
   int  mbm_get_space  (BMID bm, int size, int** ptr);
   int  mbm_get_space_a(BMID bm, int size, int** ptr, RTL_ast_t astadd, void* ast_par);
-  int  mbm_declare_event(BMID bm, int len, int evtype, int* trmask, const char* dest,
+  int  mbm_declare_event(BMID bm, int len, int evtype, __MBM_CONST unsigned int* trmask, const char* dest,
     void** free_add, int* free_size, int part_id);
-  int mbm_declare_event_and_send (BMID bm, int len, int evtype, int* trmask,
+  int mbm_declare_event_and_send (BMID bm, int len, int evtype, __MBM_CONST unsigned int* trmask,
                         const char* dest, void** free_add, int* free_size, int part_id);
   int  mbm_free_space (BMID bm);
   int  mbm_send_space (BMID bm);
@@ -88,5 +91,9 @@ extern "C"  {
   int mbm_map_global_buffer_info(lib_rtl_gbl_t* handle);
   /// Unmap global buffer information on this machine
   int mbm_unmap_global_buffer_info(lib_rtl_gbl_t handle);
-};
+#ifdef __cplusplus
+#undef __MBM_CONST
+}
+#endif
+
 #endif // _MBM_MBMDEF_H
