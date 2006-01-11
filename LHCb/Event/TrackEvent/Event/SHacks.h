@@ -16,7 +16,7 @@ namespace SHacks{
 
 template <typename TYPE1, typename TYPE2>
 inline TYPE2 SHacks::Similarity(TYPE1 F, TYPE2 C){
-  return ROOT::Math::Transpose(F)*C*F;
+  return F*C*ROOT::Math::Transpose(F);
 }
 
 #endif

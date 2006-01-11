@@ -1,4 +1,4 @@
-// $Id: State.cpp,v 1.10 2006-01-10 15:04:49 mneedham Exp $
+// $Id: State.cpp,v 1.11 2006-01-11 07:59:47 mneedham Exp $
 
 #include <math.h>
 #include <gsl/gsl_math.h>
@@ -70,7 +70,7 @@ SymMatrix6x6 State::posMomCovariance() const
   // 1) "convert" first from (x,y,tx,ty,Q/p) to (x,y,z,tx,ty,Q/p)
   const TrackMatrix cov5D = covariance();
   SymMatrix6x6 cov6Dtmp = SymMatrix6x6();
-  cov6Dtmp.Place_at(cov5D.Sub<3,3>(0,0),0,0);
+  cov6Dtmp.Place_at(cov5D.Sub<2,2>(0,0),0,0);
   cov6Dtmp.Place_at(cov5D.Sub<3,3>(0,2),0,3);
   cov6Dtmp.Place_at(cov5D.Sub<3,3>(2,0),3,0);
   cov6Dtmp.Place_at(cov5D.Sub<3,3>(2,2),3,3);
