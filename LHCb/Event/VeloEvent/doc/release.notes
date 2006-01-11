@@ -1,10 +1,12 @@
-! $Id: release.notes,v 1.35 2005-12-16 12:53:20 szumlat Exp $
+! $Id: release.notes,v 1.36 2006-01-11 13:30:15 szumlat Exp $
 package Event/VeloEvent
-package manager: C.Parkes
+package manager: C.Parkes, T.Szumlak
 
-!====================== VeloEvent v14r1 2005-12-16 =======================
-  2005-12-16 - Tomasz Szumlak
- - Changed package dependecny
+!====================== VeloEvent v15r0 2006-01-07 =======================
+  2006-01-07 - Tomasz Szumlak
+ - Remove all CLHEP dependencies 
+ - move all objects to LHCb namespace
+ - using new LHCbEnv v20r0
 
 !====================== VeloEvent v14r0 2005-12-16 ========================
 ! 2005-12-16 - Tomasz Szumlak 

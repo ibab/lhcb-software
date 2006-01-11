@@ -1,26 +1,28 @@
-# $Id: requirements,v 1.32 2005-12-16 12:53:20 szumlat Exp $
+# $Id: requirements,v 1.33 2006-01-11 13:30:15 szumlat Exp $
+# Maintainer: Chris Parkes, Tomasz Szumlak
+#
 package VeloEvent
 
-version v14r1
+version v15r0
 
-branches Event src xml cmt doc dict
+branches cmt doc src xml Event
 
-use Event        v* Event
+include_dirs    $(VELOEVENTROOT)
 
-include_dirs	 $(VELOEVENTROOT)
+use LHCbKernel     v* Kernel
+use EventBase      v* Event
+use MCEvent        v* Event
 
 #---- Produce Header-Files from XML description
-document obj2doth VeloEventObj2Doth ../xml/VeloEvent.xml
-document obj2dict VeloEventObj2Dict ../xml/VeloEvent.xml
+document obj2doth VeloEventObj2Doth ../xml/*.xml
+document obj2dict VeloEventObj2Dict ../xml/*.xml
 
 # Build libraries (including dictionary)
 #============================================================================
-library          VeloEvent      *.cpp
-library          VeloEventDict  ../dict/*.cpp
-
+library          VeloEventDict  ../$(tag)/dict/VeloEvent/*.cpp
+#
 apply_pattern component_library library=VeloEventDict
-apply_pattern linker_library    library=VeloEvent
-macro_append VeloEvent_linkopts "" WIN32 "/include:_VeloEvent_loadRef"
-
+macro_remove VeloEvent_dependencies "VeloEvent_linker_library"
+#
 private
-use GaudiObjDesc v*
+use GaudiObjDesc v* -no_auto_imports
