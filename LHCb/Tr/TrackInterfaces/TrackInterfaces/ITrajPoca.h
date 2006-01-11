@@ -38,7 +38,7 @@ public:
   // Retrieve the derivative with respect to the reference point
   // of the first ("1") trajectory
   const Gaudi::XYZVector derivative1() const;
-
+  
   // Retrieve the derivative with respect to the reference point
   // of the second ("2") trajectory
   const Gaudi::XYZVector derivative2() const;
