@@ -260,6 +260,7 @@
         desc      = 'container with pointers to all the states'
         access    = 'PROTECTED'
         setMeth   = 'FALSE'
+        nonconstaccessor = 'TRUE' 
         transient = 'TRUE' />
 
       <attribute

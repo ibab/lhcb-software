@@ -10,7 +10,7 @@
 
 
 !========================= TrackEvent v2r0 2006-01-11 ========================
->>>>>>> 1.56
+
 ! 2006-01-11 M. Needham
   - bug fix in SHacks.h
   - Bug fix in positionCovariance matrix calculation
