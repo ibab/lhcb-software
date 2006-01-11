@@ -102,6 +102,17 @@ void MBM::Consumer::addRequest(int evtype, int trmask[4], int vetomask[4], int m
   }
   throw std::runtime_error("Failed to add request to MBM buffer:"+m_buffName+" [Buffer not connected]");
 }
+void MBM::Consumer::delRequest(int evtype, int trmask[4], int vetomask[4], int masktype, int usertype)
+{
+  if ( m_bmid != (BMID)-1 ) {
+    int status = ::mbm_del_req(m_bmid,evtype,trmask,vetomask,masktype,usertype);
+    if ( status == MBM_NORMAL )  {
+      return;
+    }
+    throw std::runtime_error("Failed to delete request to MBM buffer:"+m_buffName+" [Internal Error]");
+  }
+  throw std::runtime_error("Failed to delete request to MBM buffer:"+m_buffName+" [Buffer not connected]");
+}
 
 int MBM::Consumer::getEventAsync() {
   if ( m_bmid != (BMID)-1 ) {

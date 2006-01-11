@@ -43,6 +43,9 @@ namespace MBM {
 
     /// Add request to event buffer
     void addRequest(int evtype, int trmask[4], int vetomask[4], int masktype, int usertype, int freqmode, float freq);
+    
+    /// Delete request to event buffer
+    void delRequest(int evtype, int trmask[4], int vetomask[4], int masktype, int usertype);
 
     /// Get synchronously event
     int getEvent();
