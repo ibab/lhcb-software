@@ -17,7 +17,7 @@
 #include "RTL/Lock.h"
 #include "bm_struct.h"
 #include "MBM/mepdef.h"
-#define MAGIC_PATTERN 0xFEEDBABE
+#define MAGIC_PATTERN int(0xFEEDBABE)
 
 struct MEPDESC : public _MEPID  {
   int             owner;
@@ -161,5 +161,5 @@ int mep_exclude (MEPID dsc)  {
 }
 
 int mep_magic_pattern()   {
-  return (int)MAGIC_PATTERN;
+  return MAGIC_PATTERN;
 }

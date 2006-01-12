@@ -1,5 +1,7 @@
 #include "MBM/Requirement.h"
 #include "MBM/bmdef.h"
+#include <ctype.h>
+#include <cstdio>
 
 /// Default constructor
 MBM::Requirement::Requirement () {
@@ -21,12 +23,12 @@ void MBM::Requirement::parse(const std::string& reqstring)
   char *items[20];
   int ikey=0;
   char rstr[1024];
-  strcpy(rstr,reqstring.c_str ( ));
-  token=strtok(rstr, ";");
+  ::strcpy(rstr,reqstring.c_str ( ));
+  token = ::strtok(rstr, ";");
   while (token!= NULL)  {
     items[ikey] = token;
     ikey++;
-    token = strtok(NULL,";");
+    token = ::strtok(NULL,";");
   }
   // Requirement format:
   // "EvType=x;TriggerMask=0xfeedbabe,0xdeadfeed,0xdeadbabe,0xdeadaffe;
@@ -35,19 +37,19 @@ void MBM::Requirement::parse(const std::string& reqstring)
   for(int i=0;i<ikey;i++)  {
     char* keyw = strtok(items[i],"=");
     for (unsigned int j=0;j<strlen(keyw);j++)  {
-      keyw[j] = toupper(keyw[j]);
+      keyw[j] = ::toupper(keyw[j]);
     }
     char* values = strtok(NULL,"=");
-    if (strcmp(keyw, "EVTYPE") == 0)    {
+    if ( ::strcmp(keyw, "EVTYPE") == 0 )    {
       sscanf(values,"%d",&evtype);
       continue;
     }
-    if (strcmp(keyw,"TRIGGERMASK") == 0)  {
+    if ( ::strcmp(keyw,"TRIGGERMASK") == 0 )  {
       char *v = strtok(values,",");
       memset(trmask, 0, sizeof(trmask));
       for (int j=0; v != 0 && j<4; j++)  {
-        sscanf(v,"%x",&trmask[j]);
-        v = strtok(NULL,",");
+        ::sscanf(v,"%x",&trmask[j]);
+        v = ::strtok(NULL,",");
       }
       continue;
     }

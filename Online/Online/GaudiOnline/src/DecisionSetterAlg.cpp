@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/GaudiOnline/src/DecisionSetterAlg.cpp,v 1.8 2006-01-12 12:02:57 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/GaudiOnline/src/DecisionSetterAlg.cpp,v 1.9 2006-01-12 12:56:34 frankb Exp $
 //	====================================================================
 //  DecisionSetterAlg.cpp
 //	--------------------------------------------------------------------
@@ -12,7 +12,7 @@
 #include "GaudiKernel/DataObject.h"
 #include "GaudiKernel/SmartDataPtr.h"
 #include "GaudiKernel/GenericAddress.h"
-#include "GaudiOnline/MepManager.h"
+#include "GaudiOnline/MEPManager.h"
 #include "MDF/RawEventDescriptor.h"
 #include "MBM/Producer.h"
 

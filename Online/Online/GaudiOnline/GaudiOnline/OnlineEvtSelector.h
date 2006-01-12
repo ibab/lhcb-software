@@ -1,4 +1,4 @@
-// $Id: OnlineEvtSelector.h,v 1.5 2006-01-12 12:02:57 frankb Exp $
+// $Id: OnlineEvtSelector.h,v 1.6 2006-01-12 12:56:34 frankb Exp $
 //====================================================================
 //  OnlineEvtSelector.h
 //--------------------------------------------------------------------
@@ -13,7 +13,7 @@
 //  Created    : 4/01/99
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/GaudiOnline/GaudiOnline/OnlineEvtSelector.h,v 1.5 2006-01-12 12:02:57 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/GaudiOnline/GaudiOnline/OnlineEvtSelector.h,v 1.6 2006-01-12 12:56:34 frankb Exp $
 
 #ifndef GAUDIONLINE_ONLINEEVTSELECTOR_H
 #define GAUDIONLINE_ONLINEEVTSELECTOR_H 1
@@ -25,7 +25,7 @@
 #include "GaudiKernel/ISvcLocator.h"
 #include "GaudiKernel/Service.h"
 #include "GaudiKernel/DataObject.h"
-#include "GaudiOnline/MepManager.h"
+#include "GaudiOnline/MEPManager.h"
 #include "MBM/Requirement.h"
 
 /*
