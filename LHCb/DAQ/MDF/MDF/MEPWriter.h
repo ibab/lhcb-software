@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/DAQ/MDF/MDF/MEPWriter.h,v 1.2 2006-01-10 09:43:16 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/DAQ/MDF/MDF/MEPWriter.h,v 1.3 2006-01-12 19:09:33 frankb Exp $
 //	====================================================================
 //  MEPWriter.h
 //	--------------------------------------------------------------------
@@ -11,6 +11,7 @@
 
 #include "MDF/MDFWriter.h"
 #include <map>
+
 /*
  *    LHCb namespace
  */

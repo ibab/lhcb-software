@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/DAQ/MDF/MDF/RawEventHelpers.h,v 1.4 2006-01-11 15:31:52 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/DAQ/MDF/MDF/RawEventHelpers.h,v 1.5 2006-01-12 19:09:33 frankb Exp $
 //	====================================================================
 //  MDFWriter.h
 //	--------------------------------------------------------------------
@@ -12,6 +12,7 @@
 // Framework include files
 #include "GaudiKernel/Kernel.h"
 #include "GaudiKernel/StatusCode.h"
+#include <map>
 #include "MDF/StreamDescriptor.h"
 // C++ includes
 #include <vector>
