@@ -1,0 +1,40 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!DOCTYPE gdd SYSTEM 'gdd.dtd'>
+
+<gdd>
+  <package name='MCEvent'>
+    <class name='MCOTTime' 
+	   location='/Event/MC/OT/Times' 
+	   id='8002' 
+	   author='Jeroen van Tilburg and Jacopo Nardulli' 
+	   desc='MCOTTime are constucted from the MCOTDeposits'>
+      <base name='KeyedObject&lt;LHCb::OTChannelID&gt;' />
+      <import name='Kernel/OTChannelID' />
+      <import name="Event/MCOTDeposit" soft="TRUE" /> 
+      <template name="KeyedObjectDict" t1="LHCb::OTChannelID" />
+      &KeyedContainer;
+      <constructor argList='LHCb::OTChannelID aChannel, SmartRefVector&lt;LHCb::MCOTDeposit&gt; deposits'
+                   initList='m_deposits(deposits)'
+		   desc='constructor with arguments'>
+        <code>  this->setKey(aChannel);</code>
+      </constructor>
+      <method type='LHCb::OTChannelID'
+	      name='channel' 
+	      const='TRUE' 
+	      desc='get the OTChannelID from the key'>
+        <code>return key();</code>
+      </method>
+      <method type='unsigned' 
+	      name='tdcTime' 
+	      const='TRUE' 
+	      desc='get the TDC-time from the OTChannelID'>
+        <code>return channel().tdcTime();</code>
+      </method>
+      <relation type='LHCb::MCOTDeposit' 
+		name='deposits'  
+		setMeth="FALSE" 
+		getMeth="TRUE" multiplicity='N' 
+		desc='References to all MCOTDeposits on this MCOTTime'/>
+    </class>
+  </package>
+</gdd>

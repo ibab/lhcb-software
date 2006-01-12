@@ -1,0 +1,68 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!DOCTYPE gdd SYSTEM 'gdd.dtd'>
+
+<gdd>
+  <package name="MCEvent">
+    <class name="MCOTDeposit" 
+	   location="/Event/MC/OT/Deposits" 
+	   id="8003" 
+	   author="Jeroen van Tilburg" 
+	   desc="MCOTDeposit are converted from the MC Hits"
+	   contObjectTypeDef="TRUE"
+	   stdVectorTypeDef="TRUE">
+      <base name="ContainedObject" />
+      &ContainedObject;
+      <import name="Kernel/OTChannelID" />
+      <import name="Event/MCHit" />
+      <constructor argList="LHCb::MCHit* aMCHit, LHCb::OTChannelID aChannel, double aTime, double aDistance, int ambiguity" 
+                   initList="m_channel(aChannel),m_time(aTime),m_driftDistance(aDistance),m_ambiguity(ambiguity),m_mcHit(aMCHit)"
+		   desc="constructor with arguments">
+        <code></code>
+      </constructor>
+      <method name="addTime" 
+	      argList="double aTime" 
+	      desc="add a time to the time">
+       <code>  m_time += aTime; </code>
+      </method>
+      <method type="void" 
+	      name="setTdcTime" 
+	      argList="unsigned tdcTime" 
+	      desc="set the TDC time in the OTChannelID">
+        <code> channel().setTdcTime(tdcTime); </code>
+      </method>
+      <method type="unsigned" 
+	      name="tdcTime" 
+	      const="TRUE" 
+	      desc="get the TDC-time from the OTChannelID">
+        <code> return channel().tdcTime(); </code>
+      </method>
+      <!-- Temporary hack: Won't compile without this method -->
+      <method type="LHCb::OTChannelID&amp;"
+	      name="channel"
+	      const="FALSE"
+	      desc="get the OTChannelID">
+        <code> return m_channel; </code>
+      </method>
+      <!-- ************************************************* -->
+      <attribute type="LHCb::OTChannelID"
+		 name="channel"
+		 setMeth="FALSE"
+		 getMeth="TRUE"
+		 desc="OTChannelID"/>
+      <attribute type="double" 
+		 name="time" 
+		 desc="time"/>
+      <attribute type="double" 
+		 name="driftDistance" 
+		 desc="Drift distance to wire (used for cheating)" />
+      <attribute type="int" 
+		 name="ambiguity" 
+		 desc="MC solution for the correct left/right ambiguity" />
+      <relation type="LHCb::MCHit" 
+		name="mcHit" 
+		setMeth="FALSE" 
+		getMeth="TRUE" 
+		desc="Reference to the MCHit which caused this MCOTDeposit"/>
+    </class>
+  </package>
+</gdd>
