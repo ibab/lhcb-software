@@ -8,7 +8,14 @@
 !
 !-----------------------------------------------------------------------------
 
-!===================== Tutorial/Analysis v6 2006-01-05 ======================#
+!===================== Tutorial/Analysis v5 2006-01-12 ======================#
+!===================== Tutorial/Analysis v5r0 2006-01-12 ======================#
+! 2006-01-12 P. Koppenburg
+  . corrected solution to exercises 2-6 
+    Added J/psi name for Jpsi2MuMu. Not necessary as it is the default... 
+    but inconsistent with solution2.
+  . set v5r0 in requirements
+
 ! 2006-01-10 P. Koppenburg
   corrected solution to exercise 3. 
 
@@ -25,7 +32,7 @@
   - solution{5,6}/*.*
     . Revisited for v12r15.
   
-!===================== Tutorial/Analysis v5 2005-11-15 ======================
+!===================== Tutorial/Analysis v4 2005-11-15 ======================
 ! 2005-11-07 - P. Koppenburg 
   - cmt/requirements
     . Revisited for v12r14.

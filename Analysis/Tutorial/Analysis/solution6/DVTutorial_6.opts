@@ -63,6 +63,7 @@ Jpsi2MuMu.MassWindow = 50*MeV ;
 Jpsi2MuMu.MaxChi2 = 100 ;
 Jpsi2MuMu.OutputLevel = 3 ;
 Jpsi2MuMu.HistoProduce = true ;
+Jpsi2MuMu.Particle = "J/psi(1S)" ;
 //
 // Phi->KK selection
 //

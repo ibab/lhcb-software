@@ -3,7 +3,7 @@
 # Maintainer : P. Koppenburg
 #============================================================================
 package           Analysis
-version           v5
+version           v5r0
 
 #============================================================================
 # Structure, i.e. directories to process. 
@@ -13,7 +13,7 @@ branches          cmt doc src options solution1 solution2 solution3 solution4 so
 #============================================================================
 # Used packages.
 #============================================================================
-use DaVinci       v12r15    Phys
+use DaVinci       v12r14  Phys
 
 #============================================================================
 # Use MC
