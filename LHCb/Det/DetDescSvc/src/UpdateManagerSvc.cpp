@@ -1,11 +1,14 @@
-// $Id: UpdateManagerSvc.cpp,v 1.2 2005-12-13 09:03:23 marcocle Exp $
+// $Id: UpdateManagerSvc.cpp,v 1.3 2006-01-12 13:15:25 marcocle Exp $
 // Include files 
+
 #include "GaudiKernel/SvcFactory.h"
 #include "GaudiKernel/IDetDataSvc.h"
 #include "GaudiKernel/IDataProviderSvc.h"
 #include "GaudiKernel/IRegistry.h"
 #include "GaudiKernel/GaudiException.h"
 #include "GaudiKernel/IIncidentSvc.h"
+//#include "GaudiKernel/ISvcLocator.h"
+#include "GaudiKernel/IEventProcessor.h"
 
 #include "DetDesc/ValidDataObject.h"
 
@@ -26,7 +29,8 @@ const ISvcFactory &UpdateManagerSvcFactory = s_factory;
 // Standard constructor, initializes variables
 //=============================================================================
 UpdateManagerSvc::UpdateManagerSvc(const std::string& name, ISvcLocator* svcloc):
-  Service(name,svcloc),m_dataProvider(NULL),m_detDataSvc(NULL),m_incidentSvc(NULL),m_head_since(1),m_head_until(-1)
+  Service(name,svcloc),m_dataProvider(NULL),m_detDataSvc(NULL),m_incidentSvc(NULL),m_evtProc(NULL),
+  m_head_since(1),m_head_until(-1)
 {
   declareProperty("DataProviderSvc", m_dataProviderName = "DetectorDataSvc");
   declareProperty("DetDataSvc",      m_detDataSvcName);
@@ -105,8 +109,15 @@ StatusCode UpdateManagerSvc::initialize(){
     m_incidentSvc->addListener(this,IncidentType::BeginEvent);
 		log << MSG::DEBUG << "Got pointer to IncidentSvc" << endmsg;
   } else {
-    log << MSG::WARNING << "Unable to register to the incident service." << endmsg;
+    log << MSG::ERROR << "Unable to register to the incident service." << endmsg;
     m_incidentSvc = NULL;
+    return sc;
+  }
+
+  sc = serviceLocator()->service("ApplicationMgr",m_evtProc);
+  if ( !sc.isSuccess() ) {
+    log << MSG::ERROR << "Cannot find an event processor." << endmsg;
+    return sc;
   }
   
 	return StatusCode::SUCCESS;
@@ -114,7 +125,6 @@ StatusCode UpdateManagerSvc::initialize(){
 
 StatusCode UpdateManagerSvc::finalize(){
 	// local finalization
-	// TODO: finalization to be implemented
 	
 	MsgStream log(msgSvc(),name());
 	log << MSG::DEBUG << "--- finalize ---" << endmsg;
@@ -129,6 +139,7 @@ StatusCode UpdateManagerSvc::finalize(){
     m_incidentSvc->removeListener(this,IncidentType::BeginEvent);
     m_incidentSvc->release();
   }
+  if (m_evtProc != NULL) m_evtProc->release();
 
 	// base class finalization
 	return Service::finalize();
@@ -142,7 +153,8 @@ IDataProviderSvc *UpdateManagerSvc::dataProvider() const {
 IDetDataSvc *UpdateManagerSvc::detDataSvc() const {
 	return m_detDataSvc;
 }
-StatusCode UpdateManagerSvc::i_registerCondition(const std::string &condition, BaseObjectMemberFunction *mf){
+void UpdateManagerSvc::i_registerCondition(const std::string &condition, BaseObjectMemberFunction *mf,
+                                           BasePtrSetter *ptr_dest){
 	MsgStream log(msgSvc(),name());
 //   if (condition.empty()) {
 //     log << MSG::WARNING << "Ignoring request for no condition (empty string given)" << endmsg;
@@ -168,9 +180,15 @@ StatusCode UpdateManagerSvc::i_registerCondition(const std::string &condition, B
     // find the condition
     Item *cond_item = findItem(condition);
     if (!cond_item){ // a new condition
-      cond_item = new Item(condition);
+      cond_item = new Item(condition,ptr_dest);
       m_all_items.push_back(cond_item);
     } else {
+      if (ptr_dest){
+        // I already have this condition registered, but a new user wants to set the pointer to it.
+        cond_item->user_dest_ptrs.push_back(ptr_dest);
+        // Let's check if the object is already loaded (the pointers are set by Item only when it loads them)
+        if (cond_item->vdo) { ptr_dest->set(cond_item->vdo); }
+      }
       if (cond_item->isHead()) removeFromHead(cond_item);
     }
     link(mf_item,mf,cond_item);
@@ -191,17 +209,15 @@ StatusCode UpdateManagerSvc::i_registerCondition(const std::string &condition, B
   // a new item means that we need an update
   m_head_since = 1;
   m_head_until = -1;
-    
-	return StatusCode::SUCCESS;
 }
-StatusCode UpdateManagerSvc::i_registerCondition(void *obj, BaseObjectMemberFunction *mf){
+void UpdateManagerSvc::i_registerCondition(void *obj, BaseObjectMemberFunction *mf){
 	MsgStream log(msgSvc(),name());
 	log << MSG::DEBUG << "registering object at " << std::hex << obj << std::dec
 	    << " for object of type " << mf->type().name() << endmsg;
   // find the "condition"
   Item *cond_item = findItem(obj);
   if (!cond_item){ // Error!!!
-    throw std::runtime_error("tried to register for an object not in the UpdateManagerSvc");
+    throw UpdateManagerException("tried to register for an object not in the UpdateManagerSvc");
   } else {
     if (cond_item->isHead()) removeFromHead(cond_item);
     }
@@ -216,7 +232,6 @@ StatusCode UpdateManagerSvc::i_registerCondition(void *obj, BaseObjectMemberFunc
   // a new item means that we need an update
   m_head_since = 1;
   m_head_until = -1;
-	return StatusCode::SUCCESS;
 }
 StatusCode UpdateManagerSvc::newEvent(){
 	if (detDataSvc() != NULL){
@@ -311,7 +326,7 @@ void UpdateManagerSvc::i_invalidate(void *instance){
   }
 }
 
-StatusCode UpdateManagerSvc::i_unregister(void *instance){
+void UpdateManagerSvc::i_unregister(void *instance){
   if ( m_outputLevel <= MSG::DEBUG ) {
     MsgStream log(msgSvc(),name());
     log << MSG::DEBUG << "Unregister object at " << instance << endmsg;
@@ -345,7 +360,6 @@ StatusCode UpdateManagerSvc::i_unregister(void *instance){
     m_all_items.erase(std::find(m_all_items.begin(),m_all_items.end(),item));
     delete item;
   }
-  return StatusCode::SUCCESS;
 }
 
 void UpdateManagerSvc::dump(){
@@ -389,7 +403,7 @@ void UpdateManagerSvc::dump(){
 }
 
 //=========================================================================
-//  search the item with the given path and change its validity
+//  search the item with the given path and get its validity
 //=========================================================================
 bool UpdateManagerSvc::getValidity(const std::string path, TimePoint& since, TimePoint &until,
                                    bool path_to_db) {
@@ -443,7 +457,10 @@ void UpdateManagerSvc::handle(const Incident &inc) {
     log << MSG::DEBUG << "New BeginEvent incident received" << endmsg;
     StatusCode sc = UpdateManagerSvc::newEvent();
     if (!sc.isSuccess()) {
-      throw GaudiException("Failed to preform the update",name()+"Exception",sc);
+      log << MSG::FATAL << "***** The update failed. I schedule a stop of the run *****" << endmsg;
+      m_evtProc->stopRun();
+      // The exception is ignored by the IncidentSvc
+      // throw UpdateManagerException("Failed to preform the update","*UpdateManagerSvc*",sc);
     }
   }
 }

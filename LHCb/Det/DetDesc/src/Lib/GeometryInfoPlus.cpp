@@ -1,4 +1,4 @@
-// $Id: GeometryInfoPlus.cpp,v 1.14 2005-12-08 10:36:14 jpalac Exp $
+// $Id: GeometryInfoPlus.cpp,v 1.15 2006-01-12 13:14:36 marcocle Exp $
 // Include files 
 
 // GaudiKernel
@@ -471,9 +471,10 @@ StatusCode GeometryInfoPlus::getAlignmentCondition()
 StatusCode GeometryInfoPlus::registerCondition() 
 {
   log() << MSG::VERBOSE << "registerCondition" << endmsg;
-  return m_ums->registerCondition(this, 
-                                  m_alignmentPath, 
-                                  &GeometryInfoPlus::cache);
+  m_ums->registerCondition(this, 
+                           m_alignmentPath, 
+                           &GeometryInfoPlus::cache);
+  return StatusCode::SUCCESS;  
 }
 //=============================================================================
 StatusCode GeometryInfoPlus::registerSupportGI() 
@@ -485,15 +486,13 @@ StatusCode GeometryInfoPlus::registerSupportGI()
 //     StatusCode::SUCCESS;
   if (gi) {
     log() << MSG::VERBOSE << "register parent GI!" << endmsg;
-    StatusCode sc = m_ums->registerCondition(this, gi, &IGeometryInfo::cache);
+    m_ums->registerCondition(this, gi, &IGeometryInfo::cache);
     log() << MSG::VERBOSE << "Registered" << endmsg;
-    return sc;
   } else {
     log() << MSG::VERBOSE << "No parent " << endmsg;
-    return StatusCode::SUCCESS;
   }
   
-  
+  return StatusCode::SUCCESS;  
 }
 //=============================================================================
 const Gaudi::Transform3D& GeometryInfoPlus::localIdealMatrix() const

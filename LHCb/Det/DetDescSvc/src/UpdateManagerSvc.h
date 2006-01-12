@@ -1,4 +1,4 @@
-// $Id: UpdateManagerSvc.h,v 1.2 2005-12-13 09:03:23 marcocle Exp $
+// $Id: UpdateManagerSvc.h,v 1.3 2006-01-12 13:15:25 marcocle Exp $
 #ifndef UPDATEMANAGERSVC_H 
 #define UPDATEMANAGERSVC_H 1
 
@@ -10,7 +10,8 @@
 #include "GaudiKernel/IIncidentListener.h"
 #include "GaudiKernel/MsgStream.h"
 
-#include "DetDesc/IUpdateManagerSvc.h"
+#include "GaudiKernel/IUpdateManagerSvc.h"
+#include "GaudiKernel/UpdateManagerException.h"
 
 #include <string>
 #include <map>
@@ -20,6 +21,7 @@
 // Forward declarations
 template <class TYPE> class SvcFactory;
 class IIncidentSvc;
+class IEventProcessor;
 
 /** @class UpdateManagerSvc UpdateManagerSvc.h
  *  
@@ -73,20 +75,24 @@ public:
 protected:
 
   /// Register a condition for an object
-  virtual StatusCode i_registerCondition(const std::string &condition, BaseObjectMemberFunction *mf);
+  //  virtual StatusCode i_registerCondition(const std::string &condition, BaseObjectMemberFunction *mf);
+
+  /// Register a condition for an object together with the destination for the pointer to the condition object.
+  virtual void i_registerCondition(const std::string &condition, BaseObjectMemberFunction *mf,
+                                         BasePtrSetter *ptr_dest = NULL);
 
   /// Register a condition for an object
-  virtual StatusCode i_registerCondition(void *obj, BaseObjectMemberFunction *mf);
+  virtual void i_registerCondition(void *obj, BaseObjectMemberFunction *mf);
 
   /// Used to force an update of the given instance (ex. when the object is created during an event).
   virtual StatusCode i_update(void *instance);
 
   /// Used to remove an object from the dependency network. 
   /// \warning{Removing an object is dangerous}
-  virtual StatusCode i_unregister(void *instance);
+  virtual void i_unregister(void *instance);
 
   /// Force an update of all the object depending on the given one for the next event.
-  virtual void       i_invalidate(void *instance);
+  virtual void i_invalidate(void *instance);
 
 private:
 
@@ -124,6 +130,9 @@ private:
 
   /// Pointer to the incident service;
   IIncidentSvc     *m_incidentSvc;
+
+  /// Pointer to the event processor in order to be able to top the run if something goes wrpong during an update.
+  IEventProcessor  *m_evtProc;
 
   /// List used to keep track of all the registered items.
   Item::ItemList    m_all_items;

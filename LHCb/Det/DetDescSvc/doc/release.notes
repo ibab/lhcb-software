@@ -1,10 +1,19 @@
 ! =============================================================================
-! $Id: release.notes,v 1.4 2005-12-13 10:34:12 cattanem Exp $ 
+! $Id: release.notes,v 1.5 2006-01-12 13:15:25 marcocle Exp $ 
 ! =============================================================================
 ! package DetDescSvc
 ! package manager : Marco Clemencic, Juan Palacios ?
 ! purpose:          Component library for Detector Description Services
 ! =============================================================================
+
+! 2005-01-12 - Marco Clemencic
+ ### requires GaudiKernel >= v20r2 ###
+ - UpdateManagerSvc improved: now it can set a user provided pointer to the
+   condition object
+ - IUpdateManagerSvc.h moved to GaudiKernel
+ - New exception UpdateManagerException introduced. It is thrown when the
+   registration fails. As a consequence, IUpdateManagerSvc::registerCondition
+   methods do not return anymore a StatusCode.
 
 !========================= DetDescSvc v1r1 2005-12-13 =========================
 ! 2005-12-13 - Marco Clemencic

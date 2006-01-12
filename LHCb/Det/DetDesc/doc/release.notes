@@ -1,9 +1,13 @@
 ! =============================================================================
-! $Id: release.notes,v 1.245 2005-12-09 09:31:40 cattanem Exp $ 
+! $Id: release.notes,v 1.246 2006-01-12 13:14:36 marcocle Exp $ 
 ! =============================================================================
 ! package DetDesc
 ! package manager : Marco Clemencic, Juan Palacios
 ! =============================================================================
+
+! 2006-01-12 - Marco Clemencic
+ ### requires GaudiKernel >= v20r2 ###
+ - IUpdateManagerSvc.h has been moved to GaudiKernel
 
 !======================== DetDesc v16r1 2005-12-09 ========================
 ! 2005-12-08 - Juan Palacios
