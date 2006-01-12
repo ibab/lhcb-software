@@ -3,8 +3,9 @@
 #include "WT/wt_facilities.h"
 #include "MDF/RawEventHelpers.h"
 #include "MDF/RawEventDescriptor.h"
+#include <map>
 
-namespace {
+namespace  {
   static void help()  {
     ::printf("mep_evtprod -opt [-opt]\n");
     ::printf("    -n(ame)=<name>         buffer member name\n");
@@ -12,21 +13,20 @@ namespace {
     ::printf("    -p(artition)=<number>  Partition ID\n");
   }
   struct EVENTGenerator  : public MEP::Consumer  {
-    typedef std::vector<LHCb::MEPFragment*>    Fragments;
-    typedef std::map<unsigned int, Fragments > Events;
-    bool prt;
-
+    typedef std::vector<LHCb::MEPFragment*> Frags;
+    typedef std::map<unsigned int, std::vector<LHCb::MEPFragment*> >  SubEvents;
+    int prt;
     MBM::Producer* m_evtProd;
     EVENTGenerator(const std::string& nam, int partID)
     : MEP::Consumer(nam, partID), m_evtProd(0)
     {
-      prt = false;
+      prt = 0;
       unsigned int vetomask[4] = {0,0,0,0};
       unsigned int trmask[4]   = {~0x0,~0x0,~0x0,~0x0};
       m_flags = USE_EVT_BUFFER|USE_MEP_BUFFER;
       include();
       m_bmid = m_mepID->mepBuffer;
-      m_evtProd = new MBM::Producer(m_mepID->evtBuffer, nam, partitionID());
+      m_evtProd = new(::operator new(sizeof(MBM::Producer)+4)) MBM::Producer((BMID)m_mepID->evtBuffer, nam, partitionID());
       addRequest(EVENT_TYPE_MEP,trmask,vetomask,BM_MASK_ANY,BM_REQ_VIP,BM_FREQ_PERC,100.);
       ::printf(" MEP    buffer start: %08X\n",m_mepID->mepStart);
       ::printf(" EVENT  buffer start: %08X\n",m_mepID->evtStart);
@@ -34,18 +34,18 @@ namespace {
       mbm_register_free_event(m_bmid, 0, 0);
       mbm_register_alloc_event(m_mepID->evtBuffer,0,0);
     }
-    ~EVENTGenerator()  {
+    virtual ~EVENTGenerator()  {
       if ( m_evtProd ) delete m_evtProd;
     }
-    void declareSubEvents(const EventDesc& evt, Events& events)  {
+    virtual void declareSubEvents(const EventDesc& evt, SubEvents& events)  {
       if ( prt ) ::printf("Declare MEP....\n");
-      for(Events::const_iterator i=events.begin(); i!=events.end(); ++i)  {
+      for(SubEvents::const_iterator i=events.begin(); i!=events.end(); ++i)  {
         declareSubEvent(evt, (*i).second);
       }
     }
-    void declareSubEvent(const EventDesc& evt, const Fragments& frags)  {
+    virtual void declareSubEvent(const EventDesc& evt, const Frags& frags)  {
       int sub_evt_len = LHCb::RawEventHeader::size(frags.size());
-      if ( prt ) ::printf("0-Declare MEP fragment....\n");
+      if ( prt ) ::printf("0-Declare MEP fragment [%d]....\n",sub_evt_len);
       if ( m_evtProd->getSpace(sub_evt_len) == MBM_NORMAL ) {
         if ( prt ) ::printf("1-Declare MEP fragment....\n");
         EventDesc& e = m_evtProd->event();
@@ -73,21 +73,22 @@ namespace {
         ::printf("Space error !\n");
       }
     }
-    int eventAction() {
-      Events events;
-      unsigned int partID = 0;
-      const EventDesc& evt = event();
+    virtual int eventAction() {
+      unsigned int pid = 0;
+      const EventDesc& evt = Consumer::event();
+      std::map<unsigned int, std::vector<LHCb::MEPFragment*> > events;
       MEPEVENT* ev = (MEPEVENT*)evt.data;
       LHCb::MEPEvent* me = (LHCb::MEPEvent*)ev->data;
-      //printf("Data:%p\n",ev);
-      decodeMEP2EventFragments(me, partID, events);
+      decodeMEP2EventFragments(me, pid, events);
       if ( ev->magic != mep_magic_pattern() )  {
         ::printf("Bad MEP magic pattern!!!!\n");
       }
       // Increasing refcount in big chunk and avoid callback on m_evtProd->getSpace
-      ev->refCount += (events.size()-1);
+      ev->refCount += events.size();
       declareSubEvents(evt, events);
-      return Consumer::eventAction();
+      int sc = Consumer::eventAction();
+      ev->refCount--;
+      return sc;
     }
   };
 }
@@ -101,6 +102,7 @@ extern "C" int mep2event_prod(int argc,char **argv) {
   cli.getopt("partitionid",1,partID);
   ::printf("%synchronous MEP Event generator \"%s\" (pid:%d) included in buffers.\n",
 	   async ? "As" : "S", name.c_str(),EVENTGenerator::pid());
+  //_asm int 3
   EVENTGenerator c(name,partID);
   if ( async ) c.setNonBlocking(WT_FACILITY_DAQ_EVENT, true);
   return c.run();

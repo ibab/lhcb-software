@@ -163,9 +163,11 @@ int MBM::Consumer::freeEvent() {
 // Run the application in synchonous mode
 int MBM::Consumer::runSynchronous() {
   int sc = eventRearm();
+  //::printf("Finished consumer rearm...\n");
   if ( sc != MBM_NORMAL ) {
     return sc;
   }
+  //::printf("Start Consumer Action..\n");
   sc = eventAction();
   if ( sc != MBM_NORMAL ) {
     return sc;

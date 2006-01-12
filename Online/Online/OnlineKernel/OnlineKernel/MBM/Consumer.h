@@ -29,9 +29,6 @@ namespace MBM {
     /// Static event receival rearm
     static int eventRearm(unsigned int facility, void* param);
 
-    /// The event descriptor
-    EventDesc  m_event;
-
   public:
     /// Initializing constructor
     Consumer(const std::string& buffer_name, const std::string& client_name, int partition_id);

@@ -16,20 +16,26 @@ namespace MBM {
     int  type;
     unsigned int  mask[4];
     EventDesc() : data(0), len(0), type(0) {
-      mask[0] = mask[1] = mask[2] = mask[4] = 0;
+      mask[0] = mask[1] = mask[2] = mask[3] = 0;
     }
   };
 
   class Client {
   protected:
+    /// Buffer identifier
     BMID         m_bmid;
+    /// Buffer name
     std::string  m_buffName;
+    /// Process name
     std::string  m_name;
+    /// Partition ID
     int          m_partID;
     /// Facility code for asynchronous operation
     unsigned int m_facility;
     /// Flag to run in blocking mode
     bool         m_blocking;
+    /// The event descriptor
+    EventDesc    m_event;
 
   public:
     /// Initializing constructor

@@ -10,7 +10,6 @@ namespace MBM {
 
   class Producer : public Client  {
   protected:
-
     /// Static Ast to be called on event receival (call virtual getEventAst)
     static int spaceAst(void* param);
 
@@ -19,9 +18,6 @@ namespace MBM {
 
     /// Static event receival rearm
     static int spaceRearm(unsigned int facility, void* param);
-
-    /// The event descriptor
-    EventDesc  m_event;
 
   public:
     /// Initializing constructor
@@ -57,10 +53,10 @@ namespace MBM {
     virtual int sendSpace();
 
     /// Get space call to fill event data
-    int getSpace(int len);
+    virtual int getSpace(int len);
 
     /// Send and declare event to consumers
-    int sendEvent();
+    virtual int sendEvent();
   };
 }
 #endif  // _MBM_CONSUMER_H

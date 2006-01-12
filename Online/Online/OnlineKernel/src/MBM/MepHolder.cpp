@@ -52,7 +52,7 @@ extern "C" int mep_holder_a(int argc,char **argv) {
   bool async = cli.getopt("asynchronous",1) != 0;
   cli.getopt("name",1,name);
   cli.getopt("partitionid",1,partID);
-  ::printf("%ssynchronous MEP Holder \"%s\" (pid:%d) included in buffers.\n",
+  ::printf("%synchronous MEP Holder \"%s\" (pid:%d) included in buffers.\n",
 	   async ? "As" : "S", name.c_str(),Holder::pid());
   Holder c(name, partID);
   if ( async ) c.setNonBlocking(WT_FACILITY_DAQ_EVENT, true);

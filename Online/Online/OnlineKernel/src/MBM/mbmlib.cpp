@@ -130,7 +130,7 @@ public:
     }
 #endif
     m_status = _mbm_unlock_tables(m_bm);
-    if ( !(1&m_status) )  {
+    if ( !(m_status&1) )  {
       lib_rtl_signal_message(LIB_RTL_OS,"%5d: UNLOCK: System Lock error on BM tables\n",lib_rtl_pid());
     }
   }
@@ -1273,15 +1273,21 @@ Again:
     _mbm_printf("Wait...lib_rtl_wait_for_event");
     sc = lib_rtl_wait_for_event(bm->WEV_event_flag);
   }
+  _mbm_printf("Got event: sc = %d",sc);
   if ( lib_rtl_is_success(sc) )  {
+    _mbm_printf("...Lock");
     Lock lock(bm);
+    _mbm_printf("...Done...Clear event");
     lib_rtl_clear_event(bm->WEV_event_flag);
+    _mbm_printf("...Done.");
     if (us->held_eid == -1)    {
       goto Again;
     }
     us->reason = BM_K_INT_EVENT;
     us->get_wakeups++;
+    _mbm_printf("...Run AST(%08X)",us->c_astpar);
     lib_rtl_run_ast(us->c_astadd, us->c_astpar, 3);
+    _mbm_printf("...Done.");
     us->c_state = S_active;
     return MBM_NORMAL;
   }
