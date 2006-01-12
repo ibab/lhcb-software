@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/DAQ/MDF/MDF/RawEventDescriptor.h,v 1.2 2006-01-10 09:43:16 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/DAQ/MDF/MDF/RawEventDescriptor.h,v 1.3 2006-01-12 12:04:31 frankb Exp $
 //	====================================================================
 //  MDFWriter.h
 //	--------------------------------------------------------------------
@@ -81,6 +81,7 @@ namespace LHCb    {
     void setMepBuffer(void* val)  { m_mepPtr = (char*)val;                     }
     int numberOfFragments() const { return header()->numberOfFragments();      }
     _F* fragment(int i) const  {   return (_F*)(m_mepPtr+header()->offset(i)); }
+    int offset(int which)   const {  return header()->offset(which);           }
   };
 }      // End namespace LHCb
 #endif // MDF_RAWEVENTDESCRIPTOR_H
