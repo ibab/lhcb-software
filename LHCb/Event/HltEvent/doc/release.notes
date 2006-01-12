@@ -1,8 +1,11 @@
 !-----------------------------------------------------------------------------
 ! Package     : Event/HltEvent
-! Responsible : Olivier Callot
+! Responsible : Jose A. Hernando
 ! Purpose     : Event model for HLT tracks
 !-----------------------------------------------------------------------------
+
+! 2006-01-12 - Jose A. Hernando
+	- cleaning the package to be use for the 1 MHz readout 
 
 !======================== HltEvent v5r0 2003-12-16 ========================
 ! 2003-12-16 - Marco Cattaneo
