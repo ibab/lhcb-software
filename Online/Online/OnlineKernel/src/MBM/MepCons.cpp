@@ -7,13 +7,15 @@
 
 namespace {
   static void help()  {
-    ::printf("mep_prod_a -opt [-opt]\n");
-    ::printf("    -n=<name>      buffer member name\n");
-    ::printf("    -i=<name>      input buffer name\n");
-    ::printf("    -a             Asynchonous mode (default is synchronous)\n");
+    ::printf("mep_cons_a -opt [-opt]\n");
+    ::printf("    -n=<name>              buffer member name\n");
+    ::printf("    -i=<name>              input buffer name\n");
+    ::printf("    -p(artition)=<number>  Partition ID\n");
+    ::printf("    -a                     Asynchonous mode (default is synchronous)\n");
   }
   struct Cons : public MEP::Consumer  {
-    Cons(const std::string& nam, const std::string& input) : MEP::Consumer(nam, 0x103)
+    Cons(const std::string& nam, const std::string& input, int pid)
+    : MEP::Consumer(nam, pid)
     {
       m_flags = 0;
       switch(::toupper(input[0]))  {
@@ -55,7 +57,7 @@ namespace {
       MEP_SINGLE_EVT* ev = (MEP_SINGLE_EVT*)evt.data;
       MEPEVENT*       e  = (MEPEVENT*)(int*)(m_mepID->mepStart + ev->begin);
       if ( e->valid == 0 ) {
-	      ::printf("Found invalid MEP: %p [%d]\n",(void*)e,e->mepBufferID);
+        ::printf("Found invalid MEP: %p [%d]\n",(void*)e,e->mepBufferID);
       }
       return Consumer::eventAction();
     }
@@ -64,13 +66,15 @@ namespace {
 
 extern "C" int mep_cons_a(int argc,char **argv) {
   RTL::CLI cli(argc, argv, help);
+  int partID = 0x103;
   std::string name = "consumer", input="MEP";
   bool async = cli.getopt("asynchronous",1) != 0;
   cli.getopt("name",1,name);
   cli.getopt("input",1,input);
+  cli.getopt("partitionid",1,partID);
   ::printf("%synchronous MEP Consumer \"%s\" (pid:%d) included in buffers.\n",
 	   async ? "As" : "S", name.c_str(),Cons::pid());
-  Cons c(name,input);
+  Cons c(name,input,partID);
   if ( async ) c.setNonBlocking(WT_FACILITY_DAQ_EVENT, true);
   return c.run();
 }

@@ -6,15 +6,16 @@
 namespace {
    static void help()  {
     ::printf("mbm_cons_a -opt [-opt]\n");
-    ::printf("    -n=<name>      buffer member name\n");
-    ::printf("    -s=<number>    sleep interval between events [milli seconds]\n");
-    ::printf("    -b=<name>      Buffer identifier \n");
-    ::printf("    -q             Quiet mode (do not print trigger number mismatch)\n");
+    ::printf("    -n=<name>              buffer member name\n");
+    ::printf("    -s=<number>            sleep interval between events [milli seconds]\n");
+    ::printf("    -b=<name>              Buffer identifier \n");
+    ::printf("    -p(artition)=<number>  Partition ID\n");
+    ::printf("    -q                     Quiet mode (do not print trigger number mismatch)\n");
   }
   struct Cons : public MBM::Consumer  {
     int nbad, trnumber, quiet;
-    Cons(const std::string& buff,const std::string& nam, bool q) 
-      : MBM::Consumer(buff,nam,0x103), nbad(0), trnumber(-1), quiet(q) {
+    Cons(const std::string& buff,const std::string& nam, int pid, bool q) 
+      : MBM::Consumer(buff,nam,pid), nbad(0), trnumber(-1), quiet(q) {
       unsigned int vetomask[4] = {0,0,0,0};
       unsigned int trmask[4]   = {~0x0,~0x0,~0x0,~0x0};
       addRequest(1,trmask,vetomask,BM_MASK_ANY,BM_REQ_VIP,BM_FREQ_PERC,100.);
@@ -40,11 +41,13 @@ namespace {
 extern "C" int mbm_cons_a(int argc,char **argv) {  
   RTL::CLI cli(argc, argv, help);
   std::string name = "consumer", buffer="0";
+  int partID = 0x103;
   bool quiet = cli.getopt("quiet",1) != 0;
   cli.getopt("name",1,name);
   cli.getopt("buffer",1,buffer);
+  cli.getopt("partitionid",1,partID);
   int status = wtc_init();
   if( status != WT_SUCCESS ) exit(status);
   ::printf("Asynchronous Consumer \"%s\" (pid:%d) running in buffer:\"%s\"\n",name.c_str(),Cons::pid(),buffer.c_str());
-  return Cons(buffer,name,quiet).run();
+  return Cons(buffer,name,partID,quiet).run();
 }

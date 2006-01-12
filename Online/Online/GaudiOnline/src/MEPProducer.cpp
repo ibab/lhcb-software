@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/GaudiOnline/src/MEPProducer.cpp,v 1.4 2006-01-12 12:02:57 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/GaudiOnline/src/MEPProducer.cpp,v 1.5 2006-01-12 13:41:39 frankb Exp $
 //	====================================================================
 //  RawBufferCreator.cpp
 //	--------------------------------------------------------------------
@@ -91,7 +91,7 @@ namespace {
       int status = receiveEvent(ev->data, m_spaceSize-sizeof(MEPEVENT), evtLen);
       if ( status == MBM_NORMAL )  {
         m_event.len = evtLen+sizeof(MEPEVENT)-sizeof(ev->data);
-        m_event.mask[0] = 0x103;
+        m_event.mask[0] = partitionID();
         m_event.mask[1] = 0;
         m_event.mask[2] = 0;
         m_event.mask[3] = 0;

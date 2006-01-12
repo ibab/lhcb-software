@@ -63,7 +63,7 @@ namespace {
         e.mask[1] = evt.mask[1];
         e.mask[2] = evt.mask[2];
         e.mask[3] = evt.mask[3];
-        e.type    = evt.type;
+        e.type    = EVENT_TYPE_EVENT;
         e.len     = sub_evt_len;
         if ( prt ) ::printf("2-Declare MEP fragment....\n");
         m_evtProd->sendEvent();
