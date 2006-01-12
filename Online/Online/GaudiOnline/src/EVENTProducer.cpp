@@ -26,7 +26,7 @@ namespace  {
       m_flags = USE_EVT_BUFFER|USE_MEP_BUFFER;
       include();
       m_bmid = m_mepID->mepBuffer;
-      m_evtProd = new(::operator new(sizeof(MBM::Producer)+4)) MBM::Producer((BMID)m_mepID->evtBuffer, nam, partitionID());
+      m_evtProd = new MBM::Producer((BMID)m_mepID->evtBuffer, nam, partitionID());
       addRequest(EVENT_TYPE_MEP,trmask,vetomask,BM_MASK_ANY,BM_REQ_VIP,BM_FREQ_PERC,100.);
       ::printf(" MEP    buffer start: %08X\n",m_mepID->mepStart);
       ::printf(" EVENT  buffer start: %08X\n",m_mepID->evtStart);
