@@ -1,25 +1,23 @@
-! $Id: release.notes,v 1.36 2006-01-11 13:30:15 szumlat Exp $
+! $Id: release.notes,v 1.37 2006-01-12 09:32:59 cattanem Exp $
 package Event/VeloEvent
 package manager: C.Parkes, T.Szumlak
 
-!====================== VeloEvent v15r0 2006-01-07 =======================
+!====================== VeloEvent v14r0 2006-01-12 =======================
+! 2006-01-12 - Marco Cattaneo
+ - Move MCVeloFE to MCEvent package. This removed dependency on MCEvent
+
   2006-01-07 - Tomasz Szumlak
  - Remove all CLHEP dependencies 
  - move all objects to LHCb namespace
  - using new LHCbEnv v20r0
 
-!====================== VeloEvent v14r0 2005-12-16 ========================
 ! 2005-12-16 - Tomasz Szumlak 
  - Revision of the Velo Event Model, VeloFullFPGA is a private data class
    which resides in the VeloAlgorithms package
  - Move from MCVeloHit to common MCHit
 
-! 2005-10-20 - Tomasz Szumlak & Chris Parkes
- - VeloFullDigit was removed
- - Two new objects VeloFullFPGADigit and VeloDigit are created
-
 ! 2005-10-27 - Mark Tobin (for Tomasz)
- - Removed static memeber from VeloEvent class
+ - Removed static member from VeloEvent class
 
 ! 2005-10-20 - Tomasz Szumlak & Chris Parkes
  - VeloFullDigit was removed
