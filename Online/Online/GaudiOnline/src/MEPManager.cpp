@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/GaudiOnline/src/MEPManager.cpp,v 1.2 2006-01-10 13:56:32 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/GaudiOnline/src/MEPManager.cpp,v 1.3 2006-01-12 12:02:57 frankb Exp $
 //	====================================================================
 //  MEPManager.cpp
 //	--------------------------------------------------------------------
@@ -9,6 +9,7 @@
 #include "GaudiKernel/DeclareFactoryEntries.h"
 #include "GaudiKernel/MsgStream.h"
 #include "GaudiOnline/MEPManager.h"
+#include "RTL/rtl.h"
 #include <stdexcept>
 
 LHCb::MEPManager* s_manager = 0;
@@ -17,7 +18,7 @@ LHCb::MEPManager* manager()  {
 }
 
 LHCb::MEPManager::MEPManager(const std::string& nam, ISvcLocator* loc)    
-: Service(nam, loc), m_mepID(0), m_partitionID(0x103)
+: Service(nam, loc), m_mepID(MEP_INV_DESC), m_partitionID(0x103)
 {
   s_manager = this;
   declareProperty("Buffers",     m_buffers);
@@ -68,10 +69,18 @@ StatusCode LHCb::MEPManager::initialize()  {
         return error("Unknown buffer name:"+(*i));
     }
   }
+  if ( m_procName.empty() )  {
+    char txt[64];
+    ::lib_rtl_get_process_name(txt, sizeof(txt));
+    m_procName = txt;
+  }
   m_mepID = mep_include(m_procName.c_str(), m_partitionID, flags);
   if ( m_mepID == MEP_INV_DESC )  {
     return error("Failed to include into MEP buffers!");
   }
+  ::printf(" MEP    buffer start: %08X\n",m_mepID->mepStart);
+  ::printf(" EVENT  buffer start: %08X\n",m_mepID->evtStart);
+  ::printf(" RESULT buffer start: %08X\n",m_mepID->resStart);
   return StatusCode::SUCCESS;
 }
 

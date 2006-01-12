@@ -54,13 +54,13 @@ namespace MBM {
     void addRequest(const Requirement& req);
     
     /// Add request to event buffer
-    void addRequest(int evtype, const int trmask[4], const int vetomask[4], int masktype, int usertype, int freqmode, float freq);
+    void addRequest(int evtype, const unsigned int trmask[4], const unsigned int vetomask[4], int masktype, int usertype, int freqmode, float freq);
     
     /// Delete request to event buffer
     void delRequest(const Requirement& req);
 
     /// Delete request to event buffer
-    void delRequest(int evtype, const int trmask[4], const int vetomask[4], int masktype, int usertype);
+    void delRequest(int evtype, const unsigned int trmask[4], const unsigned int vetomask[4], int masktype, int usertype);
 
     /// Get synchronously event
     int getEvent();

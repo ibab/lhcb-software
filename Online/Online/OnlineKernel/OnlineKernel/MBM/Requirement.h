@@ -17,8 +17,8 @@ namespace MBM {
   class Requirement   {
   public:
     int evtype;
-    int trmask[4];
-    int vetomask[4];
+    unsigned int trmask[4];
+    unsigned int vetomask[4];
     int userType;
     int freqType;
     int maskType;

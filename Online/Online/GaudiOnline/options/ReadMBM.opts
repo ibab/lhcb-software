@@ -1,0 +1,17 @@
+ApplicationMgr.HistogramPersistency  = "NONE";
+ApplicationMgr.ExtSvc                = { "LHCb::MEPManager/MEPManager", "LHCb::OnlineEvtSelector/EventSelector" };
+ApplicationMgr.DLLs                  = { "DAQEvent", "MDF", "GaudiOnline"};
+ApplicationMgr.TopAlg                = { "StoreExplorerAlg", "LHCb::DecisionSetterAlg/DecisionSetter" };
+StoreExplorerAlg.Load                = 1;
+StoreExplorerAlg.PrintFreq           = 0.001;
+EventDataSvc.RootCLID                = 1;
+EventDataSvc.EnableFaultHandler      = true ;
+EventPersistencySvc.CnvServices      = { "LHCb::RawDataCnvSvc/RawDataCnvSvc" };
+EventSelector.REQ1 = "EvType=1;TriggerMask=0xffffffff,0xffffffff,0xffffffff,0xffffffff;VetoMask=0,0,0,0;MaskType=ANY;UserType=ONE;Frequency=PERC;Perc=100.0";
+
+MEPManager.ProcessName           = "Moore_0";
+MEPManager.PartitionID           = 333;
+MEPManager.Buffers               = { "EVENT", "RESULT" };
+MessageSvc.OutputLevel           = 1;
+//ApplicationMgr.TopAlg            = { "StoreExplorerAlg" };
+//MEPManager.Buffers               = { "EVENT" };

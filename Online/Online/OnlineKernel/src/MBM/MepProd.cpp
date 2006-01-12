@@ -43,6 +43,7 @@ namespace {
       ev->begin       = int(int(ev)-m_mepID->mepStart);
       ev->packing     = PACKING_FACTOR;
       ev->valid       = 1;
+      ev->magic       = mep_magic_pattern();
       m_event.mask[0] = 0x103;
       m_event.mask[1] = 0;
       m_event.mask[2] = 0;

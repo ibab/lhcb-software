@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/GaudiOnline/src/MEPProducer.cpp,v 1.3 2006-01-10 14:08:17 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/GaudiOnline/src/MEPProducer.cpp,v 1.4 2006-01-12 12:02:57 frankb Exp $
 //	====================================================================
 //  RawBufferCreator.cpp
 //	--------------------------------------------------------------------
@@ -22,7 +22,7 @@
 namespace {
   int __dummyReadEvent(void* data, size_t bufLen, size_t& evtLen)  {
     static int nrewind = 0;
-    static int file = open("./mepBuffer.dat", O_RDONLY|O_BINARY);
+    static int file = open("../cmt/mepData_0.dat", O_RDONLY|O_BINARY);
     LHCb::MEPEvent* me = (LHCb::MEPEvent*)data;
 again:
     int status1 = ::read(file, me, me->sizeOf());
@@ -38,7 +38,7 @@ again:
         ::printf("[1] Rewind # %d: End-of-file.\n", ++nrewind);
         goto again;
       }
-      evtLen += me->size()+me->sizeOf();
+      evtLen = me->size()+me->sizeOf();
       // printf("MEP size: %d \n",evtLen);
       return 1;
     }
@@ -63,6 +63,7 @@ namespace {
       m_flags = USE_MEP_BUFFER;
       include();
       m_bmid = m_mepID->mepBuffer;
+      ::printf(" Buffer space: %d bytes\n",m_spaceSize);
       ::printf(" MEP    buffer start: %08X\n",m_mepID->mepStart);
       ::printf(" EVENT  buffer start: %08X\n",m_mepID->evtStart);
       ::printf(" RESULT buffer start: %08X\n",m_mepID->resStart);
@@ -77,24 +78,26 @@ namespace {
       return status==1 ? MBM_NORMAL : MBM_ERROR;
     }
     int spaceAction() {
+      static int id = -1;
       size_t evtLen = 0;
       MBM::EventDesc& dsc = event();
       MEPEVENT* ev = (MEPEVENT*)dsc.data;
-      ev->refCount    = 1;
-      ev->mepBufferID = 0;
+      ev->refCount    = 2;
+      ev->mepBufferID = ++id;
       ev->begin       = int(int(ev)-m_mepID->mepStart);
       ev->packing     = -1;
       ev->valid       = 1;
+      ev->magic       = mep_magic_pattern();
       int status = receiveEvent(ev->data, m_spaceSize-sizeof(MEPEVENT), evtLen);
       if ( status == MBM_NORMAL )  {
-        m_event.len = evtLen+sizeof(MEPEVENT);
+        m_event.len = evtLen+sizeof(MEPEVENT)-sizeof(ev->data);
         m_event.mask[0] = 0x103;
         m_event.mask[1] = 0;
         m_event.mask[2] = 0;
         m_event.mask[3] = 0;
         m_event.type    = EVENT_TYPE_MEP;
         declareEvent();
-        return sendSpace();
+        status = sendSpace();
       }
       return status;
     }

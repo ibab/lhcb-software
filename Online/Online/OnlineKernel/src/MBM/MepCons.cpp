@@ -43,8 +43,8 @@ namespace {
           m_bmid = m_mepID->mepBuffer;
           break;
       }
-      int vetomask[4] = {0,0,0,0};
-      int trmask[4]   = {-1,-1,-1,-1};
+      unsigned int vetomask[4] = {0,0,0,0};
+      unsigned int trmask[4]   = {~0x0,~0x0,~0x0,~0x0};
       addRequest(EVENT_TYPE_EVENT,trmask,vetomask,BM_MASK_ANY,BM_REQ_ALL,BM_FREQ_PERC,100.);
       ::printf(" MEP    buffer start: %08X\n",m_mepID->mepStart);
       ::printf(" EVENT  buffer start: %08X\n",m_mepID->evtStart);

@@ -323,7 +323,7 @@ int mbm_register_alloc_event(BMID bm, RTL_ast_t astadd, void* astparam)   {
 }
 
 /// Consumer routines
-int mbm_add_req (BMID bm, int evtype, const int trg_mask[4], const int veto_mask[4], 
+int mbm_add_req (BMID bm, int evtype, const unsigned int trg_mask[4], const unsigned int veto_mask[4], 
                  int masktype, int usertype, int freqmode, float freq)
 {
   UserLock user(bm);
@@ -351,7 +351,7 @@ int mbm_add_req (BMID bm, int evtype, const int trg_mask[4], const int veto_mask
   return user.status();
 }
 
-int mbm_del_req (BMID bm, int evtype, const int trmask[4], const int veto[4], 
+int mbm_del_req (BMID bm, int evtype, const unsigned int trmask[4], const unsigned int veto[4], 
                  int masktype, int usertype)
 {
   UserLock user(bm);
@@ -980,6 +980,15 @@ int _mbm_rel_event (BMID bm, USER* u)  {
   e->held_mask.clear(u->uid);
   if ( !e->umask0.mask_or(e->umask1,e->umask2) )  {  // no more consumers
     _mbm_del_event(bm, e, e->ev_size);          // de-allocate event slot/space
+  }
+  else if ( bm->free_event )  {
+    void* pars[4];
+    int* evadd  = (int*)(e->ev_add+(int)bm->buffer_add);
+    pars[0] = bm;
+    pars[1] = bm->free_event_param;
+    pars[2] = evadd+sizeof(int);
+    pars[3] = e;
+    (*bm->free_event)(pars);
   }
   return MBM_NORMAL;
 }

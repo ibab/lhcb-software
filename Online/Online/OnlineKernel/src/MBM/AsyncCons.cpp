@@ -15,8 +15,8 @@ namespace {
     int nbad, trnumber, quiet;
     Cons(const std::string& buff,const std::string& nam, bool q) 
       : MBM::Consumer(buff,nam,0x103), nbad(0), trnumber(-1), quiet(q) {
-      int vetomask[4] = {0,0,0,0};
-      int trmask[4]   = {-1,-1,-1,-1};
+      unsigned int vetomask[4] = {0,0,0,0};
+      unsigned int trmask[4]   = {~0x0,~0x0,~0x0,~0x0};
       addRequest(1,trmask,vetomask,BM_MASK_ANY,BM_REQ_VIP,BM_FREQ_PERC,100.);
       setNonBlocking(WT_FACILITY_DAQ_EVENT, true);
     }

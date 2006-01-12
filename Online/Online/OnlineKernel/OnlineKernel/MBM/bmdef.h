@@ -47,9 +47,9 @@ extern "C"  {
   int  mbm_register_free_event(BMID bm, RTL_ast_t astadd, void* astparam);
   /// Register optional callback on _mbm_ealloc
   int  mbm_register_alloc_event(BMID bm, RTL_ast_t astadd, void* astparam);
-  int  mbm_add_req (BMID bm, int evtype, __MBM_CONST int* trmask, __MBM_CONST int* veto, int masktype, 
+  int  mbm_add_req (BMID bm, int evtype, __MBM_CONST unsigned int* trmask, __MBM_CONST unsigned int* veto, int masktype, 
                     int usertype, int freqmode, float freq);
-  int  mbm_del_req    (BMID bm, int evtype, __MBM_CONST int* trmask, __MBM_CONST int* veto, int masktype, int usertype);
+  int  mbm_del_req    (BMID bm, int evtype, __MBM_CONST unsigned int* trmask, __MBM_CONST unsigned int* veto, int masktype, int usertype);
   int  mbm_get_event_a(BMID bm, int** ptr, int* size, int* evtype, unsigned int* trmask, int part_id, RTL_ast_t astadd, void* ast_par);
   int  mbm_get_event  (BMID bm, int** ptr, int* size, int* evtype, unsigned int* trmask, int part_id);
   int  mbm_free_event (BMID bm);

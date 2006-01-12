@@ -97,7 +97,7 @@ void MBM::Consumer::addRequest(const Requirement& r)  {
   return addRequest(r.evtype,r.trmask,r.vetomask,r.maskType,r.userType,r.freqType,r.freq);
 }
 
-void MBM::Consumer::addRequest(int evtype, const int trmask[4], const int vetomask[4], int masktype, int usertype, int freqmode, float freq)  {
+void MBM::Consumer::addRequest(int evtype, const unsigned int trmask[4], const unsigned int vetomask[4], int masktype, int usertype, int freqmode, float freq)  {
   if ( m_bmid != (BMID)-1 ) {
     int status = ::mbm_add_req(m_bmid,evtype,trmask,vetomask,masktype,usertype,freqmode,freq);
     if ( status == MBM_NORMAL )  {
@@ -112,7 +112,7 @@ void MBM::Consumer::delRequest(const Requirement& r)  {
   return delRequest(r.evtype, r.trmask,r.vetomask,r.maskType,r.userType);
 }
 
-void MBM::Consumer::delRequest(int evtype, const int trmask[4], const int vetomask[4], int masktype, int usertype)
+void MBM::Consumer::delRequest(int evtype, const unsigned int trmask[4], const unsigned int vetomask[4], int masktype, int usertype)
 {
   if ( m_bmid != (BMID)-1 ) {
     int status = ::mbm_del_req(m_bmid,evtype,trmask,vetomask,masktype,usertype);

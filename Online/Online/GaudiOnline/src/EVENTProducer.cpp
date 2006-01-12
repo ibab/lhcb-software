@@ -14,13 +14,15 @@ namespace {
   struct EVENTGenerator  : public MEP::Consumer  {
     typedef std::vector<LHCb::MEPFragment*>    Fragments;
     typedef std::map<unsigned int, Fragments > Events;
+    bool prt;
 
     MBM::Producer* m_evtProd;
     EVENTGenerator(const std::string& nam, int partID)
     : MEP::Consumer(nam, partID), m_evtProd(0)
     {
-      int vetomask[4] = {0,0,0,0};
-      int trmask[4]   = {-1,-1,-1,-1};
+      prt = false;
+      unsigned int vetomask[4] = {0,0,0,0};
+      unsigned int trmask[4]   = {~0x0,~0x0,~0x0,~0x0};
       m_flags = USE_EVT_BUFFER|USE_MEP_BUFFER;
       include();
       m_bmid = m_mepID->mepBuffer;
@@ -36,13 +38,16 @@ namespace {
       if ( m_evtProd ) delete m_evtProd;
     }
     void declareSubEvents(const EventDesc& evt, Events& events)  {
+      if ( prt ) ::printf("Declare MEP....\n");
       for(Events::const_iterator i=events.begin(); i!=events.end(); ++i)  {
         declareSubEvent(evt, (*i).second);
       }
     }
     void declareSubEvent(const EventDesc& evt, const Fragments& frags)  {
       int sub_evt_len = LHCb::RawEventHeader::size(frags.size());
+      if ( prt ) ::printf("0-Declare MEP fragment....\n");
       if ( m_evtProd->getSpace(sub_evt_len) == MBM_NORMAL ) {
+        if ( prt ) ::printf("1-Declare MEP fragment....\n");
         EventDesc& e = m_evtProd->event();
         MEPEVENT* ev = (MEPEVENT*)evt.data;
         LHCb::RawEventHeader* h = (LHCb::RawEventHeader*)e.data;
@@ -60,7 +65,9 @@ namespace {
         e.mask[3] = evt.mask[3];
         e.type    = evt.type;
         e.len     = sub_evt_len;
+        if ( prt ) ::printf("2-Declare MEP fragment....\n");
         m_evtProd->sendEvent();
+        if ( prt ) ::printf("3-Declare MEP fragment....\n");
       }
       else  {
         ::printf("Space error !\n");
@@ -68,15 +75,17 @@ namespace {
     }
     int eventAction() {
       Events events;
-      unsigned int partID;
+      unsigned int partID = 0;
       const EventDesc& evt = event();
       MEPEVENT* ev = (MEPEVENT*)evt.data;
       LHCb::MEPEvent* me = (LHCb::MEPEvent*)ev->data;
       //printf("Data:%p\n",ev);
       decodeMEP2EventFragments(me, partID, events);
-
+      if ( ev->magic != mep_magic_pattern() )  {
+        ::printf("Bad MEP magic pattern!!!!\n");
+      }
       // Increasing refcount in big chunk and avoid callback on m_evtProd->getSpace
-      ev->refCount += events.size();
+      ev->refCount += (events.size()-1);
       declareSubEvents(evt, events);
       return Consumer::eventAction();
     }

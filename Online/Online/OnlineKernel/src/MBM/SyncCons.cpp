@@ -13,8 +13,8 @@ extern "C" int mbm_cons(int argc,char **argv) {
   RTL::CLI cli(argc, argv, help);
   std::string name = "consumer", buffer="0";
   int  trnumber = -1, nbad = 0, sleep_msecs = 0;
-  int  trmask[4] = {-1,-1,-1,-1};
-  int  vetomask[4] = {0,0,0,0};
+  unsigned int  trmask[4] = {~0x0,~0x0,~0x0,~0x0};
+  unsigned int  vetomask[4] = {0,0,0,0};
   bool quiet = cli.getopt("quiet",1) != 0;
   cli.getopt("name",1,name);
   cli.getopt("sleep",1,sleep_msecs);

@@ -17,6 +17,7 @@
 #include "RTL/Lock.h"
 #include "bm_struct.h"
 #include "MBM/mepdef.h"
+#define MAGIC_PATTERN 0xFEEDBABE
 
 struct MEPDESC : public _MEPID  {
   int             owner;
@@ -44,10 +45,10 @@ static int _mep_change_refcount(MEPDESC* dsc,MEP_SINGLE_EVT* evt, int change)  {
         break;
       }
     }
-    if ( cnt < 1 )  {
-      printf("MEP RefCount ERROR %s [%d] Event at address %p MEP:%p [%d] [Release MEP]\n",
+    if ( cnt < 1 || e->magic != MAGIC_PATTERN )  {
+      ::printf("MEP RefCount ERROR %s [%d] Event at address %p MEP:%p [%d] Pattern:%08X [Release MEP]\n",
         change > 0 ? "AddRef" : "DelRef", cnt, 
-        (void*)evt, (void*)e, e->mepBufferID);
+        (void*)evt, (void*)e, e->mepBufferID, e->magic);
     }
     return MBM_NORMAL;
   }
@@ -59,9 +60,9 @@ static int mep_free_mep(void* param)   {
   void** pars = (void**)param;
   MEPEVENT* e = (MEPEVENT*)pars[2];
   MEPDESC* dsc = (MEPDESC*)pars[1];
-  if ( e->refCount < 1 )  {
-    printf("MEP RefCount ERROR(2) [%d] Event at address %08X MEP:%p [%d] [Release MEP]\n",
-      e->refCount, dsc->mepStart+e->begin, (void*)e, e->mepBufferID);
+  if ( e->refCount < 1 || e->magic != MAGIC_PATTERN )  {
+    printf("MEP RefCount ERROR(2) [%d] Event at address %08X MEP:%p [%d] Pattern:%08X [Release MEP]\n",
+      e->refCount, dsc->mepStart+e->begin, (void*)e, e->mepBufferID, e->magic);
   }
   while ( e->refCount > 1 )  {
 #ifdef _WIN32
@@ -70,8 +71,8 @@ static int mep_free_mep(void* param)   {
     lib_rtl_usleep(100);
 #endif
   }
-  e->refCount--;
   e->valid = 0;
+  e->refCount = 0;
   return MBM_NORMAL;
 }
 
@@ -113,7 +114,7 @@ MEPID mep_include (const char* name, int partid, int selection) {
   bm->selection = selection;
   bm->mepBuffer  = ( selection&USE_MEP_BUFFER ) 
     ? mbm_include(mep_buff_name.c_str(), name, partid)
-    : bm->mepBuffer = mbm_map_memory(mep_buff_name.c_str());
+    : mbm_map_memory(mep_buff_name.c_str());
   if ( bm->mepBuffer == MBM_INV_DESC )  {
     lib_rtl_delete_lock(bm->lockid);
     return MEP_INV_DESC;
@@ -122,7 +123,7 @@ MEPID mep_include (const char* name, int partid, int selection) {
 
   bm->evtBuffer = ( selection&USE_EVT_BUFFER )
     ? mbm_include(evt_buff_name.c_str(), name, partid)
-    : bm->evtBuffer = mbm_map_memory(evt_buff_name.c_str());
+    : mbm_map_memory(evt_buff_name.c_str());
   if ( bm->evtBuffer == MBM_INV_DESC )  {
     _mep_exclude(bm->mepBuffer, bm->selection&USE_MEP_BUFFER);
     lib_rtl_delete_lock(bm->lockid);
@@ -157,4 +158,8 @@ int mep_exclude (MEPID dsc)  {
     return MBM_NORMAL;
   }
   return MBM_ILL_CONS;
+}
+
+int mep_magic_pattern()   {
+  return (int)MAGIC_PATTERN;
 }

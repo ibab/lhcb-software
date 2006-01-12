@@ -66,7 +66,7 @@ namespace Bits  {
     int test(int which) const  {
       return ::bit_test(m_mask,which);
     }
-    BitMask& operator=(const int val[i]) {
+    BitMask& operator=(const unsigned int val[i]) {
       for(int j=0; j<i;++j) m_mask[j]=val[j];
       return *this;
     }
@@ -74,13 +74,13 @@ namespace Bits  {
       for(int j=0; j<i;++j) m_mask[j]=val.m_mask[j];
       return *this;
     }
-    bool operator==(const int val[i]) {
+    bool operator==(const unsigned int val[i]) {
       return ::memcmp(val,m_mask,i*sizeof(m_mask[0])) == 0;
     }
     bool operator==(const BitMask<i>& val) {
       return ::memcmp(val.m_mask,m_mask,i*sizeof(m_mask[0])) == 0;
     }
-    bool operator!=(const int val[i]) {
+    bool operator!=(const unsigned int val[i]) {
       return ::memcmp(val,m_mask,i*sizeof(m_mask[0])) != 0;
     }
     bool operator!=(const BitMask<i>& val) {

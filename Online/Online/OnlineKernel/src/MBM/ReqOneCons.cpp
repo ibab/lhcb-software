@@ -10,8 +10,8 @@ static void help()  {
 
 extern "C" int mbm_cons_one(int argc,char **argv) {
   int  trnumber  = -1, sleep_msecs = 0;
-  int  trmask[4] = {-1,-1,-1,-1};
-  int  vetomask[4] = {0,0,0,0};
+  unsigned int  trmask[4] = {~0x0,~0x0,~0x0,~0x0};
+  unsigned int  vetomask[4] = {0,0,0,0};
 
   RTL::CLI cli(argc, argv, help);
   std::string name = "cons_one", buffer="0";

@@ -37,6 +37,7 @@ struct MEPEVENT   {
   int refCount;
   int begin;
   int valid;
+  int magic;
   char data[4];
 };
 
@@ -46,6 +47,7 @@ extern "C"  {
   MEPID mep_include (const char* name, int partid, int selection);
   int mep_set_watch(MEPID bm);
   int mep_exclude (MEPID bm);
+  int mep_magic_pattern();
 #ifdef __cplusplus
 }
 #endif
