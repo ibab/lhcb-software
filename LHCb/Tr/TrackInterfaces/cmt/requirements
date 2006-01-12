@@ -6,7 +6,7 @@
 # http://cern.ch/lhcb-comp/Support/html/new_structure.pdf
 #============================================================================
 package           TrackInterfaces
-version           v1r5
+version           v2r0
 
 #============================================================================
 # This template is an example for a standard Algorithm package
@@ -19,6 +19,5 @@ branches          cmt doc TrackInterfaces
 include_dirs      $(TRACKINTERFACESROOT)
 
 # =============== dependencies ==============================================
-use LHCbKernel  v* Kernel
-use GaudiKernel v*
-use CLHEP       v* LCG_Interfaces
+use LHCbDefinitions  v* Kernel
+use GaudiKernel      v*

@@ -1,4 +1,4 @@
-// $Id: ITrackCloneFinder.h,v 1.2 2006-01-11 15:56:08 mneedham Exp $
+// $Id: ITrackCloneFinder.h,v 1.3 2006-01-12 10:00:46 cattanem Exp $
 #ifndef TRACKINTERFACES_ITRACKCLONEFINDER_H 
 #define TRACKINTERFACES_ITRACKCLONEFINDER_H 1
 
@@ -8,8 +8,10 @@
 // from Gaudi
 #include "GaudiKernel/IAlgTool.h"
 
-// from TrackEvent
-#include "Event/Track.h"
+// Forward declarations
+namespace LHCb{
+ class Track;
+};
 
 static const InterfaceID IID_ITrackCloneFinder ( "ITrackCloneFinder", 1, 0 );
 
