@@ -8,7 +8,8 @@
 
 #include "Kernel/TrackMatrix.h"
 
-namespace LHCb{
+// Forward declarations
+namespace LHCb {
   class State;
   class Measurement;
 };

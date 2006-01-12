@@ -5,6 +5,7 @@
 // -------------
 #include "GaudiKernel/IAlgTool.h"
 
+// from LHCbDefinitions
 #include "Kernel/TrackTypes.h"
 
 /** @class ITrackChi2Calculator ITrackChi2Calculator.h TrackInterfaces/ITrackChi2Calculator.h

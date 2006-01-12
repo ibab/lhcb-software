@@ -4,6 +4,9 @@
 ! Purpose     : package for tracking tools interfaces
 !-----------------------------------------------------------------------------
 
+! 2006-01-12 - Eduardo Rodrigues
+ - bug fixes from move to LHCb v20r0
+
 !====================== TrackInterfaces v2r0 2006-01-12 ======================
 ! 2006-01-12 - Marco Cattaneo
  - In ITrackCloneFinder.h, use forward declaration instead of

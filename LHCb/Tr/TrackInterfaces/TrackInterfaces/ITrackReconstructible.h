@@ -6,9 +6,10 @@
 // from Gaudi
 #include "GaudiKernel/IAlgTool.h"
 
-namespace{
+// Forward declarations
+namespace LHCb {
  class MCParticle;
-}
+};
 
 static const InterfaceID IID_ITrackReconstructible( "ITrackReconstructible", 0, 0 );
 

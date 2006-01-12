@@ -7,9 +7,9 @@
 #include "GaudiKernel/IAlgTool.h"
 
 // forward declarations
-namespace{
+namespace LHCb {
  class State;
-}
+};
 
 static const InterfaceID IID_ITrackPtKick ( "ITrackPtKick", 1, 0 );
 

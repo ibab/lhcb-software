@@ -4,7 +4,8 @@
 // from Gaudi
 #include "GaudiKernel/IAlgTool.h"
 
-namespace{
+// Forward declarations
+namespace LHCb {
  class MCParticle;
  class Track;
 };

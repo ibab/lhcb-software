@@ -1,4 +1,4 @@
-// $Id: IMeasurementProvider.h,v 1.3 2006-01-11 15:56:08 mneedham Exp $
+// $Id: IMeasurementProvider.h,v 1.4 2006-01-12 15:24:26 erodrigu Exp $
 #ifndef TRACKINTERFACES_IMEASUREMENTPROVIDER_H 
 #define TRACKINTERFACES_IMEASUREMENTPROVIDER_H 1
 
@@ -7,10 +7,11 @@
 // from Gaudi
 #include "GaudiKernel/IAlgTool.h"
 
-namespace LHCb{
+// Forward declarations
+namespace LHCb {
+ class LHCbID;
  class Track;
  class Measurement;
- class LHCbID;
 };
 
 static const InterfaceID IID_IMeasurementProvider ( "IMeasurementProvider", 1, 0 );

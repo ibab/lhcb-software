@@ -6,7 +6,7 @@
 #include "GaudiKernel/IAlgTool.h"
 
 // forward declarations
-namespace LHCb{ 
+namespace LHCb {
  class MCParticle;
  class State;
 };

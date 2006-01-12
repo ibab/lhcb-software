@@ -1,4 +1,4 @@
-// $Id: ITrackExtraSelector.h,v 1.1 2005-11-09 14:30:04 erodrigu Exp $
+// $Id: ITrackExtraSelector.h,v 1.2 2006-01-12 15:24:26 erodrigu Exp $
 #ifndef TRACKINTERFACES_ITRACKEXTRASELECTOR_H
 #define TRACKINTERFACES_ITRACKEXTRASELECTOR_H 1
 
@@ -8,6 +8,7 @@
 // from Gaudi
 #include "GaudiKernel/IAlgTool.h"
 
+// Forward Declaration - from TrackInterfaces
 class ITrackExtrapolator;
 
 /// Static Interface Identification

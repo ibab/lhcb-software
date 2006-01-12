@@ -6,10 +6,13 @@
 // from Gaudi
 #include "GaudiKernel/IAlgTool.h"
 
+// from LHCbDefinitions
 #include "Kernel/Vector3DTypes.h"
 
-// forward declaration
-class Trajectory;
+// Forward declarations
+namespace LHCb {
+ class Trajectory;
+};
 
 static const InterfaceID IID_ITrajPoca ( "ITrajPoca", 1, 0 );
 
@@ -33,15 +36,15 @@ public:
   // having a distance smaller than tolerance
   virtual StatusCode minimize( const Trajectory& traj1, const Trajectory& traj2,
                                double& arclength1, double& arclength2,
-                               Gaudi::XYZVector& distance ) const;
+                               Gaudi::XYZVector& distance ) = 0;
 
   // Retrieve the derivative with respect to the reference point
   // of the first ("1") trajectory
-  const Gaudi::XYZVector derivative1() const;
+  const Gaudi::XYZVector derivative1() const = 0;
   
   // Retrieve the derivative with respect to the reference point
   // of the second ("2") trajectory
-  const Gaudi::XYZVector derivative2() const;
+  const Gaudi::XYZVector derivative2() const = 0;
 
 };
 #endif // TRACKINTERFACES_ITRAJPOCA_H

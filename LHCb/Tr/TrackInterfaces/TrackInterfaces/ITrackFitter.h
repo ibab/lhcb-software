@@ -1,4 +1,4 @@
-// $Id: ITrackFitter.h,v 1.6 2006-01-11 15:56:08 mneedham Exp $
+// $Id: ITrackFitter.h,v 1.7 2006-01-12 15:24:26 erodrigu Exp $
 #ifndef TRACKINTERFACES_ITRACKFITTER_H 
 #define TRACKINTERFACES_ITRACKFITTER_H 1
 
@@ -10,7 +10,8 @@
 // from Gaudi
 #include "GaudiKernel/IAlgTool.h"
 
-namespace LHCb{
+// Forward declarations
+namespace LHCb {
  class Track;
 };
 

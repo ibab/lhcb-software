@@ -1,4 +1,4 @@
-// $Id: ITrackCloneFinder.h,v 1.3 2006-01-12 10:00:46 cattanem Exp $
+// $Id: ITrackCloneFinder.h,v 1.4 2006-01-12 15:24:26 erodrigu Exp $
 #ifndef TRACKINTERFACES_ITRACKCLONEFINDER_H 
 #define TRACKINTERFACES_ITRACKCLONEFINDER_H 1
 
@@ -9,7 +9,7 @@
 #include "GaudiKernel/IAlgTool.h"
 
 // Forward declarations
-namespace LHCb{
+namespace LHCb {
  class Track;
 };
 

@@ -6,18 +6,20 @@
 // from Gaudi
 #include "GaudiKernel/IAlgTool.h"
 
-// from LHCB
+// from LHCbKernel
 #include "Kernel/ParticleID.h"
 
+// from LHCbDefinitions
 #include "Kernel/SymmetricMatrixTypes.h"
 #include "Kernel/PointTypes.h"
 #include "Kernel/Vector3DTypes.h"
 #include "Kernel/PlaneTypes.h"
 
-namespace LHCb{
+// Forward declarations
+namespace LHCb {
  class Track;
  class State;
-}
+};
 
 static const InterfaceID IID_ITrackExtrapolator( "ITrackExtrapolator" , 2, 0 );
 
