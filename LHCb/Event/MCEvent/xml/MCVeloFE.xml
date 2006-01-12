@@ -1,0 +1,182 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!--- $Id: -->
+<!--- Author  : Tomasz Szumlak -->
+<!--- Created : 2005-12-21 -->
+
+<!DOCTYPE gdd SYSTEM "gdd.dtd" >
+<gdd>
+ <package name="MCEvent">
+  <class name="MCVeloFE" 
+   id="4002"
+   author="Chris Parkes, update Tomasz Szumlak" 
+   desc="This class represents the output of the front-end chip and
+         contains information about the simulation of the silicon
+         and FE chip response stored for a single silicon/output 
+         channel. Constructed from MCHits (i.e. GEANT deposits), 
+         MCVeloFE of previous events (spill over), noise (above a
+         threshold)"
+   location="MC/Velo/FE"
+  >
+   <template name="KeyedObjectDict" t1="LHCb::VeloChannelID"/>
+   <location name="PuVeto" place="MC/Velo/PuFE" />
+   <base name="KeyedObject&lt;LHCb::VeloChannelID&gt;"/>
+    &KeyedContainer;
+   <import name="GaudiKernel/SmartRef"/>
+   <import name="Kernel/VeloChannelID"/>
+   <import name="Event/MCHit"/>
+
+   <constructor desc="Constructor with key" 
+    initList="KeyedObject&lt;LHCb::VeloChannelID&gt;(key),
+    m_addedSignal(0.0),
+    m_addedPedestal(0.0),
+    m_addedNoise(0.0),
+    m_addedCMNoise(0.0)"
+   >
+    <arg type="LHCb::VeloChannelID" name="key" const="TRUE"/>
+    <code/>                 
+   </constructor> 
+
+   <method 
+    name="channelID" 
+    type="LHCb::VeloChannelID" 
+    desc="combined sensor and strip number ID" 
+    const="TRUE"
+   >
+    <code>
+     return key();
+    </code>
+   </method>
+
+   <method 
+    name="sensor" 
+    type="long" 
+    desc="Sensor Number" 
+    const="TRUE"
+   >
+    <code>
+     return key().sensor();
+    </code>
+   </method>
+
+   <method 
+    name="strip" 
+    type="long" 
+    desc="Strip Number" 
+    const="TRUE"
+   >
+    <code>
+     return key().strip();
+    </code>
+   </method>
+
+   <attribute 
+    name="addedSignal" 
+    type="double" 
+    desc="Added Signal in units of electrons"
+   />
+
+   <attribute 
+    name="addedPedestal" 
+    type="double" 
+    desc="pedestal added in Si/FE chip simulation in units of electrons"
+   />
+
+   <attribute 
+    name="addedNoise" 
+    type="double" 
+    desc="noise added in Si/FE chip simulation in units of electrons"
+   />
+
+   <attribute 
+    name="addedCMNoise" 
+    type="double" 
+    desc="common mode noise added in Si/FE chip simulation in units of electrons"
+   />
+
+   <relation 
+    name="MCHits" 
+    type="LHCb::MCHit" 
+    desc="References to Monte Carlo hits contributing to this channel" 
+    multiplicity="m"
+   />
+
+   <attribute 
+    name="MCHitsCharge" 
+    type="std::vector&lt;double&gt;" 
+    desc="Charge of Monte Carlo hit contributed to this channel"
+   />
+
+   <method 
+    name="addToMCHits" 
+    type="void" 
+    argList="SmartRef&lt;LHCb::MCHit&gt; hit, double chg" 
+    desc="add MC hit and its deposited charge"
+   >
+    <code>
+     m_MCHits.push_back(hit);
+     m_MCHitsCharge.push_back(chg);
+     return;
+    </code>
+   </method>        
+
+   <method 
+    name="mcHit" 
+    type="SmartRef&lt;LHCb::MCHit&gt;" 
+    argList="long num" 
+    desc="retrieve MCHit reference" 
+    const="TRUE"
+   >
+    <code>
+     return m_MCHits[num];
+    </code>
+   </method>
+
+   <method 
+    name="mcHitCharge" 
+    type="double" 
+    argList="long num" 
+    desc="retrieve deposited charge of MCHit" 
+    const="TRUE"
+   >
+    <code>
+     return m_MCHitsCharge[num];
+    </code>
+   </method>
+
+   <method 
+    name="setMCHitCharge" 
+    type="void" 
+    argList="long num, double chg" 
+    desc="set deposited charge of MCHit"
+   >
+    <code>
+     m_MCHitsCharge[num]=chg;
+     return;
+    </code>
+   </method>
+
+   <method 
+    name="NumberOfMCHits" 
+    type="long" 
+    desc="number of strips in cluster" 
+    const="TRUE"
+   >
+    <code>
+     return mcHits().size();
+    </code>
+   </method>
+
+   <method 
+    name="charge" 
+    type="double" 
+    desc="Access total charge - in electrons"
+    const="TRUE"
+   >
+    <code>
+     return addedSignal()+addedNoise()+addedPedestal()+addedCMNoise();
+    </code>
+   </method> 
+
+  </class>
+ </package>
+</gdd>

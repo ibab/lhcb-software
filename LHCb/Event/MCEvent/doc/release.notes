@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.16 2006-01-12 09:06:45 cattanem Exp $
+! $Id: release.notes,v 1.17 2006-01-12 09:29:20 cattanem Exp $
 ! Package     : Event/MCEvent
 ! Responsible : Marco Cattaneo, Gloria Corti
 ! Purpose     : LHCb Event model. MC truth classes (Gauss and Boole output) 
@@ -6,6 +6,7 @@
 !========================== MCEvent v1r0 2006-01-12 ==========================
 ! 2006-01-12 - Marco Cattaneo
  - Add MCOTTime, MCOTDeposit, moved here from OTEvent
+ - Add MCVeloFE, moved here from VeloEvent
 
 ! 2005-12-22 - Chris Jones
  - Add methods to MCRichSegment to add to position and momentum vectors
