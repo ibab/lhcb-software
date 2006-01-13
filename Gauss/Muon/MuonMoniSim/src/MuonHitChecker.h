@@ -1,4 +1,4 @@
-// $Id: MuonHitChecker.h,v 1.3 2005-06-09 13:27:01 asarti Exp $
+// $Id: MuonHitChecker.h,v 1.4 2006-01-13 13:38:27 asarti Exp $
 #ifndef MuonHitChecker_H 
 #define MuonHitChecker_H 1
 
@@ -8,13 +8,9 @@
 
 // from Gaudi
 #include "GaudiAlg/GaudiTupleAlg.h"
-#include "GaudiAlg/GaudiHistoAlg.h"
 
 // for Muons
-#include "MuonTools/MuonChannel.h"
-#include "MuonTools/IMuonGetInfoTool.h"  
-#include "MuonKernel/MuonTile.h"
-#include "Event/MCMuonHit.h"   
+#include "Event/MCHit.h"   
 
 /** @class MuonHitChecker MuonHitChecker.h
  *  
@@ -33,50 +29,15 @@ public:
   virtual StatusCode finalize  ();    ///< Algorithm finalization
 
 protected:
-  static std::string spill[5];
-  static std::string numreg[4];   
-  static std::string numsta[5];
 
-  int m_stationNumber;
   std::vector<int> m_numberOfGaps;
-  int m_regionNumber;
-  int m_partition;
 
 private:
 
-  IHistogram1D * m_pointer1Dradial[20];
-  IHistogram1D * m_pointer1Dtime[20];
-
-  virtual StatusCode crNtuples();
   int nhit[5][4],cnt[5][4];
   int nhit_ri[5],cnt_ri[5];
 
   bool m_detailedMonitor;
-  /// N-tuple items to be written away (hit)
-  long  m_run;
-  long  m_evt;
-  std::vector<float> m_sta;
-  std::vector<float> m_reg;
-  std::vector<float> m_con;
-  std::vector<float> m_x;
-  std::vector<float> m_y;
-  std::vector<float> m_z;
-  std::vector<float> m_time;
-  std::vector<float>  m_id;
-  std::vector<float> m_px;
-  std::vector<float> m_py;
-  std::vector<float> m_pz;
-  std::vector<float> m_E;
-  std::vector<float> m_xv;
-  std::vector<float> m_yv;
-  std::vector<float> m_zv;
-  std::vector<float> m_tv;
-  std::vector<float>  m_mom;
-  std::vector<float> m_ple;
-  std::vector<float> m_hen;
-  std::vector<float> m_dix;
-  std::vector<float> m_dxz;
-  std::vector<float> m_dyz;
 
 };
 #endif // MuonHitChecker_H

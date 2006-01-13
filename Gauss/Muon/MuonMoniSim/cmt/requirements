@@ -6,7 +6,7 @@
 # http://cern.ch/lhcb-comp/Support/html/new_structure.pdf
 #============================================================================
 package MuonMoniSim 
-version v1r1
+version v1r2
 
 #============================================================================
 # This template is an example for a standard Algorithm package
@@ -19,7 +19,6 @@ branches src cmt options doc
 # Used packages. 
 #============================================================================
 use MuonDet     v*    Det
-use MuonTools   v*    Muon
 use MuonEvent	v*    Event
 
 #============================================================================
