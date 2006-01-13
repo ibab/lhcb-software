@@ -32,3 +32,5 @@ HLTMuons.PhysDesktop.CombinedParticleMaker.UseLongTracks     = true;
 HLTSelections.Members += {"PreLoadParticles/HLTPhotons"};
 HLTPhotons.PhysDesktop.ParticleMakerType = "PhotonParticleMaker";
 // not tested.
+
+HLTProcessing.Context = "HLT";

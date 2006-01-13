@@ -5,6 +5,10 @@
 !-----------------------------------------------------------------------------
 %% WARNING: FROM REVISION v4r0 THIS PACKAGE IS INCOMPATIBLE WITH NON DC04-SOFTWARE %% 
 
+! 2006-01-13 - P. Koppenburg
+ - options/OfflineTracks.opts
+   . Set HLT sequence to offline mode.
+   
 ! 2006-01-03 - Luis Fernandez
  - options/
    . Truth
