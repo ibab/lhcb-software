@@ -1,6 +1,9 @@
 !Package         : STDet
 !Package manager : M. Needham
 
+! 2006-1-13 M. Needham
+  - change detector path strings
+
 !========================= STDet v2r0 2005-12-20 =======================
 ! 2005-12-19 M. Needham
   - New version for LHCb v20r0. Totally backward incompatible !!!!!!
