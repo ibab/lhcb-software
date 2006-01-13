@@ -1,4 +1,4 @@
-// $Id: BackgroundCategory.h,v 1.5 2005-12-21 13:10:40 gligorov Exp $
+// $Id: BackgroundCategory.h,v 1.6 2006-01-13 01:29:47 gligorov Exp $
 #ifndef BACKGROUNDCATEGORY_H 
 #define BACKGROUNDCATEGORY_H 1
 
@@ -69,6 +69,8 @@ private:
   const MCParticle* m_commonmother;
 
   double m_lowMassCut ; /// cut applied to low-mass background
+  double m_override; //see .cpp file for explanation
+  double m_maxweight; //dummy sorting variable
 
 };
 #endif // BACKGROUNDCATEGORY_H

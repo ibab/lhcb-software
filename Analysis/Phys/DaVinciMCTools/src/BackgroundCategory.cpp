@@ -1,4 +1,4 @@
-// $Id: BackgroundCategory.cpp,v 1.10 2005-12-21 13:10:40 gligorov Exp $
+// $Id: BackgroundCategory.cpp,v 1.11 2006-01-13 01:29:47 gligorov Exp $
 // Include files 
 
 // from Gaudi
@@ -33,6 +33,10 @@ BackgroundCategory::BackgroundCategory( const std::string& type,
 {
   declareInterface<IBackgroundCategory>(this);
   declareProperty("LowMassBackgroundCut", m_lowMassCut = 100.*MeV) ;
+  declareProperty("MCmatchQualityPIDoverrideLevel", m_override = 10.); 
+  //Override decision only if match quality for PID correct match is no 
+  //no worse than by 1 order of magnitude in weight compared to alternatives.
+  declareProperty("MCmaxWeight", m_maxweight = 1000000.);
 }
 //=============================================================================
 // Destructor
@@ -304,14 +308,18 @@ bool BackgroundCategory::condition_B(MCParticleVector mc_particles_linked_to_dec
 		carryon = false;
 		verbose() << "Checking condition B step 5" << endreq;
 		if (*iPP) {
+			verbose() << "The MC final state particle has pid : " << (*iPP)->particleID().pid() << endreq;
 			verbose() << "Checking condition B step 6" << endreq;
 			for (iP = mc_particles_linked_to_decay.begin(); iP != mc_particles_linked_to_decay.end(); ++iP) {
 				if ( *iP == 0 ) continue;
+				verbose() << "The MC-associated particle has pid : " << (*iP)->particleID().pid() << endreq;
 				verbose() << "Checking condition B step 7" << endreq;
 				SmartRefVector<MCVertex>::const_iterator iVV = (*iP)->endVertices().begin();
 				verbose() << "Checking condition B step 7b" << endreq;
-        if ( (*iVV)->products().size() == 0 || isStable( (*iP)->particleID().abspid() )  ) {
+        			if ( (*iVV)->products().size() == 0 || isStable( (*iP)->particleID().abspid() )  ) {
 					verbose() << "Checking condition B step 8" << endreq;
+					verbose() << "Associated Particle:" << (*iP) << endreq;
+					verbose() << "MC-final state Particle:" << (*iPP) << endreq;
 					if ( carryon = ( *iP == *iPP ) ) break;
 				}
 			}
@@ -490,10 +498,55 @@ MCParticleVector BackgroundCategory::associate_particles_in_decay(ParticleVector
 			//verbose() << "Associating step 4a - loop step " << debug << endreq;
 			verbose() << "Protoparticle is at " << protoTemp << endreq;
 			MCParticle* mcTemp = m_pCPPAsct->associatedFrom(protoTemp);
-			//verbose() << "Associating step 5a - loop step " << debug << endreq;
-			verbose() << "MCParticle is at " << mcTemp << endreq;
-			associated_mcparts.push_back(mcTemp);
-			//verbose() << "Associating step 6a - loop step " << debug << endreq;
+			if (!mcTemp) {
+				associated_mcparts.push_back(mcTemp);
+				continue;
+			}
+			if (mcTemp->particleID().pid() == (*iP)->particleID().pid()) {
+				//verbose() << "Associating step 5a - loop step " << debug << endreq;
+                                verbose() << "MCParticle is at " << mcTemp << endreq;
+                                associated_mcparts.push_back(mcTemp);
+                                //verbose() << "Associating step 6a - loop step " << debug << endreq;
+			} else {
+				//New commands to look for a range of particles
+				MCParticle* mc_correctPID;
+				MCParticle* mc_bestQ;
+				MCParticle* mc_TempDeux;
+				double maximumweight = m_maxweight;
+				double mc_weight;
+				double mc_correctPID_weight = maximumweight;
+				ProtoParticle2MCAsct::ToRange mcPartRange = 
+						m_pCPPAsct->rangeFrom(protoTemp);
+				ProtoParticle2MCAsct::ToIterator mcPartIt;
+				for (mcPartIt = mcPartRange.begin(); mcPartIt!=mcPartRange.end(); ++mcPartIt) {
+					mc_TempDeux = mcPartIt->to();
+					mc_weight = mcPartIt->weight();
+					if ( mc_weight < maximumweight ) {
+						maximumweight = mc_weight;
+						mc_bestQ = mc_TempDeux;
+					}
+					if (mc_TempDeux->particleID().pid() == (*iP)->particleID().pid()){
+						if (mc_weight < mc_correctPID_weight) {
+							mc_correctPID_weight = mc_weight;
+							mc_correctPID = mc_TempDeux;
+						}
+					}
+				}
+				if (mc_correctPID) {
+					if (mc_correctPID == mc_bestQ) {
+						associated_mcparts.push_back(mc_bestQ);
+					} else {
+						if (mc_correctPID_weight/m_override < maximumweight) {
+							associated_mcparts.push_back(mc_correctPID);
+						} else {
+							associated_mcparts.push_back(mc_bestQ);
+						}
+					}
+				} else {
+					//No match with correct PID, we just match the best quality one there is
+					associated_mcparts.push_back(mc_bestQ);
+				}
+			}
 		} else {
 			//verbose() << "Associating step 3b - loop step " << debug << endreq;
 			Particle* partTemp = *iP;

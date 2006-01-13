@@ -13,7 +13,7 @@ Bs2Phi2KK_Etac2KKKKForPreselBs2PhiEtac.MotherFilter.VtxIsolationFilterCriterion.
 
 ApplicationMgr.TopAlg += {"PrintBackgroundCategory/BkgCatBs2PhiEtac"};
 
-BkgCatBs2PhiEtac.OutputLevel = 2;
+BkgCatBs2PhiEtac.OutputLevel = 1;
 BkgCatBs2PhiEtac.PhysDesktop.InputLocations = {"Phys/Bs2Phi2KK_Etac2PiPiPiPiForPreselBs2PhiEtac", 
                                                "Phys/Bs2Phi2KK_Etac2KKPiPiForPreselBs2PhiEtac",
                                                "Phys/Bs2Phi2KK_Etac2KKKKForPreselBs2PhiEtac"};
@@ -36,8 +36,13 @@ BkgCatBs2PhiEtac.DumpMCEvent = false;
 
 
 // Number of events to process and skip
-ApplicationMgr.EvtMax    = -1;
-EventSelector.FirstEvent = 1;
+//<<<<<<< DVBkgCatBs2PhiEtac.opts
+ApplicationMgr.EvtMax    = 1 ;
+EventSelector.FirstEvent = 1209;
+//=======
+//ApplicationMgr.EvtMax    = -1;
+//EventSelector.FirstEvent = 1;
+//>>>>>>> 1.2
 EventSelector.PrintFreq  = 1;
 
 EventSelector.Input   = {};

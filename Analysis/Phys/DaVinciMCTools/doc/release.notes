@@ -1,7 +1,12 @@
-! $Id: release.notes,v 1.89 2005-12-24 16:55:17 lfernan Exp $
+! $Id: release.notes,v 1.90 2006-01-13 01:29:47 gligorov Exp $
 ! Package     : DaVinciMCTools
 ! Responsible : P. Koppenburg
 !=============================================================================
+
+! 2006-1-12 - V. Gligorov
+  - src/BackgroundCategory.cpp
+  Fixed bug which misidentified signal decays where a protoparticle has an association 
+  to more than one particle.
 
 ! 2005-12-24 - Luis Fernandez & Jeremie Borel
  - src/PrintBackgroundCategory.{h,cpp}
