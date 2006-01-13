@@ -1,4 +1,4 @@
-// $Id: State.cpp,v 1.11 2006-01-11 07:59:47 mneedham Exp $
+// $Id: State.cpp,v 1.12 2006-01-13 17:11:59 erodrigu Exp $
 
 #include <math.h>
 #include <gsl/gsl_math.h>
@@ -146,8 +146,8 @@ double State::errQOverP2() const
 //=============================================================================
 double State::errP2() const
 {
- return (fabs(m_stateVector[4]) > TrackParameters::lowTolerance ? 
-         errQOverP2() * gsl_pow_4( m_stateVector[4]): 0.);
+ return ( fabs(m_stateVector[4]) > TrackParameters::lowTolerance ? 
+          errQOverP2() / gsl_pow_4( m_stateVector[4]): 0. );
 };
 
 //=============================================================================

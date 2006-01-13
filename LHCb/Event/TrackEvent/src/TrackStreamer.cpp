@@ -88,7 +88,14 @@ std::ostream& str::stateFields(const State& state, std::ostream& os) {
   if (state.checkLocation(State::EndRich1)) os <<"L:EndRich1, ";
   if (state.checkLocation(State::BegRich2)) os <<"L:BegRich2, ";
   if (state.checkLocation(State::EndRich2)) os <<"L:EndRich2, ";
-  if (state.checkLocation(State::Calo)) os <<"L:Calo, ";
+  if (state.checkLocation(State::Spd)) os <<"L:Spd, ";
+  if (state.checkLocation(State::Prs)) os <<"L:Prs, ";
+  if (state.checkLocation(State::BegECal)) os <<"L:BegECal, ";
+  if (state.checkLocation(State::ECalShowerMax)) os <<"L:ECalShowerMax, ";
+  if (state.checkLocation(State::EndECal)) os <<"L:EndECal, ";
+  if (state.checkLocation(State::BegHCal)) os <<"L:BegHCal, ";
+  if (state.checkLocation(State::MidHCal)) os <<"L:MidHCal, ";
+  if (state.checkLocation(State::EndHCal)) os <<"L:EndHCal, ";
   if (state.checkLocation(State::Muon)) os <<"L:Muon, ";
 
   return os;  

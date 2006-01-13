@@ -34,8 +34,15 @@
    *    BegRich1          : at the beginning of RICH1
    *    EndRich1          : at the end of RICH1
    *    BegRich2          : at the beginning of RICH2
-   *    EndRich2          : atthe end of RICH2
-   *    Calo              : in the calorimeter
+   *    EndRich2          : at the end of RICH2
+   *    Spd               : at the Scintillating Pad Detector SPD
+   *    Prs               : at the Preshower detector
+   *    BegECal           : at the beginning of the ECAL
+   *    ECalShowerMax     : at the maximum-shower position in the ECAL
+   *    EndECal           : at the end of the ECAL
+   *    BegHCal           : at the beginning of the HCAL
+   *    MidHCal           : at the middle of the HCAL
+   *    EndHCal           : at the end of the HCAL
    *    Muon              : in the muon stations
    *
    */
@@ -53,7 +60,14 @@
                  EndRich1,
                  BegRich2,
                  EndRich2,
-                 Calo,
+		 Spd,
+		 Prs,
+		 BegECal,
+		 ECalShowerMax,
+		 EndECal,
+		 BegHCal,
+		 MidHCal,
+		 EndHCal,
                  Muon'
        access = 'PUBLIC' />
 
