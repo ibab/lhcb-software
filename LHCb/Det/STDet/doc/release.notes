@@ -1,8 +1,14 @@
 !Package         : STDet
 !Package manager : M. Needham
 
+! 2006-1-16
+  - change LayerID to layerID
+
+! 2006-1-16 M Needham
+
 !========================= STDet v2r0 2006-01-16 =======================
 ! 2006-01-16 M Needham
+
   - Bug fix in DeITStation::initialize
 
 ! 2006-01-13 M. Needham

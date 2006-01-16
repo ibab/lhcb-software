@@ -19,3 +19,5 @@ library STDet ../src/Component/*.cpp
 # =========== standard patterns (the order is essential!) ======================
 apply_pattern component_library library=STDet
 apply_pattern linker_library    library=STDetLib
+
+macro_append cppflags ' -g'

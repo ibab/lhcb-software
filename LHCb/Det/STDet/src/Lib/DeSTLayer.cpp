@@ -32,7 +32,7 @@ StatusCode DeSTLayer::initialize() {
   }
   else {
 
-    m_id = param<unsigned int>("LayerID");
+    m_id = param<unsigned int>("layerID");
     m_angle = param<double>("stereoAngle");
     m_cosAngle = cos(m_angle);
     m_sinAngle = sin(m_angle);
