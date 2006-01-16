@@ -37,12 +37,13 @@ StatusCode DeITStation::initialize() {
 
   // initialize
   MsgStream msg(msgSvc(), name() );
-  StatusCode sc = DeITStation::initialize();
+  StatusCode sc = DeSTStation::initialize();
   if (sc.isFailure() ){
     msg << MSG::ERROR << "Failed to initialize detector element" << endreq; 
   }
   else {
     // get the children
+    std::cout << "Matt " << this << std::endl;
     m_boxes = getChildren<DeITStation>(); 
   }
   return sc;
