@@ -5,7 +5,7 @@
  *  Header file for RICH reconstruction tool interface : IRichPhotonCreator
  *
  *  CVS Log :-
- *  $Id: IRichPhotonCreator.h,v 1.5 2005-06-17 14:48:57 jonrob Exp $
+ *  $Id: IRichPhotonCreator.h,v 1.6 2006-01-16 18:24:05 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -132,8 +132,11 @@ public:
 
   /** Method to perform the reconstruction of all tracks and pixels.
    *  The most efficient methods to create all possible photon candidates.
+   *  @return StatusCode indicating if request was successful or not
+   *  @retval StatusCode::SUCCESS Photon reconstruction was successful
+   *  @retval StatusCode::FAILURE Photon reconstruction failed
    */
-  virtual void reconstructPhotons() const = 0;
+  virtual StatusCode reconstructPhotons() const = 0;
 
 };
 

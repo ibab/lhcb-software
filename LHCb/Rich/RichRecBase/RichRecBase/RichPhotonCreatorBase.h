@@ -5,7 +5,7 @@
  *  Header file for tool base class : RichPhotonCreatorBase
  *
  *  CVS Log :-
- *  $Id: RichPhotonCreatorBase.h,v 1.4 2005-10-13 15:38:41 jonrob Exp $
+ *  $Id: RichPhotonCreatorBase.h,v 1.5 2006-01-16 18:24:05 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   20/05/2005
@@ -74,7 +74,7 @@ public: // methods for Gaudi
 public: // methods from interface
 
   // Method to perform the photon reconstruction of all tracks and pixels
-  void reconstructPhotons() const;
+  StatusCode reconstructPhotons() const;
 
   // Return Pointer to RichRecPhotons
   RichRecPhotons * richPhotons() const;
