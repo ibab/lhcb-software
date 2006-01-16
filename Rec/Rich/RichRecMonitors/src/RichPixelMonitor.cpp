@@ -4,7 +4,7 @@
  *
  *  Implementation file for algorithm class : RichPixelMonitor
  *
- *  $Id: RichPixelMonitor.cpp,v 1.2 2005-10-31 13:30:58 jonrob Exp $
+ *  $Id: RichPixelMonitor.cpp,v 1.3 2006-01-16 18:24:59 jonrob Exp $
  *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   05/04/2002
@@ -63,7 +63,8 @@ StatusCode RichPixelMonitor::execute()
   // Make sure all pixels have been formed
   if ( richPixels()->empty() )
   {
-    if ( !pixelCreator()->newPixels() ) return StatusCode::FAILURE;
+    if ( pixelCreator()->newPixels().isFailure() ) 
+      return Error( "Problem creating RichRecPixels" );
     debug() << "No Pixels found : Created "
             << richPixels()->size() << " RichRecPixels" << endreq;
   }

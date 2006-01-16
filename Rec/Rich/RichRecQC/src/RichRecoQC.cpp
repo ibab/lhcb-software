@@ -5,7 +5,7 @@
  *  Implementation file for RICH reconstruction monitoring algorithm : RichRecoQC
  *
  *  CVS Log :-
- *  $Id: RichRecoQC.cpp,v 1.20 2005-12-01 08:05:25 jonrob Exp $
+ *  $Id: RichRecoQC.cpp,v 1.21 2006-01-16 18:25:24 jonrob Exp $
  *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   2002-07-02
@@ -78,8 +78,16 @@ StatusCode RichRecoQC::execute()
   const double ckResRange[] = { 0.01, 0.005,  0.0025 };
 
   // Make sure all tracks and segments have been formed
-  if ( !trackCreator()->newTracks() )
+  if ( trackCreator()->newTracks().isFailure() )
     return Error( "Problem creating RichRecTracks" );
+  
+  // make sure RichrecPixels are ready
+  if ( pixelCreator()->newPixels().isFailure() )
+    return Error( "Problem creating RichRecPixels" );
+  
+  // make sure photons are available
+  if ( photonCreator()->reconstructPhotons().isFailure() )
+    return Error( "Problem creating RichRecPhotons" );
 
   // Iterate over segments
   for ( RichRecSegments::const_iterator iSeg = richSegments()->begin();

@@ -5,7 +5,7 @@
  *  Implementation file for algorithm class : RichPhotonRecoEffMonitor
  *
  *  CVS Log :-
- *  $Id: RichPhotonRecoEffMonitor.cpp,v 1.2 2005-11-07 13:29:28 jonrob Exp $
+ *  $Id: RichPhotonRecoEffMonitor.cpp,v 1.3 2006-01-16 18:24:59 jonrob Exp $
  *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   05/04/2002
@@ -64,6 +64,18 @@ StatusCode RichPhotonRecoEffMonitor::execute()
 
   // Check event status
   if ( !richStatus()->eventOK() ) return StatusCode::SUCCESS;
+
+  // Make sure all tracks and segments have been formed
+  if ( trackCreator()->newTracks().isFailure() )
+    return Error( "Problem creating RichRecTracks" );
+  
+  // make sure RichrecPixels are ready
+  if ( pixelCreator()->newPixels().isFailure() )
+    return Error( "Problem creating RichRecPixels" );
+  
+  // make sure photons are available
+  if ( photonCreator()->reconstructPhotons().isFailure() )
+    return Error( "Problem creating RichRecPhotons" );
 
   // Histogramming
   const RichHistoID hid;
