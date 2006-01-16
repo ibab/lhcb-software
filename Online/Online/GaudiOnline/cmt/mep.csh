@@ -3,7 +3,7 @@ rm /dev/shm/bm_*
 set EXEC=$ONLINEKERNELROOT/$CMTCONFIG/test.exe
 set GEXEC=$GAUDIONLINEROOT/$CMTCONFIG/Gaudi.exe
 set MINITERM='xterm -geometry 60x6 -e '
-$MINITERM "$EXEC mep_install -s=5000 -e=100 -u=20 -i=MEP -c -s=200 -e=200 -u=20 -i=EVENT -c -s=200 -e=200 -u=20 -i=RESULT" &
+$MINITERM "$EXEC mep_install -s=5000 -e=5 -u=5 -i=MEP -c -s=200 -e=200 -u=20 -i=EVENT -c -s=200 -e=200 -u=20 -i=RESULT" &
 sleep 5
 xterm  -ls -132 -geometry 132x40 -e "$EXEC mbm_mon" &
 xterm  -ls -132 -geometry 132x36 -e "$EXEC mep_dump_bitmap -b1=MEP -b2=EVENT -b3=RESULT -c" &

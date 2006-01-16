@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/GaudiOnline/src/DecisionSetterAlg.cpp,v 1.11 2006-01-16 19:05:17 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/GaudiOnline/src/DecisionSetterAlg.cpp,v 1.12 2006-01-16 19:24:23 frankb Exp $
 //	====================================================================
 //  DecisionSetterAlg.cpp
 //	--------------------------------------------------------------------
@@ -48,9 +48,9 @@ namespace LHCb  {
       }
       m_mepID = m_mepMgr->mepID();
       m_prod = new Producer(m_mepID->resBuffer,m_mepID->processName,m_mepID->partitionID);
-      mbm_register_free_event(m_mepID->evtBuffer,  0, 0);
-      mbm_register_free_event(m_mepID->resBuffer,  0, 0);
-      mbm_register_alloc_event(m_mepID->resBuffer, 0, 0);
+      // mbm_register_free_event(m_mepID->evtBuffer,  0, 0);
+      // mbm_register_free_event(m_mepID->resBuffer,  0, 0);
+      // mbm_register_alloc_event(m_mepID->resBuffer, 0, 0);
       return StatusCode::SUCCESS;
     }
 

@@ -40,10 +40,10 @@ static int _mep_change_refcount(MEPDESC* dsc,MEP_SINGLE_EVT* evt, int change)  {
     static int counter = 0;
     int cnt = 0;
     {
-      //RTL::Lock lock(dsc->lockid);
-      //if ( !lock )  {
-      //  ::printf("Failed to aquire lock:%s\n",dsc->mutexName);
-      //}
+      RTL::Lock lock(dsc->lockid);
+      if ( !lock )  {
+        ::printf("Failed to aquire lock:%s\n",dsc->mutexName);
+      }
       switch(change) {
       case 2:
         ++e->refCount;
