@@ -12,6 +12,6 @@ EventSelector.REQ1 = "EvType=2;TriggerMask=0xffffffff,0xffffffff,0xffffffff,0xff
 //MEPManager.ProcessName           = "Moore_0";
 MEPManager.PartitionID           = 333;
 MEPManager.Buffers               = { "EVENT", "RESULT" };
-//MessageSvc.OutputLevel           = 1;
+MessageSvc.OutputLevel           = 1;
 //ApplicationMgr.TopAlg            = { "StoreExplorerAlg" };
 //MEPManager.Buffers               = { "EVENT" };

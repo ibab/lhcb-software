@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/GaudiOnline/src/MEPManager.cpp,v 1.4 2006-01-16 18:30:05 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/GaudiOnline/src/MEPManager.cpp,v 1.5 2006-01-16 19:05:17 frankb Exp $
 //	====================================================================
 //  MEPManager.cpp
 //	--------------------------------------------------------------------
@@ -48,6 +48,7 @@ StatusCode LHCb::MEPManager::queryInterface(const InterfaceID& riid,
 }
 
 StatusCode LHCb::MEPManager::initialize()  {
+  MsgStream log(msgSvc(), "MEPManager");
   typedef std::vector<std::string> _V;
   StatusCode sc = Service::initialize();
   int flags = 0;
@@ -74,11 +75,11 @@ StatusCode LHCb::MEPManager::initialize()  {
     ::lib_rtl_get_process_name(txt, sizeof(txt));
     m_procName = txt;
   }
+  log << MSG::ALWAYS << "Including in MEP buffers" << endmsg;
   m_mepID = mep_include(m_procName.c_str(), m_partitionID, flags);
   if ( m_mepID == MEP_INV_DESC )  {
     return error("Failed to include into MEP buffers!");
   }
-  MsgStream log(msgSvc(), "MEPManager");
   log << MSG::INFO << " MEP    buffer start: " << (void*)m_mepID->mepStart << endmsg;
   log << MSG::INFO << " EVENT  buffer start: " << (void*)m_mepID->evtStart << endmsg;
   log << MSG::INFO << " RESULT buffer start: " << (void*)m_mepID->resStart << endmsg;

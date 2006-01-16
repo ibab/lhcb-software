@@ -3,9 +3,13 @@
 #include "RTL/screen.h"
 
 namespace RTL {
+
+  /** @class ConsoleDisplay ConsoleDisplay.h RTL/ConsoleDisplay.h
+    *
+    */
   class ConsoleDisplay  {
   protected:
-    WINDOW m_win;
+    WINDOW* m_win;
     size_t m_currLine;
     int m_textColor;
     int m_bkgColor;
@@ -23,4 +27,4 @@ namespace RTL {
     void setContinuous(bool val)  { m_continue = val;  }
   };
 }
-#endif ONLINEKERNEL_RTL_CONSOLE_DISPLAY_H
+#endif // ONLINEKERNEL_RTL_CONSOLE_DISPLAY_H

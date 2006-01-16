@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/GaudiOnline/src/DecisionSetterAlg.cpp,v 1.10 2006-01-16 18:30:05 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/GaudiOnline/src/DecisionSetterAlg.cpp,v 1.11 2006-01-16 19:05:17 frankb Exp $
 //	====================================================================
 //  DecisionSetterAlg.cpp
 //	--------------------------------------------------------------------
@@ -84,7 +84,7 @@ namespace LHCb  {
             ::memcpy(e.data, src->header(), len);
             ::memcpy(e.mask, src->triggerMask(), sizeof(e.mask));
             // Add here optional data to the output record....
-            MEPEVENT* me = (MEPEVENT*)(int*)(m_mepID->mepStart + src->header()->m_begin);
+            // MEPEVENT* me = (MEPEVENT*)(int*)(m_mepID->mepStart + src->header()->m_begin);
             // ::printf("MEP: %d   count:%d Pattern:%08X Valid:%d ",
             //  me->mepBufferID, me->refCount, me->magic, me->valid);
             if ( m_prod->sendEvent() == MBM_NORMAL )  {

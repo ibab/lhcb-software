@@ -18,8 +18,9 @@
 #include "bm_struct.h"
 #include "MBM/mepdef.h"
 #define MAGIC_PATTERN int(0xFEEDBABE)
+
 static int print_release = false;
-static int print_addref = false;
+// static int print_addref = false;
 
 
 struct MEPDESC : public _MEPID  {

@@ -261,7 +261,6 @@ int MBM::Installer::deinstall()  {
 
 int mbm_install(int argc , char** argv) {
   MBM::Installer inst(argc, argv);
-  RTL::CLI cli(argc, argv, help);
   int sc = inst.install();
   if ( sc == 1 )  {
     if ( inst.startMonitor() )  {

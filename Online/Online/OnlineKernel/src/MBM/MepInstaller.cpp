@@ -1,9 +1,10 @@
+#include <cctype>
 #include <vector>
 #include <MBM/bmdef.h>
 
 extern "C" int mep_install(int argc , char** argv) {
   std::vector<char*> opts;
-  static char* type = "mbm_install";
+  static char type[64] = "mbm_install";
   opts.push_back(type);
   for(size_t i=0; i<size_t(argc); ++i)  {
     opts.push_back(argv[i]);

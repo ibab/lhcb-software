@@ -16,8 +16,8 @@ namespace  {
   struct EVENTGenerator  : public MEP::Consumer  {
     typedef std::vector<LHCb::MEPFragment*> Frags;
     typedef std::map<unsigned int, Frags >  SubEvents;
-    int prt, m_refCount;
     MBM::Producer* m_evtProd;
+    int prt, m_refCount;
     EVENTGenerator(const std::string& nam, int partID, int cnt)
     : MEP::Consumer(nam, partID), m_evtProd(0), m_refCount(cnt)
     {

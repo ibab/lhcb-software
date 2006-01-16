@@ -44,6 +44,7 @@ static inline size_t term_width()  {   return 132; }
 #define BLUE    COLOR_BLUE
 #define YELLOW  COLOR_YELLOW
 #define BLACK   COLOR_BLACK
+#define LIGHTGREEN COLOR_GREEN
 static inline WINDOW* initscreen()  {  WINDOW* w=initscr(); clrscr(); return w; }
 static inline void gotoxy(int x, int y) { ::move(x-1,y-1); }
 static inline void printxy(int x, int y, const char* buff) { ::mvprintw(y-1,x-1,buff); }
