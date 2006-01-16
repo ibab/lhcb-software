@@ -1,18 +1,13 @@
 package MuonKernel
 
-version v4r0
+version v3r0
 
 branches cmt src MuonKernel doc 
 
 include_dirs $(MUONKERNELROOT)
 
-use LHCbKernel		v6r*	Kernel
+use LHCbKernel	v* Kernel
 
-# Produce Header-Files from XML description, overriding default destination
-#============================================================================
-
-#----------------------------------------------
 library MuonKernelLib  ../src/*.cpp
-
 apply_pattern linker_library    library=MuonKernelLib
 
