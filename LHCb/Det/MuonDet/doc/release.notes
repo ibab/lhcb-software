@@ -1,16 +1,12 @@
-! $Id: release.notes,v 1.53 2006-01-16 11:33:26 asatta Exp $
-!
+! $Id: release.notes,v 1.54 2006-01-16 13:37:11 cattanem Exp $
 ! Package     : MuonDet
 ! Responsible : Alessia Satta
+!----------------------------------------------------------------------------
 
-
-
-!========================= MuonDet v5r2 2006-01-16 =========================
+!========================= MuonDet v5r0 2006-01-16 =========================
 ! 2006-01-16 - Gaia Lanfranchi
   - add methods to fill and retrieve info in the int sensdetID of MCHit
  
-!========================= 
-MuonDet v5r1 2005-12-13 =========================
 ! 2005-12-16 - Alessio Sarti
    - src/Lib/MuonChamberLayout.cpp(.h)
    - src/Lib/DeMuonDetector.cpp(.h)

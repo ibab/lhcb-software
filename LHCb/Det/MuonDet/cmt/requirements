@@ -1,9 +1,9 @@
 # =========================================================================
-# $Id: requirements,v 1.26 2005-12-16 14:53:20 asarti Exp $
+# $Id: requirements,v 1.27 2006-01-16 13:37:11 cattanem Exp $
 # =========================================================================
 
 package MuonDet
-version  v5r2
+version  v5r0
 
 # =============== structure ===============================================
 branches         src cmt doc MuonDet
@@ -12,7 +12,7 @@ branches         src cmt doc MuonDet
 include_dirs      $(MUONDETROOT)
 
 # =============== used packages ===========================================
-use MuonKernel    v4r0 Muon
+use MuonKernel    v*  Muon
 use DetDescCnv    v*  Det
 
 # =============== link library (base classes) =============================
