@@ -34,11 +34,6 @@ namespace {
         }
         //int cnt = 0;
         while ( 1 )  {
-#ifdef _WIN32
-          lib_rtl_sleep(1);
-#else
-          lib_rtl_usleep(10);
-#endif
           //cnt++;
           //if ( (cnt%3)==0 ) printf(".");
           //if ( (cnt%50)==0 )  {
@@ -52,6 +47,11 @@ namespace {
             }
             break;
           }
+#ifdef _WIN32
+          lib_rtl_sleep(1);
+#else
+          lib_rtl_usleep(10);
+#endif
         }
         //printf("MEP release [%d] MEP @ %08X MEP:%p [%d] Pattern:%08X\n",
         //  e->refCount, m_mepID->mepStart+e->begin, (void*)e, e->evID, e->magic);
