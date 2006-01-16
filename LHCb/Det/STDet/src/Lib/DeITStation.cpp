@@ -43,7 +43,7 @@ StatusCode DeITStation::initialize() {
   }
   else {
     // get the children
-    std::cout << "Matt " << this << std::endl;
+    //std::cout << "Matt " << this << std::endl;
     m_boxes = getChildren<DeITStation>(); 
   }
   return sc;
