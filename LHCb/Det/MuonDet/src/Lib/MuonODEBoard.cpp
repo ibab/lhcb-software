@@ -1,4 +1,4 @@
-// $Id: MuonODEBoard.cpp,v 1.2 2005-12-16 14:53:20 asarti Exp $
+// $Id: MuonODEBoard.cpp,v 1.3 2006-01-16 15:11:33 asarti Exp $
 // Include files 
 
 #include "MuonKernel/MuonTile.h"
@@ -44,7 +44,7 @@ StatusCode MuonODEBoard::update(long tslayx,long tslayy, long tsnumb,
 
 StatusCode MuonODEBoard::addTSName(std::string name)
 {
-  if(m_TSName.size()<=m_TSNumber){
+  if((int)m_TSName.size()<= m_TSNumber){
     m_TSName.push_back(name);    
     return StatusCode::SUCCESS;    
   }else{

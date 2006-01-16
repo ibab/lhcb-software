@@ -1,4 +1,4 @@
-// $Id: MuonChamberGrid.cpp,v 1.6 2005-12-13 11:06:57 asatta Exp $
+// $Id: MuonChamberGrid.cpp,v 1.7 2006-01-16 15:11:33 asarti Exp $
 // Include files 
 
 // local
@@ -334,7 +334,7 @@ StatusCode MuonChamberGrid::getPCCenter(MuonFrontEndID fe,
                                         double& xcenter, double& ycenter){
   std::vector<double> x_rdout;
   std::vector<double> y_rdout;
-  unsigned int readout=fe.getReadout();
+  int readout=fe.getReadout();
   
   int TstRead =  m_x_pad_rdout2.size();
   int RdN = 1;

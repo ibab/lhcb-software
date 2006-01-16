@@ -1,4 +1,4 @@
-// $Id: MuonChamberLayout.cpp,v 1.9 2005-12-16 14:53:20 asarti Exp $
+// $Id: MuonChamberLayout.cpp,v 1.10 2006-01-16 15:11:33 asarti Exp $
 // Include files 
 
 //Muon
@@ -195,13 +195,13 @@ void MuonChamberLayout::chamberXY(int sx, int sy, int shx, int shy,
               " "<<shx<<" "<<shy<<std::endl;
 
   //Protect against chambers outside the current region grid
-  if(fx<0 || fy<0 || fx >= 4*m_cgX.at(reg) 
-     || fy >= 4*m_cgY.at(reg)) {
+  if(fx<0 || fy<0 || fx >= 4*(int)m_cgX.at(reg) 
+     || fy >= 4*(int)m_cgY.at(reg)) {
 
     //Starting point in the new (larger) grid
     sy = sy + 2*m_cgY.at(reg);
     if(reg<2) {
-      if(sx < 2*m_cgX.at(reg)) { sx = 1; }
+      if(sx < 2*(int)m_cgX.at(reg)) { sx = 1; }
       else { sx = 2;}
     } 
     
@@ -241,7 +241,7 @@ void MuonChamberLayout::chamberXY(int sx, int sy, int shx, int shy,
     if(reg-1>=0) {
       //When dropping down the region number 
       if(reg < 3){
-        if(fx < 2*m_cgX.at(reg)) { shx = -1; }
+        if(fx < 2*(int)m_cgX.at(reg)) { shx = -1; }
         else { shx = 1; }
       } else {
         shx = -2;
@@ -435,7 +435,7 @@ void MuonChamberLayout::gridPosition(float x, float y, int iS, int &idx,
   bool debug = false;
   float xs = m_xS.at(iS);   float ys = m_yS.at(iS); 
   //Extracting chamber indexes in the finest grid.
-  myIdx = (int)x/xs;  myIdy = (int)y/ys;
+  myIdx = (int)(x/xs);  myIdy = (int)(y/ys);
   rX = x-xs*myIdx; rY = y-ys*myIdy;
   if(debug) std::cout << "Rest: "<<rX<<" "<<rY<<" "<<xs<<" "<<ys<<" "
                       <<x<<" "<<y<< std::endl;
@@ -585,10 +585,10 @@ std::vector<DeMuonChamber*>  MuonChamberLayout::fillChambersVector(IDataProvider
 
 bool MuonChamberLayout::shouldLowReg(int idX, int idY, int reg){
   bool lower = true;
-  bool iXnz = (((idX <  m_cgX.at(reg))&&(idX>0)) || 
-               ((idX>=3*m_cgX.at(reg))&&(idX<4*m_cgX.at(reg))));
-  bool iYnz = (((idY <  m_cgY.at(reg))&&(idY>0)) || 
-               ((idY>=4*m_cgY.at(reg))&&(idX<4*m_cgY.at(reg))));
+  bool iXnz = (((idX <  (int)m_cgX.at(reg))&&(idX>0)) || 
+               ((idX>=3*(int)m_cgX.at(reg))&&(idX<4*(int)m_cgX.at(reg))));
+  bool iYnz = (((idY <  (int)m_cgY.at(reg))&&(idY>0)) || 
+               ((idY>=4*(int)m_cgY.at(reg))&&(idX<4*(int)m_cgY.at(reg))));
   if(iXnz && iYnz) {lower = false;}
   return lower;
 }

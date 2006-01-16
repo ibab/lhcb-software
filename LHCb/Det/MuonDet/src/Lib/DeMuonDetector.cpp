@@ -1,4 +1,4 @@
-// $Id: DeMuonDetector.cpp,v 1.14 2006-01-16 11:33:26 asatta Exp $
+// $Id: DeMuonDetector.cpp,v 1.15 2006-01-16 15:11:33 asarti Exp $
 
 // Include files
 #include "MuonDet/DeMuonDetector.h"
@@ -167,8 +167,8 @@ StatusCode DeMuonDetector::Hit2ChamberNumber(Gaudi::XYZPoint myPoint,
       
       int x_sgn(0),y_sgn(0);
       //Avoid unnecessary checks for resolution problems
-      if(fabs(x-x_ref)>0.01) {x_sgn = (x-x_ref)/fabs(x-x_ref);}
-      if(fabs(y-y_ref)>0.01) {y_sgn = (y-y_ref)/fabs(y-y_ref);}
+      if(fabs(x-x_ref)>0.01) {x_sgn = (int)((x-x_ref)/fabs(x-x_ref));}
+      if(fabs(y-y_ref)>0.01) {y_sgn = (int)((y-y_ref)/fabs(y-y_ref));}
       
       msg << MSG::DEBUG << "Hit not found Try to look in corner "
           <<x_ref<< " "<<x<<" "<<x_sgn<<" "<<y_ref<<" "<<y<<" "<<
@@ -652,7 +652,7 @@ StatusCode DeMuonDetector::getPCCenter(MuonFrontEndID fe,int chamber,
   theGrid->getPCCenter(fe,xcenter_norma,ycenter_norma);
   double xcenter_gap=xcenter_norma*2*dx-dx;
   double ycenter_gap=ycenter_norma*2*dy-dy;
-  unsigned int layer=fe.getLayer();
+  //  unsigned int layer=fe.getLayer();
   Gaudi::XYZPoint loc(xcenter_gap,ycenter_gap,0);   
   Gaudi::XYZPoint glob= geoCh->toGlobal(loc);
   xcenter=glob.x();
@@ -688,7 +688,7 @@ StatusCode  DeMuonDetector::fillGeoInfo()
       for(itRg=(*itSt)->childBegin(); itRg<(*itSt)->childEnd(); itRg++){
         if(debug)msg<<MSG::INFO<<" region "<<region<<endreq;      
         IDetectorElement::IDEContainer::iterator itCh=(*itRg)->childBegin();
-        DeMuonRegion* reg=dynamic_cast<DeMuonRegion*> (*itRg);
+	//        DeMuonRegion* reg=dynamic_cast<DeMuonRegion*> (*itRg);
         for(itCh=(*itRg)->childBegin(); itCh<(*itRg)->childEnd(); itCh++){
           DeMuonChamber* chPt=dynamic_cast<DeMuonChamber*> (*itCh);          
           IDetectorElement::IDEContainer::iterator itGap=(*itCh)->childBegin();
@@ -711,11 +711,10 @@ StatusCode  DeMuonDetector::fillGeoInfo()
           }
           m_gapPerRegion[station*4+region]=gaps;
           m_gapPerFE[station*4+region]=gaps/2; 
-          SmartRef<Condition> aGrid = (chPt)->condition(chPt->getGridName());
-          Condition* bGrid = (chPt)->condition((chPt->getGridName()).data());
 
-          std::vector<std::string>::iterator is;
+          Condition* bGrid = (chPt)->condition((chPt->getGridName()).data());
           MuonChamberGrid* theGrid = dynamic_cast<MuonChamberGrid*>(bGrid);
+
           int nreadout=1;
           if(theGrid->getGrid2SizeY()>1)nreadout=2;
           m_readoutNumber[station*4+region]=nreadout;

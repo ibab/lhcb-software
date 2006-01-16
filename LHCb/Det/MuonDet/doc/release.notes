@@ -1,9 +1,12 @@
-! $Id: release.notes,v 1.54 2006-01-16 13:37:11 cattanem Exp $
+! $Id: release.notes,v 1.55 2006-01-16 15:11:33 asarti Exp $
 ! Package     : MuonDet
 ! Responsible : Alessia Satta
 !----------------------------------------------------------------------------
 
 !========================= MuonDet v5r0 2006-01-16 =========================
+! 2006-01-16 - Alessio Sarti
+  - removal of warnings at compile time 
+
 ! 2006-01-16 - Gaia Lanfranchi
   - add methods to fill and retrieve info in the int sensdetID of MCHit
  
