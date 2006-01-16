@@ -91,7 +91,7 @@ int BF_alloc(char *base, int bf_size, int size_wanted, int* pos_found)   {
         ++len;
         if ( set && len >= size_wanted )  {
           *pos_found = pos;
-          return BF_set(base, pos, len);
+          return BF_set(base, pos, size_wanted);
         }
         else if ( !set )  {
           len = 1;
@@ -108,7 +108,7 @@ int BF_alloc(char *base, int bf_size, int size_wanted, int* pos_found)   {
 }
 
 int BF_count(const char* base,int bf_size,int* pos,int* size) {
-  bool set = 0;  
+  bool set = false;  
   int max_pos = bf_size, max_len = 0, len = 0, start_pos = 0;
   for(int i=0, j=0; i < bf_size/8; ++i, j=0)  {
     if ( base[i] )  {
@@ -188,6 +188,55 @@ int BF_free(char* base,int pos, int len) {
   for(int m=0; m<len;++m)
     *base &= ~(1<<m);
   return 1;
+}
+
+void BF_print(const void* field, int len, size_t ncols, bool prt_hdr)  {
+  size_t i, j, k, n;
+  int* txt = (int*)field;
+  if ( prt_hdr )  {
+    printf("\n");
+    for(j=0, n=0; j < ncols; ++j )  {
+      for(k=0; k<32; ++k, ++n)  {
+        printf("%c",((n+1))%10 == 0 ? (n+1)/10+'0' : ' ');
+      }
+      if ( j < (ncols-1) ) printf (" ");
+    }
+    printf("\n");
+    for(j=0, n=0; j < 4; ++j )  {
+      for(k=0; k<32; ++k, ++n)  {
+        printf("%d",(n+1)%10);
+      }
+      if ( j < (ncols-1) ) printf (" ");
+    }
+    printf("\n");
+    printf("\n");
+  }
+  std::vector<std::string> words;
+  Bits::dumpWords(field, len, words);
+  for(i = 0, k = 0; i < len/sizeof(int)/ncols; ++i )  {
+    for(j = 0; j < ncols; ++j )  {
+      printf(words[i+ncols+j].c_str());
+      if ( j < (ncols-1) ) printf (" ");
+      ++k;
+    }
+    printf("\n");
+  }
+  while(k<sizeof(words))  {
+    printf(words[k++].c_str());
+  }
+}
+
+void Bits::dumpWords(const void* field, int len, std::vector<std::string>& words)  {
+  int* txt = (int*)field;
+  char word[33];
+  words.clear();
+  for(size_t i = 0; i < len/sizeof(int); ++i )  {
+    for ( int k = 0; k<32; ++k)  {
+      word[k] = (txt[i]&(1<<k)) ? '1' : '0';
+    }
+    word[32] = 0;
+    words.push_back(word);
+  }
 }
 
 static inline int generic_ffs(int x)  {

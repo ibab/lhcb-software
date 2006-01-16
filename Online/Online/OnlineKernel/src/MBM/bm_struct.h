@@ -102,7 +102,9 @@ struct USER : public qentry_t  {
   int get_ev_calls;            
   int get_sp_calls;            
   int get_wakeups;             
-  int get_asts_run;            
+  int get_asts_run;  
+  int free_calls;
+  int alloc_calls;
   float  utime;
   float stime;
   int spare1;

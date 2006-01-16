@@ -23,24 +23,43 @@ namespace {
       ::printf(" EVENT  buffer start: %08X\n",m_mepID->evtStart);
       ::printf(" RESULT buffer start: %08X\n",m_mepID->resStart);
       // mep_set_watch(m_mepID);
-      // mbm_register_free_event(m_bmid, 0, 0);
     }
-    virtual int eventAction() {
-      const MBM::EventDesc& evt = event();
-      MEPEVENT* e = (MEPEVENT*)(int*)evt.data;
-      if ( e->magic != mep_magic_pattern() )  {
-        printf("Bad magic MEP pattern !!!!\n");
-      }
-      while ( e->refCount > 1 )  {
+    virtual int run() {
+      int sc;
+      for (sc=getEvent(); sc == MBM_NORMAL; sc=getEvent() )  {
+        const MBM::EventDesc& evt = event();
+        MEPEVENT* e = (MEPEVENT*)(int*)evt.data;
+        if ( e->magic != mep_magic_pattern() )  {
+          printf("Bad magic MEP pattern !!!!\n");
+        }
+        //int cnt = 0;
+        while ( 1 )  {
 #ifdef _WIN32
-        lib_rtl_sleep(1);
+          lib_rtl_sleep(1);
 #else
-        lib_rtl_usleep(100);
+          lib_rtl_usleep(100);
 #endif
+          //cnt++;
+          //if ( (cnt%3)==0 ) printf(".");
+          //if ( (cnt%50)==0 )  {
+          //  printf("WAIT MEP release [%d] MEP @ %08X MEP:%p [%d] Pattern:%08X\n",
+          //    e->refCount, m_mepID->mepStart+e->begin, (void*)e, e->evID, e->magic);
+          //}
+          if ( e->refCount <= 1 )    {
+            if ( e->refCount != 1 )    {
+              printf("MEP release [%d] Event at address %08X MEP:%p [%d] Pattern:%08X\n",
+                e->refCount, m_mepID->mepStart+e->begin, (void*)e, e->evID, e->magic);
+            }
+            break;
+          }
+        }
+        //printf("MEP release [%d] MEP @ %08X MEP:%p [%d] Pattern:%08X\n",
+        //  e->refCount, m_mepID->mepStart+e->begin, (void*)e, e->evID, e->magic);
+        freeEvent();
+
+        //e->valid = 0;
       }
-      e->valid = 0;
-      e->refCount = 0;
-      return Consumer::eventAction();
+      return sc;
     }
   };
 }

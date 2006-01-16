@@ -1,10 +1,18 @@
-start %ONLINEKERNELROOT%\win32_vc71_dbg\test.exe mbm_install -s=10000 -e=10 -u=20 -i=MEP
-start %ONLINEKERNELROOT%\win32_vc71_dbg\test.exe mbm_install -s=4096 -e=50 -u=20 -i=EVENT
-start %ONLINEKERNELROOT%\win32_vc71_dbg\test.exe mbm_install -s=4096 -e=100 -u=20 -i=RESULT
-start %ONLINEKERNELROOT%\win32_vc71_dbg\test.exe mbm_mon
-start %ONLINEKERNELROOT%\win32_vc71_dbg\test.exe mep_holder_a -i=MEP    -n=MepHold_0 -p=333
-rem start %GAUDIONLINEROOT%\win32_vc71_dbg\Gaudi.exe GaudiOnline mep2event_prod -n=evtprod_0 -p=333
+set test_exe=%ONLINEKERNELROOT%\win32_vc71_dbg\test.exe
+set gaudi_exe=%GAUDIONLINEROOT%\win32_vc71_dbg\Gaudi.exe
+start "Install"      %test_exe% mep_install -s=5000 -e=100 -u=20 -i=MEP -c -s=200 -e=200 -u=20 -i=EVENT -c -s=200 -e=200 -u=20 -i=RESULT
 sleep 1
-rem start %GAUDIONLINEROOT%\win32_vc71_dbg\Gaudi.exe GaudiOnline mep_producer -n=prod_0 -p=333 -s=500
+start "Monitor"       %test_exe% mbm_mon
+start "Bitmaps"       %test_exe% mep_dump_bitmap -b1=MEP -b2=EVENT -b3=RESULT -c
+start "mephold_0"     %test_exe% mep_holder_a -i=MEP -n=mephold_0 -p=333
+start "evtprod_0"     %gaudi_exe% GaudiOnline mep2event_prod -n=evtprod_0 -p=333 -r=1
+start "diskwr_0"      %test_exe% mep_cons_a -i=RESULT -n=diskwr_0 -p=333
+start "diskwr_1"      %test_exe% mep_cons_a -i=RESULT -n=diskwr_1 -p=333
+set PROCESSNAME=moore_0
+start "%PROCESSNAME%" %gaudi_exe% MDF GaudiTask ..\options\ReadMBM.opts
+set PROCESSNAME=moore_1
+start "%PROCESSNAME%" %gaudi_exe% MDF GaudiTask ..\options\ReadMBM.opts
+set PROCESSNAME=moore_2
+start "%PROCESSNAME%" %gaudi_exe% MDF GaudiTask ..\options\ReadMBM.opts
 
-rem start %GAUDIONLINEROOT%\win32_vc71_dbg\Gaudi.exe MDF GaudiTask ..\options\ReadMBM.opts
+echo start prod_0 %gaudi_exe% GaudiOnline mep_producer -n=prod_0 -p=333 -s=500 -r=2

@@ -193,3 +193,23 @@ int lib_rtl_wait_for_event_a(lib_rtl_event_t flag, lib_rtl_thread_routine_t acti
   lib_rtl_set_event(flag);
   return 1;
 }
+
+static void help_set_event()  {
+  ::printf("mbm_dumpbits -opt [-opt]\n");
+  ::printf("    -n=<name>      Event flag name \n");
+}
+extern "C" int rtl_set_event(int argc, char** argv)  {
+  lib_rtl_event_t flag;
+  std::string name;
+  RTL::CLI cli(argc, argv, help_set_event);
+  cli.getopt("name",1,name);
+  int sc = lib_rtl_create_event(name.c_str(), &flag);
+  if ( !lib_rtl_is_success(sc) )  {
+    return sc;
+  }
+  sc = lib_rtl_set_global_event(name.c_str());
+  if ( !lib_rtl_is_success(sc) )  {
+    return sc;
+  }
+  return sc;
+}

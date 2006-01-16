@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/GaudiOnline/src/MEPProducer.cpp,v 1.5 2006-01-12 13:41:39 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/GaudiOnline/src/MEPProducer.cpp,v 1.6 2006-01-16 18:30:05 frankb Exp $
 //	====================================================================
 //  RawBufferCreator.cpp
 //	--------------------------------------------------------------------
@@ -53,11 +53,12 @@ namespace {
     ::printf("    -a(synchronous)        Asynchonous mode (default is synchronous)\n");
     ::printf("    -s(pace)=<number>      Default space allocation in kBytes\n");
     ::printf("    -p(artition)=<number>  Partition ID\n");
+    ::printf("    -r(efcount)=<number>   Initial MEP reference count\n");
   }
   struct MEPProducer  : public MEP::Producer  {
-    int m_spaceSize;
-    MEPProducer(const std::string& nam, int partitionID, size_t siz) 
-    : MEP::Producer(nam, partitionID), m_spaceSize(siz)
+    int m_spaceSize, m_refCount;
+    MEPProducer(const std::string& nam, int partitionID, int refcnt, size_t siz) 
+    : MEP::Producer(nam, partitionID), m_spaceSize(siz), m_refCount(refcnt)
     {
       m_spaceSize *= 1024;  // Space size is in kBytes
       m_flags = USE_MEP_BUFFER;
@@ -81,16 +82,18 @@ namespace {
       static int id = -1;
       size_t evtLen = 0;
       MBM::EventDesc& dsc = event();
-      MEPEVENT* ev = (MEPEVENT*)dsc.data;
-      ev->refCount    = 2;
-      ev->mepBufferID = ++id;
-      ev->begin       = int(int(ev)-m_mepID->mepStart);
-      ev->packing     = -1;
-      ev->valid       = 1;
-      ev->magic       = mep_magic_pattern();
-      int status = receiveEvent(ev->data, m_spaceSize-sizeof(MEPEVENT), evtLen);
+      MEPEVENT* e = (MEPEVENT*)dsc.data;
+      e->refCount    = m_refCount;
+      e->evID        = ++id;
+      e->begin       = int(int(e)-m_mepID->mepStart);
+      e->packing     = -1;
+      e->valid       = 1;
+      e->magic       = mep_magic_pattern();
+      //::printf("MEP Buffer: [%d] Event at address %08X MEP:%p [%d] Pattern:%08X [Release MEP]\n",
+      //  e->refCount, m_mepID->mepStart+e->begin, (void*)e, e->evID, e->magic);
+      int status = receiveEvent(e->data, m_spaceSize-sizeof(MEPEVENT), evtLen);
       if ( status == MBM_NORMAL )  {
-        m_event.len = evtLen+sizeof(MEPEVENT)-sizeof(ev->data);
+        m_event.len = evtLen+sizeof(MEPEVENT)-sizeof(e->data);
         m_event.mask[0] = partitionID();
         m_event.mask[1] = 0;
         m_event.mask[2] = 0;
@@ -116,14 +119,16 @@ extern "C" int mep_producer(int argc,char **argv) {
   RTL::CLI cli(argc, argv, help);
   int space = 64*1024;             // default 64 kB
   int partID = 0x103;              // default is LHCb partition id
+  int refCount = 1;
   std::string name = "producer";
   bool async = cli.getopt("asynchronous",1) != 0;
   cli.getopt("name",1,name);
   cli.getopt("space",1,space);
   cli.getopt("partitionid",1,partID);
+  cli.getopt("refcount",1,refCount);
   ::printf("%synchronous MEP Producer \"%s\" Partition:%d (pid:%d) included in buffers.\n",
 	   async ? "As" : "S", name.c_str(), partID, MEPProducer::pid());
-  MEPProducer p(name, partID, space);
+  MEPProducer p(name, partID, refCount, space);
   if ( async ) p.setNonBlocking(WT_FACILITY_DAQ_SPACE, true);
   return p.run();
 }

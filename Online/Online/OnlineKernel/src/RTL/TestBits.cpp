@@ -1,5 +1,6 @@
 #include <cstdio>
 #include "RTL/rtl.h"
+#include "RTL/bits.h"
 
 extern "C" int rtl_testffx(int,char **) {
   static unsigned int mask[] = {
@@ -26,5 +27,48 @@ extern "C" int rtl_testffx(int,char **) {
       printf("FFX: %2d  %2d  sc=%d %08X  %2d\n", i, s, sc, val, pos);
     }
   }
+  return 0;
+}
+
+extern "C" int rtl_testbits(int,char **) {
+  int pos = 0, size = 15;
+  char txt[32*sizeof(int)];
+  int bf_len = 8*sizeof(txt);
+  memset(txt,0,sizeof(txt));
+  printf("Filed size: %d bits\n",sizeof(txt)*8);
+  BF_set(txt,20,96);
+  printf("BF_set(txt,20,%d);\n",96);
+  BF_print(txt,sizeof(txt));
+  BF_count(txt,sizeof(txt),&pos,&size);
+  printf("BFCount: pos:%d size:%d\n",pos,size);
+  BF_count(txt+8,bf_len-8*8,&pos,&size);
+  printf("BFCount: start:%d pos:%d size:%d  %d\n",8*8,pos,size, size+8*8+pos);
+  BF_count(txt+16,bf_len-16*8,&pos,&size);
+  printf("BFCount: start:%d pos:%d size:%d  %d\n",16*8,pos,size, size+16*8+pos);
+  BF_count(txt+32,bf_len-32*8,&pos,&size);
+  printf("BFCount: start:%d pos:%d size:%d  %d\n",32*8,pos,size,size+32*8+pos);
+
+  BF_free(txt,21,94);
+  printf("BF_free(txt,21,%d);\n",3*12);
+  BF_print(txt,sizeof(txt));
+
+  BF_alloc(txt,bf_len,256,&pos);
+  printf("BF_alloc(txt,...,256,%d);\n",pos);
+  BF_print(txt,sizeof(txt));
+
+  BF_alloc(txt,bf_len,11,&pos);
+  printf("BF_alloc(txt,bf_len,11,%d);\n",pos);
+  BF_print(txt,sizeof(txt));
+  BF_free(txt,pos,11);
+  printf("BF_free(txt,%d,11);\n",pos);
+  BF_print(txt,sizeof(txt));
+
+  BF_alloc(txt,bf_len,11+32,&pos);
+  printf("BF_alloc(txt,...,11+32,%d);\n",pos);
+  BF_print(txt,sizeof(txt));
+
+  BF_alloc(txt,bf_len,32,&pos);
+  printf("BF_alloc(txt,...,32,%d);\n",pos);
+  BF_print(txt,sizeof(txt));
   return 0;
 }

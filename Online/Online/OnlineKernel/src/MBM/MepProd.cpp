@@ -39,7 +39,7 @@ namespace {
 
       ev->refCount    = 1;
       ev->refCount   += PACKING_FACTOR; // saves mbm_register_alloc_event
-      ev->mepBufferID = mep_identifier;
+      ev->evID        = mep_identifier;
       ev->begin       = int(int(ev)-m_mepID->mepStart);
       ev->packing     = PACKING_FACTOR;
       ev->valid       = 1;

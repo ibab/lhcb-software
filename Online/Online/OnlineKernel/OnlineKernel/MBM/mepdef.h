@@ -27,15 +27,15 @@ typedef struct _MEPID {
 } *MEPID;
 
 struct MEP_SINGLE_EVT  {
-  //int event;
   int begin;
+  int evID;
 };
 
 struct MEPEVENT   {
-  int mepBufferID;
+  int begin;
+  int evID;
   int packing;
   int refCount;
-  int begin;
   int valid;
   int magic;
   char data[4];
@@ -48,6 +48,10 @@ extern "C"  {
   int mep_set_watch(MEPID bm);
   int mep_exclude (MEPID bm);
   int mep_magic_pattern();
+  void mep_print_release(bool val);
+  int mep_increment(MEPID dsc, MEPEVENT* e, int val);
+  int mep_decrement(MEPID dsc, MEPEVENT* e, int val);
+  int mep_install(int argc , char** argv);
 #ifdef __cplusplus
 }
 #endif

@@ -67,6 +67,70 @@ inline int _mbm_printf(const char* fmt, ...)  {
   return len;
 }
 #endif
+#ifndef MBM_CHECK_MEMORY
+#define _mbm_reset_memory(q,c,s)
+#define _mbm_check_memory(q,c,s)
+#else
+static void _mbm_reset_memory(void* q,int c, size_t s)  {
+  size_t i;
+  int *p = (int*)q;
+  size_t siz = ((s + Bytes_p_Bit) >> Shift_p_Bit) << Shift_p_Bit;
+  _mbm_printf("Reset %d bytes from %p to %p to %X\n", siz, p, ((char*)p)+siz, c);
+  for(i=0; i<siz/sizeof(int); ++i)  {
+    p[i] = c;
+  }
+}
+void _mbm_check_memory(void* q,int c, size_t s)  {
+  size_t i;
+  int bad = 0, *p = (int*)q;
+  for(i=0; i<s/sizeof(int); ++i)  {
+    if ( p[i] != c )  {
+      ::printf("Bad memory:%08X[%d]=%08X %08X\n",p,i,&p[i],p[i]);
+      bad++;
+    }
+  }
+  if ( bad )  {
+    printf("Checked %d Bytes from %p to %p found %d bad words.\n",s, q, &p[i-1], bad);
+  }
+  else  {
+    _mbm_printf("Checked %d Bytes from %p to %p found %d bad words.\n",s, q, &p[i-1], bad);
+  }
+}
+#endif
+#ifndef MBM_CHECK_LOCKS
+#define _mbm_instrument_lock(x)
+#define _mbm_deinstrument_lock(x)
+#else
+void _mbm_instrument_lock(BMID bm)  {
+#ifdef linux
+    int val;
+    lib_rtl_lock_value(bm->lockid,&val);
+    if ( val != 0 ) {
+      ::printf("%5d LOCK: Seamphore value:%d\n",lib_rtl_pid(), val);
+    }
+#endif
+    if ( m_bm->_control()->spare1 != 0 )  {
+      lib_rtl_signal_message(LIB_RTL_OS,"%5d: LOCK: Lock error on BM tables:%d",lib_rtl_pid(),
+           bm->_control()->spare1);
+    }
+    bm->_control()->spare1 = lib_rtl_pid();
+}
+void _mbm_deinstrument_lock(BMID bm)  {
+    if ( bm->_control()->spare1 != lib_rtl_pid() )  {
+      lib_rtl_signal_message(LIB_RTL_OS,"%5d: UNLOCK: Lock error on BM tables:%d",lib_rtl_pid(),
+           bm->_control()->spare1);
+    }
+    bm->_control()->spare1 = 0;
+#ifdef linux
+    int val;
+    lib_rtl_lock_value(bm->lockid,&val);
+    if ( val != 0 ) {
+      ::printf("%5d UNLOCK: Seamphore value:%d\n",lib_rtl_pid(), val);
+    }
+#endif
+}
+#endif
+
 #ifdef _WIN32
 void _mbm_update_rusage(USER* us) {
 }
@@ -102,33 +166,10 @@ public:
     if ( !(m_status&1) ) {
       lib_rtl_signal_message(LIB_RTL_OS,"%5d: LOCK: System Lock error on BM tables.",lib_rtl_pid());
     }
-#ifdef _____linux
-    int val;
-    lib_rtl_lock_value(m_bm->lockid,&val);
-    if ( val != 0 ) {
-      ::printf("%5d LOCK: Seamphore value:%d\n",lib_rtl_pid(), val);
-    }
-    if ( m_bm->_control()->spare1 != 0 )  {
-      lib_rtl_signal_message(LIB_RTL_OS,"%5d: LOCK: Lock error on BM tables:%d",lib_rtl_pid(),
-           m_bm->_control()->spare1);
-    }
-    m_bm->_control()->spare1 = lib_rtl_pid();
-#endif
+    _mbm_instrument_lock(m_bm);
   }
   virtual ~Lock() {
-#ifdef ______linux
-    if ( m_bm->_control()->spare1 != lib_rtl_pid() )  {
-      lib_rtl_signal_message(LIB_RTL_OS,"%5d: UNLOCK: Lock error on BM tables:%d",lib_rtl_pid(),
-           m_bm->_control()->spare1);
-    }
-    m_bm->_control()->spare1 = 0;
-    //  _mbm_flush_sections(m_bm);
-    int val;
-    lib_rtl_lock_value(m_bm->lockid,&val);
-    if ( val != 0 ) {
-      ::printf("%5d UNLOCK: Seamphore value:%d\n",lib_rtl_pid(), val);
-    }
-#endif
+    _mbm_deinstrument_lock(m_bm);
     m_status = _mbm_unlock_tables(m_bm);
     if ( !(m_status&1) )  {
       lib_rtl_signal_message(LIB_RTL_OS,"%5d: UNLOCK: System Lock error on BM tables\n",lib_rtl_pid());
@@ -192,7 +233,6 @@ BMID mbm_include (const char* bm_name, const char* name, int partid) {
   if ( !bm.get() )  {
     lib_rtl_signal_message(LIB_RTL_OS,"Cannot map memory sections for %s.",
             bm_name);
-    _mbm_unmap_sections(bm.get());
     return MBM_INV_DESC;
   }
 
@@ -240,7 +280,8 @@ BMID mbm_include (const char* bm_name, const char* name, int partid) {
   us->get_sp_calls  = 0;
   us->get_wakeups   = 0;  
   us->get_asts_run  = 0;  
-
+  us->free_calls    = 0;
+  us->alloc_calls   = 0;
   bm->ctrl->i_users++;
 
   // Activate this user
@@ -429,7 +470,6 @@ int mbm_free_event (BMID bm) {
     if (us->held_eid == -1)    {
       _mbm_return_err (MBM_NO_EVENT);
     }
-    us->ev_freed++;
     _mbm_rel_event (bm, us);  /* release event held by him  */
   }
   return user.status();
@@ -462,20 +502,19 @@ int mbm_pause (BMID bm)  {
 /*
 Producer Routines
 */
-int mbm_get_space_a (BMID bm, int buffsize, int** ptr, RTL_ast_t astadd, void* astpar)  {
+int mbm_get_space_a (BMID bm, int size, int** ptr, RTL_ast_t astadd, void* astpar)  {
   UserLock user(bm);
   USER* us = user.user();
   if ( us )  {
     CONTROL* ctrl = bm->_control();
-    int size = buffsize > 1024 ? buffsize : 1024;
     if (size <= 0 || size > ctrl->buff_size)    {
       _mbm_return_err (MBM_ILL_LEN);
     }
-    if (us->p_state == S_wspace)    {
+    if ( us->p_state == S_wspace )    {
       _mbm_del_wsp (bm, us);
     }
-    if (us->space_size)    {
-      _mbm_printf("mbm_get_space_a> Free event space:%08X",us->space_add);
+    if ( us->space_size )    {
+      _mbm_printf("mbm_get_space_a> Free event space:%08X\n",us->space_add);
       _mbm_sfree (bm, us->space_add, us->space_size);
       us->space_add = 0;
       us->space_size = 0;
@@ -545,7 +584,7 @@ int mbm_free_space (BMID bm) {
   UserLock user(bm, MBM_ILL_CONS);
   USER* us = user.user();
   if ( us )  {
-    if (us->space_size)    {
+    if ( us->space_size )    {
       _mbm_sfree (bm, us->space_add, us->space_size);
       us->space_add = 0;
       us->space_size = 0;
@@ -659,10 +698,10 @@ int _mbm_check_freqmode (BMID bm)  {
 }
 
 /// try to get space ...
-int _mbm_get_sp (BMID bmid, USER* us, int size, int** ptr)  {
+int _mbm_get_sp (BMID bm, USER* us, int size, int** ptr)  {
   int bit, nbit = (size + Bytes_p_Bit) >> Shift_p_Bit;  // round size to block
-  CONTROL *ctrl = bmid->ctrl;
-  char *bitmap = bmid->bitmap;
+  CONTROL *ctrl = bm->ctrl;
+  char *bitmap = bm->bitmap;
   ctrl->last_alloc = 0;
   int status = BF_alloc(bitmap+ctrl->last_alloc,ctrl->bm_size-(ctrl->last_alloc<<3),nbit,&bit);
   if (!lib_rtl_is_success(status))  {
@@ -670,15 +709,17 @@ int _mbm_get_sp (BMID bmid, USER* us, int size, int** ptr)  {
     status = BF_alloc(bitmap,ctrl->bm_size,nbit,&bit);
   }
   if (lib_rtl_is_success(status))  {
+    _mbm_printf("%s Allocated %d bits at position %d ",bm->bm_name, nbit, bit);
     bit += ctrl->last_alloc<<3 ;
+    _mbm_printf(" [%d] \n", bit);
     ctrl->last_alloc  = (bit+nbit)>>3;
     ctrl->last_bit = bit;
     ctrl->i_space -= nbit;
     us->ws_ptr = (bit << Shift_p_Bit);
-    *ptr = (int*)(bmid->buffer_add + (bit << Shift_p_Bit));
-    us->space_add = (bit<<Shift_p_Bit);  /* keep space inf... */
+    *ptr = (int*)(bm->buffer_add + (bit << Shift_p_Bit));
+    us->space_add  = (bit<<Shift_p_Bit);    // keep space info
     us->space_size = nbit << Shift_p_Bit;
-    _mbm_printf("Got space: %08X %d Bytes",us->ws_ptr, size);
+    _mbm_printf("Got space: %08X %d Bytes\n",us->ws_ptr, size);
     return MBM_NORMAL;
   }
   return MBM_NO_ROOM;
@@ -723,7 +764,7 @@ int _mbm_add_wev(BMID bm, USER *us, int** ptr, int* size, int* evtype, TriggerMa
   us->c_astadd      = astadd;
   us->c_astpar      = astpar;
   us->held_eid      = -1;
-  _mbm_printf("WEV ADD> %d State:%d",calls++, us->c_state);
+  _mbm_printf("WEV ADD> %d State:%d\n",calls++, us->c_state);
   insqti(&us->wenext, &bm->usDesc->wev_head);
   return MBM_NORMAL;
 }
@@ -735,7 +776,7 @@ int _mbm_del_wev (BMID /* bm */, USER* u) {
     lib_rtl_signal_message(0,"INCONSISTENCY: Delete user from WEV queue "
                             "without state S_wevent");
   }
-  _mbm_printf("WEV DEL> %d",calls++);
+  _mbm_printf("WEV DEL> %d\n",calls++);
   u->c_state = S_wevent_ast_queued;
   remqent(&u->wenext);
   return MBM_NORMAL;
@@ -763,7 +804,7 @@ int _mbm_check_wev (BMID bm, EVENT* e)  {
       bm->ctrl->tot_seen++;
       _mbm_del_wev (bm, u);
       u->get_wakeups++;
-      _mbm_printf("EVENT: id=%d  %d %08X -> %s",e->eid, e->count, e->ev_add, u->name);
+      _mbm_printf("EVENT: id=%d  %d %08X -> %s\n",e->eid, e->count, e->ev_add, u->name);
       _mbm_wake_process(BM_K_INT_EVENT, u);
     }
   }
@@ -784,7 +825,7 @@ int _mbm_add_wsp (BMID bm, USER* us, int size, int** ptr, RTL_ast_t astadd, void
 /// del user from the wait_space queue
 int _mbm_del_wsp (BMID /* bm */, USER* us) {
   if (us->p_state != S_wspace)  {
-    _mbm_printf("INCONSISTENCY: Delete user from WSP queue without state S_wspace");
+    _mbm_printf("INCONSISTENCY: Delete user from WSP queue without state S_wspace\n");
   }
   remqent(&us->wsnext);
   us->p_state = S_wspace_ast_queued;
@@ -792,31 +833,33 @@ int _mbm_del_wsp (BMID /* bm */, USER* us) {
 }
 
 /// check wait space queue
-int _mbm_check_wsp (BMID bmid, int bit, int nbit)  {
-  CONTROL *ctrl   = bmid->ctrl;
-  char    *bitmap = bmid->bitmap;
+int _mbm_check_wsp (BMID bm, int bit, int nbit)  {
+  CONTROL *ctrl   = bm->ctrl;
+  char    *bitmap = bm->bitmap;
   int      size   = nbit << Shift_p_Bit;
-  MBMQueue<USER> que(&bmid->usDesc->wsp_head, -USER_ws_off);
+  MBMQueue<USER> que(&bm->usDesc->wsp_head, -USER_ws_off);
   for (USER* u=que.get(); u; u = que.get() )  {
     u->isValid();
-    _mbm_printf("WSP: User %s",u->name);
+    _mbm_printf("WSP: User %s\n",u->name);
     if ( u->p_state == S_wspace && u->ws_size <= size)      {
       int ubit = (u->ws_size + Bytes_p_Bit) >> Shift_p_Bit;
       ctrl->last_alloc = 0;
       int status = BF_alloc(bitmap+ctrl->last_alloc,ctrl->bm_size-(ctrl->last_alloc<<3),ubit,&bit);
       if (!lib_rtl_is_success(status))      {
         ctrl->last_alloc = 0;
-        status = BF_alloc(bitmap,(ctrl->bm_size),ubit,&bit);
+        status = BF_alloc(bitmap,ctrl->bm_size,ubit,&bit);
       }
       if (lib_rtl_is_success(status))       {
+        _mbm_printf("%s Allocated %d bits at position %d ",bm->bm_name, nbit, bit);
         bit += ctrl->last_alloc<<3 ;
+        _mbm_printf(" [%d] \n", bit);
         ctrl->last_alloc = (bit+ubit)>>3;
         ctrl->last_bit   = bit;
         ctrl->i_space   -= ubit;
         u->ws_ptr        = (bit << Shift_p_Bit);
         u->space_add     = u->ws_ptr;
         u->space_size    = ubit << Shift_p_Bit;
-        _mbm_del_wsp (bmid, u);
+        _mbm_del_wsp (bm, u);
         _mbm_wake_process(BM_K_INT_SPACE, u);
         break;
       }
@@ -908,16 +951,16 @@ EVENT* _mbm_ealloc (BMID bm, USER* us)  {
       e->eid  = i;
       e->count = cnt++;
       ctrl->i_events++;
-      insqti(e, bm->evDesc);
       if ( bm->alloc_event )   {
         void* pars[4];
-        int* evadd = (int*)(us->space_add+(int)bm->buffer_add);
         pars[0] = bm;
         pars[1] = bm->alloc_event_param;
-        pars[2] = evadd+sizeof(int);
+        pars[2] = (void*)(us->space_add+(int)bm->buffer_add);
         pars[3] = e;
+        us->alloc_calls++;
         (*bm->alloc_event)(pars);
       }
+      insqti(e, bm->evDesc);
       return e;
     }
   }
@@ -938,26 +981,26 @@ int _mbm_ufree (BMID /* bm */, USER* u)  {
 /// free event slot
 int _mbm_efree (BMID bm, EVENT* e)  {
   if (e == 0)  {
-    _mbm_return_err (MBM_INTERNAL);
+    _mbm_return_err(MBM_INTERNAL);
   }
   else if (e->busy == 0)  {
     _mbm_return_err (MBM_INTERNAL);
   }
+  USER* u = bm->_user();
+  int* evadd  = (int*)(e->ev_add+(int)bm->buffer_add);
+  _mbm_printf("Free slot: %d %d\n",e->eid, e->count);
   if ( bm->free_event )  {
     void* pars[4];
-    int* evadd  = (int*)(e->ev_add+(int)bm->buffer_add);
     pars[0] = bm;
     pars[1] = bm->free_event_param;
-    pars[2] = evadd+sizeof(int);
+    pars[2] = evadd;
     pars[3] = e;
+    u->free_calls++;
     (*bm->free_event)(pars);
   }
-  return _mbm_do_free(bm, e);
-}
-
-int _mbm_do_free(BMID bm, EVENT* e)  {
+  _mbm_reset_memory(evadd,0xDDDDDDDD,e->ev_size);
   e->busy = 0;
-  _mbm_printf("Free slot: %d %d",e->eid, e->count);
+  u->ev_freed++;
   remqent(e);
   bm->ctrl->i_events--;
   _mbm_check_wes (bm);
@@ -965,8 +1008,9 @@ int _mbm_do_free(BMID bm, EVENT* e)  {
 }
 
 int _mbm_del_event(BMID bm, EVENT* e, int len)  {
-  _mbm_sfree (bm, e->ev_add, len);            // de-allocate event slot/space
-  _mbm_efree (bm, e);                         // de-allocate event 
+  int add = e->ev_add;
+  _mbm_efree (bm, e);           // de-allocate event 
+  _mbm_sfree (bm, add, len);    // de-allocate event slot/space
   return MBM_NORMAL;
 }
 
@@ -981,39 +1025,30 @@ int _mbm_rel_event (BMID bm, USER* u)  {
   if ( !e->umask0.mask_or(e->umask1,e->umask2) )  {  // no more consumers
     _mbm_del_event(bm, e, e->ev_size);          // de-allocate event slot/space
   }
-  else if ( bm->free_event )  {
-    void* pars[4];
-    int* evadd  = (int*)(e->ev_add+(int)bm->buffer_add);
-    pars[0] = bm;
-    pars[1] = bm->free_event_param;
-    pars[2] = evadd+sizeof(int);
-    pars[3] = e;
-    (*bm->free_event)(pars);
-  }
   return MBM_NORMAL;
 }
 
 /// clean-up this user
 int _mbm_uclean (BMID bm)  {
   int   uid = bm->owner;
-  USER* us  = bm->user + uid;
-  if (us->c_state == S_wevent)  {
-    _mbm_del_wev (bm, us);
+  USER* u  = bm->user + uid;
+  if (u->c_state == S_wevent)  {
+    _mbm_del_wev (bm, u);
   }
-  if (us->p_state == S_wspace)  {
-    _mbm_del_wsp (bm, us);
+  if (u->p_state == S_wspace)  {
+    _mbm_del_wsp (bm, u);
   }
-  if (us->p_state == S_weslot)  {
-    _mbm_del_wes (bm, us);
+  if ( u->p_state == S_weslot )  {
+    _mbm_del_wes (bm, u);
   }
 
-  if (us->space_size)   {  /* free the held space */
-    _mbm_sfree (bm, us->space_add, us->space_size);
-    us->space_add = 0;
-    us->space_size = 0;
+  if ( u->space_size )   {  /* free the held space */
+    _mbm_sfree (bm, u->space_add, u->space_size);
+    u->space_add = 0;
+    u->space_size = 0;
   }
-  if (us->held_eid != -1)    { // free the held event
-    _mbm_rel_event (bm, us);   // release event
+  if ( u->held_eid != -1 )    { // free the held event
+    _mbm_rel_event (bm, u);   // release event
   }
   MBMQueue<EVENT> que(bm->evDesc,-EVENT_next_off);
   for(EVENT* e=que.get(); e; e=que.get() )  {
@@ -1026,7 +1061,7 @@ int _mbm_uclean (BMID bm)  {
       _mbm_del_event(bm, e, e->ev_size);          // de-allocate event slot/space
     }
   }
-  _mbm_ufree (bm, us);  // de-allocate user slot
+  _mbm_ufree (bm, u);  // de-allocate user slot
   bm->ctrl->i_users--;
   return MBM_NORMAL;
 }
@@ -1039,7 +1074,8 @@ int _mbm_sfree (BMID bm, int add, int size)  {
   BF_free(bm->bitmap,bit,nbit);
   ctrl->last_alloc = 0;
   ctrl->i_space += nbit;
-  _mbm_printf("Free space  add=%08X  size=%d",add,size);
+  _mbm_printf("%s Free space  add=%08X  size=%d [ %d bits at position %d]\n",
+    bm->bm_name, add, size, nbit, bit);
   if ( bm->usDesc->next )  {
     int s, l;
     BF_count(bm->bitmap, ctrl->bm_size, &s, &l);    // find largest block 
@@ -1257,9 +1293,9 @@ int  mbm_wait_event(BMID bm)    {
   USER* us = bm->_user();
   if ( us->held_eid != -1 )  {
     Lock lock(bm);
-    _mbm_printf("WEV: State=%d  %s", us->c_state, us->c_state == S_wevent_ast_queued ? "OK" : "BAAAAD");
+    _mbm_printf("WEV: State=%d  %s\n", us->c_state, us->c_state == S_wevent_ast_queued ? "OK" : "BAAAAD");
     if ( us->c_state == S_wevent_ast_queued )  {
-      lib_rtl_clear_event(bm->WEV_event_flag);
+      // lib_rtl_clear_event(bm->WEV_event_flag);
       us->reason = BM_K_INT_EVENT;
       us->get_wakeups++;
       lib_rtl_run_ast(us->c_astadd, us->c_astpar, 3);
@@ -1270,24 +1306,17 @@ int  mbm_wait_event(BMID bm)    {
 Again:
   sc = 1;
   if ( us->c_state != S_wevent_ast_queued )  {
-    _mbm_printf("Wait...lib_rtl_wait_for_event");
     sc = lib_rtl_wait_for_event(bm->WEV_event_flag);
   }
-  _mbm_printf("Got event: sc = %d",sc);
   if ( lib_rtl_is_success(sc) )  {
-    _mbm_printf("...Lock");
-    Lock lock(bm);
-    _mbm_printf("...Done...Clear event");
     lib_rtl_clear_event(bm->WEV_event_flag);
-    _mbm_printf("...Done.");
+    Lock lock(bm);
     if (us->held_eid == -1)    {
       goto Again;
     }
     us->reason = BM_K_INT_EVENT;
     us->get_wakeups++;
-    _mbm_printf("...Run AST(%08X)",us->c_astpar);
     lib_rtl_run_ast(us->c_astadd, us->c_astpar, 3);
-    _mbm_printf("...Done.");
     us->c_state = S_active;
     return MBM_NORMAL;
   }
@@ -1308,33 +1337,33 @@ int mbm_wait_event_a(BMID bm)    {
 }
 
 int  mbm_wait_space(BMID bm)    {
-  if (bm->owner == -1)  {
+  USER* us = bm->_user();
+  if ( !us )  {
     _mbm_return_err (MBM_ILL_REQ);
   }
-  USER* us = bm->_user();
 wait:
-  if ( us->p_state == S_weslot_ast_queued )  {
+  if ( us->p_state == S_wspace_ast_ready )    {
+    us->p_state = S_wspace_ast_queued;
+    Lock lock(bm);
+    lib_rtl_run_ast(us->p_astadd, us->p_astpar, 3);
+    _mbm_check_memory(*us->ws_ptr_add, 0xDDDDDDDD,us->ws_size);
+    return MBM_NORMAL;
+  }
+  else if ( us->p_state == S_weslot_ast_queued )  {
     lib_rtl_wait_for_event(bm->WES_event_flag);
     lib_rtl_clear_event(bm->WES_event_flag);
     lib_rtl_run_ast(us->p_astadd, us->p_astpar, 3);
   }
-  else if ( us->p_state == S_wspace_ast_ready )    {
-    us->p_state = S_wspace_ast_queued;
-    Lock lock(bm);
-    _mbm_printf("Got space");
-    lib_rtl_run_ast(us->p_astadd, us->p_astpar, 3);
-    return MBM_NORMAL;
+  else if ( us->p_state == S_wspace )    {
+    lib_rtl_wait_for_event(bm->WSP_event_flag);
+    lib_rtl_clear_event(bm->WSP_event_flag);
   }
   else if ( us->p_state == S_wspace_ast_queued )    {
-    _mbm_printf("Wait...lib_rtl_wait_for_event");
-    int sc = lib_rtl_wait_for_event(bm->WSP_event_flag);
-    if ( lib_rtl_is_success(sc) )  {
-      lib_rtl_clear_event(bm->WSP_event_flag);
-      Lock lock(bm);
-      _mbm_printf("Got space");
-      lib_rtl_run_ast(us->p_astadd, us->p_astpar, 3);
-      return MBM_NORMAL;
-    }
+    //lib_rtl_wait_for_event(bm->WSP_event_flag);
+    lib_rtl_clear_event(bm->WSP_event_flag);
+    Lock lock(bm);
+    lib_rtl_run_ast(us->p_astadd, us->p_astpar, 3);
+    return MBM_NORMAL;
   }
   goto wait;
 }
@@ -1419,9 +1448,7 @@ int mbm_get_event_ast(void* par) {
     return 1;
   }
   us->reason = S_wevent_ast_handled;
-  int buff_add = (int)bm->buffer_add;
-  *us->we_ptr_add    = (int*)(ev->ev_add+buff_add);
-  *us->we_ptr_add   += sizeof(int);
+  *us->we_ptr_add    = (int*)(ev->ev_add+(int)bm->buffer_add);
   *us->we_size_add   = ev->ev_size;
   *us->we_evtype_add = ev->ev_type;
   *us->we_trmask_add = ev->tr_mask;
@@ -1448,7 +1475,6 @@ int mbm_get_space_ast(void* par) {
     return MBM_NORMAL;
   }
   *us->ws_ptr_add = (int*)(us->space_add+bm->buffer_add);
-  *us->ws_ptr_add += sizeof(int);
   us->p_state = S_wspace_ast_handled;
   us->reason = -1;
   return MBM_NORMAL;
@@ -1490,9 +1516,7 @@ int _mbm_declare_event (BMID bm, int len, int evtype, TriggerMask& trmask,
   }
   int   rlen = ((len + Bytes_p_Bit) >> Shift_p_Bit) << Shift_p_Bit;
   char* add  = us->space_add+bm->buffer_add;
-  /* find all destinations */
-  *(int*)add = len/4;
-  if (dest)  {
+  if (dest)  {                       // find all destinations 
     int uid = _mbm_findnam (bm, dest);
     if (uid != -1)    {
       mask0.set(uid);
@@ -1508,31 +1532,37 @@ int _mbm_declare_event (BMID bm, int len, int evtype, TriggerMask& trmask,
           _mbm_add_wes (bm, us, _mbm_wes_ast_add);
           lib_rtl_clear_event (  bm->WES_event_flag);
           int sp = ctrl->spare1;
-          ctrl->spare1 = 0;
           _mbm_unlock_tables(bm);
-          lib_rtl_wait_for_event (bm->WES_event_flag);
+          if ( us->p_state != S_weslot_ast_queued )
+            lib_rtl_wait_for_event (bm->WES_event_flag);
+          _mbm_lock_tables(bm);
+          ctrl->spare1 = sp;
           if (us->p_state == S_weslot_ast_queued)  {
             lib_rtl_run_ast(us->p_astadd, us->p_astpar, 3);
           }
-          _mbm_lock_tables(bm);
-          ctrl->spare1 = sp;
+          else  {
+            ::printf("%s Failed lib_rtl_wait_for_event(bm->WES_event_flag)\n",bm->bm_name);
+          }
           if (us->p_state != S_active)   {
             _mbm_return_err (MBM_REQ_CANCEL); // other reasons
           }
         }
       }
       else   {       // add on the wait event slot queue
-        _mbm_add_wes (bm, us, _mbm_wes_ast_add);
-        lib_rtl_clear_event (  bm->WES_event_flag);
+        _mbm_add_wes(bm, us, _mbm_wes_ast_add);
+        lib_rtl_clear_event(bm->WES_event_flag);
         int sp = ctrl->spare1;
-        ctrl->spare1 = 0;
         _mbm_unlock_tables(bm);
-        lib_rtl_wait_for_event (bm->WES_event_flag);
+        if ( us->p_state != S_weslot_ast_queued )
+          lib_rtl_wait_for_event (bm->WES_event_flag);
+        _mbm_lock_tables(bm);
+        ctrl->spare1 = sp;
         if (us->p_state == S_weslot_ast_queued)  {
           lib_rtl_run_ast(us->p_astadd, us->p_astpar, 3);
         }
-        _mbm_lock_tables(bm);
-        ctrl->spare1 = sp;
+        else  {
+          ::printf("%s Failed lib_rtl_wait_for_event(bm->WES_event_flag)\n",bm->bm_name);
+        }
         if (us->p_state != S_active)        {
           _mbm_return_err (MBM_REQ_CANCEL);  // other reasons
         }
@@ -1553,14 +1583,15 @@ int _mbm_declare_event (BMID bm, int len, int evtype, TriggerMask& trmask,
     ev->umask2  = mask2;
     ev->held_mask.clear();
     ev->held_mask.set(bm->owner);
-    _mbm_printf("Got slot:%d %d  %08X",ev->eid, ev->count, ev->ev_add);
+    _mbm_printf("Got slot:%d %d  %08X\n",ev->eid, ev->count, ev->ev_add);
   }
   else  {
     _mbm_del_event(bm, ev, rlen);          // de-allocate event slot/space
   }
   *free_add = add + rlen;
-  us->space_add  = (int)*free_add - (int)bm->buffer_add;
-  us->space_size = (*free_size = us->space_size - rlen);
+  *free_size = us->space_size - rlen;
+  us->space_add  = (int)(*free_add) - (int)bm->buffer_add;
+  us->space_size = *free_size;
   if (us->space_size == 0)  {
     us->space_add = 0;                    // if size zero, address zero
   }
@@ -1587,7 +1618,7 @@ int _mbm_check_cons (BMID bm)  {
     if ( e->held_mask.test(owner) )      {
       e->held_mask.clear(owner);
       e->busy = 1;
-      _mbm_printf("_mbm_check_cons EVENT: %d %d",e->eid, e->count);
+      _mbm_printf("_mbm_check_cons EVENT: %d %d\n",e->eid, e->count);
       _mbm_check_wev (bm, e);  /* check wev queue */
     }
   }
@@ -1597,13 +1628,14 @@ int _mbm_check_cons (BMID bm)  {
 int _mbm_send_space (BMID bm)  {
   int sc = _mbm_check_cons(bm);
   if ( sc == MBM_NORMAL )   {
-    USER* us = bm->user + bm->owner;
-    if (us->space_size)  {
-      _mbm_printf("_mbm_send_space> Free event space");
-      _mbm_sfree (bm, us->space_add, us->space_size);  /* free space */
+    USER* u = bm->user + bm->owner;
+    if ( u->space_size )  {
+      _mbm_printf("_mbm_send_space> %s Free event space @ %08X of size:%d\n",
+        bm->bm_name, u->space_add, u->space_size);
+      _mbm_sfree (bm, u->space_add, u->space_size);  /* free space */
     }
-    us->space_add = 0;
-    us->space_size = 0;
+    u->space_add = 0;
+    u->space_size = 0;
   }
   return sc;
 }

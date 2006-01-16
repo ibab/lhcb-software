@@ -11,14 +11,15 @@ namespace  {
     ::printf("    -n(ame)=<name>         buffer member name\n");
     ::printf("    -a(asynchronous)       Asynchonous mode (default is synchronous)\n");
     ::printf("    -p(artition)=<number>  Partition ID\n");
+    ::printf("    -r(efcount)=<number>   Optional MEP reference count decrement\n");
   }
   struct EVENTGenerator  : public MEP::Consumer  {
     typedef std::vector<LHCb::MEPFragment*> Frags;
-    typedef std::map<unsigned int, std::vector<LHCb::MEPFragment*> >  SubEvents;
-    int prt;
+    typedef std::map<unsigned int, Frags >  SubEvents;
+    int prt, m_refCount;
     MBM::Producer* m_evtProd;
-    EVENTGenerator(const std::string& nam, int partID)
-    : MEP::Consumer(nam, partID), m_evtProd(0)
+    EVENTGenerator(const std::string& nam, int partID, int cnt)
+    : MEP::Consumer(nam, partID), m_evtProd(0), m_refCount(cnt)
     {
       prt = 0;
       unsigned int vetomask[4] = {0,0,0,0};
@@ -31,19 +32,19 @@ namespace  {
       ::printf(" MEP    buffer start: %08X\n",m_mepID->mepStart);
       ::printf(" EVENT  buffer start: %08X\n",m_mepID->evtStart);
       ::printf(" RESULT buffer start: %08X\n",m_mepID->resStart);
-      mbm_register_free_event(m_bmid, 0, 0);
-      mbm_register_alloc_event(m_mepID->evtBuffer,0,0);
+      //mbm_register_alloc_event(m_mepID->evtBuffer,0,0);
     }
     virtual ~EVENTGenerator()  {
       if ( m_evtProd ) delete m_evtProd;
     }
     virtual void declareSubEvents(const EventDesc& evt, SubEvents& events)  {
+      int evID = 0;
       if ( prt ) ::printf("Declare MEP....\n");
       for(SubEvents::const_iterator i=events.begin(); i!=events.end(); ++i)  {
-        declareSubEvent(evt, (*i).second);
+        declareSubEvent(evt, ++evID, (*i).second);
       }
     }
-    virtual void declareSubEvent(const EventDesc& evt, const Frags& frags)  {
+    virtual void declareSubEvent(const EventDesc& evt, int evID, const Frags& frags)  {
       int sub_evt_len = LHCb::RawEventHeader::size(frags.size());
       if ( prt ) ::printf("0-Declare MEP fragment [%d]....\n",sub_evt_len);
       if ( m_evtProd->getSpace(sub_evt_len) == MBM_NORMAL ) {
@@ -51,6 +52,8 @@ namespace  {
         EventDesc& e = m_evtProd->event();
         MEPEVENT* ev = (MEPEVENT*)evt.data;
         LHCb::RawEventHeader* h = (LHCb::RawEventHeader*)e.data;
+        h->setEventID(evID);
+        h->setMEPID(ev->evID);
         h->setDataStart(ev->begin);
         h->setNumberOfFragments(frags.size());
         h->setErrorMask(0);
@@ -59,10 +62,10 @@ namespace  {
         for(size_t j=0; j<frags.size(); ++j)  {
           h->setOffset(j, int(int(frags[j])-m_mepID->mepStart));
         }
-        e.mask[0] = evt.mask[0];
-        e.mask[1] = evt.mask[1];
-        e.mask[2] = evt.mask[2];
-        e.mask[3] = evt.mask[3];
+        e.mask[0] = partitionID();
+        e.mask[1] = 0;
+        e.mask[2] = 0;
+        e.mask[3] = 0;
         e.type    = EVENT_TYPE_EVENT;
         e.len     = sub_evt_len;
         if ( prt ) ::printf("2-Declare MEP fragment....\n");
@@ -76,7 +79,7 @@ namespace  {
     virtual int eventAction() {
       unsigned int pid = 0;
       const EventDesc& evt = Consumer::event();
-      std::map<unsigned int, std::vector<LHCb::MEPFragment*> > events;
+      SubEvents events;
       MEPEVENT* ev = (MEPEVENT*)evt.data;
       LHCb::MEPEvent* me = (LHCb::MEPEvent*)ev->data;
       decodeMEP2EventFragments(me, pid, events);
@@ -84,11 +87,11 @@ namespace  {
         ::printf("Bad MEP magic pattern!!!!\n");
       }
       // Increasing refcount in big chunk and avoid callback on m_evtProd->getSpace
-      ev->refCount += events.size();
+      //mep_increment(m_mepID, ev, events.size());
       declareSubEvents(evt, events);
-      int sc = Consumer::eventAction();
-      ev->refCount--;
-      return sc;
+      ev->packing = events.size();
+      mep_decrement(m_mepID, ev, m_refCount);
+      return Consumer::eventAction();
     }
   };
 }
@@ -96,14 +99,16 @@ namespace  {
 extern "C" int mep2event_prod(int argc,char **argv) {
   RTL::CLI cli(argc, argv, help);
   int partID = 0x103;
+  int refCount = 0;
   std::string name = "evtgenerator";
   bool async = cli.getopt("asynchronous",1) != 0;
   cli.getopt("name",1,name);
   cli.getopt("partitionid",1,partID);
+  cli.getopt("refcount",1,refCount);
   ::printf("%synchronous MEP Event generator \"%s\" (pid:%d) included in buffers.\n",
 	   async ? "As" : "S", name.c_str(),EVENTGenerator::pid());
   //_asm int 3
-  EVENTGenerator c(name,partID);
+  EVENTGenerator c(name,partID, refCount);
   if ( async ) c.setNonBlocking(WT_FACILITY_DAQ_EVENT, true);
   return c.run();
 }

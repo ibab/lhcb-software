@@ -1,7 +1,7 @@
 #ifndef BUFFERMANAGER_BITS_H
 #define BUFFERMANAGER_BITS_H
-extern "C" {
 #ifdef __cplusplus
+extern "C" {
 #endif
   inline int bit_set(unsigned int* mask,int pos)  {
     mask[pos/32] |= (1<<(pos%32));
@@ -29,9 +29,13 @@ extern "C" {
   int BF_count    (const char* base,int bf_size,int* pos,int* size);
   int BF_set      (char* base, int start,int end);
   int BF_free     (char* base,int pos, int size);
+  void BF_print   (const void* base, int bf_size, size_t ncols=4, bool prt_hdr=true);
 #ifdef __cplusplus
 };
+#include <vector>
+#include <string>
 namespace Bits  {
+  void dumpWords(const void* field, int len, std::vector<std::string>& words);
   template <int i> struct BitMask  {
     unsigned int m_mask[i];
     BitMask() {

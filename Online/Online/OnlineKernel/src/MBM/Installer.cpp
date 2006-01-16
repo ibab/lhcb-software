@@ -3,54 +3,9 @@
 #include <cstdio>
 #include <cstring>
 #include "bm_struct.h"
-#include "Manager.h"
+#include "Installer.h"
 #define writeln(a,b,c) printf(b)
 #define _CHECK( x )  { int sc = x ; if ( !(sc&1) ) { printf ( "Error in:%s, status=%d\n", #x , sc ); return sc; } }
-
-/* default parameters values */
-namespace MBM {
-  struct Installer : public Manager  {
-    Installer(int argc, char **argv)  {
-      p_moni   = 0;               /* Start monitor               */
-      p_emax   = 32;              /* maximum events allowed      */
-      p_umax   = 5;               /* maximun users               */
-      p_loc    = 0;               /* local flag                  */
-      p_across = 0;               /* Across memory flag          */
-      p_size   = 10;              /* buffer size                 */
-      p_base   = 0x1000000;       /* Event Buffer base address   */
-      spy_base = 0;               /* Spy Memory base address     */
-      p_force  = 0;               /* force deinstall             */
-      getOptions(argc, argv);
-      m_bm = new BMDESCRIPT;
-      ::memset(m_bm,0,sizeof(BMDESCRIPT));
-      ::strcpy(m_bm->bm_name,bm_id);
-    }
-    int p_moni;           /* Start monitor                       */
-    int   p_emax;         /* maximum events allowed              */
-    int   p_umax;         /* maximun users                       */
-    int   p_loc;          /* local flag                          */
-    int   p_across;       /* Across memory flag                  */
-    int   p_size;         /* buffer size                         */
-    unsigned int p_base;  /* Event Buffer base address           */
-    unsigned int spy_base;/* Spy Memory base address             */
-    int   p_force;        /* force deinstall                     */
-
-    /* global variables          */
-    char   *buff_ptr;
-    char   *spy_ptr;
-    char   *data_ptr;
-    char   buff_id[16];
-    int    *spy_register;
-    int    *spy_on;
-    int    *spy_off;
-    int   spy_set;
-
-    bool startMonitor() const { return p_moni > 0; }
-    virtual int  optparse (const char* c);
-    int  deinstall();
-    int  install();
-  };
-}
 
 static void help()  {
   writeln(2,"Syntax: mbm_install/mbm_deinstall [<-opt>]\n",80);
@@ -59,14 +14,24 @@ static void help()  {
   writeln(2,"    -s=<size> [10]      Buffer size (kbytes)\n",80);
   writeln(2,"    -e=<max>  [32]      Maximum number of events\n",80);
   writeln(2,"    -u=<max>  [5]       Maximum number of users\n",80);
-  writeln(2,"    -b=<base> [1000000] Event Memory base address (hex)\n",80);
-  writeln(2,"    -y=<base> [0000000] Spy Memory base address (hex)\n",80);
   writeln(2,"    -i=<id>   [ ]       Buffer Identifier \n",80);
-  writeln(2,"    -l        [ ]       Local memory buffer (data module)\n",80);
-  writeln(2,"    -x        [ ]       Allow allocation across memories\n",80);
   writeln(2,"    -f        [ ]       force deinstall\n",80);
   writeln(2,"    -m        [ ]       Start monitor after installer\n",80);
+  writeln(2,"    -c        [ ]       Do not keep process alive; continue execution\n",80);
 }
+
+MBM::Installer::Installer(int argc, char **argv)  {
+  p_continue = 0;
+  p_moni   = 0;
+  p_emax   = 32;
+  p_umax   = 5;
+  p_size   = 10;
+  p_force  = 0;
+  m_bm = new BMDESCRIPT;
+  ::memset(m_bm,0,sizeof(BMDESCRIPT));
+  getOptions(argc, argv);
+}
+
 int MBM::Installer::optparse (const char* c)  {
   register int iret;
   switch (*c | 0x20)    {
@@ -77,20 +42,6 @@ int MBM::Installer::optparse (const char* c)  {
       ::exit(0);
     }
     p_size = ((p_size+1)>>1)<<1;
-    break;
-  case 'b':            /*      base address       */   
-    iret = sscanf(c+1,"=%x",&p_base);
-    if( iret != 1 )       {
-      writeln(2,"Error reading base address parameter\n",80);
-      ::exit(0);
-    }
-    break;
-  case 'y':            /*     spy base address       */   
-    iret = sscanf(c+1,"=%x",&spy_base);
-    if( iret != 1 )       {
-      writeln(2,"Error reading spy base address parameter\n",80);
-      ::exit(0);
-    }
     break;
   case 'e':            /*      maximum events        */   
     iret = sscanf(c+1,"=%d",&p_emax);
@@ -116,20 +67,17 @@ int MBM::Installer::optparse (const char* c)  {
       writeln(2,"Error reading Buffer identifier parameter\n",80);
       ::exit(0);
     }
+    ::strcpy(m_bm->bm_name,buff_id);
     bm_id = buff_id;
-    ::strcpy(m_bm->bm_name,bm_id);
     break;
-  case 'l':            /*      local flag            */   
-    p_loc = 1;
-    break;
-  case 'x':            /*      local flag            */   
-    p_across = 1;
-    break;
-  case 'f':            /*      local flag            */   
+  case 'f':
     p_force = 1;
     break;
-  case 'm':            /*      local flag            */   
+  case 'm':
     p_moni = 1;
+    break;
+  case 'c':
+    p_continue = 1;
     break;
   case '?':
   case 'h':
@@ -151,6 +99,9 @@ int MBM::Installer::install()  {
   }
   m_bm->ctrl = (CONTROL*)m_bm->ctrl_add->address;
   ::memset(m_bm->ctrl,0,sizeof(CONTROL));
+  ::printf("Control: %p  %08X             [%d Bytes]\n",(void*)m_bm->ctrl,
+           ((char*)m_bm->ctrl)-((char*)m_bm->ctrl), sizeof(CONTROL));
+
   len = sizeof(USERDesc)+sizeof(USER)*(p_umax-1);
   status = ::lib_rtl_create_section(user_mod, len ,&m_bm->user_add);
   if(!::lib_rtl_is_success(status))   {   
@@ -162,6 +113,9 @@ int MBM::Installer::install()  {
   m_bm->user   = m_bm->usDesc->users;
   ::memset(m_bm->usDesc,0,sizeof(USERDesc));
   ::memset(m_bm->user,0,sizeof(USER)*p_umax);
+  ::printf("User:    %p  %08X  %p   [%d Bytes]\n",(void*)m_bm->user,
+           ((char*)m_bm->user)-((char*)m_bm->ctrl),(void*)m_bm->usDesc, len);
+
   len = sizeof(EVENTDesc)+sizeof(EVENT)*(p_emax-1);
   status = ::lib_rtl_create_section(event_mod, len ,&m_bm->event_add);
   if(!::lib_rtl_is_success(status))   {   
@@ -173,6 +127,9 @@ int MBM::Installer::install()  {
   m_bm->evDesc = (EVENTDesc*)m_bm->event_add->address;
   m_bm->event = m_bm->evDesc->events;
   ::memset(m_bm->evDesc,0,len);
+  ::printf("Event:   %p  %08X  %p   [%d Bytes]\n",(void*)m_bm->event,
+           ((char*)m_bm->event)-((char*)m_bm->ctrl),(void*)m_bm->evDesc, len);
+
   len = (p_size<<Bits_p_kByte)>>3;
   status = ::lib_rtl_create_section(bitmap_mod,len,&m_bm->bitm_add);
   if(!::lib_rtl_is_success(status))   {   
@@ -184,7 +141,11 @@ int MBM::Installer::install()  {
   }
   m_bm->bitmap = (char*)m_bm->bitm_add->address;
   ::memset(m_bm->bitmap,0,len);
-  status = ::lib_rtl_create_section(buff_mod,p_size<<10,&m_bm->buff_add);
+  ::printf("Bitmap:  %p  %08X             [%d Bytes]\n",(void*)m_bm->bitmap,
+           ((char*)m_bm->bitmap)-((char*)m_bm->ctrl), len);
+
+  len = p_size<<10;
+  status = ::lib_rtl_create_section(buff_mod,len,&m_bm->buff_add);
   if(!::lib_rtl_is_success(status))   {   
     ::lib_rtl_delete_section(m_bm->ctrl_add);
     ::lib_rtl_delete_section(m_bm->user_add);
@@ -194,15 +155,9 @@ int MBM::Installer::install()  {
     ::exit(status);
   }
   m_bm->buffer_add = (char*)m_bm->buff_add->address;
-
-  ::printf("Control: %p  %08X\n",(void*)m_bm->ctrl,
-           ((char*)m_bm->ctrl)-((char*)m_bm->ctrl));
-  ::printf("User:    %p  %08X  %p\n",(void*)m_bm->user,
-           ((char*)m_bm->user)-((char*)m_bm->ctrl),(void*)m_bm->usDesc);
-  ::printf("Event:   %p  %08X  %p\n",(void*)m_bm->event,
-           ((char*)m_bm->event)-((char*)m_bm->ctrl),(void*)m_bm->evDesc);
-  ::printf("Bitmap:  %p  %08X\n",(void*)m_bm->bitmap,
-           ((char*)m_bm->bitmap)-((char*)m_bm->ctrl));
+  ::memset(m_bm->buffer_add,0xDD,len);
+  ::printf("Buffer:  %p  %08X             [%d Bytes]\n",(void*)m_bm->buffer_add,
+           ((char*)m_bm->buffer_add)-((char*)m_bm->ctrl), len);
 
   CONTROL* ctrl  = m_bm->ctrl;
   USER*    user  = m_bm->user;
@@ -306,12 +261,14 @@ int MBM::Installer::deinstall()  {
 
 int mbm_install(int argc , char** argv) {
   MBM::Installer inst(argc, argv);
+  RTL::CLI cli(argc, argv, help);
   int sc = inst.install();
   if ( sc == 1 )  {
     if ( inst.startMonitor() )  {
+      lib_rtl_sleep(1000);
       mbm_mon(0, argv); 
     }
-    else  {
+    else if ( !inst.continueInstallation() ) {
       for(;;) ::lib_rtl_sleep(10000);
     }
   }

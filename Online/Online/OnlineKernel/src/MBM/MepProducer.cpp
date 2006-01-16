@@ -4,7 +4,7 @@
 
 // Initializing constructor
 MEP::Producer::Producer(const std::string& client_name, int partition_id)
-: MBM::Producer(MBM_INV_DESC, client_name, partition_id), m_flags(0) 
+: MBM::Producer(MBM_INV_DESC, client_name, partition_id), m_mepID(MEP_INV_DESC), m_flags(0) 
 {
 }
 
@@ -15,7 +15,7 @@ MEP::Producer::~Producer()    {
 
 /// Include MBM client into buffer
 int MEP::Producer::include()    {
-  if ( m_mepID != MEP_INV_DESC )  {
+  if ( m_mepID == MEP_INV_DESC )  {
     m_mepID = ::mep_include(m_name.c_str(),m_partID, m_flags);
     if ( m_mepID == MEP_INV_DESC ) {
       throw std::runtime_error("Failed to include into MEP buffers.");

@@ -85,7 +85,6 @@ int MBM::Consumer::eventRearm() {
   if( sc == MBM_NORMAL || sc == MBM_NO_EVENT ) {
     sc = (m_blocking) ? ::mbm_wait_event(m_bmid) : ::mbm_wait_event_a(m_bmid);
     if( sc == MBM_NORMAL ) {
-      //::printf("Consumer Rearm done....\n");
       return sc;
     }
     throw std::runtime_error("Failed to rearm event action:"+m_buffName+" [Internal Error]");
@@ -152,7 +151,6 @@ int MBM::Consumer::freeEvent() {
   if ( m_bmid != (BMID)-1 ) {
     int status = ::mbm_free_event(m_bmid);
     if ( status == MBM_NORMAL )  {
-      //::printf("Consumer Action done....\n");
       return MBM_NORMAL;
     }
     throw std::runtime_error("Failed to free event from MBM buffer:"+m_buffName+" [Internal Error]");
@@ -163,11 +161,9 @@ int MBM::Consumer::freeEvent() {
 // Run the application in synchonous mode
 int MBM::Consumer::runSynchronous() {
   int sc = eventRearm();
-  //::printf("Finished consumer rearm...\n");
   if ( sc != MBM_NORMAL ) {
     return sc;
   }
-  //::printf("Start Consumer Action..\n");
   sc = eventAction();
   if ( sc != MBM_NORMAL ) {
     return sc;

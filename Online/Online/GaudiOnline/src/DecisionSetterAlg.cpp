@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/GaudiOnline/src/DecisionSetterAlg.cpp,v 1.9 2006-01-12 12:56:34 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/GaudiOnline/src/DecisionSetterAlg.cpp,v 1.10 2006-01-16 18:30:05 frankb Exp $
 //	====================================================================
 //  DecisionSetterAlg.cpp
 //	--------------------------------------------------------------------
@@ -48,6 +48,7 @@ namespace LHCb  {
       }
       m_mepID = m_mepMgr->mepID();
       m_prod = new Producer(m_mepID->resBuffer,m_mepID->processName,m_mepID->partitionID);
+      mbm_register_free_event(m_mepID->evtBuffer,  0, 0);
       mbm_register_free_event(m_mepID->resBuffer,  0, 0);
       mbm_register_alloc_event(m_mepID->resBuffer, 0, 0);
       return StatusCode::SUCCESS;
@@ -67,6 +68,8 @@ namespace LHCb  {
     }
     /// Execute procedure
     virtual StatusCode execute()    {
+      //static int cnt = 0;
+      //if ( !((++cnt%10)==0) ) return StatusCode::SUCCESS;
       SmartDataPtr<DataObject> evt(eventSvc(),"/Event");
       if ( evt )  {
         IRegistry* reg = evt->registry();
@@ -81,8 +84,11 @@ namespace LHCb  {
             ::memcpy(e.data, src->header(), len);
             ::memcpy(e.mask, src->triggerMask(), sizeof(e.mask));
             // Add here optional data to the output record....
-
+            MEPEVENT* me = (MEPEVENT*)(int*)(m_mepID->mepStart + src->header()->m_begin);
+            // ::printf("MEP: %d   count:%d Pattern:%08X Valid:%d ",
+            //  me->mepBufferID, me->refCount, me->magic, me->valid);
             if ( m_prod->sendEvent() == MBM_NORMAL )  {
+              // ::printf(" Sent:%d\n",me->refCount);
               return StatusCode::SUCCESS;
             }
           }

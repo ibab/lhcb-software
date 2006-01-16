@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/GaudiOnline/src/MEPManager.cpp,v 1.3 2006-01-12 12:02:57 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/GaudiOnline/src/MEPManager.cpp,v 1.4 2006-01-16 18:30:05 frankb Exp $
 //	====================================================================
 //  MEPManager.cpp
 //	--------------------------------------------------------------------
@@ -30,7 +30,7 @@ LHCb::MEPManager::~MEPManager()    {
 }
 
 StatusCode LHCb::MEPManager::error(const std::string& msg)   const {
-  MsgStream err(msgSvc(), "OnlineConverter");
+  MsgStream err(msgSvc(), "MEPManager");
   err << MSG::ERROR << msg << endmsg;
   return StatusCode::FAILURE;
 }
@@ -78,9 +78,10 @@ StatusCode LHCb::MEPManager::initialize()  {
   if ( m_mepID == MEP_INV_DESC )  {
     return error("Failed to include into MEP buffers!");
   }
-  ::printf(" MEP    buffer start: %08X\n",m_mepID->mepStart);
-  ::printf(" EVENT  buffer start: %08X\n",m_mepID->evtStart);
-  ::printf(" RESULT buffer start: %08X\n",m_mepID->resStart);
+  MsgStream log(msgSvc(), "MEPManager");
+  log << MSG::INFO << " MEP    buffer start: " << (void*)m_mepID->mepStart << endmsg;
+  log << MSG::INFO << " EVENT  buffer start: " << (void*)m_mepID->evtStart << endmsg;
+  log << MSG::INFO << " RESULT buffer start: " << (void*)m_mepID->resStart << endmsg;
   return StatusCode::SUCCESS;
 }
 

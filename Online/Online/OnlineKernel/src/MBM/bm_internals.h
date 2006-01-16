@@ -28,7 +28,6 @@ extern "C" {
   int _mbm_flush_sections(BMID bm);
   EVENT* _mbm_ealloc(BMID id, USER* us);
   int _mbm_efree    (BMID bm, EVENT* e);  /* de-allocate event slot */
-  int _mbm_do_free  (BMID bm, EVENT* e);
   int _mbm_sfree    (BMID bm, int , int);
 
   int _mbm_del_event(BMID bm, EVENT* e, int len);
