@@ -37,7 +37,7 @@ namespace {
 #ifdef _WIN32
           lib_rtl_sleep(1);
 #else
-          lib_rtl_usleep(100);
+          lib_rtl_usleep(10);
 #endif
           //cnt++;
           //if ( (cnt%3)==0 ) printf(".");
