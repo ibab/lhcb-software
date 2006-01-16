@@ -1,0 +1,16 @@
+! Package     : AlignmentTools
+! Responsible : Sebastien Viret
+
+
+!=============================================================================
+! 16/01/2006 - Sebastien Viret  ** v1r0 **
+  First release of the AlignmentTools package.
+
+  Environment requested to compile: LHCb   v19r3
+                                    Brunel v28r2
+  Tools included:
+       Millepede  - Millepede C++ translation 
+
+
+This package is intended to provide an interface to Millepede usable by the different 
+sub-detectors for their own alignment algorithm.

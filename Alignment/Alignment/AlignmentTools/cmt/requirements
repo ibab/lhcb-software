@@ -1,0 +1,48 @@
+#============================================================================
+# Created    : 2006-01-16
+# Maintainer : Sebastien Viret
+#
+# Documentation on the requirement file can be found at
+# http://cern.ch/lhcb-comp/Support/html/new_structure.pdf
+#============================================================================
+package           AlignmentTools
+version           v1r0
+
+#============================================================================
+# This template is an example for a standard Algorithm package
+#
+# Structure, i.e. directories to process. 
+#============================================================================
+branches          cmt doc src xml
+
+# =========== own includes ====================================================
+include_dirs  $(ALIGNMENTTOOLSROOT)
+
+#============================================================================
+# Used packages. Specify the version, * at the end specifies 'any revision'
+#    Put as many lines as needed, with all packages, without the '#'
+#============================================================================
+use     GaudiAlg        v*
+use     GSL             v*     LCG_Interfaces
+
+use     GaudiObjDesc    v*
+
+use     VeloDet         v*    Det
+
+document obj2doth AlignmentToolsObj2Doth ../xml/*.xml
+document obj2dict AlignmentToolsObj2Dict ../xml/*.xml
+
+#============================================================================
+# Component library building rule
+#============================================================================
+library          AlignmentTools      ../src/*.cpp 
+library          AlignmentToolsDict  ../$(tag)/dict/AlignmentTools/*.cpp
+
+#============================================================================
+# define component library link options
+#============================================================================
+apply_pattern component_library    library=AlignmentToolsDict
+apply_pattern linker_library       library=AlignmentTools
+macro_append AlignmentTools_linkopts "" WIN32 "/include:_AlignmentTools_loadRef"
+
+set ALIGNMENTTOOLSOPTS  ${ALIGNMENTTOOLSROOT}/options

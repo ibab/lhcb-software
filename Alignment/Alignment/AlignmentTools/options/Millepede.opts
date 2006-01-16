@@ -1,0 +1,6 @@
+// JobOptions for the Millepede tool
+
+ToolSvc.Millepede.OutputLevel   = 3;
+ToolSvc.Millepede.Iteration = true;
+ToolSvc.Millepede.StartingCutOnResidual = 0.25;
+ToolSvc.Millepede.FurtherCutOnresidual  = 0.1;
