@@ -1,4 +1,4 @@
-// $Id: DeMuonDetector.h,v 1.9 2005-12-16 14:53:20 asarti Exp $
+// $Id: DeMuonDetector.h,v 1.10 2006-01-16 11:33:26 asatta Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
@@ -14,6 +14,10 @@
 //Muon Detector
 #include "MuonDet/MuonChamberLayout.h"
 #include "MuonDet/MuonFrontEndID.h"
+
+#include "MuonDet/PackMCMuonHit.h"  
+#include "MuonDet/MuonEventBits.h"
+
 
 /** @class DeMuonDetector DeMuonDetector.h MuonDet/DeMuonDetector.h
  *  
@@ -97,6 +101,21 @@ public:
   StatusCode Chamber2Tile(int  chaNum, int station, int region, 
                           LHCb::MuonTileID& tile);
 
+
+  int sensitiveVolumeID(Gaudi::XYZPoint  myPoint);
+  
+
+  unsigned int gapID( int sensDetID);
+  
+  unsigned int chamberID( int sensDetID);
+  
+  unsigned int regionID( int sensDetID );
+  
+  unsigned int stationID( int sensDetID );
+  
+  unsigned int quadrantID( int sensDetID );
+  
+
   //Returns the list of physical channels for a given chamber  
   std::vector< std::pair<MuonFrontEndID, std::vector<float> > > 
   listOfPhysChannels(Gaudi::XYZPoint my_entry, Gaudi::XYZPoint my_exit, 
@@ -125,7 +144,7 @@ public:
 		      double & y, double & dy, 
 		      double & z, double & dz);  
   void CountDetEls();
-
+ 
   int stations();
   int regions();
   int regions(int stations);
@@ -253,5 +272,56 @@ inline int DeMuonDetector::regions(int stations)
   //Number of regions in each station
   return m_regsperSta[stations];
 }
+
+inline unsigned int DeMuonDetector::gapID(int sensDetID)
+{
+  
+  return MuonEventBits::getMuonBits(sensDetID,
+                        PackMCMuonHit::maskGapID,PackMCMuonHit::shiftGapID);
+  
+}
+
+
+inline unsigned int DeMuonDetector::chamberID(int sensDetID)
+{
+  
+  return MuonEventBits::getMuonBits(sensDetID,
+                        PackMCMuonHit::maskChamberID,
+                        PackMCMuonHit::shiftChamberID);
+  
+}
+
+
+inline unsigned int DeMuonDetector::regionID(int sensDetID)
+{
+  
+  return MuonEventBits::getMuonBits(sensDetID,
+                                    PackMCMuonHit::maskRegionID,
+                                    PackMCMuonHit::shiftRegionID);
+  
+}
+
+
+inline unsigned int DeMuonDetector::stationID(int sensDetID)
+{
+  
+  return MuonEventBits::getMuonBits(sensDetID,
+                                    PackMCMuonHit::maskStationID,
+                                    PackMCMuonHit::shiftStationID);
+  
+}
+
+
+inline unsigned int DeMuonDetector::quadrantID(int sensDetID)
+{
+  
+  return MuonEventBits::getMuonBits(sensDetID,
+                                    PackMCMuonHit::maskQuadrantID,
+                                    PackMCMuonHit::shiftQuadrantID);
+  
+}
+
+
+
 
 #endif    // MUONDET_DEMUONDETECTOR_H

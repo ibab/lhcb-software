@@ -1,4 +1,4 @@
-// $Id: DeMuonDetector.cpp,v 1.13 2005-12-16 14:53:20 asarti Exp $
+// $Id: DeMuonDetector.cpp,v 1.14 2006-01-16 11:33:26 asatta Exp $
 
 // Include files
 #include "MuonDet/DeMuonDetector.h"
@@ -832,4 +832,34 @@ StatusCode  DeMuonDetector::fillGeoInfo()
   return sc;
 };
 
+
+int DeMuonDetector::sensitiveVolumeID(Gaudi::XYZPoint myPoint)
+{
+  int nsta =0;
+  int nreg =0;   
+  int nchm =0;  
+  int ngap =0;
+  unsigned int nqua =0;
+  
+
+  // retrieve station,region,chamber,gap:
+  StatusCode sc = StatusCode::FAILURE;
+  sc = Hit2GapNumber(myPoint,nsta,ngap,nchm,nreg);
+
+  //retrieve the quadrant:
+  double xPoi = myPoint.x();
+  double yPoi = myPoint.y();
+  double zPoi = myPoint.z();
+  LHCb::MuonTileID tile;
+  sc = Pos2ChamberTile(xPoi,yPoi,zPoi,tile);
+  nqua = tile.quarter();
+    // pack the integer:
+  int id = (nqua<<PackMCMuonHit::shiftQuadrantID) |
+           (nsta<<PackMCMuonHit::shiftStationID ) |
+           (nreg<<PackMCMuonHit::shiftRegionID)   |
+           (nchm<<PackMCMuonHit::shiftChamberID)  |
+           (ngap<<PackMCMuonHit::shiftGapID);
+  return id;
+
+}
 
