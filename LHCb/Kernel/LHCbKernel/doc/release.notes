@@ -2,6 +2,9 @@ Package LHCbKernel
 Package manager: M.Cattaneo
 Purpose: LHCb specific Kernel classes
 
+! 2006-01-17 - Chris Jones
+ - Import RichParticleIDType files from RichKernel
+
 !===================== LHCbKernel v6r0 2005-12-21 =========================
 ! 2005-12-21 - Marco Cattaneo
  - Add Kernel/LbAppInit.h, and implementation in src. This is an initialization
