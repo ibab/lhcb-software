@@ -1,4 +1,4 @@
-// $Id: DeMuonChamber.cpp,v 1.7 2005-11-09 17:27:55 asarti Exp $
+// $Id: DeMuonChamber.cpp,v 1.8 2006-01-17 08:55:01 asarti Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
@@ -64,7 +64,7 @@ StatusCode DeMuonChamber::initialize()
   int sta(0),reg(0),chm(0);
   char patt[400]; 
   sprintf(patt,"%s",(this->name()).data());
-  sscanf(patt,"/dd/Structure/LHCb/Muon/M%d/R%d/Cham%d",&sta,&reg,&chm);
+  sscanf(patt,"/dd/Structure/DownstreamRegion/LHCb/Muon/M%d/R%d/Cham%d",&sta,&reg,&chm);
 
   this->setStationNumber(sta-1);
   this->setRegionNumber(reg-1);

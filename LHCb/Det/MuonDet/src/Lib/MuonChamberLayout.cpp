@@ -1,4 +1,4 @@
-// $Id: MuonChamberLayout.cpp,v 1.10 2006-01-16 15:11:33 asarti Exp $
+// $Id: MuonChamberLayout.cpp,v 1.11 2006-01-17 08:55:01 asarti Exp $
 // Include files 
 
 //Muon
@@ -146,7 +146,7 @@ std::vector<DeMuonChamber*> MuonChamberLayout::
 neighborChambers(int chmbNum, int sta, int reg, int x_dir, int y_dir) {
 
   char pt[200]; bool debug = false;
-  sprintf(pt,"/dd/Structure/LHCb/Muon/M%d/R%d/Cham%03d",sta+1,reg+1,chmbNum+1);
+  sprintf(pt,"/dd/Structure/DownstreamRegion/LHCb/Muon/M%d/R%d/Cham%03d",sta+1,reg+1,chmbNum+1);
   SmartDataPtr<DeMuonChamber> deChmb(m_detSvc,pt);
   std::vector<DeMuonChamber*> myChams;
   //Create a chamber * Chmb.
@@ -415,7 +415,7 @@ LHCb::MuonTileID MuonChamberLayout::tileChamberNumber(int sta, int reg, int chmb
 
 
   char pt[200];  LHCb::MuonTileID myTile;
-  sprintf(pt,"/dd/Structure/LHCb/Muon/M%d/R%d/Cham%03d",sta+1,reg+1,chmbNum+1);
+  sprintf(pt,"/dd/Structure/DownstreamRegion/LHCb/Muon/M%d/R%d/Cham%03d",sta+1,reg+1,chmbNum+1);
 
   SmartDataPtr<DeMuonChamber> deChmb(m_detSvc,pt);
   if(deChmb) {
@@ -483,7 +483,7 @@ std::vector<DeMuonChamber*>  MuonChamberLayout::fillChambersVector(IDataProvider
   StatusCode sc = StatusCode::SUCCESS;
   
   SmartDataPtr<DetectorElement> muonSys (detSvc,
-                                         "/dd/Structure/LHCb/Muon"); 
+                                         "/dd/Structure/DownstreamRegion/LHCb/Muon"); 
   
   //Getting stations
   IDetectorElement::IDEContainer::iterator itSt=muonSys->childBegin();
@@ -505,7 +505,7 @@ std::vector<DeMuonChamber*>  MuonChamberLayout::fillChambersVector(IDataProvider
   for(itSt=muonSys->childBegin(); itSt<muonSys->childEnd(); itSt++){
 
     //Are there any void Stations?
-    sscanf((*itSt)->name().data(),"/dd/Structure/LHCb/Muon/M%d",&obtIS);
+    sscanf((*itSt)->name().data(),"/dd/Structure/DownstreamRegion/LHCb/Muon/M%d",&obtIS);
     if(debug) std::cout<<"Station Name: "<<(*itSt)->name()<<" ::  "<<obtIS<<std::endl;    
     while(iS != obtIS-1) {
       std::cout<<"There is/are void stations. "<<std::endl;
@@ -524,7 +524,7 @@ std::vector<DeMuonChamber*>  MuonChamberLayout::fillChambersVector(IDataProvider
     for(itRg=(*itSt)->childBegin(); itRg<(*itSt)->childEnd(); itRg++){
 
       //Are there any void Regions?
-      sscanf((*itRg)->name().data(),"/dd/Structure/LHCb/Muon/M%d/R%d",&obtIS,&obtIR);
+      sscanf((*itRg)->name().data(),"/dd/Structure/DownstreamRegion/LHCb/Muon/M%d/R%d",&obtIS,&obtIR);
       if(debug) std::cout<<"Region Name: "<<(*itRg)->name()<<" ::  "<<obtIR<<std::endl;    
       while(iR != obtIR-1) {
 	std::cout<<"There is/are void regions. "<<std::endl;
