@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.53 2006-01-17 10:13:29 pkoppenb Exp $
+# $Id: requirements,v 1.54 2006-01-17 16:28:56 cattanem Exp $
 # Created      : 20/06/2001
 # Maintainer   : P. Koppenburg
 #
@@ -7,7 +7,7 @@ version           v9r0
 
 # Structure, i.e. directories to process. 
 #============================================================================
-branches          cmt doc dict src xml Event
+branches          cmt doc src xml Event
 
 # Include directories
 #============================================================================
@@ -15,15 +15,11 @@ include_dirs $(PHYSEVENTROOT)
 
 # Used packages. 
 #============================================================================
-use RichEvent    v*  Event
-use MuonEvent    v*  Event
-use CaloEvent    v*  Event
-use TrackEvent   v*  Event
-use EventBase    v*  Event
-use GaudiKernel  v*  
-
-use MathLib      v*  LCG_Interfaces
-use  ROOT        v*  LCG_Interfaces
+use RecEvent        v*  Event
+use CaloEvent       v*  Event
+use LHCbKernel      v*  Kernel
+use LHCbDefinitions v*  Kernel
+use GaudiKernel     v*  
 
 # Produce Header-Files & dictionary from XML description
 #============================================================================
@@ -33,7 +29,7 @@ document obj2dict PhysEventObj2Dict ../xml/*.xml
 # Build libraries (including dictionary)
 #============================================================================
 library     PhysEvent     *.cpp
-library     PhysEventDict ../dict/*.cpp
+library     PhysEventDict ../$(tag)/dict/PhysEvent/*.cpp
 
 # Define link options
 #============================================================================
@@ -42,4 +38,4 @@ apply_pattern linker_library    library=PhysEvent
 macro_append PhysEvent_linkopts "" WIN32 "/include:_PhysEvent_loadRef"
 
 private
-use GaudiObjDesc v*
+use GaudiObjDesc v* -no_auto_imports

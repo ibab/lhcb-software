@@ -1,15 +1,15 @@
-! $Id: release.notes,v 1.65 2006-01-17 10:13:29 pkoppenb Exp $
+! $Id: release.notes,v 1.66 2006-01-17 16:28:56 cattanem Exp $
 ! Package     : PhysEvent 
 ! Responsible : P. Koppenburg
 
-!
-! BUILT ON BRANCH v9r0b
-!
+!======================= PhysEvent v9r0 2006-01-17 ==========================
+! 2006-01-17 - Marco Cattaneo
+ - Cleaned up requirements
 
 ! 2006-01-17 - P. Koppenburg
   . Removed VctMap (to Gaudi), PhysEvent_load.cpp and EffCheckResult (MC)
   . Use new Gaudi matrices
-  , Ues namespace LHCb
+  . Use namespace LHCb
 
 ! 2005-10-18 - P. Koppenburg
   . Don't use ROOT TMatrices
