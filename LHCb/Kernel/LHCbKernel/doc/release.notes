@@ -6,6 +6,8 @@ Purpose: LHCb specific Kernel classes
 ! 2006-01-17 - Marco Cattaneo
  - Add Kernel/FastClusterContainer.h from Markus Frank. A test program and usage
    example is available in the directory src/tests
+ - Add xml/Packer.xml, defines LHCb::Packer namespace and methods to set and get
+   bits in a word (previously in MuonEventBase)
 
 ! 2006-01-17 - Chris Jones
  - Import RichParticleIDType files from RichKernel

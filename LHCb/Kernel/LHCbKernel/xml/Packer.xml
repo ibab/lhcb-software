@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!--- $Id: -->
+<!--- Author  : Alessia Satta -->
+<!--- Created : 2005-12-15 -->
+
+<!DOCTYPE gdd SYSTEM "gdd.dtd" >
+<gdd>
+   <package name="LHCbKernel">
+    <namespace 
+      desc="general bit (un)packing set and get methods " 
+      name="Packer"
+      author="Alessia Satta">      
+      <method 
+	desc="generic get method for packed word" 
+	name="getBit" 
+	type="unsigned int">
+	<arg 
+	  type="unsigned int" 
+	  name="packedValue" 
+	  inout="INPUT" />	
+	<arg 
+	  type="unsigned int" 
+	  name="mask" 
+	  inout="INPUT" />				
+	<arg 
+	  type="unsigned int" 
+	  name="shift" 
+	  inout="INPUT" />
+	<code>  return ((packedValue&amp;mask)&gt;&gt;shift); </code>	
+      </method>      
+      <method	 
+	desc="generic set method for packed word"
+	name="setBit" 
+	type="void">
+	<arg 
+	  type="unsigned int" 
+	  name="origValue" 
+	  inout="BOTH" />
+	<arg 
+	  type="unsigned int" 
+	  name="shift" 
+	  inout="INPUT" />
+	<arg 
+	  type="unsigned int" 
+	  name="mask" 
+	  inout="INPUT" />
+	<arg 
+	  type="unsigned int" 
+	  name="bitValue" 
+	  inout="INPUT" />
+	<code>  unsigned int store   = origValue;
+	  unsigned int result=(((bitValue&lt;&lt;shift)&amp;mask)| 
+	  (store&amp;~mask));
+	  origValue=result;		
+	</code>	  	
+      </method>	  
+    </namespace>
+ </package>
+</gdd>
