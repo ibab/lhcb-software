@@ -1,5 +1,5 @@
 # =========================================================================
-# $Id: requirements,v 1.27 2006-01-16 13:37:11 cattanem Exp $
+# $Id: requirements,v 1.28 2006-01-17 17:41:43 asatta Exp $
 # =========================================================================
 
 package MuonDet
@@ -12,6 +12,7 @@ branches         src cmt doc MuonDet
 include_dirs      $(MUONDETROOT)
 
 # =============== used packages ===========================================
+use LHCbKernel    v*  Kernel
 use MuonKernel    v*  Muon
 use DetDescCnv    v*  Det
 

@@ -1,9 +1,12 @@
-! $Id: release.notes,v 1.56 2006-01-17 08:55:01 asarti Exp $
+! $Id: release.notes,v 1.57 2006-01-17 17:41:43 asatta Exp $
 ! Package     : MuonDet
 ! Responsible : Alessia Satta
 !----------------------------------------------------------------------------
 
 !========================= MuonDet v5r0 2006-01-16 =========================
+! 2006-01-17 - Alessia Satta
+  - fixed to be compatible with LHCb::Packer
+
 ! 2006-01-17 - Alessio Sarti
   - fixed TES path adding DownstramRegion
 

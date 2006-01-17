@@ -1,4 +1,4 @@
-// $Id: DeMuonDetector.h,v 1.10 2006-01-16 11:33:26 asatta Exp $
+// $Id: DeMuonDetector.h,v 1.11 2006-01-17 17:41:43 asatta Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
@@ -10,13 +10,12 @@
 
 //Gaudi
 #include "GaudiKernel/IDataProviderSvc.h"
-
+#include "Kernel/Packer.h"
 //Muon Detector
 #include "MuonDet/MuonChamberLayout.h"
 #include "MuonDet/MuonFrontEndID.h"
 
 #include "MuonDet/PackMCMuonHit.h"  
-#include "MuonDet/MuonEventBits.h"
 
 
 /** @class DeMuonDetector DeMuonDetector.h MuonDet/DeMuonDetector.h
@@ -276,7 +275,7 @@ inline int DeMuonDetector::regions(int stations)
 inline unsigned int DeMuonDetector::gapID(int sensDetID)
 {
   
-  return MuonEventBits::getMuonBits(sensDetID,
+  return LHCb::Packer::getBit(sensDetID,
                         PackMCMuonHit::maskGapID,PackMCMuonHit::shiftGapID);
   
 }
@@ -285,7 +284,7 @@ inline unsigned int DeMuonDetector::gapID(int sensDetID)
 inline unsigned int DeMuonDetector::chamberID(int sensDetID)
 {
   
-  return MuonEventBits::getMuonBits(sensDetID,
+  return LHCb::Packer::getBit(sensDetID,
                         PackMCMuonHit::maskChamberID,
                         PackMCMuonHit::shiftChamberID);
   
@@ -295,7 +294,7 @@ inline unsigned int DeMuonDetector::chamberID(int sensDetID)
 inline unsigned int DeMuonDetector::regionID(int sensDetID)
 {
   
-  return MuonEventBits::getMuonBits(sensDetID,
+  return LHCb::Packer::getBit(sensDetID,
                                     PackMCMuonHit::maskRegionID,
                                     PackMCMuonHit::shiftRegionID);
   
@@ -305,7 +304,7 @@ inline unsigned int DeMuonDetector::regionID(int sensDetID)
 inline unsigned int DeMuonDetector::stationID(int sensDetID)
 {
   
-  return MuonEventBits::getMuonBits(sensDetID,
+  return LHCb::Packer::getBit(sensDetID,
                                     PackMCMuonHit::maskStationID,
                                     PackMCMuonHit::shiftStationID);
   
@@ -315,7 +314,7 @@ inline unsigned int DeMuonDetector::stationID(int sensDetID)
 inline unsigned int DeMuonDetector::quadrantID(int sensDetID)
 {
   
-  return MuonEventBits::getMuonBits(sensDetID,
+  return LHCb::Packer::getBit(sensDetID,
                                     PackMCMuonHit::maskQuadrantID,
                                     PackMCMuonHit::shiftQuadrantID);
   
