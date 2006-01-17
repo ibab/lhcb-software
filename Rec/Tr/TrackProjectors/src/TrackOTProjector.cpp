@@ -1,3 +1,4 @@
+// $Id: TrackOTProjector.cpp,v 1.5 2006-01-17 15:58:08 jvantilb Exp $
 // Include files 
 // -------------
 // from Gaudi
@@ -49,26 +50,21 @@ StatusCode TrackOTProjector::project( const State& state,
 
   double cosA = cos( stereoAngle );
   double sinA = sin( stereoAngle );
-  double tu = ( otmeas.tu() > 990.0 ) ? (tx * cosA + ty * sinA) : tu = otmeas.tu();
+  double tu = ( otmeas.tu() > 990.0 ) ? 
+    (tx * cosA + ty * sinA) : tu = otmeas.tu();
   double cosU     = 1./sqrt( 1.+ tu*tu );
   double du       = (x * cosA + y * sinA - wirePos) * driftVelocity;
   double wireDist = ( x * cosA + y * sinA - wirePos ) * cosU;
   double time     = driftVelocity * wireDist
-                    + wireVelocity * otmeas.ambiguity() * ( wireLength - fabs(y) );
+                    + wireVelocity * otmeas.ambiguity() * (wireLength-fabs(y));
 
   unsigned int n = state.nParameters();
   m_H = HepVector(n,0);  
   m_H[0] = cosA * cosU * driftVelocity;
   m_H[1] = sinA * cosU * driftVelocity
            - otmeas.ambiguity() * wireVelocity * y/fabs(y);
-  if ( tu > 990.0 ) {
-    m_H[2] = -du * tu * gsl_pow_3( cosU ) * cosA;
-    m_H[3] = -du * tu * gsl_pow_3( cosU ) * sinA;
-  }
-  else {
-    m_H[2] = 0.;
-    m_H[3] = 0.;
-  }
+  m_H[2] = -du * tu * gsl_pow_3( cosU ) * cosA;
+  m_H[3] = -du * tu * gsl_pow_3( cosU ) * sinA;
 
   // this shouls be ~ equivalent to : computeResidual(state,meas);
   m_residual = meas.measure() - time;
