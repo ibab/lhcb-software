@@ -1,18 +1,17 @@
+// $Id: TrajPoca.h,v 1.2 2006-01-17 09:15:10 ebos Exp $
 #ifndef TRACKTOOLS_TRAJPOCA_H 
 #define TRACKTOOLS_TRAJPOCA_H 1
 
 // Include files
-// -------------
+
 // from Gaudi
 #include "GaudiAlg/GaudiTool.h"
 
+// from Kernel/LHCbKernel
+#include "Kernel/Trajectory.h"
+
 // from Tr/TrackInterfaces
 #include "TrackInterfaces/ITrajPoca.h"
-
-// from Event/TrackEvent
-#include "Event/Trajectory.h"
-
-static const InterfaceID IID_TrajPoca ( "TrajPoca", 1, 0 );
 
 /** @class TrajPoca TrajPoca.h
  *  
@@ -27,48 +26,63 @@ class TrajPoca : public GaudiTool,
                  virtual public ITrajPoca {
 
 public:
-  // Standard constructor
+
+  /// Default constructor
   TrajPoca( const std::string& type, 
             const std::string& name,
             const IInterface* parent );
 
-  virtual ~TrajPoca( ); ///< Destructor
+  /// Default destructor
+  virtual ~TrajPoca();
 
-  // Tool initialization
-  virtual StatusCode initialize();
+  /// Tool initialization
+  StatusCode initialize();
 
-  // Tool finalization
-  virtual StatusCode finalize();
+  /// Find arclengths along trajectories
+  /// having a distance smaller than tolerance
+  virtual StatusCode minimize( const Trajectory& traj1,
+                               double& arclength1, 
+                               bool restrictRange1,
+                               const Trajectory& traj2,
+                               double& arclength2, 
+                               bool restrictRange2, 
+                               HepVector3D& distance,
+                               double precision );
 
-  // Find arclengths along trajectories
-  // having a distance smaller than tolerance
-  StatusCode minimize( const Trajectory& traj1, const Trajectory& traj2,
-                       double& arclength1, double& arclength2,
-                       HepVector3D& distance );
-
-  // Retrieve the derivative with respect to the reference point
-  // of the first ("1") trajectory
-  const HepVector3D derivative1() const; 
-
-  // Retrieve the derivative with respect to the reference point
-  // of the second ("2") trajectory
-  const HepVector3D derivative2() const;
-
+  /// Find the minimum distance between a point and a Trajectory
+  virtual StatusCode minimize( const Trajectory& traj,
+                               double& arclength,
+                               bool restrictRange,
+                               const HepPoint3D& pt,
+                               HepVector3D& distance,
+                               double precision );
 private:
+
+  StatusCode stepTowardPoca( const Trajectory& traj1,
+                             double& arclength1,
+                             bool restrictRange1,
+                             const Trajectory& traj2,
+                             double& arclength2, 
+                             bool restrictRange2,
+                             double precision ) const;
+
+  double restrictLen( double l, const Trajectory& t, bool restrictRange ) const
+  {
+    return restrictRange ? t.restrictToRange(l) : l ; 
+  }
+  
   HepVector3D m_distance;
 
   // jobOptions
+  int m_maxnOscillStep;
+  int m_maxnDivergingStep;
+  int m_maxnStuck;
+  int m_maxnTry;
+  double m_maxDist;
+ 
   double m_tolerance;
 
 };
-
-inline const HepVector3D TrajPoca::derivative1( ) const {
-  return HepVector3D( m_distance.unit() );
-}
-
-inline const HepVector3D TrajPoca::derivative2( ) const {
-  return HepVector3D( -m_distance.unit() );
-}
 
 #endif // TRACKTOOLS_TRAJPOCA_H
 
