@@ -4,6 +4,10 @@
 ! Purpose     : Package for the tracking fitting-related classes
 !-----------------------------------------------------------------------------
 
+! 2006-01-17 - Edwin Bos, Jeroen van Tilburg, Eduardo Rodrigues
+ - Added StateTraj for creating a Trajectory from a State.
+ - Added function to get referenceVector from OTMeasurement.
+
 ! 2005-12-13 - Eduardo Rodrigues
  - ITMeasurement class renamed to STMeasurement. Its type can be TT or IT
 
