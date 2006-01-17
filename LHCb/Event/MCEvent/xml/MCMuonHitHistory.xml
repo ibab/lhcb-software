@@ -1,0 +1,253 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE gdd SYSTEM "gdd.dtd">
+<gdd>
+  <package name="MCEvent">
+    <class 
+      name="MCMuonHitHistory" 
+      author="Alessia Satta" 
+      desc="MC Muon Hit history info" >
+      <import name="Kernel/Packer"/>
+      <import name="Event/PackMCMuonDigitHistory"/>
+      <import name="Event/MuonBXFlag"/>
+      <import name="Event/MuonOriginFlag"/>
+      &StlVector;
+      <attribute 
+	desc="hit history bit pattern" 
+	getMeth="FALSE" 
+	name="hitHistory" 
+	setMeth="FALSE" 
+	type="unsigned int"/>					  
+      <method 
+	desc="has the hit fired the channel?" 
+	name="hasFired" 
+	type="bool" >
+	<code> return Packer::getBit(m_hitHistory,PackMCMuonDigitHistory::maskFiredHitHistory  ,PackMCMuonDigitHistory::shiftFiredHitHistory  )!=0; 
+	</code>
+      </method>
+      <method   
+	desc="set firing  flag in the hitHistory word"
+	name="setFiredFlag" type="void">			 
+	<arg 
+	  type="unsigned int" 
+	  name="firedHit" 
+	  inout="INPUT" />
+	<code>  Packer::setBit(m_hitHistory,PackMCMuonDigitHistory::shiftFiredHitHistory,PackMCMuonDigitHistory::maskFiredHitHistory, firedHit); </code>
+      </method>	
+      <method desc="is the hit out of geometrical acceptance?" 
+	name="isHitOutGeoAccemtance" type="bool" >
+	<code> return Packer::getBit(m_hitHistory,PackMCMuonDigitHistory::maskGeoAcceptanceHitHistory  ,PackMCMuonDigitHistory::shiftGeoAcceptanceHitHistory  )!=0; </code>
+      </method>
+      <method   
+	desc="set out of geometrical acceptance  flag in the hitHistory word"
+	name="setGeometricalNotAcceptedHitHistory" 
+	type="void">					 
+	<arg 
+	  type="unsigned int" 
+	  name="geoOutHit" 
+	  inout="INPUT" />
+	<code> 
+	  Packer::setBit(m_hitHistory,PackMCMuonDigitHistory::shiftGeoAcceptanceHitHistory,PackMCMuonDigitHistory::maskGeoAcceptanceHitHistory,geoOutHit ); </code>
+      </method>	
+      <method 
+	desc="is the hit killed by deadtime?" 
+	name="isHitInDeadtime" 
+	type="bool"  >
+	<code> return Packer::getBit(m_hitHistory,PackMCMuonDigitHistory::maskDeadtimeHitHistory  ,PackMCMuonDigitHistory::shiftDeadtimeHitHistory  )!=0; </code>
+      </method>
+      <method   
+	desc="set the deadtime flag in the hitHistory word"
+	name="setHitInDeadtime" 
+	type="void">					 
+	<arg 
+	  type="unsigned int" 
+	  name="deadtimeHit" 
+	  inout="INPUT" />						
+	<code>  Packer::setBit(m_hitHistory,PackMCMuonDigitHistory::shiftDeadtimeHitHistory,PackMCMuonDigitHistory::maskDeadtimeHitHistory,deadtimeHit ); </code>
+      </method>	
+      <method desc="has the hit time jittered outside the time window?" 
+	name="hasTimeJittered" 
+	type="bool"  >
+	<code> return Packer::getBit(m_hitHistory,PackMCMuonDigitHistory::maskJitteredHitHistory  ,PackMCMuonDigitHistory::shiftJitteredHitHistory  )!=0; </code>
+      </method>
+      <method  
+	desc="set out of gate by time jitter  flag in the hitHistory word"
+	name="setHitOutByTimeJitter" 
+	type="void">			 
+	<arg 
+	  type="unsigned int" 
+	  name="jitteredHit" 
+	  inout="INPUT" />						
+	<code>  Packer::setBit(m_hitHistory,PackMCMuonDigitHistory::shiftJitteredHitHistory,PackMCMuonDigitHistory::maskJitteredHitHistory, jitteredHit); </code>
+      </method>	
+      <method 
+	desc="is the hit out after time adjustement ?" 
+	name="isOutForTimeAdjustment" 
+	type="bool"  >
+	<code> return Packer::getBit(m_hitHistory,PackMCMuonDigitHistory::maskAdjustmentHitHistory  ,PackMCMuonDigitHistory::shiftAdjustmentHitHistory  )!=0; </code>
+      </method>
+      <method   
+	desc="set out of gate after time adjustment flag in the hitHistory word"
+	name="setHitOutByTimeAdjustment" type="void">		
+	<arg 
+	  type="unsigned int" 
+	  name="timeAdjustedHit " 
+	  inout="INPUT" />						
+	<code>  Packer::setBit(m_hitHistory,PackMCMuonDigitHistory::shiftAdjustmentHitHistory,PackMCMuonDigitHistory::maskAdjustmentHitHistory, timeAdjustedHit); </code>
+      </method>	
+      
+      <method  
+	desc="set  again in gate by time adjustemt after out by time jitter or in for a hit with TOF out--- flag in the hitHistory word"
+	name="setHitInByTimeAdjustment" 
+	type="void">			 
+	<arg 
+	  type="unsigned int" 
+	  name="adjustedJitteredHit" inout="INPUT" />						
+	<code>  Packer::setBit(m_hitHistory,PackMCMuonDigitHistory::shiftAdjustmentJitterHitHistory,PackMCMuonDigitHistory::maskAdjustmentJitterHitHistory,
+	  adjustedJitteredHit); </code>
+      </method>
+      
+      <method 
+	desc="is the hit in after time adjustement while it was ouside for TOF or after timejitter?" 
+	name="isInForTimeAdjustment" 
+	type="bool"  >
+	<code> return Packer::getBit(m_hitHistory,PackMCMuonDigitHistory::maskAdjustmentJitterHitHistory  ,PackMCMuonDigitHistory::shiftAdjustmentJitterHitHistory  )!=0; </code>
+      </method>						
+      <method 
+	desc="has the hit been killed by chamber inefficiency  ?" 
+	name="isKilledByChamberInefficiency" 
+	type="bool"  >
+	<code> return Packer::getBit(m_hitHistory,PackMCMuonDigitHistory::maskChamberIneffHitHistory,PackMCMuonDigitHistory::shiftChamberIneffHitHistory  )!=0; </code>
+      </method>
+      <method  
+	desc="set the killed by chamber inefficiency flag in the hitHistory word"
+	name="setKilledByChamberInefficiencyHit" 
+	type="void">
+	<arg 
+	  type="unsigned int" 
+	  name="killedChamberIneff " 
+	  inout="INPUT" />
+	<code>  Packer::setBit(m_hitHistory,PackMCMuonDigitHistory::shiftChamberIneffHitHistory,PackMCMuonDigitHistory::maskChamberIneffHitHistory,killedChamberIneff ); </code>
+      </method>	
+      <method  
+	desc="set the BX ID of hit in the hitHistory word"
+	name="setBXOfHit" 
+	type="void">
+	<arg 
+	  type="unsigned int" 
+	  name="BXID" 
+	  inout="INPUT" />
+	<code>  Packer::setBit(m_hitHistory,PackMCMuonDigitHistory::shiftBXbelongOfHitHistory,PackMCMuonDigitHistory::maskBXbelongOfHitHistory, BXID); </code>
+      </method>	
+      <method 
+	desc="in which BX the hit has originated ?" 
+	name="BX" 
+	type="unsigned int"  >
+	<code> return
+	  (Packer::getBit(m_hitHistory,PackMCMuonDigitHistory::maskBXbelongOfHitHistory,PackMCMuonDigitHistory::shiftBXbelongOfHitHistory)); </code>
+      </method>
+      
+      <method 
+	desc="is the hit originated in the current BX ?" 
+	name="isHitOriginatedInCurrentEvent" 
+	type="bool"  >
+	<code> return
+	  (Packer::getBit(m_hitHistory,PackMCMuonDigitHistory::maskBXbelongOfHitHistory,PackMCMuonDigitHistory::shiftBXbelongOfHitHistory)==MuonBXFlag::CURRENT)!=0; </code>
+      </method>
+      <method 
+	desc="is the hit originated in the current BX ?" 
+	name="isHitOriginatedInPrevEvent" 
+	type="bool"  >
+	<code> return
+	  (Packer::getBit(m_hitHistory,PackMCMuonDigitHistory::maskBXbelongOfHitHistory,PackMCMuonDigitHistory::shiftBXbelongOfHitHistory)==MuonBXFlag::PREV)!=0; </code>
+      </method>
+      <method 
+	desc="is the hit originated in the current BX ?" 
+	name="isHitOriginatedInPrevPrevEvent" 
+	type="bool"  >
+	<code> return
+	  (Packer::getBit(m_hitHistory,PackMCMuonDigitHistory::maskBXbelongOfHitHistory,PackMCMuonDigitHistory::shiftBXbelongOfHitHistory)==MuonBXFlag::TWOPREV)!=0; </code>
+      </method>
+      <method 
+	desc="is the hit originated in the current BX ?" 
+	name="isHitOriginatedInPrevPrevPrevEvent" type="bool"  >
+	<code> return							
+	  (Packer::getBit(m_hitHistory,PackMCMuonDigitHistory::maskBXbelongOfHitHistory,PackMCMuonDigitHistory::shiftBXbelongOfHitHistory)==MuonBXFlag::THREEPREV)!=0; </code>
+      </method>
+      <method 
+	desc="is the hit originated in the current BX ?" 
+name="isHitOriginatedInPrevPrevPrevPrevEvent" type="bool"  >
+	<code> return							
+	  (Packer::getBit(m_hitHistory,PackMCMuonDigitHistory::maskBXbelongOfHitHistory,PackMCMuonDigitHistory::shiftBXbelongOfHitHistory)==MuonBXFlag::FOURPREV)!=0; </code>
+      </method>      
+      <method  
+	desc="set the nature of hit in the hitHistory word"
+	name="setNatureOfHit" 
+	type="void">
+	<arg 
+	  type="unsigned int" 
+	  name="NatureID" 
+	  inout="INPUT" />
+	<code>  Packer::setBit(m_hitHistory,PackMCMuonDigitHistory::shiftNatureOfHitHistory,PackMCMuonDigitHistory::maskNatureOfHitHistory,
+	  NatureID); </code>
+      </method>							
+      <method 
+	desc="which is the nature of the hit?" 
+	name="natureOfHit" 
+	type="unsigned int">		   
+	<code>   
+	  return  (Packer::getBit(m_hitHistory,PackMCMuonDigitHistory::maskNatureOfHitHistory , PackMCMuonDigitHistory::shiftNatureOfHitHistory )); </code>
+      </method>	
+      <method 
+	desc="Is a GEANT hit?" 
+	name="isGeantHit" 
+	type="bool">
+	<code> return (Packer::getBit(m_hitHistory , PackMCMuonDigitHistory::maskNatureOfHitHistory ,
+	  PackMCMuonDigitHistory::shiftNatureOfHitHistory )==MuonOriginFlag::GEANT)!=0; </code>
+      </method>
+      <method 
+	desc="Is a low energy background hit?" 
+	name="isBackgroundHit" 
+	type="bool">
+	<code> return (Packer::getBit(m_hitHistory , PackMCMuonDigitHistory::maskNatureOfHitHistory,PackMCMuonDigitHistory::shiftNatureOfHitHistory  
+	  )==MuonOriginFlag::BACKGROUND)!=0; </code>				
+      </method>
+      <method 
+	desc="Is a chamber noise hit?" 
+	name="isChamberNoiseHit" 
+	type="bool">
+	<code> return (Packer::getBit(m_hitHistory , PackMCMuonDigitHistory::maskNatureOfHitHistory , PackMCMuonDigitHistory::shiftNatureOfHitHistory 
+	  )==MuonOriginFlag::CHAMBERNOISE)!=0; </code>	
+      </method>
+      
+      <method 
+	desc="Is a flat spillover hit?" 
+	name="isFlatSpilloverHit" 
+	type="bool">
+	<code> return (Packer::getBit(m_hitHistory  , PackMCMuonDigitHistory::maskNatureOfHitHistory , PackMCMuonDigitHistory::shiftNatureOfHitHistory 
+	  )==MuonOriginFlag::FLATSPILLOVER)!=0; </code>	
+      </method>		
+      <method 
+	desc="Is a xtalk hit?" 
+	name="isXTalkHit" 
+	type="bool">
+	<code> return (Packer::getBit(m_hitHistory , PackMCMuonDigitHistory::maskNatureOfHitHistory ,PackMCMuonDigitHistory::shiftNatureOfHitHistory  
+	  )==MuonOriginFlag::XTALK)!=0; </code>	
+      </method>				
+ 						
+      <method 
+	desc="Is a el noise hit?" 
+	name="isElNoiseHit" 
+	type="bool">
+	<code> return (Packer::getBit(m_hitHistory ,  PackMCMuonDigitHistory::maskNatureOfHitHistory , PackMCMuonDigitHistory::shiftNatureOfHitHistory
+	  )==MuonOriginFlag::ELECTRONICNOISE)!=0; </code>	
+      </method>				
+      <method 
+	desc="Is a machine background ?" 
+	name="isMachineBkgHit" 
+	type="bool">
+	<code> return (Packer::getBit(m_hitHistory ,  PackMCMuonDigitHistory::maskNatureOfHitHistory , PackMCMuonDigitHistory::shiftNatureOfHitHistory
+	  )==MuonOriginFlag::LHCBACKGROUND)!=0; </code>	
+      </method>								
+    </class>		
+  </package>
+</gdd>

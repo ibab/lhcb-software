@@ -1,0 +1,339 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!--- $Id: -->
+<!--- Author  : Alessia Satta -->
+<!--- Created : 2005-12-15 -->
+
+<!DOCTYPE gdd SYSTEM "gdd.dtd" >
+<gdd>
+   <package name="MCEvent">
+    <namespace 
+      desc="BX Flag for spillover " 
+      name="MuonBXFlag">
+      <enum 
+	name="BXFlag" 
+	value="CURRENT=0,PREV=1,TWOPREV=2,THREEPREV, FOURPREV" 
+	desc="flags to identify the BX id" />
+    </namespace>		
+    <namespace 
+      desc="nature of the hit/digit " 
+      name="MuonOriginFlag">
+      <enum 
+	name="OriginFlag" 
+	value="GEANT=0,FLATSPILLOVER=1,BACKGROUND=2,CHAMBERNOISE, XTALK, ELECTRONICNOISE,LHCBACKGROUND" 
+	desc="flags to identify the nature of thehit/digit" />
+    </namespace>		
+    <namespace 
+      desc="bit pattern for digit info word and hit history words" 
+      name="PackMCMuonDigitInfo">  
+      <attribute 
+	desc="number of bit to define the nature of the digit" 
+	init="3" 
+	name="bitOriginDigitInfo" 
+	type="static const unsigned int"/>
+      <attribute 
+	desc="number of bit to define the BX of the hit that fired the digit" 
+	init="3" 
+	name="bitBXIDDigitInfo" 
+	type="static const unsigned int"/>
+      <attribute 
+	desc="number of bit to define if the digit is alive" 
+	init="1" 
+	name="bitAliveDigitInfo" 
+	type="static const unsigned int"/>
+      <attribute 
+	desc="number of bit to define if the digit is in deadtime" 
+	init="1" 
+	name="bitDeadtimeDigitInfo" 
+	type="static const unsigned int"/>
+      <attribute 
+	desc="number of bit to define if the digit is in chamber inefficiency "
+	init="1" 
+	name="bitChamberInefficiencyDigitInfo" 
+	type="static const unsigned int"/>
+      <attribute 
+	desc="number of bit to define if the digit is killed by time jitter " 
+	init="1" 
+	name="bitTimeJitterDigitInfo" 
+	type="static const unsigned int"/>
+      <attribute 
+	desc="number of bit to define if the digit is killed by time adj."  
+	init="1" 
+	name="bitTimeAdjustmentDigitInfo" 
+	type="static const unsigned int"/>
+      <attribute 
+	desc="number of bit to define if the digit is alive by time adjustment"
+	init="1"
+	name="bitAliveTimeAdjustmentDigitInfo" 
+	type="static const unsigned int"/>
+      <attribute 
+	desc="number of bit to define if the digit is killed by geometry acceptance " 
+	init="1" 
+	name="bitGeometryAcceptanceDigitInfo" 
+	type="static const unsigned int"/>
+      <attribute 
+	desc=" " 
+	init="0" 
+	name="shiftOriginDigitInfo" 
+	type="static const unsigned int"/>
+      <attribute 
+	desc=" " 
+	init="shiftOriginDigitInfo+bitBXIDDigitInfo" 
+	name="shiftBXIDDigitInfo" type="static const unsigned int"/>	 
+      <attribute 
+	desc=" " 
+	init="shiftBXIDDigitInfo+bitBXIDDigitInfo" 
+	name="shiftAliveDigitInfo" 
+	type="static const unsigned int"/>      
+      <attribute 
+	desc=" " 
+	init="shiftAliveDigitInfo" 
+	name="shiftSecondPart" 
+	type="static const unsigned int"/>
+      <attribute 
+	desc=" " 
+	init="shiftAliveDigitInfo+bitAliveDigitInfo" 
+	name="shiftDeadtimeDigitInfo" 
+	type="static const unsigned int"/>
+      <attribute 
+	desc=" " 
+	init="shiftDeadtimeDigitInfo+bitDeadtimeDigitInfo" 
+	name="shiftChamberInefficiencyDigitInfo" 
+	type="static const unsigned int"/>
+      <attribute 
+	desc=" " 
+	init="shiftChamberInefficiencyDigitInfo+bitChamberInefficiencyDigitInfo"
+	name="shiftTimeJitterDigitInfo" 
+	type="static const unsigned int"/>
+      <attribute 
+	desc=" " 
+	init="shiftTimeJitterDigitInfo+bitTimeJitterDigitInfo" 
+	name="shiftTimeAdjustmentDigitInfo" 
+	type="static const unsigned int"/>
+      <attribute 
+	desc=" " 
+	init="shiftTimeAdjustmentDigitInfo+bitTimeAdjustmentDigitInfo" 
+	name="shiftAliveTimeAdjustmentDigitInfo" 
+	type="static const unsigned int"/>
+      <attribute 
+	desc=" " 
+	init="shiftAliveTimeAdjustmentDigitInfo+bitAliveTimeAdjustmentDigitInfo" 
+	name="shiftGeometryAcceptanceDigitInfo" 
+	type="static const unsigned int"/>
+      <attribute 
+	desc=" " 
+	init="shiftGeometryAcceptanceDigitInfo+bitGeometryAcceptanceDigitInfo-shiftSecondPart" 
+	name="bitSecondPart" 
+	type="static const unsigned int"/>        
+      <attribute 
+	desc="" 
+	init=" ( ( ( (unsigned int) 1 ) &lt;&lt;  bitOriginDigitInfo  ) - 1  ) 
+	&lt;&lt;shiftOriginDigitInfo  " 
+	name="maskOriginDigitInfo" 
+	type="static const unsigned int"/>
+      <attribute 
+	desc="" 
+	init=" ( ( ( (unsigned int) 1 ) &lt;&lt;  bitBXIDDigitInfo   ) - 1  ) 
+	&lt;&lt;shiftBXIDDigitInfo   " 
+	name="maskBXIDDigitInfo" 
+	type="static const unsigned int"/>
+      <attribute 
+	desc="" 
+	init=" ( ( ( (unsigned int) 1 ) &lt;&lt;  bitAliveDigitInfo   ) - 1  ) 
+	&lt;&lt;shiftAliveDigitInfo   " 
+	name="maskAliveDigitInfo" 
+	type="static const unsigned int"/>
+      <attribute 
+	desc="" 
+	init=" ( ( ( (unsigned int) 1 ) 
+	&lt;&lt;  bitDeadtimeDigitInfo   ) - 1  ) 
+	&lt;&lt;shiftDeadtimeDigitInfo   " 
+	name="maskDeadtimeDigitInfo" 
+	type="static const unsigned int"/>
+      <attribute 
+	desc="" 
+	init=" ( ( ( (unsigned int) 1 ) &lt;&lt;  
+	bitChamberInefficiencyDigitInfo   ) - 1  ) &lt;&lt;
+	shiftChamberInefficiencyDigitInfo   " 
+	name="maskChamberInefficiencyDigitInfo" 
+	type="static const unsigned int"/>
+      <attribute 
+	desc="" init=" ( ( ( (unsigned int) 1 ) &lt;&lt;  
+	bitTimeJitterDigitInfo   ) - 1  ) &lt;&lt;shiftTimeJitterDigitInfo   " 
+	name="maskTimeJitterDigitInfo" type="static const unsigned int"/>
+      <attribute 
+	desc="" 
+	init=" ( ( ( (unsigned int) 1 ) &lt;&lt;  bitTimeAdjustmentDigitInfo) 
+	- 1  ) &lt;&lt;shiftTimeAdjustmentDigitInfo   " 
+	name="maskTimeAdjustmentDigitInfo" 
+	type="static const unsigned int"/>
+      <attribute 
+	desc="" 
+	init=" ( ( ( (unsigned int) 1 ) &lt;&lt;  
+	bitAliveTimeAdjustmentDigitInfo   ) - 1  ) &lt;&lt;
+	shiftAliveTimeAdjustmentDigitInfo   "
+	name="maskAliveTimeAdjustmentDigitInfo" 
+	type="static const unsigned int"/>
+      <attribute 
+	desc="" 
+	init=" ( ( ( (unsigned int) 1 ) &lt;&lt;  
+	bitGeometryAcceptanceDigitInfo   ) - 1  ) &lt;&lt;
+	shiftGeometryAcceptanceDigitInfo   " 
+	name="maskGeometryAcceptanceDigitInfo" 
+	type="static const unsigned int"/>
+      <attribute 
+	desc="" 
+	init=" ( ( ( (unsigned int) 1 ) &lt;&lt;  bitSecondPart   ) - 1  ) 
+	&lt;&lt;shiftSecondPart   " 
+	name="maskSecondPart" 
+	type="static const unsigned int"/>
+    </namespace>	
+    <namespace 
+      desc="bit pattern for hit history word" 
+      name="PackMCMuonDigitHistory">
+      <attribute 
+	desc="number of bit to define if the hit has fired the digit" 
+	init="1" 
+	name="bitFiredHitHistory" 
+	type="static const unsigned int"/>
+      <attribute 
+	desc="number of bit to define if the hit is in/outside the geometry acceptance of the digit" 
+	init="1" 
+	name="bitGeoAcceptanceHitHistory" 
+	type="static const unsigned int"/>
+      <attribute 
+	desc="number of bit to define if the hit happens when the detector  is in deadtime" 
+	init="1" 
+	name="bitDeadtimeHitHistory" 
+	type="static const unsigned int"/>
+      <attribute 
+	desc="number of bit to define if the hit is jittered in another BX" 
+	init="1" 
+	name="bitJitteredHitHistory" 
+	type="static const unsigned int"/>
+      <attribute 
+	desc="number of bit to define if the hit is in another BX after delay adjustment" 
+	init="1" 
+	name="bitAdjustmentHitHistory" 
+	type="static const unsigned int"/>
+      <attribute 
+	desc="number of bit to define if the hit is in the original BX after delay adjustment while it was outside after time jitter" 
+	init="1"
+	name="bitAdjustmentJitterHitHistory" type="static const unsigned int"/>
+      <attribute 
+	desc="number of bit to define if the hit survived the chamber inefficiency " 
+	init="1" 
+	name="bitChamberIneffHitHistory" 
+	type="static const unsigned int"/>
+      <attribute 
+	desc="number of bit to define the BX to which the hit belong" 
+	init="3" 
+	name="bitBXbelongOfHitHistory" 
+	type="static const unsigned int"/>
+      <attribute 
+	desc="number of bit to define the BX to which the hit belong" 
+	init="3" 
+	name="bitNatureOfHitHistory" 
+	type="static const unsigned int"/>
+      <attribute 
+	desc=" " 
+	init="0" 
+	name="shiftFiredHitHistory " 
+	type="static const unsigned int"/> 
+      <attribute 
+	desc=" " 
+	init="shiftFiredHitHistory+bitFiredHitHistory" 
+	name="shiftGeoAcceptanceHitHistory" 
+	type="static const unsigned int"/> 
+      <attribute 
+	desc=" " 
+	init="shiftGeoAcceptanceHitHistory +bitGeoAcceptanceHitHistory " 
+	name="shiftDeadtimeHitHistory " 
+	type="static const unsigned int"/> 
+      <attribute 
+	desc=" " 
+	init="shiftDeadtimeHitHistory +bitDeadtimeHitHistory " 
+	name="shiftJitteredHitHistory " 
+	type="static const unsigned int"/> 
+      <attribute 
+	desc=" " 
+	init="shiftJitteredHitHistory +bitJitteredHitHistory " 
+	name="shiftAdjustmentHitHistory " 
+	type="static const unsigned int"/> 
+      <attribute 
+	desc=" " 
+	init="shiftAdjustmentHitHistory +bitAdjustmentHitHistory  " 
+	name="shiftAdjustmentJitterHitHistory " 
+	type="static const unsigned int"/> 				
+      <attribute 
+	desc=" " 
+	init="shiftAdjustmentJitterHitHistory +bitAdjustmentJitterHitHistory " 
+	name="shiftChamberIneffHitHistory " 
+	type="static const unsigned int"/> 
+      <attribute 
+	desc=" " 
+	init="shiftChamberIneffHitHistory +bitChamberIneffHitHistory " 
+	name="shiftBXbelongOfHitHistory " 
+	type="static const unsigned int"/> 
+      <attribute 
+	desc=" " 
+	init=" shiftBXbelongOfHitHistory+ bitBXbelongOfHitHistory " 
+	name="shiftNatureOfHitHistory " 
+	type="static const unsigned int"/>                 
+      <attribute 
+	desc="" 
+	init=" ( ( ( (unsigned int) 1 ) &lt;&lt;  bitFiredHitHistory  ) - 1  ) 
+	&lt;&lt;shiftFiredHitHistory  " 
+	name="maskFiredHitHistory " 
+	type="static const unsigned int"/>
+      <attribute 
+	desc="" 
+	init=" ( ( ( (unsigned int) 1 ) &lt;&lt;  bitGeoAcceptanceHitHistory  )
+	- 1  ) &lt;&lt;shiftGeoAcceptanceHitHistory  " 
+	name="maskGeoAcceptanceHitHistory " 
+	type="static const unsigned int"/>
+      <attribute 
+	desc="" 
+	init=" ( ( ( (unsigned int) 1 ) &lt;&lt;  bitDeadtimeHitHistory  ) 
+	- 1  ) &lt;&lt;shiftDeadtimeHitHistory  " 
+	name="maskDeadtimeHitHistory " 
+	type="static const unsigned int"/>
+      <attribute 
+	desc="" 
+	init=" ( ( ( (unsigned int) 1 ) &lt;&lt;  bitJitteredHitHistory  ) - 1
+	) &lt;&lt;shiftJitteredHitHistory  " 
+	name="maskJitteredHitHistory " 
+	type="static const unsigned int"/>
+      <attribute 
+	desc="" 
+	init=" ( ( ( (unsigned int) 1 ) &lt;&lt;  bitAdjustmentHitHistory  ) 
+	- 1  ) &lt;&lt;shiftAdjustmentHitHistory  " 
+	name="maskAdjustmentHitHistory " 
+	type="static const unsigned int"/>
+      <attribute 
+	desc="" 
+	init=" ( ( ( (unsigned int) 1 ) &lt;&lt;  
+	bitAdjustmentJitterHitHistory  ) - 1  ) &lt;&lt;
+	shiftAdjustmentJitterHitHistory  "
+	name="maskAdjustmentJitterHitHistory " 
+	type="static const unsigned int"/>
+      <attribute 
+	desc="" 
+	init=" ( ( ( (unsigned int) 1 ) &lt;&lt;  bitChamberIneffHitHistory  ) 
+	- 1  ) &lt;&lt;shiftChamberIneffHitHistory  " 
+	name="maskChamberIneffHitHistory " 
+	type="static const unsigned int"/>
+      <attribute 
+	desc="" 
+	init=" ( ( ( (unsigned int) 1 ) &lt;&lt;  bitBXbelongOfHitHistory  ) 
+	- 1  ) &lt;&lt;shiftBXbelongOfHitHistory  " 
+	name="maskBXbelongOfHitHistory " 
+	type="static const unsigned int"/>
+      <attribute 
+	desc="" 
+	init=" ( ( ( (unsigned int) 1 ) &lt;&lt;  bitNatureOfHitHistory  ) 
+	- 1  ) &lt;&lt;shiftNatureOfHitHistory  " 
+	name="maskNatureOfHitHistory " 
+	type="static const unsigned int"/>		
+    </namespace>
+ </package>
+</gdd>

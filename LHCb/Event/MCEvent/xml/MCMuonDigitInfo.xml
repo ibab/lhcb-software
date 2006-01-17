@@ -1,0 +1,228 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE gdd SYSTEM "gdd.dtd">
+<gdd>
+  <package name="MCEvent">    
+    <class author="Alessia Satta" 
+      desc="This class permits to trace back the history of a logical channel: 
+      the origin of the hit that has fired it or the reason why 
+      the digit was not fired (inefficiency, time resolution, deadtime etc.). 
+      In the latter case the correspondig MuonDigit does not exist." 
+      name="MCMuonDigitInfo" >
+      &StlVector;
+      <import name="Kernel/Packer"/>
+      <import name="Event/PackMCMuonDigitInfo"/>
+      <import name="Event/MuonBXFlag"/>
+      <import name="Event/MuonOriginFlag"/>      
+      <attribute 
+	desc="Packed information of the origin of the hit 
+	generating the digit, the earliest, and the fate of the digit" 
+	getMeth="FALSE" 
+	name="DigitInfo" 
+	type="unsigned int"/>
+      <method 
+	desc="Is the earliest a GEANT hit?" 
+	name="isGeantHit" 
+	type="bool">
+	<code> return (Packer::getBit(m_DigitInfo,PackMCMuonDigitInfo::maskOriginDigitInfo ,PackMCMuonDigitInfo::shiftOriginDigitInfo )==MuonOriginFlag::GEANT)!=0; </code>
+      </method>
+      <method 
+	argList="unsigned int natureOfHit" 
+	desc="set the nature of hit flag in the DIGITINFO word" 
+	name="setNatureHit" 
+	type="void">
+	<code>  Packer::setBit(m_DigitInfo,PackMCMuonDigitInfo::shiftOriginDigitInfo ,PackMCMuonDigitInfo::maskOriginDigitInfo,natureOfHit); </code>
+      </method> 
+      <method 
+	desc="Is the earliest a low energy background hit?" 
+	name="isBackgroundHit" 
+	type="bool">
+	<code> return (Packer::getBit(m_DigitInfo,PackMCMuonDigitInfo::maskOriginDigitInfo ,PackMCMuonDigitInfo::shiftOriginDigitInfo)==MuonOriginFlag::BACKGROUND)!=0; </code>				
+      </method>      
+      <method 
+	desc="Is the earliest a chamber noise hit?" 
+	name="isChamberNoiseHit" 
+	type="bool">
+	<code> return (Packer::getBit(m_DigitInfo,PackMCMuonDigitInfo::maskOriginDigitInfo ,PackMCMuonDigitInfo::shiftOriginDigitInfo)==MuonOriginFlag::CHAMBERNOISE)!=0; </code>	
+      </method>      
+      <method 
+	desc="Is the earliest a flat spillover hit?" 
+	name="isFlatSpilloverHit" 
+	type="bool">
+	<code> return (Packer::getBit(m_DigitInfo,PackMCMuonDigitInfo::maskOriginDigitInfo ,PackMCMuonDigitInfo::shiftOriginDigitInfo)==MuonOriginFlag::FLATSPILLOVER)!=0; </code>	
+      </method> 						
+      <method 
+	desc="Is the earliest a xtalk hit?" 
+	name="isXTalkHit" 
+	type="bool">
+	<code> return (Packer::getBit(m_DigitInfo,PackMCMuonDigitInfo::maskOriginDigitInfo ,PackMCMuonDigitInfo::shiftOriginDigitInfo)==MuonOriginFlag::XTALK)!=0; </code>	
+      </method>				      
+      <method 
+	desc="Is the earliest a el noise hit?" 
+	name="isElNoiseHit" 
+	type="bool">
+	<code> return (Packer::getBit(m_DigitInfo,PackMCMuonDigitInfo::maskOriginDigitInfo ,PackMCMuonDigitInfo::shiftOriginDigitInfo)==MuonOriginFlag::ELECTRONICNOISE)!=0; </code>	
+      </method>				
+      <method 
+	desc="Is the earliest a machine background hit?" 
+	name="isMachineBkgHit" 
+	type="bool">
+	<code> return (Packer::getBit(m_DigitInfo,PackMCMuonDigitInfo::maskOriginDigitInfo ,PackMCMuonDigitInfo::shiftOriginDigitInfo)==MuonOriginFlag::LHCBACKGROUND)!=0; </code>	
+      </method>				
+      <method 
+	desc="which is the nature of the earliest  hit?" 
+	name="natureOfHit" 
+	type="unsigned int">
+	<code> return (Packer::getBit(m_DigitInfo,PackMCMuonDigitInfo::maskOriginDigitInfo ,PackMCMuonDigitInfo::shiftOriginDigitInfo)); </code>	
+      </method>	      
+      <method 
+	desc="retrieve the second part of the ifno word" 
+	name="secondPart" 
+	type="unsigned int">
+	<code> return (Packer::getBit(m_DigitInfo,PackMCMuonDigitInfo::maskSecondPart ,PackMCMuonDigitInfo::shiftSecondPart)); </code>	
+      </method>				
+      <method 
+	argList="unsigned int secondPart" 
+	desc="set the second part of the DIGITINFO word" 
+	name="setSecondPart" 
+	type="void">
+	<code>  Packer::setBit(m_DigitInfo,PackMCMuonDigitInfo::shiftSecondPart  ,PackMCMuonDigitInfo::maskSecondPart,secondPart); </code>
+      </method>								
+      <method 
+	desc="Does earliest hit belong to the current event?" 
+	name="doesFiringHitBelongToCurrentEvent" 
+	type="bool" >
+	<code> return (Packer::getBit(m_DigitInfo,PackMCMuonDigitInfo::maskBXIDDigitInfo ,PackMCMuonDigitInfo::shiftBXIDDigitInfo)==MuonBXFlag::CURRENT )!=0; </code>
+      </method>
+      <method 
+	argList="unsigned int BXIDFlag" 
+	desc="set the BX ID flag in the DIGITINFO word" 
+	name="setBXIDFlagHit" 
+	type="void">
+	<code>  Packer::setBit(m_DigitInfo,PackMCMuonDigitInfo::shiftBXIDDigitInfo  ,PackMCMuonDigitInfo::maskBXIDDigitInfo,BXIDFlag); </code>
+      </method>						
+      <method 
+	desc="which is the BX of the earliest hit?" 
+	name="BX" 
+	type="unsigned int">
+	<code> return (Packer::getBit(m_DigitInfo,PackMCMuonDigitInfo::maskBXIDDigitInfo ,PackMCMuonDigitInfo::shiftBXIDDigitInfo)); </code>
+      </method>
+      <method 
+	desc="Does earliest hit belong to the previous event?" 
+	name="doesFiringHitBelongToPrevEvent" 
+	type="bool">
+	<code> return (Packer::getBit(m_DigitInfo,PackMCMuonDigitInfo::maskBXIDDigitInfo ,PackMCMuonDigitInfo::shiftBXIDDigitInfo)==MuonBXFlag::PREV )!=0; </code>
+      </method>
+      <method 
+	desc="Does earliest hit belong to the previous previous event?" 
+	name="doesFiringHitBelongToPrevPrevEvent" 
+	type="bool">
+	<code> return (Packer::getBit(m_DigitInfo,PackMCMuonDigitInfo::maskBXIDDigitInfo ,PackMCMuonDigitInfo::shiftBXIDDigitInfo)==MuonBXFlag::TWOPREV )!=0; </code>
+      </method>
+      <method 
+	desc="Does earliest hit belong to the previous previous previous event?"
+	name="doesFiringHitBelongToPrevPrevPrevEvent" 
+	type="bool">
+	<code> return (Packer::getBit(m_DigitInfo,PackMCMuonDigitInfo::maskBXIDDigitInfo ,PackMCMuonDigitInfo::shiftBXIDDigitInfo)==MuonBXFlag::THREEPREV )!=0; </code>
+      </method>
+      <method 
+	desc="Does earliest hit belong to the previous previous previous previous event?" 
+	name="doesFiringHitBelongToPrevPrevPrevPrevEvent" 
+	type="bool">
+	<code> return (Packer::getBit(m_DigitInfo,PackMCMuonDigitInfo::maskBXIDDigitInfo ,PackMCMuonDigitInfo::shiftBXIDDigitInfo)==MuonBXFlag::FOURPREV )!=0; </code>
+      </method>      
+      <method 
+	desc="is the digit fired ?" 
+	name="isAlive" 
+	type="bool">
+	<code> return Packer::getBit(m_DigitInfo,PackMCMuonDigitInfo::maskAliveDigitInfo ,PackMCMuonDigitInfo::shiftAliveDigitInfo )!=0; </code>
+      </method>
+      <method 
+	argList="unsigned int digitFired" 
+	desc="set the fired flag in the DIGITINFO word" 
+	name="setAliveDigit" 
+	type="void">
+	<code>  Packer::setBit(m_DigitInfo,PackMCMuonDigitInfo::shiftAliveDigitInfo   ,PackMCMuonDigitInfo::maskAliveDigitInfo  ,digitFired); </code>
+      </method>						
+      <method 
+	desc="is the digit in the deadtime?" 
+	name="isInDeadTime" 
+	type="bool">
+	<code> return Packer::getBit(m_DigitInfo,PackMCMuonDigitInfo::maskDeadtimeDigitInfo ,PackMCMuonDigitInfo::shiftDeadtimeDigitInfo )!=0; </code>
+      </method>
+      <method 
+	argList="unsigned int deadtimeKilled" 
+	desc="set the killed by deadtime flag in the DIGITINFO word" 
+	name="setDeadtimeDigit" 
+	type="void">
+	<code>  Packer::setBit(m_DigitInfo,PackMCMuonDigitInfo::shiftDeadtimeDigitInfo   ,PackMCMuonDigitInfo::maskDeadtimeDigitInfo  , deadtimeKilled); </code>
+      </method>						
+      <method 
+	desc="is the digit in chamber inefficiency?" 
+	name="isDeadForChamberInefficiency" 
+	type="bool">
+	<code> return Packer::getBit(m_DigitInfo,PackMCMuonDigitInfo::maskChamberInefficiencyDigitInfo ,PackMCMuonDigitInfo::shiftChamberInefficiencyDigitInfo )!=0; </code>
+      </method>
+      <method 
+	argList="unsigned int chamberIneff" 
+	desc="set the killed by chamber inefficiency flag in the DIGITINFO word" 
+	name="setChamberInefficiencyDigit" 
+	type="void">
+	<code>  Packer::setBit(m_DigitInfo,PackMCMuonDigitInfo::shiftChamberInefficiencyDigitInfo   ,PackMCMuonDigitInfo::maskChamberInefficiencyDigitInfo  , chamberIneff); </code>
+      </method>								
+      <method 
+	desc="is the digit killed by time jitter?" 
+	name="isDeadByTimeJitter" 
+	type="bool">
+	<code> return Packer::getBit(m_DigitInfo,PackMCMuonDigitInfo::maskTimeJitterDigitInfo ,PackMCMuonDigitInfo::shiftTimeJitterDigitInfo )!=0; </code>
+      </method>
+      <method 
+	argList="unsigned int timeJitterKilled" 
+	desc="set the killed by time jitter flag in the DIGITINFO word" 
+	name="setTimeJitteredDigit" 
+	type="void">
+	<code>  Packer::setBit(m_DigitInfo,PackMCMuonDigitInfo::shiftTimeJitterDigitInfo    ,PackMCMuonDigitInfo::maskTimeJitterDigitInfo   ,timeJitterKilled  ); </code>
+      </method>								
+      <method 
+	desc="is the digit killed by time adjustment? " 
+	name="isDeadByTimeAdjustment" 
+	type="bool">
+	<code> return Packer::getBit(m_DigitInfo,PackMCMuonDigitInfo::maskTimeAdjustmentDigitInfo ,PackMCMuonDigitInfo::shiftTimeAdjustmentDigitInfo )!=0; </code>
+      </method>
+      <method 
+	argList="unsigned int timeAdjustmentKilled" 
+	desc="set the killed by time adjustment flag in the DIGITINFO word" 
+	name="setTimeAdjDigit" 
+	type="void">
+	<code>  Packer::setBit(m_DigitInfo,PackMCMuonDigitInfo::shiftTimeAdjustmentDigitInfo     ,PackMCMuonDigitInfo::maskTimeAdjustmentDigitInfo    ,timeAdjustmentKilled   ); </code>
+      </method>								
+      <method 
+	desc="is the digit alive due to time adjustment? " 
+	name="isAliveByTimeAdjustment" 
+	type="bool">
+	<code> return Packer::getBit(m_DigitInfo,PackMCMuonDigitInfo::maskAliveTimeAdjustmentDigitInfo ,PackMCMuonDigitInfo::shiftAliveTimeAdjustmentDigitInfo )!=0; </code>
+      </method>
+      <method 
+	argList="unsigned int timeAdjustmentKilled" 
+	desc="set the alive due to  time adjustment flag in the DIGITINFO word"
+	name="setAliveTimeAdjDigit" 
+	type="void">
+	<code>  Packer::setBit(m_DigitInfo,PackMCMuonDigitInfo::shiftAliveTimeAdjustmentDigitInfo     ,PackMCMuonDigitInfo::maskAliveTimeAdjustmentDigitInfo    ,timeAdjustmentKilled   ); </code>
+      </method>						
+      
+      <method 
+	desc="is the digit killed by geometry acceptance?" 
+	name="isDeadByGeometry" 
+	type="bool">
+	<code> return Packer::getBit(m_DigitInfo,PackMCMuonDigitInfo::maskGeometryAcceptanceDigitInfo ,PackMCMuonDigitInfo::shiftGeometryAcceptanceDigitInfo )!=0; </code>
+      </method>
+      <method 
+	argList="unsigned int geometryIneffKilled" 
+	desc="set the killed by geometry inefficiency flag in the DIGITINFO word"
+	name="setGeometryInefficiency" 
+	type="void">
+	<code>  Packer::setBit(m_DigitInfo,PackMCMuonDigitInfo::shiftGeometryAcceptanceDigitInfo,PackMCMuonDigitInfo::maskGeometryAcceptanceDigitInfo,geometryIneffKilled   ); </code>
+      </method>						
+      
+    </class>
+  </package>
+</gdd>
