@@ -22,11 +22,11 @@ include_path      none
 #============================================================================
 use   GaudiAlg         v*
 
-use   STTools          v*      IT
+use   STTools          v1r*    IT
 
-use   TrackEvent       v*      Event
-use   TrackFitEvent    v*      Tr
-use   TrackInterfaces  v*      Tr
+use   TrackEvent       v1r*    Event
+use   TrackFitEvent    v1r*    Tr
+use   TrackInterfaces  v1r*    Tr
 
 #============================================================================
 # Component library building rule

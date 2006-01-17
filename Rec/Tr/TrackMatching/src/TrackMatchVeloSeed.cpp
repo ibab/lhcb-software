@@ -1,11 +1,11 @@
-// $Id: TrackMatchVeloSeed.cpp,v 1.5 2005-12-01 17:56:01 erodrigu Exp $
+// $Id: TrackMatchVeloSeed.cpp,v 1.6 2006-01-17 14:15:44 erodrigu Exp $
 // Include files 
 // -------------
 // from Gaudi
 #include "GaudiKernel/AlgFactory.h" 
 
 // from TrackFit Event
-#include "Event/ITMeasurement.h"
+#include "Event/STMeasurement.h"
 
 // TT clusters
 #include "Event/ITCluster.h"
@@ -536,8 +536,8 @@ StatusCode TrackMatchVeloSeed::storeTracks( TrackMatches*& matchCont )
     std::vector<ITCluster*>::const_iterator iClus = ttClusters.begin();
     while ( iClus != ttClusters.end() ) {
       // make a new ITClusterOnTrack
-      ITMeasurement* ttMeas =
-        new ITMeasurement( *(*iClus), *m_itTracker, *m_stPositionTool );
+      STMeasurement* ttMeas =
+        new STMeasurement( *(*iClus), *m_itTracker, *m_stPositionTool );
       aTrack -> addToMeasurements( *ttMeas);  //  addToMeasurements clones and owns
       delete ttMeas;
       ++iClus;

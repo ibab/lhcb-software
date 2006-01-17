@@ -4,6 +4,9 @@
 ! Purpose     : Package for the track matching algorithms
 !-----------------------------------------------------------------------------
 
+! 2006-01-16 - Eduardo Rodrigues
+ - propagation of changes ITMeasurement -> STMeasurement
+
 ! 2005-12-01 - Eduardo Rodrigues
  - propagation of changes in ITMeasurement class
 
