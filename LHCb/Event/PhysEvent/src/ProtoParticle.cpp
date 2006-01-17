@@ -1,4 +1,4 @@
-// $Id: ProtoParticle.cpp,v 1.10 2004-12-10 15:16:11 cattanem Exp $
+// $Id: ProtoParticle.cpp,v 1.11 2006-01-17 10:13:29 pkoppenb Exp $
 // Include files 
 
 // STD and STL
@@ -14,16 +14,15 @@
 //                                 derived from class ContainedObject
 //
 // 2002-07-08 : Gloria Corti
+// 2005-07-25 : P. Koppenburg
 //-----------------------------------------------------------------------------
 
 //=============================================================================
 // Copy constructor
 //=============================================================================
-ProtoParticle::ProtoParticle(const ProtoParticle& proto)
+LHCb::ProtoParticle::ProtoParticle(const LHCb::ProtoParticle& proto)
   : KeyedObject<int>()
-  , m_pIDDetectors( proto.pIDDetectors() )
-  , m_pIDInfo( proto.pIDInfo() )
-  , m_pIDhistory( proto.pIDhistory() )
+  , m_extraInfo( proto.extraInfo() )
   , m_calo( proto.calo() )
   , m_track( proto.track() )
   , m_richPID( proto.richPID() )
@@ -35,21 +34,19 @@ ProtoParticle::ProtoParticle(const ProtoParticle& proto)
 //=============================================================================
 // Clone 
 //=============================================================================
-ProtoParticle* ProtoParticle::clone() const
+LHCb::ProtoParticle* LHCb::ProtoParticle::clone() const
 {
-  return new ProtoParticle(*this);
+  return new LHCb::ProtoParticle(*this);
 }
 
 //=============================================================================
 // Assignment operator
 //=============================================================================
-ProtoParticle& ProtoParticle::operator=(const ProtoParticle& orig) {
+LHCb::ProtoParticle& LHCb::ProtoParticle::operator=(const LHCb::ProtoParticle& orig) {
   
   // protect against self assignement
   if( this != &orig ) {
-    m_pIDDetectors = orig.pIDDetectors();
-    m_pIDInfo = orig.pIDInfo();
-    m_pIDhistory = orig.pIDhistory();
+    m_extraInfo = orig.extraInfo();
     m_calo = orig.calo(); 
     m_track = orig.track();
     m_richPID = orig.richPID();
@@ -59,216 +56,95 @@ ProtoParticle& ProtoParticle::operator=(const ProtoParticle& orig) {
 }    
     
 //=============================================================================
-// Return probability for specified PDG id code
-//=============================================================================
-double ProtoParticle::probOfPID(int pid) const {
-
-  double prob = 0.0;
-  for( PIDInfoVector::const_iterator id=pIDInfo().begin(); 
-       pIDInfo().end()!=id; ++id ) {
-    if( pid == (*id).first ) {
-      prob = (*id).second;
-    }
-  }
-  return prob;
-}
-
-//=============================================================================
-// PDG code of most likely particleID
-//=============================================================================
-double ProtoParticle::probOfBestPID() const {
-
-  double probmax = 0.0;
-  for( PIDInfoVector::const_iterator id=pIDInfo().begin(); 
-       pIDInfo().end()!=id; ++id ) {
-    if( probmax < (*id).second ) {
-      probmax = (*id).second;
-    }
-  }
-  return probmax;
-}
-
-//=============================================================================
-// PDG code of most likely particleID
-//=============================================================================
-int ProtoParticle::bestPID() const {
-
-  int pid = 0;
-  double probmax = 0.0;
-  for( PIDInfoVector::const_iterator id=pIDInfo().begin(); 
-       pIDInfo().end()!=id; ++id ) {
-    if( probmax < (*id).second ) {
-      probmax = (*id).second;
-      pid = (*id).first;
-    }
-  }
-  return pid;
-}
-
-//=============================================================================
-// List of compatible particleIDs
-//=============================================================================
-std::vector<int> ProtoParticle::pIDList() const {
-  
-  std::vector<int> pids;
-  pids.clear();
-
-  for( PIDInfoVector::const_iterator id=pIDInfo().begin();
-       pIDInfo().end()!=id; ++id ) { 
-    pids.push_back((*id).first);
-  }
-  return pids;
-} 
-
-//============================================================================
-// Return if specific detectorID technique is available
-//============================================================================
-bool ProtoParticle::detPID(const ProtoParticle::detectorPID& det) const {
-
-  bool found = false;
-  for( PIDDetVector::const_iterator id = pIDDetectors().begin();
-       pIDDetectors().end() != id; ++id ) {
-    if( det == (*id).first ) {
-      found = true;
-      break;
-    }
-  }
-  return found;
-}
-
-//=============================================================================
-// Value for specific technique if it is available (-1.0 if not)
-//=============================================================================
-double ProtoParticle::detPIDvalue(const ProtoParticle::detectorPID& det) const{
- 
-  double value = -999.0;
-  for( PIDDetVector::const_iterator id = pIDDetectors().begin();
-       pIDDetectors().end() != id; ++id ) {
-    if( det == (*id).first ) {
-      value = (*id).second;
-      break;
-    }
-  }
-  return value;
-}
-
-//=============================================================================
-// Return TrStateP at measure point closest to IP
-//=============================================================================
-TrStateP* ProtoParticle::trStateP() {
-
-  TrStateP* trackState = NULL;
-  if( !track() ) return trackState;
-  if( track()->velo() ) return trackState;
-  
-  SmartRefVector<TrState>& states = track()->states();
-  double firstZ=1000000;
-  for ( SmartRefVector<TrState>::iterator it = states.begin() ;
-        states.end() != it; it++ ) {
-    TrState* temp = *it;
-    
-     if ( firstZ > temp->z() )  {
-      firstZ = temp->z();
-      trackState = dynamic_cast<TrStateP*>(temp);
-    }
-  }
-  return trackState;
-}
-
-//=============================================================================
-// Return TrStateP at measure point closest to IP
-//=============================================================================
-const TrStateP* ProtoParticle::trStateP() const {
-
-  const TrStateP* trackState = NULL;
-  if( !track() ) return trackState;
-  if( track()->velo() ) return trackState;
-  
-  const SmartRefVector<TrState>& states = track()->states();
-  double firstZ=1000000;
-  for ( SmartRefVector<TrState>::const_iterator it = states.begin() ;
-        states.end() != it; it++ ) {
-    const TrState* temp = *it;
-    
-    if ( firstZ > temp->z() )  {
-      firstZ = temp->z();
-      trackState = dynamic_cast<const TrStateP*>(temp);
-    }
-  }
-  return trackState;
-}
-//=============================================================================
-// First Measured Point
-//=============================================================================
-const int ProtoParticle::minimalStates() const {
-  // State 0 is the extrapolation to beam axis if available, else it is
-  // the first measured point. This function gives the minimal number of
-  // states per track.
-
-  // forward and match have 5 (1%) or 6 (99%).
-  if ( track()->isLong() || 
-  // downstream have always 5 states (no extrapolation)
-       track()->isDownstream() ){
-    return 5 ;
-  // veloTT have 3 (5%) or 4 (95%).
-  } else if ( track()->veloTT() ){ 
-    return 3 ;
-  }
-  return -1;
-
-}
-//=============================================================================
-// Return TrStateP at first measured point
-//=============================================================================
-TrStateP* ProtoParticle::firstMeasured() {
-
-  TrStateP* trackState = NULL;
-  if( !track() ) return trackState;
-  if( track()->velo() ) return trackState;
-  
-  SmartRefVector<TrState>& states = track()->states();
-  const int MS =  minimalStates();
-  // if the number of states is minimal, the first is also the first measured.
-  // if there is one more, the first state is the extrapolation to the
-  // beam axis -> take the next one.
-  const int FirstState = states.size() - MS;
-  
-  TrState* temp = *(states.begin()+FirstState);
-  trackState = dynamic_cast<TrStateP*>(temp);
-  
-  return trackState;
-}
-//=============================================================================
-// Return TrStateP at first measured point
-//=============================================================================
-const TrStateP* ProtoParticle::firstMeasured() const {
-
-  const TrStateP* trackState = NULL;
-  if( !track() ) return trackState;
-  if( track()->velo() ) return trackState;
-  
-  const SmartRefVector<TrState>& states = track()->states();
-  const int MS =  minimalStates();
-  const int FirstState = states.size() - MS;
-  
-  const TrState* temp = *(states.begin()+FirstState);
-  trackState = dynamic_cast<const TrStateP*>(temp);
-  
-  return trackState;
-}
-
-//=============================================================================
 // Return charge of ProtoParticle
 //=============================================================================
-double ProtoParticle::charge() const {
- 
-  double tkcharge = 0.0;
-  
-  const TrStateP* tkstate = trStateP();  
-  if( !tkstate ) return tkcharge;
-  tkcharge = tkstate->qDivP() > 0.0 ? 1.0 : -1.0;
-  return tkcharge;
-
+int LHCb::ProtoParticle::charge() const {
+  if ( !track() ) return 0;
+  return track()->charge();
 }
 //=============================================================================
+/** Check the presence of the information associated with 
+ *  a given key
+ *  
+ *  @code
+ * 
+ *  const ProtoParticle* p = ... ;
+ *
+ *  ProtoParticle::Key key = ... ; 
+ *  bool hasKey = p->hasInfo( key ) ;
+ *
+ *  @endcode 
+ *  @param    key key to be checked 
+ *  @return  'true' if there is informaiton with the 'key', 
+ *           'false' otherwise
+ */
+bool LHCb::ProtoParticle::hasInfo  ( const int & key) const
+{ return m_extraInfo.end() != m_extraInfo.find( key ) ; }
 
+//=============================================================================
+/** add/replace new information , associated with the key
+ *  
+ *  @code
+ * 
+ *  ProtoParticle* p = ... ;
+ *
+ *  ProtoParticle::Key  key   = ... ; 
+ *  ProtoParticle::Info info  = ... ;
+ * 
+ *  bool inserted = p->addInfo( key , info ) ;
+ *
+ *  @endcode 
+ * 
+ *  @param key key for the information
+ *  @param info information to be associated with the key
+ *  @param 'true' if informaiton is inserted, 
+ *         'false' if the previosu information has been replaced 
+ */
+bool  LHCb::ProtoParticle::addInfo ( int key, double info )
+{ return m_extraInfo.insert( key , info ).second ;}
+//=============================================================================
+/** extract the information associated with the given key 
+ *  If there is no such infomration the default value will 
+ *  be returned 
+ * 
+ *  @code
+ * 
+ *  const ProtoParticle* p = ... ;
+ *
+ *  ProtoParticle::Key  key   = ... ; 
+ *
+ *  // extract the information
+ *  ProtoParticle::Info info = p->info( key, -999 ) ;
+ * 
+ *  @endcode 
+ *
+ *  @param key key for the information
+ *  @param def the default value to be returned 
+ *         in the case of missing info
+ *  @return information associated with the key if there 
+ *          is such information, the default value otherwise 
+ */
+double LHCb::ProtoParticle::info( int key, double def ) const {
+  ExtraInfo::iterator i = m_extraInfo.find( key ) ;
+  return m_extraInfo.end() == i ? def : i->second ;
+}
+
+//=============================================================================
+/** erase the information associated with the given key
+ *
+ *  @code
+ * 
+ *  ProtoParticle* p = ... ;
+ *
+ *  ProtoParticle::Key  key   = ... ; 
+ * 
+ *  int erased = p->eraseInfo( key ) ;
+ *
+ *  @endcode 
+ * 
+ *  @param key key for the information
+ *  @return return number of erased elements 
+ */
+LHCb::ProtoParticle::ExtraInfo::size_type LHCb::ProtoParticle::eraseInfo( int key ){ 
+  return m_extraInfo.erase( key ) ; 
+}

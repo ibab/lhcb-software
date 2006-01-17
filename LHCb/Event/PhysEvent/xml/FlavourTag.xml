@@ -35,13 +35,12 @@
         value = "b = -1, bbar = 1, none = 0" 
         access= "PUBLIC"
       />
-
       <constructor
         desc = "Copy constructor hack for windows..."
         argList  = "const FlavourTag&amp; c"
         initList = "KeyedObject&lt;int&gt;(), m_decision(c.m_decision), m_category(c.m_category), m_omega(c.m_omega), m_taggers(c.m_taggers), m_taggedB(c.m_taggedB)">
     <code/>
-  </constructor>
+    </constructor>
 
       <attribute
         desc = "The result of the tagging algorithm"
@@ -52,7 +51,7 @@
       <relation
         desc = "The B meson for which this tag has been made"
         name = "taggedB"
-        type = "Particle"
+        type = "LHCb::Particle"
         multiplicity="1"
       />
 
@@ -72,13 +71,12 @@
       <attribute 
 	desc    = "Vector of Taggers" 
 	name    = "taggers" 
-	type    = "std::vector&lt;Tagger&gt;"
-	serialize = "FALSE"
+	type    = "std::vector&lt;LHCb::Tagger&gt;"
       />
       <method
         name    = "addTagger"
         type    = "void"
-	argList = "Tagger HAS"
+	argList = "LHCb::Tagger HAS"
         desc    = "add one Tagger">
         <code>  
           m_taggers.push_back(HAS); 

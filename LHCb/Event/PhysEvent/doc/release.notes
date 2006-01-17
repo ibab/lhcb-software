@@ -1,7 +1,81 @@
-! $Id: release.notes,v 1.64 2005-11-11 20:19:14 cattanem Exp $
+! $Id: release.notes,v 1.65 2006-01-17 10:13:29 pkoppenb Exp $
 ! Package     : PhysEvent 
 ! Responsible : P. Koppenburg
 
+!
+! BUILT ON BRANCH v9r0b
+!
+
+! 2006-01-17 - P. Koppenburg
+  . Removed VctMap (to Gaudi), PhysEvent_load.cpp and EffCheckResult (MC)
+  . Use new Gaudi matrices
+  , Ues namespace LHCb
+
+! 2005-10-18 - P. Koppenburg
+  . Don't use ROOT TMatrices
+
+! 2005-09-06 - P. Koppenburg
+  - Many changes: 
+    . Use ROOT linear algebra
+    . Use LHCb typedefs for momentum, point, matrix.
+
+! 2005-07-29 - P. Koppenburg
+  - Use new MathCore geometry and Lorenz
+  
+!==================== PhysEvent v9r0PEMTF0729 2005-07-29 =======================
+! 2005-07-29 - P. Koppenburg
+  Implemented some of the suggestions by Vanya:
+  - Corr -> Cov
+  - const int& -> int
+  - const double& -> double
+  
+!==================== PhysEvent v9r0PEMTF0726b 2005-07-29 ======================
+! 2005-07-29 - P. Koppenburg
+  Changes of July 26:
+  - All: Remove Key and Info typedefs, 
+  - Particle: ConfLevel, weight method using info
+              Covariance matrix 7x7
+	      Charge is an int
+
+!==================== PhysEvent v9r0PEMTF0726 2005-07-26 =======================
+Minor changes
+!======================= PhysEvent v9r0PEMTF 2005-07-25 ==========================
+! 2005-07-25 - P. Koppenburg for Vanya Belyaev
+  New class Event/VctMap.h for a light alternative to std::map for
+  the relatively rare insertions and frequent look-up. Use-case:
+  PID info in ProtoParticle.
+  - src/VctMapTest.cpp
+    . Example
+  
+! 2005-07-25 - P. Koppenburg
+  First changes from PhysEvent Task Force
+  - xml/Particle.xml
+    . mass(Err) -> measuredMass(Err)
+    . isResonance -> removed
+    . pointOnTrack(Err) -> referencePoint(Err)
+    . ContainedObject* origin -> ProtoParticle* proto
+    . slopeX, slopeY methods removed
+    . New relation daughters
+    . New method isBasicParticle()
+    . charge is an int  
+  - xml/ProtoParticle.xml
+    . Based on Track and State
+    . Merge pIDDetectors and pIDInfo into pIDMeasurements
+    . new method probOfTechnique
+    . remove methods pIDLIst, probOfPID, bestPID, probOfBestPID, 
+      detPIDvalue, detPID, minimalStates
+    . charge is an int  
+    . firstState becomes firstState
+    . pointOnTrack -> referencePoint
+  - xml/Vertex.xml
+    . products -> outgoingParticles
+  - xml/PrimVertex.xml    
+    . Based on Track and State
+  - xml/V0.xml   
+    . Removed
+  - src/*.*
+    . Modified accordingly
+    
 !======================= PhysEvent v8r11 2005-11-11 ==========================
 ! 2005-11-11 - Marco Cattaneo
  - Add a copy constructor to FlavourTag to fix obscure Windows complaint

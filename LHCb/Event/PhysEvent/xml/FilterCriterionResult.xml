@@ -21,19 +21,16 @@
       name="filterName"
       desc="Name of the filter crition tool that produced this result"
       type="std::string"
-      serialize="FALSE"
       />
   <relation
       name="filterParticle"
       desc="Particle the filter was run on"
-      type="Particle"
-      serialize="FALSE"
+      type="LHCb::Particle"
       />
   <attribute
       name="filterResult"
       desc="The result of the filter criterion"
       type="bool"
-      serialize="FALSE"
       />
 </class>
   </package>

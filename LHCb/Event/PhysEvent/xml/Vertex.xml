@@ -9,24 +9,33 @@
      ****************************************************************-->
 
      <class 
-      author="Gloria Corti"
+      author="Patrick Koppenburg"
       desc="Physics analysis Vertex. It holds geometrical information and is part of the tree structure"
       name="Vertex"
       stdVectorTypeDef="TRUE"
       id="802"
      >
+       <import name="Kernel/SystemOfUnits.h"/>
+       <import name="GaudiKernel/VectorMap.h"/>
+       <import name="Kernel/Point3DTypes.h"/>
+       <import name="Kernel/GenericMatrixTypes.h"/>
+       <import name="Particle" soft="TRUE"/>
+       <typedef
+        type="GaudiUtils::VectorMap&lt;int,double&gt;"
+        def="ExtraInfo"
+        desc="User information"
+        access="PUBLIC"
+       />
        <enum
-        desc="Describe how a vertex was constructed"
-        name="VertexType"
-        value="Unknown=0, Primary, Decay, DecayWithMass, Interaction, Brem, Pair, Kink"
+        desc="Describe how the vertex was made (NEED MORE)"
+        name="CreationMethod"
+        value="Unknown=0, Primary, Unconstrained, MassConstrained, LastGlobal=10000"
         access="PUBLIC"
        />
        <base name="KeyedObject&lt;int&gt;"/>
        &KeyedObject;
-       <import name="CLHEP/Units/SystemOfUnits"/>
        <!-- The following line forces inclusion before HepPoint3D
             to get round CLHEP 1.9 bug with HEP_CC_NEED_SUB_WITHOUT_CONST -->
-       <import name="CLHEP/Matrix/SymMatrix"/>
        <location
         name="User"
         place="/Event/Phys/User/Vertices"
@@ -47,33 +56,24 @@
         argList="int key"
         desc="create a vertex with a selected key"
         initList = "KeyedObject&lt;int&gt;( key ),m_position(0.0, 0.0, -1*km),
-m_positionErr(3, 0), m_chi2(-1.0), m_nDoF(-1), m_type(Vertex::Unknown),
-m_desktop(0)"
+m_covMatrix(), m_chi2(-1.0), m_nDoF(-1), m_technique(Vertex::Unknown)"
        />
        <method
         name="clone"
-        desc="Clone vertex and related particles"
+        desc="Clone vertex"
         type="Vertex*"
         const="TRUE"
        />
-       <method
-        desc="Assignment operator, note that the original product particles are kept"
-        name="operator="
-        type="Vertex&amp;"
-       >
-         <arg name="orig" type="Vertex" const='TRUE'/>
-       </method>
        <attribute
         name="position"
         desc="Position in LHCb reference system"
-        type="HepPoint3D"
+        type="Gaudi::XYZPoint"
         init="0.0, 0.0, -1*km"
        />
        <attribute
-        name="positionErr"
+        name="covMatrix"
         desc="Covariance matrix containing errors on vertex position"
-        type="HepSymMatrix"
-        init="3, 0"
+        type="Gaudi::Matrix3x3"
        />
        <attribute
         name="chi2"
@@ -88,40 +88,85 @@ m_desktop(0)"
         init="-1"
        />
        <attribute
-        name="type"
+        name="technique"
         desc="How the vertex was made"
-        type="VertexType"
+        type="CreationMethod"
         init="Vertex::Unknown"
-        getMeth="FALSE"
-        setMeth="FALSE"
-       />
-       <method
-        name="type"
-        desc="Retrieve how the vertex was made"
-        type="VertexType"
-       />
-       <method
-        name="type"
-        const="TRUE"
-        desc="Retrieve how the vertex was made"
-        type="VertexType"
-       />
-       <method
-        name="setType"
-        desc="Set how the vertex was made"
-        argList="VertexType value"
        />
        <relation
-        name="products"
+        name="outgoingParticles"
         desc="Reference to outgoing particles"
         multiplicity="N"
-        type="Particle"
+        type="LHCb::Particle"
        />
+       <method
+        name="isPrimary"
+        desc="is a primary vertex ?"
+        argList=""
+        type="bool"
+       > 
+       <code>return false ; </code>
+       </method>
        <attribute
-        name="desktop"
-        desc="internal flag for location relative to physdesktop"
-        type="int"
+        name="extraInfo"
+        desc="Some addtional user information. Don't use directly. Use *Info() methods."
+        type="ExtraInfo"
+        setMeth="FALSE"
+        getMeth="FALSE"
        />
+       <method
+        name="extraInfo"
+        const="TRUE"
+        desc="ExtraInformation. Don't use directly, use hasInfo, info, addInfo..."
+        type="const ExtraInfo"
+       > 
+       <code>
+  return m_extraInfo ;
+       </code>
+       </method>
+       <method
+        name="hasInfo"
+        const="TRUE"
+        desc="has information for specified key"
+        argList="int key"
+        type="bool"
+       > 
+       <code>
+  return m_extraInfo.end() != m_extraInfo.find( key ) ;
+       </code>
+       </method>
+       <method
+        name="addInfo"
+        desc=" add/replace new information , associated with the key"
+        argList="int key, double info"
+        type="bool"
+       > 
+       <code>
+  return m_extraInfo.insert( key , info ).second ;
+       </code>
+       </method>
+       <method
+        name="info"
+        desc="extract the information associated with the given key. If there is no such infomration the default value will be returned."
+        argList="int key, double def"
+        type="double"
+        const="TRUE"
+       > 
+       <code>
+  ExtraInfo::iterator i = m_extraInfo.find( key ) ;
+  return m_extraInfo.end() == i ? def : i->second ;
+       </code>
+       </method>
+       <method
+        name="eraseInfo"
+        desc="erase the information associated with the given key"
+        argList="int key"
+        type="unsigned long"
+       > 
+       <code>
+  return m_extraInfo.erase( key ) ; 
+       </code>
+       </method>
      </class>
   </package>
 </gdd>

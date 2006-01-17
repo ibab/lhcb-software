@@ -9,49 +9,29 @@
      ****************************************************************-->
 
      <class
-      author="Gloria Corti"
+      author="Patrick Koppenburg"
       desc="ProtoParticle, precursor of Particles. It holds information relative to final/global reconstruction, mostly pointers to all elements used to make it"
       name="ProtoParticle"
       id="803"
      >
+       <import name="Kernel/ParticleID" soft="TRUE"/>
+       <import name="Event/CaloHypo" soft="TRUE"/>
+       <import name="GaudiKernel/VectorMap"/>
+       <import name="Event/Track"/>
+       <import name="Event/RichPID" soft="TRUE"/>
+       <import name="Event/MuonPID" soft="TRUE"/>
        <typedef
-        type="std::vector&lt;std::pair&lt;int,double&gt; &gt;"
-        def="PIDInfoVector"
-        desc="Vector of information for combined pIDs"
-        access="PUBLIC"
-       />
-       <typedef
-        type="std::pair&lt;int,double&gt;"
-        def="PIDInfoPair"
-        desc="Pair with info for combined pIDs: PDG id number and estimator"
-        access="PUBLIC"
-       />
-       <typedef
-        type="std::vector&lt;std::pair&lt;int,double&gt; &gt;"
-        def="PIDDetVector"
-        desc="Vector of information for separate detectors pIDs"
-        access="PUBLIC"
-       />
-        <typedef
-        type="std::pair&lt;int,double&gt;"
-        def="PIDDetPair"
-        desc="Pair with info for separate detectors pIDs: technique and corresponding value which meaning depend on the technique"
+        type="GaudiUtils::VectorMap&lt;int,double&gt;"
+        def="ExtraInfo"
+        desc="Vector of information for combined PIDs"
         access="PUBLIC"
        />
       <base name="KeyedObject&lt;int&gt;"/>
       &KeyedObject;
-       <import name="CLHEP/Vector/LorentzVector"/>
-       <import name="CLHEP/Geometry/Point3D"/>       
-       <import name="Kernel/ParticleID" soft="TRUE"/>
-       <import name="Event/CaloHypo" soft="TRUE"/>
-       <import name="Event/TrStoredTrack" soft="TRUE"/>
-       <import name="Event/TrStateP" soft="TRUE"/>
-       <import name="Event/RichPID" soft="TRUE"/>
-       <import name="Event/MuonID" soft="TRUE"/>
        <enum
-        desc="Store a detector specific particleID type or technique for which the likelyhood or discriminating value is then stored"
-        name="detectorPID"
-        value="NoPID=0, RichElectron, RichMuon, RichPion, RichKaon, RichProton, MuonMuon, CaloTrMatch, CaloDepositID, ClusterMass, ShowerShape, CaloEMatch, BremMatch, ECalPIDe, PrsPIDe, BremPIDe, HcalPIDe, HcalPIDmu, EcalPIDmu, MuonPIDmu, RichPIDe, RichPIDmu, RichPIDpi, RichPIDK, RichPIDp, LkhPIDe, LkhPIDmu, LkhPIDpi, LkhPIDK, LkhPIDp, PhotonID"
+        desc="Additional information - to be revised by Global PID Task Force"
+        name="additionalInfo"
+        value="NoPID=0, LkhPIDe, LkhPIDmu, LkhPIDpi, LkhPIDK, LkhPIDp, PhotonID, RichElectron=100, RichMuon, RichPion, RichKaon, RichProton, RichPIDe, RichPIDmu, RichPIDpi, RichPIDK, RichPIDp, MuonMuon=200, MuonPIDmu, CaloTrMatch=300, CaloDepositID, ClusterMass, ShowerShape, CaloEMatch, BremMatch, ECalPIDe, PrsPIDe, BremPIDe, HcalPIDe, HcalPIDmu, EcalPIDmu, VeloCharge=400, TrackChi2=500, TrackNDof, TrackType, LastGlobal=10000"
         access="PUBLIC"
        />
        <location
@@ -91,142 +71,77 @@
         name="calo"
         desc="Reference to possible calorimeters result"
         multiplicity="N"
-        type="CaloHypo"       
+        type="LHCb::CaloHypo"       
        />
        <relation
         name="track"
         desc="Reference to possible track used"
-        type="TrStoredTrack"
+        type="LHCb::Track"
        />
        <relation
         name="richPID"
         desc="Reference to possible Rich pID results"
-        type="RichPID"
+        type="LHCb::RichPID"
        />
        <relation
         name="muonPID"
         desc="Reference to possible Muon pID results"
-        type="MuonID"
+        type="LHCb::MuonPID"
        />
        <attribute
-        name="pIDDetectors"
-        desc="List of separate detectors pID info: technique and value"
-        type="std::vector&lt;std::pair&lt;int,double&gt; &gt;"
-       />
-       <attribute
-        name="pIDInfo"
-        desc="List of particleIDs and their Probability value after corresponding merging stage"
-        type="std::vector&lt;std::pair&lt;int,double&gt; &gt;"
-       />
-       <attribute
-        name="pIDhistory"
-        desc="Bit packing to store combination of which info (if any) is stored in pIDInfo"
-        type="bitfield"
-       >
-         <bitfield name="noneBit" length='1' desc="No particleID available"/>
-         <bitfield name="richBit" length='1' desc="Rich is available"/>
-         <bitfield name="richCombined" length='1' desc="Rich combined flag"/>
-         <bitfield name="muonBit" length='1' desc="Muon is available"/>
-         <bitfield name="muonCombined" length='1' desc="Muon combined flag"/>
-         <bitfield name="caloeBit" length='1' desc="Calo Electron is available"/>
-         <bitfield name="caloeCombined" length='1' desc="Calo Electron combined flag"/>
-       </attribute>
-       <method
-        name="pIDList"
-        const="TRUE"
-        desc="List of compatible particleIDs"
-        type="std::vector&lt;int&gt;"
+        name="extraInfo"
+        desc="Some addtional user information. Don't use directly. Use *Info() methods."
+        type="ExtraInfo"
+        setMeth="FALSE"
+        getMeth="FALSE"
        />
        <method
-        name="probOfPID"
+        name="extraInfo"
         const="TRUE"
-	desc="Probability for specified PDG id code"
-        argList="int pid"
-        type="double"
-       />
-      <method
-        name="bestPID"
-        const="TRUE"
-        desc="PDG code of most likely particleID"
-        type="int"
-       />       
+        desc="ExtraInformation. Don't use directly, use hasInfo, info, addInfo..."
+        type="const ExtraInfo"
+       > 
+       <code>
+  return m_extraInfo ;
+       </code>
+       </method>
        <method
-        name="probOfBestPID"
+        name="hasInfo"
         const="TRUE"
-        desc="Probability of the most probable particleID"
-        type="double"
-       /> 
-       <method 
-        name="detPIDvalue"
-        const="TRUE"
-        desc="Value for specified detector ID technique"
-        argList="ProtoParticle::detectorPID det"
-        type="double"
-       />
-       <method
-        name="detPID"
-        const="TRUE"
-        desc="Return true if the specific ID technique is available for this ProtoParticle"
-        argList="ProtoParticle::detectorPID det"
+        desc="has information for specified technique"
+        argList="int&amp; key"
         type="bool"
+       />
+       <method
+        name="addInfo"
+        desc=" add/replace new information , associated with the key"
+        argList="int key, double info"
+        type="bool"
+       />
+       <method
+        name="info"
+        desc="extract the information associated with the given key. If there is no such infomration the default value will be returned."
+        argList="int key, double def"
+        type="double"
+        const="TRUE"
+       />
+       <method
+        name="eraseInfo"
+        desc="erase the information associated with the given key"
+        argList="int key"
+        type="ProtoParticle::ExtraInfo::size_type"
        />
        <method
         name="charge"
         desc="measured charge"
-        type="double"
+        type="int"
         const="TRUE"
-       />
-       <method
-        name="trStateP"
-        desc="TrStateP closest to IP"
-        type="const TrStateP*    "
-        const="TRUE"
-       />
-        <method
-        name="trStateP"
-        desc="TrStateP closest to IP"
-        type="TrStateP*"
-       />
-       <method
-        name="firstMeasured"
-        desc="TrStateP of first measured hit"
-        const="TRUE"
-        type="const TrStateP*"
-       />
-        <method
-        name="firstMeasured"
-        desc="TrStateP of first measured hit"
-        type="TrStateP*"
-       />
-        <method
-        name="minimalStates"
-        desc="Minimal Number of States on Track"
-        type="const int"
-        const="TRUE"
-        access="PRIVATE"
        />
        <!--method
-        name="momentum"
-        desc="Measured three momentum components"
-        type="Hep3Vector"
-        const="TRUE"
-       /-->
-       <!--method
-        name="pointOnTrack"
+        name="referencePoint"
         desc="Point at which the momentum is given in LHCb reference frame"
-        type="HepPoint3D"
+        type="LHCb::Point3D"
         const="TRUE"
-       /-->
-       <!--method
-        name="trStateAtFirstPoint"
-        desc="Track state at measured point closest to IP"
-        type="TrState"
-        const="TRUE"
-       /-->
-       <!--method
-        name="energy"
-        desc="Measured energy"
-        type="double"
        /-->
 
     </class>

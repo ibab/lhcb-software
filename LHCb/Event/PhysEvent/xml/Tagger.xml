@@ -7,9 +7,7 @@
     <class 
       name     = "Tagger"
       author   = "Marco Musy"
-      desc     = "Individual tagger decision on B flavour" 
-      templateList   = "FALSE" 
-      templateVector = "FALSE" >
+      desc     = "Individual tagger decision on B flavour"  >
 
       &StlVector;
 
@@ -45,13 +43,12 @@
      <attribute 
 	desc    = "Vector of Particle(s) used to build the Tagger" 
 	name    = "taggerParts" 
-	type    = "std::vector&lt;Particle&gt;"
-	serialize = "FALSE"
+	type    = "std::vector&lt;LHCb::Particle&gt;"
      />
      <method
         type    = "void"
         name    = "addTaggerPart"
-	argList = "Particle HAS"
+	argList = "LHCb::Particle HAS"
         desc    = "add one Particle to Tagger list">
         <code>  
           m_taggerParts.push_back(HAS); 

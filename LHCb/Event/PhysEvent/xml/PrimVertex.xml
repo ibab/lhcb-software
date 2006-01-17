@@ -9,21 +9,31 @@
      ****************************************************************-->
 
      <class 
-      author="Gloria Corti"
-      desc="Physics analysis Primary Vertex. Inherits from Vertex plus TrTracks information"
+      author="P. Koppenburg"
+      desc="Physics analysis Primary Vertex. Inherits from Vertex plus Track information"
       name="PrimVertex"
       id="804"
+      stdVectorTypeDef="TRUE"
       keyedContTypeDef="TRUE"
      >
-       <base name="Vertex"/>
+       <base name="LHCb::Vertex"/>
        &KeyedObject;
-       <import name="Event/TrStoredTrack" soft="TRUE"/>
+       <import name="Event/Track" soft="TRUE"/>
+       <import name="Event/Vertex"/>
        <relation
         name="tracks"
         desc="Reference to tracks composing the vertex"
         multiplicity="N"
-        type="TrStoredTrack"
+        type="LHCb::Track"
        />
+       <method
+        name="isPrimary"
+        desc="is a primary vertex ?"
+        argList=""
+        type="bool"
+       > 
+       <code>return true ; </code>
+       </method>
      </class>
   </package>
 </gdd>

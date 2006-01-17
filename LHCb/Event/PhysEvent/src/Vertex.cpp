@@ -1,4 +1,4 @@
-// $Id: Vertex.cpp,v 1.6 2004-12-10 15:16:11 cattanem Exp $
+// $Id: Vertex.cpp,v 1.7 2006-01-17 10:13:29 pkoppenb Exp $
 // Include files 
 
 // STD and STL
@@ -18,74 +18,31 @@
 //=============================================================================
 // Copy constructor
 //=============================================================================
-Vertex::Vertex(const Vertex& vert)
+LHCb::Vertex::Vertex(const LHCb::Vertex& vert)
   : KeyedObject<int>()
   , m_position( vert.position() )
-  , m_positionErr( vert.positionErr() )
+  , m_covMatrix( vert.covMatrix() )
   , m_chi2( vert.chi2() )
   , m_nDoF( vert.nDoF() )
-  , m_type( vert.type() )
-  , m_products( vert.products() )  
+  , m_technique ( vert.technique() )
+  , m_extraInfo( vert.extraInfo() )
+  , m_outgoingParticles( vert.outgoingParticles() )  
 {
 }
 
 //=============================================================================
 // Clone 
 //=============================================================================
-Vertex* Vertex::clone() const
+LHCb::Vertex* LHCb::Vertex::clone() const
 {
 //    Vertex* newVtx = new Vertex(*this);
 //    // clone the end particles
-//    SmartRefVector<Particle>::const_iterator ip = vert.products().begin();
-//    while( ip != vert.products().end() ) {
-//      m_products.push_back((*ip)->clone());
+//    SmartRefVector<Particle>::const_iterator ip = vert.outgoingParticles().begin();
+//    while( ip != vert.outgoingParticles().end() ) {
+//      m_outgoingParticles.push_back((*ip)->clone());
 //      ip++;
 //    }  
 //    return newVtx;
-  return new Vertex(*this);
+  return new LHCb::Vertex(*this);
 }
 
-//=============================================================================
-// Assignment operator
-//=============================================================================
-Vertex& Vertex::operator=(const Vertex& orig) {
-
-  // protect against self assignement
-  if( this != &orig ) {
-    m_position = orig.position();
-    m_positionErr = orig.positionErr();
-    m_chi2 = orig.chi2();
-    m_nDoF = orig.nDoF();
-    m_type = orig.type();
-    m_desktop = 0;
-    // Keep the same reference to particle products
-    m_products = orig.products();
-  }
-  return *this;
-}
-
-//=============================================================================
-// Retrieve how the vertex was made
-//=============================================================================
-Vertex::VertexType Vertex::type() const 
-{
-  return m_type;
-}
-
-//=============================================================================
-// Retrieve how the vertex was made
-//=============================================================================
-Vertex::VertexType Vertex::type()
-{
-  return m_type;
-}
-
-//=============================================================================
-// Update How the vertex was made
-//=============================================================================
-void Vertex::setType(const Vertex::VertexType& value) 
-{
-  m_type = value;
-}
-
-//=============================================================================

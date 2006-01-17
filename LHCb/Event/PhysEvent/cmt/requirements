@@ -1,13 +1,13 @@
-# $Id: requirements,v 1.52 2005-11-11 19:44:24 cattanem Exp $
+# $Id: requirements,v 1.53 2006-01-17 10:13:29 pkoppenb Exp $
 # Created      : 20/06/2001
 # Maintainer   : P. Koppenburg
 #
 package           PhysEvent
-version           v8r11
+version           v9r0
 
 # Structure, i.e. directories to process. 
 #============================================================================
-branches          cmt doc src xml Event
+branches          cmt doc dict src xml Event
 
 # Include directories
 #============================================================================
@@ -17,6 +17,13 @@ include_dirs $(PHYSEVENTROOT)
 #============================================================================
 use RichEvent    v*  Event
 use MuonEvent    v*  Event
+use CaloEvent    v*  Event
+use TrackEvent   v*  Event
+use EventBase    v*  Event
+use GaudiKernel  v*  
+
+use MathLib      v*  LCG_Interfaces
+use  ROOT        v*  LCG_Interfaces
 
 # Produce Header-Files & dictionary from XML description
 #============================================================================
@@ -26,7 +33,7 @@ document obj2dict PhysEventObj2Dict ../xml/*.xml
 # Build libraries (including dictionary)
 #============================================================================
 library     PhysEvent     *.cpp
-library     PhysEventDict ../$(tag)/dict/PhysEvent/*.cpp
+library     PhysEventDict ../dict/*.cpp
 
 # Define link options
 #============================================================================

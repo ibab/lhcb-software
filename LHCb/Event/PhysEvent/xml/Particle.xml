@@ -9,7 +9,7 @@
      ****************************************************************-->
 
      <class
-      author="Gloria Corti"
+      author="Patrick Koppenburg"
       desc="Physics Analysis Particle. A chosen hypotesis for a possible candidate particle."
       name="Particle"
       stdVectorTypeDef="TRUE"
@@ -17,155 +17,124 @@
      >
        <base name="KeyedObject&lt;int&gt;"/>
        &KeyedObject;
-       <import name="CLHEP/Units/SystemOfUnits"/>
+       <import name="Kernel/SystemOfUnits.h"/>
        <import name="Event/Vertex" soft="TRUE"/>
-       <!-- The following line forces inclusion before HepPoint3D
-            to get round CLHEP 1.9 bug with HEP_CC_NEED_SUB_WITHOUT_CONST -->
-       <import name="CLHEP/Matrix/SymMatrix"/>
+       <import name="Event/ProtoParticle" soft="TRUE"/>
+       <import name="GaudiKernel/VectorMap"/>
+       <import name="Kernel/Point3DTypes.h"/>
+       <import name="Kernel/Vector4DTypes.h"/>
+       <import name="Kernel/GenericMatrixTypes.h"/>
+       <import name="Kernel/ParticleID"/>
+       <typedef
+        type="GaudiUtils::VectorMap&lt;int,double&gt;"
+        def="ExtraInfo"
+        desc="Vector of information for combined PIDs"
+        access="PUBLIC"
+       />
        <location
         name="User"
         place="/Event/Phys/User/Particles"
         />
+       <enum
+        desc="Additional information"
+        name="additionalInfo"
+        value="ConfLevel, Weight, LastGlobal=10000"
+        access="PUBLIC"
+       />
        <location
         name="Production"
         place="/Event/Phys/Prod/Particles"
        />
        <constructor
         argList="Particle part"
-        desc="Copy constructor, note that end vertex is cloned"
+        desc="Copy constructor"
        />          
        <method
         name="clone"
-        desc="Clone particle and related vertex"
-        type="Particle*"
+        desc="Clone particle"
+        type="LHCb::Particle*"
         const="TRUE"
-       />
+      >
+       <code>
+  return new Particle(*this);
+       </code>
+       </method>
        <method
         desc="Assignment operator, note that the original vertex and protoParticle are kept"
         name="operator="
-        type="Particle&amp;"
+        type="LHCb::Particle&amp;"
        >
-         <arg name="orig" type="Particle" const='TRUE'/>
+       <arg name="orig" type="Particle" const='TRUE'/>
        </method>
        <attribute
         name="particleID"
         desc="PDG code"
-        type="ParticleID"
+        type="LHCb::ParticleID"
        />
-       <attribute
+       <method
         name="confLevel"
         desc="Confidence Level of the particleID"
         type="double"
-        init="1.0"
-       />
+        const="TRUE"
+       >
+       <code>
+        return info( LHCb::Particle::ConfLevel, -1. ) ;
+       </code>
+       </method>
+       <method
+        name="weight"
+        desc="Weight of the particle, whatever that means."
+        type="double"
+        const="TRUE"
+       >
+       <code>
+        return info( LHCb::Particle::Weight, -1. ) ;
+       </code>
+       </method>
        <attribute
-        name="momentum"
-        desc="Momentum four vector "
-        type="HepLorentzVector"
-        init="0.0, 0.0, 0.0, -1*GeV"
-       />
-       <attribute
-        name="pointOnTrack"
-        desc="Point at which the momentum is given in LHCb reference frame"
-        type="HepPoint3D"
-        init="0.0, 0.0, -1*km"
-       />
-       <attribute
-        name="mass"
+        name="measuredMass"
         desc="Measured Mass"
         type="double"
         init="-1.0"
        />
        <attribute
-        name="massErr"
+        name="measuredMassErr"
         desc="Error on measured mass"
         type="double"
         init="0.0"
        />
        <attribute
-        name="momentumErr"
-        desc="Covariance matrix relative to momentum (4x4)"
-        type="HepSymMatrix"
-        init="4, 0"
-        setMeth="FALSE"
-       />
-       <method
-        name="setMomentumErr"
-        desc="Set covariance matrix relative to momentum (4x4) and propagate to (sx, sy, P)"
-        type="void"
-        argList="HepSymMatrix value"
-       />        
-       <attribute
-        name="pointOnTrackErr"
-        desc="Covariance matrix relative to point at which the momentum is given (3x3)"
-        type="HepSymMatrix"
-        init="3, 0"
+        name="momentum"
+        desc="Momentum four vector "
+        type="Gaudi::LorentzVector"
+        init="0.0, 0.0, 0.0, -1*GeV"
        />
        <attribute
-        name="posMomCorr"
-        desc="Matrix with correlation errors between momemtum and pointOnTrack (momentum x point)"
-        type="HepMatrix"
-        init="4, 3, 0"
-        setMeth="FALSE"
-       />
-       <method
-        desc="Set matrix with correlation errors between momemtum and pointOnTrack (momentum x point)"
-        name="setPosMomCorr"
-        type="void"
-        argList="HepMatrix value"
-       />
-       <attribute
-        name="isResonance"
-        desc="Describe if a particle flies or not (i.e. is a resonance) and its
-product should be taken if used in a vertex"
-        type="bool"
-        init="false"
+        name="referencePoint"
+        desc="Point at which the momentum is given in LHCb reference frame - convention: take the one that minimizes the extrapolations needs"
+        type="Gaudi::XYZPoint"
+        init="0.0, 0.0, -1*km"
        />
        <relation
         name="endVertex"
         desc="Reference to end vertex (ex. decay)"
-        type="Vertex"
+        type="LHCb::Vertex"
+	nonconstaccessor="TRUE"
        />
        <relation
-        name="origin"
-        desc="Reference to originator (ProtoParticle, MCParticle for smearing, or AxPartCandidate for Zebra DST). Void for composite particles"
-        type="ContainedObject"
+        name="proto"
+        desc="Reference to original ProtoParticle"
+        type="LHCb::ProtoParticle"
        />
-       <!--method
-        desc="Templated method to return actual pointer to originator class"
-        name="originator"
-        type="template &lt;class T&gt; T*"
-       >
-        <code>
-if( !this->origin() ) {
-  return NULL;
-}
-else {
-  return from = dynamic_cast&lt;T*&gt;( this->origin() );
-}
-        </code>
-       </method-->
        <method
         name="charge"
         const="TRUE"
-        desc="Charge in units of +e (i.e. electron charge = -1.0), temporarly it works only for basic particles"
-        type="double"
-       />
-       <method
-        name="slopeX"
-        const="TRUE"
-        desc="Retrieve slopeX from momentum - line rapresentation of a Particle"
-        type="double"
+        desc="Charge in units of +e (i.e. electron charge = -1)"
+        type="int"
        >
-         <code>return (momentum().px()/momentum().pz()); </code>
-       </method>
-       <method
-        name="slopeY"
-        const="TRUE"
-        desc="Retrieve slopeY from momentum - line rapresentaion of a Particle"
-        type="double"
-       >
-         <code>return (momentum().py()/momentum().pz()); </code>
+       <code>
+  return particleID().threeCharge()/3 ;
+       </code>
        </method>
        <method
         name="pt"
@@ -173,7 +142,8 @@ else {
         desc="short cut for transerve momentum"
         type="double"
        >
-         <code> return m_momentum.perp(); </code>
+        <code> return m_momentum.Pt(); </code> 
+<!---         <code> return m_momentum.perp(); </code> -->
        </method>
        <method
         name="p"
@@ -181,39 +151,129 @@ else {
         desc="short cut for |P|" 
         type="double"
        > 
-         <code> return m_momentum.vect().mag(); </code>
+         <code> return m_momentum.R(); </code> 
+<!---         <code> return m_momentum.vect().mag(); </code> -->
+       </method>
+       <method
+        const="TRUE"
+        name="covMatrix"
+        desc="full error matrix on position, 4-momentum. LHCb::SymCovMatrix to be revised."
+        type="Gaudi::Matrix7x7"
+	>
+	<code>
+	  return Gaudi::Matrix7x7(); // To be revised
+	</code>
        </method>
        <attribute
-        name="slopesMomErr"
-        desc="error matrix on (slopeX, slopeY, P)"
-        type="HepSymMatrix"
-        init="3, 0"
-        setMeth="FALSE"
-       />
-       <method
-        name="setSlopesMomErr"
-        desc="Set error matrix on (slopeX, slopeY, P) and propagate to momentum"
-        type="void"
-        argList="HepSymMatrix value"
+        name="momCovMatrix"
+        desc="Covariance matrix relative to momentum (4x4)"
+        type="Gaudi::Matrix4x4"
        />
        <attribute
-        name="posSlopesCorr"
-        desc="Correlation matrix with errors between (slopeX, slopeY, P) and pointOnTrack"
-        type="HepMatrix"
-        init="3, 3, 0"
-        setMeth="FALSE"
+        name="posCovMatrix"
+        desc="Covariance matrix relative to point at which the momentum is given (3x3)"
+        type="Gaudi::Matrix3x3"
        />
        <method
-        name="setPosSlopesCorr"
-        desc="Set correlation matrix with errors between (slopeX, slopeY, P) and pointOnTrack and propagate to posMomCorr"
-        type="void"
-        argList="HepMatrix value"
+        name="isBasicParticle"
+	const="TRUE" 
+        desc="a basic particle has no daughters" 
+        type="bool"
+       >
+	<code> return m_daughters.empty(); </code>
+       </method>
+       <attribute
+        name="posMomCovMatrix"
+        desc="Matrix with correlation errors between momemtum and pointOnTrack (momentum x point)"
+        type="Gaudi::Matrix4x3"
+       />
+       <relation
+        name="daughters"
+        desc="Reference to daughter particles. Users are strongly discouraged to use setDaughters method." 
+        multiplicity="N"
+        type="LHCb::Particle"
        />
        <attribute
-        name="desktop"
-        desc="internal flag for location relative to physdesktop"
-        type="int"
+        name="extraInfo"
+        desc="Some addtional user information. Don't use directly. Use *Info() methods."
+        type="ExtraInfo"
+        setMeth="FALSE"
+        getMeth="FALSE"
        />
+       <method
+        name="extraInfo"
+        const="TRUE"
+        desc="ExtraInformation. Don't use directly, use hasInfo, info, addInfo..."
+        type="const ExtraInfo"
+       > 
+       <code>
+  return m_extraInfo ;
+       </code>
+       </method>
+       <method
+        name="hasInfo"
+        const="TRUE"
+        desc="has information for specified key"
+        argList="int key"
+        type="bool"
+       > 
+       <code>
+  return m_extraInfo.end() != m_extraInfo.find( key ) ;
+       </code>
+       </method>
+       <method
+        name="addInfo"
+        desc=" add/replace new information, associated with the key"
+        argList="int key, double info"
+        type="bool"
+       > 
+       <code>
+  return m_extraInfo.insert( key , info ).second ;
+       </code>
+       </method>
+       <method
+        name="info"
+        desc="extract the information associated with the given key. If there is no such infomration the default value will be returned."
+        argList="int key, double def"
+        type="double"
+        const="TRUE"
+       > 
+       <code>
+  ExtraInfo::iterator i = m_extraInfo.find( key ) ;
+  return m_extraInfo.end() == i ? def : i->second ;
+       </code>
+       </method>
+       <method
+        name="eraseInfo"
+        desc="erase the information associated with the given key"
+        argList="int key"
+        type="unsigned long"
+       > 
+       <code>
+  return m_extraInfo.erase( key ) ; 
+       </code>
+       </method>
+       <method 
+       type="double" 
+       name="slopeX" 
+       const="TRUE" 
+       desc="slope in X at reference point"
+       > 
+        <code>
+<!--	  return m_momentum.vect().x()/m_momentum.vect().z() ; -->
+	  return m_momentum.X()/m_momentum.Z() ;
+        </code>
+       </method>
+       <method 
+       type="double" 
+       name="slopeY" 
+       const="TRUE" 
+       desc="slope in Y at reference point"
+       > 
+        <code>
+	  return m_momentum.Y()/m_momentum.X() ;
+        </code>
+       </method>
     </class>
   </package>
 
