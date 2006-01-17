@@ -1,8 +1,11 @@
-// $Id: CaloSensDet.h,v 1.11 2004-10-08 15:06:54 ibelyaev Exp $ 
+// $Id: CaloSensDet.h,v 1.12 2006-01-17 15:52:57 odescham Exp $ 
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.11  2004/10/08 15:06:54  ibelyaev
+//  fix a 'feature'
+//
 // ============================================================================
 #ifndef       GAUSSCALO_CaloSensDet_H
 #define       GAUSSCALO_CaloSensDet_H 1 
@@ -40,8 +43,8 @@ public:
   /// useful type for list of logical volumes 
   typedef std::vector<const G4LogicalVolume*>   Volumes    ;
   /// translator from Path to CellID 
-  typedef GiGaHashMap<CaloSim::Path,CaloCellID> Table      ;
-  typedef GiGaHashMap<CaloCellID,CaloHit*>      HitMap     ;
+  typedef GiGaHashMap<CaloSim::Path,LHCb::CaloCellID> Table      ;
+  typedef GiGaHashMap<LHCb::CaloCellID,CaloHit*>      HitMap     ;
   /// type for all histograms 
   typedef std::vector<AIDA::IHistogram1D*>            Histos     ;
   /// the typedef for vector of fractions       
@@ -74,7 +77,7 @@ public:
    *  sensitive detector. This implementation performs the
    *  generic (sub-detector) independent action:
    *    - decode G4Step, G4Track information
-   *    - determine the CaloCellID of the active cell
+   *    - determine the LHCb::CaloCellID of the active cell
    *    - determine is the hit to be associated with
    *      the track or its parent track  
    *    - find/create CaloHit object for the given cell 
@@ -173,7 +176,7 @@ protected:
    *  @return "time"-parameter for the given cell
    *           it is evaluated per cell basis in DeCalorimeter
    */
-  inline double               t0       ( const CaloCellID& cellID ) const ;
+  inline double               t0       ( const LHCb::CaloCellID& cellID ) const ;
   
   /// the first coefficient of Birks's law
   inline double               birk_c1    () const { return m_birk_c1 ; }
@@ -200,7 +203,7 @@ protected:
    *  @param point G4 point 
    *  @retuen calorimeter cell identifier 
    */
-  CaloCellID cell ( const G4StepPoint* point ) const ;
+  LHCb::CaloCellID cell ( const G4StepPoint* point ) const ;
 
 protected:
   
@@ -245,7 +248,7 @@ protected:
    */
   virtual StatusCode timing  
   ( const double      time      , 
-    const CaloCellID& cell      ,
+    const LHCb::CaloCellID& cell      ,
     CaloSubHit::Time& slot      ,
     Fractions&        fractions ) const  = 0 ;
 
@@ -371,7 +374,7 @@ private:
  *           it is evaluated per cell basis in DeCalorimeter
  */
 // ============================================================================
-inline double CaloSensDet::t0       ( const CaloCellID& cellID ) const 
+inline double CaloSensDet::t0       ( const LHCb::CaloCellID& cellID ) const 
 { return calo()->cellTime( cellID ) - dT0 () ; }
 // ============================================================================
 

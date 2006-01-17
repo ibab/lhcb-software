@@ -1,11 +1,18 @@
 !-----------------------------------------------------------------------------
 ! Package          : Sim/GaussCalo
 ! Contributors     : Vanya Belyaev, Grigori Rybkine, Alexei Berdiouguine,
-!                    Patrick Robbe
-! Responsible	     : Patrick Robbe, Vanya Belyaev
+!                    Patrick Robbe, Olivier Deschamps
+! Responsible	     : Patrick Robbe, Vanya Belyaev, Olivier Deschamps
 ! Purpose          : collection of sensitive detectors, converters, 
 !                  : G4 actions, etc for LHCb calorimeters
 !-----------------------------------------------------------------------------
+
+!===================== GaussCalo v7r4 ===================================
+! 2006-17-01 - Olivier Deschamps
+ - Adapt to new Event Model & LHCb v20 migration.
+ - requirement : CaloEvent dependancy replaced by MCEvent
+ - src         : algorithms and tools adapted
+                 GaussSensPlaneHitCnv.cpp/h removed 
 
 !===================== GaussCalo v7r4 ===================================
 ! 2005-12-08 - Gloria CORTI

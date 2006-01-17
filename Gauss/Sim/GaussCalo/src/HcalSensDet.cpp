@@ -1,8 +1,11 @@
-// $Id: HcalSensDet.cpp,v 1.5 2004-02-22 13:13:42 ibelyaev Exp $ 
+// $Id: HcalSensDet.cpp,v 1.6 2006-01-17 15:52:57 odescham Exp $ 
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.5  2004/02/22 13:13:42  ibelyaev
+//  update for new GiGa
+//
 // Revision 1.4  2004/01/14 13:38:10  ranjard
 // v6r0 - fix to be used with Gaudi v14r0
 //
@@ -127,7 +130,7 @@ StatusCode    HcalSensDet::fillHitInfo
                      material                   ) ;
   
   // get the cell 
-  const CaloCellID& cellID = hit->cellID() ;
+  const LHCb::CaloCellID& cellID = hit->cellID() ;
   
   // add current energy deposition to the sub-hit
   CaloSubHit::Time slot = 0   ;

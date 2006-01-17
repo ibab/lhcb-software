@@ -1,8 +1,11 @@
-// $Id: CaloSubHit.h,v 1.6 2004-01-14 13:38:10 ranjard Exp $
+// $Id: CaloSubHit.h,v 1.7 2006-01-17 15:52:57 odescham Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.6  2004/01/14 13:38:10  ranjard
+// v6r0 - fix to be used with Gaudi v14r0
+//
 // Revision 1.5  2003/12/09 08:28:39  ibelyaev
 //  fix for missing != operator for CaloCellID class
 //
@@ -69,7 +72,7 @@ public:
    *  @param cellID  cellID  of the detector cell  
    *  @param trackID trackID of the particle
    */
-  CaloSubHit ( const CaloCellID& cellID  = CaloCellID() , 
+  CaloSubHit ( const LHCb::CaloCellID& cellID  = LHCb::CaloCellID() , 
                const int         trackID = 0            ) ;
   
   /** copy constructor 
@@ -87,9 +90,9 @@ public:
   void  operator delete ( void *hit ) ;
   
   /// access to cell ID for given hit  
-  const CaloCellID& cellID() const          { return m_cellID        ; }  
+  const LHCb::CaloCellID& cellID() const          { return m_cellID        ; }  
   // set new cell ID for given hit 
-  void setCellID ( const CaloCellID& cell ) {        m_cellID = cell ; }
+  void setCellID ( const LHCb::CaloCellID& cell ) {        m_cellID = cell ; }
   
   /** add energy deposition for given hit (safe method)
    *  Error flags:
@@ -102,7 +105,7 @@ public:
    *  CaloSubHit::Time   time  = ... ;
    *  CaloSubHit::Energy e     = ... ;
    *  const int          track = ... ;
-   *  const CaloCellID&  cell  = ... ;
+   *  const LHCb::CaloCellID&  cell  = ... ;
    * 
    *  StatusCode sc  = hit->add( track , cell , time , energy ) ;
    *  if( sc.isFailure() ) { .... } 
@@ -116,7 +119,7 @@ public:
    *  @return status code 
    */
   StatusCode add ( const int         track , 
-                   const CaloCellID& cell    , 
+                   const LHCb::CaloCellID& cell    , 
                    const Time        time    , 
                    const Energy      energy  )
   {
@@ -210,7 +213,7 @@ public:
   
 private:
   
-  CaloCellID  m_cellID ;
+  LHCb::CaloCellID  m_cellID ;
   TheMap      m_map    ;
   
 };

@@ -1,8 +1,11 @@
-// $Id: GaussSensPlaneHit.h,v 1.2 2004-01-14 13:38:10 ranjard Exp $
+// $Id: GaussSensPlaneHit.h,v 1.3 2006-01-17 15:52:57 odescham Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.2  2004/01/14 13:38:10  ranjard
+// v6r0 - fix to be used with Gaudi v14r0
+//
 // Revision 1.1  2003/07/07 16:09:39  ibelyaev
 //  add Calorimeter Sensitive Palne hits and the converter
 // 
@@ -50,7 +53,7 @@ public:
    */
   GaussSensPlaneHit 
   ( const TrackID&          track    = 0                   , 
-    const ParticleID&       pid      = ParticleID       () ,
+    const LHCb::ParticleID&  pid      = LHCb::ParticleID       () ,
     const HepLorentzVector& position = HepLorentzVector () ,
     const HepLorentzVector& momentum = HepLorentzVector () ) ;
   
@@ -64,9 +67,9 @@ public:
   virtual ~GaussSensPlaneHit() ;
   
   /// access to actual particle ID 
-  inline const ParticleID&       pid         () const { return m_pid      ; }
+  inline const LHCb::ParticleID&       pid         () const { return m_pid      ; }
   // set new value for particle ID
-  inline void                    setPID      ( const ParticleID& val        )
+  inline void                    setPID      ( const LHCb::ParticleID& val        )
   { m_pid      = val ; }
 
   /// accessor to the hit position         (const version)
@@ -89,7 +92,7 @@ public:
 private:
   
   // the actual particle tye (can be different from track PID) 
-  ParticleID        m_pid      ;
+  LHCb::ParticleID        m_pid      ;
   // the actual hit position (3D + global time)
   HepLorentzVector  m_position ;
   // the particle 4-momentum at hit position 

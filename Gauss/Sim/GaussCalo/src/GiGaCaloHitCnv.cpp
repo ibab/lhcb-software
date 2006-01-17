@@ -1,8 +1,11 @@
-// $Id: GiGaCaloHitCnv.cpp,v 1.4 2004-01-14 13:38:10 ranjard Exp $
+// $Id: GiGaCaloHitCnv.cpp,v 1.5 2006-01-17 15:52:57 odescham Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.4  2004/01/14 13:38:10  ranjard
+// v6r0 - fix to be used with Gaudi v14r0
+//
 // Revision 1.3  2002/12/15 17:19:59  ibelyaev
 //  change names of collections
 //
@@ -73,16 +76,16 @@ GiGaCaloHitCnv::GiGaCaloHitCnv( ISvcLocator* svc )
   setConverterName              ( "GiGaCaloHitCnv"          ) ;
   ///
   GiGaLeaf::Pars spd  ( 1 , "Spd/SpdHits"   ) ;
-  declareObject( GiGaLeaf( MCCaloHitLocation::Spd  , objType() , spd  ) );
+  declareObject( GiGaLeaf( LHCb::MCCaloHitLocation::Spd  , objType() , spd  ) );
   
   GiGaLeaf::Pars prs  ( 1 , "Prs/PrsHits"   ) ;
-  declareObject( GiGaLeaf( MCCaloHitLocation::Prs  , objType() , prs  ) );
+  declareObject( GiGaLeaf( LHCb::MCCaloHitLocation::Prs  , objType() , prs  ) );
   
   GiGaLeaf::Pars ecal ( 1 , "Ecal/EcalHits" ) ;
-  declareObject( GiGaLeaf( MCCaloHitLocation::Ecal , objType() , ecal ) );
+  declareObject( GiGaLeaf( LHCb::MCCaloHitLocation::Ecal , objType() , ecal ) );
   
   GiGaLeaf::Pars hcal ( 1 , "Hcal/HcalHits" ) ;
-  declareObject( GiGaLeaf( MCCaloHitLocation::Hcal , objType() , hcal ) );
+  declareObject( GiGaLeaf( LHCb::MCCaloHitLocation::Hcal , objType() , hcal ) );
   ///
 };
 // ============================================================================
@@ -99,7 +102,7 @@ GiGaCaloHitCnv::~GiGaCaloHitCnv() {};
  */
 // ============================================================================ 
 const CLID&         GiGaCaloHitCnv::classID     () 
-{ return MCCaloHit::classID(); }
+{ return LHCb::MCCaloHit::classID(); }
 // ============================================================================
 
 // ============================================================================
@@ -144,7 +147,7 @@ StatusCode GiGaCaloHitCnv::createObj
   object = 0 ;
   if( 0 ==  address  ) { return Error("IOpaqueAddress* points to NULL!" ) ; }
   ///
-  object        = new MCCaloHits();
+  object        = new LHCb::MCCaloHits();
   /// 
   StatusCode sc = updateObj( address , object );
   if( sc.isFailure() ) 
@@ -173,10 +176,10 @@ StatusCode GiGaCaloHitCnv::updateObj
   // check arguments 
   if( 0 ==   address   ) { return Error(" IOpaqueAddress* points to NULL" ) ; }
   if( 0 ==   object    ) { return Error(" DataObject* points to NULL"     ) ; }
-  MCCaloHits* hits = dynamic_cast<MCCaloHits*> ( object ); 
+  LHCb::MCCaloHits* hits = dynamic_cast<LHCb::MCCaloHits*> ( object ); 
   if( 0 ==   hits ) { return Error(" DataObject*(of type '"      + 
                                    GiGaUtil::ObjTypeName(object) + 
-                                   "*') is not 'MCCaloHits*'! "   );}
+                                   "*') is not 'LHCb::MCCaloHits*'! "   );}
   // clear the object 
   hits->clear();
   
@@ -190,9 +193,9 @@ StatusCode GiGaCaloHitCnv::updateObj
     // just to force the loading of the reference table 
     std::string mcpath = 
       location.substr( 0, location.find( "/MC" ) ) + "/" + 
-      MCParticleLocation::Default;
+      LHCb::MCParticleLocation::Default;
     // get MCparticles 
-    const MCParticles* mcps = get( dataProvider() , mcpath , mcps );
+    const LHCb::MCParticles* mcps = get( dataProvider() , mcpath , mcps );
     if( 0 == mcps ) 
       { return Error("Can not locate MCparticles at '" + mcpath + "'");}  
   }
@@ -233,21 +236,22 @@ StatusCode GiGaCaloHitCnv::updateObj
           const CaloSubHit* subhit = ihit->second ;
           if( 0 == subhit ) { continue ; }                         // CONTINUE 
           // get the MC particle of the sub hit
-          const MCParticle* mcp = table( subhit->trackID() ).particle() ;
-          if( 0 == mcp ) { Warning( "MCParticle* points to NULL!" ) ; }
+          const LHCb::MCParticle* mcp = table( subhit->trackID() ).particle() ;
+          if( 0 == mcp ) { Warning( "LHCb::MCParticle* points to NULL!" ) ; }
           // explicit loop over all time/energy entries of the subhit 
           for( CaloSubHit::iterator entry = subhit->begin() ; 
                subhit->end() != entry ; ++entry )
             {
               // create new MC hit
-              MCCaloHit* mchit = new MCCaloHit() ;                 
+              LHCb::MCCaloHit* mchit = new LHCb::MCCaloHit() ;                 
               // fill it 
               mchit->setCellID   ( hit    -> cellID() ) ;
               mchit->setTime     ( entry  -> first    ) ;
               mchit->setActiveE  ( entry  -> second   ) ;
               mchit->setParticle ( mcp                ) ;
               // add hit to the container 
-              hits->insert( mchit );
+              hits->add( mchit );
+              
             } // loop over all time/energy entries of the subhit 
         } // loop over all subhits of the hit 
     } // loop over all hits

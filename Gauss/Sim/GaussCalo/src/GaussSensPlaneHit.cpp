@@ -1,8 +1,11 @@
-// $Id: GaussSensPlaneHit.cpp,v 1.3 2004-12-14 14:53:18 gcorti Exp $
+// $Id: GaussSensPlaneHit.cpp,v 1.4 2006-01-17 15:52:57 odescham Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.3  2004/12/14 14:53:18  gcorti
+// fix for compilation
+//
 // Revision 1.2  2004/01/14 13:38:10  ranjard
 // v6r0 - fix to be used with Gaudi v14r0
 //
@@ -63,7 +66,7 @@ namespace GaussSensPlaneHitLocal
 // ============================================================================
 GaussSensPlaneHit::GaussSensPlaneHit 
 ( const TrackID&          track    , 
-  const ParticleID&       pid      ,
+  const LHCb::ParticleID&       pid      ,
   const HepLorentzVector& position ,
   const HepLorentzVector& momentum )
   : GaussHitBase () 

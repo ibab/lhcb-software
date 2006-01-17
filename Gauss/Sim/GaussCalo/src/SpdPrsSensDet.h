@@ -1,8 +1,11 @@
-// $Id: SpdPrsSensDet.h,v 1.4 2004-01-14 13:38:10 ranjard Exp $ 
+// $Id: SpdPrsSensDet.h,v 1.5 2006-01-17 15:52:57 odescham Exp $ 
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.4  2004/01/14 13:38:10  ranjard
+// v6r0 - fix to be used with Gaudi v14r0
+//
 // Revision 1.3  2003/07/09 17:01:44  ibelyaev
 //  Spd/Prs implemenattion by Grigory Rybkine
 //
@@ -103,7 +106,7 @@ protected:
    */
   virtual StatusCode timing  
   ( const double            time      , 
-    const CaloCellID&       cell      ,
+    const LHCb::CaloCellID&       cell      ,
     CaloSubHit::Time&       slot      ,
     CaloSensDet::Fractions& fractions ) const ;
 

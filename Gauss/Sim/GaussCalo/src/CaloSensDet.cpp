@@ -1,16 +1,20 @@
-// $Id: CaloSensDet.cpp,v 1.17 2004-10-08 15:06:54 ibelyaev Exp $ 
+// $Id: CaloSensDet.cpp,v 1.18 2006-01-17 15:52:57 odescham Exp $ 
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.17  2004/10/08 15:06:54  ibelyaev
+//  fix a 'feature'
+//
 // ============================================================================
 /// SRD & STD 
 #include <algorithm>
 #include <vector>
 #include <sstream>
-/// CLHEP 
+/// LHCbDefintions
 #include "CLHEP/Geometry/Point3D.h"
-#include "CLHEP/Units/PhysicalConstants.h"
+#include "Kernel/Point3DTypes.h"
+#include "Kernel/PhysicalConstants.h"
 /// GaudiKernel
 #include "GaudiKernel/MsgStream.h"
 #include "GaudiKernel/SmartDataPtr.h" 
@@ -56,7 +60,7 @@
 
 namespace 
 {
-  std::string toString( const CaloCellID& id ) 
+  std::string toString( const LHCb::CaloCellID& id ) 
   {
     std::ostringstream s ;
     s << id ;
@@ -411,7 +415,7 @@ bool CaloSensDet::ProcessHits( G4Step* step                      ,
   const G4MaterialCutsCouple* const material = preStep -> 
     GetMaterialCutsCouple () ;
   
-  CaloCellID cellID = cell ( preStep ) ;
+  LHCb::CaloCellID cellID = cell ( preStep ) ;
   if ( !( calo() -> valid ( cellID ) ) ) { return false ; }
   
   // get the existing hit 
@@ -597,10 +601,10 @@ double  CaloSensDet::birkCorrection
  *  @retuen calorimeter cell identifier 
  */
 // ============================================================================
-CaloCellID CaloSensDet::cell ( const G4StepPoint* point ) const 
+LHCb::CaloCellID CaloSensDet::cell ( const G4StepPoint* point ) const 
 {
   // current solution! 
-  // CaloCellID id = calo() -> Cell ( point->GetPosition() ) ;
+  // LHCb::CaloCellID id = calo() -> Cell ( point->GetPosition() ) ;
   // return id ;
   
   G4TouchableHistory* tHist  = 
@@ -626,20 +630,22 @@ CaloCellID CaloSensDet::cell ( const G4StepPoint* point ) const
   }
   
   if ( path.empty() ) 
-  { Error ( "Volume path is invalid(empty) " ) ; return CaloCellID() ; }
+  { Error ( "Volume path is invalid(empty) " ) ; return LHCb::CaloCellID() ; }
   
-  CaloCellID id2 = m_table ( path ) ;
+  LHCb::CaloCellID id2 = m_table ( path ) ;
   
-  if( CaloCellID() == id2 ) 
+  if( LHCb::CaloCellID() == id2 ) 
   {
     HepTransform3D mtrx( *(tHist->GetRotation()) , tHist->GetTranslation() );
-    id2          = calo() -> Cell ( mtrx*HepPoint3D() ) ;
+    HepPoint3D heppoint = mtrx*HepPoint3D();
+    const Gaudi::XYZPoint point( heppoint.x(),heppoint.y(),heppoint.z() );
+    id2          = calo() -> Cell ( point ) ;
     // skip the invalid cells 
     //if ( !( calo() -> valid( id2 ) ) ) { return false ; }  // RETURN 
     m_table( path ) = id2 ;
   }
   
-  if ( CaloCellID() == id2 ) { Error ( "Invalid cell is found" ) ; }
+  if ( LHCb::CaloCellID() == id2 ) { Error ( "Invalid cell is found" ) ; }
   
   return id2 ;
 

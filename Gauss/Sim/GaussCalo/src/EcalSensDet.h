@@ -1,8 +1,11 @@
-// $Id: EcalSensDet.h,v 1.5 2004-01-14 13:38:10 ranjard Exp $ 
+// $Id: EcalSensDet.h,v 1.6 2006-01-17 15:52:57 odescham Exp $ 
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.5  2004/01/14 13:38:10  ranjard
+// v6r0 - fix to be used with Gaudi v14r0
+//
 // Revision 1.4  2003/12/05 08:59:58  robbep
 // Put fonctions and constants for the non-uniformity. The local
 // non-uniformity (sin-like amplitude) is set to 0 for the moment.
@@ -115,7 +118,7 @@ protected:
    *  collection efficiency in cell cell
    */
   double localNonUniformity ( const HepPoint3D& prePoint    , 
-                              const CaloCellID& cell    ) const ;
+                              const LHCb::CaloCellID& cell    ) const ;
   
 private :
   // Amplitudes of the local non uniformity correction

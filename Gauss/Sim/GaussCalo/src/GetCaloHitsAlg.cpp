@@ -1,4 +1,4 @@
-// $Id: GetCaloHitsAlg.cpp,v 1.1 2005-11-14 14:57:46 robbep Exp $
+// $Id: GetCaloHitsAlg.cpp,v 1.2 2006-01-17 15:52:57 odescham Exp $
 // Include files 
 
 // from Gaudi
@@ -80,10 +80,10 @@ StatusCode GetCaloHitsAlg::execute() {
   debug() << "==> Execute" << endmsg ;
 
   // Register output container to contain MCCaloHits
-  MCCaloHits * hits = new MCCaloHits( ) ;
+  LHCb::MCCaloHits * hits = new LHCb::MCCaloHits( ) ;
   StatusCode sc = put( hits , m_hitsLocation ) ;
   if ( sc.isFailure( ) ) 
-    return Error( "Unable to register MCCaloHits in " + m_hitsLocation ) ;
+    return Error( "Unable to register LHCb::MCCaloHits in " + m_hitsLocation ) ;
 
   // Get the G4 hit collections corresponding to Calo
   GiGaHitsByName col( m_colName ) ;
@@ -97,9 +97,9 @@ StatusCode GetCaloHitsAlg::execute() {
   if ( 0 == hitCollection ) return Error( "Wrong collection type" ) ;
   
   // Get the reference table between G4 tracks and MC particles
-  if ( ! exist< MCParticles >( MCParticleLocation::Default ) ) 
-    return Error( "MCParticles do not exist at'" +
-                  MCParticleLocation::Default + "'" ) ;
+  if ( ! exist< LHCb::MCParticles >( LHCb::MCParticleLocation::Default ) ) 
+    return Error( "LHCb::MCParticles do not exist at'" +
+                  LHCb::MCParticleLocation::Default + "'" ) ;
   const GiGaKineRefTable & table = m_gigaKineCnvSvc -> table() ;
 
   const size_t numOfHits = hitCollection -> entries() ;
@@ -119,17 +119,17 @@ StatusCode GetCaloHitsAlg::execute() {
       const CaloSubHit * subhit = iter -> second ;
       if ( 0 == subhit ) continue ;
       
-      // Pointer to the corresponding MCParticle using trackID of the subhit
-      const MCParticle * mcp = table( subhit -> trackID() ).particle( ) ;
+      // Pointer to the corresponding LHCb::MCParticle using trackID of the subhit
+      const LHCb::MCParticle * mcp = table( subhit -> trackID() ).particle( ) ;
       if ( 0 == mcp ) 
-        warning() << "No pointer to MCParticle for MCHit associated to G4 "
+        warning() << "No pointer to LHCb::MCParticle for MCHit associated to G4 "
                   << "trackID: " << subhit -> trackID() << endmsg ;
       
       // Loop over all energy/time deposits strored in the subhit
       for ( CaloSubHit::iterator entry = subhit -> begin() ; 
             entry != subhit -> end() ; ++entry ) {
         // Create the new MCHit
-        MCCaloHit * mchit = new MCCaloHit() ;
+        LHCb::MCCaloHit * mchit = new LHCb::MCCaloHit() ;
         // Fill it with:
         //   - Calorimeter CellID of the hit
         mchit -> setCellID( hit -> cellID() ) ;
@@ -137,11 +137,11 @@ StatusCode GetCaloHitsAlg::execute() {
         mchit -> setTime( entry -> first ) ;
         //   - Active energy deposited
         mchit -> setActiveE( entry -> second ) ;
-        //   - Pointer to the MCParticle giving the hit
+        //   - Pointer to the LHCb::MCParticle giving the hit
         mchit -> setParticle( mcp ) ;
 
         // Now insert in output container
-        hits -> insert( mchit ) ;
+        hits -> add( mchit ) ;
       }
     } 
   }

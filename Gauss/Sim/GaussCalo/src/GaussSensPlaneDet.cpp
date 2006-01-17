@@ -1,8 +1,11 @@
-// $Id: GaussSensPlaneDet.cpp,v 1.4 2004-02-22 13:13:42 ibelyaev Exp $ 
+// $Id: GaussSensPlaneDet.cpp,v 1.5 2006-01-17 15:52:57 odescham Exp $ 
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.4  2004/02/22 13:13:42  ibelyaev
+//  update for new GiGa
+//
 // Revision 1.3  2004/01/14 13:38:10  ranjard
 // v6r0 - fix to be used with Gaudi v14r0
 //
@@ -290,7 +293,7 @@ bool GaussSensPlaneDet::ProcessHits( G4Step* step                      ,
   GaussSensPlaneHit* hit = 
     new GaussSensPlaneHit
     ( sTrackID                                           ,
-      ParticleID       ( particle -> GetPDGEncoding () ) ,
+      LHCb::ParticleID       ( particle -> GetPDGEncoding () ) ,
       HepLorentzVector ( pre      -> GetPosition    () , 
                          pre      -> GetGlobalTime  () ) ,
       HepLorentzVector ( pre      -> GetMomentum    () , 

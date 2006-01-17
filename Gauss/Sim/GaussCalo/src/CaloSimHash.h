@@ -1,8 +1,11 @@
-// $Id: CaloSimHash.h,v 1.5 2004-10-08 15:06:54 ibelyaev Exp $
+// $Id: CaloSimHash.h,v 1.6 2006-01-17 15:52:57 odescham Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.5  2004/10/08 15:06:54  ibelyaev
+//  fix a 'feature'
+//
 // ============================================================================
 #ifndef CALOSIM_CALOSIMHASH_H 
 #define CALOSIM_CALOSIMHASH_H 1
@@ -55,14 +58,14 @@ private:
 };
 
 template <>
-struct GiGaHash<CaloCellID> : 
-  public std::unary_function<const CaloCellID,size_t>
+struct GiGaHash<LHCb::CaloCellID> : 
+  public std::unary_function<const LHCb::CaloCellID,size_t>
 {
   /** the only one essential method : actual "hash"
    *  @param  cell id to be hashed 
    *  @return hashed id 
    */
-  size_t operator() ( const CaloCellID& cell ) const 
+  size_t operator() ( const LHCb::CaloCellID& cell ) const 
   { return cell.index() ; }
 };
 
@@ -73,17 +76,17 @@ namespace __gnu_cxx
   template<>
   struct hash<const CaloSim::Path> : public hash<CaloSim::Path>      {} ;
   template<>
-  struct hash<CaloCellID>          : public GiGaHash<CaloCellID>     {} ;
+  struct hash<LHCb::CaloCellID>          : public GiGaHash<LHCb::CaloCellID>     {} ;
   template<>
-  struct hash<const CaloCellID>    : public hash<CaloCellID>         {} ;
+  struct hash<const LHCb::CaloCellID>    : public hash<LHCb::CaloCellID>         {} ;
   
 #ifdef WIN32
   template <> 
   inline size_t hash_value ( const CaloSim::Path& cell ) 
   { hash<CaloSim::Path> () ( cell ) ; }
   template <> 
-  inline size_t hash_value ( const CaloCellID&    cell ) 
-  { hash<CaloCellID>    () ( cell ) ; }  
+  inline size_t hash_value ( const LHCb::CaloCellID&    cell ) 
+  { hash<LHCb::CaloCellID>    () ( cell ) ; }  
 #endif 
   
 };

@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.20 2005-12-09 17:08:13 gcorti Exp $ 
+# $Id: requirements,v 1.21 2006-01-17 15:52:57 odescham Exp $ 
 #============================================================================
 # Created    : 2005-12-08
 # Maintainer : Patrick ROBBE
@@ -7,7 +7,7 @@
 # http://cern.ch/lhcb-comp/Support/html/new_structure.pdf
 #============================================================================
 package           GaussCalo
-version           v7r4
+version           v8r0
 
 #============================================================================
 # Structure, i.e. directories to process. 
@@ -21,9 +21,11 @@ set GAUSSCALOOPTS ${GAUSSCALOROOT}/options
 #============================================================================
 use AIDA          v*     LCG_Interfaces
 use GaussTools    v*     Sim
-use CaloEvent     v*     Event 
+use MCEvent       v*     Event 
 use CaloDet       v*     Det 
 use CaloDetXmlCnv v*     Det 
+use LHCbKernel    v*     Kernel
+
 
 #============================================================================
 # Component library building rule

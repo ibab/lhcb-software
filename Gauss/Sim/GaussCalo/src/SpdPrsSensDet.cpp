@@ -1,8 +1,11 @@
-// $Id: SpdPrsSensDet.cpp,v 1.7 2004-01-14 13:38:10 ranjard Exp $ 
+// $Id: SpdPrsSensDet.cpp,v 1.8 2006-01-17 15:52:57 odescham Exp $ 
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.7  2004/01/14 13:38:10  ranjard
+// v6r0 - fix to be used with Gaudi v14r0
+//
 // Revision 1.6  2003/10/17 13:59:34  ranjard
 // v4r2 - fix for geant4.5.2.ref04
 //
@@ -178,7 +181,7 @@ StatusCode    SpdPrsSensDet::fillHitInfo
 
   if( 0 == hit ) { return StatusCode::FAILURE ; }
   
-  const CaloCellID& cellID = hit->cellID();
+  const LHCb::CaloCellID& cellID = hit->cellID();
   if( !calo()->valid( cellID ) ) 
     return Print("fillHitInfo(): Cell not valid"
                  , StatusCode::FAILURE, MSG::DEBUG );
@@ -223,7 +226,7 @@ StatusCode    SpdPrsSensDet::fillHitInfo
 // ============================================================================
 StatusCode SpdPrsSensDet::timing 
 ( const double             time      , 
-  const CaloCellID&        cell      ,
+  const LHCb::CaloCellID&        cell      ,
   CaloSubHit::Time&        slot    ,
   CaloSensDet::Fractions&  fractions ) const 
 {

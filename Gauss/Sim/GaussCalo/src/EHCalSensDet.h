@@ -1,8 +1,11 @@
-// $Id: EHCalSensDet.h,v 1.2 2004-01-14 13:38:10 ranjard Exp $ 
+// $Id: EHCalSensDet.h,v 1.3 2006-01-17 15:52:57 odescham Exp $ 
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.2  2004/01/14 13:38:10  ranjard
+// v6r0 - fix to be used with Gaudi v14r0
+//
 // Revision 1.1  2003/07/07 08:21:08  ibelyaev
 //  split the general CaloSensDet class
 //
@@ -80,7 +83,7 @@ protected:
    */
   virtual StatusCode timing 
   ( const double            time      , 
-    const CaloCellID&       cell      ,
+    const LHCb::CaloCellID&       cell      ,
     CaloSubHit::Time&       slot      ,
     CaloSensDet::Fractions& fractions ) const ;
   

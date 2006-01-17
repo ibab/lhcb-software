@@ -1,8 +1,11 @@
-// $Id: CaloHit.h,v 1.6 2004-01-14 13:38:10 ranjard Exp $
+// $Id: CaloHit.h,v 1.7 2006-01-17 15:52:57 odescham Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.6  2004/01/14 13:38:10  ranjard
+// v6r0 - fix to be used with Gaudi v14r0
+//
 // Revision 1.5  2003/07/22 19:05:29  ibelyaev
 //  improve doxygen documentation
 //
@@ -74,7 +77,7 @@ public:
   /** standard  constructor 
    *  @param cell ID of calorimeter cell 
    */
-  CaloHit( const CaloCellID& cell = CaloCellID() ) ;
+  CaloHit( const LHCb::CaloCellID& cell = LHCb::CaloCellID() ) ;
 
   /** copy constructor 
    *  @param right object to be copied 
@@ -91,9 +94,9 @@ public:
   void  operator  delete ( void *hit ) ;
   
   /// get the cellID 
-  const CaloCellID& cellID () const          { return m_cellID        ; }
+  const LHCb::CaloCellID& cellID () const          { return m_cellID        ; }
   // set new cellID 
-  void  setCellID ( const CaloCellID& cell ) {        m_cellID = cell ; }
+  void  setCellID ( const LHCb::CaloCellID& cell ) {        m_cellID = cell ; }
   
   /** get the hit for the given particle 
    * 
@@ -186,7 +189,7 @@ public:
   
 private:
   
-  CaloCellID  m_cellID ;
+  LHCb::CaloCellID  m_cellID ;
   TheMap      m_map    ;
 };
 

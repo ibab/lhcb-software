@@ -1,8 +1,11 @@
-// $Id: EcalSensDet.cpp,v 1.6 2004-01-14 13:38:10 ranjard Exp $ 
+// $Id: EcalSensDet.cpp,v 1.7 2006-01-17 15:52:57 odescham Exp $ 
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.6  2004/01/14 13:38:10  ranjard
+// v6r0 - fix to be used with Gaudi v14r0
+//
 // Revision 1.5  2003/12/06 16:16:54  robbep
 // Put the correct default parameters for non uniformity correction
 //
@@ -155,7 +158,7 @@ StatusCode    EcalSensDet::fillHitInfo
   if( 0 == hit || 0 == step ) { return StatusCode::FAILURE ; }
   
   // get the cell 
-  const CaloCellID& cellID = hit->cellID() ;
+  const LHCb::CaloCellID& cellID = hit->cellID() ;
 
   // Birk's Law Correction
   double ecorrected = deposit *
@@ -206,7 +209,7 @@ StatusCode    EcalSensDet::fillHitInfo
  */
 
 double EcalSensDet::localNonUniformity( const HepPoint3D& prePoint , 
-                                        const CaloCellID& cell ) const 
+                                        const LHCb::CaloCellID& cell ) const 
 {
   
   // Only for ECal for the moment
