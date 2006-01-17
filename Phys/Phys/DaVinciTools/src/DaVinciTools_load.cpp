@@ -1,4 +1,4 @@
-// $Id: DaVinciTools_load.cpp,v 1.56 2005-10-21 14:48:07 pkoppenb Exp $
+// $Id: DaVinciTools_load.cpp,v 1.57 2006-01-17 12:54:34 pkoppenb Exp $
 // Include files 
 
 #include "GaudiKernel/DeclareFactoryEntries.h"
@@ -30,5 +30,6 @@ DECLARE_FACTORY_ENTRIES( DaVinciTools ) {
   DECLARE_ALGORITHM( SimplePlots );  
   DECLARE_ALGORITHM( PIDFilter );  
   
+  DECLARE_ALGORITHM( Particle2VertexWithIPS );
 }
 
