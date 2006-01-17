@@ -1,4 +1,4 @@
-// $Id: TrackMasterFitter.cpp,v 1.3 2005-11-28 15:18:24 erodrigu Exp $
+// $Id: TrackMasterFitter.cpp,v 1.4 2006-01-17 15:50:55 jvantilb Exp $
 // Include files 
 // -------------
 // from Gaudi
@@ -75,6 +75,9 @@ TrackMasterFitter::~TrackMasterFitter() {
 //=========================================================================
 StatusCode TrackMasterFitter::initialize() 
 {
+  StatusCode sc = GaudiTool::initialize(); // must be executed first
+  if ( sc.isFailure() ) return sc;
+
   m_extrapolator    = tool<ITrackExtrapolator>( m_extrapolatorName );
   m_trackNodeFitter = tool<ITrackFitter>( m_trackNodeFitterName, 
                                           "NodeFitter", this ) ;
@@ -255,7 +258,7 @@ StatusCode TrackMasterFitter::determineStates( Track& track )
     else {
       std::vector<double>::const_iterator zPos;
       for ( zPos = m_zPositions.begin(); zPos != m_zPositions.end(); ++zPos ) {
-        if ( fabs(*zPos - state.z()) < TrackParameters::lowTolerance )
+        if ( fabs(*zPos - state.z()) < TrackParameters::looseTolerance )
           track.addToStates( state );
       }
     }

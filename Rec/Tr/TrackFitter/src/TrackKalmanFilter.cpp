@@ -1,4 +1,4 @@
-// $Id: TrackKalmanFilter.cpp,v 1.5 2005-11-21 11:20:57 jvantilb Exp $
+// $Id: TrackKalmanFilter.cpp,v 1.6 2006-01-17 15:50:55 jvantilb Exp $
 // Include files 
 // -------------
 // from Gaudi
@@ -57,6 +57,9 @@ TrackKalmanFilter::~TrackKalmanFilter() {
 //=========================================================================
 StatusCode TrackKalmanFilter::initialize() 
 {
+  StatusCode sc = GaudiTool::initialize(); // must be executed first
+  if ( sc.isFailure() ) return sc;
+
   m_extrapolator = tool<ITrackExtrapolator>( m_extrapolatorName );
   m_projector    = tool<ITrackProjector>( m_projectorName );
   m_debugLevel   = msgLevel( MSG::DEBUG );
@@ -246,7 +249,7 @@ StatusCode TrackKalmanFilter::filter(FitNode& node, State& state)
 // M. Needham 9/11/99
 //----------------------------------------------------------------
 StatusCode TrackKalmanFilter::smooth( FitNode& thisNode,
-                                   const FitNode& prevNode )
+                                      const FitNode& prevNode )
 {
   // preliminaries, first we need to invert the _predicted_ covariance
   // matrix at k+1

@@ -3,6 +3,11 @@
 ! Responsible : Eduardo Rodrigues, Jose A. Hernando
 !----------------------------------------------------------------------------
 
+! 2006-01-17 - Jeroen van Tilburg
+ - Added the required initialisation of GaudiTool in TrackMasterFitter.cpp and
+   TrackKalmanFilter.cpp.
+ - TrackMasterFitter.cpp: use looseTolerance to compare states at z-positions.
+
 !=========================== TrackFitter v1r0 2005-11-28 ====================
 ! 2005-11-28 - Eduardo Rodrigues
  - minor cosmetics
