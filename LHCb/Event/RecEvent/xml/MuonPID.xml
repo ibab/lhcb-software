@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!DOCTYPE gdd SYSTEM "gdd.dtd" >
+<gdd>
+  <package name="RecEvent">
+
+<!-- **************************************************************************
+  * $Id: MuonPID.xml,v 1.1 2006-01-17 15:46:08 cattanem Exp $
+  *****************************************************************************
+  * XML-description of MuonPID class                                          *
+  * author: Erica Polycarpo                                                   *
+  * date:   2006-01-13                                                        *
+  ************************************************************************* -->
+
+    <class name="MuonPID"
+      author="M. Gandelman, E. Polycarpo"
+      desc="Stores the output of the Muon Identification in the muon
+system"
+      id="11050" >
+      <base name="KeyedObject&lt;int&gt;"/>
+      &KeyedObject;
+      <import name="Event/Track"/>
+
+      <attribute type="double" name="MuonLLMu"
+        desc="Muon Likelihood for muons" init="-20.0"/>
+
+      <attribute type="double" name="MuonLLBg"
+        desc="Muon likelihood for non muons" init="0.0"/>
+
+      <attribute type="int" name="NShared"
+        desc="Number of tracks which share hits" init="0"/>
+
+      <attribute type="bitfield" name="Status" desc="Status of MuonPID">
+        <bitfield name="IsMuon" length="1" desc="Boolean: is track a
+          muon"/>
+        <bitfield name="InAcceptance" length="1"
+          desc="Boolean, if track extraoplation is in the Muon
+acceptance"/>
+        <bitfield name="PreSelMomentum" length="1"
+          desc="Boolean, if track has minimal momentum"/>
+      </attribute>
+
+      <relation type="LHCb::Track" name="IDTrack"
+        desc="The track that has been IDed by the Muon system"/>
+    
+      <location name="Default" place="Rec/Muon/MuonPID"/>
+    </class>
+  </package>
+</gdd>
