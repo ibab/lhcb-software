@@ -1,9 +1,9 @@
-// $Id: TrajOTProjector.h,v 1.1 2005-12-14 11:04:33 erodrigu Exp $
+// $Id: TrajOTProjector.h,v 1.2 2006-01-17 09:20:46 ebos Exp $
 #ifndef TRACKPROJECTORS_TRAJOTPROJECTOR_H 
 #define TRACKPROJECTORS_TRAJOTPROJECTOR_H 1
 
 // Include files
-// -------------
+
 // from Gaudi
 #include "GaudiAlg/GaudiTool.h"
 
@@ -21,7 +21,9 @@ class ITrajPoca;
  *  @author Edwin Bos, Jeroen van Tilburg, Eduardo Rodrigues
  *  @date   2005-11-24
  */
+
 class TrajOTProjector : public TrackProjector {
+
 public:
   /// Project a state onto a measurement.
   /// It returns the chi squared of the projection
@@ -36,11 +38,11 @@ public:
                    const std::string& name,
                    const IInterface* parent );
 
-  virtual ~TrajOTProjector( ); ///< Destructor
-
-protected:
+  /// Default destructor
+  virtual ~TrajOTProjector();
 
 private:
+
   DeOTDetector* m_det;
   std::string   m_otTrackerPath;   ///< Name of the OT XML geom path
 
