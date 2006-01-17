@@ -1,4 +1,4 @@
-// $Id: DaVinciKernel_load.cpp,v 1.3 2006-01-17 12:40:08 pkoppenb Exp $
+// $Id: DaVinciKernel_load.cpp,v 1.4 2006-01-17 12:50:08 pkoppenb Exp $
 // Include files 
 
 #include "GaudiKernel/DeclareFactoryEntries.h"
@@ -23,6 +23,8 @@ DECLARE_DATAOBJECT_FACTORY( Particle2VertexTable);
 DECLARE_FACTORY_ENTRIES( DaVinciKernel ) {
 
   DECLARE_TOOL( PhysDesktop ); 
+  DECLARE_TOOL( Particle2VertexAsct );
+  DECLARE_DATAOBJECT( Particle2VertexTable );
   
 }
 
