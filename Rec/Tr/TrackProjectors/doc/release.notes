@@ -4,6 +4,10 @@
 ! Purpose     : Package for tracking projectors
 !-----------------------------------------------------------------------------
 
+! 2006-01-17 - Edwin Bos, Jeroen van Tilburg, Eduardo Rodrigues
+ - First version of the TrajOTProjector tool, an OT projector
+   that uses trajectories internally instead of the standard way
+
 ! 2005-12-14 - Eduardo Rodrigues
  - renamed TrackITProjector to TrackSTProjector
  - propagation of changes in Measurement classes to TrackMasterProjector
