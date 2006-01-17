@@ -1,4 +1,4 @@
-// $Id: MeasurementProvider.h,v 1.4 2005-12-01 18:10:26 erodrigu Exp $
+// $Id: MeasurementProvider.h,v 1.5 2006-01-17 13:34:34 erodrigu Exp $
 #ifndef TRACKTOOLS_MEASUREMENTPROVIDER_H 
 #define TRACKTOOLS_MEASUREMENTPROVIDER_H 1
 
@@ -61,6 +61,7 @@ public:
 protected:
   // Interfaces
   ISTClusterPosition* m_stPositionTool;     ///< ST cluster position tool
+  std::string         m_stPositionToolName;
 
   // Geometry information
   DeOTDetector* m_otDet;

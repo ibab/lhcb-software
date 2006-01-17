@@ -32,6 +32,7 @@ use   VeloEvent       v*     Event
 use   TrackFitEvent   v*     Tr
 use   TrackInterfaces v*     Tr
 
+use   STTools         v1r*   IT
 use   STDet           v*     Det
 use   OTDet           v*     Det
 use   VeloDet         v*     Det

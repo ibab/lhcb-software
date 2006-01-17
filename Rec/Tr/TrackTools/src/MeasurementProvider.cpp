@@ -1,4 +1,4 @@
-// $Id: MeasurementProvider.cpp,v 1.11 2005-12-14 13:09:21 erodrigu Exp $
+// $Id: MeasurementProvider.cpp,v 1.12 2006-01-17 13:34:34 erodrigu Exp $
 // Include files 
 // -------------
 // from Gaudi
@@ -41,6 +41,9 @@ MeasurementProvider::MeasurementProvider( const std::string& type,
   declareProperty( "VeloGeometryPath",
                    m_veloDetPath = "/dd/Structure/LHCb/Velo" );
 
+  declareProperty( "STPositionTool",
+                   m_stPositionToolName = "STOfflinePosition" );
+
   declareProperty( "MeasLocation" ,
                    m_measLocation = "/Event/Rec/Track/Measurements" );
 }
@@ -65,7 +68,7 @@ StatusCode MeasurementProvider::initialize() {
   m_veloDet = getDet<DeVelo>( m_veloDetPath );
 
   // Retrieve the STClusterPosition tool
-  m_stPositionTool = tool<ISTClusterPosition>( "STClusterPosition" );
+  m_stPositionTool = tool<ISTClusterPosition>( m_stPositionToolName );
   
   return StatusCode::SUCCESS;
 }

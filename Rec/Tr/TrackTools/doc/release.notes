@@ -4,6 +4,9 @@
 ! Purpose     : Package for tracking tools not accessing MC information
 !-----------------------------------------------------------------------------
 
+! 2006-01-17 - Eduardo Rodrigues
+ - minor correction to MeasurementProvider
+
 ! 2006-01-17 - Edwin Bos, Jeroen van Tilburg, Eduardo Rodrigues
  - Added TrajPoca, a tool which calculates the
  - Points Of Closest Approach between two Trajectories
