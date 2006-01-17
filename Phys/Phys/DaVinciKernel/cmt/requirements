@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.25 2005-10-21 14:47:05 pkoppenb Exp $
+# $Id: requirements,v 1.26 2006-01-17 12:40:08 pkoppenb Exp $
 # Created    : 05/02/2002
 # Maintainer : P. Koppenburg
 #
@@ -6,7 +6,7 @@
 # http://cern.ch/lhcb-comp/Support/html/new_structure.pdf
 
 package           DaVinciKernel
-version           v3r9
+version           v3r10
 
 # Structure, i.e. directories to process. 
 #============================================================================
@@ -20,6 +20,7 @@ include_dirs     $(DAVINCIKERNELROOT)
 #============================================================================
 use PhysEvent  v* Event
 use GaudiAlg   v* 
+use Relations  v*   Kernel
 
 # Linker library building rule
 #============================================================================
