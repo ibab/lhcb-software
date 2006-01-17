@@ -61,6 +61,8 @@ IdealTracksCreator::IdealTracksCreator( const std::string& name,
                    m_itTrackerPath = DeSTDetectorLocation::Default );
   declareProperty( "VeloGeometryPath",
                    m_veloPath = "/dd/Structure/LHCb/Velo" );
+  declareProperty( "STPositionTool",
+                   m_stPositionToolName = "STOfflinePosition" );
   declareProperty( "MinNHits", m_minNHits = 6 );
   declareProperty( "ErrorX2",  m_errorX2  = 4.0 );
   declareProperty( "ErrorY2",  m_errorY2  = 400.0 );
@@ -102,7 +104,7 @@ StatusCode IdealTracksCreator::initialize()
   debug() << "Geometry read in." << endreq;
 
   // Retrieve the STClusterPosition tool
-  m_stPositionTool = tool<ISTClusterPosition>( "STClusterPosition" );
+  m_stPositionTool = tool<ISTClusterPosition>( m_stPositionToolName );
 
   // Retrieve the TrackCriteriaSelector tool
   m_trackSelector = tool<ITrackCriteriaSelector>( "TrackCriteriaSelector",
@@ -161,20 +163,22 @@ StatusCode IdealTracksCreator::execute()
   for ( iPart = particles->begin(); particles->end() != iPart; ++iPart ) {
     MCParticle* mcParticle = *iPart;
     verbose() << endreq
-            << "- MCParticle of type "
-            << m_trackSelector -> trackType( mcParticle )
-            << " , (key # " << mcParticle -> key() << ")" << endreq
-            << "    - momentum = " << mcParticle -> momentum() << " MeV" << endreq
-            << "    - P        = " << mcParticle -> momentum().vect().mag()
-            << " MeV" <<endreq
-            << "    - charge   = "
-            << ( mcParticle -> particleID().threeCharge() / 3 ) << endreq;
+              << "- MCParticle of type "
+              << m_trackSelector -> trackType( mcParticle )
+              << " , (key # " << mcParticle -> key() << ")" << endreq
+              << "    - momentum = " << mcParticle -> momentum() << " MeV" 
+              << endreq
+              << "    - P        = " << mcParticle -> momentum().vect().mag()
+              << " MeV" <<endreq
+              << "    - charge   = "
+              << ( mcParticle -> particleID().threeCharge() / 3 ) << endreq;
     if ( m_trackSelector -> select( mcParticle ) ) {
       debug() << endreq
               << "Selected MCParticle of type "
               << m_trackSelector -> trackType( mcParticle )
               << " , (key # " << mcParticle -> key() << ")" << endreq
-              << "    - momentum = " << mcParticle -> momentum() << " MeV" <<endreq
+              << "    - momentum = " << mcParticle -> momentum() << " MeV"
+              << endreq
               << "    - P        = " << mcParticle -> momentum().vect().mag()
               << " MeV" <<endreq
               << "    - charge   = "
@@ -307,10 +311,13 @@ StatusCode IdealTracksCreator::execute()
       debug()
         << "-> Track with key # " << track -> key() << endreq
         << "  * charge         = " << track -> charge() << endreq
-        << "  * is Invalid     = " << track -> checkFlag( Track::Invalid ) << endreq
-        << "  * is Unique      = " << track -> checkFlag( Track::Unique ) << endreq
+        << "  * is Invalid     = " << track -> checkFlag( Track::Invalid ) 
+        << endreq
+        << "  * is Unique      = " << track -> checkFlag( Track::Unique ) 
+        << endreq
         << "  * is of type     = " << track -> type() << endreq
-        << "  * is Backward    = " << track -> checkFlag( Track::Backward ) << endreq
+        << "  * is Backward    = " << track -> checkFlag( Track::Backward ) 
+        << endreq
         << "  * # measurements = " << track -> nMeasurements() << endreq;
       
       // print the measurements
@@ -322,13 +329,16 @@ StatusCode IdealTracksCreator::execute()
                 << "  - LHCbID   = " << (*itMeas) -> lhcbID()  << endreq;
         // continue according to type ...  
         if ( (*itMeas) -> lhcbID().isOT() ) {
-          debug() << "  - XxxChannelID = " << (*itMeas) -> lhcbID().otID() << endreq;
+          debug() << "  - XxxChannelID = " << (*itMeas) -> lhcbID().otID() 
+                  << endreq;
         }
         else if ( (*itMeas) -> lhcbID().isST() ) {
-          debug() << "  - XxxChannelID = " << (*itMeas) -> lhcbID().stID() << endreq;
+          debug() << "  - XxxChannelID = " << (*itMeas) -> lhcbID().stID() 
+                  << endreq;
         }
         else if ( (*itMeas) -> lhcbID().isVelo() ) {    
-          debug() << "  - XxxChannelID = " << (*itMeas) -> lhcbID().veloID() << endreq;
+          debug() << "  - XxxChannelID = " << (*itMeas) -> lhcbID().veloID() 
+                  << endreq;
         }
       }
 
@@ -503,7 +513,8 @@ StatusCode IdealTracksCreator::initializeState( double z,
             << "  - position = " << state -> position() << " mm" <<endreq
             << "  - momentum = " << state -> momentum() << " MeV" <<endreq
             << "  - P        = " << state -> p() << " MeV" <<endreq
-            << "  - charge   = " << ( qP != 0. ? int(fabs(qP)/qP) : 0  ) << endreq;
+            << "  - charge   = " << ( qP != 0. ? int(fabs(qP)/qP) : 0  ) 
+            << endreq;
   }
   else {
     delete state;

@@ -107,17 +107,18 @@ private:
   std::string   m_veloPath;        ///< Name of the Velo XML geom path
 
   // Interfaces
-  ISTClusterPosition*     m_stPositionTool;     ///< ST cluster position tool
-  ITrackCriteriaSelector* m_trackSelector;      ///< Track selection tool
-  IIdealStateCreator*     m_stateCreator;       ///< Create 'seed' state at last measurement
+  ISTClusterPosition*     m_stPositionTool;///< ST cluster position tool
+  ITrackCriteriaSelector* m_trackSelector; ///< Track selection tool
+  IIdealStateCreator*     m_stateCreator;  ///< Create 'seed' state at last meas
 
   // job options
-  bool m_addOTTimes;               ///< true if OT clusters should be put on track
-  bool m_addITClusters;            ///< true if IT clusters should be put on track
-  bool m_addVeloClusters;          ///< true if Velo R clusters should be put on track
-  bool m_initState;                ///< initialize seed state
-  bool m_initStateUpstream;        ///< seed state created upstream/downstream
-  bool m_trueStatesAtMeas;         ///< Store true states at each measurement position
+  bool m_addOTTimes;         ///< true if OT clusters should be put on track
+  bool m_addITClusters;      ///< true if IT clusters should be put on track
+  bool m_addVeloClusters;    ///< true if Velo R clusters should be put on track
+  bool m_initState;          ///< initialize seed state
+  bool m_initStateUpstream;  ///< seed state created upstream/downstream
+  bool m_trueStatesAtMeas;   ///< Store true states at each measurement position
+  std::string m_stPositionToolName;
   std::string m_tracksTESPath;     ///< TrTracks container path in EvDS
   std::string m_relationTablePath; ///< Location of the associator table
   int m_minNHits;         ///< Minimum number of hits on the track

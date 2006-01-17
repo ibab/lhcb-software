@@ -4,6 +4,9 @@
 ! Purpose     : Perfect pattern recognition
 !-----------------------------------------------------------------------------
 
+! 2006-01-17 - Jeroen van Tilburg
+ - minor correction: new name of STClusterPosition tool.
+
 ! 2005-12-14 - Eduardo Rodrigues
  - propagation of changes ITMeasurement -> STMeasurement
 
