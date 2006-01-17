@@ -1,0 +1,214 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!DOCTYPE gdd SYSTEM "gdd.dtd">
+<gdd>
+<package name="RecEvent">
+
+<!-- **************************************************************************
+  * $Id: RichPID.xml,v 1.1 2006-01-17 13:55:28 jonrob Exp $
+  *****************************************************************************
+  * XML-description of RichPID class                                          *
+  * author: Chris Jones   Christopher.Rob.Jones@cern.ch                       *
+  * date:   2004-06-23                                                        *
+  ************************************************************************* -->
+
+<class 
+	name             = "RichPID"
+	author           = "Chris Jones   (Christopher.Rob.Jones@cern.ch)" 
+	desc             = "RICH particle indentification information summary" 
+	id               = "12402" 
+	keyedContTypeDef = "TRUE" 
+      	location         = "Rec/Rich/PIDs"  
+	stdVectorTypeDef = "TRUE">
+
+        <base name="KeyedObject&lt;int&gt;" virtual="FALSE"/>
+        &KeyedObject;
+	
+        <import name = "Kernel/RichParticleIDType"  />
+        <import name = "Kernel/RichRadiatorType"        />
+        <import name = "Event/Track"                    />
+        <import name = "Rich"           ignore="TRUE"   />
+        <import name = "ParticleIDType" ignore="TRUE"   />
+        <import name = "gsl/gsl_sf_erf"                 />
+
+        <location name="Trigger"   place="Rec/Rich/TrigPIDs"/>
+
+	<constructor 
+		desc     = "Constructor from data fields"
+                initList = "m_pidResultCode(0),m_particleLLValues(dllValues),m_track(track)">
+                <arg const="TRUE" inout="BYVALUE" name="pid"       type="Rich::ParticleIDType"/>
+                <arg const="TRUE" inout="BYVALUE" name="track"     type="LHCb::Track*"/>
+                <arg const="TRUE"                 name="dllValues" type="std::vector&lt;float&gt;"/>
+                <code>
+                setBestParticleID(pid);
+                </code>
+        </constructor>
+
+	<constructor 
+		desc     = "Copy constructor. Creates a new RichPID object with the same pid information" 
+		initList = "KeyedObject&lt;int&gt;(), m_pidResultCode(pid-&gt;pidResultCode()), m_particleLLValues(pid-&gt;particleLLValues()), m_track(pid-&gt;track())">
+                <arg const="TRUE" inout="BYVALUE" name="pid" type="RichPID*"/>
+                <code/>
+      	</constructor>
+
+        <method 
+		name  = "particleRawProb"
+		const = "TRUE" 
+                type  = "float"
+		desc  = "Returns the raw gaussian probability value for a given particle species">
+                <arg const="TRUE" inout="BYVALUE" name="type" type="Rich::ParticleIDType"/>  
+                <code>
+                   const float dll = particleDeltaLL(type);
+                   return ( dll &gt; 0 ? 1.0 - gsl_sf_erf(sqrt(dll)) : 1.0 );
+                </code>
+        </method>
+
+        <method 
+                name  = "particleNormProb"
+		const = "TRUE" 
+                type  = "float"
+		desc  = "Returns the normalised gaussian probability value for a given particle species">
+                <arg const="TRUE" inout="BYVALUE" name="type" type="Rich::ParticleIDType"/>
+                <code>
+                   float norm = 0;
+                   for ( int iPID = 0; iPID &lt; Rich::NParticleTypes; ++iPID ) 
+                       { norm += particleRawProb( static_cast&lt;Rich::ParticleIDType&gt;(iPID) ); }
+                   return ( norm &gt; 0 ? particleRawProb(type)/norm : 0 );
+                </code>
+        </method>
+
+        <method 
+                name  = "particleDeltaLL"
+                const = "TRUE" 
+                type  = "float"
+                desc  = "Returns the delta LL value for a given hypothesis">
+                <arg const="TRUE" inout="BYVALUE" name="type" type="Rich::ParticleIDType"/>
+                <code>
+                   return m_particleLLValues[type];
+                </code>
+        </method>
+
+        <method 
+                name = "setParticleDeltaLL"
+                desc = "sets the particle delta LL value for the given hypothesis">
+                <arg const="TRUE" inout="BYVALUE" name="type" type="Rich::ParticleIDType"/>
+                <arg const="TRUE" name="deltaLL" type="float"/>
+                <code>
+                   m_particleLLValues[type] = deltaLL;
+                </code>
+        </method>
+
+        <method 
+                name  = "traversedRadiator"
+                const = "TRUE" 
+                type  = "bool"
+                desc  = "Boolean method to check which radiators where used for this PID result">
+                <arg const="TRUE" inout="BYVALUE" name="radiator" type="Rich::RadiatorType"/>
+                <code>
+                   return (m_pidResultCode &amp; (1&lt;&lt;(radiator)))!=0;
+                </code>
+        </method>
+
+        <method 
+                name  = "isAboveThreshold"
+                const = "TRUE"
+                type  = "bool"
+                desc  = "Verify if a given hypothesis was above threshold and the associated track present in any radiator">
+                <arg const="TRUE" inout="BYVALUE" name="type" type="Rich::ParticleIDType"/>
+                <code>
+                   return (m_pidResultCode &amp; (1&lt;&lt;(type+3)))!=0;
+                </code>
+        </method>
+
+        <method 
+                name  = "nSigmaSeparation"
+                const = "TRUE" 
+                type  = "float"
+                desc  = "Returns the signed sigma separation beween 2 particle hypotheses (first relative to last)">
+                <arg const="TRUE" inout="BYVALUE" name="firstPart" type="Rich::ParticleIDType"/>
+                <arg const="TRUE" inout="BYVALUE" name="lastPart" type="Rich::ParticleIDType"/>
+                <code>
+                   const float dLL = m_particleLLValues[lastPart]-m_particleLLValues[firstPart]; 
+                   return static_cast&lt;float&gt;( sqrt( fabs(2.0*dLL) ) * (dLL&gt;0 ? 1 : -1 ) );
+                </code>
+        </method>
+
+        <method 
+                name  = "isConsistentNSigma"
+                const = "TRUE"
+                type  = "bool"
+                desc  = "Returns true if the given mass hypothesis is within the given number of sigmas separation from the best PID type">
+                <arg const="TRUE" inout="BYVALUE" name="type"   type="Rich::ParticleIDType"/>
+                <arg const="TRUE" inout="BYVALUE" name="nsigma" type="float"/>
+                <code>
+                   return ( nSigmaSeparation( bestParticleID(), type ) > nsigma );
+                </code>
+        </method>
+
+        <method 
+                name = "pidType"
+                type  = "std::string"
+                const = "TRUE" 
+                desc  = "Textual representation of PID type"
+        />
+
+        <method 
+                name  = "bestParticleID" 
+                const = "TRUE" 
+                type  = "Rich::ParticleIDType"
+                desc  = "The best Particle ID">
+                <code>
+                   // Shift by -1 to convert packed representation to Rich::ParticleIDType
+                   return (Rich::ParticleIDType)( ((m_pidResultCode &amp; packedBestParticleIDMask) &gt;&gt; packedBestParticleIDBits) - 1 );
+                </code>
+        </method>
+          
+        <method 
+                desc = "set the best particle ID" 
+                name = "setBestParticleID">
+                <arg const="TRUE" inout="BYVALUE" name="type" type="Rich::ParticleIDType"/>
+                <code>
+                    // Shift bit-packed representation by +1 to start numbering from 0 
+                    const unsigned int val = (unsigned int)type + 1;
+                    m_pidResultCode &amp;= ~packedBestParticleIDMask;
+                    m_pidResultCode |= ((((unsigned int)val) &lt;&lt; packedBestParticleIDBits) &amp; packedBestParticleIDMask);
+                </code>
+        </method>
+
+        <attribute 
+                 desc = "Bit-packed information (Best particle ID and History) for the RichPID result" 
+                 name = "pidResultCode"
+                 init = "0"  
+                 type = "bitfield">
+                <bitfield desc="The best Particle ID, bit-packed into the history word. DO NOT access this field directly, instead use the provided accessor and setter methods" length="4" name="packedBestParticleID" getMeth="FALSE" setMeth="FALSE"  />
+                <bitfield desc="Information from aerogel was used to form this PID result"                   length="1" name="usedAerogel"            />
+                <bitfield desc="Information from C4F10 was used to form this PID result"                     length="1" name="usedC4F10"              />
+                <bitfield desc="Information from CF4 was used to form this PID result"                       length="1" name="usedCF4"                />
+                <bitfield desc="The electron hypothesis is above threshold in at least one active radiator"  length="1" name="electronHypoAboveThres" />
+                <bitfield desc="The muon hypothesis is above threshold in at least one active radiator"      length="1" name="muonHypoAboveThres"     />
+                <bitfield desc="The pion hypothesis is above threshold in at least one active radiator"      length="1" name="pionHypoAboveThres"     />
+                <bitfield desc="The kaon hypothesis is above threshold in at least one active radiator"      length="1" name="kaonHypoAboveThres"     />
+                <bitfield desc="The proton hypothesis is above threshold in at least one active radiator"    length="1" name="protonHypoAboveThres"   />
+                <bitfield desc="RICH Global PID result"                                                      length="1" name="global"                 />
+                <bitfield desc="RICH Local PID result"                                                       length="1" name="local"                  />
+                <bitfield desc="RICH Ring Refit PID result"                                                  length="1" name="ringRefit"              />
+                <bitfield desc="RICH Trigger Local PID result"                                               length="1" name="trigLocal"              />
+                <bitfield desc="RICH Trigger Global PID result"                                              length="1" name="trigGlobal"             />
+        </attribute>
+
+        <attribute 
+                name = "particleLLValues"
+                desc = "Vector of particle hypothesis log likelihood values" 
+                type = "std::vector&lt;float&gt;"
+                init = "Rich::NParticleTypes,0"
+        />
+
+        <relation 
+                name    = "track"
+                type    = "LHCb::Track"
+                desc    = "Smart Reference to associated Track"
+        />
+       
+</class>
+
+</package>
+</gdd>
