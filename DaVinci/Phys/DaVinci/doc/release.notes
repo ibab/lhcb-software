@@ -4,6 +4,9 @@
 ! Purpose     : Analysis program for LHCb
 !-----------------------------------------------------------------------------
 
+! 2006-01-17 - P. Koppenburg
+  - options/DVWriteDst.opts
+    . Example options to write a DST of preselected events
 !========================== DaVinci v12r15 2005-12-15 ===================
 ! 2005-12-12 - P. Koppenburg
   - options/DaVinciReco.opts

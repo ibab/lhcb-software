@@ -4,20 +4,21 @@
 #include "$STRIPPINGROOT/options/DVComb.opts" 
 #include "$STRIPPINGROOT/options/OverwriteExclusiveSelection.opts" 
 
-#include "$DAVINCIROOT/options/DaVinciTestData.opts" 
+//#include "$DAVINCIROOT/options/DaVinciTestData.opts" 
+#include "$HLTSELECTIONSROOT/options/L0L1-MB-DC04v2.opts" 
 
-ApplicationMgr.EvtMax    = 10000 ;
+ApplicationMgr.EvtMax    = 100 ;
 EventSelector.PrintFreq  = 1;
 
 DaVinci.OutputLevel = 2 ;
 
-ApplicationMgr.OutStream = { } ; // uncomment to write out nothing
+//ApplicationMgr.OutStream = { } ; // uncomment to write out nothing
 
 // TEST //
-// ApplicationMgr.ExtSvc += { "StagerSvc" }; 
-// ApplicationMgr.Dlls += { "GaudiSiteSvc" } ; // library containing the StagerSvc
-// StagerSvc.BlockSize = 50 ; // n: the number of files in each block
-// StagerSvc.InitialStage = 3 ; // m: the number of blocks staged at the beginning of the job
+ApplicationMgr.ExtSvc += { "StagerSvc" }; 
+ApplicationMgr.Dlls += { "GaudiSiteSvc" } ; // library containing the StagerSvc
+StagerSvc.BlockSize = 50 ; // n: the number of files in each block
+StagerSvc.InitialStage = 3 ; // m: the number of blocks staged at the beginning of the job
 
 //ApplicationMgr.DLLs += { "RootHistCnv" };
 // ApplicationMgr.HistogramPersistency = "HBOOK";

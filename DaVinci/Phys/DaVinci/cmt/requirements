@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.286 2005-12-15 16:13:34 pkoppenb Exp $
+# $Id: requirements,v 1.287 2006-01-17 16:46:14 pkoppenb Exp $
 # Created    : 07/02/2002
 # Maintainer : P. Koppenburg
 #
@@ -6,7 +6,7 @@
 # Allows reading of OO-DST data
 #============================================================================
 package           DaVinci
-version           v12r15
+version           v12r16
 
 # Structure, i.e. directories to process. 
 #============================================================================
@@ -47,15 +47,15 @@ use LHCb                        v*
 # packages included in PhysCoreSys
 #=======================================================                                                                                                                                                                            
 use  CommonParticles    	v1r5p3   Phys
-use  DaVinciFilter      	v3r3     Phys
-use  DaVinciKernel      	v3r9     Phys
-use  DaVinciTools       	v12r3    Phys
+use  DaVinciFilter      	v3r4     Phys
+use  DaVinciKernel      	v3r10    Phys
+use  DaVinciTools       	v12r4    Phys
 use  FlavourTagging     	v6r4     Phys
 use  Ks2PiPiSel         	v1r7     Phys
 use  ParticleMaker      	v1r6p1   Phys
 use  PhysSelections		v6r12    Phys
 use  DaVinciTransporter 	v2r1     Phys
-use  VertexFit			v1r9     Phys
+use  VertexFit			v1r9p1   Phys
 use  Tampering                  v1r4     Phys
 use  TriggerSource              v1r0     Phys
 # Generic tools 
@@ -65,9 +65,9 @@ use  RecoTools          	v1r1     Rec
 #=======================================================
 # packages included in PhysMCSys
 #=======================================================
-use  DaVinciAssociators 	v5r5     Phys
+use  DaVinciAssociators 	v5r5p1   Phys
 use  DaVinciEff         	v3r4     Phys
-use  DaVinciMCTools     	v5r17    Phys
+use  DaVinciMCTools     	v5r18    Phys
 use  DaVinciTest        	v5r6     Phys
 use  DaVinciUser        	v5r2     Phys
 use  FlavourTaggingChecker      v1r0     Phys
@@ -126,7 +126,7 @@ use  L0MuonTrigger 		v2r3p1   L0
 use  L0mConf            	v2r2p3   L0
 
 #-- L1 Trigger libraries 
-use TrgSys                      v1r11    Trg
+use TrgSys                      v1r12    Trg
 
 
 #-- LHCbAgs
