@@ -1,4 +1,4 @@
-// $Id: OTMeasurement.cpp,v 1.5 2005-09-27 17:21:23 erodrigu Exp $
+// $Id: OTMeasurement.cpp,v 1.6 2006-01-17 09:07:58 ebos Exp $
 // Include files
 // -------------
 // local
@@ -54,6 +54,33 @@ OTMeasurement::OTMeasurement( OTTime& otTime,
   m_z = wirePos.z();
   //  m_wireLength       = module->wireLength();
 
+}
+
+//=============================================================================
+// Get the reference vector from a estimated state vector
+//=============================================================================
+const HepVector OTMeasurement::referenceVector( const HepVector& 
+                                                 stateVec ) const 
+{
+  // Initialize reference vector
+  HepVector refVec = HepVector(5,0);
+
+  // Check if the estimated state vector has the right dimensions
+  if ( stateVec.num_row() != 5 ) return refVec;
+
+  // Check if the reference slope tu is set. If it is set: use it
+  if ( m_tu > 990.0 ) {
+    refVec = stateVec;
+  } else {
+    double tv = - stateVec[2] * sin( m_stereoAngle )
+      + stateVec[3] * cos( m_stereoAngle );
+    refVec[0] = stateVec[0];
+    refVec[1] = stateVec[1];
+    refVec[2] = m_tu * cos( m_stereoAngle ) - tv * sin( m_stereoAngle );
+    refVec[3] = m_tu * sin( m_stereoAngle ) + tv * cos( m_stereoAngle );
+    refVec[4] = stateVec[4];
+  }
+  return refVec;
 }
 
 //=============================================================================

@@ -70,7 +70,13 @@
         </code>
       </method>
 
-    </class>
+     <method
+       type    = 'const HepVector'
+       name    = 'referenceVector'
+       desc    = 'Get the reference vector using a predicted state'
+       argList = 'const HepVector stateVec'
+       const   = 'TRUE'/>
 
+    </class>
   </package>
 </gdd>
