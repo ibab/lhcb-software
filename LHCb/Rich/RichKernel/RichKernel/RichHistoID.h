@@ -5,7 +5,7 @@
  *  Header file for RICH utility class : RichHistoID
  *
  *  CVS Log :-
- *  $Id: RichHistoID.h,v 1.1 2005-10-31 13:26:10 jonrob Exp $
+ *  $Id: RichHistoID.h,v 1.2 2006-01-17 13:57:02 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   27/10/2005
@@ -22,7 +22,7 @@
 // Kernel
 #include "Kernel/RichRadiatorType.h"
 #include "Kernel/RichDetectorType.h"
-#include "RichKernel/RichParticleIDType.h"
+#include "Kernel/RichParticleIDType.h"
 
 //-----------------------------------------------------------------------------
 /** @class RichHistoID RichHistoID.h RichKernel/RichHistoID.h
