@@ -1,8 +1,11 @@
-// $Id: DeCalorimeter.h,v 1.15 2005-12-16 17:12:40 odescham Exp $ 
+// $Id: DeCalorimeter.h,v 1.16 2006-01-17 18:44:17 odescham Exp $ 
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.15  2005/12/16 17:12:40  odescham
+// v8r0 - LHCb v20 migration + cleaning
+//
 // Revision 1.14  2005/12/02 14:52:46  ocallot
 // Use conditions for gain and cards
 //
@@ -40,10 +43,10 @@
 class MsgStream;
 
 namespace DeCalorimeterLocation {
-  static const std::string Spd  = "/dd/Structure/LHCb/Spd"  ;
-  static const std::string Prs  = "/dd/Structure/LHCb/Prs"  ;
-  static const std::string Ecal = "/dd/Structure/LHCb/Ecal" ;
-  static const std::string Hcal = "/dd/Structure/LHCb/Hcal" ;
+  static const std::string Spd  = "/dd/Structure/LHCb/DownstreamRegion/Spd"  ;
+  static const std::string Prs  = "/dd/Structure/LHCb/DownstreamRegion/Prs"  ;
+  static const std::string Ecal = "/dd/Structure/LHCb/DownstreamRegion/Ecal" ;
+  static const std::string Hcal = "/dd/Structure/LHCb/DownstreamRegion/Hcal" ;
 }
 
 /** @class DeCalorimeter DeCalorimeter.h CaloDet/DeCalorimeter.h 
