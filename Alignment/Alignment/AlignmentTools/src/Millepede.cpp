@@ -6,7 +6,6 @@
 
 // local
 #include "Millepede.h"
-#include "MilleConfig.h"
 
 //-----------------------------------------------------------------------------
 // Implementation file for class : Millepede
@@ -28,8 +27,6 @@ Millepede::Millepede( const std::string& type,
   : GaudiTool ( type, name , parent )
   //Default cuts for the Alignment
 {
-  declareProperty("StartingCutOnResidual", m_residual_cut_init);
-  declareProperty("FurtherCutOnResidual" , m_residual_cut);
   declareProperty("Iteration" , m_iteration);
 
   declareInterface<IMillepede>(this);
@@ -50,26 +47,6 @@ StatusCode Millepede::initialize()
     return Error("Failed to initialize", sc);
   }
 
-  debug() << "Millepede Tool launched !!!!" << endmsg;
-
-  return StatusCode::SUCCESS;
-}
-
-
-/*
-------------------------------------------------------
-  INITGL: initialization of Millepede
-------------------------------------------------------
-
-  my_config = configuration of the Millepede job
-              (see MilleConfig class for more info)
-
-------------------------------------------------------
-*/
-
-StatusCode Millepede::InitMille(MilleConfig* my_config)
-{
-
   info() << "                                           " << endmsg;
   info() << "            * o o                   o      " << endmsg;
   info() << "              o o                   o      " << endmsg;
@@ -77,27 +54,52 @@ StatusCode Millepede::InitMille(MilleConfig* my_config)
   info() << "    o  o  o o o o o  o o  o o  o o  o o  o " << endmsg;
   info() << "    o  o  o o o o oooo o  o oooo o  o oooo " << endmsg;
   info() << "    o  o  o o o o o    ooo  o    o  o o    " << endmsg;
-  info() << "    o  o  o o o o  oo  o     oo   ooo  oo ++ starts." << endmsg;
-  info() << "                       o                   " << endmsg;	   
-  
+  info() << "    o  o  o o o o  oo  o     oo   ooo  oo  ++ starts" << endmsg;	   
+  info() << "                                           " << endmsg;
 
+  return StatusCode::SUCCESS;
+}
+
+
+/*
+------------------------------------------------------
+  INITMILLE: first initialization of Millepede
+             this part is sub-detector independant
+------------------------------------------------------
+
+
+
+
+------------------------------------------------------
+*/
+
+StatusCode Millepede::InitMille(bool DOF[], double Sigm[], int nglo
+				, int nloc, double startfact, int nstd 
+				, double res_cut, double res_cut_init)
+{
+
+  debug() << "" << endmsg;
+  debug() << "----------------------------------------------------" << endmsg;
+  debug() << "" << endmsg;
+  debug() << "    Entering InitMille" << endmsg;
+  debug() << "" << endmsg;
+  debug() << "-----------------------------------------------------" << endmsg;
+  debug() << "" << endmsg;
+
+  ncs = 0;
   loctot  = 0;                        // Total number of local fits
   locrej  = 0;                        // Total number of local fits rejected
-  nstdev  = my_config->GetNstd();     // Number of StDev for local fit chisquare cut
   cfactref  = 1.0;                    // Reference value for Chi^2/ndof cut
 
   Millepede::SetTrackNumber(0);       // Number of local fits (starts at 0)
 
-  nagb	  = 6*my_config->GetNgb();    // Number of global derivatives
-  nalc	  = my_config->GetNlc();      // Number of local derivatives
+  m_residual_cut = res_cut;
+  m_residual_cut_init = res_cut_init; 
+ 
+  nagb	  = 6*nglo;    // Number of global derivatives
+  nalc	  = nloc;       // Number of local derivatives
+  nstdev  = nstd;     // Number of StDev for local fit chisquare cut
 
-  First_Plan = my_config->GetFirst(); // First station to be aligned (for VELO)
-  Last_Plan  = my_config->GetLast();  // Last station to be aligned (for VELO)
-  Nstations  = my_config->GetNgb();   // Number of stations to be aligned (for VELO)
-
-  debug() << "" << endmsg;
-  debug() << "First station aligned         : " << First_Plan << endmsg;
-  debug() << "Last  station aligned         : " << Last_Plan << endmsg;
   debug() << "Number of global parameters   : " << nagb << endmsg;
   debug() << "Number of local parameters    : " << nalc << endmsg;
   debug() << "Number of standard deviations : " << nstdev << endmsg;
@@ -110,11 +112,8 @@ StatusCode Millepede::InitMille(MilleConfig* my_config)
 
   // Global parameters initializations
 
-  derGB    = new double[nagb];     // Vector containing the global derivatives 
-
   for (int i=0; i<nagb; i++)
   {
-    derGB[i]=0.;
     bgvec[i]=0.;
     pparm[i]=0.;
     dparm[i]=0.;
@@ -149,32 +148,19 @@ StatusCode Millepede::InitMille(MilleConfig* my_config)
 
   for (int i=0; i<6; i++)
   {
-    verbose() << "GetDOF(" << i << ")= " << my_config->GetDOF(i) << endmsg;
+    verbose() << "GetDOF(" << i << ")= " << DOF[i] << endmsg;
 
-    if (my_config->GetDOF(i)) 
+    if (DOF[i]) 
       {
-      for (int j=i*my_config->GetNgb(); j<(i+1)*my_config->GetNgb(); j++) 
-	{Millepede::ParSig(j,my_config->GetDOFCons(i));}
+      for (int j=i*nglo; j<(i+1)*nglo; j++) 
+	{Millepede::ParSig(j,Sigm[i]);}
     }
   }
 
   // Activate iterations (if requested)
 
   itert   = 0;	// By default iterations are turned off
-  if (m_iteration) Millepede::InitUn(my_config->GetStartf());          
-
-  // Few cuts on the residual that will be applied in the local fits
-
-  if (my_config->isInternal())  // Module alignment
-  {
-    Millepede::SetResidualCutInit(m_residual_cut_init);  // For first iteration
-    Millepede::SetResidualCut(m_residual_cut);           // For next iterations
-  }      
-  else // Box alignment (put larger cuts)
-  {
-    Millepede::SetResidualCutInit(4*m_residual_cut_init);  // For first iteration
-    Millepede::SetResidualCut(2*m_residual_cut);           // For next iterations
-  }
+  if (m_iteration) Millepede::InitUn(startfact);          
 
   arest.clear();  // Number of stored parameters when doing local fit
   indst.clear(); 
@@ -183,324 +169,16 @@ StatusCode Millepede::InitMille(MilleConfig* my_config)
   storeare.clear();
   storeplace.clear();
 
-//
-// Now define the 9 constraints equations
-// and activate them if requested
-//
-
-  ncs 	  = 0; // The number of constraint equations (0 by default)
-
-  if (my_config->isInternal()) // If no constraint needed (eg box alignment), don't do that
-  {
-
-    ftx     = new double[nagb];	
-    fty     = new double[nagb];
-    ftz     = new double[nagb];
-    frotx   = new double[nagb];	
-    froty   = new double[nagb];	
-    frotz   = new double[nagb];	
-    fscaz   = new double[nagb];	  
-    shearx  = new double[nagb];
-    sheary  = new double[nagb];
-  
-    for (int j=0; j<nagb; j++)
-    {
-      ftx[j]    = 0.0;
-      fty[j]    = 0.0;
-      ftz[j]    = 0.0;
-      frotx[j]  = 0.0;
-      froty[j]  = 0.0;
-      frotz[j]  = 0.0;
-      fscaz[j]  = 0.0;
-      shearx[j] = 0.0;
-      sheary[j] = 0.0;
-    }
-
-    double zmoy   = my_config->Get_zmoy();
-    double s_zmoy = my_config->Get_szmoy();
-
-    for (int j=0; j<Nstations; j++) 
-    {
-      double z_station = my_config->GetVELOmap(First_Plan+j);
-
-      if (z_station != -999.) // Only included stations
-      {
-	ftx[j]                 = 1.0;
-	fty[j+Nstations]       = 1.0;
-	ftz[j+2*Nstations]     = 1.0;
-	frotx[j+3*Nstations]   = 1.0;
-	froty[j+4*Nstations]   = 1.0;
-	frotz[j+5*Nstations]   = 1.0;
-	
-	shearx[j]              = (z_station-zmoy)/s_zmoy;
-	sheary[j+Nstations]    = (z_station-zmoy)/s_zmoy;
-	fscaz[j+2*Nstations]   = (z_station-zmoy)/s_zmoy;	
-      }
-      else // Stations not included
-      {
-	Millepede::ParSig(j          ,0.);
-	Millepede::ParSig(Nstations+j  ,0.);
-	Millepede::ParSig(2*Nstations+j,0.);
-	Millepede::ParSig(3*Nstations+j,0.);
-	Millepede::ParSig(4*Nstations+j,0.);
-	Millepede::ParSig(5*Nstations+j,0.);
-      }
-    }
-
-    //  Here we put the constraints information in the basket
-	
-    if (my_config->GetCons(0) && my_config->GetDOF(0))   Millepede::ConstF(ftx,     0.0);    
-    if (my_config->GetCons(1) && my_config->GetDOF(0))   Millepede::ConstF(shearx,  0.0);  
-    if (my_config->GetCons(2) && my_config->GetDOF(1))   Millepede::ConstF(fty,     0.0);      
-    if (my_config->GetCons(3) && my_config->GetDOF(1))   Millepede::ConstF(sheary,  0.0);     
-    if (my_config->GetCons(4) && my_config->GetDOF(2))   Millepede::ConstF(ftz,     0.0);       
-    if (my_config->GetCons(5) && my_config->GetDOF(2))   Millepede::ConstF(fscaz,   0.0);           
-    if (my_config->GetCons(6) && my_config->GetDOF(3))   Millepede::ConstF(frotx,   0.0);   
-    if (my_config->GetCons(7) && my_config->GetDOF(4))   Millepede::ConstF(froty,   0.0);       
-    if (my_config->GetCons(8) && my_config->GetDOF(5))   Millepede::ConstF(frotz,   0.0);    
-  }
-
   debug() << "" << endmsg;
   debug() << "----------------------------------------------------" << endmsg;
   debug() << "" << endmsg;
-  debug() << "    Millepede has been successfully initialized!" << endmsg;
+  debug() << "    InitMille has been successfully called!" << endmsg;
   debug() << "" << endmsg;
   debug() << "-----------------------------------------------------" << endmsg;
   debug() << "" << endmsg;
 	
   return StatusCode::SUCCESS;
 }
-
-/*
-  The 3 following methods are specific to the VELO situation
-  However, PUTTRACK is rather general and could be used as a basic 
-  example for Millepede feeding  
-*/
-
-/*
------------------------------------------------------------
-  PUTTRACK : Feed the Millepede object with track info
-           and perform the local fit
------------------------------------------------------------
-
-  atrack    = object containing all the necessary
-              info for putting a track into Millepede
-	      (see Aligntrack class for more info)
-
-  my_config = configuration of the Millepede job
-              (see MilleConfig class for more info)
-
-  after     = PUTTRACK could be used in 2 ways: if after=0
-              one do the local fit and update the Millepede
-	      object. after=1 means that you just fit the track
-	      and don't update Millepede.
-
------------------------------------------------------------
-*/
-
-StatusCode Millepede::PutTrack(AlignTrack* atrack, MilleConfig* my_config, int after)
-{
-  int n_station = 0;
-
-  double x_cor  = 0.;
-  double y_cor  = 0.;
-  double z_cor  = 0.;
-  double err_x  = 0.;
-  double err_y  = 0.;
-  double slopex = atrack->nSlope_x();
-  double slopey = atrack->nSlope_y();
-
-  StatusCode sc;
-
-  for (int k=0; k<(atrack->nGoodCoordinates()); k++)  // We loop an all the track hits
-  {
-
-    // Retrieve coordinates from the track object
-
-    x_cor = ((atrack->Coords()[k]).first).x();
-    y_cor = ((atrack->Coords()[k]).first).y();
-    z_cor = ((atrack->Coords()[k]).first).z();
-    err_x = ((atrack->Coords()[k]).second).x();
-    err_y = ((atrack->Coords()[k]).second).y();
-    n_station = int(((atrack->Coords()[k]).second).z());
-
-    Millepede::ZerLoc(derGB,derLC); // reset derLC and derGB arrays
-
-    // LOCAL 1st derivatives for the X equation
-	    
-    derLC[0] = 1.0;
-    derLC[1] = z_cor;
-    derLC[2] = 0.0;
-    derLC[3] = 0.0;
-
-    // GLOBAL 1st derivatives (see LHCbnote-2005-101 for definition)
-    
-    if (my_config->GetDOF(0)) derGB[n_station-First_Plan]             = -1.0;             // dX	    
-    if (my_config->GetDOF(1)) derGB[Nstations+n_station-First_Plan]   =  0.0;             // dY
-    if (my_config->GetDOF(2)) derGB[2*Nstations+n_station-First_Plan] =  slopex;          // dZ
-    if (my_config->GetDOF(3)) derGB[3*Nstations+n_station-First_Plan] =  y_cor*slopex;    // d_alpha
-    if (my_config->GetDOF(4)) derGB[4*Nstations+n_station-First_Plan] =  x_cor*slopex;    // d_beta
-    if (my_config->GetDOF(5)) derGB[5*Nstations+n_station-First_Plan] =  y_cor;           // d_gamma
-   
-    sc = Millepede::EquLoc(derGB, derLC, x_cor, err_x); // Store hits parameters
-    if (! sc) {break;} 	
-
-    Millepede::ZerLoc(derGB,derLC); // reset derLC and derGB arrays
-
-    // LOCAL 1st derivatives for the Y equation
-
-    derLC[0] = 0.0;
-    derLC[1] = 0.0;
-    derLC[2] = 1.0;
-    derLC[3] = z_cor;
-
-    // GLOBAL 1st derivatives
-    
-    if (my_config->GetDOF(0)) derGB[n_station-First_Plan]             =  0.0;             // dX	    
-    if (my_config->GetDOF(1)) derGB[Nstations+n_station-First_Plan]   = -1.0;             // dY
-    if (my_config->GetDOF(2)) derGB[2*Nstations+n_station-First_Plan] = slopey;           // dZ
-    if (my_config->GetDOF(3)) derGB[3*Nstations+n_station-First_Plan] = y_cor*slopey;     // d_alpha
-    if (my_config->GetDOF(4)) derGB[4*Nstations+n_station-First_Plan] = x_cor*slopey;     // d_beta
-    if (my_config->GetDOF(5)) derGB[5*Nstations+n_station-First_Plan] = -x_cor;           // d_gamma
-    
-    sc = Millepede::EquLoc(derGB, derLC, y_cor, err_y); // Store hits parameters
-    if (! sc) {break;} 	
-  }
-
-  track_params.clear(); // Vector containing the fitted track parameters
-
-  sc = Millepede::FitLoc(Millepede::GetTrackNumber(),after); // Fit the track
-  if (sc.isFailure()) return StatusCode::FAILURE;
-
-  if (after == 1) // Used to update the track parameters after internal alignment
-  {
-    atrack->setNSlope_x(track_params[2]);
-    atrack->setNXo_x(track_params[0]);
-    atrack->setNErrX_x(track_params[1]);
-    atrack->setNSlope_y(track_params[6]);
-    atrack->setNYo_y(track_params[4]);
-    atrack->setNErrY_y(track_params[5]);
-    
-    // Compute also the Z of closest approach
-    
-    double zclos = 0.0;
-    double sx = (atrack)->nSlope_x();
-    double sy = (atrack)->nSlope_y();
-    double x0 = (atrack)->nXo_x();
-    double y0 = (atrack)->nYo_y();
-    
-    if (sx!=0.0 || sy !=0.0) zclos = -(sx*x0+sy*y0)/(sx*sx+sy*sy);
-    
-    verbose() << "Event / Track " << (atrack)->nEvent() << " / " << (atrack)->nTrack() << endmsg; 
-    verbose() << "Z of closest approach = " << zclos << endmsg; 
-    atrack->setNZclos(zclos);
-  }
-
-  if (after == 0) Millepede::SetTrackNumber(Millepede::GetTrackNumber()+1); // We are in the first loop
-                                                                            // update needed for the store
-  return StatusCode::SUCCESS;
-}
-
-
-/*
------------------------------------------------------------
-  PUTPVTRACK : Here we perform the local fit
------------------------------------------------------------  
-
-  Here is the real primary vertex fit method
-  
------------------------------------------------------------
-*/
-
-StatusCode Millepede::PutPVTrack(AlignTracks* aPV, MilleConfig* my_config, int nPV)
-{
-
-  AlignTracks::const_iterator itrack;
-
-  double slx, sly, x0, y0, errx, erry, zclos;
-
-  StatusCode sc;
-
-  verbose()  << "" << endmsg;
-  verbose()  << "Into FitPV: " << endmsg;
-
-  for (itrack = aPV->begin(); itrack != aPV->end(); ++itrack ) 
-  {
-    if ((*itrack)->nPVnumber() == nPV) // A good track
-    {
-      slx  = (*itrack)->nSlope_x();
-      x0   = (*itrack)->nXo_x();
-      errx = (*itrack)->nErrX_x();
-      sly  = (*itrack)->nSlope_y();
-      y0   = (*itrack)->nYo_y();
-      erry = (*itrack)->nErrY_y();;
-      
-      //    zclos = -(slx*x0+sly*y0)/(slx*slx+sly*sly);
-      zclos = (*itrack)->nZclos(); // This choice is under testing
-      y0 = sly*zclos+y0;
-      x0 = slx*zclos+x0;
-      
-      Millepede::ZerLoc(derGB,derLC); // reset derLC and derGB arrays
-      
-      // LOCAL 1st derivatives for v_x 
-      
-      derLC[0] = 0.;
-      derLC[1] = 0.;
-      derLC[2] = slx;
-      
-      // GLOBAL 1st derivatives
-      
-      if (my_config->GetDOF(0)) derGB[(*itrack)->nType()]     =  1.0;             // dX	    
-      if (my_config->GetDOF(1)) derGB[2+(*itrack)->nType()]   =  0.0;            // dY
-      if (my_config->GetDOF(2)) derGB[4+(*itrack)->nType()]   = -slx;            // dZ
-      if (my_config->GetDOF(3)) derGB[6+(*itrack)->nType()]   = 0.0;            // dtX    
-      if (my_config->GetDOF(4)) derGB[8+(*itrack)->nType()]   = zclos;            // dtY    
-      if (my_config->GetDOF(5)) derGB[10+(*itrack)->nType()]  = -y0;            // dtZ   
-      
-      sc = Millepede::EquLoc(derGB, derLC, -x0, errx); // Store hits parameters
-      if (! sc) {break;}
-      
-      Millepede::ZerLoc(derGB,derLC); // reset derLC and derGB arrays
-      
-      // LOCAL 1st derivatives for v_y
-      
-      derLC[0] = 0.;
-      derLC[1] = 0.;
-      derLC[2] = sly;	    
-      
-      // GLOBAL 1st derivatives
-      
-      if (my_config->GetDOF(0)) derGB[(*itrack)->nType()]     =  0.0;             // dX	    
-      if (my_config->GetDOF(1)) derGB[2+(*itrack)->nType()]   =  1.0;            // dY
-      if (my_config->GetDOF(2)) derGB[4+(*itrack)->nType()]   = -sly;            // dZ
-      if (my_config->GetDOF(3)) derGB[6+(*itrack)->nType()]   = zclos;            // dtX    
-      if (my_config->GetDOF(4)) derGB[8+(*itrack)->nType()]   = 0.0;            // dtY   
-      if (my_config->GetDOF(5)) derGB[10+(*itrack)->nType()]  =  x0;            // dtZ   
-      
-      sc = Millepede::EquLoc(derGB, derLC, -y0, erry); // Store hits parameters
-      if (! sc) {break;}
-    }
-  }
-
-  // Fit the vertex
-
-  sc = Millepede::FitLoc(Millepede::GetTrackNumber(),0); // Fit the track
-
-  if (sc.isFailure()){return StatusCode::FAILURE;}
-
-  Millepede::SetTrackNumber(Millepede::GetTrackNumber()+1);
-
-  return StatusCode::SUCCESS;
-}
-
-///////////////////////////////////////////////////////////////////////
-///////////////////////////////////////////////////////////////////////
-///////////////////////////////////////////////////////////////////////
-
-/*
-  Here we enter in the Millepede area. All the next methods
-  are common to all subdetectors using Millepede
-*/
 
 
 /*
@@ -736,6 +414,9 @@ StatusCode Millepede::ZerLoc(double dergb[], double derlc[])
                  fit parameters and then retrieve them 
 		 for iterations (via STOREIND and STOREARE)
 
+  track_params = contains the fitted track parameters and
+                 related errors
+
   single_fit   = is an option, if it is set to 1, we don't 
                  perform the last loop. It is used to update 
 		 the track parameters without modifying global
@@ -744,7 +425,7 @@ StatusCode Millepede::ZerLoc(double dergb[], double derlc[])
 -----------------------------------------------------------
 */
 
-StatusCode Millepede::FitLoc(int n, int single_fit)
+StatusCode Millepede::FitLoc(int n, double track_params[], int single_fit)
 {
 // Few initializations
 	
@@ -893,8 +574,8 @@ StatusCode Millepede::FitLoc(int n, int single_fit)
 
   for (i=0; i<nalc; i++)
   {
-    track_params.push_back(blvec[i]);
-    track_params.push_back(sqrt(fabs(clmat[i][i])));
+    track_params[2*i] = blvec[i];
+    track_params[2*i+1] = sqrt(fabs(clmat[i][i]));
   }
 
     
@@ -956,7 +637,7 @@ StatusCode Millepede::FitLoc(int n, int single_fit)
 	verbose() << "Residual value : "<< rmeas << endmsg;
 
 	// reject the track if rmeas is too important (outlier)
-	if (fabs(rmeas) >= Millepede::GetResidualCutInit() && itert <= 1)  
+	if (fabs(rmeas) >= m_residual_cut_init && itert <= 1)  
 	{
 	  verbose() << "Rejected track !!!!!" << endmsg;
     	  locrej++;      
@@ -965,7 +646,7 @@ StatusCode Millepede::FitLoc(int n, int single_fit)
 	  return StatusCode::FAILURE;
 	}
 
-	if (fabs(rmeas) >= Millepede::GetResidualCut() && itert > 1)   
+	if (fabs(rmeas) >= m_residual_cut && itert > 1)   
 	{
 	  verbose() << "Rejected track !!!!!" << endmsg;
     	  locrej++;      
@@ -1143,6 +824,8 @@ StatusCode Millepede::MakeGlobalFit(double par[], double error[], double pull[])
 
   double step[150];
 
+  double trackpars[2*mlocal];
+
   int ntotal_start, ntotal;
 
   info() << "..... Making global fit ....." << endmsg;
@@ -1310,7 +993,9 @@ StatusCode Millepede::MakeGlobalFit(double par[], double error[], double pull[])
 	  arest.push_back(storeare[j]);
 	}
 
-	StatusCode sc = Millepede::FitLoc(i,0);
+	for (j=0; j<2*nalc; j++) {trackpars[j] = 0.;}	
+
+	StatusCode sc = Millepede::FitLoc(i,trackpars,0);
 
 	(sc.isSuccess()) 
 	  ? nstillgood++
@@ -1713,7 +1398,7 @@ StatusCode Millepede::PrtGlo()
     if (cgmat[i][i] < 0.0) err = -err;
     gcor = 0.0;
 
-    if (i%Nstations == 0)
+    if (i%(nagb/6) == 0)
     {
       info() << "-----------------------------------------" 
 	     << "------------------------------------------" << endmsg;
@@ -1787,3 +1472,7 @@ double Millepede::chindl(int n, int nd)
     }
   }
 }
+
+
+int    Millepede::GetTrackNumber()                      {return m_track_number;}
+void   Millepede::SetTrackNumber(int value)             {m_track_number = value;}

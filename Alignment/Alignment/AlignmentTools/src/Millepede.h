@@ -6,10 +6,8 @@
 #include "GaudiAlg/GaudiTool.h"
 #include "GaudiKernel/MsgStream.h"
 
-#include "IMillepede.h"            // Interface
-#include "MilleConfig.h"          
-
-#include "Event/AlignTrack.h"
+// from Alignment
+#include "AlignmentTools/IMillepede.h"    
 
 /** @class Millepede Millepede.h AlignmentTools/Millepede.h
  *  
@@ -29,11 +27,18 @@ public:
   /// Initialization
   virtual StatusCode initialize();
 
-  virtual StatusCode InitMille(MilleConfig* my_config);
-  virtual StatusCode PutTrack(AlignTrack* atrack, MilleConfig* my_config, int after);
-  virtual StatusCode PutPVTrack(AlignTracks* aPV, MilleConfig* my_config, int nPV);
+  virtual StatusCode InitMille(bool DOF[], double Sigm[], int nglo
+			       , int nloc, double startfact, int nstd 
+			       , double res_cut, double res_cut_init);
   virtual StatusCode MakeGlobalFit(double par[], double error[], double pull[]);
   virtual StatusCode ParGlo(int index, double param);
+  virtual StatusCode ParSig(int index, double sigma);
+  virtual StatusCode ConstF(double dercs[], double rhs);
+  virtual StatusCode EquLoc(double dergb[], double derlc[], double rmeas, double sigma);
+  virtual StatusCode ZerLoc(double dergb[], double derlc[]);
+  virtual StatusCode FitLoc(int n, double track_params[], int single_fit);
+  virtual int  GetTrackNumber();
+  virtual void SetTrackNumber(int value);
 
 private:
 
@@ -47,20 +52,8 @@ private:
 
 // Private methods 
 
-  inline double GetResidualCut()                    {return m_residual_cut;}
-  inline void   SetResidualCut(double res_cut)      {m_residual_cut = res_cut;}
-  inline double GetResidualCutInit()                {return m_residual_cut_init;}
-  inline void   SetResidualCutInit(double res_cut)  {m_residual_cut_init = res_cut;}
-  inline int    GetTrackNumber()                      {return m_track_number;}
-  inline void   SetTrackNumber(int value)             {m_track_number = value;}
-
   StatusCode InitUn (double cutfac);
-  StatusCode ParSig(int index, double sigma);
-  StatusCode ConstF(double dercs[], double rhs);
   StatusCode PrtGlo();
-  StatusCode EquLoc(double dergb[], double derlc[], double rmeas, double sigma);
-  StatusCode ZerLoc(double dergb[], double derlc[]);
-  StatusCode FitLoc(int n, int single_fit);
 
   double ErrPar(int i);
   double CorPar(int i, int j);
@@ -81,11 +74,6 @@ private:
 
 // Vectors and useful variables
 
-  double   *ftx, *fty, *ftz,*frotx, *froty, *frotz; 
-  double   *fscaz, *shearx, *sheary;
-
-  double   derLC[20], *derGB;
-
   double corrv[mglobl], psigm[mglobl], pparm[mglobl], dparm[mglobl];
   double scdiag[mglobl], blvec[mlocal], arhs[mcs], diag[mgl], bgvec[mgl];
 
@@ -102,10 +90,6 @@ private:
 
   int store_row_size;
 
-  int Nstations;    // Number of stations
-  int First_Plan;   // The first station to align 
-  int Last_Plan;    // The last station to align
-
   int m_track_number;
   double m_residual_cut_init;
   double m_residual_cut;
@@ -115,8 +99,6 @@ private:
 
   int itert, nst, nfl, ncs, nstdev;
   int loctot, locrej, nagb, nalc, nrank; 
-
-  std::vector<double>  track_params;
 
 };
 #endif // ALIGNMENTTOOLS_MILLEPEDE_H

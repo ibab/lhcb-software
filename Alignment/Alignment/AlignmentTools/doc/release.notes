@@ -1,6 +1,15 @@
 ! Package     : AlignmentTools
 ! Responsible : Sebastien Viret
 
+!=============================================================================
+! 18/01/2006 - Sebastien Viret  ** v2r0 **
+  All informations specific to the have been suppressed from the package. This 
+  one is now completely independant.
+
+  For an example of how to use it, see the VeloAlignment package.
+
+  Environment requested to compile: LHCb   v19r3
+                                    Brunel v28r2
 
 !=============================================================================
 ! 16/01/2006 - Sebastien Viret  ** v1r0 **
