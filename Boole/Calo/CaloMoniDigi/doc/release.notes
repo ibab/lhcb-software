@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.2 2004-11-17 15:06:07 cattanem Exp $
+! $Id: release.notes,v 1.3 2006-01-18 18:15:21 odescham Exp $
 ! -----------------------------------------------------------------------------
 ! CVS tag $Name: not supported by cvs2svn $
 ! -----------------------------------------------------------------------------
@@ -6,6 +6,12 @@
 ! Responsible : Vanya BELYAEV belyaev@lapp.in2p3.fr
 ! Purpose     : monitoring of Calo content for Digi tape 
 ! -----------------------------------------------------------------------------
+
+!======================== CaloMoniDigi v2r0 2006-01-18 ========================
+! 2006-01-18 : Olivier Deschamps
+  - Adapt to New Event Model & LHCb v20 change
+  - src/CaloDigitMonitor algorithm inheritance from GaudiHistoAlg
+  - cmt/requirements : Adapt dependancies
 
 !======================== CaloMoniDigi v1r0 2004-11-16 ========================
 ! 2004-10-25 - Vanya BELYAEV

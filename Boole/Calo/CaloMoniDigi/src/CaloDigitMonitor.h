@@ -1,8 +1,11 @@
-// $Id: CaloDigitMonitor.h,v 1.1.1.1 2004-10-25 08:57:08 ibelyaev Exp $
+// $Id: CaloDigitMonitor.h,v 1.2 2006-01-18 18:15:21 odescham Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.1.1.1  2004/10/25 08:57:08  ibelyaev
+// // The new package: code is inported from Calo/CaloMonitor
+//
 // Revision 1.2  2002/11/13 20:49:11  ibelyaev
 //  small update of monitoring algorithms
 //
@@ -16,8 +19,7 @@
 #include <vector>
 // from Gaudi 
 #include "GaudiKernel/Algorithm.h"
-
-class IHistogram1D;
+#include "GaudiAlg/GaudiHistoAlg.h"
 
 
 /** @class CaloDigitMonitor CaloDigitMonitor.h
@@ -26,12 +28,11 @@ class IHistogram1D;
  *  @author Olivier Callot
  *  @date   25/05/2001
  */
-class CaloDigitMonitor : public Algorithm {
+
+class CaloDigitMonitor : public GaudiHistoAlg {
 public:
-  /// Standard constructor
+  /// Standard constructor & descructor
   CaloDigitMonitor( const std::string& name, ISvcLocator* pSvcLocator) ;
-  
-  /// Standard destructor
   virtual ~CaloDigitMonitor( ); 
 
   StatusCode initialize();   ///< Initialisation
@@ -50,12 +51,5 @@ private:
   double                   m_maxEnergy           ;
   double                   m_scaleHit            ;
 
-  // Histogram pointers
-  IHistogram1D*            m_histMultHit         ;
-  IHistogram1D*            m_histMultMCD         ;
-  IHistogram1D*            m_histMultDig         ;
-  IHistogram1D*            m_histEnergyHit       ;
-  IHistogram1D*            m_histEnergyMCD       ;
-  IHistogram1D*            m_histEnergyDig       ;
 };
 #endif // CALODIGITMONITOR_H

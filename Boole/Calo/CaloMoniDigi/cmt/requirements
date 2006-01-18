@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.1.1.1 2004-10-25 08:57:08 ibelyaev Exp $ 
+# $Id: requirements,v 1.2 2006-01-18 18:15:21 odescham Exp $ 
 # ============================================================================
 # CVS tag $NAme:$ 
 # ============================================================================
@@ -6,7 +6,7 @@
 # Maintainer : Vanya BELYAEV belyaev@lapp.in2p3.fr 
 # ============================================================================
 package           CaloMoniDigi
-version           v1r0
+version           v2r0
 
 # =============== structure ==================================================
 branches          cmt doc src options 
@@ -15,8 +15,9 @@ branches          cmt doc src options
 set               CALOMONIDIGIOPTS $(CALOMONIDIGIROOT)/options 
 
 # =============== dependencies ===============================================
-use               CaloInterfaces v* Calo 
-use               CaloUtils      v* Calo 
+use             GaudiAlg     v*
+use             MCEvent      v*    Event
+use             CaloEvent    v*    Event
 
 # =============== constituents ===============================================
 library           CaloMoniDigi   -import=AIDA *.cpp
