@@ -45,6 +45,11 @@ StatusCode DeITBox::initialize() {
     m_id = param<int>("boxID");
     m_layers = getChildren<DeITBox>();
     m_parent = getParent<DeITBox>(); 
+
+    STChannelID parentID = m_parent->elementID();
+    STChannelID chan(parentID.station(),parentID.layer(),
+                     m_id, 0, 0);
+    setElementID(chan);
   }
   return sc;
 }

@@ -44,6 +44,9 @@ StatusCode DeITLayer::initialize() {
   else {
     m_sectors = getChildren<DeITLayer>();
     m_parent = getParent<DeITLayer>();
+    STChannelID parentID = m_parent->elementID();
+    STChannelID chan(parentID.station(), id(), parentID.detRegion(), 0, 0);
+    setElementID(chan);
   }
 
   return sc;
