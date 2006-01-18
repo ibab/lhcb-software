@@ -1,6 +1,10 @@
-! $Id: release.notes,v 1.26 2005-12-31 17:29:58 robbep Exp $
+! $Id: release.notes,v 1.27 2006-01-18 23:01:12 robbep Exp $
 ! Package     : Gen/Generators
 ! Responsible : 
+
+! 2006-01-18 - Patrick Robbe
+ - ExternalGenerator: create HepMC::GenEvent by hand to store in 
+   HepMCEvent 
 
 ! 2005-12-31 - Patrick Robbe
  - Adapt to new event model and new vector classes.
