@@ -1,0 +1,270 @@
+<?xml version='1.0' encoding='ISO-8859-1'?>
+<!DOCTYPE gdd SYSTEM 'gdd.dtd'>
+<gdd>
+  <package name='HltEvent'>
+
+<!-- HltSummary Class : Auxiliar Class-->
+
+  <class
+      name        = 'HltSummaryBox'
+      author      = 'Jose Hernando'
+      desc        = 'Summary class for Hlt box'
+      serializers = 'FALSE'>
+
+      <import name='Event/Track' />
+      <import name='Event/TrackVertex' />
+      
+      <enum
+        name   = 'HltBox'
+        desc   = 'Hlt box'
+        value  = 'HltBoxUnknown = 0,
+	          MuonEntry,
+                  MuonL0Conf,
+                  MuonPreTrigger,
+                  MuonTrigger,
+	          MuonHad,
+	          MuonHadPreScale,
+                  MuonHadEntry,
+	          MuonHadPreTrigger,
+                  MuonHadTrigger,
+	          HadEntry,
+                  HadL0Conf,
+                  HadPreTrigger,
+                  HadTrigger,
+                  CalEntry,
+                  CalL0Confir,
+                  CalPreTrigger,
+	          CalTrigger'
+        access = 'PUBLIC' />
+
+      <enum
+        name   = 'HltQuantity'
+        desc   = 'Monitoring Quantities'
+        value  = 'HltQuantityUnknown=0,
+	          Decision,
+                  NTracks,
+                  NVertices,
+	          MuPt,
+	          MuIP,
+                  MuIPS,
+                  DiMuMass,
+                  DiMuPt,
+                  DiMuIP,
+                  DiMuIPS,
+	          MuHPt,
+                  MuHIP,
+                  MuHIPS,
+                  HEt,
+	          H1Pt,
+                  H1IP,
+                  H1IPS,
+                  H2Pt,
+                  H2IP,
+                  H2IPS,
+	          BMass'
+        access = 'PUBLIC' />
+
+      <constructor 
+	desc     = "Constructor with assigned key" 
+	argList  = "HltSummaryBox::HltBox box"
+	initList = "m_box( box ), m_decision(false), m_quantities()">
+        <code>
+        </code>
+      </constructor>
+
+      <attribute
+        type = 'HltSummaryBox::HltBox'
+        name = 'box'
+        desc = 'the type of this boox'
+        access = 'PROTECTED' />
+
+      <attribute
+        type = 'bool'
+        name = 'decision'
+        desc = 'trigger pass or not this trigger box'
+        access = 'PROTECTED' />
+
+      <attribute
+        type      = 'std::map&lt; HltSummaryBox::HltQuantity, double &gt;'
+        name      = 'quantities'
+        desc      = 'map of quantities'
+        access    = 'PROTECTED'
+        serialize = 'FALSE' />
+
+
+      <relation
+        type      = 'Track'
+        name      = 'tracks'
+        desc      = 'saved tracks this trigger box'
+	setMeth = 'FALSE'
+        access    = 'PROTECTED'
+	multiplicity = 'N'
+        serialize = 'FALSE' />
+
+      <relation
+        type      = 'TrackVertex'
+        name      = 'vertices'
+        desc      = 'saved tracks this trigger box'
+	setMeth = 'FALSE'
+        access    = 'PROTECTED'
+	multiplicity = 'N'
+        serialize = 'FALSE' />
+
+      <method
+        type = 'bool'
+        name = 'hasQuantity'
+        desc = 'has this quantity?'
+        argList = 'HltSummaryBox::HltQuantity label'
+        const = 'TRUE'>
+        <code>
+    return (m_quantities.find(label) != m_quantities.end());
+        </code>
+      </method>
+	
+      <method
+        type    = 'double'
+        name    = 'quantity'
+        desc    = 'retrieve the quantity'
+	argList = 'HltSummaryBox::HltQuantity label'    
+        const   = 'TRUE'>
+        <code>
+   if (m_quantities.find(label) == m_quantities.end()) return 0.;
+   return m_quantities.find(label)->second;
+        </code>
+      </method>
+
+      <method
+        type    = 'void'
+        name    = 'setQuantity'
+	desc    = 'set the quantity value' 
+        argList = 'HltSummaryBox::HltQuantity label, double value'>
+	<code>
+   m_quantities[label] = value;
+	</code>
+      </method>
+
+
+      <method
+        name    = 'addTrack'
+        desc    = 'Add a Track to the list of saved Track'>
+        <arg type = 'const Track ' name='track' />
+        <code>
+  m_tracks.push_back( (Track*) &amp; track );
+        </code>
+      </method>
+
+
+      <method
+        name    = 'addTrackVertex'
+        desc    = 'Add a TrackVertex to the list of saved TrackVertices'>
+        <arg type = 'const TrackVertex ' name='vertex' />
+        <code>
+  m_vertices.push_back( (TrackVertex*) &amp; vertex );
+        </code>
+      </method>
+
+    </class>
+    
+<!-- HltSummary Class -->
+
+    <class
+      name        = 'HltSummary'
+      author      = 'Jose Hernando'
+      desc        = 'Summary class for Hlt'
+      id          = '7501'
+      serializers = 'FALSE'>
+
+      <location name="Default"   place="Hlt/Summary"/>
+      
+      <base name='DataObject' />
+      &DataObject;
+
+      <import name='GaudiKernel/GaudiException' />
+      <import name="GaudiKernel/KeyedObject"/>
+      <import name='Event/HltSummaryBox' />
+
+      <enum
+        name   = 'HltLine'
+        desc   = 'Hlt line'
+        value  = 'LineUnknown = 0,
+	          Muon,
+	          MuonHad,
+	          Had,
+                  Cal'
+        access = 'PUBLIC' />
+
+
+      <destructor 
+	desc     = 'destructor' >
+        <code>
+   for (std::map&lt;HltSummaryBox::HltBox, HltSummaryBox*&gt;::iterator it = m_boxes.begin(); it != m_boxes.end(); it++) delete it->second;
+        </code>
+      </destructor>
+
+      <attribute
+        type = 'bool'
+        name = 'decision'
+        desc = 'trigger pass'
+        access = 'PROTECTED' />
+
+      <attribute
+        type      = 'std::map&lt; HltSummaryBox::HltBox, HltSummaryBox* &gt;'
+        name      = 'boxes'
+        desc      = 'map of HltSummaryBox es'
+        access    = 'PROTECTED'
+        serialize = 'FALSE' />
+
+      <method
+        type = 'bool'
+        name = 'hasBox'
+        desc = 'has a summary from this trigger box?'
+        argList = 'HltSummaryBox::HltBox box'
+        const = 'TRUE'>
+        <code>
+    return (m_boxes.find(box) != m_boxes.end());
+        </code>
+      </method>
+
+      <method
+        type = 'const HltSummaryBox &amp;'
+        name = 'hltSummaryBox'
+        desc = 'return summary box from this triger box'
+        argList = 'HltSummaryBox::HltBox box'
+        const = 'TRUE' >
+        <code>
+   HltSummaryBox*  bsum = NULL;
+   if (m_boxes.find(box) != m_boxes.end()) bsum = m_boxes.find(box)->second;
+   if (bsum == NULL) std::cout &lt;&lt; " WARNING! No box summary " &lt;&lt; box &lt;&lt; std::endl;
+   return *bsum;
+        </code>
+      </method>
+      
+      <method
+        type = 'void'
+        name = 'setHltSummaryBox'
+        desc = 'set the summary box (note: class takes ownership of pointer)'
+        argList = 'const HltSummaryBox::HltBox &amp; box, HltSummaryBox* sbox'
+        const = 'FALSE'>
+        <code>
+   m_boxes[box] = sbox;
+        </code>
+      </method>
+
+      <method
+        type = 'std::vector &lt; HltSummaryBox::HltBox &gt;'
+        name = 'boxesNames'
+        desc = 'return the boxes names stored in the summary'
+        const = 'TRUE' >
+        <code>
+    std::vector&lt;HltSummaryBox::HltBox&gt; names;
+    for (std::map&lt;HltSummaryBox::HltBox,HltSummaryBox*&gt;::const_iterator it = m_boxes.begin(); it != m_boxes.end(); it++) 
+          names.push_back(it->first);
+    return names;
+        </code>
+      </method>
+      
+    </class>
+
+  </package>
+
+</gdd>

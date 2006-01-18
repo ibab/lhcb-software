@@ -1,43 +1,47 @@
 #============================================================================
-# Created    : 2003-04-02
-# Maintainer : Olivier Callot
+# Created    : 2005-02-10
+# Maintainer : Jose Hernando
 #
 # Documentation on the requirement file can be found at
 # http://cern.ch/lhcb-comp/Support/html/new_structure.pdf
 #============================================================================
 package           HltEvent
-version           v5r0
+version           v6r0
 
 #============================================================================
 # This template is an example for a standard Algorithm package
 #
 # Structure, i.e. directories to process. 
 #============================================================================
-branches          cmt dict doc src Event xml
-
-include_dirs $(HLTEVENTROOT)
-
+branches          cmt doc dict Event xml
+include_dirs      $(HLTEVENTROOT)
 #============================================================================
 # Used packages. Specify the version, * at the end specifies 'any revision'
 #    Put as many lines as needed, with all packages, without the '#'
 #============================================================================
-use     PhysEvent	v8r*	Event
+use   LHCbKernel    v*    Kernel
+use   GaudiKernel   v*
+use   CLHEP         v*    LCG_Interfaces
+use   GSL           v*    LCG_Interfaces
+
+use   TrackEvent    v* 	  Event
 
 #============================================================================
-# Component library building rule
-#============================================================================
-#---- Produce Header-Files and from XML description
+#---- Produce Header-Files from XML description
 private
 document obj2doth HltEventObj2Doth ../xml/*.xml
-document obj2dict HltEventObj2Dict ../xml/*.xml    
+document obj2dict HltEventObj2Dict ../xml/*.xml
 
 public
-library          HltEvent    ../src/*.cpp
+library          HltEvent         ../src/*.cpp
 library          HltEventDict     ../dict/*.cpp
 
 #============================================================================
-# define component library link options
+# define library link options
 #============================================================================
-apply_pattern component_library library=HltEventDict
-apply_pattern linker_library    library=HltEvent
-macro_append HltEvent_linkopts "" WIN32 "/include:_HltEvent_loadRef"
+apply_pattern component_library library=HltEvent
+apply_pattern linker_library	library=HltEvent
+macro_append HltEvent_linkopts  "" WIN32 "/include:_HltEvent_loadRef" 
+
+private
+use GaudiObjDesc v*

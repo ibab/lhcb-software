@@ -4,6 +4,12 @@
 ! Purpose     : Event model for HLT tracks
 !-----------------------------------------------------------------------------
 
+! 2006-01-17 - Jose A. Hernando
+	- xml/HltSummary.xmt
+		defines the HltSummaryBox and HltSummary classes
+	  in HltSummaryBox we will store the relevant information of any decision box of the trigger
+    HltSummary stores the list of HltSummaryBoxes and final information of the trigger
+
 ! 2006-01-12 - Jose A. Hernando
 	- cleaning the package to be use for the 1 MHz readout 
 
