@@ -1,4 +1,4 @@
-// $Id: Common.opts,v 1.15 2005-12-16 15:36:26 gcorti Exp $ 
+// $Id: Common.opts,v 1.16 2006-01-18 09:25:35 gcorti Exp $ 
 #pragma print off
 
 /** @file 
@@ -29,11 +29,11 @@ ParticlePropertySvc.ParticlePropertiesFile = "$PARAMFILESROOT/data/ParticleTable
 ApplicationMgr.DLLs  = { "GaudiAud"};
 ApplicationMgr.DLLs += { "GaudiAlg" } ;
 ApplicationMgr.DLLs += { "LHCbAlgs" } ;
-ApplicationMgr.DLLs += { "GaussTools"} ;
+// ApplicationMgr.DLLs += { "GaussTools"} ;
 ApplicationMgr.DLLs += { "GaussAlgs"  } ;
 ApplicationMgr.DLLs += { "ParticleGuns" };
 ApplicationMgr.DLLs += { "LbPythia", "Generators" } ;
-ApplicationMgr.DLLs += { "MCTools", "GaussMonitor" };
+ApplicationMgr.DLLs += { "SimComponents", "GaussMonitor" };
 
 ApplicationMgr.DLLs += { "RootHistCnv" };
 RootHistSvc.ForceAlphaIds = true;        // Prepend histograms with "h" 
@@ -49,11 +49,11 @@ MessageSvc.setWarning += { "XmlGenericCnv" };
 MessageSvc.Format = "% F%24W%S%7W%R%T %0W%M";  // Longer "algorithm" identifier in printout
 
 // Geometry setup always necessary
-#include "$STDOPTS/DetDesc.opts"
-ApplicationMgr.DLLS += { "CaloDetXmlCnv" };
+// #include "$STDOPTS/DetDesc.opts"
+// ApplicationMgr.DLLS += { "CaloDetXmlCnv" };
 
 // "Default" geometry version: the latest
-DetectorDataSvc.DetDbLocation = "$XMLDDDBROOT/DDDB/lhcb-200511.xml";
+// DetectorDataSvc.DetDbLocation = "$XMLDDDBROOT/DDDB/lhcb-200511.xml";
 
 // Transient store setup
 EventDataSvc.ForceLeaves         = true ;

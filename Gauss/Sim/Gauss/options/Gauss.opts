@@ -1,5 +1,5 @@
-#printOptions 
-// $Id: Gauss.opts,v 1.72 2006-01-04 15:26:47 gcorti Exp $ 
+//#printOptions 
+// $Id: Gauss.opts,v 1.73 2006-01-18 09:25:35 gcorti Exp $ 
 
 /** @file 
  * 
@@ -15,18 +15,18 @@
 //                        i.e. Simulation if running generator in stand-alone
 //                        in which case comment also Simulation.opts below
 //---------------------------------------------------------------------------
-ApplicationMgr.TopAlg  = { "GaudiSequencer/Initialize" };
+ApplicationMgr.TopAlg += { "GaudiSequencer/Initialization"  };
 ApplicationMgr.TopAlg += { "GaudiSequencer/Generator"  };
-ApplicationMgr.TopAlg += { "GaudiSequencer/Simulation" }; 
-ApplicationMgr.TopAlg += { "GaudiSequencer/Monitor"    }; 
+//ApplicationMgr.TopAlg += { "GaudiSequencer/Simulation" }; 
+ApplicationMgr.TopAlg += { "GaudiSequencer/Monitor"  };
 
 //---------------------------------------------------------------------------
-// Initialize the application: set run and first event number,
+// Initialize the Phases: set run and first event number,
 //                             hence setting random numbers to start with
 //---------------------------------------------------------------------------
-Initialize.Members     = { "LbAppInit/Gauss" };
-Gauss.FirstEventNumber = 1;
-Gauss.RunNumber        = 1;
+Initialization.Members     = { "GaussInit/GaussGen" };
+GaussGen.FirstEventNumber = 1;
+GaussGen.RunNumber        = 1;
 
 //---------------------------------------------------------------------------
 // Generator phase: see there how to modify to run generator 
@@ -42,7 +42,8 @@ Generator.MeasureTime = true;
 //                   see there to with modified setup or with special
 //                   simulation conditions
 //---------------------------------------------------------------------------
-#include "$GAUSSOPTS/Simulation.opts" 
+// Simulation.Members     add initialization of simulation
+//#include "$GAUSSOPTS/Simulation.opts" 
 Simulation.MeasureTime = true;
 
 //---------------------------------------------------------------------------
@@ -50,7 +51,7 @@ Simulation.MeasureTime = true;
 //                can be commented separately
 //---------------------------------------------------------------------------
 Monitor.Members       += { "GaudiSequencer/GenMonitor" };
-Monitor.Members       += { "GaudiSequencer/SimMonitor" };
+//Monitor.Members       += { "GaudiSequencer/SimMonitor" };
 #include "$GAUSSOPTS/Monitor.opts"
 //#include "$GAUSSOPTS/MonitorInDetail.opts" // ntuples and commented examples
 Monitor.MeasureTime    = true;
@@ -85,8 +86,8 @@ HistogramPersistencySvc.OutputFile = "GaussHistos.root";  // Monitoring histos
 // Event type to simulate: for <evttype> put a line similar to the following
 //                         or use ParticleGun.opts
 //---------------------------------------------------------------------------
-#include "$GAUSSOPTS/30000000.opts"  // Min Bias
+//#include "$GAUSSOPTS/30000000.opts"  // Min Bias
 //#include "$GAUSSOPTS/10000000.opts"  // Generic b-b~ events
 
-//#include "$GAUSSOPTS/ParticleGun.opts"          
+#include "$GAUSSOPTS/ParticleGun.opts"          
  

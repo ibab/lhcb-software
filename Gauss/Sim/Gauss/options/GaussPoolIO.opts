@@ -4,14 +4,16 @@
 
 // Job option to tell POOL to load  Event Model dictionaries
 
-PoolDbCacheSvc.Dlls += {"LHCbKernelDict", "MuonKernelDict" };
-PoolDbCacheSvc.Dlls += {"EventDict" };
+PoolDbCacheSvc.Dlls += {"LHCbKernelDict"};
+//PoolDbCacheSvc.Dlls += {"LHCbKernelDict", "MuonKernelDict" };
+PoolDbCacheSvc.Dlls += {"EventBaseDict" };
 PoolDbCacheSvc.Dlls += {"GenEventDict" };
-PoolDbCacheSvc.Dlls += {"TrEventDict" };
-PoolDbCacheSvc.Dlls += {"ITEventDict" };
-PoolDbCacheSvc.Dlls += {"OTEventDict" };
-PoolDbCacheSvc.Dlls += {"RichEventDict" };
-PoolDbCacheSvc.Dlls += {"CaloEventDict" };
-PoolDbCacheSvc.Dlls += {"VeloEventDict" };
-PoolDbCacheSvc.Dlls += {"MuonEventDict" };
+PoolDbCacheSvc.Dlls += {"MCEventDict" };
+// PoolDbCacheSvc.Dlls += {"TrEventDict" };
+// PoolDbCacheSvc.Dlls += {"ITEventDict" };
+// PoolDbCacheSvc.Dlls += {"OTEventDict" };
+// PoolDbCacheSvc.Dlls += {"RichEventDict" };
+// PoolDbCacheSvc.Dlls += {"CaloEventDict" };
+// PoolDbCacheSvc.Dlls += {"VeloEventDict" };
+// PoolDbCacheSvc.Dlls += {"MuonEventDict" };
 PoolDbCacheSvc.Dlls += {"SealSTLRflx", "SealCLHEPRflx" };
