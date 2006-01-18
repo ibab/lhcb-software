@@ -1,8 +1,11 @@
-// $Id: GaussAlgs_load.cpp,v 1.6 2006-01-18 09:12:46 gcorti Exp $
+// $Id: GaussAlgs_load.cpp,v 1.7 2006-01-18 12:52:15 gcorti Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.6  2006/01/18 09:12:46  gcorti
+// adapt to LHCB v20r0
+//
 // Revision 1.5  2005/10/30 21:58:49  gcorti
 // new algorithm for MCTruth
 //
@@ -29,6 +32,8 @@
 
 DECLARE_FACTORY_ENTRIES(GaussAlgs) {
   
+  DECLARE_ALGORITHM ( GenInit ) ;
+  DECLARE_ALGORITHM ( SimInit ) ;
   DECLARE_ALGORITHM ( GiGaFlushAlgorithm  ) ;
   DECLARE_ALGORITHM ( GiGaGetHitsAlg      ) ;
   DECLARE_ALGORITHM ( GiGaGetEventAlg     ) ;

@@ -4,6 +4,14 @@
 ! Responsible : G.Corti
 ! -----------------------------------------------------------------------------
 
+!===================== GaussAlgs v2r0 2006-01-18  =========================
+! 2006-01-18 - Gloria CORTI
+ - src/GenInit.{h,cpp}, SimInit.{h,cpp} 
+   . New algorithms derived from LbAppInit to initialize respectively 
+     Generator and Simulation phases of Gauss. 
+     They also create and partially fill the corresponding GenHeader and
+     MCHeader.
+
 ! 2006-01-16 - Gloria CORTI
  - src/GiGaGetEventAlg.cpp
    src/GiGaGetHitsAlg.cpp
