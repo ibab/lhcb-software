@@ -1,4 +1,4 @@
-// $Id: OTTimeCreator.cpp,v 1.9 2006-01-18 14:05:21 janos Exp $
+// $Id: OTTimeCreator.cpp,v 1.10 2006-01-18 15:39:38 cattanem Exp $
 // Include files
 
 // local
@@ -79,7 +79,7 @@ StatusCode OTTimeCreator::execute() {
 
   // Loop over vector of banks (The Buffer)
   std::vector<LHCb::RawBank*>::const_iterator ibank;
-  long j = 0;
+  unsigned int j = 0;
   for ( ibank = OTBanks.begin(); ibank != OTBanks.end(); ++ibank) {
     // Check the bank version
     if( (*ibank)->version() == OTBankVersion::v1 ) {
@@ -96,21 +96,21 @@ StatusCode OTTimeCreator::execute() {
       return StatusCode::FAILURE;
     }
     //Getting the values of the number of bank and of the Bank size 
-    int bankSize = (*ibank)->size();
+    unsigned int bankSize = (*ibank)->size();
 
     // Some Useful Initilisation
     GolHeader golHeader;
     DataWord dataWord;
-    unsigned nStation = 0;
-    unsigned nLayer = 0;
-    unsigned nQuarter = 0;
-    unsigned nModule = 0;  
-    unsigned nSize = 0;
-    long k = 0;
+    unsigned int nStation = 0;
+    unsigned int nLayer = 0;
+    unsigned int nQuarter = 0;
+    unsigned int nModule = 0;  
+    unsigned int nSize = 0;
+    unsigned int k = 0;
         
     //The bank are vec of unsigned int: Loop over the data words inside the bank
     unsigned int* data = (*ibank)->data();  
-    for ( long i = 0; i < bankSize/4.; ++i ) {
+    for ( unsigned int i = 0; i < bankSize/4.; ++i ) {
     
       // Gol Header or DataWord     
       if(i < j ){
@@ -255,6 +255,3 @@ int OTTimeCreator::getStrawID(int otisID , int channel)
   }
   return(straw);
 }
-
-
-

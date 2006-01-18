@@ -19,4 +19,4 @@ library OTDAQ ../src/*.cpp
 apply_pattern component_library library=OTDAQ
 
 private
-use GaudiObjDesc v*
+use GaudiObjDesc v* -no_auto_imports
