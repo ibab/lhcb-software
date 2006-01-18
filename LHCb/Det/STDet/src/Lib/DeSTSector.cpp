@@ -74,7 +74,7 @@ StatusCode DeSTSector::initialize() {
   else {
    
     m_pitch = param<double>("pitch");
-    m_nStrip =  param<unsigned int>("numStrips");
+    m_nStrip =  param<int>("numStrips");
     m_capacitance = param<double>("capacitance");
     m_type = param<std::string>("type");
 

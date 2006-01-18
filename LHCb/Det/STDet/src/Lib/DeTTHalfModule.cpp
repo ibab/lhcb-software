@@ -51,9 +51,9 @@ StatusCode DeTTHalfModule::initialize() {
   }
   else {
     m_detRegion = param<int>("detRegion");
-    m_firstSector = param<unsigned int>("firstReadoutSector");
+    m_firstSector = param<int>("firstReadoutSector");
     m_position = param<std::string>("top_bottom");
-    m_column = param<unsigned int>("column");
+    m_column = param<int>("column");
 
     m_sectors = getChildren<DeTTHalfModule>();   
     m_sectors.size() == 3u ? m_type = "KLM": m_type = "KL";

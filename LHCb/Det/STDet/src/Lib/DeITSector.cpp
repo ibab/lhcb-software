@@ -39,7 +39,7 @@ StatusCode DeITSector::initialize() {
     m_parent = getParent<DeITSector>();
 
     // build the id
-    unsigned int tid = param<unsigned int>("sectorID");
+    unsigned int tid = param<int>("sectorID");
     setID(tid);
     STChannelID parentID = m_parent->elementID();
     STChannelID chan(parentID.station(),parentID.layer(), 

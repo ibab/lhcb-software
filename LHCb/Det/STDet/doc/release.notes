@@ -2,7 +2,10 @@
 !Package manager : M. Needham
 !-----------------------------------------------------------------------
 
-!========================= STDet v2r0 2006-01-17 =======================
+!========================= STDet v2r0 2006-01-18 =======================
+! 2006-01-18 - Marco Cattaneo
+ - Fix param<> types and names to correspond to XmlDDDB
+
 ! 2006-01-16 M Needham
   - Change LayerID to layerID in DeSTLayer.cpp
   - Bug fix in DeITStation::initialize

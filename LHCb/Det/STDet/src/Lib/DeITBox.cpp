@@ -35,13 +35,14 @@ StatusCode DeITBox::initialize() {
 
   // initialize
   MsgStream msg(msgSvc(), name() );
+  
   StatusCode sc = DeSTBaseElement::initialize();
   if (sc.isFailure() ){
     msg << MSG::ERROR << "Failed to initialize detector element" << endreq; 
   }
   else {
     // get the children and parent
-    m_id = param<unsigned int>("boxID");
+    m_id = param<int>("boxID");
     m_layers = getChildren<DeITBox>();
     m_parent = getParent<DeITBox>(); 
   }

@@ -40,7 +40,7 @@ StatusCode DeTTSector::initialize() {
     m_parent = getParent<DeTTSector>();
 
     // sub id
-    unsigned subID = param<unsigned int>("subID");
+    unsigned subID = param<int>("subID");
 
     // sector number needs info from mother
     if (m_parent->position() == "B"){
