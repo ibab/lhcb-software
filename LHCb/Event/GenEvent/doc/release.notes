@@ -1,7 +1,11 @@
 Package Event/GenEvent
 package coordinator: W.Pokorski, G.Corti
 
-!================ GenEvent v4r0 2005-12-15 ============================
+!================ GenEvent v4r0 2006-01-18 ============================
+! 2006-01-18 - Gloria CORTI
+ - Introduce new path in Event Store for decay of signal in HepMCEvent.xml
+   "HepMCEventsLocation::Signal".
+
 ! 2005-12-15 - Gloria CORTI
  - Introduce evtNumber in GenHeader since the generic Header has been removed
  - Introduce non const accessor for pointer to HepMC::GenEvent necessary
