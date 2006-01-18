@@ -3,6 +3,9 @@
 !-----------------------------------------------------------------------
 
 ! 2006-01-18 M. Needham
+  - check that child is of the correct type
+
+! 2006-01-18 M. Needham
   - set element ids in DeITBox and DeITLayer
 
 !========================= STDet v2r0 2006-01-18 =======================

@@ -1,4 +1,4 @@
-// $Id: DeSTBaseElement.h,v 1.1 2005-12-19 15:18:24 mneedham Exp $
+// $Id: DeSTBaseElement.h,v 1.2 2006-01-18 17:03:46 mneedham Exp $
 #ifndef _DeSTBaseElement_H_
 #define _DeSTBaseElement_H_
 
@@ -100,7 +100,7 @@ inline std::vector<typename STDetTraits<TYPE>::child*> DeSTBaseElement::getChild
   IDetectorElement::IDEContainer::const_iterator iChild;
   for (iChild = this->childBegin(); this->childEnd() != iChild; ++iChild) {
     cType* aChild = dynamic_cast<cType*>(*iChild);
-    childVector.push_back(aChild);
+    if (aChild !=0) childVector.push_back(aChild);
   } // iStation
 
   return childVector;
