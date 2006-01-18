@@ -1,4 +1,4 @@
-// $Id: LbAppInit.cpp,v 1.1 2005-12-21 12:36:39 cattanem Exp $
+// $Id: LbAppInit.cpp,v 1.2 2006-01-18 12:28:26 gcorti Exp $
 // Include files 
 #include <string>
 
@@ -26,7 +26,9 @@ DECLARE_ALGORITHM_FACTORY( LbAppInit );
 LbAppInit::LbAppInit( const std::string& name,
                       ISvcLocator* pSvcLocator)
   : GaudiAlgorithm ( name , pSvcLocator ),
-    m_eventCounter(0)
+    m_eventCounter(0),
+    m_appName(""),
+    m_appVersion("")
 {
 
 }
@@ -63,6 +65,20 @@ StatusCode LbAppInit::initialize() {
     always()
       << "=================================================================="
       << endmsg;
+  }
+
+  sc = propMgr->getProperty( "AppName", value );
+  if( sc.isFailure() ) {
+    return Error( " Fatal error while retrieving Property AppName " );
+  } else {
+    m_appName = value;
+  }
+
+  sc = propMgr->getProperty( "AppVersion", value );
+  if( sc.isFailure() ) {
+    return Error( " Fatal error while retrieving Property AppVersion " );
+  } else {
+    m_appVersion = value;
   }
 
   return StatusCode::SUCCESS;
