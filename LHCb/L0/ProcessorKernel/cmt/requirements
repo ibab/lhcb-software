@@ -5,7 +5,7 @@ version v2r0
 branches cmt doc src ProcessorKernel
 
 use Boost v* LCG_Interfaces
-use MuonKernel v* Muon
+use LHCbKernel v* Kernel
 use XercesC     v* LCG_Interfaces
 
 include_dirs $(PROCESSORKERNELROOT)

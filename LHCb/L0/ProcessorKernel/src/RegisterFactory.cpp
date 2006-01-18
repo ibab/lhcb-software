@@ -204,7 +204,7 @@ void L0Muon::RegisterFactory::tileRegisterFromNode(DOMNode* pNode){
   TileRegister* preg = createTileRegister(name,size);
   preg->setType(type);
 
-  std::vector<MuonTileID> ids;  
+  std::vector<LHCb::MuonTileID> ids;  
   boost::dynamic_bitset<> tilestag ;
   boost::dynamic_bitset<> stripstag;
 
@@ -228,7 +228,7 @@ void L0Muon::RegisterFactory::registerAliasFromNode(DOMNode* pNode){
 }
 
 void L0Muon::RegisterFactory::tileFromNode(DOMNode* pNode, 
-					   std::vector<MuonTileID> * mids, 
+					   std::vector<LHCb::MuonTileID> * mids, 
 					   boost::dynamic_bitset<> * tilestag, 
 					   boost::dynamic_bitset<> * stripstag){
 
@@ -238,7 +238,7 @@ void L0Muon::RegisterFactory::tileFromNode(DOMNode* pNode,
   int itilestag   = getAttributeInt(di, "tilestag");
   int istripstag  = getAttributeInt(di, "stripstag");
 
-  mids->push_back(MuonTileID(id));
+  mids->push_back(LHCb::MuonTileID(id));
   tilestag->push_back(itilestag);
   stripstag->push_back(istripstag);
 

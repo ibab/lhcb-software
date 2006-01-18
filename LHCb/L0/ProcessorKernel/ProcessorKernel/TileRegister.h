@@ -1,4 +1,4 @@
-// $Id: TileRegister.h,v 1.7 2005-07-01 12:39:12 jucogan Exp $
+// $Id: TileRegister.h,v 1.8 2006-01-18 16:47:17 jucogan Exp $
 
 #ifndef PROCESSORKERNEL_TILEREGISTER_H
 #define PROCESSORKERNEL_TILEREGISTER_H     1
@@ -15,7 +15,7 @@
 
 #include <vector>
 #include "ProcessorKernel/Register.h"
-#include "MuonKernel/MuonTileID.h"
+#include "Kernel/MuonTileID.h"
 #include <stdio.h>
 
 //#include "MuonKernel/MuonSystemLayout.h"
@@ -49,28 +49,28 @@ public:
       @param pattern : bit pattern
       @param ids     : associated vector of MuonTileID
   */  
-  TileRegister(int bits, unsigned long pattern, std::vector<MuonTileID> ids);
+  TileRegister(int bits, unsigned long pattern, std::vector<LHCb::MuonTileID> ids);
 
   /// Destructor
   ~TileRegister();
   
   /// set the vector of MuonTileIDs
-  void setTileVector(const std::vector<MuonTileID>& ids);
+  void setTileVector(const std::vector<LHCb::MuonTileID>& ids);
 
   /// Return the vector of MuonTileIDs
-  std::vector<MuonTileID> getTileVector() { return m_ids; }
+  std::vector<LHCb::MuonTileID> getTileVector() { return m_ids; }
 
   /** Return the MuonTileID
 
       @param ind : position in the vector
    */
-  MuonTileID tile(int ind) { return m_ids[ind]; }
+  LHCb::MuonTileID tile(int ind) { return m_ids[ind]; }
 
   /// Return the vector of MuonTileIDs for bits set to 1      
-  std::vector<MuonTileID> firedTiles();
+  std::vector<LHCb::MuonTileID> firedTiles();
 
   /// Set the tile id
-  void setTile(MuonTileID & id);
+  void setTile(LHCb::MuonTileID & id);
   
   /// set the type of tiles (strips/pad)
   void setTilesTagVector(boost::dynamic_bitset<> & tilestag);
@@ -79,7 +79,7 @@ public:
   boost::dynamic_bitset<> TilesTag() { return m_tilestag ;}
 
   /// Return the pads
-  std::vector<MuonTileID> Pads() { return m_pads; }
+  std::vector<LHCb::MuonTileID> Pads() { return m_pads; }
 
   /// Return the strips
   boost::dynamic_bitset<> StripsTag() { return m_stripstag ;}
@@ -101,8 +101,8 @@ public:
 
 private:
 
-  std::vector<MuonTileID> m_ids ;  // MuonTileIDs mapping
-  std::vector<MuonTileID> m_pads;
+  std::vector<LHCb::MuonTileID> m_ids ;  // MuonTileIDs mapping
+  std::vector<LHCb::MuonTileID> m_pads;
 
   boost::dynamic_bitset<> m_tilestag ;
   boost::dynamic_bitset<> m_stripstag ;

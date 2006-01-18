@@ -5,7 +5,7 @@
 #include <string>
 #include <vector>
 
-#include "MuonKernel/MuonTileID.h" 
+#include "Kernel/MuonTileID.h" 
 
 //! Property contains the value of a L0MConf database field.
 /**
@@ -105,7 +105,7 @@ class Property{
   /**
      Convert to MuonTileID.
   */
-  operator const MuonTileID() const {return MuonTileID(atol(m_value.c_str()));}
+  operator const LHCb::MuonTileID() const {return LHCb::MuonTileID(atol(m_value.c_str()));}
 
   
 };

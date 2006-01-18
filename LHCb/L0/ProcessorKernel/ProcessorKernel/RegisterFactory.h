@@ -1,4 +1,4 @@
-// $Id: RegisterFactory.h,v 1.4 2005-12-15 15:08:01 jucogan Exp $
+// $Id: RegisterFactory.h,v 1.5 2006-01-18 16:47:17 jucogan Exp $
 
 #ifndef PROCESSORKERNEL_REGISTERFACTORY_H
 #define PROCESSORKERNEL_REGISTERFACTORY_H     1
@@ -84,7 +84,7 @@ namespace L0Muon {
     void tileRegisterFromNode(DOMNode* pNode);
     void registerAliasFromNode(DOMNode* pNode);
     void tileFromNode(DOMNode* pNode, 
-                      std::vector<MuonTileID> *mids, 
+                      std::vector<LHCb::MuonTileID> *mids, 
                       boost::dynamic_bitset<> *tilestag, 
                       boost::dynamic_bitset<> *stripstag);
 
