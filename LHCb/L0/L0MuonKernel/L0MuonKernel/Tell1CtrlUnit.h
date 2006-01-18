@@ -22,7 +22,7 @@ namespace L0Muon {
     Tell1CtrlUnit();
 
     /// Constructor 
-    Tell1CtrlUnit(MuonTileID id);
+    Tell1CtrlUnit(LHCb::MuonTileID id);
 
     /// Constructor 
     Tell1CtrlUnit(DOMNode* pNode);

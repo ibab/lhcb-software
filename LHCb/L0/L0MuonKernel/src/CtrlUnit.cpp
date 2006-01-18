@@ -5,7 +5,7 @@ L0Muon::CtrlUnit::CtrlUnit(){
 
 }
 
-L0Muon::CtrlUnit::CtrlUnit(MuonTileID id):SelectionUnit(id){
+L0Muon::CtrlUnit::CtrlUnit(LHCb::MuonTileID id):SelectionUnit(id){
   
 }
 

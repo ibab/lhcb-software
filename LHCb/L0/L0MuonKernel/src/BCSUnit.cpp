@@ -37,7 +37,7 @@
 */
 
 
-L0Muon::BCSUnit::BCSUnit(MuonTileID id):SelectionUnit(id){
+L0Muon::BCSUnit::BCSUnit(LHCb::MuonTileID id):SelectionUnit(id){
   
 }
 

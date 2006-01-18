@@ -5,7 +5,7 @@
 
 L0Muon::L0MUnit::L0MUnit():Unit(){
 }
-L0Muon::L0MUnit::L0MUnit(MuonTileID id):Unit(){
+L0Muon::L0MUnit::L0MUnit(LHCb::MuonTileID id):Unit(){
   m_mid = id;
 }
 
@@ -19,7 +19,7 @@ L0Muon::L0MUnit::L0MUnit(DOMNode* pNode):Unit() {
   // // //std::cout << "<L0MUnit::L0MUnit> how many ?"<<di->getLength()<<std::endl;
   std::string type = getAttributeStr(di, "type");
   // // //std::cout << "<L0MUnit::L0MUnit>   "<<"type="<<type<<std::endl;
-  m_mid = MuonTileID(getAttributeStr(di, "id"));
+  m_mid = LHCb::MuonTileID(getAttributeStr(di, "id"));
   // // //std::cout << "<L0MUnit::L0MUnit>   "<<"id= "<<m_mid.toString()<<std::endl;
 
   XMLCh* PROPERTY        = XMLString::transcode(XMLProperty.c_str());

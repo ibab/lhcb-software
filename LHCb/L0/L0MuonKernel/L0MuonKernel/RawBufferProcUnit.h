@@ -27,7 +27,7 @@ namespace L0Muon {
     RawBufferProcUnit();
 
     /// Constructor
-    RawBufferProcUnit(MuonTileID id);
+    RawBufferProcUnit(LHCb::MuonTileID id);
 
     /// Constructor
     RawBufferProcUnit(DOMNode* pNode);

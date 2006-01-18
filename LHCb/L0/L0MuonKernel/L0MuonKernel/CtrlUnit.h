@@ -24,7 +24,7 @@ namespace L0Muon {
     CtrlUnit();
 
     /// Constructor 
-    CtrlUnit(MuonTileID id);
+    CtrlUnit(LHCb::MuonTileID id);
 
     /// Constructor 
     CtrlUnit(DOMNode* pNode);

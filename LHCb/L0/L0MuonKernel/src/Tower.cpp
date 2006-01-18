@@ -85,12 +85,12 @@ void L0Muon::Tower::setBit(int sta, int row, int col) {
 
 void L0Muon::Tower::setPadIdMap(int sta, 
                                 std::pair<int, int> YX, 
-                                MuonTileID mid)
+                                LHCb::MuonTileID mid)
 {
   m_idmap[sta][YX]= mid ;
 }
 
-MuonTileID L0Muon::Tower::getPadIdMap(int sta, std::pair<int, int> XY)
+LHCb::MuonTileID L0Muon::Tower::getPadIdMap(int sta, std::pair<int, int> XY)
 {
   return m_idmap[sta].find(XY)->second ;
   
@@ -133,7 +133,7 @@ void L0Muon::Tower::drawStation(int sta) {
 }
 
 
-std::vector<L0Muon::PMuonCandidate> L0Muon::Tower::processTower(MuonTileID & puID){
+std::vector<L0Muon::PMuonCandidate> L0Muon::Tower::processTower(LHCb::MuonTileID & puID){
 
   std::vector<L0Muon::PMuonCandidate> puCandidates;
   if (m_debug) std::cout <<"--- Tower::processTower: Process Tower for PU " 
@@ -223,7 +223,7 @@ std::vector<L0Muon::PMuonCandidate> L0Muon::Tower::processTower(MuonTileID & puI
         if (m_debug) std::cout <<"--- Tower::processTower: M4 and M5 OK"<< std::endl;
 
         // Station M2
-        MuonTileID padM2;
+        LHCb::MuonTileID padM2;
         int offM2=0;
         candFlag=false;
         sta=1;
@@ -274,7 +274,7 @@ std::vector<L0Muon::PMuonCandidate> L0Muon::Tower::processTower(MuonTileID & puI
         if (m_debug) std::cout <<"--- Tower::processTower: M2 OK (offM2="<< offM2 << ")"<< std::endl;
 
         // Station M1
-        MuonTileID padM1;
+        LHCb::MuonTileID padM1;
         int offM1=0;  // expressed with M3 granularity (la tour est 'super-homogène') 
         sta=0;
         if (m_debug) std::cout <<"--- Tower::processTower: Search in station sta= "<<sta<< std::endl;
@@ -376,7 +376,7 @@ std::vector<L0Muon::PMuonCandidate> L0Muon::Tower::processTower(MuonTileID & puI
 
 
 
-void L0Muon::Tower::xyFromPad(MuonTileID pad, double& x, double& y)  {
+void L0Muon::Tower::xyFromPad(LHCb::MuonTileID pad, double& x, double& y)  {
 
   double dx = 1.0;
   double dy = 2.5;
@@ -424,7 +424,7 @@ void L0Muon::Tower::xyFromPad(MuonTileID pad, double& x, double& y)  {
 }
 
 
-double L0Muon::Tower::ptcalc(MuonTileID p1, MuonTileID p2) {
+double L0Muon::Tower::ptcalc(LHCb::MuonTileID p1, LHCb::MuonTileID p2) {
 
   double d1    = m_ptparam[0]; // Z(MAG)-Z(VTX) =  545.
   double d2    = m_ptparam[1]; // Z(M1)-Z(MAG)  =  665.5

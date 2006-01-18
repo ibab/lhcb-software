@@ -23,7 +23,7 @@ namespace L0Muon {
     Tell1ProcUnit();
 
     /// Constructor 
-    Tell1ProcUnit(MuonTileID id);
+    Tell1ProcUnit(LHCb::MuonTileID id);
 
     /// Constructor 
     Tell1ProcUnit(DOMNode* pNode);

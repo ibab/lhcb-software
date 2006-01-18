@@ -8,7 +8,7 @@ L0Muon::RawBufferCtrlUnit::RawBufferCtrlUnit(){
 /**
    Constructor.
 */
-L0Muon::RawBufferCtrlUnit::RawBufferCtrlUnit(MuonTileID id):L0MUnit(id){
+L0Muon::RawBufferCtrlUnit::RawBufferCtrlUnit(LHCb::MuonTileID id):L0MUnit(id){
   m_evtCounter=0;
 };
 

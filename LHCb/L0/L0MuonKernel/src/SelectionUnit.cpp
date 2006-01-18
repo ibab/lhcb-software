@@ -3,7 +3,7 @@
 
 L0Muon::SelectionUnit::SelectionUnit(){}
 
-L0Muon::SelectionUnit::SelectionUnit(MuonTileID id):L0MUnit(id){}
+L0Muon::SelectionUnit::SelectionUnit(LHCb::MuonTileID id):L0MUnit(id){}
 
 L0Muon::SelectionUnit::SelectionUnit(DOMNode* pNode):L0MUnit(pNode){}
 

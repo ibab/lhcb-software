@@ -5,7 +5,7 @@ L0Muon::BoardUnit::BoardUnit(){
 
 }
 
-L0Muon::BoardUnit::BoardUnit(MuonTileID id):L0MUnit(id){
+L0Muon::BoardUnit::BoardUnit(LHCb::MuonTileID id):L0MUnit(id){
   
 }
 

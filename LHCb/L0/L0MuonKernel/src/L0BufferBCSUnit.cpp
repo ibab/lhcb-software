@@ -8,7 +8,7 @@ L0Muon::L0BufferBCSUnit::L0BufferBCSUnit(){
 /**
    Constructor.
 */
-L0Muon::L0BufferBCSUnit::L0BufferBCSUnit(MuonTileID id):L0MUnit(id){
+L0Muon::L0BufferBCSUnit::L0BufferBCSUnit(LHCb::MuonTileID id):L0MUnit(id){
   char buf[4096];
   char* format ;
   L0Muon::RegisterFactory* rfactory = L0Muon::RegisterFactory::instance();

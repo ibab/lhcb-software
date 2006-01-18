@@ -6,7 +6,7 @@
 L0Muon::FormattingUnit::FormattingUnit(){
 }
 
-L0Muon::FormattingUnit::FormattingUnit(MuonTileID id):L0MUnit(id){
+L0Muon::FormattingUnit::FormattingUnit(LHCb::MuonTileID id):L0MUnit(id){
 }
 
 L0Muon::FormattingUnit::FormattingUnit(DOMNode* pNode):L0MUnit(pNode){
@@ -19,7 +19,7 @@ L0Muon::FormattingUnit::~FormattingUnit() {}
 void L0Muon::FormattingUnit::preexecute(){
   if (m_debug) std::cout << "*!* Formatting::preexecute: registers in ouput"  << std::endl;
    
-  std::vector<MuonTileID> firedPads;
+  std::vector<LHCb::MuonTileID> firedPads;
   firedPads.clear();
 
   std::map<std::string,Register*>::iterator ir;
@@ -28,13 +28,13 @@ void L0Muon::FormattingUnit::preexecute(){
   for ( ir = m_inputs.begin(); ir != m_inputs.end(); ir++ ) {
     TileRegister* itr = dynamic_cast<TileRegister*>(ir->second);
     
-    std::vector<MuonTileID> tmp = itr->firedTiles();
+    std::vector<LHCb::MuonTileID> tmp = itr->firedTiles();
 
     if (m_debug) std::cout <<"*!* Formatting::preexecute:   "<<ir->first<<" "<<tmp.size()<<" fired tiles"<<std::endl;
     itr->makePads();
       
-    std::vector<MuonTileID> pads = itr->Pads();
-    std::vector<MuonTileID>::iterator  ipads ;
+    std::vector<LHCb::MuonTileID> pads = itr->Pads();
+    std::vector<LHCb::MuonTileID>::iterator  ipads ;
     for (ipads = pads.begin(); ipads != pads.end(); ipads++){
        
       firedPads.push_back(*ipads);
@@ -52,10 +52,10 @@ void L0Muon::FormattingUnit::preexecute(){
     if (m_debug) std::cout << "*!* Formatting::preexecute: registers in ouput"  << std::endl;
     for ( out = m_outputs.begin(); out != m_outputs.end(); out++ ) {
       TileRegister* outtr = dynamic_cast<TileRegister*>(out->second);
-      std::vector<MuonTileID> outPads = outtr->getTileVector();
+      std::vector<LHCb::MuonTileID> outPads = outtr->getTileVector();
     
-      std::vector<MuonTileID>::iterator init;
-      std::vector<MuonTileID>::iterator outit;
+      std::vector<LHCb::MuonTileID>::iterator init;
+      std::vector<LHCb::MuonTileID>::iterator outit;
        
       if ( ! outPads.empty()){
         for ( outit = outPads.begin(); outit != outPads.end(); outit++) {

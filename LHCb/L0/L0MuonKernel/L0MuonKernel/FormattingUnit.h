@@ -24,7 +24,7 @@ namespace L0Muon {
      /// Constructor
      FormattingUnit();
      
-     FormattingUnit(MuonTileID id);
+     FormattingUnit(LHCb::MuonTileID id);
 
      /// Destructor
      ~FormattingUnit();

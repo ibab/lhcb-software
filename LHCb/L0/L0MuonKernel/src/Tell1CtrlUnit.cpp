@@ -4,7 +4,7 @@ L0Muon::Tell1CtrlUnit::Tell1CtrlUnit(){
 
 }
 
-L0Muon::Tell1CtrlUnit::Tell1CtrlUnit(MuonTileID id):L0MUnit(id){
+L0Muon::Tell1CtrlUnit::Tell1CtrlUnit(LHCb::MuonTileID id):L0MUnit(id){
   
 }
 

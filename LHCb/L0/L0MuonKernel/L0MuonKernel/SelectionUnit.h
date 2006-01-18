@@ -26,7 +26,7 @@ namespace L0Muon {
     SelectionUnit();
 
     /// Constructor 
-    SelectionUnit(MuonTileID id);
+    SelectionUnit(LHCb::MuonTileID id);
 
     /// Constructor 
     SelectionUnit(DOMNode* pNode);

@@ -1,4 +1,4 @@
-// $Id: Tower.h,v 1.12 2005-12-15 15:53:27 jucogan Exp $
+// $Id: Tower.h,v 1.13 2006-01-18 16:49:53 jucogan Exp $
 
 #ifndef PROCESSORKERNEL_TOWER_H
 #define PROCESSORKERNEL_TOWER_H     1
@@ -16,7 +16,7 @@
 #include <boost/dynamic_bitset.hpp>
 #include "L0MuonKernel/L0MuonStatus.h"
 #include "ProcessorKernel/Register.h"
-#include "MuonKernel/MuonTileID.h"
+#include "Kernel/MuonTileID.h"
 #include "L0MuonKernel/MuonCandidate.h"
 //#include "MuonTools/IMuonTileXYZTool.h"
 //#include "GaudiKernel/MsgStream.h"
@@ -39,7 +39,7 @@ namespace L0Muon {
   
     typedef std::pair<int,int> HitIndex;
     typedef std::vector<boost::dynamic_bitset<> > StationMap;    
-    typedef std::map< HitIndex, MuonTileID> IDMap;
+    typedef std::map< HitIndex, LHCb::MuonTileID> IDMap;
     
     /// Reset the tower
     void reset();
@@ -58,14 +58,14 @@ namespace L0Muon {
         @param XY  : raw and column in tower
         @param mid : MuonTileID
      */
-    void setPadIdMap(int sta, std::pair<int, int> XY, MuonTileID mid); 
+    void setPadIdMap(int sta, std::pair<int, int> XY, LHCb::MuonTileID mid); 
  
     /** Return the MuonTileID of a pad in tower
  
         @param sta : station 
         @param XY  : raw and column in tower
      */
-    MuonTileID getPadIdMap(int sta, std::pair<int,int> XY);
+    LHCb::MuonTileID getPadIdMap(int sta, std::pair<int,int> XY);
     
     /// Draw bits for station 
     void drawStation(int sta);
@@ -113,7 +113,7 @@ namespace L0Muon {
         
         @param puID  : MuonTileID of the PU 
      */
-    std::vector<PMuonCandidate> processTower(MuonTileID & puID);
+    std::vector<PMuonCandidate> processTower(LHCb::MuonTileID & puID);
 
     /// Cleaning clusters of seeds in a tower
     void cleanSeed(StationMap & map) ; 
@@ -138,8 +138,8 @@ namespace L0Muon {
 
     IDMap m_idmap[5];// Map relating the local coordinates and the MuonTileID of every fired pad
     
-    double ptcalc(MuonTileID padM1, MuonTileID padM2);
-    void xyFromPad(MuonTileID pad, double& x, double& y) ;
+    double ptcalc(LHCb::MuonTileID padM1, LHCb::MuonTileID padM2);
+    void xyFromPad(LHCb::MuonTileID pad, double& x, double& y) ;
 
     bool m_debug; // Debug flag
 

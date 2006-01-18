@@ -27,7 +27,7 @@ namespace L0Muon {
     BoardUnit();
 
     /// Constructor 
-    BoardUnit(MuonTileID id);
+    BoardUnit(LHCb::MuonTileID id);
 
     /// Constructor 
     BoardUnit(DOMNode* pNode);

@@ -7,7 +7,7 @@
 L0Muon::CoreUnit::CoreUnit() {
 }
     
-L0Muon::CoreUnit::CoreUnit(MuonTileID id):L0MUnit(id) {
+L0Muon::CoreUnit::CoreUnit(LHCb::MuonTileID id):L0MUnit(id) {
 }
     
 L0Muon::CoreUnit::CoreUnit(DOMNode* pNode):L0MUnit(pNode) {  
@@ -33,8 +33,8 @@ bool L0Muon::CoreUnit::makePads() {
       if (m_debug) std::cout << "*!! Core:makePads: register name " << itr->name() << std::endl;
       boost::dynamic_bitset<> r = itr->getBitset();
       if (m_debug) std::cout << "*!! Core:makePads: reg size" << " " <<r.size() << std::endl;
-      std::vector<MuonTileID> tmp = itr->firedTiles();
-      std::vector<MuonTileID>::iterator itmp;
+      std::vector<LHCb::MuonTileID> tmp = itr->firedTiles();
+      std::vector<LHCb::MuonTileID>::iterator itmp;
       if (m_debug) std::cout << "*!! Core:makePads: fired tiles (" << tmp.size() <<"):"<< std::endl;
       for (itmp = tmp.begin(); itmp!= tmp.end(); itmp++){
         if (m_debug) std::cout << "*!! Core:makePads:   " << (*itmp).toString()<< std::endl;
@@ -43,9 +43,9 @@ bool L0Muon::CoreUnit::makePads() {
       itr->makePads();
       if (m_debug) std::cout << "*!! Core:makePads: itr->makePads() done" << std::endl;
 
-      std::vector<MuonTileID> pads = itr->Pads();
+      std::vector<LHCb::MuonTileID> pads = itr->Pads();
       if (m_debug) std::cout << "*!! Core:makePads: pads.size= "<<pads.size() << std::endl;
-      std::vector<MuonTileID>::iterator  ipads ;    
+      std::vector<LHCb::MuonTileID>::iterator  ipads ;    
       for (ipads = pads.begin(); ipads != pads.end(); ipads++){
         m_pads.push_back(*ipads);
         if (m_debug) std::cout << "*!! Core:makePads:   " << (*ipads).toString() << std::endl;
@@ -75,13 +75,13 @@ bool L0Muon::CoreUnit::makeTower() {
   MuonLayout pulayout(2,2);
 
   // Reference of the first pad (closest to the beam)
-  MuonTileID refpad = MuonTileID(m_mid,layout,0,0);
+  LHCb::MuonTileID refpad = LHCb::MuonTileID(m_mid,layout,0,0);
   int refX = refpad.nX();
   int refY = refpad.nY();
   if (m_debug) std::cout << "*!! Core:makeTower " << "refpad " << refpad.toString() << std::endl;
 
-  std::vector<MuonTileID>::iterator ip ;
-  std::vector<MuonTileID>::iterator itmp;
+  std::vector<LHCb::MuonTileID>::iterator ip ;
+  std::vector<LHCb::MuonTileID>::iterator itmp;
 
   // Loop over fired pads
   for (ip=m_pads.begin(); ip != m_pads.end(); ip++) {
@@ -94,7 +94,7 @@ bool L0Muon::CoreUnit::makeTower() {
     if (nsta==2) seedFound=true;
 
     // Vector of tiles with M3 granularity containing the fired pad
-    std::vector<MuonTileID> tmp;    
+    std::vector<LHCb::MuonTileID> tmp;    
     if ( ip->region() == nreg ) {
       if (m_debug) std::cout << "*!! Core:makeTower " << "ip->region==nreg" << std::endl;
       tmp = layout.tiles(*ip);
@@ -147,26 +147,26 @@ void L0Muon::CoreUnit::initializeM1TowerMap() {
   MuonLayout pulayout(2,2);
 
   // Reference of the first pad (closest to the beam)
-  MuonTileID refpad = MuonTileID(m_mid,layout,0,0);
+  LHCb::MuonTileID refpad = LHCb::MuonTileID(m_mid,layout,0,0);
   int refX = refpad.nX();
   int refY = refpad.nY();
   if (m_debug) std::cout << "*!! Core:initializeM1TowerMap " << "refpad " << refpad.toString() << std::endl;
 
-  std::vector<MuonTileID>::iterator ip ;
-  std::vector<MuonTileID>::iterator itmp;
+  std::vector<LHCb::MuonTileID>::iterator ip ;
+  std::vector<LHCb::MuonTileID>::iterator itmp;
 
 
   // Set station
   int sta=0;
 
   // Loop over M1 pads 
-  std::vector<MuonTileID> pads = layoutM1.tilesInArea(m_mid,m_tower.maxXFoi(1)/2,0);
+  std::vector<LHCb::MuonTileID> pads = layoutM1.tilesInArea(m_mid,m_tower.maxXFoi(1)/2,0);
   for (ip=pads.begin(); ip != pads.end(); ip++) {
 
     if (m_debug) std::cout << "*!! Core:initializeM1TowerMap " << "pad " << (*ip).toString() << std::endl;
 
     // Vector of tiles with M3 granularity containing the fired pad
-    std::vector<MuonTileID> tmp;    
+    std::vector<LHCb::MuonTileID> tmp;    
     if ( ip->region() == nreg ) {
       if (m_debug) std::cout << "*!! Core:initializeM1TowerMap " << "ip->region==nreg" << std::endl;
       tmp = layout.tiles(*ip);

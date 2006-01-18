@@ -6,7 +6,7 @@
 */ 
 #include "ProcessorKernel/Unit.h"
 #include "ProcessorKernel/RegisterFactory.h"
-#include "MuonKernel/MuonTileID.h"
+#include "Kernel/MuonTileID.h"
 
 #include <xercesc/dom/DOM.hpp>
 #include <xercesc/parsers/AbstractDOMParser.hpp>
@@ -35,7 +35,7 @@ namespace L0Muon {
     */
     L0MUnit();
 
-    L0MUnit(MuonTileID id);
+    L0MUnit(LHCb::MuonTileID id);
 
     /// Constructor from XML (DOM)
     L0MUnit(DOMNode* pNode);
@@ -43,13 +43,13 @@ namespace L0Muon {
     /// Destructor
     ~L0MUnit();
 
-    MuonTileID mid(){return m_mid;}
+    LHCb::MuonTileID mid(){return m_mid;}
 
     /// Save the Unit in XML format
     std::string toXML(std::string tab="");
 
   protected:
-    MuonTileID m_mid;
+    LHCb::MuonTileID m_mid;
     /// Utilities for XML decoding: get the attribute key in the list di 
     /// and convert it into an integer, a string,...
     int         getAttributeInt(DOMNamedNodeMap* di, const char* key);
