@@ -1,4 +1,4 @@
-// $Id: OTFillBufferFromOTTime.h,v 1.3 2005-11-09 16:55:39 jnardull Exp $
+// $Id: OTFillBufferFromOTTime.h,v 1.4 2006-01-18 14:05:21 janos Exp $
 #ifndef OTDAQ_OTFILLBUFFERFROMOTTIME_H 
 #define OTDAQ_OTFILLBUFFERFROMOTTIME_H 1
 
@@ -56,7 +56,7 @@ private:
   std::string m_OTTimeLoc;
   std::string m_otTrackerPath;
 
-  typedef std::vector<OTTime*> vOTime;
+  typedef std::vector<LHCb::OTTime*> vOTime;
   typedef std::map<int,vOTime*> mBank;// contains the bank vectors*
   typedef std::map<int,vOTime*> mGol;// contains the Gol vectors*
   typedef std::vector<unsigned int> dataBank;
@@ -66,7 +66,7 @@ private:
   DeOTDetector* m_otTracker;
     
   // global pointer to vectors container
-  OTTimes* m_Time;
+  LHCb::OTTimes* m_Time;
   mBank* dataContainer;
   mGol* goldatacontainer;
   dataBuffer* finalBuf;
@@ -76,8 +76,8 @@ private:
   int numberOfGols;
   
   // converts channel ID number into bank number for sorting
-  int chID2int(OTChannelID otChannel); // int is bank ID
-  int chID2Otis(OTChannelID otChannel);
+  int chID2int(LHCb::OTChannelID otChannel); // int is bank ID
+  int chID2Otis(LHCb::OTChannelID otChannel);
  
   // sort OTTimes into banks
   StatusCode sortTimesIntoBanks();

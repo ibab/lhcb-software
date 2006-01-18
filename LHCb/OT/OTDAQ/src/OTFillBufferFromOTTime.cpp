@@ -1,4 +1,4 @@
-// $Id: OTFillBufferFromOTTime.cpp,v 1.7 2005-11-09 16:55:39 jnardull Exp $
+// $Id: OTFillBufferFromOTTime.cpp,v 1.8 2006-01-18 14:05:21 janos Exp $
 // Include files
 
 // local
@@ -9,6 +9,7 @@
 #include "Event/RawEvent.h"
 #include "Event/RawBank.h"
 
+using namespace LHCb;
 
 //-----------------------------------------------------------------------------
 // Implementation file for class : OTFillBufferFromOTTime

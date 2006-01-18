@@ -1,7 +1,12 @@
 Package         : OTDAQ
 Package manager : J. Nardulli
 
-! 2005-10-11 Jacopo Nardulli
+!====================== OTDAQ v4r0 2006-01-18 ======================
+! 2006-01-18 Jan Amoraal
+ - Migrated to LHCb v20r0
+ - Split-up OTDAQ.xml into DataWord.xml and GolHeader.xml
+
+! 2005-01-11 Jacopo Nardulli
 - Change from RawBuffer-> RawEvent
 
 !====================== OTDAQ v3r3 2005-07-13 ======================

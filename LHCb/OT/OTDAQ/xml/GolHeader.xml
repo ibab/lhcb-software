@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE gdd SYSTEM "gdd.dtd">
+
+<gdd>
+  <package name="OTDAQ"> 
+    <import name="Event/RawBank"/>
+    <import name="Event/RawEvent"/>
+
+    <class name="GolHeader" 
+           author="Jacopo Nardulli"
+           desc="The Gol Header is a word of 32 bits that containes the address on an OT Module for the OTDAQ data format">
+      &StlVector;
+      <constructor argList="int iWord, int iStation, int iLayer, int iQuarter, int iModule, int iOtisErFlag, int iSize" 
+                   desc="constructor with word, station, layer, quarter, module, otisErFlag and size">
+        <code>    
+                  m_golHeader = (iWord &lt;&lt; wordBits) +
+                                (iStation &lt;&lt; stationBits) + 
+                                (iLayer &lt;&lt; layerBits) + 
+                                (iQuarter &lt;&lt; quarterBits) + 
+                                (iModule &lt;&lt; moduleBits) + 
+	                        (iOtisErFlag &lt;&lt; otisErFlagBits) + 
+                                (iSize &lt;&lt; sizeBits);
+        </code>
+      </constructor>
+      <constructor argList="const GolHeader aGolHeader" 
+                   desc="copy constructor">
+        <code>
+          m_golHeader = aGolHeader.m_golHeader;
+        </code>
+      </constructor>
+      <constructor argList="int id" 
+                   initList="m_golHeader(id)" 
+                   desc="constructor with golHeader">
+        <code></code>
+      </constructor>   
+
+      <method type="unsigned int"
+              argList="GolHeader gol"
+              name="returnInt" 
+              desc="Return an unsigned int from a GolHeader ">
+        <code> return gol.m_golHeader  &gt;&gt; 0; </code>      
+      </method>
+      
+      <attribute type="bitfield" name="golHeader" desc="Gol Header ID">
+        <bitfield name="size" length="9" desc="Size" setMeth="FALSE"/>
+	<bitfield name="otisErFlag" length="12" desc="OtisErFlag" setMeth="FALSE"/>
+        <bitfield name="module" length="4" desc="Module" setMeth="FALSE"/>
+        <bitfield name="quarter" length="2" desc="Quarter" setMeth="FALSE"/>
+        <bitfield name="layer" length="2" desc="Layer" setMeth="FALSE"/>
+        <bitfield name="station" length="2" desc="Station" setMeth="FALSE"/>
+        <bitfield name="word" length="1" desc="Word" setMeth="FALSE"/>      
+      </attribute>
+    </class>
+  </package>
+</gdd>

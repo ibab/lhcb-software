@@ -1,4 +1,4 @@
-// $Id: OTTimeCreator.cpp,v 1.8 2005-11-09 16:55:39 jnardull Exp $
+// $Id: OTTimeCreator.cpp,v 1.9 2006-01-18 14:05:21 janos Exp $
 // Include files
 
 // local
@@ -223,7 +223,7 @@ double OTTimeCreator::correctedTime(const OTChannelID aChan,
   DeOTModule* aModule = m_tracker->module(aChan);
   double timeOfFlight = -99999.;
   if (aModule != 0) {
-    HepPoint3D aPoint = aModule->centerOfStraw(aChan.straw());
+    Gaudi::XYZPoint aPoint = aModule->centerOfStraw(aChan.straw());
     timeOfFlight = sqrt(pow(aPoint.x(),2.)+pow(aPoint.z(),2.))/c_light;
   } else {
     warning () << "Failed to find DeOTModule" << endreq;

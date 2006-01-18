@@ -1,4 +1,4 @@
-// $Id: OTTimeCreator.h,v 1.6 2005-11-09 16:55:39 jnardull Exp $
+// $Id: OTTimeCreator.h,v 1.7 2006-01-18 14:05:21 janos Exp $
 #ifndef OTDAQ_OTTIMECREATOR_H 
 #define OTDAQ_OTTIMECREATOR_H 1
 
@@ -21,12 +21,14 @@
 // from Detector
 #include "OTDet/DeOTDetector.h"
 
-// CLHEP
-#include "CLHEP/Units/PhysicalConstants.h"
+// MathCore
+#include "Kernel/PhysicalConstants.h"
 
 //local
 #include "Event/GolHeader.h"
 #include "Event/DataWord.h"
+
+using namespace LHCb;
 
 /** @class OTTimeCreator OTTimeCreator.h OTDAQ/OTTimeCreator.h
  *  

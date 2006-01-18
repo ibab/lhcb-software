@@ -1,10 +1,10 @@
-// $Id: OTReadOutWindow.cpp,v 1.3 2005-07-12 09:35:19 jnardull Exp $
+// $Id: OTReadOutWindow.cpp,v 1.4 2006-01-18 14:05:21 janos Exp $
 
 // Gaudi files
 #include "GaudiKernel/ToolFactory.h"
 
-//CLHEP
-#include "CLHEP/Units/SystemOfUnits.h"
+// MathCore
+#include "Kernel/SystemOfUnits.h"
 
 // local
 #include "OTReadOutWindow.h"

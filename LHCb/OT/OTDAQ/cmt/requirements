@@ -1,5 +1,5 @@
 package OTDAQ
-version v3r3
+version v4r0
 
 branches OTDAQ cmt doc src options xml Event
 
@@ -11,7 +11,7 @@ use OTEvent	v*	Event
 use OTDet	v*	Det
 
 #---- Produce Header-Files from XML description
-document obj2doth OTDAQObj2Doth ../xml/OTDAQ.xml
+document obj2doth OTDAQObj2Doth ../xml/*.xml
 
 # ================= component library ====================
 library OTDAQ ../src/*.cpp
