@@ -1,7 +1,10 @@
-! $Id: release.notes,v 1.184 2006-01-18 09:21:51 pkoppenb Exp $
+! $Id: release.notes,v 1.185 2006-01-18 13:43:21 pkoppenb Exp $
 ! Package     : DaVinciTools
 ! Responsible : P. Koppenburg
 
+! 2006-01-18 - P. Koppenburg
+  - src/DaVinciTools_load.cpp
+    . Added CheckVeloOverlap
 !========================== DaVinciTools v12r4 2006-01-18 ===================
 ! Tagged to make a branch for DC06.
 ! 2006-01-17 - P. Koppenburg
