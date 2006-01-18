@@ -4,7 +4,28 @@
 ! Responsible : G.Corti
 ! -----------------------------------------------------------------------------
 
-!===================== GaussAlgs v1r7 2005-12-16  =========================
+! 2006-01-16 - Gloria CORTI
+ - src/GiGaGetEventAlg.cpp
+   src/GiGaGetHitsAlg.cpp
+   src/PrintEventAlg.cpp
+   . Adapt to new Event Model in LHCB v20r0 by introducing LHCb namespace
+   . Use new macro for algorithm factory declaration (GAUDI v18r0)
+ - src/GiGaGetHitsAlg.{h,cpp}
+   . Remove special treatment for Velo, PuVeto and Muon hits: now can use
+     generic method with correct detector as argument.
+     Adapt to split of containers for TT and IT.
+ - src/PrintEventAlg.h
+   . Remove use of MsgStream, use instead predefined methods 
+
+! 2006-01-16 - Gloria CORTI
+ - src/GeneratorToG4.{h,cpp} 
+   src/G4HepMCToMCTruth.{h,cpp}
+   . MOVED to NEW package GaussKine that contains code for transformation
+     from LHCb Event model kinematic classes to Geant4 and vice versa
+ - src/GaussAlgs_load.cpp
+   . remove algorithms GeneratorToG4 and G4HepMCToMCTruth
+
+!===================== GaussAlgs v1r8 2005-12-16  =========================
 ! 2005-12-16 - Gloria CORTI
  - src/GiGaGetHitsAlg.cpp
    . set empty location as default for properties of MC Rich extra classes

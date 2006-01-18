@@ -1,79 +1,55 @@
-// $Id: GiGaGetEventAlg.cpp,v 1.2 2005-02-02 15:05:54 gcorti Exp $ 
-// ============================================================================
-// CVS tag $Name: not supported by cvs2svn $ 
-// ============================================================================
-// $Log: not supported by cvs2svn $
-// Revision 1.1.1.1  2004/02/20 19:43:29  ibelyaev
-// New package 
-//
-//  ===========================================================================
-#define GIGACNV_GIGAMISCGETEVENTALG_CPP
-// ============================================================================
-// GaudiKernel
-// ============================================================================
-#include "GaudiKernel/AlgFactory.h"
+// $Id: GiGaGetEventAlg.cpp,v 1.3 2006-01-18 09:12:46 gcorti Exp $ 
+// Include files 
+
+// from Gaudi
+#include "GaudiKernel/DeclareFactoryEntries.h"
 #include "GaudiKernel/Stat.h"
-// ============================================================================
+
 // Event 
-// ============================================================================
 #include "Event/MCParticle.h"
 #include "Event/MCVertex.h"
-// ============================================================================
+
 // local 
-// ============================================================================
 #include "GiGaGetEventAlg.h"
-// ============================================================================
 
-// ============================================================================
-/** @file
- *  
- *  implementation of class GiGaGetEvent 
- *
- *  @author Vany aBelyaev Ivan.Belyaev@itep.ru
- */
-// ============================================================================
+//-----------------------------------------------------------------------------
+// Implementation file for class : GiGaGetEvent
+// 
+// 2004-02-20 : I.Belyaev 
+// 2005-02-02 : G.Corti   
+// 2006-01-16 : G.Corti
+//-----------------------------------------------------------------------------
 
-// ============================================================================
-/// mandatory factory stuff
-// ============================================================================
-static const  AlgFactory<GiGaGetEventAlg>         s_Factory;
-const        IAlgFactory&GiGaGetEventAlgFactory = s_Factory;
+// Declaration of the Algorithm Factory
+DECLARE_ALGORITHM_FACTORY( GiGaGetEventAlg );
 
-// ============================================================================
-/** standard constructor
- *  @param name name of teh algorithm 
- *  @param SvcLoc pointer to service locator 
- */
-// ============================================================================
+//=============================================================================
+// Standard constructor, initializes variables
+//=============================================================================
 GiGaGetEventAlg::GiGaGetEventAlg(const std::string& name, 
                                  ISvcLocator* pSvcLocator) 
   ///
   : GaudiAlgorithm( name , pSvcLocator) 
-  , m_particles   ( MCParticleLocation::Default )
-  , m_vertices    ( MCVertexLocation::Default   )
+  , m_particles   ( LHCb::MCParticleLocation::Default )
+  , m_vertices    ( LHCb::MCVertexLocation::Default )
 { 
-  declareProperty( "Particles" , m_particles  ) ; 
-  declareProperty( "Vertices"  , m_vertices   ) ; 
+  declareProperty( "Particles", m_particles ); 
+  declareProperty( "Vertices" , m_vertices ); 
 };
-// ============================================================================
 
-// ============================================================================
-/// destructor 
-// ============================================================================
+//=============================================================================
+// Destructor
+//=============================================================================
 GiGaGetEventAlg::~GiGaGetEventAlg(){};
-// ============================================================================
 
-// ============================================================================
-/** the standard Algorithm execution method 
- *  @see Algorithm
- *  @return status code
- */
-// ============================================================================
+//=============================================================================
+// Main execution
+//=============================================================================
 StatusCode GiGaGetEventAlg::execute() 
 {
   if ( !m_particles.empty() )
   {
-    const MCParticles* particles = get<MCParticles> ( m_particles ) ;
+    const LHCb::MCParticles* particles = get<LHCb::MCParticles>( m_particles );
     info() << " Number of extracted MCParticles '"
            << m_particles << "' \t"
            << particles -> size() 
@@ -83,7 +59,7 @@ StatusCode GiGaGetEventAlg::execute()
   
   if( !m_vertices.empty() )
   {
-    const MCVertices* vertices = get<MCVertices> ( m_vertices ) ;
+    const LHCb::MCVertices* vertices = get<LHCb::MCVertices>( m_vertices ) ;
     info() << " Number of extracted MCvertices  '"
            << m_vertices << "'  \t" 
            << vertices -> size() 
@@ -93,12 +69,8 @@ StatusCode GiGaGetEventAlg::execute()
   
   return StatusCode::SUCCESS;
 };
-// ============================================================================
 
-
-// ============================================================================
-// The End 
-// ============================================================================
+//=============================================================================
 
 
 

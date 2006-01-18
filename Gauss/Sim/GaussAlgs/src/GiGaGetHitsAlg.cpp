@@ -1,24 +1,13 @@
-// $Id: GiGaGetHitsAlg.cpp,v 1.7 2005-12-16 11:24:11 gcorti Exp $
+// $Id: GiGaGetHitsAlg.cpp,v 1.8 2006-01-18 09:12:46 gcorti Exp $
 // Include files
 
 // from Gaudi
-#include "GaudiKernel/AlgFactory.h"
-// #include "GaudiKernel/ISvcLocator.h"
-// #include "GaudiKernel/IDataProviderSvc.h"
-// #include "GaudiKernel/SmartDataPtr.h"
-// #include "GaudiKernel/DataObject.h"
+#include "GaudiKernel/DeclareFactoryEntries.h" 
 #include "GaudiKernel/Stat.h"
-// #include "GaudiKernel/MsgStream.h"
-
-// from GiGa
-//#include "GiGa/IGiGaSvc.h"
 
 /// from Event
 #include "Event/MCHit.h"
-#include "Event/MCVeloHit.h"
-#include "Event/MCMuonHit.h"
 #include "Event/MCCaloHit.h"
-#include "Event/MCMuonHitPath.h"
 #include "Event/MCRichHit.h"
 #include "Event/MCRichOpticalPhoton.h"
 #include "Event/MCRichTrack.h"
@@ -35,8 +24,7 @@
 //-----------------------------------------------------------------------------
 
 // Declaration of the Algorithm Factory
-static const  AlgFactory<GiGaGetHitsAlg>          s_factory ;
-const        IAlgFactory& GiGaGetHitsAlgFactory = s_factory ;
+DECLARE_ALGORITHM_FACTORY( GiGaGetHitsAlg );
 
 
 //=============================================================================
@@ -47,25 +35,26 @@ GiGaGetHitsAlg::GiGaGetHitsAlg( const std::string& name,
   : GaudiAlgorithm ( name , pSvcLocator )
     , m_caloHits     ()
 {
-  m_caloHits.push_back ( MCCaloHitLocation::Spd  ) ;
-  m_caloHits.push_back ( MCCaloHitLocation::Prs  ) ;
-  m_caloHits.push_back ( MCCaloHitLocation::Ecal ) ;
-  m_caloHits.push_back ( MCCaloHitLocation::Hcal ) ;
+  m_caloHits.push_back ( LHCb::MCCaloHitLocation::Spd  ) ;
+  m_caloHits.push_back ( LHCb::MCCaloHitLocation::Prs  ) ;
+  m_caloHits.push_back ( LHCb::MCCaloHitLocation::Ecal ) ;
+  m_caloHits.push_back ( LHCb::MCCaloHitLocation::Hcal ) ;
   m_caloDet.push_back ( "Spd" );
   m_caloDet.push_back ( "Prs" );
   m_caloDet.push_back ( "Ecal" );
   m_caloDet.push_back ( "Hcal" );
 
-  declareProperty( "OTHits"    , m_othits = MCHitLocation::OTHits );
-  declareProperty( "STHits"    , m_sthits = MCHitLocation::ITHits );
-  declareProperty( "VeloHits"  , m_velohits = MCVeloHitLocation::Default );
-  declareProperty( "PuVeloHits", m_puvelohits = MCVeloHitLocation::PuVeto );
-  declareProperty( "MuonHits"  , m_muonhits = MCMuonHitLocation::MCMuonHits );
-  declareProperty( "RichHits"  , m_richhits = MCRichHitLocation::Default );
+  declareProperty( "VeloHits",   m_velohits   = LHCb::MCHitLocation::Velo );
+  declareProperty( "PuVeloHits", m_puvelohits = LHCb::MCHitLocation::PuVeto );
+  declareProperty( "TTHits",     m_othits = LHCb::MCHitLocation::TT );
+  declareProperty( "ITHits",     m_sthits = LHCb::MCHitLocation::IT );
+  declareProperty( "OTHits",     m_othits = LHCb::MCHitLocation::OT );
+  declareProperty( "CaloHits",   m_caloHits );
+  declareProperty( "MuonHits",   m_muonhits = LHCb::MCHitLocation::Muon );
+  declareProperty( "RichHits",   m_richhits = LHCb::MCRichHitLocation::Default );
   declareProperty( "RichOpticalPhotons", m_richop = "" );
-  declareProperty( "RichTracks", m_richtracks = "" );
-  declareProperty( "RichSegments", m_richsegments = "" );
-  declareProperty( "CaloHits",           m_caloHits      );
+  declareProperty( "RichTracks",         m_richtracks = "" );
+  declareProperty( "RichSegments",       m_richsegments = "" );
   declareProperty( "ExtraHits",          m_extraHits = "" );
   
 }
@@ -96,13 +85,16 @@ StatusCode GiGaGetHitsAlg::execute() {
   debug() << "==> Execute" << endmsg;
   
   // Velo hits
-  hitsVelo( "Velo", m_velohits );
+  hitsTracker( "Velo", m_velohits );
 
   // Velo PileUp hits
-  hitsVelo( "VeloPU", m_puvelohits );
+  hitsTracker( "VeloPU", m_puvelohits );
 
-  // Silicon Tracker hits
-  hitsTracker( "ST", m_sthits );
+  // Trigger Tracker hits
+  hitsTracker( "TT", m_sthits );
+
+  // Inner Tracker hits
+  hitsTracker( "IT", m_sthits );
   
   // Outer Tracker hits
   hitsTracker( "OT", m_othits );  
@@ -115,7 +107,7 @@ StatusCode GiGaGetHitsAlg::execute() {
   for(Addresses::const_iterator address = m_caloHits.begin() ;
       m_caloHits.end() != address ; ++address ) {
     if( (*address).empty() ) continue;
-    MCCaloHits* hits = get<MCCaloHits>( *address );
+    LHCb::MCCaloHits* hits = get<LHCb::MCCaloHits>( *address );
     info() << "Number of extracted MCCaloHits  '" << *address << "' \t"
            << hits->size() << endmsg ;
     Stat stat( chronoSvc(), "#"+m_caloDet[idet]+" MCHits", hits->size() );
@@ -123,8 +115,8 @@ StatusCode GiGaGetHitsAlg::execute() {
   }
 
   // Muon hits
-  infoMuon();
-
+  hitsTracker( "Muon", m_muonhits );
+  
   // Extra detector hits
   hitsTracker( "Extra" , m_extraHits );
 
@@ -143,48 +135,14 @@ StatusCode GiGaGetHitsAlg::finalize() {
 }
 
 //=============================================================================
-// Get hits for Velo: standard and PileUp
-// If verbose print some details
-//=============================================================================
-void GiGaGetHitsAlg::hitsVelo(const std::string det, 
-                              const std::string location)
-{
-  if( !location.empty() ) {
-    MCVeloHits* obj = get<MCVeloHits>( location );
-    std::string dethits = det+" MCHits";
-    info() << "Number of extracted MCVeloHits  '"
-           << location << "'  \t"
-           << obj->size()
-           << endmsg ;
-    Stat stat( chronoSvc(), "#"+dethits, obj->size() ) ;
-    
-    if( msgLevel( MSG::VERBOSE ) ) {
-      for( MCVeloHits::const_iterator vhiter=obj->begin(); vhiter!=obj->end();
-           ++vhiter ) {
-        verbose() <<  "Energy of MCVeloHit: " 
-                  << (*vhiter)->energy()
-                  << "   Sensor: " 
-                  << (*vhiter)-> sensor()
-                  << "   MCParticle: " 
-                  << (*vhiter)->mcParticle()->particleID().pid()
-                  << "     Energy: " 
-                  << (*vhiter)->mcParticle()-> momentum().e()
-                  <<  endmsg;
-      }
-    }
-  } 
-  return;
-}
-
-//=============================================================================
-// Get hits for Trackers: OT and ST
+// Get hits for Trackers: Velo, PuVeto, TT, IT and OT
 // If verbose print some details
 //=============================================================================
 void GiGaGetHitsAlg::hitsTracker(const std::string det, 
                                  const std::string location)
 {
   if( !location.empty() ) {
-    MCHits* obj = get<MCHits>( location );
+    LHCb::MCHits* obj = get<LHCb::MCHits>( location );
     std::string dethits = det+" MCHits";
     info() << "Number of extracted MCHits      '"
            << location << "'  \t"
@@ -192,7 +150,7 @@ void GiGaGetHitsAlg::hitsTracker(const std::string det,
            << endmsg;
     Stat stat( chronoSvc(), "#"+dethits, obj->size() );
     if( msgLevel( MSG::VERBOSE ) ) {
-      for( MCHits::const_iterator hiter=obj->begin(); hiter!=obj->end();
+      for( LHCb::MCHits::const_iterator hiter=obj->begin(); hiter!=obj->end();
            ++hiter ) {
         verbose() << "Energy of MCHit: "
                   << (*hiter)->energy()
@@ -215,14 +173,14 @@ void GiGaGetHitsAlg::infoRICH()
 {
   // MCRichHits
   if( !m_richhits.empty() ) {
-    MCRichHits* obj = get<MCRichHits>( m_richhits );
+    LHCb::MCRichHits* obj = get<LHCb::MCRichHits>( m_richhits );
     info() << "Number of extracted MCRichHits  '"
            << m_richhits << "' \t"
            << obj->size()
            << endmsg ;
     unsigned int nHitsRich1 = 0, nHitsRich2 = 0;
-    for( MCRichHits::const_iterator hiter=obj->begin(); hiter!=obj->end();
-         ++hiter ) {
+    for( LHCb::MCRichHits::const_iterator hiter=obj->begin(); 
+         hiter!=obj->end(); ++hiter ) {
       if( (*hiter)->rich() == Rich::Rich1 ) nHitsRich1++;
       if( (*hiter)->rich() == Rich::Rich2 ) nHitsRich2++;
       verbose() << "Rich: " << (*hiter)->rich() 
@@ -246,7 +204,8 @@ void GiGaGetHitsAlg::infoRICH()
   
   // Optical photons
   if( !m_richop.empty() ) {
-    MCRichOpticalPhotons* obj = get<MCRichOpticalPhotons>( m_richop );
+    LHCb::MCRichOpticalPhotons* obj = 
+      get<LHCb::MCRichOpticalPhotons>( m_richop );
     info() << "Number of extracted MCRichOpticalPhotons '"
             << m_richop << "' \t"
             << obj->size()
@@ -257,7 +216,7 @@ void GiGaGetHitsAlg::infoRICH()
 
   // Rich segments
   if( !m_richsegments.empty() ) {
-    MCRichSegments* obj = get<MCRichSegments>( m_richsegments );
+    LHCb::MCRichSegments* obj = get<LHCb::MCRichSegments>( m_richsegments );
     info() << "Number of extracted MCRichSegments '"
            << m_richsegments << "' \t"
            << obj->size()
@@ -268,7 +227,7 @@ void GiGaGetHitsAlg::infoRICH()
 
   // Rich tracks
   if( !m_richtracks.empty() ) {
-    MCRichTracks* obj = get<MCRichTracks>( m_richtracks );
+    LHCb::MCRichTracks* obj = get<LHCb::MCRichTracks>( m_richtracks );
     info() << MSG::INFO
            << "Number of extracted MCRichTracks '"
            << m_richtracks << "' \t"
@@ -281,88 +240,6 @@ void GiGaGetHitsAlg::infoRICH()
   return;
 }
 
-//=============================================================================
-// Get hits for MUON system:
-// If verbose print some details
-//=============================================================================
-void GiGaGetHitsAlg::infoMuon() {
-
-  // MCMuonHits
-  if( m_muonhits.empty() ) {
-    return;
-  }
-  
-  unsigned int nTotMuonHits = 0;
-  unsigned int nM1Hits = 0, nM2Hits = 0, nM3Hits = 0, nM4Hits = 0, nM5Hits = 0;
-  for ( int i=0; i<20; ++i) {
-    MCMuonHits* obj = get<MCMuonHits>( MCMuonHitPath::MCMuonHitPath[i] );
-    nTotMuonHits += obj->size();
-    if( msgLevel( MSG::DEBUG ) ) {
-      if( (MCMuonHitPath::MCMuonHitPath[i]).find("M1") != std::string::npos ) {
-        nM1Hits += obj->size();
-      }
-      if( (MCMuonHitPath::MCMuonHitPath[i]).find("M2") != std::string::npos ) {
-        nM2Hits += obj->size();
-      }
-      if( (MCMuonHitPath::MCMuonHitPath[i]).find("M3") != std::string::npos ) {
-        nM3Hits += obj->size();
-      }
-      if( (MCMuonHitPath::MCMuonHitPath[i]).find("M4") != std::string::npos ) {
-        nM4Hits += obj->size();
-      }
-      if( (MCMuonHitPath::MCMuonHitPath[i]).find("M5") != std::string::npos ) {
-        nM5Hits += obj->size();
-      }
-      debug() << "Number of extracted MCMuonHits  '"
-              << MCMuonHitPath::MCMuonHitPath[i] << "'  \t"
-              << obj->size() 
-              << endmsg;
-    }
-    unsigned int chamLimit = 0;
-    if( (MCMuonHitPath::MCMuonHitPath[i]).find("R1") != std::string::npos ) {
-      chamLimit = 12;
-    }
-    if( (MCMuonHitPath::MCMuonHitPath[i]).find("R2") != std::string::npos ) {
-      chamLimit = 24;
-    }
-    if( (MCMuonHitPath::MCMuonHitPath[i]).find("R3") != std::string::npos ) {
-      chamLimit = 48;
-    }
-    if( (MCMuonHitPath::MCMuonHitPath[i]).find("R4") != std::string::npos ) {
-      chamLimit = 192;  
-    }
-    //    if( msgLevel( MSG::VERBOSE ) ) {
-    for( MCMuonHits::const_iterator hiter=obj->begin(); hiter!=obj->end();
-         ++hiter ) {
-      if( (*hiter)->chamberID() > chamLimit ) {
-        warning() << "Chamber out of limits in " 
-                  << MCMuonHitPath::MCMuonHitPath[i]
-                  << endmsg;
-        
-        warning() << "Chamber: " << (*hiter)->chamberID() 
-                  << " Gap: " << (*hiter)->gapID()
-                  << " Entry point: " << (*hiter)->entry()
-                  << " Exit point: "  << (*hiter)->exit()
-                  << endmsg;  
-      }
-    }
-  }
-  info() << "Number of extracted MCMuonHits  (total)       \t"
-         << nTotMuonHits
-         << endmsg;
-
-  Stat stat( chronoSvc(), "#Muon MCHits", nTotMuonHits );
-  if( msgLevel( MSG::DEBUG ) ) {
-    Stat statM1( chronoSvc(), "#M1 MCHits", nM1Hits );
-    Stat statM2( chronoSvc(), "#M2 MCHits", nM2Hits );
-    Stat statM3( chronoSvc(), "#M3 MCHits", nM3Hits );
-    Stat statM4( chronoSvc(), "#M4 MCHits", nM4Hits );
-    Stat statM5( chronoSvc(), "#M5 MCHits", nM5Hits );
-  }
-  
-  return;
-  
-}
 
 
 //=============================================================================

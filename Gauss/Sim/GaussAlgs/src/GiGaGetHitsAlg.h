@@ -1,4 +1,4 @@
-// $Id: GiGaGetHitsAlg.h,v 1.4 2005-10-25 17:56:30 gcorti Exp $
+// $Id: GiGaGetHitsAlg.h,v 1.5 2006-01-18 09:12:46 gcorti Exp $
 #ifndef GIGAGETHITSALG_H 
 #define GIGAGETHITSALG_H 1
 
@@ -26,18 +26,12 @@ public:
 
 protected:
   
-  // Print info for Velo or Velo PileUp MCVeloHits
-  virtual void hitsVelo( const std::string det, const std::string location );
-  
   // Print info for Silicon or Outer Tracker MCHits
   virtual void hitsTracker( const std::string det, const std::string location );
 
   // Print info for RICH detector: MCRichHits, Optical photons, segments and
   // tracks
   virtual void infoRICH( );  
-
-  // Print info for Muon detector
-  virtual void infoMuon( );
 
 private:
 
