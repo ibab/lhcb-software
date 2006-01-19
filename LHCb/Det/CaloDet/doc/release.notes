@@ -1,14 +1,12 @@
-! $Id: release.notes,v 1.51 2006-01-17 18:44:17 odescham Exp $ 
+! $Id: release.notes,v 1.52 2006-01-19 09:42:20 cattanem Exp $ 
 ! =============================================================================
 Package         : CaloDet   
 Package manager : Olivier Deschamps odescham@in2p3.fr
 
-!========================= CaloDet v7r1 2005-01-17 ============================
-! 2006-01-11 - Olivier Deschamps
+!========================= CaloDet v7r0 2005-01-17 ============================
+! 2006-01-17 - Olivier Deschamps
  - add /DownstreamRegion/ to DeCalorimeterLocation in CaloDet/DeCalorimeter.h
 
-
-!========================= CaloDet v7r0 2005-01-11 ============================
 ! 2006-01-11 - Olivier Callot
  - Change a message form INFO to DEBUG in building FE cards in DeCalorimeter.cpp
 
