@@ -1,8 +1,9 @@
-// $Id: LoadDDDB.cpp,v 1.1 2005-11-17 16:52:46 marcocle Exp $
+// $Id: LoadDDDB.cpp,v 1.2 2006-01-19 18:32:10 marcocle Exp $
 // Include files 
 
 // from Gaudi
 #include "GaudiKernel/AlgFactory.h" 
+#include "GaudiKernel/DeclareFactoryEntries.h" 
 
 #include "GaudiKernel/DataStoreItem.h"
 #include "GaudiKernel/MsgStream.h"
@@ -17,8 +18,7 @@
 //-----------------------------------------------------------------------------
 
 // Declaration of the Algorithm Factory
-static const  AlgFactory<LoadDDDB>          s_factory ;
-const        IAlgFactory& LoadDDDBFactory = s_factory ; 
+DECLARE_ALGORITHM_FACTORY( LoadDDDB );
 
 
 //=============================================================================

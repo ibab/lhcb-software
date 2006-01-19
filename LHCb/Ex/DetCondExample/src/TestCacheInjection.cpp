@@ -1,11 +1,11 @@
-// $Id: TestCacheInjection.cpp,v 1.6 2005-12-08 11:28:17 marcocle Exp $
+// $Id: TestCacheInjection.cpp,v 1.7 2006-01-19 18:32:11 marcocle Exp $
 // Include files 
 
 // from Gaudi
 #include "GaudiKernel/AlgFactory.h"
+#include "GaudiKernel/DeclareFactoryEntries.h" 
 
 #include "DetDesc/Condition.h"
-#include "DetDesc/IUpdateManagerSvc.h"
 #include "DetCond/ICondDBAccessSvc.h"
 
 // local
@@ -18,8 +18,7 @@
 //-----------------------------------------------------------------------------
 
 // Declaration of the Algorithm Factory
-static const  AlgFactory<TestCacheInjection>          s_factory ;
-const        IAlgFactory& TestCacheInjectionFactory = s_factory ; 
+DECLARE_ALGORITHM_FACTORY( TestCacheInjection );
 
 
 //=============================================================================
@@ -53,22 +52,18 @@ StatusCode TestCacheInjection::initialize() {
     info() << "Inject data into the cache" << endreq;
     sc = i_injectData();
     if ( !sc.isSuccess() ) return sc;
-    
-    // Locate the Update Manager Service
-    m_ums = svc<IUpdateManagerSvc>("UpdateManagerSvc",true);
 
     info() << "*** register conditions ***" << endreq;
-    m_ums->registerCondition(this,"/dd/CacheTest/Object1",NULL);
-    m_ums->registerCondition(this,"/dd/CacheTest/Object2",NULL);
-    m_ums->registerCondition(this,"/dd/CacheTest/Object3",NULL);
-    m_ums->registerCondition(this,"/dd/CacheTest/Object4",NULL);
-    m_ums->update(this);
+    registerCondition<TestCacheInjection>("/dd/CacheTest/Object1",m_cond1);
+    registerCondition<TestCacheInjection>("/dd/CacheTest/Object2",m_cond2);
+    registerCondition<TestCacheInjection>("/dd/CacheTest/Object3",m_cond3);
+    registerCondition<TestCacheInjection>("/dd/CacheTest/Object4",m_cond4);
   }
   catch (GaudiException) {
     return StatusCode::FAILURE;
   }
     
-  return StatusCode::SUCCESS;
+  return runUpdate();
 };
 
 //=============================================================================
@@ -98,7 +93,7 @@ StatusCode TestCacheInjection::execute() {
     // **************************************************
     info() << "Tell the update manager of the change I made" << endmsg;
     TimePoint s,u;
-    if (m_ums->getValidity("/test/cache/folder2",s,u,true)){ // UMS knows the object
+    if (updMgrSvc()->getValidity("/test/cache/folder2",s,u,true)){ // UMS knows the object
       info() << "old validity = " << s << " - " << u << endmsg;
       bool has_to_change = false;
       if ( u > new_since ) {
@@ -106,29 +101,24 @@ StatusCode TestCacheInjection::execute() {
         has_to_change = true;
       }
       info() << "new validity = " << s << " - " << u << endmsg;
-      if ( has_to_change ) m_ums->setValidity("/test/cache/folder2",s,u,true);
+      if ( has_to_change ) updMgrSvc()->setValidity("/test/cache/folder2",s,u,true);
     } else {
       error() << "I cannot find the CondDB folder in UMS" << endmsg;
       return StatusCode::FAILURE;
     }
   }
 
-  Condition *cond1 = getDet<Condition>( "/dd/CacheTest/Object1" );
-  Condition *cond2 = getDet<Condition>( "/dd/CacheTest/Object2" );
-  Condition *cond3 = getDet<Condition>( "/dd/CacheTest/Object3" );
-  Condition *cond4 = getDet<Condition>( "/dd/CacheTest/Object4" );
-
-  info() << "Object1: " << cond1->validSince() << " -> " << cond1->validTill() << endmsg;
-  info() << "         data = " << cond1->paramAsString("data") << endmsg;
+  info() << "Object1: " << m_cond1->validSince() << " -> " << m_cond1->validTill() << endmsg;
+  info() << "         data = " << m_cond1->paramAsString("data") << endmsg;
   
-  info() << "Object2: " << cond2->validSince() << " -> " << cond2->validTill() << endmsg;
-  info() << "         data = " << cond2->paramAsString("data") << endmsg;
+  info() << "Object2: " << m_cond2->validSince() << " -> " << m_cond2->validTill() << endmsg;
+  info() << "         data = " << m_cond2->paramAsString("data") << endmsg;
   
-  info() << "Object3: " << cond3->validSince() << " -> " << cond3->validTill() << endmsg;
-  info() << "         data = " << cond3->paramAsString("data") << endmsg;
+  info() << "Object3: " << m_cond3->validSince() << " -> " << m_cond3->validTill() << endmsg;
+  info() << "         data = " << m_cond3->paramAsString("data") << endmsg;
   
-  info() << "Object4: " << cond4->validSince() << " -> " << cond4->validTill() << endmsg;
-  info() << "         data = " << cond4->paramAsString("data") << endmsg;
+  info() << "Object4: " << m_cond4->validSince() << " -> " << m_cond4->validTill() << endmsg;
+  info() << "         data = " << m_cond4->paramAsString("data") << endmsg;
   
   return StatusCode::SUCCESS;
 };

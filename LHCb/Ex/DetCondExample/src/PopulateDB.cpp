@@ -1,4 +1,4 @@
-// $Id: PopulateDB.cpp,v 1.26 2005-12-08 11:28:17 marcocle Exp $
+// $Id: PopulateDB.cpp,v 1.27 2006-01-19 18:32:10 marcocle Exp $
 // Include files
 #include <iostream>
 #include <fstream>
@@ -10,6 +10,7 @@
 #include "GaudiKernel/AlgFactory.h" 
 #include "GaudiKernel/MsgStream.h"
 #include "GaudiKernel/TimePoint.h"
+#include "GaudiKernel/DeclareFactoryEntries.h" 
 
 #include "Kernel/SystemOfUnits.h"
 
@@ -40,8 +41,7 @@
 //-----------------------------------------------------------------------------
 
 // Declaration of the Algorithm Factory
-static const  AlgFactory<PopulateDB>          s_factory ;
-const        IAlgFactory& PopulateDBFactory = s_factory ; 
+DECLARE_ALGORITHM_FACTORY( PopulateDB );
 
 
 //=============================================================================
@@ -56,7 +56,7 @@ PopulateDB::PopulateDB( const std::string& name,
 //=============================================================================
 // Destructor
 //=============================================================================
-PopulateDB::~PopulateDB() {}; 
+PopulateDB::~PopulateDB() {};
 
 //=============================================================================
 // Initialization
@@ -89,7 +89,7 @@ StatusCode PopulateDB::initialize() {
   }
 
   return StatusCode::SUCCESS;
-};
+}
 
 //=============================================================================
 // Main execution
@@ -99,7 +99,7 @@ StatusCode PopulateDB::execute() {
   //  debug() << "==> Execute" << endmsg;
 
   return StatusCode::SUCCESS;
-};
+}
 
 //=============================================================================
 //  Finalize

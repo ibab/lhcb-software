@@ -1,4 +1,4 @@
-//$Id: DAQCondDBAlgorithm.cpp,v 1.10 2005-09-20 11:44:28 cattanem Exp $
+//$Id: DAQCondDBAlgorithm.cpp,v 1.11 2006-01-19 18:32:10 marcocle Exp $
 
 #include "DAQCondDBAlgorithm.h"
 
@@ -7,6 +7,7 @@
 #include "GaudiKernel/AlgFactory.h"
 #include "GaudiKernel/MsgStream.h"
 #include "GaudiKernel/Timing.h"
+#include "GaudiKernel/DeclareFactoryEntries.h" 
 
 #include "CoolKernel/Exception.h"
 #include "CoolKernel/IDatabase.h"
@@ -21,8 +22,7 @@
 #include "AttributeList/AttributeList.h"
 
 /// Instantiation of a static factory to create instances of this algorithm
-static const AlgFactory<DAQCondDBAlgorithm> Factory;
-const IAlgFactory& DAQCondDBAlgorithmFactory = Factory;
+DECLARE_ALGORITHM_FACTORY( DAQCondDBAlgorithm );
 
 // Define the attributes for all folders created in this example
 const std::string folderAttributes = "";
@@ -169,7 +169,6 @@ StatusCode DAQCondDBAlgorithm::execute( ) {
 //----------------------------------------------------------------------------
 
 StatusCode DAQCondDBAlgorithm::finalize( ) {
-  MsgStream log(msgSvc(), name());
   info() << "Finalize()" << endmsg;
   info() << "Total number of events processed: " << m_daqEventNumber << endmsg;
   info() << "DAQ record size in bytes: " << m_daqRecordSize << endmsg;

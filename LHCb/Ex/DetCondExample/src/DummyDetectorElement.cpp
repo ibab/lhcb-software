@@ -1,10 +1,9 @@
-// $Id: DummyDetectorElement.cpp,v 1.4 2005-05-13 16:17:50 marcocle Exp $
+// $Id: DummyDetectorElement.cpp,v 1.5 2006-01-19 18:32:10 marcocle Exp $
 // Include files 
 
 #include <string>
 #include "DetDesc/Condition.h"
-
-#include "DetDesc/IUpdateManagerSvc.h"
+#include "GaudiKernel/IUpdateManagerSvc.h"
 
 // local
 #include "DummyDetectorElement.h"

@@ -1,11 +1,11 @@
-// $Id: MultiDBTest.cpp,v 1.6 2005-12-08 11:28:17 marcocle Exp $
+// $Id: MultiDBTest.cpp,v 1.7 2006-01-19 18:32:10 marcocle Exp $
 // Include files 
 
 // from Gaudi
 #include "GaudiKernel/AlgFactory.h" 
+#include "GaudiKernel/DeclareFactoryEntries.h"
 
 #include "DetDesc/Condition.h"
-#include "DetDesc/IUpdateManagerSvc.h"
 #include "DetCond/ICondDBAccessSvc.h"
 
 // local
@@ -18,8 +18,7 @@
 //-----------------------------------------------------------------------------
 
 // Declaration of the Algorithm Factory
-static const  AlgFactory<MultiDBTest>          s_factory ;
-const        IAlgFactory& MultiDBTestFactory = s_factory ; 
+DECLARE_ALGORITHM_FACTORY( MultiDBTest );
 
 
 //=============================================================================
@@ -72,16 +71,14 @@ StatusCode MultiDBTest::initialize() {
                                 "</condition></DDDB>",TimePoint(0), TimePoint(20));
 
     info() << "*** register conditions ***" << endreq;
-    IUpdateManagerSvc *ums = svc<IUpdateManagerSvc>("UpdateManagerSvc",true);
-    ums->registerCondition(this,"/dd/multiDBTest/Cond1",NULL);
-    ums->registerCondition(this,"/dd/multiDBTest/Cond2",NULL);
-    ums->update(this);
+    registerCondition<MultiDBTest>("/dd/multiDBTest/Cond1",m_cond1);
+    registerCondition<MultiDBTest>("/dd/multiDBTest/Cond2",m_cond2);
 
   }
   catch (GaudiException){
     return StatusCode::FAILURE;
   }
-  return StatusCode::SUCCESS;
+  return runUpdate();
 };
 
 //=============================================================================
@@ -90,15 +87,12 @@ StatusCode MultiDBTest::initialize() {
 StatusCode MultiDBTest::execute() {
 
   info() << "*************** execute(): process new event ***************" << endmsg;
-
-  Condition *cond1 = getDet<Condition>( "/dd/multiDBTest/Cond1" );
-  Condition *cond2 = getDet<Condition>( "/dd/multiDBTest/Cond2" );
   
-  info() << "Cond1: " << cond1->validSince() << " -> " << cond1->validTill() << endmsg;
-  info() << "       DB = " << cond1->paramAsString("Database") << endmsg;
+  info() << "Cond1: " << m_cond1->validSince() << " -> " << m_cond1->validTill() << endmsg;
+  info() << "       DB = " << m_cond1->paramAsString("Database") << endmsg;
   
-  info() << "Cond2: " << cond2->validSince() << " -> " << cond2->validTill() << endmsg;
-  info() << "       DB = " << cond2->paramAsString("Database") << endmsg;
+  info() << "Cond2: " << m_cond2->validSince() << " -> " << m_cond2->validTill() << endmsg;
+  info() << "       DB = " << m_cond2->paramAsString("Database") << endmsg;
 
   return StatusCode::SUCCESS;
 };

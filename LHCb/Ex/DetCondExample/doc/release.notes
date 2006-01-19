@@ -1,9 +1,17 @@
 ! =============================================================================
-! $Id: release.notes,v 1.65 2005-12-08 12:07:55 cattanem Exp $
+! $Id: release.notes,v 1.66 2006-01-19 18:32:10 marcocle Exp $
 ! =============================================================================
 ! package Ex/DetCondExample
 ! package manager : Marco Clemencic
 ! =============================================================================
+
+! 2006-01-19 - Marco Clemencic
+ **** requires Gaudi v18r1 ****
+ - Use the new methods provided by GaudiCommon.
+ - Do not include IUpdateMgrSvc.h in algorithms since is already included in
+   GaudiCommon.
+ - A lot of clean up.
+ - Added references for the outputs of each test/example.
 
 !=========== Ex/DetCondExample v7r8 2005-12-08 ===============================
 ! 2005-12-08 - Marco Clemencic

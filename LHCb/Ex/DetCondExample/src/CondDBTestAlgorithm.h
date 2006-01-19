@@ -1,4 +1,4 @@
-// $Id: CondDBTestAlgorithm.h,v 1.5 2005-10-07 15:40:20 marcocle Exp $
+// $Id: CondDBTestAlgorithm.h,v 1.6 2006-01-19 18:32:10 marcocle Exp $
 #ifndef CONDDBTESTALGORITHM_H 
 #define CONDDBTESTALGORITHM_H 1
 
@@ -9,8 +9,8 @@
 // Forward declarations
 class DataObject;
 class Condition;
-class IUpdateManagerSvc;
 class IDetDataSvc;
+class AlignmentCondition;
 
 /** @class CondDBTestAlgorithm CondDBTestAlgorithm.h
  *  
@@ -51,9 +51,10 @@ private:
   Condition *m_LHCb_cond;
   /// Cached pointer to Condition
   Condition *m_Hcal_cond;
-  
-  /// Pointer tu the Update Manager Service
-  IUpdateManagerSvc *m_ums;
+  /// Cached pointer to TabulatedProperty
+  TabulatedProperty *m_TabProp;
+  /// Cached pointers to AlignmentCondition
+  AlignmentCondition *m_m01, *m_m12;
 
   double m_LHCb_temp;
   double m_Hcal_temp;

@@ -1,17 +1,16 @@
-// $Id: CondDBTestAlgorithm.cpp,v 1.15 2005-12-08 11:28:17 marcocle Exp $
+// $Id: CondDBTestAlgorithm.cpp,v 1.16 2006-01-19 18:32:10 marcocle Exp $
 // Include files 
 
 // from Gaudi
 #include "GaudiKernel/AlgFactory.h" 
 #include "GaudiKernel/IDetDataSvc.h"
+#include "GaudiKernel/DeclareFactoryEntries.h"
 
 #include "DetDesc/Condition.h"
 #include "DetDesc/TabulatedProperty.h"
 #include "DetDesc/DetectorElement.h"
 #include "DetDesc/IGeometryInfo.h"
 #include "DetDesc/LVolume.h"
-
-#include "DetDesc/IUpdateManagerSvc.h"
 
 // local
 #include "CondDBTestAlgorithm.h"
@@ -23,8 +22,7 @@
 //-----------------------------------------------------------------------------
 
 // Declaration of the Algorithm Factory
-static const  AlgFactory<CondDBTestAlgorithm>          s_factory ;
-const        IAlgFactory& CondDBTestAlgorithmFactory = s_factory ; 
+DECLARE_ALGORITHM_FACTORY( CondDBTestAlgorithm );
 
 
 //=============================================================================
@@ -45,7 +43,7 @@ CondDBTestAlgorithm::CondDBTestAlgorithm( const std::string& name,
 //=============================================================================
 // Destructor
 //=============================================================================
-CondDBTestAlgorithm::~CondDBTestAlgorithm() {}; 
+CondDBTestAlgorithm::~CondDBTestAlgorithm() {}
 
 //=============================================================================
 // Initialization
@@ -58,27 +56,36 @@ StatusCode CondDBTestAlgorithm::initialize() {
   
   info() << "*** register conditions ***" << endmsg;
   try {
-    m_ums = svc<IUpdateManagerSvc>("UpdateManagerSvc",true);
-    
-    m_ums->registerCondition(this,"/dd/SlowControl/LHCb/scLHCb",&CondDBTestAlgorithm::i_updateCacheLHCb);
-    m_ums->registerCondition(this,"/dd/SlowControl/LHCb/scLHCb",&CondDBTestAlgorithm::i_updateCache);
-    m_ums->registerCondition(this,"/dd/SlowControl/Hcal/scHcal",&CondDBTestAlgorithm::i_updateCacheHcal);
-    m_ums->registerCondition(this,"/dd/SlowControl/Hcal/scHcal",&CondDBTestAlgorithm::i_updateCache);
-    m_ums->registerCondition(this,"/dd/SlowControl/LHCb/scLHCb",NULL);
-    m_ums->registerCondition(this,"/dd/Properties/TestFunction");
-    m_ums->registerCondition(this,"/dd/Alignment/Velo/Module01");
-    m_ums->registerCondition(this,"/dd/Alignment/Velo/Module12");
-    m_ums->update(this);
+
+    // tell the update manager that we need a condition object, which pointer to set and which method to call
+    registerCondition("/dd/SlowControl/LHCb/scLHCb", m_LHCb_cond, &CondDBTestAlgorithm::i_updateCacheLHCb);
+    registerCondition("/dd/SlowControl/Hcal/scHcal", m_Hcal_cond, &CondDBTestAlgorithm::i_updateCacheHcal);
+
+    // we already told the update mgr which pointers to set, we do not need to do it twice
+    registerCondition("/dd/SlowControl/LHCb/scLHCb", &CondDBTestAlgorithm::i_updateCache);
+    registerCondition("/dd/SlowControl/Hcal/scHcal", &CondDBTestAlgorithm::i_updateCache);
+
+    // this line tells the update mgr that we want the following condition to be always up-to-date,
+    // but we do not need to call any special method when it is updated (is it really useful?)
+    registerCondition<CondDBTestAlgorithm>("/dd/SlowControl/LHCb/scLHCb");
+
+    // we want that the following TabulatedProperty is updated and the pointer to it is put
+    // in m_TabProp
+    registerCondition<CondDBTestAlgorithm>("/dd/Properties/TestFunction", m_TabProp);
+
+    registerCondition<CondDBTestAlgorithm>("/dd/Alignment/Velo/Module01", m_m01);
+    registerCondition<CondDBTestAlgorithm>("/dd/Alignment/Velo/Module12", m_m12);
 
     m_dds = svc<IDetDataSvc>("DetectorDataSvc",true);
 
   }
-  catch (GaudiException){
+  catch (GaudiException &e){
+    fatal() << e << endmsg;
     return StatusCode::FAILURE;
   }
   
-  return StatusCode::SUCCESS;
-};
+  return runUpdate();
+}
 
 //=============================================================================
 // Main execution
@@ -92,7 +99,7 @@ StatusCode CondDBTestAlgorithm::execute() {
   info() << "Temperature check: LHCb = " << m_LHCb_temp << endmsg;
   info() << "                   Hcal = " << m_Hcal_temp << endmsg;
   info() << "                   avg  = " << m_avg_temp << endmsg;
-  info() << *(getDet<TabulatedProperty>("/dd/Properties/TestFunction")) << endmsg;
+  info() << *m_TabProp << endmsg;
   info() << "-------------------------------------" << endmsg;
   
   ++m_evtCount;
@@ -122,13 +129,13 @@ StatusCode CondDBTestAlgorithm::execute() {
     scLHCb->param<double>("Temperature") = scLHCb->param<double>("Temperature")/2.0;
     info() << "Temperature set to " << scLHCb->param<double>("Temperature") << endmsg;
     info() << "UpdateManagerSvc::invalidate() ==> Condition data are considered no more valid" << endmsg;
-    m_ums->invalidate(scLHCb);
+    updMgrSvc()->invalidate(scLHCb);
   } else if (m_evtCount == 5){
     // trigger a re-load from CondDB
     info() << "Forcing a re-load from CondDB..." << endmsg;
     info() << "ValidDataObject::forceUpdateMode() + UpdateManagerSvc::invalidate()" << endmsg;
     scLHCb->forceUpdateMode();
-    m_ums->invalidate(scLHCb);
+    updMgrSvc()->invalidate(scLHCb);
   }
 
   // Retrieve logical volume for the LHCb detector
@@ -157,31 +164,19 @@ StatusCode CondDBTestAlgorithm::execute() {
 
   // Test alignment (and cool::ChannelId)
   info() << "Test AlignmentConditions detector /dd/Alignment/Velo/ModuleXX" << endmsg;
-  AlignmentCondition* m01 = getDet<AlignmentCondition>("/dd/Alignment/Velo/Module01");
-  AlignmentCondition* m12 = getDet<AlignmentCondition>("/dd/Alignment/Velo/Module12");
 
-  //  info() << m01->name() << " dPosXYZ = " << m01->param<std::vector<double> >("dPosXYZ")
+  //  info() << m_m01->name() << " dPosXYZ = " << m_m01->param<std::vector<double> >("dPosXYZ")
   //         << " transformation = \n"
-  info() << m01->name() << ":\n"
-         << m01->printParams()
+  info() << m_m01->name() << ":\n"
+         << m_m01->printParams()
          << "\n transformation =  \n"
-         << m01->matrix()
-    /*
-         << m01->matrix()[0][0] << " " << m01->matrix()[0][1] << " " << m01->matrix()[0][2] << " " << m01->matrix()[0][3] << "\n"
-         << m01->matrix()[1][0] << " " << m01->matrix()[1][1] << " " << m01->matrix()[1][2] << " " << m01->matrix()[1][3] << "\n"
-         << m01->matrix()[2][0] << " " << m01->matrix()[2][1] << " " << m01->matrix()[2][2] << " " << m01->matrix()[2][3] << "\n"
-    */
+         << m_m01->matrix()
          << endmsg;
 
-  info() << m12->name() << ":\n"
-         << m12->printParams()
+  info() << m_m12->name() << ":\n"
+         << m_m12->printParams()
          << "\n transformation =  \n"
-         << m12->matrix()
-    /*
-         << m12->matrix()[0][0] << " " << m12->matrix()[0][1] << " " << m12->matrix()[0][2] << " " << m12->matrix()[0][3] << "\n"
-         << m12->matrix()[1][0] << " " << m12->matrix()[1][1] << " " << m12->matrix()[1][2] << " " << m12->matrix()[1][3] << "\n"
-         << m12->matrix()[2][0] << " " << m12->matrix()[2][1] << " " << m12->matrix()[2][2] << " " << m12->matrix()[2][3] << "\n"
-    */
+         << m_m12->matrix()
          << endmsg;
 
   info() << "Test COOL FolderSets mapping to catalogs (get /dd/CondDBRoot/OnLine/Cave)" << endmsg;
@@ -202,7 +197,7 @@ StatusCode CondDBTestAlgorithm::execute() {
   
   // Event processing completed
   return StatusCode::SUCCESS;
-};
+}
 
 //=============================================================================
 //  Finalize
@@ -261,14 +256,6 @@ StatusCode CondDBTestAlgorithm::i_analyse( DataObject* pObj ) {
 //=========================================================================
 StatusCode CondDBTestAlgorithm::i_updateCacheLHCb ( ) {
   info() << "i_updateCacheLHCb() called!" << endmsg;
-  if (m_LHCb_cond == NULL){
-    try {
-      m_LHCb_cond = getDet<Condition>("/dd/SlowControl/LHCb/scLHCb");
-    }
-    catch (GaudiException){
-      return StatusCode::FAILURE;
-    }
-  }
   m_LHCb_temp = m_LHCb_cond->param<double>("Temperature");
   return StatusCode::SUCCESS;
 }
@@ -278,14 +265,6 @@ StatusCode CondDBTestAlgorithm::i_updateCacheLHCb ( ) {
 //=========================================================================
 StatusCode CondDBTestAlgorithm::i_updateCacheHcal ( ) {
   info() << "i_updateCacheHcal() called!" << endmsg;
-  if (m_Hcal_cond == NULL){
-    try {
-      m_Hcal_cond = getDet<Condition>("/dd/SlowControl/Hcal/scHcal");
-    }
-    catch (GaudiException){
-      return StatusCode::FAILURE;
-    }
-  }
   m_Hcal_temp = m_Hcal_cond->param<double>("Temperature");
   return StatusCode::SUCCESS;
 }
@@ -295,24 +274,6 @@ StatusCode CondDBTestAlgorithm::i_updateCacheHcal ( ) {
 //=========================================================================
 StatusCode CondDBTestAlgorithm::i_updateCache ( ) {
   info() << "i_updateCache() called!" << endmsg;
-
-  if (m_LHCb_cond == NULL){
-    try {
-      m_LHCb_cond = getDet<Condition>("/dd/SlowControl/LHCb/scLHCb");
-    }
-    catch (GaudiException){
-      return StatusCode::FAILURE;
-    }
-  }
-
-  if (m_Hcal_cond == NULL){
-    try {
-      m_Hcal_cond = getDet<Condition>("/dd/SlowControl/Hcal/scHcal");
-    }
-    catch (GaudiException){
-      return StatusCode::FAILURE;
-    }
-  }
   m_avg_temp = (m_LHCb_cond->param<double>("Temperature")+m_Hcal_cond->param<double>("Temperature"))/2.;
   return StatusCode::SUCCESS;
 }

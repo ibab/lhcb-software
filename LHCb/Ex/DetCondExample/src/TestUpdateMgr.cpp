@@ -1,11 +1,11 @@
-// $Id: TestUpdateMgr.cpp,v 1.4 2005-08-30 14:58:44 marcocle Exp $
+// $Id: TestUpdateMgr.cpp,v 1.5 2006-01-19 18:32:11 marcocle Exp $
 // Include files 
 
 // from Gaudi
 #include "GaudiKernel/AlgFactory.h" 
 #include "GaudiKernel/DataObject.h" 
+#include "GaudiKernel/DeclareFactoryEntries.h"
 
-#include "DetDesc/IUpdateManagerSvc.h"
 #include "DetDesc/ValidDataObject.h"
 
 // local
@@ -18,8 +18,8 @@
 //-----------------------------------------------------------------------------
 
 // Declaration of the Algorithm Factory
-static const  AlgFactory<TestUpdateMgr>          s_factory ;
-const        IAlgFactory& TestUpdateMgrFactory = s_factory ; 
+DECLARE_ALGORITHM_FACTORY( TestUpdateMgr );
+
 
 
 //=============================================================================
@@ -49,23 +49,22 @@ StatusCode TestUpdateMgr::initialize() {
   debug() << "==> Initialize" << endmsg;
 
   try {
-    m_ums = svc<IUpdateManagerSvc>("UpdateManagerSvc",true);
     
-    m_ums->registerCondition(this,"/dd/SlowControl/LHCb/scLHCb",&TestUpdateMgr::i_updateMethod1);
-    m_ums->registerCondition(this,"/dd/SlowControl/LHCb/scLHCb",&TestUpdateMgr::i_updateMethod2);
-    m_ums->registerCondition(this,"/dd/SlowControl/Hcal/scHcal",&TestUpdateMgr::i_updateMethod3);
-    m_ums->registerCondition(this,"/dd/SlowControl/Hcal/scHcal",&TestUpdateMgr::i_updateMethod3);
-    m_ums->registerCondition(this,"/dd/SlowControl/Hcal/scHcal",&TestUpdateMgr::i_updateMethod2);
+    registerCondition("/dd/SlowControl/LHCb/scLHCb",&TestUpdateMgr::i_updateMethod1);
+    registerCondition("/dd/SlowControl/LHCb/scLHCb",&TestUpdateMgr::i_updateMethod2);
+    registerCondition("/dd/SlowControl/Hcal/scHcal",&TestUpdateMgr::i_updateMethod3);
+    registerCondition("/dd/SlowControl/Hcal/scHcal",&TestUpdateMgr::i_updateMethod3);
+    registerCondition("/dd/SlowControl/Hcal/scHcal",&TestUpdateMgr::i_updateMethod2);
     
-    m_ums->registerCondition(this,"/dd/Structure/LHCb/Dummy",&TestUpdateMgr::i_updateMethod3);
+    registerCondition("/dd/Structure/LHCb/Dummy",&TestUpdateMgr::i_updateMethod3);
     
-    m_ums->registerCondition(&m_intermediate,"/dd/SlowControl/Hcal/scHcal",&InternalClass::myTinyMethod);
+    updMgrSvc()->registerCondition(&m_intermediate,"/dd/SlowControl/Hcal/scHcal",&InternalClass::myTinyMethod);
     
-    m_ums->registerCondition(this,&m_intermediate,&TestUpdateMgr::i_updateMethod4);
+    registerCondition(&m_intermediate,&TestUpdateMgr::i_updateMethod4);
 
     // I'm crazy... but that must work!
-    m_ums->registerCondition(m_dummyUMSentry);
-    //m_ums->registerCondition(this,m_dummyUMSentry);
+    updMgrSvc()->registerCondition(m_dummyUMSentry);
+    registerCondition<TestUpdateMgr>(m_dummyUMSentry,NULL);
 
   } catch (GaudiException) {
     return StatusCode::FAILURE;
@@ -81,7 +80,7 @@ StatusCode TestUpdateMgr::execute() {
   debug() << "==> Execute" << endmsg;
   if ( ++m_evtCount == 3 ) {
     debug() << " invalidating m_intermediate" << endmsg;
-    m_ums->invalidate(&m_intermediate);
+    updMgrSvc()->invalidate(&m_intermediate);
   }
 
   return StatusCode::SUCCESS;
@@ -94,11 +93,11 @@ StatusCode TestUpdateMgr::finalize() {
 
   debug() << "==> Finalize" << endmsg;
   
-  m_ums->dump();
+  updMgrSvc()->dump();
   
-  m_ums->unregister(m_dummyUMSentry);
-  m_ums->unregister(&m_intermediate);
-  m_ums->unregister(this);
+  updMgrSvc()->unregister(m_dummyUMSentry);
+  updMgrSvc()->unregister(&m_intermediate);
+  updMgrSvc()->unregister(this);
 
   return GaudiAlgorithm::finalize();  // must be called after all other actions
 }

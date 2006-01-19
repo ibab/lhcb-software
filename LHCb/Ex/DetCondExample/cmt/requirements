@@ -1,8 +1,8 @@
-# $Id: requirements,v 1.43 2005-12-08 12:07:55 cattanem Exp $
+# $Id: requirements,v 1.44 2006-01-19 18:32:10 marcocle Exp $
 package DetCondExample
 version v7r8
 
-branches doc src job options cmt XMLDDDB python
+branches doc src job options cmt XMLDDDB python logs
 ignore_pattern package_stamps 
 
 # Main program and standard job options
@@ -82,8 +82,10 @@ set CONDDBSCHEMA "CONDDB.sqlite"
 set CONDDBENGINE "sqlite"
 
 # for testMultiDB.opts
-set CONDDBNAME1  "CONDDB1"
-set CONDDBNAME2  "CONDDB2"
+set CONDDBNAME1   "CONDDB1"
+set CONDDBSCHEMA1 "CONDDB1.sqlite"
+set CONDDBNAME2   "CONDDB2"
+set CONDDBSCHEMA2 "CONDDB2.sqlite"
 
 macro_append SEAL_linkopts ' -llcg_SealServices ' WIN32 ' lcg_SealServices.lib '
 macro_append POOL_linkopts ' -llcg_CollectionBase ' WIN32 ' lcg_CollectionBase.lib '

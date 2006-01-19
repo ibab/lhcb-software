@@ -1,4 +1,4 @@
-// $Id: XmlDummyDECnv.cpp,v 1.1 2005-04-22 15:17:54 marcocle Exp $
+// $Id: XmlDummyDECnv.cpp,v 1.2 2006-01-19 18:32:11 marcocle Exp $
 // Include files 
 
 #include "GaudiKernel/CnvFactory.h"
@@ -28,7 +28,7 @@ const ICnvFactory& XmlDummyDECnvFactory = dummyde_factory;
 XmlDummyDECnv::XmlDummyDECnv(ISvcLocator* svc):
     XmlUserDetElemCnv<DummyDetectorElement>(svc) {
 
-  std::cout << "XmlDummyDECnv: Hello world!" << std::endl;
+  //std::cout << "XmlDummyDECnv: Hello world!" << std::endl;
 }
 
 //=============================================================================
@@ -43,7 +43,8 @@ StatusCode XmlDummyDECnv::i_fillSpecificObj(xercesc::DOMElement* childElement,
                                             DummyDetectorElement* dataObj,
                                             IOpaqueAddress* address){
   // Nothing special, just fill a generic DE
-  return XmlUserDetElemCnv<DummyDetectorElement>::i_fillSpecificObj(childElement, dynamic_cast<DetectorElement*>(dataObj),address);
+  return XmlUserDetElemCnv<DummyDetectorElement>::i_fillSpecificObj(childElement, dynamic_cast<DetectorElement*>(dataObj),
+                                                                    address);
 }
 //=============================================================================
 

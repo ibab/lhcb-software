@@ -1,4 +1,4 @@
-//$Id: DetDataAgent.h,v 1.4 2005-11-17 16:53:05 marcocle Exp $
+//$Id: DetDataAgent.h,v 1.5 2006-01-19 18:32:10 marcocle Exp $
 #ifndef DETCONDEXAMPLE_DETDATAAGENT_H
 #define DETCONDEXAMPLE_DETDATAAGENT_H
 
@@ -21,9 +21,9 @@ class DetDataAgent : virtual public IDataStoreAgent {
 
  public:
 
-  DetDataAgent( IMessageSvc* msgSvc ) : m_msgSvc( msgSvc ) {};
+  DetDataAgent( IMessageSvc* msgSvc ) : m_msgSvc( msgSvc ) {}
 
-  virtual ~DetDataAgent() {};
+  virtual ~DetDataAgent() {}
 
   virtual bool analyse(IRegistry* dir, int level );
 

@@ -1,0 +1,1066 @@
+JobOptionsSvc        INFO 
+
+//$Id: fillCondDB.opts,v 1.6 2005/09/18 16:15:16 marcocle Exp $
+//==============================================================
+// Job options to populate the CondDB in DetCondExample
+//==============================================================
+
+// --> Including file $DETCONDEXAMPLEROOT/options/cool.opts
+
+
+//==============================================================
+// Common job options to use a COOL in DetCondExample
+//==============================================================
+
+//--------------------------------------------------------------
+// Extra services needed in the application
+//--------------------------------------------------------------
+
+// Dynamically load component library for DetCond services and converters
+ApplicationMgr.DLLs += { "DetCond" };
+
+//--------------------------------------------------------------
+// Access to the ConditionsDB
+//--------------------------------------------------------------
+
+// name of the database server
+CondDBAccessSvc.HostName = "$CONDDBHOST";
+
+// name of the user needed to connect
+CondDBAccessSvc.User     = "$CONDDBUSER";
+
+// password needed to connect to the DB server
+CondDBAccessSvc.Password = "$CONDDBPWD";
+
+// hide password in log output (default = true)
+CondDBAccessSvc.HidePassword = true;
+
+// name of the database to use
+CondDBAccessSvc.Database = "$CONDDBNAME";
+
+// schema to use
+CondDBAccessSvc.Schema   = "$CONDDBSCHEMA";
+
+// which tag to use if none is specified
+// CondDBAccessSvc.TAG = "";
+
+// which db technology to use (oracle|mysql|sqlite)
+CondDBAccessSvc.BackEnd    = "$CONDDBENGINE";
+
+// Drop and recreate the database during initialization.
+//CondDBAccessSvc.RecreateDB = true;
+
+//CondDBAccessSvc.RunTest = true;
+
+// +++++++++++++ Cache related options (default values)
+//CondDBAccessSvc.UseCache = false;
+//CondDBAccessSvc.CacheHighLevel = 100;
+//CondDBAccessSvc.CacheLowLevel = 10;
+//CondDBAccessSvc.NoDB = false;
+
+//************************************************** 
+
+// which tag to use if none is specified
+//CondDBAccessSvc.TAG = "COLD";
+
+
+// <-- End of including file $DETCONDEXAMPLEROOT/options/cool.opts
+
+
+//--------------------------------------------------------------
+// Sequence of algorithms to be applied
+//--------------------------------------------------------------
+ApplicationMgr.TopAlg  = { "PopulateDB" };
+
+//--------------------------------------------------------------
+// Input events
+//--------------------------------------------------------------
+
+// Input file
+ApplicationMgr.EvtSel = "NONE";
+
+// Number of events to be processed (default is 10)
+ApplicationMgr.EvtMax = 1;
+
+//--------------------------------------------------------------
+// Message service options
+//--------------------------------------------------------------
+
+// Set output level threshold 
+// Levels: 1=VERBOSE, 2=DEBUG, 3=INFO, 4=WARNING, 5=ERROR, 6=FATAL
+MessageSvc.OutputLevel = 1;
+
+//--------------------------------------------------------------
+// DetCond extra options
+//--------------------------------------------------------------
+
+// needed to drop the database before creating the new one
+CondDBAccessSvc.RecreateDB = true;
+
+//==============================================================
+// End of job options to populate the CondDB in DetCondExample
+//==============================================================
+
+Job options successfully read in from ../options/fillCondDB.opts
+ApplicationMgr      DEBUG Getting my own properties
+ApplicationMgr    SUCCESS 
+====================================================================================================================================
+                                                   Welcome to DetCondExample version v7r7
+                                          running on pclhcb91.cern.ch on Thu Jan 19 19:18:29 2006
+====================================================================================================================================
+DllClassManager     DEBUG Found factory RelyConverter
+ConverterFactory    DEBUG Added converter for class:RelyConverter Storage id:9 clID:0
+DllClassManager     DEBUG Found factory Service CondDBCnvSvc
+DllClassManager     DEBUG Found factory Service CondDBAccessSvc
+DllClassManager     DEBUG Loaded 3 factories from module DetCond
+ApplicationMgr       INFO Successfully loaded modules : DetCond
+ApplicationMgr       INFO Application Manager Configured successfully
+ServiceManager      DEBUG Initializing service AppMgrRunable
+AppMgrRunable       DEBUG Service base class initialized successfully
+ServiceManager      DEBUG Initializing service EventLoopMgr
+EventLoopMgr        DEBUG Service base class initialized successfully
+EventLoopMgr        DEBUG Creating Top Algorithm PopulateDB with name PopulateDB
+PopulateDB          DEBUG Releasing service 'JobOptionsSvc'
+PopulateDB          DEBUG Property update for OutputLevel : new value = 1
+PopulateDB          DEBUG Initialize base class GaudiCommon<PBASE>
+PopulateDB          DEBUG List of ALL properties of PopulateDB/PopulateDB  #properties = 12
+PopulateDB          DEBUG Property ['Name': Value] = "Context": ""
+PopulateDB          DEBUG Property ['Name': Value] = "TypePrint": 1
+PopulateDB          DEBUG Property ['Name': Value] = "StatPrint": 0
+PopulateDB          DEBUG Property ['Name': Value] = "PropertiesPrint": 0
+PopulateDB          DEBUG Property ['Name': Value] = "ErrorsPrint": 1
+PopulateDB          DEBUG Property ['Name': Value] = "AuditFinalize": 0
+PopulateDB          DEBUG Property ['Name': Value] = "AuditExecute": 1
+PopulateDB          DEBUG Property ['Name': Value] = "AuditInitialize": 0
+PopulateDB          DEBUG Property ['Name': Value] = "ErrorCount": 0
+PopulateDB          DEBUG Property ['Name': Value] = "ErrorMax": 1
+PopulateDB          DEBUG Property ['Name': Value] = "Enable": 1
+PopulateDB          DEBUG Property ['Name': Value] = "OutputLevel": 1
+PopulateDB          DEBUG ==> Initialize
+CondDBAccessSvc     DEBUG Service base class initialized successfully
+CondDBAccessSvc     DEBUG Initialize
+CondDBAccessSvc     DEBUG Connection string = "sqlite://none;schema=CONDDB.sqlite;user=none;password=**hidden**;dbname=CONDDB"
+CondDBAccessSvc     DEBUG Get DatabaseSvc
+ConfigurationService: level[Warning] Configuration file /afs/cern.ch/user/m/marcocle/cmtuser_lhcb_v20r0/Ex/DetCondExample/v7r8/logs/seal.opts does not exist or is not readable!
+ConfigurationService: level[Warning] Please check env. variable SEAL_CONFIGURATION_FILE!
+ Application     Info Instantiate a COOL Application
+ Application     Info Load the COOL database service
+RalDatabaseSvc     Info Instantiate the RalDatabaseSvc
+RalDatabaseSvc     Info Load the POOL relational service
+POOL/Services/RelationalService     Info Found plugin for RDBMS technology "frontier" with native implementation
+POOL/Services/RelationalService     Info Found plugin for RDBMS technology "mysql" with implementation "odbc"
+POOL/Services/RelationalService     Info Found plugin for RDBMS technology "oracle" with native implementation
+POOL/Services/RelationalService     Info Found plugin for RDBMS technology "sqlite" with native implementation
+POOL/Services/RelationalService     Info Default implementation for RDBMS technology "frontier" is native
+POOL/Services/RelationalService     Info Default implementation for RDBMS technology "mysql" is "odbc"
+POOL/Services/RelationalService     Info Default implementation for RDBMS technology "oracle" is native
+POOL/Services/RelationalService     Info Default implementation for RDBMS technology "sqlite" is native
+RalDatabaseSvc     Info Load the POOL XML authentication service
+CondDBAccessSvc     DEBUG got service
+CondDBAccessSvc      INFO Recreating Database
+CondDBAccessSvc     DEBUG drop the database "sqlite://none;schema=CONDDB.sqlite;user=none;password=**hidden**;dbname=CONDDB"
+RelationalDatabase     Info Instantiate a RalDatabase for 'sqlite://none;schema=CONDDB.sqlite;dbname=CONDDB;user=none;password=********'
+RelationalDatabase     Info Delete the RalDatabase for 'sqlite://none;schema=CONDDB.sqlite;dbname=CONDDB;user=none;password=********'
+SQLiteAccess: level[Warning] No active transaction to roll back
+CondDBAccessSvc     DEBUG done
+CondDBAccessSvc     DEBUG create empty the database 
+RelationalDatabase     Info Instantiate a RalDatabase for 'sqlite://none;schema=CONDDB.sqlite;dbname=CONDDB;user=none;password=********'
+CondDBAccessSvc     DEBUG CondDB cache not needed
+PopulateDB           INFO Store sample data in the database if empty
+PopulateDB           INFO ============= condDBStoreSampleData() starting =====================
+PopulateDB           INFO Checking if CondDB tree has been already filled
+PopulateDB           INFO Signature folderSet does not exist: create it
+PopulateDB           INFO Signature folderSet did not exist and was succesfully created
+PopulateDB           INFO Now store sample data into the CondDB
+PopulateDB          DEBUG Create foldersets
+PopulateDB          DEBUG Create folders (multi-version)
+PopulateDB          DEBUG Create folders (single-version)
+PopulateDB          DEBUG Create COLD objects in /SlowControl/LHCb/scLHCb and /SlowControl/Hcal/scHcal
+PopulateDB        VERBOSE Encoding XML string for name=scLHCb and temperature=5
+PopulateDB        VERBOSE Encoded XML string is:<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE DDDB SYSTEM "structure.dtd"><DDDB><condition classID="5" name="scLHCb"><param name="Temperature" type="double">5</param></condition></DDDB>
+
+PopulateDB        VERBOSE Encoding XML string for name=scHcal and temperature=4.2
+PopulateDB        VERBOSE Encoded XML string is:<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE DDDB SYSTEM "structure.dtd"><DDDB><condition classID="5" name="scHcal"><param name="Temperature" type="double">4.2</param></condition></DDDB>
+
+PopulateDB        VERBOSE Encoding XML string for name=scLHCb and temperature=15
+PopulateDB        VERBOSE Encoded XML string is:<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE DDDB SYSTEM "structure.dtd"><DDDB><condition classID="5" name="scLHCb"><param name="Temperature" type="double">15</param></condition></DDDB>
+
+PopulateDB        VERBOSE Encoding XML string for name=scHcal and temperature=14.6
+PopulateDB        VERBOSE Encoded XML string is:<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE DDDB SYSTEM "structure.dtd"><DDDB><condition classID="5" name="scHcal"><param name="Temperature" type="double">14.6</param></condition></DDDB>
+
+PopulateDB        VERBOSE Encoding XML string for name=scLHCb and temperature=25
+PopulateDB        VERBOSE Encoded XML string is:<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE DDDB SYSTEM "structure.dtd"><DDDB><condition classID="5" name="scLHCb"><param name="Temperature" type="double">25</param></condition></DDDB>
+
+PopulateDB        VERBOSE Encoding XML string for name=scHcal and temperature=25
+PopulateDB        VERBOSE Encoded XML string is:<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE DDDB SYSTEM "structure.dtd"><DDDB><condition classID="5" name="scHcal"><param name="Temperature" type="double">25</param></condition></DDDB>
+
+PopulateDB          DEBUG Apply tag COLD
+CondDBAccessSvc     DEBUG entering tagFolder: "/SlowControl"
+CondDBAccessSvc     DEBUG it is a folderset
+CondDBAccessSvc     DEBUG entering tagFolder: "/SlowControl/Hcal"
+CondDBAccessSvc     DEBUG it is a folderset
+CondDBAccessSvc     DEBUG entering tagFolder: "/SlowControl/Hcal/scHcal"
+CondDBAccessSvc     DEBUG it is a folder
+CondDBAccessSvc     DEBUG Tagging folder "/SlowControl/Hcal/scHcal": COLD
+CondDBAccessSvc     DEBUG entering tagFolder: "/SlowControl/LHCb"
+CondDBAccessSvc     DEBUG it is a folderset
+CondDBAccessSvc     DEBUG entering tagFolder: "/SlowControl/LHCb/scLHCb"
+CondDBAccessSvc     DEBUG it is a folder
+CondDBAccessSvc     DEBUG Tagging folder "/SlowControl/LHCb/scLHCb": COLD
+CondDBAccessSvc     DEBUG entering tagFolder: "/SlowControl/DummyDE"
+CondDBAccessSvc     DEBUG it is a folder
+CondDBAccessSvc     DEBUG Tagging folder "/SlowControl/DummyDE": COLD
+PopulateDB          DEBUG Apply tag PRODUCTION to /SlowControl/LHCb/scLHCb
+CondDBAccessSvc     DEBUG entering tagFolder: "/SlowControl/LHCb/scLHCb"
+CondDBAccessSvc     DEBUG it is a folder
+CondDBAccessSvc     DEBUG Tagging folder "/SlowControl/LHCb/scLHCb": PRODUCTION
+PopulateDB          DEBUG Create HOT objects in /SlowControl/LHCb/scLHCb and /SlowControl/Hcal/scHcal
+PopulateDB        VERBOSE Encoding XML string for name=scLHCb and temperature=105
+PopulateDB        VERBOSE Encoded XML string is:<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE DDDB SYSTEM "structure.dtd"><DDDB><condition classID="5" name="scLHCb"><param name="Temperature" type="double">105</param></condition></DDDB>
+
+PopulateDB        VERBOSE Encoding XML string for name=scHcal and temperature=105
+PopulateDB        VERBOSE Encoded XML string is:<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE DDDB SYSTEM "structure.dtd"><DDDB><condition classID="5" name="scHcal"><param name="Temperature" type="double">105</param></condition></DDDB>
+
+PopulateDB        VERBOSE Encoding XML string for name=scLHCb and temperature=115
+PopulateDB        VERBOSE Encoded XML string is:<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE DDDB SYSTEM "structure.dtd"><DDDB><condition classID="5" name="scLHCb"><param name="Temperature" type="double">115</param></condition></DDDB>
+
+PopulateDB        VERBOSE Encoding XML string for name=scHcal and temperature=115
+PopulateDB        VERBOSE Encoded XML string is:<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE DDDB SYSTEM "structure.dtd"><DDDB><condition classID="5" name="scHcal"><param name="Temperature" type="double">115</param></condition></DDDB>
+
+PopulateDB        VERBOSE Encoding XML string for name=scLHCb and temperature=125
+PopulateDB        VERBOSE Encoded XML string is:<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE DDDB SYSTEM "structure.dtd"><DDDB><condition classID="5" name="scLHCb"><param name="Temperature" type="double">125</param></condition></DDDB>
+
+PopulateDB        VERBOSE Encoding XML string for name=scHcal and temperature=125
+PopulateDB        VERBOSE Encoded XML string is:<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE DDDB SYSTEM "structure.dtd"><DDDB><condition classID="5" name="scHcal"><param name="Temperature" type="double">125</param></condition></DDDB>
+
+PopulateDB          DEBUG Apply tag HOT
+CondDBAccessSvc     DEBUG entering tagFolder: "/SlowControl"
+CondDBAccessSvc     DEBUG it is a folderset
+CondDBAccessSvc     DEBUG entering tagFolder: "/SlowControl/Hcal"
+CondDBAccessSvc     DEBUG it is a folderset
+CondDBAccessSvc     DEBUG entering tagFolder: "/SlowControl/Hcal/scHcal"
+CondDBAccessSvc     DEBUG it is a folder
+CondDBAccessSvc     DEBUG Tagging folder "/SlowControl/Hcal/scHcal": HOT
+CondDBAccessSvc     DEBUG entering tagFolder: "/SlowControl/LHCb"
+CondDBAccessSvc     DEBUG it is a folderset
+CondDBAccessSvc     DEBUG entering tagFolder: "/SlowControl/LHCb/scLHCb"
+CondDBAccessSvc     DEBUG it is a folder
+CondDBAccessSvc     DEBUG Tagging folder "/SlowControl/LHCb/scLHCb": HOT
+CondDBAccessSvc     DEBUG entering tagFolder: "/SlowControl/DummyDE"
+CondDBAccessSvc     DEBUG it is a folder
+CondDBAccessSvc     DEBUG Tagging folder "/SlowControl/DummyDE": HOT
+PopulateDB          DEBUG Apply tag PRODUCTION to /SlowControl/Hcal
+CondDBAccessSvc     DEBUG entering tagFolder: "/SlowControl/Hcal"
+CondDBAccessSvc     DEBUG it is a folderset
+CondDBAccessSvc     DEBUG entering tagFolder: "/SlowControl/Hcal/scHcal"
+CondDBAccessSvc     DEBUG it is a folder
+CondDBAccessSvc     DEBUG Tagging folder "/SlowControl/Hcal/scHcal": PRODUCTION
+PopulateDB          DEBUG Create objects in folder /Geometry/LHCb
+PopulateDB          DEBUG Reading XML data from file: 
+PopulateDB          DEBUG ../XMLDDDB/LHCb/geometry.xml
+PopulateDB        VERBOSE Remove DTD relative path in the XML
+PopulateDB        VERBOSE DTD literal was: "../DTD/geometry.dtd"
+PopulateDB        VERBOSE DTD literal is now: "geometry.dtd"
+PopulateDB        VERBOSE XML data is:
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE DDDB SYSTEM "geometry.dtd">
+<DDDB>
+<!-- $Id: geometry.xml,v 1.2 2001/12/17 19:47:40 andreav Exp $ -->
+  <catalog name="LHCb">
+  <!-- LHCb detector geometry  catalog -->
+
+    <logvol material="Vacuum" name="lvLHCb">
+    <!-- Geometry for LHCb detector -->
+
+      <box name  = "caveBox" 
+           sizeX = "50000*mm" 
+           sizeY = "50000*mm" 
+           sizeZ = "50000*mm" />
+
+      <physvol logvol="/dd/Geometry/Ecal/lvEcal" name="EcalSubsystem">
+          <posXYZ x="0*mm" y="0*mm" z="12907.5*mm"/>        
+      </physvol>
+
+      <physvol logvol="/dd/Geometry/Hcal/lvHcal" name="HcalSubsystem">
+          <posXYZ x="0*mm" y="0*mm" z="14162.5*mm"/>      
+      </physvol>
+
+    </logvol>  
+
+  </catalog>
+
+</DDDB>
+
+PopulateDB        VERBOSE Store it in the database with [-inf,+inf] validity range
+PopulateDB        VERBOSE Folder name: /Geometry/LHCb
+PopulateDB        VERBOSE Create object with validity range: [0(0x0),9223372036854775807(0x7fffffffffffffff)]
+PopulateDB          DEBUG Apply tag PRODUCTION to /Geometry/LHCb
+CondDBAccessSvc     DEBUG entering tagFolder: "/Geometry/LHCb"
+CondDBAccessSvc     DEBUG it is a folder
+CondDBAccessSvc     DEBUG Tagging folder "/Geometry/LHCb": PRODUCTION
+PopulateDB          DEBUG Put in a new HEAD
+PopulateDB        VERBOSE Encoding XML string for name=scLHCb and temperature=9.2
+PopulateDB        VERBOSE Encoded XML string is:<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE DDDB SYSTEM "structure.dtd"><DDDB><condition classID="5" name="scLHCb"><param name="Temperature" type="double">9.199999999999999</param></condition></DDDB>
+
+PopulateDB        VERBOSE Encoding XML string for name=scLHCb and temperature=14.2
+PopulateDB        VERBOSE Encoded XML string is:<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE DDDB SYSTEM "structure.dtd"><DDDB><condition classID="5" name="scLHCb"><param name="Temperature" type="double">14.2</param></condition></DDDB>
+
+PopulateDB        VERBOSE Encoding XML string for name=scHcal and temperature=9
+PopulateDB        VERBOSE Encoded XML string is:<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE DDDB SYSTEM "structure.dtd"><DDDB><condition classID="5" name="scHcal"><param name="Temperature" type="double">9</param></condition></DDDB>
+
+PopulateDB        VERBOSE Encoding XML string for name=scHcal and temperature=14.4
+PopulateDB        VERBOSE Encoded XML string is:<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE DDDB SYSTEM "structure.dtd"><DDDB><condition classID="5" name="scHcal"><param name="Temperature" type="double">14.4</param></condition></DDDB>
+
+PopulateDB        VERBOSE Encoding XML string for name=scHcal and temperature=19.8
+PopulateDB        VERBOSE Encoded XML string is:<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE DDDB SYSTEM "structure.dtd"><DDDB><condition classID="5" name="scHcal"><param name="Temperature" type="double">19.8</param></condition></DDDB>
+
+PopulateDB        VERBOSE Encoding XML string for name=scHcal and temperature=25.2
+PopulateDB        VERBOSE Encoded XML string is:<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE DDDB SYSTEM "structure.dtd"><DDDB><condition classID="5" name="scHcal"><param name="Temperature" type="double">25.2</param></condition></DDDB>
+
+PopulateDB        VERBOSE Encoding XML string for name=scHcal and temperature=30.6
+PopulateDB        VERBOSE Encoded XML string is:<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE DDDB SYSTEM "structure.dtd"><DDDB><condition classID="5" name="scHcal"><param name="Temperature" type="double">30.6</param></condition></DDDB>
+
+PopulateDB        VERBOSE Encoding XML string for name=scHcal and temperature=36
+PopulateDB        VERBOSE Encoded XML string is:<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE DDDB SYSTEM "structure.dtd"><DDDB><condition classID="5" name="scHcal"><param name="Temperature" type="double">36</param></condition></DDDB>
+
+PopulateDB        VERBOSE Encoding XML string for name=scHcal and temperature=41.4
+PopulateDB        VERBOSE Encoded XML string is:<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE DDDB SYSTEM "structure.dtd"><DDDB><condition classID="5" name="scHcal"><param name="Temperature" type="double">41.40000000000001</param></condition></DDDB>
+
+PopulateDB        VERBOSE Encoding XML string for name=scHcal and temperature=46.8
+PopulateDB        VERBOSE Encoded XML string is:<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE DDDB SYSTEM "structure.dtd"><DDDB><condition classID="5" name="scHcal"><param name="Temperature" type="double">46.8</param></condition></DDDB>
+
+PopulateDB        VERBOSE Encoding XML string for name=scHcal and temperature=52.2
+PopulateDB        VERBOSE Encoded XML string is:<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE DDDB SYSTEM "structure.dtd"><DDDB><condition classID="5" name="scHcal"><param name="Temperature" type="double">52.2</param></condition></DDDB>
+
+PopulateDB        VERBOSE Encoding XML string for name=scHcal and temperature=57.6
+PopulateDB        VERBOSE Encoded XML string is:<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE DDDB SYSTEM "structure.dtd"><DDDB><condition classID="5" name="scHcal"><param name="Temperature" type="double">57.6</param></condition></DDDB>
+
+PopulateDB        VERBOSE Encoding XML string for name=DummyDE and temperature=25.16
+PopulateDB        VERBOSE Encoded XML string is:<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE DDDB SYSTEM "structure.dtd"><DDDB><condition classID="5" name="DummyDE"><param name="Temperature" type="double">25.16</param></condition></DDDB>
+
+PopulateDB        VERBOSE Encoding XML string for name=DummyDE and temperature=29.33
+PopulateDB        VERBOSE Encoded XML string is:<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE DDDB SYSTEM "structure.dtd"><DDDB><condition classID="5" name="DummyDE"><param name="Temperature" type="double">29.33</param></condition></DDDB>
+
+PopulateDB        VERBOSE Encoding XML string for name=DummyDE and temperature=33.5
+PopulateDB        VERBOSE Encoded XML string is:<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE DDDB SYSTEM "structure.dtd"><DDDB><condition classID="5" name="DummyDE"><param name="Temperature" type="double">33.5</param></condition></DDDB>
+
+PopulateDB        VERBOSE /ReadOut/DummyDE: <?xml version="1.0" encoding="UTF-8"?><!DOCTYPE DDDB SYSTEM "structure.dtd"><DDDB><condition classID="5" name="DummyDE"><paramVector name="Channels" type="int">0 1 2 3 4 5 6 7 8 9</paramVector><paramVector name="CrateTemps" type="double">20.16 19.24 18.32 17.4 16.48 15.56 14.64 13.72 12.8 11.88</paramVector><param name="NChannels" type="int">10</param></condition></DDDB>
+
+PopulateDB        VERBOSE /ReadOut/DummyDE: <?xml version="1.0" encoding="UTF-8"?><!DOCTYPE DDDB SYSTEM "structure.dtd"><DDDB><condition classID="5" name="DummyDE"><paramVector name="Channels" type="int">0 2 4 6 8</paramVector><paramVector name="CrateTemps" type="double">24.33 23.41 22.49 21.57 20.65 19.73 18.81 17.89 16.97 16.05</paramVector><param name="NChannels" type="int">10</param></condition></DDDB>
+
+PopulateDB        VERBOSE /ReadOut/DummyDE: <?xml version="1.0" encoding="UTF-8"?><!DOCTYPE DDDB SYSTEM "structure.dtd"><DDDB><condition classID="5" name="DummyDE"><paramVector name="Channels" type="int">0 3 6 9</paramVector><paramVector name="CrateTemps" type="double">28.5 27.58 26.66 25.74 24.82 23.9 22.98 22.06 21.14 20.22</paramVector><param name="NChannels" type="int">10</param></condition></DDDB>
+
+AlignmentConditionVERBOSE Constructing AlignmentCondition from transformation parameters. classID 6
+AlignmentConditionVERBOSE Making transformation matrix
+AlignmentConditionVERBOSE Constructing AlignmentCondition from transformation parameters. classID 6
+AlignmentConditionVERBOSE Making transformation matrix
+PopulateDB          DEBUG Tagging /Geometry2
+CondDBAccessSvc     DEBUG entering tagFolder: "/Geometry2"
+CondDBAccessSvc     DEBUG it is a folderset
+CondDBAccessSvc     DEBUG entering tagFolder: "/Geometry2/LHCb"
+CondDBAccessSvc     DEBUG it is a folder
+CondDBAccessSvc     DEBUG Tagging folder "/Geometry2/LHCb": COLD
+CondDBAccessSvc     DEBUG entering tagFolder: "/Geometry2/lvLHCb"
+CondDBAccessSvc     DEBUG it is a folder
+CondDBAccessSvc     DEBUG Tagging folder "/Geometry2/lvLHCb": COLD
+CondDBAccessSvc     DEBUG entering tagFolder: "/Geometry2"
+CondDBAccessSvc     DEBUG it is a folderset
+CondDBAccessSvc     DEBUG entering tagFolder: "/Geometry2/LHCb"
+CondDBAccessSvc     DEBUG it is a folder
+CondDBAccessSvc     DEBUG Tagging folder "/Geometry2/LHCb": HOT
+CondDBAccessSvc     DEBUG entering tagFolder: "/Geometry2/lvLHCb"
+CondDBAccessSvc     DEBUG it is a folder
+CondDBAccessSvc     DEBUG Tagging folder "/Geometry2/lvLHCb": HOT
+CondDBAccessSvc     DEBUG entering tagFolder: "/Geometry2"
+CondDBAccessSvc     DEBUG it is a folderset
+CondDBAccessSvc     DEBUG entering tagFolder: "/Geometry2/LHCb"
+CondDBAccessSvc     DEBUG it is a folder
+CondDBAccessSvc     DEBUG Tagging folder "/Geometry2/LHCb": PRODUCTION
+CondDBAccessSvc     DEBUG entering tagFolder: "/Geometry2/lvLHCb"
+CondDBAccessSvc     DEBUG it is a folder
+CondDBAccessSvc     DEBUG Tagging folder "/Geometry2/lvLHCb": PRODUCTION
+PopulateDB          DEBUG Add a TabulatedProperty from 0 to 30
+PopulateDB          DEBUG Add a second TabulatedProperty from 30 to +inf
+PopulateDB          DEBUG Tagging everything (FORFUN)
+CondDBAccessSvc     DEBUG entering tagFolder: "/"
+CondDBAccessSvc     DEBUG it is a folderset
+CondDBAccessSvc     DEBUG entering tagFolder: "/Alignment"
+CondDBAccessSvc     DEBUG it is a folderset
+CondDBAccessSvc     DEBUG entering tagFolder: "/Alignment/Velo"
+CondDBAccessSvc     DEBUG it is a folderset
+CondDBAccessSvc     DEBUG entering tagFolder: "/Alignment/Velo/Modules"
+CondDBAccessSvc     DEBUG it is a folder
+CondDBAccessSvc     DEBUG Tagging folder "/Alignment/Velo/Modules": FORFUN
+CondDBAccessSvc     DEBUG entering tagFolder: "/Geometry"
+CondDBAccessSvc     DEBUG it is a folderset
+CondDBAccessSvc     DEBUG entering tagFolder: "/Geometry/LHCb"
+CondDBAccessSvc     DEBUG it is a folder
+CondDBAccessSvc     DEBUG Tagging folder "/Geometry/LHCb": FORFUN
+CondDBAccessSvc     DEBUG entering tagFolder: "/Geometry2"
+CondDBAccessSvc     DEBUG it is a folderset
+CondDBAccessSvc     DEBUG entering tagFolder: "/Geometry2/LHCb"
+CondDBAccessSvc     DEBUG it is a folder
+CondDBAccessSvc     DEBUG Tagging folder "/Geometry2/LHCb": FORFUN
+CondDBAccessSvc     DEBUG entering tagFolder: "/Geometry2/lvLHCb"
+CondDBAccessSvc     DEBUG it is a folder
+CondDBAccessSvc     DEBUG Tagging folder "/Geometry2/lvLHCb": FORFUN
+CondDBAccessSvc     DEBUG entering tagFolder: "/OnLine"
+CondDBAccessSvc     DEBUG it is a folderset
+CondDBAccessSvc     DEBUG entering tagFolder: "/OnLine/Cave"
+CondDBAccessSvc     DEBUG it is a folderset
+CondDBAccessSvc     DEBUG entering tagFolder: "/OnLine/Cave/P1"
+CondDBAccessSvc     DEBUG it is a folder
+CondDBAccessSvc   WARNING Not tagging folder "/OnLine/Cave/P1": single-version
+CondDBAccessSvc     DEBUG entering tagFolder: "/OnLine/Cave/T1"
+CondDBAccessSvc     DEBUG it is a folder
+CondDBAccessSvc   WARNING Not tagging folder "/OnLine/Cave/T1": single-version
+CondDBAccessSvc     DEBUG entering tagFolder: "/OnLine/Cave/T2"
+CondDBAccessSvc     DEBUG it is a folder
+CondDBAccessSvc   WARNING Not tagging folder "/OnLine/Cave/T2": single-version
+CondDBAccessSvc     DEBUG entering tagFolder: "/Properties"
+CondDBAccessSvc     DEBUG it is a folderset
+CondDBAccessSvc     DEBUG entering tagFolder: "/Properties/TestFunction"
+CondDBAccessSvc     DEBUG it is a folder
+CondDBAccessSvc     DEBUG Tagging folder "/Properties/TestFunction": FORFUN
+CondDBAccessSvc     DEBUG entering tagFolder: "/ReadOut"
+CondDBAccessSvc     DEBUG it is a folderset
+CondDBAccessSvc     DEBUG entering tagFolder: "/ReadOut/DummyDE"
+CondDBAccessSvc     DEBUG it is a folder
+CondDBAccessSvc     DEBUG Tagging folder "/ReadOut/DummyDE": FORFUN
+CondDBAccessSvc     DEBUG entering tagFolder: "/SlowControl"
+CondDBAccessSvc     DEBUG it is a folderset
+CondDBAccessSvc     DEBUG entering tagFolder: "/SlowControl/Hcal"
+CondDBAccessSvc     DEBUG it is a folderset
+CondDBAccessSvc     DEBUG entering tagFolder: "/SlowControl/Hcal/scHcal"
+CondDBAccessSvc     DEBUG it is a folder
+CondDBAccessSvc     DEBUG Tagging folder "/SlowControl/Hcal/scHcal": FORFUN
+CondDBAccessSvc     DEBUG entering tagFolder: "/SlowControl/LHCb"
+CondDBAccessSvc     DEBUG it is a folderset
+CondDBAccessSvc     DEBUG entering tagFolder: "/SlowControl/LHCb/scLHCb"
+CondDBAccessSvc     DEBUG it is a folder
+CondDBAccessSvc     DEBUG Tagging folder "/SlowControl/LHCb/scLHCb": FORFUN
+CondDBAccessSvc     DEBUG entering tagFolder: "/SlowControl/DummyDE"
+CondDBAccessSvc     DEBUG it is a folder
+CondDBAccessSvc     DEBUG Tagging folder "/SlowControl/DummyDE": FORFUN
+CondDBAccessSvc     DEBUG entering tagFolder: "/_PopulateDB"
+CondDBAccessSvc     DEBUG it is a folderset
+CondDBAccessSvc     DEBUG entering tagFolder: "/TestFolder"
+CondDBAccessSvc     DEBUG it is a folder
+CondDBAccessSvc     DEBUG Tagging folder "/TestFolder": FORFUN
+PopulateDB           INFO ============= condDBStoreSampleData() ending =======================
+PopulateDB           INFO Dump sample data from the database
+PopulateDB           INFO ============= condDBDumpSampleData() starting ======================
+PopulateDB           INFO  --> List of CondDB Folders
+PopulateDB           INFO  S /  
+PopulateDB           INFO  S /Alignment  
+PopulateDB           INFO  S /Alignment/Velo  
+PopulateDB           INFO    /Alignment/Velo/Modules  
+PopulateDB           INFO     | using tag ="COLD"
+PopulateDB           INFO     | no objects in folder
+PopulateDB           INFO     | using tag ="HOT"
+PopulateDB           INFO     | no objects in folder
+PopulateDB           INFO     | using tag ="PRODUCTION"
+PopulateDB           INFO     | no objects in folder
+PopulateDB           INFO     | using tag ="HEAD"
+PopulateDB           INFO     | 1 objects in folder
+PopulateDB           INFO     | 0 -> 9223372036854775807
+PopulateDB           INFO       size = 1
+PopulateDB           INFO       data (string) =
+PopulateDB           INFO         <?xml version="1.0" encoding="UTF-8"?><!DOCTYPE DDDB SYSTEM "structure.dtd"><DDDB><condition classID="6" name="Module00"><paramVector name="dPosXYZ" type="double">0 0 0</paramVector><paramVector name="dRotXYZ" type="double">0 0 0</paramVector><paramVector name="pivotXYZ" type="double">0 0 0</paramVector></condition></DDDB>
+
+PopulateDB           INFO     | using tag ="FORFUN"
+PopulateDB           INFO     | 1 objects in folder
+PopulateDB           INFO     | 0 -> 9223372036854775807
+PopulateDB           INFO       size = 1
+PopulateDB           INFO       data (string) =
+PopulateDB           INFO         <?xml version="1.0" encoding="UTF-8"?><!DOCTYPE DDDB SYSTEM "structure.dtd"><DDDB><condition classID="6" name="Module00"><paramVector name="dPosXYZ" type="double">0 0 0</paramVector><paramVector name="dRotXYZ" type="double">0 0 0</paramVector><paramVector name="pivotXYZ" type="double">0 0 0</paramVector></condition></DDDB>
+
+PopulateDB           INFO  S /Geometry  
+PopulateDB           INFO    /Geometry/LHCb  
+PopulateDB           INFO     | using tag ="COLD"
+PopulateDB           INFO     | no objects in folder
+PopulateDB           INFO     | using tag ="HOT"
+PopulateDB           INFO     | no objects in folder
+PopulateDB           INFO     | using tag ="PRODUCTION"
+PopulateDB           INFO     | 1 objects in folder
+PopulateDB           INFO     | 0 -> 9223372036854775807
+PopulateDB           INFO       size = 1
+PopulateDB           INFO       data (string) =
+PopulateDB           INFO         <?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE DDDB SYSTEM "geometry.dtd">
+<DDDB>
+<!-- $Id: geometry.xml,v 1.2 2001/12/17 19:47:40 andreav Exp $ -->
+  <catalog name="LHCb">
+  <!-- LHCb detector geometry  catalog -->
+
+    <logvol material="Vacuum" name="lvLHCb">
+    <!-- Geometry for LHCb detector -->
+
+      <box name  = "caveBox" 
+           sizeX = "50000*mm" 
+           sizeY = "50000*mm" 
+           sizeZ = "50000*mm" />
+
+      <physvol logvol="/dd/Geometry/Ecal/lvEcal" name="EcalSubsystem">
+          <posXYZ x="0*mm" y="0*mm" z="12907.5*mm"/>        
+      </physvol>
+
+      <physvol logvol="/dd/Geometry/Hcal/lvHcal" name="HcalSubsystem">
+          <posXYZ x="0*mm" y="0*mm" z="14162.5*mm"/>      
+      </physvol>
+
+    </logvol>  
+
+  </catalog>
+
+</DDDB>
+
+PopulateDB           INFO     | using tag ="HEAD"
+PopulateDB           INFO     | 1 objects in folder
+PopulateDB           INFO     | 0 -> 9223372036854775807
+PopulateDB           INFO       size = 1
+PopulateDB           INFO       data (string) =
+PopulateDB           INFO         <?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE DDDB SYSTEM "geometry.dtd">
+<DDDB>
+<!-- $Id: geometry.xml,v 1.2 2001/12/17 19:47:40 andreav Exp $ -->
+  <catalog name="LHCb">
+  <!-- LHCb detector geometry  catalog -->
+
+    <logvol material="Vacuum" name="lvLHCb">
+    <!-- Geometry for LHCb detector -->
+
+      <box name  = "caveBox" 
+           sizeX = "50000*mm" 
+           sizeY = "50000*mm" 
+           sizeZ = "50000*mm" />
+
+      <physvol logvol="/dd/Geometry/Ecal/lvEcal" name="EcalSubsystem">
+          <posXYZ x="0*mm" y="0*mm" z="12907.5*mm"/>        
+      </physvol>
+
+      <physvol logvol="/dd/Geometry/Hcal/lvHcal" name="HcalSubsystem">
+          <posXYZ x="0*mm" y="0*mm" z="14162.5*mm"/>      
+      </physvol>
+
+    </logvol>  
+
+  </catalog>
+
+</DDDB>
+
+PopulateDB           INFO     | using tag ="FORFUN"
+PopulateDB           INFO     | 1 objects in folder
+PopulateDB           INFO     | 0 -> 9223372036854775807
+PopulateDB           INFO       size = 1
+PopulateDB           INFO       data (string) =
+PopulateDB           INFO         <?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE DDDB SYSTEM "geometry.dtd">
+<DDDB>
+<!-- $Id: geometry.xml,v 1.2 2001/12/17 19:47:40 andreav Exp $ -->
+  <catalog name="LHCb">
+  <!-- LHCb detector geometry  catalog -->
+
+    <logvol material="Vacuum" name="lvLHCb">
+    <!-- Geometry for LHCb detector -->
+
+      <box name  = "caveBox" 
+           sizeX = "50000*mm" 
+           sizeY = "50000*mm" 
+           sizeZ = "50000*mm" />
+
+      <physvol logvol="/dd/Geometry/Ecal/lvEcal" name="EcalSubsystem">
+          <posXYZ x="0*mm" y="0*mm" z="12907.5*mm"/>        
+      </physvol>
+
+      <physvol logvol="/dd/Geometry/Hcal/lvHcal" name="HcalSubsystem">
+          <posXYZ x="0*mm" y="0*mm" z="14162.5*mm"/>      
+      </physvol>
+
+    </logvol>  
+
+  </catalog>
+
+</DDDB>
+
+PopulateDB           INFO  S /Geometry2  
+PopulateDB           INFO    /Geometry2/LHCb  
+PopulateDB           INFO     | using tag ="COLD"
+PopulateDB           INFO     | 1 objects in folder
+PopulateDB           INFO     | 0 -> 9223372036854775807
+PopulateDB           INFO       size = 1
+PopulateDB           INFO       data (string) =
+PopulateDB           INFO         <?xml version="1.0" encoding="UTF-8"?><!DOCTYPE DDDB SYSTEM "geometry.dtd"><DDDB><catalog name="LHCb"><logvolref href="conddb:/Geometry2/lvLHCb#lvLHCb"/></catalog></DDDB>
+PopulateDB           INFO     | using tag ="HOT"
+PopulateDB           INFO     | 1 objects in folder
+PopulateDB           INFO     | 0 -> 9223372036854775807
+PopulateDB           INFO       size = 1
+PopulateDB           INFO       data (string) =
+PopulateDB           INFO         <?xml version="1.0" encoding="UTF-8"?><!DOCTYPE DDDB SYSTEM "geometry.dtd"><DDDB><catalog name="LHCb"><logvolref href="conddb:/Geometry2/lvLHCb#lvLHCb"/></catalog></DDDB>
+PopulateDB           INFO     | using tag ="PRODUCTION"
+PopulateDB           INFO     | 1 objects in folder
+PopulateDB           INFO     | 0 -> 9223372036854775807
+PopulateDB           INFO       size = 1
+PopulateDB           INFO       data (string) =
+PopulateDB           INFO         <?xml version="1.0" encoding="UTF-8"?><!DOCTYPE DDDB SYSTEM "geometry.dtd"><DDDB><catalog name="LHCb"><logvolref href="conddb:/Geometry2/lvLHCb#lvLHCb"/></catalog></DDDB>
+PopulateDB           INFO     | using tag ="HEAD"
+PopulateDB           INFO     | 1 objects in folder
+PopulateDB           INFO     | 0 -> 9223372036854775807
+PopulateDB           INFO       size = 1
+PopulateDB           INFO       data (string) =
+PopulateDB           INFO         <?xml version="1.0" encoding="UTF-8"?><!DOCTYPE DDDB SYSTEM "geometry.dtd"><DDDB><catalog name="LHCb"><logvolref href="conddb:/Geometry2/lvLHCb#lvLHCb"/></catalog></DDDB>
+PopulateDB           INFO     | using tag ="FORFUN"
+PopulateDB           INFO     | 1 objects in folder
+PopulateDB           INFO     | 0 -> 9223372036854775807
+PopulateDB           INFO       size = 1
+PopulateDB           INFO       data (string) =
+PopulateDB           INFO         <?xml version="1.0" encoding="UTF-8"?><!DOCTYPE DDDB SYSTEM "geometry.dtd"><DDDB><catalog name="LHCb"><logvolref href="conddb:/Geometry2/lvLHCb#lvLHCb"/></catalog></DDDB>
+PopulateDB           INFO    /Geometry2/lvLHCb  
+PopulateDB           INFO     | using tag ="COLD"
+PopulateDB           INFO     | 1 objects in folder
+PopulateDB           INFO     | 0 -> 9223372036854775807
+PopulateDB           INFO       size = 1
+PopulateDB           INFO       data (string) =
+PopulateDB           INFO         <?xml version="1.0" encoding="UTF-8"?><!DOCTYPE DDDB SYSTEM "geometry.dtd"><DDDB><logvol material="Vacuum" name="lvLHCb"><box name="caveBox" sizeX="50000*mm" sizeY="50000*mm" sizeZ="50000*mm"/><physvol logvol="/dd/Geometry/Ecal/lvEcal" name="EcalSubsystem"><posXYZ x="0*mm" y="0*mm" z="12907.5*mm"/></physvol><physvol logvol="/dd/Geometry/Hcal/lvHcal" name="HcalSubsystem"><posXYZ x="0*mm" y="0*mm" z="14162.5*mm"/></physvol></logvol></DDDB>
+PopulateDB           INFO     | using tag ="HOT"
+PopulateDB           INFO     | 1 objects in folder
+PopulateDB           INFO     | 0 -> 9223372036854775807
+PopulateDB           INFO       size = 1
+PopulateDB           INFO       data (string) =
+PopulateDB           INFO         <?xml version="1.0" encoding="UTF-8"?><!DOCTYPE DDDB SYSTEM "geometry.dtd"><DDDB><logvol material="Vacuum" name="lvLHCb"><box name="caveBox" sizeX="50000*mm" sizeY="50000*mm" sizeZ="50000*mm"/><physvol logvol="/dd/Geometry/Ecal/lvEcal" name="EcalSubsystem"><posXYZ x="0*mm" y="0*mm" z="12907.5*mm"/></physvol><physvol logvol="/dd/Geometry/Hcal/lvHcal" name="HcalSubsystem"><posXYZ x="0*mm" y="0*mm" z="14162.5*mm"/></physvol></logvol></DDDB>
+PopulateDB           INFO     | using tag ="PRODUCTION"
+PopulateDB           INFO     | 1 objects in folder
+PopulateDB           INFO     | 0 -> 9223372036854775807
+PopulateDB           INFO       size = 1
+PopulateDB           INFO       data (string) =
+PopulateDB           INFO         <?xml version="1.0" encoding="UTF-8"?><!DOCTYPE DDDB SYSTEM "geometry.dtd"><DDDB><logvol material="Vacuum" name="lvLHCb"><box name="caveBox" sizeX="50000*mm" sizeY="50000*mm" sizeZ="50000*mm"/><physvol logvol="/dd/Geometry/Ecal/lvEcal" name="EcalSubsystem"><posXYZ x="0*mm" y="0*mm" z="12907.5*mm"/></physvol><physvol logvol="/dd/Geometry/Hcal/lvHcal" name="HcalSubsystem"><posXYZ x="0*mm" y="0*mm" z="14162.5*mm"/></physvol></logvol></DDDB>
+PopulateDB           INFO     | using tag ="HEAD"
+PopulateDB           INFO     | 1 objects in folder
+PopulateDB           INFO     | 0 -> 9223372036854775807
+PopulateDB           INFO       size = 1
+PopulateDB           INFO       data (string) =
+PopulateDB           INFO         <?xml version="1.0" encoding="UTF-8"?><!DOCTYPE DDDB SYSTEM "geometry.dtd"><DDDB><logvol material="Vacuum" name="lvLHCb"><box name="caveBox" sizeX="50000*mm" sizeY="50000*mm" sizeZ="50000*mm"/><physvol logvol="/dd/Geometry/Ecal/lvEcal" name="EcalSubsystem"><posXYZ x="0*mm" y="0*mm" z="12907.5*mm"/></physvol><physvol logvol="/dd/Geometry/Hcal/lvHcal" name="HcalSubsystem"><posXYZ x="0*mm" y="0*mm" z="14162.5*mm"/></physvol></logvol></DDDB>
+PopulateDB           INFO     | using tag ="FORFUN"
+PopulateDB           INFO     | 1 objects in folder
+PopulateDB           INFO     | 0 -> 9223372036854775807
+PopulateDB           INFO       size = 1
+PopulateDB           INFO       data (string) =
+PopulateDB           INFO         <?xml version="1.0" encoding="UTF-8"?><!DOCTYPE DDDB SYSTEM "geometry.dtd"><DDDB><logvol material="Vacuum" name="lvLHCb"><box name="caveBox" sizeX="50000*mm" sizeY="50000*mm" sizeZ="50000*mm"/><physvol logvol="/dd/Geometry/Ecal/lvEcal" name="EcalSubsystem"><posXYZ x="0*mm" y="0*mm" z="12907.5*mm"/></physvol><physvol logvol="/dd/Geometry/Hcal/lvHcal" name="HcalSubsystem"><posXYZ x="0*mm" y="0*mm" z="14162.5*mm"/></physvol></logvol></DDDB>
+PopulateDB           INFO  S /OnLine  
+PopulateDB           INFO  S /OnLine/Cave  
+PopulateDB           INFO    /OnLine/Cave/P1  
+PopulateDB           INFO     | using tag ="HEAD"
+PopulateDB           INFO     | no objects in folder
+PopulateDB           INFO    /OnLine/Cave/T1  
+PopulateDB           INFO     | using tag ="HEAD"
+PopulateDB           INFO     | no objects in folder
+PopulateDB           INFO    /OnLine/Cave/T2  
+PopulateDB           INFO     | using tag ="HEAD"
+PopulateDB           INFO     | no objects in folder
+PopulateDB           INFO  S /Properties  
+PopulateDB           INFO    /Properties/TestFunction  
+PopulateDB           INFO     | using tag ="COLD"
+PopulateDB           INFO     | no objects in folder
+PopulateDB           INFO     | using tag ="HOT"
+PopulateDB           INFO     | no objects in folder
+PopulateDB           INFO     | using tag ="PRODUCTION"
+PopulateDB           INFO     | no objects in folder
+PopulateDB           INFO     | using tag ="HEAD"
+PopulateDB           INFO     | 2 objects in folder
+PopulateDB           INFO     | 0 -> 30
+PopulateDB           INFO       size = 1
+PopulateDB           INFO       data (string) =
+PopulateDB           INFO         <?xml version="1.0" encoding="UTF-8"?><!DOCTYPE DDDB SYSTEM "geometry.dtd"><DDDB><tabproperty name="TestFunction" type="(Unknown)" xaxis="(empty)" yaxis="(empty)"><entry x = '0'  y = '0' /><entry x = '0.2'  y = '0.04000000000000001' /><entry x = '0.4'  y = '0.16' /><entry x = '0.6000000000000001'  y = '0.3600000000000001' /><entry x = '0.8'  y = '0.6400000000000001' /><entry x = '1'  y = '1' /><entry x = '1.2'  y = '1.44' /><entry x = '1.4'  y = '1.96' /><entry x = '1.6'  y = '2.56' /><entry x = '1.8'  y = '3.239999999999999' /><entry x = '2'  y = '3.999999999999999' /></tabproperty></DDDB>
+
+PopulateDB           INFO     | 30 -> 9223372036854775807
+PopulateDB           INFO       size = 1
+PopulateDB           INFO       data (string) =
+PopulateDB           INFO         <?xml version="1.0" encoding="UTF-8"?><!DOCTYPE DDDB SYSTEM "geometry.dtd"><DDDB><tabproperty name="TestFunction" type="(Unknown)" xaxis="(empty)" yaxis="(empty)"><entry x = '0'  y = '0' /><entry x = '0.2'  y = '0.02' /><entry x = '0.4'  y = '0.08000000000000002' /><entry x = '0.6000000000000001'  y = '0.18' /><entry x = '0.8'  y = '0.3200000000000001' /><entry x = '1'  y = '0.5' /><entry x = '1.2'  y = '0.72' /><entry x = '1.4'  y = '0.9799999999999999' /><entry x = '1.6'  y = '1.28' /><entry x = '1.8'  y = '1.62' /><entry x = '2'  y = '2' /></tabproperty></DDDB>
+
+PopulateDB           INFO     | using tag ="FORFUN"
+PopulateDB           INFO     | 2 objects in folder
+PopulateDB           INFO     | 0 -> 30
+PopulateDB           INFO       size = 1
+PopulateDB           INFO       data (string) =
+PopulateDB           INFO         <?xml version="1.0" encoding="UTF-8"?><!DOCTYPE DDDB SYSTEM "geometry.dtd"><DDDB><tabproperty name="TestFunction" type="(Unknown)" xaxis="(empty)" yaxis="(empty)"><entry x = '0'  y = '0' /><entry x = '0.2'  y = '0.04000000000000001' /><entry x = '0.4'  y = '0.16' /><entry x = '0.6000000000000001'  y = '0.3600000000000001' /><entry x = '0.8'  y = '0.6400000000000001' /><entry x = '1'  y = '1' /><entry x = '1.2'  y = '1.44' /><entry x = '1.4'  y = '1.96' /><entry x = '1.6'  y = '2.56' /><entry x = '1.8'  y = '3.239999999999999' /><entry x = '2'  y = '3.999999999999999' /></tabproperty></DDDB>
+
+PopulateDB           INFO     | 30 -> 9223372036854775807
+PopulateDB           INFO       size = 1
+PopulateDB           INFO       data (string) =
+PopulateDB           INFO         <?xml version="1.0" encoding="UTF-8"?><!DOCTYPE DDDB SYSTEM "geometry.dtd"><DDDB><tabproperty name="TestFunction" type="(Unknown)" xaxis="(empty)" yaxis="(empty)"><entry x = '0'  y = '0' /><entry x = '0.2'  y = '0.02' /><entry x = '0.4'  y = '0.08000000000000002' /><entry x = '0.6000000000000001'  y = '0.18' /><entry x = '0.8'  y = '0.3200000000000001' /><entry x = '1'  y = '0.5' /><entry x = '1.2'  y = '0.72' /><entry x = '1.4'  y = '0.9799999999999999' /><entry x = '1.6'  y = '1.28' /><entry x = '1.8'  y = '1.62' /><entry x = '2'  y = '2' /></tabproperty></DDDB>
+
+PopulateDB           INFO  S /ReadOut  
+PopulateDB           INFO    /ReadOut/DummyDE  
+PopulateDB           INFO     | using tag ="COLD"
+PopulateDB           INFO     | no objects in folder
+PopulateDB           INFO     | using tag ="HOT"
+PopulateDB           INFO     | no objects in folder
+PopulateDB           INFO     | using tag ="PRODUCTION"
+PopulateDB           INFO     | no objects in folder
+PopulateDB           INFO     | using tag ="HEAD"
+PopulateDB           INFO     | 3 objects in folder
+PopulateDB           INFO     | 0 -> 24
+PopulateDB           INFO       size = 1
+PopulateDB           INFO       data (string) =
+PopulateDB           INFO         <?xml version="1.0" encoding="UTF-8"?><!DOCTYPE DDDB SYSTEM "structure.dtd"><DDDB><condition classID="5" name="DummyDE"><paramVector name="Channels" type="int">0 1 2 3 4 5 6 7 8 9</paramVector><paramVector name="CrateTemps" type="double">20.16 19.24 18.32 17.4 16.48 15.56 14.64 13.72 12.8 11.88</paramVector><param name="NChannels" type="int">10</param></condition></DDDB>
+
+PopulateDB           INFO     | 24 -> 48
+PopulateDB           INFO       size = 1
+PopulateDB           INFO       data (string) =
+PopulateDB           INFO         <?xml version="1.0" encoding="UTF-8"?><!DOCTYPE DDDB SYSTEM "structure.dtd"><DDDB><condition classID="5" name="DummyDE"><paramVector name="Channels" type="int">0 2 4 6 8</paramVector><paramVector name="CrateTemps" type="double">24.33 23.41 22.49 21.57 20.65 19.73 18.81 17.89 16.97 16.05</paramVector><param name="NChannels" type="int">10</param></condition></DDDB>
+
+PopulateDB           INFO     | 48 -> 72
+PopulateDB           INFO       size = 1
+PopulateDB           INFO       data (string) =
+PopulateDB           INFO         <?xml version="1.0" encoding="UTF-8"?><!DOCTYPE DDDB SYSTEM "structure.dtd"><DDDB><condition classID="5" name="DummyDE"><paramVector name="Channels" type="int">0 3 6 9</paramVector><paramVector name="CrateTemps" type="double">28.5 27.58 26.66 25.74 24.82 23.9 22.98 22.06 21.14 20.22</paramVector><param name="NChannels" type="int">10</param></condition></DDDB>
+
+PopulateDB           INFO     | using tag ="FORFUN"
+PopulateDB           INFO     | 3 objects in folder
+PopulateDB           INFO     | 0 -> 24
+PopulateDB           INFO       size = 1
+PopulateDB           INFO       data (string) =
+PopulateDB           INFO         <?xml version="1.0" encoding="UTF-8"?><!DOCTYPE DDDB SYSTEM "structure.dtd"><DDDB><condition classID="5" name="DummyDE"><paramVector name="Channels" type="int">0 1 2 3 4 5 6 7 8 9</paramVector><paramVector name="CrateTemps" type="double">20.16 19.24 18.32 17.4 16.48 15.56 14.64 13.72 12.8 11.88</paramVector><param name="NChannels" type="int">10</param></condition></DDDB>
+
+PopulateDB           INFO     | 24 -> 48
+PopulateDB           INFO       size = 1
+PopulateDB           INFO       data (string) =
+PopulateDB           INFO         <?xml version="1.0" encoding="UTF-8"?><!DOCTYPE DDDB SYSTEM "structure.dtd"><DDDB><condition classID="5" name="DummyDE"><paramVector name="Channels" type="int">0 2 4 6 8</paramVector><paramVector name="CrateTemps" type="double">24.33 23.41 22.49 21.57 20.65 19.73 18.81 17.89 16.97 16.05</paramVector><param name="NChannels" type="int">10</param></condition></DDDB>
+
+PopulateDB           INFO     | 48 -> 72
+PopulateDB           INFO       size = 1
+PopulateDB           INFO       data (string) =
+PopulateDB           INFO         <?xml version="1.0" encoding="UTF-8"?><!DOCTYPE DDDB SYSTEM "structure.dtd"><DDDB><condition classID="5" name="DummyDE"><paramVector name="Channels" type="int">0 3 6 9</paramVector><paramVector name="CrateTemps" type="double">28.5 27.58 26.66 25.74 24.82 23.9 22.98 22.06 21.14 20.22</paramVector><param name="NChannels" type="int">10</param></condition></DDDB>
+
+PopulateDB           INFO  S /SlowControl  
+PopulateDB           INFO    /SlowControl/DummyDE  
+PopulateDB           INFO     | using tag ="COLD"
+PopulateDB           INFO     | no objects in folder
+PopulateDB           INFO     | using tag ="HOT"
+PopulateDB           INFO     | no objects in folder
+PopulateDB           INFO     | using tag ="PRODUCTION"
+PopulateDB           INFO     | no objects in folder
+PopulateDB           INFO     | using tag ="HEAD"
+PopulateDB           INFO     | 3 objects in folder
+PopulateDB           INFO     | 0 -> 24
+PopulateDB           INFO       size = 1
+PopulateDB           INFO       data (string) =
+PopulateDB           INFO         <?xml version="1.0" encoding="UTF-8"?><!DOCTYPE DDDB SYSTEM "structure.dtd"><DDDB><condition classID="5" name="DummyDE"><param name="Temperature" type="double">25.16</param></condition></DDDB>
+
+PopulateDB           INFO     | 24 -> 48
+PopulateDB           INFO       size = 1
+PopulateDB           INFO       data (string) =
+PopulateDB           INFO         <?xml version="1.0" encoding="UTF-8"?><!DOCTYPE DDDB SYSTEM "structure.dtd"><DDDB><condition classID="5" name="DummyDE"><param name="Temperature" type="double">29.33</param></condition></DDDB>
+
+PopulateDB           INFO     | 48 -> 72
+PopulateDB           INFO       size = 1
+PopulateDB           INFO       data (string) =
+PopulateDB           INFO         <?xml version="1.0" encoding="UTF-8"?><!DOCTYPE DDDB SYSTEM "structure.dtd"><DDDB><condition classID="5" name="DummyDE"><param name="Temperature" type="double">33.5</param></condition></DDDB>
+
+PopulateDB           INFO     | using tag ="FORFUN"
+PopulateDB           INFO     | 3 objects in folder
+PopulateDB           INFO     | 0 -> 24
+PopulateDB           INFO       size = 1
+PopulateDB           INFO       data (string) =
+PopulateDB           INFO         <?xml version="1.0" encoding="UTF-8"?><!DOCTYPE DDDB SYSTEM "structure.dtd"><DDDB><condition classID="5" name="DummyDE"><param name="Temperature" type="double">25.16</param></condition></DDDB>
+
+PopulateDB           INFO     | 24 -> 48
+PopulateDB           INFO       size = 1
+PopulateDB           INFO       data (string) =
+PopulateDB           INFO         <?xml version="1.0" encoding="UTF-8"?><!DOCTYPE DDDB SYSTEM "structure.dtd"><DDDB><condition classID="5" name="DummyDE"><param name="Temperature" type="double">29.33</param></condition></DDDB>
+
+PopulateDB           INFO     | 48 -> 72
+PopulateDB           INFO       size = 1
+PopulateDB           INFO       data (string) =
+PopulateDB           INFO         <?xml version="1.0" encoding="UTF-8"?><!DOCTYPE DDDB SYSTEM "structure.dtd"><DDDB><condition classID="5" name="DummyDE"><param name="Temperature" type="double">33.5</param></condition></DDDB>
+
+PopulateDB           INFO  S /SlowControl/Hcal  
+PopulateDB           INFO    /SlowControl/Hcal/scHcal  
+PopulateDB           INFO     | using tag ="COLD"
+PopulateDB           INFO     | 3 objects in folder
+PopulateDB           INFO     | 0 -> 16
+PopulateDB           INFO       size = 1
+PopulateDB           INFO       data (string) =
+PopulateDB           INFO         <?xml version="1.0" encoding="UTF-8"?><!DOCTYPE DDDB SYSTEM "structure.dtd"><DDDB><condition classID="5" name="scHcal"><param name="Temperature" type="double">4.2</param></condition></DDDB>
+
+PopulateDB           INFO     | 16 -> 32
+PopulateDB           INFO       size = 1
+PopulateDB           INFO       data (string) =
+PopulateDB           INFO         <?xml version="1.0" encoding="UTF-8"?><!DOCTYPE DDDB SYSTEM "structure.dtd"><DDDB><condition classID="5" name="scHcal"><param name="Temperature" type="double">14.6</param></condition></DDDB>
+
+PopulateDB           INFO     | 32 -> 48
+PopulateDB           INFO       size = 1
+PopulateDB           INFO       data (string) =
+PopulateDB           INFO         <?xml version="1.0" encoding="UTF-8"?><!DOCTYPE DDDB SYSTEM "structure.dtd"><DDDB><condition classID="5" name="scHcal"><param name="Temperature" type="double">25</param></condition></DDDB>
+
+PopulateDB           INFO     | using tag ="HOT"
+PopulateDB           INFO     | 3 objects in folder
+PopulateDB           INFO     | 0 -> 16
+PopulateDB           INFO       size = 1
+PopulateDB           INFO       data (string) =
+PopulateDB           INFO         <?xml version="1.0" encoding="UTF-8"?><!DOCTYPE DDDB SYSTEM "structure.dtd"><DDDB><condition classID="5" name="scHcal"><param name="Temperature" type="double">105</param></condition></DDDB>
+
+PopulateDB           INFO     | 16 -> 32
+PopulateDB           INFO       size = 1
+PopulateDB           INFO       data (string) =
+PopulateDB           INFO         <?xml version="1.0" encoding="UTF-8"?><!DOCTYPE DDDB SYSTEM "structure.dtd"><DDDB><condition classID="5" name="scHcal"><param name="Temperature" type="double">115</param></condition></DDDB>
+
+PopulateDB           INFO     | 32 -> 48
+PopulateDB           INFO       size = 1
+PopulateDB           INFO       data (string) =
+PopulateDB           INFO         <?xml version="1.0" encoding="UTF-8"?><!DOCTYPE DDDB SYSTEM "structure.dtd"><DDDB><condition classID="5" name="scHcal"><param name="Temperature" type="double">125</param></condition></DDDB>
+
+PopulateDB           INFO     | using tag ="PRODUCTION"
+PopulateDB           INFO     | 3 objects in folder
+PopulateDB           INFO     | 0 -> 16
+PopulateDB           INFO       size = 1
+PopulateDB           INFO       data (string) =
+PopulateDB           INFO         <?xml version="1.0" encoding="UTF-8"?><!DOCTYPE DDDB SYSTEM "structure.dtd"><DDDB><condition classID="5" name="scHcal"><param name="Temperature" type="double">105</param></condition></DDDB>
+
+PopulateDB           INFO     | 16 -> 32
+PopulateDB           INFO       size = 1
+PopulateDB           INFO       data (string) =
+PopulateDB           INFO         <?xml version="1.0" encoding="UTF-8"?><!DOCTYPE DDDB SYSTEM "structure.dtd"><DDDB><condition classID="5" name="scHcal"><param name="Temperature" type="double">115</param></condition></DDDB>
+
+PopulateDB           INFO     | 32 -> 48
+PopulateDB           INFO       size = 1
+PopulateDB           INFO       data (string) =
+PopulateDB           INFO         <?xml version="1.0" encoding="UTF-8"?><!DOCTYPE DDDB SYSTEM "structure.dtd"><DDDB><condition classID="5" name="scHcal"><param name="Temperature" type="double">125</param></condition></DDDB>
+
+PopulateDB           INFO     | using tag ="HEAD"
+PopulateDB           INFO     | 10 objects in folder
+PopulateDB           INFO     | 0 -> 10
+PopulateDB           INFO       size = 1
+PopulateDB           INFO       data (string) =
+PopulateDB           INFO         <?xml version="1.0" encoding="UTF-8"?><!DOCTYPE DDDB SYSTEM "structure.dtd"><DDDB><condition classID="5" name="scHcal"><param name="Temperature" type="double">9</param></condition></DDDB>
+
+PopulateDB           INFO     | 10 -> 20
+PopulateDB           INFO       size = 1
+PopulateDB           INFO       data (string) =
+PopulateDB           INFO         <?xml version="1.0" encoding="UTF-8"?><!DOCTYPE DDDB SYSTEM "structure.dtd"><DDDB><condition classID="5" name="scHcal"><param name="Temperature" type="double">14.4</param></condition></DDDB>
+
+PopulateDB           INFO     | 20 -> 30
+PopulateDB           INFO       size = 1
+PopulateDB           INFO       data (string) =
+PopulateDB           INFO         <?xml version="1.0" encoding="UTF-8"?><!DOCTYPE DDDB SYSTEM "structure.dtd"><DDDB><condition classID="5" name="scHcal"><param name="Temperature" type="double">19.8</param></condition></DDDB>
+
+PopulateDB           INFO     | 30 -> 40
+PopulateDB           INFO       size = 1
+PopulateDB           INFO       data (string) =
+PopulateDB           INFO         <?xml version="1.0" encoding="UTF-8"?><!DOCTYPE DDDB SYSTEM "structure.dtd"><DDDB><condition classID="5" name="scHcal"><param name="Temperature" type="double">25.2</param></condition></DDDB>
+
+PopulateDB           INFO     | 40 -> 50
+PopulateDB           INFO       size = 1
+PopulateDB           INFO       data (string) =
+PopulateDB           INFO         <?xml version="1.0" encoding="UTF-8"?><!DOCTYPE DDDB SYSTEM "structure.dtd"><DDDB><condition classID="5" name="scHcal"><param name="Temperature" type="double">30.6</param></condition></DDDB>
+
+PopulateDB           INFO     | 50 -> 60
+PopulateDB           INFO       size = 1
+PopulateDB           INFO       data (string) =
+PopulateDB           INFO         <?xml version="1.0" encoding="UTF-8"?><!DOCTYPE DDDB SYSTEM "structure.dtd"><DDDB><condition classID="5" name="scHcal"><param name="Temperature" type="double">36</param></condition></DDDB>
+
+PopulateDB           INFO     | 60 -> 70
+PopulateDB           INFO       size = 1
+PopulateDB           INFO       data (string) =
+PopulateDB           INFO         <?xml version="1.0" encoding="UTF-8"?><!DOCTYPE DDDB SYSTEM "structure.dtd"><DDDB><condition classID="5" name="scHcal"><param name="Temperature" type="double">41.40000000000001</param></condition></DDDB>
+
+PopulateDB           INFO     | 70 -> 80
+PopulateDB           INFO       size = 1
+PopulateDB           INFO       data (string) =
+PopulateDB           INFO         <?xml version="1.0" encoding="UTF-8"?><!DOCTYPE DDDB SYSTEM "structure.dtd"><DDDB><condition classID="5" name="scHcal"><param name="Temperature" type="double">46.8</param></condition></DDDB>
+
+PopulateDB           INFO     | 80 -> 90
+PopulateDB           INFO       size = 1
+PopulateDB           INFO       data (string) =
+PopulateDB           INFO         <?xml version="1.0" encoding="UTF-8"?><!DOCTYPE DDDB SYSTEM "structure.dtd"><DDDB><condition classID="5" name="scHcal"><param name="Temperature" type="double">52.2</param></condition></DDDB>
+
+PopulateDB           INFO     | 90 -> 100
+PopulateDB           INFO       size = 1
+PopulateDB           INFO       data (string) =
+PopulateDB           INFO         <?xml version="1.0" encoding="UTF-8"?><!DOCTYPE DDDB SYSTEM "structure.dtd"><DDDB><condition classID="5" name="scHcal"><param name="Temperature" type="double">57.6</param></condition></DDDB>
+
+PopulateDB           INFO     | using tag ="FORFUN"
+PopulateDB           INFO     | 10 objects in folder
+PopulateDB           INFO     | 0 -> 10
+PopulateDB           INFO       size = 1
+PopulateDB           INFO       data (string) =
+PopulateDB           INFO         <?xml version="1.0" encoding="UTF-8"?><!DOCTYPE DDDB SYSTEM "structure.dtd"><DDDB><condition classID="5" name="scHcal"><param name="Temperature" type="double">9</param></condition></DDDB>
+
+PopulateDB           INFO     | 10 -> 20
+PopulateDB           INFO       size = 1
+PopulateDB           INFO       data (string) =
+PopulateDB           INFO         <?xml version="1.0" encoding="UTF-8"?><!DOCTYPE DDDB SYSTEM "structure.dtd"><DDDB><condition classID="5" name="scHcal"><param name="Temperature" type="double">14.4</param></condition></DDDB>
+
+PopulateDB           INFO     | 20 -> 30
+PopulateDB           INFO       size = 1
+PopulateDB           INFO       data (string) =
+PopulateDB           INFO         <?xml version="1.0" encoding="UTF-8"?><!DOCTYPE DDDB SYSTEM "structure.dtd"><DDDB><condition classID="5" name="scHcal"><param name="Temperature" type="double">19.8</param></condition></DDDB>
+
+PopulateDB           INFO     | 30 -> 40
+PopulateDB           INFO       size = 1
+PopulateDB           INFO       data (string) =
+PopulateDB           INFO         <?xml version="1.0" encoding="UTF-8"?><!DOCTYPE DDDB SYSTEM "structure.dtd"><DDDB><condition classID="5" name="scHcal"><param name="Temperature" type="double">25.2</param></condition></DDDB>
+
+PopulateDB           INFO     | 40 -> 50
+PopulateDB           INFO       size = 1
+PopulateDB           INFO       data (string) =
+PopulateDB           INFO         <?xml version="1.0" encoding="UTF-8"?><!DOCTYPE DDDB SYSTEM "structure.dtd"><DDDB><condition classID="5" name="scHcal"><param name="Temperature" type="double">30.6</param></condition></DDDB>
+
+PopulateDB           INFO     | 50 -> 60
+PopulateDB           INFO       size = 1
+PopulateDB           INFO       data (string) =
+PopulateDB           INFO         <?xml version="1.0" encoding="UTF-8"?><!DOCTYPE DDDB SYSTEM "structure.dtd"><DDDB><condition classID="5" name="scHcal"><param name="Temperature" type="double">36</param></condition></DDDB>
+
+PopulateDB           INFO     | 60 -> 70
+PopulateDB           INFO       size = 1
+PopulateDB           INFO       data (string) =
+PopulateDB           INFO         <?xml version="1.0" encoding="UTF-8"?><!DOCTYPE DDDB SYSTEM "structure.dtd"><DDDB><condition classID="5" name="scHcal"><param name="Temperature" type="double">41.40000000000001</param></condition></DDDB>
+
+PopulateDB           INFO     | 70 -> 80
+PopulateDB           INFO       size = 1
+PopulateDB           INFO       data (string) =
+PopulateDB           INFO         <?xml version="1.0" encoding="UTF-8"?><!DOCTYPE DDDB SYSTEM "structure.dtd"><DDDB><condition classID="5" name="scHcal"><param name="Temperature" type="double">46.8</param></condition></DDDB>
+
+PopulateDB           INFO     | 80 -> 90
+PopulateDB           INFO       size = 1
+PopulateDB           INFO       data (string) =
+PopulateDB           INFO         <?xml version="1.0" encoding="UTF-8"?><!DOCTYPE DDDB SYSTEM "structure.dtd"><DDDB><condition classID="5" name="scHcal"><param name="Temperature" type="double">52.2</param></condition></DDDB>
+
+PopulateDB           INFO     | 90 -> 100
+PopulateDB           INFO       size = 1
+PopulateDB           INFO       data (string) =
+PopulateDB           INFO         <?xml version="1.0" encoding="UTF-8"?><!DOCTYPE DDDB SYSTEM "structure.dtd"><DDDB><condition classID="5" name="scHcal"><param name="Temperature" type="double">57.6</param></condition></DDDB>
+
+PopulateDB           INFO  S /SlowControl/LHCb  
+PopulateDB           INFO    /SlowControl/LHCb/scLHCb  
+PopulateDB           INFO     | using tag ="COLD"
+PopulateDB           INFO     | 3 objects in folder
+PopulateDB           INFO     | 0 -> 16
+PopulateDB           INFO       size = 1
+PopulateDB           INFO       data (string) =
+PopulateDB           INFO         <?xml version="1.0" encoding="UTF-8"?><!DOCTYPE DDDB SYSTEM "structure.dtd"><DDDB><condition classID="5" name="scLHCb"><param name="Temperature" type="double">5</param></condition></DDDB>
+
+PopulateDB           INFO     | 16 -> 32
+PopulateDB           INFO       size = 1
+PopulateDB           INFO       data (string) =
+PopulateDB           INFO         <?xml version="1.0" encoding="UTF-8"?><!DOCTYPE DDDB SYSTEM "structure.dtd"><DDDB><condition classID="5" name="scLHCb"><param name="Temperature" type="double">15</param></condition></DDDB>
+
+PopulateDB           INFO     | 32 -> 48
+PopulateDB           INFO       size = 1
+PopulateDB           INFO       data (string) =
+PopulateDB           INFO         <?xml version="1.0" encoding="UTF-8"?><!DOCTYPE DDDB SYSTEM "structure.dtd"><DDDB><condition classID="5" name="scLHCb"><param name="Temperature" type="double">25</param></condition></DDDB>
+
+PopulateDB           INFO     | using tag ="HOT"
+PopulateDB           INFO     | 3 objects in folder
+PopulateDB           INFO     | 0 -> 16
+PopulateDB           INFO       size = 1
+PopulateDB           INFO       data (string) =
+PopulateDB           INFO         <?xml version="1.0" encoding="UTF-8"?><!DOCTYPE DDDB SYSTEM "structure.dtd"><DDDB><condition classID="5" name="scLHCb"><param name="Temperature" type="double">105</param></condition></DDDB>
+
+PopulateDB           INFO     | 16 -> 32
+PopulateDB           INFO       size = 1
+PopulateDB           INFO       data (string) =
+PopulateDB           INFO         <?xml version="1.0" encoding="UTF-8"?><!DOCTYPE DDDB SYSTEM "structure.dtd"><DDDB><condition classID="5" name="scLHCb"><param name="Temperature" type="double">115</param></condition></DDDB>
+
+PopulateDB           INFO     | 32 -> 48
+PopulateDB           INFO       size = 1
+PopulateDB           INFO       data (string) =
+PopulateDB           INFO         <?xml version="1.0" encoding="UTF-8"?><!DOCTYPE DDDB SYSTEM "structure.dtd"><DDDB><condition classID="5" name="scLHCb"><param name="Temperature" type="double">125</param></condition></DDDB>
+
+PopulateDB           INFO     | using tag ="PRODUCTION"
+PopulateDB           INFO     | 3 objects in folder
+PopulateDB           INFO     | 0 -> 16
+PopulateDB           INFO       size = 1
+PopulateDB           INFO       data (string) =
+PopulateDB           INFO         <?xml version="1.0" encoding="UTF-8"?><!DOCTYPE DDDB SYSTEM "structure.dtd"><DDDB><condition classID="5" name="scLHCb"><param name="Temperature" type="double">5</param></condition></DDDB>
+
+PopulateDB           INFO     | 16 -> 32
+PopulateDB           INFO       size = 1
+PopulateDB           INFO       data (string) =
+PopulateDB           INFO         <?xml version="1.0" encoding="UTF-8"?><!DOCTYPE DDDB SYSTEM "structure.dtd"><DDDB><condition classID="5" name="scLHCb"><param name="Temperature" type="double">15</param></condition></DDDB>
+
+PopulateDB           INFO     | 32 -> 48
+PopulateDB           INFO       size = 1
+PopulateDB           INFO       data (string) =
+PopulateDB           INFO         <?xml version="1.0" encoding="UTF-8"?><!DOCTYPE DDDB SYSTEM "structure.dtd"><DDDB><condition classID="5" name="scLHCb"><param name="Temperature" type="double">25</param></condition></DDDB>
+
+PopulateDB           INFO     | using tag ="HEAD"
+PopulateDB           INFO     | 2 objects in folder
+PopulateDB           INFO     | 0 -> 24
+PopulateDB           INFO       size = 1
+PopulateDB           INFO       data (string) =
+PopulateDB           INFO         <?xml version="1.0" encoding="UTF-8"?><!DOCTYPE DDDB SYSTEM "structure.dtd"><DDDB><condition classID="5" name="scLHCb"><param name="Temperature" type="double">9.199999999999999</param></condition></DDDB>
+
+PopulateDB           INFO     | 24 -> 48
+PopulateDB           INFO       size = 1
+PopulateDB           INFO       data (string) =
+PopulateDB           INFO         <?xml version="1.0" encoding="UTF-8"?><!DOCTYPE DDDB SYSTEM "structure.dtd"><DDDB><condition classID="5" name="scLHCb"><param name="Temperature" type="double">14.2</param></condition></DDDB>
+
+PopulateDB           INFO     | using tag ="FORFUN"
+PopulateDB           INFO     | 2 objects in folder
+PopulateDB           INFO     | 0 -> 24
+PopulateDB           INFO       size = 1
+PopulateDB           INFO       data (string) =
+PopulateDB           INFO         <?xml version="1.0" encoding="UTF-8"?><!DOCTYPE DDDB SYSTEM "structure.dtd"><DDDB><condition classID="5" name="scLHCb"><param name="Temperature" type="double">9.199999999999999</param></condition></DDDB>
+
+PopulateDB           INFO     | 24 -> 48
+PopulateDB           INFO       size = 1
+PopulateDB           INFO       data (string) =
+PopulateDB           INFO         <?xml version="1.0" encoding="UTF-8"?><!DOCTYPE DDDB SYSTEM "structure.dtd"><DDDB><condition classID="5" name="scLHCb"><param name="Temperature" type="double">14.2</param></condition></DDDB>
+
+PopulateDB           INFO    /TestFolder  
+PopulateDB           INFO     | using tag ="COLD"
+PopulateDB           INFO     | no objects in folder
+PopulateDB           INFO     | using tag ="HOT"
+PopulateDB           INFO     | no objects in folder
+PopulateDB           INFO     | using tag ="PRODUCTION"
+PopulateDB           INFO     | no objects in folder
+PopulateDB           INFO     | using tag ="HEAD"
+PopulateDB           INFO     | 1 objects in folder
+PopulateDB           INFO     | 0 -> 9223372036854775807
+PopulateDB           INFO       size = 1
+PopulateDB           INFO       data (string) =
+PopulateDB           INFO         <?xml version="1.0" encoding="UTF-8"?><!DOCTYPE DDDB SYSTEM "structure.dtd"><DDDB><catalog name="TestFolder"><catalog name="TestSubFolder"><conditionref href="#TestCondition"/></catalog></catalog><condition name="TestCondition"><paramVector name="ChannelMap" type="int">1 2 3 4</paramVector></condition></DDDB>
+PopulateDB           INFO     | using tag ="FORFUN"
+PopulateDB           INFO     | 1 objects in folder
+PopulateDB           INFO     | 0 -> 9223372036854775807
+PopulateDB           INFO       size = 1
+PopulateDB           INFO       data (string) =
+PopulateDB           INFO         <?xml version="1.0" encoding="UTF-8"?><!DOCTYPE DDDB SYSTEM "structure.dtd"><DDDB><catalog name="TestFolder"><catalog name="TestSubFolder"><conditionref href="#TestCondition"/></catalog></catalog><condition name="TestCondition"><paramVector name="ChannelMap" type="int">1 2 3 4</paramVector></condition></DDDB>
+PopulateDB           INFO  S /_PopulateDB  
+PopulateDB           INFO ============= condDBDumpSampleData() ending ========================
+PopulateDB           INFO Initialization completed
+EventDataSvc        DEBUG Service base class initialized successfully
+IncidentSvc         DEBUG Service base class initialized successfully
+EventDataSvc      VERBOSE ServiceLocatorHelper::createService: got service IncidentSvc
+EventPersistenc...  DEBUG Service base class initialized successfully
+EventLoopMgr      WARNING Unable to locate service "EventSelector" 
+EventLoopMgr      WARNING No events will be processed from external input.
+HistogramDataSvc    DEBUG Service base class initialized successfully
+HistogramDataSvc  VERBOSE ServiceLocatorHelper::createService: found service IncidentSvc
+HistogramPersis...   INFO "CnvServices": ["HbookHistSvc", "RootHistSvc"]
+HistogramPersis...  DEBUG Service base class initialized successfully
+HistogramPersis...WARNING Histograms saving not required.
+ApplicationMgr       INFO Application Manager Initialized successfully
+AuditorSvc          DEBUG Service base class initialized successfully
+PopulateDB        VERBOSE ServiceLocatorHelper::createService: got service AuditorSvc
+PopulateDB          DEBUG ==> Finalize
+PopulateDB          DEBUG Finalize base class GaudiAlgorithm
+PopulateDB          DEBUG Tools to release :
+PopulateDB          DEBUG Services to release : CondDBAccessSvc
+PopulateDB          DEBUG Releasing service 'CondDBAccessSvc'
+EventLoopMgr         INFO Histograms converted successfully according to request.
+ServiceManager      DEBUG Finalizing service EventLoopMgr
+ServiceManager      DEBUG Finalizing service AppMgrRunable
+ServiceManager      DEBUG Finalizing service AuditorSvc
+ServiceManager      DEBUG Finalizing service HistogramDataSvc
+ServiceManager      DEBUG Finalizing service HistogramPersistencySvc
+ServiceManager      DEBUG Finalizing service EventDataSvc
+ServiceManager      DEBUG Finalizing service EventPersistencySvc
+ServiceManager      DEBUG Finalizing service IncidentSvc
+CondDBAccessSvc     DEBUG Finalize
+RelationalDatabase     Info Delete the RalDatabase for 'sqlite://none;schema=CONDDB.sqlite;dbname=CONDDB;user=none;password=********'
+SQLiteAccess: level[Warning] No active transaction to roll back
+ServiceManager      DEBUG Finalizing service CondDBAccessSvc
+ApplicationMgr       INFO Application Manager Finalized successfully
+ Application     Info Delete the COOL Application
+RalDatabaseSvc     Info Delete the RalDatabaseSvc
