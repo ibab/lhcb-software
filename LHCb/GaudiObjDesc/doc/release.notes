@@ -2,6 +2,9 @@ Package: GaudiObjDesc
 Desccription: This package contains a set of tools used to generate code from the XML description of the data object classes.
 Package manager : Stefan Roiser
 
+!2006-01-19 Pere Mato
+- Adapted to use genreflex command to generate dictionaries (Reflex from ROOT)
+
 ===============================GaudiObjDesc v9r2============================
 !2005-12-20 Stefan Roiser
 - fix on namespace python script.

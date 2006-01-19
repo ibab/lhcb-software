@@ -12,9 +12,6 @@
 //   *                                                                        *
 //   **************************************************************************
 
-// Reflex include files
-#include "Reflex/Builder/ReflexBuilder.h"
-
 // begin include files
 @@@includes@@@
 // end include files

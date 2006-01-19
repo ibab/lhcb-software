@@ -1,7 +1,7 @@
 $(dest)$(package).lcgdict : ${OBJS} 
-	@echo Producing dictionaries using lcgdict
+	@echo Producing dictionaries using genreflex command
 	@cd $(dest)
-	@$(lcgdict_cmd) $(package)_dictionary.h --reflex --no_membertypedefs --split --selection_file $(package)_selection.xml --capabilities=$(package)_capabilities.cpp --gccxmlpath=$(GCCXML_home)/bin $(includes) $(use_pp_cppflags)
+	@"$(genreflex_cmd)" $(package)_dictionary.h --no_membertypedefs --selection_file $(package)_selection.xml --capabilities=$(package)_capabilities.cpp --gccxmlpath=$(GCCXML_home)/bin $(includes) $(use_pp_cppflags)
 	@echo "" > $(package).lcgdict 
 
 clean :: ${CONSTITUENT}clean
