@@ -1,4 +1,4 @@
-// $Id: Generation.cpp,v 1.8 2005-12-31 17:32:39 robbep Exp $
+// $Id: Generation.cpp,v 1.9 2006-01-19 13:24:02 gcorti Exp $
 // Include files 
 
 // local
@@ -225,16 +225,13 @@ StatusCode Generation::execute() {
   m_nPromptCAccepted += nPromptC ;
   m_nbcAccepted += nbc ;
 
-  // Now store the event in Gaudi event store
-  LHCb::GenHeader * theGenHeader = new LHCb::GenHeader() ;
+  // Now update the header information and put the event in Gaudi event store
+  LHCb::GenHeader* theGenHeader = get<LHCb::GenHeader> ( m_genHeaderLocation );
   theGenHeader -> setLuminosity( currentLuminosity ) ;
   theGenHeader -> setEvType( m_eventType ) ;
   LHCb::GenCollisions::const_iterator it ;
   for ( it = theCollisions -> begin() ; theCollisions -> end() != it ; ++it ) 
     theGenHeader -> addToCollisions( *it ) ;
-
-  sc = put( theGenHeader , m_genHeaderLocation ) ;
-  if ( ! sc.isSuccess() ) return Error( "Cannot store GenHeader object" ) ;
 
   sc = put( theEvents , m_hepMCEventLocation ) ;
   if ( ! sc.isSuccess() ) return Error( "Cannot store HepMC object" ) ;

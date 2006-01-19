@@ -1,6 +1,9 @@
-! $Id: release.notes,v 1.27 2006-01-18 23:01:12 robbep Exp $
+! $Id: release.notes,v 1.28 2006-01-19 13:24:02 gcorti Exp $
 ! Package     : Gen/Generators
 ! Responsible : 
+
+! 2006-01-19 - Gloria CORTI
+ - Generation: do not create new GenHeader but unpdate info already in TES
 
 ! 2006-01-18 - Patrick Robbe
  - ExternalGenerator: create HepMC::GenEvent by hand to store in 
