@@ -1,0 +1,17 @@
+!-----------------------------------------------------------------------------
+! Package     : Hlt/HltTracking
+! Responsible : Jose A. Hernando
+! Purpose     : Steering the tracking by Hlt
+!-----------------------------------------------------------------------------
+
+! 2006-01-19 Jose A. Hernando
+	- cmt/requirements
+	  depends on Pat-packages, and Hlt and Track Event Model
+  - src/HltForward
+    algorithm to steer the Forward reconstruction
+    modes of operation (via option) = "selected","rest","all"
+    track the seed Tracks that has been "selected", the one not-selected, or all
+  - src/HltVeloTT	
+    algorithm to steer the VeloTT reconstruction
+    modes of operation (via option) = "selected","rest","all"
+    track the seed Tracks that has been "selected", the one not-selected, or all
