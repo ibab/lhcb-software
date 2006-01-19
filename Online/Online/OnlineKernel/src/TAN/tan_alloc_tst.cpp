@@ -3,6 +3,7 @@
 #include <cstdlib>
 #include "TAN/TanDB.h"
 #include "TAN/TanInterface.h"
+#include "AMS/amsdef.h"
 
 #ifdef _VMS
 #define lib_signal(x) lib$signal(x)
@@ -52,32 +53,32 @@ extern "C" int rtl_tan_alloc_test ( int argc, char* argv[] )  {
         status = tan_allocate_port_number (buff, &ports[i]);
         alloc++;
         if ( status == TAN_SS_SUCCESS )  {
-          if ( !quiet ) printf("AllocatePort: %s Port:%04X  status:%d\n", buff, ports[i], status);
+          if ( !quiet ) ::printf("AllocatePort: %s Port:%04X  status:%d\n", buff, ports[i], status);
         }
         else   {
-          printf("AllocatePort: %d \n", status);
+          ::printf("AllocatePort: %d \n", status);
           lib_signal(status);
         }
         for ( int j = 0; j < i; j++ )           {
           sprintf(buff,"%s::MYTASK_%02d_%02d",host,i,j);
           status = tan_declare_alias(buff);
           alias++;
-          if ( !quiet || status != TAN_SS_SUCCESS ) {
-            printf("     DeclareAlias: %s   status:%d\n", buff, status);
+          if ( !quiet || status != AMS_SUCCESS ) {
+            ::printf("     DeclareAlias: %s   status:%d\n", buff, status);
             if ( status != TAN_SS_SUCCESS ) lib_signal(status);
           }
         }
         if ( !quiet)  {
-          printf("Hit any key to continue\n");
+          ::printf("Hit any key to continue\n");
           ::getchar();
         }
-        sprintf(buff,"%s::MYTASK_%02d",host,i);
+        ::sprintf(buff,"%s::MYTASK_%02d",host,i);
         status = tan_deallocate_port_number ( buff );
 #ifdef _OSK
         //       tsleep(5);
 #endif
         dealloc++;
-        if ( !quiet || status != TAN_SS_SUCCESS ) {
+        if ( !quiet || status != AMS_SUCCESS ) {
           printf("DeallocatePort: %s Port:%04X  status:%d\n", buff, ports[i], status);
           if ( status != TAN_SS_SUCCESS ) lib_signal(status);
         }

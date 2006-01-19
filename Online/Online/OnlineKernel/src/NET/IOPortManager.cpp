@@ -36,26 +36,29 @@ int EntryMap::threadCall(void* param)  {
 int EntryMap::handle()  {
   std::vector<__NetworkChannel__> channels;
   while(1)  {
-    int nsock = 0;
+    int nsock = 0, mxsock = 0;
     size_t len = size();
     if(channels.size()<len) channels.resize(len+32);
-    fd_set read_fds;
+    fd_set read_fds, exc_fds;
+    FD_ZERO(&exc_fds);
     FD_ZERO(&read_fds);
     for(iterator i=begin(); i != end(); ++i)  {
       __NetworkChannel__ fd = (*i).first;
+      if ( fd > mxsock ) mxsock = fd;
       FD_SET(fd, &read_fds);
+      FD_SET(fd, &exc_fds);
       channels[nsock] = fd;
       nsock++;
     }
     if ( nsock > 0 )  {
-      int res = select(nsock, &read_fds, 0, 0, 0);
+      int res = select(mxsock+1, &read_fds, 0, &exc_fds, 0);
       if (res < 0)  {
         return res;
       }
     }
     else  {
       timeval tv = { 0, 1000 };
-      ::select(nsock, &read_fds, 0, 0, &tv);
+      ::select(nsock, 0, 0, 0, &tv);
       continue;
     }
     for ( int j=0; j<nsock; ++j )  {
@@ -89,7 +92,7 @@ int EntryMap::run()  {
   if ( !m_thread )  {
     int sc = lib_rtl_start_thread(threadCall, this, &m_thread);
     if ( !lib_rtl_is_success(sc) )  {
-      ::printf("Failed to create port-thread");
+      ::printf("Failed to create port-thread\n");
       throw std::runtime_error("Failed to create port-thread");
     }
   }

@@ -240,20 +240,22 @@ int TanInterface::GetAddressByName(const char* name, NetworkChannel::Address& sa
     NetworkChannel::Address radd;
     TanMessage msg(TanMessage::INQUIRE);
     GetNodeWithName(name,node,msg._Name());
-    TcpNetworkChannel c;
     SetLocalAddress(msg.sin);
+    if ( SetInquireAddr(node,msg.sin,radd) == TAN_SS_SUCCESS )  {
+#if __USING_TCP_ALLOCATOR
+    TcpNetworkChannel c;
     if ( c._Connect(msg.sin,Connect_TMO) == -1 )  {
       printf("Connect error");
     }
     TcpNetworkChannel& snd = c;
     TcpNetworkChannel& rcv = c;
-    if ( SetInquireAddr(node,msg.sin,radd) == TAN_SS_SUCCESS )  {
-#if 0
+#else    // Using UDP with INQUIRE service
+      int retry;
       UdpNetworkChannel snd, rcv;
       if ( !rcv._IsValid() )                    return rcv._Error();
       if ( !snd._IsValid() )                    return snd._Error();
       if ( snd._Connect(msg.sin,Connect_TMO)<0) return snd._Error();
-      for( int retry=0; retry<5; retry++ )  {   // Necessary to avaoid
+      for( retry=0; retry<5; retry++ )  {       // Necessary to avaoid
         if ( rcv._Bind(radd) < 0 ) SLEEP(10)    // Clashes on the same
         else                       break;       // node...
       }                                         //

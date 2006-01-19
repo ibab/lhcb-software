@@ -41,6 +41,8 @@ protected:
   Channel  m_socket;
   /// Port number
   Port     m_port;
+  /// Alarm identifier
+  unsigned int m_alarmID;
   /// Buffer to store status code
   unsigned int m_errno;
   //@Man: protected member functions
@@ -53,8 +55,7 @@ public:
   /// Default constructor
   NetworkChannel();
   /// Virtual destructor
-  virtual ~NetworkChannel()  {
-  }
+  virtual ~NetworkChannel();
   /// AST called on timeout for receiving data on socket
   static int TmoAST(void* par);
   /// Retieve cancel flag

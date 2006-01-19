@@ -110,10 +110,10 @@ extern "C" int remqti(qentry_t *head, qentry_t **qent)  {
 
 qentry_t* remqent(qentry_t* e)  {
   if ( e )  {
-    qentry_t* dummy = 0;
-    qentry_t *hd = add_ptr(e->prev,&e->next);
-    remqhi(hd, &dummy);
-    return dummy;
+    qentry_t* entry = 0;
+    qentry_t *hd = add_ptr(e,e->next);
+    remqhi(hd, &entry);
+    return entry;
   }
   return 0;
 }

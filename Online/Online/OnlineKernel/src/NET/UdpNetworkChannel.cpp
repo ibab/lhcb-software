@@ -33,9 +33,11 @@ UdpNetworkChannel::UdpNetworkChannel()  {
 //                                      M.Frank
 // ----------------------------------------------------------------------------
 UdpNetworkChannel::~UdpNetworkChannel()  {
-  StopTimer();
-  ::shutdown(m_socket,2);
-  ::socket_close (m_socket);
+  //StopTimer();
+  if ( m_socket > 0 ) {
+    ::shutdown(m_socket,2);
+    ::socket_close (m_socket);
+  }
 }
 // ----------------------------------------------------------------------------
 //  Send data to network partner.
@@ -50,8 +52,8 @@ int UdpNetworkChannel::_Send  (void* buff, int len, int tmo, int flags, const Ad
       status = ::send ( m_socket, (char*)buff, len, flags);
     else 
       status = ::sendto ( m_socket, (char*)buff, len, flags, (sockaddr*)addr, siz);
-    if ( status != len )  m_errno = ::lib_rtl_get_error();
     StopTimer();
+    if ( status != len )  m_errno = ::lib_rtl_get_error();
     return status;
   }
   return 0;
@@ -68,8 +70,8 @@ int UdpNetworkChannel::_Recv  (void* buff, int len, int tmo, int flags, Address*
     status = ::recv(m_socket, (char*)buff, len, flags);  
   else
     status = ::recvfrom(m_socket, (char*)buff, len, flags, (sockaddr*)addr, &siz);  
-  m_errno = (status < 0 || status != len) ? ::lib_rtl_get_error() : 0;
   StopTimer();
+  m_errno = (status < 0 || status != len) ? ::lib_rtl_get_error() : 0;
   return status;
 }
 
@@ -81,8 +83,8 @@ int UdpNetworkChannel::_Connect ( const Address& addr, int tmo )  {
   if ( m_socket > 0 )  {
     StartTimer(tmo);
     int status = ::connect(m_socket, (sockaddr*)&addr, sizeof(addr) );
-    if ( !m_bCancel ) m_errno = (status < 0) ? ::lib_rtl_get_error() : 0;
     StopTimer();
+    if ( !m_bCancel ) m_errno = (status < 0) ? ::lib_rtl_get_error() : 0;
     return status;
   }
   return (-1);

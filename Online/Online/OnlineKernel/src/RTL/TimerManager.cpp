@@ -1,6 +1,7 @@
 #include "RTL/SysTime.h"
 #include "RTL/TimerManager.h"
 #include "RTL/DoubleLinkedQueue.h"
+#include <vector>
 
 /// Timer thread instance
 RTL::TimerManager& RTL::TimerManager::instance() {
@@ -49,14 +50,21 @@ int RTL::TimerManager::add(timer_entry_t* entry) {
 
 /// Remove timer entry from thread
 int RTL::TimerManager::remove(timer_entry_t* entry) {
+  timer_entry_t* e, *fnd = 0;
   lib_rtl_lock(m_lock);
-  DoubleLinkedQueue<timer_entry_t> que(m_head.get());
-  for(timer_entry_t* e=que.get(); e; e = que.get()) {
-    if ( e == entry ) {
-      remqent(e);
-      delete e;
-      return lib_rtl_unlock(m_lock);
+  {
+    DoubleLinkedQueue<timer_entry_t> que(m_head.get());
+    for(e=que.get(); e; e = que.get()) {
+      if ( e == entry ) {
+	fnd = e;
+	break;
+      }
     }
+  }
+  if ( fnd ) {
+    fnd->magic = 0;
+    remqent(fnd);
+    delete fnd;
   }
   return lib_rtl_unlock(m_lock);
 }
@@ -101,29 +109,46 @@ int RTL::TimerManager::cleanup() {
 
 /// Check timer queue for new events
 unsigned int RTL::TimerManager::check() {
+  std::vector<timer_entry_t*> to_remove;
   unsigned int next = 9999999;
   unsigned int now = SysTime::uptime();
-  lib_rtl_lock(m_lock);
+  timer_entry_t* e;
   int nent=0;
-  DoubleLinkedQueue<timer_entry_t> que(m_head.get());
-  for(timer_entry_t* e=que.get(); e; e = que.get()) {
-    try {
-      nent++;
-      //printf("Now: %lld Entry:%lld\n",now, e->expire);
-      if ( now >= e->expire ) {
-        lib_rtl_run_ast(e->ast, e->param, 0);
-        if ( 0 == e->period ) {
-          remqent(e);
-          delete e;
-          continue;
-        }
-        e->expire += e->period;
+  lib_rtl_lock(m_lock);
+  {
+    DoubleLinkedQueue<timer_entry_t> que(m_head.get());
+    for(e=que.get(); e; e = que.get()) {
+      try {
+	nent++;
+	//printf("Now: %lld Entry:%lld\n",now, e->expire);
+	if ( e->magic == 0xFEEDBABE ) {
+	  if ( now >= e->expire ) {
+	    lib_rtl_run_ast(e->ast, e->param, 0);
+	    if ( 0 == e->period ) {
+	      to_remove.push_back(e);
+	      continue;
+	    }
+	    e->expire += e->period;
+	  }
+	  if ( next > (e->expire-now) ) next = e->expire-now;
+	}
+	else {	
+	  printf("FATAL ERROR: BAD timer entry: %p\n",(void*)e);
+	  lib_rtl_sleep(10000);
+	}
       }
-      if ( next > (e->expire-now) ) next = e->expire-now;
+      catch(...) {
+	::printf("Exception in timer AST\n");
+      }
     }
-    catch(...) {
-      ::printf("Exception in timer AST\n");
-    }
+  }
+  //printf("Timer queue is %d entries long\n",nent);
+  std::vector<timer_entry_t*>::iterator i;
+  for( i=to_remove.begin(); i != to_remove.end(); ++i) {
+    e = *i;
+    remqent(e);
+    e->magic = 0;
+    delete e;
   }
   lib_rtl_unlock(m_lock);
   return next;

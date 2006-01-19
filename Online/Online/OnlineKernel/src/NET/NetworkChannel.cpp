@@ -3,7 +3,6 @@
 #include "NET/NetworkChannel.h"
 #include "RTL/rtl.h"
 #include "RTL/QIO.h"
-static unsigned int _g_iAlarmID = 0;
 
 #if defined(_WIN32)
 #include "Winsock.h"
@@ -27,8 +26,13 @@ namespace {
 //                                      M.Frank
 // ----------------------------------------------------------------------------
 NetworkChannel::NetworkChannel() 
-: m_bCancel(false), m_bValid(false), m_port(~0x0), m_errno(0)
+  : m_bCancel(false), m_bValid(false), m_port(~0x0), m_alarmID(0), m_errno(0)
 {
+}
+NetworkChannel::~NetworkChannel()  {
+  if ( 0 != m_alarmID ) {
+    StopTimer();
+  }
 }
 // ----------------------------------------------------------------------------
 //  Return error string
@@ -49,7 +53,8 @@ int NetworkChannel::TmoAST ( void* par )   {
 #else
     chan->m_errno  = EIO;
 #endif
-    lib_rtl_cancel_io(chan->m_socket);
+    chan->m_alarmID = 0;
+    lib_rtl_cancel_io(chan->m_socket);    
     return 0x1;
 }
 // ----------------------------------------------------------------------------
@@ -58,8 +63,8 @@ int NetworkChannel::TmoAST ( void* par )   {
 // ----------------------------------------------------------------------------
 void NetworkChannel::StartTimer( int tmo )  {
   if ( tmo > 0 )  {
-    lib_rtl_kill_timer(_g_iAlarmID);
-    lib_rtl_set_timer(1000*tmo, TmoAST, this, &_g_iAlarmID);
+    if ( m_alarmID ) lib_rtl_kill_timer(m_alarmID);
+    lib_rtl_set_timer(1000*tmo, TmoAST, this, &m_alarmID);
   }
   m_bCancel = false;
 }
@@ -68,6 +73,6 @@ void NetworkChannel::StartTimer( int tmo )  {
 //                                      M.Frank
 // ----------------------------------------------------------------------------
 void NetworkChannel::StopTimer()  {
-  lib_rtl_kill_timer(_g_iAlarmID);
-  _g_iAlarmID = 0;
+  lib_rtl_kill_timer(m_alarmID);
+  m_alarmID = 0;
 }

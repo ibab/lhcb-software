@@ -10,6 +10,7 @@
 namespace RTL  {
 
   struct timer_entry_t : public qentry_t {
+    timer_entry_t() : qentry_t(0,0) {}
     unsigned int             magic;
     unsigned int             expire;
     void*                    hdl;

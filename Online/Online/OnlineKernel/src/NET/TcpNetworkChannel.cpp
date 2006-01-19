@@ -19,9 +19,9 @@ TcpNetworkChannel::TcpNetworkChannel() {
     return;
   }
   struct linger Linger;
-  Linger.l_onoff = 1;
+  Linger.l_onoff  = 0;
   Linger.l_linger = 0;
-  setsockopt(m_socket, SOL_SOCKET, SO_LINGER,     (const char*)&Linger, sizeof(Linger));
+  setsockopt(m_socket, SOL_SOCKET, SO_LINGER, (const char*)&Linger, sizeof(Linger));
   m_bValid = true;
 }
 // ----------------------------------------------------------------------------
@@ -37,9 +37,11 @@ TcpNetworkChannel::TcpNetworkChannel(Channel channel) {
 //                                      M.Frank
 // ----------------------------------------------------------------------------
 TcpNetworkChannel::~TcpNetworkChannel()  {
-  StopTimer();
-  ::shutdown(m_socket,2);
-  ::socket_close (m_socket);
+  //StopTimer();
+  if ( m_socket > 0 ) {
+    ::shutdown(m_socket,2);
+    ::socket_close (m_socket);
+  }
 }
 // ----------------------------------------------------------------------------
 //  o Bind Address (Acceptor)
@@ -81,8 +83,9 @@ NetworkChannel::Channel TcpNetworkChannel::_Accept ( Address& addr, int tmo )  {
     if ( accepted > 0 )   {
       int status, on = 1;
       struct linger Linger;
-      Linger.l_onoff  = 1;
+      Linger.l_onoff  = 0;
       Linger.l_linger = 0;
+      status = ::setsockopt(m_socket, SOL_SOCKET, SO_REUSEADDR, (const char*)&on, sizeof(on));
       status = ::setsockopt( accepted, SOL_SOCKET, SO_LINGER,   (const char*)&Linger,sizeof(Linger));
       status = ::setsockopt( accepted, SOL_SOCKET, SO_BROADCAST,(const char*)&on, sizeof(on));
       status = ::setsockopt( accepted, SOL_SOCKET, SO_OOBINLINE,(const char*)&on, sizeof(on));
@@ -99,8 +102,8 @@ int TcpNetworkChannel::_Connect ( const Address& addr, int tmo )  {
   if ( m_socket > 0 )  {
     StartTimer(tmo);
     int status = ::connect ( m_socket, (sockaddr*)&addr, sizeof(addr) );
-    if ( !m_bCancel ) m_errno = (status < 0) ? TCP_errno : 0;
     StopTimer();
+    if ( !m_bCancel ) m_errno = (status < 0) ? TCP_errno : 0;
     return status;
   }
   return (-1);
@@ -117,8 +120,8 @@ int TcpNetworkChannel::_Send  (void* buff, int len, int tmo, int flags, const Ad
       status = ::send(m_socket,(char*)buff,len,flags);
     else
       status = ::sendto(m_socket,(char*)buff,len,flags,(sockaddr*)addr,addr_len);
-    m_errno = (status <= 0) ? TCP_errno : 0;
     StopTimer();
+    m_errno = (status <= 0) ? TCP_errno : 0;
     return status;
   }
   return 0;
@@ -135,8 +138,8 @@ int TcpNetworkChannel::_Recv  (void* buff, int len, int tmo, int flags, Address*
     status = ::recv(m_socket, (char*)buff, len, flags );
   else
     status = ::recvfrom(m_socket, (char*)buff, len, flags, (sockaddr*)addr, &addr_len);
-  if ( !m_bCancel ) m_errno = (status <= 0) ? TCP_errno : 0;
   StopTimer();
+  if ( !m_bCancel ) m_errno = (status <= 0) ? TCP_errno : 0;
   return status;
 }
 // ----------------------------------------------------------------------------

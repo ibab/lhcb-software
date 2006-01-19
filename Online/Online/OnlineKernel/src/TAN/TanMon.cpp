@@ -58,8 +58,7 @@ extern "C" int tanmon( int argc, char* argv[])   {
   do  {
     time(&curr);
     clear_scr; bold; inverse; 
-    cursor(1,10); dbl_hi_top;      printf("T A N   M O N I T O R");
-    cursor(2,10); dbl_hi_botm;     printf("T A N   M O N I T O R");
+    cursor(2,30);  printf("T A N   M O N I T O R");
     plain;      
     cursor(4,30);      printf(ctime(&curr));      
     cursor(5,1);       TanDataBase::Instance().Dump(stdout);

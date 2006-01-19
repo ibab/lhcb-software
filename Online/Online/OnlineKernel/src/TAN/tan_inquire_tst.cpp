@@ -5,6 +5,7 @@
 #include <cstdio>
 #include <cstdlib>
 #include <ctime>
+#include "AMS/amsdef.h"
 #include "TAN/TanInterface.h"
 
 #define MAXTASKS 20
@@ -39,8 +40,8 @@ extern "C" int rtl_tan_inquire_test ( int argc, char* argv[] )  {
   }
 #define _PRINT  succ++; if ( !quiet ) printf
 #define _PRINTERROR(buff,status)  {             \
-  if ( status == TAN_SS_TASKNOTFOUND ) notfnd++;          \
-  if ( !quiet || status != TAN_SS_TASKNOTFOUND )  {       \
+  if ( status == AMS_TASKNOTFOUND ) notfnd++;          \
+  if ( !quiet || status != AMS_TASKNOTFOUND )  {       \
   printf("GetAddressByName(%-24s) %4d ", buff, status);   \
   lib_signal(status);                    \
   } fail++;                      \
@@ -52,26 +53,26 @@ extern "C" int rtl_tan_inquire_test ( int argc, char* argv[] )  {
     _PRINTERROR(buff,status);
     status = tan_dump_dbase ( host );
     time_t start = time(0);
+    int nalias = 0;
     while ( 1 )    {
       if ( num_inq > inc )  {
         tot_inq += num_inq;
         num_inq = 0;
-        printf("->%-4ld sec<-  Queries:%6d Success:%-4d TaskNotFound:%-4d Failure:%-4d.\n",
-          time(0) - start, tot_inq, succ, notfnd, fail);
+        printf("->%-4ld sec<-  Queries:%6d Aliases:%6d  Success:%-4d TaskNotFound:%-4d Failure:%-4d.\n",
+          time(0) - start, tot_inq, nalias, succ, notfnd, fail);
       }
       for ( int i = 0; i < MAXTASKS; i++ )         {
-        int nalias = 0;
         for ( int j = 0; j < i; j++ )           {
           // Now check the aliases
           sprintf(buff,"%s::MYTASK_%02d_%02d",host,i,j);
           status = tan_get_address_by_name (buff,&addr);
           num_inq++;
-          if ( status == TAN_SS_SUCCESS )  {
-            _PRINT ("GetAddressByName: %s Port:%04X Fam:%1X Saddr:%08X (%s)\n",
-              buff, addr.sin_port, addr.sin_family, addr.sin_addr.s_addr,
+	  if ( status == AMS_SUCCESS ) {
+            _PRINT ("GetAddressByName[%d]: %s Port:%04X Fam:%1X Saddr:%08X (%s)\n",
+              num_inq, buff, addr.sin_port, addr.sin_family, addr.sin_addr.s_addr,
               inet_ntoa(addr.sin_addr) );
           }
-          else {
+	  else {
             nalias++;
             _PRINTERROR(buff,status);
           }
@@ -79,14 +80,15 @@ extern "C" int rtl_tan_inquire_test ( int argc, char* argv[] )  {
         sprintf(buff,"%s::MYTASK_%02d",host,i);
         status = tan_get_address_by_name (buff,&addr);
         num_inq++;
-        if ( status == TAN_SS_SUCCESS )  {
-          _PRINT ("GetAddressByName: %s Port:%04X Fam:%1X Saddr:%08X (%s)\n",
-            buff, addr.sin_port, addr.sin_family, addr.sin_addr.s_addr,
-            inet_ntoa(addr.sin_addr) );
-        }
-        else  {
-          _PRINTERROR(buff,status);
-        }
+	if ( status == AMS_SUCCESS ) {
+	  _PRINT ("GetAddressByName[%d]: %s Port:%04X Fam:%1X Saddr:%08X (%s)\n",
+		  num_inq, buff, addr.sin_port, addr.sin_family, addr.sin_addr.s_addr,
+		  inet_ntoa(addr.sin_addr) );
+	}
+	else {
+	  nalias++;
+	  _PRINTERROR(buff,status);
+	}
         if ( !continuous ) return 0x1;   // Just stop if non continuous
       }
     }
