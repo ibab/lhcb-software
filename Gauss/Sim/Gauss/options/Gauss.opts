@@ -1,5 +1,5 @@
 //#printOptions 
-// $Id: Gauss.opts,v 1.74 2006-01-18 12:49:11 gcorti Exp $ 
+// $Id: Gauss.opts,v 1.75 2006-01-19 14:49:38 gcorti Exp $ 
 
 /** @file 
  * 
@@ -17,15 +17,15 @@
 //---------------------------------------------------------------------------
 ApplicationMgr.TopAlg += { "GaudiSequencer/Initialization"  };
 ApplicationMgr.TopAlg += { "GaudiSequencer/Generator"  };
-//ApplicationMgr.TopAlg += { "GaudiSequencer/Simulation" }; 
+ApplicationMgr.TopAlg += { "GaudiSequencer/Simulation" }; 
 ApplicationMgr.TopAlg += { "GaudiSequencer/Monitor"  };
 
 //---------------------------------------------------------------------------
 // Initialize the Phases: set run and first event number,
 //                             hence setting random numbers to start with
 //---------------------------------------------------------------------------
-Initialization.Members      = { "GenInit/GaussGen" };
-//Initialization.Members     += { "SimInit/GaussSim" };
+Initialization.Members    = { "GenInit/GaussGen" };
+//Simulation.Members        = { "SimInit/GaussSim" };
 GaussGen.FirstEventNumber = 1;
 GaussGen.RunNumber        = 1;
 
@@ -87,8 +87,8 @@ HistogramPersistencySvc.OutputFile = "GaussHistos.root";  // Monitoring histos
 // Event type to simulate: for <evttype> put a line similar to the following
 //                         or use ParticleGun.opts
 //---------------------------------------------------------------------------
-#include "$GAUSSOPTS/30000000.opts"  // Min Bias
+//#include "$GAUSSOPTS/30000000.opts"  // Min Bias
 //#include "$GAUSSOPTS/10000000.opts"  // Generic b-b~ events
 
-//#include "$GAUSSOPTS/ParticleGun.opts"          
+#include "$GAUSSOPTS/ParticleGun.opts"          
  

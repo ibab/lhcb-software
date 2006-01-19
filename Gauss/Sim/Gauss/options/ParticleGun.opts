@@ -7,6 +7,10 @@ Generator.Members = {"ParticleGun", "GenMonitorAlg"};
 
 //Generator.Members += {"DumpMC"};
 
+// Event type is set as described in LHCb-2005-034 : G=5!
+ParticleGun.EventType = 53210205;
+
+
 // Particle Gun's options
 // Note that internally the ParticleGun expect the 
 // units to be as specified on the side (this is
@@ -29,13 +33,13 @@ ParticleGun.PhiMax      =   6.28; // rad
 ParticleGun.PdgCodes    = {-211, 211}; // PDG code of a list of possible 
                                        // particles to be generated
 
+// Set min and max number of particles to produce in an event
+// defaults are = 1, i.e. always one particle
+// ParticleGun.MinNumParticles = 1
+// ParticleGun.MaxNumParticles = 1
+
 // GunMode flag: 
 //    if = 1 uses parameters above within random values generated
 //    if = 0 need to set fix values of px, py, pz via specific properties
 ParticleGun.GunMode=1;
-// Mode flag: General control for pile-up (for all generators)
-//    if = 0 one interaction or particle per event
-//    if = 1 follow poisson distribution according to specified luminosity
-//    for particle gun it is recommened to use 0
-ParticleGun.Mode=0;
 

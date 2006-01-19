@@ -4,6 +4,13 @@
 ! Purpose     : LHCb Simulation Application with Geant4
 !-----------------------------------------------------------------------------
 
+!======================== Gauss v24r0 2006-01-19 ============================
+   
+                      TEMPORARY! ONLY GENERATOR PHASE!        
+
+! 2006-01-19 - Gloria CORTI
+ - Update ParticleGun.opts to reflect changes in code for its properties 
+
 ! 2006-01-18 - Gloria CORTI
  - Gauss v24r0 built from v22r0, using Geant3 v71r0p1.
  - Built it one step at the time to allow tests. 
