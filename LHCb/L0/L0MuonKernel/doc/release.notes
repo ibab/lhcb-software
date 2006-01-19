@@ -4,6 +4,10 @@
 ! Purpose     : 
 !-----------------------------------------------------------------------------
 
+!========================= L0MuonKernel v5r0 2006-01-19 ====================
+! 2006-01-18 - Julien Cogan
+ - Adapt to event model changes and LHCb namespace
+
 !========================= L0MuonKernel v4r0 2005-12-19 ====================
 ! 2005-12-18 - Julien Cogan
  - Decouple the building of the MuonKernel.xml (done once) and the reading

@@ -1,4 +1,4 @@
-// $Id: CandRegisterHandler.h,v 1.2 2006-01-18 16:49:52 jucogan Exp $
+// $Id: CandRegisterHandler.h,v 1.3 2006-01-19 16:04:12 cattanem Exp $
 
 #ifndef L0MUONKERNEL_CANDREGISTERHANDLER_H
 #define L0MUONKERNEL_CANDREGISTERHANDLER_H     1
@@ -10,10 +10,9 @@ of a Muon trigger candidate
 
 */
 
-#include <iostream.h>
+#include <iostream>
 #include "ProcessorKernel/Register.h"
 #include <boost/dynamic_bitset.hpp>
-#include "boost/shared_ptr.hpp"
 #include "L0MuonKernel/MuonCandidate.h"
 
 namespace L0Muon {
