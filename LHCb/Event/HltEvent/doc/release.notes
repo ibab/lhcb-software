@@ -4,6 +4,7 @@
 ! Purpose     : Event model for HLT tracks
 !-----------------------------------------------------------------------------
 
+!======================== HltEvent v6r1 2006-01-19 ========================
 ! 2006-01-17 - Jose A. Hernando
 	- xml/HltSummary.xmt
 		defines the HltSummaryBox and HltSummary classes
