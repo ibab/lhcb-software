@@ -2,24 +2,22 @@
 // PUBAREA_GetSlotofType.CC ! Andreu Pacheco ! 6-8-96
 //
 #include <cstdio>
-#include "CPP/pubarea.h"
+#include "CPP/PubArea.h"
 
 extern "C" int pubarea_getslotoftype(int argc,char** argv)  {
-   if (argc==1)   {
-      printf("Usage: pubarea_getslotoftype <SlotType>\n\0");
-      printf("       <SlotType> - Type of slot (integer 0-99)\n\0");
+  const char* name = "Unknown";
+  if (argc<3)   {
+      printf("Usage: pubarea_getslotoftype <name> <SlotType>\n");
+      printf("       <SlotType> - Type of slot (integer 0-99)\n");
       return(0);
    }
 
    int Type;
-   if ( (argc==2) && (sscanf(argv[1],"%d",&Type)==1) ) {
-     argc--;
-   } else {
-     Type=1;
-   }
+   if ( (argc==3) && (sscanf(argv[2],"%d",&Type)==1) ) {argc--;} else {Type=1;}
+   if (argc==2) { name = argv[1]; argc--; }
 
-   PubArea PA;
-   int status = PA.LinkPubArea();
+   PubArea PA(name);
+   int status = PA.LinkPubArea(~0);
    if (!(status&1))   {
      printf("PubArea_AllocateSlot: Failed to link pubarea\n");
      return(status);
@@ -30,8 +28,8 @@ extern "C" int pubarea_getslotoftype(int argc,char** argv)  {
    while (status==PA_SUCCESS)   {  
      status = PA.GetSlotofType(Type,&context,SlotPtr);
      if (status!=PA_SUCCESS) break;
-     //      strcpy((char*)SlotPtr,"Hello\0");
-     printf("PubArea_GetSlotofType: Found slot %d\n\0",(int*)SlotPtr);
+     //      strcpy((char*)SlotPtr,"Hello");
+     printf("PubArea_GetSlotofType: Found slot %p\n",SlotPtr);
    }
    return(0);
 }

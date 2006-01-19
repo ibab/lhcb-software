@@ -4,8 +4,8 @@
               C++ usage
 
 */
-#ifndef __TANMessage_H__
-#define __TANMessage_H__
+#ifndef ONLINEKERNEL_TAN_TANMESSAGE_H
+#define ONLINEKERNEL_TAN_TANMESSAGE_H
 #include "NET/NetworkChannel.h"
 
 #define NAME_SERVICE_NAME    "TAN_NAME"
@@ -106,16 +106,17 @@ public:
 inline TanMessage::TanMessage () {
   length = sizeof (TanMessage);
   error = function = 0;
-  memset  (name,0,sizeof(name));
-  memset  (&sin, 0, sizeof (sin));
+  ::memset  (name,0,sizeof(name));
+  ::memset  (&sin, 0, sizeof (sin));
 }
 
 inline TanMessage::TanMessage (u_int func, const char* proc)  {
+  size_t i, n;
   length    = htonl (sizeof (TanMessage));
   error     = htonl (0);
   function  = htonl (func);
-  for ( size_t i = 0; i < strlen(proc); i++ )
-     name[i] = tolower(proc[i]);
+  for (i=0, n=::strlen(proc); i<n; i++)
+     name[i] = ::tolower(proc[i]);
   name[i] = 0;
   memset  (&sin, 0, sizeof (sin));
 }
@@ -125,9 +126,7 @@ inline TanMessage& TanMessage::operator = (const TanMessage& cp)  {
   error     = cp._Error();
   length    = sizeof(cp);
   function  = cp._Function();
-  for ( size_t i = 0; i < strlen(cp.name); i++ )
-     name[i] = tolower(cp.name[i]);
-  name[i] = 0;
+  ::strcpy(name, cp.name);
   return *this;
 }
 
@@ -138,5 +137,5 @@ inline void TanMessage::Convert()  {
   //sin.sin_family = ntohs (sin.sin_family);
 }
 
-#endif   /* __cplusplus       */
-#endif   /* __TANMessage_H__  */
+#endif   /* __cplusplus                    */
+#endif   /* ONLINEKERNEL_TAN_TANMESSAGE_H  */

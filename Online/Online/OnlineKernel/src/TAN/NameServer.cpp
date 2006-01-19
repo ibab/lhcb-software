@@ -1,21 +1,13 @@
-#include <cstdlib>
-#include <cstdio>
 #include <ctime>
+#include <cstdio>
+#include <cstdlib>
 
-#include "NET/defs.h"
 #include <NET/UdpConnection.h>
 #include "NET/TcpConnection.h"
-#include <CPP/SmartPointer.h>
-#ifdef _VMS
-#include </a_cpp$src/wait.h>
-#else
-#include "WT/wtdef.h"
-#ifdef _OSK
-extern "C" void EXC_install(void);
-#endif
-#endif
-#include "TAN/tandb.h"
 #include "CPP/EventHandler.h"
+#include <CPP/SmartPointer.h>
+#include "TAN/TanDB.h"
+#include "WT/wtdef.h"
 
 #define EINVOPER       0xDEAD
 
@@ -89,9 +81,12 @@ public:
   virtual ~NameService();
   /// Handle Tan request
   virtual void HandleMessage(TanDataBase::Entry*& ent, TanMessage& rec_msg, TanMessage& snd_msg ); 
+  /// Reactor's Event dispatching overlayed method
+  virtual int Handle ( EventHandler* /* handler */ )  {
+    return NAME_SERVER_SUCCESS;
+  }
   /// Abstract member function: Act on Nameservice requests
   virtual void Handle() {
-    return;
   }
   /// Abstract: Suspend the service
   virtual int Suspend() {
@@ -129,7 +124,7 @@ public:
   virtual ~InquireNameService()   {
   }
   /// Reactor's Event dispatching overlayed method
-  int Handle ( EventHandler* handler )  {
+  virtual int Handle ( EventHandler* /* handler */ )  {
     return NAME_SERVER_SUCCESS;
   }
   /// Handle Single request
@@ -472,7 +467,7 @@ New_allocation:
 #endif
   _pNetwork = &((TcpNetworkChannel&)_tcp->_RecvChannel());
   if ( _pNetwork->_Error() != 0 && ++retry < 5 )  {
-    printf("Resume-Retry# %d>> %s\n", _pNetwork->_ErrMsg());
+    printf("Resume-Retry# %d> %s\n", retry, _pNetwork->_ErrMsg());
     goto New_allocation;
   }
   return _pNetwork->_QueueAccept ( _tcp->_Port(), _pAcceptHandler );

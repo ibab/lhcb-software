@@ -3,8 +3,7 @@
 //
 #include <cstdio>
 #include <cstring>
-#include "AMS/amsdef.h"
-#include "CPP/pubarea.h"
+#include "CPP/PubArea.h"
 
 extern "C" int pubarea_display(int argc,char** argv)  {
   char    *cptr, *name = 0;
@@ -31,28 +30,23 @@ extern "C" int pubarea_display(int argc,char** argv)  {
     }
   }
 
-  PubArea *PA = (name==0) ? new PubArea : new PubArea(name);
+  PubArea PA(name);
   if (strcmp(Node,"\0")==0)   {
-    printf("PubArea_Display: Getting the display of this node\n\0");
+    printf("PubArea_Display: Getting the display of this node\n");
   }
   else   {
-    printf("PubArea_Display: Getting the display of node %s\n\0",Node);
+    printf("PubArea_Display: Getting the display of node %s\n",Node);
   }
-
-  //............................................................ Initialize AMS
-  amsc_init(0);
   //............................................ Linking to the publishing area
-  int status = PA->LinkPubArea(Node);
+  int status = PA.LinkPubArea(Node);
   if (status!=PA_SUCCESS)  {
     printf("PubArea_Display: Failed to link pubarea\n");
-    delete PA;
     return(0);
   }
-  status = PA->PrintHeader();
+  status = PA.PrintHeader();
   if (status!=PA_SUCCESS) return(0);
 
-  PA->PrintIndex();
+  PA.PrintIndex();
   if (status!=PA_SUCCESS) return(0);
-  delete PA;
   return(0);
 }

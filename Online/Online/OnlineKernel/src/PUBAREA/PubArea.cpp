@@ -1,6 +1,6 @@
 #define _pubarea_C
-#include "pa.h"
-#include "CPP/pubarea.h"
+#include "PA.h"
+#include "CPP/PubArea.h"
 
 _PubArea::_PubArea(const char* name )	{
   obj = new _PubArea::PaObject(name);

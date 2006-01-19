@@ -105,7 +105,7 @@ public:
   int CleanPubArea(); //..................................... Cleans the pubarea
   int InitPubArea(int Size = (-1)/* bytes */); //........ Initializes the PubArea
   //................. Prints error messages on the screen for debugging purposes
-  void PubAreaPrint(int Severity, int ReturnCode, char *Message,...);
+  void PubAreaPrint(int Severity, int ReturnCode, const char *Message,...);
   int PrintHeader(); //....................... Prints the contents of the header
   int PrintIndex(); //......................... Prints the contents of the index
   void* GetPubAreaPtr() {return this->m_ptr;}; //. Returns the base pointer
@@ -119,8 +119,8 @@ public:
   int DumpSlot(void* SlotPtr);//..................... Dumps a given slot pointer
   int DumpSlot(int SlotNum);//........................ Dumps a given slot number
   //.................................................. Memory corruption tracers
-  int GetPAfromVMS(char* Node);//............ Requests global section via server
-  int GetPAfromOS9(char* Node);//............... Requests data module via server
+  int GetPAfromVMS(const char* Node);//...... Requests global section via server
+  int GetPAfromOS9(const char* Node);//......... Requests data module via server
   int ConvertPubAreafromOS9();//................................ Data conversion
   //.................................... Data conversion for buffer by slot type
   int SetSlotTypeFormat(int SlotType, char* Format);

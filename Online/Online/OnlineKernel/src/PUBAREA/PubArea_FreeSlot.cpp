@@ -2,16 +2,19 @@
 // PUBAREA_FreeSlot.CC ! Andreu Pacheco ! 6-8-96
 //
 #include <cstdio>
-#include "CPP/pubarea.h"
+#include "CPP/PubArea.h"
 
 extern "C" int pubarea_freeslot(int argc,char** argv)  {
   void *Slot;
-  if ( !((argc==2)&&(sscanf(argv[1],"%d",&Slot)==1)) ) Slot=0;
-  printf("Calling: pubarea_freeslot %d\n\0",(int*)Slot);
-  printf("         Slot Address   %d\n\0",(int*)Slot);
+  const char* name = "Unknown";
+  if ( !((argc==3)&&(sscanf(argv[2],"%p",&Slot)==1)) ) Slot=0;
+  if (argc==2) { name = argv[1]; argc--; }
 
-  PubArea PA;
-  int status = PA.LinkPubArea();
+  printf("Calling: pubarea_freeslot %p\n\0",Slot);
+  printf("         Slot Address   %p\n\0",Slot);
+
+  PubArea PA(name);
+  int status = PA.LinkPubArea(~0);
   if (!(status&1))   {
     printf("PubArea_FreeSlot: Failed to link pubarea\n");
     return status;

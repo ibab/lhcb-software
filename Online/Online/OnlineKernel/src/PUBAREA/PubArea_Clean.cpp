@@ -2,10 +2,11 @@
 // PUBAREA_CLEAN.CC ! Andreu Pacheco ! 6-8-96
 //
 #include <cstdio>
-#include "CPP/pubarea.h"
+#include "CPP/PubArea.h"
 
 extern "C" int pubarea_clean(int argc,char** argv)  {
-  char    *cptr, *name = 0;
+  char    *cptr;
+  const char *name = 0;
   while (--argc > 0)     {           /* process options */
     if (*(cptr = *++argv) == '-')    {
       switch (*(cptr+1) | 0x20)  {
@@ -22,10 +23,10 @@ extern "C" int pubarea_clean(int argc,char** argv)  {
     }
   }
 
-  PubArea *PA = name ? new PubArea(name) : new PubArea;
-  int status = PA->LinkPubArea();
+  PubArea PA(name);
+  int status = PA.LinkPubArea(~0);
   ::printf("PubArea_Clean: %s to link pubarea\n", status&1 ? "Succeeded" : "Failed");
-  status = PA->CleanPubArea();
+  status = PA.CleanPubArea();
   if (!(status&1))  {
     ::printf("PubArea_Clean: Failed to clean pubarea\n");
   }

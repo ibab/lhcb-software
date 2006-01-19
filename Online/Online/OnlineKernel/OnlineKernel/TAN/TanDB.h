@@ -1,14 +1,15 @@
-#ifndef __tandb_H__
-#define __tandb_H__
+#ifndef ONLINEKERNEL_TAN_TANDB_H
+#define ONLINEKERNEL_TAN_TANDB_H 1
 
 #include <cstdio>
 #include <ctype.h>
 #include <cstring>
 
 #define NAMESERVICE_BASE_PORT    0x5300
+
 #include "NET/NetworkChannel.h"
 #include "TAN/TanMessage.h"
-#include "TAN/tanerrno.h"
+#include "TAN/TanErrno.h"
 #include "RTL/que.h"
 #include "RTL/rtl.h"
 
@@ -61,6 +62,7 @@ extern "C"  {
 /*                           */
 #ifdef __cplusplus                     /*  C++ ONLY!                */
 
+#include "CPP/SmartObject.h"
 
 /// TAN Database entry definition
 /** @class TANDB_ENTRY
@@ -118,15 +120,10 @@ public:
 }; 
 
 /// Database class storing all connections the nameserver knows about
-/**
+/** @class TanDataBase TanDB.h TAN/TanDB.h
 
-{\Large{\bfclass TanDataBase}}
-\\
-M.Frank                                   \\
+   M.Frank
 */
-#include "CPP/SmartObject.h"
-
-//class TanDataBase  { ! solved by $cc -qt=local on OS9 M.F
 class TanDataBase : public SmartObject<TanDataBase>  {
 public:
   //@Man: public data declarations
@@ -209,6 +206,6 @@ public:
   /// Given a message, find the approprate port number in the database. If not existant, retrun 0.
   NetworkChannel::Port FindPort     ( TanMessage& msg );
 };
-#endif                                 /*  C++ ONLY!   */
 
-#endif
+#endif /*  C++ ONLY!                */
+#endif /* ONLINEKERNEL_TAN_TANDB_H  */

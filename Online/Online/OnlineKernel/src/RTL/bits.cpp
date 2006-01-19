@@ -192,7 +192,6 @@ int BF_free(char* base,int pos, int len) {
 
 void BF_print(const void* field, int len, size_t ncols, bool prt_hdr)  {
   size_t i, j, k, n;
-  int* txt = (int*)field;
   if ( prt_hdr )  {
     printf("\n");
     for(j=0, n=0; j < ncols; ++j )  {

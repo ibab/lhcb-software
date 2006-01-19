@@ -4,10 +4,8 @@
 #include "NET/defs.h"
 #if defined(_VMS) || defined(VMS)                        /* _VMS   */
 typedef unsigned short __NetworkChannel__;               /* _VMS   */
-#elif defined(_OSK)                                      /*  _OSK   */
-typedef int            __NetworkChannel__;               /*  _OSK   */  
-#elif defined(_WIN32)                                    /*  _WIN32 */
-typedef int            __NetworkChannel__;               /*  _WIN32 */  
+#else  // _OSK, WIN32 and linux
+typedef int            __NetworkChannel__;
 #endif
 
 typedef unsigned short     __NetworkPort__;

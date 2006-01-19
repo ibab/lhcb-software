@@ -1,13 +1,12 @@
 #include <cstdio>
 #include "RTL/rtl.h"
-#include "TAN/tandb.h"
-#include "CPP/pubarea.h"
+#include "TAN/TanDB.h"
 #define LINE(ll,x)   { \
   for ( int i=0; i < ll; i++ ) putchar(x);    \
   putchar('\n');   \
 }
 
-extern "C" int tandb_test( int argc, char* argv[] )  {
+extern "C" int rtl_tandb_test( int /* argc */, char** /*argv */ )  {
   char buff[32];
   printf("Sizees: TANDB_ENTRY=%d TanMessage=%d Bytes\n",sizeof(TANDB_ENTRY),sizeof(TanMessage));
 
@@ -26,10 +25,9 @@ extern "C" int tandb_test( int argc, char* argv[] )  {
 #endif
   for ( int i = 0; i < num_task; i++ )  {
     // Insert entry
-    TANDB_ENTRY* e;
-    e = entry[i] = db.AllocateEntry(i);
+    TANDB_ENTRY* e = entry[i] = db.AllocateEntry(i);
     sprintf(e->_Message()._Name(),"MYTASK_%02d",i);
-    NetworkChannel::Port port = db.AllocatePort (e);
+    db.AllocatePort (e);
 
     // Insert alias(s)
     for ( int j = 0; j < i; j++ )  {
@@ -75,8 +73,7 @@ extern "C" int tandb_test( int argc, char* argv[] )  {
   for ( int k = 0; k < num_loop; k++ )  {
     for ( int i = 0; i < num_task; i++ )  {
       // Insert entry
-      TANDB_ENTRY* e;
-      e = entry[i] = db.AllocateEntry(i);
+      TANDB_ENTRY* e = entry[i] = db.AllocateEntry(i);
       sprintf(e->_Message()._Name(),"MYTASK_%02d",i);
       strcpy(msg._Name(),e->_Message()._Name());
       NetworkChannel::Port port = db.AllocatePort (e);
@@ -99,7 +96,7 @@ extern "C" int tandb_test( int argc, char* argv[] )  {
     //      fprintf(stdout,"Type return to delete tasks:");
     //      fflush(stdout);
     //      scanf("%c",&buff[0]);
-    for ( i = 0; i < num_task; i++ )    {
+    for ( int i = 0; i < num_task; i++ )    {
       sprintf(buff,"MYTASK_%02d",i);
       TANDB_ENTRY* e = db.FindEntry ( buff );
       db.Close( e );

@@ -2,12 +2,13 @@
 // PUBAREA_CREATE.CC ! Andreu Pacheco ! 6-8-96
 //
 #include <cstdio>
-#include "CPP/pubarea.h"
+#include "CPP/PubArea.h"
 
 extern "C" int pubarea_create(int argc,char** argv)  {
   int Size = -1;
   int status = 0;
-  char    *cptr, *name = 0;
+  char    *cptr;
+  const char *name = 0;
 
   while (--argc > 0)  {              /* process options */
     if (*(cptr = *++argv) == '-')    {
@@ -28,16 +29,14 @@ extern "C" int pubarea_create(int argc,char** argv)  {
         printf("Function: Publishing area creation\n");
         printf("Options:\n");
         printf("    -n=<name>       Publishing area name (if not default)\n");
-        printf("    -s=<size> [%d]  Publishing area size (bytes)\n",
-          Size);
+        printf("    -s=<size> [%d]  Publishing area size (bytes)\n",Size);
         return(0);
       }
     }
   }
 
-  PubArea *PA = name ? new PubArea(name) : new PubArea;
-  status = PA->CreatePubArea(Size);
+  PubArea PA(name);
+  status = PA.CreatePubArea(Size);
   printf("%s to create pubarea\n", status&1 ? "Succeeded" : "Failed");
-  delete PA;
   return(0);
 }

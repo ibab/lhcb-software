@@ -2,7 +2,7 @@
 // PUBAREA_DELETE.CC ! Andreu Pacheco ! 6-8-96
 //
 #include <cstdio>
-#include "CPP/pubarea.h"
+#include "CPP/PubArea.h"
 
 extern "C" int pubarea_delete(int argc, char* argv[] )  {
   char *cptr, *name = 0;
@@ -21,8 +21,8 @@ extern "C" int pubarea_delete(int argc, char* argv[] )  {
       }
     }
   }
-  PubArea *PA = (name==0) ? new PubArea : new PubArea(name);
-  int status = PA->DeletePubArea();
+  PubArea PA(name);
+  int status = PA.DeletePubArea();
   ::printf("%s to delete pubarea\n", status&1 ? "Succeeded" : "Failed");
   return(0);
 }

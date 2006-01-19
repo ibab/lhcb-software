@@ -8,12 +8,12 @@ Created           :  5-AUG-1996 by A.Pacheco
 #include <cstdarg>
 #include <stdexcept>
 #include <cstring>
-#include <process.h>
+//#include <process.h>
 #include "RTL/rtl.h"
-#include "AMS/amsdef.h"
+//#include "AMS/amsdef.h"
 #include "CPP/FormatCnv.h" //...................(A_CPP) Needed for format conversion
 
-#include "pa.h" //............. The pubarea class and structure definitions
+#include "PA.h" //............. The pubarea class and structure definitions
 
 static char LocalProcess[32] = "\0";
 #include "RTL/rtl.h"
@@ -49,14 +49,14 @@ PubArea::~PubArea() {
   for (int i=0;i<PA_MAX_INDEX;i++)
     if (m_idxBuffer[i]!=0) delete m_idxBuffer[i];
   if (m_locked) UnLock(); //................... Unlock the Public Area
-  if (m_remote!=0) delete m_remote;
+  if (m_remote) ::operator delete(m_remote);
 }
 
 int PubArea::ExitHandler(void* param)  {
   lib_rtl_gbl_t hdl = (lib_rtl_gbl_t)param;
   void* m_ptr = hdl->address;
-  PubAreaHeader *head = (PubAreaHeader *)(m_ptr);
-  PubAreaIndex  *ind  = (PubAreaIndex *)((char*)(m_ptr) + sizeof(PubAreaHeader));
+  PubAreaHeader *head = (PubAreaHeader*)(m_ptr);
+  PubAreaIndex  *ind  = (PubAreaIndex*)((char*)(m_ptr) + sizeof(PubAreaHeader));
   if ( head > 0 )  {
     for ( int i = 0; i < head->NumIndex; i++, ind++)  {
       if ( strcmp(LocalProcess, ind->SlotProcess) == 0 )
@@ -151,14 +151,17 @@ int PubArea::FreeSlot(void* SPtr) {
   return PA_FAILURE;
 }
 
-int PubArea::PrepareSlot(void* SlotPtr)   {
+int PubArea::PrepareSlot(void* /* SlotPtr */)   {
   return PA_SUCCESS;
 }
 
 int PubArea::LinkPubArea(char* Node)    {
   int ret = 0; int status = PA_SUCCESS;
+#ifdef _WIN32
   if (Node) ret = ::stricmp(m_node,Node); // ret==0 nodes are equal
-
+#else
+  if (Node) ret = ::strcasecmp(m_node,Node); // ret==0 nodes are equal
+#endif
   //.......................................................... Local node access
   if ((Node==0)||(ret==0)||(strcmp("\0",Node)==0))  {
     PubAreaPrint(0,0,"PubArea::LinkPubArea(node): Linking local pubarea");
@@ -386,13 +389,13 @@ int PubArea::CleanProcessArea() {
   return PA_SUCCESS;
 }
 
-void PubArea::PubAreaPrint(int Severity, int ReturnCode, char *message,...) {
+void PubArea::PubAreaPrint(int Severity, int ReturnCode, const char *message,...) {
   int length = 0;
   va_list args;
-  char msg[500] = "\0";
+  char msg[500];
   static int PaDebug = PADEBUG;
-  static char *Tmp = (char*)(-1);
-  char *lvl[5] = {"_INFO__\0","WARNING\0","*ERROR*\0","*FATAL*\0","_______\0"};
+  static const char *Tmp = (char*)(-1);
+  const char *lvl[5] = {"_INFO__\0","WARNING\0","*ERROR*\0","*FATAL*\0","_______\0"};
 
   // Get the PADEBUG variable from the process environement variable
   if ( (int)Tmp < 0 ) {
@@ -409,22 +412,22 @@ void PubArea::PubAreaPrint(int Severity, int ReturnCode, char *message,...) {
   va_end(args);
   if (Severity>4) Severity = 4; //............................. Maximum accepted
   if (length>499)   { 
-    fprintf(stderr,"PubArea::PubAreaPrint: *Error* Input string too long, array overwritten\n\0");
+    fprintf(stderr,"PubArea::PubAreaPrint: *Error* Input string too long, array overwritten\n");
     return;
   } 
   // Trailing carriage return and zero.
   *(msg + length) = '\n';
   *(msg + length + 1) = '\0';
-  fprintf(stdout,"%s %s\0",lvl[Severity],msg);
+  fprintf(stdout,"%s %s",lvl[Severity],msg);
   if (ReturnCode)   {
-    fprintf(stdout,"%s Errno: 0x%08x Msg: %s\n\0",
+    fprintf(stdout,"%s Errno: 0x%08x Msg: %s\n",
       lvl[0],ReturnCode,lib_rtl_error_message(ReturnCode));
   }
   return;
 }
 
 int PubArea::DeletePubArea()  {
-  char* me="PubArea::DeletePubArea:\0";
+  static const char* me="PubArea::DeletePubArea:";
   int status = 0;
   PubAreaPrint(0,0,"%s called",me);
 
@@ -583,17 +586,17 @@ int PubArea::GetSlotType(void* slot)    {
 }
 
 //*** PubArea::GetPAfromVMS ***
-int PubArea::GetPAfromVMS(char *Node)   {
-  char message[128] = "DUMP\0";
-  int  mlen = strlen(message);
+int PubArea::GetPAfromVMS(const char *Node)   {
+  //char message[128] = "DUMP\0";
+  //int  mlen = strlen(message);
   char source[64] = "\0";
-  char reqsource[64]="\0";
-  int  timeout = 100;
-  unsigned int  facility = 0;
-  unsigned int  reqfacility = 0;
+  //char reqsource[64]="\0";
+  //int  timeout = 100;
+  //unsigned int  facility = 0;
+  //unsigned int  reqfacility = 0;
   char destination[64]="\0";
   int status = 0;
-  char alias[64]="PASERVER\0";
+  //char alias[64]="PASERVER\0";
   size_t buffersize = PA_SIZE_VMS_DEFAULT;
   static char* tmpbuffer = 0;
 
@@ -602,7 +605,7 @@ int PubArea::GetPAfromVMS(char *Node)   {
   strcpy(destination,Node);
   strcat(destination,"::PAGBLSERVER_0\0");
 
-  status = amsc_send_message(message,mlen,&destination[0],facility,0);
+  status = 0;//amsc_send_message(message,mlen,&destination[0],facility,0);
   if (!(status&1))  { 
     PubAreaPrint(3,status,
       "PubArea::GetPAfromVMS: Error sending request to VMS node %s",Node);
@@ -613,14 +616,14 @@ int PubArea::GetPAfromVMS(char *Node)   {
   }
   strcpy(source,"\0");
   strcpy(destination,"\0");
-  status = amsc_get_message(tmpbuffer,
+  status = 0;/*amsc_get_message(tmpbuffer,
     &buffersize,
     &source[0],
     &reqsource[0],
     timeout,
     &facility,
     reqfacility,
-    &destination[0]);
+    &destination[0]);*/
   if (!(status&1))  { 
     PubAreaPrint(3,status,
       "PubArea::GetPAfromVMS: Error receiving data from %s",Node);
@@ -635,7 +638,7 @@ int PubArea::GetPAfromVMS(char *Node)   {
 }
 
 //*** PubArea::GetPAfromOS9 ***
-int PubArea::GetPAfromOS9(char *node) {
+int PubArea::GetPAfromOS9(const char * /*node*/) {
 #if 0
   struct dsc$descriptor node_desc;
   node_desc.dsc$a_pointer = node;
@@ -702,7 +705,7 @@ int PubArea::ConvertPubAreafromOS9()    {
 
 //*** PubArea::SetSlotTypeFormat ***
 int PubArea::SetSlotTypeFormat(int SlotType, char* Format)   {
-  static const char* me="PubArea::SetSlotTypeFormat:\0";
+  static const char* me="PubArea::SetSlotTypeFormat:";
   if ((SlotType<0)||(SlotType>=PA_MAX_INDEX))  {
     PubAreaPrint(3,0,"%s SlotType %d out of range 0-%d",me,SlotType,PA_MAX_INDEX-1);
     return PA_FAILURE;
@@ -717,7 +720,7 @@ int PubArea::SetSlotTypeFormat(int SlotType, char* Format)   {
 
 //*** PubArea::DumpSlot(void*) ***
 int PubArea::DumpSlot(void* slot)   {
-  char* me="PubArea::DumpSlot:\0";
+  static const char* me="PubArea::DumpSlot:";
   int i = 0;
   //........................................... The input was not a slot pointer
   if (slot == 0)  {
@@ -752,24 +755,24 @@ int PubArea::DumpSlot(void* slot)   {
       if (size==0) return PA_SUCCESS; //.......................... No slot size
 
       int k = 0, j=0, l=0;
-      printf(" *** Ascii Dump *** codes 0-31 are dots (.) 127-255 are wildcards (*)\n\0");
+      printf(" *** Ascii Dump *** codes 0-31 are dots (.) 127-255 are wildcards (*)\n");
       for (j=0;j<(size);j++)
       {
-        if (*tmp<32) printf(".\0");
-        if ((*tmp>31)&&(*tmp<127)) printf("%c\0",*tmp);
-        if (*tmp>126) printf("*\0");
+        if (*tmp<32) printf(".");
+        if ((*tmp>31)&&(*tmp<127)) printf("%c",*tmp);
+        if (*tmp>126) printf("*");
         k++;tmp++;
-        if (k>61) {printf("\n\0");k=0;}
+        if (k>61) {printf("\n");k=0;}
       }
       k=0;l=0;
-      printf("\n *** Hexadecimal Dump ***\n\0");
+      printf("\n *** Hexadecimal Dump ***\n");
       for (j=0;j<(size);j++)  {
-        printf("%02x\0",*tmp2);
+        printf("%02x",*tmp2);
         k++; l++; tmp2++;
-        if (l>3) {printf(" \0");l=0;} //.... Prints spaces 
-        if (k>31) {printf("\n\0");k=0;}
+        if (l>3) {printf(" ");l=0;} //.... Prints spaces 
+        if (k>31) {printf("\n");k=0;}
       }
-      printf("\n\0");
+      printf("\n");
       return PA_SUCCESS;
     }      
   }
@@ -782,7 +785,7 @@ int PubArea::DumpSlot(void* slot)   {
 //*** PubArea::DumpSlot(int) ***
 //******************************
 int PubArea::DumpSlot(int slot)  {
-  char* me="PubArea::DumpSlot(int):\0";
+  static const char* me="PubArea::DumpSlot(int):";
   int i = 0;
   //........................................... The input was not a slot pointer
   if (slot < 0)  {
@@ -817,22 +820,22 @@ int PubArea::DumpSlot(int slot)  {
   if (size==0) return PA_SUCCESS; //.......................... No slot size
 
   int k = 0, j=0, l=0;
-  printf(" *** Ascii Dump *** codes 0-31 are dots (.) 127-255 are wildcards (*)\n\0");
+  printf(" *** Ascii Dump *** codes 0-31 are dots (.) 127-255 are wildcards (*)\n");
   for (j=0;j<(size);j++)  {
-    if (*tmp<32) printf(".\0");
-    if ((*tmp>31)&&(*tmp<127)) printf("%c\0",*tmp);
-    if (*tmp>126) printf("*\0");
+    if (*tmp<32) printf(".");
+    if ((*tmp>31)&&(*tmp<127)) printf("%c",*tmp);
+    if (*tmp>126) printf("*");
     k++;tmp++;
-    if (k>63) {printf("\n\0");k=0;}
+    if (k>63) {printf("\n");k=0;}
   }
   k=0;l=0;
-  printf("\n *** Hexadecimal Dump ***\n\0");
+  printf("\n *** Hexadecimal Dump ***\n");
   for (j=0;(j<size);j++)  {
-    printf("%02x\0",*tmp2);
+    printf("%02x",*tmp2);
     k++; l++; tmp2++;
-    if (l>3) {printf(" \0");l=0;} //.... Prints spaces 
-    if (k>31) {printf("\n\0");k=0;}
+    if (l>3) {printf(" ");l=0;} //.... Prints spaces 
+    if (k>31) {printf("\n");k=0;}
   }
-  printf("\n\0");
+  printf("\n");
   return PA_SUCCESS;
 }      

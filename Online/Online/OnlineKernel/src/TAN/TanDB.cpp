@@ -17,9 +17,9 @@
 #endif
 
 #include    "NET/defs.h"
-#include    "CPP/pubarea.h"
-#include    "TAN/tandb.h"
-#include    "TAN/tanerrno.h"
+#include    "CPP/PubArea.h"
+#include    "TAN/TanDB.h"
+#include    "TAN/TanErrno.h"
 #include    "RTL/rtl.h"
 #include    "RTL/Lock.h"
 
@@ -57,7 +57,7 @@ public:
   enum {
 #ifndef _OSK
     NumEntries = 512
-#else _OSK
+#else // _OSK
     #define OS9_PORT_FLIP 512
     NumEntries = 32
 #endif
@@ -76,7 +76,7 @@ public:
 static void strlow (char* s1, const char* s2)   {
   register char c;
   char diff = 'a' - 'A';
-  while (c = *s2++)    {
+  while ( (c = *s2++) != 0 )    {
     *s1++ = c + ((c >= 'A' && c <= 'Z')  ? diff : 0);
   }
   *s1 = 0;
@@ -407,14 +407,14 @@ TanDataBase::Entry* TanDataBase::_allocateEntry ( NetworkChannel::Channel chan )
   Entry *e = 0;
   for ( int i = 0; i < TanPaSlot::NumEntries; i++ )   {
     if ( _pData->_pEntry[i] == 0 )  {
-      sockaddr_in peer;
-      int peerlen = sizeof(peer);
       e = &_pData->_Entry[i];
       e->port_flag = e->alias_flag = false;
       e->port = 0;
       e->_IsDead = 0;
       e->chan = chan;
 #ifdef _OSK
+      sockaddr_in peer;
+      int peerlen = sizeof(peer);
       e->iosb._pHandler = 0;
       e->iosb._pPort = e->iosb._lPort = 0;
       e->hl.next = e->hl.prev = (int)&e->hl;
@@ -528,10 +528,10 @@ int TanDataBase::Close (TanDataBase::Entry *ce)   {
 //                                      M.Frank
 // ----------------------------------------------------------------------------
 int TanDataBase::Dump( FILE* fptr)  {
-  char *func;
-  ::printf("NameServer Database entry dump: #Allocated %d With port:%d\n",
+  const char *func;
+  ::fprintf(fptr,"NameServer Database entry dump: #Allocated %d With port:%d\n",
     _pData->_allocated,_pData->_ports);
-  ::printf("%-16s %-4s(%-3s) %-4s Msg:%-6s %-3s %-16s %s\n",
+  ::fprintf(fptr,"%-16s %-4s(%-3s) %-4s Msg:%-6s %-3s %-16s %s\n",
     "Name","Port","Flg","Chan","Reqst","Len","Name","Address");
   for ( int i = 0; i < TanPaSlot::NumEntries; i++ )     {
     if ( _pData->_pEntry[i] != 0 )  {
@@ -560,7 +560,7 @@ int TanDataBase::Dump( FILE* fptr)  {
             func = "-----";
             break;
         }
-        ::printf("%-16s %04X Prt  %-4d %-3s %-7s%-4d%-16s %s\n",
+        ::fprintf(fptr,"%-16s %04X Prt  %-4d %-3s %-7s%-4d%-16s %s\n",
           e._Name(), e._Port(), e._Channel(), e._IsDead==1 ? "***" : "",
           func, htonl(e.msg._Length()), e.msg._Name(),
           inet_ntoa(e.msg._Address()));
@@ -579,7 +579,7 @@ int TanDataBase::Dump( FILE* fptr)  {
             case TanMessage::DUMP:           func = "DUMPDB";      break;
             default:                         func = "-----";       break;
           }
-          ::printf("%-16s %04X Als  %-4d %-3s %-7s%-4d%-16s %s\n",
+          ::fprintf(fptr,"%-16s %04X Als  %-4d %-3s %-7s%-4d%-16s %s\n",
             ee->_Name(), ee->_Port(), ee->_Channel(), ee->_IsDead==1 ? "***" : "",
             func, ee->msg._Length(), ee->msg._Name(), inet_ntoa(ee->msg._Address()));
         }

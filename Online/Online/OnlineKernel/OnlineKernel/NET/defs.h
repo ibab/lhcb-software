@@ -26,9 +26,9 @@
 #elif defined(linux)
 
 #include <cerrno>
-#include <ctypes>
-#include <socket.h>
+#include <sys/socket.h>
 #include <netinet/in.h>
+#include <arpa/inet.h>
 #include <netdb.h>
 #define socket_close close
 #endif

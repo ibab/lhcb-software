@@ -1,11 +1,11 @@
 #define _TanInterface_C_
 
+#include "RTL/rtl.h"
 #include "NET/defs.h"
-#include "TAN/taninterface.h"
+#include "TAN/TanInterface.h"
 #include "NET/UdpNetworkChannel.h"
 #include "NET/TcpNetworkChannel.h"
 
-#include "RTL/rtl.h"
 #include "AMS/amsdef.h"
 #define SLEEP(x)  lib_rtl_sleep(1000*x);
 
