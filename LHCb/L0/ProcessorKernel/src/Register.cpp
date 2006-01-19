@@ -33,7 +33,7 @@ void L0Muon::Register::set (unsigned long pattern) {
 void L0Muon::Register::set (boost::dynamic_bitset<> bitpattern,int nbits, int shift) { 
   
   //bitpattern.resize(nbits,false);
-  int newSize = m_bitset.size() > nbits+shift ?  m_bitset.size() : nbits+shift ;
+  unsigned int newSize = (int)m_bitset.size() > nbits+shift ?  (int)m_bitset.size() : nbits+shift ;
   bitpattern.resize(newSize,false);
   if (m_bitset.size()<newSize) {
     m_bitset.resize(newSize,false);  

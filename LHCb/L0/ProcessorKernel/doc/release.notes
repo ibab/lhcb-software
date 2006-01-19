@@ -4,6 +4,10 @@
 ! Purpose     : Base classes for a generic processor simulation
 !-----------------------------------------------------------------------------
 
+!======================== ProcessorKernel v3r0 2006-01-19 ====================
+! 2006-01-18 - Julien Cogan
+ - Adapt to event model changes and LHCb namespace
+
 !======================== ProcessorKernel v2r0 2005-12-19 ====================
 ! 2005-12-15 - Julien Cogan
  - Add new methods to the Register to manipulate a subset of the bitset

@@ -111,7 +111,7 @@ void L0Muon::TileRegister::makePads(){
   }
 }
 
-void L0Muon::TileRegister::print_bits(long unsigned int event, FILE *file){
+void L0Muon::TileRegister::print_bits(unsigned int event, FILE *file){
 
   // Loop over the bits of the register 
   for (boost::dynamic_bitset<>::size_type i =0; i < m_bitset.size();i++){

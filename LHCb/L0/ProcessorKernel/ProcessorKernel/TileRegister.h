@@ -1,4 +1,4 @@
-// $Id: TileRegister.h,v 1.8 2006-01-18 16:47:17 jucogan Exp $
+// $Id: TileRegister.h,v 1.9 2006-01-19 14:56:52 cattanem Exp $
 
 #ifndef PROCESSORKERNEL_TILEREGISTER_H
 #define PROCESSORKERNEL_TILEREGISTER_H     1
@@ -91,7 +91,7 @@ public:
   void makePads();
   
   /// Print the tile register for debug
-  void print_bits(long unsigned int event, FILE *file);
+  void print_bits(unsigned int event, FILE *file);
 
   void print_words(FILE *file, int nwords_per_line=1);
 
