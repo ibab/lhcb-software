@@ -4,10 +4,6 @@
 ! Purpose     : interface package to GENSER
 !-----------------------------------------------------------------------------
 
-!======================= GENSER v1r121p1 ================================
-! 2005-12-12 - Florence RANJARD
- - requirements - remove compilation of a private lhaglue.f rootine
-
 !======================= GENSER v1r121p0 ================================
 ! 2005-12-06 - Florence RANJARD
  - requirements - use GENSER_1_2_1 to use Pythia 6_325.2, Photos 215.2
