@@ -21,7 +21,7 @@ namespace RTL  {
     /// Initializing constructor for inverted lock
     Lock(lib_rtl_lock_t id, bool inverted=false);
     /// Standard destructor
-    virtual ~Lock();
+    ~Lock();
     /// Create now named lock
     static int create(const char* name, lib_rtl_lock_t& id);
     /// Delete lock

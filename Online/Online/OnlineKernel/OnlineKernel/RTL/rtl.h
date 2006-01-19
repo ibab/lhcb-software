@@ -146,9 +146,13 @@ extern "C" {
   /// Sleep specified time (sub-millisecond range)
   int lib_rtl_usleep(int microsecs);
 
+  /// System error message (from status)
   const char* lib_rtl_error_message(int status);
   /// Small helper function to properly retrun from main program.
   int lib_rtl_default_return();
+
+  /// Cancel I/O request
+  int lib_rtl_cancel_io(int channel);
 
 #ifdef __cplusplus
 }

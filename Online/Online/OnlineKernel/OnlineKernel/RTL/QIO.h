@@ -17,7 +17,6 @@ extern "C" {
     LIB_RTL_IO_RECEIVE,
     LIB_RTL_IO_RECEIVE_WAIT
   };
-  int lib_rtl_cancel_io(int channel);
   int lib_rtl_qio(int channel, const IOAction action, IOSB_t* iosb,
 		  lib_rtl_qio_ast_t ast, void* ast_param,
 		  int64_t p1=0, int64_t p2=0, int64_t p3=0, int64_t p4=0);

@@ -192,6 +192,7 @@ int BF_free(char* base,int pos, int len) {
 
 void BF_print(const void* field, int len, size_t ncols, bool prt_hdr)  {
   size_t i, j, k, n;
+  int* txt = (int*)field;
   if ( prt_hdr )  {
     printf("\n");
     for(j=0, n=0; j < ncols; ++j )  {
@@ -226,14 +227,18 @@ void BF_print(const void* field, int len, size_t ncols, bool prt_hdr)  {
 }
 
 void Bits::dumpWords(const void* field, int len, std::vector<std::string>& words)  {
-  int* txt = (int*)field;
+  char* txt = (char*)field;
   char word[33];
   words.clear();
-  for(size_t i = 0; i < len/sizeof(int); ++i )  {
-    for ( int k = 0; k<32; ++k)  {
-      word[k] = (txt[i]&(1<<k)) ? '1' : '0';
+  word[32] = 0;
+  len += len%sizeof(int) ? 1 : 0;
+  for(int i = 0; i < len; i += sizeof(int) )  {
+    for (int k = 0; k<8; ++k)  {
+      word[k]    = (txt[i]&(1<<k))   ? '1' : '0';
+      word[k+8]  = i+1<len ? (txt[i+1]&(1<<k)) ? '1' : '0' : 0;
+      word[k+16] = i+2<len ? (txt[i+2]&(1<<k)) ? '1' : '0' : 0;
+      word[k+24] = i+3<len ? (txt[i+3]&(1<<k)) ? '1' : '0' : 0;
     }
-    word[32] = 0;
     words.push_back(word);
   }
 }

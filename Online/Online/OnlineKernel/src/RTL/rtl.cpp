@@ -61,6 +61,22 @@ const char* errorString(int status)  {
   return s;
 }
 
+#elif defined(_VMS)
+#include <ssdef.h>
+#include <descrip.h>
+
+const char* errorString(int status)  {
+  static char message[1024];
+  dsc$descriptor_s msg;
+  short len = sizeof(message) - 1;
+  msg.dsc$w_length  = sizeof(message) - 1;
+  msg.dsc$a_pointer = message;
+  msg.dsc$b_dtype   = DSC$K_DTYPE_T;
+  msg.dsc$b_class   = DSC$K_CLASS_S;
+  sys$getmsg (status, len, msg, 15, 0);
+  message[len] = '\0';
+  return message;
+}
 #endif
 
 int lib_rtl_get_error()   {

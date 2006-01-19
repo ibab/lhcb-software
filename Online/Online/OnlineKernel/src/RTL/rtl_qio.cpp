@@ -1,12 +1,12 @@
 #include "RTL/QIO.h"
 
-int lib_rtl_cancel_io(int /* channel */)    {
+int lib_rtl_cancel_io(int channel)    {
 #ifdef _VMS
-   int status = sys$cancel(m_socket);
+   int status = sys$cancel(channel);
 #else
-  int status = 0;
+  int status = channel == 0 ? 0 : 1;
 #endif
-   return status;
+  return status;
 }
 
 int lib_rtl_qio(int channel, const IOAction action, IOSB_t* iosb,

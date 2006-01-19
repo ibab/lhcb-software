@@ -23,7 +23,7 @@ extern "C" int insqti (qentry_t *qent, qentry_t *head)  {
     h_next = -offset-h_prev;
   *(QENT*)(header+4)=-offset;
   *(QENT*)header=h_next;
-  return head->prev==head->next ? QUE_ONEENTQUE : 1;
+  return head->prev==head->next ? QUE_ONEENTQUE : QUE_SUCCESS;
 }
 
 /*
@@ -39,7 +39,7 @@ extern "C" int insqhi(qentry_t *qent, qentry_t *head) {
   *(QENT*)(entry+4) = tmp2;
   *(QENT*)(header+(QENT)(tmp1)+4)=-tmp1-tmp2;
   *(QENT*)header    = -tmp2;
-  return head->prev==head->next ? QUE_ONEENTQUE : 1;
+  return head->prev==head->next ? QUE_ONEENTQUE : QUE_SUCCESS;
 }
 
 /*
@@ -48,7 +48,7 @@ extern "C" int insqhi(qentry_t *qent, qentry_t *head) {
 extern "C" int remqhi(qentry_t *head, qentry_t **qent)  {
   if ( head->prev == 0 && head->next == 0 )   {
     *qent = 0;
-    return QUE_SUCCESS;
+    return QUE_QUEWASEMPTY;
   }
   char* header = (char*)head;
   char* addr = (char*)qent;
@@ -72,7 +72,7 @@ extern "C" int remqhi(qentry_t *head, qentry_t **qent)  {
     return QUE_ONEENTQUE;
   }
   (*qent)->next = (*qent)->prev = 0;
-  return 1;
+  return QUE_SUCCESS;
 }
 
 /*
@@ -81,7 +81,7 @@ extern "C" int remqhi(qentry_t *head, qentry_t **qent)  {
 extern "C" int remqti(qentry_t *head, qentry_t **qent)  {
   if ( head->prev == 0 && head->next == 0 )   {
     *qent = 0;
-    return QUE_SUCCESS;
+    return QUE_QUEWASEMPTY;
   }
   char* header = (char*)head;
   char* myaddr = (char*)qent;
@@ -105,7 +105,7 @@ extern "C" int remqti(qentry_t *head, qentry_t **qent)  {
     return QUE_ONEENTQUE;
   }
   (*qent)->next = (*qent)->prev = 0;
-  return 1;
+  return QUE_SUCCESS;
 }
 
 qentry_t* remqent(qentry_t* e)  {
@@ -120,6 +120,6 @@ qentry_t* remqent(qentry_t* e)  {
 
 qentry_t *remqhead( qentry_t* head )   {
   qentry_t *entry;
-  int status  = remqhi (head,&entry);
-  return (status & 1) ? entry : 0;
+  int status  = remqhi(head,&entry);
+  return lib_rtl_queue_success(status) ? entry : 0;
 }

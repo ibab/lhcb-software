@@ -14,7 +14,11 @@
 #define INTERVAL3 600*INTERVAL_NORMAL
 #define INTERVAL4 6000*INTERVAL_NORMAL
 
-unsigned int alarm1, alarm2, alarm3, alarm4;
+static unsigned int alarm1, alarm2, alarm3, alarm4;
+static int ast1_count = 0;
+static int ast2_count = 0;
+static int ast3_count = 0;
+static int ast4_count = 0;
 
 void print_at(int x, int y, const char* fmt, ...)  {
   static int cnt=0;
@@ -29,8 +33,7 @@ void print_at(int x, int y, const char* fmt, ...)  {
 }
 
 int ast1(void* par)  {
-  static int count = 0;
-  print_at(50, 4, "%5d",++count);
+  ast1_count++;
   int status = wtc_insert(WT_FACILITY_TIMER1, par);
   if( status != WT_SUCCESS ) exit(status);
   return WT_SUCCESS;
@@ -45,16 +48,16 @@ int rearm1(unsigned int /* fac */, void* /* par */)  {
 
 int action1(unsigned int /* fac */, void* /* par */) {
   static int count = 0;
+  print_at(50, 4, "%5d",ast1_count);
   print_at(30, 4, "%5d",++count);
-  return 1;
+  return WT_SUCCESS;
 }
 
 int ast2(void* par) {
-  static int count = 0;
-  print_at(50, 5, "%5d",++count);
+  ast2_count++;
   int status = wtc_insert(WT_FACILITY_TIMER2,par);
   if( status != WT_SUCCESS ) exit(status);
-  return 1;
+  return WT_SUCCESS;
 }
 
 int rearm2(unsigned int /* fac */, void* /* par */)  {
@@ -65,16 +68,16 @@ int rearm2(unsigned int /* fac */, void* /* par */)  {
 
 int action2(unsigned int /* fac */, void* /* par */) {
   static int count = 0;
+  print_at(50, 5, "%5d",ast2_count);
   print_at(30, 5, "%5d",++count);
-  return 1;
+  return WT_SUCCESS;
 }
 
 int ast3(void* par)  {
-  static int count = 0;
-  print_at(50, 6, "%5d",++count);
+  ast3_count++;
   int status = wtc_insert(WT_FACILITY_TIMER3, par);
   if( status != WT_SUCCESS ) exit(status);
-  return 1;
+  return WT_SUCCESS;
 }
 
 int rearm3(unsigned int /* fac */, void* /* par */)  {
@@ -85,16 +88,16 @@ int rearm3(unsigned int /* fac */, void* /* par */)  {
 
 int action3(unsigned int /* fac */, void* /* par */) {
   static int count = 0;
+  print_at(50, 6, "%5d",ast3_count);
   print_at(30, 6, "%5d",++count);
-  return 1;
+  return WT_SUCCESS;
 }
 
 int ast4(void* par)  {
-  static int count = 0;
-  print_at(50, 7, "%5d",++count);
+  ast4_count++;
   int status = wtc_insert(WT_FACILITY_TIMER4, par);
   if( status != WT_SUCCESS ) exit(status);
-  return 1;
+  return WT_SUCCESS;
 }
 
 int rearm4(unsigned int /* fac */, void* /* par */)  {
@@ -105,8 +108,9 @@ int rearm4(unsigned int /* fac */, void* /* par */)  {
 
 int action4(unsigned int /* fac */, void* /* par */) {
   static int count = 0;
+  print_at(50, 7, "%5d",ast4_count);
   print_at(30, 7, "%5d",++count);
-  return 1;
+  return WT_SUCCESS;
 }
 
 extern "C" int wtc_test(int /* argc */, char** /* argv */)   {  
