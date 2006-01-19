@@ -5,7 +5,7 @@
  *  Header file for tool interface : IRichMCTruthTool
  *
  *  CVS Log :-
- *  $Id: IRichMCTruthTool.h,v 1.15 2005-12-17 14:14:37 jonrob Exp $
+ *  $Id: IRichMCTruthTool.h,v 1.16 2006-01-19 08:43:37 cattanem Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   2003-07-31
@@ -16,7 +16,7 @@
 #define RICHKERNEL_IRICHMCTRUTHTOOL_H 1
 
 // Kernel
-#include "RichKernel/RichParticleIDType.h"
+#include "Kernel/RichParticleIDType.h"
 #include "Kernel/RichRadiatorType.h"
 
 // Event Model
