@@ -10,8 +10,8 @@ extern "C" int pubarea_freeslot(int argc,char** argv)  {
   if ( !((argc==3)&&(sscanf(argv[2],"%p",&Slot)==1)) ) Slot=0;
   if (argc==2) { name = argv[1]; argc--; }
 
-  printf("Calling: pubarea_freeslot %p\n\0",Slot);
-  printf("         Slot Address   %p\n\0",Slot);
+  printf("Calling: pubarea_freeslot %p\n",Slot);
+  printf("         Slot Address   %p\n",Slot);
 
   PubArea PA(name);
   int status = PA.LinkPubArea(~0);

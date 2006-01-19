@@ -79,13 +79,13 @@ int UdpConnection::Initialize ( UdpConnection::Port port )  {
   //  want to listen to. Address INADDR_ANY means we will accept
   //  connections to any of our local IP addresses.
   //
-  m_sin._addr.sin_family       = AF_INET;
   m_sin._addr.sin_port = port;
-  m_sin._addr.sin_addr.s_addr  = INADDR_ANY;
+  m_sin._addr.sin_family = AF_INET;
+  m_sin._addr.sin_addr.s_addr = INADDR_ANY;
   ::memset(m_sin._addr.sin_zero,0,sizeof(m_sin._addr.sin_zero));
   //  Bind to that address...
   if ( m_channel._Bind(m_sin._addr) < 0 ) {
-    ::printf("%s UdpConnection>> Error binding address:%s\n",timestr(),m_channel._ErrMsg());
+    ::printf("%s UdpConnection> Error binding address:%s\n",timestr(),m_channel._ErrMsg());
     return m_status;
   }
   return m_status = CONNECTION_SUCCESS;
@@ -101,7 +101,7 @@ UdpConnection::~UdpConnection() {
   // ----------------------------------------------------------------------------
 }
 
-int UdpConnection::Receive(BasicRequest* req, NetworkAddress& origine, Iosb& ios)  {
+int UdpConnection::Receive(BasicRequest* req, NetworkAddress& origine)  {
   // ----------------------------------------------------------------------------
   //
   //  Receive data from UDP
@@ -109,20 +109,20 @@ int UdpConnection::Receive(BasicRequest* req, NetworkAddress& origine, Iosb& ios
   //                                      M.Frank
   // 
   // ----------------------------------------------------------------------------
-  int       flags = 0, size  = req->MaxBuffSize();
+  int flags = 0, size  = req->MaxBuffSize();
   UdpNetworkAddress *from = (UdpNetworkAddress*)&origine;
   int status = m_channel._Recv(req->Buffer(), size, 0, flags, &from->_addr);
   if ( status <= 0 )  {
     //  ----------------------------  D E B U G -----------------------------
     m_status = m_channel._Error();
-    printf("%s  UdpConnection::Receive>> Bad IO status. Status=0x%X %s\n",
+    printf("%s  UdpConnection::Receive> Bad IO status. Status=0x%X %s\n",
       timestr(),m_channel._Error(),m_channel._ErrMsg());
     return CONNECTION_ERROR;
   }
   return CONNECTION_SUCCESS;
 }
 
-int UdpConnection::Send(BasicRequest* req, NetworkAddress& target, Iosb& ios)  {
+int UdpConnection::Send(BasicRequest* req, NetworkAddress& target)  {
   // ----------------------------------------------------------------------------
   //
   //  Receive data from UDP
@@ -130,13 +130,14 @@ int UdpConnection::Send(BasicRequest* req, NetworkAddress& target, Iosb& ios)  {
   //                                      M.Frank
   // 
   // ----------------------------------------------------------------------------
-  int       flags = 0, size  = req->BuffSize();
+  int       flags = 0;
+  socklen_t size  = req->BuffSize();
   UdpNetworkAddress *to = (UdpNetworkAddress*)&target;
   int status = m_channel._Send(req->Buffer(), size, 0, flags, &to->_addr);
   if ( status <= 0 )  {
     //  ----------------------------  D E B U G -----------------------------
     m_status = m_channel._Error();
-    ::printf("%s  UdpConnection::Send>> Bad IO status. Status=0x%X %s\n",
+    ::printf("%s  UdpConnection::Send> Bad IO status. Status=0x%X %s\n",
       timestr(),m_channel._Error(),m_channel._ErrMsg());
     return CONNECTION_ERROR;
   }

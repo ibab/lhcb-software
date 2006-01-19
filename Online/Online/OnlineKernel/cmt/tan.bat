@@ -8,4 +8,4 @@ start ..\win32_vc71_dbg\test.exe rtl_tan_alloc_test -c
 rem start netstat -a -p UDP -v 5
 sleep 3
 set PROCESSNAME=TANDUMP
-..\win32_vc71_dbg\test.exe tandb_dump
+..\win32_vc71_dbg\test.exe rtl_tandb_dump

@@ -27,7 +27,7 @@ namespace {
 //                                      M.Frank
 // ----------------------------------------------------------------------------
 NetworkChannel::NetworkChannel() 
-: m_bCancel(false), m_bValid(false), m_port(-1), m_errno(0)
+: m_bCancel(false), m_bValid(false), m_port(~0x0), m_errno(0)
 {
 }
 // ----------------------------------------------------------------------------

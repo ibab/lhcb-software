@@ -1,4 +1,4 @@
-#include "CPP/table.h"
+#include "CPP/Table.h"
 
 class TableEntry {
   friend class Table;

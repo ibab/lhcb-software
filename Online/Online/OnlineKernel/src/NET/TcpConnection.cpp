@@ -96,13 +96,13 @@ int TcpConnection::Listen ( EventHandler *handler )  {
   return m_channel._QueueAccept( _Port(), handler );
 }
 
-int TcpConnection::Receive(BasicRequest* req, NetworkAddress& origine, Iosb& ios)  {
+int TcpConnection::Receive(BasicRequest* req, NetworkAddress& org)  {
   // ----------------------------------------------------------------------------
   //  Receive data from Tcp
   //                                      M.Frank
   // ----------------------------------------------------------------------------
   int flags = 0, size  = req->MaxBuffSize();
-  TcpNetworkAddress *from = (TcpNetworkAddress*)&origine;  
+  TcpNetworkAddress *from = (TcpNetworkAddress*)&org;
   int status = m_channel._Recv(req->Buffer(), size, 0, flags, &from->_addr);
   if ( status <= 0 )  {
     //  ----------------------------  D E B U G -----------------------------
@@ -114,7 +114,7 @@ int TcpConnection::Receive(BasicRequest* req, NetworkAddress& origine, Iosb& ios
   return CONNECTION_SUCCESS;
 }
 
-int TcpConnection::Send(BasicRequest* req, NetworkAddress& target, Iosb& ios)  {
+int TcpConnection::Send(BasicRequest* req, NetworkAddress& target)  {
   // ----------------------------------------------------------------------------
   //  Receive data from Tcp
   //                                      M.Frank

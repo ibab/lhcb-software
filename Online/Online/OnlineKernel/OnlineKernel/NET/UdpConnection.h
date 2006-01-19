@@ -121,8 +121,8 @@ public:
   /// Return family type
   Family _Family () const;
   /// Virtual method to receive data from a given UDP address
-  virtual int Receive  (BasicRequest* req, NetworkAddress& from, Iosb& ios);
+  virtual int Receive  (BasicRequest* req, NetworkAddress& from);
   /// Virtual method to send data to a given UDP address
-  virtual int Send     (BasicRequest* req, NetworkAddress& to, Iosb& ios);
+  virtual int Send     (BasicRequest* req, NetworkAddress& to);
 };
 #endif

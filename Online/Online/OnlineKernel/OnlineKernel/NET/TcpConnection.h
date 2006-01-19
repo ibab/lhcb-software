@@ -108,9 +108,9 @@ public:
   /// Address the connection points to (may be invalid)
   virtual const NetworkAddress& _Address () const;
   /// Virtual method to receive data
-  virtual int Receive  (BasicRequest* req, NetworkAddress&from, Iosb& ios);
+  virtual int Receive  (BasicRequest* req, NetworkAddress&from);
   /// Virtual method to send data
-  virtual int Send     (BasicRequest* req, NetworkAddress& to, Iosb& ios);
+  virtual int Send     (BasicRequest* req, NetworkAddress& to);
   /// Virtual method to listen to the connection socket
   virtual int Listen( EventHandler *handler );
 };

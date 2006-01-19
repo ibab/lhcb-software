@@ -13,19 +13,17 @@ UdpNetworkChannel::UdpNetworkChannel()  {
   m_errno = 0;
   m_socket = ::socket(PF_INET, SOCK_DGRAM, 0);
   if ( m_socket <= 0 )  {
-    ::printf("UdpNetworkChannel>> socket(AF_INET,SOCK_DGRAM):%s\n",_ErrMsg());
+    ::printf("UdpNetworkChannel> socket(AF_INET,SOCK_DGRAM):%s\n",_ErrMsg());
     m_errno = lib_rtl_get_error();
   }
-#if 0
   else if (::setsockopt(m_socket, SOL_SOCKET, SO_REUSEADDR, (char*)&on, sizeof(on)) < 0) {
-    ::printf("UdpNetworkChannel>> setsockopt(SO_REUSEADDR):%s\n",_ErrMsg());
+    ::printf("UdpNetworkChannel> setsockopt(SO_REUSEADDR):%s\n",_ErrMsg());
     m_errno = lib_rtl_get_error();
   }
   else if (::setsockopt(m_socket, SOL_SOCKET, SO_DONTROUTE, (char*)&on, sizeof(on)) < 0) {
-    ::printf("UdpNetworkChannel>> setsockopt(SO_DONTROUTE):%s\n",_ErrMsg());
+    ::printf("UdpNetworkChannel> setsockopt(SO_DONTROUTE):%s\n",_ErrMsg());
     m_errno = lib_rtl_get_error();
   }
-#endif
   else  {
     m_bValid = true;
   }
@@ -45,7 +43,8 @@ UdpNetworkChannel::~UdpNetworkChannel()  {
 // ----------------------------------------------------------------------------
 int UdpNetworkChannel::_Send  (void* buff, int len, int tmo, int flags, const Address* addr)    {
   if ( m_socket > 0 )  {
-    int status, siz = sizeof(NetworkChannel::Address);
+    int status;
+    socklen_t siz = sizeof(Address);
     StartTimer(tmo);
     if ( addr == 0 )
       status = ::send ( m_socket, (char*)buff, len, flags);
@@ -62,7 +61,8 @@ int UdpNetworkChannel::_Send  (void* buff, int len, int tmo, int flags, const Ad
 //                                      M.Frank
 // ----------------------------------------------------------------------------
 int UdpNetworkChannel::_Recv  (void* buff, int len, int tmo, int flags, Address* addr)   {
-  int status, siz = sizeof(NetworkChannel::Address);
+  int status;
+  socklen_t siz = sizeof(Address);
   StartTimer(tmo);
   if ( addr == 0 )
     status = ::recv(m_socket, (char*)buff, len, flags);  
@@ -92,7 +92,7 @@ int UdpNetworkChannel::_Connect ( const Address& addr, int tmo )  {
 //  Bind Address (Acceptor)
 //                                      M.Frank
 // ----------------------------------------------------------------------------
-int UdpNetworkChannel::_Bind ( const Address& addr, int pend )  {
+int UdpNetworkChannel::_Bind ( const Address& addr, int /* pend */ )  {
   if ( m_socket > 0 )  {
     int status = ::bind ( m_socket, (sockaddr*)&addr, sizeof(addr) );
     m_errno = (status < 0) ? ::lib_rtl_get_error() : 0;

@@ -1,7 +1,7 @@
 #include <cstdio>
 #include <ctime>
 #include "RTL/rtl.h"
-#include "TAN/tandb.h"
+#include "TAN/TanDB.h"
 
 #define dbl_hi_top      printf("\033#3")
 #define dbl_hi_botm     printf("\033#4")
@@ -36,34 +36,34 @@ void keyboard_handler( int signal ) {
 }
 
 extern "C" int tanmon( int argc, char* argv[])   {
-    char *c;
-    time_t curr;
-    while (--argc > 0)   {               /* process options */
-      if (*(c = *++argv) == '-') {
-        switch (*++c | 0x20)   {
-          case 'c':
-            continuous = 1;
-          break;
-          case '?':
-          default:
-            puts ("Syntax: tanmon [<-opt>]");
-            puts ("Function: tan monitor");
-            puts ("Options:");
-            puts ("    -c                    Continuous mode");
-            return lib_rtl_default_return();
-        }
+  char *c;
+  time_t curr;
+  while (--argc > 0)   {               /* process options */
+    if (*(c = *++argv) == '-') {
+      switch (*++c | 0x20)   {
+      case 'c':
+	continuous = 1;
+	break;
+      case '?':
+      default:
+	puts ("Syntax: tanmon [<-opt>]");
+	puts ("Function: tan monitor");
+	puts ("Options:");
+	puts ("    -c                    Continuous mode");
+	return lib_rtl_default_return();
       }
     }
-    terminal_response();
-    do  {
-      time(&curr);
-      clear_scr; bold; inverse; 
-      cursor(1,10); dbl_hi_top;      printf("T A N   M O N I T O R");
-      cursor(2,10); dbl_hi_botm;     printf("T A N   M O N I T O R");
-      plain;      
-      cursor(4,30);      printf(ctime(&curr));      
-      cursor(5,1);       TanDataBase::Instance().Dump(stdout);
-      if ( continuous )  lib_rtl_sleep(2000);
-    } while ( continuous );
-       return lib_rtl_default_return();
+  }
+  terminal_response();
+  do  {
+    time(&curr);
+    clear_scr; bold; inverse; 
+    cursor(1,10); dbl_hi_top;      printf("T A N   M O N I T O R");
+    cursor(2,10); dbl_hi_botm;     printf("T A N   M O N I T O R");
+    plain;      
+    cursor(4,30);      printf(ctime(&curr));      
+    cursor(5,1);       TanDataBase::Instance().Dump(stdout);
+    if ( continuous )  lib_rtl_sleep(2000);
+  } while ( continuous );
+  return lib_rtl_default_return();
 }

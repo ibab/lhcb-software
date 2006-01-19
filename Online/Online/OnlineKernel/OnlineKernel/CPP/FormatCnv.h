@@ -6,8 +6,10 @@
 //
 //============================================================================//
 
-#ifndef __FORMATCNV
-#define __FORMATCNV
+#ifndef ONLINEKERNEL_CPP_FORMATCNV
+#define ONLINEKERNEL_CPP_FORMATCNV 1
+
+#include <cstdlib>
 
 enum AtomicDataType {
   DATATYPE_INT,
@@ -68,4 +70,4 @@ void net2host( void* buffer_out, void* buffer_in, size_t size, DataStructure& Da
 
 void ConverttoHost( void* buffer_out, const void* buffer_in, size_t buffer_size,
                     DataStructure& dstruct, DataFormat dformat );  
-#endif
+#endif /*  ONLINEKERNEL_CPP_FORMATCNV */

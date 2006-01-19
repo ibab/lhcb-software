@@ -2,16 +2,16 @@
 #define TAN_TANINTERFACE_H
 #include <CPP/SmartObject.h>
 #include "TAN/TanMessage.h"
-#include "TAN/tanerrno.h"
+#include "TAN/TanErrno.h"
+
 #ifdef  __cplusplus
 
 /// Defintion of the TanInterface class
-/**
+/** @class TanInterface
 
-   {\Large{\bf Class TanInterface}}
+   C++ Interface to the tan library 
 
-   C++ Interface to the tan library         \\
-                                            M.Frank
+   M.Frank
 */
 struct hostent;
 class TcpNetworkChannel;

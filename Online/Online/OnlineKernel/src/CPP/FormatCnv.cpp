@@ -1,15 +1,13 @@
-//============================================================================//
+//============================================================================
 // Description:
 //              This is set of classes and utilitities used to convert data
 //              from different farmats. This is needed to exchange information 
 //              between systems with different internal data representations.
 //
-//============================================================================//
-
-#include "CPP/FormatCnv.h"
+//============================================================================
 #include <cstdio>
-#include <cstdlib>
 #include <cstring>
+#include "CPP/FormatCnv.h"
 
 #define MIN( a, b ) (a)<(b) ? (a) : (b)
 static void ConvertINTfromHost( void*, const void*, int, DataFormat );
@@ -19,15 +17,15 @@ static inline void ConvertINTtoHost( void* out, const void* in, int s, DataForma
        { ConvertINTfromHost( out, in, s, df ); } 
 static inline void ConvertSHORTtoHost( void* out, const void* in, int s, DataFormat df)
        { ConvertSHORTfromHost( out, in, s, df ); } 
-static inline void ConvertCHARtoHost( void* out, const void* in, int s, DataFormat df)
+static inline void ConvertCHARtoHost( void* out, const void* in, int s, DataFormat)
        { memcpy( out, in, s ); }
-static inline void ConvertCHARfromHost( void* out, const void* in, int s, DataFormat df)
+static inline void ConvertCHARfromHost( void* out, const void* in, int s, DataFormat)
        { memcpy( out, in, s ); }
 
-static void ConvertFLOATtoHost( void*, const void*, int, DataFormat );
-static void ConvertFLOATfromHost( void*, const void*, int, DataFormat );
-static void ConvertDOUBLEtoHost( void*, const void*, int, DataFormat );
-static void ConvertDOUBLEfromHost( void*, const void*, int, DataFormat );
+static void ConvertFLOATtoHost( void*, const void*, int, DataFormat);
+static void ConvertFLOATfromHost( void*, const void*, int, DataFormat);
+static void ConvertDOUBLEtoHost( void*, const void*, int, DataFormat);
+static void ConvertDOUBLEfromHost( void*, const void*, int, DataFormat);
 static void SwapBytes ( char*, char*, int);
 static void SwapShorts( char*, char*, int);
 
@@ -393,74 +391,82 @@ void ConvertSHORTfromHost( void* out, const void* in, int s, DataFormat df )
 #endif
 
 //------------------------------------------------------------------------------
+#if defined(__VMS)
 void ConvertFLOATtoHost( void* out, const void* in, int s, DataFormat df)   {
-#ifdef __VMS
   int i, n;
   switch( df )  {
     case DATAFORMAT_OS9:
     case DATAFORMAT_NETWORK:
       n = s/sizeof(float);
       SwapBytes( (char*)out, (char*)in, s);
-      for( i = 0; i < n; i++) cvt$convert_float( (float*)out + i, CVT$K_IEEE_S,
-                                                 (float*)out + i, CVT$K_VAX_F, 0);
+      for( i = 0; i < n; i++)  {
+	cvt$convert_float((float*)out+i,CVT$K_IEEE_S,(float*)out+i,CVT$K_VAX_F,0);
+      }
       break;
     default:
       memcpy( out, in, s );
       break;
   }
-#endif
-#ifdef _OSK 
+#elif defined(WIN32) || defined(linux)
+void ConvertFLOATtoHost(void*, const void*, int, DataFormat)   {
+#elif defined(_OSK)
+void ConvertFLOATtoHost(void*, const void*, int, DataFormat)   {
   // not yet implemented
 #endif
 }
 
-//------------------------------------------------------------------------------
-void ConvertFLOATfromHost( void* out, const void* in, int s, DataFormat df)   {
-#ifdef __VMS
+//-----------------------------------------------------------------------------
+#if defined(__VMS)
+void ConvertFLOATfromHost(void* out, const void* in, int s, DataFormat df)   {
   int i, n;
   switch( df )  {
     case DATAFORMAT_OS9:
     case DATAFORMAT_NETWORK:
       n = s/sizeof(float);
-      for( i = 0; i < n; i++) cvt$convert_float( (float*)in + i, CVT$K_VAX_F,
-                                                 (float*)out + i, CVT$K_IEEE_S,0);
+      for( i = 0; i < n; i++) {
+	cvt$convert_float((float*)in+i,CVT$K_VAX_F,(float*)out+i,CVT$K_IEEE_S,0);
+      }
       SwapBytes( (char*)out, (char*)out, s);
       break;
     default:
       memcpy( out, in, s );
       break;
   }
-#endif
-#ifdef _OSK
+#elif defined(WIN32) || defined(linux)
+void ConvertFLOATfromHost(void*, const void*, int, DataFormat)   {
+#elif defined(_OSK)
+void ConvertFLOATfromHost(void*, const void*, int, DataFormat)   {
   // not yet implemented
 #endif
 }
 
-//------------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
+#if defined(__VMS)
 void ConvertDOUBLEtoHost( void* out, const void* in, int s, DataFormat df)  {
-#ifdef __VMS
   int i, n;
   switch( df )  {
     case DATAFORMAT_OS9:
     case DATAFORMAT_NETWORK:
       n = s/sizeof(double);
       SwapBytes( (char*)out, (char*)in, s);
-      for( i = 0; i < n; i++) cvt$convert_float( (double*)out + i, CVT$K_IEEE_T,
-                                                 (double*)out + i, CVT$K_VAX_D, 0);
+      for( i = 0; i < n; i++) {
+	cvt$convert_float((double*)out+i,CVT$K_IEEE_T,(double*)out+i,CVT$K_VAX_D,0);
       break;
     default:
       memcpy( out, in, s );
       break;
   }
-#endif
-#ifdef _OSK
+#elif defined(WIN32) || defined(linux)
+void ConvertDOUBLEtoHost(void*, const void*, int, DataFormat)  {
+#elif defined(_OSK)
+void ConvertDOUBLEtoHost(void*, const void*, int, DataFormat)  {
   // not yet implemented
 #endif
 }
 
-//------------------------------------------------------------------------------
-void ConvertDOUBLEfromHost( void* out, const void* in, int s, DataFormat df )  {
+//----------------------------------------------------------------------------
 #ifdef __VMS
+void ConvertDOUBLEfromHost( void* out, const void* in, int s, DataFormat df) {
   int i, n;
   switch( df )  {
     case DATAFORMAT_OS9:
@@ -474,8 +480,10 @@ void ConvertDOUBLEfromHost( void* out, const void* in, int s, DataFormat df )  {
       memcpy( out, in, s );
       break;
   }
-#endif
-#ifdef OSK
+#elif defined(WIN32) || defined(linux)
+void ConvertDOUBLEfromHost(void*, const void*, int, DataFormat)  {
+#elif defined(_OSK)
+void ConvertDOUBLEfromHost(void*, const void*, int, DataFormat)  {
   // not yet implemented
 #endif
 }

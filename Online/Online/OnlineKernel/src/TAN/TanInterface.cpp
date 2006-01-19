@@ -21,7 +21,7 @@ extern "C" TanInterface* taninterface() {
 static void strlow (char* s1, const char* s2)   {
   register char c;
   char diff = 'a' - 'A';
-  while (c = *s2++)    {
+  while (0 != (c = *s2++) )    {
     *s1++ = c + ((c >= 'A' && c <= 'Z')  ? diff : 0);
   }
   *s1 = 0;
@@ -206,14 +206,14 @@ int TanInterface::SetLocalAddress  ( NetworkChannel::Address& sin )       {
 void TanInterface::GetNodeWithName(const char* name, char* node, char* proc)  {
   int n;
   char *p;
-  if (p = strstr (name, "::"))    {      // DECNET STYLE
+  if ( 0 != (p=strstr(name,"::")) )    {      // DECNET STYLE
     if (node != 0)  {
       strncpy (node, name, n = p - name);
       node [n] = 0;
     }
     if (proc!= 0)  strcpy (proc, p + 2);
   }
-  else if (p = strchr (name, '@'))    {
+  else if ( 0 != (p=strchr(name,'@')) )    {
     if (node != 0)  {                    // INTERNET STYLE
       strcpy (node, p + 1);
     }
@@ -265,7 +265,7 @@ int TanInterface::GetAddressByName(const char* name, NetworkChannel::Address& sa
         nbyte = rcv._Recv(&msg,sizeof(msg),Receive_TMO);
         if ( nbyte > 0 )  {
           msg.Convert();
-          if ( nbyte        != msg._Length() )  return ErrorCode(TAN_SS_ODDRESPONSE);
+          if ( nbyte != int(msg._Length()) )    return ErrorCode(TAN_SS_ODDRESPONSE);
           if ( msg._Error() != 0             )  return ErrorCode(msg._Error());
           sad = msg.sin;                        return ErrorCode(TAN_SS_SUCCESS);
         }                                       // Timeout fired!
@@ -291,7 +291,7 @@ int TanInterface::AllocatePort(const char* name, NetworkChannel::Port *port)  {
           int num_byte = m_channel->_Recv ( &msg, sizeof(msg), Receive_TMO);
           if ( num_byte > 0 )  {
             msg.Convert();
-            if ( num_byte != msg._Length() )    return FatalError( ErrorCode(TAN_SS_ODDRESPONSE) );
+            if ( num_byte != int(msg._Length()) ) return FatalError( ErrorCode(TAN_SS_ODDRESPONSE) );
             if ( msg._Error() != 0 )            return FatalError( ErrorCode(msg._Error()) );
             _portAllocated = msg.sin.sin_port;
             *port = msg.sin.sin_port;           return ErrorCode( TAN_SS_SUCCESS );
@@ -339,12 +339,12 @@ int TanInterface::DeclareAlias ( const char* name )  {
       num_byte = m_channel->_Recv (&msg,sizeof(msg),Receive_TMO);
       msg.Convert();
       if      ( m_channel->_IsCancelled()  )     return ErrorCode(TAN_SS_RECV_TMO);
-      else if ( num_byte < 0              )     return FatalError(m_channel->_Error());
-      else if ( num_byte != msg._Length() )    return ErrorCode(TAN_SS_ODDRESPONSE);
-      else if ( msg._Error() != 0 )               return ErrorCode(msg._Error());
-      else                                      return ErrorCode(TAN_SS_SUCCESS);
-    }                                           return ErrorCode(TAN_SS_NOTOPEN);
-  }                                             return ErrorCode(TAN_SS_ERROR);
+      else if ( num_byte < 0              )      return FatalError(m_channel->_Error());
+      else if ( num_byte != int(msg._Length()) ) return ErrorCode(TAN_SS_ODDRESPONSE);
+      else if ( msg._Error() != 0 )              return ErrorCode(msg._Error());
+      else                                       return ErrorCode(TAN_SS_SUCCESS);
+    }                                            return ErrorCode(TAN_SS_NOTOPEN);
+  }                                              return ErrorCode(TAN_SS_ERROR);
 }
 // ----------------------------------------------------------------------------
 //  Remove alias from nameserver
@@ -361,12 +361,12 @@ int TanInterface::RemoveAlias ( const char* name )  {
       num_byte = m_channel->_Recv ( &msg, sizeof(msg), Receive_TMO);
       msg.Convert();
       if      ( m_channel->_IsCancelled()  )     return ErrorCode(TAN_SS_RECV_TMO);
-      else if ( num_byte < 0              )     return FatalError(m_channel->_Error());
-      else if ( num_byte != msg._Length() )    return ErrorCode(TAN_SS_ODDRESPONSE);
-      else if ( msg._Error() != 0 )               return ErrorCode(msg._Error());
-      else                                      return ErrorCode(TAN_SS_SUCCESS);
-    }                                           return ErrorCode(TAN_SS_NOTOPEN);
-  }                                             return ErrorCode(TAN_SS_ERROR);
+      else if ( num_byte < 0              )      return FatalError(m_channel->_Error());
+      else if ( num_byte != int(msg._Length()) ) return ErrorCode(TAN_SS_ODDRESPONSE);
+      else if ( msg._Error() != 0 )              return ErrorCode(msg._Error());
+      else                                       return ErrorCode(TAN_SS_SUCCESS);
+    }                                            return ErrorCode(TAN_SS_NOTOPEN);
+  }                                              return ErrorCode(TAN_SS_ERROR);
 }
 // ----------------------------------------------------------------------------
 //  Dump remote database...
@@ -377,11 +377,12 @@ int TanInterface::DumpDB (const char* node)   {
     NetworkChannel::Address radd;
     TanMessage msg(TanMessage::DUMP);
     if ( SetInquireAddr(node,msg.sin,radd) == TAN_SS_SUCCESS )  {
+      int retry;
       UdpNetworkChannel snd, rcv;
       if ( !snd._IsValid() )                    return snd._Error();
       if ( !rcv._IsValid() )                    return rcv._Error();
       if ( snd._Connect(msg.sin,Connect_TMO)<0) return snd._Error();
-      for( int retry=0; retry<5; retry++ )  {   // Necessary to avaoid
+      for( retry=0; retry<5; retry++ )  {       // Necessary to avaoid
         if ( rcv._Bind(radd) < 0 ) SLEEP(10)    // Clashes on the same
         else                       break;       // node...
       }                                         //
@@ -392,9 +393,9 @@ int TanInterface::DumpDB (const char* node)   {
         nbyte = rcv._Recv(&msg,sizeof(msg),Receive_TMO);
         if ( nbyte > 0 )  {
           msg.Convert();
-          if      ( rcv._IsCancelled()       )  return ErrorCode(TAN_SS_RECV_TMO);
-          else if ( nbyte   != msg._Length() )  return ErrorCode(TAN_SS_ODDRESPONSE);
-          else if ( msg._Error() != 0        )  return ErrorCode(msg._Error());
+          if      (rcv._IsCancelled()       )   return ErrorCode(TAN_SS_RECV_TMO);
+          else if (nbyte != int(msg._Length())) return ErrorCode(TAN_SS_ODDRESPONSE);
+          else if (msg._Error() != 0        )   return ErrorCode(msg._Error());
           else                                  return ErrorCode(TAN_SS_SUCCESS);
         }                                       return rcv._Error();
       }                                         return snd._Error();

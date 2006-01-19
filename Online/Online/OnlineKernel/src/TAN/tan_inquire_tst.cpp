@@ -5,7 +5,7 @@
 #include <cstdio>
 #include <cstdlib>
 #include <ctime>
-#include "TAN/taninterface.h"
+#include "TAN/TanInterface.h"
 
 #define MAXTASKS 20
 #ifdef _VMS
@@ -56,7 +56,7 @@ extern "C" int rtl_tan_inquire_test ( int argc, char* argv[] )  {
       if ( num_inq > inc )  {
         tot_inq += num_inq;
         num_inq = 0;
-        printf("->%-4d sec<-  Queries:%6d Success:%-4d TaskNotFound:%-4d Failure:%-4d.\n",
+        printf("->%-4ld sec<-  Queries:%6d Success:%-4d TaskNotFound:%-4d Failure:%-4d.\n",
           time(0) - start, tot_inq, succ, notfnd, fail);
       }
       for ( int i = 0; i < MAXTASKS; i++ )         {

@@ -73,19 +73,19 @@ int TcpNetworkChannel::_Bind ( const Address& addr, int con_pend )  {
 // ----------------------------------------------------------------------------
 NetworkChannel::Channel TcpNetworkChannel::_Accept ( Address& addr, int tmo )  {
   if ( m_socket > 0 )  {
-    int size = sizeof(addr);
+    socklen_t size = sizeof(addr);
     StartTimer(tmo);
-    NetworkChannel::Channel accepted = ::accept ( m_socket, (sockaddr*)&addr, &size );
+    Channel accepted = ::accept(m_socket,(sockaddr*)&addr, &size );
     StopTimer();
     if ( !m_bCancel ) m_errno = (accepted <= 0) ? TCP_errno : 0;
     if ( accepted > 0 )   {
-      int status, buf_siz = 1024, on = 1;
+      int status, on = 1;
       struct linger Linger;
       Linger.l_onoff  = 1;
       Linger.l_linger = 0;
-      status = ::setsockopt( accepted, SOL_SOCKET, SO_LINGER,    (const char*)&Linger,  sizeof(Linger));
-      status = ::setsockopt( accepted, SOL_SOCKET, SO_BROADCAST, (const char*)&on, sizeof(on));
-      status = ::setsockopt( accepted, SOL_SOCKET, SO_OOBINLINE, (const char*)&on, sizeof(on));
+      status = ::setsockopt( accepted, SOL_SOCKET, SO_LINGER,   (const char*)&Linger,sizeof(Linger));
+      status = ::setsockopt( accepted, SOL_SOCKET, SO_BROADCAST,(const char*)&on, sizeof(on));
+      status = ::setsockopt( accepted, SOL_SOCKET, SO_OOBINLINE,(const char*)&on, sizeof(on));
     }
     return accepted;
   }
@@ -111,7 +111,7 @@ int TcpNetworkChannel::_Connect ( const Address& addr, int tmo )  {
 // ----------------------------------------------------------------------------
 int TcpNetworkChannel::_Send  (void* buff, int len, int tmo, int flags, const Address* addr )    {
   if ( m_socket > 0 )  {
-    int status, addr_len = sizeof(NetworkChannel::Address);
+    int status, addr_len = sizeof(Address);
     StartTimer(tmo);
     if ( addr == 0 )
       status = ::send(m_socket,(char*)buff,len,flags);
@@ -128,7 +128,8 @@ int TcpNetworkChannel::_Send  (void* buff, int len, int tmo, int flags, const Ad
 //                                      M.Frank
 // ----------------------------------------------------------------------------
 int TcpNetworkChannel::_Recv  (void* buff, int len, int tmo, int flags, Address* addr)   {
-  int status, addr_len = sizeof(NetworkChannel::Address);
+  int status;
+  socklen_t addr_len = sizeof(Address);
   StartTimer(tmo);
   if ( addr == 0 )
     status = ::recv(m_socket, (char*)buff, len, flags );

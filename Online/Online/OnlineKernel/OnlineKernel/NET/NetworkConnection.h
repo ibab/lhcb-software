@@ -4,15 +4,17 @@
 #include "CPP/SmartObject.h"
 class BasicRequest;
 class NetworkChannel;
+
+
 class NetworkAddress  {
 public:
-    NetworkAddress() {
-    }
-    virtual ~NetworkAddress() {
-    }
-    virtual NetworkAddress& operator = (const NetworkAddress& copy)  {
-        return *this;
-    }
+  NetworkAddress() {
+  }
+  virtual ~NetworkAddress() {
+  }
+  virtual NetworkAddress& operator = (const NetworkAddress& /* copy */)  {
+    return *this;
+  }
 };
 
 /// Defintion of the basic interface of ANY networking connection.
@@ -33,8 +35,6 @@ public:
 class NetworkConnection  : public SmartObject<NetworkConnection> {
 public:
   //@Man: Class specific enumerations and typedefs
-  /// IOSB type definition
-  typedef _IOSB          Iosb;
   /// Status enum of the networking connection
   enum NetConnectionStatus {
     NETCONNECTION_ERROR = 0,
@@ -56,9 +56,9 @@ public:
   /// Virtual method to manipulate the channel
   virtual NetworkChannel& _RecvChannel ()  = 0;
   /// Virtual method to receive data.
-  virtual int Receive  (BasicRequest* req, NetworkAddress& addr, Iosb& ios) = 0;
+  virtual int Receive  (BasicRequest* req, NetworkAddress& addr) = 0;
   /// Virtual method to send data
-  virtual int Send     (BasicRequest* req, NetworkAddress& addr, Iosb& ios) = 0;
+  virtual int Send     (BasicRequest* req, NetworkAddress& addr) = 0;
 };
 
 #endif

@@ -23,7 +23,7 @@
 #include    "RTL/rtl.h"
 #include    "RTL/Lock.h"
 
-#define NAMESRV_PUBAREA_NAME     "PUBNAMESRV"
+#define NAMESRV_PUBAREA_NAME     "TAN_PUBAREA"
 #define NAMESRV_PUBAREA_SIZE     ((int)(sizeof(TanPaSlot)+sizeof(TanPaSlot)/2))
 
 #ifdef _OSK

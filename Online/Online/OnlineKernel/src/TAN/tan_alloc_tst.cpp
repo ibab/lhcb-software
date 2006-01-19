@@ -1,8 +1,8 @@
+#include <ctime>
 #include <cstdio>
 #include <cstdlib>
-#include <ctime>
-#include "TAN/tandb.h"
-#include "TAN/taninterface.h"
+#include "TAN/TanDB.h"
+#include "TAN/TanInterface.h"
 
 #ifdef _VMS
 #define lib_signal(x) lib$signal(x)
@@ -69,7 +69,7 @@ extern "C" int rtl_tan_alloc_test ( int argc, char* argv[] )  {
         }
         if ( !quiet)  {
           printf("Hit any key to continue\n");
-          int character = getchar();
+          ::getchar();
         }
         sprintf(buff,"%s::MYTASK_%02d",host,i);
         status = tan_deallocate_port_number ( buff );
@@ -82,7 +82,7 @@ extern "C" int rtl_tan_alloc_test ( int argc, char* argv[] )  {
           if ( status != TAN_SS_SUCCESS ) lib_signal(status);
         }
         if ( dealloc%50 == 0 )  {
-          printf("->%-4d sec<-  Allocations:%-6d  Aliases:%-8d  Deallocations:%-6d\n",
+          printf("->%-4ld sec<-  Allocations:%-6d  Aliases:%-8d  Deallocations:%-6d\n",
             time(0) - start, alloc, alias, dealloc);
         }
       }

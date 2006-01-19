@@ -4,6 +4,11 @@
 #include <vector>
 #include <stdexcept>
 
+#ifdef linux
+#include <sys/ioctl.h>
+#define ioctlsocket ioctl
+#endif
+
 class EntryMap : public std::map<__NetworkChannel__,PortEntry*> {
 protected:
   lib_rtl_thread_t m_thread;
@@ -13,10 +18,10 @@ public:
   EntryMap(__NetworkPort__ p);
   int handle();
   int run();
-  unsigned int getAvailBytes(int fd)  {
+  int getAvailBytes(int fd)  {
     unsigned long ret;
     if (ioctlsocket(fd, FIONREAD, &ret) != -1)
-      return ret;
+      return int(ret);
     else    {
       if (errno == EINVAL) // Server socket
         return -1;
@@ -77,7 +82,7 @@ int EntryMap::handle()  {
   }
 }
 
-EntryMap::EntryMap(__NetworkPort__ p) : m_port(0), m_thread(0) {
+EntryMap::EntryMap(__NetworkPort__ p) : m_thread(0), m_port(p) {
 }
 
 int EntryMap::run()  {
