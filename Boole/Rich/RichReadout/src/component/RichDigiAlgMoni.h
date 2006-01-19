@@ -1,4 +1,4 @@
-// $Id: RichDigiAlgMoni.h,v 1.4 2005-12-16 15:13:33 jonrob Exp $
+// $Id: RichDigiAlgMoni.h,v 1.5 2006-01-19 08:48:03 cattanem Exp $
 #ifndef RICHMONITOR_RICHDIGIALGMONI_H
 #define RICHMONITOR_RICHDIGIALGMONI_H 1
 
@@ -16,13 +16,13 @@
 #include "Event/MCRichDeposit.h"
 #include "Event/MCRichSummedDeposit.h"
 #include "Event/MCRichHit.h"
+#include "Kernel/RichParticleIDType.h"
 
 // RichKernel
 #include "RichKernel/RichMap.h"
 #include "RichKernel/RichHashMap.h"
 #include "Kernel/RichDetectorType.h"
 #include "Kernel/RichRadiatorType.h"
-#include "RichKernel/RichParticleIDType.h"
 
 // Histogramming
 #include "AIDA/IHistogram1D.h"

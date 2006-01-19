@@ -4,7 +4,10 @@
 ! Purpose     : Rich Digitisation
 !-----------------------------------------------------------------------------
 
-!======================== RichReadout v2r0 2005-12-19 ========================
+!======================== RichReadout v2r0 2006-01-19 ========================
+! 2006-01-19 - Marco Cattaneo
+ - Adapt to changed location of RichParticleIDType.h
+
 ! 2005-12-16 - Chris Jones
  - Update for LHCb v20r0
 
