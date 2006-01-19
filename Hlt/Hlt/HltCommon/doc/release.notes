@@ -1,0 +1,22 @@
+!-----------------------------------------------------------------------------
+! Package     : Hlt/HltCommon
+! Responsible : Jose A. Hernando
+! Purpose     : Common utilities for Hlt
+!-----------------------------------------------------------------------------
+
+! 2006-01-19 Jose A. Hernando
+	- cmt/requirements
+	  (temp) still depend on Trg for the Primary Vertices
+  - src/HltEntry.h
+    decision algorithm to enter or no in a given trigger line
+  - src/HltUtils
+    some utilities to operate with Tracks and Vertices and compute IP, etc 
+    (TODO: move them to Track?)
+  - src/HltTrackIPSelection
+    make a selection depending on the IP of the tracks
+    (TODO: create a 'node' class for PV+{Tracks with IP} where the trigger should be applied
+  - src/HltDummy.h
+    dummy decision algorithm to complete the empty trigger boxes 
+  - src/TrgVertexToTVertex
+    convert TrgVertex (using TrgTracks) to TrackVertex (using Track)
+    (TODO: temporally here, remove when the PV algorithms use Tracks)
