@@ -56,8 +56,8 @@ int RTL::TimerManager::remove(timer_entry_t* entry) {
     DoubleLinkedQueue<timer_entry_t> que(m_head.get());
     for(e=que.get(); e; e = que.get()) {
       if ( e == entry ) {
-	fnd = e;
-	break;
+        fnd = e;
+        break;
       }
     }
   }
@@ -119,26 +119,26 @@ unsigned int RTL::TimerManager::check() {
     DoubleLinkedQueue<timer_entry_t> que(m_head.get());
     for(e=que.get(); e; e = que.get()) {
       try {
-	nent++;
-	//printf("Now: %lld Entry:%lld\n",now, e->expire);
-	if ( e->magic == 0xFEEDBABE ) {
-	  if ( now >= e->expire ) {
-	    lib_rtl_run_ast(e->ast, e->param, 0);
-	    if ( 0 == e->period ) {
-	      to_remove.push_back(e);
-	      continue;
-	    }
-	    e->expire += e->period;
-	  }
-	  if ( next > (e->expire-now) ) next = e->expire-now;
-	}
-	else {	
-	  printf("FATAL ERROR: BAD timer entry: %p\n",(void*)e);
-	  lib_rtl_sleep(10000);
-	}
+        nent++;
+        //printf("%p [%d] Now: %lld Entry:%lld\n",e, nent, now, e->expire);
+        if ( e->magic == 0xFEEDBABE ) {
+	        if ( now >= e->expire ) {
+	          lib_rtl_run_ast(e->ast, e->param, 0);
+	          if ( 0 == e->period ) {
+	            to_remove.push_back(e);
+	            continue;
+	          }
+	          e->expire += e->period;
+	        }
+	        if ( next > (e->expire-now) ) next = e->expire-now;
+        }
+        else {	
+	        printf("FATAL ERROR: BAD timer entry: %p\n",(void*)e);
+	        lib_rtl_sleep(10000);
+        }
       }
       catch(...) {
-	::printf("Exception in timer AST\n");
+        ::printf("Exception in timer AST\n");
       }
     }
   }

@@ -6,6 +6,9 @@
 typedef unsigned short __NetworkChannel__;               /* _VMS   */
 #else  // _OSK, WIN32 and linux
 typedef int            __NetworkChannel__;
+#ifdef _WIN32
+typedef int socklen_t;
+#endif
 #endif
 
 typedef unsigned short     __NetworkPort__;
