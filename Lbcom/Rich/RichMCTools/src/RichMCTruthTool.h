@@ -5,7 +5,7 @@
  *  Header file for tool : RichMCTruthTool
  *
  *  CVS Log :-
- *  $Id: RichMCTruthTool.h,v 1.20 2005-12-17 14:18:15 jonrob Exp $
+ *  $Id: RichMCTruthTool.h,v 1.21 2006-01-19 08:42:22 cattanem Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -32,9 +32,9 @@
 
 // RichKernel
 #include "RichKernel/RichMap.h"
-#include "RichKernel/RichParticleIDType.h"
 
 // Event model
+#include "Kernel/RichParticleIDType.h"
 #include "Event/MCParticle.h"
 #include "Event/MCTruth.h"
 #include "Event/MCRichDigit.h"

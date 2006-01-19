@@ -4,7 +4,10 @@
 ! Purpose     : Provides basic tools for RICH MC information
 !-----------------------------------------------------------------------------
 
-!========================== RichMCTools v3r0 2005-12-19 ======================
+!========================== RichMCTools v3r0 2006-01-19 ======================
+! 2006-01-19 - Marco Cattaneo
+ - Adapt to changed location of RichParticleIDType.h
+
 ! 2005-12-17 - Chris Jones
  - Update to LHCb v20r0
  - Move track based tools to RichRecMCTools
