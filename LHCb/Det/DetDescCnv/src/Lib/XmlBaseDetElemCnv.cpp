@@ -1,4 +1,4 @@
-// $Id: XmlBaseDetElemCnv.cpp,v 1.10 2005-12-13 09:00:23 marcocle Exp $
+// $Id: XmlBaseDetElemCnv.cpp,v 1.11 2006-01-19 08:33:27 marcocle Exp $
 
 // include files
 
@@ -6,6 +6,7 @@
 #include "GaudiKernel/IDataProviderSvc.h"
 #include "GaudiKernel/IDataManagerSvc.h"
 #include "GaudiKernel/MsgStream.h"
+#include "GaudiKernel/IRegistry.h"
 
 #include <xercesc/dom/DOMNodeList.hpp>
 
@@ -148,6 +149,14 @@ StatusCode XmlBaseDetElemCnv::fillObjRefs (IOpaqueAddress* childElement,
   }
   // gets the object
   DetectorElement* dataObj = dynamic_cast<DetectorElement*> (refpObject);
+  if (!dataObj) {
+    std::ostringstream msg;
+    msg << "DataObject at " << refpObject->registry()->identifier() << " is not a DetectorElement!!!";
+    log << MSG::ERROR << msg.str() << endmsg;
+    throw GaudiException(msg.str(),
+                         "XmlBaseDetElemCnv::fillObjRefs",
+                         StatusCode::FAILURE);
+  }
   // initializes it
   dataObj->initialize();
   // returns
