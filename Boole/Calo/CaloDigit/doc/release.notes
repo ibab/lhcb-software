@@ -4,7 +4,10 @@
 ! Purpose     : Digitisation and Zero-suppression of the Calorimeters
 !-----------------------------------------------------------------------------
 
-!======================== CaloDigit v2r0 2006-01-10 ========================
+!======================== CaloDigit v2r0 2006-01-19 ========================
+! 2006-01-19 - Marco Cattaneo
+ - Use definitions from CaloDet for detector locations, instead of raw strings
+
 ! 2006-01-10 - Olivier Callot
  - Adapt to LHCb v20, i.e. add LHCb:: namespace and convert from CLHEP
 

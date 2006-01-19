@@ -1,4 +1,4 @@
-// $Id: CaloSignalAlg.cpp,v 1.6 2006-01-10 07:44:29 ocallot Exp $
+// $Id: CaloSignalAlg.cpp,v 1.7 2006-01-19 11:06:49 cattanem Exp $
 
 /// Kernel
 #include "Kernel/SystemOfUnits.h"
@@ -52,22 +52,22 @@ CaloSignalAlg::CaloSignalAlg( const std::string& name,
   declareProperty( "IgnoreTimeInfo"    , m_ignoreTimeInfo     = false) ;
 
   if ( "SpdSignal" == name ) {
-    m_detectorName   = "/dd/Structure/LHCb/Spd" ;
+    m_detectorName   = DeCalorimeterLocation::Spd;
     m_inputData      = LHCb::MCCaloHitLocation::Spd ;
     m_outputData     = LHCb::MCCaloDigitLocation::Spd ;
     m_previousDigits = "Prev/" + LHCb::MCCaloDigitLocation::Spd;
     m_minimalDeposit = 0.0;   //== Full history
   } else if ( "PrsSignal" == name ) {
-    m_detectorName   = "/dd/Structure/LHCb/Prs" ;
+    m_detectorName   = DeCalorimeterLocation::Prs;
     m_inputData      = LHCb::MCCaloHitLocation::Prs ;
     m_outputData     = LHCb::MCCaloDigitLocation::Prs ;
     m_previousDigits = "Prev/" + LHCb::MCCaloDigitLocation::Prs;
   } else if ( "EcalSignal" == name ) {
-    m_detectorName   = "/dd/Structure/LHCb/Ecal" ;
+    m_detectorName   = DeCalorimeterLocation::Ecal;
     m_inputData      = LHCb::MCCaloHitLocation::Ecal ;
     m_outputData     = LHCb::MCCaloDigitLocation::Ecal ;
   } else if ( "HcalSignal" == name ) {
-    m_detectorName   = "/dd/Structure/LHCb/Hcal" ;
+    m_detectorName   = DeCalorimeterLocation::Hcal;
     m_inputData      = LHCb::MCCaloHitLocation::Hcal ;
     m_outputData     = LHCb::MCCaloDigitLocation::Hcal ;
   }

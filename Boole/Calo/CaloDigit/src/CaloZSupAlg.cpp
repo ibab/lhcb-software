@@ -1,4 +1,4 @@
-// $Id: CaloZSupAlg.cpp,v 1.14 2006-01-10 07:44:29 ocallot Exp $
+// $Id: CaloZSupAlg.cpp,v 1.15 2006-01-19 11:06:49 cattanem Exp $
 
 // LHCbDefinitions
 #include "Kernel/SystemOfUnits.h"
@@ -39,13 +39,13 @@ CaloZSupAlg::CaloZSupAlg( const std::string& name, ISvcLocator* pSvcLocator)
 
   //=== Default values according to the name of the algorithm !
   if ( "EcalZSup" == name ) {
-    m_detectorName     = "/dd/Structure/LHCb/Ecal";
+    m_detectorName     = DeCalorimeterLocation::Ecal;
     m_outputData       = LHCb::CaloAdcLocation::Ecal;
     m_zsupMethod       = "2D";
     m_zsupThreshold    = 20;
     m_inputToolName    = "CaloEnergyFromRaw/EcalEnergyFromRaw";
   } else if ( "HcalZSup" == name ) {
-    m_detectorName     = "/dd/Structure/LHCb/Hcal";
+    m_detectorName     = DeCalorimeterLocation::Hcal;
     m_outputData       = LHCb::CaloAdcLocation::Hcal;
     m_zsupMethod       = "1D";
     m_zsupThreshold    = 4;

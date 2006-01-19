@@ -1,4 +1,4 @@
-// $Id: CaloDigitAlg.cpp,v 1.10 2006-01-10 07:44:29 ocallot Exp $
+// $Id: CaloDigitAlg.cpp,v 1.11 2006-01-19 11:06:49 cattanem Exp $
 
 // CLHEP
 #include "Kernel/SystemOfUnits.h"
@@ -71,7 +71,7 @@ CaloDigitAlg::CaloDigitAlg( const std::string& name,
   
   
   if ( "SpdDigit" == name ) {
-    m_detectorName     = "/dd/Structure/LHCb/Spd";
+    m_detectorName     = DeCalorimeterLocation::Spd;
     m_inputData        = LHCb::MCCaloDigitLocation::Spd;
     m_outputData       = LHCb::CaloAdcLocation::Spd;
     m_inputPrevData    = "Prev/"+LHCb::MCCaloDigitLocation::Spd;
@@ -84,7 +84,7 @@ CaloDigitAlg::CaloDigitAlg( const std::string& name,
     m_triggerIsBit     = true;
     m_zSupThreshold    = 10;  //== No ADC for SPD, only trigger bit...
   } else if ( "PrsDigit" == name ) {
-    m_detectorName     = "/dd/Structure/LHCb/Prs";
+    m_detectorName     = DeCalorimeterLocation::Prs;
     m_inputData        = LHCb::MCCaloDigitLocation::Prs;
     m_outputData       = LHCb::CaloAdcLocation::Prs;
     m_inputPrevData    = "Prev/"+LHCb::MCCaloDigitLocation::Prs;
@@ -96,7 +96,7 @@ CaloDigitAlg::CaloDigitAlg( const std::string& name,
     m_triggerIsBit     = true;
     m_zSupThreshold    = 15;
   } else if ( "EcalDigit" == name ) {
-    m_detectorName     = "/dd/Structure/LHCb/Ecal";
+    m_detectorName     = DeCalorimeterLocation::Ecal;
     m_inputData        = LHCb::MCCaloDigitLocation::Ecal;
     m_outputData       = LHCb::CaloAdcLocation::FullEcal;
     m_pedShift         = 0.40;
@@ -108,7 +108,7 @@ CaloDigitAlg::CaloDigitAlg( const std::string& name,
     m_corrArea.push_back( 1.08 );
     
  } else if ( "HcalDigit" == name ) {
-    m_detectorName     = "/dd/Structure/LHCb/Hcal";
+    m_detectorName     = DeCalorimeterLocation::Hcal;
     m_inputData        = LHCb::MCCaloDigitLocation::Hcal;
     m_outputData       = LHCb::CaloAdcLocation::FullHcal;
     m_pedShift         = 0.40;
