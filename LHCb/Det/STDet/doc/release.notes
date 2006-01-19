@@ -2,13 +2,13 @@
 !Package manager : M. Needham
 !-----------------------------------------------------------------------
 
+!========================= STDet v2r0 2006-01-19 =======================
 ! 2006-01-18 M. Needham
   - check that child is of the correct type
 
 ! 2006-01-18 M. Needham
   - set element ids in DeITBox and DeITLayer
 
-!========================= STDet v2r0 2006-01-18 =======================
 ! 2006-01-18 - Marco Cattaneo
  - Fix param<> types and names to correspond to XmlDDDB
 
