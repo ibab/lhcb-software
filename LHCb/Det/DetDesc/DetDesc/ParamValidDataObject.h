@@ -1,4 +1,4 @@
-//$Id: ParamValidDataObject.h,v 1.5 2005-11-17 16:30:17 marcocle Exp $
+//$Id: ParamValidDataObject.h,v 1.6 2006-01-19 08:51:54 marcocle Exp $
 #ifndef DETDESC_PARAMVALIDDATAOBJECT_H
 #define DETDESC_PARAMVALIDDATAOBJECT_H 1
 
@@ -83,7 +83,11 @@ class ParamValidDataObject : public ValidDataObject {
   inline const T &param(const std::string &name) const {
     ParamList::const_iterator i = m_paramList.find(name);
     if ( i == m_paramList.end() ) throw ParamException(name);
-    return i->second-> template get<T>();
+    try {
+      return i->second-> template get<T>();
+    } catch (std::bad_cast) {
+      throw ParamException(name,typeid(T),i->second->type());
+    }
   }
   
   /// Give a read/write accessor to a parameter.
@@ -91,7 +95,11 @@ class ParamValidDataObject : public ValidDataObject {
   inline T &param(const std::string &name) {
     ParamList::iterator i = m_paramList.find(name);
     if ( i == m_paramList.end() ) throw ParamException(name);
-    return i->second-> template get<T>();
+    try {
+      return i->second-> template get<T>();
+    } catch (std::bad_cast) {
+      throw ParamException(name,typeid(T),i->second->type());
+    }
   }
   
   /// Give a read-only accessor to a parameter vector.

@@ -1,9 +1,13 @@
 ! =============================================================================
-! $Id: release.notes,v 1.246 2006-01-12 13:14:36 marcocle Exp $ 
+! $Id: release.notes,v 1.247 2006-01-19 08:51:54 marcocle Exp $ 
 ! =============================================================================
 ! package DetDesc
 ! package manager : Marco Clemencic, Juan Palacios
 ! =============================================================================
+
+! 2006-01-19 - Marco Clemencic
+ - Improved ParamValidDataObject exceptions. Now is is possible to understand
+   which is the problem.
 
 ! 2006-01-12 - Marco Clemencic
  ### requires GaudiKernel >= v20r2 ###

@@ -1,4 +1,4 @@
-//$Id: ParamValidDataObject.cpp,v 1.5 2005-09-18 15:15:15 marcocle Exp $
+//$Id: ParamValidDataObject.cpp,v 1.6 2006-01-19 08:51:54 marcocle Exp $
 #include <string>
 
 #include "DetDesc/ParamValidDataObject.h"
@@ -42,7 +42,8 @@ void ParamValidDataObject::update( ValidDataObject& obj ){
   // first check the class
   ParamValidDataObject *pvdo = dynamic_cast<ParamValidDataObject *>(&obj);
   if (0 == pvdo){
-    throw ParamException("Trying to do a deep copy between different classes");
+    throw GaudiException("Trying to do a deep copy between different classes",
+                         "ParamValidDataObject",StatusCode::FAILURE);
   }
   // call the 
   ValidDataObject::update(obj);
