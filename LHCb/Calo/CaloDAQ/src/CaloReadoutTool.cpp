@@ -1,4 +1,4 @@
-// $Id: CaloReadoutTool.cpp,v 1.3 2005-12-19 19:29:14 ocallot Exp $
+// $Id: CaloReadoutTool.cpp,v 1.4 2006-01-19 12:18:51 cattanem Exp $
 // Include files 
 
 // from Gaudi
@@ -49,7 +49,18 @@ StatusCode CaloReadoutTool::initialize ( ) {
 
   debug() << "==> Initialize" << endmsg;
 
-  m_calo = getDet<DeCalorimeter>( "/dd/Structure/LHCb/" + m_detectorName );
+  if( "Ecal" == m_detectorName ) {
+    m_calo = getDet<DeCalorimeter>( DeCalorimeterLocation::Ecal );
+  }
+  else if( "Hcal" == m_detectorName ) {
+    m_calo = getDet<DeCalorimeter>( DeCalorimeterLocation::Hcal );
+  }
+  else if( "Prs" == m_detectorName ) {
+    m_calo = getDet<DeCalorimeter>( DeCalorimeterLocation::Prs );
+  }
+  else {
+    return( Error( "Invalid detector name: " + m_detectorName ) );
+  }
 
   unsigned int caloID = CaloCellCode::CaloNumFromName( m_detectorName );
   bool hasFault = false;

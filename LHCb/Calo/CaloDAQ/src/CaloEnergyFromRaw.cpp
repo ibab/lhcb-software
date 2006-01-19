@@ -1,4 +1,4 @@
-// $Id: CaloEnergyFromRaw.cpp,v 1.6 2005-12-19 19:29:14 ocallot Exp $
+// $Id: CaloEnergyFromRaw.cpp,v 1.7 2006-01-19 12:18:51 cattanem Exp $
 // Include files 
 
 // from Gaudi
@@ -52,19 +52,19 @@ StatusCode CaloEnergyFromRaw::initialize ( ) {
   debug() << "==> Initialize" << endmsg;
 
   if ( "Ecal" == m_detectorName ) {
-    m_calo     = getDet<DeCalorimeter>( "/dd/Structure/LHCb/Ecal" );
+    m_calo     = getDet<DeCalorimeter>( DeCalorimeterLocation::Ecal );
     m_roTool   = tool<CaloReadoutTool>( "CaloReadoutTool/EcalReadoutTool" );
     m_pedShift = 0.6;
     m_packedType = LHCb::RawBank::EcalPacked;
     m_shortType  = LHCb::RawBank::EcalE;
   } else if ( "Hcal" == m_detectorName ) {
-    m_calo     = getDet<DeCalorimeter>( "/dd/Structure/LHCb/Hcal" );
+    m_calo     = getDet<DeCalorimeter>( DeCalorimeterLocation::Hcal );
     m_roTool   = tool<CaloReadoutTool>( "CaloReadoutTool/HcalReadoutTool" );
     m_pedShift = 0.6;
     m_packedType = LHCb::RawBank::HcalPacked;
     m_shortType  = LHCb::RawBank::HcalE;
   } else if ( "Prs" == m_detectorName ) {
-    m_calo     = getDet<DeCalorimeter>( "/dd/Structure/LHCb/Prs" );
+    m_calo     = getDet<DeCalorimeter>( DeCalorimeterLocation::Prs );
     m_roTool   = tool<CaloReadoutTool>( "CaloReadoutTool/PrsReadoutTool" );
     m_pedShift = 0.;
     m_packedType = LHCb::RawBank::PrsPacked;

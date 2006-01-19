@@ -1,4 +1,4 @@
-// $Id: CaloFillRawBuffer.h,v 1.4 2005-12-19 19:29:14 ocallot Exp $
+// $Id: CaloFillRawBuffer.h,v 1.5 2006-01-19 12:18:51 cattanem Exp $
 #ifndef CALOFILLRAWBUFFER_H 
 #define CALOFILLRAWBUFFER_H 1
 
@@ -39,6 +39,7 @@ private:
   std::string m_inputBank;
   std::string m_triggerBank;
   std::string m_detectorName;
+  std::string m_detectorLocation;
   LHCb::RawBank::BankType m_bankType;
   LHCb::RawBank::BankType m_triggerBankType;
   int    m_numberOfBanks;

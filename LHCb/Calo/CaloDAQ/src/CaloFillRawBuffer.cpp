@@ -1,4 +1,4 @@
-// $Id: CaloFillRawBuffer.cpp,v 1.7 2006-01-10 17:19:46 cattanem Exp $
+// $Id: CaloFillRawBuffer.cpp,v 1.8 2006-01-19 12:18:51 cattanem Exp $
 // Include files 
 // from Gaudi
 #include "GaudiKernel/AlgFactory.h" 
@@ -30,6 +30,7 @@ CaloFillRawBuffer::CaloFillRawBuffer( const std::string& name,
   //=== Default values according to the name of the algorithm !
   if ( "Ecal" == name.substr( 0, 4 ) ) {
     m_detectorName     = "Ecal";
+    m_detectorLocation = DeCalorimeterLocation::Ecal;
     m_inputBank        = LHCb::CaloAdcLocation::Ecal;
     m_triggerBank      = LHCb::L0CaloAdcLocation::Ecal;
     m_bankType         = LHCb::RawBank::EcalE;
@@ -37,6 +38,7 @@ CaloFillRawBuffer::CaloFillRawBuffer( const std::string& name,
     m_numberOfBanks    = 1;
   } else if ("Hcal" == name.substr( 0, 4 ) ) {
     m_detectorName     = "Hcal";
+    m_detectorLocation = DeCalorimeterLocation::Hcal;
     m_inputBank        = LHCb::CaloAdcLocation::Hcal;
     m_triggerBank      = LHCb::L0CaloAdcLocation::Hcal;
     m_bankType         = LHCb::RawBank::HcalE;
@@ -62,7 +64,7 @@ StatusCode CaloFillRawBuffer::initialize() {
 
   debug() << "==> Initialize" << endmsg;
 
-  m_calo = getDet<DeCalorimeter>( "/dd/Structure/LHCb/" + m_detectorName );
+  m_calo = getDet<DeCalorimeter>( m_detectorLocation );
 
   std::string toolName = "CaloReadoutTool/" + m_detectorName + "ReadoutTool";
   m_roTool = tool<CaloReadoutTool>( toolName );

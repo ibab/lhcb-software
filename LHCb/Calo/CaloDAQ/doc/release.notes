@@ -4,7 +4,10 @@
 ! Purpose     : Convert Calo Digit and Trigger information to RawEvent banks.
 !-----------------------------------------------------------------------------
 
-!========================== CaloDAQ v2r0 2006-01-10 ==========================
+!========================== CaloDAQ v2r0 2006-01-19 ==========================
+! 2006-01-19 - Marco Cattaneo
+ - Use definitions from CaloDet for detector locations, instead of raw strings
+
 ! 2006-01-10 - Marco Cattaneo
  - Remove BankType property from CaloFillRawBuffer, because an enum cannot be 
    a property

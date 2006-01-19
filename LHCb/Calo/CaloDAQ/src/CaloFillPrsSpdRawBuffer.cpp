@@ -1,4 +1,4 @@
-// $Id: CaloFillPrsSpdRawBuffer.cpp,v 1.7 2005-12-20 13:35:28 ocallot Exp $
+// $Id: CaloFillPrsSpdRawBuffer.cpp,v 1.8 2006-01-19 12:18:51 cattanem Exp $
 // Include files 
 #include "Event/RawEvent.h"
 
@@ -51,7 +51,7 @@ StatusCode CaloFillPrsSpdRawBuffer::initialize() {
 
   debug() << "==> Initialize" << endmsg;
 
-  m_calo = getDet<DeCalorimeter>( "/dd/Structure/LHCb/Prs" );
+  m_calo = getDet<DeCalorimeter>( DeCalorimeterLocation::Prs );
   m_roTool = tool<CaloReadoutTool>( "CaloReadoutTool/PrsReadoutTool" );
 
   if ( 3 == m_dataCodingType ) {
