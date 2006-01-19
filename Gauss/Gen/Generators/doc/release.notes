@@ -1,7 +1,8 @@
-! $Id: release.notes,v 1.28 2006-01-19 13:24:02 gcorti Exp $
+! $Id: release.notes,v 1.29 2006-01-19 13:25:08 gcorti Exp $
 ! Package     : Gen/Generators
 ! Responsible : 
 
+!=================== Generators v4r0 2006-01-19 ===========================
 ! 2006-01-19 - Gloria CORTI
  - Generation: do not create new GenHeader but unpdate info already in TES
 
