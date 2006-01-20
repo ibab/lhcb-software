@@ -1,11 +1,9 @@
-// $Id: Particle2VertexWithIPS.cpp,v 1.4 2006-01-17 12:54:34 pkoppenb Exp $
+// $Id: Particle2VertexWithIPS.cpp,v 1.5 2006-01-20 07:54:08 pkoppenb Exp $
 // Include files 
 
 // from Gaudi
 #include "GaudiKernel/AlgFactory.h"
-#include "GaudiKernel/MsgStream.h" 
 #include "GaudiKernel/IDataProviderSvc.h"
-#include "GaudiKernel/SmartDataPtr.h"
 
 // from DaVinciTools
 #include "Kernel/IGeomDispCalculator.h"
@@ -16,8 +14,6 @@
 
 // local
 #include "Particle2VertexWithIPS.h"
-
-
 //-----------------------------------------------------------------------------
 // Implementation file for class : Particle2VertexWithIPS
 //
@@ -34,7 +30,7 @@ const        IAlgFactory& Particle2VertexWithIPSFactory = s_factory ;
 //=============================================================================
 Particle2VertexWithIPS::Particle2VertexWithIPS( const std::string& name,
                                                 ISvcLocator* pSvcLocator)
-  : Algorithm ( name , pSvcLocator )
+  : GaudiAlgorithm ( name , pSvcLocator )
 {
   declareProperty( "InputData", m_inputData );
   declareProperty( "OutputTable", m_outputTable );
@@ -62,14 +58,9 @@ Particle2VertexWithIPS::~Particle2VertexWithIPS() {};
 //=============================================================================
 StatusCode Particle2VertexWithIPS::initialize() 
 {
-
-  MsgStream log(msgSvc(), name());
-  log << MSG::DEBUG << "==> Initialise" << endmsg;
-
-  StatusCode sc = toolSvc()->retrieveTool("GeomDispCalculator", m_ipTool, this);
-  if(sc.isFailure()){
-    log << MSG::FATAL << " Unable to retrieve GeomDispCalculator tool" << endreq;
-  }
+  StatusCode sc = GaudiAlgorithm::initialize();
+  if (!sc) return sc;
+  m_ipTool = tool<IGeomDispCalculator>("GeomDispCalculator", m_ipTool, this);
   return sc;
 };
 
@@ -78,54 +69,49 @@ StatusCode Particle2VertexWithIPS::initialize()
 //=============================================================================
 StatusCode Particle2VertexWithIPS::execute() {
 
-  MsgStream  log( msgSvc(), name() );
-  log << MSG::DEBUG << "==> Execute" << endmsg;
-
   // create an association table and register it in the TES
   Particle2VertexAsct::Table* table = new Particle2VertexAsct::Table();
   if (table==0) {
-    log << MSG::FATAL << "     *** Could not create table " 
+    fatal() << "     *** Could not create table " 
         << outputTable()
         << endmsg;
   }
   
   SmartDataPtr<Vertices> primaries(eventSvc(),VertexLocation::Primary);
-          log << MSG::DEBUG << " got vertices from " << VertexLocation::Primary << endmsg;
-          log << MSG::DEBUG << " particles from " << m_inputData.size() << " places " << endmsg;
+  debug() << " got vertices from " << VertexLocation::Primary << endmsg;
+  debug() << " particles from " << m_inputData.size() << " places " << endmsg;
   for( std::vector<std::string>::iterator i= m_inputData.begin(); 
        i!=m_inputData.end(); ++i) {
-    log << MSG::DEBUG << " getting particles from " << *i<< endmsg;
+    debug() << " getting particles from " << *i<< endmsg;
     // Get Particles
     SmartDataPtr<Particles> particles (eventSvc(), *i);
     if( !particles ) {
-      log << MSG::ERROR << "    *** Could not retrieve Particles from " << *i << endmsg;
+      err() << "    *** Could not retrieve Particles from " << *i << endmsg;
       continue;
     }
     for (ParticleVector::const_iterator ip=particles->begin();ip!=particles->end();++ip){
-    for (VertexVector::const_iterator iv=primaries->begin();iv!=primaries->end();++iv) {
-            // FIXME: all but the next few lines are generic for all particles->vertex
-            //        associators. Maybe we should template this class in a 'policy pattern'
-            //        which, as template argument, defines a class which does the actual
-            //        1->1 association... Alternatively add a pure virtual which does
-            //        again the actual 1->1 association
-          if( (*iv)->type()!=Vertex::Primary) continue;
-          double x,sx;
-          StatusCode sc = m_ipTool->calcImpactPar(**ip,**iv, x, sx);
-          if (!sc.isSuccess()) continue;
-          double w = fabs(m_useSignificance?x/sx:x);
-          log << MSG::DEBUG << " p = @" << *ip << " v = @ " << *iv << " w = " << w << endmsg;
-          if (m_max<=0 || w<m_max ) table->relate(*ip,*iv,w);
-    } }
+      for (VertexVector::const_iterator iv=primaries->begin();iv!=primaries->end();++iv) {
+        // @todo all but the next few lines are generic for all particles->vertex
+        //       associators. Maybe we should template this class in a 'policy pattern'
+        //       which, as template argument, defines a class which does the actual
+        //       1->1 association... Alternatively add a pure virtual which does
+        //       again the actual 1->1 association
+        if( (*iv)->type()!=Vertex::Primary) continue;
+        double x,sx;
+        StatusCode sc = m_ipTool->calcImpactPar(**ip,**iv, x, sx);
+        if (!sc.isSuccess()) continue;
+        double w = fabs(m_useSignificance?x/sx:x);
+        debug() << " p = @" << *ip << " v = @ " << *iv << " w = " << w << endmsg;
+        if (m_max<=0 || w<m_max ) table->relate(*ip,*iv,w);
+      } }
   }
   // Register the table on the TES
-  StatusCode sc = eventSvc()->registerObject( outputTable(), table);
+  StatusCode sc = put( table, outputTable());
   if( sc.isFailure() ) {
-    log << MSG::FATAL << "     *** Could not register table " 
-        << outputTable()
-        << endmsg;
+    fatal() << "     *** Could not register table " << outputTable() << endmsg;
     delete table;
   } else {
-    log << MSG::DEBUG << "     Registered table " << outputTable() << endmsg;
+    debug() << "     Registered table " << outputTable() << endmsg;
   }
   return sc;
 };
@@ -135,8 +121,6 @@ StatusCode Particle2VertexWithIPS::execute() {
 //=============================================================================
 StatusCode Particle2VertexWithIPS::finalize() {
 
-  MsgStream log(msgSvc(), name());
-  log << MSG::DEBUG << "==> Finalize" << endmsg;
+  return GaudiAlgorithm::finalize();
 
-  return StatusCode::SUCCESS;
 }

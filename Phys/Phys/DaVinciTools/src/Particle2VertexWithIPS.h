@@ -1,4 +1,4 @@
-// $Id: Particle2VertexWithIPS.h,v 1.5 2006-01-17 12:54:34 pkoppenb Exp $
+// $Id: Particle2VertexWithIPS.h,v 1.6 2006-01-20 07:54:08 pkoppenb Exp $
 #ifndef Particle2VertexWithIPS_H
 #define Particle2VertexWithIPS_H 1
 
@@ -7,13 +7,12 @@
 #include <string>
 
 // from Gaudi
-#include "GaudiKernel/Algorithm.h"
+#include "GaudiAlg/GaudiAlgorithm.h"
 
 class IGeomDispCalculator;
 
 // local
 #include "Kernel/Particle2VertexAsct.h"
-#include "GaudiKernel/Algorithm.h"
 
 /** @class Particle2VertexWithIPS Particle2VertexWithIPS.h
  *
@@ -21,7 +20,7 @@ class IGeomDispCalculator;
  *  @date   May 2003
  */
 
-class Particle2VertexWithIPS : public Algorithm
+class Particle2VertexWithIPS : public GaudiAlgorithm
 {
 
   friend class AlgFactory<Particle2VertexWithIPS>;
