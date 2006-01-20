@@ -1,4 +1,4 @@
-// $Id: IParticleTransporter.h,v 1.1 2005-03-11 13:39:18 cattanem Exp $
+// $Id: IParticleTransporter.h,v 1.2 2006-01-20 16:17:15 pkoppenb Exp $
 #ifndef KERNEL_IPARTICLETRANSPORTER_H 
 #define KERNEL_IPARTICLETRANSPORTER_H 1
 
@@ -27,15 +27,10 @@ public:
   /// Retrieve interface ID
   static const InterfaceID& interfaceID() { return IID_IParticleTransporter;}
 
-  /// Transport a Particle to specified z position given a Particle iterator.
-  virtual StatusCode transport(ParticleVector::const_iterator &, 
-                               const double znew,
-                               Particle &transParticle) = 0;
-  
   /// Transport a Particle to specified z position.
-  virtual StatusCode transport(const Particle &, 
+  virtual StatusCode transport(const LHCb::Particle*, 
                                const double znew,
-                               Particle &transParticle) = 0;
+                               LHCb::Particle &transParticle) = 0;
 
 };
 #endif // KERNEL_IPARTICLETRANSPORTER_H
