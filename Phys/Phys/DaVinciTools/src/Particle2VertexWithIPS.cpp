@@ -1,4 +1,4 @@
-// $Id: Particle2VertexWithIPS.cpp,v 1.5 2006-01-20 07:54:08 pkoppenb Exp $
+// $Id: Particle2VertexWithIPS.cpp,v 1.6 2006-01-20 08:37:19 pkoppenb Exp $
 // Include files 
 
 // from Gaudi
@@ -77,14 +77,14 @@ StatusCode Particle2VertexWithIPS::execute() {
         << endmsg;
   }
   
-  SmartDataPtr<Vertices> primaries(eventSvc(),VertexLocation::Primary);
+  Vertices* primaries = get<Vertices>(VertexLocation::Primary);
   debug() << " got vertices from " << VertexLocation::Primary << endmsg;
   debug() << " particles from " << m_inputData.size() << " places " << endmsg;
   for( std::vector<std::string>::iterator i= m_inputData.begin(); 
        i!=m_inputData.end(); ++i) {
     debug() << " getting particles from " << *i<< endmsg;
     // Get Particles
-    SmartDataPtr<Particles> particles (eventSvc(), *i);
+    Particles* particles = get<Particles>(*i);
     if( !particles ) {
       err() << "    *** Could not retrieve Particles from " << *i << endmsg;
       continue;
