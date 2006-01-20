@@ -4,7 +4,7 @@
  *
  *  Header file for RICH reconstruction tool interface : IRichParticleProperties
  *
- *  $Id: IRichParticleProperties.h,v 1.1 2005-10-13 15:03:41 jonrob Exp $
+ *  $Id: IRichParticleProperties.h,v 1.2 2006-01-20 16:28:16 cattanem Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -15,7 +15,7 @@
 #define RICHKERNEL_IRICHPARTICLEPROPERTIES_H 1
 
 // Kernel
-#include "RichKernel/RichParticleIDType.h"
+#include "Kernel/RichParticleIDType.h"
 #include "Kernel/RichRadiatorType.h"
 
 /// Static Interface Identification

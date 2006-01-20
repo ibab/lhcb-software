@@ -5,7 +5,7 @@
  *  Header file for utility class : RichHypoData
  *
  *  CVS Log :-
- *  $Id: RichHypoData.h,v 1.11 2005-11-15 13:01:54 jonrob Exp $
+ *  $Id: RichHypoData.h,v 1.12 2006-01-20 16:28:16 cattanem Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   2003-07-31
@@ -23,7 +23,7 @@
 #include "RichKernel/BoostArray.h"
 
 // RichKernel
-#include "RichKernel/RichParticleIDType.h"
+#include "Kernel/RichParticleIDType.h"
 #include "RichKernel/BoostMemPoolAlloc.h"
 
 //------------------------------------------------------------------------
