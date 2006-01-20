@@ -1,4 +1,4 @@
-// $Id: DeOTDetector.h,v 1.20 2006-01-20 14:32:42 cattanem Exp $
+// $Id: DeOTDetector.h,v 1.21 2006-01-20 14:37:05 cattanem Exp $
 #ifndef OTDET_DEOTDETECTOR_H
 #define OTDET_DEOTDETECTOR_H 1
 
@@ -30,7 +30,7 @@
  */
 
 namespace DeOTDetectorLocation{
-  static const std::string& Default = "/dd/Structure/LHCb/AfterMagnet/T/OT";
+  static const std::string& Default="/dd/Structure/LHCb/AfterMagnetRegion/T/OT";
 };
 
 static const CLID& CLID_DeOTDetector = 8101;
