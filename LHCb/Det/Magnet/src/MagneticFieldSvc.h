@@ -1,10 +1,10 @@
-// $Id: MagneticFieldSvc.h,v 1.9 2005-12-08 15:16:44 cattanem Exp $
+// $Id: MagneticFieldSvc.h,v 1.10 2006-01-20 16:24:11 cattanem Exp $
 #ifndef MAGNETICFIELDSVC_H
 #define MAGNETICFIELDSVC_H 1
 
 // Include files
 #include "GaudiKernel/Service.h"
-#include "Kernel/IMagneticFieldSvc.h"
+#include "GaudiKernel/IMagneticFieldSvc.h"
 #include "Kernel/Vector3DTypes.h"
 #include "Kernel/Point3DTypes.h"
 

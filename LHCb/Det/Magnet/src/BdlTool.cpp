@@ -1,8 +1,8 @@
-// $Id: BdlTool.cpp,v 1.2 2005-12-08 15:16:44 cattanem Exp $
+// $Id: BdlTool.cpp,v 1.3 2006-01-20 16:24:11 cattanem Exp $
 
 // Include files
 #include "GaudiKernel/ToolFactory.h"
-#include "Kernel/IMagneticFieldSvc.h"
+#include "GaudiKernel/IMagneticFieldSvc.h"
 
 // Mathlib
 #include "Kernel/Point3DTypes.h"
