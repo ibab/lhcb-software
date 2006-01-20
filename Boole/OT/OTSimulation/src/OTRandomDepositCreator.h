@@ -1,10 +1,10 @@
-// $Id: OTRandomDepositCreator.h,v 1.6 2006-01-20 12:57:05 janos Exp $
+// $Id: OTRandomDepositCreator.h,v 1.7 2006-01-20 15:44:45 cattanem Exp $
 #ifndef OTSIMULATION_OTRANDOMDEPOSITCREATOR_H 
 #define OTSIMULATION_OTRANDOMDEPOSITCREATOR_H 1
 
 #include "GaudiAlg/GaudiTool.h"
 #include "GaudiKernel/SmartIF.h"
-#include "OTSimulation/IOTRandomDepositCreator.h"
+#include "IOTRandomDepositCreator.h"
 
 #include <vector>
 #include <string>

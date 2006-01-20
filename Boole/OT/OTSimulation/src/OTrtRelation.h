@@ -1,4 +1,4 @@
-// $Id: OTrtRelation.h,v 1.3 2006-01-20 12:57:05 janos Exp $
+// $Id: OTrtRelation.h,v 1.4 2006-01-20 15:44:45 cattanem Exp $
 #ifndef OTSIMULATION_OTRTRELATION_H
 #define OTSIMULATION_OTRTRELATION_H 1
 
@@ -12,7 +12,7 @@
 #include "OTDet/DeOTDetector.h"
 
 // OTSimulation
-#include "OTSimulation/IOTrtRelation.h"
+#include "IOTrtRelation.h"
 
 // Forward declarations
 namespace LHCb 

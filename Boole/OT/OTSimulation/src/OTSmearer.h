@@ -1,4 +1,4 @@
-// $Id: OTSmearer.h,v 1.3 2006-01-20 12:57:05 janos Exp $
+// $Id: OTSmearer.h,v 1.4 2006-01-20 15:44:45 cattanem Exp $
 #ifndef OTSIMULATION_OTSMEARER_H
 #define OTSIMULATION_OTSMEARER_H 1
 
@@ -13,7 +13,7 @@
 #include "OTDet/DeOTDetector.h"
 
 // OTSimulation
-#include "OTSimulation/IOTSmearer.h"
+#include "IOTSmearer.h"
 
 // Forward declaration
 class IMagneticFieldSvc;

@@ -1,4 +1,4 @@
-// $Id: OTEffCalculator.h,v 1.3 2006-01-20 12:57:05 janos Exp $
+// $Id: OTEffCalculator.h,v 1.4 2006-01-20 15:44:45 cattanem Exp $
 #ifndef OTSIMULATION_OTEFFCALCULATOR_H
 #define OTSIMULATION_OTEFFCALCULATOR_H 1
 
@@ -10,7 +10,7 @@
 #include "Event/MCOTDeposit.h"
 
 // OTSimulation
-#include "OTSimulation/IOTEffCalculator.h"
+#include "IOTEffCalculator.h"
 
 // Forward declaration
 namespace LHCb 

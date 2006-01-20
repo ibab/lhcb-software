@@ -1,9 +1,12 @@
-! $Id: release.notes,v 1.17 2006-01-20 14:05:54 cattanem Exp $
+! $Id: release.notes,v 1.18 2006-01-20 15:44:45 cattanem Exp $
 Package         : OTSimulation
 Package manager : Jacopo Nardulli
 
 !==================== OTSimulation v3r0 2006-01-20 ======================
-! 2006-01-30 Jan Amoraal
+! 2006-01-20 - Marco Cattaneo
+ - Remove unneccesary OTSimulation diectory, all includes now in src
+
+! 2006-01-20 Jan Amoraal
  - Migrated to LHCb v20r0
  - In MCOTDepositCreator::addCrossTalk(): (*iterDeposit)->tdcTime()
    should be (*iterDeposit)->time. As we don't use tdcTime to create 

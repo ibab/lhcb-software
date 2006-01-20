@@ -1,4 +1,4 @@
-// $Id: MCOTDepositCreator.cpp,v 1.9 2006-01-20 12:57:05 janos Exp $
+// $Id: MCOTDepositCreator.cpp,v 1.10 2006-01-20 15:44:45 cattanem Exp $
 
 // Gaudi
 #include "GaudiKernel/xtoa.h" // needed for toolName()
@@ -19,11 +19,11 @@
 
 // OTSimulation
 #include "MCOTDepositCreator.h"
-#include "OTSimulation/IOTSmearer.h" 
-#include "OTSimulation/IOTrtRelation.h"
-#include "OTSimulation/OTDataFunctor.h"
-#include "OTSimulation/IOTEffCalculator.h"
-#include "OTSimulation/IOTRandomDepositCreator.h"
+#include "IOTSmearer.h" 
+#include "IOTrtRelation.h"
+#include "OTDataFunctor.h"
+#include "IOTEffCalculator.h"
+#include "IOTRandomDepositCreator.h"
 
 // xml geometry
 #include "DetDesc/IGeometryInfo.h"

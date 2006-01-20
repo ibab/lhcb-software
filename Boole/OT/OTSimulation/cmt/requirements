@@ -1,11 +1,11 @@
-# $Id: requirements,v 1.10 2006-01-20 14:05:54 cattanem Exp $
+# $Id: requirements,v 1.11 2006-01-20 15:44:45 cattanem Exp $
 package OTSimulation
 
 version v3r0
 
-branches OTSimulation cmt doc src options
+branches cmt doc src options
 
-include_dirs $(OTSIMULATIONROOT)
+include_path none
 
 use MCEvent v* Event
 use OTDAQ   v*  OT

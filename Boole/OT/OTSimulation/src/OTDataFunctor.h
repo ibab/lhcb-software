@@ -1,4 +1,4 @@
-// $Id: OTDataFunctor.h,v 1.2 2006-01-20 12:57:05 janos Exp $
+// $Id: OTDataFunctor.h,v 1.1 2006-01-20 15:44:45 cattanem Exp $
 #ifndef OTSIMULATION_OTDATAFUNCTOR_H
 #define OTSIMULATION_OTDATAFUNCTOR_H 1
 
