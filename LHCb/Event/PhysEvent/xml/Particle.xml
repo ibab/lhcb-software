@@ -49,6 +49,15 @@
         argList="Particle part"
         desc="Copy constructor"
        />          
+       <constructor
+        argList="const LHCb::ParticleID&amp; pid"
+        desc="Constructor from ParticleID"
+       >
+	<code>
+         setParticleID(pid);
+	 return;
+	</code>
+       </constructor>
        <method
         name="clone"
         desc="Clone particle"
@@ -193,6 +202,21 @@
         multiplicity="N"
         type="LHCb::Particle"
        />
+      <method
+        name="daughtersVector"
+	desc="Get daughters as a ConstVector"
+	type="LHCb::Particle::ConstVector"
+	const="TRUE"
+	>
+	<code>
+	 LHCb::Particle::ConstVector out;
+         for (SmartRefVector&lt;LHCb::Particle&gt;::const_iterator i=m_daughters.begin();
+	      i!=m_daughters.end();++i){
+	    out.push_back(*i);
+	 }
+	 return out;
+	</code>
+       </method>
        <attribute
         name="extraInfo"
         desc="Some addtional user information. Don't use directly. Use *Info() methods."

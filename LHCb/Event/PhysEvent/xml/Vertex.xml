@@ -58,6 +58,15 @@
         initList = "KeyedObject&lt;int&gt;( key ),m_position(0.0, 0.0, -1*km),
 m_covMatrix(), m_chi2(-1.0), m_nDoF(-1), m_technique(Vertex::Unknown)"
        />
+       <constructor
+        argList="const Gaudi::XYZPoint&amp; p"
+        desc="Constructor from a point"
+       >
+	<code>
+         setPosition(p);
+	 return;
+	</code>
+       </constructor>
        <method
         name="clone"
         desc="Clone vertex"
@@ -99,6 +108,21 @@ m_covMatrix(), m_chi2(-1.0), m_nDoF(-1), m_technique(Vertex::Unknown)"
         multiplicity="N"
         type="LHCb::Particle"
        />
+      <method
+        name="outgoingParticlesVector"
+	desc="Get outgoing particles as a LHCb::Particle::ConstVector"
+	type="std::vector&lt;const LHCb::Particle*&gt;"
+	const="TRUE"
+        >
+	<code>
+	 std::vector&lt;const LHCb::Particle*&gt; out;
+         for (SmartRefVector&lt;LHCb::Particle&gt;::const_iterator i=m_outgoingParticles.begin();
+	      i!=m_outgoingParticles.end();++i){
+	    out.push_back(*i);
+	 }
+	 return out;
+	</code>
+       </method>
        <method
         name="isPrimary"
         desc="is a primary vertex ?"

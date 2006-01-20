@@ -1,6 +1,14 @@
-! $Id: release.notes,v 1.66 2006-01-17 16:28:56 cattanem Exp $
+! $Id: release.notes,v 1.67 2006-01-20 10:14:24 pkoppenb Exp $
 ! Package     : PhysEvent 
 ! Responsible : P. Koppenburg
+
+! 2006-01-20 - P. Koppenburg
+ - xml/Particle.xml
+   . Added a constructor from ParticleID
+   . Added a mthod that returns a ConstVector of daughters
+ - xml/Vertex.xml
+   . Added a constructor from XYZPoint
+   . Added a mthod that returns a ConstVector of outgoingParticles
 
 !======================= PhysEvent v9r0 2006-01-17 ==========================
 ! 2006-01-17 - Marco Cattaneo
