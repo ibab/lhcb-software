@@ -1,4 +1,4 @@
-// $Id: MeasurementProvider.h,v 1.5 2006-01-17 13:34:34 erodrigu Exp $
+// $Id: MeasurementProvider.h,v 1.6 2006-01-20 11:02:32 erodrigu Exp $
 #ifndef TRACKTOOLS_MEASUREMENTPROVIDER_H 
 #define TRACKTOOLS_MEASUREMENTPROVIDER_H 1
 
@@ -50,18 +50,36 @@ public:
 
   StatusCode initialize();
 
+  /** Load the necessary VeloClusters, ITClusters and OTTimes.
+   *  Note: this method should be called for each event
+   *        before any call to load( Track& track )!
+   */
   void load();
 
+
+  /** Load (=create) all the Measurements from the list of LHCbIDs
+   *  on the input Track
+   */
   StatusCode load( Track& track );  
 
-  Measurement* measurement( const LHCbID&, 
+  /** Construct a Measurement of the type of the input LHCbID
+   *  Note: this method is not for general use. A user should preferably call
+   *  the "load( Track& track )" method to load=create "in one go" all the
+   *  Measurements from the list of LHCbIDs on the Track.
+   *  This method is in fact called internally by "load( Track& track )".
+   *  @return Pointer the the Measurement created
+   *  @param  id input LHCbID
+   *  @param  par0, par1 extra parameters for the XxxMeasurement constructors
+   *          (refer to XxxMeasurement.h for details)
+   */
+  Measurement* measurement( const LHCbID& id, 
                             double par0 = 999.,
                             double par1 = 999.);
 
 protected:
   // Interfaces
   ISTClusterPosition* m_stPositionTool;     ///< ST cluster position tool
-  std::string         m_stPositionToolName;
+  std::string         m_stPositionToolName; ///< ST cluster position tool name
 
   // Geometry information
   DeOTDetector* m_otDet;
