@@ -6,11 +6,10 @@
 #include <cstring>
 #include "SCR/scr.h"
 
-enum {
-	SEQUENTIAL,
+enum {	SEQUENTIAL,
 	DETACHED,
 	ICONIFIED,
-	SCREENS,
+	SCREENS
 };
  
 typedef struct WINDOW_SYSTEM Window_system;
@@ -26,10 +25,8 @@ struct WINDOW_SYSTEM
 
 
 static Window_system System;
-static void scrc_send_window_to_icon ();
-char *scrc_get_title();
 
-/*----------------------------------------------------------------------------*/
+//----------------------------------------------------------------------------
 int scrc_memory_of_window (Window* w)  {
   int memory = sizeof (Window);
   for(Paste_entry *p = w->paste.first; p; p = p->next)
@@ -44,7 +41,7 @@ int scrc_memory_of_screen (Screen* s)    {
     memory += scrc_memory_of_window (w);
   return (memory);
 }
-/*----------------------------------------------------------------------------*/
+//----------------------------------------------------------------------------
 static void fill_title_display (Window *w, Display *d)    {
   char *t;
   scrc_put_chars (w->title, "", NORMAL, 1, 1, 1);
@@ -55,7 +52,7 @@ static void fill_title_display (Window *w, Display *d)    {
   }
 }
 
-/*----------------------------------------------------------------------------*/
+//----------------------------------------------------------------------------
 int scrc_memory_of_windows()    {
   int i;
   Screen *s;  
@@ -66,14 +63,14 @@ int scrc_memory_of_windows()    {
   return (memory);
 }
 
-/*----------------------------------------------------------------------------*/
+//----------------------------------------------------------------------------
 int scrc_configure_windows (int rows, int cols)  {
   System.rows = rows;
   System.cols = cols;
   return 1;
 }
 
-/*----------------------------------------------------------------------------*/
+//----------------------------------------------------------------------------
 int scrc_init_windows(Pasteboard* pb, int rows, int cols)   {
   int i;
   Screen *s;
@@ -91,7 +88,7 @@ int scrc_init_windows(Pasteboard* pb, int rows, int cols)   {
   return 1;
 }  
 
-/*----------------------------------------------------------------------------*/
+//----------------------------------------------------------------------------
 Window* scrc_open_window (int type)   {
   int row, col;
 
@@ -134,12 +131,12 @@ Window* scrc_open_window (int type)   {
   return w;
 }
 
-/*----------------------------------------------------------------------------*/
+//----------------------------------------------------------------------------
 int scrc_move_window_to (Window *w, int row, int col)   {
   return scrc_move_window (w, row - w->row, col - w->col);
 }
 
-/*----------------------------------------------------------------------------*/
+//----------------------------------------------------------------------------
 int scrc_move_window (Window *w, int drow, int dcol)    {
   w->row += drow;
   w->col += dcol;
@@ -150,7 +147,7 @@ int scrc_move_window (Window *w, int drow, int dcol)    {
   return 1;
 }
 
-/*----------------------------------------------------------------------------*/
+//----------------------------------------------------------------------------
 int scrc_change_window (Window *w, int height, int width)   {
   int dh, dw;
 
@@ -178,19 +175,19 @@ int scrc_change_window (Window *w, int height, int width)   {
   return 1;
 }
 
-/*----------------------------------------------------------------------------*/
+//----------------------------------------------------------------------------
 int scrc_get_window_position (Window *w, int* row, int* col)    {
   *row = w->row;
   *col = w->col;
   return 1;
 }
 
-/*----------------------------------------------------------------------------*/
+//----------------------------------------------------------------------------
 static int scrc_drag_result (Display* id, int drow, int dcol)   {
   return scrc_move_window (id->wind, drow, dcol);
 }
 
-/*----------------------------------------------------------------------------*/
+//----------------------------------------------------------------------------
 static int scrc_scroll_result (int key)   {
   Window *w1;
   int dcol;
@@ -225,13 +222,13 @@ static int scrc_scroll_result (int key)   {
   return 1;
 }
 
-/*----------------------------------------------------------------------------*/
+//----------------------------------------------------------------------------
 int scrc_window_moved (Window *w)   {
   return (w->moved);
 }
 
 
-/*----------------------------------------------------------------------------*/
+//----------------------------------------------------------------------------
 int scrc_put_display_on_window (Display *d, Window *w)    {
   Display *old;
   Paste_entry *p = (Paste_entry *) list_add_entry (&w->paste, sizeof (Paste_entry));
@@ -254,7 +251,7 @@ int scrc_put_display_on_window (Display *d, Window *w)    {
 }
 
 
-/*----------------------------------------------------------------------------*/
+//----------------------------------------------------------------------------
 int scrc_remove_display_from_window (Display *d, Window *w)   {
   Paste_entry *p = w->paste.first;
   for (; p; p = p->next )  {
@@ -280,7 +277,7 @@ int scrc_remove_display_from_window (Display *d, Window *w)   {
 }
 
 
-/*----------------------------------------------------------------------------*/
+//----------------------------------------------------------------------------
 int scrc_delete_window (Window *w)    {
   if (w->type != DETACHED_WINDOW)  {
     if (w->title) scrc_delete_display (w->title);
@@ -293,14 +290,14 @@ int scrc_delete_window (Window *w)    {
 }
 
 
-/*----------------------------------------------------------------------------*/
+//----------------------------------------------------------------------------
 Display* scrc_get_window_display (Window *w)   {
   if (!w) return 0;
   if (w->on_screen == w->title) return (0);
   return w->on_screen;
 }
 
-/*----------------------------------------------------------------------------*/
+//----------------------------------------------------------------------------
 int scrc_window_has_display (Window *w, Display* d)   {
   if (!w) return 0;
   for (Paste_entry *p = w->paste.first; p; p = p->next)  {
@@ -309,7 +306,7 @@ int scrc_window_has_display (Window *w, Display* d)   {
   return (0);
 }
 
-/*----------------------------------------------------------------------------*/
+//----------------------------------------------------------------------------
 Window *scrc_prev_window (Window *w)    {
   if (!w) return 0;
   while ((w = w->prev))  {
@@ -318,7 +315,7 @@ Window *scrc_prev_window (Window *w)    {
   return 0;
 }
 
-/*----------------------------------------------------------------------------*/
+//----------------------------------------------------------------------------
 Window *scrc_next_window (Window *w)    {
   if (!w) return 0;
   while ((w = w->next))  {
@@ -327,7 +324,7 @@ Window *scrc_next_window (Window *w)    {
   return 0;
 }
 
-/*----------------------------------------------------------------------------*/
+//----------------------------------------------------------------------------
 int scrc_show_window (Window *w, Display *d)    {
   Display *dd;
   Screen *s;
@@ -411,14 +408,14 @@ int scrc_show_window (Window *w, Display *d)    {
   return 1;
 }
 
-/*----------------------------------------------------------------------------*/
+//----------------------------------------------------------------------------
 int scrc_hide_screen (Screen *s)  {
   for (Window *w= s->wind.first; w; w = w->next)
     scrc_hide_window (w);
   return 1;
 }
 
-/*----------------------------------------------------------------------------*/
+//----------------------------------------------------------------------------
 int scrc_hide_window (Window *w)    {
   Display *d = w->on_screen;
   if (d)  {
@@ -429,7 +426,7 @@ int scrc_hide_window (Window *w)    {
 }
 
 
-/*----------------------------------------------------------------------------*/
+//----------------------------------------------------------------------------
 int scrc_moving_window (Window *w)    {
   Display *d = w->on_screen;
   if (!d) return 0;  
@@ -437,7 +434,7 @@ int scrc_moving_window (Window *w)    {
   return scrc_moving_display (d);
 }
 
-/*---------------------------------------------------------------------------*/
+//----------------------------------------------------------------------------
 int scrc_iconify_window (Window* w, flag mode)    {
   Display *d = w->on_screen;
   switch (mode)  {
@@ -456,7 +453,7 @@ int scrc_iconify_window (Window* w, flag mode)    {
   return 1;
 }
 
-/*---------------------------------------------------------------------------*/
+//----------------------------------------------------------------------------
 void scrc_send_window_to_icon (Window* w)   {
   if (!w || w->type == DETACHED_WINDOW || w->iconified) return;
 

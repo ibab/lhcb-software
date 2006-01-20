@@ -127,11 +127,14 @@ struct Update
 }
 #ifdef __cplusplus
 extern "C"  {
+#define __CXX_CONST const
+#else
+#define __CXX_CONST 
 #endif
 
 //scr_edit.cpp
 int scrc_change_rendition (Display *disp, int r1, int c1, int rows, int cols, char attr);
-int scrc_insert_line (Display *disp, char *str, byte attr, int row, int scroll);
+int scrc_insert_line (Display *disp, __CXX_CONST char *str, byte attr, int row, int scroll);
 int scrc_insert_char (Display *disp, char ch, byte attr, int row, int col);
 int scrc_delete_line (Display *disp, int row);
 int scrc_delete_char (Display *disp, int row, int col);
@@ -201,14 +204,14 @@ int scrc_clear_screen (Pasteboard *pb);
 int scrc_save_screen (Pasteboard *pb);
 int scrc_restore_screen (Pasteboard *pb);
 int scrc_repaint_screen (Pasteboard *pb);
-int scrc_create_display (Display** disp, int rows, int cols, int attr, flag border, char* title);
+int scrc_create_display (Display** disp, int rows, int cols, int attr, flag border, __CXX_CONST char* title);
 int scrc_memory_of_display (Display *disp);
 int scrc_enable_scroll (Display *disp, int (*scroll)(int));
 int scrc_enable_resize (Display *disp, int (*resize)(Display*,int,int));
 int scrc_enable_drag (Display *disp, int (*drag)(Display*,int,int));
 int scrc_get_display_attr (Display *disp, int* rows, int* cols);
 int scrc_read_from_display (Display *disp, char *string, int maxlen, int row);
-int scrc_set_border (Display *disp, char *title, char attr);
+int scrc_set_border (Display *disp, __CXX_CONST char *title, char attr);
 int scrc_paste_display (Display *disp, Pasteboard *pb, int row, int col);
 int scrc_unpaste_display (Display *disp, Pasteboard *pb);
 int scrc_bring_display_to_back (Display *disp, Pasteboard *pb);
@@ -221,7 +224,7 @@ int scrc_undraw_block (Display *disp, int r1, int r2, int c1, int c2);
 Display* scrc_display_at (Pasteboard* pb, int row, int col);
 int scrc_display_occluded (Display *disp);
 int scrc_occluded (Display *disp, int row, int col);
-int scrc_put_chars (Display *disp, char *str, byte attr, int row, int col, int erase);
+int scrc_put_chars (Display *disp, __CXX_CONST char *str, byte attr, int row, int col, int erase);
 int scrc_erase_line (Display *disp, int row);
 int scrc_put_char_all (Display *disp, int offset, char c, unsigned char attr, int row, int col);
 int scrc_restore_cursor(Pasteboard *pb, int context[]);
@@ -231,7 +234,7 @@ int scrc_action_moving_display (Pasteboard *pb, int key);
 int scrc_moving_display (Display *d);
 int scrc_action_resizing_display (Pasteboard *pb, int key);
 int scrc_resizing_display (Display *d);
-int scrc_load_font (Pasteboard *pb, char *name);
+int scrc_load_font (Pasteboard *pb, __CXX_CONST char *name);
 int scrc_ring_bell (Display *disp);
 int scrc_check_key_buffer (char *buffer);
 int scrc_set_cursor (Display *disp, int row, int col);
@@ -245,8 +248,8 @@ int scrc_put_char (Display *disp, char c, unsigned char attr, int row, int col);
 
 
 int scrc_putc (char c, Pasteboard *pb);
-int scrc_putes (char* s, Pasteboard *pb);
-int scrc_puts (char* s, Pasteboard *pb);
+int scrc_putes (__CXX_CONST char* s, Pasteboard *pb);
+int scrc_puts (__CXX_CONST char* s, Pasteboard *pb);
 int scrc_puti (int i, Pasteboard *pb);
 int scrc_begin_pasteboard_update (Pasteboard *pb);
 int scrc_end_pasteboard_update (Pasteboard *pb);
@@ -259,6 +262,6 @@ int scrc_cursor_off (Pasteboard *pb);
 #ifdef __cplusplus
 }
 #endif
-
+#undef __CXX_CONST
 
 #endif /* __SCR_H */

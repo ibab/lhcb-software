@@ -150,7 +150,7 @@ typedef enum {
   ON_RESIZE,
   ON_PAGE_UP,
   ON_PAGE_DOWN,
-  ON_POP_UP,
+  ON_POP_UP
 } scr_on_enums;
 
 #endif /* __SCRDEF_H */

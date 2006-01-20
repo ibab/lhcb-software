@@ -334,7 +334,7 @@ int scrc_repaint_screen (Pasteboard *pb)  {
 }
 
 /*---------------------------------------------------------------------------*/
-int scrc_create_display (Display** disp, int rows, int cols, int attr, flag border, char* title) {
+int scrc_create_display (Display** disp, int rows, int cols, int attr, flag border, const char* title) {
   int size;
   Display *d = (Display *) list_malloc (sizeof(Display));
   d->pb = (Pasteboard *) 0;
@@ -424,7 +424,7 @@ int scrc_read_from_display (Display *disp, char *string, int maxlen, int row)   
 }
 
 /*---------------------------------------------------------------------------*/
-int scrc_set_border (Display *disp, char *title, char attr)   {
+int scrc_set_border (Display *disp, const char *title, char attr)   {
   int len, pos;
   int cols, rows;
   static char zero[] = "";
@@ -827,7 +827,7 @@ int scrc_occluded (Display *disp, int row, int col)   {
 }
 
 /*---------------------------------------------------------------------------*/
-int scrc_put_chars (Display *disp, char *str, byte attr, int row, int col, int erase) {
+int scrc_put_chars (Display *disp, const char *str, byte attr, int row, int col, int erase) {
   int len;
   int w, h;
 
@@ -1391,7 +1391,7 @@ int scrc_ring_bell (Display *d)  {
 }
 
 /*---------------------------------------------------------------------------*/
-int scrc_load_font (Pasteboard *pb, char *name)   {
+int scrc_load_font (Pasteboard *pb, const char *name)   {
   char buf[80];
   FILE* f = fopen (name, "r");
   if (!f) return 0;
@@ -1558,7 +1558,7 @@ int scrc_action_moving_display (Pasteboard *pb, int key)    {
 }
 
 
-/*----------------------------------------------------------------------------*/
+//----------------------------------------------------------------------------
 int scrc_fflush(Pasteboard *pb)    {
   char *buf;
 
@@ -1573,8 +1573,8 @@ int scrc_fflush(Pasteboard *pb)    {
   return 1;
 }
 
-/*----------------------------------------------------------------------------*/
-int scrc_save_cursor(Pasteboard *pb, int *(context[]))    {
+//----------------------------------------------------------------------------
+int scrc_save_cursor(Pasteboard * /* pb */, int ** /* context */ )    {
   /*
   *context = (int *) list_malloc (3*4);
 
@@ -1587,8 +1587,8 @@ int scrc_save_cursor(Pasteboard *pb, int *(context[]))    {
   return 1;
 }
 
-/*----------------------------------------------------------------------------*/
-int scrc_restore_cursor(Pasteboard *pb, int context[])    {
+//----------------------------------------------------------------------------
+int scrc_restore_cursor(Pasteboard * /* pb */ , int* /* context */ )    {
   /*
   pb->curs.row = context[0];
   pb->curs.col = context[1];
@@ -1605,7 +1605,7 @@ int scrc_restore_cursor(Pasteboard *pb, int context[])    {
   return 1;
 }
 
-/*----------------------------------------------------------------------------*/
+//----------------------------------------------------------------------------
 int scrc_putc (char c, Pasteboard *pb)    {
   char *buf;
 
@@ -1618,28 +1618,24 @@ int scrc_putc (char c, Pasteboard *pb)    {
   return 1;
 }
 
-/*----------------------------------------------------------------------------*/
-int scrc_putes (char* s, Pasteboard *pb)    {
-  char *buf;
-
-  buf = pb->bufout + pb->bufptr;
+//----------------------------------------------------------------------------
+int scrc_putes (const char* s, Pasteboard *pb)    {
+  char *buf = pb->bufout + pb->bufptr;
   *buf = ESCAPE;
   pb->bufptr++;
   return scrc_puts (s, pb);
 }
 
-/*----------------------------------------------------------------------------*/
-int scrc_puts (char* s, Pasteboard *pb)   {
-  char *buf;
-
-  buf = pb->bufout + pb->bufptr;
-  strcpy (buf, s);
+//----------------------------------------------------------------------------
+int scrc_puts (const char* s, Pasteboard *pb)   {
+  char *buf = pb->bufout + pb->bufptr;
+  ::strcpy (buf, s);
   pb->bufptr += strlen(s);
   if (pb->bufptr > pb->bufsize - BUFFER_GUARD) scrc_fflush (pb);
   return 1;
 }
 
-/*----------------------------------------------------------------------------*/
+//----------------------------------------------------------------------------
 int scrc_puti (int i, Pasteboard *pb)   {
   char *buf;
 
@@ -1650,7 +1646,7 @@ int scrc_puti (int i, Pasteboard *pb)   {
   return 1;
 }
 
-/*----------------------------------------------------------------------------*/
+//----------------------------------------------------------------------------
 int scrc_begin_pasteboard_update (Pasteboard *pb)   {
   if (!pb) return 0;
 
@@ -1742,7 +1738,7 @@ int scrc_end_pasteboard_update (Pasteboard *pb)   {
   return 0;
 }
 
-/*----------------------------------------------------------------------------*/
+//----------------------------------------------------------------------------
 int scrc_count_unmodified (char* attr, char* last)    {
   int count;
   for (count = 0; attr<=last; (attr++, count++))
@@ -1754,7 +1750,7 @@ int scrc_count_unmodified (char* attr, char* last)    {
   return count;
 }
 
-/*----------------------------------------------------------------------------*/
+//----------------------------------------------------------------------------
 int cursor (Pasteboard *pb, int row, int col)   {
   char *buf;
 
@@ -1769,7 +1765,7 @@ int cursor (Pasteboard *pb, int row, int col)   {
   return 1;
 }
 
-/*----------------------------------------------------------------------------*/
+//----------------------------------------------------------------------------
 int scrc_set_scroll (Pasteboard *pb, int row1, int row2)    {
   char *buf;
 
@@ -1784,13 +1780,13 @@ int scrc_set_scroll (Pasteboard *pb, int row1, int row2)    {
   return 1;
 }
 
-/*----------------------------------------------------------------------------*/
+//----------------------------------------------------------------------------
 int scrc_cursor_on (Pasteboard *pb)   {
   cursor_on();
   return 1;
 }
 
-/*----------------------------------------------------------------------------*/
+//----------------------------------------------------------------------------
 int scrc_cursor_off (Pasteboard *pb)    {
   cursor_off();
   return 1;

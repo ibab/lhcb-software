@@ -1,11 +1,9 @@
 #include <cstdio>
 #include "SCR/scr.h"
 
-/*----------------------------------------------------------------------------*/
+//----------------------------------------------------------------------------
 int scrc_change_rendition (Display *disp, int r1, int c1, int rows, int cols, char attr)  {
   if (!disp || !rows || !cols) return 1;
-
-  Pasteboard *pb    = disp->pb;
   int width = disp->cols + 2;
   int offset = r1*width + c1;
   int r2  = r1 + rows - 1;
@@ -20,8 +18,8 @@ int scrc_change_rendition (Display *disp, int r1, int c1, int rows, int cols, ch
   return 1;
 }
 
-/*----------------------------------------------------------------------------*/
-int scrc_insert_line (Display *disp, char *str, byte attr, int row, int scroll)   {
+//----------------------------------------------------------------------------
+int scrc_insert_line (Display *disp, const char *str, byte attr, int row, int scroll)   {
   Pasteboard *pb = disp->pb;
   int h = disp->rows;
   int w = disp->cols;
@@ -54,7 +52,7 @@ int scrc_insert_line (Display *disp, char *str, byte attr, int row, int scroll) 
   return 1;
 }
 
-/*----------------------------------------------------------------------------*/
+//----------------------------------------------------------------------------
 int scrc_insert_char (Display *disp, char ch, byte attr, int row, int col)  {
   Pasteboard *pb = disp->pb;
   int h = disp->rows;
@@ -80,7 +78,7 @@ int scrc_insert_char (Display *disp, char ch, byte attr, int row, int col)  {
   return 1;
 }
 
-/*----------------------------------------------------------------------------*/
+//----------------------------------------------------------------------------
 int scrc_delete_line (Display *disp, int row)   {
   int w, h;
   char *m, *a;
@@ -107,7 +105,7 @@ int scrc_delete_line (Display *disp, int row)   {
   return 1;
 }
 
-/*----------------------------------------------------------------------------*/
+//----------------------------------------------------------------------------
 int scrc_delete_char (Display *disp, int row, int col)  {
   int w, h;
   char *m, *a;

@@ -6,23 +6,12 @@ static Pasteboard* pb;
 typedef Display* PDisplay;
 static PDisplay d0, d1, d2, d3, d4, d5;
 
+#if 0
 static void broadcast_handler (char* message)   {
   scrc_begin_pasteboard_update (pb);
   scrc_put_chars (d5, message, NORMAL, 1, 1, 1);
   scrc_end_pasteboard_update (pb);
 }
-
-static void end_update (Pasteboard* pb) {
-  scrc_end_pasteboard_update (pb);
-  scrc_fflush (pb);
-}
-
-static void wait_next()   {
-  end_update (pb);
-  scrc_set_cursor (d3, 1, 1);
-  scrc_wait(d3);
-}
-
 static int show_memory()     {
   int memory;
   char text[20];
@@ -58,6 +47,18 @@ static int show_memory()     {
   
   scrc_end_pasteboard_update (pb);
   return 1;
+}
+#endif
+
+static void end_update (Pasteboard* pb) {
+  scrc_end_pasteboard_update (pb);
+  scrc_fflush (pb);
+}
+
+static void wait_next()   {
+  end_update (pb);
+  scrc_set_cursor (d3, 1, 1);
+  scrc_wait(d3);
 }
 
 extern "C" int scr_test(int argc, char** argv)  {
