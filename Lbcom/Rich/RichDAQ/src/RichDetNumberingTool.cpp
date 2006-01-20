@@ -5,7 +5,7 @@
  *  Implementation file for class : RichDetNumberingTool
  *
  *  CVS Log :-
- *  $Id: RichDetNumberingTool.cpp,v 1.3 2005-12-16 15:11:34 jonrob Exp $
+ *  $Id: RichDetNumberingTool.cpp,v 1.4 2006-01-20 16:41:06 cattanem Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date 2004-12-18
@@ -49,19 +49,11 @@ StatusCode RichDetNumberingTool::initialize()
   IUpdateManagerSvc * ums = svc<IUpdateManagerSvc>("UpdateManagerSvc",true);
 
   // Register RICH1
-  sc = ums->registerCondition( this,
-                               m_condBDLocs[Rich::Rich1],
-                               &RichDetNumberingTool::buildHPDMappings );
-  if (sc.isFailure())
-    return Error( "Failed registering dependency on '"+m_condBDLocs[Rich::Rich1]+"'", sc );
-
+  ums->registerCondition( this, m_condBDLocs[Rich::Rich1],
+                                &RichDetNumberingTool::buildHPDMappings );
   // Register RICH2
-  sc = ums->registerCondition( this,
-                               m_condBDLocs[Rich::Rich2],
-                               &RichDetNumberingTool::buildHPDMappings );
-  if (sc.isFailure())
-    return Error( "Failed registering dependency on '"+m_condBDLocs[Rich::Rich2]+"'", sc );
-
+  ums->registerCondition( this, m_condBDLocs[Rich::Rich2],
+                                &RichDetNumberingTool::buildHPDMappings );
   // force first updates
   sc = ums->update(this);
   if (sc.isFailure()) return Error ( "Failed first UMS update", sc );

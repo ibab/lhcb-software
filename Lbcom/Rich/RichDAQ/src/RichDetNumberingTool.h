@@ -5,7 +5,7 @@
  *  Header file for tool : RichDetNumberingTool
  *
  *  CVS Log :-
- *  $Id: RichDetNumberingTool.h,v 1.2 2005-12-16 15:11:34 jonrob Exp $
+ *  $Id: RichDetNumberingTool.h,v 1.3 2006-01-20 16:41:06 cattanem Exp $
  *
  *  @author Chris Jones    Christopher.Rob.Jones@cern.ch
  *  @date   2004-12-18
@@ -23,6 +23,7 @@
 #include "GaudiKernel/RndmGenerators.h"
 #include "GaudiKernel/ToolFactory.h"
 #include "GaudiKernel/IRndmGenSvc.h"
+#include "GaudiKernel/IUpdateManagerSvc.h"
 
 // Base class
 #include "RichKernel/RichToolBase.h"
@@ -35,7 +36,6 @@
 
 // Det Desc
 #include "DetDesc/Condition.h"
-#include "DetDesc/IUpdateManagerSvc.h"
 
 // namespaces
 using namespace LHCb; ///< LHCb general namespace

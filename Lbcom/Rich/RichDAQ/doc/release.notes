@@ -4,6 +4,10 @@
 ! Purpose     : Package simulating the RICH DAQ system and data format
 !-----------------------------------------------------------------------------
 
+!========================== RichDAQ v3r1 2006-01-20 =========================
+! 2006-01-20 - Marco Cattaneo
+ - Updates for Gaudi v18r1
+
 !========================== RichDAQ v3r0 2005-12-19 =========================
 ! 2005-12-16 - Chris Jones
  - Update for LHCb v20r0
