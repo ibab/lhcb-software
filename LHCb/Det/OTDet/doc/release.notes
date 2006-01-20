@@ -1,8 +1,11 @@
-! $Id: release.notes,v 1.40 2006-01-11 12:51:05 cattanem Exp $
+! $Id: release.notes,v 1.41 2006-01-20 14:32:42 cattanem Exp $
 ! Package     : OTDet
 ! Responsible : Jeroen van Tilburg, Jacopo Nardulli, Jan Amoraal
 
-!========================== OTDet v6r0 2005-01-11 ==========================
+!========================== OTDet v6r0 2006-01-20 ==========================
+! 2006-01-20 - Marco Cattaneo
+ - Change default detector location to use AfterMagnet/T envelope
+
 ! 2006-01-10 Jan Amoraal
  - Migrated to LHCb v20r0
  - Removed method DeOTDetector::getAngles(): This method didn't do
