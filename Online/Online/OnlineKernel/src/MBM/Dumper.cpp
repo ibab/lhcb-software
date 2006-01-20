@@ -47,7 +47,7 @@ int mbm_dump(int argc , char** argv) {
 }
 
 int MBM::Dumper::optparse (const char* c)   {
-  register int iret;
+  int iret;
   switch (*c | 0x20)  {
   case 'a':      /*      size of buffer        */   
     All = 1;

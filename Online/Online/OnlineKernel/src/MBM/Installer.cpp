@@ -33,7 +33,7 @@ MBM::Installer::Installer(int argc, char **argv)  {
 }
 
 int MBM::Installer::optparse (const char* c)  {
-  register int iret;
+  int iret;
   switch (*c | 0x20)    {
   case 's':            /*      size of buffer        */   
     iret = sscanf(c+1,"=%d",&p_size);

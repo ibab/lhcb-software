@@ -13,6 +13,7 @@ library       OnlineKernel ../src/WT/*.cpp   \
                            ../src/PUBAREA/*.cpp  \
                            ../src/TAN/*.cpp  \
 #                           ../src/AMS/*.cpp  \
+                           ../src/SCR/*.cpp  \
                            ../src/CPP/*.cpp  \
                            ../src/NET/*.cpp
 

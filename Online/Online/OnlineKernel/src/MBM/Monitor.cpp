@@ -269,7 +269,7 @@ int MBM::Monitor::put_inf()   {
 }
 
 int MBM::Monitor::optparse (const char* c)  {
-  register int iret;
+  int iret;
   switch (*c | 0x20)  {
   case 's':        /*      Single Update*/  
     cont = 0;

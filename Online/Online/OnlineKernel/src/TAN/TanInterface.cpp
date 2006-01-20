@@ -19,8 +19,7 @@ extern "C" TanInterface* taninterface() {
 // Convert string s2 into s1, all characters lower case
 // ----------------------------------------------------------------------------
 static void strlow (char* s1, const char* s2)   {
-  register char c;
-  char diff = 'a' - 'A';
+  char c, diff = 'a' - 'A';
   while (0 != (c = *s2++) )    {
     *s1++ = c + ((c >= 'A' && c <= 'Z')  ? diff : 0);
   }
