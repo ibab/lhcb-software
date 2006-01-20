@@ -1,4 +1,4 @@
-// $Id: DeMuonChamber.cpp,v 1.8 2006-01-17 08:55:01 asarti Exp $
+// $Id: DeMuonChamber.cpp,v 1.9 2006-01-20 15:08:42 cattanem Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
@@ -12,7 +12,6 @@
 
 //Detector descriptions
 #include "DetDesc/Condition.h"
-#include "DetDesc/IUpdateManagerSvc.h"
 
 /** @file DeMuonChamber.cpp
  * 
