@@ -25,8 +25,7 @@ class MCParticle;
  *  The requirement is a match of both the Velo and the Seed part of the 
  *  Track. If there are not enough coordinates, the match is assumed so that
  *  a Velo only or a Seed only are matched properly.
- *  The required fraction of hits is a jobOption 'FractionOK', default 0.70
- *  Another option is 'MinimalZ' which allows to ignore IT hits in TT1.
+ *  The required fraction of hits is a jobOption 'FractionOK', default 0.70.
  *
  *  Adapted to the new Track Event Model using Linkers
  *  @author Edwin Bos
@@ -71,7 +70,6 @@ private:
   // jobOptions
   std::string m_tracksInContainer;  //< Name of the input Tracks container
   std::string m_linkerOutTable;     //< Name of the output Linker table
-  double      m_minimalZ;           //< minimal Z for IT, to ignore TT1
   double      m_fractionOK;         //< minimal good matching fraction
 
   // Member pointers to retrieved associator tools

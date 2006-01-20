@@ -43,7 +43,6 @@ const        IAlgFactory& TrackAssociatorFactory = s_factory ;
 TrackAssociator::TrackAssociator( const std::string& name,
                                   ISvcLocator* pSvcLocator ) :
   GaudiAlgorithm( name, pSvcLocator ),
-  m_minimalZ(0.),
   m_fractionOK(0.),
   m_veloClusToMCP(0),
   m_itClusToMCP(0),
@@ -52,10 +51,12 @@ TrackAssociator::TrackAssociator( const std::string& name,
   m_nTotTT1(0.),
   m_nTotSeed(0.)
 {
-  declareProperty( "TracksInContainer" , m_tracksInContainer );
-  declareProperty( "LinkerOutTable"    , m_linkerOutTable );
-  declareProperty( "MinimalZ"          , m_minimalZ = 5000.*mm );
-  declareProperty( "FractionOK"        , m_fractionOK = 0.70 );
+  declareProperty( "TracksInContainer" ,
+                   m_tracksInContainer = "/Event/Rec/Track/Best" );
+  declareProperty( "LinkerOutTable"    ,
+                   m_linkerOutTable = "/Event/Link/Rec/Track/Best" );
+  declareProperty( "FractionOK"        ,
+                   m_fractionOK = 0.70 );
 }
 
 //=============================================================================
@@ -169,8 +170,7 @@ StatusCode TrackAssociator::execute() {
         continue;
       }
       else {
-        // True if Measurement has Z < 5 meters, so it is a TT hit
-        bool inTT1 = ( m_minimalZ > (*itm)->z() );
+        bool inTT1 = (*itm) -> lhcbID().isTT();
         // Note that both IT and TT hits are STMeasurements!
         STMeasurement* itc = dynamic_cast<STMeasurement*> ( *itm );
         if( 0 != itc ) {

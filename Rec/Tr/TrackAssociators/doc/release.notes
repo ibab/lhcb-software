@@ -4,6 +4,11 @@
 ! Purpose     : Associators to MC truth for Tracks
 !----------------------------------------------------------------------------
 
+! 2006-01-19 - Eduardo Rodrigues
+ - removed unnecessary "MinimalZ" property - using instead the track event
+   model functionality
+ - added default options for the algorithm
+
 ! 2005-12-14 - Eduardo Rodrigues
  - propagation of changes ITMeasurement -> STMeasurement
 
