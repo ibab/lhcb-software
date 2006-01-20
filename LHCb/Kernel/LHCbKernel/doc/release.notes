@@ -2,6 +2,10 @@ Package LHCbKernel
 Package manager: M.Cattaneo
 Purpose: LHCb specific Kernel classes
 
+!===================== LHCbKernel v6r1 2006-01-20 =========================
+! 2006-01-20 - Marco Cattaneo
+ - Remove IMagneticFieldSvc.h, use GaudiKernel instead (from GAUDI v18r1)
+
 !===================== LHCbKernel v6r0 2006-01-18 =========================
  2006-01-18 - Gloria CORTI
  - Modify LbAppInit.h and cpp file to introduce retrieval of Application
