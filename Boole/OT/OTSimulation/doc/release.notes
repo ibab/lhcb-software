@@ -1,10 +1,11 @@
-! $Id: release.notes,v 1.18 2006-01-20 15:44:45 cattanem Exp $
+! $Id: release.notes,v 1.19 2006-01-20 16:50:38 cattanem Exp $
 Package         : OTSimulation
 Package manager : Jacopo Nardulli
 
 !==================== OTSimulation v3r0 2006-01-20 ======================
 ! 2006-01-20 - Marco Cattaneo
- - Remove unneccesary OTSimulation diectory, all includes now in src
+ - Remove unneccesary OTSimulation directory, all includes now in src
+ - Update for Gaudi v18r1
 
 ! 2006-01-20 Jan Amoraal
  - Migrated to LHCb v20r0

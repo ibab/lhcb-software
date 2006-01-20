@@ -1,13 +1,11 @@
-// $Id: OTSmearer.cpp,v 1.5 2006-01-20 12:57:05 janos Exp $
+// $Id: OTSmearer.cpp,v 1.6 2006-01-20 16:50:38 cattanem Exp $
 
 // Gaudi files
 #include "GaudiKernel/ToolFactory.h"
 #include "GaudiKernel/IRndmGenSvc.h"
 #include "GaudiKernel/RndmGenerators.h"
 #include "GaudiKernel/IService.h"
-
-// LHCb Kernel
-#include "Kernel/IMagneticFieldSvc.h"
+#include "GaudiKernel/IMagneticFieldSvc.h"
 
 // MathCore
 #include "Kernel/Vector3DTypes.h"
