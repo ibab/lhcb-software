@@ -1,4 +1,4 @@
-// $Id: OTrtRelation.h,v 1.4 2006-01-20 15:44:45 cattanem Exp $
+// $Id: OTrtRelation.h,v 1.5 2006-01-20 17:01:08 cattanem Exp $
 #ifndef OTSIMULATION_OTRTRELATION_H
 #define OTSIMULATION_OTRTRELATION_H 1
 
@@ -49,9 +49,6 @@ public:
 
   /// initialize method
   virtual StatusCode initialize();
-
-  /// finalize method
-  virtual StatusCode finalize();
 
   /// tool 'operation'. Fills the deposit time entry.
   StatusCode convertRtoT(LHCb::MCOTDeposit* aDeposit);

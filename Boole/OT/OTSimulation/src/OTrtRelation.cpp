@@ -1,11 +1,9 @@
-// $Id: OTrtRelation.cpp,v 1.5 2006-01-20 12:57:05 janos Exp $
+// $Id: OTrtRelation.cpp,v 1.6 2006-01-20 17:01:08 cattanem Exp $
 
 // Gaudi files
 #include "GaudiKernel/ToolFactory.h"
 #include "GaudiKernel/IService.h"
-
-// Kernel 
-#include "Kernel/IMagneticFieldSvc.h"
+#include "GaudiKernel/IMagneticFieldSvc.h"
 
 // MathCore
 #include "Kernel/Vector3DTypes.h"
@@ -40,27 +38,13 @@ OTrtRelation::OTrtRelation(const std::string& type,
   declareInterface<IOTrtRelation>(this); 
 }
 
-StatusCode OTrtRelation::finalize()
-{
-  // Release all services and tools accessed at initialization
-  if( 0 != m_magFieldSvc ) {
-    m_magFieldSvc->release();
-    m_magFieldSvc = 0;
-  }
-  return GaudiTool::finalize(); 
-}
-
 StatusCode OTrtRelation::initialize() 
 {
 
   StatusCode sc = GaudiTool::initialize();
   // retrieve pointer to magnetic field service
-  sc = serviceLocator()->service( "MagneticFieldSvc", 
-                                             m_magFieldSvc, true ); 
-  if( sc.isFailure() ) {
-    return Error ("Failed to retrieve magnetic field service",sc);
-  }
-
+  m_magFieldSvc = svc<IMagneticFieldSvc>( "MagneticFieldSvc", true );
+  
   // Loading OT Geometry from XML
   IDataProviderSvc* detSvc; 
   sc = serviceLocator()->service( "DetectorDataSvc", detSvc, true );
