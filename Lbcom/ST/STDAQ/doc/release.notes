@@ -4,6 +4,10 @@
 ! Purpose     : Encode and decode Raw banks for ST
 !-----------------------------------------------------------------------------
 
+!=============================== STDAQ v2r1 2006-01-20 =======================
+! 2006-01-20 - Marco Cattaneo
+ - From Gaudi v18r1, IUpdateManagerSvc.h is in GaudiKernel
+
 !=============================== STDAQ v2r0 2006-01-06 =======================
 ! 2006-01-06 M Needham
  - Change from smart numbering STDAQChannelID to flat numbering (how it will be)

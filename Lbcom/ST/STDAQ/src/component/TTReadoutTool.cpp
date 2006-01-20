@@ -1,7 +1,8 @@
-// $Id: TTReadoutTool.cpp,v 1.2 2006-01-06 08:13:18 mneedham Exp $
+// $Id: TTReadoutTool.cpp,v 1.3 2006-01-20 14:28:19 cattanem Exp $
 
 // Gaudi
 #include "GaudiKernel/ToolFactory.h"
+#include "GaudiKernel/IUpdateManagerSvc.h"
 
 // STDAQ
 #include "TTReadoutTool.h"
@@ -16,7 +17,6 @@
 
 // Det Desc
 #include "DetDesc/Condition.h"
-#include "DetDesc/IUpdateManagerSvc.h"
 
 using namespace LHCb;
 
@@ -49,14 +49,9 @@ StatusCode TTReadoutTool::initialize() {
    // Update Manager
   IUpdateManagerSvc * ums = svc<IUpdateManagerSvc>("UpdateManagerSvc",true);
 
-  // Register RICH1
-  sc = ums->registerCondition( this,
-                               m_conditionLocation,
-                               &TTReadoutTool::createBoards );
+  ums->registerCondition( this, m_conditionLocation,
+                                &TTReadoutTool::createBoards );
 
-  if (sc.isFailure())
-    return Error( "Failed registering dependency on '"+m_conditionLocation+"'", sc );
- 
   // force first updates
   sc = ums->update(this);
   ums->release();
