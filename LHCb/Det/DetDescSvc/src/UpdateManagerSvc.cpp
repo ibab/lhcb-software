@@ -1,4 +1,4 @@
-// $Id: UpdateManagerSvc.cpp,v 1.3 2006-01-12 13:15:25 marcocle Exp $
+// $Id: UpdateManagerSvc.cpp,v 1.4 2006-01-20 16:37:14 cattanem Exp $
 // Include files 
 
 #include "GaudiKernel/SvcFactory.h"
@@ -7,7 +7,6 @@
 #include "GaudiKernel/IRegistry.h"
 #include "GaudiKernel/GaudiException.h"
 #include "GaudiKernel/IIncidentSvc.h"
-//#include "GaudiKernel/ISvcLocator.h"
 #include "GaudiKernel/IEventProcessor.h"
 
 #include "DetDesc/ValidDataObject.h"

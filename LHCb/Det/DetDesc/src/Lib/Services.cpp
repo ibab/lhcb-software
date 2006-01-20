@@ -1,4 +1,4 @@
-// $Id: Services.cpp,v 1.3 2005-11-17 16:22:22 marcocle Exp $ 
+// $Id: Services.cpp,v 1.4 2006-01-20 16:35:53 cattanem Exp $ 
 
 // Include files
 #include "DetDesc/Services.h"
@@ -7,8 +7,7 @@
 #include "GaudiKernel/IDataProviderSvc.h"
 #include "GaudiKernel/IMessageSvc.h"
 #include "GaudiKernel/Bootstrap.h" 
-
-#include "DetDesc/IUpdateManagerSvc.h"
+#include "GaudiKernel/IUpdateManagerSvc.h"
 
 /**
  * Default constructor

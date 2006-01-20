@@ -1,9 +1,14 @@
-# $Id: release.notes,v 1.59 2005-12-08 12:05:42 marcocle Exp $
+# $Id: release.notes,v 1.60 2006-01-20 16:36:30 cattanem Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Det/DetCond
 ! Responsible : Marco Clemencic
 ! Purpose     : Interface between LHCb and LGC/COOL project
 !-----------------------------------------------------------------------------
+
+================= Det/DetCond v7r8 2006-01-20 ================================
+! 2006-01-20 - Marco Cattaneo
+ - Add use CORAL to requirements. N.B.: this is temporary, should be done 
+   directly in COOL interface package
 
 ! 2005-12-08 - Marco Clemencic
  - Use GaudiUtils::HashMap in CondDBCache.h

@@ -1,10 +1,10 @@
-// $Id: GeometryInfoPlus.cpp,v 1.15 2006-01-12 13:14:36 marcocle Exp $
+// $Id: GeometryInfoPlus.cpp,v 1.16 2006-01-20 16:35:53 cattanem Exp $
 // Include files 
 
 // GaudiKernel
 #include "GaudiKernel/IInspector.h"
 #include "GaudiKernel/IDataProviderSvc.h"
-#include "DetDesc/IUpdateManagerSvc.h"
+#include "GaudiKernel/IUpdateManagerSvc.h"
 
 #include "GaudiKernel/Kernel.h"
 #include "GaudiKernel/IRegistry.h"
