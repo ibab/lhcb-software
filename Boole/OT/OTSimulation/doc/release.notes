@@ -1,6 +1,18 @@
-! $Id: release.notes,v 1.15 2005-11-09 16:52:25 jnardull Exp $
+! $Id: release.notes,v 1.16 2006-01-20 12:57:05 janos Exp $
 Package         : OTSimulation
 Package manager : Jacopo Nardulli
+
+!==================== OTSimulation v3r0 2006-01-20 ======================
+! 2006-01-30 Jan Amoraal
+ - Migrated to LHCb v20r0
+ - In MCOTDepositCreator::addCrossTalk(): (*iterDeposit)->tdcTime()
+   should be (*iterDepsoit)->time. As we don't use tdcTime to create 
+   cross talk. Anyhow tdcTime=0 when we create cross talk.
+ - In OTRandomDepositCreator::OTRandomDepositCreator: Removed channel
+   deadtime it's now structure parameter. 
+ - In OTRandomDepositCreator::createDeposit: tdcTime -> time, we're not
+   using tdcTime to create deposits.
+ - Renamed OTFillRawBuffer.* to OTFillRawEvent.* as well as the class therein.  
 
 ! 2005-10-11 Jacopo Nardulli
 - Introduction of the Double Pulse implementation in the MCOTDepositCreator 

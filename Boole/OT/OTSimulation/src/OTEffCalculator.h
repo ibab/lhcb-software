@@ -1,4 +1,4 @@
-// $Id: OTEffCalculator.h,v 1.2 2004-11-10 13:05:14 jnardull Exp $
+// $Id: OTEffCalculator.h,v 1.3 2006-01-20 12:57:05 janos Exp $
 #ifndef OTSIMULATION_OTEFFCALCULATOR_H
 #define OTSIMULATION_OTEFFCALCULATOR_H 1
 
@@ -6,13 +6,17 @@
 #include "GaudiAlg/GaudiTool.h"
 #include "GaudiKernel/SmartIF.h"
 
-// Event
+// MCEvent
 #include "Event/MCOTDeposit.h"
 
 // OTSimulation
 #include "OTSimulation/IOTEffCalculator.h"
 
-class MCOTDeposit;
+// Forward declaration
+namespace LHCb 
+{
+  class MCOTDeposit;
+}
 
 /** @class OTEffCalculator OTEffCalculator.h "OTSimulation/OTEffCalculator.h"
  *
@@ -45,8 +49,7 @@ public:
   virtual StatusCode initialize();
 
   /// tool 'operation' - returns false if hit is to be killed 
-  StatusCode calculate(MCOTDeposit* aDeposit, 
-                       bool& iAccept);
+  StatusCode calculate(LHCb::MCOTDeposit* aDeposit, bool& iAccept);
   
 private:
 

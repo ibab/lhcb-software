@@ -1,6 +1,5 @@
-// $Id: OTFillRawBuffer.h,v 1.5 2005-11-09 16:52:25 jnardull Exp $
-#ifndef OTSIMULATION_OTFILLRAWBUFFER_H 
-#define OTSIMULATION_OTFILLRAWBUFFER_H 1
+#ifndef OTSIMULATION_OTFILLRAWEVENT_H 
+#define OTSIMULATION_OTFILLRAWEVENT_H 1
 
 // Include files
 // from STL
@@ -11,19 +10,23 @@
 // from Gaudi
 #include "GaudiAlg/GaudiAlgorithm.h"
 
+// MCEvent
+#include "Event/MCOTTime.h"
+
 // Event
 #include "Kernel/OTChannelID.h"
-#include "Event/MCOTTime.h"
+
+// OTDAQ
 #include "Event/RawEvent.h"
 
-/** @class OTFillRawBuffer OTFillRawBuffer.h OTSimulation/OTFillRawBuffer.h
+/** @class OTFillRawEvent OTFillRawEvent.h OTSimulation/OTFillRawEvent.h
  *  
  *
  *  @author Jacopo Nardulli & Bart Hommels
  *  @date   2004-01-09
  */
 
-class OTFillRawBuffer : public GaudiAlgorithm 
+class OTFillRawEvent : public GaudiAlgorithm 
 {
   
 
@@ -31,9 +34,9 @@ public:
 
   /// Standard constructor
 
-  OTFillRawBuffer( const std::string& name, ISvcLocator* pSvcLocator );
+  OTFillRawEvent( const std::string& name, ISvcLocator* pSvcLocator );
 
-  virtual ~OTFillRawBuffer( ); ///< Destructor
+  virtual ~OTFillRawEvent( ); ///< Destructor
 
   virtual StatusCode initialize();    ///< Algorithm initialization
   virtual StatusCode execute   ();    ///< Algorithm execution
@@ -43,7 +46,7 @@ protected:
 
 private:  
   
-  typedef std::vector<MCOTTime*> vmcOTime;
+  typedef std::vector<LHCb::MCOTTime*> vmcOTime;
   typedef std::map<int,vmcOTime*> mBank;// contains the bank vectors*
   typedef std::map<int,vmcOTime*> mGol;// contains the Gol vectors*
   typedef std::vector<unsigned int> dataBank;
@@ -61,8 +64,8 @@ private:
   int m_numberOfGols;
   
   // converts channel ID number into bank number for sorting
-  int chID2int(OTChannelID otChannel); // int is bank ID
-  int chID2Otis(OTChannelID otChannel);
+  int chID2int(LHCb::OTChannelID otChannel); // int is bank ID
+  int chID2Otis(LHCb::OTChannelID otChannel);
  
   // sort MCOTTimes into banks
   StatusCode sortMcTimesIntoBanks();
@@ -73,4 +76,4 @@ private:
   StatusCode convertToRAWEmptyBank(dataBank* aBank);
 
 };
-#endif // OTSIMULATION_OTFILLRAWBUFFER_H
+#endif // OTSIMULATION_OTFILLRAWEVENT_H

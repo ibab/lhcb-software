@@ -1,4 +1,4 @@
-// $Id: OTEffCalculator.cpp,v 1.5 2005-07-11 14:30:09 jnardull Exp $
+// $Id: OTEffCalculator.cpp,v 1.6 2006-01-20 12:57:05 janos Exp $
 
 // Gaudi files
 #include "GaudiKernel/SmartIF.h"
@@ -7,7 +7,7 @@
 #include "GaudiKernel/RndmGenerators.h"
 
 // CLHEP
-#include "CLHEP/Units/SystemOfUnits.h"
+#include "Kernel/SystemOfUnits.h"
 
 // OTSimulation
 #include "OTEffCalculator.h"
@@ -19,6 +19,8 @@
  *  @author M. Needham
  *  @date   19-09-2000
  */
+
+using namespace LHCb;
 
 static ToolFactory<OTEffCalculator> s_factory;
 const IToolFactory& OTEffCalculatorFactory = s_factory;

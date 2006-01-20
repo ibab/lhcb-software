@@ -1,4 +1,4 @@
-// $Id: IOTSmearer.h,v 1.1.1.1 2004-09-03 13:35:47 jnardull Exp $
+// $Id: IOTSmearer.h,v 1.2 2006-01-20 12:57:05 janos Exp $
 #ifndef OTSIMULATION_IOTSMEARER_H 
 #define OTSIMULATION_IOTSMEARER_H 1
 
@@ -6,7 +6,10 @@
 #include "GaudiKernel/IAlgTool.h"
 
 // Forward declarations
-class MCOTDeposit;
+namespace LHCb 
+{
+  class MCOTDeposit;
+}
 
 static const InterfaceID IID_OTSmearer( "IOTSmearer", 1, 0 );
 
@@ -22,11 +25,11 @@ public:
   /// Retrieve interface ID
   static const InterfaceID& interfaceID() { return IID_OTSmearer; }
   /// Actual operator function
-  virtual StatusCode smear( MCOTDeposit* ) = 0;
+  virtual StatusCode smear( LHCb::MCOTDeposit* ) = 0;
   /// Get the resolution (without magnetic field correction)
   virtual double resolution() = 0;
   /// Get the resolution (with magnetic field correction)
-  virtual double resolution( HepPoint3D& ) = 0;
+  virtual double resolution( Gaudi::XYZPoint& ) = 0;
 
 
 };

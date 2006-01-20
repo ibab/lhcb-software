@@ -1,4 +1,4 @@
-// $Id: MCOTDepositCreator.h,v 1.6 2005-11-09 16:52:25 jnardull Exp $
+// $Id: MCOTDepositCreator.h,v 1.7 2006-01-20 12:57:05 janos Exp $
 #ifndef OTSIMULATION_MCOTDEPOSITCREATOR_H
 #define OTSIMULATION_MCOTDEPOSITCREATOR_H 1
 
@@ -7,7 +7,7 @@
 #include "GaudiAlg/GaudiAlgorithm.h"
 #include "GaudiKernel/SmartIF.h"
 
-// Event
+// MCEvent
 #include "Event/MCOTDeposit.h"
 
 // OTDet
@@ -37,7 +37,7 @@ class IOTRandomDepositCreator;
  *  @date   21/10/2000
  */
 
-typedef std::vector<MCOTDeposit*> MCOTDepositVec;
+typedef std::vector<LHCb::MCOTDeposit*> MCOTDepositVec;
 
 class MCOTDepositCreator : public GaudiAlgorithm {
 
@@ -45,8 +45,8 @@ public:
  
   /// constructor
   MCOTDepositCreator(const std::string& name, 
-             ISvcLocator *svcloc );
-
+		     ISvcLocator *svcloc );
+  
   /// destructor
   virtual ~MCOTDepositCreator();
 

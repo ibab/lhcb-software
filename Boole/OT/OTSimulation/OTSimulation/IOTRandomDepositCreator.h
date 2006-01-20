@@ -1,4 +1,4 @@
-// $Id: IOTRandomDepositCreator.h,v 1.4 2005-11-09 16:52:25 jnardull Exp $
+// $Id: IOTRandomDepositCreator.h,v 1.5 2006-01-20 12:57:05 janos Exp $
 #ifndef OTSIMULATION_IOTRANDOMDEPOSITCREATOR_H 
 #define OTSIMULATION_IOTRANDOMDEPOSITCREATOR_H 1
 
@@ -6,9 +6,12 @@
 #include "GaudiKernel/IAlgTool.h"
 
 // Forward declarations
-class MCOTDeposit;
+namespace LHCb
+{
+  class MCOTDeposit;
+}
 
-typedef std::vector<MCOTDeposit*> MCOTDepositVec;
+typedef std::vector<LHCb::MCOTDeposit*> MCOTDepositVec;
 
 static const InterfaceID IID_OTRandomDepositCreator( "IOTRandomDepositCreator", 1, 0 );
 

@@ -1,4 +1,4 @@
-// $Id: OTRandomDepositCreator.cpp,v 1.7 2005-11-09 16:52:25 jnardull Exp $
+// $Id: OTRandomDepositCreator.cpp,v 1.8 2006-01-20 12:57:05 janos Exp $
 
 // Gaudi files
 #include "GaudiKernel/ToolFactory.h"
@@ -6,14 +6,14 @@
 #include "GaudiKernel/RndmGenerators.h"
 #include "GaudiKernel/IService.h"
 
-// CLHEP
-#include "CLHEP/Units/SystemOfUnits.h"
+// MathCore
+#include "Kernel/SystemOfUnits.h"
 
-// OTEvent
+// MCEvent
 #include "Event/MCOTDeposit.h"
 
-// OTSimulation
-#include "OTSimulation/IOTReadOutWindow.h"
+// OTDAQ
+#include "OTDAQ/IOTReadOutWindow.h"
 
 // OTDet
 #include "OTDet/DeOTDetector.h"
@@ -29,16 +29,18 @@
  *  @date   28/02/2003
  */
 
+using namespace LHCb;
+
 static ToolFactory<OTRandomDepositCreator> s_factory;
 const IToolFactory& OTRandomDepositCreatorFactory = s_factory;
 
 OTRandomDepositCreator::OTRandomDepositCreator(const std::string& type, 
-                     const std::string& name, 
-                     const IInterface* parent) : 
+					       const std::string& name, 
+					       const IInterface* parent) : 
   GaudiTool( type, name, parent )
 {
  
-  this->declareProperty("deadTime", m_deadTime = 50.*ns);
+  //this->declareProperty("deadTime", m_deadTime = 50.*ns);
   this->declareProperty("noiseRate", m_noiseRate = 10.0*kilohertz);
   this->declareProperty("readOutWindowToolName",
                         m_readoutWindowToolName ="OTReadOutWindow"),
@@ -78,6 +80,9 @@ StatusCode OTRandomDepositCreator::initialize()
   DeOTDetector* tracker = getDet<DeOTDetector>(DeOTDetectorLocation::Default ); 
   detSvc->release();
   m_tracker = tracker;
+
+  // Get channel deadtime
+  m_deadTime = m_tracker->deadTime();
 
   // pointer to OTReadoutWindow tool
   IOTReadOutWindow* readoutTool;
@@ -120,11 +125,11 @@ StatusCode OTRandomDepositCreator::createDeposits(MCOTDepositVec* depVector)
 
     if (strawID <= aModule->nChannels()) {
       unsigned int stationID = aModule->stationID();
-      double tdcTime = m_windowOffSet[stationID-1u] 
+      double time = m_windowOffSet[stationID-1u] 
         + (m_genDist->shoot() * m_windowSize);  
       OTChannelID aChan(stationID, aModule->layerID(), aModule->quarterID(),
                         aModule->moduleID(), strawID);
-      MCOTDeposit* newDeposit = new MCOTDeposit(0, aChan, tdcTime, 0, 0);
+      MCOTDeposit* newDeposit = new MCOTDeposit(0, aChan, time, 0, 0);
       depVector->push_back(newDeposit);
     }
   } // iDep

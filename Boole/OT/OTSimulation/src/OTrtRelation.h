@@ -1,11 +1,11 @@
-// $Id: OTrtRelation.h,v 1.2 2004-11-10 13:05:14 jnardull Exp $
+// $Id: OTrtRelation.h,v 1.3 2006-01-20 12:57:05 janos Exp $
 #ifndef OTSIMULATION_OTRTRELATION_H
 #define OTSIMULATION_OTRTRELATION_H 1
 
 // Gaudi
 #include "GaudiAlg/GaudiTool.h"
 
-// OTEvent
+// MCEvent
 #include "Event/MCOTDeposit.h"
 
 // OTDet
@@ -14,8 +14,13 @@
 // OTSimulation
 #include "OTSimulation/IOTrtRelation.h"
 
+// Forward declarations
+namespace LHCb 
+{
+  class MCOTDeposit;
+}
 class IMagneticFieldSvc;
-class MCOTDeposit;
+
 
 /** @class OTrtRelation OTrtRelation.h "OTSimulation/OTrtRelation.h"
  *
@@ -49,13 +54,13 @@ public:
   virtual StatusCode finalize();
 
   /// tool 'operation'. Fills the deposit time entry.
-  StatusCode convertRtoT(MCOTDeposit* aDeposit);
+  StatusCode convertRtoT(LHCb::MCOTDeposit* aDeposit);
   
   /// r-t relation with correction for the magnetic field
-  double driftTime(const double driftDist, const HepPoint3D& aPoint);
+  double driftTime(const double driftDist, const Gaudi::XYZPoint& aPoint);
   
   /// inverse r-t relation with correction for the magnetic field
-  double driftDistance( const double driftTime, const HepPoint3D& aPoint );
+  double driftDistance( const double driftTime, const Gaudi::XYZPoint& aPoint );
 
 private:
  

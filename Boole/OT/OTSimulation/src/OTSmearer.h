@@ -1,4 +1,4 @@
-// $Id: OTSmearer.h,v 1.2 2004-11-10 13:05:14 jnardull Exp $
+// $Id: OTSmearer.h,v 1.3 2006-01-20 12:57:05 janos Exp $
 #ifndef OTSIMULATION_OTSMEARER_H
 #define OTSIMULATION_OTSMEARER_H 1
 
@@ -15,6 +15,7 @@
 // OTSimulation
 #include "OTSimulation/IOTSmearer.h"
 
+// Forward declaration
 class IMagneticFieldSvc;
 
 /** @class OTSmearer OTSmearer.h "OTSimulation/OTSmearer.h"
@@ -46,13 +47,13 @@ public:
   virtual StatusCode finalize();
 
   /// tool 'operation' - returns smeared distance + sigma used
-  StatusCode smear(MCOTDeposit* aDeposit);
+  StatusCode smear(LHCb::MCOTDeposit* aDeposit);
 
   /// Get the resolution (without magnetic field correction)
   double resolution();
 
   /// Get the resolution (with magnetic field correction)
-  double resolution( HepPoint3D& aPoint );
+  double resolution( Gaudi::XYZPoint& aPoint );
   
 private:
 

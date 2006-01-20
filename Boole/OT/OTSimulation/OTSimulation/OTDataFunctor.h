@@ -1,4 +1,4 @@
-// $Id: OTDataFunctor.h,v 1.1.1.1 2004-09-03 13:35:47 jnardull Exp $
+// $Id: OTDataFunctor.h,v 1.2 2006-01-20 12:57:05 janos Exp $
 #ifndef OTSIMULATION_OTDATAFUNCTOR_H
 #define OTSIMULATION_OTDATAFUNCTOR_H 1
 
@@ -112,66 +112,66 @@ template <class TYPE1, class TYPE2 = TYPE1 >
 
 template <class TYPE>
 class station_eq: public std::unary_function<TYPE,bool>{
-   OTChannelID aChan;
+   LHCb::OTChannelID aChan;
 public:
-  explicit station_eq(const OTChannelID& testChan) : aChan(testChan){}
+  explicit station_eq(const LHCb::OTChannelID& testChan) : aChan(testChan){}
   inline bool operator() (TYPE obj) const{
   return obj->channel().station()==aChan.station();}
 };
 
 template <class TYPE>
 class layer_eq: public std::unary_function<TYPE,bool>{
-   OTChannelID aChan;
+   LHCb::OTChannelID aChan;
 public:
-  explicit layer_eq(const OTChannelID& testChan) : aChan(testChan){}
+  explicit layer_eq(const LHCb::OTChannelID& testChan) : aChan(testChan){}
   inline bool operator() (TYPE obj) const{
   return obj->channel().uniqueLayer()==aChan.uniqueLayer();}
 };
 
 template <class TYPE>
 class module_eq: public std::unary_function<TYPE,bool>{
-   OTChannelID aChan;
+   LHCb::OTChannelID aChan;
 public:
-  explicit module_eq(const OTChannelID& testChan) : aChan(testChan){}
+  explicit module_eq(const LHCb::OTChannelID& testChan) : aChan(testChan){}
   inline bool operator() (TYPE obj) const{
   return obj->channelID().uniqueModule()==aChan.uniqueModule();}
 };
 
 template <class TYPE>
 class compByStation_LB: public std::binary_function<const TYPE,
-  const OTChannelID, bool>{
+  const LHCb::OTChannelID, bool>{
 public:
-  inline bool operator() (const TYPE& obj, const OTChannelID& testID) const{
+  inline bool operator() (const TYPE& obj, const LHCb::OTChannelID& testID) const{
     return ((!obj) ? false : testID.station() >obj->channel().station());
   }
 };
 
 template <class TYPE>
-class compByStation_UB: public std::binary_function<const OTChannelID,
+class compByStation_UB: public std::binary_function<const LHCb::OTChannelID,
   const TYPE ,bool>{
 public:
-  inline bool operator() (const OTChannelID& testID, const TYPE& obj) const{
+  inline bool operator() (const LHCb::OTChannelID& testID, const TYPE& obj) const{
     return ((!obj) ? false : testID.station() >obj->channel().station());
   }
 };
 
 template <class TYPE>
 class compByLayer_LB: public std::binary_function<const TYPE, 
-  const OTChannelID, bool>{
-   OTChannelID testID;
+  const LHCb::OTChannelID, bool>{
+   LHCb::OTChannelID testID;
 public:
-  inline bool operator() (const TYPE& obj,const OTChannelID& testID) const{
+  inline bool operator() (const TYPE& obj,const LHCb::OTChannelID& testID) const{
     return 
       ((!obj) ? false : testID.uniqueLayer() >obj->channel().uniqueLayer());
   }
 };
 
 template <class TYPE>
-class compByLayer_UB: public std::binary_function<const OTChannelID,
+class compByLayer_UB: public std::binary_function<const LHCb::OTChannelID,
   const TYPE ,bool>{
-   OTChannelID testID;
+   LHCb::OTChannelID testID;
 public:
-  inline bool operator()(const OTChannelID& testID, const TYPE& obj) const{
+  inline bool operator()(const LHCb::OTChannelID& testID, const TYPE& obj) const{
     return 
       ((!obj) ? false : testID.uniqueLayer() >obj->channel().uniqueLayer());
   }
@@ -179,21 +179,21 @@ public:
 
 template <class TYPE>
 class compByModule_LB: public std::binary_function<const TYPE, 
-  const OTChannelID, bool>{
-   OTChannelID testID;
+  const LHCb::OTChannelID, bool>{
+   LHCb::OTChannelID testID;
 public:
-  inline bool operator() (const TYPE& obj,const OTChannelID& testID) const{
+  inline bool operator() (const TYPE& obj,const LHCb::OTChannelID& testID) const{
     return 
       ((!obj) ? false : testID.uniqueModule() >obj->channel().uniqueModule());
   }
 };
 
 template <class TYPE>
-class compBModule_UB: public std::binary_function<const OTChannelID, 
+class compBModule_UB: public std::binary_function<const LHCb::OTChannelID, 
   const TYPE ,bool>{
-   OTChannelID testID;
+   LHCb::OTChannelID testID;
 public:
-  inline bool operator() (const OTChannelID& testID, const TYPE& obj) const{
+  inline bool operator() (const LHCb::OTChannelID& testID, const TYPE& obj) const{
     return 
       ((!obj) ? false : testID.uniqueModule() >obj->channel().uniqueModule());
   }

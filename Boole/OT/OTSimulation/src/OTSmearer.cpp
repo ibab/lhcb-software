@@ -1,18 +1,20 @@
-// $Id: OTSmearer.cpp,v 1.4 2004-12-10 08:09:13 jnardull Exp $
+// $Id: OTSmearer.cpp,v 1.5 2006-01-20 12:57:05 janos Exp $
 
 // Gaudi files
 #include "GaudiKernel/ToolFactory.h"
 #include "GaudiKernel/IRndmGenSvc.h"
 #include "GaudiKernel/RndmGenerators.h"
-#include "GaudiKernel/IMagneticFieldSvc.h"
 #include "GaudiKernel/IService.h"
 
-//CLHEP
-#include "CLHEP/Geometry/Vector3D.h"
-#include "CLHEP/Geometry/Point3D.h"
-#include "CLHEP/Units/SystemOfUnits.h"
+// LHCb Kernel
+#include "Kernel/IMagneticFieldSvc.h"
 
-// OTEvent
+// MathCore
+#include "Kernel/Vector3DTypes.h"
+#include "Kernel/Point3DTypes.h"
+#include "Kernel/SystemOfUnits.h"
+
+// MCEvent
 #include "Event/MCHit.h"
 
 //OTSimulation
@@ -25,6 +27,8 @@
  *  @author M. Needham
  *  @date   21/10/2000
  */
+
+using namespace LHCb;
 
 static ToolFactory<OTSmearer> s_factory;
 const IToolFactory& OTSmearerFactory = s_factory;
@@ -97,12 +101,12 @@ StatusCode OTSmearer::initialize()
 StatusCode OTSmearer::smear(MCOTDeposit* aDeposit)
 {
   // retrieve MC info
-  MCHit* aMCHit = aDeposit->mcHit();
+  const MCHit* aMCHit = aDeposit->mcHit();
 
   // average entrance and exit to get point in cell 
-  const HepPoint3D& entrancePoint = aMCHit->entry();
-  const HepPoint3D& exitPoint = aMCHit->exit();
-  HepPoint3D aPoint = 0.5*(entrancePoint+exitPoint);
+  const Gaudi::XYZPoint& entrancePoint = aMCHit->entry();
+  const Gaudi::XYZPoint& exitPoint = aMCHit->exit();
+  Gaudi::XYZPoint aPoint = entrancePoint + 0.5*(exitPoint - entrancePoint);
 
   // get sigma (error on drift distance) for this point 
   double driftDistError = resolution(aPoint);
@@ -138,10 +142,10 @@ double OTSmearer::resolution()
 }
 
 
-double OTSmearer::resolution(HepPoint3D& aPoint)
+double OTSmearer::resolution(Gaudi::XYZPoint& aPoint)
 {
   // return sigma (error on drift distance) for this point 
-  HepVector3D bField;
+  Gaudi::XYZVector bField;
   m_magFieldSvc->fieldVector( aPoint, bField );
   return sigmaParamFunc(bField.y());
 }

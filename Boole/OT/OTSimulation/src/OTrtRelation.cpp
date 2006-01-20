@@ -1,14 +1,16 @@
-// $Id: OTrtRelation.cpp,v 1.4 2004-12-10 08:09:13 jnardull Exp $
+// $Id: OTrtRelation.cpp,v 1.5 2006-01-20 12:57:05 janos Exp $
 
 // Gaudi files
 #include "GaudiKernel/ToolFactory.h"
-#include "GaudiKernel/IMagneticFieldSvc.h"
 #include "GaudiKernel/IService.h"
 
-// CLHEP
-#include "CLHEP/Geometry/Vector3D.h"
-#include "CLHEP/Geometry/Point3D.h"
-#include "CLHEP/Units/SystemOfUnits.h"
+// Kernel 
+#include "Kernel/IMagneticFieldSvc.h"
+
+// MathCore
+#include "Kernel/Vector3DTypes.h"
+#include "Kernel/Point3DTypes.h"
+#include "Kernel/SystemOfUnits.h"
 
 // OTSimulation
 #include "OTrtRelation.h"
@@ -23,6 +25,8 @@
  *  @author M. Needham
  *  @date   21/10/2000
  */
+
+using namespace LHCb;
 
 static ToolFactory<OTrtRelation> s_factory;
 const IToolFactory& OTrtRelationFactory = s_factory;
@@ -80,13 +84,13 @@ StatusCode OTrtRelation::convertRtoT(MCOTDeposit* aDeposit)
 {
   // r-t relation
   // retrieve MC info
-  MCHit* aMCHit = aDeposit->mcHit();
+  const MCHit* aMCHit = aDeposit->mcHit();
   const double driftDist = aDeposit->driftDistance();
   
   // average entrance and exit to get point in cell 
-  const HepPoint3D& entrancePoint = aMCHit->entry();
-  const HepPoint3D& exitPoint = aMCHit->exit();
-  HepPoint3D aPoint = 0.5 * (entrancePoint + exitPoint);
+  const Gaudi::XYZPoint& entrancePoint = aMCHit->entry();
+  const Gaudi::XYZPoint& exitPoint = aMCHit->exit();
+  Gaudi::XYZPoint aPoint = entrancePoint + 0.5 * (exitPoint - entrancePoint);
 
   // add drift time
   double time = driftTime(driftDist, aPoint) ;
@@ -100,22 +104,22 @@ StatusCode OTrtRelation::convertRtoT(MCOTDeposit* aDeposit)
   return StatusCode::SUCCESS;
 }
 
-double OTrtRelation::driftTime(const double driftDist, const HepPoint3D& aPoint)
+double OTrtRelation::driftTime(const double driftDist, const Gaudi::XYZPoint& aPoint)
 {
   // r-t relation with correction for the magnetic field
 
   // get magnetic field
-  HepVector3D bField;
+  Gaudi::XYZVector bField;
   m_magFieldSvc->fieldVector( aPoint, bField );
 
   return m_tracker->driftTime(driftDist, bField.y());  
 }
 
 double OTrtRelation::driftDistance( const double driftTime, 
-                                    const HepPoint3D& aPoint )
+                                    const Gaudi::XYZPoint& aPoint )
 {
   // inverse r-t relation with correction for the magnetic field
-  HepVector3D bField;
+  Gaudi::XYZVector bField;
   m_magFieldSvc->fieldVector( aPoint, bField );
   return m_tracker->driftDistance(driftTime, bField.y());
 }

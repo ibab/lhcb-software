@@ -1,4 +1,4 @@
-// $Id: MCOTDepositCreator.cpp,v 1.8 2005-11-09 16:52:25 jnardull Exp $
+// $Id: MCOTDepositCreator.cpp,v 1.9 2006-01-20 12:57:05 janos Exp $
 
 // Gaudi
 #include "GaudiKernel/xtoa.h" // needed for toolName()
@@ -7,13 +7,15 @@
 #include "GaudiKernel/RndmGenerators.h"
 #include "GaudiKernel/IService.h"
 
-
 // Event
 #include "Event/MCHit.h"
 
-// CLHEP
-#include "CLHEP/Geometry/Point3D.h"
-#include "CLHEP/Units/SystemOfUnits.h"
+// MathCore
+#include "Kernel/Point3DTypes.h"
+#include "Kernel/SystemOfUnits.h"
+
+// OTDAQ
+#include "OTDAQ/IOTReadOutWindow.h"
 
 // OTSimulation
 #include "MCOTDepositCreator.h"
@@ -21,14 +23,10 @@
 #include "OTSimulation/IOTrtRelation.h"
 #include "OTSimulation/OTDataFunctor.h"
 #include "OTSimulation/IOTEffCalculator.h"
-#include "OTSimulation/IOTReadOutWindow.h"
 #include "OTSimulation/IOTRandomDepositCreator.h"
 
 // xml geometry
 #include "DetDesc/IGeometryInfo.h"
-
-static const AlgFactory<MCOTDepositCreator> s_Factory;
-const IAlgFactory& MCOTDepositCreatorFactory = s_Factory;
 
 /** @file MCOTDepositCreator.cpp 
  *
@@ -39,6 +37,11 @@ const IAlgFactory& MCOTDepositCreatorFactory = s_Factory;
  *          jtilburg@nikhef.nl (03-04-2002)
  *  @date   19-09-2000
  */
+
+using namespace LHCb;
+
+static const AlgFactory<MCOTDepositCreator> s_Factory;
+const IAlgFactory& MCOTDepositCreatorFactory = s_Factory;
 
 MCOTDepositCreator::MCOTDepositCreator(const std::string& name,
                                        ISvcLocator* pSvcLocator) :
@@ -168,7 +171,7 @@ StatusCode MCOTDepositCreator::initialize()
     = m_spillVector.begin();
   while (iSpillName!=m_spillVector.end()){
     // path in Transient data store
-    std::string mcHitPath = "/Event"+(*iSpillName)+MCHitLocation::OTHits;
+    std::string mcHitPath = "/Event"+(*iSpillName)+MCHitLocation::OT;
     m_spillNames.push_back(mcHitPath);
     ++iSpillName;
   } // iterSpillName
@@ -251,7 +254,7 @@ StatusCode MCOTDepositCreator::execute(){
   std::stable_sort(m_tempDeposits->begin(),m_tempDeposits->end(),
                    OTDataFunctor::Less_by_ChannelAndTime<const MCOTDeposit*>());
 
-  MCOTDepositVector* deposits = new MCOTDepositVector();
+  MCOTDeposits* deposits = new MCOTDeposits();
   deposits->reserve(m_tempDeposits->size());
   MCOTDepositVec::iterator iterDep;
   for ( iterDep = m_tempDeposits->begin(); iterDep != m_tempDeposits->end();
@@ -283,7 +286,7 @@ StatusCode MCOTDepositCreator::makeDigitizations()
             iterHit != monteCarloTrackerHits->end(); ++iterHit) {
 
         // time offset
-        double tTimeOffset = (*iterHit)->timeOfFlight() + m_spillTimes[iSpill];
+        double tTimeOffset = (*iterHit)->time() + m_spillTimes[iSpill];
 
         // make deposits
         std::vector<OTChannelID> channels;
@@ -432,7 +435,7 @@ StatusCode MCOTDepositCreator::addCrossTalk()
 
         // crosstalk in neighbour - copy hit - this is very ugly
         MCOTDeposit* newDep = new MCOTDeposit(0, *iterChan,
-                                 (*iterDeposit)->tdcTime(),
+                                 (*iterDeposit)->time(),
                                  (*iterDeposit)->driftDistance(),
                                  (*iterDeposit)->ambiguity());
         

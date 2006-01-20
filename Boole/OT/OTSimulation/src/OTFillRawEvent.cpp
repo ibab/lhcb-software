@@ -1,52 +1,53 @@
-// $Id: OTFillRawBuffer.cpp,v 1.10 2005-11-09 16:52:25 jnardull Exp $
 // Include files
 
 // From Gaudi
 #include "GaudiKernel/AlgFactory.h"
 
-// From event model
+// EVENT/DAQ/OTDAQ
 #include "Event/RawEvent.h"
 #include "Event/RawBank.h"
-
-// local
-#include "OTFillRawBuffer.h"
 #include "Event/GolHeader.h"
 #include "Event/DataWord.h"
 #include "Event/OTBankVersion.h"
 
+// local
+#include "OTFillRawEvent.h"
+
 //-----------------------------------------------------------------------------
-// Implementation file for class : OTFillRawBuffer
+// Implementation file for class : OTFillRawEvent
 //
 // 2004-01-09 : Jacopo Nardulli & Bart Hommels
 //-----------------------------------------------------------------------------
 
+using namespace LHCb;
+
 // Declaration of the Algorithm Factory
-static const  AlgFactory<OTFillRawBuffer>          s_factory ;
-const        IAlgFactory& OTFillRawBufferFactory = s_factory ; 
+static const  AlgFactory<OTFillRawEvent>          s_factory ;
+const IAlgFactory& OTFillRawEventFactory = s_factory ; 
 
 
 //=============================================================================
 // Standard constructor, initializes variables
 //=============================================================================
-OTFillRawBuffer::OTFillRawBuffer( const std::string& name,
+OTFillRawEvent::OTFillRawEvent( const std::string& name,
                                     ISvcLocator* pSvcLocator)
   : GaudiAlgorithm ( name , pSvcLocator )
 {
   this->declareProperty( "NumberOfBanks", m_numberOfBanks = 24 );
   this->declareProperty( "NumberOfGols",  m_numberOfGols  = 18 );
-   this->declareProperty( "MCOTTimeLocation", 
+  this->declareProperty( "MCOTTimeLocation", 
                          m_MCOTTimeLoc = MCOTTimeLocation::Default );
 }
 
 //=============================================================================
 // Destructor
 //=============================================================================
-OTFillRawBuffer::~OTFillRawBuffer(){}; 
+OTFillRawEvent::~OTFillRawEvent(){}; 
 
 //=============================================================================
 // Initialisation. Check parameters
 //=============================================================================
-StatusCode OTFillRawBuffer::initialize() {
+StatusCode OTFillRawEvent::initialize() {
  
   StatusCode sc = GaudiAlgorithm::initialize();
   if ( sc.isFailure() ) return sc;  // error printed already by GaudiAlgorithm
@@ -70,10 +71,10 @@ StatusCode OTFillRawBuffer::initialize() {
 //=============================================================================
 // Main execution
 //=============================================================================
-StatusCode OTFillRawBuffer::execute() 
+StatusCode OTFillRawEvent::execute() 
 {
   // A new RawEvent
-  LHCb::RawEvent* rawEvent =  new LHCb::RawEvent();
+  RawEvent* rawEvent =  new RawEvent();
 
   // Sorting MCTimes into Banks
   this->sortMcTimesIntoBanks();
@@ -103,7 +104,7 @@ StatusCode OTFillRawBuffer::execute()
 
     int bankID = (*iBank).first;
     dataBank& bBank = aBank;
-    rawEvent->addBank(bankID, LHCb::RawBank::OT, 2, bBank);  
+    rawEvent->addBank(bankID, RawBank::OT, 2, bBank);  
     aBank.erase( aBank.begin(),aBank.end() );
   }
 
@@ -123,7 +124,7 @@ StatusCode OTFillRawBuffer::execute()
 //=============================================================================
 //  Finalize
 //=============================================================================
-StatusCode OTFillRawBuffer::finalize() 
+StatusCode OTFillRawEvent::finalize() 
 {      
   // clear all containers used in the process and delete all new objects:
   for(mBank::iterator iBank = m_dataContainer.begin();
@@ -143,7 +144,7 @@ StatusCode OTFillRawBuffer::finalize()
   return GaudiAlgorithm::finalize();  // must be called after all other actions 
 }
 //-----------------------------------------------------------------------------
-StatusCode OTFillRawBuffer::sortMcTimesIntoBanks()
+StatusCode OTFillRawEvent::sortMcTimesIntoBanks()
 {
   // Retrieve MCOTTime and sort them into banks
   MCOTTimes* mcTime = get<MCOTTimes>( MCOTTimeLocation::Default ); 
@@ -160,7 +161,7 @@ StatusCode OTFillRawBuffer::sortMcTimesIntoBanks()
   return StatusCode::SUCCESS;
 }
 //-------------------------------------------------------------------------
-StatusCode OTFillRawBuffer::sortMcTimesIntoGol( vmcOTime* BankmcOTime )
+StatusCode OTFillRawEvent::sortMcTimesIntoGol( vmcOTime* BankmcOTime )
 {
   // There are 18 Gol per Bank, each one containing the data of a short module 
   for(vmcOTime::iterator iTime = BankmcOTime->begin();
@@ -184,7 +185,7 @@ StatusCode OTFillRawBuffer::sortMcTimesIntoGol( vmcOTime* BankmcOTime )
   return StatusCode::SUCCESS;
 }  
 //-----------------------------------------------------------------
-StatusCode OTFillRawBuffer::convertToRAWEmptyBank(dataBank* aBank)
+StatusCode OTFillRawEvent::convertToRAWEmptyBank(dataBank* aBank)
 {
   // Creating the Tell1 Headers - 3 words of 32 bits - I do not fill them...
   for(int i = 0; i < 1; i++){
@@ -199,7 +200,7 @@ StatusCode OTFillRawBuffer::convertToRAWEmptyBank(dataBank* aBank)
   return StatusCode::SUCCESS;
 }
 //-----------------------------------------------------------------
-StatusCode OTFillRawBuffer::convertToRAWDataBank(vmcOTime* vToConvert, 
+StatusCode OTFillRawEvent::convertToRAWDataBank(vmcOTime* vToConvert, 
                                                  dataBank* aBank)
 {
   // Creating the Tell1 Headers - 3 words of 32 bits - I do not fill them...
@@ -379,7 +380,7 @@ StatusCode OTFillRawBuffer::convertToRAWDataBank(vmcOTime* vToConvert,
 // Member functions
 //=============================================================================
 
-int OTFillRawBuffer::chID2Otis(OTChannelID otChannel)
+int OTFillRawEvent::chID2Otis(OTChannelID otChannel)
 
 {    
   int OtisID = 0;
@@ -405,7 +406,7 @@ int OTFillRawBuffer::chID2Otis(OTChannelID otChannel)
 // Member functions
 //=============================================================================
 
-int OTFillRawBuffer::chID2int(OTChannelID otChannel)
+int OTFillRawEvent::chID2int(OTChannelID otChannel)
 
 {    
   int nArray = 0;

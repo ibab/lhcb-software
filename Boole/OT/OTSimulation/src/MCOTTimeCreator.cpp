@@ -1,4 +1,4 @@
-// $Id: MCOTTimeCreator.cpp,v 1.6 2005-11-09 16:52:25 jnardull Exp $
+// $Id: MCOTTimeCreator.cpp,v 1.7 2006-01-20 12:57:05 janos Exp $
 
 // Gaudi
 #include "GaudiKernel/AlgFactory.h"
@@ -9,9 +9,6 @@
 // local
 #include "MCOTTimeCreator.h"
 
-static const AlgFactory<MCOTTimeCreator> s_Factory;
-const IAlgFactory& MCOTTimeCreatorFactory = s_Factory;
-
 /** @file MCOTTimeCreator.cpp
  *
  *  Implementation of MCOTimeCreator
@@ -19,6 +16,11 @@ const IAlgFactory& MCOTTimeCreatorFactory = s_Factory;
  *  @author J. Nardulli and J. van Tilburg 
  *  @date   10/6/2004
  */
+
+using namespace LHCb;
+
+static const AlgFactory<MCOTTimeCreator> s_Factory;
+const IAlgFactory& MCOTTimeCreatorFactory = s_Factory;
 
 MCOTTimeCreator::MCOTTimeCreator(const std::string& name, 
                                    ISvcLocator* pSvcLocator) :
@@ -34,7 +36,7 @@ MCOTTimeCreator::MCOTTimeCreator(const std::string& name,
   declareProperty("singleHitMode", m_singleHitMode = true);
 
   // container for temporary time storage 
-  m_tempTimeCont = new MCOTTimeVector();
+  m_tempTimeCont = new MCOTTimeVec();
 
   // reserve some space
   m_tempTimeCont->reserve(8000);
@@ -83,11 +85,11 @@ StatusCode MCOTTimeCreator::execute()
 StatusCode MCOTTimeCreator::createTimes( MCOTTimes* times )
 {
   // retrieve deposits
-  MCOTDepositVector* depositCont = 
-    get<MCOTDepositVector>(MCOTDepositLocation::Default);
+  MCOTDeposits* depositCont = 
+    get<MCOTDeposits>(MCOTDepositLocation::Default);
 
-  MCOTDepositVector::const_iterator iterDep = depositCont->begin();
-  MCOTDepositVector::const_iterator jterDep = iterDep;
+  MCOTDeposits::const_iterator iterDep = depositCont->begin();
+  MCOTDeposits::const_iterator jterDep = iterDep;
 
   // apply dead time - Analog deadtime
   while (iterDep != depositCont->end()){
