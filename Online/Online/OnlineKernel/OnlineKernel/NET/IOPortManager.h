@@ -9,10 +9,6 @@ public:
   IOPortManager(NetworkChannel::Port p): m_port(p)  {}
   int add(int typ, NetworkChannel::Channel c, int (*callback)(void*), void* param);
   int remove(NetworkChannel::Channel c);
-};
-struct PortEntry  {
-  int type;
-  int (*callback)(void*);
-  void* param;
+  static int getAvailBytes(int fd);
 };
 #endif // ONLINEKERNEL_NET_IOPORTMANAGER_H

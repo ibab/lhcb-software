@@ -9,7 +9,7 @@
 #include "SCR/scr.h"
 #include "WT/wtdef.h"
 #include "WT/wt_facilities.h"
-
+#include "NET/IOPortManager.h"
 static Pasteboard *Kbd = 0;
 
 static char Last_char = 0;
@@ -38,19 +38,22 @@ static int scrc_exit_handler (int* /* status */, Pasteboard *pb)    {
 int scrc_rearm_keyboard (unsigned int /* fac */, void* /* par */)   {
   if (Armed) return 0;
   Armed = 1;  
-#if 0
+#if _OSK
   if (!Insignal)  {
     Insignal = sig_book_signal();
     sig_declare_signal(Insignal, scrc_ast );
   }
   _ss_ssig(0,Insignal);
+#else
+  IOPortManager(0).add(0, fileno(stdin), scrc_ast_keyboard, 0);
 #endif
   return (1);
 }
 
 //----------------------------------------------------------------------------
-int scrc_ast_keyboard (unsigned int /* fac */)   {
+int scrc_ast_keyboard (void*)   {
   if (scr_ignore_input == 0)  {
+    ::printf("Got input to process\n");
     wtc_insert (WT_FACILITY_KEYBOARD);
     if (User_ast) (* User_ast) ();
   }
@@ -61,7 +64,7 @@ int scrc_ast_keyboard (unsigned int /* fac */)   {
 int scrc_handler_keyboard (unsigned int /* fac */, void* /* par */)  {
   int status = 0;
   do  {
-    //status = _gs_rdy(0);
+    status = IOPortManager::getAvailBytes(fileno(stdin));
     if( status > 0 )    {  
       read(0,&Last_char,1);
       if (Key_ptr >= KEY_BUF_SIZE) status = 0;

@@ -184,7 +184,7 @@ int scrc_fputs (Pasteboard *pb);
 int scrc_wait (Display *disp);
 int scrc_save_screen_rearm();
 int scrc_rearm_keyboard (unsigned int fac, void* par);
-int scrc_ast_keyboard (unsigned int);
+int scrc_ast_keyboard (void*);
 void scrc_uniconify_display (Display* d);
 void scrc_iconify_display (Display* d);
 
