@@ -1,13 +1,13 @@
-! $Id: release.notes,v 1.69 2006-01-20 16:17:15 pkoppenb Exp $
+! $Id: release.notes,v 1.70 2006-01-20 17:14:15 cattanem Exp $
 ! Package     : PhysEvent 
 ! Responsible : P. Koppenburg
 
+!======================= PhysEvent v9r0 2006-01-20 ==========================
 ! 2006-01-20 - P. Koppenburg
  - xml/Particle.xml
  - xml/Vertex.xml
    . Use symmetrix matrices
 
-!======================= PhysEvent v9r0 2006-01-20 ==========================
 ! 2006-01-20 - P. Koppenburg
  - xml/Particle.xml
    . Added a constructor from ParticleID
