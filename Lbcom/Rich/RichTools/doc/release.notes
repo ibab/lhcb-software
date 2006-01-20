@@ -4,6 +4,10 @@
 ! Purpose     : General purpose Rich Tools
 !-----------------------------------------------------------------------------
 
+!=========================== RichTools v2r1 2006-01-20 =======================
+! 2006-01-20 - Marco Cattaneo
+ - Changes for Gaudi v18r1
+
 !=========================== RichTools v2r0 2005-12-19 =======================
 ! 2005-12-19 - Marco Cattaneo
  - Add dependency on RichKernel (no longer through RichDet)

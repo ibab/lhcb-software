@@ -5,7 +5,7 @@
  * Implementation file for class : RichTabulatedRefractiveIndex
  *
  * CVS Log :-
- * $Id: RichTabulatedRefractiveIndex.cpp,v 1.7 2005-10-26 10:39:00 jonrob Exp $
+ * $Id: RichTabulatedRefractiveIndex.cpp,v 1.8 2006-01-20 16:34:27 cattanem Exp $
  *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @date 15/03/2002
@@ -61,24 +61,17 @@ StatusCode RichTabulatedRefractiveIndex::initialize()
 
   // Register dependencies on DeRichRadiator objects to UMS
   // aerogel
-  sc = ums->registerCondition( this,
-                               DeRichRadiatorLocation::Aerogel,
-                               &RichTabulatedRefractiveIndex::updateAerogelRefIndex );
-  if (sc.isFailure())
-    return Error( "Failed registering dependency on '"+m_deRads[Rich::Aerogel]->name()+"'",sc );
+  ums->registerCondition( this,
+                          DeRichRadiatorLocation::Aerogel,
+                          &RichTabulatedRefractiveIndex::updateAerogelRefIndex );
   // C4F10
-  sc = ums->registerCondition( this,
-                               DeRichRadiatorLocation::C4F10,
-                               &RichTabulatedRefractiveIndex::updateC4F10RefIndex );
-  if (sc.isFailure())
-    return Error( "Failed registering dependency on '"+m_deRads[Rich::C4F10]->name()+"'",sc );
+  ums->registerCondition( this,
+                           DeRichRadiatorLocation::C4F10,
+                           &RichTabulatedRefractiveIndex::updateC4F10RefIndex );
   // CF4
-  sc = ums->registerCondition( this,
-                               DeRichRadiatorLocation::CF4,
-                               &RichTabulatedRefractiveIndex::updateCF4RefIndex );
-  if (sc.isFailure())
-    return Error( "Failed registering dependency on '"+m_deRads[Rich::CF4]->name()+"'",sc );
-
+  ums->registerCondition( this,
+                          DeRichRadiatorLocation::CF4,
+                          &RichTabulatedRefractiveIndex::updateCF4RefIndex );
   // force first updates
   sc = ums->update(this);
   if (sc.isFailure()) return Error ( "Failed first UMS update", sc );

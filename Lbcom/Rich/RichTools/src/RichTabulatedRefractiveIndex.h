@@ -5,7 +5,7 @@
  *  Header file for tool : RichTabulatedRefractiveIndex
  *
  *  CVS Log :-
- *  $Id: RichTabulatedRefractiveIndex.h,v 1.9 2005-12-16 15:14:20 jonrob Exp $
+ *  $Id: RichTabulatedRefractiveIndex.h,v 1.10 2006-01-20 16:34:27 cattanem Exp $
  *
  *  @author Chris Jones    Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -20,9 +20,7 @@
 #include "GaudiKernel/SmartDataPtr.h"
 #include "GaudiKernel/ParticleProperty.h"
 #include "GaudiKernel/IParticlePropertySvc.h"
-
-// Det Desc
-#include "DetDesc/IUpdateManagerSvc.h"
+#include "GaudiKernel/IUpdateManagerSvc.h"
 
 // Constants
 #include "Kernel/PhysicalConstants.h"
