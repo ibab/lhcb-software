@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.16 2006-01-20 12:57:05 janos Exp $
+! $Id: release.notes,v 1.17 2006-01-20 14:05:54 cattanem Exp $
 Package         : OTSimulation
 Package manager : Jacopo Nardulli
 
@@ -6,7 +6,7 @@ Package manager : Jacopo Nardulli
 ! 2006-01-30 Jan Amoraal
  - Migrated to LHCb v20r0
  - In MCOTDepositCreator::addCrossTalk(): (*iterDeposit)->tdcTime()
-   should be (*iterDepsoit)->time. As we don't use tdcTime to create 
+   should be (*iterDeposit)->time. As we don't use tdcTime to create 
    cross talk. Anyhow tdcTime=0 when we create cross talk.
  - In OTRandomDepositCreator::OTRandomDepositCreator: Removed channel
    deadtime it's now structure parameter. 

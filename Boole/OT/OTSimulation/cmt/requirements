@@ -1,7 +1,7 @@
-# $Id: requirements,v 1.9 2006-01-20 12:57:05 janos Exp $
+# $Id: requirements,v 1.10 2006-01-20 14:05:54 cattanem Exp $
 package OTSimulation
 
-version v2r0
+version v3r0
 
 branches OTSimulation cmt doc src options
 
