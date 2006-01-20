@@ -4,12 +4,12 @@
 ! Purpose     : standard converters for the LHCb Detector Description
 !-----------------------------------------------------------------------------
 
+!================ DetDescCnv v3r0 2006-01-20 ==========================
+! - *** Requires MathCore-5_06_02 or higher. ***
+
 ! 2006-01-19 - Marco Clemencic
  - Check if the DataObject is a DetectorElement instead of trusting it
    in XmlBaseDetElemCnv::fillObjRef.
-
-!================ DetDescCnv v3r0 2005-12-15 ==========================
-! - *** Requires MathCore-5_06_02 or higher. ***
 
 ! 2005-12-15 - Marco Clemencic
  - Fixed a but in handling of Windows' style path
