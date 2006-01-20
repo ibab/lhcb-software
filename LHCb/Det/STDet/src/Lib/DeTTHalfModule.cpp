@@ -75,7 +75,6 @@ std::ostream& DeTTHalfModule::printOut( std::ostream& os ) const{
      << "position " << m_position
      << " Det region " << m_detRegion
      << " Column " << m_column
-     << " n children "  << childIDetectorElements().size() 
      << std::endl;
 
   return os;
@@ -89,7 +88,6 @@ MsgStream& DeTTHalfModule::printOut( MsgStream& os ) const{
      << "position " << m_position 
      << " Det region " << m_detRegion
      << " Column " << m_column  
-     << " n children "  << childIDetectorElements().size() 
      << std::endl;
 
   return os;

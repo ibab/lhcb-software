@@ -46,7 +46,6 @@ std::ostream& DeSTLayer::printOut( std::ostream& os ) const{
   // stream to cout
   os << " Layer: "  << m_id << std::endl;
   os << "stereo angle " << m_angle
-     << " n children "  << childIDetectorElements().size() 
      << std::endl;
 
   return os;
@@ -57,7 +56,6 @@ MsgStream& DeSTLayer::printOut( MsgStream& os ) const{
   // stream to Msg service
   os << " Station : "  << m_id << endreq;
   os << "stereo angle " << m_angle
-     << " n children "  << childIDetectorElements().size() 
      << endreq;
 
   return os;

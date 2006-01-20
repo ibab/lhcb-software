@@ -44,7 +44,6 @@ std::ostream& DeSTStation::printOut( std::ostream& os ) const{
 
   // stream to cout
   os << " Station : "  << m_id 
-     << " n children "  << childIDetectorElements().size() 
      << std::endl;
 
   return os;
@@ -54,7 +53,6 @@ MsgStream& DeSTStation::printOut( MsgStream& os ) const{
 
   // stream to Msg service
   os << " Station : "  << m_id 
-     << " n children "  << childIDetectorElements().size() 
      << endreq;
 
   return os;

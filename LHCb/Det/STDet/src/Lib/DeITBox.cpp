@@ -59,7 +59,6 @@ std::ostream& DeITBox::printOut( std::ostream& os ) const{
   // stream to cout
   os << " Box : "  << name() 
      << " id " << id() 
-     << " n children "  << childIDetectorElements().size() 
      << std::endl;
 
   return os;
@@ -70,7 +69,6 @@ MsgStream& DeITBox::printOut( MsgStream& os ) const{
   // stream to Msg service
   os << " Box : "  << name() 
      << " id " << id() 
-     << " n children "  << childIDetectorElements().size() 
      << std::endl;
 
   return os;
