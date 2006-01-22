@@ -1,4 +1,4 @@
-// $Id: CondDBCache.cpp,v 1.3 2005-09-18 16:08:39 marcocle Exp $
+// $Id: CondDBCache.cpp,v 1.4 2006-01-22 16:13:45 marcocle Exp $
 // Include files 
 
 
@@ -192,8 +192,9 @@ void CondDBCache::getSubNodes (const std::string &path, std::vector<std::string>
   for ( f = m_cache.begin(); f != m_cache.end(); ++f ) {
     const std::string &p = f->first;
     if ( p.find(path) == 0  // the string must start with path
+         && ( p.size() > path.size() ) // it must contain something more than the path
          && ( p.find('/',path.size()+1) == p.npos ) ) { // and I should have only one extra name
-      node_names.push_back(p.substr(path.size()+1));
+      node_names.push_back(p.substr(path.size()));
     }
   }
 }

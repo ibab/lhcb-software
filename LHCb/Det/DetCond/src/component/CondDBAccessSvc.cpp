@@ -1,4 +1,4 @@
-// $Id: CondDBAccessSvc.cpp,v 1.14 2005-10-18 15:44:00 marcocle Exp $
+// $Id: CondDBAccessSvc.cpp,v 1.15 2006-01-22 16:13:45 marcocle Exp $
 // Include files 
 #include <sstream>
 
@@ -13,6 +13,7 @@
 #include "CoolKernel/DatabaseId.h"
 #include "CoolKernel/IDatabaseSvc.h"
 #include "CoolKernel/IFolder.h"
+#include "CoolKernel/IFolderSet.h"
 #include "CoolKernel/IObject.h"
 #include "CoolKernel/Exception.h"
 
@@ -509,28 +510,34 @@ StatusCode CondDBAccessSvc::tagFolder(const std::string &path, const std::string
     log << MSG::DEBUG << "entering tagFolder: \"" << path << '"' << endmsg;
     // retrieve folder pointer
     StatusCode sc;
-    cool::IFolderPtr folder = m_db->getFolder(path);
-    if (!folder->isLeaf()) { // FolderSet
+    //
+    if (m_db->existsFolderSet(path)) { // FolderSet
+      cool::IFolderSetPtr folderSet = m_db->getFolderSet(path);
       log << MSG::DEBUG << "it is a folderset" << endmsg;
-      std::string sub_path(path);
-      if ( sub_path != "/" ) { // root folderset does not need an extra "/"
-      	sub_path += "/";
-      }
       // discover child folders
-      std::vector<std::string> fldr_names = m_db->listAllNodes();
+      std::vector<std::string> folderSet_names = folderSet->listFolderSets();
+      std::vector<std::string> folder_names    = folderSet->listFolders();
       std::vector<std::string>::iterator i;
-      for ( i = fldr_names.begin(); i != fldr_names.end(); ++i ){
-        if ( *i != sub_path // avoid infinite recursion on folderset "/". TODO: refine
-             && i->find(sub_path) == 0 // (*i) starts with path
-             && i->find('/',sub_path.size()+1) == i->npos) // and does not contain any other '/'
-          sc = tagFolder(*i,tagName,description); // recursion!
+      for ( i = folderSet_names.begin(); i != folderSet_names.end(); ++i ){
+        sc = tagFolder(*i, tagName, description); // recursion!
+      }
+      for ( i = folder_names.begin(); i != folder_names.end(); ++i ){
+        sc = tagFolder(*i, tagName, description); // recursion again. Might be merged with above...
       }
     } else {
-      if (folder->versioningMode() == cool::FolderVersioning::SINGLE_VERSION){
-        log << MSG::WARNING << "Not tagging folder \"" << path << "\": single-version" << endmsg;
+      if (m_db->existsFolder(path)) {
+        cool::IFolderPtr folder = m_db->getFolder(path);
+        log << MSG::DEBUG << "it is a folder" << endmsg;
+        if (folder->versioningMode() == cool::FolderVersioning::SINGLE_VERSION){
+          log << MSG::WARNING << "Not tagging folder \"" << path << "\": single-version" << endmsg;
+        } else {
+          log << MSG::DEBUG << "Tagging folder \"" << path << "\": " << tagName << endmsg;
+          folder->tagCurrentHead(folder->fullPath() + "-" + tagName, description);
+        }
       } else {
-        log << MSG::DEBUG << "Tagging folder \"" << path << "\": " << tagName << endmsg;
-        folder->tag(folder->fullPath() + "-" + tagName,description);
+        MsgStream log(msgSvc(),name());
+        log << MSG::ERROR << "Folder \"" << path << "\" not found!" << endmsg;
+        return StatusCode::FAILURE;
       }
     }
   } catch (cool::FolderNotFound &e) {
@@ -647,14 +654,18 @@ StatusCode CondDBAccessSvc::getChildNodes (const std::string &path, std::vector<
       if (database()->existsFolderSet(path)) {
         log << MSG::DEBUG << "FolderSet \"" << path  << "\" exists" << endmsg;
         
-        std::vector<std::string> fldr_names = database()->listAllNodes();
+        cool::IFolderSetPtr folderSet = database()->getFolderSet(path);
+
+        std::vector<std::string> fldr_names = folderSet->listFolders();
+        std::vector<std::string> fldrset_names = folderSet->listFolderSets();
+
         for ( std::vector<std::string>::iterator f = fldr_names.begin(); f != fldr_names.end(); ++f ) {
           log << MSG::DEBUG << *f << endmsg;
-          if ( *f != path // if (*f == path) we match also the following conditions (which is not what we want)
-               && f->find(path) == 0  // the string must start with path
-               && ( f->find('/',path.size()+1) == f->npos ) ) { // and I should have only one extra name
-            node_names.push_back(f->substr(path.size()));
-          }
+          node_names.push_back(f->substr(f->rfind('/')));
+        }
+        for ( std::vector<std::string>::iterator f = fldrset_names.begin(); f != fldrset_names.end(); ++f ) {
+          log << MSG::DEBUG << *f << endmsg;
+          node_names.push_back(f->substr(f->rfind('/')));
         }
         
         log << MSG::DEBUG << "got " << node_names.size() << " sub folders" << endmsg;
@@ -729,7 +740,7 @@ StatusCode CondDBAccessSvc::cacheAddObject(const std::string &path, const TimePo
 //  
 //=========================================================================
 StatusCode CondDBAccessSvc::cacheAddXMLObject(const std::string &path, const TimePoint &since, const TimePoint &until,
-                                           const std::string &data, cool::ChannelId channel) {
+                                              const std::string &data, cool::ChannelId channel) {
   pool::AttributeList payload(*s_XMLstorageAttListSpec);
   payload["data"].setValue<std::string>(data);
   return cacheAddObject(path,since,until,payload,channel);

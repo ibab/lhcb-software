@@ -1,4 +1,4 @@
-// $Id: RelyConverter.cpp,v 1.13 2005-10-18 15:38:48 marcocle Exp $
+// $Id: RelyConverter.cpp,v 1.14 2006-01-22 16:13:45 marcocle Exp $
 // Include files 
 #include "RelyConverter.h"
 
@@ -218,35 +218,44 @@ StatusCode RelyConverter::i_delegatedCreation(IOpaqueAddress* pAddress, DataObje
       
     case FillObjectRefs:
       {
-	log << MSG::DEBUG << "Create addresses for sub-folders" << endmsg;
-	std::string path = pAddress->par()[0];
+        log << MSG::DEBUG << "Create addresses for sub-folders" << endmsg;
+        std::string path = pAddress->par()[0];
+        
+        // find subnodes
+        std::vector<std::string> children;
+        
+        sc = getChildNodes(path,children);
+        if ( !sc.isSuccess() ) return sc;
 	
-	// find subnodes
-	std::vector<std::string> children;
-	
-	sc = getChildNodes(path,children);
-	if ( !sc.isSuccess() ) return sc;
-	
-	// add registries for the sub folders
-	for ( std::vector<std::string>::iterator c = children.begin(); c != children.end(); ++c ) {
+        // add registries for the sub folders
+        for ( std::vector<std::string>::iterator c = children.begin(); c != children.end(); ++c ) {
 	  
-	  IOpaqueAddress *childAddress;
-	  std::string par[2] = { path + *c, *c };
-	  unsigned long ipar[2] = { 0,0 };
+          IOpaqueAddress *childAddress;
+          std::string par[2];
+          // in current implementation, the child folders have a '/' in front.
+          // So I need to treat in a different way the case of a parent COOL root folderset
+          // to avoid thing like "//folder"
+          if ( path == "/" ) {
+            par[0] = *c;
+          } else {
+            par[0] = path + *c;
+          }
+          par[1] = *c;
+          unsigned long ipar[2] = { 0,0 };
 	  
-	  log << MSG::VERBOSE << "Create address for " << par[0] << endmsg;      
-	  sc = conversionSvc()->addressCreator()->createAddress(CONDDB_StorageType,
-								CLID_Catalog,
-								par,
-								ipar,
-								childAddress);
-	  if ( !sc.isSuccess() ) return sc;
-	  log << MSG::VERBOSE << "Address created" << endmsg;
+          log << MSG::VERBOSE << "Create address for " << par[0] << endmsg;      
+          sc = conversionSvc()->addressCreator()->createAddress(CONDDB_StorageType,
+                                                                CLID_Catalog,
+                                                                par,
+                                                                ipar,
+                                                                childAddress);
+          if ( !sc.isSuccess() ) return sc;
+          log << MSG::VERBOSE << "Address created" << endmsg;
 	  
-	  sc = dataManager()->registerAddress(pAddress->registry(), *c, childAddress);
-	  if ( !sc.isSuccess() ) return sc;
-	  log << MSG::VERBOSE << "Address registered" << endmsg;
-	}
+          sc = dataManager()->registerAddress(pAddress->registry(), *c, childAddress);
+          if ( !sc.isSuccess() ) return sc;
+          log << MSG::VERBOSE << "Address registered" << endmsg;
+        }
       }
       break;
       
