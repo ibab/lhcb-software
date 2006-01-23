@@ -5,7 +5,7 @@
  * Implementation file for class : MCRichDigitSummaryAlg
  *
  * CVS Log :-
- * $Id: MCRichDigitSummaryAlg.cpp,v 1.1 2005-10-18 12:40:30 jonrob Exp $
+ * $Id: MCRichDigitSummaryAlg.cpp,v 1.2 2006-01-23 13:52:07 jonrob Exp $
  *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @date 2004-02-11
@@ -14,6 +14,9 @@
 
 // local
 #include "MCRichDigitSummaryAlg.h"
+
+// namespace
+using namespace LHCb;
 
 // Declaration of the Algorithm Factory
 static const  AlgFactory<MCRichDigitSummaryAlg>          s_factory;
@@ -78,7 +81,7 @@ StatusCode MCRichDigitSummaryAlg::execute()
   MCRichDigits * mcDigits = get<MCRichDigits>( MCRichDigitLocation::Default );
 
   // Make new container of MCRichDigitSummaries
-  MCRichDigitSummaryVector * summaries = new MCRichDigitSummaryVector();
+  MCRichDigitSummarys * summaries = new MCRichDigitSummarys();
   put ( summaries, MCRichDigitSummaryLocation::Default );
 
   // loop over mc digits
@@ -106,8 +109,8 @@ StatusCode MCRichDigitSummaryAlg::execute()
         // Set MCParticle
         summary->setMCParticle( (*iH)->mcParticle() );
 
-        // Set bit-packed history
-        MCRichDigitHistoryCode & hist = summary->historyCode();
+        // Copy default history from object
+        MCRichDigitHistoryCode hist = summary->history();
 
         // Which event
         if      ( inMainEvent )                            { hist.setSignalEvent(true);   }
@@ -116,7 +119,7 @@ StatusCode MCRichDigitSummaryAlg::execute()
         else if ( hitInSpillEvent(*iH,m_RichNextLoc) )     { hist.setNextEvent(true);     }
         else if ( hitInSpillEvent(*iH,m_RichNextNextLoc) ) { hist.setNextNextEvent(true); }
         // Is it signal
-        if ( !m_truth->isBackground(*iH) ) 
+        if ( !m_truth->isBackground(*iH) )
         {
           if      ( Rich::Aerogel == (*iH)->radiator() ) { hist.setAerogelHit(true); }
           else if ( Rich::C4F10   == (*iH)->radiator() ) { hist.setC4f10Hit(true);   }
@@ -127,6 +130,9 @@ StatusCode MCRichDigitSummaryAlg::execute()
         if ( (*iH)->chargedTrack()    ) { hist.setChargedTrack(true);  }
         if ( (*iH)->backgroundHit()   ) { hist.setBackgroundHit(true); }
 
+        // update history in data object
+        summary->setHistory(hist);
+
       }
 
     } // end loop over hits
@@ -135,7 +141,7 @@ StatusCode MCRichDigitSummaryAlg::execute()
 
   if ( msgLevel(MSG::DEBUG) )
   {
-    debug() << "Created " << summaries->size() << " MCRichDigitSummary objects at " 
+    debug() << "Created " << summaries->size() << " MCRichDigitSummary objects at "
             << MCRichDigitSummaryLocation::Default << endreq;
   }
 

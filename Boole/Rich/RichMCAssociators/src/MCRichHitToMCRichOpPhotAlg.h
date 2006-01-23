@@ -4,7 +4,7 @@
  *  Header file for algorithm : MCRichHitToMCRichOpPhotAlg
  *
  *  CVS Log :-
- *  $Id: MCRichHitToMCRichOpPhotAlg.h,v 1.1.1.1 2005-10-13 15:13:40 jonrob Exp $
+ *  $Id: MCRichHitToMCRichOpPhotAlg.h,v 1.2 2006-01-23 13:52:07 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   2004-02-11
@@ -39,7 +39,8 @@
  *  @date   2004-02-11
  */
 
-class MCRichHitToMCRichOpPhotAlg : public RichAlgBase {
+class MCRichHitToMCRichOpPhotAlg : public RichAlgBase 
+{
 
 public:
 
@@ -60,7 +61,7 @@ public:
 private: // definitions
 
   /// Shortcut to linker name
-  typedef LinkerWithKey<MCRichOpticalPhoton,MCRichHit> MCRichHitsToPhotons;
+  typedef LinkerWithKey<LHCb::MCRichOpticalPhoton,LHCb::MCRichHit> MCRichHitsToPhotons;
 
 private: // methods
 
@@ -69,8 +70,11 @@ private: // methods
 
 private: // data
 
+  /// typedef of event locations to process
   typedef std::vector<std::string> EventList;
+  /// event locations to process
   EventList m_evtLocs;
 
 };
+
 #endif // RICHMCTOOLS_MCRICHHITTOMCRICHOPPHOTALG_H

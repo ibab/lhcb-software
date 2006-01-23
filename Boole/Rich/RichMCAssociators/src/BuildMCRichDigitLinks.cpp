@@ -4,14 +4,7 @@
  *  Implementation file for RICH DAQ algorithm : BuildMCRichDigitLinks
  *
  *  CVS Log :-
- *  $Id: BuildMCRichDigitLinks.cpp,v 1.1.1.1 2005-10-13 15:13:40 jonrob Exp $
- *  $Log: not supported by cvs2svn $
- *  Revision 1.1  2005/01/07 13:17:47  jonrob
- *  Imported from RichDAQ
- *
- *  Revision 1.6  2004/07/27 13:46:06  jonrob
- *  Add doxygen file documentation and CVS information
- *
+ *  $Id: BuildMCRichDigitLinks.cpp,v 1.2 2006-01-23 13:52:07 jonrob Exp $
  *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   2003-11-09
@@ -24,6 +17,9 @@
 // local
 #include "BuildMCRichDigitLinks.h"
 
+// namespace
+using namespace LHCb;
+
 //-----------------------------------------------------------------------------
 
 // Declaration of the Algorithm Factory
@@ -35,14 +31,13 @@ const        IAlgFactory& BuildMCRichDigitLinksFactory = s_factory ;
 //=============================================================================
 BuildMCRichDigitLinks::BuildMCRichDigitLinks( const std::string& name,
                                               ISvcLocator* pSvcLocator)
-  : RichAlgBase ( name, pSvcLocator ) {
-
+  : RichAlgBase ( name, pSvcLocator ) 
+{
   // Define Job options for this algorithm
   declareProperty( "MCRichDigitsLocation",
                    m_mcRichDigitsLocation = MCRichDigitLocation::Default );
   declareProperty( "RichDigitsLocation",
                    m_richDigitsLocation = RichDigitLocation::Default );
-
 }
 
 //=============================================================================
@@ -53,16 +48,14 @@ BuildMCRichDigitLinks::~BuildMCRichDigitLinks() {};
 //=============================================================================
 // Initialisation.
 //=============================================================================
-StatusCode BuildMCRichDigitLinks::initialize() {
-
-  debug() << "Initialise" << endreq;
-
+StatusCode BuildMCRichDigitLinks::initialize() 
+{
   // intialise base
-  StatusCode sc = RichAlgBase::initialize();
+  const StatusCode sc = RichAlgBase::initialize();
   if ( sc.isFailure() ) { return sc; }
 
-  return StatusCode::SUCCESS;
-};
+  return sc;
+}
 
 //=============================================================================
 // Main execution
@@ -92,7 +85,7 @@ StatusCode BuildMCRichDigitLinks::execute() {
 //=============================================================================
 //  Finalize
 //=============================================================================
-StatusCode BuildMCRichDigitLinks::finalize() 
+StatusCode BuildMCRichDigitLinks::finalize()
 {
   // finalise base
   return RichAlgBase::finalize();

@@ -5,7 +5,7 @@
  *  Header file for algorithm : MCRichDigitSummaryAlg
  *
  *  CVS Log :-
- *  $Id: MCRichDigitSummaryAlg.h,v 1.1 2005-10-18 12:40:30 jonrob Exp $
+ *  $Id: MCRichDigitSummaryAlg.h,v 1.2 2006-01-23 13:52:07 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   04/10/2005
@@ -33,7 +33,7 @@
 /** @class MCRichDigitSummaryAlg MCRichDigitSummaryAlg.h
  *
  *  Algorithm to fill the MCRichDigitSummary objects.
- *  Used to provide direct navigation from RichSmartIDs to MCParticles on the DST, 
+ *  Used to provide direct navigation from RichSmartIDs to MCParticles on the DST,
  *  and also to provide some history information.
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
@@ -58,10 +58,10 @@ public:
 private: // methods
 
   /// test if given hit is in main event ?
-  bool hitInMainEvent( const MCRichHit * hit ) const;
+  bool hitInMainEvent( const LHCb::MCRichHit * hit ) const;
 
   /// test if hit is in given spillover event
-  bool hitInSpillEvent( const MCRichHit * hit,
+  bool hitInSpillEvent( const LHCb::MCRichHit * hit,
                         const std::string & loc ) const;
 
 private: // data members
@@ -82,17 +82,17 @@ private: // data members
 };
 
 inline bool
-MCRichDigitSummaryAlg::hitInMainEvent( const MCRichHit * hit ) const
+MCRichDigitSummaryAlg::hitInMainEvent( const LHCb::MCRichHit * hit ) const
 {
   // get location of this hits parent container
   const std::string location = objectLocation( hit->parent() );
   // compare to main event location
-  return ( location == MCRichHitLocation::Default ||
-           location == "/Event/"+MCRichHitLocation::Default );
+  return ( location == LHCb::MCRichHitLocation::Default ||
+           location == "/Event/"+LHCb::MCRichHitLocation::Default );
 }
 
-inline bool 
-MCRichDigitSummaryAlg::hitInSpillEvent( const MCRichHit * hit,
+inline bool
+MCRichDigitSummaryAlg::hitInSpillEvent( const LHCb::MCRichHit * hit,
                                         const std::string & loc ) const
 {
   return ( objectLocation(hit->parent()) == loc );

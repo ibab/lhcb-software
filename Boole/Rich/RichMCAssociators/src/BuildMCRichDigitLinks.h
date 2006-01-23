@@ -4,7 +4,7 @@
  *  Header file for RICH DAQ algorithm : BuildMCRichDigitLinks
  *
  *  CVS Log :-
- *  $Id: BuildMCRichDigitLinks.h,v 1.1.1.1 2005-10-13 15:13:40 jonrob Exp $
+ *  $Id: BuildMCRichDigitLinks.h,v 1.2 2006-01-23 13:52:07 jonrob Exp $
  *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   2003-11-09
@@ -15,9 +15,6 @@
 
 // base class
 #include "RichKernel/RichAlgBase.h"
-
-// Gaudi framework
-#include "GaudiKernel/SmartDataPtr.h"
 
 // Event model
 #include "Event/RichDigit.h"
@@ -32,7 +29,8 @@
  *  @date   2003-11-09
  */
 
-class BuildMCRichDigitLinks : public RichAlgBase {
+class BuildMCRichDigitLinks : public RichAlgBase 
+{
 
 public:
 

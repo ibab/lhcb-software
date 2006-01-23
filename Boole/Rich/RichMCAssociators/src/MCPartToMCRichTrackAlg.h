@@ -5,14 +5,14 @@
  *  Header file for algorithm : MCPartToMCRichTrackAlg
  *
  *  CVS Log :-
- *  $Id: MCPartToMCRichTrackAlg.h,v 1.1.1.1 2005-10-13 15:13:40 jonrob Exp $
+ *  $Id: MCPartToMCRichTrackAlg.h,v 1.2 2006-01-23 13:52:07 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   2004-02-11
  */
 //-----------------------------------------------------------------------------
 
-#ifndef RICHMCASSOCIATORS_MCPARTTOMCRICHTRACKALG_H 
+#ifndef RICHMCASSOCIATORS_MCPARTTOMCRICHTRACKALG_H
 #define RICHMCASSOCIATORS_MCPARTTOMCRICHTRACKALG_H 1
 
 // from Gaudi
@@ -30,21 +30,22 @@
 
 //-----------------------------------------------------------------------------
 /** @class MCPartToMCRichTrackAlg MCPartToMCRichTrackAlg.h
- *  
+ *
  *  Builds the association tables between MCParticles and MCRichTracks
- * 
+ *
  *  @author Chris Jones    Christopher.Rob.Jones@cern.ch
  *  @date   2004-02-11
  */
 //-----------------------------------------------------------------------------
 
-class MCPartToMCRichTrackAlg : public RichAlgBase {
+class MCPartToMCRichTrackAlg : public RichAlgBase 
+{
 
-public: 
+public:
 
   /// Standard constructor
   MCPartToMCRichTrackAlg( const std::string& name, ISvcLocator* pSvcLocator );
- 
+
   /// Destructor
   virtual ~MCPartToMCRichTrackAlg( );
 
@@ -55,7 +56,7 @@ public:
 private: // definitions
 
   /// Shortcut to linker name
-  typedef LinkerWithKey<MCRichTrack,MCParticle> MCPartToRichTracks;
+  typedef LinkerWithKey<LHCb::MCRichTrack,LHCb::MCParticle> MCPartToRichTracks;
 
 private: // methods
 
@@ -64,8 +65,11 @@ private: // methods
 
 private: // data
 
+  /// typedef for List of event locations to process
   typedef std::vector<std::string> EventList;
+  /// List of event locations to process
   EventList m_evtLocs;
 
 };
-#endif // RICHMCASSOCIATORS_MCPARTTOMCRICHTRACKALG_H 
+
+#endif // RICHMCASSOCIATORS_MCPARTTOMCRICHTRACKALG_H

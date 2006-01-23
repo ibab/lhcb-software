@@ -5,7 +5,7 @@
  * Implementation file for class : MCRichHitToMCRichOpPhotAlg
  *
  * CVS Log :-
- * $Id: MCRichHitToMCRichOpPhotAlg.cpp,v 1.1.1.1 2005-10-13 15:13:40 jonrob Exp $
+ * $Id: MCRichHitToMCRichOpPhotAlg.cpp,v 1.2 2006-01-23 13:52:07 jonrob Exp $
  *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @date 2004-02-11
@@ -14,6 +14,9 @@
 
 // local
 #include "MCRichHitToMCRichOpPhotAlg.h"
+
+// namespace
+using namespace LHCb;
 
 // Declaration of the Algorithm Factory
 static const  AlgFactory<MCRichHitToMCRichOpPhotAlg>          s_factory;
@@ -51,7 +54,7 @@ StatusCode MCRichHitToMCRichOpPhotAlg::initialize()
 {
   // Sets up various tools and services
   return RichAlgBase::initialize();
-};
+}
 
 //=============================================================================
 // Main execution
@@ -69,7 +72,7 @@ StatusCode MCRichHitToMCRichOpPhotAlg::execute()
 
   // Loop over all MCRichOpticalPhotons in each spillover event
   for ( EventList::const_iterator iEvt = m_evtLocs.begin();
-        iEvt != m_evtLocs.end(); ++iEvt ) 
+        iEvt != m_evtLocs.end(); ++iEvt )
   {
     if ( !addEvent(links,*iEvt) ) return StatusCode::FAILURE;
   }
@@ -83,7 +86,7 @@ StatusCode MCRichHitToMCRichOpPhotAlg::addEvent( MCRichHitsToPhotons & links,
 
   // load MCRichTracks in this event
   SmartDataPtr<MCRichOpticalPhotons> mcPhotons( eventSvc(), evtLoc );
-  if ( !mcPhotons ) 
+  if ( !mcPhotons )
   {
     debug() << "Cannot locate MCRichOpticalPhotons at " << evtLoc << endreq;
     return StatusCode::SUCCESS;
@@ -93,11 +96,11 @@ StatusCode MCRichHitToMCRichOpPhotAlg::addEvent( MCRichHitsToPhotons & links,
 
   // add links to linker
   for ( MCRichOpticalPhotons::const_iterator iPhot = mcPhotons->begin();
-        iPhot != mcPhotons->end(); ++iPhot ) 
+        iPhot != mcPhotons->end(); ++iPhot )
   {
     links.link( (*iPhot)->mcRichHit(), *iPhot );
   }
-  
+
   return StatusCode::SUCCESS;
 }
 

@@ -5,14 +5,7 @@
  * Implementation file for class : MCPartToMCRichTrackAlg
  *
  * CVS Log :-
- * $Id: MCPartToMCRichTrackAlg.cpp,v 1.2 2005-11-15 13:24:29 jonrob Exp $
- * $Log: not supported by cvs2svn $
- * Revision 1.1.1.1  2005/10/13 15:13:38  jonrob
- * First import of RichMCAssociators under Rich
- *
- * Revision 1.3  2004/07/26 17:56:09  jonrob
- * Various improvements to the doxygen comments
- *
+ * $Id: MCPartToMCRichTrackAlg.cpp,v 1.3 2006-01-23 13:52:07 jonrob Exp $
  *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @date 14/01/2002
@@ -21,6 +14,9 @@
 
 // local
 #include "MCPartToMCRichTrackAlg.h"
+
+// namespace
+using namespace LHCb;
 
 // Declaration of the Algorithm Factory
 static const  AlgFactory<MCPartToMCRichTrackAlg>          s_factory;
@@ -31,7 +27,7 @@ const        IAlgFactory& MCPartToMCRichTrackAlgFactory = s_factory;
 //=============================================================================
 MCPartToMCRichTrackAlg::MCPartToMCRichTrackAlg( const std::string& name,
                                                 ISvcLocator* pSvcLocator)
-  : RichAlgBase ( name , pSvcLocator ) 
+  : RichAlgBase ( name , pSvcLocator )
 {
 
   m_evtLocs.clear();
@@ -48,12 +44,12 @@ MCPartToMCRichTrackAlg::MCPartToMCRichTrackAlg( const std::string& name,
 //=============================================================================
 // Destructor
 //=============================================================================
-MCPartToMCRichTrackAlg::~MCPartToMCRichTrackAlg() {}; 
+MCPartToMCRichTrackAlg::~MCPartToMCRichTrackAlg() {};
 
 //=============================================================================
 // Initialisation
 //=============================================================================
-StatusCode MCPartToMCRichTrackAlg::initialize() 
+StatusCode MCPartToMCRichTrackAlg::initialize()
 {
   // Sets up various tools and services
   return RichAlgBase::initialize();
@@ -62,14 +58,14 @@ StatusCode MCPartToMCRichTrackAlg::initialize()
 //=============================================================================
 // Main execution
 //=============================================================================
-StatusCode MCPartToMCRichTrackAlg::execute() 
+StatusCode MCPartToMCRichTrackAlg::execute()
 {
   debug() << "Execute" << endreq;
 
   // New linker object
-  MCPartToRichTracks links( eventSvc(), msgSvc(), 
+  MCPartToRichTracks links( eventSvc(), msgSvc(),
                             MCRichTrackLocation::LinksFromMCParticles );
-  
+
   // set the ordering
   links.setDecreasingWeight();
 
@@ -82,13 +78,13 @@ StatusCode MCPartToMCRichTrackAlg::execute()
   return StatusCode::SUCCESS;
 };
 
-StatusCode MCPartToMCRichTrackAlg::addEvent( MCPartToRichTracks & links, 
+StatusCode MCPartToMCRichTrackAlg::addEvent( MCPartToRichTracks & links,
                                              const std::string & evtLoc )
 {
 
   // load MCRichTracks in this event
   SmartDataPtr<MCRichTracks> mcTracks( eventSvc(), evtLoc );
-  if ( !mcTracks ) 
+  if ( !mcTracks )
   {
     debug() << "Cannot locate MCRichTracks at " << evtLoc << endreq;
     return StatusCode::SUCCESS;
@@ -108,7 +104,7 @@ StatusCode MCPartToMCRichTrackAlg::addEvent( MCPartToRichTracks & links,
 //=============================================================================
 //  Finalize
 //=============================================================================
-StatusCode MCPartToMCRichTrackAlg::finalize() 
+StatusCode MCPartToMCRichTrackAlg::finalize()
 {
   return RichAlgBase::finalize();
 }
