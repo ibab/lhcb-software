@@ -69,7 +69,7 @@ namespace {
     FILE* f = stdin;
     int pos = 0;
     while(1)  {
-      while ( f->_cnt > 0 ) lib_rtl_sleep(10);
+      //while ( f->_cnt > 0 ) lib_rtl_sleep(10);
       int c = getch();//f);
 //      ungetch(c);
       //c = getc(f);
