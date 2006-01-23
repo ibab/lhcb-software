@@ -5,7 +5,7 @@
  *  Header file for algorithm class : RichTrackResolutionMoni
  *
  *  CVS Log :-
- *  $Id: RichTrackResolutionMoni.h,v 1.3 2005-10-31 13:30:58 jonrob Exp $
+ *  $Id: RichTrackResolutionMoni.h,v 1.4 2006-01-23 14:10:48 jonrob Exp $
  *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   05/04/2002
@@ -34,6 +34,9 @@
 #include "RichRecBase/IRichRecMCTruthTool.h"
 #include "RichKernel/IRichMCTrackInfoTool.h"
 
+// Kernel
+#include "RichKernel/RichGeomFunctions.h"
+
 //---------------------------------------------------------------------------
 /** @class RichTrackResolutionMoni RichTrackResolutionMoni.h
  *
@@ -45,7 +48,7 @@
  */
 //---------------------------------------------------------------------------
 
-class RichTrackResolutionMoni : public RichRecHistoAlgBase 
+class RichTrackResolutionMoni : public RichRecHistoAlgBase
 {
 
 public:

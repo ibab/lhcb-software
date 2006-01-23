@@ -4,7 +4,7 @@
  *
  *  Implementation file for algorithm class : RichTrackGeomMoni
  *
- *  $Id: RichTrackGeomMoni.cpp,v 1.5 2005-11-03 14:36:06 jonrob Exp $
+ *  $Id: RichTrackGeomMoni.cpp,v 1.6 2006-01-23 14:10:48 jonrob Exp $
  *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   05/04/2002
@@ -13,6 +13,9 @@
 
 // local
 #include "RichTrackGeomMoni.h"
+
+// namespace
+using namespace LHCb;
 
 //---------------------------------------------------------------------------
 
@@ -51,7 +54,7 @@ StatusCode RichTrackGeomMoni::initialize()
   acquireTool( "RichMCTrackInfoTool",  m_mcTkInfo       );
 
   // Configure track selector
-  if ( !m_trSelector.configureTrackTypes() ) 
+  if ( !m_trSelector.configureTrackTypes() )
     return Error( "Problem configuring track selection" );
   m_trSelector.printTrackSelection( info() );
 
@@ -72,7 +75,7 @@ StatusCode RichTrackGeomMoni::initialize()
 }
 
 // Main execution
-StatusCode RichTrackGeomMoni::execute() 
+StatusCode RichTrackGeomMoni::execute()
 {
   debug() << "Execute" << endreq;
 
@@ -101,7 +104,7 @@ StatusCode RichTrackGeomMoni::execute()
 
   // Iterate over segments
   for ( RichRecSegments::const_iterator iSeg = richSegments()->begin();
-        iSeg != richSegments()->end(); ++iSeg ) 
+        iSeg != richSegments()->end(); ++iSeg )
   {
     RichRecSegment * segment = *iSeg;
 
@@ -121,15 +124,15 @@ StatusCode RichTrackGeomMoni::execute()
     ++nSegs[iRad]; // count segments per radiator
 
     // HPD panel impact points (ray traced)
-    const HepPoint3D & pdPoint    = segment->pdPanelHitPoint();
-    const HepPoint3D & pdPointLoc = segment->pdPanelHitPointLocal();
+    const Gaudi::XYZPoint & pdPoint    = segment->pdPanelHitPoint();
+    const Gaudi::XYZPoint & pdPointLoc = segment->pdPanelHitPointLocal();
 
     // Pointer to parent MCParticle
     const MCParticle * trackMCPart =
       m_richRecMCTruth->mcParticle( segment->richRecTrack() );
 
     // radiator entry/exit information
-    const HepVector3D & trackDir = trackSeg.bestMomentum();
+    const Gaudi::XYZVector & trackDir = trackSeg.bestMomentum();
 
     // entry/exit point histograms
     plot1D( trackSeg.entryPoint().z(), hid(iRad,"zEntry"), "Track entrance z",
@@ -153,13 +156,13 @@ StatusCode RichTrackGeomMoni::execute()
     plot1D( pdPoint.z(), hid(iRich,"zTkPDpan"), "Projected track PDPanel hits z global",
             zMinPDGlo[iRich], zMaxPDGlo[iRich] );
 
-    plot2D( pdPoint.x(), pdPoint.y(), 
+    plot2D( pdPoint.x(), pdPoint.y(),
             hid(iRich,"xyTkPDpan"), "Projected track PDPanel hits yVx global",
             xMinPDGlo[iRich],xMaxPDGlo[iRich],yMinPDGlo[iRich],yMaxPDGlo[iRich] );
-    plot2D( pdPoint.z(), pdPoint.x(), 
+    plot2D( pdPoint.z(), pdPoint.x(),
             hid(iRich,"xzTkPDpan"), "Projected track PDPanel hits xVz global",
             zMinPDGlo[iRich],zMaxPDGlo[iRich],xMinPDGlo[iRich],xMaxPDGlo[iRich] );
-    plot2D( pdPoint.z(), pdPoint.y(), 
+    plot2D( pdPoint.z(), pdPoint.y(),
             hid(iRich,"yzTkPDpan"), "Projected track PDPanel hits yVz global",
             zMinPDGlo[iRich],zMaxPDGlo[iRich],yMinPDGlo[iRich],yMaxPDGlo[iRich] );
 
@@ -176,10 +179,10 @@ StatusCode RichTrackGeomMoni::execute()
 
     // HPD panel acceptance
     const double hpdPanAcc = m_geomTool->hpdPanelAcceptance(segment,Rich::Electron);
-    plot2D( pdPointLoc.x(), hpdPanAcc, 
+    plot2D( pdPointLoc.x(), hpdPanAcc,
             hid(iRad,"hpdPanAccX"), "HPD panel acceptance (electron) V x",
             1.1*xMinPDLoc[iRich],1.1*xMaxPDLoc[iRich],0,1.05 );
-    plot2D( pdPointLoc.y(), hpdPanAcc, 
+    plot2D( pdPointLoc.y(), hpdPanAcc,
             hid(iRad,"hpdPanAccY"), "HPD panel acceptance (electron) V y",
             1.1*yMinPDLoc[iRich],1.1*yMaxPDLoc[iRich],0,1.05 );
 
@@ -194,7 +197,7 @@ StatusCode RichTrackGeomMoni::execute()
 
     // Get associated RichMCSegment
     const MCRichSegment * mcSegment = m_richRecMCTruth->mcRichSegment(segment);
-    if ( mcSegment ) 
+    if ( mcSegment )
     {
       ++nMCSegs[iRad]; // count MC segments per radiator
       // entry/exit coordinates
@@ -218,11 +221,11 @@ StatusCode RichTrackGeomMoni::execute()
                                       trackSeg.bestPoint(),
                                       trackDir,
                                       photon,
-                                      m_traceMode ) != 0 ) 
+                                      m_traceMode ) != 0 )
     {
 
       // Ray traced hit point on PDs, global
-      const HepPoint3D & photPoint = photon.detectionPoint();
+      const Gaudi::XYZPoint & photPoint = photon.detectionPoint();
       plot1D( photPoint.x(), hid(iRich,"xTkPD"), "Projected track PD hits x global",
               xMinPDGlo[iRich], xMaxPDGlo[iRich] );
       plot1D( photPoint.y(), hid(iRich,"yTkPD"), "Projected track PD hits y global",
@@ -251,7 +254,7 @@ StatusCode RichTrackGeomMoni::execute()
               xMinPDLoc[iRich],xMaxPDLoc[iRich],yMinPDLoc[iRich],yMaxPDLoc[iRich] );
 
       // Ray traced reflection point on spherical mirror
-      const HepPoint3D & photSpeMir = photon.sphMirReflectionPoint();
+      const Gaudi::XYZPoint & photSpeMir = photon.sphMirReflectionPoint();
       plot1D( photSpeMir.x(), hid(iRich,"xTkPD"), "Projected track SpheMir hits x global",
               xMinSpheGlo[iRich],xMaxSpheGlo[iRich] );
       plot1D( photSpeMir.y(), hid(iRich,"yTkPD"), "Projected track SpheMir hits y global",
@@ -269,7 +272,7 @@ StatusCode RichTrackGeomMoni::execute()
               zMinSpheGlo[iRich],zMaxSpheGlo[iRich],yMinSpheGlo[iRich],yMaxSpheGlo[iRich] );
 
       // Ray traced reflection point on flat mirror
-      const HepPoint3D & photFlatMir = photon.flatMirReflectionPoint();
+      const Gaudi::XYZPoint & photFlatMir = photon.flatMirReflectionPoint();
       plot1D( photFlatMir.x(), hid(iRich,"xTkPD"), "Projected track FlatMir hits x global",
               xMinFlatGlo[iRich],xMaxFlatGlo[iRich] );
       plot1D( photFlatMir.y(), hid(iRich,"yTkPD"), "Projected track FlatMir hits y global",
@@ -287,10 +290,10 @@ StatusCode RichTrackGeomMoni::execute()
               zMinFlatGlo[iRich],zMaxFlatGlo[iRich],yMinFlatGlo[iRich],yMaxFlatGlo[iRich] );
 
       // find out pd positions
-      m_xHits[photon.smartID().pdID()] += photPoint.x();
-      m_yHits[photon.smartID().pdID()] += photPoint.y();
-      m_zHits[photon.smartID().pdID()] += photPoint.z();
-      m_hitCount[photon.smartID().pdID()] += 1;
+      m_xHits[photon.smartID().hpdID()] += photPoint.x();
+      m_yHits[photon.smartID().hpdID()] += photPoint.y();
+      m_zHits[photon.smartID().hpdID()] += photPoint.z();
+      m_hitCount[photon.smartID().hpdID()] += 1;
 
     }
 
@@ -299,7 +302,7 @@ StatusCode RichTrackGeomMoni::execute()
     {
       debug() << "Segment " << segment->key() << " " << iRad << " : "
               << rad << " : TrTrackType " << trType << " : pTot "
-              << segment->trackSegment().bestMomentum().mag()
+              << sqrt(segment->trackSegment().bestMomentum().Mag2())
               << " pthLen " << segment->trackSegment().pathLength()
               << endreq;
       debug() << " Entry : Point " << segment->trackSegment().entryPoint()

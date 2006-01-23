@@ -5,7 +5,7 @@
  *  Implementation file for algorithm class : RichTrackResolutionMoni
  *
  *  CVS Log :-
- *  $Id: RichTrackResolutionMoni.cpp,v 1.4 2005-11-03 14:36:06 jonrob Exp $
+ *  $Id: RichTrackResolutionMoni.cpp,v 1.5 2006-01-23 14:10:48 jonrob Exp $
  *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   05/04/2002
@@ -14,6 +14,9 @@
 
 // local
 #include "RichTrackResolutionMoni.h"
+
+// namespace
+using namespace LHCb;
 
 //---------------------------------------------------------------------------
 
@@ -36,7 +39,7 @@ RichTrackResolutionMoni::RichTrackResolutionMoni( const std::string& name,
 RichTrackResolutionMoni::~RichTrackResolutionMoni() {};
 
 //  Initialize
-StatusCode RichTrackResolutionMoni::initialize() 
+StatusCode RichTrackResolutionMoni::initialize()
 {
   // Sets up various tools and services
   const StatusCode sc = RichRecHistoAlgBase::initialize();
@@ -47,7 +50,7 @@ StatusCode RichTrackResolutionMoni::initialize()
   acquireTool( "RichMCTrackInfoTool",  m_mcTkInfo       );
 
   // Configure track selector
-  if ( !m_trSelector.configureTrackTypes() ) 
+  if ( !m_trSelector.configureTrackTypes() )
     return Error( "Problem configuring track selection" );
   m_trSelector.printTrackSelection( info() );
 
@@ -55,7 +58,7 @@ StatusCode RichTrackResolutionMoni::initialize()
 }
 
 // Main execution
-StatusCode RichTrackResolutionMoni::execute() 
+StatusCode RichTrackResolutionMoni::execute()
 {
   debug() << "Execute" << endreq;
 
@@ -63,9 +66,9 @@ StatusCode RichTrackResolutionMoni::execute()
   if ( !richStatus()->eventOK() ) return StatusCode::SUCCESS;
 
   // Make sure all tracks and segments have been formed
-  if ( richTracks()->empty() ) 
+  if ( richTracks()->empty() )
   {
-    if ( !trackCreator()->newTracks() ) 
+    if ( !trackCreator()->newTracks() )
       return Error( "Problem creating RichRecTracks" );
     debug() << "No tracks found : Created " << richTracks()->size()
             << " RichRecTracks " << richSegments()->size()
@@ -85,7 +88,7 @@ StatusCode RichTrackResolutionMoni::execute()
 
   // Iterate over segments
   for ( RichRecSegments::const_iterator iSeg = richSegments()->begin();
-        iSeg != richSegments()->end(); ++iSeg ) 
+        iSeg != richSegments()->end(); ++iSeg )
   {
     RichRecSegment * segment = *iSeg;
 
@@ -100,11 +103,11 @@ StatusCode RichTrackResolutionMoni::execute()
     // track segment
     const RichTrackSegment & tkSeg = segment->trackSegment();
     // entry/exit points
-    const HepPoint3D & entP  = tkSeg.entryPoint();
-    const HepPoint3D & extP  = tkSeg.exitPoint();
+    const Gaudi::XYZPoint & entP  = tkSeg.entryPoint();
+    const Gaudi::XYZPoint & extP  = tkSeg.exitPoint();
     // entry exit momentum vectors
-    const HepVector3D & entV = tkSeg.entryMomentum();
-    const HepVector3D & extV = tkSeg.exitMomentum();
+    const Gaudi::XYZVector & entV = tkSeg.entryMomentum();
+    const Gaudi::XYZVector & extV = tkSeg.exitMomentum();
 
     //const Rich::DetectorType iRich = tkSeg.rich();    // which rich detector
     const Rich::RadiatorType rad = tkSeg.radiator();   // which radiator
@@ -114,28 +117,28 @@ StatusCode RichTrackResolutionMoni::execute()
               << " RichRecSegment in " << rad << endreq;
 
     // Ray traced hit point on PDPanel
-    const HepPoint3D & pdPoint = segment->pdPanelHitPoint();
+    const Gaudi::XYZPoint & pdPoint = segment->pdPanelHitPoint();
 
     // Angle between entry and exit vectors
-    const double recoInOutAng = entV.angle(extV);
+    const double recoInOutAng = Rich::Geom::AngleBetween( entV, extV );
     plot1D( recoInOutAng, hid(rad,"recoInOutAng"), "Reco. entry/exit angle",0,0.01);
 
     // Get associated RichMCSegment
     const MCRichSegment * mcSeg = m_richRecMCTruth->mcRichSegment(segment);
-    if ( mcSeg ) 
+    if ( mcSeg )
     {
       ++nMCSegs[rad]; // count MC segments per radiator
 
       // shortcuts
       // MC entry and exit points
-      const HepPoint3D & mcEntP = mcSeg->entryPoint();
-      const HepPoint3D & mcExtP = mcSeg->exitPoint();
+      const Gaudi::XYZPoint & mcEntP = mcSeg->entryPoint();
+      const Gaudi::XYZPoint & mcExtP = mcSeg->exitPoint();
       // MC entry/exit momentum vectors
-      const HepVector3D & mcEntV = mcSeg->entryMomentum();
-      const HepVector3D & mcExtV = mcSeg->exitMomentum();
+      const Gaudi::XYZVector & mcEntV = mcSeg->entryMomentum();
+      const Gaudi::XYZVector & mcExtV = mcSeg->exitMomentum();
 
       // number of G4 segments
-      plot1D( mcSeg->trajectoryPoints().size(), 
+      plot1D( mcSeg->trajectoryPoints().size(),
               hid(rad,"nMCTrajPtns"), "# G4 segments", -0.5,100.5,101 );
 
       // position resolution plots
@@ -149,8 +152,8 @@ StatusCode RichTrackResolutionMoni::execute()
               hid(rad,"dTrPathL"), "Rec-MC rad pathLength", -5,5 );
 
       // Panel ray-traced point
-      HepPoint3D mcGlobal;
-      if ( m_mcTkInfo->panelIntersectGlobal( mcSeg, mcGlobal ) ) 
+      Gaudi::XYZPoint mcGlobal;
+      if ( m_mcTkInfo->panelIntersectGlobal( mcSeg, mcGlobal ) )
       {
         plot1D( pdPoint.x()-mcGlobal.x(), hid(rad,"dTrPanX"), "Rec-MC panel X", -5,5 );
         plot1D( pdPoint.y()-mcGlobal.y(), hid(rad,"dTrPanY"), "Rec-MC panel Y", -5,5 );
@@ -158,11 +161,11 @@ StatusCode RichTrackResolutionMoni::execute()
       }
 
       // angle between mc and reco vectors
-      plot1D( entV.angle( mcEntV ),
+      plot1D( Rich::Geom::AngleBetween( entV, mcEntV ),
               hid(rad,"dTrAngEnt"), "Angle between Rec/MC dir at entry", 0,0.01 );
-      plot1D( tkSeg.bestMomentum().angle( mcSeg->bestMomentum(0.5) ),
+      plot1D( Rich::Geom::AngleBetween( tkSeg.bestMomentum(), mcSeg->bestMomentum(0.5) ),
               hid(rad,"dTrAngExt"), "Angle between Rec/MC dir at exit", 0,0.01 );
-      plot1D( extV.angle( mcExtV ),
+      plot1D( Rich::Geom::AngleBetween( extV, mcExtV ),
               hid(rad,"dTrAngMid"), "Angle between Rec/MC dir at mid point", 0,0.01 );
 
       // direction resolutions
@@ -193,44 +196,44 @@ StatusCode RichTrackResolutionMoni::execute()
       const double pullYExt = ( tkSeg.exitErrors().errY()>0 ?
                                 (extP.y()-mcExtP.y())/tkSeg.exitErrors().errY() : -999 );
       plot1D   ( pullXEnt, hid(rad,"pullXEnt"), "Entry x pull", -5,5 );
-      profile1D( entV.mag(), pullXEnt, hid(rad,"pullXEntVP"), "Entry x pull versus momentum", 0, 100*GeV, 50 );
+      profile1D( sqrt(entV.Mag2()), pullXEnt, hid(rad,"pullXEntVP"), "Entry x pull versus momentum", 0, 100*GeV, 50 );
       plot1D   ( pullYEnt, hid(rad,"pullYEnt"), "Entry y pull", -5,5 );
-      profile1D( entV.mag(), pullYEnt, hid(rad,"pullYEntVP"), "Entry y pull versus momentum", 0, 100*GeV, 50 );
+      profile1D( sqrt(entV.Mag2()), pullYEnt, hid(rad,"pullYEntVP"), "Entry y pull versus momentum", 0, 100*GeV, 50 );
       plot1D   ( pullXExt, hid(rad,"pullXExt"), "Exit x pull",  -5,5 );
-      profile1D( extV.mag(), pullXExt, hid(rad,"pullXExtVP"), "Exit x pull versus momentum", 0, 100*GeV, 50 );
+      profile1D( sqrt(extV.Mag2()), pullXExt, hid(rad,"pullXExtVP"), "Exit x pull versus momentum", 0, 100*GeV, 50 );
       plot1D   ( pullYExt, hid(rad,"pullYExt"), "Exit y pull",  -5,5 );
-      profile1D( extV.mag(), pullYExt, hid(rad,"pullYExtVP"), "Exit y pull versus momentum", 0, 100*GeV, 50 );
+      profile1D( sqrt(extV.Mag2()), pullYExt, hid(rad,"pullYExtVP"), "Exit y pull versus momentum", 0, 100*GeV, 50 );
 
       // tx and ty pull distributions
-      const double pullTXEnt = 
+      const double pullTXEnt =
         ( tkSeg.entryErrors().errTX()>0 ? (txrecoEnt-txmcEnt)/tkSeg.entryErrors().errTX() : -999 );
-      const double pullTYEnt = 
+      const double pullTYEnt =
         ( tkSeg.entryErrors().errTY()>0 ? (tyrecoEnt-tymcEnt)/tkSeg.entryErrors().errTY() : -999 );
-      const double pullTXExt = 
+      const double pullTXExt =
         ( tkSeg.exitErrors().errTX()>0 ? (txrecoEx-txmcEx)/tkSeg.exitErrors().errTX() : -999 );
-      const double pullTYExt = 
+      const double pullTYExt =
         ( tkSeg.exitErrors().errTY()>0 ? (tyrecoEx-tymcEx)/tkSeg.exitErrors().errTY() : -999 );
       plot1D   ( pullTXEnt, hid(rad,"pullTXEnt"), "Entry tx pull", -5,5 );
-      profile1D( entV.mag(), pullTXEnt, hid(rad,"pullTXEntVP"), "Entry tx pull versus momentum", 0, 100*GeV, 50 );
+      profile1D( sqrt(entV.Mag2()), pullTXEnt, hid(rad,"pullTXEntVP"), "Entry tx pull versus momentum", 0, 100*GeV, 50 );
       plot1D   ( pullTYEnt, hid(rad,"pullTYEnt"), "Entry ty pull", -5,5 );
-      profile1D( entV.mag(), pullTYEnt, hid(rad,"pullTYEntVP"), "Entry ty pull versus momentum", 0, 100*GeV, 50 );
+      profile1D( sqrt(entV.Mag2()), pullTYEnt, hid(rad,"pullTYEntVP"), "Entry ty pull versus momentum", 0, 100*GeV, 50 );
       plot1D   ( pullTXExt, hid(rad,"pullTXExt"), "Exit tx pull", -5,5 );
-      profile1D( extV.mag(), pullTXExt, hid(rad,"pullTXExtVP"), "Exit tx pull versus momentum", 0, 100*GeV, 50 );
+      profile1D( sqrt(extV.Mag2()), pullTXExt, hid(rad,"pullTXExtVP"), "Exit tx pull versus momentum", 0, 100*GeV, 50 );
       plot1D   ( pullTYExt, hid(rad,"pullTYExt"), "Exit ty pull", -5,5 );
-      profile1D( extV.mag(), pullTYExt, hid(rad,"pullTYExtVP"), "Exit ty pull versus momentum", 0, 100*GeV, 50 );
+      profile1D( sqrt(extV.Mag2()), pullTYExt, hid(rad,"pullTYExtVP"), "Exit ty pull versus momentum", 0, 100*GeV, 50 );
 
       // momentum pulls
       const double pullPEnt = ( tkSeg.entryErrors().errP()>0 ?
-                                (entV.mag()-mcEntV.mag())/tkSeg.entryErrors().errP() : -999 );
+                                (sqrt(entV.Mag2())-sqrt(mcEntV.Mag2()))/tkSeg.entryErrors().errP() : -999 );
       const double pullPExt = ( tkSeg.exitErrors().errP()>0 ?
-                                (extV.mag()-mcExtV.mag())/tkSeg.exitErrors().errP() : -999 );
+                                (sqrt(extV.Mag2())-sqrt(mcExtV.Mag2()))/tkSeg.exitErrors().errP() : -999 );
       plot1D   ( pullPEnt, hid(rad,"pullPEnt"), "Entry P pull", -5,5 );
-      profile1D( entV.mag(), pullPEnt, hid(rad,"pullPEntVP"), "Entry P pull versus P", 0, 100*GeV, 50 );
+      profile1D( sqrt(entV.Mag2()), pullPEnt, hid(rad,"pullPEntVP"), "Entry P pull versus P", 0, 100*GeV, 50 );
       plot1D( pullPExt, hid(rad,"pullPExt"), "Exit P pull",  -5,5 );
-      profile1D( extV.mag(), pullPExt, hid(rad,"pullPExtVP"), "Exit P pull versus P", 0, 100*GeV, 50 );
+      profile1D( sqrt(extV.Mag2()), pullPExt, hid(rad,"pullPExtVP"), "Exit P pull versus P", 0, 100*GeV, 50 );
 
       // Angle between entry and exit directions
-      const double mcInOutAng = mcEntV.angle( mcExtV );
+      const double mcInOutAng = Rich::Geom::AngleBetween( mcEntV, mcExtV );
       plot1D( mcInOutAng, hid(rad,"mcInOutAng"), "MC entry/exit angle", 0,0.01 );
       plot1D( recoInOutAng-mcInOutAng, hid(rad,"InOutAngRes"), "Reco-MC entry/exit angle", -0.01,0.01);
 
@@ -239,7 +242,7 @@ StatusCode RichTrackResolutionMoni::execute()
   } // end segment loop
 
   // Fill final plots
-  for ( int irad = 0; irad < Rich::NRadiatorTypes; ++irad ) 
+  for ( int irad = 0; irad < Rich::NRadiatorTypes; ++irad )
   {
     const Rich::RadiatorType rad = (Rich::RadiatorType)irad;
     plot1D( nSegs[rad], hid(rad,"nSegs"), "# segments per event", -0.5,100.5,101 );

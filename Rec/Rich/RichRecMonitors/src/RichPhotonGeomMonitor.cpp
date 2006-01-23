@@ -5,7 +5,7 @@
  *  Implementation file for algorithm class : RichPhotonGeomMonitor
  *
  *  CVS Log :-
- *  $Id: RichPhotonGeomMonitor.cpp,v 1.2 2006-01-16 18:24:59 jonrob Exp $
+ *  $Id: RichPhotonGeomMonitor.cpp,v 1.3 2006-01-23 14:10:48 jonrob Exp $
  *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   05/04/2002
@@ -14,6 +14,9 @@
 
 // local
 #include "RichPhotonGeomMonitor.h"
+
+// namespace
+using namespace LHCb;
 
 //---------------------------------------------------------------------------
 

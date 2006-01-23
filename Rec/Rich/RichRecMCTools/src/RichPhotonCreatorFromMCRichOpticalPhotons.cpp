@@ -5,7 +5,7 @@
  *  Implementation file for RICH reconstruction tool : RichPhotonCreatorFromMCRichOpticalPhotons
  *
  *  CVS Log :-
- *  $Id: RichPhotonCreatorFromMCRichOpticalPhotons.cpp,v 1.9 2005-11-15 13:34:03 jonrob Exp $
+ *  $Id: RichPhotonCreatorFromMCRichOpticalPhotons.cpp,v 1.10 2006-01-23 14:09:59 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   08/07/2004
@@ -14,6 +14,9 @@
 
 // local
 #include "RichPhotonCreatorFromMCRichOpticalPhotons.h"
+
+// namespaces
+using namespace LHCb;
 
 //-----------------------------------------------------------------------------
 

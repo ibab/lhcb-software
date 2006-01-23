@@ -5,7 +5,7 @@
  *  Implementation file for RICH reconstruction tool : RichPhotonCreatorWithGaussianCKSmear
  *
  *  CVS Log :-
- *  $Id: RichPhotonCreatorWithGaussianCKSmear.cpp,v 1.3 2005-10-13 15:41:01 jonrob Exp $
+ *  $Id: RichPhotonCreatorWithGaussianCKSmear.cpp,v 1.4 2006-01-23 14:09:59 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   08/07/2004
@@ -14,6 +14,9 @@
 
 // local
 #include "RichPhotonCreatorWithGaussianCKSmear.h"
+
+// namespaces
+using namespace LHCb;
 
 //-----------------------------------------------------------------------------
 
@@ -102,13 +105,13 @@ StatusCode RichPhotonCreatorWithGaussianCKSmear::finalize()
     info() << "=================================================================" << endreq
            << "  Photon smearing summary : " << nEvents() << " events :-" << endreq
            << "    Aerogel   : "
-           << occ(m_smearCount[Rich::Aerogel],nEvents()) << "  photons/event " 
+           << occ(m_smearCount[Rich::Aerogel],nEvents()) << "  photons/event "
            << 1000*m_smearWid[Rich::Aerogel] << " mrad smear" << endreq
            << "    C4F10     : "
            << occ(m_smearCount[Rich::C4F10],nEvents())   << "  photons/event "
            << 1000*m_smearWid[Rich::C4F10] << " mrad smear" << endreq
            << "    CF4       : "
-           << occ(m_smearCount[Rich::CF4],nEvents())     << "  photons/event " 
+           << occ(m_smearCount[Rich::CF4],nEvents())     << "  photons/event "
            << 1000*m_smearWid[Rich::CF4] << " mrad smear" << endreq
            << "=================================================================" << endreq;
 

@@ -5,7 +5,7 @@
  *  Header file for RICH reconstruction tool : RichPixelCreatorFromSignalRichDigits
  *
  *  CVS Log :-
- *  $Id: RichPixelCreatorFromSignalRichDigits.h,v 1.8 2005-06-23 15:14:12 jonrob Exp $
+ *  $Id: RichPixelCreatorFromSignalRichDigits.h,v 1.9 2006-01-23 14:09:59 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   08/07/2004
@@ -39,7 +39,7 @@
  *  Tool for the creation and book-keeping of RichRecPixel objects.
  *  Uses RichDigits from the digitisation but then refers to the
  *  MCRichOpticalPhoton objects select on the true Cherenkov hits.
- *  Optionally, can also select only those pixels that are associated to 
+ *  Optionally, can also select only those pixels that are associated to
  *  a RichRecxTrack, so that trackless hits can be filtered out.
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
@@ -70,7 +70,7 @@ public: // Public interface methods
 
   // Returns a RichRecPixel object pointer for given ContainedObject.
   // If if it not possible NULL is return.
-  RichRecPixel * newPixel( const ContainedObject * obj ) const;
+  LHCb::RichRecPixel * newPixel( const ContainedObject * obj ) const;
 
   // Form all possible RichRecPixels from input RichDigits.
   // The most efficient way to make all RichRecPixel objects in the event.
@@ -82,7 +82,7 @@ private: // methods
   virtual void InitNewEvent();
 
   /// List of tracked MCParticles
-  typedef RichMap < const MCParticle*, bool > TrackedMCPList;
+  typedef Rich::Map < const LHCb::MCParticle*, bool > TrackedMCPList;
   /// Get the map for tracked MCParticles for this event
   TrackedMCPList & trackedMCPs() const;
 
@@ -103,7 +103,7 @@ private: // data
   /// String containing input RichDigits location in TES
   std::string m_recoDigitsLocation;
 
-  /** Flag to turn on/off the filtering of pixels that do not 
+  /** Flag to turn on/off the filtering of pixels that do not
       associated to any reconstructed RichRecTrack */
   bool m_trackFilter;
 

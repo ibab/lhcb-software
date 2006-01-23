@@ -4,7 +4,7 @@
  *  Header file for algorithm class : RichAlignmentMonitor
  *
  *  CVS Log :-
- *  $Id: RichAlignmentMonitor.h,v 1.5 2005-10-31 13:30:58 jonrob Exp $
+ *  $Id: RichAlignmentMonitor.h,v 1.6 2006-01-23 14:10:48 jonrob Exp $
  *
  *  @author Antonis Papanestis   a.papanestis@rl.ac.uk
  *  @date   2004-02-19
@@ -53,8 +53,8 @@ class RichAlignmentMonitor : public RichRecHistoAlgBase {
 
 public:
 
-  // type defintion
-  typedef RichGeomPhotonCode::ShortType MirrorNumber;
+  /// type definition
+  typedef LHCb::RichGeomPhotonCode::ShortType MirrorNumber;
 
   /// Standard constructor
   RichAlignmentMonitor( const std::string& name, ISvcLocator* pSvcLocator );
@@ -68,7 +68,7 @@ public:
 private: // methods
 
   /// four configurations: 2 no MCTruth, photon track association and + true
-  /// Cherenkov angle 
+  /// Cherenkov angle
   enum MCINFO {NO_MC = 0, NO_MC2_RICH2, TRACK, TR_A_ANGLE};
 
   /// Book hisograms
@@ -89,7 +89,7 @@ private: // data
   bool m_useMCTruth;
   // use all tracks (not only saturated)
   bool m_useAllTracks;
-  // associate photons with their MC track (reject background) 
+  // associate photons with their MC track (reject background)
   bool m_assocTrackPhoton;
   // use a second higher saturation energy for Rich2
   bool m_highSatEnergyRich2;
@@ -108,7 +108,7 @@ private: // data
   double m_deltaThetaRange;
   double m_deltaThetaHistoRange;
 
-  
+
   // Pointer to RichRecMCTruthTool interface
   const IRichRecMCTruthTool* m_richRecMCTruth;
   const IRichRefractiveIndex* m_richRefIndexTool;

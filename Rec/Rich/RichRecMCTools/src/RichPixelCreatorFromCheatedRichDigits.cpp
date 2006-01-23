@@ -5,7 +5,7 @@
  *  Implementation file for RICH reconstruction tool : RichPixelCreatorFromCheatedRichDigits
  *
  *  CVS Log :-
- *  $Id: RichPixelCreatorFromCheatedRichDigits.cpp,v 1.17 2005-10-18 12:46:37 jonrob Exp $
+ *  $Id: RichPixelCreatorFromCheatedRichDigits.cpp,v 1.18 2006-01-23 14:09:59 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/09/2003
@@ -14,6 +14,9 @@
 
 // local
 #include "RichPixelCreatorFromCheatedRichDigits.h"
+
+// namespaces
+using namespace LHCb;
 
 //-----------------------------------------------------------------------------
 
@@ -69,21 +72,24 @@ RichPixelCreatorFromCheatedRichDigits::newPixel( const ContainedObject * obj ) c
 {
   // Try to cast to RichDigit
   const RichDigit * digit = dynamic_cast<const RichDigit*>(obj);
-  if ( !digit ) {
+  if ( !digit ) 
+  {
     Warning("Parent not of type RichDigit");
     return NULL;
   }
 
   // Find the MCRichDigit for this RichDigit
-  const MCRichDigit * mcDigit = m_mcTool->mcRichDigit( digit );
-  if ( !mcDigit ) {
+  const MCRichDigit * mcDigit = m_mcTool->mcRichDigit( digit->richSmartID() );
+  if ( !mcDigit ) 
+  {
     Warning("Failed to find MCRichDigit for given RichDigit"); return NULL;
   }
 
   // Loop over all MCRichHits for this MCRichDigit and make RichRecPixels
   RichRecPixel * returnPix = NULL;
   for ( SmartRefVector<MCRichHit>::const_iterator hit = mcDigit->hits().begin();
-        hit != mcDigit->hits().end(); ++hit ) {
+        hit != mcDigit->hits().end(); ++hit ) 
+  {
     returnPix = newPixelFromHit( digit, *hit );
   }
 
@@ -97,12 +103,12 @@ RichPixelCreatorFromCheatedRichDigits::newPixelFromHit( const RichDigit * digit,
 {
 
   // See if this RichRecPixel already exists
-  if ( bookKeep() && m_pixelDone[hit->key()] )
-  {
-    return m_pixelExists[hit->key()];
-  }
-  else
-  {
+  //if ( bookKeep() && m_pixelDone[hit->key()] )
+  //{
+  //  return m_pixelExists[hit->key()];
+  //}
+  //else
+  //{
 
     RichRecPixel * newPixel = NULL;
 
@@ -123,8 +129,10 @@ RichPixelCreatorFromCheatedRichDigits::newPixelFromHit( const RichDigit * digit,
 
           // Positions
           newPixel->setGlobalPosition( mcPhot->pdIncidencePoint() );
-          newPixel->localPosition() =
-            m_smartIDTool->globalToPDPanel(newPixel->globalPosition());
+          //newPixel->localPosition() =
+          //  m_smartIDTool->globalToPDPanel(newPixel->globalPosition());
+          newPixel->setLocalPosition( m_smartIDTool->globalToPDPanel(newPixel->globalPosition()) );
+
           // compute corrected local coordinates
           computeRadCorrLocalPositions( newPixel );
 
@@ -132,7 +140,7 @@ RichPixelCreatorFromCheatedRichDigits::newPixelFromHit( const RichDigit * digit,
           newPixel->setSmartID( digit->key() );
 
           // Set parent information
-          // Note - we are pretending to be RichDigits here...
+          // Note - we are pretending to be RichDigits here ...
           newPixel->setParentPixel( digit );
           newPixel->setParentType( Rich::PixelParent::Digit );
 
@@ -146,14 +154,14 @@ RichPixelCreatorFromCheatedRichDigits::newPixelFromHit( const RichDigit * digit,
     }
 
     // Add to reference map
-    if ( bookKeep() )
-    {
-      m_pixelExists [ hit->key() ] = newPixel;
-      m_pixelDone   [ hit->key() ] = true;
-    }
+    //if ( bookKeep() )
+    //{
+    //  m_pixelExists [ hit->key() ] = newPixel;
+    //  m_pixelDone   [ hit->key() ] = true;
+    //}
 
     return newPixel;
-  }
+    //}
 
 }
 

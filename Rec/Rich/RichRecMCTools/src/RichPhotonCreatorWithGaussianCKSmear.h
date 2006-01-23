@@ -5,7 +5,7 @@
  *  Header file for RICH reconstruction tool : RichPhotonCreatorWithGaussianCKSmear
  *
  *  CVS Log :-
- *  $Id: RichPhotonCreatorWithGaussianCKSmear.h,v 1.5 2005-10-13 15:41:01 jonrob Exp $
+ *  $Id: RichPhotonCreatorWithGaussianCKSmear.h,v 1.6 2006-01-23 14:09:59 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   20/05/2005
@@ -18,6 +18,7 @@
 // from Gaudi
 #include "GaudiKernel/ToolFactory.h"
 #include "GaudiKernel/RndmGenerators.h"
+#include "GaudiKernel/IRndmGenSvc.h"
 
 // base class
 #include "RichRecBase/RichPhotonCreatorBase.h"
@@ -36,7 +37,7 @@
 /** @class RichPhotonCreatorWithGaussianCKSmear RichPhotonCreatorWithGaussianCKSmear.h
  *
  *  Tool which first delegates the photon creator to another tool, but then applies
- *  a Gaussian smear to the true Cherenkov photons for each Radiator. 
+ *  a Gaussian smear to the true Cherenkov photons for each Radiator.
  *  The about of smearing is seperately configurable for each radiator.
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
@@ -71,9 +72,9 @@ protected: // methods
 private: // private methods
 
   /// Form a Photon candidate from a Segment and a pixel.
-  virtual RichRecPhoton * buildPhoton( RichRecSegment * segment,
-                                       RichRecPixel * pixel,
-                                       const RichRecPhotonKey key ) const;
+  virtual LHCb::RichRecPhoton * buildPhoton( LHCb::RichRecSegment * segment,
+                                             LHCb::RichRecPixel * pixel,
+                                             const RichRecPhotonKey key ) const;
 
   /// Access RICH MC reconstruction tool on demand
   /// Means if not needed, this tool runs MC free and can be used on real data (if wanted)
@@ -98,14 +99,14 @@ private: // private data
   mutable boost::array< Rndm::Numbers, Rich::NRadiatorTypes > m_rand;
 
   /// photon smearing done map
-  mutable RichHashMap<long int, bool> m_photSmearDone;
+  mutable Rich::HashMap<long int, bool> m_photSmearDone;
 
   /// count of smeared photons
   mutable std::vector<unsigned long int> m_smearCount;
 
 };
 
-inline const IRichRecMCTruthTool * 
+inline const IRichRecMCTruthTool *
 RichPhotonCreatorWithGaussianCKSmear::richMCRecTool() const
 {
   if ( !m_mcRecTool ) acquireTool( "RichRecMCTruthTool", m_mcRecTool );

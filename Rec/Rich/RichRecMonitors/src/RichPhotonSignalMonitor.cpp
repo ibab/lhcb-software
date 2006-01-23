@@ -5,7 +5,7 @@
  *  Implementation file for algorithm class : RichPhotonSignalMonitor
  *
  *  CVS Log :-
- *  $Id: RichPhotonSignalMonitor.cpp,v 1.1 2005-11-07 09:37:20 jonrob Exp $
+ *  $Id: RichPhotonSignalMonitor.cpp,v 1.2 2006-01-23 14:10:48 jonrob Exp $
  *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   05/04/2002
@@ -14,6 +14,9 @@
 
 // local
 #include "RichPhotonSignalMonitor.h"
+
+// namespace
+using namespace LHCb;
 
 //---------------------------------------------------------------------------
 
@@ -110,22 +113,22 @@ StatusCode RichPhotonSignalMonitor::execute()
 
     // Average energy of emitted cherenkov photons for true type
     const double avgEnEmit = m_tkSignal->avgEmitPhotEnergy( segment, mcType );
-    plot1D( avgEnEmit, hid(rad,mcType,"emitPhotEnTrue"), 
+    plot1D( avgEnEmit, hid(rad,mcType,"emitPhotEnTrue"),
             "Av. energy of emitted photons - True type", minPhotEn[rad], maxPhotEn[rad] );
 
     // Average energy of signal cherenkov photons for true type
     const double avgEnSig = m_tkSignal->avgSignalPhotEnergy( segment, mcType );
-    plot1D( avgEnSig, hid(rad,mcType,"sigPhotEnTrue"), 
+    plot1D( avgEnSig, hid(rad,mcType,"sigPhotEnTrue"),
             "Av. energy of signal photons - True type", minPhotEn[rad], maxPhotEn[rad] );
 
     // refractive index
     const double refInd = m_refIndex->refractiveIndex( rad, avgEnEmit );
-    plot1D( refInd-1, hid(rad,mcType,"refIndM1"), 
+    plot1D( refInd-1, hid(rad,mcType,"refIndM1"),
             "Refractive index n-1", minRefInd[rad], maxRefInd[rad] );
 
     // Number of signal photons for true type
     const double nSigTrue = m_tkSignal->nSignalPhotons( segment, mcType );
-    plot1D( nSigTrue, hid(rad,mcType,"nSigPhotsTrue"), 
+    plot1D( nSigTrue, hid(rad,mcType,"nSigPhotsTrue"),
             "Expected # signal photons - true type", 0,  100 );
 
   }

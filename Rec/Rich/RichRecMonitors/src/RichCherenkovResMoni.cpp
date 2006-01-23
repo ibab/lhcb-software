@@ -5,7 +5,7 @@
  *  Implementation file for algorithm class : RichCherenkovResMoni
  *
  *  CVS Log :-
- *  $Id: RichCherenkovResMoni.cpp,v 1.6 2005-11-03 14:36:06 jonrob Exp $
+ *  $Id: RichCherenkovResMoni.cpp,v 1.7 2006-01-23 14:10:48 jonrob Exp $
  *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   05/04/2002
@@ -14,6 +14,9 @@
 
 // local
 #include "RichCherenkovResMoni.h"
+
+// namespace
+using namespace LHCb;
 
 //---------------------------------------------------------------------------
 
@@ -92,7 +95,7 @@ StatusCode RichCherenkovResMoni::execute()
     const Rich::RadiatorType rad = trackSeg.radiator();
 
     // Segment momentum
-    const double ptot = segment->trackSegment().bestMomentum().mag() / GeV;
+    const double ptot = sqrt(segment->trackSegment().bestMomentum().Mag2()) / GeV;
 
     // CK resolution and angle for true type
     const double trueCKres = m_ckAngleRes->ckThetaResolution(segment,mcType);
@@ -135,7 +138,7 @@ StatusCode RichCherenkovResMoni::execute()
       const MCRichOpticalPhoton * mcPhot = m_richRecMCTruth->trueOpticalPhoton(photon);
       if ( mcPhot )
       {
-        // Cherenkov angles  
+        // Cherenkov angles
         const double thetaRec = photon->geomPhoton().CherenkovTheta();
         const double thetaMC  = mcPhot->cherenkovTheta();
         const double delCK    = thetaRec-thetaMC;
@@ -143,7 +146,7 @@ StatusCode RichCherenkovResMoni::execute()
         const double trueCKerr  = fabs(thetaMC-trueCKang);
         const double recoCKerr  = fabs(thetaRec-trueCKang);
 
-        plot1D( thetaRec, hid(rad,mcType,"recoCKang"), "Reconstructed CK angle (true photons)", 
+        plot1D( thetaRec, hid(rad,mcType,"recoCKang"), "Reconstructed CK angle (true photons)",
                 minCkTheta[rad], maxCkTheta[rad] );
         plot1D( thetaMC, hid(rad,mcType,"mcCKang"), "MC CK angle", minCkTheta[rad], maxCkTheta[rad] );
         profile1D( delCK, trueCKres, hid(rad,mcType,"trueVcalCKres"), "True V calculated CKres",
@@ -152,7 +155,7 @@ StatusCode RichCherenkovResMoni::execute()
                    minCkTheta[rad], maxCkTheta[rad] );
 
         plot1D( trueCKerr, hid(rad,mcType,"mcckres"), "True MC CKres", 0, ckResMax[rad] );
-        profile1D( trueCKres, trueCKerr, hid(rad,mcType,"ckresVmcres"), "True MC V Calculated CKres", 
+        profile1D( trueCKres, trueCKerr, hid(rad,mcType,"ckresVmcres"), "True MC V Calculated CKres",
                    0, ckResMax[rad] );
 
         profile1D( trueCKang, recoCKerr, hid(rad,mcType,"diffckVckangP"), "fabs(Rec-Exp) Cktheta V CKangle",

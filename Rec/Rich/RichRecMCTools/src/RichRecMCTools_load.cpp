@@ -5,7 +5,7 @@
  *  Declaration of objects in component library RichRecMCTools
  *
  *  CVS Log :-
- *  $Id: RichRecMCTools_load.cpp,v 1.6 2005-05-28 16:45:48 jonrob Exp $
+ *  $Id: RichRecMCTools_load.cpp,v 1.7 2006-01-23 14:09:59 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   08/07/2004
@@ -30,5 +30,8 @@ DECLARE_FACTORY_ENTRIES ( RichRecMCTools )
 
   // MC truth interrogation tools
   DECLARE_TOOL( RichRecMCTruthTool );
+
+  // Builds RichTrackSegments from MC information
+  DECLARE_TOOL( RichTrSegMakerFromMCRichTracks );
 
 };

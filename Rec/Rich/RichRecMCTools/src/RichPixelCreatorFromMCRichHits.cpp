@@ -5,7 +5,7 @@
  *  Implementation file for RICH reconstruction tool : RichPixelCreatorFromMCRichHits
  *
  *  CVS Log :-
- *  $Id: RichPixelCreatorFromMCRichHits.cpp,v 1.15 2005-10-18 12:46:37 jonrob Exp $
+ *  $Id: RichPixelCreatorFromMCRichHits.cpp,v 1.16 2006-01-23 14:09:59 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -14,6 +14,9 @@
 
 // local
 #include "RichPixelCreatorFromMCRichHits.h"
+
+// namespaces
+using namespace LHCb;
 
 //-----------------------------------------------------------------------------
 
@@ -65,7 +68,8 @@ StatusCode RichPixelCreatorFromMCRichHits::finalize()
 
 // Forms a new RichRecPixel object from a RichDigit
 RichRecPixel *
-RichPixelCreatorFromMCRichHits::newPixel( const ContainedObject * obj ) const {
+RichPixelCreatorFromMCRichHits::newPixel( const ContainedObject * obj ) const 
+{
 
   // Try to cast to MCRichHit
   const MCRichHit * hit = dynamic_cast<const MCRichHit*>(obj);
@@ -74,15 +78,15 @@ RichPixelCreatorFromMCRichHits::newPixel( const ContainedObject * obj ) const {
     return NULL;
   }
 
-  const long int hitKey = hit->key();
-
+  // hit key
+  //const long int hitKey = hit->key();
   // See if this RichRecPixel already exists
-  if ( bookKeep() && m_pixelDone[hitKey] )
-  {
-    return m_pixelExists[hitKey];
-  }
-  else
-  {
+  //if ( bookKeep() && m_pixelDone[hitKey] )
+  //{
+  //  return m_pixelExists[hitKey];
+  //}
+  //else
+  //{
 
     RichRecPixel * newPixel = NULL;
 
@@ -103,8 +107,7 @@ RichPixelCreatorFromMCRichHits::newPixel( const ContainedObject * obj ) const {
 
           // Positions
           newPixel->setGlobalPosition( mcPhot->pdIncidencePoint() );
-          newPixel->localPosition() =
-            m_smartIDTool->globalToPDPanel(newPixel->globalPosition());
+          newPixel->setLocalPosition( m_smartIDTool->globalToPDPanel(newPixel->globalPosition()) );
           // compute corrected local coordinates
           computeRadCorrLocalPositions( newPixel );
 
@@ -125,14 +128,14 @@ RichPixelCreatorFromMCRichHits::newPixel( const ContainedObject * obj ) const {
     }
 
     // Add to reference map
-    if ( bookKeep() )
-    {
-      m_pixelExists[hitKey] = newPixel;
-      m_pixelDone[hitKey] = true;
-    }
+    //if ( bookKeep() )
+    // {
+    //  m_pixelExists[hitKey] = newPixel;
+    //  m_pixelDone[hitKey] = true;
+    // }
 
     return newPixel;
-  }
+    //}
 
 }
 

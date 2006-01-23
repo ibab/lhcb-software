@@ -5,7 +5,7 @@
  *  Header file for RICH reconstruction tool : RichPixelCreatorFromRichDigitsWithBg
  *
  *  CVS Log :-
- *  $Id: RichPixelCreatorFromRichDigitsWithBg.h,v 1.10 2005-06-23 15:14:12 jonrob Exp $
+ *  $Id: RichPixelCreatorFromRichDigitsWithBg.h,v 1.11 2006-01-23 14:09:59 jonrob Exp $
  *
  *  @author Andy Buckley   buckley@hep.phy.cam.ac.uk
  *  @author Chris Jones    Christopher.Rob.Jones@cern.ch
@@ -73,7 +73,7 @@ public: // methods (and doxygen comments) inherited from public interface
 
   // Returns a RichRecPixel object pointer for given object.
   // If if it not possible NULL is return.
-  RichRecPixel * newPixel( const ContainedObject * obj ) const;
+  LHCb::RichRecPixel * newPixel( const ContainedObject * obj ) const;
 
   // Form all possible RichRecPixels from input RichDigits.
   // The most efficient way to make all RichRecPixel objects in the event.
@@ -82,7 +82,7 @@ public: // methods (and doxygen comments) inherited from public interface
 private: // methods
 
   /// Returns a RichRecPixel object for given smart ID
-  RichRecPixel * newPixel( const RichSmartID id ) const;
+  LHCb::RichRecPixel * newPixel( const LHCb::RichSmartID id ) const;
 
   /// Add the current event's digits to a collection of bg track digits
   StatusCode fillBgTrackStack() const;
@@ -99,10 +99,10 @@ private: // data
   std::string m_recoDigitsLocation;
 
   /// Typedef for mapping between MCParticles and RIchSmartIDs
-  typedef RichMap<const MCParticle*, RichSmartID::Collection > BgTrackStack;
+  typedef Rich::Map<const LHCb::MCParticle*, LHCb::RichSmartID::Vector > BgTrackStack;
 
   /// Stack of RichSmartIDs for a single MCParticle for use as track background
-  mutable RichMap<Rich::DetectorType, BgTrackStack> m_digitsForTrackBg;
+  mutable Rich::Map<Rich::DetectorType, BgTrackStack> m_digitsForTrackBg;
 
   /// Number of background tracks to add to each event
   std::vector<size_t> m_numBgTracksToAdd;

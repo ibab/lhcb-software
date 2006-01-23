@@ -4,7 +4,7 @@
  *
  *  Implementation file for algorithm class : RichPixelMonitor
  *
- *  $Id: RichPixelMonitor.cpp,v 1.3 2006-01-16 18:24:59 jonrob Exp $
+ *  $Id: RichPixelMonitor.cpp,v 1.4 2006-01-23 14:10:48 jonrob Exp $
  *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   05/04/2002
@@ -15,6 +15,9 @@
 
 // local
 #include "RichPixelMonitor.h"
+
+// namespace
+using namespace LHCb;
 
 //-----------------------------------------------------------------------------
 
@@ -63,7 +66,7 @@ StatusCode RichPixelMonitor::execute()
   // Make sure all pixels have been formed
   if ( richPixels()->empty() )
   {
-    if ( pixelCreator()->newPixels().isFailure() ) 
+    if ( pixelCreator()->newPixels().isFailure() )
       return Error( "Problem creating RichRecPixels" );
     debug() << "No Pixels found : Created "
             << richPixels()->size() << " RichRecPixels" << endreq;
@@ -98,7 +101,7 @@ StatusCode RichPixelMonitor::execute()
     }
 
     // global position
-    const HepPoint3D & gPos = pixel->globalPosition();
+    const Gaudi::XYZPoint & gPos = pixel->globalPosition();
     plot1D( gPos.x(), hid(iRich,"obsXglo"), "Observed hits x global",
             xMinPDGlo[iRich], xMaxPDGlo[iRich] );
     plot1D( gPos.y(), hid(iRich,"obsYglo"), "Observed hits y global",
@@ -112,7 +115,7 @@ StatusCode RichPixelMonitor::execute()
     plot2D( gPos.y(), gPos.z(), hid(iRich,"obsYZglo"), "Observed hits yVz global",
             yMinPDGlo[iRich], yMaxPDGlo[iRich], zMinPDGlo[iRich], zMaxPDGlo[iRich] );
     // local position on HP panels
-    const HepPoint3D & lPos = pixel->localPosition();
+    const Gaudi::XYZPoint & lPos = pixel->localPosition();
     plot1D( lPos.x(), hid(iRich,"obsXloc"), "Observed hits x local",
             xMinPDLoc[iRich], xMaxPDLoc[iRich] );
     plot1D( lPos.y(), hid(iRich,"obsYloc"), "Observed hits y local",
@@ -155,7 +158,7 @@ StatusCode RichPixelMonitor::execute()
     plot1D( logPixBkg, hid(iRich,"pixLogBkg"), "Pixel log(background)",-20,0);
 
     // find out pd positions
-    const RichSmartID pdID = pixel->smartID().pdID();
+    const RichSmartID pdID = pixel->smartID().hpdID();
     m_xHits[pdID] += pixel->globalPosition().x();
     m_yHits[pdID] += pixel->globalPosition().y();
     m_zHits[pdID] += pixel->globalPosition().z();
@@ -215,7 +218,7 @@ StatusCode RichPixelMonitor::finalize()
 
   // Final printout of histograms and PD numbering histograms
   debug() << "RichDigit PD Positions :-" << endreq;
-  for ( RichMap<RichSmartID::KeyType, double>::const_iterator ix = m_xHits.begin();
+  for ( Rich::Map<RichSmartID::KeyType, double>::const_iterator ix = m_xHits.begin();
         ix != m_xHits.end(); ++ix )
   {
     const RichSmartID pdID = ix->first;
@@ -223,29 +226,29 @@ StatusCode RichPixelMonitor::finalize()
     const double avX = ( hits>0 ? ix->second/hits : 0 );
     const double avY = ( hits>0 ? m_yHits[pdID]/hits : 0 );
     const double avZ = ( hits>0 ? m_zHits[pdID]/hits : 0 );
-    debug() << "PD " << pdID << " Pos. " << HepPoint3D(avX,avY,avZ)
+    debug() << "PD " << pdID << " Pos. " << Gaudi::XYZPoint(avX,avY,avZ)
             << " Hits " << hits << endreq;
     const Rich::DetectorType iRich = ( avZ>5000 ? Rich::Rich2 : Rich::Rich1 );
 
     plot2D( avX, avY, "hpdNumbers/pdColXY", "HPD column numbers yVx",
             xMinPDGlo[iRich], xMaxPDGlo[iRich], yMinPDGlo[iRich], yMaxPDGlo[iRich],
-            50, 50, pdID.pdCol() );
+            50, 50, pdID.hpdCol() );
     plot2D( avZ, avX, "hpdNumbers/pdColZX", "HPD column numbers xVz",
             zMinPDGlo[iRich], zMaxPDGlo[iRich], xMinPDGlo[iRich], xMaxPDGlo[iRich],
-            50, 50, pdID.pdCol() );
+            50, 50, pdID.hpdCol() );
     plot2D( avZ, avY, "hpdNumbers/pdColZY", "HPD column numbers yVz",
             zMinPDGlo[iRich], zMaxPDGlo[iRich], yMinPDGlo[iRich], yMaxPDGlo[iRich],
-            50, 50, pdID.pdCol() );
+            50, 50, pdID.hpdCol() );
 
     plot2D( avX, avY, "hpdNumbers/pdRowXY", "HPD row numbers yVx",
             xMinPDGlo[iRich], xMaxPDGlo[iRich], yMinPDGlo[iRich], yMaxPDGlo[iRich],
-            50, 50, pdID.pdRow() );
+            50, 50, pdID.hpdNumInCol() );
     plot2D( avZ, avX, "hpdNumbers/pdRowZX", "HPD row numbers xVz",
             zMinPDGlo[iRich], zMaxPDGlo[iRich], xMinPDGlo[iRich], xMaxPDGlo[iRich],
-            50, 50, pdID.pdRow() );
+            50, 50, pdID.hpdNumInCol() );
     plot2D( avZ, avY, "hpdNumbers/pdRowZY", "HPD row numbers yVz",
             zMinPDGlo[iRich], zMaxPDGlo[iRich], yMinPDGlo[iRich], yMaxPDGlo[iRich],
-            50, 50, pdID.pdRow() );
+            50, 50, pdID.hpdNumInCol() );
 
   }
 

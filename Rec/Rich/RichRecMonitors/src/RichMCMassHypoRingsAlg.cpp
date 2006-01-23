@@ -5,7 +5,7 @@
  *  Implementation file for algorithm class : RichMCMassHypoRingsAlg
  *
  *  CVS Log :-
- *  $Id: RichMCMassHypoRingsAlg.cpp,v 1.3 2005-11-07 09:37:19 jonrob Exp $
+ *  $Id: RichMCMassHypoRingsAlg.cpp,v 1.4 2006-01-23 14:10:48 jonrob Exp $
  *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   05/04/2002
@@ -14,6 +14,9 @@
 
 // local
 #include "RichMCMassHypoRingsAlg.h"
+
+// namespace
+using namespace LHCb;
 
 //--------------------------------------------------------------------------
 
@@ -81,7 +84,7 @@ StatusCode RichMCMassHypoRingsAlg::execute()
 
   // loop over data locations
   for ( EventList::const_iterator iEvt = m_evtLocs.begin();
-        iEvt != m_evtLocs.end(); ++iEvt ) 
+        iEvt != m_evtLocs.end(); ++iEvt )
   {
     const StatusCode sc = buildRings( *iEvt );
     if ( sc.isFailure() ) { return sc; }
@@ -105,10 +108,10 @@ RichMCMassHypoRingsAlg::buildRings( const std::string & evtLoc ) const
 
   // Ray tracing mode
   RichTraceMode mode;
-  
+
   // iterate over segments
   for ( MCRichSegments::const_iterator iSeg = mcSegs->begin();
-        iSeg != mcSegs->end(); ++iSeg ) 
+        iSeg != mcSegs->end(); ++iSeg )
   {
     const MCRichSegment * segment = *iSeg;
     if ( !segment ) continue;
@@ -127,12 +130,12 @@ RichMCMassHypoRingsAlg::buildRings( const std::string & evtLoc ) const
          theta > m_maxCKtheta[segment->radiator()] ) continue;
 
     // Emission point and direction
-    const HepPoint3D  bestPtn = segment->bestPoint(0.5);
-    const HepVector3D bestDir = segment->bestMomentum(0.5);
+    const Gaudi::XYZPoint  bestPtn = segment->bestPoint(0.5);
+    const Gaudi::XYZVector bestDir = segment->bestMomentum(0.5);
 
     // ray-trace the ring points in tight mode to find out if any part of
     // the ring is in the general acceptance of the HPD panels
-    std::vector<HepPoint3D> points;
+    std::vector<Gaudi::XYZPoint> points;
     mode.setDetPlaneBound( RichTraceMode::tight ); // dis-regard HPD panel boundaries
     m_rayTrace->rayTrace( segment->rich(), bestPtn, bestDir,
                           theta, points, mode );
@@ -152,8 +155,15 @@ RichMCMassHypoRingsAlg::buildRings( const std::string & evtLoc ) const
     ring->setRich( segment->rich() );
 
     // Set the PD panel points
-    m_mcTkInfo->panelIntersectGlobal ( *iSeg, ring->centrePointGlobal() );
-    m_mcTkInfo->panelIntersectLocal  ( *iSeg, ring->centrePointLocal()  );
+    Gaudi::XYZPoint tmpPoint;
+    if ( m_mcTkInfo->panelIntersectGlobal( *iSeg, tmpPoint ) )
+    {
+      ring->setCentrePointGlobal(tmpPoint);
+    }
+    if ( m_mcTkInfo->panelIntersectLocal( *iSeg, tmpPoint ) )
+    {
+      ring->setCentrePointLocal(tmpPoint);
+    }
 
     // ray-trace again using loose mode to get the full ring.
     mode.setDetPlaneBound( RichTraceMode::loose ); // dis-regard HPD panel boundaries

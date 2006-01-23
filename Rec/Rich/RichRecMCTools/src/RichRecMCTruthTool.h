@@ -5,7 +5,7 @@
  *  Header file for RICH reconstruction tool : RichRecMCTruthTool
  *
  *  CVS Log :-
- *  $Id: RichRecMCTruthTool.h,v 1.11 2005-10-13 15:41:01 jonrob Exp $
+ *  $Id: RichRecMCTruthTool.h,v 1.12 2006-01-23 14:09:59 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   08/07/2004
@@ -23,6 +23,8 @@
 #include "GaudiKernel/IParticlePropertySvc.h"
 #include "GaudiKernel/ParticleProperty.h"
 #include "GaudiKernel/ToolFactory.h"
+#include "GaudiKernel/IIncidentListener.h"
+#include "GaudiKernel/IIncidentSvc.h"
 
 // base class
 #include "RichRecBase/RichRecToolBase.h"
@@ -33,7 +35,6 @@
 
 // Event model
 #include "Event/Track.h"
-#include "Event/TrStoredTrack.h"
 #include "Event/MCParticle.h"
 #include "Event/MCTruth.h"
 #include "Event/RichRecSegment.h"
@@ -46,12 +47,15 @@
 #include "Event/MCRichSegment.h"
 #include "Event/MCRichTrack.h"
 
+// Linkers
+#include "Linker/LinkedTo.h"
+
 // Interfaces
 #include "RichRecBase/IRichRecMCTruthTool.h"
 #include "RichKernel/IRichMCTruthTool.h"
 
-// CLHEP
-#include "CLHEP/Units/PhysicalConstants.h"
+// constants
+#include "Kernel/PhysicalConstants.h"
 
 //-----------------------------------------------------------------------------
 /** @class RichRecMCTruthTool RichRecMCTruthTool.h
@@ -65,7 +69,9 @@
 //-----------------------------------------------------------------------------
 
 class RichRecMCTruthTool : public RichRecToolBase,
-                           virtual public IRichRecMCTruthTool {
+                           virtual public IRichRecMCTruthTool,
+                           virtual public IIncidentListener 
+{
 
 public: // methods for Gaudi framework
 
@@ -80,85 +86,111 @@ public: // methods for Gaudi framework
   // Finalize method
   StatusCode finalize();
 
+  /** Implement the handle method for the Incident service.
+   *  This is used to inform the tool of software incidents.
+   *
+   *  @param incident The incident identifier
+   */
+  void handle( const Incident& incident );
+
 public: // Public interface methods
 
+  // Find best MCParticle association for a given reconstructed Track
+  const LHCb::MCParticle * mcParticle( const LHCb::Track * track ) const;
+
   // Find best MCParticle association for a given RichRecTrack
-  const MCParticle * mcParticle( const RichRecTrack * richTrack ) const;
+  const LHCb::MCParticle * mcParticle( const LHCb::RichRecTrack * richTrack ) const;
 
   // Find best MCParticle association for a given RichRecSegment
-  const MCParticle * mcParticle( const RichRecSegment * richSegment ) const;
+  const LHCb::MCParticle * mcParticle( const LHCb::RichRecSegment * richSegment ) const;
+
+  // Determines the particle mass hypothesis for a given reconstructed Track
+  Rich::ParticleIDType mcParticleType( const LHCb::Track * track ) const;
 
   // Truth particle type for given RichRecTrack
-  Rich::ParticleIDType mcParticleType( const RichRecTrack * richTrack ) const;
+  Rich::ParticleIDType mcParticleType( const LHCb::RichRecTrack * richTrack ) const;
 
   // Truth particle type for given RichRecSegment
-  Rich::ParticleIDType mcParticleType( const RichRecSegment * richSegment ) const;
+  Rich::ParticleIDType mcParticleType( const LHCb::RichRecSegment * richSegment ) const;
 
   // Find parent MCParticles associated to a given RichRecPixel
-  bool mcParticle( const RichRecPixel * richPixel,
-                   std::vector<const MCParticle*> & mcParts ) const;
+  bool mcParticle( const LHCb::RichRecPixel * richPixel,
+                   std::vector<const LHCb::MCParticle*> & mcParts ) const;
 
   // Find parent MCRichDigit association for a given RichRecPixel
-  const MCRichDigit * mcRichDigit( const RichRecPixel * richPixel ) const;
+  const LHCb::MCRichDigit * mcRichDigit( const LHCb::RichRecPixel * richPixel ) const;
 
   // Find parent MCRichHits for a given RichRecPixel
-  const SmartRefVector<MCRichHit> & mcRichHits( const RichRecPixel * richPixel ) const;
+  const SmartRefVector<LHCb::MCRichHit> & mcRichHits( const LHCb::RichRecPixel * richPixel ) const;
 
   // Find parent MCRichOpticalPhotons associated to a given RichRecPixel
-  bool mcRichOpticalPhoton( const RichRecPixel * richPixel,
-                            SmartRefVector<MCRichOpticalPhoton> & phots ) const;
-  
+  bool mcRichOpticalPhoton( const LHCb::RichRecPixel * richPixel,
+                            SmartRefVector<LHCb::MCRichOpticalPhoton> & phots ) const;
+
   // Is this a true photon candidate ?
   // Do the associated segment and pixel have the same MC parent
-  const MCParticle * trueRecPhoton( const RichRecPhoton * photon ) const;
+  const LHCb::MCParticle * trueRecPhoton( const LHCb::RichRecPhoton * photon ) const;
 
   // Is this a true photon candidate ?
   // Do the segment and pixel have the same MC parent
-  const MCParticle * trueRecPhoton( const RichRecSegment * segment,
-                                    const RichRecPixel * pixel ) const;
+  const LHCb::MCParticle * trueRecPhoton( const LHCb::RichRecSegment * segment,
+                                          const LHCb::RichRecPixel * pixel ) const;
 
   // Returns the associated MCRichHit if given RichRecPhoton is true (null otherwise)
-  const MCRichHit * trueCherenkovHit( const RichRecPhoton * photon ) const;
+  const LHCb::MCRichHit * trueCherenkovHit( const LHCb::RichRecPhoton * photon ) const;
 
   // Returns the associated MCRichOpticalPhoton if given RichRecPhoton is true (null otherwise)
-  const MCRichOpticalPhoton * trueOpticalPhoton( const RichRecPhoton * photon ) const;
+  const LHCb::MCRichOpticalPhoton * trueOpticalPhoton( const LHCb::RichRecPhoton * photon ) const;
 
   // Returns the associated MCRichOpticalPhoton if given available for given segment and pixel
-  const MCRichOpticalPhoton * trueOpticalPhoton( const RichRecSegment * segment,
-                                                 const RichRecPixel * pixel ) const;
+  const LHCb::MCRichOpticalPhoton * trueOpticalPhoton( const LHCb::RichRecSegment * segment,
+                                                       const LHCb::RichRecPixel * pixel ) const;
 
   // Is this a true Cherenkov photon candidate ?
   // Do the associated segment and pixel have the same MC parent AND was the pixel
   // the result of Cherenkov radiation from the relevant radiator
-  const MCParticle * trueCherenkovPhoton( const RichRecPhoton * photon ) const;
+  const LHCb::MCParticle * trueCherenkovPhoton( const LHCb::RichRecPhoton * photon ) const;
 
   // Is this a true Cherenkov photon candidate ?
   // Do the segment and pixel have the same MC parent AND was the pixel
   // the result of Cherenkov radiation from the relevant radiator
-  const MCParticle * trueCherenkovPhoton( const RichRecSegment * segment,
-                                          const RichRecPixel * pixel ) const;
+  const LHCb::MCParticle * trueCherenkovPhoton( const LHCb::RichRecSegment * segment,
+                                                const LHCb::RichRecPixel * pixel ) const;
 
   // Is the hit due to Cherenkov radiation for given radiator medium ?
-  const MCParticle * trueCherenkovRadiation( const RichRecPixel * pixel,
-                                             const Rich::RadiatorType rad ) const;
+  const LHCb::MCParticle * trueCherenkovRadiation( const LHCb::RichRecPixel * pixel,
+                                                   const Rich::RadiatorType rad ) const;
 
   // Returns the MCRichSegment associated to a given RichRecSegment
-  const MCRichSegment * mcRichSegment( const RichRecSegment * segment ) const;
+  const LHCb::MCRichSegment * mcRichSegment( const LHCb::RichRecSegment * segment ) const;
 
   // Returns the MCRichTrack associated to a given RichRecTrack
-  const MCRichTrack * mcRichTrack( const RichRecTrack * track ) const;
-
-  // Returns the MCRichTrack associated to a given TrStoredTrack
-  const MCRichTrack * mcRichTrack( const TrStoredTrack * track ) const;
+  const LHCb::MCRichTrack * mcRichTrack( const LHCb::RichRecTrack * track ) const;
 
   // Returns the MCRichTrack associated to a given RichRecSegment
-  const MCRichTrack * mcRichTrack( const RichRecSegment * segment ) const;
+  const LHCb::MCRichTrack * mcRichTrack( const LHCb::RichRecSegment * segment ) const;
 
   // Returns pointer to vector of MCRichSegments associated to a given RichRecTrack
-  const SmartRefVector<MCRichSegment> * mcRichSegments( const RichRecTrack * track ) const;
+  const SmartRefVector<LHCb::MCRichSegment> * mcRichSegments( const LHCb::RichRecTrack * track ) const;
 
   // Is this RichRecPixel background ?
-  bool isBackground( const RichRecPixel * pixel ) const;
+  bool isBackground( const LHCb::RichRecPixel * pixel ) const;
+
+private: // definitions
+
+  /// typedef of the Linker object for Tracks to MCParticles
+  typedef LinkedTo<LHCb::MCParticle,LHCb::Track> TrackToMCP;
+
+private: // methods
+
+  /// Returns the linker object for Tracks to MCParticles
+  TrackToMCP * trackToMCPLinks() const;
+
+  /// Clean up current linker objects
+  void cleanUpLinkers();
+
+  /// Initialise for a new event
+  void InitNewEvent();
 
 private: // private data
 
@@ -166,8 +198,21 @@ private: // private data
   const IRichMCTruthTool * m_truth;
 
   /// Empty container for missing links
-  SmartRefVector<MCRichHit> m_emptyContainer;
+  SmartRefVector<LHCb::MCRichHit> m_emptyContainer;
+
+  /// Linker for Tracks to MCParticles
+  mutable TrackToMCP * m_trToMCPLinks;
 
 };
+
+inline void RichRecMCTruthTool::cleanUpLinkers()
+{
+  if ( m_trToMCPLinks ) { delete m_trToMCPLinks; m_trToMCPLinks = 0; }
+}
+
+inline void RichRecMCTruthTool::InitNewEvent()
+{
+  cleanUpLinkers();
+}
 
 #endif // RICHRECMCTOOLS_RICHRECMCTRUTHTOOL_H

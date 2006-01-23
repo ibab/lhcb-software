@@ -5,7 +5,7 @@
  *  Header file for algorithm class : RichCherenkovResMoni
  *
  *  CVS Log :-
- *  $Id: RichCherenkovResMoni.h,v 1.3 2005-10-31 15:25:49 jonrob Exp $
+ *  $Id: RichCherenkovResMoni.h,v 1.4 2006-01-23 14:10:48 jonrob Exp $
  *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   05/04/2002
@@ -44,7 +44,7 @@
  */
 //---------------------------------------------------------------------------
 
-class RichCherenkovResMoni : public RichRecHistoAlgBase 
+class RichCherenkovResMoni : public RichRecHistoAlgBase
 {
 
 public:

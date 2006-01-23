@@ -5,7 +5,7 @@
  *  Header file for RICH reconstruction tool : RichPhotonCreatorFromMCRichOpticalPhotons
  *
  *  CVS Log :-
- *  $Id: RichPhotonCreatorFromMCRichOpticalPhotons.h,v 1.6 2005-06-23 15:14:12 jonrob Exp $
+ *  $Id: RichPhotonCreatorFromMCRichOpticalPhotons.h,v 1.7 2006-01-23 14:09:59 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   08/07/2004
@@ -64,9 +64,9 @@ public: // methods for Gaudi framework
 private: // private methods
 
   /// Form a Photon candidate from a Segment and a pixel.
-  virtual RichRecPhoton * buildPhoton( RichRecSegment * segment,
-                                       RichRecPixel * pixel,
-                                       const RichRecPhotonKey key ) const;
+  virtual LHCb::RichRecPhoton * buildPhoton( LHCb::RichRecSegment * segment,
+                                             LHCb::RichRecPixel * pixel,
+                                             const RichRecPhotonKey key ) const;
 
 private: // private data
 

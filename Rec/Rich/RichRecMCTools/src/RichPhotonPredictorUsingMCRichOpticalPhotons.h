@@ -5,7 +5,7 @@
  *  Header file for RICH reconstruction tool : RichPhotonPredictorUsingMCRichOpticalPhotons
  *
  *  CVS Log :-
- *  $Id: RichPhotonPredictorUsingMCRichOpticalPhotons.h,v 1.4 2005-06-23 15:14:12 jonrob Exp $
+ *  $Id: RichPhotonPredictorUsingMCRichOpticalPhotons.h,v 1.5 2006-01-23 14:09:59 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   08/07/2004
@@ -43,7 +43,8 @@
 //---------------------------------------------------------------------------------------------------
 
 class RichPhotonPredictorUsingMCRichOpticalPhotons : public RichRecToolBase,
-                                                     virtual public IRichPhotonPredictor {
+                                                     virtual public IRichPhotonPredictor
+{
 
 public: // methods for Gaudi framework
 
@@ -64,8 +65,8 @@ public: // methods for Gaudi framework
 public: // Public interface methods
 
   // Is it possible to make a photon candidate using this segment and pixel.
-  bool photonPossible( RichRecSegment * segment,
-                       RichRecPixel * pixel ) const;
+  bool photonPossible( LHCb::RichRecSegment * segment,
+                       LHCb::RichRecPixel * pixel ) const;
 
 private: // private data
 

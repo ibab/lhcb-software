@@ -5,7 +5,7 @@
  *  Header file for RICH reconstruction tool : RichPixelCreatorFromMCRichHits
  *
  *  CVS Log :-
- *  $Id: RichPixelCreatorFromMCRichHits.h,v 1.11 2005-06-23 15:14:12 jonrob Exp $
+ *  $Id: RichPixelCreatorFromMCRichHits.h,v 1.12 2006-01-23 14:09:59 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   08/07/2004
@@ -37,6 +37,8 @@
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
+ *
+ *  @todo Figure out how to handle the missing key() method in the booking keeping
  */
 //--------------------------------------------------------------------------------------
 
@@ -63,7 +65,7 @@ public: // Public interface methods
 
   // Returns a RichRecPixel object pointer for given ContainedObject.
   // If if it not possible NULL is return.
-  RichRecPixel * newPixel( const ContainedObject * obj ) const;
+  LHCb::RichRecPixel * newPixel( const ContainedObject * obj ) const;
 
   // Form all possible RichRecPixels from input RichDigits.
   // The most efficient way to make all RichRecPixel objects in the event.

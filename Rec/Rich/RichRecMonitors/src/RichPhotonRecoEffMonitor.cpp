@@ -5,7 +5,7 @@
  *  Implementation file for algorithm class : RichPhotonRecoEffMonitor
  *
  *  CVS Log :-
- *  $Id: RichPhotonRecoEffMonitor.cpp,v 1.3 2006-01-16 18:24:59 jonrob Exp $
+ *  $Id: RichPhotonRecoEffMonitor.cpp,v 1.4 2006-01-23 14:10:48 jonrob Exp $
  *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   05/04/2002
@@ -14,6 +14,9 @@
 
 // local
 #include "RichPhotonRecoEffMonitor.h"
+
+// namespace
+using namespace LHCb;
 
 //---------------------------------------------------------------------------
 
@@ -68,11 +71,11 @@ StatusCode RichPhotonRecoEffMonitor::execute()
   // Make sure all tracks and segments have been formed
   if ( trackCreator()->newTracks().isFailure() )
     return Error( "Problem creating RichRecTracks" );
-  
+
   // make sure RichrecPixels are ready
   if ( pixelCreator()->newPixels().isFailure() )
     return Error( "Problem creating RichRecPixels" );
-  
+
   // make sure photons are available
   if ( photonCreator()->reconstructPhotons().isFailure() )
     return Error( "Problem creating RichRecPhotons" );
@@ -127,7 +130,7 @@ StatusCode RichPhotonRecoEffMonitor::execute()
           const double sep = sqrt( m_geomTool->trackPixelHitSep2(segment, pixel) );
           // expect CK theta
           const double thetaExp = m_ckAngle->avgCherenkovTheta(segment,mcType);
-          const double sepAngle = 
+          const double sepAngle =
             ( atan2( pixel->localPosition(rad).x() - segment->pdPanelHitPointLocal().x(),
                      pixel->localPosition(rad).y() - segment->pdPanelHitPointLocal().y() ) );
 
@@ -147,7 +150,7 @@ StatusCode RichPhotonRecoEffMonitor::execute()
             plot1D( mcPhot->cherenkovTheta(), hid(rad,"nonRecoCKthetaMC"),
                     "Non-reco. CK theta", minCkTheta[rad],maxCkTheta[rad] );
             plot2D( mcPhot->cherenkovTheta(), sep, hid(rad,"nonRecoSepVCKtMC"),
-                    "Non-reco. Sep V MC CK theta true", 
+                    "Non-reco. Sep V MC CK theta true",
                     minCkTheta[rad],maxCkTheta[rad],tkHitSepMin[rad],tkHitSepMax[rad] );
             plot1D( mcPhot->cherenkovTheta() - thetaExp, hid(rad,"nonRecoCKresMC"),
                     "Non Reco. MC CK res", -ckRange[rad], ckRange[rad]);
@@ -164,12 +167,12 @@ StatusCode RichPhotonRecoEffMonitor::execute()
             plot1D( recPhot->geomPhoton().CherenkovTheta(), hid(rad,"nonRecoCKtheta"),
                     "Non reco. CK theta", minCkTheta[rad],maxCkTheta[rad] );
             plot2D( recPhot->geomPhoton().CherenkovTheta(), sep, hid(rad,"nonRecoSepVCKt"),
-                    "Non-reco. Sep V Reco CK theta true", 
+                    "Non-reco. Sep V Reco CK theta true",
                     minCkTheta[rad],maxCkTheta[rad],tkHitSepMin[rad],tkHitSepMax[rad] );
             plot1D( recPhot->geomPhoton().CherenkovTheta() - thetaExp, hid(rad,"nonRecoCKresMC"),
                     "Non Reco. CK res", -ckRange[rad], ckRange[rad]);
           }
-          
+
         } // photon not reconstructed
 
       } // true photon

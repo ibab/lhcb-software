@@ -4,7 +4,7 @@
  *  Implementation file for algorithm class : RichAlignmentMonitor
  *
  *  CVS Log :-
- *  $Id: RichAlignmentMonitor.cpp,v 1.5 2005-10-31 13:30:58 jonrob Exp $
+ *  $Id: RichAlignmentMonitor.cpp,v 1.6 2006-01-23 14:10:48 jonrob Exp $
  *
  *  @author Antonis Papanestis
  *  @date   2004-02-19
@@ -12,6 +12,9 @@
 
 // local
 #include "RichAlignmentMonitor.h"
+
+// namespaces
+using namespace LHCb;
 
 //-----------------------------------------------------------------------------
 
@@ -155,7 +158,7 @@ StatusCode RichAlignmentMonitor::execute() {
     int hrich = rich+1;
 
     // Segment momentum
-    const double ptot = segment->trackSegment().bestMomentum().mag();
+    const double ptot = sqrt(segment->trackSegment().bestMomentum().Mag2());
     debug() << "Momentum " << ptot << endmsg;
 
     bool saturated( false );
@@ -170,7 +173,8 @@ StatusCode RichAlignmentMonitor::execute() {
         mcParticleType( segment );
       if ( Rich::Unknown == mcType ) continue;
       debug() << "mcType:" << mcType << endmsg;
-      const double beta = m_richPartProp->beta( segment->trackSegment().bestMomentum().mag(), mcType );
+      const double beta =
+        m_richPartProp->beta( sqrt(segment->trackSegment().bestMomentum().Mag2()), mcType );
       m_trackBeta[rich]->fill(beta);
       // Expected Cherenkov theta angle for true particle type
 
@@ -216,9 +220,9 @@ StatusCode RichAlignmentMonitor::execute() {
       m_ambigMirrorsHist[rich]->fill(static_cast<int>(unAmbiguousPhoton));
 
       if (m_useMCTruth && trueParent && trType == Rich::Track::Forward) {
-          plot( delThetaTrue, hrich*100+90, "Ch angle error MC forward ALL",
-                -m_deltaThetaHistoRange, m_deltaThetaHistoRange);
-        
+        plot( delThetaTrue, hrich*100+90, "Ch angle error MC forward ALL",
+              -m_deltaThetaHistoRange, m_deltaThetaHistoRange);
+
         if ( unAmbiguousPhoton )
           plot( delThetaTrue, hrich*100+91, "Ch angle error MC forward Unambiguous",
                 -m_deltaThetaHistoRange, m_deltaThetaHistoRange);
@@ -226,7 +230,7 @@ StatusCode RichAlignmentMonitor::execute() {
           plot( delThetaTrue, hrich*100+92, "Ch angle error MC forward Ambiguous",
                 -m_deltaThetaHistoRange, m_deltaThetaHistoRange);
       }
-      
+
 
       if (!unAmbiguousPhoton) continue;
 

@@ -5,7 +5,7 @@
  *  Implementation file for algorithm class : RichRecBackgroundEsti
  *
  *  CVS Log :-
- *  $Id: RichRecBackgroundEsti.cpp,v 1.3 2005-10-18 12:44:06 jonrob Exp $
+ *  $Id: RichRecBackgroundEsti.cpp,v 1.4 2006-01-23 14:07:23 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   17/04/2002
@@ -14,6 +14,9 @@
 
 // local
 #include "RichRecBackgroundEsti.h"
+
+// namespaces
+using namespace LHCb;
 
 //--------------------------------------------------------------------------
 
@@ -68,13 +71,13 @@ StatusCode RichRecBackgroundEsti::execute()
             << "Found " << richPixels()->size() << " RichRecPixels" << endreq;
   }
 
-  // Get reference to detector backgrounds
-  std::vector<RichRecStatus::FloatType> & bckEstimate = richStatus()->detOverallBkg();
+  // Get detector backgrounds
+  std::vector<RichRecStatus::FloatType> bckEstimate = richStatus()->detOverallBkg();
 
   // Initialise detector backgrounds
   bckEstimate[Rich::Rich1] = 0;
   bckEstimate[Rich::Rich2] = 0;
-  typedef RichMap<RichSmartID::KeyType,double> PDsignals;
+  typedef Rich::Map<RichSmartID::KeyType,double> PDsignals;
   PDsignals obsPDsignals[Rich::NRiches];
   PDsignals expPDsignals[Rich::NRiches];
   PDsignals expPDbkg    [Rich::NRiches];
@@ -83,7 +86,7 @@ StatusCode RichRecBackgroundEsti::execute()
 
   // loop over segments
   for ( RichRecSegments::iterator segment = richSegments()->begin();
-        segment != richSegments()->end(); ++segment ) 
+        segment != richSegments()->end(); ++segment )
   {
 
     // Current best hypothesis for this track
@@ -96,7 +99,7 @@ StatusCode RichRecBackgroundEsti::execute()
     RichRecSegment::PDGeomEffs & hypoMap = (*segment)->geomEfficiencyPerPD( id );
     for ( RichRecSegment::PDGeomEffs::iterator iPD = hypoMap.begin();
           iPD != hypoMap.end();
-          ++iPD ) 
+          ++iPD )
     {
       const Rich::DetectorType rich = (*segment)->trackSegment().rich();
       const double sig = detPhots * iPD->second; // expected signal for this PD
@@ -108,9 +111,9 @@ StatusCode RichRecBackgroundEsti::execute()
 
     // Loop over pixels
   {for ( RichRecPixels::iterator pixel = richPixels()->begin();
-         pixel != richPixels()->end(); ++pixel ) 
+         pixel != richPixels()->end(); ++pixel )
   {
-    ++(obsPDsignals[ (*pixel)->smartID().rich() ])[ (*pixel)->smartID().pdID() ];
+    ++(obsPDsignals[ (*pixel)->smartID().rich() ])[ (*pixel)->smartID().hpdID() ];
     ++sigRich[(*pixel)->smartID().rich()];
   }} // end pixel loop
 
@@ -121,33 +124,33 @@ StatusCode RichRecBackgroundEsti::execute()
   }
 
   // Obtain background term PD by PD
-  for ( int iRich = Rich::Rich1; iRich <= Rich::Rich2; ++iRich ) 
+  for ( int iRich = Rich::Rich1; iRich <= Rich::Rich2; ++iRich )
   {
-  
+
     int iter = 1;
     bool cont = true;
     double rnorm = 0.0;
-    while ( cont ) 
+    while ( cont )
     {
 
       int nBelow(0), nAbove(0);
       double tBelow = 0.0;
       for ( PDsignals::iterator iPD = obsPDsignals[iRich].begin();
             iPD !=  obsPDsignals[iRich].end();
-            ++iPD ) 
+            ++iPD )
       {
         const RichSmartID::KeyType pd = iPD->first;
         const double obs = iPD->second;
         const double exp = (expPDsignals[iRich])[pd];
         double & bkg = (expPDbkg[iRich])[pd];
 
-        if ( 1 == iter ) 
+        if ( 1 == iter )
         {
           bkg = obs - exp;
-        } 
-        else 
+        }
+        else
         {
-          if ( bkg > 0.0 ) 
+          if ( bkg > 0.0 )
           {
             bkg -= rnorm;
           } else {
@@ -155,23 +158,23 @@ StatusCode RichRecBackgroundEsti::execute()
           }
         }
 
-        if ( bkg < 0.0 ) 
+        if ( bkg < 0.0 )
         {
           ++nBelow;
           tBelow += fabs( bkg );
-        } 
-        else if ( bkg > 0.0 ) 
+        }
+        else if ( bkg > 0.0 )
         {
           ++nAbove;
         }
 
       } // end loop over signal PDs
 
-      if ( nBelow > 0 && nAbove > 0 ) 
+      if ( nBelow > 0 && nAbove > 0 )
       {
         rnorm = tBelow/( static_cast<double>(nAbove) );
-      } 
-      else 
+      }
+      else
       {
         cont = false;
       }
@@ -182,7 +185,7 @@ StatusCode RichRecBackgroundEsti::execute()
 
       // Finally, fill background estimates
     for ( PDsignals::iterator iPD = expPDbkg[iRich].begin();
-          iPD !=  expPDbkg[iRich].end(); ++iPD ) 
+          iPD !=  expPDbkg[iRich].end(); ++iPD )
     {
       if ( iPD->second < 0 ) iPD->second = 0;
       bckEstimate[ static_cast<Rich::DetectorType>(iRich) ] += iPD->second;
@@ -193,17 +196,17 @@ StatusCode RichRecBackgroundEsti::execute()
     // Loop over pixels again to set background term
   {for ( RichRecPixels::iterator pixel = richPixels()->begin();
          pixel != richPixels()->end();
-         ++pixel ) 
+         ++pixel )
   {
 
-    const RichSmartID::KeyType pd = (*pixel)->smartID().pdID();
+    const RichSmartID::KeyType pd = (*pixel)->smartID().hpdID();
     const Rich::DetectorType  det = (Rich::DetectorType)(*pixel)->smartID().rich();
 
     const double rbckexp = (obsPDsignals[det])[pd] - (expPDsignals[det])[pd];
     (*pixel)->setCurrentBackground( rbckexp>0 ? rbckexp/m_nPixelsPerPD : 0 );
 
     // Debug printout
-    if ( msgLevel(MSG::VERBOSE) ) 
+    if ( msgLevel(MSG::VERBOSE) )
     {
       verbose() << "Pixel " << static_cast<unsigned long>((*pixel)->key())
                 << " Obs " << (obsPDsignals[det])[pd]
@@ -213,6 +216,9 @@ StatusCode RichRecBackgroundEsti::execute()
     }
 
   }}
+
+  // Update detector backgrounds
+  richStatus()->setDetOverallBkg(bckEstimate);
 
   if ( msgLevel(MSG::DEBUG) )
   {

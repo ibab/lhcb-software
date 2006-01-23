@@ -3,8 +3,9 @@
 # Maintainer : Chris Jones
 #            : Common reconstruction algorithms for the RICH
 #============================================================================
+
 package           RichRecAlgorithms
-version           v1r0
+version           v2r0
 
 #============================================================================
 # Structure, i.e. directories to process. 

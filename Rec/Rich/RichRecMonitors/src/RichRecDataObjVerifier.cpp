@@ -5,7 +5,7 @@
  *  Implementation file for algorithm class : RichRecDataObjVerifier
  *
  *  CVS Log :-
- *  $Id: RichRecDataObjVerifier.cpp,v 1.1.1.1 2005-06-18 11:44:46 jonrob Exp $
+ *  $Id: RichRecDataObjVerifier.cpp,v 1.2 2006-01-23 14:10:48 jonrob Exp $
  *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   05/04/2002
@@ -14,6 +14,9 @@
 
 // local
 #include "RichRecDataObjVerifier.h"
+
+// namespace
+using namespace LHCb;
 
 //-----------------------------------------------------------------------------
 
@@ -25,13 +28,12 @@ const        IAlgFactory& RichRecDataObjVerifierFactory = s_factory ;
 // Standard constructor, initializes variables
 RichRecDataObjVerifier::RichRecDataObjVerifier( const std::string& name,
                                                 ISvcLocator* pSvcLocator )
-  : RichRecAlgBase ( name, pSvcLocator ) {
-
+  : RichRecAlgBase ( name, pSvcLocator ) 
+{
   declareProperty( "PrintPixels",   m_bdPixels   = false );
   declareProperty( "PrintTracks",   m_bdTracks   = false );
   declareProperty( "PrintSegments", m_bdSegments = false );
   declareProperty( "PrintPhotons",  m_bdPhotons  = false );
-
 }
 
 // Destructor
@@ -159,32 +161,32 @@ StatusCode RichRecDataObjVerifier::execute()
 
   // Check internal consistency of links
   /*
-  for ( RichRecTracks::const_iterator track = richTracks()->begin();
-        track != richTracks()->end();
-        track++ )
-  {
+    for ( RichRecTracks::const_iterator track = richTracks()->begin();
+    track != richTracks()->end();
+    track++ )
+    {
 
     std::vector<RichRecPixel*> pPixels;
     pPixels.clear();
     RichRecTrack::Pixels & pixels = (*track)->richRecPixels();
     for ( RichRecTrack::Pixels::iterator iPix = pixels.begin();
-          iPix != pixels.end();
-          iPix++ ) {
-      RichRecPixel* pPix = *iPix;
-      for ( std::vector<RichRecPixel*>::iterator p = pPixels.begin();
-            p != pPixels.end();
-            p++ ) {
-        if ( *p == pPix ) {
-          err() << "Track " << (*track)->key()
-                << " has multiple refernces to pixel " << pPix->key() << endreq;
-        }
-
-      }
-
-      pPixels.push_back( pPix );
+    iPix != pixels.end();
+    iPix++ ) {
+    RichRecPixel* pPix = *iPix;
+    for ( std::vector<RichRecPixel*>::iterator p = pPixels.begin();
+    p != pPixels.end();
+    p++ ) {
+    if ( *p == pPix ) {
+    err() << "Track " << (*track)->key()
+    << " has multiple refernces to pixel " << pPix->key() << endreq;
     }
 
-  }
+    }
+
+    pPixels.push_back( pPix );
+    }
+
+    }
   */
 
   return StatusCode::SUCCESS;

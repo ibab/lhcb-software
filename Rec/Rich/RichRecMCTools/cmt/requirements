@@ -2,19 +2,21 @@
 # Created    : 15/09/2003
 # Maintainer : Christopher Rob Jones
 #============================================================================
-# $Id: requirements,v 1.17 2005-11-21 08:56:21 cattanem Exp $
+# $Id: requirements,v 1.18 2006-01-23 14:09:59 jonrob Exp $
 #============================================================================
 
 package RichRecMCTools
-version v1r10
+version v2r0
 
 # ================ structure ================================================
 branches src cmt doc
 include_path none
 
 # ================ dependencies =============================================
-use RichRecBase        v*     Rich
-use Relations          v*     Kernel
+use  RichDet           v*     Det
+use  RichRecBase       v*     Rich
+use  Relations         v*     Kernel
+use  LinkerEvent       v*     Event
 
 # ================ component library=========================================
 library          RichRecMCTools  ../src/*.cpp

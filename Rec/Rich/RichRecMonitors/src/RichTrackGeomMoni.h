@@ -5,7 +5,7 @@
  *  Header file for algorithm class : RichTrackGeomMoni
  *
  *  CVS Log :-
- *  $Id: RichTrackGeomMoni.h,v 1.3 2005-10-31 13:30:58 jonrob Exp $
+ *  $Id: RichTrackGeomMoni.h,v 1.4 2006-01-23 14:10:48 jonrob Exp $
  *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   05/04/2002
@@ -53,7 +53,7 @@
  */
 //---------------------------------------------------------------------------
 
-class RichTrackGeomMoni : public RichRecHistoAlgBase 
+class RichTrackGeomMoni : public RichRecHistoAlgBase
 {
 
 public:
@@ -83,10 +83,10 @@ private: // data
   RichTraceMode m_traceMode;
 
   // working variables for average PD positions
-  RichMap<RichSmartID, double> m_xHits;
-  RichMap<RichSmartID, double> m_yHits;
-  RichMap<RichSmartID, double> m_zHits;
-  RichMap<RichSmartID, int> m_hitCount;
+  Rich::Map<LHCb::RichSmartID, double> m_xHits;
+  Rich::Map<LHCb::RichSmartID, double> m_yHits;
+  Rich::Map<LHCb::RichSmartID, double> m_zHits;
+  Rich::Map<LHCb::RichSmartID, int> m_hitCount;
 
 };
 

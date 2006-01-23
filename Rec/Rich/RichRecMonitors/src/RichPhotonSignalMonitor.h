@@ -5,7 +5,7 @@
  *  Header file for algorithm class : RichPhotonSignalMonitor
  *
  *  CVS Log :-
- *  $Id: RichPhotonSignalMonitor.h,v 1.1 2005-11-07 09:37:20 jonrob Exp $
+ *  $Id: RichPhotonSignalMonitor.h,v 1.2 2006-01-23 14:10:48 jonrob Exp $
  *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   05/04/2002
@@ -44,14 +44,14 @@
  */
 //---------------------------------------------------------------------------
 
-class RichPhotonSignalMonitor : public RichRecHistoAlgBase 
+class RichPhotonSignalMonitor : public RichRecHistoAlgBase
 {
 
 public:
 
   /// Standard constructor
   RichPhotonSignalMonitor( const std::string& name,
-                        ISvcLocator* pSvcLocator );
+                           ISvcLocator* pSvcLocator );
 
   virtual ~RichPhotonSignalMonitor( ); ///< Destructor
 

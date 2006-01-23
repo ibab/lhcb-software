@@ -4,6 +4,9 @@
 ! Purpose     : Monte Carlo Utility tools for RICH reconstruction algorithms
 !------------------------------------------------------------------------------
 
+! 2006-01-23 - Chris Jones
+ - Update for LHCb v20r0
+
 !====================== RichRecMCTools v1r10 2005-11-21 ====================
 ! 2005-11-15 - Chris Jones
  - Improvements to photon reconstruction interface to avoid data copying

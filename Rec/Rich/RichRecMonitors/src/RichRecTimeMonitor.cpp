@@ -5,7 +5,7 @@
  *  Implementation file for algorithm class : RichRecTimeMonitor
  *
  *  CVS Log :-
- *  $Id: RichRecTimeMonitor.cpp,v 1.4 2005-10-31 13:30:58 jonrob Exp $
+ *  $Id: RichRecTimeMonitor.cpp,v 1.5 2006-01-23 14:10:48 jonrob Exp $
  *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   05/04/2002
@@ -14,6 +14,9 @@
 
 // local
 #include "RichRecTimeMonitor.h"
+
+// namespace
+using namespace LHCb;
 
 //-----------------------------------------------------------------------------
 

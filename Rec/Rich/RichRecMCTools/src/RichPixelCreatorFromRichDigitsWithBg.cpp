@@ -5,7 +5,7 @@
  *  Implementation file for RICH reconstruction tool : RichPixelCreatorFromRichDigitsWithBg
  *
  *  CVS Log :-
- *  $Id: RichPixelCreatorFromRichDigitsWithBg.cpp,v 1.13 2005-10-18 12:46:37 jonrob Exp $
+ *  $Id: RichPixelCreatorFromRichDigitsWithBg.cpp,v 1.14 2006-01-23 14:09:59 jonrob Exp $
  *
  *  @author Andy Buckley  buckley@hep.phy.cam.ac.uk
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
@@ -15,6 +15,9 @@
 
 // local
 #include "RichPixelCreatorFromRichDigitsWithBg.h"
+
+// namespaces
+using namespace LHCb;
 
 //-----------------------------------------------------------------------------
 
@@ -67,17 +70,17 @@ RichPixelCreatorFromRichDigitsWithBg::fillBgTrackStack() const
 {
   // Obtain smart data pointer to RichDigits
   RichDigits * digits = get<RichDigits>( m_recoDigitsLocation );
-  RichMap<Rich::DetectorType, unsigned int> originalNumTracksInStack;
+  Rich::Map<Rich::DetectorType, unsigned int> originalNumTracksInStack;
   originalNumTracksInStack[Rich::Rich1] = m_digitsForTrackBg[Rich::Rich1].size();
   originalNumTracksInStack[Rich::Rich2] = m_digitsForTrackBg[Rich::Rich2].size();
-  RichMap<Rich::DetectorType, unsigned int> numDigitsAddedToStack;
+  Rich::Map<Rich::DetectorType, unsigned int> numDigitsAddedToStack;
 
   // Loop over RichDigits and create working pixels
   for ( RichDigits::const_iterator digit = digits->begin(); digit != digits->end(); ++digit ) {
     const Rich::DetectorType whichRich( (*digit)->key().rich() );
 
     // Make association to the MCRichDigit via IRichMCTruthTool tool:
-    const MCRichDigit* mcDigit( m_mcTool->mcRichDigit(*digit) );
+    const MCRichDigit* mcDigit( m_mcTool->mcRichDigit( (*digit)->richSmartID() ) );
     if (mcDigit) {
 
       // Get MC hits from the MC digit (can be >1 photon producing one digit in general)
@@ -105,7 +108,7 @@ RichPixelCreatorFromRichDigitsWithBg::fillBgTrackStack() const
   // Work out how many tracks were added to the stack and tell the world about it
   if ( msgLevel(MSG::INFO) )
   {
-    RichMap<Rich::DetectorType, unsigned int> numTracksAddedToStack;
+    Rich::Map<Rich::DetectorType, unsigned int> numTracksAddedToStack;
     numTracksAddedToStack[Rich::Rich1] =
       m_digitsForTrackBg[Rich::Rich1].size() - originalNumTracksInStack[Rich::Rich1];
     numTracksAddedToStack[Rich::Rich2] =
@@ -176,8 +179,9 @@ RichPixelCreatorFromRichDigitsWithBg::newPixel( const RichSmartID id ) const
       newPixel = new RichRecPixel();
 
       // Positions
-      newPixel->globalPosition() = m_smartIDTool->globalPosition( id );
-      newPixel->localPosition()  = m_smartIDTool->globalToPDPanel(newPixel->globalPosition());
+      newPixel->setGlobalPosition( m_smartIDTool->globalPosition(id) );
+      newPixel->setLocalPosition( m_smartIDTool->globalToPDPanel(newPixel->globalPosition()) );
+
       // compute corrected local coordinates
       computeRadCorrLocalPositions( newPixel );
 
@@ -234,7 +238,7 @@ StatusCode RichPixelCreatorFromRichDigitsWithBg::newPixels() const
           digit != digits->end(); ++digit ) { newPixel( *digit ); }
 
     // Do the same thing for the bg track digits
-    RichMap<Rich::DetectorType, size_t> numBgTracksAdded;
+    Rich::Map<Rich::DetectorType, size_t> numBgTracksAdded;
     size_t numBgPixelsAdded(0);
     // RICH1
     while ( numBgTracksAdded[Rich::Rich1] < m_numBgTracksToAdd[Rich::Rich1] )

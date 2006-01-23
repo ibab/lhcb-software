@@ -5,7 +5,7 @@
  *  Header file for algorithm class : RichRecBackgroundEsti
  *
  *  CVS Log :-
- *  $Id: RichRecBackgroundEsti.h,v 1.3 2005-10-18 12:44:06 jonrob Exp $
+ *  $Id: RichRecBackgroundEsti.h,v 1.4 2006-01-23 14:07:23 jonrob Exp $
  *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   10/01/2003
@@ -40,7 +40,7 @@
  */
 //---------------------------------------------------------------------------
 
-class RichRecBackgroundEsti : public RichRecAlgBase 
+class RichRecBackgroundEsti : public RichRecAlgBase
 {
 
 public:

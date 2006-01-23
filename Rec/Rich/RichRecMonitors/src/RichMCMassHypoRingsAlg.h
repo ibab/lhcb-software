@@ -4,7 +4,7 @@
  *  Header file for algorithm class : RichMCMassHypoRingsAlg
  *
  *  CVS Log :-
- *  $Id: RichMCMassHypoRingsAlg.h,v 1.2 2005-06-23 15:14:55 jonrob Exp $
+ *  $Id: RichMCMassHypoRingsAlg.h,v 1.3 2006-01-23 14:10:48 jonrob Exp $
  *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   10/01/2003
@@ -25,7 +25,6 @@
 
 // RichKernel
 #include "RichKernel/RichHashMap.h"
-#include "RichKernel/StringHashFuncs.h"
 
 // Interfaces
 #include "RichKernel/IRichMCTruthTool.h"
@@ -64,7 +63,7 @@ private: // methods
   const IRichMassHypothesisRingCreator * ringCreator( const std::string & loc ) const;
 
   /// Returns the cherenkov angle for a given MCRichSegment
-  double ckTheta( const MCRichSegment * segment ) const;
+  double ckTheta( const LHCb::MCRichSegment * segment ) const;
 
 private: // Private data members
 
@@ -76,7 +75,7 @@ private: // Private data members
 
   /** typedef to a map translating an event location into a particular
    *  Mass Hypothesis ring creator */
-  typedef RichHashMap<std::string,const IRichMassHypothesisRingCreator*> RingCreators;
+  typedef Rich::HashMap<std::string,const IRichMassHypothesisRingCreator*> RingCreators;
 
   /// The Mass hypothesis ring creators
   mutable RingCreators m_ringCrs;
@@ -100,7 +99,7 @@ inline const IRichMassHypothesisRingCreator *
 RichMCMassHypoRingsAlg::ringCreator( const std::string & loc ) const
 {
   const IRichMassHypothesisRingCreator *& tool = m_ringCrs[loc];
-  if (!tool) 
+  if (!tool)
   {
     const int slash = loc.find_first_of( "/" );
     const std::string toolName =

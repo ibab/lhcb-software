@@ -5,7 +5,7 @@
  *  Implementation file for algorithm class : RichCherenkovAngleMonitor
  *
  *  CVS Log :-
- *  $Id: RichCherenkovAngleMonitor.cpp,v 1.1 2005-11-07 09:37:19 jonrob Exp $
+ *  $Id: RichCherenkovAngleMonitor.cpp,v 1.2 2006-01-23 14:10:48 jonrob Exp $
  *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   05/04/2002
@@ -14,6 +14,9 @@
 
 // local
 #include "RichCherenkovAngleMonitor.h"
+
+// namespace
+using namespace LHCb;
 
 //---------------------------------------------------------------------------
 
@@ -103,10 +106,10 @@ StatusCode RichCherenkovAngleMonitor::execute()
       const double phiRec   = photon->geomPhoton().CherenkovPhi();
       const double delTheta = thetaRec-thetaExpTrue;
 
-      plot1D( thetaRec, hid(rad,"ckTheta"), "Reconstructed Cherenkov theta", 
+      plot1D( thetaRec, hid(rad,"ckTheta"), "Reconstructed Cherenkov theta",
               minCkTheta[rad], maxCkTheta[rad] );
       plot1D( phiRec, hid(rad,"ckPhi"), "Reconstructed Cherenkov phi", 0, 2*M_PI );
-      plot1D( delTheta, hid(rad,"ckDiffAll"), "Rec-Exp CK theta all", 
+      plot1D( delTheta, hid(rad,"ckDiffAll"), "Rec-Exp CK theta all",
               -ckRange[rad],ckRange[rad]);
 
       // true CK photon ?
@@ -118,11 +121,11 @@ StatusCode RichCherenkovAngleMonitor::execute()
         plot1D( thetaRec, hid(rad,mcType,"ckThetaTrue"), "Cherenkov theta",
                 minCkTheta[rad], maxCkTheta[rad] );
         plot1D( phiRec,   hid(rad,mcType,"ckPhiTrue"), "Cherenkov phi", 0, 2*M_PI );
-        plot1D( delTheta, hid(rad,"ckDiffTrue"), "Rec-Exp CK theta all", 
+        plot1D( delTheta, hid(rad,"ckDiffTrue"), "Rec-Exp CK theta all",
                 -ckRange[rad],ckRange[rad]);
 
         // Hit point associated to photon
-        const HepPoint3D & hitPnt = photon->richRecPixel()->globalPosition();
+        const Gaudi::XYZPoint & hitPnt = photon->richRecPixel()->globalPosition();
 
         // theta versus phi plots
         if ( hitPnt.y() < 0 && hitPnt.x() < 0 )
@@ -154,11 +157,11 @@ StatusCode RichCherenkovAngleMonitor::execute()
           const double delThetaMC    = thetaRec-mcPhot->cherenkovTheta();
           const double delThetaExpMC = thetaExpTrue-mcPhot->cherenkovTheta();
 
-          plot1D( thetaMC, hid(rad,"ckThetaMC"), "MC Cherenkov theta", 
+          plot1D( thetaMC, hid(rad,"ckThetaMC"), "MC Cherenkov theta",
                   minCkTheta[rad], maxCkTheta[rad] );
-          plot1D( delThetaMC, hid(rad,"mcckDiffTrue"), "Rec-MC CK theta true", 
+          plot1D( delThetaMC, hid(rad,"mcckDiffTrue"), "Rec-MC CK theta true",
                   -ckRange[rad],ckRange[rad]);
-          plot1D( delThetaExpMC, hid(rad,"mcExpDiff"), "MC-Exp CK theta true", 
+          plot1D( delThetaExpMC, hid(rad,"mcExpDiff"), "MC-Exp CK theta true",
                   -ckRange[rad],ckRange[rad]);
         } // mc photon
 
