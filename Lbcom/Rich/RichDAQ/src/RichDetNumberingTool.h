@@ -5,7 +5,7 @@
  *  Header file for tool : RichDetNumberingTool
  *
  *  CVS Log :-
- *  $Id: RichDetNumberingTool.h,v 1.3 2006-01-20 16:41:06 cattanem Exp $
+ *  $Id: RichDetNumberingTool.h,v 1.4 2006-01-23 13:40:43 jonrob Exp $
  *
  *  @author Chris Jones    Christopher.Rob.Jones@cern.ch
  *  @date   2004-12-18
@@ -107,6 +107,12 @@ public: // methods (and doxygen comments) inherited from interface
   // Obtain the Level1 ID number for a given HPD hardware ID
   const RichDAQ::Level1ID level1ID( const RichDAQ::HPDHardwareID hardID ) const;
 
+  // Obtain the Level1 input number for a given RichSmartID
+  const RichDAQ::Level1Input level1InputNum( const LHCb::RichSmartID smartID ) const;
+
+  /// Obtain the Level1 input number for a given HPD hardware ID
+  const RichDAQ::Level1Input level1InputNum( const RichDAQ::HPDHardwareID hardID ) const;
+
   // Obtain a list of RichSmartID HPD identifiers for a given level 1 ID
   const RichSmartID::Vector & l1HPDSmartIDs( const RichDAQ::Level1ID l1ID ) const;
 
@@ -168,6 +174,14 @@ private: // data
   /// Typedef for mapping from HPD Hardware ID to Level1 ID
   typedef Rich::HashMap< const RichDAQ::HPDHardwareID, RichDAQ::Level1ID > HardIDToL1;
   HardIDToL1 m_hardid2L1; ///< HPD Hardware ID to L1 ID map
+
+  /// Typedef for mapping from RichSmartID to Level1 input number
+  typedef Rich::HashMap< const RichSmartID, RichDAQ::Level1Input > SmartIDToL1In;
+  SmartIDToL1In m_smartid2L1In; ///< HPD RichSmartID to L1 input number map
+
+  /// Typedef for mapping from HPD Hardware ID to Level1 input number
+  typedef Rich::HashMap< const RichDAQ::HPDHardwareID, RichDAQ::Level1Input > HardIDToL1In;
+  HardIDToL1In m_hardid2L1In; ///< HPD Hardware ID to L1 input number map
 
   /// Typedef for mapping between L1 boards and RICH detector
   typedef Rich::HashMap< const RichDAQ::Level1ID, Rich::DetectorType > L1ToRICH;

@@ -5,7 +5,7 @@
  *  Implementation file for class : RichRawDataFormatTool
  *
  *  CVS Log :-
- *  $Id: RichRawDataFormatTool.cpp,v 1.18 2005-12-16 15:11:34 jonrob Exp $
+ *  $Id: RichRawDataFormatTool.cpp,v 1.19 2006-01-23 13:40:43 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date 2004-12-18
@@ -118,7 +118,7 @@ RichRawDataFormatTool::printL1Stats( const L1TypeCount & count,
       totWordSize[rich]                  += words;
       const unsigned long hits            = (*iL1C).second.second.second;
       totHits[rich]                      += hits;
-      debug() << "  Board " << format("%3i",L1ID.dataValue()) << " Ver" << version << " | L1 size ="
+      debug() << "  Board " << format("%3i",L1ID.data()) << " Ver" << version << " | L1 size ="
               << occ1(nBanks,m_evtCount) << " hpds :"
               << occ2(words,m_evtCount) << " words :"
               << occ2(hits,m_evtCount) << " hits / event" << endreq;
@@ -317,7 +317,7 @@ void RichRawDataFormatTool::createDataBank( const RichDAQ::L1Map & L1Data,
     }
 
     // Add this bank to the Raw buffer
-    rawEv->addBank( (*iL1).first.dataValue(), RawBank::Rich, version, dataBank );
+    rawEv->addBank( (*iL1).first.data(), RawBank::Rich, version, dataBank );
 
     if ( m_summary )
     {
@@ -334,7 +334,7 @@ void RichRawDataFormatTool::createDataBank( const RichDAQ::L1Map & L1Data,
     if ( msgLevel(MSG::DEBUG) )
     {
       debug() << "Encoded " << format("%2i",(*iL1).second.size()) << " HPDs into Level1 Bank "
-              << format("%2i",(*iL1).first.dataValue()) << " : Size " << format("%4i",2+dataBank.size())
+              << format("%2i",(*iL1).first.data()) << " : Size " << format("%4i",2+dataBank.size())
               << " words : Version " << version << endreq;
     }
 
@@ -467,7 +467,7 @@ void RichRawDataFormatTool::decodeToSmartIDs( const RawBank & bank,
   if ( msgLevel(MSG::DEBUG) )
   {
     debug() << "Decoded " << format("%2i",nHPDbanks) << " HPDs from Level1 Bank "
-            << format("%2i",L1ID.dataValue())
+            << format("%2i",L1ID.data())
             << " : Size " << format("%4i",2+(bank.size()/4)) << " words : Version "
             << version << endreq;
 

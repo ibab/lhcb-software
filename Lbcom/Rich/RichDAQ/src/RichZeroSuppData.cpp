@@ -4,7 +4,7 @@
  *
  *  Implementation file for RICH DAQ helper class : RichZeroSuppData
  *
- *  $Id: RichZeroSuppData.cpp,v 1.6 2005-12-16 15:11:34 jonrob Exp $
+ *  $Id: RichZeroSuppData.cpp,v 1.7 2006-01-23 13:40:43 jonrob Exp $
  *
  *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
  *  @date   2004-12-17
@@ -120,7 +120,7 @@ namespace RichZeroSuppDataV2 {
   {
 
     // temporary data map
-    typedef RichMap< RichDAQ::ShortType, RichDAQ::ShortType > DataMap;
+    typedef Rich::Map< RichDAQ::ShortType, RichDAQ::ShortType > DataMap;
     DataMap dataM;
 
     // Loop over digits and form groups of three

@@ -5,7 +5,7 @@
  *  Implementation file for class : RichDetNumberingTool
  *
  *  CVS Log :-
- *  $Id: RichDetNumberingTool.cpp,v 1.4 2006-01-20 16:41:06 cattanem Exp $
+ *  $Id: RichDetNumberingTool.cpp,v 1.5 2006-01-23 13:40:43 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date 2004-12-18
@@ -78,6 +78,8 @@ StatusCode RichDetNumberingTool::buildHPDMappings()
   m_l1ToRich.clear();
   m_l12smartids.clear();
   m_l12hardids.clear();
+  m_smartid2L1In.clear();
+  m_hardid2L1In.clear();
 
   // NB : Currently updating both RICH1 and RICH2 if either changes ...
   //      Could considering doing this separately, probably not a big issue though
@@ -101,26 +103,33 @@ StatusCode RichDetNumberingTool::fillMaps( const Rich::DetectorType rich )
   // load conditions
   Condition * numbers = getDet<Condition>(m_condBDLocs[rich]);
 
+  // local typedef for vector from Conditions
+  typedef std::vector<int> CondData;
+
   // number of HPDs
-  const unsigned int nHPDs         = numbers->param<int>( "NumberOfHPDs" );
+  const unsigned int nHPDs = numbers->param<int>( "NumberOfHPDs" );
   // vector of HPD RichSmartIDs
-  const std::vector<int> & softIDs = numbers->paramAsIntVect("HPDSmartIDs");
+  const CondData & softIDs = numbers->paramAsIntVect("HPDSmartIDs");
   // vector of HPD hardware IDs
-  const std::vector<int> & hardIDs = numbers->paramAsIntVect("HPDHardwareIDs");
+  const CondData & hardIDs = numbers->paramAsIntVect("HPDHardwareIDs");
   // vector of HPD Level0 IDs
-  const std::vector<int> & l0IDs   = numbers->paramAsIntVect("HPDLevel0IDs");
-  // vector of HPD Level1 IDs
-  const std::vector<int> & l1IDs   = numbers->paramAsIntVect("HPDLevel1IDs");
+  const CondData & l0IDs   = numbers->paramAsIntVect("HPDLevel0IDs");
+  // vector of HPD Level1 board IDs
+  const CondData & l1IDs   = numbers->paramAsIntVect("HPDLevel1IDs");
+  // vector of HPD Level1 input numbers
+  const CondData & l1Ins   = numbers->paramAsIntVect("HPDLevel1InputNums");
   // check consistency
   if ( nHPDs != softIDs.size() ||
        nHPDs != hardIDs.size() ||
        nHPDs != l1IDs.size()   ||
-       nHPDs != l0IDs.size()    )
+       nHPDs != l0IDs.size()   ||
+       nHPDs != l1Ins.size()   )
   {
     std::ostringstream mess;
     mess << "Mismatch in " << rich << " HPD numbering schemes : # HPDs = " << nHPDs
          << " # SmartIDs = " << softIDs.size() << " # HardIDs = " << hardIDs.size()
-         << " # L0IDs = " << l0IDs.size() << " # L1IDs = " << l1IDs.size();
+         << " # L0IDs = " << l0IDs.size() << " # L1BoardIDs = " << l1IDs.size()
+         << " # L1InputIDs = " << l1Ins.size();
     return Error( mess.str() );
   }
 
@@ -128,21 +137,24 @@ StatusCode RichDetNumberingTool::fillMaps( const Rich::DetectorType rich )
   const int saveL1size = m_l1IDs.size();
 
   // build cached mappings
-  std::vector<int>::const_iterator iSoft = softIDs.begin();
-  std::vector<int>::const_iterator iHard = hardIDs.begin();
-  std::vector<int>::const_iterator iL1   = l1IDs.begin();
-  std::vector<int>::const_iterator iL0   = l0IDs.begin();
+  CondData::const_iterator iSoft = softIDs.begin();
+  CondData::const_iterator iHard = hardIDs.begin();
+  CondData::const_iterator iL1   = l1IDs.begin();
+  CondData::const_iterator iL1In = l1Ins.begin();
+  CondData::const_iterator iL0   = l0IDs.begin();
   for ( ; iSoft != softIDs.end() &&
           iHard != hardIDs.end() &&
           iL0   != l0IDs.end()   &&
-          iL1   != l1IDs.end()   ;
-        ++iSoft, ++iHard, ++iL0, ++iL1 )
+          iL1   != l1IDs.end()   &&
+          iL1In != l1Ins.end()   ;
+        ++iSoft, ++iHard, ++iL0, ++iL1, ++iL1In )
   {
     // get data
     const RichSmartID            hpdID  ( *iSoft );
     const RichDAQ::HPDHardwareID hardID ( *iHard );
     const RichDAQ::Level1ID      L1ID   ( *iL1   );
     const RichDAQ::Level0ID      L0ID   ( *iL0   );
+    const RichDAQ::Level1Input   L1IN   ( *iL1In );
     // Sanity checks that this HPD is not already in the maps
     if ( m_soft2hard.find(hpdID) != m_soft2hard.end() )
     {
@@ -170,6 +182,8 @@ StatusCode RichDetNumberingTool::fillMaps( const Rich::DetectorType rich )
     m_hardid2L0[hardID] = L0ID;
     m_smartid2L1[hpdID] = L1ID;
     m_hardid2L1[hardID] = L1ID;
+    m_smartid2L1In[hpdID] = L1IN;
+    m_hardid2L1In[hardID] = L1IN;
     m_l12smartids[L1ID].push_back( hpdID );
     m_l12hardids[L1ID].push_back( hardID );
     if ( std::find( m_l1IDs.begin(), m_l1IDs.end(), L1ID ) == m_l1IDs.end() )
@@ -181,7 +195,7 @@ StatusCode RichDetNumberingTool::fillMaps( const Rich::DetectorType rich )
     if ( msgLevel(MSG::VERBOSE) )
     {
       verbose() << "HPD RichSmartID " << (int)hpdID << " " << hpdID << " HPDhardID " << hardID
-                << " L0 " << L0ID << " L1 " << L1ID << endreq;
+                << " L0 " << L0ID << " L1 board " << L1ID << " L1 input " << L1IN << endreq;
     }
   }
 
@@ -197,7 +211,8 @@ StatusCode RichDetNumberingTool::finalize()
   return RichToolBase::finalize();
 }
 
-const RichDAQ::HPDHardwareID RichDetNumberingTool::hardwareID( const RichSmartID smartID ) const
+const RichDAQ::HPDHardwareID
+RichDetNumberingTool::hardwareID( const RichSmartID smartID ) const
 {
   // See if this RichSmartID is known
   SoftToHard::const_iterator id = m_soft2hard.find( smartID.hpdID() );
@@ -212,7 +227,8 @@ const RichDAQ::HPDHardwareID RichDetNumberingTool::hardwareID( const RichSmartID
   return (*id).second;
 }
 
-const RichSmartID RichDetNumberingTool::richSmartID( const RichDAQ::HPDHardwareID hID ) const
+const RichSmartID
+RichDetNumberingTool::richSmartID( const RichDAQ::HPDHardwareID hID ) const
 {
   // See if this HPD hardware ID is known
   HardToSoft::const_iterator id = m_hard2soft.find( hID );
@@ -225,7 +241,8 @@ const RichSmartID RichDetNumberingTool::richSmartID( const RichDAQ::HPDHardwareI
   return (*id).second;
 }
 
-const RichSmartID RichDetNumberingTool::richSmartID( const RichDAQ::Level0ID l0ID ) const
+const RichSmartID
+RichDetNumberingTool::richSmartID( const RichDAQ::Level0ID l0ID ) const
 {
   // See if this Level0 hardware ID is known
   L0HardToSoft::const_iterator id = m_l0hard2soft.find( l0ID );
@@ -274,7 +291,7 @@ RichDetNumberingTool::level0ID( const RichSmartID smartID ) const
     Exception ( mess.str() );
   }
 
-  // Found, so return hardware ID
+  // Found, so return Level 0 ID
   return (*id).second;
 }
 
@@ -290,7 +307,24 @@ RichDetNumberingTool::level1ID( const RichSmartID smartID ) const
     Exception ( mess.str() );
   }
 
-  // Found, so return hardware ID
+  // Found, so return Level1 board number
+  return (*id).second;
+}
+
+// Obtain the Level1 input number for a given RichSmartID
+const RichDAQ::Level1Input
+RichDetNumberingTool::level1InputNum( const LHCb::RichSmartID smartID ) const
+{
+  // See if this RichSmartID is known
+  SmartIDToL1In::const_iterator id = m_smartid2L1In.find( smartID.hpdID() );
+  if ( m_smartid2L1In.end() == id )
+  {
+    std::ostringstream mess;
+    mess << "Unknown HPD RichSmartID " << smartID;
+    Exception ( mess.str() );
+  }
+
+  // Found, so return Level 1 input number
   return (*id).second;
 }
 
@@ -304,7 +338,7 @@ RichDetNumberingTool::level0ID( const RichDAQ::HPDHardwareID hardID ) const
     Exception ( "Unknown HPD hardware ID" + (std::string)hardID );
   }
 
-  // Found, so return RichSmartID
+  // Found, so return Level 0 ID
   return (*id).second;
 }
 
@@ -318,7 +352,22 @@ RichDetNumberingTool::level1ID( const RichDAQ::HPDHardwareID hardID ) const
     Exception ( "Unknown HPD hardware ID" + (std::string)hardID );
   }
 
-  // Found, so return RichSmartID
+  // Found, so return Level 1 board number
+  return (*id).second;
+}
+
+/// Obtain the Level1 input number for a given HPD hardware ID
+const RichDAQ::Level1Input
+RichDetNumberingTool::level1InputNum( const RichDAQ::HPDHardwareID hardID ) const
+{
+  // See if this hardware ID is known
+  HardIDToL1In::const_iterator id = m_hardid2L1In.find( hardID );
+  if ( m_hardid2L1In.end() == id )
+  {
+    Exception ( "Unknown HPD hardware ID" + (std::string)hardID );
+  }
+
+  // Found, so return Level 1 board input xnumber
   return (*id).second;
 }
 
@@ -329,7 +378,7 @@ RichDetNumberingTool::l1HPDSmartIDs( const RichDAQ::Level1ID l1ID ) const
   RichDAQ::L1ToSmartIDs::const_iterator id = m_l12smartids.find( l1ID );
   if ( m_l12smartids.end() == id )
   {
-    Exception ( "Unknown RICH Level 1 ID " + (std::string)l1ID );
+    Exception ( "Unknown RICH Level 1 board ID " + (std::string)l1ID );
   }
 
   // Found, so return list
@@ -343,7 +392,7 @@ RichDetNumberingTool::l1HPDHardIDs( const RichDAQ::Level1ID l1ID ) const
   RichDAQ::L1ToHardIDs::const_iterator id = m_l12hardids.find( l1ID );
   if ( m_l12hardids.end() == id )
   {
-    Exception ( "Unknown RICH Level 1 ID " + (std::string)l1ID );
+    Exception ( "Unknown RICH Level 1 board ID " + (std::string)l1ID );
   }
 
   // Found, so return list
@@ -369,7 +418,7 @@ RichDetNumberingTool::richDetector( const RichDAQ::Level1ID l1ID ) const
   L1ToRICH::const_iterator rich = m_l1ToRich.find( l1ID );
   if ( m_l1ToRich.end() == rich )
   {
-    Exception ( "Unknown RICH Level 1 ID " + (std::string)l1ID );
+    Exception ( "Unknown RICH Level 1 board ID " + (std::string)l1ID );
   }
 
   // Found, so return RICH

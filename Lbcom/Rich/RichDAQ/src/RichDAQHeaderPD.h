@@ -4,7 +4,7 @@
  *
  *  Header file for RICH DAQ utility class : RichDAQHeaderPD
  *
- *  $Id: RichDAQHeaderPD.h,v 1.15 2005-12-16 15:11:34 jonrob Exp $
+ *  $Id: RichDAQHeaderPD.h,v 1.16 2006-01-23 13:40:43 jonrob Exp $
  *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   2003-11-06
@@ -107,8 +107,8 @@ namespace RichDAQHeaderV1
     /// Set the Level0 ID
     inline bool setL0ID( const RichDAQ::Level0ID l0id )
     {
-      return ( dataInRange(l0id.dataValue(),RichDAQHeaderPDCode::MaxL0ID) ?
-               set( l0id.dataValue(), RichDAQHeaderPDCode::ShiftL0ID,
+      return ( dataInRange(l0id.data(),RichDAQHeaderPDCode::MaxL0ID) ?
+               set( l0id.data(), RichDAQHeaderPDCode::ShiftL0ID,
                     RichDAQHeaderPDCode::MaskL0ID ) : false );
     }
 

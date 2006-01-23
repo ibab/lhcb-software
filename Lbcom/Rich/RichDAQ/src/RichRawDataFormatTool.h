@@ -5,7 +5,7 @@
  *  Header file for tool : RichRawDataFormatTool
  *
  *  CVS Log :-
- *  $Id: RichRawDataFormatTool.h,v 1.10 2005-12-16 15:11:34 jonrob Exp $
+ *  $Id: RichRawDataFormatTool.h,v 1.11 2006-01-23 13:40:43 jonrob Exp $
  *
  *  @author Chris Jones    Christopher.Rob.Jones@cern.ch
  *  @date   2004-12-18
@@ -122,7 +122,7 @@ private: // definitions
   // Summary data
   typedef std::pair< const RichDAQ::BankVersion, RichDAQ::Level1ID >            L1IDandV;
   typedef std::pair< unsigned long, std::pair< unsigned long, unsigned long > > L1CountAndSize;
-  typedef RichMap< const L1IDandV, L1CountAndSize > L1TypeCount;
+  typedef Rich::Map< const L1IDandV, L1CountAndSize > L1TypeCount;
 
 private: // methods
 
