@@ -5,7 +5,7 @@
  *  Header file for tool : RichTrSegMakerFromRecoTracks
  *
  *  CVS Log :-
- *  $Id: RichTrSegMakerFromRecoTracks.h,v 1.1 2006-01-23 14:20:44 jonrob Exp $
+ *  $Id: RichTrSegMakerFromRecoTracks.h,v 1.2 2006-01-23 16:52:08 jonrob Exp $
  *
  *  @author Chris Jones    Christopher.Rob.Jones@cern.ch
  *  @date   14/01/2002
@@ -19,13 +19,11 @@
 #include "GaudiKernel/ToolFactory.h"
 #include "GaudiKernel/IToolSvc.h"
 #include "GaudiKernel/IDataProviderSvc.h"
+#include "GaudiKernel/IUpdateManagerSvc.h"
 
 // base class and interface
 #include "RichKernel/RichToolBase.h"
 #include "RichRecBase/IRichTrSegMaker.h"
-
-// Det Desc
-#include "DetDesc/IUpdateManagerSvc.h"
 
 // Event model
 #include "Event/Track.h"
