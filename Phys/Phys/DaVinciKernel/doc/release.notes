@@ -1,7 +1,12 @@
-! $Id: release.notes,v 1.82 2006-01-17 12:40:08 pkoppenb Exp $
+! $Id: release.notes,v 1.83 2006-01-23 12:31:09 pkoppenb Exp $
 ! Package     : DaVinciKernel
 ! Responsible : P. Koppenburg
 
+! 2006-01-23 - P. Koppenburg
+  - src/component/PhysDesktop.cpp
+    . Issue primary vertex empty container warning only if primary
+      vertices are requested
+    
 ! 2006-01-17 - P. Koppenburg
   - Kernel/Particle2VertexAsct.h
     . Moved from DaVinciFilter.

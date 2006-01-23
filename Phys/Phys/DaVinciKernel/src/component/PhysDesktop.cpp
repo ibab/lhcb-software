@@ -1,4 +1,4 @@
-// $Id: PhysDesktop.cpp,v 1.28 2005-10-18 15:44:38 pkoppenb Exp $
+// $Id: PhysDesktop.cpp,v 1.29 2006-01-23 12:31:10 pkoppenb Exp $
 // Include files
 
 // from Gaudi
@@ -216,6 +216,14 @@ const VertexVector& PhysDesktop::primaryVertices()
 {
   // @todo Find a smarter way of checking this is done only once...
   if ( m_primVerts.empty()) getPrimaryVertices();
+  if ( m_primVerts.empty()) {
+    if ( m_primVtxLocn == "" ){
+      Warning("Empty primary vertex container at"+m_OnOffline->getPVLocation()) ;      
+    } else {
+      Warning("Empty primary vertex container at "+m_primVtxLocn);
+    } 
+  }
+  
   return m_primVerts;
 }
 //=============================================================================
@@ -840,8 +848,6 @@ StatusCode PhysDesktop::getPrimaryVertices(){
   }
 
   if ( !exist<Vertices>( primVtxLocn )){
-    Warning("Primary vertex location `"+primVtxLocn+"' does not exist") ;
-    if ( m_primVtxLocn == "" ) Warning("This location is obtained from OnOffline tool");
     return StatusCode::SUCCESS; // no PV
   }
 
