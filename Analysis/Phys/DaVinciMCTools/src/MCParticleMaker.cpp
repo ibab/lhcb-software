@@ -1,4 +1,4 @@
-// $Id: MCParticleMaker.cpp,v 1.12 2005-12-15 14:19:50 pkoppenb Exp $
+// $Id: MCParticleMaker.cpp,v 1.13 2006-01-23 10:15:02 pkoppenb Exp $
 // Include files 
 
 #include <memory>
@@ -50,10 +50,10 @@ MCParticleMaker::MCParticleMaker( const std::string& type,
                                   const std::string& name,
                                   const IInterface* parent )
   : GaudiTool ( type, name , parent )
-    ,m_onlyReconstructable(false)
-    ,m_onlyReconstructed(false)
-    ,m_ppSvc(0) 
-    ,m_pMCDecFinder(0)
+  ,m_onlyReconstructable(false)
+  ,m_onlyReconstructed(false)
+  ,m_ppSvc(0) 
+  ,m_pMCDecFinder(0)
 {
   // Declaring implemented interface  
   declareInterface<IParticleMaker>(this);
@@ -217,9 +217,11 @@ StatusCode MCParticleMaker::makeParticles( ParticleVector & parts ) {
     }
   }
 
+  debug() << "    List contains   = " << list.size() << " MCParticles" << endmsg;
       
   std::vector<const MCParticle*>::const_iterator icand;
   for(icand = list.begin(); icand != list.end(); icand++){
+    debug() << " New candidate of pid " << (*icand)->particleID().pid() << endmsg ;
     if ( std::find(m_ids.begin(),m_ids.end(),(*icand)->particleID().pid() ) == m_ids.end()) continue;
     if ( m_onlyReconstructable && !reconstructable(**icand) )  continue;
     // covariance is in (x,y,z,sx,sy,p) order
@@ -235,16 +237,19 @@ StatusCode MCParticleMaker::makeParticles( ParticleVector & parts ) {
 #endif
       }
     }
-    if (covariance.get() == 0)
+    if (covariance.get() == 0){
 #ifdef WIN32
       covariance = std::auto_ptr<HepSymMatrix>( generateCovariance((*icand)->momentum()) );
 #else
-    covariance.reset( generateCovariance((*icand)->momentum()) );
+      covariance.reset( generateCovariance((*icand)->momentum()) );
 #endif
+    }
+    debug() << "Got covariance matrix" << endmsg ;
     std::auto_ptr<Particle> particle( new Particle() );
     StatusCode sc = fillParticle( **icand, *particle, *covariance);
     if(sc.isFailure()) continue;
     parts.push_back(particle.release());
+    debug() << "Done candidate of pid " << (*icand)->particleID().pid() << endmsg ;
   }
   debug() << " ==> MCParticleMaker created " << parts.size() << " particle in the desktop " << endmsg;
   return StatusCode::SUCCESS;
@@ -256,9 +261,12 @@ StatusCode MCParticleMaker::makeParticles( ParticleVector & parts ) {
 StatusCode 
 MCParticleMaker::fillParticle( const MCParticle& mc,
                                Particle& particle,
-                               const HepSymMatrix& cov)
-{
+                               const HepSymMatrix& cov){
 
+  debug() << "Filling Particle with PID " << mc.particleID().pid() << endmsg ;
+
+  verbose() << "Matrix is " << cov << endmsg ;
+  
   // Start filling the particle:     
   particle.setOrigin(&mc);
   particle.setParticleID( mc.particleID() );
@@ -267,6 +275,8 @@ MCParticleMaker::fillParticle( const MCParticle& mc,
   
   // Set pointOnTrackErr: take typical errors at vertex...
   HepLorentzVector mom = mc.momentum();
+
+  verbose() << "... and momentum " << mom << endmsg ;
 
   // Definition of ScalingFactor and Bias (momentum and charge dependent)
   int sign=mc.particleID().pid()/mc.particleID().abspid();
@@ -279,36 +289,49 @@ MCParticleMaker::fillParticle( const MCParticle& mc,
   BIAS[5]  = (m_BIASsC0[5]     +  m_BIASsC1[5]*mom.vect().mag()/GeV); // chosen parametrization bias=  (C0 + C1 * p) momenta
   SFCov[5] = 1./(m_covSFsC0[5] + m_covSFsC1[5]*mom.vect().mag()/GeV);
 
+  verbose() << "... BIAS: " << BIAS[0] << " " << BIAS[1] << " "<< BIAS[2] << " "
+            << BIAS[3] << " "<< BIAS[4] << " "<< BIAS[5] << " " << endmsg ;
+  verbose() << "... SFCov: " << SFCov[0] << " " << SFCov[1] << " " << SFCov[2] << " " 
+            << SFCov[3] << " " << SFCov[4] << " " << SFCov[5] << " " << endmsg ;
 
   const MCVertex* vtx = mc.originVertex();
   HepPoint3D pos = vtx->position();
 
+  verbose() << "... Position: " << pos << endmsg ;
+
   // Smearing at Point On Track   defined as minimum distance to the beam line
-  if(m_smearATPoT){          debug()<<"Smear @ PoT "<<endmsg;   
-  double sx = mom.px()/mom.pz();
-  double sy = mom.py()/mom.pz();
+  if(m_smearATPoT){          
+    verbose()<<"Smear @ PoT "<<endmsg;   
+    double sx = mom.px()/mom.pz();
+    double sy = mom.py()/mom.pz();
 
-  double zPoT = pos.z() - (pos.x()*sx + pos.y()*sy)/(pow(sx,2)+pow(sy,2));
-  double xPoT = pos.x() + sx * (zPoT - pos.z());
-  double yPoT = pos.y() + sy * (zPoT - pos.z());
-
-  pos.setX(  xPoT );
-  pos.setY(  yPoT );
-  pos.setZ(  zPoT );
+    double zPoT = pos.z() - (pos.x()*sx + pos.y()*sy)/(pow(sx,2)+pow(sy,2));
+    double xPoT = pos.x() + sx * (zPoT - pos.z());
+    double yPoT = pos.y() + sy * (zPoT - pos.z());
+    
+    pos.setX(  xPoT );
+    pos.setY(  yPoT );
+    pos.setZ(  zPoT );
   }
+  verbose() << "... -> gets " << pos << endmsg ;
 
   HepSymMatrix covSF(cov);  
   if (m_smearParticle) {
+    
+    verbose() << "... -> smearing by " << cov << endmsg ;
+
     HepSymMatrix D(cov);    
     HepMatrix U = diagonalize(&D);  // needed if correlation is present
     HepVector deviates(6,0); //  x,y,z,sx,sy,p
+
+    verbose() << "Looping over " << cov.num_row() << endmsg ;
 
     for (int i=0;i<cov.num_row();++i) {
       for (int j=0;j<cov.num_col();++j) {
         covSF(1+i,1+j) = cov(1+i,1+j)*SFCov[i]*SFCov[j];
       }
     }
-    debug()<<"covSF "<< covSF  <<endmsg;
+    verbose()<<"covSF "<< covSF  <<endmsg;
     
     for (int i=1;i<7;i++) {
       if (D(i,i)<0)  {
@@ -323,6 +346,7 @@ MCParticleMaker::fillParticle( const MCParticle& mc,
     for (int i=1;i<=6;++i)  quadra(i,i)=i;	
     
     int ck=0;
+    verbose() << "Inverting" << endmsg ;
     HepMatrix invU=U.inverse(ck);
     if(ck!=0) return StatusCode::FAILURE;
     
@@ -331,9 +355,9 @@ MCParticleMaker::fillParticle( const MCParticle& mc,
     
     for (int i=1;i<=6;++i) {		
       newindex[i-1]=(int)(floor(pip(i,i)+0.5)); 
-      debug() << newindex[i-1] <<" ";
+      verbose() << newindex[i-1] <<" ";
     }
-    debug() << endmsg;
+    verbose() << endmsg;
 
     
     // Random Generation according single or double Gaussian
@@ -379,6 +403,7 @@ MCParticleMaker::fillParticle( const MCParticle& mc,
   }
   particle.setPosSlopesCorr(c);
     
+  debug() << "Done Filling Particle with PID " << mc.particleID().pid() << endmsg ;
   return StatusCode::SUCCESS;
 }
 
@@ -389,7 +414,8 @@ bool
 MCParticleMaker::reconstructable(const MCParticle& icand) const
 {
   /// @todo Use Olivier Callot's associator in reconstructable method
-  return true;
+  verbose() << "reconstructible?" << endmsg ;
+  return (icand.momentum().rho()>0);
 }
 
 //=====================================================================
@@ -399,7 +425,9 @@ const Particle *
 MCParticleMaker::reconstructed(const MCParticle& icand) const
 {
   // @todo Use Olivier Callot's associator in reconstructed method
-  return 0;
+  verbose() << "reconstructed?" << endmsg ;
+  if (icand.momentum().rho()>0) return NULL;
+  else  return NULL;
 }
 
 //=====================================================================
@@ -423,11 +451,16 @@ MCParticleMaker::fetchCovariance(const Particle& p ) const
 // generateCovariance
 //=====================================================================
 HepSymMatrix *
-MCParticleMaker::generateCovariance(const HepLorentzVector& p) const
-{
+MCParticleMaker::generateCovariance(const HepLorentzVector& p) const{
   HepSymMatrix *c = new HepSymMatrix(6);
   // Set Covariance Matrix based on the following parametrization
-  double sip = m_ipErrorC0 + m_ipErrorC1/(p.perp()/GeV); 
+  double pperp = p.perp();
+  if (pperp<0.01*MeV) pperp = 0.01*MeV; // to avoid junk
+
+  double sip = m_ipErrorC0 + m_ipErrorC1/(pperp/GeV);
+
+  verbose() << "Generation covariance matrix based on " << p << " " << sip << endmsg ;
+
   (*c)(1,1) = sip*sip/2;
   (*c)(2,2) = (*c)(1,1);
   (*c)(3,3) = (*c)(1,1); 
@@ -455,7 +488,8 @@ MCParticleMaker::generateCovariance(const HepLorentzVector& p) const
   (*c)(6,4)=m_rhotxp*sqrt((*c)(4,4)*(*c)(6,6));
 
   (*c)(6,5)=m_rhotyp*sqrt((*c)(5,5)*(*c)(6,6));
-  debug()<< " Covariance Matrix generated" << endmsg;
+  verbose() << " Covariance Matrix generated:" << endmsg;
+  verbose() << (*c) << endmsg ;
   
   return c;
 }
