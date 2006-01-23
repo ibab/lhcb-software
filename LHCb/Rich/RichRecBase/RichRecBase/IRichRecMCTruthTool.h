@@ -4,7 +4,7 @@
  *
  *  Header file for RICH reconstruction tool interface : IRichRecMCTruthTool
  *
- *  $Id: IRichRecMCTruthTool.h,v 1.11 2005-03-04 16:22:49 cattanem Exp $
+ *  $Id: IRichRecMCTruthTool.h,v 1.12 2006-01-23 14:08:55 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -14,18 +14,34 @@
 #ifndef RICHRECTOOLS_IRICHRECMCTRUTHTOOL_H
 #define RICHRECTOOLS_IRICHRECMCTRUTHTOOL_H 1
 
+// Gaudi
+#include "GaudiKernel/SmartRefVector.h"
+
+// Kernel
+#include "Kernel/RichParticleIDType.h"
+#include "Kernel/RichRadiatorType.h"
+
 // Event Model
-class MCRichOpticalPhoton;
-class MCRichSegment;
-class MCRichTrack;
-class MCRichDigit;
-class MCParticle;
-class MCRichHit;
-class RichDigit;
+namespace LHCb
+{
+  class MCRichOpticalPhoton;
+  class MCRichSegment;
+  class MCRichTrack;
+  class MCRichDigit;
+  class MCParticle;
+  class MCRichHit;
+  class RichDigit;
+  class Track;
+  class RichRecTrack;
+  class RichRecSegment;
+  class RichRecPhoton;
+  class RichRecPixel;
+}
 
 /// Static Interface Identification
 static const InterfaceID IID_IRichRecMCTruthTool( "IRichRecMCTruthTool", 1, 0 );
 
+//-----------------------------------------------------------------------------
 /** @class IRichRecMCTruthTool IRichRecMCTruthTool.h
  *
  *  Interface for tool performing MC truth associations between Rich
@@ -34,8 +50,10 @@ static const InterfaceID IID_IRichRecMCTruthTool( "IRichRecMCTruthTool", 1, 0 );
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
  */
+//-----------------------------------------------------------------------------
 
-class IRichRecMCTruthTool : public virtual IAlgTool {
+class IRichRecMCTruthTool : public virtual IAlgTool 
+{
 
 public:
 
@@ -43,6 +61,17 @@ public:
    *  @return unique interface identifier
    */
   static const InterfaceID& interfaceID() { return IID_IRichRecMCTruthTool; }
+
+  /** Find best MCParticle association for a given reconstructed Track
+   *
+   *  @param track Pointer to a Track
+   *
+   *  @return Pointer to MCParticle
+   *  @retval NULL  No Monte Carlo association was possible
+   *  @retval !NULL Association was successful
+   */
+  virtual const LHCb::MCParticle *
+  mcParticle ( const LHCb::Track * track ) const = 0;
 
   /** Find the best MCParticle association for a given RichRecTrack
    *
@@ -52,7 +81,8 @@ public:
    *  @retval NULL  No Monte Carlo association was possible
    *  @retval !NULL Monte Carlo association was successful
    */
-  virtual const MCParticle * mcParticle( const RichRecTrack * richTrack ) const = 0;
+  virtual const LHCb::MCParticle *
+  mcParticle( const LHCb::RichRecTrack * richTrack ) const = 0;
 
   /** Find the best MCParticle association for a given RichRecSegment
    *
@@ -62,7 +92,17 @@ public:
    *  @retval NULL  No Monte Carlo association was possible
    *  @retval !NULL Monte Carlo association was successful
    */
-  virtual const MCParticle * mcParticle( const RichRecSegment * richSegment ) const = 0;
+  virtual const LHCb::MCParticle *
+  mcParticle( const LHCb::RichRecSegment * richSegment ) const = 0;
+
+  /** Determines the particle mass hypothesis for a given reconstructed Track
+   *
+   *  @param track Pointer to a Track
+   *
+   *  @return The true particle type of the TrStoredTrack
+   */
+  virtual Rich::ParticleIDType
+  mcParticleType ( const LHCb::Track * track ) const = 0;
 
   /** Truth particle type for given RichRecTrack
    *
@@ -71,7 +111,8 @@ public:
    *  @return True Particle type
    *  @retval Rich::Unknown if no Monte Carlo association was possible
    */
-  virtual Rich::ParticleIDType mcParticleType( const RichRecTrack * richTrack ) const = 0;
+  virtual Rich::ParticleIDType
+  mcParticleType( const LHCb::RichRecTrack * richTrack ) const = 0;
 
   /** Truth particle type for given RichRecSegment
    *
@@ -80,7 +121,8 @@ public:
    *  @return True Particle type
    *  @retval Rich::Unknown if no Monte Carlo association was possible
    */
-  virtual Rich::ParticleIDType mcParticleType( const RichRecSegment * richSegment ) const = 0;
+  virtual Rich::ParticleIDType
+  mcParticleType( const LHCb::RichRecSegment * richSegment ) const = 0;
 
   /** Find the parent MCParticles associated to a given RichRecPixel
    *
@@ -91,8 +133,8 @@ public:
    *  @retval true  Monte Carlo association was successful
    *  @retval false No Monte Carlo association was possible
    */
-  virtual bool mcParticle( const RichRecPixel * richPixel,
-                           std::vector<const MCParticle*> & mcParts ) const = 0;
+  virtual bool mcParticle( const LHCb::RichRecPixel * richPixel,
+                           std::vector<const LHCb::MCParticle*> & mcParts ) const = 0;
 
   /** Find the parent MCRichDigit association for a given RichRecPixel
    *
@@ -102,7 +144,8 @@ public:
    *  @retval NULL  No Monte Carlo association was possible
    *  @retval !NULL Monte Carlo association was successful
    */
-  virtual const MCRichDigit * mcRichDigit( const RichRecPixel * richPixel ) const = 0;
+  virtual const LHCb::MCRichDigit *
+  mcRichDigit( const LHCb::RichRecPixel * richPixel ) const = 0;
 
   /** Find the parent MCRichHits for a given RichRecPixel
    *
@@ -110,7 +153,8 @@ public:
    *
    *  @return Reference to the SmartRefVector of associated MCRichHits
    */
-  virtual const SmartRefVector<MCRichHit> & mcRichHits( const RichRecPixel * richPixel ) const = 0;
+  virtual const SmartRefVector<LHCb::MCRichHit> &
+  mcRichHits( const LHCb::RichRecPixel * richPixel ) const = 0;
 
   /** Find the parent MCRichOpticalPhotons associated to a given RichRecPixel
    *
@@ -121,9 +165,10 @@ public:
    *  @retval true  Monte Carlo association was successful
    *  @retval false No Monte Carlo association was possible
    */
-  virtual bool mcRichOpticalPhoton( const RichRecPixel * richPixel,
-                                    SmartRefVector<MCRichOpticalPhoton> & phots ) const = 0;
-
+  virtual bool 
+  mcRichOpticalPhoton( const LHCb::RichRecPixel * richPixel,
+                       SmartRefVector<LHCb::MCRichOpticalPhoton> & phots ) const = 0;
+  
   /** Is this a true photon candidate ? Do the associated RichRecSegment and RichRecPixels
    *  used to form the given RichRecPhoton candidate have the same MCParticle parent.
    *
@@ -134,7 +179,8 @@ public:
    *          or the segment and pixel do not share the same parent
    *  @retval !NULL Pointer to the shared MCParticle parent
    */
-  virtual const MCParticle * trueRecPhoton( const RichRecPhoton * photon ) const = 0;
+  virtual const LHCb::MCParticle *
+  trueRecPhoton( const LHCb::RichRecPhoton * photon ) const = 0;
 
   /** Access the associated MCRichHit if given RichRecPhoton is a true Cherenkov photon
    *
@@ -145,9 +191,11 @@ public:
    *          or the photon is not a true Cherenkov photon
    *  @retval !NULL Pointer to the associated MCRichHit
    */
-  virtual const MCRichHit * trueCherenkovHit( const RichRecPhoton * photon ) const = 0;
+  virtual const LHCb::MCRichHit *
+  trueCherenkovHit( const LHCb::RichRecPhoton * photon ) const = 0;
 
-  /** Access the associated MCRichOpticalPhoton if given RichRecPhoton is a true Cherenkov photon
+  /** Access the associated MCRichOpticalPhoton if given RichRecPhoton 
+   *  is a true Cherenkov photon
    *
    *  @param photon Pointer to a RichRecPhoton
    *
@@ -156,7 +204,8 @@ public:
    *          or the photon is not a true Cherenkov photon
    *  @retval !NULL Pointer to the associated MCRichOpticalPhoton
    */
-  virtual const MCRichOpticalPhoton * trueOpticalPhoton( const RichRecPhoton * photon ) const = 0;
+  virtual const LHCb::MCRichOpticalPhoton *
+  trueOpticalPhoton( const LHCb::RichRecPhoton * photon ) const = 0;
 
   /** Access the associated MCRichOpticalPhoton if given RichRecSegment and RichRexPixel
    *  are both associated a single Cherenkov poton
@@ -169,8 +218,9 @@ public:
    *          or the given segment and pixel are not associated to a single Cherenkov photon
    *  @retval !NULL Pointer to the associated MCRichOpticalPhoton
    */
-  virtual const MCRichOpticalPhoton * trueOpticalPhoton( const RichRecSegment * segment,
-                                                         const RichRecPixel * pixel ) const = 0;
+  virtual const LHCb::MCRichOpticalPhoton *
+  trueOpticalPhoton( const LHCb::RichRecSegment * segment,
+                     const LHCb::RichRecPixel * pixel ) const = 0;
 
   /** Is this a true photon candidate ?
    *  Do the RichRecSegment and RichRecPixel have the same MCParticle parent
@@ -182,8 +232,9 @@ public:
    *  @retval NULL  No Monte Carlo association was possible
    *  @retval !NULL Monte Carlo association was successful
    */
-  virtual const MCParticle * trueRecPhoton( const RichRecSegment * segment,
-                                            const RichRecPixel * pixel ) const = 0;
+  virtual const LHCb::MCParticle *
+  trueRecPhoton( const LHCb::RichRecSegment * segment,
+                 const LHCb::RichRecPixel * pixel ) const = 0;
 
   /** Is this a true Cherenkov photon candidate ?
    *  Do the associated segment and pixel have the same MC parent AND was the pixel
@@ -196,7 +247,8 @@ public:
    *                Cherenkov photon
    *  @retval !NULL Monte Carlo association was successful
    */
-  virtual const MCParticle * trueCherenkovPhoton( const RichRecPhoton * photon ) const = 0;
+  virtual const LHCb::MCParticle *
+  trueCherenkovPhoton( const LHCb::RichRecPhoton * photon ) const = 0;
 
   /** Is this a true Cherenkov photon candidate ?
    *  Do the segment and pixel have the same MC parent AND was the pixel
@@ -210,8 +262,9 @@ public:
    *                Cherenkov photon
    *  @retval !NULL Monte Carlo association was successful
    */
-  virtual const MCParticle * trueCherenkovPhoton( const RichRecSegment * segment,
-                                                  const RichRecPixel * pixel ) const = 0;
+  virtual const LHCb::MCParticle *
+  trueCherenkovPhoton( const LHCb::RichRecSegment * segment,
+                       const LHCb::RichRecPixel * pixel ) const = 0;
 
   /** Is the RichRecPixel due to true MC Cherenkov radiation from given radiator medium ?
    *
@@ -223,8 +276,9 @@ public:
    *                Cherenkov photon
    *  @retval !NULL Monte Carlo association was successful
    */
-  virtual const MCParticle * trueCherenkovRadiation( const RichRecPixel * pixel,
-                                                     const Rich::RadiatorType rad ) const = 0;
+  virtual const LHCb::MCParticle *
+  trueCherenkovRadiation( const LHCb::RichRecPixel * pixel,
+                          const Rich::RadiatorType rad ) const = 0;
 
   /** Access the MCRichSegment associated to a given RichRecSegment
    *
@@ -234,7 +288,8 @@ public:
    *  @retval NULL  No Monte Carlo association was possible
    *  @retval !NULL Monte Carlo association was successful
    */
-  virtual const MCRichSegment * mcRichSegment( const RichRecSegment * segment ) const = 0;
+  virtual const LHCb::MCRichSegment *
+  mcRichSegment( const LHCb::RichRecSegment * segment ) const = 0;
 
   /** Access the MCRichTrack associated to a given RichRecTrack
    *
@@ -244,7 +299,8 @@ public:
    *  @retval NULL  No Monte Carlo association was possible
    *  @retval !NULL Monte Carlo association was successful
    */
-  virtual const MCRichTrack * mcRichTrack( const RichRecTrack * track ) const = 0;
+  virtual const LHCb::MCRichTrack *
+  mcRichTrack( const LHCb::RichRecTrack * track ) const = 0;
 
   /** Access the MCRichTrack associated to a given RichRecSegment
    *
@@ -254,15 +310,17 @@ public:
    *  @retval NULL  No Monte Carlo association was possible
    *  @retval !NULL Monte Carlo association was successful
    */
-  virtual const MCRichTrack * mcRichTrack( const RichRecSegment * segment ) const = 0;
+  virtual const LHCb::MCRichTrack *
+  mcRichTrack( const LHCb::RichRecSegment * segment ) const = 0;
 
   /** Access the MCRichSegments associated to a given RichRecTrack
    *
    *  @param track Pointer to a RichRecTrack
-   *  
+   *
    *  @return Pointer to the SmartRefVector of associated MCRichSegments
    */
-  virtual const SmartRefVector<MCRichSegment> * mcRichSegments( const RichRecTrack * track ) const = 0;
+  virtual const SmartRefVector<LHCb::MCRichSegment> *
+  mcRichSegments( const LHCb::RichRecTrack * track ) const = 0;
 
   /** Is this RichRecPixel background ?
    *
@@ -271,7 +329,7 @@ public:
    *  @retval true  Pixel is the result of a background hit in the detector
    *  @retval false Pixel is a Cherenkov Hit
    */
-  virtual bool isBackground( const RichRecPixel * pixel ) const = 0;
+  virtual bool isBackground( const LHCb::RichRecPixel * pixel ) const = 0;
 
 };
 

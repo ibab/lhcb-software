@@ -5,7 +5,7 @@
  *  Header file for RICH reconstruction tool interface : IRichPixelCreator
  *
  *  CVS Log :-
- *  $Id: IRichPixelCreator.h,v 1.6 2005-05-13 14:54:56 jonrob Exp $
+ *  $Id: IRichPixelCreator.h,v 1.7 2006-01-23 14:08:55 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -17,11 +17,15 @@
 
 // Event
 #include "Event/RichRecPixel.h"
-class RichDigit;
+namespace LHCb
+{
+  class RichDigit;
+}
 
 /// Static Interface Identification
 static const InterfaceID IID_IRichPixelCreator( "IRichPixelCreator" , 1 , 0 );
 
+//-----------------------------------------------------------------------------
 /** @class IRichPixelCreator IRichPixelCreator.h
  *
  *  Interface for tool for the creation and book-keeping of RichRecPixel objects
@@ -29,8 +33,10 @@ static const InterfaceID IID_IRichPixelCreator( "IRichPixelCreator" , 1 , 0 );
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
  */
+//-----------------------------------------------------------------------------
 
-class IRichPixelCreator : public virtual IAlgTool {
+class IRichPixelCreator : public virtual IAlgTool
+{
 
 public:
 
@@ -49,7 +55,7 @@ public:
    *  @retval NULL  Unable to build a RichRecPixel from the input data object
    *  @retval !NULL Object was successfully built
    */
-  virtual RichRecPixel * newPixel( const ContainedObject * obj ) const = 0;
+  virtual LHCb::RichRecPixel * newPixel( const ContainedObject * obj ) const = 0;
 
   /** Form all possible RichRecPixels from data objects at the configured
    *  input location in the TES.
@@ -66,7 +72,7 @@ public:
    *
    *  @return Pointer to the container of RichRecPixels
    */
-  virtual RichRecPixels * richPixels() const = 0;
+  virtual LHCb::RichRecPixels * richPixels() const = 0;
 
   /** Access the begin iterator for the pixels in the given RICH detector
    *
@@ -76,7 +82,7 @@ public:
    *
    *  @attention Only valid if newPixels() has been called for the current event
    */
-  virtual RichRecPixels::iterator begin( const Rich::DetectorType rich ) const = 0;
+  virtual LHCb::RichRecPixels::iterator begin( const Rich::DetectorType rich ) const = 0;
 
   /** Access the end iterator for the pixels in the given RICH detector
    *
@@ -86,7 +92,7 @@ public:
    *
    *  @attention Only valid if newPixels() has been called for the current event
    */
-  virtual RichRecPixels::iterator end( const Rich::DetectorType rich ) const = 0;
+  virtual LHCb::RichRecPixels::iterator end( const Rich::DetectorType rich ) const = 0;
 
   /** Access the begin iterator for the pixels in the given RICH detector
    *
@@ -97,8 +103,8 @@ public:
    *
    *  @attention Only valid if newPixels() has been called for the current event
    */
-  virtual RichRecPixels::iterator begin( const Rich::DetectorType rich,
-                                         const Rich::Side         panel ) const = 0;
+  virtual LHCb::RichRecPixels::iterator begin( const Rich::DetectorType rich,
+                                               const Rich::Side         panel ) const = 0;
 
   /** Access the end iterator for the pixels in the given RICH detector
    *
@@ -109,8 +115,8 @@ public:
    *
    *  @attention Only valid if newPixels() has been called for the current event
    */
-  virtual RichRecPixels::iterator end( const Rich::DetectorType rich,
-                                       const Rich::Side         panel ) const = 0;
+  virtual LHCb::RichRecPixels::iterator end( const Rich::DetectorType rich,
+                                             const Rich::Side         panel ) const = 0;
 
 };
 

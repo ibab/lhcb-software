@@ -5,7 +5,7 @@
  *  Header file for RICH reconstruction tool interface : IRichCherenkovResolution
  *
  *  CVS Log :-
- *  $Id: IRichCherenkovResolution.h,v 1.5 2005-06-17 14:48:57 jonrob Exp $
+ *  $Id: IRichCherenkovResolution.h,v 1.6 2006-01-23 14:08:55 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -16,7 +16,10 @@
 #define RICHRECTOOLS_IRICHCHERENKOVRESOLUTION_H 1
 
 // Event model
-class RichRecSegment;
+namespace LHCb
+{
+  class RichRecSegment;
+}
 
 /// Static Interface Identification
 static const InterfaceID IID_IRichCherenkovResolution( "IRichCherenkovResolution", 1, 0 );
@@ -32,7 +35,8 @@ static const InterfaceID IID_IRichCherenkovResolution( "IRichCherenkovResolution
  */
 //-----------------------------------------------------------------------------
 
-class IRichCherenkovResolution : public virtual IAlgTool {
+class IRichCherenkovResolution : public virtual IAlgTool
+{
 
 public:
 
@@ -41,15 +45,15 @@ public:
    */
   static const InterfaceID& interfaceID() {return IID_IRichCherenkovResolution;}
 
-  /** Calculates the Cherenkov theta resolution for given RichRecSegment 
+  /** Calculates the Cherenkov theta resolution for given RichRecSegment
    *  and particle mass hypothesis
    *
    *  @param segment Pointer to the RichRecSegment
    *  @param id Mass hypothesis
    *
    *  @return Cherenkov angle theta resolution
-   */  
-  virtual double ckThetaResolution( RichRecSegment * segment,
+   */
+  virtual double ckThetaResolution( LHCb::RichRecSegment * segment,
                                     const Rich::ParticleIDType id = Rich::Pion ) const = 0;
 
 };

@@ -4,7 +4,7 @@
  *
  *  Header file for utility class : RichPhotonSpectra
  *
- *  $Id: RichPhotonSpectra.h,v 1.13 2005-11-15 13:32:16 jonrob Exp $
+ *  $Id: RichPhotonSpectra.h,v 1.14 2006-01-23 14:08:55 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   2003-07-12
@@ -20,8 +20,9 @@
 // from Gaudi
 #include "GaudiKernel/StreamBuffer.h"
 
-// Kernel
-#include "RichKernel/RichParticleIDType.h"
+// LHCbKernel
+#include "Kernel/RichParticleIDType.h"
+// RichKernel
 #include "RichKernel/RichHypoData.h"
 #include "RichKernel/BoostMemPoolAlloc.h"
 

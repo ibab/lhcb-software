@@ -5,7 +5,7 @@
  *  Implementation file for class : RichTrackSelector
  *
  *  CVS Log :-
- *  $Id: RichTrackSelector.cpp,v 1.9 2005-05-13 14:54:57 jonrob Exp $
+ *  $Id: RichTrackSelector.cpp,v 1.10 2006-01-23 14:08:55 jonrob Exp $
  *
  *  @author Chris Jones    Christopher.Rob.Jones@cern.ch
  *  @date   2003-06-20
@@ -17,6 +17,9 @@
 
 // Boost
 #include "boost/lexical_cast.hpp"
+
+// namespaces
+using namespace LHCb;
 
 // Standard constructor
 RichTrackSelector::RichTrackSelector() :

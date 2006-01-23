@@ -4,7 +4,7 @@
  *
  * Header file for utility class : RichTrackID
  *
- * $Id: RichTrackID.h,v 1.17 2005-10-18 12:45:10 jonrob Exp $
+ * $Id: RichTrackID.h,v 1.18 2006-01-23 14:08:55 jonrob Exp $
  *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @date   08/07/2004
@@ -17,11 +17,9 @@
 // Event
 #include "Event/Track.h"
 #include "Event/MCParticle.h"
-// to be removed
-#include "Event/TrStoredTrack.h"
-#include "Event/TrgTrack.h"
 
-namespace Rich {
+namespace Rich 
+{
 
   /** @namespace Rich::Track
    *
@@ -30,7 +28,8 @@ namespace Rich {
    *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
    *  @date   08/07/2004
    */
-  namespace Track {
+  namespace Track 
+  {
 
     /// Number of Track types
     static const unsigned int NTrTypes = 8;
@@ -57,29 +56,13 @@ namespace Rich {
         Trigger  =  7  ///< Track algorithm type Trigger track
       };
 
-    /** Access the enumerated type for given TrgTrack
-     *
-     * @param track Pointer to a TrgTrack object
-     *
-     * @return enumerated type information
-     */
-    Rich::Track::Type type( const TrgTrack * track );
-
-    /** Access the enumerated type for given TrStoredTrack
-     *
-     * @param track Pointer to a TrStoredTrack object
-     *
-     * @return enumerated type information
-     */
-    Rich::Track::Type type( const TrStoredTrack * track );
-
     /** Access the enumerated type for given Track
      *
      * @param track Pointer to a Track object
      *
      * @return enumerated type information
      */
-    Rich::Track::Type type( const ::Track * track );
+    Rich::Track::Type type( const LHCb::Track * track );
 
     /** Converts a string name into the associated type enumeration
      *
@@ -104,26 +87,13 @@ namespace Rich {
 
     /** Evaluate if track is potentially usable for the RICH reconstruction
      *
-     *  @param track Pointer to a TrStoredTrack object
-     *
-     *  @return Boolean indicating the track usability
-     *  @retval true  Track is of a type that is usable by the RICH reconstruction
-     *  @retval false track type contains no RICH information
-     */
-    inline bool isUsable( const TrStoredTrack * track )
-    {
-      return ( track ? Rich::Track::isUsable(Rich::Track::type(track)) : false );
-    }
-
-    /** Evaluate if track is potentially usable for the RICH reconstruction
-     *
      *  @param track Pointer to a Track object
      *
      *  @return Boolean indicating the track usability
      *  @retval true  Track is of a type that is usable by the RICH reconstruction
      *  @retval false track type contains no RICH information
      */
-    inline bool isUsable( const ::Track * track )
+    inline bool isUsable( const LHCb::Track * track )
     {
       return ( track ? Rich::Track::isUsable(Rich::Track::type(track)) : false );
     }
@@ -150,8 +120,6 @@ namespace Rich {
       {
         Unknown = -1,   ///< Parent type is unknown
         Track,          ///< Track derives from a reconstructed Track object
-        TrStoredTrack,  ///< Track derives from a reconstructed TrStoredTrack object
-        TrgTrack,       ///< Track derives from a reconstructed TrgTrack object
         MCParticle      ///< Track derives from Monte Carlo MCParticle information
       };
 
@@ -173,23 +141,12 @@ namespace Rich {
    */
   std::string text( const Rich::Track::Type track );
 
-  /** Text conversion for TrStoredTracks
-   *
-   *  @param track Pointer to a TrStoredTrack object
-   *
-   *  @return Track type as a string
-   */
-  inline std::string text( const TrStoredTrack * track )
-  {
-    return Rich::text( Rich::Track::type(track) );
-  }
-
 }
 
 /** @class RichTrackID RichTrackID.h RichRecBase/RichTrackID.h
  *
  *  Utility class used as an indentification object for tracking objects used in
- *  the RICH reconstruction software; such as TrStoredTrack, TrgTrack and MCParticle.
+ *  the RICH reconstruction software; such as Track and MCParticle.
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   2003-09-23
@@ -205,40 +162,20 @@ public:
       m_parentType ( Rich::TrackParent::Unknown       ),
       m_unique     ( true                             ) { }
 
-  /** Constructor from a TrStoredTrack
-   *
-   * @param track Pointer to a TrStoredTrack
-   */
-  explicit RichTrackID( const TrStoredTrack * track )
-    : m_tkType     ( Rich::Track::type(track)         ),
-      m_parentType ( Rich::TrackParent::TrStoredTrack ),
-      m_unique     ( 0 != track->unique()             ) { }
-
   /** Constructor from a Track
    *
-   *  @param track Pointer to a TrStoredTrack
+   *  @param track Pointer to a Track
    */
-  explicit RichTrackID( const ::Track * track )
+  explicit RichTrackID( const LHCb::Track * track )
     : m_tkType     ( Rich::Track::type(track)            ),
       m_parentType ( Rich::TrackParent::Track            ),
-      m_unique     ( track->checkFlag(::Track::Unique) ) { }
-
-  /** Constructor from a TrStoredTrack
-   *
-   *  @param track Pointer to a TrgTrack
-   *
-   *  @todo Decide what to do about unique flag
-   */
-  explicit RichTrackID( const TrgTrack * track )
-    : m_tkType     ( Rich::Track::type(track)         ),
-      m_parentType ( Rich::TrackParent::TrgTrack      ),
-      m_unique     ( true                             ) { }
+      m_unique     ( track->checkFlag(LHCb::Track::Unique) ) { }
 
   /** Constructor from an MCParticle
    *
    *  @param mcPart Pointer to an MCParticle
    */
-  explicit RichTrackID( const MCParticle * mcPart )
+  explicit RichTrackID( const LHCb::MCParticle * mcPart )
     : m_tkType     ( Rich::Track::Unknown             ),
       m_parentType ( Rich::TrackParent::MCParticle    ),
       m_unique     ( true                             ) { }
@@ -285,27 +222,15 @@ public:
 
   /** Initialise from a Track
    *
-   *  @param track Pointer to a TrStoredTrack from which to initialise
+   *  @param track Pointer to a Track from which to initialise
    */
-  void initialiseFor( const Track * track );
-
-  /** Initialise from a TrStoredTrack
-   *
-   *  @param track Pointer to a TrStoredTrack from which to initialise
-   */
-  void initialiseFor( const TrStoredTrack * track );
-
-  /** Initialise from a TrgTrack
-   *
-   *  @param track Pointer to a TrgTrack from which to initialise
-   */
-  void initialiseFor( const TrgTrack * track );
+  void initialiseFor( const LHCb::Track * track );
 
   /** Initialise from a MCParticle
    *
    *  @param track Pointer to an MCParticle from which to initialise
    */
-  void initialiseFor( const MCParticle * track );
+  void initialiseFor( const LHCb::MCParticle * track );
 
   /** Operator < For sorting
    *
@@ -331,28 +256,14 @@ private: // data
 
 };
 
-inline void RichTrackID::initialiseFor( const Track * track )
+inline void RichTrackID::initialiseFor( const LHCb::Track * track )
 {
   setParentType ( Rich::TrackParent::Track            );
   setTrackType  ( Rich::Track::type(track)            );
-  setUnique     ( track->checkFlag(::Track::Unique) );
+  setUnique     ( track->checkFlag(LHCb::Track::Unique)   );
 }
 
-inline void RichTrackID::initialiseFor( const TrStoredTrack * track )
-{
-  setParentType ( Rich::TrackParent::TrStoredTrack );
-  setTrackType  ( Rich::Track::type(track)         );
-  setUnique     ( 0 != track->unique()             );
-}
-
-inline void RichTrackID::initialiseFor( const TrgTrack * track )
-{
-  setParentType ( Rich::TrackParent::TrgTrack      );
-  setTrackType  ( Rich::Track::type(track)         );
-  setUnique     ( true                             ); ///< Need to decide what to do here
-}
-
-inline void RichTrackID::initialiseFor( const MCParticle * )
+inline void RichTrackID::initialiseFor( const LHCb::MCParticle * )
 {
   setParentType ( Rich::TrackParent::MCParticle );
 }
@@ -400,30 +311,5 @@ inline MsgStream& operator << ( MsgStream& s,
   s << Rich::text( track );
   return s;
 }
-
-/// Implement StreamBuffer >> method for RichTrackID
-/*
-inline StreamBuffer& operator >> ( StreamBuffer& s,
-                                   RichTrackID& id )
-{
-  int iTemp;
-  s >> iTemp; id.setTrackType( static_cast<Rich::Track::Type>(iTemp) );
-  s >> iTemp; id.setParentType( static_cast<Rich::TrackParent::Type>(iTemp) );
-  s >> iTemp; id.setUnique( 0 != iTemp );
-  return s;
-}
-*/
-
-/// Implement StreamBuffer << method for RichTrackID
-/*
-inline StreamBuffer& operator << ( StreamBuffer& s,
-                                   const RichTrackID& id )
-{
-  s << static_cast<int>(id.trackType())
-    << static_cast<int>(id.parentType())
-    << static_cast<int>(id.unique());
-  return s;
-}
-*/
 
 #endif // RICHRECBASE_RICHTRACKID_H

@@ -5,7 +5,7 @@
  *  Header file for tool base class : RichPixelCreatorBase
  *
  *  CVS Log :-
- *  $Id: RichPixelCreatorBase.h,v 1.5 2005-11-15 13:32:16 jonrob Exp $
+ *  $Id: RichPixelCreatorBase.h,v 1.6 2006-01-23 14:08:55 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   20/04/2005
@@ -83,21 +83,21 @@ public:
 public: // methods from interface
 
   // Returns a pointer to the RichRecPixels
-  RichRecPixels * richPixels() const;
+  LHCb::RichRecPixels * richPixels() const;
 
   // Access the begin iterator for the pixels in the given RICH detector
-  RichRecPixels::iterator begin( const Rich::DetectorType rich ) const;
+  LHCb::RichRecPixels::iterator begin( const Rich::DetectorType rich ) const;
 
   // Access the end iterator for the pixels in the given RICH detector
-  RichRecPixels::iterator end( const Rich::DetectorType rich ) const;
+  LHCb::RichRecPixels::iterator end( const Rich::DetectorType rich ) const;
 
   // Access the begin iterator for the pixels in the given RICH detector
-  RichRecPixels::iterator begin( const Rich::DetectorType rich,
-                                 const Rich::Side         panel ) const;
+  LHCb::RichRecPixels::iterator begin( const Rich::DetectorType rich,
+                                       const Rich::Side         panel ) const;
 
   // Access the end iterator for the pixels in the given RICH detector
-  RichRecPixels::iterator end( const Rich::DetectorType rich,
-                               const Rich::Side         panel ) const;
+  LHCb::RichRecPixels::iterator end( const Rich::DetectorType rich,
+                                     const Rich::Side         panel ) const;
 
 protected: // methods
 
@@ -140,19 +140,19 @@ protected: // methods
    *  @retval true  channel is active
    *  @retval false channel is not in use
    */
-  bool pixelIsOK( const RichSmartID id ) const;
+  bool pixelIsOK( const LHCb::RichSmartID id ) const;
 
   /** Save a given pixel to the TES container
    *
    *  @param pix Pointer to the RichRecPixel to save
    */
-  void savePixel( RichRecPixel * pix ) const;
+  void savePixel( LHCb::RichRecPixel * pix ) const;
 
   /** Compute the average radiator distortion corrected positions
-   *  in local HPD panel coordinate system, 
+   *  in local HPD panel coordinate system,
    *  for each valid radiator for the given pixel
    */
-  void computeRadCorrLocalPositions( RichRecPixel * pixel ) const;
+  void computeRadCorrLocalPositions( LHCb::RichRecPixel * pixel ) const;
 
 protected: // data
 
@@ -160,10 +160,10 @@ protected: // data
   mutable bool m_allDone;
 
   /// Map between RichSmartID and the associated RichRecPixel
-  mutable RichHashMap< RichSmartID::KeyType, RichRecPixel* > m_pixelExists;
+  mutable Rich::HashMap< LHCb::RichSmartID::KeyType, LHCb::RichRecPixel* > m_pixelExists;
 
   /// Map indicating if a given RichSmartID has been considered already
-  mutable RichHashMap< RichSmartID::KeyType, bool > m_pixelDone;
+  mutable Rich::HashMap< LHCb::RichSmartID::KeyType, bool > m_pixelDone;
 
 private: // data
 
@@ -174,7 +174,7 @@ private: // data
   const IRichRecGeomTool * m_recGeom;
 
   /// Pointer to RichRecPixels
-  mutable RichRecPixels * m_pixels;
+  mutable LHCb::RichRecPixels * m_pixels;
 
   /// Flag to turn on or off the book keeping features to save cpu time.
   bool m_bookKeep;
@@ -189,16 +189,16 @@ private: // data
   std::string m_richRecPixelLocation;
 
   /// Begin iterators for various Rich and panel combinations
-  mutable boost::multi_array<RichRecPixels::iterator,2> m_begins;
+  mutable boost::multi_array<LHCb::RichRecPixels::iterator,2> m_begins;
 
   /// End iterators for various Rich and panel combinations
-  mutable boost::multi_array<RichRecPixels::iterator,2> m_ends;
+  mutable boost::multi_array<LHCb::RichRecPixels::iterator,2> m_ends;
 
   /// Begin iterators for each RICH
-  mutable boost::array<RichRecPixels::iterator,Rich::NRiches> m_richBegin;
+  mutable boost::array<LHCb::RichRecPixels::iterator,Rich::NRiches> m_richBegin;
 
   /// End iterators for each RICH
-  mutable boost::array<RichRecPixels::iterator,Rich::NRiches> m_richEnd;
+  mutable boost::array<LHCb::RichRecPixels::iterator,Rich::NRiches> m_richEnd;
 
   /// Hit count tally
   mutable boost::array<unsigned int, Rich::NRiches> m_hitCount;
@@ -218,12 +218,12 @@ private: // helper classes
 
   /// Class to sort the RichRecPixels according to detector regions
   class SortByRegion
-    : std::binary_function<const RichRecPixel*,const RichRecPixel*,bool>
+    : std::binary_function<const LHCb::RichRecPixel*,const LHCb::RichRecPixel*,bool>
   {
   public:
     /// Method to return true if RichRecPixel p1 should be listed before p2
-    inline bool operator() ( const RichRecPixel * p1,
-                             const RichRecPixel * p2 ) const
+    inline bool operator() ( const LHCb::RichRecPixel * p1,
+                             const LHCb::RichRecPixel * p2 ) const
     {
       return ( p1->smartID().dataBitsOnly().key() < p2->smartID().dataBitsOnly().key() );
     }
@@ -251,7 +251,7 @@ inline bool RichPixelCreatorBase::useDetector( const Rich::DetectorType rich ) c
   return m_usedDets[rich];
 }
 
-inline bool RichPixelCreatorBase::pixelIsOK( const RichSmartID id ) const
+inline bool RichPixelCreatorBase::pixelIsOK( const LHCb::RichSmartID id ) const
 {
   return (
           //validID &&                 // RichSmartID is valid
@@ -260,7 +260,7 @@ inline bool RichPixelCreatorBase::pixelIsOK( const RichSmartID id ) const
           );
 }
 
-inline void RichPixelCreatorBase::savePixel( RichRecPixel * pix ) const
+inline void RichPixelCreatorBase::savePixel( LHCb::RichRecPixel * pix ) const
 {
   richPixels()->insert( pix );
   ++m_hitCount[pix->smartID().rich()];
@@ -288,18 +288,18 @@ inline void RichPixelCreatorBase::resetIterators() const
 
 }
 
-inline void 
-RichPixelCreatorBase::computeRadCorrLocalPositions( RichRecPixel * pixel ) const
+inline void
+RichPixelCreatorBase::computeRadCorrLocalPositions( LHCb::RichRecPixel * pixel ) const
 {
   if ( Rich::Rich1 == pixel->detector() )
   {
     pixel->setRadCorrLocalPosition(m_recGeom->correctAvRadiatorDistortion(pixel->localPosition(),Rich::Aerogel),Rich::Aerogel);
-    pixel->setRadCorrLocalPosition(m_recGeom->correctAvRadiatorDistortion(pixel->localPosition(),Rich::C4F10),Rich::C4F10);  
-  } 
+    pixel->setRadCorrLocalPosition(m_recGeom->correctAvRadiatorDistortion(pixel->localPosition(),Rich::C4F10),Rich::C4F10);
+  }
   else
   {
     pixel->setRadCorrLocalPosition(m_recGeom->correctAvRadiatorDistortion(pixel->localPosition(),Rich::CF4),Rich::CF4);
-  } 
+  }
 }
 
 #endif // RICHRECBASE_RICHPIXELCREATORBASE_H

@@ -5,7 +5,7 @@
  *  Header file for RICH reconstruction tool interface : IRichPhotonSignal
  *
  *  CVS Log :-
- *  $Id: IRichPhotonSignal.h,v 1.7 2005-06-23 15:13:05 jonrob Exp $
+ *  $Id: IRichPhotonSignal.h,v 1.8 2006-01-23 14:08:55 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -16,11 +16,15 @@
 #define RICHRECTOOLS_IRICHPHOTONSIGNAL_H 1
 
 // Event
-class RichRecPhoton;
+namespace LHCb
+{
+  class RichRecPhoton;
+}
 
 /// Static Interface Identification
 static const InterfaceID IID_IRichPhotonSignal( "IRichPhotonSignal" , 1 , 0 );
 
+//-----------------------------------------------------------------------------
 /** @class IRichPhotonSignal IRichPhotonSignal.h
  *
  *  Interface to the tool to calculate for a given photon the probabilities of it
@@ -30,8 +34,10 @@ static const InterfaceID IID_IRichPhotonSignal( "IRichPhotonSignal" , 1 , 0 );
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
  */
+//-----------------------------------------------------------------------------
 
-class IRichPhotonSignal : public virtual IAlgTool {
+class IRichPhotonSignal : public virtual IAlgTool 
+{
 
 public:
 
@@ -40,7 +46,7 @@ public:
    */
   static const InterfaceID& interfaceID() { return IID_IRichPhotonSignal; }
 
-  /** Calculate the predicted pixel signal for a given reconstructed photon 
+  /** Calculate the predicted pixel signal for a given reconstructed photon
    *  under a given mass hypothesis
    *
    *  @param photon Pointer to the reconstructed photon
@@ -49,7 +55,7 @@ public:
    *  @return The predicted signal contribution to the associated RichRecPixel
    *          for the photon assuming the given mass hypothesis
    */
-  virtual double predictedPixelSignal( RichRecPhoton * photon,
+  virtual double predictedPixelSignal( LHCb::RichRecPhoton * photon,
                                        const Rich::ParticleIDType id ) const = 0;
 
   /** Calculates the value of the signal probablity function for the given photon
@@ -60,10 +66,10 @@ public:
    *
    *  @return The signal probability
    */
-  virtual double signalProb( RichRecPhoton * photon,
+  virtual double signalProb( LHCb::RichRecPhoton * photon,
                              const Rich::ParticleIDType id ) const = 0;
 
-  /** Calculates the value of the scatter probablity function for the given photon 
+  /** Calculates the value of the scatter probablity function for the given photon
    *  at its cherenkov theta, for the given mass hypothesis
    *
    *  @param photon Pointer to the reconstructed photon
@@ -71,7 +77,7 @@ public:
    *
    *  @return The scattering probability
    */
-  virtual double scatterProb( RichRecPhoton * photon,
+  virtual double scatterProb( LHCb::RichRecPhoton * photon,
                               const Rich::ParticleIDType id ) const = 0;
 
 };

@@ -5,7 +5,7 @@
  *  Header file for RICH reconstruction tool interface : IRichPhotonCreator
  *
  *  CVS Log :-
- *  $Id: IRichPhotonCreator.h,v 1.6 2006-01-16 18:24:05 jonrob Exp $
+ *  $Id: IRichPhotonCreator.h,v 1.7 2006-01-23 14:08:55 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -49,7 +49,7 @@ public:
    *
    *  @return Pointer to the container of RichRecPhotons
    */
-  virtual RichRecPhotons * richPhotons() const = 0;
+  virtual LHCb::RichRecPhotons * richPhotons() const = 0;
 
   /** Checks whether a photon candidate exists for the given segment and pixel pair
    *
@@ -59,13 +59,14 @@ public:
    *  @return Pointer to the reconstructed photon candidate
    *  @retval !NULL A valid reconstructed photon exists for this pixel/segment pair
    *  @retval NULL  No photon exists for this pixel/segment pair.
-   *                Note this DOES NOT mean it isn't possible to reconstruct a candidate 
+   *                Note this DOES NOT mean it isn't possible to reconstruct a candidate
    *                ( see reconstructPhoton methods ).
    */
-  virtual RichRecPhoton * checkForExistingPhoton( RichRecSegment * segment,
-                                                  RichRecPixel * pixel ) const = 0;
+  virtual
+  LHCb::RichRecPhoton * checkForExistingPhoton( LHCb::RichRecSegment * segment,
+                                                LHCb::RichRecPixel * pixel ) const = 0;
 
-  /** Form a RichRecPhoton candidate from a given segment and a pixel. 
+  /** Form a RichRecPhoton candidate from a given segment and a pixel.
    *  Whether or not this method succeeds in creating a photon object
    *  depends on the particular implementation being used, and its runtime
    *  configuration.
@@ -77,8 +78,9 @@ public:
    *  @retval !NULL A valid reconstructed photon was possible
    *  @retval NULL  It was not possible to produce a valid photon candidate
    */
-  virtual RichRecPhoton * reconstructPhoton( RichRecSegment * segment,
-                                             RichRecPixel * pixel ) const = 0;
+  virtual
+  LHCb::RichRecPhoton * reconstructPhoton( LHCb::RichRecSegment * segment,
+                                           LHCb::RichRecPixel * pixel ) const = 0;
 
   /** Form all valid photon candidates for a given track and pixel.
    *  Whether or not this method succeeds in creating photon objects
@@ -90,10 +92,10 @@ public:
    *
    *  @return Container of photon candidates
    */
-  virtual 
-  RichRecTrack::Photons reconstructPhotons( RichRecTrack * track, 
-                                            RichRecPixel * pixel ) const = 0;
-  
+  virtual
+  LHCb::RichRecTrack::Photons reconstructPhotons( LHCb::RichRecTrack * track,
+                                                  LHCb::RichRecPixel * pixel ) const = 0;
+
   /** Form all photon candidates for a given track, with all possible pixels.
    *  Whether or not this method succeeds in creating photon objects
    *  depends on the particular implementation being used, and its runtime
@@ -103,8 +105,8 @@ public:
    *
    *  @return Container of photon candidates
    */
-  virtual const RichRecTrack::Photons &
-  reconstructPhotons( RichRecTrack * track ) const = 0;
+  virtual const LHCb::RichRecTrack::Photons &
+  reconstructPhotons( LHCb::RichRecTrack * track ) const = 0;
 
   /** Form all photon candidates for a given pixel, with all possible tracks.
    *  Whether or not this method succeeds in creating photon objects
@@ -115,8 +117,8 @@ public:
    *
    *  @return Container of photon candidates
    */
-  virtual const RichRecPixel::Photons &
-  reconstructPhotons( RichRecPixel * pixel ) const = 0;
+  virtual const LHCb::RichRecPixel::Photons &
+  reconstructPhotons( LHCb::RichRecPixel * pixel ) const = 0;
 
   /** Form all photon candidates for a given segment, with all possible pixels.
    *  Whether or not this method succeeds in creating photon objects
@@ -127,16 +129,16 @@ public:
    *
    *  @return Container of photon candidates
    */
-  virtual const RichRecSegment::Photons &
-  reconstructPhotons( RichRecSegment * segment ) const = 0;
+  virtual const LHCb::RichRecSegment::Photons &
+  reconstructPhotons( LHCb::RichRecSegment * segment ) const = 0;
 
-  /** Method to perform the reconstruction of all tracks and pixels.
-   *  The most efficient methods to create all possible photon candidates.
-   *  @return StatusCode indicating if request was successful or not
-   *  @retval StatusCode::SUCCESS Photon reconstruction was successful
-   *  @retval StatusCode::FAILURE Photon reconstruction failed
-   */
-  virtual StatusCode reconstructPhotons() const = 0;
+/** Method to perform the reconstruction of all tracks and pixels.
+ *  The most efficient methods to create all possible photon candidates.
+ *  @return StatusCode indicating if request was successful or not
+ *  @retval StatusCode::SUCCESS Photon reconstruction was successful
+ *  @retval StatusCode::FAILURE Photon reconstruction failed
+ */
+virtual StatusCode reconstructPhotons() const = 0;
 
 };
 

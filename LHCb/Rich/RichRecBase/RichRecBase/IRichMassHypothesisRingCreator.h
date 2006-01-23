@@ -5,8 +5,7 @@
  *  Header file for RICH reconstruction tool interface : IRichMassHypothesisRingCreator
  *
  *  CVS Log :-
- *  $Id: IRichMassHypothesisRingCreator.h,v 1.3 2004-07-26 18:00:57 jonrob Exp $
- *  $Log: not supported by cvs2svn $
+ *  $Id: IRichMassHypothesisRingCreator.h,v 1.4 2006-01-23 14:08:55 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2004
@@ -18,11 +17,15 @@
 
 // Event model
 #include "Event/RichRecRing.h"
-class RichRecSegment;
+namespace LHCb
+{
+  class RichRecSegment;
+}
 
 /// Static Interface Identification
 static const InterfaceID IID_IRichMassHypothesisRingCreator( "IRichMassHypothesisRingCreator", 1, 0 );
 
+//-----------------------------------------------------------------------------
 /** @class IRichMassHypothesisRingCreator IRichMassHypothesisRingCreator.h
  *
  *  Interface for tool to create RichRecRings that represent the rings a given
@@ -31,8 +34,10 @@ static const InterfaceID IID_IRichMassHypothesisRingCreator( "IRichMassHypothesi
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2004
  */
+//-----------------------------------------------------------------------------
 
-class IRichMassHypothesisRingCreator : public virtual IAlgTool {
+class IRichMassHypothesisRingCreator : public virtual IAlgTool 
+{
 
 public:
 
@@ -48,38 +53,38 @@ public:
    *
    *  @return Pointer to the mass hypothesis ring
    */
-  virtual RichRecRing * newMassHypoRing( RichRecSegment * segment,
-                                         const Rich::ParticleIDType id ) const = 0;
+  virtual LHCb::RichRecRing * newMassHypoRing( LHCb::RichRecSegment * segment,
+                                               const Rich::ParticleIDType id ) const = 0;
 
   /** Creates and returns a new default RichRecRing object.
-   * 
+   *
    *  @attention It is the reponsibility of the user to save or delete the ring,
    *             otherwise there will be a memory leak.
    *
    *  @return Pointer to the new RichrecRing
    */
-  virtual RichRecRing * newMassHypoRing() const = 0;
+  virtual LHCb::RichRecRing * newMassHypoRing() const = 0;
 
   /** Save the RichRecRing in the tool internal container
    *
-   *  @attention Once this method is called on a ring, the user should 
+   *  @attention Once this method is called on a ring, the user should
    *             NOT delete the ring
    *
    *  @param ring Pointer to the RichRecRing to save
    */
-  virtual void saveMassHypoRing( RichRecRing * ring ) const = 0;
+  virtual void saveMassHypoRing( LHCb::RichRecRing * ring ) const = 0;
 
   /** Builds the mass hypothesis rings for all mass hypotheses for given RichRecSegment
    *
    *  @param segment Pointer to a RichRecSegment
    */
-  virtual void newMassHypoRings( RichRecSegment * segment ) const = 0;
+  virtual void newMassHypoRings( LHCb::RichRecSegment * segment ) const = 0;
 
   /** Access to all mass hypothesis rings currently created
    *
    *  @return Pointer to the contianer of all RichRecRings
    */
-  virtual RichRecRings * massHypoRings() const = 0;
+  virtual LHCb::RichRecRings * massHypoRings() const = 0;
 
 };
 

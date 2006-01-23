@@ -5,7 +5,7 @@
  *  Header file for RICH reconstruction base class : RichRecBase
  *
  *  CVS Log :-
- *  $Id: RichRecBase.h,v 1.1 2005-10-13 15:38:41 jonrob Exp $
+ *  $Id: RichRecBase.h,v 1.2 2006-01-23 14:08:55 jonrob Exp $
  *
  *  @author Chris Jones    Christopher.Rob.Jones@cern.ch
  *  @date   2005-08-26
@@ -16,8 +16,11 @@
 #define RICHRECBASE_RICHRECBASE_H 1
 
 // Event
-class ProcStatus;
-class RichRecStatus;
+namespace LHCb
+{
+  class ProcStatus;
+  class RichRecStatus;
+}
 #include "Event/RichRecTrack.h"
 #include "Event/RichRecSegment.h"
 #include "Event/RichRecPixel.h"
@@ -29,6 +32,9 @@ class RichRecStatus;
 #include "RichRecBase/IRichPhotonCreator.h"
 #include "RichRecBase/IRichPixelCreator.h"
 #include "RichRecBase/IRichStatusCreator.h"
+
+// Physical Constants
+#include "Kernel/PhysicalConstants.h"
 
 //-----------------------------------------------------------------------------
 /** @class RichRecBase RichRecBase.h RichRecBase/RichRecBase.h
@@ -175,7 +181,7 @@ protected: // Read/write access to data
    *
    * @return Pointer to the RichRecTracks container.
    */
-  inline RichRecTracks * richTracks()
+  inline LHCb::RichRecTracks * richTracks()
   {
     return trackCreator()->richTracks();
   }
@@ -186,7 +192,7 @@ protected: // Read/write access to data
    *
    * @return Pointer to the RichRecPixels container.
    */
-  inline RichRecPixels * richPixels()
+  inline LHCb::RichRecPixels * richPixels()
   {
     return pixelCreator()->richPixels();
   }
@@ -197,7 +203,7 @@ protected: // Read/write access to data
    *
    * @return Pointer to the RichRecSegments container.
    */
-  inline RichRecSegments * richSegments()
+  inline LHCb::RichRecSegments * richSegments()
   {
     return segmentCreator()->richSegments();
   }
@@ -208,7 +214,7 @@ protected: // Read/write access to data
    *
    * @return Pointer to the RichRecPhotons container.
    */
-  inline RichRecPhotons * richPhotons()
+  inline LHCb::RichRecPhotons * richPhotons()
   {
     return photonCreator()->richPhotons();
   }
@@ -219,7 +225,7 @@ protected: // Read/write access to data
    *
    * @return Pointer to the RichRecStatus data object.
    */
-  inline RichRecStatus * richStatus()
+  inline LHCb::RichRecStatus * richStatus()
   {
     return statusCreator()->richStatus();
   }
@@ -232,7 +238,7 @@ protected: // read only access to data
    *
    * @return const Pointer to the RichRecTracks container.
    */
-  inline const RichRecTracks * richTracks() const
+  inline const LHCb::RichRecTracks * richTracks() const
   {
     return trackCreator()->richTracks();
   }
@@ -243,7 +249,7 @@ protected: // read only access to data
    *
    * @return const Pointer to the RichRecPixels container.
    */
-  inline const RichRecPixels * richPixels() const
+  inline const LHCb::RichRecPixels * richPixels() const
   {
     return pixelCreator()->richPixels();
   }
@@ -254,7 +260,7 @@ protected: // read only access to data
    *
    * @return const Pointer to the RichRecSegments container.
    */
-  inline const RichRecSegments * richSegments() const
+  inline const LHCb::RichRecSegments * richSegments() const
   {
     return segmentCreator()->richSegments();
   }
@@ -265,7 +271,7 @@ protected: // read only access to data
    *
    * @return const Pointer to the RichRecPhotons container.
    */
-  inline const RichRecPhotons * richPhotons() const
+  inline const LHCb::RichRecPhotons * richPhotons() const
   {
     return photonCreator()->richPhotons();
   }
@@ -276,7 +282,7 @@ protected: // read only access to data
    *
    * @return const Pointer to the RichRecStatus data object.
    */
-  inline const RichRecStatus * richStatus() const
+  inline const LHCb::RichRecStatus * richStatus() const
   {
     return statusCreator()->richStatus();
   }

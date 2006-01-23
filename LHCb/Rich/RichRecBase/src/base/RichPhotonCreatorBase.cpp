@@ -5,7 +5,7 @@
  *  Implementation file for tool base class : RichPhotonCreatorBase
  *
  *  CVS Log :-
- *  $Id: RichPhotonCreatorBase.cpp,v 1.8 2006-01-16 18:24:05 jonrob Exp $
+ *  $Id: RichPhotonCreatorBase.cpp,v 1.9 2006-01-23 14:08:55 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   20/05/2005
@@ -14,6 +14,9 @@
 
 // local
 #include "RichRecBase/RichPhotonCreatorBase.h"
+
+// namespaces
+using namespace LHCb;
 
 //-----------------------------------------------------------------------------
 

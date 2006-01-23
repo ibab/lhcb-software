@@ -5,7 +5,7 @@
  * Header file for utility class : RichTrackSelector
  *
  * CVS Log :-
- * $Id: RichTrackSelector.h,v 1.13 2005-11-07 09:33:45 jonrob Exp $
+ * $Id: RichTrackSelector.h,v 1.14 2006-01-23 14:08:55 jonrob Exp $
  *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @date   2003-06-20
@@ -21,8 +21,6 @@
 
 // Event model
 #include "Event/Track.h"
-#include "Event/TrStoredTrack.h"
-#include "Event/TrgTrack.h"
 #include "Event/RichRecTrack.h"
 
 // Kernel
@@ -38,7 +36,8 @@
  */
 //--------------------------------------------------------------------------------
 
-class RichTrackSelector {
+class RichTrackSelector 
+{
 
 public: // definitions
 
@@ -82,27 +81,7 @@ public:
    *  @retval true  Track is selected
    *  @retval false Track is rejected
    */
-  bool trackSelected( const ::Track * track ) const;
-
-  /** Test if the given TrStoredTrack is selected under the current criteria
-   *
-   *  @param track Pointer to a TrStoredTrack
-   *
-   *  @return Boolean indicating if the track is selected
-   *  @retval true  Track is selected
-   *  @retval false Track is rejected
-   */
-  bool trackSelected( const TrStoredTrack * track ) const;
-
-  /** Test it the given TrgTrack is selected
-   *
-   *  @param track Pointer to a TrgTrack
-   *
-   *  @return Boolean indicating if the track is selected
-   *  @retval true  Track is selected
-   *  @retval false Track is rejected
-   */
-  bool trackSelected( const TrgTrack * track ) const;
+  bool trackSelected( const LHCb::Track * track ) const;
 
   /** Test it the given RichRecTrack is selected
    *
@@ -112,7 +91,7 @@ public:
    *  @retval true  Track is selected
    *  @retval false Track is rejected
    */
-  bool trackSelected( const RichRecTrack * track ) const;
+  bool trackSelected( const LHCb::RichRecTrack * track ) const;
 
   /** Access to selected track type name (non-const)
    *
@@ -152,10 +131,6 @@ public:
 
 private: // methods
 
-  /// Finds the TrStateP for a given track and z position
-  const TrStateP * trStateP( const TrStoredTrack * track,
-                             const double zPos = 0 ) const;
-
   /// Configure the momentum cuts
   bool configureMomentumCuts();
 
@@ -192,13 +167,6 @@ inline RichTrackSelector::MomentumCutData & RichTrackSelector::setMomentumCuts()
   return m_pCutData;
 }
 
-inline const TrStateP * RichTrackSelector::trStateP( const TrStoredTrack * track,
-                                                     const double zPos ) const
-{
-  return ( track ?
-           dynamic_cast<const TrStateP*>((const TrState*)track->closestState(zPos)) : 0 );
-}
-
 inline const double RichTrackSelector::minMomentum( const Rich::Track::Type type ) const
 {
   return m_minP[type];
@@ -209,28 +177,13 @@ inline const double RichTrackSelector::maxMomentum( const Rich::Track::Type type
   return m_maxP[type];
 }
 
-inline bool RichTrackSelector::trackSelected( const TrStoredTrack * track ) const
-{
-  const TrStateP * trackPState = trStateP( track );
-  const Rich::Track::Type type = Rich::Track::type(track);
-  return ( type != Rich::Track::Unknown &&          // track type is known
-           type != Rich::Track::Unusable &&         // track type is usable
-           track && trackPState &&                  // Track info OK
-           (!m_uniqueTrOnly || track->unique()) &&  // Unique tracks
-           m_tkTypeSel[type] &&                     // tracking algorithm type
-           ( m_chargeSel*track->charge() >= 0 ) &&  // track charge
-           ( trackPState->p()/GeV > minMomentum(type) ) &&  // Momentum cuts
-           ( trackPState->p()/GeV < maxMomentum(type) )     // Momentum cuts
-           );
-}
-
-inline bool RichTrackSelector::trackSelected( const ::Track * track ) const
+inline bool RichTrackSelector::trackSelected( const LHCb::Track * track ) const
 {
   const Rich::Track::Type type = Rich::Track::type(track);
   return ( type != Rich::Track::Unknown &&          // track type is known
            type != Rich::Track::Unusable &&         // track type is usable
            track &&                                 // Track info OK
-           (!m_uniqueTrOnly || track->checkFlag(::Track::Unique)) &&  // Unique tracks
+           (!m_uniqueTrOnly || track->checkFlag(LHCb::Track::Unique)) &&  // Unique tracks
            m_tkTypeSel[type] &&                     // tracking algorithm type
            ( m_chargeSel*track->charge() >= 0 ) &&  // track charge
            ( track->p()/GeV > minMomentum(type) ) &&  // Momentum cuts
@@ -238,20 +191,7 @@ inline bool RichTrackSelector::trackSelected( const ::Track * track ) const
            );
 }
 
-inline bool RichTrackSelector::trackSelected( const TrgTrack * track ) const
-{
-  const Rich::Track::Type type = Rich::Track::type(track);
-  return ( type != Rich::Track::Unknown &&          // track type is known
-           type != Rich::Track::Unusable &&         // track type is usable
-           track &&                                           // Track pointer OK
-           m_tkTypeSel[type] &&                               // tracking algorithm type
-           ( m_chargeSel*track->firstState().momentum() >= 0 )  &&       // track charge
-           ( fabs(track->firstState().momentum())/GeV > minMomentum(type) ) && // Momentum cut
-           ( fabs(track->firstState().momentum())/GeV < maxMomentum(type) )    // Momentum cut
-           );
-}
-
-inline bool RichTrackSelector::trackSelected( const RichRecTrack * track ) const
+inline bool RichTrackSelector::trackSelected( const LHCb::RichRecTrack * track ) const
 {
   const Rich::Track::Type type = track->trackID().trackType();
   return ( type != Rich::Track::Unknown &&          // track type is known

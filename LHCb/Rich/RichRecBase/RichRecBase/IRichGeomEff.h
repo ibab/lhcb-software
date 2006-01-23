@@ -5,8 +5,7 @@
  *  Header file for RICH reconstruction tool interface : IRichGeomEff
  *
  *  CVS Log :-
- *  $Id: IRichGeomEff.h,v 1.3 2004-07-26 18:00:57 jonrob Exp $
- *  $Log: not supported by cvs2svn $
+ *  $Id: IRichGeomEff.h,v 1.4 2006-01-23 14:08:55 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -17,11 +16,15 @@
 #define RICHRECTOOLS_IRICHGEOMEFF_H 1
 
 // Event model
-class RichRecSegment;
+namespace LHCb
+{
+  class RichRecSegment;
+}
 
 /// Static Interface Identification
 static const InterfaceID IID_IRichGeomEff( "IRichGeomEff", 1, 0 );
 
+//-----------------------------------------------------------------------------
 /** @class IRichGeomEff IRichGeomEff.h
  *
  *  Interface for tool to calculate the geometrical efficiencies for a given
@@ -32,8 +35,10 @@ static const InterfaceID IID_IRichGeomEff( "IRichGeomEff", 1, 0 );
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
  */
+//-----------------------------------------------------------------------------
 
-class IRichGeomEff : public virtual IAlgTool {
+class IRichGeomEff : public virtual IAlgTool
+{
 
 public:
 
@@ -50,7 +55,7 @@ public:
    *
    *  @return the geometrical efficiency
    */
-  virtual double geomEfficiency ( RichRecSegment * segment,
+  virtual double geomEfficiency ( LHCb::RichRecSegment * segment,
                                   const Rich::ParticleIDType id ) const = 0;
 
   /** Calculate the scattered geometrical efficiency for the given
@@ -61,7 +66,7 @@ public:
    *
    *  @return the geometrical efficiency
    */
-  virtual double geomEfficiencyScat ( RichRecSegment * segment,
+  virtual double geomEfficiencyScat ( LHCb::RichRecSegment * segment,
                                       const Rich::ParticleIDType id ) const = 0;
 
 };

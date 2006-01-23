@@ -4,6 +4,9 @@
 ! Purpose     : Base package for RICH Reconstruction Packages
 !-----------------------------------------------------------------------------
 
+! 2006-01-23 - Chris Jones
+ - Updates for LHCb v20r0
+
 !====================== RichRecBase v1r17 2005-11-18 =======================
 ! 2005-11-15 - Chris Jones
  - Improvements to transient reconstruction objects

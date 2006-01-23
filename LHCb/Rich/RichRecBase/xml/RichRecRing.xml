@@ -4,20 +4,12 @@
 <package name="RichRecBase">
 
 <!-- **************************************************************************
-  * $Id: RichRecRing.xml,v 1.4 2004-11-02 13:00:53 jonrob Exp $
+  * $Id: RichRecRing.xml,v 1.5 2006-01-23 14:08:55 jonrob Exp $
   *****************************************************************************
   * XML-description of RichRecRing class                                      *
   * author: Chris Jones   Christopher.Rob.Jones@cern.ch                       *
   * date:   2004-06-23                                                        *
-  *****************************************************************************
-  * $Log: not supported by cvs2svn $
-  * Revision 1.3  2004/10/13 09:29:43  jonrob
-  * Improvements to RichTrackID and RichTrackSelector
-  *
-  * Revision 1.2  2004/07/29 09:03:12  jonesc
-  * Add CVS Log history information to XML files
-  *
-  ************************************************************************* -->
+  ***************************************************************************** -->
 
 
 <class 
@@ -30,9 +22,12 @@
         <base name="KeyedObject&lt;long&gt;"/>
         &KeyedObject;
             
+        <import name="Kernel/Point3DTypes.h"/>
         <import name="Kernel/RichDetectorType"/>
-        <import name="RichKernel/RichParticleIDType"/>
+        <import name="Kernel/RichParticleIDType"/>
         <import name="Kernel/RichSide"/>
+        <import name="Event/RichRecSegment" soft="TRUE" />
+
         <import ignore="TRUE" name="Rich"/>
         <import ignore="TRUE" name="DetectorType"/>
         <import ignore="TRUE" name="Side"/>
@@ -51,7 +46,7 @@
         <constructor 
                 desc     = "Copy Constructor. Creates a new RichRecRing with the same physics content" 
                 initList = "KeyedObject&lt;long&gt;(), m_centrePointGlobal(ring.centrePointGlobal()), m_centrePointLocal(ring.centrePointLocal()), m_radius(ring.radius()), m_massHypo(ring.massHypo()), m_ringPoints(ring.ringPoints()), m_ringPointsLocal(ring.ringPointsLocal()), m_historyCode(ring.historyCode())" >
-                <arg const="TRUE" name="ring" type="RichRecRing"  />
+                <arg const="TRUE" name="ring" type="LHCb::RichRecRing"  />
                 <code/>
         </constructor>
 
@@ -102,14 +97,14 @@
         <attribute 
                 desc = "Reconstructed centre point on HPD panel (global coordinates)" 
                 name = "centrePointGlobal" 
-                type = "HepPoint3D"
+                type = "Gaudi::XYZPoint"
                 init = "0,0,0"
         />
         
         <attribute 
                 desc = "Reconstructed centre point on HPD panel (local coordinates)"  
                 name = "centrePointLocal" 
-                type = "HepPoint3D"
+                type = "Gaudi::XYZPoint"
                 init = "0,0,0"
         />
             
@@ -117,7 +112,7 @@
                 desc = "The radius of the reconstructed ring, in radians" 
                 init = "0" 
                 name = "radius" 
-                type = "RichRecRing::FloatType"
+                type = "LHCb::RichRecRing::FloatType"
         />
             
         <attribute 
@@ -130,13 +125,15 @@
         <attribute 
                 desc = "A collection of points in global coordinates on this ring as projected on the HPD panel" 
                 name = "ringPoints" 
-                type = "std::vector&lt;HepPoint3D&gt;"
+                type = "std::vector&lt;Gaudi::XYZPoint&gt;"
+                nonconstaccessor = "TRUE"
         />
             
         <attribute 
                 desc = "A collection of points in local coordinates on this ring as projected on the HPD panel" 
                 name = "ringPointsLocal" 
-                type = "std::vector&lt;HepPoint3D&gt;"
+                type = "std::vector&lt;Gaudi::XYZPoint&gt;"
+                nonconstaccessor = "TRUE"
         />
 
         <attribute 
@@ -151,14 +148,16 @@
         <relation 
                 desc = "RichRecSegment to wich this ring is associated" 
                 name = "richRecSegment" 
-                type = "RichRecSegment"
+                type = "LHCb::RichRecSegment"
+                nonconstaccessor = "TRUE"
         />
             
         <relation 
                 desc         = "The RichRecPixels associated to this ring" 
                 multiplicity = "N" 
                 name         = "richRecPixels" 
-                type         = "RichRecPixel"
+                type         = "LHCb::RichRecPixel"
+                nonconstaccessor = "TRUE"
         />
 
 </class>

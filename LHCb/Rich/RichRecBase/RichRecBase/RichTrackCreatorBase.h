@@ -5,7 +5,7 @@
  *  Header file for tool base class : RichTrackCreatorBase
  *
  *  CVS Log :-
- *  $Id: RichTrackCreatorBase.h,v 1.1 2005-05-26 16:45:51 jonrob Exp $
+ *  $Id: RichTrackCreatorBase.h,v 1.2 2006-01-23 14:08:55 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   20/05/2005
@@ -36,8 +36,8 @@
 // Event
 #include "Event/RichRecTrack.h"
 
-// CLHEP
-#include "CLHEP/Units/PhysicalConstants.h"
+// Constants
+#include "Kernel/PhysicalConstants.h"
 
 //---------------------------------------------------------------------------------------
 /** @class RichTrackCreatorBase RichTrackCreatorBase.h RichRecBase/RichTrackCreatorBase.h
@@ -78,7 +78,7 @@ public: // methods for Gaudi
 public: // methods from interface
 
   // Return a pointer to the container of RichRecTracks
-  RichRecTracks * richTracks() const;
+  LHCb::RichRecTracks * richTracks() const;
 
 private: // methods
 
@@ -88,7 +88,8 @@ private: // methods
 protected: // helper classes
 
   /// Track Statistics class for Rich Reconstruction
-  class TrackCount {
+  class TrackCount 
+  {
   public:
     /// Default constructor
     TrackCount() : triedTracks(0), selectedTracks(0), aeroSegs(0), c4f10Segs(0), cf4Segs(0) {}
@@ -111,7 +112,7 @@ protected: // helper classes
   typedef std::pair<Rich::Track::Type,bool> TrackTag;
 
   /// Map of track statistics objects for different track types
-  class TrackTypeCount : public RichMap< TrackTag, TrackCount >
+  class TrackTypeCount : public Rich::Map< TrackTag, TrackCount >
   {
   public:
     TrackTypeCount() {}
@@ -152,7 +153,7 @@ protected: // methods
    *  @param track Track to set data for
    *  @param rad   Radiator to set active
    */
-  void setDetInfo( RichRecTrack * track,
+  void setDetInfo( LHCb::RichRecTrack * track,
                    const Rich::RadiatorType rad ) const;
 
 protected: // data
@@ -161,12 +162,12 @@ protected: // data
   mutable bool m_hasBeenCalled;
 
   /// Working object to keep track of formed objects
-  mutable RichHashMap<unsigned long, bool> m_trackDone;
+  mutable Rich::HashMap<unsigned long, bool> m_trackDone;
 
 private: // data
 
   /// Pointer to RichRecTracks
-  mutable RichRecTracks * m_tracks;
+  mutable LHCb::RichRecTracks * m_tracks;
 
   /// Output location for RichRecTracks in TES
   std::string m_richRecTrackLocation;
@@ -203,7 +204,7 @@ inline RichTrackCreatorBase::TrackTypeCount & RichTrackCreatorBase::trackStats()
   return m_nTracksAll;
 }
 
-inline void RichTrackCreatorBase::setDetInfo( RichRecTrack * track,
+inline void RichTrackCreatorBase::setDetInfo( LHCb::RichRecTrack * track,
                                               const Rich::RadiatorType rad ) const
 {
   if ( Rich::Aerogel == rad )

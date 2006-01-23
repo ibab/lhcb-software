@@ -5,7 +5,7 @@
  *  Header file for RICH reconstruction tool interface : IRichRecGeomTool
  *
  *  CVS Log :-
- *  $Id: IRichRecGeomTool.h,v 1.4 2005-06-17 14:48:57 jonrob Exp $
+ *  $Id: IRichRecGeomTool.h,v 1.5 2006-01-23 14:08:55 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -16,8 +16,11 @@
 #define RICHRECTOOLS_IRICHRECGEOMTOOL_H 1
 
 // Event
-class RichRecPixel;
-class RichRecSegment;
+namespace LHCb
+{
+  class RichRecPixel;
+  class RichRecSegment;
+}
 
 /// Static Interface Identification
 static const InterfaceID IID_IRichRecGeomTool( "IRichRecGeomTool" , 1 , 0 );
@@ -51,8 +54,8 @@ public:
    *
    *  @return The separation squared in local HPD panel coordinates
    */
-  virtual double trackPixelHitSep2( const RichRecSegment * segment,
-                                    const RichRecPixel * pixel ) const = 0;
+  virtual double trackPixelHitSep2( const LHCb::RichRecSegment * segment,
+                                    const LHCb::RichRecPixel * pixel ) const = 0;
 
   /** Computes the fraction of the Cherenkov cone for a given segment and mass hypothesis
    *  that lies within the average HPD panel acceptance
@@ -62,7 +65,7 @@ public:
    *
    *  @return The fraction of the cherenkov ring that is within the averge HPD acceptance
    */
-  virtual double hpdPanelAcceptance( RichRecSegment * segment,
+  virtual double hpdPanelAcceptance( LHCb::RichRecSegment * segment,
                                      const Rich::ParticleIDType id ) const = 0;
 
 
@@ -74,9 +77,10 @@ public:
    *
    *  @return The corrected local coordinate
    */
-  virtual HepPoint3D correctAvRadiatorDistortion( const HepPoint3D & point,
-                                                  const Rich::RadiatorType rad ) const = 0;
-
+  virtual Gaudi::XYZPoint 
+  correctAvRadiatorDistortion( const Gaudi::XYZPoint & point,
+                               const Rich::RadiatorType rad ) const = 0;
+  
 
 };
 

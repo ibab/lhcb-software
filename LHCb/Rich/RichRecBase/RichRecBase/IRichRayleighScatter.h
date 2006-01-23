@@ -5,8 +5,7 @@
  *  Header file for RICH reconstruction tool interface : IRichRayleighScatter
  *
  *  CVS Log :-
- *  $Id: IRichRayleighScatter.h,v 1.4 2004-07-26 18:00:57 jonrob Exp $
- *  $Log: not supported by cvs2svn $
+ *  $Id: IRichRayleighScatter.h,v 1.5 2006-01-23 14:08:55 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -17,11 +16,15 @@
 #define RICHRECTOOLS_IRICHRAYLEIGHSCATTER_H 1
 
 // Event model
-class RichRecSegment;
+namespace LHCb
+{
+  class RichRecSegment;
+}
 
 /// Static Interface Identification
 static const InterfaceID IID_IRichRayleighScatter( "IRichRayleighScatter", 1, 0 );
 
+//-----------------------------------------------------------------------------
 /** @class IRichRayleighScatter IRichRayleighScatter.h
  *
  *  Interface for tool to calculate quantities related to Rayleigh scattering
@@ -29,8 +32,10 @@ static const InterfaceID IID_IRichRayleighScatter( "IRichRayleighScatter", 1, 0 
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
  */
+//-----------------------------------------------------------------------------
 
-class IRichRayleighScatter : public virtual IAlgTool {
+class IRichRayleighScatter : public virtual IAlgTool
+{
 
 public:
 
@@ -47,7 +52,7 @@ public:
    *
    *  @return The Rayleigh scattering probability
    */
-  virtual double photonScatteredProb( const RichRecSegment * segment,
+  virtual double photonScatteredProb( const LHCb::RichRecSegment * segment,
                                       const double energy ) const = 0;
 
 };

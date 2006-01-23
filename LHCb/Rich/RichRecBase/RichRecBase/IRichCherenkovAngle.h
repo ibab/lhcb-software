@@ -5,7 +5,7 @@
  *  Header file for RICH reconstruction tool interface : IRichCherenkovAngle
  *
  *  CVS Log :-
- *  $Id: IRichCherenkovAngle.h,v 1.4 2005-02-02 10:01:20 jonrob Exp $
+ *  $Id: IRichCherenkovAngle.h,v 1.5 2006-01-23 14:08:55 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -16,7 +16,10 @@
 #define RICHRECTOOLS_IRICHCHERENKOVANGLE_H 1
 
 // Event model
-class RichRecSegment;
+namespace LHCb
+{
+  class RichRecSegment;
+}
 
 /// Static Interface Identification
 static const InterfaceID IID_IRichCherenkovAngle( "IRichCherenkovAngle", 1, 0 );
@@ -47,7 +50,7 @@ public:
    *
    *  @return The expected average cherenkov angle
    */
-  virtual double avgCherenkovTheta( RichRecSegment * segment,
+  virtual double avgCherenkovTheta( LHCb::RichRecSegment * segment,
                                     const Rich::ParticleIDType id ) const = 0;
 
   /** Computes the average Cherenkov angle for the current mass hypothesis
@@ -57,7 +60,7 @@ public:
    *
    *  @return The expected average cherenkov angle
    */
-  virtual double avgCherenkovTheta( RichRecSegment * segment ) const = 0;
+  virtual double avgCherenkovTheta( LHCb::RichRecSegment * segment ) const = 0;
 
   /** Computes the nominal saturated Cherenkov angle for a given radiator medium
    *
@@ -80,7 +83,7 @@ public:
    *
    *  @return The Cherenkov averge ring radius
    */
-  virtual double avCKRingRadiusLocal( RichRecSegment * segment,
+  virtual double avCKRingRadiusLocal( LHCb::RichRecSegment * segment,
                                       const Rich::ParticleIDType id,
                                       const unsigned int nSamples = 6 ) const = 0;
 
@@ -97,7 +100,7 @@ public:
    *
    *  @return The Cherenkov averge ring radius
    */
-  virtual double avCKRingRadiusLocal( RichRecSegment * segment,
+  virtual double avCKRingRadiusLocal( LHCb::RichRecSegment * segment,
                                       const double ckTheta,
                                       const unsigned int nSamples = 6 ) const = 0;
 
@@ -113,7 +116,7 @@ public:
    *
    *  @return The Cherenkov averge ring radius
    */
-  virtual double satCKRingRadiusLocal( RichRecSegment * segment,
+  virtual double satCKRingRadiusLocal( LHCb::RichRecSegment * segment,
                                        const unsigned int nSamples = 6 ) const = 0;
 
 };

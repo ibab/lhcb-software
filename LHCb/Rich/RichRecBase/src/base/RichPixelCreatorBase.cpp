@@ -5,7 +5,7 @@
  *  Implementation file for tool base class : RichPixelCreatorBase
  *
  *  CVS Log :-
- *  $Id: RichPixelCreatorBase.cpp,v 1.7 2005-11-15 13:32:16 jonrob Exp $
+ *  $Id: RichPixelCreatorBase.cpp,v 1.8 2006-01-23 14:08:55 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   20/04/2005
@@ -14,6 +14,9 @@
 
 // local
 #include "RichRecBase/RichPixelCreatorBase.h"
+
+// namespaces
+using namespace LHCb;
 
 //-----------------------------------------------------------------------------
 

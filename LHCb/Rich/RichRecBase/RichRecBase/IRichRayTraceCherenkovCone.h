@@ -4,7 +4,7 @@
  *
  *  Header file for RICH reconstruction tool interface : IRichRayTraceCherenkovCone
  *
- *  $Id: IRichRayTraceCherenkovCone.h,v 1.7 2005-03-04 16:22:49 cattanem Exp $
+ *  $Id: IRichRayTraceCherenkovCone.h,v 1.8 2006-01-23 14:08:55 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -15,15 +15,19 @@
 #define RICHRECBASE_IRICHRAYTRACECHERENKOVCONE_H 1
 
 // Event model
+namespace LHCb
+{
+  class RichRecSegment;
+}
 #include "Event/RichRecRing.h"
-class RichRecSegment;
 
-// RichKernel
-#include "RichKernel/RichTraceMode.h"
+// Kernel
+#include "Kernel/RichTraceMode.h"
 
 /// Static Interface Identification
 static const InterfaceID IID_IRichRayTraceCherenkovCone( "IRichRayTraceCherenkovCone", 1, 0 );
 
+//---------------------------------------------------------------------------------
 /** @class IRichRayTraceCherenkovCone IRichRayTraceCherenkovCone.h
  *
  *  Interface for tool to ray trace cherenkov photons in a cone around a given
@@ -33,8 +37,10 @@ static const InterfaceID IID_IRichRayTraceCherenkovCone( "IRichRayTraceCherenkov
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
  */
+//---------------------------------------------------------------------------------
 
-class IRichRayTraceCherenkovCone : public virtual IAlgTool {
+class IRichRayTraceCherenkovCone : public virtual IAlgTool
+{
 
 public:
 
@@ -58,9 +64,9 @@ public:
    *  @retval StatusCode::SUCCESS Ray tracing was successful, vector points is valid
    *  @retval StatusCode::FAILURE Ray tracing failed
    */
-  virtual StatusCode rayTrace ( RichRecSegment * segment,
+  virtual StatusCode rayTrace ( LHCb::RichRecSegment * segment,
                                 const Rich::ParticleIDType id,
-                                std::vector<HepPoint3D> & points,
+                                std::vector<Gaudi::XYZPoint> & points,
                                 const RichTraceMode mode = RichTraceMode() ) const = 0;
 
   /** Ray trace the Cherenkov cone for the given segment and Cherenkoc angle
@@ -78,9 +84,9 @@ public:
    *  @retval StatusCode::SUCCESS Ray tracing was successful, vector points is valid
    *  @retval StatusCode::FAILURE Ray tracing failed
    */
-  virtual StatusCode rayTrace ( RichRecSegment * segment,
+  virtual StatusCode rayTrace ( LHCb::RichRecSegment * segment,
                                 const double ckTheta,
-                                std::vector<HepPoint3D> & points,
+                                std::vector<Gaudi::XYZPoint> & points,
                                 const RichTraceMode mode = RichTraceMode() ) const = 0;
 
   /** Ray trace the Cherenkov cone using the given emission point, direction
@@ -99,10 +105,10 @@ public:
    *  @retval StatusCode::FAILURE Ray tracing failed
    */
   virtual StatusCode rayTrace ( const Rich::DetectorType rich,
-                                const HepPoint3D & emissionPoint,
-                                const HepVector3D & direction,
+                                const Gaudi::XYZPoint & emissionPoint,
+                                const Gaudi::XYZVector & direction,
                                 const double ckTheta,
-                                std::vector<HepPoint3D> & points,
+                                std::vector<Gaudi::XYZPoint> & points,
                                 const RichTraceMode mode = RichTraceMode() ) const = 0;
 
   /** Ray trace the Cherenkov cone for the given ring to the detector plane,
@@ -114,8 +120,9 @@ public:
    *  @return Reference to a vector of points (in global coordinates)
    *          on the detector plane that lie on the Cherenkov ring.
    */
-  virtual const std::vector<HepPoint3D> & rayTrace ( RichRecRing * ring,
-                                                     const RichTraceMode mode = RichTraceMode() ) const = 0;
+  virtual const std::vector<Gaudi::XYZPoint> &
+  rayTrace ( LHCb::RichRecRing * ring,
+             const RichTraceMode mode = RichTraceMode() ) const = 0;
 
   /** Ray trace the Cherenkov cone for the given ring to the detector plane,
    *  in Local HPD panel coordinates
@@ -126,8 +133,9 @@ public:
    *  @return Reference to a vector of points (in local HPD panel coordinates)
    *          on the detector plane that lie on the Cherenkov ring.
    */
-  virtual const std::vector<HepPoint3D> & rayTraceLocal ( RichRecRing * ring,
-                                                          const RichTraceMode mode = RichTraceMode() ) const = 0;
+  virtual const std::vector<Gaudi::XYZPoint> &
+  rayTraceLocal ( LHCb::RichRecRing * ring,
+                  const RichTraceMode mode = RichTraceMode() ) const = 0;
 
 };
 

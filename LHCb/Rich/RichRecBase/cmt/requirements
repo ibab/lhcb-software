@@ -2,11 +2,11 @@
 # Created    : 2002-11-19
 # Maintainer : Chris Jones   Christopher.Rob.Jones@cern.ch 
 #============================================================================
-# $Id: requirements,v 1.34 2005-10-13 15:38:41 jonrob Exp $
+# $Id: requirements,v 1.35 2006-01-23 14:08:55 jonrob Exp $
 #============================================================================
 
 package   RichRecBase
-version   v1r17
+version   v2r0
 
 #============================================================================
 # Structure
@@ -16,7 +16,10 @@ branches xml doc src cmt Event RichRecBase
 #============================================================================
 # Used packages.
 #============================================================================
+use   MCEvent        v*      Event
+use   RecEvent       v*      Event
 use   RichEvent      v*      Event
+# CRJ : Should check if this one is really needed ?
 use   DAQEvent       v*      Event
 
 #============================================================================

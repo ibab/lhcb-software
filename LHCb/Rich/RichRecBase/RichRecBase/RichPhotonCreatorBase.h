@@ -5,7 +5,7 @@
  *  Header file for tool base class : RichPhotonCreatorBase
  *
  *  CVS Log :-
- *  $Id: RichPhotonCreatorBase.h,v 1.5 2006-01-16 18:24:05 jonrob Exp $
+ *  $Id: RichPhotonCreatorBase.h,v 1.6 2006-01-23 14:08:55 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   20/05/2005
@@ -77,28 +77,28 @@ public: // methods from interface
   StatusCode reconstructPhotons() const;
 
   // Return Pointer to RichRecPhotons
-  RichRecPhotons * richPhotons() const;
+  LHCb::RichRecPhotons * richPhotons() const;
 
   // Checks whether a photon candidate exists for the given segment and pixel pair
-  RichRecPhoton * checkForExistingPhoton( RichRecSegment * segment,
-                                          RichRecPixel * pixel ) const;
+  LHCb::RichRecPhoton * checkForExistingPhoton( LHCb::RichRecSegment * segment,
+                                                LHCb::RichRecPixel * pixel ) const;
 
   // Form a Photon candidate from a Segment and a pixel.
-  RichRecPhoton * reconstructPhoton( RichRecSegment * segment,
-                                     RichRecPixel * pixel ) const;
+  LHCb::RichRecPhoton * reconstructPhoton( LHCb::RichRecSegment * segment,
+                                           LHCb::RichRecPixel * pixel ) const;
 
   // Form all photon candidates for a given track and pixel
-  RichRecTrack::Photons reconstructPhotons( RichRecTrack * track,
-                                            RichRecPixel * pixel ) const;
+  LHCb::RichRecTrack::Photons reconstructPhotons( LHCb::RichRecTrack * track,
+                                                  LHCb::RichRecPixel * pixel ) const;
 
   // Form all photon candidates for a given track, with all possible pixels.
-  const RichRecTrack::Photons & reconstructPhotons( RichRecTrack * track ) const;
+  const LHCb::RichRecTrack::Photons & reconstructPhotons( LHCb::RichRecTrack * track ) const;
 
   // Form all photon candidates for a given pixel, with all possible tracks.
-  const RichRecPixel::Photons & reconstructPhotons( RichRecPixel * pixel ) const;
+  const LHCb::RichRecPixel::Photons & reconstructPhotons( LHCb::RichRecPixel * pixel ) const;
 
   // Form all photon candidates for a given segment, with all possible pixels.
-  const RichRecSegment::Photons & reconstructPhotons( RichRecSegment * segment ) const;
+  const LHCb::RichRecSegment::Photons & reconstructPhotons( LHCb::RichRecSegment * segment ) const;
 
 protected: // methods
 
@@ -123,7 +123,7 @@ protected: // methods
    *
    *  @return The Cherenkov angle range to search for photons in
    */
-  double ckSearchRange( RichRecSegment * segment,
+  double ckSearchRange( LHCb::RichRecSegment * segment,
                         const Rich::ParticleIDType id ) const;
 
   /** Absolute maximum Cherenkov theta value to reconstuct for given track segment
@@ -132,7 +132,7 @@ protected: // methods
    *
    *  @return The maximum Cherenkov angle to reconstruct
    */
-  double absMaxCKTheta( RichRecSegment * segment ) const;
+  double absMaxCKTheta( LHCb::RichRecSegment * segment ) const;
 
   /** Absolute minimum Cherenkov theta value to reconstuct for given track segment
    *
@@ -140,7 +140,7 @@ protected: // methods
    *
    *  @return The minimum Cherenkov angle to reconstruct
    */
-  double absMinCKTheta( RichRecSegment * segment ) const;
+  double absMinCKTheta( LHCb::RichRecSegment * segment ) const;
 
   /** Maximum Cherenkov theta value to reconstuct for
    *  given track segment and mass hypothesis
@@ -150,7 +150,7 @@ protected: // methods
    *
    *  @return The maximum Cherenkov angle to reconstruct
    */
-  double maxCKTheta( RichRecSegment * segment,
+  double maxCKTheta( LHCb::RichRecSegment * segment,
                      const Rich::ParticleIDType id = Rich::Electron ) const;
 
   /** Minimum Cherenkov theta value to reconstuct for
@@ -161,7 +161,7 @@ protected: // methods
    *
    *  @return The minimum Cherenkov angle to reconstruct
    */
-  double minCKTheta( RichRecSegment * segment,
+  double minCKTheta( LHCb::RichRecSegment * segment,
                      const Rich::ParticleIDType id = Rich::Proton ) const;
 
   /** Check if the given Cherenkov theta is within tolerences for any mass
@@ -174,7 +174,7 @@ protected: // methods
    *  @retval true  Angle is within tolerence for at least one mass hypothesis
    *  @retval false Angle is outside tolerence for all mass hypotheses
    */
-  bool checkAngleInRange( RichRecSegment * segment,
+  bool checkAngleInRange( LHCb::RichRecSegment * segment,
                           const double ckTheta ) const;
 
   /** Form a Photon candidate from a Segment and a pixel.
@@ -184,7 +184,7 @@ protected: // methods
    *
    *  @param segment Pointer to the RichRecSegment to use in the
    *                 photon reconstruction
-   *  @param pixel   Pointer to the RichRecPixcel to use in the
+   *  @param pixel   Pointer to the RichRecPixel to use in the
    *                 photon reconstruction
    *  @param key     The key to use for the reconstruction photon
    *
@@ -193,16 +193,16 @@ protected: // methods
    *  @retval NULL Reconstruction was not possible
    *  @retval non-NULL Reconstruction was successful
    */
-  virtual RichRecPhoton * buildPhoton( RichRecSegment * segment,
-                                       RichRecPixel * pixel,
-                                       const RichRecPhotonKey key ) const = 0;
+  virtual LHCb::RichRecPhoton * buildPhoton( LHCb::RichRecSegment * segment,
+                                             LHCb::RichRecPixel * pixel,
+                                             const RichRecPhotonKey key ) const = 0;
 
   /** Save a given photon to the TES container
    *
    *  @param photon The photon candidate to save in the TES container
    *  @param key    The key to save the photon with
    */
-  void savePhoton( RichRecPhoton * photon,
+  void savePhoton( LHCb::RichRecPhoton * photon,
                    const RichRecPhotonKey key ) const;
 
   /** Checks the photon signal probability is above a threshold value for
@@ -214,14 +214,14 @@ protected: // methods
    *  @retval true  The photon candidate is a good one and is to be saved
    *  @retval false The photon candidate is to be rejected
    */
-  bool checkPhotonProb( RichRecPhoton * photon ) const;
+  bool checkPhotonProb( LHCb::RichRecPhoton * photon ) const;
 
   /** Build cross references between the various reconstruction data
    *  objects for this photon
    *
    *  @param photon The photon candidate to build the references for
    */
-  void buildCrossReferences( RichRecPhoton * photon ) const;
+  void buildCrossReferences( LHCb::RichRecPhoton * photon ) const;
 
   /// Returns the number of processed events
   inline unsigned int nEvents() const { return m_Nevts; }
@@ -232,7 +232,7 @@ protected: // data
   mutable bool m_hasBeenCalled;
 
   /// photon done map
-  mutable RichHashMap<long int, bool> m_photonDone;
+  mutable Rich::HashMap<long int, bool> m_photonDone;
 
 private: // data
 
@@ -267,7 +267,7 @@ private: // data
   bool m_bookKeep;
 
   /// Pointer to RichRecPhotons
-  mutable RichRecPhotons * m_photons;
+  mutable LHCb::RichRecPhotons * m_photons;
 
   /// Location of RichRecPhotons in TES
   std::string m_richRecPhotonLocation;
@@ -287,7 +287,7 @@ private: // methods
 };
 
 inline double
-RichPhotonCreatorBase::ckSearchRange( RichRecSegment * segment,
+RichPhotonCreatorBase::ckSearchRange( LHCb::RichRecSegment * segment,
                                       const Rich::ParticleIDType /* id */ ) const
 {
   // Range depends on track resolution
@@ -297,33 +297,33 @@ RichPhotonCreatorBase::ckSearchRange( RichRecSegment * segment,
 }
 
 inline double
-RichPhotonCreatorBase::absMaxCKTheta( RichRecSegment * segment ) const
+RichPhotonCreatorBase::absMaxCKTheta( LHCb::RichRecSegment * segment ) const
 {
   return m_maxCKtheta[segment->trackSegment().radiator()];
 }
 
 inline double
-RichPhotonCreatorBase::maxCKTheta( RichRecSegment * segment,
+RichPhotonCreatorBase::maxCKTheta( LHCb::RichRecSegment * segment,
                                    const Rich::ParticleIDType id ) const
 {
   return ( m_ckAngle->avgCherenkovTheta(segment,id) + ckSearchRange(segment,id) );
 }
 
 inline double
-RichPhotonCreatorBase::absMinCKTheta( RichRecSegment * segment ) const
+RichPhotonCreatorBase::absMinCKTheta( LHCb::RichRecSegment * segment ) const
 {
   return m_minCKtheta[segment->trackSegment().radiator()];
 }
 
 inline double
-RichPhotonCreatorBase::minCKTheta( RichRecSegment * segment,
+RichPhotonCreatorBase::minCKTheta( LHCb::RichRecSegment * segment,
                                    const Rich::ParticleIDType id ) const
 {
   return ( m_ckAngle->avgCherenkovTheta(segment,id) - ckSearchRange(segment,id) );
 }
 
 inline bool
-RichPhotonCreatorBase::checkAngleInRange( RichRecSegment * segment,
+RichPhotonCreatorBase::checkAngleInRange( LHCb::RichRecSegment * segment,
                                           const double ckTheta ) const
 {
   // Just check overall absolute min - max range
@@ -347,7 +347,7 @@ inline bool RichPhotonCreatorBase::bookKeep() const
   return m_bookKeep;
 }
 
-inline void RichPhotonCreatorBase::savePhoton( RichRecPhoton * photon,
+inline void RichPhotonCreatorBase::savePhoton( LHCb::RichRecPhoton * photon,
                                                const RichRecPhotonKey key ) const
 {
   // save photon
@@ -356,7 +356,7 @@ inline void RichPhotonCreatorBase::savePhoton( RichRecPhoton * photon,
   ++m_photCount[ photon->richRecSegment()->trackSegment().radiator() ];
 }
 
-inline bool RichPhotonCreatorBase::checkPhotonProb( RichRecPhoton * photon ) const
+inline bool RichPhotonCreatorBase::checkPhotonProb( LHCb::RichRecPhoton * photon ) const
 {
   // check photon has significant probability to be signal for any
   // hypothesis. If not then reject

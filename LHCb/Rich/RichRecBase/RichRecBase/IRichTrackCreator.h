@@ -5,7 +5,7 @@
  *  Header file for RICH reconstruction tool interface : IRichTrackCreator
  *
  *  CVS Log :-
- *  $Id: IRichTrackCreator.h,v 1.7 2005-10-13 15:38:41 jonrob Exp $
+ *  $Id: IRichTrackCreator.h,v 1.8 2006-01-23 14:08:55 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -31,7 +31,8 @@ static const InterfaceID IID_IRichTrackCreator( "IRichTrackCreator", 1, 0 );
  *  @date   15/03/2002
  */
 
-class IRichTrackCreator : public virtual IAlgTool {
+class IRichTrackCreator : public virtual IAlgTool 
+{
 
 public:
 
@@ -43,14 +44,14 @@ public:
   /** Creates and returns the RichRecTrack associated to the given data object.
    *
    *  @param obj The data object to use to build the RichRecTrack. The runtime
-   *             type of obj must correspond to that expected by the particular 
+   *             type of obj must correspond to that expected by the particular
    *             implementation being used.
    *
    *  @return Pointer to the associated RichRecTrack object
    *  @retval NULL  Unable to build a RichRecTrack from the input data object
    *  @retval !NULL Object was successfully built
    */
-  virtual RichRecTrack * newTrack ( const ContainedObject * obj ) const = 0;
+  virtual LHCb::RichRecTrack * newTrack ( const ContainedObject * obj ) const = 0;
 
   /** Form all possible RichRecTracks from data objects at the configured
    *  input location in the TES.
@@ -67,7 +68,7 @@ public:
    *
    *  @return Pointer to the container of RichRecTracks
    */
-  virtual RichRecTracks * richTracks() const = 0;
+  virtual LHCb::RichRecTracks * richTracks() const = 0;
 
   /** Number of tracks in the input track container (e.g. Tracks, TrStoredTracks or TrgTracks)
    *

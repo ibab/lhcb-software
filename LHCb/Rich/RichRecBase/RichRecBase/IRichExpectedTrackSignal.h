@@ -5,7 +5,7 @@
  *  Header file for RICH reconstruction tool interface : IRichExpectedTrackSignal
  *
  *  CVS Log :-
- *  $Id: IRichExpectedTrackSignal.h,v 1.7 2005-06-23 15:13:05 jonrob Exp $
+ *  $Id: IRichExpectedTrackSignal.h,v 1.8 2006-01-23 14:08:55 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -18,14 +18,16 @@
 #define RICHRECTOOLS_IRICHEXPECTEDTRACKSIGNAL_H 1
 
 // Event model
-class RichRecSegment;
-class RichRecTrack;
-// Change to include whilst we have the two RichPIDs hack
-//class RichPID;
-#include "Event/RichPID.h"
+namespace LHCb
+{
+  class RichRecSegment;
+  class RichRecTrack;
+  class RichPID;
+}
+//#include "Event/RichPID.h"
 
 // Kernel
-#include "RichKernel/RichParticleIDType.h"
+#include "Kernel/RichParticleIDType.h"
 #include "Kernel/RichRadiatorType.h"
 
 /// Static Interface Identification
@@ -50,100 +52,100 @@ public:
   static const InterfaceID& interfaceID() {return IID_IRichExpectedTrackSignal;}
 
   /// Expected number of signal photons for given track and hypothesis
-  virtual double nSignalPhotons ( RichRecTrack * track,
+  virtual double nSignalPhotons ( LHCb::RichRecTrack * track,
                                   const Rich::ParticleIDType id ) const = 0;
 
   /// Expected number of signal photons for given segment and hypothesis
-  virtual double nSignalPhotons ( RichRecSegment * segment,
+  virtual double nSignalPhotons ( LHCb::RichRecSegment * segment,
                                   const Rich::ParticleIDType id ) const = 0;
 
   /// Expected number of observable signal photons for given track and hypothesis
-  virtual double nObservableSignalPhotons ( RichRecTrack * track,
+  virtual double nObservableSignalPhotons ( LHCb::RichRecTrack * track,
                                             const Rich::ParticleIDType id ) const = 0;
 
   /// Expected number of observable signal photons for given segment and hypothesis
-  virtual double nObservableSignalPhotons ( RichRecSegment * segment,
+  virtual double nObservableSignalPhotons ( LHCb::RichRecSegment * segment,
                                             const Rich::ParticleIDType id ) const = 0;
 
   /// Expected number of scattered photons for given track and hypothesis
-  virtual double nScatteredPhotons ( RichRecTrack * track,
+  virtual double nScatteredPhotons ( LHCb::RichRecTrack * track,
                                      const Rich::ParticleIDType id ) const = 0;
 
   /// Expected number of scattered photons for given segment and hypothesis
-  virtual double nScatteredPhotons ( RichRecSegment * segment,
+  virtual double nScatteredPhotons ( LHCb::RichRecSegment * segment,
                                      const Rich::ParticleIDType id ) const = 0;
 
   /// Expected number of observable scattered photons for given track and hypothesis
-  virtual double nObservableScatteredPhotons ( RichRecTrack * track,
+  virtual double nObservableScatteredPhotons ( LHCb::RichRecTrack * track,
                                                const Rich::ParticleIDType id ) const = 0;
 
   /// Expected number of observable scattered photons for given segment and hypothesis
-  virtual double nObservableScatteredPhotons ( RichRecSegment * segment,
+  virtual double nObservableScatteredPhotons ( LHCb::RichRecSegment * segment,
                                                const Rich::ParticleIDType id ) const = 0;
 
   /// Expected number of observable signal+scattered photons for given track and hypothesis
-  virtual double nTotalObservablePhotons ( RichRecTrack * track,
+  virtual double nTotalObservablePhotons ( LHCb::RichRecTrack * track,
                                            const Rich::ParticleIDType id ) const = 0;
 
   /// Expected number of observable signal+scattered photons for given segment and hypothesis
-  virtual double nTotalObservablePhotons ( RichRecSegment * segment,
+  virtual double nTotalObservablePhotons ( LHCb::RichRecSegment * segment,
                                            const Rich::ParticleIDType id ) const = 0;
 
   /// Expected emitted photons for given track and hypothesis
-  virtual double nEmittedPhotons ( RichRecTrack * track,
+  virtual double nEmittedPhotons ( LHCb::RichRecTrack * track,
                                    const Rich::ParticleIDType id ) const = 0;
 
   /// Expected number of emitted photons for given segment and hypothesis
-  virtual double nEmittedPhotons ( RichRecSegment * segment,
+  virtual double nEmittedPhotons ( LHCb::RichRecSegment * segment,
                                    const Rich::ParticleIDType id ) const = 0;
 
   /// Expected number of emitted photons for given segment and hypothesis, scaled by the HPD quantum efficiency
-  virtual double nDetectablePhotons ( RichRecTrack * track,
+  virtual double nDetectablePhotons ( LHCb::RichRecTrack * track,
                                       const Rich::ParticleIDType id ) const = 0;
 
   /// Expected number of emitted photons for given segment and hypothesis, scaled by the HPD quantum efficiency
-  virtual double nDetectablePhotons ( RichRecSegment * segment,
+  virtual double nDetectablePhotons ( LHCb::RichRecSegment * segment,
                                       const Rich::ParticleIDType id ) const = 0;
 
 
   /// The average energy of signal Cherenkov photons
-  virtual double avgSignalPhotEnergy( RichRecSegment * segment,
+  virtual double avgSignalPhotEnergy( LHCb::RichRecSegment * segment,
                                       const Rich::ParticleIDType id ) const = 0;
 
   /// The average energy of emitted Cherenkov photons
-  virtual double avgEmitPhotEnergy( RichRecSegment * segment,
+  virtual double avgEmitPhotEnergy( LHCb::RichRecSegment * segment,
                                     const Rich::ParticleIDType id ) const = 0;
 
   /// Is it possible for this track to give Rich information
-  virtual bool hasRichInfo( RichRecTrack * track ) const = 0;
+  virtual bool hasRichInfo( LHCb::RichRecTrack * track ) const = 0;
 
   /// Is it geometrically possible for this segment to give Rich information
-  virtual bool hasRichInfo( RichRecSegment * segment ) const = 0;
+  virtual bool hasRichInfo( LHCb::RichRecSegment * segment ) const = 0;
 
 
   /// Is this track above threshold for a given particle type in any radiator
-  virtual bool aboveThreshold( RichRecTrack * track,
+  virtual bool aboveThreshold( LHCb::RichRecTrack * track,
                                const Rich::ParticleIDType type ) const = 0;
 
   /// Is this track above threshold for a given particle type in a given radiator
-  virtual bool aboveThreshold( RichRecTrack * track,
+  virtual bool aboveThreshold( LHCb::RichRecTrack * track,
                                const Rich::ParticleIDType type,
                                const Rich::RadiatorType radiator ) const = 0;
 
   /// Is this segment above threshold for a given particle hypothesis
-  virtual bool aboveThreshold( RichRecSegment * segment,
+  virtual bool aboveThreshold( LHCb::RichRecSegment * segment,
                                const Rich::ParticleIDType type ) const = 0;
 
   /// Set the threshold information in a RichPID object for given segment
-  virtual void setThresholdInfo( RichRecSegment * segment,
-                                 RichPID * pid ) const = 0;
+  virtual void setThresholdInfo( LHCb::RichRecSegment * segment,
+                                 LHCb::RichPID * pid ) const = 0;
 
   /// Set the threshold information in a RichPID object for given track
-  virtual void setThresholdInfo( RichRecTrack * track,
-                                 RichPID * pid ) const = 0;
+  virtual void setThresholdInfo( LHCb::RichRecTrack * track,
+                                 LHCb::RichPID * pid ) const = 0;
 
   /// Is this track active in given radiator for given particle id
-  virtual bool activeInRadiator( RichRecTrack * track,
+  virtual bool activeInRadiator( LHCb::RichRecTrack * track,
                                  const Rich::RadiatorType rad,
                                  const Rich::ParticleIDType id = Rich::Electron ) const = 0;
 

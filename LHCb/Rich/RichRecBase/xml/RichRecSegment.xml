@@ -4,7 +4,7 @@
 <package name="RichRecBase">
 
 <!-- **************************************************************************
-  * $Id: RichRecSegment.xml,v 1.7 2005-11-15 13:32:16 jonrob Exp $
+  * $Id: RichRecSegment.xml,v 1.8 2006-01-23 14:08:55 jonrob Exp $
   *****************************************************************************
   * XML-description of RichRecTrack class                                     *
   * author: Chris Jones   Christopher.Rob.Jones@cern.ch                       *
@@ -24,16 +24,22 @@
         <base name="KeyedObject&lt;int&gt;"/>
         &KeyedObject;
             
-        <import name="RichKernel/RichParticleIDType"/>
+        <import name="Kernel/RichParticleIDType"/>
+        <import name="Kernel/Point3DTypes.h"/>
         <import name="RichEvent/RichTrackSegment"/>
         <import name="RichRecBase/RichPhotonSpectra"/>
         <import name="RichKernel/RichHypoData"/>
         <import name="RichKernel/RichObjPtn"/>
+        <import name="RichKernel/RichMap"/>
         <import name="Kernel/RichSmartID"/>
-        <import name="Event/RichRecRing"/>
 
-        <location name="Offline" place="Rec/Rich/RecoEvent/OfflineSegments"/>
-        <location name="HLT"     place="Rec/Rich/RecoEvent/HltSegments"/>
+        <import name="Event/RichRecRing"    soft="TRUE" />
+        <import name="Event/RichRecTrack"   soft="TRUE" />
+        <import name="Event/RichRecPhoton"  soft="TRUE" />
+        <import name="Event/RichRecPixel"   soft="TRUE" />
+
+        <location name="Offline" place="Rec/Rich/OfflineEvent/Segments"/>
+        <location name="HLT"     place="Rec/Rich/HLTEvent/Segments"/>
 
 	<typedef 
 		desc   = "type for internal storage for floating point data" 
@@ -46,7 +52,7 @@
                 access = "PUBLIC" 
                 def    = "PDGeomEffs" 
                 desc   = "Data containers for each hypothesis" 
-                type   = "std::map&lt;RichSmartID::KeyType,RichRecSegment::FloatType&gt;"
+                type   = "Rich::Map&lt;LHCb::RichSmartID::KeyType,LHCb::RichRecSegment::FloatType&gt;"
         />
             
         <typedef 
@@ -59,11 +65,11 @@
         <constructor 
                 desc     = "Constructor from segment information" 
                 initList = "m_nEmittedPhotons(), m_nDetectablePhotons(),m_nSignalPhotons(), m_nScatteredPhotons(), m_emittedPhotonSpectra(enBins,minEn,maxEn), m_detectablePhotonSpectra(enBins,minEn,maxEn), m_signalPhotonSpectra(enBins,minEn,maxEn), m_geomEfficiencyPerPD(Rich::NParticleTypes, PDGeomEffs() ), m_geomEfficiency(), m_geomEfficiencyScat(), m_averageCKTheta(), m_ckThetaResolution(), m_averageCKRadiusLocal(), m_avSaturatedRadiusLocal(-999),m_trackSegment(segment), m_trackInfo(0), m_richRecTrack(pTrk), m_hypothesisRings()" >
-                <arg const="FALSE"                 name="segment" type="RichTrackSegment*"  />
-                <arg const="FALSE" inout="BYVALUE" name="pTrk"    type="RichRecTrack*"     />
+                <arg const="FALSE"                 name="segment" type="LHCb::RichTrackSegment*"  />
+                <arg const="FALSE" inout="BYVALUE" name="pTrk"    type="LHCb::RichRecTrack*"     />
                 <arg const="TRUE"  inout="BYVALUE" name="enBins"  type="unsigned int"      />
-                <arg const="TRUE"  inout="BYVALUE" name="minEn"   type="RichRecSegment::FloatType"  />
-                <arg const="TRUE"  inout="BYVALUE" name="maxEn"   type="RichRecSegment::FloatType"  />
+                <arg const="TRUE"  inout="BYVALUE" name="minEn"   type="LHCb::RichRecSegment::FloatType"  />
+                <arg const="TRUE"  inout="BYVALUE" name="maxEn"   type="LHCb::RichRecSegment::FloatType"  />
                 <code/>
         </constructor>
             
@@ -72,7 +78,7 @@
                 const = "FALSE" 
                 desc  = "Set the geometrical efficiency for a given particle type" >
                 <arg const="TRUE" inout="BYVALUE" name="type" type="Rich::ParticleIDType"  />
-                <arg const="TRUE" inout="BYVALUE" name="eff"  type="RichRecSegment::FloatType"                />
+                <arg const="TRUE" inout="BYVALUE" name="eff"  type="LHCb::RichRecSegment::FloatType"                />
                 <code>
                         geomEfficiency().setData(type,eff);
                 </code>
@@ -83,7 +89,7 @@
                 const = "FALSE" 
                 desc  = "Set the scattered geometrical efficiency for a given particle type" >
                 <arg const="TRUE" inout="BYVALUE" name="type" type="Rich::ParticleIDType"   />
-                <arg const="TRUE" inout="BYVALUE" name="eff"  type="RichRecSegment::FloatType"                 />
+                <arg const="TRUE" inout="BYVALUE" name="eff"  type="LHCb::RichRecSegment::FloatType"                 />
                 <code>
                         geomEfficiencyScat().setData(type,eff);
                 </code>
@@ -94,7 +100,7 @@
                 const = "FALSE" 
                 desc  = "Set the number of emitted photons for a given particle type" >
                 <arg const="TRUE" inout="BYVALUE" name="type" type="Rich::ParticleIDType"/>
-                <arg const="TRUE" inout="BYVALUE" name="photons" type="RichRecSegment::FloatType"/>
+                <arg const="TRUE" inout="BYVALUE" name="photons" type="LHCb::RichRecSegment::FloatType"/>
                 <code>
                         nEmittedPhotons().setData(type,photons);
                 </code>
@@ -105,7 +111,7 @@
                 const = "FALSE" 
                 desc  = "Set the number of detectable photons for a given particle type">
                 <arg const="TRUE" inout="BYVALUE" name="type"    type="Rich::ParticleIDType" />
-                <arg const="TRUE" inout="BYVALUE" name="photons" type="RichRecSegment::FloatType"               />
+                <arg const="TRUE" inout="BYVALUE" name="photons" type="LHCb::RichRecSegment::FloatType"               />
                 <code>
                         nDetectablePhotons().setData(type,photons);
                 </code>
@@ -116,7 +122,7 @@
                 const = "FALSE" 
                 desc  = "Set the number of signal photons for a given particle type" >
                 <arg const="TRUE" inout="BYVALUE" name="type"    type="Rich::ParticleIDType" />
-                <arg const="TRUE" inout="BYVALUE" name="photons" type="RichRecSegment::FloatType"               />
+                <arg const="TRUE" inout="BYVALUE" name="photons" type="LHCb::RichRecSegment::FloatType"               />
                 <code>
                         nSignalPhotons().setData(type,photons);
                 </code>
@@ -127,7 +133,7 @@
                 const = "FALSE" 
                 desc  = "Set the number of scattered photons for a given particle type" >
                 <arg const="TRUE" inout="BYVALUE" name="type" type="Rich::ParticleIDType"/>
-                <arg const="TRUE" inout="BYVALUE" name="photons" type="RichRecSegment::FloatType"/>
+                <arg const="TRUE" inout="BYVALUE" name="photons" type="LHCb::RichRecSegment::FloatType"/>
                 <code>
                         nScatteredPhotons().setData(type,photons);
                 </code>
@@ -138,7 +144,7 @@
                 desc  = "Set the average Cherenkov angle for a given particle type"
                 name  = "setAverageCKTheta">
                 <arg const="TRUE" inout="BYVALUE" name="type"  type="Rich::ParticleIDType"  />
-                <arg const="TRUE" inout="BYVALUE" name="angle" type="RichRecSegment::FloatType" />
+                <arg const="TRUE" inout="BYVALUE" name="angle" type="LHCb::RichRecSegment::FloatType" />
                 <code>
                         averageCKTheta().setData(type,angle);
                 </code>
@@ -149,7 +155,7 @@
                 desc  = "Set the Cherenkov angle resolution for a given particle type"
                 name  = "setCKThetaResolution">
                 <arg const="TRUE" inout="BYVALUE" name="type"  type="Rich::ParticleIDType"  />
-                <arg const="TRUE" inout="BYVALUE" name="reso" type="RichRecSegment::FloatType" />
+                <arg const="TRUE" inout="BYVALUE" name="reso" type="LHCb::RichRecSegment::FloatType" />
                 <code>
                         ckThetaResolution().setData(type,reso);
                 </code>
@@ -160,7 +166,7 @@
                 desc  = "Set the average radius of the Cherenkov Ring on the HPD detector plane, in local coordinates, for given particle ID type" 
                 name  = "setAverageCKRadiusLocal">
                 <arg const="TRUE" inout="BYVALUE" name="type"  type="Rich::ParticleIDType"  />
-                <arg const="TRUE" inout="BYVALUE" name="radius" type="RichRecSegment::FloatType"                />
+                <arg const="TRUE" inout="BYVALUE" name="radius" type="LHCb::RichRecSegment::FloatType"                />
                 <code>
                         averageCKRadiusLocal().setData(type,radius);
                 </code>
@@ -169,9 +175,9 @@
         <method 
                 desc = "Method to create the geometrical efficiencies per PD" 
                 name = "addToGeomEfficiencyPerPD">
-                <arg const="TRUE" inout="BYVALUE" name="type" type="Rich::ParticleIDType"/>
-                <arg const="TRUE" inout="BYVALUE" name="pd" type="RichSmartID::KeyType"/>
-                <arg const="TRUE" inout="BYVALUE" name="signal" type="RichRecSegment::FloatType"/>
+                <arg const="TRUE" inout="BYVALUE" name="type"   type="Rich::ParticleIDType"/>
+                <arg const="TRUE" inout="BYVALUE" name="pd"     type="LHCb::RichSmartID::KeyType"/>
+                <arg const="TRUE" inout="BYVALUE" name="signal" type="LHCb::RichRecSegment::FloatType"/>
                 <code>
                         ((geomEfficiencyPerPD())[type])[pd] += signal;
                 </code>
@@ -181,7 +187,7 @@
                 const = "TRUE" 
                 desc  = "Returns the number of emitted photons for a given particle type" 
                 name  = "nEmittedPhotons" 
-                type  = "RichRecSegment::FloatType">
+                type  = "LHCb::RichRecSegment::FloatType">
                 <arg const="TRUE" inout="BYVALUE" name="type" type="Rich::ParticleIDType"/>
                 <code>
                         return (nEmittedPhotons())[type];
@@ -192,7 +198,7 @@
                 const = "TRUE" 
                 desc  = "Returns the number of detectable photons for a given particle type" 
                 name  = "nDetectablePhotons" 
-                type  = "RichRecSegment::FloatType" >
+                type  = "LHCb::RichRecSegment::FloatType" >
                 <arg const="TRUE" inout="BYVALUE" name="type" type="Rich::ParticleIDType"/>
                 <code>
                         return (nDetectablePhotons())[type];
@@ -203,7 +209,7 @@
                 const = "TRUE" 
                 desc  = "Returns the number of signal photons for a given particle type" 
                 name  = "nSignalPhotons" 
-                type  = "RichRecSegment::FloatType">
+                type  = "LHCb::RichRecSegment::FloatType">
                 <arg const="TRUE" inout="BYVALUE" name="type" type="Rich::ParticleIDType"/>
                 <code>
                         return (nSignalPhotons())[type];
@@ -214,7 +220,7 @@
                 const = "TRUE" 
                 desc  = "Returns the number of scattered photons for a given particle type" 
                 name  = "nScatteredPhotons" 
-                type  = "RichRecSegment::FloatType" >
+                type  = "LHCb::RichRecSegment::FloatType" >
                 <arg const="TRUE" inout="BYVALUE" name="type" type="Rich::ParticleIDType"/>
                 <code>  
                         return (nScatteredPhotons())[type];
@@ -225,7 +231,7 @@
                 const = "TRUE" 
                 desc  = "Returns the number of photons for a given particle type" 
                 name  = "nTotalObservablePhotons" 
-                type  = "RichRecSegment::FloatType" >
+                type  = "LHCb::RichRecSegment::FloatType" >
                 <arg const="TRUE" inout="BYVALUE" name="type" type="Rich::ParticleIDType"/>
                 <code>
                         return ( (nSignalPhotons())[type] + (nScatteredPhotons())[type] );
@@ -236,7 +242,7 @@
                 const = "TRUE" 
                 desc  = "Get the geometrical efficiency for a given particle type" 
                 name  = "geomEfficiency" 
-                type  = "RichRecSegment::FloatType" >
+                type  = "LHCb::RichRecSegment::FloatType" >
                 <arg const="TRUE" inout="BYVALUE" name="type" type="Rich::ParticleIDType"/>
                 <code>
                         return (geomEfficiency())[type];
@@ -247,7 +253,7 @@
                 const = "TRUE" 
                 desc  = "Get the scattered geometrical efficiency for a given particle type" 
                 name  = "geomEfficiencyScat" 
-                type  = "RichRecSegment::FloatType" >
+                type  = "LHCb::RichRecSegment::FloatType" >
                 <arg const="TRUE" inout="BYVALUE" name="type" type="Rich::ParticleIDType"/>
                 <code>
                         return (geomEfficiencyScat())[type];
@@ -258,7 +264,7 @@
                 const = "TRUE" 
                 desc  = "Get the average Cherenkov angle for a given particle type" 
                 name  = "averageCKTheta" 
-                type  = "RichRecSegment::FloatType" >
+                type  = "LHCb::RichRecSegment::FloatType" >
                 <arg const="TRUE" inout="BYVALUE" name="type" type="Rich::ParticleIDType"/>
                 <code>
                         return (averageCKTheta())[type];
@@ -269,7 +275,7 @@
                 const = "TRUE" 
                 desc  = "Get the Cherenkov angle resolution for a given particle type" 
                 name  = "ckThetaResolution" 
-                type  = "RichRecSegment::FloatType" >
+                type  = "LHCb::RichRecSegment::FloatType" >
                 <arg const="TRUE" inout="BYVALUE" name="type" type="Rich::ParticleIDType"/>
                 <code>
                         return (ckThetaResolution())[type];
@@ -280,7 +286,7 @@
                 const = "TRUE" 
                 desc  = "Get the average radius of the Cherenkov Ring on the HPD detector plane, in local coordinates, for given particle ID type" 
                 name  = "averageCKRadiusLocal" 
-                type  = "RichRecSegment::FloatType" >
+                type  = "LHCb::RichRecSegment::FloatType" >
                 <arg const="TRUE" inout="BYVALUE" name="type" type="Rich::ParticleIDType"/>
                 <code>
                         return (averageCKRadiusLocal())[type];
@@ -290,7 +296,7 @@
         <method 
                 desc = "Returns the geometrical efficiency per PD for given hypothesis" 
                 name = "geomEfficiencyPerPD" 
-                type = "RichRecSegment::PDGeomEffs&amp;" >
+                type = "LHCb::RichRecSegment::PDGeomEffs&amp;" >
                 <arg const="TRUE" inout="BYVALUE" name="type" type="Rich::ParticleIDType"/>
                 <code>
                         return (geomEfficiencyPerPD())[type];
@@ -307,14 +313,14 @@
                 desc  = "Retrieve const The number of emitted photons expected for each particle hypothesis" 
                 name  = "nEmittedPhotons" 
                 const = "TRUE" 
-                type  = "const RichHypoData&lt;RichRecSegment::FloatType&gt; &amp;" >
+                type  = "const RichHypoData&lt;LHCb::RichRecSegment::FloatType&gt; &amp;" >
                 <code> return *m_nEmittedPhotons.object(); </code>
         </method>
         <method 
                 desc  = "Retrieve The number of emitted photons expected for each particle hypothesis" 
                 name  = "nEmittedPhotons" 
                 const = "FALSE" 
-                type  = "RichHypoData&lt;RichRecSegment::FloatType&gt; &amp;" >
+                type  = "RichHypoData&lt;LHCb::RichRecSegment::FloatType&gt; &amp;" >
                 <code> return *m_nEmittedPhotons.object(); </code>
         </method>
         <attribute 
@@ -322,30 +328,21 @@
                 getMeth     = "FALSE"
                 desc        = "The number of emitted photons expected for each particle hypothesis" 
                 name        = "nEmittedPhotons" 
-                type        = "RichObjPtn&lt; RichHypoData&lt;RichRecSegment::FloatType&gt; &gt;"
+                type        = "RichObjPtn&lt; RichHypoData&lt;LHCb::RichRecSegment::FloatType&gt; &gt;"
         />
-<!--
-        <attribute 
-                setMeth     = "FALSE"
-                desc        = "The number of emitted photons expected for each particle hypothesis" 
-                name        = "nEmittedPhotons" 
-                init        = "0" 
-                type        = "RichHypoData&lt;RichRecSegment::FloatType&gt;"
-        />
--->
 
         <method 
                 desc  = "Retrieve const The number of detectable emitted photons expected for each particle hypothesis" 
                 name  = "nDetectablePhotons" 
                 const = "TRUE" 
-                type  = "const RichHypoData&lt;RichRecSegment::FloatType&gt; &amp;" >
+                type  = "const RichHypoData&lt;LHCb::RichRecSegment::FloatType&gt; &amp;" >
                 <code> return *m_nDetectablePhotons.object(); </code>
         </method>
         <method 
                 desc  = "Retrieve The number of detectable emitted photons expected for each particle hypothesis" 
                 name  = "nDetectablePhotons" 
                 const = "FALSE" 
-                type  = "RichHypoData&lt;RichRecSegment::FloatType&gt; &amp;" >
+                type  = "RichHypoData&lt;LHCb::RichRecSegment::FloatType&gt; &amp;" >
                 <code> return *m_nDetectablePhotons.object(); </code>
         </method>
         <attribute 
@@ -353,30 +350,21 @@
                 getMeth     = "FALSE"
                 desc        = "The number of detectable emitted photons expected for each particle hypothesis" 
                 name        = "nDetectablePhotons" 
-                type        = "RichObjPtn&lt; RichHypoData&lt;RichRecSegment::FloatType&gt; &gt;"
+                type        = "RichObjPtn&lt; RichHypoData&lt;LHCb::RichRecSegment::FloatType&gt; &gt;"
         />
-<!--
-        <attribute  
-                setMeth     = "FALSE"
-                desc        = "The number of detectable emitted photons expected for each particle hypothesis" 
-                name        = "nDetectablePhotons" 
-                init        = "0" 
-                type        = "RichHypoData&lt;RichRecSegment::FloatType&gt;"
-        />
--->
 
         <method 
                 desc  = "Retrieve const  The number of signal photons expected for each particle hypothesis" 
                 name  = "nSignalPhotons" 
                 const = "TRUE" 
-                type  = "const RichHypoData&lt;RichRecSegment::FloatType&gt; &amp;" >
+                type  = "const RichHypoData&lt;LHCb::RichRecSegment::FloatType&gt; &amp;" >
                 <code> return *m_nSignalPhotons.object(); </code>
         </method>
         <method 
                 desc  = "Retrieve The number of signal photons expected for each particle hypothesis" 
                 name  = "nSignalPhotons" 
                 const = "FALSE" 
-                type  = "RichHypoData&lt;RichRecSegment::FloatType&gt; &amp;" >
+                type  = "RichHypoData&lt;LHCb::RichRecSegment::FloatType&gt; &amp;" >
                 <code> return *m_nSignalPhotons.object(); </code>
         </method>
         <attribute 
@@ -384,30 +372,21 @@
                 getMeth     = "FALSE"
                 desc        = "The number of signal photons expected for each particle hypothesis" 
                 name        = "nSignalPhotons" 
-                type        = "RichObjPtn&lt; RichHypoData&lt;RichRecSegment::FloatType&gt; &gt;"
+                type        = "RichObjPtn&lt; RichHypoData&lt;LHCb::RichRecSegment::FloatType&gt; &gt;"
         />
-<!--
-        <attribute 
-                setMeth     = "FALSE"
-                desc        = "The number of signal photons expected for each particle hypothesis" 
-                name        = "nSignalPhotons" 
-                init        = "0" 
-                type        = "RichHypoData&lt;RichRecSegment::FloatType&gt;"
-        />
--->  
 
         <method 
                 desc  = "Retrieve const The number of scattered photons expected for each particle hypothesis" 
                 name  = "nScatteredPhotons" 
                 const = "TRUE" 
-                type  = "const RichHypoData&lt;RichRecSegment::FloatType&gt; &amp;" >
+                type  = "const RichHypoData&lt;LHCb::RichRecSegment::FloatType&gt; &amp;" >
                 <code> return *m_nScatteredPhotons.object(); </code>
         </method>
         <method 
                 desc  = "Retrieve The number of scattered photons expected for each particle hypothesis" 
                 name  = "nScatteredPhotons" 
                 const = "FALSE" 
-                type  = "RichHypoData&lt;RichRecSegment::FloatType&gt; &amp;" >
+                type  = "RichHypoData&lt;LHCb::RichRecSegment::FloatType&gt; &amp;" >
                 <code> return *m_nScatteredPhotons.object(); </code>
         </method>
         <attribute 
@@ -415,103 +394,28 @@
                 getMeth     = "FALSE"
                 desc        = "The number of scattered photons expected for each particle hypothesis" 
                 name        = "nScatteredPhotons" 
-                type        = "RichObjPtn&lt; RichHypoData&lt;RichRecSegment::FloatType&gt; &gt;"
+                type        = "RichObjPtn&lt; RichHypoData&lt;LHCb::RichRecSegment::FloatType&gt; &gt;"
         />
-<!--  
-        <attribute 
-                setMeth     = "FALSE"
-                desc        = "The number of scattered photons expected for each particle hypothesis"
-                name        = "nScatteredPhotons" 
-                init        = "0" 
-                type        = "RichHypoData&lt;RichRecSegment::FloatType&gt;"
-        />
--->        
 
-<!--
-        <method 
-                desc  = "Retrieve const The Photon energy spectra for emitted photons" 
-                name  = "emittedPhotonSpectra" 
-                const = "TRUE" 
-                type  = "const RichHypoData&lt;RichRecSegment::FloatType&gt; &amp;" >
-                <code> return *m_emittedPhotonSpectra.object(); </code>
-        </method>
-        <method 
-                desc  = "Retrieve The Photon energy spectra for emitted photons" 
-                name  = "emittedPhotonSpectra" 
-                const = "FALSE" 
-                type  = "RichHypoData&lt;RichRecSegment::FloatType&gt; &amp;" >
-                <code> return *m_emittedPhotonSpectra.object(); </code>
-        </method>
-        <attribute 
-                setMeth     = "FALSE"
-                getMeth     = "FALSE"
-                desc        = "The Photon energy spectra for emitted photons" 
-                name        = "emittedPhotonSpectra" 
-                type        = "RichObjPtn&lt; RichPhotonSpectra&lt;RichRecSegment::FloatType&gt; &gt;"
-        />
--->  
         <attribute 
                 desc        = "Photon energy spectra for emitted photons" 
                 name        = "emittedPhotonSpectra" 
-                type        = "RichPhotonSpectra&lt;RichRecSegment::FloatType&gt;"
+                type        = "RichPhotonSpectra&lt;LHCb::RichRecSegment::FloatType&gt;"
+                nonconstaccessor = "TRUE"
         />        
 
-<!--
-        <method 
-                desc  = "Retrieve const The Photon energy spectra for detectable photons" 
-                name  = "detectablePhotonSpectra" 
-                const = "TRUE" 
-                type  = "const RichHypoData&lt;RichRecSegment::FloatType&gt; &amp;" >
-                <code> return *m_detectablePhotonSpectra.object(); </code>
-        </method>
-        <method 
-                desc  = "Retrieve The Photon energy spectra for detectable photons" 
-                name  = "detectablePhotonSpectra" 
-                const = "FALSE" 
-                type  = "RichHypoData&lt;RichRecSegment::FloatType&gt; &amp;" >
-                <code> return *m_detectablePhotonSpectra.object(); </code>
-        </method>
-        <attribute 
-                setMeth     = "FALSE"
-                getMeth     = "FALSE"
-                desc        = "The Photon energy spectra for detectable photons" 
-                name        = "detectablePhotonSpectra" 
-                type        = "RichObjPtn&lt; RichPhotonSpectra&lt;RichRecSegment::FloatType&gt; &gt;"
-        />
--->  
         <attribute 
                 desc        = "Photon energy spectra for detectable photons" 
                 name        = "detectablePhotonSpectra" 
-                type        = "RichPhotonSpectra&lt;RichRecSegment::FloatType&gt;"
+                type        = "RichPhotonSpectra&lt;LHCb::RichRecSegment::FloatType&gt;"
+                nonconstaccessor = "TRUE"
         />        
 
-<!--
-        <method 
-                desc  = "Retrieve const The Photon energy spectra for signal photons" 
-                name  = "signalPhotonSpectra" 
-                const = "TRUE" 
-                type  = "const RichHypoData&lt;RichRecSegment::FloatType&gt; &amp;" >
-                <code> return *m_signalPhotonSpectra.object(); </code>
-        </method>
-        <method 
-                desc  = "Retrieve The Photon energy spectra for signal photons" 
-                name  = "signalPhotonSpectra" 
-                const = "FALSE" 
-                type  = "RichHypoData&lt;RichRecSegment::FloatType&gt; &amp;" >
-                <code> return *m_signalPhotonSpectra.object(); </code>
-        </method>
-        <attribute 
-                setMeth     = "FALSE"
-                getMeth     = "FALSE"
-                desc        = "The Photon energy spectra for signal photons" 
-                name        = "signalPhotonSpectra" 
-                type        = "RichObjPtn&lt; RichPhotonSpectra&lt;RichRecSegment::FloatType&gt; &gt;"
-        />
--->  
         <attribute 
                 desc        = "Photon energy spectra for signal photons" 
                 name        = "signalPhotonSpectra" 
-                type        = "RichPhotonSpectra&lt;RichRecSegment::FloatType&gt;"
+                type        = "RichPhotonSpectra&lt;LHCb::RichRecSegment::FloatType&gt;"
+                nonconstaccessor = "TRUE"
         />
         
         <attribute 
@@ -519,20 +423,21 @@
                 init        = "Rich::NParticleTypes,PDGeomEffs() " 
                 name        = "geomEfficiencyPerPD" 
                 type        = "PDGeomEffsVector"
+                nonconstaccessor = "TRUE"
         />
 
         <method 
                 desc  = "Retrieve const The Geometrical efficiencies for each particle hypothesis" 
                 name  = "geomEfficiency" 
                 const = "TRUE" 
-                type  = "const RichHypoData&lt;RichRecSegment::FloatType&gt; &amp;" >
+                type  = "const RichHypoData&lt;LHCb::RichRecSegment::FloatType&gt; &amp;" >
                 <code> return *m_geomEfficiency.object(); </code>
         </method>
         <method 
                 desc  = "Retrieve The Geometrical efficiencies for each particle hypothesis" 
                 name  = "geomEfficiency" 
                 const = "FALSE" 
-                type  = "RichHypoData&lt;RichRecSegment::FloatType&gt; &amp;" >
+                type  = "RichHypoData&lt;LHCb::RichRecSegment::FloatType&gt; &amp;" >
                 <code> return *m_geomEfficiency.object(); </code>
         </method>
         <attribute 
@@ -540,30 +445,21 @@
                 getMeth     = "FALSE"
                 desc        = "The Geometrical efficiencies for each particle hypothesis" 
                 name        = "geomEfficiency" 
-                type        = "RichObjPtn&lt; RichHypoData&lt;RichRecSegment::FloatType&gt; &gt;"
+                type        = "RichObjPtn&lt; RichHypoData&lt;LHCb::RichRecSegment::FloatType&gt; &gt;"
         />
-<!--  
-        <attribute 
-                setMeth     = "FALSE"
-                desc        = "Geometrical efficiencies for the each particle hypothesis" 
-                name        = "geomEfficiency" 
-                init        = "0" 
-                type        = "RichHypoData&lt;RichRecSegment::FloatType&gt;"
-        />
--->        
 
         <method 
                 desc  = "Retrieve const The Geometrical efficiencies for scattered component for each particle hypothesis" 
                 name  = "geomEfficiencyScat" 
                 const = "TRUE" 
-                type  = "const RichHypoData&lt;RichRecSegment::FloatType&gt; &amp;" >
+                type  = "const RichHypoData&lt;LHCb::RichRecSegment::FloatType&gt; &amp;" >
                 <code> return *m_geomEfficiencyScat.object(); </code>
         </method>
         <method 
                 desc  = "Retrieve The Geometrical efficiencies for scattered component for each particle hypothesis" 
                 name  = "geomEfficiencyScat" 
                 const = "FALSE" 
-                type  = "RichHypoData&lt;RichRecSegment::FloatType&gt; &amp;" >
+                type  = "RichHypoData&lt;LHCb::RichRecSegment::FloatType&gt; &amp;" >
                 <code> return *m_geomEfficiencyScat.object(); </code>
         </method>
         <attribute 
@@ -571,29 +467,21 @@
                 getMeth     = "FALSE"
                 desc        = "The Geometrical efficiencies for scattered component for each particle hypothesis" 
                 name        = "geomEfficiencyScat" 
-                type        = "RichObjPtn&lt; RichHypoData&lt;RichRecSegment::FloatType&gt; &gt;"
+                type        = "RichObjPtn&lt; RichHypoData&lt;LHCb::RichRecSegment::FloatType&gt; &gt;"
         />
-<!--  
-        <attribute 
-                desc        = "Geometrical efficiency for scattered component" 
-                name        = "geomEfficiencyScat" 
-                init        = "0" 
-                type        = "RichHypoData&lt;RichRecSegment::FloatType&gt;"
-        />
--->        
 
         <method 
                 desc  = "Retrieve const The average Cherenkov theta angle for the given particle ID type" 
                 name  = "averageCKTheta" 
                 const = "TRUE" 
-                type  = "const RichHypoData&lt;RichRecSegment::FloatType&gt; &amp;" >
+                type  = "const RichHypoData&lt;LHCb::RichRecSegment::FloatType&gt; &amp;" >
                 <code> return *m_averageCKTheta.object(); </code>
         </method>
         <method 
                 desc  = "Retrieve The average Cherenkov theta angle for the given particle ID type" 
                 name  = "averageCKTheta" 
                 const = "FALSE" 
-                type  = "RichHypoData&lt;RichRecSegment::FloatType&gt; &amp;" >
+                type  = "RichHypoData&lt;LHCb::RichRecSegment::FloatType&gt; &amp;" >
                 <code> return *m_averageCKTheta.object(); </code>
         </method>
         <attribute 
@@ -601,29 +489,21 @@
                 getMeth     = "FALSE"
                 desc        = "The average Cherenkov theta angle for the given particle ID type" 
                 name        = "averageCKTheta" 
-                type        = "RichObjPtn&lt; RichHypoData&lt;RichRecSegment::FloatType&gt; &gt;"
+                type        = "RichObjPtn&lt; RichHypoData&lt;LHCb::RichRecSegment::FloatType&gt; &gt;"
         />
-<!--  
-        <attribute 
-                desc        = "The average Cherenkov theta angle for the given particle ID type" 
-                name        = "averageCKTheta" 
-                init        = "0" 
-                type        = "RichHypoData&lt;RichRecSegment::FloatType&gt;"
-        />
--->
 
         <method 
                 desc  = "Retrieve const The Cherenkov theta angle resolution for the given particle ID type" 
                 name  = "ckThetaResolution" 
                 const = "TRUE" 
-                type  = "const RichHypoData&lt;RichRecSegment::FloatType&gt; &amp;" >
+                type  = "const RichHypoData&lt;LHCb::RichRecSegment::FloatType&gt; &amp;" >
                 <code> return *m_ckThetaResolution.object(); </code>
         </method>
         <method 
                 desc  = "Retrieve The Cherenkov theta angle resolution for the given particle ID type" 
                 name  = "ckThetaResolution" 
                 const = "FALSE" 
-                type  = "RichHypoData&lt;RichRecSegment::FloatType&gt; &amp;" >
+                type  = "RichHypoData&lt;LHCb::RichRecSegment::FloatType&gt; &amp;" >
                 <code> return *m_ckThetaResolution.object(); </code>
         </method>
         <attribute 
@@ -631,29 +511,21 @@
                 getMeth     = "FALSE"
                 desc        = "The Cherenkov theta angle resolution for the given particle ID type" 
                 name        = "ckThetaResolution" 
-                type        = "RichObjPtn&lt; RichHypoData&lt;RichRecSegment::FloatType&gt; &gt;"
+                type        = "RichObjPtn&lt; RichHypoData&lt;LHCb::RichRecSegment::FloatType&gt; &gt;"
         />
-<!--  
-        <attribute 
-                desc        = "The Cherenkov theta angle resolution for the given particle ID type" 
-                name        = "ckThetaResolution" 
-                init        = "0" 
-                type        = "RichHypoData&lt;RichRecSegment::FloatType&gt;"
-        />
--->
 
         <method 
                 desc  = "Retrieve const The average radius of the Cherenkov Ring on the HPD detector plane, in local coordinates, for given particle ID type" 
                 name  = "averageCKRadiusLocal" 
                 const = "TRUE" 
-                type  = "const RichHypoData&lt;RichRecSegment::FloatType&gt; &amp;" >
+                type  = "const RichHypoData&lt;LHCb::RichRecSegment::FloatType&gt; &amp;" >
                 <code> return *m_averageCKRadiusLocal.object(); </code>
         </method>
         <method 
                 desc  = "Retrieve The average radius of the Cherenkov Ring on the HPD detector plane, in local coordinates, for given particle ID type" 
                 name  = "averageCKRadiusLocal" 
                 const = "FALSE" 
-                type  = "RichHypoData&lt;RichRecSegment::FloatType&gt; &amp;" >
+                type  = "RichHypoData&lt;LHCb::RichRecSegment::FloatType&gt; &amp;" >
                 <code> return *m_averageCKRadiusLocal.object(); </code>
         </method>
         <attribute 
@@ -661,36 +533,28 @@
                 getMeth     = "FALSE"
                 desc        = "The average radius of the Cherenkov Ring on the HPD detector plane, in local coordinates, for given particle ID type" 
                 name        = "averageCKRadiusLocal" 
-                type        = "RichObjPtn&lt; RichHypoData&lt;RichRecSegment::FloatType&gt; &gt;"
+                type        = "RichObjPtn&lt; RichHypoData&lt;LHCb::RichRecSegment::FloatType&gt; &gt;"
         />
-<!--  
-        <attribute 
-                desc        = "The average radius of the Cherenkov Ring on the HPD detector plane, in local coordinates, for given particle ID type" 
-                name        = "averageCKRadiusLocal" 
-                init        = "0" 
-                type        = "RichHypoData&lt;RichRecSegment::FloatType&gt;"
-        />
--->
 
         <attribute 
                 desc        = "Average radius in local coordinates of Saturated Cherenkov Cone for this segment" 
                 name        = "avSaturatedRadiusLocal" 
                 init        = "-999" 
-                type        = "RichRecSegment::FloatType"
+                type        = "LHCb::RichRecSegment::FloatType"
         />
            
          <method 
                 desc  = "Retrieve const The Track segment, the passage of a track through a Rich detector" 
                 name  = "trackSegment" 
                 const = "TRUE" 
-                type  = "const RichTrackSegment &amp;" >
+                type  = "const LHCb::RichTrackSegment &amp;" >
                 <code> return *m_trackSegment.object(); </code>
         </method>
         <method 
                 desc  = "Retrieve The Track segment, the passage of a track through a Rich detector" 
                 name  = "trackSegment" 
                 const = "FALSE" 
-                type  = "RichTrackSegment &amp;" >
+                type  = "LHCb::RichTrackSegment &amp;" >
                 <code> return *m_trackSegment.object(); </code>
         </method>
         <attribute 
@@ -698,33 +562,19 @@
                 getMeth     = "FALSE"
                 desc        = "Track segment, the passage of a track through a Rich detector" 
                 name        = "trackSegment" 
-                type        = "RichObjPtn&lt; RichTrackSegment &gt;"
+                type        = "RichObjPtn&lt; LHCb::RichTrackSegment &gt;"
         />
-<!--
-        <attribute 
-                desc        = "Track segment, the passage of a track through a Rich detector" 
-                name        = "trackSegment" 
-                type        = "RichTrackSegment"
-        />
--->
         
         <attribute
                 desc        = "Ray traced PD panel impact point in global coordinates" 
                 name        = "pdPanelHitPoint" 
-                type        = "HepPoint3D"
+                type        = "Gaudi::XYZPoint"
         />
             
         <attribute 
                 desc        = "Ray traced PD panel impact point in local coordinates" 
                 name        = "pdPanelHitPointLocal" 
-                type        = "HepPoint3D"
-        />
-
-        <relation 
-                desc         = "Smart Reference to associated RichRecTrack" 
-                name         = "richRecTrackSmartRef" 
-                type         = "RichRecTrack"
-                multiplicity = "1"
+                type        = "Gaudi::XYZPoint"
         />
             
         <attribute 
@@ -743,14 +593,14 @@
                 access       = "PUBLIC" 
                 def          = "Pixels" 
                 desc         = "Container type for RichRecPixels" 
-                type         = "std::vector&lt;RichRecPixel*&gt;"
+                type         = "std::vector&lt;LHCb::RichRecPixel*&gt;"
         />
 
         <typedef 
                 access       = "PUBLIC" 
                 def          = "Photons" 
                 desc         = "Container type for RichRecPhotons" 
-                type         = "std::vector&lt;RichRecPhoton*&gt;"
+                type         = "std::vector&lt;LHCb::RichRecPhoton*&gt;"
         />
             
         <attribute 
@@ -758,15 +608,14 @@
                 desc         = "Associated RichRecTrack" 
                 init         = "0" 
                 name         = "richRecTrack" 
-                serialize    = "FALSE" 
-                type         = "RichRecTrack*"
+                type         = "LHCb::RichRecTrack*"
+                nonconstaccessor = "TRUE"
         />
             
         <attribute 
                 access       = "PRIVATE" 
                 desc         = "Associated RichRecPixels" 
                 name         = "richRecPixels" 
-                serialize    = "FALSE" 
                 type         = "Pixels"
         />
            
@@ -774,7 +623,7 @@
                 desc         = "Add to associated RichRecPixels" 
                 inline       = "TRUE" 
                 name         = "addToRichRecPixels" >
-                <arg const="FALSE" name="pixel" type="RichRecPixel*"/>
+                <arg const="FALSE" name="pixel" type="LHCb::RichRecPixel*"/>
                 <code>
                         m_richRecPixels.push_back(pixel);
                 </code>
@@ -784,7 +633,6 @@
                 access       = "PRIVATE" 
                 desc         = "Associated RichRecPhotons" 
                 name         = "richRecPhotons" 
-                serialize    = "FALSE" 
                 type         = "Photons"
         />
         
@@ -792,7 +640,7 @@
                 desc         = "Add to associated RichRecPhotons" 
                 inline       = "TRUE" 
                 name         = "addToRichRecPhotons" >
-                <arg const="FALSE" name="photon" type="RichRecPhoton*"/>
+                <arg const="FALSE" name="photon" type="LHCb::RichRecPhoton*"/>
                 <code>
                         m_richRecPhotons.push_back(photon);
                 </code>
@@ -802,14 +650,14 @@
                 desc  = "Retrieve const The Expected Rings for each mass hypothesis" 
                 name  = "hypothesisRings" 
                 const = "TRUE" 
-                type  = "const RichHypoData&lt;RichRecRing*&gt; &amp;" >
+                type  = "const RichHypoData&lt;LHCb::RichRecRing*&gt; &amp;" >
                 <code> return *m_hypothesisRings.object(); </code>
         </method>
         <method 
                 desc  = "Retrieve The Expected Rings for each mass hypothesis" 
                 name  = "hypothesisRings" 
                 const = "FALSE" 
-                type  = "RichHypoData&lt;RichRecRing*&gt; &amp;" >
+                type  = "RichHypoData&lt;LHCb::RichRecRing*&gt; &amp;" >
                 <code> return *m_hypothesisRings.object(); </code>
         </method>
         <attribute 
@@ -817,18 +665,8 @@
                 getMeth     = "FALSE"
                 desc        = "The Expected Rings for each mass hypothesis" 
                 name        = "hypothesisRings" 
-                type        = "RichObjPtn&lt; RichHypoData&lt;RichRecRing*&gt; &gt;"
+                type        = "RichObjPtn&lt; RichHypoData&lt;LHCb::RichRecRing*&gt; &gt;"
         />
-<!--  
-        <attribute 
-                array       = "FALSE" 
-                compression = "TRUE" 
-                desc        = "Expected Rings for each mass hypothesis" 
-                init        = "NULL" 
-                name        = "hypothesisRings" 
-                type        = "RichHypoData&lt;RichRecRing*&gt;"
-        />
--->
 
 </class>
 
