@@ -8,36 +8,6 @@
 #include <sys/ioctl.h>
 #define ioctlsocket ioctl
 
-#include <termios.h> 
-
-int getch() { 
-  static int ch = -1, fd = 0; 
-  struct termios neu, alt; 
-  fd = fileno(stdin); 
-  tcgetattr(fd, &alt); 
-  neu = alt; 
-  neu.c_lflag &= ~(ICANON|ECHO); 
-  tcsetattr(fd, TCSANOW, &neu); 
-  ch = getchar(); 
-  tcsetattr(fd, TCSANOW, &alt); 
-  return ch; 
-} 
-int kbhit(void) { 
-  struct termios term, oterm; 
-  int fd = 0; 
-  int c = 0; 
-  tcgetattr(fd, &oterm); 
-  memcpy(&term, &oterm, sizeof(term)); 
-  term.c_lflag = term.c_lflag & (!ICANON); 
-  term.c_cc[VMIN] = 0; 
-  term.c_cc[VTIME] = 1; 
-  tcsetattr(fd, TCSANOW, &term); 
-  c = getchar(); 
-  tcsetattr(fd, TCSANOW, &oterm); 
-  if (c != -1) 
-    ungetc(c, stdin); 
-  return ((c != -1) ? 1 : 0); 
-} 
 #elif _WIN32
 #include <conio.h>
 #endif
@@ -66,14 +36,16 @@ namespace {
   }
   int EntryMap::consoleCall(void* param)  {
     EntryMap* m = (EntryMap*)param;
-    FILE* f = stdin;
-    int pos = 0;
+    int ch;
     while(1)  {
-      //while ( f->_cnt > 0 ) lib_rtl_sleep(10);
-      int c = getch();//f);
-//      ungetch(c);
-      //c = getc(f);
-      ungetc(c, f);
+      lib_rtl_sleep(10);
+#ifdef _WIN32
+      ch = getch();
+      ungetch(ch);
+#endif
+      //printf("Wait for hit...\n");
+      if ( ch == -1 ) continue;
+      // printf("Got hit:%02X !!\n",ch);
       for(iterator i=m->begin(); i != m->end(); ++i)  {
         PortEntry* e = (*i).second;
         if ( e )  {
@@ -119,7 +91,10 @@ namespace {
             if ( e )  {
               int t = e->type, nb = IOPortManager::getAvailBytes(fd);
               // ::printf("got read request: %d bytes!\n",nb);
-              if ( e->callback ) (*e->callback)(e->param);
+              if ( e->callback )   {
+		if ( !(nb==0 && fd == fileno(stdin)) )
+		  (*e->callback)(e->param);
+	      }
               if ( t == 1 && nb <= 0 )  {
                 k = find(fd);
                 if ( k != end() )  {
@@ -142,12 +117,12 @@ namespace {
       int (*call)(void*);
       switch(m_port)  {
         case 0:
-//#ifdef _WIN32
+#ifdef _WIN32
           call = consoleCall;
           break;
-//#endif
+#endif
         default: 
-          printf("Installing thread call!\n");
+          //printf("Installing thread call!\n");
           call = threadCall;
           break;
       }
@@ -180,9 +155,15 @@ int IOPortManager::getAvailBytes(int fd)  {
 
 int IOPortManager::add(int typ, NetworkChannel::Channel c, int (*callback)(void*), void* param)  {
   EntryMap* em = portMap()[m_port];
-  if ( !em ) portMap()[m_port] = em = new EntryMap(m_port);
+  if ( !em ) {
+    //printf("Install port watcher for %d\n",m_port);
+    portMap()[m_port] = em = new EntryMap(m_port);
+  }
   PortEntry* e = (*em)[c];
-  if ( !e ) (*em)[c] = e = new PortEntry;
+  if ( !e ) {
+    //printf("Install channel watcher for %d\n",c);
+    (*em)[c] = e = new PortEntry;
+  }
   e->callback = callback;
   e->param = param;
   e->type = typ;

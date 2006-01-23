@@ -250,18 +250,15 @@ namespace  {
       scrc_paste_display (Show_mem_display, Pb, 15, 65);
       scrc_put_chars (Show_mem_display, "..........", NORMAL, 2, 1, 0);
       */
-      
-      while (item != 99)
-      {
+      static int _cnt=0;
+      while (item != 99)   {
         upic_get_input (&menu, &item, &param);
-        switch (menu)
-        {
+        switch (menu)  {
           case 0 :
             item = 99;
             break;
           case 1 :
-            switch (item)
-            {
+            switch (item)  {
               case 1: upic_disable_command (2,1);
                 break;
               case 2: upic_disable_command (1,2);
@@ -358,7 +355,7 @@ namespace  {
             break;
         }
 
-        sprintf (buffer, "Menu %d Item %d Param %d ", menu, item, param);
+        sprintf (buffer, " [%d] Menu %d Item %d Param %d ", ++_cnt, menu, item, param);
         upic_write_message (buffer, "");
       }
       upic_quit();

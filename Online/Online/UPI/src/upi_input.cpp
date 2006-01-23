@@ -255,7 +255,7 @@ int upic_key_rearm (unsigned int /* event */ , void*)
   if (cursor) scrc_cursor_on (Sys.pb);
   else scrc_cursor_off (Sys.pb);
   scrc_fflush (Sys.pb);
-  return UPI_SS_NORMAL;
+  return WT_SUCCESS;
 }
 
 //---------------------------------------------------------------------------
@@ -277,7 +277,7 @@ int upic_key_action (unsigned int /* event */, void*)
   if (!m || !(d = m->page.cur) || !(i = d->item.cur)) return UPI_SS_INVMENU;
 
   int key = scrc_read_keyboard (0, 0);
-  if (!key) return (UPI_SS_NORMAL);
+  if (!key) return WT_SUCCESS;
 
   scrc_begin_pasteboard_update (Sys.pb);
 
@@ -684,8 +684,7 @@ int upic_key_action (unsigned int /* event */, void*)
     /*      upic_scroll_message (key);  */
     break;
   }
-  if (key == RETURN)
-  {
+  if (key == RETURN)  {
     int menu_id, item_id, param_id, list_index;
 
     menu_id = m->id;
@@ -711,7 +710,7 @@ int upic_key_action (unsigned int /* event */, void*)
       wtc_insert_head (Fac_wt_upi);
     }
   }
-  return UPI_SS_NORMAL;
+  return WT_SUCCESS;
 }
 
 #endif

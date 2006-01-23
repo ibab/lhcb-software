@@ -180,7 +180,7 @@ int scrc_enable_unsolicited_input (Pasteboard *pb, int (* ast)());
 int scrc_get_smgid (Pasteboard *pb);
 int scrc_save_screen_rearm();
 int scrc_test_input ();
-int scrc_handler_keyboard (int fac);
+int scrc_handler_keyboard (unsigned int fac,void* param);
 int scrc_get_last_key ();
 int scrc_read (Display *disp, unsigned char *buffer, int wait);
 int scrc_fputs (Pasteboard *pb);

@@ -560,13 +560,11 @@ int scrc_change_display (Display *disp, int rows, int cols)   {
   disp->cols = cols;
   disp->row1 = r1;
   disp->col1 = c1;
-  if (disp->border)
-  {
+  if (disp->border)  {
     disp->height = rows + 2;
     disp->width  = cols + 2;
   }
-  else
-  {
+  else  {
     disp->height = rows;
     disp->width  = cols;
   }
@@ -575,29 +573,24 @@ int scrc_change_display (Display *disp, int rows, int cols)   {
   aa = a + w + 3;
 
 
-  for (r = 1; r <= min(h,rows); r++)
-  {
+  for (r = 1; r <= min(h,rows); r++)  {
     offset = r * (cols + 2) + 1;
 
-    for (c = 1; c <= min(w,cols); c++, offset++)
-    {
+    for (c = 1; c <= min(w,cols); c++, offset++)    {
       scrc_put_char_all (disp, offset, *mm++, *aa++, r, c);
     }
-    for (; c<=cols; c++, offset++)
-    {
+    for (; c<=cols; c++, offset++)    {
       scrc_put_char_all (disp, offset, ' ', NORMAL, r, c);
     }
 
-    if (w > cols)
-    {
+    if (w > cols)    {
       mm += w - cols;
       aa += w - cols;
     }
     mm += 2;
     aa += 2;
   }
-  for (; r<=rows; r++)
-  {
+  for (; r<=rows; r++)  {
     offset = r*(cols + 2) + 1;
     for (c = 1; c <= cols; c++, offset++)
       scrc_put_char_all (disp, offset, ' ', NORMAL, r, c);
@@ -622,26 +615,20 @@ char *scrc_get_title (Display *disp)    {
 
 /*---------------------------------------------------------------------------*/
 int scrc_draw_block (Display *disp, int r1, int r2, int c1, int c2) {
-  int r, c;
-  int row, col;
   int offset, pb_offset;
-  Pasteboard *pb;
-  int cols;
 
   if (!disp->paste) return 1;
 
-  pb   = disp->pb;
-  cols = disp->cols + 2;
+  Pasteboard* pb   = disp->pb;
+  int cols = disp->cols + 2;
+  int row = disp->row;
+  int col = disp->col;
 
-  row = disp->row;
-  col = disp->col;
-
-  r = r1;
-  c = c1;
+  int r = r1;
+  int c = c1;
 
   r1 += row - 1;
-  if (r1 < 1)
-  {
+  if (r1 < 1)  {
     r -= r1 - 1;
     r1 = 1;
   }
@@ -652,8 +639,7 @@ int scrc_draw_block (Display *disp, int r1, int r2, int c1, int c2) {
   if (r2 > pb->rows) r2 = pb->rows;
 
   c1 += col - 1;
-  if (c1 < 1)
-  {
+  if (c1 < 1)  {
     c -= c1 - 1;
     c1 = 1;
   }
@@ -665,16 +651,12 @@ int scrc_draw_block (Display *disp, int r1, int r2, int c1, int c2) {
 
   offset = r*cols + c;
 
-  for (r=r1; r<=r2; r++)
-  {
-    char *map, *attr;
-
-    map    = disp->map + offset;
-    attr   = disp->attr + offset;
+  for (r=r1; r<=r2; r++)  {
+    char* map    = disp->map + offset;
+    char* attr   = disp->attr + offset;
 
     pb_offset = (r - 1)*pb->cols + c1 - 1;
-    for (c=c1; c<=c2; c++, pb_offset++)
-    {
+    for (c=c1; c<=c2; c++, pb_offset++)   {
       scrc_draw_char (disp, pb, pb_offset, *map, *attr, disp, r, c);
       map++;
       attr++;
@@ -718,20 +700,16 @@ int scrc_undraw_block (Display *disp, int r1, int r2, int c1, int c2)   {
   if (c2 < 1) return (1);
   if (c2 > pb->cols) c2 = pb->cols;
 
-  for (r=r1; r<=r2; r++)
-  {
+  for (r=r1; r<=r2; r++)  {
     pb_offset = (r - 1)*pb->cols + c1 - 1;
-    for (c=c1; c<=c2; c++, pb_offset++)
-    {
+    for (c=c1; c<=c2; c++, pb_offset++)  {
       int done;
 
       done = 0;
       d = disp->paste->prev;
-      while (d)
-      {
+      while (d)  {
         dd = d->disp;
-        if (belongs_to(dd, r, c))
-        {
+        if (belongs_to(dd, r, c))  {
           offset = (r - dd->row + 1)*(dd->cols + 2) + c - dd->col + 1;
           scrc_draw_char (disp, pb, pb_offset, *(dd->map + offset),
             *(dd->attr + offset), dd, r, c);
@@ -763,23 +741,19 @@ Display* scrc_display_at (Pasteboard* pb, int row, int col)    {
 /*---------------------------------------------------------------------------*/
 int scrc_draw_box (Display *disp, char attr)    {
   int r, c, offset;
-  int r2, c2;
+  int r2 = disp->rows + 1;
+  int c2 = disp->cols + 1;
 
   attr |= GRAPHIC;
 
-  r2 = disp->rows + 1;
-  c2 = disp->cols + 1;
-
   scrc_put_char_all (disp, 0, TOP_LEFT_CORNER, attr, 0, 0);
-  for (c = 1, offset = 1; c < c2; c++, offset++)
-  {
+  for (c = 1, offset = 1; c < c2; c++, offset++)  {
     scrc_put_char_all (disp, offset, HORIZONTAL_BAR, attr, 0, c);
   }
   scrc_put_char_all (disp, offset, TOP_RIGHT_CORNER, attr, 0, c);
   offset++;
 
-  for (r = 1; r < r2; r++)
-  {
+  for (r = 1; r < r2; r++)  {
     scrc_put_char_all (disp, offset, VERTICAL_BAR, attr, r, 0);
     offset += c2;
     scrc_put_char_all (disp, offset, VERTICAL_BAR, attr, r, c2);
@@ -788,8 +762,7 @@ int scrc_draw_box (Display *disp, char attr)    {
 
   scrc_put_char_all (disp, offset, BOTTOM_LEFT_CORNER, attr, r, 0);
   offset++;
-  for (c = 1; c < c2; c++, offset++)
-  {
+  for (c = 1; c < c2; c++, offset++)  {
     scrc_put_char_all (disp, offset, HORIZONTAL_BAR, attr, r, c);
   }
   scrc_put_char_all (disp, offset, BOTTOM_RIGHT_CORNER, attr, r, c);
@@ -806,29 +779,25 @@ int scrc_display_occluded (Display *disp)   {
 
 /*---------------------------------------------------------------------------*/
 int scrc_occluded (Display *disp, int row, int col)   {
-  Paste_entry *d;
+  Paste_entry *d = disp->paste;
   Display *dd;
 
-  d = disp->paste;
   if (!d) return 0;
 
   d = d->next;
-  while (d)
-  {
+  while (d)  {
     dd = d->disp;
     if (belongs_to(dd, row, col)) return 1;
     d = d->next;
-  };
+  }
   return 0;
 }
 
 /*---------------------------------------------------------------------------*/
 int scrc_put_chars (Display *disp, const char *str, byte attr, int row, int col, int erase) {
   int len;
-  int w, h;
-
-  h = disp->rows;
-  w = disp->cols;
+  int h = disp->rows;
+  int w = disp->cols;
 
   if (row < 0 || col < 0 || row > h || col > w) return 0;
   len = strlen(str);
@@ -842,11 +811,9 @@ int scrc_put_chars (Display *disp, const char *str, byte attr, int row, int col,
 
 /*---------------------------------------------------------------------------*/
 int scrc_erase_line (Display *disp, int row)  {
-  int i;
-
   if (row > disp->rows) return 0;
-  for (i = 1;i <= disp->cols; i++) scrc_put_char (disp, ' ', NORMAL, row, i);
-
+  for (int i = 1;i <= disp->cols; i++) 
+    scrc_put_char (disp, ' ', NORMAL, row, i);
   return 1;
 }
 
@@ -857,10 +824,8 @@ int scrc_put_char_all (Display *disp, int offset, char c, unsigned char attr, in
   *(disp->map  + offset) = c;
   *(disp->attr + offset) = attr;
 
-  if (disp->paste)
-  {
+  if (disp->paste)  {
     Pasteboard *pb = disp->pb;
-
     row += disp->row - 1;
     col += disp->col - 1;
     if (visible (pb, row, col))
@@ -934,20 +899,16 @@ int scrc_draw_char (Display *disp, Pasteboard *pb, int offset,
 
 
   /*  Check occlusion of this position within the display        */
-
   if (disp && scrc_occluded (disp, row, col)) return 0;
 
 
   /*  Take care of multiple inversions                           */
-
   attr = (~INVERSE & (def | attr)) | (INVERSE & (def ^ attr)) ;
 
 
   /*  Further checks on the char itself                          */
-
   if (!c) c = ' ';
-  if (c == ' ')
-  {
+  if (c == ' ')  {
 #ifdef USE_FONT_SUPP
     attr &= ATTRIBUTES | FONT_SUPP;
 #else

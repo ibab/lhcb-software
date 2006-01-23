@@ -109,7 +109,8 @@ typedef enum {
 #define BACK_SPACE CTRL_H
 #define TAB        CTRL_I
 #define LINE_FEED  CTRL_J
-#define RETURN     CTRL_M
+//#define RETURN     CTRL_M
+#define RETURN     CTRL_J
 #define UPDATE     CTRL_W
 
         

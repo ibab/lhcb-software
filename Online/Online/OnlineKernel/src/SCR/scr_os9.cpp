@@ -34,6 +34,8 @@ static int scrc_exit_handler (int* /* status */, Pasteboard *pb)    {
   return 1;
 }
 #endif
+static bool _p=false;
+int scrc_handler_keyboard (unsigned int /* fac */, void* /* par */);
 //----------------------------------------------------------------------------
 int scrc_rearm_keyboard (unsigned int /* fac */, void* /* par */)   {
   if (Armed) return 0;
@@ -45,54 +47,68 @@ int scrc_rearm_keyboard (unsigned int /* fac */, void* /* par */)   {
   }
   _ss_ssig(0,Insignal);
 #else 
-  IOPortManager(0).add(0, fileno(stdin), scrc_ast_keyboard, 0);
+  typedef int (*_F)(void*);
+  //IOPortManager(0).add(0, fileno(stdin), scrc_ast_keyboard, 0);
+  IOPortManager(0).add(0, fileno(stdin), (_F)scrc_handler_keyboard, 0);
 #endif
-  return (1);
+  return WT_SUCCESS;
 }
 
 //----------------------------------------------------------------------------
 int scrc_ast_keyboard (void*)   {
   if (scr_ignore_input == 0)  {
+	      printf("KeyboardAST ... INSERT WT_FACILITY_SCR.\n");
     wtc_insert (WT_FACILITY_KEYBOARD);
     if (User_ast) (* User_ast) ();
   }
   return 1;
 }
 
+int rd_getch();
+int keyboard_buffer_len();
+#include "RTL/rtl.h"
 //----------------------------------------------------------------------------
-int scrc_handler_keyboard (unsigned int /* fac */, void* /* par */)  {
+int scrc_handler_keyboard (unsigned int fac, void* /* par */)  {
   int status = 0;
   do  {
-    Last_char = getc(stdin);
-    if (Key_ptr >= KEY_BUF_SIZE) status = 0;
-    else if (Last_char)      {
-      Key_buffer[Key_ptr] = Last_char;
-      Key_ptr++;
-      Key_buffer[Key_ptr] = 0;
-      Last_key_stroke = scrc_check_key_buffer (Key_buffer);
-      if (Last_key_stroke > 0)        {
-        Key_ptr = 0;
-        Key_buffer[Key_ptr] = 0;
-
-        if (Kbd->moving)          {
-          if (scrc_action_moving_display (Kbd, Last_key_stroke))
-            wtc_insert_head (WT_FACILITY_SCR);
-          else
-            Last_key_stroke = -1;
-        }
-        else if (Kbd->resizing)          {
-          if (scrc_action_resizing_display (Kbd, Last_key_stroke))
-            wtc_insert_head (WT_FACILITY_SCR);
-          else
-            Last_key_stroke = -1;
-        }
-        else
-          wtc_insert_head (WT_FACILITY_SCR);
+    int fd = fileno(stdin);
+    status = IOPortManager::getAvailBytes(fd);
+    if ( status>0 )  {
+      read(fd,&Last_char,1); // Last_char = rd_getch();
+      if (_p)printf("scrc_handler_keyboard[%d, %d]: Got char: %d %02X\n",status,fac,Last_char,Last_char);
+      if (Key_ptr >= KEY_BUF_SIZE) status = 0;
+      else if (Last_char)      {
+	Key_buffer[Key_ptr] = Last_char;
+	Key_ptr++;
+	Key_buffer[Key_ptr] = 0;
+	Last_key_stroke = scrc_check_key_buffer (Key_buffer);
+	if (Last_key_stroke > 0)        {
+	  Key_ptr = 0;
+	  Key_buffer[Key_ptr] = 0;
+	  
+	  if (Kbd->moving)          {
+	    if (scrc_action_moving_display (Kbd, Last_key_stroke)) {
+	      wtc_insert_head (WT_FACILITY_SCR);  
+	    }
+	    else
+	      Last_key_stroke = -1;
+	  }
+	  else if (Kbd->resizing)          {
+	    if (scrc_action_resizing_display (Kbd, Last_key_stroke)) {
+	      wtc_insert_head (WT_FACILITY_SCR);
+	    }
+	    else
+	      Last_key_stroke = -1;
+	  }
+	  else {
+	    wtc_insert_head (WT_FACILITY_SCR);
+	  }
+	}
       }
     }
   } while( status > 0);
   Armed = 0;
-  return (0);
+  return WT_SUCCESS;
 }
 
 //----------------------------------------------------------------------------
@@ -114,7 +130,7 @@ int scrc_init_screen (Pasteboard *pb, int rows, int cols)   {
   return 1;
 }
 
-/*---------------------------------------------------------------------------*/
+//----------------------------------------------------------------------------
 int scrc_get_last_key ()    {
   int key = Last_key_stroke;
   Last_key_stroke = -1;
@@ -122,11 +138,10 @@ int scrc_get_last_key ()    {
   return (key);
 }
 
-
+//----------------------------------------------------------------------------
 int scrc_save_screen_rearm()  {
   return scrc_rearm_keyboard(WT_FACILITY_KEYBOARD, 0);
 }
-
 
 //----------------------------------------------------------------------------
 int scrc_fputs (Pasteboard *pb)   {
@@ -144,7 +159,9 @@ int scrc_read_keyboard (Display * /*disp */, int wait)  {
   unsigned int event;
   void* dummy;  
   if (wait) status = wtc_wait (&event,&dummy,&sub_status);
-  return scrc_get_last_key ();
+  int key = scrc_get_last_key ();
+  if(_p)printf("scrc_read_keyboard: Got char: %d %02X\n",key,key);
+  return key;
 }
 
 //----------------------------------------------------------------------------
@@ -168,6 +185,7 @@ int scrc_read (Display *disp, unsigned char *buffer, int wait)      {
 /*---------------------------------------------------------------------------*/
 int scrc_test_input ()    {
   scrc_rearm (0,0);
+  if(_p)printf("scrc_test_input\n");
   return (Last_char);
 }
 

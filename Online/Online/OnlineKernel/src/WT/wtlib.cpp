@@ -100,6 +100,11 @@ int wtc_subscribe( int facility, wt_callback_t rearm, wt_callback_t action, void
       fac = new wt_fac_entry(facility, rearm, action);
       insqti( fac, fac_list );        
     }
+    else {
+      fac->facility = facility;
+      fac->action = action;
+      fac->rearm = rearm;
+    }
     if (rearm)  {
       wt_queue_entry *entry = new wt_queue_entry(facility, par);
       insqti(entry, wt_fired);        
