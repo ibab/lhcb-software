@@ -5,7 +5,7 @@
  *  Header file for tool : RichMCTruthTool
  *
  *  CVS Log :-
- *  $Id: RichMCTruthTool.h,v 1.21 2006-01-19 08:42:22 cattanem Exp $
+ *  $Id: RichMCTruthTool.h,v 1.22 2006-01-23 13:56:10 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -30,8 +30,9 @@
 #include "Relations/IAssociatorWeighted.h"
 #include "Relations/IRelationWeighted.h"
 
-// RichKernel
+// Kernel
 #include "RichKernel/RichMap.h"
+#include "Kernel/RichParticleIDType.h"
 
 // Event model
 #include "Kernel/RichParticleIDType.h"
@@ -139,7 +140,7 @@ private: // definitions
   typedef std::vector<MCRichDigitSummary*> MCRichDigitSummaries;
 
   /// Typedef for map between RichSmartIDs and MCRichDigitSummary objects
-  typedef RichMap< const RichSmartID, MCRichDigitSummaries > RichSummaryMap;
+  typedef Rich::Map< const RichSmartID, MCRichDigitSummaries > RichSummaryMap;
 
 private: // private methods
 
@@ -219,7 +220,7 @@ private: // private data
   std::string m_mcRichHitsLocation;
 
   /// PID information
-  mutable RichMap<int,Rich::ParticleIDType> m_localID;
+  mutable Rich::Map<int,Rich::ParticleIDType> m_localID;
 
   /// Map between RichSmartIDs and MCRichDigitSummary objects
   mutable RichSummaryMap m_summaryMap;
@@ -231,8 +232,8 @@ private: // private data
 
 inline void RichMCTruthTool::cleanUpLinkers()
 {
-  if ( m_mcTrackLinks         ) { delete m_mcTrackLinks;         m_mcTrackLinks         = 0; }
-  if ( m_mcPhotonLinks        ) { delete m_mcPhotonLinks;        m_mcPhotonLinks        = 0; }
+  if ( m_mcTrackLinks  ) { delete m_mcTrackLinks;  m_mcTrackLinks  = 0; }
+  if ( m_mcPhotonLinks ) { delete m_mcPhotonLinks; m_mcPhotonLinks = 0; }
 }
 
 inline void RichMCTruthTool::InitNewEvent()
