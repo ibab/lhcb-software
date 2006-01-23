@@ -5,7 +5,7 @@
  *  Implementation file for RICH Global PID algorithm base class : RichGlobalPIDAlgBase
  *
  *  CVS Log :-
- *  $Id: RichGlobalPIDAlgBase.cpp,v 1.6 2005-04-08 13:16:45 jonrob Exp $
+ *  $Id: RichGlobalPIDAlgBase.cpp,v 1.7 2006-01-23 13:42:16 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   2003-05-10
@@ -14,6 +14,9 @@
 
 // local
 #include "RichGlobalPIDAlgBase.h"
+
+// namespaces
+using namespace LHCb;
 
 //-----------------------------------------------------------------------------
 

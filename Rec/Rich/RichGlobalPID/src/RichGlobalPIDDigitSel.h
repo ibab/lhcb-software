@@ -5,7 +5,7 @@
  *  Header file for RICH Global PID algorithm class : RichGlobalPIDDigitSel
  *
  *  CVS Log :-
- *  $Id: RichGlobalPIDDigitSel.h,v 1.5 2005-04-08 13:16:45 jonrob Exp $
+ *  $Id: RichGlobalPIDDigitSel.h,v 1.6 2006-01-23 13:42:16 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   12/12/2002
@@ -36,7 +36,8 @@
  */
 //--------------------------------------------------------------------------
 
-class RichGlobalPIDDigitSel : public RichGlobalPIDAlgBase {
+class RichGlobalPIDDigitSel : public RichGlobalPIDAlgBase
+{
 
 public:
 

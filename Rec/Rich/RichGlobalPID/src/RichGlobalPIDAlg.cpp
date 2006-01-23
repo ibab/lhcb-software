@@ -5,7 +5,7 @@
  *  Implementation file for RICH Global PID algorithm class : RichGlobalPIDAlg
  *
  *  CVS Log :-
- *  $Id: RichGlobalPIDAlg.cpp,v 1.25 2005-09-25 10:01:43 jonrob Exp $
+ *  $Id: RichGlobalPIDAlg.cpp,v 1.26 2006-01-23 13:42:16 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   17/04/2002
@@ -14,6 +14,9 @@
 
 // local
 #include "RichGlobalPIDAlg.h"
+
+// namespaces
+using namespace LHCb;
 
 //--------------------------------------------------------------------------
 
@@ -137,33 +140,33 @@ StatusCode RichGlobalPIDAlg::execute()
   minTrList minTracks;
   m_lastChance = false;
   bool tryAgain = true;
-  while ( tryAgain || 0 == m_trackIteration || !minTracks.empty() ) 
+  while ( tryAgain || 0 == m_trackIteration || !minTracks.empty() )
   {
-    if ( m_trackIteration > m_maxTrackIterations ) 
+    if ( m_trackIteration > m_maxTrackIterations )
     {
-      Warning( "Taken more than max number of iterations -> quitting", 
+      Warning( "Taken more than max number of iterations -> quitting",
                StatusCode::SUCCESS );
       break;
     }
-    
+
     // Iterate finding the min likelihood
     findMinLogLikelihood( minTracks );
 
     // set track hypotheses to the minimum
-    if ( !minTracks.empty() ) 
+    if ( !minTracks.empty() )
     {
       m_lastChance = false;
       minTrList::iterator iTrack;
-      for ( iTrack = minTracks.begin(); iTrack != minTracks.end(); ++iTrack ) 
+      for ( iTrack = minTracks.begin(); iTrack != minTracks.end(); ++iTrack )
       {
-        if ( Rich::Unknown == iTrack->second ) 
+        if ( Rich::Unknown == iTrack->second )
         {
           err() << "Track " << (iTrack->first)->key()
                 << " has been Id'ed as Unknown !!" << endreq;
-        } 
-        else 
+        }
+        else
         {
-          if ( msgLevel(MSG::VERBOSE) ) 
+          if ( msgLevel(MSG::VERBOSE) )
           {
             verbose() << "Changing Track " << (iTrack->first)->key()
                       << " hypothesis to from "
@@ -177,12 +180,12 @@ StatusCode RichGlobalPIDAlg::execute()
           (iTrack->first)->globalPID()->setParticleDeltaLL( iTrack->second, 0 );
         }
       }
-    } 
-    else if ( !m_lastChance && m_tryAgain && 0 != m_trackIteration ) 
+    }
+    else if ( !m_lastChance && m_tryAgain && 0 != m_trackIteration )
     {
       m_lastChance = true;
-    } 
-    else 
+    }
+    else
     {
       tryAgain = false;
     }
@@ -205,7 +208,7 @@ StatusCode RichGlobalPIDAlg::execute()
 
 StatusCode RichGlobalPIDAlg::initMinLogLikelihood()
 {
-  RichGlobalPIDTrackVector minTrack;
+  RichGlobalPIDTrack::Vector minTrack;
   Rich::ParticleIDTypeVector minTrackHypo;
   std::vector<double> minDLL;
   m_trackList.clear();
@@ -272,7 +275,7 @@ StatusCode RichGlobalPIDAlg::initMinLogLikelihood()
   // Finally, set all track hypotheses to their minimum
   Rich::ParticleIDTypeVector::const_iterator hypo = minTrackHypo.begin();
   std::vector<double>::const_iterator dll = minDLL.begin();
-  for ( RichGlobalPIDTrackVector::iterator track = minTrack.begin();
+  for ( RichGlobalPIDTrack::Vector::iterator track = minTrack.begin();
         track != minTrack.end();
         ++track ) {
     if ( msgLevel(MSG::VERBOSE) ) {
@@ -433,7 +436,7 @@ RichGlobalPIDAlg::deltaLogLikelihood( RichRecTrack * track,
 
     // photons for this pixel
     RichRecPixel::Photons & photons = (*iPixel)->richRecPhotons();
-    if ( !photons.empty() ) 
+    if ( !photons.empty() )
     {
 
       double oldSig = (*iPixel)->currentBackground();
@@ -442,7 +445,7 @@ RichGlobalPIDAlg::deltaLogLikelihood( RichRecTrack * track,
       // Loop over photons for this pixel
       const RichRecPixel::Photons::iterator iPhotonEnd = photons.end();
       for ( RichRecPixel::Photons::const_iterator iPhoton = photons.begin();
-            iPhoton != iPhotonEnd; ++iPhoton ) 
+            iPhoton != iPhotonEnd; ++iPhoton )
       {
         RichRecPhoton * photon = *iPhoton;
 
@@ -475,7 +478,7 @@ double RichGlobalPIDAlg::logLikelihood()
   double trackLL = 0.0;
   for ( RichGlobalPIDTracks::iterator track = m_GPIDtracks->begin();
         track != m_GPIDtracks->end();
-        ++track ) 
+        ++track )
   {
     // Sum expected photons from each track with current assumed hypotheses
     RichRecTrack * rRTrack = (*track)->richRecTrack();
@@ -493,7 +496,7 @@ double RichGlobalPIDAlg::logLikelihood()
   double pixelLL = 0.0;
   for ( RichRecPixels::iterator iPixel = richPixels()->begin();
         iPixel != richPixels()->end();
-        ++iPixel ) 
+        ++iPixel )
   {
     RichRecPixel * pixel = *iPixel;
 
@@ -502,7 +505,7 @@ double RichGlobalPIDAlg::logLikelihood()
     const RichRecPixel::Photons::iterator iPhotonEnd = photons.end();
     for ( RichRecPixel::Photons::iterator iPhoton = photons.begin();
           iPhoton != iPhotonEnd;
-          ++iPhoton ) 
+          ++iPhoton )
     {
       RichRecPhoton * photon = *iPhoton;
 

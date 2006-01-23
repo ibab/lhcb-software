@@ -4,6 +4,9 @@
 ! Purpose     : The Rich Global PID algorithm
 !-----------------------------------------------------------------------------
 
+! 2006-01-23 - Chris Jones
+ - Updates for LHCb v20r0
+
 !====================== RichGlobalPID v1r11 2005-11-21 =======================
 ! 2005-09-25 - Chris Jones
  - Improvements to HLT/Offline running

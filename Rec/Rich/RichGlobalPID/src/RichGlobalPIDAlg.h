@@ -5,7 +5,7 @@
  *  Header file for RICH Global PID algorithm class : RichGlobalPIDAlg
  *
  *  CVS Log :-
- *  $Id: RichGlobalPIDAlg.h,v 1.10 2005-06-23 14:54:25 jonrob Exp $
+ *  $Id: RichGlobalPIDAlg.h,v 1.11 2006-01-23 13:42:16 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   12/12/2002
@@ -35,7 +35,7 @@
 //--------------------------------------------------------------------------
 /** @class RichGlobalPIDAlg RichGlobalPIDAlg.h
  *
- *  Performs a single iteration of the global PID overall event 
+ *  Performs a single iteration of the global PID overall event
  *  likelihood minimisation.
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
@@ -43,7 +43,8 @@
  */
 //--------------------------------------------------------------------------
 
-class RichGlobalPIDAlg : public RichGlobalPIDAlgBase {
+class RichGlobalPIDAlg : public RichGlobalPIDAlgBase
+{
 
 public:
 
@@ -60,8 +61,8 @@ public:
 private: // Private methods
 
   // private typedefs
-  typedef RichMap<RichGlobalPIDTrack*,Rich::ParticleIDType> minTrList;
-  typedef std::pair<double,RichGlobalPIDTrack*> TrackPair;
+  typedef Rich::Map<LHCb::RichGlobalPIDTrack*,Rich::ParticleIDType> minTrList;
+  typedef std::pair<double,LHCb::RichGlobalPIDTrack*> TrackPair;
   typedef std::vector<TrackPair> TrackList;
 
   /// Starting with all tracks pion, calculate logLikelihood. Then for
@@ -80,9 +81,9 @@ private: // Private methods
   /// Performs full loop over all tracks and hypotheses
   double logLikelihood();
 
-  /// Computes the change in the logLikelihood produced by changing given 
+  /// Computes the change in the logLikelihood produced by changing given
   /// track to the given hypothesis
-  double deltaLogLikelihood( RichRecTrack * track,
+  double deltaLogLikelihood( LHCb::RichRecTrack * track,
                              const Rich::ParticleIDType newHypo );
 
   /// Returns log( exp(signal) - 1 ) or an approximation for small signals
@@ -124,7 +125,7 @@ private:  // Private data members
   /// Minimum signal value for full calculation of log(exp(signal)-1)
   double m_minSig;
 
-  /// Signal value below which to approximate log(exp(signal)-1) with log(signal) 
+  /// Signal value below which to approximate log(exp(signal)-1) with log(signal)
   double m_apxSig;
 
   /// Cached value of log(exp(m_minSig) - 1) for efficiency
@@ -146,12 +147,12 @@ inline double RichGlobalPIDAlg::dllThres()
   return m_currentDllTreshold;
 }
 
-inline double RichGlobalPIDAlg::sigFunc( double s ) 
+inline double RichGlobalPIDAlg::sigFunc( double s )
 {
   return ( s>m_apxSig ? log(exp(s)-1.) : ( s>m_minSig ? log(s) : m_logMinSig ) );
 }
 
-inline double RichGlobalPIDAlg::freezeOutValue() 
+inline double RichGlobalPIDAlg::freezeOutValue()
 {
   return m_currentFreezeOutValue;
 }

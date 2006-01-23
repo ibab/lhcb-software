@@ -1,20 +1,22 @@
 
+//--------------------------------------------------------------------------
 /** @file RichGlobalPIDFinalize.cpp
  *
  *  Implementation file for RICH Global PID algorithm class : RichGlobalPIDFinalize
  *
  *  CVS Log :-
- *  $Id: RichGlobalPIDFinalize.cpp,v 1.13 2004-08-19 09:49:01 jonrob Exp $
- *  $Log: not supported by cvs2svn $
- *  Revision 1.12  2004/07/27 10:56:36  jonrob
- *  Add doxygen file documentation and CVS information
+ *  $Id: RichGlobalPIDFinalize.cpp,v 1.14 2006-01-23 13:42:16 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   17/04/2002
  */
+//--------------------------------------------------------------------------
 
 // local
 #include "RichGlobalPIDFinalize.h"
+
+// namespaces
+using namespace LHCb;
 
 //--------------------------------------------------------------------------
 
@@ -25,11 +27,10 @@ const        IAlgFactory& RichGlobalPIDFinalizeFactory = s_factory ;
 // Standard constructor, initializes variables
 RichGlobalPIDFinalize::RichGlobalPIDFinalize( const std::string& name,
                                               ISvcLocator* pSvcLocator )
-  : RichGlobalPIDAlgBase ( name, pSvcLocator ) {
-
+  : RichGlobalPIDAlgBase ( name, pSvcLocator )
+{
   declareProperty( "ProcStatusLocation",
                    m_procStatLocation = ProcStatusLocation::Default );
-
 }
 
 // Destructor
@@ -42,7 +43,9 @@ StatusCode RichGlobalPIDFinalize::initialize()
   StatusCode sc = RichRecAlgBase::initialize();
   if ( sc.isFailure() ) { return sc; }
 
-  return StatusCode::SUCCESS;
+  // custom initialisations here
+
+  return sc;
 }
 
 StatusCode RichGlobalPIDFinalize::execute()
@@ -84,7 +87,7 @@ StatusCode RichGlobalPIDFinalize::execute()
     pid->setUsedCF4     ( rRTrack->inGas2()    );
 
     // Finalise delta LL values
-    std::vector<float> & deltaLLs = pid->particleLLValues();
+    std::vector<float> deltaLLs = pid->particleLLValues();
     if ( deltaLLs[pid->bestParticleID()] > 1e-10 ) {
       warning() << "PID " << pid->key() << " best ID " << pid->bestParticleID()
                 << " has non-zero deltaLL value! " << deltaLLs[pid->bestParticleID()] << endreq;
@@ -95,6 +98,7 @@ StatusCode RichGlobalPIDFinalize::execute()
       //const double prob = 1.0 - gsl_sf_erf( sqrt(deltaLLs[iHypo]) );
       //pid->setParticleRawProb( static_cast<Rich::ParticleIDType>(iHypo), prob );
     }
+    pid->setParticleLLValues(deltaLLs);
 
   }
 

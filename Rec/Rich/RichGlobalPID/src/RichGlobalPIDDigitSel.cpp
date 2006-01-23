@@ -5,7 +5,7 @@
  *  Implementation file for RICH Global PID algorithm class : RichGlobalPIDDigitSel
  *
  *  CVS Log :-
- *  $Id: RichGlobalPIDDigitSel.cpp,v 1.16 2005-06-23 14:54:25 jonrob Exp $
+ *  $Id: RichGlobalPIDDigitSel.cpp,v 1.17 2006-01-23 13:42:16 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   17/04/2002
@@ -14,6 +14,9 @@
 
 // local
 #include "RichGlobalPIDDigitSel.h"
+
+// namespaces
+using namespace LHCb;
 
 //--------------------------------------------------------------------------
 

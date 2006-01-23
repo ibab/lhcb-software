@@ -1,14 +1,16 @@
 
+//--------------------------------------------------------------------------
 /** @file RichGlobalPIDFinalize.h
  *
  *  Header file for RICH Global PID algorithm class : RichGlobalPIDFinalize
  *
  *  CVS Log :-
- *  $Id: RichGlobalPIDFinalize.h,v 1.5 2005-06-23 14:54:25 jonrob Exp $
+ *  $Id: RichGlobalPIDFinalize.h,v 1.6 2006-01-23 13:42:16 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   12/12/2002
  */
+//--------------------------------------------------------------------------
 
 #ifndef RICHGLOBALPID_RICHGLOBALPIDFINALIZE_H
 #define RICHGLOBALPID_RICHGLOBALPIDFINALIZE_H 1
@@ -26,6 +28,7 @@
 #include "Event/ProcStatus.h"
 #include "Event/RichRecStatus.h"
 
+//--------------------------------------------------------------------------
 /** @class RichGlobalPIDFinalize RichGlobalPIDFinalize.h
  *
  *  Finalises the RichPID objects for the Global PID algorithm
@@ -33,8 +36,10 @@
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   12/12/2002
  */
+//--------------------------------------------------------------------------
 
-class RichGlobalPIDFinalize : public RichGlobalPIDAlgBase {
+class RichGlobalPIDFinalize : public RichGlobalPIDAlgBase
+{
 
 public:
 

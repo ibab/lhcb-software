@@ -4,7 +4,7 @@
  *  Implementation file for RICH Global PID algorithm class : RichGlobalPIDInitialize
  *
  *  CVS Log :-
- *  $Id: RichGlobalPIDInitialize.cpp,v 1.8 2005-06-23 14:54:25 jonrob Exp $
+ *  $Id: RichGlobalPIDInitialize.cpp,v 1.9 2006-01-23 13:42:16 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   17/04/2002
@@ -13,6 +13,9 @@
 
 // local
 #include "RichGlobalPIDInitialize.h"
+
+// namespaces
+using namespace LHCb;
 
 //--------------------------------------------------------------------------
 

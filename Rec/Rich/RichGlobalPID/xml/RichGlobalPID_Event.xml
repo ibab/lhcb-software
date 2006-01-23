@@ -9,10 +9,11 @@
                 <code>m_eventLL.push_back( logL );</code>
             </method>
             <!--aComment-->
-            <attribute desc="History of overall event LogLikelihood values" name="eventLL" type="std::vector&lt;double&gt;"/>
+            <attribute nonconstaccessor = "TRUE" desc="History of overall event LogLikelihood values" name="eventLL" type="std::vector&lt;double&gt;"/>
         </class>
         <class author="Chris Jones     Christopher.Rob.Jones@cern.ch" desc="Working track object for Rich Global PID" id="12432" keyedContTypeDef="TRUE" location="Rec/Rich/GlobalPID/Tracks" name="RichGlobalPIDTrack" serializers="TRUE" stdVectorTypeDef="TRUE">
             <import name="Event/RichRecTrack"/>
+            <import name="Event/RichGlobalPID"/>
             <import name="RichGlobalPID/RichGlobalPIDTkQuality"/>
             <import ignore="TRUE" name="Rich"/>
             <import ignore="TRUE" name="ParticleIDType"/>
@@ -23,14 +24,14 @@
                 <code/>
             </constructor>
             <attribute desc="Integer code describing the quality of this track for the Global likelihood method" name="trQuality" type="Rich::GlobalPID::TkQuality"/>
-            <relation desc="SmartRef to RichRecTrack" name="richRecTrack" type="RichRecTrack"/>
-            <relation desc="Associated GlobalPID object" name="globalPID" type="RichGlobalPID"/>
+            <relation nonconstaccessor = "TRUE" desc="SmartRef to RichRecTrack" name="richRecTrack" type="LHCb::RichRecTrack"/>
+            <relation nonconstaccessor = "TRUE" desc="Associated GlobalPID object" name="globalPID" type="LHCb::RichGlobalPID"/>
         </class>
         <class author="Chris Jones   (Christopher.Rob.Jones@cern.ch)" desc="Rich particle identification object for the global track based algorithm" id="12434" keyedContTypeDef="TRUE" location="Rec/Rich/GlobalPID/PIDs" name="RichGlobalPID" stdVectorTypeDef="TRUE">
             <base name="RichPID"/>
             <import name="Event/RichPID"/>
             <constructor desc="Default constructor">
-                <code>this-&gt;setGlobal(1);</code>
+                <code>this-&gt;setGlobal(true);</code>
             </constructor>
         </class>
     </package>

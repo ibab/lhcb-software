@@ -5,7 +5,7 @@
  *  Header file for RICH Global PID algorithm class : RichGlobalPIDTrTrackSel
  *
  *  CVS Log :-
- *  $Id: RichGlobalPIDTrTrackSel.h,v 1.12 2005-06-23 14:54:25 jonrob Exp $
+ *  $Id: RichGlobalPIDTrTrackSel.h,v 1.13 2006-01-23 13:42:16 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   12/12/2002
@@ -30,7 +30,7 @@
 #include "Event/RichRecStatus.h"
 
 // CLHEP
-#include "CLHEP/Units/PhysicalConstants.h"
+#include "Kernel/PhysicalConstants.h"
 
 // interfaces
 #include "RichRecBase/IRichExpectedTrackSignal.h"
@@ -42,6 +42,8 @@
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   12/12/2002
+ *
+ *  @todo Find a way to avoid the dynamic_casts when setting Track in RichPID
  */
 //--------------------------------------------------------------------------
 
@@ -67,7 +69,7 @@ private:
 
   /// Determine the global PID Status of a track.
   /// Determines how the track will be used in the global likelihood
-  Rich::GlobalPID::TkQuality trackStatus( RichRecTrack * track );
+  Rich::GlobalPID::TkQuality trackStatus( LHCb::RichRecTrack * track );
 
   // Private data members
 private:
@@ -99,6 +101,5 @@ inline void RichGlobalPIDTrTrackSel::deleteEvent()
   if ( m_GPIDtracks && !m_GPIDtracks->empty() ) m_GPIDtracks->clear();
   if ( m_GPIDs      && !m_GPIDs->empty()      ) m_GPIDs->clear();
 }
-
 
 #endif // RICHGLOBALPID_RICHGLOBALPIDTRTRACKSEL_H

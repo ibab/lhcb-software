@@ -5,7 +5,7 @@
  *  Header file for RICH global PID algorithm base class : RichGlobalPIDAlgBase
  *
  *  CVS Log :-
- *  $Id: RichGlobalPIDAlgBase.h,v 1.5 2005-04-08 13:16:45 jonrob Exp $
+ *  $Id: RichGlobalPIDAlgBase.h,v 1.6 2006-01-23 13:42:16 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   2002-11-30
@@ -40,7 +40,8 @@
  */
 //--------------------------------------------------------------------------
 
-class RichGlobalPIDAlgBase : public RichRecAlgBase {
+class RichGlobalPIDAlgBase : public RichRecAlgBase 
+{
 
 public:
 
@@ -61,13 +62,13 @@ protected:
 protected:
 
   /// Pointer to parent RichGlobalPIDTrack container
-  RichGlobalPIDTracks * m_GPIDtracks;
+  LHCb::RichGlobalPIDTracks * m_GPIDtracks;
 
   /// Pointer to parent RichGlobalPIDSummary object
-  RichGlobalPIDSummary * m_GPIDSummary;
+  LHCb::RichGlobalPIDSummary * m_GPIDSummary;
 
   /// Pointer to parent RichGlobalPID container
-  RichGlobalPIDs * m_GPIDs;
+  LHCb::RichGlobalPIDs * m_GPIDs;
 
   /// Location of working RICH Global PID tracks in TES
   std::string m_richGPIDTrackLocation;
@@ -85,19 +86,19 @@ protected:
 
 inline StatusCode RichGlobalPIDAlgBase::gpidTracks()
 {
-  m_GPIDtracks = get<RichGlobalPIDTracks>( m_richGPIDTrackLocation );
+  m_GPIDtracks = get<LHCb::RichGlobalPIDTracks>( m_richGPIDTrackLocation );
   return StatusCode::SUCCESS;
 }
 
 inline StatusCode RichGlobalPIDAlgBase::gpidPIDs()
 {
-  m_GPIDs = get<RichGlobalPIDs>( m_richGPIDLocation );
+  m_GPIDs = get<LHCb::RichGlobalPIDs>( m_richGPIDLocation );
   return StatusCode::SUCCESS;
 }
 
 inline StatusCode RichGlobalPIDAlgBase::gpidSummary()
 {
-  m_GPIDSummary = get<RichGlobalPIDSummary>( m_richGPIDSummaryLocation );
+  m_GPIDSummary = get<LHCb::RichGlobalPIDSummary>( m_richGPIDSummaryLocation );
   return StatusCode::SUCCESS;
 }
 
