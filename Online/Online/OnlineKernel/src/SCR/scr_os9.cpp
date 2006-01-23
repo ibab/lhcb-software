@@ -44,7 +44,7 @@ int scrc_rearm_keyboard (unsigned int /* fac */, void* /* par */)   {
     sig_declare_signal(Insignal, scrc_ast );
   }
   _ss_ssig(0,Insignal);
-#else
+#else 
   IOPortManager(0).add(0, fileno(stdin), scrc_ast_keyboard, 0);
 #endif
   return (1);
@@ -53,7 +53,6 @@ int scrc_rearm_keyboard (unsigned int /* fac */, void* /* par */)   {
 //----------------------------------------------------------------------------
 int scrc_ast_keyboard (void*)   {
   if (scr_ignore_input == 0)  {
-    ::printf("Got input to process\n");
     wtc_insert (WT_FACILITY_KEYBOARD);
     if (User_ast) (* User_ast) ();
   }
@@ -64,34 +63,31 @@ int scrc_ast_keyboard (void*)   {
 int scrc_handler_keyboard (unsigned int /* fac */, void* /* par */)  {
   int status = 0;
   do  {
-    status = IOPortManager::getAvailBytes(fileno(stdin));
-    if( status > 0 )    {  
-      read(0,&Last_char,1);
-      if (Key_ptr >= KEY_BUF_SIZE) status = 0;
-      else if (Last_char)      {
-        Key_buffer[Key_ptr] = Last_char;
-        Key_ptr++;
+    Last_char = getc(stdin);
+    if (Key_ptr >= KEY_BUF_SIZE) status = 0;
+    else if (Last_char)      {
+      Key_buffer[Key_ptr] = Last_char;
+      Key_ptr++;
+      Key_buffer[Key_ptr] = 0;
+      Last_key_stroke = scrc_check_key_buffer (Key_buffer);
+      if (Last_key_stroke > 0)        {
+        Key_ptr = 0;
         Key_buffer[Key_ptr] = 0;
-        Last_key_stroke = scrc_check_key_buffer (Key_buffer);
-        if (Last_key_stroke > 0)        {
-          Key_ptr = 0;
-          Key_buffer[Key_ptr] = 0;
-  
-          if (Kbd->moving)          {
-            if (scrc_action_moving_display (Kbd, Last_key_stroke))
-              wtc_insert_head (WT_FACILITY_SCR);
-            else
-              Last_key_stroke = -1;
-          }
-          else if (Kbd->resizing)          {
-            if (scrc_action_resizing_display (Kbd, Last_key_stroke))
-              wtc_insert_head (WT_FACILITY_SCR);
-            else
-              Last_key_stroke = -1;
-          }
-          else
+
+        if (Kbd->moving)          {
+          if (scrc_action_moving_display (Kbd, Last_key_stroke))
             wtc_insert_head (WT_FACILITY_SCR);
+          else
+            Last_key_stroke = -1;
         }
+        else if (Kbd->resizing)          {
+          if (scrc_action_resizing_display (Kbd, Last_key_stroke))
+            wtc_insert_head (WT_FACILITY_SCR);
+          else
+            Last_key_stroke = -1;
+        }
+        else
+          wtc_insert_head (WT_FACILITY_SCR);
       }
     }
   } while( status > 0);

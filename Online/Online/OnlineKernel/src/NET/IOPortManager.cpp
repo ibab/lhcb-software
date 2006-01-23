@@ -22,13 +22,32 @@ namespace {
     __NetworkPort__  m_port;
   public:
     static int threadCall(void* param);
+    static int consoleCall(void* param);
     EntryMap(__NetworkPort__ p);
-    int handle();
+    virtual int handle();
     int run();
   };
 
   int EntryMap::threadCall(void* param)  {
     return ((EntryMap*)param)->handle();
+  }
+  int EntryMap::consoleCall(void* param)  {
+    EntryMap* m = (EntryMap*)param;
+#ifdef _WIN32
+    FILE* f = stdin;
+    int pos = 0;
+    while(1)  {
+      while ( f->_cnt > 0 ) lib_rtl_sleep(10);
+      int c = getc(f);
+      ungetc(c, f);
+      for(iterator i=m->begin(); i != m->end(); ++i)  {
+        PortEntry* e = (*i).second;
+        if ( e )  {
+          if ( e->callback ) (*e->callback)(e->param);
+        }
+      }
+    }
+#endif
   }
   int EntryMap::handle()  {
     std::vector<__NetworkChannel__> channels;
@@ -87,7 +106,19 @@ namespace {
 
   int EntryMap::run()  {
     if ( !m_thread )  {
-      int sc = lib_rtl_start_thread(threadCall, this, &m_thread);
+      int (*call)(void*);
+      switch(m_port)  {
+        case 0:
+#ifdef _WIN32
+          call = consoleCall;
+          break;
+#endif
+        default: 
+          printf("Installing thread call!\n");
+          call = threadCall;
+          break;
+      }
+      int sc = lib_rtl_start_thread(call, this, &m_thread);
       if ( !lib_rtl_is_success(sc) )  {
         ::printf("Failed to create port-thread\n");
         throw std::runtime_error("Failed to create port-thread");

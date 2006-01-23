@@ -9,7 +9,10 @@
 #define BUFFER_SIZE 1000
 #endif
 
+#if !defined(ON_OFF_DEFINED)
+#define ON_OFF_DEFINED 1
 typedef enum FLAG {OFF, ON} flag;
+#endif
 typedef unsigned char byte;
 
 struct Window;
@@ -150,7 +153,7 @@ Window* scrc_open_window (int type);
 int scrc_move_window_to (Window *w, int row, int col);
 int scrc_move_window (Window *w, int drow, int dcol);
 int scrc_change_window (Window *w, int height, int width);
-int scrc_get_window_position (Window *w, int row, int col);
+int scrc_get_window_position (Window *w, int* row, int* col);
 int scrc_window_moved (Window *w);
 int scrc_put_display_on_window (Display *d, Window *w);
 int scrc_remove_display_from_window (Display *d, Window *w);

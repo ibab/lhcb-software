@@ -71,7 +71,7 @@ void list_remove_entry ( void* _entry );
 void list_move_entry (void*, void*, void*);
 void list_disconnect_entry ();
 void list_transfer_entry (void*, void*, void*,void*);
-void list_transfer ();
+void list_transfer (void*, void*);
 void list_convert ();
 Link* list_first ();
 Link* list_last ();

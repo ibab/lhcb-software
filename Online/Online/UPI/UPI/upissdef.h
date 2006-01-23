@@ -3,7 +3,7 @@
 
 /* function return codes */
 #define UPI_NORMAL 0
-#define UPI_ERROR  -1
+#define UPI_ERROR (-1)
  
 /* error codes */
 #define UPI_FACILITY      80*256
@@ -25,6 +25,6 @@
 #define UPI_SS_INVCOMMAND (UPI_FACILITY+0x1C)
 #define UPI_SS_INVMENU    (UPI_FACILITY+0x1E)
 #define UPI_SS_NORMAL     0
-#define UPI$_FACILITY     80
+#define UPI___FACILITY     80
 
 #endif /* __UPISSDEF_H */
