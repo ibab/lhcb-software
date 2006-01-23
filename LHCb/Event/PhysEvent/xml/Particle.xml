@@ -92,6 +92,17 @@
        </code>
        </method>
        <method
+        name="setConfLevel"
+        desc="set confidence Level of the particleID"
+        type="void"
+	argList="double cl"
+        const="FALSE"
+       >
+       <code>
+        addInfo( LHCb::Particle::ConfLevel, cl ) ;
+       </code>
+       </method>
+       <method
         name="weight"
         desc="Weight of the particle, whatever that means."
         type="double"
@@ -99,6 +110,17 @@
        >
        <code>
         return info( LHCb::Particle::Weight, -1. ) ;
+       </code>
+       </method>
+       <method
+        name="setWeight"
+        desc="set Weight of the particle, whatever that means."
+        type="void"
+	argList="double w"
+        const="FALSE"
+       >
+       <code>
+        addInfo( LHCb::Particle::Weight, w ) ;
        </code>
        </method>
        <attribute
