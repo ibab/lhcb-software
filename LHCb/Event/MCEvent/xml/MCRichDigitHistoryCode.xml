@@ -4,7 +4,7 @@
 <package name="MCEvent">
 
 <!-- **************************************************************************
-  * $Id: MCRichDigitHistoryCode.xml,v 1.2 2005-12-20 10:58:11 cattanem Exp $
+  * $Id: MCRichDigitHistoryCode.xml,v 1.3 2006-01-23 13:23:02 jonrob Exp $
   *****************************************************************************
   * XML-description of MCRichDigitHistoryCode class                           *
   * author: Chris Jones   Christopher.Rob.Jones@cern.ch                       *
@@ -39,6 +39,7 @@
                 <bitfield desc="One of the hits contributing to this pixel come from a background hit"            length="1"  name="backgroundHit" />
                 <bitfield desc="One of the hits contributing to this pixel come from a charged track hitting the HPD window" length="1"  name="chargedTrack" />
                 <bitfield desc="One of the hits contributing to this pixel undergo rayleigh scattering"           length="1"  name="scatteredHit" />
+                <bitfield desc="One of the hits contributing to this pixel come from charge sharing"              length="1"  name="chargeShareHit" />
         </attribute>
 
 </class>
