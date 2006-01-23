@@ -71,7 +71,7 @@ int upic_scroll_message (int key)    {
 }
 
 //---------------------------------------------------------------------------
-int  upic_resize_message (Display* id, int rows, int cols)   {
+int  upic_resize_message (Display* /* id */, int rows, int cols)   {
   scrc_begin_pasteboard_update (Sys.pb);
   Async* a = &Sys.async;
   if (rows > 0 && cols > 0)  {
@@ -84,7 +84,7 @@ int  upic_resize_message (Display* id, int rows, int cols)   {
 }
 
 //---------------------------------------------------------------------------
-int upic_drag_message (Display* id, int drow, int dcol) {
+int upic_drag_message (Display* /* id */, int drow, int dcol) {
   Async* a = &Sys.async;
   scrc_begin_pasteboard_update (Sys.pb);
   scrc_move_display (a->id, Sys.pb, drow, dcol);
@@ -172,13 +172,11 @@ int upic_write_message (const char* text1, const char* text2) {
 #ifdef SCREEN
   const char* t[2] = {text1, text2};
   Async_line* line;
-  Async* a;
-  int len;
-
-  a = &Sys.async;
+  Async* a = &Sys.async;
   scrc_begin_pasteboard_update (Sys.pb);
   for (int i=0; i<2; i++)  {
-    if (len = strlen(t[i]))    {
+    int len = strlen(t[i]);
+    if ( len )    {
       if (a->entries == a->max_entries)    {
         free (a->first->next->text);
         list_remove_entry (a->first->next);

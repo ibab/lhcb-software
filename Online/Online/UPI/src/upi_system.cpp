@@ -15,10 +15,11 @@
 //---------------------------------------------------------------------------
 
 //---------------------------------------------------------------------------
-System Sys = {0,0,0,0};
+System Sys;
 //---------------------------------------------------------------------------
 
 //---------------------------------------------------------------------------
+#ifdef _VMS
 static struct {
   int link;
   Routine handler;
@@ -27,6 +28,7 @@ static struct {
 } Exit_block;
   
 static int Exit_status;
+#endif
 static Routine User_exit_handler = 0;
 //---------------------------------------------------------------------------
 
@@ -103,7 +105,7 @@ static int upic_memory_of_menu (Menu* m)  {
   return (memory);
 }
 //---------------------------------------------------------------------------
-static void upic_exit_handler (int* status)  {
+static void upic_exit_handler (int* /* status */ )  {
   if (User_exit_handler) User_exit_handler(0,0);
 #ifndef SCREEN
   upic_quit();
@@ -112,6 +114,11 @@ static void upic_exit_handler (int* status)  {
 
 //---------------------------------------------------------------------------
 int upic_attach_terminal ()   {
+  static bool first = true;
+  if ( first ) {
+    first = false;
+    memset(&Sys,0,sizeof(Sys));
+  }
   Sys.id++;
   if (Sys.id > 1) return UPI_SS_NORMAL;    
   list_init ((Linked_list*)&Sys.menu);
@@ -162,13 +169,11 @@ int upic_declare_exit_handler (Routine handler) {
   User_exit_handler = handler;
   return (UPI_SS_NORMAL);
 }
-  
 
 //---------------------------------------------------------------------------
-int upic_declare_ast_handler (Routine handler)  {
+int upic_declare_ast_handler (Routine /* handler */ )  {
   return (UPI_SS_NORMAL);
 }
-  
 
 //---------------------------------------------------------------------------
 int upic_quit ()    {
@@ -290,8 +295,8 @@ int upic_restore_setup ()
 }
 
 /*--------------------------------------------------*/
-int upic_signal_error (int code,const char* text) {
 #ifdef VAX
+int upic_signal_error (int code,const char* text) {
   short len;
   int flag;
   int status;
@@ -305,25 +310,29 @@ int upic_signal_error (int code,const char* text) {
   Buffer[len] = '\0';
   if (len + strlen(text) <= 132) strcat (Buffer, text);
   return (upic_write_message (Buffer, text));
+#else
+int upic_signal_error (int, const char* ) {
 #endif
   return UPI_SS_NORMAL;
 }
 
 
 /*--------------------------------------------------*/
-int upic_connect_process (const char* name) {
 #ifdef REMOTE
+int upic_connect_process (const char* name) {
   upir_connect_process (name);
 #endif
+int upic_connect_process (const char* ) {
   return UPI_SS_NORMAL;
 }
 
 
 /*--------------------------------------------------*/
-int upic_disconnect_process (const char* name)  {
 #ifdef REMOTE
+int upic_disconnect_process (const char* name)  {
   upir_disconnect_process (name);
 #endif
+int upic_disconnect_process (const char*)  {
   return UPI_SS_NORMAL;
 }
 

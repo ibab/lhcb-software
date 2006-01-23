@@ -195,7 +195,7 @@ int upic_get_input (int* menu_id, int* item_id, int* param_id)  {
 #ifdef SCREEN
 
 //---------------------------------------------------------------------------
-int upic_key_rearm (unsigned int event, void*)
+int upic_key_rearm (unsigned int /* event */ , void*)
 //---------------------------------------------------------------------------
 /*   This is called to reset the cursor properly and therefore to allow       */
 /*  the operator to hit the next keystroke.                                   */
@@ -259,7 +259,7 @@ int upic_key_rearm (unsigned int event, void*)
 }
 
 //---------------------------------------------------------------------------
-int upic_key_action (unsigned int event, void*)
+int upic_key_action (unsigned int /* event */, void*)
 //---------------------------------------------------------------------------
 /*  We come to this point whenever a key stroke has been detected.            */
 /*    It is a valid keystroke.                                                */
@@ -827,4 +827,6 @@ static void upic_spawn ()
   upic_restore_screen();
   if (!(status & 1)) upic_signal_error (status, "SPAWN");
 }
+#else
+static void upic_spawn () {}
 #endif

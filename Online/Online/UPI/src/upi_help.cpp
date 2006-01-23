@@ -3,8 +3,8 @@
          Created           : 23-OCT-1989 by Christian Arnault
 */
 #ifdef SCREEN
-#include "SCR/scr.h"
 #include "UPI/upidef.h"
+#include "SCR/scr.h"
 #include <cstring>
 #include <cstdlib>
 

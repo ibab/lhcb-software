@@ -14,7 +14,7 @@
 static size_t Lines = 0;
 static size_t Cols = 0;
 static size_t Cursor = 0;
-static char Blank[] = "\
+static char Blank[1024] = "\
                                                   \
                                                   \
                                                   \
@@ -26,9 +26,7 @@ static char Blank[] = "\
 
 static char* Buffer;
 static char Text[3];
-static char* Yes_no[] = {
-  NO,
-  YES };
+static const char* Yes_no[] = { NO, YES };
   
 static int Was_param = 0;
 //---------------------------------------------------------------------------
@@ -43,8 +41,7 @@ static int upic_dlinput ()  {
 //---------------------------------------------------------------------------
 int upic_dlhead (const char* title, int lines, int cols)  {
 #ifdef SCREEN
-  int len, i;
-  
+  int len, i;  
   if (Lines) upic_delete_menu (DLPACK);
   upic_open_detached_menu (DLPACK, 0, 0, " ", title, " ");
   if (!lines) lines = 5;
@@ -53,7 +50,7 @@ int upic_dlhead (const char* title, int lines, int cols)  {
   len = strlen(title);
   if (len < cols) len = cols;
   Blank[len-1] = '.';
-  Blank[len] = '\0';
+  Blank[len] = 0;
   upic_add_comment (1, Blank, " ");
   Blank[len] = ' ';
   if (lines < 2) lines = 2;
@@ -95,7 +92,7 @@ static void upic_do_param_line (const char* prompt, int length) {
   strcpy (Buffer, prompt);
   char* field = Buffer + p_len;
   memset (field, '^', length);
-  field[length] = '\0';
+  field[length] = 0;
   upic_install_dl_line (Buffer);
   Was_param = 1;
   free (Buffer);
@@ -119,7 +116,7 @@ static void upic_dlout_any (const char* text, int var1, int var2, int nvar, cons
 //---------------------------------------------------------------------------
 int upic_dlout (const char* text, int var1, int var2, int nvar)   {
 #ifdef SCREEN
-  upic_dlout_any (text, var1, var2, nvar, " %d\0");
+  upic_dlout_any (text, var1, var2, nvar, " %d");
 #else
   upir_dlout (text, var1, var2, nvar);
 #endif
@@ -129,7 +126,7 @@ int upic_dlout (const char* text, int var1, int var2, int nvar)   {
 //---------------------------------------------------------------------------
 int upic_dlouto (const char* text, int var1,  int var2,  int nvar)    {
 #ifdef SCREEN
-  upic_dlout_any (text, var1, var2, nvar, " %o\0");
+  upic_dlout_any (text, var1, var2, nvar, " %o");
 #else
   upir_dlouto (text, var1, var2, nvar);
 #endif
@@ -139,7 +136,7 @@ int upic_dlouto (const char* text, int var1,  int var2,  int nvar)    {
 //---------------------------------------------------------------------------
 int upic_dloutx (const char* text, int var1, int var2, int nvar)    {
 #ifdef SCREEN
-  upic_dlout_any (text, var1, var2, nvar, " %x\0");
+  upic_dlout_any (text, var1, var2, nvar, " %x");
 #else
   upir_dloutx (text, var1, var2, nvar);
 #endif
@@ -158,19 +155,20 @@ int upic_dlkey ()   {
 }
 
 //---------------------------------------------------------------------------
-int upic_dltxt (char* prompt, char* def, char* value, int length, int* ret_len) {
-  int status;
+int upic_dltxt (char* prompt, char* def, char* value, int length, int* 
 #ifdef SCREEN
+) {
   char format[12];  
   upic_dlcheck();
-  sprintf (format, "A%d\0", length);
+  sprintf (format, "A%d", length);
   if (strlen(prompt) + length > Cols) length = Cols - strlen(prompt);
   if (length <= 0) return UPI_SS_INVFORM;
   upic_set_param (value, 1, format, def, 0, 0, 0, 0, 0);
   upic_do_param_line (prompt, length);
-  status = upic_dlinput ();
+  int status = upic_dlinput ();
 #else
-  status = upir_dltxt (prompt, def, value, length, ret_len);
+ret_len) {
+  int status = upir_dltxt (prompt, def, value, length, ret_len);
 #endif
   return (status);
 }
@@ -183,7 +181,7 @@ int upic_dldec (char* prompt, int def, int* value, int min, int max)  {
 
   upic_dlcheck();
   int length = 10;
-  sprintf (format, "I%d\0", length);
+  sprintf (format, "I%d", length);
   if (strlen(prompt) + length > Cols) length = Cols - strlen(prompt);
   if (length <= 0) return UPI_SS_INVFORM;
   upic_set_param (value, 1, format, def, min, max, 0, 0, 0);
@@ -201,7 +199,7 @@ int upic_dloct (char* prompt, int def, int* value, int min, int max)  {
   char format[12];
   int length = 10;  
   upic_dlcheck();
-  sprintf (format, "O%d\0", length);
+  sprintf (format, "O%d", length);
   if (strlen(prompt) + length > Cols) length = Cols - strlen(prompt);
   if (length <= 0) return UPI_SS_INVFORM;
   upic_set_param (value, 1, format, def, min, max, 0, 0, 0);
@@ -220,7 +218,7 @@ int upic_dlhex (char* prompt, int def, int* value, int min, int max)  {
   int length = 10;
   
   upic_dlcheck();
-  sprintf (format, "X%d\0", length);
+  sprintf (format, "X%d", length);
   if (strlen(prompt) + length > Cols) length = Cols - strlen(prompt);
   if (length <= 0) return UPI_SS_INVFORM;
   upic_set_param (value, 1, format, def, min, max, 0, 0, 0);
@@ -238,7 +236,7 @@ int upic_dlmask (const char* prompt, int def, int* value) {
   char format[12];
   int length = 16;
   upic_dlcheck();
-  sprintf (format, "M%d\0", length);
+  sprintf (format, "M%d", length);
   if (strlen(prompt) + length > Cols) length = Cols - strlen(prompt);
   if (length <= 0) return UPI_SS_INVFORM;
   upic_set_param (value, 1, format, def, 0, 0xffff, 0, 0, 0);
@@ -256,7 +254,7 @@ int upic_dlm32 (const char* prompt, int def, int* value)    {
   char format[12];
   int length=32;
   upic_dlcheck();
-  sprintf (format, "M%d\0", length);
+  sprintf (format, "M%d", length);
   if (strlen(prompt) + length > Cols) length = Cols - strlen(prompt);
   if (length <= 0) return UPI_SS_INVFORM;
   upic_set_param (value, 1, format, def, 0, 0, 0, 0, 0);
@@ -276,7 +274,7 @@ int upic_dlyeno ( const char* prompt, int def, int* value)  {
   upic_dlcheck();
   if (def) strcpy (Text, YES);
   else strcpy (Text, NO);
-  sprintf (format, "A%d\0", length);
+  sprintf (format, "A%d", length);
   if (strlen(prompt) + length > Cols) length = Cols - strlen(prompt);
   if (length <= 0) return UPI_SS_INVFORM;
   upic_set_param (Text, 1, format, Text, 0, 0, Yes_no, 2, 1);

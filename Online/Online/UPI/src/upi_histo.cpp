@@ -4,6 +4,9 @@
 #include <cstdlib>
 #ifdef _WIN32
 #include <io.h>
+#else
+#include <unistd.h>
+#include "fcntl.h"
 #endif
 #include "SCR/scr.h"
 #include "UPI/file.h"
@@ -381,7 +384,7 @@ void upic_display_histo (Histo* h, int row, int col)    {
       scrc_put_chars (d0, "n", GRAPHIC, h->rows-1, i, 0);
       if ( !((i-2) % 10) )   {
         mark = h->min + ((h->max - h->min) * (double)(i-2) / h->bins);
-        sprintf(str_mark,"%f\0",mark);
+        sprintf(str_mark,"%f",mark);
         l = strlen(str_mark) - 1;
         j = l;
         /* suppress trailing 0's and center on dot */
@@ -389,7 +392,7 @@ void upic_display_histo (Histo* h, int row, int col)    {
           if (str_mark[l] == '0') l--;
           if (*c == '.') break;
         }
-        str_mark[l+1] = '\0';
+        str_mark[l+1] = 0;
         scrc_put_chars (d0, str_mark, NORMAL, h->rows, i-j, 0);
       }
     }
@@ -470,7 +473,7 @@ void upic_set_drag_histo_action (Routine action)  {
 }
 
 //---------------------------------------------------------------------------
-int upic_drag_histo (Display* id, int row, int col)   {
+int upic_drag_histo (Display* /* id */, int row, int col)   {
 #ifdef SCREEN
   upic_move_histo (Current_histo, row, col);
 #else

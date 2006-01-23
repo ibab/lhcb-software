@@ -152,25 +152,18 @@ void upic_change_page (Menu* m, Page* d, int width)    {
 
 //---------------------------------------------------------------------------
 void upic_draw_title_bar (Display* d, const char* title, int width, int row, const char* head)  {
-   int ttl_len;
-
-  if (row == 1)
-  {
+  if (row == 1)  {
     scrc_put_chars (d, head, INVERSE, row, 1, 1);
     scrc_put_chars (d, ONLY_PAGE, INVERSE,
     	            row, width - PAGE_MARKER_SIZE + 1, 0);
   }
-  else
-  {
+  else  {
     scrc_put_chars (d, ONLY_PAGE, INVERSE, row, 1, 1);
     scrc_put_chars (d, head, INVERSE, row, width - PAGE_MARKER_SIZE + 1, 0);
   }
-
-  if (ttl_len = strlen (title))
-  {
-    int margin;
-
-    margin = (width - 2*PAGE_MARKER_SIZE - ttl_len) >> 1;
+  int ttl_len = strlen(title);
+  if ( ttl_len )  {
+    int margin = (width - 2*PAGE_MARKER_SIZE - ttl_len) >> 1;
     scrc_put_chars (d, title, INVERSE, row, margin + PAGE_MARKER_SIZE + 1, 0);
   }
 }

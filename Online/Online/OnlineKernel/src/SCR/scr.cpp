@@ -235,19 +235,15 @@ int scrc_delete_pasteboard (Pasteboard *pb) {
   scrc_delete_physical_pasteboard (pb);
 
   u = pb->upd;
-
   free (u->map);
   free (u->attr);
   free (u->mod_rows);
-
   free (u);
 
   u = pb->old;
-
   free (u->map);
   free (u->attr);
   free (u->mod_rows);
-
   free (u);
 
   free (pb);

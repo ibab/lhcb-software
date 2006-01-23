@@ -1,6 +1,8 @@
 #ifndef __FILE_LOADED
 #define __FILE_LOADED   1
 
+#ifdef _WIN32
+
 /*      FILE - V3.0     */
 
 /*
@@ -16,5 +18,7 @@
 # define O_CREAT        01000
 # define O_TRUNC        02000
 # define O_EXCL         04000
+
+#endif
 
 #endif                                  /* __FILE_LOADED */

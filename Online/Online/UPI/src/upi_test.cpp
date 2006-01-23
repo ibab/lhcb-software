@@ -5,34 +5,34 @@
 #include <cstdlib>
 
 namespace  {
-  char ins_text[81] = "";
-  char ins_help[81] = "";
+  const char ins_text[81] = "";
+  const char ins_help[81] = "";
   int  ins_id = 0;
   int  ins_menu = 0;
   int  ins_before = 0;
-  char* ins_type_list[] = {
+  const char* ins_type_list[] = {
     "COMMENT",
     "COMMAND",
     "PARAM  ",
   };
-  char ins_type[] = "COMMENT";
+  const char ins_type[] = "COMMENT";
 
   /*  Variables for creating a parameter  */
 
   int  param_id   = 0;
   char param_format[12] = "";
-  char* param_type_list[] = {
+  const char* param_type_list[] = {
     "INTEGER",
     "REAL   ",
     "STRING ",
   };
   int  param_number = 0;
-  char param_type[] = "INTEGER";
+  const char param_type[] = "INTEGER";
   int    param_int[10] = {
     0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
   double param_real[10] = {
     0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
-  char   param_string[10][81] = {
+  const char   param_string[10][81] = {
     "",
     "",
     "",
@@ -94,7 +94,7 @@ namespace  {
       static int list[30] = {1,2,3,4,5,6,7,8,9,10,
                             11,12,13,14,15,16,17,18,19,20,
                             21,22,23,24,25,26,27,28,29,30};
-      static char* clist[5] = {"abc", "def", "ghi", "jkl", "mno"};
+      static const char* clist[5] = {"abc", "def", "ghi", "jkl", "mno"};
       char buffer[100];
       int mrows, mcols, mrow, mcol;
       int items;
@@ -104,7 +104,7 @@ namespace  {
       int dmenu = 0;
       int emenu = 0;
       static int log;
-      char *fmt = "I3";
+      const char *fmt = "I3";
 
       upic_attach_terminal ();
       
@@ -358,7 +358,7 @@ namespace  {
             break;
         }
 
-        sprintf (buffer, "Menu %d Item %d Param %d \0", menu, item, param);
+        sprintf (buffer, "Menu %d Item %d Param %d ", menu, item, param);
         upic_write_message (buffer, "");
       }
       upic_quit();
@@ -389,7 +389,7 @@ namespace  {
   }
   */
 }
-extern "C" int upi_test (int argc, char** argv)   {
+extern "C" int upi_test (int /* argc */, char** /* argv */ )   {
     while (loop());
     return 1;
 }

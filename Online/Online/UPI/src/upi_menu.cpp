@@ -16,7 +16,7 @@ extern System Sys;
 //---------------------------------------------------------------------------
  
 //---------------------------------------------------------------------------
-static char* Options[] = {
+static const char* Options[] = {
   "ACCEPT ",
   "CANCEL ",
   "RESET  ",
@@ -51,15 +51,15 @@ int upic_close_param () {
   
 //---------------------------------------------------------------------------
 int upic_close_menu ()  {
-   Menu* m = Sys.menu.last;
+  Menu* m = Sys.menu.last;
   if (!m) return UPI_SS_NOOPENMENU;
 
   if (m->type == PARAMETER_PAGE)  {
-    upic_set_param ((int *)Sys.result, ACCEPT_OPTION, "A7",
+    upic_set_param ((int*)Sys.result, ACCEPT_OPTION, "A7",
       "ACCEPT ",0,0, Options, 1, 1);
-    upic_set_param ((int *)Sys.result, CANCEL_OPTION, "A7",
+    upic_set_param ((int*)Sys.result, CANCEL_OPTION, "A7",
       "CANCEL ",0,0, Options+1, 1, 1);
-    upic_set_param ((int *)Sys.result, RESET_OPTION,  "A7",
+    upic_set_param ((int*)Sys.result, RESET_OPTION,  "A7",
       "RESET  ",0,0, Options+2, 1, 1);
     upic_add_param_line (-1, "[^^^^^^^]   [^^^^^^^]   [^^^^^^^]", "");
   }

@@ -1,6 +1,7 @@
 #ifndef __UPIDEF_H
 #define __UPIDEF_H
 
+#include <cstdlib>
 #include "SCR/lists.h"
 #include "UPI/upissdef.h"
 
@@ -40,7 +41,7 @@ typedef int  (*WtRoutine)(int,int);
 typedef enum {
   COMMENT,
   COMMAND,
-  PARAM,
+  PARAM
 } Item_types;
 
 /* menu.type field */
@@ -48,7 +49,7 @@ typedef enum {
   NORMAL_MENU,
   PULLDOWN_MENU,
   DETACHED_MENU,
-  PARAMETER_PAGE,
+  PARAMETER_PAGE
 } Menu_types;
 
 /* Special predefined menus */
@@ -60,7 +61,7 @@ typedef enum {
 typedef enum {
   ACCEPT_OPTION,
   CANCEL_OPTION,
-  RESET_OPTION,
+  RESET_OPTION
 } Parameter_page_options;
  
 /* item.type field */
@@ -71,7 +72,7 @@ typedef enum {
   HEX_FMT,
   REAL_FMT,
   BIN_FMT,
-  LOG_FMT,
+  LOG_FMT
 } Parameter_types;
 
 typedef union {

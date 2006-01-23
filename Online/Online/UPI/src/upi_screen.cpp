@@ -16,22 +16,21 @@
 //---------------------------------------------------------------------------
 extern System Sys;
 //---------------------------------------------------------------------------
-
-//---------------------------------------------------------------------------
-static FLAG Cursor_state = OFF;
-
 static int Fac_wt_scr = WT_FACILITY_SCR;
 static int Fac_wt_upi = WT_FACILITY_UPI;
 
+#ifndef SCREEN
 static char My_name[80];
 static char Server_name[80];
+#endif
+
 static int  Lun_scr = 0;
 static int  Lun_kbd = 0;
 //---------------------------------------------------------------------------
 
 //---------------------------------------------------------------------------
 #ifdef SCREEN
-static int upic_mouse_handler (int window, int display, size_t row, size_t col);
+int upic_mouse_handler (int window, int display, size_t row, size_t col);
 #endif
 //---------------------------------------------------------------------------
  
@@ -202,7 +201,7 @@ void upic_broadcast_handler (const char* message)   {
 }
 
 //---------------------------------------------------------------------------
-static int upic_mouse_handler (Window* window, int d, size_t row, size_t col)
+int upic_mouse_handler (Window* window, int d, size_t row, size_t col)
 //---------------------------------------------------------------------------
 /*  window is the window where the mouse click has been detected.             */
 /*         (may be 0).                                                        */
@@ -230,8 +229,7 @@ static int upic_mouse_handler (Window* window, int d, size_t row, size_t col)
     if (row == 1)    {
       return (ON_PAGE_UP);
     }
-    else if (row == d->lines + 2)
-    {
+    else if ( row == size_t(d->lines+2) )    {
       return (ON_PAGE_DOWN);
     }
     else    {
@@ -431,8 +429,8 @@ int upic_move_left (Menu* m)    {
   Item* i = d->item.cur;
   
   if (i && (i->type == PARAM))  {
-     Param* p = i->param.cur;
-    if (p = p->prev)    {
+    Param* p = i->param.cur;
+    if ( (p = p->prev) )    {
       i->param.cur = p;
       Sys.param.cur = p;
       return 1;
@@ -443,13 +441,11 @@ int upic_move_left (Menu* m)    {
   }
   
   Window* w = m->window;
-  while (w = scrc_prev_window(w))
-  {
+  while ((w = scrc_prev_window(w)))  {
     m = upic_find_menu_on_window (w);
     if (!m) return 0;
     d = m->page.cur;
-    if (!d)
-    {
+    if (!d)    {
       m->page.cur = m->page.first;
       d = m->page.cur;
     }
@@ -461,8 +457,7 @@ int upic_move_left (Menu* m)    {
       i = d->item.cur;
     }
     if (!i) return 0;
-    if (i->enabled)
-    {
+    if (i->enabled)    {
       upic_move_cursor (m, d, i, d->cur_line);
       return 1;
     }
@@ -478,11 +473,10 @@ int upic_move_right (Menu* m)   {
   Page* d = m->page.cur;
   if (!d) return 0;
   
-  Item* i = d->item.cur;
-  
+  Item* i = d->item.cur;  
   if (i && (i->type == PARAM))  {
-     Param* p = i->param.cur;
-    if (p = p->next)    {
+    Param* p = i->param.cur;
+    if ( (p = p->next) )    {
       i->param.cur = p;
       Sys.param.cur = p;
       return 1;
@@ -493,7 +487,7 @@ int upic_move_right (Menu* m)   {
   }
   
   Window* w = m->window;
-  while (w = scrc_next_window(w))  {
+  while ( (w = scrc_next_window(w)) )  {
     m = upic_find_menu_on_window (w);
     if (!m) return 0;
     d = m->page.cur;

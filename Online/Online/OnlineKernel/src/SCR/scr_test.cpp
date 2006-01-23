@@ -110,18 +110,15 @@ extern "C" int scr_test(int argc, char** argv)  {
   scrc_put_chars (d1, "user    : ", NORMAL, 7, 1, 0);
   scrc_put_chars (d1, "abcdefghijkl", FONT_USER, 7, 11, 0);
 
-  for (i=1;i<=10;i++)
-  {
+  for (i=1;i<=10;i++)  {
     sprintf (text, "%d----------", i);
     scrc_put_chars (d0, text, BOLD, i, 1, 1);
   }
-  for (i=8;i<=10;i++)
-  {
+  for (i=8;i<=10;i++)  {
     sprintf (text, "%d............", i);
     scrc_put_chars (d1, text, NORMAL, i, 1, 1);
   }
-  for (i=1;i<=15;i++)
-  {
+  for (i=1;i<=15;i++)  {
     sprintf (text, "%d", i);
     scrc_put_chars (d2, text, NORMAL, i, 1, 1);
   }
@@ -171,9 +168,7 @@ extern "C" int scr_test(int argc, char** argv)  {
   end_update (pb);
   
   for (i=29; i>5; i -= 4)
-  {
     scrc_change_display (d2, i, i);
-  }
   wait_next();
 
   scrc_begin_pasteboard_update (pb);
@@ -189,8 +184,7 @@ extern "C" int scr_test(int argc, char** argv)  {
   scrc_delete_line (d0, 1);
   wait_next();
 
-  scrc_put_chars (d3, "Insert lines in display 0 with scroll down",
-    NORMAL, 1, 1, 1);
+  scrc_put_chars(d3,"Insert lines in display 0 with scroll down",NORMAL,1,1,1);
   end_update (pb);
 
   scrc_insert_line (d0, "new line 1 ", INVERSE, 1, MOVE_DOWN);
@@ -198,13 +192,12 @@ extern "C" int scr_test(int argc, char** argv)  {
   scrc_insert_line (d0, "new line 10 ", INVERSE, 10, MOVE_DOWN);
   wait_next();
 
-  scrc_put_chars (d3, "Insert lines in display 0 with scroll up",
-    NORMAL, 1, 1, 1);
+  scrc_put_chars(d3,"Insert lines in display 0 with scroll up",NORMAL,1,1,1);
   end_update (pb);
 
-  scrc_insert_line (d0, "new line 1 ", NORMAL, 1, MOVE_UP);
-  scrc_insert_line (d0, "new line 5 ", NORMAL, 5, MOVE_UP);
-  scrc_insert_line (d0, "new line 10 ", NORMAL, 10, MOVE_UP);
+  scrc_insert_line(d0,"new line 1 ", NORMAL, 1, MOVE_UP);
+  scrc_insert_line(d0,"new line 5 ", NORMAL, 5, MOVE_UP);
+  scrc_insert_line(d0,"new line 10 ",NORMAL,10, MOVE_UP);
   wait_next();
 
   scrc_put_chars (d3, "Change pasteboard to 132", NORMAL, 1, 1, 1);
@@ -212,9 +205,13 @@ extern "C" int scr_test(int argc, char** argv)  {
 
   pb_cols = 132;
   scrc_change_pasteboard (pb, &pb_rows, &pb_cols);
+  end_update (pb);
   wait_next();
 
+  scrc_put_chars (d3, "Exit", NORMAL, 1, 1, 1);
+  wait_next();
   scrc_clear_screen(pb);
+  scrc_delete_pasteboard(pb);
   return 0;
 }
 

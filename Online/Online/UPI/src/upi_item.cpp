@@ -292,22 +292,16 @@ int upic_replace_item (int menu_id, int id, const char* text_0, const char* text
     return UPI_SS_INVCOMMAND;
 
   if (Sys.item.cur == i) upic_wakeup();
-
   upic_init_item_strings (i, text_0, text_1);
-
   i->type    = type;
+  if (Sys.param.first || i->param.first)  {  
+    Param* p = Sys.param.first;
 
-  if (Sys.param.first || i->param.first)
-  {  
-    Param* p;
-
-    if (p = Sys.param.first)
-    {
+    if ( p )  {
       upic_drop_params (i->param.first);
       list_transfer (&Sys.param, &i->param);
     }
     else p = i->param.first;
-
     upic_install_params (p, i->string);    
     i->param.cur = p;
     i->type      = PARAM;
@@ -315,18 +309,15 @@ int upic_replace_item (int menu_id, int id, const char* text_0, const char* text
 
 #ifdef SCREEN
   scrc_begin_pasteboard_update (Sys.pb);
-  if ((len = strlen(i->string)) > m->width)
-  {
+  if ((len = strlen(i->string)) > m->width)  {
     scrc_change_window (m->window, -1, len+2);
     m->width = len;
     d = m->page.first;
-    while (d)
-    {
+    while (d)  {
       upic_change_page (m, d, len);
       d = d->next;
     }
   }
-
   upic_draw_item (i, row);
   scrc_end_pasteboard_update (Sys.pb);
 #else

@@ -288,7 +288,7 @@ void upic_draw_title_bar (Display*,const char*,int,int,const char*);
 
 /*- From UPI_PARAM.C --------------------------------------------------*/
 
-int upic_set_param ( void*, int, char *, ... );
+int upic_set_param ( const void*, int, const char *, ... );
 int upic_modify_param ( int, int, int, ... );
 int upic_get_param (int,int,int,Menu**,Page**,Item**,Param**);
 int upic_refresh_param_page (int);
@@ -298,7 +298,7 @@ void upic_drop_params (Param*);
 void upic_drop_param (Param*);
 void upic_refresh_params_in_line (Param*);
 void upic_refresh_param (Param*);
-int upic_build_format (char*,Param*);
+int upic_build_format (const char*,Param*);
 void upic_install_params (Param*,char*);
 int upic_check_int (int,int,int);
 int upic_check_double (double val, double min, double max);

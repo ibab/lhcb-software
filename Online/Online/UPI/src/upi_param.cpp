@@ -111,20 +111,14 @@ static char* upic_retreive_params_of_line (Item* i, char* buffer)   {
 }
 
 //---------------------------------------------------------------------------
-int upic_set_param (void *var, int id, char *format, ...) {
+int upic_set_param (const void *var, int id, const char *format, ...) {
   va_list args;
-  Convert def, min, max;
-  Convert* list;
-  int list_size;
-  int flag;
-  
-  Param* p;
-  int width;
-  int fortran;
+  Convert def, min, max, *list;
+  int list_size, flag, width, fortran;
 
   if (upic_find_param(Sys.param.first, id)) return UPI_SS_INVPARAM;
   
-  p = (Param*) list_add_entry (&Sys.param, sizeof(Param));
+  Param* p = (Param*) list_add_entry (&Sys.param, sizeof(Param));
   p->id = id;
 
   p->fortran = fortran = (*format == '#');
@@ -518,7 +512,7 @@ void upic_refresh_param (Param* p)    {
 }
 
 //---------------------------------------------------------------------------
-int upic_build_format (char* format, Param* p)    {
+int upic_build_format (const char* format, Param* p)    {
   char* fmt;
   char* conv;
   int width = 0;
@@ -529,7 +523,7 @@ int upic_build_format (char* format, Param* p)    {
     c = format[upic_non_blanks(format) - 1];
     c = toupper(c);
   }
-  sscanf (format, "%d.%d", &width, &w2);
+  ::sscanf (format, "%d.%d", &width, &w2);
   if (!width) return UPI_SS_INVFORM;
   if (!w2 )  {
     if ( c=='A' || c=='S' || c=='F' || c=='E' || c=='G' ) w2 = width;
@@ -541,7 +535,7 @@ int upic_build_format (char* format, Param* p)    {
   *fmt++ = '%';
   *conv++ = '%';
   if (c == 'A' || c == 'S') *fmt++ = '-';
-  sprintf (fmt, "%d.%d\0", width, w2);
+  sprintf (fmt, "%d.%d", width, w2);
   fmt += strlen(fmt);
   p->chars = width;
   switch (c)  {
@@ -608,11 +602,11 @@ int upic_build_format (char* format, Param* p)    {
 //---------------------------------------------------------------------------
 void upic_install_params (Param* param, char* text)   {
   char* c = text;
-  while (param)
-  {
+  while (param)  {
+    size_t n;
     if ( (c = strstr (c, "^")) == (char*) 0) return;
     param->pos = (int) c - (int) text + 1;
-    for (size_t n=0; (n < param->chars) && (*c == '^'); n++) c++;
+    for (n=0; (n < param->chars) && (*c == '^'); n++) c++;
     param->chars = n;
     param = param->next;
   }
@@ -907,11 +901,10 @@ int upic_itol (char* buffer, int digits, Unsigned value)    {
 }
 
 //---------------------------------------------------------------------------
-int upic_ltoi ( char* buffer, int digits)   {
+int upic_ltoi ( char* buffer, int /* digits */ )   {
   char c = toupper(*buffer);
   return (c == 'T') ? 1 : 0;
 }
-
 
 //---------------------------------------------------------------------------
 void upic_print_param (Param* p, char* buf, Convert source) {
@@ -1036,7 +1029,7 @@ int upic_set_value_from_list (int menu_id, int item_id, int param_id, int elem) 
 
 #ifdef SCREEN
 //---------------------------------------------------------------------------
-void upic_draw_param (Page*  page, Param* param, int row, int attrib, int offs) {
+void upic_draw_param (Page*  page, Param* param, int row, int attrib, int /* offs */) {
   int attr = attrib | UNDERLINE;
   size_t col = param->pos;
   size_t pos = (param->buf_pos > param->chars) ? param->chars - 1 : param->buf_pos;

@@ -9,7 +9,6 @@
 //---------------------------------------------------------------------------
 
 //-----------------   GLOBAL VARIABLES  -------------------------------------
-static int          Sig_upi;
 static int          upic_done = 0;
 //---------------------------------------------------------------------------
 
@@ -36,10 +35,6 @@ void upic_enable_ast()    {
 void upic_enable_input()    {
 #ifdef SCREEN
   upic_done = 0;
-#ifdef VAX
-#elif _OSK
-  _ss_ssig (0, Sig_upi);
-#endif
 #else
 #endif
 }
