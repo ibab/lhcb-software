@@ -4,6 +4,10 @@
 ! Purpose     : Contains the merging algorithms for final RICH PID results
 !-----------------------------------------------------------------------------
 
+! 2006-01-23 - Chris Jones
+ - Updates for LHCb v20r0
+ - Remove use of Ring refitting until actually used for reconstruction
+
 !======================= RichPIDMerge v1r5 2004-11-18 =======================
 ! 2004-08-19 - Chris Jones
  - Update and rename main PID merging algorithm
