@@ -5,7 +5,7 @@
  *  Header file for RICH DAQ general definitions
  *
  *  CVS Log :-
- *  $Id: RichDAQDefinitions.h,v 1.8 2005-12-13 17:27:25 jonrob Exp $
+ *  $Id: RichDAQDefinitions.h,v 1.9 2006-01-23 13:48:35 jonrob Exp $
  *
  *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
  *  @date   2003-11-06
@@ -58,25 +58,29 @@ namespace RichDAQ
   public:
     /// Constructor
     explicit NumericType ( const TYPE id = 0 ) : m_id(id) { }
-    /// Access the actual data value
-    inline TYPE dataValue() const { return m_id; }
-    /// Operator ==
-    inline bool operator== ( const RichDAQ::NumericType<TYPE>& id ) const
-    { return id.dataValue() == this->dataValue() ; }
-    /// Operator !=
-    inline bool operator!= ( const RichDAQ::NumericType<TYPE>& id ) const
-    { return id.dataValue() != this->dataValue() ; }
-    /// Operator <
-    inline bool operator<  ( const RichDAQ::NumericType<TYPE>& id ) const
-    { return id.dataValue() <  this->dataValue() ; }
-    /// Operator >
-    inline bool operator>  ( const RichDAQ::NumericType<TYPE>& id ) const
-    { return id.dataValue() >  this->dataValue() ; }
-    /// Operator std::string
-    inline operator std::string() const
-    { return boost::lexical_cast<std::string>(dataValue()); }
     /// Retrieve the full value
     inline TYPE data() const { return m_id; }
+    /// Operator ==
+    inline bool operator== ( const RichDAQ::NumericType<TYPE>& id ) const
+    { return id.data() == this->data() ; }
+    /// Operator !=
+    inline bool operator!= ( const RichDAQ::NumericType<TYPE>& id ) const
+    { return id.data() != this->data() ; }
+    /// Operator <
+    inline bool operator<  ( const RichDAQ::NumericType<TYPE>& id ) const
+    { return id.data() <  this->data() ; }
+    /// Operator >
+    inline bool operator>  ( const RichDAQ::NumericType<TYPE>& id ) const
+    { return id.data() >  this->data() ; }
+    /// Operator std::string
+    inline operator std::string() const
+    { return boost::lexical_cast<std::string>(data()); }
+    /// Overload output to ostream
+    friend inline std::ostream& operator << ( std::ostream& os, const NumericType<TYPE> & id )
+    { return ( os << id.data() ); }
+    /// Overloaded output to MsgStream
+    friend inline MsgStream & operator << ( MsgStream & os, const NumericType<TYPE> & id )
+    { return ( os << format("%4i",id.data()) ); }
   protected:
     /// Update the internal data
     inline void setData( const TYPE id ) { m_id = id; }
@@ -94,7 +98,7 @@ namespace RichDAQ
 
   //---------------------------------------------------------------------------------
 
-  /** @class Level0ID RichKernel/RichDAQDefinitions.hHPD
+  /** @class Level0ID RichKernel/RichDAQDefinitions.h
    *
    *  Contains the Level 0 board number plus one bit identifying on of the two HPDs
    *
@@ -161,9 +165,9 @@ namespace RichDAQ
 
   //---------------------------------------------------------------------------------
 
-  /** @class Level1ID RichKernel/RichDAQDefinitions.hHPD
+  /** @class Level1ID RichKernel/RichDAQDefinitions.h
    *
-   *  The Level 1 board ID
+   *  The Level 1 board ID.
    *
    *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
    *  @date   11/11/2005
@@ -176,7 +180,22 @@ namespace RichDAQ
       : NumericType<RichDAQ::ShortType>(id) { }
   };
 
-  /** @class HPDHardwareID RichKernel/RichDAQDefinitions.hHPD
+  /** @class Level1Input RichKernel/RichDAQDefinitions.h
+   *
+   *  The Level 1 board input number.
+   *
+   *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
+   *  @date   11/11/2005
+   */
+  class Level1Input : public NumericType<RichDAQ::ShortType>
+  {
+  public :
+    /// Constructor
+    explicit Level1Input ( const RichDAQ::ShortType id = 0 )
+      : NumericType<RichDAQ::ShortType>(id) { }
+  };
+
+  /** @class HPDHardwareID RichKernel/RichDAQDefinitions.h
    *
    *  The (numeric) HPD hardware ID. Unique to each HPD and can be
    *  used to locate its physical properties, such as Q.E. curves.
@@ -190,6 +209,75 @@ namespace RichDAQ
     /// Constructor
     explicit HPDHardwareID ( const RichDAQ::ShortType id = 0 )
       : NumericType<RichDAQ::ShortType>(id) { }
+  };
+
+  /** @class HPDL1InputID RichKernel/RichDAQDefinitions.h
+   *
+   *  The HPD Level1 input ID. The Level1 board number and the input
+   *  number on that board for a given HPD bit-packed into a single word.
+   *
+   *  The most significant 8 bits gives the L1 board number.
+   *  The least significant 8 bits gives the L1 board input number.
+   *
+   *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
+   *  @date   11/11/2005
+   */
+  class HPDL1InputID : public NumericType<RichDAQ::ShortType>
+  {
+  public :
+    // Define the number of bits for each field
+    static const RichDAQ::ShortType  BitsIn =  8; ///< Number of bits for input number
+    static const RichDAQ::ShortType  BitsB  =  8; ///< Number of bits for board number
+    // Create the shift registers
+    static const RichDAQ::ShortType  ShiftIn = 0;
+    static const RichDAQ::ShortType  ShiftB  = ShiftIn + BitsIn;
+    // Create the Masks
+    static const RichDAQ::LongType  MaskIn = ((1 << BitsIn)-1) << ShiftIn;
+    static const RichDAQ::LongType  MaskB  = ((1 << BitsB) -1) << ShiftB ;
+    // Create the max values that can be stored in each field
+    static const RichDAQ::ShortType  MaxIn = ( 1 << BitsIn ) - 1;
+    static const RichDAQ::ShortType  MaxB  = ( 1 << BitsB ) - 1;
+  public :
+    /// Constructor from bit packed word
+    explicit HPDL1InputID ( const RichDAQ::ShortType id = 0 )
+      : NumericType<RichDAQ::ShortType>(id) { }
+    /// Return the Level1 board number
+    inline RichDAQ::Level1ID boardNumber() const
+    {
+      return RichDAQ::Level1ID( (data() & MaskB) >> ShiftB );
+    }
+    /// Set the Level1 board number
+    inline bool setBoardNumber( const RichDAQ::Level1ID board )
+    {
+      return ( dataInRange(board.data(),MaxB) ?
+               set( board.data(), ShiftB, MaskB ) : false );
+    }
+    /// Return the input number
+    inline RichDAQ::Level1Input inputNumber() const
+    {
+      return RichDAQ::Level1Input( (data() & MaskIn) >> ShiftIn );
+    }
+    /// Set the input number
+    inline bool setInputNumber( const RichDAQ::Level1Input input )
+    {
+      return ( dataInRange(input.data(),MaxIn) ?
+               set( input.data(), ShiftIn, MaskIn ) : false );
+    }
+  private: // methods
+    /// Set the data value for a given mask and shift value
+    inline bool set( const RichDAQ::ShortType value,
+                     const RichDAQ::ShortType shift,
+                     const RichDAQ::LongType  mask )
+    {
+      setData( ((value << shift) & mask) | (data() & ~mask) );
+      return true;
+    }
+    /// tests whether a given value is in range for a given data field
+    inline bool dataInRange( const RichDAQ::ShortType value,
+                             const RichDAQ::ShortType max ) const
+    {
+      return ( value <= max );
+    }
   };
 
   //---------------------------------------------------------------------------------
@@ -246,78 +334,48 @@ namespace RichDAQ
 
 //---------------------------------------------------------------------------------
 
-/// overloaded output to MsgStream for RichDAQ::Level0ID
-inline MsgStream& operator << ( MsgStream& os,
-                                const RichDAQ::Level0ID & id )
-{
-  os << format( "%4i",id.dataValue() );
-  return os;
-}
-/// overloaded output to MsgStream for RichDAQ::Level1ID
-inline MsgStream& operator << ( MsgStream& os,
-                                const RichDAQ::Level1ID & id )
-{
-  os << format( "%4i",id.dataValue() );
-  return os;
-}
-/// overloaded output to MsgStream for RichDAQ::HPDHardwareID
-inline MsgStream& operator << ( MsgStream& os,
-                                const RichDAQ::HPDHardwareID & id )
-{
-  os << format( "%4i",id.dataValue() );
-  return os;
-}
-
-//---------------------------------------------------------------------------------
-
-/// overloaded output to std::ostream for RichDAQ::Level0ID
-inline std::ostream& operator << ( std::ostream& os,
-                                   const RichDAQ::Level0ID & id )
-{
-  os << id.dataValue();
-  return os;
-}
-/// overloaded output to std::ostream for RichDAQ::Level1ID
-inline std::ostream& operator << ( std::ostream& os,
-                                   const RichDAQ::Level1ID & id )
-{
-  os << id.dataValue();
-  return os;
-}
-/// overloaded output to std::ostream for RichDAQ::HPDHardwareID
-inline std::ostream& operator << ( std::ostream& os,
-                                   const RichDAQ::HPDHardwareID & id )
-{
-  os << id.dataValue();
-  return os;
-}
-
-//---------------------------------------------------------------------------------
-
 // Hash functions
 // Needed in order to allow these classes to be used as keys in Hash maps
 
 #ifdef __GNUC__
 namespace __gnu_cxx
 {
+
   /// Level0ID hash function
   template <> struct hash<const RichDAQ::Level0ID>
-  { size_t operator() ( const RichDAQ::Level0ID id ) const { return (size_t)id.dataValue(); } } ;
+  { size_t operator() ( const RichDAQ::Level0ID id ) const { return (size_t)id.data(); } } ;
   /// Level0ID hash function
   template <> struct hash<const RichDAQ::Level0ID&>
-  { size_t operator() ( const RichDAQ::Level0ID id ) const { return (size_t)id.dataValue(); } } ;
+  { size_t operator() ( const RichDAQ::Level0ID id ) const { return (size_t)id.data(); } } ;
+
   /// Level1ID hash function
   template <> struct hash<const RichDAQ::Level1ID>
-  { size_t operator() ( const RichDAQ::Level1ID id ) const { return (size_t)id.dataValue(); } } ;
+  { size_t operator() ( const RichDAQ::Level1ID id ) const { return (size_t)id.data(); } } ;
   /// Level1ID hash function
   template <> struct hash<const RichDAQ::Level1ID&>
-  { size_t operator() ( const RichDAQ::Level1ID id ) const { return (size_t)id.dataValue(); } } ;
+  { size_t operator() ( const RichDAQ::Level1ID id ) const { return (size_t)id.data(); } } ;
+
+  /// Level1Input hash function
+  template <> struct hash<const RichDAQ::Level1Input>
+  { size_t operator() ( const RichDAQ::Level1Input id ) const { return (size_t)id.data(); } } ;
+  /// Level1Input hash function
+  template <> struct hash<const RichDAQ::Level1Input&>
+  { size_t operator() ( const RichDAQ::Level1Input id ) const { return (size_t)id.data(); } } ;
+
   /// HPDHardwareID hash function
   template <> struct hash<const RichDAQ::HPDHardwareID>
-  { size_t operator() ( const RichDAQ::HPDHardwareID id ) const { return (size_t)id.dataValue(); } } ;
+  { size_t operator() ( const RichDAQ::HPDHardwareID id ) const { return (size_t)id.data(); } } ;
   /// HPDHardwareID hash function
   template <> struct hash<const RichDAQ::HPDHardwareID&>
-  { size_t operator() ( const RichDAQ::HPDHardwareID id ) const { return (size_t)id.dataValue(); } } ;
+  { size_t operator() ( const RichDAQ::HPDHardwareID id ) const { return (size_t)id.data(); } } ;
+
+  /// HPDL1InputID hash function
+  template <> struct hash<const RichDAQ::HPDL1InputID>
+  { size_t operator() ( const RichDAQ::HPDL1InputID id ) const { return (size_t)id.data(); } } ;
+  /// HPDL1InputID hash function
+  template <> struct hash<const RichDAQ::HPDL1InputID&>
+  { size_t operator() ( const RichDAQ::HPDL1InputID id ) const { return (size_t)id.data(); } } ;
+
 }
 #endif
 

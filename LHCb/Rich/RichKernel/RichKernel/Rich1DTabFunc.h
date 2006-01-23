@@ -5,7 +5,7 @@
  *  Header file for utility class : Rich1DTabFunc
  *
  *  CVS Log :-
- *  $Id: Rich1DTabFunc.h,v 1.8 2005-10-13 15:03:41 jonrob Exp $ 
+ *  $Id: Rich1DTabFunc.h,v 1.9 2006-01-23 13:48:35 jonrob Exp $ 
  *  
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   2003-08-13
@@ -80,7 +80,7 @@ public:
    *  @param data     map contain x(key) and y(data) values
    *  @param interType GSL Interpolator type
    */
-  Rich1DTabFunc::Rich1DTabFunc( const RichMap<double,double> & data, 
+  Rich1DTabFunc::Rich1DTabFunc( const Rich::Map<double,double> & data, 
                                 const gsl_interp_type * interType = gsl_interp_linear );
 
   /// Destructor
@@ -207,7 +207,7 @@ public:
 protected: // data
 
   /// the data points
-  RichMap < double, double > m_data;
+  Rich::Map < double, double > m_data;
 
   /// Status flag
   bool m_OK;

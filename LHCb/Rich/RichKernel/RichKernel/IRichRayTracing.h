@@ -1,12 +1,15 @@
+
+//-----------------------------------------------------------------------------
 /** @file IRichRayTracing.h
  *
  *  Header file for tool interface : IRichRayTracing
  *
- *  $Id: IRichRayTracing.h,v 1.18 2005-12-19 17:00:00 cattanem Exp $
+ *  $Id: IRichRayTracing.h,v 1.19 2006-01-23 13:48:35 jonrob Exp $
  *
  *  @author Antonis Papanestis
  *  @date   2003-10-28
  */
+//-----------------------------------------------------------------------------
 
 #ifndef RICHKERNEL_IRICHRAYTRACING_H
 #define RICHKERNEL_IRICHRAYTRACING_H 1
@@ -33,6 +36,7 @@ namespace LHCb
 /// Static Interface Identification
 static const InterfaceID IID_IRichRayTracing( "IRichRayTracing", 1, 0 );
 
+//-----------------------------------------------------------------------------
 /** @class IRichRayTracing IRichRayTracing.h RichKernel/IRichRayTracing.h
  *
  *  A tool to trace photons (or similar) from a point all the way to
@@ -41,8 +45,10 @@ static const InterfaceID IID_IRichRayTracing( "IRichRayTracing", 1, 0 );
  *  @author Antonis Papanestis
  *  @date   2003-10-28
  */
+//-----------------------------------------------------------------------------
 
-class IRichRayTracing : public virtual IAlgTool {
+class IRichRayTracing : public virtual IAlgTool 
+{
 
 public:
 

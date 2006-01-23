@@ -4,7 +4,7 @@
  *
  *  Header file for RICH reconstruction tool interface : IRichParticleProperties
  *
- *  $Id: IRichParticleProperties.h,v 1.2 2006-01-20 16:28:16 cattanem Exp $
+ *  $Id: IRichParticleProperties.h,v 1.3 2006-01-23 13:48:35 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -30,7 +30,8 @@ static const InterfaceID IID_IRichParticleProperties( "IRichParticleProperties",
  *  @date   15/03/2002
  */
 
-class IRichParticleProperties : public virtual IAlgTool {
+class IRichParticleProperties : public virtual IAlgTool
+{
 
 public:
 
@@ -65,7 +66,7 @@ public:
    */
   virtual double massSq( const Rich::ParticleIDType id ) const = 0;
 
-  /** Calculates the threshold momentum for a given mass hypothesis 
+  /** Calculates the threshold momentum for a given mass hypothesis
    *  in a given radiator
    *
    *  @param id The mass hypothesis
@@ -77,7 +78,7 @@ public:
   virtual double thresholdMomentum( const Rich::ParticleIDType id,
                                     const Rich::RadiatorType rad ) const = 0;
 
-  /** Calculates the square of the threshold momentum for a given mass hypothesis 
+  /** Calculates the square of the threshold momentum for a given mass hypothesis
    *  in a given radiator
    *
    *  @param id The mass hypothesis

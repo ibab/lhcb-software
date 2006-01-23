@@ -5,7 +5,7 @@
  *  Header file for utility hash map for the RICH : RichHashMap
  *
  *  CVS Log :-
- *  $Id: RichHashMap.h,v 1.4 2005-12-13 17:27:25 jonrob Exp $
+ *  $Id: RichHashMap.h,v 1.5 2006-01-23 13:48:35 jonrob Exp $
  *
  *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
  *  @date   2005-01-11
@@ -26,6 +26,8 @@ namespace Rich
    *
    *  A utility class providing a templated HashMap for fast
    *  loop up table like access.
+   *
+   *  Provides a convenient single point of definition for optimisation studies.
    *
    *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
    *  @date   2005-01-11

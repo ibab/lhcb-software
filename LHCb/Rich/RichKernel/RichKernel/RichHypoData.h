@@ -5,7 +5,7 @@
  *  Header file for utility class : RichHypoData
  *
  *  CVS Log :-
- *  $Id: RichHypoData.h,v 1.12 2006-01-20 16:28:16 cattanem Exp $
+ *  $Id: RichHypoData.h,v 1.13 2006-01-23 13:48:35 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   2003-07-31
@@ -22,8 +22,11 @@
 // boost
 #include "RichKernel/BoostArray.h"
 
-// RichKernel
+// LHCbKernel
 #include "Kernel/RichParticleIDType.h"
+#include "Kernel/RichParticleIDType.h"
+
+// RichKernel
 #include "RichKernel/BoostMemPoolAlloc.h"
 
 //------------------------------------------------------------------------
@@ -125,7 +128,7 @@ public: // methods
    *  @retval true  Data field has been explicitly set
    *  @retval false Data field has not been set. Value will be the initialisation (or reset) value
    */
-  bool dataIsValid( const Rich::ParticleIDType type );
+  bool dataIsValid( const Rich::ParticleIDType type ) const;
 
 private: // data
 
@@ -190,7 +193,7 @@ inline const typename RichHypoData<TYPE>::DataArray & RichHypoData<TYPE>::dataAr
 }
 
 template <class TYPE>
-inline bool RichHypoData<TYPE>::dataIsValid( const Rich::ParticleIDType type )
+inline bool RichHypoData<TYPE>::dataIsValid( const Rich::ParticleIDType type ) const
 {
   return m_valid[type];
 }

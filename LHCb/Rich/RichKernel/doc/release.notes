@@ -1,7 +1,11 @@
-! $Id: release.notes,v 1.94 2006-01-17 14:34:42 cattanem Exp $
+! $Id: release.notes,v 1.95 2006-01-23 13:48:35 jonrob Exp $
 ! Package     : Rich/RichKernel
 ! Responsible : Chris Jones
 ! Purpose     : General purpose RICH classes
+
+! 2006-01-23 - Chris Jones
+ - New updates for Rich DAQ
+ - Various fixes for reconstruction compatibility with LHCb v20r0
 
 !======================= RichKernel v6r0 2006-01-17 =======================
 ! 2006-01-17 - Chris Jones

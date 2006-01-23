@@ -5,7 +5,7 @@
  *  Header file for RICH utility class : RichObjPtn
  *
  *  CVS Log :-
- *  $Id: RichObjPtn.h,v 1.2 2005-11-15 14:27:50 jonrob Exp $
+ *  $Id: RichObjPtn.h,v 1.3 2006-01-23 13:48:35 jonrob Exp $
  *
  *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
  *  @date   13/11/2005
@@ -41,7 +41,9 @@ public:
    *
    *  @attention Using this method, RichObjPtn takes ownership of
    *  the object pointed at by obj. In particular, it is deleted
-   *  when this RichObjPtn goes out of scope or is deleted itself
+   *  when this RichObjPtn goes out of scope or is deleted itself.
+   *  Consequently users should NOT manually delete objects they
+   *  pass to a RichObjPtn
    */
   explicit RichObjPtn( TYPE * obj ) : m_obj(obj) {}
 
@@ -58,6 +60,9 @@ private:
   }
 
 public:
+
+  /// Check if an object is defined
+  inline bool objectExists()      const { return 0 != m_obj; }
 
   /// Dereference operator to const object
   inline const TYPE* operator->() const { return checkObj(); }

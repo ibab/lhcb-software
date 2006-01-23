@@ -5,7 +5,7 @@
  *  Header file for tool interface : IRichDetNumberingTool
  *
  *  CVS Log :-
- *  $Id: IRichDetNumberingTool.h,v 1.2 2005-12-13 17:27:25 jonrob Exp $
+ *  $Id: IRichDetNumberingTool.h,v 1.3 2006-01-23 13:48:35 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   2004-12-18
@@ -36,7 +36,8 @@ static const InterfaceID IID_IRichDetNumberingTool ( "IRichDetNumberingTool", 1,
  */
 //-----------------------------------------------------------------------------
 
-class IRichDetNumberingTool : virtual public IAlgTool {
+class IRichDetNumberingTool : virtual public IAlgTool 
+{
 
 public:
 
@@ -132,6 +133,32 @@ public:
    *  @return The Level1 board ID
    */
   virtual const RichDAQ::Level1ID level1ID( const RichDAQ::HPDHardwareID hardID ) const = 0;
+
+
+
+
+
+
+  /** Obtain the Level1 input number for a given RichSmartID
+   *
+   *  @param smartID The RichSmartID identifier
+   *
+   *  @return The Level1 board input number
+   */
+  virtual const RichDAQ::Level1Input level1InputNum( const LHCb::RichSmartID smartID ) const = 0;
+
+  /** Obtain the Level1 input number for a given HPD hardware ID
+   *
+   *  @param hardID The HPD hardware ID
+   *
+   *  @return The Level1 board input number
+   */
+  virtual const RichDAQ::Level1Input level1InputNum( const RichDAQ::HPDHardwareID hardID ) const = 0;
+
+
+
+
+
 
   /** Obtain a list of RichSmartID HPD identifiers for a given level 1 ID
    *
