@@ -1,4 +1,4 @@
-// $Id: RichDigiAlgMoni.h,v 1.5 2006-01-19 08:48:03 cattanem Exp $
+// $Id: RichDigiAlgMoni.h,v 1.6 2006-01-23 14:05:15 jonrob Exp $
 #ifndef RICHMONITOR_RICHDIGIALGMONI_H
 #define RICHMONITOR_RICHDIGIALGMONI_H 1
 
@@ -18,11 +18,12 @@
 #include "Event/MCRichHit.h"
 #include "Kernel/RichParticleIDType.h"
 
-// RichKernel
+// Kernel
 #include "RichKernel/RichMap.h"
 #include "RichKernel/RichHashMap.h"
 #include "Kernel/RichDetectorType.h"
 #include "Kernel/RichRadiatorType.h"
+#include "Kernel/RichParticleIDType.h"
 
 // Histogramming
 #include "AIDA/IHistogram1D.h"
@@ -67,10 +68,10 @@ private: // methods
 
   // Map to count cherenkov photons for each radiator
   typedef std::pair<const MCParticle*,Rich::RadiatorType> PhotPair;
-  typedef RichMap< PhotPair, int >                        PhotMap;
+  typedef Rich::Map< PhotPair, int >                      PhotMap;
 
   // PD occupancies
-  typedef RichMap<RichSmartID,int> PDMulti;
+  typedef Rich::Map<RichSmartID,int> PDMulti;
 
   /// Book histograms
   StatusCode bookHistograms();
@@ -106,7 +107,7 @@ private: // data
   std::string m_mchitTES;       ///< Location of MCRichHits in TES
 
   // Particle masses
-  RichMap<Rich::ParticleIDType,double> m_particleMass;
+  Rich::Map<Rich::ParticleIDType,double> m_particleMass;
 
   // Histograms
   IHistogram1D* m_digitMult[Rich::NRiches]; ///< MCRichDigit event multiplicity

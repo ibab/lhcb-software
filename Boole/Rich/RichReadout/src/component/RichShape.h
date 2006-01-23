@@ -23,7 +23,7 @@ public:
   {
 
     // Initialise interpolator
-    RichMap<double,double> data;
+    Rich::Map<double,double> data;
     for ( int i = 1; i < 101; ++i )
     {
       const double time = m_minTime + (m_maxTime-m_minTime)*i/100;

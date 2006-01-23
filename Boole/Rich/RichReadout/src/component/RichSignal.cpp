@@ -5,7 +5,7 @@
  *  Implementation file for RICH digitisation algorithm : RichSignal
  *
  *  CVS Log :-
- *  $Id: RichSignal.cpp,v 1.5 2005-12-16 15:13:33 jonrob Exp $
+ *  $Id: RichSignal.cpp,v 1.6 2006-01-23 14:05:15 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @author Alex Howard   a.s.howard@ic.ac.uk
@@ -66,7 +66,6 @@ StatusCode RichSignal::initialize()
 
   // tools
   acquireTool( "RichSmartIDTool", m_smartIDTool, 0, true );
-  acquireTool( "RichMCTruthTool", m_truth, 0, true       );
 
   return sc;
 }
@@ -115,15 +114,11 @@ StatusCode RichSignal::ProcessEvent( const std::string & hitLoc,
 {
 
   // Load hits
-  if ( !exist<MCRichHits>(hitLoc) )
+  if ( exist<MCRichHits>(hitLoc) )
   {
-    //if ( msgLevel(MSG::DEBUG) )
-    //{
-    //  debug() << "Cannot locate MCRichHits at " << hitLoc << endreq;
-    //}
-    return Warning( "Cannot locate MCRichHits at " + hitLoc, 
-                    StatusCode::SUCCESS, 0 );
+    ++counter( "Found MCRichHits at " + hitLoc );
   }
+  else { return StatusCode::SUCCESS; }
   MCRichHits * hits = get<MCRichHits>( hitLoc );
   if ( msgLevel(MSG::DEBUG) )
   {
@@ -131,33 +126,27 @@ StatusCode RichSignal::ProcessEvent( const std::string & hitLoc,
             << " MCRichHits at " << hitLoc << " : Pointer=" << hits << endreq;
   }
 
-  unsigned int nDeps(0), nSumDeps(0);
-  for ( MCRichHits::const_iterator iHit = hits->begin(); 
-        iHit != hits->end(); ++iHit ) 
+  unsigned int nDeps(0);
+  for ( MCRichHits::const_iterator iHit = hits->begin();
+        iHit != hits->end(); ++iHit )
   {
 
     RichSmartID tempID;
     // Is hit in active pixel
     if ( (m_smartIDTool->smartID((*iHit)->entry(),tempID)).isSuccess()
-         && tempID.pixelDataAreValid() ) {
+         && tempID.pixelDataAreValid() ) 
+    {
 
-      // For the time being strip sub-pixel information
+      // For the time being strip any sub-pixel information
       const RichSmartID id = tempID.pixelID();
 
-      // Find out if we already have a hit for this super-pixel
-      MCRichSummedDeposit * sumDep = m_mcSummedDeposits->object(id);
-      if ( tofOffset < -1 && sumDep ) 
-      {
-        // Toss a coin to see if we add this hit to the existing deposits
-        // Simulate a 1/8 chance of additional hit falling in same sub-pixel as
-        // already existing hit
-        if ( 0 != static_cast<int>(m_rndm()*8.) ) continue;
-      }
-
-      // Then create a new deposit
+      // Create a new deposit
       MCRichDeposit* dep = new MCRichDeposit();
       m_mcDeposits->insert( dep );
       ++nDeps;
+
+      // Set RichSmartID
+      dep->setSmartID( id );
 
       // set parent hit
       dep->setParentHit( *iHit );
@@ -171,41 +160,12 @@ StatusCode RichSignal::ProcessEvent( const std::string & hitLoc,
       if ( Rich::Rich2 == (*iHit)->rich() ) tof -= 40;
       dep->setTime( tof );
 
-      // Add to the set of other deposits in the pixel
-      if ( !sumDep )
-      {
-        sumDep = new MCRichSummedDeposit();
-        m_mcSummedDeposits->insert( sumDep, id );
-        ++nSumDeps;
-      }
-      sumDep->addToDeposits(dep);
-
-      // summed energy
-      sumDep->setSummedEnergy( sumDep->summedEnergy() + dep->energy() );
-
-      // copy history to local object to update
-      MCRichDigitHistoryCode hist = sumDep->history();
-
       // store type event type
-      if      (  0 == eventType ) { dep->setSignalEvent(true);   hist.setSignalEvent(true);   }
-      else if ( -1 == eventType ) { dep->setPrevEvent(true);     hist.setPrevEvent(true);     }
-      else if ( -2 == eventType ) { dep->setPrevPrevEvent(true); hist.setPrevPrevEvent(true); }
-      else if (  1 == eventType ) { dep->setNextEvent(true);     hist.setNextEvent(true);     }
-      else if (  2 == eventType ) { dep->setNextNextEvent(true); hist.setNextNextEvent(true); }
-
-      // store history in summed deposit
-      if ( !m_truth->isBackground( *iHit ) ) 
-      {
-        if      ( Rich::Aerogel == (*iHit)->radiator() ) { hist.setAerogelHit(true); }
-        else if ( Rich::C4F10   == (*iHit)->radiator() ) { hist.setC4f10Hit(true);   }
-        else if ( Rich::CF4     == (*iHit)->radiator() ) { hist.setCf4Hit(true);     }
-      } 
-      if ( (*iHit)->scatteredPhoton() ) { hist.setScatteredHit(true);  }
-      if ( (*iHit)->chargedTrack()    ) { hist.setChargedTrack(true);  }
-      if ( (*iHit)->backgroundHit()   ) { hist.setBackgroundHit(true); }
-
-      // Set history in sum dep
-      sumDep->setHistory( hist );
+      if      (  0 == eventType ) { dep->setSignalEvent(true);   }
+      else if ( -1 == eventType ) { dep->setPrevEvent(true);     }
+      else if ( -2 == eventType ) { dep->setPrevPrevEvent(true); }
+      else if (  1 == eventType ) { dep->setNextEvent(true);     }
+      else if (  2 == eventType ) { dep->setNextNextEvent(true); }
 
     } // active hit if
 
@@ -213,8 +173,7 @@ StatusCode RichSignal::ProcessEvent( const std::string & hitLoc,
 
   if ( msgLevel(MSG::DEBUG) )
   {
-    debug() << "Created " << nDeps << " MCRichDeposits and " << nSumDeps
-            << " MCRichSummedDeposits for " << hitLoc << endreq;
+    debug() << "Created " << nDeps << " MCRichDeposits for " << hitLoc << endreq;
   }
 
   return StatusCode::SUCCESS;

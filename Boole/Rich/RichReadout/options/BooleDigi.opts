@@ -5,6 +5,13 @@ DigiRICHSeq.Members += { "RichSignal/RichPDSignal" };
 RichPDSignal.UseSpillover     = true;
 RichPDSignal.UseLHCBackground = false; // requires "Gauss" LHC events
 
+// charge sharing
+DigiRICHSeq.Members += { "RichSimpleChargeSharing/RichChargeShare" };
+RichChargeShare.ChargeShareFraction = 0.025;
+
+// deposit summation
+DigiRICHSeq.Members += { "RichSummedDeposits" };
+
 // Detailed treatment of HPD response
 DigiRICHSeq.Members += { "RichDetailedFrontEndResponse/RichPDResponse" };
 
