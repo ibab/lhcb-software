@@ -66,7 +66,6 @@ namespace {
   }
   int EntryMap::consoleCall(void* param)  {
     EntryMap* m = (EntryMap*)param;
-#ifdef _WIN32
     FILE* f = stdin;
     int pos = 0;
     while(1)  {
@@ -82,7 +81,6 @@ namespace {
         }
       }
     }
-#endif
   }
   int EntryMap::handle()  {
     std::vector<__NetworkChannel__> channels;
@@ -144,10 +142,10 @@ namespace {
       int (*call)(void*);
       switch(m_port)  {
         case 0:
-#ifdef _WIN32
+//#ifdef _WIN32
           call = consoleCall;
           break;
-#endif
+//#endif
         default: 
           printf("Installing thread call!\n");
           call = threadCall;
