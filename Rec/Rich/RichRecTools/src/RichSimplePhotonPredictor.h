@@ -5,7 +5,7 @@
  *  Header file for tool : RichSimplePhotonPredictor
  *
  *  CVS Log :-
- *  $Id: RichSimplePhotonPredictor.h,v 1.2 2005-06-23 15:17:42 jonrob Exp $
+ *  $Id: RichSimplePhotonPredictor.h,v 1.3 2006-01-23 14:20:44 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -36,9 +36,9 @@
 /** @class RichSimplePhotonPredictor RichSimplePhotonPredictor.h
  *
  *  Tool which performs the association between RichRecTracks and
- *  RichRecPixels to form RichRecPhotons. 
- * 
- *  This particular implementation uses a simple fixed cut range per radiator, 
+ *  RichRecPixels to form RichRecPhotons.
+ *
+ *  This particular implementation uses a simple fixed cut range per radiator,
  *  on the seperation between the pixel and ray-traced track impact point.
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
@@ -47,7 +47,7 @@
 //-----------------------------------------------------------------------------
 
 class RichSimplePhotonPredictor : public RichRecToolBase,
-                                  virtual public IRichPhotonPredictor 
+                                  virtual public IRichPhotonPredictor
 {
 
 public: // Methods for Gaudi Framework
@@ -69,8 +69,8 @@ public: // Methods for Gaudi Framework
 public: // methods (and doxygen comments) inherited from public interface
 
   // Is it possible to make a photon candidate using this segment and pixel.
-  bool photonPossible( RichRecSegment * segment,
-                       RichRecPixel * pixel ) const;
+  bool photonPossible( LHCb::RichRecSegment * segment,
+                       LHCb::RichRecPixel * pixel ) const;
 
 private: // private data
 

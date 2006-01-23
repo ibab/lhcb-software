@@ -5,7 +5,7 @@
  *  Header file for tool : RichCherenkovAngle
  *
  *  CVS Log :-
- *  $Id: RichCherenkovAngle.h,v 1.8 2005-10-13 16:01:55 jonrob Exp $
+ *  $Id: RichCherenkovAngle.h,v 1.9 2006-01-23 14:20:43 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -41,7 +41,7 @@
 #include "gsl/gsl_math.h"
 
 // CLHEP
-#include "CLHEP/Units/PhysicalConstants.h"
+#include "Kernel/PhysicalConstants.h"
 
 //-----------------------------------------------------------------------------
 /** @class RichCherenkovAngle RichCherenkovAngle.h
@@ -75,36 +75,36 @@ public: // Methods for Gaudi Framework
 public: // methods (and doxygen comments) inherited from public interface
 
   // Returns average Cherenkov angle for given particle hypothesis
-  double avgCherenkovTheta( RichRecSegment * segment,
+  double avgCherenkovTheta( LHCb::RichRecSegment * segment,
                             const Rich::ParticleIDType id ) const;
 
   // Returns average Cherenkov angle for the current mass hypothesis
   // Assigned to the segment
-  double avgCherenkovTheta( RichRecSegment * segment ) const;
+  double avgCherenkovTheta( LHCb::RichRecSegment * segment ) const;
 
   // Computes the nominal saturated Cherenkov angle for a given radiator medium
   double nominalSaturatedCherenkovTheta( const Rich::RadiatorType rad ) const;
 
   // Computes the average ring radius on the detector plane, in local HPD coordinates,
   // for the given mass hypothesis.
-  double avCKRingRadiusLocal( RichRecSegment * segment,
+  double avCKRingRadiusLocal( LHCb::RichRecSegment * segment,
                               const Rich::ParticleIDType id,
                               const unsigned int nSamples = 6 ) const;
 
   // Computes the average ring radius on the detector plane, in local HPD coordinates,
   // for the given cherenkov angle
-  double avCKRingRadiusLocal( RichRecSegment * segment,
+  double avCKRingRadiusLocal( LHCb::RichRecSegment * segment,
                               const double ckTheta,
                               const unsigned int nSamples = 6 ) const;
 
   // Computes the average ring radius on the detector plane, in local HPD coordinates,
-  double satCKRingRadiusLocal( RichRecSegment * segment,
+  double satCKRingRadiusLocal( LHCb::RichRecSegment * segment,
                                const unsigned int nSamples = 6 ) const;
 
 private: // methods
 
   /// Compute and store the average radii values for the mass hypotheses
-  void computeRadii( RichRecSegment * segment,
+  void computeRadii( LHCb::RichRecSegment * segment,
                      const unsigned int nSamples ) const;
 
 private: // Private data

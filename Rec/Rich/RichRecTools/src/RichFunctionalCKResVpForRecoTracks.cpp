@@ -4,7 +4,7 @@
  *
  *  Implementation file for tool : RichFunctionalCKResVpForRecoTracks
  *
- *  $Id: RichFunctionalCKResVpForRecoTracks.cpp,v 1.3 2005-11-03 14:33:59 jonrob Exp $
+ *  $Id: RichFunctionalCKResVpForRecoTracks.cpp,v 1.4 2006-01-23 14:20:44 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   17/10/2004
@@ -16,6 +16,9 @@
 
 // local
 #include "RichFunctionalCKResVpForRecoTracks.h"
+
+// namespaces
+using namespace LHCb;
 
 //----------------------------------------------------------------------------------------
 
@@ -144,11 +147,10 @@ ckThetaResolution( RichRecSegment * segment,
     // Reference to track ID object
     const RichTrackID & tkID = segment->richRecTrack()->trackID();
 
-    // Check track parent type is Track or TrStoredTrack
-    if ( Rich::TrackParent::Track         != tkID.parentType() &&
-         Rich::TrackParent::TrStoredTrack != tkID.parentType() )
+    // Check track parent type is Track
+    if ( Rich::TrackParent::Track != tkID.parentType() )
     {
-      Exception( "Track parent type is not Track or TrStoredTrack" );
+      Exception( "Track parent type is not Track" );
     }
 
     // Expected Cherenkov theta angle
@@ -171,7 +173,7 @@ ckThetaResolution( RichRecSegment * segment,
       const Rich::RadiatorType rad = tkSeg.radiator();
 
       // momentum for this segment
-      const double ptot = tkSeg.bestMomentum().mag() / GeV;
+      const double ptot = sqrt(tkSeg.bestMomentum().Mag2()) / GeV;
 
       // tan(cktheta)
       const double tanCkExp = tan(ckExp);
@@ -185,7 +187,7 @@ ckThetaResolution( RichRecSegment * segment,
       res2 += chromatErr;
 
       // multiple scattering
-      const HepVector3D & entV = tkSeg.entryMomentum();
+      const Gaudi::XYZVector & entV = tkSeg.entryMomentum();
       const double tx = ( fabs(entV.z())>0 ? entV.x() / entV.z() : 0 );
       const double ty = ( fabs(entV.z())>0 ? entV.y() / entV.z() : 0 );
       const double effectiveLength = sqrt( 1 + tx*tx + ty*ty ) * m_matThickness[rad];

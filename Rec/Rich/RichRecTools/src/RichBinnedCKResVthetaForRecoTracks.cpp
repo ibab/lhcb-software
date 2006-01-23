@@ -5,7 +5,7 @@
  *  Implementation file for tool : RichBinnedCKResVthetaForRecoTracks
  *
  *  CVS Log :-
- *  $Id: RichBinnedCKResVthetaForRecoTracks.cpp,v 1.1 2005-10-13 16:01:55 jonrob Exp $
+ *  $Id: RichBinnedCKResVthetaForRecoTracks.cpp,v 1.2 2006-01-23 14:20:43 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -21,7 +21,10 @@
 #include "RichBinnedCKResVthetaForRecoTracks.h"
 
 // CLHEP
-#include "CLHEP/Units/PhysicalConstants.h"
+#include "Kernel/PhysicalConstants.h"
+
+// namespaces
+using namespace LHCb;
 
 //-----------------------------------------------------------------------------
 
@@ -147,7 +150,7 @@ StatusCode RichBinnedCKResVthetaForRecoTracks::initialize()
   acquireTool( "RichCherenkovAngle", m_ckAngle );
 
   // Informational Printout
-  debug() << " Using binned track resolutions for TrStoredTracks" << endreq;
+  debug() << " Using binned track resolutions for Tracks" << endreq;
   for ( int iR = 0; iR < Rich::NRadiatorTypes; ++iR )
   {
     debug() << " " << (Rich::RadiatorType)iR << " Resolution bins = " << m_binEdges[iR] << endreq;
@@ -178,11 +181,10 @@ RichBinnedCKResVthetaForRecoTracks::ckThetaResolution( RichRecSegment * segment,
     // Reference to track ID object
     const RichTrackID & tkID = segment->richRecTrack()->trackID();
 
-    // Check track parent type is Track or TrStoredTrack
-    if ( Rich::TrackParent::Track         != tkID.parentType() &&
-         Rich::TrackParent::TrStoredTrack != tkID.parentType() )
+    // Check track parent type is Track
+    if ( Rich::TrackParent::Track         != tkID.parentType() )
     {
-      Exception( "Track parent type is not Track or TrStoredTrack" );
+      Exception( "Track parent type is not 'Track'" );
     }
 
     double res = 0;

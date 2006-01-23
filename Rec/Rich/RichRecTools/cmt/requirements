@@ -2,20 +2,23 @@
 # Created    : 11/03/2002
 # Maintainer : Christopher Rob Jones   Christopher.Rob.Jones@cern.ch
 #============================================================================
-# $Id: requirements,v 1.36 2005-11-21 08:49:00 cattanem Exp $
+# $Id: requirements,v 1.37 2006-01-23 14:20:43 jonrob Exp $
 #============================================================================
 
+# Comments :-
+# Should look to spliting up this package, its getting rather large.
+
 package RichRecTools
-version v2r16
+version v3r0
 
 # ================ structure ================================================
 branches src cmt doc
 include_path none
 
 # ================ dependencies =============================================
-use RichRecBase    v*   Rich
-use RichDet        v*   Det
-# Should look to spliting up this package, its getting rather large.
+use RichRecBase      v*   Rich
+use RichDet          v*   Det
+use TrackInterfaces  v*   Tr
 
 # ================ component library=========================================
 library          RichRecTools  ../src/*.cpp

@@ -5,7 +5,7 @@
  *  Header file for tool : RichDelegatedTrackCreatorFromRecoTracks
  *
  *  CVS Log :-
- *  $Id: RichDelegatedTrackCreatorFromRecoTracks.h,v 1.1 2005-10-13 16:01:55 jonrob Exp $
+ *  $Id: RichDelegatedTrackCreatorFromRecoTracks.h,v 1.2 2006-01-23 14:20:43 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -20,9 +20,6 @@
 
 // base class
 #include "RichRecBase/RichTrackCreatorBase.h"
-
-// RichKernel
-#include "RichKernel/StringHashFuncs.h"
 
 // Event
 #include "Event/Track.h"
@@ -61,7 +58,7 @@ public: // methods (and doxygen comments) inherited from public interface
 
   // Returns a RichRecTrack object pointer for given ContainedObject.
   // In this implementation the ContainedObject must be a Track.
-  RichRecTrack * newTrack ( const ContainedObject * obj ) const;
+  virtual LHCb::RichRecTrack * newTrack ( const ContainedObject * obj ) const;
 
   // Form all possible RichRecTracks from input Tracks
   const StatusCode newTracks() const;
@@ -77,7 +74,7 @@ protected: // methods
 private: // methods
 
   /// Returns a pointer to the Tracks
-  const Tracks * recoTracks() const;
+  const LHCb::Tracks * recoTracks() const;
 
   /// Returns the RichTrackCreator tool appropriate for a given track type
   const IRichTrackCreator * tkTool( const Rich::Track::Type tkType ) const;
@@ -85,7 +82,7 @@ private: // methods
 private: // data
 
   /// Pointer to Tracks
-  mutable Tracks * m_trTracks;
+  mutable LHCb::Tracks * m_trTracks;
 
   /// Input location of Tracks in TES
   std::string m_trTracksLocation;

@@ -5,7 +5,7 @@
  *  Implementation file for tool : RichInterpCKResVpForRecoTracks
  *
  *  CVS Log :-
- *  $Id: RichInterpCKResVpForRecoTracks.cpp,v 1.1 2005-10-13 16:01:55 jonrob Exp $
+ *  $Id: RichInterpCKResVpForRecoTracks.cpp,v 1.2 2006-01-23 14:20:44 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -17,6 +17,9 @@
 
 // local
 #include "RichInterpCKResVpForRecoTracks.h"
+
+// namespaces
+using namespace LHCb;
 
 //-----------------------------------------------------------------------------
 
@@ -64,7 +67,8 @@ RichInterpCKResVpForRecoTracks ( const std::string& type,
   declareProperty( "CF4VeloRes",     m_theerr[Rich::CF4][Rich::Track::Velo] );
 
   // set interpolator pointers to NULL
-  for ( int iR = 0; iR < Rich::NRadiatorTypes; ++iR ) {
+  for ( int iR = 0; iR < Rich::NRadiatorTypes; ++iR )
+  {
     for ( unsigned iT = 0; iT < Rich::Track::NTrTypes; ++iT ) { m_ckRes[iR][iT] = 0; }
   }
 
@@ -116,14 +120,13 @@ RichInterpCKResVpForRecoTracks::ckThetaResolution( RichRecSegment * segment,
     const RichTrackID & tkID = segment->richRecTrack()->trackID();
 
     // Check track parent type is Track or TrStoredTrack
-    if ( Rich::TrackParent::Track         != tkID.parentType() &&
-         Rich::TrackParent::TrStoredTrack != tkID.parentType() )
+    if ( Rich::TrackParent::Track != tkID.parentType() )
     {
       Exception( "Track parent type is not Track or TrStoredTrack" );
     }
 
     // momentum for this segment
-    const double ptot = segment->trackSegment().bestMomentum().mag();
+    const double ptot = sqrt(segment->trackSegment().bestMomentum().Mag2());
 
     // track type
     const Rich::Track::Type type = segment->richRecTrack()->trackID().trackType();

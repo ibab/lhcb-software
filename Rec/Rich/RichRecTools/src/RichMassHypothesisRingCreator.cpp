@@ -5,7 +5,7 @@
  *  Implementation file for tool : RichMassHypothesisRingCreator
  *
  *  CVS Log :-
- *  $Id: RichMassHypothesisRingCreator.cpp,v 1.10 2005-10-13 16:01:55 jonrob Exp $
+ *  $Id: RichMassHypothesisRingCreator.cpp,v 1.11 2006-01-23 14:20:44 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -14,6 +14,9 @@
 
 // local
 #include "RichMassHypothesisRingCreator.h"
+
+// namespaces
+using namespace LHCb;
 
 //-----------------------------------------------------------------------------
 
@@ -38,7 +41,7 @@ RichMassHypothesisRingCreator::RichMassHypothesisRingCreator( const std::string&
 
 }
 
-StatusCode RichMassHypothesisRingCreator::initialize() 
+StatusCode RichMassHypothesisRingCreator::initialize()
 {
   // Sets up various tools and services
   const StatusCode sc = RichRecToolBase::initialize();
@@ -98,8 +101,8 @@ RichRecRing * RichMassHypothesisRingCreator::buildRing( RichRecSegment * segment
   if ( ckTheta > 0 ) {
 
     if ( msgLevel(MSG::VERBOSE) ) {
-      verbose() << "Creating " << id 
-                << " hypothesis ring for RichRecSegment " << segment->key() 
+      verbose() << "Creating " << id
+                << " hypothesis ring for RichRecSegment " << segment->key()
                 << endreq;
     }
 
@@ -134,7 +137,7 @@ RichRecRing * RichMassHypothesisRingCreator::buildRing( RichRecSegment * segment
   return newRing;
 }
 
-RichRecRing * RichMassHypothesisRingCreator::newMassHypoRing() const 
+RichRecRing * RichMassHypothesisRingCreator::newMassHypoRing() const
 {
   // Make a new ring and give to container
   RichRecRing * newRing = new RichRecRing();

@@ -5,7 +5,7 @@
  *  Implementation file for tool : RichSegmentCreator
  *
  *  CVS Log :-
- *  $Id: RichSegmentCreator.cpp,v 1.21 2005-11-15 13:38:10 jonrob Exp $
+ *  $Id: RichSegmentCreator.cpp,v 1.22 2006-01-23 14:20:44 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -14,6 +14,9 @@
 
 // local
 #include "RichSegmentCreator.h"
+
+// namespaces
+using namespace LHCb;
 
 //-----------------------------------------------------------------------------
 
@@ -42,7 +45,7 @@ RichSegmentCreator::RichSegmentCreator ( const std::string& type,
 
   declareProperty( "EnergyBins", m_binsEn );
 
-  if ( context() == "Offline" )
+  if      ( context() == "Offline" )
   {
     m_richRecSegmentLocation = RichRecSegmentLocation::Offline;
   }

@@ -5,7 +5,7 @@
  *  Header file for tool : RichSegmentCreator
  *
  *  CVS Log :-
- *  $Id: RichSegmentCreator.h,v 1.17 2005-11-15 13:38:10 jonrob Exp $
+ *  $Id: RichSegmentCreator.h,v 1.18 2006-01-23 14:20:44 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -48,7 +48,8 @@
 
 class RichSegmentCreator : public RichRecToolBase,
                            virtual public IRichSegmentCreator,
-                           virtual public IIncidentListener {
+                           virtual public IIncidentListener
+{
 
 public: // Methods for Gaudi Framework
 
@@ -74,14 +75,14 @@ public: // Methods for Gaudi Framework
 public: // methods (and doxygen comments) inherited from public interface
 
   // Save a new RichRecSegment in the container
-  void saveSegment( RichRecSegment * segment ) const;
+  void saveSegment( LHCb::RichRecSegment * segment ) const;
 
   // Create a new RichRecSegment
-  RichRecSegment * newSegment( RichTrackSegment* segment, 
-                               RichRecTrack* pTrk ) const;
+  LHCb:: RichRecSegment * newSegment( LHCb::RichTrackSegment* segment,
+                                      LHCb::RichRecTrack* pTrk ) const;
 
   // Return a pointer to RichRecSegments
-  RichRecSegments * richSegments() const;
+  LHCb::RichRecSegments * richSegments() const;
 
 private: // methods
 
@@ -94,7 +95,7 @@ private: // methods
 private:  // Private data
 
   /// Pointer to RichRecTracks
-  mutable RichRecSegments * m_segments;
+  mutable LHCb::RichRecSegments * m_segments;
 
   /// Location of RichRecSegments in TES
   std::string m_richRecSegmentLocation;
@@ -123,8 +124,8 @@ private:  // Private data
 inline void RichSegmentCreator::InitEvent()
 {
   m_segments = 0;
-  if (msgLevel(MSG::DEBUG)) 
-  { 
+  if (msgLevel(MSG::DEBUG))
+  {
     m_segCountLast = m_segCount;
     m_hasBeenCalled = false;
   }
@@ -132,7 +133,7 @@ inline void RichSegmentCreator::InitEvent()
 
 inline void RichSegmentCreator::FinishEvent()
 {
-  if (msgLevel(MSG::DEBUG)) 
+  if (msgLevel(MSG::DEBUG))
   {
     if ( m_hasBeenCalled ) ++m_Nevts;
   }

@@ -5,7 +5,7 @@
  *  Header file for tool : RichPixelCreatorFromRawBuffer
  *
  *  CVS Log :-
- *  $Id: RichPixelCreatorFromRawBuffer.h,v 1.7 2005-06-23 15:17:41 jonrob Exp $
+ *  $Id: RichPixelCreatorFromRawBuffer.h,v 1.8 2006-01-23 14:20:44 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   30/10/2004
@@ -47,7 +47,7 @@ public: // Methods for Gaudi Framework
                                  const IInterface* parent );
 
   /// Destructor
-  virtual ~RichPixelCreatorFromRawBuffer(){}
+  virtual ~RichPixelCreatorFromRawBuffer() {}
 
   // Initialize method
   StatusCode initialize();
@@ -59,7 +59,7 @@ public: // methods (and doxygen comments) inherited from public interface
 
   // Returns a RichRecPixel object pointer for given ContainedObject.
   // If if it not possible NULL is return.
-  RichRecPixel * newPixel( const ContainedObject * obj ) const;
+  LHCb::RichRecPixel * newPixel( const ContainedObject * obj ) const;
 
   // Form all possible RichRecPixels from RawBuffer
   // The most efficient way to make all RichRecPixel objects in the event.
@@ -68,7 +68,7 @@ public: // methods (and doxygen comments) inherited from public interface
 private: // methods
 
   /// Build a new RichRecPixel
-  RichRecPixel * buildPixel ( const RichSmartID id ) const;
+  LHCb::RichRecPixel * buildPixel ( const LHCb::RichSmartID id ) const;
 
 private: // data
 

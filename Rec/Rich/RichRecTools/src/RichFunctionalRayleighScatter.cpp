@@ -5,7 +5,7 @@
  *  Implementation file for tool : RichFunctionalRayleighScatter
  *
  *  CVS Log :-
- *  $Id: RichFunctionalRayleighScatter.cpp,v 1.11 2005-06-18 11:40:10 jonrob Exp $
+ *  $Id: RichFunctionalRayleighScatter.cpp,v 1.12 2006-01-23 14:20:44 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -15,6 +15,9 @@
 // local
 #include "RichFunctionalRayleighScatter.h"
 
+// namespaces
+using namespace LHCb;
+
 //-----------------------------------------------------------------------------
 
 // Declaration of the Tool Factory
@@ -22,19 +25,19 @@ static const  ToolFactory<RichFunctionalRayleighScatter>          s_factory ;
 const        IToolFactory& RichFunctionalRayleighScatterFactory = s_factory ;
 
 // Standard constructor
-RichFunctionalRayleighScatter::RichFunctionalRayleighScatter ( const std::string& type,
-                                                               const std::string& name,
-                                                               const IInterface* parent )
+RichFunctionalRayleighScatter::
+RichFunctionalRayleighScatter ( const std::string& type,
+                                const std::string& name,
+                                const IInterface* parent )
   : RichRecToolBase( type, name, parent ),
     m_eVToMicron   ( 0 ),
-    m_AeroClarity  ( 0 ) 
+    m_AeroClarity  ( 0 )
 {
-
+  // interface
   declareInterface<IRichRayleighScatter>(this);
-
 }
 
-StatusCode RichFunctionalRayleighScatter::initialize() 
+StatusCode RichFunctionalRayleighScatter::initialize()
 {
 
   // Sets up various tools and services
@@ -52,11 +55,11 @@ StatusCode RichFunctionalRayleighScatter::initialize()
   debug() << " Using analytic implementation"   << endreq
           << " eV to mm conversion factor   = " << m_eVToMicron << endreq
           << " Aerogel clarity              = " << m_AeroClarity << endreq;
-  
+
   return sc;
 }
 
-StatusCode RichFunctionalRayleighScatter::finalize() 
+StatusCode RichFunctionalRayleighScatter::finalize()
 {
   // Execute base class method
   return RichRecToolBase::finalize();
@@ -64,7 +67,7 @@ StatusCode RichFunctionalRayleighScatter::finalize()
 
 double
 RichFunctionalRayleighScatter::photonScatteredProb( const RichRecSegment * segment,
-                                                    const double energy ) const 
+                                                    const double energy ) const
 {
 
   // check this is aerogel
@@ -82,4 +85,4 @@ RichFunctionalRayleighScatter::photonScatteredProb( const RichRecSegment * segme
   const double scatLeng = lambda*lambda*lambda*lambda/m_AeroClarity;
 
   return ( 1 - (scatLeng/path)*(1.0-exp(-path/scatLeng)) );
-} 
+}

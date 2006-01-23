@@ -5,7 +5,7 @@
  *  Implementation file for tool : RichGeomEffFixedValue
  *
  *  CVS Log :-
- *  $Id: RichGeomEffFixedValue.cpp,v 1.12 2005-10-13 16:01:55 jonrob Exp $
+ *  $Id: RichGeomEffFixedValue.cpp,v 1.13 2006-01-23 14:20:44 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -17,6 +17,9 @@
 
 // local
 #include "RichGeomEffFixedValue.h"
+
+// namespaces
+using namespace LHCb;
 
 //-----------------------------------------------------------------------------
 
@@ -44,7 +47,7 @@ RichGeomEffFixedValue::RichGeomEffFixedValue ( const std::string& type,
 
 }
 
-StatusCode RichGeomEffFixedValue::initialize() 
+StatusCode RichGeomEffFixedValue::initialize()
 {
   // Sets up various tools and services
   const StatusCode sc = RichRecToolBase::initialize();
@@ -57,7 +60,7 @@ StatusCode RichGeomEffFixedValue::initialize()
   return sc;
 }
 
-StatusCode RichGeomEffFixedValue::finalize() 
+StatusCode RichGeomEffFixedValue::finalize()
 {
   // Execute base class method
   return RichRecToolBase::finalize();
@@ -66,14 +69,14 @@ StatusCode RichGeomEffFixedValue::finalize()
 double RichGeomEffFixedValue::geomEfficiency ( RichRecSegment * segment,
                                                const Rich::ParticleIDType id ) const {
 
-  if ( !segment->geomEfficiency().dataIsValid(id) ) 
+  if ( !segment->geomEfficiency().dataIsValid(id) )
   {
     double eff = 0;
 
     // Cherenkov theta
     const double ckTh = m_ckAngle->avgCherenkovTheta( segment, id );
 
-    if ( ckTh > 0 ) 
+    if ( ckTh > 0 )
     {
       // First get the HPD panel acceptance (edges)
       eff = m_geomTool->hpdPanelAcceptance(segment,id);
@@ -85,11 +88,11 @@ double RichGeomEffFixedValue::geomEfficiency ( RichRecSegment * segment,
     segment->setGeomEfficiency( id, eff );
 
     // Track impact point on HPD panel
-    const HepPoint3D & tkPoint = segment->pdPanelHitPointLocal();
+    const Gaudi::XYZPoint & tkPoint = segment->pdPanelHitPointLocal();
 
     // radius of ring for given hypothesis
     const double rSig = m_ckAngle->avCKRingRadiusLocal(segment,id);
-    
+
     // flag where hits could be
     //segment->setPhotonsInYPlus(true);
     //segment->setPhotonsInYMinus(true);

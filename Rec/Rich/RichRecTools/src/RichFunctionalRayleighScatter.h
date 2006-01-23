@@ -5,7 +5,7 @@
  *  Header file for tool : RichFunctionalRayleighScatter
  *
  *  CVS Log :-
- *  $Id: RichFunctionalRayleighScatter.h,v 1.6 2005-06-18 11:40:10 jonrob Exp $
+ *  $Id: RichFunctionalRayleighScatter.h,v 1.7 2006-01-23 14:20:44 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -20,7 +20,7 @@
 #include "GaudiKernel/SmartDataPtr.h"
 
 // CLHEP
-#include "CLHEP/Units/PhysicalConstants.h"
+#include "Kernel/PhysicalConstants.h"
 
 // base class
 #include "RichRecBase/RichRecToolBase.h"
@@ -67,7 +67,7 @@ public: // Methods for Gaudi Framework
 public: // methods (and doxygen comments) inherited from public interface
 
   // Rayleigh scattering probability for given pathlength (segment) and photyon energy
-  double photonScatteredProb( const RichRecSegment * segment,
+  double photonScatteredProb( const LHCb::RichRecSegment * segment,
                               const double energy ) const;
 
 private:  // Private data

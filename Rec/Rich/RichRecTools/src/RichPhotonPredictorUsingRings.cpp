@@ -5,7 +5,7 @@
  *  Implementation file for tool : RichPhotonPredictorUsingRings
  *
  *  CVS Log :-
- *  $Id: RichPhotonPredictorUsingRings.cpp,v 1.7 2005-10-13 16:01:55 jonrob Exp $
+ *  $Id: RichPhotonPredictorUsingRings.cpp,v 1.8 2006-01-23 14:20:44 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -14,6 +14,9 @@
 
 // local
 #include "RichPhotonPredictorUsingRings.h"
+
+// namespaces
+using namespace LHCb;
 
 //-----------------------------------------------------------------------------
 
@@ -98,14 +101,14 @@ bool RichPhotonPredictorUsingRings::photonPossible( RichRecSegment * segment,
   // Run over RichRecRings and check if the current pixel "belongs"
   // to a ring associated to the current segment
   // Search could probably be made faster using stl etc...
-  for ( RichRecRings::iterator iRing = richRings()->begin(); 
+  for ( RichRecRings::iterator iRing = richRings()->begin();
         iRing != richRings()->end(); ++iRing ) {
-    
-    if ( *iRing && 
-         (*iRing)->richRecSegment() && 
+
+    if ( *iRing &&
+         (*iRing)->richRecSegment() &&
          (*iRing)->richRecSegment()->key() == segment->key() ) {
 
-      for (SmartRefVector<RichRecPixel>::iterator iPix = (*iRing)->richRecPixels().begin();
+      for (SmartRefVector<RichRecPixel>::const_iterator iPix = (*iRing)->richRecPixels().begin();
            iPix != (*iRing)->richRecPixels().end(); ++iPix) {
         if ( *iPix && (*iPix)->key() == pixel->key() ) { return true; }
       }

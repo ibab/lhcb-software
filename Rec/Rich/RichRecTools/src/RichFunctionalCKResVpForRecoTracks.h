@@ -5,7 +5,7 @@
  *  Header file for tool : RichFunctionalCKResVpForRecoTracks
  *
  *  CVS Log :-
- *  $Id: RichFunctionalCKResVpForRecoTracks.h,v 1.2 2005-11-03 14:33:59 jonrob Exp $
+ *  $Id: RichFunctionalCKResVpForRecoTracks.h,v 1.3 2006-01-23 14:20:44 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   17/10/2004
@@ -66,7 +66,7 @@ public: // Methods for Gaudi Framework
 public: // methods (and doxygen comments) inherited from public interface
 
   // Photon resolution
-  double ckThetaResolution( RichRecSegment * segment,
+  double ckThetaResolution( LHCb::RichRecSegment * segment,
                             const Rich::ParticleIDType id = Rich::Pion ) const;
 
 private:

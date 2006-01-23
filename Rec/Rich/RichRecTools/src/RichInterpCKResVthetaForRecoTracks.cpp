@@ -5,7 +5,7 @@
  *  Implementation file for tool : RichInterpCKResVthetaForRecoTracks
  *
  *  CVS Log :-
- *  $Id: RichInterpCKResVthetaForRecoTracks.cpp,v 1.1 2005-10-13 16:01:55 jonrob Exp $
+ *  $Id: RichInterpCKResVthetaForRecoTracks.cpp,v 1.2 2006-01-23 14:20:44 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -17,6 +17,9 @@
 
 // local
 #include "RichInterpCKResVthetaForRecoTracks.h"
+
+// namespaces
+using namespace LHCb;
 
 //-----------------------------------------------------------------------------
 
@@ -125,9 +128,8 @@ RichInterpCKResVthetaForRecoTracks::ckThetaResolution( RichRecSegment * segment,
     // Reference to track ID object
     const RichTrackID & tkID = segment->richRecTrack()->trackID();
 
-    // Check track parent type is Track or TrStoredTrack
-    if ( Rich::TrackParent::Track         != tkID.parentType() &&
-         Rich::TrackParent::TrStoredTrack != tkID.parentType() )
+    // Check track parent type is Track
+    if ( Rich::TrackParent::Track != tkID.parentType() )
     {
       Exception( "Track parent type is not Track or TrStoredTrack" );
     }

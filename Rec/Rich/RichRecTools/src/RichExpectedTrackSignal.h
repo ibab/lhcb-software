@@ -5,7 +5,7 @@
  *  Header file for tool : RichExpectedTrackSignal
  *
  *  CVS Log :-
- *  $Id: RichExpectedTrackSignal.h,v 1.11 2005-10-13 16:01:55 jonrob Exp $
+ *  $Id: RichExpectedTrackSignal.h,v 1.12 2006-01-23 14:20:44 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -19,7 +19,7 @@
 #include "GaudiKernel/ToolFactory.h"
 
 // CLHEP
-#include "CLHEP/Units/PhysicalConstants.h"
+#include "Kernel/PhysicalConstants.h"
 
 // base class
 #include "RichRecBase/RichRecToolBase.h"
@@ -41,7 +41,7 @@
 //-----------------------------------------------------------------------------
 /** @class RichExpectedTrackSignal RichExpectedTrackSignal.h
  *
- *  Tool to calculate the expected signals for given 
+ *  Tool to calculate the expected signals for given
  *  RichRecSegments and RichRecTracks.
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
@@ -50,7 +50,8 @@
 //-----------------------------------------------------------------------------
 
 class RichExpectedTrackSignal : public RichRecToolBase,
-                                virtual public IRichExpectedTrackSignal {
+                                virtual public IRichExpectedTrackSignal 
+{
 
 public: // Methods for Gaudi Framework
 
@@ -71,99 +72,101 @@ public: // Methods for Gaudi Framework
 public: // methods (and doxygen comments) inherited from public interface
 
   // Expected number of observable signal photons for given track and hypothesis
-  double nSignalPhotons ( RichRecTrack * track,
+  double nSignalPhotons ( LHCb::RichRecTrack * track,
                           const Rich::ParticleIDType id ) const;
 
   // Expected number of signal photons for given segment and hypothesis
-  double nSignalPhotons ( RichRecSegment * segment,
+  double nSignalPhotons ( LHCb::RichRecSegment * segment,
                           const Rich::ParticleIDType id ) const;
 
   // Expected number of observable signal photons for given track and hypothesis
-  double nObservableSignalPhotons ( RichRecTrack * track,
+  double nObservableSignalPhotons ( LHCb::RichRecTrack * track,
                                     const Rich::ParticleIDType id ) const;
 
   // Expected number of observable signal photons for given segment and hypothesis
-  double nObservableSignalPhotons ( RichRecSegment * segment,
+  double nObservableSignalPhotons ( LHCb::RichRecSegment * segment,
                                     const Rich::ParticleIDType id ) const;
 
   // Expected number of scattered photons for given track and hypothesis
-  double nScatteredPhotons ( RichRecTrack * track,
+  double nScatteredPhotons ( LHCb::RichRecTrack * track,
                              const Rich::ParticleIDType id ) const;
 
   // Expected number of scattered photons for given segment and hypothesis
-  double nScatteredPhotons ( RichRecSegment * segment,
+  double nScatteredPhotons ( LHCb::RichRecSegment * segment,
                              const Rich::ParticleIDType id ) const;
 
   // Expected number of observable scattered photons for given track and hypothesis
-  double nObservableScatteredPhotons ( RichRecTrack * track,
+  double nObservableScatteredPhotons ( LHCb::RichRecTrack * track,
                                        const Rich::ParticleIDType id ) const;
 
   // Expected number of observable scattered photons for given segment and hypothesis
-  double nObservableScatteredPhotons ( RichRecSegment * segment,
+  double nObservableScatteredPhotons ( LHCb::RichRecSegment * segment,
                                        const Rich::ParticleIDType id ) const;
 
   // Expected number of observable signal and scattered photons for
-  //  the given track and hypothesis 
-  double nTotalObservablePhotons ( RichRecTrack * track,
+  //  the given track and hypothesis
+  double nTotalObservablePhotons ( LHCb::RichRecTrack * track,
                                    const Rich::ParticleIDType id ) const;
 
   // Expected number of observable signal+scattered photons for given segment and hypothesis
-  double nTotalObservablePhotons ( RichRecSegment * segment,
+  double nTotalObservablePhotons ( LHCb::RichRecSegment * segment,
                                    const Rich::ParticleIDType id ) const;
 
   // Expected number of emitted photons for given track and hypothesis
-  double nEmittedPhotons ( RichRecTrack * track,
+  double nEmittedPhotons ( LHCb::RichRecTrack * track,
                            const Rich::ParticleIDType id ) const;
 
   // Expected number of emitted photons for given segment and hypothesis
-  double nEmittedPhotons ( RichRecSegment * segment,
+  double nEmittedPhotons ( LHCb::RichRecSegment * segment,
                            const Rich::ParticleIDType id ) const;
 
   // Expected number of emitted photons for given segment and hypothesis,
-  //  scaled by the HPD quantum efficiency 
-  double nDetectablePhotons ( RichRecTrack * track,
+  //  scaled by the HPD quantum efficiency
+  double nDetectablePhotons ( LHCb::RichRecTrack * track,
                               const Rich::ParticleIDType id ) const;
 
   //  Expected number of emitted photons for given segment and hypothesis,
   //  scaled by the HPD quantum efficiency
-  double nDetectablePhotons ( RichRecSegment * segment,
+  double nDetectablePhotons ( LHCb::RichRecSegment * segment,
                               const Rich::ParticleIDType id ) const;
 
   // The average energy of signal Cherenkov photons
-  double avgSignalPhotEnergy( RichRecSegment * segment,
+  double avgSignalPhotEnergy( LHCb::RichRecSegment * segment,
                               const Rich::ParticleIDType id ) const;
 
   // The average energy of emitted Cherenkov photons
-  double avgEmitPhotEnergy( RichRecSegment * segment,
+  double avgEmitPhotEnergy( LHCb::RichRecSegment * segment,
                             const Rich::ParticleIDType id ) const;
-  
+
   // Is it possible for this track to give Rich information
-  bool hasRichInfo( RichRecTrack * track ) const;
+  bool hasRichInfo( LHCb::RichRecTrack * track ) const;
 
   // Is it geometrically possible for this segment to give Rich information
-  bool hasRichInfo( RichRecSegment * segment ) const;
+  bool hasRichInfo( LHCb::RichRecSegment * segment ) const;
 
   // Is this track above threshold for a given particle type
-  bool aboveThreshold( RichRecTrack * track,
+  bool aboveThreshold( LHCb::RichRecTrack * track,
                        const Rich::ParticleIDType type ) const;
 
   // Is this track above threshold for a given particle type in a given radiator
-  bool aboveThreshold( RichRecTrack * track,
+  bool aboveThreshold( LHCb::RichRecTrack * track,
                        const Rich::ParticleIDType type,
                        const Rich::RadiatorType radiator ) const;
 
   // Is this segment above threshold for a given particle hypothesis
-  bool aboveThreshold( RichRecSegment * segment,
+  bool aboveThreshold( LHCb::RichRecSegment * segment,
                        const Rich::ParticleIDType type ) const;
 
   // Set the threshold information in a RichPID object for given track
-  void setThresholdInfo( RichRecTrack * track, RichPID * pid ) const;
+  void setThresholdInfo( LHCb::RichRecTrack * track, 
+                         LHCb::RichPID * pid ) const;
 
   // Set the threshold information in a RichPID object for given segment
-  void setThresholdInfo( RichRecSegment * segment, RichPID * pid ) const;
+  void setThresholdInfo( LHCb::RichRecSegment * segment, 
+                         LHCb::RichPID * pid ) const;
 
   // Is this track active in this radiator medium for given particle id
-  bool activeInRadiator( RichRecTrack * track,
+  bool activeInRadiator( LHCb::RichRecTrack * track,
                          const Rich::RadiatorType rad,
                          const Rich::ParticleIDType id = Rich::Electron ) const;
 

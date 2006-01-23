@@ -5,7 +5,7 @@
  *  Implementation file for tool : RichCherenkovAngle
  *
  *  CVS Log :-
- *  $Id: RichCherenkovAngle.cpp,v 1.16 2005-10-18 13:03:51 jonrob Exp $
+ *  $Id: RichCherenkovAngle.cpp,v 1.17 2006-01-23 14:20:43 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -14,6 +14,9 @@
 
 // local
 #include "RichCherenkovAngle.h"
+
+// namespaces
+using namespace LHCb;
 
 //-----------------------------------------------------------------------------
 
@@ -32,9 +35,8 @@ RichCherenkovAngle::RichCherenkovAngle ( const std::string& type,
     m_smartIDTool   ( 0 ),
     m_rayTrace      ( 0 )
 {
-
+  // interface
   declareInterface<IRichCherenkovAngle>(this);
-
 }
 
 StatusCode RichCherenkovAngle::initialize()
@@ -79,24 +81,24 @@ RichCherenkovAngle::avgCherenkovTheta( RichRecSegment * segment,
                                        const Rich::ParticleIDType id ) const
 {
 
-  if ( !segment->averageCKTheta().dataIsValid(id) ) 
+  if ( !segment->averageCKTheta().dataIsValid(id) )
   {
     double angle = 0;
 
     // total unscattered signal
     const double unscat = m_signal->nSignalPhotons( segment, id );
-    if ( unscat > 0 ) 
+    if ( unscat > 0 )
     {
 
       // which radiator
       const Rich::RadiatorType rad = segment->trackSegment().radiator();
 
       // Beta for this segment
-      const double beta = m_richPartProp->beta(segment->trackSegment().bestMomentum().mag(), id);
+      const double beta = m_richPartProp->beta( sqrt(segment->trackSegment().bestMomentum().mag2()), id);
 
       // loop over energy bins
       RichPhotonSpectra<RichRecSegment::FloatType> & sigSpectra = segment->signalPhotonSpectra();
-      for ( unsigned int iEnBin = 0; iEnBin < sigSpectra.energyBins(); ++iEnBin ) 
+      for ( unsigned int iEnBin = 0; iEnBin < sigSpectra.energyBins(); ++iEnBin )
       {
         const double temp = beta *
           m_refIndex->refractiveIndex( rad, sigSpectra.binEnergy(iEnBin) );
@@ -143,7 +145,7 @@ void RichCherenkovAngle::computeRadii( RichRecSegment * segment,
   const double rMax = satCKRingRadiusLocal( segment, nSamples );
 
   // Loop over all particle codes
-  for ( int iHypo = 0; iHypo < Rich::NParticleTypes; ++iHypo ) 
+  for ( int iHypo = 0; iHypo < Rich::NParticleTypes; ++iHypo )
   {
     const Rich::ParticleIDType id = static_cast<Rich::ParticleIDType>(iHypo);
 
@@ -151,7 +153,7 @@ void RichCherenkovAngle::computeRadii( RichRecSegment * segment,
     const double ckTheta = avgCherenkovTheta(segment,id);
 
     // Set the value
-    segment->setAverageCKRadiusLocal( id, 
+    segment->setAverageCKRadiusLocal( id,
                                       rMax * (ckTheta/m_nomCK[segment->trackSegment().radiator()]) );
 
   }
@@ -164,10 +166,10 @@ double RichCherenkovAngle::avCKRingRadiusLocal( RichRecSegment * segment,
 {
 
   // Calculate increment in phi
-  const double incPhi = M_2PI / static_cast<double>(nSamples) ;
+  const double incPhi = twopi / static_cast<double>(nSamples) ;
 
   // Track impact point on HPD panel
-  const HepPoint3D & tkPoint = segment->pdPanelHitPointLocal();
+  const Gaudi::XYZPoint & tkPoint = segment->pdPanelHitPointLocal();
 
   // radiator
   const Rich::RadiatorType iRad = segment->trackSegment().radiator();
@@ -176,17 +178,17 @@ double RichCherenkovAngle::avCKRingRadiusLocal( RichRecSegment * segment,
   double ckPhi = 0.0;
   double rSum  = 0.0;
   unsigned int nUsed = 0;
-  for ( unsigned int iPhot = 0 ; iPhot < nSamples; ++iPhot, ckPhi+=incPhi ) 
+  for ( unsigned int iPhot = 0 ; iPhot < nSamples; ++iPhot, ckPhi+=incPhi )
   {
 
     // Photon emission point is half-way between segment start and end points
-    const HepPoint3D & emissionPt = segment->trackSegment().bestPoint();
+    const Gaudi::XYZPoint & emissionPt = segment->trackSegment().bestPoint();
 
     // Photon direction around loop
-    const HepVector3D photDir = segment->trackSegment().vectorAtThetaPhi( ckTheta, ckPhi );
+    const Gaudi::XYZVector photDir = segment->trackSegment().vectorAtThetaPhi( ckTheta, ckPhi );
 
     // DeRichHPDPanel::loose defines how the panel boundaries are dealt with
-    HepPoint3D hitPointGlobal;
+    Gaudi::XYZPoint hitPointGlobal;
     if ( m_rayTrace->traceToDetectorWithoutEff( segment->trackSegment().rich(),
                                                 emissionPt,
                                                 photDir,
@@ -194,7 +196,7 @@ double RichCherenkovAngle::avCKRingRadiusLocal( RichRecSegment * segment,
     {
 
       // Hit in local coordinates
-      const HepPoint3D hitPointLocal = m_smartIDTool->globalToPDPanel(hitPointGlobal);
+      const Gaudi::XYZPoint hitPointLocal = m_smartIDTool->globalToPDPanel(hitPointGlobal);
 
       // Only use photons that end up on the same side of the RICH as the track
       if ( ( iRad != Rich::CF4 && hitPointLocal.y()*tkPoint.y() > 0. ) ||
@@ -219,8 +221,8 @@ double RichCherenkovAngle::satCKRingRadiusLocal( RichRecSegment * segment,
   if ( segment->avSaturatedRadiusLocal() < 0 )
   {
     // Get radius for saturated angle
-    segment->setAvSaturatedRadiusLocal( avCKRingRadiusLocal( segment, 
-                                                             m_nomCK[segment->trackSegment().radiator()], 
+    segment->setAvSaturatedRadiusLocal( avCKRingRadiusLocal( segment,
+                                                             m_nomCK[segment->trackSegment().radiator()],
                                                              nSamples ) );
   }
 

@@ -5,7 +5,7 @@
  *  Implementation file for tool : RichSellmeirFunc
  *
  *  CVS Log :-
- *  $Id: RichSellmeirFunc.cpp,v 1.13 2005-06-23 15:17:41 jonrob Exp $
+ *  $Id: RichSellmeirFunc.cpp,v 1.14 2006-01-23 14:20:44 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -20,8 +20,11 @@
 // local
 #include "RichSellmeirFunc.h"
 
-// CLHEP
-#include "CLHEP/Units/PhysicalConstants.h"
+// constants
+#include "Kernel/PhysicalConstants.h"
+
+// namespaces
+using namespace LHCb;
 
 //-----------------------------------------------------------------------------
 
@@ -87,16 +90,16 @@ StatusCode RichSellmeirFunc::initialize() {
   const double selLorGasFac = Rich1DE->param<double>("SellLorGasFacParam");
 
   // Initialise the calculations and cache as much as possible for efficiency
-  for ( int iRad = 0; iRad < Rich::NRadiatorTypes; ++iRad ) 
+  for ( int iRad = 0; iRad < Rich::NRadiatorTypes; ++iRad )
   {
     const Rich::RadiatorType rad = static_cast<Rich::RadiatorType>(iRad);
     double RC3,RC2;
-    if ( Rich::Aerogel == rad ) 
+    if ( Rich::Aerogel == rad )
     {
       RC3 = 1.;
       RC2 = 1.;
-    } 
-    else 
+    }
+    else
     {
       RC3 = 3. * selLorGasFac * m_rho[rad] / m_molW[rad];
       RC2 = 2. * selLorGasFac * m_rho[rad] / m_molW[rad];
@@ -137,7 +140,7 @@ double RichSellmeirFunc::photonsInEnergyRange( RichRecSegment * segment,
 {
 
   // Some parameters of the segment
-  const double momentum = segment->trackSegment().bestMomentum().mag();
+  const double momentum = sqrt(segment->trackSegment().bestMomentum().Mag2());
   const double Esq      = momentum*momentum + m_particleMassSq[id];
   const double betaSq   = ( Esq>0 ? momentum*momentum/Esq : 0 );
   const double gammaSq  = Esq/m_particleMassSq[id];

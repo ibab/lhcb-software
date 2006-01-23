@@ -5,7 +5,7 @@
  *  Header file for tool : RichRayTraceCherenkovCone
  *
  *  CVS Log :-
- *  $Id: RichRayTraceCherenkovCone.h,v 1.7 2005-06-23 15:17:41 jonrob Exp $
+ *  $Id: RichRayTraceCherenkovCone.h,v 1.8 2006-01-23 14:20:44 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -36,7 +36,7 @@
 /** @class RichRayTraceCherenkovCone RichRayTraceCherenkovCone.h
  *
  *  Tool to ray trace cherenkov photons in a cone around a given
- *  RichRecSegment direction, at the given angle or the angle correct 
+ *  RichRecSegment direction, at the given angle or the angle correct
  *  for a given mass hypothesis.
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
@@ -45,7 +45,8 @@
 //-----------------------------------------------------------------------------
 
 class RichRayTraceCherenkovCone : public RichRecToolBase,
-                                  virtual public IRichRayTraceCherenkovCone {
+                                  virtual public IRichRayTraceCherenkovCone
+{
 
 public: // Methods for Gaudi Framework
 
@@ -66,32 +67,32 @@ public: // Methods for Gaudi Framework
 public: // methods (and doxygen comments) inherited from public interface
 
   // Ray trace the Cherenkov cone for the given segment and mass hypothesis to the detector plane
-  StatusCode rayTrace ( RichRecSegment * segment,
+  StatusCode rayTrace ( LHCb::RichRecSegment * segment,
                         const Rich::ParticleIDType id,
-                        std::vector<HepPoint3D> & points,
+                        std::vector<Gaudi::XYZPoint> & points,
                         const RichTraceMode mode = RichTraceMode() ) const;
 
   // Ray trace the Cherenkov cone for the given segment and cherenkov angle to the detector plane
-  StatusCode rayTrace ( RichRecSegment * segment,
+  StatusCode rayTrace ( LHCb::RichRecSegment * segment,
                         const double ckTheta,
-                        std::vector<HepPoint3D> & points,
+                        std::vector<Gaudi::XYZPoint> & points,
                         const RichTraceMode mode = RichTraceMode() ) const;
 
   // Ray trace the Cherenkov cone using the given emission point, direction and Cherenkov angle
   StatusCode rayTrace ( const Rich::DetectorType rich,
-                        const HepPoint3D & emissionPoint,
-                        const HepVector3D & direction,
+                        const Gaudi::XYZPoint & emissionPoint,
+                        const Gaudi::XYZVector & direction,
                         const double ckTheta,
-                        std::vector<HepPoint3D> & points,
+                        std::vector<Gaudi::XYZPoint> & points,
                         const RichTraceMode mode = RichTraceMode() ) const;
 
   // Ray trace the Cherenkov cone for the given ring to the detector plane, in Global coordinates
-  const std::vector<HepPoint3D> & rayTrace ( RichRecRing * ring,
-                                             const RichTraceMode mode = RichTraceMode() ) const;
+  const std::vector<Gaudi::XYZPoint> & rayTrace ( LHCb::RichRecRing * ring,
+                                                  const RichTraceMode mode = RichTraceMode() ) const;
 
   // Ray trace the Cherenkov cone for the given ring to the detector plane, in Local coordinates
-  const std::vector<HepPoint3D> & rayTraceLocal ( RichRecRing * ring,
-                                                  const RichTraceMode mode = RichTraceMode() ) const;
+  const std::vector<Gaudi::XYZPoint> & rayTraceLocal ( LHCb::RichRecRing * ring,
+                                                       const RichTraceMode mode = RichTraceMode() ) const;
 
 
 private: // data

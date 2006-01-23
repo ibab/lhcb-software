@@ -5,7 +5,7 @@
  *  Header file for tool : RichGeomEffPhotonTracing
  *
  *  CVS Log :-
- *  $Id: RichGeomEffPhotonTracing.h,v 1.13 2005-11-15 13:38:10 jonrob Exp $
+ *  $Id: RichGeomEffPhotonTracing.h,v 1.14 2006-01-23 14:20:44 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -20,6 +20,7 @@
 
 // from Gaudi
 #include "GaudiKernel/RndmGenerators.h"
+#include "GaudiKernel/IRndmGenSvc.h"
 #include "GaudiKernel/ToolFactory.h"
 #include "GaudiKernel/ParticleProperty.h"
 
@@ -29,8 +30,8 @@
 // Event model
 #include "Event/RichRecSegment.h"
 
-// CLHEP
-#include "CLHEP/Units/PhysicalConstants.h"
+// constants
+#include "Kernel/PhysicalConstants.h"
 
 // interfaces
 #include "RichRecBase/IRichCherenkovAngle.h"
@@ -55,7 +56,7 @@
 //-----------------------------------------------------------------------------
 
 class RichGeomEffPhotonTracing : public RichRecToolBase,
-                                 virtual public IRichGeomEff 
+                                 virtual public IRichGeomEff
 {
 
 public: // Methods for Gaudi Framework
@@ -77,11 +78,11 @@ public: // Methods for Gaudi Framework
 public: // methods (and doxygen comments) inherited from public interface
 
   // Obtain geometrical efficiency for this track and hypothesis
-  double geomEfficiency ( RichRecSegment * segment,
+  double geomEfficiency ( LHCb::RichRecSegment * segment,
                           const Rich::ParticleIDType id ) const;
 
   // Obtain scattered geometrical efficiency for this track and hypothesis
-  double geomEfficiencyScat ( RichRecSegment * segment,
+  double geomEfficiencyScat ( LHCb::RichRecSegment * segment,
                               const Rich::ParticleIDType id ) const;
 
 private: // Private data

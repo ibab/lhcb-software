@@ -5,7 +5,7 @@
  *  Implementation file for tool : RichGeomEffPhotonTracing
  *
  *  CVS Log :-
- *  $Id: RichGeomEffPhotonTracing.cpp,v 1.17 2005-11-15 13:38:10 jonrob Exp $
+ *  $Id: RichGeomEffPhotonTracing.cpp,v 1.18 2006-01-23 14:20:44 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -14,6 +14,9 @@
 
 // local
 #include "RichGeomEffPhotonTracing.h"
+
+// namespaces
+using namespace LHCb;
 
 //-----------------------------------------------------------------------------
 
@@ -70,7 +73,7 @@ StatusCode RichGeomEffPhotonTracing::initialize()
 
   // Set up cached parameters for geometrical efficiency calculation
   m_pdInc             = 1.0   / static_cast<double>(m_nGeomEff);
-  const double incPhi = M_2PI / static_cast<double>(m_nGeomEff);
+  const double incPhi = twopi / static_cast<double>(m_nGeomEff);
   double ckPhi = 0;
   m_phiValues.clear();
   m_phiValues.reserve(m_nGeomEff);
@@ -120,12 +123,12 @@ RichGeomEffPhotonTracing::geomEfficiency ( RichRecSegment * segment,
       {
 
         // Photon emission point is random between segment start and end points
-        //const HepPoint3D emissionPt = trackSeg.bestPoint( m_uniDist() );
+        //const Gaudi::XYZPoint emissionPt = trackSeg.bestPoint( m_uniDist() );
         // Photon emission point is half-way between segment start and end points
-        const HepPoint3D & emissionPt = segment->trackSegment().bestPoint();
+        const Gaudi::XYZPoint & emissionPt = segment->trackSegment().bestPoint();
 
         // Photon direction around loop
-        const HepVector3D photDir = segment->trackSegment().vectorAtThetaPhi( ckTheta, *ckPhi );
+        const Gaudi::XYZVector photDir = segment->trackSegment().vectorAtThetaPhi( ckTheta, *ckPhi );
 
         // Ray trace through detector, using fast circle modelling of HPDs
         RichGeomPhoton photon;
@@ -144,7 +147,7 @@ RichGeomEffPhotonTracing::geomEfficiency ( RichRecSegment * segment,
 
           // update efficiency per HPD tally
           segment->addToGeomEfficiencyPerPD( id,
-                                             photon.smartID().pdID(),
+                                             photon.smartID().hpdID(),
                                              m_pdInc );
 
           // flag regions where we expect hits for this segment
@@ -201,7 +204,7 @@ RichGeomEffPhotonTracing::geomEfficiencyScat ( RichRecSegment * segment,
     {
 
       // Photon emission point is end of aerogel
-      const HepPoint3D emissionPt = segment->trackSegment().exitPoint();
+      const Gaudi::XYZPoint emissionPt = segment->trackSegment().exitPoint();
 
       // Cos of CK theta - cached for speed
       const double cosCkTheta = cos(ckTheta);
@@ -222,19 +225,19 @@ RichGeomEffPhotonTracing::geomEfficiencyScat ( RichRecSegment * segment,
         while ( m_uniDist() > gsl_pow_2(cosCkTheta) );
 
         // Photon direction around loop
-        const HepVector3D photDir = segment->trackSegment().vectorAtThetaPhi( ckTheta, *ckPhi );
+        const Gaudi::XYZVector photDir = segment->trackSegment().vectorAtThetaPhi( ckTheta, *ckPhi );
 
         // Ray trace through detector
         if ( 0 != m_rayTrace->traceToDetector( segment->trackSegment().rich(),
                                                emissionPt,
                                                photDir,
                                                photon,
-                                               m_traceMode ) ) 
-        { 
+                                               m_traceMode ) )
+        {
           // Check HPD status
           if ( m_hpdCheck && !m_hpdTool->hpdIsActive(photon.smartID()) ) continue;
           // count detected
-          ++nDetect; 
+          ++nDetect;
         }
 
         // Bail out if tried m_geomEffBailout times and all have failed

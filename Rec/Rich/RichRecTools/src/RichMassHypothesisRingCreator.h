@@ -1,21 +1,16 @@
 
+//-----------------------------------------------------------------------------
 /** @file RichMassHypothesisRingCreator.h
  *
  *  Header file for tool : RichMassHypothesisRingCreator
  *
  *  CVS Log :-
- *  $Id: RichMassHypothesisRingCreator.h,v 1.5 2005-06-23 15:17:41 jonrob Exp $
- *  $Log: not supported by cvs2svn $
- *  Revision 1.4  2004/10/13 09:52:41  jonrob
- *  Speed improvements + various minor changes
- *
- *  Revision 1.3  2004/07/27 20:15:30  jonrob
- *  Add doxygen file documentation and CVS information
- *
+ *  $Id: RichMassHypothesisRingCreator.h,v 1.6 2006-01-23 14:20:44 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
  */
+//-----------------------------------------------------------------------------
 
 #ifndef RICHRECTOOLS_RICHMASSHYPOTHESISRINGCREATOR_H
 #define RICHRECTOOLS_RICHMASSHYPOTHESISRINGCREATOR_H 1
@@ -38,6 +33,7 @@
 #include "Event/RichRecRing.h"
 #include "Event/RichRecSegment.h"
 
+//-----------------------------------------------------------------------------
 /** @class RichMassHypothesisRingCreator RichMassHypothesisRingCreator.h
  *
  *  Tool to create RichRecRings that represent the rings a given
@@ -46,10 +42,12 @@
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
  */
+//-----------------------------------------------------------------------------
 
 class RichMassHypothesisRingCreator : public RichRecToolBase,
                                       virtual public IRichMassHypothesisRingCreator,
-                                      virtual public IIncidentListener {
+                                      virtual public IIncidentListener
+{
 
 public: // Methods for Gaudi Framework
 
@@ -74,21 +72,21 @@ public: // methods (and doxygen comments) inherited from public interface
   void handle( const Incident& incident );
 
   // Returns the mas hypothesis ring for a given segment and mass hypothesis
-  RichRecRing * newMassHypoRing( RichRecSegment * segment,
-                                 const Rich::ParticleIDType id ) const;
+  LHCb::RichRecRing * newMassHypoRing( LHCb::RichRecSegment * segment,
+                                       const Rich::ParticleIDType id ) const;
 
   // Returns a new default RichRecRing object
   // It is the reponsibility of the user to save or delete the ring
-  RichRecRing * newMassHypoRing() const;
+  LHCb::RichRecRing * newMassHypoRing() const;
 
   // Save the RichRecRing in the container
-  void saveMassHypoRing( RichRecRing * ring ) const;
+  void saveMassHypoRing( LHCb::RichRecRing * ring ) const;
 
   // Builds the mass hypothesis rings for all mass hypotheses for given RichRecSegment
-  void newMassHypoRings( RichRecSegment * segment ) const;
+  void newMassHypoRings( LHCb::RichRecSegment * segment ) const;
 
   // Returns a pointer to all mass hypothesis rings
-  RichRecRings * massHypoRings() const;
+  LHCb::RichRecRings * massHypoRings() const;
 
 private: // methods
 
@@ -96,8 +94,8 @@ private: // methods
   void InitNewEvent();
 
   /// Build a new ring using photon ray tracing
-  RichRecRing * buildRing( RichRecSegment * segment,
-                           const Rich::ParticleIDType id ) const;
+  LHCb::RichRecRing * buildRing( LHCb::RichRecSegment * segment,
+                                 const Rich::ParticleIDType id ) const;
 
 private: // data
 
@@ -105,7 +103,7 @@ private: // data
   const IRichCherenkovAngle * m_ckAngle;
 
   /// Pointer to Rings
-  mutable RichRecRings * m_rings;
+  mutable LHCb::RichRecRings * m_rings;
 
   /// Location of Rings in TES
   std::string m_ringLocation;

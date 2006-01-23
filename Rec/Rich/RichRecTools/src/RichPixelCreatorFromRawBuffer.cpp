@@ -5,7 +5,7 @@
  *  Implementation file for tool : RichPixelCreatorFromRawBuffer
  *
  *  CVS Log :-
- *  $Id: RichPixelCreatorFromRawBuffer.cpp,v 1.10 2005-10-18 13:03:51 jonrob Exp $
+ *  $Id: RichPixelCreatorFromRawBuffer.cpp,v 1.11 2006-01-23 14:20:44 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   30/10/2004
@@ -14,6 +14,9 @@
 
 // local
 #include "RichPixelCreatorFromRawBuffer.h"
+
+// namespaces
+using namespace LHCb;
 
 //---------------------------------------------------------------------------------
 
@@ -71,7 +74,7 @@ RichPixelCreatorFromRawBuffer::buildPixel( const RichSmartID id ) const
   {
 
     // Make a new RichRecPixel
-    const HepPoint3D gPos = m_idTool->globalPosition( id );
+    const Gaudi::XYZPoint gPos = m_idTool->globalPosition( id );
     pixel = new RichRecPixel( id,                              // SmartID for pixel
                               gPos,                            // position in global coords
                               m_idTool->globalToPDPanel(gPos), // position in local coords
@@ -104,13 +107,13 @@ StatusCode RichPixelCreatorFromRawBuffer::newPixels() const
     m_allDone = true; // only once per event
 
     // Obtain RichSmartIDs
-    const RichSmartID::Collection & smartIDs = m_decoder->allRichSmartIDs();
+    const RichSmartID::Vector & smartIDs = m_decoder->allRichSmartIDs();
 
     // Reserve space
     richPixels()->reserve( smartIDs.size() );
 
     // Loop over RichSmartIDs and create working pixels
-    for ( RichSmartID::Collection::const_iterator iID = smartIDs.begin();
+    for ( RichSmartID::Vector::const_iterator iID = smartIDs.begin();
           iID != smartIDs.end(); ++iID )
     {
       // Make a Pixel for this RichSmartID

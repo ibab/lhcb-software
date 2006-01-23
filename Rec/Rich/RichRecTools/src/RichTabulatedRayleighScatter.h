@@ -5,7 +5,7 @@
  *  Header file for tool : RichTabulatedRayleighScatter
  *
  *  CVS Log :-
- *  $Id: RichTabulatedRayleighScatter.h,v 1.7 2005-06-23 15:17:42 jonrob Exp $
+ *  $Id: RichTabulatedRayleighScatter.h,v 1.8 2006-01-23 14:20:44 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -19,8 +19,8 @@
 #include "GaudiKernel/ToolFactory.h"
 #include "GaudiKernel/SmartDataPtr.h"
 
-// CLHEP
-#include "CLHEP/Units/PhysicalConstants.h"
+// constants
+#include "Kernel/PhysicalConstants.h"
 
 // base class
 #include "RichRecBase/RichRecToolBase.h"
@@ -52,7 +52,8 @@
 //-----------------------------------------------------------------------------
 
 class RichTabulatedRayleighScatter : public RichRecToolBase,
-                                     virtual public IRichRayleighScatter {
+                                     virtual public IRichRayleighScatter
+{
 
 public: // Methods for Gaudi Framework
 
@@ -73,7 +74,7 @@ public: // Methods for Gaudi Framework
 public: // methods (and doxygen comments) inherited from public interface
 
   // Rayleigh scattering probability for given pathlength (segment) and photyon energy
-  double photonScatteredProb( const RichRecSegment * segment,
+  double photonScatteredProb( const LHCb::RichRecSegment * segment,
                               const double energy ) const;
 
 private:  // Private data

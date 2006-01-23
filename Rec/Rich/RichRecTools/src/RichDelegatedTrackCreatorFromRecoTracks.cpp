@@ -5,15 +5,20 @@
  *  Implementation file for tool : RichDelegatedTrackCreatorFromRecoTracks
  *
  *  CVS Log :-
- *  $Id: RichDelegatedTrackCreatorFromRecoTracks.cpp,v 1.1 2005-10-13 16:01:55 jonrob Exp $
+ *  $Id: RichDelegatedTrackCreatorFromRecoTracks.cpp,v 1.2 2006-01-23 14:20:43 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
  */
 //---------------------------------------------------------------------------------------------
 
+#include "GaudiKernel/ContainedObject.h"
+
 // local
 #include "RichDelegatedTrackCreatorFromRecoTracks.h"
+
+// namespaces
+using namespace LHCb;
 
 //---------------------------------------------------------------------------------------------
 // Declaration of the Tool Factory
@@ -49,7 +54,7 @@ StatusCode RichDelegatedTrackCreatorFromRecoTracks::initialize()
   if ( sc.isFailure() ) { return sc; }
 
   // setup mapping between track type and tool pointer
-  RichMap< std::string, const IRichTrackCreator * > tmpMap;
+  Rich::Map< std::string, const IRichTrackCreator * > tmpMap;
   for ( ToolList::iterator it = m_names.begin();
         it != m_names.end(); ++it )
   {
@@ -104,7 +109,7 @@ const long RichDelegatedTrackCreatorFromRecoTracks::nInputTracks() const
   return ( recoTracks() ? recoTracks()->size() : 0 );
 }
 
-const Tracks *
+const LHCb::Tracks *
 RichDelegatedTrackCreatorFromRecoTracks::recoTracks() const
 {
   if ( !m_trTracks )

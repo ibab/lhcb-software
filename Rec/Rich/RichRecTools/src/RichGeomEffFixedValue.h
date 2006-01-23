@@ -5,7 +5,7 @@
  *  Header file for tool : RichGeomEffFixedValue
  *
  *  CVS Log :-
- *  $Id: RichGeomEffFixedValue.h,v 1.7 2005-06-23 15:17:41 jonrob Exp $
+ *  $Id: RichGeomEffFixedValue.h,v 1.8 2006-01-23 14:20:44 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -30,7 +30,7 @@
 /** @class RichGeomEffFixedValue RichGeomEffFixedValue.h
  *
  *  Tool to perform a fast determination of the geometrical efficiency for
- *  a given RichRecSegment and mass hypothesis. 
+ *  a given RichRecSegment and mass hypothesis.
  *
  *  Uses a fixed value of the signal and scattered efficiencies on the HPD panel,
  *  and also takes into account the HPD panel boundaries.
@@ -62,11 +62,11 @@ public: // Methods for Gaudi Framework
 public: // methods (and doxygen comments) inherited from public interface
 
   // Obtain geometrical efficiency for this track and hypothesis
-  double geomEfficiency ( RichRecSegment * segment,
+  double geomEfficiency ( LHCb::RichRecSegment * segment,
                           const Rich::ParticleIDType id ) const;
 
   // Obtain scattered geometrical efficiency for this track and hypothesis
-  double geomEfficiencyScat ( RichRecSegment * segment,
+  double geomEfficiencyScat ( LHCb::RichRecSegment * segment,
                               const Rich::ParticleIDType id ) const;
 
 private: // Private data

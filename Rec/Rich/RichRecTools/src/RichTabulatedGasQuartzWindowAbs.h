@@ -5,7 +5,7 @@
  *  Header file for tool : RichTabulatedGasQuartzWindowAbs
  *
  *  CVS Log :-
- *  $Id: RichTabulatedGasQuartzWindowAbs.h,v 1.5 2005-06-18 11:40:11 jonrob Exp $
+ *  $Id: RichTabulatedGasQuartzWindowAbs.h,v 1.6 2006-01-23 14:20:44 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -19,8 +19,8 @@
 #include "GaudiKernel/ToolFactory.h"
 #include "GaudiKernel/SmartDataPtr.h"
 
-// CLHEP
-#include "CLHEP/Units/PhysicalConstants.h"
+// constants
+#include "Kernel/PhysicalConstants.h"
 
 // base class
 #include "RichRecBase/RichRecToolBase.h"
@@ -53,7 +53,8 @@
 //-----------------------------------------------------------------------------
 
 class RichTabulatedGasQuartzWindowAbs : public RichRecToolBase,
-                                        virtual public IRichGasQuartzWindowAbs {
+                                        virtual public IRichGasQuartzWindowAbs
+{
 
 public: // Methods for Gaudi Framework
 
@@ -74,7 +75,7 @@ public: // Methods for Gaudi Framework
 public: // methods (and doxygen comments) inherited from public interface
 
   // Rayleigh scattering probability for given pathlength (segment) and photon energy
-  double photonTransProb( const RichRecSegment * segment,
+  double photonTransProb( const LHCb::RichRecSegment * segment,
                           const double energy ) const;
 
 private:  // Private data

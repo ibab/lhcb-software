@@ -5,7 +5,7 @@
  *  Header file for tool : RichStatusCreator
  *
  *  CVS Log :-
- *  $Id: RichStatusCreator.h,v 1.7 2005-06-23 15:17:42 jonrob Exp $
+ *  $Id: RichStatusCreator.h,v 1.8 2006-01-23 14:20:44 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -23,6 +23,9 @@
 // base class
 #include "RichRecBase/RichRecToolBase.h"
 
+// Event
+#include "Event/RichRecStatus.h"
+
 // interface
 #include "RichRecBase/IRichStatusCreator.h"
 
@@ -38,7 +41,7 @@
 
 class RichStatusCreator : public RichRecToolBase,
                           virtual public IRichStatusCreator,
-                          virtual public IIncidentListener 
+                          virtual public IIncidentListener
 {
 
 public: // Methods for Gaudi Framework
@@ -64,7 +67,7 @@ public: // methods (and doxygen comments) inherited from public interface
   void handle( const Incident& incident );
 
   // Returns a pointer to the RichRecStatus
-  RichRecStatus * richStatus() const;
+  LHCb::RichRecStatus * richStatus() const;
 
 private: // methods
 
@@ -74,7 +77,7 @@ private: // methods
 private: // data
 
   /// Pointer to RichRecStatus
-  mutable RichRecStatus * m_status;
+  mutable LHCb::RichRecStatus * m_status;
 
   /// Location of RichRecStatus in TES
   std::string m_richStatusLocation;

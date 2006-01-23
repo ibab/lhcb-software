@@ -5,7 +5,7 @@
  *  Header file for tool : RichTabulatedSignalDetectionEff
  *
  *  CVS Log :-
- *  $Id: RichTabulatedSignalDetectionEff.h,v 1.8 2005-06-18 11:40:11 jonrob Exp $
+ *  $Id: RichTabulatedSignalDetectionEff.h,v 1.9 2006-01-23 14:20:44 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -32,8 +32,8 @@
 // Event model
 #include "Event/RichRecSegment.h"
 
-// CLHEP
-#include "CLHEP/Units/PhysicalConstants.h"
+// constants
+#include "Kernel/PhysicalConstants.h"
 
 // RichDet
 #include "RichDet/DeRich1.h"
@@ -51,7 +51,8 @@
 //-----------------------------------------------------------------------------
 
 class RichTabulatedSignalDetectionEff : public RichRecToolBase,
-                                        virtual public IRichSignalDetectionEff {
+                                        virtual public IRichSignalDetectionEff
+{
 
 public: // Methods for Gaudi Framework
 
@@ -72,7 +73,7 @@ public: // Methods for Gaudi Framework
 public: // methods (and doxygen comments) inherited from public interface
 
   // Returns the detection efficiency for a cherenkov photon of a given energy
-  double photonDetEfficiency( RichRecSegment * segment, 
+  double photonDetEfficiency( LHCb::RichRecSegment * segment,
                               const double energy ) const;
 
 private:  // Private data

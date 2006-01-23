@@ -90,13 +90,11 @@ ToolSvc.Offline.RichRayTraceCKCone.NPhotonsRayTrace = 100;
 
 // Segment creator
 ToolSvc.Offline.RichToolRegistry.Tools += { "RichSegmentCreator/RichSegmentCreator" };
-ToolSvc.Offline.RichSegmentCreator.RichRecSegmentLocation = "Rec/Rich/RecoEvent/OfflineSegments";
 //                                        Aerogel  C4F10   CF4
 ToolSvc.Offline.RichSegmentCreator.EnergyBins = { 5,       5,      5   };
 
 // Status Creator
 ToolSvc.Offline.RichToolRegistry.Tools += { "RichStatusCreator/RichStatusCreator" };
-ToolSvc.Offline.RichStatusCreator.RichRecStatusLocation = "Rec/Rich/RecoEvent/OfflineStatus";
 
 // Geometrical efficiency from full ray tracing
 ToolSvc.Offline.RichToolRegistry.Tools += { "RichGeomEffPhotonTracing/RichGeomEff" };

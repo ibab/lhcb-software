@@ -5,7 +5,7 @@
  *  Header file for tool : RichPixelCreatorFromRichDigits
  *
  *  CVS Log :-
- *  $Id: RichPixelCreatorFromRichDigits.h,v 1.15 2005-06-23 15:17:41 jonrob Exp $
+ *  $Id: RichPixelCreatorFromRichDigits.h,v 1.16 2006-01-23 14:20:44 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -61,7 +61,7 @@ public: // methods (and doxygen comments) inherited from public interface
 
   // Returns a RichRecPixel object pointer for given ContainedObject.
   // If if it not possible NULL is return.
-  RichRecPixel * newPixel( const ContainedObject * obj ) const;
+  LHCb::RichRecPixel * newPixel( const ContainedObject * obj ) const;
 
   // Form all possible RichRecPixels from input RichDigits.
   // The most efficient way to make all RichRecPixel objects in the event.
@@ -70,7 +70,7 @@ public: // methods (and doxygen comments) inherited from public interface
 private: // methods
 
   /// Build a new RichRecPixel
-  RichRecPixel * buildPixel ( const RichDigit * digit ) const;
+  LHCb::RichRecPixel * buildPixel ( const LHCb::RichDigit * digit ) const;
 
 private: // data
 

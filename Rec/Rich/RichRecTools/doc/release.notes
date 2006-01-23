@@ -4,6 +4,9 @@
 ! Purpose     : Utility tools for RICH reconstruction algorithms
 !------------------------------------------------------------------------------
 
+! 2006-01-23 - Chris Jones
+ - Updates for LHCb v20r0
+
 !===================== RichRecTools v2r16 2005-11-21 ======================
 ! 2005-11-21 - Marco Cattaneo
  - Clean up requirements

@@ -5,7 +5,7 @@
  *  Implementation file for tool : RichTabulatedSignalDetectionEff
  *
  *  CVS Log :-
- *  $Id: RichTabulatedSignalDetectionEff.cpp,v 1.8 2005-06-18 11:40:11 jonrob Exp $
+ *  $Id: RichTabulatedSignalDetectionEff.cpp,v 1.9 2006-01-23 14:20:44 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -14,6 +14,9 @@
 
 // local
 #include "RichTabulatedSignalDetectionEff.h"
+
+// namespaces
+using namespace LHCb;
 
 //-----------------------------------------------------------------------------
 
@@ -37,13 +40,13 @@ RichTabulatedSignalDetectionEff ( const std::string& type,
 
 }
 
-StatusCode RichTabulatedSignalDetectionEff::initialize() 
+StatusCode RichTabulatedSignalDetectionEff::initialize()
 {
   // Sets up various tools and services
   const StatusCode sc = RichRecToolBase::initialize();
   if ( sc.isFailure() ) { return sc; }
 
-  // Rich1 and Rich2 
+  // Rich1 and Rich2
   const DeRich * rich1 = getDet<DeRich>( DeRichLocation::Rich1 );
   const DeRich * rich2 = getDet<DeRich>( DeRichLocation::Rich2 );
 
@@ -51,10 +54,10 @@ StatusCode RichTabulatedSignalDetectionEff::initialize()
   m_QE = new Rich1DTabProperty( rich1->nominalHPDQuantumEff() );
 
   // mirror reflectivities
-  m_flatMirRefl[Rich::Rich1] = new Rich1DTabProperty( rich1->nominalFlatMirrorRefl() );
-  m_flatMirRefl[Rich::Rich2] = new Rich1DTabProperty( rich2->nominalFlatMirrorRefl() );
-  m_sphMirRefl[Rich::Rich1]  = new Rich1DTabProperty( rich1->nominalSphMirrorRefl()  );
-  m_sphMirRefl[Rich::Rich2]  = new Rich1DTabProperty( rich2->nominalSphMirrorRefl()  );
+  m_flatMirRefl[Rich::Rich1] = new Rich1DTabProperty( rich1->nominalSecMirrorRefl() );
+  m_flatMirRefl[Rich::Rich2] = new Rich1DTabProperty( rich2->nominalSecMirrorRefl() );
+  m_sphMirRefl[Rich::Rich1]  = new Rich1DTabProperty( rich1->nominalSphMirrorRefl() );
+  m_sphMirRefl[Rich::Rich2]  = new Rich1DTabProperty( rich2->nominalSphMirrorRefl() );
 
   // Quartz window eff
   m_quartzWinEff = rich1->param<double>( "HPDQuartzWindowEff" );

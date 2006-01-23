@@ -5,7 +5,7 @@
  *  Implementation file for tool : RichRayTraceCherenkovCone
  *
  *  CVS Log :-
- *  $Id: RichRayTraceCherenkovCone.cpp,v 1.12 2005-10-18 13:03:51 jonrob Exp $
+ *  $Id: RichRayTraceCherenkovCone.cpp,v 1.13 2006-01-23 14:20:44 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -14,6 +14,9 @@
 
 // local
 #include "RichRayTraceCherenkovCone.h"
+
+// namespaces
+using namespace LHCb;
 
 //-----------------------------------------------------------------------------
 
@@ -50,7 +53,7 @@ StatusCode RichRayTraceCherenkovCone::initialize()
   acquireTool( "RichSmartIDTool", m_smartIDTool, 0, true );
 
   // Set up cached parameters for photon tracing
-  m_incPhi = M_2PI / static_cast<double>(m_nRayTrace) ;
+  m_incPhi = twopi / static_cast<double>(m_nRayTrace) ;
 
   return sc;
 }
@@ -61,7 +64,7 @@ StatusCode RichRayTraceCherenkovCone::finalize()
   return RichRecToolBase::finalize();
 }
 
-const std::vector<HepPoint3D> &
+const std::vector<Gaudi::XYZPoint> &
 RichRayTraceCherenkovCone::rayTraceLocal ( RichRecRing * ring,
                                            const RichTraceMode mode ) const
 {
@@ -73,8 +76,9 @@ RichRayTraceCherenkovCone::rayTraceLocal ( RichRecRing * ring,
     if ( ring->ringPoints().empty() ) rayTrace ( ring, mode );
 
     // convert global to local points
-    for ( std::vector<HepPoint3D>::const_iterator iP = ring->ringPoints().begin();
-          iP != ring->ringPoints().end(); ++iP ) {
+    for ( std::vector<Gaudi::XYZPoint>::const_iterator iP = ring->ringPoints().begin();
+          iP != ring->ringPoints().end(); ++iP ) 
+    {
       ring->ringPointsLocal().push_back( m_smartIDTool->globalToPDPanel(*iP) );
     }
 
@@ -83,24 +87,25 @@ RichRayTraceCherenkovCone::rayTraceLocal ( RichRecRing * ring,
   return ring->ringPointsLocal();
 }
 
-const std::vector<HepPoint3D> &
+const std::vector<Gaudi::XYZPoint> &
 RichRayTraceCherenkovCone::rayTrace ( RichRecRing * ring,
                                       const RichTraceMode mode ) const
 {
   if ( !ring ) Exception( "Null RichRecRing pointer!" );
 
   // cache points in each ring
-  if ( ring->ringPoints().empty() ) {
+  if ( ring->ringPoints().empty() ) 
+  {
     rayTrace( ring->richRecSegment(), ring->radius(), ring->ringPoints(), mode );
   }
-
+  
   return ring->ringPoints();
 }
 
 StatusCode
 RichRayTraceCherenkovCone::rayTrace ( RichRecSegment * segment,
                                       const Rich::ParticleIDType id,
-                                      std::vector<HepPoint3D> & points,
+                                      std::vector<Gaudi::XYZPoint> & points,
                                       const RichTraceMode mode ) const
 {
   return rayTrace( segment,
@@ -111,7 +116,7 @@ RichRayTraceCherenkovCone::rayTrace ( RichRecSegment * segment,
 StatusCode
 RichRayTraceCherenkovCone::rayTrace ( RichRecSegment * segment,
                                       const double ckTheta,
-                                      std::vector<HepPoint3D> & points,
+                                      std::vector<Gaudi::XYZPoint> & points,
                                       const RichTraceMode mode ) const
 {
   // make sure segment is valid
@@ -126,48 +131,54 @@ RichRayTraceCherenkovCone::rayTrace ( RichRecSegment * segment,
 
 StatusCode
 RichRayTraceCherenkovCone::rayTrace ( const Rich::DetectorType rich,
-                                      const HepPoint3D & emissionPoint,
-                                      const HepVector3D & direction,
+                                      const Gaudi::XYZPoint & emissionPoint,
+                                      const Gaudi::XYZVector & direction,
                                       const double ckTheta,
-                                      std::vector<HepPoint3D> & points,
+                                      std::vector<Gaudi::XYZPoint> & points,
                                       const RichTraceMode mode ) const
 {
 
-  if ( ckTheta > 0 ) {
+  if ( ckTheta > 0 ) 
+  {
 
     // Define rotation matrix
-    const HepVector3D z = direction.unit();
-    HepVector3D y = z.cross( HepVector3D(0.,1.,0.) );
-    y.setMag(1);
-    const HepVector3D x = y.cross(z);
-    HepRotation rotation = HepRotation();
-    rotation.rotateAxes(x,y,z);
+    const Gaudi::XYZVector z = direction.unit();
+    Gaudi::XYZVector y = z.Cross( Gaudi::XYZVector(0.,1.,0.) );
+    y /= sqrt(y.Mag2());
+    const Gaudi::XYZVector x = y.Cross(z);
+    Gaudi::Rotation3D rotation = Gaudi::Rotation3D(x,y,z);
 
     // loop around the ring
     const double sinCkTheta = sin(ckTheta);
     const double cosCkTheta = cos(ckTheta);   
     double ckPhi = 0.0;
-    for ( int iPhot = 0; iPhot < m_nRayTrace; ++iPhot, ckPhi+=m_incPhi ) {
+    for ( int iPhot = 0; iPhot < m_nRayTrace; ++iPhot, ckPhi+=m_incPhi ) 
+    {
 
       // Photon direction around loop
-      const HepVector3D photDir = rotation * HepVector3D( sinCkTheta*cos(ckPhi),
-                                                          sinCkTheta*sin(ckPhi),
-                                                          cosCkTheta );
+      const Gaudi::XYZVector photDir = 
+        rotation * Gaudi::XYZVector( sinCkTheta*cos(ckPhi),
+                                     sinCkTheta*sin(ckPhi),
+                                     cosCkTheta );
 
       // Ray trace to detector plane
-      HepPoint3D hitPoint;
+      Gaudi::XYZPoint hitPoint;
       if ( m_rayTrace->traceToDetectorWithoutEff( rich,
                                                   emissionPoint,
                                                   photDir,
                                                   hitPoint,
-                                                  mode ) ) {
+                                                  mode ) ) 
+      {
         points.push_back( hitPoint );
       }
 
     }
 
     return StatusCode::SUCCESS;
-  } else {
+
+  } 
+  else 
+  {
     // cannot perform ray-tracing
     return StatusCode::FAILURE;
   }

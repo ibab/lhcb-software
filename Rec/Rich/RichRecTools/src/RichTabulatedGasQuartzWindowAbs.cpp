@@ -5,7 +5,7 @@
  *  Implementation file for tool : RichTabulatedGasQuartzWindowAbs
  *
  *  CVS Log :-
- *  $Id: RichTabulatedGasQuartzWindowAbs.cpp,v 1.6 2005-06-18 11:40:11 jonrob Exp $
+ *  $Id: RichTabulatedGasQuartzWindowAbs.cpp,v 1.7 2006-01-23 14:20:44 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -14,6 +14,9 @@
 
 // local
 #include "RichTabulatedGasQuartzWindowAbs.h"
+
+// namespaces
+using namespace LHCb;
 
 //-----------------------------------------------------------------------------
 
@@ -32,7 +35,7 @@ RichTabulatedGasQuartzWindowAbs::RichTabulatedGasQuartzWindowAbs ( const std::st
 
 }
 
-StatusCode RichTabulatedGasQuartzWindowAbs::initialize() 
+StatusCode RichTabulatedGasQuartzWindowAbs::initialize()
 {
 
   // Sets up various tools and services
@@ -47,7 +50,7 @@ StatusCode RichTabulatedGasQuartzWindowAbs::initialize()
   m_gasQWin[Rich::Rich1] = new Rich1DTabProperty( Rich1DE->gasWinAbsLength() );
   m_gasQWin[Rich::Rich2] = new Rich1DTabProperty( Rich2DE->gasWinAbsLength() );
 
-  // Quartz window thicknesses. 
+  // Quartz window thicknesses.
   m_qWinZSize[Rich::Rich1] = Rich1DE->param<double>("Rich1GasQuartzWindowThickness");
   m_qWinZSize[Rich::Rich2] = Rich2DE->param<double>("Rich2GasQuartzWindowThickness");
 
@@ -72,6 +75,6 @@ RichTabulatedGasQuartzWindowAbs::photonTransProb( const RichRecSegment * segment
   if ( energy <= 0 ) return 0;
 
   // compute and return transmission probability
-  return exp( -m_qWinZSize[segment->trackSegment().rich()] / 
+  return exp( -m_qWinZSize[segment->trackSegment().rich()] /
               (*m_gasQWin[segment->trackSegment().rich()])[energy*eV] );
 }

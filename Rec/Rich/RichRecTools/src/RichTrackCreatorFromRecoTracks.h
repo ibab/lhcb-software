@@ -5,7 +5,7 @@
  *  Header file for tool : RichTrackCreatorFromRecoTracks
  *
  *  CVS Log :-
- *  $Id: RichTrackCreatorFromRecoTracks.h,v 1.1 2005-10-13 16:01:56 jonrob Exp $
+ *  $Id: RichTrackCreatorFromRecoTracks.h,v 1.2 2006-01-23 14:20:44 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -18,7 +18,7 @@
 // from Gaudi
 #include "GaudiKernel/ToolFactory.h"
 
-// base package
+// base class
 #include "RichRecBase/RichTrackCreatorBase.h"
 
 // interfaces
@@ -26,7 +26,7 @@
 #include "RichRecBase/IRichMassHypothesisRingCreator.h"
 #include "RichKernel/IRichRayTracing.h"
 #include "RichKernel/IRichSmartIDTool.h"
-#include "RichKernel/IRichTrSegMaker.h"
+#include "RichRecBase/IRichTrSegMaker.h"
 
 // Event
 #include "Event/Track.h"
@@ -65,7 +65,7 @@ public: // methods (and doxygen comments) inherited from public interface
 
   // Returns a RichRecTrack object pointer for given ContainedObject.
   // In this implementation the ContainedObject must be a reconstruction 'Track'.
-  virtual RichRecTrack * newTrack ( const ContainedObject * obj ) const;
+  virtual LHCb::RichRecTrack * newTrack ( const ContainedObject * obj ) const;
 
   // Form all possible RichRecTracks from input Tracks
   virtual const StatusCode newTracks() const;
@@ -81,12 +81,12 @@ protected: // methods
 private: // methods
 
   /// Returns a pointer to the Tracks
-  const Tracks * trTracks() const;
+  const LHCb::Tracks * trTracks() const;
 
 private: // data
 
   /// Pointer to Tracks
-  mutable Tracks * m_trTracks;
+  mutable LHCb::Tracks * m_trTracks;
 
   /// Pointer to the detector ray tracing tool
   const IRichRayTracing * m_rayTrace;

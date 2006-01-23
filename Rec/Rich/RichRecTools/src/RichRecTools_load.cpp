@@ -5,7 +5,7 @@
  *  Declaration of objects in the component library RichRecTools
  *
  *  CVS Log :-
- *  $Id: RichRecTools_load.cpp,v 1.22 2005-10-13 16:01:55 jonrob Exp $
+ *  $Id: RichRecTools_load.cpp,v 1.23 2006-01-23 14:20:44 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -19,9 +19,7 @@ DECLARE_FACTORY_ENTRIES( RichRecTools )
 
   // Rich reconstruction working object creators
   DECLARE_TOOL( RichDelegatedTrackCreatorFromRecoTracks );
-  DECLARE_TOOL( RichDelegatedTrackCreatorFromTrStoredTracks );
   DECLARE_TOOL( RichTrackCreatorFromRecoTracks );
-  DECLARE_TOOL( RichTrackCreatorFromTrStoredTracks );
   DECLARE_TOOL( RichSegmentCreator );
   DECLARE_TOOL( RichPixelCreatorFromRichDigits );
   DECLARE_TOOL( RichPixelCreatorFromRawBuffer );
@@ -59,5 +57,11 @@ DECLARE_FACTORY_ENTRIES( RichRecTools )
 
   // ray tracing
   DECLARE_TOOL( RichRayTraceCherenkovCone );
+
+  // track segment makers
+  DECLARE_TOOL( RichTrSegMakerFromRecoTracks ); 
+
+  // photon reconstruction using Quartic solution
+  DECLARE_TOOL( RichPhotonRecoUsingQuarticSoln ); 
 
 };

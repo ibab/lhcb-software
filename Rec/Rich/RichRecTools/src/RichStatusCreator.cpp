@@ -5,7 +5,7 @@
  *  Implementation file for tool : RichStatusCreator
  *
  *  CVS Log :-
- *  $Id: RichStatusCreator.cpp,v 1.11 2005-10-13 16:01:56 jonrob Exp $
+ *  $Id: RichStatusCreator.cpp,v 1.12 2006-01-23 14:20:44 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -14,6 +14,9 @@
 
 // local
 #include "RichStatusCreator.h"
+
+// namespaces
+using namespace LHCb;
 
 //-----------------------------------------------------------------------------
 

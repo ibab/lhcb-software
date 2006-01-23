@@ -5,7 +5,7 @@
  *  Header file for tool : RichPhotonSignal
  *
  *  CVS Log :-
- *  $Id: RichPhotonSignal.h,v 1.11 2005-06-23 15:17:41 jonrob Exp $
+ *  $Id: RichPhotonSignal.h,v 1.12 2006-01-23 14:20:44 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -35,8 +35,8 @@
 #include "RichRecBase/IRichCherenkovAngle.h"
 #include "RichRecBase/IRichCherenkovResolution.h"
 
-// CLHEP
-#include "CLHEP/Units/PhysicalConstants.h"
+// constants
+#include "Kernel/PhysicalConstants.h"
 
 //-----------------------------------------------------------------------------
 /** @class RichPhotonSignal RichPhotonSignal.h
@@ -52,7 +52,8 @@
 //-----------------------------------------------------------------------------
 
 class RichPhotonSignal : public RichRecToolBase,
-                         virtual public IRichPhotonSignal {
+                         virtual public IRichPhotonSignal
+{
 
 public: // Methods for Gaudi Framework
 
@@ -73,14 +74,14 @@ public: // Methods for Gaudi Framework
 public: // methods (and doxygen comments) inherited from public interface
 
   // Predicted pixel signal for a given reconstructed photon under a given mass hypothesis
-  double predictedPixelSignal( RichRecPhoton * photon,
+  double predictedPixelSignal( LHCb::RichRecPhoton * photon,
                                const Rich::ParticleIDType id ) const;
   // Signal Probability for a given reconstructed photon under a given mass hypothesis
-  double signalProb( RichRecPhoton * photon,
+  double signalProb( LHCb::RichRecPhoton * photon,
                      const Rich::ParticleIDType id ) const;
 
   // Scatter Probability for a given reconstructed photon under a given mass hypothesis
-  double scatterProb( RichRecPhoton * photon,
+  double scatterProb( LHCb::RichRecPhoton * photon,
                       const Rich::ParticleIDType id ) const;
 
 private: // private data

@@ -5,7 +5,7 @@
  *  Header file for tool : RichPhotonCreator
  *
  *  CVS Log :-
- *  $Id: RichPhotonCreator.h,v 1.24 2005-06-23 15:17:41 jonrob Exp $
+ *  $Id: RichPhotonCreator.h,v 1.25 2006-01-23 14:20:44 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -22,7 +22,7 @@
 #include "RichRecBase/RichPhotonCreatorBase.h"
 
 // Interfaces
-#include "RichKernel/IRichPhotonReconstruction.h"
+#include "RichRecBase/IRichPhotonReconstruction.h"
 
 //-----------------------------------------------------------------------------
 /** @class RichPhotonCreator RichPhotonCreator.h
@@ -57,14 +57,14 @@ public: // Methods for Gaudi Framework
 protected: // methods
 
   /// Form a Photon candidate from a Segment and a pixel.
-  virtual RichRecPhoton * buildPhoton( RichRecSegment * segment,
-                                       RichRecPixel * pixel,
-                                       const RichRecPhotonKey key ) const;
+  virtual LHCb::RichRecPhoton * buildPhoton( LHCb::RichRecSegment * segment,
+                                             LHCb::RichRecPixel * pixel,
+                                             const RichRecPhotonKey key ) const;
 
 private: // private data
 
   /// Pointer to photon reconstruction tool
-  const IRichPhotonReconstruction * m_photonReco; 
+  const IRichPhotonReconstruction * m_photonReco;
 
   /// Photon reconstruction tool runtime name
   std::string m_photonRecoName;

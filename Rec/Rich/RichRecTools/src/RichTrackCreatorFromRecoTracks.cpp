@@ -5,7 +5,7 @@
  *  Implementation file for tool : RichTrackCreatorFromRecoTracks
  *
  *  CVS Log :-
- *  $Id: RichTrackCreatorFromRecoTracks.cpp,v 1.3 2005-11-15 13:38:10 jonrob Exp $
+ *  $Id: RichTrackCreatorFromRecoTracks.cpp,v 1.4 2006-01-23 14:20:44 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -14,6 +14,9 @@
 
 // local
 #include "RichTrackCreatorFromRecoTracks.h"
+
+// namespaces
+using namespace LHCb;
 
 //-------------------------------------------------------------------------------------
 
@@ -212,19 +215,21 @@ RichTrackCreatorFromRecoTracks::newTrack ( const ContainedObject * obj ) const
         RichRecSegment * newSegment = segmentCreator()->newSegment( *iSeg, newTrack );
 
         // Get PD panel impact point
-        HepPoint3D & hitPoint = newSegment->pdPanelHitPoint();
-        const HepVector3D & trackDir = (*iSeg)->bestMomentum();
+        Gaudi::XYZPoint hitPoint;
+        const Gaudi::XYZVector & trackDir = (*iSeg)->bestMomentum();
         if ( m_rayTrace->traceToDetectorWithoutEff( (*iSeg)->rich(),
                                                     (*iSeg)->bestPoint(),
                                                     trackDir,
                                                     hitPoint,
                                                     m_traceMode ) )
         {
+          // set global hit point
+          newSegment->setPdPanelHitPoint( hitPoint );
 
           // Get PD panel hit point in local coordinates
           // need to do before test below, since potentially needed by geom eff tool
           // need to make this data "on-demand" to avoid this sort of thing
-          newSegment->pdPanelHitPointLocal() = m_smartIDTool->globalToPDPanel(hitPoint);
+          newSegment->setPdPanelHitPointLocal( m_smartIDTool->globalToPDPanel(hitPoint) );
 
           // test if this segment has valid information
           if ( m_signal->hasRichInfo(newSegment) )

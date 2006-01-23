@@ -5,7 +5,7 @@
  *  Header file for tool : RichInterpCKResVpForRecoTracks
  *
  *  CVS Log :-
- *  $Id: RichInterpCKResVpForRecoTracks.h,v 1.1 2005-10-13 16:01:55 jonrob Exp $
+ *  $Id: RichInterpCKResVpForRecoTracks.h,v 1.2 2006-01-23 14:20:44 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -25,7 +25,7 @@
 #include "RichKernel/Rich1DTabFunc.h"
 
 // CLHEP
-#include "CLHEP/Units/PhysicalConstants.h"
+#include "Kernel/PhysicalConstants.h"
 
 // interfaces
 #include "RichRecBase/IRichCherenkovResolution.h"
@@ -43,7 +43,8 @@
 //---------------------------------------------------------------------------------------
 
 class RichInterpCKResVpForRecoTracks : public RichRecToolBase,
-                                       virtual public IRichCherenkovResolution {
+                                       virtual public IRichCherenkovResolution
+{
 
 public: // Methods for Gaudi Framework
 
@@ -64,7 +65,7 @@ public: // Methods for Gaudi Framework
 public: // methods (and doxygen comments) inherited from public interface
 
   // Photon resolution
-  double ckThetaResolution( RichRecSegment * segment,
+  double ckThetaResolution( LHCb::RichRecSegment * segment,
                             const Rich::ParticleIDType id = Rich::Pion ) const;
 
 private:  // Private data

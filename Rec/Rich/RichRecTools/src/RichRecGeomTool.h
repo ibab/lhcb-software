@@ -5,7 +5,7 @@
  *  Header file for tool : RichRecGeomTool
  *
  *  CVS Log :-
- *  $Id: RichRecGeomTool.h,v 1.6 2005-06-23 15:17:41 jonrob Exp $
+ *  $Id: RichRecGeomTool.h,v 1.7 2006-01-23 14:20:44 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -45,7 +45,7 @@
 //-----------------------------------------------------------------------------
 
 class RichRecGeomTool : public RichRecToolBase,
-                        virtual public IRichRecGeomTool 
+                        virtual public IRichRecGeomTool
 {
 
 public: // Methods for Gaudi Framework
@@ -68,18 +68,18 @@ public: // methods (and doxygen comments) inherited from public interface
 
   // Returns square of distance seperating the pixel hit and hit position extrapolated
   // using the RichRecSegment direction in local corrdinates
-  double trackPixelHitSep2( const RichRecSegment * segment,
-                            const RichRecPixel * pixel ) const;
+  double trackPixelHitSep2( const LHCb::RichRecSegment * segment,
+                            const LHCb::RichRecPixel * pixel ) const;
 
   // Computes the fraction of the Cherenkov cone for a given segment that
   //  is within the average HPD panel acceptance
-  double hpdPanelAcceptance( RichRecSegment * segment,
-                             const Rich::ParticleIDType id ) const; 
+  double hpdPanelAcceptance( LHCb::RichRecSegment * segment,
+                             const Rich::ParticleIDType id ) const;
 
   // Correct the given position (in local HPD coordinates) for the average
   // optical distortion for given radiator
-  HepPoint3D correctAvRadiatorDistortion( const HepPoint3D & point,
-                                          const Rich::RadiatorType rad ) const;
+  Gaudi::XYZPoint correctAvRadiatorDistortion( const Gaudi::XYZPoint & point,
+                                               const Rich::RadiatorType rad ) const;
 
 private: // private data
 

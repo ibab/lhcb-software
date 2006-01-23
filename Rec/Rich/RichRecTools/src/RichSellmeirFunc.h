@@ -5,7 +5,7 @@
  *  Header file for tool : RichSellmeirFunc
  *
  *  CVS Log :-
- *  $Id: RichSellmeirFunc.h,v 1.10 2005-10-13 16:01:55 jonrob Exp $
+ *  $Id: RichSellmeirFunc.h,v 1.11 2006-01-23 14:20:44 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -20,7 +20,7 @@
 
 // Kernel
 #include "Kernel/RichRadiatorType.h"
-#include "RichKernel/RichParticleIDType.h"
+#include "Kernel/RichParticleIDType.h"
 #include "RichKernel/BoostArray.h"
 
 // Event model
@@ -47,7 +47,8 @@
 //-----------------------------------------------------------------------------
 
 class RichSellmeirFunc : public RichRecToolBase,
-                         virtual public IRichSellmeirFunc {
+                         virtual public IRichSellmeirFunc
+{
 
 public: // Methods for Gaudi Framework
 
@@ -69,7 +70,7 @@ public: // methods (and doxygen comments) inherited from public interface
 
   // Computes the number of photons emitted in the given energy range for a
   // given RichRecSegment under a certain mass hypothesis
-  double photonsInEnergyRange( RichRecSegment * segment,
+  double photonsInEnergyRange( LHCb::RichRecSegment * segment,
                                const Rich::ParticleIDType id,
                                const double botEn,
                                const double topEn ) const;

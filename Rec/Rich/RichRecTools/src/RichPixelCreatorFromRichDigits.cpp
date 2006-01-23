@@ -5,7 +5,7 @@
  *  Implementation file for tool : RichPixelCreatorFromRichDigits
  *
  *  CVS Log :-
- *  $Id: RichPixelCreatorFromRichDigits.cpp,v 1.21 2005-10-18 13:03:51 jonrob Exp $
+ *  $Id: RichPixelCreatorFromRichDigits.cpp,v 1.22 2006-01-23 14:20:44 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -14,6 +14,9 @@
 
 // local
 #include "RichPixelCreatorFromRichDigits.h"
+
+// namespaces
+using namespace LHCb;
 
 //-----------------------------------------------------------------------------
 
@@ -93,7 +96,7 @@ RichPixelCreatorFromRichDigits::buildPixel( const RichDigit * digit ) const
   {
 
     // Make a new RichRecPixel
-    const HepPoint3D gPos = m_idTool->globalPosition( id );
+    const Gaudi::XYZPoint gPos = m_idTool->globalPosition( id );
     pixel = new RichRecPixel( id,                              // SmartID for pixel
                               gPos,                            // position in global coords
                               m_idTool->globalToPDPanel(gPos), // position in local coords
