@@ -10,9 +10,8 @@
 #include "GaudiKernel/AlgFactory.h"
 
 //Local
+#include "MuonDet/DeMuonDetector.h"
 #include "MuonHitChecker.h"
-#include "Event/PackMCMuonHit.h"
-#include "Event/MuonEventBits.h"
 #include "Event/MCHeader.h"
 
 static const  AlgFactory<MuonHitChecker>  s_Factory ;
@@ -80,7 +79,8 @@ StatusCode MuonHitChecker::execute() {
   std::vector<float> m_id,m_px,m_py,m_pz,m_E,m_xv,m_yv,m_zv,m_tv, m_mom;
   std::vector<float> m_ple,m_hen,m_dix,m_dxz,m_dyz;
 
-  
+  DeMuonDetector * muonD = getDet<DeMuonDetector>("/dd/Structure/LHCb/DownstreamRegion/Muon"); 
+
   // get the MCHits
   SmartDataPtr<LHCb::MCHits> hits(eventSvc(), 
 				  LHCb::MCHitLocation::Muon);
@@ -94,17 +94,11 @@ StatusCode MuonHitChecker::execute() {
       MyDetID = (*iter)->sensDetID();
 
       //Needs to extract info from sens ID      
-      int station = MuonEventBits::getMuonBits(MyDetID,
-					       PackMCMuonHit::maskStationID,
-					       PackMCMuonHit::shiftStationID);  
+      int station = muonD->stationID(MyDetID);  
       
-      int region  = MuonEventBits::getMuonBits(MyDetID,
-					       PackMCMuonHit::maskRegionID,
-					       PackMCMuonHit::shiftRegionID);   
+      int region  = muonD->regionID(MyDetID);   
 
-      int chamber = MuonEventBits::getMuonBits(MyDetID,
-					       PackMCMuonHit::maskChamberID,
-					       PackMCMuonHit::shiftChamberID);        
+      int chamber = muonD->chamberID(MyDetID);        
 
       debug()<<" Station, Region :: " <<station<<" "<<region<<endmsg;
   

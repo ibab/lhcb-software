@@ -2,6 +2,10 @@ Package         : MuonMoniSim
 Package manager : A Sarti
 
 !============================== MuonMoniSim v1r1 ============================
+! 2006-01-23 - A. Sarti
+ - Fixed the call to MCevent in requirements
+ - Use MuonDet to retrieve the info from sensDetID!
+
 ! 2006-01-13 - A. Sarti
  - Moved the code to LHCb v20r0 [LHCb namespace and MChit instead of
    MCMuonHit]
