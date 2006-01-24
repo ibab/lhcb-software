@@ -1,0 +1,33 @@
+# =============================================================================
+# CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.1.1.1 $
+# =============================================================================
+# Created    : 2006-01-16
+# Maintainer : Vanya BELYAEV ibelyaev@physics.syr.edu 
+# =============================================================================
+package            LoKiCore
+version            v1r0
+
+# ================ structure ==================================================
+branches           cmt doc src LoKi 
+
+# ================ own includes ===============================================
+include_dirs       $(LOKICOREROOT)
+
+# ================ dependencies ===============================================
+use                GaudiAlg         v* 
+use                LHCbKernel       v* Kernel 
+use                Boost            v* LCG_Interfaces -no_auto_imports
+ 
+# ================ constituents ===============================================
+library            LoKiCoreLib    ../src/*.cpp 
+library            LoKiCore       ../src/Components/*.cpp
+
+# ================ patterns ===================================================
+apply_pattern      linker_library    library=LoKiCoreLib
+apply_pattern      component_library library=LoKiCore
+
+# =============================================================================
+# $Log: not supported by cvs2svn $ 
+# =============================================================================
+# The END
+# =============================================================================
