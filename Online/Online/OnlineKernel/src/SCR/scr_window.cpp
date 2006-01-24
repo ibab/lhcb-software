@@ -72,10 +72,8 @@ int scrc_configure_windows (int rows, int cols)  {
 
 //----------------------------------------------------------------------------
 int scrc_init_windows(Pasteboard* pb, int rows, int cols)   {
-  int i;
-  Screen *s;
-  
-  for (i=0, s = &System.scr[0]; i<SCREENS; i++, s++)  {  
+  Screen *s = &System.scr[0];  
+  for (int i=0; i<SCREENS; i++, s++)  {  
     list_init (&s->wind);
     s->wind.cur = (Window *) 0;
     s->last_id    = 0;
@@ -354,34 +352,27 @@ int scrc_show_window (Window *w, Display *d)    {
     Window *ww;
     int col;
     int father = (int)&System.scr[ICONIFIED].wind;
-    if (w->father == (Linked_list *)father)
-    {
+    if (w->father == (Linked_list *)father)  {
       s = &System.scr[SEQUENTIAL];
       ww = s->wind.last;
-      if (ww)
-      {
+      if (ww)  {
         col = ww->col + ww->width;
         if (w->type != PULLDOWN_WINDOW) col++;
       }
       else col = 1;
-      
       list_transfer_entry (w, &s->wind, ww, 0);
-
       scrc_move_window_to (w, w->row, col);
     }
 
-    if (w->col + w->width - 1 > System.cols)
-    {
+    if (w->col + w->width - 1 > System.cols)  {
       shift = System.cols - (w->col + w->width - 1);
       ww = (Window*) w->father->first;
-      while (ww)
-      {
+      while (ww)  {
         scrc_move_window (ww, 0, shift);
         ww = ww->next;
       }
     }
-    else if (w->col < 1)
-    {
+    else if (w->col < 1)  {
       shift = 1 - w->col;
       ww = (Window*) w->father->last;
       while (ww)

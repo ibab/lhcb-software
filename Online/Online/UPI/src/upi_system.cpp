@@ -141,22 +141,15 @@ int upic_attach_terminal ()   {
 #endif
   
 #ifdef SCREEN
-  {
-    int i;
-    
-    upic_init_screen();
-    Sys.items_per_page = Sys.pb_rows - 6;
-    Sys.pf1.menu = 0;
-    Sys.pf1.item = 0;
-  
-    for (i=0; i<10; i++)
-    {
-      Sys.keypad[i].menu = 0;
-      Sys.keypad[i].item = 1;
-    }
-  
-    upic_draw_message();
+  upic_init_screen();
+  Sys.items_per_page = Sys.pb_rows - 6;
+  Sys.pf1.menu = 0;
+  Sys.pf1.item = 0;  
+  for (int i=0; i<10; i++)    {
+    Sys.keypad[i].menu = 0;
+    Sys.keypad[i].item = 1;
   }
+  upic_draw_message();
 #else
   Sys.items_per_page = 0x7fffffff;
   upir_init_remote ();

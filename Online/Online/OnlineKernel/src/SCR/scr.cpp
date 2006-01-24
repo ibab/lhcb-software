@@ -2,7 +2,11 @@
 #include <cstdlib>
 #include <cstring>
 #include "SCR/scr.h"
-
+#ifdef linux
+#include <sys/ioctl.h>
+#include <unistd.h>
+#include <cerrno>
+#endif
 #define BUFFER_GUARD 20
 
 #define belongs_to(d,r,c) (r >= d->row0+d->row-1 && \
@@ -39,14 +43,14 @@
 #define cursor_off()       scrc_putes("[?25l", pb)
 #define setansi()          scrc_putes("=", pb)
 #define resetansi()        scrc_putes(">", pb)
-#define crlf()             {scrc_puti(CARRIAGERETURN, pb);\
-  scrc_puti(LINEFEED, pb);}
+#define crlf()             {scrc_puti(CARRIAGERETURN,pb);scrc_puti(LINEFEED, pb);}
 
 static Pasteboard *Paste = 0;
 static Display *Moving_display, *Moving_text;
 static Display *Resizing_display, *Resizing_text;
 int scr_ignore_input;
 
+//---------------------------------------------------------------------------
 int scrc_create_pasteboard(Pasteboard** paste, char* device, int* rows, int* cols)  {
   if (Paste)  {
     *paste = Paste;
@@ -62,18 +66,34 @@ int scrc_create_pasteboard(Pasteboard** paste, char* device, int* rows, int* col
   *(pb->bufout) = 0;
   pb->bufptr = 0;
   pb->bufsize = BUFFER_SIZE;
-
+  pb->device  = (char*)0;
   if (device)  {
     pb->device = (char*) list_malloc (strlen(device) + 1);
     strcpy (pb->device, device);
   }
-  else pb->device = (char *) 0;
-
   pb->rows = 24;
   pb->cols = 80;
-
+#ifdef linux
+  int fd = ::fileno(stdin);
+  if ( ::isatty(fd) ) {
+    struct winsize wns;
+    do {
+      if(::ioctl(fd,TIOCGWINSZ,&wns) == 0) {
+	pb->rows = wns.ws_row;
+	pb->cols = wns.ws_col;
+	break;
+      }
+    } while (errno == EINTR);   
+  } 
+#else
+  if ( ::getenv("COLUMNS") ) {
+    if ( 1 == ::sscanf(::getenv("COLUMNS"),"%d",&n) ) pb->cols = n;
+  }
+  if ( ::getenv("LINES") ) {
+    if ( 1 == ::sscanf(::getenv("LINES","%d",&n) ) pb->rows = n;
+  }
+#endif
   scrc_init_screen (pb, *rows, *cols);
-
   int size = pb->rows * pb->cols;
   *rows = pb->rows;
   *cols = pb->cols;
@@ -96,7 +116,6 @@ int scrc_create_pasteboard(Pasteboard** paste, char* device, int* rows, int* col
 
   pb->updating = OFF;
   pb->old_attr = 0;
-
   pb->moving = 0;
   pb->resizing = 0;
 
@@ -110,39 +129,28 @@ int scrc_create_pasteboard(Pasteboard** paste, char* device, int* rows, int* col
   scrc_put_chars (Moving_display, "\134/", NORMAL, 1, ON, 0);
   scrc_put_chars (Moving_display, "/\134", NORMAL, 2, ON, 0);
 
-  scrc_create_display (&Moving_text, 5, 30, INVERSE, ON, "");
-  scrc_put_chars (Moving_text, "    ^     :",
-    NORMAL, 1, ON, 0);
-  scrc_put_chars (Moving_text, "  <- ->   : Move the display",
-    NORMAL, 2, ON, 0);
-  scrc_put_chars (Moving_text, "    v     :",
-    NORMAL, 3, ON, 0);
-  scrc_put_chars (Moving_text, "Prev Next : Change order",
-    NORMAL, 4, ON, 0);
-  scrc_put_chars (Moving_text, "   PF3    : Validate",
-    NORMAL, 5, ON, 0);
+  scrc_create_display (&Moving_text, 5, 30,                   INVERSE, ON, "");
+  scrc_put_chars (Moving_text, "    ^     :",                 NORMAL, 1, ON, 0);
+  scrc_put_chars (Moving_text, "  <- ->   : Move the display",NORMAL, 2, ON, 0);
+  scrc_put_chars (Moving_text, "    v     :",                 NORMAL, 3, ON, 0);
+  scrc_put_chars (Moving_text, "Prev Next : Change order",    NORMAL, 4, ON, 0);
+  scrc_put_chars (Moving_text, "   PF3    : Validate",        NORMAL, 5, ON, 0);
 
   scrc_create_display (&Resizing_display, 2, 2, FLASH, OFF, "");
   scrc_put_chars (Resizing_display, "/\134", NORMAL, 1, ON, 0);
   scrc_put_chars (Resizing_display, "\134/", NORMAL, 2, ON, 0);
 
   scrc_create_display (&Resizing_text, 5, 30, INVERSE, ON, "");
-  scrc_put_chars (Resizing_text, "    ^     :",
-    NORMAL, 1, ON, 0);
-  scrc_put_chars (Resizing_text, "  <- ->   : Change the size",
-    NORMAL, 2, ON, 0);
-  scrc_put_chars (Resizing_text, "    v     :",
-    NORMAL, 3, ON, 0);
-  scrc_put_chars (Resizing_text, "Prev Next : Scroll",
-    NORMAL, 4, ON, 0);
-  scrc_put_chars (Resizing_text, "   PF4    : Validate",
-    NORMAL, 5, ON, 0);
-
+  scrc_put_chars (Resizing_text, "    ^     :",                NORMAL, 1, ON, 0);
+  scrc_put_chars (Resizing_text, "  <- ->   : Change the size",NORMAL, 2, ON, 0);
+  scrc_put_chars (Resizing_text, "    v     :",                NORMAL, 3, ON, 0);
+  scrc_put_chars (Resizing_text, "Prev Next : Scroll",         NORMAL, 4, ON, 0);
+  scrc_put_chars (Resizing_text, "   PF4    : Validate",       NORMAL, 5, ON, 0);
   *paste = pb;
   return 1;
 }
 
-/*---------------------------------------------------------------------------*/
+//---------------------------------------------------------------------------
 int scrc_memory_of_pasteboard (Pasteboard *pb)  {
   int memory = sizeof(Pasteboard);
   Paste_entry *p = pb->paste.first;
@@ -160,39 +168,29 @@ int scrc_memory_of_pasteboard (Pasteboard *pb)  {
     scrc_memory_of_display (Moving_text) +
     scrc_memory_of_display (Resizing_display) +
     scrc_memory_of_display (Resizing_text);
-
   return (memory);
 }
 
-/*---------------------------------------------------------------------------*/
+//---------------------------------------------------------------------------
 int scrc_get_pasteboard_infos (Pasteboard *pb, int* rows, int *cols)  {
   *rows = pb->rows;
   *cols = pb->cols;
   return 1;
 }
 
-/*---------------------------------------------------------------------------*/
+//---------------------------------------------------------------------------
 int scrc_change_pasteboard (Pasteboard *pb, int *prows, int *pcols)   {
-  Update *u;
-  int size;
-
   scrc_clear_screen (pb);
 
   if (*pcols) pb->cols = *pcols;
   if (*prows) pb->rows = *prows;
-  if (pb->cols > 80)   {
-    wide_screen();
-  }
-  else  {
-    narrow_screen();
-  }
+  (pb->cols > 80) ? wide_screen() : narrow_screen();
 
   /*  scrc_fflush(pb); */
   scrc_change_pbd_characteristics (pb);
 
-  size = pb->rows * pb->cols;
-
-  u = pb->upd;
+  int size = pb->rows * pb->cols;
+  Update* u = pb->upd;
 
   free (u->map);
   free (u->attr);
@@ -216,10 +214,9 @@ int scrc_change_pasteboard (Pasteboard *pb, int *prows, int *pcols)   {
   return 1;
 }
 
-/*---------------------------------------------------------------------------*/
+//---------------------------------------------------------------------------
 int scrc_delete_pasteboard (Pasteboard *pb) {
   Paste_entry *d;
-  Update *u;
 
   if (pb->updating > 0) scrc_end_pasteboard_update (pb);
 
@@ -237,7 +234,7 @@ int scrc_delete_pasteboard (Pasteboard *pb) {
 
   scrc_delete_physical_pasteboard (pb);
 
-  u = pb->upd;
+  Update* u = pb->upd;
   free (u->map);
   free (u->attr);
   free (u->mod_rows);
@@ -254,7 +251,7 @@ int scrc_delete_pasteboard (Pasteboard *pb) {
   return 1;
 }
 
-/*---------------------------------------------------------------------------*/
+//---------------------------------------------------------------------------
 int scrc_delete_display (Display *d)    {
   if (d->paste) scrc_unpaste_display (d, d->pb);
   free (d->map);
@@ -263,35 +260,27 @@ int scrc_delete_display (Display *d)    {
   return 1;
 }
 
-/*---------------------------------------------------------------------------*/
+//---------------------------------------------------------------------------
 int scrc_clear_screen (Pasteboard *pb)    {
   while (pb->updating > 0) scrc_end_pasteboard_update (pb);
-
   pb->old_attr = 0;
   clear_screen ();
-
-  {
-    Update *u;
-    int size;
-
-    u = pb->old;
-    size = pb->rows * pb->cols;
-    memset (u->map,  ' ', size);
+  Update *u = pb->old;
+  int size = pb->rows * pb->cols;
+  memset (u->map,  ' ', size);
 #ifdef USE_FONT_SUPP
-    memset (u->attr, FONT_SUPP, size);
+  memset (u->attr, FONT_SUPP, size);
 #else
-    memset (u->attr, NORMAL, size);
+  memset (u->attr, NORMAL, size);
 #endif
-    memset (u->mod_rows, 0, pb->rows);
-  }
-
+  memset (u->mod_rows, 0, pb->rows);
   toascii();
   plain();
   cursor (pb, 1, 1);
   return 1;
 }
 
-/*---------------------------------------------------------------------------*/
+//---------------------------------------------------------------------------
 int scrc_save_screen (Pasteboard *pb)   {
   scrc_resetANSI ();
   scrc_clear_screen (pb);
@@ -302,7 +291,7 @@ int scrc_save_screen (Pasteboard *pb)   {
   return 1;
 }
 
-/*---------------------------------------------------------------------------*/
+//---------------------------------------------------------------------------
 int scrc_restore_screen (Pasteboard *pb)      {
   scrc_set_scroll (pb, 1, pb->rows);
   setfonts();
@@ -314,17 +303,12 @@ int scrc_restore_screen (Pasteboard *pb)      {
   return 1;
 }
 
-/*---------------------------------------------------------------------------*/
+//---------------------------------------------------------------------------
 int scrc_repaint_screen (Pasteboard *pb)  {
-  Paste_entry *d;
-  Display *dd;
-
   scrc_clear_screen (pb);
   scrc_begin_pasteboard_update(pb);
-  d = pb->paste.first;
-  while (d)
-  {
-    dd = d->disp;
+  for(Paste_entry* d = pb->paste.first; d; d = d->next) {
+    Display* dd = d->disp;
     scrc_draw_block (dd, dd->row0, dd->row1, dd->col0, dd->col1);
     d = d->next;
   }
@@ -332,7 +316,7 @@ int scrc_repaint_screen (Pasteboard *pb)  {
   return 1;
 }
 
-/*---------------------------------------------------------------------------*/
+//---------------------------------------------------------------------------
 int scrc_create_display (Display** disp, int rows, int cols, int attr, flag border, const char* title) {
   int size;
   Display *d = (Display *) list_malloc (sizeof(Display));
@@ -374,31 +358,30 @@ int scrc_create_display (Display** disp, int rows, int cols, int attr, flag bord
   return 1;
 }
 
-/*---------------------------------------------------------------------------*/
+//---------------------------------------------------------------------------
 int scrc_memory_of_display (Display *disp)    {
-  int memory = sizeof(Display) + 2 * (disp->rows + 2) * (disp->cols +2);
-  return (memory);
+  return sizeof(Display) + 2 * (disp->rows + 2) * (disp->cols +2);
 }
 
-/*---------------------------------------------------------------------------*/
+//---------------------------------------------------------------------------
 int scrc_enable_scroll (Display *disp, int (*scroll)(int))   {
   disp->scroll = scroll;
   return 1;
 }
 
-/*---------------------------------------------------------------------------*/
+//---------------------------------------------------------------------------
 int scrc_enable_resize (Display *disp, int (*resize)(Display*, int, int))   {
   disp->resize = resize;
   return 1;
 }
 
-/*---------------------------------------------------------------------------*/
+//---------------------------------------------------------------------------
 int scrc_enable_drag (Display *disp, int (*drag)(Display*, int, int))   {
   disp->drag = drag;
   return 1;
 }
 
-/*---------------------------------------------------------------------------*/
+//---------------------------------------------------------------------------
 int scrc_get_display_attr (Display *disp, int* rows, int* cols)   {
   if (disp)  {
     *rows = disp->rows;
@@ -407,48 +390,35 @@ int scrc_get_display_attr (Display *disp, int* rows, int* cols)   {
   return 1;
 }
 
-/*---------------------------------------------------------------------------*/
+//---------------------------------------------------------------------------
 int scrc_read_from_display (Display *disp, char *string, int maxlen, int row)   {
-  char *m;
-  int cols;
-
-  if (disp)
-  {
-    cols = disp->cols;
-    m = disp->map + row * (cols + 2) + 1;
+  if (disp)  {
+    int cols = disp->cols;
+    char* m = disp->map + row * (cols + 2) + 1;
     if (maxlen > cols) maxlen = cols;
     strncpy (string, m, maxlen);
   }
   return 1;
 }
 
-/*---------------------------------------------------------------------------*/
+//---------------------------------------------------------------------------
 int scrc_set_border (Display *disp, const char *title, char attr)   {
-  int len, pos;
-  int cols, rows;
-  static char zero[] = "";
-
+  int cols = disp->cols;
+  int len = (title) ? strlen(title) : 0;
   if (disp->title) free (disp->title);
-
-  len = (title) ? strlen(title) : 0;
   disp->title = (char *) list_malloc (len + 1);
-  strcpy (disp->title, (title) ? title : zero);
-
-  rows = disp->rows;
-  cols = disp->cols;
-
+  strcpy (disp->title, (title) ? title : "");
   scrc_draw_box (disp, attr);
-  if (cols > 1 && (len != 0))
-  {
+  if (cols > 1 && (len != 0))  {
     if (len > cols) len = cols;
-    pos = (cols - len + 2) >> 1;
+    int pos = (cols - len + 2) >> 1;
     for (;len;len--,pos++)
       scrc_put_char_all (disp, pos, *title++, attr, 0, pos);
   }
   return 1;
 }
 
-/*---------------------------------------------------------------------------*/
+//---------------------------------------------------------------------------
 int scrc_paste_display (Display *disp, Pasteboard *pb, int row, int col)    {
   Paste_entry *d;
   level_up (pb);
@@ -458,8 +428,7 @@ int scrc_paste_display (Display *disp, Pasteboard *pb, int row, int col)    {
     if (d != pb->paste.last)
       list_move_entry (d, pb->paste.last, 0);
   }
-  else
-  {
+  else  {
     d = (Paste_entry *) list_add_entry (&pb->paste, sizeof(Paste_entry));
     scrc_uniconify_display (disp);
     disp->paste = d;
@@ -468,14 +437,12 @@ int scrc_paste_display (Display *disp, Pasteboard *pb, int row, int col)    {
   disp->row      = row;
   disp->col      = col;
   scrc_draw_block (disp, disp->row0, disp->row1, disp->col0, disp->col1);
-
   d->disp = disp;
-
   level_down (pb);
   return 1;
 }
 
-/*---------------------------------------------------------------------------*/
+//---------------------------------------------------------------------------
 int scrc_unpaste_display (Display *disp, Pasteboard *pb)    {
   if (disp && disp->paste)    {
     level_up (pb);
@@ -487,7 +454,7 @@ int scrc_unpaste_display (Display *disp, Pasteboard *pb)    {
   return 1;
 }
 
-/*---------------------------------------------------------------------------*/
+//---------------------------------------------------------------------------
 int scrc_bring_display_to_back (Display *disp, Pasteboard *pb)    {
   Paste_entry *d = disp->paste;
   if (!d) return 0;
@@ -506,7 +473,7 @@ int scrc_bring_display_to_back (Display *disp, Pasteboard *pb)    {
   return 1;
 }     
 
-/*---------------------------------------------------------------------------*/
+//---------------------------------------------------------------------------
 int scrc_move_display (Display *disp, Pasteboard *pb, int drow, int dcol) {
   level_up (pb);
   scrc_undraw_block (disp, disp->row0, disp->row1, disp->col0, disp->col1);
@@ -517,34 +484,31 @@ int scrc_move_display (Display *disp, Pasteboard *pb, int drow, int dcol) {
   return 1;
 }
 
-/*---------------------------------------------------------------------------*/
+//---------------------------------------------------------------------------
 int scrc_change_display (Display *disp, int rows, int cols)   {
-  int w, h;
   int r, c;
-  char *map, *m, *mm;
-  char *attr, *a, *aa;
+  char *map, *mm;
+  char *attr, *aa;
   int size = (rows + 2)*(cols + 2);
   int r0, r1, c0, c1;
   Pasteboard *pb = disp->pb;
   int offset;
 
-  h = disp->rows;
-  w = disp->cols;
+  int h = disp->rows;
+  int w = disp->cols;
 
   if (h == rows && w == cols) return 1;
 
   level_up (pb);
-  m = disp->map;
-  a = disp->attr;
+  char* m = disp->map;
+  char* a = disp->attr;
 
-  if (disp->border)
-  {
+  if (disp->border)  {
     r0 = c0 = 0;
     r1 = rows + 1;
     c1 = cols + 1;
   }
-  else
-  {
+  else  {
     r0 = c0 = 1;
     r1 = rows;
     c1 = cols;
@@ -578,14 +542,12 @@ int scrc_change_display (Display *disp, int rows, int cols)   {
 
   for (r = 1; r <= min(h,rows); r++)  {
     offset = r * (cols + 2) + 1;
-
     for (c = 1; c <= min(w,cols); c++, offset++)    {
       scrc_put_char_all (disp, offset, *mm++, *aa++, r, c);
     }
     for (; c<=cols; c++, offset++)    {
       scrc_put_char_all (disp, offset, ' ', NORMAL, r, c);
     }
-
     if (w > cols)    {
       mm += w - cols;
       aa += w - cols;
@@ -610,13 +572,13 @@ int scrc_change_display (Display *disp, int rows, int cols)   {
   return 1;
 }
 
-/*---------------------------------------------------------------------------*/
+//---------------------------------------------------------------------------
 char *scrc_get_title (Display *disp)    {
   if (disp->border) return (disp->title);
   return (0);
 }
 
-/*---------------------------------------------------------------------------*/
+//---------------------------------------------------------------------------
 int scrc_draw_block (Display *disp, int r1, int r2, int c1, int c2) {
   int offset, pb_offset;
 
@@ -669,7 +631,7 @@ int scrc_draw_block (Display *disp, int r1, int r2, int c1, int c2) {
   return 0;
 }
 
-/*---------------------------------------------------------------------------*/
+//---------------------------------------------------------------------------
 int scrc_undraw_block (Display *disp, int r1, int r2, int c1, int c2)   {
   int r, c;
   int row, col;
@@ -730,7 +692,7 @@ int scrc_undraw_block (Display *disp, int r1, int r2, int c1, int c2)   {
   return 0;
 }
 
-/*---------------------------------------------------------------------------*/
+//---------------------------------------------------------------------------
 Display* scrc_display_at (Pasteboard* pb, int row, int col)    {
   Paste_entry *d = pb->paste.last;
   while (d)  {
@@ -741,7 +703,7 @@ Display* scrc_display_at (Pasteboard* pb, int row, int col)    {
   return (0);
 }
 
-/*---------------------------------------------------------------------------*/
+//---------------------------------------------------------------------------
 int scrc_draw_box (Display *disp, char attr)    {
   int r, c, offset;
   int r2 = disp->rows + 1;
@@ -772,7 +734,7 @@ int scrc_draw_box (Display *disp, char attr)    {
   return 1;
 }
 
-/*---------------------------------------------------------------------------*/
+//---------------------------------------------------------------------------
 int scrc_display_occluded (Display *disp)   {
   for (int row = disp->row0 + disp->row; row <= disp->row1 + disp->row; row++)
     for (int col = disp->col0 + disp->col; col <= disp->col1 + disp->col; col++)
@@ -780,7 +742,7 @@ int scrc_display_occluded (Display *disp)   {
   return 0;
 }
 
-/*---------------------------------------------------------------------------*/
+//---------------------------------------------------------------------------
 int scrc_occluded (Display *disp, int row, int col)   {
   Paste_entry *d = disp->paste;
   Display *dd;
@@ -796,14 +758,13 @@ int scrc_occluded (Display *disp, int row, int col)   {
   return 0;
 }
 
-/*---------------------------------------------------------------------------*/
+//---------------------------------------------------------------------------
 int scrc_put_chars (Display *disp, const char *str, byte attr, int row, int col, int erase) {
-  int len;
+  int len = strlen(str);
   int h = disp->rows;
   int w = disp->cols;
 
   if (row < 0 || col < 0 || row > h || col > w) return 0;
-  len = strlen(str);
   if (len > w - col + 1) len = w - col + 1;
   for (;len;len--) scrc_put_char (disp, *str++, attr, row, col++);
   if (erase)
@@ -812,7 +773,7 @@ int scrc_put_chars (Display *disp, const char *str, byte attr, int row, int col,
   return 1;
 }
 
-/*---------------------------------------------------------------------------*/
+//---------------------------------------------------------------------------
 int scrc_erase_line (Display *disp, int row)  {
   if (row > disp->rows) return 0;
   for (int i = 1;i <= disp->cols; i++) 
@@ -820,72 +781,61 @@ int scrc_erase_line (Display *disp, int row)  {
   return 1;
 }
 
-/*---------------------------------------------------------------------------*/
+//---------------------------------------------------------------------------
 int scrc_put_char_all (Display *disp, int offset, char c, unsigned char attr, int row, int col)   {
-  int pb_offset;
-
   *(disp->map  + offset) = c;
+  *(disp->attr + offset) = attr;
+  if (disp->paste)  {
+    Pasteboard *pb = disp->pb;
+    row += disp->row - 1;
+    col += disp->col - 1;
+    if (visible (pb, row, col))    {
+      int pb_offset = (row - 1)*pb->cols + col - 1;
+      scrc_draw_char (disp, pb, pb_offset, c, attr, disp, row, col);
+    }
+  }
+  return 1;
+}
+
+//---------------------------------------------------------------------------
+int scrc_put_char (Display *disp, char c, unsigned char attr, int row, int col)   {
+  int h = disp->rows;
+  int w = disp->cols;
+
+  if (row < 0 || row > h+1 || col < 0 || col > w+1) return 0;
+
+  w += 2;
+  int offset = row*w + col;
+  *(disp->map  + offset) = c < ' ' ? ' ' : c;
   *(disp->attr + offset) = attr;
 
   if (disp->paste)  {
     Pasteboard *pb = disp->pb;
     row += disp->row - 1;
     col += disp->col - 1;
-    if (visible (pb, row, col))
-    {
-      pb_offset = (row - 1)*pb->cols + col - 1;
+    if (visible (pb, row, col))    {
+      int pb_offset = (row - 1)*pb->cols + col - 1;
       scrc_draw_char (disp, pb, pb_offset, c, attr, disp, row, col);
     }
   }
   return 1;
 }
 
-/*---------------------------------------------------------------------------*/
-int scrc_put_char (Display *disp, char c, unsigned char attr, int row, int col)   {
-  int w, h, offset, pb_offset;
-
-  h = disp->rows;
-  w = disp->cols;
-
-  if (row < 0 || row > h+1 || col < 0 || col > w+1) return 0;
-
-  w += 2;
-  offset = row*w + col;
-  *(disp->map  + offset) = c < ' ' ? ' ' : c;
-  *(disp->attr + offset) = attr;
-
-  if (disp->paste)
-  {
-    Pasteboard *pb = disp->pb;
-
-    row += disp->row - 1;
-    col += disp->col - 1;
-    if (visible (pb, row, col))
-    {
-      pb_offset = (row - 1)*pb->cols + col - 1;
-      scrc_draw_char (disp, pb, pb_offset, c, attr, disp, row, col);
-    }
-  }
-  return 1;
-}
-
-/*---------------------------------------------------------------------------*/
+//---------------------------------------------------------------------------
 int scrc_get_char (Display *disp, int row, int col, char* c, unsigned int* attr)  {
-  int w, h, offset;
-
-  h = disp->rows;
-  w = disp->cols;
+  int h = disp->rows;
+  int w = disp->cols;
 
   if (row > h+1 || col > w+1) return 0;
 
   w += 2;
-  offset = row*w + col;
+  int offset = row*w + col;
   *c = *(disp->map  + offset);
   *attr = *(disp->attr + offset);
   return 1;
 }
 
-/*---------------------------------------------------------------------------*/
+//---------------------------------------------------------------------------
 int scrc_draw_char (Display *disp, Pasteboard *pb, int offset, 
                     char c, unsigned char attr, Display *ddef, int row, int col)
 {
@@ -896,19 +846,12 @@ int scrc_draw_char (Display *disp, Pasteboard *pb, int offset,
   if (!pb) return 0;
 
   /*  Check to use the default display attribute                 */
-
   def = NORMAL;
   if (ddef) def = ddef->def_attr;
-
-
   /*  Check occlusion of this position within the display        */
   if (disp && scrc_occluded (disp, row, col)) return 0;
-
-
   /*  Take care of multiple inversions                           */
   attr = (~INVERSE & (def | attr)) | (INVERSE & (def ^ attr)) ;
-
-
   /*  Further checks on the char itself                          */
   if (!c) c = ' ';
   if (c == ' ')  {
@@ -942,19 +885,13 @@ int scrc_draw_char (Display *disp, Pasteboard *pb, int offset,
   return 1;
 }
 
-/*---------------------------------------------------------------------------*/
+//---------------------------------------------------------------------------
 int scrc_draw_char_on_pb (Pasteboard *pb, char c, int attr, int row, int col)   {
-  byte old;
-  int old_set, set;
-
-  old = pb->old_attr;
-
-  old_set = old & FONTS;
-  set     = attr & FONTS;
-  if (old_set != set)
-  {
-    switch (set)
-    {
+  byte old = pb->old_attr;
+  int  old_set = old & FONTS;
+  int set     = attr & FONTS;
+  if (old_set != set)  {
+    switch (set)  {
     case ASCII : toascii();
       break;
     case GRAPHIC : tographic();
@@ -970,17 +907,14 @@ int scrc_draw_char_on_pb (Pasteboard *pb, char c, int attr, int row, int col)   
 
   old_set = old & ATTRIBUTES;
   set     = attr & ATTRIBUTES;
-  if (old_set)
-  {
-    if (set != old_set)
-    {
+  if (old_set)  {
+    if (set != old_set)  {
       plain();
       old &= ~ATTRIBUTES;
     }
     else set = 0;
   }
-  if (set)
-  {
+  if (set)  {
     if (set & BOLD)      bold();
     if (set & UNDERLINE) underline();
     if (set & FLASH)     flash();
@@ -995,7 +929,7 @@ int scrc_draw_char_on_pb (Pasteboard *pb, char c, int attr, int row, int col)   
   return 1;
 }
 
-/*---------------------------------------------------------------------------*/
+//---------------------------------------------------------------------------
 int scrc_set_cursor_abs (Pasteboard *pb, int row, int col)  {
   cursor (pb, row, col);
   pb->curs.row = row;
@@ -1003,7 +937,7 @@ int scrc_set_cursor_abs (Pasteboard *pb, int row, int col)  {
   return 1;
 }
 
-/*---------------------------------------------------------------------------*/
+//---------------------------------------------------------------------------
 int scrc_set_cursor (Display *disp, int row, int col)   {
   if (disp->paste)
     scrc_set_cursor_abs (disp->pb, disp->row + row - 1, disp->col + col - 1);
@@ -1011,44 +945,39 @@ int scrc_set_cursor (Display *disp, int row, int col)   {
 }
 
 
-/*---------------------------------------------------------------------------*/
+//---------------------------------------------------------------------------
 int scrc_check_key_buffer (char *buffer)
-/*---------------------------------------------------------------------------*/
+//---------------------------------------------------------------------------
 /* This function checks the buffer for a valid escape sequence or a normal   */
 /* key stroke.                                                               */
 /*  If a valid key sequence is found, the corresponding code is returned.    */
 /*  INVALID may be returned.                                                 */
 /*  (-1)    is returned if the escape sequence is incomplete.                */
-/*---------------------------------------------------------------------------*/
+//---------------------------------------------------------------------------
 {
   int b;
   char c;
 
   b = *buffer & 0xff;
-  switch (b)
-  {
+  switch (b)  {
   case 0x9b:
     buffer++;
-    switch (*buffer)
-    {
+    switch (*buffer)  {
     case 'D': return MOVE_LEFT;
     case 'B': return MOVE_DOWN;
     case 'A': return MOVE_UP;
     case 'C': return MOVE_RIGHT;
     case '1':
       buffer++;
-      switch (c = *buffer)
-      {
+      switch (c = *buffer)  {
       case '~' : return KPD_FIND;
       case '7' :
       case '8' :
       case '9' :
         buffer++;
-        switch (*buffer)
-        {
+        switch (*buffer)  {
         case '~' :
-          switch (c)
-          {
+          switch (c) {
           case '7' : return F6;
           case '8' : return F7;
           case '9' : return F8;
@@ -1062,8 +991,7 @@ int scrc_check_key_buffer (char *buffer)
       break;
     case '2':
       buffer++;
-      switch (c = *buffer)
-      {
+      switch (c = *buffer)  {
       case '~' : return KPD_INSERT;
       case '0' :
       case '1' :
@@ -1074,11 +1002,9 @@ int scrc_check_key_buffer (char *buffer)
       case '8' :
       case '9' :
         buffer++;
-        switch (*buffer)
-        {
+        switch (*buffer) {
         case '~' :
-          switch (c)
-          {
+          switch (c) {
           case '0' : return F9;
           case '1' : return F10;
           case '3' : return F11;
@@ -1097,19 +1023,16 @@ int scrc_check_key_buffer (char *buffer)
       break;
     case '3':
       buffer++;
-      switch (c = *buffer)
-      {
+      switch (c = *buffer)  {
       case '~' : return KPD_REMOVE;
       case '1' :
       case '2' :
       case '3' :
       case '4' :
         buffer++;
-        switch (*buffer)
-        {
+        switch (*buffer)  {
         case '~' :
-          switch (c)
-          {
+          switch (c) {
           case '1' : return F17;
           case '2' : return F18;
           case '3' : return F19;
@@ -1124,24 +1047,21 @@ int scrc_check_key_buffer (char *buffer)
       break;
     case '4':
       buffer++;
-      switch (c = *buffer)
-      {
+      switch (c = *buffer) {
       case '~' : return KPD_SELECT;
       case 0 : return (-1);
       }
       break;
     case '5':
       buffer++;
-      switch (c = *buffer)
-      {
+      switch (c = *buffer) {
       case '~' : return KPD_PREV;
       case 0 : return (-1);
       }
       break;
     case '6':
       buffer++;
-      switch (c = *buffer)
-      {
+      switch (c = *buffer) {
       case '~' : return KPD_NEXT;
       case 0 : return (-1);
       }
@@ -1153,8 +1073,7 @@ int scrc_check_key_buffer (char *buffer)
     break;
   case 0x8f :
     buffer++;
-    switch (*buffer)
-    {
+    switch (*buffer) {
     case 'l': return PAGE_DOWN;
     case 'm': return PAGE_UP;
     case 'n': return KPD_PERIOD;
@@ -1343,14 +1262,14 @@ int scrc_check_key_buffer (char *buffer)
   return INVALID;
 }
 
-/*---------------------------------------------------------------------------*/
+//---------------------------------------------------------------------------
 int scrc_ring_bell (Display *d)  {
   Pasteboard* pb = d->pb;
   if ( pb ) beep ();
   return 1;
 }
 
-/*---------------------------------------------------------------------------*/
+//---------------------------------------------------------------------------
 int scrc_load_font (Pasteboard *pb, const char *name)   {
   char buf[80];
   FILE* f = fopen (name, "r");
@@ -1362,11 +1281,10 @@ int scrc_load_font (Pasteboard *pb, const char *name)   {
   return scrc_fflush(pb);
 }
 
-/*---------------------------------------------------------------------------*/
+//---------------------------------------------------------------------------
 int scrc_resizing_display (Display *d)    {
   Pasteboard *pb = d->pb;
   pb->resizing = d;
-
   scrc_paste_display (Resizing_text, pb, 2, 2);
   scrc_paste_display (Resizing_display, pb, d->row, d->col);
   cursor_off();
@@ -1374,20 +1292,12 @@ int scrc_resizing_display (Display *d)    {
 }
 
 
-/*---------------------------------------------------------------------------*/
+//---------------------------------------------------------------------------
 int scrc_action_resizing_display (Pasteboard *pb, int key)    {
-  Display *d;
-  int done;
-  int drow, dcol;
-
-  d = pb->resizing;
-
-  done = 0;
+  Display* d = pb->resizing;
+  int done = 0, drow = 0, dcol = 0;
   scrc_begin_pasteboard_update (pb);
-  dcol = 0;
-  drow = 0;
-  switch (key)
-  {
+  switch (key)  {
   case MOVE_UP :
     if (Resizing_display->row > 1) drow = -1;
     break;
@@ -1402,8 +1312,7 @@ int scrc_action_resizing_display (Pasteboard *pb, int key)    {
     break;
   case KPD_PREV :
   case KPD_NEXT :
-    if (d->scroll)
-    {
+    if (d->scroll)  {
       (*d->scroll)(key);
       scrc_paste_display (Resizing_display, pb, d->row, d->col);
       dcol = 0;
@@ -1415,8 +1324,7 @@ int scrc_action_resizing_display (Pasteboard *pb, int key)    {
     break;
   }
   if (!done) scrc_move_display (Resizing_display, pb, drow, dcol);
-  else
-  {
+  else  {
     pb->resizing = 0;
     scrc_unpaste_display (Resizing_display, pb);
     scrc_unpaste_display (Resizing_text, pb);
@@ -1437,13 +1345,10 @@ int scrc_action_resizing_display (Pasteboard *pb, int key)    {
 }
 
 
-/*---------------------------------------------------------------------------*/
+//---------------------------------------------------------------------------
 int scrc_moving_display (Display *d)    {
-  Pasteboard *pb;
-
-  pb = d->pb;
+  Pasteboard *pb = d->pb;
   pb->moving = d;
-
   scrc_paste_display (Moving_text, pb, pb->rows-5, 2);
   scrc_paste_display (Moving_display, pb, d->row, d->col);
   cursor_off();
@@ -1451,16 +1356,12 @@ int scrc_moving_display (Display *d)    {
 }
 
 
-/*---------------------------------------------------------------------------*/
+//---------------------------------------------------------------------------
 int scrc_action_moving_display (Pasteboard *pb, int key)    {
   Display *d = pb->moving;
-  int done = 0;
-  int dcol = 0;
-  int drow = 0;
-
+  int done = 0, dcol = 0, drow = 0;
   scrc_begin_pasteboard_update (pb);
-  switch (key)
-  {
+  switch (key)  {
   case MOVE_UP :
     if (Moving_display->row > 1) drow = -1;
     break;
@@ -1475,8 +1376,7 @@ int scrc_action_moving_display (Pasteboard *pb, int key)    {
     break;
   case KPD_NEXT :
   case KPD_PREV :
-    if (d->scroll)
-    {
+    if (d->scroll)  {
       (*d->scroll)(key);
       scrc_paste_display (Moving_display, pb, d->row, d->col);
       dcol = 0;
@@ -1490,23 +1390,20 @@ int scrc_action_moving_display (Pasteboard *pb, int key)    {
   if (!done)    {
     scrc_move_display (Moving_display, pb, drow, dcol);
   }
-  else
-  {
+  else  {
     pb->moving = 0;
     scrc_unpaste_display (Moving_display, pb);
     scrc_unpaste_display (Moving_text, pb);
     cursor_on();
-    if (key == KPD_PF3 || key == KPD_PF4)
-    {
+    if (key == KPD_PF3 || key == KPD_PF4) {
       drow = Moving_display->row - d->row;
       dcol = Moving_display->col - d->col;
-      if (drow || dcol)
-      {
+      if (drow || dcol)  {
         /*
         if ((drag = d->drag))
         (*drag) (d, Moving_display->row, Moving_display->col);
         */
-        if (d->drag)        {
+        if (d->drag)   {
           (*d->drag) (d, drow, dcol);
         }
         else scrc_move_display (d, pb, drow, dcol);
@@ -1517,14 +1414,10 @@ int scrc_action_moving_display (Pasteboard *pb, int key)    {
   return (done);
 }
 
-
 //----------------------------------------------------------------------------
 int scrc_fflush(Pasteboard *pb)    {
-  char *buf;
-
-  if (pb->bufptr)
-  {
-    buf = pb->bufout + pb->bufptr;
+  if (pb->bufptr)  {
+    char* buf = pb->bufout + pb->bufptr;
     *buf = 0;
     scrc_fputs(pb);
     pb->bufptr = 0;
@@ -1567,9 +1460,7 @@ int scrc_restore_cursor(Pasteboard * /* pb */ , int* /* context */ )    {
 
 //----------------------------------------------------------------------------
 int scrc_putc (char c, Pasteboard *pb)    {
-  char *buf;
-
-  buf = pb->bufout + pb->bufptr;
+  char *buf = pb->bufout + pb->bufptr;
   *buf = c;
   buf++;
   *buf = 0;
@@ -1597,9 +1488,7 @@ int scrc_puts (const char* s, Pasteboard *pb)   {
 
 //----------------------------------------------------------------------------
 int scrc_puti (int i, Pasteboard *pb)   {
-  char *buf;
-
-  buf       = pb->bufout + pb->bufptr;
+  char *buf = pb->bufout + pb->bufptr;
   *buf      = i;
   pb->bufptr ++;
   if (pb->bufptr > pb->bufsize - BUFFER_GUARD) scrc_fflush (pb);
@@ -1608,25 +1497,20 @@ int scrc_puti (int i, Pasteboard *pb)   {
 
 //----------------------------------------------------------------------------
 int scrc_begin_pasteboard_update (Pasteboard *pb)   {
-  if (!pb) return 0;
-
-  if (!pb->updating)
-  {
-    Update *u;
-    int size;
-
-    u = pb->upd;
-    size = pb->rows * pb->cols;
+  if (!pb) 
+    return 0;
+  else if (!pb->updating)  {
+    Update* u = pb->upd;
+    int size = pb->rows * pb->cols;
     memset (u->map,  ' ', size);
     memset (u->attr, 0, size);
     memset (u->mod_rows, 0, pb->rows);
   }
-
   pb->updating++;
   return 1;
 }
 
-/*---------------------------------------------------------------------------*/
+//---------------------------------------------------------------------------
 int scrc_end_pasteboard_update (Pasteboard *pb)   {
   char *m, *a, *last;
   char *old_m, *old_a;
@@ -1660,32 +1544,24 @@ int scrc_end_pasteboard_update (Pasteboard *pb)   {
   cols = pb->cols;
   last = a + pb->rows*cols - 1;
 
-  for (r=1; r<=pb->rows; r++, l++)
-  {
-    if (*l)
-    {
-      for (c = 1; c <= cols; c++)
-      {
-        if (*a)
-        {
+  for (r=1; r<=pb->rows; r++, l++)  {
+    if (*l) {
+      for (c = 1; c <= cols; c++)  {
+        if (*a) {
           *a &= ~MODIFIED;
-          if (*a != *old_a || *m != *old_m)
-          {
+          if (*a != *old_a || *m != *old_m) {
             *old_m = *m;
             *old_a = *a;
             scrc_draw_char_on_pb (pb, *m, *a, r, c);
           }
         }
-
         m++;
         a++;
-
         old_m++;
         old_a++;
       }
     }
-    else
-    {
+    else {
       m += cols;
       a += cols;
 
@@ -1701,8 +1577,7 @@ int scrc_end_pasteboard_update (Pasteboard *pb)   {
 //----------------------------------------------------------------------------
 int scrc_count_unmodified (char* attr, char* last)    {
   int count;
-  for (count = 0; attr<=last; (attr++, count++))
-  {
+  for (count = 0; attr<=last; (attr++, count++))  {
     if (*attr & MODIFIED) break;
   }
   if (count < 7) for (--attr; count; attr--, count--) *attr |= MODIFIED;
@@ -1712,12 +1587,9 @@ int scrc_count_unmodified (char* attr, char* last)    {
 
 //----------------------------------------------------------------------------
 int cursor (Pasteboard *pb, int row, int col)   {
-  char *buf;
-
-  buf = pb->bufout + pb->bufptr;
+  char *buf = pb->bufout + pb->bufptr;
   *buf = ESCAPE;
   pb->bufptr++;
-
   buf = pb->bufout + pb->bufptr;
   sprintf (buf, "[%d;%dH", row, col);
   pb->bufptr += strlen(buf);
@@ -1727,12 +1599,9 @@ int cursor (Pasteboard *pb, int row, int col)   {
 
 //----------------------------------------------------------------------------
 int scrc_set_scroll (Pasteboard *pb, int row1, int row2)    {
-  char *buf;
-
-  buf = pb->bufout + pb->bufptr;
+  char *buf = pb->bufout + pb->bufptr;
   *buf = ESCAPE;
   pb->bufptr++;
-
   buf = pb->bufout + pb->bufptr;
   sprintf (buf, "[%d;%dr", row1, row2);
   pb->bufptr += strlen(buf);
